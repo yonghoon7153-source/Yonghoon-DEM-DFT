@@ -35,7 +35,7 @@ from tools.preserve import (FAULTS, CasBackend, Hooks, PlannedLeg, PreserveError
                             check_manifest, load_canonical,
                             assert_durable_retention, has_registration_journal,
                             check_envelope, check_output, check_output_claim, check_hook_validation,
-                            pin_set_digest, ENFORCEMENT_OBJECT_LOCK, ENFORCEMENT_ADVISORY,
+                            pin_set_digest, ENFORCEMENT_OBJECT_LOCK, ENFORCEMENT_ADVISORY, registration,
                             MIN_RETENTION_DAYS, ObjectLockBackend, LockedCasBackend)
 from tools.preserve import _is_hex64 as _is_hex64_str
 
@@ -1907,7 +1907,7 @@ def test_a_provider_that_stops_enforcing_loses_durable_retention(tmp_path):
     등록 시점에 강제됐다는 사실이 지금도 강제된다는 뜻이 아니다.
     """
     run = _make_run(tmp_path)
-    store = _LockingStore()
+    store = _LockingStore(name=str(tmp_path))
     backend = _lockstore(tmp_path, store)
     index = tmp_path / "index"
     assert run_transaction(PLANNED, run, backend, index, _hooks())["durable"]
@@ -2209,14 +2209,25 @@ class _LockingStore:
     """
 
     MODE = "COMPLIANCE"
+    #: 이름 → 백킹 상태. 같은 이름의 새 instance 는 **같은 store 를 다시 연
+    #: 것**이다 (새 process 흉내). 실제 provider 의 bucket 에 해당한다.
+    _BACKING: dict = {}
 
-    def __init__(self, min_retain_days=MIN_RETENTION_DAYS, mode=None):
-        self._obj: dict[tuple[str, str], bytes] = {}     # (key, version) → bytes
-        self._head: dict[str, str] = {}                  # key → version
-        self._lock: dict[tuple[str, str], str] = {}      # (key, version) → until
+    def __init__(self, min_retain_days=MIN_RETENTION_DAYS, mode=None,
+                 name="canary-store"):
+        st = _LockingStore._BACKING.setdefault(
+            name, {"obj": {}, "head": {}, "lock": {}, "n": [0]})
+        self._obj: dict[tuple[str, str], bytes] = st["obj"]
+        self._head: dict[str, str] = st["head"]
+        self._lock: dict[tuple[str, str], str] = st["lock"]
+        self._counter = st["n"]
+        self.name = name
         self.min_retain_days = min_retain_days
         self.mode = mode or self.MODE
-        self._n = 0
+
+    def store_uri(self) -> str:
+        """★ 33차 P0-1 — provider 가 주는 **안정 식별자**. 재시작을 견딘다."""
+        return f"canary://{self.name}"
 
     # ── 실제 provider 가 제공하는 연산 ──────────────────────────────────
     def put(self, key: str, data: bytes) -> str:
@@ -2225,8 +2236,8 @@ class _LockingStore:
             if self._obj[(key, cur)] != data:
                 raise PermissionError(f"object lock 이 덮어쓰기를 막았다: {key}")
             return cur
-        self._n += 1
-        vid = f"v{self._n:05d}"
+        self._counter[0] += 1
+        vid = f"v{self._counter[0]:05d}"
         self._obj[(key, vid)] = bytes(data)
         self._head[key] = vid
         return vid
@@ -2266,7 +2277,8 @@ class _LockingStore:
 
 def _lockstore(tmp_path, store=None):
     b = LockedCasBackend(root=tmp_path / "cas")
-    object.__setattr__(b, "provider", store or _LockingStore())
+    object.__setattr__(b, "provider",
+                       store or _LockingStore(name=str(tmp_path)))
     return b
 
 
@@ -2278,7 +2290,7 @@ def test_a_locked_graph_survives_wiping_the_local_root(tmp_path):
     31차 canary 는 local 이 바이트를 들고 있었으므로 이것을 못 보였다.
     """
     run = _make_run(tmp_path)
-    store = _LockingStore()
+    store = _LockingStore(name=str(tmp_path))
     backend = _lockstore(tmp_path, store)
     index = tmp_path / "index"
     res = run_transaction(PLANNED, run, backend, index, _hooks())
@@ -2298,7 +2310,7 @@ def test_the_provider_actually_refuses_to_delete_a_locked_object(tmp_path):
     성공한 순간 durable retention 의 약속이 깨진다" 는 지적 그대로다.
     """
     run = _make_run(tmp_path)
-    store = _LockingStore()
+    store = _LockingStore(name=str(tmp_path))
     backend = _lockstore(tmp_path, store)
     index = tmp_path / "index"
     res = run_transaction(PLANNED, run, backend, index, _hooks())
@@ -2324,7 +2336,7 @@ def test_each_lock_axis_independently_loses_durable_retention(tmp_path, axis):
       3. version 별 현재 `retain_until` 을 재조회하지 않았다
     """
     run = _make_run(tmp_path)
-    store = _LockingStore()
+    store = _LockingStore(name=str(tmp_path))
     backend = _lockstore(tmp_path, store)
     index = tmp_path / "index"
     res = run_transaction(PLANNED, run, backend, index, _hooks())
@@ -2466,3 +2478,91 @@ def test_a_fresh_store_root_flushes_its_own_parent_entry(tmp_path, monkeypatch):
     CasBackend(root=root).store_id
     assert str(root.parent) in seen, "CAS root 이름을 담은 entry 를 안 굳혔다"
     assert str(tmp_path) in seen, "그 위 층도 굳혀야 한다"
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# 33차 P0-1 — durable graph 의 **증거**인 lease 가 잠금 밖이었다
+# ─────────────────────────────────────────────────────────────────────────────
+
+def test_the_lease_object_is_locked_too(tmp_path):
+    """★ 33차 P0-1 — `retain()` 의 순서가 lease 를 잠금 밖에 뒀다.
+
+        graph objects pin → lock_objects(graph) → lease 생성 → lease put/pin
+
+    정확한 lease digest 와 version 은 `lock_objects()` **뒤에야** 존재하므로
+    `retention.objects` 만 보호받고 lease 는 지울 수 있었다. verifier 는
+    lease 를 retention graph 의 일부로 취급하는데, graph 가 durable 하다는
+    **증거만 mutable** 인 모순이다. 32차 canary 도 `objects` 만 공격했다.
+    """
+    run = _make_run(tmp_path)
+    store = _LockingStore(name=str(tmp_path))
+    backend = _lockstore(tmp_path, store)
+    index = tmp_path / "index"
+    res = run_transaction(PLANNED, run, backend, index, _hooks())
+    leg, lease = PLANNED.leg_id, res["retention"]["lease_digest"]
+
+    # lease 의 pin 도 content object 도 잠겨 있어야 한다
+    for key in (backend._provider_key(leg, lease),
+                backend._provider_obj_key(lease)):
+        with pytest.raises(PermissionError):
+            store.delete(key)
+        with pytest.raises(PermissionError):
+            store.put(key, b"overwritten")
+
+    # journal 이 lease version proof 를 들고 있어야 한다 — lease 는 자기
+    # digest 를 담을 수 없으므로 그 증거는 밖에 있어야 한다
+    j = registration(index, leg)
+    assert _is_hex64_str(j["lease_digest"])
+    assert _nonempty(j["lease_version"])
+    assert assert_durable_retention(backend, index, leg)
+
+
+def test_a_forged_lease_version_proof_is_refused(tmp_path):
+    """journal 의 lease version proof 도 provider 와 대조한다."""
+    run = _make_run(tmp_path)
+    backend = _lockstore(tmp_path)
+    index = tmp_path / "index"
+    res = run_transaction(PLANNED, run, backend, index, _hooks())
+    leg = PLANNED.leg_id
+
+    j = registration(index, leg)
+    path = index / "registered" / f"{leg}.json"
+    path.unlink()
+    path.write_bytes(canonical_bytes(dict(j, lease_version="v99999")))
+    assert not is_registered(index, leg, backend)
+
+
+def test_a_reopened_backend_finds_the_same_registration(tmp_path):
+    """★ 33차 P0-1 — `uri` 기본값이 `id(provider)` 였다.
+
+    process-local 객체 주소라 재시작 뒤 값이 달라지고 재사용될 수도 있다.
+    receipt·lease 가 backend URI 를 봉인해 대조하므로 이 기본 계약으로는
+    reopen/recovery locator 가 될 수 없다. provider 가 **안정 식별자**를 준다.
+    """
+    run = _make_run(tmp_path)
+    store = _LockingStore(name=str(tmp_path))
+    backend = _lockstore(tmp_path, store)
+    index = tmp_path / "index"
+    run_transaction(PLANNED, run, backend, index, _hooks())
+
+    # 새 process 를 흉내낸다 — 같은 store 이름, **다른 provider·backend 객체**
+    fresh = _LockingStore(name=store.name)
+    assert fresh is not store and id(fresh) != id(store)
+    reopened = _lockstore(tmp_path, fresh)
+    assert reopened.uri == backend.uri, "재시작 뒤 URI 가 달라졌다"
+    assert reopened.store_id == backend.store_id
+    assert is_registered(index, PLANNED.leg_id, reopened)
+    assert assert_durable_retention(reopened, index, PLANNED.leg_id)
+
+
+def test_a_provider_without_a_stable_identity_cannot_be_used(tmp_path):
+    """안정 식별자를 못 주는 provider 는 durable 을 주장할 수 없다."""
+
+    class _Anon(_LockingStore):
+        def store_uri(self):
+            return None
+
+    backend = _lockstore(tmp_path, _Anon(name=str(tmp_path)))
+    with pytest.raises(PreserveError) as ei:
+        backend.uri
+    assert "식별자" in ei.value.msg

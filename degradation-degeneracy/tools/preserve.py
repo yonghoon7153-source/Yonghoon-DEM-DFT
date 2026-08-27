@@ -589,7 +589,13 @@ class CasBackend:
         raw = canonical_bytes(lease)
         l_obj = self.put_if_absent(raw)["digest"]
         self.pin(leg_id, [l_obj])          # lease 도 graph 의 일부다
-        return dict(lease, lease_digest=l_obj)
+        # ★ 33차 P0-1 — lease 는 **durable graph 의 증거**인데 잠금 밖이었다.
+        #   정확한 lease digest 는 `lock_objects()` 뒤에야 존재하므로 순서상
+        #   빠져 있었다. graph 가 durable 하다는 증거만 mutable 이면 모순이다.
+        #   lease 도 같은 기한까지 잠근다.
+        lv = (self.lock_objects(leg_id, [l_obj], until_s) or {}).get(l_obj)
+        self.lock_content_object(l_obj, until_s)
+        return dict(lease, lease_digest=l_obj, lease_version=lv)
 
     def _existing_lease(self, leg_id: str, objs: list,
                         min_retention_days: int) -> dict | None:
@@ -626,7 +632,8 @@ class CasBackend:
 
     def verify_retention(self, leg_id: str, lease_digest: str,
                          expected: set | None = None,
-                         lease: dict | None = None) -> dict:
+                         lease: dict | None = None,
+                         lease_version: str | None = None) -> dict:
         """lease 가 **이 backend 에서 지금** 유효한가.
 
         읽은 바이트가 아니라 **상태**를 본다 — 그래서 전수 읽기가 끝난 뒤에
@@ -635,7 +642,9 @@ class CasBackend:
         stage = "retention"
         # `lease` 를 주면 그것을 본다 — 회귀가 lease 축만 변이할 수 있게 한다.
         lease = dict(lease) if lease is not None else self.read_lease(leg_id, lease_digest)
+        lease_version = lease_version or lease.pop("lease_version", None)
         lease.pop("lease_digest", None)
+        lease.pop("lease_version", None)
         want = {"schema", "leg_id", "store_id", "backend_uri", "enforcement",
                 "lock_mode", "object_versions",
                 "min_retention_days", "retain_until_utc", "objects", "pin_set_digest"}
@@ -721,10 +730,8 @@ class CasBackend:
                     stage, f"provider 에 잠긴 version 이 없다: {gone[:2]} — "
                            "더 이상 잠겨 있지 않다")
             for dg, st in sorted(live_locks.items()):
-                if st.get("version_id") != want_v[dg]:
-                    raise PreserveError(
-                        stage, f"provider 의 object version 이 lease 와 다르다: "
-                               f"{dg[:16]}")
+                # `describe_locks` 가 version 을 **키로** 조회하므로 dict 가
+                # 돌아온 것 자체가 일치를 뜻한다 — 중복 비교를 두지 않는다.
                 if st.get("mode") != lease["lock_mode"]:
                     raise PreserveError(
                         stage, f"lock mode 가 lease 와 다르다: {st.get('mode')!r} "
@@ -736,6 +743,25 @@ class CasBackend:
                                f"{lease['retain_until_utc']}")
         elif want_v:
             raise PreserveError(stage, "advisory lease 인데 version 이 적혀 있다")
+        # ★ 33차 P0-1 — lease **자신**도 잠겨 있어야 한다. proof 는 journal 이
+        #   들고 있다 (lease 는 자기 digest 를 담을 수 없으므로 밖에 둔다).
+        if live == ENFORCEMENT_OBJECT_LOCK:
+            if not _nonempty_str(lease_version or ""):
+                raise PreserveError(
+                    stage, "lease 자신의 version proof 가 없다 — durable graph 의 "
+                           "증거가 잠금 밖이면 그 증거를 지울 수 있다")
+            st = (self.describe_locks(leg_id, {lease_digest: lease_version})
+                  or {}).get(lease_digest)
+            if not isinstance(st, dict):
+                raise PreserveError(stage, "lease 가 provider 에 잠겨 있지 않다")
+            # ★ `describe_locks` 는 **그 version 을 키로** 조회하므로 dict 가
+            #   돌아온 것 자체가 version 일치를 뜻한다. 여기서 다시 비교하면
+            #   같은 규칙이 두 곳에 생기고, 강한 쪽을 지워도 초록이 된다
+            #   (변이로 확인했다).
+            if st.get("mode") != lease["lock_mode"]:
+                raise PreserveError(stage, "lease 의 lock mode 가 다르다")
+            if str(st.get("retain_until") or "") < lease["retain_until_utc"]:
+                raise PreserveError(stage, "lease 의 retain_until 이 짧다")
         on_disk = self.pinned(leg_id)
         want_disk = set(objs) | {lease_digest}
         if on_disk != want_disk:
@@ -743,7 +769,7 @@ class CasBackend:
                 stage, f"pin 상태가 lease 와 다르다 — 없음 "
                        f"{sorted(want_disk - on_disk)[:2]} · 여분 "
                        f"{sorted(on_disk - want_disk)[:2]}")
-        return dict(lease, lease_digest=lease_digest)
+        return dict(lease, lease_digest=lease_digest, lease_version=lease_version)
 
     # ── object-lock adapter 가 채워야 하는 자리 (★ 31차 P0-1) ───────────
     # local 은 아무 것도 잠그지 않으므로 빈 값을 돌려준다. 강제하는 backend 는
@@ -756,6 +782,10 @@ class CasBackend:
 
     def lock_objects(self, leg_id: str, digests, until: str) -> dict:
         return {}
+
+    def lock_content_object(self, dg: str, until: str) -> None:
+        """CAS object 쪽도 잠근다 — pin 만 잠그면 원본이 지워질 수 있다."""
+        return None
 
     def describe_locks(self, leg_id: str, versions: dict) -> dict:
         """version 별 **현재** lock 상태를 provider 에 묻는다.
@@ -835,12 +865,31 @@ class ObjectLockBackend(CasBackend):
 
     @property
     def uri(self) -> str:
-        """provider 가 소유하므로 local 경로가 아니라 provider 를 이름한다."""
-        return f"objectlock+cas://{type(self.provider).__name__}/{id(self.provider):x}"
+        """provider 가 주는 **안정 식별자**. receipt·lease 가 이것을 봉인한다.
+
+        ★ 33차 P0-1 — 초판은 `id(provider)` 를 썼다. process-local 객체
+          주소라 재시작 뒤 달라지고 재사용될 수도 있다. receipt 가 URI 를
+          봉인해 대조하므로 그 기본값으로는 reopen locator 가 될 수 없었다.
+          안정 식별자를 못 주는 provider 는 durable 을 주장할 수 없다.
+        """
+        u = getattr(self.provider, "store_uri", None)
+        u = u() if callable(u) else None
+        if not _nonempty_str(u or ""):
+            raise PreserveError(
+                "capability",
+                "provider 가 안정 식별자(store_uri)를 주지 않는다 — 재시작 뒤 "
+                "같은 store 를 다시 열 수 없으면 durable 을 주장할 수 없다")
+        return f"objectlock+cas://{u}"
 
     # ── capability ──────────────────────────────────────────────────────
     def query_object_lock(self) -> dict | None:
         return self.provider.describe() if self.provider is not None else None
+
+    def lock_content_object(self, dg: str, until: str) -> None:
+        """CAS object 쪽도 잠근다 — pin 만 잠그면 원본을 지울 수 있다."""
+        key = self._provider_obj_key(dg)
+        vid = self.provider.put(key, self.read_back(dg))
+        self.provider.lock(key, vid, until)
 
     def probe_enforcement(self) -> str:
         st = self.query_object_lock()
@@ -1350,6 +1399,8 @@ def registration(index_path: Path, leg_id: str) -> dict | None:
         return None
     if not _is_hex64(rec.get("lease_digest") or ""):
         return None
+    if not isinstance(rec.get("lease_version"), str):
+        return None
     # ★ 30차 P1-1 — 초판은 `isinstance(list)` 였다. 정상 목록의 digest 를 한 번
     #   더 넣은 duplicate journal 이 `set(...) == expected` 를 통과했다.
     if not _is_unique_hex64_list(rec.get("objects")):
@@ -1402,7 +1453,8 @@ def verified_retention(backend: CasBackend, index_path: Path,
     """
     verify_registered_graph(backend, index_path, leg_id)
     j = registration(index_path, leg_id)
-    return backend.verify_retention(leg_id, j["lease_digest"])
+    return backend.verify_retention(leg_id, j["lease_digest"],
+                                    lease_version=j["lease_version"])
 
 
 def assert_durable_retention(backend: CasBackend, index_path: Path,
@@ -1432,16 +1484,22 @@ def assert_durable_retention(backend: CasBackend, index_path: Path,
 
 #: 등록 journal 의 닫힌 schema (★ 30차 P1-1)
 _JOURNAL_KEYS = frozenset({"leg_id", "receipt_object", "pin_set_digest",
-                           "objects", "lease_digest"})
+                           "objects", "lease_digest", "lease_version"})
 
 
 def _register(index_path: Path, leg_id: str, receipt_object: str,
-              pin_digest: str, objects: list, lease_digest: str) -> None:
-    """durable 상태 변경. 기존 journal 이 다르면 **거부**한다."""
+              pin_digest: str, objects: list, lease_digest: str,
+              lease_version: str = "") -> None:
+    """durable 상태 변경. 기존 journal 이 다르면 **거부**한다.
+
+    ★ 33차 P0-1 — `lease_version` 은 lease 자신의 lock proof 다. lease 는
+      자기 digest 를 담을 수 없으므로 그 증거가 밖에 있어야 한다.
+    """
     data = canonical_bytes({"leg_id": leg_id, "receipt_object": receipt_object,
                             "pin_set_digest": pin_digest,
                             "objects": sorted(set(objects)),
-                            "lease_digest": lease_digest})
+                            "lease_digest": lease_digest,
+                            "lease_version": lease_version})
     path = _reg_file(index_path, leg_id)
     if _exclusive_write(path, data):
         return
@@ -1977,7 +2035,8 @@ def verify_registered_graph(backend: CasBackend, index_path: Path,
 
     # 2. **retention lease 를 먼저** 본다. 성공의 근거는 읽은 바이트가 아니라
     #    상태다 (30차 P0-1).
-    lease = backend.verify_retention(leg_id, j["lease_digest"])
+    lease = backend.verify_retention(leg_id, j["lease_digest"],
+                                     lease_version=j["lease_version"])
 
     # 3. receipt·manifest 를 **lease 가 담보한 pin 에서** 읽는다
     try:
@@ -2027,7 +2086,8 @@ def verify_registered_graph(backend: CasBackend, index_path: Path,
     #    backend 에서 member pin 이 사라진 채 성공했다. 마지막 검사가 바이트가
     #    아니라 상태여야 그 창이 닫힌다. (그 뒤의 창은 local 에서 닫을 수
     #    없다 — 그래서 이 backend 는 `advisory_local` 이라고 신고한다.)
-    backend.verify_retention(leg_id, j["lease_digest"], expected=expected)
+    backend.verify_retention(leg_id, j["lease_digest"], expected=expected,
+                             lease_version=j["lease_version"])
     return rec
 
 
@@ -2053,7 +2113,8 @@ def verify_graph_before_registration(backend: CasBackend, index_path: Path,
     expected = reachable_objects(dict(rec, receipt_object=e["receipt_object"]), man)
     if set(lease["objects"]) != expected:
         raise PreserveError(stage, "lease 가 담보한 graph 가 유도한 graph 와 다르다")
-    backend.verify_retention(leg_id, lease["lease_digest"], expected=expected)
+    backend.verify_retention(leg_id, lease["lease_digest"], expected=expected,
+                             lease_version=lease.get("lease_version"))
     return rec
 
 
@@ -2270,7 +2331,8 @@ def _commit_registration(backend: CasBackend, index_path: Path,
     verify_graph_before_registration(backend, index_path, leg_id, lease)
 
     _register(index_path, leg_id, e["receipt_object"],
-              pin_set_digest(leg_id, objs), sorted(objs), lease["lease_digest"])
+              pin_set_digest(leg_id, objs), sorted(objs), lease["lease_digest"],
+              lease.get("lease_version") or "")
 
     # ★ 29차 P0-2 / 30차 P0-1 — commit 뒤에 **다시** 본다. 그 검증의 마지막
     #   단계는 바이트 읽기가 아니라 lease 상태 확인이다.

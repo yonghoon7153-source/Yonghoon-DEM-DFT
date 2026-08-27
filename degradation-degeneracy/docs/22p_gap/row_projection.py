@@ -664,11 +664,11 @@ def build(leg: str, out: Path | None = None) -> dict:
     # YAML 을 **마지막에** 옮긴다 (manifest-last). YAML 이 나머지 둘의 digest 를
     # 들고 있으므로, 중간에 죽으면 옛 YAML 이 옛 payload 를 계속 가리켜
     # 세대가 섞이지 않는다.
-    _files = sorted(_stage.iterdir(),
-                    key=lambda f: (f.name.endswith(".projection.yaml"), f.name))
-    for f in _files:
-        os.replace(f, _out / f.name)
-    _stage.rmdir()
+    # ★ 33차 #9 — 초판은 세 파일을 하나씩 `os.replace` 했다. manifest-last 로
+    #   섞임을 줄였을 뿐 set atomicity 가 아니어서, 첫 파일 뒤 중단하면 reader
+    #   가 두 세대를 함께 봤다. cohort 전체의 immutable generation 을 만들고
+    #   **pointer 하나**를 원자적으로 옮긴다.
+    promote_cohort_generation(_stage, _out, leg)
 
     return meta
 
@@ -767,6 +767,7 @@ def promote_generation(stage: Path, out: Path) -> dict:
 
     rec = {"schema": CURRENT_SCHEMA, "generation_id": gid, "files": files}
     _publish_pointer(out, rec)
+    _materialize(out, rec)      # 호환 사본 — 권위는 CURRENT 다
     return rec
 
 
@@ -794,6 +795,76 @@ def read_current(out: Path) -> dict:
     if got != rec["files"]:
         raise SystemExit(f"✗ generation {gid[:16]} 의 실물이 CURRENT 와 다르다")
     return rec
+
+
+def _materialize(out: Path, rec: dict) -> None:
+    """CURRENT 의 generation 을 fixed name 으로 **파생**시킨다 (호환 reader 용).
+
+    권위는 `CURRENT` 다. 이 사본은 편의이며 `check_materialized()` 가
+    CURRENT 와 갈리는지 본다.
+    """
+    gdir = out / "gen" / rec["generation_id"]
+    for name in sorted(rec["files"]):
+        dst = out / name
+        src = gdir / name
+        if dst.exists() and _sha(dst.read_bytes()) == rec["files"][name]:
+            continue
+        tmp = out / f".{name}.{uuid.uuid4().hex}.tmp"
+        tmp.write_bytes(src.read_bytes())
+        os.replace(tmp, dst)
+    _fsync_dir(out)
+
+
+def check_materialized(out: Path) -> dict:
+    """fixed-name 사본이 CURRENT 와 같은지. 갈리면 **오류**다."""
+    rec = read_current(out)
+    for name, want in sorted(rec["files"].items()):
+        q = Path(out) / name
+        if not q.is_file() or _sha(q.read_bytes()) != want:
+            raise SystemExit(
+                f"✗ {name} 사본이 CURRENT 와 다르다 — 권위는 CURRENT 다")
+    return rec
+
+
+def cohort_bytes(out: Path, name: str) -> bytes:
+    """**CURRENT 를 통해서만** 읽는다. fixed path 는 authority 가 아니다."""
+    rec = read_current(out)
+    if name not in rec["files"]:
+        raise SystemExit(f"✗ CURRENT 가 {name} 을 담고 있지 않다")
+    data = (Path(out) / "gen" / rec["generation_id"] / name).read_bytes()
+    if _sha(data) != rec["files"][name]:
+        raise SystemExit(f"✗ {name} 의 바이트가 CURRENT 와 다르다")
+    return data
+
+
+def _leg_of(name: str) -> str:
+    return name.split(".", 1)[0]
+
+
+def promote_cohort_generation(stage: Path, out: Path, leg: str) -> dict:
+    """한 leg 를 갱신하되 **cohort 전체**의 새 generation 을 만든다.
+
+    ★ 33차 #9 — 32차판은 `promote_generation(stage, out)` 을 그대로 쓰면
+      cohort 가 **한 leg 로 줄어드는** 구조였다 (stage 가 한 leg 만 담으므로).
+      요구는 immutable **cohort** generation 이다. 현재 generation 을 base 로
+      읽어 그 leg 의 파일만 갈아 끼운 **완전한 snapshot** 을 만든다.
+    """
+    stage, out = Path(stage), Path(out)
+    base: dict = {}
+    gdir = None
+    if (out / "CURRENT").is_file():
+        cur = read_current(out)
+        base = dict(cur["files"])
+        gdir = out / "gen" / cur["generation_id"]
+
+    fresh = {p.name for p in stage.iterdir() if p.is_file()}
+    keep = {n: h for n, h in base.items()
+            if _leg_of(n) != leg and n not in fresh}
+
+    # base 에서 넘길 파일을 staging 에 복사한다 — generation 은 self-contained
+    for name in sorted(keep):
+        shutil.copyfile(gdir / name, stage / name)
+    return promote_generation(stage, out)
 
 
 def _frozen_cohort_dirs() -> dict[str, Path]:

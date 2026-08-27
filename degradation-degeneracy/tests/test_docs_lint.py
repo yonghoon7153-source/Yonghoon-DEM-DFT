@@ -20,6 +20,7 @@ import hashlib
 import json
 import os
 import re
+import shutil
 import subprocess
 import sys
 from pathlib import Path
@@ -3474,16 +3475,21 @@ def test_promotion_happens_only_after_the_recomputation_verdict():
 
     초판은 semantic verdict 가 false 여도 세 파일을 먼저 승격하고 CLI 가 나중에
     exit 1 을 냈다. 검증 실패는 **승격 자체가 없어야** 한다.
+
+    ★ 33차 #9 — 초판은 여기서 **manifest-last** 도 함께 요구했다 (YAML 을
+    마지막에 옮겨 세대 섞임을 줄이는 완화책). 승격이 cohort 전체의 immutable
+    generation + 단일 pointer 로 바뀌면서 그 요구는 **필요 없어졌다** —
+    파일별 순서 자체가 사라졌고 전환은 한 번이다. 완화책을 계속 요구하면
+    구조가 바뀐 뒤에도 옛 모양을 강제하게 된다.
     """
     src = (_REPO / "docs" / "22p_gap" / "row_projection.py").read_text(encoding="utf-8")
     i = src.index("_v = meta.get(\"재계산_검증\")")
-    j = src.index("os.replace(f, _out / f.name)")
+    j = src.index("promote_cohort_generation(_stage, _out, leg)")
     assert i < j, "승격이 verdict 검사보다 먼저 온다"
     assert "shutil.rmtree(_stage" in src[i:j], (
         "verdict 가 실패해도 staging 을 버리지 않는다")
-    # manifest-last — YAML 이 마지막에 옮겨져야 세대가 섞이지 않는다
-    assert "endswith(\".projection.yaml\")" in src[i:j], (
-        "YAML 을 마지막에 옮기지 않는다 (manifest-last)")
+    # 파일별 승격이 남아 있으면 원자성이 깨진다
+    assert "os.replace(f, _out" not in src, "옛 파일별 승격이 남아 있다"
 
 
 def test_both_audit_paths_share_one_semantic_view():
@@ -3675,39 +3681,73 @@ def test_every_generation_entry_names_the_legs_that_attained_it():
 _PRESERVE_INDEX = _REPO / "docs" / "22p_gap" / "preserve_index"
 
 
+#: 보존 backend 를 어디서 여는가 — 배선의 **정본**. 아직 없다.
+_PRESERVE_BACKEND = _REPO / "docs" / "22p_gap" / "preserve_backend.yaml"
+
+
+def _open_canonical_backend():
+    """배선 파일이 이름하는 backend 를 연다. 없으면 `None`.
+
+    ★ 33차 P2 — 32차판 live gate 는 `_registered_legs(_PRESERVE_INDEX)` 로
+      **backend 없이** 불렀고, helper 는 backend 가 없으면 즉시 `{}` 를
+      돌려줬다. 그래서 실제 index 에 잘못 결속된 registration 이 생겨도 gate
+      는 "등록 leg 0개" 를 보고 통과했다. helper 를 고쳐 놓고 production
+      caller 를 그 경로에 연결하지 않은 것이다.
+    """
+    import yaml
+
+    import tools.preserve as P
+
+    if not _PRESERVE_BACKEND.is_file():
+        return None
+    cfg = yaml.safe_load(_PRESERVE_BACKEND.read_text(encoding="utf-8")) or {}
+    root = cfg.get("root")
+    if not root:
+        raise AssertionError(f"{_PRESERVE_BACKEND.name} 에 root 가 없다")
+    return P.CasBackend(root=(_REPO / root))
+
+
 def _registered_legs(index_path, backend=None) -> dict[str, dict]:
     """**검증된 receipt** 를 backend 에서 회수해 돌려준다.
 
     ★ 31차 P2 — 30차판은 가변 원장의 optional `evidence.registered_receipt`
       가 있는 다리만 registered 로 셌다.
     ★ 32차 P2 — 31차판은 index entry 와 journal 의 `receipt_object` **문자열**
-      이 같으면 등록으로 셌다. CAS·lease·pin graph·receipt bytes 를 하나도
-      읽지 않았고, generation 결속도 receipt 가 아니라 index 의 사본
-      (`entry["planned_envelope"]`) 을 읽었다. 리뷰의 반례:
+      이 같으면 등록으로 셌다. index 의 사본은 대조 대상일 수는 있어도
+      **권위가 될 수 없다.**
+    ★ 33차 P2 — 32차판은 검증 실패를 `continue` 로 **숨겼다**. journal·index
+      는 있는데 CAS graph 나 lease 가 깨진 **가장 중요한 상태**가 "등록되지
+      않은 leg" 로 사라졌다. 이제 그 실패를 올린다.
 
-          index.planned_envelope = 원장과 일치
-          journal.receipt_object = index.receipt_object
-          actual receipt        = 없음 또는 다른 planned_envelope
-          ⇒ 통과
-
-      index 의 사본은 대조 대상일 수는 있어도 **권위가 될 수 없다.**
-      `verify_registered_graph()` 가 돌려준 receipt 를 쓴다. backend 없이는
-      "등록됨" 을 판정하지 않는다 — 31차에 API 에서 가른 그 구분이다.
+    돌려주는 것: `(verified receipts, 오류 목록)`.
     """
     from pathlib import Path as _P
 
     import tools.preserve as P
 
     index_path = _P(index_path)
-    if backend is None or not (index_path / "legs").is_dir():
-        return {}
-    out = {}
-    for leg in P.index_entries(index_path):
+    if not (index_path / "legs").is_dir():
+        return {}, []
+    legs = list(P.index_entries(index_path))
+    if backend is None:
+        # journal 이 있는데 backend 를 못 열면 **판정 불가**다 — 조용히 빈
+        # 집합을 돌려주면 gate 가 공허하게 통과한다.
+        pending = [l for l in legs if P.has_registration_journal(index_path, l)]
+        if pending:
+            return {}, [f"등록 journal 이 있는데 backend 를 열 수 없다: "
+                        f"{sorted(pending)[:3]} — `{_PRESERVE_BACKEND.name}` 를 "
+                        "두거나 배선을 고쳐라"]
+        return {}, []
+    out, bad = {}, []
+    for leg in legs:
+        if not P.has_registration_journal(index_path, leg):
+            continue
         try:
             out[leg] = P.verify_registered_graph(backend, index_path, leg)
-        except P.PreserveError:
-            continue                     # 등록이 성립하지 않는다
-    return out
+        except P.PreserveError as ex:
+            bad.append(f"{leg}: 등록 journal 이 있는데 graph 검증이 실패했다 "
+                       f"({ex.stage}: {ex.msg})")
+    return out, bad
 
 
 def _generation_binding_problems(registered: dict, reg: dict,
@@ -3756,9 +3796,14 @@ def test_a_registered_leg_binds_its_generation_to_the_receipt():
       비어 있지만, **이유가 다르다**: 원장이 고른 것이 아니라 실물이 없는
       것이다. 규칙 자체가 무는지는 아래 합성 index 시험이 보인다.
     """
-    registered = _registered_legs(_PRESERVE_INDEX)
-    bad = _generation_binding_problems(registered, _leg_preservation(),
-                                       _claim_status())
+    import tools.preserve as P
+
+    backend = _open_canonical_backend()
+    registered, unreadable = _registered_legs(_PRESERVE_INDEX, backend)
+    entries = (P.index_entries(_PRESERVE_INDEX)
+               if (_PRESERVE_INDEX / "legs").is_dir() else {})
+    bad = unreadable + _generation_binding_problems(
+        registered, _leg_preservation(), _claim_status(), entries=entries)
     assert not bad, "등록 세대 결속이 어긋난다:\n  " + "\n  ".join(bad)
     assert registered == {}, (
         f"보존 index 가 생겼다 ({sorted(registered)}) — 묶음 9 배선과 "
@@ -3826,24 +3871,31 @@ def test_the_registry_reader_recovers_the_actual_receipt(tmp_path):
 
     index = tmp_path / "index"
     backend = P.CasBackend(root=tmp_path / "cas")
-    assert _registered_legs(index, backend) == {}          # 없으면 비어 있다
+    assert _registered_legs(index, backend) == ({}, [])   # 없으면 비어 있다
 
     run = TP._make_run(tmp_path)
     P.run_transaction(TP.PLANNED, run, backend, index, TP._hooks())
 
-    got = _registered_legs(index, backend)
+    got, bad = _registered_legs(index, backend)
+    assert bad == []
     assert set(got) == {TP.PLANNED.leg_id}
     env = got[TP.PLANNED.leg_id]["planned_envelope"]
     assert env["protocol_generation"] == TP.PLANNED.protocol_generation
     assert env["source_digest"] == TP.PLANNED.source_digest
 
-    # backend 를 안 주면 판정하지 않는다 (31차에 API 에서 가른 구분)
-    assert _registered_legs(index) == {}
+    # ★ 33차 P2 — backend 를 못 열면 **조용히 빈 집합** 이 아니라 오류다.
+    #   journal 이 있는데 판정할 수 없다는 사실 자체가 gate 실패여야 한다.
+    empty, why = _registered_legs(index)
+    assert empty == {} and why, "backend 없이 빈 집합을 조용히 돌려줬다"
+    assert "backend 를 열 수 없다" in why[0]
 
-    # graph 를 잃으면 등록이 아니다 — journal 문자열만으로는 못 센다
+    # ★ 33차 P2 — graph 를 잃으면 "등록되지 않은 leg" 로 **사라지면 안 된다**.
+    #   32차판은 `continue` 로 숨겼다 — 가장 중요한 상태가 조용해졌다.
     import shutil as _sh
     _sh.rmtree(backend.root / "pins")
-    assert _registered_legs(index, backend) == {}
+    got2, bad2 = _registered_legs(index, backend)
+    assert got2 == {}
+    assert bad2 and "graph 검증이 실패했다" in bad2[0], bad2
 
 
 def test_the_index_copy_is_compared_against_the_receipt(tmp_path):
@@ -4029,3 +4081,139 @@ def test_a_crash_between_generation_and_pointer_leaves_no_mixed_state(tmp_path,
         "pointer 가 안 옮겨졌는데 읽는 쪽이 새 generation 을 본다")
     assert rp.read_current(out)["files"]["a.projection.yaml"] == \
         hashlib.sha256(b"meta: 1\n").hexdigest()
+
+
+def test_the_live_gate_actually_opens_a_backend_when_an_index_exists(tmp_path,
+                                                                    monkeypatch):
+    """★ 33차 P2 — live gate 가 실제로 backend 를 열어 판정하는지.
+
+    32차판은 `_registered_legs(_PRESERVE_INDEX)` 를 backend 없이 불러
+    **언제나 `{}`** 를 검사했다. helper 를 고쳐도 caller 가 그 경로에 닿지
+    않으면 아무 것도 닫히지 않는다. 배선을 합성 index 로 물린다.
+    """
+    import sys as _sys
+
+    import tools.preserve as P
+
+    _sys.path.insert(0, str(_REPO / "tests"))
+    import test_preserve as TP
+
+    index = tmp_path / "index"
+    backend = P.CasBackend(root=tmp_path / "cas")
+    run = TP._make_run(tmp_path)
+    P.run_transaction(TP.PLANNED, run, backend, index, TP._hooks())
+
+    mod = _sys.modules[__name__]
+    monkeypatch.setattr(mod, "_PRESERVE_INDEX", index)
+
+    # 1. 배선이 없으면 — journal 이 있는데 판정 불가 → 실패해야 한다
+    monkeypatch.setattr(mod, "_open_canonical_backend", lambda: None)
+    with pytest.raises(AssertionError) as ei:
+        mod.test_a_registered_leg_binds_its_generation_to_the_receipt()
+    assert "backend 를 열 수 없다" in str(ei.value)
+
+    # 2. 배선이 있으면 — 등록이 발견되고, 원장에 없는 다리라 결속이 실패한다
+    monkeypatch.setattr(mod, "_open_canonical_backend", lambda: backend)
+    with pytest.raises(AssertionError) as ei:
+        mod.test_a_registered_leg_binds_its_generation_to_the_receipt()
+    assert "원장에 없다" in str(ei.value), str(ei.value)
+
+    # 3. graph 를 잃으면 조용해지지 않는다
+    shutil.rmtree(backend.root / "pins")
+    with pytest.raises(AssertionError) as ei:
+        mod.test_a_registered_leg_binds_its_generation_to_the_receipt()
+    assert "graph 검증이 실패했다" in str(ei.value)
+
+
+def test_a_cohort_generation_keeps_every_leg_and_switches_once(tmp_path):
+    """★ 33차 #9 — 한 leg stage 를 그대로 승격하면 cohort 가 **줄어든다**.
+
+    요구는 immutable **cohort** generation 이지 leg generation 이 아니다.
+    G0 에 두 leg 를 두고 한 leg 만 갱신해 G1 을 만든다 — G1 은 두 leg 를 모두
+    담아야 하고, pointer 는 **한 번** 바뀌어야 한다.
+    """
+    rp = _rp()
+    out = tmp_path / "cohort"
+
+    g0 = rp.promote_cohort_generation(
+        _stage(tmp_path, **{"a.projection.yaml": b"A0\n"}), out, "a")
+    g0b = rp.promote_cohort_generation(
+        _stage(tmp_path, **{"b.projection.yaml": b"B0\n"}), out, "b")
+    assert set(g0b["files"]) == {"a.projection.yaml", "b.projection.yaml"}
+    assert g0b["generation_id"] != g0["generation_id"]
+
+    g1 = rp.promote_cohort_generation(
+        _stage(tmp_path, **{"a.projection.yaml": b"A1\n"}), out, "a")
+    assert set(g1["files"]) == {"a.projection.yaml", "b.projection.yaml"}, (
+        "한 leg 를 갱신했더니 cohort 가 줄었다")
+    assert g1["files"]["b.projection.yaml"] == g0b["files"]["b.projection.yaml"], (
+        "손대지 않은 leg 가 바뀌었다")
+    assert rp.read_current(out)["generation_id"] == g1["generation_id"]
+
+    # 옛 generation 은 그대로 남아 있다 (immutable)
+    assert (out / "gen" / g0b["generation_id"] / "a.projection.yaml"
+            ).read_bytes() == b"A0\n"
+
+
+def test_the_production_writer_and_reader_go_through_current(tmp_path):
+    """★ 33차 #9 — primitive 가 **배선되지 않으면** 아무 것도 닫히지 않는다.
+
+    32차판 `build()` 는 여전히 세 파일을 하나씩 `os.replace` 했고 reader 도
+    fixed path 를 읽었다. `CURRENT` 단위시험이 production crash semantics 를
+    증명하지 않는다는 지적 그대로다.
+    """
+    import inspect
+
+    rp = _rp()
+    src = inspect.getsource(rp.build)
+    assert "promote_cohort_generation" in src, (
+        "production writer 가 generation 승격을 쓰지 않는다")
+    assert "os.replace(f, _out" not in src, "옛 파일별 승격이 남아 있다"
+
+    # reader authority
+    out = tmp_path / "cohort"
+    rec = rp.promote_cohort_generation(
+        _stage(tmp_path, **{"a.projection.yaml": b"A0\n"}), out, "a")
+    assert rp.cohort_bytes(out, "a.projection.yaml") == b"A0\n"
+
+    # CURRENT 가 가리키지 않는 이름은 못 읽는다 — fixed path 가 authority 가
+    # 아니라는 뜻이다
+    (out / "ghost.projection.yaml").write_bytes(b"GHOST\n")
+    with pytest.raises(SystemExit):
+        rp.cohort_bytes(out, "ghost.projection.yaml")
+
+    # 호환 사본이 CURRENT 와 갈리면 그것도 오류다
+    (out / "a.projection.yaml").write_bytes(b"TAMPERED\n")
+    with pytest.raises(SystemExit) as ei:
+        rp.check_materialized(out)
+    assert "CURRENT" in str(ei.value)
+
+
+def test_the_active_cohort_is_published_through_a_single_current_pointer():
+    """★ 33차 #9 — 실제 active cohort 가 CURRENT 를 통해 게시되는지.
+
+    primitive 를 만들어 두고 배선하지 않으면 아무 것도 닫히지 않는다는 지적
+    그대로다. 실물 cohort 를 본다.
+
+    frozen cohort(g1)는 **예외**다 — 다시 만들 수 없으므로 옛 fixed-name
+    layout 그대로 얼려 둔다. 그 사실을 여기 고정한다 (조용한 예외가 아니라).
+    """
+    rp = _rp()
+    active = [c for c in _cohorts() if c.get("status") == "active"]
+    frozen = [c for c in _cohorts() if c.get("status") == "frozen"]
+    assert len(active) == 1
+
+    d = _REPO / active[0]["dir"]
+    rec = rp.check_materialized(d)          # CURRENT ↔ fixed-name 사본 대조
+    legs = sorted({n.split(".", 1)[0] for n in rec["files"]})
+    assert legs == sorted(active[0]["legs"]), (
+        f"CURRENT 가 담은 다리 {legs} 가 원장의 cohort 구성과 다르다")
+
+    # 모든 leg 의 세 파일이 **한 generation** 안에 있다
+    for leg in legs:
+        for suffix in (".projection.csv.gz", ".projection.yaml", ".restarts.csv.gz"):
+            assert leg + suffix in rec["files"], f"{leg}{suffix} 가 빠졌다"
+
+    for c in frozen:
+        assert not (_REPO / c["dir"] / "CURRENT").exists(), (
+            f"{c['cohort_id']} 는 frozen 이다 — 새 layout 으로 바꾸지 않는다")
