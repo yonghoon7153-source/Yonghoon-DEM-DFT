@@ -20,18 +20,31 @@ set +H
 #   인자 없이 돌리면 매번 "궤적 0개" 가짜 경보가 뜨고, 철회된 Ea 0.207 이 화면에 남았다.
 #   경보가 늘 뜨면 사람은 경보를 무시하게 된다 — 그게 F9 경보를 무력화한다.
 #   기본을 **현행 계열**로 바꾸고, 은퇴 계열을 보면 그렇다고 말한다.
-R="${1:-/data/work/runs/highT_reseed_traj}"
-TOTAL_PS="${2:-}"                    # equilib+prod [ps]. 비우면 md.log 진행률을 ps 로만 표시
+# ── 인자 파싱 ────────────────────────────────────────────────────────────────
+# ⭐ 2026-08-27 확장 — **루트를 여러 개** 받는다. 같은 머신에서 두 런을 동시에 볼 때
+#   이 스크립트를 두 번 부르면 PID 머리와 GPU 꼬리가 **두 번** 찍혀서, 정작 봐야 할
+#   런 표가 잡음에 묻힌다 (pgrep·nvidia-smi 는 루트와 무관한 **전역** 정보다).
+#   이제 전역 블록은 한 번만 찍고 런 표만 루트별로 반복한다.
+#
+#   레거시 형식 그대로 동작한다:  watch_b2o3_md.sh <root> <total_ps>
+#   새 형식 (루트마다 ps 를 따로):  watch_b2o3_md.sh <root1>:<ps1> <root2>:<ps2> ...
+#   ps 를 생략하면 그 루트는 진행률을 ps 로만 표시한다.
+declare -a ROOTS PSS
+if [ "$#" -eq 2 ] && [ -n "$2" ] && [ -z "${2//[0-9]/}" ]; then
+  ROOTS=("$1"); PSS=("$2")                       # ← 레거시: 두 번째 인자가 숫자면 total_ps
+elif [ "$#" -eq 0 ]; then
+  ROOTS=("/data/work/runs/highT_reseed_traj"); PSS=("")
+else
+  for a in "$@"; do
+    case "$a" in
+      *:*) ROOTS+=("${a%:*}"); PSS+=("${a##*:}") ;;
+      *)   ROOTS+=("$a");      PSS+=("") ;;
+    esac
+  done
+fi
 
-echo "════ $(date '+%m-%d %H:%M:%S')  UMA-MD  ($R) ════"
-case "$R" in
-  */b2o3_md*|*b2o3_full*)
-    echo "  ⛔ **은퇴한 legacy 계열이다** (single-seed, --save_traj 이전)."
-    echo "     여기 Ea·D 는 인용 불가고 '궤적 0개' 경보는 **가짜**다 —"
-    echo "     그 결함은 이미 기록돼 있다(db/properties/b2o3_md_arrhenius.json)."
-    echo "     현행: /data/work/runs/highT_reseed_traj · arrhenius_6pt_traj" ;;
-esac
-
+# ── 전역 (루트와 무관) — 한 번만 ─────────────────────────────────────────────
+echo "════ $(date '+%m-%d %H:%M:%S')  UMA-MD ════"
 if P=$(pgrep -f disorder_ensemble_diffusion.py); then
   for p in $P; do
     lbl=$(tr '\0' ' ' < /proc/$p/cmdline 2>/dev/null | grep -o -- '--out_root [^ ]*' | awk '{print $2}')
@@ -39,6 +52,26 @@ if P=$(pgrep -f disorder_ensemble_diffusion.py); then
   done
 else
   echo "⛔ 실행 중 MD 없음 (끝났거나 죽음)"
+fi
+
+G_DONE=0; G_RUNNING=0; G_STALLED=0; G_TRAJ=0
+for _i in "${!ROOTS[@]}"; do
+R="${ROOTS[$_i]}"
+TOTAL_PS="${PSS[$_i]}"               # equilib+prod [ps]. 비우면 md.log 진행률을 ps 로만 표시
+
+echo
+echo "──── $R ────"
+case "$R" in
+  */b2o3_md*|*b2o3_full*)
+    echo "  ⛔ **은퇴한 legacy 계열이다** (single-seed, --save_traj 이전)."
+    echo "     여기 Ea·D 는 인용 불가고 '궤적 0개' 경보는 **가짜**다 —"
+    echo "     그 결함은 이미 기록돼 있다(db/properties/b2o3_md_arrhenius.json)."
+    echo "     현행: /data/work/runs/highT_reseed_traj · arrhenius_6pt_traj" ;;
+esac
+if [ ! -d "$R" ]; then
+  # ⛔ 없는 루트를 조용히 '완료 0 · 진행 0' 으로 찍으면 **안 걸린 런**과 구분이 안 된다.
+  echo "  ⛔ 이 경로가 없다 — 런이 안 걸렸거나 경로가 틀렸다."
+  continue
 fi
 
 # ── 살아있는 MD 의 out_root 수집 ─────────────────────────────────────────────
@@ -121,5 +154,16 @@ for f in "$R"/ensemble_results.json "$R"/*/ensemble_results.json; do
   grep -a -A8 '"headline"' "$f" 2>/dev/null | head -10 | sed 's/^/  /'
 done
 
+G_DONE=$((G_DONE+DONE)); G_RUNNING=$((G_RUNNING+RUNNING))
+G_STALLED=$((G_STALLED+STALLED)); G_TRAJ=$((G_TRAJ+TRAJ))
+done   # ← 루트 루프 끝
+
+if [ "${#ROOTS[@]}" -gt 1 ]; then
+  echo
+  echo "── 전체 합계 (${#ROOTS[@]} 루트) ──"
+  echo "  완료 $G_DONE · 진행 $G_RUNNING · 중단 $G_STALLED · 궤적 $G_TRAJ"
+fi
+
+echo
 echo "── GPU ──"
 nvidia-smi --query-gpu=utilization.gpu,memory.used,memory.total --format=csv,noheader 2>/dev/null | sed 's/^/  /'
