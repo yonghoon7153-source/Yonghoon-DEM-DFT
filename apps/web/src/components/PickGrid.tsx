@@ -27,6 +27,14 @@ export interface PickItem {
   note?: string
   /** 켜졌을 때 앞에 찍는 점.  그래프의 그 곡선 색과 같아야 뜻이 있다. */
   color?: string
+  /** 이 항목이 **이미 다 된 것**인가 (EIS 라면 fitting 이 있는 것).
+   *
+   *  이름 앞에 체크를, 아래 회색 줄 앞에 무엇이 됐는지를 적는다.  고르기
+   *  전에 알아야 하는 것이라 여기 있다 — 골라 놓고 그림에서 "이건 곡선이
+   *  없네" 를 발견하면 다시 고르러 내려와야 한다. */
+  done?: boolean
+  /** 됐을 때 회색 줄 앞에 적을 말 (`fitting 완료`).  `done` 없이는 안 쓴다. */
+  doneNote?: string
 }
 
 export function PickGrid({
@@ -67,14 +75,12 @@ export function PickGrid({
   const box = useRef<HTMLDivElement>(null)
   const toggle = (id: number) => {
     if (picked.includes(id)) {
-      keepInPlace(box.current)
       onChange(picked.filter((value) => value !== id))
       return
     }
     // 상한에서는 **켜는 것만** 막는다.  끄는 것까지 막으면 자리를 비울 수가
     // 없어서, 다른 것을 보려면 화면을 새로 고치는 수밖에 없다.
     if (full) return
-    keepInPlace(box.current)
     onChange([...picked, id])
   }
 
@@ -149,10 +155,23 @@ export function PickGrid({
                           style={{ background: on ? item.color : 'var(--line-strong)' }}
                         />
                       ) : null}
+                      {/* 다 된 것은 이름 앞에 체크.  색이 아니라 글자인 이유는
+                          정적 캡처와 색맹에서 색만으로는 안 보이기 때문이다. */}
+                      {item.done ? (
+                        <span className="done-mark" aria-hidden>✓</span>
+                      ) : null}
                       {item.name}
                     </span>
-                    {item.note ? (
+                    {item.note || (item.done && item.doneNote) ? (
                       <span className="tiny faint truncate" style={{ display: 'block' }}>
+                        {/* 무엇이 됐는지를 **회색으로** 적는다.  체크만 있으면
+                            무엇이 됐다는 뜻인지 화면 어디에도 없다. */}
+                        {item.done && item.doneNote ? (
+                          <>
+                            <span className="done-note">{item.doneNote}</span>
+                            {item.note ? ' · ' : ''}
+                          </>
+                        ) : null}
                         {item.note}
                       </span>
                     ) : null}

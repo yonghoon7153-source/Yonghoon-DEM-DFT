@@ -1442,6 +1442,16 @@ table tr.section > th > .section-label {
 .folder-change.more { background: var(--pos-wash); color: var(--pos); }
 .folder-change.less { background: var(--neg-wash); color: var(--neg); }
 
+/* 고르개에서 "이건 이미 다 된 것" — EIS 라면 fitting 이 있는 스펙트럼.
+   색만으로 가르지 않는 이유는 정적 캡처와 색맹에서 색이 사라지기 때문이다:
+   글자(✓)가 먼저고 색은 거들 뿐이다. */
+.done-mark {
+  margin-right: 4px;
+  color: var(--pos);
+  font-weight: 700;
+}
+.done-note { color: var(--pos); font-weight: 600; }
+
 /* 비교 화면의 셀 목록.  그래프 밑으로 내려오면서 가로가 넓어졌으므로 한 줄에
    하나씩 쌓지 않는다 — 스무 개짜리 묶음이 세로로 스무 줄이면 아래쪽 절반은
    스크롤해야 보인다.  높이 상한은 그대로 둔다: 목록이 화면을 밀어내면 그래프가

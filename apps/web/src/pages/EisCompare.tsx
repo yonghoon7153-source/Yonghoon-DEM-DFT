@@ -535,6 +535,10 @@ export function EisCompare() {
           note: [row.kind === 'solid' ? '전고체' : '액체', row.purpose,
                  row.sample_name ? `셀: ${row.sample_name}` : null]
             .filter(Boolean).join(' · '),
+          // fitting 이 있는지는 **고르기 전에** 알아야 한다.  골라 놓고
+          // 그림에서 "이건 곡선이 없네" 를 발견하면 다시 내려와야 한다.
+          done: row.fit_count > 0,
+          doneNote: 'fitting 완료',
           color: seriesColor(index),
         }))}
         picked={selected}
