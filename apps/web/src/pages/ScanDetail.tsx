@@ -13,15 +13,40 @@ import { useEffect, useMemo, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 
 import { CopyBar } from '../components/CopyBar'
-import { Plot, type PlotSeries } from '../components/Plot'
+import { Plot, PlotLegend, type PlotSeries } from '../components/Plot'
 import { Alert, Card, Empty, Field, Metric, MetricBand, Spinner } from '../components/ui'
 import { api } from '../lib/api'
-import { num } from '../lib/format'
+import { num, seriesColor } from '../lib/format'
+import { nyquistXy } from '../lib/eis'
 import { useAsync } from '../lib/hooks'
+import { seriesWideTsv } from '../lib/origin'
 import type { ScanPoint } from '../lib/types'
 
 const CONFIG_LABEL: Record<string, string> = {
   full: '풀셀', half: '하프셀', sym: '대칭셀',
+}
+
+/** 앞 스윕과의 차이.  충방전 사이클 표의 `Δ방전` 과 같은 자리다.
+ *
+ *  **앞 스윕이 아니라 앞의 "값이 있는" 스윕과 견준다.**  가운데 스윕 하나가
+ *  미결정이면 그 자리는 비는데, 거기서 Δ 를 끊으면 그다음 줄까지 같이 비어
+ *  SOC 를 따라가던 눈이 두 번 멈춘다.  건너뛴 것은 아래 안내가 말한다.
+ *
+ *  첫 줄은 견줄 것이 없어 줄표다 — 0 이 아니다 (§0.4).
+ */
+export function delta(
+  points: ScanPoint[], index: number,
+  key: 'series_resistance_ohm' | 'total_resistance_ohm',
+): string {
+  const now = points[index]?.[key]
+  if (now === null || now === undefined) return '—'
+  for (let before = index - 1; before >= 0; before -= 1) {
+    const was = points[before]?.[key]
+    if (was === null || was === undefined) continue
+    const change = now - was
+    return `${change >= 0 ? '+' : '−'}${num(Math.abs(change), 3)}`
+  }
+  return '—'
 }
 
 /** 용량이 있으면 용량, 없으면 전위.  둘 다 없는 점은 놓을 자리가 없다. */
@@ -39,6 +64,18 @@ export function ScanDetail() {
   const [parameter, setParameter] = useState('')
 
   const points = useMemo(() => scan.data?.points ?? [], [scan.data])
+  //: **스윕 전부를 한 번에 받는다.**  `/points` 의 열두 개 상한을 안 쓰는
+  //  전용 경로다 (거기 상한은 사람이 아무거나 고를 수 있어서 있는 것이고,
+  //  여기서 오는 수는 파일이 정한다).  낱개로 나눠 부르면 그리는 동안 축이
+  //  여러 번 다시 잡히고, 그 사이 그림은 스캔의 일부만 보여 주면서 전부인
+  //  척한다 — 겹쳐 보는 이유가 정확히 그 전체 모양인데.
+  const raw = useAsync(() => api.scanPoints(sha256), [sha256])
+  //: 끈 스윕.  이름이 아니라 **스윕 번호**로 기억한다 — 이름은 파일 이름에
+  //  `#3` 을 붙인 것이라 길고, 번호가 곧 SOC 차례다.
+  const [hidden, setHidden] = useState<number[]>([])
+  //: 고주파 유도성 점을 접을까.  겹쳐 보는 화면에서는 세로 눈금이 하나라,
+  //  한 스윕의 꼬리가 나머지 전부의 아크를 납작하게 만든다.
+  const [dropInductive, setDropInductive] = useState(true)
   const parameters = useMemo(() => scan.data?.parameters ?? [], [scan.data])
   const axis = useMemo(() => axisOf(points), [points])
 
@@ -64,6 +101,35 @@ export function ScanDetail() {
     const series: PlotSeries = { label: parameter, x, y, points: true }
     return [series]
   }, [points, parameter, axis])
+
+  //: 나이퀴스트 겹쳐보기.  색은 스윕 차례를 따라간다 — SOC 가 그 차례다.
+  const overlay = useMemo<PlotSeries[]>(() => {
+    const order = new Map(points.map((p, i) => [p.spectrum_id, i]))
+    return (raw.data ?? []).map((item) => {
+      const index = order.get(item.id) ?? 0
+      const point = points[index]
+      const { x, y } = nyquistXy(item.z_re, item.z_im, dropInductive)
+      // 범례에 SOC 를 적는다.  `#3` 만으로는 어느 충전 상태인지 모르고,
+      // 그것이 이 화면을 여는 이유다.
+      const at = point && point.capacity_mah !== null
+        ? `${num(point.capacity_mah, 3)} mAh`
+        : point && point.potential_v !== null
+          ? `${num(point.potential_v, 3)} V` : ''
+      return {
+        label: `#${point?.sweep_index ?? index + 1}`,
+        note: at || undefined,
+        x,
+        y,
+        color: seriesColor(index),
+        points: true,
+        width: 1,
+        hidden: hidden.includes(point?.sweep_index ?? -1),
+      }
+    })
+  }, [raw.data, points, hidden, dropInductive])
+
+  const shownOverlay = useMemo(
+    () => overlay.filter((series) => !series.hidden), [overlay])
 
   const label = useMemo(() => {
     for (const point of points) {
@@ -121,6 +187,65 @@ export function ScanDetail() {
         </Alert>
       ) : null}
 
+      {/* **나이퀴스트가 먼저다.**  파일 하나가 스윕 스물이면 목록에서는 줄이
+          스무 개인데, 사람이 보려는 것은 그 스무 개가 SOC 를 따라 어떻게
+          움직이는가 하나다.  아래 파라미터 추세는 그것을 숫자로 요약한 것이고,
+          요약을 먼저 보여 주면 원래 모양을 못 본 채로 읽게 된다. */}
+      <Card
+        title="나이퀴스트 — 스윕 전부"
+        actions={
+          <label className="tiny faint row" style={{ gap: 6, alignItems: 'center' }}>
+            <input
+              type="checkbox"
+              checked={dropInductive}
+              onChange={(event) => setDropInductive(event.target.checked)}
+            />
+            고주파 유도성 점 접기
+          </label>
+        }
+        tight
+      >
+        {raw.error ? <Alert kind="error">{raw.error}</Alert>
+          : raw.loading && !raw.data ? <div style={{ padding: 20 }}><Spinner /></div>
+          : overlay.length ? (
+            <>
+              <Plot
+                series={overlay}
+                xLabel="Z′ (Ω)"
+                yLabel="−Z″ (Ω)"
+                height={380}
+                equalAspect
+                positiveFit
+              />
+              {/* 충방전 사이클 고르개와 같은 손놀림 — 조각을 눌러 켜고 끈다. */}
+              <PlotLegend
+                series={overlay}
+                onToggle={(name) => {
+                  const index = Number(name.replace('#', ''))
+                  setHidden((current) => current.includes(index)
+                    ? current.filter((one) => one !== index)
+                    : [...current, index])
+                }}
+              />
+              <CopyBar items={[{
+                label: '나이퀴스트 (스윕 전부)',
+                title: `스윕마다 Z′·−Z″ 두 열 — 지금 켜 둔 ${shownOverlay.length}개`,
+                disabled: !shownOverlay.length,
+                // **켜 둔 것만 나간다.**  화면에서 끈 스윕이 클립보드에
+                // 따라가면, 붙여 넣은 표가 방금 본 그림과 다른 것이 된다.
+                skipped: overlay.length - shownOverlay.length,
+                skippedNote: (n) => `꺼 둔 ${n}개는 빠졌습니다`,
+                build: () => seriesWideTsv(shownOverlay,
+                                           { x: 'Z′ (Ω)', y: '−Z″ (Ω)' }),
+              }]} />
+            </>
+          ) : (
+            <Empty title="점을 읽지 못했습니다" icon="∿">
+              원본이 없으면 다시 올려 주세요.
+            </Empty>
+          )}
+      </Card>
+
       <Card
         title={`${parameter || '파라미터'} vs SOC`}
         actions={
@@ -177,20 +302,40 @@ export function ScanDetail() {
                 <th style={{ textAlign: 'left' }}>이름</th>
                 <th>용량 (mAh)</th>
                 <th>전위 (V)</th>
+                {/* **회로가 달라도 뜻이 같은 둘.**  파라미터 이름은 회로마다
+                    달라서 (`R0`/`Rs`) 열이 될 수 없다 — 스캔 안에서 스윕마다
+                    다른 회로가 이겼을 수 있고, 그때도 이 두 열은 이어진다. */}
+                <th>R₀ (Ω)</th>
+                <th>ΔR₀</th>
+                <th>총저항 (Ω)</th>
+                <th>Δ총저항</th>
+                <th>점</th>
                 <th style={{ textAlign: 'left' }}>회로</th>
                 <th>χ²</th>
                 {parameters.map((name) => <th key={name}>{name}</th>)}
               </tr>
             </thead>
             <tbody>
-              {points.map((point) => (
-                <tr key={point.spectrum_id}>
+              {points.map((point, index) => (
+                <tr key={point.spectrum_id}
+                    className={hidden.includes(point.sweep_index) ? 'dim' : undefined}>
                   <td>{point.sweep_index}</td>
                   <td className="text">
                     <Link to={`/eis/${point.spectrum_id}`}>{point.name}</Link>
                   </td>
                   <td>{point.capacity_mah === null ? '—' : num(point.capacity_mah, 4)}</td>
                   <td>{point.potential_v === null ? '—' : num(point.potential_v, 4)}</td>
+                  <td className={point.series_resistance_ohm === null ? 'dim' : ''}>
+                    {point.series_resistance_ohm === null
+                      ? '—' : num(point.series_resistance_ohm, 4)}
+                  </td>
+                  <td className="dim">{delta(points, index, 'series_resistance_ohm')}</td>
+                  <td className={point.total_resistance_ohm === null ? 'dim' : ''}>
+                    {point.total_resistance_ohm === null
+                      ? '—' : num(point.total_resistance_ohm, 4)}
+                  </td>
+                  <td className="dim">{delta(points, index, 'total_resistance_ohm')}</td>
+                  <td className="dim">{point.n_points || '—'}</td>
                   <td className="text dim">{point.circuit || '—'}</td>
                   <td className="dim">
                     {point.chi_squared === null ? '—' : num(point.chi_squared, 3)}

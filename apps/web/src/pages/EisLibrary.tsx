@@ -83,8 +83,16 @@ export function EisLibrary() {
     return [...seen].sort((a, b) => a.localeCompare(b, 'ko'))
   }, [spectra.data])
 
+  //: **SOC 스캔은 한 줄로 접는다** (기본).  파일 하나가 스윕 스물이면 목록의
+  //  스무 줄이 같은 파일이고, 그 스무 줄은 서로 아무것도 구별해 주지 않는다 --
+  //  이름도 같고 대역도 같고 회로도 같다.  훑어야 할 것은 "이 파일이 있다"
+  //  하나이고, 스윕 사이의 차이는 스캔 화면이 그림으로 보여 준다.
+  //
+  //  펴는 길을 남겨 둔다: 스윕 하나를 지우거나 셀에 따로 붙이는 일이 있다.
+  const [foldScans, setFoldScans] = useStickyState('bml.eisFoldScans', true)
+
   const inGroup = group.includes
-  const shown = useMemo(() => {
+  const matched = useMemo(() => {
     const needle = search.trim().toLowerCase()
     return (spectra.data ?? []).filter((item) => {
       if (shape === 'scan' && !isScan(item)) return false
@@ -99,6 +107,29 @@ export function EisLibrary() {
       return true
     })
   }, [spectra.data, samples.data, shape, purpose, search, group.effective, inGroup])
+
+  //: 접을 때는 **파일마다 첫 스윕만** 남긴다.  걸러진 뒤에 접는 순서가 맞다 —
+  //  먼저 접으면 검색어에 맞는 스윕이 3번인데 1번만 남아 아무것도 안 걸린다.
+  const shown = useMemo(() => {
+    if (!foldScans) return matched
+    const seen = new Set<string>()
+    return matched.filter((item) => {
+      if (!isScan(item)) return true
+      if (seen.has(item.sha256)) return false
+      seen.add(item.sha256)
+      return true
+    })
+  }, [matched, foldScans])
+
+  //: 접힌 줄이 대표하는 스윕의 수.  줄에 그 수를 적어야 "이 파일에 스물이
+  //  있다" 가 보인다 -- 안 적으면 접은 것과 원래 하나인 것이 같아 보인다.
+  const sweepsOf = useMemo(() => {
+    const count = new Map<string, number>()
+    for (const item of matched) {
+      if (isScan(item)) count.set(item.sha256, (count.get(item.sha256) ?? 0) + 1)
+    }
+    return count
+  }, [matched])
 
   // 스캔은 파일 단위로 세어야 뜻이 맞는다 — 스윕 21개는 스캔 1개다.
   const scanFiles = useMemo(
@@ -138,6 +169,17 @@ export function EisLibrary() {
       <Card title="거르기" tight>
         <div className="grid cols-4" style={{ padding: 12, gap: 10 }}>
           <GroupFilterFields pick={group} hint="셀에 붙은 것만 남습니다" />
+          {/* 스캔을 접을지.  기본은 접기 — 스윕 스무 줄이 같은 파일이면 그
+              스무 줄은 서로 아무것도 구별해 주지 않는다.  펴는 길은 남긴다:
+              스윕 하나를 지우거나 셀에 따로 붙이는 일이 있다. */}
+          <Field label="SOC 스캔" hint="스윕을 한 줄로 접습니다">
+            <div className="segmented" role="group" aria-label="SOC 스캔">
+              <button type="button" className={foldScans ? 'on' : ''}
+                      onClick={() => setFoldScans(true)}>묶기</button>
+              <button type="button" className={foldScans ? '' : 'on'}
+                      onClick={() => setFoldScans(false)}>스윕 전부</button>
+            </div>
+          </Field>
           <Field label="종류" hint="파일이 말하는 것 — 스윕 수로 갈립니다">
             <select
               aria-label="종류"
@@ -263,10 +305,16 @@ export function EisLibrary() {
                       {isScan(item) ? (
                         // 스캔의 한 줄에서 그 스캔 전체로 가는 길.  이것이
                         // 없으면 스윕 21개를 훑어야 SOC 축을 볼 수 있다.
+                        //
+                        // 접혀 있으면 **이 줄이 몇 개를 대표하는지**를 적는다.
+                        // 안 적으면 접은 줄과 원래 하나인 줄이 같아 보인다.
                         <>
                           {' '}
                           <Link to={`/scans/${item.sha256}`} className="tiny">
-                            [스캔 {item.sweep_index}/{item.sweep_count}]
+                            {foldScans
+                              ? `[SOC 스캔 · 스윕 ${sweepsOf.get(item.sha256)
+                                  ?? item.sweep_count}개]`
+                              : `[스캔 ${item.sweep_index}/${item.sweep_count}]`}
                           </Link>
                         </>
                       ) : null}

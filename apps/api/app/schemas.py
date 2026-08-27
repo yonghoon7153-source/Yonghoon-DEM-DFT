@@ -888,6 +888,15 @@ class ScanPointOut(BaseModel):
     values: dict[str, float] = {}
     #: 그 저항들이 이 셀에서 무엇인지 (파라미터 이름 → 라벨).
     labels: dict[str, str] = {}
+    #: 이 스윕의 점 수와 대역 — 스캔 안에서도 스윕마다 다를 수 있다 (중간에
+    #: 대역을 바꿔 잰 파일이 있다).  표에서 그것이 보여야 한다.
+    n_points: int = 0
+    frequency_start_hz: float | None = None
+    frequency_end_hz: float | None = None
+    #: 회로 이름이 달라도 뜻이 같은 둘.  스윕 표는 이 둘로 SOC 를 따라가는데,
+    #: 파라미터 이름은 회로마다 달라서 (`R0`/`Rs`) 표의 열이 될 수 없다.
+    series_resistance_ohm: float | None = None
+    total_resistance_ohm: float | None = None
 
 
 class ScanOut(BaseModel):

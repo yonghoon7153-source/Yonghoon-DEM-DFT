@@ -221,6 +221,11 @@ export const api = {
   measurements: (sampleId: number) =>
     request<Measurements>(`/api/samples/${sampleId}/measurements`),
   getScan: (sha256: string) => request<Scan>(`/api/eis/scans/${sha256}`),
+  //: 한 스캔의 **모든** 스윕의 점.  `spectraPoints` 의 열두 개 상한을
+  //  안 쓴다 — 여기서 돌아오는 수는 사람이 고르는 것이 아니라 파일이
+  //  정한다 (`/scans/{sha}/points` 의 주석).
+  scanPoints: (sha256: string) =>
+    request<SpectrumPoints[]>(`/api/eis/scans/${sha256}/points`),
   getSpectrum: (id: number) => request<SpectrumDetail>(`/api/eis/spectra/${id}`),
   spectrumPoints: (id: number) =>
     request<SpectrumPoints>(`/api/eis/spectra/${id}/points`),

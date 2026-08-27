@@ -740,6 +740,9 @@ def _scan_point(session: Session, record: SpectrumRecord) -> ScanPointOut:
         name=record.name or record.original_name,
         capacity_mah=record.capacity_mah,
         potential_v=record.potential_v,
+        n_points=record.n_points,
+        frequency_start_hz=record.frequency_start_hz,
+        frequency_end_hz=record.frequency_end_hz,
     )
     fit = _best_fit(session, record.id or 0)
     if fit is None:
@@ -754,6 +757,17 @@ def _scan_point(session: Session, record: SpectrumRecord) -> ScanPointOut:
     # 안다 (§0.4).  뺀 자리는 선이 끊어져서 보인다.
     point.values = {p["name"]: float(p["value"]) for p in parameters
                     if p.get("determined")}
+    # 회로가 달라도 뜻이 같은 둘.  스윕 표가 SOC 를 따라가는 값이 이것이고,
+    # 파라미터 이름(`R0`/`Rs`)은 회로마다 달라 표의 열이 될 수 없다.
+    point.series_resistance_ohm = _series_resistance(parameters)
+    if parameters:
+        try:
+            point.total_resistance_ohm = total_resistance(_FitStub(
+                circuit=fit.circuit,
+                parameters=[_ParameterStub(**p) for p in parameters]))
+        except (KeyError, TypeError, ValueError):
+            # 총저항을 못 세는 회로가 있다 (전송선처럼).  모르면 비운다 (§0.4).
+            point.total_resistance_ohm = None
     if parameters:
         stub = _FitStub(circuit=fit.circuit, parameters=[
             _ParameterStub(**p) for p in parameters])
@@ -822,6 +836,25 @@ def read_scan(sha256: str, session: Session = Depends(get_session)):
     if not records:
         raise HTTPException(404, f"스캔 {sha256[:12]} 을 찾을 수 없습니다")
     return _scan_out(session, records, with_points=True)
+
+
+@router.get("/scans/{sha256}/points", response_model=list[SpectrumPointsOut])
+def scan_points(sha256: str, session: Session = Depends(get_session)):
+    """한 스캔의 **모든** 스윕의 점 — 나이퀴스트를 한 화면에 겹치려고.
+
+    `/points` 의 열두 개 상한을 여기서는 안 쓴다.  거기 상한이 있는 이유는
+    사람이 아무 스펙트럼이나 골라 넣을 수 있어서인데, 여기서 돌아오는 것은
+    **한 파일이 담고 있는 것 전부**다 — 사람이 고르는 것이 아니라 파일이
+    정하는 수이고, 계측기가 한 파일에 넣는 스윕은 수십 개 규모다.
+
+    스윕을 낱개로 열두 개씩 나눠 부르면 화면이 부분적으로 채워지며 축이 여러
+    번 다시 잡히고, **그 사이 그림은 스캔의 일부만 보여 주면서 전부인 척
+    한다** -- SOC 스캔을 겹쳐 보는 이유가 정확히 그 전체 모양이다.
+    """
+    records = _scan_records(session, sha256)
+    if not records:
+        raise HTTPException(404, f"스캔 {sha256[:12]} 을 찾을 수 없습니다")
+    return [_points_out(record, _load_points(record)) for record in records]
 
 
 # --------------------------------------------------------------------------

@@ -773,6 +773,14 @@ export interface ScanPoint {
   /** 파라미터 이름 → 값.  **미결정 파라미터는 여기 없다** — 서버가 뺀다 (§0.4). */
   values: Record<string, number>
   labels: Record<string, string>
+  /** 이 스윕의 점 수와 대역 — 한 파일 안에서도 스윕마다 다를 수 있다. */
+  n_points: number
+  frequency_start_hz: number | null
+  frequency_end_hz: number | null
+  /** 회로 이름이 달라도 뜻이 같은 둘.  표의 열이 되는 것은 이 둘이다 —
+   *  파라미터 이름(`R0`/`Rs`)은 회로마다 달라 열이 될 수 없다. */
+  series_resistance_ohm: number | null
+  total_resistance_ohm: number | null
 }
 
 /** 파일 하나에서 나온 스윕들 — SOC 스캔 하나. */

@@ -27,9 +27,25 @@ function point(index: number, values: Record<string, number>) {
   }
 }
 
-function installFetch(scan: unknown) {
-  vi.stubGlobal('fetch', vi.fn(async () => ({
-    ok: true, status: 200, statusText: 'OK', json: async () => scan,
+/** 스윕 하나의 점 — 나이퀴스트 겹쳐보기가 이것을 받는다. */
+function sweepPoints(index: number) {
+  return {
+    id: index, name: `sweep ${index}`, kind: 'liquid', at_cycle: null,
+    frequency_hz: [1e5, 1e3, 1e1, 1e-1],
+    z_re: [5, 8, 14, 22], z_im: [0.5, -2, -4, -6],
+    magnitude: [5, 8.2, 14.6, 22.8], phase_deg: [6, -14, -16, -15],
+  }
+}
+
+/** **주소를 보고 답한다.**  하나로 뭉뚱그리면 `/points` 요청에도 스캔 객체가
+ *  돌아오고, 화면은 그것을 배열로 여겨 죽는다 — 그런데 그 죽음은 "스캔을 못
+ *  읽었다" 로 보여서, 실제 원인(엉뚱한 응답)과 정반대로 읽힌다. */
+function installFetch(scan: unknown, points: unknown[] = [
+  sweepPoints(1), sweepPoints(2), sweepPoints(3),
+]) {
+  vi.stubGlobal('fetch', vi.fn(async (url: string) => ({
+    ok: true, status: 200, statusText: 'OK',
+    json: async () => (String(url).endsWith('/points') ? points : scan),
   })))
 }
 
@@ -95,5 +111,43 @@ describe('ScanDetail', () => {
     const dashes = await screen.findAllByText('—')
     expect(dashes.length).toBeGreaterThan(0)
     expect(screen.queryByText('0.0000')).toBeNull()
+  })
+
+  it('스윕을 한 화면에 겹쳐 그리고, 조각을 눌러 끈다', async () => {
+    installFetch({
+      sha256: 'abc', name: '스캔', original_name: 'scan.mpr', kind: 'liquid',
+      cell_config: 'half', purpose: 'SOC별', sample_id: null, sample_name: null,
+      sweeps: 3, fitted: 3, parameters: ['R0'],
+      points: [point(1, { R0: 5 }), point(2, { R0: 6 }), point(3, { R0: 7 })],
+    })
+    show()
+    // 스윕 셋이 조각 셋으로 — 파일 하나가 목록에서 세 줄이던 것을 한 그림으로.
+    await waitFor(() =>
+      expect(document.querySelectorAll('.legend-chip')).toHaveLength(3))
+    // 조각에 SOC 를 적는다.  `#2` 만으로는 어느 충전 상태인지 모르고, 그것이
+    // 이 화면을 여는 이유다.
+    const chips = [...document.querySelectorAll('.legend-chip')]
+    expect(chips.map((chip) => chip.textContent).join(' ')).toContain('mAh')
+    // 끄면 조각이 남고 곡선만 빠진다 (충방전 사이클 고르개와 같은 손놀림).
+    await userEvent.click(chips[1] as HTMLElement)
+    expect(chips[1]!.className).toContain('off')
+  })
+
+  it('스윕 표에 R₀ 와 그 변화가 나온다 — SOC 를 따라가는 값이 그것이다', async () => {
+    installFetch({
+      sha256: 'abc', name: '스캔', original_name: 'scan.mpr', kind: 'liquid',
+      cell_config: 'half', purpose: 'SOC별', sample_id: null, sample_name: null,
+      sweeps: 2, fitted: 2, parameters: ['R0'],
+      points: [
+        { ...point(1, { R0: 5 }), series_resistance_ohm: 5, total_resistance_ohm: 30 },
+        { ...point(2, { R0: 6 }), series_resistance_ohm: 6.5, total_resistance_ohm: 28 },
+      ],
+    })
+    show()
+    await screen.findByRole('columnheader', { name: 'R₀ (Ω)' })
+    // 첫 줄은 견줄 것이 없어 줄표, 둘째 줄이 +1.5 다.
+    expect(screen.getByText('+1.50')).toBeInTheDocument()
+    // 내려간 것은 − 로 — 부호가 곧 이 열을 보는 이유다.
+    expect(screen.getByText('−2.00')).toBeInTheDocument()
   })
 })
