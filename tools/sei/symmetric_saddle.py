@@ -1550,14 +1550,50 @@ def trace_report(steps, cell, energies=None, forces=None):
     }
 
 
-def mode_overlap(a_vec, b_vec, skip=()):
-    """두 끝점의 순변위 3N 벡터 코사인. 배회는 정렬될 이유가 없다."""
+def inversion_match(first, last, ctr, cell, tolA=1.0):
+    """홉 중점 반전 `x → 2·ctr − x` 가 first → last 를 옮기는 대응 P. (match, worst) 또는 (None, worst).
+
+    왜 필요한가 (2026-08-27, 실측이 가르쳐 준 것):
+      두 끝점이 **대칭 등가**면 이완 변위장은 *같지* 않고 **대칭 연산으로 관계**된다.
+      그래서 같은 index 로 잰 코사인은 서로 다른 자리의 변위를 비교하게 되어
+      **0 근처가 나오는 것이 정상**이다 — 그걸 "배회" 로 읽으면 정반대 결론이 난다.
+      실측: ccpath 두 끝점의 이완 스칼라가 소수 4자리까지 같은데 raw 코사인은 0.018 이었다.
+    """
+    import math as _m
+    used, worst, match = set(), 0.0, {}
+    for i, (s, q) in enumerate(first):
+        img = [2 * ctr[k] - q[k] for k in range(3)]
+        best, bj = 1e9, None
+        for jj, (s2, r) in enumerate(last):
+            if s2 != s or jj in used:
+                continue
+            dd = min_image([r[k] - img[k] for k in range(3)], cell)
+            nn = _m.sqrt(sum(x * x for x in dd))
+            if nn < best:
+                best, bj = nn, jj
+        if bj is None:
+            return None, None
+        used.add(bj)
+        match[i] = bj
+        worst = max(worst, best)
+    return (match if worst <= tolA else None), worst
+
+
+def mode_overlap(a_vec, b_vec, skip=(), match=None, sign=1.0):
+    """두 끝점의 순변위 3N 벡터 코사인.
+
+    match 를 주면 `b_vec[match[i]]` 와 비교하고, sign=-1 이면 부호를 뒤집는다
+    (반전 대칭이면 변위 벡터도 뒤집히므로 `cos(d_A[i], −d_B[P(i)])` 가 옳은 비교다).
+    """
     import math as _m
     sk = set(skip)
     idx = [i for i in range(min(len(a_vec), len(b_vec))) if i not in sk]
-    num = sum(sum(a_vec[i][k] * b_vec[i][k] for k in range(3)) for i in idx)
+    if match is not None:
+        idx = [i for i in idx if match.get(i) is not None and match[i] not in sk]
+    _b = (lambda i: b_vec[match[i]]) if match is not None else (lambda i: b_vec[i])
+    num = sum(sum(a_vec[i][k] * sign * _b(i)[k] for k in range(3)) for i in idx)
     na = _m.sqrt(sum(sum(x * x for x in a_vec[i]) for i in idx))
-    nb = _m.sqrt(sum(sum(x * x for x in b_vec[i]) for i in idx))
+    nb = _m.sqrt(sum(sum(x * x for x in _b(i)) for i in idx))
     return None if na < 1e-9 or nb < 1e-9 else round(num / (na * nb), 4)
 
 
@@ -1578,7 +1614,8 @@ def bfgs_trace(work, tag, base_dirs=False):
         t = open(p, encoding="utf-8", errors="replace").read()
         en = [float(x) for x in re.findall(r"!\s+total energy\s+=\s+([-\d.]+)\s+Ry", t)]
         fo = [float(x) for x in re.findall(r"Total force\s+=\s+([\d.eE+-]+)", t)]
-        r = trace_report(_all_pos_blocks(t), cell, en, fo)
+        blocks = _all_pos_blocks(t)
+        r = trace_report(blocks, cell, en, fo)
         if "error" in r:
             return 1, f"⛔ {nm}: {r['error']}"
         r["converged"] = "Begin final coordinates" in t
@@ -1586,13 +1623,36 @@ def bfgs_trace(work, tag, base_dirs=False):
         r["dir"] = os.path.basename(ed)
         vec[nm] = r.pop("net_vector")
         rep[nm] = r
+        rep[nm + "_final_rows"] = blocks[-1]
 
-    skip = {rep["ep_initial"]["hop_index"], rep["ep_final"]["hop_index"]}
-    cos = mode_overlap(vec["ep_initial"], vec["ep_final"], skip)
+    A, B = rep["ep_initial"], rep["ep_final"]
+    skip = {A["hop_index"], B["hop_index"]}
+    cos_raw = mode_overlap(vec["ep_initial"], vec["ep_final"], skip)
+
+    # ── 대칭 매핑을 넣은 코사인 (이게 옳은 비교다 — 위 inversion_match docstring 참조) ──
+    fr, la = rep["ep_initial_final_rows"], rep["ep_final_final_rows"]
+    hop = A["hop_index"]
+    dh = min_image([la[hop][1][k] - fr[hop][1][k] for k in range(3)], cell)
+    ctr = [fr[hop][1][k] + dh[k] / 2.0 for k in range(3)]
+    match, worst = inversion_match(fr, la, ctr, cell)
+    cos_sym = (mode_overlap(vec["ep_initial"], vec["ep_final"], skip, match, -1.0)
+               if match else None)
+
+    # ── 이완 스칼라 일치도: 대칭 등가면 두 끝점의 이완 **크기**가 같아야 한다 ────────
+    def _rel(x, y):
+        m = (abs(x) + abs(y)) / 2.0
+        return None if m < 1e-9 else round(abs(x - y) / m * 100, 2)
+    scal = {"net_max_pct": _rel(A["net_max_A"], B["net_max_A"]),
+            "net_median_pct": _rel(A["net_median_A"], B["net_median_A"]),
+            "energy_drop_pct": _rel(A["energy_drop_eV"] or 0, B["energy_drop_eV"] or 0)}
+    scal_max = max([v for v in scal.values() if v is not None], default=None)
 
     L = [f"■ 끝점 BFGS 궤적 진단 — {tag}"]
     for nm in ("ep_initial", "ep_final"):
         r = rep[nm]
+        if r["dir"] != nm:
+            L.append(f"   ⚠ **{r['dir']} 는 이어달리기다** — 아래 궤적은 그 구간뿐이고, "
+                     f"앞 구간(`{nm}`)의 이동은 안 보인다. 앞 구간은 `--align_base` 로.")
         L += [f"   [{r['dir']}] {r['n_steps']}스텝 · 원자 {r['n_atoms']} · "
               f"{'수렴' if r['converged'] else '⛔ 미수렴' + (' (스텝 한도)' if r['max_steps_reached'] else '')}",
               f"      힘 {r['force_first_eVA']} → {r['force_last_eVA']} eV/Å · "
@@ -1601,32 +1661,54 @@ def bfgs_trace(work, tag, base_dirs=False):
               f"      **배회지수 {r['wander_index']}** (경로합/순변위합 · 1=곧게, 클수록 왔다갔다)",
               f"      마지막 3스텝 이동량 {r['tail3_move_A']} Å"]
     L.append("")
-    L.append(f"   ★ 두 끝점 **모드 일치도(코사인) = {cos}**")
-    if cos is None:
-        L.append("      판정불가")
-    elif abs(cos) >= 0.7:
-        L.append("      ⇒ 두 끝점이 **같은 방향**으로 갔다. 독립된 두 계산이 이렇게 정렬되려면 "
-                 "**공유된 무른 방향**이 있어야 한다 — 곧게 갔든 그 방향으로 진동했든 "
-                 "**격자 자체의 모드**를 가리킨다 (P0-2 양성 쪽).")
-    elif abs(cos) <= 0.3:
-        L.append("      ⇒ 두 끝점이 **다른 방향**으로 갔다. 공유 모드의 증거가 없다 — "
-                 "미수렴 배회 쪽이다 (P0-2 음성 쪽).")
+    L.append(f"   ★ 이완 **스칼라 일치도** (대칭 등가면 두 끝점의 이완 크기가 같아야 한다):")
+    L.append(f"      순변위 최대 {scal['net_max_pct']}% · 중앙 {scal['net_median_pct']}% · "
+             f"E 낙차 {scal['energy_drop_pct']}% 차이")
+    if scal_max is not None and scal_max <= 1.0:
+        L.append("      ⇒ ✅ 사실상 **동일**하다 — 두 끝점이 실제로 대칭 등가고, 이완은 "
+                 "**재현되는 물리적 응답**이다 (배회가 아니다).")
+    elif scal_max is not None and scal_max >= 5.0:
+        L.append(f"      ⇒ ⛔ **{scal_max}% 어긋난다** — 두 끝점이 대칭 등가가 아니다. "
+                 "각자 **다른 국소 최소**로 들어갔다는 뜻이다. 끝점 ΔE 가 작다는 것만으로 "
+                 "대칭 등가라고 부른 것을 재검토할 것.")
     else:
         L.append("      ⇒ 중간 — 어느 쪽도 주장하지 않는다.")
-    w = [rep[n]["wander_index"] for n in rep if rep[n]["wander_index"]]
+
+    L.append("")
+    L.append(f"   ★ 모드 일치도 — raw {cos_raw} · **대칭매핑 {cos_sym}** "
+             f"(반전 잔차 {None if worst is None else round(worst, 3)} Å)")
+    L.append("      ⚠ **raw 코사인은 여기서 뜻이 없다.** 대칭 등가면 두 변위장은 *같은* 게 아니라 "
+             "**대칭 연산으로 관계**돼 있어서, 같은 index 로 재면 서로 다른 자리를 비교하게 된다 "
+             "— 0 근처가 정상이다. 볼 것은 **대칭매핑** 쪽이다.")
+    if cos_sym is None:
+        L.append("      ⇒ 반전 매핑이 성립 안 한다(잔차가 크다) — **그 자체가 두 끝점이 "
+                 "반전 대칭이 아니라는 신호**다.")
+    elif cos_sym >= 0.7:
+        L.append("      ⇒ ✅ 두 이완이 **반전으로 겹친다** = 같은 물리적 응답이다.")
+    elif cos_sym <= 0.3:
+        L.append("      ⇒ ⛔ 반전으로도 안 겹친다 — 공유 응답의 증거가 없다.")
+    else:
+        L.append("      ⇒ 중간.")
+
+    w = [rep[n]["wander_index"] for n in ("ep_initial", "ep_final") if rep[n]["wander_index"]]
     if w and max(w) >= 2.0:
-        L.append(f"   ⚠ 배회지수 최대 {max(w)} — 경로가 순변위의 2배 넘게 길다. "
-                 f"곧은 이완이 아니다.")
+        L.append(f"   ⚠ 배회지수 최대 {max(w)} — 경로가 순변위의 2배 넘게 길다. 곧은 이완이 아니다.")
     elif w:
         L.append(f"   ✔ 배회지수 최대 {max(w)} — 두 끝점 다 대체로 곧게 갔다 "
                  f"(느린 이완이지 배회가 아니다).")
     L.append("")
     L.append("   ⛔ 이 진단이 못 하는 것: 곧게 갔다고 **옳은 방향**이라는 보증은 없다 · "
-             "스텝 간 회전은 안 뺀다 · 이것만으로 P0-2 를 닫지 못한다 "
-             "(pristine rattle 이 본 검사다).")
+             "스텝 간 회전은 안 뺀다 · 반전 말고 다른 대칭 연산은 안 본다 · "
+             "**이 폴더의 이완 구간만** 본다 (이어달리기면 앞 구간은 안 보인다 — `--align_base`) · "
+             "이것만으로 P0-2 를 닫지 못한다 (pristine rattle 이 본 검사다).")
     op = os.path.join(d, "bfgs_trace.json")
     try:
-        json.dump({"tag": tag, "mode_overlap_cos": cos,
+        for k in ("ep_initial_final_rows", "ep_final_final_rows"):
+            rep.pop(k, None)
+        json.dump({"tag": tag, "mode_overlap_cos_raw": cos_raw,
+                   "mode_overlap_cos_symmetry_mapped": cos_sym,
+                   "inversion_residual_A": None if worst is None else round(worst, 4),
+                   "relax_scalar_mismatch_pct": scal,
                    "endpoints": rep}, open(op, "w", encoding="utf-8"),
                   ensure_ascii=False, indent=2)
         L.append(f"   → {op}")
@@ -1682,6 +1764,35 @@ def selftest_trace():
     e = trace_report(steps_wander(off=31, ph=2.1), cell)["net_vector"]
     chk(abs(mode_overlap(c, e) or 1) <= 0.3,
         f"[궤적·음성] 방향이 다른 배회는 코사인이 안 선다 ({mode_overlap(c, e)})")
+
+    # ★★ 2026-08-27 실측 회귀 — **대칭 등가 쌍은 raw 코사인이 0 근처가 정상이다.**
+    #   ccpath 두 끝점의 이완 스칼라가 소수 4자리까지 같은데 raw 코사인은 0.018 이었다.
+    #   그걸 '배회' 로 읽으면 정반대 결론이 난다. 대칭매핑을 넣어야 1 이 나온다.
+    #   (a) 매처가 **목록 순서가 섞여도** 반전 짝을 찾아내는가
+    ctr_t = [A * N / 2.0] * 3
+    inv = [(s, [2 * ctr_t[k] - p[k] for k in range(3)]) for s, p in base]
+    order = list(range(len(base)))
+    for st in ("Nd", "Li"):                       # 원소 안에서 순서를 뒤집는다 (비자명 순열)
+        g = [i for i in order if base[i][0] == st]
+        for a_, b_ in zip(g, reversed(g)):
+            order[a_] = b_
+    shuf = [inv[order[i]] for i in range(len(inv))]
+    m_inv, w_inv = inversion_match(base, shuf, ctr_t, cell)
+    chk(m_inv is not None and w_inv < 1e-6 and any(m_inv[i] != i for i in m_inv),
+        f"[궤적·대칭] 목록이 섞여도 반전 짝을 찾는다 (잔차 "
+        f"{None if w_inv is None else round(w_inv, 6)}, 비자명 순열)")
+
+    #   (b) 반전으로 관계된 변위장: **raw 는 낮고 대칭매핑은 1** 이어야 한다
+    dA = [mode(i) for i in range(nat)]
+    dB = [None] * nat
+    for i, j in m_inv.items():
+        dB[j] = [-x for x in dA[i]]
+    chk((mode_overlap(dA, dB, (), m_inv, -1.0) or 0) >= 0.99,
+        "[궤적·대칭] 반전으로 관계된 변위장은 **대칭매핑 코사인 ≈ 1**")
+    raw = abs(mode_overlap(dA, dB) or 1)
+    chk(raw <= 0.5,
+        f"[궤적·대칭·실측회귀] 같은 쌍의 **raw 코사인은 낮다** ({raw:.3f}) — "
+        f"raw 를 '배회' 로 읽으면 안 된다")
     chk(abs(mode_overlap(a, [[0.0, 0.0, 0.0]] * nat) or 1) if False else
         mode_overlap(a, [[0.0, 0.0, 0.0]] * nat) is None,
         "[궤적·가드] 영벡터면 코사인을 계산하지 않는다")
