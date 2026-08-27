@@ -42,7 +42,7 @@ export interface Folder<T> {
 /** 묶음이 없는 셀들이 가는 곳.  마지막에 온다. */
 export const UNGROUPED = 'ungrouped'
 
-/** 목록을 폴더 차례로 편다 — 최상위, 그 소그룹들, … 그리고 묶음 없음.
+/** 목록을 폴더 차례로 편다 — 최상위, 그 소그룹들, … 그리고 그룹 없음.
  *
  *  **빈 폴더는 만들지 않는다.**  필터로 셀이 다 빠진 그룹까지 그리면 화면의
  *  절반이 "0개" 가 되고, 그 목록은 무엇이 걸러졌는지가 아니라 어떤 그룹이
@@ -107,10 +107,10 @@ export function buildFolders<T>(
     }
   }
 
-  // 묶음 없음은 맨 아래.  "아직 안 넣었다" 는 조건이 아니라 미완이라, 위에
+  // 그룹 없음은 맨 아래.  "아직 안 넣었다" 는 조건이 아니라 미완이라, 위에
   // 두면 실제 묶음들을 매번 밀어낸다.
   if (loose.length) {
-    out.push({ key: UNGROUPED, name: '묶음 없음', depth: 0,
+    out.push({ key: UNGROUPED, name: '그룹 없음', depth: 0,
                items: loose, subtree: loose, total: loose.length, children: [] })
   }
   return out

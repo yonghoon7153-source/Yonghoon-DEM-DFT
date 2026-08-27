@@ -70,7 +70,12 @@ export function Dashboard() {
   // 그룹으로 서버에서 거르지 않는다.  칩마다 개수를 보여주려면 전체가 필요하고,
   // 그룹을 누를 때마다 다시 받아오지 않아도 되므로 전환이 즉시 된다.
   const group = useGroupChoice()
-  const [folderView, setFolderView] = useStickyState('bml.dashboardFolders', false)
+  // **기본이 폴더다.**  예전에는 목록이 기본이었다 — 이 표의 기본 차례가
+  // "방금 올린 것이 위로" 이고 폴더로 묶으면 그 차례가 폴더 안으로 들어가기
+  // 때문이었다.  그런데 셀이 마흔을 넘으면서 그 차례보다 **어느 묶음이
+  // 움직였나** 가 먼저 보고 싶은 것이 됐고, 폴더는 다 접혀 있으므로 첫 화면이
+  // 곧 요약이다 (ADR 0035).  차례는 `목록` 한 번이면 돌아온다.
+  const [folderView, setFolderView] = useStickyState('bml.dashboardFolders.v2', true)
   // 남이 무엇을 바꾸면 바로(`live`), 그리고 아무 편집이 없어도 30초마다
   // (`refreshMs`) 다시 읽는다.  둘 다 필요하다: 편집은 알림이 오지만, 구동 중인
   // 셀에 사이클이 붙는 것은 아무도 "편집" 하지 않으므로 알림이 오지 않는다.

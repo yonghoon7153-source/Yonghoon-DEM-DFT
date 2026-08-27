@@ -24,7 +24,12 @@ export function Library() {
   // 목록을 다시 읽게 하는 토큰.  셀을 새로 만들 때도, 지울 때도 뒤집는다 —
   // 지우고 나서 목록이 그대로면 사라진 셀이 계속 보이고, 눌러 보면 404 다.
   const [reloadKey, bumpReload] = useState(false)
-  const [groupBy, setGroupBy] = useStickyState<GroupKey>('workbench.libraryGroupBy', 'none')
+  // **기본이 '그룹' 이다.**  묶는 것이 이 화면의 첫 모습이어야 한다 — 폴더가
+  // 다 접혀 있으므로 (ADR 0035) 그것이 곧 요약이고, `없음` 으로 시작하면 셀
+  // 마흔일곱 줄이 먼저 쏟아진 뒤 사람이 매번 `그룹` 을 눌러야 한다.
+  // 열쇠를 바꾼 것은 기본값이 뒤집혀서다: 옛 열쇠에 남은 `none` 은 "안 골랐다"
+  // 가 아니라 "골라서 없음" 으로 읽히고, 그러면 새 기본이 영영 안 온다.
+  const [groupBy, setGroupBy] = useStickyState<GroupKey>('bml.libraryGroupBy.v2', 'group')
   // 작성자도 같은 자리에서 거른다.  서버에 보내면 고른 순간 선택지가 그 하나로
   // 줄어서 다른 사람 것으로 옮겨 갈 수가 없다.
   const [owner, setOwner] = useState('')

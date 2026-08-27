@@ -55,7 +55,12 @@ export function GittLibrary() {
   }, [runs.data, samples.data, owner, purpose, group.effective, inGroup])
 
   // 묶기 — 셀·EIS 라이브러리와 같은 어휘, 같은 모양 (`LibraryGroups`).
-  const [groupBy, setGroupBy] = useStickyState<GroupKey>('bml.gittGroupBy', 'none')
+  // **기본이 '그룹' 이다.**  묶는 것이 이 화면의 첫 모습이어야 한다 — 폴더가
+  // 다 접혀 있으므로 (ADR 0035) 그것이 곧 요약이고, `없음` 으로 시작하면 셀
+  // 마흔일곱 줄이 먼저 쏟아진 뒤 사람이 매번 `그룹` 을 눌러야 한다.
+  // 열쇠를 바꾼 것은 기본값이 뒤집혀서다: 옛 열쇠에 남은 `none` 은 "안 골랐다"
+  // 가 아니라 "골라서 없음" 으로 읽히고, 그러면 새 기본이 영영 안 온다.
+  const [groupBy, setGroupBy] = useStickyState<GroupKey>('bml.gittGroupBy.v2', 'group')
   const groupKey = validGroupKey(groupBy)
   const folders = useFolders('gitt-library', rows, placeRun)
   const buckets = useMemo(

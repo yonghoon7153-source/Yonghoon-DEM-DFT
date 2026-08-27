@@ -144,11 +144,22 @@ afterEach(() => {
 })
 
 describe('라이브러리 묶기', () => {
-  it('처음에는 안 묶는다 — 셋을 한 줄씩', async () => {
+  it('처음에는 그룹으로 묶는다 — 첫 화면이 곧 폴더다 (ADR 0035)', async () => {
     installFetch()
     renderLibrary()
 
     await screen.findByText('4.6V_1_17.5mg')
+    // 픽스처의 셀은 그룹이 없으므로 한 폴더에 담긴다.  최상위라 펴져 있어
+    // 줄은 그대로 보인다 — 묶였다는 것만 달라진다.
+    expect(sections()).toEqual(['▾그룹 없음 · 3개'])  // ▾ 는 접는 삼각형
+  })
+
+  it('`없음` 을 누르면 안 묶는다', async () => {
+    installFetch()
+    renderLibrary()
+    await screen.findByText('4.6V_1_17.5mg')
+
+    await userEvent.click(screen.getByRole('button', { name: '없음' }))
     expect(sections()).toEqual([])
   })
 
@@ -429,6 +440,10 @@ describe('작성자로 좁히기', () => {
       sample(2, 'B_1_10mg', { group_name: '삼성SDI' }),
     ])
     renderLibrary()
+    // 이 시험이 보는 것은 **그룹 칸의 글자**이지 묶기가 아니다.  기본이
+    // 그룹이면 소그룹에 든 셀이 접힌 폴더 안에 있어 줄 자체가 없으므로,
+    // 묶기를 끄고 본다.
+    await userEvent.click(await screen.findByRole('button', { name: '없음' }))
     await screen.findByText('A_1_10mg')
 
     const rows = [...document.querySelectorAll('tbody tr')]

@@ -51,7 +51,7 @@ describe('buildFolders', () => {
       cell(2, 10, 'Mid_Ni'),
       cell(3, null),
     ], place)
-    expect(folders.map((f) => f.name)).toEqual(['Mid_Ni', '묶음 없음'])
+    expect(folders.map((f) => f.name)).toEqual(['Mid_Ni', '그룹 없음'])
     expect(folders[1]!.key).toBe(UNGROUPED)
     expect(folders[1]!.items.map((row) => row.id)).toEqual([1, 3])
   })

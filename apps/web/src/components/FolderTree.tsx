@@ -14,13 +14,14 @@ import {
 } from '../lib/folders'
 
 const SNAPSHOT_PREFIX = 'bml.folders.'
-//: **펼친 것**을 적어 둔다, 접은 것이 아니라.  기본이 "다 접힘" 이라
-//: (아래 `useFolders` 참고) 빈 목록이 곧 기본이 되어야 하기 때문이다.
+//: 손으로 **바꾼 것만** 적어 둔다 (열쇠 → 폈나).  기본이 깊이마다 다르므로
+//: (아래 `useFolders`) 목록 하나로는 "안 건드림" 과 "일부러 접음" 을 가를 수가
+//: 없다 — 최상위를 일부러 접어 둔 것과 아직 아무것도 안 한 것이 같아진다.
 //:
-//: 열쇠 이름을 바꾼 것은 뜻이 뒤집혀서다.  옛 `bml.folded.*` 에 남아 있던
-//: 목록을 그대로 "펼친 것" 으로 읽으면 정확히 반대로 접힌다 — 한 번 쓰고
-//: 버리는 값이므로 옛 열쇠는 그냥 안 읽는다.
-const OPEN_PREFIX = 'bml.folders.open.'
+//: 열쇠 이름이 세 번째다.  담는 모양이 바뀔 때마다 새 이름을 쓴다: 옛 값을
+//: 새 뜻으로 읽으면 정확히 반대로 접힌다.  한 번 쓰고 버리는 값이라 옛 열쇠는
+//: 그냥 안 읽는다.
+const OPEN_PREFIX = 'bml.folders.open2.'
 
 function readSnapshot(key: string): FolderSnapshot | null {
   try {
@@ -61,11 +62,18 @@ export interface FolderView<T> {
 export function useFolders<T>(
   scope: string, items: T[], place: (item: T) => Placed,
 ): FolderView<T> {
-  //: **기본은 다 접힘.**  펴 놓은 것이 기본이면 화면은 예전의 평평한 목록과
-  //: 똑같아서 폴더가 있으나 마나이고, 무엇보다 폴더 이름 끝의 `+2 −1` 을
-  //: 훑을 수가 없다 — 그 수를 보려고 스물여덟 줄을 스크롤해야 한다면 그 수는
-  //: 아무것도 안 알려 준 것이다.  접혀 있으면 첫 화면이 곧 요약이다.
-  const [opened, setOpened] = useStickyState<string[]>(OPEN_PREFIX + scope, [])
+  //: **기본은 깊이가 정한다: 최상위는 펴고, 소그룹은 접는다.**
+  //:
+  //: 다 접으면 첫 화면이 묶음 이름 두 줄이라 무엇이 있는지 안 보이고, 다 펴면
+  //: 예전의 평평한 목록과 똑같아 폴더가 있으나 마나다.  가운데가 파일
+  //: 탐색기의 모양이고, 그것이 이 제안의 시작이었다 (ADR 0035) — 큰 칸은
+  //: 보이고 그 안은 눌러서 연다.
+  //:
+  //: 그리고 이 배치라야 `+2 −1` 이 쓸모가 있다: 최상위는 제 아래 전부를 합쳐
+  //: 세므로 (`subtree`) 펴 놓은 그 줄에 바뀐 수가 이미 적혀 있고, 어느 소그룹
+  //: 인지는 그때 열어 보면 된다.
+  const [open, setOpen] = useStickyState<Record<string, boolean>>(
+    OPEN_PREFIX + scope, {})
   // 처음 한 번만 읽는다.  매 렌더마다 읽으면 아래에서 저장한 것을 도로 읽어
   // 기준선이 "지금" 이 되고, 그러면 아무것도 안 바뀐 것으로 보인다.
   const baseline = useRef<FolderSnapshot | null>(null)
@@ -94,17 +102,18 @@ export function useFolders<T>(
     writeSnapshot(scope, snapshot)
   }, [scope, snapshot, folders.length])
 
-  const isFolded = (key: string) => !opened.includes(key)
+  // 열쇠만 받으므로 깊이를 여기서 찾는다 -- 부르는 쪽 전부가 폴더를 들고
+  // 있지는 않다 (`isVisible` 은 부모의 열쇠만 안다).
+  const depthOf = new Map(folders.map((folder) => [folder.key, folder.depth]))
+  const isFolded = (key: string) =>
+    !(open[key] ?? (depthOf.get(key) ?? 0) === 0)
   return {
     folders,
     isFolded,
     isVisible: (folder) =>
       folder.depth === 0
       || !folders.some((top) => top.children.includes(folder.key) && isFolded(top.key)),
-    toggle: (folder) =>
-      setOpened(opened.includes(folder.key)
-        ? opened.filter((key) => key !== folder.key)
-        : [...opened, folder.key]),
+    toggle: (folder) => setOpen({ ...open, [folder.key]: isFolded(folder.key) }),
     change: (folder) => folderDelta(
       snapshot[folder.key] ?? [],
       baseline.current?.[folder.key],
