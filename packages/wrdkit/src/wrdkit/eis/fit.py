@@ -141,6 +141,10 @@ class Parameter:
             #   jacobian_insensitive
             #       이 창에서 값을 바꿔도 곡선이 안 움직인다.  주파수창이나 그
             #       과정을 다시 재야 한다.
+            #   rank_deficient
+            #       개별값 대신 **조합**만 정해진다.  회로를 줄이거나, 정해지는
+            #       조합(합)을 보고해야 한다.  `reason` 옆의 안내 문장이 어느
+            #       파라미터들이 묶였는지 이름으로 적는다.
             return self.no_error_reason or "jacobian_insensitive"
         relative = self.relative_error
         if relative is None:
@@ -601,6 +605,15 @@ def fit_circuit(spectrum: Spectrum, circuit: str | Circuit, *,
             spreads, strict=True)
     ]
 
+    # **못 가르는 조합을 이름으로 말한다.**  개별값의 오차 막대만 지우면
+    # 사람은 회로가 통째로 실패한 줄 안다 — 실제로는 그 조합의 **합**이
+    # 잘 정해져 있다 (Codex 판정 리뷰 #2).
+    tangled = _degenerate_groups(solution.jac, model.parameter_names)
+    tangled_names = {name for group in tangled for name in group}
+    for parameter in parameters:
+        if parameter.name in tangled_names:
+            parameter.no_error_reason = "rank_deficient"
+
     at_bound = []
     for parameter, low, high in zip(parameters, model.lower, model.upper,
                                     strict=True):
@@ -631,6 +644,11 @@ def fit_circuit(spectrum: Spectrum, circuit: str | Circuit, *,
     # 나온다 (실측에서 1e-12).  씨앗을 아무리 흩어도 마찬가지다 — 두 순서가
     # 정확히 같은 답이라, "흩어졌다" 는 검사에도 안 걸린다.  표시가 없으면 둘
     # 다 잘 잰 값으로 읽힌다 (Codex #2).
+    for group in tangled:
+        notes.append(" · ".join(group)
+                     + " 는 이 스펙트럼이 **따로 가르지 못합니다** — 조합(합)은 "
+                       "정해져 있지만 개별값은 시작점이 정한 것입니다")
+
     by_name = {parameter.name: parameter for parameter in parameters}
     swapped = []
     for left, right in model.exchangeable_pairs:
@@ -907,11 +925,12 @@ def _standard_errors(solution, values, model, chi2, dof) -> list[float | None]:
     # 살아 있어도 그 **차이 방향**이 널이다.  절단 SVD 가 버린 방향에 파라미터
     # 축이 절반 넘게 실려 있으면, 그 파라미터의 분산은 계산에서 그 방향을 뺀
     # 과소평가다 -- 개별값이 아무 뜻 없는 R1=37.5/R2=2.5 가 "정밀" 로 나온다.
-    if np.any(~good):
-        leak = np.sqrt(np.sum(vt[~good] ** 2, axis=0))
-    else:
-        leak = np.zeros(len(values))
-    degenerate = leak > 0.5
+    #
+    # **컬럼을 정규화해서 다시 본다** (`_null_leak`).  안 하면 널 방향이 변환
+    # 좌표의 국소 배율만큼 기울어져, 정확히 대등한 두 축 중 **한쪽만** 걸린다.
+    # `R0-R1` (합만 정해지는 회로) 에서 시작값을 바꾸면 어느 쪽이 "결정됨" 인지
+    # 뒤집혔다 (Codex 판정 리뷰 #2).
+    degenerate = _null_leak(jac) > 0.5
 
     out: list[float | None] = []
     for i, var in enumerate(variance):
@@ -919,6 +938,53 @@ def _standard_errors(solution, values, model, chi2, dof) -> list[float | None]:
                   and not blind[i] and not pressed[i] and not degenerate[i])
         out.append(float(np.sqrt(var) * abs(derivative[i])) if usable else None)
     return out
+
+
+def _null_leak(jac: np.ndarray) -> np.ndarray:
+    """각 파라미터 축이 **데이터가 못 보는 방향**에 얼마나 실려 있나 (0~1).
+
+    야코비안의 컬럼을 각자의 크기로 나눈 뒤 SVD 한다.  정규화가 요점이다:
+    안 하면 널 방향이 변환 좌표의 국소 배율만큼 기울어서, 정확히 대등한 두
+    축 가운데 한쪽만 문턱을 넘는다.  `R0-R1` 처럼 **합만** 정해지는 회로에서
+    시작값 `[5, 10]` 과 `[10, 5]` 가 서로 다른 쪽을 "결정됨" 으로 냈다
+    (Codex 판정 리뷰 #2).
+
+    정규화하면 대등한 짝은 널 방향에 `1/√2 ≈ 0.707` 씩 똑같이 실리고, 셋이
+    묶이면 `√(2/3) ≈ 0.816` 씩 실린다.  참여하지 않는 축은 0 에 가깝다.
+    그래서 0.5 라는 문턱은 "짝을 이루는 축이면 전부, 아니면 아무도" 로 갈린다.
+
+    **정확한 축퇴만 잡는다** (문턱이 기계 정밀도다).  값에 따라 겹치는 것 —
+    같은 시간상수를 가진 두 아크 같은 — 은 여기서 단정하지 않고 씨앗 흩기가
+    맡는다.  거기는 데이터와 잡음이 정하는 문제이지 식의 성질이 아니다.
+    """
+    if jac.size == 0:
+        return np.zeros(0)
+    norms = np.linalg.norm(jac, axis=0)
+    live = norms > 0
+    if not np.any(live):
+        return np.ones(jac.shape[1])
+    scaled = jac[:, live] / norms[live]
+    try:
+        _, s, vt = np.linalg.svd(scaled, full_matrices=False)
+    except np.linalg.LinAlgError:                    # pragma: no cover
+        return np.zeros(jac.shape[1])
+    threshold = np.finfo(float).eps * max(scaled.shape) * (s[0] if len(s) else 0)
+    null = s <= threshold
+    leak = np.zeros(jac.shape[1])
+    if np.any(null):
+        leak[live] = np.sqrt(np.sum(vt[null] ** 2, axis=0))
+    # 컬럼이 아예 0 인 축은 그 자체로 못 보는 축이다.
+    leak[~live] = 1.0
+    return leak
+
+
+def _degenerate_groups(jac: np.ndarray, names) -> list[tuple[str, ...]]:
+    """못 가르는 축들을 묶어서 이름으로.  화면이 "이 둘의 합만 정해집니다" 라고
+    말할 수 있게 한다 — 개별값을 지우기만 하면 사람은 회로가 통째로 실패한
+    줄 안다."""
+    leak = _null_leak(jac)
+    caught = [name for name, value in zip(names, leak, strict=True) if value > 0.5]
+    return [tuple(caught)] if len(caught) > 1 else []
 
 
 def _failed(model, working, reason, dropped_inductive, dropped_range) -> FitResult:

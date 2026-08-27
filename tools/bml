@@ -4834,7 +4834,7 @@ gate_jar() {
 }
 
 cmd_reparse() {
-  local url="${SERVER:-$URL}" out total done_ failed jar=""
+  local url="${SERVER:-$URL}" out total done_ failed stuck jar=""
   local -a curlargs
   if ! server_alive "$url" 8; then
     die "서버가 응답하지 않습니다: $url — 먼저 ${GREEN}bml${OFF} 로 띄우세요."
@@ -4878,6 +4878,32 @@ cmd_reparse() {
     # 이름을 적는다.  수만 세면 어느 파일인지 알 길이 없다.
     printf '%s' "$out" | tr ',' '\n' | sed -n 's/.*"name":"\([^"]*\)".*/    \1/p'
   fi
+
+  # **EIS 맞춤도 같이 다시 한다.**  충방전은 파싱이 결정적이라 다시 읽으면
+  # 끝이지만, EIS 는 판정 규칙(무엇을 "쟀다" 고 부르는가)이 맞춤 안에 들어
+  # 있다.  규칙이 바뀌면 저장된 행은 옛 규칙의 것이라 화면에서 강등되는데,
+  # 여기서 같이 안 돌리면 사람은 "왜 갑자기 값이 미결정이지" 만 보게 된다.
+  step "EIS 맞춤을 다시 하는 중 ${DIM}(회로와 주파수창은 그대로)${OFF}"
+  out="$(curl "${curlargs[@]}" "$url/api/eis/refit" 2>&1)" || {
+    warn "EIS 맞춤은 다시 하지 못했습니다 — 충방전 쪽은 끝났습니다."
+    say "  ${DIM}${out}${OFF}"
+    say "  ${DIM}화면을 새로고침하면 새 값이 보입니다.${OFF}"
+    return 0
+  }
+  total="$(printf '%s' "$out" | sed -n 's/.*"total":[[:space:]]*\([0-9]*\).*/\1/p')"
+  done_="$(printf '%s' "$out" | sed -n 's/.*"refitted":[[:space:]]*\([0-9]*\).*/\1/p')"
+  if [ -n "$total" ]; then
+    ok "EIS ${done_}/${total} 개를 다시 맞췄습니다."
+    stuck="$(printf '%s' "$out" | sed -n 's/.*"not_converged":[[:space:]]*\([0-9]*\).*/\1/p')"
+    if [ -n "$stuck" ] && [ "$stuck" -gt 0 ]; then
+      warn "${stuck} 개는 새로 맞추다 수렴하지 않아 옛 값을 그대로 뒀습니다."
+      say "  ${DIM}그 스펙트럼은 화면에서 미결정으로 나옵니다 — 회로를 바꿔 다시 맞춰 보세요.${OFF}"
+    fi
+  else
+    warn "EIS 맞춤 결과를 읽지 못했습니다."
+    say "  ${DIM}${out}${OFF}"
+  fi
+
   say "  ${DIM}화면을 새로고침하면 새 값이 보입니다.${OFF}"
 }
 

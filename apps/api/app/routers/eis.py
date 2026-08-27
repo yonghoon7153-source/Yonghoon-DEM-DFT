@@ -47,6 +47,7 @@ from ..schemas import (
     DrtSweepOut,
     EisDashboardOut,
     EisDashboardRow,
+    RefitAllOut,
     ScanOut,
     ScanPointOut,
     SpectrumDetailOut,
@@ -1563,12 +1564,30 @@ def _stub_parameters(circuit: str, parameters: list[dict]) -> list[_ParameterStu
 
 
 def apply_exchangeable(circuit: str, parameters: list[dict]) -> list[dict]:
-    """저장된 파라미터 dict 에 회로의 축퇴를 씌운다 — **응답에 실리는 것에도**.
+    """저장된 파라미터 dict 에 **지금 규칙**을 씌운다 — 응답에 실리는 것에도.
+
+    둘을 한다.
+
+    1. **옛 행을 강등한다.**  `policy` 열쇠가 없는 행은 이 규칙이 생기기 전에
+       저장된 것이다.  그 `determined: true` 가 흩어짐을 통과해서 참인지,
+       검사를 아예 못 해서 참인지 JSON 으로는 구별할 수 없다 — 그래서 측정값
+       으로 쓰지 않고 `legacy_unknown` 으로 낸다 (Codex 판정 리뷰 #6).
+       값은 그대로 보인다; 총저항·전도도·추세로만 안 간다.
+       **다시 맞추면 사라지는 표시다** (`POST /api/eis/refit`).
+    2. **회로가 아는 축퇴를 씌운다.**  통계 문턱과 달리 이것은 식의 성질이라
+       옛 행에도 소급할 수 있다 (Codex 판정 리뷰 #3).
 
     스텁에만 씌우면 아크 이름과 전도도만 고쳐지고, 화면이 실제로 그리는
     `parameters` 목록에는 옛 `determined: true` 가 그대로 남는다.  같은 응답
     안에서 두 자리가 서로 다른 말을 하게 된다.
     """
+    parameters = [
+        one if one.get("policy") else {
+            **one, "determined": False, "status": "legacy_unknown",
+            "reason": "legacy_no_diagnostics",
+        }
+        for one in parameters
+    ]
     try:
         pairs = parse_circuit(circuit).exchangeable_pairs
     except Exception:  # noqa: BLE001 — 못 읽는 회로는 그냥 손대지 않는다
@@ -1719,6 +1738,68 @@ def _run_auto(session: Session, record: SpectrumRecord, spectrum, *,
     if not converged:
         return outs[0]
     return min(converged, key=lambda out: out.chi_squared)
+
+
+@router.post("/refit", response_model=RefitAllOut)
+def refit_all(session: Session = Depends(get_session)):
+    """저장된 맞춤을 **전부 다시** 한다 — 판정 규칙이 바뀌었을 때 쓰는 것.
+
+    충방전의 `POST /api/runs/reparse` 와 같은 자리다.  다른 점은 다시 읽는
+    것이 원본 바이트가 아니라 **맞춤**이라는 것이다: 파싱은 결정적이지만 맞춤은
+    시작점을 흩어 가장 좋은 것을 고르므로, 규칙이 바뀌면 그 규칙으로 다시
+    맞춰야 값과 판정이 짝이 맞는다.
+
+    **왜 필요한가.**  `parameters_json` 은 판정의 근거(`status`·`reason`·
+    `spread`·정책 이름)를 이제야 담기 시작했다.  그 전 행에는 `determined`
+    불리언 하나뿐이라, 그 참이 흩어짐을 통과해서 참인지 검사를 아예 못 해서
+    참인지 알 수가 없다 — 그래서 읽을 때 `legacy_unknown` 으로 강등한다
+    (`apply_exchangeable`).  강등만 하고 끝내면 올려 둔 셀의 전도도·추세가
+    통째로 비므로, **되돌리는 길**이 같이 있어야 한다.  이것이 그 길이다.
+
+    회로와 주파수창은 **그 스펙트럼에서 가장 잘 맞은 맞춤의 것**을 쓴다.
+    사람이 골라 둔 것을 여기서 바꾸지 않는다.
+
+    한 스펙트럼이 실패해도 멈추지 않는다 (`/runs/reparse` 와 같은 규칙).
+    그리고 **수렴하지 않으면 옛 행을 지우지 않는다** — 새 맞춤이 답을 못 냈는데
+    옛 답까지 없애면 화면에서 그 셀이 통째로 사라진다.
+    """
+    records = session.exec(select(SpectrumRecord).order_by(SpectrumRecord.id)).all()
+    done = 0
+    stalled = 0
+    failed: list[dict] = []
+    for record in records:
+        best = _best_fit(session, record.id or 0)
+        if best is None:
+            continue
+        old_ids = [f.id for f in session.exec(
+            select(SpectrumFit).where(SpectrumFit.spectrum_id == record.id)).all()]
+        try:
+            fresh = _run_fit(
+                session, record.id or 0, circuit=best.circuit,
+                drop_inductive=best.dropped_inductive > 0,
+                frequency_low_hz=best.frequency_low_hz,
+                frequency_high_hz=best.frequency_high_hz)
+        except HTTPException as exc:
+            failed.append({"run_id": record.id, "name": record.name
+                           or record.original_name, "reason": str(exc.detail)})
+            continue
+        except (CircuitError, ValueError, FileNotFoundError) as exc:
+            failed.append({"run_id": record.id, "name": record.name
+                           or record.original_name, "reason": str(exc)})
+            continue
+        if not fresh.converged:
+            # 새 맞춤이 답을 못 냈다.  옛 행을 남긴다 — 새 규칙으로는 미결정
+            # 이지만, 있던 값까지 지우면 그 셀이 화면에서 사라진다.
+            stalled += 1
+            continue
+        for fit_id in old_ids:
+            stale = session.get(SpectrumFit, fit_id)
+            if stale is not None:
+                session.delete(stale)
+        done += 1
+    session.commit()
+    return RefitAllOut(total=len(records), refitted=done,
+                       not_converged=stalled, failed=failed)
 
 
 @router.post("/fit-batch")

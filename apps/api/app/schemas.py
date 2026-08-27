@@ -388,6 +388,16 @@ class ReparseFailure(BaseModel):
     reason: str
 
 
+class RefitAllOut(BaseModel):
+    """맞춤을 전부 다시 한 결과.  실패는 세는 것이 아니라 **이름을 적는다.**"""
+    total: int
+    refitted: int
+    #: 다시 맞췄지만 **수렴하지 않은** 것.  덮어쓰지 않고 옛 행을 남긴 수다 —
+    #: 새 규칙으로는 미결정이지만 값은 그대로 보인다.
+    not_converged: int = 0
+    failed: list[ReparseFailure] = []
+
+
 class ReparseAllOut(BaseModel):
     """전부 다시 읽은 결과.  실패는 세는 것이 아니라 **이름을 적는다.**"""
     total: int

@@ -1006,3 +1006,59 @@ def test_a_boundary_value_that_is_the_truth_is_not_called_a_broken_circuit():
     # 문장은 "확인하지 못했다" 이지 "회로가 틀렸다" 가 아니다.
     assert "확인하지 못했습니다" in result.reason
     assert "설명하지 못한다" not in result.reason
+
+
+# --- 조합 축퇴: 회로를 조합할 때 생기는 것 (Codex 판정 리뷰 #2) --------------
+
+
+def test_two_series_resistors_are_both_undetermined_whichever_start():
+    """`R0-R1` 은 **합만** 정해진다.  어느 쪽을 "쟀다" 고 부를지가 시작값에
+    따라 뒤집히면 안 된다.
+
+    전에는 뒤집혔다: 시작 `[5, 10]` 이면 `R1` 이 결정됨, `[10, 5]` 면 `R0` 가
+    결정됨이었다.  야코비안 컬럼을 정규화하지 않아 널 방향이 변환 좌표의 국소
+    배율만큼 기울었고, 대등한 두 축 가운데 한쪽만 문턱을 넘었다.
+
+    `Element.exchangeable` 로는 못 잡는다 — 원소 **안**의 짝만 선언하기 때문
+    이다.  이것은 회로를 **조합**할 때 생긴다.
+    """
+    pytest.importorskip("scipy")
+    frequency = np.logspace(4, -1, 20)
+    flat = Spectrum(frequency, np.full(20, 15.0), np.zeros(20))
+    assert parse_circuit("R0-R1").exchangeable_pairs == ()   # 회로는 모른다
+
+    for guess in ([5.0, 10.0], [10.0, 5.0]):
+        result = fit_circuit(flat, "R0-R1", restarts=0, drop_inductive=False,
+                             guess=np.array(guess))
+        assert result.chi_squared < 1e-20                     # 완벽히 맞는다
+        for parameter in result.parameters:
+            assert not parameter.determined, (guess, parameter)
+            assert parameter.reason == "rank_deficient", (guess, parameter)
+        # 합은 정해져 있다 — 그리고 화면이 그렇게 말한다.
+        assert sum(p.value for p in result.parameters) == pytest.approx(15.0, rel=1e-6)
+        assert "따로 가르지 못합니다" in result.reason
+        assert "R0" in result.reason and "R1" in result.reason
+
+
+def test_the_null_leak_is_shared_evenly_by_an_exactly_degenerate_pair():
+    """정규화가 하는 일 — 대등한 두 축은 널 방향에 `1/√2` 씩 **똑같이** 실린다.
+
+    안 하면 한쪽이 문턱을 넘고 한쪽이 못 넘어, 같은 처지의 두 파라미터가
+    다르게 판정된다.
+    """
+    from wrdkit.eis.fit import _null_leak
+
+    # 합만 보는 야코비안: 두 컬럼이 같다.
+    same = np.array([[1.0, 1.0], [2.0, 2.0], [0.5, 0.5]])
+    leak = _null_leak(same)
+    assert leak[0] == pytest.approx(leak[1], rel=1e-9)
+    assert leak[0] == pytest.approx(1 / np.sqrt(2), rel=1e-6)
+
+    # 크기가 100 배 다른 두 컬럼이어도 — 정규화가 그것을 지운다.
+    skewed = np.array([[1.0, 100.0], [2.0, 200.0], [0.5, 50.0]])
+    leak = _null_leak(skewed)
+    assert leak[0] == pytest.approx(leak[1], rel=1e-9)
+
+    # 서로 다른 방향을 보는 컬럼은 아무도 안 걸린다.
+    free = np.array([[1.0, 0.0], [0.0, 1.0], [0.3, 0.7]])
+    assert np.all(_null_leak(free) < 0.5)

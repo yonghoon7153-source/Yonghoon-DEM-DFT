@@ -1247,6 +1247,21 @@ check "재실행해도 URL·IP 가 제자리" \
 check "인자 없는 bmlout 도 그대로" "$(replay)" "|"
 
 echo
+echo "bml reparse 는 EIS 맞춤도 같이 다시 한다"
+# 충방전 파싱은 결정적이라 다시 읽으면 끝이지만, EIS 는 판정 규칙이 맞춤 안에
+# 들어 있다.  여기서 같이 안 돌리면 사람은 "왜 갑자기 미결정이지" 만 본다.
+RE="$(sed -n '/^cmd_reparse()/,/^}/p' "$BML")"
+check "충방전 재파싱을 부른다" \
+  "$(printf '%s' "$RE" | grep -c '\$url/api/runs/reparse')" "1"
+check "EIS 재맞춤도 부른다" \
+  "$(printf '%s' "$RE" | grep -c '\$url/api/eis/refit')" "1"
+check "수렴 안 한 개수를 읽는다" \
+  "$(printf '%s' "$RE" | grep -c 'not_converged')" "1"
+# EIS 가 실패해도 충방전 결과를 되돌리지 않는다 — 둘은 서로 다른 일이다.
+check "EIS 실패는 경고로 끝난다" \
+  "$(printf '%s' "$RE" | grep -c 'EIS 맞춤은 다시 하지 못했습니다')" "1"
+
+echo
 if [ "$fail" -eq 0 ]; then
   printf '통과 %d건.\n' "$pass"
 else
