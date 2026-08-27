@@ -414,6 +414,21 @@ def rasterize(am_c, am_r, am_t, add_pts, add_phase, box_lo, box_hi, vox, tol_am_
         #     (SDCP–SDCP → 5 · SDCP–VGCF → 3 · SDCP–AM → 그 AM).  브리지가 없던 곳에
         #     **더 좋은 도체를 새로 깔지 않는다** = 이득을 인위로 만들지 않는다.
         _brg = []
+        #  ⚠⚠ **fail-closed** (2026-08-27) — 브리지 기하는 구 반지름 r = d/2 에서 정의된다.
+        #     점 스탬프(`sdcp_sphere_d_um = 0`)로 브리지를 요청하면 옛 코드는 이 블록을
+        #     **조용히 건너뛰어** 처리팔이 대조팔과 **바이트 동일**해졌다 (fail-open).
+        #     2026-08-27 A 트랙 4팔이 정확히 그렇게 무효화됐다 (`INVALID_TREATMENT_NOT_APPLIED`,
+        #     docs/reviews/a_track_status_20260827.md) — 매니페스트는 요청값 0.08 을 적었고
+        #     격자에는 브리지가 없었다.  ⇒ 이제 **거부한다**: "요청했는데 안 걸렸다" 를
+        #     런이 끝난 뒤 판정기가 발견하는 게 아니라 **격자를 찍기 전에** 죽인다.
+        if float(sdcp_bridge_um) > 0.0 and not sdcp_sphere_d_um:
+            raise ValueError(
+                "sdcp_bridge_um > 0 requires the SDCP sphere stamp (sdcp_sphere_d_um > 0): "
+                "the bridge geometry is defined from the sphere radius r = d/2, so under the "
+                "point stamp it would be a silent no-op.  Pass --step3-sdcp-sphere-d "
+                "(kit: SDCP_SPHERE_D=0.30) together with --step3-sdcp-bridge, or set the "
+                "bridge back to 0.  [fail-closed guard added 2026-08-27 after the A-track "
+                "treatment arms came out bit-identical to their controls]")
         if sdcp_sphere_d_um and float(sdcp_bridge_um) > 0.0:
             _tol = float(sdcp_bridge_um)
             _rs = float(sdcp_sphere_d_um) / 2.0
@@ -1946,6 +1961,25 @@ def _selftest():
     _e4 = bool((_d0 == _d1).all())
     ok &= _e4
     print(f"sdcp-bridge-sbe-noop: SDCP 없는 침대에 셀 단위 no-op  {'OK' if _e4 else 'FAIL'}")
+
+    #  ⓔ ★ **fail-closed** — 점 스탬프 + 브리지 요청은 **거부**한다 (2026-08-27).
+    #     이 검사가 없어서 A 트랙 4팔이 무효가 됐다: 킷이 `SDCP_SPHERE_D` 를 안 넘겨
+    #     구 스탬프가 꺼진 채로 `--step3-sdcp-bridge 0.08` 만 걸렸고, 옛 가드가
+    #     `if sdcp_sphere_d_um and ...` 였던 탓에 **처리팔 = 대조팔**이 나왔다.
+    #     세 갈래를 다 문다 — 거부 · 기본값 무해 · 정상 조합 통과.
+    def _raises(**kw):
+        try:
+            rasterize(_bx, _br0, None, _pD, _phD, (0, 0, 0), (3., 3., 3.), 0.15, **kw)
+            return False
+        except ValueError:
+            return True
+    _e5a = _raises(sdcp_bridge_um=0.08)                              # 점 스탬프 + 브리지 → 거부
+    _e5b = not _raises(sdcp_bridge_um=0.0)                           # 기본 off → 통과 (바이트 동일 보존)
+    _e5c = not _raises(sdcp_sphere_d_um=0.30, sdcp_bridge_um=0.08)   # 정상 조합 → 통과
+    _e5 = _e5a and _e5b and _e5c
+    ok &= _e5
+    print(f"sdcp-bridge-failclosed: 점 스탬프+브리지 거부 (거부 {_e5a} · 기본 {_e5b} · 정상 {_e5c})  "
+          f"{'OK' if _e5 else 'FAIL'}")
 
     # ── ★ G2 (D13 원장 ②) — PTFE 이온 차단 노브 `ptfe_block_um` ──────────────────────
     #   계약 7개: ⓐ 기본 off = 바이트 동일 ⓑ 0.0 = off (변환 0 셀) ⓒ 반경이 셀 수를

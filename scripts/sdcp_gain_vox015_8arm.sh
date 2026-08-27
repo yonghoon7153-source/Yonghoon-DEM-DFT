@@ -71,6 +71,18 @@ if [ -n "${SDCP_BRIDGE:-}" ]; then
   case "$SDCP_BRIDGE" in
     *[!0-9.]*|"") echo "[p2] ABORT — SDCP_BRIDGE 는 µm 숫자여야 한다 (받은 값: $SDCP_BRIDGE)"; exit 2;;
   esac
+  #  ⚠⚠ **fail-closed (2026-08-27)** — 브리지는 구 반지름 r = d/2 에서 정의된다.
+  #     `SDCP_SPHERE_D` 없이 브리지만 주면 점 스탬프가 되고 브리지는 **조용히 사라진다**.
+  #     2026-08-27 A 트랙 4팔이 정확히 그렇게 무효화됐다 (처리팔이 대조팔과 바이트 동일,
+  #     `INVALID_TREATMENT_NOT_APPLIED`).  step3 안에도 같은 가드가 있지만 그쪽은 격자를
+  #     찍는 시점 = 이미 DEM·MPM 을 몇 시간 돌린 뒤다.  여기서 **초 단위로** 죽인다.
+  if [ -z "${SDCP_SPHERE_D:-}" ]; then
+    echo "[p2] ABORT — SDCP_BRIDGE=$SDCP_BRIDGE 인데 SDCP_SPHERE_D 가 비었다."
+    echo "      브리지 기하는 구 반지름 r=d/2 에서 정의된다 → 점 스탬프에서는 **no-op** 이고"
+    echo "      처리팔이 대조팔과 바이트 동일해진다 (2026-08-27 A 트랙 무효화 원인)."
+    echo "      고치는 법:  SDCP_SPHERE_D=0.30 SDCP_BRIDGE=$SDCP_BRIDGE ... 로 **둘 다** 줄 것."
+    exit 2
+  fi
   SBRG_FLAG=" --step3-sdcp-bridge $SDCP_BRIDGE"; SBRG_TAG="_sbrg${SDCP_BRIDGE//./}"
   echo "[p2] ★ **판별 팔** — SDCP 접촉 브리지 tol=$SDCP_BRIDGE µm.  생산 규약 아님"        "(sdcp_bridge_prereg_20260825 — 진단 전용, 기본 off)"
 fi
