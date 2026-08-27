@@ -2135,6 +2135,11 @@ def smear_ladder(work, tag, ladder=SMEAR_LADDER_RY, kgrid=None):
             "saddle_image_1based": isad + 1,
             "profile_eV": en,
             "barrier_of_run_eV": round(max(en) - en[0], 6),
+            "⛔_barrier_of_run_은_결과가_아니다": (
+                "이 값은 `<tag>.dat` 의 **마지막 NEB 상태**에서 나온다. 그 런이 미수렴이면 "
+                "이건 지나가는 값이다 (cc333 은 step 30 의 0.128 eV 이고 **인용 금지**로 잠겨 있다). "
+                "sentinel 은 이 값을 '장벽' 으로 쓰는 게 아니라 **같은 좌표에서 SCF 가 같은 수를 "
+                "내는가**만 본다."),
             "fixed_geometry": True,
             "⛔_한계": ["기하는 0.02 에서 최적화된 것 — 이완을 다시 하지 않는다",
                       "k-point 고정 — smearing 과 k 는 짝이라 '수렴' 은 못 말한다",
@@ -2147,7 +2152,9 @@ def smear_ladder(work, tag, ladder=SMEAR_LADDER_RY, kgrid=None):
          f"   프로토콜 출처: {hdr['src']} (degauss {hdr['degauss']:g} Ry · "
          f"{hdr['smearing']} · q {hdr['tot_charge']:.1f} · k {hdr['kpts'][1]})",
          f"   이미지 {len(frames)}개 · **안장 = image {isad+1}** · "
-         f"런의 장벽 {max(en)-en[0]:.4f} eV",
+         f"런의 프로파일 최고−첫점 = {max(en)-en[0]:.4f} eV",
+         f"   ⚠ 이 값은 **결과가 아니다** — `.dat` 의 마지막 NEB 상태다. 그 런이 미수렴이면 "
+         f"지나가는 값이고, sentinel 은 이걸 '장벽' 으로 쓰는 게 아니라 **재현되는지**만 본다.",
          f"   k-point: **{hdr['kpts'][1]}**" + ("  ← 덮어씀" if kgrid else "  (런과 동일)"),
          f"   만든 입력 {len(made)}개 → {out}/g<degauss>/{{ep_initial,saddle,ep_final}}/scf.in",
          "",

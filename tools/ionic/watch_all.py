@@ -265,7 +265,9 @@ def render(captured: str) -> str:
         body = sec.rstrip("\n")
         if not body.strip():
             continue
-        is_live = (_LIVE in body) or ("⛔" in body)
+        # ⛔ 2026-08-28 — `--only <키>` 를 줬는데 그 섹션이 접혀서 화면이 비었다.
+        #   그 인자는 **그 섹션을 보려고** 주는 것이다. 접지 않는다.
+        is_live = (_LIVE in body) or ("⛔" in body) or bool(ONLY)
         n_act += body.count("⛔")
         body = "\n".join(l for l in body.splitlines() if _LIVE not in l)
         title = body.splitlines()[0].strip() if body.strip() else ""
@@ -1007,7 +1009,9 @@ def _tail_logs(pat, n=1):
 if want("prereq"):
     print(BAR)
     print("■ li3nd 선행검사 체인 (리뷰 J ②~⑤)")
-    lg = _tail_logs("/data/work/runs/chain*.log")
+    # ⚠ gabia 에는 이미 `chain_gpu_release.sh` 계열의 chain* 로그가 있다 — 이름이 겹친다.
+    #   선행검사 체인의 기본 로그명은 `prereq_chain_*.log` 다. 그걸 먼저 보고, 없으면 chain*.
+    lg = _tail_logs("/data/work/runs/prereq_chain*.log") or _tail_logs("/data/work/runs/chain*.log")
     run = alive("run_prereq_chain")
     if not lg:
         print("  · 로그 없음 — 아직 안 걸었다")
@@ -1027,6 +1031,8 @@ if want("prereq"):
         bad = [l for l in txt.splitlines()
                if re.match(r"^\[\d\d-\d\d \d\d:\d\d:\d\d\]\s*⛔", l)]
         npt = txt.count("  ▶ ")
+        if run:
+            live()          # ⛔ 이걸 안 찍으면 **도는 중인데도 접힌다** (2026-08-28 실측)
         print(f"  로그 {os.path.basename(f)} · SCF 시작 {npt}점 · "
               f"{'🔄 진행 중' if run else '⏹ 안 돌고 있다'}")
         if stage:
@@ -1063,6 +1069,8 @@ if want("vanhove"):
         cage = sum(1 for l in ver if "제자리다" in l)
         tr = sum(1 for l in ver if "잘려서" in l)
         mid = len(ver) - diff - cage - tr
+        if run:
+            live()
         print(f"  로그 {os.path.basename(f)} · 궤적 {len(starts)}개 시작 · 판정 {len(ver)}건 · "
               f"{'🔄 진행 중' if run else '⏹ 끝'}")
         if ver:
