@@ -684,8 +684,11 @@ def _warm_accessors():
       없으면 `getattr` 도 `globals()` 도 찾을 것이 없다. 경로를 closure 지역
       변수로 가두고, 허용된 accessor **셋만** 밖으로 내보낸다.
 
-      guard(`_warm_offenders`)는 지우지 않는다 — 이 global 이 **되살아나는
-      것**을 막는 회귀로 남는다 (합성 소스로 시험한다).
+      ★ 44차 P1 — 43차에는 guard 를 "되살아남 방지" 로 남겼는데, 44차 리뷰가
+      `DOCS / "22p_gap" / "warm_probe"` 재구성과 closure introspection 을
+      보였다. blacklist 로는 증명이 안 된다 — **지웠다.** 남는 회귀 둘은
+      "그 global 이 없다" 와 "현행 소비자가 accessor 를 지난다" 이고, 그것이
+      이 수정이 실제로 주는 것(현행 소비자 API hardening)이다.
     """
     root = Path(__file__).resolve().parent.parent / "docs" / "22p_gap" / "warm_probe"
 
@@ -4699,104 +4702,6 @@ def _handmade_generation(rp, out: Path, blobs: dict) -> str:
 # 36차 #9a — helper 는 CURRENT 를 따랐지만 **실제 판정**은 fixed path 를 읽었다
 # ─────────────────────────────────────────────────────────────────────────────
 
-def _warm_offenders(tree, warm_ok) -> list:
-    """허용된 셋 **밖에서 `_WARM` 이라는 이름을 읽는** 자리 (40차 #9).
-
-    ★ 39차는 `BinOp(Div)` 의 left 가 정확히 `_WARM` 일 때만 잡았다. alias 한
-      줄이면 우회된다 — `base = _WARM; base / ...`, `_WARM.joinpath(...)`,
-      `Path(_WARM, ...)`. syntax blacklist 를 늘릴 이유가 없다. **이름을 읽는
-      것 자체**를 금지하면 alias 도 다른 constructor 도 함께 닫힌다.
-
-    predicate 를 함수로 뺀 이유는 그것을 **직접 시험할 수 있게** 하기
-    위해서다 (`..._catches_every_way_of_reaching_warm`).
-    """
-    import ast as _ast
-
-    out = []
-
-    def _visit(node, fn):
-        """`fn` 은 **가장 안쪽** 함수 이름 (module scope 면 `None`).
-
-        ★ 41차 #9 — 40차는 `FunctionDef` 를 찾아 그 **안**만 돌았다. module
-          scope 에 alias 한 줄을 두면 load 는 함수 밖이고 함수 안에는 alias
-          이름만 남는다::
-
-              _WARM_ALIAS = _WARM
-              def some_reader(m): return (_WARM_ALIAS / m[...]).read_bytes()
-
-          이름이 "이름 로드 자체를 금지" 인데 실제 predicate 는 "허용되지 않은
-          **함수 안**의 이름 로드" 였다. 이제 전체 AST 를 scope 를 들고
-          돈다 — module scope 도, 허용된 accessor **안의 nested function** 도
-          각자 자기 이름으로 판정된다 (allowlist 를 통째로 건너뛰면 그 안에
-          새 우회가 생긴다).
-        """
-        # ★ 42차 #9 — **이름 load 만 보면 attribute 로 우회된다.** 같은 module 을
-        #   돌려주는 accessor 가 이미 있으므로 `_this()._WARM` 은 `Attribute` 로
-        #   읽혀 41차 guard 를 그대로 통과했다. 금지 대상은 문법이 아니라
-        #   **그 namespace 에 닿는 것**이므로 attribute 이름도 같이 본다.
-        # ★ 43차 P1 — 42차 리뷰가 `getattr(_this(), "_WARM")` ·
-        #   `globals()["_WARM"]` 을 더 보였다. **문자열로 적힌 그 이름**도
-        #   같은 namespace 에 닿는다. (근본 수정은 이 global 을 없앤 것이고
-        #   — `_warm_accessors()` — 이 guard 는 되살아나는 것을 막는 회귀다.)
-        hit = ((isinstance(node, _ast.Name) and node.id == "_WARM"
-                and isinstance(node.ctx, _ast.Load))
-               or (isinstance(node, _ast.Attribute) and node.attr == "_WARM"
-                   and isinstance(node.ctx, _ast.Load))
-               or (isinstance(node, _ast.Constant) and node.value == "_WARM"))
-        if hit and fn not in warm_ok:
-            out.append(f"{fn or '<module>'}:{node.lineno}")
-        # ★ 42차 #9 — `lambda` 도 **새 scope** 다. 41차는 `FunctionDef` 만
-        #   scope 로 봐서, 허용된 accessor 안의 lambda 가 바깥 함수 이름을
-        #   물려받아 allowlist 에 얹혔다 (요청문은 "nested function 도 각자
-        #   판정된다" 고 적었는데 lambda 는 그렇지 않았다).
-        if isinstance(node, _ast.Lambda):
-            # ★ 43차 P1 — default 도 `<lambda>` scope 로 본다. Python 의 실제
-            #   scoping 으로는 바깥에서 평가되지만, `lambda m, root=_WARM: ...`
-            #   는 허용된 accessor **밖으로 capability 를 내보내는** 형태다.
-            #   이 guard 가 막으려는 것은 scoping 이 아니라 그 유출이다.
-            for sub in list(node.args.defaults) \
-                    + [d for d in node.args.kw_defaults if d is not None]:
-                _visit(sub, "<lambda>")
-            _visit(node.body, "<lambda>")
-            return
-        if isinstance(node, (_ast.FunctionDef, _ast.AsyncFunctionDef)):
-            # decorator·기본값·annotation 은 **바깥** scope 에서 평가된다
-            outer = list(node.decorator_list) + list(node.args.defaults) \
-                + [d for d in node.args.kw_defaults if d is not None] \
-                + ([node.returns] if node.returns is not None else []) \
-                + [a.annotation for a in _ast.walk(node.args)
-                   if isinstance(a, _ast.arg) and a.annotation is not None]
-            for sub in outer:
-                _visit(sub, fn)
-            for sub in node.body:
-                _visit(sub, node.name)
-            return
-        for ch in _ast.iter_child_nodes(node):
-            _visit(ch, fn)
-
-    _visit(tree, None)
-    return out
-
-
-@pytest.mark.parametrize("form", [
-    'raw = (_WARM / m["projection_file"]).read_bytes()',
-    'base = _WARM\n    raw = (base / m["projection_file"]).read_bytes()',
-    'raw = _WARM.joinpath(m["projection_file"]).read_bytes()',
-    'raw = Path(_WARM, m["projection_file"]).read_bytes()',
-])
-def test_the_guard_catches_every_way_of_reaching_warm(form):
-    """★ 40차 #9 — 39차 guard 는 **한 가지 문법**만 막았다.
-
-    리뷰가 준 우회 넷을 그대로 넣어 본다. 넷 다 잡혀야 한다 — 이름이
-    "경로 조립 통로 제거" 인데 predicate 가 그보다 좁으면 안 된다.
-    """
-    import ast
-
-    src = f"def some_reader(m):\n    {form}\n"
-    assert _warm_offenders(ast.parse(src), {"_warm_summary"}), (
-        f"이 형태를 못 잡는다: {form!r}")
-
-
 def test_no_reader_touches_the_cohort_fixed_namespace():
     """★ 37차 #9 — 36차 금지는 **함수 이름 하나**였다.
 
@@ -4862,20 +4767,23 @@ def test_no_reader_touches_the_cohort_fixed_namespace():
     #     아니다 (`summary.yaml`·`manifest.yaml` 은 `LEG_SUFFIXES` 밖의 봉인
     #     산출물이라 cohort generation 에 속하지 않는다). 그 밖에서 조립하면
     #     generation 이든 아니든 거부한다 — 통로 자체를 없앤다.
-    # ★ 43차 P1 — 이름 자체가 **없어졌다** (`_warm_accessors()` 의 closure 지역
-    #   변수다). 그래서 production reader 쪽 allowlist 는 비었고, 남는 것은
-    #   guard 자신과 "그 global 이 되살아났는가" 를 보는 회귀뿐이다.
-    warm_ok = {"_visit", "test_the_warm_root_is_not_a_module_global"}
     # ★ 40차 #9 — 39차는 `BinOp(Div)` 의 **left 가 정확히 `_WARM`** 일 때만
     #   잡았다. alias 한 줄이면 우회된다:
     #       base = _WARM; base / m["projection_file"]
     #       _WARM.joinpath(...)   ·   Path(_WARM, ...)
     #   syntax blacklist 를 늘릴 이유가 없다. 허용된 셋 **밖에서 `_WARM` 이라는
     #   이름을 읽는 것 자체**를 금지하면 alias 도 다른 constructor 도 함께 닫힌다.
-    gen_bad = _warm_offenders(tree, warm_ok)
-    assert not gen_bad, (
-        "`_WARM` 을 읽는다 — snapshot 을 쓰라 (허용된 셋은 "
-        f"{sorted(warm_ok)}):\n  " + "\n  ".join(gen_bad))
+    # ★ 44차 P1 — 여기 있던 `_WARM` AST blacklist 를 **지웠다.**
+    #   39~43차에 걸쳐 `BinOp` → 이름 load → module scope → attribute·lambda →
+    #   문자열 상수로 네 번 넓혔고, 매번 새 철자가 나왔다 (44차 리뷰가
+    #   `DOCS / "22p_gap" / "warm_probe"` 재구성과 closure introspection 을 더
+    #   보였다). **AST blacklist 로 namespace confinement 를 증명할 수 없다.**
+    #
+    #   남기는 회귀는 둘이고, 둘 다 이름이 정확하다:
+    #     · `..._warm_root_is_not_a_module_global` — 그 global 이 없다
+    #     · `..._warm_consumers_go_through_the_accessors` — 현행 소비자 배선
+    #   이것은 **현행 소비자 API hardening** 이지 구조적 confinement 의
+    #   증명이 아니다 (그 한계는 요청문에 신고한다).
 
 
 def test_no_cohort_assertion_reads_a_fixed_path():
@@ -6271,38 +6179,6 @@ def test_the_pointer_cas_compares_the_whole_record_not_just_the_generation(
     assert "움직" in str(ei.value) or "CAS" in str(ei.value), str(ei.value)
 
 
-def test_the_warm_guard_catches_a_module_scope_alias(tmp_path):
-    """★ 41차 #9 — guard 가 **함수 안**만 돌았다.
-
-    `_warm_offenders()` 는 `FunctionDef` 를 찾아 그 안의 `_WARM` load 를 센다.
-    module scope 에 alias 한 줄을 두면 load 는 함수 밖이고 함수 안에는
-    alias 이름만 남는다::
-
-        _WARM_ALIAS = _WARM
-        def some_reader(m): return (_WARM_ALIAS / m["projection_file"]).read_bytes()
-
-    40차가 "이름 로드 자체를 금지" 라고 불렀지만 실제 predicate 는 "허용되지
-    않은 **함수 안**의 이름 로드" 였다 — 이름이 predicate 보다 강했다.
-    """
-    import ast
-
-    src = ('_WARM_ALIAS = _WARM\n\n\n'
-           'def some_reader(m):\n'
-           '    return (_WARM_ALIAS / m["projection_file"]).read_bytes()\n')
-    assert _warm_offenders(ast.parse(src), {"_warm_summary"}), (
-        "module scope alias 를 못 잡는다")
-
-
-def test_an_allowed_accessor_may_still_read_warm():
-    """전제 — 허용된 accessor 안의 `_WARM` 은 위반이 아니다 (guard 가 전부를
-    빨갛게 만들면 위 시험이 공허참이 된다)."""
-    import ast
-
-    src = ('def _warm_summary(m):\n'
-           '    return (_WARM / m["projection_file"]).read_bytes()\n')
-    assert not _warm_offenders(ast.parse(src), {"_warm_summary"})
-
-
 @pytest.mark.parametrize("order", [0, 1])
 def test_a_ledger_that_declares_one_cohort_id_twice_is_refused(tmp_path,
                                                                monkeypatch,
@@ -6612,30 +6488,6 @@ def test_the_lock_sentinel_is_a_stable_opaque_inode(tmp_path):
     assert sentinel.stat().st_ino == ino, "sentinel inode 가 바뀌었다"
     assert sentinel.read_bytes() == marker, (
         "게시 lock 이 sentinel 내용을 바꿨다 — 그 파일은 우리 authority 가 아니다")
-
-
-@pytest.mark.parametrize("fn,form", [
-    # attribute 우회 — **허용되지 않은** 함수가 module 객체를 거쳐 읽는다
-    ("some_reader", 'return (_this()._WARM / m["projection_file"]).read_bytes()'),
-    # lambda 우회 — **허용된 accessor 안**에서 만들어 밖으로 내보낸다
-    ("_warm_summary", 'return lambda m: (_WARM / m["projection_file"]).read_bytes()'),
-])
-def test_the_warm_guard_catches_attribute_and_lambda_bypasses(fn, form):
-    """★ 42차 #9 — guard 가 "`_WARM` 이라는 **이름**을 읽는다" 만 본다.
-
-    같은 module 을 돌려주는 accessor 가 이미 있으므로 `_this()._WARM` 는
-    `ast.Attribute.attr` 로 읽혀 통과한다. 그리고 visitor 가 `FunctionDef` 만
-    새 scope 로 보므로, 허용된 accessor **안의 lambda** 는 바깥 함수 이름을
-    그대로 물려받아 allowlist 에 얹힌다.
-
-    41차 요청문은 "허용 accessor 안의 nested function 도 각자 판정된다" 고
-    적었는데 lambda 는 그렇지 않았다 — 산문이 predicate 보다 강했다.
-    """
-    import ast
-
-    src = f'def {fn}(m):\n    {form}\n'
-    assert _warm_offenders(ast.parse(src), {"_warm_summary"}), (
-        f"이 형태를 못 잡는다: {fn}/{form!r}")
 
 
 def test_the_snapshot_selector_itself_refuses_a_duplicate_cohort_id(
@@ -6966,26 +6818,6 @@ def test_the_warm_root_is_not_a_module_global():
     assert callable(_warm_summary) and callable(_warm_has_summary)
 
 
-@pytest.mark.parametrize("fn,form", [
-    ("some_reader", 'return getattr(_this(), "_WARM") / m["projection_file"]'),
-    ("some_reader", 'return globals()["_WARM"] / m["projection_file"]'),
-    ("_warm_summary",
-     'return lambda m, root=_WARM: (root / m["projection_file"]).read_bytes()'),
-])
-def test_the_warm_guard_catches_indirect_namespace_lookups(fn, form):
-    """★ 43차 P1 — guard 는 **되살아남**을 막는 회귀로 남긴다.
-
-    근본 수정은 global 을 없앤 것이지만 (`..._is_not_a_module_global`), 누가
-    다시 만들면 이 셋으로도 닿을 수 있다. 문자열로 적힌 이름과 lambda default
-    capture 를 함께 본다.
-    """
-    import ast
-
-    src = f'def {fn}(m):\n    {form}\n'
-    assert _warm_offenders(ast.parse(src), {"_warm_summary"}), (
-        f"이 형태를 못 잡는다: {fn}/{form!r}")
-
-
 # ─────────────────────────────────────────────────────────────────────────────
 # 43차 #9 — 진짜 두 publisher (독립 process · 서로 다른 leg · no lost update)
 # ─────────────────────────────────────────────────────────────────────────────
@@ -7006,17 +6838,23 @@ for sfx, b in ((".projection.csv.gz", b"c"), (".projection.yaml", b"v\\n"),
 
 out = pathlib.Path(out)
 if release:
-    # A 역할: **임계 구역 안에서** barrier 를 친다 — lock 을 들고 원장·base 를
-    # 읽은 뒤 멈췄다가 그대로 commit 한다 (진짜 publisher 의 중간 상태다).
-    with rp._PublishLock(out) as lock, rp._authority(lock, out) as auth:
-        if ready:
-            open(ready, "w").close()
+    # ★ 44차 #9 — A 도 **public lifecycle 을 그대로 지난다.** 43차는 A 가
+    #   내부 helper 를 직접 불러서 "두 publisher 가 모두 production 경로를
+    #   지난다" 는 증거가 아니었다. production signature 에 hook 을 다는 대신,
+    #   child process 에서 내부 임계 단계 하나를 **시험 전용 wrapper** 로
+    #   감싸 barrier 만 끼워 넣는다 (44차 리뷰 Q3 답변 그대로).
+    real_locked = rp._promote_cohort_locked
+
+    def _barrier(stage_, auth_, leg_):
+        open(ready, "w").close()          # 원장·base 를 읽은 뒤다
         while not os.path.exists(release):
             time.sleep(0.01)
-        res = rp._promote_cohort_locked(stage, auth, leg)
-else:
-    res = rp.promote_cohort_generation(stage, out, leg,
-                                       roster=rp._ledger_roster(out))
+        return real_locked(stage_, auth_, leg_)
+
+    rp._promote_cohort_locked = _barrier
+
+res = rp.promote_cohort_generation(stage, out, leg,
+                                   roster=rp._ledger_roster(out))
 print(json.dumps({"published": res.get("published")}))
 '''
 
@@ -7092,3 +6930,221 @@ def test_two_independent_publishers_lose_no_leg(tmp_path):
     cur = rp.read_current(out, expect_legs={"a", "b"})
     assert {rp._leg_of(n) for n in cur["files"]} == {"a", "b"}, (
         f"두 publisher 중 하나의 leg 를 잃었다: {sorted(cur['files'])}")
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# 44차 #9 — 진짜 authority 를 들고도 불완전 generation 을 게시할 수 있었다
+# ─────────────────────────────────────────────────────────────────────────────
+
+def test_the_sink_refuses_an_incomplete_generation_with_a_genuine_authority(
+        tmp_path):
+    """★ 44차 #9 — 43차는 **위조** authority 만 막았다.
+
+    `_authority()` 는 genuine `_Authority` 를 caller 에게 그대로 `yield` 한다.
+    그래서 위조도 registry 편집도 없이 이렇게 부를 수 있다::
+
+        with _PublishLock(out) as lock, _authority(lock, out) as auth:
+            _promote_generation(incomplete_stage, auth)
+
+    exact suffix 검사와 `assert_cohort_complete()` 는 wrapper
+    (`_promote_cohort_locked`) 에만 있었고, 되돌릴 수 없는 sink 는 **leg 이름
+    집합**만 roster 와 대조했다. roster 가 {a,b} 일 때 stage 에
+    `a.projection.yaml` · `b.projection.yaml` 둘만 있어도 seen legs 는 {a,b} 라
+    통과한다 — publisher 가 reader 가 읽을 수 없는 active state 를 만든다.
+
+    되돌릴 수 없는 sink 는 자기 불변식을 **스스로** 강제해야 한다 (36차에 이
+    사본을 "중복" 이라며 지웠던 것이 37차에 오판으로 판명된 그 자리다).
+    """
+    rp = _rp()
+    out = tmp_path / "cohort"
+    out.mkdir(parents=True)
+    # roster {a,b} 를 원장 역할 fixture 에 알린다
+    rp.promote_cohort_generation(
+        _stage(tmp_path / "sa", **{"a.projection.csv.gz": b"ac",
+                                   "a.projection.yaml": b"v: a\n",
+                                   "a.restarts.csv.gz": b"ar"}), out, "a",
+        roster={"a", "b"})
+    before_cur = rp._pointer_bytes(out, "CURRENT")
+    before_pend = rp._pointer_bytes(out, ".PENDING")
+    gens = sorted(p.name for p in (out / "gen").iterdir())
+
+    # 두 축을 **따로** 본다:
+    #   active 경로 — leg 이름 집합은 {a,b} 로 맞지만 세 파일 exact set 이 아니다
+    #   bootstrap 경로 — leg 집합이 명부의 부분집합이고 suffix 도 깨졌다
+    #     (완전성 검사는 여기서 안 불리므로 suffix 축만이 잡는다)
+    for tag, files in (
+            ("active", {"a.projection.yaml": b"v: a\n",
+                        "b.projection.yaml": b"v: b\n"}),
+            ("bootstrap", {"a.projection.yaml": b"v: a\n"})):
+        bad = _stage(tmp_path / f"sbad_{tag}", **files)
+        with rp._PublishLock(out) as lock, rp._authority(lock, out) as auth:
+            with pytest.raises(SystemExit) as ei:
+                rp._promote_generation(bad, auth)
+        assert "불완전" in str(ei.value) or "exact" in str(ei.value), (
+            f"{tag}: {ei.value}")
+        assert rp._pointer_bytes(out, "CURRENT") == before_cur, tag
+        assert rp._pointer_bytes(out, ".PENDING") == before_pend, tag
+        assert sorted(p.name for p in (out / "gen").iterdir()) == gens, (
+            f"{tag}: 거부 전에 generation 이 생겼다")
+
+
+def test_a_frozen_authority_cannot_be_edited_by_its_holder(tmp_path):
+    """★ 44차 #9 — 43차 `_Authority` 는 mutable slot 이었다.
+
+    genuine 객체를 받은 caller 가 `auth.roster` 나 pointer snapshot 을 바꾸면
+    registry 검사는 그대로 통과한다. snapshot 은 **고정된 근거**여야 한다.
+    """
+    rp = _rp()
+    out = tmp_path / "cohort"
+    _one_leg_cohort(rp, tmp_path, out)
+    with rp._PublishLock(out) as lock, rp._authority(lock, out) as auth:
+        with pytest.raises((SystemExit, AttributeError)):
+            auth.roster = {"someone-else"}
+        with pytest.raises((SystemExit, AttributeError)):
+            auth.cur_raw = b"{}"
+        assert auth.roster == {"a"}, "snapshot 이 바뀌었다"
+
+
+@pytest.mark.parametrize("kind", ["date_leg", "date_scalar"])
+def test_a_ledger_whose_types_differ_is_not_folded_into_one_seal(tmp_path,
+                                                                monkeypatch,
+                                                                kind):
+    """★ 44차 #9 — seal 이 typed YAML record 에 대해 **injective 하지 않다.**
+
+    원장은 `yaml.safe_load()` 로 읽고 seal 은 `json.dumps(..., default=str)`
+    로 만든다. PyYAML 은 이 둘에 다른 Python type 을 준다::
+
+        legs: ["2026-08-28"]   → str
+        legs: [2026-08-28]     → datetime.date
+
+    그런데 `default=str` 이 둘 다 `"2026-08-28"` 로 접는다. record 의 의미가
+    바뀌었는데 seal 이 같아져 게시 직전 재확인이 변경을 놓친다.
+
+    canonicalizer 가 흡수하면 안 되는 것은 **거부**해야 한다 (fail-closed).
+    """
+    import importlib.util
+
+    import yaml
+
+    spec = importlib.util.spec_from_file_location(
+        "_rp_seal", _REPO / "docs" / "22p_gap" / "row_projection.py")
+    rp = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(rp)
+
+    root = tmp_path / "repo"
+    (root / "docs" / "22p_gap" / "coh").mkdir(parents=True)
+    body = ('cohorts:\n'
+            '  - cohort_id: gX\n'
+            '    dir: docs/22p_gap/coh\n'
+            '    status: active\n')
+    body += ('    legs: [2026-08-28]\n' if kind == "date_leg"
+             else '    legs: ["a"]\n    recorded: 2026-08-28\n')
+    (root / "docs" / "22p_gap" / "LEG_PRESERVATION.yaml").write_text(
+        body, encoding="utf-8")
+    monkeypatch.setattr(rp, "REPO", root)
+
+    with pytest.raises(SystemExit) as ei:
+        rp._ledger_seal(rp._ledger_cohort(root / "docs" / "22p_gap" / "coh"))
+    assert "타입" in str(ei.value) or "type" in str(ei.value), str(ei.value)
+
+
+def test_the_pointer_is_rechecked_immediately_before_the_rename(tmp_path):
+    """★ 44차 #9 — guard 가 통과한 **뒤** commit 이 온다.
+
+        A: ledger seal · CURRENT · PENDING 재확인 → 통과
+        X: 다른 valid CURRENT 를 게시
+        A: `_publish_pointer()` 가 X 의 CURRENT 를 덮는다
+
+    창을 완전히 없애려면 권한 경계나 provider 의 원자적 conditional write 가
+    필요하다 (신고 항목). 여기서 할 수 있는 것은 대조를 **`os.replace` 직전**
+    으로 내리는 것이다 — temp 파일을 다 쓰고 fsync 한 뒤 마지막 syscall 앞.
+
+    주입 지점은 `_publish_pointer` 안의 temp write 다.
+    """
+    rp = _rp()
+    out = tmp_path / "cohort"
+    before = _one_leg_cohort(rp, tmp_path, out)
+    hijacked = _one_leg_cohort_bytes(rp, tmp_path, out, tag=b"X")
+
+    real_tmp = rp._write_pointer_tmp
+    fired: list = []
+
+    def _steal(o, rec):
+        # temp 파일을 쓴 **뒤**·`os.replace` **직전**에 남이 끼어든다
+        tmp = real_tmp(o, rec)
+        if not fired:
+            fired.append(1)
+            (out / "CURRENT").write_bytes(hijacked)
+        return tmp
+
+    rp._write_pointer_tmp = _steal
+    try:
+        with pytest.raises(SystemExit) as ei:
+            _one_leg_cohort(rp, tmp_path, out, tag=b"1")
+    finally:
+        rp._write_pointer_tmp = real_tmp
+    assert fired, "전제: 주입이 실제로 일어났다"
+    assert "움직" in str(ei.value), str(ei.value)
+    assert (out / "CURRENT").read_bytes() == hijacked, "남의 승격을 덮었다"
+    assert before["generation_id"], "전제: 처음 게시가 있었다"
+
+
+def test_the_warm_consumers_go_through_the_accessors():
+    """★ 44차 P1 — blacklist 를 지운 자리에 **positive wiring** 회귀를 둔다.
+
+    44차 리뷰 Q4 답변 그대로: 유지할 핵심 회귀는 ① global 부재 ② 현행 허용
+    소비자가 accessor 를 호출한다는 것 둘이다. 이것은 **현행 소비자 API
+    hardening** 이지 same-process namespace confinement 의 증명이 아니다
+    (그 한계는 요청문에 신고한다).
+
+    같은 root 를 우연히 재구성하는 것도 좁게 막는다 — `"warm_probe"` 문자열은
+    accessor factory 안에서만 나온다. 이것은 **사고 방지**이지 보안 경계가
+    아니고, 이름도 그렇게 붙인다.
+    """
+    import ast
+
+    src = Path(__file__).read_text(encoding="utf-8")
+    tree = ast.parse(src)
+
+    calls = {n.func.id for n in ast.walk(tree)
+             if isinstance(n, ast.Call) and isinstance(n.func, ast.Name)}
+    assert {"_warm_summary", "_warm_manifest", "_warm_has_summary"} <= calls, (
+        "허용된 accessor 셋 중 쓰이지 않는 것이 있다 — 배선이 끊겼다")
+
+    where = []
+    for fn in ast.walk(tree):
+        if not isinstance(fn, ast.FunctionDef):
+            continue
+        for n in ast.walk(fn):
+            if isinstance(n, ast.Constant) and n.value == "warm_probe":
+                where.append(fn.name)
+    assert set(where) <= {"_warm_accessors",
+                          "test_the_warm_consumers_go_through_the_accessors"}, (
+        f"`warm_probe` 경로를 accessor 밖에서 조립한다: {sorted(set(where))}")
+
+
+def test_the_publisher_declares_its_trust_boundary():
+    """★ 44차 #9 — 검사로 닫히지 않는 창은 **전제로 적어야** 한다.
+
+    44차 리뷰 Q1 답변의 두 갈래 중 후자를 택했다: 강한 hostile-namespace
+    보장을 유지하려면 별도 OS principal 이나 provider 의 원자적 conditional
+    write 가 필요하고, 둘 다 이 배포 형태 밖이다. 그래서 **보장을 철회하고
+    전제를 계약에 적는다.**
+
+    산문이 코드와 갈라지지 않게 둘을 함께 못 박는다 — 정본은 코드의
+    `_TRUST_BOUNDARY` 이고 계약서는 그것을 가리킨다.
+    """
+    rp = _rp()
+    tb = getattr(rp, "_TRUST_BOUNDARY", None)
+    assert isinstance(tb, str) and "principal" in tb, (
+        "publisher 가 신뢰 경계를 선언하지 않는다")
+    for need in ("promote_cohort_generation", "lock", "밖"):
+        assert need in tb, f"신뢰 경계 선언에 `{need}` 가 없다"
+
+    contract = (DOCS / "22p_gap" / "STAGE3_CONTRACT.md").read_text(
+        encoding="utf-8")
+    assert "_TRUST_BOUNDARY" in contract, (
+        "계약서가 코드의 신뢰 경계 선언을 가리키지 않는다 — 산문과 코드가 "
+        "갈라지는 자리다")
+    assert "보장 철회" in contract or "보장을 철회" in contract, (
+        "계약서가 무엇을 철회했는지 적지 않았다")

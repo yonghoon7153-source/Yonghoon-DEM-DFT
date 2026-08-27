@@ -881,6 +881,15 @@ class CasBackend:
             #   버리고 기한 없는 `recover_*()` 로 다시 찾았고, 같은 바이트의
             #   더 최신·더 짧은 Compliance version 이 있으면 그것을 골라
             #   검증에서 죽었다 (기한을 덮는 v1 이 그대로 있는데도).
+            # ★ 44차 P2 — `proof.until` 은 지금까지 반환만 되고 아무도 안
+            #   봤다. horizon 의 정본은 검증된 lease record 이므로, 여기서
+            #   **둘이 같은 값인지** 한 번 못 박는다 (그러지 않으면 필드가
+            #   이름만 있고 계약은 없다 — 이 저장소가 반복해서 겪은 형태다).
+            if proof.until != lease["retain_until_utc"]:
+                raise PreserveError(
+                    "retention",
+                    f"{leg_id}: 수리 proof 의 기한이 lease 와 다르다 "
+                    f"({proof.until} ≠ {lease['retain_until_utc']})")
             return self.verify_retention(
                 leg_id, extra[0], expected=set(objs),
                 lease_version=proof.lease_version,

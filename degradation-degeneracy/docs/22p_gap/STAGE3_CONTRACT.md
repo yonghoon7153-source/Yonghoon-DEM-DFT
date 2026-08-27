@@ -916,6 +916,43 @@ cohort 에 재생성했더니 `projection_sha256`·`restart_projection_sha256`·
 **아직 아닌 것**: v6 투영을 새 schema 로 만들 때 새 디렉터리·새 cohort 로
 가야 한다는 규칙은 적었지만, v6 투영 자체가 없어 실측되지 않았다.
 
+### 13.3.1 cohort 게시의 신뢰 경계 (44차 — **보장 철회**)
+
+39~43차 게이트 리뷰에서 cohort 게시 경로는 "적대적 same-process/namespace
+writer" 를 위협 모델에 두고 검사를 계속 늘렸다. 44차에 그 중 하나가 **검사
+횟수로 닫히지 않는다**는 것이 확정됐다:
+
+> `_commit_guard()` 가 원장 seal 과 두 pointer 를 재확인하고 통과한 뒤,
+> `os.replace` 가 실행되기 전에 다른 writer 가 valid `CURRENT` 를 게시하면
+> 그것을 덮는다.
+
+이 창을 없애려면 둘 중 하나가 필요하다.
+
+1. 별도 OS principal/service 가 `CURRENT`·`.PENDING`·`gen/`·`.publish.lock`
+   과 보존 원장 namespace 의 create/rename/link/write 를 **독점**한다.
+2. provider 가 원자적 conditional write(compare-and-swap)를 제공한다.
+
+둘 다 이 저장소의 현재 배포 형태 밖이다. 그러므로 **보장을 철회하고 전제를
+계약에 적는다.**
+
+> **전제**: cohort 출력 디렉터리와 보존 원장은 **하나의 OS principal 이
+> 소유**하고, 그 안에 쓰는 모든 writer 는 `promote_cohort_generation()` 을
+> 지나 같은 게시 lock 을 따른다. 비협조적 writer — 같은 principal 로 lock
+> 없이 pointer 를 바꾸는 코드, pathname 을 교체하는 코드 — 는 지원 범위
+> **밖**이다.
+
+정본은 `docs/22p_gap/row_projection.py` 의 `_TRUST_BOUNDARY` 문자열이고,
+이 절은 그것을 가리킨다 (`test_the_publisher_declares_its_trust_boundary`
+가 둘이 함께 있는지 본다).
+
+남는 것은 다음 셋이며, 전제가 깨져도 **탐지**는 된다.
+
+| 축 | 상태 |
+|---|---|
+| lock 취득~commit 사이의 pointer/원장 변경 | 검사한다 (`_commit_guard` + `os.replace` 직전 재확인) |
+| `os.replace` 직전~직후의 마지막 창 | **전제로 배제** — 검사로 못 닫는다 |
+| 잃은 pointer 의 복구 | generation directory 는 immutable 이므로 가능 |
+
 ### 13.4 묶음 9 가 아직 못 하는 것 — planned leg index
 
 보존 원장의 coverage 기준이 **커밋된 투영**이다. 그래서 새 다리를 돌려도 투영을

@@ -5308,3 +5308,57 @@ def test_a_pre_journal_finalize_uses_the_repaired_pin_proof(tmp_path, monkeypatc
     assert out["retention"]["lease_version"] == v1, (
         "수리가 찾은 긴-기한 proof 대신 짧은 v2 를 봉인했다: "
         f"{out['retention']['lease_version']}")
+
+
+def test_the_journal_seals_the_content_proof_the_repair_produced(tmp_path,
+                                                                 monkeypatch):
+    """★ 44차 P2 — 43차 증거는 content exact-ID 가 **journal 까지** 가는지를
+    직접 보지 않았다 (pin 축만 end-to-end 였다).
+
+    `after_pin_lock` 창에서 재개하면 수리가 content 를 잠그고 그 exact ID 가
+    journal 에 봉인돼야 한다. 그리고 journal 이 적은 ID 로 provider 를 조회한
+    것이 실제 담보 상태여야 한다.
+    """
+    import tools.preserve as P
+
+    run = _make_run(tmp_path)
+    store = _LockingStore(name=str(tmp_path))
+    backend = _lockstore(tmp_path, store)
+    index = tmp_path / "index"
+
+    base = dt.datetime(2026, 8, 30, 12, 0, 0, tzinfo=dt.timezone.utc)
+    ticks = iter(range(0, 100000, 37))
+
+    class _Clock(dt.datetime):
+        @classmethod
+        def now(cls, tz=None):
+            return base + dt.timedelta(seconds=next(ticks))
+
+    monkeypatch.setattr(P.dt, "datetime", _Clock)
+    _phase_kill(monkeypatch, "after_pin_lock")
+    with pytest.raises(RuntimeError):
+        run_transaction(PLANNED, run, backend, index, _hooks())
+    monkeypatch.undo()
+    monkeypatch.setattr(P.dt, "datetime", _Clock)
+
+    leg = PLANNED.leg_id
+    fresh = _lockstore(tmp_path, _LockingStore(name=store.name))
+    out = finalize_only(leg, fresh, index)
+    monkeypatch.undo()
+    assert out["ok"] and out["durable"] is True
+
+    ld = out["retention"]["lease_digest"]
+    cv = out["retention"]["lease_content_version"]
+    assert cv, "content proof 가 비었다"
+
+    # journal 이 그 exact ID 를 봉인했는가
+    jrn = load_canonical(_reg_path(index, leg).read_bytes())
+    assert jrn.get("lease_content_version") == cv, (
+        f"journal 의 content proof 가 수리 결과와 다르다: "
+        f"{jrn.get('lease_content_version')} ≠ {cv}")
+    assert jrn.get("lease_version") == out["retention"]["lease_version"]
+
+    # 그 ID 가 실제로 담보 상태인가 (journal 이 적은 것을 provider 에 묻는다)
+    st = store.describe_object(fresh._provider_obj_key(ld), cv)
+    assert st and st["mode"] == "COMPLIANCE", f"봉인 ID 가 담보가 아니다: {st}"
+    assert st["retain_until"] >= out["retention"]["retain_until_utc"]

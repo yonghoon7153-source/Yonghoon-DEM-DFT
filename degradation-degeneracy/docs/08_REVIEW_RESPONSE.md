@@ -4434,3 +4434,54 @@ selector 도 닫았다: `cohort_id` 와 `purpose` 동시 지정, 모르는 purpo
 | same-process hostile Python | 보안 경계 아님 — `_Authority` 는 우연한 우회를 막을 뿐 |
 | 실제 object-lock provider adapter | **미구현** (별도 acceptance gate) |
 | power-loss ordering fault model | **미착수** (별도 acceptance gate) |
+
+---
+
+## 52. 43차 리뷰 대응 — 근거의 범위, 그리고 닫히지 않는 창을 계약으로 옮긴다
+
+**대상 커밋**: `09317986` · **판정**: NO-GO (P0 셋 · evidence/contract 넷)
+**source_digest**: `9a18ed9776de34f3` → `1d0b9bde8e09792a`
+
+43차 리뷰는 조건 3·6·7·9 를 종결로, 5·8 을 한정 범위 통과로 인정했다.
+남은 P0 셋은 전부 **근거의 범위** 문제였고, 그중 하나는 검사로 닫히지 않았다.
+
+### 발견별 대응
+
+| # | 43차 지적 | 이번에 한 것 | 시험 |
+|---|---|---|---|
+| P0-1 | genuine authority 가 raw sink 의 **유효한 인자**다 (위조 없이 불완전 generation 을 CURRENT 로 게시) | 되돌릴 수 없는 sink 가 **자기 불변식을 스스로** 본다 — `assert_cohort_complete()` 를 자재화 **전에** 부른다 (reader 와 같은 validator 하나) | `..._sink_refuses_an_incomplete_generation_with_a_genuine_authority[active·bootstrap]` |
+| P0-1b | `_Authority` slot 이 mutable | `__setattr__` 이 고정 뒤 거부한다 | `..._frozen_authority_cannot_be_edited_by_its_holder` |
+| P0-2 | seal 이 injective 하지 않다 (`yaml.safe_load` + `default=str` 이 `"2026-08-28"` 와 `date(2026,8,28)` 를 접는다) | `_assert_sealable()` — 접을 수 없는 값은 **거부**한다. `default=str` 삭제 | `..._ledger_whose_types_differ_is_not_folded_into_one_seal[date_leg·date_scalar]` |
+| P0-3 | guard 통과 뒤 commit 이 온다 | 대조를 **`os.replace` 직전**으로 내렸다 (`_write_pointer_tmp` 뒤). **그래도 남는 창은 계약으로 옮겼다** — §13.3.1 · `_TRUST_BOUNDARY` | `..._pointer_is_rechecked_immediately_before_the_rename` · `..._publisher_declares_its_trust_boundary` |
+| P1-5 | A 가 public lifecycle 을 우회한다 | A·B **둘 다** `promote_cohort_generation()` 을 부른다. barrier 는 child process 에서 내부 helper 를 **시험 전용 wrapper** 로 감싸 넣는다 (production signature 는 안 건드린다) | `..._two_independent_publishers_lose_no_leg` |
+| P2-6 | `RetentionProof.until` 이 아무도 안 본다 | orchestration 경계에서 `proof.until == lease["retain_until_utc"]` 를 못 박는다. content exact-ID 가 journal 까지 가는지도 직접 본다 | `..._journal_seals_the_content_proof_the_repair_produced` |
+| P1-8 | warm guard 가 structural confinement 의 증명이 아니다 | **AST blacklist 를 지웠다.** 남는 회귀는 ① global 부재 ② 현행 소비자 배선 둘이고, 이름을 "현행 소비자 API hardening" 으로 정확히 붙였다 | `..._warm_root_is_not_a_module_global` · `..._warm_consumers_go_through_the_accessors` |
+| 증거 | 변이 결과가 prose-only 라 replay 불가 | `docs/22p_gap/mutation_replay.py` — mutant 19개를 저장소에 둔다 (`--list` · `-k`). RUN_SCOPE 밖이라 code identity 를 안 움직인다 | 그 자체가 artifact |
+
+### 보장 철회 — 43차 리뷰 Q1 의 두 갈래 중 후자
+
+`_commit_guard()` 와 `os.replace` 사이의 창은 검사 횟수로 닫히지 않는다.
+닫으려면 별도 OS principal 이 lock·pointer·generation·원장 namespace 를
+독점하거나 provider 의 원자적 conditional write 가 있어야 하고, 둘 다 이
+배포 형태 밖이다. 그래서 **강한 hostile-namespace 보장을 철회하고 전제를
+적었다** (계약 §13.3.1, 코드 `_TRUST_BOUNDARY`). 이것은 구현 종결이 아니라
+위협 모델 축소이며, 그렇게 부른다.
+
+### 변이 재생 — 19 mutant, 그중 둘은 "관측 안 됨" 으로 신고
+
+`sink-exact-suffix` 와 `sink-completeness` 를 따로 두었더니 **서로를 가려**
+둘 다 안 물었다. 두 검사가 같은 것을 말하고 있었다 — 하나로 합쳤다
+(`assert_cohort_complete` 한 번). 합친 뒤 `sink-validates-itself` 가 문다.
+
+`proof-until-equals-lease` 와 `warm-consumer-wiring` 은 **관측되지 않는다고
+신고**한다 (사유는 `mutation_replay.py` 의 `DECLARED_MASKED`).
+
+### 아직 아닌 것
+
+| 항 | 상태 |
+|---|---|
+| `os.replace` 직전~직후의 마지막 창 | **전제로 배제** (계약 §13.3.1) — 검사로 못 닫는다 |
+| roster 를 cohort lifetime 동안 immutable 로 + `CURRENT` 에 cohort ID·원장 digest 봉인 | **미착수** (43차 Q2 답변의 설계) |
+| same-process hostile Python | 보안 경계 아님 — 우연한 우회만 막는다 |
+| 실제 object-lock provider adapter | **미구현** (별도 acceptance gate) |
+| power-loss ordering fault model | **미착수** (별도 acceptance gate) |

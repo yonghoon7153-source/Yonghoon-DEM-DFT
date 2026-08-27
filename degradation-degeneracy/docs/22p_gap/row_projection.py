@@ -907,13 +907,28 @@ class _PublishLock:
         _PublishLock._reassert_kernel_lock(self)
 
 
-def _publish_pointer(out: Path, rec: dict, name: str = "CURRENT") -> None:
+def _publish_pointer(out: Path, rec: dict, name: str = "CURRENT",
+                     auth: "_Authority" = None) -> None:
     """CURRENT 를 **원자적으로** 옮긴다. 여기가 유일한 가시성 전환점이다.
 
     ★ 39차 #9 — `name=".PENDING"` 은 bootstrap 용 **비활성** pointer 다.
       어떤 reader 도 그것을 권위로 보지 않는다 (`read_current()` 는 `CURRENT`
       만 본다). 다음 leg 의 publisher 가 base 를 찾는 데만 쓴다.
     """
+    tmp = _write_pointer_tmp(out, rec)
+    # ★ 44차 #9 — 대조를 **`os.replace` 직전**으로 내린다. 43차는 guard 가
+    #   통과한 뒤 temp write·fsync 를 거쳐 commit 했고, 그 사이에 다른 valid
+    #   pointer 가 생기면 그대로 덮었다. 여기까지 내려도 마지막 syscall 앞
+    #   창은 남는다 — 그것을 없애려면 권한 경계나 provider 의 원자적
+    #   conditional write 가 필요하다 (`_TRUST_BOUNDARY` 참조).
+    if auth is not None:
+        _Authority.assert_pointers_unmoved(auth)
+    os.replace(tmp, out / name)
+    _fsync_dir(out)
+
+
+def _write_pointer_tmp(out: Path, rec: dict) -> Path:
+    """pointer 를 temp 로 쓰고 fsync 한다 — 남은 것은 `os.replace` 하나다."""
     tmp = out / f".CURRENT.{uuid.uuid4().hex}.tmp"
     data = json.dumps(rec, sort_keys=True, ensure_ascii=False,
                       separators=(",", ":")).encode("utf-8")
@@ -925,8 +940,26 @@ def _publish_pointer(out: Path, rec: dict, name: str = "CURRENT") -> None:
         os.fsync(fd)
     finally:
         os.close(fd)
-    os.replace(tmp, out / name)
-    _fsync_dir(out)
+    return tmp
+
+
+#: ★ 44차 #9 — **신뢰 경계를 좁혀 명시한다** (44차 리뷰 Q1 답변의 두 갈래 중
+#: 후자를 택했다). 39~43차에 걸쳐 "적대적 same-process/namespace writer" 를
+#: 위협 모델에 두고 검사를 계속 늘렸지만, 마지막 창은 검사 횟수로 닫히지
+#: 않는다: `_commit_guard()` 와 `os.replace` 사이에 다른 valid pointer 가
+#: 생기면 그대로 덮는다. 그것을 없애려면 별도 OS principal 이 lock·pointer·
+#: generation·원장 namespace 의 create/rename/link/write 를 독점하거나
+#: provider 의 원자적 conditional write 가 있어야 한다 — 둘 다 이 저장소의
+#: 배포 형태 밖이다.
+#:
+#: 그래서 **보장을 철회하고 전제를 적는다.** 이 전제가 깨지면 아래 어떤
+#: 검사도 손실을 막지 못한다 (검사는 그때 **탐지**만 한다 — generation
+#: directory 는 immutable 하므로 잃은 pointer 는 복구 가능하다).
+_TRUST_BOUNDARY = """cohort 출력 디렉터리(`CURRENT`·`.PENDING`·`gen/`·
+`.publish.lock`)와 보존 원장은 **하나의 OS principal 이 소유**하고, 그 안에
+쓰는 모든 writer 는 `promote_cohort_generation()` 을 지나 같은 게시 lock 을
+따른다. 비협조적 writer(같은 principal 로 lock 없이 pointer 를 바꾸는 코드,
+pathname 을 교체하는 코드)는 지원 범위 **밖**이다."""
 
 
 class _Authority:
@@ -952,10 +985,25 @@ class _Authority:
 
     _ACTIVE: set = set()
     __slots__ = ("out", "lock", "cohort", "seal", "roster", "roster_digest",
-                 "cur_raw", "pend_raw", "base_ptr", "base_raw", "cur_gid")
+                 "cur_raw", "pend_raw", "base_ptr", "base_raw", "cur_gid",
+                 "_sealed")
 
     def __init__(self, out, lock):
+        object.__setattr__(self, "_sealed", False)
         self.out, self.lock = Path(out), lock
+
+    def __setattr__(self, name, value):
+        """★ 44차 #9 — 고정된 뒤에는 **바꿀 수 없다.**
+
+        43차 slot 은 mutable 이라, genuine authority 를 받은 caller 가
+        `auth.roster` 나 pointer snapshot 을 바꿔도 registry 검사는 그대로
+        통과했다. snapshot 이 근거인데 근거를 고칠 수 있으면 근거가 아니다.
+        """
+        if getattr(self, "_sealed", False):
+            raise SystemExit(
+                f"✗ 고정된 게시 authority 를 바꿀 수 없다 ({name}) — "
+                "근거는 `_authority()` 가 한 번 고정한 그 값이다")
+        object.__setattr__(self, name, value)
 
     def ledger_seal_now(self) -> str:
         return _ledger_seal(_ledger_cohort(self.out))
@@ -963,6 +1011,14 @@ class _Authority:
     def pointers_now(self):
         return (_pointer_bytes(self.out, "CURRENT"),
                 _pointer_bytes(self.out, ".PENDING"))
+
+    def assert_pointers_unmoved(self) -> None:
+        """두 pointer 가 snapshot 그대로인가 — `os.replace` **직전**에 부른다."""
+        live_cur, live_pend = self.pointers_now()
+        if live_cur != self.cur_raw or live_pend != self.pend_raw:
+            raise SystemExit(
+                "✗ CURRENT 또는 `.PENDING` 이 그 사이에 움직였다 — 남의 승격을 "
+                "덮지 않는다. base 를 다시 읽고 재시도하라")
 
 
 @contextlib.contextmanager
@@ -1020,6 +1076,7 @@ def _authority(lock: "_PublishLock", out: Path):
         auth.base_ptr = ".PENDING"
     auth.base_raw = (auth.pend_raw if auth.base_ptr == ".PENDING"
                      else auth.cur_raw)
+    object.__setattr__(auth, "_sealed", True)      # 44차 #9 — 여기서 굳는다
     _Authority._ACTIVE.add(id(auth))
     try:
         yield auth
@@ -1060,6 +1117,20 @@ def _promote_generation(stage: Path, auth: "_Authority") -> dict:
     if not files:
         raise SystemExit(f"✗ staging 이 비었다: {stage}")
     gid = generation_id(files)
+    # ★ 44차 #9 — **되돌릴 수 없는 sink 가 자기 불변식을 스스로 본다.**
+    #   43차는 exact suffix 와 `assert_cohort_complete()` 를 wrapper 에만 두고,
+    #   sink 는 leg **이름 집합**만 roster 와 대조했다. 그래서 genuine
+    #   authority 를 든 caller 가 `{a.projection.yaml, b.projection.yaml}` 로
+    #   roster {a,b} 를 만족시켜 **reader 가 못 읽는 active state** 를 게시할
+    #   수 있었다. (36차에 이 사본을 "중복" 이라며 지웠던 것이 37차에 오판으로
+    #   판명된 그 자리다 — sink 는 wrapper 의 검사를 신뢰하지 않는다.)
+    #   sink 가 부르는 것은 **reader 와 같은 validator** 하나다 (leg 마다 세
+    #   파일 exact set · 빈 generation 금지 · active 로 갈 때는 명부 일치).
+    #   두 검사를 따로 두면 서로를 가려 변이가 안 문다 — 실측했다.
+    #   자재화보다 **먼저** 불러야 거부가 아무것도 남기지 않는다.
+    seen = {_leg_of(n) for n in files}
+    assert_cohort_complete(
+        files, gid, expect_legs=auth.roster if seen == auth.roster else None)
     gdir = out / "gen" / gid
 
     if gdir.is_dir():
@@ -1114,28 +1185,23 @@ def _promote_generation(stage: Path, auth: "_Authority") -> dict:
             raise SystemExit(
                 "✗ 원장이 게시 도중에 바뀌었다 — 옛 근거로 게시하지 않는다. "
                 "원장을 확정한 뒤 다시 시도하라")
-        live_cur, live_pend = auth.pointers_now()
-        if live_cur != auth.cur_raw or live_pend != auth.pend_raw:
-            raise SystemExit(
-                "✗ CURRENT 또는 `.PENDING` 이 그 사이에 움직였다 — 남의 승격을 "
-                "덮지 않는다. base 를 다시 읽고 재시도하라")
+        _Authority.assert_pointers_unmoved(auth)
 
     # ★ 39차 #9 — **명부가 다 차야** active pointer 를 옮긴다. bootstrap
     #   partial 을 active `CURRENT` 로 게시하면 roster 를 받지 않는 public
     #   reader 가 그것을 정상으로 읽는다. generation directory 는 이미
     #   immutable 하게 굳었으므로 잃는 것은 없다.
-    seen = {_leg_of(n) for n in files}
     if seen != auth.roster:
         # bootstrap 중이다 — generation 은 굳었지만 **active 가 아니다.**
         # ★ 40차 #9 — **어느 명부·어느 base 의 것인지** 함께 봉인한다.
         _commit_guard()
         _publish_pointer(out, dict(rec, roster_digest=auth.roster_digest,
                                    base_generation=auth.cur_gid),
-                         name=".PENDING")
+                         name=".PENDING", auth=auth)
         return dict(rec, published=False,
                     pending=sorted(auth.roster - seen))
     _commit_guard()
-    _publish_pointer(out, rec)
+    _publish_pointer(out, rec, auth=auth)
     (out / ".PENDING").unlink(missing_ok=True)     # 명부가 찼다 — 더는 필요 없다
     _materialize(out, rec)      # 호환 사본 — 권위는 CURRENT 다
     return dict(rec, published=True)
@@ -1465,10 +1531,57 @@ def _ledger_cohort(out: Path) -> dict:
         "`LEG_PRESERVATION.yaml` 에 선언하라")
 
 
+#: seal 이 다룰 수 있는 scalar 타입. **이 밖은 거부한다** (44차 #9).
+_SEALABLE = (str, int, float, bool, type(None))
+
+
+def _assert_sealable(node, where: str = "cohort") -> None:
+    """canonicalizer 가 **접어 버릴 수 있는 값**을 입력 단계에서 거부한다.
+
+    ★ 44차 #9 — 43차 seal 은 `json.dumps(..., default=str)` 이었다. 원장은
+      `yaml.safe_load()` 로 읽으므로 PyYAML 이 타입을 붙인다::
+
+          legs: ["2026-08-28"]   → str
+          legs: [2026-08-28]     → datetime.date
+
+      `default=str` 이 둘 다 `"2026-08-28"` 로 접었다. record 의 의미가
+      바뀌었는데 seal 이 같아져, 게시 직전 재확인이 변경을 놓쳤다.
+      **injective 하지 않은 canonicalizer 는 봉인이 아니다.**
+
+      흡수하지 말고 거부한다 — 원장에 date-shaped scalar 를 쓰려면 따옴표로
+      감싸 문자열로 적으면 된다 (그러면 seal 이 달라진다).
+    """
+    if isinstance(node, bool) or isinstance(node, _SEALABLE):
+        return
+    if isinstance(node, dict):
+        for k, v in node.items():
+            if not isinstance(k, str):
+                raise SystemExit(
+                    f"✗ 원장 {where} 의 key 타입이 봉인 가능하지 않다: "
+                    f"{type(k).__name__} — 문자열로 적어라")
+            _assert_sealable(v, f"{where}.{k}")
+        return
+    if isinstance(node, (list, tuple)):
+        for i, v in enumerate(node):
+            _assert_sealable(v, f"{where}[{i}]")
+        return
+    raise SystemExit(
+        f"✗ 원장 {where} 의 값 타입이 봉인 가능하지 않다: "
+        f"{type(node).__name__} ({node!r}) — canonicalizer 가 문자열로 접으면 "
+        "서로 다른 record 가 같은 seal 이 된다. YAML 에서 따옴표로 감싸 "
+        "문자열로 적어라")
+
+
 def _ledger_seal(cohort: dict) -> str:
-    """cohort record **전체**의 정규 digest — 게시 근거의 봉인값 (43차 #9)."""
+    """cohort record **전체**의 정규 digest — 게시 근거의 봉인값 (43·44차 #9).
+
+    ★ 44차 — `default=str` 을 없앴다. 접을 수 없는 값은 `_assert_sealable()`
+      이 **거부**한다. canonicalizer 가 흡수하면 서로 다른 record 가 같은
+      seal 로 접힌다 (43차 반례).
+    """
+    _assert_sealable(cohort)
     return hashlib.sha256(json.dumps(
-        cohort, sort_keys=True, ensure_ascii=False, default=str,
+        cohort, sort_keys=True, ensure_ascii=False,
         separators=(",", ":")).encode("utf-8")).hexdigest()
 
 
