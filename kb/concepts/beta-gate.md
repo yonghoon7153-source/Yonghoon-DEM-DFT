@@ -410,6 +410,29 @@ bootstrap 95 % CI **−0.82~+0.14 (0 포함)**. leave-one-system-out 도 뒤집�
 He 법칙을 진짜로 재현하려면 **D 와 독립적으로 실제 사이트 전이를 세고**, 되튐·집단홉을 보정한
 `N_eff` 가 **held-out 조건**의 시드 분산을 예측하는지 봐야 한다. 아직 안 했다.
 
+### 7-8d. 🔒 **증거 범위를 못 박는다 — `within-argyrodite compositional transfer`**
+
+교차리뷰 H Q15 판정: **comp1·comp2 는 새 조성이지 새 구조군이 아니다.**
+
+| 후보 | 지위 |
+|---|---|
+| **comp1** Li₆PS₅Cl | 같은 argyrodite 안의 parent/baseline |
+| **comp2** Br 치환판 | 같은 골격 안의 조성·음이온 치환 transfer |
+| **b2o3** | ⛔ **이 검증에서 제외** — Li 수송 endpoint 가 2026-08-25 철회됨 |
+
+**허용 문구**
+> 동결된 분석법을 **보지 않은 argyrodite 조성**에 전향 적용했다.
+
+**불허 문구**
+> 구조가 다른 고체전해질에도 성립하는 **재료 공통 법칙**이다.
+
+⚠ comp1 결과를 **본 뒤** detector·임계값·제외 규칙을 고치면 comp1 은 개발/validation 자료가
+되고 **untouched comp2 만 final holdout** 으로 남는다. 둘 다 final test 로 쓰려면
+**결과 공개 전에 전 규칙을 동결**해야 한다.
+
+⇒ 산화물까지 캠페인을 넓힐 필요는 없다. **evidence scope 를 좁히면 된다.**
+한두 held-out 조성은 **전향적 falsification** 이지 재료 간 일반화 오차의 추정이 아니다.
+
 ### 7-9. 레버는 넷이고 **셀은 그 중 하나**다
 
 문헌 표준 ①②③ 은 서로 다른 처방으로 이어진다 — 하나로 뭉치면 안 된다.

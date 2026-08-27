@@ -694,5 +694,6 @@
     "fixed": "2026-08-26 — 배너를 `$SEEDS`(복수형)로. 나머지 `$SEED` 참조 5곳은 전부 루프 안이라 정상.",
     "검증": "LADDER 기본값으로 돌려 배너 통과 + 드라이버 진입까지 확인 (fairchem 없는 컨테이너라 거기서 멈춤).",
     "⛔_교훈": "`bash -n` 은 unbound variable 을 못 잡는다. **tmux 로 띄운 뒤 30초 안에 로그를 확인**하는 습관이 이걸 두 번 잡았다 (오늘 gabia 에서 두 번: tee 실패 · SEED 미정의)."
-  }
+  },
+  "⛔_finite_duration_2026_08_27": "동일한 200 ps 프로토콜의 독립 초기화 3–4개에서 얻은 **finite-duration 추정치**다. 산포는 run 간 변동이며 단일궤적 block CI 도 장시간 수렴도 뜻하지 않는다. 표기: Ea → `Ea_200, provisional` · Nernst–Einstein σ → `σ_NE,200` (실제 collective conductivity 로 확대 금지). 근거: 교차리뷰 H Q12 (2026-08-27)."
 }

@@ -11,6 +11,11 @@
 # Allowed wording: 'in an exploratory summary of 9 conditions an MSD-derived displacement proxy showed a stronger negative rank correlation with seed CV than beta did'. NOT 'predicts', NOT 'reproduces He 2018', NOT 'hop count is the cause'.
 # To actually test the event-count law: count real site transitions independently of D, correct for back-jumps and collective hops, and check that N_eff predicts seed variance in HELD-OUT conditions.
 # Column name n_hop_per_ion is kept for continuity but should be read as 'MSD-derived displacement proxy', not a jump count.
+# EVIDENCE SCOPE (2026-08-27, reply H Q15): within-argyrodite compositional transfer. NOT a cross-material law.
+#   comp1 (Li6PS5Cl) and comp2 (Br) are held-out COMPOSITIONS inside the same argyrodite framework, not a new structure family.
+#   Allowed: 'a frozen analysis was applied prospectively to argyrodite compositions it had not seen'.
+#   NOT allowed: 'a material-general law that also holds for solid electrolytes of different structure'.
+#   b2o3 is excluded from this validation entirely - its Li-transport endpoint was retracted 2026-08-25.
 system_T,beta_ensemble,n_seeds,traj_ps,n_hop_per_ion,CV_D_pct,D_max_over_min,D_seeds_1e5_cm2_s
 modelc/600K,0.868,3,199,13.8,25.3,1.64,"1.1718;1.2037;0.7351"
 modelc/800K,0.934,3,99,18.8,32.3,1.95,"2.8320;3.7720;1.9320"
