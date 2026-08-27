@@ -3013,6 +3013,21 @@ CLOUDFLARED=""
 #: `die` 의 exit 이 서브셸만 끝내서 스크립트는 빈 경로를 들고 계속 간다.
 #: 실제로 그렇게 됐다 — 화면에는 아무 설명 없이 "터널 주소를 받지 못했습니다"
 #: 만 떴다.
+#: cloudflared 를 준비하되 **못 해도 죽지 않는다** (Codex #13).
+#:
+#: 갈래를 고를 수 있는지 판단하는 자리에서 부르므로, 실패는 "이 길은 못 쓴다"
+#: 이지 "아무것도 못 한다" 가 아니다.  예전에는 갈래를 고르기 **전에**
+#: `ensure_cloudflared` + `die` 였고, 그래서 SSH 만 쓸 기계에서 내려받기가
+#: 실패하면 (CPU 미지원·망 차단) 멀쩡한 VPS 를 시도조차 못 하고 끝났다.
+ensure_cloudflared_or_warn() {
+  ensure_cloudflared >/dev/null 2>&1 || true
+  [ -x "$CLOUDFLARED" ] && return 0
+  warn "cloudflared 를 준비하지 못했습니다 — 이 갈래는 건너뜁니다."
+  say "  ${DIM}이 기계에서 안 되는 것이지 설정이 틀린 것은 아닙니다.${OFF}"
+  say "  ${DIM}SSH 로 가는 길은 그대로입니다 —${OFF} ${GREEN}bml share vps <사용자@호스트>${OFF} ${DIM}(ADR 0034)${OFF}"
+  return 1
+}
+
 ensure_cloudflared() {
   local own="$RUN_DIR/bin/cloudflared" arch url
   if command -v cloudflared >/dev/null 2>&1; then
@@ -3127,6 +3142,11 @@ looks_like_our_tunnel() {
     # 않는다 -- 이것이 없으면 `bml status` 가 살아 있는 터널을 못 보고,
     # `close_tunnel` 은 "우리 것이 아니다" 며 안 닫는다.
     *"$RUN_DIR/tunnel-keepalive.sh"*) return 0 ;;
+    # VPS 갈래를 붙이면서 이 줄을 빠뜨렸다 (Codex #2).  그래서 `bml stop` 이
+    # VPS 감독자를 "우리 것이 아니다" 며 남겼고, 남은 감독자는 5초마다 다시
+    # 붙으려 든다 -- **닫았다고 말한 뒤에 고정 주소가 조용히 다시 열린다.**
+    # 랜덤 주소는 곧 사라지지만 고정 주소는 안 사라진다.
+    *"$RUN_DIR/vps-keepalive.sh"*) return 0 ;;
     *) return 1 ;;
   esac
 }
@@ -3295,19 +3315,51 @@ relay_revive() {
 #:   1  서버가 내려가 있다.  터널은 **그대로 둔다** -- 서버를 다시 띄우면 같은
 #:      주소가 그대로 살아나므로, 여기서 닫으면 멀쩡한 주소를 버리는 것이 된다.
 share_stale() {
-  local url="$1"
+  local url="$1" code layer fixed=""
+  # **고정 주소면 안 바뀐다.**  우리 VPS·이름 있는 Cloudflare 터널은 다시
+  # 열어도 같은 이름이라, "주소가 바뀝니다" 는 거짓말이다 (Codex #12).
+  tunnel_vps >/dev/null 2>&1 && fixed=1
+  tunnel_cf_token >/dev/null 2>&1 && tunnel_domain >/dev/null 2>&1 && fixed=1
+
   if ! server_alive "$URL" 5; then
     warn "서버가 내려가 있습니다 — 터널은 살아 있습니다."
     say "  ${GREEN}bml${OFF} ${DIM}로 띄우면 이 주소가 그대로 살아납니다:${OFF} ${B}${url}${OFF}"
     say "  ${DIM}터널은 안 건드렸습니다 — 지금 닫으면 멀쩡한 주소를 버리는 것이 됩니다.${OFF}"
     return 1
   fi
-  warn "적어 둔 주소가 응답하지 않습니다 ${DIM}(${url})${OFF}"
-  say "  ${DIM}서버는 여기서 멀쩡합니다 — 터널만 죽었습니다.  ssh 가 살아 있어도${OFF}"
-  say "  ${DIM}저쪽이 세션을 놓으면 그 이름은 503 을 돌려줍니다.${OFF}"
-  say "  ${DIM}닫고 새로 엽니다 —${OFF} ${B}주소가 바뀝니다.${OFF}"
-  close_tunnel >/dev/null 2>&1 || true
-  return 0
+  # **왜 응답이 없는지 가른다** (Codex #12).  예전에는 "공개 주소가 조용하고
+  # 로컬은 멀쩡" 하나로 곧바로 터널을 닫았다.  그 조건에는 이 기계의 DNS·TLS·
+  # 인터넷 장애가 전부 걸리는데, 그때 터널은 **멀쩡하고 남들은 잘 쓰고 있다** —
+  # 닫는 순간 우리가 남의 접속을 끊는 것이 된다.
+  code="$(http_code_of "$url" 8)"
+  case "${code:-000}" in
+    502|503|504)
+      # 여기까지 온 것은 우리가 저쪽에 닿았다는 뜻이고, 저쪽이 뒤에서 아무
+      # 응답도 못 받았다는 뜻이다.  로컬 서버는 위에서 멀쩡함을 확인했으므로
+      # 남은 것은 전달이 끊긴 것이다.  이때만 닫는다.
+      warn "터널이 죽었습니다 ${DIM}(${url} → HTTP ${code})${OFF}"
+      say "  ${DIM}서버는 여기서 멀쩡한데 저쪽이 뒤에서 응답을 못 받습니다.${OFF}"
+      if [ -n "$fixed" ]; then
+        say "  ${DIM}닫고 새로 엽니다 —${OFF} ${B}주소는 그대로입니다.${OFF}"
+      else
+        say "  ${DIM}닫고 새로 엽니다 —${OFF} ${B}주소가 바뀝니다.${OFF}"
+      fi
+      close_tunnel >/dev/null 2>&1 || true
+      return 0
+      ;;
+  esac
+
+  # 나머지는 **판정 불가**다.  모르는 것을 아는 것처럼 다루지 않는다 (§0.4).
+  warn "적어 둔 주소를 여기서 확인하지 못했습니다 ${DIM}(${url})${OFF}"
+  say "  ${DIM}$(tunnel_code_meaning "$code")${OFF}"
+  if [ "${code:-000}" = "000" ]; then
+    layer="$(tunnel_block_layer "$url")"
+    say "  ${DIM}$(block_layer_meaning "$layer" 1)${OFF}"
+  fi
+  say "  ${B}터널은 안 건드렸습니다${OFF} ${DIM}— 이 기계만 못 나가는 것일 수 있고,${OFF}"
+  say "  ${DIM}그러면 상대는 지금도 잘 쓰고 있습니다. 닫으면 그것을 우리가 끊는 것입니다.${OFF}"
+  say "  ${DIM}정말 다시 열려면${OFF} ${GREEN}bml share stop${OFF} ${DIM}후${OFF} ${GREEN}bml share${OFF}"
+  return 1
 }
 
 #: 터널 하나를 띄우고, 그 주소가 실제로 열릴 때까지 기다린다.
@@ -3491,7 +3543,7 @@ write_tunnel_keepalive() {
 # 끊기면 다시 붙습니다.  (주소가 그대로일지는 저쪽이 정합니다 -- 실측에서는
 # 같은 키로도 바뀌었다: 653712d5fb509b -> d1c47a7b4af191 -> 928ae9cbe83d4e.)
 child=""
-trap 'kill "\$child" 2>/dev/null; exit 0' TERM INT
+trap 'kill "\$child" 2>/dev/null; wait "\$child" 2>/dev/null; exit 0' TERM INT
 quick=0
 while :; do
   started=\$SECONDS
@@ -3502,6 +3554,7 @@ while :; do
       -R ${bind}:localhost:$PORT localhost.run &
   child=\$!
   wait "\$child"
+  child=""
   # 붙자마자 죽는 것이 이어지면 고칠 수 있는 문제가 아니다 (키가 지워졌거나,
   # 계정이 막혔거나).  무한히 두드리지 않고 멈춘다 -- 로그에 이유가 남는다.
   if [ \$(( SECONDS - started )) -lt 5 ]; then
@@ -3531,27 +3584,60 @@ tunnel_vps() {
 #: `-R 5003:localhost:5003` 의 앞 5003 은 **VPS 안의 127.0.0.1** 에 열린다
 #: (`GatewayPorts no`).  그 앞에 nginx 가 서서 TLS 를 끝내고 넘긴다 -- 전달된
 #: 포트를 0.0.0.0 에 열면 인터넷 아무나 TLS 없이 그 포트로 들어온다.
+#: `사용자@호스트[:포트]` 를 갈라 놓는다 — **한 군데서** (Codex #20).
+#:
+#: 예전에는 감독자·사전 probe·`ssh-copy-id` 안내가 각자 잘랐다.  그래서
+#: `ubuntu@host:443` 을 주면 감독자만 `-p 443` 을 쓰고 probe 는 22 로 붙었다 --
+#: 화면은 "키로 붙습니다" 인데 정작 터널은 다른 포트로 간다.  `u@h:` ·
+#: `u@h:abc` · `u@@h` 도 그냥 저장됐다.
+#: 성공하면 `<사용자@호스트> <포트>`.  못 읽으면 1.
+parse_vps_target() {
+  local raw="${1:-}" hostpart port="22"
+  case "$raw" in
+    *:*) hostpart="${raw%:*}"; port="${raw##*:}" ;;
+    *)   hostpart="$raw" ;;
+  esac
+  case "$hostpart" in
+    *@*@*|@*|*@) return 1 ;;
+    *@*) ;;
+    *) return 1 ;;
+  esac
+  case "$port" in ''|*[!0-9]*) return 1 ;; esac
+  [ "$port" -ge 1 ] && [ "$port" -le 65535 ] || return 1
+  printf '%s %s' "$hostpart" "$port"
+}
+
 write_vps_keepalive() {
-  local target="$1" path="$RUN_DIR/vps-keepalive.sh" host port ssh_port
-  host="${target%%:*}"
-  ssh_port="22"
-  case "$target" in *:*) ssh_port="${target##*:}" ;; esac
-  port="${WORKBENCH_VPS_PORT:-$PORT}"
-  cat > "$path" <<KEEPALIVE
+  local target="$1" path="$RUN_DIR/vps-keepalive.sh" tmp host port ssh_port parsed
+  parsed="$(parse_vps_target "$target")" || return 1
+  host="${parsed%% *}"; ssh_port="${parsed##* }"
+  # **원격 포트와 이 기계의 포트는 다른 값이다** (Codex #14).  예전에는 둘 다
+  # `$PORT` 였다 -- 그래서 이 도구가 직접 권하는 `WORKBENCH_PORT=6001 bml` 을
+  # 쓰면 저쪽에 6001 리스너가 생기는데, VPS 의 nginx 는 5003 을 보므로 공개
+  # 주소는 502 다.  원격은 nginx 가 보는 포트, 로컬만 `$PORT`.
+  port="${WORKBENCH_VPS_PORT:-5003}"
+  # 링크·비정규 파일에 쓰지 않고, 같은 폴더 임시 파일에 다 쓴 뒤 원자 교체한다
+  # (Codex #11).  반쯤 쓰인 감독자를 실행하면 옛 VPS·옛 포트로 간다.
+  [ -L "$path" ] && return 1
+  [ -e "$path" ] && [ ! -f "$path" ] && return 1
+  tmp="$(mktemp "$path.XXXXXX")" || return 1
+  cat > "$tmp" <<KEEPALIVE
 #!/usr/bin/env bash
 # bml 이 만든 파일입니다 -- 고치지 마세요.  \`bml share\` 가 다시 씁니다.
 child=""
-trap 'kill "\$child" 2>/dev/null; exit 0' TERM INT
+trap 'kill "\$child" 2>/dev/null; wait "\$child" 2>/dev/null; exit 0' TERM INT
 quick=0
 while :; do
   started=\$SECONDS
   ssh -N -p ${ssh_port} \\
       -o StrictHostKeyChecking=accept-new \\
+      -o BatchMode=yes -o ConnectTimeout=15 \\
       -o ServerAliveInterval=30 -o ServerAliveCountMax=3 \\
       -o ExitOnForwardFailure=yes \\
-      -R ${port}:localhost:$PORT $(shquote "$host") &
+      -R 127.0.0.1:${port}:127.0.0.1:$PORT $(shquote "$host") &
   child=\$!
   wait "\$child"
+  child=""
   # 붙자마자 죽는 것이 이어지면 고칠 수 있는 문제가 아니다 (키가 안 올라갔거나,
   # 저쪽 포트가 이미 잡혀 있거나).  무한히 두드리지 않고 멈춘다.
   if [ \$(( SECONDS - started )) -lt 5 ]; then
@@ -3563,7 +3649,12 @@ while :; do
   sleep 5
 done
 KEEPALIVE
-  chmod +x "$path" 2>/dev/null || true
+  # 실패를 삼키지 않는다.  못 썼는데 경로를 돌려주면 부르는 쪽이 **옛
+  # 감독자**를 실행한다 -- 옛 VPS·옛 포트로 가면서 화면은 성공이다.
+  if [ ! -s "$tmp" ] || ! chmod +x "$tmp" 2>/dev/null; then
+    rm -f "$tmp"; return 1
+  fi
+  mv -f "$tmp" "$path" || { rm -f "$tmp"; return 1; }
   printf '%s' "$path"
 }
 
@@ -3992,9 +4083,8 @@ cmd_share() {
     exit 1
   fi
 
-  ensure_cloudflared
-  [ -x "$CLOUDFLARED" ] || die "터널 프로그램을 준비하지 못했습니다."
-
+  # **cloudflared 를 여기서 준비하지 않는다** (Codex #13).  쓰는 갈래가 제
+  # 것을 준비한다 -- 아래 Cloudflare 갈래의 `ensure_cloudflared_or_warn`.
   local url="" rc=1
   # 우리 VPS 가 있으면 그것이 먼저다.  남의 서비스를 거치지 않고, 주소가
   # 우리 것이고, 저쪽 사정으로 바뀌지 않는다 (ADR 0034).
@@ -4017,7 +4107,7 @@ cmd_share() {
   # 실패했다고 랜덤 주소로 흘러가면 안 된다.  고정 주소를 설정해 둔 사람은
   # 열렸다는 말을 보고 그 이름을 남에게 알려 주는데, 정작 열린 것은 랜덤
   # 주소다 -- 화면은 성공이고 상대는 아무것도 못 연다.
-  elif tunnel_cf_token >/dev/null && tunnel_domain >/dev/null; then
+  elif tunnel_cf_token >/dev/null && tunnel_domain >/dev/null && ensure_cloudflared_or_warn; then
     # 7844 가 막힌 것이 이미 보이면 2분을 쓰지 않는다.  quic·http2 를 다
     # 기다려 봐야 답은 같고, 그 2분은 사람이 그냥 서 있는 시간이다.
     case "$(edge_probe)" in
@@ -4062,7 +4152,9 @@ cmd_share() {
   else
   case "$TUNNEL" in
     ssh|localhost.run)      tunnel_via_ssh 1;        rc=$? ;;
-    cloudflare|cloudflared) tunnel_via_cloudflare 1; rc=$? ;;
+    cloudflare|cloudflared)
+      if ensure_cloudflared_or_warn; then tunnel_via_cloudflare 1; rc=$?
+      else tunnel_via_ssh 1; rc=$?; fi ;;
     *)
       # 7844/TCP 가 열려 있으면 Cloudflare 가 빠르고 안정적이다.  막혀 있으면
       # cloudflared 는 어떤 --protocol 로도 못 붙는다 (QUIC 도 http2 도 그
@@ -4070,7 +4162,8 @@ cmd_share() {
       step "밖으로 나가는 길 확인 중"
       local probe; probe="$(edge_probe)"
       case "$probe" in
-        open*) tunnel_via_cloudflare 0; rc=$? ;;
+        # 포트가 열려 있어도 **프로그램이 있어야** 쓴다 (Codex #13).
+        open*) if ensure_cloudflared_or_warn; then tunnel_via_cloudflare 0; rc=$?; fi ;;
         # 무엇 때문에 못 나가는지까지 적는다.  대처가 정반대다 — 포트가 막혔으면
         # Cloudflare 는 아예 못 쓰고, 이름만 못 구한 것이면 아직 모르는 것이다.
         blocked*)

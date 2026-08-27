@@ -916,30 +916,47 @@ check "status 가 무엇을 통해 보는지 적는다" \
 #: 찍은 표식은 그 자리에서 삼켜진다.
 CLOSED_MARK="$(mktemp)"
 share_probe() {
-  # 인자: 터널이 응답하는가(yes/no) · 로컬 서버가 응답하는가(yes/no)
-  local tunnel="$1" server="$2"
+  # 인자: 공개 주소의 HTTP 코드 · 로컬 서버가 응답하는가(yes/no) ·
+  #       고정 주소인가(yes/no)
+  # **이름을 코드의 지역변수와 겹치지 않게** 짓는다.  bash 는 동적 범위라,
+  # `share_stale` 안에서 불린 스텁이 보는 `code`·`fixed` 는 **그 함수의
+  # local** 이다 -- 겹치면 `set -u` 에서 unbound 로 죽고, 화면은 "확인 못
+  # 했다" 가 되어 시험이 엉뚱한 것을 통과시킨다.
+  WANT_CODE="$1" WANT_SERVER="$2" WANT_FIXED="${3:-no}"
   : > "$CLOSED_MARK"
   (
     TUNNEL_PID_FILE="$(mktemp)"; echo 4242 > "$TUNNEL_PID_FILE"
     tunnel_running()      { return 0; }
     tunnel_url()          { printf 'https://stale.lhr.life'; }
-    wait_until_alive()    { [ "$tunnel" = yes ]; }
-    server_alive()        { [ "$server" = yes ]; }
+    wait_until_alive()    { return 1; }
+    http_code_of()        { printf '%s' "$WANT_CODE"; }
+    server_alive()        { [ "$WANT_SERVER" = yes ]; }
+    tunnel_vps()          { [ "$WANT_FIXED" = yes ] && printf 'ubuntu@vps'; }
+    tunnel_domain()       { [ "$WANT_FIXED" = yes ] && printf 'bml.example.kr'; }
+    tunnel_cf_token()     { return 1; }
+    tunnel_block_layer()  { printf 'dns'; }
     close_tunnel()        { echo closed >> "$CLOSED_MARK"; }
     tunnel_ip_hint()      { :; }
     tunnel_account_note() { :; }
-    # 암호가 없으면 새로 여는 갈래가 그 자리에서 멈춘다 — 이 시험이 보려는
-    # 것은 거기까지다 (진짜 ssh 를 띄우지 않는다).
     unset WORKBENCH_PASSWORD
     cmd_share 2>&1
     rm -f "$TUNNEL_PID_FILE"
   )
 }
 
-#: 방금 돌린 갈래가 터널을 닫았는가.
 closed_it() { [ -s "$CLOSED_MARK" ]; }
 
-ALIVE="$(share_probe yes yes)"
+# 공개 주소가 응답하면 그대로 쓴다.
+ALIVE="$( TUNNEL_PID_FILE="$(mktemp)"
+  echo 4242 > "$TUNNEL_PID_FILE"
+  : > "$CLOSED_MARK"
+  tunnel_running() { return 0; }
+  tunnel_url() { printf 'https://stale.lhr.life'; }
+  wait_until_alive() { return 0; }
+  close_tunnel() { echo closed >> "$CLOSED_MARK"; }
+  tunnel_ip_hint() { :; }; tunnel_account_note() { :; }
+  unset WORKBENCH_PASSWORD
+  cmd_share 2>&1 )"
 contains "터널이 응답하면 열려 있다고 말한다" "$ALIVE" "이미 열려 있습니다"
 contains "그때는 보낼 줄도 함께 낸다"         "$ALIVE" "bmlout https://stale.lhr.life"
 if closed_it; then
@@ -948,23 +965,56 @@ else
   pass=$((pass + 1)); printf '  ok   멀쩡한 터널은 안 건드린다\n'
 fi
 
-DEAD="$(share_probe no yes)"
+# --- 503: 저쪽까지 갔는데 뒤에서 응답이 없다.  **이때만 닫는다.** -------------
+DEAD="$(share_probe 503 yes)"
 case "$DEAD" in
   *"이미 열려 있습니다"*) fail=$((fail + 1))
     printf '  FAIL 응답 없는 주소를 "이미 열려 있습니다" 로 말한다\n' ;;
   *) pass=$((pass + 1)); printf '  ok   응답 없는 주소를 열려 있다고 하지 않는다\n' ;;
 esac
-contains "터널만 죽은 것이라고 말한다"   "$DEAD" "터널만 죽었습니다"
-contains "주소가 바뀐다고 미리 말한다"   "$DEAD" "주소가 바뀝니다"
+contains "503 은 터널이 죽었다고 말한다" "$DEAD" "터널이 죽었습니다"
 if closed_it; then
-  pass=$((pass + 1)); printf '  ok   그리고 닫는다\n'
+  pass=$((pass + 1)); printf '  ok   503 에서는 닫는다\n'
 else
   fail=$((fail + 1)); printf '  FAIL 죽은 터널을 닫지 않는다 — 다음 시도가 또 여기서 막힌다\n'
 fi
+contains "랜덤 주소면 바뀐다고 말한다" "$DEAD" "주소가 바뀝니다"
 
-# 서버가 내려간 것이면 **터널을 닫으면 안 된다.**  서버를 다시 띄우면 같은
-# 주소가 그대로 살아나므로, 여기서 닫는 것은 멀쩡한 주소를 버리는 짓이다.
-DOWN="$(share_probe no no)"
+# 고정 주소는 다시 열어도 같은 이름이다.  "바뀝니다" 는 거짓말이다 (Codex #12).
+FIXED="$(share_probe 503 yes yes)"
+contains "고정 주소면 그대로라고 말한다" "$FIXED" "주소는 그대로입니다"
+case "$FIXED" in
+  *"주소가 바뀝니다"*) fail=$((fail + 1)); printf '  FAIL 고정 주소인데 바뀐다고 말한다\n' ;;
+  *) pass=$((pass + 1)); printf '  ok   고정 주소에 바뀐다고 하지 않는다\n' ;;
+esac
+
+# --- 000: 이름·TLS·이 기계의 인터넷.  터널은 멀쩡할 수 있다 -------------------
+#
+# 예전에는 "공개 실패 + 로컬 성공" 하나로 곧바로 닫았다.  그 조건에는 이 기계의
+# DNS·TLS·망 장애가 전부 걸리는데, 그때 터널은 멀쩡하고 **남들은 잘 쓰고 있다**
+# -- 닫는 순간 우리가 남의 접속을 끊는 것이 된다 (Codex #12).
+UNSURE="$(share_probe 000 yes)"
+if closed_it; then
+  fail=$((fail + 1)); printf '  FAIL 확인이 안 됐는데 터널을 닫는다\n'
+else
+  pass=$((pass + 1)); printf '  ok   확인이 안 되면 터널을 안 건드린다\n'
+fi
+contains "확인 못 했다고 말한다"       "$UNSURE" "확인하지 못했습니다"
+contains "안 건드렸다고 말한다"        "$UNSURE" "터널은 안 건드렸습니다"
+contains "손으로 닫을 길은 준다"       "$UNSURE" "bml share stop"
+
+# 404·429 도 같다 — 우리가 저쪽에 닿았지만 backend 단절의 증거는 아니다.
+for code in 404 429; do
+  OTHER="$(share_probe "$code" yes)"
+  if closed_it; then
+    fail=$((fail + 1)); printf '  FAIL %s 인데 터널을 닫는다\n' "$code"
+  else
+    pass=$((pass + 1)); printf '  ok   %s 에서는 안 닫는다\n' "$code"
+  fi
+done
+
+# --- 서버가 내려간 것이면 터널을 닫으면 안 된다 -------------------------------
+DOWN="$(share_probe 503 no)"
 contains "서버가 내려간 것이라고 말한다" "$DOWN" "서버가 내려가 있습니다"
 contains "같은 주소가 살아난다고 말한다" "$DOWN" "이 주소가 그대로 살아납니다"
 if closed_it; then
@@ -973,6 +1023,109 @@ else
   pass=$((pass + 1)); printf '  ok   서버가 죽었을 때는 터널을 안 닫는다\n'
 fi
 rm -f "$CLOSED_MARK"
+
+echo
+echo "감독자 둘 다 우리 것이다 — bml stop 이 VPS 터널도 닫는다"
+# 실측 리뷰 2026-08-27 (Codex #2): VPS 갈래를 붙이면서 소유 판정에
+# `vps-keepalive.sh` 를 안 넣었다.  그래서 `bml stop` 은 "우리 것이 아니다" 며
+# 감독자를 남기고 표식만 지웠고, 남은 감독자는 5초마다 다시 붙으려 든다 --
+# **닫았다고 말한 뒤에 고정 주소가 조용히 다시 열린다.**
+check "localhost.run 감독자를 우리 것으로 본다" \
+  "$(RUN_DIR=/tmp/x; looks_like_our_tunnel "bash /tmp/x/tunnel-keepalive.sh" && echo yes || echo no)" "yes"
+check "VPS 감독자도 우리 것으로 본다" \
+  "$(RUN_DIR=/tmp/x; looks_like_our_tunnel "bash /tmp/x/vps-keepalive.sh" && echo yes || echo no)" "yes"
+check "남의 keepalive 는 우리 것이 아니다" \
+  "$(RUN_DIR=/tmp/x; looks_like_our_tunnel "bash /other/vps-keepalive.sh" && echo yes || echo no)" "no"
+
+# 문자열만 세지 않는다 — **진짜 감독자와 자식을 띄우고 stop 뒤 둘 다 죽는지**
+# 본다.  이것이 없으면 위 세 줄은 통과하면서 stop 은 여전히 못 죽일 수 있다.
+STOPDIR="$(mktemp -d)"
+cat > "$STOPDIR/vps-keepalive.sh" <<'KEEP'
+#!/usr/bin/env bash
+child=""
+trap 'kill "$child" 2>/dev/null; exit 0' TERM INT
+while :; do
+  sleep 300 &
+  child=$!
+  wait "$child"
+  child=""
+done
+KEEP
+chmod +x "$STOPDIR/vps-keepalive.sh"
+bash "$STOPDIR/vps-keepalive.sh" & KEEPER=$!
+sleep 0.4
+KID="$(pgrep -P "$KEEPER" 2>/dev/null | head -1)"
+(
+  RUN_DIR="$STOPDIR"
+  TUNNEL_PID_FILE="$STOPDIR/tunnel.pid"
+  TUNNEL_URL_FILE="$STOPDIR/tunnel.url"
+  echo "$KEEPER" > "$TUNNEL_PID_FILE"
+  echo "https://x.example" > "$TUNNEL_URL_FILE"
+  close_tunnel >/dev/null 2>&1
+)
+sleep 0.6
+# **`kill -0` 이 아니라 `process_alive`.**  거두지 않은 자식은 좀비로 남고
+# 좀비에게도 `kill -0` 은 성공한다 -- 그것으로 세면 멀쩡히 죽은 것을 "살아
+# 있다" 로 읽는다 (`process_alive` 가 이미 그 함정을 알고 있다).
+if process_alive "$KEEPER"; then
+  fail=$((fail + 1)); printf '  FAIL stop 이 VPS 감독자를 남긴다 — 고정 주소가 다시 열린다\n'
+  kill "$KEEPER" 2>/dev/null
+else
+  pass=$((pass + 1)); printf '  ok   stop 이 VPS 감독자를 죽인다\n'
+fi
+if [ -n "$KID" ] && process_alive "$KID"; then
+  fail=$((fail + 1)); printf '  FAIL 자식 ssh 가 살아남는다 (pid %s) — 저쪽 포트를 계속 잡는다\n' "$KID"
+  kill "$KID" 2>/dev/null
+else
+  pass=$((pass + 1)); printf '  ok   자식 ssh 도 사라진다\n'
+fi
+rm -rf "$STOPDIR"
+
+echo "감독자 명령이 실제로 무엇을 여는가 (문자열이 아니라 생성해서 본다)"
+GEN="$(mktemp -d)"
+GENCMD="$(
+  RUN_DIR="$GEN" PORT=6001
+  path="$(write_vps_keepalive "ubuntu@vps.example:2222")" && grep -E '^\s+-R ' "$path"
+)"
+# **원격은 nginx 가 보는 5003, 로컬만 `$PORT`** (Codex #14).  둘을 묶어 두면
+# 이 도구가 직접 권하는 `WORKBENCH_PORT=6001 bml` 에서 저쪽에 6001 리스너가
+# 생기고, nginx 는 5003 을 보므로 공개 주소가 502 다.
+contains "원격은 5003, 로컬은 6001" "$GENCMD" "-R 127.0.0.1:5003:127.0.0.1:6001"
+# **bind 주소를 밝힌다** (Codex #3).  생략하면 OpenSSH 가 loopback v4·v6 를
+# 다 시도하고 **하나만** 붙어도 성공으로 답한다 -- 127.0.0.1:5003 을 남이
+# 잡고 있으면 ssh 는 [::1] 로 성공하고, nginx 는 계속 그 남의 프로세스를
+# 인터넷에 공개한다.
+case "$GENCMD" in
+  *"-R 127.0.0.1:"*) pass=$((pass + 1)); printf '  ok   원격 bind 주소를 밝힌다\n' ;;
+  *) fail=$((fail + 1)); printf '  FAIL bind 주소를 생략한다 — v6 만 붙어도 성공이 된다\n' ;;
+esac
+GENPORT="$( RUN_DIR="$GEN" PORT=6001; path="$(write_vps_keepalive "ubuntu@vps.example:2222")" \
+            && grep -oE '^\s+ssh -N -p [0-9]+' "$path" )"
+contains "적어 준 SSH 포트를 쓴다" "$GENPORT" "-p 2222"
+GENBATCH="$( RUN_DIR="$GEN" PORT=6001; path="$(write_vps_keepalive "ubuntu@vps.example")" \
+             && grep -c 'BatchMode=yes' "$path" )"
+check "감독자도 BatchMode 다 (Codex #15)" "$GENBATCH" "1"
+
+# 못 읽는 주소는 **저장 전에** 막는다 (Codex #20).
+for bad in "u@h:" "u@h:abc" "u@@h" "@h" "u@" "u@h:0" "u@h:70000" "nohost"; do
+  if ( RUN_DIR="$GEN"; write_vps_keepalive "$bad" >/dev/null 2>&1 ); then
+    fail=$((fail + 1)); printf '  FAIL 이상한 주소를 받아들인다: %s\n' "$bad"
+  else
+    pass=$((pass + 1)); printf '  ok   거절: %s\n' "$bad"
+  fi
+done
+
+# 링크 자리에 쓰지 않는다 (Codex #11) — 따라 쓰면 남의 파일을 덮는다.
+# 앞 시험이 진짜 파일을 만들어 뒀으므로 `-f` 로 갈아 끼운다 -- 그냥 `ln -s`
+# 는 "File exists" 로 실패하고, 그러면 이 시험은 링크가 아닌 것을 검사한다.
+rm -f "$GEN/vps-keepalive.sh"
+ln -s /dev/null "$GEN/vps-keepalive.sh"
+if ( RUN_DIR="$GEN"; write_vps_keepalive "ubuntu@vps.example" >/dev/null 2>&1 ); then
+  fail=$((fail + 1)); printf '  FAIL 심볼릭 링크를 따라 쓴다\n'
+else
+  pass=$((pass + 1)); printf '  ok   심볼릭 링크 자리면 거절한다\n'
+fi
+rm -rf "$GEN"
 
 echo
 if [ "$fail" -eq 0 ]; then

@@ -366,14 +366,17 @@ check "두 번 닫으면 닫을 게 없다" "$(close_tunnel && echo yes || echo 
 # 7844 가 막힌 망에서는 cloudflared 가 어떤 --protocol 로도 못 붙는다.
 # 그때 SSH 로 넘어가지 않으면 그 망에서는 공유 자체가 불가능해진다.
 #
-# 세 자리다: `bml share now` (설정을 둔 채 한 번만 랜덤으로), 자동 판별에서
-# 7844 가 막혔을 때, 그리고 Cloudflare 를 시도했는데 안 됐을 때.
+# **네 자리다.**  `bml share now` (설정을 둔 채 한 번만 랜덤으로), 자동
+# 판별에서 7844 가 막혔을 때, Cloudflare 를 시도했는데 안 됐을 때, 그리고
+# 2026-08-27 에 붙은 것: `bml share cf` 를 골라 뒀는데 **cloudflared 를 준비
+# 못 한** 경우 (Codex #13).  예전에는 갈래를 고르기 전에 무조건 받고 실패하면
+# 죽었으므로 이 자리가 아예 없었다.
 check "cloudflare 가 안 되면 SSH 로 넘어간다" \
-  "$(sed -n '/^cmd_share()/,/^}/p' "$BML" | grep -c 'tunnel_via_ssh')" "3"
+  "$(sed -n '/^cmd_share()/,/^}/p' "$BML" | grep -c 'tunnel_via_ssh')" "4"
 # 주소는 받았는데 확인이 안 된 것을 실패로 치고 죽여 버리면, 사람이 그 주소를
 # 손으로 찔러 볼 수도 없다 — 실제로 그래서 원인을 못 찾았다.
 check "마지막 시도는 확인이 안 돼도 남긴다" \
-  "$(sed -n '/^cmd_share()/,/^}/p' "$BML" | grep -c 'tunnel_via_ssh 1')" "3"
+  "$(sed -n '/^cmd_share()/,/^}/p' "$BML" | grep -c 'tunnel_via_ssh 1')" "4"
 check "확인 실패(2)를 실패(1)와 구분한다" \
   "$(sed -n '/^cmd_share()/,/^}/p' "$BML" | grep -c 'rc" -eq 2')" "1"
 # 서버 없이 남은 터널은 남에게 오류 화면을 띄우는 주소일 뿐이다.
@@ -1090,14 +1093,23 @@ check "감독자는 키가 있을 때만" \
   "$(awk '/^tunnel_via_ssh\(\) \{/,/^}/' "$BML" | grep -c 'write_tunnel_keepalive')" "1"
 # 감독자가 둘이다: localhost.run 쪽과 우리 VPS 쪽 (ADR 0034).  둘 다 같은
 # 고리를 가져야 한다 — 한쪽만 다시 붙으면 그쪽만 살아남는다.
+#
+# **넷이다.**  고리마다 `wait` 가 둘이라서다: 하나는 자식이 끝날 때까지 기다리는
+# 것이고, 하나는 TERM 을 받았을 때 죽인 자식을 **거두는** 것이다 (2026-08-27).
+# 거두지 않으면 좀비로 남고, 좀비에게도 `kill -0` 은 성공해서 "아직 살아 있다"
+# 로 읽힌다.
 check "끊기면 다시 붙는 고리가 있다" \
-  "$(grep -c 'wait "\\$child"' "$BML")" "2"
+  "$(grep -c 'wait "\\$child"' "$BML")" "4"
 # 무한히 두드리지 않는다 -- 키가 지워졌거나 계정이 막힌 것은 고쳐지지 않는다.
 check "곧바로 계속 끊기면 멈춘다" \
   "$(grep -c '계속 곧바로 끊겨서 멈춥니다' "$BML")" "2"
 # 감독자를 우리 것으로 못 알아보면 status 가 못 보고, close_tunnel 이 안 닫는다.
 check "감독자도 우리 것으로 알아본다" \
   "$(grep -c 'tunnel-keepalive.sh"\*) return 0' "$BML")" "1"
+# **VPS 감독자도** (Codex #2).  이것이 빠져 있어서 `bml stop` 이 VPS 터널을
+# 남겼다 — 닫았다고 말한 뒤에 고정 주소가 조용히 다시 열린다.
+check "VPS 감독자도 우리 것으로 알아본다" \
+  "$(grep -c 'vps-keepalive.sh"\*) return 0' "$BML")" "1"
 # 신호를 받으면 자식 ssh 까지 데리고 죽는다 -- 안 그러면 감독자만 죽고 터널이
 # 주인 없이 남는다.
 check "닫으면 자식 ssh 도 죽는다" \
