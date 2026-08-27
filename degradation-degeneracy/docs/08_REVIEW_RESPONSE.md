@@ -3222,3 +3222,114 @@ fail-closed 검사를 미리 켜 뒀고, 지금은 그 검사가 "등록된 다�
 9항) 은 이번에도 **미착수**다. `row_projection` 의 승격이 여전히 fixed-name 세
 파일이라 set atomicity 가 아니다. 계약 §13 의 열 묶음도 "닫음" 으로 바꾸지
 않았다.
+
+## 40. 31차 리뷰 대응 — 좁힌 의미가 문자열 하나로 무너졌다
+
+> 2026-08-27. 30차에 "`ok=True` 의 뜻을 좁혔다" 고 적었다. 리뷰가 그 경계를
+> 한 줄로 넘었다:
+>
+> ```python
+> b = CasBackend(root=cas, enforcement="object_lock")   # 구현은 여전히 local pin
+> r = run_transaction(..., backend=b, ...)
+> assert r["durable"] is True                            # 통과했다
+> assert_durable_retention(b, index, leg)                # 통과했다
+> ```
+>
+> `enforcement` 가 **dataclass field** 였다. 강제 수준을 값으로 신고하게 만든
+> 것까지는 맞았는데, 그 값을 **호출자가 붙일 수 있게** 뒀다.
+
+### 40.1 P0-1 — label 이 아니라 capability 로
+
+| 무엇 | 지금 |
+|---|---|
+| `enforcement` 를 생성자로 지정 | `ENFORCEMENT` 는 `ClassVar` — 인자가 아니고 대입도 `__setattr__` 이 막는다 |
+| 신고값을 그대로 lease 에 저장 | `probe_enforcement()` 가 provider 를 **지금 조회**하고, 그 결과를 싣는다 |
+| lease 의 문자열을 다시 안 봄 | `verify_retention()` 이 lease ↔ 조회 결과를 대조한다 |
+| lock 증거가 없음 | lease 가 provider 의 `lock_mode` 와 immutable `object_versions` 를 싣고, 검증 때 version 을 **다시 조회**한다 |
+| `finalize_only()` 가 `ok=True` 만 | 두 경로 모두 `run_transaction` 과 같은 typed 결과 |
+
+`ObjectLockBackend` 로 adapter 자리를 만들었다. **실제 provider adapter 는
+아직 없다** — 세 메서드(`query_object_lock` · `lock_objects` ·
+`query_object_versions`)를 구현하는 것이 남은 일이고, 그 전에는
+`probe_enforcement()` 가 `advisory_local` 로 떨어져 `retain()` 부터 실패한다.
+클래스 이름만으로는 강제가 아니라는 뜻이다.
+
+경계가 한쪽으로만 닫히면 그것도 시험이 아니므로, 강제가 **있는** 쪽도
+canary 로 고정했다 — 가짜 provider 가 version·mode·retain-until 을 만들면
+`durable=True` 가 되고, 정책 하한이 내려가거나 version 이 사라지면 그 자리에서
+durable 을 잃는다.
+
+### 40.2 §2.1 질문에 대한 답을 받았다
+
+리뷰의 답을 그대로 옮긴다:
+
+1. "local 에서는 durable retention 을 주장하지 않는다" 는 **정책 방향은 맞다.**
+2. **P0-1 전체 종결에는 actual object-lock backend 구현이 필요하다.**
+
+그래서 이 라운드는 (2) 를 닫지 않았고 닫았다고 적지도 않는다. 타입 경계와
+canary 까지가 이번 몫이다.
+
+### 40.3 P0-3 — CAS 쪽만 닫혀 있었다
+
+| # | 무엇이 열려 있었나 | 고침 |
+|---|---|---|
+| 1 | `_exclusive_write()` 가 `index/`·`index/legs`·`index/registered` 새 edge 를 안 굳혔다 | `_mkdir_durable()` 을 쓴다 |
+| 2 | `_fsync_dir_strict()` 가 capability 없으면 조용히 `return` | 그 자리에서 멈춘다 |
+| 3 | link 성공 뒤 fsync 실패 → 재시도가 `EEXIST` 로 fsync 를 건너뛰고 성공 | 이름이 있는 한 **항상** 굳힌다 |
+| 4 | crash drill 의 두 지점이 모두 `_register()` 앞 | `after_register`·`during_journal_fsync` 를 더했다 |
+
+2번은 주석까지 틀렸었다 — "publish 가 이미 막는다" 는 CAS 와 index 가 **같은
+filesystem** 일 때만 참이다. 갈라 주입하니 `put_if_absent()` 가 그냥 성공했다.
+
+4번이 이번 라운드의 대표적인 자기기만이다. 시험 이름은
+`journal visible ⇒ full graph retrievable` 인데 **전건이 한 번도 참이 되지
+않았다.** 공허하게 참인 시험을 "drill 을 넣었다" 고 적었던 것이다. 이제
+양성/음성이 모두 나왔는지를 별도 시험이 강제한다.
+
+### 40.4 P1 넷
+
+| # | 무엇 | 고침 |
+|---|---|---|
+| 1 | `{"ok": True, "checks": {"payload": False}}` 가 통과하고 receipt 가 `n_checks: 1` 로 축약해 false subcheck 를 **지웠다** | 값이 전부 참이어야 하고 검사 **이름 집합**을 receipt 에 봉인 |
+| 2 | output 이 role 별 **subset** 검사라 `rescored_rows` 에 summary 전용 필드가 통과 · `relative_path` domain 이 manifest 와 달랐다 | role 별 exact key set · 같은 `_safe_member_path()` 공유 |
+| 3 | `candidate_mode` enum 이 계약 §3 과 **달랐다** — 계약의 두 mode 를 거부하고 계약에 없는 세 mode 를 허용 | 계약에서 파싱 (값을 두 곳에 두지 않는다) |
+| 4 | `binding` 이 자유 dict — key set 과 bank 동일성만 봐서 위조가 통과 | `binding` 인자를 없앴다. `candidate_id` 가 봉인물만 받고 chain 을 유도 |
+
+P1-4 는 **두 회차 연속 같은 형태**다. 30차에 "plan 을 인자로 받을 수 있다는
+것 자체가 결함" 이라고 적어 놓고, plan 을 담은 dict 를 인자로 만들었다.
+한 겹 포장했을 뿐이었다.
+
+### 40.5 P2 — 30차의 설명이 거짓이었다. 철회한다
+
+30차 요청문과 원장 §39.5 에 "묶음 9 등록이 생기는 순간 registered receipt 가
+정본이 되도록 **fail-closed 검사를 미리 켜 뒀다**" 고 적었다. **거짓이다.**
+
+그 검사는 등록된 다리를 가변 `LEG_PRESERVATION.yaml` 의 **optional**
+`evidence.registered_receipt` 필드로 골랐다. 실제 등록이 생겨도 그 필드를 안
+적으면 검사가 잠든다 — 원장이 검사 대상을 스스로 고르는 구조였다.
+
+이제 실제 index 의 journal 을 읽고 양방향으로 본다 (index 에 있는데 원장에
+없음 / 원장이 주장하는데 index 에 없음). 실물 index 가 아직 없어 결과는
+여전히 비어 있지만 **이유가 다르다** — 원장이 고른 것이 아니라 실물이 없다.
+규칙이 무는지는 합성 index 시험이 보인다.
+
+### 40.6 변이로 확인했고, 물지 않은 것 다섯
+
+| 물지 않은 변이 | 왜 | 처리 |
+|---|---|---|
+| `assert_durable_retention` 의 재조회 삭제 | `verify_retention` 이 이미 대조한다 | 중복이라 **삭제** — 권위를 한 곳으로 |
+| output exact key set → subset | 시험이 **남는** 키만 넣고 **모자란** 경우를 안 봤다 | 누락 축을 시험에 추가 |
+| capability fail-closed 삭제 | 시험이 `store.json` 쓰기 경로에 업혀 통과 | store 를 먼저 만들고 CAS 쓰기만 보게 분리 |
+| `bank_version` 유도 삭제 | design digest 에 이미 들어 있어 `bank_id` 가 어차피 달라진다 | 유도값 자체를 보는 시험으로 |
+| crash drill 양성 상태 | 전건이 거짓이라 공허하게 참 | 양성/음성 도달을 강제하는 시험 추가 |
+
+30차에 "규칙을 넣을 때마다 지워 보는 것을 절차로 굳힌다" 고 적었고, 이번에도
+다섯이 나왔다. 절차가 없었으면 다섯 전부 "닫았다" 로 보고됐을 것이다.
+
+### 40.7 미종결
+
+| 항 | 상태 |
+|---|---|
+| P0-1 durable retention 전체 | actual object-lock adapter 없음 — 리뷰가 그것을 조건으로 명시했다 |
+| 최소 증거 9 | immutable cohort generation + 단일 `CURRENT` — **미착수** |
+| P2 generation value | `digest → generation` 은 여전히 선언이다 (실행 산출물에 그 필드가 없다) |
