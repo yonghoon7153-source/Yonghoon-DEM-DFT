@@ -23,6 +23,7 @@ import json
 import os
 import shutil
 import tempfile
+import uuid
 from pathlib import Path
 
 import pytest
@@ -39,6 +40,7 @@ from tools.preserve import (FAULTS, CasBackend, Hooks, PlannedLeg, PreserveError
                             MIN_RETENTION_DAYS, ObjectLockBackend, LockedCasBackend)
 from tools.preserve import _is_hex64 as _is_hex64_str
 from tools.preserve import RETENTION_SCHEMA as P_RETENTION_SCHEMA
+from tools.preserve import STORE_SCHEMA as P_STORE_SCHEMA
 from tools.preserve import _reg_file as _reg_path
 
 #: 저장소 루트 (`tests/` 의 부모) — 소스를 읽어 계약을 대조하는 시험이 쓴다.
@@ -4142,6 +4144,9 @@ def _lease_like(backend, leg, objs, **over) -> dict:
     ("graph_version_wrong_bytes", {"object_versions": "WRONG_BYTES"}),
     ("graph_version_short_horizon", {"object_versions": "SHORT"}),
     ("graph_version_wrong_mode", {"object_versions": "MODE"}),
+    # ★ 41차 P0-1 — store locator 는 **bytes 를 아예 안 봤다**
+    ("store_version_other_store", {"store_version_id": "OTHER_STORE"}),
+    ("store_version_not_a_record", {"store_version_id": "NOT_A_RECORD"}),
 ])
 def test_a_forged_candidate_axis_is_refused_without_touching_anything(
         tmp_path, axis, over):
@@ -4182,6 +4187,17 @@ def test_a_forged_candidate_axis_is_refused_without_touching_anything(
             store2.lock(key, v, clean["retain_until_utc"])
             store2._mode[(key, v)] = "GOVERNANCE"
         over = {"object_versions": dict(clean["object_versions"], **{dg: v})}
+    elif over.get("store_version_id") in ("OTHER_STORE", "NOT_A_RECORD"):
+        # ★ 41차 P0-1 — 존재·mode·기한은 **전부 맞고** 그 version 의 record 만
+        #   다르다. 40차 `_locator_holds()` 는 store 를 `dg=None` 으로 불러
+        #   bytes 분기를 통째로 건너뛰었으므로 이 둘이 모두 통과했다.
+        payload = (canonical_bytes({"schema": P_STORE_SCHEMA,
+                                    "store_id": uuid.uuid4().hex})
+                   if over["store_version_id"] == "OTHER_STORE"
+                   else b"not-a-store-record-at-all")
+        v = store2.put("store.json", payload)
+        store2.lock("store.json", v, clean["retain_until_utc"])
+        over = {"store_version_id": v}
     rec = dict(clean, **over)
 
     fd = backend2.put_if_absent(canonical_bytes(rec))["digest"]
@@ -4729,3 +4745,160 @@ def test_a_same_bytes_governance_version_does_not_hide_the_compliance_proof(
     got = backend.recover_lease_version(leg, ld)
     assert got == v1, (
         f"같은 바이트의 Governance version 이 Compliance proof 를 가렸다: {got}")
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# 41차 P1 — read-only 라는 **이름**과 실제 동작이 아직 달랐다
+# ─────────────────────────────────────────────────────────────────────────────
+
+def test_the_local_backend_inspect_never_creates_or_extends_the_store(tmp_path):
+    """★ 41차 P1 — base `CasBackend.inspect_store_id()` 가 `self.store_id` 였다.
+
+    39차에 "검증은 수리하지 않는다" 며 inspect 를 갈랐는데, base 구현은
+    한 줄짜리 위임이었다::
+
+        def inspect_store_id(self): return self.store_id     # ← 만든다
+
+    `store_id` 는 record 가 없으면 UUID 를 발급하고 CAS root 를 durable 하게
+    굳힌다. object-lock backend 만 순수했고 **local backend 의 candidate
+    validation 은 순수하지 않았다.** 이름이 predicate 보다 강한 그 형태다.
+
+    store record 를 지운 상태에서 두 검증 경로를 부른다 — 어느 쪽도
+    record·pin·lock 을 새로 만들면 안 된다.
+    """
+    backend = CasBackend(root=tmp_path / "cas", retention_days=MIN_RETENTION_DAYS)
+    leg = "hc22p_v6_armA_b20"
+    objs = sorted(backend.put_if_absent(b"g%d" % i)["digest"] for i in range(2))
+    backend.pin(leg, objs)
+    sid = backend.store_id                       # 여기서 한 번 만든다
+    rec_path = Path(backend.root) / "store.json"
+    assert rec_path.is_file() and sid
+    rec_path.unlink()                            # 그리고 지운다
+
+    lease = _lease_like(_StoreIdStub(sid, backend), leg, objs,
+                        store_version_id="", store_lock_mode="",
+                        object_versions={})
+    assert backend.inspect_store_id() is None, (
+        "record 가 없는데 store identity 를 만들어 냈다")
+    assert not backend._matches_lease(leg, objs, MIN_RETENTION_DAYS, lease), (
+        "store record 가 없는데 candidate 가 통과했다")
+    assert not rec_path.exists(), "candidate 검증이 store record 를 만들었다"
+
+    with pytest.raises(PreserveError):
+        backend.verify_retention(leg, "0" * 64, lease=dict(lease))
+    assert not rec_path.exists(), (
+        "strict verifier 가 불일치를 설명하다가 store record 를 만들었다")
+
+
+class _StoreIdStub:
+    """`_lease_like()` 가 읽는 세 속성만 흉내낸다 (backend 를 만들지 않는다)."""
+
+    def __init__(self, sid, backend):
+        self.store_id = sid
+        self.store_version_id = ""
+        self.store_lock_mode = ""
+        self.uri = backend.uri
+        self._backend = backend
+
+    def probe_enforcement(self):
+        return self._backend.probe_enforcement()
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# 41차 P1 — repair **source** 를 찾은 것과 repair **target** 을 찾은 것은 다르다
+# ─────────────────────────────────────────────────────────────────────────────
+
+def test_a_same_bytes_governance_head_does_not_block_repair(tmp_path, monkeypatch):
+    """★ 41차 P1 — 40차는 두 성분을 **따로** 시험하고 결합을 안 봤다.
+
+    40차가 닫은 둘::
+
+        (a) unlocked v1 + newer **wrong-bytes** locked v2   → repair source 로 해결
+        (b) 이미 Compliance 인 v1 + newer same-bytes Governance v2 → proof lookup
+
+    결합하면 다시 열린다::
+
+        after_lease_pin crash
+        v1 = correct bytes, **unlocked**
+        v2 = same correct bytes, **Governance**, newer
+
+    `_version_for()` 에는 담보 proof 가 없고, 수리는 `_existing_version()` 으로
+    **최신 same-bytes** 인 v2 를 target 으로 골라 잠근다. 이미 Governance 인
+    version 은 Compliance 로 승격되지 않으므로 수리가 영영 실패하고, 수리 가능한
+    unlocked v1 은 provider 에 그대로 남는다.
+
+    repair target 은 **담보로 만들 수 있는** version 이어야 한다 (안 잠겼거나
+    이미 담보) — 없으면 새 version 을 만든다.
+    """
+    import tools.preserve as P
+
+    run = _make_run(tmp_path)
+    store = _LockingStore(name=str(tmp_path))
+    backend = _lockstore(tmp_path, store)
+    index = tmp_path / "index"
+
+    base = dt.datetime(2026, 8, 27, 12, 0, 0, tzinfo=dt.timezone.utc)
+    ticks = iter(range(0, 100000, 37))
+
+    class _Clock(dt.datetime):
+        @classmethod
+        def now(cls, tz=None):
+            return base + dt.timedelta(seconds=next(ticks))
+
+    monkeypatch.setattr(P.dt, "datetime", _Clock)
+    _phase_kill(monkeypatch, "after_lease_pin")
+    with pytest.raises(RuntimeError):
+        run_transaction(PLANNED, run, backend, index, _hooks())
+    monkeypatch.undo()
+    monkeypatch.setattr(P.dt, "datetime", _Clock)
+
+    leg = PLANNED.leg_id
+    ld = _crashed_lease_digest(store, backend, leg)
+    assert ld, "전제: lease 후보가 있다"
+    key = backend._provider_key(leg, ld)
+    assert backend.protected_version(key) is None, "전제: v1 이 아직 안 잠겼다"
+
+    v1 = store.versions(key)[0]
+    v2 = store.put(key, store.get(key, v1))            # **같은 바이트**
+    store.lock(key, v2, "2099-01-01T00:00:00Z")
+    store._mode[(key, v2)] = "GOVERNANCE"               # 승격 불가능한 head
+
+    fresh = _lockstore(tmp_path, _LockingStore(name=store.name))
+    out = finalize_only(leg, fresh, index)
+    monkeypatch.undo()
+
+    assert out["ok"] and out["durable"] is True
+    assert out["retention"]["lease_digest"] == ld, (
+        "같은 바이트의 Governance head 가 수리 target 을 가로막았다")
+    proof = out["retention"]["lease_version"]
+    st = store.describe_object(key, proof)
+    assert st and st["mode"] == "COMPLIANCE", (
+        f"수리가 담보되지 않은 version 을 proof 로 돌려줬다: {st}")
+
+
+def test_a_lock_that_does_not_produce_a_durable_version_fails_closed(tmp_path):
+    """★ 41차 P1 — 수리가 고른 target ID 를 **proof 로 믿지 않는다.**
+
+    target selector 는 "담보로 만들 수 있는가" 를 묻고, proof selector 는
+    "지금 담보인가" 를 묻는다. 둘은 다른 질문이므로, `lock()` 이 끝났다는 것이
+    proof 가 생겼다는 뜻은 아니다 — provider 가 우회 가능한 mode 로 잠그면
+    (실물에서 bucket 기본 설정이 GOVERNANCE 인 경우가 그렇다) 잠금은 성공하고
+    담보는 없다.
+
+    40차는 `lock()` 뒤 그 version ID 를 그대로 돌려줬다. 이제 proof selector 를
+    다시 돌리고, 없으면 **거부**한다.
+    """
+    class _GovernanceOnly(_LockingStore):
+        def lock(self, key, version, until):
+            super().lock(key, version, until)
+            self._mode[(key, version)] = "GOVERNANCE"
+
+    store = _GovernanceOnly(name=str(tmp_path))
+    backend = _lockstore(tmp_path, store)
+    dg = backend.put_if_absent(b"payload")["digest"]
+    until = (dt.datetime.now(dt.timezone.utc)
+             + dt.timedelta(days=MIN_RETENTION_DAYS)).strftime("%Y-%m-%dT%H:%M:%SZ")
+
+    with pytest.raises(PreserveError) as ei:
+        backend.lock_content_object(dg, until)
+    assert "담보" in str(ei.value), str(ei.value)

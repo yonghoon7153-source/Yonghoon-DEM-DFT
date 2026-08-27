@@ -4245,3 +4245,81 @@ selector 도 닫았다: `cohort_id` 와 `purpose` 동시 지정, 모르는 purpo
 | 실제 object-lock provider adapter | **미구현** |
 | power-loss ordering fault model | **미착수** |
 | lease 갱신 | **미지원** (38차 결정, 리뷰 종결) |
+
+---
+
+## 49. 40차 리뷰 대응 — "이름이 predicate 보다 강하다" 가 세 자리에 더 있었다
+
+**대상 커밋**: `f0aa24f1` · **판정**: NO-GO (P0-1 · 최소증거 #9 미종결)
+**source_digest**: `db34cc3d3aeca5e2` → `b587816c40999e27`
+
+40차 리뷰는 39차의 여러 좁은 결함이 실제로 닫혔음을 인정하면서도, **같은 병이
+한 층 위에 남았다**고 판정했다. 요지는 셋이다.
+
+1. `store_version_id` 는 "그 version 이 있고 잠겨 있다" 를 **"그 version 이
+   올바른 store record 다"** 라고 불렀다.
+2. `_repair_source` 를 찾은 것을 **repair target 을 찾은 것**이라고 불렀다.
+3. 두 번째 fd 의 flock 실패를 **소유권**이라고 불렀다.
+
+그리고 내가 40차에 "닫혔다" 고 보고한 축 하나(`unknown purpose`)가 실제로는
+**false-green** 이었다 — 두-cohort fixture 라 guard 를 지워도 뒤의 ambiguity
+분기가 같은 예외를 냈다. 리뷰가 그것을 지적했고, 변이로 확인했다.
+
+### 발견별 대응
+
+| # | 40차 지적 | 이번에 한 것 | 시험 |
+|---|---|---|---|
+| P0-1a | store locator 가 `dg=None` 으로 불려 **bytes 를 안 봤다** | `_locator_holds()` 를 **typed 둘**로 가른다: `_object_locator_holds()`(담보+bytes) / `_store_locator_holds()`(담보 + exact record + `store_id` 결속). `dg=None` 분기가 사라졌다 | `..._forged_candidate_axis...[store_version_other_store]` · `[store_version_not_a_record]` |
+| P0-1b | base `inspect_store_id()` 가 `self.store_id` (생성·연장) | 진짜로 읽기만 한다. record 없으면 `None` | `..._local_backend_inspect_never_creates_or_extends_the_store` |
+| P0-1c | strict verifier 가 **오류 문자열**에서 `self.store_id` 재평가 | 읽은 값을 지역변수(`live_sid`)에 담고 메시지도 그것만 쓴다 | 같은 시험 (두 번째 assert) |
+| P1-2a | repair **target** 이 `_existing_version()` (최신 same-bytes) | `_repair_target()` — exact bytes **이면서 담보로 만들 수 있는** version 만 (unlocked 또는 이미 담보). Governance head 는 후보가 아니다 | `..._same_bytes_governance_head_does_not_block_repair` |
+| P1-2b | 수리 뒤 target ID 를 그대로 proof 로 믿는다 | `_lock_to_proof()` — 잠근 **뒤** proof selector 를 다시 돌리고, 없으면 거부 | `..._lock_that_does_not_produce_a_durable_version_fails_closed` |
+| P1-2c | `retain()` 이 `pv`(repair **source**)를 `lease_version` proof 로 넘긴다 | 수리 뒤 `recover_lease_version()` 으로 재유도 | 같은 governance-head 시험 |
+| P0-3a | `isinstance` + **virtual** `assert_held_for` → 두 위조의 결합 | `type(lock) is _PublishLock` + **unbound** `_PublishLock.assert_held_for(lock, out)` | `..._lock_whose_assert_is_overridden_cannot_publish[instance_attribute·subclass_override]` |
+| P0-3b | subclass 가 **내부 검사**를 override 하면 unbound 호출도 소용없다 | 정확한 타입 검사가 그것을 막는다 (진짜 lock 을 든 subclass 반례로 고정) | `..._subclass_holding_a_real_lock_cannot_weaken_its_own_checks` |
+| P0-3c | 두 번째 fd probe 는 소유권 증명도 무부작용 관측도 아니다 | `_holds_kernel_lock()` 삭제. `_reassert_kernel_lock()` — 게시 직전 **원래 fd** 에 `LOCK_EX\|LOCK_NB` 재적용 | `..._lock_another_writer_stole_is_refused_without_touching_it` · `..._reapplying_flock_to_an_fd_that_already_holds_it_succeeds` |
+| 파괴적 | `.publish.lock` 이 `CURRENT` 의 symlink/hardlink 면 lock 취득이 그것을 비운다 | `O_NOFOLLOW` + `fstat` regular + `st_nlink == 1` (flock 전·후 두 번) + **`ftruncate` 삭제**. `assert_held_for` 의 `stat()` 도 `follow_symlinks=False` | `..._lock_sentinel_cannot_be_aimed_at_another_file[symlink·hardlink]` |
+| #9-a | 원장을 **lock 밖에서** 읽고 비교했다 | 원장 조회를 임계 구역 안으로. caller 신고는 lock 안에서 대조 | `..._roster_is_read_from_the_ledger_inside_the_publish_lock` |
+| #9-b | pointer CAS 가 `generation_id` 만 본다 (`roster_digest`·`base_generation` 은 gid 밖) | `_pointer_fingerprint()` — base pointer 의 **바이트 전체** digest 로 CAS | `..._pointer_cas_compares_the_whole_record_not_just_the_generation` |
+| P1-5 | `_WARM` guard 가 `FunctionDef` **안**만 순회 → module-scope alias 우회 | 전체 AST 를 **scope 를 들고** 순회. module scope 도, 허용 accessor 안의 nested function 도 각자 판정 | `..._warm_guard_catches_a_module_scope_alias` (+ 허용 accessor 전제 시험) |
+| P2-6a | 같은 `cohort_id` 가 다른 디렉터리에 둘이면 소비자 넷이 각자 첫 hit 를 쓴다 | `_ledger_cohorts()` — 원장 **중앙 parser** 하나가 ID·디렉터리 유일성을 조회 전에 강제. `_ledger_roster`·`_cohort_dir`·`_frozen_cohort_dirs` 가 전부 그것만 쓴다. 시험 쪽 `_cohorts()` 도 같은 규칙 | `..._ledger_that_declares_one_cohort_id_twice_is_refused[order 0·1]` · `..._snapshot_selector_refuses_a_ledger_with_a_duplicate_cohort_id` |
+| 증거-6b | unknown-purpose 회귀가 **false-green** | single-cohort fixture 로 다시 쓴다 — guard 를 지우면 selector 가 조용히 그 하나를 돌려주므로 거부는 guard 때문일 수밖에 없다 | `..._unknown_purpose_is_refused_even_with_one_cohort` |
+
+### 의미가 바뀐 시험 하나 (숨기지 않는다)
+
+`test_a_manually_unlocked_real_lock_is_refused` → `..._is_retaken_before_publishing`.
+
+40차는 "밖에서 `LOCK_UN` 하면 거부" 를 요구했고 그 판정을 두 번째 fd probe 로
+구현했다. 리뷰가 그 predicate 자체가 틀렸음을 보였으므로 (다른 owner 의 lock 을
+자기 것으로 오인한다), 관측을 그만두고 **강제**로 바꿨다. 그 결과 "아무도 안
+들고 있는데 내 fd 만 풀린" 경우는 **되찾는다** — 상호배제는 유지된다. 거부해야
+하는 경우(남이 들고 있다)는 3자 회귀가 따로 본다.
+
+### 변이 시험 — 16축 전부 물었다
+
+`store-locator-record-binding` · `inspect-store-id-pure` · `verify-error-string-pure`
+· `repair-target-mode-filter` · `lock-to-proof-rederive` ·
+`retain-proof-not-repair-source` · `exact-type-check` · `unbound-assert-call` ·
+`reassert-kernel-lock` · `o-nofollow` · `nlink-check` · `roster-inside-lock` ·
+`full-pointer-cas`(2-site) · `ledger-dup-id` · `cohorts-dup-id` ·
+`unknown-purpose-guard`.
+
+**처음에 여섯이 안 물었다.** triage 를 적어 둔다 — 이 저장소가 반복해서
+겪은 자리다.
+
+| 안 문 변이 | 원인 | 처리 |
+|---|---|---|
+| `exact-type-check` | unbound 호출이 위조 둘을 이미 잡아서 타입 검사가 가려졌다. 그러나 **진짜 lock 을 든 subclass 가 내부를 override** 하면 unbound 호출도 뚫린다 | 시험 보강 (`..._subclass_holding_a_real_lock_...`) |
+| `lock-to-proof-rederive` | 그 반례에서는 target 과 proof 가 같은 version 이라 재유도가 관측되지 않았다 | 시험 보강 — `lock()` 이 Governance 로 잠그는 provider 반례 추가 |
+| `o-nofollow` · `nlink-check` | 시험이 **바이트 불변**만 봐서, `ftruncate` 를 지운 것만으로 초록이 됐다 | 시험 보강 — **거부까지** 요구한다 (남의 inode 를 flock 하는 것 자체가 결함) |
+| `full-pointer-cas` | 변이 설계 오류 — 한쪽(`live`)만 gid 로 되돌려 언제나 불일치가 났다 | 변이를 2-site 로 고쳐 재실행 |
+| `no-truncate` | 소유권 검사(`O_NOFOLLOW`+`st_nlink`)가 앞서므로 truncate 가 남의 inode 에 닿을 수 없다 | **코드를 남긴다** — 파괴적 축의 심층 방어이고, 애초에 필요 없는 연산의 제거다. 독립 관측되지 않는다는 것을 여기 적어 둔다 |
+
+### 아직 아닌 것
+
+| 항 | 상태 |
+|---|---|
+| 실제 object-lock provider adapter | **미구현** |
+| power-loss ordering fault model | **미착수** |
+| 두 writer + 원장 전환 동시성 (조건 10) | **부분** — 원장 재확인과 full pointer CAS 는 넣었고, 두 process 동시 게시 회귀는 아직 없다 |
+| roster generation ↔ cohort generation 의 단일 승인 전환 | **미착수** (설계 항목) |

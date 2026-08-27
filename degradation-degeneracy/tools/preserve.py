@@ -835,9 +835,15 @@ class CasBackend:
             # ★ 38차 P0-1 — content version proof 도 **재발견**해서 넘긴다.
             #   안 넘기면 재개가 만든 journal 이 최초 등록과 달라져
             #   `_register()` 가 거부한다 (재실행이 실패한다).
+            # ★ 41차 P1 — `pv` 는 **repair source** 다 (바이트를 읽으려고 잠금
+            #   여부를 안 묻고 고른 version). 그것을 proof 로 넘기면 수리가
+            #   만든 담보 version 대신 우회 가능한 head 를 봉인한다 — 실제로
+            #   같은 바이트의 Governance head 가 있으면 그것이 넘어가서
+            #   "lock mode 가 lease 와 다르다" 로 죽었다. 수리가 끝난 **뒤**
+            #   proof selector 를 다시 돌린다.
             return self.verify_retention(
                 leg_id, extra[0], expected=set(objs),
-                lease_version=pv or self.recover_lease_version(leg_id, extra[0]),
+                lease_version=self.recover_lease_version(leg_id, extra[0]),
                 lease_content_version=self.recover_content_version(extra[0]))
         except PreserveError as ex:
             # ★ 38차 P0-1 — 37차판은 만료면 `None` 을 돌려 **자동 갱신**했다.
@@ -933,45 +939,106 @@ class CasBackend:
             #   repair 가 WORM 을 만든 뒤에야 거부됐다.
             #
             #   여기서 **읽기만** 해서 전부 확인한다.
-            if not self._locator_holds("store.json", rec["store_version_id"],
-                                       None, rec["store_lock_mode"], rec):
+            # ★ 41차 P0-1 — locator 는 **두 종류**이고 결속하는 것이 다르다.
+            #   40차는 하나의 `_locator_holds(key, version, dg, ...)` 로 둘을
+            #   함께 봤고, store 는 `dg=None` 으로 불러 bytes 분기를 통째로
+            #   건너뛰었다. 그래서 "그 version 이 존재하고 잠겨 있다" 를 "그
+            #   version 이 이 candidate 의 store record 다" 라고 불렀다 —
+            #   `store_id` 가 다른 record 나 record 도 아닌 바이트를 가리키는
+            #   locator 가 앞단을 통과했다.
+            if not self._store_locator_holds(rec["store_version_id"],
+                                             rec["store_lock_mode"], rec):
                 return False
             for dg, v in ov.items():
-                if not self._locator_holds(self._provider_key(leg_id, dg), v,
-                                           dg, rec["lock_mode"], rec):
+                if not self._object_locator_holds(
+                        self._provider_key(leg_id, dg), v, dg,
+                        rec["lock_mode"], rec):
                     return False
         elif rec.get("object_versions"):
             return False
         return not _lease_expired(rec)
 
-    def _locator_holds(self, key: str, version: str, dg, want_mode, rec) -> bool:
-        """그 exact version 이 실제 proof 인가 — **읽기만 한다** (40차 P0-1).
+    def _locator_state(self, key: str, version: str, want_mode, rec):
+        """그 exact version 이 **지금 담보되어 있는가** — 상태를 준다 (없으면 `None`).
 
-        존재 · (dg 를 주면) bytes · mode 동등 · 기한 덮음. 하나라도 어긋나면
-        `False` 이고, 아무것도 바꾸지 않는다.
+        존재 · mode 동등 · 기한 덮음까지만 본다. **여기서 끝내면 안 된다** —
+        "그 version 이 담보돼 있다" 는 "그 version 이 내가 봉인한 그것이다" 가
+        아니다. 무엇으로 결속하는지는 아래 두 typed 검사가 정한다.
+
+        **읽기만 한다.**
         """
         prov = getattr(self, "provider", None)
         if prov is None:
-            return False
+            return None
         st = prov.describe_object(key, version)
         if not isinstance(st, dict) or st.get("mode") != want_mode:
-            return False
+            return None
         try:
             _horizon_covers(st, rec["retain_until_utc"], key)
         except PreserveError:
+            return None
+        return st
+
+    def _object_locator_holds(self, key: str, version: str, dg: str,
+                              want_mode, rec) -> bool:
+        """graph pin locator — 담보 상태 **+ 그 version 의 바이트가 `dg`**."""
+        if self._locator_state(key, version, want_mode, rec) is None:
             return False
-        if dg is not None and not self._bytes_match(key, version, dg):
+        return self._bytes_match(key, version, dg)
+
+    def _store_locator_holds(self, version: str, want_mode, rec) -> bool:
+        """store locator — 담보 상태 **+ 그 version 이 이 candidate 의 store record**.
+
+        ★ 41차 P0-1 — 40차는 store 를 `dg=None` 으로 불러 bytes 를 아예 안
+          봤다. 그래서 이런 candidate 가 앞단을 통과했다::
+
+              canonical store v1 = record(store_id=A), Compliance, 충분한 기한
+              newer     store v2 = record(store_id=B) 또는 record 가 아닌 바이트
+              candidate: store_id=A · store_version_id=v2
+
+          `inspect_store_id()` 는 canonical v1 의 A 를 돌려주고 locator 검사는
+          존재·mode·기한만 봤으므로 통과했다. 그 뒤 `repair_lease_locks()` 가
+          pin·content 를 WORM 으로 만든 **다음에야** strict verifier 가 exact
+          v2 를 읽고 거부했다 — 거부는 맞지만 되돌릴 수 없는 상태가 앞섰다.
+
+          `store_id` 는 identity **root** 다. locator 가 그것과 결속되지 않으면
+          reopen 이 남의 record 를 가리키는 receipt 를 만들 수 있다.
+        """
+        if self._locator_state("store.json", version, want_mode, rec) is None:
             return False
-        return True
+        prov = self.provider
+        try:
+            got = load_canonical(prov.get("store.json", version))
+        except (KeyError, ValueError, UnicodeDecodeError):
+            return False
+        return _is_store_record(got) and got["store_id"] == rec.get("store_id")
 
     def inspect_store_id(self):
-        """store identity 를 **읽기만** 한다 (39차 P0-1).
+        """store identity 를 **읽기만** 한다. 없으면 `None` (39·41차 P0-1).
 
-        ★ `store_id` 는 record 가 없으면 만들고, 있으면 `ensure_store_lock()`
-          으로 기한을 연장한다 — 둘 다 mutation 이다. "순수 validator" 가 그것을
+        ★ 39차 — `store_id` 는 record 가 없으면 만들고, 있으면
+          `ensure_store_lock()` 으로 기한을 연장한다. "순수 validator" 가 그것을
           부르면 검증 자체가 상태를 바꾼다. inspect 와 ensure 를 가른다.
+
+        ★ 41차 P1 — 그런데 base 구현이 `return self.store_id` 한 줄이었다.
+          object-lock backend 쪽만 순수해졌고 **local backend 의 candidate
+          validation 은 그대로 만들고 굳혔다** — 이름이 predicate 보다 강한
+          그 형태다. 여기서 진짜로 읽기만 한다.
         """
-        return self.store_id
+        p = Path(self.root) / "store.json"
+        if not p.is_file():
+            return None
+        try:
+            rec = load_canonical(p.read_bytes())
+        except (ValueError, UnicodeDecodeError):
+            return None
+        if not isinstance(rec, dict):
+            return None
+        sid = rec.get("store_id") or ""
+        # `store_id` 가 받아들이는 것과 같은 형태만 identity 로 인정한다.
+        # 이상하면 `None` — 검증 경로에서 예외를 던지면 그 자체가 부작용 있는
+        # 판정이 되고, `None` 은 어느 비교와도 안 맞아 fail-closed 다.
+        return sid if (_is_hex64(sid) or _is_uuid_hex(sid)) else None
 
     def read_lease(self, leg_id: str, lease_digest: str, *, version=None) -> dict:
         """lease 를 **pin 에서** 읽는다."""
@@ -1025,10 +1092,16 @@ class CasBackend:
         #   없으면 만들고 있으면 기한을 연장한다. 그것을 검증 경로에서 부르면
         #   "봉인이 풀렸다" 를 스스로 고쳐 놓고 통과시킨다 — 실제로 그랬다
         #   (담보 해제·기한 단축 반례가 둘 다 self-healing 으로 초록이었다).
-        if lease["store_id"] != self.inspect_store_id():
+        # ★ 41차 P1 — 읽은 값을 **지역변수에 담고 오류 문자열도 그것만 쓴다.**
+        #   40차는 불일치를 `inspect_store_id()` 로 발견해 놓고 메시지에서
+        #   `self.store_id` 를 다시 평가했다 — 오류를 설명하는 과정에서 없는
+        #   store record 를 만들거나 기한을 연장할 수 있었다. read-only 경로에
+        #   mutation 을 남기는 마지막 자리였다.
+        live_sid = self.inspect_store_id()
+        if lease["store_id"] != live_sid:
             raise PreserveError(
                 stage, f"lease 가 다른 store 의 것이다 — backend URI 는 같은데 "
-                       f"store {lease['store_id'][:8]} ≠ {self.store_id[:8]}")
+                       f"store {lease['store_id'][:8]} ≠ {str(live_sid)[:8]}")
         # ★ 30차 P1-3 — receipt 가 적은 숫자가 아니라 **지금 backend** 를 본다
         if self.retention_days < lease["min_retention_days"]:
             raise PreserveError(
@@ -1558,13 +1631,13 @@ class ObjectLockBackend(CasBackend):
           version 이 생기고 그것이 WORM 으로 잠겼다. 36차 fake 가 "같은
           바이트면 같은 version" shortcut 을 갖고 있어서 이 누적이 안 보였다.
           이미 있는 version 을 **재사용**하고, 없을 때만 만든다.
+
+        ★ 41차 P1 — target 을 `_repair_target()` 이 고르고, 잠근 뒤 proof 를
+          **재유도**한다. 40차는 `_existing_version()` 이 고른 최신 same-bytes
+          version 을 그대로 proof 로 돌려줬다.
         """
-        key = self._provider_obj_key(dg)
-        vid = self._existing_version(key, self.read_back(dg))
-        if vid is None:
-            vid = self.provider.put(key, self.read_back(dg))
-        self.provider.lock(key, vid, until)
-        return vid
+        return self._lock_to_proof(self._provider_obj_key(dg), dg, until,
+                                   lambda: self.read_back(dg))
 
     def _version_for(self, key: str, dg: str):
         """**담보 proof** — 잠겨 있고 mode 가 담보이고 바이트가 `dg` 인 version.
@@ -1597,23 +1670,64 @@ class ObjectLockBackend(CasBackend):
                 return v
         return None
 
-    def _existing_version(self, key: str, data: bytes):
-        """그 key 에서 `data` 와 **바이트가 같은** 가장 최신 version (37차 P0-1).
+    def _repair_target(self, key: str, dg: str):
+        """수리가 **담보로 만들 수 있는** version — 없으면 `None` (41차 P1).
 
-        재시도가 provider version 을 늘리지 않게 하는 유일한 수단이다 —
-        실물에서는 put 마다 새 version 이 생기고, 새로 생긴 것을 잠그면
-        같은 바이트의 WORM version 이 재시도 횟수만큼 쌓인다.
+        ★ 40차는 `_existing_version(key, data)` 하나로 골랐다. 그것은 "바이트가
+          같은 **가장 최신** version" 이라, 우회 가능한 head 하나가 아래의
+          수리 가능한 version 을 가렸다::
+
+              after_lease_pin crash
+              v1 = correct bytes, **unlocked**       ← 잠글 수 있다
+              v2 = same bytes, **Governance**, newer ← 승격 불가능
+
+          40차는 v2 를 target 으로 골라 잠갔고, Governance 는 Compliance 로
+          승격되지 않으므로 재개가 영영 실패했다. 40차 시험은 두 성분(wrong
+          bytes locked head / same-bytes Governance head)을 **따로** 봤을 뿐
+          결합을 안 봤다.
+
+          네 phase 는 각자 다른 것을 묻는다::
+
+              proof lookup   `_version_for()`     잠긴 담보 + exact bytes
+              repair source  `_repair_source()`   바이트를 **읽을** 수 있는가
+              repair target  여기                 담보로 **만들** 수 있는가
+              journal verify `recover_*()`        봉인된 exact ID 만 조회
+
+          담보로 만들 수 있는 것: 아직 안 잠긴 version, 그리고 이미 담보 mode 인
+          version (`lock` 은 멱등이고 기한은 연장만 된다). 우회 가능한 mode 는
+          후보가 아니다 — 잠그면 되돌릴 수 없이 막힌다. 하나도 없으면 `None`
+          이고 호출자가 **새 version** 을 만든다.
         """
         vs = getattr(self.provider, "versions", None)
         if not callable(vs):
             return None
         for v in vs(key) or []:
-            try:
-                if self.provider.get(key, v) == data:
-                    return v
-            except KeyError:
+            if not self._bytes_match(key, v, dg):
                 continue
+            st = self.provider.describe_object(key, v)
+            mode = st.get("mode") if isinstance(st, dict) else None
+            if mode is None or mode in self.DURABLE_MODES:
+                return v
         return None
+
+    def _lock_to_proof(self, key: str, dg: str, until: str, make_bytes) -> str:
+        """그 key 를 `dg` 바이트로 **담보로 만들고 proof 를 재유도한다** (41차 P1).
+
+        수리가 고른 target ID 를 그대로 proof 로 믿지 않는다 — target selector
+        와 proof selector 는 묻는 것이 다르므로, 잠근 **뒤** proof selector 를
+        다시 돌려 typed proof 를 얻는다. 그것이 없으면 수리가 실패한 것이다.
+        """
+        vid = self._repair_target(key, dg)
+        if vid is None:
+            vid = self.provider.put(key, make_bytes())
+        self.provider.lock(key, vid, until)
+        proof = self._version_for(key, dg)
+        if proof is None:
+            raise PreserveError(
+                "retention",
+                f"{key} 를 담보로 만들지 못했다 (version {str(vid)[:16]}) — "
+                "잠근 뒤에도 담보 proof 가 없다")
+        return proof
 
     def repair_lease_locks(self, leg_id: str, lease_digest: str,
                            until: str) -> None:
@@ -1819,15 +1933,15 @@ class ObjectLockBackend(CasBackend):
         out = {}
         for dg in sorted(set(digests)):
             key = self._provider_key(leg_id, dg)
-            # 잠그러 가는 길이므로 아직 안 잠긴 exact bytes 도 후보다
-            data = self.read_pinned(leg_id, dg,
-                                    version=self._repair_source(key, dg))
-            # ★ 37차 P0-1 — 무조건 put 하면 재시도마다 WORM version 이 쌓인다
-            vid = self._existing_version(key, data)
-            if vid is None:
-                vid = self.provider.put(key, data)
-            self.provider.lock(key, vid, until)
-            out[dg] = vid
+            # ★ 37차 P0-1 — 무조건 put 하면 재시도마다 WORM version 이 쌓인다.
+            # ★ 41차 P1 — 그래서 기존 version 을 재사용하는데, 재사용 후보는
+            #   "바이트가 같은 최신" 이 아니라 **담보로 만들 수 있는** 것이어야
+            #   한다 (`_repair_target`). 바이트를 **읽는** 후보는 또 다르다
+            #   (`_repair_source` — 잠금 여부를 묻지 않는다).
+            out[dg] = self._lock_to_proof(
+                key, dg, until,
+                lambda dg=dg, key=key: self.read_pinned(
+                    leg_id, dg, version=self._repair_source(key, dg)))
         return out
 
     def describe_locks(self, leg_id: str, versions: dict) -> dict:

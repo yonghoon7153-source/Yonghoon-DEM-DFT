@@ -2731,6 +2731,16 @@ def _cohorts() -> list[dict]:
     cs = reg.get("cohorts")
     assert cs, ("`LEG_PRESERVATION.yaml` 에 `cohorts` 가 없다 — 투영을 전역 "
                 "하나로 묶으면 analyzer 를 바꾸는 순간 충족 불가능해진다")
+    # ★ 41차 #9 — 시험 쪽 selector 도 같은 원장을 읽는다. 중복을 그대로
+    #   흘리면 `_snapshot_for_leg(cohort_id=...)` 이 **첫 hit** 를 고른다 —
+    #   production `_ledger_cohorts()` 가 막는 것과 같은 병이다. 조회 전에 본다.
+    ids = [c.get("cohort_id") for c in cs]
+    dirs = [str((_REPO / c["dir"]).resolve()) for c in cs]
+    dup_id = sorted({i for i in ids if ids.count(i) > 1})
+    dup_dir = sorted({d for d in dirs if dirs.count(d) > 1})
+    assert not (dup_id or dup_dir), (
+        f"원장이 중복 선언을 담고 있다 — cohort_id {dup_id} · 디렉터리 "
+        f"{dup_dir}. 어느 항목이 정본인지 목록 순서로 정하게 된다")
     return cs
 
 
@@ -4671,15 +4681,42 @@ def _warm_offenders(tree, warm_ok) -> list:
     import ast as _ast
 
     out = []
-    for fn in _ast.walk(tree):
-        if not isinstance(fn, (_ast.FunctionDef, _ast.AsyncFunctionDef)):
-            continue
-        if fn.name in warm_ok:
-            continue
-        for n in _ast.walk(fn):
-            if isinstance(n, _ast.Name) and n.id == "_WARM" \
-                    and isinstance(n.ctx, _ast.Load):
-                out.append(f"{fn.name}:{n.lineno}")
+
+    def _visit(node, fn):
+        """`fn` 은 **가장 안쪽** 함수 이름 (module scope 면 `None`).
+
+        ★ 41차 #9 — 40차는 `FunctionDef` 를 찾아 그 **안**만 돌았다. module
+          scope 에 alias 한 줄을 두면 load 는 함수 밖이고 함수 안에는 alias
+          이름만 남는다::
+
+              _WARM_ALIAS = _WARM
+              def some_reader(m): return (_WARM_ALIAS / m[...]).read_bytes()
+
+          이름이 "이름 로드 자체를 금지" 인데 실제 predicate 는 "허용되지 않은
+          **함수 안**의 이름 로드" 였다. 이제 전체 AST 를 scope 를 들고
+          돈다 — module scope 도, 허용된 accessor **안의 nested function** 도
+          각자 자기 이름으로 판정된다 (allowlist 를 통째로 건너뛰면 그 안에
+          새 우회가 생긴다).
+        """
+        if isinstance(node, _ast.Name) and node.id == "_WARM" \
+                and isinstance(node.ctx, _ast.Load) and fn not in warm_ok:
+            out.append(f"{fn or '<module>'}:{node.lineno}")
+        if isinstance(node, (_ast.FunctionDef, _ast.AsyncFunctionDef)):
+            # decorator·기본값·annotation 은 **바깥** scope 에서 평가된다
+            outer = list(node.decorator_list) + list(node.args.defaults) \
+                + [d for d in node.args.kw_defaults if d is not None] \
+                + ([node.returns] if node.returns is not None else []) \
+                + [a.annotation for a in _ast.walk(node.args)
+                   if isinstance(a, _ast.arg) and a.annotation is not None]
+            for sub in outer:
+                _visit(sub, fn)
+            for sub in node.body:
+                _visit(sub, node.name)
+            return
+        for ch in _ast.iter_child_nodes(node):
+            _visit(ch, fn)
+
+    _visit(tree, None)
     return out
 
 
@@ -4723,7 +4760,10 @@ def test_no_reader_touches_the_cohort_fixed_namespace():
     #: 가 안 생겼는지를 보려면 layout 을 봐야 한다. 내용을 읽지는 않는다.
     #: `..._declares_each_cohort_and_directory_once` 는 **원장의 `dir` 자체**가
     #: 유일한지를 보는 시험이라 예외다 — 내용을 읽지 않고 선언만 센다.
-    allowed = {"_Snapshot", "__init__", "_snapshot",
+    #: ★ 41차 #9 — `_cohorts()` 는 원장의 **중앙 parser** 다. `dir` 을 꺼내는
+    #: 이유는 중복 선언을 세기 위해서이고 (production `_ledger_cohorts()` 와
+    #: 같은 규칙), 그 경로로 파일을 열지 않는다.
+    allowed = {"_Snapshot", "__init__", "_snapshot", "_cohorts",
                "test_the_active_cohort_is_published_through_a_single_current_pointer",
                "test_the_ledger_declares_each_cohort_and_directory_once"}
     #: cohort record 를 담는 이름들. 다른 record 의 `dir` 은 이 규칙 밖이다
@@ -5603,11 +5643,17 @@ def test_an_object_that_merely_has_assert_held_for_cannot_publish(tmp_path):
         "위조 capability 로 generation 이 생겼다")
 
 
-def test_a_manually_unlocked_real_lock_is_refused(tmp_path):
-    """★ 40차 #9 — fd·pid·inode 가 그대로면 **kernel lock 이 없어도** 통과했다.
+def test_a_manually_unlocked_lock_is_retaken_before_publishing(tmp_path):
+    """★ 41차 #9 — 40차는 여기서 **거부**를 요구했고, 그것이 오판이었다.
 
-    `assert_held_for()` 는 "그 파일 descriptor 와 pathname 을 갖는다" 를
-    증명했지 "지금 kernel lock 을 보유한다" 를 증명하지 않았다.
+    40차 판정은 "두 번째 fd 로 잡히면 내가 안 들고 있는 것" 이었다. 그
+    predicate 는 소유권을 증명하지 못한다 (다른 writer 가 들고 있어도 잡히지
+    않는다) — 리뷰가 3자 반례로 보인 그대로다. 그래서 관측을 그만두고 게시
+    직전에 **원래 fd 로 다시 강제**한다.
+
+    그 결과 이 시나리오의 의미가 바뀐다: 아무도 안 들고 있으면 A 가 자기
+    lock 을 되찾는다 (상호배제는 유지된다). 남이 들고 있으면 되찾지 못하고
+    거부된다 — 그 축은 `..._a_lock_another_writer_stole_...` 가 본다.
     """
     import fcntl
 
@@ -5618,20 +5664,26 @@ def test_a_manually_unlocked_real_lock_is_refused(tmp_path):
     with rp._PublishLock(out) as held:
         held.assert_held_for(out)                     # 전제: 정상이다
         fcntl.flock(held.fd, fcntl.LOCK_UN)           # 밖에서 풀어 버린다
-        with pytest.raises(SystemExit) as ei:
-            held.assert_held_for(out)
-        assert "lock" in str(ei.value), str(ei.value)
+        held.assert_held_for(out)                     # 되찾는다 (관측이 아니다)
+        # 되찾았음을 밖에서 확인한다 — 다른 fd 는 이제 못 잡는다
+        probe = os.open(held.path, os.O_RDWR)
+        try:
+            with pytest.raises(OSError):
+                fcntl.flock(probe, fcntl.LOCK_EX | fcntl.LOCK_NB)
+        finally:
+            os.close(probe)
 
 
-@pytest.mark.parametrize("step", ["ftruncate", "fstat"])
+@pytest.mark.parametrize("step", ["fstat"])
 def test_a_failed_acquire_releases_the_lock(tmp_path, monkeypatch, step):
     """★ 40차 #9 — flock 을 잡은 **뒤** 실패하면 fd 도 lock 도 안 풀렸다.
 
     39차 `__enter__()` 는 `flock` 성공 뒤 `ftruncate`·`pwrite`·`fsync` 를
     했는데 그 사이 실패에 cleanup 이 없어 다음 writer 가 영영 못 들어왔다.
 
-    (40차에 `pwrite`·`fsync` 는 **없앴다** — lock 파일 내용은 authority 가
-     아니므로 쓸 이유가 없다. 남은 두 단계로 같은 축을 본다.)
+    (40차에 `pwrite`·`fsync` 를, 41차에 `ftruncate` 를 **없앴다** — lock 파일
+     내용은 authority 가 아니고, truncate 는 symlink/hardlink 로 남의 파일을
+     비우는 통로였다. flock 뒤에 남은 단계는 inode 재확인 하나다.)
     """
     rp = _rp()
     out = tmp_path / "cohort"
@@ -5860,3 +5912,412 @@ def test_a_ledger_that_declares_one_directory_twice_is_refused(tmp_path,
     with pytest.raises(SystemExit) as ei:
         rp._ledger_roster(root / "docs" / "22p_gap" / "dup")
     assert "선언" in str(ei.value) or "정본" in str(ei.value), str(ei.value)
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# 41차 #9 — 타입과 virtual method 를 **결합**하면 다시 위조된다
+# ─────────────────────────────────────────────────────────────────────────────
+
+def _one_leg_cohort(rp, tmp_path, out, tag=b"0"):
+    rp.promote_cohort_generation(
+        _stage(tmp_path / f"s{tag.decode()}",
+               **{"a.projection.csv.gz": b"c" + tag,
+                  "a.projection.yaml": b"v: " + tag + b"\n",
+                  "a.restarts.csv.gz": b"r" + tag}), out, "a", roster={"a"})
+    return rp.read_current(out)
+
+
+def _publish_attempt(rp, tmp_path, out, lock, tag=b"1"):
+    return rp._promote_generation(
+        _stage(tmp_path / f"s{tag.decode()}",
+               **{"a.projection.csv.gz": b"c" + tag,
+                  "a.projection.yaml": b"v: " + tag + b"\n",
+                  "a.restarts.csv.gz": b"r" + tag}),
+        out, lock=lock, roster={"a"})
+
+
+@pytest.mark.parametrize("how", ["instance_attribute", "subclass_override"])
+def test_a_lock_whose_assert_is_overridden_cannot_publish(tmp_path, how):
+    """★ 41차 #9 — 40차는 두 위조를 **따로** 막고 결합을 안 봤다.
+
+    40차판 `_promote_generation()` 은 이렇게 판정한다::
+
+        if not isinstance(lock, _PublishLock): 거부
+        lock.assert_held_for(out)              # ← **virtual** 호출
+
+    `isinstance` 는 subclass 를 통과시키고, 속성 조회는 instance 속성이
+    이긴다. 그래서 40차가 따로 막아 둔 두 fixture 를 겹치면 registry·fd·
+    kernel 검사가 통째로 건너뛰어진다:
+
+        fake = object.__new__(_PublishLock); fake.assert_held_for = no-op
+        class Forged(_PublishLock): def assert_held_for(self, out): pass
+
+    타입 검사는 **정확히 그 타입**이어야 하고, 검증은 **unbound** 로 불러야
+    한다 — 인스턴스가 자기 검사를 고를 수 있으면 검사가 아니다.
+    """
+    rp = _rp()
+    out = tmp_path / "cohort"
+    before = _one_leg_cohort(rp, tmp_path, out)
+    gens = sorted(p.name for p in (out / "gen").iterdir())
+
+    if how == "instance_attribute":
+        lock = object.__new__(rp._PublishLock)
+        lock.out, lock.path = Path(out).resolve(), Path(out) / ".publish.lock"
+        lock.fd = lock.ino = lock.pid = None
+        lock.assert_held_for = lambda out: None
+    else:
+        class _Forged(rp._PublishLock):
+            def assert_held_for(self, out):
+                return None
+        lock = object.__new__(_Forged)
+        lock.out, lock.path = Path(out).resolve(), Path(out) / ".publish.lock"
+        lock.fd = lock.ino = lock.pid = None
+
+    with pytest.raises(SystemExit):
+        _publish_attempt(rp, tmp_path, out, lock)
+    assert rp.read_current(out) == before, "위조 lock 으로 pointer 가 움직였다"
+    assert sorted(p.name for p in (out / "gen").iterdir()) == gens, (
+        "위조 lock 으로 generation 이 생겼다")
+
+
+def test_a_subclass_holding_a_real_lock_cannot_weaken_its_own_checks(tmp_path):
+    """★ 41차 #9 — **unbound 호출만으로는 부족하다.**
+
+    `assert_held_for()` 를 unbound 로 불러도 그 안은 `self._assert_plain_sentinel`
+    ·`self._reassert_kernel_lock` 을 부른다. `isinstance` 로 subclass 를
+    통과시키면 subclass 가 **그 내부**를 override 해 검사를 비워 버릴 수 있다 —
+    위조 인스턴스가 아니라 **진짜 lock 을 든 subclass** 라서 registry·fd·inode
+    는 전부 진짜다.
+
+    그래서 타입은 **정확히 그 타입**이어야 한다. (변이로 확인했다: `type is` 를
+    `isinstance` 로 되돌리면 이 시험만 빨개진다.)
+    """
+    import fcntl
+
+    rp = _rp()
+    out = tmp_path / "cohort"
+    before = _one_leg_cohort(rp, tmp_path, out)
+
+    class _Weakened(rp._PublishLock):
+        def _reassert_kernel_lock(self):
+            return None                       # 검사를 비운다
+
+    with _Weakened(out) as sub:
+        sub.assert_held_for(out)              # 전제: 진짜 lock 이다
+        fcntl.flock(sub.fd, fcntl.LOCK_UN)    # 실제로는 놓았고
+        b_fd = os.open(sub.path, os.O_RDWR)
+        try:
+            fcntl.flock(b_fd, fcntl.LOCK_EX | fcntl.LOCK_NB)   # B 가 가져갔다
+            with pytest.raises(SystemExit):
+                _publish_attempt(rp, tmp_path, out, sub)
+        finally:
+            os.close(b_fd)
+    assert rp.read_current(out) == before, (
+        "내부 검사를 비운 subclass 로 pointer 가 움직였다")
+
+
+def test_a_lock_another_writer_stole_is_refused_without_touching_it(tmp_path):
+    """★ 41차 #9 — 두 번째 fd 의 nonblocking flock 실패는 **소유권이 아니다.**
+
+    40차 `_holds_kernel_lock()` 은 같은 pathname 을 새 fd 로 열어 잡히지
+    않으면 "내가 들고 있다" 고 결론냈다. 그 실패가 말하는 것은 **누군가**
+    잠갔다는 것뿐이다::
+
+        A enter → A LOCK_UN → B LOCK_EX → A.assert_held_for()
+        probe 는 B 때문에 실패 → A 를 승인한다
+
+    관측을 강제로 바꾼다: 게시 직전에 **원래 fd** 로 배타 lock 을 다시
+    적용한다. 남이 들고 있으면 그 시도가 실패하므로 A 가 거부되고, B 의
+    lock 은 그대로 남는다.
+    """
+    import fcntl
+
+    rp = _rp()
+    out = tmp_path / "cohort"
+    before = _one_leg_cohort(rp, tmp_path, out)
+
+    with rp._PublishLock(out) as a:
+        fcntl.flock(a.fd, fcntl.LOCK_UN)          # A 가 밖에서 풀렸다
+        b_fd = os.open(a.path, os.O_RDWR)         # B 가 같은 inode 를 잡는다
+        try:
+            fcntl.flock(b_fd, fcntl.LOCK_EX | fcntl.LOCK_NB)
+            with pytest.raises(SystemExit) as ei:
+                _publish_attempt(rp, tmp_path, out, a)
+            assert "lock" in str(ei.value), str(ei.value)
+            # B 의 lock 을 건드리지 않았다 — 세 번째 fd 가 여전히 못 잡는다
+            probe = os.open(a.path, os.O_RDWR)
+            try:
+                with pytest.raises(OSError):
+                    fcntl.flock(probe, fcntl.LOCK_EX | fcntl.LOCK_NB)
+            finally:
+                os.close(probe)
+        finally:
+            os.close(b_fd)
+    assert rp.read_current(out) == before, "훔쳐간 lock 으로 pointer 가 움직였다"
+
+
+def test_reapplying_flock_to_an_fd_that_already_holds_it_succeeds(tmp_path):
+    """★ 41차 #9 — 위 수정은 "이미 보유한 flock 에 같은 연산을 다시 적용해도
+    성공한다" 는 **플랫폼 성질**에 기댄다. 그 전제를 여기에 고정한다.
+
+    이 성질이 깨지면 정상 게시가 전부 자기 lock 때문에 실패한다 — 조용히
+    깨지면 안 되는 축이므로 별도 회귀로 둔다.
+    """
+    import fcntl
+
+    p = tmp_path / "f"
+    p.write_bytes(b"")
+    fd = os.open(p, os.O_RDWR)
+    try:
+        fcntl.flock(fd, fcntl.LOCK_EX | fcntl.LOCK_NB)
+        fcntl.flock(fd, fcntl.LOCK_EX | fcntl.LOCK_NB)     # 다시 — 성공해야 한다
+    finally:
+        os.close(fd)
+
+
+@pytest.mark.parametrize("kind", ["symlink", "hardlink"])
+def test_the_lock_sentinel_cannot_be_aimed_at_another_file(tmp_path, kind):
+    """★ 41차 #9 — **파괴적**. sentinel 이 남의 파일을 비울 수 있었다.
+
+    40차 `__enter__()` 는 `.publish.lock` 을 `O_NOFOLLOW` 없이 열고 flock 뒤
+    `ftruncate(fd, 0)` 한다. 미리 이렇게 두면::
+
+        .publish.lock -> CURRENT      (symlink 또는 hardlink)
+
+    게시자가 lock 을 잡는 **순간** `CURRENT` 가 빈 파일이 된다. 그 뒤의
+    fd/pathname inode 대조는 symlink 를 따라가므로 손상을 못 본다. 39차부터
+    pathname 교체를 위협 모델에 넣었으므로 범위 밖 공격이 아니다.
+
+    lock 취득이 성공하든 실패하든 **`CURRENT` 와 generation tree 는 바이트가
+    같아야 한다.**
+    """
+    rp = _rp()
+    out = tmp_path / "cohort"
+    _one_leg_cohort(rp, tmp_path, out)
+    cur = out / "CURRENT"
+    before = cur.read_bytes()
+    tree_before = {p.name: p.read_bytes()
+                   for p in sorted((out / "gen").rglob("*")) if p.is_file()}
+
+    sentinel = out / ".publish.lock"
+    sentinel.unlink(missing_ok=True)
+    if kind == "symlink":
+        sentinel.symlink_to(cur)
+    else:
+        os.link(cur, sentinel)
+
+    # ★ 41차 — **거부까지** 요구한다. "바이트가 안 변했다" 만 보면 truncate 를
+    #   지운 것만으로 초록이 되고, `O_NOFOLLOW`·`st_nlink` 검사를 지우는 변이가
+    #   둘 다 안 물었다 (실측했다). 남의 inode 를 flock 하는 것 자체가 결함이다
+    #   — 두 cohort 의 sentinel 이 한 inode 를 공유하면 상호배제가 엉키고,
+    #   공유 파일을 겨눈 symlink 는 모든 게시를 막는 통로다.
+    with pytest.raises(SystemExit) as ei:
+        with rp._PublishLock(out):
+            pass
+    assert "lock" in str(ei.value) or "sentinel" in str(ei.value), str(ei.value)
+    assert cur.read_bytes() == before, f"{kind} sentinel 이 CURRENT 를 비웠다"
+    assert {p.name: p.read_bytes()
+            for p in sorted((out / "gen").rglob("*"))
+            if p.is_file()} == tree_before, f"{kind} sentinel 이 generation 을 바꿨다"
+
+
+def test_the_roster_is_read_from_the_ledger_inside_the_publish_lock(tmp_path):
+    """★ 41차 #9 — 원장을 **lock 밖에서** 읽고 비교했다.
+
+    40차 `promote_cohort_generation()` 은::
+
+        declared = _ledger_roster(out)        # ← lock 밖
+        if roster != declared: 거부
+        with _PublishLock(out): ...           # ← 임계 구역은 여기서 시작
+
+    그 사이에 원장 authority 가 바뀌면 임계 구역은 **옛 값**으로 게시한다.
+    원장 조회는 하나도 빠짐없이 lock 을 든 채여야 한다.
+    """
+    rp = _rp()
+    out = tmp_path / "cohort"
+    out.mkdir(parents=True)
+    real = rp._ledger_roster
+    held: list = []
+
+    def _watch(o):
+        held.append(bool(rp._PublishLock._ACTIVE))
+        return real(o)
+
+    rp._ledger_roster = _watch
+    try:
+        _one_leg_cohort(rp, tmp_path, out)
+    finally:
+        rp._ledger_roster = real
+    assert held, "원장을 한 번도 읽지 않았다"
+    assert all(held), (
+        f"원장을 lock 밖에서 읽었다 (lock 보유 여부 순서대로: {held})")
+
+
+def test_the_pointer_cas_compares_the_whole_record_not_just_the_generation(
+        tmp_path):
+    """★ 41차 #9 — CAS 가 `generation_id` 만 봤다.
+
+    `.PENDING` 은 `roster_digest` 와 `base_generation` 을 **generation ID 밖**
+    에 싣는다. 그래서 같은 generation·다른 authority metadata 로 교체하면
+    40차 CAS 는 아무것도 못 본다. base 로 읽은 pointer 의 **canonical bytes
+    전체**를 대조해야 한다.
+
+    base 를 읽은 뒤·게시 전에 `.PENDING` 을 같은 gid·다른 명부 digest 로
+    갈아 끼운다 (`_assert_writable()` 이 그 사이 지점이다).
+    """
+    rp = _rp()
+    out = tmp_path / "cohort"
+    rp.promote_cohort_generation(
+        _stage(tmp_path / "sa", **{"a.projection.csv.gz": b"ac",
+                                   "a.projection.yaml": b"v: a\n",
+                                   "a.restarts.csv.gz": b"ar"}), out, "a",
+        roster={"a", "b"})
+    assert (out / ".PENDING").is_file(), "전제: bootstrap pending 이 있다"
+
+    real = rp._assert_writable
+
+    def _swap(dest):
+        rec = json.loads((out / ".PENDING").read_text(encoding="utf-8"))
+        if rec.get("roster_digest") != "swapped":
+            rec["roster_digest"] = "swapped"          # gid 는 그대로다
+            (out / ".PENDING").write_text(
+                json.dumps(rec, sort_keys=True, separators=(",", ":")),
+                encoding="utf-8")
+        return real(dest)
+
+    rp._assert_writable = _swap
+    try:
+        with pytest.raises(SystemExit) as ei:
+            rp.promote_cohort_generation(
+                _stage(tmp_path / "sb", **{"b.projection.csv.gz": b"bc",
+                                           "b.projection.yaml": b"v: b\n",
+                                           "b.restarts.csv.gz": b"br"}),
+                out, "b", roster={"a", "b"})
+    finally:
+        rp._assert_writable = real
+    assert "움직" in str(ei.value) or "CAS" in str(ei.value), str(ei.value)
+
+
+def test_the_warm_guard_catches_a_module_scope_alias(tmp_path):
+    """★ 41차 #9 — guard 가 **함수 안**만 돌았다.
+
+    `_warm_offenders()` 는 `FunctionDef` 를 찾아 그 안의 `_WARM` load 를 센다.
+    module scope 에 alias 한 줄을 두면 load 는 함수 밖이고 함수 안에는
+    alias 이름만 남는다::
+
+        _WARM_ALIAS = _WARM
+        def some_reader(m): return (_WARM_ALIAS / m["projection_file"]).read_bytes()
+
+    40차가 "이름 로드 자체를 금지" 라고 불렀지만 실제 predicate 는 "허용되지
+    않은 **함수 안**의 이름 로드" 였다 — 이름이 predicate 보다 강했다.
+    """
+    import ast
+
+    src = ('_WARM_ALIAS = _WARM\n\n\n'
+           'def some_reader(m):\n'
+           '    return (_WARM_ALIAS / m["projection_file"]).read_bytes()\n')
+    assert _warm_offenders(ast.parse(src), {"_warm_summary"}), (
+        "module scope alias 를 못 잡는다")
+
+
+def test_an_allowed_accessor_may_still_read_warm():
+    """전제 — 허용된 accessor 안의 `_WARM` 은 위반이 아니다 (guard 가 전부를
+    빨갛게 만들면 위 시험이 공허참이 된다)."""
+    import ast
+
+    src = ('def _warm_summary(m):\n'
+           '    return (_WARM / m["projection_file"]).read_bytes()\n')
+    assert not _warm_offenders(ast.parse(src), {"_warm_summary"})
+
+
+@pytest.mark.parametrize("order", [0, 1])
+def test_a_ledger_that_declares_one_cohort_id_twice_is_refused(tmp_path,
+                                                               monkeypatch,
+                                                               order):
+    """★ 41차 #9 — 40차는 **같은 디렉터리** 중복만 막았다.
+
+    같은 `cohort_id` 가 서로 다른 디렉터리에 두 번 있으면 디렉터리별 조회는
+    hit 가 하나씩이라 통과하고, `_cohort_dir()` 은 **첫 ID** 를 즉시
+    돌려주며 `_frozen_cohort_dirs()` 는 dict comprehension 으로 조용히 덮는다.
+    authority 가 다시 목록 순서에 달린다.
+
+    네 소비자가 **순서와 무관하게** 전부 거부해야 한다.
+    """
+    import importlib.util
+
+    import yaml
+
+    spec = importlib.util.spec_from_file_location(
+        "_rp_dupid", _REPO / "docs" / "22p_gap" / "row_projection.py")
+    rp = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(rp)
+
+    root = tmp_path / "repo"
+    (root / "docs" / "22p_gap").mkdir(parents=True)
+    entries = [
+        {"cohort_id": "gDUP", "dir": "docs/22p_gap/one", "legs": ["a"],
+         "status": "frozen"},
+        {"cohort_id": "gDUP", "dir": "docs/22p_gap/two", "legs": ["b"],
+         "status": "active"},
+    ]
+    if order:
+        entries.reverse()
+    (root / "docs" / "22p_gap" / "LEG_PRESERVATION.yaml").write_text(
+        yaml.safe_dump({"cohorts": entries}, allow_unicode=True),
+        encoding="utf-8")
+    monkeypatch.setattr(rp, "REPO", root)
+
+    for call in (lambda: rp._ledger_roster(root / "docs" / "22p_gap" / "one"),
+                 lambda: rp._cohort_dir("gDUP"),
+                 lambda: rp._frozen_cohort_dirs()):
+        with pytest.raises(SystemExit) as ei:
+            call()
+        assert "gDUP" in str(ei.value), str(ei.value)
+
+
+def test_the_snapshot_selector_refuses_a_ledger_with_a_duplicate_cohort_id(
+        tmp_path, monkeypatch):
+    """★ 41차 #9 — 시험 쪽 selector 도 같은 원장을 읽는다.
+
+    `_cohorts()` 가 중복을 그대로 흘리면 `_snapshot_for_leg()` 의 `cohort_id`
+    분기가 **첫 hit** 를 고른다 — production 과 같은 병이다.
+    """
+    import yaml
+
+    reg = tmp_path / "LEG_PRESERVATION.yaml"
+    reg.write_text(yaml.safe_dump({"cohorts": [
+        {"cohort_id": "gDUP", "dir": "docs/22p_gap/one", "legs": ["L"]},
+        {"cohort_id": "gDUP", "dir": "docs/22p_gap/two", "legs": ["L"]},
+    ]}, allow_unicode=True), encoding="utf-8")
+    monkeypatch.setattr(_this(), "_PRESERVE", reg)
+    with pytest.raises(AssertionError) as ei:
+        _cohorts()
+    assert "gDUP" in str(ei.value), str(ei.value)
+
+
+def test_an_unknown_purpose_is_refused_even_with_one_cohort(tmp_path,
+                                                            monkeypatch):
+    """★ 41차 #9 — 40차 unknown-purpose 회귀가 **false-green** 이었다.
+
+    그 시험은 두-cohort fixture 를 쓴다. unknown-purpose guard 를 지워도
+    `purpose="compare"` 는 뒤의 "두 cohort 에 모두 있다" 분기에서 같은
+    `AssertionError` 를 낸다 — 시험은 자기 이름의 축을 실행하지 않았다
+    (변이로 확인했다).
+
+    cohort 를 **하나만** 둔다. 그러면 guard 가 없을 때 selector 는 조용히
+    그 하나를 돌려주므로, 거부는 guard 때문일 수밖에 없다.
+    """
+    rp = _rp()
+    g = tmp_path / "g1"
+    rp.promote_cohort_generation(
+        _stage(tmp_path / "s1", **{"L.projection.csv.gz": b"c",
+                                   "L.projection.yaml": b"v: 1\n",
+                                   "L.restarts.csv.gz": b"r"}), g, "L",
+        roster={"L"})
+    monkeypatch.setattr(_this(), "_cohorts", lambda: [
+        {"cohort_id": "gonly", "dir": str(g), "status": "active",
+         "legs": ["L"], "pin": {}}])
+    assert _snapshot_for_leg("L") is not None, "전제: 하나면 그냥 고른다"
+    with pytest.raises(AssertionError) as ei:
+        _snapshot_for_leg("L", purpose="compare")
+    assert "목적" in str(ei.value), str(ei.value)
