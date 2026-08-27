@@ -46,6 +46,8 @@
 |---|---|
 | [2026-08-22-codex-review-remote-access-result](reviews/2026-08-22-codex-review-remote-access-result.md) | **원격 접근 리뷰 결과 (확정 21건)** — 대응 현황 표를 여기서 갱신한다 |
 | [2026-08-24-codex-screens-and-partials-reply](reviews/2026-08-24-codex-screens-and-partials-reply.md) | **부분 사이클 리뷰 회답 (12건 전부 닫음)** — #6 은 결론을 바꿨고 ADR 0017 에 이유가 있다 |
+| [codex-review-determination](reviews/codex-review-determination.md) | **"쟀다" 판정 리뷰 과제 (보낸 것)** — 0de4875e..a81aadd4, 회로가 아는 축퇴(`exchangeable`)와 `status`/`reason`, 그리고 아직 안 고친 #1 |
+| [codex-review-figure-export](reviews/codex-review-figure-export.md) | **그림 저장·이격 리뷰 과제 (보낸 것)** — a81aadd4..9d8fbf04, 값을 옮겨 그린 그림과 이름으로 하는 단위 판정 |
 | [codex-review-soc-scan](reviews/codex-review-soc-scan.md) | **SOC 스캔 · 미결정 판정 리뷰 과제 (보낸 것)** — 6135c4cf~1..HEAD, 문턱 두 개(`_SPREAD_LIMIT`·`_TIE_TOLERANCE`)의 근거가 핵심 |
 | [codex-review-eis-gitt](reviews/codex-review-eis-gitt.md) | EIS·DRT·GITT 리뷰 과제 (보낸 것) — b6df17bb..7b0531d1, Claude 쪽 적대 리뷰와 교차 |
 | [2026-08-24-codex-screens-reply](reviews/2026-08-24-codex-screens-reply.md) | **화면 리뷰 회답 (15건 전부 닫음)** — 대응 현황 표를 여기서 갱신한다 |

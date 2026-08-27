@@ -1,6 +1,8 @@
-import { describe, expect, it } from 'vitest'
+import { describe, expect, it, vi } from 'vitest'
 
-import { AXIS_PX, axisPx, PNG_TICK_ROOM, safeFileName, scaleFont } from '../pngsave'
+import {
+  AXIS_PX, axisPx, downloadCanvas, PNG_TICK_ROOM, safeFileName, scaleFont,
+} from '../pngsave'
 
 describe('그림 저장 — 파일 이름과 글꼴 배수', () => {
   it('파일 이름에 못 쓰는 글자만 걷어내고 한글은 남긴다', () => {
@@ -56,5 +58,47 @@ describe('저장할 때 눈금이 촘촘해지지 않는다', () => {
   it('눈금 글자 띠도 같이 커진다 — 33 px 글자가 50 px 띠에 안 들어간다', () => {
     expect(axisPx(3).xSize).toBe(AXIS_PX.xSize * 3)
     expect(axisPx(3).ySize).toBe(AXIS_PX.ySize * 3)
+  })
+})
+
+describe('내려받기가 실패하면 말한다', () => {
+  it('`toBlob` 이 null 을 주면 부르는 쪽에 알린다', () => {
+    // 브라우저가 캔버스를 PNG 로 못 굽는 경우 (대개 너무 커서다).  `toBlob` 은
+    // **비동기**라 throw 로는 못 알린다 — 부르는 쪽의 try 는 이미 끝나 있다.
+    const canvas = {
+      toBlob: (done: (blob: Blob | null) => void) => done(null),
+    } as unknown as HTMLCanvasElement
+    const said: string[] = []
+    downloadCanvas(canvas, '그림', (why) => said.push(why))
+    expect(said).toHaveLength(1)
+    expect(said[0]).toContain('만들지 못했습니다')
+  })
+
+  it('성공하면 아무 말도 안 한다 — 그리고 파일 이름을 붙인다', () => {
+    // jsdom 에는 `URL.createObjectURL` 이 없다 (Blob URL 을 만들 곳이 없다).
+    const urls = URL as unknown as Record<string, unknown>
+    urls.createObjectURL = () => 'blob:x'
+    urls.revokeObjectURL = () => {}
+    const clicked: string[] = []
+    const canvas = {
+      toBlob: (done: (blob: Blob | null) => void) => done(new Blob(['x'])),
+    } as unknown as HTMLCanvasElement
+    const realCreate = document.createElement.bind(document)
+    const spy = vi.spyOn(document, 'createElement').mockImplementation(((tag: string) => {
+      const node = realCreate(tag)
+      if (tag === 'a') {
+        Object.defineProperty(node, 'click', {
+          value: () => clicked.push((node as HTMLAnchorElement).download),
+        })
+      }
+      return node
+    }) as typeof document.createElement)
+    const said: string[] = []
+    downloadCanvas(canvas, 'LPSCl 셀 #3', (why) => said.push(why))
+    spy.mockRestore()
+    delete urls.createObjectURL
+    delete urls.revokeObjectURL
+    expect(said).toEqual([])
+    expect(clicked).toEqual(['LPSCl 셀 #3.png'])
   })
 })

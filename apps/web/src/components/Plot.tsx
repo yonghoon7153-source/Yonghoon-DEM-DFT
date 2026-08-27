@@ -395,6 +395,9 @@ export function Plot({
       => uPlot.Options) | null>(null)
   const dataRef = useRef<uPlot.AlignedData | null>(null)
   const [saving, setSaving] = useState(false)
+  //: 저장이 실패하면 **말한다.**  조용히 끝내면 눌렀는데 아무 일도 안 일어난
+  //  것과 구별되지 않는다 (§0.4).
+  const [saveError, setSaveError] = useState<string | null>(null)
   const colors = useChartColors()
   const [readout, setReadout] = useState<Readout | null>(null)
   //: uPlot 이 정한 "커서에 가장 가까운 계열".  setSeries 로만 바뀐다.
@@ -956,6 +959,7 @@ export function Plot({
     const rows = dataRef.current
     if (!build || !rows || saving) return
     setSaving(true)
+    setSaveError(null)
     const holder = document.createElement('div')
     holder.style.cssText =
       'position:fixed;left:-100000px;top:0;pointer-events:none;opacity:0'
@@ -972,7 +976,12 @@ export function Plot({
         requestAnimationFrame(() => requestAnimationFrame(() => resolve()))
       })
       const canvas = holder.querySelector('canvas')
-      if (!(canvas instanceof HTMLCanvasElement)) return
+      if (!(canvas instanceof HTMLCanvasElement)) {
+        // **말한다.**  조용히 끝내면 눌렀는데 아무 일도 안 일어난 것과
+        // 구별되지 않고, 그때 사람이 하는 일은 한 번 더 누르는 것이다.
+        setSaveError('그림을 다시 그리지 못했습니다 — 화면을 새로 고친 뒤 다시 눌러 주세요')
+        return
+      }
       const ratio = canvas.width / Math.max(1, width)
       const chips: PngLegendItem[] = visible.map((item, index) => ({
         label: item.note ? `${item.label} · ${item.note}` : item.label,
@@ -993,7 +1002,10 @@ export function Plot({
       })
       downloadCanvas(sheet, pngName
         ?? pngTitle
-        ?? `${splitAxisLabel(yLabel).name} - ${splitAxisLabel(xLabel).name}`)
+        ?? `${splitAxisLabel(yLabel).name} - ${splitAxisLabel(xLabel).name}`,
+        (why) => setSaveError(`그림을 파일로 내보내지 못했습니다 — ${why}`))
+    } catch (cause) {
+      setSaveError(cause instanceof Error ? cause.message : String(cause))
     } finally {
       shot?.destroy()
       holder.remove()
@@ -1063,12 +1075,13 @@ export function Plot({
             <button
               type="button"
               className="sm ghost"
-              onClick={savePng}
+              onClick={() => void savePng()}
               disabled={saving}
               aria-label="그림 저장"
-              title={`지금 보이는 그대로 PNG 로 내립니다 — 화면 캡처가 아니라 ${PNG_SCALE} 배 크기로 다시 그리므로 확대해도 안 뭉갭니다`}
+              title={saveError
+                || `지금 보이는 그대로 PNG 로 내립니다 — 화면 캡처가 아니라 ${PNG_SCALE} 배 크기로 다시 그리므로 확대해도 안 뭉갭니다`}
             >
-              {saving ? '…' : '⤓ PNG'}
+              {saving ? '…' : saveError ? '⤓ 실패' : '⤓ PNG'}
             </button>
           </div>
           <div ref={nodeRef} />
@@ -1082,6 +1095,14 @@ export function Plot({
           그릴 데이터가 없습니다
         </div>
       )}
+
+      {/* 저장 실패는 **그림 아래에** 적는다.  단추 줄은 그림 위에 반투명으로
+          겹쳐 있어서 (`.plot-zoom`), 거기에 문장을 넣으면 데이터를 가린다. */}
+      {saveError ? (
+        <div className="tiny warn" style={{ padding: '6px 12px 0' }}>
+          {saveError}
+        </div>
+      ) : null}
 
       {/* 커서 옆 판독기.  십자선만으로는 "여기가 몇 사이클의 몇 mAh/g 인지" 를
           눈대중으로 축까지 따라가야 한다.  pointer-events 를 끄지 않으면 팝업이

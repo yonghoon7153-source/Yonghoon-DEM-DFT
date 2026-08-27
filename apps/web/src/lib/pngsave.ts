@@ -214,7 +214,13 @@ export function safeFileName(text: string): string {
  *  는 그 전체를 문자열로 만들었다가 다시 디코딩한다 — 큰 그림에서 탭이 몇 초
  *  멈춘다.  Blob URL 은 복사가 없다.
  */
-export function downloadCanvas(canvas: HTMLCanvasElement, name: string): void {
+export function downloadCanvas(
+  canvas: HTMLCanvasElement, name: string,
+  /** 못 내렸을 때 부르는 쪽에 알린다.  `toBlob` 은 **비동기**라 `throw` 로는
+   *  못 알린다 — 부르는 쪽의 `try` 는 이미 끝나 있다.  조용히 끝내면 눌렀는데
+   *  아무 일도 안 일어난 것과 구별되지 않는다 (§0.4). */
+  onFail?: (why: string) => void,
+): void {
   const finish = (url: string, revoke: boolean) => {
     const link = document.createElement('a')
     link.href = url
@@ -226,12 +232,20 @@ export function downloadCanvas(canvas: HTMLCanvasElement, name: string): void {
   }
   if (typeof canvas.toBlob === 'function') {
     canvas.toBlob((blob) => {
-      if (!blob) return
+      if (!blob) {
+        // 브라우저가 캔버스를 PNG 로 못 굽는 경우다 — 대개 너무 커서다.
+        onFail?.('브라우저가 이 크기의 그림을 만들지 못했습니다')
+        return
+      }
       finish(URL.createObjectURL(blob), true)
     }, 'image/png')
     return
   }
-  finish(canvas.toDataURL('image/png'), false)
+  try {
+    finish(canvas.toDataURL('image/png'), false)
+  } catch (cause) {
+    onFail?.(cause instanceof Error ? cause.message : String(cause))
+  }
 }
 
 /** `11px ...` 같은 CSS 글꼴 문자열의 크기만 배로. */

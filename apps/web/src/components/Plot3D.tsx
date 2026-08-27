@@ -146,6 +146,9 @@ export function Plot3D({
   const box = useRef<HTMLDivElement>(null)
   const svgRef = useRef<SVGSVGElement>(null)
   const [saving, setSaving] = useState(false)
+  //: 저장이 실패하면 말한다 — 조용히 끝내면 눌렀는데 아무 일도 안 일어난
+  //  것과 구별되지 않는다 (§0.4).
+  const [saveError, setSaveError] = useState<string | null>(null)
   const [azimuth, setAzimuth] = useState(AZIMUTH0)
   const [elevation, setElevation] = useState(ELEVATION0)
   const [zoom, setZoom] = useState(1)
@@ -324,6 +327,7 @@ export function Plot3D({
     const node = svgRef.current
     if (!node || saving) return
     setSaving(true)
+    setSaveError(null)
     try {
       const surface = getComputedStyle(document.body)
         .getPropertyValue('--surface').trim() || '#ffffff'
@@ -332,7 +336,10 @@ export function Plot3D({
       const faint = getComputedStyle(document.body)
         .getPropertyValue('--ink-2').trim() || '#475467'
       const drawn = await svgToCanvas(node, PNG_SCALE, surface)
-      if (!drawn) return
+      if (!drawn) {
+        setSaveError('그림을 캔버스로 못 옮겼습니다 — 화면을 새로 고친 뒤 다시 눌러 주세요')
+        return
+      }
       const chips: PngLegendItem[] = shown.map((one, index) => ({
         label: one.label,
         color: one.color ?? seriesColor(index),
@@ -349,7 +356,10 @@ export function Plot3D({
         text: ink,
         faint,
       })
-      downloadCanvas(sheet, pngName ?? pngTitle ?? `${yLabel} - ${xLabel} - ${zLabel}`)
+      downloadCanvas(sheet, pngName ?? pngTitle ?? `${yLabel} - ${xLabel} - ${zLabel}`,
+                     (why) => setSaveError(`그림을 파일로 내보내지 못했습니다 — ${why}`))
+    } catch (cause) {
+      setSaveError(cause instanceof Error ? cause.message : String(cause))
     } finally {
       setSaving(false)
     }
@@ -374,10 +384,11 @@ export function Plot3D({
                 }}>
           전체
         </button>
-        <button type="button" className="sm ghost" onClick={savePng}
+        <button type="button" className="sm ghost" onClick={() => void savePng()}
                 disabled={saving} aria-label="그림 저장"
-                title={`지금 각도·확대 그대로 PNG 로 내립니다 (${PNG_SCALE} 배 크기)`}>
-          {saving ? '…' : '⤓ PNG'}
+                title={saveError
+                  || `지금 각도·확대 그대로 PNG 로 내립니다 (${PNG_SCALE} 배 크기)`}>
+          {saving ? '…' : saveError ? '⤓ 실패' : '⤓ PNG'}
         </button>
       </div>
       <svg
@@ -523,6 +534,9 @@ export function Plot3D({
         <text {...(() => { const { out } = tickAt(wEdge, 0.5, 40); return { x: out.x, y: out.y } })()}
               textAnchor="middle" className="plot3d-axis">{zLabel}</text>
       </svg>
+      {saveError ? (
+        <div className="tiny warn" style={{ padding: '6px 10px 0' }}>{saveError}</div>
+      ) : null}
       <div className="tiny faint" style={{ padding: '2px 10px 0' }}>
         끌어서 돌리고, <b>Shift</b>+끌어서 옮기고, 휠이나 🔍 로 상자째
         확대합니다 · 방위 {((azimuth % 360) + 360) % 360 > 180
