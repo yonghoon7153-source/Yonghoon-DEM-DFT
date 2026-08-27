@@ -6,5 +6,90 @@
    "text": "table",
    "who": ""
   }
+ ],
+ "litdb/papers/kim2025_csp_metastable_edge_sharing_sse.md": [
+  {
+   "anchor": "안정성 순위. 마커 모양 3종(파란 원 corner / 주황 사각 edge / 초록 삼각 mixed)만 읽으면 논문의 결론이 여기서 끝난다: 왼쪽(안정)이 바닥에 붙어 있고 오른쪽(준안정)이 떠 있다.",
+   "at": "2026-08-27 23:00",
+   "edited_at": "2026-08-27 23:11",
+   "history": [
+    {
+     "at": "2026-08-27 23:00",
+     "text": "여기가 결론이네"
+    }
+   ],
+   "id": "c1787839257439",
+   "text": "MTP(descriptor 기반 MLIP)로 relax하고, uncertainty 높은 구조만 골라 DFT 라벨링하는 active learning 루프를 돌림. 형님 파이프라인의 DFT→MLIP 단계랑 거의 같은 구조인데, 목적이 물성 계산이 아니라 구조 탐색이라는 게 차이.",
+   "who": ""
+  },
+  {
+   "anchor": "MTP 기반 CSP 로 12개 실험 구조를 재현하고, 4조성에서 준안정 edge-sharing 상이 안정 corner-sharing 상보다 Li 이동도가 우수함을 보였다.",
+   "at": "2026-08-27 23:03",
+   "edited_at": "2026-08-27 23:13",
+   "history": [
+    {
+     "at": "2026-08-27 23:03",
+     "text": "초록 관련해서 중요한 점 준안정 edge-sharing 상이 안정 corner-sharing 상보다 Li 이동도가 우수함"
+    }
+   ],
+   "id": "c1787839398081",
+   "text": "초록 관련해서 중요한 점 준안정 edge-sharing 상이 안정 corner-sharing 상보다 Li 이동도가 우수함  Li–S₄ sublattice volume + CSM: Li 하나를 둘러싼 S 4개 사면체. 부피가 크면 Li–S 정전기 인력이 약해져서 잘 빠져나가고, 뒤틀림(CSM 값 ↑)이 크면 에너지 landscape가 평평해져서 migration barrier가 낮아짐. \"frustrated energy landscape\"",
+   "who": ""
+  },
+  {
+   "anchor": "논문은 σ 를 한 번도 계산하지 않는다. 잰 것은 D_600K 뿐이다(§9-A, §11-1). 인용할 때 \"확산계수 기준\"을 반드시 붙인다.",
+   "at": "2026-08-27 23:04",
+   "id": "c1787839453271",
+   "text": "이온전도도 관련해서 안재고 D 600K 정도로만 표현했네",
+   "who": ""
+  },
+  {
+   "anchor": "초록 (p.47381 전폭, \"Significant attention has been devoted to developing…\")",
+   "at": "2026-08-27 23:06",
+   "edited_at": "2026-08-27 23:53",
+   "history": [
+    {
+     "at": "2026-08-27 23:06",
+     "text": "이를 해결하기 위해 본 연구는 머신러닝 기반 moment tensor potential(MTP)을 활용한 이론적 결정구조예측(CSP) 접근법을 제안한다. 이 방법은 새로운 SSE 구조를 성공적으로 발굴했으며, 실험적으로 알려진 12개 결정구조를 재현했다."
+    },
+    {
+     "at": "2026-08-27 23:07",
+     "text": "이를 해결하기 위해 본 연구는 머신러닝 기반 moment tensor potential(MTP)을 활용한 이론적 결정구조예측(CSP) 접근법을 제안한다. 이 방법은 새로운 SSE 구조를 성공적으로 발굴했으며, 실험적으로 알려진 12개 결정구조를 재현했다. Li₂SiS₃, Li₂GeS₃, Li₄SiGeS₆, Li₄SiSnS₆"
+    },
+    {
+     "at": "2026-08-27 23:07",
+     "text": "이를 해결하기 위해 본 연구는 머신러닝 기반 moment tensor potential(MTP)을 활용한 이론적 결정구조예측(CSP) 접근법을 제안한다. 이 방법은 새로운 SSE 구조를 성공적으로 발굴했으며, 실험적으로 알려진 12개 결정구조를 재현했다. Li₂SiS₃, Li₂GeS₃, Li₄SiGeS₆, Li₄SiSnS₆ 네 가지 유망 후보에 CSP를 적용하여 다면체 연결성, 상대 안정성, Li 이온 전달 특성을 평가했다."
+    },
+    {
+     "at": "2026-08-27 23:12",
+     "text": "이를 해결하기 위해 본 연구는 머신러닝 기반 moment tensor potential(MTP)을 활용한 이론적 결정구조예측(CSP) 접근법을 제안한다. 이 방법은 새로운 SSE 구조를 성공적으로 발굴했으며, 실험적으로 알려진 12개 결정구조를 재현했다. Li₂SiS₃, Li₂GeS₃, Li₄SiGeS₆, Li₄SiSnS₆ 네 가지 유망 후보에 CSP를 적용하여 다면체 연결성, 상대 안정성, Li 이온 전달 특성을 평가했다.  packing ratio, Li-S4 sublattice volume, more distorted - dead volume / packing ratio (α): 결정 안에 공간은 있는데 중심 양이온(Si⁴⁺ 등)의 정전기 반발 때문에 Li⁺가 못 들어가는 죽은 공간."
+    },
+    {
+     "at": "2026-08-27 23:13",
+     "text": "이를 해결하기 위해 본 연구는 머신러닝 기반 moment tensor potential(MTP)을 활용한 이론적 결정구조예측(CSP) 접근법을 제안한다. 이 방법은 새로운 SSE 구조를 성공적으로 발굴했으며, 실험적으로 알려진 12개 결정구조를 재현했다. Li₂SiS₃, Li₂GeS₃, Li₄SiGeS₆, Li₄SiSnS₆ 네 가지 유망 후보에 CSP를 적용하여 다면체 연결성, 상대 안정성, Li 이온 전달 특성을 평가했다.  packing ratio, Li-S4 sublattice volume, more distorted - dead volume / packing ratio (α): 결정 안에 공간은 있는데 중심 양이온(Si⁴⁺ 등)의 정전기 반발 때문에 Li⁺가 못 들어가는 죽은 공간. Li–S₄ sublattice volume + CSM: Li 하나를 둘러싼 S 4개 사면체. 부피가 크면 Li–S 정전기 인력이 약해져서 잘 빠져나가고, 뒤틀림(CSM 값 ↑)이 크면 에너지 landscape가 평평해져서 migration barrier가 낮아짐. \"frustrated energy landscape\""
+    },
+    {
+     "at": "2026-08-27 23:13",
+     "text": "이를 해결하기 위해 본 연구는 머신러닝 기반 moment tensor potential(MTP)을 활용한 이론적 결정구조예측(CSP) 접근법을 제안한다. 이 방법은 새로운 SSE 구조를 성공적으로 발굴했으며, 실험적으로 알려진 12개 결정구조를 재현했다. Li₂SiS₃, Li₂GeS₃, Li₄SiGeS₆, Li₄SiSnS₆ 네 가지 유망 후보에 CSP를 적용하여 다면체 연결성, 상대 안정성, Li 이온 전달 특성을 평가했다.  packing ratio, Li-S4 sublattice volume, more distorted - dead volume / packing ratio (α): 결정 안에 공간은 있는데 중심 양이온(Si⁴⁺ 등)의 정전기 반발 때문에 Li⁺가 못 들어가는 죽은 공간."
+    }
+   ],
+   "id": "c1787839610489",
+   "text": "이를 해결하기 위해 본 연구는 머신러닝 기반 moment tensor potential(MTP)을 활용한 이론적 결정구조예측(CSP) 접근법을 제안한다. 이 방법은 새로운 SSE 구조를 성공적으로 발굴했으며, 실험적으로 알려진 12개 결정구조를 재현했다. Li₂SiS₃, Li₂GeS₃, Li₄SiGeS₆, Li₄SiSnS₆ 네 가지 유망 후보에 CSP를 적용하여 다면체 연결성, 상대 안정성, Li 이온 전달 특성을 평가했다.   packing ratio, Li-S4 sublattice volume, more distorted - dead volume / packing ratio (α): 결정 안에 공간은 있는데 중심 양이온(Si⁴⁺ 등)의 정전기 반발 때문에 Li⁺가 못 들어가는 죽은 공간.",
+   "who": ""
+  },
+  {
+   "anchor": "(p.47381 좌단, \"To pursue safer and more energy-dense lithium-ion batteries…\")",
+   "at": "2026-08-27 23:19",
+   "edited_at": "2026-08-27 23:40",
+   "history": [
+    {
+     "at": "2026-08-27 23:19",
+     "text": "SSE는 높은 이온전도도, 전기화학적 안정성, 계면 적합성을 동시에 만족해야 한다"
+    }
+   ],
+   "id": "c1787840361674",
+   "text": "SSE는 높은 이온전도도, 전기화학적 안정성, 계면 적합성을 동시에 만족해야 한다 결정 구조야말로 이온전도도와 물질 성능을 지배하는 핵심 인자다.",
+   "who": ""
+  }
  ]
 }
