@@ -65,6 +65,34 @@ dft() {
 }
 dftst()   { cd "$DFT_REPO" || return 1; git -C "$DFT_REPO" status -sb | head -3; }  # 예전 dft
 
+DFT_DATA_FILES="db/file_comments.json db/file_highlights.json"
+
+dftsave() {                  # 화면에서 쓴 것(메모·형광펜)을 커밋+푸시한다. dftpull **전에**.
+  # ⛔ 왜 필요한가 (2026-08-27, 하루에 두 번 걸렸다)
+  #   웹앱은 메모·형광펜을 repo 안 JSON 에 쓴다. 그래서 쓰고 나면 항상 작업트리가
+  #   더러워지고 dftpull 이 막힌다. 거기서 안내가 `-f` 하나뿐이면 **니가 쓴 글을
+  #   버리는 쪽으로 손이 간다.** 저장하는 길을 같이 둔다.
+  # ⛔ 그리고 커밋만 하고 두면 안 된다 — dftpull 은 `reset --hard FETCH_HEAD` 라
+  #   **푸시 안 된 커밋도 지운다.** 그래서 여기서 push 까지 끝낸다.
+  cd "$DFT_REPO" || return 1
+  if [ -z "$(git status --porcelain -- $DFT_DATA_FILES)" ]; then
+    echo "· 저장할 메모·형광펜 변경이 없다"; return 0
+  fi
+  if [ -z "$(git config user.email)" ]; then
+    echo "⛔ git 작성자가 없다. 한 번만 걸면 된다:"
+    echo "   git -C $DFT_REPO config user.email \"<니 이메일>\""
+    echo "   git -C $DFT_REPO config user.name  \"<니 이름>\""
+    return 1
+  fi
+  git add -- $DFT_DATA_FILES || return 1
+  git commit -q -m "notes: 화면에서 쓴 메모·형광펜 ($(date +%Y-%m-%d\ %H:%M))" || return 1
+  git pull --rebase -q origin "$DFT_BRANCH" || {
+    echo "⛔ rebase 가 막혔다 — 손으로 풀 것 (커밋은 남아 있다)"; return 1; }
+  git push -q -u origin "$DFT_BRANCH" || { echo "⛔ push 실패 — 커밋은 남아 있다"; return 1; }
+  echo "✅ 저장·푸시 완료 → 이제 dftpull / dft"
+  git log --oneline -1
+}
+
 dftpull() {                  # 최신 받기. -f 를 줘야만 로컬 변경을 버린다.
   local force=0
   [ "${1:-}" = "-f" ] && force=1
@@ -74,7 +102,14 @@ dftpull() {                  # 최신 받기. -f 를 줘야만 로컬 변경을 
   if [ "$st" = 1 ] && [ "$force" = 0 ]; then
     echo "⛔ **추적 파일에 수정이 있다** — reset 하면 사라진다. 먼저 보라:"
     git -C "$DFT_REPO" status --short | grep -v '^??'
-    echo "   버려도 되면:  dftpull -f"
+    # 바뀐 게 화면에서 쓴 것(메모·형광펜)뿐이면 버릴 게 아니라 **저장할 것**이다.
+    #   -f 를 먼저 안내하면 니가 쓴 글을 버리는 쪽으로 손이 간다 (2026-08-27 두 번 걸렸다).
+    if [ -z "$(git -C "$DFT_REPO" status --porcelain -- . ':!db/file_comments.json' \
+               ':!db/file_highlights.json' | grep -v '^??')" ]; then
+      echo "   → 이건 **화면에서 쓴 메모·형광펜**이다. 버리지 말고:  dftsave"
+    else
+      echo "   버려도 되면:  dftpull -f"
+    fi
     return 1
   fi
   [ "$st" = 1 ] && { echo "⚠ -f — 아래 수정을 버린다:"; git -C "$DFT_REPO" status --short | grep -v '^??'; }
@@ -209,6 +244,7 @@ dfthelp() {
   dft         ★ 받고 + webapp 띄우고 + 주소 (한 번에)
   dftst       repo 로 이동 + 상태 3줄 (예전 dft)
   dftpull     최신 받기 (로컬 변경이 있으면 멈춘다 · 버리려면 dftpull -f)
+  dftsave     ★ 화면에서 쓴 메모·형광펜을 커밋+푸시 (dftpull 이 막히면 보통 이것)
   dftsetup    ★ 처음 한 번 — venv + 의존성 설치
   dftweb      webapp 앞단 실행        dftwebbg  백그라운드 + 건강검진
   dftwebstop  webapp 종료             dfttest   webapp 테스트
@@ -255,6 +291,27 @@ if [ "${1:-}" = "--selftest" ]; then
   echo also > "$T/untracked2.txt"
   _dft_tree_clean "$T"; [ "$?" = 1 ] && say "✓" "⑦ 수정+untracked 혼재 → 1 (안전측)" \
                                      || say "✗" "⑦ 혼재인데 통과시켰다 — 수정이 사라진다"
+  # ⑧ dftpull 이 **버리라고 할지 저장하라고 할지** 를 가르는 판정 (2026-08-27)
+  #    바뀐 게 메모·형광펜뿐이면 `-f` 를 권하면 안 된다 — 니가 쓴 글이다.
+  D=$(mktemp -d); ( cd "$D" && git init -q . && mkdir -p db \
+     && echo '{}' > db/file_comments.json && echo '{}' > db/file_highlights.json \
+     && echo x > other.txt && git add -A \
+     && git -c user.email=t@t -c user.name=t commit -qm init ) >/dev/null 2>&1
+  _only_data() {   # 0 = 데이터 파일만 바뀌었다
+    [ -z "$(git -C "$1" status --porcelain -- . ':!db/file_comments.json' \
+            ':!db/file_highlights.json' | grep -v '^??')" ]
+  }
+  echo '{"a":1}' > "$D/db/file_highlights.json"
+  _only_data "$D" && say "✓" "⑧ 형광펜만 바뀌면 '데이터만' 으로 본다 (→ dftsave)" \
+                  || say "✗" "⑧ 형광펜 변경을 못 알아본다 — -f 를 권하게 된다"
+  echo y >> "$D/other.txt"
+  _only_data "$D" && say "✗" "⑧' 코드까지 바뀌었는데 '데이터만' 이라 했다" \
+                  || say "✓" "⑧' 코드가 섞이면 '데이터만' 이 아니다 (→ -f 안내)"
+  rm -rf "$D"
+  # ⑨ dftsave 가 **push 까지** 하는가 — 커밋만 하면 dftpull 의 reset --hard 가 지운다
+  grep -q 'git push -q -u origin "\$DFT_BRANCH"' "${BASH_SOURCE[0]}" \
+    && say "✓" "⑨ dftsave 가 push 까지 한다 (커밋만 두면 reset --hard 가 지운다)" \
+    || say "✗" "⑨ dftsave 가 push 를 안 한다 — 커밋이 dftpull 에 날아간다"
   rm -rf "$T"
   [ "$ok" = 1 ] && { echo "  ✅ selftest 통과"; exit 0; } || { echo "  ⛔ selftest 실패"; exit 1; }
 fi
