@@ -20,7 +20,8 @@
 
 import { useEffect, useMemo, useRef, useState } from 'react'
 
-import { num, seriesColor } from '../lib/format'
+import { num } from '../lib/format'
+import { paintColor } from '../lib/seriescolor'
 import {
   composePng, downloadCanvas, PNG_SCALE, svgToCanvas,
   type PngLegendItem,
@@ -34,6 +35,12 @@ export interface Series3D {
   z: number
   color?: string
   hidden?: boolean
+  /** 범례에만 붙는 회색 꼬리표 — 2D 와 **같은 것**을 보여야 한다.
+   *
+   *  전에는 3D 로 바꾸면 이것이 사라져서, 화면 범례의 `#3 · 0.750 mAh` 가
+   *  저장한 PNG 에서는 `#3` 만 남았다.  깊이 축은 전위(또는 스윕 차례)라
+   *  축만으로는 `#n` 과 SOC 의 대응을 되찾을 수 없다 (Codex 그림 리뷰 #7). */
+  note?: string
   /** 점을 찍을까.  실측은 점, 맞춤은 선. */
   points?: boolean
 }
@@ -341,8 +348,8 @@ export function Plot3D({
         return
       }
       const chips: PngLegendItem[] = shown.map((one, index) => ({
-        label: one.label,
-        color: one.color ?? seriesColor(index),
+        label: one.note ? `${one.label} · ${one.note}` : one.label,
+        color: paintColor(one.color, index),
       }))
       const sheet = composePng({
         plot: drawn,
@@ -351,13 +358,13 @@ export function Plot3D({
         caption: [pngCaption,
                   `방위 ${azimuth.toFixed(0)}° · 고도 ${elevation.toFixed(0)}°`]
           .filter(Boolean).join(' · '),
-        legend: chips.length > 1 ? chips : undefined,
+        legend: chips.length ? chips : undefined,
         background: surface,
         text: ink,
         faint,
       })
-      downloadCanvas(sheet, pngName ?? pngTitle ?? `${yLabel} - ${xLabel} - ${zLabel}`,
-                     (why) => setSaveError(`그림을 파일로 내보내지 못했습니다 — ${why}`))
+      await downloadCanvas(
+        sheet, pngName ?? pngTitle ?? `${yLabel} - ${xLabel} - ${zLabel}`)
     } catch (cause) {
       setSaveError(cause instanceof Error ? cause.message : String(cause))
     } finally {
@@ -468,7 +475,7 @@ export function Plot3D({
             const w = unit.z(one.z)
             const path = one.x.map((value, i) => cube.at(
               unit.x(value), unit.y(one.y[i] ?? 0), w))
-            const colour = one.color ?? seriesColor(index)
+            const colour = paintColor(one.color, index)
             return (
               <g key={one.label}>
                 <path d={line(path)} stroke={colour} strokeWidth={1.6} fill="none"

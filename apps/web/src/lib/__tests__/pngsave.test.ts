@@ -2,6 +2,7 @@ import { describe, expect, it, vi } from 'vitest'
 
 import {
   AXIS_PX, axisPx, downloadCanvas, PNG_TICK_ROOM, safeFileName, scaleFont,
+  wrapText,
 } from '../pngsave'
 
 describe('그림 저장 — 파일 이름과 글꼴 배수', () => {
@@ -62,19 +63,38 @@ describe('저장할 때 눈금이 촘촘해지지 않는다', () => {
 })
 
 describe('내려받기가 실패하면 말한다', () => {
-  it('`toBlob` 이 null 을 주면 부르는 쪽에 알린다', () => {
-    // 브라우저가 캔버스를 PNG 로 못 굽는 경우 (대개 너무 커서다).  `toBlob` 은
-    // **비동기**라 throw 로는 못 알린다 — 부르는 쪽의 try 는 이미 끝나 있다.
+  it('`toBlob` 이 null 을 주면 **거절**한다 — 콜백이 아니라', async () => {
+    // 브라우저가 캔버스를 PNG 로 못 굽는 경우 (대개 너무 커서다).  콜백으로
+    // 알리면 부르는 쪽의 `finally` 가 굽기 전에 돌아 `saving` 이 먼저 풀리고,
+    // 두 번 누르면 늦게 온 첫 실패가 이미 성공한 두 번째를 덮는다.
     const canvas = {
-      toBlob: (done: (blob: Blob | null) => void) => done(null),
+      toBlob: (done: (blob: Blob | null) => void) => setTimeout(() => done(null), 0),
     } as unknown as HTMLCanvasElement
-    const said: string[] = []
-    downloadCanvas(canvas, '그림', (why) => said.push(why))
-    expect(said).toHaveLength(1)
-    expect(said[0]).toContain('만들지 못했습니다')
+    await expect(downloadCanvas(canvas, '그림')).rejects.toThrow('만들지 못했습니다')
   })
 
-  it('성공하면 아무 말도 안 한다 — 그리고 파일 이름을 붙인다', () => {
+  it('굽기가 끝나야 Promise 가 풀린다 — 그 전에는 저장 중이다', async () => {
+    let release: (() => void) | null = null
+    const canvas = {
+      toBlob: (done: (blob: Blob | null) => void) => {
+        release = () => done(new Blob(['x']))
+      },
+    } as unknown as HTMLCanvasElement
+    const urls = URL as unknown as Record<string, unknown>
+    urls.createObjectURL = () => 'blob:x'
+    urls.revokeObjectURL = () => {}
+    let settled = false
+    const done = downloadCanvas(canvas, '그림').then(() => { settled = true })
+    await Promise.resolve()
+    expect(settled).toBe(false)          // 아직 굽는 중
+    release!()
+    await done
+    expect(settled).toBe(true)
+    delete urls.createObjectURL
+    delete urls.revokeObjectURL
+  })
+
+  it('성공하면 파일 이름을 붙인다', async () => {
     // jsdom 에는 `URL.createObjectURL` 이 없다 (Blob URL 을 만들 곳이 없다).
     const urls = URL as unknown as Record<string, unknown>
     urls.createObjectURL = () => 'blob:x'
@@ -93,12 +113,38 @@ describe('내려받기가 실패하면 말한다', () => {
       }
       return node
     }) as typeof document.createElement)
-    const said: string[] = []
-    downloadCanvas(canvas, 'LPSCl 셀 #3', (why) => said.push(why))
+    await downloadCanvas(canvas, 'LPSCl 셀 #3')
     spy.mockRestore()
     delete urls.createObjectURL
     delete urls.revokeObjectURL
-    expect(said).toEqual([])
     expect(clicked).toEqual(['LPSCl 셀 #3.png'])
+  })
+})
+
+describe('꼬리말은 감는다 — 잘리지 않는다', () => {
+  /** 캔버스가 없는 jsdom 이라 폭 재기를 대신 세운다: 글자 하나 = 10 px. */
+  const fake = {
+    measureText: (text: string) => ({ width: text.length * 10 }),
+  } as unknown as CanvasRenderingContext2D
+
+  it('뜻 단위(` · `)로 먼저 끊는다 — 사람이 읽는 경계가 거기다', () => {
+    const text = '긴셀이름입니다 · 면적 1.539 cm² · 세로 눈금은 값이 아닙니다'
+    // 앞 두 조각은 23자(230 px)라 함께 들어가고, 셋째를 더하면 390 px 다.
+    expect(wrapText(fake, text, 300)).toEqual([
+      '긴셀이름입니다 · 면적 1.539 cm²',
+      '세로 눈금은 값이 아닙니다',
+    ])
+  })
+
+  it('한 줄에 들어가면 안 자른다', () => {
+    expect(wrapText(fake, 'a · b', 10_000)).toEqual(['a · b'])
+    expect(wrapText(fake, '', 100)).toEqual([])
+  })
+
+  it('조각 하나가 한 줄을 넘으면 어절로 더 끊는다', () => {
+    // 여기서 잘려 나가던 것이 하필 `세로 눈금은 값이 아닙니다` 였다.
+    const lines = wrapText(fake, '가나다라마 바사아자차 카타파하', 100)
+    expect(lines.length).toBeGreaterThan(1)
+    expect(lines.join(' ')).toContain('카타파하')   // 끝이 안 사라진다
   })
 })

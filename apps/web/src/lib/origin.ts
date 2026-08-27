@@ -428,6 +428,34 @@ export function seriesWideTsv(
                    head && { ...head, name: (item) => item.label ?? '' })
 }
 
+/** 이격 그림 그대로 — 곡선마다 (x, 본값, 화면값) **세 열**.
+ *
+ *  이격은 곡선을 위로 옮겨 그린다.  옮긴 값만 내보내면 붙여 넣은 표가
+ *  **혼자서는 설명이 안 된다**: 올린 양은 화면의 안내 문구와 단추 툴팁에만
+ *  있었고 (툴팁은 클립보드에 안 들어간다), 그나마 소수 셋째 자리로 반올림된
+ *  수였다.  그리고 올린 양은 **켜 둔 곡선 집합**에 달려 있어서, 스윕 하나를
+ *  껐다 켜면 같은 원시 y 가 다른 자리로 간다 (Codex 그림 리뷰 #4).
+ *
+ *  그래서 본값과 화면값을 **나란히** 낸다.  둘의 차가 그 곡선의 offset 이라
+ *  전체 정밀도로 복원된다 — 알고리즘도 버전도 몰라도 된다.  머리글이 올린
+ *  양 한 칸과 변환 이름을 사람 말로 한 번 더 적는다.
+ */
+export function stackedWideTsv(
+  series: { x: number[]; y: number[]; raw: number[]; label?: string }[],
+  head: WideHead & { rawY: string },
+): string {
+  const columns: string[][] = []
+  for (const item of series) {
+    if (!item.x.length) continue
+    const name = item.label ?? ''
+    const tag = (what: string) => (name ? `${name} ${what}` : what)
+    columns.push([tag(head.x), ...item.x.map(cell)])
+    columns.push([tag(head.rawY), ...item.raw.map(cell)])
+    columns.push([tag(head.y), ...item.y.map(cell)])
+  }
+  return columns.length ? tsvColumns(columns) : ''
+}
+
 /** 보드: 주파수, |Z|, 위상 — 세 열.
  *
  *  여기만 두 열이 아니다.  |Z| 와 위상은 축이 다르므로 쌓으면 한 축에 두

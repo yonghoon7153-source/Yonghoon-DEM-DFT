@@ -118,8 +118,14 @@ export function composePng(frame: PngFrame): HTMLCanvasElement {
 
   // 범례를 먼저 줄로 나눈다 — 몇 줄인지 알아야 캔버스 높이가 정해진다.
   const measure = document.createElement('canvas').getContext('2d')
+  if (!measure) {
+    // **조용히 넘어가지 않는다.**  글자 폭을 못 재면 제목도 범례도 자리를
+    // 못 잡는다.  그 상태로 그림만 내보내면 "저장됨" 인데 이름이 없는 파일이
+    // 나온다 (Codex 그림 리뷰 #11).
+    throw new Error('글자 폭을 잴 수 없어 제목·범례를 그리지 못했습니다')
+  }
   const rows: PngLegendItem[][] = []
-  if (measure && frame.legend?.length) {
+  if (frame.legend?.length) {
     measure.font = `${legendSize}px Pretendard, system-ui, sans-serif`
     let row: PngLegendItem[] = []
     let at = 0
@@ -137,8 +143,19 @@ export function composePng(frame: PngFrame): HTMLCanvasElement {
     if (row.length) rows.push(row)
   }
 
+  // **꼬리말을 감는다.**  한 줄로 그리면 폭을 넘은 만큼이 그냥 잘렸다 —
+  // 그리고 잘리는 끝자락이 하필 `세로 눈금은 값이 아닙니다` 처럼 가장 남아야
+  // 할 말이었다 (Codex 그림 리뷰 #5).  뜻 단위(` · `)로 먼저 끊고, 그래도
+  // 넘치면 어절로 끊는다.
+  measure.font = `${captionSize}px Pretendard, system-ui, sans-serif`
+  const captionLines = frame.caption
+    ? wrapText(measure, frame.caption, inner) : []
   const headHeight = frame.title
-    ? titleSize + Math.round(6 * ratio) + (frame.caption ? captionSize + Math.round(4 * ratio) : 0)
+    ? titleSize + Math.round(6 * ratio)
+      + (captionLines.length
+        ? captionLines.length * (captionSize + Math.round(3 * ratio))
+          + Math.round(1 * ratio)
+        : 0)
     : 0
   const legendHeight = rows.length
     ? rows.length * legendSize + (rows.length - 1) * rowGap + Math.round(10 * ratio)
@@ -149,7 +166,10 @@ export function composePng(frame: PngFrame): HTMLCanvasElement {
   out.width = width
   out.height = height
   const ctx = out.getContext('2d')
-  if (!ctx) return plot
+  if (!ctx) {
+    // 그림만 돌려주면 제목·꼬리말·범례가 조용히 사라진 채 "저장됨" 이 된다.
+    throw new Error('그림을 합칠 캔버스를 만들지 못했습니다')
+  }
 
   // **배경을 칠한다.**  투명 PNG 를 어두운 슬라이드에 붙이면 검은 글씨가
   // 사라진다 — 그림이 없어진 것처럼 보이고 원인이 안 보인다.
@@ -163,18 +183,21 @@ export function composePng(frame: PngFrame): HTMLCanvasElement {
     ctx.textBaseline = 'top'
     ctx.fillText(frame.title, pad, y)
     y += titleSize + Math.round(6 * ratio)
-    if (frame.caption) {
+    if (captionLines.length) {
       ctx.fillStyle = frame.faint
       ctx.font = `${captionSize}px Pretendard, system-ui, sans-serif`
-      ctx.fillText(frame.caption, pad, y)
-      y += captionSize + Math.round(4 * ratio)
+      for (const line of captionLines) {
+        ctx.fillText(line, pad, y)
+        y += captionSize + Math.round(3 * ratio)
+      }
+      y += Math.round(1 * ratio)
     }
   }
 
   ctx.drawImage(plot, 0, y)
   y += plot.height + (rows.length ? Math.round(10 * ratio) : 0)
 
-  if (measure) {
+  {
     ctx.font = `${legendSize}px Pretendard, system-ui, sans-serif`
     ctx.textBaseline = 'top'
     for (const row of rows) {
@@ -199,6 +222,43 @@ export function composePng(frame: PngFrame): HTMLCanvasElement {
   return out
 }
 
+/** 글자를 폭에 맞춰 여러 줄로.
+ *
+ *  먼저 뜻 단위(` · `)로 끊는다 — 캡션이 `이름 · 면적 · 이격` 이라 그 경계가
+ *  사람이 읽는 경계와 같다.  한 조각이 그래도 넘치면 어절로 끊고, 어절
+ *  하나가 넘으면 그 줄은 그대로 둔다 (글자 단위로 자르면 단위 기호가 갈린다).
+ */
+export function wrapText(
+  ctx: CanvasRenderingContext2D, text: string, limit: number,
+): string[] {
+  if (!text) return []
+  if (ctx.measureText(text).width <= limit) return [text]
+  const lines: string[] = []
+  let line = ''
+  const flush = () => { if (line) { lines.push(line); line = '' } }
+  const push = (piece: string, join: string) => {
+    const next = line ? line + join + piece : piece
+    if (line && ctx.measureText(next).width > limit) {
+      flush()
+      line = piece
+      return
+    }
+    line = next
+  }
+  for (const chunk of text.split(' · ')) {
+    if (ctx.measureText(chunk).width <= limit) {
+      push(chunk, ' · ')
+      continue
+    }
+    // 조각 하나가 한 줄을 넘는다 — 어절로 더 끊는다.
+    flush()
+    for (const word of chunk.split(/\s+/)) push(word, ' ')
+    flush()
+  }
+  flush()
+  return lines
+}
+
 /** 파일 이름에 못 쓰는 글자를 없앤다.  한글은 남긴다 — 셀 이름이 한글이다. */
 export function safeFileName(text: string): string {
   return (text || 'plot')
@@ -216,36 +276,51 @@ export function safeFileName(text: string): string {
  */
 export function downloadCanvas(
   canvas: HTMLCanvasElement, name: string,
-  /** 못 내렸을 때 부르는 쪽에 알린다.  `toBlob` 은 **비동기**라 `throw` 로는
-   *  못 알린다 — 부르는 쪽의 `try` 는 이미 끝나 있다.  조용히 끝내면 눌렀는데
-   *  아무 일도 안 일어난 것과 구별되지 않는다 (§0.4). */
-  onFail?: (why: string) => void,
-): void {
-  const finish = (url: string, revoke: boolean) => {
-    const link = document.createElement('a')
-    link.href = url
-    link.download = `${safeFileName(name)}.png`
-    document.body.appendChild(link)
-    link.click()
-    link.remove()
-    if (revoke) setTimeout(() => URL.revokeObjectURL(url), 10_000)
-  }
-  if (typeof canvas.toBlob === 'function') {
-    canvas.toBlob((blob) => {
-      if (!blob) {
-        // 브라우저가 캔버스를 PNG 로 못 굽는 경우다 — 대개 너무 커서다.
-        onFail?.('브라우저가 이 크기의 그림을 만들지 못했습니다')
-        return
+): Promise<void> {
+  // **콜백이 아니라 Promise 다.**  한 번의 저장은 단추의 `saving` 상태·재진입
+  // 막기·blob 굽기·URL 만들기·링크 누르기·오류 표시가 **한 생명주기**다.
+  // 콜백으로 두면 `finally` 가 굽기 전에 돌아 `saving` 이 먼저 풀리고, 저장을
+  // 두 번 누르면 늦게 온 첫 실패가 이미 성공한 두 번째를 실패로 덮는다.
+  // 콜백 안에서 난 예외도 바깥 `try` 가 못 잡는다 (Codex 그림 리뷰 #10).
+  return new Promise<void>((resolve, reject) => {
+    const finish = (url: string, revoke: boolean) => {
+      try {
+        const link = document.createElement('a')
+        link.href = url
+        link.download = `${safeFileName(name)}.png`
+        document.body.appendChild(link)
+        link.click()
+        link.remove()
+        if (revoke) setTimeout(() => URL.revokeObjectURL(url), 10_000)
+        resolve()
+      } catch (cause) {
+        reject(cause instanceof Error ? cause : new Error(String(cause)))
       }
-      finish(URL.createObjectURL(blob), true)
-    }, 'image/png')
-    return
-  }
-  try {
-    finish(canvas.toDataURL('image/png'), false)
-  } catch (cause) {
-    onFail?.(cause instanceof Error ? cause.message : String(cause))
-  }
+    }
+    if (typeof canvas.toBlob === 'function') {
+      canvas.toBlob((blob) => {
+        if (!blob) {
+          // 브라우저가 캔버스를 PNG 로 못 굽는 경우다 — 대개 너무 커서다.
+          reject(new Error('브라우저가 이 크기의 그림을 만들지 못했습니다'))
+          return
+        }
+        let url: string
+        try {
+          url = URL.createObjectURL(blob)
+        } catch (cause) {
+          reject(cause instanceof Error ? cause : new Error(String(cause)))
+          return
+        }
+        finish(url, true)
+      }, 'image/png')
+      return
+    }
+    try {
+      finish(canvas.toDataURL('image/png'), false)
+    } catch (cause) {
+      reject(cause instanceof Error ? cause : new Error(String(cause)))
+    }
+  })
 }
 
 /** `11px ...` 같은 CSS 글꼴 문자열의 크기만 배로. */

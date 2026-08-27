@@ -556,3 +556,30 @@ describe('넓은 배치의 머리글 — 열마다 어느 셀인지 (2026-08-27)
     expect(rows[0]).toBe('x\ty')
   })
 })
+
+describe('이격 표는 혼자서도 설명된다', () => {
+  it('곡선마다 x·본값·화면값 세 열 — 둘의 차가 그 곡선의 이격이다', async () => {
+    const { stackedWideTsv } = await import('../origin')
+    const tsv = stackedWideTsv([
+      { label: '#1', x: [1, 2], raw: [10, 11], y: [10, 11] },
+      { label: '#2', x: [1, 2], raw: [20, 21], y: [26.5, 27.5] },
+    ], { x: 'Z′ (Ω)', rawY: '−Z″ (Ω)', y: '−Z″ + 이격 (Ω)' })
+    const rows = tsv.split('\n').map((line) => line.split('\t'))
+    expect(rows[0]).toEqual([
+      '#1 Z′ (Ω)', '#1 −Z″ (Ω)', '#1 −Z″ + 이격 (Ω)',
+      '#2 Z′ (Ω)', '#2 −Z″ (Ω)', '#2 −Z″ + 이격 (Ω)',
+    ])
+    // 올린 양은 전체 정밀도로 복원된다 — 알고리즘도 버전도 몰라도 된다.
+    expect(Number(rows[1]![5]) - Number(rows[1]![4])).toBeCloseTo(6.5, 10)
+    expect(Number(rows[2]![5]) - Number(rows[2]![4])).toBeCloseTo(6.5, 10)
+    // 안 올린 곡선의 차는 0 이다.
+    expect(Number(rows[1]![2]) - Number(rows[1]![1])).toBe(0)
+  })
+
+  it('점이 없는 곡선은 열을 안 차지한다', async () => {
+    const { stackedWideTsv } = await import('../origin')
+    const tsv = stackedWideTsv([{ label: '#1', x: [], raw: [], y: [] }],
+                               { x: 'x', rawY: 'y', y: 'y+' })
+    expect(tsv).toBe('')
+  })
+})

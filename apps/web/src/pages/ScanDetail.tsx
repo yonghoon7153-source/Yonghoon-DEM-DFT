@@ -26,7 +26,7 @@ import {
   Z_UNITS, Z_UNIT_KEY, type ZUnit, areaFor, hasStoredZUnit, validZUnit, zUnitLabel,
 } from '../lib/zunit'
 import { rememberedLambda } from '../lib/drtlambda'
-import { seriesWideTsv } from '../lib/origin'
+import { seriesWideTsv, stackedWideTsv } from '../lib/origin'
 import { paramMeaning } from '../lib/params'
 import { usePinnedColumns } from '../lib/pincols'
 import { stackOffsets, stackStep } from '../lib/stack'
@@ -350,6 +350,9 @@ export function ScanDetail() {
       z: depth.get(one.label) ?? index,
       color: one.color,
       points: one.points,
+      // 2D 범례와 **같은 것**을 보여야 한다 — 3D 로 바꿨다고 SOC 가 사라지면,
+      // 깊이 축만으로는 `#n` 과 용량의 대응을 되찾을 수 없다.
+      note: one.note,
     }))
   }, [flat, points])
 
@@ -381,10 +384,16 @@ export function ScanDetail() {
     })
   }, [flat, stacked, stackStepValue])
 
+  //: 이격 클립보드는 **본값과 화면값을 나란히** 낸다.  둘의 차가 그 곡선의
+  //  offset 이라 전체 정밀도로 복원된다 — 붙여 넣은 표가 혼자서도 설명된다.
+  const stackedForCopy = useMemo(
+    () => stackedSeries
+      .map((one, index) => ({ ...one, raw: flat[index]?.y ?? one.y }))
+      .filter((one) => !one.hidden),
+    [stackedSeries, flat])
+
   //: 2D 로 그리는 것.  이격이면 올린 쪽을 그린다 (3D 는 `Plot3D` 가 따로 받는다).
   const series: PlotSeries[] = stacked ? stackedSeries : flat
-  const shownStacked = useMemo(
-    () => stackedSeries.filter((one) => !one.hidden), [stackedSeries])
 
   /** 범례 조각과 표의 줄이 **같은 것**을 누른다 (`#3` 을 껐다 켰다). */
   const toggleSweep = (sweep: number) =>
@@ -710,13 +719,18 @@ export function ScanDetail() {
                 // 올린 수를 복사하면 붙여 넣은 표가 화면과 다른 것이 된다.
                 ...(stacked && stackStepValue ? [{
                   label: mode === 'drt' ? 'γ(τ) (이격)' : '나이퀴스트 (이격)',
-                  title: `화면 그대로 — 곡선마다 ${num(stackStepValue, 3)} ${zUnit} 씩 올린 값 (세로는 값이 아닙니다)`,
-                  disabled: !shownStacked.length,
-                  skipped: stackedSeries.length - shownStacked.length,
+                  title: `화면 그대로 — 곡선마다 본값과 올린 값을 나란히 냅니다 (둘의 차가 그 곡선의 이격입니다)`,
+                  disabled: !stackedForCopy.length,
+                  skipped: stackedSeries.length - stackedForCopy.length,
                   skippedNote: (n: number) => `꺼 둔 ${n}개는 빠졌습니다`,
-                  build: () => seriesWideTsv(shownStacked, mode === 'drt'
-                    ? { x: drtAxisLabel(drtAxis), y: `γ + 이격 (${zUnit})` }
-                    : { x: `Z′ (${zUnit})`, y: `−Z″ + 이격 (${zUnit})` }),
+                  // **본값을 함께 낸다.**  올린 양은 켜 둔 곡선 집합에 달려
+                  // 있어서 스윕 하나를 껐다 켜면 달라진다 — 옮긴 수만 있는
+                  // 표는 나중에 되돌릴 근거가 없다.
+                  build: () => stackedWideTsv(stackedForCopy, mode === 'drt'
+                    ? { x: drtAxisLabel(drtAxis), rawY: `γ (${zUnit})`,
+                        y: `γ + 이격 (${zUnit})` }
+                    : { x: `Z′ (${zUnit})`, rawY: `−Z″ (${zUnit})`,
+                        y: `−Z″ + 이격 (${zUnit})` }),
                 }] : []),
               ]} />
               </div>

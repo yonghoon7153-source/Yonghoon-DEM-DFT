@@ -12,7 +12,8 @@ import 'uplot/dist/uPlot.min.css'
 
 import { useElementWidth } from '../lib/hooks'
 import { arcWindow } from '../lib/eis'
-import { num, SERIES_COLORS, seriesColor } from '../lib/format'
+import { num } from '../lib/format'
+import { cssVar, paintColor, seriesToken } from '../lib/seriescolor'
 import {
   axisPx, composePng, downloadCanvas, PNG_SCALE, PNG_TICK_ROOM, scaleFont,
   type PngLegendItem,
@@ -129,42 +130,6 @@ function alignY(item: PlotSeries, axis: number[]): (number | null)[] {
     if (key !== undefined && value !== undefined) lookup.set(key, value)
   }
   return axis.map((value) => lookup.get(value) ?? null)
-}
-
-function cssVar(name: string, fallback: string): string {
-  if (typeof window === 'undefined') return fallback
-  const value = getComputedStyle(document.documentElement).getPropertyValue(name).trim()
-  return value || fallback
-}
-
-/** Resolve `var(--token)` to a real colour.
- *
- * uPlot strokes a canvas, and a canvas has no cascade: handing it
- * `var(--discharge)` silently produces an invisible line.  Series colours are
- * therefore resolved here rather than at the call site, so a caller can use a
- * theme token like everywhere else in the app. */
-function resolveColor(color: string | undefined, fallback: string): string {
-  if (!color) return fallback
-  const token = color.match(/^var\(\s*(--[\w-]+)\s*(?:,\s*(.+?))?\s*\)$/)
-  if (!token) return color
-  return cssVar(token[1]!, token[2]?.trim() ?? fallback)
-}
-
-/** Express a qualitative-palette colour as its theme token.
- *
- * `SERIES_COLORS` is a light-mode-only constant and callers hand its literal
- * hex straight in as `series.color`, so on the dark surface the grey and the
- * deep blues fall to about 2.4:1 -- below the 3:1 a line needs to be seen.
- * The palette slot is recovered here and rewritten as `var(--series-N, <hex>)`,
- * which app.css themes the way it themes --charge/--discharge; the literal hex
- * stays as the fallback, and a colour that is not from the palette (a caller's
- * own token or a one-off) is passed through untouched. */
-function seriesToken(color: string | undefined, index: number): string {
-  const slot = color
-    ? SERIES_COLORS.indexOf(color.trim().toLowerCase())
-    : index % SERIES_COLORS.length
-  if (slot < 0) return color as string
-  return `var(--series-${slot}, ${SERIES_COLORS[slot]})`
 }
 
 /** Axis, grid and label-plate colours, re-read when the OS scheme flips.
@@ -649,7 +614,7 @@ export function Plot({
         {},
         ...visible.map((item, index) => ({
           label: item.label,
-          stroke: resolveColor(seriesToken(item.color, index), seriesColor(index)),
+          stroke: paintColor(item.color, index),
           width: (item.width ?? 1.6) * pxScale,
           dash: item.dash?.map((value) => value * pxScale),
           spanGaps: item.spanGaps ?? true,
@@ -958,6 +923,16 @@ export function Plot({
     const build = makeOptionsRef.current
     const rows = dataRef.current
     if (!build || !rows || saving) return
+    if (busy) {
+      // **받는 중에는 저장하지 않는다.**  `useAsync` 는 새 응답이 올 때까지
+      // 옛 곡선을 지키는데 (그것이 맞다 — 그림을 비우면 축이 튄다), 제목·
+      // 꼬리말은 지금 고른 것으로 즉시 만들어진다.  그 사이에 저장하면
+      // 3번 사이클 곡선이 "20번 사이클" 이라고 적힌 파일로 나가고, 완성된
+      // 파일에는 "받는 중" 표시가 없어 뒤에서 판별할 수가 없다
+      // (Codex 그림 리뷰 #2).
+      setSaveError('새 곡선을 받는 중입니다 — 다 받은 뒤에 저장해 주세요')
+      return
+    }
     setSaving(true)
     setSaveError(null)
     const holder = document.createElement('div')
@@ -968,7 +943,14 @@ export function Plot({
     try {
       const live = plotRef.current
       const frozen = live ? readScales(live) : {}
-      shot = new uPlot(build(PNG_SCALE, frozen as Record<string, { min: number; max: number }>),
+      // **장치 배율을 한 번만 곱한다.**  uPlot 은 우리가 준 CSS 크기에 제
+      // `pxRatio` 를 다시 곱해 캔버스를 잡는다.  그래서 CSS 로 3 배를 주면
+      // DPR 2 인 화면에서 실제 그림이 6 배가 됐다 — 메모리와 blob 이 DPR²
+      // 만큼 늘고, `toBlob` 실패가 기계마다 달라진다.  Plot3D 는 SVG 라
+      // 정확히 3 배였으니 두 저장 경로의 "3 배" 도 서로 달랐다
+      // (Codex 그림 리뷰 #12).  나눠 두면 결과가 어느 화면에서든 3 배다.
+      const cssScale = PNG_SCALE / (uPlot.pxRatio || 1)
+      shot = new uPlot(build(cssScale, frozen as Record<string, { min: number; max: number }>),
                        rows, holder)
       // uPlot 은 첫 그리기를 microtask 로 미룬다 -- 생성 직후의 캔버스는
       // 아직 비어 있다.  두 프레임을 기다리면 확실히 그려진 뒤다.
@@ -985,7 +967,7 @@ export function Plot({
       const ratio = canvas.width / Math.max(1, width)
       const chips: PngLegendItem[] = visible.map((item, index) => ({
         label: item.note ? `${item.label} · ${item.note}` : item.label,
-        color: resolveColor(seriesToken(item.color, index), seriesColor(index)),
+        color: paintColor(item.color, index),
         dash: Boolean(item.dash?.length),
       }))
       const sheet = composePng({
@@ -993,17 +975,21 @@ export function Plot({
         ratio,
         title: pngTitle,
         caption: pngCaption,
-        // 범례는 캔버스 밖(DOM)이라 저장에 안 담긴다.  곡선이 둘 이상이면
-        // 이름 없이는 그림 한 장으로 아무것도 못 읽으므로 다시 그린다.
-        legend: chips.length > 1 ? chips : undefined,
+        // 범례는 캔버스 밖(DOM)이라 저장에 안 담긴다.  **곡선이 하나여도
+        // 넣는다** — 화면에서는 카드 제목이 무엇을 그린 그림인지 말해 주지만,
+        // 파일은 혼자 다닌다.  하나뿐이라고 빼면 셀 이름이 PNG 어디에도 없는
+        // 그림이 나온다 (Codex 그림 리뷰 #6).
+        legend: chips.length ? chips : undefined,
         background: colors.surface,
         text: colors.ink,
         faint: colors.ink2,
       })
-      downloadCanvas(sheet, pngName
+      // **기다린다.**  기다리지 않으면 `finally` 가 굽기 전에 돌아 `saving`
+      // 이 먼저 풀리고, 두 번 누르면 늦게 온 첫 실패가 이미 성공한 두 번째를
+      // 실패로 덮는다 (Codex 그림 리뷰 #10).
+      await downloadCanvas(sheet, pngName
         ?? pngTitle
-        ?? `${splitAxisLabel(yLabel).name} - ${splitAxisLabel(xLabel).name}`,
-        (why) => setSaveError(`그림을 파일로 내보내지 못했습니다 — ${why}`))
+        ?? `${splitAxisLabel(yLabel).name} - ${splitAxisLabel(xLabel).name}`)
     } catch (cause) {
       setSaveError(cause instanceof Error ? cause.message : String(cause))
     } finally {
