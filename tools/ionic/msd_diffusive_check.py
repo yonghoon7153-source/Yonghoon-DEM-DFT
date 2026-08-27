@@ -188,6 +188,76 @@ def _elem_msd(d):
     return None
 
 
+def tau_int_geyer(series, d_origin_ps):
+    """적분상관시간 `τ_int` 와 block 하한을 낸다 (Geyer initial-monotone 절단).
+
+    **정의를 여기 한 곳에 못 박는다** (2026-08-27, 교차리뷰 H):
+
+        g       = 1 + 2·Σ_k ρ(k)          (자기상관 합 — statistical inefficiency)
+        τ_int   = (Δo / 2) · g            (Δo = 시간원점 간격 [ps])
+
+    ⚠⚠ **이 정의에서 `2·τ_int` 는 이미 `g·Δo` 다.** 회신 H 원문:
+        *"이 정의에서는 기존 식의 `2τ_int` 가 이미 `g·Δo` 다. factor 2 를 다시 곱하면 안 된다."*
+      그래서 block 하한은 `max(t₂_max, g·Δo)` 이지 `max(t₂_max, 2·τ_int·2)` 가 아니다.
+      이 함수가 **`block_min_ps` 를 직접 돌려주는 이유**가 그것이다 — 호출자가 2 를
+      다시 곱할 여지를 없앤다.
+
+    절단 (회신 H 권고 순서 2): Geyer **initial-positive + monotone** —
+      인접 두 항의 합 `Γ_m = ρ(2m)+ρ(2m+1)` 이 양수인 동안만 더하고, 단조 감소하도록 깎는다.
+      back-jump 의 **음의 자기상관** 때문에 signed 합이 작아질 수 있는데, 그때도
+      기억 꼬리는 길 수 있으므로 `memory_horizon_ps`(ρ 가 마지막으로 |ρ|>0.05 인 lag)를
+      **같이** 돌려준다. 회신 H: *"실제 block 하한은 2τ_int 하나보다 ACF 의 memory horizon
+      과 SE plateau 를 같이 봐야 한다."*
+
+    ⛔ 이 함수가 못 하는 것:
+      · **SE plateau 검사를 대신하지 않는다.** block 크기를 b·1.5b·2b 로 바꿔가며 SE 가
+        평평해지는지는 호출자가 따로 봐야 한다.
+      · 시드 경계를 넘어 이어붙이면 안 된다 — **시드마다 따로** 부르는 것이 전제다.
+      · 표본이 짧으면 τ 가 과소평가된다. `n_eff` 를 같이 보고 8–10 미만이면 쓰지 말 것.
+    """
+    n = len(series)
+    if n < 16:
+        return None
+    mean = sum(series) / n
+    dev = [x - mean for x in series]
+    var = sum(d * d for d in dev) / n
+    if var <= 0:
+        return None
+
+    def rho(k):
+        return sum(dev[i] * dev[i + k] for i in range(n - k)) / ((n - k) * var)
+
+    # Geyer initial-positive: Γ_m = ρ(2m)+ρ(2m+1) 이 양수인 동안
+    gammas, m = [], 0
+    while 2 * m + 1 < n - 1:
+        G = rho(2 * m) + rho(2 * m + 1)
+        if m > 0 and G <= 0:
+            break
+        gammas.append(G)
+        m += 1
+        if m > n // 4:
+            break
+    if not gammas:
+        return None
+    # initial-monotone: 단조 비증가로 깎는다
+    for i in range(1, len(gammas)):
+        gammas[i] = min(gammas[i], gammas[i - 1])
+    g = 2.0 * sum(gammas) - rho(0)          # = 1 + 2Σρ(k)  (ρ(0)=1)
+    g = max(g, 1.0)                          # 반상관이 심해도 1 미만으로 내리지 않는다
+    horizon = 0
+    for k in range(1, min(n - 1, n // 2)):
+        if abs(rho(k)) > 0.05:
+            horizon = k
+    return {
+        "g": g,
+        "tau_int_ps": (d_origin_ps / 2.0) * g,
+        "block_min_ps": g * d_origin_ps,     # ★ = 2·τ_int. 호출자가 2 를 또 곱하지 말 것
+        "memory_horizon_ps": horizon * d_origin_ps,
+        "n_origin": n,
+        "n_eff": n / g,
+    }
+
+
 def directional_msd_tensor(traj_path, save_fs=100.0, species="Li",
                            prefix_ps=None, max_lag_frac=0.5, n_origin=200):
     """`traj.xyz` 에서 **확산텐서** `M_αβ(t) = ⟨Δr_α Δr_β⟩` 를 낸다 (다중 시간원점).
@@ -1031,6 +1101,37 @@ def selftest():
         "[음성] 점이 3개 미만이면 None — 두 점으로 기울기를 만들지 않는다")
     chk(d_incremental(_t, _cage, 200, 300) is None,
         "[음성] 창이 궤적 밖이면 None — 빈 구간에서 0 을 반환하지 않는다")
+
+    # ── τ_int (2026-08-27, 교차리뷰 H) ───────────────────────────────────────
+    try:
+        import numpy as _np
+        _r = _np.random.default_rng(11)
+
+        def _ar1(phi, n=8000):
+            x = _np.zeros(n)
+            for i in range(1, n):
+                x[i] = phi * x[i - 1] + _r.normal(0, 1)
+            return x.tolist()
+
+        for _phi in (0.0, 0.6, 0.8):
+            _th = (1 + _phi) / (1 - _phi)          # AR(1) 이론 g
+            _t = tau_int_geyer(_ar1(_phi), 1.0)
+            chk(_t and abs(_t["g"] - _th) < max(0.3, 0.35 * _th),
+                f"[양성] AR(1) φ={_phi} 의 g 를 회수한다 ({_t['g']:.2f} vs 이론 {_th:.2f})")
+        _t = tau_int_geyer(_ar1(0.8), 1.0)
+        chk(abs(_t["block_min_ps"] - 2 * _t["tau_int_ps"]) < 1e-9,
+            "[음성] ⚠**factor-2 함정** — block_min_ps 가 이미 2·τ_int 다. "
+            "호출자가 2 를 또 곱할 여지를 함수가 없앤다 (회신 H 경고)")
+        _t = tau_int_geyer(_ar1(-0.7), 1.0)
+        chk(_t["g"] <= 1.01 and _t["memory_horizon_ps"] > 10,
+            f"[음성] **반상관에서 g 만 보면 놓친다** — g={_t['g']:.2f}(바닥)인데 "
+            f"memory_horizon={_t['memory_horizon_ps']:.0f} ps 다 (back-jump 사례)")
+        chk(tau_int_geyer([1, 2, 3], 1.0) is None,
+            "[음성] 표본 16개 미만이면 None — 짧은 계열에서 τ 를 지어내지 않는다")
+        chk(tau_int_geyer([5.0] * 100, 1.0) is None,
+            "[음성] 분산 0 이면 None — 상수열에서 0 으로 나누지 않는다")
+    except ImportError:
+        print("  · (numpy 없음 — τ_int selftest 건너뜀)")
 
     # ── 방향별 확산텐서 (2026-08-27, 교차리뷰 G/H) ──────────────────────────
     chk(directional_msd_tensor("/does/not/exist/traj.xyz") is None,
