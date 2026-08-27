@@ -7,6 +7,8 @@
 
 from __future__ import annotations
 
+import re
+
 import pytest
 
 from app import gate
@@ -49,11 +51,34 @@ def test_health_stays_open(client, locked):
 
     이것까지 막으면 암호를 아는 사람도 주소를 등록할 수 없다.  대신 응답에
     데이터가 없어야 문 밖에 둘 수 있다.
+
+    **이 집합은 자물쇠다.**  넓히려면 그 값이 문 밖에 있어도 되는 이유를 여기
+    적어야 한다 -- `instance` 는 아래 시험이 그 이유를 적어 두었다.
     """
     response = client.get("/api/health")
     assert response.status_code == 200
     body = response.json()
-    assert set(body) <= {"status", "wrdkit", "data_dir", "max_upload_mb"}
+    assert set(body) <= {"status", "instance", "wrdkit", "data_dir", "max_upload_mb"}
+
+
+def test_the_instance_name_is_out_there_on_purpose(client, locked):
+    """이름표는 **문 밖**이어야 쓸모가 있다 (Codex #8).
+
+    `bml` 이 이것으로 확인하는 것은 "공개 주소가 정말 이 서버인가" 다.  도메인이
+    아직 옛 VPS 를 가리키거나 저쪽 포트를 옛 터널이 잡고 있으면, 이번 연결이
+    실패했는데도 **다른 워크벤치**가 200 을 준다.  그때 "열렸습니다" 를 내면
+    그 주소를 받은 사람은 남의 데이터를 우리 것으로 본다.
+
+    확인하는 쪽(`bml`)은 암호를 들고 있지 않다.  그래서 문 안에 두면 이 확인이
+    아예 불가능하다.  대신 이 값으로 **할 수 있는 일이 없어야** 한다: 무작위고,
+    아무것도 열지 않고, 서버를 다시 띄우면 버려진다.
+    """
+    body = client.get("/api/health").json()
+    assert body["instance"]
+    # 한 프로세스 안에서는 안 바뀐다 -- 바뀌면 자기 자신과도 안 맞는다.
+    assert client.get("/api/health").json()["instance"] == body["instance"]
+    # 값에서 무엇도 읽히면 안 된다.
+    assert re.fullmatch(r"[0-9a-f]{16}", body["instance"])
 
 
 def test_the_page_asks_instead_of_erroring(client, locked):

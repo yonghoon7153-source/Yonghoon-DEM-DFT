@@ -2345,6 +2345,55 @@ server_alive() {
   [ "$(http_code_of "$1" "${2:-4}")" = "200" ]
 }
 
+#: 그 주소가 내주는 워크벤치의 이름표 (`/api/health` 의 `instance`).
+#:
+#: 없으면 빈 문자열이다.  `jq` 를 전제하지 않는다 -- 이 도구가 도는 기계 중에
+#: 없는 것이 있고, 값 하나 뽑자고 의존성을 늘리지 않는다.  이름표는 hex 라
+#: 공백도 따옴표도 안 들어간다.
+instance_of() {
+  curl -s -m "${2:-6}" "$1/api/health" 2>/dev/null \
+    | tr -d ' \t\r\n' \
+    | sed -n 's/.*"instance":"\([A-Za-z0-9]\{1,64\}\)".*/\1/p' \
+    | head -n 1
+}
+
+#: **이 공개 주소가 정말 우리 서버인가** (Codex #8).
+#:
+#: 200 하나로는 모자란다.  도메인이 아직 옛 VPS 를 가리키거나 저쪽 5003 을 옛
+#: 터널이 잡고 있으면, 이번 ssh 가 붙지 못했는데도 **다른 워크벤치**가 200 을
+#: 준다.  그때 "열렸습니다" 를 내면 그 주소를 받은 사람은 남의 데이터를 우리
+#: 것으로 본다 -- 이 도구가 낼 수 있는 가장 조용한 거짓말이다.
+#:
+#:   0  같은 서버다
+#:   1  다른 서버다
+#:   2  판정 불가 (여기 서버가 이름표를 안 낸다 -- 옛 서버로 떠 있다)
+#:
+#: 2 를 실패로 세지 않는다.  모르면 모른다고 하고 하던 대로 간다 (§0.4).
+#: 반대로 **여기 서버는 이름표를 내는데 저쪽이 안 내면 그것은 다른 서버다** --
+#: 터널은 우리 자신의 포트로 이어지므로 같은 프로세스여야 하고, 같은
+#: 프로세스라면 같은 값이 나온다.
+#: `same_instance` 를 `if` 에 그대로 쓰면 안 되는 이유: 0 이 아닌 값이 둘(1·2)
+#: 이고 그중 하나는 **판정 불가**다.  `! same_instance` 는 그 둘을 한 덩어리로
+#: 만들어, 이름표를 못 읽은 것을 "남의 서버" 로 읽는다.  다르다고 말할 수 있을
+#: 때만 참이다.
+wrong_instance() {
+  same_instance "$1"
+  [ $? = 1 ]
+}
+
+same_instance() {
+  local url="$1" mine theirs
+  mine="$(instance_of "http://127.0.0.1:$PORT" 4)"
+  [ -n "$mine" ] || return 2
+  theirs="$(instance_of "$url" 8)"
+  # 방금 200 을 본 주소다.  그래도 한 번은 더 물어본다 -- 그 사이의 한 번짜리
+  # 실패를 "남의 서버" 로 읽으면 멀쩡한 터널을 닫는다.
+  [ -n "$theirs" ] || theirs="$(instance_of "$url" 12)"
+  [ -n "$theirs" ] || return 1
+  [ "$mine" = "$theirs" ] && return 0
+  return 1
+}
+
 #: 열릴 때까지 <초> 만큼 기다린다.
 #:
 #: **횟수가 아니라 시간으로 센다.**  아직 안 붙은 터널은 Cloudflare 가 530 을
@@ -3377,12 +3426,17 @@ share_stale() {
 #:   3  주소는 받았는데 터널 프로그램이 끝났다.  이 주소는 살아날 일이 없으므로
 #:      keep 과 무관하게 닫는다 — 죽은 주소를 "열어 둡니다" 로 내보내면, 그것을
 #:      받은 사람이 오류 화면을 보고 서버를 의심한다.
+#:   4  그 주소가 200 을 주는데 **우리 서버가 아니다** (Codex #8).  다른 기계의
+#:      워크벤치이거나 저쪽에 남은 옛 터널이다.  keep 과 무관하게 닫는다 —
+#:      "열렸습니다" 를 내면 그 주소를 받은 사람이 남의 데이터를 우리 것으로
+#:      본다.  이 도구가 낼 수 있는 가장 조용한 거짓말이라, 확인이 안 된 것(2)
+#:      보다 나쁘게 다룬다.
 #: 어느 쪽이든 마지막으로 본 HTTP 코드를 `tunnel.last-code` 에 적어 둔다.
 #: 주소를 받았다.  그것이 **실제로 열렸는지**까지 확인한다.
 #:
 #: `try_tunnel` 과 `try_tunnel_named` 가 같은 것을 해야 한다 -- 주소를 어디서
 #: 얻었는지는 여기서 상관없고, 갈라 두면 한쪽만 고치는 날이 온다.
-#: 돌려주는 값은 `try_tunnel` 의 것과 같다 (0 / 2 / 3).
+#: 돌려주는 값은 `try_tunnel` 의 것과 같다 (0 / 2 / 3 / 4).
 confirm_tunnel() {
   local keep="$1" pid="$2" url="$3" code
   printf '%s' "$url" > "$TUNNEL_URL_FILE"
@@ -3392,7 +3446,17 @@ confirm_tunnel() {
   # 믿고 상대에게 알려 줬다가 되돌아오는 왕복 한 번보다 훨씬 싸다.
   step "주소가 실제로 열렸는지 확인 중 ${DIM}(최대 1분)${OFF}"
   if wait_until_alive "$url" 60 "$pid"; then
-    rm -f "$RUN_DIR/tunnel.last-code" "$RUN_DIR/tunnel.last-layer"
+    # 200 을 봤다고 끝이 아니다.  **그 200 을 우리가 냈는가** (Codex #8).
+    if wrong_instance "$url"; then
+      printf '%s' "$url" > "$RUN_DIR/tunnel.wrong-instance"
+      close_tunnel >/dev/null 2>&1 || true
+      return 4
+    fi
+    # 0 이거나 2(판정 불가) 다.  여기 서버가 이름표를 안 내는 경우(2)는 실패로
+    # 세지 않는다 — 모르는 것을 아는 척하지 않는다 (§0.4).  옛 코드로 떠 있는
+    # 서버에서 이 확인이 통째로 막히면 안 된다.
+    rm -f "$RUN_DIR/tunnel.last-code" "$RUN_DIR/tunnel.last-layer" \
+          "$RUN_DIR/tunnel.wrong-instance"
     return 0
   fi
   # 1분을 이미 물어봤으면서 화면에서는 "확인해 보세요" 로 끝나면 안 된다.
@@ -4026,7 +4090,7 @@ cmd_share() {
     local open_url open_pid; open_url="$(tunnel_url)"
     open_pid="$(cat "$TUNNEL_PID_FILE" 2>/dev/null)"
     step "적어 둔 주소가 아직 열려 있는지 확인 중 ${DIM}(최대 15초)${OFF}"
-    if wait_until_alive "$open_url" 15 "$open_pid"; then
+    if wait_until_alive "$open_url" 15 "$open_pid" && ! wrong_instance "$open_url"; then
       ok "이미 열려 있습니다 → ${B}${open_url}${OFF}"
       say "  ${B}다른 기계에서${OFF}  ${GREEN}bmlout ${open_url}${OFF}"
       # **이 갈래가 이제 제일 흔하다.**  터널이 서버 재시작을 살아남게 되면서
@@ -4041,8 +4105,18 @@ cmd_share() {
       say "  ${DIM}닫으려면${OFF}  ${GREEN}bml share stop${OFF}"
       return 0
     fi
-    # 응답이 없다.  서버가 죽은 것인지 터널이 죽은 것인지 가른다.
-    share_stale "$open_url" || return 1
+    # 응답이 **남의 것**이면 stale 갈래로 보내지 않는다 -- 저쪽은 200 이라
+    # 502/503/504 갈래에 안 걸리고, "판정 불가" 로 끝나 멀쩡한 척이 남는다.
+    if wrong_instance "$open_url"; then
+      warn "적어 둔 주소가 열려 있지만 ${B}우리 서버가 아닙니다${OFF} ${DIM}(Codex #8)${OFF}"
+      say "  ${DIM}${open_url} 의 이름표가 이 기계의 서버와 다릅니다 —${OFF}"
+      say "  ${DIM}이 주소를 '열려 있습니다' 로 내면 받는 사람이 남의 데이터를 봅니다.${OFF}"
+      say "  ${DIM}우리 터널을 닫고 다시 엽니다.${OFF}"
+      close_tunnel >/dev/null 2>&1 || true
+    else
+      # 응답이 없다.  서버가 죽은 것인지 터널이 죽은 것인지 가른다.
+      share_stale "$open_url" || return 1
+    fi
     # 터널만 죽었다 (share_stale 이 닫아 뒀다).  아래에서 새로 연다.
   fi
   close_tunnel >/dev/null 2>&1 || true
@@ -4094,6 +4168,23 @@ cmd_share() {
   elif tunnel_vps >/dev/null && tunnel_domain >/dev/null; then
     tunnel_via_vps 1; rc=$?
     url="$(tunnel_url)"
+    if [ "$rc" -eq 4 ]; then
+      # 여기가 고정 주소의 고유한 함정이다 (Codex #8).  랜덤 주소는 남이 쓸 일이
+      # 없지만, 우리 도메인은 **옛 VPS 를 가리키고 있어도 200 을 준다.**
+      printf '%s✕%s 그 주소는 열려 있는데, 우리 서버가 아닙니다.\n' "$RED" "$OFF" >&2
+      say "  ${DIM}$(cat "$RUN_DIR/tunnel.wrong-instance" 2>/dev/null) 가 200 을 주지만${OFF}"
+      say "  ${DIM}이름표(/api/health 의 instance)가 이 기계의 서버와 다릅니다.${OFF}"
+      say "  ${DIM}열렸다고 말하지 않고 닫았습니다 — 그 주소를 남에게 주면 남의 데이터를 봅니다.${OFF}"
+      say ""
+      say "  ${DIM}셋 중 하나입니다:${OFF}"
+      say "    ${DIM}1. DNS 가 아직 옛 VPS 를 가리킵니다 (전파 대기 또는 A 레코드가 옛 IP)${OFF}"
+      say "    ${DIM}2. 저쪽 127.0.0.1:5003 을 옛 터널이 아직 잡고 있습니다${OFF}"
+      say "    ${DIM}3. 그 도메인 뒤에 다른 워크벤치가 서 있습니다${OFF}"
+      say ""
+      say "  ${DIM}저쪽에서:${OFF} ${GREEN}ss -H -ltn 'sport = :5003'${OFF} ${DIM}— 127.0.0.1 하나여야 합니다${OFF}"
+      say "  ${DIM}여기서:${OFF}   ${GREEN}dig +short $(tunnel_domain 2>/dev/null)${OFF} ${DIM}— 우리 VPS 의 IP 인가요${OFF}"
+      exit 1
+    fi
     if [ "$rc" -ne 0 ] && [ -z "$url" ]; then
       printf '%s✕%s 우리 VPS 로 터널을 열지 못했습니다.\n' "$RED" "$OFF" >&2
       say "  ${DIM}랜덤 주소로 대신 열지 않습니다 — 고정 주소를 설정해 두셨으므로.${OFF}"
@@ -4183,6 +4274,14 @@ cmd_share() {
     say ""
     if [ "$rc" -eq 3 ]; then
       say "  ${DIM}주소는 받았지만 터널 프로그램이 곧 끝났습니다 — 죽은 주소라서 남기지 않았습니다.${OFF}"
+      say ""
+    fi
+    if [ "$rc" -eq 4 ]; then
+      # 200 을 받고도 실패로 끝나는 유일한 갈래다.  왜인지 안 적으면 화면이
+      # "열지 못했습니다" 인데 브라우저로는 열려서, 사람이 이 도구를 의심한다.
+      say "  ${DIM}주소는 응답했지만 이름표가 달랐습니다 — 우리 서버가 아닙니다 (Codex #8).${OFF}"
+      say "  ${DIM}응답한 주소:${OFF} $(cat "$RUN_DIR/tunnel.wrong-instance" 2>/dev/null)"
+      say "  ${DIM}열렸다고 하지 않고 닫았습니다 — 그 주소를 받은 사람은 남의 데이터를 봅니다.${OFF}"
       say ""
     fi
     # 빈 줄을 걸러서 보여 준다.  localhost.run 의 접속 배너는 빈 줄로 끝나서,

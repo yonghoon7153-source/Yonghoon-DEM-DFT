@@ -1173,6 +1173,159 @@ else
 fi
 rm -rf "$GEN"
 
+echo "공개 주소가 정말 우리 서버인가 (Codex #8)"
+
+# **문자열이 아니라 진짜 HTTP 서버 둘을 띄운다.**  이 결함의 요점이 "200 을
+# 받았다" 와 "우리가 그 200 을 냈다" 의 차이다.  200 을 mock 으로 만들면 시험이
+# 결함을 그대로 통과시킨다 -- Codex 가 지금 시험들을 두고 한 말이 정확히 그것이고
+# (`임의 200 을 진실로 mock 한다`), 그 지적을 mock 으로 닫으면 아무것도 안 닫힌다.
+if command -v python3 >/dev/null 2>&1 && command -v curl >/dev/null 2>&1; then
+  NDIR="$(mktemp -d)"
+  cat > "$NDIR/health.py" <<'PYSRV'
+import sys
+import http.server
+
+BODY = sys.argv[1].encode()
+
+
+class H(http.server.BaseHTTPRequestHandler):
+    def do_GET(self):
+        self.send_response(200)
+        self.send_header("Content-Type", "application/json")
+        self.send_header("Content-Length", str(len(BODY)))
+        self.end_headers()
+        self.wfile.write(BODY)
+
+    def log_message(self, *a):
+        pass
+
+
+srv = http.server.HTTPServer(("127.0.0.1", 0), H)
+print(srv.server_address[1], flush=True)
+srv.serve_forever()
+PYSRV
+
+  # 포트를 우리가 고르지 않는다.  고정 포트를 쓰면 이 기계에서 이미 쓰는 포트와
+  # 부딪히고, 그때 시험은 결함이 아니라 환경을 보고한다.
+  start_health() {  # $1=본문 $2=포트를 적을 파일 -> pid 를 낸다
+    python3 "$NDIR/health.py" "$1" > "$2" 2>/dev/null &
+    printf '%s' "$!"
+  }
+  port_of() {
+    local i
+    for i in $(seq 1 60); do
+      [ -s "$1" ] && { tr -dc '0-9' < "$1"; return 0; }
+      sleep 0.1
+    done
+    return 1
+  }
+
+  MINE='{"status":"ok","instance":"aaaa000011112222","wrdkit":"0","data_dir":"/x y","max_upload_mb":512}'
+  OTHER='{"status":"ok","instance":"bbbb333344445555","wrdkit":"0","data_dir":"/x y","max_upload_mb":512}'
+  OLD='{"status":"ok","wrdkit":"0","data_dir":"/x y","max_upload_mb":512}'
+
+  LPID="$(start_health "$MINE" "$NDIR/lport")";  LP="$(port_of "$NDIR/lport")"
+  SPID="$(start_health "$MINE" "$NDIR/sport")";  SP="$(port_of "$NDIR/sport")"
+  OPID="$(start_health "$OTHER" "$NDIR/oport")"; OP="$(port_of "$NDIR/oport")"
+  XPID="$(start_health "$OLD" "$NDIR/xport")";   XP="$(port_of "$NDIR/xport")"
+
+  if [ -n "${LP:-}" ] && [ -n "${SP:-}" ] && [ -n "${OP:-}" ] && [ -n "${XP:-}" ]; then
+    check "이름표를 읽는다" \
+      "$(instance_of "http://127.0.0.1:$LP")" "aaaa000011112222"
+    # 공백이 든 값(`data_dir`)이 있어도 엉키면 안 된다 -- `jq` 없이 자르므로.
+    check "이름표가 없으면 빈 값" "$(instance_of "http://127.0.0.1:$XP")" ""
+    check "닿지 않는 주소도 빈 값" "$(instance_of "http://127.0.0.1:1" 1)" ""
+
+    ( PORT="$LP"; same_instance "http://127.0.0.1:$SP" )
+    check "같은 이름표면 우리 것이다"   "$?" "0"
+    ( PORT="$LP"; same_instance "http://127.0.0.1:$OP" )
+    check "다른 이름표면 남의 것이다"   "$?" "1"
+    # 저쪽이 200 인데 이름표가 없다 = 옛 워크벤치다.  터널은 **우리 자신의
+    # 포트**로 이어지므로 같은 프로세스여야 하고, 여기가 이름표를 내는데
+    # 저쪽이 안 내면 저쪽은 우리가 아니다.
+    ( PORT="$LP"; same_instance "http://127.0.0.1:$XP" )
+    check "저쪽만 옛 서버여도 남의 것"  "$?" "1"
+    # 반대는 다르다.  **여기**가 옛 코드로 떠 있으면 비교 자체가 불가능하다.
+    # 모르는 것을 실패로 세지 않는다 (§0.4).
+    ( PORT="$XP"; same_instance "http://127.0.0.1:$SP" )
+    check "여기가 옛 서버면 판정 불가"  "$?" "2"
+
+    # `! same_instance` 로 쓰면 판정 불가(2)까지 "남의 것" 이 된다.  옛 서버로
+    # 떠 있는 랩 PC 에서 멀쩡한 터널이 전부 거절당한다는 뜻이다.
+    ( PORT="$XP"; wrong_instance "http://127.0.0.1:$SP" )
+    check "판정 불가는 '남의 것' 이 아니다" "$?" "1"
+    ( PORT="$LP"; wrong_instance "http://127.0.0.1:$OP" )
+    check "다른 것만 '남의 것'"            "$?" "0"
+
+    # **여기가 Codex 가 요구한 시험이다**: 새 연결은 실패했는데 옛 endpoint 가
+    # 200 을 준다.  `wait_until_alive` 는 통과하고, 그다음에 이름표가 막는다.
+    CDIR="$(mktemp -d)"
+    CONFIRM_RC="$(
+      RUN_DIR="$CDIR" PORT="$LP"
+      TUNNEL_URL_FILE="$CDIR/tunnel.url"
+      TUNNEL_PID_FILE="$CDIR/tunnel.pid"
+      # 이름 충돌 조심: `confirm_tunnel` 의 `local url`·`code` 가 여기서 보인다
+      # (bash 는 동적 스코프다).  그래서 stub 은 아무 이름도 안 읽는다.
+      wait_until_alive() { return 0; }
+      close_tunnel() { printf 'closed\n' >> "$RUN_DIR/closed"; return 0; }
+      step() { :; }
+      confirm_tunnel 1 99999 "http://127.0.0.1:$OP" >/dev/null 2>&1
+      printf '%s' "$?"
+    )"
+    check "남의 200 은 열렸다고 하지 않는다" "$CONFIRM_RC" "4"
+    check "그리고 닫는다 (keep 이어도)"      "$([ -s "$CDIR/closed" ] && echo yes)" "yes"
+    check "무엇이 응답했는지 적어 둔다"      "$(cat "$CDIR/tunnel.wrong-instance" 2>/dev/null)" "http://127.0.0.1:$OP"
+    rm -rf "$CDIR"
+
+    # 같은 서버면 예전과 똑같이 0 이어야 한다 -- 이 확인이 멀쩡한 터널을
+    # 막으면 그것이 더 큰 회귀다.
+    CDIR="$(mktemp -d)"
+    CONFIRM_OK="$(
+      RUN_DIR="$CDIR" PORT="$LP"
+      TUNNEL_URL_FILE="$CDIR/tunnel.url"
+      TUNNEL_PID_FILE="$CDIR/tunnel.pid"
+      wait_until_alive() { return 0; }
+      close_tunnel() { printf 'closed\n' >> "$RUN_DIR/closed"; return 0; }
+      step() { :; }
+      confirm_tunnel 0 99999 "http://127.0.0.1:$SP" >/dev/null 2>&1
+      printf '%s' "$?"
+    )"
+    check "우리 200 은 그대로 통과한다"  "$CONFIRM_OK" "0"
+    check "그때는 닫지 않는다"           "$([ -s "$CDIR/closed" ] && echo yes)" ""
+    rm -rf "$CDIR"
+
+    # 옛 코드로 떠 있는 서버에서도 막히면 안 된다 (판정 불가 = 예전 행동).
+    CDIR="$(mktemp -d)"
+    CONFIRM_OLD="$(
+      RUN_DIR="$CDIR" PORT="$XP"
+      TUNNEL_URL_FILE="$CDIR/tunnel.url"
+      TUNNEL_PID_FILE="$CDIR/tunnel.pid"
+      wait_until_alive() { return 0; }
+      close_tunnel() { return 0; }
+      step() { :; }
+      confirm_tunnel 0 99999 "http://127.0.0.1:$SP" >/dev/null 2>&1
+      printf '%s' "$?"
+    )"
+    check "옛 서버에서는 예전처럼 통과"  "$CONFIRM_OLD" "0"
+    rm -rf "$CDIR"
+  else
+    printf '  --   이름표 검사 건너뜀 (시험용 서버를 못 띄움)\n'
+  fi
+
+  kill "$LPID" "$SPID" "$OPID" "$XPID" 2>/dev/null
+  wait "$LPID" "$SPID" "$OPID" "$XPID" 2>/dev/null
+  rm -rf "$NDIR"
+else
+  printf '  --   이름표 검사 건너뜀 (python3 또는 curl 없음)\n'
+fi
+
+# 서버가 실제로 이름표를 내는지도 여기서 본다 -- `bml` 만 고치고 API 를 안
+# 고치면 모든 확인이 조용히 "판정 불가" 가 되어 이 갈래가 통째로 죽는다.
+check "API 가 이름표를 낸다" \
+  "$(grep -c '"instance": INSTANCE' "$HERE/../../apps/api/app/main.py")" "1"
+check "이름표는 프로세스마다 한 번" \
+  "$(grep -c '^INSTANCE = secrets.token_hex' "$HERE/../../apps/api/app/main.py")" "1"
+
 echo
 if [ "$fail" -eq 0 ]; then
   printf '결과: %d개 통과\n' "$pass"

@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import math
 import re
+import secrets
 import sys
 from pathlib import Path
 
@@ -194,10 +195,28 @@ def _served_commit() -> str:
         return ""
 
 
+#: 이 프로세스의 이름표.  뜰 때 한 번 만들고, 죽을 때까지 안 바뀐다.
+#:
+#: **터널이 정말 이 서버로 오는지 확인하는 데 쓴다** (Codex #8).  공개 주소가
+#: HTTP 200 을 줬다는 것만으로는 "이번에 연 터널이 열렸다" 가 증명되지 않는다.
+#: 도메인이 아직 옛 VPS 를 가리키거나, 저쪽 5003 을 옛 터널이 잡고 있으면,
+#: 이번 ssh 가 실패했는데도 **다른 워크벤치**가 200 을 준다.  화면은 열렸다고
+#: 하고, 그 주소를 받은 사람은 남의 데이터를 본다 -- 우리 데이터인 줄 알고.
+#: 그래서 여기 값과 공개 주소의 값이 같은지 본다.
+#:
+#: 비밀이 아니다.  ADR 0014 대로 `/api/health` 는 문 밖이라 암호를 모르는
+#: 사람도 읽는데, 이 값으로 할 수 있는 일이 없어야 한다 -- 그래서 무작위이고,
+#: 아무것도 열지 않으며, 서버를 다시 띄우면 버려진다.  예측 불가능할 필요도
+#: 없다 (같은지 다른지만 본다).  `secrets` 를 쓰는 것은 그것이 이 자리에서
+#: 가장 싼 무작위라서지, 이 값을 지켜야 해서가 아니다.
+INSTANCE = secrets.token_hex(8)
+
+
 @app.get("/api/health")
 def health() -> dict:
     return {
         "status": "ok",
+        "instance": INSTANCE,
         "wrdkit": wrdkit_version,
         "data_dir": str(settings.data_dir),
         "max_upload_mb": settings.max_upload_bytes // (1024 * 1024),
