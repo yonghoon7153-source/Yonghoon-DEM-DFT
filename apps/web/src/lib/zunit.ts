@@ -43,3 +43,19 @@ export function areaFor(unit: ZUnit, area: number | null | undefined): number | 
   if (unit !== 'ohmcm2') return null
   return area && area > 0 ? area : null
 }
+
+/** 이 브라우저가 단위를 **골라 본 적이 있는가.**
+ *
+ *  없으면 화면이 데이터를 보고 정할 수 있다 — 면적을 아는 스캔은 Ω·cm² 로
+ *  여는 것이 맞고, 그것이 이 랩이 논문에 적는 값이다.  한 번이라도 골랐으면
+ *  그 선택이 이긴다: 사람이 Ω 로 바꿔 놓은 화면이 새로고침마다 Ω·cm² 로
+ *  돌아가면 그 단추는 고장 난 것으로 읽힌다.
+ */
+export function hasStoredZUnit(): boolean {
+  try {
+    return window.localStorage.getItem(Z_UNIT_KEY) !== null
+  } catch {
+    // 사생활 보호 모드에서는 읽기 자체가 던진다.  그때는 "고른 적 없다" 로 본다.
+    return false
+  }
+}

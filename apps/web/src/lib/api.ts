@@ -265,6 +265,8 @@ export const api = {
       failed: { spectrum_id: number; detail: string }[]
       requested: number
       converged: number
+      /** 1번 스윕의 기하·조건이 몇 줄에 따라갔는지. */
+      synced: number
     }>(`/api/eis/scans/${sha256}/fit${query(params)}`, { method: 'POST' }),
   fitSpectra: (ids: number[], params?: Params) =>
     request<{

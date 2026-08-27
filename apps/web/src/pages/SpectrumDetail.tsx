@@ -222,7 +222,11 @@ export function SpectrumDetail() {
       const parts = [`스윕 ${out.converged}/${out.requested}개 수렴`]
       // 성공만 세면 반쯤 실패한 배치가 작은 배치로 읽힌다.
       if (out.failed.length) parts.push(`${out.failed.length}개 실패`)
+      // 맞추기 전에 조건을 한 번 맞춘다 (1번 스윕 기준).  말없이 고치지 않는다.
+      if (out.synced) parts.push(`조건을 ${out.synced}개 스윕에 함께 맞췄습니다`)
       setNote(parts.join(' · '))
+      // 이제 스윕 전부가 같은 면적을 갖는다 — 그러면 Ω·cm² 로 볼 수 있다.
+      if (cellArea) setZUnit('ohmcm2')
       if (out.failed.length) {
         setError(out.failed.map((row) => `#${row.spectrum_id}: ${row.detail}`).join('\n'))
       }
@@ -642,7 +646,7 @@ export function SpectrumDetail() {
               {isScanSweep ? (
                 <>
                   <button type="button" className="primary" disabled={busy}
-                          title="상한은 스윕마다 따로 (유도성 위쪽 끝), 하한은 안 정합니다"
+                          title="이 스윕의 기하·조건을 나머지에 맞춘 뒤 전부 맞춥니다 · 상한은 스윕마다 따로 (유도성 위쪽 끝), 하한은 안 정합니다"
                           onClick={() => void runScanFit()}>
                     {busy ? '맞추는 중…' : `스윕 ${sweeps}개 전부 맞추기`}
                   </button>

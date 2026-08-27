@@ -50,7 +50,9 @@ export function CopyBar({ items }: { items: CopyItem[] }) {
 
   return (
     <div className="col copy-bar" style={{ gap: 6 }}>
-      <div className="row" style={{ gap: 6, flexWrap: 'wrap' }}>
+      {/* `align-items: center` 가 없으면 `.row` 의 기본 정렬(stretch)이 작은
+          글자를 단추 높이만큼 늘려, 'Origin 으로' 가 단추 위쪽에 걸린다. */}
+      <div className="row" style={{ gap: 6, flexWrap: 'wrap', alignItems: 'center' }}>
         <span className="tiny faint">Origin 으로</span>
         {items.map((item) => (
           <button

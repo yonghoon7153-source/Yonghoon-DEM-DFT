@@ -9,13 +9,14 @@
  *  고를 때 보는 것이 바로 그 차이다.
  */
 
-import { useCallback, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 
 import { CopyBar } from '../components/CopyBar'
 import { useGroupChoice } from '../components/GroupFilter'
 import { PickGrid } from '../components/PickGrid'
 import { Plot, type PlotSeries } from '../components/Plot'
+import { Plot3D, type Series3D } from '../components/Plot3D'
 import { Alert, Card, Empty, Field, Spinner } from '../components/ui'
 import { api } from '../lib/api'
 import { num, seriesColor } from '../lib/format'
@@ -25,7 +26,9 @@ import {
   drtAxisTick, drtAxisValue, validDrtAxis,
 } from '../lib/tauaxis'
 import { perArea } from '../lib/areanorm'
-import { Z_UNIT_KEY, type ZUnit, validZUnit, zUnitLabel } from '../lib/zunit'
+import {
+  Z_UNIT_KEY, type ZUnit, hasStoredZUnit, validZUnit, zUnitLabel,
+} from '../lib/zunit'
 import { rememberedLambda } from '../lib/drtlambda'
 import { inductiveCount, isScan, nyquistXy, sweepAt } from '../lib/eis'
 import { nyquistWideTsv, seriesWideTsv } from '../lib/origin'
@@ -125,6 +128,10 @@ export function EisCompare() {
   //  쪽에서 f 가 나오면 같은 봉우리가 반대쪽 끝에 있는 것처럼 보인다.
   const [storedAxis, setAxis] = useStickyState<DrtAxis>(DRT_AXIS_KEY, 'tau')
   const drtAxis = validDrtAxis(storedAxis)
+  //: 겹쳐 그릴까 축 셋으로 세울까.  **깊이는 고른 스펙트럼**이다 — 여기는
+  //  SOC 스캔이 아니라 서로 다른 셀을 나란히 놓는 화면이라, 깊이에 놓을 물리량이
+  //  없다.  대신 이름을 눈금으로 적는다.
+  const [solid, setSolid] = useState(false)
   //: 어느 그림을 보고 있나.  Origin 클립보드가 이것을 따라간다 — 안 보이는
   //  그림을 복사할 수 있으면 사람은 방금 본 것을 복사했다고 믿는다.
   const [mode, setMode] = useState<Mode>('nyquist')
@@ -206,6 +213,18 @@ export function EisCompare() {
   }, [points.data, unit, areaOf])
 
   const unitLabel = zUnitLabel(unit)
+
+  //: **고른 것 전부의 면적을 알면 Ω·cm² 로 연다.**  셀끼리 견주는 값이 그것이고
+  //  이 화면의 목적이 바로 견주기다.  하나라도 면적이 없으면 Ω 로 둔다 — 그때
+  //  Ω·cm² 는 그것을 빼야 하고, 처음 여는 사람에게 스펙트럼이 없어져 보이는
+  //  것보다 단위가 셀마다 다르다는 것이 덜 놀랍다.  한 번이라도 골라 봤으면
+  //  그 선택이 이긴다.
+  const everyAreaKnown = selected.length > 0
+    && selected.every((id) => (areaOf(id) ?? 0) > 0)
+  useEffect(() => {
+    if (everyAreaKnown && !hasStoredZUnit()) setUnit('ohmcm2')
+  }, [everyAreaKnown, setUnit])
+
 
   // DRT 는 볼 때만 부른다.  스펙트럼마다 한 번씩 푸는 계산이라, 안 보는 동안
   // 부르면 나이퀴스트만 보려던 사람이 그 시간을 대신 낸다.
@@ -307,6 +326,32 @@ export function EisCompare() {
       }]
     })
   }, [shown, fresh, rows, dropInductive, mode, drt.data, unit, areaOf, fitOf, drtAxis])
+
+  //: 축 셋으로 세울 때의 깊이 — 고른 차례다.  이름은 눈금 글자로 붙인다.
+  const solidSeries = useMemo<Series3D[]>(() => {
+    const order = new Map(selected.map((id, index) => [id, index]))
+    return series.filter((one) => !one.hidden).map((one, index) => {
+      const row = rows.find((item) => label(item) === one.label
+        || one.label.startsWith(label(item)))
+      return {
+        label: one.label,
+        x: one.x,
+        y: one.y,
+        z: row ? order.get(row.id) ?? index : index,
+        color: one.color,
+        points: one.points,
+      }
+    })
+  }, [series, rows, selected])
+
+  //: 깊이 눈금에 적을 이름.  길면 자른다 — 눈금 글자가 상자보다 길면 서로 겹친다.
+  const depthName = useCallback((value: number) => {
+    const id = selected[Math.round(value)]
+    const row = rows.find((one) => one.id === id)
+    if (!row) return ''
+    const name = row.name || row.original_name
+    return name.length > 18 ? `${name.slice(0, 17)}…` : name
+  }, [selected, rows])
 
   // 겹쳐 놓으면 한 스펙트럼의 유도성 꼬리가 다른 것들의 아크까지 납작하게
   // 만든다 — 세로 눈금은 하나이기 때문이다.  몇 점이 빠졌는지는 적는다.
@@ -416,6 +461,18 @@ export function EisCompare() {
               <button type="button" className={mode === 'drt' ? 'on' : ''}
                       onClick={() => setMode('drt')}>DRT</button>
             </div>
+            {/* 겹쳐 그리면 큰 곡선이 작은 것을 덮는다.  축 셋으로 세우면 고른
+                순서대로 뒤로 물러나서 넷·다섯을 한눈에 견줄 수 있다.
+                fitting 은 한 곡선이 둘(점 + 파선)이라 세우면 짝이 흩어진다. */}
+            {mode === 'fit' ? null : (
+              <div className="segmented" role="group" aria-label="보기">
+                <button type="button" className={solid ? '' : 'on'}
+                        onClick={() => setSolid(false)}>2D</button>
+                <button type="button" className={solid ? 'on' : ''}
+                        title="고른 스펙트럼을 깊이로 세웁니다 — 눈금이 이름입니다"
+                        onClick={() => setSolid(true)}>3D</button>
+              </div>
+            )}
             {/* DRT 를 볼 때만 뜬다 — 나이퀴스트에는 τ 축이 없다. */}
             {mode === 'drt' ? (
               <div className="segmented" role="group" aria-label="가로축">
@@ -517,7 +574,17 @@ export function EisCompare() {
           <Spinner />
         ) : series.length ? (
           <>
-            {mode === 'drt' ? (
+            {solid && mode !== 'fit' ? (
+              <Plot3D
+                series={solidSeries}
+                xLabel={mode === 'drt' ? drtAxisLabel(drtAxis) : `Z′ (${unitLabel})`}
+                yLabel={mode === 'drt' ? `γ (${unitLabel})` : `−Z″ (${unitLabel})`}
+                zLabel="스펙트럼"
+                zTicks={solidSeries.map((one) => one.z)}
+                zTickLabel={depthName}
+                height={560}
+              />
+            ) : mode === 'drt' ? (
               // DRT 는 두 축의 뜻이 달라서 `equalAspect` 가 없다 — 가로는
               // 로그 초, 세로는 저항이다.
               <Plot series={series} xLabel={drtAxisLabel(drtAxis)}

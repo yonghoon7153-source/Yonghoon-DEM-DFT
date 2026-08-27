@@ -144,6 +144,15 @@ export function EisDashboard() {
                       {row.spectrum_id
                         ? <Link to={`/eis/${row.spectrum_id}`}>{row.name}</Link>
                         : (row.name || '—')}
+                      {/* 라이브러리의 접힌 줄과 **같은 꼬리표**.  이 줄이 파일
+                          하나가 아니라 스윕 열하나라는 것이 여기서도 보여야
+                          한다 — 스펙트럼 수(11)만 보고는 그것이 한 파일인지
+                          열한 파일인지 모른다. */}
+                      {row.scan_sha256 ? (
+                        <span className="tiny faint">
+                          {' '}[SOC 스캔 · 스윕 {row.spectra}개]
+                        </span>
+                      ) : null}
                     </td>
                     <td className="text">
                       {/* 셀 칸이 비어 있다는 것 자체가 이 줄의 정보다: 아직

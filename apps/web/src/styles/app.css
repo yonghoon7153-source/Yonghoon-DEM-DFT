@@ -751,13 +751,15 @@ tbody tr:last-child td { border-bottom: none; }
 .table-wrap thead th.pin-col { z-index: 3; background: var(--surface-2); }
 /* 붙은 구간이 어디서 끝나는지가 보여야 한다.  선이 없으면 그냥 안 움직이는
    열로 읽히고, 사람은 스크롤이 고장 났다고 생각한다. */
-.table-wrap td.pin-edge,
-.table-wrap th.pin-edge { border-right: 1px solid var(--line); }
+.table-wrap.pin-scrolled td.pin-edge,
+.table-wrap.pin-scrolled th.pin-edge { border-right: 1px solid var(--line); }
 /* 줄 배경(hover·선택)이 이 칸들만 빼놓고 칠해지면 한 줄이 두 색이 된다. */
 .table-wrap tbody tr:hover td.pin-col { background: var(--surface-2); }
 .table-wrap tbody tr.selected td.pin-col { background: var(--accent-wash); }
 /* 꺼 둔 스윕은 흐리게 — 붙인 칸도 같이 흐려야 한 줄로 읽힌다. */
 .table-wrap tbody tr.dim td.pin-col { background: var(--surface); }
+/* 켜 둔 줄의 파란 바탕은 붙인 칸까지 간다.  안 그러면 한 줄이 두 색이다. */
+.table-wrap tbody tr.selected td.pin-col { background: var(--accent-wash); }
 
 /* An inline bar behind a percentage, so a column of them reads as a shape. */
 .bar-cell { position: relative; }
@@ -778,6 +780,20 @@ tbody tr:last-child td { border-bottom: none; }
 .bar-cell .bar > i.good { background: var(--pos); }
 .bar-cell .bar > i.mid { background: var(--warn); }
 .bar-cell .bar > i.low { background: var(--neg); }
+
+/* --- 축이 셋인 그림 (`components/Plot3D`) ------------------------------------
+   uPlot 이 아니라 SVG 라 눈금 글자를 여기서 정한다.  2D 그림의 눈금과 같은
+   크기·같은 색이라야 두 그림이 한 화면에서 따로 놀지 않는다. */
+.plot3d { padding: var(--s2) var(--s1) 0; }
+.plot3d-tick {
+  font: 11px/1 var(--sans);
+  fill: var(--ink-3);
+}
+.plot3d-axis {
+  font: 11px/1 var(--sans);
+  fill: var(--ink-2);
+}
+.plot3d svg { user-select: none; }
 
 /* -------------------------------------------------------------- plots */
 .plot-shell { position: relative; padding: var(--s2) var(--s1) 0; }

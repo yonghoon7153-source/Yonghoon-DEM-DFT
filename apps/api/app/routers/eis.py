@@ -860,6 +860,8 @@ def fit_scan(sha256: str,
              circuit: str | None = Query(None, description="비우면 이 종류의 기본 회로"),
              auto_high: bool = Query(
                  True, description="스윕마다 유도성 위쪽 끝을 상한으로 (하한은 안 정함)"),
+             sync_conditions: bool = Query(
+                 True, description="1번 스윕의 기하·조건을 나머지에도 먼저 맞춘다"),
              restarts: int | None = Query(None, ge=0, le=64),
              session: Session = Depends(get_session)):
     """Fit every sweep of one SOC scan with the same circuit.
@@ -876,6 +878,26 @@ def fit_scan(sha256: str,
     records = _scan_records(session, sha256)
     if not records:
         raise HTTPException(404, f"스캔 {sha256[:12]} 을 찾을 수 없습니다")
+
+    # **먼저 조건을 맞춘다.**  1번 스윕에만 지름을 적어 둔 스캔이 흔하다 (전파가
+    # 생기기 전에 올린 파일, 또는 셀에 붙이기 전에 적어 둔 것).  그대로 맞추면
+    # 결과 열한 줄 중 하나만 Ω·cm² 로 그려지고, 그 차이는 표에서 줄표로만
+    # 보인다.  맞추기 전에 한 번 고르는 편이 낫다.
+    synced = 0
+    if sync_conditions:
+        lead = records[0]
+        shared = {key: getattr(lead, key) for key in SCAN_SHARED_FIELDS}
+        now = datetime.now(timezone.utc).replace(tzinfo=None)
+        for one in records[1:]:
+            if all(getattr(one, key) == value for key, value in shared.items()):
+                continue
+            for key, value in shared.items():
+                setattr(one, key, value)
+            one.updated_at = now
+            session.add(one)
+            synced += 1
+        if synced:
+            session.commit()
 
     done, failed = [], []
     for record in records:
@@ -894,6 +916,9 @@ def fit_scan(sha256: str,
         done.append(out)
     return {"fitted": done, "failed": failed,
             "requested": len(records),
+            # 몇 줄의 조건이 1번을 따라갔는지 — 화면이 적는다.  말없이 열 줄을
+            # 고치면 다른 스윕을 연 사람이 "내가 안 적었는데" 를 만난다.
+            "synced": synced,
             "converged": sum(1 for out in done if out.converged)}
 
 

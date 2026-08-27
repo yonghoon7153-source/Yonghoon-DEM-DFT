@@ -15,6 +15,7 @@ import { Link, useParams } from 'react-router-dom'
 import { CopyBar } from '../components/CopyBar'
 import { ParamName } from '../components/ParamName'
 import { Plot, PlotLegend, type PlotSeries } from '../components/Plot'
+import { Plot3D, type Series3D } from '../components/Plot3D'
 import { Alert, Card, Empty, Field, Metric, MetricBand, Spinner } from '../components/ui'
 import { api } from '../lib/api'
 import { num, seriesColor } from '../lib/format'
@@ -22,24 +23,27 @@ import { perArea } from '../lib/areanorm'
 import { nyquistXy, sweepAt } from '../lib/eis'
 import { useAsync, useStickyState } from '../lib/hooks'
 import {
-  Z_UNITS, Z_UNIT_KEY, type ZUnit, areaFor, validZUnit, zUnitLabel,
+  Z_UNITS, Z_UNIT_KEY, type ZUnit, areaFor, hasStoredZUnit, validZUnit, zUnitLabel,
 } from '../lib/zunit'
 import { rememberedLambda } from '../lib/drtlambda'
 import { seriesWideTsv } from '../lib/origin'
+import { paramMeaning } from '../lib/params'
 import { usePinnedColumns } from '../lib/pincols'
-import { depthGuide, stack } from '../lib/waterfall'
 import {
   DRT_AXES, DRT_AXIS_KEY, type DrtAxis, decadeSplits, drtAxisLabel, drtAxisShort,
   drtAxisTick, drtAxisValue, validDrtAxis,
 } from '../lib/tauaxis'
 import type { ScanPoint } from '../lib/types'
 
-/** 스윕 표에서 붙여 둘 열의 수 — `#` 부터 `점` 까지.
+/** 스윕 표에서 붙여 둘 열의 수 — `#` 과 `이름`.
  *
- *  거기까지가 "이 스윕이 무엇인가" 이고 그 뒤(회로·χ²·파라미터 열셋)가 맞춘
- *  결과다.  오른쪽으로 밀면서 읽는 것은 결과이고, 그때 왼쪽에 남아야 하는 것이
- *  이 아홉 열이다. */
-const PINNED_COLUMNS = 11
+ *  **처음에는 `점` 까지 열하나를 붙였는데 그게 화근이었다.**  붙인 열의 폭을
+ *  다 더하면 화면보다 넓어서, 오른쪽으로 밀면 뒤쪽 붙인 열들이 나머지 표를
+ *  통째로 덮었다 — `점` 열이 사라진 것으로 보였다.
+ *
+ *  오른쪽으로 밀면서 알아야 하는 것은 "이 줄이 누구 것인가" 하나이고, 그것은
+ *  `#` 과 이름이다.  나머지는 함께 밀리는 편이 낫다. */
+const PINNED_COLUMNS = 2
 
 const CONFIG_LABEL: Record<string, string> = {
   full: '풀셀', half: '하프셀', sym: '대칭셀',
@@ -74,10 +78,15 @@ export function delta(
  *  아무도 모르면 빈 문자열이다 — 이름을 뜻인 척 되풀이하지 않는다 (§0.4).
  */
 function meaningOf(points: ScanPoint[], name: string): string {
+  // 서버가 붙인 아크 이름이 먼저다 — 그 저항이 **이 셀에서** 무엇인지는 셀
+  // 구성에 달렸고 그것은 서버가 안다 (액체의 첫 아크는 SEI, 전고체 대칭셀의
+  // 첫 아크는 벌크다).
   for (const point of points) {
     if (point.labels[name]) return point.labels[name]
   }
-  return ''
+  // 없으면 회로 원소의 일반적인 뜻 — 스펙트럼 상세의 '뜻' 열과 같은 표를 쓴다.
+  // 이것마저 없으면 빈 문자열이다: 이름을 뜻인 척 되풀이하지 않는다 (§0.4).
+  return paramMeaning(name)
 }
 
 /** 용량이 있으면 용량, 없으면 전위.  둘 다 없는 점은 놓을 자리가 없다. */
@@ -128,6 +137,13 @@ export function ScanDetail() {
   const scanArea = scan.data?.area_cm2_effective ?? null
   const area = areaFor(zPick, scanArea)
   const zUnit = zUnitLabel(area ? 'ohmcm2' : 'ohm')
+
+  //: **면적을 알면 Ω·cm² 로 연다.**  셀끼리 견주는 값이 그것이고 논문에 적는
+  //  것도 그것이다.  단, 한 번이라도 골라 본 적이 있으면 그 선택이 이긴다 —
+  //  Ω 로 바꿔 놓은 화면이 새로고침마다 되돌아가면 단추가 고장 난 것으로 읽힌다.
+  useEffect(() => {
+    if (scanArea && !hasStoredZUnit()) setZUnit('ohmcm2')
+  }, [scanArea, setZUnit])
   const axis = useMemo(() => axisOf(points), [points])
 
   // 목록이 오기 전에는 고를 것이 없다.  첫 파라미터를 기본으로 세우되,
@@ -224,40 +240,43 @@ export function ScanDetail() {
   //  꺼져 있다.
   const flat = mode === 'drt' ? drtOverlay : overlay
 
-  //: 비껴 쌓기 (3D).  깊이는 **전위(V)** 다 — 계측기가 SOC 를 % 로 말해 주지
-  //  않으므로, 논문의 `SOC 0/50/100 %` 자리에 실제 전위가 들어간다.
+  //: 3D 는 **축이 셋인 그림**이다 (`components/Plot3D`).  전에는 곡선을 깊이만큼
+  //  밀어 흉내를 냈는데, 축을 안 그리면 깊이는 없는 것과 같아서 열한 곡선이
+  //  대각선으로 늘어선 한 덩어리로 보였다.
   //
-  //  **켜 둔 것만 쌓는다.**  꺼 둔 스윕이 자리를 차지하고 있으면 계단에 빈 칸이
-  //  생기고, 그 빈 칸이 "여기 측정이 없다" 로 읽힌다.
-  const stacked = useMemo(() => {
-    if (!solid) return null
-    const shown = flat.filter((one) => !one.hidden)
-    if (shown.length < 2) return null
-    const byLabel = new Map(points.map(
+  //  깊이는 **전위(V)** 다 — 계측기가 SOC 를 % 로 말해 주지 않으므로, 논문의
+  //  `SOC 0/50/100 %` 자리에 실제 전위가 들어간다.  **켜 둔 것만 세운다**:
+  //  꺼 둔 스윕이 자리를 차지하면 상자에 빈 칸이 생기고, 그 빈 칸이 "여기
+  //  측정이 없다" 로 읽힌다.
+  const solidSeries = useMemo<Series3D[]>(() => {
+    const depth = new Map(points.map(
       (point) => [`#${point.sweep_index}`, point.potential_v ?? null]))
-    return stack(shown, shown.map((one) => byLabel.get(one.label) ?? null))
-  }, [solid, flat, points])
+    return flat.filter((one) => !one.hidden).map((one, index) => ({
+      label: one.label,
+      x: one.x,
+      y: one.y,
+      // 전위를 모르는 스윕이 섞여 있으면 **차례**로 세운다 — 아는 것만 세우면
+      // 모르는 것들이 한 자리에 겹치고, 그 겹침이 물리로 읽힌다.
+      z: depth.get(one.label) ?? index,
+      color: one.color,
+      points: one.points,
+    }))
+  }, [flat, points])
 
-  const series = useMemo<PlotSeries[]>(() => {
-    if (!stacked) return flat
-    // 깊이 축 안내선.  없으면 계단이 그냥 흩어진 곡선 열하나로 보인다.
-    const guide = depthGuide(stacked.offsets, { x: 0, y: 0 })
-    return [
-      {
-        label: stacked.span
-          ? `전위 ${num(stacked.span.low, 3)} → ${num(stacked.span.high, 3)} V`
-          : '스윕 차례',
-        x: guide.x,
-        y: guide.y,
-        color: 'var(--line-strong)',
-        width: 1,
-        dash: [4, 4],
-      },
-      ...stacked.series,
-    ]
-  }, [stacked, flat])
+  //: 깊이 눈금은 **스윕이 실제로 앉은 자리**다.  고르게 나눈 눈금을 쓰면 전위
+  //  간격이 고르지 않은 스캔에서 눈금과 곡선이 어긋난다.
+  const depthTicks = useMemo(
+    () => [...new Set(solidSeries.map((one) => one.z).filter(Number.isFinite))]
+      .sort((a, b) => a - b), [solidSeries])
+
+  //: 전위를 다 아는가 — 모르면 깊이 축 이름이 `스윕 차례` 가 된다.
+  const depthIsVolt = points.length > 0
+    && points.every((point) => point.potential_v !== null)
+
   const shownOverlay = useMemo(
     () => flat.filter((one) => !one.hidden), [flat])
+  //: 2D 로 그리는 것은 곧 `flat` 이다 (3D 는 `Plot3D` 가 따로 받는다).
+  const series: PlotSeries[] = flat
 
   /** 범례 조각과 표의 줄이 **같은 것**을 누른다 (`#3` 을 껐다 켰다). */
   const toggleSweep = (sweep: number) =>
@@ -404,51 +423,48 @@ export function ScanDetail() {
             ? <div style={{ padding: 20 }}><Spinner label="DRT 를 푸는 중" /></div>
           : flat.length ? (
             <>
-              {mode === 'drt' ? (
+              {solid ? (
+                <Plot3D
+                  series={solidSeries}
+                  xLabel={mode === 'drt' ? drtAxisLabel(drtAxis) : `Z′ (${zUnit})`}
+                  yLabel={mode === 'drt' ? `γ (${zUnit})` : `−Z″ (${zUnit})`}
+                  zLabel={depthIsVolt ? '전위 (V)' : '스윕 차례'}
+                  zTicks={depthTicks}
+                  height={560}
+                />
+              ) : mode === 'drt' ? (
                 // DRT 는 두 축의 뜻이 달라서 `equalAspect` 가 없다 — 가로는
                 // 로그 시간(또는 주파수), 세로는 저항이다.
                 <Plot
                   series={series}
-                  xLabel={stacked ? `${drtAxisLabel(drtAxis)} + V 오프셋`
-                    : drtAxisLabel(drtAxis)}
-                  yLabel={stacked ? `γ (${zUnit}) + V 오프셋` : `γ (${zUnit})`}
-                  height={stacked ? 460 : 380}
+                  xLabel={drtAxisLabel(drtAxis)}
+                  yLabel={`γ (${zUnit})`}
+                  height={380}
                   busy={drt.loading}
-                  // 쌓아 놓으면 눈금 값이 그 곡선의 것이 아니다 — 지수 표기를
-                  // 그대로 두면 옮겨진 자리를 주파수로 읽게 된다.
-                  xTick={stacked ? undefined : (value) => drtAxisTick(drtAxis, value)}
-                  xSplits={!stacked && drtAxis === 'f' ? decadeSplits : undefined}
+                  xTick={(value) => drtAxisTick(drtAxis, value)}
+                  xSplits={drtAxis === 'f' ? decadeSplits : undefined}
                 />
               ) : (
                 <Plot
                   series={series}
-                  xLabel={stacked ? `Z′ (${zUnit}) + V 오프셋` : `Z′ (${zUnit})`}
-                  yLabel={stacked ? `−Z″ (${zUnit}) + V 오프셋` : `−Z″ (${zUnit})`}
-                  height={stacked ? 460 : 380}
-                  // 쌓으면 두 축의 한 단위가 더는 같은 뜻이 아니다 (한쪽은
-                  // 저항, 한쪽은 저항 + 깊이) — 비율을 맞출 근거가 없어진다.
-                  equalAspect={!stacked}
-                  positiveFit={!stacked}
+                  xLabel={`Z′ (${zUnit})`}
+                  yLabel={`−Z″ (${zUnit})`}
+                  height={380}
+                  equalAspect
+                  positiveFit
                 />
               )}
-              {/* **값이 옮겨졌다고 적는다.**  안 적으면 사람이 계단의 두 번째
-                  곡선에서 Z′ 를 읽고 그것을 그 스윕의 직렬저항으로 쓴다 — 그
-                  수는 옆으로 민 만큼 크다 (§0.4). */}
-              {stacked ? (
-                <div className="tiny warn" style={{ paddingTop: 6 }}>
-                  {stacked.span
-                    ? `전위 ${num(stacked.span.low, 3)} V → ${num(stacked.span.high, 3)} V `
-                      + '를 깊이로 오른쪽·위로 비껴 쌓았습니다.'
-                    : '전위를 모르는 스윕이 있어 **차례**로 비껴 쌓았습니다.'}
-                  <span className="tiny faint">
-                    {' '}민 만큼 값이 옮겨져 있으므로 눈금에서 저항을 읽지
-                    마세요 — 모양을 보는 그림입니다. 값은 2D 로 돌아가서
-                    읽습니다. 점선이 깊이 축입니다.
-                  </span>
+              <div className="col" style={{ gap: 6, paddingTop: 8 }}>
+              {solid && !depthIsVolt ? (
+                // 전위를 모르는 스윕이 섞여 있다.  **말한다** — 깊이 축이
+                // 물리가 아니라 차례라는 것이 축 이름에만 있으면 눈이 안 간다.
+                <div className="tiny warn">
+                  전위를 모르는 스윕이 있어 깊이를 <b>스윕 차례</b>로 세웠습니다 —
+                  축의 간격이 전위 간격이 아닙니다.
                 </div>
               ) : null}
               {mode === 'drt' ? (
-                <div className="tiny faint" style={{ paddingTop: 6 }}>
+                <div className="tiny faint">
                   벌점 λ = {lambda.toExponential(2)} · 평활 차수 0 — 스펙트럼
                   상세에서 옮긴 값을 그대로 씁니다. 두 화면이 다른 λ 를 쓰면
                   같은 γ 가 다르게 생겨서, 나란히 놓는 이 화면이 곧바로
@@ -458,7 +474,7 @@ export function ScanDetail() {
               {/* 골라 둔 단위가 이 스캔에서 안 되면 **말한다.**  말없이 Ω 로
                   떨어뜨리면 화면은 Ω·cm² 를 고른 채로 Ω 를 그리고 있게 된다. */}
               {zPick === 'ohmcm2' && !scanArea ? (
-                <div className="tiny warn" style={{ paddingTop: 6 }}>
+                <div className="tiny warn">
                   스윕들의 면적이 비었거나 서로 다릅니다 — Ω 로 그립니다.
                   <span className="tiny faint">
                     {' '}한 스캔은 한 셀이라 면적이 같아야 하는데, 스윕 하나의
@@ -467,7 +483,7 @@ export function ScanDetail() {
                 </div>
               ) : null}
               {area ? (
-                <div className="tiny faint" style={{ paddingTop: 6 }}>
+                <div className="tiny faint">
                   면적 {num(scanArea, 4)} cm² 로 나눈 값입니다.
                 </div>
               ) : null}
@@ -477,7 +493,7 @@ export function ScanDetail() {
                   켜는 쪽이 편할 때도 있어 두 단추를 나란히 둔다.
                   아래 스윕 표의 줄과 **같은 것을 누른다** (`toggleSweep`) —
                   두 곳이 따로 놀면 표에서 흐린 줄이 그림에는 그려져 있다. */}
-              <div className="row" style={{ gap: 6, padding: '10px 0 2px' }}>
+              <div className="row" style={{ gap: 6, alignItems: 'center' }}>
                 <button type="button" className="sm" onClick={() => setHidden([])}>
                   전체
                 </button>
@@ -500,7 +516,7 @@ export function ScanDetail() {
               />
               {/* 범례와 클립보드가 붙어 있으면 조각 줄의 마지막 칸과 'Origin
                   으로' 가 한 덩어리로 읽힌다 — 누르는 것이 다른 두 줄이다. */}
-              <div style={{ marginTop: 10 }}>
+              <div>
                 <CopyBar items={[{
                   label: mode === 'drt' ? 'γ(τ) (스윕 전부)' : '나이퀴스트 (스윕 전부)',
                   title: mode === 'drt'
@@ -515,6 +531,7 @@ export function ScanDetail() {
                     ? { x: drtAxisLabel(drtAxis), y: `γ (${zUnit})` }
                     : { x: `Z′ (${zUnit})`, y: `−Z″ (${zUnit})` }),
                 }]} />
+              </div>
               </div>
             </>
           ) : (
@@ -552,8 +569,10 @@ export function ScanDetail() {
         }
       >
         {curve ? (
-          <>
-            {label ? <div className="sub" style={{ marginBottom: 8 }}>{label}</div> : null}
+          // 그림 · 경고 · 클립보드가 한 덩어리로 붙어 있으면 경고가 그림의
+          // 일부처럼 읽힌다.  세 줄 사이에 같은 간격을 준다.
+          <div className="col" style={{ gap: 12 }}>
+            {label ? <div className="sub">{label}</div> : null}
             <Plot series={drawn} xLabel={axis.label} yLabel={parameter} height={320} />
             {missing > 0 ? (
               <Alert kind="warn">
@@ -572,7 +591,7 @@ export function ScanDetail() {
                 ...curve.x.map((at, i) => [at, curve.y[i]].join('\t')),
               ].join('\n'),
             }]} />
-          </>
+          </div>
         ) : (
           <Empty title="그릴 점이 없습니다" icon="∿">
             이 스캔에서 결정된 파라미터가 아직 없습니다.
@@ -608,17 +627,22 @@ export function ScanDetail() {
                 <th>총저항 (Ω)</th>
                 <th>총저항 (Ω·cm²)</th>
                 <th>Δ총저항 (Ω)</th>
-                <th>점</th>
+                <th title="이 스윕에 실제로 있는 점의 수 — 한 파일 안에서도 스윕마다 다를 수 있습니다">점</th>
                 <th style={{ textAlign: 'left' }}>회로</th>
-                <th>χ²</th>
+                <th title="χ² — 가중 잔차의 제곱합을 자유도로 나눈 값. 작을수록 잘 맞은 것이고, 스펙트럼끼리 견줄 수 있습니다">χ²</th>
                 {/* 이름 위에 마우스를 올리면 뜻이 뜬다.  `CPE2_Q` 가 열셋
                     나란히 있는 줄에서 이름만으로 고를 수 있는 사람은 외우고
                     있는 사람뿐이다. */}
-                {parameters.map((name) => (
-                  <th key={name} title={meaningOf(points, name) || name}>
-                    <ParamName name={name} />
-                  </th>
-                ))}
+                {parameters.map((name) => {
+                  const meaning = meaningOf(points, name)
+                  return (
+                    // `title` 은 **원래 이름부터** 적는다.  머리 칸은 첨자로
+                    // 그려서 (`CPE₁,Q`) 회로 칸에 쳐 넣을 글자와 다르다.
+                    <th key={name} title={meaning ? `${name} — ${meaning}` : name}>
+                      <ParamName name={name} />
+                    </th>
+                  )
+                })}
               </tr>
             </thead>
             <tbody>
@@ -627,9 +651,12 @@ export function ScanDetail() {
                 // 것을 누른다.  두 곳이 따로 놀면 표에서 흐린 줄이 그림에는
                 // 그려져 있고, 어느 쪽이 맞는지 화면이 말해 주지 않는다.
                 // 이름은 링크라 눌러도 여기까지 안 온다 (스윕 상세로 간다).
+                // 켜 둔 줄은 **파랗게** — 충방전 사이클 표와 같은 표시다.  꺼진
+                // 것을 흐리게만 하면 "전부 꺼짐" 과 "전부 켜짐" 이 같아 보인다
+                // (둘 다 흐린 줄이 없다).
                 <tr key={point.spectrum_id}
                     className={`clickable${
-                      hidden.includes(point.sweep_index) ? ' dim' : ''}`}
+                      hidden.includes(point.sweep_index) ? ' dim' : ' selected'}`}
                     title={hidden.includes(point.sweep_index)
                       ? '눌러서 그림에 켜기' : '눌러서 그림에서 끄기'}
                     onClick={() => toggleSweep(point.sweep_index)}>
@@ -682,6 +709,24 @@ export function ScanDetail() {
               ))}
             </tbody>
           </table>
+        </div>
+        {/* 그림 밑에도 같은 단추가 있다.  표에서 줄을 끄다 보면 그림이 화면
+            위로 사라져서, 다시 켜려고 스크롤해 올라가야 했다. */}
+        <div className="row" style={{ gap: 6, padding: '6px 12px 2px',
+                                      alignItems: 'center' }}>
+          <button type="button" className="sm" onClick={() => setHidden([])}>
+            전체
+          </button>
+          <button
+            type="button"
+            className="sm ghost"
+            onClick={() => setHidden(points.map((one) => one.sweep_index))}
+          >
+            초기화
+          </button>
+          <span className="tiny faint">
+            {points.length - hidden.length} / {points.length} 켬 — 줄을 눌러 켜고 끕니다
+          </span>
         </div>
       </Card>
     </main>

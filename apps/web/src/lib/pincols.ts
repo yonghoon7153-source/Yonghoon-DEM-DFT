@@ -60,13 +60,24 @@ export function usePinnedColumns(
       }
     }
 
+    // 붙은 구간의 경계선은 **밀었을 때만** 긋는다.  안 민 상태에서도 그으면
+    // 표가 두 덩어리로 갈린 것처럼 보이는데, 그때는 갈릴 이유가 없다.
+    const edge = () => node.classList.toggle('pin-scrolled', node.scrollLeft > 0)
+    edge()
+    node.addEventListener('scroll', edge, { passive: true })
+
     apply()
     // 표가 좁아지면 칸 폭이 줄어 붙여 둔 자리가 어긋난다.  `ResizeObserver` 가
     // 없는 환경(오래된 jsdom)에서는 한 번 재고 만다 — 붙긴 붙는다.
-    if (typeof ResizeObserver === 'undefined') return
+    if (typeof ResizeObserver === 'undefined') {
+      return () => node.removeEventListener('scroll', edge)
+    }
     const watch = new ResizeObserver(() => apply())
     watch.observe(table)
-    return () => watch.disconnect()
+    return () => {
+      node.removeEventListener('scroll', edge)
+      watch.disconnect()
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [box, count, ...deps])
 }

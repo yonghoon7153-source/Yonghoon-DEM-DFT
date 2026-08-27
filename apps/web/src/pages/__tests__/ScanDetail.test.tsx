@@ -171,17 +171,16 @@ describe('ScanDetail', () => {
     })
     show()
 
-    // 기본은 Ω — 계측기가 준 수다.  안 나눴으면 나눴다는 말도 없다.
-    const ohm = await screen.findByRole('button', { name: 'Ω' })
-    expect(ohm.className).toContain('on')
-    expect(document.body.textContent).not.toContain('나눈 값입니다')
-
-    await userEvent.click(screen.getByRole('button', { name: 'Ω·cm²' }))
-    // **나눴으면 무엇으로 나눴는지 적는다.**  축 이름은 그림 안에 있어서
-    // 캡처를 붙여 넣으면 따라가지만, 이 줄은 화면에서 바로 읽힌다.
+    // **면적을 알면 Ω·cm² 로 연다** — 셀끼리 견주는 값이 그것이고, 논문에
+    // 적는 것도 그것이다.  그리고 무엇으로 나눴는지 화면이 적는다.
     await waitFor(() =>
       expect(document.body.textContent).toContain('면적 2.000 cm² 로 나눈 값입니다'))
-    expect(screen.getByRole('button', { name: 'Ω' }).className).not.toContain('on')
+    expect(screen.getByRole('button', { name: 'Ω·cm²' }).className).toContain('on')
+
+    // 손으로 Ω 로 돌리면 그 선택이 이긴다.
+    await userEvent.click(screen.getByRole('button', { name: 'Ω' }))
+    await waitFor(() =>
+      expect(document.body.textContent).not.toContain('나눈 값입니다'))
   })
 
   it('면적이 없거나 스윕마다 다르면 Ω·cm² 를 못 누르고, 왜인지 적는다', async () => {
@@ -223,10 +222,14 @@ describe('ScanDetail', () => {
     expect(chips()[1]!.className).toContain('off')
     expect(rows()[1]!.className).toContain('dim')
 
-    await userEvent.click(screen.getByRole('button', { name: '초기화' }))
+    // 같은 단추가 그림 밑과 표 밑 두 곳에 있다 (표에서 줄을 끄다 보면 그림이
+    // 화면 위로 사라진다).  둘 다 같은 선택을 움직인다.
+    const buttons = (name: string) => screen.getAllByRole('button', { name })
+    await userEvent.click(buttons('초기화')[0] as HTMLElement)
     expect(chips().filter((chip) => chip.className.includes('off'))).toHaveLength(3)
 
-    await userEvent.click(screen.getByRole('button', { name: '전체' }))
+    // 표 밑의 것으로 되돌린다 — 두 곳이 같은 것을 움직인다는 확인이다.
+    await userEvent.click(buttons('전체')[1] as HTMLElement)
     expect(chips().filter((chip) => chip.className.includes('off'))).toHaveLength(0)
   })
 
@@ -317,18 +320,23 @@ describe('ScanDetail', () => {
     show()
 
     await screen.findByRole('group', { name: '보기' })
-    expect(document.body.textContent).not.toContain('비껴 쌓았습니다')
+    expect(document.querySelector('.plot3d')).toBeNull()
 
     await userEvent.click(screen.getByRole('button', { name: '3D' }))
-    // 깊이로 쓴 전위 범위를 적는다 — point(n) 의 전위는 3.5 + 0.1n 이다.
-    await waitFor(() =>
-      expect(document.body.textContent).toContain('비껴 쌓았습니다'))
-    expect(document.body.textContent).toContain('3.60 V')
-    expect(document.body.textContent).toContain('3.80 V')
-    // 값이 옮겨졌다는 말이 함께 있어야 한다 (§0.4).
-    expect(document.body.textContent).toContain('눈금에서 저항을 읽지 마세요')
-
-    // 조각은 여전히 **스윕**의 것이다 — 깊이 축 안내선은 목록에 안 들어간다.
+    // **축이 셋인 그림**이다 — 이름 셋이 그림 안에 있어야 깊이가 읽힌다.
+    await waitFor(() => expect(document.querySelector('.plot3d')).not.toBeNull())
+    const svg = document.querySelector('.plot3d svg')!
+    const labels = [...svg.querySelectorAll('.plot3d-axis')].map((one) => one.textContent)
+    expect(labels).toContain('전위 (V)')
+    expect(labels).toContain('Z′ (Ω)')
+    expect(labels).toContain('−Z″ (Ω)')
+    // 깊이 눈금은 **스윕이 실제로 앉은 자리**다 (point(n) 의 전위는 3.5 + 0.1n).
+    const ticks = [...svg.querySelectorAll('.plot3d-tick')].map((one) => one.textContent)
+    // 깊이 눈금은 스윕이 실제로 앉은 자리다 — 고르게 나눈 눈금이 아니다.
+    expect(ticks).toContain('3.60')
+    expect(ticks).toContain('3.70')
+    expect(ticks).toContain('3.80')
+    // 조각은 여전히 스윕의 것이다.
     expect(document.querySelectorAll('.legend-chip')).toHaveLength(3)
   })
 
