@@ -2005,8 +2005,7 @@ def test_projections_share_one_compute_provenance_within_each_cohort():
     for c in _cohorts():
         seen: dict[str, dict[str, list[str]]] = collections.defaultdict(
             lambda: collections.defaultdict(list))
-        for y in _cohort_projections(c):
-            m = yaml.safe_load(y.read_text(encoding="utf-8"))
+        for _n, m in _cohort_manifests(c):
             a = m.get("analyzer") or {}
             seen["compute_sha256"][a.get("compute_sha256")].append(m["leg_id"])
             seen["analysis_spec_sha256"][m.get("analysis_spec_sha256")].append(m["leg_id"])
@@ -2128,8 +2127,7 @@ def test_projection_analyzer_digests_recompute_from_the_current_tree():
     for c in _cohorts():
         want = cur if c.get("status") == "active" else c["pin"]
         기준 = "현행 트리" if c.get("status") == "active" else f"{c['cohort_id']} pin"
-        for y in _cohort_projections(c):
-            m = yaml.safe_load(y.read_text(encoding="utf-8"))
+        for _n, m in _cohort_manifests(c):
             a = m.get("analyzer") or {}
             if a.get("compute_sha256") != want["compute_sha256"]:
                 stale.append(f"{c['cohort_id']}/{m['leg_id']}: compute "
@@ -2168,8 +2166,7 @@ def test_projection_schema_is_declared_consistently():
             assert c["pin"]["schema_version"] == s["schema_version"], (
                 f"{c['cohort_id']}: 활성 cohort pin schema "
                 f"{c['pin']['schema_version']} ≠ 현행 spec {s['schema_version']}")
-        for y in _cohort_projections(c):
-            m = yaml.safe_load(y.read_text(encoding="utf-8"))
+        for _n, m in _cohort_manifests(c):
             assert m.get("projection_schema") == c["pin"]["schema_version"], (
                 f"{c['cohort_id']}/{m['leg_id']}: 산출물 schema "
                 f"{m.get('projection_schema')} ≠ cohort pin "
@@ -2752,10 +2749,17 @@ def _cohort_yaml(c: dict, name: str, base=None) -> dict:
     return yaml.safe_load(_rp().cohort_bytes(d, name).decode("utf-8"))
 
 
-def _cohort_projections(c: dict) -> list[Path]:
-    """호환용 경로 목록. **판정에는 쓰지 않는다** — `_cohort_yaml` 을 쓴다."""
-    d = _REPO / c["dir"]
-    return [d / n for n in _cohort_names(c)]
+def _cohort_manifests(c: dict):
+    """cohort 의 투영 manifest 를 **(이름, dict)** 로 준다 (36차 #9a).
+
+    35차까지는 `_cohort_projections()` 가 `Path` 를 줬고, 실제 판정 넷이
+    그 Path 를 `read_text()` 했다. helper 만 CURRENT 로 옮겨 놓고 소비자는
+    고정 사본을 읽고 있었던 것이다 — "판정에는 쓰지 않는다" 는 docstring
+    으로는 아무것도 못 막는다. 경로를 아예 **주지 않는다**: 여기서 나오는
+    것은 이미 읽힌 내용이고, active cohort 면 CURRENT 를 지나서 왔다.
+    """
+    for n in _cohort_names(c):
+        yield n, _cohort_yaml(c, n)
 
 
 def test_every_projection_matches_its_own_cohort_pin():
@@ -2773,11 +2777,9 @@ def test_every_projection_matches_its_own_cohort_pin():
     bad = []
     for c in _cohorts():
         pin = c["pin"]
-        files = _cohort_projections(c)
+        files = list(_cohort_manifests(c))
         assert files, f"{c['cohort_id']}: 투영이 하나도 없다 ({c['dir']})"
-        for y in files:
-            import yaml
-            m = yaml.safe_load(y.read_text(encoding="utf-8"))
+        for _n, m in files:
             a = m.get("analyzer") or {}
             got = {"schema_version": m.get("projection_schema"),
                    "compute_sha256": a.get("compute_sha256"),
@@ -2845,8 +2847,8 @@ def test_cohort_membership_is_consistent_in_both_directions():
     bad = []
     for c in _cohorts():
         declared = set(c["legs"])
-        on_disk = {p.name[: -len(".projection.yaml")]
-                   for p in _cohort_projections(c)}
+        on_disk = {n[: -len(".projection.yaml")]
+                   for n, _m in _cohort_manifests(c)}
         if declared != on_disk:
             bad.append(f"{c['cohort_id']}: 선언 {sorted(declared - on_disk)} 누락 · "
                        f"디스크 {sorted(on_disk - declared)} 미선언")
@@ -3981,6 +3983,17 @@ def test_the_index_copy_is_compared_against_the_receipt(tmp_path):
 # 32차 최소 증거 #9 — immutable generation + 단일 CURRENT
 # ─────────────────────────────────────────────────────────────────────────────
 
+def _leg3(tmp: Path, leg: str, tag: bytes) -> Path:
+    """leg 하나의 **완전한** 세 파일 staging (36차 #9b).
+
+    `promote_generation()` 이 비공개가 된 뒤로 generation 단위시험도 cohort
+    publisher 를 지난다 — 완전성은 이제 우회할 수 없다.
+    """
+    return _stage(tmp, **{f"{leg}.projection.csv.gz": b"rows-" + tag,
+                          f"{leg}.restarts.csv.gz": b"restarts-" + tag,
+                          f"{leg}.projection.yaml": b"meta: " + tag + b"\n"})
+
+
 def _rp():
     import importlib.util
     spec = importlib.util.spec_from_file_location(
@@ -4009,10 +4022,8 @@ def test_promotion_publishes_an_immutable_generation_then_one_pointer(tmp_path):
     """
     rp = _rp()
     out = tmp_path / "out"
-    st = _stage(tmp_path, **{"a.projection.csv.gz": b"rows-1",
-                             "a.restarts.csv.gz": b"restarts-1",
-                             "a.projection.yaml": b"meta: 1\n"})
-    rec = rp.promote_generation(st, out)
+    st = _leg3(tmp_path / "s0", "a", b"1")
+    rec = rp.promote_cohort_generation(st, out, "a")
 
     gen = out / "gen" / rec["generation_id"]
     assert gen.is_dir(), "immutable generation directory 가 없다"
@@ -4023,16 +4034,10 @@ def test_promotion_publishes_an_immutable_generation_then_one_pointer(tmp_path):
                                  "a.projection.yaml"}
 
     # 같은 내용은 멱등, 다른 내용은 **새 generation** (덮지 않는다)
-    again = rp.promote_generation(
-        _stage(tmp_path, **{"a.projection.csv.gz": b"rows-1",
-                            "a.restarts.csv.gz": b"restarts-1",
-                            "a.projection.yaml": b"meta: 1\n"}), out)
+    again = rp.promote_cohort_generation(_leg3(tmp_path / "s1", "a", b"1"), out, "a")
     assert again["generation_id"] == rec["generation_id"]
 
-    two = rp.promote_generation(
-        _stage(tmp_path, **{"a.projection.csv.gz": b"rows-2",
-                            "a.restarts.csv.gz": b"restarts-1",
-                            "a.projection.yaml": b"meta: 2\n"}), out)
+    two = rp.promote_cohort_generation(_leg3(tmp_path / "s2", "a", b"2"), out, "a")
     assert two["generation_id"] != rec["generation_id"]
     assert gen.is_dir(), "옛 generation 이 사라졌다 — immutable 이 아니다"
     assert (gen / "a.projection.csv.gz").read_bytes() == b"rows-1"
@@ -4043,13 +4048,11 @@ def test_a_generation_directory_is_never_overwritten(tmp_path):
     """같은 generation_id 자리에 다른 바이트가 있으면 **거부**한다."""
     rp = _rp()
     out = tmp_path / "out"
-    rec = rp.promote_generation(
-        _stage(tmp_path, **{"a.projection.yaml": b"meta: 1\n"}), out)
+    rec = rp.promote_cohort_generation(_leg3(tmp_path / "s0", "a", b"1"), out, "a")
     victim = out / "gen" / rec["generation_id"] / "a.projection.yaml"
     victim.write_bytes(b"tampered\n")
     with pytest.raises(SystemExit) as ei:
-        rp.promote_generation(
-            _stage(tmp_path, **{"a.projection.yaml": b"meta: 1\n"}), out)
+        rp.promote_cohort_generation(_leg3(tmp_path / "s1", "a", b"1"), out, "a")
     assert "generation" in str(ei.value)
 
 
@@ -4060,8 +4063,7 @@ def test_readers_follow_current_and_a_torn_pointer_is_refused(tmp_path):
     with pytest.raises(SystemExit):
         rp.read_current(out)                       # 아직 없다
 
-    rec = rp.promote_generation(
-        _stage(tmp_path, **{"a.projection.yaml": b"meta: 1\n"}), out)
+    rec = rp.promote_cohort_generation(_leg3(tmp_path / "s0", "a", b"1"), out, "a")
     (out / "CURRENT").write_text("{oops", encoding="utf-8")
     with pytest.raises(SystemExit):
         rp.read_current(out)
@@ -4088,8 +4090,7 @@ def test_a_torn_pointer_write_never_replaces_a_good_one(tmp_path, monkeypatch):
     """
     rp = _rp()
     out = tmp_path / "out"
-    first = rp.promote_generation(
-        _stage(tmp_path, **{"a.projection.yaml": b"meta: 1\n"}), out)
+    first = rp.promote_cohort_generation(_leg3(tmp_path / "s0", "a", b"1"), out, "a")
 
     real_write = os.write
     state = {"armed": False}
@@ -4121,8 +4122,7 @@ def test_a_crash_between_generation_and_pointer_leaves_no_mixed_state(tmp_path,
     """
     rp = _rp()
     out = tmp_path / "out"
-    first = rp.promote_generation(
-        _stage(tmp_path, **{"a.projection.yaml": b"meta: 1\n"}), out)
+    first = rp.promote_cohort_generation(_leg3(tmp_path / "s0", "a", b"1"), out, "a")
 
     boom = RuntimeError("pointer 직전에 죽었다 (주입)")
 
@@ -4131,8 +4131,7 @@ def test_a_crash_between_generation_and_pointer_leaves_no_mixed_state(tmp_path,
 
     monkeypatch.setattr(rp, "_publish_pointer", die)
     with pytest.raises(RuntimeError):
-        rp.promote_generation(
-            _stage(tmp_path, **{"a.projection.yaml": b"meta: 2\n"}), out)
+        rp.promote_cohort_generation(_leg3(tmp_path / "s1", "a", b"2"), out, "a")
 
     assert rp.read_current(out)["generation_id"] == first["generation_id"], (
         "pointer 가 안 옮겨졌는데 읽는 쪽이 새 generation 을 본다")
@@ -4444,12 +4443,16 @@ def test_an_incomplete_base_generation_cannot_be_carried_forward(tmp_path):
     stage 검사가 새 불완전 generation 을 막지만, 그 검사가 생기기 **전에**
     만들어진 generation 이 있을 수 있다. 그것을 조용히 이어받으면 불완전
     snapshot 이 영구화된다.
+
+    ★ 36차 #9b — 34차판은 이 fixture 를 **살아 있는 publisher**로 만들었다
+      (`promote_generation()` 에 한 파일 staging). 그러면 publisher 를 고치는
+      순간 fixture 가 같이 변해, 이 시험이 무엇을 보는지 알 수 없게 된다 —
+      실제로 publisher 를 비공개로 만들자 fixture 가 먼저 깨졌다. 이제
+      generation directory 와 CURRENT 를 **바이트에서** 직접 만든다.
     """
     rp = _rp()
     out = tmp_path / "cohort"
-    # 검사를 우회해 불완전 generation 을 만든다 (옛 판이 만든 상태 흉내)
-    rp.promote_generation(
-        _stage(tmp_path, **{"b.projection.yaml": b"y"}), out)
+    _handmade_generation(rp, out, {"b.projection.yaml": b"y"})
 
     with pytest.raises(SystemExit) as ei:
         rp.promote_cohort_generation(
@@ -4457,3 +4460,222 @@ def test_an_incomplete_base_generation_cannot_be_carried_forward(tmp_path):
                                 "a.projection.yaml": b"y",
                                 "a.restarts.csv.gz": b"r"}), out, "a")
     assert "불완전" in str(ei.value)
+
+
+def _handmade_generation(rp, out: Path, blobs: dict) -> str:
+    """generation directory 와 CURRENT 를 **바이트에서** 만든다 (36차 #9b).
+
+    publisher 를 전혀 부르지 않는다 — publisher 가 무엇을 막든 상관없이
+    "이미 이런 상태가 디스크에 있다" 를 그대로 재현하기 위한 것이다.
+    """
+    files = {n: hashlib.sha256(b).hexdigest() for n, b in blobs.items()}
+    gid = rp.generation_id(files)
+    gdir = Path(out) / "gen" / gid
+    gdir.mkdir(parents=True, exist_ok=True)
+    for n, b in blobs.items():
+        (gdir / n).write_bytes(b)
+    (Path(out) / "CURRENT").write_text(
+        json.dumps({"schema": rp.CURRENT_SCHEMA, "generation_id": gid,
+                    "files": files}, sort_keys=True, separators=(",", ":")),
+        encoding="utf-8")
+    return gid
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# 36차 #9a — helper 는 CURRENT 를 따랐지만 **실제 판정**은 fixed path 를 읽었다
+# ─────────────────────────────────────────────────────────────────────────────
+
+def test_no_cohort_assertion_reads_a_fixed_path():
+    """★ 36차 #9a — `_cohort_projections()` 가 우회로였다.
+
+    34차에 `_cohort_names`·`_cohort_yaml` 을 CURRENT 로 옮겼지만, 실제
+    판정 넷(cohort 계산 provenance · active 현행성 · schema/pin · 전 투영
+    pin)은 여전히 `_cohort_projections(c)` 가 준 **고정 경로**를 열었다.
+    docstring 에 "판정에는 쓰지 않는다" 라고 적어 두는 것은 강제가 아니다 —
+    31차에 enforcement 를 caller label 로 받았던 것과 같은 실수다.
+
+    그래서 그 함수를 **없앤다**. 여기서는 AST 로 확인한다 — 다시 생기면
+    이 시험이 먼저 깨진다.
+    """
+    import ast
+
+    src = Path(__file__).read_text(encoding="utf-8")
+    tree = ast.parse(src)
+
+    defined = [n.name for n in ast.walk(tree)
+               if isinstance(n, ast.FunctionDef) and n.name == "_cohort_projections"]
+    assert not defined, (
+        "`_cohort_projections` 가 다시 생겼다 — 고정 경로 우회로다. "
+        "cohort 판정은 `_cohort_manifests()` 로만 한다")
+
+    called = sorted({f.name for f in ast.walk(tree)
+                     if isinstance(f, ast.FunctionDef)
+                     for n in ast.walk(f)
+                     if isinstance(n, ast.Call) and isinstance(n.func, ast.Name)
+                     and n.func.id == "_cohort_projections"})
+    assert not called, f"고정 경로 reader 를 부르는 판정: {called}"
+
+
+@pytest.mark.parametrize("k", [0, 1, 2])
+def test_a_crash_midway_through_materialize_never_moves_the_authority(tmp_path, k,
+                                                                     monkeypatch):
+    """★ 36차 #9a — 파생 사본을 만드는 중에 죽으면 무엇이 참인가.
+
+    `_materialize()` 는 `os.replace` 를 파일 수만큼 반복한다. 그 사이에 죽으면
+    fixed-name 사본은 **새 것과 옛 것이 섞인다**. 34·35차는 이 상태를 한 번도
+    만들어 보지 않았다 — 승격이 원자적인 것은 CURRENT 뿐인데, 소비자가 사본을
+    읽던 시절의 상태 공간을 그대로 두고 "원자적" 이라고 불렀다.
+
+    고정하는 불변식 셋:
+      1. 권위(`read_current`·`cohort_bytes`)는 섞인 사본에 영향받지 않는다
+      2. 섞인 것을 `check_materialized()` 가 **말한다** (조용히 넘어가지 않는다)
+      3. 같은 승격을 다시 돌리면 복구된다 (멱등)
+    """
+    rp = _rp()
+    out = tmp_path / "cohort"
+    rp.promote_cohort_generation(
+        _stage(tmp_path / "s0", **{"a.projection.csv.gz": b"c0",
+                                   "a.projection.yaml": b"v: 0\n",
+                                   "a.restarts.csv.gz": b"r0"}), out, "a")
+    old = {n: (out / n).read_bytes() for n in ("a.projection.csv.gz",
+                                               "a.projection.yaml",
+                                               "a.restarts.csv.gz")}
+
+    real, calls = os.replace, {"n": 0}
+
+    def _dying(src, dst):
+        # gen 디렉터리 이동·CURRENT 전환은 통과시키고, 사본 replace 만 센다
+        if Path(dst).parent == out and Path(dst).name in old:
+            if calls["n"] >= k:
+                raise _MaterializeCrash(Path(dst).name)
+            calls["n"] += 1
+        return real(src, dst)
+
+    monkeypatch.setattr(rp.os, "replace", _dying)
+    with pytest.raises(_MaterializeCrash):
+        rp.promote_cohort_generation(
+            _stage(tmp_path / "s1", **{"a.projection.csv.gz": b"c1",
+                                       "a.projection.yaml": b"v: 1\n",
+                                       "a.restarts.csv.gz": b"r1"}), out, "a")
+    monkeypatch.undo()
+
+    # 1. 권위는 이미 새 generation 이고, 바이트도 새 것이다
+    cur = rp.read_current(out)
+    assert rp.cohort_bytes(out, "a.projection.yaml") == b"v: 1\n", (
+        "섞인 사본이 권위 읽기를 오염시켰다")
+    assert rp.cohort_bytes(out, "a.projection.csv.gz") == b"c1"
+
+    # 2. 섞였다는 것을 말해야 한다 — k 개만 새 것이므로 하나 이상 옛 것이다
+    with pytest.raises(SystemExit) as ei:
+        rp.check_materialized(out)
+    assert "CURRENT" in str(ei.value)
+
+    # 3. 같은 승격을 다시 돌리면 복구된다
+    rp.promote_cohort_generation(
+        _stage(tmp_path / "s2", **{"a.projection.csv.gz": b"c1",
+                                   "a.projection.yaml": b"v: 1\n",
+                                   "a.restarts.csv.gz": b"r1"}), out, "a")
+    assert rp.check_materialized(out)["generation_id"] == cur["generation_id"], (
+        "재실행이 같은 generation 으로 복구하지 못했다")
+
+
+class _MaterializeCrash(RuntimeError):
+    """`_materialize` 중간에서 죽이는 표식."""
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# 36차 #9b — 불완전 generation 을 **public API 로 만들 수 있었다**
+# ─────────────────────────────────────────────────────────────────────────────
+
+def test_the_incomplete_publisher_is_not_public(tmp_path):
+    """★ 36차 #9b — `promote_generation()` 이 공개 publisher 였다.
+
+    34차에 `promote_cohort_generation()` 이 leg 세 파일 exact set 을 강제하게
+    했지만, 그 검사를 **거치지 않는** `promote_generation(stage, out)` 이 같은
+    module 의 공개 이름으로 남아 있었다. 한 파일짜리 staging 을 그대로 넘기면
+    cohort 를 한 파일로 줄인 generation 이 CURRENT 로 정상 게시된다.
+    검사를 하나 더 두는 것과 **만들 수 없게 하는 것**은 다르다.
+    """
+    rp = _rp()
+    assert not hasattr(rp, "promote_generation"), (
+        "불완전 generation 을 만들 수 있는 publisher 가 공개돼 있다")
+    assert callable(getattr(rp, "_promote_generation", None)), (
+        "내부 publisher 자체가 사라지면 안 된다 (cohort publisher 가 쓴다)")
+
+
+def test_reading_current_refuses_an_incomplete_cohort(tmp_path):
+    """★ 36차 #9b — 완전성 검사가 **쓰는 쪽에만** 있었다.
+
+    `promote_cohort_generation()` 은 세 파일을 요구하지만, 이미 게시된
+    CURRENT 가 불완전하면 읽는 쪽은 아무 말도 안 했다. 원장·CURRENT 를
+    직접 편집하거나 옛 판으로 만든 generation 을 물려받으면 그대로 통과한다.
+    fixture 는 **바이트에서** 만든다 — 살아 있는 publisher 로 만들면
+    publisher 를 고치는 순간 이 시험이 무엇을 보는지 알 수 없게 된다.
+    """
+    rp = _rp()
+    out = tmp_path / "cohort"
+    rp.promote_cohort_generation(
+        _stage(tmp_path / "s", **{"a.projection.csv.gz": b"c0",
+                                  "a.projection.yaml": b"v: 0\n",
+                                  "a.restarts.csv.gz": b"r0"}), out, "a")
+
+    # 세 파일 중 하나를 뺀 generation 을 **손으로** 만든다 (publisher 우회)
+    files = {"a.projection.yaml": hashlib.sha256(b"v: 0\n").hexdigest(),
+             "a.projection.csv.gz": hashlib.sha256(b"c0").hexdigest()}
+    gid = rp.generation_id(files)
+    gdir = out / "gen" / gid
+    gdir.mkdir(parents=True)
+    (gdir / "a.projection.yaml").write_bytes(b"v: 0\n")
+    (gdir / "a.projection.csv.gz").write_bytes(b"c0")
+    (out / "CURRENT").write_text(json.dumps(
+        {"schema": rp.CURRENT_SCHEMA, "generation_id": gid, "files": files},
+        sort_keys=True, separators=(",", ":")), encoding="utf-8")
+
+    with pytest.raises(SystemExit) as ei:
+        rp.read_current(out)
+    assert "restarts" in str(ei.value) or "불완전" in str(ei.value), (
+        f"불완전한 cohort 를 그대로 읽었다: {ei.value}")
+
+
+def test_a_lost_update_cannot_silently_drop_another_legs_generation(tmp_path):
+    """★ 36차 #9b — CURRENT 전환이 **compare-and-swap** 이 아니었다.
+
+    `promote_cohort_generation()` 은 base 를 `read_current()` 로 읽고, 그
+    사이에 다른 승격이 CURRENT 를 옮겨도 자기 base 로 그냥 덮었다. 두 leg 를
+    동시에 승격하면 나중에 게시한 쪽이 상대의 leg 를 **조용히 지운다**.
+    """
+    rp = _rp()
+    out = tmp_path / "cohort"
+    rp.promote_cohort_generation(
+        _stage(tmp_path / "s0", **{"a.projection.csv.gz": b"c0",
+                                   "a.projection.yaml": b"v: 0\n",
+                                   "a.restarts.csv.gz": b"r0"}), out, "a")
+
+    # A 의 base 를 읽는 시점에 B 가 끼어들어 b leg 를 추가한다
+    real = rp.read_current
+    fired = {"n": 0}
+
+    def _interleave(o):
+        rec = real(o)
+        if fired["n"] == 0:
+            fired["n"] = 1
+            rp.promote_cohort_generation(
+                _stage(tmp_path / "sb", **{"b.projection.csv.gz": b"bc",
+                                           "b.projection.yaml": b"v: b\n",
+                                           "b.restarts.csv.gz": b"br"}), o, "b")
+        return rec
+
+    rp.read_current = _interleave
+    try:
+        with pytest.raises(SystemExit) as ei:
+            rp.promote_cohort_generation(
+                _stage(tmp_path / "s1", **{"a.projection.csv.gz": b"c1",
+                                           "a.projection.yaml": b"v: 1\n",
+                                           "a.restarts.csv.gz": b"r1"}), out, "a")
+    finally:
+        rp.read_current = real
+    assert "CURRENT" in str(ei.value)
+
+    # B 의 leg 가 살아 있어야 한다
+    cur = rp.read_current(out)
+    assert "b.projection.yaml" in cur["files"], "끼어든 승격이 조용히 사라졌다"

@@ -712,6 +712,11 @@ def _fsync_dir(d: Path) -> None:
         os.close(fd)
 
 
+#: "인자가 안 왔다" 와 "None 이 왔다" 를 구별하는 표식 (36차 #9b — CAS 기대값이
+#: `None` 인 것은 "CURRENT 가 아직 없어야 한다" 는 뜻이라 생략과 다르다).
+_UNSET = object()
+
+
 def _publish_pointer(out: Path, rec: dict) -> None:
     """CURRENT 를 **원자적으로** 옮긴다. 여기가 유일한 가시성 전환점이다."""
     tmp = out / f".CURRENT.{uuid.uuid4().hex}.tmp"
@@ -729,8 +734,18 @@ def _publish_pointer(out: Path, rec: dict) -> None:
     _fsync_dir(out)
 
 
-def promote_generation(stage: Path, out: Path) -> dict:
-    """staging 을 immutable generation 으로 굳히고 CURRENT 를 옮긴다."""
+def _promote_generation(stage: Path, out: Path, *, expect=_UNSET) -> dict:
+    """staging 을 immutable generation 으로 굳히고 CURRENT 를 옮긴다.
+
+    ★ 36차 #9b — **비공개다.** 이 함수는 staging 을 그대로 믿으므로 한 파일
+      짜리 staging 을 넘기면 cohort 를 한 파일로 줄인 generation 이 정상
+      게시된다. 34차에 `promote_cohort_generation()` 에 세 파일 exact set
+      검사를 붙였지만, 그 검사를 **건너뛰는 공개 이름**을 옆에 남겨 두면
+      검사가 아니라 권고다. 완전성을 보는 유일한 입구는 cohort publisher 다.
+
+    `expect` 는 CURRENT 의 compare-and-swap 기대값이다 (36차 #9b). base 를
+    읽은 뒤 게시까지 사이에 CURRENT 가 움직였으면 덮지 않고 거부한다.
+    """
     stage, out = Path(stage), Path(out)
     _assert_writable(out)
     files = {p.name: _sha(p.read_bytes())
@@ -766,6 +781,15 @@ def promote_generation(stage: Path, out: Path) -> dict:
         _fsync_dir(out / "gen")
 
     rec = {"schema": CURRENT_SCHEMA, "generation_id": gid, "files": files}
+    if expect is not _UNSET:
+        live = None
+        if (out / "CURRENT").is_file():
+            live = read_current(out)["generation_id"]
+        if live != expect:
+            raise SystemExit(
+                f"✗ CURRENT 가 그 사이에 움직였다 (기대 "
+                f"{str(expect)[:16]} · 실제 {str(live)[:16]}) — 남의 승격을 "
+                "덮지 않는다. base 를 다시 읽고 재시도하라")
     _publish_pointer(out, rec)
     _materialize(out, rec)      # 호환 사본 — 권위는 CURRENT 다
     return rec
@@ -794,7 +818,27 @@ def read_current(out: Path) -> dict:
            for q in sorted(gdir.iterdir()) if q.is_file()}
     if got != rec["files"]:
         raise SystemExit(f"✗ generation {gid[:16]} 의 실물이 CURRENT 와 다르다")
+    _assert_cohort_complete(rec["files"], gid)
     return rec
+
+
+def _assert_cohort_complete(files: dict, gid: str) -> None:
+    """generation 안의 모든 leg 가 세 파일을 갖췄는가 (36차 #9b).
+
+    35차까지 완전성은 **쓰는 쪽에만** 있었다. 이미 게시된 CURRENT 가 불완전
+    하면 (손편집·옛 판이 만든 generation) 읽는 쪽은 아무 말도 안 했고, 그
+    불완전한 base 를 다음 승격이 그대로 물려받았다.
+    """
+    bad = []
+    for leg in sorted({_leg_of(n) for n in files}):
+        have = {n for n in files if _leg_of(n) == leg}
+        need = {f"{leg}{sfx}" for sfx in LEG_SUFFIXES}
+        if have != need:
+            bad.append(f"{leg}: 모자람 {sorted(need - have)} · "
+                       f"남음 {sorted(have - need)}")
+    if bad:
+        raise SystemExit(
+            f"✗ generation {gid[:16]} 이 불완전하다 — " + " / ".join(bad))
 
 
 def _materialize(out: Path, rec: dict) -> None:
@@ -856,10 +900,12 @@ def promote_cohort_generation(stage: Path, out: Path, leg: str) -> dict:
     stage, out = Path(stage), Path(out)
     base: dict = {}
     gdir = None
+    expect = None
     if (out / "CURRENT").is_file():
         cur = read_current(out)
         base = dict(cur["files"])
         gdir = out / "gen" / cur["generation_id"]
+        expect = cur["generation_id"]
 
     fresh = {p.name for p in stage.iterdir() if p.is_file()}
     # ★ 34차 #9 — "완전한 snapshot" 을 **구조로** 강제한다. 초판은 stage 의
@@ -871,20 +917,17 @@ def promote_cohort_generation(stage: Path, out: Path, leg: str) -> dict:
         raise SystemExit(
             f"✗ {leg} 의 staging 이 세 파일 exact set 이 아니다 — 남음 "
             f"{sorted(fresh - want)} · 모자람 {sorted(want - fresh)}")
+    # ★ 36차 #9b — base 완전성 검사를 여기서 **뺐다.** `read_current()` 가
+    #   모든 독자에 대해 같은 것을 보므로 (위 `read_current(out)` 호출이
+    #   그것이다) 여기 사본은 중복이었다 — 변이로 확인했다: 이 loop 를 지워도
+    #   suite 가 초록이었다. 검사가 하나 더 있는 것과 불변식이 한 곳에 있는
+    #   것은 다르다.
     keep = {n: h for n, h in base.items() if _leg_of(n) != leg}
-    # base 도 leg 마다 완전해야 한다 — 불완전한 것을 물려받지 않는다
-    for other in sorted({_leg_of(n) for n in keep}):
-        have = {n for n in keep if _leg_of(n) == other}
-        need = {f"{other}{sfx}" for sfx in LEG_SUFFIXES}
-        if have != need:
-            raise SystemExit(
-                f"✗ 기존 generation 의 {other} 가 불완전하다: 모자람 "
-                f"{sorted(need - have)}")
 
     # base 에서 넘길 파일을 staging 에 복사한다 — generation 은 self-contained
     for name in sorted(keep):
         shutil.copyfile(gdir / name, stage / name)
-    return promote_generation(stage, out)
+    return _promote_generation(stage, out, expect=expect)
 
 
 def _frozen_cohort_dirs() -> dict[str, Path]:

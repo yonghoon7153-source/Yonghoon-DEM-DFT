@@ -3611,3 +3611,121 @@ helper 가 맞는 것과 **실제 소비자가 그것을 쓰는 것**은 다른 
 | 실제 object-lock provider adapter | **미구현** — 계약(9연산)과 canary 는 고정 |
 | power-loss ordering fault model | **미착수** — fault-injecting filesystem 필요 |
 | `digest → generation` value | **선언** — 실행 산출물에 그 필드가 없다 |
+
+## 44. 35차 리뷰 대응 — 원자적이라고 부른 것들의 중간 상태
+
+35차는 P2 를 종결하고 P0-1·#9 를 미종결로 남겼다. 진단은 **같은 모양이
+세 번째**다 — 34차가 "최초 경로는 맞는데 그 다음 상태가 없다" 였다면, 35차는
+"**한 덩어리라고 부른 것이 실은 여러 단계**" 다.
+
+| 자리 | 한 덩어리라고 불렀다 | 실제 단계 |
+|---|---|---|
+| `retain()` | lease 하나 | put → pin → lock_objects → lock_content (4) |
+| `store.json` | 생성하면 잠긴다 | put → lock (2), 그리고 기한이 lease 와 무관 |
+| `_materialize()` | 승격의 일부 | 파일 수만큼 `os.replace` (n) |
+| provider 계약 | 7연산 산문 | 코드가 부르는 것은 9개 |
+
+### 44.1 P0-1a — `retain()` 네 단계의 crash
+
+각 단계 사이에서 죽인 뒤 재개시키는 회귀 셋
+(`after_lease_put` · `after_lease_pin` · `after_pin_lock`). 재개는 **lease 를
+하나만** 남겨야 하고 두 잠금이 모두 살아 있어야 한다. 단계를 호출 서수로
+죽인다 — lease digest 는 store 마다 다르므로(`store_id`·`backend_uri` 가
+lease 안에 있다) digest 로는 못 겨눈다.
+
+`repair_lease_locks()` 를 도입해 `_existing_lease()` 가 **검증 전에 수리**
+한다. pin·lock 은 멱등이므로 수리는 재실행이다.
+
+### 44.2 P0-1b — `store.json` 의 pre-lock 잔여와 기한 결속
+
+`store_id` 는 valid UUID record 가 보이면 즉시 반환했다. put 뒤 lock 전에
+죽으면 valid 하지만 unlocked 인 record 가 남고, 그 상태에서 durable 을 주장한
+뒤 record 를 지우면 다음 reopen 이 새 UUID 를 발급해 locator 를 잃는다.
+`ensure_store_lock()` 이 수리한다.
+
+기한도 graph 와 결속한다. 초판은 생성 시 고정 지평으로 한 번 잠갔고 후속
+lease 기한과 대조하지 않았다 — 오래된 store 에 긴 lease 를 만들면 담보 기간
+대부분에 identity 가 삭제 가능했다.
+
+> **변이가 안 물었다.** 첫 시험의 lease(365일)는 store 기본 지평(3650일)에
+> 이미 덮여 retain 쪽 연장을 지워도 초록이었다. lease 를 기본 지평보다 **길게**
+> 만들어야 이 축이 실행된다. backend `retention_days` 도 함께 열어야 한다.
+
+### 44.3 P0-1c — 계약의 authority · per-version 의미 · GOVERNANCE
+
+**계약.** `PROVIDER_CONTRACT` 상수가 정본이 되고, 시험이 `tools/preserve.py`
+를 AST 로 읽어 `self.provider.*` 호출 집합과 **정확히 일치**하는지 본다.
+docstring 은 의미 설명이지 목록이 아니다. 계약을 못 채운 provider 는
+`probe_enforcement()` 가 advisory 로 답한다 — helper 를 durable 판정에
+배선하지 않으면 고친 것이 아니다(33차 교훈).
+
+**per-version.** 실물 Object Lock 은 key 가 아니라 **version** 을 지킨다.
+잠긴 v1 위에 잠기지 않은 v2 를 올리는 것은 실패가 아니라 정상이고,
+`head_version` 을 보는 코드는 전부 그 v2 를 본다. 35차 fake 는 그 put 을
+거부해서 이 창을 통째로 가리고 있었다 — 32차의 "canary 가 강제하는 쪽이
+아니었다" 와 정확히 같은 실수의 재발이다.
+
+fake 를 실물에 맞추자 **durable canary 셋이 먼저 빨개졌다**: 그 셋은
+"적대적 put 이 실패한다" 를 보고 있었는데, 실물에서 그 put 은 성공한다.
+불변식을 옳은 것으로 바꿨다 — **담보한 바이트를 그래도 회수할 수 있다.**
+`protected_version()` 이 담보 version 을 찾고, 모든 durable 읽기
+(`store_id`·`read_back`·`read_pinned`·`put_if_absent`·`pin`)가 그것을 지난다.
+
+**GOVERNANCE.** `LOCK_MODES` 가 GOVERNANCE 를 그냥 받았다. 실물에서 그 모드는
+`s3:BypassGovernanceRetention` 을 가진 principal 이 우회 삭제할 수 있으므로,
+담보가 저장소가 아니라 **IAM 설정**에 대한 주장이 된다. 이제 우회 부재를
+`probe_bypass()` 가 **실측**한다 — 잠긴 canary 에 우회 삭제를 시도해 그
+결과로 답한다. 자기신고(`describe()["bypass_allowed"]`)는 근거가 아니다.
+반대 축(우회를 실제로 거부하는 GOVERNANCE 는 담보)도 함께 고정해, 이것이
+이름 금지가 아니라 측정임을 시험이 보장한다.
+
+### 44.4 #9a — helper 는 CURRENT 를 따랐는데 판정은 고정 경로를 읽었다
+
+34차에 `_cohort_names`·`_cohort_yaml` 을 CURRENT 로 옮겼지만, 실제 판정 넷
+(cohort 계산 provenance · active 현행성 · schema/pin · 전 투영 pin)은 여전히
+`_cohort_projections(c)` 가 준 `Path` 를 `read_text()` 했다. 그 함수
+docstring 에 "판정에는 쓰지 않는다" 라고 적어 둔 것이 전부였다 — 31차에
+enforcement 를 caller label 로 받았던 것과 같다.
+
+함수를 **없앴다**. `_cohort_manifests()` 는 경로를 아예 주지 않고 이미 읽힌
+내용을 준다. AST 시험이 재발을 막는다.
+
+`_materialize` 중간(replace 0/1/2)에서 죽이는 회귀도 추가했다. 불변식 셋:
+권위 읽기는 섞인 사본에 영향받지 않는다 · 섞였다는 것을
+`check_materialized()` 가 말한다 · 재실행이 복구한다.
+
+### 44.5 #9b — 불완전 generation 을 public API 로 만들 수 있었다
+
+`promote_generation()` 이 공개 publisher 로 남아 있었다. 34차에 cohort
+publisher 에 세 파일 exact set 검사를 붙였지만, 그 검사를 **건너뛰는 공개
+이름**을 옆에 두면 검사가 아니라 권고다. 비공개(`_promote_generation`)로
+만들었다.
+
+완전성 검사가 **쓰는 쪽에만** 있던 것도 고쳤다 — `read_current()` 가 모든
+독자에 대해 leg 3-suffix 완전성을 본다. CURRENT 전환에는
+compare-and-swap 을 붙였다: base 를 읽은 뒤 게시까지 사이에 CURRENT 가
+움직였으면 덮지 않는다 (초판은 두 leg 를 동시에 승격하면 나중 쪽이 상대의
+leg 를 조용히 지웠다).
+
+fixture 도 고쳤다. 34차의 불완전-base 시험은 그 상태를 **살아 있는
+publisher** 로 만들었다 — publisher 를 비공개로 만들자 fixture 가 먼저
+깨졌고, 그것이 fixture 가 무엇을 보는지 알 수 없게 만들고 있었다는 증거다.
+이제 generation directory 와 CURRENT 를 **바이트에서** 만든다.
+
+### 44.6 변이 — 물지 않은 둘
+
+| 물지 않은 변이 | 왜 | 처리 |
+|---|---|---|
+| `retain` 이 store 기한을 안 늘린다 | 시험 lease 가 기본 지평에 덮였다 | lease 를 지평보다 길게 (§44.2) |
+| cohort publisher 의 base 완전성 loop 삭제 | `read_current()` 가 같은 것을 본다 | **중복을 지웠다** — 불변식은 한 곳에 |
+
+두 번째는 지운 쪽이 맞다. `read_current()` 는 publisher 만이 아니라 **모든
+독자**를 덮으므로, publisher 안의 사본은 검사를 하나 더 두는 것일 뿐이었다.
+
+### 44.7 남은 것 (35차와 동일 — 이 환경에서 닫히지 않는다)
+
+| 항 | 상태 |
+|---|---|
+| 실제 object-lock provider adapter | **미구현** — 계약(9연산)·per-version 의미·bypass probe 는 고정. 자격증명·네트워크가 없다 |
+| power-loss ordering fault model | **미착수** — `os._exit` 는 fsync 안 된 항목을 잃지 않는다. fault-injecting filesystem 필요 |
+| delete-marker 공격면 | **미모형** — fake 는 version 삭제만 모형한다. head 를 가리는 delete marker 는 별도 축이다 |
