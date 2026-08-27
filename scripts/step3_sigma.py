@@ -205,7 +205,12 @@ def _amg_M(L):
 
 def _solve_cg(L, b):
     """Preconditioned CG for the SPD Kirchhoff system L·φ = b.  GPU (CuPy) when GPU_SOLVE and
-    the import succeeds, else scipy CPU — SAME matrix + tol (1e-8) → SAME φ (backend swap only).
+    the import succeeds, else scipy CPU — same matrix + same rtol (1e-8), so φ is **expected
+    within solver tolerance** (backend swap only).
+    ⚠⚠ 2026-08-27 (Codex R7 Q4c) — 옛 문구는 *"SAME φ"* 였다.  그것은 **선언이지 측정이
+    아니다**: 이 리포는 같은 계를 CPU/GPU 양쪽에서 풀어 σ 를 비교한 적이 없다.  ⇒ 문구를
+    약화하고, **CPU/GPU 팔을 섞는 cohort 는 금지**한다 (허용오차를 사전등록하기 전까지).
+    실제 사용 backend 는 `LAST_BACKEND['used']` 로 봉인된다.
     CPU preconditioner = Jacobi (default) or AMG when AMG_SOLVE (SR-03, 해-불변 측정 완료).
     Returns (phi: np.ndarray, info: int).
 

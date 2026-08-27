@@ -2287,6 +2287,41 @@ def _selftest():
         '$SBRG_FLAG$RQG_FLAG', '$SBRG_FLAG$RQG_FLAG$NEWAXIS_FLAG', 1)
     chk('L-1c: ★★ 러너가 **대입하는** 새 축은 seed 목록을 안 고쳐도 통과한다 '
         '(SBRG·RQG 에서 두 번 난 부류의 재발 방지)', _rmut_src(_src_new) == [])
+    #  ⓓ ★★ Codex R7 Q4b — **자동 seed 의 false-pass**: 정규식은 제어흐름을 모르므로
+    #    죽은 가지 안의 대입(`if false; then VAR=…; fi`)이나 **호출되지 않는 함수** 안의
+    #    대입도 "러너가 대입한다" 로 센다.  그러면 프로브는 빈 값으로 통과하는데 **실제
+    #    러너에서는 unbound** 가 될 수 있다.  현재 러너는 관련 flag 를 무조건 `VAR=""` 로
+    #    먼저 초기화해 판정 영향은 없지만(Codex: P 없음), 그 구조에 기대는 것은 보증이
+    #    아니므로 **그 상태를 시험으로 고정**한다.
+    #  ⇒ 지금은 "자동 seed 가 이 부류를 통과시킨다" 를 **알려진 한계로 명시**하고,
+    #    러너가 무조건 초기화를 유지하는지를 대신 강제한다 (그것이 진짜 방어선이다).
+    #  ⚠ **여러 줄** 형태여야 한다 — 자동 seed 의 `^\s*` 앵커가 한 줄짜리
+    #    `if false; then VAR=…; fi` 는 이미 배제한다 (첫 판이 그것으로 시험해 오보했다).
+    _dead = _RSRC.replace(
+        'RQG_FLAG=""',
+        'RQG_FLAG=""\nif false; then\n  DEADAXIS_FLAG=" --dead"\nfi', 1).replace(
+        '$SBRG_FLAG$RQG_FLAG', '$SBRG_FLAG$RQG_FLAG$DEADAXIS_FLAG', 1)
+    chk('L-1d: ★ 알려진 한계 — 죽은 가지의 대입도 자동 seed 된다 (제어흐름 미인식).  '
+        '이 시험은 그 사실을 **고정**한다: 통과하면 한계가 그대로, 실패하면 누군가 '
+        '제어흐름 인식을 넣었다는 뜻이니 이 주석을 지울 것 (Codex R7 Q4b)',
+        _rmut_src(_dead) == [])
+    #  ★ 진짜 방어선 — 조립 줄이 참조하는 모든 FLAG 변수를 러너가 **무조건** 초기화하는가
+    #    (`VAR=""` 가 조건 밖에 있는가).  이것이 깨지면 죽은 가지 문제가 실물이 된다.
+    #  ⚠ 두 가지를 조심한다 (첫 판이 둘 다 틀렸다): ⓐ `local VAR=""` 도 무조건 초기화다
+    #    (러너의 팔 함수 안 EP/XP 가 그 꼴) ⓑ `$LEAN_FLAGS` 를 `LEAN_FLAG` 로 잘라 잡으면
+    #    없는 변수를 만든다 ⇒ 전체 이름을 잡고 접미사로 거른다.
+    _asm = [ln for ln in _RSRC.splitlines() if '--extra-flags "' in ln]
+    _refs = {m for m in re.findall(r'\$([A-Z][A-Z0-9_]*)', _asm[0] if _asm else '')
+             if m.endswith(('_FLAG', '_FLAGS'))}
+    #  기준 = **줄머리 대입**(옵션 `local`).  조건부 형태(`[ x ] && VAR=…` · `if …; then
+    #  VAR=…`)는 전부 줄 중간이라 안 잡힌다 ⇒ "조건부 대입만 있고 기본값이 없는" 플래그를
+    #  정확히 골라낸다 (그런 플래그는 조건이 거짓일 때 러너 자신이 `set -u` 로 죽는다).
+    #  ⚠ 여러 줄 죽은 가지는 이 기준으로도 통과한다 — 그것이 L-1d 가 고정한 잔여 한계다.
+    _uncond = {m for m in _refs
+               if re.search(r'^\s*(?:local\s+)?' + m + r'=', _RSRC, re.M)}
+    chk(f'L-1e: ★★ 조립 줄의 FLAG {len(_refs)}개가 전부 **줄머리(무조건) 대입**을 갖는다 '
+        f'({len(_uncond)}개) — 조건부 대입만 있으면 조건이 거짓일 때 러너가 죽는다',
+        bool(_refs) and _uncond == _refs)
     _m1 = _rmut('LEAN_FLAGS=" --no-step4 --no-thermal --no-trackb --no-field --no-ion --no-pore --no-collector"',
                 'LEAN_FLAGS=" --no-step4 --no-thermal --no-trackb --no-field --no-ion --no-pore"')
     chk(f'L-2: ★ LEAN=2 에서 `--no-collector` 를 빼면 **잡는다** ({len(_m1)}건)',

@@ -386,6 +386,33 @@ def _selftest_temperature():
     _p('ptfe-dia-early  ★ --fibre-dia 를 solve **전에** 읽는다 (뷰어 블록은 재사용)',
        '_dia_all = np.load(a.fibre_dia)' in _txt and 'dia = _dia_all' in _txt)
 
+    #  ── ★ 실행환경 영수증 `_exec_env` (2026-08-27, Codex R7 Q4a) ─────────────────
+    #    계약 넷: ⓐ 필수 키가 다 있다 ⓑ 로드된 **프로젝트 모듈**을 세고 해시한다
+    #    ⓒ `PYTHONPATH` 가 설정돼 있으면 **risk 로 표시**한다 (조용히 넘어가지 않는다)
+    #    ⓓ untracked 스캔이 **불가**하면 `None` 이다 (빈 목록 ≠ 모름 — 그 구분이 요점)
+    _ee = _exec_env(_THIS_DIR)
+    _p('execenv-keys ★ 영수증이 필수 축을 다 담는다 (Q4a)',
+       all(k in _ee for k in ('python', 'py_version', 'pythonpath', 'sitecustomize',
+                              'usercustomize', 'untracked_codelike',
+                              'loaded_project_modules', 'project_module_digest', 'risk')))
+    _p(f"execenv-modules ★ 로드된 프로젝트 모듈을 센다 ({_ee['loaded_project_modules']}개) "
+       f"— `code_sha` 가 못 보는 축",
+       _ee['loaded_project_modules'] >= 1 and bool(_ee['project_module_digest']))
+    _old_pp = _os.environ.get('PYTHONPATH')
+    try:
+        _os.environ['PYTHONPATH'] = '/tmp/execenv-probe'
+        _p('execenv-risk-pythonpath ★ PYTHONPATH 가 있으면 **risk 로 표시**한다 '
+           '(조용히 넘어가면 Q4a 시나리오가 안 보인다)',
+           any('PYTHONPATH' in r for r in _exec_env(_THIS_DIR)['risk']))
+    finally:
+        if _old_pp is None:
+            _os.environ.pop('PYTHONPATH', None)
+        else:
+            _os.environ['PYTHONPATH'] = _old_pp
+    _p('execenv-unknown-not-empty ★ 스캔 불가는 `None` 이지 빈 목록이 아니다 '
+       '(모름 ≠ 없음)',
+       _exec_env('/nonexistent-dir-for-probe')['untracked_codelike'] is None)
+
     print('PAYLOAD TEMPERATURE SELFTEST', 'PASS' if ok else 'FAIL')
     return 0 if ok else 1
 
@@ -414,6 +441,70 @@ def _sha256_file(path, _chunk=1 << 22):
         return None
 
 
+def _exec_env(script_dir):
+    """이 런이 **어떤 실행 환경**에서 돌았나 (2026-08-27, Codex R7 Q4a).
+
+    ★ 왜: `_code_sha` 는 **git tracked state** 이지 hermetic execution hash 가 아니다.
+      repo root 의 untracked `sitecustomize.py` + `PYTHONPATH` 로 import hook 을 갈아끼우면
+      **실행은 달라지는데 SHA 는 깨끗하다** (Codex 가 제시한 최소 시나리오).
+      ⇒ 봉인이 그것을 **덮을 수는 없어도 기록할 수는 있다** — 리뷰어가 볼 수 있게 남긴다.
+
+    ⚠ 이것은 **게이트가 아니라 기록**이다 (`MANIFEST_RESULT_KEYS`).  런마다 달라질 수 있고
+      (다른 기계·다른 venv) 그 사실 자체가 정보다.  판정을 막지 않는다 — 진행 중인 런을
+      죽이지 않기 위해서다 (이 리포에서 내 게이트가 생산을 막은 것이 이미 여섯 번이다).
+
+    담는 것: 인터프리터·버전 · `PYTHONPATH` · repo **밖** sys.path 항목 수 ·
+      `sitecustomize`/`usercustomize` 가 실제로 로드됐다면 그 파일 경로 ·
+      repo 전역의 **untracked code-like 파일**(.py/.so/.pyd/.pth/.zip/.sh) 목록 ·
+      실제 로드된 **프로젝트 모듈**(script_dir 밑)의 내용 해시.
+    """
+    import hashlib as _hl
+    import subprocess as _sp
+    out = {'python': _sys.executable, 'py_version': _sys.version.split()[0],
+           'pythonpath': _os.environ.get('PYTHONPATH', ''),
+           'sitecustomize': None, 'usercustomize': None,
+           'untracked_codelike': [], 'loaded_project_modules': 0,
+           'project_module_digest': None, 'risk': []}
+    for _n in ('sitecustomize', 'usercustomize'):
+        _m = _sys.modules.get(_n)
+        if _m is not None:
+            out[_n] = getattr(_m, '__file__', '<no file>')
+            out['risk'].append(f'{_n} loaded')
+    if out['pythonpath']:
+        out['risk'].append('PYTHONPATH set')
+    try:                                                   # repo 전역 untracked code-like
+        _r = _sp.run(['git', '-C', script_dir, 'ls-files', '--others', '--exclude-standard'],
+                     capture_output=True, text=True, timeout=30)
+        #  ⚠ **모름 ≠ 없음** — git 이 실패하면 stdout 이 비는데, 그것을 "untracked 없음" 으로
+        #    적으면 스캔 실패가 **깨끗함으로 위장**된다 (이 리포의 반복 결함 부류; 이 줄은
+        #    내가 붙인 회귀 `execenv-unknown-not-empty` 가 실제로 잡아서 추가됐다).
+        if _r.returncode != 0:
+            raise RuntimeError(f'git ls-files rc={_r.returncode}')
+        _ex = ('.py', '.so', '.pyd', '.pth', '.zip', '.sh')
+        _u = sorted(x for x in (_r.stdout or '').split('\n') if x.endswith(_ex))
+        out['untracked_codelike'] = _u[:20]
+        if _u:
+            out['risk'].append(f'{len(_u)} untracked code-like file(s)')
+    except Exception:                                      # noqa: BLE001
+        out['untracked_codelike'] = None                   # 모름 ≠ 없음
+        out['risk'].append('untracked scan unavailable')
+    #  실제로 **로드된** 프로젝트 모듈의 내용 해시 — import 된 것만 센다 (경로가 아니라 내용).
+    _root = _os.path.abspath(_os.path.join(script_dir, _os.pardir))
+    _h, _n_mod = _hl.sha256(), 0
+    for _name in sorted(_sys.modules):
+        _f = getattr(_sys.modules.get(_name), '__file__', None) or ''
+        if _f and _os.path.abspath(_f).startswith(_root + _os.sep):
+            try:
+                with open(_f, 'rb') as _fh:
+                    _h.update(_name.encode()); _h.update(_fh.read())
+                _n_mod += 1
+            except OSError:
+                pass
+    out['loaded_project_modules'] = _n_mod
+    out['project_module_digest'] = _h.hexdigest()[:16] if _n_mod else None
+    return out
+
+
 def _code_sha(script_dir):
     """이 코드가 어느 커밋인가 (+ dirty 여부).  git 이 없으면 None.
 
@@ -428,6 +519,18 @@ def _code_sha(script_dir):
         실행된 코드를 바꿀 수 없는 파일이 재현성 딱지를 바꾸면 안 된다.
       실사고: kgy 의 상주 로컬 디렉터리(anchor_params/ db/ tools/)가 porcelain 에 잡혀
       **모든 생산 런이 `+dirty` → 판정기 무조건 HOLD** — GPU 8팔이 완주하고도 버려졌다.
+
+    ⚠⚠ **한계 (Codex R7 Q4a) — 이 값은 `git tracked state` 이지 hermetic execution hash 가
+      아니다.**  scripts/ **밖**의 untracked 파일도 거동을 바꿀 수 있다.  최소 시나리오:
+        ① repo root 에 untracked `sitecustomize.py` 를 둔다
+        ② `PYTHONPATH=$REPO` 이거나 repo root 에서 `python -c`/`python -` 로 실행한다
+        ③ 그 `sitecustomize` 가 import hook 이나 `numpy.load` 를 바꾼다
+        ④ 실행은 달라지는데 이 함수는 scripts/ 밖 untracked 를 무시해 **plain SHA** 를 낸다
+      (`.pth` 의 실행행도 site 디렉터리에 있으면 매 시작마다 돈다.)
+    ⇒ **`code_sha` 가 clean 이라는 것 하나를 판정 증거로 쓰지 말 것.**  현재 오염 증거는
+      없지만 봉인의 강도는 여기까지다.  더 강하게 하려면 영수증에 `PYTHONPATH`·`sys.path`·
+      인터프리터·실제 로드된 프로젝트 모듈 해시·`sitecustomize/usercustomize` 위치를 같이
+      남기고, repo 전역의 untracked code-like 파일(`.py/.so/.pyd/.pth/.zip/.sh`)을 봐야 한다.
     """
     import subprocess as _sp
     try:
@@ -2410,6 +2513,10 @@ def main():
             'input_digest': _in_dig,
             'input_files': _in_files,
             'code_sha': _code_sha(_os.path.dirname(_os.path.abspath(__file__))),
+            #  ★ 2026-08-27 (Codex R7 Q4a) — `code_sha` 는 tracked state 일 뿐이라
+            #    실행 환경(sitecustomize·PYTHONPATH·untracked code-like·로드된 모듈 해시)을
+            #    **따로 기록**한다.  게이트가 아니라 기록이다 (MANIFEST_RESULT_KEYS).
+            'exec_env': _exec_env(_os.path.dirname(_os.path.abspath(__file__))),
             #  ★★★ 2026-08-25 (자체발견, R3-F2 검증 중) — **`vox_um` 이 매니페스트에 없었다.**
             #    `PROTOCOL_FIELDS` 는 그것을 요구하는데 producer 가 안 써서 `physics_protocol_id`
             #    가 **모든 런에서 `unknown:vox_um`** 이 됐다.  팔끼리는 그 상수로 일치하므로

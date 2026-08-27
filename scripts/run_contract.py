@@ -131,9 +131,13 @@ CLI_ACCOUNTING = {
     # ── numeric (수치 방법.  해에 영향은 있으나 규약은 아니다) ──────────────
     '--step3-gpu': ('numeric', None), '--step3-amg': ('numeric', None),
     '--step3-maxiter': ('numeric', None),
-    #  ★ `--step3-require-gpu` = **numeric** 이다 (규약 아님) — backend 는 σ 를 안 바꾼다
-    #    (같은 행렬·같은 rtol).  이 플래그는 GPU 가 죽었을 때 CPU 폴백을 **금지**해 거부될
-    #    계산을 미리 멈출 뿐이고, 성공한 런의 결과는 플래그 유무에 무관하게 동일하다.
+    #  ★ `--step3-require-gpu` = **numeric** 이다 (규약 아님).  근거는 "backend 가 σ 를 안
+    #    바꾼다" 가 **아니라** — 그것은 미측정이다 (Codex R7 Q4c) — backend 를 **고르는**
+    #    플래그가 `--step3-gpu` 이고 이 플래그는 **성공한 GPU 계산을 바꾸지 않기** 때문이다.
+    #    GPU 가 죽었을 때 어차피 backend 봉인이 거부할 CPU 결과를 미리 중단할 뿐이다.
+    #    ⇒ physics hash 에 넣지 않고, 실제 component backend 는 계속 봉인한다.
+    #    ⚠ CPU/GPU σ parity 는 이 리포에서 **측정된 적이 없다** ⇒ 두 backend 를 섞은 cohort
+    #      는 금지 (섞으려면 허용오차를 사전등록해야 한다).
     #    ⇒ 규약 해시에 들어가면 안 된다 (넣으면 같은 물리가 두 규약으로 갈린다).
     '--step3-require-gpu': ('numeric', None),
     # ── solve (σ_e/σ_ion 밖 채널) ───────────────────────────────────────────

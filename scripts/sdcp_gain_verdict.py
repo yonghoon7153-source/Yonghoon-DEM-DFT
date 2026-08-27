@@ -190,6 +190,11 @@ MANIFEST_RESULT_KEYS = {
     'ptfe_cells_observed': '침대 **측정치** — 스탬프 규약이 바뀌면 따라 바뀐다',
     'input_files': '경로는 디렉터리마다 다르다.  **내용**은 `input_digest` 가 덮는다',
     'schema_version': '세대 표시.  세대 계약은 `schema_of` 가 따로 본다',
+    #  ★ 2026-08-27 (Codex R7 Q4a) — 실행 환경 기록.  **게이트 아님**: 기계·venv 가
+    #    다르면 당연히 다르고 그 사실 자체가 정보다.  `code_sha` 가 못 덮는 축
+    #    (sitecustomize·PYTHONPATH·repo 전역 untracked code-like·로드된 모듈 해시)을
+    #    리뷰어가 볼 수 있게 남긴다.  ⚠ 옛 팔에는 이 키가 **없다** — 필수가 아니다.
+    'exec_env': '실행 환경 기록 (Q4a) — code_sha 가 못 덮는 축.  판정을 막지 않는다',
     'component_plan': '무엇을 돌렸나 — LEAN 팔과 전량 팔이 섞이면 `_XDIR_FIELDS` 밖의 '
                       '증거 계약이 잡는다 (여기서 고정하면 정상 LEAN 대조가 막힌다)',
 }

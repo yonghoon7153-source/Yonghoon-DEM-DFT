@@ -32,6 +32,7 @@ DISC = ('check_method_discipline.py', '--selftest')
 STEP3 = ('step3_sigma.py', '--selftest')
 SR01 = ('sr01_stamp_compare.py', '--selftest')
 RC = ('run_contract.py', '--selftest')
+PAYSEL = ('mpm_webapp_payload.py', '--selftest-temperature')
 
 #: (라벨, 대상파일, 옛코드, 새코드, 시험 명령, **기대 시험 id 접두사들**)
 #  ⚠ 기대 id 는 **정확히** 그 시험이 물어야 한다는 선언이다.  다른 시험이 대신 물면
@@ -281,6 +282,20 @@ MUTANTS = [
      "\nREQUIRE_GPU = True\n",
      #  기본이 True 면 ⓒ(GPU 미요청 무해)는 그대로지만 ⓐ(폴백 허용 팔)가 중단된다.
      STEP3, ('require-gpu',)),
+    #  ── Q4a 실행환경 영수증 (code_sha 가 못 보는 축) ─────────────────────────────
+    ('Q4a 스캔 실패를 "untracked 없음" 으로 (모름 ≠ 없음 혼동 복원)',
+     'mpm_webapp_payload.py',
+     "        if _r.returncode != 0:\n            raise RuntimeError(f'git ls-files rc={_r.returncode}')\n",
+     "",
+     PAYSEL, ('execenv-unknown-not-empty',)),
+    ('Q4a PYTHONPATH 를 risk 에서 빼기 (조용한 환경 오염)', 'mpm_webapp_payload.py',
+     "    if out['pythonpath']:\n        out['risk'].append('PYTHONPATH set')",
+     "    if False:\n        out['risk'].append('PYTHONPATH set')",
+     PAYSEL, ('execenv-risk-pythonpath',)),
+    ('Q4a 로드된 프로젝트 모듈 해시 제거 (영수증이 코드를 안 본다)', 'mpm_webapp_payload.py',
+     "    out['project_module_digest'] = _h.hexdigest()[:16] if _n_mod else None",
+     "    out['project_module_digest'] = None",
+     PAYSEL, ('execenv-modules',)),
     ('R5-CX-05 미등록 component 조용한 통과 복원', 'run_contract.py',
      "            return False, (f'EVID|{comp}|unregistered| 이 component 의 증거 계약이 ",
      "            continue\n        if False:\n            return False, (f'EVID|{comp}|unregistered| 이 component 의 증거 계약이 ",
