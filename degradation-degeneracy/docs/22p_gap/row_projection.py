@@ -45,6 +45,7 @@ from __future__ import annotations
 import argparse
 import os
 import shutil
+import time
 import tempfile
 import uuid
 import gzip
@@ -716,6 +717,56 @@ def _fsync_dir(d: Path) -> None:
 #: `None` 인 것은 "CURRENT 가 아직 없어야 한다" 는 뜻이라 생략과 다르다).
 _UNSET = object()
 
+#: writer lock 이 죽은 채 남았다고 보는 시간. crash 로 남은 lock 이 영구히
+#: 게시를 막으면 그것대로 고장이므로, 이 시간이 지나면 회수한다.
+_LOCK_STALE_S = 600
+
+
+class _PublishLock:
+    """게시 전체를 덮는 writer critical section (37차 #9).
+
+    ★ 36차판은 `read_current()` 로 expected 를 대조한 뒤 **별도의 무조건**
+      `os.replace` 로 게시했다. 두 writer 가 같은 옛 값을 읽고 차례로
+      replace 하면 뒤가 앞의 완전한 generation 을 조용히 지웠다. 대조와
+      전환이 한 임계 구역 안에 있어야 한다 — 대조를 한 줄 뒤로 옮기는 것은
+      창을 옮길 뿐이다.
+
+      `O_CREAT|O_EXCL` 은 같은 filesystem 안에서 원자적이다. 이것이 이
+      저장소가 가진 유일한 실물 CAS primitive 다.
+    """
+
+    def __init__(self, out: Path):
+        self.path = Path(out) / ".publish.lock"
+        self.fd = None
+
+    def __enter__(self):
+        self.path.parent.mkdir(parents=True, exist_ok=True)
+        for _ in range(2):
+            try:
+                self.fd = os.open(self.path, os.O_CREAT | os.O_EXCL | os.O_WRONLY,
+                                  0o644)
+                os.write(self.fd, str(os.getpid()).encode())
+                os.fsync(self.fd)
+                return self
+            except FileExistsError:
+                try:
+                    age = time.time() - self.path.stat().st_mtime
+                except FileNotFoundError:
+                    continue
+                if age < _LOCK_STALE_S:
+                    raise SystemExit(
+                        f"✗ 다른 게시가 진행 중이다: {self.path} "
+                        f"({age:.0f}초 전에 잡혔다). 끝난 뒤 다시 시도하라")
+                # crash 잔여로 본다 — 회수하고 한 번만 더 시도한다
+                self.path.unlink(missing_ok=True)
+        raise SystemExit(f"✗ 게시 lock 을 잡지 못했다: {self.path}")
+
+    def __exit__(self, *exc):
+        if self.fd is not None:
+            os.close(self.fd)
+        self.path.unlink(missing_ok=True)
+        return False
+
 
 def _publish_pointer(out: Path, rec: dict) -> None:
     """CURRENT 를 **원자적으로** 옮긴다. 여기가 유일한 가시성 전환점이다."""
@@ -795,7 +846,7 @@ def _promote_generation(stage: Path, out: Path, *, expect=_UNSET) -> dict:
     return rec
 
 
-def read_current(out: Path) -> dict:
+def read_current(out: Path, expect_legs=None) -> dict:
     """CURRENT 를 따라간다. 없거나 깨졌거나 실물과 어긋나면 **fail-closed**."""
     out = Path(out)
     p = out / "CURRENT"
@@ -818,27 +869,48 @@ def read_current(out: Path) -> dict:
            for q in sorted(gdir.iterdir()) if q.is_file()}
     if got != rec["files"]:
         raise SystemExit(f"✗ generation {gid[:16]} 의 실물이 CURRENT 와 다르다")
-    _assert_cohort_complete(rec["files"], gid)
+    assert_cohort_complete(rec["files"], gid, expect_legs=expect_legs)
     return rec
 
 
-def _assert_cohort_complete(files: dict, gid: str) -> None:
-    """generation 안의 모든 leg 가 세 파일을 갖췄는가 (36차 #9b).
+def assert_cohort_complete(files: dict, gid: str, expect_legs=None) -> None:
+    """generation 이 완전한가 — **publish 와 read 가 함께 쓰는** validator.
 
-    35차까지 완전성은 **쓰는 쪽에만** 있었다. 이미 게시된 CURRENT 가 불완전
-    하면 (손편집·옛 판이 만든 generation) 읽는 쪽은 아무 말도 안 했고, 그
-    불완전한 base 를 다음 승격이 그대로 물려받았다.
+    ★ 36차 #9b 는 관측된 leg 를 순회했다. 그래서 셋이 통과했다:
+        · `files={}` 인 빈 generation (공허참)
+        · expected roster 의 leg 가 **통째로** 빠진 generation
+        · 한 leg 의 세 파일만 넘겨 multi-leg cohort 를 축소하는 호출
+      완전성은 관측된 것이 아니라 **기대 명부**에 대해 닫혀야 한다.
+
+    ★ 36차에 publisher 쪽 사본을 "중복" 으로 보고 지웠는데, 그것이 틀렸다.
+      변이가 안 문 이유는 중복이어서가 아니라 **validator 가 약해서** 였다.
+      이제 pure 함수 하나를 양쪽에서 부른다 — publisher 가 private 라는 이름
+      규약은 trust boundary 가 아니므로 read-side 검사를 없앨 근거가 못 된다.
+
+    `expect_legs` 를 주면 그 명부와 **정확히** 같아야 한다. 명부는 고정 파일
+    목록에서 유도하면 안 되고 (그러면 자기 자신을 근거로 삼는다) 원장·계약
+    처럼 밖에서 와야 한다.
     """
+    if not files:
+        raise SystemExit(
+            f"✗ generation {str(gid)[:16]} 이 비었다 — 빈 generation 은 "
+            "'모든 leg 가 완전하다' 를 공허참으로 만족한다")
+    seen = {_leg_of(n) for n in files}
     bad = []
-    for leg in sorted({_leg_of(n) for n in files}):
+    for leg in sorted(seen):
         have = {n for n in files if _leg_of(n) == leg}
         need = {f"{leg}{sfx}" for sfx in LEG_SUFFIXES}
         if have != need:
             bad.append(f"{leg}: 모자람 {sorted(need - have)} · "
                        f"남음 {sorted(have - need)}")
+    if expect_legs is not None:
+        want = set(expect_legs)
+        if seen != want:
+            bad.append(f"명부와 다르다: 빠진 leg {sorted(want - seen)} · "
+                       f"명부에 없는 leg {sorted(seen - want)}")
     if bad:
         raise SystemExit(
-            f"✗ generation {gid[:16]} 이 불완전하다 — " + " / ".join(bad))
+            f"✗ generation {str(gid)[:16]} 이 불완전하다 — " + " / ".join(bad))
 
 
 def _materialize(out: Path, rec: dict) -> None:
@@ -898,6 +970,14 @@ def promote_cohort_generation(stage: Path, out: Path, leg: str) -> dict:
       읽어 그 leg 의 파일만 갈아 끼운 **완전한 snapshot** 을 만든다.
     """
     stage, out = Path(stage), Path(out)
+    # ★ 37차 #9 — base 읽기 · 완전성 판정 · generation 자재화 · pointer 전환을
+    #   **한 임계 구역**으로 묶는다. 이 중 어느 둘 사이에 남의 게시가 끼면
+    #   그 leg 가 조용히 사라진다.
+    with _PublishLock(out):
+        return _promote_cohort_locked(stage, out, leg)
+
+
+def _promote_cohort_locked(stage: Path, out: Path, leg: str) -> dict:
     base: dict = {}
     gdir = None
     expect = None
@@ -927,6 +1007,14 @@ def promote_cohort_generation(stage: Path, out: Path, leg: str) -> dict:
     # base 에서 넘길 파일을 staging 에 복사한다 — generation 은 self-contained
     for name in sorted(keep):
         shutil.copyfile(gdir / name, stage / name)
+    # ★ 37차 #9 — publish 쪽에서도 **같은** validator 를 부른다. 36차에 이
+    #   사본을 지웠던 것은 오판이었다: 변이가 안 문 것은 중복이어서가 아니라
+    #   validator 가 약해서였다. 기대 명부는 base 에 있던 leg 들 ∪ {이번 leg}
+    #   — 승격이 남의 leg 를 **줄이는** 것을 여기서 막는다.
+    want = {_leg_of(n) for n in keep} | {leg}
+    staged = {p.name: _sha(p.read_bytes())
+              for p in sorted(stage.iterdir()) if p.is_file()}
+    assert_cohort_complete(staged, "staging", expect_legs=want)
     return _promote_generation(stage, out, expect=expect)
 
 

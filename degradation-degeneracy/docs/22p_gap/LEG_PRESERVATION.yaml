@@ -77,8 +77,8 @@ cohorts:
       (`cross_leg_comparison` 참조).
     pin:
       schema_version: 3
-      compute_sha256: ab8aadbf521943fd
-      row_projection_py_sha256: b00ec1c367532c5d
+      compute_sha256: 4d948d46f4123ce4
+      row_projection_py_sha256: c08b6309e6c79a7d
       src_scoring_py_sha256: 69e69cb046f4b4ae
       analysis_spec_sha256: 43d74dd385b1f66d28cc371dd7ebbd00fc0289323e0a515114eb2b8d45d56271
     runtime: {python: "3.11.15", pandas: "3.0.5", pyarrow: "25.0.1",
@@ -116,12 +116,12 @@ legs:
       #   commit SHA·실행 시각·dirty 여부는 stamp 로 뺐다 (그것들을 core 에
       #   두면 커밋된 영수증이 원리적으로 재생 불가능해진다).
       verification_receipt: docs/22p_gap/receipts/paired_fixed5_v4.validate.yaml
-      verification_receipt_core_sha256: ddb3ac0b38b6c2e56cf3bddc88eca8cb7545841ee91efeba61576c9ca1886536
+      verification_receipt_core_sha256: c80b580a8647dfdedfcfab5e2ed38436ed0023aad020d362adec384014294fb3
       verification_receipt_generator: docs/22p_gap/make_receipt.py
       empty_root_restore: true       # 원본 results/ 에 접근하지 않고 복원해 검증
       rescored_from_restored_fits: true
       validator_identity:
-        source_digest: 4f4756746bd63496
+        source_digest: ccb3e2ad0f6145c0
         n_checks: 34
         ok: true
       leg_source_digest: d50295f980ccaa81            # 산출물 쪽 (옛 세대)

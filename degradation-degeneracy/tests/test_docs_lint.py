@@ -19,6 +19,7 @@ from __future__ import annotations
 import hashlib
 import json
 import os
+import time
 import re
 import shutil
 import subprocess
@@ -1226,11 +1227,13 @@ def test_warm_probe_row_projections_are_committed_and_self_consistent():
                         | {l for p in _WARM_PAIRS for l in p}
                         | {l for a, b, _ in _CONFOUNDED_PAIRS for l in (a, b)}
                         | {l for p in _XDIGEST_PAIRS for l in p})
-    targets: list[tuple[str, str, Path, int]] = []      # (cohort, leg, dir, schema)
+    # ★ 37차 #9 — cohort dir 이 아니라 **snapshot handle** 을 넘긴다. 경로를
+    #   주면 소비자가 고정 이름을 직접 열 수 있고, 36차에 실제로 그랬다.
+    targets = []                       # (cohort, leg, snapshot, schema)
     for c in _cohorts():
-        d = _REPO / c["dir"]
+        snap = _snapshot(c)
         for leg in c["legs"]:
-            targets.append((c["cohort_id"], leg, d, c["pin"]["schema_version"]))
+            targets.append((c["cohort_id"], leg, snap, c["pin"]["schema_version"]))
 
     covered = {leg for _, leg, _, _ in targets}
     missing = [l for l in claim_legs if l not in covered]
@@ -1238,13 +1241,13 @@ def test_warm_probe_row_projections_are_committed_and_self_consistent():
         "인용되는 다리가 어느 cohort 에도 없다:\n  " + "\n  ".join(missing))
 
     bad = []
-    for cohort, leg, _WARM, want_schema in targets:
-        y = _WARM / f"{leg}.projection.yaml"
-        if not y.is_file():
+    for cohort, leg, snap, want_schema in targets:
+        name = f"{leg}.projection.yaml"
+        if not snap.has(name):
             bad.append(f"{cohort}/{leg}: 투영 YAML 이 없다")
             continue
         leg = f"{cohort}/{leg}"
-        m = yaml.safe_load(y.read_text(encoding="utf-8"))
+        m = snap.yaml(name)
         # ★ 27차 P1-8 — `projection_file` 을 cohort dir 와 단순 join 하면
         #   `../warm_probe/...` 로 **다른 cohort 의 bytes** 를 대신 재해시할 수
         #   있다 (g2 payload 를 지우고 frozen g1 을 가리키는 false-green).
@@ -1321,10 +1324,10 @@ def test_warm_probe_row_projections_are_committed_and_self_consistent():
             bad.append(f"{leg}: 분석기 provenance 가 없다")
         # restart 수준 투영도 있어야 한다 (발견 5 항목 4)
         rp = m.get("restart_projection_file")
-        if not rp or not (_WARM / rp).is_file():
+        if not rp or not snap.has(rp):
             bad.append(f"{leg}: restart 수준 투영이 없다")
         else:
-            r_raw = gzip.decompress((_WARM / rp).read_bytes())
+            r_raw = gzip.decompress(snap.blob(rp))
             if hashlib.sha256(r_raw).hexdigest() != m.get("restart_projection_sha256"):
                 bad.append(f"{leg}: restart 투영이 digest 와 다르다")
             r_body = r_raw.decode("utf-8").splitlines()[1:]
@@ -2198,9 +2201,8 @@ def test_preservation_registry_covers_every_warm_probe_leg():
     recorded = {l["leg_id"]: l for l in reg["legs"]}
     # ★ 26차 P1-9 — 초판은 frozen g1 디렉터리 하나와 정확히 같기를 요구했다.
     #   새 cohort 에만 있는 다리는 영원히 `extra` 가 된다. cohort 전체를 본다.
-    have = {p.name[: -len(".projection.yaml")]
-            for c in _cohorts()
-            for p in (_REPO / c["dir"]).glob("*.projection.yaml")}
+    have = {n[: -len(".projection.yaml")]
+            for c in _cohorts() for n in _snapshot(c).names()}
 
     missing = sorted(have - set(recorded))
     assert not missing, (
@@ -2352,7 +2354,7 @@ def test_legs_with_projection_but_no_raw_are_recorded_projection():
     reg = yaml.safe_load(_PRESERVE.read_text(encoding="utf-8"))
     bad = []
     for e in reg["legs"]:
-        has_proj = any((_REPO / c["dir"] / f"{e['leg_id']}.projection.yaml").is_file()
+        has_proj = any(_snapshot(c).has(f"{e['leg_id']}.projection.yaml")
                        for c in _cohorts())
         if has_proj and e.get("preservation_status") == "missing":
             bad.append(f"{e['leg_id']}: 투영이 커밋돼 있는데 preservation_status=missing")
@@ -2731,35 +2733,91 @@ def _cohort_names(c: dict, base=None) -> list[str]:
     frozen cohort 는 원자료를 잃어 migration 할 수 없으므로 fixed layout
     fallback 을 유지한다 (조용한 예외가 아니라 여기 적힌 예외다).
     """
-    d = Path(base) if base is not None else _REPO / c["dir"]
-    if c.get("status") == "frozen":
-        return sorted(q.name for q in d.glob("*.projection.yaml"))
-    rp = _rp()
-    return sorted(n for n in rp.read_current(d)["files"]
-                  if n.endswith(".projection.yaml"))
+    return _snapshot(c, base=base).names()
+
+
+class _Snapshot:
+    """한 cohort 의 **한 generation** 을 고정한 handle (37차 #9).
+
+    ★ 36차판은 `_cohort_names()` 가 `CURRENT` 를 한 번 읽고, manifest 마다
+      `_cohort_yaml()` 이 `CURRENT` 를 **또** 읽었다. 그 사이에 게시가 끼면
+      한 assertion 안에서 G0 와 G1 이 섞인다. reader operation 이 시작할 때
+      한 번 읽어 generation ID 와 file map 을 고정하고, 이후 모든 조회가
+      **그 generation** 만 본다.
+
+    ★ 그리고 **경로를 밖으로 내보내지 않는다.** cohort dir 을 넘기면 소비자가
+      고정 이름을 직접 열 수 있고, 36차에 실제로 그랬다. 여기서 나가는 것은
+      이름과 이미 읽힌 바이트뿐이다.
+    """
+
+    def __init__(self, c: dict, base=None):
+        self.cohort_id = c.get("cohort_id")
+        self.frozen = c.get("status") == "frozen"
+        d = Path(base) if base is not None else _REPO / c["dir"]
+        self._dir = d
+        if self.frozen:
+            # 원자료를 잃어 migration 할 수 없다 — fixed layout fallback 을
+            # 유지하되, 목록도 **한 번만** 읽어 고정한다.
+            self.generation_id = None
+            self._files = {q.name: None for q in sorted(d.iterdir())
+                           if q.is_file()}
+        else:
+            # ★ 37차 #9 — 기대 명부는 **원장**에서 온다. 고정 파일 목록에서
+            #   유도하면 자기 자신을 근거로 삼는 꼴이라 leg 통째 누락을 못 본다.
+            #   명부를 **선언한** cohort 에만 적용한다 — 선언이 없으면 빈
+            #   집합이 아니라 "검사 안 함"(None) 이다.
+            rec = _rp().read_current(
+                d, expect_legs=set(c["legs"]) if c.get("legs") else None)
+            self.generation_id = rec["generation_id"]
+            self._files = dict(rec["files"])
+            self._gdir = d / "gen" / rec["generation_id"]
+
+    def names(self) -> list:
+        return sorted(n for n in self._files if n.endswith(".projection.yaml"))
+
+    def has(self, name: str) -> bool:
+        return name in self._files
+
+    def blob(self, name: str) -> bytes:
+        """이 generation 의 바이트. 고정 사본이 흔들려도 영향받지 않는다."""
+        if name not in self._files:
+            raise AssertionError(
+                f"{self.cohort_id}: snapshot 이 {name} 을 담고 있지 않다")
+        if self.frozen:
+            return (self._dir / name).read_bytes()
+        data = (self._gdir / name).read_bytes()
+        got = hashlib.sha256(data).hexdigest()
+        if got != self._files[name]:
+            raise AssertionError(
+                f"{self.cohort_id}/{name}: 바이트가 snapshot 과 다르다")
+        return data
+
+    def yaml(self, name: str) -> dict:
+        import yaml as _y
+
+        return _y.safe_load(self.blob(name).decode("utf-8"))
+
+    def manifests(self):
+        for n in self.names():
+            yield n, self.yaml(n)
+
+
+def _snapshot(c: dict, base=None) -> _Snapshot:
+    return _Snapshot(c, base=base)
 
 
 def _cohort_yaml(c: dict, name: str, base=None) -> dict:
     """cohort 에서 투영 YAML 하나를 읽는다 — active 는 CURRENT 를 통해서."""
-    import yaml
-
-    d = Path(base) if base is not None else _REPO / c["dir"]
-    if c.get("status") == "frozen":
-        return yaml.safe_load((d / name).read_text(encoding="utf-8"))
-    return yaml.safe_load(_rp().cohort_bytes(d, name).decode("utf-8"))
+    return _snapshot(c, base=base).yaml(name)
 
 
 def _cohort_manifests(c: dict):
-    """cohort 의 투영 manifest 를 **(이름, dict)** 로 준다 (36차 #9a).
+    """cohort 의 투영 manifest 를 **(이름, dict)** 로 준다.
 
-    35차까지는 `_cohort_projections()` 가 `Path` 를 줬고, 실제 판정 넷이
-    그 Path 를 `read_text()` 했다. helper 만 CURRENT 로 옮겨 놓고 소비자는
-    고정 사본을 읽고 있었던 것이다 — "판정에는 쓰지 않는다" 는 docstring
-    으로는 아무것도 못 막는다. 경로를 아예 **주지 않는다**: 여기서 나오는
-    것은 이미 읽힌 내용이고, active cohort 면 CURRENT 를 지나서 왔다.
+    ★ 37차 #9 — 한 snapshot 에서 전부 나온다. 36차판은 이름과 내용을 서로
+      다른 `CURRENT` 읽기로 얻어 mixed generation 이 가능했다.
     """
-    for n in _cohort_names(c):
-        yield n, _cohort_yaml(c, n)
+    yield from _snapshot(c).manifests()
 
 
 def test_every_projection_matches_its_own_cohort_pin():
@@ -2778,7 +2836,7 @@ def test_every_projection_matches_its_own_cohort_pin():
     for c in _cohorts():
         pin = c["pin"]
         files = list(_cohort_manifests(c))
-        assert files, f"{c['cohort_id']}: 투영이 하나도 없다 ({c['dir']})"
+        assert files, f"{c['cohort_id']}: 투영이 하나도 없다"
         for _n, m in files:
             a = m.get("analyzer") or {}
             got = {"schema_version": m.get("projection_schema"),
@@ -4485,6 +4543,52 @@ def _handmade_generation(rp, out: Path, blobs: dict) -> str:
 # 36차 #9a — helper 는 CURRENT 를 따랐지만 **실제 판정**은 fixed path 를 읽었다
 # ─────────────────────────────────────────────────────────────────────────────
 
+def test_no_reader_touches_the_cohort_fixed_namespace():
+    """★ 37차 #9 — 36차 금지는 **함수 이름 하나**였다.
+
+    `_cohort_projections` 호출만 막았으므로 `c["dir"] / f"{leg}.projection.yaml"`
+    · glob · 직접 gzip open 은 그대로 통과했고, 실제로 cohort self-consistency
+    경로가 그렇게 읽고 있었다. 이름이 아니라 **namespace 접근**을 막는다.
+
+    규칙: cohort record 의 `dir` 을 꺼내는 곳은 snapshot 생성자 하나뿐이다.
+    그 밖에서 꺼내면 경로가 소비자에게 흘러가고, 그 순간 고정 사본을 읽을 수
+    있게 된다.
+    """
+    import ast
+
+    src = Path(__file__).read_text(encoding="utf-8")
+    tree = ast.parse(src)
+    #: snapshot 생성자 — 여기서만 경로를 안다.
+    #: `..._published_through_a_single_current_pointer` 는 **자재화 자체**를
+    #: 보는 시험이라 예외다: CURRENT 와 고정 사본이 같은지, frozen 에 CURRENT
+    #: 가 안 생겼는지를 보려면 layout 을 봐야 한다. 내용을 읽지는 않는다.
+    allowed = {"_Snapshot", "__init__", "_snapshot",
+               "test_the_active_cohort_is_published_through_a_single_current_pointer"}
+    #: cohort record 를 담는 이름들. 다른 record 의 `dir` 은 이 규칙 밖이다
+    #: (예: 원점 진단 JSON 의 `dir`).
+    cohort_names = {"c", "cohort", "active", "frozen", "co"}
+
+    def _is_cohort(node) -> bool:
+        base = node.value
+        while isinstance(base, ast.Subscript):
+            base = base.value
+        return isinstance(base, ast.Name) and base.id in cohort_names
+
+    bad = []
+    for fn in ast.walk(tree):
+        if not isinstance(fn, (ast.FunctionDef, ast.AsyncFunctionDef)):
+            continue
+        if fn.name in allowed:
+            continue
+        for n in ast.walk(fn):
+            if isinstance(n, ast.Subscript) and isinstance(n.slice, ast.Constant) \
+                    and n.slice.value == "dir" and _is_cohort(n):
+                bad.append(f"{fn.name}:{n.lineno}")
+    assert not bad, (
+        "cohort dir 을 snapshot 밖에서 꺼낸다 — 고정 namespace 로 가는 통로다:\n  "
+        + "\n  ".join(bad))
+
+
 def test_no_cohort_assertion_reads_a_fixed_path():
     """★ 36차 #9a — `_cohort_projections()` 가 우회로였다.
 
@@ -4638,11 +4742,11 @@ def test_reading_current_refuses_an_incomplete_cohort(tmp_path):
 
 
 def test_a_lost_update_cannot_silently_drop_another_legs_generation(tmp_path):
-    """★ 36차 #9b — CURRENT 전환이 **compare-and-swap** 이 아니었다.
+    """★ 36차 #9 / 37차 #9 — **성공을 반환했으면 남아 있어야 한다.**
 
-    `promote_cohort_generation()` 은 base 를 `read_current()` 로 읽고, 그
-    사이에 다른 승격이 CURRENT 를 옮겨도 자기 base 로 그냥 덮었다. 두 leg 를
-    동시에 승격하면 나중에 게시한 쪽이 상대의 leg 를 **조용히 지운다**.
+    36차판은 "A 가 거부된다" 를 요구했는데, 그것은 구현을 하나로 못 박는
+    과잉 규정이었다. 진짜 불변식은 이것이다 — 성공을 돌려준 승격의 leg 는
+    최종 `CURRENT` 에 있어야 한다. 직렬화로 이루든 거부로 이루든 상관없다.
     """
     rp = _rp()
     out = tmp_path / "cohort"
@@ -4651,31 +4755,217 @@ def test_a_lost_update_cannot_silently_drop_another_legs_generation(tmp_path):
                                    "a.projection.yaml": b"v: 0\n",
                                    "a.restarts.csv.gz": b"r0"}), out, "a")
 
-    # A 의 base 를 읽는 시점에 B 가 끼어들어 b leg 를 추가한다
     real = rp.read_current
-    fired = {"n": 0}
+    ok = []
 
     def _interleave(o):
         rec = real(o)
-        if fired["n"] == 0:
-            fired["n"] = 1
-            rp.promote_cohort_generation(
-                _stage(tmp_path / "sb", **{"b.projection.csv.gz": b"bc",
-                                           "b.projection.yaml": b"v: b\n",
-                                           "b.restarts.csv.gz": b"br"}), o, "b")
+        if not ok:                       # A 의 첫 read 중에 B 가 끼어든다
+            ok.append("armed")
+            rp.read_current = real
+            try:
+                rp.promote_cohort_generation(
+                    _stage(tmp_path / "sb", **{"b.projection.csv.gz": b"bc",
+                                               "b.projection.yaml": b"v: b\n",
+                                               "b.restarts.csv.gz": b"br"}), o, "b")
+                ok.append("b")
+            except SystemExit:
+                pass                     # 직렬화로 거부됐다 — 정당하다
+            rp.read_current = _interleave
         return rec
 
     rp.read_current = _interleave
     try:
-        with pytest.raises(SystemExit) as ei:
+        try:
             rp.promote_cohort_generation(
                 _stage(tmp_path / "s1", **{"a.projection.csv.gz": b"c1",
                                            "a.projection.yaml": b"v: 1\n",
                                            "a.restarts.csv.gz": b"r1"}), out, "a")
+            ok.append("a")
+        except SystemExit:
+            pass
     finally:
         rp.read_current = real
-    assert "CURRENT" in str(ei.value)
 
-    # B 의 leg 가 살아 있어야 한다
     cur = rp.read_current(out)
-    assert "b.projection.yaml" in cur["files"], "끼어든 승격이 조용히 사라졌다"
+    assert ok, "둘 다 거부됐다 — 진행이 불가능하면 그것도 고장이다"
+    if "b" in ok:
+        assert "b.projection.yaml" in cur["files"], (
+            "B 가 성공을 돌려줬는데 leg 가 사라졌다")
+    if "a" in ok:
+        assert cur["files"]["a.projection.yaml"] == \
+            hashlib.sha256(b"v: 1\n").hexdigest(), (
+            "A 가 성공을 돌려줬는데 그 세대가 아니다")
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# 37차 #9 — `expected_current` 는 compare-and-swap 이 아니었다
+# ─────────────────────────────────────────────────────────────────────────────
+
+def test_a_publish_between_compare_and_replace_cannot_be_lost(tmp_path):
+    """★ 37차 #9 — compare 와 replace 가 **따로**였다.
+
+    36차판은 `CURRENT` 를 읽어 expected 와 대조한 뒤, 별도의 무조건
+    `os.replace` 로 게시했다. 두 writer 가 같은 옛 값을 읽고 차례로 replace
+    하면 뒤 writer 가 앞의 **완전한 generation** 을 조용히 잃게 한다:
+
+        CURRENT = G0
+        A: read_current() → G0 · expected == G0 확인
+                                 B: 전 과정 게시 → CURRENT = GB
+        A: CURRENT := GA          ← GB 가 사라진다
+
+    36차 회귀는 A 의 비교 read **전에** B 를 게시해 A 가 GB 를 보고 실패하는
+    쉬운 schedule 만 잡았다. 여기서는 A 의 비교 read 가 G0 를 **반환한 뒤**
+    B 를 끼운다. 대조를 한 줄 뒤로 옮기는 것으로는 못 막는다 — 임계 구역이
+    필요하다.
+    """
+    rp = _rp()
+    out = tmp_path / "cohort"
+    rp.promote_cohort_generation(
+        _stage(tmp_path / "s0", **{"a.projection.csv.gz": b"c0",
+                                   "a.projection.yaml": b"v: 0\n",
+                                   "a.restarts.csv.gz": b"r0"}), out, "a")
+
+    real = rp.read_current
+    state = {"seen": 0, "b_ok": False, "a_ok": False}
+
+    def _stale(o):
+        rec = real(o)
+        state["seen"] += 1
+        if state["seen"] == 2:           # A 의 **비교용** read 직후
+            rp.read_current = real
+            try:
+                rp.promote_cohort_generation(
+                    _stage(tmp_path / "sb", **{"b.projection.csv.gz": b"bc",
+                                               "b.projection.yaml": b"v: b\n",
+                                               "b.restarts.csv.gz": b"br"}), o, "b")
+                state["b_ok"] = True
+            except SystemExit:
+                pass                     # 임계 구역이 막았다 — 정당하다
+            rp.read_current = _stale
+        return rec
+
+    rp.read_current = _stale
+    try:
+        try:
+            rp.promote_cohort_generation(
+                _stage(tmp_path / "s1", **{"a.projection.csv.gz": b"c1",
+                                           "a.projection.yaml": b"v: 1\n",
+                                           "a.restarts.csv.gz": b"r1"}), out, "a")
+            state["a_ok"] = True
+        except SystemExit:
+            pass
+    finally:
+        rp.read_current = real
+
+    cur = rp.read_current(out)
+    assert state["a_ok"] or state["b_ok"], "둘 다 거부됐다"
+    if state["b_ok"]:
+        assert "b.projection.yaml" in cur["files"], (
+            "B 가 성공을 돌려줬는데 A 의 replace 가 지웠다 — expected 대조는 "
+            "CAS 가 아니다")
+    if state["a_ok"]:
+        assert cur["files"]["a.projection.yaml"] == \
+            hashlib.sha256(b"v: 1\n").hexdigest()
+
+
+def test_a_live_publish_lock_blocks_and_a_stale_one_is_reclaimed(tmp_path):
+    """★ 37차 #9 — 임계 구역을 넣었으면 **crash 잔여 의미**도 정해야 한다.
+
+    lock 이 죽은 채 남아 영구히 게시를 막으면 그것대로 고장이다. 살아 있는
+    lock 은 막고, 오래된 lock 은 회수한다.
+    """
+    rp = _rp()
+    out = tmp_path / "cohort"
+    out.mkdir(parents=True)
+    lock = out / ".publish.lock"
+
+    lock.write_text("99999", encoding="utf-8")          # 방금 잡힌 lock
+    with pytest.raises(SystemExit) as ei:
+        rp.promote_cohort_generation(
+            _stage(tmp_path / "s0", **{"a.projection.csv.gz": b"c0",
+                                       "a.projection.yaml": b"v: 0\n",
+                                       "a.restarts.csv.gz": b"r0"}), out, "a")
+    assert "진행 중" in str(ei.value)
+
+    old = time.time() - rp._LOCK_STALE_S - 60
+    os.utime(lock, (old, old))                          # crash 잔여로 늙힌다
+    rec = rp.promote_cohort_generation(
+        _stage(tmp_path / "s1", **{"a.projection.csv.gz": b"c0",
+                                   "a.projection.yaml": b"v: 0\n",
+                                   "a.restarts.csv.gz": b"r0"}), out, "a")
+    assert rec["generation_id"], "늙은 lock 이 게시를 영구히 막았다"
+    assert not lock.exists(), "게시 뒤 lock 을 안 풀었다"
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# 37차 #9 — completeness 가 **observed files** 에 대해서만 닫혀 있었다
+# ─────────────────────────────────────────────────────────────────────────────
+
+def test_an_empty_generation_is_not_complete(tmp_path):
+    """★ 37차 #9 — `files={}` 는 "모든 leg 가 완전하다" 를 공허참으로 만족했다.
+
+    관측된 leg 를 순회하는 검사이므로 leg 가 하나도 없으면 통과한다. 빈
+    generation 을 가리키는 CURRENT 가 정상으로 읽혔다.
+    """
+    rp = _rp()
+    out = tmp_path / "cohort"
+    _handmade_generation(rp, out, {})
+    with pytest.raises(SystemExit) as ei:
+        rp.read_current(out)
+    assert "비었다" in str(ei.value) or "불완전" in str(ei.value)
+
+
+def test_a_whole_leg_missing_from_the_roster_is_not_complete(tmp_path):
+    """★ 37차 #9 — leg 가 **통째로** 빠지면 observed 순회는 못 본다.
+
+    expected roster 가 `{A, B}` 인데 B 의 세 파일이 전부 없으면, 남은 A 는
+    완전하므로 검사가 통과한다. cohort 를 축소한 generation 이 정상 게시되고
+    정상으로 읽힌다. 완전성은 **관측된 것**이 아니라 **기대 명부**에 대해
+    닫혀야 한다.
+    """
+    rp = _rp()
+    out = tmp_path / "cohort"
+    rp.promote_cohort_generation(
+        _stage(tmp_path / "sa", **{"a.projection.csv.gz": b"c0",
+                                   "a.projection.yaml": b"v: 0\n",
+                                   "a.restarts.csv.gz": b"r0"}), out, "a")
+    rp.promote_cohort_generation(
+        _stage(tmp_path / "sb", **{"b.projection.csv.gz": b"bc",
+                                   "b.projection.yaml": b"v: b\n",
+                                   "b.restarts.csv.gz": b"br"}), out, "b")
+    assert set(rp.read_current(out)["files"]) >= {"b.projection.yaml"}, "전제"
+
+    # B 를 통째로 뺀 generation 을 **바이트에서** 만든다 (publisher 우회)
+    _handmade_generation(rp, out, {"a.projection.csv.gz": b"c0",
+                                   "a.projection.yaml": b"v: 0\n",
+                                   "a.restarts.csv.gz": b"r0"})
+    with pytest.raises(SystemExit) as ei:
+        rp.read_current(out, expect_legs={"a", "b"})
+    assert "b" in str(ei.value)
+
+
+def test_the_publisher_and_the_reader_share_one_validator():
+    """★ 37차 #9 — 36차에 publisher 쪽 검사를 **지운 것이 틀렸다.**
+
+    변이가 안 물길래 중복으로 보고 지웠는데, 리뷰의 답은 "validator 가 약했던
+    것" 이었다. 옳은 구조는 같은 **pure validator** 를 publish 와 read 양쪽에서
+    부르는 것이다. publisher 가 private 라는 이름 규약은 trust boundary 가
+    아니므로 read-side fail-closed 를 없앨 근거가 못 된다.
+    """
+    import ast
+
+    rp = _rp()
+    assert callable(getattr(rp, "assert_cohort_complete", None)), (
+        "공유 validator 가 없다")
+
+    src = (_REPO / "docs" / "22p_gap" / "row_projection.py").read_text(
+        encoding="utf-8")
+    callers = {fn.name for fn in ast.walk(ast.parse(src))
+               if isinstance(fn, ast.FunctionDef)
+               for n in ast.walk(fn)
+               if isinstance(n, ast.Call) and isinstance(n.func, ast.Name)
+               and n.func.id == "assert_cohort_complete"}
+    assert "read_current" in callers, "reader 가 validator 를 안 부른다"
+    assert any(c.startswith("_promote") or c.startswith("promote")
+               for c in callers), "publisher 가 validator 를 안 부른다"

@@ -3729,3 +3729,144 @@ publisher** 로 만들었다 — publisher 를 비공개로 만들자 fixture �
 | 실제 object-lock provider adapter | **미구현** — 계약(9연산)·per-version 의미·bypass probe 는 고정. 자격증명·네트워크가 없다 |
 | power-loss ordering fault model | **미착수** — `os._exit` 는 fsync 안 된 항목을 잃지 않는다. fault-injecting filesystem 필요 |
 | delete-marker 공격면 | **미모형** — fake 는 version 삭제만 모형한다. head 를 가리는 delete marker 는 별도 축이다 |
+
+## 45. 36차 리뷰 대응 — fake 가 실물보다 엄격해 창을 가리고 있었다
+
+36차 리뷰는 방향(per-version · CURRENT authority)을 인정하고 좁은 항목 아홉을
+종결했지만, P0-1 과 #9 를 미종결로 남겼다. 이번 라운드의 시작점은 그중 하나였다.
+
+### 45.1 시작 — fake 를 실물에 맞추자 8개가 빨개졌다
+
+`_LockingStore.put()` 은 head 가 잠겼고 bytes 가 같으면 기존 version ID 를
+재사용했다. 실물 `PutObject` 는 요청마다 version 을 부여한다. 그리고 version
+없는 `delete()` 를 head 삭제로 모형했는데, 실물 versioned S3 는 **delete
+marker** 를 얹고 보호된 version 은 남긴다.
+
+fake 를 실물에 맞추자 **여덟이 즉시 빨개졌다.** 32차의 "canary 가 강제하는
+쪽이 아니었다" 와 같은 실수가 다른 층에서 반복된 것이다 — 이번에는 canary 가
+바이트를 들고 있었지만 **의미**를 거꾸로 들고 있었다.
+
+| 드러난 것 | 왜 안 보였나 |
+|---|---|
+| `lock_objects`·`lock_content_object` 이 **무조건 put** | 같은 바이트면 같은 version 이라 누적이 안 보였다 |
+| `pinned()` 이 delete marker 뒤의 담보를 못 봄 | fake 가 marker 를 모형하지 않았다 |
+| 재시도가 WORM version 을 무한히 쌓음 | key 만 세고 version 을 안 셌다 |
+
+`_existing_version()` 이 같은 바이트의 기존 version 을 재사용한다. 열거
+primitive 는 `list_versions`(= ListObjectVersions) 하나로 모으고 `keys_under`
+(= ListObjectsV2)는 계약에서 **뺐다** — marker 뒤를 못 본다. `delete` 도 뺐다:
+우리는 어떤 경로로도 지우지 않으므로 adapter 에게 요구할 근거가 없다.
+
+### 45.2 P0-1 발견 1 — 복구가 **삭제 가능한 그 창**을 못 견뎠다
+
+36차 drill 은 삭제를 **복구가 끝난 뒤**에 했다. 리뷰의 반례는 그 사이다:
+
+```
+T0  lease L0 content put + pin
+T1  crash
+T2  아직 unlocked 인 objects/<L0> 를 지운다
+T3  fresh backend 로 재개
+```
+
+`repair_lease_locks()` 가 `pin()` 부터 불렀고 `pin()` 은 `read_back()` 으로
+**지워진 content** 를 읽다 실패했다. `_existing_lease()` 는 그 실패를 후보
+부재와 구별하지 않고 `None` 으로 바꿔 **두 번째 WORM lease** 를 만들었다.
+재현했고 — `after_pin_lock` 에서 lease pin 이 2개였다 — 셋을 고쳤다.
+
+1. **순서를 뒤집는다.** 살아남은 pin 바이트가 정본이다. `read_pinned()` 로
+   읽어 digest 를 확인하고, content 가 없으면 그 바이트로 되살린 뒤 잠근다.
+2. **후보가 하나라도 있으면 새 state 를 만들지 않는다.** 모호(≥2)·손상·수리
+   실패·만료 전 검증 실패는 전부 `None` 이 아니라 **fail-closed** 다.
+3. **`after_lease_put` 잔여를 입양한다.** pin 만 보면 그 창의 orphan content 를
+   못 보고 새 lease 를 만든다. lease 바이트는 초마다 달라져 CAS dedup 도 안
+   걸리므로 재시도마다 하나씩 쌓였다.
+
+만료는 반대다 — 담보 기간이 지난 lease 는 갱신하는 것이 맞다. 그 축을 같이
+못 박았다(§45.7 변이 참조: 없으면 "언제나 거부" 로도 넷이 초록이다).
+
+### 45.3 P0-1 발견 2 — identity 는 잠겼지만 **어느 version 이 정본인지**는 안 잠겼다
+
+`protected_version()` 은 "최신 잠긴 version" 이다. 그래서 유효하고 잠긴 더
+최신 record 하나가 생기면 reopen 이 store identity 를 조용히 바꿨다. 바이트는
+다 살아 있는데 **locator** 를 잃는다 — 예전 receipt 전부가 foreign store 가
+된다.
+
+`_canonical_store_version()` 은 **가장 오래된** 유효 잠금을 고른다. 최초 잠금이
+root-of-authority 이고, 그 뒤에 무엇이 올라오든 바뀌지 않는다. record 자체도
+닫힌 schema 로 본다(`_is_store_record`) — 36차판은 mapping 과 32-hex 만 봐서
+남는 key 나 다른 schema 도 canonical 로 받았다. 담보 version 이 계약 record 가
+아니면 새 UUID 를 발급하지 않고 **거부**한다 (잠긴 쓰레기는 못 지우므로 발급은
+영구 record 를 하나 더 만드는 것이다).
+
+### 45.4 P0-1 발견 3 — 이름은 닫혔는데 **의미**가 안 닫혔다
+
+**GOVERNANCE 를 durable 에서 뺐다.** 36차는 우회 삭제를 canary 로 실측해
+거부되면 승격했다. 그 한 요청이 증명하는 것은 "현재 credential 의 version-delete
+한 경로" 뿐이다 — retention 단축·제거 권한, 다른 principal, 이후 IAM 변경은
+관측되지 않는다. 31차에 local mode bit 를 uid 0 이 우회할 수 있다는 이유로
+durable 에서 뺐으니 **같은 잣대**를 쓴다. `probe_bypass()` 는 지웠다.
+
+**회수가 봉인 version 을 읽는다.** `retrieve_retained()` 는 locator 를 다시
+탐색하고 있었다. lease 가 v1 을 봉인했는데 다른 바이트의 v2 가 올라와 잠기면
+v1 은 그대로 durable 한데 회수는 v2 를 읽고 digest mismatch 로 실패했다.
+receipt 의 목적은 locator 재발견이 아니라 **exact immutable version 회수**다.
+
+### 45.5 #9 발견 1 — `expected_current` 는 CAS 가 아니었다
+
+compare 와 replace 가 따로였다. 리뷰가 준 schedule 을 그대로 재현했다 — A 의
+비교 read 가 G0 를 **반환한 뒤** B 가 완전 게시하면, A 의 무조건 replace 가
+B 의 완전한 generation 을 조용히 지웠다. 36차 회귀는 비교 read **전에** B 를
+게시하는 쉬운 schedule 만 잡았다.
+
+`_PublishLock` 이 base 읽기·완전성 판정·자재화·pointer 전환을 **한 임계 구역**
+으로 묶는다. `O_CREAT|O_EXCL` 이 이 저장소가 가진 유일한 실물 CAS primitive 다.
+crash 잔여 lock 이 영구히 게시를 막으면 그것대로 고장이므로 stale 회수 의미도
+정하고 시험했다.
+
+시험의 불변식도 바꿨다. 36차판은 "A 가 거부된다" 를 요구했는데 그것은 구현을
+하나로 못 박는 과잉 규정이다. 진짜 불변식은 **성공을 반환했으면 남아 있어야
+한다** 이고, 직렬화로 이루든 거부로 이루든 상관없다.
+
+### 45.6 #9 발견 2 — 금지가 **함수 이름 하나**였다
+
+36차는 `_cohort_projections` 호출만 막았다. 그래서
+`c["dir"] / f"{leg}.projection.yaml"` · glob · 직접 gzip open 은 통과했고,
+실제로 cohort self-consistency 경로가 그렇게 읽고 있었다.
+
+`_Snapshot` 이 한 cohort 의 **한 generation** 을 고정한다. reader operation
+시작 때 `CURRENT` 를 한 번 읽고, 이후 모든 조회가 그 generation 만 본다
+(36차판은 이름과 내용을 서로 다른 읽기로 얻어 mixed generation 이 가능했다).
+그리고 **경로를 밖으로 내보내지 않는다** — 나가는 것은 이름과 이미 읽힌
+바이트뿐이다. AST 회귀도 이름이 아니라 **namespace 접근**을 막는다: cohort
+record 의 `dir` 을 꺼내는 곳은 snapshot 생성자 하나뿐이다.
+
+**completeness 는 관측이 아니라 명부에 대해 닫았다.** 36차판은 관측된 leg 를
+순회해서 셋이 통과했다 — 빈 generation(공허참), leg 통째 누락, 한 leg 만
+넘겨 cohort 축소. 이제 nonempty 를 보고, 기대 명부(원장에서 온다 — 고정 파일
+목록에서 유도하면 자기 자신을 근거로 삼는다)와 정확히 같기를 요구한다.
+
+**그리고 36차에 publisher 쪽 검사를 지운 것은 오판이었다.** 변이가 안 문 이유는
+중복이어서가 아니라 **validator 가 약해서**였다. 리뷰의 답이 맞다: 같은 pure
+validator 를 publish 와 read 양쪽에서 부른다. publisher 가 private 라는 이름
+규약은 trust boundary 가 아니므로 read-side 를 없앨 근거가 못 된다.
+
+### 45.7 변이 — 물지 않은 것들이 이번에도 가장 많은 것을 알려줬다
+
+| 물지 않은 변이 | 진단 | 처리 |
+|---|---|---|
+| repair 가 pin 바이트로 복원하지 않는다 | 시험이 fail-closed 도 허용해서 "복원 안 하고 거부" 로도 초록 | pin 이 살아남았으면 **성공**을 요구하도록 조였다 |
+| 수리 실패를 `None` 으로 접는다 | `finalize_only()` 가 journal 검증에서 먼저 죽어 `_existing_lease()` 까지 오지도 않았다 | 재진입점인 `retain()` 을 직접 부른다 |
+| 만료 아닌 검증 실패를 `None` 으로 | 같은 이유 | 같은 처리 |
+| 모호한 후보를 `None` 으로 | 후보가 둘인 상태를 만드는 시험이 없었다 | 추가 |
+| 담보 record 가 계약이 아닐 때 재발급 | schema 시험이 **잠기지 않은** record 만 썼다 | 잠긴 쓰레기 시험 추가 |
+| 만료 판정을 뒤집는다 (갱신 불가) | 갱신 축을 아무도 안 봤다 — "언제나 거부" 로도 넷이 초록 | 갱신 시험 추가 |
+
+여섯 중 다섯이 **시험이 그 축을 안 보던 것**이었고, 하나(§45.6 publisher
+validator)는 지난 라운드에 내가 중복으로 오판해 지웠던 것이다.
+
+### 45.8 남은 것 (신고 유지)
+
+| 항 | 상태 |
+|---|---|
+| 실제 object-lock provider adapter | **미구현** — 계약 8연산·per-version·delete-marker 의미는 고정 |
+| power-loss ordering fault model | **미착수** — fault-injecting filesystem 필요 |

@@ -38,6 +38,7 @@ from tools.preserve import (FAULTS, CasBackend, Hooks, PlannedLeg, PreserveError
                             pin_set_digest, ENFORCEMENT_OBJECT_LOCK, ENFORCEMENT_ADVISORY, registration,
                             MIN_RETENTION_DAYS, ObjectLockBackend, LockedCasBackend)
 from tools.preserve import _is_hex64 as _is_hex64_str
+from tools.preserve import RETENTION_SCHEMA as P_RETENTION_SCHEMA
 
 #: 저장소 루트 (`tests/` 의 부모) — 소스를 읽어 계약을 대조하는 시험이 쓴다.
 ROOT = Path(__file__).resolve().parents[1]
@@ -1147,8 +1148,8 @@ class _DropPinAfterRead(CasBackend):
     def arm(self, victims):
         object.__setattr__(self, "_victims", set(victims))
 
-    def read_pinned(self, leg_id, dg):
-        data = super().read_pinned(leg_id, dg)
+    def read_pinned(self, leg_id, dg, *, version=None):
+        data = super().read_pinned(leg_id, dg, version=version)
         if dg in self._victims:
             self._pin(leg_id, dg).unlink(missing_ok=True)
         return data
@@ -2223,11 +2224,13 @@ class _LockingStore:
     def __init__(self, min_retain_days=MIN_RETENTION_DAYS, mode=None,
                  name="canary-store", bypass=None):
         st = _LockingStore._BACKING.setdefault(
-            name, {"obj": {}, "head": {}, "lock": {}, "n": [0], "ver": {}})
+            name, {"obj": {}, "head": {}, "lock": {}, "n": [0], "ver": {},
+                   "marker": set()})
         self._obj: dict[tuple[str, str], bytes] = st["obj"]
         self._head: dict[str, str] = st["head"]
         self._lock: dict[tuple[str, str], str] = st["lock"]
         self._ver: dict[str, list] = st["ver"]
+        self._marker: set = st["marker"]
         self._counter = st["n"]
         self.name = name
         self.min_retain_days = min_retain_days
@@ -2247,10 +2250,13 @@ class _LockingStore:
         것이지 key 를 지키는 것이 아니다. 그래서 실물에서는 잠긴 v1 위에
         잠기지 않은 v2 가 얼마든지 올라가고, `head_version` 을 보는 코드는
         전부 그 v2 를 본다. fake 가 그 창을 가리고 있었다.
+
+        ★ 37차 P0-1 — **같은 바이트 shortcut 을 없앴다.** 36차판은 head 가
+        잠겼고 bytes 가 같으면 기존 version ID 를 재사용했다. 실물
+        `PutObject` 는 요청마다 version ID 를 부여한다. 그 shortcut 때문에
+        `repair_lease_locks()` 반복이 fake 에서만 멱등해 보였고, 실물에서는
+        재시도마다 새 version 이 생겨 WORM-lock 될 수 있다.
         """
-        if (key, self._head.get(key)) in self._lock \
-                and self._obj.get((key, self._head.get(key))) == data:
-            return self._head[key]                # 같은 바이트면 그대로 (멱등)
         self._counter[0] += 1
         vid = f"v{self._counter[0]:05d}"
         self._obj[(key, vid)] = bytes(data)
@@ -2260,26 +2266,42 @@ class _LockingStore:
 
     def get(self, key: str, version: str | None = None) -> bytes:
         v = version or self._head.get(key)
-        if v is None or (key, v) not in self._obj:
+        # delete marker 가 head 면 실물처럼 "없다" 로 답한다 (version 은 살아 있다)
+        if v is None or (key, v) in self._marker or (key, v) not in self._obj:
             raise KeyError(key)
         return self._obj[(key, v)]
 
     def versions(self, key: str) -> list:
-        """★ 36차 P0-1 — 최신순 version 목록. per-version 잠금의 locator."""
+        """최신순 version 목록. per-version 잠금의 locator (marker 는 뺀다)."""
         return [v for v in self._ver.get(key, []) if (key, v) in self._obj]
 
     def delete(self, key: str, version: str | None = None,
                bypass: bool = False) -> None:
-        v = version or self._head.get(key)
-        if v is None:
+        """★ 37차 P0-1 — version 없는 delete 는 **delete marker** 다.
+
+        36차판은 version 없는 delete 가 locked head 를 직접 지운다고 봤다.
+        실물 versioned S3 에서 version 없는 DELETE 는 delete marker 를 얹고
+        보호된 version 은 **남긴다**. 그래서 36차 canary 의 "`delete(key)` 가
+        거부된다" 는 기대 자체가 실물 의미와 달랐다 — 실물에서는 거부되지
+        않고 **성공하며**, 대신 담보 version 이 살아남는다.
+        """
+        if version is None:
+            self._counter[0] += 1
+            mk = f"d{self._counter[0]:05d}"       # delete marker 도 version 이다
+            self._marker.add((key, mk))
+            self._head[key] = mk
+            self._ver.setdefault(key, []).insert(0, mk)
             return
+        v = version
         if (key, v) in self._lock:
             if not (bypass and self.mode == "GOVERNANCE" and self.bypass):
                 raise PermissionError(f"object lock 이 삭제를 막았다: {key}@{v}")
             self._lock.pop((key, v), None)
         self._obj.pop((key, v), None)
+        self._marker.discard((key, v))
         if self._head.get(key) == v:
-            live = self.versions(key)
+            live = [x for x in self._ver.get(key, [])
+                    if (key, x) in self._obj or (key, x) in self._marker]
             if live:
                 self._head[key] = live[0]
             else:
@@ -2302,8 +2324,25 @@ class _LockingStore:
         """★ 34차 P0-1 — digest 로 현재 version 을 재조회하는 계약."""
         return self._head.get(key)
 
+    def list_versions(self, prefix: str) -> list:
+        """★ 37차 P0-1 — `ListObjectVersions` 다: delete marker 도 넘는다.
+
+        `keys_under()`(= ListObjectsV2)만으로 pin 을 열거하면 marker 하나로
+        graph 가 "없는" 것이 된다. 담보 version 은 살아 있으므로 열거도
+        version 층에서 해야 한다.
+        """
+        return sorted((k, v) for (k, v) in self._obj if k.startswith(prefix))
+
     def keys_under(self, prefix: str) -> list[str]:
-        return sorted(k for k in self._head if k.startswith(prefix))
+        """★ 37차 P0-1 — head 가 delete marker 면 열거되지 않는다.
+
+        실물 `ListObjectsV2` 의 의미다. 보호된 version 은 남아 있지만 목록
+        에서는 사라지므로, pin 열거를 이것에만 의존하면 delete marker 하나로
+        graph 가 "없는" 것이 된다.
+        """
+        return sorted(k for k in self._head
+                      if k.startswith(prefix)
+                      and (k, self._head[k]) not in self._marker)
 
 
 def _lockstore(tmp_path, store=None, retention_days=3650):
@@ -2349,8 +2388,13 @@ def test_the_provider_actually_refuses_to_delete_a_locked_object(tmp_path):
     leg, lease = PLANNED.leg_id, res["retention"]
     for dg in res["retention"]["objects"]:
         key = backend._provider_key(leg, dg)
+        # ★ 37차 P0-1 — version 없는 DELETE 는 실물에서 **거부되지 않는다.**
+        #   delete marker 를 얹을 뿐이고 담보 version 은 남는다. 거부되어야
+        #   하는 것은 **그 version 을 겨눈** 삭제다.
+        pv = backend.protected_version(key)
+        assert pv, f"담보 version 이 없다: {key}"
         with pytest.raises(PermissionError):
-            store.delete(key)
+            store.delete(key, pv)
         # ★ 36차 P0-1 — 실물 Object Lock 은 **새 version 을 막지 않는다.**
         #   적대적 put 은 성공하고 잠기지 않은 head 가 잠긴 version 을 가린다.
         #   깨지면 안 되는 것은 "put 이 실패한다" 가 아니라 **담보한 바이트를
@@ -2544,12 +2588,16 @@ def test_the_lease_object_is_locked_too(tmp_path):
     # lease 의 pin 도 content object 도 잠겨 있어야 한다
     for key in (backend._provider_key(leg, lease),
                 backend._provider_obj_key(lease)):
+        pv = backend.protected_version(key)
+        assert pv, f"담보 version 이 없다: {key}"
         with pytest.raises(PermissionError):
-            store.delete(key)
+            store.delete(key, pv)                 # 그 version 은 못 지운다
+        store.delete(key)                         # marker 는 얹힌다 (실물 의미)
         # ★ 36차 P0-1 — 적대적 새 version 은 실물에서 성공한다. 잠긴 version
         #   이 남아 있어야 하고 lease 는 그것으로 읽혀야 한다.
         store.put(key, b"overwritten")
-        assert backend.protected_version(key), f"잠긴 version 을 잃었다: {key}"
+        assert backend.protected_version(key) == pv, (
+            f"marker·덮어쓰기가 담보 version 을 바꿨다: {key}")
     assert assert_durable_retention(backend, index, leg), (
         "적대적 head 가 lease 증명을 가렸다")
 
@@ -2729,8 +2777,11 @@ def test_the_provider_control_plane_is_locked_too(tmp_path):
     run_transaction(PLANNED, run, backend, index, _hooks())
 
     sid = backend.store_id
+    pv = backend.protected_version("store.json")
+    assert pv, "store.json 담보 version 이 없다"
     with pytest.raises(PermissionError):
-        store.delete("store.json")
+        store.delete("store.json", pv)
+    store.delete("store.json")                    # marker 는 얹힌다
     # ★ 36차 P0-1 — 적대적 put 은 실물에서 성공한다 (per-version 잠금).
     #   identity 는 **잠긴 version** 에서 읽혀야 하고, head 오염이 새 UUID
     #   발급으로 이어지면 안 된다 — 그 순간 기존 receipt 의 locator 를 잃는다.
@@ -2843,8 +2894,10 @@ def test_a_crash_inside_retain_leaves_exactly_one_repairable_lease(tmp_path,
     # 두 잠금이 **모두** 살아 있어야 한다
     leg, ld = PLANNED.leg_id, lease["lease_digest"]
     for key in (fresh._provider_key(leg, ld), fresh._provider_obj_key(ld)):
+        pv = fresh.protected_version(key)
+        assert pv, f"{phase}: 담보 version 이 없다 — {key}"
         with pytest.raises(PermissionError):
-            store.delete(key)
+            store.delete(key, pv)
 
 
 def test_an_unlocked_store_record_is_repaired_or_refused(tmp_path):
@@ -2864,8 +2917,10 @@ def test_an_unlocked_store_record_is_repaired_or_refused(tmp_path):
     backend = _lockstore(tmp_path, store)
     sid = backend.store_id                      # reopen — repair 하거나 거부
     assert sid == "0" * 32, "기존 identity 를 버리면 안 된다"
+    pv = backend.protected_version("store.json")
+    assert pv, "수리가 잠그지 않았다"
     with pytest.raises(PermissionError):
-        store.delete("store.json")
+        store.delete("store.json", pv)
 
 
 def test_the_store_lock_horizon_covers_every_lease(tmp_path, monkeypatch):
@@ -2983,49 +3038,601 @@ def test_a_provider_missing_a_contract_op_cannot_claim_durable(tmp_path):
 # 36차 P0-1 — GOVERNANCE 는 신고이지 강제가 아니다
 # ─────────────────────────────────────────────────────────────────────────────
 
-def test_governance_mode_alone_is_not_durable(tmp_path):
-    """★ 36차 P0-1 — `LOCK_MODES` 가 GOVERNANCE 를 그냥 받아줬다.
+def test_governance_is_never_durable_however_the_probe_answers(tmp_path):
+    """★ 37차 P0-1 — GOVERNANCE 는 **어떤 probe 결과로도** 담보가 아니다.
 
-    실물 S3 에서 GOVERNANCE retention 은 `s3:BypassGovernanceRetention` 을
-    가진 principal 이 우회 삭제할 수 있다. 그것을 durable 로 받으면 "지울 수
-    없다" 가 IAM 정책에 대한 주장이 되고, 저장소가 아니라 **설정**이 담보가
-    된다. 우회가 없다는 것은 신고가 아니라 **실측**으로만 말할 수 있다.
+    36차는 우회 삭제를 실측해 거부되면 GOVERNANCE 를 `object_lock` 으로
+    승격했다. 리뷰의 반례: 한 principal 이 retention 을 **단축·제거**할
+    권한은 가지되 version delete 권한은 없는 구성이 가능하다. 그러면 delete
+    probe 는 거부돼 양성이 되는데 같은 principal 이 담보를 지울 수 있다.
+    다른 principal 과 이후 IAM 변경은 애초에 현재 credential 의 한 요청으로
+    관측되지 않는다.
+
+    31차에 local mode bit 를 uid 0 이 우회할 수 있다는 이유로 durable 에서
+    뺐다. 현재 credential 의 delete 한 번이 거부됐다는 GOVERNANCE 증거를
+    그보다 강하게 취급할 근거가 없다 — **같은 잣대를 쓴다.**
     """
-    store = _LockingStore(name=str(tmp_path), mode="GOVERNANCE", bypass=True)
-    backend = _lockstore(tmp_path, store)
-    assert backend.probe_enforcement() == "advisory_local", (
-        "우회 가능한 GOVERNANCE 를 object_lock 으로 받았다")
+    for bypass in (True, False):
+        store = _LockingStore(name=f"{tmp_path}-{bypass}", mode="GOVERNANCE",
+                              bypass=bypass)
+        backend = _lockstore(tmp_path / str(bypass), store)
+        assert backend.probe_enforcement() == "advisory_local", (
+            f"bypass={bypass}: GOVERNANCE 를 담보로 받았다 — 이 주장은 저장소가 "
+            "아니라 IAM 설정에 대한 것이다")
 
 
-def test_a_governance_store_that_refuses_bypass_is_durable(tmp_path):
-    """반대 축 — 우회가 **실제로 거부되면** GOVERNANCE 도 담보다.
-
-    이 시험이 없으면 위 시험은 "GOVERNANCE 를 이름으로 금지" 로도 통과한다.
-    금지가 아니라 **측정**이어야 한다.
-    """
-    store = _LockingStore(name=str(tmp_path), mode="GOVERNANCE", bypass=False)
+def test_compliance_is_still_durable(tmp_path):
+    """반대 축 — GOVERNANCE 를 뺀 것이 mode 전체를 뺀 것이 되면 안 된다."""
+    store = _LockingStore(name=str(tmp_path), mode="COMPLIANCE")
     backend = _lockstore(tmp_path, store)
     assert backend.probe_enforcement() == "object_lock"
 
 
-def test_the_bypass_probe_is_a_real_attempt_not_a_self_report(tmp_path):
-    """provider 의 자기신고를 믿으면 안 된다 — 시도해 보고 결과로 답한다."""
-    tried = []
 
-    class _Liar(_LockingStore):
-        MODE = "GOVERNANCE"
+# ─────────────────────────────────────────────────────────────────────────────
+# 37차 P0-1 — fake 가 실물 versioning 을 거꾸로 모형하고 있었다
+# ─────────────────────────────────────────────────────────────────────────────
 
-        def describe(self):
-            d = super().describe()
-            d["bypass_allowed"] = False        # 거짓 신고
-            return d
+def _version_census(store, prefix="") -> dict:
+    """key 별 version 수. **key 수가 아니라 이것을 센다** (37차 P0-1)."""
+    out: dict[str, int] = {}
+    for k, _v in store.list_versions(prefix):
+        out[k] = out.get(k, 0) + 1
+    return out
 
-        def delete(self, key, version=None, bypass=False):
-            tried.append((key, bypass))
-            return super().delete(key, version, bypass)
 
-    store = _Liar(name=str(tmp_path), bypass=True)
+def test_repeated_repair_never_inflates_locked_versions(tmp_path):
+    """★ 37차 P0-1 — 재시도가 provider version 을 늘리면 안 된다.
+
+    36차 fake 는 `put` 이 같은 바이트면 기존 version ID 를 재사용해서
+    `repair_lease_locks()` 반복이 멱등해 **보였다**. 실물 `PutObject` 는
+    요청마다 version 을 부여하므로, 무조건 put 하는 구현은 재시도마다 같은
+    바이트의 WORM version 을 쌓는다. 지울 수 없는 쓰레기가 무한히 는다.
+
+    "lease 가 하나다" 는 key 만 세므로 이 축을 못 본다 — **version 을 센다.**
+    """
+    run = _make_run(tmp_path)
+    store = _LockingStore(name=str(tmp_path))
     backend = _lockstore(tmp_path, store)
-    assert backend.probe_enforcement() == "advisory_local", (
-        "provider 의 자기신고를 그대로 믿었다")
-    assert any(b for _, b in tried), "우회를 **시도**하지 않았다"
+    index = tmp_path / "index"
+    res = run_transaction(PLANNED, run, backend, index, _hooks())
+    assert res["durable"] is True
+
+    before = _version_census(store)
+    leg, ld = PLANNED.leg_id, res["retention"]["lease_digest"]
+    until = res["retention"]["retain_until_utc"]
+    for _ in range(4):
+        backend.repair_lease_locks(leg, ld, until)
+        backend.ensure_store_lock(until)
+    after = _version_census(store)
+
+    grew = {k: (before.get(k, 0), n) for k, n in after.items()
+            if n > before.get(k, 0)}
+    assert not grew, f"재시도가 version 을 늘렸다: {grew}"
+
+
+def test_a_delete_marker_cannot_hide_the_retained_graph(tmp_path):
+    """★ 37차 P0-1 — version 없는 DELETE 는 marker 이고, 열거를 가린다.
+
+    실물 `ListObjectsV2` 는 head 가 delete marker 인 key 를 안 보여준다.
+    pin 열거가 그것에만 의존하면 marker 하나로 graph 가 "없는" 것이 된다 —
+    담보 version 은 멀쩡히 살아 있는데도. 열거는 version 층에서 해야 한다.
+    """
+    run = _make_run(tmp_path)
+    store = _LockingStore(name=str(tmp_path))
+    backend = _lockstore(tmp_path, store)
+    index = tmp_path / "index"
+    res = run_transaction(PLANNED, run, backend, index, _hooks())
+    leg = PLANNED.leg_id
+    full = backend.pinned(leg)
+    assert full, "전제: pin 이 있다"
+
+    for dg in sorted(full):
+        store.delete(backend._provider_key(leg, dg))     # marker 를 얹는다
+    assert store.keys_under(f"pins/{leg}/") == [], "전제: 목록에서 사라졌다"
+
+    assert backend.pinned(leg) == full, (
+        "delete marker 가 pin 열거를 가렸다 — 담보 version 은 살아 있다")
+    assert assert_durable_retention(backend, index, leg), (
+        "marker 뒤에서 담보 증명이 무너졌다")
+    for dg in sorted(res["retention"]["objects"]):
+        assert hashlib.sha256(
+            backend.retrieve_retained(res["retention"], dg)).hexdigest() == dg
+
+
+def _crashed_lease_digest(store, backend, leg: str) -> str | None:
+    """crash 직후 상태에서 lease digest 를 찾는다 (journal 이 아직 없다).
+
+    pin 에 있으면 그 바이트가 lease schema 인지로 고르고, 아직 pin 이 없으면
+    (`after_lease_put`) `objects/` 에만 있고 pin 에는 없는 것이 lease 다.
+    """
+    pins = backend.pinned(leg)
+    for dg in sorted(pins):
+        try:
+            rec = load_canonical(backend.read_pinned(leg, dg))
+        except (PreserveError, ValueError, UnicodeDecodeError):
+            continue
+        if isinstance(rec, dict) and rec.get("schema") == P_RETENTION_SCHEMA:
+            return dg
+    only = {k.split("/", 1)[1] for k, _v in store.list_versions("objects/")} - pins
+    return sorted(only)[0] if len(only) == 1 else None
+
+
+@pytest.mark.parametrize("phase", ["after_lease_put", "after_lease_pin",
+                                   "after_pin_lock"])
+def test_a_deletion_inside_the_unlocked_window_never_mints_a_second_lease(
+        tmp_path, monkeypatch, phase):
+    """★ 37차 P0-1 — 36차 drill 은 **삭제를 복구가 끝난 뒤에** 했다.
+
+    `after_lease_put`·`after_lease_pin`·`after_pin_lock` 시점에는 lease CAS
+    content 가 아직 잠기지 않았다. 리뷰가 준 반례 그대로다:
+
+        T0  lease L0 content 를 put 하고 pin 을 만든다
+        T1  그 사이에서 죽는다
+        T2  **아직 unlocked 인 objects/<L0> 를 지운다**
+        T3  fresh backend 로 재개한다
+
+    재개는 pin 에서 L0 를 발견하지만, `repair_lease_locks()` 가 살아남은 pin
+    바이트를 읽지 않고 `pin()` 부터 부른다. `pin()` 은 `read_back(L0)` 로
+    **지워진 content** 를 읽다가 실패하고, `_existing_lease()` 는 그 실패를
+    "기존 lease 없음" 과 구별하지 않고 `None` 으로 바꾼다. 두 번째 WORM
+    lease 가 생기고 옛 pin 은 남는다 — `after_pin_lock` 의 옛 pin 은 이미
+    WORM 이라 정상 API 로 치울 수도 없다.
+
+    허용되는 결과는 둘뿐이다:
+      · 살아남은 pin 바이트로 content 를 되살리고 **같은 lease** 로 완료
+      · 명시적 fail-closed — 단, **새 lease 를 만들지 않는다**
+    """
+    import tools.preserve as P
+
+    run = _make_run(tmp_path)
+    store = _LockingStore(name=str(tmp_path))
+    backend = _lockstore(tmp_path, store)
+    index = tmp_path / "index"
+
+    base = dt.datetime(2026, 8, 27, 12, 0, 0, tzinfo=dt.timezone.utc)
+    ticks = iter(range(0, 100000, 37))
+
+    class _Clock(dt.datetime):
+        @classmethod
+        def now(cls, tz=None):
+            return base + dt.timedelta(seconds=next(ticks))
+
+    monkeypatch.setattr(P.dt, "datetime", _Clock)
+    _phase_kill(monkeypatch, phase)
+    with pytest.raises(RuntimeError):
+        run_transaction(PLANNED, run, backend, index, _hooks())
+    monkeypatch.undo()
+    monkeypatch.setattr(P.dt, "datetime", _Clock)
+
+    leg = PLANNED.leg_id
+    ld = _crashed_lease_digest(store, backend, leg)
+    assert ld, f"{phase}: lease 후보를 못 찾았다 (전제)"
+
+    # ── T2: 아직 잠기지 않은 lease content 를 **실제로** 지운다 ──────────
+    key = backend._provider_obj_key(ld)
+    live = store.versions(key)
+    assert live, f"{phase}: lease content 가 없다 (전제)"
+    for v in live:
+        assert (key, v) not in store._lock, (
+            f"{phase}: 이 창에서는 lease content 가 잠겨 있으면 안 된다 (전제)")
+        store.delete(key, v)
+    assert not store.versions(key), f"{phase}: 삭제가 실패했다 (전제)"
+
+    fresh = _lockstore(tmp_path, _LockingStore(name=store.name))
+    before = _version_census(store, "pins/")
+    try:
+        out = finalize_only(leg, fresh, index)
+    except PreserveError:
+        out = None                            # fail-closed 도 허용되는 결과다
+    if phase != "after_lease_put":
+        # ★ pin 이 살아남았으면 바이트가 남아 있다는 뜻이다. 그러면
+        #   fail-closed 는 **불필요한 손실**이다 — 살아남은 pin 으로 content 를
+        #   되살려 같은 lease 로 끝내야 한다. (이 줄이 없으면 "복원 안 하고
+        #   그냥 거부" 변이가 초록이다 — 실측했다.)
+        assert out is not None, (
+            f"{phase}: pin 이 살아 있는데 복구하지 못하고 거부했다")
+
+    leases = {dg for dg in fresh.pinned(leg)
+              if _looks_like_lease(fresh, leg, dg)}
+    assert len(leases) <= 1, (
+        f"{phase}: lease pin 이 {len(leases)}개다 — 두 번째 WORM lease 가 "
+        f"생겼다: {sorted(leases)}")
+
+    if out is not None:
+        assert out["ok"] and out["durable"] is True
+        assert leases == {out["retention"]["lease_digest"]}
+        if phase != "after_lease_put":
+            # pin 이 살아남은 창에서는 **그 pin 바이트로** 같은 lease 를
+            # 되살려야 한다. `after_lease_put` 은 pin 자체가 없으므로
+            # (content 도 지웠다) 새 lease 가 유일한 정답이고, 그때는 지울 수
+            # 없는 WORM 잔여가 남지 않는다는 것이 불변식이다.
+            assert out["retention"]["lease_digest"] == ld, (
+                f"{phase}: 살아남은 pin 으로 같은 lease 를 복구하지 않았다")
+        got = out["retention"]["lease_digest"]
+        for k in (fresh._provider_key(leg, got), fresh._provider_obj_key(got)):
+            assert fresh.protected_version(k), f"{phase}: 잠기지 않았다 — {k}"
+    else:
+        after = _version_census(store, "pins/")
+        grew = {k: (before.get(k, 0), n) for k, n in after.items()
+                if n > before.get(k, 0)}
+        assert not grew, f"{phase}: 실패했는데 pin version 이 늘었다: {grew}"
+
+
+def _looks_like_lease(backend, leg: str, dg: str) -> bool:
+    try:
+        rec = load_canonical(backend.read_pinned(leg, dg))
+    except (PreserveError, ValueError, UnicodeDecodeError):
+        return False
+    return isinstance(rec, dict) and rec.get("schema") == P_RETENTION_SCHEMA
+
+
+def test_an_unpinned_lease_residue_is_adopted_not_multiplied(tmp_path,
+                                                             monkeypatch):
+    """★ 37차 P0-1 — `after_lease_put` 잔여를 discovery 가 못 봤다.
+
+    그 창에서는 lease content 가 put 됐고 pin 은 아직 없다. 재개는 pin 만
+    보므로 잔여를 못 보고 새 lease 를 만든다. lease 바이트는 `retain_until_utc`
+    때문에 초마다 달라져 CAS dedup 도 안 걸리므로, 그 창을 지날 때마다
+    orphan content 와 provider version 이 **하나씩 쌓인다**.
+
+    35·36차 시험은 pin 된 extra 만 세어 이 누적을 통째로 놓쳤다 — key 가 아니라
+    **version 을 센다**.
+    """
+    import tools.preserve as P
+
+    run = _make_run(tmp_path)
+    store = _LockingStore(name=str(tmp_path))
+    backend = _lockstore(tmp_path, store)
+    index = tmp_path / "index"
+
+    base = dt.datetime(2026, 8, 27, 12, 0, 0, tzinfo=dt.timezone.utc)
+    ticks = iter(range(0, 100000, 37))
+
+    class _Clock(dt.datetime):
+        @classmethod
+        def now(cls, tz=None):
+            return base + dt.timedelta(seconds=next(ticks))
+
+    monkeypatch.setattr(P.dt, "datetime", _Clock)
+    _phase_kill(monkeypatch, "after_lease_put")
+    with pytest.raises(RuntimeError):
+        run_transaction(PLANNED, run, backend, index, _hooks())
+    monkeypatch.undo()
+    monkeypatch.setattr(P.dt, "datetime", _Clock)
+
+    leg = PLANNED.leg_id
+    orphan = _crashed_lease_digest(store, backend, leg)
+    assert orphan, "전제: pin 없는 lease content 잔여가 있다"
+    assert orphan not in backend.pinned(leg), "전제: 아직 pin 이 아니다"
+
+    fresh = _lockstore(tmp_path, _LockingStore(name=store.name))
+    out = finalize_only(leg, fresh, index)
+    assert out["ok"] and out["durable"] is True
+    assert out["retention"]["lease_digest"] == orphan, (
+        "잔여를 입양하지 않고 새 lease 를 만들었다 — 재시도마다 지워지지 않는 "
+        "content 가 쌓인다")
+
+    census = _version_census(store, "objects/")
+    leases = [k for k in census
+              if k.split("/", 1)[1] not in set(out["retention"]["objects"])]
+    assert len(leases) == 1, f"lease content 가 {len(leases)}개다: {leases}"
+    assert census[leases[0]] == 1, (
+        f"같은 lease 의 version 이 {census[leases[0]]}개다 — 재시도가 늘렸다")
+
+
+def _crash_at_lease_pin(tmp_path, monkeypatch):
+    """`after_lease_pin` 상태를 만들고 (store, backend, index) 를 돌려준다."""
+    import tools.preserve as P
+
+    run = _make_run(tmp_path)
+    store = _LockingStore(name=str(tmp_path))
+    backend = _lockstore(tmp_path, store)
+    index = tmp_path / "index"
+    base = dt.datetime(2026, 8, 27, 12, 0, 0, tzinfo=dt.timezone.utc)
+    ticks = iter(range(0, 100000, 37))
+
+    class _Clock(dt.datetime):
+        @classmethod
+        def now(cls, tz=None):
+            return base + dt.timedelta(seconds=next(ticks))
+
+    monkeypatch.setattr(P.dt, "datetime", _Clock)
+    _phase_kill(monkeypatch, "after_lease_pin")
+    with pytest.raises(RuntimeError):
+        run_transaction(PLANNED, run, backend, index, _hooks())
+    monkeypatch.undo()
+    monkeypatch.setattr(P.dt, "datetime", _Clock)
+    return store, backend, index
+def test_a_repair_failure_is_not_the_same_as_no_candidate(tmp_path, monkeypatch):
+    """★ 37차 P0-1 — 수리 실패를 `None` 으로 접으면 새 WORM lease 가 생긴다.
+
+    36차판은 `repair_lease_locks()` 의 예외를 삼켜 "기존 lease 없음" 과 같이
+    취급했다. 후보가 눈앞에 있는데 손댈 수 없는 상태라면, 그 위에 되돌릴 수
+    없는 것을 하나 더 얹는 것이 조용한 기본값이면 안 된다.
+
+    `after_lease_pin` 창에서는 lease pin 이 **아직 안 잠겼다.** 그 pin 바이트가
+    오염되면 수리는 digest 대조에서 실패한다 — 실제로 일어날 수 있는 상태다.
+    """
+    store, backend, index = _crash_at_lease_pin(tmp_path, monkeypatch)
+    leg = PLANNED.leg_id
+    ld = _crashed_lease_digest(store, backend, leg)
+    assert ld, "전제: lease 후보가 있다"
+    key = backend._provider_key(leg, ld)
+    assert backend.protected_version(key) is None, "전제: pin 이 안 잠겼다"
+
+    store.put(key, b"corrupted-pin-bytes")        # 잠기지 않았으므로 head 가 된다
+
+    fresh = _lockstore(tmp_path, _LockingStore(name=store.name))
+    with pytest.raises(PreserveError):
+        finalize_only(leg, fresh, index)
+
+    leases = {dg for dg in fresh.pinned(leg) if _looks_like_lease(fresh, leg, dg)}
+    assert not leases - {ld}, f"수리 실패 뒤 lease 가 늘었다: {sorted(leases)}"
+
+
+def test_a_live_lease_that_fails_verification_is_refused_not_replaced(
+        tmp_path, monkeypatch):
+    """★ 37차 P0-1 — 만료와 불일치를 같은 `None` 으로 접었다.
+
+    만료된 lease 를 새로 만드는 것은 맞다. 그러나 **만료 전인데** 검증에
+    실패하는 것은 다른 사건이고, 그 위에 새 lease 를 얹으면 이상을 덮어쓴다.
+
+    재진입점인 `retain()` 을 직접 부른다 — `finalize_only()` 로 들어가면 이미
+    등록된 journal 검증에서 먼저 죽어 `_existing_lease()` 까지 오지도 않는다
+    (실측했다: 그 경로로는 이 분기를 지우는 변이가 초록이었다).
+    """
+    import tools.preserve as P
+
+    run = _make_run(tmp_path)
+    store = _LockingStore(name=str(tmp_path))
+    backend = _lockstore(tmp_path, store)
+    index = tmp_path / "index"
+    res = run_transaction(PLANNED, run, backend, index, _hooks())
+    leg, ld = PLANNED.leg_id, res["retention"]["lease_digest"]
+    lease = res["retention"]
+    assert not _lease_expired_t(lease), "전제: 만료 전이다"
+
+    def failing(self, *a, **kw):
+        raise PreserveError("retention", "검증이 어긋났다 (주입)")
+
+    monkeypatch.setattr(P.ObjectLockBackend, "verify_retention", failing)
+    with pytest.raises(PreserveError):
+        backend.retain(leg, lease["objects"],
+                       min_retention_days=lease["min_retention_days"])
+    monkeypatch.undo()
+
+    leases = {dg for dg in backend.pinned(leg)
+              if _looks_like_lease(backend, leg, dg)}
+    assert leases == {ld}, (
+        f"만료 전 불일치 위에 새 lease 를 얹었다: {sorted(leases)}")
+
+
+def test_a_repair_that_raises_is_refused_not_replaced(tmp_path, monkeypatch):
+    """★ 37차 P0-1 — 수리 실패는 **후보 부재가 아니다.**
+
+    후보를 읽는 데 실패하는 축은 위 `..._not_the_same_as_no_candidate` 가
+    본다. 여기는 그 다음 단계다 — 후보는 잘 읽혔는데 **수리가** 실패하는
+    경우. 36차판은 둘 다 `None` 으로 접었다.
+    """
+    import tools.preserve as P
+
+    run = _make_run(tmp_path)
+    store = _LockingStore(name=str(tmp_path))
+    backend = _lockstore(tmp_path, store)
+    index = tmp_path / "index"
+    res = run_transaction(PLANNED, run, backend, index, _hooks())
+    leg, ld = PLANNED.leg_id, res["retention"]["lease_digest"]
+    lease = res["retention"]
+
+    def failing(self, *a, **kw):
+        raise PreserveError("retention", "수리가 실패했다 (주입)")
+
+    monkeypatch.setattr(P.ObjectLockBackend, "repair_lease_locks", failing)
+    with pytest.raises(PreserveError) as ex:
+        backend.retain(leg, lease["objects"],
+                       min_retention_days=lease["min_retention_days"])
+    monkeypatch.undo()
+    assert "수리" in str(ex.value), str(ex.value)
+
+    leases = {dg for dg in backend.pinned(leg)
+              if _looks_like_lease(backend, leg, dg)}
+    assert leases == {ld}, f"수리 실패 위에 새 lease 를 얹었다: {sorted(leases)}"
+
+
+def _lease_expired_t(lease) -> bool:
+    from tools.preserve import _lease_expired
+    return _lease_expired(lease)
+
+
+def test_two_lease_candidates_are_refused_not_resolved_by_guessing(tmp_path,
+                                                                   monkeypatch):
+    """★ 37차 P0-1 — 후보가 둘이면 `None` 이 아니라 **거부**다.
+
+    36차판은 `len(extra) != 1` 이면 조용히 `None` 을 돌려 세 번째 lease 를
+    만들었다. 이미 오염된 상태에 되돌릴 수 없는 것을 하나 더 얹는 것이
+    기본값이면 안 된다.
+    """
+    store, backend, index = _crash_at_lease_pin(tmp_path, monkeypatch)
+    leg = PLANNED.leg_id
+    ld = _crashed_lease_digest(store, backend, leg)
+    assert ld, "전제: lease 후보가 하나 있다"
+
+    # graph 에 없는 두 번째 object 를 pin 한다 — 후보가 둘이 된다
+    other = backend.put_if_absent(b"second-non-graph-object")["digest"]
+    backend.pin(leg, [other])
+    assert len({d for d in backend.pinned(leg)} ) >= 2, "전제"
+
+    fresh = _lockstore(tmp_path, _LockingStore(name=store.name))
+    with pytest.raises(PreserveError) as ex:
+        finalize_only(leg, fresh, index)
+    assert "정할 수 없다" in str(ex.value) or "2개" in str(ex.value), str(ex.value)
+
+    leases = {dg for dg in fresh.pinned(leg) if _looks_like_lease(fresh, leg, dg)}
+    assert leases == {ld}, f"모호한 상태에 lease 를 더 만들었다: {sorted(leases)}"
+
+
+def test_an_expired_lease_is_renewed_not_refused(tmp_path, monkeypatch):
+    """★ 37차 P0-1 — fail-closed 가 **갱신까지** 막으면 안 된다.
+
+    후보가 있으면 거부한다는 규칙을 세웠으니, 그 반대 축을 같이 못 박아야
+    한다: 담보 기간이 지난 lease 는 새로 만드는 것이 맞다. 이 시험이 없으면
+    "언제나 거부" 라는 구현으로도 위 넷이 전부 초록이다 (변이로 확인했다).
+    """
+    import tools.preserve as P
+
+    run = _make_run(tmp_path)
+    store = _LockingStore(name=str(tmp_path))
+    backend = _lockstore(tmp_path, store)
+    index = tmp_path / "index"
+    res = run_transaction(PLANNED, run, backend, index, _hooks())
+    leg, old = PLANNED.leg_id, res["retention"]["lease_digest"]
+    lease = res["retention"]
+
+    # 담보 기간을 **지나** 보낸다
+    far = (dt.datetime.now(dt.timezone.utc)
+           + dt.timedelta(days=lease["min_retention_days"] + 10))
+
+    class _Clock(dt.datetime):
+        @classmethod
+        def now(cls, tz=None):
+            return far
+
+    monkeypatch.setattr(P.dt, "datetime", _Clock)
+    fresh = backend.retain(leg, lease["objects"],
+                           min_retention_days=lease["min_retention_days"])
+    monkeypatch.undo()
+
+    assert fresh["lease_digest"] != old, (
+        "만료된 lease 를 갱신하지 않고 그대로 돌려줬다")
+    assert fresh["retain_until_utc"] > lease["retain_until_utc"], (
+        "갱신했는데 기한이 안 늘었다")
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# 37차 P0-1 — store.json 은 잠겼지만 **어느 version 이 정본인지**는 안 잠겼다
+# ─────────────────────────────────────────────────────────────────────────────
+
+def test_a_newer_locked_store_record_cannot_switch_the_identity(tmp_path):
+    """★ 37차 P0-1 — `protected_version()` 은 "최신 잠긴 version" 이다.
+
+    canonical identity 를 특정 immutable version 에 결속하지 않으므로, 계약
+    **안에서** 다음이 성립한다:
+
+        1. store.json vA = {store_id: A} 를 만들고 잠근다
+        2. graph 와 receipt 를 A 에 결속해 정상 등록한다
+        3. 더 최신 vB = {store_id: B} 를 put 하고 같은 지평까지 잠근다
+        4. fresh backend 로 reopen 한다
+        5. protected_version() 이 vB 를 골라 store_id 가 B 가 된다
+
+    vA 도 예전 graph 의 모든 object version 도 그대로 잠겨 있다. 잃은 것은
+    바이트가 아니라 **locator** 다 — 예전 receipt 전부가 foreign store 가
+    되어 검증도 finalize 도 막힌다.
+
+    36차 회귀는 `{}` 라는 **잠기지 않은** invalid head 만 올렸다. 그러면
+    locator 가 예전 vA 로 돌아가는 것이 당연해서 이 축을 못 물었다.
+    """
+    run = _make_run(tmp_path)
+    store = _LockingStore(name=str(tmp_path))
+    backend = _lockstore(tmp_path, store)
+    index = tmp_path / "index"
+    res = run_transaction(PLANNED, run, backend, index, _hooks())
+    a_id = backend.store_id
+    assert _is_hex64_str(a_id) or len(a_id) == 32
+
+    # ── 더 최신이고 **유효하며 잠긴** 두 번째 record ────────────────────
+    vb = store.put("store.json", canonical_bytes(
+        {"schema": "cas-store/v1", "store_id": "b" * 32}))
+    store.lock("store.json", vb, res["retention"]["retain_until_utc"])
+    assert store.versions("store.json")[0] == vb, "전제: 더 최신이다"
+
+    fresh = _lockstore(tmp_path, _LockingStore(name=store.name))
+    try:
+        got = fresh.store_id
+    except PreserveError:
+        return                       # ambiguity 로 fail-closed 도 정답이다
+    assert got == a_id, (
+        f"더 최신 잠긴 record 가 identity 를 갈아치웠다: {got} ≠ {a_id} — "
+        "예전 receipt 전부가 foreign store 가 된다")
+
+
+def test_the_store_record_must_be_an_exact_schema_not_just_a_uuid(tmp_path):
+    """★ 37차 P0-1 — parser 가 mapping 과 32-hex `store_id` 만 봤다.
+
+    exact key set 도 schema 값도 안 봐서, 남는 key 를 단 record 나 다른
+    schema 의 record 도 잠겨서 canonical identity 로 받아들여졌다.
+    """
+    for i, bad in enumerate([
+            {"store_id": "c" * 32},                                # schema 없음
+            {"schema": "other/v9", "store_id": "c" * 32},          # 다른 schema
+            {"schema": "cas-store/v1", "store_id": "c" * 32, "x": 1},  # 남는 key
+    ]):
+        store = _LockingStore(name=f"{tmp_path}-bad{i}")
+        store.put("store.json", canonical_bytes(bad))
+        backend = _lockstore(tmp_path / f"b{i}", store)
+        sid = None
+        try:
+            sid = backend.store_id
+        except PreserveError:
+            continue                 # 거부가 정답이다
+        assert sid != "c" * 32, (
+            f"계약이 아닌 record 를 canonical identity 로 받았다: {bad}")
+
+
+def test_a_locked_non_contract_store_record_is_refused_not_reissued(tmp_path):
+    """★ 37차 P0-1 — 담보 version 이 계약 record 가 아니면 **거부**다.
+
+    위 schema 시험은 잠기지 않은 record 를 쓰므로 이 분기를 안 지난다.
+    잠긴 쓰레기는 지울 수 없으므로, 그 위에 새 UUID 를 발급하면 두 개의
+    영구 record 가 남고 다음 reopen 이 어느 것을 고를지 알 수 없게 된다.
+    """
+    store = _LockingStore(name=str(tmp_path))
+    v = store.put("store.json", canonical_bytes({"schema": "junk/v1", "x": 1}))
+    store.lock("store.json", v, "2099-01-01T00:00:00Z")
+
+    backend = _lockstore(tmp_path, store)
+    with pytest.raises(PreserveError) as ex:
+        backend.store_id
+    assert "계약" in str(ex.value), str(ex.value)
+    assert len(store.versions("store.json")) == 1, (
+        "거부해야 하는데 새 record 를 발급했다")
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# 37차 P0-1 — 회수가 lease 가 봉인한 exact version 을 쓰지 않았다
+# ─────────────────────────────────────────────────────────────────────────────
+
+def test_retrieval_reads_the_sealed_version_not_the_newest_locked_one(tmp_path):
+    """★ 37차 P0-1 — `retrieve_retained()` 이 locator 를 **재탐색**했다.
+
+    `retrieve_retained → read_pinned → _read_protected` 는 lease 의
+    `object_versions[digest]` 를 받지 않고 "가장 최신 잠긴 version" 을 다시
+    골랐다. 정상 lease 가 v1 을 봉인한 뒤 같은 pin key 에 **다른 바이트**의
+    v2 를 put 하고 잠그면, v1 은 그대로 durable 하고 exact version read 도
+    가능한데 회수는 v2 를 골라 digest mismatch 로 실패한다.
+
+    retention receipt 의 목적은 locator 를 재발견하는 것이 아니라 **exact
+    immutable version 을 회수**하는 것이다.
+
+    36차 회귀는 새 version 을 **잠그지 않아서** v1 fallback 만 확인했다.
+    """
+    run = _make_run(tmp_path)
+    store = _LockingStore(name=str(tmp_path))
+    backend = _lockstore(tmp_path, store)
+    index = tmp_path / "index"
+    res = run_transaction(PLANNED, run, backend, index, _hooks())
+    lease, leg = res["retention"], PLANNED.leg_id
+
+    victim = sorted(lease["objects"])[0]
+    key = backend._provider_key(leg, victim)
+    sealed = lease["object_versions"][victim]
+    assert store.get(key, sealed), "전제: 봉인 version 이 읽힌다"
+
+    # 적대적(또는 사고성) 새 version 을 올리고 **그것도 잠근다**
+    v2 = store.put(key, b"different-bytes-entirely")
+    store.lock(key, v2, lease["retain_until_utc"])
+    assert backend.protected_version(key) == v2, "전제: 최신 담보가 v2 다"
+
+    got = backend.retrieve_retained(lease, victim)
+    assert hashlib.sha256(got).hexdigest() == victim, (
+        "회수가 봉인 version 이 아니라 최신 잠긴 version 을 읽었다")
