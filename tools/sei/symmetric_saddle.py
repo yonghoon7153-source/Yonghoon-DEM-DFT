@@ -1469,6 +1469,227 @@ def align_report(first, last, cell, far_r=FAR_FIELD_R_A):
     return out
 
 
+# ══ P0-2 예비 — **공짜 판정**: 잔여가 물리인가 미수렴 배회인가 ═════════════════
+#
+#  2026-08-27 정렬 진단이 남긴 질문: cc333 끝점의 1.234 Å 잔여가 실제 이완인지,
+#  nstep 한도에서 끝난 optimizer 의 배회인지. 새 계산 없이 relax.out 안에 답이 있다 —
+#  QE 는 **모든 BFGS 스텝의 좌표**를 찍기 때문이다. 두 가지를 본다:
+#
+#   ① 배회지수 = Σ|스텝별 이동| / |순 이동|.  1 에 가까우면 한 방향으로 곧게 간 것(실제
+#      이완), 크면 왔다갔다 한 것(배회). 미수렴이어도 ①이 1 근처면 "느린 이완" 이다.
+#   ② 두 끝점의 **모드 일치도** = 각자 출발점 기준 순변위 3N 벡터의 코사인.
+#      배회는 두 계산에서 정렬될 이유가 없다. 정렬돼 있으면 **격자 자체의 모드**다.
+#      ← 이게 P0-2(전역 soft mode) 의 직접 지문이다.
+RY_EV = 13.605693122994
+RYAU_EVA = 25.711
+
+
+def _all_pos_blocks(txt):
+    """relax.out 의 **모든** ATOMIC_POSITIONS 블록 → [rows, …] (스텝 순서)."""
+    out, i = [], txt.find("ATOMIC_POSITIONS")
+    while i >= 0:
+        rows = _pos_block(txt, i)
+        if rows:
+            out.append(rows)
+        i = txt.find("ATOMIC_POSITIONS", i + 1)
+    return out
+
+
+def trace_report(steps, cell, energies=None, forces=None):
+    """한 끝점의 BFGS 궤적 요약. 반환 dict.
+
+    ⛔ 못 하는 것
+      · 배회지수가 1 이어도 **그 방향이 물리적으로 옳다는 보증은 없다** — 곧게 갔다는 것뿐.
+      · 스텝 사이 강체 병진만 뺀다. 회전은 안 뺀다.
+      · 블록이 2개 미만이면 궤적이 아니다 — 그렇게 말하고 끝낸다.
+    """
+    import math as _m
+    n = len(steps)
+    if n < 2:
+        return {"error": f"⛔ BFGS 블록이 {n}개다 — 궤적이 아니다 (수렴본만 남았거나 첫 스텝)"}
+    nat = len(steps[0])
+    if any(len(s) != nat for s in steps):
+        return {"error": "⛔ 스텝마다 원자 수가 다르다"}
+
+    def _al(a, b):                        # b 를 a 에 맞춰 병진 제거한 변위 리스트
+        t, _c = _optimal_pbc_translation(a, b, cell)
+        return [min_image([b[i][1][k] - a[i][1][k] - t[k] for k in range(3)], cell)
+                for i in range(nat)]
+
+    def _nrm(v):
+        return _m.sqrt(sum(x * x for x in v))
+
+    net = _al(steps[0], steps[-1])
+    path = [0.0] * nat
+    for s in range(n - 1):
+        d = _al(steps[s], steps[s + 1])
+        for i in range(nat):
+            path[i] += _nrm(d[i])
+    hop = max(range(nat), key=lambda i: _nrm(net[i]))
+    keep = [i for i in range(nat) if i != hop]
+    sum_net = sum(_nrm(net[i]) for i in keep)
+    sum_path = sum(path[i] for i in keep)
+    # 마지막 3 스텝에서 아직 움직이는가
+    tail = 0.0
+    for s in range(max(0, n - 4), n - 1):
+        tail += max(_nrm(v) for i, v in enumerate(_al(steps[s], steps[s + 1])) if i != hop)
+    return {
+        "n_steps": n, "n_atoms": nat, "hop_index": hop,
+        "net_max_A": round(max(_nrm(net[i]) for i in keep), 4),
+        "net_median_A": round(sorted(_nrm(net[i]) for i in keep)[len(keep) // 2], 4),
+        "path_max_A": round(max(path[i] for i in keep), 4),
+        "wander_index": round(sum_path / sum_net, 3) if sum_net > 1e-9 else None,
+        "tail3_move_A": round(tail, 4),
+        "net_vector": [net[i] for i in range(nat)],
+        "energy_drop_eV": (round((energies[-1] - energies[0]) * RY_EV, 4)
+                           if energies and len(energies) >= 2 else None),
+        "energy_tail3_eV": (round((energies[-1] - energies[-4]) * RY_EV, 5)
+                            if energies and len(energies) >= 4 else None),
+        "force_first_eVA": round(forces[0] * RYAU_EVA, 4) if forces else None,
+        "force_last_eVA": round(forces[-1] * RYAU_EVA, 4) if forces else None,
+    }
+
+
+def mode_overlap(a_vec, b_vec, skip=()):
+    """두 끝점의 순변위 3N 벡터 코사인. 배회는 정렬될 이유가 없다."""
+    import math as _m
+    sk = set(skip)
+    idx = [i for i in range(min(len(a_vec), len(b_vec))) if i not in sk]
+    num = sum(sum(a_vec[i][k] * b_vec[i][k] for k in range(3)) for i in idx)
+    na = _m.sqrt(sum(sum(x * x for x in a_vec[i]) for i in idx))
+    nb = _m.sqrt(sum(sum(x * x for x in b_vec[i]) for i in idx))
+    return None if na < 1e-9 or nb < 1e-9 else round(num / (na * nb), 4)
+
+
+def bfgs_trace(work, tag, base_dirs=False):
+    """P0-2 예비 진단 — 새 계산 없이 relax.out 궤적으로 물리/배회를 가른다."""
+    d = os.path.join(work, tag)
+    cell = None
+    rep, vec = {}, {}
+    for nm in ("ep_initial", "ep_final"):
+        ed = os.path.join(d, nm) if base_dirs else endpoint_dir(d, nm)
+        p = os.path.join(ed, "relax.out")
+        if not os.path.isfile(p):
+            return 1, f"⛔ 없음: {p}"
+        if cell is None:
+            cell = parse_cell(os.path.join(ed, "relax.in"))
+            if cell is None:
+                return 1, "⛔ CELL_PARAMETERS 를 못 읽었다"
+        t = open(p, encoding="utf-8", errors="replace").read()
+        en = [float(x) for x in re.findall(r"!\s+total energy\s+=\s+([-\d.]+)\s+Ry", t)]
+        fo = [float(x) for x in re.findall(r"Total force\s+=\s+([\d.eE+-]+)", t)]
+        r = trace_report(_all_pos_blocks(t), cell, en, fo)
+        if "error" in r:
+            return 1, f"⛔ {nm}: {r['error']}"
+        r["converged"] = "Begin final coordinates" in t
+        r["max_steps_reached"] = "The maximum number of steps has been reached" in t
+        r["dir"] = os.path.basename(ed)
+        vec[nm] = r.pop("net_vector")
+        rep[nm] = r
+
+    skip = {rep["ep_initial"]["hop_index"], rep["ep_final"]["hop_index"]}
+    cos = mode_overlap(vec["ep_initial"], vec["ep_final"], skip)
+
+    L = [f"■ 끝점 BFGS 궤적 진단 — {tag}"]
+    for nm in ("ep_initial", "ep_final"):
+        r = rep[nm]
+        L += [f"   [{r['dir']}] {r['n_steps']}스텝 · 원자 {r['n_atoms']} · "
+              f"{'수렴' if r['converged'] else '⛔ 미수렴' + (' (스텝 한도)' if r['max_steps_reached'] else '')}",
+              f"      힘 {r['force_first_eVA']} → {r['force_last_eVA']} eV/Å · "
+              f"E 낙차 {r['energy_drop_eV']} eV (마지막 3스텝 {r['energy_tail3_eV']})",
+              f"      홉 제외 순변위 최대 {r['net_max_A']} · 중앙 {r['net_median_A']} Å",
+              f"      **배회지수 {r['wander_index']}** (경로합/순변위합 · 1=곧게, 클수록 왔다갔다)",
+              f"      마지막 3스텝 이동량 {r['tail3_move_A']} Å"]
+    L.append("")
+    L.append(f"   ★ 두 끝점 **모드 일치도(코사인) = {cos}**")
+    if cos is None:
+        L.append("      판정불가")
+    elif abs(cos) >= 0.7:
+        L.append("      ⇒ 두 끝점이 **같은 방향**으로 갔다. 독립된 두 계산이 이렇게 정렬되려면 "
+                 "**공유된 무른 방향**이 있어야 한다 — 곧게 갔든 그 방향으로 진동했든 "
+                 "**격자 자체의 모드**를 가리킨다 (P0-2 양성 쪽).")
+    elif abs(cos) <= 0.3:
+        L.append("      ⇒ 두 끝점이 **다른 방향**으로 갔다. 공유 모드의 증거가 없다 — "
+                 "미수렴 배회 쪽이다 (P0-2 음성 쪽).")
+    else:
+        L.append("      ⇒ 중간 — 어느 쪽도 주장하지 않는다.")
+    w = [rep[n]["wander_index"] for n in rep if rep[n]["wander_index"]]
+    if w and max(w) >= 2.0:
+        L.append(f"   ⚠ 배회지수 최대 {max(w)} — 경로가 순변위의 2배 넘게 길다. "
+                 f"곧은 이완이 아니다.")
+    elif w:
+        L.append(f"   ✔ 배회지수 최대 {max(w)} — 두 끝점 다 대체로 곧게 갔다 "
+                 f"(느린 이완이지 배회가 아니다).")
+    L.append("")
+    L.append("   ⛔ 이 진단이 못 하는 것: 곧게 갔다고 **옳은 방향**이라는 보증은 없다 · "
+             "스텝 간 회전은 안 뺀다 · 이것만으로 P0-2 를 닫지 못한다 "
+             "(pristine rattle 이 본 검사다).")
+    op = os.path.join(d, "bfgs_trace.json")
+    try:
+        json.dump({"tag": tag, "mode_overlap_cos": cos,
+                   "endpoints": rep}, open(op, "w", encoding="utf-8"),
+                  ensure_ascii=False, indent=2)
+        L.append(f"   → {op}")
+    except OSError:
+        pass
+    return 0, "\n".join(L)
+
+
+def selftest_trace():
+    """궤적 진단 selftest — 음성 경로(배회)가 핵심이다."""
+    import math as _m
+    ok = True
+
+    def chk(c, m):
+        nonlocal ok
+        ok &= bool(c)
+        _p(f"  {_OK if c else _NG} {m}")
+
+    A, N = 5.19, 3
+    cell = [[A * N, 0, 0], [0, A * N, 0], [0, 0, A * N]]
+    base = [("Nd", [i * A, j * A, k * A]) for i in range(N) for j in range(N) for k in range(N)]
+    base += [("Li", [i * A + A / 2, j * A, k * A])
+             for i in range(N) for j in range(N) for k in range(N)]
+    nat = len(base)
+
+    def mode(i):                      # 결정론적 '모드' 방향
+        v = [_m.sin(i * 1.7), _m.cos(i * 2.3), _m.sin(i * 3.1)]
+        n = _m.sqrt(sum(x * x for x in v)) or 1.0
+        return [x / n for x in v]
+
+    def steps_straight(nst=8, amp=1.2):        # 한 방향으로 곧게
+        return [[(s, [p[k] + mode(i)[k] * amp * t / (nst - 1) for k in range(3)])
+                 for i, (s, p) in enumerate(base)] for t in range(nst)]
+
+    def steps_wander(nst=8, amp=0.4, ph=0.0, off=7):  # 왔다갔다 (순변위 작고 경로 길다)
+        return [[(s, [p[k] + mode(i + off)[k] * amp * _m.sin(t * 1.9 + ph) for k in range(3)])
+                 for i, (s, p) in enumerate(base)] for t in range(nst)]
+
+    r = trace_report(steps_straight(), cell)
+    chk(r["wander_index"] is not None and r["wander_index"] < 1.2,
+        f"[궤적·양성] 곧은 이완의 배회지수 ≈ 1 ({r['wander_index']})")
+    r2 = trace_report(steps_wander(), cell)
+    chk(r2["wander_index"] >= 2.0,
+        f"[궤적·음성] 배회하면 배회지수가 커진다 ({r2['wander_index']})")
+
+    a = trace_report(steps_straight(), cell)["net_vector"]
+    b = trace_report(steps_straight(), cell)["net_vector"]
+    chk(abs(mode_overlap(a, b) or 0) >= 0.99, "[궤적·양성] 같은 모드면 코사인 ≈ 1")
+    # ★ 음성 핵심: 두 계산이 **다른 방향**으로 배회하면 코사인이 안 선다.
+    #   (같은 방향으로 배회하면 코사인은 높게 나오고, 그건 오판이 아니다 —
+    #    "공유된 무른 방향이 있다" 는 뜻이라 우리가 찾는 바로 그 신호다.)
+    c = trace_report(steps_wander(off=7), cell)["net_vector"]
+    e = trace_report(steps_wander(off=31, ph=2.1), cell)["net_vector"]
+    chk(abs(mode_overlap(c, e) or 1) <= 0.3,
+        f"[궤적·음성] 방향이 다른 배회는 코사인이 안 선다 ({mode_overlap(c, e)})")
+    chk(abs(mode_overlap(a, [[0.0, 0.0, 0.0]] * nat) or 1) if False else
+        mode_overlap(a, [[0.0, 0.0, 0.0]] * nat) is None,
+        "[궤적·가드] 영벡터면 코사인을 계산하지 않는다")
+    chk("error" in trace_report([base], cell), "[궤적·가드] 블록 1개면 궤적이 아니라고 말한다")
+    chk("error" in trace_report([base, base[:-1]], cell), "[궤적·가드] 원자 수가 다르면 거부")
+    return ok
+
+
 def align_endpoints(work, tag, source="in", far_r=FAR_FIELD_R_A, allow_unconverged=True,
                     base_dirs=False):
     """P0-1 진단: 두 끝점의 겉보기 변위에서 병진·라벨을 뺀다.
@@ -1691,11 +1912,18 @@ def main():
                     help="이어달리기(_r2·_r3)를 따라가지 않고 **원본 ep_initial/ep_final** 을 본다. "
                          "08-17 사고(한쪽은 갓 지은 입력·한쪽은 이완본)를 드러내려면 "
                          "이것과 기본 규약을 나란히 돌린다")
+    ap.add_argument("--bfgs_trace", action="store_true",
+                    help="끝점 relax.out 의 **BFGS 궤적**으로 물리/배회를 가른다 "
+                         "(새 계산 없음): 배회지수 + 두 끝점 모드 일치도")
     ap.add_argument("--selftest", action="store_true")
     a = ap.parse_args()
     if a.selftest:
         rc = selftest()
-        return 0 if (selftest_align() and rc == 0) else 1
+        return 0 if (selftest_align() and selftest_trace() and rc == 0) else 1
+    if a.bfgs_trace:
+        r, m = bfgs_trace(a.work, a.tag, a.align_base)
+        print(m)
+        return r
     if a.align_check:
         srcs = ("in", "out") if a.align_source == "both" else (a.align_source,)
         rc = 0
