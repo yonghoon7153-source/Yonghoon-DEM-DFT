@@ -136,9 +136,14 @@ export function EisDashboard() {
                       <OwnerTag owner={row.owner} />
                       {/* 이름이 곧 그 측정으로 가는 길이다 -- 셀 이름만으로는
                           어느 측정인지 모른다 (파일 이름에 조건이 적혀 있다). */}
-                      {row.spectrum_id
-                        ? <Link to={`/eis/${row.spectrum_id}`}>{row.name}</Link>
-                        : (row.name || '—')}
+                      {/* 스캔이면 **스캔 화면**으로 간다.  이 줄에 `SOC 스캔
+                          1` 이라고 적어 놓고 1번 스윕으로 보내면, 누른 사람은
+                          열한 개 중 하나만 보고 나머지 열을 찾아 헤맨다. */}
+                      {row.scan_sha256
+                        ? <Link to={`/scans/${row.scan_sha256}`}>{row.name}</Link>
+                        : row.spectrum_id
+                          ? <Link to={`/eis/${row.spectrum_id}`}>{row.name}</Link>
+                          : (row.name || '—')}
                     </td>
                     <td className="text">
                       {/* 셀 칸이 비어 있다는 것 자체가 이 줄의 정보다: 아직

@@ -257,6 +257,15 @@ export const api = {
     request<Drt>(`/api/eis/spectra/${id}/drt${query(params)}`),
   spectrumDrtSweep: (id: number, params?: Params) =>
     request<DrtSweep>(`/api/eis/spectra/${id}/drt/sweep${query(params)}`),
+  /** 한 SOC 스캔의 스윕 **전부**를 한 회로로.  상한은 스윕마다 따로 잡힌다
+   *  (유도성 꼬리의 길이가 스윕마다 다르다) — 하한은 안 정한다. */
+  fitScan: (sha256: string, params?: Params) =>
+    request<{
+      fitted: SpectrumFit[]
+      failed: { spectrum_id: number; detail: string }[]
+      requested: number
+      converged: number
+    }>(`/api/eis/scans/${sha256}/fit${query(params)}`, { method: 'POST' }),
   fitSpectra: (ids: number[], params?: Params) =>
     request<{
       fitted: SpectrumFit[]

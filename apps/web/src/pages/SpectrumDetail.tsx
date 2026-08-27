@@ -8,7 +8,7 @@
 
 import { OtherMeasurements } from '../components/OtherMeasurements'
 import { RelatedCellCard } from '../components/RelatedCell'
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 
 import { CopyBar } from '../components/CopyBar'
@@ -28,8 +28,10 @@ import { inductiveCount, nyquistXy } from '../lib/eis'
 import { isHeadline, paramMeaning } from '../lib/params'
 import { bodeTsv, fitParametersTsv, nyquistTsv } from '../lib/origin'
 import { useAsync, useStickyState } from '../lib/hooks'
-import type { CellConfig, CircuitKind, CircuitPreset, EisKind, SpectrumDetail as Detail, SpectrumFit }
-  from '../lib/types'
+import type {
+  CellConfig, CircuitKind, CircuitPreset, EisKind, Spectrum,
+  SpectrumDetail as Detail, SpectrumFit,
+} from '../lib/types'
 import { frequencySpan, hertz } from './Eis'
 
 const KIND_LABEL: Record<EisKind, string> = { liquid: '액체 전해질', solid: '전고체' }
@@ -94,6 +96,10 @@ export function SpectrumDetail() {
    *  보드의 |Z|, 피팅 파라미터의 저항들, 그리고 DRT.
    */
   const cellArea = record?.area_cm2_effective ?? null
+  //: 방금 저장한 값이 같은 파일의 스윕 몇 개까지 갔는지.  저장할 때만 뜬다.
+  const [spread, setSpread] = useState<string | null>(null)
+  //: 방금 한 일의 결과 한 줄 (스캔 전부 맞추기의 수렴 수 같은 것).
+  const [note, setNote] = useState<string | null>(null)
   const [storedZUnit, setZUnit] = useStickyState<ZUnit>(Z_UNIT_KEY, 'ohmcm2')
   const zPick = validZUnit(storedZUnit, 'ohmcm2')
   const area = areaFor(zPick, cellArea)
@@ -189,6 +195,62 @@ export function SpectrumDetail() {
     }
   }, [record?.fits, showFit])
 
+  /** 이 스펙트럼이 SOC 스캔의 한 스윕인가.  그렇다면 맞추기는 **스캔 단위**가
+   *  기본이다 — 한 파일이고 한 셀이라 1번에 맞는 회로가 나머지에도 맞는
+   *  회로이고, 스윕 열하나를 하나씩 맞추는 것이 이 화면이 생긴 이유였다. */
+  const sweeps = record?.sweep_count ?? 1
+  const isScanSweep = sweeps > 1
+
+  /** 스캔의 스윕 전부를 지금 고른 회로로.
+   *
+   *  **상한은 서버가 스윕마다 따로 잡는다** (유도성 위쪽 끝).  한 파일 안에서도
+   *  유도성 꼬리의 길이가 스윕마다 달라서, 이 화면의 상한 칸을 열한 개에
+   *  그대로 쓰면 어떤 스윕은 셀을 버리고 어떤 스윕은 배선을 남긴다.
+   *  **하한은 안 정한다** — 저주파 끝의 어긋남은 맞춰 봐야 아는 것이라
+   *  맞추기 전에 그은 하한은 근거 없이 데이터를 버리는 것이다.
+   */
+  async function runScanFit() {
+    if (!record?.sha256) return
+    setBusy(true)
+    setError(null)
+    setNote(null)
+    try {
+      const out = await api.fitScan(record.sha256, {
+        circuit: chosenCircuit || undefined,
+        auto_high: true,
+      })
+      const parts = [`스윕 ${out.converged}/${out.requested}개 수렴`]
+      // 성공만 세면 반쯤 실패한 배치가 작은 배치로 읽힌다.
+      if (out.failed.length) parts.push(`${out.failed.length}개 실패`)
+      setNote(parts.join(' · '))
+      if (out.failed.length) {
+        setError(out.failed.map((row) => `#${row.spectrum_id}: ${row.detail}`).join('\n'))
+      }
+      const mine = out.fitted.find((one) => one.spectrum_id === record.id)
+      if (mine) setShowFit(mine.id)
+      bumpReload((value) => !value)
+    } catch (cause) {
+      setError(cause instanceof Error ? cause.message : String(cause))
+    } finally {
+      setBusy(false)
+    }
+  }
+
+  // 추천 하한·상한을 **자동으로 채운다.**  전에는 두 칸이 비어 있고 그 아래
+  // '추천 345 kHz' 단추를 눌러야 들어갔다 — 매번 두 번 누르는 일이고, 안 누른
+  // 채로 맞추면 유도성 꼬리가 첫 아크를 끌어당긴 결과가 나온다.
+  //
+  // **손으로 고친 칸은 안 건드린다.**  덮어쓰면 좁혀 놓은 창이 다음 피팅에서
+  // 조용히 원래대로 돌아가고, 그 차이는 결과에만 나타난다.
+  const [touchedLow, setTouchedLow] = useState(false)
+  const [touchedHigh, setTouchedHigh] = useState(false)
+  useEffect(() => {
+    if (!touchedLow && suggestion.low !== null) setFitLow(String(suggestion.low))
+  }, [suggestion.low, touchedLow])
+  useEffect(() => {
+    if (!touchedHigh && suggestion.high !== null) setFitHigh(String(suggestion.high))
+  }, [suggestion.high, touchedHigh])
+
   async function runFit(mode?: 'auto') {
     if (!record) return
     setBusy(true)
@@ -249,6 +311,18 @@ export function SpectrumDetail() {
         </div>
         <span className="spacer" />
         <div className="row">
+          {/* 스캔의 한 스윕이면 **형제들이 있는 자리**로 가는 길이 먼저다 —
+              이 화면은 그중 하나이고, 나머지 열은 여기서 안 보인다. */}
+          {record.sweep_count && record.sweep_count > 1 ? (
+            <Link className="link-btn" to={`/scans/${record.sha256}`}>
+              스캔 · 스윕 {record.sweep_count}개
+            </Link>
+          ) : null}
+          {/* 여러 개를 한 회로로 한꺼번에 맞추는 자리.  스캔이 아니어도
+              쓸모가 있다 (같은 셀의 사이클별 스펙트럼을 한 번에). */}
+          <Link className="link-btn" to="/eis/spectra">
+            여러 개 한꺼번에 맞추기
+          </Link>
           <Link className="link-btn" to="/eis">
             목록
           </Link>
@@ -261,6 +335,9 @@ export function SpectrumDetail() {
       </div>
 
       {error ? <Alert kind="error">{error}</Alert> : null}
+      {note ? <Alert kind="info">{note}</Alert> : null}
+      {/* 스윕 전파는 **조용히 넘어갈 일이 아니다** — 열한 줄이 함께 바뀐다. */}
+      {spread ? <Alert kind="info">{spread}</Alert> : null}
 
       <div style={{ marginBottom: 14 }}>
         <RelatedCellCard
@@ -407,7 +484,23 @@ export function SpectrumDetail() {
             있어야 "이 값이 어느 셀·어느 면적의 것인가" 를 눈만 옮겨 본다. */}
         <div className="col" style={{ gap: 14 }}>
           <Card title="셀" padSmall>
-            <CellFields record={record} onSaved={() => bumpReload((value) => !value)} />
+            <CellFields
+              record={record}
+              onSaved={(out) => {
+                bumpReload((value) => !value)
+                if (!out) return
+                // **말없이 열한 줄을 고치지 않는다.**  한 스캔은 파일 하나·셀
+                // 하나라 지름·면적·그룹이 스윕 전부에 가는 것이 맞지만, 그
+                // 사실이 화면 어디에도 없으면 다른 스윕을 열어 본 사람이
+                // "내가 안 적었는데 왜 들어 있지" 를 만난다.
+                setSpread(out.spread_to_sweeps
+                  ? `이 스캔의 다른 스윕 ${out.spread_to_sweeps}개에도 함께 적용했습니다`
+                  : null)
+                // 면적이 이제 있으면 Ω·cm² 로 올린다.  지름을 적는 이유가
+                // 그것이고, 적어 놓고 단추를 또 눌러야 하면 적은 보람이 없다.
+                if (!cellArea && out.area_cm2_effective) setZUnit('ohmcm2')
+              }}
+            />
           </Card>
           <Card title="측정 정보" padSmall>
             <KeyValues
@@ -495,7 +588,10 @@ export function SpectrumDetail() {
                   aria-label="맞출 주파수 하한"
                   placeholder={measured ? `${num(measured.low, 3)}` : 'Hz'}
                   value={fitLow}
-                  onChange={(event) => setFitLow(event.target.value)}
+                  onChange={(event) => {
+                    setTouchedLow(true)
+                    setFitLow(event.target.value)
+                  }}
                 />
                 {/* 눌러서 넣는다.  숫자를 문장 속에서 찾아 손으로 옮겨 적는
                     것이 이 칸의 실제 사용법이었는데, 경계에 선 점의 주파수를
@@ -505,7 +601,7 @@ export function SpectrumDetail() {
                     type="button"
                     className="sm ghost"
                     style={{ marginTop: 5 }}
-                    onClick={() => setFitLow(String(suggestion.low))}
+                    onClick={() => { setTouchedLow(false); setFitLow(String(suggestion.low)) }}
                   >
                     추천 {suggestion.low} Hz
                     <span className="faint">
@@ -521,14 +617,17 @@ export function SpectrumDetail() {
                   aria-label="맞출 주파수 상한"
                   placeholder={measured ? `${num(measured.high, 3)}` : 'Hz'}
                   value={fitHigh}
-                  onChange={(event) => setFitHigh(event.target.value)}
+                  onChange={(event) => {
+                    setTouchedHigh(true)
+                    setFitHigh(event.target.value)
+                  }}
                 />
                 {suggestion.high !== null ? (
                   <button
                     type="button"
                     className="sm ghost"
                     style={{ marginTop: 5 }}
-                    onClick={() => setFitHigh(String(suggestion.high))}
+                    onClick={() => { setTouchedHigh(false); setFitHigh(String(suggestion.high)) }}
                   >
                     추천 {hertz(suggestion.high)}
                     <span className="faint"> · 유도성 위쪽 끝</span>
@@ -537,9 +636,27 @@ export function SpectrumDetail() {
               </Field>
             </div>
             <div className="row">
-              <button type="button" className="primary" disabled={busy} onClick={() => void runFit()}>
-                {busy ? '맞추는 중…' : '맞추기'}
-              </button>
+              {/* 스캔이면 **전부**가 기본이다.  한 파일이고 한 셀이라 1번에
+                  맞는 회로가 나머지에도 맞는 회로다.  한 스윕만 맞춰 보는
+                  길은 옆에 남긴다 — 회로를 고르는 동안에는 그쪽이 빠르다. */}
+              {isScanSweep ? (
+                <>
+                  <button type="button" className="primary" disabled={busy}
+                          title="상한은 스윕마다 따로 (유도성 위쪽 끝), 하한은 안 정합니다"
+                          onClick={() => void runScanFit()}>
+                    {busy ? '맞추는 중…' : `스윕 ${sweeps}개 전부 맞추기`}
+                  </button>
+                  <button type="button" disabled={busy}
+                          onClick={() => void runFit()}>
+                    {busy ? '…' : '이 스윕만'}
+                  </button>
+                </>
+              ) : (
+                <button type="button" className="primary" disabled={busy}
+                        onClick={() => void runFit()}>
+                  {busy ? '맞추는 중…' : '맞추기'}
+                </button>
+              )}
               {/* 사람이 하던 일이 그대로 이것이다: 회로를 바꿔 가며 몇 번 맞춰
                   보고 χ² 를 본다.  전부 저장되므로 아래 '지난 피팅' 에서
                   나란히 볼 수 있다. */}
@@ -755,7 +872,9 @@ function CellFields({
   onSaved,
 }: {
   record: Detail
-  onSaved: () => void
+  /** 저장된 결과를 그대로 넘긴다 — 부모가 "스윕 열에 함께 적용" 을 적고,
+   *  면적이 생겼으면 단위를 Ω·cm² 로 올린다. */
+  onSaved: (out?: Spectrum) => void
 }) {
   const [error, setError] = useState<string | null>(null)
   const [busy, setBusy] = useState(false)
@@ -792,8 +911,8 @@ function CellFields({
     setBusy(true)
     setError(null)
     try {
-      await api.updateSpectrum(record.id, body)
-      onSaved()
+      const out = await api.updateSpectrum(record.id, body)
+      onSaved(out)
     } catch (cause) {
       setError(cause instanceof Error ? cause.message : String(cause))
     } finally {

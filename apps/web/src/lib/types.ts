@@ -606,6 +606,9 @@ export interface Spectrum {
   capacity_mah?: number | null
   /** 이번 업로드가 같은 바이트의 기존 항목을 돌려준 것인가 (서버 dedup). */
   duplicate?: boolean
+  /** 이번 수정이 같은 파일의 다른 스윕 몇 개까지 따라갔나 (SOC 스캔).
+   *  한 스캔은 파일 하나·셀 하나라 지름·면적·그룹을 스윕이 나눠 갖는다. */
+  spread_to_sweeps?: number
   id: number
   sample_id: number | null
   sample_name: string | null
@@ -674,6 +677,8 @@ export interface EisDashboardRow {
   name: string
   /** 그 이름이 가리키는 스펙트럼 — 눌러서 가고, 안 붙은 줄은 여기서 지운다. */
   spectrum_id: number | null
+  /** 스캔의 한 스윕이면 그 파일의 sha256 — 이름을 누르면 스캔 화면으로. */
+  scan_sha256?: string
   /** 셀에 붙어 있는가.  안 붙은 것도 줄로 나온다. */
   attached: boolean
   /** 그룹·소그룹으로 거르려면 id 가, "부모 · 자식" 으로 적으려면 이름 둘이

@@ -885,12 +885,62 @@ def test_a_missing_scan_is_a_404_not_an_empty_scan(client):
     assert client.get("/api/eis/scans/" + "f" * 64).status_code == 404
 
 
-def test_a_scan_carries_one_area_only_when_every_sweep_agrees(client):
-    """Ω → Ω·cm² 는 스윕 전부가 같은 면적일 때만.
+def test_one_press_fits_every_sweep_of_a_scan(client):
+    """스윕 스물을 하나씩 맞추는 것이 이 화면이 있는 이유였다.
 
-    한 스캔은 한 파일이고 한 셀이라 보통 같다.  스윕 하나의 면적만 손으로
-    고쳐 두면 다른데, 그때 대표값 하나로 전부를 나누면 그림에 섞인 수가 나오고
-    섞였다는 표시는 어디에도 안 남는다 (§0.4).
+    한 스캔은 파일 하나이고 셀 하나라, 1번 스윕에 맞는 회로가 나머지에도
+    맞는 회로다.  **상한은 스윕마다 따로** 잡는다 — 유도성 꼬리의 길이가
+    스윕마다 다르고, 1번의 상한을 열한 개에 그대로 쓰면 어떤 스윕은 셀을
+    버리고 어떤 스윕은 배선을 남긴다.
+    """
+    client.post("/api/eis/spectra/upload",
+                params={"kind": "liquid", "cell_config": "half"},
+                files={"file": ("scan.mpr", scan_mpr(sweeps=3),
+                                "application/octet-stream")})
+    sha = client.get("/api/eis/spectra").json()[0]["sha256"]
+
+    body = client.post(f"/api/eis/scans/{sha}/fit",
+                       params={"circuit": "R0-p(R1,CPE1)"}).json()
+    assert body["requested"] == 3
+    assert body["converged"] >= 1
+    assert len(body["fitted"]) + len(body["failed"]) == 3
+
+    # 스캔 화면이 곧바로 추세를 그릴 수 있어야 한다.
+    scan = client.get(f"/api/eis/scans/{sha}").json()
+    assert scan["fitted"] == 3
+    assert "R0" in scan["parameters"]
+
+
+def test_the_scan_fit_cuts_the_inductive_tail_by_itself(client):
+    """상한 추천이 실제로 걸린다 — 맞춘 대역이 원래 대역보다 좁다."""
+    client.post("/api/eis/spectra/upload",
+                params={"kind": "liquid", "cell_config": "half"},
+                files={"file": ("scan.mpr", scan_mpr(sweeps=2),
+                                "application/octet-stream")})
+    rows = client.get("/api/eis/spectra").json()
+    sha = rows[0]["sha256"]
+    top = max(row["frequency_start_hz"] or 0 for row in rows)
+
+    body = client.post(f"/api/eis/scans/{sha}/fit",
+                       params={"circuit": "R0-p(R1,CPE1)"}).json()
+    for fit in body["fitted"]:
+        assert fit["frequency_high_hz"] is not None
+        assert fit["frequency_high_hz"] <= top
+
+
+def test_fitting_a_scan_that_does_not_exist_is_a_404(client):
+    assert client.post("/api/eis/scans/" + "f" * 64 + "/fit").status_code == 404
+
+
+def test_one_sweeps_geometry_becomes_the_whole_scans(client):
+    """스윕 하나에 적은 지름이 열한 줄 전부에 간다.
+
+    한 SOC 스캔은 파일 하나이고 셀 하나다.  1번 스윕에만 지름 14 mm 를 적으면
+    2~11번은 면적을 모르는 채로 남고, 화면은 같은 파일의 열한 줄을 서로 다른
+    단위(Ω / Ω·cm²)로 그린다.  스윕마다 손으로 열한 번 적는 것이 유일한
+    대안이었다.
+
+    **말없이 고치지는 않는다** — 몇 줄이 따라갔는지 응답이 적는다.
     """
     client.post("/api/eis/spectra/upload", params={"kind": "liquid"},
                 files={"file": ("scan.mpr", scan_mpr(sweeps=3),
@@ -901,12 +951,55 @@ def test_a_scan_carries_one_area_only_when_every_sweep_agrees(client):
     # 아직 아무 면적도 안 적었다 — 나눌 수가 없다.
     assert client.get(f"/api/eis/scans/{sha}").json()["area_cm2_effective"] is None
 
-    for row in rows:
-        client.patch(f"/api/eis/spectra/{row['id']}", json={"area_cm2": 1.5})
-    assert client.get(f"/api/eis/scans/{sha}").json()["area_cm2_effective"] == 1.5
+    out = client.patch(f"/api/eis/spectra/{rows[0]['id']}",
+                       json={"diameter_mm": 14.0}).json()
+    assert out["spread_to_sweeps"] == 2
 
-    # 하나만 다르게 고쳐 두면 대표값이 없다.
-    client.patch(f"/api/eis/spectra/{rows[1]['id']}", json={"area_cm2": 0.785})
+    after = client.get("/api/eis/spectra").json()
+    assert [row["diameter_mm"] for row in after] == [14.0, 14.0, 14.0]
+    # 스캔 전체가 하나의 면적을 갖게 됐다 — 그래야 Ω·cm² 로 그릴 수 있다.
+    assert client.get(f"/api/eis/scans/{sha}").json()["area_cm2_effective"] == \
+        pytest.approx(1.5394, rel=1e-3)
+
+
+def test_a_lone_spectrum_reports_no_spread(client):
+    """스윕이 하나뿐이면 따라갈 줄이 없다 — 0 이지 1 이 아니다."""
+    client.post("/api/eis/spectra/upload", params={"kind": "liquid"},
+                files={"file": ("one.mpr", scan_mpr(sweeps=1),
+                                "application/octet-stream")})
+    row = client.get("/api/eis/spectra").json()[0]
+    out = client.patch(f"/api/eis/spectra/{row['id']}",
+                       json={"diameter_mm": 14.0}).json()
+    assert out["spread_to_sweeps"] == 0
+
+
+def test_a_scan_with_mismatched_sweep_areas_reports_none(client):
+    """§0.4 — 스윕끼리 면적이 다르면 대표값이 없다.
+
+    PATCH 로는 이제 못 만드는 상태다 (고치면 전부에 퍼진다).  퍼지기 전에
+    저장된 옛 행에서는 생길 수 있고, 그때 대표값 하나로 전부를 나누면 그림에
+    섞인 수가 나오면서 섞였다는 표시는 어디에도 안 남는다.  그래서 규칙은
+    남겨 두고, 옛 행을 DB 에 직접 써서 확인한다.
+    """
+    from sqlmodel import Session as DbSession
+    from sqlmodel import select as db_select
+
+    from app.db import engine
+    from app.models import SpectrumRecord
+
+    client.post("/api/eis/spectra/upload", params={"kind": "liquid"},
+                files={"file": ("scan.mpr", scan_mpr(sweeps=3),
+                                "application/octet-stream")})
+    sha = client.get("/api/eis/spectra").json()[0]["sha256"]
+
+    with DbSession(engine) as session:
+        records = session.exec(
+            db_select(SpectrumRecord).where(SpectrumRecord.sha256 == sha)).all()
+        for index, record in enumerate(records):
+            record.area_cm2 = 1.5 if index else 0.785
+            session.add(record)
+        session.commit()
+
     assert client.get(f"/api/eis/scans/{sha}").json()["area_cm2_effective"] is None
 
 

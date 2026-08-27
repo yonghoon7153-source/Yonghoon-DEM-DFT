@@ -259,7 +259,7 @@ def _validate_config(config: str) -> str:
 
 
 def _out(session: Session, record: SpectrumRecord, *,
-         duplicate: bool = False) -> SpectrumOut:
+         duplicate: bool = False, spread_to: int = 0) -> SpectrumOut:
     sample_name = None
     if record.sample_id:
         sample = session.get(Sample, record.sample_id)
@@ -276,6 +276,7 @@ def _out(session: Session, record: SpectrumRecord, *,
         best_chi_squared=best.chi_squared if best else None,
         best_circuit=best.circuit if best else "",
         duplicate=duplicate,
+        spread_to_sweeps=spread_to,
         area_cm2_effective=_geometry(session, record)[1],
     )
 
@@ -606,6 +607,7 @@ def dashboard(session: Session = Depends(get_session)):
             sample_name=sample.name,
             name=latest.original_name or latest.name,
             spectrum_id=latest.id,
+            scan_sha256=latest.sha256 if latest.sweep_count > 1 else "",
             group_id=group_id,
             group_name=group_name,
             group_parent_name=parent_name,
@@ -659,6 +661,7 @@ def dashboard(session: Session = Depends(get_session)):
             sample_name="",
             name=latest.original_name or latest.name,
             spectrum_id=latest.id,
+            scan_sha256=latest.sha256 if latest.sweep_count > 1 else "",
             attached=False,
             group_id=group_id,
             group_name=group_name,
@@ -809,6 +812,68 @@ def _scan_out(session: Session, records: list[SpectrumRecord], *,
         area_cm2_effective=area,
         points=points if with_points else [],
     )
+
+
+def _auto_high_hz(record: SpectrumRecord) -> float | None:
+    """추천 상한 — 유도성 점을 뺀 뒤 남는 가장 높은 주파수.
+
+    **하한은 추천하지 않는다.**  저주파 끝의 어긋남은 회로가 그 구간을 설명
+    하는지의 문제라 맞춰 본 뒤에야 잴 수 있고 (``edge_misfit``), 맞추기 전에
+    그은 하한은 근거 없이 데이터를 버리는 것이다.  상한은 다르다: 실수축
+    **위**에 있는 점(Z″ > 0)은 배선과 셀 홀더의 인덕턴스이지 셀이 아니고, 그
+    판정은 부호 하나라 맞추기 전에도 정확하다.
+
+    스윕마다 따로 잰다.  한 파일 안에서도 유도성 꼬리의 길이가 스윕마다
+    다르고, 1번 스윕의 상한을 열한 개에 그대로 쓰면 어떤 스윕은 셀을 버리고
+    어떤 스윕은 배선을 남긴다.
+    """
+    spectrum = _load_points(record)
+    if spectrum is None:
+        return None
+    kept = spectrum.select(~inductive_mask(spectrum))
+    return float(np.max(kept.frequency_hz)) if len(kept) else None
+
+
+@router.post("/scans/{sha256}/fit")
+def fit_scan(sha256: str,
+             circuit: str | None = Query(None, description="비우면 이 종류의 기본 회로"),
+             auto_high: bool = Query(
+                 True, description="스윕마다 유도성 위쪽 끝을 상한으로 (하한은 안 정함)"),
+             restarts: int | None = Query(None, ge=0, le=64),
+             session: Session = Depends(get_session)):
+    """Fit every sweep of one SOC scan with the same circuit.
+
+    A scan is one file of one cell, so the circuit that fits sweep 1 is the
+    circuit for all of them -- and fitting twenty one at a time, by hand, is
+    the reason this screen exists at all.  Each sweep still gets **its own**
+    upper cut (``_auto_high_hz``); the lower end is left open on purpose.
+
+    Reported per sweep, success and failure both: one sweep that will not fit
+    must not stop the other twenty, and a batch that only counted successes
+    would read as a small batch instead of a half-failed one.
+    """
+    records = _scan_records(session, sha256)
+    if not records:
+        raise HTTPException(404, f"스캔 {sha256[:12]} 을 찾을 수 없습니다")
+
+    done, failed = [], []
+    for record in records:
+        try:
+            out = _run_fit(session, record.id, circuit=circuit,
+                           frequency_high_hz=_auto_high_hz(record) if auto_high
+                           else None,
+                           restarts=restarts)
+        except HTTPException as exc:
+            failed.append({"spectrum_id": record.id, "detail": exc.detail})
+            continue
+        except Exception as exc:  # noqa: BLE001
+            failed.append({"spectrum_id": record.id,
+                           "detail": f"{type(exc).__name__}: {exc}"})
+            continue
+        done.append(out)
+    return {"fitted": done, "failed": failed,
+            "requested": len(records),
+            "converged": sum(1 for out in done if out.converged)}
 
 
 def _scan_records(session: Session, sha256: str) -> list[SpectrumRecord]:
@@ -1182,11 +1247,54 @@ def update_spectrum(spectrum_id: int, payload: SpectrumUpdate,
                      f"값입니다 (비울 수 있는 것: "
                      f"{', '.join(sorted(CLEARABLE_SPECTRUM_FIELDS))})")
         setattr(record, field, None)
-    record.updated_at = datetime.now(timezone.utc).replace(tzinfo=None)
+    now = datetime.now(timezone.utc).replace(tzinfo=None)
+    record.updated_at = now
     session.add(record)
+    siblings = _spread_over_scan(session, record, values, payload.clear, now)
     session.commit()
     session.refresh(record)
-    return _out(session, record)
+    return _out(session, record, spread_to=siblings)
+
+
+#: 한 스캔의 스윕 전부가 나눠 갖는 칸들 — 스윕 하나를 고치면 나머지도 따라간다.
+#:
+#: **왜 나눠 갖는가.**  SOC 스캔 하나는 파일 하나이고 셀 하나다.  지름 14 mm 를
+#: 1번 스윕에만 적어 넣으면 2~11번은 면적을 모르는 채로 남고, 화면은 그 열한
+#: 줄을 서로 다른 단위(Ω / Ω·cm²)로 그린다 — 같은 파일인데.  스윕마다 손으로
+#: 열한 번 적는 것이 유일한 대안이었다.
+#:
+#: **왜 전부는 아닌가.**  `name` 은 스윕마다 `#3` 이 붙어 있어 그것이 곧
+#: 구별이다.  `at_cycle` 은 스캔이 사이클 하나에서 나오므로 같아도 되지만,
+#: 스윕을 골라 다른 사이클에 붙이는 일이 실제로 있어 남겨 둔다.
+SCAN_SHARED_FIELDS = {
+    # 기하 — 이것을 고치면 모든 스윕의 Ω·cm² 가 함께 바뀐다.
+    "thickness_um", "area_cm2", "diameter_mm",
+    # 측정 자신의 조건 (ADR 0027) 과 붙은 셀.
+    "sample_id", "group_id", "test_date", "cathode_type", "process",
+    "temperature_c", "kind", "cell_config", "purpose",
+}
+
+
+def _spread_over_scan(session: Session, record: SpectrumRecord,
+                      values: dict, cleared: list[str], now) -> int:
+    """Copy the shared fields onto the other sweeps of the same file.
+
+    Returns how many other rows changed, so the screen can say it.  Silence
+    here would be the worst of both: eleven rows quietly rewritten, and no way
+    to tell from the screen that they were.
+    """
+    touched = ({key for key in values if key in SCAN_SHARED_FIELDS}
+               | {key for key in cleared if key in SCAN_SHARED_FIELDS})
+    if not touched:
+        return 0
+    others = [one for one in _scan_records(session, record.sha256)
+              if one.id != record.id]
+    for one in others:
+        for key in touched:
+            setattr(one, key, getattr(record, key))
+        one.updated_at = now
+        session.add(one)
+    return len(others)
 
 
 #: PATCH ``clear`` 가 비울 수 있는 필드 — 전부 사람이 입력하는 것들이다.
