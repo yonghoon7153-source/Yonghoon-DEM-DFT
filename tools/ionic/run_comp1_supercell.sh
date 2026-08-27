@@ -66,9 +66,26 @@ grep -q "msd_multi_origin" "$DRIVER" || { echo "⛔ 드라이버에 MTO 가 없�
 grep -q '"--supercell"' "$DRIVER" || { echo "⛔ 드라이버에 --supercell 이 없다 — 옛 판이다: $DRIVER"; exit 1; }
 
 # ── 중복 실행 가드 (flock 만 쓴다 — pgrep 은 tmux 래퍼까지 세서 자기 자신에 걸린다) ──
-LOCK=${LOCK:-/tmp/comp1_supercell.lock}
-exec 9>"$LOCK" || { echo "⛔ 락 파일을 못 연다"; exit 1; }
-command -v flock >/dev/null 2>&1 && { flock -n 9 || { echo "⛔ 이미 돈다 — 중단"; exit 0; }; }
+# ⛔⛔ 2026-08-27 — 락이 `/tmp/comp1_supercell.lock` **고정**이라 OUTROOT 가 달라도 물었다.
+#   실측: lpsocl 큰 셀(lpsocl_long)이 도는 중에 작은 셀(lpsocl_small800)을 걸었더니
+#   `⛔ 이미 돈다 — 중단` 으로 **즉사**했다. 폴더도 로그도 안 생겨서 "안 걸렸나?" 로 15분을 썼다.
+#   가드의 목적은 **같은 출력 폴더를 두 번 돌리지 마라** 지 "이 스크립트를 두 번 쓰지 마라"가
+#   아니다. 이 스크립트는 OUTROOT·V0XYZ·LABEL 로 매개변수화돼 있어서 서로 다른 실험을
+#   동시에 돌리는 게 **정상 용법**이다.
+#   → 락 이름을 OUTROOT 에서 뽑는다. 같은 OUTROOT 는 여전히 막고, 다른 실험은 안 막는다.
+_LB=$(basename "$OUTROOT")
+_LH=$(printf '%s' "$OUTROOT" | cksum | cut -d' ' -f1)   # 경로 전체를 반영 (basename 충돌 방지)
+LOCK=${LOCK:-/tmp/comp1_supercell_${_LB}_${_LH}.lock}
+exec 9>"$LOCK" || { echo "⛔ 락 파일을 못 연다: $LOCK"; exit 1; }
+command -v flock >/dev/null 2>&1 && { flock -n 9 || {
+  # ⚠ "이미 돈다" 만 찍으면 **무엇이** 도는지 몰라서 죽일지 기다릴지 못 정한다.
+  echo "⛔ **같은 OUTROOT 로 이미 돌고 있다** — 중단"
+  echo "   OUTROOT: $OUTROOT"
+  echo "   락     : $LOCK"
+  pgrep -af 'disorder_ensemble_diffusion.py' 2>/dev/null \
+    | grep -a -- "--out_root $OUTROOT" | sed 's/^/   도는 것: /'
+  echo "   ⇒ 다른 실험을 돌리려면 **OUTROOT 를 다르게** 준다 (락도 따라 갈린다)."
+  exit 0; }; }
 
 ts(){ echo "[$(date +%m-%d\ %H:%M:%S)] $*"; }
 mkdir -p "$OUTROOT"
