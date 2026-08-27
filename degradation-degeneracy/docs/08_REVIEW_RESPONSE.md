@@ -3517,3 +3517,97 @@ leg" 로 사라졌다.
 | 실제 object-lock provider adapter | 붙일 provider 가 없다. 계약(7연산)과 canary 는 고정했다 |
 | power-loss ordering fault model | `os._exit` 은 un-fsynced entry 를 잃지 않는다. fault-injecting filesystem 이 필요하다 |
 | `digest → generation` value | 실행 산출물에 그 필드가 없다 — 선언이다 |
+
+## 43. 34차 리뷰 대응 — 최초 경로는 고쳤는데 재개·발견·소비가 갈렸다
+
+> 2026-08-27. 34차가 세 발견을 한 문장으로 묶었다:
+>
+> > 세 곳 모두 "고친 함수" 와 "실제 재개·발견·소비 경로" 가 다시 갈린 경우다.
+>
+> 33차에는 "고친 것과 실제로 쓰이는 것이 다르다" 였고, 이번에는 **최초 정상
+> 경로는 맞는데 그 다음 상태**가 빠져 있었다. 같은 병의 시제만 다른 형태다.
+
+### 43.1 P0-1 — proof 가 journal 전에는 회수 불가였다
+
+lease version proof 를 journal 에 두는 것까지는 맞았는데, **journal 이 생기기
+전에는 메모리에만** 있었다. 그래서 기존 lease 를 재사용하려는 모든 경로가
+proof 없이 verifier 를 불러 **반드시** 실패했고, 실패할 때마다 두 번째 WORM
+lease 가 생겨 exact pin set 이 오염됐다. WORM 이라 지울 수도 없다.
+
+| 반례 | 결과 |
+|---|---|
+| A: 완료 뒤 같은 트랜잭션 재실행 | 두 번째 lease 가 생겨 **기존 정상 등록까지 거짓**이 된다 |
+| B: lease lock 뒤 journal 전 crash | 재개가 journal 조차 못 만들고 장기 복구 불가 |
+
+`recover_lease_version()` 이 provider 에 digest 로 version 을 재조회한다.
+불변식을 리뷰의 문장 그대로 적는다:
+
+```text
+lease 가 한 번 잠겼다면 어느 후속 지점에서 죽어도
+reopen 은 같은 lease digest + 같은 provider version 을 재발견하고 재사용한다.
+```
+
+두 반례를 회귀로 고정하면서 **시계를 전진**시켰다. 같은 초 안에서는 lease
+바이트가 같아 우연히 재사용되고, 그러면 시험이 아무 것도 시험하지 않는다 —
+30차에 겪은 확률적 초록의 재발을 막는다.
+
+`store.json` 도 잠갔다. 지우면 새 UUID 가 발급돼 content·lease 가 남아 있어도
+기존 receipt 가 복구 불가가 된다.
+
+### 43.2 P2 — 후보 filter 가 verifier 앞에서 숨겼다
+
+33차에 "검증 실패를 `continue` 로 숨기지 않는다" 를 고쳤는데, **후보를
+고르는 술어**가 그 앞에 있었다. `has_registration_journal()` 은 raw 파일 존재
+술어가 아니다:
+
+| journal 상태 | 술어 결과 |
+|---|---|
+| 잘린 JSON · `{}` · schema 위반 | `False` (`registration()` 이 `None`) |
+| `receipt_object` 가 index 와 다름 | `False` |
+| index entry 없음 (orphan) | `False` |
+
+그래서 raw journal 이 **실제로 있는데** live gate 는 "등록 0건 · 오류 0건" 을
+봤다. 33차 회귀는 parse-valid journal 을 둔 채 `pins/` 만 지웠으므로 filter 를
+통과한 뒤의 실패만 증명했다 — 이름보다 범위가 한 단계 좁았다.
+
+이제 `registered/*.json` 과 `legs/*.json` 을 **직접 열거**한다. 발견은 semantic
+helper 가 아니라 raw namespace 에서 시작해야 한다. 다섯 손상을 각각 물린다.
+index 의 `planned_envelope` 사본 **누락**도 이제 오류다 (`copy is not None`
+조건이 누락 자체를 봐주고 있었다).
+
+### 43.3 #9 — 실제 reader 가 fixed 사본을 authority 로 읽었다
+
+writer 는 CURRENT 로 옮겼는데 `_cohort_projections`·`_sealed_projections`·
+`_sealed_source_digest` 는 fixed name 을 glob 했다. pointer 전환 뒤
+`_materialize` 중 죽으면 reader 가 stale G0 또는 G0/G1 혼합을 **읽는다** —
+다음 suite 의 `check_materialized()` 가 나중에 잡는 것은 이미 벌어진 일을
+되돌리지 못한다. 리뷰의 지적이 정확했다.
+
+* active cohort 는 `read_current()`/`cohort_bytes()` 를 통한다
+* frozen 은 원자료를 잃어 migration 불가이므로 fixed fallback 을 **명시적
+  예외**로 유지한다
+* `_materialize` 중 crash 를 주입하고 실제 reader 가 G1 만 보는지 확인한다
+
+그리고 "완전한 snapshot" 이 **구조로 강제되지 않았다**. promotion 입구에서
+leg 당 **세 suffix exact set** 을 강제한다 — 초판은 `{a.projection.yaml}` 만
+넘겨도 그 leg 의 CSV·restart 를 제거한 generation 을 정상 게시했다. base 가
+이미 불완전하면 물려받지도 않는다.
+
+### 43.4 변이 — 셋, 전부 "시험이 그 축을 안 보던" 자리
+
+| 물지 않은 변이 | 왜 | 처리 |
+|---|---|---|
+| base 완전성 검사 삭제 | 불완전 base 를 만드는 시험이 없었다 | 검사를 우회해 만든 뒤 물리는 시험 추가 |
+| active reader 이름을 fixed glob 으로 | 시험이 `cohort_bytes` 만 직접 불렀다 | **lint 가 쓰는 함수**를 부르는 시험 추가 |
+| active reader 바이트를 fixed 사본으로 | 같은 이유 | 같은 시험에서 함께 |
+
+helper 가 맞는 것과 **실제 소비자가 그것을 쓰는 것**은 다른 축이다 — 34차
+발견 셋이 전부 이 구분이었고, 변이에서 나온 셋도 같았다.
+
+### 43.5 남은 것
+
+| 항 | 상태 |
+|---|---|
+| 실제 object-lock provider adapter | **미구현** — 계약(9연산)과 canary 는 고정 |
+| power-loss ordering fault model | **미착수** — fault-injecting filesystem 필요 |
+| `digest → generation` value | **선언** — 실행 산출물에 그 필드가 없다 |
