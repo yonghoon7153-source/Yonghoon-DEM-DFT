@@ -124,8 +124,8 @@ describe('폴더 줄', () => {
     render(<Harness />)
     const name = screen.getByText('Mid_Ni')
     expect(name.className).toContain('folder-name')
-    // 소그룹은 한 눈금 작게 (`.sub`).  들여쓰기만으로는 다 펴 놓았을 때
-    // 최상위와 소그룹이 같은 세로줄에 겹쳐 보인다.
+    // 소그룹은 `.sub` 다 — **원래 색**으로 돌아가고 한 눈금 작다.  둘 다
+    // 파랗게 두면 층이 사라진다 (색 규칙은 `stylesheet.test.ts` 가 잡는다).
     expect(screen.getByText('4.4V').className).toContain('sub')
     expect(name.className).not.toContain('sub')
     // `· 3개` 는 이름 밖에 남아야 한다 -- 안에 들어가면 같이 칠해진다.

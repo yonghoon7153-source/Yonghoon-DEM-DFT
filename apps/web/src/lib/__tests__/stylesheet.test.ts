@@ -65,6 +65,18 @@ describe('app.css', () => {
     }
   })
 
+  it('묶음 이름은 최상위만 강조색 — 소그룹은 줄의 색을 그대로 쓴다', () => {
+    // 둘 다 파랗게 두면 층이 사라진다: 파란 글자가 줄마다 이어져 어디까지가
+    // 한 묶음인지 눈이 못 가른다.  색이 갈리는 편이 들여쓰기보다 강하다.
+    const ruleOf = (selector: string) =>
+      body.match(new RegExp(`\\${selector}\\s*\\{([^{}]*)\\}`))?.[1] ?? ''
+    expect(ruleOf('.folder-name')).toMatch(/color:\s*var\(--accent\)/)
+    // `.sub` 는 색을 **다시 정해야** 한다 -- 안 정하면 위 규칙이 그대로 남아
+    // 소그룹까지 파래진다.
+    expect(ruleOf('.folder-name.sub')).toMatch(/color:/)
+    expect(ruleOf('.folder-name.sub')).not.toMatch(/var\(--accent\)/)
+  })
+
   it('창은 표 머리보다 위에 있다 — z-index 를 눈으로 대조한다', () => {
     const zOf = (selector: string) => {
       const found = body.match(
