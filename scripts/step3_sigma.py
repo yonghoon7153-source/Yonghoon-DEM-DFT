@@ -2062,11 +2062,27 @@ def _selftest():
     print(f"ptfe-block-ion-drop: σ_ion {_rQ['sigma_eff']:.4f} → {_rB['sigma_eff']:.4f} "
           f"(차단이 솔브까지 관통)  {'OK' if _e5f else 'FAIL'}")
     #  ── ★ GPU 폴백 fail-closed (`REQUIRE_GPU`, 2026-08-26) ─────────────────────────
-    #    이 환경엔 CuPy 가 없으므로 `GPU_SOLVE=True` 면 import 가 실패해 **폴백 경로가
-    #    실제로 실행된다** = 가드를 진짜로 시험할 수 있다 (모의가 아니다).
+    #  ⚠⚠ **2026-08-27 — 옛 판은 GPU 의 "부재"를 전제로 썼고 그래서 공허했다.**
+    #    옛 주석: "이 환경엔 CuPy 가 없으므로 GPU_SOLVE=True 면 import 가 실패한다."
+    #    그 전제가 참인 곳(CPU 전용 컨테이너)에서는 초록이었지만, **정작 이 가드가 지켜야 할
+    #    GPU 기계(kgy)에서는 GPU 로 그냥 풀려서 `_e6a`·`_e6b` 가 둘 다 False = FAIL** 이었다
+    #    (실측 2026-08-27, W4 착수 전 예행에서 잡힘).  검사가 필요한 자리에서만 안 도는 것은
+    #    false-green 의 환경판이다 (CDXIJ-4/9 가 매체에서 겪은 것과 같은 부류).
+    #    ⇒ **부재에 기대지 않는다.**  `sys.modules['cupy'] = None` 로 import 를 강제로 실패시켜
+    #      GPU 유무와 무관하게 **같은 경로**를 타게 한다.  (`import cupy as cp` 가 GPU 분기의
+    #      첫 줄이므로 이 하나로 충분하다.)
+    #    ⚠ **잔여 한계 (원리적)**: 주입을 지워도 CPU 전용 기계에서는 여전히 초록이다 —
+    #      거기선 cupy 가 원래 없어서 "주입이 작동함" 과 "cupy 가 없음" 을 구분할 수 없다.
+    #      ⇒ 이 시험의 **비공허성은 GPU 기계에서만 검증된다**.  W4 급 런 전 예행에
+    #      `~/dem-venv/bin/python3 …/step3_sigma.py --selftest` 를 GPU 호스트에서 돌리는 것이
+    #      그 검증이고, 2026-08-27 에 실제로 그 자리에서 결함이 잡혔다.
     global GPU_SOLVE, REQUIRE_GPU
     _g0, _r0 = GPU_SOLVE, REQUIRE_GPU
     _La = sparse.diags([2.0, 2.0]).tocsr(); _ba = np.array([1.0, 1.0])
+    import sys as _sys
+    _ABSENT = object()
+    _cupy_saved = _sys.modules.get('cupy', _ABSENT)
+    _sys.modules['cupy'] = None                     # → `import cupy` 가 ImportError (결정적)
     try:
         GPU_SOLVE, REQUIRE_GPU = True, False
         _x, _i = _solve_cg(_La, _ba)                    # 폴백 허용 → CPU 로 푼다
@@ -2083,6 +2099,12 @@ def _selftest():
         _e6c = np.allclose(_x2, 0.5)
     finally:
         GPU_SOLVE, REQUIRE_GPU = _g0, _r0
+        #  cupy 를 원래대로 — 막아 둔 채 두면 **이후 모든 GPU 솔브가 조용히 CPU 로 떨어진다**
+        #  (이 함수가 프로덕션 프로세스 안에서 불릴 수 있다).  부재였으면 부재로 되돌린다.
+        if _cupy_saved is _ABSENT:
+            _sys.modules.pop('cupy', None)
+        else:
+            _sys.modules['cupy'] = _cupy_saved
     #  ★★ 기본값 계약 — 세 하위시험이 값을 **명시로** 덮으므로 기본값 경로를 안 지난다
     #    (브리지 `sdcp-bridge-zero-is-off` 와 같은 부류: 배터리가 잡았다).  ⇒ 직접 단언한다.
     #    `_r0` 는 selftest 진입 시점 값 = 모듈 기본값 (그 전에 아무도 안 바꾼다).
