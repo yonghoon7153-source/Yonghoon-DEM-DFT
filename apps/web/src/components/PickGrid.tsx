@@ -13,10 +13,11 @@
  *  적는다.
  */
 
-import type { ReactNode } from 'react'
+import { type ReactNode, useRef } from 'react'
 
 import { GroupFilterFields, type GroupChoice } from './GroupFilter'
 import { Card, Empty } from './ui'
+import { keepInPlace } from '../lib/anchor'
 
 export interface PickItem {
   id: number
@@ -58,20 +59,28 @@ export function PickGrid({
   empty?: ReactNode
 }) {
   const full = limit !== undefined && picked.length >= limit
+  // 고르개는 그림 **밑**에 있다.  체크를 하나 누르면 위쪽이 다시 그려지면서
+  // 높이가 변하고 (범례가 한 줄 늘거나 줄고, 경고가 뜨거나 사라지고, '고른 것'
+  // 표에 줄이 하나 붙는다), 고르개가 그만큼 위아래로 움직인다 — 다음에
+  // 누르려던 칸이 커서 밑에서 사라진다.  다섯 개를 고르려면 스크롤을 다섯 번
+  // 다시 맞춰야 했다.  누른 순간의 자리를 붙잡아 둔다 (`lib/anchor`).
+  const box = useRef<HTMLDivElement>(null)
   const toggle = (id: number) => {
     if (picked.includes(id)) {
+      keepInPlace(box.current)
       onChange(picked.filter((value) => value !== id))
       return
     }
     // 상한에서는 **켜는 것만** 막는다.  끄는 것까지 막으면 자리를 비울 수가
     // 없어서, 다른 것을 보려면 화면을 새로 고치는 수밖에 없다.
     if (full) return
+    keepInPlace(box.current)
     onChange([...picked, id])
   }
 
   return (
     <Card title={`${title} · ${picked.length}개`}>
-      <div className="col" style={{ gap: 10 }}>
+      <div className="col" style={{ gap: 10 }} ref={box}>
         {group ? (
           <div className="grid cols-2" style={{ gap: 10 }}>
             <GroupFilterFields pick={group} hint={groupHint} />
@@ -86,12 +95,18 @@ export function PickGrid({
             className="sm"
             onClick={() => {
               const all = items.map((item) => item.id)
+              // 여기가 높이를 가장 크게 바꾼다 — 한 번에 열두 줄이 붙는다.
+              keepInPlace(box.current)
               onChange(limit === undefined ? all : all.slice(0, limit))
             }}
           >
             모두 선택
           </button>
-          <button type="button" className="sm ghost" onClick={() => onChange([])}>
+          <button
+            type="button"
+            className="sm ghost"
+            onClick={() => { keepInPlace(box.current); onChange([]) }}
+          >
             해제
           </button>
           <span className="spacer" />

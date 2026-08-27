@@ -1,6 +1,6 @@
 /** Overlay several cells: cycle-life curves, or the same cycle's profile. */
 
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 
 import { AxisLockControl, useAxisLock } from '../components/AxisLock'
 import { BasisSelect } from '../components/BasisSelect'
@@ -8,6 +8,7 @@ import { CopyBar } from '../components/CopyBar'
 import { GroupFilterFields, useGroupChoice } from '../components/GroupFilter'
 import { Plot, PlotLegend, type PlotSeries } from '../components/Plot'
 import { Alert, Card, Empty, Spinner } from '../components/ui'
+import { keepInPlace } from '../lib/anchor'
 import { api } from '../lib/api'
 import { basisAxis, basisUnit, seriesColor } from '../lib/format'
 import {
@@ -74,6 +75,7 @@ export function Compare() {
   const [picked, setPicked] = useState<number[]>([])
   const [hidden, setHidden] = useState<string[]>([])
   const [truncated, setTruncated] = useState(false)
+  const pickBox = useRef<HTMLDivElement>(null)
 
   const group = useGroupChoice()
   // 서버가 상위 그룹을 소그룹까지 펴 준다 (`deps.group_scope`) -- 여기서 다시
@@ -566,7 +568,11 @@ export function Compare() {
         </div>
 
         <Card title={`셀 선택 · ${picked.length}개`}>
-          <div className="col" style={{ gap: 10 }}>
+          {/* 고르개는 그림 밑에 있다.  체크를 하나 누르면 위쪽이 다시 그려지며
+              높이가 변하고 (범례가 한 줄 늘거나 줄고, 경고가 뜨거나 사라진다)
+              고르개가 그만큼 움직인다 — 다음에 누르려던 칸이 커서 밑에서
+              사라진다.  누른 순간의 자리를 붙잡아 둔다 (`lib/anchor`). */}
+          <div className="col" style={{ gap: 10 }} ref={pickBox}>
             <div className="grid cols-2" style={{ gap: 10 }}>
               <GroupFilterFields pick={group} hint="소그룹까지 골라 좁힐 수 있습니다" />
             </div>
@@ -576,6 +582,8 @@ export function Compare() {
                 type="button"
                 className="sm"
                 onClick={() => {
+                  // 여기가 높이를 가장 크게 바꾼다 — 한 번에 서른 줄이 붙는다.
+                  keepInPlace(pickBox.current)
                   setTouched(true)
                   const all = samples.data ?? []
                   setPicked(all.slice(0, SELECT_ALL_LIMIT).map((s) => s.id))
@@ -588,6 +596,7 @@ export function Compare() {
                 type="button"
                 className="sm ghost"
                 onClick={() => {
+                  keepInPlace(pickBox.current)
                   setTouched(true)
                   setTruncated(false)
                   setPicked([])
@@ -614,6 +623,7 @@ export function Compare() {
                     type="checkbox"
                     checked={picked.includes(sample.id)}
                     onChange={() => {
+                      keepInPlace(pickBox.current)
                       setTouched(true)
                       setTruncated(false)
                       setPicked((current) =>
