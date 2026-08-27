@@ -641,6 +641,13 @@ def n_per_elem_from_traj(json_path):
 #   판정 기준은 **결과를 보기 전에** 고정한다:
 DRIFT_KEEP = 0.30      # COM 제거 후 골격 MSD 가 원래의 30 % 이하 → 흐름 지배 = 구제 가능
 DRIFT_LOST = 0.70      # 70 % 이상 남으면 재배열 = 구제 불가
+#: ⛔⛔ 2026-08-28 실측 — 위 두 문턱은 **비율**이라 골격이 거의 안 움직일 때 뜻을 잃는다.
+#:   골격이 진동만 하면(MSD 0.3–1 Å²) COM 을 빼도 바뀌는 게 없어 kept ≈ 1.0 이 되고,
+#:   그러면 **rigid 한 골격이 "재배열 — 구제 불가"** 로 찍힌다. 실제로 modelc 9개 중 8개가
+#:   그렇게 나왔다 — 같은 실행의 골격 β 검사는 **9/9 rigid** 라고 했는데도.
+#:   ⇒ '흐름이냐 재배열이냐' 는 **골격이 실제로 움직일 때만** 성립하는 질문이다.
+#:   오늘 아침 스칼라 일치도에서 고친 것과 같은 종류(절대 바닥 없는 백분율)다.
+DRIFT_MIN_MSD = 2.0    # 골격 MSD [Å²] 가 이 밑이면 진동이다 — 판정하지 않는다 (RMS 1.4 Å)
 
 
 def framework_com_split(json_path, save_fs=None):
@@ -688,8 +695,11 @@ def framework_com_split(json_path, save_fs=None):
     if ft is None or fi is None or ft <= 0:
         return None
     kept = fi / ft
-    v = ("drift_dominated" if kept <= DRIFT_KEEP else
-         "rearrangement" if kept >= DRIFT_LOST else "mixed")
+    if ft < DRIFT_MIN_MSD:
+        v = "framework_static"        # 판정 자체가 성립 안 한다 (위 DRIFT_MIN_MSD 주석)
+    else:
+        v = ("drift_dominated" if kept <= DRIFT_KEEP else
+             "rearrangement" if kept >= DRIFT_LOST else "mixed")
     return {"frame_total": ft, "frame_internal": fi, "kept_frac": kept,
             "li_total": raw["msd_per_elem_A2"][LI][-1],
             "li_internal": com["msd_per_elem_A2"][LI][-1],
@@ -1323,6 +1333,24 @@ def selftest():
     except ImportError:
         print("  · (ase/numpy 없음 — 방향별 텐서 selftest 건너뜀)")
 
+
+    # ★★ 실측회귀 (2026-08-28) — kept_frac 은 **비율**이라 골격이 안 움직이면 뜻을 잃는다.
+    #   modelc 9개 중 8개가 골격 β 로는 rigid(−0.05~0.27)인데 이 검사에서
+    #   "재배열 — 구제 불가" 로 찍혔다. **같은 실행의 두 검사가 정반대**를 말한 것이 신호였다.
+    def _drift(ft, fi):
+        kept = fi / ft
+        if ft < DRIFT_MIN_MSD:
+            return "framework_static"
+        return ("drift_dominated" if kept <= DRIFT_KEEP else
+                "rearrangement" if kept >= DRIFT_LOST else "mixed")
+    chk(_drift(0.4, 0.4) == "framework_static",
+        "[골격COM·실측회귀] 골격 MSD 0.4 Å²(진동)은 **판정 안 함** — 옛 판은 '재배열'이었다")
+    chk(_drift(0.7, 0.6) == "framework_static", "[골격COM·실측회귀] 0.7 Å² 도 마찬가지")
+    chk(_drift(5.5, 5.5) == "rearrangement",
+        "[골격COM·양성] 골격이 실제로 크게 움직이면 여전히 재배열로 잡는다")
+    chk(_drift(10.0, 1.0) == "drift_dominated",
+        "[골격COM·양성] COM 을 빼서 대부분 사라지면 흐름 지배다")
+    chk(_drift(10.0, 5.0) == "mixed", "[골격COM] 중간은 중간이라 말한다")
     print(f"selftest {'PASS' if not n_bad else 'FAIL'} — {n_ok} ok, {n_bad} bad")
     return 1 if n_bad else 0
 
@@ -1852,11 +1880,16 @@ def main():
                 continue
             mk = {"drift_dominated": "⭕ 흐름 — 구제 가능",
                   "mixed": "⚠ 섞임 — 구제 불확실",
-                  "rearrangement": "⛔ 재배열 — 구제 불가"}[r["verdict"]]
+                  "rearrangement": "⛔ 재배열 — 구제 불가",
+                  "framework_static": f"· 골격이 거의 안 움직임 (MSD<{DRIFT_MIN_MSD:g} Å²) — 판정 안 함",
+                  }[r["verdict"]]
             _cnt[r["verdict"]] = _cnt.get(r["verdict"], 0) + 1
             print(f"{tag:34s} {r['frame_total']:9.1f} {r['frame_internal']:10.1f} "
                   f"{r['kept_frac']:7.2f} {r['li_total']:8.1f} {r['li_internal']:10.1f}  {mk}")
         print("\n  합계: " + " · ".join(f"{k} {v}" for k, v in sorted(_cnt.items())))
+        if _cnt.get("framework_static"):
+            print(f"  · {_cnt['framework_static']}건은 골격 MSD 가 {DRIFT_MIN_MSD:g} Å² 미만이라 "
+                  f"**'흐름이냐 재배열이냐' 가 성립 안 한다** — 골격 β 검사 결과로 판단할 것.")
         if _cnt.get("rearrangement"):
             print("  ⛔ 재배열이 하나라도 있으면 그 온도점의 Li D 는 공동계로도 못 살린다.")
         if _cnt.get("drift_dominated"):
