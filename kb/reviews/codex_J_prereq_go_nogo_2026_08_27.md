@@ -9,7 +9,7 @@ verificationStatus: unverified
 explored: false
 authoredBy: agent
 effort: medium
-claimType: methodological
+claimType: prescriptive
 evidenceScope: multi-source-primary
 ---
 
