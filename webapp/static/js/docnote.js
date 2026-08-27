@@ -42,6 +42,32 @@
   }
   function norm(s) { return String(s == null ? "" : s).replace(/\s+/g, " ").trim(); }
 
+  /* 메모 글의 아주 작은 인라인 서식. **esc 뒤에** 돌린다 — 순서가 뒤집히면 HTML 주입이다.
+   * `code` 를 먼저 처리해 그 안의 별표가 굵게 먹지 않게 한다.
+   * ⛔ 못 하는 것: 블록 문법(목록·표·제목)은 없다. 여기는 메모지 문서가 아니다. */
+  function inline(s) {
+    return esc(s)
+      .replace(/`([^`\n]+)`/g, '<code>$1</code>')
+      .replace(/\*\*([^*\n]+)\*\*/g, "<b>$1</b>")
+      .replace(/==([^=\n]+)==/g, '<mark class="dn-penmk">$1</mark>');
+  }
+
+  /* textarea 선택 영역을 표시로 감싼다/벗긴다 (Ctrl+B). 선택이 없으면 커서 자리에
+   * 빈 표시를 넣고 그 안으로 커서를 옮긴다 — 워드에서 굵게를 먼저 켜는 것과 같다. */
+  function wrapSel(ta, mk) {
+    var a = ta.selectionStart, b = ta.selectionEnd, v = ta.value, sel = v.slice(a, b), n = mk.length;
+    if (sel && v.slice(a - n, a) === mk && v.slice(b, b + n) === mk) {
+      ta.value = v.slice(0, a - n) + sel + v.slice(b + n);
+      ta.setSelectionRange(a - n, b - n);
+    } else if (sel.length > 2 * n && sel.slice(0, n) === mk && sel.slice(-n) === mk) {
+      ta.value = v.slice(0, a) + sel.slice(n, -n) + v.slice(b);
+      ta.setSelectionRange(a, b - 2 * n);
+    } else {
+      ta.value = v.slice(0, a) + mk + sel + mk + v.slice(b);
+      if (sel) ta.setSelectionRange(a + n, b + n); else ta.setSelectionRange(a + n, a + n);
+    }
+  }
+
   /* ── 본문 쪽: 형광펜 ───────────────────────────────────────────────────── */
 
   function blockList() {
@@ -54,17 +80,18 @@
   /* 한 텍스트 노드 안에 통째로 들어 있을 때만 <mark> 로 감싼다.
    * ⚠ 노드를 걸치면 surroundContents 가 던진다 — 그때는 조용히 포기하고
    *   호출부가 문단 표시로 넘어간다 (예외를 삼키지 말고 null 로 알린다). */
-  function wrapFirst(block, needle) {
-    if (!needle || needle.length < 4) return null;
+  function wrapFirst(block, needle, cls, minLen) {
+    if (!needle || needle.length < (minLen == null ? 4 : minLen)) return null;
     var w = document.createTreeWalker(block, NodeFilter.SHOW_TEXT, null), n;
     while ((n = w.nextNode())) {
-      if (n.parentNode && n.parentNode.closest && n.parentNode.closest("mark.dn-hl")) continue;
+      if (n.parentNode && n.parentNode.closest &&
+          n.parentNode.closest("mark.dn-hl,mark.dn-pen")) continue;
       var i = n.nodeValue.indexOf(needle);
       if (i < 0) continue;
       var r = document.createRange();
       r.setStart(n, i); r.setEnd(n, i + needle.length);
       var mk = document.createElement("mark");
-      mk.className = "dn-hl";
+      mk.className = cls || "dn-hl";
       try { r.surroundContents(mk); } catch (_) { return null; }
       return mk;
     }
@@ -73,7 +100,7 @@
 
   function clearHl() {
     if (!cur) return;
-    cur.body.querySelectorAll("mark.dn-hl").forEach(function (m) {
+    cur.body.querySelectorAll("mark.dn-hl,mark.dn-pen").forEach(function (m) {
       var p = m.parentNode;
       while (m.firstChild) p.insertBefore(m.firstChild, m);
       p.removeChild(m);
@@ -117,7 +144,7 @@
       '<button type="button" class="dn-edit" title="고치기">✎</button>' +
       '<button type="button" class="dn-del" title="지우기">✕</button></div>' +
       (nt.anchor ? '<div class="dn-quote">' + esc(nt.anchor) + "</div>" : "") +
-      '<div class="dn-text" title="눌러서 고치기">' + esc(nt.text) + "</div></div>";
+      '<div class="dn-text" title="눌러서 고치기">' + inline(nt.text) + "</div></div>";
   }
 
   /* ── 고치기 (제자리) ───────────────────────────────────────────────────── */
@@ -168,7 +195,8 @@
 
   function render() {
     var lost = [], ok = [];
-    clearHl();
+    clearHl();                 // ⚠ 형광펜도 같이 벗겨진다 — 바로 아래에서 다시 칠한다
+    paintPens();
     cur.map = {};
     cur.notes.forEach(function (nt) {
       var el = findAnchor(nt.anchor || "");
@@ -271,6 +299,64 @@
       });
   }
 
+  /* ── 형광펜 (2026-08-27) ────────────────────────────────────────────────
+   * 메모와 **저장소가 다르다**(/api/highlights). 자리 잡는 방식은 같다 — 글 지문.
+   * ⛔ 못 하는 것: 한 문단에 같은 글이 여러 번이면 첫 번째만 · 문단을 가로지르는
+   *   선택은 저장은 되나 다시 못 찾을 수 있다 · 색은 4종 고정. */
+  function paintPens() {
+    if (!cur || !cur.pens) return;
+    var blocks = blockList();
+    cur.pens.forEach(function (h) {
+      for (var i = 0; i < blocks.length; i++) {
+        var mk = wrapFirst(blocks[i], h.text, "dn-pen dn-pen-" + (h.color || "yellow"), 2);
+        if (mk) { mk.dataset.hid = h.id; mk.title = "형광펜 " + (h.at || "") + " — 펜 켜고 누르면 지워요"; return; }
+      }
+    });
+  }
+
+  function loadPens() {
+    if (!cur) return;
+    fetch("/api/highlights/" + encodeURI(cur.rel))
+      .then(function (r) { return r.json(); })
+      .then(function (d) { if (cur) { cur.pens = d.items || []; render(); paintPenBtn(); } })
+      .catch(function () { if (cur) cur.pens = []; });
+  }
+
+  function addPen(text) {
+    if (!cur) return;
+    fetch("/api/highlights/" + encodeURI(cur.rel), {
+      method: "POST", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ text: text, color: cur.penColor || "yellow" })
+    }).then(function (r) { return r.json().then(function (d) { return { ok: r.ok, d: d }; }); })
+      .then(function (x) { if (!x.ok) { alert("⛔ " + (x.d.error || "실패")); return; } loadPens(); })
+      .catch(function () { alert("⛔ 통신 실패"); });
+  }
+
+  function delPen(hid) {
+    if (!cur) return;
+    fetch("/api/highlights/" + encodeURI(cur.rel), {
+      method: "DELETE", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ id: hid })
+    }).then(function () { loadPens(); }).catch(function () { alert("⛔ 통신 실패"); });
+  }
+
+  function paintPenBtn() {
+    var b = document.getElementById("docpen");
+    if (!b) return;
+    var on = !!(cur && cur.penOn), n = (cur && cur.pens ? cur.pens.length : 0);
+    b.classList.toggle("on", on);
+    b.textContent = (on ? "🖍 형광 켬" : "🖍 형광") + (n ? " " + n : "");
+    b.title = on ? "글을 드래그하면 칠해요 · 칠한 곳을 누르면 지워요 (다시 눌러 끄기)"
+                 : "형광펜을 켜요 — 켜면 드래그로 칠할 수 있어요";
+    document.body.classList.toggle("dn-pen-on", on);
+  }
+
+  global.docnotePenToggle = function () {
+    if (!cur) return;
+    cur.penOn = !cur.penOn;
+    paintPenBtn();
+  };
+
   function save(text, anchor) {
     if (!norm(text)) return;
     fetch("/api/comments/" + encodeURI(cur.rel), {
@@ -306,7 +392,7 @@
     d.innerHTML =
       '<div class="dn-meta">새 메모<button type="button" class="dn-cancel" title="취소 (Esc)">✕</button></div>' +
       (anchor ? '<div class="dn-quote">' + esc(anchor) + "</div>" : "") +
-      '<textarea class="dn-in" rows="3" placeholder="메모… (Ctrl+Enter 저장 · Esc 취소)"></textarea>' +
+      '<textarea class="dn-in" rows="3" placeholder="메모… (Ctrl+Enter 저장 · Esc 취소 · Ctrl+B 굵게 · Ctrl+H 형광 · Shift+Enter 줄바꿈)"></textarea>' +
       '<div class="dn-act"><button type="button" class="btn sm dn-save">저장</button></div>';
     cur.gut.appendChild(d);
     layout();
@@ -343,9 +429,32 @@
     }
     hostEl.classList.add("dnote-on");
     cur = { body: bodyEl, rel: rel, host: hostEl, gut: gut,
-            notes: [], map: {}, draftEl: null, draftAnchor: "" };
+            notes: [], map: {}, draftEl: null, draftAnchor: "",
+            pens: [], penOn: false, penColor: "yellow" };
     gut.innerHTML = '<div class="dn-h">📝 메모</div>';
     load();
+    loadPens();
+    paintPenBtn();
+    // 형광펜: 켜져 있을 때만 드래그가 칠한다. 꺼져 있으면 평소처럼 글이 선택될 뿐이다
+    //   — 읽다가 실수로 칠하는 사고를 막으려고 **기본은 꺼짐**이다.
+    bodyEl.addEventListener("mouseup", function () {
+      if (!cur || !cur.penOn) return;
+      var sel = global.getSelection();
+      if (!sel || sel.isCollapsed) return;
+      var t = norm(String(sel));
+      if (t.length < 2) return;
+      if (!bodyEl.contains(sel.anchorNode)) return;
+      sel.removeAllRanges();
+      addPen(t.slice(0, 400));
+    });
+    // 칠한 곳을 누르면 지운다 (펜이 켜져 있을 때만 — 꺼져 있으면 그냥 글이다)
+    bodyEl.addEventListener("click", function (e) {
+      if (!cur || !cur.penOn) return;
+      var m = e.target.closest && e.target.closest("mark.dn-pen");
+      if (!m || !m.dataset.hid) return;
+      e.preventDefault(); e.stopPropagation();
+      delPen(m.dataset.hid);
+    }, true);
     // 본문 높이가 바뀌면(그림 로딩·표 접힘) 카드 자리도 따라가야 한다
     if (global.ResizeObserver) {
       cur.ro = new ResizeObserver(function () { layout(); });
@@ -360,6 +469,9 @@
     if (cur.host) cur.host.classList.remove("dnote-on");
     if (cur.gut && cur.gut.parentNode) cur.gut.parentNode.removeChild(cur.gut);
     cur = null;
+    document.body.classList.remove("dn-pen-on");
+    var pb = document.getElementById("docpen");
+    if (pb) { pb.classList.remove("on"); pb.textContent = "🖍 형광"; }
   };
 
   global.docNoteLayout = layout;
@@ -431,6 +543,14 @@
     if (!cur) return;
     var ta = e.target.closest && e.target.closest(".dn-in");
     if (!ta) return;
+    // Ctrl/⌘+B = 굵게. 워드에서 하던 손이 여기서도 먹어야 한다 (1저자 요청 2026-08-27).
+    //   브라우저 기본 Ctrl+B(사이드바/북마크)를 막아야 하므로 preventDefault 가 필수다.
+    if ((e.ctrlKey || e.metaKey) && (e.key === "b" || e.key === "B")) {
+      e.preventDefault(); wrapSel(ta, "**"); return;
+    }
+    if ((e.ctrlKey || e.metaKey) && (e.key === "h" || e.key === "H")) {
+      e.preventDefault(); wrapSel(ta, "=="); return;      // 메모 안 형광펜
+    }
     if ((e.ctrlKey || e.metaKey) && e.key === "Enter") {
       e.preventDefault();
       var card = ta.closest(".dn-card");

@@ -1180,6 +1180,30 @@ tr.row-dim{opacity:.62}
   border:1px solid var(--border);border-radius:6px;padding:6px 7px;background:var(--surface);
   color:inherit;resize:vertical}
 .dn-act{display:flex;justify-content:flex-end;margin-top:6px}
+/* 메모 글 안의 인라인 서식 (Ctrl+B / Ctrl+H) */
+.dn-text b{font-weight:700}
+.dn-text code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.92em;
+  background:var(--surface);border:1px solid var(--border2);border-radius:3px;padding:0 3px}
+mark.dn-penmk{background:#fef08a;color:inherit;border-radius:2px;padding:0 1px}
+/* ── 형광펜 (2026-08-27) ─────────────────────────────────────────────────
+   메모 형광(mark.dn-hl)과 **다른 표시**다: 저건 "메모가 붙은 자리" 를 가리키는
+   시스템 표시고, 이건 사람이 직접 칠한 것이라 아래줄 없이 배경만 칠한다. */
+mark.dn-pen{color:inherit;border-radius:2px;padding:0 1px;background:#fef08a}
+mark.dn-pen-yellow{background:#fef08a}
+mark.dn-pen-green{background:#bbf7d0}
+mark.dn-pen-pink{background:#fbcfe8}
+mark.dn-pen-blue{background:#bfdbfe}
+/* 펜이 켜져 있을 때만 커서를 바꾼다 — 꺼져 있으면 평소처럼 글을 고를 뿐이다 */
+body.dn-pen-on .doc{cursor:text}
+body.dn-pen-on mark.dn-pen{cursor:pointer;outline:1px dashed rgba(120,53,15,.45)}
+#docpen.on{background:#fde68a;border-color:#f59e0b;color:#78350f;font-weight:600}
+@media (prefers-color-scheme:dark){
+  mark.dn-pen,mark.dn-pen-yellow{background:#78600f;color:#fef9c3}
+  mark.dn-pen-green{background:#14532d;color:#dcfce7}
+  mark.dn-pen-pink{background:#701a45;color:#fce7f3}
+  mark.dn-pen-blue{background:#1e3a8a;color:#dbeafe}
+  mark.dn-penmk{background:#78600f;color:#fef9c3}
+}
 /* 본문 쪽 표시 — 형광펜(정확히 그 글) · 문단 표시(글을 못 집었을 때) */
 mark.dn-hl{background:#fef3c7;color:inherit;border-bottom:2px solid #f59e0b;
   padding:0 1px;border-radius:2px}

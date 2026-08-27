@@ -169,6 +169,11 @@
         <span id="pnotebadge" class="muted" style="font-size:.74rem"></span>
         {# 그림 목록이 digest 맨 끝이라 긴 논문은 한참 굴려야 닿는다 — 한 번에 점프.
            한 번 더 누르면 읽던 자리(본문 위)로 되돌아온다. 단축키 F / Esc 는 닫기. #}
+        {# 형광펜 — **기본은 꺼짐**. 읽다가 드래그만 해도 칠해지면 사고라, 켠 동안만 칠한다.
+           켠 상태에서: 드래그 = 칠하기 · 칠한 곳 클릭 = 지우기. 저장은 글 지문 기준이라
+           문서를 다시 렌더해도 따라간다(메모 anchor 와 같은 방식). #}
+        <button class="btn sm" id="docpen" onclick="window.docnotePenToggle&&docnotePenToggle()"
+                title="형광펜을 켜요 — 켜면 드래그로 칠할 수 있어요">🖍 형광</button>
         <button class="btn sm" id="pfigjump" style="display:none"
                 onclick="jumpFigs()" title="그림 목록으로 (단축키 F · 다시 누르면 위로)">🖼 그림 ↓</button>
         <button class="btn sm" onclick="document.getElementById('pmodal').classList.remove('open');window.figrefClose&&figrefClose()">✕ 닫기</button></span></div>

@@ -1835,3 +1835,67 @@ def test_comp1_supercell_md_reassessed_not_banned():
     assert "정본" in r["forbidden_use"] and "인용 금지" in r["forbidden_use"]
     assert any("단일 시드" in x or "단일시드" in x for x in r["why_still_not_canonical"])
     assert "unban_condition" not in a, "밴이 풀렸으면 해제 조건은 남기지 않는다"
+
+
+def test_note_text_keeps_newlines():
+    """메모 줄바꿈 보존 (2026-08-27 1저자 신고: "shift enter 가 안 먹힌다").
+
+    증상은 입력에서 보였는데 원인은 **저장**에 있었다 — 서버가
+    `" ".join(text.split("\\n"))` 으로 줄을 전부 공백으로 뭉갰다. 화면(.dn-text)은
+    이미 pre-wrap 이었고 입력창도 textarea 라 Shift+Enter 는 네이티브로 먹었다.
+    ⇒ 이 테스트가 지키는 것은 "줄이 살아서 저장되고 다시 읽힌다" 하나다.
+    """
+    import tempfile
+    with tempfile.TemporaryDirectory() as td:
+        old = D.COMMENTS_PATH
+        try:
+            D.COMMENTS_PATH = Path(td) / "file_comments.json"
+            rel = "db/properties/electronic.json"
+            body = "첫 줄\n둘째 줄\n\n넷째 줄"
+            r = D.add_file_comment(rel, body)
+            assert r.get("ok"), r
+            assert r["item"]["text"] == body, repr(r["item"]["text"])
+            back = D.file_comments(rel)[0]["text"]
+            assert back.count("\n") == 3, repr(back)
+            # 고치기도 같은 규약이어야 한다 (한쪽만 고치면 편집하는 순간 다시 뭉개진다)
+            e = D.edit_file_comment(rel, r["item"]["id"], "가\r\n나\n\n\n다  ")
+            assert e["item"]["text"] == "가\n나\n\n다", repr(e["item"]["text"])
+            # 음성: 공백·줄바꿈뿐이면 여전히 거절한다
+            assert D.add_file_comment(rel, " \n\n\t ").get("error")
+        finally:
+            D.COMMENTS_PATH = old
+
+
+def test_highlights_are_separate_from_notes():
+    """형광펜은 메모와 **다른 저장소**다 (2026-08-27).
+
+    같은 파일에 섞으면 file_comments() 를 쓰는 곳(📝 배지·검색 색인·paper 색인)이
+    형광펜을 메모로 센다. 그 경계를 잠근다.
+    """
+    import tempfile
+    with tempfile.TemporaryDirectory() as td:
+        oldh, oldc = D.HIGHLIGHTS_PATH, D.COMMENTS_PATH
+        try:
+            D.HIGHLIGHTS_PATH = Path(td) / "file_highlights.json"
+            D.COMMENTS_PATH = Path(td) / "file_comments.json"
+            rel = "db/properties/electronic.json"
+            r = D.add_file_highlight(rel, "  띄어쓰기가   여럿인 글  ", "green")
+            assert r["ok"] and r["item"]["text"] == "띄어쓰기가 여럿인 글"
+            assert r["item"]["color"] == "green"
+            # 같은 글을 다시 칠하면 **새로 만들지 않고 색만** 바꾼다
+            r2 = D.add_file_highlight(rel, "띄어쓰기가 여럿인 글", "pink")
+            assert r2.get("recolored") and r2["n"] == 1 and r2["item"]["color"] == "pink"
+            # 음성 경로들
+            assert D.add_file_highlight(rel, "가").get("error"), "너무 짧은 글은 거절"
+            assert D.add_file_highlight("../../etc/passwd", "abcd").get("error"), "경로 탈출 거절"
+            assert D.add_file_highlight(rel, "모르는 색 시험", "chartreuse")["item"]["color"] \
+                == "yellow", "CSS 에 없는 색은 조용히 칠 안 되므로 yellow 로 떨어뜨린다"
+            assert D.del_file_highlight(rel, "없는id").get("error")
+            # ★ 핵심: 메모 저장소가 그대로다
+            assert D.file_comments(rel) == [], "형광펜이 메모 저장소로 샜다"
+            assert len(D.file_highlights(rel)) == 2
+            for h in list(D.file_highlights(rel)):
+                D.del_file_highlight(rel, h["id"])
+            assert D.file_highlights(rel) == []
+        finally:
+            D.HIGHLIGHTS_PATH, D.COMMENTS_PATH = oldh, oldc

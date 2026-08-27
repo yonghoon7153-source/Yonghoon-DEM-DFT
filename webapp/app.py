@@ -821,6 +821,25 @@ def api_comments(rel):
     return jsonify(r)
 
 
+@app.route("/api/highlights/<path:rel>", methods=["GET", "POST", "DELETE"])
+def api_highlights(rel):
+    """형광펜 읽기/칠하기/지우기. 메모와 **저장소가 다르다** (data.HIGHLIGHTS_PATH).
+
+    POST `{text, color}` · DELETE `{id}`. 같은 글을 다시 칠하면 색만 바뀐다.
+    """
+    if request.method == "GET":
+        return jsonify({"rel": rel, "items": D.file_highlights(rel)})
+    g = _guard_mutation()
+    if g:
+        return g
+    d = request.get_json(silent=True) or {}
+    if request.method == "DELETE":
+        r = D.del_file_highlight(rel, str(d.get("id", "")))
+    else:
+        r = D.add_file_highlight(rel, str(d.get("text", "")), str(d.get("color", "yellow")))
+    return (jsonify(r), 400) if r.get("error") else jsonify(r)
+
+
 @app.route("/api/comments/<path:rel>", methods=["DELETE"])
 def api_comment_delete(rel):
     """?id=<cid> 로 한 건 삭제. path 에 넣으면 파일 경로와 섞여 파싱이 애매해진다."""

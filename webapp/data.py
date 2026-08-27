@@ -4611,19 +4611,40 @@ def papers_with_figures() -> dict[str, int]:
 #   그림·CSV 를 보다가 든 판단("이건 아티팩트 의심", "이 축은 log")을 그 파일 옆에 붙여
 #   둔다. repo 에 파일로 두므로 세션이 바뀌어도, 다른 머신에서도 그대로 보인다.
 COMMENTS_PATH = DB / "file_comments.json"
+HIGHLIGHTS_PATH = DB / "file_highlights.json"
 
 
-def _load_comments() -> dict:
-    if not COMMENTS_PATH.exists():
+def _clean_note_text(s: str) -> str:
+    """메모 글 정리 — **줄바꿈은 살린다.**
+
+    ⛔ 2026-08-27 정정 (1저자 신고: "shift enter 가 안 먹힌다")
+      옛 판은 `" ".join(text.split("\\n"))` 으로 줄바꿈을 전부 공백으로 뭉갰다.
+      저장이 JSON 이라 줄바꿈을 못 담을 이유가 없었는데도 그랬다. 게다가
+      **화면과 입력창은 이미 줄을 그릴 준비가 돼 있었다** — `.dn-text` 는 `pre-wrap`
+      이고 입력창은 `textarea` 라 Shift+Enter 가 네이티브로 먹는다. 서버만 몰랐고,
+      그래서 세미나 메모가 전부 한 줄로 뭉쳐 나왔다. 증상은 입력에서 보이는데
+      원인은 저장에 있던 경우다.
+
+    지금 하는 것: CRLF 통일 · 줄 끝 공백 제거 · **빈 줄은 최대 하나**까지.
+    안 하는 것: 줄 수 제한은 두지 않는다 (2000자 상한이 이미 있다).
+    """
+    s = (s or "").replace("\r\n", "\n").replace("\r", "\n")
+    s = "\n".join(ln.rstrip() for ln in s.split("\n"))
+    return re.sub(r"\n{3,}", "\n\n", s).strip()
+
+
+def _load_comments(path=None) -> dict:
+    p = path or COMMENTS_PATH
+    if not p.exists():
         return {}
     try:
-        d = json.loads(COMMENTS_PATH.read_text(encoding="utf-8"))
+        d = json.loads(p.read_text(encoding="utf-8"))
         return d if isinstance(d, dict) else {}
     except (OSError, ValueError):
         return {}
 
 
-def _save_comments(d: dict) -> None:
+def _save_comments(d: dict, path=None) -> None:
     """임시파일에 쓰고 os.replace 로 갈아끼운다 — 쓰는 도중 죽어도 반쪽 JSON 이 안 남는다.
 
     ⚠⚠ Windows 에서 `os.replace` 는 대상 파일을 **누가 잠깐 열고만 있어도**
@@ -4634,14 +4655,15 @@ def _save_comments(d: dict) -> None:
       → 짧은 backoff 로 제한 재시도한다. POSIX 에서는 애초에 안 나는 경로다.
     """
     import time
-    COMMENTS_PATH.parent.mkdir(parents=True, exist_ok=True)
-    tmp = COMMENTS_PATH.with_suffix(COMMENTS_PATH.suffix + f".tmp{os.getpid()}")
+    P = path or COMMENTS_PATH
+    P.parent.mkdir(parents=True, exist_ok=True)
+    tmp = P.with_suffix(P.suffix + f".tmp{os.getpid()}")
     tmp.write_text(json.dumps(d, ensure_ascii=False, indent=1, sort_keys=True),
                    encoding="utf-8")
     delay, last = 0.005, None
     for _ in range(8):                       # 총 ~0.6 s. 그 이상 걸리면 진짜 문제다
         try:
-            os.replace(tmp, COMMENTS_PATH)
+            os.replace(tmp, P)
             return
         except PermissionError as ex:        # Windows 일시 점유
             last = ex
@@ -4739,7 +4761,7 @@ def process_alive(pid) -> bool:
 
 
 @_ctx.contextmanager
-def _comments_locked(timeout=10.0):
+def _comments_locked(timeout=10.0, path=None):
     """읽기→수정→쓰기 전체를 한 임계구역으로 묶는다.
 
     ⚠ Windows 에는 fcntl 이 없다. 첫 판은 "없으면 그냥 진행" 이었는데, 그러면 Windows
@@ -4749,7 +4771,7 @@ def _comments_locked(timeout=10.0):
       어느 경우에도 "락 없이 진행" 은 하지 않는다.
     """
     import time
-    lock_path = COMMENTS_PATH.with_suffix(COMMENTS_PATH.suffix + ".lock")
+    lock_path = (path or COMMENTS_PATH).with_suffix((path or COMMENTS_PATH).suffix + ".lock")
     lock_path.parent.mkdir(parents=True, exist_ok=True)
     try:
         import fcntl
@@ -4860,8 +4882,7 @@ def add_file_comment(rel: str, text: str, who: str = "", anchor: str = "") -> di
     rel = (rel or "").lstrip("/")
     if safe_note_target(rel) is None:
         return {"error": "그 파일을 찾을 수 없어요"}
-    text = " ".join((text or "").split("\n"))
-    text = (text or "").strip()
+    text = _clean_note_text(text)          # ⛔ 줄바꿈을 **살린다** (_clean_note_text docstring)
     if not text:
         return {"error": "내용이 비어 있어요"}
     # ⚠ 읽기→수정→쓰기를 통째로 잠근다. 그리고 id 를 밀리초 타임스탬프로만 만들면
@@ -4898,7 +4919,7 @@ def edit_file_comment(rel: str, cid: str, text: str) -> dict:
     이 함수가 못 하는 것: anchor(붙인 자리)는 못 바꾼다. 자리를 옮기려면 지우고 다시 단다.
     """
     rel = (rel or "").lstrip("/")
-    text = " ".join((text or "").split("\n")).strip()
+    text = _clean_note_text(text)          # ⛔ 줄바꿈을 **살린다**
     if not text:
         return {"error": "내용이 비어 있어요"}
     with _comments_locked():
@@ -4916,6 +4937,72 @@ def edit_file_comment(rel: str, cid: str, text: str) -> dict:
             _save_comments(d)
             return {"ok": True, "item": c, "n": len(lst)}
     return {"error": "그 메모를 못 찾았어요"}
+
+
+# ── 형광펜 (2026-08-27, 논문세미나 준비) ──────────────────────────────────────
+#   메모와 **다른 파일**에 담는다. 같은 파일에 섞으면 `file_comments()` 를 쓰는 곳
+#   (검색 색인·📝 배지·paper 색인)이 전부 형광펜을 메모로 세게 된다 — 그 셋을 다
+#   고치는 것보다 저장소를 가르는 게 싸고 되돌리기 쉽다.
+#   대신 **락·원자쓰기는 메모 것을 그대로 재사용**한다(경로만 갈아끼운다).
+#   자리 잡는 방식은 메모와 같다: 좌표가 아니라 **글 지문**. 문서가 다시 렌더돼도 따라간다.
+HL_COLORS = ("yellow", "green", "pink", "blue")
+
+
+def file_highlights(rel: str) -> list:
+    return _load_comments(HIGHLIGHTS_PATH).get((rel or "").lstrip("/"), [])
+
+
+def add_file_highlight(rel: str, text: str, color: str = "yellow") -> dict:
+    """형광펜 한 줄. text = 칠한 글 그대로(자리를 다시 찾는 지문이자 내용).
+
+    이 함수가 못 하는 것
+      · 한 문단 안에 **같은 글이 여러 번** 나오면 첫 번째만 칠한다 (메모 anchor 와 같은 한계).
+      · 문단을 가로지르는 선택은 저장은 되지만 다시 찾을 때 한 문단 안에서만 찾는다.
+      · 색은 4종 고정. 임의 색을 받으면 CSS 클래스가 없어 조용히 안 칠해진다 — 그래서 막는다.
+    """
+    rel = (rel or "").lstrip("/")
+    if safe_note_target(rel) is None:
+        return {"error": "그 파일을 찾을 수 없어요"}
+    t = " ".join((text or "").split())[:400]     # 형광펜은 한 줄짜리 지문이라 접는다
+    if len(t) < 2:
+        return {"error": "칠할 글이 너무 짧아요"}
+    if color not in HL_COLORS:
+        color = "yellow"
+    with _comments_locked(path=HIGHLIGHTS_PATH):
+        d = _load_comments(HIGHLIGHTS_PATH)
+        lst = d.setdefault(rel, [])
+        for c in lst:                            # 같은 글을 두 번 칠하면 색만 바꾼다
+            if c.get("text") == t:
+                c["color"] = color
+                _save_comments(d, HIGHLIGHTS_PATH)
+                return {"ok": True, "item": c, "n": len(lst), "recolored": True}
+        used = {c.get("id") for v in d.values() for c in v}
+        base = f"h{int(_dt.datetime.now().timestamp() * 1000)}"
+        hid, n = base, 0
+        while hid in used:
+            n += 1
+            hid = f"{base}-{n}"
+        item = {"id": hid, "text": t, "color": color,
+                "at": _dt.datetime.now().strftime("%Y-%m-%d %H:%M")}
+        lst.append(item)
+        _save_comments(d, HIGHLIGHTS_PATH)
+        return {"ok": True, "item": item, "n": len(lst)}
+
+
+def del_file_highlight(rel: str, hid: str) -> dict:
+    rel = (rel or "").lstrip("/")
+    with _comments_locked(path=HIGHLIGHTS_PATH):
+        d = _load_comments(HIGHLIGHTS_PATH)
+        lst = d.get(rel) or []
+        keep = [c for c in lst if c.get("id") != hid]
+        if len(keep) == len(lst):
+            return {"error": "그 형광펜을 못 찾았어요"}
+        if keep:
+            d[rel] = keep
+        else:
+            d.pop(rel, None)
+        _save_comments(d, HIGHLIGHTS_PATH)
+        return {"ok": True, "n": len(keep)}
 
 
 def del_file_comment(rel: str, cid: str) -> dict:
