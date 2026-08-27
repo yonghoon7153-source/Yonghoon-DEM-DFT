@@ -1155,20 +1155,42 @@ def main():
         # ⚠ He/Zhu/Mo 2018 — 최대 lag 이 궤적 길이에 가까우면 그 lag 의 **시간원점이 거의
         #   없다**(lag t 에서 원점 수 ≈ (T−t)/Δ). 상한을 총 길이의 30–70 % 아래로 두라는
         #   권고다. 우리는 자르지 않고 **표시**한다 — 자르면 늦은 창 구제가 아예 막힌다.
-        LAG_WARN_FRAC = 0.70
-        HOT = {w for w in WINS if tmax_all and w[1] > LAG_WARN_FRAC * tmax_all}
+        # ⛔⛔ 2026-08-27 (Codex 회신 G) — 초판은 70 % 초과 창에 `!` **경고만** 붙이고
+        #   추세 계산에는 그대로 넣었다. 회신 판정: *"경고만 붙일 것이 아니라
+        #   판정·plateau 검정에서 **제외**해야 한다."* 이유는 lag t 에서 시간원점 수가
+        #   ≈(T−t)/Δ 라 t→T 에서 0 으로 간다 — 그 열은 값이 아니라 잡음이다.
+        #   → 세 등급으로 나눈다. 등급이 화면에 보이고, 추세는 PRIMARY+SENS 로만 돈다.
+        LAG_PRIMARY_FRAC = 0.50      # 주 판정창 — 보수적으로 t₂ ≤ 0.5T
+        LAG_WARN_FRAC = 0.70         # 0.5–0.7T = 민감도 분석 · 0.7T 초과 = 시각 진단 전용
+        def _tier(w):
+            if not tmax_all:
+                return "P"
+            if w[1] > LAG_WARN_FRAC * tmax_all:
+                return "X"                        # exploratory_only — 판정 금지
+            if w[1] > LAG_PRIMARY_FRAC * tmax_all:
+                return "S"                        # sensitivity
+            return "P"                            # primary
+        TIER = {w: _tier(w) for w in WINS}
+        HOT = {w for w in WINS if TIER[w] == "X"}
+        SENS = {w for w in WINS if TIER[w] == "S"}
         # ★ --average 를 같이 주면 **평균 곡선**으로 돈다. 늦은 창이 살아나는 유일한
         #   공짜 수단이다 (개별 런은 lag 이 길어지면 유효 표본이 몇 개 안 남아 붕괴한다).
         scan_items = ([(k, t, y) for k, (t, y) in sorted(avg_curves.items())]
                       if avg_curves else None)
         print("\n창 스캔 — β 가 1 에 가까워지는 창이 있으면 재계산 없이 구제된다"
               + ("  **[시드 평균 곡선]**" if scan_items else ""))
-        head = " ".join((f"{lo}-{hi}" + ("!" if (lo, hi) in HOT else "")).rjust(8)
-                        for lo, hi in WINS)
+        _mark = {"P": "", "S": "~", "X": "!"}
+        head = " ".join((f"{lo}-{hi}" + _mark[TIER[(lo, hi)]]).rjust(8) for lo, hi in WINS)
         print(f"{'case':34s} {head}   tmax")
-        if HOT:
-            print(f"   ⚠ `!` = 최대 lag 이 궤적의 {LAG_WARN_FRAC:.0%} 를 넘는 창 — "
-                  f"그 lag 의 **시간원점이 거의 없다**(He 2018). 이 열만으로 판정하지 말 것.")
+        if HOT or SENS:
+            print(f"   창 등급 (Codex 회신 G) — lag 이 길수록 그 lag 의 시간원점이 "
+                  f"≈(T−t)/Δ 로 **0 에 수렴한다**:")
+            print(f"     (표시없음) **primary** t₂ ≤ {LAG_PRIMARY_FRAC:.0%}·T — 판정은 이것으로만")
+            if SENS:
+                print(f"     `~` sensitivity {LAG_PRIMARY_FRAC:.0%}–{LAG_WARN_FRAC:.0%}·T — 민감도 분석용")
+            if HOT:
+                print(f"     `!` **exploratory_only** t₂ > {LAG_WARN_FRAC:.0%}·T — "
+                      f"**추세 계산에서 제외됐다.** 화면 진단용이지 판정·plateau·오차막대에 쓰지 말 것")
         print("   (행: β · 절편 c [Å²] · 기울기 m [Å²/ps] · **D_inc** = 창 구간 증분기울기/6)")
         print("   ★ **D_inc 가 주 판정축이다** (2026-08-27 Codex 회신 F 반영) — 상수 절편이"
               " 대수적으로 소거되므로")
@@ -1230,8 +1252,12 @@ def main():
             triples = [(w, b, lf) for w, b, lf in zip(WINS, bv0, lfv)
                        if b is not None and lf is not None]
             # 비물리 창(절편 c<0)은 추세에서 **버린다** — 순위 매길 대상이 아니다
-            valid = [(w, b, lf) for w, b, lf in triples if lf[1] >= 0]
+            # ⛔ 2026-08-27 — `exploratory_only`(lag > 0.7·T) 창도 **여기서 뺀다.**
+            #   초판은 화면에만 `!` 를 찍고 추세에는 넣었다. 그 창은 시간원점이 거의 없어
+            #   c·m 이 잡음이고, 중첩창 6개 중 둘이 그런 열이면 Spearman 이 그쪽으로 끌린다.
+            valid = [(w, b, lf) for w, b, lf in triples if lf[1] >= 0 and TIER.get(w) != "X"]
             n_drop = len(triples) - len(valid)
+            n_drop_x = sum(1 for w, _b, _l in triples if TIER.get(w) == "X")
             if len(valid) >= 4:
                 bv = [b for _w, b, _l in valid]
                 mv = [l[0] for _w, _b, l in valid]
@@ -1270,6 +1296,8 @@ def main():
                 print(f"  {tag:26s} {tb:+6.2f} {dm:+7.1f} {tm:+6.2f} {tc:+6.2f} "
                       f"{dbm:8.3f} {nd_:5d}  {v}")
             print()
+            print("  ⚠ '제외창' 은 절편 c<0(비물리) **+ exploratory_only(lag > "
+                  f"{LAG_WARN_FRAC:.0%}·T)** 를 합친 수다 (2026-08-27 Codex 회신 G).")
             print("  ⚠ 이 표는 **제안**이다 — MC 재검토 실측: 오분류 8~13%, 중첩창 n_eff≈3.2,")
             print("    'sub-diffusion' 제안은 느린 전이(D 존재·창만 이르다) 대비 **동전**이다.")
             print("    느린 전이면 처방이 정반대다: 점 제거가 아니라 **창 이동/연장**.")
