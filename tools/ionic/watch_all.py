@@ -1020,7 +1020,12 @@ if want("prereq"):
         #   "sentinel Δ" 로 찾으면 **안 잡힌다** (실제로 놓쳤다). 키워드로 찾는다.
         done = [l for l in txt.splitlines()
                 if "sentinel" in l or "통과" in l or "장벽 범위" in l or "곡률" in l]
-        bad = [l for l in txt.splitlines() if l.lstrip().startswith("⛔")]
+        # ⛔ 2026-08-28 — 첫 판은 ⛔ 로 시작하는 줄을 전부 실패로 셌다. 그런데 도구가
+        #   스스로 찍는 **"못 하는 것" 안내문**도 ⛔ 로 시작한다 — 한계 설명이지 문제가 아니다.
+        #   그걸 실패로 세면 오탐이고, 화면 아래 "조치 필요 N건" 카운트까지 오염된다.
+        #   ⇒ **체인이 직접 찍은 줄**(ts() 가 붙이는 시각 접두)만 실패로 센다.
+        bad = [l for l in txt.splitlines()
+               if re.match(r"^\[\d\d-\d\d \d\d:\d\d:\d\d\]\s*⛔", l)]
         npt = txt.count("  ▶ ")
         print(f"  로그 {os.path.basename(f)} · SCF 시작 {npt}점 · "
               f"{'🔄 진행 중' if run else '⏹ 안 돌고 있다'}")
