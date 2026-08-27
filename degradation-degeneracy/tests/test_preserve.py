@@ -35,8 +35,8 @@ from tools.preserve import (FAULTS, CasBackend, Hooks, PlannedLeg, PreserveError
                             check_manifest, load_canonical,
                             assert_durable_retention, has_registration_journal,
                             check_envelope, check_output, check_output_claim, check_hook_validation,
-                            pin_set_digest, ENFORCEMENT_OBJECT_LOCK,
-                            MIN_RETENTION_DAYS)
+                            pin_set_digest, ENFORCEMENT_OBJECT_LOCK, ENFORCEMENT_ADVISORY,
+                            MIN_RETENTION_DAYS, ObjectLockBackend)
 from tools.preserve import _is_hex64 as _is_hex64_str
 
 #: 고정 fixture 바이트 — 여기서 기대 semantic digest 가 결정된다.
@@ -1663,6 +1663,23 @@ elif stage == "after_publish":
         os._exit(9)                       # index 는 있고 pin·journal 이 없다
         return out
     P.publish = killer2
+elif stage == "after_register":
+    # ★ 31차 P0-3 — journal 이 **보이는** 상태에서 죽는다. 30차 drill 의 두
+    #   지점은 둘 다 `_register()` 앞이라 `journal visible` 양성 branch 가
+    #   한 번도 실행되지 않았다.
+    real_register = P._register
+    def killer3(*a, **kw):
+        real_register(*a, **kw)
+        os._exit(9)                       # journal 은 있고 post-commit 검증 전
+    P._register = killer3
+elif stage == "during_journal_fsync":
+    # journal link 는 됐는데 그 directory 를 굳히기 **직전**에 죽는다
+    real_strict = P._fsync_dir_strict
+    def killer4(d, stage_name):
+        if d.name == "registered":
+            os._exit(9)
+        return real_strict(d, stage_name)
+    P._fsync_dir_strict = killer4
 
 run_transaction(planned, run, backend, index,
                 Hooks(validate=validate, rescore=rescore,
@@ -1671,7 +1688,12 @@ run_transaction(planned, run, backend, index,
 '''
 
 
-@pytest.mark.parametrize("stage", ["after_pin", "after_publish"])
+#: crash drill 이 각 지점에서 journal 양성 상태를 만들었는가 (★ 31차 P0-3)
+_CRASH_POSITIVE: dict[str, bool] = {}
+
+
+@pytest.mark.parametrize("stage", ["after_pin", "after_publish",
+                                   "after_register", "during_journal_fsync"])
 def test_a_killed_process_never_leaves_a_journal_without_its_graph(tmp_path, stage):
     """★ 30차 P0-3 — 요청문이 "drill 이 없다" 고 신고했던 자리다.
 
@@ -1696,11 +1718,17 @@ def test_a_killed_process_never_leaves_a_journal_without_its_graph(tmp_path, sta
     index = where / "index"
 
     # 불변식: journal 이 보이면 graph 전체가 회수 가능하다
-    if has_registration_journal(index, "crashleg"):
+    positive = has_registration_journal(index, "crashleg")
+    if positive:
         assert is_registered(index, "crashleg", backend), (
             "journal 은 남았는데 graph 를 회수할 수 없다")
     else:
         assert not is_registered(index, "crashleg", backend)
+
+    # ★ 31차 P0-3 — 양성 상태를 **실제로 만든 적이 있는지** 기록한다.
+    #   30차 drill 은 두 지점 모두 `_register()` 앞이라 위 양성 branch 가 한
+    #   번도 실행되지 않았다. 아래 집계 시험이 그것을 강제한다.
+    _CRASH_POSITIVE[stage] = positive
 
     # 그리고 재개는 **재계산 없이** 끝나야 한다 (hooks 를 받지 않는다)
     if index_entries(index):
@@ -1745,3 +1773,477 @@ def test_re_running_a_registered_leg_does_not_mint_a_second_lease(tmp_path,
               if d not in set(a["retention"]["objects"])]
     assert leases == [a["retention"]["lease_digest"]], (
         f"pin 에 lease 가 {len(leases)}개다 — 여분이 생겼다")
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# 31차 P0-1 — enforcement 는 **backend capability** 이지 caller label 이 아니다
+# ─────────────────────────────────────────────────────────────────────────────
+
+def test_a_local_backend_cannot_be_labelled_object_lock(tmp_path):
+    """★ 31차 P0-1 — 리뷰가 준 정적 반례를 그대로 돌린다.
+
+        b = CasBackend(root=cas, enforcement="object_lock")   # 구현은 local pin
+        r = run_transaction(..., backend=b, ...)
+        assert r["durable"] is True                            # 통과했다
+        assert_durable_retention(b, index, leg)                # 통과했다
+        b._pin(leg, receipt_digest).unlink()                   # local 에서 가능
+
+    30차에 만든 "durable 의 뜻을 좁혔다" 는 경계가 **문자열 하나로 무너졌다.**
+    `enforcement` 는 생성자로 바꿀 수 있는 dataclass field 였다.
+    """
+    with pytest.raises(TypeError):
+        CasBackend(root=tmp_path / "cas", enforcement=ENFORCEMENT_OBJECT_LOCK)
+
+    b = CasBackend(root=tmp_path / "cas")
+    with pytest.raises(PreserveError) as ei:
+        b.enforcement = ENFORCEMENT_OBJECT_LOCK      # 사후 대입도 막는다
+    assert "capability" in ei.value.msg
+
+
+def test_verify_retention_compares_the_lease_label_to_live_capability(tmp_path):
+    """★ 31차 P0-1 — lease 에 적힌 문자열을 **지금 backend** 와 대조한다.
+
+    초판은 lease 의 `enforcement` 를 저장만 하고 다시 보지 않았다. 그래서
+    lease 를 위조하거나, 강한 backend 에서 만든 lease 를 약한 backend 에서
+    열어도 아무 일이 없었다.
+    """
+    backend = CasBackend(root=tmp_path / "cas")
+    dg = backend.put_if_absent(b"x")["digest"]
+    lease = backend.retain("legX", [dg], min_retention_days=MIN_RETENTION_DAYS)
+    assert backend.verify_retention("legX", lease["lease_digest"])
+
+    # lease 만 `object_lock` 으로 바꿔 CAS 에 넣고 pin 한다 — 위조 시나리오
+    forged = dict({k: v for k, v in lease.items() if k != "lease_digest"},
+                  enforcement=ENFORCEMENT_OBJECT_LOCK)
+    f_obj = backend.put_if_absent(canonical_bytes(forged))["digest"]
+    backend.pin("legX", [f_obj])
+    with pytest.raises(PreserveError) as ei:
+        backend.verify_retention("legX", f_obj)
+    assert "enforcement" in ei.value.msg
+
+
+def test_durable_retention_needs_a_live_capability_probe(tmp_path):
+    """★ 31차 P0-1 — `assert_durable_retention` 이 저장된 문자열만 믿었다.
+
+    강제를 **지금 조회해** 확인해야 한다. local backend 는 그 조회를
+    통과할 수 없다.
+    """
+    run = _make_run(tmp_path)
+    backend = CasBackend(root=tmp_path / "cas")
+    index = tmp_path / "index"
+    res = run_transaction(PLANNED, run, backend, index, _hooks())
+    assert res["durable"] is False
+    assert res["retention"]["enforcement"] == ENFORCEMENT_ADVISORY
+
+    with pytest.raises(PreserveError) as ei:
+        assert_durable_retention(backend, index, PLANNED.leg_id)
+    assert "advisory" in ei.value.msg
+
+
+def test_finalize_only_returns_the_same_typed_retention_result(tmp_path):
+    """★ 31차 P0-1 — `finalize_only()` 는 `ok=True` 만 돌려줬다.
+
+    "`ok=True` 의 뜻을 좁혔다" 가 **모든 public 성공 경로**에 적용되지
+    않았다는 뜻이다. 신규 등록 경로와 `already` 경로 둘 다 본다.
+    """
+    run = _make_run(tmp_path)
+    backend = CasBackend(root=tmp_path / "cas")
+    index = tmp_path / "index"
+    with pytest.raises(PreserveError):
+        run_transaction(PLANNED, run, backend, index, _hooks(),
+                        faults=frozenset({"crash_after_publish"}))
+    shutil.rmtree(run)
+
+    fresh = finalize_only(PLANNED.leg_id, backend, index)
+    assert fresh["already"] is False
+    assert fresh["durable"] is False
+    assert fresh["retention"]["enforcement"] == ENFORCEMENT_ADVISORY
+
+    again = finalize_only(PLANNED.leg_id, backend, index)
+    assert again["already"] is True
+    assert again["durable"] is False
+    assert again["retention"]["lease_digest"] == fresh["retention"]["lease_digest"]
+
+
+class _FakeLockProvider:
+    """실제로 **강제하는** 가짜 provider. version ID · lock mode · retain-until.
+
+    ★ 31차 P0-1 — 리뷰가 요구한 canary 다. 이 저장소에는 붙일 수 있는 실제
+      provider 가 없으므로, 강제가 **있는** 쪽과 **없는** 쪽을 같은 타입
+      경계에 놓고 경계가 실제로 갈라지는지 본다.
+    """
+
+    MODE = "COMPLIANCE"
+
+    def __init__(self, min_retain_days=MIN_RETENTION_DAYS):
+        self.versions: dict[str, str] = {}
+        self.until: dict[str, str] = {}
+        self.min_retain_days = min_retain_days
+        self.deleted: list[str] = []
+
+    def put_locked(self, key: str, until: str) -> str:
+        vid = f"v{len(self.versions) + 1:04d}"
+        self.versions[key] = vid
+        self.until[key] = until
+        return vid
+
+    def delete(self, key: str) -> None:
+        if key in self.until:
+            raise PermissionError(f"object lock 이 삭제를 막았다: {key}")
+        self.deleted.append(key)
+
+    def describe(self) -> dict:
+        return {"mode": self.MODE, "min_retain_days": self.min_retain_days}
+
+
+class _LockedBackend(ObjectLockBackend):
+    """가짜 provider 를 붙인 object-lock backend."""
+
+    provider: object = None
+
+    def query_object_lock(self):
+        return self.provider.describe() if self.provider else None
+
+    def lock_objects(self, leg_id, digests, until):
+        return {d: self.provider.put_locked(f"{leg_id}/{d}", until)
+                for d in sorted(digests)}
+
+    def query_object_versions(self, leg_id, digests):
+        return {d: self.provider.versions.get(f"{leg_id}/{d}")
+                for d in sorted(digests)}
+
+
+def _locked(tmp_path, provider=None):
+    b = _LockedBackend(root=tmp_path / "cas")
+    object.__setattr__(b, "provider", provider or _FakeLockProvider())
+    return b
+
+
+def test_an_object_lock_backend_can_claim_durable_retention(tmp_path):
+    """강제가 **있으면** durable 이 성립한다 — 경계가 한쪽으로만 닫히면 안 된다."""
+    run = _make_run(tmp_path)
+    backend = _locked(tmp_path)
+    index = tmp_path / "index"
+    res = run_transaction(PLANNED, run, backend, index, _hooks())
+
+    assert res["durable"] is True
+    assert res["retention"]["enforcement"] == ENFORCEMENT_OBJECT_LOCK
+    assert res["retention"]["lock_mode"] == "COMPLIANCE"
+    # provider 가 준 version ID 가 lease 에 들어 있고 다시 조회된다
+    versions = res["retention"]["object_versions"]
+    assert set(versions) == set(res["retention"]["objects"])
+    assert all(v for v in versions.values())
+    assert assert_durable_retention(backend, index, PLANNED.leg_id)
+
+
+def test_a_provider_that_stops_enforcing_loses_durable_retention(tmp_path):
+    """★ 31차 P0-1 — 강제는 **지금** 조회해야 한다.
+
+    등록 시점에 강제됐다는 사실이 지금도 강제된다는 뜻이 아니다.
+    """
+    run = _make_run(tmp_path)
+    prov = _FakeLockProvider()
+    backend = _locked(tmp_path, prov)
+    index = tmp_path / "index"
+    assert run_transaction(PLANNED, run, backend, index, _hooks())["durable"]
+
+    prov.min_retain_days = 1                      # 정책이 내려갔다
+    with pytest.raises(PreserveError):
+        assert_durable_retention(backend, index, PLANNED.leg_id)
+    assert not is_registered(index, PLANNED.leg_id, backend)
+
+
+def test_a_provider_that_forgets_a_version_loses_durable_retention(tmp_path):
+    """version ID 가 사라지면 그 object 는 더 이상 잠겨 있지 않다."""
+    run = _make_run(tmp_path)
+    prov = _FakeLockProvider()
+    backend = _locked(tmp_path, prov)
+    index = tmp_path / "index"
+    res = run_transaction(PLANNED, run, backend, index, _hooks())
+
+    victim = sorted(res["retention"]["object_versions"])[0]
+    prov.versions.pop(f"{PLANNED.leg_id}/{victim}")
+    with pytest.raises(PreserveError) as ei:
+        backend.verify_retention(PLANNED.leg_id,
+                                 res["retention"]["lease_digest"])
+    assert "version" in ei.value.msg
+
+
+def test_an_object_lock_backend_without_a_provider_is_advisory(tmp_path):
+    """★ 31차 P0-1 — 클래스 이름만으로는 강제가 아니다.
+
+    `ENFORCEMENT` 를 `object_lock` 으로 선언했어도 조회가 지지하지 않으면
+    lease 를 만들 수 없다. 이것이 "label 이 아니라 capability" 의 뜻이다.
+    """
+    backend = _LockedBackend(root=tmp_path / "cas")     # provider 없음
+    assert backend.enforcement == ENFORCEMENT_OBJECT_LOCK
+    assert backend.probe_enforcement() == ENFORCEMENT_ADVISORY
+    dg = backend.put_if_absent(b"x")["digest"]
+    with pytest.raises(PreserveError) as ei:
+        backend.retain("legX", [dg], min_retention_days=MIN_RETENTION_DAYS)
+    assert "지지하지 않는다" in ei.value.msg
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# 31차 P0-3 — durability edge 가 CAS 쪽에만 닫혔다
+# ─────────────────────────────────────────────────────────────────────────────
+
+def test_index_and_journal_levels_flush_their_parent_entry(tmp_path, monkeypatch):
+    """★ 31차 P0-3 — `_exclusive_write()` 는 `mkdir(parents=True)` 뒤 **자기
+    부모만** flush 했다.
+
+    새 `index/legs`·`index/registered` 를 담는 `index/` edge 와, 새 `index/`
+    를 담는 그 부모 edge 는 굳히지 않았다. 30차의 "모든 새 directory parent
+    edge" 주장이 이 경로에는 적용되지 않았다 — 30차 회귀가 CAS 네 경로만
+    셌기 때문에 잡히지 않았다.
+    """
+    import tools.preserve as P
+
+    seen: list[str] = []
+    real = P._fsync_dir
+    monkeypatch.setattr(P, "_fsync_dir", lambda d: (seen.append(str(d)), real(d))[1])
+
+    run = _make_run(tmp_path)
+    backend = CasBackend(root=tmp_path / "cas")
+    index = tmp_path / "index"
+    run_transaction(PLANNED, run, backend, index, _hooks())
+
+    for want in (str(index), f"{index}/legs", f"{index}/registered"):
+        assert want in seen, f"{want} entry 를 굳히지 않았다"
+
+
+def test_a_backend_without_directory_fsync_cannot_publish_a_graph(tmp_path,
+                                                                  monkeypatch):
+    """★ 31차 P0-3 — `_fsync_dir_strict()` 가 capability false 면 **return** 했다.
+
+    "publish 가 이미 막는다" 는 주석은 CAS 와 index 가 **같은 filesystem**
+    일 때만 성립한다. CAS 에서 directory fsync 가 안 되고 index 에서는 되는
+    구성이면 graph 이름은 비내구적으로 진행하고 journal 만 durable 하게
+    commit 된다. 두 계층의 capability 를 따로 주입해 그 상황을 만든다.
+    """
+    import tools.preserve as P
+
+    monkeypatch.setattr(P, "_DIR_FSYNC", {})
+    cas_root = (tmp_path / "cas").resolve()
+
+    real = P.dir_fsync_supported
+
+    def split(where):
+        # CAS 아래만 capability 없음 — index 는 정상
+        return False if str(Path(where).resolve()).startswith(str(cas_root)) \
+            else real(where)
+
+    run = _make_run(tmp_path)
+    backend = CasBackend(root=tmp_path / "cas")
+    index = tmp_path / "index"
+    backend.store_id                     # store 를 **먼저** 만든다 (전제)
+    monkeypatch.setattr(P, "dir_fsync_supported", split)
+
+    # CAS 쓰기가 그 자리에서 멈춰야 한다. `store.json` 은 이미 있으므로
+    # `_exclusive_write` 의 capability 검사에 업히지 않는다 — 이 시험이
+    # 실제로 보는 것은 `_fsync_dir_strict()` 하나다.
+    with pytest.raises(PreserveError) as ei:
+        backend.put_if_absent(b"graph-object-that-needs-a-new-prefix")
+    assert ei.value.stage == "cas_put", ei.value.stage
+
+    with pytest.raises(PreserveError):
+        run_transaction(PLANNED, run, backend, index, _hooks())
+    assert index_entries(index) == {}, "graph 가 비내구적인데 index 가 생겼다"
+
+
+def test_a_retry_after_a_failed_directory_fsync_must_fsync_again(tmp_path,
+                                                                 monkeypatch):
+    """★ 31차 P0-3 — 실패 전파가 **재시도까지** fail-closed 가 아니었다.
+
+    `_exclusive_write()` 는 final link 뒤 directory fsync 가 실패하면 예외를
+    던지지만 final pathname 은 **이미 존재한다**. 재시도는
+    `EEXIST → created=False` 가 되어 fsync 를 건너뛰고, 상위
+    `publish()`/`_register()` 는 "같은 바이트" 라는 이유로 성공했다.
+    """
+    import tools.preserve as P
+
+    index = tmp_path / "index"
+    entry = {"leg_id": "legX", "planned_id": "p", "receipt_digest": "r",
+             "receipt_object": "o", "payload_root_digest": "d",
+             "payload_manifest_digest": "m", "backend_uri": "file+cas:///x"}
+
+    calls = {"n": 0, "legs": 0}
+    real = P._fsync_dir
+
+    def flaky(d):
+        calls["n"] += 1
+        if d.name == "legs":
+            calls["legs"] += 1
+            if calls["legs"] == 1:
+                return False        # 첫 시도의 최종 fsync 만 실패시킨다
+        return real(d)
+
+    monkeypatch.setattr(P, "_fsync_dir", flaky)
+
+    with pytest.raises(PreserveError):
+        publish(index, entry)
+    assert (index / "legs" / "legX.json").is_file(), "이름은 이미 생겼다 — 전제"
+
+    # 재시도는 durable 해질 때까지 성공이라고 말하면 안 된다
+    before = calls["legs"]
+    publish(index, entry)
+    assert calls["legs"] > before, "재시도가 directory fsync 를 건너뛰었다"
+
+
+def test_the_crash_drill_actually_reaches_a_visible_journal():
+    """★ 31차 P0-3 — drill 이 **양성 상태를 만든 적이 있어야** 한다.
+
+    30차 drill 은 `after_pin`·`after_publish` 둘뿐이었고 둘 다 `_register()`
+    앞이라, `journal visible ⇒ full graph retrievable` 의 전건이 한 번도
+    참이 되지 않았다. 시험 이름은 그 불변식을 말하는데 실제로는 공허하게
+    참이었던 것이다 — 35.7 이 적은 형태의 또 다른 얼굴이다.
+    """
+    assert set(_CRASH_POSITIVE) == {"after_pin", "after_publish",
+                                    "after_register", "during_journal_fsync"}, (
+        f"drill 이 다 돌지 않았다: {sorted(_CRASH_POSITIVE)}")
+    assert any(_CRASH_POSITIVE.values()), (
+        "어느 지점도 journal 양성 상태를 만들지 못했다 — 불변식의 전건이 "
+        "한 번도 참이 되지 않으면 그 시험은 공허하다")
+    assert not all(_CRASH_POSITIVE.values()), (
+        "음성 지점이 없다 — 음성 쪽도 고정해야 한다")
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# 31차 P1 — validator check 값 · output variant · candidate mode
+# ─────────────────────────────────────────────────────────────────────────────
+
+def test_a_false_subcheck_cannot_hide_inside_a_successful_receipt(tmp_path):
+    """★ 31차 P1-1 — `checks` 의 **값**을 아무도 안 봤다.
+
+        {"ok": True, "fail": [], "checks": {"payload": False}}
+
+    가 통과하고, receipt 는 이것을 `{"ok": true, "n_checks": 1}` 로 축약해
+    false subcheck 를 **지웠다**. 30차 7-case 회귀는 `checks` 자체의 타입과
+    공백만 바꿨지 check 값을 변이하지 않았다.
+    """
+    assert check_hook_validation(
+        {"ok": True, "fail": [], "checks": {"a": True, "b": True}}) == []
+    bad = check_hook_validation(
+        {"ok": True, "fail": [], "checks": {"a": True, "payload": False}})
+    assert any("payload" in x for x in bad), bad
+
+    run = _make_run(tmp_path)
+    backend = CasBackend(root=tmp_path / "cas")
+    index = tmp_path / "index"
+    h = _hooks()
+    h.validate = lambda root: {"ok": True, "fail": [],
+                               "checks": {"payload": False}}
+    with pytest.raises(PreserveError) as ei:
+        run_transaction(PLANNED, run, backend, index, h)
+    assert ei.value.stage == "validate"
+    assert index_entries(index) == {}
+
+
+def test_the_receipt_seals_the_check_names_not_just_a_count(tmp_path):
+    """★ 31차 P1-1 — `n_checks` 숫자 하나로 축약하면 무엇을 봤는지 사라진다.
+
+    검사 **이름 집합**을 receipt 에 봉인해, 검사를 바꿔치기해도 숫자가 같으면
+    통과하던 자리를 막는다.
+    """
+    run = _make_run(tmp_path)
+    backend = CasBackend(root=tmp_path / "cas")
+    index = tmp_path / "index"
+    res = run_transaction(PLANNED, run, backend, index, _hooks())
+    v = res["receipt"]["validation"]
+    assert v["ok"] is True
+    assert v["checks"] == ["_inputs/base.yaml", "fits.parquet", "manifest.yaml"], v
+    assert v["n_checks"] == len(v["checks"])
+
+
+def test_output_variants_reject_fields_from_another_variant():
+    """★ 31차 P1-2 — role 별 **exact key set** 이 아니라 subset 검사였다.
+
+    `rescored_rows` 에 summary 전용 `semantic_view_drops` 를 넣어도 통과했다.
+    30차 회귀는 정상 summary 의 **기존 필드 값**만 바꿔서 cross-variant
+    surplus 를 넣어 보지 않았다.
+    """
+    rows = {"role": "rescored_rows", "canonicalizer": "score-semantic/v1",
+            "semantic_schema": "rows/v1", "semantic_sha256": "a" * 64,
+            "relative_path": "out.tsv", "byte_size": 12,
+            "file_sha256": "b" * 64, "producer": "p/v1",
+            "object_digest": "b" * 64, "measured_by": "tools.preserve",
+            "produced_from": "fits.parquet", "source_file_sha256": "c" * 64,
+            "n_rows": 3}
+    assert check_output(rows) == []
+    # 다른 variant 의 필드가 남으면 거부 (subset 검사로도 잡히는 축)
+    bad = check_output(dict(rows, semantic_view_drops=["_채점원본"]))
+    assert any("semantic_view_drops" in x for x in bad), bad
+    # **모자라도** 거부 — 이쪽이 exact set 이 아니면 못 잡는 축이다.
+    for k in sorted(rows):
+        missing = {x: v for x, v in rows.items() if x != k}
+        assert check_output(missing), f"{k} 를 빼도 통과했다"
+    # summary 는 자기 필드를 요구한다
+    summary = dict(rows, role="rescored_summary")
+    assert check_output(summary), "summary 인데 semantic_view_drops 가 없다"
+    assert check_output(dict(summary, semantic_view_drops=["_채점원본"])) == []
+
+
+@pytest.mark.parametrize("path", ["a\\b", "C:x", "a//b", "./x", " x", "x "])
+def test_output_paths_use_the_same_validator_as_manifest_members(path):
+    """★ 31차 P1-2 — 생성·복구의 path domain 이 **달랐다**.
+
+    `_safe_member_path()` 는 backslash·colon·빈/`.` segment 를 거부하는데
+    `check_output()` 은 leading slash 와 `..` 만 봤다. 저장된 receipt 를
+    검증하는 쪽이, 만드는 쪽이라면 거부했을 경로를 받아들였다.
+    """
+    good = {"role": "rescored_rows", "canonicalizer": "score-semantic/v1",
+            "semantic_schema": "rows/v1", "semantic_sha256": "a" * 64,
+            "relative_path": "out.tsv", "byte_size": 12,
+            "file_sha256": "b" * 64, "producer": "p/v1",
+            "object_digest": "b" * 64, "measured_by": "tools.preserve",
+            "produced_from": "fits.parquet", "source_file_sha256": "c" * 64,
+            "n_rows": 3}
+    assert check_output(good) == []
+    bad = check_output(dict(good, relative_path=path))
+    assert any("relative_path" in x or "경로" in x for x in bad), (path, bad)
+
+
+def test_candidate_mode_enum_comes_from_the_contract_not_a_second_list():
+    """★ 31차 P1-3 — validator 의 enum 이 **계약과 달랐다**.
+
+    validator: `legacy_slot_replace · warm_slot_replace · random_only ·
+    base_init_only`
+    계약 §3:  `legacy_slot_replace · equal_start_count_base_retained · union`
+
+    계약상 유효한 두 mode 를 거부하고 계약에 없는 세 mode 를 허용했다.
+    30차 회귀는 `whatever` 하나만 넣어 봤으므로 이 불일치를 못 잡았다.
+    값을 두 곳에 두지 않는다 — 계약에서 파싱한다.
+    """
+    from tools.preserve import candidate_modes
+
+    modes = candidate_modes()
+    assert modes == {"legacy_slot_replace", "equal_start_count_base_retained",
+                     "union"}, modes
+    good = PLANNED.envelope()
+    for m in sorted(modes):
+        assert check_envelope(dict(good, candidate_mode=m)) == [], m
+    for m in ("warm_slot_replace", "random_only", "base_init_only", "whatever"):
+        assert check_envelope(dict(good, candidate_mode=m)), m
+
+
+def test_a_backend_object_keeps_pointing_at_the_store_it_was_made_for(tmp_path,
+                                                                     monkeypatch):
+    """★ 31차 P0-2 hardening — `root` 가 생성 시 고정되지 않았다.
+
+    `uri` property 가 호출 때마다 cwd 기준으로 다시 계산해, **같은 backend
+    객체**가 cwd 변경만으로 다른 store 를 가리켰다. 30차의 상대경로 반례는
+    두 객체를 만들었으므로 이 축을 보지 못했다.
+    """
+    a, b = tmp_path / "a", tmp_path / "b"
+    (a / "cas").mkdir(parents=True)
+    (b / "cas").mkdir(parents=True)
+
+    monkeypatch.chdir(a)
+    backend = CasBackend(root=Path("cas"))
+    before = backend.uri
+    sid = backend.store_id
+
+    monkeypatch.chdir(b)
+    assert backend.uri == before, "cwd 를 바꿨더니 같은 객체가 다른 store 를 가리킨다"
+    assert backend.store_id == sid
+    assert backend.uri.startswith("file+cas:///"), backend.uri

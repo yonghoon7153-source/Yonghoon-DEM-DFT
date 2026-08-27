@@ -3669,27 +3669,146 @@ def test_every_generation_entry_names_the_legs_that_attained_it():
                     f"({p.get('source_digest')})")
 
 
-def test_a_registered_leg_binds_its_generation_to_the_receipt():
-    """★ 30차 P2 — 묶음 9 로 등록된 다리는 receipt 가 세대의 정본이다.
+#: 묶음 9 의 보존 index 가 놓일 자리. 아직 **없다** — 그것이 지금의 상태다.
+_PRESERVE_INDEX = _REPO / "docs" / "22p_gap" / "preserve_index"
 
-    지금은 등록된 다리가 **없다** — 그래서 이 검사는 "없음" 을 고정한다.
-    등록이 생기는 순간 fail-closed 로 켜진다: registered receipt 의
-    `planned_envelope` 이 원장과 어긋나면 실패한다.
+
+def _registered_legs(index_path) -> dict[str, dict]:
+    """**실제 index** 에서 등록된 다리를 찾는다.
+
+    ★ 31차 P2 — 30차판은 가변 `LEG_PRESERVATION.yaml` 의 **optional**
+      `evidence.registered_receipt` 필드가 있는 다리만 "registered" 로 셌다.
+      리뷰가 지적한 그대로다:
+
+          실제 backend 에 등록 receipt 가 생김
+          + ledger 에서 evidence.registered_receipt 를 누락
+          ⇒ registered=[] ⇒ 결속 검사가 돌지 않음
+
+      원장이 검사 대상을 스스로 고르는 구조였다. 이제 index 를 읽는다.
     """
-    reg = _leg_preservation()
-    registered = [e["leg_id"] for e in reg["legs"]
-                  if (e.get("evidence") or {}).get("registered_receipt")]
-    creg = _claim_status()
+    from pathlib import Path as _P
+
+    import tools.preserve as P
+
+    index_path = _P(index_path)
+    if not (index_path / "legs").is_dir():
+        return {}
+    out = {}
+    for leg, entry in P.index_entries(index_path).items():
+        j = P.registration(index_path, leg)
+        if j is not None and j.get("receipt_object") == entry.get("receipt_object"):
+            out[leg] = entry
+    return out
+
+
+def _generation_binding_problems(registered: dict, reg: dict,
+                                 creg: dict) -> list[str]:
+    """등록 실물 ↔ 원장 ↔ 세대표 결속. 순수 함수라 변이를 걸 수 있다."""
     dg = creg.get("source_digest_generations") or {}
+    legs = {e["leg_id"]: e for e in reg["legs"]}
+    bad = []
+    for leg, entry in sorted(registered.items()):
+        env = (entry.get("planned_envelope") or {})
+        e = legs.get(leg)
+        if e is None:
+            bad.append(f"{leg}: index 에 등록돼 있는데 원장에 없다")
+            continue
+        src = (e.get("evidence") or {}).get("leg_source_digest")
+        if env.get("source_digest") != src:
+            bad.append(f"{leg}: 등록 receipt 의 source_digest "
+                       f"{env.get('source_digest')!r} 가 원장 {src!r} 와 다르다")
+        if dg.get(env.get("source_digest")) != env.get("protocol_generation"):
+            bad.append(f"{leg}: 등록 receipt 의 protocol_generation "
+                       f"{env.get('protocol_generation')!r} 가 세대표 "
+                       f"{dg.get(env.get('source_digest'))!r} 와 다르다")
+    # 반대 방향 — 원장이 등록을 주장하는데 index 에 없으면 그것도 거짓이다
+    for leg, e in sorted(legs.items()):
+        if (e.get("evidence") or {}).get("registered_receipt") and \
+                leg not in registered:
+            bad.append(f"{leg}: 원장은 등록됐다는데 index 에 없다")
+    return bad
 
-    for leg in registered:                      # 지금은 빈 목록이다
-        e = next(x for x in reg["legs"] if x["leg_id"] == leg)
-        env = e["evidence"]["registered_receipt"]["planned_envelope"]
-        assert env["source_digest"] == e["evidence"]["leg_source_digest"], (
-            f"{leg}: 등록 receipt 의 source_digest 가 원장과 다르다")
-        assert dg.get(env["source_digest"]) == env["protocol_generation"], (
-            f"{leg}: 등록 receipt 의 protocol_generation 이 세대표와 다르다")
 
-    assert registered == [], (
-        "등록된 다리가 생겼다 — 위 결속이 이제 실제로 돌아야 하고, "
-        "`docs/22p_gap/STAGE3_CONTRACT.md` §8 의 세대 권위도 갱신해야 한다")
+def test_a_registered_leg_binds_its_generation_to_the_receipt():
+    """★ 30차 P2 / 31차 P2 — 세대 정본은 **등록 receipt** 다.
+
+    ★ 31차 — 30차판은 검사 대상을 가변 원장의 optional 필드로 골랐다. 그래서
+      "등록이 생기는 순간 fail-closed 로 켜진다" 는 설명이 **거짓**이었다 —
+      필드를 안 적으면 검사가 잠들었다. 그 문장은 철회한다.
+
+      지금은 실제 index 를 읽는다. index 가 아직 없으므로 결과는 여전히
+      비어 있지만, **이유가 다르다**: 원장이 고른 것이 아니라 실물이 없는
+      것이다. 규칙 자체가 무는지는 아래 합성 index 시험이 보인다.
+    """
+    registered = _registered_legs(_PRESERVE_INDEX)
+    bad = _generation_binding_problems(registered, _leg_preservation(),
+                                       _claim_status())
+    assert not bad, "등록 세대 결속이 어긋난다:\n  " + "\n  ".join(bad)
+    assert registered == {}, (
+        f"보존 index 가 생겼다 ({sorted(registered)}) — 묶음 9 배선과 "
+        "`STAGE3_CONTRACT.md` §8 의 세대 권위를 함께 갱신해야 한다")
+
+
+def test_the_generation_binding_bites_on_a_synthetic_registry(tmp_path):
+    """★ 31차 P2 — 규칙이 **실제로 무는지**를 합성 index 로 본다.
+
+    실물 index 가 없으면 위 시험은 공허하게 참이다 (전건이 거짓). 30차에
+    그것을 "fail-closed 가 미리 켜져 있다" 고 적었고 리뷰가 반박했다.
+    여기서는 index 를 만들어 세 방향을 전부 물린다.
+    """
+    import tools.preserve as P
+
+    reg = _leg_preservation()
+    creg = _claim_status()
+    leg = "paired_fixed5_v4"
+    src = next(e for e in reg["legs"]
+               if e["leg_id"] == leg)["evidence"]["leg_source_digest"]
+    gen = creg["source_digest_generations"][src]
+
+    def entry(**kw):
+        base = {"planned_envelope": {"source_digest": src,
+                                     "protocol_generation": gen}}
+        base["planned_envelope"].update(kw)
+        return {leg: base}
+
+    # 1. 일치하면 통과
+    assert _generation_binding_problems(entry(), reg, creg) == []
+    # 2. receipt 의 source_digest 가 원장과 다르면 실패
+    bad = _generation_binding_problems(entry(source_digest="a72c0f3a485c19bb"),
+                                       reg, creg)
+    assert any("source_digest" in b for b in bad), bad
+    # 3. receipt 의 세대가 세대표와 다르면 실패
+    bad = _generation_binding_problems(entry(protocol_generation="v6"), reg, creg)
+    assert any("protocol_generation" in b for b in bad), bad
+    # 4. index 에 있는데 원장에 없으면 실패
+    bad = _generation_binding_problems({"ghost_leg": {"planned_envelope": {}}},
+                                       reg, creg)
+    assert any("원장에 없다" in b for b in bad), bad
+    # 5. 원장이 등록을 주장하는데 index 에 없으면 실패
+    claimed = {"legs": [dict(e, evidence=dict(e.get("evidence") or {},
+                                              registered_receipt={"x": 1}))
+                        if e["leg_id"] == leg else e for e in reg["legs"]]}
+    bad = _generation_binding_problems({}, claimed, creg)
+    assert any("index 에 없다" in b for b in bad), bad
+
+
+def test_the_registry_reader_finds_a_real_registration(tmp_path):
+    """`_registered_legs()` 가 **실제 journal** 을 읽는지 — reader 자체의 시험."""
+    import tools.preserve as P
+
+    index = tmp_path / "index"
+    assert _registered_legs(index) == {}          # 없으면 비어 있다
+
+    e = {"leg_id": "legX", "planned_id": "p", "receipt_digest": "r",
+         "receipt_object": "a" * 64, "payload_root_digest": "d",
+         "payload_manifest_digest": "m", "backend_uri": "file+cas:///x",
+         "planned_envelope": {"source_digest": "d50295f980ccaa81",
+                              "protocol_generation": "v5"}}
+    P.publish(index, e)
+    assert _registered_legs(index) == {}, "publish 만으로는 등록이 아니다"
+
+    P._register(index, "legX", "a" * 64,
+                P.pin_set_digest("legX", ["b" * 64]), ["b" * 64], "c" * 64)
+    got = _registered_legs(index)
+    assert set(got) == {"legX"}
+    assert got["legX"]["planned_envelope"]["protocol_generation"] == "v5"

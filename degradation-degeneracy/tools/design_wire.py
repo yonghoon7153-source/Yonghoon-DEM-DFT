@@ -458,60 +458,73 @@ def bank_id(pair_group: str, bank_version: str, unit_cube_bank_sha: str) -> str:
                    "unit_cube_bank_sha256": unit_cube_bank_sha})
 
 
-def design_binding(*, design: dict, coords: dict, parameter_order_sha256: str,
-                   bank_version: str, unit_cube_bank_sha256: str) -> dict:
+def design_binding(*, design: dict, coords: dict,
+                   unit_cube_bank_sha256: str) -> dict:
     """**봉인된 design 에서** ID chain 을 통째로 유도한다.
 
     ★ 30차 P1-4 — `candidate_id` 의 `objective_plan` 이 caller 의 자유
-      인자였다. 리뷰의 반례는 다른 design 의 bank 에, design 밖 목적함수를
-      쓰면서, 그 목적함수를 담은 plan 을 **자기가 같이 넘기는** 것이었다.
-      검사를 하나 더 두는 것으로는 닫히지 않는다 — plan 을 인자로 받을 수
-      있다는 것 자체가 결함이다.
+      인자였다. 다른 design 의 bank 에, design 밖 목적함수를 쓰면서, 그
+      목적함수를 담은 plan 을 자기가 같이 넘기면 통과했다.
 
-      그래서 chain 을 여기서 유도하고, `candidate_id` 는 유도된 것만 받는다:
+    ★ 31차 P1-4 — 30차판은 그것을 **dict 로 한 겹 포장했을 뿐**이었다.
+      `candidate_id` 가 key set 과 `bank == binding["bank_id"]` 만 봐서,
+      나머지를 아무 값으로 채운 dict 가 그대로 통했다. 그리고
+      `parameter_order_sha256` 과 `bank_version` 도 여전히 caller 인자여서,
+      design 안의 `parameter_order` · `bank.version` 과 다른 값을 주장해도
+      chain 이 만들어졌다.
 
-          design → pairing_design_sha256 → pair_group_id → bank_id
-                 → objective_plan (design 안에 있다)
+      이제 **design 봉인물 안에 있는 것은 밖에서 받지 않는다.** order 와
+      bank version 은 design 에서 읽고, `candidate_id` 는 preimage 를 받아
+      chain 을 **자기가 다시 유도**한다 (`binding` 을 신뢰하지 않는다).
+
+    `unit_cube_bank_sha256` 만 밖에서 받는다 — bank 바이트는 design 이 아니라
+    생성기의 산출물이라 봉인물 안에 없다.
     """
-    if not isinstance(design, dict) or "objective_plan" not in design:
-        raise WireError("design 봉인물이 아니다 — objective_plan 이 없다")
+    if not isinstance(design, dict):
+        raise WireError(f"design 이 dict 가 아니다: {type(design).__name__}")
+    for k in ("objective_plan", "parameter_order", "bank"):
+        if k not in design:
+            raise WireError(f"design 봉인물이 아니다 — {k} 가 없다")
+    bank_version = (design.get("bank") or {}).get("version")
+    if not _nonempty_str(bank_version):
+        raise WireError(f"design 의 bank.version 이 이상하다: {bank_version!r}")
+    pos = parameter_order_sha256(design["parameter_order"])
     d_sha = pairing_design_sha256(design)
-    pg = pair_group_id(d_sha, coords, parameter_order_sha256)
+    pg = pair_group_id(d_sha, coords, pos)
     bk = bank_id(pg, bank_version, unit_cube_bank_sha256)
     return {"pairing_design_sha256": d_sha, "pair_group_id": pg, "bank_id": bk,
+            "parameter_order_sha256": pos, "bank_version": bank_version,
             "objective_plan": list(design["objective_plan"])}
 
 
-def candidate_id(bank: str, exact_bounds_sha: str, source: str,
-                 source_payload: dict, *, binding: dict) -> str:
+def candidate_id(exact_bounds_sha: str, source: str, source_payload: dict, *,
+                 design: dict, coords: dict,
+                 unit_cube_bank_sha256: str) -> str:
     """source 별 **닫힌** provenance schema 를 강제한다 (계약 §4.2 / P1-8).
 
-    ★ 28차 P1-6 — `objective_plan` 을 받지 않아 warm 의
-      `provider_objective='not-in-design'` 을 거부할 수 없었다.
-    ★ 30차 P1-4 — 그 plan 이 자유 인자였다. 이제 `binding` 만 받는다 —
-      `design_binding()` 이 봉인된 design 에서 유도한 것이다.
+    ★ 30차 P1-4 — `objective_plan` 이 caller 의 자유 인자였다.
+    ★ 31차 P1-4 — 30차판은 그것을 **dict 로 한 겹 포장했을 뿐**이었다.
+      `binding` 의 key set 과 `bank == binding["bank_id"]` 만 봤으므로, 나머지를
+      아무 값으로 채운 dict 가 그대로 통했다 (리뷰가 준 `forged` 반례).
+
+      규칙은 두 회차째 같다 — **받을 수 있다는 것 자체가 결함이다.** 그래서
+      `binding` 인자를 없앴다. 이 함수는 봉인물(design·coords·bank 바이트)만
+      받고 chain 을 **자기가 유도**한다. 위조할 자리가 없다.
     """
-    if not _is_hex64(bank) or not _is_hex64(exact_bounds_sha):
-        raise WireError("bank_id·exact_bounds_sha256 는 64-hex 여야 한다")
-    if not isinstance(binding, dict) or \
-            set(binding) != {"pairing_design_sha256", "pair_group_id",
-                             "bank_id", "objective_plan"}:
-        raise WireError("binding 은 design_binding() 이 만든 것이어야 한다")
-    # ★ 30차 P1-4 — bank 가 **이 design 의** bank 인지 본다. 초판은 64-hex
-    #   인지만 봐서 다른 design 의 정당한 bank 를 그대로 쓸 수 있었다.
-    if bank != binding["bank_id"]:
-        raise WireError(f"bank 가 이 design 에서 유도한 것과 다르다: "
-                        f"{bank[:16]} ≠ {binding['bank_id'][:16]}")
+    if not _is_hex64(exact_bounds_sha):
+        raise WireError(f"exact_bounds_sha256 는 64-hex 여야 한다: {exact_bounds_sha!r}")
+    b = design_binding(design=design, coords=coords,
+                       unit_cube_bank_sha256=unit_cube_bank_sha256)
     if source == "warm":
         po = (source_payload or {}).get("provider_objective")
-        if po not in binding["objective_plan"]:
+        if po not in b["objective_plan"]:
             raise WireError(f"provider_objective 가 design 의 objective 가 "
-                            f"아니다: {po!r} ∉ {binding['objective_plan']}")
+                            f"아니다: {po!r} ∉ {b['objective_plan']}")
     bad = check_candidate_payload(source, source_payload)
     if bad:
         raise WireError(f"{source} payload: " + "; ".join(bad))
     assert_wire_safe(source_payload)
-    return digest({"schema": "candidate/v2", "bank_id": bank,
+    return digest({"schema": "candidate/v2", "bank_id": b["bank_id"],
                    "exact_bounds_sha256": exact_bounds_sha,
                    "source": source, "source_payload": source_payload})
 

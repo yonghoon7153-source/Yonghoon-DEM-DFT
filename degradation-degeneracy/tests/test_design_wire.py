@@ -41,15 +41,26 @@ def _spec(label: str, arms: list[str], order: list[str]) -> dict:
         endian="little", coordinate_unit="fraction")
 
 
+def _sealed(golden, label="p22_halfcell_2x2_v6") -> dict:
+    """봉인 design spec."""
+    return _spec(label, golden["designs"][label]["arms"],
+                 golden["parameter_order"])
+
+
 def _binding(golden, coords=None, label="p22_halfcell_2x2_v6") -> dict:
-    """봉인 design 에서 유도한 ID chain — ★ 30차 P1-4 이후 유일한 입구."""
-    order = golden["parameter_order"]
-    spec = _spec(label, golden["designs"][label]["arms"], order)
+    """봉인 design 에서 유도한 ID chain — ★ 31차 P1-4 이후 유일한 입구."""
     return design_binding(
-        design=spec, coords=coords or golden["vectors"][0]["coords"],
-        parameter_order_sha256=golden["parameter_order_sha256"],
-        bank_version="v6.0",
+        design=_sealed(golden, label),
+        coords=coords or golden["vectors"][0]["coords"],
         unit_cube_bank_sha256=golden["unit_cube_bank_sha256"])
+
+
+def _cid(golden, src, payload, coords=None, label="p22_halfcell_2x2_v6",
+         bounds=None):
+    return candidate_id(bounds or golden["exact_bounds_sha256"], src, payload,
+                        design=_sealed(golden, label),
+                        coords=coords or golden["vectors"][0]["coords"],
+                        unit_cube_bank_sha256=golden["unit_cube_bank_sha256"])
 
 
 def test_golden_vectors_recompute_exactly(golden):
@@ -76,9 +87,7 @@ def test_golden_vectors_recompute_exactly(golden):
         bk = bank_id(pg, "v6.0", golden["unit_cube_bank_sha256"])
         assert bk == v["bank_id"], f"{v['name']}: bank_id 가 움직였다"
         for src, want in v["candidate_ids"].items():
-            got = candidate_id(bk, golden["exact_bounds_sha256"], src,
-                               v["candidate_payloads"][src],
-                               binding=_binding(golden, v["coords"]))
+            got = _cid(golden, src, v["candidate_payloads"][src], v["coords"])
             assert got == want, f"{v['name']}/{src}: candidate_id 가 움직였다"
 
 
@@ -175,8 +184,7 @@ def test_unknown_arms_and_duplicate_parameters_are_refused(golden):
     with pytest.raises(WireError):
         _spec("x", ["A"], ["lli", "lli"])
     with pytest.raises(WireError):
-        candidate_id("b", "e", "grid", {},
-                     binding=_binding(golden))   # 모르는 restart source
+        _cid(golden, "grid", {})              # 모르는 restart source
 
 
 def test_design_schema_version_is_pinned_in_the_golden_file(golden):
@@ -195,38 +203,33 @@ def test_candidate_payloads_follow_a_closed_per_source_schema(golden):
     고정했다" 는 말이 성립하지 않았다. 계약 §4.2 는 source 마다 다른 것을
     요구한다.
     """
-    b = _binding(golden)
-    bank, bounds = b["bank_id"], "b" * 64
+    bounds = "b" * 64
     good = golden["vectors"][0]["candidate_payloads"]
     for src, payload in good.items():
-        assert candidate_id(bank, bounds, src, payload, binding=b)
+        assert _cid(golden, src, payload, bounds=bounds)
         for k in payload:                                   # 키 하나를 빼면 거부
             with pytest.raises(WireError):
-                candidate_id(bank, bounds, src,
-                             {x: v for x, v in payload.items() if x != k},
-                             binding=b)
+                _cid(golden, src, {x: v for x, v in payload.items() if x != k},
+                     bounds=bounds)
         with pytest.raises(WireError):                      # 남는 키도 거부
-            candidate_id(bank, bounds, src, dict(payload, __extra__="x"),
-                         binding=b)
+            _cid(golden, src, dict(payload, __extra__="x"), bounds=bounds)
     for src in CANDIDATE_PAYLOAD_SCHEMA:
         with pytest.raises(WireError):
-            candidate_id(bank, bounds, src, {}, binding=b)
+            _cid(golden, src, {}, bounds=bounds)
     with pytest.raises(WireError):
-        candidate_id(bank, bounds, "random",
-                     {"bank_index": 1.0, "unit_cube_bytes_sha256": "c" * 64},
-                     binding=b)
+        _cid(golden, "random",
+             {"bank_index": 1.0, "unit_cube_bytes_sha256": "c" * 64}, bounds=bounds)
     with pytest.raises(WireError):
-        candidate_id(bank, bounds, "warm", good["random"], binding=b)
+        _cid(golden, "warm", good["random"], bounds=bounds)
     with pytest.raises(WireError):
-        candidate_id("짧은-id", bounds, "base_init", good["base_init"], binding=b)
-    # ★ 30차 P1-4 — binding 없이는 부를 수 없다 (keyword-only 필수 인자)
+        _cid(golden, "base_init", good["base_init"], bounds="짧은-id")
+    # ★ 31차 P1-4 — 봉인물 없이는 부를 수 없다 (keyword-only 필수 인자)
     with pytest.raises(TypeError):
-        candidate_id(bank, bounds, "warm", good["warm"])
-    # binding 모양이 아니면 거부한다
-    with pytest.raises(WireError) as e:
-        candidate_id(bank, bounds, "warm", good["warm"],
+        candidate_id(bounds, "warm", good["warm"])
+    # 그리고 **binding 을 건네줄 자리 자체가 없다** — 위조할 곳이 없다
+    with pytest.raises(TypeError):
+        candidate_id(bounds, "warm", good["warm"],
                      binding={"objective_plan": ["pocv_dvdq"]})
-    assert "design_binding" in str(e.value)
 
 
 def test_a_design_alias_change_does_not_move_any_id(golden):
@@ -337,9 +340,9 @@ def test_objective_order_is_part_of_design_identity(golden):
 def test_numeric_and_unicode_domains_are_closed(golden):
     """음수 bank index · 이상한 decimal_places · 비-NFC 문자열을 거부한다."""
     with pytest.raises(WireError):
-        candidate_id(_binding(golden)["bank_id"], "b" * 64, "random",
-                     {"bank_index": -1, "unit_cube_bytes_sha256": "c" * 64},
-                     binding=_binding(golden))
+        _cid(golden, "random",
+             {"bank_index": -1, "unit_cube_bytes_sha256": "c" * 64},
+             bounds="b" * 64)
     for places in (True, 0, -3, 99, 2.5):
         with pytest.raises(WireError):
             canonical_design_spec(
@@ -418,13 +421,12 @@ def test_parent_digest_domains_and_type_axis_nfc_are_checked(golden):
 
 def test_a_warm_candidate_must_name_an_objective_in_the_design(golden):
     """★ 28차 P1-6 — `provider_objective='not-in-design'` 이 통과했다."""
-    b = _binding(golden)
     good = {"provider_objective": "pocv_dvdq",
             "provider_artifact_sha256": "2" * 64, "solution_map_sha256": "3" * 64}
-    assert candidate_id(b["bank_id"], "b" * 64, "warm", good, binding=b)
+    assert _cid(golden, "warm", good, bounds="b" * 64)
     with pytest.raises(WireError) as e:
-        candidate_id(b["bank_id"], "b" * 64, "warm",
-                     dict(good, provider_objective="not-in-design"), binding=b)
+        _cid(golden, "warm", dict(good, provider_objective="not-in-design"),
+             bounds="b" * 64)
     assert "objective" in str(e.value)
 
 
@@ -470,80 +472,100 @@ def test_bank_and_parameter_order_ids_enforce_nfc(golden):
 def test_a_warm_candidate_cannot_name_an_objective_from_a_free_argument(golden):
     """★ 30차 P1-4 — `objective_plan` 이 caller 의 자유 인자였다.
 
-    리뷰가 준 반례 그대로다 — 다른 design 의 bank 에, design 밖 목적함수를
-    쓰면서, 그 목적함수를 담은 plan 을 **자기가 같이 넘기면** 통과했다:
-
-        candidate_id(valid_bank_for_another_design, valid_bounds, "warm",
-                     {"provider_objective": "not-in-design", ...},
-                     objective_plan=["not-in-design"])
-
-    현재 회귀는 신뢰된 golden plan 을 넘긴 뒤 provider 만 바꾸므로 이것을
-    놓친다. 검사를 더 두는 것으로는 안 된다 — plan 을 **인자로 받을 수 있는
-    것 자체**가 결함이므로, design 봉인물에서 유도한다.
+    리뷰가 준 반례: 다른 design 의 bank 에, design 밖 목적함수를 쓰면서,
+    그 목적함수를 담은 plan 을 **자기가 같이 넘기면** 통과했다.
     """
-    order = golden["parameter_order"]
-    d = golden["designs"]["p22_halfcell_2x2_v6"]
-    spec = _spec("p22_halfcell_2x2_v6", d["arms"], order)
-    v = golden["vectors"][0]
-    binding = design_binding(
-        design=spec, coords=v["coords"],
-        parameter_order_sha256=golden["parameter_order_sha256"],
-        bank_version="v6.0",
-        unit_cube_bank_sha256=golden["unit_cube_bank_sha256"])
-
-    warm = dict(v["candidate_payloads"]["warm"])
-    assert candidate_id(binding["bank_id"], golden["exact_bounds_sha256"],
-                        "warm", warm, binding=binding)
-
-    # design 밖 목적함수 — 이제 plan 을 같이 넘길 방법이 없다
+    warm = dict(golden["vectors"][0]["candidate_payloads"]["warm"])
+    assert _cid(golden, "warm", warm)
     with pytest.raises(WireError) as ei:
-        candidate_id(binding["bank_id"], golden["exact_bounds_sha256"], "warm",
-                     dict(warm, provider_objective="not-in-design"),
-                     binding=binding)
+        _cid(golden, "warm", dict(warm, provider_objective="not-in-design"))
     assert "objective" in str(ei.value)
 
 
-def test_a_bank_from_another_design_is_refused(golden):
-    """★ 30차 P1-4 — bank 가 이 design 의 것인지 아무도 안 봤다.
+def test_a_bank_from_another_design_cannot_be_substituted(golden):
+    """★ 30차/31차 P1-4 — bank 를 밖에서 건네줄 자리가 **없다**.
 
-    `candidate_id` 는 `bank` 를 64-hex 인지만 봤으므로, 다른 design 에서
-    정당하게 만든 bank 를 그대로 쓸 수 있었다. 이제 binding 이 chain 을
-    **다시 유도**한다.
+    30차판은 `bank` 를 인자로 받고 binding 과 같은지 봤다. 31차판은 bank 를
+    봉인 design 에서 유도하므로, 다른 design 의 bank 를 대입할 방법이 없다 —
+    같은 좌표라도 design 이 다르면 candidate_id 가 다르다.
     """
     order = golden["parameter_order"]
-    v = golden["vectors"][0]
-    a = _spec("p22_halfcell_2x2_v6",
-              golden["designs"]["p22_halfcell_2x2_v6"]["arms"], order)
-    other_label = next(k for k in golden["designs"]
-                       if k != "p22_halfcell_2x2_v6")
-    b = _spec(other_label, golden["designs"][other_label]["arms"], order)
+    other = next(k for k in golden["designs"] if k != "p22_halfcell_2x2_v6")
+    warm = golden["vectors"][0]["candidate_payloads"]["warm"]
 
-    ba = design_binding(design=a, coords=v["coords"],
-                        parameter_order_sha256=golden["parameter_order_sha256"],
-                        bank_version="v6.0",
-                        unit_cube_bank_sha256=golden["unit_cube_bank_sha256"])
-    bb = design_binding(design=b, coords=v["coords"],
-                        parameter_order_sha256=golden["parameter_order_sha256"],
-                        bank_version="v6.0",
-                        unit_cube_bank_sha256=golden["unit_cube_bank_sha256"])
-    assert ba["bank_id"] != bb["bank_id"]
-
-    with pytest.raises(WireError) as ei:
-        candidate_id(bb["bank_id"], golden["exact_bounds_sha256"], "warm",
-                     v["candidate_payloads"]["warm"], binding=ba)
-    assert "bank" in str(ei.value)
+    a = _cid(golden, "warm", warm)
+    b = _cid(golden, "warm", warm, label=other)
+    assert a != b, "design 이 달라도 같은 candidate_id 가 나왔다"
+    assert _binding(golden)["bank_id"] != _binding(golden, label=other)["bank_id"]
 
 
 def test_the_objective_plan_is_read_from_the_sealed_design(golden):
     """plan 의 정본이 design 하나임을 고정한다."""
-    order = golden["parameter_order"]
-    d = golden["designs"]["p22_halfcell_2x2_v6"]
-    spec = _spec("p22_halfcell_2x2_v6", d["arms"], order)
+    spec = _sealed(golden)
+    b = _binding(golden)
+    assert b["objective_plan"] == spec["objective_plan"]
+    assert b["pairing_design_sha256"] == \
+        golden["designs"]["p22_halfcell_2x2_v6"]["pairing_design_sha256"]
+
+
+def test_a_forged_binding_has_nowhere_to_go(golden):
+    """★ 31차 P1-4 — 리뷰가 준 `forged` 반례를 **쓸 수 없다**.
+
+    30차판은 binding dict 의 key set 과 `bank == binding["bank_id"]` 만 봤다:
+
+        forged = {"pairing_design_sha256": "not-even-checked",
+                  "pair_group_id": "not-even-checked",
+                  "bank_id": chosen_bank,
+                  "objective_plan": ["not-in-design"]}
+
+    검사를 더 두는 것으로는 안 닫힌다 — 두 회차 연속 같은 형태였다. 인자를
+    없앴으므로 이 반례는 `TypeError` 다.
+    """
+    warm = golden["vectors"][0]["candidate_payloads"]["warm"]
+    forged = {"pairing_design_sha256": "0" * 64, "pair_group_id": "0" * 64,
+              "bank_id": _binding(golden)["bank_id"],
+              "objective_plan": ["not-in-design"]}
+    with pytest.raises(TypeError):
+        candidate_id(golden["exact_bounds_sha256"], "warm",
+                     dict(warm, provider_objective="not-in-design"),
+                     binding=forged)
+
+
+def test_the_binding_derives_order_and_bank_version_from_the_design(golden):
+    """★ 31차 P1-4 — `parameter_order_sha256` 과 `bank_version` 도 caller 인자였다.
+
+    design 의 `parameter_order` · `bank.version` 과 **다른** 정당한 값을 넣어도
+    chain 이 만들어졌다. 봉인물 안에 있는 값을 밖에서 다시 받으면 그 둘이
+    갈리는 것을 아무도 못 본다.
+    """
+    spec = _sealed(golden)
     v = golden["vectors"][0]
-    binding = design_binding(
-        design=spec, coords=v["coords"],
-        parameter_order_sha256=golden["parameter_order_sha256"],
-        bank_version="v6.0",
-        unit_cube_bank_sha256=golden["unit_cube_bank_sha256"])
-    assert binding["objective_plan"] == spec["objective_plan"]
-    assert binding["pairing_design_sha256"] == d["pairing_design_sha256"]
+    ok = design_binding(design=spec, coords=v["coords"],
+                        unit_cube_bank_sha256=golden["unit_cube_bank_sha256"])
+    assert ok["bank_id"] == v["bank_id"]
+    assert ok["parameter_order_sha256"] == golden["parameter_order_sha256"]
+    assert ok["bank_version"] == spec["bank"]["version"]
+
+    # design 과 다른 order/version 을 밖에서 주장할 수 없다
+    with pytest.raises(TypeError):
+        design_binding(design=spec, coords=v["coords"],
+                       parameter_order_sha256="0" * 64, bank_version="v9.9",
+                       unit_cube_bank_sha256=golden["unit_cube_bank_sha256"])
+
+    # design 안의 값을 고치면 chain 이 따라 움직인다 (밖에서 못 붙든다).
+    # ★ 이 축을 **직접** 본다. `bank_id` 비교만으로는 부족하다 — bank.version
+    #   은 design 안에 있어 `pairing_design_sha256` 에 이미 들어가므로,
+    #   `bank_version` 을 상수로 박아도 `bank_id` 는 어차피 달라진다 (변이로
+    #   확인했다). 유도값 자체를 본다.
+    moved = dict(spec, bank=dict(spec["bank"], version="v6.1"))
+    got = design_binding(design=moved, coords=v["coords"],
+                         unit_cube_bank_sha256=golden["unit_cube_bank_sha256"])
+    assert got["bank_version"] == "v6.1", got["bank_version"]
+    assert got["bank_id"] != ok["bank_id"]
+
+    # bank.version 이 없거나 이상하면 chain 을 만들 수 없다
+    for bad in (None, "", 7, "e\u0301"):
+        with pytest.raises(WireError):
+            design_binding(design=dict(spec, bank=dict(spec["bank"], version=bad)),
+                           coords=v["coords"],
+                           unit_cube_bank_sha256=golden["unit_cube_bank_sha256"])

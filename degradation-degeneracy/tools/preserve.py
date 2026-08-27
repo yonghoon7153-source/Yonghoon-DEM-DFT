@@ -65,6 +65,7 @@ import tempfile
 import unicodedata
 import uuid
 from dataclasses import dataclass
+from typing import ClassVar
 from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
@@ -193,9 +194,20 @@ def _fsync_dir(d: Path) -> bool:
 
 
 def _fsync_dir_strict(d: Path, stage: str) -> None:
-    """이 filesystem 이 directory fsync 를 지원하면 **반드시** 성공해야 한다."""
+    """directory entry 를 굳힌다. 못 굳히면 **그 자리에서 멈춘다**.
+
+    ★ 31차 P0-3 — 30차판은 capability 가 없으면 조용히 `return` 했다. 주석은
+      "publish 경로가 이미 막는다" 였는데, 그것은 CAS 와 index 가 **같은
+      filesystem** 일 때만 참이다. CAS 에서 directory fsync 가 안 되고 index
+      에서는 되는 구성이면 graph 이름은 비내구적으로 진행하고 journal 만
+      durable 하게 commit 된다 — 리뷰가 지목한 ordering 이 그대로 열린다.
+      (실측: 그 구성에서 `put_if_absent()` 가 그냥 성공했다.)
+    """
     if not dir_fsync_supported(d):
-        return                       # capability 없음 — publish 경로가 이미 막는다
+        raise PreserveError(
+            stage, f"이 filesystem 은 directory fsync 를 지원하지 않는다 ({d}) — "
+                   "graph 이름이 durable 하지 않으면 journal 만 남는 ordering 이 "
+                   "가능하다. backend capability 를 확인하고 멈춘다")
     if not _fsync_dir(d):
         raise PreserveError(
             stage, f"directory fsync 가 실패했다 ({d}) — 이름이 durable 하지 "
@@ -293,11 +305,52 @@ class CasBackend:
     retention_days: int = 3650
     readable: bool = True
 
-    #: 이 backend 가 강제할 수 있는 retention 수준. local filesystem 은
-    #: object-lock 을 **강제하지 못한다** — 이 저장소의 실행 환경은 uid 0 이라
-    #: mode bit 조차 잠금이 아니다. 그래서 `advisory_local` 이라고 신고하고,
-    #: `assert_durable_retention()` 이 그 값을 보고 거부한다 (30차 P0-1).
-    enforcement: str = ENFORCEMENT_ADVISORY
+    #: 이 **클래스**가 강제할 수 있는 retention 수준. local filesystem 은
+    #: object-lock 을 강제하지 못한다 — 이 저장소의 실행 환경은 uid 0 이라
+    #: mode bit 조차 잠금이 아니다.
+    #:
+    #: ★ 31차 P0-1 — 30차판은 이것이 **dataclass field** 였다. 리뷰의 정적
+    #:   반례가 그대로 통했다: `CasBackend(root=cas, enforcement="object_lock")`
+    #:   하나로 구현은 그대로인 채 `durable=True` 가 나오고
+    #:   `assert_durable_retention()` 이 통과했다. "durable 의 뜻을 좁혔다" 는
+    #:   경계가 문자열 하나로 무너진 것이다.
+    #:
+    #:   이제 ClassVar 다 — 생성자 인자가 아니고, 대입도 `__setattr__` 이
+    #:   막는다. 강제 수준은 **구현이 정하는 것**이지 호출자가 붙이는 이름이
+    #:   아니다. `object_lock` 을 주장하려면 `probe_enforcement()` 를 실제로
+    #:   통과하는 다른 클래스를 만들어야 한다.
+    ENFORCEMENT: ClassVar[str] = ENFORCEMENT_ADVISORY
+
+    #: capability 를 바꿔치기하려는 대입을 막는다 (읽기는 자유)
+    _LOCKED_ATTRS: ClassVar[frozenset] = frozenset({"ENFORCEMENT", "enforcement"})
+
+    def __post_init__(self):
+        # ★ 31차 P0-2 hardening — `root` 를 **생성 시** 고정한다. 초판은
+        #   `uri` property 가 호출 때마다 cwd 기준으로 다시 계산해, 같은
+        #   backend 객체가 cwd 변경만으로 다른 store 를 가리켰다.
+        object.__setattr__(self, "root", Path(self.root).absolute())
+
+    def __setattr__(self, name, value):
+        if name in type(self)._LOCKED_ATTRS:
+            raise PreserveError(
+                "capability",
+                f"{name} 은 backend capability 다 — 대입으로 바꿀 수 없다. "
+                "강제 수준은 구현이 정한다")
+        object.__setattr__(self, name, value)
+
+    @property
+    def enforcement(self) -> str:
+        return type(self).ENFORCEMENT
+
+    def probe_enforcement(self) -> str:
+        """**지금** 이 store 가 실제로 강제하는 수준을 조회한다.
+
+        ★ 31차 P0-1 — 리뷰: "저장 문자열이 아니라 provider 의 live lock
+          state 조회". local 은 조회할 provider 가 없고 강제하는 것도 없다.
+          object-lock backend 는 이 자리에서 provider 에 물어 version ID ·
+          lock mode · retain-until 을 확인하고 그 결과로 답해야 한다.
+        """
+        return ENFORCEMENT_ADVISORY
 
     @property
     def uri(self) -> str:
@@ -306,7 +359,7 @@ class CasBackend:
         `root=Path("cas")` 로 등록한 뒤 cwd 를 바꾸면 **다른** store 를 가리키면서
         URI 는 그대로였다. 절대 경로로 정규화한다.
         """
-        return f"file+cas://{Path(self.root).resolve()}"
+        return Path(self.root).resolve().as_uri().replace("file://", "file+cas://", 1)
 
     @property
     def store_id(self) -> str:
@@ -494,16 +547,29 @@ class CasBackend:
         if existing is not None:
             return existing
         self.pin(leg_id, objs)
+        live = self.probe_enforcement()
+        if live != self.enforcement:
+            raise PreserveError(
+                "retain", f"backend 가 신고한 enforcement({self.enforcement!r}) 를 "
+                          f"조회가 지지하지 않는다 ({live!r}) — 강제는 이름이 아니라 "
+                          "구현이다")
         until = (dt.datetime.now(dt.timezone.utc)
                  + dt.timedelta(days=min_retention_days))
+        until_s = until.strftime("%Y-%m-%dT%H:%M:%SZ")
+        lock = self.query_object_lock() or {}
         lease = {
             "schema": RETENTION_SCHEMA,
             "leg_id": leg_id,
             "store_id": self.store_id,
             "backend_uri": self.uri,
-            "enforcement": self.enforcement,
+            # ★ 31차 P0-1 — 신고값이 아니라 **조회한** 강제 수준을 적는다
+            "enforcement": live,
+            # ★ 31차 P0-1 — provider 가 강제하는 **모드**와 그것이 만든
+            #   immutable version ID 를 lease 에 싣는다. 검증 때 다시 조회한다.
+            "lock_mode": lock.get("mode"),
+            "object_versions": self.lock_objects(leg_id, objs, until_s),
             "min_retention_days": min_retention_days,
-            "retain_until_utc": until.strftime("%Y-%m-%dT%H:%M:%SZ"),
+            "retain_until_utc": until_s,
             "objects": objs,
             "pin_set_digest": pin_set_digest(leg_id, objs),
         }
@@ -531,7 +597,7 @@ class CasBackend:
                 or lease.get("min_retention_days") != min_retention_days \
                 or lease.get("store_id") != self.store_id \
                 or lease.get("backend_uri") != self.uri \
-                or lease.get("enforcement") != self.enforcement:
+                or lease.get("enforcement") != self.probe_enforcement():
             return None
         try:
             return self.verify_retention(leg_id, extra[0], expected=set(objs))
@@ -555,6 +621,7 @@ class CasBackend:
         stage = "retention"
         lease = self.read_lease(leg_id, lease_digest)
         want = {"schema", "leg_id", "store_id", "backend_uri", "enforcement",
+                "lock_mode", "object_versions",
                 "min_retention_days", "retain_until_utc", "objects", "pin_set_digest"}
         if set(lease) != want:
             raise PreserveError(stage, f"lease 키가 계약과 다르다: "
@@ -582,6 +649,19 @@ class CasBackend:
                        f"하한({lease['min_retention_days']}일)보다 짧다")
         if lease["min_retention_days"] < MIN_RETENTION_DAYS:
             raise PreserveError(stage, "lease 의 하한이 정책 하한 미만이다")
+        # ★ 31차 P0-1 — lease 에 적힌 강제 수준을 **지금 backend 가 증명하는
+        #   것**과 대조한다. 초판은 저장만 하고 다시 보지 않아, lease 를
+        #   위조하거나 강한 backend 의 lease 를 약한 backend 에서 열어도
+        #   아무 일이 없었다.
+        live = self.probe_enforcement()
+        if lease["enforcement"] != live:
+            raise PreserveError(
+                stage, f"lease 의 enforcement 가 이 backend 가 지금 증명하는 것과 "
+                       f"다르다: {lease['enforcement']!r} ≠ {live!r}")
+        if live != self.enforcement:
+            raise PreserveError(
+                stage, f"backend 가 신고한 enforcement({self.enforcement!r}) 를 "
+                       f"조회가 지지하지 않는다 ({live!r})")
         try:
             until = dt.datetime.strptime(lease["retain_until_utc"], "%Y-%m-%dT%H:%M:%SZ")
         except (TypeError, ValueError) as ex:
@@ -598,6 +678,26 @@ class CasBackend:
             raise PreserveError(
                 stage, f"lease 가 유도한 graph 와 다르다 — 없음 "
                        f"{sorted(set(expected) - set(objs))[:2]}")
+        # ★ 31차 P0-1 — provider 의 version ID 를 **다시 조회**한다. 등록
+        #   시점에 잠겼다는 사실이 지금도 잠겨 있다는 뜻이 아니다.
+        want_v = lease["object_versions"]
+        if not isinstance(want_v, dict):
+            raise PreserveError(stage, "lease 의 object_versions 가 dict 가 아니다")
+        if live == ENFORCEMENT_OBJECT_LOCK:
+            if set(want_v) != set(objs):
+                raise PreserveError(
+                    stage, "object-lock lease 인데 version 이 없는 object 가 있다: "
+                           f"{sorted(set(objs) - set(want_v))[:2]}")
+            if not _nonempty_str(lease["lock_mode"] or ""):
+                raise PreserveError(stage, "object-lock lease 에 lock_mode 가 없다")
+            got_v = self.query_object_versions(leg_id, objs)
+            if got_v != want_v:
+                diff = sorted(d for d in want_v if got_v.get(d) != want_v[d])
+                raise PreserveError(
+                    stage, f"provider 의 object version 이 lease 와 다르다: "
+                           f"{diff[:2]} — 더 이상 잠겨 있지 않다")
+        elif want_v:
+            raise PreserveError(stage, "advisory lease 인데 version 이 적혀 있다")
         on_disk = self.pinned(leg_id)
         want_disk = set(objs) | {lease_digest}
         if on_disk != want_disk:
@@ -607,11 +707,68 @@ class CasBackend:
                        f"{sorted(on_disk - want_disk)[:2]}")
         return dict(lease, lease_digest=lease_digest)
 
+    # ── object-lock adapter 가 채워야 하는 자리 (★ 31차 P0-1) ───────────
+    # local 은 아무 것도 잠그지 않으므로 빈 값을 돌려준다. 강제하는 backend 는
+    # provider 가 만든 **immutable version ID** 를 돌려주고, 검증 때 그것을
+    # 다시 조회해 살아 있는지 본다.
+
+    def query_object_lock(self) -> dict | None:
+        """provider 의 live lock 설정. local 은 잠글 provider 가 없다."""
+        return None
+
+    def lock_objects(self, leg_id: str, digests, until: str) -> dict:
+        return {}
+
+    def query_object_versions(self, leg_id: str, digests) -> dict:
+        return {}
+
     def retrieve_retained(self, lease: dict, dg: str) -> bytes:
         """lease 가 담보한 object 만 회수한다."""
         if dg not in set(lease.get("objects") or []):
             raise PreserveError("retention", f"lease 가 담보하지 않은 object: {dg[:16]}")
         return self.read_pinned(lease["leg_id"], dg)
+
+
+class ObjectLockBackend(CasBackend):
+    """provider 가 **강제하는** retention. 이 저장소에는 실제 adapter 가 없다.
+
+    ★ 31차 P0-1 — 리뷰: "단순 enum/string 이 아니라 provider 가 강제한 object
+      version, retain-until, lock mode 를 만들고 다시 조회하는 adapter 와
+      canary 가 있어야 한다."
+
+      여기 있는 것은 **타입 경계**다. `ENFORCEMENT` 를 `object_lock` 으로
+      선언하는 것만으로는 아무 일도 일어나지 않는다 — `probe_enforcement()`
+      가 `query_object_lock()` 을 실제로 조회해 mode 와 정책 하한을 확인해야
+      하고, 그것이 없으면 `advisory_local` 로 떨어져 `retain()` 부터 실패한다.
+
+      실제 provider(S3 Object Lock 등) adapter 는 **아직 없다.** 이 클래스를
+      상속해 세 메서드를 구현하는 것이 남은 일이다:
+
+          query_object_lock()      -> {"mode": …, "min_retain_days": …}
+          lock_objects(leg, digests, until) -> {digest: version_id}
+          query_object_versions(leg, digests) -> {digest: version_id}
+    """
+
+    ENFORCEMENT: ClassVar[str] = ENFORCEMENT_OBJECT_LOCK
+
+    #: provider 가 강제한다고 인정하는 lock mode
+    LOCK_MODES: ClassVar[frozenset] = frozenset({"COMPLIANCE", "GOVERNANCE"})
+
+    def query_object_lock(self) -> dict | None:
+        """provider 의 **live** lock 설정. 구현이 없으면 강제가 없는 것이다."""
+        return None
+
+    def probe_enforcement(self) -> str:
+        st = self.query_object_lock()
+        if not isinstance(st, dict):
+            return ENFORCEMENT_ADVISORY
+        if st.get("mode") not in self.LOCK_MODES:
+            return ENFORCEMENT_ADVISORY
+        days = st.get("min_retain_days")
+        if isinstance(days, bool) or not isinstance(days, int) \
+                or days < MIN_RETENTION_DAYS:
+            return ENFORCEMENT_ADVISORY
+        return ENFORCEMENT_OBJECT_LOCK
 
 
 #: payload manifest 의 닫힌 schema. 키가 남거나 모자라면 거부한다.
@@ -916,7 +1073,11 @@ def _exclusive_write(path: Path, data: bytes, *,
       temp 에 **전부** 쓰고 fsync 한 뒤 `os.link` 로 no-replace commit 한다
       (link 는 대상이 있으면 EEXIST 로 실패하는 원자적 연산이다).
     """
-    path.parent.mkdir(parents=True, exist_ok=True)
+    # ★ 31차 P0-3 — 초판은 `mkdir(parents=True)` 뒤 **자기 부모만** flush 했다.
+    #   새 `index/legs`·`index/registered` 를 담는 `index/` edge 와, 새 `index/`
+    #   를 담는 그 부모 edge 는 굳히지 않았다. "모든 새 directory parent edge"
+    #   주장이 이 경로에는 적용되지 않았던 것이다.
+    _mkdir_durable(path.parent, "durability")
     # ★ capability 를 먼저 본다. 못 하면 **만들기 전에** 실패한다.
     durable = dir_fsync_supported(path.parent)
     if require_durable and not durable:
@@ -945,12 +1106,13 @@ def _exclusive_write(path: Path, data: bytes, *,
         created = False
     finally:
         tmp.unlink(missing_ok=True)
-    if created and durable:
-        dfd = os.open(path.parent, os.O_RDONLY)
-        try:
-            os.fsync(dfd)           # 이름이 durable 해야 crash 뒤에도 보인다
-        finally:
-            os.close(dfd)
+    # ★ 31차 P0-3 — 초판은 `created` 일 때만 fsync 했다. final link 뒤 fsync 가
+    #   실패해 예외가 나가도 **final pathname 은 이미 존재**하므로, 재시도는
+    #   `EEXIST → created=False` 가 되어 fsync 를 건너뛰고 상위 `publish()` ·
+    #   `_register()` 가 "같은 바이트" 라는 이유로 성공했다. 실패 전파가
+    #   재시도까지 fail-closed 가 아니었다. 이름이 있는 한 **항상** 굳힌다.
+    if durable:
+        _fsync_dir_strict(path.parent, "durability")
     return created
 
 
@@ -1051,6 +1213,18 @@ def is_registered(index_path: Path, leg_id: str, backend: CasBackend) -> bool:
     return True
 
 
+def verified_retention(backend: CasBackend, index_path: Path,
+                       leg_id: str) -> dict:
+    """graph 를 검증하고 그 검증이 인정한 **lease** 를 돌려준다.
+
+    ★ 31차 P0-1 — `enforcement` 의 권위를 한 곳에 둔다. 호출자가 다시
+      `probe_enforcement()` 를 부르면 같은 판단이 두 곳에 생긴다.
+    """
+    verify_registered_graph(backend, index_path, leg_id)
+    j = registration(index_path, leg_id)
+    return backend.verify_retention(leg_id, j["lease_digest"])
+
+
 def assert_durable_retention(backend: CasBackend, index_path: Path,
                              leg_id: str) -> dict:
     """등록이 **강제되는** retention 아래 있는지 — 아니면 거부한다.
@@ -1059,18 +1233,21 @@ def assert_durable_retention(backend: CasBackend, index_path: Path,
       `ok=True` 를 durable retention 성공이라고 부를 수 없다. 비싼 본 실행을
       승인하는 자리는 이 함수를 통과해야 한다.
     """
-    rec = verify_registered_graph(backend, index_path, leg_id)
-    j = registration(index_path, leg_id)
-    lease = backend.read_lease(leg_id, j["lease_digest"])
-    if lease.get("enforcement") != ENFORCEMENT_OBJECT_LOCK:
+    # ★ 31차 P0-1 — 강제 수준의 권위는 **한 곳**이다: `verify_retention()` 이
+    #   lease 에 적힌 값을 `probe_enforcement()` 조회 결과와 대조하고, 어긋나면
+    #   거기서 실패한다. 여기서 다시 조회하면 같은 계산이 두 곳에 있게 되고,
+    #   그러면 강한 쪽을 지워도 시험이 초록이 된다 (30차에 세 번 겪은 형태 —
+    #   실제로 이 자리의 변이가 물지 않았다).
+    lease = verified_retention(backend, index_path, leg_id)
+    live = lease["enforcement"]
+    if live != ENFORCEMENT_OBJECT_LOCK:
         raise PreserveError(
             "durable_retention",
-            f"이 backend 는 retention 을 강제하지 못한다 "
-            f"(enforcement={lease.get('enforcement')!r}). local filesystem 의 pin 은 "
-            "advisory 다 — 마지막 검사와 반환 사이의 창을 닫을 수 없고, uid 0 "
-            "에서는 mode bit 도 잠금이 아니다. object-lock 을 강제하는 backend "
-            "에서만 durable retention 을 주장한다")
-    return rec
+            f"이 backend 는 retention 을 강제하지 못한다 (조회 결과 {live!r}). "
+            "local filesystem 의 pin 은 advisory 다 — 마지막 검사와 반환 사이의 "
+            "창을 닫을 수 없고, uid 0 에서는 mode bit 도 잠금이 아니다. "
+            "object-lock 을 강제하는 backend 에서만 durable retention 을 주장한다")
+    return lease
 
 
 #: 등록 journal 의 닫힌 schema (★ 30차 P1-1)
@@ -1114,6 +1291,10 @@ _OUTPUT_ROLES = {
     "rescored_rows": frozenset({"measured_by", "produced_from",
                                 "source_file_sha256", "n_rows"}),
 }
+#: ★ 31차 P1-2 — role 마다 **exact** key set 이다. 초판은 전체 `_OUTPUT_KEYS`
+#:   의 subset 인지만 봐서, `rescored_rows` 에 summary 전용
+#:   `semantic_view_drops` 를 넣어도 통과했다. tagged union 이라는 이름이
+#:   실제로 하는 일보다 강했다.
 #: 모든 role 이 공유하는 필수 필드
 _OUTPUT_BASE = ("role", "canonicalizer", "semantic_schema", "semantic_sha256",
                 "relative_path", "byte_size", "file_sha256", "producer",
@@ -1134,7 +1315,15 @@ def check_output(out, *, measured: bool = True) -> list[str]:
     if not isinstance(out, dict):
         return [f"산출이 dict 가 아니다: {type(out).__name__}"]
     bad = []
-    if not set(out) <= _OUTPUT_KEYS:
+    role0 = out.get("role")
+    if role0 in _OUTPUT_ROLES:
+        want = set(_OUTPUT_BASE) | set(_OUTPUT_ROLES[role0])
+        if not measured:
+            want -= set(_OUTPUT_MEASURED)
+        if set(out) != want:
+            bad.append(f"role={role0} 의 키 집합이 정확하지 않다 — 남음 "
+                       f"{sorted(set(out) - want)} · 모자람 {sorted(want - set(out))}")
+    elif not set(out) <= _OUTPUT_KEYS:
         bad.append(f"산출 키 집합이 닫혀 있지 않다: {sorted(set(out) - _OUTPUT_KEYS)}")
     if not measured:
         stray = [k for k in _OUTPUT_MEASURED if k in out]
@@ -1148,10 +1337,14 @@ def check_output(out, *, measured: bool = True) -> list[str]:
     # ★ 27차 P1-5 — semantic digest 만 요구하면 "무슨 파일을 만들었는가" 가
     #   receipt 어디에도 없다. byte 축을 함께 강제한다 (25차 Q2 는 둘 다 요구).
     # ★ 30차 P1-2 — nonempty 가 아니라 **타입**을 본다.
-    need = [k for k in _OUTPUT_BASE if measured or k not in _OUTPUT_MEASURED]
-    for k in need:
-        if k not in out:
-            bad.append(f"산출에 {k} 가 없다")
+    # ★ 31차 P1-2 — role 을 아는 경우 위의 exact key set 비교가 "모자람" 까지
+    #   말한다. 여기서 다시 세면 같은 규칙이 두 곳에 있게 되고, 그러면 강한
+    #   쪽(exact 비교)을 subset 으로 되돌려도 시험이 초록이 된다 (변이로 확인).
+    #   role 을 모를 때만 base 필드를 따로 본다.
+    if role0 not in _OUTPUT_ROLES:
+        for k in _OUTPUT_BASE:
+            if (measured or k not in _OUTPUT_MEASURED) and k not in out:
+                bad.append(f"산출에 {k} 가 없다")
     for k in ("canonicalizer", "semantic_schema", "producer", "relative_path"):
         if k in out and not _nonempty_str(out[k]):
             bad.append(f"{k} 가 비어 있지 않은 NFC 문자열이 아니다: {out.get(k)!r}")
@@ -1162,9 +1355,15 @@ def check_output(out, *, measured: bool = True) -> list[str]:
     n = out.get("byte_size")
     if isinstance(n, bool) or not isinstance(n, int) or n < 0:
         bad.append(f"byte_size 가 음이 아닌 정수가 아니다: {n!r}")
-    rp = out.get("relative_path")
-    if isinstance(rp, str) and (rp.startswith("/") or ".." in rp.split("/")):
-        bad.append(f"relative_path 가 상대 경로가 아니다: {rp!r}")
+    # ★ 31차 P1-2 — 생성과 복구가 **같은** path validator 를 쓴다. 초판은
+    #   여기서 leading slash 와 `..` 만 봤고 `_safe_member_path()` 는 backslash·
+    #   colon·빈/`.` segment 까지 거부했다. 저장된 receipt 를 검증하는 쪽이,
+    #   만드는 쪽이라면 거부했을 경로를 받아들였다는 뜻이다.
+    try:
+        _safe_member_path(Path("/__output_domain__"), out.get("relative_path"),
+                          "output")
+    except PreserveError as ex:
+        bad.append(f"relative_path: {ex.msg}")
     # role 별 필수 필드와 타입
     for k in sorted(_OUTPUT_ROLES.get(role, frozenset())):
         if not measured and k in _OUTPUT_MEASURED:
@@ -1250,6 +1449,15 @@ def check_hook_validation(v) -> list[str]:
         bad.append(f"checks 가 비어 있지 않은 dict 가 아니다: {v['checks']!r}")
     elif not all(_nonempty_str(k) for k in v["checks"]):
         bad.append("checks 의 키가 비어 있지 않은 NFC 문자열이 아니다")
+    else:
+        # ★ 31차 P1-1 — 초판은 `checks` 의 **값**을 보지 않았다.
+        #   `{"ok": True, "fail": [], "checks": {"payload": False}}` 가
+        #   통과했고, receipt 는 `{"ok": true, "n_checks": 1}` 로 축약해
+        #   false subcheck 를 지웠다. 통과한 검증에서는 모든 검사가 참이어야
+        #   한다 — 아니면 그것은 `fail` 에 있어야 한다.
+        wrong = sorted(k for k, x in v["checks"].items() if x is not True)
+        if wrong:
+            bad.append(f"통과했다는데 참이 아닌 검사가 있다: {wrong[:4]}")
     if not isinstance(v["fail"], list) or not all(isinstance(x, str) for x in v["fail"]):
         bad.append(f"fail 이 문자열 목록이 아니다: {v['fail']!r}")
     elif bool(v["fail"]) == (v["ok"] is True):
@@ -1340,7 +1548,7 @@ _ENVELOPE_KEYS = frozenset({
     "schema", "leg_id", "protocol_generation", "pairing_design_sha256",
     "source_digest", "objectives", "total_start_budget", "candidate_mode",
     "min_retention_days"})
-_VALIDATION_KEYS = frozenset({"ok", "n_checks"})
+_VALIDATION_KEYS = frozenset({"ok", "n_checks", "checks"})
 
 #: planned envelope 의 **값 domain** (★ 30차 P1-2)
 #:
@@ -1350,8 +1558,44 @@ _VALIDATION_KEYS = frozenset({"ok", "n_checks"})
 #:     protocol_generation = 7 · source_digest = 7 · objectives = [7]
 #:     total_start_budget = -1 · candidate_mode = 7
 _GENERATION_RE = re.compile(r"^v[0-9]+(_[a-z0-9]+)*$")
-_CANDIDATE_MODES = frozenset({"legacy_slot_replace", "warm_slot_replace",
-                              "random_only", "base_init_only"})
+
+#: 계약 §3 의 후보 정책 표에서 mode 이름을 뽑는 정규식.
+_MODE_ROW = re.compile(r"^\|\s*`([a-z][a-z0-9_]*)`\s*\|")
+_CONTRACT = Path(__file__).resolve().parent.parent / "docs" / "22p_gap" \
+    / "STAGE3_CONTRACT.md"
+_MODE_CACHE: dict[str, frozenset] = {}
+
+
+def candidate_modes() -> frozenset:
+    """후보 정책 enum — **계약 §3 표가 정본**이다.
+
+    ★ 31차 P1-3 — 30차판은 여기에 목록을 **옮겨 적었고** 그것이 계약과
+      달랐다. validator 는 `warm_slot_replace · random_only · base_init_only`
+      를 허용하고 계약의 `equal_start_count_base_retained · union` 을
+      거부했다. 계약상 유효한 두 mode 를 거부하고 계약에 없는 세 mode 를
+      허용한 것이다. 30차 회귀가 `whatever` 하나만 넣어 봐서 못 잡았다.
+
+      값을 두 곳에 두지 않는다 (CLAUDE.md 의 "정본" 규칙). 계약을 고치면
+      validator 가 따라오고, 계약을 못 읽으면 fail-closed 다.
+    """
+    if "modes" in _MODE_CACHE:
+        return _MODE_CACHE["modes"]
+    try:
+        txt = _CONTRACT.read_text(encoding="utf-8")
+    except OSError as ex:
+        raise PreserveError("contract",
+                            f"계약 문서를 읽을 수 없다 ({_CONTRACT}) — "
+                            "후보 정책 enum 의 정본이 없으면 멈춘다") from ex
+    sec = re.search(r"(?ms)^## 3\. 후보 정책.*?(?=^## )", txt)
+    if not sec:
+        raise PreserveError("contract", "계약에 §3 후보 정책 절이 없다")
+    modes = frozenset(m.group(1) for m in
+                      (_MODE_ROW.match(ln) for ln in sec.group(0).split("\n"))
+                      if m)
+    if not modes:
+        raise PreserveError("contract", "계약 §3 표에서 mode 를 하나도 못 읽었다")
+    _MODE_CACHE["modes"] = modes
+    return modes
 
 
 def _nonempty_str(v) -> bool:
@@ -1391,7 +1635,7 @@ def check_envelope(env) -> list[str]:
     if not _pos_int(env["total_start_budget"]):
         bad.append(f"total_start_budget 이 양의 정수가 아니다: "
                    f"{env['total_start_budget']!r}")
-    if env["candidate_mode"] not in _CANDIDATE_MODES:
+    if env["candidate_mode"] not in candidate_modes():
         bad.append(f"candidate_mode 가 계약 enum 이 아니다: {env['candidate_mode']!r}")
     # ★ 30차 P1-3 — 원래 요구한 하한을 envelope 에 **봉인**한다. 이것이 없으면
     #   나중 verifier 가 "무엇을 요구했었나" 를 복원할 수 없다.
@@ -1454,6 +1698,12 @@ def check_receipt(rec, entry: dict, backend: "CasBackend",
     elif v["ok"] is not True or isinstance(v["n_checks"], bool) \
             or not isinstance(v["n_checks"], int) or v["n_checks"] <= 0:
         bad.append(f"validation 값이 이상하다: {v!r}")
+    elif not isinstance(v["checks"], list) \
+            or not all(_nonempty_str(x) for x in v["checks"]) \
+            or v["checks"] != sorted(set(v["checks"])) \
+            or len(v["checks"]) != v["n_checks"]:
+        bad.append(f"validation.checks 가 정렬된 unique 이름 목록이 아니거나 "
+                   f"n_checks 와 다르다: {v['checks']!r}")
     outs = rec["outputs"]
     if not isinstance(outs, list) or not outs:
         bad.append("outputs 가 비었다")
@@ -1762,7 +2012,12 @@ def _finalize(leg_id: str, pid: str, envelope: dict, man_dg: str,
             "payload_manifest_digest": man_dg,
             "n_members": man["n_members"],
             "total_bytes": man["total_bytes"],
-            "validation": {"ok": True, "n_checks": len(v.get("checks") or {})},
+            # ★ 31차 P1-1 — 숫자 하나로 축약하면 **무엇을 봤는지** 사라진다.
+            #   검사 이름 집합을 봉인해 검사를 바꿔치기해도 개수만 같으면
+            #   통과하던 자리를 막는다.
+            "validation": {"ok": True,
+                           "n_checks": len(v["checks"]),
+                           "checks": sorted(v["checks"])},
             "outputs": [out],
             "retention_days": retention,
         }
@@ -1865,9 +2120,17 @@ def finalize_only(leg_id: str, backend: CasBackend, index_path: Path) -> dict:
     # ★ 29차 P0-1 — 초판은 listed pins 만 맞으면 `verify_registered_receipt()`
     #   를 부르지 않고 `already=True` 를 돌려줬다. 그래서 subset journal 과
     #   foreign backend 복사가 통과했다. 항상 graph 를 재유도한다.
+    # ★ 31차 P0-1 — 초판은 두 경로 모두 `ok=True` 만 돌려줬다. "`ok=True` 의
+    #   뜻을 좁혔다" 가 **모든 public 성공 경로**에 적용되지 않았다는 뜻이다.
+    #   `run_transaction` 과 같은 typed retention 결과를 돌려준다.
     if registration(index_path, leg_id) is not None:
-        verify_registered_graph(backend, index_path, leg_id)   # 실패하면 예외
-        return {"ok": True, "already": True}
-    pins = _commit_registration(backend, index_path, leg_id)
-    return {"ok": True, "already": False, "pin_set_digest": pins["pin_set_digest"],
+        lease = verified_retention(backend, index_path, leg_id)  # 실패하면 예외
+        return {"ok": True, "already": True, "retention": lease,
+                "durable": lease["enforcement"] == ENFORCEMENT_OBJECT_LOCK,
+                "receipt_object": e["receipt_object"]}
+    lease = _commit_registration(backend, index_path, leg_id)
+    return {"ok": True, "already": False,
+            "pin_set_digest": pin_set_digest(leg_id, lease["objects"]),
+            "retention": lease,
+            "durable": lease["enforcement"] == ENFORCEMENT_OBJECT_LOCK,
             "receipt_object": e["receipt_object"]}
