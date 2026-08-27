@@ -182,11 +182,38 @@ def parse_cell(relax_in):
     return [[float(x) for x in l.split()] for l in m.group(1).strip().splitlines()]
 
 
+def _inv3(m):
+    """3×3 역행렬. 특이하면 None."""
+    det = (m[0][0]*(m[1][1]*m[2][2]-m[1][2]*m[2][1])
+           - m[0][1]*(m[1][0]*m[2][2]-m[1][2]*m[2][0])
+           + m[0][2]*(m[1][0]*m[2][1]-m[1][1]*m[2][0]))
+    if abs(det) < 1e-12:
+        return None
+    c = [[m[(i+1) % 3][(j+1) % 3]*m[(i+2) % 3][(j+2) % 3]
+          - m[(i+1) % 3][(j+2) % 3]*m[(i+2) % 3][(j+1) % 3] for j in range(3)]
+         for i in range(3)]
+    return [[c[j][i]/det for j in range(3)] for i in range(3)]   # adj/det = 전치
+
+
 def min_image(d, cell):
-    """최소이미지로 변위를 편다. cell 이 없으면 그대로 돌려준다."""
+    """최소이미지로 변위를 편다. cell 이 없으면 그대로 돌려준다.
+
+    ⛔⛔ 2026-08-27 실측 버그 — 옛 판은 `n ∈ {-1,0,1}³` 만 훑었다. 그러면 **원시 벡터가
+      셀보다 훨씬 길 때 못 접는다**: 한 방향으로 최대 1 셀만 뺄 수 있으니 25 Å 짜리는
+      15 Å 로만 줄어든다. 끝점 변위(≈1 Å)에서는 안 드러났고, **반전상**(셀 밖에 놓일 수
+      있다)을 비교하기 시작하자 곧바로 나왔다 — 10.37 Å 셀에서 잔차 17.39 Å 이 찍혔다.
+      그 셀의 min-image 최대는 √3·10.37/2 = 8.98 Å 이라 **물리적으로 불가능한 값**이다.
+      → 분수좌표로 먼저 접고, 그 뒤에 ±1 을 훑는다(비직교 셀에서는 접기만으로
+        최단이 보장되지 않는다 — 두 단계가 다 필요하다).
+    """
     if not cell:
         return d
     import itertools
+    inv = _inv3(cell)
+    if inv is not None:
+        f = [sum(d[k]*inv[k][a] for k in range(3)) for a in range(3)]
+        f = [x - round(x) for x in f]
+        d = [sum(f[a]*cell[a][k] for a in range(3)) for k in range(3)]
     best, bn = d, sum(x * x for x in d)
     for n in itertools.product((-1, 0, 1), repeat=3):
         c = [d[k] + sum(n[j] * cell[j][k] for j in range(3)) for k in range(3)]
@@ -1564,24 +1591,22 @@ def inversion_match(first, last, ctr, cell):
       그래서 같은 index 로 잰 코사인은 서로 다른 자리의 변위를 비교하게 되어
       **0 근처가 나오는 것이 정상**이다 — 그걸 "배회" 로 읽으면 정반대 결론이 난다.
       실측: ccpath 두 끝점의 이완 스칼라가 소수 4자리까지 같은데 raw 코사인은 0.018 이었다.
+
+    ⛔⛔ 2026-08-27 두 번째 버그 — 옛 판은 **index 순서대로 greedy** 로 짝을 지었다
+      (`used` 에 담아 가며). 앞 원자가 좋은 짝을 선점하면 **뒤 원자에는 아무거나 남고**,
+      그 찌꺼기가 `worst` 를 지배한다. 그래서 대칭이 멀쩡한 ccpath 에서도 잔차가
+      셀보다 크게 나왔다. → 이미 있는 `_assign_by_element`(scipy Hungarian, 없으면
+      전역정렬 greedy)를 쓴다. **같은 문제를 두 번 푸는 코드를 만들지 않는다.**
     """
     import math as _m
-    used, worst, match = set(), 0.0, {}
-    for i, (s, q) in enumerate(first):
-        img = [2 * ctr[k] - q[k] for k in range(3)]
-        best, bj = 1e9, None
-        for jj, (s2, r) in enumerate(last):
-            if s2 != s or jj in used:
-                continue
-            dd = min_image([r[k] - img[k] for k in range(3)], cell)
-            nn = _m.sqrt(sum(x * x for x in dd))
-            if nn < best:
-                best, bj = nn, jj
-        if bj is None:
-            return None, None
-        used.add(bj)
-        match[i] = bj
-        worst = max(worst, best)
+    inv_first = [(s, [2 * ctr[k] - q[k] for k in range(3)]) for s, q in first]
+    match, _nre, method = _assign_by_element(inv_first, last, cell, [0.0, 0.0, 0.0])
+    if match is None:
+        return None, None
+    worst = 0.0
+    for i, j in match.items():
+        dd = min_image([last[j][1][k] - inv_first[i][1][k] for k in range(3)], cell)
+        worst = max(worst, _m.sqrt(sum(x * x for x in dd)))
     return match, worst
 
 
@@ -1647,13 +1672,27 @@ def bfgs_trace(work, tag, base_dirs=False):
     inv_ok = worst is not None and worst <= 0.5
 
     # ── 이완 스칼라 일치도: 대칭 등가면 두 끝점의 이완 **크기**가 같아야 한다 ────────
+    # ⛔ 2026-08-27 자체수정 — 처음엔 **%만** 봤다. 그랬더니 cc333 `_r2` 가 순변위
+    #   0.0641 vs 0.0723 Å 로 "12 % 어긋남 ⇒ 대칭 등가가 아니다" 로 찍혔는데,
+    #   절대차는 **0.008 Å** 이다. 그건 어긋남이 아니라 잡음이다.
+    #   작은 양의 백분율은 아무것도 뜻하지 않는다 — **절대 바닥을 같이 본다.**
+    ABS_FLOOR_A, ABS_LOUD_A, ABS_FLOOR_EV = 0.02, 0.05, 0.010
+
     def _rel(x, y):
         m = (abs(x) + abs(y)) / 2.0
         return None if m < 1e-9 else round(abs(x - y) / m * 100, 2)
+    dmax = abs(A["net_max_A"] - B["net_max_A"])
+    dmed = abs(A["net_median_A"] - B["net_median_A"])
+    dE = abs((A["energy_drop_eV"] or 0) - (B["energy_drop_eV"] or 0))
     scal = {"net_max_pct": _rel(A["net_max_A"], B["net_max_A"]),
             "net_median_pct": _rel(A["net_median_A"], B["net_median_A"]),
-            "energy_drop_pct": _rel(A["energy_drop_eV"] or 0, B["energy_drop_eV"] or 0)}
-    scal_max = max([v for v in scal.values() if v is not None], default=None)
+            "energy_drop_pct": _rel(A["energy_drop_eV"] or 0, B["energy_drop_eV"] or 0),
+            "net_max_abs_A": round(dmax, 4), "net_median_abs_A": round(dmed, 4),
+            "energy_drop_abs_eV": round(dE, 5)}
+    pct_max = max([scal[k] for k in ("net_max_pct", "net_median_pct", "energy_drop_pct")
+                   if scal[k] is not None], default=0.0)
+    same = max(dmax, dmed) <= ABS_FLOOR_A and dE <= ABS_FLOOR_EV
+    differ = (max(dmax, dmed) >= ABS_LOUD_A or dE > ABS_FLOOR_EV) and pct_max >= 5.0
 
     L = [f"■ 끝점 BFGS 궤적 진단 — {tag}"]
     for nm in ("ep_initial", "ep_final"):
@@ -1670,17 +1709,21 @@ def bfgs_trace(work, tag, base_dirs=False):
               f"      마지막 3스텝 이동량 {r['tail3_move_A']} Å"]
     L.append("")
     L.append(f"   ★ 이완 **스칼라 일치도** (대칭 등가면 두 끝점의 이완 크기가 같아야 한다):")
-    L.append(f"      순변위 최대 {scal['net_max_pct']}% · 중앙 {scal['net_median_pct']}% · "
-             f"E 낙차 {scal['energy_drop_pct']}% 차이")
-    if scal_max is not None and scal_max <= 1.0:
-        L.append("      ⇒ ✅ 사실상 **동일**하다 — 두 끝점이 실제로 대칭 등가고, 이완은 "
+    L.append(f"      순변위 최대 Δ{scal['net_max_abs_A']} Å ({scal['net_max_pct']}%) · "
+             f"중앙 Δ{scal['net_median_abs_A']} Å ({scal['net_median_pct']}%) · "
+             f"E 낙차 Δ{scal['energy_drop_abs_eV']} eV ({scal['energy_drop_pct']}%)")
+    if same:
+        L.append(f"      ⇒ ✅ 사실상 **동일**하다 (절대차가 {ABS_FLOOR_A} Å·"
+                 f"{ABS_FLOOR_EV} eV 안) — 두 끝점이 실제로 대칭 등가고, 이완은 "
                  "**재현되는 물리적 응답**이다 (배회가 아니다).")
-    elif scal_max is not None and scal_max >= 5.0:
-        L.append(f"      ⇒ ⛔ **{scal_max}% 어긋난다** — 두 끝점이 대칭 등가가 아니다. "
-                 "각자 **다른 국소 최소**로 들어갔다는 뜻이다. 끝점 ΔE 가 작다는 것만으로 "
-                 "대칭 등가라고 부른 것을 재검토할 것.")
+    elif differ:
+        L.append(f"      ⇒ ⛔ **어긋난다** (절대차 {max(dmax, dmed):.3f} Å · {pct_max}%) — "
+                 "두 끝점이 대칭 등가가 아니다. 각자 **다른 국소 최소**로 들어갔다는 뜻이다. "
+                 "끝점 ΔE 가 작다는 것만으로 대칭 등가라고 부른 것을 재검토할 것.")
     else:
-        L.append("      ⇒ 중간 — 어느 쪽도 주장하지 않는다.")
+        L.append(f"      ⇒ 중간 — 어느 쪽도 주장하지 않는다. "
+                 f"(⚠ % 가 커 보여도 **절대차가 {max(dmax, dmed):.3f} Å 뿐**이면 그건 "
+                 f"어긋남이 아니라 잡음이다 — 작은 양의 백분율은 뜻이 없다.)")
 
     L.append("")
     L.append(f"   ★ 모드 일치도 — raw {cos_raw} · **대칭매핑 {cos_sym}** "
@@ -1958,6 +2001,18 @@ def selftest_align():
     chk(r["verdict"] == "실제" and abs(r["translation_norm_A"] - 1.1) < 0.05,
         f"[정렬·양성] 병진+이완 혼합에서 병진만 빠진다 (|t|={r['translation_norm_A']}, "
         f"far {r['far_field_max_A']})")
+
+    # ★★ 실측회귀 (2026-08-27): 원시 벡터가 **셀보다 훨씬 길어도** 접혀야 한다.
+    #   옛 min_image 는 ±1 셀만 훑어서 한 방향으로 한 셀치만 뺐다. 끝점 변위(≈1 Å)에서는
+    #   안 드러나다가, 셀 밖에 놓이는 **반전상**을 비교하자마자 10.37 Å 셀에서 잔차
+    #   17.39 Å 이 나왔다 — 그 셀의 min-image 상한(√3·L/2 = 8.98)을 넘는 **불가능한 값**이다.
+    L = A * N
+    lim = _m.sqrt(3) * L / 2
+    for v in ([2.7 * L, -3.4 * L + 1.0, 5.1 * L - 0.5], [-9.2 * L, 0.0, 0.0]):
+        mi = min_image(v, cell)
+        chk(_m.sqrt(sum(x * x for x in mi)) <= lim + 1e-6,
+            f"[정렬·min_image·실측회귀] 셀의 {abs(v[0])/L:.1f}배 벡터도 상한 {lim:.2f} Å 안으로 "
+            f"접힌다 ({_m.sqrt(sum(x*x for x in mi)):.2f})")
 
     # ── 가드 ⑤ 원소 구성이 다르면 거부 ──
     bad = [(s if i else "Xx", p) for i, (s, p) in enumerate(base)]
