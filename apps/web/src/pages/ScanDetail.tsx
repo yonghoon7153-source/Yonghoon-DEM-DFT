@@ -90,7 +90,6 @@ function meaningOf(points: ScanPoint[], name: string): string {
   return paramMeaning(name)
 }
 
-/** 용량이 있으면 용량, 없으면 전위.  둘 다 없는 점은 놓을 자리가 없다. */
 /** 추세의 가로축에 무엇을 놓을까 — 넷 중 하나.
  *
  *  **`스윕` 이 기본이다.**  나머지 셋은 계측기가 적어 준 것이라 없을 수 있는데
@@ -723,11 +722,11 @@ export function ScanDetail() {
                 })}
               </div>
             </Field>
-            // **이름만으로는 무엇인지 모른다.**  `CPE2_Q` 와 `Ws4_tau` 가
-            // 세로로 열세 줄 늘어선 드롭박스에서 고르는 일은 외우고 있는
-            // 사람만 할 수 있다.  서버가 회로마다 붙여 보내는 뜻
-            // (`ScanPoint.labels`)을 이름 옆에 적고, 칸을 넓혀 그 줄이 안
-            // 잘리게 한다.
+            {/* **이름만으로는 무엇인지 모른다.**  `CPE2_Q` 와 `Ws4_tau` 가
+                세로로 열세 줄 늘어선 드롭박스에서 고르는 일은 외우고 있는
+                사람만 할 수 있다.  서버가 회로마다 붙여 보내는 뜻
+                (`ScanPoint.labels`)을 이름 옆에 적고, 칸을 넓혀 그 줄이 안
+                잘리게 한다. */}
             <Field label="파라미터" hint="세로축에 무엇을 놓을까">
               <select
                 aria-label="파라미터"
