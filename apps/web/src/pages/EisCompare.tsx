@@ -291,7 +291,8 @@ export function EisCompare() {
       const index = rows.findIndex((one) => one.id === item.id)
       const row = rows[index] ?? ({} as Spectrum)
       const name = label(row)
-      const { x, y } = nyquistXy(item.z_re, item.z_im, dropInductive)
+      const { x, y } = nyquistXy(item.z_re, item.z_im, dropInductive,
+                                 undefined, item.frequency_hz)
       const measured: PlotSeries = {
         label: name,
         note: (isScan(row) ? sweepAt(row) : '') || undefined,
@@ -313,7 +314,8 @@ export function EisCompare() {
       // 꽂힌다.
       const area = unit === 'ohmcm2' ? areaOf(item.id) : null
       const curve = nyquistXy(fit.fitted_z_re, fit.fitted_z_im, dropInductive,
-                              (value) => perArea(value, area))
+                              (value) => perArea(value, area),
+                              fit.fitted_frequency_hz ?? undefined)
       return [measured, {
         label: `${name} fitting`,
         note: fit.circuit,
@@ -356,7 +358,8 @@ export function EisCompare() {
   // 겹쳐 놓으면 한 스펙트럼의 유도성 꼬리가 다른 것들의 아크까지 납작하게
   // 만든다 — 세로 눈금은 하나이기 때문이다.  몇 점이 빠졌는지는 적는다.
   const inductive = useMemo(
-    () => (points.data ?? []).reduce((sum, item) => sum + inductiveCount(item.z_im), 0),
+    () => (points.data ?? []).reduce(
+      (sum, item) => sum + inductiveCount(item.z_im, item.frequency_hz), 0),
     [points.data])
 
   return (

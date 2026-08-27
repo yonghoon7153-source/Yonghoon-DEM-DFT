@@ -110,7 +110,8 @@ export function SpectrumDetail() {
     // 세로축은 −Z″ 다.  허수부를 그대로 그리면 아크가 아래로 뒤집혀서,
     // 파일이 왜 −Im(Z) 를 저장하는지가 화면에서 되풀이된다.
     const measured = nyquistXy(points.data.z_re, points.data.z_im, dropInductive,
-                               (value) => perArea(value, area))
+                               (value) => perArea(value, area),
+                               points.data.frequency_hz)
     const series: PlotSeries[] = [{
       label: '측정',
       x: measured.x,
@@ -127,7 +128,8 @@ export function SpectrumDetail() {
       // 맞춤 곡선도 같은 규칙으로 자른다.  회로에 L 이 있으면 이 곡선도
       // 고주파에서 유도성이라, 측정만 자르면 맞춤선 혼자 밑으로 꽂힌다.
       const fitted = nyquistXy(fit.fitted_z_re, fit.fitted_z_im, dropInductive,
-                               (value) => perArea(value, area))
+                               (value) => perArea(value, area),
+                               fit.fitted_frequency_hz ?? undefined)
       series.push({
         label: `fitting (${fit.circuit})`,
         x: fitted.x,
@@ -140,7 +142,9 @@ export function SpectrumDetail() {
   }, [points.data, fit, area, dropInductive])
 
   const inductive = useMemo(
-    () => (points.data ? inductiveCount(points.data.z_im) : 0), [points.data])
+    () => (points.data
+      ? inductiveCount(points.data.z_im, points.data.frequency_hz) : 0),
+    [points.data])
 
   // 보드는 두 패널이다 (리뷰 #27).  8 decade 의 주파수를 선형 x 에 놓으면
   // 10 kHz 아래 전부가 폭 1% 에 뭉치고, Ω 와 도(°)를 한 선형 y 에 겹치면
@@ -215,8 +219,20 @@ export function SpectrumDetail() {
     setError(null)
     setNote(null)
     try {
+      const low = Number(fitLow)
+      const high = Number(fitHigh)
       const out = await api.fitScan(record.sha256, {
         circuit: chosenCircuit || undefined,
+        // **화면의 설정을 그대로 보낸다.**  전에는 회로만 보내고 나머지는
+        // 서버 기본값이 쓰였다: 바로 위의 '유도성 점 빼기' 체크박스와 두 주파수
+        // 칸이 아무 일도 안 했고, 1–100 Hz 로 좁혀 놓고 이 단추를 누른 사람은
+        // 전 대역으로 맞춘 결과를 같은 이름으로 받았다 (Codex #4).
+        drop_inductive: dropInductive,
+        ...(fitLow.trim() && Number.isFinite(low) && low > 0
+          ? { frequency_low_hz: low } : {}),
+        ...(fitHigh.trim() && Number.isFinite(high) && high > 0
+          ? { frequency_high_hz: high } : {}),
+        // 상한을 안 적었을 때만 스윕마다 자동으로 잡는다.
         auto_high: true,
       })
       const parts = [`스윕 ${out.converged}/${out.requested}개 수렴`]
@@ -646,7 +662,7 @@ export function SpectrumDetail() {
               {isScanSweep ? (
                 <>
                   <button type="button" className="primary" disabled={busy}
-                          title="이 스윕의 기하·조건을 나머지에 맞춘 뒤 전부 맞춥니다 · 상한은 스윕마다 따로 (유도성 위쪽 끝), 하한은 안 정합니다"
+                          title="위의 설정(유도성 빼기·하한·상한)을 그대로 씁니다 · 이 스윕의 기하·조건을 나머지에 맞춘 뒤 전부 맞춥니다 · 상한을 비워 두면 스윕마다 자동(유도성 위쪽 끝)"
                           onClick={() => void runScanFit()}>
                     {busy ? '맞추는 중…' : `스윕 ${sweeps}개 전부 맞추기`}
                   </button>

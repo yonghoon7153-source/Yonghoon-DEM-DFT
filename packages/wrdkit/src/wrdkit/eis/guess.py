@@ -41,7 +41,7 @@ class Arc:
 
 
 def inductive_mask(spectrum: Spectrum) -> np.ndarray:
-    """Points that sit **above** the real axis -- wiring, not the cell.
+    """The **high-frequency** run of points above the real axis -- wiring.
 
     Real spectra start inductive: the reference file is positive-imaginary from
     7 MHz down to a few hundred kHz.  Those points are the cables and the cell
@@ -49,8 +49,30 @@ def inductive_mask(spectrum: Spectrum) -> np.ndarray:
     series resistance and the first arc off by whole ohms; dropped silently,
     the series resistance changes and nobody knows why.  So this returns the
     mask and the caller decides -- and says so on screen (ADR 0019).
+
+    **Only the run that starts at the top of the sweep.**  The first version
+    was ``z_im > 0`` everywhere, and that is a different claim: it says every
+    point above the axis is wiring, at any frequency.  It is not.  Batteries
+    have low-frequency inductive loops of their own -- chemical inductance from
+    slow surface coverage or film growth, and drift in a cell that has not
+    settled.  Those are measurements of the cell, and a sign test cannot tell
+    them from cable inductance; only *where they sit in the sweep* can.
+    Codex reproduced the damage: of twenty points from 100 kHz to 0.01 Hz, five
+    at the **bottom** were positive, and the old rule moved the fitted lower
+    bound from 0.01 Hz to 0.695 Hz -- silently throwing away the slowest decade
+    and then reporting the other parameters as measurements.
+
+    So: walk from the highest frequency down and stop at the first point on or
+    below the axis.  A cell that really is inductive at 10 kHz *and* at 10 mHz
+    keeps the second one; the caller can still switch the whole thing off.
     """
-    return spectrum.z_im > 0
+    order = np.argsort(spectrum.frequency_hz)[::-1]   # 높은 주파수부터
+    mask = np.zeros(len(spectrum.z_im), dtype=bool)
+    for index in order:
+        if not spectrum.z_im[index] > 0:
+            break
+        mask[index] = True
+    return mask
 
 
 def _smooth(values: np.ndarray, window: int) -> np.ndarray:

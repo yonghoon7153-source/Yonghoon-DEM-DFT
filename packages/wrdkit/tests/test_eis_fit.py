@@ -788,3 +788,57 @@ def test_the_dropped_inductive_points_are_not_the_whole_story():
     # 크다.  1 % 면 아크 하나를 찌그러뜨리기에 충분하다.
     apart = float(np.abs(z_ind[at] - z_bare[at])[0] / np.abs(z_bare[at])[0])
     assert apart > 0.05, f"교차점 바로 아래에서 차이가 {apart:.1%} 뿐"
+
+
+# --- 실수축 위의 점은 어디에 있느냐로 갈린다 (Codex #3) ---------------------
+
+def test_only_the_high_frequency_run_counts_as_wiring():
+    """부호는 관측이지 "배선이다" 의 증명이 아니다.
+
+    배터리는 제 저주파 유도성 고리를 갖는다 — 느린 표면 피복이나 피막 성장에서
+    오는 화학적 인덕턴스, 그리고 아직 안정되지 않은 셀의 드리프트.  그것은
+    **셀의 측정값**이고, 부호만으로는 케이블 인덕턴스와 구별할 수 없다.
+    구별하는 것은 **스윕 안에서의 자리**다.
+
+    Codex 재현: 100 kHz~0.01 Hz 스무 점 중 **아래쪽** 다섯이 양수인 스펙트럼에서
+    옛 규칙은 맞춘 하한을 0.01 Hz 에서 0.695 Hz 로 밀어 올렸다 — 가장 느린
+    한 자리를 통째로 버리고 나머지를 측정값으로 보고했다.
+    """
+    from wrdkit.eis.guess import inductive_mask
+
+    frequency = np.logspace(5, -2, 20)
+    z_im = np.full(20, -1.0)
+    z_im[:3] = 1.5      # 고주파 세 점 — 배선
+    z_im[-5:] = 0.4     # 저주파 다섯 점 — 셀 자신의 것
+    spectrum = Spectrum(frequency_hz=frequency, z_re=np.linspace(5, 50, 20),
+                        z_im=z_im)
+
+    mask = inductive_mask(spectrum)
+    assert mask[:3].all()          # 위에서부터 이어진 것만
+    assert not mask[3:].any()      # 저주파 다섯 점은 남는다
+    assert spectrum.select(~mask).frequency_hz.min() == pytest.approx(0.01)
+
+
+def test_a_gap_ends_the_run():
+    """가운데 한 점만 양수여도 그것은 배선이 아니다 — 이어져 있지 않다."""
+    from wrdkit.eis.guess import inductive_mask
+
+    frequency = np.array([1e4, 1e3, 1e2, 1e1, 1e0])
+    spectrum = Spectrum(frequency_hz=frequency,
+                        z_re=np.array([10.0, 11.0, 12.0, 13.0, 14.0]),
+                        z_im=np.array([10.0, -2.0, 3.0, -4.0, -5.0]))
+    mask = inductive_mask(spectrum)
+    assert list(mask) == [True, False, False, False, False]
+
+
+def test_the_run_is_found_by_frequency_not_array_order():
+    """배열이 저주파부터 담겨 있어도 판정은 같다 — 파일마다 순서가 다르다."""
+    from wrdkit.eis.guess import inductive_mask
+
+    frequency = np.array([1e0, 1e1, 1e2, 1e3, 1e4])
+    spectrum = Spectrum(frequency_hz=frequency,
+                        z_re=np.array([14.0, 13.0, 12.0, 11.0, 10.0]),
+                        z_im=np.array([-5.0, -4.0, 3.0, -2.0, 10.0]))
+    mask = inductive_mask(spectrum)
+    # 가장 높은 10 kHz 하나만 배선이다.  100 Hz 의 양수는 남는다.
+    assert list(mask) == [False, False, False, False, True]

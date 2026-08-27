@@ -932,6 +932,46 @@ def test_fitting_a_scan_that_does_not_exist_is_a_404(client):
     assert client.post("/api/eis/scans/" + "f" * 64 + "/fit").status_code == 404
 
 
+def test_the_scan_fit_uses_the_window_it_was_given(client):
+    """Codex #4 — 화면의 설정이 그대로 와야 한다.
+
+    처음 판은 회로만 받고 나머지는 서버 기본값을 썼다.  단추 바로 위의
+    '유도성 점 빼기' 체크박스와 두 주파수 칸이 아무 일도 안 했고, 창을 좁혀
+    놓고 누른 사람은 전 대역으로 맞춘 결과를 같은 이름으로 받았다.
+    """
+    client.post("/api/eis/spectra/upload",
+                params={"kind": "liquid", "cell_config": "half"},
+                files={"file": ("scan.mpr", scan_mpr(sweeps=2),
+                                "application/octet-stream")})
+    sha = client.get("/api/eis/spectra").json()[0]["sha256"]
+
+    body = client.post(f"/api/eis/scans/{sha}/fit",
+                       params={"circuit": "R0-p(R1,CPE1)",
+                               "frequency_low_hz": 1.0,
+                               "frequency_high_hz": 1000.0}).json()
+    assert body["fitted"], body
+    for fit in body["fitted"]:
+        # 준 창 안에서만 맞췄다 — 자동 상한이 이것을 덮어쓰지 않는다.
+        assert fit["frequency_low_hz"] >= 1.0
+        assert fit["frequency_high_hz"] <= 1000.0
+
+
+def test_the_scan_fit_can_keep_the_inductive_tail(client):
+    """체크박스를 끄면 실제로 안 뺀다."""
+    client.post("/api/eis/spectra/upload",
+                params={"kind": "liquid", "cell_config": "half"},
+                files={"file": ("scan.mpr", scan_mpr(sweeps=2),
+                                "application/octet-stream")})
+    sha = client.get("/api/eis/spectra").json()[0]["sha256"]
+
+    body = client.post(f"/api/eis/scans/{sha}/fit",
+                       params={"circuit": "R0-p(R1,CPE1)",
+                               "drop_inductive": "false",
+                               "auto_high": "false"}).json()
+    assert body["fitted"], body
+    assert all(fit["dropped_inductive"] == 0 for fit in body["fitted"])
+
+
 def test_the_dashboard_opens_a_scan_at_sweep_one(client):
     """스캔 줄의 이름은 **1번 스윕**으로 간다.
 

@@ -858,8 +858,14 @@ def _auto_high_hz(record: SpectrumRecord) -> float | None:
 @router.post("/scans/{sha256}/fit")
 def fit_scan(sha256: str,
              circuit: str | None = Query(None, description="비우면 이 종류의 기본 회로"),
+             drop_inductive: bool = Query(
+                 True, description="실수축 위의 고주파 꼬리를 뺀다 (화면의 그 체크박스)"),
+             frequency_low_hz: float | None = Query(
+                 None, gt=0, description="맞출 하한 — 비우면 끝까지"),
+             frequency_high_hz: float | None = Query(
+                 None, gt=0, description="맞출 상한 — 비우면 스윕마다 자동(유도성 위쪽 끝)"),
              auto_high: bool = Query(
-                 True, description="스윕마다 유도성 위쪽 끝을 상한으로 (하한은 안 정함)"),
+                 True, description="상한을 안 줬을 때 스윕마다 자동으로 잡을까"),
              sync_conditions: bool = Query(
                  True, description="1번 스윕의 기하·조건을 나머지에도 먼저 맞춘다"),
              restarts: int | None = Query(None, ge=0, le=64),
@@ -868,8 +874,21 @@ def fit_scan(sha256: str,
 
     A scan is one file of one cell, so the circuit that fits sweep 1 is the
     circuit for all of them -- and fitting twenty one at a time, by hand, is
-    the reason this screen exists at all.  Each sweep still gets **its own**
-    upper cut (``_auto_high_hz``); the lower end is left open on purpose.
+    the reason this screen exists at all.
+
+    **The screen's settings come through.**  The first version took only the
+    circuit and then quietly used the server's defaults: the "drop the
+    inductive tail" checkbox and both frequency boxes, sitting right above the
+    button, did nothing (Codex #4).  Someone who narrowed the window to 1–100 Hz
+    and pressed this got a fit over the whole sweep, stored under the same
+    name.  Every control is passed explicitly now.
+
+    ``auto_high`` only fills in an upper cut **that was not given**: without it,
+    each sweep would be trimmed to the same hard-coded number even though the
+    inductive tail is a different length in each one (``_auto_high_hz``).  The
+    lower end is never invented -- the low-frequency misfit is a question about
+    whether the circuit explains that band, and it can only be measured after a
+    fit (``edge_misfit``).
 
     Reported per sweep, success and failure both: one sweep that will not fit
     must not stop the other twenty, and a batch that only counted successes
@@ -901,10 +920,17 @@ def fit_scan(sha256: str,
 
     done, failed = [], []
     for record in records:
+        # 사람이 적은 상한이 이긴다.  안 적었을 때만 스윕마다 자동으로 잡는다 —
+        # 한 파일 안에서도 유도성 꼬리의 길이가 달라서, 하나의 수를 열한 개에
+        # 그대로 쓰면 어떤 스윕은 셀을 버리고 어떤 스윕은 배선을 남긴다.
+        high = frequency_high_hz
+        if high is None and auto_high:
+            high = _auto_high_hz(record)
         try:
             out = _run_fit(session, record.id, circuit=circuit,
-                           frequency_high_hz=_auto_high_hz(record) if auto_high
-                           else None,
+                           drop_inductive=drop_inductive,
+                           frequency_low_hz=frequency_low_hz,
+                           frequency_high_hz=high,
                            restarts=restarts)
         except HTTPException as exc:
             failed.append({"spectrum_id": record.id, "detail": exc.detail})

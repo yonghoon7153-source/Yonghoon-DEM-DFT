@@ -795,6 +795,23 @@ tbody tr:last-child td { border-bottom: none; }
 }
 .plot3d svg { user-select: none; }
 
+/* --- 그림 밑에 딸린 줄들 ------------------------------------------------------
+   설명 · 켜고 끄기 단추 · 범례 조각 · Origin 클립보드.  네 줄이 각자 제 여백을
+   갖고 있어서 왼쪽 끝이 40·48·50·30 px 로 들쭉날쭉했다 — 한 덩어리로 읽혀야
+   하는 것들이 서로 다른 자리에서 시작하면 화면이 정리가 안 된 것으로 보인다.
+   여기서 **한 자리**로 묶고, 안쪽 것들의 제 여백은 지운다. */
+.plot-below {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--s2);
+  padding: var(--s3) var(--s4) var(--s4);
+}
+.plot-below > * { margin: 0; }
+.plot-below .copy-bar { margin-bottom: 0; }
+/* 조각 줄과 단추 줄이 같은 왼쪽 끝에서 시작한다. */
+.plot-below .legend-chips { padding-left: 0; }
+
 /* -------------------------------------------------------------- plots */
 .plot-shell { position: relative; padding: var(--s2) var(--s1) 0; }
 

@@ -6,20 +6,43 @@
 
 import { num } from './format'
 
-/** 유도성 점의 수 — 실수축 위(Z″ > 0)에 있는 것.
+/** 실수축 **위**에 있는 고주파 꼬리 — 배선이지 셀이 아닌 구간.
  *
  *  이 실험실의 파일은 실제로 유도성으로 시작한다: 7 MHz 부터 몇백 kHz 까지
- *  Z″ 가 양수다.  그것은 케이블과 셀 홀더이지 셀이 아니고, 어떤 셀 회로도
- *  재현하지 못한다 (`wrdkit/eis/guess.py: inductive_mask` 와 같은 규칙 —
- *  판정은 부호 하나다).
+ *  Z″ 가 양수다.  그것은 케이블과 셀 홀더다.
+ *
+ *  **부호만으로 가르지 않는다.**  처음에는 `Z″ > 0` 을 전부 배선으로 봤는데,
+ *  그것은 다른 주장이다 — "실수축 위의 점은 어느 주파수에서든 배선이다".
+ *  아니다: 배터리는 제 저주파 유도성 고리를 갖는다 (느린 표면 피복·피막
+ *  성장에서 오는 화학적 인덕턴스, 안정되지 않은 셀의 드리프트).  그것은 셀의
+ *  측정값이고, 구별하는 것은 부호가 아니라 **스윕 안에서의 자리**다.
+ *  그래서 **가장 높은 주파수에서 이어진 구간**만 센다 (`wrdkit` 의
+ *  `inductive_mask` 와 같은 규칙 — 두 곳이 다르면 그림과 맞춤이 다른 점 위에
+ *  선다).
+ *
+ *  주파수를 안 받으면 **배열 순서**를 고주파부터로 본다.  우리 파일이 실제로
+ *  그렇게 담기지만, 알 수 있으면 주파수를 주는 편이 옳다.
  */
-export function inductiveCount(zIm: number[]): number {
-  let n = 0
-  for (const value of zIm) if (value > 0) n += 1
-  return n
+export function inductiveRun(
+  zIm: number[], frequencyHz?: number[],
+): boolean[] {
+  const mask = zIm.map(() => false)
+  const order = frequencyHz?.length === zIm.length
+    ? zIm.map((_, i) => i).sort((a, b) => frequencyHz[b]! - frequencyHz[a]!)
+    : zIm.map((_, i) => i)
+  for (const index of order) {
+    if (!((zIm[index] ?? 0) > 0)) break
+    mask[index] = true
+  }
+  return mask
 }
 
-/** 유도성 점을 뺀 (Z′, −Z″).
+/** 그 구간의 점 수 — 화면이 "몇 개를 뺐다" 고 적는 데 쓴다. */
+export function inductiveCount(zIm: number[], frequencyHz?: number[]): number {
+  return inductiveRun(zIm, frequencyHz).filter(Boolean).length
+}
+
+/** 유도성 꼬리를 뺀 (Z′, −Z″).
  *
  *  나이퀴스트에서 이 점들은 −Z″ 가 음수라 아크 밑으로 수직선이 되어 꽂히고,
  *  세로 눈금을 통째로 늘려 아크를 납작하게 만든다.  `y ≥ 0` 단추는 **보이는
@@ -28,9 +51,6 @@ export function inductiveCount(zIm: number[]): number {
  *  **조용히 빼지 않는다.**  뺀 수를 함께 돌려주고 화면이 그것을 적는다:
  *  직렬저항이 옴 단위로 달라지는데 이유를 아무도 모르는 것이 이 규칙이
  *  생긴 이유다 (ADR 0019).
- *
- *  부호 하나로만 자른다.  "고주파 몇 점" 처럼 세는 규칙을 넣으면 아크가
- *  실제로 유도성인 셀(리튬 도금 같은)에서 실측을 지우게 된다.
  */
 export function nyquistXy(
   zRe: number[],
@@ -40,12 +60,15 @@ export function nyquistXy(
    *  Ω·cm² 로 바꿔도 부호는 그대로라 순서가 답을 바꾸지는 않지만, 판정이
    *  언제나 날 것의 Z″ 위에서 일어나는 편이 읽기 쉽다. */
   scale: (value: number) => number = (value) => value,
+  /** 있으면 고주파 순서를 이것으로 정한다 (`inductiveRun`). */
+  frequencyHz?: number[],
 ): { x: number[]; y: number[]; dropped: number } {
+  const drop = dropInductive ? inductiveRun(zIm, frequencyHz) : null
   const x: number[] = []
   const y: number[] = []
   let dropped = 0
   for (let i = 0; i < zRe.length; i += 1) {
-    if (dropInductive && (zIm[i] ?? 0) > 0) {
+    if (drop?.[i]) {
       dropped += 1
       continue
     }

@@ -180,7 +180,8 @@ export function ScanDetail() {
       if (index === undefined) return []
       const point = points[index]
       const { x, y } = nyquistXy(item.z_re, item.z_im, dropInductive,
-                                 (value) => perArea(value, area))
+                                 (value) => perArea(value, area),
+                                 item.frequency_hz)
       // 범례에 SOC 를 적는다.  `#3` 만으로는 어느 충전 상태인지 모르고,
       // 그것이 이 화면을 여는 이유다.  비교 화면도 같은 규칙을 쓴다
       // (`lib/eis: sweepAt`) — 두 화면이 같은 스윕을 다르게 부르면 안 된다.
@@ -454,7 +455,9 @@ export function ScanDetail() {
                   positiveFit
                 />
               )}
-              <div className="col" style={{ gap: 6, paddingTop: 8 }}>
+              {/* 그림 밑 네 줄을 한 자리에서 (`.plot-below`) — 각자 제
+                  여백을 갖고 있어서 왼쪽 끝이 들쭉날쭉했다. */}
+              <div className="plot-below">
               {solid && !depthIsVolt ? (
                 // 전위를 모르는 스윕이 섞여 있다.  **말한다** — 깊이 축이
                 // 물리가 아니라 차례라는 것이 축 이름에만 있으면 눈이 안 간다.
@@ -493,7 +496,7 @@ export function ScanDetail() {
                   켜는 쪽이 편할 때도 있어 두 단추를 나란히 둔다.
                   아래 스윕 표의 줄과 **같은 것을 누른다** (`toggleSweep`) —
                   두 곳이 따로 놀면 표에서 흐린 줄이 그림에는 그려져 있다. */}
-              <div className="row" style={{ gap: 6, alignItems: 'center' }}>
+              <div className="row" style={{ gap: 8, alignItems: 'center' }}>
                 <button type="button" className="sm" onClick={() => setHidden([])}>
                   전체
                 </button>
@@ -516,8 +519,7 @@ export function ScanDetail() {
               />
               {/* 범례와 클립보드가 붙어 있으면 조각 줄의 마지막 칸과 'Origin
                   으로' 가 한 덩어리로 읽힌다 — 누르는 것이 다른 두 줄이다. */}
-              <div>
-                <CopyBar items={[{
+              <CopyBar items={[{
                   label: mode === 'drt' ? 'γ(τ) (스윕 전부)' : '나이퀴스트 (스윕 전부)',
                   title: mode === 'drt'
                     ? `스윕마다 ${drtAxisShort(drtAxis)}·γ 두 열 — 지금 켜 둔 ${shownOverlay.length}개`
@@ -530,8 +532,7 @@ export function ScanDetail() {
                   build: () => seriesWideTsv(shownOverlay, mode === 'drt'
                     ? { x: drtAxisLabel(drtAxis), y: `γ (${zUnit})` }
                     : { x: `Z′ (${zUnit})`, y: `−Z″ (${zUnit})` }),
-                }]} />
-              </div>
+              }]} />
               </div>
             </>
           ) : (
