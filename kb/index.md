@@ -150,7 +150,7 @@
 - `kb/results/sdcp_wave1_vasp_return_2026_08_25.md` — SDCP wave1 VASP 회신 — 자기 basin 이 갈랐다 (E_ads · 자리선호) ○미열람
 - `kb/results/section1_system_design.md` — Section 1 (Deep Dive) — 시스템 설계의 과학적 논리
 - `kb/results/section2_bader_cross_comp.md` — Section 2 — Bader Charge Cross-Composition: 4 Trends + 3 Anomaly Fingerprints + Br Effect on PS₄
-- `kb/results/sei_cc333_nd_lattice_hop_2026_08_17.md` — cc333 — 같은 c-c 홉이 맞다. 3×3×3 에서 Nd 격자 재배열이 풀린다 ⚠disputed ○미열람
+- `kb/results/sei_cc333_nd_lattice_hop_2026_08_17.md` — cc333 — 같은 c-c 홉이 맞다. 3×3×3 에서 Nd 격자 재배열이 풀린다 ○미열람
 - `kb/results/session_handoff_2026_07_22.md` — 세션 핸드오프 — 2026-07-21 밤 → 07-22 새벽
 - `kb/results/session_timelog_2026_06_04.md` — Session Timelog — 2026-06-04/05 (multi-track)
 - `kb/results/single_li_neb_invalid_argyrodite_2026_08_21.md` — 무질서 Li₆PS₅Cl 에서 단일 Li NEB 는 성립하지 않는다 — 세 설정으로 확인 ○미열람
