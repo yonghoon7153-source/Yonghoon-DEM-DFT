@@ -272,7 +272,13 @@ PROVIDER_CONTRACT: tuple[str, ...] = (
     "describe",         # describe() -> {mode, min_retain_days}
     "describe_object",  # describe_object(key, version) -> {version_id, mode, retain_until} | None
     "get",              # get(key, version=None) -> bytes
-    "list_versions",    # list_versions(prefix) -> [(key, version_id)] — marker 를 넘는다
+    # list_versions(prefix) -> [(key, version_id)]
+    #   ★ 40차 — 39차 주석은 "marker 를 넘는다" 였는데 구현은 **data version 만**
+    #     돌려준다 (delete marker 는 제외). 실물 `ListObjectVersions` 는 marker 도
+    #     함께 주지만 우리가 쓰는 것은 data version 이고, marker 뒤의 담보를 볼 수
+    #     있으면 목적은 달성된다. 계약을 구현에 맞춘다 — 산문이 더 강하면 adapter
+    #     작성자가 없는 보장을 믿는다.
+    "list_versions",
     "lock",             # lock(key, version, until)
     "put",              # put(key, data) -> version_id — **새 version 을 만든다**
     "store_uri",        # store_uri() -> str — 재시작을 견디는 안정 식별자
@@ -311,6 +317,54 @@ def _is_utc_stamp(v) -> bool:
     except ValueError:
         return False
     return True
+
+
+def _horizon_covers(state, want: str, what: str, stage: str = "retention"):
+    """provider 가 신고한 `retain_until` 이 `want` 를 **덮는가** (40차 P0-1).
+
+    ★ 39차까지는 문자열 비교였다:
+
+            str(state.get("retain_until") or "") < lease["retain_until_utc"]
+
+      `"zzzz"` 는 어떤 ISO 문자열보다 사전식으로 크므로 "충분한 미래
+      horizon" 으로 통과했다. lease record 쪽에는 문법 검사를 넣어 놓고
+      **provider 응답**은 열어 뒀다. 실제 adapter 가 아직 없다는 것은 검사를
+      생략할 이유가 아니라 계약을 fail-closed 로 고정할 이유다.
+    """
+    got = (state or {}).get("retain_until")
+    if not _is_utc_stamp(got):
+        raise PreserveError(
+            stage, f"{what} 의 retain_until 이 UTC timestamp 가 아니다: "
+                   f"{got!r} — 문자열 순서는 기한 증명이 아니다")
+    if not _is_utc_stamp(want):
+        raise PreserveError(stage, f"{what} 와 대조할 기한이 이상하다: {want!r}")
+    if _stamp(got) < _stamp(want):
+        raise PreserveError(
+            stage, f"{what} 의 기한이 짧다: {got} < {want}")
+
+
+def _stamp(v: str) -> dt.datetime:
+    return dt.datetime.strptime(v, "%Y-%m-%dT%H:%M:%SZ").replace(
+        tzinfo=dt.timezone.utc)
+
+
+def _durable_mode(state, want_mode, what: str, modes, stage: str = "retention"):
+    """그 version 의 mode 가 lease 가 신고한 mode 와 같은가.
+
+    ★ 40차 P0-1 — 39차는 이 **동등성만** 봤고, 그 값이 허용된 담보 mode 인지는
+      아무도 안 봤다. 둘 다 Governance 인 self-consistent state 가 durable
+      false-green 이었다. "서로 같다" 와 "허용된 값이다" 는 다른 축이다.
+
+      membership 은 **lease record 쪽 한 곳**에서 본다 (`lock_mode` ·
+      `store_lock_mode`). lease mode 가 담보 mode 이고 모든 version 이 그것과
+      같으면 모든 version 이 담보 mode 다 — 여기에 membership 을 한 번 더 두면
+      같은 규칙이 두 곳에 생기고, 강한 쪽을 지워도 초록이 된다 (변이로
+      확인했다). `modes` 는 호출부 호환을 위해 남기고 쓰지 않는다.
+    """
+    got = (state or {}).get("mode")
+    if want_mode is not None and got != want_mode:
+        raise PreserveError(
+            stage, f"{what} 의 lock mode 가 lease 와 다르다: {got!r} ≠ {want_mode!r}")
 
 
 def _lease_expired(lease: dict) -> bool:
@@ -722,10 +776,17 @@ class CasBackend:
         # ★ 39차 P0-1 — proof 를 **먼저 재발견**하고 그 version 으로 읽는다.
         #   38차판은 version 없이 먼저 읽어, 같은 pin key 에 wrong-bytes 의
         #   더 최신 locked version 이 있으면 온전한 후보를 못 읽었다.
+        # ★ 40차 P1 — 담보 proof 가 있으면 그것으로, 아직 없으면(crash 창)
+        #   **exact bytes** 로 읽는다. 39차는 proof 만 봐서 `after_lease_pin`
+        #   창의 잠기지 않은 v1 을 못 읽고 hostile v2 를 읽었다.
         try:
             pv = self.recover_lease_version(leg_id, extra[0])
         except PreserveError:
             pv = None
+        if pv is None:
+            src = getattr(self, "_repair_source", None)
+            if callable(src):
+                pv = src(self._provider_key(leg_id, extra[0]), extra[0])
         try:
             lease = self.read_lease(leg_id, extra[0], version=pv)
         except (PreserveError, ValueError, UnicodeDecodeError) as ex:
@@ -865,9 +926,43 @@ class CasBackend:
                 return False
             if any(not _nonempty_str(v or "") for v in ov.values()):
                 return False
+            # ★ 40차 P0-1 — **nonempty 는 "존재한다" 가 아니다.** 39차는
+            #   모양만 봤고, 그 ID 가 provider 에 실제로 있는지·bytes 가
+            #   맞는지·mode·기한이 candidate 를 지지하는지는 안 봤다. 그래서
+            #   존재하지 않는 locator 를 가진 candidate 가 앞단을 통과해
+            #   repair 가 WORM 을 만든 뒤에야 거부됐다.
+            #
+            #   여기서 **읽기만** 해서 전부 확인한다.
+            if not self._locator_holds("store.json", rec["store_version_id"],
+                                       None, rec["store_lock_mode"], rec):
+                return False
+            for dg, v in ov.items():
+                if not self._locator_holds(self._provider_key(leg_id, dg), v,
+                                           dg, rec["lock_mode"], rec):
+                    return False
         elif rec.get("object_versions"):
             return False
         return not _lease_expired(rec)
+
+    def _locator_holds(self, key: str, version: str, dg, want_mode, rec) -> bool:
+        """그 exact version 이 실제 proof 인가 — **읽기만 한다** (40차 P0-1).
+
+        존재 · (dg 를 주면) bytes · mode 동등 · 기한 덮음. 하나라도 어긋나면
+        `False` 이고, 아무것도 바꾸지 않는다.
+        """
+        prov = getattr(self, "provider", None)
+        if prov is None:
+            return False
+        st = prov.describe_object(key, version)
+        if not isinstance(st, dict) or st.get("mode") != want_mode:
+            return False
+        try:
+            _horizon_covers(st, rec["retain_until_utc"], key)
+        except PreserveError:
+            return False
+        if dg is not None and not self._bytes_match(key, version, dg):
+            return False
+        return True
 
     def inspect_store_id(self):
         """store identity 를 **읽기만** 한다 (39차 P0-1).
@@ -974,10 +1069,8 @@ class CasBackend:
             if not isinstance(st, dict):
                 raise PreserveError(
                     stage, f"lease 가 봉인한 store version 이 담보되지 않는다: {sv}")
-            if st.get("mode") != lease.get("store_lock_mode"):
-                raise PreserveError(
-                    stage, f"store version 의 mode 가 lease 와 다르다: "
-                           f"{st.get('mode')!r} ≠ {lease.get('store_lock_mode')!r}")
+            _durable_mode(st, lease.get("store_lock_mode"), "store version",
+                          self.DURABLE_MODES, stage)
             try:
                 rec = load_canonical(prov.get("store.json", sv))
             except (KeyError, ValueError, UnicodeDecodeError) as ex:
@@ -987,11 +1080,7 @@ class CasBackend:
                     stage, "봉인 store version 의 record 가 lease 와 다르다")
             # ★ 39차 P0-1 — identity root 가 graph 보다 **먼저 풀리면** 안 된다.
             #   exact graph version 이 살아 있어도 reopen locator 를 잃는다.
-            if str(st.get("retain_until") or "") < lease["retain_until_utc"]:
-                raise PreserveError(
-                    stage, f"store version 의 기한이 graph 보다 짧다: "
-                           f"{st.get('retain_until')!r} < "
-                           f"{lease['retain_until_utc']}")
+            _horizon_covers(st, lease["retain_until_utc"], "store version", stage)
         try:
             until = dt.datetime.strptime(lease["retain_until_utc"], "%Y-%m-%dT%H:%M:%SZ")
         except (TypeError, ValueError) as ex:
@@ -1018,8 +1107,13 @@ class CasBackend:
                 raise PreserveError(
                     stage, "object-lock lease 인데 version 이 없는 object 가 있다: "
                            f"{sorted(set(objs) - set(want_v))[:2]}")
-            if not _nonempty_str(lease["lock_mode"] or ""):
-                raise PreserveError(stage, "object-lock lease 에 lock_mode 가 없다")
+            # ★ 40차 P0-1 — 값이 **허용된 담보 mode** 여야 한다. 39차는
+            #   nonempty 만 봐서 Governance 가 그대로 지나갔다.
+            if lease["lock_mode"] not in self.DURABLE_MODES:
+                raise PreserveError(
+                    stage, f"lease 의 lock_mode 가 담보 mode 가 아니다: "
+                           f"{lease['lock_mode']!r} (허용 "
+                           f"{sorted(self.DURABLE_MODES)})")
             # ★ 32차 P0-1 — version **값**이 유효해야 한다. 초판은 key set 만
             #   봐서 `{digest: None}` 도 durable 로 통과했다.
             weak = sorted(d for d, v in want_v.items() if not _nonempty_str(v or ""))
@@ -1037,15 +1131,10 @@ class CasBackend:
             for dg, st in sorted(live_locks.items()):
                 # `describe_locks` 가 version 을 **키로** 조회하므로 dict 가
                 # 돌아온 것 자체가 일치를 뜻한다 — 중복 비교를 두지 않는다.
-                if st.get("mode") != lease["lock_mode"]:
-                    raise PreserveError(
-                        stage, f"lock mode 가 lease 와 다르다: {st.get('mode')!r} "
-                               f"≠ {lease['lock_mode']!r}")
-                if str(st.get("retain_until") or "") < lease["retain_until_utc"]:
-                    raise PreserveError(
-                        stage, f"version 의 retain_until 이 lease 보다 짧다: "
-                               f"{dg[:16]} {st.get('retain_until')!r} < "
-                               f"{lease['retain_until_utc']}")
+                _durable_mode(st, lease["lock_mode"], f"graph pin {dg[:16]}",
+                              self.DURABLE_MODES, stage)
+                _horizon_covers(st, lease["retain_until_utc"],
+                                f"graph pin {dg[:16]}", stage)
         elif want_v:
             raise PreserveError(stage, "advisory lease 인데 version 이 적혀 있다")
         # ★ 33차 P0-1 — lease **자신**도 잠겨 있어야 한다. proof 는 journal 이
@@ -1073,21 +1162,16 @@ class CasBackend:
                 raise PreserveError(
                     stage, "lease 의 CAS content 가 잠겨 있지 않다 — 증거의 "
                            "원본을 지울 수 있다")
-            if cst.get("mode") not in self.DURABLE_MODES:
-                raise PreserveError(
-                    stage, f"lease content 의 lock mode 가 담보 mode 가 아니다: "
-                           f"{cst.get('mode')!r} — bytes 와 날짜만으로는 "
-                           "Compliance proof 가 아니다")
-            if str(cst.get("retain_until") or "") < lease["retain_until_utc"]:
-                raise PreserveError(stage, "lease content 의 retain_until 이 짧다")
+            _durable_mode(cst, lease["lock_mode"], "lease content",
+                          self.DURABLE_MODES, stage)
+            _horizon_covers(cst, lease["retain_until_utc"], "lease content", stage)
             # ★ `describe_locks` 는 **그 version 을 키로** 조회하므로 dict 가
             #   돌아온 것 자체가 version 일치를 뜻한다. 여기서 다시 비교하면
             #   같은 규칙이 두 곳에 생기고, 강한 쪽을 지워도 초록이 된다
             #   (변이로 확인했다).
-            if st.get("mode") != lease["lock_mode"]:
-                raise PreserveError(stage, "lease 의 lock mode 가 다르다")
-            if str(st.get("retain_until") or "") < lease["retain_until_utc"]:
-                raise PreserveError(stage, "lease 의 retain_until 이 짧다")
+            _durable_mode(st, lease["lock_mode"], "lease pin",
+                          self.DURABLE_MODES, stage)
+            _horizon_covers(st, lease["retain_until_utc"], "lease pin", stage)
         # ★ 38차 P0-1 — graph pin 도 **봉인 version** 으로 되읽는다.
         pbad = self.verify_pins(leg_id, objs, versions=want_v or None)
         if pbad:
@@ -1274,8 +1358,14 @@ class ObjectLockBackend(CasBackend):
                 return v
         return None
 
-    def _locked_versions(self, key: str) -> list:
-        """그 key 에서 **지금 잠겨 있는** version 전부 (최신순, 38차 P0-1)."""
+    def _locked_versions(self, key: str, modes=None) -> list:
+        """그 key 에서 **지금 잠겨 있는** version 전부 (최신순).
+
+        ★ 40차 P1 — `modes` 를 주면 그 mode 만 후보다. proof lookup 은 담보
+          mode 만 봐야 한다 — 같은 바이트의 newer Governance version 이 older
+          Compliance proof 를 가릴 수 있었다.
+        """
+        want = self.DURABLE_MODES if modes is None else modes
         vs = getattr(self.provider, "versions", None)
         if not callable(vs):
             return []
@@ -1283,8 +1373,9 @@ class ObjectLockBackend(CasBackend):
         out = []
         for v in vs(key) or []:
             st = self.provider.describe_object(key, v)
-            if isinstance(st, dict) and st.get("mode") in self.LOCK_MODES \
-                    and str(st.get("retain_until") or "") > now:
+            if isinstance(st, dict) and st.get("mode") in want \
+                    and _is_utc_stamp(st.get("retain_until")) \
+                    and _stamp(st["retain_until"]) > _stamp(now):
                 out.append(v)
         return out
 
@@ -1323,7 +1414,9 @@ class ObjectLockBackend(CasBackend):
         # ★ 39차 P0-1 — Compliance canonical 이 없는데 **잠긴 record 는 있는**
         #   상태에서 fallback 으로 읽으면, Compliance selector 를 우회해
         #   우회 가능한 identity root 로 durable 을 주장하게 된다.
-        if vid is None and self._locked_versions(key):
+        # 담보(Compliance)가 아니어도 **잠긴 것이 있으면** 그 위에 새 identity 를
+        # 발급하지 않는다 — 그래서 여기서는 `LOCK_MODES` 전체를 본다.
+        if vid is None and self._locked_versions(key, modes=self.LOCK_MODES):
             raise PreserveError(
                 "store",
                 "store.json 에 COMPLIANCE 담보 version 이 없다 (잠긴 version 은 "
@@ -1474,12 +1567,32 @@ class ObjectLockBackend(CasBackend):
         return vid
 
     def _version_for(self, key: str, dg: str):
-        """그 key 에서 **바이트가 `dg` 와 같은** 담보 version (39차 P0-1).
+        """**담보 proof** — 잠겨 있고 mode 가 담보이고 바이트가 `dg` 인 version.
 
-        pin·content·수리가 전부 이 하나를 쓴다. 같은 규칙을 세 곳에 두면 강한
-        쪽을 지워도 초록이 된다 — 이 저장소에서 여러 번 겪었다.
+        ★ 40차 P1 — 39차는 이 하나로 proof lookup 과 **수리 source** 를 함께
+          맡았다. 중복이 아니라 phase contract 가 다르다:
+
+            proof lookup : 잠긴 담보 version 이어야 한다 (이 함수)
+            repair source: **아직 안 잠긴** exact bytes 도 후보다 (아래)
+
+          `after_lease_pin` 창에서는 올바른 v1 이 아직 안 잠겼으므로, 이 함수
+          하나로는 복구 가능한 상태를 못 찾았다.
         """
         for v in self._locked_versions(key):
+            if self._bytes_match(key, v, dg):
+                return v
+        return None
+
+    def _repair_source(self, key: str, dg: str):
+        """수리가 읽을 version — **잠금 여부를 묻지 않고** 바이트로 고른다.
+
+        찾은 version 은 아직 proof 가 아니다. 호출자가 잠근 **뒤**
+        `_version_for()` 로 다시 확인해야 proof 로 승격된다.
+        """
+        vs = getattr(self.provider, "versions", None)
+        if not callable(vs):
+            return None
+        for v in vs(key) or []:
             if self._bytes_match(key, v, dg):
                 return v
         return None
@@ -1517,9 +1630,11 @@ class ObjectLockBackend(CasBackend):
         """
         # ★ 39차 P0-1 — 수리도 **담보 version** 에서 읽는다. 적대적 최신
         #   version 이 있으면 그것을 읽어 digest 대조에서 죽었다.
-        data = self.read_pinned(
-            leg_id, lease_digest,
-            version=self.recover_lease_version(leg_id, lease_digest))
+        # ★ 40차 P1 — 수리는 **잠금 여부를 묻지 않고** exact bytes 를 찾는다.
+        #   담보 version 만 보면 `after_lease_pin` 창의 v1 을 못 찾는다.
+        key = self._provider_key(leg_id, lease_digest)
+        data = self.read_pinned(leg_id, lease_digest,
+                                version=self._repair_source(key, lease_digest))
         if not self.has(lease_digest):
             # content 가 지워졌다 — pin 바이트로 되살린다 (digest 가 같으므로
             # 같은 object 다). 되살린 뒤 잠가야 같은 창이 다시 열리지 않는다.
@@ -1547,11 +1662,6 @@ class ObjectLockBackend(CasBackend):
         """
         return self._version_for(self._provider_key(leg_id, lease_digest),
                                  lease_digest)
-
-        # ★ 36차 P0-1 — head 는 잠기지 않은 새 version 일 수 있다. lease
-        #   proof 는 **담보 version** 이어야 한다 — head 를 돌려주면 재개가
-        #   자기 proof 를 못 알아보고 두 번째 WORM lease 를 만든다.
-        return self.protected_version(self._provider_key(leg_id, lease_digest))
 
     def _orphan_lease(self, leg_id: str, objs: list,
                       min_retention_days: int) -> str | None:
@@ -1709,8 +1819,9 @@ class ObjectLockBackend(CasBackend):
         out = {}
         for dg in sorted(set(digests)):
             key = self._provider_key(leg_id, dg)
+            # 잠그러 가는 길이므로 아직 안 잠긴 exact bytes 도 후보다
             data = self.read_pinned(leg_id, dg,
-                                    version=self._version_for(key, dg))
+                                    version=self._repair_source(key, dg))
             # ★ 37차 P0-1 — 무조건 put 하면 재시도마다 WORM version 이 쌓인다
             vid = self._existing_version(key, data)
             if vid is None:

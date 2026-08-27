@@ -4113,3 +4113,135 @@ active `CURRENT` 로 옮기고 있었다 — 그 직후 crash 하면 roster 를 
 | 실제 object-lock provider adapter | **미구현** — 계약 8연산·per-version mode·Compliance 단조·delete marker 는 고정 |
 | power-loss ordering fault model | **미착수** — fault-injecting filesystem 필요 |
 | lease 갱신 | **미지원** (38차 결정, 리뷰 종결) |
+
+## 48. 39차 리뷰 대응 — 같은 패턴이 한 층 위로 옮겨갔을 뿐이었다
+
+39차 리뷰는 좁은 회귀를 많이 인정하면서 같은 진단을 반복했다:
+
+> `semantically forged` 시험은 nonempty locator 가 실제 provider object 인지
+> 보지 않고, `forged lock` 시험은 새 method 이름으로 위조하지 않으며,
+> `.PENDING` 시험은 CURRENT 가 없는 최초 bootstrap 만 보고, "경로 조립 금지"
+> AST 는 `_WARM` 이 `/` 의 직접 왼쪽 피연산자인지만 본다.
+
+11개 반증 조건을 닫았다. 이번 라운드에서 배운 것은 **fixture 가 축을 가리는
+방식이 한 가지가 아니라는 것**이다.
+
+### 48.1 fixture 를 두 번 고쳤고, 두 번 다 축을 못 보고 있었다
+
+`_semantically_forged` 시험군의 fixture 를 두 번 다시 만들었다.
+
+| 판 | 무엇이 잘못됐나 | 증상 |
+|---|---|---|
+| 39차 1판 | pin 을 안 잠그고 `object_versions` 에 가짜 `"v00001"` | 어느 축을 위조하든 거절 — locator 실존 검사를 지워도 **넷 다 초록** |
+| 40차 2판 | `retain()` 을 불러 **진짜 lease 가 이미 pin** | 후보가 둘이 되어 ambiguity 가 먼저 물음 — 같은 변이가 **여전히 초록** |
+| 3판 | graph 만 pin·잠그고 lease 는 만들지 않음 | 후보가 정확히 하나. 위조 없으면 통과(전제로 확인), 축마다 물린다 |
+
+3판에는 `assert backend._matches_lease(...) is True` 를 **전제로 명시**했다.
+"위조가 없으면 통과한다" 를 시험이 스스로 확인하지 않으면, 무엇을 위조하든
+거절되는 fixture 를 또 만들게 된다.
+
+축은 열이다 — 빈 store locator · Governance store mode · Governance
+`lock_mode` · 빈 `object_versions` · 잘못된 timestamp 문법 · **존재하지 않는**
+store version · **존재하지 않는** graph version · **바이트가 다른** graph
+version · **기한이 짧은** version · **mode 가 다른** version. 각각 호출 전후
+provider version census · 잠금 · pin 집합 · store bytes 가 동일한지 본다.
+
+### 48.2 "서로 같다" 와 "허용된 값이다" 는 다른 축
+
+strict verifier 는 graph·lease pin 의 mode 를 `lease.lock_mode` 와 **같은지만**
+봤다. 그 값 자체가 Compliance 인지는 아무도 안 봤으므로, 전부 일관되게
+Governance 인 self-consistent state 가 durable false-green 이었다.
+
+membership 은 **lease record 쪽 한 곳**에 둔다 (`lock_mode`·`store_lock_mode`).
+lease mode 가 담보 mode 이고 모든 version 이 그것과 같으면 모든 version 이
+담보 mode 다 — per-version membership 을 한 번 더 두면 중복이고, 실제로 변이가
+서로 가렸다.
+
+> 이 시험도 처음엔 이름이 predicate 보다 강했다. 한 곳만 Governance 로 바꿨더니
+> **content 의 동등성**이 잡고 있었다. 일관되게 바꿔야 membership 축이 실행된다.
+
+### 48.3 provider 의 시간을 문자열로 믿고 있었다
+
+네 곳의 horizon 비교가 전부 이 모양이었다:
+
+```python
+str(state.get("retain_until") or "") < lease["retain_until_utc"]
+```
+
+`"zzzz"` 는 어떤 ISO 문자열보다 사전식으로 크다. lease record 쪽에는 39차에
+문법 검사를 넣어 놓고 **provider 응답**은 열어 뒀다. `_horizon_covers()` 가
+문법을 확인하고 tz-aware datetime 으로 파싱해 비교한다. fake 의 `lock()` 도
+잘못된 timestamp 를 받지 않는다 — canary 가 실물보다 약하면 그 위의 모든
+horizon proof 가 그만큼 약하다.
+
+### 48.4 phase contract 가 다른 것을 한 selector 로 접었다
+
+39차에 `_version_for()` 하나로 합친 것이 오판이었다. 리뷰의 지적이 맞다 —
+중복이 아니라 **상태 전이가 다르다**:
+
+| 용도 | 계약 |
+|---|---|
+| proof lookup | 잠긴 **담보 mode** version, 바이트 일치 |
+| repair source | **아직 안 잠긴** exact bytes 도 후보 (잠근 뒤에야 proof) |
+
+`after_lease_pin` 창에서는 올바른 v1 이 아직 안 잠겼으므로, 합친 selector 로는
+복구 가능한 상태를 못 찾고 hostile v2 를 읽어 죽었다. 그리고 `_locked_versions()`
+가 Governance 도 후보로 삼아, 같은 바이트의 newer Governance 가 older
+Compliance proof 를 가릴 수 있었다.
+
+공유하는 것은 `_bytes_match()`·`_stamp()` 같은 primitive 뿐이다.
+
+### 48.5 위조가 boolean 에서 method 이름으로 옮겨갔다
+
+39차는 `held()` 를 `assert_held_for()` 로 바꿨는데, **그 이름의 no-op method
+하나면** 새 capability 가 됐다. 고친 것이 duck-typed boolean 에서 duck-typed
+method 이름으로 옮겨간 것뿐이었다.
+
+이제 구체 타입 · 이 process 의 **활성 registry** · **kernel lock 재확인**
+(다른 fd 로 `LOCK_EX|LOCK_NB` 를 시도해 본다) 셋을 본다. 같은 process 안의
+적대적 Python 을 완전한 boundary 로 만들 수는 없지만, raw publisher 가
+**조립된 capability 를 authority 로 삼지 않게** 하는 것이 목표다.
+
+**그리고 내가 `.publish.lock` 을 저장소에 커밋했다.** tracked 이면 worktree 가
+더러워지고 checkout·배포가 그 pathname 의 inode 를 갈아 끼울 수 있다 — 39차에
+inode 대조를 넣은 바로 그 조건이다. untrack·gitignore 하고, 파일을 **빈
+sentinel** 로 바꿨다 (내용은 어떤 판정에도 안 쓰인다). 취득 실패 시 fd·flock
+cleanup 도 넣었다.
+
+### 48.6 `.PENDING` 이 최초 bootstrap 만 누적했다
+
+`base_ptr` 이 `CURRENT` 가 있으면 `.PENDING` 을 영원히 안 봤다. 그래서
+`CURRENT={a}` 에 roster 를 `{a,b,c}` 로 넓히면 b 를 올리면 c 가, c 를 올리면
+b 가 사라져 **complete 에 영원히 도달하지 못했다.**
+
+pending 에 `roster_digest` 와 `base_generation` 을 봉인하고, **호환되는**
+pending(같은 명부 · 지금의 CURRENT 를 base 로 한 것)이 있으면 그것을 이어받는다.
+다른 명부의 pending 은 거부한다 — 승인되지 않은 구성이 이어지면 안 된다.
+
+### 48.7 금지가 한 문법이었다
+
+`_WARM` guard 가 `BinOp(Div)` 의 left 가 정확히 `_WARM` 일 때만 잡았다.
+alias 한 줄이면 우회된다. **이름을 읽는 것 자체**를 금지하니 alias·`joinpath`·
+`Path(_WARM, ...)` 가 함께 닫혔다. predicate 를 `_warm_offenders()` 로 빼서
+네 우회 형태를 **직접 시험**한다 — 이름이 "통로 제거" 인데 그보다 좁으면 안 된다.
+
+selector 도 닫았다: `cohort_id` 와 `purpose` 동시 지정, 모르는 purpose 를 거부한다.
+`_ledger_roster()` 도 같은 dir 이 둘이면 first match 대신 거부한다.
+
+### 48.8 변이 — 물지 않은 것들
+
+| 물지 않은 변이 | 진단 | 처리 |
+|---|---|---|
+| locator 실존·bytes·기한·mode 넷 | fixture 가 축을 가림 (§48.1) | fixture 를 두 번 다시 만들었다 |
+| per-version mode membership | lease 쪽 membership 과 서로 가림 | **중복 삭제** |
+| 활성 registry | `fd is None` 에 업힘 | 인스턴스 위조 시험 추가 |
+| `_WARM` guard | 현재 코드에 우회 형태가 없음 | predicate 를 빼서 직접 시험 |
+| 원장 중복 거부 | 실제 원장이 유일함 | 임시 원장으로 함수를 직접 시험 |
+
+### 48.9 남은 것 (신고 유지)
+
+| 항 | 상태 |
+|---|---|
+| 실제 object-lock provider adapter | **미구현** |
+| power-loss ordering fault model | **미착수** |
+| lease 갱신 | **미지원** (38차 결정, 리뷰 종결) |

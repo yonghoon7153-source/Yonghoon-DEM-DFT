@@ -27,3 +27,8 @@ dist-ssr
 venv/
 run_VGCF1_PTFE1_*/
 latest_run
+
+# ★ 39차 #9 — 게시 writer lock 은 **runtime 파일**이다. 저장소에 커밋되면
+#   worktree 가 더러워지고, checkout·배포가 그 pathname 의 inode 를 갈아
+#   끼울 수 있다 (그 자체가 lock capability 를 무효화하는 조건이다).
+.publish.lock

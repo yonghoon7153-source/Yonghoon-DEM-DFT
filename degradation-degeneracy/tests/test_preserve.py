@@ -2326,6 +2326,11 @@ class _LockingStore:
         `self.mode` 를 바꾸면 과거 모든 version 의 mode 가 소급 변경됐다.
         실물 Compliance 는 둘 다 거부한다.
         """
+        # ★ 40차 P0-1 — canary 도 계약을 지킨다. 잘못된 timestamp 를 받아
+        #   두면 그 위의 모든 horizon proof 가 그만큼 약해진다.
+        if not isinstance(until, str):
+            raise TypeError(f"retain_until 이 문자열이 아니다: {until!r}")
+        dt.datetime.strptime(until, "%Y-%m-%dT%H:%M:%SZ")   # 아니면 ValueError
         cur = self._lock.get((key, version))
         if cur is not None:
             mode = self._mode.get((key, version), self.mode)
@@ -3392,7 +3397,13 @@ def test_a_repair_failure_is_not_the_same_as_no_candidate(tmp_path, monkeypatch)
     key = backend._provider_key(leg, ld)
     assert backend.protected_version(key) is None, "전제: pin 이 안 잠겼다"
 
-    store.put(key, b"corrupted-pin-bytes")        # 잠기지 않았으므로 head 가 된다
+    # ★ 40차 P1 — 원본 version 을 **지우고** 오염된 것만 남긴다. `put` 은
+    #   언제나 새 version 을 만들므로, 그냥 덮기만 하면 원본이 살아남아
+    #   수리가 성공한다 (그것이 옳은 동작이다 — 실측했다). 여기서 보려는 것은
+    #   "정말로 복구 불가일 때 fail-closed 인가" 이다.
+    for v in list(store.versions(key)):
+        store.delete(key, v)
+    store.put(key, b"corrupted-pin-bytes")
 
     fresh = _lockstore(tmp_path, _LockingStore(name=store.name))
     with pytest.raises(PreserveError):
@@ -4058,6 +4069,49 @@ def test_the_fake_enforces_per_version_mode_and_monotonic_compliance(tmp_path):
 # 39차 P0-1 — validator 가 **새 locator 의미**를 보기 전에 WORM 을 만든다
 # ─────────────────────────────────────────────────────────────────────────────
 
+def _valid_candidate(tmp_path, name, **over):
+    """**실제로 유효한** candidate 상태를 만들고, `over` 로 한 축만 위조한다.
+
+    ★ 40차 P0-1 — 이 fixture 를 두 번 고쳤다. 둘 다 시험이 자기 이름의 축을
+      실행하지 못하게 만들고 있었다:
+
+        1판: pin 을 안 잠그고 `object_versions` 에 가짜 값 → 어느 축을
+             위조하든 거절 (locator 실존 검사를 지워도 초록이었다)
+        2판: `retain()` 을 불러 **진짜 lease 가 이미 pin** → 후보가 둘이 되어
+             ambiguity 가 먼저 물었다 (같은 변이가 여전히 초록이었다)
+
+    이제 graph 만 pin·잠그고 **lease 는 만들지 않는다.** 그 위에 위조 candidate
+    하나만 얹으므로 후보가 정확히 하나다. 위조가 없으면 `_matches_lease()` 는
+    **True** 다 (그 반대 축도 아래 시험이 확인한다).
+    """
+    store = _LockingStore(name=name)
+    backend = _lockstore(tmp_path, store)
+    leg = "hc22p_v6_armA_b20"
+    objs = sorted(backend.put_if_absent(b"g%d" % i)["digest"] for i in range(2))
+    backend.pin(leg, objs)
+
+    until = (dt.datetime.now(dt.timezone.utc)
+             + dt.timedelta(days=MIN_RETENTION_DAYS)).strftime("%Y-%m-%dT%H:%M:%SZ")
+    backend.store_id                      # record 를 만들고 잠근다 (먼저)
+    backend.ensure_store_lock(until)
+    versions = backend.lock_objects(leg, objs, until)
+
+    rec = {
+        "schema": P_RETENTION_SCHEMA, "leg_id": leg, "objects": objs,
+        "min_retention_days": MIN_RETENTION_DAYS, "retain_until_utc": until,
+        "store_id": backend.store_id,
+        "store_version_id": backend.store_version_id,
+        "store_lock_mode": backend.store_lock_mode,
+        "backend_uri": backend.uri,
+        "enforcement": backend.probe_enforcement(),
+        "lock_mode": "COMPLIANCE",
+        "object_versions": dict(versions),
+        "pin_set_digest": pin_set_digest(leg, objs),
+    }
+    rec.update(over)
+    return store, backend, leg, objs, rec
+
+
 def _lease_like(backend, leg, objs, **over) -> dict:
     """계약 key 를 정확히 갖춘 lease record. `over` 로 한 축만 위조한다."""
     rec = {
@@ -4082,53 +4136,71 @@ def _lease_like(backend, leg, objs, **over) -> dict:
     ("store_lock_mode", {"store_lock_mode": "GOVERNANCE"}),
     ("lock_mode", {"lock_mode": "GOVERNANCE"}),
     ("object_versions_missing", {"object_versions": {}}),
-    ("object_versions_empty", {"object_versions": {"x" * 64: ""}}),
     ("timestamp", {"retain_until_utc": "not-a-date"}),
+    ("store_version_absent", {"store_version_id": "v-does-not-exist"}),
+    ("graph_version_absent", {"object_versions": "ABSENT"}),
+    ("graph_version_wrong_bytes", {"object_versions": "WRONG_BYTES"}),
+    ("graph_version_short_horizon", {"object_versions": "SHORT"}),
+    ("graph_version_wrong_mode", {"object_versions": "MODE"}),
 ])
-def test_a_semantically_forged_candidate_changes_nothing_before_refusal(
+def test_a_forged_candidate_axis_is_refused_without_touching_anything(
         tmp_path, axis, over):
-    """★ 39차 P0-1 — exact key set 은 봤지만 **새 field 의 의미**는 안 봤다.
+    """★ 39·40차 P0-1 — 위조 축마다 **거부 전에 아무것도 안 바뀌어야** 한다.
 
-    38차 `_matches_lease()` 는 key 집합·schema·leg·graph·정책·pin digest·
-    store ID·URI·enforcement·만료를 봤다. 그런데 그 뒤에 추가된
-    `store_version_id`·`store_lock_mode`·`lock_mode`·`object_versions` 와
-    timestamp 문법은 보지 않았다. 그래서 이 축만 위조한 candidate 를 먼저
-    pin·content **WORM 으로 만든 뒤** strict verifier 가 거부했다 — 거부는
-    맞지만 되돌릴 수 없는 상태 변경이 검증보다 앞섰다.
+    39차판 fixture 는 pin 을 잠그지 않고 `object_versions` 에 가짜 값을 넣어
+    두었다. 그러면 candidate 가 어느 축을 위조하든 거절되므로 시험이 자기
+    이름의 축을 한 번도 실행하지 못한다 — locator 실존 검사를 지우는 변이가
+    넷 다 초록이었다. 이제 **실제로 유효한** candidate 에서 한 축만 위조한다.
 
-    `retain_until_utc` 축이 특히 나쁘다: `_lease_expired()` 는 문자열 비교라
-    `"not-a-date"` 를 미래처럼 받아들이고, 그 값이 그대로 provider lock 에
-    넘어간 뒤에야 strict parser 가 거부한다.
-
-    **호출 전후로 provider version·pin 집합·store record 가 같아야 한다.**
+    축 여덟: 빈 store locator · Governance store mode · Governance lock_mode ·
+    빈 object_versions · 잘못된 timestamp 문법 · **존재하지 않는** store
+    version · **존재하지 않는** graph version · **바이트가 다른** graph version.
     """
-    store = _LockingStore(name=f"{tmp_path}-{axis}")
-    backend = _lockstore(tmp_path / axis, store)
-    leg = "hc22p_v6_armA_b20"
-    objs = sorted(backend.put_if_absent(b"g%d" % i)["digest"] for i in range(2))
-    backend.pin(leg, objs)
-    if over.get("object_versions") == {"x" * 64: ""}:
-        # key set 은 맞고 **값만** 빈 경우 — key set 검사에 업히지 않게 한다
-        over = {"object_versions": {objs[0]: "v00001", objs[1]: ""}}
+    store2, backend2, leg, objs, clean = _valid_candidate(
+        tmp_path, f"{tmp_path}-{axis}")
+    assert backend2._matches_lease(leg, objs, MIN_RETENTION_DAYS, clean), (
+        "전제: 위조 없는 candidate 는 통과한다")
 
-    fd = backend.put_if_absent(canonical_bytes(
-        _lease_like(backend, leg, objs, **over)))["digest"]
-    backend.pin(leg, [fd])
+    if over.get("object_versions") == "ABSENT":
+        over = {"object_versions": {d: "v-does-not-exist" for d in objs}}
+    elif over.get("object_versions") in ("WRONG_BYTES", "SHORT", "MODE"):
+        kind = over["object_versions"]
+        dg = objs[0]
+        key = backend2._provider_key(leg, dg)
+        if kind == "WRONG_BYTES":
+            # 같은 key 에 **다른 바이트**의 version 을 올리고 잠근다 —
+            # 존재하고 잠겨 있으므로 bytes 대조만이 잡는다
+            v = store2.put(key, b"different-bytes-entirely")
+            store2.lock(key, v, clean["retain_until_utc"])
+        elif kind == "SHORT":
+            # 존재·mode·bytes 는 맞고 **기한만 짧다**
+            v = store2.put(key, store2.get(key, clean["object_versions"][dg]))
+            store2.lock(key, v, "2027-01-01T00:00:00Z")
+        else:
+            # 존재·bytes·기한 은 맞고 **mode 만 다르다**
+            v = store2.put(key, store2.get(key, clean["object_versions"][dg]))
+            store2.lock(key, v, clean["retain_until_utc"])
+            store2._mode[(key, v)] = "GOVERNANCE"
+        over = {"object_versions": dict(clean["object_versions"], **{dg: v})}
+    rec = dict(clean, **over)
 
-    before_v = _version_census(store)
-    before_pins = set(backend.pinned(leg))
-    before_store = store.get("store.json")
+    fd = backend2.put_if_absent(canonical_bytes(rec))["digest"]
+    backend2.pin(leg, [fd])
+
+    before_v = _version_census(store2)
+    before_lock = dict(store2._lock)
+    before_pins = set(backend2.pinned(leg))
+    before_store = store2.get("store.json")
 
     with pytest.raises(PreserveError):
-        backend.retain(leg, objs, min_retention_days=MIN_RETENTION_DAYS)
+        backend2.retain(leg, objs, min_retention_days=MIN_RETENTION_DAYS)
 
-    grew = {k: (before_v.get(k, 0), n) for k, n in _version_census(store).items()
-            if n > before_v.get(k, 0)}
+    grew = {k: (before_v.get(k, 0), n)
+            for k, n in _version_census(store2).items() if n > before_v.get(k, 0)}
     assert not grew, f"{axis}: 거부 전에 version 을 늘렸다: {grew}"
-    assert set(backend.pinned(leg)) == before_pins, f"{axis}: pin 집합이 변했다"
-    assert store.get("store.json") == before_store, f"{axis}: store record 가 변했다"
-    assert backend.protected_version(backend._provider_key(leg, fd)) is None, (
-        f"{axis}: 위조 candidate 를 WORM 으로 만든 뒤 거부했다")
+    assert dict(store2._lock) == before_lock, f"{axis}: 거부 전에 잠금이 바뀌었다"
+    assert set(backend2.pinned(leg)) == before_pins, f"{axis}: pin 집합이 변했다"
+    assert store2.get("store.json") == before_store, f"{axis}: store record 가 변했다"
 
 
 def test_validating_a_candidate_never_creates_the_store_record(tmp_path):
@@ -4394,3 +4466,266 @@ def test_the_fake_lets_an_expired_lock_be_deleted(tmp_path, monkeypatch):
 
     store.delete("k", v)                            # 만료됐으므로 지워진다
     assert store.versions("k") == [], "만료된 잠금이 삭제를 막았다"
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# 40차 P0-1 — "서로 같다" 와 "허용된 값이다" 는 다른 축이다
+# ─────────────────────────────────────────────────────────────────────────────
+
+def test_a_governance_graph_and_lease_pin_are_not_durable(tmp_path):
+    """★ 40차 P0-1 — strict verifier 가 mode **membership** 을 안 봤다.
+
+    graph pin 과 lease pin 은 `version.mode == lease.lock_mode` 만 봤다. 그
+    값 자체가 Compliance 인지는 안 봤으므로 다음 self-consistent state 가
+    통과한다:
+
+        provider 현재 probe = Compliance   (그래서 enforcement=object_lock)
+        store exact version = Compliance
+        lease content       = Compliance
+        lease.lock_mode     = GOVERNANCE
+        graph pin · lease pin = GOVERNANCE
+
+    Governance 를 durable policy 에서 뺀 결정과 정면으로 모순된다.
+    """
+    run = _make_run(tmp_path)
+    store = _LockingStore(name=str(tmp_path))
+    backend = _lockstore(tmp_path, store)
+    index = tmp_path / "index"
+    res = run_transaction(PLANNED, run, backend, index, _hooks())
+    lease, leg = res["retention"], PLANNED.leg_id
+
+    # ★ **일관되게** Governance 로 만든다. 한 곳만 바꾸면 동등성 검사가 먼저
+    #   물어서 membership 축이 실행되지 않는다 (실측했다 — 처음 판은 content
+    #   의 동등성이 잡고 있었고, 시험 이름이 실제 predicate 보다 강했다).
+    for dg in list(lease["objects"]) + [lease["lease_digest"]]:
+        key = backend._provider_key(leg, dg)
+        for v in store.versions(key):
+            if (key, v) in store._lock:
+                store._mode[(key, v)] = "GOVERNANCE"
+    ck = backend._provider_obj_key(lease["lease_digest"])
+    store._mode[(ck, lease["lease_content_version"])] = "GOVERNANCE"
+
+    bad = dict(lease, lock_mode="GOVERNANCE")
+    with pytest.raises(PreserveError) as ex:
+        backend.verify_retention(leg, lease["lease_digest"], lease=bad,
+                                 lease_version=lease["lease_version"])
+    assert "COMPLIANCE" in str(ex.value) or "담보" in str(ex.value), str(ex.value)
+
+
+@pytest.mark.parametrize("key_kind", ["store", "graph", "lease_pin", "content"])
+def test_a_malformed_provider_horizon_is_not_a_future_proof(tmp_path, key_kind):
+    """★ 40차 P0-1 — provider 의 `retain_until` 을 **문자열로** 비교했다.
+
+        str(state.get("retain_until") or "") < lease["retain_until_utc"]
+
+    `"zzzz"` 는 어떤 ISO 문자열보다 사전식으로 크므로 "충분한 미래 horizon"
+    으로 통과한다. lease record 쪽에는 `_is_utc_stamp()` 를 넣었으면서
+    **provider 응답**은 열어 뒀다. 실제 adapter 가 아직 없다는 것은 검사를
+    생략할 이유가 아니라 계약을 fail-closed 로 고정할 이유다.
+    """
+    run = _make_run(tmp_path)
+    store = _LockingStore(name=str(tmp_path))
+    backend = _lockstore(tmp_path, store)
+    index = tmp_path / "index"
+    res = run_transaction(PLANNED, run, backend, index, _hooks())
+    lease, leg = res["retention"], PLANNED.leg_id
+
+    if key_kind == "store":
+        keys = [("store.json", lease["store_version_id"])]
+    elif key_kind == "graph":
+        dg = sorted(lease["objects"])[0]
+        keys = [(backend._provider_key(leg, dg), lease["object_versions"][dg])]
+    elif key_kind == "lease_pin":
+        keys = [(backend._provider_key(leg, lease["lease_digest"]),
+                 lease["lease_version"])]
+    else:
+        keys = [(backend._provider_obj_key(lease["lease_digest"]),
+                 lease["lease_content_version"])]
+
+    for k, v in keys:
+        assert (k, v) in store._lock, f"전제: {key_kind} 가 잠겨 있다"
+        store._lock[(k, v)] = "zzzz"          # timestamp 가 아니다
+
+    with pytest.raises(PreserveError):
+        backend.verify_retention(leg, lease["lease_digest"], lease=dict(lease),
+                                 lease_version=lease["lease_version"])
+
+
+def test_the_fake_refuses_a_malformed_retain_until(tmp_path):
+    """canary 도 계약을 지켜야 한다 — 잘못된 timestamp 를 받지 않는다."""
+    store = _LockingStore(name=str(tmp_path))
+    v = store.put("k", b"payload")
+    for bad in ("zzzz", "2099-01-01", None, 12345):
+        with pytest.raises((ValueError, TypeError)):
+            store.lock("k", v, bad)
+    store.lock("k", v, "2099-01-01T00:00:00Z")     # 정상은 된다
+
+
+def test_a_governance_store_lock_mode_is_not_durable_even_when_consistent(tmp_path):
+    """★ 40차 P0-1 — `store_lock_mode` 도 **값 자체**가 담보 mode 여야 한다.
+
+    lease 와 provider version 이 서로 같기만 하면 통과하던 축을 store 쪽에서
+    따로 본다: graph·lease·content 는 전부 Compliance 로 두고 **store 만**
+    일관되게 Governance 로 만든다. 동등성은 맞으므로 membership 만이 잡는다.
+    """
+    run = _make_run(tmp_path)
+    store = _LockingStore(name=str(tmp_path))
+    backend = _lockstore(tmp_path, store)
+    index = tmp_path / "index"
+    res = run_transaction(PLANNED, run, backend, index, _hooks())
+    lease, leg = res["retention"], PLANNED.leg_id
+
+    store._mode[("store.json", lease["store_version_id"])] = "GOVERNANCE"
+    bad = dict(lease, store_lock_mode="GOVERNANCE")
+
+    with pytest.raises(PreserveError) as ex:
+        backend.verify_retention(leg, lease["lease_digest"], lease=bad,
+                                 lease_version=lease["lease_version"])
+    assert "store" in str(ex.value), str(ex.value)
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# 40차 P0-1 — locator 가 "모양" 만 검증되고 실제 proof 인지 확인되지 않았다
+# ─────────────────────────────────────────────────────────────────────────────
+
+@pytest.mark.parametrize("axis", ["store_version", "graph_version"])
+def test_a_nonexistent_locator_changes_nothing_before_refusal(tmp_path, axis):
+    """★ 40차 P0-1 — nonempty 는 "존재한다" 가 아니다.
+
+    39차 `_matches_lease()` 는 `store_version_id` 와 `object_versions` 가
+    nonempty 인지만 봤다. 그 ID 가 provider 에 **실제로 있는지**, 그 version 의
+    bytes·mode·기한이 candidate 를 지지하는지는 안 봤다.
+
+    그래서 나머지를 전부 정상 candidate 와 같게 두고 locator 하나만 존재하지
+    않는 값으로 바꾸면 앞단을 통과하고, `repair_lease_locks()` 가 pin·content
+    를 WORM 으로 만든 **뒤** strict verifier 가 거부한다. 38차의
+    validate-after-mutate 반례와 같은 불변식이다.
+
+    **호출 전후로 provider version·lock·pin 집합·store bytes 가 같아야 한다.**
+    """
+    store = _LockingStore(name=f"{tmp_path}-{axis}")
+    backend = _lockstore(tmp_path / axis, store)
+    leg = "hc22p_v6_armA_b20"
+    objs = sorted(backend.put_if_absent(b"g%d" % i)["digest"] for i in range(2))
+    backend.pin(leg, objs)
+
+    over = ({"store_version_id": "v-does-not-exist"} if axis == "store_version"
+            else {"object_versions": {d: "v-does-not-exist" for d in objs}})
+    fd = backend.put_if_absent(canonical_bytes(
+        _lease_like(backend, leg, objs, **over)))["digest"]
+    backend.pin(leg, [fd])
+
+    before_v = _version_census(store)
+    before_lock = dict(store._lock)
+    before_pins = set(backend.pinned(leg))
+    before_store = store.get("store.json")
+
+    with pytest.raises(PreserveError):
+        backend.retain(leg, objs, min_retention_days=MIN_RETENTION_DAYS)
+
+    grew = {k: (before_v.get(k, 0), n) for k, n in _version_census(store).items()
+            if n > before_v.get(k, 0)}
+    assert not grew, f"{axis}: 거부 전에 version 을 늘렸다: {grew}"
+    assert dict(store._lock) == before_lock, f"{axis}: 거부 전에 잠금이 바뀌었다"
+    assert set(backend.pinned(leg)) == before_pins, f"{axis}: pin 집합이 변했다"
+    assert store.get("store.json") == before_store, f"{axis}: store record 가 변했다"
+
+
+def test_an_orphan_with_a_nonexistent_locator_is_not_adopted(tmp_path):
+    """orphan 입양도 같은 관문을 지나야 한다 — 입양은 pin 을 만드는 mutation 이다."""
+    store = _LockingStore(name=str(tmp_path))
+    backend = _lockstore(tmp_path, store)
+    leg = "hc22p_v6_armA_b20"
+    objs = sorted(backend.put_if_absent(b"h%d" % i)["digest"] for i in range(2))
+    backend.pin(leg, objs)
+
+    ad = backend.put_if_absent(canonical_bytes(_lease_like(
+        backend, leg, objs,
+        object_versions={d: "v-does-not-exist" for d in objs})))["digest"]
+
+    assert backend._orphan_lease(leg, objs, MIN_RETENTION_DAYS) is None, (
+        "존재하지 않는 locator 를 가진 record 를 입양 후보로 봤다")
+    assert ad not in backend.pinned(leg), "입양하면서 pin 을 만들었다"
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# 40차 P1 — proof lookup 과 repair source 는 phase contract 가 다르다
+# ─────────────────────────────────────────────────────────────────────────────
+
+def test_repair_recovers_from_an_unlocked_exact_version(tmp_path, monkeypatch):
+    """★ 40차 P1 — 39차는 셋을 `_version_for()` 하나로 접었다.
+
+    `after_lease_pin` 창에서는 올바른 v1 이 **아직 안 잠겼다.** 그 위에
+    wrong-bytes locked v2 가 생기면 `_version_for()` 는 잠긴 것만 보므로 v1 을
+    못 찾고 `None` 을 돌린다. 수리는 version 없는 fallback 으로 hostile v2 를
+    읽어 digest mismatch 로 끝난다 — 복구 가능한 v1 이 provider 에 그대로
+    남아 있는데도.
+
+    proof lookup 은 "잠긴 담보" 를 찾아야 하고, repair source 는 "아직 안
+    잠긴 exact bytes" 도 후보로 삼아 **잠근 뒤** proof 로 승격해야 한다.
+    중복이 아니라 phase contract 가 다르다.
+    """
+    import tools.preserve as P
+
+    run = _make_run(tmp_path)
+    store = _LockingStore(name=str(tmp_path))
+    backend = _lockstore(tmp_path, store)
+    index = tmp_path / "index"
+
+    base = dt.datetime(2026, 8, 27, 12, 0, 0, tzinfo=dt.timezone.utc)
+    ticks = iter(range(0, 100000, 37))
+
+    class _Clock(dt.datetime):
+        @classmethod
+        def now(cls, tz=None):
+            return base + dt.timedelta(seconds=next(ticks))
+
+    monkeypatch.setattr(P.dt, "datetime", _Clock)
+    _phase_kill(monkeypatch, "after_lease_pin")
+    with pytest.raises(RuntimeError):
+        run_transaction(PLANNED, run, backend, index, _hooks())
+    monkeypatch.undo()
+    monkeypatch.setattr(P.dt, "datetime", _Clock)
+
+    leg = PLANNED.leg_id
+    ld = _crashed_lease_digest(store, backend, leg)
+    assert ld, "전제: lease 후보가 있다"
+    key = backend._provider_key(leg, ld)
+    assert backend.protected_version(key) is None, "전제: v1 이 아직 안 잠겼다"
+
+    v2 = store.put(key, b"hostile-newer-unlocked-window")
+    store.lock(key, v2, "2099-01-01T00:00:00Z")
+
+    fresh = _lockstore(tmp_path, _LockingStore(name=store.name))
+    out = finalize_only(leg, fresh, index)
+    monkeypatch.undo()
+
+    assert out["ok"] and out["durable"] is True
+    assert out["retention"]["lease_digest"] == ld, (
+        "잠기지 않은 exact version 을 못 찾아 같은 lease 로 재개하지 못했다")
+
+
+def test_a_same_bytes_governance_version_does_not_hide_the_compliance_proof(
+        tmp_path):
+    """★ 40차 P1 — `_locked_versions()` 가 Governance 도 후보로 삼았다.
+
+    같은 바이트의 newer Governance v2 가 older Compliance v1 을 가릴 수 있다.
+    proof lookup 은 **담보 mode** 만 후보로 삼아야 한다.
+    """
+    run = _make_run(tmp_path)
+    store = _LockingStore(name=str(tmp_path))
+    backend = _lockstore(tmp_path, store)
+    index = tmp_path / "index"
+    res = run_transaction(PLANNED, run, backend, index, _hooks())
+    lease, leg = res["retention"], PLANNED.leg_id
+    ld = lease["lease_digest"]
+    key = backend._provider_key(leg, ld)
+    v1 = lease["lease_version"]
+
+    v2 = store.put(key, store.get(key, v1))        # **같은 바이트**
+    store.lock(key, v2, lease["retain_until_utc"])
+    store._mode[(key, v2)] = "GOVERNANCE"
+
+    got = backend.recover_lease_version(leg, ld)
+    assert got == v1, (
+        f"같은 바이트의 Governance version 이 Compliance proof 를 가렸다: {got}")
