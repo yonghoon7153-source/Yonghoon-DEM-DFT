@@ -77,8 +77,8 @@ cohorts:
       (`cross_leg_comparison` 참조).
     pin:
       schema_version: 3
-      compute_sha256: a7def130d68d79a1
-      row_projection_py_sha256: a30847533ef8fcfd
+      compute_sha256: fa05b081fbca25ef
+      row_projection_py_sha256: e876bd425400143b
       src_scoring_py_sha256: 69e69cb046f4b4ae
       analysis_spec_sha256: 43d74dd385b1f66d28cc371dd7ebbd00fc0289323e0a515114eb2b8d45d56271
     runtime: {python: "3.11.15", pandas: "3.0.5", pyarrow: "25.0.1",
