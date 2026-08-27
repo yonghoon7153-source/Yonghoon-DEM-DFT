@@ -1,46 +1,31 @@
-/** DRT 가로축 — `ln τ` 와 `log₁₀ τ`.
+/** DRT 가로축 — `log₁₀ τ`.
  *
  *  **τ 자체는 축으로 못 쓴다.**  이완 시간은 마이크로초에서 수백 초까지
  *  여섯 자리를 걸치고, 선형 축에 놓으면 봉우리 대부분이 왼쪽 한 점에 뭉친다.
- *  그래서 로그를 취하는데, **어느 로그인지가 랩마다 다르다.**
+ *  그래서 로그를 취한다.
  *
- *  DRT 문헌과 이 랩이 실제로 쓰는 것은 `ln τ` 다 — γ(ln τ) 의 정의 자체가
- *  자연로그 위의 밀도이고 (`Z = ∫ γ(ln τ)/(1+jωτ) d ln τ`), 봉우리 아래 넓이가
- *  곧 저항이 되는 것도 그 축에서다.  `log₁₀` 는 눈금을 읽기 쉬워서 쓴다
- *  (−3 이 곧 1 ms).  둘은 **같은 그림을 2.303 배로 늘인 것**이라 봉우리 자리와
- *  높이의 뜻이 달라지지 않지만, 폭을 자로 재서 적는 사람에게는 다른 수가 된다.
+ *  **`ln τ` 를 골라 쓸 수 있게 뒀다가 뺐다.**  DRT 문헌의 정의는 자연로그 위의
+ *  밀도이고 (`Z = ∫ γ(ln τ)/(1+jωτ) d ln τ`) 봉우리 아래 넓이가 저항이 되는
+ *  것도 그 축에서라, 한동안 `ln` 이 기본이었다.  그런데 이 랩이 실제로 읽는
+ *  것은 `log₁₀` 다 — 눈금이 곧 자릿수라 `−3` 이 1 ms 로 바로 읽힌다.  둘은
+ *  같은 그림을 2.303 배로 늘인 것이라 봉우리 자리와 높이의 뜻은 같지만, 폭을
+ *  자로 재서 적는 사람에게는 다른 수가 된다.  **쓰지 않는 축을 골라 둘 수
+ *  있게 두면 두 화면이 다른 축으로 그려지는 길만 남는다.**  하나로 줄인다.
  *
- *  그래서 고르게 두고 기본은 `ln` 이다.  고른 것은 이 브라우저에 남는다.
+ *  되돌릴 일이 있으면 이 파일의 히스토리에 `ln` 갈래가 통째로 있다.
  */
 
-export type TauAxis = 'ln' | 'log10'
-
-export const TAU_AXES: readonly TauAxis[] = ['ln', 'log10']
-
-/** 이 브라우저가 기억하는 열쇠.  DRT 를 그리는 화면 둘이 같은 것을 쓴다 --
- *  한쪽에서 `ln` 으로 보다 다른 쪽에서 `log₁₀` 이 나오면 같은 봉우리가 다른
- *  자리에 있는 것처럼 보인다. */
-export const TAU_AXIS_KEY = 'bml.drtTauAxis'
-
-export function tauAxisValue(axis: TauAxis, tauSeconds: number): number {
-  return axis === 'ln' ? Math.log(tauSeconds) : Math.log10(tauSeconds)
+/** τ (초) → 가로축 값. */
+export function tauAxisValue(tauSeconds: number): number {
+  return Math.log10(tauSeconds)
 }
 
 /** 축의 값에서 τ 를 되돌린다 — 눈금 설명(`describeX`)이 쓴다. */
-export function tauFromAxis(axis: TauAxis, value: number): number {
-  return axis === 'ln' ? Math.exp(value) : 10 ** value
+export function tauFromAxis(value: number): number {
+  return 10 ** value
 }
 
-export function tauAxisLabel(axis: TauAxis): string {
-  return axis === 'ln' ? 'ln τ (τ in s)' : 'log₁₀ τ (s)'
-}
+export const TAU_AXIS_LABEL = 'log₁₀ τ (s)'
 
-/** 고르개에 적을 짧은 이름. */
-export function tauAxisShort(axis: TauAxis): string {
-  return axis === 'ln' ? 'ln τ' : 'log₁₀ τ'
-}
-
-/** 저장된 값이 우리가 아는 둘 중 하나인가.  아니면 기본(`ln`). */
-export function validTauAxis(value: unknown): TauAxis {
-  return value === 'log10' ? 'log10' : 'ln'
-}
+/** 클립보드 머리말처럼 좁은 자리에 적을 짧은 이름. */
+export const TAU_AXIS_SHORT = 'log₁₀ τ'

@@ -19,11 +19,8 @@ import { num, seriesColor } from '../lib/format'
 import { perArea } from '../lib/areanorm'
 import { drtTsv } from '../lib/origin'
 import { nearestLambdaIndex, rememberedLambda, rememberLambda } from '../lib/drtlambda'
-import { useAsync, useStickyState } from '../lib/hooks'
-import {
-  TAU_AXES, TAU_AXIS_KEY, type TauAxis,
-  tauAxisLabel, tauAxisShort, tauAxisValue, tauFromAxis, validTauAxis,
-} from '../lib/tauaxis'
+import { useAsync } from '../lib/hooks'
+import { TAU_AXIS_LABEL, tauAxisValue, tauFromAxis } from '../lib/tauaxis'
 import type { Drt } from '../lib/types'
 
 /** 그 시간대에 무엇이 사는가 — **관례적인 구간**이고 판정이 아니다.
@@ -35,12 +32,13 @@ import type { Drt } from '../lib/types'
  */
 /** 축의 값을 주파수와 그 시간대의 이름으로.
  *
- *  **어느 축인지 반드시 받는다 (기본값을 안 둔다).**  `-6` 은 `log₁₀` 에서
- *  1 µs 이고 `ln` 에서 2.5 ms 다 — 앞은 '벌크 이온전도' 대, 뒤는 '전하이동'
- *  대다.  기본값을 두면 축을 바꾼 화면이 **조용히 다른 물리를 적는다.**
+ *  가로축은 `log₁₀ τ` 하나다.  한때 `ln` 도 고를 수 있었고, 그때 이 함수는
+ *  어느 축인지를 **반드시 받았다** — `-6` 은 `log₁₀` 에서 1 µs 이고 `ln` 에서
+ *  2.5 ms 라, 축을 모르면 같은 눈금에 다른 물리를 적기 때문이다.  축이 하나로
+ *  줄면서 그 위험도 없어졌다 (`lib/tauaxis.ts` 에 왜 줄였는지).
  */
-export function tauBand(axisValue: number, axis: TauAxis): string {
-  const tau = tauFromAxis(axis, axisValue)
+export function tauBand(axisValue: number): string {
+  const tau = tauFromAxis(axisValue)
   const hz = 1 / (2 * Math.PI * tau)
   const where = hz >= 1000 ? `${(hz / 1000).toFixed(1)} kHz`
     : hz >= 1 ? `${hz.toFixed(1)} Hz` : `${(hz * 1000).toFixed(1)} mHz`
@@ -130,12 +128,6 @@ export function DrtPanel({ spectrumId, area = null }: {
     setIndex(null)
   }, [spectrumId, order])
 
-  // 가로축의 밑.  기본은 `ln` 이고 (DRT 의 정의가 자연로그 위의 밀도다),
-  // 고른 것은 이 브라우저에 남는다 — 비교 화면과 **같은 열쇠**를 써서 두
-  // 화면이 같은 축으로 그린다 (`lib/tauaxis.ts`).
-  const [storedAxis, setAxis] = useStickyState<TauAxis>(TAU_AXIS_KEY, 'ln')
-  const axis = validTauAxis(storedAxis)
-
   const shown: Drt | null =
     !fresh || index === null ? null : (results[index] ?? null)
 
@@ -147,14 +139,13 @@ export function DrtPanel({ spectrumId, area = null }: {
     if (!shown) return []
     return [{
       label: `γ(τ) · λ=${format(shown.regularisation)}`,
-      // 가로축은 로그 τ 다.  τ 자체를 쓰면 여섯 자리가 한 점에 뭉친다.
-      // 밑을 고를 수 있고 기본은 `ln` 이다 (`lib/tauaxis.ts` 에 이유).
-      x: shown.tau_s.map((value) => tauAxisValue(axis, value)),
+      // 가로축은 log₁₀ τ 다.  τ 자체를 쓰면 여섯 자리가 한 점에 뭉친다.
+      x: shown.tau_s.map((value) => tauAxisValue(value)),
       y: shown.gamma_ohm.map((value) => perArea(value, area)),
       color: seriesColor(0),
       width: 2,
     }]
-  }, [shown, axis, area])
+  }, [shown, area])
 
   if (sweep.error) {
     return (
@@ -267,28 +258,13 @@ export function DrtPanel({ spectrumId, area = null }: {
             그림" 쪽으로 밀고 그 분극을 그대로 보고하게 된다. */}
         <div className="tiny faint">{LAMBDA_NOTE}</div>
 
-        {/* 밑을 고르는 것뿐이라 봉우리 자리와 높이의 뜻은 안 바뀐다 — 같은
-            그림을 2.303 배로 늘인 것이다.  그래도 폭을 자로 재서 적는
-            사람에게는 다른 수라서, 어느 축으로 보고 있는지가 보여야 한다. */}
-        <div className="row" style={{ gap: 8, alignItems: 'center' }}>
-          <span className="tiny faint">가로축</span>
-          <div className="segmented" role="group" aria-label="가로축">
-            {TAU_AXES.map((one) => (
-              <button key={one} type="button" className={axis === one ? 'on' : ''}
-                      onClick={() => setAxis(one)}>
-                {tauAxisShort(one)}
-              </button>
-            ))}
-          </div>
-        </div>
-
         <Plot
           series={series}
-          xLabel={tauAxisLabel(axis)}
+          xLabel={TAU_AXIS_LABEL}
           yLabel={`γ (${zUnit})`}
           height={280}
           legend
-          describeX={(value) => tauBand(value, axis)}
+          describeX={(value) => tauBand(value)}
         />
 
         <details className="tiny faint">
