@@ -1642,7 +1642,26 @@ def mode_overlap(a_vec, b_vec, skip=(), match=None, sign=1.0):
 #     (PP·k·ecut·전하·smearing 종류). 다시 유도하면 NEB 와 다른 조건이 될 수 있고,
 #     그러면 비교가 성립하지 않는다 — 이 repo 가 이미 두 번 밟은 함정이다.
 SMEAR_LADDER_RY = (0.02, 0.01, 0.005)
-MODE_SCAN_LAMBDAS = (-1.0, -0.5, -0.25, 0.0, 0.25, 0.5, 1.0)
+# ⛔ 리뷰 J2 — ±0.25 는 **국소 곡률을 보기엔 이미 크다.** 작은 진폭을 넣는다.
+#   ±1.5·±2 는 넣지 않는다 — λ=1 까지 계속 내려가면 외삽보다 **변위 구조 이완**이 낫다.
+MODE_SCAN_LAMBDAS = (-1.0, -0.5, -0.25, -0.10, -0.05, 0.0, 0.05, 0.10, 0.25, 0.5, 1.0)
+
+
+def _sha(path, n=16):
+    """파일 SHA256 앞 n 글자. 없으면 'MISSING'.
+
+    왜 남기나(리뷰 J): 입력이 뭘로 만들어졌는지 나중에 못 되짚으면, 값이 흔들렸을 때
+    **PP 가 바뀐 건지 설정이 바뀐 건지 못 가른다.**
+    """
+    import hashlib
+    try:
+        h = hashlib.sha256()
+        with open(path, "rb") as f:
+            for b in iter(lambda: f.read(1 << 20), b""):
+                h.update(b)
+        return h.hexdigest()[:n]
+    except OSError:
+        return "MISSING"
 
 
 def parse_qe_header(src_in):
@@ -1686,15 +1705,23 @@ def parse_qe_header(src_in):
             if len(p) >= 3:
                 sp.append((p[0], p[1], p[2]))
     out["species"] = sp
+    # ⛔ 2026-08-27 (리뷰 J · P0) — 옛 판은 파싱 실패 시 조용히 `2 2 2 0 0 0` 을 넣었다.
+    #   그러면 **엔진 블록을 복제한다는 이 함수의 약속이 깨진다** — NEB 가 3×3×3 으로 돌았는데
+    #   비교용 SCF 가 2×2×2 로 나가고, 그 차이가 장벽 차이로 보고된다. 기본값을 없앤다.
     m = re.search(r"K_POINTS\s*(\w+)\s*\n\s*([\d\s]+)\n", t)
-    out["kpts"] = (m.group(1), m.group(2).strip()) if m else ("automatic", "2 2 2 0 0 0")
+    out["kpts"] = (m.group(1), m.group(2).strip()) if m else None
     m = re.search(r"CELL_PARAMETERS\s*\(?angstrom\)?\s*\n"
                   r"((?:\s*[-\d.eE+]+\s+[-\d.eE+]+\s+[-\d.eE+]+\s*\n){3})", t)
     out["cell"] = ([[float(x) for x in l.split()] for l in m.group(1).strip().splitlines()]
                    if m else None)
-    miss = [k for k in ("pseudo_dir", "ecutwfc", "cell") if not out.get(k)]
+    miss = [k for k in ("pseudo_dir", "ecutwfc", "cell", "kpts", "degauss") if not out.get(k)]
     if miss or not sp:
-        return None, f"⛔ {src_in} 에서 못 읽은 것: {miss or ''} {'ATOMIC_SPECIES' if not sp else ''}"
+        return None, (f"⛔ {src_in} 에서 못 읽은 것: {miss or ''} "
+                      f"{'ATOMIC_SPECIES' if not sp else ''}\n"
+                      f"   기본값으로 메우지 않는다 — 엔진 블록을 **그대로 복제**하는 것이 "
+                      f"이 함수의 유일한 목적이다 (리뷰 J P0).")
+    out["src_sha256"] = _sha(src_in)
+    out["upf_sha256"] = {e: _sha(os.path.join(out["pseudo_dir"], u)) for e, _m, u in sp}
     return out, None
 
 
@@ -2093,6 +2120,9 @@ def smear_ladder(work, tag, ladder=SMEAR_LADDER_RY):
                 return 1, e
             made.append(p)
     meta = {"tag": tag, "why": "kb 2026-08-11 등록 선행조건 + 회신 I N5",
+            "protocol_sha256": hdr["src_sha256"], "upf_sha256": hdr["upf_sha256"],
+            "src_sha256": {f: _sha(os.path.join(d, f))
+                           for f in (f"{tag}.xyz", f"{tag}.dat", "neb.in")},
             "ladder_Ry": list(ladder), "protocol_source": hdr["src"],
             "degauss_of_run_Ry": hdr["degauss"], "n_images": len(frames),
             "saddle_image_1based": isad + 1,
@@ -2123,17 +2153,23 @@ def smear_ladder(work, tag, ladder=SMEAR_LADDER_RY):
 
 
 def collect_ladder(work, tag):
-    """① 사다리 회수 — 각 degauss 의 장벽과 그 흔들림."""
+    """① 사다리 회수 — **fail-closed.** 설정한 전 점이 갖춰지지 않으면 판정하지 않는다.
+
+    ⛔ 2026-08-27 (리뷰 J · P0-1) — 옛 판은 일부 degauss 만 있어도 판정하고 **rc=0 으로
+      성공 종료**했다. 그러면 "3점 사다리" 라고 적힌 결과가 실제로는 2점일 수 있고,
+      화면만 보고는 그걸 모른다. 빠진 게 하나라도 있으면 **거부한다.**
+    """
     d = os.path.join(work, tag, "smear_ladder")
     mp = os.path.join(d, "meta.json")
     if not os.path.isfile(mp):
         return 1, f"⛔ 없음: {mp} — 먼저 --smear_ladder 로 입력을 만들 것"
     meta = json.load(open(mp, encoding="utf-8"))
-    rows, miss = [], []
+    NEED = ("ep_initial", "saddle", "ep_final")
+    rows, miss, bad = [], [], []
     for g in meta["ladder_Ry"]:
         gt = f"{g:g}".replace(".", "p")
-        e = {}
-        for nm in ("ep_initial", "saddle", "ep_final"):
+        e, f_ = {}, {}
+        for nm in NEED:
             op = os.path.join(d, f"g{gt}", nm, "scf.out")
             if not os.path.isfile(op):
                 miss.append(f"g{gt}/{nm}")
@@ -2142,45 +2178,76 @@ def collect_ladder(work, tag):
             if "JOB DONE" not in t:
                 miss.append(f"g{gt}/{nm}(미완료)")
                 continue
+            if re.search(r"convergence NOT achieved", t):
+                bad.append(f"g{gt}/{nm}(SCF 미수렴)")
+                continue
             m = re.findall(r"!\s+total energy\s+=\s+([-\d.]+)\s+Ry", t)
             if not m:
-                miss.append(f"g{gt}/{nm}(에너지 없음)")
+                bad.append(f"g{gt}/{nm}(에너지 없음)")
                 continue
             e[nm] = float(m[-1]) * RY_EV
+            fm = re.findall(r"Total force\s+=\s+([\d.eE+-]+)", t)
+            f_[nm] = float(fm[-1]) * RYAU_EVA if fm else None
         if len(e) == 3:
-            rows.append({"degauss_Ry": g, "barrier_eV": round(e["saddle"] - e["ep_initial"], 5),
-                         "endpoint_dE_meV": round((e["ep_final"] - e["ep_initial"]) * 1000, 2)})
+            rows.append({"degauss_Ry": g,
+                         # 리뷰 J: 양쪽에서 따로 판정하고 endpoint splitting 을 기록한다
+                         "barrier_fwd_eV": round(e["saddle"] - e["ep_initial"], 5),
+                         "barrier_rev_eV": round(e["saddle"] - e["ep_final"], 5),
+                         "endpoint_split_meV": round((e["ep_final"] - e["ep_initial"]) * 1000, 2),
+                         "force_eVA": {k: (None if v is None else round(v, 4))
+                                       for k, v in f_.items()}})
     L = [f"■ smearing 사다리 — {tag}  (고정 기하)"]
-    if miss:
-        L.append(f"   ⏳ 아직 없는 것 {len(miss)}개: {', '.join(miss[:6])}"
-                 + (" …" if len(miss) > 6 else ""))
+    if miss or bad:
+        L += [f"   ⏳ 없는 점 {len(miss)}: {', '.join(miss[:6])}" + (" …" if len(miss) > 6 else "")]
+        if bad:
+            L.append(f"   ⛔ 못 쓰는 점 {len(bad)}: {', '.join(bad[:6])}")
+        L.append("   ⇒ **판정하지 않는다.** 설정한 전 점이 갖춰져야 사다리다 "
+                 "(일부만으로 판정하면 몇 점짜리인지 화면에서 안 보인다 — 리뷰 J P0-1).")
+        return 1, "\n".join(L)
     if not rows:
-        return (1 if miss else 0), "\n".join(L + ["   ⛔ 회수할 결과가 없다"])
-    L.append("   degauss [Ry]   장벽 [eV]   끝점 ΔE [meV]")
+        return 1, "\n".join(L + ["   ⛔ 회수할 결과가 없다"])
+
+    # 힘 게이트 — 고정 기하가 각 degauss 에서도 정류점 근처인가
+    FMAX = 0.05
+    hot = [(r["degauss_Ry"], k, v) for r in rows for k, v in r["force_eVA"].items()
+           if v is not None and v > FMAX]
+    L.append("   degauss   장벽(정) [eV]  장벽(역) [eV]  끝점 split [meV]   |F| max [eV/Å]")
     for r in rows:
-        L.append(f"     {r['degauss_Ry']:<12g} {r['barrier_eV']:<11.4f} {r['endpoint_dE_meV']:.2f}")
-    if len(rows) >= 2:
-        b = [r["barrier_eV"] for r in rows]
-        spread = max(b) - min(b)
-        L += ["", f"   ★ 장벽 흔들림 = **{spread*1000:.1f} meV** "
-                  f"({min(b):.4f} – {max(b):.4f})"]
-        # 회신 I 의 실용 허용폭: δ_E = k_B T* ln f. rate factor 2 → 18 meV @300K · 36 @600K
-        if spread * 1000 <= 18:
-            L.append("      ⇒ ✅ **18 meV(300 K rate factor 2) 안**이다 — smearing 이 장벽을 "
-                     "지배하지 않는다. 사전등록 허용폭 통과.")
-        elif spread * 1000 <= 36:
-            L.append("      ⇒ ⚠ 18–36 meV — 300 K 기준은 넘고 600 K(36 meV) 안이다. "
-                     "인용할 온도를 명시할 것.")
+        fv = [v for v in r["force_eVA"].values() if v is not None]
+        L.append(f"     {r['degauss_Ry']:<8g} {r['barrier_fwd_eV']:<14.4f} "
+                 f"{r['barrier_rev_eV']:<14.4f} {r['endpoint_split_meV']:<16.2f} "
+                 f"{(max(fv) if fv else float('nan')):.3f}")
+    out = {"tag": tag, "rows": rows, "fixed_geometry": True}
+    verdict = []
+    for key, nm in (("barrier_fwd_eV", "정방향"), ("barrier_rev_eV", "역방향")):
+        b = [r[key] for r in rows]
+        spread = (max(b) - min(b)) * 1000
+        last = abs(b[-1] - b[-2]) * 1000 if len(b) >= 2 else None
+        # ⛔ 리뷰 J3 — 문턱을 조인다. 18/36 은 **rate 영향 등급**이지 수치수렴 문턱이 아니다.
+        if spread <= 5:
+            v = f"✅ 수치적으로 안정 (범위 {spread:.1f} meV ≤ 5)"
+        elif spread <= 18:
+            v = f"⚠ 민감도 경고 ({spread:.1f} meV) — 인용 시 명시"
+        elif spread <= 36:
+            v = f"⛔ **300 K 장벽 인용 불가** ({spread:.1f} meV) · 600 K 정성 해석만 조건부"
         else:
-            L.append(f"      ⇒ ⛔ **{spread*1000:.0f} meV 는 허용폭(36 meV @600K)을 넘는다** — "
-                     "이 장벽은 smearing 에 딸려 있다. degauss 를 내리고 **이완부터 다시** 해야 한다.")
-        if len(rows) >= 3:
-            L.append(f"      마지막 두 점 차이 {abs(b[-1]-b[-2])*1000:.1f} meV "
-                     f"(수렴이면 이게 제일 작아야 한다)")
-    L += ["", "   ⛔ 고정 기하다 — 각 degauss 에서 이완을 다시 하지 않았다. "
-              "여기서 흔들리면 그때 이완까지 다시 한다."]
-    json.dump({"tag": tag, "rows": rows, "fixed_geometry": True},
-              open(os.path.join(d, "ladder_result.json"), "w", encoding="utf-8"),
+            v = f"⛔⛔ **NO-GO** ({spread:.1f} meV > 36) — degauss 내리고 **이완부터 다시**"
+        verdict.append((nm, spread, last, v))
+        out[key + "_spread_meV"] = round(spread, 2)
+    L.append("")
+    for nm, spread, last, v in verdict:
+        L.append(f"   ★ {nm} 장벽 범위 **{spread:.1f} meV** → {v}")
+        if last is not None:
+            L.append(f"      마지막 두 degauss 차이 {last:.1f} meV "
+                     f"(수렴이면 이게 범위보다 작아야 한다)")
+    if hot:
+        L.append(f"   ⛔ 잔류력이 {FMAX} eV/Å 를 넘는 점 {len(hot)}개: "
+                 + ", ".join(f"g{g:g}/{k} {v:.3f}" for g, k, v in hot[:4]))
+        L.append("      ⇒ 고정 기하가 그 degauss 에서 정류점이 아니다 — **경로를 다시 이완**해야 한다.")
+    L += ["", "   ⛔ `max−min` 은 **관측 범위이지 오차상한이 아니다** (리뷰 J3).",
+          "      이 사다리는 *3×3×3 k-grid 에서, degauss 0.02 로 찾은 고정 경로*의 민감도까지다 —",
+          "      relaxed barrier 도 k 수렴도 증명하지 않는다. dense-k corner check 가 따로 필요하다."]
+    json.dump(out, open(os.path.join(d, "ladder_result.json"), "w", encoding="utf-8"),
               ensure_ascii=False, indent=2)
     return 0, "\n".join(L)
 
@@ -2223,11 +2290,52 @@ def mode_scan(work, tag, lambdas=MODE_SCAN_LAMBDAS):
     hop, _ctr, dif = hop_center(built_i, built_f, cell)
     vac = built_f[hop]                       # 뛰는 원자의 도착 자리 = ep_initial 의 공공 자리
     import math as _m
-    u = [min_image([rel_i[i][1][k] - built_i[i][1][k] for k in range(3)], cell)
+    # ⛔ 리뷰 J2 — **전역 병진 성분을 먼저 뺀다.** 안 빼면 스캔이 셀 전체를 밀고,
+    #   그건 에너지가 변하지 않는 방향이라 곡률을 희석한다(그리고 λ 축의 뜻이 흐려진다).
+    tshift, tconv = _optimal_pbc_translation(built_i, rel_i, cell)
+    u = [min_image([rel_i[i][1][k] - built_i[i][1][k] - tshift[k] for k in range(3)], cell)
          for i in range(len(built_i))]
     umax = max(_m.sqrt(sum(x * x for x in v)) for v in u)
     ideal = [(s, list(p)) for s, p in built_i] + [(vac[0], list(vac[1]))]
     u.append([0.0, 0.0, 0.0])                # 메운 원자는 안 민다 (완전 격자의 제자리다)
+
+    # ── preflight (리뷰 J P0) — 완전 격자가 진짜 완전한가. 틀리면 전 λ 가 무의미하다 ──
+    comp = {}
+    for sym, _q in ideal:
+        comp[sym] = comp.get(sym, 0) + 1
+    pf, warn = {"composition": comp, "n_atoms": len(ideal)}, []
+    dmin, dpair = 1e9, None
+    for i in range(len(ideal)):
+        for j in range(i + 1, len(ideal)):
+            dd = min_image([ideal[j][1][k] - ideal[i][1][k] for k in range(3)], cell)
+            n = _m.sqrt(sum(x * x for x in dd))
+            if n < dmin:
+                dmin, dpair = n, (i, j)
+    pf["min_distance_A"] = round(dmin, 4)
+    pf["min_distance_pair"] = dpair
+    if dmin < 1.5:
+        warn.append(f"⛔ 최소 원자간 거리 {dmin:.3f} Å < 1.5 — 중복 좌표이거나 자리가 겹쳤다")
+    # 메운 Li 가 **이상 격자자리**인가: 나머지 Li 들이 만드는 최근접 거리 분포와 같은가
+    li = [i for i, (sym, _q) in enumerate(ideal) if sym == "Li"]
+    def _nn(i, pool):
+        return min(_m.sqrt(sum(x * x for x in min_image(
+            [ideal[j][1][k] - ideal[i][1][k] for k in range(3)], cell)))
+            for j in pool if j != i)
+    if len(li) > 3:
+        nn_fill = _nn(len(ideal) - 1, li)
+        others = sorted(_nn(i, li) for i in li[:-1])
+        med = others[len(others) // 2]
+        pf["filled_nn_A"], pf["li_nn_median_A"] = round(nn_fill, 4), round(med, 4)
+        if abs(nn_fill - med) > 0.35:
+            warn.append(f"⛔ 메운 Li 의 최근접 {nn_fill:.3f} Å 이 나머지 Li 중앙값 "
+                        f"{med:.3f} 와 {abs(nn_fill-med):.3f} Å 어긋난다 — 이상 격자자리가 아니다")
+    if not tconv:
+        warn.append("⚠ 병진 제거가 수렴하지 않았다")
+    if warn:
+        return 1, ("⛔ preflight 실패 — 완전 격자가 성립하지 않는다:\n   "
+                   + "\n   ".join(warn)
+                   + f"\n   (조성 {comp} · 원자 {len(ideal)} · 최소거리 {dmin:.3f} Å)\n"
+                   + "   이걸 무시하고 돌리면 **전 λ 가 무의미**하다.")
 
     out = os.path.join(d, "mode_scan")
     made = []
@@ -2241,6 +2349,9 @@ def mode_scan(work, tag, lambdas=MODE_SCAN_LAMBDAS):
             return 1, e
         made.append(p)
     meta = {"tag": tag, "why": "회신 I P0-2 의 싼 판 — pristine 이 이 모드로 불안정한가",
+            "preflight": pf,
+            "translation_removed_A": round(_m.sqrt(sum(x*x for x in tshift)), 4),
+            "protocol_sha256": hdr["src_sha256"], "upf_sha256": hdr["upf_sha256"],
             "lambdas": list(lambdas), "n_atoms_pristine": len(ideal),
             "n_atoms_vacancy_cell": len(built_i),
             "mode_source": os.path.join(ini_d, "relax.out"),
@@ -2248,13 +2359,19 @@ def mode_scan(work, tag, lambdas=MODE_SCAN_LAMBDAS):
             "mode_max_A": round(umax, 4),
             "filled_site_from": f"ep_final atom #{hop} ({vac[0]})",
             "tot_charge": 0.0, "protocol_source": hdr["src"],
-            "⛔_한계": ["모드 하나만 본다 — 음성이어도 '이 모드로는 안정' 까지다",
+            "⛔_한계": ["메운 Li 의 u=0 은 **임의의 mode completion** 이다 — 음성 결과는 "
+                      "더 약한 결론만 허용한다 (리뷰 J2)",
+                      "모드 하나만 본다 — 음성이어도 '이 모드로는 안정' 까지다",
                       "조성이 다르다(공공 없음) — NEB 끝점 에너지와 직접 비교 금지",
                       "single point 다 — λ=0 최소여도 다른 기하가 더 낮을 수 있다"]}
     json.dump(meta, open(os.path.join(out, "meta.json"), "w", encoding="utf-8"),
               ensure_ascii=False, indent=2)
     L = [f"■ pristine 모드 스캔 입력 — {tag}",
-         f"   완전 격자 {len(ideal)}원자 (공공셀 {len(built_i)} + 메운 자리 1)",
+         f"   완전 격자 {len(ideal)}원자 (공공셀 {len(built_i)} + 메운 자리 1) · "
+         f"조성 {''.join(f'{k}{v}' for k, v in sorted(comp.items()))}",
+         f"   preflight ✅ 최소거리 {dmin:.3f} Å · 메운 Li 최근접 "
+         f"{pf.get('filled_nn_A')} (나머지 중앙값 {pf.get('li_nn_median_A')})",
+         f"   전역 병진 {meta['translation_removed_A']} Å 제거",
          f"   모드: {os.path.basename(ini_d)}/relax.out 의 이완 변위 "
          f"(최대 {umax:.3f} Å · {'수렴' if info.get('converged') else '⛔ 미수렴'})",
          f"   λ = {', '.join(f'{x:+g}' for x in lambdas)} · 전하 중성(q=0)",
@@ -2272,13 +2389,24 @@ def mode_scan(work, tag, lambdas=MODE_SCAN_LAMBDAS):
 
 
 def collect_scan(work, tag):
-    """② 모드 스캔 회수 — E(λ) 가 λ=0 에서 최소인가."""
+    """② 모드 스캔 회수 — **곡률 부호**로 판정한다. fail-closed.
+
+    ⛔ 2026-08-27 (리뷰 J · P0-2) — 옛 판은 λ=0 **하나만** 있어도 "λ=0 이 최소" 라고
+      찍고 rc=0 을 냈다. 점 하나로 최소를 주장한 것이다. 이제 설정한 전 λ 가 없으면 거부한다.
+
+    ⛔ 리뷰 J2 — 판정 기준도 바꾼다. *"어느 λ 가 가장 낮은가"* 가 아니라 **짝수부**
+
+        Δ_even(a) = [E(+a) + E(−a)] / 2 − E(0)
+
+      의 부호로 본다. Δ_even 은 홀수부(선형 힘 항)를 지우므로 **국소 곡률**만 남는다.
+      작은 진폭 두 개에서 **재현되는 음의 곡률**이 있어야 불안정이다.
+    """
     d = os.path.join(work, tag, "mode_scan")
     mp = os.path.join(d, "meta.json")
     if not os.path.isfile(mp):
         return 1, f"⛔ 없음: {mp} — 먼저 --mode_scan 으로 입력을 만들 것"
     meta = json.load(open(mp, encoding="utf-8"))
-    pts, miss = [], []
+    pts, miss, bad = {}, [], []
     for lam in meta["lambdas"]:
         lt = f"{lam:+.2f}".replace(".", "p").replace("+", "p").replace("-", "m")
         op = os.path.join(d, f"lam{lt}", "scf.out")
@@ -2286,39 +2414,67 @@ def collect_scan(work, tag):
             miss.append(f"λ={lam:+g}")
             continue
         t = open(op, encoding="utf-8", errors="replace").read()
-        m = re.findall(r"!\s+total energy\s+=\s+([-\d.]+)\s+Ry", t)
-        if "JOB DONE" not in t or not m:
+        if "JOB DONE" not in t:
             miss.append(f"λ={lam:+g}(미완료)")
             continue
-        pts.append((lam, float(m[-1]) * RY_EV))
+        if re.search(r"convergence NOT achieved", t):
+            bad.append(f"λ={lam:+g}(SCF 미수렴)")
+            continue
+        m = re.findall(r"!\s+total energy\s+=\s+([-\d.]+)\s+Ry", t)
+        if not m:
+            bad.append(f"λ={lam:+g}(에너지 없음)")
+            continue
+        pts[round(float(lam), 6)] = float(m[-1]) * RY_EV
     L = [f"■ pristine 모드 스캔 — {tag}"]
-    if miss:
-        L.append(f"   ⏳ 아직 없는 것: {', '.join(miss)}")
-    z = [e for l, e in pts if abs(l) < 1e-9]
-    if not pts or not z:
-        return (1 if miss else 0), "\n".join(L + ["   ⛔ λ=0 이 없으면 기준이 없다 — 회수 불가"])
-    e0 = z[0]
+    if miss or bad:
+        L.append(f"   ⏳ 없는 점: {', '.join(miss) if miss else '—'}")
+        if bad:
+            L.append(f"   ⛔ 못 쓰는 점: {', '.join(bad)}")
+        L.append("   ⇒ **판정하지 않는다.** 곡률은 ±쌍이 다 있어야 나온다 "
+                 "(옛 판은 λ=0 하나로 '최소' 를 주장했다 — 리뷰 J P0-2).")
+        return 1, "\n".join(L)
+    if 0.0 not in pts:
+        return 1, "\n".join(L + ["   ⛔ λ=0 이 없으면 기준이 없다"])
+    e0 = pts[0.0]
     L.append("   λ        ΔE [meV]")
-    for lam, e in sorted(pts):
-        L.append(f"    {lam:+6.2f}  {(e-e0)*1000:+10.2f}" + ("   ← 기준" if abs(lam) < 1e-9 else ""))
-    lo = min(pts, key=lambda x: x[1])
-    drop = (e0 - lo[1]) * 1000
+    for lam in sorted(pts):
+        L.append(f"    {lam:+6.2f}  {(pts[lam]-e0)*1000:+10.2f}"
+                 + ("   ← 기준" if lam == 0.0 else ""))
+
+    # ── 짝수부 = 국소 곡률 (홀수부/선형 힘 항이 지워진다) ──────────────────
+    amps = sorted({abs(l) for l in pts if l != 0 and -abs(l) in pts and abs(l) in pts})
+    ev = [(a, ((pts[a] + pts[-a]) / 2 - e0) * 1000) for a in amps]
     L.append("")
-    if abs(lo[0]) < 1e-9:
-        L.append("   ⇒ ✅ **λ=0 이 최소**다 — pristine 셀은 이 모드로 안정하다. "
-                 "관측한 이완은 **공공이 유발한 것**이고, 끝점 정의는 유효하다.")
-    elif drop >= 10:
-        L.append(f"   ⇒ ⛔ **λ={lo[0]:+g} 에서 {drop:.1f} meV 더 낮다** — pristine 셀이 "
-                 f"이 모드로 **불안정**하다. 그러면 끝점 정의 자체가 무효고, "
-                 f"**MD 로 옮겨도 해결되지 않는다**(같은 불안정한 구조에서 낸 Ea 다). "
-                 f"끝점부터 다시 정의해야 한다.")
+    if not ev:
+        L.append("   ⛔ ±쌍이 하나도 없다 — 곡률을 못 낸다. λ 를 대칭으로 설정할 것.")
+        return 1, "\n".join(L)
+    L.append("   진폭 a    Δ_even(a) = [E(+a)+E(−a)]/2 − E(0)  [meV]")
+    for a, v in ev:
+        L.append(f"    {a:6.2f}   {v:+10.2f}")
+    small = [x for x in ev if x[0] <= 0.15] or ev[:2]
+    neg = [x for x in small if x[1] < 0]
+    L.append("")
+    if len(small) >= 2 and len(neg) == len(small):
+        L.append(f"   ⇒ ⛔ **작은 두 진폭에서 음의 곡률이 재현된다** "
+                 f"({', '.join(f'a={a:g}: {v:+.1f}' for a, v in small)}) — "
+                 f"이 trial direction 으로 **불안정**하다. NEB HOLD 유지하고 "
+                 f"**변위 구조에서 이완**을 걸 것.")
+    elif any(v < 0 for _a, v in ev) and all(v >= 0 for a, v in small):
+        far = [(a, v) for a, v in ev if v < 0]
+        L.append(f"   ⇒ ⚠ λ=0 **근처는 양의 곡률**인데 먼 진폭에서 낮다 "
+                 f"({', '.join(f'a={a:g}: {v:+.1f}' for a, v in far)}) — "
+                 f"국소 soft mode 가 아니라 **멀리 있는 lower-basin 후보**다. "
+                 f"국소 안정성과는 다른 얘기다.")
     else:
-        L.append(f"   ⇒ ⚠ λ={lo[0]:+g} 가 {drop:.1f} meV 낮지만 SCF 잡음 규모다 — "
-                 f"어느 쪽도 주장하지 않는다. λ 를 더 촘촘히 하거나 conv_thr 를 조일 것.")
-    L += ["", "   ⛔ 이 판정이 못 하는 것: **모드 하나만** 봤다 — 다른 방향의 soft mode 는 "
-              "안 봤다. 음성이어도 '이 모드로는 안정' 까지다.",
-          "      (본 검사는 여전히 pristine rattle 여러 개 → 이완이다.)"]
-    json.dump({"tag": tag, "points_eV": pts, "e0_eV": e0},
+        L.append("   ⇒ ✅ **전부 양의 곡률** — 다만 말할 수 있는 것은 "
+                 "*\"이 한 방향에서 불안정을 검출하지 못했다\"* 까지다.")
+    L += ["", "   ⛔ **이 결과 하나로 P0-2 를 닫을 수 없다** (리뷰 J2).",
+          "      모드 하나만 봤고, 메운 Li 의 u=0 은 임의의 mode completion 이다.",
+          "      닫으려면 symmetry-off pristine rattle 이완 2–3개 또는 관련 q 의 phonon/Hessian.",
+          "   ⛔ 수치 바닥을 **미리 선언하지 않는다** — λ=0 반복 계산·더 엄격한 SCF·",
+          "      dense-k spot check 로 **재서** 이 표와 나란히 놓을 것 (리뷰 J3)."]
+    json.dump({"tag": tag, "points_eV": {str(k): v for k, v in pts.items()}, "e0_eV": e0,
+               "delta_even_meV": {str(a): v for a, v in ev}},
               open(os.path.join(d, "scan_result.json"), "w", encoding="utf-8"),
               ensure_ascii=False, indent=2)
     return 0, "\n".join(L)
@@ -2342,7 +2498,9 @@ def selftest_prereq():
 
     td = tempfile.mkdtemp(prefix="prereq_st_")
     TAG = "li3nd"
-    CELL = [[10.37, 0, 0], [0, 10.37, 0], [0, 0, 10.37]]
+    # ⚠ Li 부격자가 규칙적이어야 preflight(메운 Li 의 최근접 == 나머지 중앙값)를 탄다.
+    #   3 × 3.667 = 11.001 로 두면 0 · 3.667 · 7.334 가 주기적으로 등간격이 된다.
+    CELL = [[11.001, 0, 0], [0, 11.001, 0], [0, 0, 11.001]]
     ROWS = [("Li", [0.0, 0.0, 0.0]), ("Li", [3.667, 0.0, 0.0]),
             ("Nd", [5.185, 0.0, 0.0]), ("Nd", [0.0, 5.185, 0.0])]
 
@@ -2438,19 +2596,31 @@ def selftest_prereq():
         _mkout(g, "ep_final", -100.0)
         _mkout(g, "saddle", -100.0 + sad)
     rc, msg = collect_ladder(td, TAG)
-    chk(rc == 0 and "18 meV" in msg and "✅" in msg,
-        f"[사다리·회수] 작은 흔들림은 허용폭 통과로 읽는다")
-    _mkout(0.01, "saddle", -100.0 + 0.0200)                 # 장벽이 43 meV 튄다
+    chk(rc == 0 and "수치적으로 안정" in msg,
+        "[사다리·회수] 5 meV 안이면 '수치적으로 안정'")
+    chk("정방향" in msg and "역방향" in msg and "끝점 split" in msg,
+        "[사다리·회수] 양쪽 장벽과 끝점 splitting 을 따로 낸다 (리뷰 J1)")
+    #   ★★ P0-1 회귀: **일부 점만 있으면 판정하지 않는다** (옛 판은 rc=0 으로 통과했다)
+    import shutil as _sh
+    _sh.rmtree(os.path.join(d, "smear_ladder", "g0p01", "saddle"))
     rc, msg = collect_ladder(td, TAG)
-    chk("허용폭" in msg and "⛔" in msg,
-        "[사다리·회수·음성] 큰 흔들림은 **장벽이 smearing 에 딸려 있다**고 말한다")
+    chk(rc == 1 and "판정하지 않는다" in msg,
+        "[사다리·회수·P0회귀] **점이 빠지면 거부**한다 (옛 판은 일부만으로 판정+성공종료)")
+    _mkout(0.01, "saddle", -100.0 + 0.0200)                 # 43 meV 튐 — 복구 겸
+    rc, msg = collect_ladder(td, TAG)
+    chk("NO-GO" in msg, "[사다리·회수·음성] 36 meV 넘으면 NO-GO 라고 말한다")
+    #   SCF 미수렴 문자열이 있으면 그 점을 못 쓰는 점으로 센다
+    open(os.path.join(d, "smear_ladder", "g0p01", "saddle", "scf.out"), "a").write(
+        "     convergence NOT achieved after 200 iterations\n")
+    rc, msg = collect_ladder(td, TAG)
+    chk(rc == 1 and "SCF 미수렴" in msg, "[사다리·회수·음성] SCF 미수렴 점을 조용히 안 쓴다")
 
     # ── ② 모드 스캔 ──────────────────────────────────────────────────────────
     d2 = os.path.join(td, "sc")
     for nm in ("ep_initial", "ep_final"):
         os.makedirs(os.path.join(d2, nm), exist_ok=True)
-    BUILT_I = ROWS                                       # 갓 지은 초기 (공공 1개 있는 셀)
-    BUILT_F = [("Li", [7.334, 0.0, 0.0])] + ROWS[1:]     # 뛰는 원자가 다른 자리로
+    BUILT_I = ROWS
+    BUILT_F = [("Li", [7.334, 0.0, 0.0])] + ROWS[1:]
     REL_I = [(s, [p[0], p[1] + (0.3 if s == "Nd" else 0.02), p[2]]) for s, p in BUILT_I]
     for nm, rows in (("ep_initial", BUILT_I), ("ep_final", BUILT_F)):
         open(os.path.join(d2, nm, "relax.in"), "w", encoding="utf-8").write(
@@ -2458,42 +2628,78 @@ def selftest_prereq():
     open(os.path.join(d2, "ep_initial", "relax.out"), "w", encoding="utf-8").write(
         "Begin final coordinates\n" + _blk(REL_I) + "End final coordinates\n"
         "!    total energy              =    -100.0 Ry\nJOB DONE.\n")
-    rc, msg = mode_scan(td, "sc", (-0.5, 0.0, 0.5))
-    chk(rc == 0, f"[스캔] 입력을 만든다 ({msg[:50]})")
+    LAM = (-0.5, -0.10, -0.05, 0.0, 0.05, 0.10, 0.5)
+    rc, msg = mode_scan(td, "sc", LAM)
+    chk(rc == 0 and "preflight ✅" in msg, f"[스캔] preflight 통과 후 입력을 만든다 ({msg[:44]})")
     sc = sorted(_g.glob(os.path.join(d2, "mode_scan", "lam*", "scf.in")))
-    chk(len(sc) == 3, f"[스캔] λ 3개 ({len(sc)})")
+    chk(len(sc) == len(LAM), f"[스캔] λ {len(LAM)}개 ({len(sc)})")
     t2 = open(sc[0], encoding="utf-8").read()
     chk(f"nat             = {len(BUILT_I)+1}" in t2,
         f"[스캔·핵심] 공공을 **메운다** — 원자 {len(BUILT_I)} → {len(BUILT_I)+1}")
     chk("tot_charge      = 0.0" in t2, "[스캔·핵심] 공공이 없으니 전하는 중성이다")
+    mj = json.load(open(os.path.join(d2, "mode_scan", "meta.json"), encoding="utf-8"))
+    chk(mj["preflight"]["min_distance_A"] > 1.5 and "upf_sha256" in mj,
+        "[스캔] preflight 와 PP 해시를 meta 에 남긴다 (리뷰 J P0)")
     z = [x for x in sc if "lamp0p00" in x]
-    chk(len(z) == 1, "[스캔] λ=0 기준점이 있다")
     zr = _pos_block(open(z[0], encoding="utf-8").read(),
                     open(z[0], encoding="utf-8").read().index("ATOMIC_POSITIONS"))
     chk(all(abs(zr[i][1][k] - ([*BUILT_I, BUILT_F[0]][i][1][k])) < 1e-6
             for i in range(len(zr)) for k in range(3)),
-        "[스캔·핵심] λ=0 은 **갓 지은 완전 격자** 그대로다 (이완 좌표가 새면 기준이 무너진다)")
+        "[스캔·핵심] λ=0 은 **갓 지은 완전 격자** 그대로다")
 
-    def _scanout(lam, ry):
+    #   ★★ P0-2 회귀: λ=0 **하나만** 있으면 판정하지 않는다
+    def _scanout(lam, ry, tail="JOB DONE.\n"):
         lt = f"{lam:+.2f}".replace(".", "p").replace("+", "p").replace("-", "m")
-        p = os.path.join(d2, "mode_scan", f"lam{lt}")
-        os.makedirs(p, exist_ok=True)
-        open(os.path.join(p, "scf.out"), "w", encoding="utf-8").write(
-            f"!    total energy              =    {ry:.8f} Ry\nJOB DONE.\n")
-    for lam, ry in ((-0.5, -100.0 + 0.01), (0.0, -100.0), (0.5, -100.0 + 0.012)):
-        _scanout(lam, ry)                                # λ=0 이 최소 → 안정
+        pp = os.path.join(d2, "mode_scan", f"lam{lt}")
+        os.makedirs(pp, exist_ok=True)
+        open(os.path.join(pp, "scf.out"), "w", encoding="utf-8").write(
+            f"!    total energy              =    {ry:.8f} Ry\n" + tail)
+    _scanout(0.0, -100.0)
     rc, msg = collect_scan(td, "sc")
-    chk(rc == 0 and "λ=0 이 최소" in msg and "공공이 유발" in msg,
-        "[스캔·회수·양성] λ=0 최소면 '공공이 유발한 이완' 으로 읽는다")
-    _scanout(0.5, -100.0 - 0.005)                        # λ=+0.5 가 68 meV 더 낮다
+    chk(rc == 1 and "판정하지 않는다" in msg,
+        "[스캔·회수·P0회귀] **λ=0 하나로는 판정 안 한다** (옛 판은 '최소' 라고 찍었다)")
+
+    #   양성 ①: 작은 두 진폭에서 **음의 곡률 재현** → 불안정
+    for lam, ry in ((-0.5, -100.0 - 0.02), (-0.10, -100.0 - 0.001), (-0.05, -100.0 - 0.0004),
+                    (0.0, -100.0), (0.05, -100.0 - 0.0004), (0.10, -100.0 - 0.001),
+                    (0.5, -100.0 - 0.02)):
+        _scanout(lam, ry)
     rc, msg = collect_scan(td, "sc")
-    chk("불안정" in msg and "MD 로 옮겨도" in msg,
-        "[스캔·회수·음성] 더 낮은 λ 가 있으면 **불안정 + MD 도 답이 아님**을 말한다")
-    for lam, ry in ((-0.5, -100.0 + 2e-6), (0.5, -100.0 + 3e-6)):
-        _scanout(lam, ry)                                # 잡음 규모
+    chk(rc == 0 and "음의 곡률이 재현" in msg and "불안정" in msg,
+        "[스캔·회수·양성] 작은 진폭 음의 곡률 → 불안정")
+    chk("Δ_even" in msg, "[스캔·회수] 판정을 **짝수부(곡률)** 로 한다 — 최저 λ 가 아니라")
+
+    #   양성 ②: 근처는 양의 곡률인데 **먼 곳만** 낮다 → 국소 soft mode 아님
+    for lam, ry in ((-0.10, -100.0 + 0.002), (-0.05, -100.0 + 0.0006),
+                    (0.05, -100.0 + 0.0006), (0.10, -100.0 + 0.002),
+                    (-0.5, -100.0 - 0.03), (0.5, -100.0 - 0.03)):
+        _scanout(lam, ry)
     rc, msg = collect_scan(td, "sc")
-    chk("어느 쪽도 주장하지 않는다" in msg or "λ=0 이 최소" in msg,
-        "[스캔·회수·가드] 잡음 규모 차이로는 판정하지 않는다")
+    chk("lower-basin" in msg, "[스캔·회수] 근처 양 + 먼 곳 음 → **먼 lower-basin 후보**로 구분")
+
+    #   음성: 전부 양의 곡률 → **약한 결론만**
+    for lam, ry in ((-0.5, -100.0 + 0.05), (0.5, -100.0 + 0.05)):
+        _scanout(lam, ry)
+    rc, msg = collect_scan(td, "sc")
+    chk("검출하지 못했다" in msg and "닫을 수 없다" in msg,
+        "[스캔·회수·음성] 전부 양이면 '검출 못 함' 까지만 — P0-2 를 닫지 않는다")
+
+    #   preflight 음성: 좌표가 겹치면 만들지 않는다
+    d3 = os.path.join(td, "dup")
+    for nm in ("ep_initial", "ep_final"):
+        os.makedirs(os.path.join(d3, nm), exist_ok=True)
+    DUP_I = [("Li", [0.0, 0.0, 0.0]), ("Li", [0.05, 0.0, 0.0]), ("Nd", [5.185, 0.0, 0.0])]
+    DUP_F = [("Li", [3.667, 0.0, 0.0])] + DUP_I[1:]
+    for nm, rows in (("ep_initial", DUP_I), ("ep_final", DUP_F)):
+        open(os.path.join(d3, nm, "relax.in"), "w", encoding="utf-8").write(
+            _sys() + _blk(rows) + _tail())
+    open(os.path.join(d3, "ep_initial", "relax.out"), "w", encoding="utf-8").write(
+        "Begin final coordinates\n" + _blk(DUP_I) + "End final coordinates\n"
+        "!    total energy              =    -100.0 Ry\nJOB DONE.\n")
+    rc, msg = mode_scan(td, "dup", (-0.05, 0.0, 0.05))
+    chk(rc == 1 and "preflight 실패" in msg,
+        "[스캔·preflight·음성] 최소거리가 이상하면 **입력을 안 만든다**")
+
     chk(collect_scan(td, "nope")[0] == 1 and collect_ladder(td, "nope")[0] == 1,
         "[선행·가드] 입력을 안 만들었으면 회수를 거부")
     shutil.rmtree(td, ignore_errors=True)
