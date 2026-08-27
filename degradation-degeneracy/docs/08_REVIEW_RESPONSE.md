@@ -3333,3 +3333,107 @@ P1-4 는 **두 회차 연속 같은 형태**다. 30차에 "plan 을 인자로 �
 | P0-1 durable retention 전체 | actual object-lock adapter 없음 — 리뷰가 그것을 조건으로 명시했다 |
 | 최소 증거 9 | immutable cohort generation + 단일 `CURRENT` — **미착수** |
 | P2 generation value | `digest → generation` 은 여전히 선언이다 (실행 산출물에 그 필드가 없다) |
+
+## 41. 32차 리뷰 대응 — canary 가 강제하는 쪽이 아니었다
+
+> 2026-08-27. 31차에 "강제가 **있는** 쪽도 canary 로 고정했다" 고 적었다.
+> 리뷰의 판정:
+>
+> > 이 canary 는 강제가 있는 쪽이 아니라 **local bytes 와 독립된 metadata
+> > 장부가 있는 쪽**이다.
+>
+> 맞다. `ObjectLockBackend` 가 `CasBackend` 의 저장 연산을 그대로 상속해서
+> 바이트는 local `objects/`·`pins/` 에 있었고, provider 에는 version/mode
+> 장부만 적혔다. 그래서 `durable=True` 뒤에도 local pin 을 지울 수 있었다.
+> 잠갔다는 말이 거짓이었다.
+
+### 41.1 P0-1 — 바이트의 소유자를 provider 로 옮겼다
+
+| 연산 | 31차 | 32차 |
+|---|---|---|
+| `put_if_absent` · `read_back` · `has` | local `objects/` | provider |
+| `pin` · `pinned` · `read_pinned` | local `pins/` | provider |
+| `store_id` | local `store.json` | provider |
+| `uri` | local 경로 | provider identity |
+
+canary 도 리뷰가 요구한 형태로 바꿨다:
+
+* **local root 를 통째로 지운 뒤** graph 전부를 provider 에서 회수한다
+* provider 가 `retain_until` 전 delete/overwrite 를 **실제로 거부**한다
+  (31차 canary 는 삭제를 시도조차 하지 않았다)
+
+verifier 의 세 구멍도 닫았다 — 리뷰가 번호를 붙여 준 그대로:
+
+| # | 무엇 | 지금 |
+|---|---|---|
+| 1 | `object_versions` 가 key set 만 봤다 → `{digest: None}` 이 durable 로 통과 | version **값**이 비어 있으면 거부 |
+| 2 | lease 의 `lock_mode` 를 현재 provider mode 와 대조 안 함 | 대조한다 |
+| 3 | version 별 현재 `retain_until` 을 재조회 안 함 | 재조회하고 lease 보다 짧으면 거부 |
+
+다섯 축(empty version · foreign version · mode 변경 · until 단축 · lock 해제)을
+각각 물린다.
+
+### 41.2 P0-3 — retry 재-fsync 가 index 한 경로에만 있었다
+
+31차에 "이름이 있는 한 항상 굳힌다" 고 적었는데 `_exclusive_write()` 에만
+적용했다. 같은 형태가 네 곳에 남아 있었다:
+
+| 곳 | 무엇이었나 |
+|---|---|
+| `put_if_absent` | `os.replace` 뒤 fsync 실패 → 재시도가 `dst.exists()` 로 들어가 그냥 성공 |
+| `pin` | 첫 commit 뒤 fsync 실패 → 재시도가 hash 만 보고 `continue` |
+| `_mkdir_durable` | "보이면 즉시 return" — mkdir 성공/parent fsync 실패 상태를 durable 과 구별 못함 |
+| `store_id` | CAS root **이름**을 담은 parent entry 를 안 굳힘 |
+
+그리고 `during_journal_fsync` 복구가 완료되지 않았다. journal 이 **보이지만
+durable 하지 않을 수 있는** 상태에서 `finalize_only()` 가 `already` 로
+빠져나가며 `registered/` 를 다시 굳히지 않았다. 이제 재개가 commit 을
+끝낸다.
+
+drill 집계도 `any`/`not all` 이라 `during_journal_fsync` 가 다시 음성이 되어도
+통과했다. 요청문에 적은 **exact vector** 로 고정했다.
+
+### 41.3 P2 — "actual registry" 가 실물을 안 읽었다
+
+31차 reader 는 index entry 와 journal 의 `receipt_object` **문자열**이 같으면
+등록으로 셌다. CAS·lease·pin graph·receipt bytes 를 하나도 읽지 않았고,
+generation 결속도 receipt 가 아니라 index 의 사본을 읽었다.
+
+이제 `verify_registered_graph()` 가 돌려준 receipt 를 쓴다. index 의
+`planned_envelope` 사본은 **대조 대상**이지 권위가 아니다 — 갈리면 그 자체가
+오류다. reader 시험도 진짜 트랜잭션으로 만든 등록을 쓴다 (31차 시험은
+`planned_id="p"` · `receipt_digest="r"` 로 CAS 없이 `publish()`+`_register()`
+만 부르고 "real registration" 이라고 불렀다).
+
+### 41.4 #9 — immutable generation + 단일 CURRENT
+
+27차부터 "다음 checkpoint" 로 계속 지목되던 자리다. 승격이 fixed-name 세
+파일이라 set atomicity 가 아니었다 (manifest-last 로 완화했을 뿐).
+
+```text
+out/gen/<generation_id>/…   ← 내용 주소가 이름. 한 번 쓰고 절대 안 고친다
+out/CURRENT                 ← 이 한 파일만 원자적으로 바뀐다
+```
+
+generation 자리에 다른 바이트가 있으면 덮지 않고 거부한다. `read_current()`
+는 pointer·id·실물이 어긋나면 fail-closed. pointer 직전에 죽으면 옛
+generation 이 그대로 보인다.
+
+### 41.5 변이로 확인했고, 물지 않은 것 셋
+
+| 물지 않은 변이 | 왜 | 처리 |
+|---|---|---|
+| lease version 값 검사 삭제 | live 조회가 같은 것을 잡아 메시지가 겹쳤다 | 두 축의 메시지를 갈라 각각 고정 |
+| pointer 원자성 삭제 | 단일 프로세스로는 관측 불가 | 부분 쓰기를 주입해 옛 pointer 가 살아남는지 본다 |
+| "없는 generation" 검사 삭제 | 앞의 id 검사에 업혀 통과 | 자기정합 pointer 를 만들어 축을 분리 |
+
+세 라운드 연속 같은 형태가 나온다 — **시험이 다른 축에 업혀 통과하는 것**.
+규칙을 넣을 때마다 지워 보는 절차가 이것을 잡고 있다.
+
+### 41.6 남은 것
+
+| 항 | 상태 |
+|---|---|
+| 실제 provider adapter (S3 Object Lock 등) | **미구현** — 이 환경에 붙일 provider 가 없다 |
+| power-loss ordering fault model | **미착수** — `os._exit` 은 un-fsynced entry 를 잃지 않는다 |
+| `digest → generation` value | **선언** — 실행 산출물에 그 필드가 없다 |
