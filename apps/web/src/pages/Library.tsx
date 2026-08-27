@@ -6,6 +6,9 @@ import { Link } from 'react-router-dom'
 import { DeleteSampleButton } from '../components/DeleteSample'
 import { FolderRow, useFolders } from '../components/FolderTree'
 import { GroupFilterFields, groupPath, useGroupChoice } from '../components/GroupFilter'
+import {
+  BucketRow, GroupByControl, type GroupKey, bucketize, validGroupKey,
+} from '../components/LibraryGroups'
 import { Alert, Card, Empty, Field, Spinner, TrashIcon } from '../components/ui'
 import { api } from '../lib/api'
 import { num } from '../lib/format'
@@ -45,8 +48,7 @@ export function Library() {
   // 브라우저에 남아 있던 옛 선택('이름 묶음')을 걸러 낸다.  없어진 값이 그대로
   // 살아 있으면 묶기 줄에 아무 버튼도 안 켜지고, 표는 이유 없이 한 덩어리가
   // 된다 -- 화면은 멀쩡해 보이는데 아무도 그렇게 고른 적이 없다.
-  const groupKey: GroupKey =
-    GROUP_KEYS.some(([value]) => value === groupBy) ? groupBy : 'none'
+  const groupKey = validGroupKey(groupBy)
 
   const owners = useMemo(() => {
     const seen = new Set<string>()
@@ -141,21 +143,7 @@ export function Library() {
           <Card
             title={`셀 ${shown.length}개`}
             actions={
-              <div className="row" style={{ gap: 6 }}>
-                <span className="tiny faint">묶기</span>
-                <div className="segmented">
-                  {GROUP_KEYS.map(([value, label]) => (
-                    <button
-                      key={value}
-                      type="button"
-                      className={groupKey === value ? 'on' : ''}
-                      onClick={() => setGroupBy(value)}
-                    >
-                      {label}
-                    </button>
-                  ))}
-                </div>
-              </div>
+              <GroupByControl value={groupKey} onChange={setGroupBy} />
             }
             tight
           >
@@ -189,41 +177,16 @@ export function Library() {
   )
 }
 
-/** 무엇으로 묶을 수 있는가.
- *
- * 그룹은 사람이 만들어 붙이는 것이고, 나머지는 이미 셀에 적혀 있는 것이다.
- * 그룹을 만들기 전에도 "같은 조건 세 번 돌린 것" 을 나란히 보고 싶은 것이
- * 실제 요구라서, 이름으로 묶는 길을 열어 둔다.
- */
-const GROUP_KEYS: [GroupKey, string][] = [
-  ['none', '없음'],
-  ['group', '그룹'],
-  // 누가 올린 셀인가.  한 서버를 여럿이 쓰면 표에서 남의 셀과 내 셀이 섞이고,
-  // 이름만 보고는 알 수 없다 (ADR 0012 — 이름은 기록이지 신원 확인이 아니다).
-  ['owner', '작성자'],
-  ['cathode', '양극재'],
-  ['process', '공정'],
-  ['temperature', '온도'],
-]
-
-type GroupKey = 'none' | 'group' | 'owner' | 'cathode' | 'process' | 'temperature'
-
 /** 이 셀이 어느 묶음에 속하는가.  "" 는 값이 없다는 뜻이고, 그 묶음은 맨
  *  아래로 내린다 — 비어 있는 것이 목록의 첫인상이 되면 안 된다. */
 function bucketOf(sample: Sample, key: GroupKey): string {
   switch (key) {
-    case 'group':
-      return groupPath(sample.group_name, sample.group_parent_name)
-    case 'owner':
-      return sample.created_by ?? ''
-    case 'cathode':
-      return sample.cathode_detail || sample.cathode_type || ''
-    case 'process':
-      return sample.process || ''
+    case 'owner': return sample.created_by ?? ''
+    case 'cathode': return sample.cathode_detail || sample.cathode_type || ''
+    case 'process': return sample.process || ''
     case 'temperature':
       return sample.temperature_c === null ? '' : `${sample.temperature_c}°C`
-    default:
-      return ''
+    default: return ''
   }
 }
 
@@ -252,23 +215,8 @@ function SampleTable({
   // 접었다 펴도 얻는 것이 없고, 폴더 모양만 흉내 내면 그룹 트리와 헷갈린다.
   const folders = useFolders('library', samples, placeSample)
 
-  const sections = useMemo(() => {
-    if (groupBy === 'none' || groupBy === 'group') return null
-    const buckets = new Map<string, Sample[]>()
-    for (const sample of samples) {
-      const key = bucketOf(sample, groupBy)
-      const bucket = buckets.get(key)
-      if (bucket) bucket.push(sample)
-      else buckets.set(key, [sample])
-    }
-    // 값이 없는 묶음은 맨 아래.  나머지는 이름순 — 새로 올린 셀이 목록을
-    // 흔들지 않게 하려면 순서가 내용에만 달려 있어야 한다.
-    return [...buckets.entries()].sort(([a], [b]) => {
-      if (!a) return 1
-      if (!b) return -1
-      return a.localeCompare(b, 'ko')
-    })
-  }, [samples, groupBy])
+  const sections = useMemo(
+    () => bucketize(samples, groupBy, bucketOf), [samples, groupBy])
 
   const row = (sample: Sample) => (
     <SampleRow
@@ -308,16 +256,7 @@ function SampleTable({
           <SampleHead />
           {sections.map(([key, rows]) => (
             <tbody key={key || '(none)'}>
-              <tr className="section">
-                <th colSpan={COLUMN_COUNT}>
-                  {/* 가로 스크롤에 붙는 것은 이 span 이다 — 칸 자체는 표 전체
-                      폭이라 붙잡을 여지가 없다 (app.css 의 .section-label). */}
-                  <span className="section-label">
-                    {key || <span className="faint">미입력</span>}
-                    <span className="faint"> · {rows.length}개</span>
-                  </span>
-                </th>
-              </tr>
+              <BucketRow label={key} count={rows.length} columns={COLUMN_COUNT} />
               {rows.map(row)}
             </tbody>
           ))}

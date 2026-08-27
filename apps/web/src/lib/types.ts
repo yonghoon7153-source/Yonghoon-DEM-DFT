@@ -645,6 +645,10 @@ export interface Spectrum {
   /** 실제로 쓰이는 값 — 자기 것이 비어 있으면 붙은 셀의 것. */
   group_id_effective?: number | null
   group_label?: string
+  /** 폴더 트리가 쓰는 두 조각 (ADR 0035) — `group_label` 을 갈라 쓰면
+   *  이름에 `·` 가 든 그룹에서 조용히 틀린다. */
+  group_name_effective?: string
+  group_parent_name_effective?: string
   test_date_effective?: string
   cathode_type_effective?: string
   process_effective?: string
@@ -967,6 +971,10 @@ export interface GittRun {
   /** 실제로 쓰이는 값 — 자기 것이 비어 있으면 붙은 셀의 것. */
   group_id_effective?: number | null
   group_label?: string
+  /** 폴더 트리가 쓰는 두 조각 (ADR 0035) — `group_label` 을 갈라 쓰면
+   *  이름에 `·` 가 든 그룹에서 조용히 틀린다. */
+  group_name_effective?: string
+  group_parent_name_effective?: string
   test_date_effective?: string
   cathode_type_effective?: string
   process_effective?: string

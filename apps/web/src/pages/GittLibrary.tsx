@@ -9,13 +9,18 @@
 import { useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 
+import { FolderRow, useFolders } from '../components/FolderTree'
 import { GroupFilterFields, useGroupChoice } from '../components/GroupFilter'
+import {
+  BucketRow, GroupByControl, type GroupKey, bucketize, validGroupKey,
+} from '../components/LibraryGroups'
 import { DeleteMeasurementButton, RelatedCellSelect } from '../components/RelatedCell'
 import { GroupTag, OwnerTag, leafOf } from '../components/RowTags'
 import { Alert, Card, Empty, Field, Spinner } from '../components/ui'
 import { api } from '../lib/api'
 import { dateTime, num } from '../lib/format'
-import { useAsync } from '../lib/hooks'
+import { useAsync, useStickyState } from '../lib/hooks'
+import type { GittRun } from '../lib/types'
 
 export function GittLibrary() {
   const [search, setSearch] = useState('')
@@ -48,6 +53,13 @@ export function GittLibrary() {
       return true
     })
   }, [runs.data, samples.data, owner, purpose, group.effective, inGroup])
+
+  // 묶기 — 셀·EIS 라이브러리와 같은 어휘, 같은 모양 (`LibraryGroups`).
+  const [groupBy, setGroupBy] = useStickyState<GroupKey>('bml.gittGroupBy', 'none')
+  const groupKey = validGroupKey(groupBy)
+  const folders = useFolders('gitt-library', rows, placeRun)
+  const buckets = useMemo(
+    () => bucketize(rows, groupKey, bucketOf), [rows, groupKey])
 
   async function attach(id: number, sampleId: string) {
     setError(null)
@@ -117,7 +129,11 @@ export function GittLibrary() {
         </div>
       </Card>
 
-      <Card title={`GITT 기록 ${rows.length}개`} tight>
+      <Card
+        title={`GITT 기록 ${rows.length}개`}
+        actions={<GroupByControl value={groupKey} onChange={setGroupBy} />}
+        tight
+      >
         {runs.error ? (
           <Alert kind="error">{runs.error}</Alert>
         ) : runs.loading && !runs.data ? (
@@ -138,8 +154,37 @@ export function GittLibrary() {
                   <th />
                 </tr>
               </thead>
-              <tbody>
-                {rows.map((run) => (
+              {groupKey === 'group' ? (
+                folders.folders.filter(folders.isVisible).map((folder) => (
+                  <tbody key={folder.key}>
+                    <FolderRow folder={folder} view={folders} columns={COLUMN_COUNT} />
+                    {folders.isFolded(folder.key) ? null : folder.items.map(row)}
+                  </tbody>
+                ))
+              ) : buckets ? (
+                buckets.map(([label, items]) => (
+                  <tbody key={label || '(none)'}>
+                    <BucketRow label={label} count={items.length} columns={COLUMN_COUNT} />
+                    {items.map(row)}
+                  </tbody>
+                ))
+              ) : (
+                <tbody>{rows.map(row)}</tbody>
+              )}
+            </table>
+          </div>
+        ) : (
+          <Empty title="해당하는 기록이 없습니다" icon="↯">
+            <Link to="/gitt/upload">업로드</Link>에서 Smart Interface 의{' '}
+            <code>.wrd</code> 를 그대로 올리면 됩니다.
+          </Empty>
+        )}
+      </Card>
+    </main>
+  )
+
+  function row(run: GittRun) {
+    return (
                   <tr key={run.id}>
                     <td className="text">
                       {/* EIS 라이브러리와 같은 이름표 — 두 표를 나란히 놓고 보는
@@ -192,17 +237,32 @@ export function GittLibrary() {
                       />
                     </td>
                   </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        ) : (
-          <Empty title="해당하는 기록이 없습니다" icon="↯">
-            <Link to="/gitt/upload">업로드</Link>에서 Smart Interface 의{' '}
-            <code>.wrd</code> 를 그대로 올리면 됩니다.
-          </Empty>
-        )}
-      </Card>
-    </main>
-  )
+    )
+  }
 }
+
+/** 이 기록을 폴더 자리로 (ADR 0035).  EIS 라이브러리와 같은 규칙이다. */
+const placeRun = (run: GittRun) => ({
+  id: run.id,
+  groupId: run.group_id_effective ?? null,
+  groupName: run.group_name_effective ?? '',
+  groupParentName: run.group_parent_name_effective ?? '',
+})
+
+/** 그룹이 아닌 묶기의 값.  "" 는 값이 없다는 뜻이고 그 묶음은 맨 아래로 간다. */
+function bucketOf(run: GittRun, key: GroupKey): string {
+  switch (key) {
+    case 'owner': return run.created_by ?? ''
+    case 'cathode': return run.cathode_type_effective || ''
+    case 'process': return run.process_effective || ''
+    case 'temperature':
+      return run.temperature_c_effective === null
+        || run.temperature_c_effective === undefined
+        ? '' : `${run.temperature_c_effective}°C`
+    default: return ''
+  }
+}
+
+/** 폴더 줄이 표 전체 폭을 덮으려면 열 수가 맞아야 한다 — 이름·관계셀·목적·
+ *  펄스·점·기간·확산계수·올린 때·지우기 = 9. */
+const COLUMN_COUNT = 9

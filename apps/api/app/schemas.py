@@ -751,6 +751,10 @@ class SpectrumOut(BaseModel):
     #: 어디서 왔는지도 함께 낸다.
     group_id_effective: int | None = None
     group_label: str = ""
+    #: 폴더 트리는 부모와 자식을 따로 알아야 한다 (ADR 0035).  `group_label`
+    #: 을 `·` 로 갈라 쓰면 이름에 `·` 가 든 그룹에서 조용히 틀린다.
+    group_name_effective: str = ""
+    group_parent_name_effective: str = ""
     test_date_effective: str = ""
     cathode_type_effective: str = ""
     process_effective: str = ""
@@ -986,6 +990,10 @@ class GittRunOut(BaseModel):
     #: 어디서 왔는지도 함께 낸다.
     group_id_effective: int | None = None
     group_label: str = ""
+    #: 폴더 트리는 부모와 자식을 따로 알아야 한다 (ADR 0035).  `group_label`
+    #: 을 `·` 로 갈라 쓰면 이름에 `·` 가 든 그룹에서 조용히 틀린다.
+    group_name_effective: str = ""
+    group_parent_name_effective: str = ""
     test_date_effective: str = ""
     cathode_type_effective: str = ""
     process_effective: str = ""

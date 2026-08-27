@@ -11,13 +11,17 @@
 import { useCallback, useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 
+import { FolderRow, useFolders } from '../components/FolderTree'
 import { GroupFilterFields, useGroupChoice } from '../components/GroupFilter'
+import {
+  BucketRow, GroupByControl, type GroupKey, bucketize, validGroupKey,
+} from '../components/LibraryGroups'
 import { DeleteMeasurementButton, RelatedCellSelect } from '../components/RelatedCell'
 import { GroupTag, OwnerTag, leafOf } from '../components/RowTags'
 import { Alert, Card, Empty, Field, Spinner } from '../components/ui'
 import { api } from '../lib/api'
 import { dateTime, num } from '../lib/format'
-import { useAsync } from '../lib/hooks'
+import { useAsync, useStickyState } from '../lib/hooks'
 import type { EisKind, Spectrum } from '../lib/types'
 import { frequencySpan } from './Eis'
 
@@ -100,6 +104,13 @@ export function EisLibrary() {
   const scanFiles = useMemo(
     () => new Set(shown.filter(isScan).map((item) => item.sha256)), [shown])
 
+  // 묶기 — 셀 라이브러리와 같은 어휘, 같은 모양 (`LibraryGroups`).
+  const [groupBy, setGroupBy] = useStickyState<GroupKey>('bml.eisGroupBy', 'none')
+  const groupKey = validGroupKey(groupBy)
+  const folders = useFolders('eis-library', shown, placeSpectrum)
+  const buckets = useMemo(
+    () => bucketize(shown, groupKey, bucketOf), [shown, groupKey])
+
   return (
     <main className="page">
       <div className="page-head">
@@ -170,6 +181,7 @@ export function EisLibrary() {
 
       <Card
         title={`${shown.length}개${scanFiles.size ? ` · 스캔 ${scanFiles.size}개` : ''}`}
+        actions={<GroupByControl value={groupKey} onChange={setGroupBy} />}
         tight
       >
         {spectra.error ? (
@@ -195,8 +207,37 @@ export function EisLibrary() {
                   <th />
                 </tr>
               </thead>
-              <tbody>
-                {shown.map((item) => (
+              {groupKey === 'group' ? (
+                folders.folders.filter(folders.isVisible).map((folder) => (
+                  <tbody key={folder.key}>
+                    <FolderRow folder={folder} view={folders} columns={COLUMN_COUNT} />
+                    {folders.isFolded(folder.key) ? null : folder.items.map(row)}
+                  </tbody>
+                ))
+              ) : buckets ? (
+                buckets.map(([label, items]) => (
+                  <tbody key={label || '(none)'}>
+                    <BucketRow label={label} count={items.length} columns={COLUMN_COUNT} />
+                    {items.map(row)}
+                  </tbody>
+                ))
+              ) : (
+                <tbody>{shown.map(row)}</tbody>
+              )}
+            </table>
+          </div>
+        ) : (
+          <Empty title="해당하는 측정이 없습니다" icon="∿">
+            <Link to="/eis/upload">업로드</Link>에서 <code>.mpr</code> 을 올리면
+            여기 나타납니다.
+          </Empty>
+        )}
+      </Card>
+    </main>
+  )
+
+  function row(item: Spectrum) {
+    return (
                   <tr key={item.id}>
                     <td className="text">
                       {/* 그룹과 올린 사람을 이름 앞에 — 대시보드와 같은 모양이다.
@@ -263,17 +304,34 @@ export function EisLibrary() {
                       />
                     </td>
                   </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        ) : (
-          <Empty title="해당하는 측정이 없습니다" icon="∿">
-            <Link to="/eis/upload">업로드</Link>에서 <code>.mpr</code> 을 올리면
-            여기 나타납니다.
-          </Empty>
-        )}
-      </Card>
-    </main>
-  )
+    )
+  }
 }
+
+/** 이 측정을 폴더 자리로 (ADR 0035).  그룹은 **측정 자신의 것**이 먼저고,
+ *  비어 있으면 붙은 셀의 것이다 (`*_effective`, ADR 0027). */
+const placeSpectrum = (item: Spectrum) => ({
+  id: item.id,
+  groupId: item.group_id_effective ?? null,
+  groupName: item.group_name_effective ?? '',
+  groupParentName: item.group_parent_name_effective ?? '',
+})
+
+/** 그룹이 아닌 묶기의 값.  "" 는 값이 없다는 뜻이고 그 묶음은 맨 아래로 간다. */
+function bucketOf(item: Spectrum, key: GroupKey): string {
+  switch (key) {
+    case 'owner': return item.created_by ?? ''
+    case 'cathode': return item.cathode_type_effective || ''
+    case 'process': return item.process_effective || ''
+    case 'temperature':
+      return item.temperature_c_effective === null
+        || item.temperature_c_effective === undefined
+        ? '' : `${item.temperature_c_effective}°C`
+    default: return ''
+  }
+}
+
+/** 폴더 줄이 표 전체 폭을 덮으려면 열 수가 맞아야 한다.  틀리면 그 줄만
+ *  가로로 밀려 표가 어긋난다 — 이름·관계셀·측정·목적·주파수·점·사이클·
+ *  피팅·올린 때·지우기 = 10. */
+const COLUMN_COUNT = 10

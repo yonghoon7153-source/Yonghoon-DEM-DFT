@@ -103,10 +103,17 @@ def resolve_conditions(session: Session, record) -> dict:
     group = session.get(ExperimentGroup, group_id) if group_id else None
     if group is None:
         out["group_label"] = ""
+        out["group_name_effective"] = ""
+        out["group_parent_name_effective"] = ""
     else:
         parent = (session.get(ExperimentGroup, group.parent_id)
                   if group.parent_id else None)
         out["group_label"] = f"{parent.name} · {group.name}" if parent else group.name
+        # 붙여 놓은 한 줄만 내면 화면이 그것을 다시 갈라야 하는데, 구분자가
+        # `·` 라 이름에 `·` 가 들어간 그룹에서 조용히 틀린다.  폴더 트리는
+        # 부모와 자식을 따로 알아야 하므로 (ADR 0035) 여기서 함께 낸다.
+        out["group_name_effective"] = group.name
+        out["group_parent_name_effective"] = parent.name if parent else ""
     return out
 
 
