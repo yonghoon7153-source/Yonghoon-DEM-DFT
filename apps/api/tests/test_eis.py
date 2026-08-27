@@ -1304,3 +1304,34 @@ def test_a_second_upload_fills_a_blank_group_but_never_moves_one(client):
                 params={"kind": "liquid", "group_id": second["id"]},
                 files={"file": ("g.mpr", body, "application/octet-stream")})
     assert client.get(f"/api/eis/spectra/{bare['id']}").json()["group_id"] == first["id"]
+
+
+def test_the_liquid_presets_carry_the_wiring_inductance(client):
+    """액체 프리셋에도 `L1` 이 있어야 한다 (실측 2026-08-27).
+
+    전고체 쪽은 ADR 0028 때 이미 달았는데 액체 쪽만 빠져 있었다.  7 MHz 까지
+    재면 케이블·셀 홀더의 인덕턴스가 고주파를 휘게 하고, 유도성 점을 빼도 그
+    **아래** 점들이 이미 휘어 있다 — `L` 없는 회로는 그 굽이를 첫 아크를
+    찌그러뜨려 흉내낸다 ("반원 두 개가 안 나온다").
+    """
+    body = client.get("/api/eis/circuits").json()
+    by_pair = {(c["kind"], c["cell_config"]): c["presets"]
+               for c in body["combinations"]}
+    liquid_base = next(k["presets"] for k in body["kinds"] if k["kind"] == "liquid")
+
+    for name, presets in [
+        ("liquid/half", by_pair[("liquid", "half")]),
+        ("liquid/full", by_pair[("liquid", "full")]),
+        ("liquid/sym", by_pair[("liquid", "sym")]),
+        ("liquid (기본)", liquid_base),
+    ]:
+        circuits = [p["circuit"] for p in presets]
+        assert any(c.startswith("L1-") for c in circuits), (name, circuits)
+
+    # 하프셀은 **아크 셋 + L** 이 먼저다 — 실측 11스윕에서 평균 0.65 % 로
+    # 가장 좋았다 (옛 기본은 2.04 %, 최대오차는 12–15 %).
+    half = by_pair[("liquid", "half")]
+    assert half[0]["circuit"] == "L1-R0-p(R1,CPE1)-p(R2,CPE2)-p(R3,CPE3)-Ws4"
+    # 배선 없는 회로도 남긴다 — 유도성 꼬리가 아예 없는 파일이 있고, `auto` 는
+    # χ² 로 고르므로 그때는 그쪽이 이긴다 (파라미터가 하나 적다).
+    assert any(not c["circuit"].startswith("L1-") for c in half)

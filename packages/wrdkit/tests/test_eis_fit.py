@@ -647,3 +647,64 @@ def test_edge_misfit_measures_and_names_a_threshold_to_type():
     # 길이가 안 맞거나 점이 적으면 아무 말도 하지 않는다.
     assert edge_misfit(frequency, z, fitted[:-1]) is None
     assert edge_misfit(frequency[:8], z[:8], fitted[:8]) is None
+
+
+# --- 배선 인덕턴스 (실측 2026-08-27) ---------------------------------------
+
+def test_the_wiring_inductance_bends_the_points_below_the_crossover_too():
+    """유도성 점을 빼도 **그 아래 점들이 이미 휘어 있다.**
+
+    7 MHz 까지 재면 케이블·셀 홀더의 인덕턴스가 고주파 점을 실수축 위로
+    밀어 올린다.  올라간 점은 우리가 뺀다 (`drop_inductive`) -- 셀의 것이
+    아니니까.  그런데 **인덕턴스의 영향은 거기서 끊기지 않는다**: 교차점
+    아래로도 한두 십년대에 걸쳐 아크를 왼쪽 위로 당긴다.
+
+    `L` 없는 회로로 맞추면 모델이 그 굽이를 **첫 아크를 찌그러뜨려** 흉내낸다.
+    화면에서는 "반원 두 개가 안 나온다" 로 보인다 — 실측 하프셀 SOC 스캔
+    11스윕 전부에서 최대오차가 12–15 % 였고, 그 오차가 전부 고주파 끝에
+    몰려 있었다.  `L1` 을 넣으면 2–4 % 가 된다.
+    """
+    frequency = S.log_sweep(7e6, 1e-2, 10)
+    model = parse_circuit("L1-" + LIQUID)
+    truth = [8e-7, 5.0, 20.0, 1e-5, 0.7, 40.0, 1e-3, 0.8]
+    z = model.impedance(np.array(truth), frequency)
+    made = Spectrum(frequency, z.real, z.imag)
+
+    def worst(circuit: str) -> float:
+        best = None
+        for seed in range(3):
+            result = fit_circuit(made, circuit, restarts=32, seed=seed)
+            used = np.isin(frequency, result.frequency_hz)
+            deviation = (np.abs(result.fitted - z[used]) / np.abs(z[used])).max()
+            best = deviation if best is None else min(best, deviation)
+        return float(best)
+
+    without = worst(LIQUID)
+    with_l = worst("L1-" + LIQUID)
+    # 인덕턴스를 모델에 두면 **그 스펙트럼을 만든 식**이라 거의 완벽해야 한다.
+    assert with_l < 0.02, f"L 을 넣고도 {with_l:.1%}"
+    # 빼면 눈에 띄게 나빠진다.  이 배수가 곧 화면에서 보이던 차이다.
+    assert without > 5 * with_l, f"L 없이 {without:.1%}, 있고 {with_l:.1%}"
+
+
+def test_the_dropped_inductive_points_are_not_the_whole_story():
+    """뺀 점의 수만 보고 "인덕턴스는 처리했다" 로 읽으면 안 된다.
+
+    뺀 점이 있다는 것은 **남은 점에도 그 영향이 있다**는 신호다.  이 시험은
+    그 신호가 실재함을 고정한다: 유도성 점을 다 뺀 뒤에도, 남은 가장 높은
+    주파수의 점은 인덕턴스가 없을 때와 뚜렷이 다르다.
+    """
+    frequency = S.log_sweep(7e6, 1e-2, 10)
+    bare = parse_circuit(LIQUID)
+    withl = parse_circuit("L1-" + LIQUID)
+    arcs = [5.0, 20.0, 1e-5, 0.7, 40.0, 1e-3, 0.8]
+    z_bare = bare.impedance(np.array(arcs), frequency)
+    z_ind = withl.impedance(np.array([8e-7, *arcs]), frequency)
+
+    capacitive = z_ind.imag < 0
+    top = frequency[capacitive].max()
+    at = frequency == top
+    # 실수축을 아직 안 넘은 (즉 우리가 **남기는**) 가장 높은 점에서도 차이가
+    # 크다.  1 % 면 아크 하나를 찌그러뜨리기에 충분하다.
+    apart = float(np.abs(z_ind[at] - z_bare[at])[0] / np.abs(z_bare[at])[0])
+    assert apart > 0.05, f"교차점 바로 아래에서 차이가 {apart:.1%} 뿐"
