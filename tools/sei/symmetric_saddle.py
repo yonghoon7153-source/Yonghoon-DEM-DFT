@@ -1550,8 +1550,14 @@ def trace_report(steps, cell, energies=None, forces=None):
     }
 
 
-def inversion_match(first, last, ctr, cell, tolA=1.0):
-    """홉 중점 반전 `x → 2·ctr − x` 가 first → last 를 옮기는 대응 P. (match, worst) 또는 (None, worst).
+def inversion_match(first, last, ctr, cell):
+    """홉 중점 반전 `x → 2·ctr − x` 의 원자 대응 P 와 그 최악 잔차. → (match, worst)
+
+    ⛔ **문턱을 두지 않는다** (2026-08-27 자체수정). 처음엔 `worst > 1.0 Å` 이면 match 를
+      None 으로 버리게 했는데, 그러면 정작 보려던 경우 — cc333 처럼 끝점이 1.23 Å 어긋난
+      경우 — 에 코사인을 아예 못 본다. 문턱이 판정을 삼킨다.
+      → 대응은 언제나 돌려주고, **잔차를 같이 보고**해서 읽는 쪽이 할인하게 한다.
+      match 가 None 인 것은 대응 자체가 성립 못 할 때뿐이다(원소 개수 불일치).
 
     왜 필요한가 (2026-08-27, 실측이 가르쳐 준 것):
       두 끝점이 **대칭 등가**면 이완 변위장은 *같지* 않고 **대칭 연산으로 관계**된다.
@@ -1576,7 +1582,7 @@ def inversion_match(first, last, ctr, cell, tolA=1.0):
         used.add(bj)
         match[i] = bj
         worst = max(worst, best)
-    return (match if worst <= tolA else None), worst
+    return match, worst
 
 
 def mode_overlap(a_vec, b_vec, skip=(), match=None, sign=1.0):
@@ -1637,6 +1643,8 @@ def bfgs_trace(work, tag, base_dirs=False):
     match, worst = inversion_match(fr, la, ctr, cell)
     cos_sym = (mode_overlap(vec["ep_initial"], vec["ep_final"], skip, match, -1.0)
                if match else None)
+    # 잔차로 **읽는 강도**를 조절한다 (문턱으로 버리지 않는다 — inversion_match docstring)
+    inv_ok = worst is not None and worst <= 0.5
 
     # ── 이완 스칼라 일치도: 대칭 등가면 두 끝점의 이완 **크기**가 같아야 한다 ────────
     def _rel(x, y):
@@ -1681,8 +1689,11 @@ def bfgs_trace(work, tag, base_dirs=False):
              "**대칭 연산으로 관계**돼 있어서, 같은 index 로 재면 서로 다른 자리를 비교하게 된다 "
              "— 0 근처가 정상이다. 볼 것은 **대칭매핑** 쪽이다.")
     if cos_sym is None:
-        L.append("      ⇒ 반전 매핑이 성립 안 한다(잔차가 크다) — **그 자체가 두 끝점이 "
-                 "반전 대칭이 아니라는 신호**다.")
+        L.append("      ⇒ 반전 대응 자체를 못 만들었다 (원소 개수 불일치).")
+    elif not inv_ok:
+        L.append(f"      ⇒ ⛔ **반전 잔차가 {worst:.2f} Å 로 크다** — 두 끝점이 애초에 반전으로 "
+                 f"안 겹친다. 즉 **대칭 등가가 아니다.** 이 경우 대칭매핑 코사인 "
+                 f"({cos_sym}) 도 참고값일 뿐이다. 위 **스칼라 일치도**를 먼저 볼 것.")
     elif cos_sym >= 0.7:
         L.append("      ⇒ ✅ 두 이완이 **반전으로 겹친다** = 같은 물리적 응답이다.")
     elif cos_sym <= 0.3:
