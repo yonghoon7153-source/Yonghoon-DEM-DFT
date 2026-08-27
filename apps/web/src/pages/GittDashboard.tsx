@@ -12,13 +12,15 @@ import { useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 
 import { DeleteSampleButton } from '../components/DeleteSample'
+import { FolderRow, useFolders } from '../components/FolderTree'
 import { GroupFilterFields, groupPath, useGroupChoice } from '../components/GroupFilter'
 import { GroupTag, OwnerTag } from '../components/RowTags'
 import { DeleteMeasurementButton } from '../components/RelatedCell'
 import { Alert, Card, Empty, Spinner } from '../components/ui'
 import { api } from '../lib/api'
 import { dateTime } from '../lib/format'
-import { useAsync } from '../lib/hooks'
+import { useAsync, useStickyState } from '../lib/hooks'
+import type { GittDashboardRow } from '../lib/types'
 
 /** `3.2e-11`.  D 는 지수로 읽는 값이라 고정 소수점으로 쓰면 0 만 보인다. */
 function scientific(value: number | null): string {
@@ -36,6 +38,11 @@ export function GittDashboard() {
     () => (board.data?.rows ?? []).filter((row) => inGroup(row.group_id)),
     [board.data, inGroup])
   const unattached = board.data?.unattached ?? 0
+  // 세 대시보드가 같은 기본, 같은 손놀림이다 (ADR 0035).  기억만 화면마다
+  // 따로 둔다 -- 거르는 것이 서로 다르면 한쪽에서 걸러진 셀이 다른 쪽에서
+  // '지워졌다' 로 세어진다.
+  const [folderView, setFolderView] = useStickyState('bml.gittDashboardFolders', true)
+  const folders = useFolders('gittDashboard', rows, placeGittRow)
 
   return (
     <main className="page">
@@ -48,6 +55,13 @@ export function GittDashboard() {
           </div>
         </div>
         <span className="spacer" />
+        {/* 충방전·EIS 대시보드와 같은 자리, 같은 낱말. */}
+        <div className="segmented" role="group" aria-label="보기">
+          <button type="button" className={folderView ? '' : 'on'}
+                  onClick={() => setFolderView(false)}>목록</button>
+          <button type="button" className={folderView ? 'on' : ''}
+                  onClick={() => setFolderView(true)}>폴더</button>
+        </div>
         <GroupFilterFields pick={group} compact />
       </div>
 
@@ -86,8 +100,28 @@ export function GittDashboard() {
                   <th />
                 </tr>
               </thead>
-              <tbody>
-                {rows.map((row) => (
+              {folderView
+                ? folders.folders.filter(folders.isVisible).map((folder) => (
+                  <tbody key={folder.key}>
+                    <FolderRow folder={folder} view={folders} columns={COLUMN_COUNT} />
+                    {folders.isFolded(folder.key) ? null : folder.items.map(gittRow)}
+                  </tbody>
+                ))
+                : <tbody>{rows.map(gittRow)}</tbody>}
+            </table>
+          </div>
+        ) : (
+          <Empty title="셀에 붙은 GITT 가 없습니다" icon="↯">
+            <Link to="/gitt/upload">업로드</Link>에서 <code>.wrd</code> 를 올리면서
+            셀을 고르면 여기 나타납니다.
+          </Empty>
+        )}
+      </Card>
+    </main>
+  )
+
+  function gittRow(row: GittDashboardRow) {
+    return (
                   <tr key={row.attached ? `s${row.sample_id}` : `f${row.name}`}
                       className={row.attached ? undefined : 'dim'}>
                     <td className="text">
@@ -153,17 +187,19 @@ export function GittDashboard() {
                       ) : null}
                     </td>
                   </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        ) : (
-          <Empty title="셀에 붙은 GITT 가 없습니다" icon="↯">
-            <Link to="/gitt/upload">업로드</Link>에서 <code>.wrd</code> 를 올리면서
-            셀을 고르면 여기 나타납니다.
-          </Empty>
-        )}
-      </Card>
-    </main>
-  )
+    )
+  }
 }
+
+/** GITT 대시보드 줄을 폴더 자리로 (ADR 0035).  EIS 의 `placeEisRow` 와 같다 —
+ *  안 붙은 줄은 셀 id 가 없어 파일 이름으로 열쇠를 만든다. */
+const placeGittRow = (row: GittDashboardRow) => ({
+  id: row.attached && row.sample_id !== null ? row.sample_id : `f:${row.name}`,
+  groupId: row.group_id,
+  groupName: row.group_name ?? '',
+  groupParentName: row.group_parent_name ?? '',
+})
+
+/** 폴더 줄이 표 전체 폭을 덮으려면 열 수가 맞아야 한다 — 이름·관계셀·기록·
+ *  펄스·계산 가능·D·없는 것·목적·마지막·(지우기) = 10. */
+const COLUMN_COUNT = 10

@@ -158,7 +158,12 @@ export function FolderRow<T>({
           >
             {open ? '▾' : '▸'}
           </button>
-          {folder.name}
+          {/* **이름만 칠한다.**  줄 전체를 강조색으로 두면 `· 26개` 와
+              `+2 −1` 까지 같이 파래져서 이름과 수가 다시 한 덩어리가 된다 —
+              가르려고 칠하는 것이므로 가를 것만 칠한다. */}
+          <span className={folder.depth ? 'folder-name sub' : 'folder-name'}>
+            {folder.name}
+          </span>
           <span className="faint"> · {folder.total}개</span>
           {/* 들어온 것과 나간 것은 **색이 다르다.**  훑을 때 부호 하나로
               가르는 것보다 빠르고, `+2 −1` 이 한 덩어리로 읽히지 않는다. */}

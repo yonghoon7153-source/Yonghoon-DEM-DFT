@@ -8,10 +8,19 @@
  *  일뿐이다.  서버는 그대로다 — 새 표도 새 라우터도 없다.
  */
 
+/** 달라진 것을 세는 열쇠.
+ *
+ *  **숫자만이 아니다.**  EIS·GITT 대시보드에는 아직 셀에 안 붙은 줄이 있고
+ *  (`sample_id === null`), 그 줄들도 폴더 안에서 세어져야 한다.  전부 `null`
+ *  이면 서로 구별이 안 되어 "하나 들어오고 하나 나갔다" 가 0 으로 보인다 —
+ *  그날이 바로 봐야 하는 날인데.  그래서 그런 줄은 `f:<이름>` 같은 문자열을
+ *  쓴다.  세는 쪽은 집합의 원소로만 다루므로 종류를 안 가린다. */
+export type FolderId = number | string
+
 /** 폴더로 묶을 수 있는 것.  대시보드 줄이든 셀이든 이 셋만 있으면 된다. */
 export interface Placed {
-  /** 셀의 id — 달라진 것을 세는 열쇠다 (`folderDelta`). */
-  id: number
+  /** 이 줄의 열쇠 — 달라진 것을 세는 데 쓴다 (`folderDelta`). */
+  id: FolderId
   groupId: number | null
   groupName: string
   /** 그 그룹이 소그룹이면 그 위 그룹의 이름.  최상위면 빈 문자열. */
@@ -118,8 +127,8 @@ export function buildFolders<T>(
 
 // --- 지난번과 달라진 것 (ADR 0035) ------------------------------------------
 
-/** 폴더 열쇠 → 그때 그 폴더에 있던 셀 id 들. */
-export type FolderSnapshot = Record<string, number[]>
+/** 폴더 열쇠 → 그때 그 폴더에 있던 줄들의 열쇠. */
+export type FolderSnapshot = Record<string, FolderId[]>
 
 export interface FolderDelta {
   added: number
@@ -136,7 +145,7 @@ export interface FolderDelta {
  *  보이지만 그건 사실이 아니라 기억이 없다는 뜻이다 (§0.4).
  */
 export function folderDelta(
-  now: number[], before: number[] | undefined, hasMemory: boolean,
+  now: FolderId[], before: FolderId[] | undefined, hasMemory: boolean,
 ): FolderDelta {
   if (!hasMemory) return { added: 0, removed: 0 }
   const then = new Set(before ?? [])

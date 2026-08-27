@@ -6,7 +6,7 @@ import { afterEach, beforeEach, describe, expect, it } from 'vitest'
 
 import { FolderRow, useFolders } from '../FolderTree'
 
-interface Row { id: number; group: number | null; name: string; parent: string }
+interface Row { id: number | string; group: number | null; name: string; parent: string }
 
 const place = (row: Row) => ({
   id: row.id,
@@ -118,5 +118,30 @@ describe('폴더 줄', () => {
     expect(badges[1]!.className).toContain('less')
     // 그러면서 소그룹은 여전히 접혀 있다 — 셀은 안 보인다.
     expect(screen.queryByText('셀 4')).toBeNull()
+  })
+
+  it('묶음 이름만 강조색이다 — 수까지 같이 칠하면 도로 한 덩어리다', () => {
+    render(<Harness />)
+    const name = screen.getByText('Mid_Ni')
+    expect(name.className).toContain('folder-name')
+    // 소그룹은 한 눈금 작게 (`.sub`).  들여쓰기만으로는 다 펴 놓았을 때
+    // 최상위와 소그룹이 같은 세로줄에 겹쳐 보인다.
+    expect(screen.getByText('4.4V').className).toContain('sub')
+    expect(name.className).not.toContain('sub')
+    // `· 3개` 는 이름 밖에 남아야 한다 -- 안에 들어가면 같이 칠해진다.
+    expect(name.textContent).toBe('Mid_Ni')
+  })
+
+  it('셀에 안 붙은 줄도 센다 — 열쇠가 숫자가 아니어도', () => {
+    // EIS·GITT 대시보드에는 `sample_id` 가 없는 줄이 있다.  전부 같은 값으로
+    // 두면 서로 구별이 안 되어 **하나 들어오고 하나 나간 날이 0 으로 보인다.**
+    const loose = (name: string): Row =>
+      ({ id: `f:${name}`, group: null, name: '', parent: '' })
+    const first = render(<Harness rows={[loose('a.mpr'), loose('b.mpr')]} />)
+    first.unmount()
+
+    render(<Harness rows={[loose('a.mpr'), loose('c.mpr')]} />)
+    const badges = screen.getAllByTitle(/지난번에 이 화면을 떠날 때/)
+    expect(badges.map((node) => node.textContent)).toEqual(['+1', '−1'])
   })
 })

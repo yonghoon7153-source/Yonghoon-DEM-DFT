@@ -11,13 +11,15 @@ import { useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 
 import { DeleteSampleButton } from '../components/DeleteSample'
+import { FolderRow, useFolders } from '../components/FolderTree'
 import { GroupFilterFields, groupPath, useGroupChoice } from '../components/GroupFilter'
 import { GroupTag, OwnerTag } from '../components/RowTags'
 import { DeleteMeasurementButton } from '../components/RelatedCell'
 import { Alert, Card, Empty, Spinner } from '../components/ui'
 import { api } from '../lib/api'
 import { dateTime, num } from '../lib/format'
-import { useAsync } from '../lib/hooks'
+import { useAsync, useStickyState } from '../lib/hooks'
+import type { EisDashboardRow } from '../lib/types'
 
 const CONFIG_LABEL: Record<string, string> = {
   full: '풀셀', half: '하프셀', sym: '대칭셀',
@@ -33,6 +35,12 @@ export function EisDashboard() {
     () => (board.data?.rows ?? []).filter((row) => inGroup(row.group_id)),
     [board.data, inGroup])
   const unattached = board.data?.unattached ?? 0
+  // 충방전 대시보드와 **같은 기본, 같은 손놀림** (ADR 0035): 폴더로 시작하고,
+  // `목록` 한 번이면 올린 차례로 돌아온다.  기억은 화면마다 따로 둔다 -- 세
+  // 대시보드가 거르는 것이 서로 달라서 (여기는 임피던스를 가진 셀만), 같은
+  // 기억을 나눠 쓰면 한쪽에서 걸러진 셀이 다른 쪽에서 '지워졌다' 로 세어진다.
+  const [folderView, setFolderView] = useStickyState('bml.eisDashboardFolders', true)
+  const folders = useFolders('eisDashboard', rows, placeEisRow)
 
   return (
     <main className="page">
@@ -44,6 +52,14 @@ export function EisDashboard() {
           </div>
         </div>
         <span className="spacer" />
+        {/* 충방전 대시보드와 같은 자리, 같은 낱말 (ADR 0035).  세 대시보드가
+            같은 손놀림이어야 한다 — 여기만 다른 이름이면 익힌 손이 안 통한다. */}
+        <div className="segmented" role="group" aria-label="보기">
+          <button type="button" className={folderView ? '' : 'on'}
+                  onClick={() => setFolderView(false)}>목록</button>
+          <button type="button" className={folderView ? 'on' : ''}
+                  onClick={() => setFolderView(true)}>폴더</button>
+        </div>
         <GroupFilterFields pick={group} compact />
       </div>
 
@@ -86,8 +102,28 @@ export function EisDashboard() {
                   <th />
                 </tr>
               </thead>
-              <tbody>
-                {rows.map((row) => (
+              {folderView
+                ? folders.folders.filter(folders.isVisible).map((folder) => (
+                  <tbody key={folder.key}>
+                    <FolderRow folder={folder} view={folders} columns={COLUMN_COUNT} />
+                    {folders.isFolded(folder.key) ? null : folder.items.map(eisRow)}
+                  </tbody>
+                ))
+                : <tbody>{rows.map(eisRow)}</tbody>}
+            </table>
+          </div>
+        ) : (
+          <Empty title="셀에 붙은 임피던스가 없습니다" icon="∿">
+            <Link to="/eis/upload">업로드</Link>에서 파일을 올리면서 셀을 고르면
+            여기 나타납니다.
+          </Empty>
+        )}
+      </Card>
+    </main>
+  )
+
+  function eisRow(row: EisDashboardRow) {
+    return (
                   <tr key={row.attached ? `s${row.sample_id}` : `f${row.name}`}
                       className={row.attached ? undefined : 'dim'}>
                     <td className="text">
@@ -162,17 +198,26 @@ export function EisDashboard() {
                       ) : null}
                     </td>
                   </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        ) : (
-          <Empty title="셀에 붙은 임피던스가 없습니다" icon="∿">
-            <Link to="/eis/upload">업로드</Link>에서 파일을 올리면서 셀을 고르면
-            여기 나타납니다.
-          </Empty>
-        )}
-      </Card>
-    </main>
-  )
+    )
+  }
 }
+
+/** EIS 대시보드 줄을 폴더 자리로 (ADR 0035).  충방전의 `placeRow` 와 짝이다.
+ *
+ *  **아직 셀에 안 붙은 줄도 폴더에 들어간다.**  그 줄은 `sample_id` 가 없어서
+ *  열쇠를 파일 이름으로 만든다 -- 전부 `null` 로 두면 서로 구별이 안 되어
+ *  "하나 들어오고 하나 나갔다" 가 0 으로 보인다.  그런 줄은 그룹도 없으므로
+ *  `그룹 없음` 폴더로 모이는데, 그 자리가 맞다: 붙이는 것이 남은 일이고
+ *  (화면 위의 안내가 그 말이다) 한군데 모여 있어야 그 일이 보인다.
+ */
+const placeEisRow = (row: EisDashboardRow) => ({
+  id: row.attached && row.sample_id !== null ? row.sample_id : `f:${row.name}`,
+  groupId: row.group_id,
+  groupName: row.group_name ?? '',
+  groupParentName: row.group_parent_name ?? '',
+})
+
+/** 폴더 줄이 표 전체 폭을 덮으려면 열 수가 맞아야 한다.  틀리면 그 줄만
+ *  가로로 밀려 표가 어긋난다 — 이름·관계셀·측정·스펙트럼·SOC 스캔·fitting·
+ *  회로·R₀·총저항·목적·마지막·(지우기) = 12. */
+const COLUMN_COUNT = 12

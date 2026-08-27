@@ -101,7 +101,14 @@ export function BucketRow({
         {/* 가로 스크롤에 붙는 것은 이 span 이다 — 칸 자체는 표 전체 폭이라
             붙잡을 여지가 없다 (app.css 의 .section-label). */}
         <span className="section-label">
-          {label || <span className="faint">미입력</span>}
+          {/* 폴더 줄과 같은 강조 (FolderTree 의 `.folder-name`).  묶는 방법이
+              달라도 **묶음 줄은 같아 보여야** 한다 — 한쪽에서 익힌 눈이 다른
+              쪽에서 그대로 통해야 하므로.
+              '미입력' 은 값이 아니라 **없다는 말**이라 안 칠한다.  칠하면
+              빈 칸이 이름처럼 읽힌다 (§0.4). */}
+          {label
+            ? <span className="folder-name">{label}</span>
+            : <span className="faint">미입력</span>}
           <span className="faint"> · {count}개</span>
         </span>
       </th>
