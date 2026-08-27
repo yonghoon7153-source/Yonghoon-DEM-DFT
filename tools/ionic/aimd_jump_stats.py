@@ -81,7 +81,12 @@ def free_anions(sym, pos0, cell):
 
 
 def van_hove(uw, dt_ps, lags_ps, rmax=None, nbins=160):
-    """자기 van Hove — P(|Δr| = r, 시간간격 dt). uw = **unwrap 된** (T, N, 3).
+    """자기 van Hove의 **radial displacement density** P_s(r,t) = 4πr²·G_s(r,t).
+
+    ⛔ 2026-08-28 (리뷰 L · P0-4) — 열 이름을 `Gs_*` 로 썼는데 이건 G_s 가 아니다.
+      |Δr| 의 히스토그램이라 **r² 야코비안이 이미 들어간** radial density 다. `Ps_*` 로 고쳤다.
+
+    uw = **unwrap 된** (T, N, 3).
 
     읽는 법: 짧은 dt 는 진동 봉우리 하나(~0.5 Å)뿐이다. dt 를 늘렸을 때
       **자리 간격(~3 Å)에 두 번째 봉우리가 자라면 진짜 홉**, 첫 봉우리만 넓어지면
@@ -126,7 +131,7 @@ def van_hove(uw, dt_ps, lags_ps, rmax=None, nbins=160):
         lag = max(1, int(round(lag_ps / dt_ps)))
         d = np.linalg.norm(uw[lag:] - uw[:-lag], axis=2).ravel()
         h, _ = np.histogram(d, bins=edges, density=True)
-        cols.append(h); hdr.append(f"Gs_dt{lag_ps:g}ps")
+        cols.append(h); hdr.append(f"Ps_dt{lag_ps:g}ps")
         trunc.append(float((d > rmax).mean()))
     return rc, cols, hdr, skipped, {"rmax_A": round(rmax, 2), "trunc_frac": trunc}
 
@@ -149,6 +154,8 @@ def second_peak(rc, g, rmin=2.0):
 
 
 def _selftest():
+    import os
+    import shutil
     """합성 궤적으로 판별력을 확인한다 — **음성 경로가 핵심**이다.
 
     양성(홉)만 보면 "무엇을 넣어도 봉우리가 보인다" 는 도구여도 통과한다.
@@ -239,6 +246,57 @@ def _selftest():
     chk(_ns.rmax is None and _ns.lags_ps,
         "[배선] 기본 인자로 파싱했을 때도 rmax 가 None 이다")
 
+    # ★★★ E2E (2026-08-28, 리뷰 L P0-1) — **실제 CLI 를 태운다.**
+    #   `edges` NameError 는 홉이 잡힐 때만 나는데, 함수 단위 테스트는 main() 을 안 타서
+    #   못 잡았다. 러너도 traceback 을 숨기고 성공으로 세어 33건이 "완료" 로 보고됐다.
+    #   ⇒ 홉이 **실제로 잡히는** 합성 궤적을 만들어 CLI 를 돌리고 종료코드와 산출물을 본다.
+    import subprocess
+    import tempfile
+    td = tempfile.mkdtemp(prefix="ajs_e2e_")
+    # ⚠ **홉이 실제로 잡혀야 한다.** 첫 fixture 는 cage 중심이 하나뿐이라 홉이 0 이었고,
+    #   그러면 `edges` 를 쓰는 줄이 아예 안 돌아 **회귀 테스트가 판별력이 없었다**
+    #   (제거해도 통과했다 — 오늘 세 번째 '합성이 실제보다 쉽다').
+    #   ⇒ cage 중심(자유 음이온) **둘**을 두고 Li 하나를 그 사이로 확실히 넘긴다.
+    NF = 400
+    cell = [[18., 0, 0], [0, 18., 0], [0, 0, 18.]]
+    rows0 = [("P", [9., 9., 0.]),                       # PS4 (S 는 결합 → 자유 아님)
+             ("S", [10.9, 9., 0.]), ("S", [7.1, 9., 0.]),
+             ("S", [9., 10.9, 0.]), ("S", [9., 7.1, 0.]),
+             ("Cl", [0., 0., 0.]), ("Cl", [6., 0., 0.]),  # ← cage 중심 2개
+             ("Li", [0.6, 0., 0.]),                       # 이 Li 가 Cl1 → Cl2 로 넘어간다
+             ("Li", [0., 3.0, 0.]), ("Li", [6., 3.0, 0.])]
+    HOP_I = 7
+    with open(os.path.join(td, "traj.xyz"), "w") as f:
+        for t_ in range(NF):
+            f.write(f"{len(rows0)}\nLattice=\"" +
+                    " ".join(f"{v:.6f}" for r in cell for v in r) + "\"\n")
+            for i, (sym, q) in enumerate(rows0):
+                x = list(q)
+                if i == HOP_I and t_ > NF // 2:
+                    x[0] = 5.4            # 0.6 → 5.4 Å : 4.8 Å 이동 (문턱 2.5 초과)
+                f.write(f"{sym} {x[0]:.6f} {x[1]:.6f} {x[2]:.6f}\n")
+    json.dump({"save_fs": 100.0}, open(os.path.join(td, "aimd_results.json"), "w"))
+    r = subprocess.run([sys.executable, os.path.abspath(__file__),
+                        "--traj", os.path.join(td, "traj.xyz"), "--label", "e2e",
+                        "--out_dir", os.path.join(td, "out"), "--lags_ps", "0.5", "5", "20"],
+                       capture_output=True, text=True, timeout=180)
+    chk(r.returncode == 0,
+        f"[E2E·실측회귀] **실제 CLI 가 종료코드 0 으로 끝난다** "
+        f"(rc={r.returncode}) — `edges` NameError 가 여기서 났다"
+        + ("\n      " + (r.stderr or "").strip().splitlines()[-1] if r.returncode else ""))
+    chk("NameError" not in (r.stderr or ""), "[E2E·실측회귀] traceback 이 없다")
+    chk(os.path.isfile(os.path.join(td, "out", "e2e_vanhove.csv")),
+        "[E2E] vanhove.csv 가 생긴다")
+    hdr0 = open(os.path.join(td, "out", "e2e_vanhove.csv")).readline()
+    chk("Ps_dt" in hdr0 and "Gs_dt" not in hdr0,
+        f"[E2E·리뷰L] 열 이름이 **P_s**(=4πr²G_s) 다 — G_s 가 아니다 ({hdr0.split(',')[1].strip()})")
+    js = os.path.join(td, "out", "e2e_summary.json")
+    if os.path.isfile(js):
+        d_ = json.load(open(js))
+        chk("D_cm2_s" not in d_ and "D_single_origin_diagnostic_cm2_s" in d_,
+            "[E2E·리뷰L] 비정본 D 를 일반 이름으로 저장하지 않는다")
+    shutil.rmtree(td, ignore_errors=True)
+
     print("selftest " + ("PASS" if ok else "FAIL"))
     return 0 if ok else 1
 
@@ -314,6 +372,10 @@ def main():
     # ---- Van Hove self Gs(r, dt) ----
     rc, cols, hdr, skipped, vhinfo = van_hove(Li_uw, dt_ps, args.lags_ps,
                                              args.rmax, args.nbins)
+    # ⛔ 2026-08-28 (리뷰 L · P0-1) — 아래 inter-cage 히스토그램이 `edges` 를 쓰는데
+    #   그건 van_hove() 의 **지역변수**다. van_hove 를 함수로 뽑을 때 이 참조를 안 고쳤고,
+    #   **홉이 하나라도 잡히면 NameError** 로 죽었다. 같은 격자를 여기서 다시 만든다.
+    edges = np.linspace(0, vhinfo["rmax_A"], args.nbins + 1)
     if skipped:
         print(f"  ! lag {skipped} ps 는 궤적({T*dt_ps:.1f} ps)보다 길어 건너뛴다")
     np.savetxt(out / f"{args.label}_vanhove.csv", np.c_[[rc] + cols].T,
@@ -339,9 +401,19 @@ def main():
             print(f"  ⇒ ⛔ 분포의 {100*b['trunc_frac']:.1f} % 가 rmax 밖이다 — **잘려서 못 읽는다.** "
                   f"--rmax 를 키울 것")
         elif shift >= 0.5:
-            # ⚠ 이 줄에 "제자리" 를 넣었다가 watch 의 분류기가 확산 줄까지 cage 로 세서
-            #   합계가 음수가 됐다 (2026-08-28). **판정 문구에는 다른 판정의 어휘를 안 쓴다.**
-            print(f"  ⇒ **확산한다** — 봉우리가 {shift:+.2f} Å 밖으로 이동했다")
+            # ⚠ 판정 문구에 다른 판정의 어휘를 안 쓴다 (watch 분류기가 겹쳐 센 적 있다).
+            # ⛔ 2026-08-28 (리뷰 L · P0-2) — 카드에는 "갇힘/고원/확산" 세 체제라고 써 놓고
+            #   **코드는 shift ≥ 0.5 를 전부 '확산' 이라고 찍고 있었다.** 문서와 코드가 갈렸다.
+            #   (그 전에 넣었다고 생각한 편집이 실제로는 안 붙었는데, selftest 가 판정 **문구**를
+            #    안 보기 때문에 통과했다 — 오늘 세 번째 같은 유형이다.)
+            SITE_LO, SITE_HI = 3.2, 4.8
+            if SITE_LO <= b["first_peak_A"] <= SITE_HI:
+                print(f"  ⇒ **움직인다 — 자리 간격 고원**이다 (봉우리 {b['first_peak_A']} Å, "
+                      f"Δ{shift:+.2f}). 홉이 대략 한 번 수준이라 **이 구간에서는 D 에 둔감**하다 "
+                      f"— 빠르기 비교에 쓰지 말 것")
+            else:
+                print(f"  ⇒ **확산한다** — 봉우리가 {shift:+.2f} Å 밖으로 이동했다 "
+                      f"(고원 밖: {b['first_peak_A']} Å)")
         elif shift <= 0.2:
             print(f"  ⇒ ⚠ **봉우리가 제자리다** ({shift:+.2f} Å) — 이 창에서는 "
                   f"cage 안 흔들림이 지배적이다")
@@ -398,7 +470,11 @@ def main():
         "label": args.label, "frames": T, "dt_ps": dt_ps, "total_ps": total_ps,
         "n_Li": len(Li), "n_cages": int(len(cen)),
         "cage_Cl_fraction": round(float((ctype == "Cl").mean()), 3) if len(ctype) else None,
-        "D_cm2_s": D,
+        # ⛔ 2026-08-28 (리뷰 L · P0-4) — 이 D 는 **정본 창(2–50 ps)이 아니다.**
+        #   single-origin 20–90 % 적합이다. 일반 이름으로 두면 정본 D 와 섞인다.
+        "D_single_origin_diagnostic_cm2_s": D,
+        "⛔_D_규약": ("정본은 MSD 창 2–50 ps · 자유절편이다(CLAUDE.md). 이 값은 "
+                     "single-origin 20–90 % 적합이라 **정본 D 로 인용 금지** — 진단용이다."),
         "inter_cage_hops": inter_hops,
         "inter_cage_hop_rate_per_Li_per_ns": round(rate, 4),
         "inter_cage_hop_dist_mean_A": round(float(hop_dists.mean()), 3) if len(hop_dists) else None,

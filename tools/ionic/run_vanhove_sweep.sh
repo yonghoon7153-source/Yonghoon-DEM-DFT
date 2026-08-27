@@ -44,7 +44,7 @@ mkdir -p "$OUTROOT"
 SUM="$OUTROOT/summary_$(date +%m%d_%H%M).txt"
 echo "# van Hove sweep $(date)" | tee "$SUM"
 
-n_ok=0; n_skip=0
+n_ok=0; n_fail=0; n_skip=0
 for ROOT in "$@"; do
   ROOT="${ROOT/#\~/$HOME}"
   [ -d "$ROOT" ] || { echo "· 없음: $ROOT" | tee -a "$SUM"; continue; }
@@ -57,11 +57,23 @@ for ROOT in "$@"; do
     SZ=$(stat -c%s "$TJ" 2>/dev/null || echo 0)
     [ "$SZ" -gt 1000 ] || { echo "· 빈 궤적 → 건너뜀: $D" | tee -a "$SUM"; n_skip=$((n_skip+1)); continue; }
     echo "▶ $LBL" | tee -a "$SUM"
+    # ⛔ 2026-08-28 (리뷰 L · P0-1) — 첫 판은 출력을 grep 으로 거르고 **무조건 n_ok++** 했다.
+    #   분석기가 traceback 으로 죽어도 "완료" 로 세어졌다 (실제로 `edges` NameError 가 있었다).
+    #   ⇒ 전체 출력을 파일로 받고, **종료코드로** 성공을 센다. traceback 은 요약에 남긴다.
+    _RAW="$OUTROOT/$LBL.stdout"; mkdir -p "$OUTROOT"
     "$PY" "$TOOL" --traj "$TJ" --label "$LBL" --out_dir "$OUTROOT/$LBL" \
-        --lags_ps $LAGS 2>&1 | grep -aE "frames=|vanHove|⇒|!" | tee -a "$SUM"
-    n_ok=$((n_ok+1))
+        --lags_ps $LAGS > "$_RAW" 2>&1
+    _RC=$?
+    grep -aE "frames=|vanHove|⇒|!" "$_RAW" | tee -a "$SUM"
+    if [ "$_RC" -ne 0 ]; then
+      echo "  ⛔ 분석기 실패 (rc=$_RC) — 꼬리:" | tee -a "$SUM"
+      tail -6 "$_RAW" | sed 's/^/     /' | tee -a "$SUM"
+      n_fail=$((n_fail+1))
+    else
+      n_ok=$((n_ok+1))
+    fi
   done < <(find "$ROOT" -name traj.xyz | sort)
 done
 echo "" | tee -a "$SUM"
-echo "완료 $n_ok · 건너뜀 $n_skip · 요약: $SUM" | tee -a "$SUM"
+echo "완료 $n_ok · **실패 $n_fail** · 건너뜀 $n_skip · 요약: $SUM" | tee -a "$SUM"
 echo "⛔ 판정은 사람이 한다 — 같은 계·다른 시드를 **나란히** 놓고 봐야 시드 산포가 보인다." | tee -a "$SUM"
