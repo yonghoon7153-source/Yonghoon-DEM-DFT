@@ -34,17 +34,28 @@
 
 ## 3. 재실행 (Table S3 확보 후)
 
+⚠⚠ **경로 정정 (2026-08-27 저녁)** — 옛 명령은 `~/Yonghoon-DEM-DFT`(= `claude/stoic-knuth-NObVQ`)
+를 가리켰다.  **그 브랜치에는 §4 의 가드가 둘 다 없다** (`ce2f318f` 실측: `rasterize` 의
+`ValueError` 도, 러너의 `exit 2` 도 부재).  ⇒ 그 경로로 재실행하면 **이 트랙을 무효화한
+fail-open 이 그대로 살아 있다**.  §4 끝의 *"빠지면 시작 즉시 죽는다"* 는 문장은
+**`~/dem-mt` 에서만 참**이다.
+
 ```bash
 cd ~/sdcp
 for V in 0.15 0.125; do
-  ARMS=8 LEAN=2 VOX=$V SDCP_SPHERE_D=0.30 bash ~/Yonghoon-DEM-DFT/scripts/sdcp_gain_vox015_8arm.sh
-  ARMS=8 LEAN=2 VOX=$V SDCP_SPHERE_D=0.30 SDCP_BRIDGE=0.01 bash ~/Yonghoon-DEM-DFT/scripts/sdcp_gain_vox015_8arm.sh
+  ARMS=8 LEAN=2 VOX=$V SDCP_SPHERE_D=0.30 bash ~/dem-mt/scripts/sdcp_gain_vox015_8arm.sh
+  ARMS=8 LEAN=2 VOX=$V SDCP_SPHERE_D=0.30 SDCP_BRIDGE=0.01 bash ~/dem-mt/scripts/sdcp_gain_vox015_8arm.sh
 done
 ```
 ★ 시작 1분 안에 **OUTDIR 에 `_sph` 가 있는지** 확인할 것 (없으면 또 헛돈다).
 확인됨: 재실행 시도에서 `prereg_v2_vox015_sph_b048_lean2_r07abecad1459` 로 정상 생성.
 판정은 **개정 A1** (`sdcp_bridge_prereg_amendment_A1_20260827.md`, 커밋 `a4636d15`) 대로.
 ⚠ 완주한 팔은 SKIP 되므로 중단해도 낭비가 없다.
+
+⚠ **침대가 바뀌었다 — SKIP 을 기대하지 말 것.**  러너는 킷의 최신 런을 고르므로 재실행은
+**2026-08-27 재압밀 침대**(W2)로 돈다.  1차 시도의 `r07abecad1459` 는 **옛 침대**라 OUTDIR
+접미사가 달라지고 완주 팔 SKIP 이 **걸리지 않는다** (= 전부 새로 돈다).
+그쪽이 오히려 맞다 — Table S3 §2·§3 과 **같은 침대·같은 code_sha** 아래 놓인다.
 
 ## 4. 코드 수정 — ★ 완료 (2026-08-27)
 
