@@ -1,12 +1,19 @@
 <!doctype html>
-<html lang="ko">
+<html lang="ko" translate="no">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- **자동 번역을 끈다.**  이 화면은 한국어인데 단위·회로·파라미터가 라틴
+         문자와 기호라, 크롬이 "영어 문서" 로 보고 통째로 번역해 버린다.  실제로
+         `Ω` 가 `오` 로, `fitting` 이 `읽어 보기` 로 바뀐 화면이 나왔다 — 단위가
+         번역되면 그 화면의 수는 아무 뜻이 없다.
+         `translate="no"` 는 표준(HTML `translate` 속성)이고 `google` 쪽 meta 는
+         구글 번역 전용이다.  둘 다 둔다: 하나만으로는 안 막히는 조합이 있다. -->
+    <meta name="google" content="notranslate" />
     <title>Battery Lab Workbench</title>
   </head>
   <body>
-    <div id="root"></div>
+    <div id="root" class="notranslate" translate="no"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

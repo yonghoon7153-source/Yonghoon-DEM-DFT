@@ -712,7 +712,7 @@ export function ScanDetail() {
         </div>
         {/* 그림 밑에도 같은 단추가 있다.  표에서 줄을 끄다 보면 그림이 화면
             위로 사라져서, 다시 켜려고 스크롤해 올라가야 했다. */}
-        <div className="row" style={{ gap: 6, padding: '6px 12px 2px',
+        <div className="row" style={{ gap: 8, padding: '8px 12px 10px',
                                       alignItems: 'center' }}>
           <button type="button" className="sm" onClick={() => setHidden([])}>
             전체

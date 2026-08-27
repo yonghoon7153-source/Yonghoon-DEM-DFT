@@ -149,9 +149,15 @@ export function EisDashboard() {
                           한다 — 스펙트럼 수(11)만 보고는 그것이 한 파일인지
                           열한 파일인지 모른다. */}
                       {row.scan_sha256 ? (
-                        <span className="tiny faint">
-                          {' '}[SOC 스캔 · 스윕 {row.spectra}개]
-                        </span>
+                        <>
+                          {' '}
+                          {/* 꼬리표 자체가 겹쳐보기로 가는 길이다.  글자만
+                              두면 "여기를 누르면 되겠구나" 를 시험해 보고
+                              아무 일도 안 일어나는 것을 확인하게 된다. */}
+                          <Link className="tiny" to={`/scans/${row.scan_sha256}`}>
+                            [SOC 스캔 · 스윕 {row.spectra}개]
+                          </Link>
+                        </>
                       ) : null}
                     </td>
                     <td className="text">

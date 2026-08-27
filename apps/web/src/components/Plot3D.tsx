@@ -18,7 +18,7 @@
  *  안 받는다 — 우리 데이터에 그런 것이 없고, 받으면 면(surface)을 그려야 한다.
  */
 
-import { useMemo, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 
 import { num, seriesColor } from '../lib/format'
 
@@ -135,8 +135,29 @@ export function Plot3D({
   const [azimuth, setAzimuth] = useState(AZIMUTH0)
   const [elevation, setElevation] = useState(ELEVATION0)
   const [zoom, setZoom] = useState(1)
-  const drag = useRef<{ x: number; y: number; az: number; el: number } | null>(null)
+  //: 확대한 뒤 **옮길** 수 있어야 한다.  가운데만 커지면 보고 싶은 구석이
+  //  화면 밖으로 나가고, 그때 할 수 있는 일이 '전체' 뿐이다.
+  const [pan, setPan] = useState({ x: 0, y: 0 })
+  const drag = useRef<
+    { x: number; y: number; az: number; el: number; pan: { x: number; y: number };
+      move: boolean } | null>(null)
   const [width, setWidth] = useState(900)
+
+  //: 휠로 확대할 때 **뒤의 화면이 같이 스크롤되면 안 된다.**  React 의
+  //  `onWheel` 은 passive 로 붙어서 `preventDefault` 가 안 먹는다 (브라우저가
+  //  무시한다).  그래서 직접, passive 를 끄고 붙인다.
+  useEffect(() => {
+    const node = box.current
+    if (!node) return
+    const onWheel = (event: WheelEvent) => {
+      if (!event.deltaY) return
+      event.preventDefault()
+      setZoom((was) => Math.max(0.4,
+        Math.min(8, was * (event.deltaY < 0 ? 1.12 : 1 / 1.12))))
+    }
+    node.addEventListener('wheel', onWheel, { passive: false })
+    return () => node.removeEventListener('wheel', onWheel)
+  }, [])
 
   // 폭은 부모가 정한다.  `ResizeObserver` 가 없는 환경에서는 기본값으로 그린다 —
   // 그림이 조금 좁을 뿐 안 그려지지는 않는다.
@@ -204,8 +225,8 @@ export function Plot3D({
     height: view.height - MARGIN.top - MARGIN.bottom,
   }
   const centre = {
-    x: MARGIN.left + inner.width / 2,
-    y: MARGIN.top + inner.height / 2,
+    x: MARGIN.left + inner.width / 2 + pan.x,
+    y: MARGIN.top + inner.height / 2 + pan.y,
   }
   // 상자가 화면에 딱 맞게 — 돌리면 대각선이 길어지므로 그때마다 다시 잰다.
   const probe = project(azimuth, elevation, 1, { x: 0, y: 0 })
@@ -223,7 +244,14 @@ export function Plot3D({
   const unit = {
     x: (value: number) => (value - bounds.x[0]) / (bounds.x[1] - bounds.x[0] || 1),
     y: (value: number) => (value - bounds.y[0]) / (bounds.y[1] - bounds.y[0] || 1),
-    z: (value: number) => (value - bounds.z[0]) / (bounds.z[1] - bounds.z[0] || 1),
+    // **깊이는 거꾸로 넣는다** — 작은 값이 앞이다.
+    //
+    // `w = 1` 쪽이 화면 앞이다 (기본 각도에서 오른쪽 아래로 나온다).  그대로
+    // 두면 가장 큰 전위가 앞, `#1` 이 맨 뒤에 선다.  스캔을 읽는 순서는 `#1`
+    // 부터이고, 앞에 있는 곡선이 뒤의 것을 덮으므로 **먼저 읽을 것이 앞**에
+    // 있어야 한다.  비교 화면도 같다: 먼저 고른 것이 앞이다.
+    z: (value: number) =>
+      1 - (value - bounds.z[0]) / (bounds.z[1] - bounds.z[0] || 1),
   }
 
   const corners = CORNERS.map(([u, v, w]) => cube.at(u, v, w))
@@ -278,13 +306,18 @@ export function Plot3D({
       <div className="plot-zoom">
         <button type="button" className="sm ghost" aria-label="확대"
                 title="확대 — 상자째 커집니다"
-                onClick={() => setZoom((was) => Math.min(6, was * 1.25))}>🔍+</button>
+                onClick={() => setZoom((was) => Math.min(8, was * 1.25))}>🔍+</button>
         <button type="button" className="sm ghost" aria-label="축소"
-                disabled={zoom <= 1}
-                onClick={() => setZoom((was) => Math.max(1, was / 1.25))}>🔍−</button>
+                disabled={zoom <= 0.4}
+                onClick={() => setZoom((was) => Math.max(0.4, was / 1.25))}>🔍−</button>
         <button type="button" className="sm ghost" aria-label="각도 초기화"
                 title="처음 각도와 크기로"
-                onClick={() => { setAzimuth(AZIMUTH0); setElevation(ELEVATION0); setZoom(1) }}>
+                onClick={() => {
+                  setAzimuth(AZIMUTH0)
+                  setElevation(ELEVATION0)
+                  setZoom(1)
+                  setPan({ x: 0, y: 0 })
+                }}>
           전체
         </button>
       </div>
@@ -295,26 +328,34 @@ export function Plot3D({
         style={{ display: 'block', cursor: drag.current ? 'grabbing' : 'grab',
                  touchAction: 'none' }}
         onPointerDown={(event) => {
-          drag.current = { x: event.clientX, y: event.clientY,
-                           az: azimuth, el: elevation }
+          drag.current = {
+            x: event.clientX, y: event.clientY, az: azimuth, el: elevation,
+            pan, // Shift 나 가운데 단추면 **옮기기** — 돌리기와 손이 갈린다.
+            move: event.shiftKey || event.button === 1,
+          }
           event.currentTarget.setPointerCapture(event.pointerId)
         }}
         onPointerMove={(event) => {
           const from = drag.current
           if (!from) return
+          if (from.move) {
+            setPan({ x: from.pan.x + (event.clientX - from.x),
+                     y: from.pan.y + (event.clientY - from.y) })
+            return
+          }
           setAzimuth(from.az + (event.clientX - from.x) * 0.5)
           // 고도는 위아래로 넘어가면 상자가 뒤집혀서 눈금이 거꾸로 붙는다.
-          setElevation(Math.max(-80, Math.min(80,
+          // 5° 아래로 내려가면 상자가 납작해져 깊이가 사라지고, 0 을 지나면
+          // 통째로 뒤집혀 눈금이 거꾸로 붙는다.  위쪽도 85 에서 멈춘다 —
+          // 90 은 위에서 내려다본 그림이라 세로축이 점이 된다.
+          setElevation(Math.max(5, Math.min(85,
             from.el - (event.clientY - from.y) * 0.4)))
         }}
         onPointerUp={(event) => {
           drag.current = null
           event.currentTarget.releasePointerCapture(event.pointerId)
         }}
-        onWheel={(event) => {
-          if (!event.deltaY) return
-          setZoom((was) => Math.max(1, Math.min(6, was * (event.deltaY < 0 ? 1.1 : 1 / 1.1))))
-        }}
+
       >
         {/* 상자.  열두 모서리를 옅게 — 이것이 "여기가 3D 다" 를 말하는 전부다. */}
         {EDGES.map(([a, b]) => (
@@ -423,8 +464,10 @@ export function Plot3D({
               textAnchor="middle" className="plot3d-axis">{zLabel}</text>
       </svg>
       <div className="tiny faint" style={{ padding: '2px 10px 0' }}>
-        끌어서 돌리고, 휠이나 🔍 로 상자째 확대합니다 · 방위 {azimuth.toFixed(0)}°
-        · 고도 {elevation.toFixed(0)}°
+        끌어서 돌리고, <b>Shift</b>+끌어서 옮기고, 휠이나 🔍 로 상자째
+        확대합니다 · 방위 {((azimuth % 360) + 360) % 360 > 180
+          ? (((azimuth % 360) + 360) % 360) - 360
+          : ((azimuth % 360) + 360) % 360}° · 고도 {elevation.toFixed(0)}°
       </div>
     </div>
   )

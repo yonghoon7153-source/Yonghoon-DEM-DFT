@@ -43,7 +43,19 @@ export function usePinnedColumns(
       const heads = [...head.children] as HTMLElement[]
       // 실제로 붙일 수 있는 만큼만.  열이 count 보다 적을 수 있다.
       const wanted = Math.min(count, heads.length)
-      const lefts = heads.slice(0, wanted).map((cell) => cell.offsetLeft)
+      // **폭을 더해서 자리를 낸다 — `offsetLeft` 를 읽으면 안 된다.**
+      //
+      // 처음엔 `offsetLeft` 로 쟀는데, 한 번 `position: sticky` 를 걸고 나면
+      // 그 값이 **붙어 있는 자리**를 돌려준다.  `ResizeObserver` 가 다시 잴
+      // 때마다 그 값이 다음 `left` 로 들어가서, 두어 번 만에 앞 열들이 표
+      // 한가운데로 기어들어갔다 (실제로 `#`·`이름` 이 `R₀` 옆에 가 있었다).
+      // 칸의 **폭**은 붙어 있든 아니든 같으므로 그것만 더한다.
+      let at = 0
+      const lefts = heads.slice(0, wanted).map((cell) => {
+        const here = at
+        at += cell.getBoundingClientRect().width
+        return here
+      })
       for (const row of table.querySelectorAll('tr')) {
         const cells = [...row.children] as HTMLElement[]
         cells.forEach((cell, index) => {

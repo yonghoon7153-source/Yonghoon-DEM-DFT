@@ -8,16 +8,25 @@
  *  끼우는 일은 드물어서, 그쪽은 독자 섹션으로 둔다.
  */
 
-import { useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 
 import { CopyBar } from './CopyBar'
 import { Plot, type PlotSeries } from './Plot'
 import { Alert, Card, Empty, Spinner } from './ui'
 import { api } from '../lib/api'
+import { perArea } from '../lib/areanorm'
+import { rememberedLambda } from '../lib/drtlambda'
 import { num, seriesColor } from '../lib/format'
-import { nyquistTsv } from '../lib/origin'
-import { useAsync } from '../lib/hooks'
+import { nyquistTsv, seriesWideTsv } from '../lib/origin'
+import { useAsync, useStickyState } from '../lib/hooks'
+import {
+  DRT_AXES, DRT_AXIS_KEY, type DrtAxis, decadeSplits, drtAxisLabel, drtAxisShort,
+  drtAxisTick, drtAxisValue, validDrtAxis,
+} from '../lib/tauaxis'
+import {
+  Z_UNITS, Z_UNIT_KEY, type ZUnit, areaFor, hasStoredZUnit, validZUnit, zUnitLabel,
+} from '../lib/zunit'
 
 //: 서버의 /api/eis/points 겹치기 상한과 같은 수.
 const OVERLAY_LIMIT = 12
@@ -53,20 +62,76 @@ export function CellSpectra({ sampleId }: { sampleId: number }) {
     return got === [...selected].sort().join(',')
   }, [points.data, selected])
 
+  //: 나이퀴스트인가 DRT 인가.  **같은 선택을 쓴다** — 여기서 끈 스펙트럼이
+  //  DRT 에서 도로 켜지면 두 그림이 다른 집합을 말하게 된다.
+  const [mode, setMode] = useState<'nyquist' | 'drt'>('nyquist')
+  const [storedAxis, setAxis] = useStickyState<DrtAxis>(DRT_AXIS_KEY, 'tau')
+  const drtAxis = validDrtAxis(storedAxis)
+
+  //: Ω 인가 Ω·cm² 인가.  다른 EIS 화면과 **같은 열쇠**를 쓴다 (`lib/zunit.ts`).
+  const [storedUnit, setUnit] = useStickyState<ZUnit>(Z_UNIT_KEY, 'ohm')
+  const unit = validZUnit(storedUnit, 'ohm')
+  const areaOf = useCallback(
+    (id: number) => rows.find((row) => row.id === id)?.area_cm2_effective ?? null,
+    [rows])
+  //: **고른 것 전부의 면적을 알 때만** Ω·cm² 를 준다.  하나라도 모르면 그
+  //  곡선만 안 나뉘어서, 한 그림에 두 단위가 섞인다 — 그림은 그것을 말하지
+  //  않는다.
+  const everyAreaKnown = selected.length > 0
+    && selected.every((id) => (areaOf(id) ?? 0) > 0)
+  const unitLabel = zUnitLabel(everyAreaKnown && unit === 'ohmcm2' ? 'ohmcm2' : 'ohm')
+  useEffect(() => {
+    if (everyAreaKnown && !hasStoredZUnit()) setUnit('ohmcm2')
+  }, [everyAreaKnown, setUnit])
+  const scaleOf = useCallback(
+    (id: number) => areaFor(everyAreaKnown ? unit : 'ohm', areaOf(id)),
+    [everyAreaKnown, unit, areaOf])
+
+  //: DRT 는 **볼 때만** 부른다 — 스펙트럼마다 한 번씩 푸는 계산이라, 나이퀴스트만
+  //  보려던 사람이 그 시간을 대신 낼 이유가 없다.  λ 는 스펙트럼 상세에서 옮긴
+  //  값을 그대로 쓴다.
+  const lambda = rememberedLambda()
+  const drt = useAsync(
+    () => (mode === 'drt' && selected.length
+      ? Promise.all(selected.map((id) =>
+          api.spectrumDrt(id, { regularisation: lambda, derivative_order: 0 })
+            .then((value) => ({ id, value }))
+            .catch(() => ({ id, value: null }))))
+      : Promise.resolve([])),
+    [mode, selected.join(','), lambda],
+  )
+
   const series = useMemo<PlotSeries[]>(() => {
+    const colourOf = (id: number) =>
+      seriesColor(rows.findIndex((row) => row.id === id))
+    if (mode === 'drt') {
+      return (drt.data ?? []).flatMap(({ id, value }) => {
+        if (!value) return []
+        const row = rows.find((one) => one.id === id)
+        return [{
+          label: row ? spectrumLabel(row) : `#${id}`,
+          x: value.tau_s.map((tau) => drtAxisValue(drtAxis, tau)),
+          // γ 도 저항이다 — 나이퀴스트를 Ω·cm² 로 보면서 γ 만 Ω 로 두면 같은
+          // 화면의 두 그림이 다른 자로 그려진다.
+          y: value.gamma_ohm.map((gamma) => perArea(gamma, scaleOf(id))),
+          color: colourOf(id),
+          width: 1.5,
+        }]
+      })
+    }
     if (!fresh) return []
     const data = points.data ?? []
     return data.map((item) => ({
       label: spectrumLabel(item),
-      x: item.z_re,
+      x: item.z_re.map((value) => perArea(value, scaleOf(item.id))),
       // 나이퀴스트 세로축은 −Z″ 다.
-      y: item.z_im.map((value) => -value),
+      y: item.z_im.map((value) => perArea(-value, scaleOf(item.id))),
       // 색은 행 순서로 — 곡선을 하나 꺼도 남은 곡선의 색이 칩과 같아야 한다.
-      color: seriesColor(rows.findIndex((row) => row.id === item.id)),
+      color: colourOf(item.id),
       points: true,
       width: 1,
     }))
-  }, [points.data, fresh, rows])
+  }, [points.data, fresh, rows, mode, drt.data, drtAxis, scaleOf])
 
   if (spectra.error) {
     return (
@@ -89,7 +154,44 @@ export function CellSpectra({ sampleId }: { sampleId: number }) {
     <Card
       title={`임피던스 (EIS) ${rows.length}개`}
       actions={
-        <div className="row" style={{ gap: 6 }}>
+        <div className="row" style={{ gap: 8, alignItems: 'center' }}>
+          {/* 같은 스펙트럼을 두 눈으로 본다.  나이퀴스트는 아크의 모양, DRT 는
+              그 아크가 몇 개인가 — 구동 전과 200 사이클을 견줄 때 무엇이
+              늘었는지가 DRT 쪽에서 먼저 보인다. */}
+          <div className="segmented" role="group" aria-label="그림">
+            <button type="button" className={mode === 'nyquist' ? 'on' : ''}
+                    onClick={() => setMode('nyquist')}>나이퀴스트</button>
+            <button type="button" className={mode === 'drt' ? 'on' : ''}
+                    onClick={() => setMode('drt')}>DRT</button>
+          </div>
+          {mode === 'drt' ? (
+            <div className="segmented" role="group" aria-label="가로축">
+              {DRT_AXES.map((one) => (
+                <button key={one} type="button" className={drtAxis === one ? 'on' : ''}
+                        onClick={() => setAxis(one)}>
+                  {drtAxisShort(one)}
+                </button>
+              ))}
+            </div>
+          ) : null}
+          {/* 고른 것 **전부**의 면적을 알 때만 Ω·cm² 를 준다 — 하나라도 모르면
+              그 곡선만 안 나뉘어 한 그림에 두 단위가 섞인다. */}
+          <div className="segmented" role="group" aria-label="임피던스 단위">
+            {Z_UNITS.map((one) => (
+              <button
+                key={one}
+                type="button"
+                className={(everyAreaKnown ? unit : 'ohm') === one ? 'on' : ''}
+                disabled={one === 'ohmcm2' && !everyAreaKnown}
+                title={one === 'ohmcm2' && !everyAreaKnown
+                  ? '고른 것 중에 면적을 모르는 스펙트럼이 있습니다 — 스펙트럼 상세에서 면적이나 지름을 적어 주세요'
+                  : undefined}
+                onClick={() => setUnit(one)}
+              >
+                {zUnitLabel(one)}
+              </button>
+            ))}
+          </div>
           <button type="button"
                   onClick={() => setChosen(rows.slice(0, OVERLAY_LIMIT).map((row) => row.id))}>
             {rows.length > OVERLAY_LIMIT ? `처음 ${OVERLAY_LIMIT}개` : '전부'}
@@ -138,11 +240,24 @@ export function CellSpectra({ sampleId }: { sampleId: number }) {
 
         <CopyBar
           items={[{
-            label: '나이퀴스트',
-            title: '고른 곡선을 Z′·−Z″ 두 열로 쌓아서',
+            label: mode === 'drt' ? 'γ(τ)' : '나이퀴스트',
+            title: mode === 'drt'
+              ? `스펙트럼마다 ${drtAxisShort(drtAxis)}·γ 두 열 (${unitLabel})`
+              : `고른 곡선을 Z′·−Z″ 두 열로 쌓아서 (${unitLabel})`,
             // 고른 집합의 응답이 아직 안 왔으면 옛 집합을 복사하게 된다.
-            disabled: !fresh || !points.data?.length,
-            build: () => nyquistTsv(points.data ?? []),
+            disabled: mode === 'drt'
+              ? !series.length
+              : !fresh || !points.data?.length,
+            // **화면이 나눈 값을 그리고 있으면 붙여 넣는 열도 나뉜 값**이다.
+            // 스펙트럼마다 면적이 다를 수 있어 하나의 `scale` 로는 안 되고,
+            // 각자 나눠 둔 사본을 넘긴다.
+            build: () => (mode === 'drt'
+              ? seriesWideTsv(series, { x: drtAxisLabel(drtAxis), y: `γ (${unitLabel})` })
+              : nyquistTsv((points.data ?? []).map((item) => ({
+                  ...item,
+                  z_re: item.z_re.map((value) => perArea(value, scaleOf(item.id))),
+                  z_im: item.z_im.map((value) => perArea(value, scaleOf(item.id))),
+                })))),
           }]}
         />
 
@@ -153,18 +268,33 @@ export function CellSpectra({ sampleId }: { sampleId: number }) {
           <div className="tiny faint" style={{ padding: 12 }}>
             고른 스펙트럼이 없습니다.
           </div>
-        ) : points.loading && !points.data ? (
-          <Spinner />
+        ) : (mode === 'drt' ? drt.loading && !drt.data : points.loading && !points.data) ? (
+          <Spinner label={mode === 'drt' ? 'DRT 를 푸는 중' : undefined} />
         ) : series.length ? (
-          <Plot
-            series={series}
-            xLabel="Z′ (Ω)"
-            yLabel="−Z″ (Ω)"
-            height={320}
-            legend
-            equalAspect
-            positiveFit
-          />
+          mode === 'drt' ? (
+            // DRT 는 두 축의 뜻이 달라서 `equalAspect` 가 없다 — 가로는 로그
+            // 시간(또는 주파수), 세로는 저항이다.
+            <Plot
+              series={series}
+              xLabel={drtAxisLabel(drtAxis)}
+              yLabel={`γ (${unitLabel})`}
+              height={320}
+              legend
+              busy={drt.loading}
+              xTick={(value) => drtAxisTick(drtAxis, value)}
+              xSplits={drtAxis === 'f' ? decadeSplits : undefined}
+            />
+          ) : (
+            <Plot
+              series={series}
+              xLabel={`Z′ (${unitLabel})`}
+              yLabel={`−Z″ (${unitLabel})`}
+              height={320}
+              legend
+              equalAspect
+              positiveFit
+            />
+          )
         ) : null}
 
         <div className="table-wrap">
