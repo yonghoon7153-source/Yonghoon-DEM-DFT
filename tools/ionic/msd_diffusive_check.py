@@ -271,6 +271,10 @@ def directional_msd_tensor(traj_path, save_fs=100.0, species="Li",
       `D_αβ = ½ · dM_αβ/dt`  (성분당 1차원이므로 **분모가 6 이 아니라 2** 다)
 
     ⛔ 이 함수가 못 하는 것:
+      · **unwrap 을 하지 않는다.** wrap 된 궤적은 **거부**한다(한 프레임 최대 변위가
+        셀 최소폭의 절반을 넘으면 None + 이유 출력). 실측 계기: kgy `EN_0717/licube` 가
+        D = 3×10⁶ Å²/ps 를 냈다 — 실제 Li(~0.1)의 **10⁷ 배**. 눈에 띄어서 잡혔지만
+        일부만 접힌 궤적은 **그럴듯한 숫자로 통과**하므로 도구가 막아야 한다.
       · **골격 drift 를 제거하지 않는다** — 호출자가 `framework_com_split()` 등으로 먼저
         보정해야 한다. Langevin `fixcm=True` 라 전체 CoM 은 고정이지만 **골격 기준**
         drift 는 따로다.
@@ -302,6 +306,28 @@ def directional_msd_tensor(traj_path, save_fs=100.0, species="Li",
         return None
     pos = _np.array([f.get_positions()[idx] for f in frames])   # (nframe, nion, 3)
     nf = len(pos)
+
+    # ⛔⛔ 2026-08-27 — **wrap 된 궤적을 잡는다.** 실측(kgy `EN_0717/licube`):
+    #   D 가 3×10⁶ Å²/ps 로 나왔다. 실제 Li 는 ~0.1 이라 **10⁷ 배**다. 확산이 아니라
+    #   좌표가 주기상자로 접혀서 원자가 매 프레임 상자를 가로지른 것으로 읽힌 것이다.
+    #   저 값은 커서 눈에 띄었지만, 일부만 접힌 궤적은 **그럴듯한 숫자로 통과**한다.
+    #   → 한 프레임 최대 변위를 셀 최소폭의 절반과 비교한다. 넘으면 물리가 아니다.
+    try:
+        cell = _np.array(frames[0].get_cell())
+        vol = abs(_np.linalg.det(cell))
+        widths = [vol / _np.linalg.norm(_np.cross(cell[(k + 1) % 3], cell[(k + 2) % 3]))
+                  for k in range(3)] if vol > 0 else []
+        half_min = 0.5 * min(widths) if widths else None
+    except Exception:
+        half_min = None
+    if half_min and nf > 1:
+        step_max = float(_np.abs(_np.diff(pos, axis=0)).max())
+        if step_max > half_min:
+            print(f"   ⛔ **{tp.parent.name}: 좌표가 wrap 돼 있다** — 한 프레임 최대 변위 "
+                  f"{step_max:.1f} Å > 셀 최소폭의 절반 {half_min:.1f} Å.\n"
+                  f"      MSD 를 이 좌표로 재면 확산이 아니라 **상자 가로지르기**를 잰다. "
+                  f"unwrap 한 궤적이 필요하다 — 여기서 숫자를 내지 않는다.")
+            return None
     max_lag = max(3, int(nf * max_lag_frac))
     # 시간원점을 균등 추출 — 전부 쓰면 O(nf²) 라 800 ps 에서 느리다
     origins = _np.unique(_np.linspace(0, nf - max_lag - 1,
@@ -1167,6 +1193,15 @@ def selftest():
             _off = max(abs(_sl(_M[i][j])) for i, j in ((0, 1), (0, 2), (1, 2)))
             chk(_off < 0.3 * max(_dd),
                 "[음성] 축이 독립이면 비대각이 대각보다 훨씬 작다 — 상관을 지어내지 않는다")
+        # ★ wrap 거부 — kgy EN_0717/licube 가 D=3e6 Å²/ps 를 낸 실측이 계기다
+        _pw = _p % 40.0                                     # 주기상자로 접는다
+        _w(str(_d / "wrapped.xyz"),
+           [_At("Li" * _ni, positions=q, cell=[40, 40, 40], pbc=True) for q in _pw])
+        chk(directional_msd_tensor(_d / "wrapped.xyz", save_fs=100.0) is None,
+            "[음성] ⛔**wrap 된 궤적을 거부한다** — 상자 가로지르기를 확산으로 재지 않는다 "
+            "(EN_0717/licube 가 3e6 Å²/ps 를 냈던 그 상황)")
+        chk(directional_msd_tensor(_d / "traj.xyz", save_fs=100.0) is not None,
+            "[양성] 같은 궤적의 **unwrap 판은 그대로 통과**한다 — 정상까지 막지 않는다")
         chk(directional_msd_tensor(_d / "traj.xyz", save_fs=100.0, prefix_ps=0.5) is None,
             "[음성] prefix 가 너무 짧으면 None — 프레임 20개 미만은 재지 않는다")
         chk(directional_msd_tensor(_d / "traj.xyz", save_fs=100.0, species="Xx") is None,
