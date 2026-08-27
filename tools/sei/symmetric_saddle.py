@@ -1628,8 +1628,23 @@ def mode_overlap(a_vec, b_vec, skip=(), match=None, sign=1.0):
     return None if na < 1e-9 or nb < 1e-9 else round(num / (na * nb), 4)
 
 
+def hop_center(fr, la, cell):
+    """반전 중심 = **두 끝점 사이에서** 제일 많이 다른 원자의 중점. → (hop, ctr, dif)
+
+    ⛔ 이걸 함수로 뽑은 이유(2026-08-27): bfgs_trace 가 중심을 `그 끝점 이완 중 최대 이동
+      원자` 로 잡고 있었다. 그건 공공 이웃이지 뛰는 원자가 아니다 — 뛰는 Li 는 제 끝점
+      안에서 0.03 Å 밖에 안 움직인다. 중심을 고르는 규약은 build_frozen·align_report 와
+      **하나여야** 하고, 하나면 테스트할 수 있다.
+    """
+    nat = len(fr)
+    dif = [min_image([la[i][1][k] - fr[i][1][k] for k in range(3)], cell) for i in range(nat)]
+    hop = max(range(nat), key=lambda i: sum(x * x for x in dif[i]))
+    return hop, [fr[hop][1][k] + dif[hop][k] / 2.0 for k in range(3)], dif
+
+
 def bfgs_trace(work, tag, base_dirs=False):
     """P0-2 예비 진단 — 새 계산 없이 relax.out 궤적으로 물리/배회를 가른다."""
+    import math as _m
     d = os.path.join(work, tag)
     cell = None
     rep, vec = {}, {}
@@ -1657,14 +1672,19 @@ def bfgs_trace(work, tag, base_dirs=False):
         rep[nm + "_final_rows"] = blocks[-1]
 
     A, B = rep["ep_initial"], rep["ep_final"]
-    skip = {A["hop_index"], B["hop_index"]}
-    cos_raw = mode_overlap(vec["ep_initial"], vec["ep_final"], skip)
 
     # ── 대칭 매핑을 넣은 코사인 (이게 옳은 비교다 — 위 inversion_match docstring 참조) ──
     fr, la = rep["ep_initial_final_rows"], rep["ep_final_final_rows"]
-    hop = A["hop_index"]
-    dh = min_image([la[hop][1][k] - fr[hop][1][k] for k in range(3)], cell)
-    ctr = [fr[hop][1][k] + dh[k] / 2.0 for k in range(3)]
+    # ⛔⛔ 2026-08-27 네 번째 버그 — 옛 판은 반전 중심을 `A["hop_index"]` 로 잡았다.
+    #   그건 **그 끝점 이완 중에** 제일 많이 움직인 원자다(= 공공 이웃). **뛰는 원자가 아니다** —
+    #   뛰는 Li 는 제 끝점 안에서 0.03 Å 밖에 안 움직인다. 엉뚱한 중심으로 반전을 걸었으니
+    #   잔차가 클 수밖에 없었고, 그래서 스칼라가 소수 4자리까지 같은 ccpath 마저
+    #   "대칭 등가가 아니다" 로 찍혔다 — **출력 안에서 모순이 났고 그게 신호였다.**
+    #   → 중심은 **두 끝점 사이에서** 제일 많이 다른 원자의 중점이다 (build_frozen·
+    #     align_report 와 같은 규약).
+    hop, ctr, dif = hop_center(fr, la, cell)
+    skip = {hop}          # 뛰는 원자만 뺀다 — 이완장 자체는 비교 대상이다
+    cos_raw = mode_overlap(vec["ep_initial"], vec["ep_final"], skip)
     match, worst = inversion_match(fr, la, ctr, cell)
     cos_sym = (mode_overlap(vec["ep_initial"], vec["ep_final"], skip, match, -1.0)
                if match else None)
@@ -1727,7 +1747,9 @@ def bfgs_trace(work, tag, base_dirs=False):
 
     L.append("")
     L.append(f"   ★ 모드 일치도 — raw {cos_raw} · **대칭매핑 {cos_sym}** "
-             f"(반전 잔차 {None if worst is None else round(worst, 3)} Å)")
+             f"(반전 잔차 {None if worst is None else round(worst, 3)} Å · "
+             f"중심 = 끝점 간 최대차 원자 #{hop} {fr[hop][0]} "
+             f"{_m.sqrt(sum(x*x for x in dif[hop])):.3f} Å 의 중점)")
     L.append("      ⚠ **raw 코사인은 여기서 뜻이 없다.** 대칭 등가면 두 변위장은 *같은* 게 아니라 "
              "**대칭 연산으로 관계**돼 있어서, 같은 index 로 재면 서로 다른 자리를 비교하게 된다 "
              "— 0 근처가 정상이다. 볼 것은 **대칭매핑** 쪽이다.")
@@ -1759,7 +1781,9 @@ def bfgs_trace(work, tag, base_dirs=False):
     try:
         for k in ("ep_initial_final_rows", "ep_final_final_rows"):
             rep.pop(k, None)
-        json.dump({"tag": tag, "mode_overlap_cos_raw": cos_raw,
+        json.dump({"tag": tag, "hop_between_endpoints": hop,
+                   "hop_between_endpoints_A": round(_m.sqrt(sum(x*x for x in dif[hop])), 4),
+                   "mode_overlap_cos_raw": cos_raw,
                    "mode_overlap_cos_symmetry_mapped": cos_sym,
                    "inversion_residual_A": None if worst is None else round(worst, 4),
                    "relax_scalar_mismatch_pct": scal,
@@ -1847,6 +1871,38 @@ def selftest_trace():
     chk(raw <= 0.5,
         f"[궤적·대칭·실측회귀] 같은 쌍의 **raw 코사인은 낮다** ({raw:.3f}) — "
         f"raw 를 '배회' 로 읽으면 안 된다")
+
+    # ★★★ 실측회귀 (2026-08-27) — **반전 중심을 어디서 잡는가.**
+    #   옛 판은 `그 끝점 이완 중 최대 이동 원자` 를 썼다(= 공공 이웃). 그래서 스칼라가
+    #   소수 4자리까지 같은 ccpath 마저 "대칭 등가 아님" 이 나왔다. 여기서는 **진짜로
+    #   반전 대칭인 한 쌍**을 만들어, 중심을 옳게 잡으면 잔차가 0 에 붙는지 본다.
+    aC, bC = 3.0, 4                                   # 단일 원소 단순입방 (반전 대칭이 자명)
+    cellC = [[aC * bC, 0, 0], [0, aC * bC, 0], [0, 0, aC * bC]]
+    site = [(x * aC, y * aC, z * aC) for x in range(bC) for y in range(bC) for z in range(bC)]
+    M = [aC / 2, 0.0, 0.0]                            # (0,0,0) 과 (a,0,0) 의 중점
+    def _key(p):
+        return tuple(round(v % (aC * bC), 6) for v in p)
+    idx = {_key(p): i for i, p in enumerate(site)}
+    Q = [idx[_key([2 * M[k] - p[k] for k in range(3)])] for p in site]  # 반전이 만드는 자리 치환
+    u = [[x * 0.12 for x in mode(i * 3 + 1)] for i in range(len(site))]  # 임의 이완장
+    A_i, B_i = idx[_key((0.0, 0.0, 0.0))], idx[_key((aC, 0.0, 0.0))]
+    # ⚠ 두 끝점의 **원자 목록이 같아야** 한다 (같은 index = 같은 원자). 그래서 공통 원자
+    #   + 맨 뒤에 '뛰는 원자' 하나로 만든다. 자리를 하나씩 빼며 만들면 목록이 어긋난다.
+    common = [i for i in range(len(site)) if i not in (A_i, B_i)]
+    first_s = [("Li", [site[i][k] + u[i][k] for k in range(3)]) for i in common]
+    #   최종은 초기의 **반전상**: 자리 q 에 앉은 원자는 −u(2M−q) 만큼 밀린다
+    last_s = [("Li", [site[i][k] - u[Q[i]][k] for k in range(3)]) for i in common]
+    first_s.append(("Li", [site[A_i][k] + u[A_i][k] for k in range(3)]))   # 뛰는 원자: A → B
+    last_s.append(("Li", [site[B_i][k] - u[A_i][k] for k in range(3)]))
+    hopC, ctrC, _d = hop_center(first_s, last_s, cellC)
+    _mm2, wC = inversion_match(first_s, last_s, ctrC, cellC)
+    chk(wC is not None and wC < 0.05,
+        f"[궤적·중심·실측회귀] 진짜 반전쌍이면 잔차가 0 에 붙는다 ({wC})")
+    ctr_bad = [first_s[0][1][k] for k in range(3)]    # 엉뚱한 중심(옛 버그의 모양)
+    _mm3, wBad = inversion_match(first_s, last_s, ctr_bad, cellC)
+    chk(wBad is not None and wBad > 5 * (wC or 1e-9) and wBad > 0.5,
+        f"[궤적·중심·음성] 중심을 잘못 잡으면 잔차가 커진다 ({wBad:.2f} vs {wC:.3f}) "
+        f"— 잔차는 **중심 선택도** 재고 있다")
     chk(abs(mode_overlap(a, [[0.0, 0.0, 0.0]] * nat) or 1) if False else
         mode_overlap(a, [[0.0, 0.0, 0.0]] * nat) is None,
         "[궤적·가드] 영벡터면 코사인을 계산하지 않는다")
