@@ -57,7 +57,8 @@ describe('무엇을 강조하는가', () => {
 describe('면적으로 나눠도 되는 파라미터', () => {
   it('Ω 인 것만 — 나머지는 나누면 뜻 없는 수가 된다', async () => {
     const { isOhmParam } = await import('../params')
-    for (const name of ['R0', 'R12', 'TL1_Rct', 'TL1_Ri', 'TL1_Re',
+    // 번호 없는 `R` 도 정식 이름이다 — 회로 문법이 번호를 선택으로 둔다.
+    for (const name of ['R', 'R0', 'R12', 'TL1_Rct', 'TL1_Ri', 'TL1_Re',
                         'TL1_Wr', 'Ws4_R']) {
       expect(isOhmParam(name)).toBe(true)
     }

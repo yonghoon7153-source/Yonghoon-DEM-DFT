@@ -341,7 +341,7 @@ describe('fitParametersTsv', () => {
       '파라미터\t값\t단위\t± 1σ\nR0\t7.99\tΩ\t0.31\nCPE1_n\t--\t\t--')
   })
 
-  it('화면이 면적으로 나눈 값을 보고 있으면 그 값 그대로 나간다', () => {
+  it('화면이 면적을 곱한 값을 보고 있으면 그 값 그대로 나간다', () => {
     // 보는 수와 붙이는 수가 다르면 어느 쪽이 맞는지 확인하는 데 왕복이 든다.
     const text = fitParametersTsv(
       [{ name: 'R0', value: 8, unit: 'Ω', stderr: 0.4, determined: true }],

@@ -21,9 +21,20 @@ export function isHeadline(name: string): boolean {
   return isOhmParam(name)
 }
 
-/** 이 파라미터의 단위가 **Ω 인가**.
+/** 이름만 보고 저항이라고 짐작한다 — **면적 규격화에는 쓰지 않는다.**
  *
- *  면적으로 나눠도 되는 것과 안 되는 것을 가른다.  Ω 은 나누면 Ω·cm² 이고
+ *  이 함수는 `isHeadline` (보고서에 옮겨 적는 값을 굵게) 전용이다.  강조는
+ *  틀려도 숫자가 안 바뀌지만, 면적 규격화가 틀리면 화면에 `Ω·cm²` 라고 적힌
+ *  아무 뜻 없는 수가 남는다.  그래서 규격화는 **서버가 보낸 단위**로 한다
+ *  (`ScanPointOut.units` → `areanorm.scalesWithArea`).
+ *
+ *  짐작이 왜 못 미더운지: 회로 문법은 원소 번호를 선택으로 둔다.
+ *  `R-p(R1,CPE1)-p(R2,CPE2)` 의 `R` 이 정식 이름인데 아래 정규식이 그것을
+ *  놓쳐, 한 표 안에서 `R` 만 Ω 로 남고 `R1`·`R2` 는 Ω·cm² 가 됐다
+ *  (Codex 그림 리뷰 #3).  번호를 선택으로 고쳐도 (`^R\d*$`) 다음 접미사가
+ *  생기면 같은 일이 난다 — 그래서 여기를 늘리는 대신 단위를 쓴다.
+ *
+ *  아래 옛 설명은 왜 이 집합이 저항인가에 대한 것이라 남긴다.  Ω 은 나누면 Ω·cm² 이고
  *  그것이 셀끼리 견주는 수다.  나머지는 그렇지 않다: `_Q` 는 S·sⁿ 이라 면적을
  *  **곱해야** 하고, `_n`·`_Wn` 은 무차원이며, `_tau`·`_Wt` 는 초다 — 셋 다
  *  나누면 아무 뜻도 없는 수가 되는데 화면에는 `Ω·cm²` 라고 적힌다 (§0.4).
@@ -34,7 +45,8 @@ export function isHeadline(name: string): boolean {
  *  아니라 같은 이유다: 옮겨 적는 것이 저항이고, 정규화할 수 있는 것도 저항이다.
  */
 export function isOhmParam(name: string): boolean {
-  if (/^R\d+$/.test(name)) return true
+  // 번호는 선택이다 — `R` 도 `R0` 도 정식 이름이다.
+  if (/^R\d*$/.test(name)) return true
   return /_(Rct|Ri|Re|Wr|R)$/.test(name)
 }
 

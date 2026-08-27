@@ -19,7 +19,7 @@ import { Plot3D, type Series3D } from '../components/Plot3D'
 import { Alert, Card, Empty, Field, Metric, MetricBand, Spinner } from '../components/ui'
 import { api } from '../lib/api'
 import { basisAxis, num, seriesColor } from '../lib/format'
-import { perArea } from '../lib/areanorm'
+import { perArea, scalesWithArea } from '../lib/areanorm'
 import { nyquistXy, sweepAt } from '../lib/eis'
 import { useAsync, useStickyState } from '../lib/hooks'
 import {
@@ -27,7 +27,7 @@ import {
 } from '../lib/zunit'
 import { rememberedLambda } from '../lib/drtlambda'
 import { seriesWideTsv } from '../lib/origin'
-import { isOhmParam, paramMeaning } from '../lib/params'
+import { paramMeaning } from '../lib/params'
 import { usePinnedColumns } from '../lib/pincols'
 import { stackOffsets, stackStep } from '../lib/stack'
 import {
@@ -113,6 +113,24 @@ function canPlot(key: ScanX, points: ScanPoint[], area: number | null): boolean 
   if (key === 'volt') return points.some((point) => point.potential_v !== null)
   const capacity = points.some((point) => point.capacity_mah !== null)
   return key === 'mah' ? capacity : capacity && !!area
+}
+
+/** 이 파라미터가 면적으로 규격화되는가 — **서버가 보낸 단위**로 정한다.
+ *
+ *  전에는 이름을 봤다 (`/^R\d+$/`).  회로 문법은 원소 번호를 선택으로 두므로
+ *  `R-p(R1,CPE1)-p(R2,CPE2)` 의 `R` 이 정식 이름인데 그 정규식이 그것을
+ *  놓쳤고, 같은 표에서 `R` 만 Ω 로 남고 `R1`·`R2` 는 Ω·cm² 가 됐다
+ *  (Codex 그림 리뷰 #3).  단위는 회로가 아는 것이라 알아맞힐 이유가 없다.
+ *
+ *  **단위를 모르면 손대지 않는다.**  옛 응답에는 `units` 가 없는데, 거기서
+ *  이름으로 되돌아가면 같은 실수를 옛 데이터에만 남기게 된다 (§0.4).
+ */
+function unitOf(points: ScanPoint[], name: string): string | null {
+  for (const point of points) {
+    const unit = point.units?.[name]
+    if (unit !== undefined) return unit
+  }
+  return null
 }
 
 /** 스윕 축의 눈금 자리 — **정수만**.
@@ -208,8 +226,11 @@ export function ScanDetail() {
 
   //: 세로축도 위 나이퀴스트와 **같은 자**로 그린다.  R0 를 여기서는 Ω 로,
   //  바로 위에서는 Ω·cm² 로 그리면 같은 수가 화면 안에서 두 번 다르게 나온다.
-  const paramIsOhm = isOhmParam(parameter)
-  const yLabel = paramIsOhm ? `${parameter} (${zUnit})` : parameter
+  const paramUnit = unitOf(points, parameter)
+  const paramIsOhm = scalesWithArea(paramUnit ?? '')
+  const yLabel = paramUnit === null ? parameter
+    : paramIsOhm ? `${parameter} (${zUnit})`
+    : paramUnit ? `${parameter} (${paramUnit})` : parameter
 
   // 목록이 오기 전에는 고를 것이 없다.  첫 파라미터를 기본으로 세우되,
   // 사람이 고른 뒤에는 건드리지 않는다.
@@ -402,7 +423,7 @@ export function ScanDetail() {
   //  세로 눈금이 무엇인지 알 방법이 없다.
   const pngCaption = [
     head.name,
-    area ? `면적 ${num(scanArea, 4)} cm² 로 나눈 값` : null,
+    area ? `면적 ${num(scanArea, 4)} cm² 를 곱한 값 (ASR)` : null,
     stacked && stackStepValue
       ? `곡선마다 ${num(stackStepValue, 3)} ${zUnit} 씩 올려 그림 — 세로 눈금은 값이 아닙니다`
       : null,
@@ -555,16 +576,26 @@ export function ScanDetail() {
                   pngCaption={pngCaption}
                 />
               ) : (
-                // **이격에서는 `equalAspect`·`y ≥ 0` 을 끈다.**  둘 다 세로가
-                // 진짜 −Z″ 라는 전제 위에 있다: 비율을 맞춰야 반원이 반원으로
-                // 보이고, 0 아래를 자르는 것이 인덕턴스 꼬리를 자르는 것이다.
-                // 올려 그린 화면에서 그 둘은 아무 뜻이 없다.
+                // **이격에서 끄는 것은 `y ≥ 0` 뿐이다.**
+                //
+                // 처음에는 `equalAspect` 도 같이 껐다.  둘을 "세로가 진짜
+                // −Z″ 라는 전제 위에 있다" 로 묶었는데, 그 묶음이 틀렸다.
+                // 상수를 더하는 것은 **평행이동**이라 `dy/dx` 를 안 바꾼다 —
+                // Ω 당 픽셀을 같게 하는 규칙은 옮겨 놓아도 그대로 뜻이 있다.
+                // 끄면 세로 범위가 커진 만큼 그림이 눌려서, 이상적인 반원이
+                // 찌그러진 아크(CPE 지수가 낮은 것)처럼 보인다 — 사람이 회로를
+                // 고를 때 보는 것이 정확히 그 차이다 (Codex 그림 리뷰 #1).
+                //
+                // `y ≥ 0` 은 진짜로 뜻을 잃는다: 0 아래를 자르는 것은 인덕턴스
+                // 꼬리를 자르는 것인데, 올려 놓은 화면에는 0 이 없다.
+                //
+                // 비율을 지키면 세로가 길어지므로 그림도 그만큼 키운다.
                 <Plot
                   series={series}
                   xLabel={`Z′ (${zUnit})`}
                   yLabel={stacked ? `−Z″ + 이격 (${zUnit})` : `−Z″ (${zUnit})`}
-                  height={stacked ? 520 : 380}
-                  equalAspect={!stacked}
+                  height={stacked ? 760 : 380}
+                  equalAspect
                   positiveFit={!stacked}
                   pngName={`${head.name} 나이퀴스트${stacked ? ' 이격' : ''}`}
                   pngTitle={stacked ? '나이퀴스트 — 스윕 전부 (이격)' : '나이퀴스트 — 스윕 전부'}
@@ -591,6 +622,11 @@ export function ScanDetail() {
                     곡선마다 <b>{num(stackStepValue, 3)} {zUnit}</b> 씩 올려
                     그렸습니다 (아래에서 위로, 켜 둔 것만). 세로 눈금은 그
                     스윕의 값이 아닙니다 — 모양을 보는 그림입니다.
+                    {mode === 'nyquist' ? (
+                      <> 두 축의 한 칸은 같은 길이로 두었습니다: 그래야 반원이
+                      반원으로 보입니다. 세로가 길어진 만큼 좌우가 비는데,
+                      🔍 로 좁히면 됩니다.</>
+                    ) : null}
                   </div>
                 ) : (
                   <div className="tiny warn">
@@ -620,7 +656,9 @@ export function ScanDetail() {
               ) : null}
               {area ? (
                 <div className="tiny faint">
-                  면적 {num(scanArea, 4)} cm² 로 나눈 값입니다.
+                  면적 {num(scanArea, 4)} cm² 를 <b>곱한</b> 값입니다 (ASR) —
+                  저항은 면적에 반비례하므로, 셀 크기가 달라도 견줄 수 있게
+                  하려면 나누는 것이 아니라 곱합니다.
                 </div>
               ) : null}
               {/* 충방전 사이클 고르개와 같은 손놀림 — 조각을 눌러 켜고 끈다.
@@ -799,7 +837,7 @@ export function ScanDetail() {
                 <th>#</th>
                 <th style={{ textAlign: 'left' }}>이름</th>
                 <th>용량 (mAh)</th>
-                {/* 셀끼리 견주려면 면적으로 나눈 값이라야 한다.  면적을 아직
+                {/* 이 열은 **용량**이라 진짜로 나눈다 (mAh → mAh/cm²).  면적을 아직
                     안 적었으면 **줄표** 다 — 0 으로 채우면 만방전과 구분되지
                     않는다 (§0.4). */}
                 <th>용량 (mAh/cm²)</th>
@@ -827,7 +865,9 @@ export function ScanDetail() {
                   // Ω·cm² 인데 표만 Ω 이면 같은 R₁ 이 한 화면에서 두 번 다르게
                   // 나온다.  Ω 이 아닌 것(`_Q`·`_n`·`_tau`)은 나누는 양이
                   // 아니므로 이름만 적는다 (`lib/params: isOhmParam`).
-                  const unit = isOhmParam(name) ? zUnit : ''
+                  const raw = unitOf(points, name)
+                  const unit = raw === null ? ''
+                    : scalesWithArea(raw) ? zUnit : raw
                   return (
                     // `title` 은 **원래 이름부터** 적는다.  머리 칸은 첨자로
                     // 그려서 (`CPE₁,Q`) 회로 칸에 쳐 넣을 글자와 다르다.
@@ -901,7 +941,8 @@ export function ScanDetail() {
                         {/* 값이 없는 칸은 0 이 아니라 줄표다.  '결정되지 않음'
                             을 숫자로 채우면 표가 없는 측정을 말하게 된다. */}
                         {value === undefined ? '—'
-                          : num(isOhmParam(name) ? perArea(value, area) : value, 4)}
+                          : num(scalesWithArea(unitOf(points, name) ?? '')
+                            ? perArea(value, area) : value, 4)}
                       </td>
                     )
                   })}

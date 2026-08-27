@@ -17,13 +17,23 @@ vi.hoisted(() => {
 
 import { ScanDetail } from '../ScanDetail'
 
-function point(index: number, values: Record<string, number>) {
+/** 이름으로 단위를 알아맞히지 않는다 — 서버가 실어 보낸다.  여기서도 실제
+ *  응답과 같은 모양으로 준다 (`ScanPointOut.units`). */
+const UNITS: Record<string, string> = {
+  R: 'Ω', R0: 'Ω', R1: 'Ω', R2: 'Ω', R3: 'Ω',
+  CPE1_Q: 'S·sⁿ', CPE1_n: '', CPE2_Q: 'S·sⁿ', CPE2_n: '',
+}
+
+function point(index: number, values: Record<string, number>,
+               units?: Record<string, string>) {
   return {
     spectrum_id: index, sweep_index: index, name: `sweep ${index}`,
     capacity_mah: index * 0.5, potential_v: 3.5 + index * 0.1,
     fit_id: Object.keys(values).length ? index : null,
     circuit: 'R0-p(R1,CPE1)', chi_squared: 0.01,
     values, labels: { R1: 'SEI 저항' },
+    units: units ?? Object.fromEntries(
+      Object.keys(values).map((name) => [name, UNITS[name] ?? ''])),
   }
 }
 
@@ -172,9 +182,12 @@ describe('ScanDetail', () => {
     show()
 
     // **면적을 알면 Ω·cm² 로 연다** — 셀끼리 견주는 값이 그것이고, 논문에
-    // 적는 것도 그것이다.  그리고 무엇으로 나눴는지 화면이 적는다.
+    // 적는 것도 그것이다.  그리고 무엇을 **곱했는지** 화면이 적는다.  저항은
+    // 면적에 반비례하므로 크기를 지우려면 곱해야 한다 (`R·A = ρL`).  오래
+    // "나눈 값" 이라고 적혀 있었고 이 시험이 그 거짓말을 잠그고 있었다.
     await waitFor(() =>
-      expect(document.body.textContent).toContain('면적 2.000 cm² 로 나눈 값입니다'))
+      expect(document.body.textContent).toContain('면적 2.000 cm² 를'))
+    expect(document.body.textContent).toContain('곱한')
     expect(screen.getByRole('button', { name: 'Ω·cm²' }).className).toContain('on')
 
     // 손으로 Ω 로 돌리면 그 선택이 이긴다.
@@ -271,7 +284,7 @@ describe('ScanDetail', () => {
         .toBeInTheDocument())
   })
 
-  it('면적을 알면 용량과 저항을 면적으로 나눈 열이 함께 나온다', async () => {
+  it('면적을 알면 용량은 나눈 열, 저항은 곱한 열이 함께 나온다', async () => {
     installFetch({
       sha256: 'abc', name: '스캔', original_name: 'scan.mpr', kind: 'liquid',
       cell_config: 'half', purpose: 'SOC별', sample_id: null, sample_name: null,
@@ -384,6 +397,50 @@ describe('ScanDetail', () => {
 
     // 추세의 세로축 이름도 같은 자를 적는다.
     expect(document.body.textContent).toContain('R0 (Ω·cm²)')
+  })
+
+  /** 회로 문법은 원소 번호를 선택으로 둔다.  `R-p(R1,CPE1)-p(R2,CPE2)` 의
+   *  `R` 이 정식 이름인데, 이름으로 저항을 알아맞히던 규칙(`/^R\d+$/`)이
+   *  그것을 놓쳐 한 표 안에서 `R` 만 Ω 로 남았다 (Codex 그림 리뷰 #3). */
+  it('번호 없는 R 도 면적으로 규격화된다 — 단위가 정하지 이름이 정하지 않는다',
+     async () => {
+    window.localStorage.clear()
+    installFetch({
+      sha256: 'abc', name: '스캔', original_name: 'scan.mpr', kind: 'liquid',
+      cell_config: 'half', purpose: 'SOC별', sample_id: null, sample_name: null,
+      sweeps: 1, fitted: 1, parameters: ['R', 'R1', 'CPE1_n'],
+      area_cm2_effective: 2,
+      points: [point(1, { R: 5, R1: 20, CPE1_n: 0.9 })],
+    }, [sweepPoints(1)])
+    show()
+
+    await screen.findByRole('columnheader', { name: /R₀ \(Ω·cm²\)/ })
+    const cells = [...document.querySelectorAll('tbody tr td')]
+      .map((one) => one.textContent)
+    expect(cells).toContain('10.00')     // R  5 Ω × 2 cm²
+    expect(cells).toContain('40.00')     // R1 20 Ω × 2 cm²
+    expect(cells).toContain('0.900')     // 지수는 무차원 — 그대로
+  })
+
+  /** 단위를 모르면 손대지 않는다 (§0.4).  옛 응답에는 `units` 가 없는데,
+   *  거기서 이름으로 되돌아가면 같은 실수를 옛 데이터에만 남기게 된다. */
+  it('단위가 없는 옛 응답은 규격화하지 않고 이름만 적는다', async () => {
+    window.localStorage.clear()
+    installFetch({
+      sha256: 'abc', name: '스캔', original_name: 'scan.mpr', kind: 'liquid',
+      cell_config: 'half', purpose: 'SOC별', sample_id: null, sample_name: null,
+      sweeps: 1, fitted: 1, parameters: ['R0'], area_cm2_effective: 2,
+      points: [{ ...point(1, { R0: 5 }), units: undefined }],
+    }, [sweepPoints(1)])
+    show()
+
+    await screen.findByRole('columnheader', { name: '총저항 (Ω·cm²)' })
+    const table = document.querySelector('table')!
+    const heads = [...table.querySelectorAll('thead th')].map((h) => h.textContent)
+    // 붙박이 열 둘(R₀·총저항) 말고는 자를 안 적는다 — 모르니까.
+    expect(heads.filter((h) => h?.includes('(Ω·cm²)'))).toHaveLength(2)
+    const cells = [...table.querySelectorAll('tbody tr td')].map((c) => c.textContent)
+    expect(cells).toContain('5.000')     // 안 곱한 값 그대로
   })
 
   /** 나머지 셋은 없을 수 있고 (용량을 안 적은 스캔, 면적을 아직 안 넣은 셀)

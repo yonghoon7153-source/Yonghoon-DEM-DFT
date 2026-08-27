@@ -762,6 +762,10 @@ def _scan_point(session: Session, record: SpectrumRecord) -> ScanPointOut:
     # 안다 (§0.4).  뺀 자리는 선이 끊어져서 보인다.
     point.values = {p["name"]: float(p["value"]) for p in parameters
                     if p.get("determined")}
+    # **단위도 같이 보낸다.**  면적으로 규격화해도 되는 값인지는 단위가 정하지
+    # 이름이 정하지 않는다 (`ScanPointOut.units`).  값이 미결정이라 안 나가는
+    # 파라미터의 단위까지 보낸다 — 표의 머리 칸은 값이 없어도 서 있다.
+    point.units = {p["name"]: str(p.get("unit") or "") for p in parameters}
     # 회로가 달라도 뜻이 같은 둘.  스윕 표가 SOC 를 따라가는 값이 이것이고,
     # 파라미터 이름(`R0`/`Rs`)은 회로마다 달라 표의 열이 될 수 없다.
     point.series_resistance_ohm = _series_resistance(parameters)

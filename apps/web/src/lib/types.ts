@@ -778,6 +778,9 @@ export interface ScanPoint {
   /** 파라미터 이름 → 값.  **미결정 파라미터는 여기 없다** — 서버가 뺀다 (§0.4). */
   values: Record<string, number>
   labels: Record<string, string>
+  /** 파라미터 이름 → 단위.  면적으로 규격화해도 되는 값인지는 **단위**가
+   *  정한다 — 이름으로 알아맞히면 번호 없는 `R` 같은 것을 놓친다. */
+  units?: Record<string, string>
   /** 이 스윕의 점 수와 대역 — 한 파일 안에서도 스윕마다 다를 수 있다. */
   n_points: number
   frequency_start_hz: number | null
