@@ -86,7 +86,13 @@ export function PickGrid({
 
   return (
     <Card title={`${title} · ${picked.length}개`}>
-      <div className="col" style={{ gap: 10 }} ref={box}>
+      {/* **한 자리에서 붙잡는다.**  체크만이 아니라 그룹·소그룹·검색도 목록의
+          길이를 바꾸고, 그때마다 고르개가 위아래로 달아난다 — 소그룹을 골랐더니
+          화면이 위로 튀어 다음에 누를 칸을 다시 찾아야 했다.  `change` 는
+          거품처럼 올라오므로 (select · checkbox · input 전부) 상자 하나에
+          걸어 두면 그 안의 무엇을 건드려도 자리가 유지된다. */}
+      <div className="col" style={{ gap: 10 }} ref={box}
+           onChange={() => keepInPlace(box.current)}>
         {group ? (
           <div className="grid cols-2" style={{ gap: 10 }}>
             <GroupFilterFields pick={group} hint={groupHint} />

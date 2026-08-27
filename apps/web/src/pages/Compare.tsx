@@ -572,7 +572,11 @@ export function Compare() {
               높이가 변하고 (범례가 한 줄 늘거나 줄고, 경고가 뜨거나 사라진다)
               고르개가 그만큼 움직인다 — 다음에 누르려던 칸이 커서 밑에서
               사라진다.  누른 순간의 자리를 붙잡아 둔다 (`lib/anchor`). */}
-          <div className="col" style={{ gap: 10 }} ref={pickBox}>
+          {/* 체크만이 아니라 그룹·소그룹도 목록의 길이를 바꾼다 — `change` 는
+              거품처럼 올라오므로 상자 하나에 걸면 그 안의 무엇을 건드려도
+              자리가 유지된다. */}
+          <div className="col" style={{ gap: 10 }} ref={pickBox}
+               onChange={() => keepInPlace(pickBox.current)}>
             <div className="grid cols-2" style={{ gap: 10 }}>
               <GroupFilterFields pick={group} hint="소그룹까지 골라 좁힐 수 있습니다" />
             </div>
@@ -623,7 +627,6 @@ export function Compare() {
                     type="checkbox"
                     checked={picked.includes(sample.id)}
                     onChange={() => {
-                      keepInPlace(pickBox.current)
                       setTouched(true)
                       setTruncated(false)
                       setPicked((current) =>
