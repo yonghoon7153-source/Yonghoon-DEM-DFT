@@ -739,12 +739,23 @@ class _PublishLock:
     """
 
     def __init__(self, out: Path):
-        self.path = Path(out) / ".publish.lock"
+        self.out = Path(out).resolve()
+        self.path = self.out / ".publish.lock"
         self.fd = None
         self.token = None
+        self.ino = None
+        self.pid = None
 
     def __enter__(self):
-        import fcntl
+        try:
+            import fcntl
+        except ImportError as e:                 # pragma: no cover - POSIX 전제
+            # ★ 39차 #9 — native Windows 에는 `fcntl` 이 없다. 조용히 lock 없이
+            #   진행하면 상호배제가 사라지므로 **명시적으로 거부**한다. 이
+            #   저장소의 실제 배치는 단일 호스트 POSIX 다.
+            raise SystemExit(
+                "✗ 이 platform 에는 fcntl 이 없다 — 게시 상호배제를 보장할 수 "
+                "없으므로 진행하지 않는다 (POSIX 단일 호스트 전제)") from e
 
         self.path.parent.mkdir(parents=True, exist_ok=True)
         self.fd = os.open(self.path, os.O_CREAT | os.O_RDWR, 0o644)
@@ -757,8 +768,10 @@ class _PublishLock:
                 f"✗ 다른 게시가 진행 중이다: {self.path} — 그 process 가 살아 "
                 "있다. 끝난 뒤 다시 시도하라")
         self.token = uuid.uuid4().hex
+        self.pid = os.getpid()
+        self.ino = os.fstat(self.fd).st_ino
         os.ftruncate(self.fd, 0)
-        os.pwrite(self.fd, f"{os.getpid()} {self.token}".encode(), 0)
+        os.pwrite(self.fd, f"{self.pid} {self.token}".encode(), 0)
         os.fsync(self.fd)
         return self
 
@@ -767,28 +780,58 @@ class _PublishLock:
 
         if self.fd is None:
             return False
+        # ★ 39차 #9 — **파일을 지우지 않는다.** 38차판은 token 을 old fd 의
+        #   inode 에서 읽고 삭제는 현재 pathname 에 했다. pathname 이 다른
+        #   inode 로 교체되면 옛 owner 가 새 owner 의 lock path 를 지우고
+        #   제3 writer 가 새 inode 를 잠글 수 있었다 (pathname split ABA).
+        #
+        #   flock 은 process 가 죽으면 kernel 이 푼다 — 파일이 남아 있어도
+        #   다음 owner 를 막지 않는다. persistent inode 가 모든 writer 를 한
+        #   곳으로 모으는 가장 단순한 답이고, 삭제 경합이 아예 없어진다.
         try:
-            # ★ 38차 — **내 token 일 때만** 지운다. 아니면 남의 lock 이다.
-            cur = os.pread(self.fd, 4096, 0).decode("utf-8", "replace")
-            if self.token and self.token in cur:
-                self.path.unlink(missing_ok=True)
+            fcntl.flock(self.fd, fcntl.LOCK_UN)
         except OSError:
             pass
-        finally:
-            try:
-                fcntl.flock(self.fd, fcntl.LOCK_UN)
-            except OSError:
-                pass
-            os.close(self.fd)
-            self.fd = None
+        os.close(self.fd)
+        self.fd = None
         return False
 
     def held(self) -> bool:
         return self.fd is not None
 
+    def assert_held_for(self, out: Path) -> None:
+        """이 lock 이 **바로 그 cohort** 의 것인가 (39차 #9).
 
-def _publish_pointer(out: Path, rec: dict) -> None:
-    """CURRENT 를 **원자적으로** 옮긴다. 여기가 유일한 가시성 전환점이다."""
+        38차판은 `held()` 가 참인지만 봤다. 가짜 객체는 물론이고, `outA` 에서
+        **진짜로 획득한** lock 을 `outB` 게시에 넘겨도 통과했다 — `outB` 는
+        잠기지 않은 채로. capability 는 대상에 결속돼야 한다.
+        """
+        want = Path(out).resolve()
+        if self.fd is None:
+            raise SystemExit(f"✗ lock 을 들고 있지 않다: {want}")
+        if self.out != want:
+            raise SystemExit(
+                f"✗ 이 lock 은 {self.out} 의 것이다 — {want} 를 게시할 수 없다")
+        if self.pid != os.getpid():
+            raise SystemExit("✗ 다른 process 가 잡은 lock 이다")
+        try:
+            st = os.fstat(self.fd)
+            live = self.path.stat()
+        except OSError as e:
+            raise SystemExit(f"✗ lock 파일을 확인할 수 없다: {e}") from e
+        if st.st_ino != self.ino or live.st_ino != self.ino:
+            raise SystemExit(
+                "✗ lock 파일의 inode 가 바뀌었다 — 잡고 있는 것이 그 파일이 "
+                "아니다 (pathname 이 교체됐다)")
+
+
+def _publish_pointer(out: Path, rec: dict, name: str = "CURRENT") -> None:
+    """CURRENT 를 **원자적으로** 옮긴다. 여기가 유일한 가시성 전환점이다.
+
+    ★ 39차 #9 — `name=".PENDING"` 은 bootstrap 용 **비활성** pointer 다.
+      어떤 reader 도 그것을 권위로 보지 않는다 (`read_current()` 는 `CURRENT`
+      만 본다). 다음 leg 의 publisher 가 base 를 찾는 데만 쓴다.
+    """
     tmp = out / f".CURRENT.{uuid.uuid4().hex}.tmp"
     data = json.dumps(rec, sort_keys=True, ensure_ascii=False,
                       separators=(",", ":")).encode("utf-8")
@@ -800,12 +843,13 @@ def _publish_pointer(out: Path, rec: dict) -> None:
         os.fsync(fd)
     finally:
         os.close(fd)
-    os.replace(tmp, out / "CURRENT")
+    os.replace(tmp, out / name)
     _fsync_dir(out)
 
 
 def _promote_generation(stage: Path, out: Path, *, expect=_UNSET,
-                        lock: "_PublishLock" = None) -> dict:
+                        lock: "_PublishLock" = None, roster=None,
+                        base_ptr: str = "CURRENT") -> dict:
     """staging 을 immutable generation 으로 굳히고 CURRENT 를 옮긴다.
 
     ★ 36차 #9b — **비공개다.** 이 함수는 staging 을 그대로 믿으므로 한 파일
@@ -820,10 +864,13 @@ def _promote_generation(stage: Path, out: Path, *, expect=_UNSET,
     # ★ 38차 #9 — **유효한 lock 을 들고 있어야** pointer 를 옮길 수 있다.
     #   37차판은 이 함수가 이름만 private 였고 lock 없이도 게시할 수 있었다.
     #   "private 라는 이름은 trust boundary 가 아니다" 를 스스로 어겼다.
-    if lock is None or not getattr(lock, "held", lambda: False)():
+    # ★ 39차 #9 — `held()` 가 참인지가 아니라 **이 `out` 의 lock 인지** 본다.
+    check = getattr(lock, "assert_held_for", None)
+    if not callable(check):
         raise SystemExit(
             "✗ 게시 lock 없이 CURRENT 를 옮길 수 없다 — "
             "`promote_cohort_generation()` 을 쓰라")
+    check(out)
     stage, out = Path(stage), Path(out)
     _assert_writable(out)
     files = {p.name: _sha(p.read_bytes())
@@ -860,23 +907,44 @@ def _promote_generation(stage: Path, out: Path, *, expect=_UNSET,
 
     rec = {"schema": CURRENT_SCHEMA, "generation_id": gid, "files": files}
     if expect is not _UNSET:
+        # ★ 39차 #9 — base 를 읽은 **그 pointer** 와 대조한다. bootstrap 중에는
+        #   base 가 `.PENDING` 이므로 `CURRENT` 와 비교하면 언제나 어긋난다.
         live = None
-        if (out / "CURRENT").is_file():
-            live = read_current(out)["generation_id"]
+        if (out / base_ptr).is_file():
+            live = _read_pointer(out, base_ptr)["generation_id"]
         if live != expect:
             raise SystemExit(
                 f"✗ CURRENT 가 그 사이에 움직였다 (기대 "
                 f"{str(expect)[:16]} · 실제 {str(live)[:16]}) — 남의 승격을 "
                 "덮지 않는다. base 를 다시 읽고 재시도하라")
+    # ★ 39차 #9 — **명부가 다 차야** active pointer 를 옮긴다. 38차판은
+    #   bootstrap partial 을 그대로 active `CURRENT` 로 게시했고, 그 직후
+    #   crash 하면 incomplete active state 가 남았다 — roster 를 받지 않는
+    #   public `read_current()`·`cohort_bytes()` 는 그것을 정상으로 읽는다.
+    #   bootstrap 은 필요하지만 active publication 과 같은 상태일 필요는 없다.
+    #   generation directory 는 이미 immutable 하게 굳었으므로 잃는 것은 없다.
+    if roster is not None:
+        seen = {_leg_of(n) for n in files}
+        if seen != set(roster):
+            # bootstrap 중이다 — generation 은 굳었지만 **active 가 아니다.**
+            # 다음 leg 가 base 로 삼을 수 있게 pending pointer 에만 적는다.
+            _publish_pointer(out, rec, name=".PENDING")
+            return dict(rec, published=False,
+                        pending=sorted(set(roster) - seen))
     _publish_pointer(out, rec)
+    (out / ".PENDING").unlink(missing_ok=True)     # 명부가 찼다 — 더는 필요 없다
     _materialize(out, rec)      # 호환 사본 — 권위는 CURRENT 다
-    return rec
+    return dict(rec, published=True)
 
 
 def read_current(out: Path, expect_legs=None) -> dict:
     """CURRENT 를 따라간다. 없거나 깨졌거나 실물과 어긋나면 **fail-closed**."""
+    return _read_pointer(out, "CURRENT", expect_legs=expect_legs)
+
+
+def _read_pointer(out: Path, name: str, expect_legs=None) -> dict:
     out = Path(out)
-    p = out / "CURRENT"
+    p = out / name
     if not p.is_file():
         raise SystemExit(f"✗ CURRENT 가 없다: {p}")
     try:
@@ -1008,7 +1076,17 @@ def promote_cohort_generation(stage: Path, out: Path, leg: str, *, roster) -> di
     #   빈 roster 와 "이 leg 가 명부 밖" 은 아래 `undeclared` 검사가 그대로
     #   잡는다 (staging 에는 언제나 이 leg 가 들어 있다). 같은 규칙을 두 곳에
     #   두면 강한 쪽을 지워도 초록이 된다 — 변이로 확인했다.
+    # ★ 39차 #9 — **caller 의 신고를 믿지 않는다.** 38차판은 bare set 을 그대로
+    #   받아, 원장에 없는 leg 를 caller 가 roster 에 넣어 승인시킬 수 있었다.
+    #   필수 인자는 *누락*을 막을 뿐 provenance 를 만들지 않는다. `out` 을 원장
+    #   cohort 로 resolve 해 **직접 읽고**, caller 의 신고와 다르면 거부한다
+    #   (인자는 이제 "내가 이렇게 알고 있다" 는 주장이고, 원장이 정본이다).
+    declared = _ledger_roster(out)
     roster = set(roster or ())
+    if roster != declared:
+        raise SystemExit(
+            f"✗ 신고한 roster {sorted(roster)} 가 원장 {sorted(declared)} 와 "
+            "다르다 — 원장이 정본이다")
     with _PublishLock(out) as lock:
         return _promote_cohort_locked(stage, out, leg, lock, roster)
 
@@ -1018,12 +1096,14 @@ def _promote_cohort_locked(stage: Path, out: Path, leg: str,
     base: dict = {}
     gdir = None
     expect = None
-    if (out / "CURRENT").is_file():
-        # ★ 38차 #9 — base 는 **명부 부분집합**이면 된다. 여기서 exact 를
-        #   요구하면 bootstrap 이 불가능하다: roster={a,b} 인 cohort 에 a 를
-        #   처음 게시할 때 base 는 비어 있고, b 를 게시하려면 base={a} 여야
-        #   한다. exact 는 **reader** 의 주장이다 (`_Snapshot` 이 그것을 한다).
-        cur = read_current(out)
+    # ★ 39차 #9 — base 는 active `CURRENT` 또는 bootstrap `.PENDING` 이다.
+    #   `.PENDING` 은 어떤 reader 도 권위로 보지 않지만, 다음 leg 가 이어
+    #   붙이려면 base 가 있어야 한다.
+    base_ptr = "CURRENT" if (out / "CURRENT").is_file() else ".PENDING"
+    if (out / base_ptr).is_file():
+        # base 는 **명부 부분집합**이면 된다. 여기서 exact 를 요구하면
+        # bootstrap 이 불가능하다. exact 는 **reader** 의 주장이다.
+        cur = _read_pointer(out, base_ptr)
         base = dict(cur["files"])
         gdir = out / "gen" / cur["generation_id"]
         expect = cur["generation_id"]
@@ -1068,7 +1148,8 @@ def _promote_cohort_locked(stage: Path, out: Path, leg: str,
     #   (기존 leg 를 줄이는 것은 위 `keep` 복사가 구조로 막는다 — 검사를 하나
     #    더 두려 했으나 도달 불가능이었다. 확인했고 두지 않는다.)
     assert_cohort_complete(staged, "staging")
-    return _promote_generation(stage, out, expect=expect, lock=lock)
+    return _promote_generation(stage, out, expect=expect, lock=lock,
+                               roster=roster, base_ptr=base_ptr)
 
 
 def _ledger_roster(out: Path) -> set:

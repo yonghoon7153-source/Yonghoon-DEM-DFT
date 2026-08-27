@@ -39,6 +39,7 @@ from tools.preserve import (FAULTS, CasBackend, Hooks, PlannedLeg, PreserveError
                             MIN_RETENTION_DAYS, ObjectLockBackend, LockedCasBackend)
 from tools.preserve import _is_hex64 as _is_hex64_str
 from tools.preserve import RETENTION_SCHEMA as P_RETENTION_SCHEMA
+from tools.preserve import _reg_file as _reg_path
 
 #: 저장소 루트 (`tests/` 의 부모) — 소스를 읽어 계약을 대조하는 시험이 쓴다.
 ROOT = Path(__file__).resolve().parents[1]
@@ -2295,8 +2296,17 @@ class _LockingStore:
             return
         v = version
         if (key, v) in self._lock:
-            if not (bypass and self.mode == "GOVERNANCE" and self.bypass):
-                raise PermissionError(f"object lock 이 삭제를 막았다: {key}@{v}")
+            # ★ 39차 P0-1 — **봉인된 per-version mode** 와 **그 version 의 기한**
+            #   으로 판단한다. 38차판은 mutable 한 현재 `self.mode` 를 봐서,
+            #   COMPLIANCE 로 잠근 version 도 전역 mode 를 GOVERNANCE 로 바꾼 뒤
+            #   bypass 삭제할 수 있었다. 반대로 만료된 잠금도 영구 잠금처럼
+            #   취급했다.
+            mode = self._mode.get((key, v), self.mode)
+            now = dt.datetime.now(dt.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+            expired = str(self._lock[(key, v)]) <= now
+            if not expired:
+                if not (bypass and mode == "GOVERNANCE" and self.bypass):
+                    raise PermissionError(f"object lock 이 삭제를 막았다: {key}@{v}")
             self._lock.pop((key, v), None)
         self._obj.pop((key, v), None)
         self._marker.discard((key, v))
@@ -4042,3 +4052,345 @@ def test_the_fake_enforces_per_version_mode_and_monotonic_compliance(tmp_path):
     store.mode = "GOVERNANCE"                          # 나중에 store mode 를 바꿔도
     assert store.describe_object("k", v)["mode"] == "COMPLIANCE", (
         "잠글 때 봉인된 mode 가 소급 변경됐다")
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# 39차 P0-1 — validator 가 **새 locator 의미**를 보기 전에 WORM 을 만든다
+# ─────────────────────────────────────────────────────────────────────────────
+
+def _lease_like(backend, leg, objs, **over) -> dict:
+    """계약 key 를 정확히 갖춘 lease record. `over` 로 한 축만 위조한다."""
+    rec = {
+        "schema": P_RETENTION_SCHEMA, "leg_id": leg, "objects": objs,
+        "min_retention_days": MIN_RETENTION_DAYS,
+        "retain_until_utc": "2099-01-01T00:00:00Z",
+        "store_id": backend.store_id,
+        "store_version_id": backend.store_version_id or "",
+        "store_lock_mode": backend.store_lock_mode or "",
+        "backend_uri": backend.uri,
+        "enforcement": backend.probe_enforcement(),
+        "lock_mode": "COMPLIANCE",
+        "object_versions": {dg: "v00001" for dg in objs},
+        "pin_set_digest": pin_set_digest(leg, objs),
+    }
+    rec.update(over)
+    return rec
+
+
+@pytest.mark.parametrize("axis,over", [
+    ("store_version_id", {"store_version_id": ""}),
+    ("store_lock_mode", {"store_lock_mode": "GOVERNANCE"}),
+    ("lock_mode", {"lock_mode": "GOVERNANCE"}),
+    ("object_versions_missing", {"object_versions": {}}),
+    ("object_versions_empty", {"object_versions": {"x" * 64: ""}}),
+    ("timestamp", {"retain_until_utc": "not-a-date"}),
+])
+def test_a_semantically_forged_candidate_changes_nothing_before_refusal(
+        tmp_path, axis, over):
+    """★ 39차 P0-1 — exact key set 은 봤지만 **새 field 의 의미**는 안 봤다.
+
+    38차 `_matches_lease()` 는 key 집합·schema·leg·graph·정책·pin digest·
+    store ID·URI·enforcement·만료를 봤다. 그런데 그 뒤에 추가된
+    `store_version_id`·`store_lock_mode`·`lock_mode`·`object_versions` 와
+    timestamp 문법은 보지 않았다. 그래서 이 축만 위조한 candidate 를 먼저
+    pin·content **WORM 으로 만든 뒤** strict verifier 가 거부했다 — 거부는
+    맞지만 되돌릴 수 없는 상태 변경이 검증보다 앞섰다.
+
+    `retain_until_utc` 축이 특히 나쁘다: `_lease_expired()` 는 문자열 비교라
+    `"not-a-date"` 를 미래처럼 받아들이고, 그 값이 그대로 provider lock 에
+    넘어간 뒤에야 strict parser 가 거부한다.
+
+    **호출 전후로 provider version·pin 집합·store record 가 같아야 한다.**
+    """
+    store = _LockingStore(name=f"{tmp_path}-{axis}")
+    backend = _lockstore(tmp_path / axis, store)
+    leg = "hc22p_v6_armA_b20"
+    objs = sorted(backend.put_if_absent(b"g%d" % i)["digest"] for i in range(2))
+    backend.pin(leg, objs)
+    if over.get("object_versions") == {"x" * 64: ""}:
+        # key set 은 맞고 **값만** 빈 경우 — key set 검사에 업히지 않게 한다
+        over = {"object_versions": {objs[0]: "v00001", objs[1]: ""}}
+
+    fd = backend.put_if_absent(canonical_bytes(
+        _lease_like(backend, leg, objs, **over)))["digest"]
+    backend.pin(leg, [fd])
+
+    before_v = _version_census(store)
+    before_pins = set(backend.pinned(leg))
+    before_store = store.get("store.json")
+
+    with pytest.raises(PreserveError):
+        backend.retain(leg, objs, min_retention_days=MIN_RETENTION_DAYS)
+
+    grew = {k: (before_v.get(k, 0), n) for k, n in _version_census(store).items()
+            if n > before_v.get(k, 0)}
+    assert not grew, f"{axis}: 거부 전에 version 을 늘렸다: {grew}"
+    assert set(backend.pinned(leg)) == before_pins, f"{axis}: pin 집합이 변했다"
+    assert store.get("store.json") == before_store, f"{axis}: store record 가 변했다"
+    assert backend.protected_version(backend._provider_key(leg, fd)) is None, (
+        f"{axis}: 위조 candidate 를 WORM 으로 만든 뒤 거부했다")
+
+
+def test_validating_a_candidate_never_creates_the_store_record(tmp_path):
+    """★ 39차 P0-1 — "순수 validator" 가 `self.store_id` 를 불렀다.
+
+    `store_id` 는 record 가 없으면 **만들고 잠그며**, 있으면
+    `ensure_store_lock()` 으로 기한을 연장한다. 둘 다 mutation 이다. 검증이
+    상태를 바꾸면 "거부 전에 아무것도 안 바꿨다" 는 주장이 성립하지 않는다.
+
+    가장 관측하기 쉬운 형태로 본다 — store record 가 **아직 없는** backend 에서
+    validator 를 부르고, 그래도 안 생기는지 확인한다.
+    """
+    store = _LockingStore(name=str(tmp_path))
+    backend = _lockstore(tmp_path, store)
+    assert store.versions("store.json") == [], "전제: 아직 없다"
+
+    rec = {"schema": P_RETENTION_SCHEMA, "leg_id": "hc22p_v6_armA_b20",
+           "objects": ["a" * 64], "min_retention_days": MIN_RETENTION_DAYS,
+           "retain_until_utc": "2099-01-01T00:00:00Z", "store_id": "0" * 32,
+           "store_version_id": "v1", "store_lock_mode": "COMPLIANCE",
+           "backend_uri": backend.uri, "enforcement": "object_lock",
+           "lock_mode": "COMPLIANCE", "object_versions": {"a" * 64: "v1"},
+           "pin_set_digest": pin_set_digest("hc22p_v6_armA_b20", ["a" * 64])}
+    assert backend._matches_lease("hc22p_v6_armA_b20", ["a" * 64],
+                                  MIN_RETENTION_DAYS, rec) is False
+
+    assert store.versions("store.json") == [], (
+        "validator 가 store record 를 만들었다 — 검증이 상태를 바꿨다")
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# 39차 P0-1 — proof 를 더했지만 **빈 값이면 옛 live-search 로 돌아갔다**
+# ─────────────────────────────────────────────────────────────────────────────
+
+def test_an_object_lock_lease_without_a_store_version_proof_is_refused(tmp_path):
+    """★ 39차 P0-1 — `store_version_id == ""` 이면 검증을 **통째로 건너뛰었다.**
+
+    `if sv and prov is not None:` 이라 빈 값은 조용히 넘어갔다. field 를
+    더했지만 **optional** 이면 sealed locator 가 아니라 hint 다.
+    """
+    run = _make_run(tmp_path)
+    store = _LockingStore(name=str(tmp_path))
+    backend = _lockstore(tmp_path, store)
+    index = tmp_path / "index"
+    res = run_transaction(PLANNED, run, backend, index, _hooks())
+    # ★ `store_lock_mode` 는 **정상으로 둔다** — 그래야 "빈 locator" 축만
+    #   실행된다 (둘 다 비우면 mode 검사가 먼저 물어 축이 갈린다).
+    lease = dict(res["retention"], store_version_id="")
+
+    with pytest.raises(PreserveError) as ex:
+        backend.verify_retention(PLANNED.leg_id, lease["lease_digest"],
+                                 lease=lease,
+                                 lease_version=lease["lease_version"])
+    assert "store" in str(ex.value), str(ex.value)
+
+
+def test_a_store_version_that_expires_before_the_graph_is_refused(tmp_path):
+    """★ 39차 P0-1 — exact store version 의 **기한**을 안 봤다.
+
+    bytes 와 mode 는 봤지만 `retain_until` 이 graph lease 보다 짧은지는 안 봤다.
+    identity root 가 graph 보다 먼저 삭제 가능해지면, exact graph version 이
+    살아 있어도 reopen locator 를 잃는다.
+    """
+    run = _make_run(tmp_path)
+    store = _LockingStore(name=str(tmp_path))
+    backend = _lockstore(tmp_path, store)
+    index = tmp_path / "index"
+    res = run_transaction(PLANNED, run, backend, index, _hooks())
+    lease = res["retention"]
+    sv = lease["store_version_id"]
+
+    # store 담보를 graph 보다 **짧게** 만든다 (fake 는 단축을 거부하므로 직접).
+    # 검증이 수리하지 않아야 이 상태가 보인다.
+    store._lock[("store.json", sv)] = "2027-01-01T00:00:00Z"
+    assert store._lock[("store.json", sv)] < lease["retain_until_utc"], "전제"
+
+    with pytest.raises(PreserveError) as ex:
+        backend.verify_retention(PLANNED.leg_id, lease["lease_digest"],
+                                 lease=dict(lease),
+                                 lease_version=lease["lease_version"])
+    assert "기한" in str(ex.value) or "짧" in str(ex.value), str(ex.value)
+
+
+def test_a_governance_only_store_cannot_reach_durable(tmp_path):
+    """★ 39차 P0-1 — Compliance selector 를 `store_id` fallback 이 우회했다.
+
+        1. store.json vG 를 valid record 로 GOVERNANCE 잠금
+        2. provider 의 현재 default mode 를 COMPLIANCE 로
+        3. `_canonical_store_version()` 은 vG 를 빼고 None
+        4. `store_id` 는 `_read_protected()` fallback 으로 vG bytes 를 읽는다
+        5. `probe_enforcement()` 는 현재 describe 가 Compliance 라 object_lock
+        6. lease 에 빈 proof 가 실리고 durable=True 까지 간다
+    """
+    store = _LockingStore(name=str(tmp_path), mode="GOVERNANCE")
+    v = store.put("store.json", canonical_bytes(
+        {"schema": "cas-store/v1", "store_id": "a" * 32}))
+    store.lock("store.json", v, "2099-01-01T00:00:00Z")
+    store.mode = "COMPLIANCE"
+
+    backend = _lockstore(tmp_path, store)
+    with pytest.raises(PreserveError) as ex:
+        backend.store_id
+    assert "COMPLIANCE" in str(ex.value) or "담보" in str(ex.value), str(ex.value)
+
+
+def test_an_object_lock_journal_without_a_content_proof_is_refused(tmp_path):
+    """★ 39차 P0-1 — `lease_content_version` 도 optional 이었다.
+
+    journal parser 가 type·nonempty 를 안 보고, 등록 verifier 는
+    `or None` 으로 빈 값을 **의도적으로 지워** live search 로 돌아갔다.
+    """
+    run = _make_run(tmp_path)
+    store = _LockingStore(name=str(tmp_path))
+    backend = _lockstore(tmp_path, store)
+    index = tmp_path / "index"
+    res = run_transaction(PLANNED, run, backend, index, _hooks())
+    leg = PLANNED.leg_id
+
+    j = registration(index, leg)
+    bad = dict(j, lease_content_version="")
+    _reg_path(index, leg).write_bytes(canonical_bytes(bad))
+
+    with pytest.raises(PreserveError):
+        assert_durable_retention(backend, index, leg)
+
+
+def test_a_governance_locked_lease_content_is_not_a_compliance_proof(tmp_path):
+    """★ 39차 P0-1 — content lock 의 **mode** 를 대조하지 않았다.
+
+    bytes 와 날짜만 보고 dict 존재로 통과시켰다. 같은 lease bytes 의 content
+    version 을 GOVERNANCE 로 길게 잠그면 Compliance durable proof 처럼 지나간다.
+    """
+    run = _make_run(tmp_path)
+    store = _LockingStore(name=str(tmp_path))
+    backend = _lockstore(tmp_path, store)
+    index = tmp_path / "index"
+    res = run_transaction(PLANNED, run, backend, index, _hooks())
+    lease, leg = res["retention"], PLANNED.leg_id
+    key = backend._provider_obj_key(lease["lease_digest"])
+    cv = lease["lease_content_version"]
+
+    store._mode[(key, cv)] = "GOVERNANCE"      # 그 version 만 mode 를 바꾼다
+    with pytest.raises(PreserveError) as ex:
+        assert_durable_retention(backend, index, leg)
+    assert "mode" in str(ex.value) or "COMPLIANCE" in str(ex.value), str(ex.value)
+
+
+@pytest.mark.parametrize("bad", [None, 123, ["v1"], {"v": 1}])
+def test_a_journal_locator_that_is_not_a_string_is_not_a_journal(tmp_path, bad):
+    """★ 39차 P0-1 — journal parser 가 content locator 의 **type** 을 안 봤다.
+
+    38차판은 `lease_version` 의 type 만 봤다. `lease_content_version` 은
+    아무것도 안 봐서 `None`·정수·목록·dict 가 journal 을 통과했다. 빈 문자열은
+    `verify_retention()` 이 잡지만, **문자열이 아닌 값**은 거기까지 가기 전에
+    구조가 깨진다.
+    """
+    run = _make_run(tmp_path)
+    store = _LockingStore(name=str(tmp_path))
+    backend = _lockstore(tmp_path, store)
+    index = tmp_path / "index"
+    run_transaction(PLANNED, run, backend, index, _hooks())
+    leg = PLANNED.leg_id
+
+    j = registration(index, leg)
+    _reg_path(index, leg).write_bytes(
+        canonical_bytes(dict(j, lease_content_version=bad)))
+
+    assert registration(index, leg) is None, (
+        f"journal 이 {type(bad).__name__} locator 를 받아들였다")
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# 39차 P0-1 — journal 전 재개가 lease pin 의 exact version 을 모른다
+# ─────────────────────────────────────────────────────────────────────────────
+
+def test_a_hostile_newer_lease_pin_version_does_not_block_resume(tmp_path,
+                                                                 monkeypatch):
+    """★ 39차 P0-1 — 재개가 **newest protected** version 을 골랐다.
+
+    등록 뒤에는 journal 의 `lease_version` 을 쓰도록 고쳤지만, journal 전
+    crash 에서는 그 proof 가 메모리에서 사라진다. `_existing_lease()` 는 proof
+    를 복구하기 **전에** version 없이 읽고, `recover_lease_version()` 은 그
+    version 의 바이트가 lease digest 와 같은지 보지 않는다.
+
+        올바른 lease pin v1 을 잠금 → journal 전 crash
+        → 같은 pin key 에 wrong-bytes locked v2 삽입
+        → 재개가 newest v2 를 읽어 실패 (v1 과 graph 는 온전한데도)
+
+    content 쪽은 `_bytes_match()` 로 고쳤는데 pin 쪽엔 같은 결속이 없었다.
+    """
+    import tools.preserve as P
+
+    run = _make_run(tmp_path)
+    store = _LockingStore(name=str(tmp_path))
+    backend = _lockstore(tmp_path, store)
+    index = tmp_path / "index"
+
+    base = dt.datetime(2026, 8, 27, 12, 0, 0, tzinfo=dt.timezone.utc)
+    ticks = iter(range(0, 100000, 37))
+
+    class _Clock(dt.datetime):
+        @classmethod
+        def now(cls, tz=None):
+            return base + dt.timedelta(seconds=next(ticks))
+
+    monkeypatch.setattr(P.dt, "datetime", _Clock)
+    _phase_kill(monkeypatch, "after_pin_lock")
+    with pytest.raises(RuntimeError):
+        run_transaction(PLANNED, run, backend, index, _hooks())
+    monkeypatch.undo()
+    monkeypatch.setattr(P.dt, "datetime", _Clock)
+
+    leg = PLANNED.leg_id
+    ld = _crashed_lease_digest(store, backend, leg)
+    assert ld, "전제: lease 후보가 있다"
+    key = backend._provider_key(leg, ld)
+    v1 = backend.protected_version(key)
+    assert v1, "전제: 올바른 v1 이 잠겨 있다"
+
+    v2 = store.put(key, b"hostile-newer-lease-pin")
+    store.lock(key, v2, "2099-01-01T00:00:00Z")
+    assert store.versions(key)[0] == v2, "전제: v2 가 더 최신이다"
+
+    fresh = _lockstore(tmp_path, _LockingStore(name=store.name))
+    out = finalize_only(leg, fresh, index)
+    monkeypatch.undo()
+
+    assert out["ok"] and out["durable"] is True
+    assert out["retention"]["lease_digest"] == ld, "같은 lease 로 재개하지 못했다"
+    assert out["retention"]["lease_version"] == v1, (
+        "바이트가 다른 최신 version 을 lease proof 로 골랐다")
+
+
+def test_the_fake_refuses_a_bypass_delete_of_a_compliance_version(tmp_path):
+    """★ 39차 P0-1 — fake `delete()` 가 **봉인된 mode 를 안 봤다.**
+
+    `lock()` 은 `(key, version)` 별 mode 를 저장하는데 `delete()` 는 mutable 한
+    현재 `self.mode` 로 Governance bypass 를 판단했다:
+
+        v1 을 COMPLIANCE 로 잠금 → store.mode = GOVERNANCE
+        → delete(key, v1, bypass=True) 가 **성공**
+
+    canary 가 실물보다 약하면 그 위의 durable 판정도 그만큼 약하다.
+    """
+    store = _LockingStore(name=str(tmp_path), mode="COMPLIANCE", bypass=True)
+    v = store.put("k", b"payload")
+    store.lock("k", v, "2099-01-01T00:00:00Z")
+
+    store.mode = "GOVERNANCE"                       # 나중에 store mode 를 바꾼다
+    with pytest.raises(PermissionError):
+        store.delete("k", v, bypass=True)
+    assert store.get("k", v) == b"payload", "COMPLIANCE version 이 지워졌다"
+
+
+def test_the_fake_lets_an_expired_lock_be_deleted(tmp_path, monkeypatch):
+    """반대 축 — 만료된 잠금을 **영구 잠금처럼** 취급하면 안 된다.
+
+    이 시험이 없으면 위 시험은 "언제나 거부" 로도 통과한다.
+    """
+    store = _LockingStore(name=str(tmp_path), mode="GOVERNANCE", bypass=True)
+    v = store.put("k", b"payload")
+    store.lock("k", v, "2020-01-01T00:00:00Z")      # 이미 지난 기한
+
+    store.delete("k", v)                            # 만료됐으므로 지워진다
+    assert store.versions("k") == [], "만료된 잠금이 삭제를 막았다"

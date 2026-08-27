@@ -297,6 +297,22 @@ def _is_store_record(rec) -> bool:
             and _is_uuid_hex(rec.get("store_id") or ""))
 
 
+def _is_utc_stamp(v) -> bool:
+    """`YYYY-MM-DDTHH:MM:SSZ` 인가 (39차 P0-1).
+
+    ★ `_lease_expired()` 는 **문자열 비교**라 `"not-a-date"` 를 미래처럼
+      받아들인다. 그 값이 provider lock 까지 흘러간 뒤에야 strict parser 가
+      거부했다 — 되돌릴 수 없는 상태가 검증보다 앞섰다.
+    """
+    if not isinstance(v, str):
+        return False
+    try:
+        dt.datetime.strptime(v, "%Y-%m-%dT%H:%M:%SZ")
+    except ValueError:
+        return False
+    return True
+
+
 def _lease_expired(lease: dict) -> bool:
     """lease 의 담보 기간이 지났는가 (37차 P0-1).
 
@@ -703,8 +719,15 @@ class CasBackend:
                 f"{leg_id}: graph 밖 pin 이 {len(extra)}개다 — 어느 것이 lease "
                 f"인지 정할 수 없다 ({[d[:16] for d in extra]}). 새 lease 를 "
                 "만들면 지울 수 없는 WORM 잔여가 하나 더 생긴다")
+        # ★ 39차 P0-1 — proof 를 **먼저 재발견**하고 그 version 으로 읽는다.
+        #   38차판은 version 없이 먼저 읽어, 같은 pin key 에 wrong-bytes 의
+        #   더 최신 locked version 이 있으면 온전한 후보를 못 읽었다.
         try:
-            lease = self.read_lease(leg_id, extra[0])
+            pv = self.recover_lease_version(leg_id, extra[0])
+        except PreserveError:
+            pv = None
+        try:
+            lease = self.read_lease(leg_id, extra[0], version=pv)
         except (PreserveError, ValueError, UnicodeDecodeError) as ex:
             raise PreserveError(
                 "retention",
@@ -753,7 +776,7 @@ class CasBackend:
             #   `_register()` 가 거부한다 (재실행이 실패한다).
             return self.verify_retention(
                 leg_id, extra[0], expected=set(objs),
-                lease_version=self.recover_lease_version(leg_id, extra[0]),
+                lease_version=pv or self.recover_lease_version(leg_id, extra[0]),
                 lease_content_version=self.recover_content_version(extra[0]))
         except PreserveError as ex:
             # ★ 38차 P0-1 — 37차판은 만료면 `None` 을 돌려 **자동 갱신**했다.
@@ -818,11 +841,42 @@ class CasBackend:
             return False
         if rec.get("pin_set_digest") != pin_set_digest(leg_id, objs):
             return False
-        if rec.get("store_id") != self.store_id or rec.get("backend_uri") != self.uri:
+        # ★ 39차 P0-1 — timestamp 는 **문법부터** 본다 (문자열 비교 전에).
+        if not _is_utc_stamp(rec.get("retain_until_utc")):
             return False
-        if rec.get("enforcement") != self.probe_enforcement():
+        if rec.get("store_id") != self.inspect_store_id() \
+                or rec.get("backend_uri") != self.uri:
+            return False
+        live = self.probe_enforcement()
+        if rec.get("enforcement") != live:
+            return False
+        # ★ 39차 P0-1 — 38차 뒤에 **추가된 locator 의미**를 여기서 본다.
+        #   그것을 안 보고 repair 로 넘기면 위조 candidate 를 WORM 으로 만든
+        #   뒤에야 strict verifier 가 거부한다.
+        if live == ENFORCEMENT_OBJECT_LOCK:
+            if rec.get("lock_mode") not in self.DURABLE_MODES:
+                return False
+            if rec.get("store_lock_mode") not in self.DURABLE_MODES:
+                return False
+            if not _nonempty_str(rec.get("store_version_id") or ""):
+                return False
+            ov = rec.get("object_versions")
+            if not isinstance(ov, dict) or set(ov) != set(objs):
+                return False
+            if any(not _nonempty_str(v or "") for v in ov.values()):
+                return False
+        elif rec.get("object_versions"):
             return False
         return not _lease_expired(rec)
+
+    def inspect_store_id(self):
+        """store identity 를 **읽기만** 한다 (39차 P0-1).
+
+        ★ `store_id` 는 record 가 없으면 만들고, 있으면 `ensure_store_lock()`
+          으로 기한을 연장한다 — 둘 다 mutation 이다. "순수 validator" 가 그것을
+          부르면 검증 자체가 상태를 바꾼다. inspect 와 ensure 를 가른다.
+        """
+        return self.store_id
 
     def read_lease(self, leg_id: str, lease_digest: str, *, version=None) -> dict:
         """lease 를 **pin 에서** 읽는다."""
@@ -872,27 +926,11 @@ class CasBackend:
             raise PreserveError(
                 stage, f"lease 가 다른 backend 의 것이다 — "
                        f"{lease['backend_uri']!r} ≠ {self.uri!r}")
-        # ★ 38차 P0-1 — **봉인된 version 으로** identity 를 확인한다.
-        #   live-lock census 는 시간이 지나면 답이 바뀌므로 proof 가 아니다.
-        sv = lease.get("store_version_id") or ""
-        prov = getattr(self, "provider", None)
-        if sv and prov is not None:
-            st = prov.describe_object("store.json", sv)
-            if not isinstance(st, dict):
-                raise PreserveError(
-                    stage, f"lease 가 봉인한 store version 이 담보되지 않는다: {sv}")
-            if st.get("mode") != lease.get("store_lock_mode"):
-                raise PreserveError(
-                    stage, f"store version 의 mode 가 lease 와 다르다: "
-                           f"{st.get('mode')!r} ≠ {lease.get('store_lock_mode')!r}")
-            try:
-                rec = load_canonical(prov.get("store.json", sv))
-            except (KeyError, ValueError, UnicodeDecodeError) as ex:
-                raise PreserveError(stage, "봉인 store record 를 읽을 수 없다") from ex
-            if not _is_store_record(rec) or rec["store_id"] != lease["store_id"]:
-                raise PreserveError(
-                    stage, "봉인 store version 의 record 가 lease 와 다르다")
-        if lease["store_id"] != self.store_id:
+        # ★ 39차 P0-1 — **검증은 수리하지 않는다.** `store_id` 는 record 가
+        #   없으면 만들고 있으면 기한을 연장한다. 그것을 검증 경로에서 부르면
+        #   "봉인이 풀렸다" 를 스스로 고쳐 놓고 통과시킨다 — 실제로 그랬다
+        #   (담보 해제·기한 단축 반례가 둘 다 self-healing 으로 초록이었다).
+        if lease["store_id"] != self.inspect_store_id():
             raise PreserveError(
                 stage, f"lease 가 다른 store 의 것이다 — backend URI 는 같은데 "
                        f"store {lease['store_id'][:8]} ≠ {self.store_id[:8]}")
@@ -916,6 +954,44 @@ class CasBackend:
             raise PreserveError(
                 stage, f"backend 가 신고한 enforcement({self.enforcement!r}) 를 "
                        f"조회가 지지하지 않는다 ({live!r})")
+        # ★ 38차 P0-1 — **봉인된 version 으로** identity 를 확인한다.
+        #   live-lock census 는 시간이 지나면 답이 바뀌므로 proof 가 아니다.
+        sv = lease.get("store_version_id") or ""
+        prov = getattr(self, "provider", None)
+        if live == ENFORCEMENT_OBJECT_LOCK and prov is not None:
+            # ★ 39차 P0-1 — **optional 이면 sealed locator 가 아니라 hint 다.**
+            #   38차판은 `if sv and ...` 라 빈 값이 조용히 넘어갔다.
+            if not _nonempty_str(sv):
+                raise PreserveError(
+                    stage, "object-lock lease 에 store version proof 가 없다 — "
+                           "빈 값은 live 재탐색으로 돌아가는 통로다")
+            if lease.get("store_lock_mode") not in self.DURABLE_MODES:
+                raise PreserveError(
+                    stage, f"store lock mode 가 담보 mode 가 아니다: "
+                           f"{lease.get('store_lock_mode')!r}")
+        if sv and prov is not None:
+            st = prov.describe_object("store.json", sv)
+            if not isinstance(st, dict):
+                raise PreserveError(
+                    stage, f"lease 가 봉인한 store version 이 담보되지 않는다: {sv}")
+            if st.get("mode") != lease.get("store_lock_mode"):
+                raise PreserveError(
+                    stage, f"store version 의 mode 가 lease 와 다르다: "
+                           f"{st.get('mode')!r} ≠ {lease.get('store_lock_mode')!r}")
+            try:
+                rec = load_canonical(prov.get("store.json", sv))
+            except (KeyError, ValueError, UnicodeDecodeError) as ex:
+                raise PreserveError(stage, "봉인 store record 를 읽을 수 없다") from ex
+            if not _is_store_record(rec) or rec["store_id"] != lease["store_id"]:
+                raise PreserveError(
+                    stage, "봉인 store version 의 record 가 lease 와 다르다")
+            # ★ 39차 P0-1 — identity root 가 graph 보다 **먼저 풀리면** 안 된다.
+            #   exact graph version 이 살아 있어도 reopen locator 를 잃는다.
+            if str(st.get("retain_until") or "") < lease["retain_until_utc"]:
+                raise PreserveError(
+                    stage, f"store version 의 기한이 graph 보다 짧다: "
+                           f"{st.get('retain_until')!r} < "
+                           f"{lease['retain_until_utc']}")
         try:
             until = dt.datetime.strptime(lease["retain_until_utc"], "%Y-%m-%dT%H:%M:%SZ")
         except (TypeError, ValueError) as ex:
@@ -986,12 +1062,22 @@ class CasBackend:
             # ★ 35차 P0-1 — lease **CAS content** 도 잠겨 있어야 한다. 초판은
             #   pin version 만 다시 조회해서, content lock 직전에 죽으면 한쪽이
             #   unlocked 인 채 `durable=True` 까지 갔다.
+            # ★ 39차 P0-1 — content locator 도 **필수**다. 빈 값이면 live
+            #   재탐색으로 돌아가므로 sealed proof 가 아니다.
+            if not _nonempty_str(lease_content_version or ""):
+                raise PreserveError(
+                    stage, "object-lock lease 에 content version proof 가 없다")
             cst = self.describe_content_lock(
                 lease_digest, version=lease_content_version)
             if not isinstance(cst, dict):
                 raise PreserveError(
                     stage, "lease 의 CAS content 가 잠겨 있지 않다 — 증거의 "
                            "원본을 지울 수 있다")
+            if cst.get("mode") not in self.DURABLE_MODES:
+                raise PreserveError(
+                    stage, f"lease content 의 lock mode 가 담보 mode 가 아니다: "
+                           f"{cst.get('mode')!r} — bytes 와 날짜만으로는 "
+                           "Compliance proof 가 아니다")
             if str(cst.get("retain_until") or "") < lease["retain_until_utc"]:
                 raise PreserveError(stage, "lease content 의 retain_until 이 짧다")
             # ★ `describe_locks` 는 **그 version 을 키로** 조회하므로 dict 가
@@ -1234,6 +1320,14 @@ class ObjectLockBackend(CasBackend):
         #   그 순간 예전 receipt 전부가 foreign store 가 됐다 (바이트는 다
         #   살아 있는데 locator 를 잃는다). 최초 잠금이 root-of-authority 다.
         vid = self._canonical_store_version(key)
+        # ★ 39차 P0-1 — Compliance canonical 이 없는데 **잠긴 record 는 있는**
+        #   상태에서 fallback 으로 읽으면, Compliance selector 를 우회해
+        #   우회 가능한 identity root 로 durable 을 주장하게 된다.
+        if vid is None and self._locked_versions(key):
+            raise PreserveError(
+                "store",
+                "store.json 에 COMPLIANCE 담보 version 이 없다 (잠긴 version 은 "
+                "있다) — 우회 가능한 identity root 위에 담보를 주장하지 않는다")
         try:
             raw = self.provider.get(key, vid) if vid else self._read_protected(key)
             rec = load_canonical(raw)
@@ -1263,6 +1357,17 @@ class ObjectLockBackend(CasBackend):
         if not _is_store_record(new):
             raise PreserveError("store", "발급한 store record 가 계약이 아니다")
         return new["store_id"]
+
+    def inspect_store_id(self):
+        """만들지도 연장하지도 않고 **본다**. 없으면 `None` (39차 P0-1)."""
+        vid = self._canonical_store_version()
+        try:
+            raw = self.provider.get("store.json", vid) if vid \
+                else self.provider.get("store.json")
+            rec = load_canonical(raw)
+        except (KeyError, ValueError, UnicodeDecodeError):
+            return None
+        return rec["store_id"] if _is_store_record(rec) else None
 
     @property
     def store_version_id(self):
@@ -1368,6 +1473,17 @@ class ObjectLockBackend(CasBackend):
         self.provider.lock(key, vid, until)
         return vid
 
+    def _version_for(self, key: str, dg: str):
+        """그 key 에서 **바이트가 `dg` 와 같은** 담보 version (39차 P0-1).
+
+        pin·content·수리가 전부 이 하나를 쓴다. 같은 규칙을 세 곳에 두면 강한
+        쪽을 지워도 초록이 된다 — 이 저장소에서 여러 번 겪었다.
+        """
+        for v in self._locked_versions(key):
+            if self._bytes_match(key, v, dg):
+                return v
+        return None
+
     def _existing_version(self, key: str, data: bytes):
         """그 key 에서 `data` 와 **바이트가 같은** 가장 최신 version (37차 P0-1).
 
@@ -1399,7 +1515,11 @@ class ObjectLockBackend(CasBackend):
           있거나 최소한 남아 있고, 그 바이트로 CAS content 를 되살릴 수 있다.
           pin 도 content 도 없으면 그때야 진짜 후보 부재다.
         """
-        data = self.read_pinned(leg_id, lease_digest)   # 없으면 PreserveError
+        # ★ 39차 P0-1 — 수리도 **담보 version** 에서 읽는다. 적대적 최신
+        #   version 이 있으면 그것을 읽어 digest 대조에서 죽었다.
+        data = self.read_pinned(
+            leg_id, lease_digest,
+            version=self.recover_lease_version(leg_id, lease_digest))
         if not self.has(lease_digest):
             # content 가 지워졌다 — pin 바이트로 되살린다 (digest 가 같으므로
             # 같은 object 다). 되살린 뒤 잠가야 같은 창이 다시 열리지 않는다.
@@ -1413,14 +1533,21 @@ class ObjectLockBackend(CasBackend):
         잠긴 version 중 **바이트가 digest 와 같은** 것이다. "아무 잠긴
         version" 은 proof 가 아니다.
         """
-        key = self._provider_obj_key(lease_digest)
-        for v in self._locked_versions(key):
-            if self._bytes_match(key, v, lease_digest):
-                return v
-        return None
+        return self._version_for(self._provider_obj_key(lease_digest),
+                                 lease_digest)
 
     def recover_lease_version(self, leg_id: str, lease_digest: str):
-        """provider 에게 그 pin 의 **현재 version** 을 묻는다 (34차 P0-1)."""
+        """lease pin 의 **담보 version** 을 재발견한다 (34차 P0-1 · 39차 P0-1).
+
+        ★ 39차 — 38차판은 "가장 최신 담보 version" 을 돌려주고 **그 version 의
+          바이트가 lease digest 와 같은지** 보지 않았다. 올바른 v1 위에 wrong
+          bytes 의 locked v2 가 올라오면, v1 과 graph 가 온전한데도 재개가
+          실패했다. content 쪽은 `_bytes_match()` 로 고쳤는데 pin 쪽엔 같은
+          결속이 없었다.
+        """
+        return self._version_for(self._provider_key(leg_id, lease_digest),
+                                 lease_digest)
+
         # ★ 36차 P0-1 — head 는 잠기지 않은 새 version 일 수 있다. lease
         #   proof 는 **담보 version** 이어야 한다 — head 를 돌려주면 재개가
         #   자기 proof 를 못 알아보고 두 번째 WORM lease 를 만든다.
@@ -1582,7 +1709,8 @@ class ObjectLockBackend(CasBackend):
         out = {}
         for dg in sorted(set(digests)):
             key = self._provider_key(leg_id, dg)
-            data = self.read_pinned(leg_id, dg)
+            data = self.read_pinned(leg_id, dg,
+                                    version=self._version_for(key, dg))
             # ★ 37차 P0-1 — 무조건 put 하면 재시도마다 WORM version 이 쌓인다
             vid = self._existing_version(key, data)
             if vid is None:
@@ -2018,6 +2146,10 @@ def registration(index_path: Path, leg_id: str) -> dict | None:
         return None
     if not _is_hex64(rec.get("lease_digest") or ""):
         return None
+    # ★ 39차 P0-1 — 두 locator **모두** type 을 본다. 38차판은 content 쪽을
+    #   아무것도 안 봐서 int·None·dict 가 journal 을 통과했다.
+    if any(not isinstance(rec.get(k), str) for k in _JOURNAL_LOCATORS):
+        return None
     if not isinstance(rec.get("lease_version"), str):
         return None
     # ★ 30차 P1-1 — 초판은 `isinstance(list)` 였다. 정상 목록의 digest 를 한 번
@@ -2111,6 +2243,12 @@ def assert_durable_retention(backend: CasBackend, index_path: Path,
 _JOURNAL_KEYS = frozenset({"leg_id", "receipt_object", "pin_set_digest",
                            "objects", "lease_digest", "lease_version",
                            "lease_content_version"})
+
+#: ★ 39차 P0-1 — 두 locator 는 **둘 다** typed 여야 한다. 38차판은
+#:   `lease_version` 의 type 만 봤고 content 쪽은 아무것도 안 봤다.
+#:   (빈 값 자체는 advisory backend 에서 정상이므로, "nonempty" 요구는
+#:    object-lock 판정을 하는 `verify_retention()` 이 진다.)
+_JOURNAL_LOCATORS = ("lease_version", "lease_content_version")
 
 
 def _register(index_path: Path, leg_id: str, receipt_object: str,
@@ -2744,8 +2882,12 @@ def verify_graph_before_registration(backend: CasBackend, index_path: Path,
     expected = reachable_objects(dict(rec, receipt_object=e["receipt_object"]), man)
     if set(lease["objects"]) != expected:
         raise PreserveError(stage, "lease 가 담보한 graph 가 유도한 graph 와 다르다")
-    backend.verify_retention(leg_id, lease["lease_digest"], expected=expected,
-                             lease_version=lease.get("lease_version"))
+    # ★ 39차 P0-1 — 최초 성공 판정부터 **두 locator 를 모두** 쓴다. 38차판은
+    #   `retain()` 이 돌려준 content version 을 여기서 버렸다.
+    backend.verify_retention(
+        leg_id, lease["lease_digest"], expected=expected,
+        lease_version=lease.get("lease_version"),
+        lease_content_version=lease.get("lease_content_version"))
     return rec
 
 

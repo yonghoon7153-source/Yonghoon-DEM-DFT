@@ -2819,16 +2819,43 @@ def _snapshot(c: dict, base=None) -> _Snapshot:
     return _Snapshot(c, base=base)
 
 
-def _snapshot_for_leg(leg: str) -> _Snapshot:
-    """그 leg 를 담은 cohort 의 snapshot (38차 #9).
+def _snapshot_for_leg(leg: str, *, cohort_id: str = None,
+                      purpose: str = None) -> _Snapshot:
+    """그 leg 의 snapshot — **목적을 말해야** 고를 수 있다 (39차 #9).
 
-    소비자가 cohort 를 직접 고르고 경로를 조립하는 것을 없앤다 — 그 조립이
-    곧 고정 namespace 로 가는 통로였다.
+    ★ 38차판은 원장 cohort 를 순서대로 돌며 **처음 나온 것**을 돌려줬다.
+      원장은 frozen g1 을 먼저 적고 `paired_fixed5_v4` 를 g1·g2 둘 다에 담고
+      있으므로, 이 helper 는 **언제나 frozen g1** 을 돌려줬다. 다섯 소비자를
+      여기로 옮긴 결과가 "active 를 읽는다" 가 아니라 **g1 선택의 공통화**
+      였다. 두 cohort 의 바이트가 지금 우연히 같아서 초록이었을 뿐이다.
+
+      이 저장소는 같은 실수를 `_pick_sealed_digest()` 에서 이미 겪었다
+      (30차 P2: "cohort 목록의 순서가 답을 바꿨다"). 규칙도 같다 —
+      **순서로 고르지 않는다.**
+
+    셋 중 하나여야 한다:
+      · `purpose="active"` — `status == active` 인 유일 cohort
+      · `cohort_id=...`    — historical 비교. 부르는 쪽이 명시한다
+      · 그 외 — leg 가 한 cohort 에만 있으면 그것, 둘 이상이면 **거부**
     """
-    for c in _cohorts():
-        if leg in (c.get("legs") or []):
-            return _snapshot(c)
-    raise AssertionError(f"어느 cohort 에도 없는 다리: {leg}")
+    have = [c for c in _cohorts() if leg in (c.get("legs") or [])]
+    if not have:
+        raise AssertionError(f"어느 cohort 에도 없는 다리: {leg}")
+    if cohort_id is not None:
+        pick = [c for c in have if c["cohort_id"] == cohort_id]
+        assert pick, f"{leg} 는 {cohort_id} 에 없다"
+        return _snapshot(pick[0])
+    if purpose == "active":
+        act = [c for c in have if c.get("status") == "active"]
+        assert len(act) == 1, (
+            f"{leg} 의 active cohort 가 {len(act)}개다 — active 판정을 할 수 없다")
+        return _snapshot(act[0])
+    if len(have) > 1:
+        raise AssertionError(
+            f"{leg} 가 cohort {sorted(c['cohort_id'] for c in have)} 에 모두 있다 — "
+            "목적을 말하라 (`purpose='active'` 또는 `cohort_id=...`). "
+            "순서로 고르면 원장 순서가 답을 바꾼다 (30차 P2 와 같은 실수)")
+    return _snapshot(have[0])
 
 
 def _cohort_yaml(c: dict, name: str, base=None) -> dict:
@@ -4082,13 +4109,63 @@ def _leg3(tmp: Path, leg: str, tag: bytes) -> Path:
                           f"{leg}.projection.yaml": b"meta: " + tag + b"\n"})
 
 
+@pytest.fixture(autouse=True)
+def _temp_cohort_ledger():
+    """임시 cohort 에 **원장 역할**을 준다 (39차 #9).
+
+    `promote_cohort_generation()` 은 이제 caller 의 roster 신고를 믿지 않고
+    `_ledger_roster(out)` 로 원장에서 직접 읽는다. 그래서 `tmp_path` 아래 만든
+    cohort 는 원장이 모르므로 게시할 수 없다 — **그것이 맞는 동작이다.**
+
+    시험은 그 cohort 의 원장 역할을 대신 해 준다. 임시 경로에 한해서만
+    caller 가 준 roster 를 원장 값으로 돌려주고, 저장소 실물 경로는 진짜
+    `_ledger_roster()` 를 그대로 쓴다. production provenance 는
+    `test_the_publisher_reads_the_roster_from_the_ledger_not_the_caller` 와
+    `build()` 경로가 지킨다.
+    """
+    rp = _rp()
+    real = rp._ledger_roster
+    seen: dict = {}
+
+    def _fake(out):
+        key = str(Path(out).resolve())
+        if key.startswith(("/tmp/", "/private/var/", "/var/folders/")):
+            return set(seen.get(key) or ())
+        return real(out)
+
+    real_promote = rp.promote_cohort_generation
+
+    def _promote(stage, out, leg, *, roster):
+        seen[str(Path(out).resolve())] = set(roster)
+        return real_promote(stage, out, leg, roster=roster)
+
+    # ★ `monkeypatch` 를 쓰지 않는다 — 여러 시험이 자기 주입을 걷으려고
+    #   `monkeypatch.undo()` 를 부르는데, 그러면 이 fixture 도 함께 걷힌다
+    #   (실측했다: materialize crash 시험 셋이 그렇게 깨졌다).
+    rp._ledger_roster = _fake
+    rp.promote_cohort_generation = _promote
+    try:
+        yield
+    finally:
+        rp._ledger_roster = real
+        rp.promote_cohort_generation = real_promote
+
+
+#: ★ 39차 #9 — module 을 **한 번만** 적재한다. 매번 새로 exec 하면 fixture 의
+#:   monkeypatch 가 다음 호출이 만든 다른 객체에는 안 붙는다 (실측했다 —
+#:   `_ledger_roster` 를 갈아 끼워도 publisher 는 원본을 봤다).
+_RP_CACHE: list = []
+
+
 def _rp():
-    import importlib.util
-    spec = importlib.util.spec_from_file_location(
-        "_rp_mod", _REPO / "docs" / "22p_gap" / "row_projection.py")
-    mod = importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(mod)
-    return mod
+    if not _RP_CACHE:
+        import importlib.util
+        spec = importlib.util.spec_from_file_location(
+            "_rp_mod", _REPO / "docs" / "22p_gap" / "row_projection.py")
+        mod = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(mod)
+        _RP_CACHE.append(mod)
+    return _RP_CACHE[0]
 
 
 def _stage(tmp_path, **files):
@@ -4623,26 +4700,30 @@ def test_no_reader_touches_the_cohort_fixed_namespace():
     #   실제로 self-consistency 판정이 active cohort 의 YAML 은 snapshot 에서
     #   읽으면서 main gzip 은 frozen g1 에서 열고 있었다.
     #   generation 파일 세 suffix 는 **snapshot 으로만** 닿을 수 있다.
+    #   ★ 39차 #9 — 38차 판정은 "함수 안에 `_WARM` 이 있고 **동시에** dotted
+    #     suffix 문자열 상수가 있으면" 이었다. 그것은 함수 전체에 걸친 접속사라
+    #     옆에 우연히 있는 상수에 기댄다 — 그 상수가 없는 함수는 그대로 빠져
+    #     나간다. 금지 대상은 상수가 아니라 **경로 조립 연산 자체**다.
+    #
+    #     `_WARM` 을 `/` 로 잇는 곳은 아래 셋뿐이고, 셋 다 generation 파일이
+    #     아니다 (`summary.yaml`·`manifest.yaml` 은 `LEG_SUFFIXES` 밖의 봉인
+    #     산출물이라 cohort generation 에 속하지 않는다). 그 밖에서 조립하면
+    #     generation 이든 아니든 거부한다 — 통로 자체를 없앤다.
+    warm_ok = {"_warm_summary", "_warm_manifest",
+               "test_warm_probe_summaries_are_committed"}
     gen_bad = []
     for fn in ast.walk(tree):
         if not isinstance(fn, (ast.FunctionDef, ast.AsyncFunctionDef)):
             continue
-        if fn.name in allowed:
+        if fn.name in warm_ok:
             continue
-        uses_warm = any(isinstance(n, ast.Name) and n.id == "_WARM"
-                        for n in ast.walk(fn))
-        if not uses_warm:
-            continue
-        touches_gen = any(
-            isinstance(n, ast.Constant) and isinstance(n.value, str)
-            and any(sfx in n.value for sfx in
-                    (".projection.", ".restarts."))
-            for n in ast.walk(fn))
-        if touches_gen:
-            gen_bad.append(f"{fn.name}:{fn.lineno}")
+        for n in ast.walk(fn):
+            if isinstance(n, ast.BinOp) and isinstance(n.op, ast.Div) \
+                    and isinstance(n.left, ast.Name) and n.left.id == "_WARM":
+                gen_bad.append(f"{fn.name}:{n.lineno}")
     assert not gen_bad, (
-        "`_WARM` 고정 namespace 로 generation 파일을 연다 — snapshot 을 쓰라:\n  "
-        + "\n  ".join(gen_bad))
+        "`_WARM` 으로 경로를 조립한다 — snapshot 을 쓰라 (허용된 셋은 "
+        f"{sorted(warm_ok)}):\n  " + "\n  ".join(gen_bad))
 
 
 def test_no_cohort_assertion_reads_a_fixed_path():
@@ -4811,6 +4892,15 @@ def test_a_lost_update_cannot_silently_drop_another_legs_generation(tmp_path):
                                    "a.projection.yaml": b"v: 0\n",
                                    "a.restarts.csv.gz": b"r0"}), out, "a", roster={"a", "b"})
 
+    # ★ 39차 #9 — 명부가 다 차야 active pointer 가 생긴다. 경쟁 schedule 을
+    #   보려면 먼저 bootstrap 을 끝내야 한다.
+    rp.promote_cohort_generation(
+        _stage(tmp_path / "sb0", **{"b.projection.csv.gz": b"b0c",
+                                    "b.projection.yaml": b"v: b0\n",
+                                    "b.restarts.csv.gz": b"b0r"}), out, "b",
+        roster={"a", "b"})
+    assert rp.read_current(out), "전제: active pointer 가 생겼다"
+
     real = rp.read_current
     ok = []
 
@@ -4881,6 +4971,15 @@ def test_a_publish_between_compare_and_replace_cannot_be_lost(tmp_path):
         _stage(tmp_path / "s0", **{"a.projection.csv.gz": b"c0",
                                    "a.projection.yaml": b"v: 0\n",
                                    "a.restarts.csv.gz": b"r0"}), out, "a", roster={"a", "b"})
+
+    # ★ 39차 #9 — 명부가 다 차야 active pointer 가 생긴다. 경쟁 schedule 을
+    #   보려면 먼저 bootstrap 을 끝내야 한다.
+    rp.promote_cohort_generation(
+        _stage(tmp_path / "sb0", **{"b.projection.csv.gz": b"b0c",
+                                    "b.projection.yaml": b"v: b0\n",
+                                    "b.restarts.csv.gz": b"b0r"}), out, "b",
+        roster={"a", "b"})
+    assert rp.read_current(out), "전제: active pointer 가 생겼다"
 
     real = rp.read_current
     state = {"seen": 0, "b_ok": False, "a_ok": False}
@@ -5024,7 +5123,8 @@ def test_the_publisher_and_the_reader_share_one_validator():
                for n in ast.walk(fn)
                if isinstance(n, ast.Call) and isinstance(n.func, ast.Name)
                and n.func.id == "assert_cohort_complete"}
-    assert "read_current" in callers, "reader 가 validator 를 안 부른다"
+    assert callers & {"read_current", "_read_pointer"}, (
+        "reader 가 validator 를 안 부른다")
     assert any(c.startswith("_promote") or c.startswith("promote")
                for c in callers), "publisher 가 validator 를 안 부른다"
 
@@ -5057,26 +5157,10 @@ def test_a_live_owner_is_not_evicted_however_long_it_holds(tmp_path):
         assert "진행 중" in str(ei.value), str(ei.value)
 
 
-def test_an_old_owner_cannot_delete_the_new_owners_lock(tmp_path):
-    """★ 38차 #9 — release 가 **자기 lock 인지** 확인해야 한다.
-
-    37차판 `__exit__` 는 확인 없이 unlink 했다. 빼앗김이 가능한 구조에서는
-    A 가 늦게 깨어나 B 의 lock 을 지우는 ABA 가 난다.
-
-    지금은 빼앗김 자체가 불가능하지만 (`flock`), release 의 token 대조는
-    그것과 **독립된 불변식**이다 — 밖에서 파일이 갈렸을 때도 남의 것을
-    지우면 안 된다.
-    """
-    rp = _rp()
-    out = tmp_path / "cohort"
-    out.mkdir(parents=True)
-    lock = out / ".publish.lock"
-
-    a = rp._PublishLock(out).__enter__()
-    lock.write_text("12345 someone-elses-token", encoding="utf-8")
-    a.__exit__(None, None, None)
-    assert lock.exists(), "내 token 이 아닌 lock 파일을 지웠다"
-    lock.unlink()
+# ★ 39차 #9 — 38차의 `..._old_owner_cannot_delete_the_new_owners_lock` 은
+#   여기서 **삭제했다.** release 가 파일을 아예 안 지우게 되면서 그 시험은
+#   공허참이 됐다 (무엇을 해도 파일이 남는다). 같은 위험의 구조적 답은
+#   `..._lock_path_survives_release_so_writers_share_one_inode` 가 본다.
 
 
 def test_the_internal_publisher_cannot_move_the_pointer_without_the_lock(tmp_path):
@@ -5170,3 +5254,260 @@ def test_a_base_leg_the_roster_dropped_blocks_the_next_publish(tmp_path):
                                         "a.restarts.csv.gz": b"r9"}), out, "a",
             roster={"a"})
     assert "b" in str(ei.value) and "명부" in str(ei.value), str(ei.value)
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# 39차 #9 — 중복 leg 에서 **first match** 가 권위였다
+# ─────────────────────────────────────────────────────────────────────────────
+
+def _two_cohort_fixture(tmp_path, monkeypatch):
+    """같은 leg 를 담은 frozen g1 / active g2 를 **바이트를 다르게** 만든다.
+
+    실제 저장소에서 둘의 payload 가 우연히 같아 first-match 버그가 초록이었다.
+    """
+    rp = _rp()
+    g1d, g2d = tmp_path / "g1", tmp_path / "g2"
+    g1d.mkdir(parents=True)
+    for sfx, b in ((".projection.csv.gz", b"G1c"), (".projection.yaml", b"v: g1\n"),
+                   (".restarts.csv.gz", b"G1r")):
+        (g1d / f"L{sfx}").write_bytes(b)
+    rp.promote_cohort_generation(
+        _stage(tmp_path / "s2", **{"L.projection.csv.gz": b"G2c",
+                                   "L.projection.yaml": b"v: g2\n",
+                                   "L.restarts.csv.gz": b"G2r"}), g2d, "L",
+        roster={"L"})
+
+    cohorts = [{"cohort_id": "g1", "dir": str(g1d), "status": "frozen",
+                "legs": ["L"], "pin": {}},
+               {"cohort_id": "g2", "dir": str(g2d), "status": "active",
+                "legs": ["L"], "pin": {}}]
+    monkeypatch.setattr(_this(), "_cohorts", lambda: cohorts)
+    # `_Snapshot` 은 `_REPO / c["dir"]` 로 join 한다 — 절대경로면 그대로 쓰인다
+    return g1d, g2d
+
+
+def _this():
+    import sys
+    return sys.modules[__name__]
+
+
+def test_a_leg_in_two_cohorts_refuses_to_be_resolved_by_order(tmp_path,
+                                                              monkeypatch):
+    """★ 39차 #9 — 38차 helper 는 원장 **순서대로 첫 cohort** 를 돌려줬다.
+
+    원장은 frozen g1 을 먼저 적고 `paired_fixed5_v4` 를 g1·g2 둘 다에 담는다.
+    그래서 `_snapshot_for_leg()` 는 **언제나 frozen g1** 이었다 — 다섯 소비자를
+    이 helper 로 옮긴 결과가 "active 를 읽는다" 가 아니라 **g1 선택의
+    공통화**였다. 두 cohort 의 바이트가 지금 우연히 같아 초록이었을 뿐이다.
+
+    이 저장소는 `_pick_sealed_digest()` 에서 같은 실수를 이미 겪었다 (30차 P2:
+    "cohort 목록의 순서가 답을 바꿨다"). 규칙도 같다 — **순서로 고르지 않는다.**
+    """
+    _two_cohort_fixture(tmp_path, monkeypatch)
+
+    with pytest.raises(AssertionError) as ei:
+        _snapshot_for_leg("L")
+    assert "목적" in str(ei.value), str(ei.value)
+
+
+def test_an_active_purpose_reads_the_active_cohort_not_the_frozen_one(
+        tmp_path, monkeypatch):
+    """반대 축 — 목적을 말하면 **active 를 읽어야** 한다.
+
+    이 시험이 없으면 위 시험은 "언제나 거부" 라는 구현으로도 통과한다.
+    """
+    _two_cohort_fixture(tmp_path, monkeypatch)
+
+    act = _snapshot_for_leg("L", purpose="active")
+    assert act.cohort_id == "g2"
+    assert act.blob("L.projection.csv.gz") == b"G2c", "frozen g1 을 읽었다"
+
+    hist = _snapshot_for_leg("L", cohort_id="g1")
+    assert hist.cohort_id == "g1"
+    assert hist.blob("L.projection.csv.gz") == b"G1c", "명시한 cohort 를 안 읽었다"
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# 39차 #9 — lock 이 **게시 대상에 결속된 capability** 가 아니었다
+# ─────────────────────────────────────────────────────────────────────────────
+
+def test_a_lock_for_another_cohort_cannot_publish_here(tmp_path):
+    """★ 39차 #9 — 38차판은 임의 객체의 `held()` 만 봤다.
+
+    가짜 객체조차 필요 없다 — `outA` 에서 **진짜로 획득한** lock 을 `outB`
+    게시에 넘기면 통과한다. `lockA` 는 실제 kernel flock 을 들고 있지만
+    `outB/.publish.lock` 은 잠그지 않았으므로, `outB` 의 정상 writer 와 동시에
+    pointer 를 움직일 수 있다.
+
+    "private 이름은 trust boundary 가 아니다" 와 같은 이유로, duck-typed
+    boolean 도 trust boundary 가 아니다.
+    """
+    rp = _rp()
+    outA, outB = tmp_path / "A", tmp_path / "B"
+    rp.promote_cohort_generation(
+        _stage(tmp_path / "sb", **{"a.projection.csv.gz": b"c0",
+                                   "a.projection.yaml": b"v: 0\n",
+                                   "a.restarts.csv.gz": b"r0"}), outB, "a",
+        roster={"a"})
+    before = rp.read_current(outB)["generation_id"]
+
+    outA.mkdir(parents=True, exist_ok=True)
+    with rp._PublishLock(outA) as lockA:
+        with pytest.raises(SystemExit) as ei:
+            rp._promote_generation(
+                _stage(tmp_path / "s1", **{"a.projection.csv.gz": b"c1",
+                                           "a.projection.yaml": b"v: 1\n",
+                                           "a.restarts.csv.gz": b"r1"}),
+                outB, lock=lockA)
+    assert "lock" in str(ei.value)
+    assert rp.read_current(outB)["generation_id"] == before, (
+        "남의 cohort 에서 얻은 lock 으로 pointer 가 움직였다")
+
+
+def test_a_forged_held_object_cannot_publish(tmp_path):
+    """`held() -> True` 인 아무 객체나 통과하면 안 된다."""
+    rp = _rp()
+    out = tmp_path / "cohort"
+    rp.promote_cohort_generation(
+        _stage(tmp_path / "s0", **{"a.projection.csv.gz": b"c0",
+                                   "a.projection.yaml": b"v: 0\n",
+                                   "a.restarts.csv.gz": b"r0"}), out, "a",
+        roster={"a"})
+    before = rp.read_current(out)["generation_id"]
+
+    class _Forged:
+        def held(self):
+            return True
+
+    with pytest.raises((SystemExit, AttributeError, TypeError)):
+        rp._promote_generation(
+            _stage(tmp_path / "s1", **{"a.projection.csv.gz": b"c1",
+                                       "a.projection.yaml": b"v: 1\n",
+                                       "a.restarts.csv.gz": b"r1"}),
+            out, lock=_Forged())
+    assert rp.read_current(out)["generation_id"] == before
+
+
+def test_the_lock_path_survives_release_so_writers_share_one_inode(tmp_path):
+    """★ 39차 #9 — 38차 `__exit__` 가 lock **path 를 지웠다.**
+
+    token 은 old fd 의 inode 에서 읽고 삭제는 현재 pathname 에 한다. pathname 이
+    다른 inode 로 교체되면 옛 owner 가 **새 owner 의 lock path** 를 지우고
+    제3 writer 가 새 inode 를 잠글 수 있다 (pathname split ABA).
+
+    flock 은 process 가 죽으면 kernel 이 푼다 — 파일을 남겨 두어도 다음
+    owner 를 막지 않는다. **persistent inode** 가 모든 writer 를 한 곳으로
+    모으는 가장 단순한 답이다.
+    """
+    rp = _rp()
+    out = tmp_path / "cohort"
+    out.mkdir(parents=True)
+    lock = out / ".publish.lock"
+
+    with rp._PublishLock(out):
+        ino = lock.stat().st_ino
+    assert lock.exists(), "release 가 lock path 를 지웠다 — pathname split 이 열린다"
+    assert lock.stat().st_ino == ino, "release 가 inode 를 갈았다"
+
+    # 남아 있어도 다음 owner 를 막지 않는다
+    with rp._PublishLock(out):
+        assert lock.stat().st_ino == ino, "다음 owner 가 다른 inode 를 잠갔다"
+
+
+def test_a_replaced_lock_pathname_invalidates_the_capability(tmp_path):
+    """★ 39차 #9 — 잡고 있는 fd 와 **현재 pathname** 이 같은 파일이어야 한다.
+
+    release 가 더 이상 지우지 않으므로 옛 ABA 는 닫혔지만, 밖에서 pathname 을
+    다른 inode 로 갈아 끼우는 것은 여전히 가능하다. 그러면 이 lock 은 아무도
+    안 보는 옛 inode 를 잡고 있는 것이고, 새 pathname 은 잠기지 않은 채다.
+    capability 는 그 상태를 **거부해야** 한다.
+    """
+    rp = _rp()
+    out = tmp_path / "cohort"
+    out.mkdir(parents=True)
+    lock = out / ".publish.lock"
+
+    with rp._PublishLock(out) as held:
+        held.assert_held_for(out)                       # 전제: 정상이다
+        other = out / ".other"
+        other.write_text("replacement", encoding="utf-8")
+        os.replace(other, lock)                         # pathname 이 새 inode 로
+        with pytest.raises(SystemExit) as ei:
+            held.assert_held_for(out)
+        assert "inode" in str(ei.value), str(ei.value)
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# 39차 #9 — roster 가 caller 의 self-report 였고, bootstrap 이 active 로 갔다
+# ─────────────────────────────────────────────────────────────────────────────
+
+def test_the_publisher_reads_the_roster_from_the_ledger_not_the_caller(tmp_path):
+    """★ 39차 #9 — 38차판은 caller 가 준 bare set 을 그대로 믿었다.
+
+        실제 원장: cohort X 의 roster = {a}
+        직접 호출: promote_cohort_generation(stage_b, X, "b", roster={a, b})
+        결과: caller 가 신고한 roster 에 b 가 있으므로 게시된다
+
+    signature 에 기본값이 없다는 것은 **누락**을 막을 뿐 provenance 를 만들지
+    않는다. publisher 가 `out` 을 원장 cohort 로 resolve 해 직접 읽어야 한다.
+    """
+    import importlib.util
+
+    # ★ autouse fixture 가 임시 cohort 에 원장 역할을 대신 해 주므로, 여기서는
+    #   **패치되지 않은 module** 을 따로 적재해 진짜 동작을 본다.
+    spec = importlib.util.spec_from_file_location(
+        "_rp_raw", _REPO / "docs" / "22p_gap" / "row_projection.py")
+    raw = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(raw)
+
+    out = tmp_path / "unknown_cohort"
+    with pytest.raises(SystemExit) as ei:
+        raw.promote_cohort_generation(
+            _stage(tmp_path / "sb", **{"b.projection.csv.gz": b"bc",
+                                       "b.projection.yaml": b"v: b\n",
+                                       "b.restarts.csv.gz": b"br"}), out, "b",
+            roster={"a", "b"})
+    assert "원장" in str(ei.value), str(ei.value)
+
+    # 그리고 원장이 아는 cohort 라도 **신고가 다르면** 거부한다
+    real_dir = _REPO / "docs" / "22p_gap" / "proj_g2"
+    with pytest.raises(SystemExit) as ei2:
+        raw.promote_cohort_generation(
+            _stage(tmp_path / "sc", **{"paired_fixed5_v4.projection.csv.gz": b"x",
+                                       "paired_fixed5_v4.projection.yaml": b"y",
+                                       "paired_fixed5_v4.restarts.csv.gz": b"z"}),
+            real_dir, "paired_fixed5_v4", roster={"paired_fixed5_v4", "ghost"})
+    assert "원장" in str(ei2.value), str(ei2.value)
+
+
+def test_a_bootstrap_partial_cohort_never_becomes_the_active_pointer(tmp_path,
+                                                                     monkeypatch):
+    """★ 39차 #9 — partial bootstrap 을 active `CURRENT` 로 게시했다.
+
+    roster `{a,b}` 에서 첫 `a` 게시가 a-only generation 을 active pointer 로
+    옮겼다. 그 직후 crash 하면 incomplete active state 가 남고, roster 를 받지
+    않는 public `read_current()`·`cohort_bytes()` 는 그것을 **정상으로 읽는다.**
+
+    bootstrap 은 필요하지만 active publication 과 같은 상태일 필요는 없다.
+    exact roster 가 모두 모였을 때만 pointer 를 옮긴다.
+    """
+    rp = _rp()
+    out = tmp_path / "cohort"
+    monkeypatch.setattr(rp, "_ledger_roster", lambda o: {"a", "b"})
+
+    rp.promote_cohort_generation(
+        _stage(tmp_path / "sa", **{"a.projection.csv.gz": b"c0",
+                                   "a.projection.yaml": b"v: 0\n",
+                                   "a.restarts.csv.gz": b"r0"}), out, "a",
+        roster={"a", "b"})
+    with pytest.raises(SystemExit):
+        rp.read_current(out)          # active pointer 가 아직 없어야 한다
+
+    rp.promote_cohort_generation(
+        _stage(tmp_path / "sb", **{"b.projection.csv.gz": b"bc",
+                                   "b.projection.yaml": b"v: b\n",
+                                   "b.restarts.csv.gz": b"br"}), out, "b",
+        roster={"a", "b"})
+    cur = rp.read_current(out)        # 이제 명부가 다 찼다
+    assert set(cur["files"]) == {f"{l}{s}" for l in ("a", "b")
+                                 for s in rp.LEG_SUFFIXES}

@@ -3991,3 +3991,125 @@ roster 를 publisher 에 요구할 수는 **없다** — roster={a,b} 인 cohort
 | 실제 object-lock provider adapter | **미구현** — 계약 8연산·per-version·delete-marker·Compliance 단조성은 고정 |
 | power-loss ordering fault model | **미착수** — fault-injecting filesystem 필요 |
 | lease 갱신 | **미지원으로 신고** — active lease pointer 또는 retirement primitive 설계가 선행 |
+
+## 47. 38차 리뷰 대응 — "시험의 이름이 실제 predicate 보다 강하다"
+
+38차 리뷰의 결론 한 줄이 이번 라운드의 전부다:
+
+> field 를 추가했지만 빈 값이면 옛 live-search 로 돌아가고, validator 라는
+> 이름을 붙였지만 새 field 의미를 보기 전에 WORM repair 를 하며, lock 인자를
+> 필수로 했지만 그 lock 이 게시 대상의 lock 인지는 보지 않고, snapshot helper
+> 를 배선했지만 중복 leg 에서 first match 로 frozen 세대를 고른다.
+
+리뷰가 준 13개 반증 조건을 그대로 닫았다. 모든 수정의 규칙은 하나다 —
+**predicate 를 이름만큼 강하게 만들거나, 이름을 바꾼다.**
+
+### 47.1 optional 이면 sealed locator 가 아니라 hint 다
+
+| 자리 | 38차 | 39차 |
+|---|---|---|
+| `store_version_id` | `if sv and ...` — 빈 값이면 검증 통째로 건너뜀 | object-lock 이면 **필수**, 없으면 거부 |
+| `store_lock_mode` | 안 봄 | `DURABLE_MODES` 여야 함 |
+| store version 기한 | 안 봄 | `retain_until >= lease.retain_until_utc` |
+| `lease_content_version` | journal parser 가 type 도 안 봄 · verifier 가 `or None` 로 지움 | 두 locator **모두** typed, object-lock 이면 nonempty |
+| content lock mode | 안 봄 | `DURABLE_MODES` 여야 함 |
+| 최초 등록 전 verifier | content proof 를 **안 넘김** | 두 locator 모두 넘김 |
+
+**Governance-only store fallback 도 막았다.** Compliance selector 를 만들어
+놓고, `store_id` 의 `_read_protected()` fallback 이 그 경계를 다시 열고
+있었다 — Governance 로만 잠긴 record 뒤에서 provider 의 현재 default 만
+Compliance 로 바꾸면 빈 proof 로 `durable=True` 까지 갔다.
+
+### 47.2 검증은 수리하지 않는다
+
+38차 validator 는 `self.store_id` 를 불렀다. 그것은 record 가 없으면 **만들고**
+있으면 기한을 **연장한다** — 둘 다 mutation 이다. `inspect_store_id()` 로 갈랐다.
+
+이것을 고치자 예상 못 한 것이 드러났다: `verify_retention()` 도 `store_id` 를
+부르고 있어서, **담보 해제와 기한 단축 반례가 둘 다 self-healing 으로
+초록**이었다. 검증이 스스로 고쳐 놓고 통과시킨 것이다. 거기도 inspect 로 바꾸자
+두 반례가 비로소 보였다.
+
+### 47.3 validator 가 새 field 의미를 본다
+
+38차 `_matches_lease()` 는 exact key set 은 봤지만 그 뒤에 **추가된**
+`store_version_id`·`store_lock_mode`·`lock_mode`·`object_versions` 와 timestamp
+문법은 안 봤다. 그래서 그 축만 위조한 candidate 를 pin·content WORM 으로 만든
+**뒤** strict verifier 가 거부했다.
+
+`retain_until_utc` 축이 특히 나빴다 — `_lease_expired()` 는 문자열 비교라
+`"not-a-date"` 를 미래처럼 받아들이고, 그 값이 provider lock 까지 흘러간 뒤에야
+strict parser 가 거부했다. `_is_utc_stamp()` 로 문법부터 본다.
+
+여섯 축을 parametrize 로 물리고, 각각 **호출 전후 provider version census ·
+pin 집합 · store record 바이트가 동일**한지 확인한다.
+
+### 47.4 lock 은 대상에 결속된 capability 여야 한다
+
+38차는 `held()` 가 참인지만 봤다. 가짜 객체는 물론이고 — 리뷰가 지적한 더 작은
+반례 — **`outA` 에서 진짜로 획득한 lock 을 `outB` 게시에 넘겨도** 통과했다.
+`assert_held_for(out)` 이 resolved 대상·process·fd inode 를 대조한다.
+
+그리고 `__exit__` 가 lock **path 를 지웠다.** token 은 old fd 의 inode 에서 읽고
+삭제는 현재 pathname 에 하므로, pathname 이 교체되면 옛 owner 가 새 owner 의
+lock 을 지운다. **파일을 아예 안 지운다** — flock 은 process 가 죽으면 kernel 이
+푸니 잔여 파일이 다음 owner 를 막지 않고, persistent inode 가 모든 writer 를 한
+곳으로 모은다. 삭제 경합 자체가 없어졌다.
+
+> 38차의 `..._old_owner_cannot_delete_the_new_owners_lock` 은 **삭제했다** —
+> 아무것도 안 지우게 되면서 공허참이 됐다.
+
+`fcntl` 이 없는 platform 은 조용히 진행하지 않고 명시적으로 거부한다.
+
+### 47.5 roster 는 caller 의 신고가 아니다
+
+38차는 필수 인자로 만들었지만 bare set 을 그대로 믿었다 — 필수는 **누락**을 막을
+뿐 provenance 를 만들지 않는다. 이제 publisher 가 `out` 을 원장 cohort 로
+resolve 해 직접 읽고, caller 의 신고와 다르면 거부한다.
+
+**bootstrap 도 분리했다.** roster `{a,b}` 에서 첫 `a` 게시가 a-only generation 을
+active `CURRENT` 로 옮기고 있었다 — 그 직후 crash 하면 roster 를 안 받는 public
+`read_current()`·`cohort_bytes()` 가 그것을 정상으로 읽는다. 이제 명부가 다
+찰 때까지 `.PENDING`(비활성 pointer)에만 적고, 다 차면 한 번에 `CURRENT` 로
+옮긴다. generation directory 는 이미 immutable 하게 굳으므로 잃는 것은 없다.
+
+### 47.6 first match 가 권위였다 — 옮긴 것이 오히려 나빴다
+
+`_snapshot_for_leg()` 는 원장 cohort 를 순서대로 돌며 처음 나온 것을 돌려줬다.
+원장은 frozen g1 을 먼저 적고 `paired_fixed5_v4` 를 g1·g2 둘 다에 담으므로,
+이 helper 는 **언제나 frozen g1** 이었다. 다섯 소비자를 여기로 옮긴 결과가
+"active 를 읽는다" 가 아니라 **g1 선택의 공통화**였다. 두 cohort 의 바이트가
+지금 우연히 같아서 초록이었을 뿐이다.
+
+이 저장소는 `_pick_sealed_digest()` 에서 같은 실수를 이미 겪었다 (30차 P2:
+"cohort 목록의 순서가 답을 바꿨다"). 규칙도 같다 — **순서로 고르지 않는다.**
+목적을 말해야 한다: `purpose="active"` · `cohort_id=...` · 아니면 거부.
+
+바이트를 다르게 만든 fixture 로 세 갈래를 전부 물린다.
+
+### 47.7 guard 를 상수 접속사에서 **연산 금지**로
+
+38차 `_WARM` guard 는 "함수에 `_WARM` 이 있고 **동시에** dotted suffix 상수가
+있으면" 이었다. 함수 전체에 걸친 접속사라 옆에 우연히 있는 상수에 기댄다.
+금지 대상은 상수가 아니라 **경로 조립 연산 자체**다 — `_WARM` 을 `/` 로 잇는
+것을 세 helper 밖에서 금지한다. 리뷰의 반증 13(옛 코드로 되돌리기)을 실제로
+적용해 빨개지는 것을 확인했다.
+
+### 47.8 변이 — 물지 않은 것과 그 처리
+
+| 물지 않은 변이 | 진단 | 처리 |
+|---|---|---|
+| `object_versions` 값 검사 | key set 검사에 업혔다 | fixture 를 갈랐다 |
+| validator 의 mutating `store_id` | record 가 이미 있으면 관측 불가 | record 없는 상태로 시험 |
+| store proof 필수화 | mode 검사가 먼저 물었다 | 한 축만 비우게 fixture 수정 |
+| journal locator type | 빈 문자열은 str 이라 안 걸린다 | 비-문자열 4종 parametrize |
+| `_version_for` (anchor 2×) | 같은 loop 이 **세 곳**에 있었다 | **하나로 합쳤다** |
+| 도달 불가능 shrink 검사 | `keep` 복사가 구조로 막는다 | 38차에 이미 삭제 |
+
+### 47.9 남은 것 (신고 유지)
+
+| 항 | 상태 |
+|---|---|
+| 실제 object-lock provider adapter | **미구현** — 계약 8연산·per-version mode·Compliance 단조·delete marker 는 고정 |
+| power-loss ordering fault model | **미착수** — fault-injecting filesystem 필요 |
+| lease 갱신 | **미지원** (38차 결정, 리뷰 종결) |
