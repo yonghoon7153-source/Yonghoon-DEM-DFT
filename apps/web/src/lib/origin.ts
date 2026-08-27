@@ -2,10 +2,17 @@
  *
  * Three rules, each one a thing that went wrong in a worksheet:
  *
- * *Numbers only.*  No column names, no unit row.  A pasted header lands in the
- * data rows of an Origin worksheet, where it has to be cut out again before
- * anything will plot -- and whoever pressed the button already knows what they
- * pressed.
+ * *Numbers only -- **한 셀을 쌓아 붙일 때는.***  붙여 넣은 머리글은 Origin
+ * 워크시트의 데이터 첫 행으로 앉아 도로 잘라내야 하는 것이 되고, 누른 사람은
+ * 자기가 무엇을 눌렀는지 이미 안다.
+ *
+ * **비교 화면은 다르다** (2026-08-27).  거기서는 열 한 쌍이 **저마다 다른 셀**
+ * 이고 열 스무 개가 나란히 붙는다 -- 어느 쌍이 어느 셀인지 워크시트 안에는
+ * 아무 데도 안 적혀 있고, 화면을 떠나면 되찾을 방법이 없다.  그래서 **넓은
+ * 배치(`widePairs`)에만** 머리글 한 줄을 옵션으로 붙인다.  쌓는 배치는 그대로
+ * 숫자만이다: 거기서는 모든 열이 같은 셀이라 머리글이 잡음이다.
+ *
+ * Origin 에서는 Long Name 칸을 골라 붙여 넣으면 그 줄이 이름 줄로 앉는다.
  *
  * *Two columns.*  A (capacity, voltage) pair per curve laid out side by side is
  * miserable to plot: Origin has to be told which X belongs to which Y, column
@@ -165,45 +172,73 @@ export function dvdqTsv(series: DvdqSeries[]): string {
  *  (`analysis.py`: `for sample_id … for number …`) 3·4 번을 고르면 열이
  *  [셀1 3번][셀1 4번][셀2 3번][셀2 4번] 순으로 나온다.
  */
-function widePairs<T>(series: T[], pick: (item: T) => [number[], number[]]): string {
+export interface WideHead {
+  /** 가로 열에 적을 축 이름 (`사이클`, `용량 (mAh g⁻¹)` …). */
+  x: string
+  /** 세로 열에 적을 축 이름. */
+  y: string
+}
+
+/** 머리글은 **여기서** 만든다.
+ *
+ *  화면이 따로 만들면 열 수가 어긋난다: `widePairs` 는 점이 없는 곡선을
+ *  빼는데 (아래 참고) 화면은 그것을 모르므로, 빈 곡선 하나가 머리글을 한 칸씩
+ *  밀어 모든 열의 이름이 틀리게 된다.  틀린 이름은 없는 이름보다 나쁘다.
+ */
+function widePairs<T>(
+  series: T[],
+  pick: (item: T) => [number[], number[]],
+  head?: WideHead & { name: (item: T) => string },
+): string {
   const columns: string[][] = []
   for (const item of series) {
     const [xs, ys] = pick(item)
     // 점이 없는 곡선은 열을 차지하지 않는다.  빈 열 두 개는 Origin 에서
     // 데이터셋 두 개로 잡히고, 그리면 아무것도 없는 범례 항목이 된다.
     if (!xs.length) continue
-    columns.push(xs.map(cell), ys.map(cell))
+    const x = xs.map(cell)
+    const y = ys.map(cell)
+    if (head) {
+      const name = head.name(item)
+      x.unshift(name ? `${name} ${head.x}` : head.x)
+      y.unshift(name ? `${name} ${head.y}` : head.y)
+    }
+    columns.push(x, y)
   }
   return columns.length ? tsvColumns(columns) : ''
 }
 
 /** 겹쳐 본 사이클 추세 — 곡선마다 (사이클, 값) 두 열. */
 export function compareCyclesWideTsv(
-  series: { points: { cycle: number; value: number }[] }[],
+  series: { sample_name?: string; points: { cycle: number; value: number }[] }[],
+  head?: WideHead,
 ): string {
   return widePairs(series, (item) => [
     item.points.map((point) => point.cycle),
     item.points.map((point) => point.value),
-  ])
+  ], head && { ...head, name: (item) => item.sample_name ?? '' })
 }
 
 /** 겹쳐 본 충방전 프로파일 — 곡선마다 (용량, 전압) 두 열.
  *
  *  구동 중이라 잘린 곡선은 여기서도 뺀다 (`profileTsv` 와 같은 이유).
  */
-export function profileWideTsv(series: ProfileSeries[]): string {
+export function profileWideTsv(series: ProfileSeries[], head?: WideHead): string {
   return widePairs(series.filter((item) => !stillRunning(item)),
-                   (item) => [item.capacity, item.voltage])
+                   (item) => [item.capacity, item.voltage],
+                   head && { ...head, name: (item) => item.label })
 }
 
 /** 겹쳐 본 dQ/dV — 곡선마다 (전압, dQ/dV) 두 열. */
-export function dqdvWideTsv(series: DqdvSeries[]): string {
-  return widePairs(series, (item) => [item.voltage, item.dqdv])
+export function dqdvWideTsv(series: DqdvSeries[], head?: WideHead): string {
+  return widePairs(series, (item) => [item.voltage, item.dqdv],
+                   head && { ...head, name: (item) => item.label })
 }
 
 /** 겹쳐 본 dV/dQ — 곡선마다 (용량, dV/dQ) 두 열.  x 가 용량인 것에 주의. */
-export function dvdqWideTsv(series: DvdqSeries[]): string {
-  return widePairs(series, (item) => [item.capacity, item.dvdq])
+export function dvdqWideTsv(series: DvdqSeries[], head?: WideHead): string {
+  return widePairs(series, (item) => [item.capacity, item.dvdq],
+                   head && { ...head, name: (item) => item.label })
 }
 
 /** Stack `(x, y)` pairs from many curves into two columns with `--` between.
@@ -359,9 +394,12 @@ export function nyquistTsv(spectra: SpectrumPoints[], scale?: Scale): string {
  *  비교 화면 것이라 쌓지 않는다 (`widePairs` 머리말).  상세 화면의
  *  `nyquistTsv` 는 그대로 쌓는다 — 거기는 한 스펙트럼이다.
  */
-export function nyquistWideTsv(spectra: SpectrumPoints[], scale?: Scale): string {
+export function nyquistWideTsv(
+  spectra: SpectrumPoints[], scale?: Scale, head?: WideHead,
+): string {
   const z = ohms(scale)
-  return widePairs(spectra, (item) => [item.z_re.map(z), item.z_im.map((v) => z(-v))])
+  return widePairs(spectra, (item) => [item.z_re.map(z), item.z_im.map((v) => z(-v))],
+                   head && { ...head, name: (item) => item.name })
 }
 
 /** 겹쳐 본 pseudo-OCV — 기록마다 (용량, 전압) 두 열.
@@ -371,9 +409,10 @@ export function nyquistWideTsv(spectra: SpectrumPoints[], scale?: Scale): string
  *  하는 것이 되고, 그 규칙은 이 파일 머리말이 이미 정해 둔 것이다.
  */
 export function pseudoOcvWideTsv(
-  series: { x: number[]; y: number[] }[],
+  series: { x: number[]; y: number[]; label?: string }[],
+  head?: WideHead,
 ): string {
-  return seriesWideTsv(series)
+  return seriesWideTsv(series, head)
 }
 
 /** 화면에 그려진 곡선 그대로 — 곡선마다 (x, y) 두 열.
@@ -382,8 +421,11 @@ export function pseudoOcvWideTsv(
  *  (Z′, −Z″) 든, 화면이 이미 계산해 둔 것을 그대로 낸다.  숫자를 여기서 다시
  *  만들지 않으므로 **붙여 넣은 워크시트와 그림이 어긋날 수가 없다.**
  */
-export function seriesWideTsv(series: { x: number[]; y: number[] }[]): string {
-  return widePairs(series, (item) => [item.x, item.y])
+export function seriesWideTsv(
+  series: { x: number[]; y: number[]; label?: string }[], head?: WideHead,
+): string {
+  return widePairs(series, (item) => [item.x, item.y],
+                   head && { ...head, name: (item) => item.label ?? '' })
 }
 
 /** 보드: 주파수, |Z|, 위상 — 세 열.

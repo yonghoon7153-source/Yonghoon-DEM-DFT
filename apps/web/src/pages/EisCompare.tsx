@@ -403,7 +403,10 @@ export function EisCompare() {
                 ? `스펙트럼마다 Z′·−Z″ 두 열 (${unitLabel})`
                 : `${MODE_TITLE[mode]} 를 보고 있습니다 — 나이퀴스트로 바꾸면 켜집니다`,
               disabled: mode !== 'nyquist' || !fresh || !shown.kept.length,
-              build: () => nyquistWideTsv(shown.kept),
+              // 열마다 어느 스펙트럼인지.  열 한 쌍이 저마다 다른 셀이라
+              // 워크시트 안에는 그것을 적을 자리가 없다.
+              build: () => nyquistWideTsv(shown.kept, undefined,
+                                          { x: `Z′ (${unitLabel})`, y: `−Z″ (${unitLabel})` }),
               skipped: shown.dropped.length,
               skippedNote: (n) => `면적이 없어 ${n}개를 뺐습니다`,
             },
@@ -416,7 +419,8 @@ export function EisCompare() {
                 ? `스펙트럼마다 측정·fitting Z′·−Z″ 네 열 (${unitLabel})`
                 : `${MODE_TITLE[mode]} 를 보고 있습니다 — fitting 으로 바꾸면 켜집니다`,
               disabled: mode !== 'fit' || !fresh || !series.length,
-              build: () => seriesWideTsv(series),
+              build: () => seriesWideTsv(series,
+                                         { x: `Z′ (${unitLabel})`, y: `−Z″ (${unitLabel})` }),
               skipped: unfitted.length,
               skippedNote: (n) => `아직 fitting 데이터가 없어 ${n}개는 fitting 열이 없습니다`,
             },
@@ -426,7 +430,8 @@ export function EisCompare() {
                 ? `스펙트럼마다 log₁₀τ·γ 두 열 (${unitLabel})`
                 : `${MODE_TITLE[mode]} 를 보고 있습니다 — DRT 로 바꾸면 켜집니다`,
               disabled: mode !== 'drt' || !series.length,
-              build: () => seriesWideTsv(series),
+              build: () => seriesWideTsv(series,
+                                         { x: 'log₁₀ τ (s)', y: `γ (${unitLabel})` }),
             },
           ]}
         />

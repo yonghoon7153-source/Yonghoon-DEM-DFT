@@ -230,7 +230,11 @@ export function GittCompare() {
             label: 'pseudo-OCV',
             title: '기록마다 용량·전압 두 열',
             disabled: !fresh || !series.length,
-            build: () => pseudoOcvWideTsv(series),
+            // 열마다 어느 기록인지.  열 한 쌍이 저마다 다른 셀이라 워크시트
+            // 안에는 그것을 적을 자리가 없다.
+            build: () => pseudoOcvWideTsv(series, {
+              x: `용량 (${GITT_AXIS_LABEL[basis]})`, y: '전압 (V)',
+            }),
           }]}
         />
         {curves.error ? <Alert kind="error">{curves.error}</Alert> : null}

@@ -518,3 +518,38 @@ describe('onlyCycles', () => {
     expect(onlyCycles(rows, [])).toEqual([])
   })
 })
+
+describe('넓은 배치의 머리글 — 열마다 어느 셀인지 (2026-08-27)', () => {
+  const A = { label: 'A_cell', capacity: [0, 1], voltage: [4.2, 3.0],
+              complete: true } as ProfileSeries
+  const B = { label: 'B_cell', capacity: [0, 2], voltage: [4.1, 2.9],
+              complete: true } as ProfileSeries
+
+  it('안 물어보면 숫자만 — 쌓는 배치의 규칙은 그대로다', () => {
+    expect(profileWideTsv([A, B]).split('\n')[0]).toBe('0\t4.2\t0\t4.1')
+  })
+
+  it('물어보면 첫 줄이 이름 + 축 — 열마다 하나씩', () => {
+    const rows = profileWideTsv([A, B], { x: '용량 (mAh)', y: '전압 (V)' })
+      .split('\n')
+    expect(rows[0]).toBe(
+      'A_cell 용량 (mAh)\tA_cell 전압 (V)\tB_cell 용량 (mAh)\tB_cell 전압 (V)')
+    // 숫자는 그대로 그 아래.
+    expect(rows[1]).toBe('0\t4.2\t0\t4.1')
+  })
+
+  it('점 없는 곡선을 뺀 만큼 머리글도 빠진다 — 안 그러면 이름이 한 칸씩 밀린다',
+     () => {
+    const empty = { label: '빈것', capacity: [], voltage: [],
+                    complete: true } as unknown as ProfileSeries
+    const rows = profileWideTsv([A, empty, B], { x: 'x', y: 'y' }).split('\n')
+    expect(rows[0]).toBe('A_cell x\tA_cell y\tB_cell x\tB_cell y')
+    expect(rows[0]).not.toContain('빈것')
+  })
+
+  it('이름이 없으면 축만 적는다 — `undefined 전압` 은 이름이 아니다', () => {
+    const rows = profileWideTsv(
+      [{ ...A, label: '' } as ProfileSeries], { x: 'x', y: 'y' }).split('\n')
+    expect(rows[0]).toBe('x\ty')
+  })
+})

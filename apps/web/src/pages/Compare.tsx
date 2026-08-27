@@ -393,25 +393,39 @@ export function Compare() {
                   title: `사이클 · ${METRICS.find((m) => m.value === metric)?.label ?? '값'}`
                     + ' — 셀마다 두 열',
                   disabled: !(cycleCompare.data?.series ?? []).length,
-                  build: () => compareCyclesWideTsv(cycleCompare.data?.series ?? []),
+                  // 열마다 어느 셀인지 이름을 얹는다.  여기서는 열 한 쌍이
+                  // 저마다 다른 셀이라, 워크시트에는 그것을 적을 자리가 없다.
+                  build: () => compareCyclesWideTsv(cycleCompare.data?.series ?? [], {
+                    x: '사이클',
+                    y: METRICS.find((m) => m.value === metric)?.label ?? '값',
+                  }),
                 }] : mode === 'profiles' ? [{
                   label: MODE_LABELS.profiles,
                   title: '용량 · 전압 — 곡선마다 두 열 (셀 → 사이클 순)',
                   disabled: !(profileCompare.data?.series ?? []).length,
-                  build: () => profileWideTsv(profileCompare.data?.series ?? []),
+                  build: () => profileWideTsv(profileCompare.data?.series ?? [], {
+                    x: `용량 (${basisUnit(profileCompare.data?.basis ?? basis)})`,
+                    y: '전압 (V)',
+                  }),
                   skipped: skippedForCopy(profileCompare.data?.series ?? []),
                   skippedNote: (n) => `구동 중이라 마지막 사이클이 잘린 셀 ${n}개는 뺐습니다`,
                 }] : mode === 'dqdv' ? [{
                   label: MODE_LABELS.dqdv,
                   title: '전압 · dQ/dV — 곡선마다 두 열 (셀 → 사이클 순)',
                   disabled: !(dqdvCompare.data?.series ?? []).length,
-                  build: () => dqdvWideTsv(dqdvCompare.data?.series ?? []),
+                  build: () => dqdvWideTsv(dqdvCompare.data?.series ?? [], {
+                    x: '전압 (V)',
+                    y: `dQ/dV (${basisUnit(dqdvCompare.data?.basis ?? basis)}/V)`,
+                  }),
                 }] : [{
                   label: MODE_LABELS.dvdq,
                   // dQ/dV 의 거울이라 열 순서를 헷갈리기 쉽다 -- 여기 적어 둔다.
                   title: '용량 · dV/dQ — 곡선마다 두 열 (dQ/dV 와 x 가 반대)',
                   disabled: !(dvdqCompare.data?.series ?? []).length,
-                  build: () => dvdqWideTsv(dvdqCompare.data?.series ?? []),
+                  build: () => dvdqWideTsv(dvdqCompare.data?.series ?? [], {
+                    x: `용량 (${basisUnit(dvdqCompare.data?.basis ?? basis)})`,
+                    y: `dV/dQ (V/${basisUnit(dvdqCompare.data?.basis ?? basis)})`,
+                  }),
                 }]}
               />
             </div>
