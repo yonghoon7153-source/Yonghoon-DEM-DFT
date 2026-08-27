@@ -109,6 +109,22 @@ GLOSSARY = [
   "how":"로그-로그 눈금에서 적합 창(2–50 ps)의 기울기 + 창끝 MSD ≥ 3 Å² 병행. <b>2026-08-26 부터 β&lt;0.8 은 '케이지' 라고 단정하지 않는다</b> — 그 창의 자유절편 직선 (c,m) 이 함의하는 <b>귀무 β</b> 와 비교해 <code>β≈귀무(절편+홉 N 으로 설명가능)</code> / <code>β≪귀무(창이 직선이 아님)</code> 로 갈라 찍는다. 케이지 vs 멱함수 <b>확정</b>은 여전히 <code>--scan</code> 의 다중 창 c-추세 몫이다. R²로는 못 잡는다 — R² 0.975인데 β 0.61인 실측(LPSOCl 600 K). <b>확정 판정은 MTO 시드<i>평균곡선</i>으로만</b>(→ STO/MTO 항목): 같은 런을 STO 로 읽으면 시드 산포가 <b>8.7배</b>(0.52 vs 0.06)이고 β=1.14 같은 물리적 불가값이 섞인다. 도구: <code>msd_diffusive_check.py --mto --average --scan</code>.",
   "ours":"<b>원인이 셀 크기로 판정됐다 (2026-08-26).</b> 시간을 8배(200→1600 ps) 늘리면 600 K 가 <b>오히려 나빠진다</b>(β 0.64→0.37) — 이온이 상자를 가로질러 wrap 이 쌓이기 때문. 같은 잣대(MTO 시드평균)로 lpsocl 작은 셀(5.67 Å)은 <b>0.76·0.77 두 런셋에서 재현되게 실패</b>, 3×3×1(17.0 Å)은 <b>0.81 통과</b>(시드산포 0.006). 그리고 셀 확대 비용이 <b>원자 ×9 에 벽시계 ×1.2</b>로 실측됐다 — 62원자에선 GPU 가 놀고 있었다. ⚠ β 인용은 <code>db/properties/lpsocl_beta_registry.json</code> 의 <b>entry id 로</b> — 같은 이름에 0.615~0.82 <b>여섯 값</b>이 흩어져 있었다."},
 
+{"id":"d-inc", "term":"D<sub>inc</sub> (구간 증분 확산계수)",
+  "full":"incremental diffusivity — D<sub>inc</sub>(t₁,t₂) = [MSD(t₂) − MSD(t₁)] / [6(t₂ − t₁)]",
+  "cat":"이온 수송",
+  "doc":"beta-gate", "doc_sec":"§7-8b 교차리뷰 판정 · §8 c 행 판별",
+  "what":"<b>2026-08-27 부터 우리의 주 판정축</b>이다 (교차리뷰 권고를 받아들인 것). 핵심은 <b>차분이 상수 절편을 대수적으로 소거한다</b>는 것이다: <code>MSD = c + 6Dt</code> 이면 <code>MSD(t₂) − MSD(t₁) = 6D(t₂−t₁)</code> 로 <b>c 가 사라진다</b>. 그래서 케이지 절편이면 창을 옮겨도 D<sub>inc</sub> 가 <b>평평</b>하고, 진짜 <code>t^α</code> 면 <code>D<sub>eff</sub> ∝ t^(α−1)</code> 로 계속 움직인다. ⇒ <b>케이지 vs 멱함수를 자유절편 c 보다 곧게 가른다.</b><br>왜 c 를 강등했나 — 자유절편은 <b>관측 범위 밖 t=0 으로의 외삽</b>이고 c–m 오차가 강하게 얽혀 있어서, 늦은 창에서 <b>음수로 튄다</b>(실측: modelc/700 K −4.68 Å²). c 행은 이제 <b>보조 진단</b>이다.",
+  "how":"합성 검증이 가장 명확하다 — <code>MSD = 3.0 + 0.6t</code> (즉 c=3 Å², <b>D=0.1 Å²/ps 정확</b>) 를 넣으면 창 2–50 / 10–50 / 25–100 / 50–100 에서 <b>β 는 0.72 → 0.93 으로 움직이는데 D<sub>inc</sub> 는 네 창 모두 0.100</b> 이다. <b>낮은 β 가 D 가 틀렸다는 증거가 아니라는 것</b>이 한 줄로 보인다. 도구: <code>msd_diffusive_check.py --scan</code> 의 <code>★D_inc</code> 행 (selftest 52).",
+  "ours":"⛔ <b>이 지표가 못 하는 것</b> — ① <b>느린 전이 vs 진짜 멱함수는 여전히 못 가른다</b>(둘 다 D<sub>inc</sub> 가 움직인다; 가르려면 더 긴 궤적에서 plateau 도달 여부를 봐야 한다) ② <b>오차막대가 없다</b> — 끝점 두 개만 쓰므로 잡음에 그대로 노출된다. 제대로 된 CI 는 <b>시드 외층 + 시간원점 block 내층</b> 계층 bootstrap 이어야 하고(lag 점이나 이온 개별 재표집은 <b>금지</b> — 각각 시간원점을 공유하고 집단홉 공분산을 파괴한다) <b>아직 미구현</b>이다 ③ lag 이 궤적 길이에 가까우면 MSD(t₂) 자체를 못 믿는다."},
+
+{"id":"lag-tier", "term":"창 등급 (primary / sensitivity / exploratory)",
+  "full":"analysis-window tiers by max lag vs trajectory length",
+  "cat":"이온 수송",
+  "doc":"beta-gate", "doc_sec":"§7-8b",
+  "what":"창의 최대 lag <code>t₂</code> 가 궤적 길이 <code>T</code> 에 가까워지면 <b>그 lag 의 시간원점 수가 ≈(T−t₂)/Δt 로 0 에 수렴한다</b> — 값이 아니라 잡음이다. 그래서 창을 셋으로 나눈다: <b>primary</b> t₂ ≤ 0.5T (판정은 이것으로만) · <b>sensitivity</b> 0.5–0.7T (민감도 분석) · <b>exploratory_only</b> t₂ > 0.7T (<b>화면 진단 전용 — 판정·plateau·오차막대에 쓰지 않는다</b>).",
+  "how":"<code>msd_diffusive_check.py --scan</code> 이 등급을 라벨에 찍고(<code>~</code>=sensitivity, <code>!</code>=exploratory) <b>exploratory 는 추세 계산에서 뺀다</b>. 창이 tmax 를 넘으면 잘라내고 중복을 없앤 뒤 버린 개수를 찍는다.",
+  "ours":"⚠ <b>결과가 아프다</b>: 100 ps 궤적에서는 primary 가 <b>2개</b>밖에 안 남고 추세 판정에 4개가 필요해서 <b>추세표가 아예 안 나온다.</b> 우리 <code>arrhenius_6pt</code> 12런이 전부 100 ps라 그 c-추세 판독은 <b>형식적으로 판정 불가</b>가 됐다. 800 ps 면 9창 중 7개가 살아 정상 작동한다 — <b>지금 800 ps 를 도는 직접적 이유다.</b><br>⛔ 이 등급이 생긴 계기는 우리 도구 버그였다 — 창 목록이 고정 리터럴이라 tmax 100 ps 에서 <code>50-150</code> 과 <code>50-200</code> 이 <b>같은 50–100 을 두 번 찍고</b> 서로 다른 라벨로 나왔다. 값이 같으니 '두 창이 일치한다' 로 읽혔다."},
+
 {"id":"sto-mto", "term":"STO / MTO (시간원점)",
   "full":"Single / Multi Time Origin — MSD 를 <b>언제부터</b> 재는가",
   "cat":"이온 수송",
