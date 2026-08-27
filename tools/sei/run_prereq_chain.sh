@@ -49,6 +49,9 @@ while [ $# -gt 0 ]; do
   esac; shift
 done
 
+# ⛔ 2026-08-28 — selftest 가 `die "테스트"` 를 부르는데 die→ts 가 `tee -a "$LOG"` 를 타서
+#   **실제 로그에 ⛔ 를 써 넣었다.** watch 가 그걸 진짜 실패로 잡아 가짜 경보를 냈다.
+#   테스트가 운영 기록을 건드리면 안 된다 — selftest 중에는 로그를 /dev/null 로 돌린다.
 ts(){ echo "[$(date +%m-%d\ %H:%M:%S)] $*" | tee -a "$LOG"; }
 die(){ ts "⛔ $*"; ts "   ⇒ **여기서 멈춘다.** 뒤 단계를 돌려도 읽을 수 없는 숫자가 나온다."; exit 1; }
 
@@ -97,6 +100,7 @@ run_tree() {   # $1 = 폴더 (그 밑의 모든 scf.in 을 돈다)
 
 # ── selftest: 게이트가 실제로 막는가 (QE 없이) ───────────────────────────────
 if [ "$SELFTEST" = 1 ]; then
+  LOG=/dev/null            # ⛔ 위 ts() 주석 참조 — 테스트는 운영 로그를 안 건드린다
   ok=1; say(){ echo "  $1 $2"; [ "$1" = "✗" ] && ok=0; return 0; }
   echo "── run_prereq_chain selftest ──"
   # ① GPU 게이트: 여유가 모자라고 --wait 가 없으면 **막아야** 한다
@@ -115,6 +119,11 @@ if [ "$SELFTEST" = 1 ]; then
     && say "✗" "② JOB DONE 없는데 성공이라 했다" || say "✓" "② JOB DONE 없으면 실패로 본다"
   # ③ die 는 반드시 비영 종료 (게이트가 뚫리면 이 스크립트는 의미가 없다)
   ( die "테스트" ) >/dev/null 2>&1 && say "✗" "③ die 가 0 으로 끝났다" || say "✓" "③ die 는 비영 종료"
+  # ③' **테스트가 운영 로그를 오염시키지 않는다** (실측: `⛔ 테스트` 가 watch 에 떴다)
+  _PL="$T/prod.log"; : > "$_PL"
+  ( LOG="$_PL"; SELFTEST=1; LOG=/dev/null; ts "이건 로그에 남으면 안 된다" ) >/dev/null 2>&1
+  [ ! -s "$_PL" ] && say "✓" "③' selftest 는 운영 로그에 안 쓴다" \
+                  || say "✗" "③' selftest 가 운영 로그를 오염시켰다"
   rm -rf "$T"
   [ "$ok" = 1 ] && { echo "  ✅ selftest 통과"; exit 0; } || { echo "  ⛔ selftest 실패"; exit 1; }
 fi

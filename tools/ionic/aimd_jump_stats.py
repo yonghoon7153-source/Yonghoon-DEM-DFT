@@ -345,6 +345,9 @@ def main():
         elif shift <= 0.2:
             print(f"  ⇒ ⚠ **봉우리가 제자리다** ({shift:+.2f} Å) — 이 창에서는 "
                   f"cage 안 흔들림이 지배적이다")
+            if vhinfo["rmax_A"] > 12:
+                print(f"     ⚠ 다만 rmax 가 {vhinfo['rmax_A']} Å 로 잡혔다 — "
+                      f"**소수는 멀리 갔다.** 봉우리는 최빈값이라 그 꼬리를 안 센다")
         else:
             print(f"  ⇒ ⚠ 중간 ({shift:+.2f} Å) — 어느 쪽도 주장하지 않는다. "
                   f"더 긴 lag 이 필요하다")
