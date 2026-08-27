@@ -1198,6 +1198,323 @@ def selftest():
     return 0 if ok else 1
 
 
+# ══ P0-1 (교차리뷰 I · 2026-08-27) — 겉보기 변위에서 **비물리 성분을 먼저 뺀다** ══
+#
+#  왜 생겼나: `build_frozen` 도, `build_neb_inputs.endpoint_displacement_max_A` 도
+#  두 끝점을 **원자 순서대로 zip** 해서 변위를 잰다. 그 값은 다음을 포함한다:
+#    (a) 두 끝점을 독립 이완하며 각각 생긴 **강체 표류** — 셀은 병진 불변이라 물리가 아니다
+#    (b) 같은 원소끼리의 **라벨 교환** — 이완 중 순서가 바뀌면 없던 변위가 생긴다
+#  cc333 의 `1.240 Å` 블로커와 `107/107 원자 이동` 은 (a) 의 전형적 지문이다.
+#  이 절은 (a)·(b) 를 뺀 **잔여 변위**를 내서, 비국소 이완이 진짜인지 가른다.
+FAR_FIELD_R_A = 6.0        # 이 거리 밖을 far-field 로 본다 (홉 중점 기준)
+ARTIFACT_TOL_A = 0.05      # far-field 잔여가 이 밑이면 겉보기 변위는 인공물이었다
+REAL_TOL_A = 0.30          # 이 위면 정렬로 설명 안 된다 = 실제 비국소 이완
+
+
+def _optimal_pbc_translation(first, last, cell, skip=(), iters=80):
+    """두 좌표 집합을 잇는 최적 강체 병진 (성분별 중앙값 고정점).
+
+    중앙값을 쓰는 이유: 진짜로 움직인 소수 원자(뛰는 Li·재배열 Nd)에 끌려가지 않는다.
+    평균을 쓰면 그 원자들이 병진 추정을 오염시켜, 빼야 할 것을 못 빼고
+    빼면 안 되는 것을 빼게 된다.
+    """
+    sk = set(skip)
+    idx = [i for i in range(len(first)) if i not in sk]
+    t = [0.0, 0.0, 0.0]
+    conv = False
+    for _ in range(iters):
+        d = [min_image([last[i][1][k] - first[i][1][k] - t[k] for k in range(3)], cell)
+             for i in idx]
+        med = [sorted(v[k] for v in d)[len(d) // 2] for k in range(3)]
+        if max(abs(x) for x in med) < 1e-9:
+            conv = True
+            break
+        t = [t[k] + med[k] for k in range(3)]
+    return t, conv
+
+
+def _assign_by_element(first, last, cell, shift):
+    """원소별 최소변위 대응 → (match, n_reassigned, method).
+
+    match[i] = last 쪽 인덱스. 같은 원소 안에서만 짝을 짓는다.
+    """
+    import math as _m
+    groups = {}
+    for i, (s, _) in enumerate(first):
+        groups.setdefault(s, [[], []])[0].append(i)
+    for j, (s, _) in enumerate(last):
+        if s not in groups:
+            groups[s] = [[], []]
+        groups[s][1].append(j)
+
+    def cost(i, j):
+        d = min_image([last[j][1][k] - first[i][1][k] - shift[k] for k in range(3)], cell)
+        return _m.sqrt(sum(x * x for x in d))
+
+    try:
+        from scipy.optimize import linear_sum_assignment as _lsa
+        import numpy as _np
+        method = "hungarian(scipy)"
+    except Exception:
+        _lsa, method = None, "greedy-global"
+
+    match, nre = {}, 0
+    for s, (ii, jj) in groups.items():
+        if len(ii) != len(jj):
+            return None, None, f"⛔ 원소 {s} 개수가 다르다 ({len(ii)} vs {len(jj)})"
+        if _lsa is not None:
+            C = _np.array([[cost(i, j) for j in jj] for i in ii], float)
+            r, c = _lsa(C)
+            for a, b in zip(r, c):
+                match[ii[a]] = jj[b]
+        else:
+            pairs = sorted(((cost(i, j), i, j) for i in ii for j in jj))
+            ui, uj = set(), set()
+            for _c, i, j in pairs:
+                if i in ui or j in uj:
+                    continue
+                match[i] = j
+                ui.add(i)
+                uj.add(j)
+    for i, j in match.items():
+        if i != j:
+            nre += 1
+    return match, nre, method
+
+
+def align_report(first, last, cell, far_r=FAR_FIELD_R_A):
+    """정렬(병진 제거 + 라벨 재대응) 뒤의 잔여 변위 보고서.
+
+    ⛔ 이 함수가 **못 하는 것**
+      · 공간군 **회전·반사** 연산은 시도하지 않는다 — 병진과 라벨 교환만 뺀다.
+        두 끝점이 회전으로 연결돼 있으면 그 성분이 잔여 변위로 남아 '실제'로 오판된다.
+      · 잔여 변위가 **물리인지 이완 미수렴 표류인지 못 가른다.** 수렴 여부는 호출자가
+        relax.out 에서 확인해 같이 찍어야 한다 (align_endpoints 가 그렇게 한다).
+      · 홉 원자를 '가장 크게 움직인 원자' 로 잡는다 — 진짜 홉이 아니어도 그렇게 잡힌다.
+      · far-field 원자가 없으면(작은 셀) **판정하지 않고 그렇게 말한다.**
+    """
+    import math as _m
+    n = len(first)
+    if n != len(last) or n == 0:
+        return {"error": "⛔ 원자 수가 다르거나 0 이다"}
+    if sorted(s for s, _ in first) != sorted(s for s, _ in last):
+        return {"error": "⛔ 두 끝점의 원소 구성이 다르다"}
+
+    def _nrm(v):
+        return _m.sqrt(sum(x * x for x in v))
+
+    raw = [_nrm(min_image([last[i][1][k] - first[i][1][k] for k in range(3)], cell))
+           for i in range(n)]
+    hop = max(range(n), key=lambda i: raw[i])
+
+    shift, tconv = _optimal_pbc_translation(first, last, cell, skip=(hop,))
+    match, nre, method = _assign_by_element(first, last, cell, shift)
+    if match is None:
+        return {"error": method}
+
+    res = [_nrm(min_image([last[match[i]][1][k] - first[i][1][k] - shift[k]
+                           for k in range(3)], cell)) for i in range(n)]
+    hop2 = max(range(n), key=lambda i: res[i])
+    d_hop = min_image([last[match[hop2]][1][k] - first[hop2][1][k] - shift[k]
+                       for k in range(3)], cell)
+    ctr = [first[hop2][1][k] + d_hop[k] / 2.0 for k in range(3)]
+    dist = [_nrm(min_image([first[i][1][k] - ctr[k] for k in range(3)], cell))
+            for i in range(n)]
+
+    far = [i for i in range(n) if i != hop2 and dist[i] > far_r]
+    ff = max((res[i] for i in far), default=None)
+    out = {
+        "n_atoms": n,
+        "translation_A": [round(x, 4) for x in shift],
+        "translation_norm_A": round(_nrm(shift), 4),
+        "translation_converged": tconv,
+        "assignment": method,
+        "n_relabeled": nre,
+        "hop_atom": {"index_raw": hop, "index_aligned": hop2,
+                     "element": first[hop2][0],
+                     "raw_A": round(raw[hop], 4), "aligned_A": round(res[hop2], 4)},
+        "raw_max_excl_hop_A": round(max((raw[i] for i in range(n) if i != hop), default=0.0), 4),
+        "aligned_max_excl_hop_A": round(max((res[i] for i in range(n) if i != hop2),
+                                            default=0.0), 4),
+        "far_field_R_A": far_r,
+        "n_far_field": len(far),
+        "far_field_max_A": None if ff is None else round(ff, 4),
+    }
+    # 거리 구간별 잔여 (비국소성이 실제면 far-field 까지 꼬리가 남는다)
+    bins, edges = [], [2.0, 4.0, 6.0, 8.0, 1e9]
+    lo = 0.0
+    for hi in edges:
+        sel = [res[i] for i in range(n) if i != hop2 and lo <= dist[i] < hi]
+        if sel:
+            bins.append({"r_A": f"{lo:.0f}–{'∞' if hi > 1e8 else f'{hi:.0f}'}",
+                         "n": len(sel), "max_A": round(max(sel), 4),
+                         "median_A": round(sorted(sel)[len(sel) // 2], 4)})
+        lo = hi
+    out["by_distance"] = bins
+
+    if ff is None:
+        out["verdict"] = "판정불가"
+        out["verdict_text"] = (f"⚠ 홉 중점에서 {far_r} Å 밖에 원자가 없다 — 이 셀로는 "
+                               f"far-field 를 볼 수 없다. --far_r 를 줄이거나 큰 셀이 필요하다.")
+    elif ff <= ARTIFACT_TOL_A:
+        out["verdict"] = "인공물"
+        out["verdict_text"] = (f"❌ 정렬 뒤 far-field 최대가 {ff:.3f} Å ≤ {ARTIFACT_TOL_A} — "
+                               f"겉보기 변위는 **병진/라벨 인공물**이었다. "
+                               f"비국소 이완의 증거가 아니다.")
+    elif ff >= REAL_TOL_A:
+        out["verdict"] = "실제"
+        out["verdict_text"] = (f"✅ 정렬 뒤에도 far-field 가 {ff:.3f} Å ≥ {REAL_TOL_A} 남는다 — "
+                               f"병진·라벨로 설명되지 않는다. (다만 이완 미수렴 표류는 "
+                               f"이 도구가 못 가른다 — 수렴 여부를 같이 볼 것)")
+    else:
+        out["verdict"] = "회색"
+        out["verdict_text"] = (f"⚠ far-field 최대 {ff:.3f} Å 이 {ARTIFACT_TOL_A}–{REAL_TOL_A} "
+                               f"사이다 — 어느 쪽도 주장하지 않는다.")
+    return out
+
+
+def align_endpoints(work, tag, source="in", far_r=FAR_FIELD_R_A, allow_unconverged=True):
+    """P0-1 진단: 두 끝점의 겉보기 변위에서 병진·라벨을 뺀다.
+
+    source="in"  → 갓 지은 좌표 (relax.in)   · source="out" → 이완 좌표 (relax.out)
+    **둘 다 돌려서 비교하는 것이 이 도구의 용법**이다: in 이 깨끗한데 out 이 크면
+    그 차이는 이완(또는 이완 표류)에서 온 것이다.
+    """
+    d = os.path.join(work, tag)
+    got, conv = {}, {}
+    for nm in ("ep_initial", "ep_final"):
+        ed = endpoint_dir(d, nm)
+        if source == "in":
+            p = os.path.join(ed, "relax.in")
+            if not os.path.isfile(p):
+                return 1, f"⛔ 없음: {p}"
+            got[nm], conv[nm] = parse_input_positions(p), None
+        else:
+            rows, err, info = read_relaxed(os.path.join(ed, "relax.out"), allow_unconverged)
+            if rows is None:
+                return 1, f"⛔ {nm}: {err}"
+            got[nm], conv[nm] = rows, info.get("converged")
+        got[nm + "_dir"] = ed
+    cell = parse_cell(os.path.join(endpoint_dir(d, "ep_initial"), "relax.in"))
+    cell2 = parse_cell(os.path.join(endpoint_dir(d, "ep_final"), "relax.in"))
+    if cell is None:
+        return 1, "⛔ CELL_PARAMETERS 를 못 읽었다"
+    if cell2 and max(abs(cell[i][k] - cell2[i][k]) for i in range(3) for k in range(3)) > 1e-6:
+        return 1, "⛔ 두 끝점의 셀이 다르다 — 이 진단은 같은 셀에서만 뜻이 있다"
+
+    rep = align_report(got["ep_initial"], got["ep_final"], cell, far_r)
+    if "error" in rep:
+        return 1, rep["error"]
+    rep["source"] = source
+    rep["endpoint_dirs"] = [got["ep_initial_dir"], got["ep_final_dir"]]
+    rep["relax_converged"] = {k: conv[k] for k in ("ep_initial", "ep_final")}
+
+    L = [f"■ 끝점 정렬 진단 — {tag} (source=relax.{source})",
+         f"   끝점: {os.path.basename(got['ep_initial_dir'])} · "
+         f"{os.path.basename(got['ep_final_dir'])}"]
+    if source == "out":
+        bad = [k for k, v in conv.items() if v is False]
+        if bad:
+            L.append(f"   ⛔ **이완 미수렴**: {', '.join(bad)} — 아래 잔여 변위에는 "
+                     f"미수렴 표류가 섞여 있다. 이 도구는 그것을 못 가른다.")
+    L += [f"   강체 병진 제거: |t| = {rep['translation_norm_A']} Å "
+          f"{'(수렴)' if rep['translation_converged'] else '(⚠ 미수렴)'}",
+          f"   라벨 재대응: {rep['n_relabeled']} 개 ({rep['assignment']})",
+          f"   홉 원자: {rep['hop_atom']['element']} "
+          f"raw {rep['hop_atom']['raw_A']} → 정렬 {rep['hop_atom']['aligned_A']} Å",
+          f"   홉 제외 최대: raw {rep['raw_max_excl_hop_A']} → "
+          f"**정렬 {rep['aligned_max_excl_hop_A']}** Å",
+          "   거리별 잔여 [Å]:"]
+    for b in rep["by_distance"]:
+        L.append(f"     r {b['r_A']:>6}  n={b['n']:<4} 중앙 {b['median_A']:<8} 최대 {b['max_A']}")
+    L += [f"   far-field(>{far_r} Å, n={rep['n_far_field']}) 최대 = {rep['far_field_max_A']} Å",
+          "", "   " + rep["verdict_text"]]
+    op = os.path.join(d, f"align_report_{source}.json")
+    try:
+        json.dump(rep, open(op, "w", encoding="utf-8"), ensure_ascii=False, indent=2)
+        L.append(f"   → {op}")
+    except OSError:
+        pass
+    return 0, "\n".join(L)
+
+
+def selftest_align():
+    """정렬 진단 selftest — **음성 경로 포함**.
+
+    음성 경로가 핵심이다: 강체 병진·라벨 교환처럼 *물리가 아닌* 겉보기 변위를
+    이 도구가 실제로 걷어내는지. 양성만 있으면 통과해도 아무것도 보증 못 한다.
+    """
+    import math as _m
+    ok = True
+
+    def chk(c, m):
+        nonlocal ok
+        ok &= bool(c)
+        _p(f"  {_OK if c else _NG} {m}")
+
+    A, N = 5.19, 3
+    cell = [[A * N, 0, 0], [0, A * N, 0], [0, 0, A * N]]
+    base = []
+    for i in range(N):
+        for j in range(N):
+            for k in range(N):
+                base.append(("Nd", [i * A, j * A, k * A]))
+                base.append(("Li", [i * A + A / 2, j * A, k * A]))
+    hop_i = next(i for i, (s, p) in enumerate(base) if s == "Li")
+
+    def moved(shift=(0, 0, 0), noise=0.0, far_move=0, swap=None, hop=3.667):
+        out = []
+        for i, (s, p) in enumerate(base):
+            q = [p[k] + shift[k] + (noise if (i + k) % 3 == 0 else -noise) for k in range(3)]
+            out.append((s, q))
+        out[hop_i] = (out[hop_i][0], [out[hop_i][1][0] + hop] + out[hop_i][1][1:])
+        if far_move:
+            ctr = base[hop_i][1]
+            far = sorted((i for i, (s, p) in enumerate(base)
+                          if s == "Nd" and i != hop_i),
+                         key=lambda i: -_m.sqrt(sum((base[i][1][k] - ctr[k]) ** 2
+                                                    for k in range(3))))[:far_move]
+            for i in far:
+                out[i] = (out[i][0], [out[i][1][0] + 1.12, out[i][1][1], out[i][1][2]])
+        if swap:
+            a, b = swap
+            out[a], out[b] = (out[a][0], out[b][1]), (out[b][0], out[a][1])
+        return out
+
+    # ── 음성 ① 순수 강체 병진 (|t| = 1.10 Å) — 인공물로 판정해야 한다 ──
+    r = align_report(base, moved(shift=(0.6, 0.6, 0.7), noise=0.005), cell)
+    chk(r["raw_max_excl_hop_A"] > 1.0, "[정렬·음성] 병진 전에는 raw 가 1 Å 넘게 보인다")
+    chk(abs(r["translation_norm_A"] - 1.1) < 0.05, "[정렬·음성] 병진 |t|≈1.10 Å 를 찾는다")
+    chk(r["verdict"] == "인공물",
+        f"[정렬·음성] 순수 병진은 **인공물**로 판정 (far {r['far_field_max_A']})")
+
+    # ── 음성 ② 같은 원소 라벨 교환 — 재대응으로 사라져야 한다 ──
+    nds = [i for i, (s, _) in enumerate(base) if s == "Nd"]
+    r = align_report(base, moved(swap=(nds[0], nds[-1])), cell)
+    chk(r["n_relabeled"] >= 2 and r["verdict"] == "인공물",
+        f"[정렬·음성] 라벨 교환은 재대응으로 사라진다 (재대응 {r['n_relabeled']}개)")
+
+    # ── 양성 ③ 진짜 far-field 이완 6개 × 1.12 Å — 살아남아야 한다 ──
+    r = align_report(base, moved(far_move=6), cell)
+    chk(r["verdict"] == "실제" and r["far_field_max_A"] > 1.0,
+        f"[정렬·양성] 실제 비국소 이완은 살아남는다 (far {r['far_field_max_A']})")
+
+    # ── 양성 ④ 병진 + 진짜 이완이 섞여도 진짜만 남는다 (제일 현실적) ──
+    r = align_report(base, moved(shift=(0.6, 0.6, 0.7), far_move=6), cell)
+    chk(r["verdict"] == "실제" and abs(r["translation_norm_A"] - 1.1) < 0.05,
+        f"[정렬·양성] 병진+이완 혼합에서 병진만 빠진다 (|t|={r['translation_norm_A']}, "
+        f"far {r['far_field_max_A']})")
+
+    # ── 가드 ⑤ 원소 구성이 다르면 거부 ──
+    bad = [(s if i else "Xx", p) for i, (s, p) in enumerate(base)]
+    chk("error" in align_report(base, bad, cell), "[정렬·가드] 원소 구성이 다르면 거부")
+
+    # ── 가드 ⑥ far-field 원자가 없으면 판정하지 않는다 ──
+    r = align_report(base, moved(far_move=6), cell, far_r=100.0)
+    chk(r["verdict"] == "판정불가", "[정렬·가드] far-field 가 비면 판정불가라고 말한다")
+    return ok
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--work", default="/data/work/runs/sei_neb_v2_cc333")
@@ -1215,10 +1532,29 @@ def main():
     ap.add_argument("--scan", default=None,
                     help="반경 스캔 (예: '3.5,4,5,6'). 각 반경으로 입력 세트를 만든다 — "
                          "두 번 연속 |ΔEa| ≤ 0.02~0.03 eV 면 반경 수렴")
+    ap.add_argument("--align_check", action="store_true",
+                    help="P0-1(리뷰 I): 두 끝점 변위에서 **강체 병진·라벨 교환을 빼고** "
+                         "남는 잔여를 낸다 — 비국소 이완이 진짜인지 가른다")
+    ap.add_argument("--align_source", choices=("in", "out", "both"), default="both",
+                    help="in=갓 지은 좌표 · out=이완 좌표 · both=둘 다(권장)")
+    ap.add_argument("--far_r", type=float, default=FAR_FIELD_R_A,
+                    help=f"far-field 기준 거리 [Å] (기본 {FAR_FIELD_R_A})")
     ap.add_argument("--selftest", action="store_true")
     a = ap.parse_args()
     if a.selftest:
-        return selftest()
+        rc = selftest()
+        return 0 if (selftest_align() and rc == 0) else 1
+    if a.align_check:
+        srcs = ("in", "out") if a.align_source == "both" else (a.align_source,)
+        rc = 0
+        for s in srcs:
+            # ⚠ 미수렴 좌표를 **일부러** 읽는다 — 미수렴 표류를 보는 것이 이 진단의 목적이다.
+            #   대신 보고서가 미수렴을 ⛔ 로 명시한다 (조용히 쓰지 않는다).
+            r, m = align_endpoints(a.work, a.tag, s, a.far_r, allow_unconverged=True)
+            print(m)
+            print()
+            rc = rc or r
+        return rc
     if a.relax_radius is not None and a.relax_radius <= 0:
         # ⛔ 리뷰 F6 — 진리값으로 분기하면 0 이 전이완(수일짜리)으로 조용히 샌다
         print("⛔ --relax_radius 는 0 보다 커야 한다 (고정셸 반경 [Å]). "

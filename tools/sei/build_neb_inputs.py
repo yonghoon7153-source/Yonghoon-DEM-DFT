@@ -771,7 +771,13 @@ def build(tag, path, disp, a, pool):
             # CI = climbing image. 안장점을 직접 올라타므로 barrier 가 이미지 격자에
             # 안 걸린다 — 'auto' 는 첫 몇 스텝 뒤 최고점 이미지를 자동 지정한다.
             f"  CI_scheme       = '{a.ci_scheme}'",
-            (f"  restart_mode    = 'restart'" if a.ci_scheme != "no-CI" and a.restart
+            # ⛔ 2026-08-27 (교차리뷰 I · P0-3) — 옛 조건은 `ci_scheme != "no-CI" and restart`
+            #   였다. 즉 **중단된 no-CI 런을 이어달리려고 --restart 를 줘도 조용히
+            #   from_scratch 로 써서** 체크포인트(prefix.path)를 두고 처음부터 돌았다.
+            #   (--restart 를 "2단계 CI 전용" 으로만 본 설계였는데, 실제 용례는 둘이다:
+            #    ① no-CI 중단 재개  ② no-CI 수렴본 위에 CI. 둘 다 restart_mode='restart' 다.)
+            #   러너(run_sei_neb.sh)는 반대로 "*.path 가 있으면 이어진다" 고 안내하고 있었다.
+            ("  restart_mode    = 'restart'" if a.restart
              else "  restart_mode    = 'from_scratch'"),
             f"  path_thr        = {a.path_thr}",
             "/", "END_PATH_INPUT", "BEGIN_ENGINE_INPUT",
@@ -801,6 +807,19 @@ def build(tag, path, disp, a, pool):
     for v in at.cell.array:
         body.append("  %16.10f %16.10f %16.10f" % tuple(v))
     body += ["END_ENGINE_INPUT", "END", ""]
+    # ⛔ 2026-08-27 (교차리뷰 I · P0-3) — restart 는 **체크포인트가 실재할 때만** 뜻이 있다.
+    #   QE 는 prefix.path 없이 restart_mode='restart' 를 받으면 조용히 처음부터 도는데,
+    #   그러면 우리는 "이어달린다" 고 믿으면서 몇 주를 다시 태운다. 여기서 먼저 막는다.
+    if a.restart:
+        _pf = os.path.join(d, f"{tag}.path")
+        info["restart_checkpoint"] = _pf
+        info["restart_checkpoint_exists"] = os.path.isfile(_pf)
+        if not info["restart_checkpoint_exists"]:
+            info["skip"] = (f"⛔ --restart 인데 체크포인트가 없다: {_pf}\n"
+                            f"      restart_mode='restart' 는 이 파일이 있어야 이어달린다. "
+                            f"처음부터 도는 것이 맞다면 --restart 를 빼라 "
+                            f"(빼면 from_scratch 로 명시된다).")
+            return info
     open(os.path.join(d, "neb.in"), "w").write("\n".join(body))
     # ★ 회수기가 대칭 게이트를 켤지 말지 여기서 판단한다 (위 li_orbits 주석 참조).
     #   지문 인자는 한 번만 만든다 — 해시와 payload 가 **같은 재료**여야 diff 가 의미 있다.
@@ -1300,7 +1319,9 @@ def main():
                     help="QE 권고: **no-CI 로 먼저 수렴**시킨 뒤 restart + auto. "
                          "옛 기본값 auto 는 처음부터 CI 를 켠 것이라 권고와 어긋났다")
     ap.add_argument("--restart", action="store_true",
-                    help="restart_mode='restart' (2단계 CI 에서 쓴다)")
+                    help="restart_mode='restart'. 용례 둘: ① 중단된 no-CI 런 이어달리기 "
+                         "② no-CI 수렴본 위에 CI. **<tag>.path 가 없으면 거부한다** "
+                         "(옛 판은 no-CI 면 이 플래그를 조용히 무시했다 — 리뷰 I P0-3)")
     ap.add_argument("--allow_unrelaxed_endpoints", action="store_true",
                     help="⚠ vacancy 끝점 이완 없이 강행 — Ea=0 사고의 미해결 절반. 디버그 전용")
     ap.add_argument("--vacancy_charge", choices=("minus1", "neutral"), default="minus1",

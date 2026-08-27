@@ -33,7 +33,7 @@ ts(){ echo "[$(date +%H:%M:%S)] $*"; }
 #   호출 직후 러너가 `> neb.out` 으로 출력을 덮어쓰므로, **그 전에** 이력을 떠 놓고
 #   restart_mode 를 맞춘다. 조건이 안 맞으면 아무것도 건드리지 않는다.
 prep_resume() {
-  local _NPATH _NITER _BAK _RM
+  local _NPATH _NITER _BAK _RM _BK _NB
   _NPATH=$(ls ./*.path 2>/dev/null | head -1)
   # ⚠ 스텝 수는 'activation energy (->)' 줄로 센다. neb.out 의 반복 머리글은
   #   '---- iteration N ----' 라 '^ *iteration' 로는 **한 줄도 안 잡힌다**
@@ -45,9 +45,21 @@ prep_resume() {
   _NITER=$(grep -ac "activation energy (->)" neb.out 2>/dev/null)
   [ -n "$_NITER" ] || _NITER=0          # 파일 자체가 없으면 빈 문자열
   [ -n "$_NPATH" ] || return 0
-  [ "${_NITER:-0}" -gt 0 ] || return 0
-  _BAK="neb.out.iter${_NITER}_$(date +%m%d)"
-  cp neb.out "$_BAK" 2>/dev/null && ts "  ⭐ 이어달리기: 이력 ${_NITER}스텝 보존 → $_BAK"
+  if [ "${_NITER:-0}" -gt 0 ]; then
+    _BAK="neb.out.iter${_NITER}_$(date +%m%d)"
+    cp neb.out "$_BAK" 2>/dev/null && ts "  ⭐ 이어달리기: 이력 ${_NITER}스텝 보존 → $_BAK"
+  else
+    # ⛔ 2026-08-27 (교차리뷰 I · P0-3) — 세 번째 구멍. neb.out 이 **옮겨졌으면**
+    #   (ci 단계의 `mv neb.out neb.out.noCI`, 손백업) 이력이 0 으로 보인다. 그때
+    #   손을 떼면 neb.in 의 from_scratch 가 그대로 서서 **.path 를 두고 처음부터** 돈다.
+    #   → 백업에 이력이 있으면 체크포인트를 살린다. 새 백업은 안 만든다(덮어쓸 게 없다).
+    _BK=$(ls -t ./neb.out.iter* ./neb.out.noCI ./neb.out.bak* 2>/dev/null | head -1)
+    [ -n "$_BK" ] || return 0
+    _NB=$(grep -ac "activation energy (->)" "$_BK" 2>/dev/null)
+    [ -n "$_NB" ] || _NB=0
+    [ "$_NB" -gt 0 ] || return 0
+    ts "  ⭐ neb.out 에 이력이 없지만 ${_BK#./} 에 ${_NB}스텝 있다 — 체크포인트를 살린다"
+  fi
   _RM=$(sed -n "s/.*restart_mode[[:space:]]*=[[:space:]]*'\{0,1\}\([a-z_]*\).*/\1/p" neb.in | head -1)
   if [ "$_RM" = "restart" ]; then
     ts "  ✓ restart_mode 이미 'restart'"
@@ -117,6 +129,20 @@ if [ "${1:-}" = "--selftest" ]; then
     touch z.path; _mkout 7 neb.out; _in "'restart'" > neb.in; prep_resume >/dev/null )
   [ -z "$(ls "$_T/e"/neb.in.bak_* 2>/dev/null)" ] && say "✓" "⑥ 이미 restart → neb.in 백업 안 만듦" || say "✗" "⑥ 쓸데없이 neb.in 을 백업했다"
   [ -f "$_T/e/neb.out.iter7_$(date +%m%d)" ] && say "✓" "⑥ 그래도 이력은 보존" || say "✗" "⑥ 이력을 안 지켰다"
+  # ⑦ 양성(리뷰 I P0-3): neb.out 이 옮겨졌어도 백업에 이력이 있으면 restart 를 맞춘다
+  mkdir -p "$_T/g"; ( cd "$_T/g"
+    touch li3nd.path; _mkout 30 neb.out.noCI; _in "'from_scratch'" > neb.in; prep_resume >/dev/null )
+  grep -q "restart_mode = 'restart'" "$_T/g/neb.in" \
+    && say "✓" "⑦ neb.out 부재 + 백업 이력 → restart 로 맞춘다" \
+    || say "✗" "⑦ 백업에 이력이 있는데 from_scratch 로 뒀다 (.path 를 버린다)"
+  [ -z "$(ls "$_T/g"/neb.out.iter* 2>/dev/null)" ] && say "✓" "⑦ 새 백업은 안 만든다" || say "✗" "⑦ 쓸데없이 백업했다"
+  # ⑦' 음성: 백업이 있어도 **이력이 0** 이면 손대지 않는다
+  mkdir -p "$_T/h"; ( cd "$_T/h"
+    touch li3nd.path; printf '     Program NEB starts\n' > neb.out.noCI
+    _in "'from_scratch'" > neb.in; prep_resume >/dev/null 2>"$_T/h.err" )
+  grep -q "restart_mode = 'from_scratch'" "$_T/h/neb.in" \
+    && say "✓" "⑦' 백업에 이력 0 → 손대지 않음" || say "✗" "⑦' 이력이 없는데 restart 로 바꿨다"
+  [ ! -s "$_T/h.err" ] && say "✓" "⑦'' 조용히 지나간다" || say "✗" "⑦'' stderr: $(head -1 "$_T/h.err")"
   rm -rf "$_T"
   [ "$_ok" = 1 ] && { echo "  ✅ selftest 통과"; exit 0; } || { echo "  ⛔ selftest 실패"; exit 1; }
 fi
