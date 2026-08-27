@@ -166,6 +166,25 @@ describe('DRT 화면', () => {
     expect(screen.queryByText(/Ω·cm²/)).toBeNull()
   })
 
+  /** 문헌의 γ 그림은 대개 `f (Hz)` 다 (봉우리에 F1·F2… 이름을 붙이는 그림).
+   *  같은 그림을 좌우로 뒤집은 것이라 봉우리 높이·넓이는 그대로다. */
+  it('가로축을 f (Hz) 로 바꾸면 클립보드 머리말도 따라간다', async () => {
+    window.localStorage.clear()
+    installFetch((url) =>
+      path(url) === '/api/eis/spectra/1/drt/sweep' ? sweep(2) : {})
+    render(<DrtPanel spectrumId={1} />)
+
+    const picker = within(await screen.findByRole('group', { name: '가로축' }))
+    expect(picker.getByRole('button', { name: 'log₁₀ τ' }).className)
+      .toContain('on')
+    // 안 보이는 축을 복사할 수 있으면 방금 본 것을 복사했다고 믿는다.
+    expect(screen.getByRole('button', { name: /γ\(τ\)/ })).toBeInTheDocument()
+
+    await userEvent.click(picker.getByRole('button', { name: 'f (Hz)' }))
+    expect(screen.getByRole('button', { name: /γ\(f\)/ })).toBeInTheDocument()
+    expect(screen.queryByRole('button', { name: /γ\(τ\)/ })).toBeNull()
+  })
+
   it('뺀 유도성 점을 말한다', async () => {
     installFetch((url) =>
       path(url) === '/api/eis/spectra/1/drt/sweep' ? sweep(2) : {})
@@ -204,24 +223,28 @@ function fireRange(input: HTMLInputElement, value: number) {
 describe('τ 구간 이름', () => {
   it('τ 를 주파수와 그 시간대의 이름으로 옮긴다', () => {
     // 관례적인 구간이고 판정이 아니다 — 문장이 "…대" 로 끝난다.
-    expect(tauBand(-6)).toContain('kHz')
-    expect(tauBand(-6)).toContain('벌크')
-    expect(tauBand(-4)).toContain('입계')
-    expect(tauBand(-2)).toContain('전하이동')
-    expect(tauBand(0)).toContain('전송선')
-    expect(tauBand(2)).toContain('측정 대역 끝')
+    expect(tauBand(-6, 'tau')).toContain('kHz')
+    expect(tauBand(-6, 'tau')).toContain('벌크')
+    expect(tauBand(-4, 'tau')).toContain('입계')
+    expect(tauBand(-2, 'tau')).toContain('전하이동')
+    expect(tauBand(0, 'tau')).toContain('전송선')
+    expect(tauBand(2, 'tau')).toContain('측정 대역 끝')
   })
 
   it('τ 와 주파수는 ω τ = 1 로 이어져 있다', () => {
     // log τ = -2 → τ=0.01 s → f = 1/(2π·0.01) ≈ 15.9 Hz
-    expect(tauBand(-2)).toContain('15.9 Hz')
+    expect(tauBand(-2, 'tau')).toContain('15.9 Hz')
   })
 
-  it('눈금이 곧 자릿수다 — log₁₀ 을 쓰는 이유가 그것이다', () => {
-    // −4 는 100 µs (입계 대) 다.  ln 축이었다면 같은 −4 가 18 ms 라 두 대를
-    // 건너뛴다.  그래서 축을 하나로 줄였다 (`lib/tauaxis.ts`) — 두 화면이
-    // 다른 축으로 그려질 길을 없앤다.
-    expect(tauBand(-4)).toContain('1.6 kHz')
-    expect(tauBand(-4)).toContain('입계')
+  it('같은 숫자라도 축이 다르면 다른 대(帶)다 — 그래서 축을 반드시 받는다', () => {
+    // τ 축의 −4 는 100 µs (입계 대), f 축의 −4 는 0.1 mHz (측정 대역 끝) 다.
+    // 기본값을 두면 축을 바꾼 화면이 조용히 다른 물리를 적는다.
+    expect(tauBand(-4, 'tau')).toContain('1.6 kHz')
+    expect(tauBand(-4, 'tau')).toContain('입계')
+    expect(tauBand(-4, 'f')).toContain('측정 대역 끝')
+
+    // f 축은 눈금이 곧 주파수다 — 3 이면 1 kHz 이고, τ 로는 159 µs 다.
+    expect(tauBand(3, 'f')).toContain('1.0 kHz')
+    expect(tauBand(3, 'f')).toContain('입계')
   })
 })

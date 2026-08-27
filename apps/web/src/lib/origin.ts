@@ -500,12 +500,18 @@ export function fitParametersTsv(
  */
 export function drtTsv(
   drt: { tau_s: number[]; gamma_ohm: number[] },
-  /** γ 의 눈금 바꾸기 (Ω → Ω·cm²).  **τ 는 안 탄다** — 시간은 면적과 무관하다.
-   *  화면이 Ω·cm² 로 그리고 있으면 붙여 넣는 열도 그것이라야 한다. */
+  /** γ 의 눈금 바꾸기 (Ω → Ω·cm²).  **가로는 안 탄다** — 시간도 주파수도
+   *  면적과 무관하다.  화면이 Ω·cm² 로 그리고 있으면 붙여 넣는 열도 그것이라야
+   *  한다. */
   scale: (value: number) => number = (value) => value,
+  /** τ 를 가로 열의 값으로.  기본은 τ 그대로(초)이고, f 축으로 보고 있으면
+   *  Hz 를 낸다 — **날 것으로** 낸다.  로그로 내보내면 워크시트에서 되돌릴 수
+   *  없고, Origin 에서 축을 로그로 잡는 것은 한 번의 클릭이다. */
+  x: (tauSeconds: number) => number = (tauSeconds) => tauSeconds,
 ): string {
   if (!drt.tau_s.length) return ''
-  return tsvColumns([drt.tau_s.map(cell), drt.gamma_ohm.map((value) => cell(scale(value)))])
+  return tsvColumns([drt.tau_s.map((tau) => cell(x(tau))),
+                     drt.gamma_ohm.map((value) => cell(scale(value)))])
 }
 
 /** pOCV: 용량과 전압.  충전과 방전을 `--` 한 줄로 갈라 쌓는다. */

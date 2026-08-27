@@ -19,8 +19,11 @@ import { num, seriesColor } from '../lib/format'
 import { perArea } from '../lib/areanorm'
 import { drtTsv } from '../lib/origin'
 import { nearestLambdaIndex, rememberedLambda, rememberLambda } from '../lib/drtlambda'
-import { useAsync } from '../lib/hooks'
-import { TAU_AXIS_LABEL, tauAxisValue, tauFromAxis } from '../lib/tauaxis'
+import { useAsync, useStickyState } from '../lib/hooks'
+import {
+  DRT_AXES, DRT_AXIS_KEY, type DrtAxis, decadeSplits, drtAxisLabel, drtAxisShort,
+  drtAxisTick, drtAxisValue, rawFromTau, tauFromAxis, validDrtAxis,
+} from '../lib/tauaxis'
 import type { Drt } from '../lib/types'
 
 /** 그 시간대에 무엇이 사는가 — **관례적인 구간**이고 판정이 아니다.
@@ -32,13 +35,12 @@ import type { Drt } from '../lib/types'
  */
 /** 축의 값을 주파수와 그 시간대의 이름으로.
  *
- *  가로축은 `log₁₀ τ` 하나다.  한때 `ln` 도 고를 수 있었고, 그때 이 함수는
- *  어느 축인지를 **반드시 받았다** — `-6` 은 `log₁₀` 에서 1 µs 이고 `ln` 에서
- *  2.5 ms 라, 축을 모르면 같은 눈금에 다른 물리를 적기 때문이다.  축이 하나로
- *  줄면서 그 위험도 없어졌다 (`lib/tauaxis.ts` 에 왜 줄였는지).
+ *  **어느 축인지 반드시 받는다 (기본값을 안 둔다).**  `−4` 는 τ 축에서 100 µs
+ *  (입계 대) 이고 f 축에서는 0.1 mHz — 측정 대역 끝의 아주 느린 확산이다.
+ *  기본값을 두면 축을 바꾼 화면이 **조용히 다른 물리를 적는다.**
  */
-export function tauBand(axisValue: number): string {
-  const tau = tauFromAxis(axisValue)
+export function tauBand(axisValue: number, axis: DrtAxis): string {
+  const tau = tauFromAxis(axis, axisValue)
   const hz = 1 / (2 * Math.PI * tau)
   const where = hz >= 1000 ? `${(hz / 1000).toFixed(1)} kHz`
     : hz >= 1 ? `${hz.toFixed(1)} Hz` : `${(hz * 1000).toFixed(1)} mHz`
@@ -135,17 +137,25 @@ export function DrtPanel({ spectrumId, area = null }: {
   // 받으면 안 나눈 수에 `Ω·cm²` 만 붙는 화면이 만들어진다.
   const zUnit = area ? 'Ω·cm²' : 'Ω'
 
+  //: 가로축.  `log₁₀ τ` 가 기본이고 `f (Hz)` 로 바꿀 수 있다 — 같은 그림을
+  //  좌우로 뒤집은 것이고, 문헌의 γ 그림은 대개 f 쪽이다 (`lib/tauaxis.ts`).
+  //  비교 화면과 **같은 열쇠**를 써서 두 화면이 같은 축으로 그린다.
+  const [storedAxis, setAxis] = useStickyState<DrtAxis>(DRT_AXIS_KEY, 'tau')
+  const axis = validDrtAxis(storedAxis)
+
   const series = useMemo<PlotSeries[]>(() => {
     if (!shown) return []
     return [{
       label: `γ(τ) · λ=${format(shown.regularisation)}`,
-      // 가로축은 log₁₀ τ 다.  τ 자체를 쓰면 여섯 자리가 한 점에 뭉친다.
-      x: shown.tau_s.map((value) => tauAxisValue(value)),
+      // 어느 쪽이든 좌표는 로그다.  τ 나 f 자체를 쓰면 여섯 자리가 한 점에
+      // 뭉친다.  f 축의 **눈금 글자**는 좌표가 아니라 주파수로 적는다
+      // (`drtAxisTick`) — `2` 가 아니라 `10²` 이라야 읽힌다.
+      x: shown.tau_s.map((value) => drtAxisValue(axis, value)),
       y: shown.gamma_ohm.map((value) => perArea(value, area)),
       color: seriesColor(0),
       width: 2,
     }]
-  }, [shown, area])
+  }, [shown, area, axis])
 
   if (sweep.error) {
     return (
@@ -258,13 +268,30 @@ export function DrtPanel({ spectrumId, area = null }: {
             그림" 쪽으로 밀고 그 분극을 그대로 보고하게 된다. */}
         <div className="tiny faint">{LAMBDA_NOTE}</div>
 
+        {/* 뒤집힌 그림이지 다른 그림이 아니다 — 봉우리의 높이와 넓이는 그대로,
+            좌우만 바뀐다 (γ 는 `d ln τ` 위의 밀도이고 `d ln τ = −d ln f`).
+            그래도 어느 축으로 보고 있는지가 보여야 봉우리 자리를 읽는다. */}
+        <div className="row" style={{ gap: 8, alignItems: 'center' }}>
+          <span className="tiny faint">가로축</span>
+          <div className="segmented" role="group" aria-label="가로축">
+            {DRT_AXES.map((one) => (
+              <button key={one} type="button" className={axis === one ? 'on' : ''}
+                      onClick={() => setAxis(one)}>
+                {drtAxisShort(one)}
+              </button>
+            ))}
+          </div>
+        </div>
+
         <Plot
           series={series}
-          xLabel={TAU_AXIS_LABEL}
+          xLabel={drtAxisLabel(axis)}
           yLabel={`γ (${zUnit})`}
           height={280}
           legend
-          describeX={(value) => tauBand(value)}
+          describeX={(value) => tauBand(value, axis)}
+          xTick={(value) => drtAxisTick(axis, value)}
+          xSplits={axis === 'f' ? decadeSplits : undefined}
         />
 
         <details className="tiny faint">
@@ -274,11 +301,15 @@ export function DrtPanel({ spectrumId, area = null }: {
 
         <CopyBar
           items={[{
-            label: 'γ(τ)',
+            label: axis === 'tau' ? 'γ(τ)' : 'γ(f)',
             // τ 를 그대로 낸다 -- 로그로 내보내면 워크시트에서 되돌릴 수 없다.
-            title: `τ (s) 와 γ (${zUnit}) 두 열 · 지금 보고 있는 λ 의 것`,
-            // 화면이 Ω·cm² 로 그리고 있으면 붙여 넣는 열도 Ω·cm² 다.
-            build: () => drtTsv(shown, (value) => perArea(value, area)),
+            title: `${axis === 'tau' ? 'τ (s)' : 'f (Hz)'} 와 γ (${zUnit}) `
+              + '두 열 · 지금 보고 있는 λ 의 것',
+            // 화면이 Ω·cm² 로 그리고 있으면 붙여 넣는 열도 Ω·cm² 다.  가로도
+            // **보고 있는 것**을 낸다 — 다만 로그가 아니라 날 것으로 (τ 초,
+            // f 헤르츠).  로그로 내보내면 워크시트에서 되돌릴 수 없다.
+            build: () => drtTsv(shown, (value) => perArea(value, area),
+                                (tau) => rawFromTau(axis, tau)),
           }]}
         />
 

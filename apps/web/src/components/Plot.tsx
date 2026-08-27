@@ -62,6 +62,15 @@ interface Props {
    *  사람이 매번 머릿속에서 τ → 주파수 → 그 시간대의 현상을 되짚어야 한다.
    *  판정이 아니라 관례적인 구간 이름이므로, 부르는 쪽이 그렇게 적는다. */
   describeX?: (x: number) => string | null
+  /** 가로 눈금에 적을 글자.  **좌표와 눈금이 다른 축**에 쓴다.
+   *
+   *  DRT 를 주파수로 볼 때가 그렇다: 좌표는 `log₁₀ f` 여야 (그래야 여섯 자리가
+   *  고르게 퍼진다) 하는데, 사람이 읽어야 하는 것은 `2` 가 아니라 `10²` 이다.
+   *  숫자를 그대로 두면 눈금이 지수라는 사실이 축 이름에만 남는다. */
+  xTick?: (value: number) => string
+  /** 가로 눈금을 어디에 놓을까.  `xTick` 과 짝이다 — 자릿수 눈금을 쓰려면
+   *  눈금이 정수 자리에 떨어져야 `10^0.7` 같은 것이 안 나온다. */
+  xSplits?: (min: number, max: number) => number[]
   /** "y ≥ 0" 버튼을 붙인다 (나이퀴스트).
    *
    *  임피던스는 고주파 끝에서 −Z″ 가 음수로 내려간다 (측정선의 인덕턴스).
@@ -355,6 +364,8 @@ export function Plot({
   positiveFit = false,
   busy = false,
   describeX,
+  xTick,
+  xSplits,
 }: Props) {
   const [wrapRef, width] = useElementWidth<HTMLDivElement>()
   const plotRef = useRef<uPlot | null>(null)
@@ -511,6 +522,13 @@ export function Plot({
           labelSize: 28,
           labelGap: 4,
           stroke: text,
+          ...(xSplits
+            ? { splits: (_u: uPlot, _i: number, min: number, max: number) =>
+                  xSplits(min, max) }
+            : {}),
+          ...(xTick
+            ? { values: (_u: uPlot, splits: number[]) => splits.map(xTick) }
+            : {}),
           // A dotted grid stays behind the data instead of competing with it.
           grid: { stroke: grid, width: 1, dash: [1, 3] },
           ticks: { stroke: grid, width: 1, size: 4 },
@@ -938,7 +956,7 @@ export function Plot({
           <div className="tip-row">
             <span>{xAxis.name}</span>
             <b>
-              {num(readout.x)}
+              {xTick ? xTick(readout.x) : num(readout.x)}
               {xAxis.unit ? ` ${xAxis.unit}` : ''}
             </b>
           </div>

@@ -20,7 +20,10 @@ import { Alert, Card, Empty, Field, Spinner } from '../components/ui'
 import { api } from '../lib/api'
 import { num, seriesColor } from '../lib/format'
 import { useAsync, useStickyState } from '../lib/hooks'
-import { TAU_AXIS_LABEL, TAU_AXIS_SHORT, tauAxisValue } from '../lib/tauaxis'
+import {
+  DRT_AXES, DRT_AXIS_KEY, type DrtAxis, decadeSplits, drtAxisLabel, drtAxisShort,
+  drtAxisTick, drtAxisValue, validDrtAxis,
+} from '../lib/tauaxis'
 import { perArea } from '../lib/areanorm'
 import { Z_UNIT_KEY, type ZUnit, validZUnit, zUnitLabel } from '../lib/zunit'
 import { rememberedLambda } from '../lib/drtlambda'
@@ -117,6 +120,11 @@ export function EisCompare() {
   //  말이 축 이름에만 남고, 눈은 축까지 안 간다.
   const [storedUnit, setUnit] = useStickyState<ZUnit>(Z_UNIT_KEY, 'ohm')
   const unit = validZUnit(storedUnit, 'ohm')
+  //: DRT 가로축 — `log₁₀ τ` 인가 `f (Hz)` 인가.  상세 화면과 **같은 열쇠**를
+  //  쓴다: 둘은 같은 그림을 좌우로 뒤집은 것이라, 한쪽에서 τ 로 보다 다른
+  //  쪽에서 f 가 나오면 같은 봉우리가 반대쪽 끝에 있는 것처럼 보인다.
+  const [storedAxis, setAxis] = useStickyState<DrtAxis>(DRT_AXIS_KEY, 'tau')
+  const drtAxis = validDrtAxis(storedAxis)
   //: 어느 그림을 보고 있나.  Origin 클립보드가 이것을 따라간다 — 안 보이는
   //  그림을 복사할 수 있으면 사람은 방금 본 것을 복사했다고 믿는다.
   const [mode, setMode] = useState<Mode>('nyquist')
@@ -251,9 +259,9 @@ export function EisCompare() {
           // SOC 스캔이면 그 스윕이 어느 상태였는지.  `#3` 만으로는 순서밖에
           // 모르는데, 곡선을 읽는 사람이 보는 것은 순서가 아니라 SOC 다.
           note: (isScan(row) ? sweepAt(row) : '') || undefined,
-          // γ 는 log₁₀ τ 위에서 읽는 것이다 — 선형 τ 로 그리면 고주파 봉우리
+          // 어느 쪽이든 좌표는 로그다 — 선형 τ 로 그리면 고주파 봉우리
           // 열 개가 왼쪽 끝 한 점에 겹친다.
-          x: value.tau_s.map((tau) => tauAxisValue(tau)),
+          x: value.tau_s.map((tau) => drtAxisValue(drtAxis, tau)),
           y: value.gamma_ohm.map((gamma) => (area ? gamma * area : gamma)),
           color: seriesColor(rows.findIndex((one) => one.id === id)),
           width: 1.5,
@@ -298,7 +306,7 @@ export function EisCompare() {
         dash: [6, 4],
       }]
     })
-  }, [shown, fresh, rows, dropInductive, mode, drt.data, unit, areaOf, fitOf])
+  }, [shown, fresh, rows, dropInductive, mode, drt.data, unit, areaOf, fitOf, drtAxis])
 
   // 겹쳐 놓으면 한 스펙트럼의 유도성 꼬리가 다른 것들의 아크까지 납작하게
   // 만든다 — 세로 눈금은 하나이기 때문이다.  몇 점이 빠졌는지는 적는다.
@@ -408,6 +416,17 @@ export function EisCompare() {
               <button type="button" className={mode === 'drt' ? 'on' : ''}
                       onClick={() => setMode('drt')}>DRT</button>
             </div>
+            {/* DRT 를 볼 때만 뜬다 — 나이퀴스트에는 τ 축이 없다. */}
+            {mode === 'drt' ? (
+              <div className="segmented" role="group" aria-label="가로축">
+                {DRT_AXES.map((one) => (
+                  <button key={one} type="button" className={drtAxis === one ? 'on' : ''}
+                          onClick={() => setAxis(one)}>
+                    {drtAxisShort(one)}
+                  </button>
+                ))}
+              </div>
+            ) : null}
             <div className="segmented" role="group" aria-label="단위">
               <button type="button" className={unit === 'ohm' ? 'on' : ''}
                       onClick={() => setUnit('ohm')}>{zUnitLabel('ohm')}</button>
@@ -450,13 +469,13 @@ export function EisCompare() {
               skippedNote: (n) => `아직 fitting 데이터가 없어 ${n}개는 fitting 열이 없습니다`,
             },
             {
-              label: 'γ(τ)',
+              label: drtAxis === 'tau' ? 'γ(τ)' : 'γ(f)',
               title: mode === 'drt'
-                ? `스펙트럼마다 ${TAU_AXIS_SHORT}·γ 두 열 (${unitLabel})`
+                ? `스펙트럼마다 ${drtAxisShort(drtAxis)}·γ 두 열 (${unitLabel})`
                 : `${MODE_TITLE[mode]} 를 보고 있습니다 — DRT 로 바꾸면 켜집니다`,
               disabled: mode !== 'drt' || !series.length,
               build: () => seriesWideTsv(series,
-                                         { x: TAU_AXIS_LABEL, y: `γ (${unitLabel})` }),
+                                         { x: drtAxisLabel(drtAxis), y: `γ (${unitLabel})` }),
             },
           ]}
         />
@@ -501,9 +520,11 @@ export function EisCompare() {
             {mode === 'drt' ? (
               // DRT 는 두 축의 뜻이 달라서 `equalAspect` 가 없다 — 가로는
               // 로그 초, 세로는 저항이다.
-              <Plot series={series} xLabel={TAU_AXIS_LABEL}
+              <Plot series={series} xLabel={drtAxisLabel(drtAxis)}
                     yLabel={`γ (${unitLabel})`}
-                    height={380} legend busy={drt.loading} />
+                    height={380} legend busy={drt.loading}
+                    xTick={(value) => drtAxisTick(drtAxis, value)}
+                    xSplits={drtAxis === 'f' ? decadeSplits : undefined} />
             ) : (
               <Plot series={series} xLabel={`Z′ (${unitLabel})`}
                     yLabel={`−Z″ (${unitLabel})`}
