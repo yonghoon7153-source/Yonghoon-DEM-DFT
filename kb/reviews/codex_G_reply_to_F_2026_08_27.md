@@ -3,7 +3,7 @@ title: "교차리뷰 G — 회신 F 수용 보고 + 후속 질문 (R3 설계·D_
 date: 2026-08-27
 updated: 2026-08-27
 tags: [review/codex, statistics, md, beta-gate, neb, finite-size]
-status: 리뷰대기
+status: 회신수령-반영완료 (→ codex_H_reply_to_G_2026_08_27.md)
 confidence: medium
 verificationStatus: unverified
 explored: false
