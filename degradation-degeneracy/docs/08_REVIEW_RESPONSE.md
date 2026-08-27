@@ -3437,3 +3437,83 @@ generation 이 그대로 보인다.
 | 실제 provider adapter (S3 Object Lock 등) | **미구현** — 이 환경에 붙일 provider 가 없다 |
 | power-loss ordering fault model | **미착수** — `os._exit` 은 un-fsynced entry 를 잃지 않는다 |
 | `digest → generation` value | **선언** — 실행 산출물에 그 필드가 없다 |
+
+## 42. 33차 리뷰 대응 — 증거만 잠금 밖, helper 만 고침, primitive 만 만듦
+
+> 2026-08-27. 33차가 **P0-3 을 종결**로 올렸다 — 이 루프에서 P0 축이 통째로
+> 닫힌 첫 사례다. 남은 셋은 리뷰가 한 문장으로 묶었다:
+>
+> > 세 곳 모두 이번 요청문이 경계한 "시험이 다른 축 또는 독립 helper 에 업혀
+> > 통과하는 것" 의 재발이다.
+>
+> 형태가 셋 다 같다 — **고친 것과 실제로 쓰이는 것이 다른 자리**였다.
+
+### 42.1 P0-1 — durable 의 증거가 잠금 밖이었다
+
+`retain()` 의 순서상 lease digest 는 `lock_objects()` **뒤에야** 존재하므로
+`retention.objects` 만 보호받았다. graph 가 durable 하다는 **증거만 mutable**
+인 모순이고, 32차 canary 도 `objects` 만 공격했다.
+
+| 축 | 지금 |
+|---|---|
+| lease pin · lease content object | 같은 기한까지 잠근다 |
+| lease 의 version proof | lease 는 자기 digest 를 담을 수 없으므로 **journal** 에 (`lease_version`) |
+| canary | lease 의 delete/overwrite 거부까지 확인 |
+
+그리고 `uri` 기본값이 `id(provider)` 였다 — process-local 주소라 재시작 뒤
+달라진다. receipt·lease 가 URI 를 봉인해 대조하므로 reopen locator 가 될 수
+없었다. provider 가 주는 안정 식별자를 쓰고, 못 주는 provider 는 durable 을
+주장할 수 없다.
+
+### 42.2 P2 — helper 만 고치고 caller 를 연결하지 않았다
+
+32차에 reader 가 verified receipt 를 쓰도록 고쳤는데, 실제 gate 는
+`_registered_legs(_PRESERVE_INDEX)` 로 **backend 없이** 불렀다. helper 는
+backend 가 없으면 `{}` 를 돌려주므로 gate 는 언제나 "등록 leg 0개" 를 보고
+통과했다. 고친 경로에 production 이 닿지 않았던 것이다.
+
+두 번째 fail-open 도 있었다 — 검증 실패를 `continue` 로 삼켜서, journal·index
+는 있는데 CAS graph 나 lease 가 깨진 **가장 중요한 상태**가 "등록되지 않은
+leg" 로 사라졌다.
+
+이제 배선 파일에서 canonical backend 를 열고, journal 이 있는데 backend 를 못
+열면 그 자체가 오류다. 검증 실패도 lint error 로 올린다.
+
+### 42.3 #9 — primitive 만 만들고 배선하지 않았다
+
+32차 `promote_generation()`/`read_current()` 는 **단위시험에서만** 호출되는
+독립 함수였다. `build()` 는 여전히 세 파일을 하나씩 `os.replace` 했고 reader
+도 fixed path 를 읽었다.
+
+더 근본적으로, 한 leg stage 를 그대로 승격하면 cohort 가 **한 leg 로
+줄어든다**. 요구는 immutable *cohort* generation 이지 leg generation 이
+아니다.
+
+`promote_cohort_generation()` 이 현재 generation 을 base 로 읽어 그 leg 만
+갈아 끼운 **완전한 snapshot** 을 만들고 pointer 를 한 번 옮긴다. `build()`
+가 이것을 쓰고, `cohort_bytes()` 가 CURRENT 를 통해서만 읽고,
+`check_materialized()` 가 호환 사본이 CURRENT 와 갈리는지 본다. 실물 g2 도
+이 경로로 게시된다. frozen g1 은 다시 만들 수 없으므로 옛 layout 그대로
+두고, 그 예외를 시험이 **명시적으로** 고정한다 (조용한 예외가 아니라).
+
+`..._promotion_happens_only_after_the_recomputation_verdict` 의 manifest-last
+요구는 없앴다. 파일별 순서 자체가 사라졌으므로 완화책을 계속 요구하면 구조가
+바뀐 뒤에도 옛 모양을 강제하게 된다.
+
+### 42.4 변이 — 이번엔 둘, 둘 다 중복이었다
+
+| 물지 않은 변이 | 왜 | 처리 |
+|---|---|---|
+| lease 의 `version_id` 재비교 삭제 | `describe_locks` 가 version 을 **키로** 조회하므로 dict 가 돌아온 것 자체가 일치를 뜻한다 | 삭제 |
+| content 의 `version_id` 재비교 삭제 | 같은 이유 | 삭제 |
+
+지난 세 라운드는 "시험이 약해서" 물지 않았는데 이번 둘은 "검사가 중복이라"
+물지 않았다. 전자는 시험을 고치고 후자는 코드를 지우는 것이 맞다.
+
+### 42.5 남은 것 — 인프라
+
+| 항 | 왜 여기서 못 닫나 |
+|---|---|
+| 실제 object-lock provider adapter | 붙일 provider 가 없다. 계약(7연산)과 canary 는 고정했다 |
+| power-loss ordering fault model | `os._exit` 은 un-fsynced entry 를 잃지 않는다. fault-injecting filesystem 이 필요하다 |
+| `digest → generation` value | 실행 산출물에 그 필드가 없다 — 선언이다 |
