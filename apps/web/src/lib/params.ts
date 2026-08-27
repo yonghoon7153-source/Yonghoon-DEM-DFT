@@ -18,6 +18,22 @@
  *  아니고, 인덕턴스는 아예 셀의 것이 아니다.
  */
 export function isHeadline(name: string): boolean {
+  return isOhmParam(name)
+}
+
+/** 이 파라미터의 단위가 **Ω 인가**.
+ *
+ *  면적으로 나눠도 되는 것과 안 되는 것을 가른다.  Ω 은 나누면 Ω·cm² 이고
+ *  그것이 셀끼리 견주는 수다.  나머지는 그렇지 않다: `_Q` 는 S·sⁿ 이라 면적을
+ *  **곱해야** 하고, `_n`·`_Wn` 은 무차원이며, `_tau`·`_Wt` 는 초다 — 셋 다
+ *  나누면 아무 뜻도 없는 수가 되는데 화면에는 `Ω·cm²` 라고 적힌다 (§0.4).
+ *  그래서 이름으로 판정한다: 서버가 스캔의 파라미터에 단위를 실어 보내지
+ *  않으므로 (`ScanPoint.values` 는 이름 → 수뿐) 여기가 유일한 근거다.
+ *
+ *  같은 집합이 '보고서에 옮겨 적는 값'(`isHeadline`)이기도 하다 — 우연이
+ *  아니라 같은 이유다: 옮겨 적는 것이 저항이고, 정규화할 수 있는 것도 저항이다.
+ */
+export function isOhmParam(name: string): boolean {
   if (/^R\d+$/.test(name)) return true
   return /_(Rct|Ri|Re|Wr|R)$/.test(name)
 }

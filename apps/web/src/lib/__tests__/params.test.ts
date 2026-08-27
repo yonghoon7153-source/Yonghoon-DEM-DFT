@@ -53,3 +53,17 @@ describe('무엇을 강조하는가', () => {
     expect(isHeadline('L1')).toBe(false)
   })
 })
+
+describe('면적으로 나눠도 되는 파라미터', () => {
+  it('Ω 인 것만 — 나머지는 나누면 뜻 없는 수가 된다', async () => {
+    const { isOhmParam } = await import('../params')
+    for (const name of ['R0', 'R12', 'TL1_Rct', 'TL1_Ri', 'TL1_Re',
+                        'TL1_Wr', 'Ws4_R']) {
+      expect(isOhmParam(name)).toBe(true)
+    }
+    // `_Q` 는 S·sⁿ 이라 오히려 곱해야 하고, 지수는 무차원, `_tau`·`_Wt` 는 초다.
+    for (const name of ['CPE1_Q', 'CPE1_n', 'TL1_Wn', 'TL1_Wt', 'Ws4_tau', 'L1']) {
+      expect(isOhmParam(name)).toBe(false)
+    }
+  })
+})

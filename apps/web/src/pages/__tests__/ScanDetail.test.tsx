@@ -357,4 +357,59 @@ describe('ScanDetail', () => {
     // 내려간 것은 − 로 — 부호가 곧 이 열을 보는 이유다.
     expect(screen.getByText('−2.00')).toBeInTheDocument()
   })
+
+  /** 위 나이퀴스트가 Ω·cm² 인데 추세와 표만 Ω 이면 같은 R₀ 가 한 화면에서
+   *  두 번 다르게 나온다.  자는 하나여야 한다. */
+  it('면적을 알면 추세의 세로축도 표의 Ω 열도 Ω·cm² 로 간다', async () => {
+    window.localStorage.clear()
+    installFetch({
+      sha256: 'abc', name: '스캔', original_name: 'scan.mpr', kind: 'liquid',
+      cell_config: 'half', purpose: 'SOC별', sample_id: null, sample_name: null,
+      sweeps: 2, fitted: 2, parameters: ['R0', 'CPE1_n'], area_cm2_effective: 2,
+      points: [
+        { ...point(1, { R0: 5, CPE1_n: 0.9 }), capacity_mah: 3 },
+        { ...point(2, { R0: 6, CPE1_n: 0.8 }), capacity_mah: 4 },
+      ],
+    }, [sweepPoints(1), sweepPoints(2)])
+    show()
+
+    await screen.findByRole('columnheader', { name: /R₀ \(Ω·cm²\)/ })
+    const table = document.querySelector('table')!
+    // 파라미터 머리 칸에 자가 적힌다 — Ω 인 것에만.
+    expect(table.textContent).toContain('(Ω·cm²)')
+    const cells = [...table.querySelectorAll('tbody tr td')].map((one) => one.textContent)
+    expect(cells).toContain('10.00')   // R0 5 Ω × 2 cm²
+    // 지수는 무차원이라 그대로다 — 나누면 아무 뜻 없는 수가 된다.
+    expect(cells).toContain('0.900')
+
+    // 추세의 세로축 이름도 같은 자를 적는다.
+    expect(document.body.textContent).toContain('R0 (Ω·cm²)')
+  })
+
+  /** 나머지 셋은 없을 수 있고 (용량을 안 적은 스캔, 면적을 아직 안 넣은 셀)
+   *  스윕 번호는 언제나 있다.  빈 그림으로 여는 것보다 늘 그려지는 축이 낫다. */
+  it('추세 가로축은 넷이고 스윕 번호가 먼저다 — 못 그리는 축은 꺼진다', async () => {
+    window.localStorage.clear()
+    installFetch({
+      sha256: 'abc', name: '스캔', original_name: 'scan.mpr', kind: 'liquid',
+      cell_config: 'half', purpose: 'SOC별', sample_id: null, sample_name: null,
+      sweeps: 2, fitted: 2, parameters: ['R0'], area_cm2_effective: null,
+      points: [
+        { ...point(1, { R0: 5 }), capacity_mah: null },
+        { ...point(2, { R0: 6 }), capacity_mah: null },
+      ],
+    }, [sweepPoints(1), sweepPoints(2)])
+    show()
+
+    const group = await screen.findByRole('group', { name: '추세 가로축' })
+    const buttons = [...group.querySelectorAll('button')]
+    expect(buttons.map((one) => one.textContent))
+      .toEqual(['#1, #2', 'mAh', 'mAh·cm⁻²', 'V'])
+    // 스윕이 먼저 켜져 있다.
+    expect(buttons[0]!.className).toContain('on')
+    // 용량이 없는 스캔이라 mAh 와 mAh·cm⁻² 는 눌리지 않는다.  전위는 있다.
+    expect(buttons[1]!.disabled).toBe(true)
+    expect(buttons[2]!.disabled).toBe(true)
+    expect(buttons[3]!.disabled).toBe(false)
+  })
 })
