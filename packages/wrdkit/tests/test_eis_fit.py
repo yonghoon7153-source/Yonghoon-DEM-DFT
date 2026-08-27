@@ -186,19 +186,21 @@ def test_an_undetermined_parameter_is_not_called_a_measurement():
 # --- the error bar is not the whole story ----------------------------------
 
 def test_the_determined_rule_reads_both_the_error_bar_and_the_scatter():
-    """두 갈래로 떨어진다.  둘 다 통과해야 '쟀다' 고 적는다."""
+    """세 갈래로 떨어진다.  **전부** 통과해야 '쟀다' 고 적는다."""
     # 오차 막대만 보던 규칙 — 여전히 유효하다.
-    assert Parameter("R0", 10.0, stderr=1.0).determined
-    assert not Parameter("R0", 10.0, stderr=6.0).determined
+    assert Parameter("R0", 10.0, stderr=1.0, spread=1.1).determined
+    assert not Parameter("R0", 10.0, stderr=6.0, spread=1.1).determined
     # 야코비안이 특이하면 그 자체가 발견이다: 이 값은 맞춤을 안 바꾼다.
     assert not Parameter("R0", 10.0).determined
 
-    # 흩어짐이 더해진다.  못 본 것(None)은 통과를 막지 않는다 -- 막으면
-    # 시작점이 하나인 모든 맞춤이 통째로 미결정이 된다.
-    assert Parameter("R0", 10.0, stderr=1.0, spread=None).determined
+    # 흩어짐이 더해진다.
     assert Parameter("R0", 10.0, stderr=1.0, spread=2.9).determined
     assert not Parameter("R0", 10.0, stderr=1.0, spread=3.0).determined
     assert not Parameter("R0", 10.0, stderr=1.0, spread=1e9).determined
+
+    # **못 본 것(None)도 통과를 막는다.**  전에는 통과시켰는데, 그것이
+    # 검사가 안 돈 수를 총저항·전도도·추세·클립보드로 흘려보냈다.
+    assert not Parameter("R0", 10.0, stderr=1.0, spread=None).determined
 
 
 
@@ -254,13 +256,52 @@ def test_the_scatter_check_does_not_downgrade_a_parameter_that_holds_still():
 
 
 def test_scatter_is_none_when_there_was_nothing_to_compare_against():
-    """§0.4 — 하나뿐이었으면 '안 움직인다' 가 아니라 '못 봤다' 다."""
-    result = fit_circuit(spectrum(), LIQUID, restarts=0)
-    assert result.converged
-    # 시작점이 하나뿐이면 견줄 답이 없다.  1.0 을 적으면 "재 봤더니 안
-    # 움직이더라" 가 되어, 못 본 것이 본 것으로 둔갑한다.
-    for parameter in result.parameters:
-        assert parameter.spread is None, parameter
+    """§0.4 — 하나뿐이었으면 '안 움직인다' 가 아니라 '못 봤다' 다.
+
+    그리고 **어느 쪽으로** 못 봤는지까지 적는다 (Codex 판정 리뷰 #4).
+    다듬은 답이 하나뿐인 것과, 여럿인데 같은 답으로 볼 것이 하나뿐인 것은
+    사람이 할 다음 일이 다르다 — 앞은 재시작을 늘리는 일이고 뒤는 왜 답들이
+    갈렸는지 보는 일이다.
+    """
+    from wrdkit.eis.fit import _seed_spread
+
+    model = parse_circuit(LIQUID)
+    one = [(1e-6, np.ones(len(model.parameter_names)))]
+    got = _seed_spread(model, one, 1e-6, 24)
+    assert all(one.ratio is None for one in got)
+    assert {one.reason for one in got} == {"one_polished_solution"}
+
+    # 여럿인데 하나만 "같은 답" 인 경우 — 사유가 다르다.
+    far = [(1e-6, np.ones(len(model.parameter_names))),
+           (5e-1, np.full(len(model.parameter_names), 9.0))]
+    got = _seed_spread(model, far, 1e-6, 24)
+    assert {one.reason for one in got} == {"no_comparable_solution"}
+
+    # 못 잰 것은 통과시키지 않는다 — 그것이 이 검사의 요점이다.
+    assert not Parameter("R0", 10.0, stderr=0.1, spread=None,
+                         spread_missing="one_polished_solution").determined
+
+
+def test_a_near_zero_cost_fit_still_finds_its_ties():
+    """비율만으로 "같은 답" 을 재면 chi^2 가 0 에 가까울 때 무너진다.
+
+    합성 스펙트럼은 cost 가 1e-30 까지 내려간다.  그때 `best * 1.05` 도
+    1e-30 이라 **수치적으로 같은** 답들이 창 밖으로 떨어졌다 — 시작점 10/10 이
+    수렴했는데 파라미터 일곱이 전부 "비교할 답이 하나뿐" 으로 나왔다
+    (Codex 판정 리뷰 #4).  절대 바닥이 그것을 막는다.
+    """
+    frequency = np.logspace(6, -2, 97)
+    z = np.full(97, 500.0, dtype=complex)
+    for r, q, n in ((20.0, 1e-5, 0.9), (40.0, 1e-3, 0.8)):
+        z = z + 1 / (1 / r + q * (1j * 2 * np.pi * frequency) ** n)
+    result = fit_circuit(Spectrum(frequency, z.real, z.imag), LIQUID)
+    assert result.chi_squared < 1e-20          # 사실상 정확히 맞았다
+    assert result.starts_converged >= 2        # 견줄 답이 여럿 있었다
+    measured = [p for p in result.parameters if p.spread is not None]
+    assert len(measured) == len(result.parameters), [
+        (p.name, p.spread_missing) for p in result.parameters]
+    # 전부 같은 답으로 모였으므로 흩어짐은 1 에 가깝고, 그래서 결정된다.
+    assert all(p.determined for p in result.parameters)
 
 
 # --- against a real instrument file ----------------------------------------
@@ -903,18 +944,24 @@ def test_both_rails_are_marked_undetermined_with_the_reason():
     assert r0.alias_of == ""
 
 
-def test_one_solution_is_not_checked_rather_than_determined():
+def test_one_solution_is_not_checked_and_is_not_a_measurement():
     """비교할 답이 하나뿐이면 흩어짐 검사는 **돌지 않은** 것이다 (Codex #8).
 
-    값은 그대로 낸다 — 답이 하나인 피팅의 모든 수를 감추면 화면이 빈다 —
-    대신 어떤 검사가 안 돌았는지를 값 옆에 적는다.
+    **값은 그리고, 재지는 않는다.**  처음에는 `determined` 를 True 로 뒀다 —
+    "답이 하나인 피팅의 수를 다 감추면 화면이 빈다" 는 이유였는데 둘 다
+    틀렸다.  화면은 안 빈다 (파라미터 표가 값을 그리고 옆에 `미결정` 을
+    붙이며, 맞춤 곡선은 어느 쪽이든 원래 값을 쓴다 — `value_available`).
+    그리고 `determined` 가 실제로 막는 것은 **측정값만 받아야 하는 소비자**
+    다: 총저항·전도도·추세·무표시 TSV.  거기에 "검사를 안 했다" 를 흘려
+    보내는 것이 이 표시가 존재하는 이유 그 자체였다.
     """
     from wrdkit.eis.fit import Parameter
 
     quiet = Parameter(name="R0", value=10.0, stderr=0.1, spread=None)
     assert quiet.status == "not_checked"
-    assert quiet.reason == "single_solution"
-    assert quiet.determined            # 숫자는 나온다
+    assert quiet.reason == "scatter_not_measured"   # 사유가 안 실렸을 때의 기본
+    assert not quiet.determined        # 총저항·전도도에 못 들어간다
+    assert quiet.value_available       # 그래도 그림과 표에는 그린다
 
     checked = Parameter(name="R0", value=10.0, stderr=0.1, spread=1.2)
     assert checked.status == "determined"

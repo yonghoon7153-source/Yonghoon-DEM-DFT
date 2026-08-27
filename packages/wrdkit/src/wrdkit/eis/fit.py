@@ -62,6 +62,14 @@ class Parameter:
     #: measurements (Codex #2).  The circuit knows this before any data
     #: arrives, so it is not left to chance.
     alias_of: str = ""
+    #: 흩어짐을 실제로 잰 구간 (최소·최대).  못 쟀으면 둘 다 ``None``.
+    spread_low: float | None = None
+    spread_high: float | None = None
+    #: 흩어짐을 **왜** 못 쟀나 — `Scatter.reason` 의 어휘.  쟀으면 ``""``.
+    #:
+    #: 전에는 이 넷이 `spread is None` 하나로 뭉개져서, 화면이 "시작점 10/10"
+    #: 과 "해가 하나여서 검사 안 함" 을 동시에 말했다 (Codex 판정 리뷰 #4).
+    spread_missing: str = ""
 
     @property
     def relative_error(self) -> float | None:
@@ -109,8 +117,12 @@ class Parameter:
         were actually recorded instead of re-running every fit.
 
         ``structural_alias`` / ``no_error_bar`` / ``relative_stderr`` /
-        ``seed_spread`` mean undetermined; ``single_solution`` means the
-        scatter check never ran.
+        ``seed_spread`` mean undetermined.  ``one_polished_solution`` /
+        ``no_comparable_solution`` / ``zero_crossing`` / ``nonfinite_solution``
+        mean the scatter check did not run, and say which way -- one string
+        each, because the next thing a person does differs (raise the restarts,
+        look at why the solutions disagree, look at a parameter sitting on
+        zero, look at a numerical failure).
         """
         if self.alias_of:
             return "structural_alias"
@@ -125,10 +137,24 @@ class Parameter:
         if relative >= 0.5:
             return "relative_stderr"
         if self.spread is None:
-            return "single_solution"
+            # **왜** 못 쟀는지를 그대로 낸다.  `single_solution` 한 마디로는
+            # 사람이 다음에 할 일을 못 정한다 — 재시작을 늘릴 일인지, 회로가
+            # 다른 최소로 갈린 것인지, 수치 문제인지가 다 다르다.
+            return self.spread_missing or "scatter_not_measured"
         if self.spread >= _SPREAD_LIMIT:
             return "seed_spread"
         return ""
+
+    @property
+    def value_available(self) -> bool:
+        """There is a number to draw, whatever we think of it.
+
+        The fitted curve and the parameter table use this: an optimiser
+        estimate is still the thing that drew the line, and hiding it would
+        make the screen disagree with the curve on it.  It is **not** a claim
+        that the number was measured -- that is ``determined``.
+        """
+        return np.isfinite(self.value)
 
     @property
     def determined(self) -> bool:
@@ -158,8 +184,22 @@ class Parameter:
            that and no re-seeding finds it -- the standard errors come back at
            1e-12 and both rows look measured (Codex #2).  The circuit knows
            this before the data does, so it is settled there, not by luck.
+
+        **``not_checked`` is False here, and that is the whole point.**  The
+        first version said ``status != "undetermined"``, reasoning that hiding
+        every number from a single-solution fit would empty the screen.  That
+        reasoning was wrong twice.  The screen does not empty -- the parameter
+        table draws the value and puts ``미결정`` next to it, and the fitted
+        curve uses the raw values either way (that is ``value_available``).
+        And what ``determined`` actually gates is the **consumers that must
+        only ever see measurements**: total resistance, conductivity, the scan
+        trend, the unmarked TSV.  Letting a value through there because it was
+        never *checked* is exactly the failure this flag exists to prevent --
+        a synthetic two-arc fit at ``restarts=1`` handed out a total resistance
+        of 65 ohm built from seven parameters none of which had been compared
+        against anything (Codex, determination review #1).
         """
-        return self.status != "undetermined"
+        return self.status == "determined"
 
 @dataclass
 class FitResult:
@@ -214,6 +254,20 @@ _POLISH_NFEV = 4000
 #: **소수점 셋째 자리까지 같은** 채로 자릿수를 넘나들었으므로, 잡고 싶은 것은
 #: 이 문턱보다 한참 안쪽에 있다.
 _TIE_TOLERANCE = 0.05
+
+#: 그 비율에 **더해지는 절대 바닥**.  잔차 하나가 이만큼(상대 임피던스)
+#: 안쪽이면 어떤 계측기로도 구별할 수 없으므로 같은 답으로 본다.
+#:
+#: 비율만으로는 chi^2 가 0 에 가까울 때 무너진다.  합성 스펙트럼을 맞추면
+#: cost 가 1e-30 까지 내려가는데, 그때 `best * 1.05` 도 1e-30 이라 **수치적으로
+#: 같은** 답들이 창 밖으로 떨어진다.  실제로 그랬다: 시작점 10/10 이 수렴한
+#: `R0-p(R1,CPE1)-p(R2,CPE2)` 맞춤에서 파라미터 일곱이 전부
+#: `single_solution` 으로 나왔고, 그 말은 "비교할 답이 하나뿐" 인데 열 개가
+#: 있었다 (Codex 판정 리뷰 #4).
+#:
+#: 1e-8 은 계측 잡음보다 여덟 자리 아래다 — 이만큼 어긋난 두 답을 다른 답이라고
+#: 부를 근거가 어떤 EIS 장비에도 없다.
+_TIE_FLOOR_RESIDUAL = 1e-8
 
 #: 같은 chi^2 에 닿은 답들 사이에서 값이 이만큼(최대/최소) 움직였으면 미결정.
 #:
@@ -526,11 +580,12 @@ def fit_circuit(spectrum: Spectrum, circuit: str | Circuit, *,
 
     stderrs = _standard_errors(solution, values, model, chi2, dof)
     values, stderrs = _order_arcs_by_frequency(model, values, stderrs)
-    spreads = _seed_spread(model, polished, cost)
+    spreads = _seed_spread(model, polished, cost, len(residuals))
     parameters = [
         Parameter(name=name, value=float(value), unit=unit, stderr=stderr,
-                  spread=spread)
-        for name, unit, value, stderr, spread in zip(
+                  spread=scatter.ratio, spread_low=scatter.low,
+                  spread_high=scatter.high, spread_missing=scatter.reason)
+        for name, unit, value, stderr, scatter in zip(
             model.parameter_names, model.parameter_units, values, stderrs,
             spreads, strict=True)
     ]
@@ -678,7 +733,27 @@ def _edge_misfit_note(edge: EdgeMisfit | None) -> str:
             f"{edge.chi_squared_without:.2e} 이고, 다시 맞추면 더 내려갑니다)")
 
 
-def _seed_spread(model, polished, best_cost: float) -> list[float | None]:
+@dataclass(frozen=True)
+class Scatter:
+    """씨앗 사이에서 이 파라미터가 얼마나 움직였나, 그리고 못 봤으면 왜.
+
+    비(``ratio``) 하나만 돌려주던 것을 넓혔다.  `None` 하나가 네 가지를
+    뜻했기 때문이다: 다듬은 답이 하나뿐 / 같은 답으로 볼 것이 하나뿐 / 값이
+    0 에 닿음 / 값이 유한하지 않음.  화면이 "시작점 10/10" 과 "해가 하나여서
+    검사 안 함" 을 동시에 말하는 일이 그래서 생겼다 (Codex 판정 리뷰 #4).
+    """
+
+    #: 최대/최소.  못 쟀으면 ``None``.
+    ratio: float | None
+    low: float | None
+    high: float | None
+    #: 못 쟀으면 왜 — ``one_polished_solution`` / ``no_comparable_solution``
+    #: / ``zero_crossing`` / ``nonfinite_solution``.  쟀으면 ``""``.
+    reason: str
+
+
+def _seed_spread(model, polished, best_cost: float,
+                 n_residuals: int) -> list[Scatter]:
     """How far each parameter moved between starts that reached the same chi-square.
 
     **Why this is not the error bar.**  ``stderr`` comes from the curvature of
@@ -691,38 +766,43 @@ def _seed_spread(model, polished, best_cost: float) -> list[float | None]:
     pinned anywhere from 0.01 to 3 ohm with an indistinguishable chi-square
     while its reported error bar stayed at +-38%.
 
-    Returns the ratio max/min per parameter, or ``None`` where there is nothing
-    to compare against -- one solution, or a value that reached zero (a
-    parameter pinned at its bound already loses its error bar above, so it is
-    marked undetermined by that route).
+    Returns a :class:`Scatter` per parameter -- the ratio when it could be
+    measured, and **which** of the four ways it could not when it could not.
 
     Branches are put in frequency order first, exactly as the reported values
     are.  Without that, two starts that found the same two arcs the other way
     round would read as a huge spread in every arc parameter.
     """
+    blank = lambda why: [Scatter(None, None, None, why)] * len(model.parameter_names)  # noqa: E731
     if len(polished) < 2:
-        return [None] * len(model.parameter_names)
+        return blank("one_polished_solution")
     # 같은 답으로 볼 것만.  진짜로 더 나쁜 답까지 넣으면 잘 정해진 파라미터도
     # 흩어져 보이고, 그러면 이 검사가 전부를 미결정으로 만든다.
-    limit = best_cost * (1.0 + _TIE_TOLERANCE)
+    #
+    # 비율에 **절대 바닥**을 더한다 — 이유는 `_TIE_FLOOR_RESIDUAL` 에 있다.
+    floor = max(1, n_residuals) * _TIE_FLOOR_RESIDUAL ** 2
+    limit = best_cost * (1.0 + _TIE_TOLERANCE) + floor
     tied = [values for cost, values in polished if cost <= limit]
     if len(tied) < 2:
-        return [None] * len(model.parameter_names)
+        return blank("no_comparable_solution")
 
     dummy: list[float | None] = [None] * len(model.parameter_names)
     ordered = [_order_arcs_by_frequency(model, values, dummy)[0] for values in tied]
     stack = np.array(ordered, dtype=float)
 
-    spreads: list[float | None] = []
+    spreads: list[Scatter] = []
     for column in stack.T:
         if not np.all(np.isfinite(column)):
-            spreads.append(None)
+            spreads.append(Scatter(None, None, None, "nonfinite_solution"))
             continue
         low = float(np.min(np.abs(column)))
         high = float(np.max(np.abs(column)))
-        # 0 에 닿은 값으로는 비를 만들 수 없다.  그런 파라미터는 경계에 눌린
-        # 것이라 이미 오차 막대를 잃고 미결정이다 (`at_bound`).
-        spreads.append(high / low if low > 0 else None)
+        if low <= 0:
+            # 0 에 닿은 값으로는 비를 만들 수 없다.  그런 파라미터는 경계에
+            # 눌린 것이라 이미 오차 막대를 잃고 미결정이다 (`at_bound`).
+            spreads.append(Scatter(None, low, high, "zero_crossing"))
+            continue
+        spreads.append(Scatter(high / low, low, high, ""))
     return spreads
 
 
