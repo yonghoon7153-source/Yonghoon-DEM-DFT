@@ -40,7 +40,8 @@ NOW = datetime.now()
 import argparse as _ap
 _p = _ap.ArgumentParser(add_help=False)
 _p.add_argument("--full", action="store_true", help="끝난 항목까지 전부 펼친다")
-_p.add_argument("--only", default="", help="disorder|sdcp|committee|elf|bader|chain 중 하나만")
+_p.add_argument("--only", default="",
+                help="disorder|sdcp|committee|elf|bader|chain|prereq|vanhove 중 하나만")
 ARGS, _ = _p.parse_known_args()
 FULL, ONLY = ARGS.full, ARGS.only.lower()
 
@@ -993,6 +994,74 @@ if restart:
     for j in restart:
         print(f"  # {j['key']}")
         print(f"  {j['start']}")
+
+
+# ── li3nd 선행검사 체인 + van Hove 쓸이 (2026-08-28 신설) ─────────────────────
+#   둘 다 로그 한 줄로 상태가 정해지는 작업이라 별도 watch 를 만들지 않고 여기 붙인다.
+#   ⛔ 이 섹션이 못 하는 것: 결과를 **판정하지 않는다**. 어디까지 갔나만 본다.
+def _tail_logs(pat, n=1):
+    fs = sorted(glob.glob(pat), key=lambda f: mtime(f) or 0, reverse=True)
+    return fs[:n]
+
+
+if want("prereq"):
+    print(BAR)
+    print("■ li3nd 선행검사 체인 (리뷰 J ②~⑤)")
+    lg = _tail_logs("/data/work/runs/chain*.log")
+    run = alive("run_prereq_chain")
+    if not lg:
+        print("  · 로그 없음 — 아직 안 걸었다")
+    else:
+        f = lg[0]
+        txt = open(f, errors="replace").read()
+        stage = [l for l in txt.splitlines() if "──" in l and ("②" in l or "③" in l
+                                                              or "④" in l or "⑤" in l)]
+        # ⚠ sentinel 줄은 `★ sentinel (degauss …) → **Δ +0.1 meV**` 모양이라
+        #   "sentinel Δ" 로 찾으면 **안 잡힌다** (실제로 놓쳤다). 키워드로 찾는다.
+        done = [l for l in txt.splitlines()
+                if "sentinel" in l or "통과" in l or "장벽 범위" in l or "곡률" in l]
+        bad = [l for l in txt.splitlines() if l.lstrip().startswith("⛔")]
+        npt = txt.count("  ▶ ")
+        print(f"  로그 {os.path.basename(f)} · SCF 시작 {npt}점 · "
+              f"{'🔄 진행 중' if run else '⏹ 안 돌고 있다'}")
+        if stage:
+            print(f"  현재 단계: {stage[-1].split('──')[-1].strip()}")
+        for l in done[-3:]:
+            print(f"    {l.strip()[:110]}")
+        if bad:
+            print(f"  ⛔ {bad[-1].strip()[:110]}")
+            if not run:
+                print("     ⇒ 멈춰 있다. 고친 뒤 다시:  "
+                      "nohup bash tools/sei/run_prereq_chain.sh --wait > /data/work/runs/chain3.log 2>&1 &")
+        elif not run and "체인 끝" in txt:
+            print("  ✅ 체인 완주 — ⑥(NEB 재개 판정)은 사람이 한다")
+        elif not run:
+            print("  ⚠ 로그에 ⛔ 도 '체인 끝' 도 없는데 프로세스가 없다 — 죽었을 수 있다")
+
+if want("vanhove"):
+    print(BAR)
+    print("■ van Hove 쓸이 (T12)")
+    lg = _tail_logs("/data/work/runs/vanhove*.log")
+    run = alive("run_vanhove_sweep") or alive("aimd_jump_stats")
+    if not lg:
+        print("  · 로그 없음")
+    else:
+        f = lg[0]
+        L = open(f, errors="replace").read().splitlines()
+        starts = [l for l in L if l.startswith("▶")]
+        ver = [l for l in L if "⇒" in l]
+        diff = sum(1 for l in ver if "확산한다" in l)
+        cage = sum(1 for l in ver if "제자리" in l)
+        tr = sum(1 for l in ver if "잘려서" in l)
+        mid = len(ver) - diff - cage - tr
+        print(f"  로그 {os.path.basename(f)} · 궤적 {len(starts)}개 시작 · 판정 {len(ver)}건 · "
+              f"{'🔄 진행 중' if run else '⏹ 끝'}")
+        if ver:
+            print(f"    확산 {diff} · 제자리(cage) {cage} · 중간 {mid} · ⛔잘림 {tr}")
+        if tr:
+            print("  ⛔ 잘린 궤적이 있다 — rmax 가 모자란다. --rmax 를 키워 그것만 다시 돌릴 것")
+        if ver and not run:
+            print("  ✅ 끝 — 같은 계·다른 시드를 **나란히** 놓고 봐야 시드 산포가 보인다")
 
 if not FULL:
     sys.stdout = _REAL_STDOUT
