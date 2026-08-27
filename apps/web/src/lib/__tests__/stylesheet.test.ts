@@ -13,13 +13,28 @@
  *  않는다. 그래서 여기서 센다.
  */
 
-import { readFileSync } from 'node:fs'
+import { existsSync, readFileSync } from 'node:fs'
 import { resolve } from 'node:path'
 
 import { describe, expect, it } from 'vitest'
 
-// vitest 는 `apps/web` 에서 돈다 (vite root).
-const css = readFileSync(resolve(process.cwd(), 'src/styles/app.css'), 'utf-8')
+/** 스타일시트를 찾는다.
+ *
+ *  `process.cwd()` 에 매달면 **어디서 돌렸느냐에 따라 통과가 갈린다** —
+ *  `make check` 는 `apps/web` 에서 돌고 저장소 뿌리에서 `vitest --root apps/web`
+ *  로 돌리면 cwd 가 뿌리다.  그때 이 시험은 "파일이 없다" 로 죽는데, 화면에는
+ *  스타일 규칙이 깨진 것처럼 보인다.  두 자리를 다 본다.
+ */
+function findCss(): string {
+  const tries = ['src/styles/app.css', 'apps/web/src/styles/app.css']
+  for (const relative of tries) {
+    const path = resolve(process.cwd(), relative)
+    if (existsSync(path)) return readFileSync(path, 'utf-8')
+  }
+  throw new Error(`app.css 를 못 찾았습니다 (cwd: ${process.cwd()})`)
+}
+
+const css = findCss()
 
 /** 주석을 뺀 본문 — 주석 속의 예시가 규칙으로 세어지지 않게. */
 const body = css.replace(/\/\*[\s\S]*?\*\//g, '')
