@@ -62,6 +62,18 @@ DERIVED = {
 }
 
 
+#: 이 축들은 **절대값**으로 읽는다 — 열은 부호 있는 값인데 의미는 크기다.
+#:   ⛔ 2026-08-28 — `analyse()` 는 이 규칙을 지키고 있었는데 새로 붙인 `pareto()` 가
+#:     안 지켜서, 부피가 **33 % 줄어든** 후보가 5 % 줄어든 후보를 이기고 front 에 올랐다.
+#:     같은 파일 안에서 두 경로가 갈렸다 — 규약을 이름 하나로 묶어 다시 갈라지지 않게 한다.
+ABS_AXES = {"screen_dV_over_V0"}
+
+
+def axis_value(key, v):
+    """축 하나의 **읽는 값**. 절대값 축이면 크기로 바꾼다."""
+    return None if v is None else (abs(v) if key in ABS_AXES else v)
+
+
 def is_definitional(a, b):
     """두 축이 '파생 축 ↔ 그 재료' 관계인가. → bool"""
     return b in DERIVED.get(a, ()) or a in DERIVED.get(b, ())
@@ -115,8 +127,7 @@ def analyse(rows, min_n=MIN_N):
         cover[key] = (label, n, len(rows))
         if n >= min_n:
             # 부호 통일: 전부 "클수록 좋다" 로. |ΔV| 는 절대값을 먼저 취한다.
-            if key == "screen_dV_over_V0":
-                vals = [abs(v) if v is not None else None for v in vals]
+            vals = [axis_value(key, v) for v in vals]
             cols[key] = (label, [(-v if (v is not None and not hib) else v) for v in vals])
     pairs = []
     keys = list(cols)
@@ -233,8 +244,100 @@ def _selftest():
     say(not is_definitional("migration_volume_fraction", "bvs_li_proxy_score"),
         "⑥ [음성] 같은 공식의 **재료끼리**는 정의상 아니다 (서로 독립 측정)")
 
+    # ── Pareto (A3, 2026-08-28) — **음성 경로가 핵심**이다 ────────────────────
+    A = [("screen_de_per_atom", "낮을수록", False), ("wad_J_m2_mean", "높을수록", True)]
+    R = [{"id": "win_both", "screen_de_per_atom": "-1.0", "wad_J_m2_mean": "9.0"},
+         {"id": "lose_both", "screen_de_per_atom": "0.0", "wad_J_m2_mean": "1.0"},
+         {"id": "tradeoff_a", "screen_de_per_atom": "-2.0", "wad_J_m2_mean": "1.0"},
+         # ⚠ wad 를 10 으로 둔다 — 9 면 win_both(-1.0, 9.0) 에게 **지배당해서**
+         #   "둘 다 남는다" 를 시험하지 못한다 (fixture 를 한 번 그렇게 짰다)
+         {"id": "tradeoff_b", "screen_de_per_atom": "0.0", "wad_J_m2_mean": "10.0"},
+         {"id": "missing", "screen_de_per_atom": "-9.0", "wad_J_m2_mean": ""}]
+    fr, sc, _ax = pareto(R, axes=A, min_axes=2)
+    ids = {r["id"] for r in fr}
+    say("lose_both" not in ids, "[Pareto] 전 축에서 지는 점은 빠진다")
+    say({"tradeoff_a", "tradeoff_b"} <= ids,
+        "[Pareto] 서로 다른 축에서 이기는 둘은 **둘 다** 남는다 (가중합이 지우는 충돌)")
+    say("missing" not in ids and len(sc) == 4,
+        "[Pareto·음성] **축이 빈 행은 front 에 안 넣는다** — 넣으면 결측이 front 를 채운다")
+    say("win_both" in ids, "[Pareto] 전 축에서 이기는 점은 남는다")
+    #   방향 뒤집기: 낮을수록 좋은 축을 안 뒤집으면 tradeoff_a 가 지배당해 사라진다
+    fr2, _s, _a = pareto([r for r in R if r["id"] in ("tradeoff_a", "win_both")],
+                         axes=A, min_axes=2)
+    say(len({r["id"] for r in fr2}) == 2,
+        "[Pareto·방향] '낮을수록 좋다' 축의 부호를 뒤집는다 (안 뒤집으면 하나가 사라진다)")
+    #   ★★ 실측회귀 (2026-08-28): 절대값 축을 부호 그대로 쓰면 **부피가 크게 줄어든 후보가
+    #      이긴다.** analyse() 는 지키던 규칙을 pareto() 가 안 지켜서 실제로 그렇게 나왔다.
+    AV = [("screen_dV_over_V0", "|ΔV/V0|", False)]
+    RV = [{"id": "small_shrink", "screen_dV_over_V0": "-0.05"},
+          {"id": "huge_shrink", "screen_dV_over_V0": "-0.30"}]
+    frv, _s, _a = pareto(RV, axes=AV, min_axes=1)
+    say({r["id"] for r in frv} == {"small_shrink"},
+        "[Pareto·실측회귀] |ΔV/V0| 는 **절대값**으로 읽는다 — 33 % 수축이 5 % 를 못 이긴다")
+    #   파생 축은 기본 축 집합에서 빠진다 (같은 방향에 가중치 두 번 금지)
+    _f3, _s3, ax3 = pareto([], axes=None)
+    say(all(k != "li_mobility_score" for k, _l, _h in ax3),
+        "[Pareto] 파생 축(li_mobility_score)은 기본 축에서 뺀다")
+
     print("  " + ("✅ selftest 통과" if ok else "⛔ selftest 실패"))
     return 0 if ok else 1
+
+
+def pareto(rows, axes=None, min_axes=3):
+    """정본 CSV 의 **비지배 집합**. 가중합이 지우는 축 충돌을 그대로 남긴다.
+
+    ⛔ 못 하는 것 (analyze_screening.pareto_front 와 같은 한계 + CSV 특유의 것)
+      · **순위가 아니다.** Pareto 는 집합이고, 그 안에서 무엇을 고를지는 사람이 정한다.
+      · **결측 행은 front 에 안 넣는다.** 축이 비어 있는 행을 넣으면 "아무 축에서도 지지
+        않는다" 가 되어 front 가 결측 행으로 채워진다 — 정확히 반대 결과다.
+        우리 CSV 는 축 대부분이 18.8 % 밖에 안 차 있어서 이 함정이 크다.
+      · 그래서 **어느 축 집합으로 쟀는지와 표본 수를 같이 낸다.** 그게 없으면
+        "3,615개 중 47개가 front" 라는 문장이 3,615 를 대표하는 것처럼 읽힌다.
+      · 파생 축(li_mobility_score)은 기본 축 집합에서 뺀다 — 재료 축과 같이 넣으면
+        그 방향에 **가중치를 두 번** 주는 셈이다.
+    """
+    ax = axes or [(k, lab, hi) for k, lab, hi in AXES
+                  if k not in DERIVED and k != "li_mobility_score"]
+    pts, keep = [], []
+    for r in rows:
+        v = [axis_value(k, _f(r.get(k))) for k, _l, _h in ax]
+        if sum(x is not None for x in v) < min_axes or any(x is None for x in v):
+            continue
+        # 전부 "클수록 좋다" 로 방향을 맞춘다 (낮을수록 좋은 축은 부호를 뒤집는다)
+        keep.append(r)
+        pts.append([(x if hi else -x) for x, (_k, _l, hi) in zip(v, ax)])
+    front = []
+    for i, p_ in enumerate(pts):
+        dominated = any(
+            i != j and all(q >= p_[k] for k, q in enumerate(qq)) and any(q > p_[k] for k, q in enumerate(qq))
+            for j, qq in enumerate(pts))
+        if not dominated:
+            front.append(keep[i])
+    return front, keep, ax
+
+
+def print_pareto(front, scored, ax, total):
+    print("\n" + "=" * 78)
+    print("■ Pareto 비지배 집합 (가중합이 지우는 축 충돌을 남긴다)")
+    print(f"   축 {len(ax)}개: " + " · ".join(l for _k, l, _h in ax))
+    print(f"   ⚠ **{total}행 중 이 축들이 다 찬 행은 {len(scored)}개** "
+          f"({100*len(scored)/max(total,1):.1f} %) — front 는 그 안에서만 뜻이 있다.")
+    if not scored:
+        print("   ⛔ 채점 가능한 행이 없다 — 축이 비어 있다.")
+        return
+    print(f"   front **{len(front)}개** ({100*len(front)/len(scored):.1f} % of {len(scored)})")
+    key = next((k for k in ("cascade_id", "id", "dopant", "formula") if k in front[0]), None)
+    for r in front[:25]:
+        who = r.get(key, "?") if key else "?"
+        vals = " ".join(
+            (f"{l}={axis_value(k, _f(r.get(k))):.3g}"
+             if _f(r.get(k)) is not None else f"{l}=—") for k, l, _h in ax)
+        print(f"     {str(who)[:28]:28} {vals}")
+    if len(front) > 25:
+        print(f"     … 외 {len(front)-25}개")
+
+
+    print("   ⛔ 이건 **집합이지 순위가 아니다.** front 안의 선택은 사람이 한다.")
 
 
 def main():
@@ -242,6 +345,8 @@ def main():
                                  formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--csv", default=DEFAULT_CSV)
     ap.add_argument("--min_n", type=int, default=MIN_N)
+    ap.add_argument("--pareto", action="store_true",
+                    help="비지배 집합도 낸다 (A3). 축이 다 찬 행에서만 — 결측 행은 뺀다")
     ap.add_argument("--selftest", action="store_true")
     a = ap.parse_args()
     if a.selftest:
@@ -249,7 +354,11 @@ def main():
     if not os.path.isfile(a.csv):
         print(f"⛔ 없다: {a.csv}")
         return 2
-    report(analyse(load(a.csv), a.min_n))
+    rows = load(a.csv)
+    report(analyse(rows, a.min_n))
+    if a.pareto:
+        fr, sc, ax = pareto(rows)
+        print_pareto(fr, sc, ax, len(rows))
     return 0
 
 
