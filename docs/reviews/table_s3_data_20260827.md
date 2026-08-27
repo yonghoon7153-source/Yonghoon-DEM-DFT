@@ -138,9 +138,33 @@ PTFE 미표현 (§3, 측정 예정)   <   실험 대칭셀 +23.1 %   <   PTFE �
 | 3 | **침대 과압축** | porosity 7.9 % vs 실험 ~15.6 %.  공극이 절반 이하면 연결성이 크게 좋아진다.  플래튼 트랙 ② 계통 (§1) |
 | 4 | **격자 미수렴** | CL-41 |
 
-⇒ **보고 문장**: *"모델의 유효 전자전도도는 문헌 건식 황화물 양극과 같은 자릿수
-(10¹ mS cm⁻¹)이며, 조성을 맞추면 문헌보다 높은 쪽에 있다.  방향은 설명된다 — 복셀 융합의
-접촉저항 삭제 · PTFE 코팅 미표현 · 과압축 침대가 모두 σ_e 를 올리는 쪽이다."*
+### ★ 원고에 쓸 문장 (본문 또는 SI)
+
+**자릿수 정합은 쓸 수 있는 주장이다** (CL-46 Tier 1).  절대값이 문헌과 같은 자릿수라는
+것은 이 모델이 **상대 추세만이 아니라 절대 크기도 물리적으로 타당한 범위**를 낸다는
+뜻이고, 복셀 수송 모델로서는 의미 있는 진술이다.  ⇒ **긍정 문장으로 싣는다.**
+
+> The computed effective electronic conductivity of the composite cathode
+> (54.0 mS cm⁻¹ for the single-binder electrode, 70.6 mS cm⁻¹ with SDCP) falls in
+> the same order of magnitude (10¹ mS cm⁻¹) as dry-processed sulfide composite
+> cathodes at comparable carbon loading — 38.6–65.2 mS cm⁻¹ at 3 wt% carbon
+> (Kim 2024) and 34 mS cm⁻¹ at VGCF 3 wt% / PTFE 0.5 wt% (Lee 2025) — indicating
+> that the voxel transport model returns physically reasonable absolute
+> magnitudes and not merely relative trends.
+
+바로 뒤에 붙이는 한정 문장 (**분리하지 말 것**):
+
+> A composition-matched comparison is not yet available: our active-material
+> loading is 70.3 wt% against 80–90 wt% in the cited work, and both voxel fusion
+> of fibre–fibre contacts and the unrepresented surface effect of the binder bias
+> the computed conductivity upward.  The agreement is therefore an
+> order-of-magnitude concordance, not a quantitative validation.
+
+⇒ **국문 요약**: *"모델의 유효 전자전도도는 문헌 건식 황화물 양극과 **같은 자릿수**
+(10¹ mS cm⁻¹)다 — 절대 크기가 물리적으로 타당한 범위에 있다.  ⚠ 다만 조성이 안 맞아
+(우리 AM 70.3 vs 문헌 80~90) **정량 검증이 아니라 자릿수 정합**이고, 조성을 맞추면
+우리가 높은 쪽이다.  방향은 설명된다 — 복셀 융합의 접촉저항 삭제 · PTFE 코팅 미표현 ·
+과압축 침대가 모두 σ_e 를 올리는 쪽이다."*
 
 ⚠ **"밴드 안" 이라고 쓰지 말 것.**  조성을 안 맞춘 밴드 대조는 우연한 일치를 검증으로
 읽게 만든다.  ⇒ 지름길은 **Lee 2025 조성(80:17:3:0.5)으로 침대 1건**을 만들어
