@@ -509,15 +509,26 @@ function DashboardTable({
                 ) : null}
               </td>
               <td>{num(row.loading_mg_cm2, 3)}</td>
+              {/* **날짜 · C-rate · 온도** 차례다.  이 칸은 표의 맨 끝이라 가로로
+                  밀어야 보이는데, 예전 차례에서는 밀어서 보이는 마지막 조각이
+                  날짜였다 -- 셋 중 줄마다 가장 다른 값이 그것인데도.  양극재는
+                  뒤로 뺐다: 조건이 아니라 화학이고, 대개 한 화면 안의 줄들이
+                  같은 값이라 앞에 두면 자리만 먹는다.
+
+                  `cell-wrap` 으로 감싸는 이유는 `tbody td` 가 `nowrap` 이라서다
+                  (숫자 열이 접히면 자릿수가 어긋난다).  이 칸은 숫자가 아니고
+                  맨 끝이므로 접혀도 되고, 접히는 편이 표를 덜 넓힌다. */}
               <td className="text small dim">
-                {[
-                  row.cathode_type,
-                  row.c_rate ? `${row.c_rate}C` : null,
-                  row.temperature_c !== null ? `${row.temperature_c}°C` : null,
-                  row.test_date,
-                ]
-                  .filter(Boolean)
-                  .join(' · ') || '—'}
+                <span className="cell-wrap">
+                  {[
+                    row.test_date,
+                    row.c_rate ? `${row.c_rate}C` : null,
+                    row.temperature_c !== null ? `${row.temperature_c}°C` : null,
+                    row.cathode_type,
+                  ]
+                    .filter(Boolean)
+                    .join(' · ') || '—'}
+                </span>
               </td>
             </tr>
     )

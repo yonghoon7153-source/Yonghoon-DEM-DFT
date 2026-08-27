@@ -282,6 +282,31 @@ describe('Dashboard capacity column', () => {
   })
 })
 
+describe('Dashboard 조건 칸', () => {
+  it('날짜 · C-rate · 온도 차례다 — 밀어서 보이는 마지막 조각이 날짜면 안 된다',
+     async () => {
+    installFetch((url) => {
+      if (path(url) === '/api/groups') return []
+      if (path(url) === '/api/dashboard') {
+        return {
+          basis: 'mAh/g', basis_label: 'mAh g⁻¹',
+          rows: [dashboardRow({
+            sample_id: 1, sample_name: 'A',
+            test_date: '2026-08-09', c_rate: 0.2, temperature_c: 60,
+            cathode_type: 'NCM811',
+          })],
+        }
+      }
+      return []
+    })
+    render(<MemoryRouter><Dashboard /></MemoryRouter>)
+    // 이 칸은 표의 맨 끝이라 가로로 밀어야 보인다.  줄마다 가장 다른 값이
+    // 날짜이므로 그것이 먼저다.  양극재는 조건이 아니라 화학이라 맨 뒤.
+    expect(await screen.findByText('2026-08-09 · 0.2C · 60°C · NCM811'))
+      .toBeInTheDocument()
+  })
+})
+
 describe('Dashboard 유지율 그림', () => {
   function installRows(rows: unknown[]) {
     // 곡선 수 선택은 이 브라우저에 남는다 (useStickyState).  안 지우면 앞
