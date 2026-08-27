@@ -23,7 +23,14 @@ from wrdkit.ica import (
 )
 
 from ..db import get_session
-from ..deps import get_run, get_sample, group_scope, resolved_cell_out, validate_basis
+from ..deps import (
+    get_run,
+    get_sample,
+    group_scope,
+    order_by_date_anchor,
+    resolved_cell_out,
+    validate_basis,
+)
 from ..models import CycleRecord, ExperimentGroup, Run, Sample
 from ..schemas import (
     CycleOut,
@@ -1229,17 +1236,22 @@ def dashboard(session: Session = Depends(get_session),
             "owner": sample.created_by or "",
         })
 
-    # 최근에 올린 셀이 맨 위.  이름순은 실험이 쌓일수록 방금 올린 셀이 표
-    # 한가운데로 숨는다 -- 지금 보려는 것이 늘 방금 올린 것인데도.
+    # 차례는 `order_by_date_anchor` 가 정한다: **시험일을 아직 안 적은 셀이 맨
+    # 위** (그 안에서 올린 때 최신순), 그 아래가 시험일 최신순.  같은 규칙을
+    # 셀 라이브러리와 EIS·GITT 대시보드가 함께 쓴다 — 화면마다 차례가 다르면
+    # 같은 셀을 두 화면에서 찾는 데 눈이 두 번 움직인다.
     #
-    # 정렬을 두 번 한다: 이름으로 한 번, 그다음 시각으로.  파이썬의 sort 는
-    # 안정 정렬이라 시각이 같은 셀끼리는 이름순이 남는다 (`reverse=True` 도
-    # 같은 값끼리는 뒤집지 않는다).  한 번에 튜플로 묶으면 시각은 내림차순,
-    # 이름은 오름차순이라는 서로 다른 방향을 한 키에 담을 수 없다.
-    #
-    # 파일이 하나도 없는 셀(방금 만들고 아직 안 올린 셀)은 맨 아래로 간다.
+    # 이름순 정렬을 먼저 해 두는 것은 **동률용**이다.  파이썬의 sort 는
+    # 안정적이라 그 차례가 동률 안에 남는다 (한 key 에 `reverse=True` 로
+    # 묶으면 이름까지 거꾸로 간다).
     rows.sort(key=lambda row: row["sample_name"] or "")
-    rows.sort(key=lambda row: row["uploaded_at"] or "", reverse=True)
+    rows = order_by_date_anchor(
+        rows,
+        anchor=lambda row: row["test_date"] or "",
+        # 파일이 하나도 없는 셀(방금 만들고 아직 안 올린 셀)은 `""` 이라 제
+        # 무리의 맨 아래로 간다.
+        recency=lambda row: row["uploaded_at"] or "",
+    )
 
     used_bases = {row["basis"] for row in rows}
     response_basis = next(iter(used_bases)) if len(used_bases) == 1 else basis

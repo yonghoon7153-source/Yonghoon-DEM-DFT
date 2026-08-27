@@ -14,7 +14,13 @@ from wrdkit.health import DEFAULT_REFERENCE_CYCLE
 
 from .. import storage
 from ..db import get_session
-from ..deps import get_sample, group_scope, resolved_cell_out, validate_basis
+from ..deps import (
+    get_sample,
+    group_scope,
+    order_by_date_anchor,
+    resolved_cell_out,
+    validate_basis,
+)
 from ..models import (
     CycleRecord,
     ExperimentGroup,
@@ -139,8 +145,10 @@ def list_samples(
         statement = statement.where(Sample.test_date <= date_to)
     if c_rate is not None:
         statement = statement.where(Sample.c_rate == c_rate)
-    samples = session.exec(statement.order_by(Sample.test_date.desc(),
-                                              Sample.name)).all()
+    # **SQL 로 날짜 내림차순을 걸지 않는다.**  SQLite 의 `ORDER BY x DESC` 는
+    # NULL 을 맨 뒤로 보내는데, 시험일을 아직 안 적은 셀이야말로 위에 있어야
+    # 하는 것이다 (할 일이 남은 줄이다).  대시보드와 같은 규칙을 쓴다.
+    samples = list(session.exec(statement.order_by(Sample.name)).all())
     if search:
         needle = search.lower()
         samples = [
@@ -149,6 +157,21 @@ def list_samples(
             or needle in (s.cathode_detail or "").lower()
             or needle in (s.notes or "").lower()
         ]
+    # 무리 안의 차례는 **올린 때**다 — "방금 손댄 것" 이 곧 지금 보려는 것이고,
+    # 셀 자체에는 그 시각이 없으므로 그 셀의 파일 중 가장 늦게 올라온 것으로
+    # 센다.  파일이 아직 없는 셀은 `datetime.min` 이라 제 무리의 아래로 간다.
+    newest: dict[int, datetime] = {}
+    for run_sample_id, uploaded_at in session.exec(
+            select(Run.sample_id, Run.uploaded_at).where(Run.sample_id.is_not(None))):
+        if run_sample_id is None or uploaded_at is None:
+            continue
+        if uploaded_at > newest.get(run_sample_id, datetime.min):
+            newest[run_sample_id] = uploaded_at
+    samples = order_by_date_anchor(
+        samples,
+        anchor=lambda s: s.test_date or "",
+        recency=lambda s: newest.get(s.id or 0, datetime.min),
+    )
     return [_out(session, sample) for sample in samples]
 
 

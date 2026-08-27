@@ -1180,6 +1180,14 @@ class EisDashboardRow(BaseModel):
     #: `measured_at` 과 다르다: 지난달에 잰 파일을 오늘 올릴 수 있고, 그때
     #: 사람이 찾는 것은 "방금 올린 것" 이지 "가장 최근에 잰 것" 이 아니다.
     uploaded_at: datetime | None = None
+    #: 이 줄의 **시험일** — 가장 최근 것의 값 (ADR 0027 의 측정 조건).
+    #:
+    #: 표에 열로 뜨지는 않지만 **차례를 정한다**: 아직 안 적은 줄이 맨 위다
+    #: (`deps.order_by_date_anchor`).  안 적은 것은 할 일이 남은 줄이라, 날짜
+    #: 정렬의 끝으로 밀면 채워 넣으라고 보여 주는 자리가 가장 안 보이는 자리가
+    #: 된다.  값을 함께 내보내는 이유는 그 차례가 **왜 그런지** 를 화면과
+    #: 시험이 확인할 수 있어야 해서다.
+    test_date: str = ""
 
 
 class EisDashboardOut(BaseModel):
@@ -1227,6 +1235,8 @@ class GittDashboardRow(BaseModel):
     measured_at: datetime | None = None
     #: `EisDashboardRow.uploaded_at` 과 같은 뜻 — 표의 기본 정렬.
     uploaded_at: datetime | None = None
+    #: `EisDashboardRow.test_date` 와 같은 뜻 — 안 적은 줄이 맨 위로 간다.
+    test_date: str = ""
 
 
 class GittDashboardOut(BaseModel):

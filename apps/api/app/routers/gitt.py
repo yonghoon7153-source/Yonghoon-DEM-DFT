@@ -23,7 +23,7 @@ from wrdkit.gitt import diffusion, pseudo_ocv, segment_pulses
 
 from .. import storage
 from ..db import get_session
-from ..deps import circle_cm2, resolve_conditions
+from ..deps import circle_cm2, order_by_date_anchor, resolve_conditions
 from ..models import ExperimentGroup, GittRun, Sample
 from ..schemas import (
     DiffusionOut,
@@ -515,6 +515,10 @@ def dashboard(session: Session = Depends(get_session)):
             # 이 줄의 것 중 가장 늦게 올라온 때 — `latest` 는 잰 때로 고른
             # 것이라 그 하나만 보면 나중에 올린 옛 측정을 놓친다.
             uploaded_at=max(r.uploaded_at for r in items),
+            # 차례를 정하는 값.  한 줄에 기록이 여럿이면 그중 가장 늦은 날로
+            # 본다 — 하나만 비었다고 이 셀 전체를 "안 적음" 으로 올리면 이미
+            # 정리된 셀이 맨 위에 계속 남는다.
+            test_date=max((r.test_date for r in items if r.test_date), default=""),
         ))
 
     # 안 붙은 기록도 줄로.  셀 칸이 비어 있다는 것 자체가 "이 파일에는 아직
@@ -542,6 +546,7 @@ def dashboard(session: Session = Depends(get_session)):
             diffusion_high=None,
             measured_at=record.start_time or record.uploaded_at,
             uploaded_at=record.uploaded_at,
+            test_date=record.test_date or "",
         ))
 
     # **가장 늦게 올라온 것이 맨 위다.**  이 표를 여는 가장 흔한 이유가 "방금
@@ -555,5 +560,11 @@ def dashboard(session: Session = Depends(get_session)):
     # 정렬은 안정적이므로 두 번 부르면 "올린 때 내림차순, 동률은 이름순" 이
     # 된다 — 한 key 에 reverse=True 로 묶으면 이름까지 거꾸로 간다.
     rows.sort(key=lambda r: (r.group_name, r.sample_name, r.name))
-    rows.sort(key=lambda r: r.uploaded_at or datetime.min, reverse=True)
+    # 시험일을 아직 안 적은 줄이 맨 위 — 세 대시보드와 셀 라이브러리가 같은
+    # 규칙을 쓴다 (`deps.order_by_date_anchor`).
+    rows = order_by_date_anchor(
+        rows,
+        anchor=lambda r: r.test_date or "",
+        recency=lambda r: r.uploaded_at or datetime.min,
+    )
     return GittDashboardOut(rows=rows, unattached=len(loose))

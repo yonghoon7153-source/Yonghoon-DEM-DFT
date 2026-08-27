@@ -522,3 +522,47 @@ def test_the_dashboard_group_filter_follows_the_subgroups(client, sample_id, wrd
 
     rows = client.get("/api/dashboard", params={"group_id": parent["id"]}).json()["rows"]
     assert [row["sample_id"] for row in rows] == [sample_id]
+
+
+def test_the_undated_cells_come_first_then_the_dated_newest_down(client):
+    """표의 차례 — **시험일을 아직 안 적은 셀이 맨 위**, 그 아래가 날짜 최신순.
+
+    예전에는 SQL 로 ``ORDER BY test_date DESC`` 를 걸었다.  SQLite 는 그때
+    NULL 을 **맨 뒤**로 보낸다.  그런데 시험일이 비어 있는 셀이야말로 할 일이
+    남은 셀이다 — 방금 올려 놓고 조건을 아직 안 채운 것.  그것을 표의 끝으로
+    밀면, 셀이 쌓일수록 **채워 넣으라고 보여 주는 자리가 가장 안 보이는
+    자리**가 된다.
+
+    두 무리를 나누는 이유가 다르므로 무리 안의 차례도 다르다: 안 적은 쪽은
+    "방금 손댄 것" 이 위, 적은 쪽은 실험 날짜가 최신인 것이 위.
+    """
+    for name, date in [("dated-old", "2026-01-02"), ("undated-a", None),
+                       ("dated-new", "2026-05-06"), ("undated-b", None)]:
+        body = {"name": name}
+        if date:
+            body["test_date"] = date
+        assert client.post("/api/samples", json=body).status_code in (200, 201)
+
+    names = [row["name"] for row in client.get("/api/samples").json()]
+    # 날짜 없는 둘이 먼저, 그다음 날짜 있는 둘이 최신부터.
+    assert names.index("undated-a") < names.index("dated-new")
+    assert names.index("undated-b") < names.index("dated-new")
+    assert names.index("dated-new") < names.index("dated-old")
+
+
+def test_the_dashboard_uses_the_same_order_as_the_library(client, sample_id, wrd_bytes):
+    """두 화면이 같은 차례여야 한다.
+
+    갈라 두면 같은 셀을 라이브러리와 대시보드에서 찾는 데 눈이 두 번 움직이고,
+    "왜 여기서는 위에 있는데 저기서는 아래냐" 가 매번 새 질문이 된다.
+    """
+    client.patch(f"/api/samples/{sample_id}", json={"test_date": "2026-03-04"})
+    fresh = client.post("/api/samples", json={"name": "no-date-yet"}).json()
+    client.post("/api/runs/upload", params={"sample_id": fresh["id"]},
+                files={"file": ("later.wrd", wrd_bytes, "application/octet-stream")})
+
+    board = [row["sample_name"] for row in client.get("/api/dashboard").json()["rows"]]
+    # 날짜를 안 적은 셀이 위다 — 그 셀의 파일이 더 나중에 올라왔든 아니든,
+    # 날짜가 있는 셀보다 먼저다.
+    assert board.index("no-date-yet") < board.index(
+        client.get(f"/api/samples/{sample_id}").json()["name"])

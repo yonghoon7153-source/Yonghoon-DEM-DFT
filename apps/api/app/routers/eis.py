@@ -39,7 +39,7 @@ from wrdkit.eis.derive import CONFIGS, FULL, HALF, SYMMETRIC
 
 from .. import storage
 from ..db import get_session
-from ..deps import circle_cm2, resolve_conditions
+from ..deps import circle_cm2, order_by_date_anchor, resolve_conditions
 from ..models import ExperimentGroup, Sample, SpectrumFit, SpectrumRecord
 from ..schemas import (
     DrtOut,
@@ -590,6 +590,11 @@ def dashboard(session: Session = Depends(get_session)):
             # 이 줄의 것 중 가장 늦게 올라온 때 — `latest` 는 잰 때로 고른
             # 것이라 그 하나만 보면 나중에 올린 옛 측정을 놓친다.
             uploaded_at=max(r.uploaded_at for r in items),
+            # 차례를 정하는 값 (아래 `order_by_date_anchor`).  이 줄의 것 중
+            # 하나라도 적혀 있으면 그중 가장 늦은 날로 본다 — 한 줄에 여러
+            # 측정이 묶이므로, 하나만 비었다고 이 셀 전체를 "안 적음" 으로
+            # 올리면 이미 정리된 셀이 맨 위에 계속 남는다.
+            test_date=max((r.test_date for r in items if r.test_date), default=""),
         ))
 
     # 안 붙은 파일도 줄로.  셀 칸이 비어 있다는 것 자체가 이 줄의 정보다 --
@@ -639,6 +644,11 @@ def dashboard(session: Session = Depends(get_session)):
             # 이 줄의 것 중 가장 늦게 올라온 때 — `latest` 는 잰 때로 고른
             # 것이라 그 하나만 보면 나중에 올린 옛 측정을 놓친다.
             uploaded_at=max(r.uploaded_at for r in items),
+            # 차례를 정하는 값 (아래 `order_by_date_anchor`).  이 줄의 것 중
+            # 하나라도 적혀 있으면 그중 가장 늦은 날로 본다 — 한 줄에 여러
+            # 측정이 묶이므로, 하나만 비었다고 이 셀 전체를 "안 적음" 으로
+            # 올리면 이미 정리된 셀이 맨 위에 계속 남는다.
+            test_date=max((r.test_date for r in items if r.test_date), default=""),
         ))
 
     # 붙은 것이 먼저, 그 안에서 그룹·셀 이름순.  안 붙은 것은 아래로 모인다 --
@@ -654,7 +664,15 @@ def dashboard(session: Session = Depends(get_session)):
     # 정렬은 안정적이므로 두 번 부르면 "올린 때 내림차순, 동률은 이름순" 이
     # 된다 — 한 key 에 reverse=True 로 묶으면 이름까지 거꾸로 간다.
     rows.sort(key=lambda r: (r.group_name, r.sample_name, r.name))
-    rows.sort(key=lambda r: r.uploaded_at or datetime.min, reverse=True)
+    # 그리고 **시험일을 아직 안 적은 줄이 맨 위**다 — 충방전 대시보드·셀
+    # 라이브러리와 같은 규칙 (`deps.order_by_date_anchor`).  안 적은 줄이 곧
+    # 할 일이 남은 줄이고, 그 줄을 날짜 정렬의 끝으로 밀면 채워 넣으라고
+    # 보여 주는 자리가 가장 안 보이는 자리가 된다.
+    rows = order_by_date_anchor(
+        rows,
+        anchor=lambda r: r.test_date or "",
+        recency=lambda r: r.uploaded_at or datetime.min,
+    )
     return EisDashboardOut(rows=rows, unattached=unattached)
 
 

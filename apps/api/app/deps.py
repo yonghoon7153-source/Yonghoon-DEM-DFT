@@ -146,3 +146,35 @@ def resolved_cell_out(cell: ResolvedCell) -> ResolvedCellOut:
 
 def basis_label_for(basis: str) -> str:
     return basis_label(basis)
+
+
+def order_by_date_anchor(rows: list, *, anchor, recency) -> list:
+    """표의 차례 — **날짜를 아직 안 적은 것이 맨 위**, 그 아래가 날짜 최신순.
+
+    두 무리를 나누는 이유가 서로 다르다.
+
+    * 시험일을 안 적은 줄은 **할 일이 남은 줄**이다.  올려는 놓고 조건을 아직
+      안 채운 것이라, 날짜순 어디에도 낄 자리가 없다 (없는 날짜는 0 도
+      아니고 오늘도 아니다).  그런 줄을 날짜 정렬의 끝으로 밀면 -- SQL 의
+      ``ORDER BY date DESC`` 가 정확히 그렇게 한다 -- 표가 길어질수록
+      **방금 올린 것이 맨 아래**로 간다.  채워 넣으라고 보여 주는 자리가
+      가장 안 보이는 자리가 되는 셈이다.
+    * 시험일을 적은 줄은 **정리가 끝난 줄**이고, 그때 사람이 찾는 차례는
+      실험 날짜순이다.
+
+    그래서 안 적은 무리 안에서는 *올린 때* 로, 적은 무리 안에서는 *시험일* 로
+    센다.  둘 다 최신이 위다.
+
+    ``rows`` 는 이미 동률용 차례(대개 이름순)로 정렬돼 있다고 본다.  파이썬의
+    정렬은 안정적이므로 그 차례가 동률 안에 그대로 남는다 -- 한 key 에
+    ``reverse=True`` 로 묶으면 이름까지 거꾸로 간다.
+
+    ``anchor`` 와 ``recency`` 는 **None 을 돌려주지 않아야 한다** (빈 문자열이나
+    ``datetime.min``).  섞이면 파이썬이 비교에서 죽는다.
+    """
+    undated = [row for row in rows if not anchor(row)]
+    dated = [row for row in rows if anchor(row)]
+    for bucket in (undated, dated):
+        bucket.sort(key=recency, reverse=True)
+    dated.sort(key=anchor, reverse=True)
+    return undated + dated
