@@ -11,7 +11,7 @@ import pytest
 import synthetic_eis as S
 
 from wrdkit.eis.circuit import parse_circuit
-from wrdkit.eis.fit import fit_circuit
+from wrdkit.eis.fit import Parameter, fit_circuit
 from wrdkit.eis.guess import find_arcs, initial_guess, series_resistance
 from wrdkit.eis.spectrum import Spectrum
 
@@ -181,6 +181,86 @@ def test_an_undetermined_parameter_is_not_called_a_measurement():
     for parameter in result.parameters:
         if parameter.stderr is None or parameter.relative_error is not None and parameter.relative_error >= 0.5:
             assert not parameter.determined
+
+
+# --- the error bar is not the whole story ----------------------------------
+
+def test_the_determined_rule_reads_both_the_error_bar_and_the_scatter():
+    """두 갈래로 떨어진다.  둘 다 통과해야 '쟀다' 고 적는다."""
+    # 오차 막대만 보던 규칙 — 여전히 유효하다.
+    assert Parameter("R0", 10.0, stderr=1.0).determined
+    assert not Parameter("R0", 10.0, stderr=6.0).determined
+    # 야코비안이 특이하면 그 자체가 발견이다: 이 값은 맞춤을 안 바꾼다.
+    assert not Parameter("R0", 10.0).determined
+
+    # 흩어짐이 더해진다.  못 본 것(None)은 통과를 막지 않는다 -- 막으면
+    # 시작점이 하나인 모든 맞춤이 통째로 미결정이 된다.
+    assert Parameter("R0", 10.0, stderr=1.0, spread=None).determined
+    assert Parameter("R0", 10.0, stderr=1.0, spread=2.9).determined
+    assert not Parameter("R0", 10.0, stderr=1.0, spread=3.0).determined
+    assert not Parameter("R0", 10.0, stderr=1.0, spread=1e9).determined
+
+
+
+def _flat_valley_spectrum():
+    """전고체 풀셀 모양 — `Rct` 가 측정창에 안 보이게 작다.
+
+    랩의 Dry_2 에서 본 것을 합성으로 재현한 것이다: chi^2 는 소수점 셋째
+    자리까지 같은데 `Rct` 는 씨앗을 바꿀 때마다 자릿수로 움직였고, 그래도
+    +-1sigma 는 ±10% 로 나왔다.
+    """
+    circuit = "L1-R0-p(R1,CPE1)-TL1"
+    truth = {"L1": 1e-6, "R0": 12.0, "R1": 6.0, "CPE1_Q": 2e-5, "CPE1_n": 0.85,
+             "TL1_Ri": 30.0, "TL1_Re": 1.0, "TL1_Rct": 0.05, "TL1_Q": 3e-3,
+             "TL1_n": 0.8, "TL1_Wr": 40.0, "TL1_Wn": 0.5, "TL1_Wt": 20.0}
+    model = parse_circuit(circuit)
+    values = np.array([truth[name] for name in model.parameter_names], float)
+    frequency = np.logspace(np.log10(7e6), np.log10(0.05), 60)
+    z = model.impedance(values, frequency)
+    rng = np.random.default_rng(7)
+    z = z * (1 + rng.normal(0, 0.004, z.shape) + 1j * rng.normal(0, 0.004, z.shape))
+    return circuit, Spectrum(frequency_hz=frequency, z_re=z.real, z_im=z.imag)
+
+
+def test_a_flat_valley_is_undetermined_even_with_a_small_error_bar():
+    """±1σ 가 작아도, 씨앗을 바꾸면 값이 자릿수로 움직이면 측정이 아니다.
+
+    오차 막대는 해 **한 점**의 곡률이다.  데이터가 못 잡는 파라미터는 긴
+    평평한 골짜기에 앉아 있고, 골짜기를 가로지르는 곡률은 어디서 멈추든
+    작으므로 sigma 는 작게 나온다.  실측에서 `Rct = 0.5807 ± 0.2217`
+    (상대오차 0.38 — 넉넉히 '결정됨') 이 그렇게 통과했다.
+    """
+    circuit, data = _flat_valley_spectrum()
+    result = fit_circuit(data, circuit, seed=0)
+    assert result.converged
+
+    rct = next(p for p in result.parameters if p.name == "TL1_Rct")
+    # 옛 규칙(±1σ 만)이라면 통과했을 값이다 -- 그것이 이 시험의 요점이다.
+    assert rct.relative_error is not None and rct.relative_error < 0.5
+    # 새 규칙: 같은 chi^2 에 닿은 시작점들 사이에서 자릿수로 움직였다.
+    assert rct.spread is not None and rct.spread > 100
+    assert not rct.determined
+    assert "TL1_Rct" in result.undetermined
+
+
+def test_the_scatter_check_does_not_downgrade_a_parameter_that_holds_still():
+    """한쪽으로만 틀린다 — 못 보고 지나칠 수는 있어도 없는 흩어짐을 만들지 않는다."""
+    circuit, data = _flat_valley_spectrum()
+    result = fit_circuit(data, circuit, seed=0)
+    for name in ("CPE1_n", "TL1_n", "R1"):
+        parameter = next(p for p in result.parameters if p.name == name)
+        assert parameter.spread is None or parameter.spread < 3.0, parameter
+        assert parameter.determined, parameter
+
+
+def test_scatter_is_none_when_there_was_nothing_to_compare_against():
+    """§0.4 — 하나뿐이었으면 '안 움직인다' 가 아니라 '못 봤다' 다."""
+    result = fit_circuit(spectrum(), LIQUID, restarts=0)
+    assert result.converged
+    # 시작점이 하나뿐이면 견줄 답이 없다.  1.0 을 적으면 "재 봤더니 안
+    # 움직이더라" 가 되어, 못 본 것이 본 것으로 둔갑한다.
+    for parameter in result.parameters:
+        assert parameter.spread is None, parameter
 
 
 # --- against a real instrument file ----------------------------------------

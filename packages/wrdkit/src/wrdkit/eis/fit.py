@@ -50,6 +50,10 @@ class Parameter:
     #: the Jacobian was singular -- which itself is a finding: the parameter
     #: does not change the fit.
     stderr: float | None = None
+    #: How far this value moved between starting points that reached the **same**
+    #: chi-square (max / min).  ``None`` when there was only one such solution --
+    #: that is "we did not see it move", not "it does not move" (§0.4).
+    spread: float | None = None
 
     @property
     def relative_error(self) -> float | None:
@@ -59,16 +63,34 @@ class Parameter:
 
     @property
     def determined(self) -> bool:
-        """False when the error bar is as big as the value.
+        """False when the number is not a measurement.
 
-        A parameter like that has not been measured.  ZView prints it anyway;
-        we mark it, because the number reads exactly like the ones that mean
-        something.
+        Two ways to fail, and the second is the one that bites:
+
+        1. **The error bar swamps the value.**  One standard error from the
+           covariance at the solution, relative to the value itself.  ZView
+           prints such numbers anyway; we mark them, because they read exactly
+           like the ones that mean something.
+
+        2. **Different starting points land on the same chi-square with
+           different values.**  The error bar cannot see this.  It is the
+           curvature at *one* point of the surface, so a long flat valley --
+           the classic sign of a parameter the data does not constrain -- shows
+           up as a small sigma at whichever end the optimiser stopped.  On a
+           real all-solid-state full cell this let ``Rct = 0.5807 +- 0.2217``
+           through (relative error 0.38, comfortably "determined") while
+           re-seeding moved the same number across nine decades at an
+           indistinguishable chi-square.  A number like that is a starting
+           guess wearing a measurement's clothes.
         """
         relative = self.relative_error
         if relative is None:
             return False
-        return relative < 0.5
+        if relative >= 0.5:
+            return False
+        # 흩어짐을 못 본 것(``None``)은 통과를 막지 않는다.  막으면 시작점이
+        # 하나뿐인 맞춤이 통째로 미결정이 된다 — 못 본 것과 나쁜 것은 다르다.
+        return self.spread is None or self.spread < _SPREAD_LIMIT
 
 
 @dataclass
@@ -113,6 +135,24 @@ _SCREEN_NFEV = 200
 #: 끝까지 미는 시작점의 수, 그리고 그때의 예산.
 _POLISH_KEEP = 4
 _POLISH_NFEV = 4000
+
+#: 두 답이 **같은 답**인가 — chi^2 가 이 비율 안쪽이면 이 데이터로는 어느 쪽이
+#: 낫다고 말할 수 없다고 본다.
+#:
+#: 고르기의 방향이 양쪽으로 나쁘다.  너무 조이면 (1.001 같은) 짝이 아예 안
+#: 생겨서 검사가 한 번도 안 걸리고, 너무 풀면 (2.0) 진짜로 더 나쁜 답이 "같은
+#: 답" 으로 들어와 멀쩡한 파라미터까지 미결정으로 만든다.  5% 는 그 사이의
+#: 판단이다 — 이 실험실의 실측 파일에서 자리를 못 잡은 파라미터는 chi^2 가
+#: **소수점 셋째 자리까지 같은** 채로 자릿수를 넘나들었으므로, 잡고 싶은 것은
+#: 이 문턱보다 한참 안쪽에 있다.
+_TIE_TOLERANCE = 0.05
+
+#: 같은 chi^2 에 닿은 답들 사이에서 값이 이만큼(최대/최소) 움직였으면 미결정.
+#:
+#: `relative_error < 0.5` 와 **같은 뜻으로** 골랐다: 비가 r 이면 값들은 기하
+#: 평균의 [1/sqrt(r), sqrt(r)] 안에 있으므로, r=3 이 대략 -42% / +73% 다.
+#: 오차 막대로 ±50% 를 못 넘게 했으면서 씨앗 사이의 3 배를 통과시킬 이유가 없다.
+_SPREAD_LIMIT = 3.0
 
 
 def _is_warburg_sigma(model, name: str) -> bool:
@@ -387,6 +427,10 @@ def fit_circuit(spectrum: Spectrum, circuit: str | Circuit, *,
     best = None
     converged_count = 0
     seen: set[int] = set()
+    # 다듬은 답을 **전부** 들고 있는다.  가장 좋은 것 하나만 남기면 "다른 데서
+    # 출발했더니 같은 chi^2 에 다른 값이 나왔다" 를 볼 방법이 사라진다 — 오차
+    # 막대는 한 점의 곡률이라 그것을 못 본다 (`Parameter.determined`).
+    polished: list[tuple[float, np.ndarray]] = []
     for _, index, polished_start in screened[:_POLISH_KEEP]:
         seen.add(index)
         solution = solve(polished_start, _POLISH_NFEV)
@@ -394,6 +438,8 @@ def fit_circuit(spectrum: Spectrum, circuit: str | Circuit, *,
             continue
         converged_count += 1
         cost = float(np.sum(solution.fun ** 2))
+        polished.append(
+            (cost, _from_unbounded(solution.x, model.lower, model.upper)))
         if best is None or cost < best[0]:
             best = (cost, solution)
     # 훑기에서 살아남았지만 다듬지 않은 것들도 "수렴했다" 에는 든다 -- 그 수는
@@ -412,11 +458,13 @@ def fit_circuit(spectrum: Spectrum, circuit: str | Circuit, *,
 
     stderrs = _standard_errors(solution, values, model, chi2, dof)
     values, stderrs = _order_arcs_by_frequency(model, values, stderrs)
+    spreads = _seed_spread(model, polished, cost)
     parameters = [
-        Parameter(name=name, value=float(value), unit=unit, stderr=stderr)
-        for name, unit, value, stderr in zip(
+        Parameter(name=name, value=float(value), unit=unit, stderr=stderr,
+                  spread=spread)
+        for name, unit, value, stderr, spread in zip(
             model.parameter_names, model.parameter_units, values, stderrs,
-            strict=True)
+            spreads, strict=True)
     ]
 
     at_bound = []
@@ -548,6 +596,54 @@ def _edge_misfit_note(edge: EdgeMisfit | None) -> str:
             f"맞출 주파수 하한을 {edge.threshold_hz:.3g} Hz 로 두고 다시 맞춰 "
             f"보세요 (그 점들을 뺀 채로 지금 값의 χ² 가 "
             f"{edge.chi_squared_without:.2e} 이고, 다시 맞추면 더 내려갑니다)")
+
+
+def _seed_spread(model, polished, best_cost: float) -> list[float | None]:
+    """How far each parameter moved between starts that reached the same chi-square.
+
+    **Why this is not the error bar.**  ``stderr`` comes from the curvature of
+    the cost surface at one point.  A parameter the data does not constrain sits
+    in a long flat valley, and the curvature *across* the valley is small
+    wherever the optimiser happened to stop -- so the reported sigma is small
+    and the number looks measured.  Starting somewhere else lands somewhere else
+    along the same valley at the same cost, and that is the thing the sigma
+    cannot see.  Fitting the lab's all-solid-state full cell, ``Rct`` could be
+    pinned anywhere from 0.01 to 3 ohm with an indistinguishable chi-square
+    while its reported error bar stayed at +-38%.
+
+    Returns the ratio max/min per parameter, or ``None`` where there is nothing
+    to compare against -- one solution, or a value that reached zero (a
+    parameter pinned at its bound already loses its error bar above, so it is
+    marked undetermined by that route).
+
+    Branches are put in frequency order first, exactly as the reported values
+    are.  Without that, two starts that found the same two arcs the other way
+    round would read as a huge spread in every arc parameter.
+    """
+    if len(polished) < 2:
+        return [None] * len(model.parameter_names)
+    # 같은 답으로 볼 것만.  진짜로 더 나쁜 답까지 넣으면 잘 정해진 파라미터도
+    # 흩어져 보이고, 그러면 이 검사가 전부를 미결정으로 만든다.
+    limit = best_cost * (1.0 + _TIE_TOLERANCE)
+    tied = [values for cost, values in polished if cost <= limit]
+    if len(tied) < 2:
+        return [None] * len(model.parameter_names)
+
+    dummy: list[float | None] = [None] * len(model.parameter_names)
+    ordered = [_order_arcs_by_frequency(model, values, dummy)[0] for values in tied]
+    stack = np.array(ordered, dtype=float)
+
+    spreads: list[float | None] = []
+    for column in stack.T:
+        if not np.all(np.isfinite(column)):
+            spreads.append(None)
+            continue
+        low = float(np.min(np.abs(column)))
+        high = float(np.max(np.abs(column)))
+        # 0 에 닿은 값으로는 비를 만들 수 없다.  그런 파라미터는 경계에 눌린
+        # 것이라 이미 오차 막대를 잃고 미결정이다 (`at_bound`).
+        spreads.append(high / low if low > 0 else None)
+    return spreads
 
 
 def _order_arcs_by_frequency(model, values, stderrs):
