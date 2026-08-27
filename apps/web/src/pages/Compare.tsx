@@ -497,6 +497,9 @@ export function Compare() {
                   // 서 있다.  표시가 없으면 화면이 눌린 것을 못 알아들은
                   // 것처럼 보이고, 사람은 같은 것을 한 번 더 누른다.
                   busy={loading}
+                  pngName="셀 비교"
+                  pngTitle={`${yLabel} — 셀 비교`}
+                  pngCaption={cycleTitle(cycleSpec, drawnCycles)}
                 />
                 {/* 셀을 하나 빼면 y 축이 다시 잡혀서 남은 곡선이 갑자기 커
                     보인다.  잠그면 눈금이 그대로 남는다. */}

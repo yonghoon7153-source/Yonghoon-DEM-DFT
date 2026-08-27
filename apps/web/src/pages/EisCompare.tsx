@@ -214,6 +214,7 @@ export function EisCompare() {
 
   const unitLabel = zUnitLabel(unit)
 
+
   //: **고른 것 전부의 면적을 알면 Ω·cm² 로 연다.**  셀끼리 견주는 값이 그것이고
   //  이 화면의 목적이 바로 견주기다.  하나라도 면적이 없으면 Ω 로 둔다 — 그때
   //  Ω·cm² 는 그것을 빼야 하고, 처음 여는 사람에게 스펙트럼이 없어져 보이는
@@ -229,6 +230,12 @@ export function EisCompare() {
   // DRT 는 볼 때만 부른다.  스펙트럼마다 한 번씩 푸는 계산이라, 안 보는 동안
   // 부르면 나이퀴스트만 보려던 사람이 그 시간을 대신 낸다.
   const lambda = rememberedLambda()
+  //: 저장한 그림의 꼬리말.  파일로 나간 뒤에는 이 화면의 맥락이 없다 —
+  //  단위 기준이 Ω 인지 Ω·cm² 인지가 축 이름에만 있으면 슬라이드에서 못 읽는다.
+  const pngCaption = [
+    `단위 ${unitLabel}`,
+    mode === 'drt' ? `벌점 λ = ${lambda.toExponential(2)} · 평활 차수 0` : null,
+  ].filter(Boolean).join(' · ')
   const drt = useAsync(
     () => (mode === 'drt' && selected.length
       ? Promise.all(selected.map((id) =>
@@ -586,6 +593,9 @@ export function EisCompare() {
                 zTicks={solidSeries.map((one) => one.z)}
                 zTickLabel={depthName}
                 height={560}
+                pngName={`EIS 비교 ${mode === 'drt' ? 'DRT' : '나이퀴스트'} 3D`}
+                pngTitle={mode === 'drt' ? 'DRT 비교 (3D)' : '나이퀴스트 비교 (3D)'}
+                pngCaption={pngCaption}
               />
             ) : mode === 'drt' ? (
               // DRT 는 두 축의 뜻이 달라서 `equalAspect` 가 없다 — 가로는
@@ -594,12 +604,17 @@ export function EisCompare() {
                     yLabel={`γ (${unitLabel})`}
                     height={380} legend busy={drt.loading}
                     xTick={(value) => drtAxisTick(drtAxis, value)}
-                    xSplits={drtAxis === 'f' ? decadeSplits : undefined} />
+                    xSplits={drtAxis === 'f' ? decadeSplits : undefined}
+                    pngName="EIS 비교 DRT" pngTitle="DRT 비교"
+                    pngCaption={pngCaption} />
             ) : (
               <Plot series={series} xLabel={`Z′ (${unitLabel})`}
                     yLabel={`−Z″ (${unitLabel})`}
                     height={380} legend equalAspect positiveFit
-                    busy={points.loading || fits.loading || !fresh} />
+                    busy={points.loading || fits.loading || !fresh}
+                    pngName={mode === 'fit' ? 'EIS 비교 fitting' : 'EIS 비교 나이퀴스트'}
+                    pngTitle={mode === 'fit' ? '나이퀴스트 + fitting 비교' : '나이퀴스트 비교'}
+                    pngCaption={pngCaption} />
             )}
             {mode === 'fit' ? (
               <div className="tiny faint" style={{ padding: '6px 0 0' }}>

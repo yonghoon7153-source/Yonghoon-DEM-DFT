@@ -836,6 +836,7 @@ tbody tr:last-child td { border-bottom: none; }
   transition: opacity 0.12s ease;
 }
 .plot-shell:hover .plot-zoom,
+.plot3d:hover .plot-zoom,
 .plot-zoom:focus-within { opacity: 1; }
 /* 단추 줄은 평소 흐리다 (0.35) — 그림을 방해하지 않으려고.  그런데 "새로 받는
    중" 은 보라고 있는 것이라, 흐린 채로 두면 있으나 마나다. */

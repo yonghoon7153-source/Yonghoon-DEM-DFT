@@ -292,6 +292,11 @@ export function DrtPanel({ spectrumId, area = null }: {
           describeX={(value) => tauBand(value, axis)}
           xTick={(value) => drtAxisTick(axis, value)}
           xSplits={axis === 'f' ? decadeSplits : undefined}
+          pngName="DRT"
+          pngTitle="DRT — γ(τ)"
+          pngCaption={[`단위 ${zUnit}`, shown
+            ? `벌점 λ = ${shown.regularisation.toExponential(2)} · 평활 차수 ${order}`
+            : null].filter(Boolean).join(' · ')}
         />
 
         <details className="tiny faint">

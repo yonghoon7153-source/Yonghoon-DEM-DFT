@@ -13,6 +13,10 @@ import 'uplot/dist/uPlot.min.css'
 import { useElementWidth } from '../lib/hooks'
 import { arcWindow } from '../lib/eis'
 import { num, SERIES_COLORS, seriesColor } from '../lib/format'
+import {
+  composePng, downloadCanvas, PNG_SCALE, scaleFont,
+  type PngLegendItem,
+} from '../lib/pngsave'
 
 export interface PlotSeries {
   label: string
@@ -92,6 +96,13 @@ interface Props {
    *  깜빡이고 축이 튄다).  그런데 그러면 화면이 눌린 것을 못 알아들은 것처럼
    *  보이고, 사람은 같은 것을 한 번 더 누른다.  돌아가는 표시 하나면 갈린다. */
   busy?: boolean
+  /** 저장 파일 이름 (확장자 없이).  없으면 축 이름으로 짓는다. */
+  pngName?: string
+  /** 저장한 그림 맨 위에 적을 제목.  화면에는 이미 카드 제목이 있지만, 파일로
+   *  나간 그림에는 아무 맥락이 없다 — 슬라이드에 붙은 다음에는 더 그렇다. */
+  pngTitle?: string
+  /** 제목 아래 한 줄.  단위 기준·이격 폭처럼 **이 그림을 읽는 법**. */
+  pngCaption?: string
 }
 
 /** Merge every series' x values into one sorted, de-duplicated axis.
@@ -168,6 +179,9 @@ function readChartColors() {
     grid: cssVar('--line', '#e5e7eb'),
     warn: cssVar('--warn', '#b54708'),
     surface: cssVar('--surface', '#ffffff'),
+    // 저장한 그림의 제목·범례.  축 눈금(`text`)보다 진해야 읽힌다.
+    ink: cssVar('--ink', '#101828'),
+    ink2: cssVar('--ink-2', '#475467'),
   }
 }
 
@@ -367,10 +381,20 @@ export function Plot({
   describeX,
   xTick,
   xSplits,
+  pngName,
+  pngTitle,
+  pngCaption,
 }: Props) {
   const [wrapRef, width] = useElementWidth<HTMLDivElement>()
   const plotRef = useRef<uPlot | null>(null)
   const nodeRef = useRef<HTMLDivElement>(null)
+  //: 저장이 다시 그릴 때 쓸 옵션 만들기와 데이터.  화면 그래프를 만든 그
+  //: 자리에서 그대로 들고 온다 -- 저장용으로 따로 만들면 언젠가 어긋난다.
+  const makeOptionsRef = useRef<
+    ((pxScale: number, frozen?: Record<string, { min: number; max: number }>)
+      => uPlot.Options) | null>(null)
+  const dataRef = useRef<uPlot.AlignedData | null>(null)
+  const [saving, setSaving] = useState(false)
   const colors = useChartColors()
   const [readout, setReadout] = useState<Readout | null>(null)
   //: uPlot 이 정한 "커서에 가장 가까운 계열".  setSeries 로만 바뀐다.
@@ -449,11 +473,66 @@ export function Plot({
     const text = colors.text
     const grid = colors.grid
 
-    const options: uPlot.Options = {
-      width,
-      height,
-      legend: { show: legend },
-      cursor: {
+    /** 표시선(knee 등)을 그리는 훅.  배수를 받는다 — 저장용 그림에서 선만
+     *  세 배로 굵어지고 글자·바탕판이 그대로면 라벨이 좁쌀로 남는다. */
+    const markerDraw = (pxScale: number) => (u: uPlot) => {
+      const ctx = u.ctx
+      const plate = 16 * pxScale
+      ctx.save()
+      for (const marker of steadyMarkers) {
+        const x = u.valToPos(marker.x, 'x', true)
+        if (!Number.isFinite(x)) continue
+        ctx.strokeStyle = marker.color ?? colors.warn
+        ctx.lineWidth = (marker.tentative ? 1 : 1.25) * pxScale
+        ctx.globalAlpha = marker.tentative ? 0.55 : 1
+        ctx.setLineDash((marker.tentative ? [2, 4] : [5, 4]).map((v) => v * pxScale))
+        ctx.beginPath()
+        ctx.moveTo(x, u.bbox.top)
+        ctx.lineTo(x, u.bbox.top + u.bbox.height)
+        ctx.stroke()
+        ctx.setLineDash([])
+        const color = marker.color ?? colors.warn
+        ctx.font = scaleFont(LABEL_FONT, pxScale)
+        ctx.textAlign = 'left'
+        // A plate behind the label keeps it readable over the data.
+        const textWidth = ctx.measureText(marker.label).width
+        ctx.fillStyle = colors.surface
+        ctx.fillRect(x + 3 * pxScale, u.bbox.top + 2 * pxScale,
+                     textWidth + 8 * pxScale, plate)
+        ctx.fillStyle = color
+        ctx.fillText(marker.label, x + 7 * pxScale, u.bbox.top + 14 * pxScale)
+        ctx.globalAlpha = 1
+      }
+      ctx.restore()
+    }
+
+    /** 옵션 한 벌 — 화면용(배 1)과 저장용(배 3)을 **같은 곳에서** 만든다.
+     *
+     *  저장이 화면 캔버스를 그대로 퍼 오지 않는 이유: 그 캔버스는 CSS 크기
+     *  그대로라 키우면 뭉갠다.  대신 같은 옵션으로 세 배 캔버스에 **다시**
+     *  그리는데, 그러려면 글꼴·선 굵기·눈금 크기도 세 배여야 한다 (안 그러면
+     *  그림만 크고 글자는 좁쌀이다).  옵션을 여기서 한 번만 쓰고 배수를
+     *  인자로 받는 것이 두 벌을 따로 두는 것보다 안 어긋난다.
+     *
+     *  `frozen` 이 오면 **지금 보고 있는 눈금**을 그대로 박는다: 확대해 둔
+     *  화면을 저장하면 확대한 그대로 나와야 한다.  같이 커서·훅도 뗀다 —
+     *  저장용 그림은 React 상태를 건드리면 안 된다 (setState 가 돌면 화면
+     *  그래프가 다시 그려지면서 확대가 풀린다).
+     */
+    const makeOptions = (
+      pxScale: number,
+      frozen?: Record<string, { min: number; max: number }>,
+    ): uPlot.Options => {
+    const s = (value: number) => value * pxScale
+    const line = (value: number) => Math.max(1, value * pxScale)
+    const axisFont = scaleFont(AXIS_FONT, pxScale)
+    const labelFont = scaleFont(LABEL_FONT, pxScale)
+    const still = frozen !== undefined
+    return {
+      width: Math.round(width * pxScale),
+      height: Math.round(height * pxScale),
+      legend: { show: legend && !still },
+      cursor: still ? { show: false } : {
         // 끌어서 만든 사각형이 그대로 화면이 된다.
         //
         // `uni` 를 두면 가로로 길쭉한 드래그는 가로만 확대한다.  사람이 원하는
@@ -479,9 +558,12 @@ export function Plot({
           },
         },
         focus: { prox: 24 },
-        points: { size: 6, width: 1.5 },
+        points: { size: s(6), width: s(1.5) },
       },
-      scales: {
+      scales: still ? {
+        x: { time: false, range: [frozen?.x?.min ?? null, frozen?.x?.max ?? null] as uPlot.Range.MinMax },
+        y: { range: [frozen?.y?.min ?? null, frozen?.y?.max ?? null] as uPlot.Range.MinMax },
+      } : {
         x: {
           time: false,
           range: equalAspect
@@ -516,12 +598,12 @@ export function Plot({
               : undefined,
         },
       },
-      padding: [12, 14, 0, 0],
+      padding: [s(12), s(14), 0, 0],
       axes: [
         {
           label: xLabel,
-          labelSize: 28,
-          labelGap: 4,
+          labelSize: s(28),
+          labelGap: s(4),
           stroke: text,
           ...(xSplits
             ? { splits: (_u: uPlot, _i: number, min: number, max: number) =>
@@ -531,23 +613,23 @@ export function Plot({
             ? { values: (_u: uPlot, splits: number[]) => splits.map(xTick) }
             : {}),
           // A dotted grid stays behind the data instead of competing with it.
-          grid: { stroke: grid, width: 1, dash: [1, 3] },
-          ticks: { stroke: grid, width: 1, size: 4 },
-          font: AXIS_FONT,
-          labelFont: LABEL_FONT,
-          gap: 4,
+          grid: { stroke: grid, width: line(1), dash: [line(1), line(3)] },
+          ticks: { stroke: grid, width: line(1), size: s(4) },
+          font: axisFont,
+          labelFont,
+          gap: s(4),
         },
         {
           label: yLabel,
-          labelSize: 40,
-          labelGap: 4,
+          labelSize: s(40),
+          labelGap: s(4),
           stroke: text,
-          grid: { stroke: grid, width: 1, dash: [1, 3] },
-          ticks: { stroke: grid, width: 1, size: 4 },
-          font: AXIS_FONT,
-          labelFont: LABEL_FONT,
-          size: 58,
-          gap: 4,
+          grid: { stroke: grid, width: line(1), dash: [line(1), line(3)] },
+          ticks: { stroke: grid, width: line(1), size: s(4) },
+          font: axisFont,
+          labelFont,
+          size: s(58),
+          gap: s(4),
         },
       ],
       series: [
@@ -555,13 +637,17 @@ export function Plot({
         ...visible.map((item, index) => ({
           label: item.label,
           stroke: resolveColor(seriesToken(item.color, index), seriesColor(index)),
-          width: item.width ?? 1.6,
-          dash: item.dash,
+          width: (item.width ?? 1.6) * pxScale,
+          dash: item.dash?.map((value) => value * pxScale),
           spanGaps: item.spanGaps ?? true,
-          points: { show: item.points ?? false, size: 4 },
+          points: { show: item.points ?? false, size: s(4) },
         })),
       ],
-      hooks: {
+      hooks: still ? {
+        // 저장용 그림에는 표시선만 남긴다.  나머지 훅은 React 상태를
+        // 건드려서, 화면 그래프의 확대를 저장 도중에 풀어 버린다.
+        ...(steadyMarkers.length ? { draw: [markerDraw(pxScale)] } : {}),
+      } : {
         // 확대 여부는 **uPlot 의 눈금을 읽어서** 정한다.  버튼을 누른 횟수를
         // 세면 드래그 확대와 더블클릭 복귀를 놓치고, 그때 '전체' 버튼이
         // 화면과 어긋난 상태로 남는다 (꺼져 있는데 확대돼 있거나, 그 반대).
@@ -633,40 +719,13 @@ export function Plot({
         // TypeError 를 냈고, 그 예외가 commit 을 중간에 끊었다: 끌어서 확대한
         // 사각형이 눈금까지 못 가고 그냥 사라졌다.  화면에는 오류가 안 보이니
         // "확대가 안 된다" 로만 보인다.
-        ...(steadyMarkers.length ? {
-          draw: [
-              (u: uPlot) => {
-                const ctx = u.ctx
-                ctx.save()
-                for (const marker of steadyMarkers) {
-                  const x = u.valToPos(marker.x, 'x', true)
-                  if (!Number.isFinite(x)) continue
-                  ctx.strokeStyle = marker.color ?? colors.warn
-                  ctx.lineWidth = marker.tentative ? 1 : 1.25
-                  ctx.globalAlpha = marker.tentative ? 0.55 : 1
-                  ctx.setLineDash(marker.tentative ? [2, 4] : [5, 4])
-                  ctx.beginPath()
-                  ctx.moveTo(x, u.bbox.top)
-                  ctx.lineTo(x, u.bbox.top + u.bbox.height)
-                  ctx.stroke()
-                  ctx.setLineDash([])
-                  const color = marker.color ?? colors.warn
-                  ctx.font = LABEL_FONT
-                  ctx.textAlign = 'left'
-                  // A plate behind the label keeps it readable over the data.
-                  const textWidth = ctx.measureText(marker.label).width
-                  ctx.fillStyle = colors.surface
-                  ctx.fillRect(x + 3, u.bbox.top + 2, textWidth + 8, 16)
-                  ctx.fillStyle = color
-                  ctx.fillText(marker.label, x + 7, u.bbox.top + 14)
-                  ctx.globalAlpha = 1
-                }
-                ctx.restore()
-              },
-          ],
-        } : {}),
+        ...(steadyMarkers.length ? { draw: [markerDraw(1)] } : {}),
       },
     }
+    }
+    const options = makeOptions(1)
+    makeOptionsRef.current = makeOptions
+    dataRef.current = data
 
     plotRef.current?.destroy()
     focusRef.current = null
@@ -873,6 +932,65 @@ export function Plot({
     })
   }
 
+  /** 지금 보이는 그대로를 **인쇄 해상도**로 내린다.
+   *
+   *  화면 캔버스를 퍼 오지 않고 세 배 크기로 다시 그린다 (`makeOptions`).
+   *  눈금은 지금 것을 그대로 박으므로, 확대해 둔 화면은 확대한 그대로
+   *  저장된다 -- 저장하려고 확대를 풀 필요가 없다.
+   *
+   *  숨겨 놓은 캔버스에 그리는 이유: 화면의 그래프를 잠깐 키웠다 되돌리면
+   *  레이아웃이 한 프레임 튀고, 그 사이 붙여 둔 표의 열까지 다시 잰다.
+   */
+  const savePng = async () => {
+    const build = makeOptionsRef.current
+    const rows = dataRef.current
+    if (!build || !rows || saving) return
+    setSaving(true)
+    const holder = document.createElement('div')
+    holder.style.cssText =
+      'position:fixed;left:-100000px;top:0;pointer-events:none;opacity:0'
+    document.body.appendChild(holder)
+    let shot: uPlot | null = null
+    try {
+      const live = plotRef.current
+      const frozen = live ? readScales(live) : {}
+      shot = new uPlot(build(PNG_SCALE, frozen as Record<string, { min: number; max: number }>),
+                       rows, holder)
+      // uPlot 은 첫 그리기를 microtask 로 미룬다 -- 생성 직후의 캔버스는
+      // 아직 비어 있다.  두 프레임을 기다리면 확실히 그려진 뒤다.
+      await new Promise<void>((resolve) => {
+        requestAnimationFrame(() => requestAnimationFrame(() => resolve()))
+      })
+      const canvas = holder.querySelector('canvas')
+      if (!(canvas instanceof HTMLCanvasElement)) return
+      const ratio = canvas.width / Math.max(1, width)
+      const chips: PngLegendItem[] = visible.map((item, index) => ({
+        label: item.note ? `${item.label} · ${item.note}` : item.label,
+        color: resolveColor(seriesToken(item.color, index), seriesColor(index)),
+        dash: Boolean(item.dash?.length),
+      }))
+      const sheet = composePng({
+        plot: canvas,
+        ratio,
+        title: pngTitle,
+        caption: pngCaption,
+        // 범례는 캔버스 밖(DOM)이라 저장에 안 담긴다.  곡선이 둘 이상이면
+        // 이름 없이는 그림 한 장으로 아무것도 못 읽으므로 다시 그린다.
+        legend: chips.length > 1 ? chips : undefined,
+        background: colors.surface,
+        text: colors.ink,
+        faint: colors.ink2,
+      })
+      downloadCanvas(sheet, pngName
+        ?? pngTitle
+        ?? `${splitAxisLabel(yLabel).name} - ${splitAxisLabel(xLabel).name}`)
+    } finally {
+      shot?.destroy()
+      holder.remove()
+      setSaving(false)
+    }
+  }
+
   return (
     <div ref={wrapRef} className="plot-shell">
       {data ? (
@@ -931,6 +1049,16 @@ export function Plot({
               title="처음 보이던 범위로 되돌립니다 (그래프를 더블클릭해도 됩니다)"
             >
               전체
+            </button>
+            <button
+              type="button"
+              className="sm ghost"
+              onClick={savePng}
+              disabled={saving}
+              aria-label="그림 저장"
+              title={`지금 보이는 그대로 PNG 로 내립니다 — 화면 캡처가 아니라 ${PNG_SCALE} 배 크기로 다시 그리므로 확대해도 안 뭉갭니다`}
+            >
+              {saving ? '…' : '⤓ PNG'}
             </button>
           </div>
           <div ref={nodeRef} />

@@ -466,6 +466,9 @@ export function SpectrumDetail() {
               // 반원이 반원으로 보여야 찌그러진 아크를 알아본다.
               equalAspect
               positiveFit
+              pngName={`${record.name} 나이퀴스트`}
+              pngTitle="나이퀴스트"
+              pngCaption={`${record.name} · 단위 ${zUnit}`}
             />
           ) : (
             <Spinner />
@@ -489,9 +492,13 @@ export function SpectrumDetail() {
           {bodeMagnitude.length ? (
             <div className="col" style={{ gap: 6 }}>
               <Plot series={bodeMagnitude} xLabel="log₁₀ f (Hz)"
-                    yLabel={`log₁₀|Z| (${zUnit})`} height={180} legend />
+                    yLabel={`log₁₀|Z| (${zUnit})`} height={180} legend
+                    pngName={`${record.name} 보드 크기`} pngTitle="보드 — 크기"
+                    pngCaption={`${record.name} · 단위 ${zUnit}`} />
               <Plot series={bodePhase} xLabel="log₁₀ f (Hz)" yLabel="위상 (°)"
-                    height={180} legend />
+                    height={180} legend
+                    pngName={`${record.name} 보드 위상`} pngTitle="보드 — 위상"
+                    pngCaption={record.name} />
             </div>
           ) : (
             <Spinner />

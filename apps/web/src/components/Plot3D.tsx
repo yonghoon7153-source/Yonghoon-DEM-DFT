@@ -21,6 +21,10 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 
 import { num, seriesColor } from '../lib/format'
+import {
+  composePng, downloadCanvas, PNG_SCALE, svgToCanvas,
+  type PngLegendItem,
+} from '../lib/pngsave'
 
 export interface Series3D {
   label: string
@@ -118,6 +122,9 @@ export function Plot3D({
   height = 520,
   zTicks,
   zTickLabel,
+  pngName,
+  pngTitle,
+  pngCaption,
 }: {
   series: Series3D[]
   xLabel: string
@@ -130,8 +137,15 @@ export function Plot3D({
   /** 깊이 눈금에 적을 글자.  깊이가 **수가 아닐 때** 쓴다 — 비교 화면의 깊이는
    *  고른 스펙트럼의 이름이고, 거기에 `0.000` 이라고 적으면 아무 뜻이 없다. */
   zTickLabel?: (value: number) => string
+  /** 저장 파일 이름 (확장자 없이). */
+  pngName?: string
+  /** 저장한 그림의 제목과 그 아래 한 줄. */
+  pngTitle?: string
+  pngCaption?: string
 }) {
   const box = useRef<HTMLDivElement>(null)
+  const svgRef = useRef<SVGSVGElement>(null)
+  const [saving, setSaving] = useState(false)
   const [azimuth, setAzimuth] = useState(AZIMUTH0)
   const [elevation, setElevation] = useState(ELEVATION0)
   const [zoom, setZoom] = useState(1)
@@ -301,6 +315,46 @@ export function Plot3D({
     return { on, out: { x: on.x + (dx / len) * away, y: on.y + (dy / len) * away } }
   }
 
+  /** 지금 각도·확대 그대로 인쇄 해상도 PNG.
+   *
+   *  SVG 라 배만 키우면 된다 — 다시 그릴 필요가 없다.  각도·확대·이동은 이미
+   *  `viewBox` 안의 좌표에 들어가 있으므로, 보이는 그대로가 저장된다.
+   */
+  const savePng = async () => {
+    const node = svgRef.current
+    if (!node || saving) return
+    setSaving(true)
+    try {
+      const surface = getComputedStyle(document.body)
+        .getPropertyValue('--surface').trim() || '#ffffff'
+      const ink = getComputedStyle(document.body)
+        .getPropertyValue('--ink').trim() || '#101828'
+      const faint = getComputedStyle(document.body)
+        .getPropertyValue('--ink-2').trim() || '#475467'
+      const drawn = await svgToCanvas(node, PNG_SCALE, surface)
+      if (!drawn) return
+      const chips: PngLegendItem[] = shown.map((one, index) => ({
+        label: one.label,
+        color: one.color ?? seriesColor(index),
+      }))
+      const sheet = composePng({
+        plot: drawn,
+        ratio: PNG_SCALE,
+        title: pngTitle,
+        caption: [pngCaption,
+                  `방위 ${azimuth.toFixed(0)}° · 고도 ${elevation.toFixed(0)}°`]
+          .filter(Boolean).join(' · '),
+        legend: chips.length > 1 ? chips : undefined,
+        background: surface,
+        text: ink,
+        faint,
+      })
+      downloadCanvas(sheet, pngName ?? pngTitle ?? `${yLabel} - ${xLabel} - ${zLabel}`)
+    } finally {
+      setSaving(false)
+    }
+  }
+
   return (
     <div className="plot3d" ref={box} style={{ position: 'relative' }}>
       <div className="plot-zoom">
@@ -320,8 +374,14 @@ export function Plot3D({
                 }}>
           전체
         </button>
+        <button type="button" className="sm ghost" onClick={savePng}
+                disabled={saving} aria-label="그림 저장"
+                title={`지금 각도·확대 그대로 PNG 로 내립니다 (${PNG_SCALE} 배 크기)`}>
+          {saving ? '…' : '⤓ PNG'}
+        </button>
       </div>
       <svg
+        ref={svgRef}
         width="100%"
         height={height}
         viewBox={`0 0 ${view.width} ${view.height}`}

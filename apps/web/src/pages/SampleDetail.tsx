@@ -887,6 +887,11 @@ export function SampleDetail() {
                           ? `dV/dQ (V/${basisUnit(dvdqState.data?.basis ?? basis)})`
                           : '전압 (V)'
                     }
+                    pngName={`${sample?.name ?? '셀'} ${
+                      mode === 'dqdv' ? 'dQdV' : mode === 'dvdq' ? 'dVdQ' : '프로파일'}`}
+                    pngTitle={mode === 'dqdv' ? 'dQ/dV'
+                      : mode === 'dvdq' ? 'dV/dQ' : '충방전 프로파일'}
+                    pngCaption={sample?.name ?? ''}
                     xRange={xRange}
                     yRange={yLock.range}
                     height={400}
@@ -1035,6 +1040,9 @@ export function SampleDetail() {
                 yLabel={lifeYLabel}
                 height={280}
                 markers={kneeMarkers}
+                pngName={`${sample?.name ?? '셀'} 사이클 추세`}
+                pngTitle="사이클 추세"
+                pngCaption={sample?.name ?? ''}
               />
             </Card>
 
