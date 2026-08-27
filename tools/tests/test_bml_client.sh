@@ -785,6 +785,51 @@ check "누가 잡았는지 볼 명령을 준다" \
   "$(printf '%s\n' "$THEIRS" | grep -c 'netstat.exe -ano')" "1"
 
 echo
+echo "DB 오류 — 셀을 통째로 버리라고 시키지 않는다"
+# 예전에는 `sqlite3.OperationalError` 하나로 묶고 "DB 를 옆으로 치우고 다시" 를
+# 시켰다.  그 그물에는 잠김·권한·경로가 다 걸리는데 그 셋은 스키마와 상관이
+# 없고, 시키는 일은 셀·그룹·피팅을 통째로 버리는 것이다 -- 이 도구에서 가장
+# 위험한 한 줄이었다 (실측 2026-08-27: 방금 내린 서버가 파일을 쥐고 있었을
+# 뿐인데 이 안내가 떴다).
+dblog() { printf '%s\n' "$1" > "$TMP/db.log"; explain_log "$TMP/db.log" 2>&1; }
+
+LOCKED="$(dblog 'sqlite3.OperationalError: database is locked')"
+check "잠김은 스키마 문제가 아니라고 말한다" \
+  "$(printf '%s\n' "$LOCKED" | grep -c '스키마 문제가 아닙니다')" "1"
+check "잠김에서는 DB 를 지우라고 안 한다" \
+  "$(printf '%s\n' "$LOCKED" | grep -cE 'rm data/workbench.db|mv data/workbench.db')" "0"
+
+PERM="$(dblog 'sqlite3.OperationalError: unable to open database file')"
+check "권한·경로도 스키마 문제가 아니라고 말한다" \
+  "$(printf '%s\n' "$PERM" | grep -c '스키마 문제가 아닙니다')" "1"
+check "권한·경로에서도 DB 를 지우라고 안 한다" \
+  "$(printf '%s\n' "$PERM" | grep -cE 'rm data/workbench.db|mv data/workbench.db')" "0"
+
+# 진짜 스키마 문제일 때도 **첫 처방은 지우기가 아니다.**  `init_db` 가 빠진
+# 열을 자동으로 붙이므로 (apps/api/app/db.py: _add_missing_columns) 한 번 더
+# 띄워 보는 것이 먼저고, 버리는 것은 그래도 안 될 때다.
+SCHEMA="$(dblog 'sqlite3.OperationalError: no such column: run.superseded_by')"
+S_BML="$(printf '%s\n' "$SCHEMA" | grep -n 'bml' | head -1 | cut -d: -f1)"
+S_RM="$(printf '%s\n' "$SCHEMA" | grep -n 'rm data/workbench.db' | head -1 | cut -d: -f1)"
+if [ -n "$S_BML" ] && [ -n "$S_RM" ] && [ "$S_BML" -lt "$S_RM" ]; then
+  pass=$((pass + 1)); printf '  ok   스키마 문제도 다시 띄우기가 먼저다\n'
+else
+  fail=$((fail + 1)); printf '  FAIL 버리는 것을 먼저 시킨다 (bml %s, rm %s)\n' \
+    "${S_BML:-없음}" "${S_RM:-없음}"
+fi
+check "지우기 전에 백업을 시킨다" \
+  "$(printf '%s\n' "$SCHEMA" | grep -c 'cp data/workbench.db')" "1"
+check "무엇이 사라지는지 말한다" \
+  "$(printf '%s\n' "$SCHEMA" | grep -c '사라집니다')" "1"
+
+# 모르는 OperationalError 는 처방을 지어내지 않고 sqlite 가 한 말을 보여 준다.
+OTHER="$(dblog 'sqlite3.OperationalError: disk I/O error')"
+check "모르는 것은 그 줄을 그대로 보여 준다" \
+  "$(printf '%s\n' "$OTHER" | grep -c 'disk I/O error')" "1"
+check "모르면서 DB 를 지우라고 하지 않는다" \
+  "$(printf '%s\n' "$OTHER" | grep -cE 'rm data/workbench.db|mv data/workbench.db')" "0"
+
+echo
 echo "자리를 둘로 — bmlin / bmlout"
 # 랩 주소는 한 번 정하면 안 바뀌고, 터널 주소는 열 때마다 달라질 수 있다.
 # 하나만 저장하면 자리를 옮길 때마다 주소를 다시 쳐야 한다.
