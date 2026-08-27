@@ -1198,7 +1198,7 @@ check "도움말에 있다" \
 # 바깥에 열려 있으면 문이 서 있다 (ADR 0014).  `/api/health` 만 문 밖이라
 # **서버가 살아 있는 것과 이 POST 가 들어갈 수 있는 것은 다른 일**이다.
 # 실측: server_alive 는 통과했는데 {"detail":"암호가 필요합니다."} 로 끝났다.
-check "문이 있으면 먼저 들어간다"  "$(printf '%s' "$RE" | grep -c 'gate_jar')" "1"
+check "문이 있으면 먼저 들어간다"  "$(printf '%s' "$RE" | grep -c 'hold_gate_jar "$url"')" "1"
 # 쿠키 값을 셸에서 흉내 내면(gate.py 의 HMAC) 저쪽이 계산을 바꾸는 날 조용히
 # 401 이 되고, 증상은 이쪽에 뜨는데 원인은 저쪽에 있다.
 GJ="$(awk '/^gate_jar\(\) \{/,/^\}/' "$BML")"
@@ -1207,7 +1207,18 @@ check "HMAC 을 흉내 내지 않는다"  "$(printf '%s' "$GJ" | grep -c 'hmac\|
 check "303 이 아니면 실패다"      "$(printf '%s' "$GJ" | grep -c '"303"')" "1"
 # 이 쿠키는 암호와 같은 값이다.  저장소 폴더(.bml/)에 남기지 않는다.
 check "쿠키를 저장소에 안 남긴다" "$(printf '%s' "$GJ" | grep -c 'RUN_DIR')" "0"
-check "쓰고 나서 지운다"          "$(printf '%s' "$RE" | grep -c 'rm -f "$jar"')" "2"
+# 쓰고 나서 지운다 — 다만 **부르는 쪽에서 손으로** 지우지 않는다.  나가는 길이
+# 넷이라 (curl 실패 · 답 못 읽음 · EIS 실패 · 정상) 손으로 붙이면 하나를
+# 빠뜨리고, 실제로 빠뜨려서 EIS 호출이 쿠키 없이 나갔다.  trap 에 건다.
+check "정리를 trap 에 건다" \
+  "$(printf '%s' "$RE" | grep -c 'hold_gate_jar')" "1"
+check "손으로 지우는 줄이 없다" \
+  "$(printf '%s' "$RE" | grep -c 'rm -f "\$jar"')" "0"
+HJ="$(awk '/^hold_gate_jar\(\) \{/,/^\}/' "$BML")"
+check "trap 을 거는 곳은 hold 다"  "$(printf '%s' "$HJ" | grep -c "trap 'drop_gate_jar'")" "1"
+check "경로를 표준출력으로 안 낸다" "$(printf '%s' "$HJ" | grep -c 'printf')" "0"
+DJ="$(awk '/^drop_gate_jar\(\) \{/,/^\}/' "$BML")"
+check "지우고 trap 을 푼다"        "$(printf '%s' "$DJ" | grep -c 'trap - EXIT')" "1"
 # 401 을 "뜻 모를 답" 으로 뭉뚱그리면 고칠 방법이 안 보인다.  갈래가 둘이다:
 # 암호가 **틀린** 것(문에서 303 이 안 나옴)과 아예 **안 적힌** 것(POST 가 401).
 # 둘 다 같은 곳으로 안내한다.
@@ -1247,6 +1258,54 @@ check "재실행해도 URL·IP 가 제자리" \
 check "인자 없는 bmlout 도 그대로" "$(replay)" "|"
 
 echo
+echo "문 쿠키는 두 호출을 다 지나고 나서 지워진다"
+# 실제로 있었던 결함: `bml reparse` 가 충방전 호출 **직후에** 쿠키 파일을
+# 지워서, 바로 뒤 EIS 호출이 `-b <없는 파일>` 로 나가 401 을 받았다.
+#   ! EIS 맞춤 결과를 읽지 못했습니다.
+#     {"detail":"암호가 필요합니다."}
+# 소스 훑기로는 못 잡는다 — 지우는 줄이 **있는 것** 자체는 맞기 때문이다.
+# 그래서 함수를 진짜로 돌려 파일이 언제 사라지는지 본다.
+JARTEST="$(mktemp -d)"
+cat > "$JARTEST/run.sh" <<'INNER'
+set -u
+# `gate_jar` 만 흉내 낸다 — 로그인 대신 파일 하나를 만든다.
+gate_jar() { local j; j="$(mktemp "${TMPDIR:-/tmp}/faux-jar.XXXXXX")"; printf '%s
+' "$j"; }
+GATE_JAR=""
+drop_gate_jar() {
+  [ -n "$GATE_JAR" ] || return 0
+  rm -f "$GATE_JAR"; GATE_JAR=""; trap - EXIT INT TERM
+}
+hold_gate_jar() {
+  local url="${1:-}" jar
+  jar="$(gate_jar "$url")" || return 1
+  [ -n "$jar" ] || return 0
+  GATE_JAR="$jar"
+  trap 'drop_gate_jar' EXIT INT TERM
+}
+hold_gate_jar http://x
+printf 'held=%s
+' "$GATE_JAR"                       # 전역이 부모에 남았나
+[ -f "$GATE_JAR" ] && printf 'first=yes
+'           # 첫 호출 때 있다
+[ -f "$GATE_JAR" ] && printf 'second=yes
+'          # 둘째 호출 때도 있다
+printf '%s
+' "$GATE_JAR" > "$1"                     # 경로를 밖으로 흘린다
+exit 0                                               # 나가면 trap 이 지운다
+INNER
+OUTJ="$(bash "$JARTEST/run.sh" "$JARTEST/path" 2>&1)"
+JARPATH="$(cat "$JARTEST/path" 2>/dev/null || true)"
+check "쿠키 경로가 부모 셸에 남는다 (서브셸이면 빈다)" \
+  "$(printf '%s' "$OUTJ" | grep -c '^held=/')" "1"
+check "첫 호출 때 파일이 있다" \
+  "$(printf '%s' "$OUTJ" | grep -c '^first=yes')" "1"
+check "둘째 호출 때도 아직 있다" \
+  "$(printf '%s' "$OUTJ" | grep -c '^second=yes')" "1"
+check "나가면 지워진다" "$([ -e "$JARPATH" ] && echo left || echo gone)" "gone"
+rm -rf "$JARTEST"
+
+echo
 echo "bml reparse 는 EIS 맞춤도 같이 다시 한다"
 # 충방전 파싱은 결정적이라 다시 읽으면 끝이지만, EIS 는 판정 규칙이 맞춤 안에
 # 들어 있다.  여기서 같이 안 돌리면 사람은 "왜 갑자기 미결정이지" 만 본다.
@@ -1260,6 +1319,12 @@ check "수렴 안 한 개수를 읽는다" \
 # EIS 가 실패해도 충방전 결과를 되돌리지 않는다 — 둘은 서로 다른 일이다.
 check "EIS 실패는 경고로 끝난다" \
   "$(printf '%s' "$RE" | grep -c 'EIS 맞춤은 다시 하지 못했습니다')" "1"
+# 두 호출 **사이에서** 쿠키를 지우면 안 된다.  그것이 바로 그 결함이었다.
+BETWEEN="$(printf '%s' "$RE" | sed -n '/api\/runs\/reparse/,/api\/eis\/refit/p')"
+check "두 호출 사이에서 쿠키를 안 지운다" \
+  "$(printf '%s' "$BETWEEN" | grep -c 'rm -f "\$jar"')" "0"
+check "끝에서 명시적으로도 한 번 정리한다" \
+  "$(printf '%s' "$RE" | grep -c '^  drop_gate_jar$')" "1"
 
 echo
 if [ "$fail" -eq 0 ]; then

@@ -4821,6 +4821,33 @@ cmd_only() {
 #:
 #: 파일은 `/tmp` 에 만든다.  이 쿠키는 암호와 같은 값이라 저장소 폴더에 남기지
 #: 않는다 -- 쓰고 나서 부른 쪽이 지운다.
+#: 문을 통과한 쿠키 파일.  **나가는 길이 하나가 아니라서** 부르는 쪽에서
+#: 지우면 하나를 빠뜨린다 — 실제로 빠뜨렸다: `bml reparse` 가 충방전 호출
+#: 직후에 지워 버려서, 바로 뒤의 EIS 호출이 쿠키 없이 나가
+#: `{"detail":"암호가 필요합니다."}` 를 받았다.  터널 약속과 같은 방식으로
+#: trap 에 건다 (`keep_tunnel_promise` 위 머리말 참고).
+GATE_JAR=""
+
+drop_gate_jar() {
+  [ -n "$GATE_JAR" ] || return 0
+  rm -f "$GATE_JAR"
+  GATE_JAR=""
+  trap - EXIT INT TERM
+}
+
+#: 쿠키를 받아 두고, 어느 길로 나가든 지워지게 건다.  경로는 `$GATE_JAR` 다.
+#:
+#: **표준출력으로 내지 않는다.**  그러면 부르는 쪽이 `$(...)` 로 받게 되는데,
+#: 명령 치환은 서브셸이라 거기서 건 `trap` 도 전역도 부모에 안 남는다 —
+#: 정리가 걸린 줄 알고 안 걸리는, 제일 나쁜 종류의 조용한 실패다.
+hold_gate_jar() {
+  local url="${1:-}" jar
+  jar="$(gate_jar "$url")" || return 1
+  [ -n "$jar" ] || return 0            # 문이 없다 -- 지울 것도 없다
+  GATE_JAR="$jar"
+  trap 'drop_gate_jar' EXIT INT TERM
+}
+
 gate_jar() {
   local url="${1:-}" jar code
   [ -n "${WORKBENCH_PASSWORD:-}" ] || return 0   # 문이 없다 -- 그냥 간다
@@ -4842,20 +4869,21 @@ cmd_reparse() {
   # 바깥에 열려 있으면 문이 서 있다 (ADR 0014).  `/api/health` 만 문 밖이라
   # 서버가 살아 있는 것과 이 POST 가 들어갈 수 있는 것은 다른 일이다 -- 실측:
   # {"detail":"암호가 필요합니다."}.
-  if [ -n "${WORKBENCH_PASSWORD:-}" ] && ! jar="$(gate_jar "$url")"; then
+  if [ -n "${WORKBENCH_PASSWORD:-}" ] && ! hold_gate_jar "$url"; then
     die "문을 통과하지 못했습니다 — 이 기계에 적힌 암호가 그 서버의 것과 다릅니다 (${GREEN}bml password${OFF})."
   fi
+  jar="$GATE_JAR"
   step "전부 다시 읽는 중 ${DIM}(원본은 그대로 · 요약만 새로 씁니다)${OFF}"
   say "  ${DIM}파일이 많으면 몇 분 걸립니다.${OFF}"
   curlargs=(-sS -m 3600 -X POST)
   [ -n "$jar" ] && curlargs+=(-b "$jar")
+  # 쿠키는 **여기서 지우지 않는다.**  바로 뒤에 EIS 호출이 같은 문을 지나야
+  # 한다.  어느 길로 나가든 `drop_gate_jar` 가 trap 에서 지운다.
   out="$(curl "${curlargs[@]}" "$url/api/runs/reparse" 2>&1)" || {
-    [ -n "$jar" ] && rm -f "$jar"
     printf '%s✕%s 다시 읽지 못했습니다.\n' "$RED" "$OFF" >&2
     say "  ${DIM}${out}${OFF}"
     exit 1
   }
-  [ -n "$jar" ] && rm -f "$jar"
   total="$(printf '%s' "$out" | sed -n 's/.*"total":[[:space:]]*\([0-9]*\).*/\1/p')"
   done_="$(printf '%s' "$out" | sed -n 's/.*"reparsed":[[:space:]]*\([0-9]*\).*/\1/p')"
   if [ -z "$total" ]; then
@@ -4904,6 +4932,7 @@ cmd_reparse() {
     say "  ${DIM}${out}${OFF}"
   fi
 
+  drop_gate_jar
   say "  ${DIM}화면을 새로고침하면 새 값이 보입니다.${OFF}"
 }
 
