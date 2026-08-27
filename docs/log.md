@@ -5306,3 +5306,34 @@ EIS 비교의 고르개는 이름과 조건만 보여 줬다. fitting 이 있는
 코드와 이 기록은 바뀌었는데 ADR 본문이 "처음에는 다 접혀 있다" 로 남아 있었다.
 결정을 찾으러 오는 사람이 읽는 자리가 거기다 — 코드와 어긋난 ADR 은 없는 것보다
 나쁘다.
+
+## [2026-08-27] create | Codex 리뷰 과제 — 우리 VPS 한 대를 워크벤치의 대문으로
+
+`tools/vps-setup.sh` 는 **한 번도 안 돌아 본 107줄**이고, 남의 기계에서 root 로
+돈다. 이 저장소에서 시험이 못 닿는 유일한 코드라 사람 눈이 필요하다.
+
+과제를 쓰면서 제 diff 를 읽었고 (`preparing-for-review`: "남이 쓴 것처럼 읽어라")
+셋을 이미 의심하고 있다 — 확인을 부탁하는 형태로 적었다.
+
+- **A. certbot 이 돌기 전에 nginx 설정이 깨져 있을 것이다.** `listen 443 ssl;`
+  블록을 먼저 써 두고 심볼릭 링크를 건 뒤 `certbot --nginx` 를 부르는데, 그
+  블록에는 아직 `ssl_certificate` 가 없다 (발급 전이라 없는 게 맞다). nginx 는
+  그 조합을 거절하므로 certbot 안의 `nginx -t` 가 실패할 것으로 본다.
+  흔한 처방(:80 만 써 두고 443 은 certbot 이 붙이게)을 그대로 쓰면 우리가 적어
+  둔 `client_max_body_size 512m` · `proxy_buffering off` ·
+  `proxy_read_timeout 3600s` 가 갈 곳이 없어진다 — 셋 다 없으면 안 되는
+  것이라 (512 MB 업로드 · 20초 하트비트 SSE) 최소 수정을 함께 물었다.
+- **B. `Connection "upgrade"` 를 무조건 보낸다** (`map $http_upgrade` 없이).
+- **C. `rm -f .../sites-enabled/default`** — 전용 기계 전제인데 안 적혀 있다.
+
+**여기서 고치지 않았다.** nginx 가 이 컨테이너에 없어 `nginx -t` 를 못 돌린다 —
+못 돌려 본 수정을 "고쳤다" 로 밀어 넣는 것이 지금 이 스크립트가 처한 문제
+그대로다 (§0.4). 확인을 받고 고친다.
+
+물은 것 여섯: keepalive 의 죽는 길 (`kill -- -$pid` 는 프로세스 그룹 리더가
+아니라 대개 실패하고 trap 에 기댄다 — 재우기·랜 뽑기·`bml stop` 에서 ssh 가
+확실히 죽는가), SSE·512 MB 가 `ssh -R` 한 단을 더 지나도 되는가,
+`GatewayPorts` 가 `clientspecified`·없음일 때, **전송은 살아 있는데 전달만
+풀리는** 일이 우리 VPS 에서도 나는가 (localhost.run 에서 겪은 그것 —
+`share_stale` 이 생긴 이유), Oracle Cloud 의 기본 iptables, 그리고 우리가
+안 본 구멍.
