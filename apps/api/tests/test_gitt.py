@@ -435,3 +435,25 @@ def test_a_gitt_record_can_sit_in_a_group_without_a_cell(client):
                        json={"group_id": group["id"]}).json()
     assert out["group_id_effective"] == group["id"]
     assert out["group_label"] == "GITT 묶음"
+
+
+def test_the_group_sticks_even_without_a_cell(client):
+    """EIS 와 같은 규칙 (ADR 0027) — 셀을 안 만들어도 그룹은 남는다.
+
+    파일부터 올려 두고 셀은 나중에 만드는 순서가 흔한데, 예전에는 그때
+    업로드 화면에서 고른 그룹이 아무 데도 안 가고 사라졌다.
+    """
+    group = client.post("/api/groups", json={"name": "GITT 묶음"}).json()
+    out = client.post("/api/gitt/runs/upload", params={"group_id": group["id"]},
+                      files={"file": ("loose.wrd", gitt_bytes(),
+                                      "application/octet-stream")}).json()
+    detail = client.get(f"/api/gitt/runs/{out['id']}").json()
+    assert detail["sample_id"] is None
+    assert detail["group_id"] == group["id"]
+
+
+def test_an_unknown_group_is_refused(client):
+    fail = client.post("/api/gitt/runs/upload", params={"group_id": 99999},
+                       files={"file": ("nope.wrd", gitt_bytes(),
+                                       "application/octet-stream")})
+    assert fail.status_code == 404

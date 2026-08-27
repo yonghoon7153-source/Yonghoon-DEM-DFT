@@ -88,6 +88,12 @@ export function EisUpload() {
               cell_config: config || undefined,
               purpose: purpose.trim() || undefined,
               sample_id: plan[index] ?? undefined,
+              // **그룹은 셀과 따로 보낸다** (ADR 0027).  예전에는 ① 에서 고른
+              // 그룹이 `planFor` 가 **새로 만드는 셀**에만 붙었다.  그래서
+              // 셀을 안 만들고 파일만 올리면 -- SOC 스캔을 일단 올려 두는
+              // 흔한 순서다 -- 그 그룹이 아무 데도 안 가고 사라졌고, 목록에는
+              // '그룹 없음' 으로 떴다.  화면이 물어본 것을 버리면 안 된다.
+              group_id: pick.group.effective ?? undefined,
               // 올리면서 회로를 골라 맞춘다.  나중에 맞추면 목록에 저항이
               // 빈 줄로 쌓이는데, 그 줄은 "이 셀은 안 맞는다" 와 "아직
               // 아무도 안 눌러 봤다" 를 구분해 주지 않는다.

@@ -1249,3 +1249,58 @@ def test_one_cells_spectra_stay_in_cycle_order(client):
     names = [row["name"] for row in
              client.get("/api/eis/spectra", params={"sample_id": sample["id"]}).json()]
     assert names == ["3번", "200번"], names
+
+
+def test_the_group_sticks_even_without_a_cell(client):
+    """업로드 화면이 고른 그룹은 **셀이 없어도** 남는다 (ADR 0027).
+
+    예전에는 그 그룹이 `planFor` 가 새로 만드는 **셀에만** 붙었다.  그래서
+    셀을 안 만들고 파일만 올리면 -- SOC 스캔을 일단 올려 두는 흔한 순서다 --
+    ① 에서 고른 그룹이 아무 데도 안 가고 사라졌고, 목록에는 '그룹 없음' 으로
+    떴다.  화면이 물어본 것을 버리면 안 된다.
+    """
+    group = client.post("/api/groups", json={"name": "SOC 스캔"}).json()
+    out = client.post("/api/eis/spectra/upload",
+                      params={"kind": "liquid", "group_id": group["id"]},
+                      files={"file": ("loose.mpr", mpr(),
+                                      "application/octet-stream")}).json()
+    detail = client.get(f"/api/eis/spectra/{out['id']}").json()
+    # 셀은 안 붙었는데 그룹은 붙었다 — 그 둘은 서로 다른 질문이다.
+    assert detail["sample_id"] is None
+    assert detail["group_id"] == group["id"]
+    assert detail["group_id_effective"] == group["id"]
+
+
+def test_an_unknown_group_is_refused_rather_than_dropped(client):
+    """없는 그룹 번호로 올리면 404 다 — 조용히 `None` 으로 두지 않는다.
+
+    셀 번호는 이미 그렇게 하고 있었다 (#23).  그룹만 통과시키면 오타 하나가
+    '그룹 없음' 으로 조용히 내려앉고, 올린 사람은 붙었다고 생각한다.
+    """
+    fail = client.post("/api/eis/spectra/upload",
+                       params={"kind": "liquid", "group_id": 99999},
+                       files={"file": ("loose2.mpr", mpr(),
+                                       "application/octet-stream")})
+    assert fail.status_code == 404
+
+
+def test_a_second_upload_fills_a_blank_group_but_never_moves_one(client):
+    """빈 칸만 채운다 — 이미 적힌 그룹을 다시 올리면서 옮기지 않는다."""
+    first = client.post("/api/groups", json={"name": "처음"}).json()
+    second = client.post("/api/groups", json={"name": "나중"}).json()
+    body = mpr(rs=6.0)
+    bare = client.post("/api/eis/spectra/upload", params={"kind": "liquid"},
+                       files={"file": ("g.mpr", body,
+                                       "application/octet-stream")}).json()
+    assert client.get(f"/api/eis/spectra/{bare['id']}").json()["group_id"] is None
+
+    client.post("/api/eis/spectra/upload",
+                params={"kind": "liquid", "group_id": first["id"]},
+                files={"file": ("g.mpr", body, "application/octet-stream")})
+    assert client.get(f"/api/eis/spectra/{bare['id']}").json()["group_id"] == first["id"]
+
+    # 두 번째 그룹으로 또 올려도 안 옮긴다 — 남의 묶음에서 떼어 오는 것이 된다.
+    client.post("/api/eis/spectra/upload",
+                params={"kind": "liquid", "group_id": second["id"]},
+                files={"file": ("g.mpr", body, "application/octet-stream")})
+    assert client.get(f"/api/eis/spectra/{bare['id']}").json()["group_id"] == first["id"]

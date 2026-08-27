@@ -59,6 +59,10 @@ export function GittUpload() {
           const sampleId = plan[index]
           const run = await api.uploadGittRun(file, {
             ...(sampleId ? { sample_id: sampleId } : {}),
+            // EIS 업로드와 같은 이유로 **그룹을 따로 보낸다** (ADR 0027):
+            // 셀을 안 만들고 파일만 올리면 화면에서 고른 그룹이 사라졌다.
+            ...(pick.group.effective === null
+              ? {} : { group_id: pick.group.effective }),
             ...(purpose.trim() ? { purpose: purpose.trim() } : {}),
           })
           setResults((current) => [{ file: file.name, run }, ...current])

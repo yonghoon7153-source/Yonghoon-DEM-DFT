@@ -211,6 +211,9 @@ def list_runs(session: Session = Depends(get_session),
 @router.post("/runs/upload", response_model=GittRunOut, status_code=201)
 async def upload_run(file: UploadFile = File(...),
                      sample_id: int | None = Query(None, description="이 셀에 붙인다"),
+                     group_id: int | None = Query(
+                         None,
+                         description="이 측정이 속한 그룹 — 셀에 안 붙여도 남는다"),
                      purpose: str = Query("", description="무엇을 보려고 잰 측정인가"),
                      session: Session = Depends(get_session)):
     """Store one GITT ``.wrd`` and count what is in it.
@@ -228,6 +231,11 @@ async def upload_run(file: UploadFile = File(...),
 
     if sample_id is not None and session.get(Sample, sample_id) is None:
         raise HTTPException(404, f"sample {sample_id} not found")
+    # **그룹은 셀이 없어도 남는다** (ADR 0027).  EIS 업로드와 같은 이유:
+    # 파일부터 올려 두고 셀은 나중에 만드는 순서가 흔한데, 예전에는 그때
+    # 화면에서 고른 그룹이 아무 데도 안 가고 사라졌다.
+    if group_id is not None and session.get(ExperimentGroup, group_id) is None:
+        raise HTTPException(404, f"group {group_id} not found")
 
     digest = hashlib.sha256(content).hexdigest()
     existing = session.exec(select(GittRun).where(GittRun.sha256 == digest)).first()
@@ -241,6 +249,9 @@ async def upload_run(file: UploadFile = File(...),
         # 있으면 조용히 옮기지 않는다 -- 남의 셀에서 떼어 오는 것이 된다.
         if sample_id is not None and existing.sample_id is None:
             existing.sample_id = sample_id
+            session.add(existing)
+        if group_id is not None and existing.group_id is None:
+            existing.group_id = group_id
             session.add(existing)
         # 목적도 같다: 비어 있을 때만 채운다.  다시 올리면서 빈 칸을 두었다고
         # 먼저 적어 둔 것을 지우지 않는다.
@@ -269,6 +280,7 @@ async def upload_run(file: UploadFile = File(...),
     seconds = wrd.seconds("test_time")
     record = GittRun(
         sample_id=sample_id,
+        group_id=group_id,
         purpose=purpose.strip(),
         name=(file.filename or "gitt").rsplit(".", 1)[0],
         original_name=file.filename or "",

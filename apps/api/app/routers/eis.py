@@ -853,6 +853,8 @@ async def upload_spectrum(
     file: UploadFile = File(...),
     settings_file: UploadFile | None = File(None),
     sample_id: int | None = Query(None),
+    group_id: int | None = Query(
+        None, description="이 측정이 속한 그룹 — 셀에 안 붙이고 올려도 남는다"),
     kind: str = Query(LIQUID),
     cell_config: str = Query(""),
     at_cycle: int | None = Query(None, ge=0),
@@ -882,6 +884,13 @@ async def upload_spectrum(
     """
     _validate_kind(kind)
     _validate_config(cell_config)
+    # **그룹은 셀이 없어도 남아야 한다** (ADR 0027: 측정은 제 조건을 갖는다).
+    # 예전에는 업로드 화면의 그룹이 **새로 만드는 셀**에만 붙었다.  그래서
+    # 셀을 안 만들고 파일만 올리면 -- SOC 스캔을 일단 올려 두는 흔한 순서다 --
+    # ① 에서 고른 그룹이 아무 데도 안 가고 사라졌고, 목록에는 '그룹 없음' 으로
+    # 떴다.  화면은 물어봤는데 답이 버려진 셈이다.
+    if group_id is not None and session.get(ExperimentGroup, group_id) is None:
+        raise HTTPException(404, f"group {group_id} not found")
     # PATCH 는 확인하는데 업로드는 안 하고 있었다.  없는 셀 번호로 올리면
     # 스펙트럼이 아무 데도 안 붙은 채 조용히 저장되고, 셀 화면에서는 영영
     # 안 보인다 -- 붙였다고 생각한 사람에게는 사라진 것과 같다.
@@ -916,6 +925,9 @@ async def upload_spectrum(
         changed = False
         if sample_id is not None and existing.sample_id is None:
             existing.sample_id = sample_id
+            changed = True
+        if group_id is not None and existing.group_id is None:
+            existing.group_id = group_id
             changed = True
         if cell_config and not existing.cell_config:
             existing.cell_config = cell_config
@@ -1004,6 +1016,7 @@ async def upload_spectrum(
         spectrum = sweep.spectrum
         record = SpectrumRecord(
             sample_id=sample_id,
+            group_id=group_id,
             # 스윕이 여럿이면 이름으로 구별돼야 한다 -- 같은 파일에서 나온
             # 21개가 전부 같은 이름이면 목록에서 고를 수가 없다.
             name=stem if len(sweeps) == 1 else f"{stem} #{sweep.index}",
