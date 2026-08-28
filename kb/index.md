@@ -1,6 +1,6 @@
 # kb 카탈로그 (생성물 — 손으로 고치지 말 것)
 
-> `python3 tools/kb_wiki.py index` 가 만든다 · 2026-08-28 · managed-files: 258
+> `python3 tools/kb_wiki.py index` 가 만든다 · 2026-08-28 · managed-files: 259
 
 규칙: kb/SCHEMA.md · 열린 질문: kb/questions/ · 논지 카드: kb/syntheses/ · 원장: kb/open_items.md · 문헌: litdb/INDEX.md
 
@@ -221,7 +221,8 @@
 - `kb/projects/sei_products_2026_08_06.md` — SEI 분해상 6종 캠페인 — 확산장벽 · 형성전위 · 밴드갭
 - `kb/projects/symposium_2026_competitive_analysis.md` — 전지기술 심포지엄 2026 — 경쟁 좌표 분석 (이상욱 / 문장혁)
 
-## questions/ (2)
+## questions/ (3)
+- `kb/questions/esw_reduction_limit_field_2026_08_28.md` — `reduction_limit_V` 는 환원한계가 아닌 것 같다 — breakpoint 하나 아래를 가리킨다 ○미열람 [미해결]
 - `kb/questions/lpsocl_low_beta_mechanism.md` — 저β 런의 정체 — 케이지 절편인가, 진짜 sub-diffusion인가, 느린 전이인가 ⚠disputed ○미열람 [active]
 - `kb/questions/sdcp_site_preference.md` — SDCP 조각은 LiNiO₂(104)에서 Li 자리와 Ni 자리 중 어디에 붙는가 ○미열람 [active]
 
@@ -293,4 +294,4 @@
 ## elements/ — 118개 (생성물/템플릿, 목록 생략)
 ## templates/ — 1개 (생성물/템플릿, 목록 생략)
 
-## litdb/ — digest 196개 (정본 목록: litdb/INDEX.md)
+## litdb/ — digest 197개 (정본 목록: litdb/INDEX.md)
