@@ -7,38 +7,24 @@
 
 > 순서가 있다. 앞이 끝나야 뒤가 뜻이 있다.
 
-### ⏭-0. SDCP doped — **범위 마감(proposed) 등록, 계산 없음** (2026-08-28 밤 확정)
-1저자 지시: "돌아가지 말고 doped 를 닫을 수 있는 것만" — 회신 O 재승인 7조건을 밟는 대신
-**범위 마감**으로 닫았다: `db/properties/sdcp_doped_closed_2026_08_28.json` +
-`decisions.json D-2026-08-28-sdcp-doped-scope-closure` (proposed — **ratify 는 1저자 몫**).
-- 유효 잔존: 추출 부호 +0.34 eV(부호만) · 기체상 DPE/LCA/EA · (중성형은 별도 마감)
-- 재개는 회신 O 7조건 전부로만. 부분 재개 없음.
-- 부수 판정 완료: LiNiO₂(104)+U 슬랩 **금속 아님** (gap ≈ 0.21 eV, dense 일치, 부분점유 0)
-  — 음이온을 중성 셀로 받는 지름길 없음. 기록: doped 마감 문서 재개조건 절.
-**남은 유일한 필수 계산 — 회신 P 로 설계 확정 (delta_joint 금지)**:
-1단계 (지금): 기준 분자 3종(box24, 기하 고정)을 **NUPDOWN=-1 · LREAL=F 유지** 로 재실행
-  → δ_m 만 잰다. ⛔ LREAL 은 건드리지 않는다 — 정본이 all-F 라서, 분자 T 재실행은
-  all-T 값을 만들 뿐 아무 정본도 재지 못한다 (회신 P 3번 P0). 분자 T 계산은 생략.
-2단계 (0.346 을 살릴 때만): 관련 SDCP/PTFE **complex 를 LREAL=F 로** 재실행 —
-  cross-fragment 차에서 slab 은 소거되므로 slab F 는 불필요. 최소 2잡(SDCP Nitop pm1 +
-  c10 Litop pm1) × 5.8 h ≈ 12 h, 전 자세 복구는 8잡 ≈ 46 h.
-3단계 (절대 E_ads 까지): matching slab F 추가 (+5.2 h).
-**비용 실측** (wave1 OUTCAR 의 Elapsed time, 전부 48 MPI rank · Γ 1점):
-mol box24 잡당 sdcp_neutral 1262 s · ptfe_c10 1196 s · ptfe_dimer 554 s = **합 50분**.
-제약 해제로 SCF 스텝 +50% 를 잡아도 **~75분**, 6잡 분리해도 **~2.5시간**. core-h 40.
-⇒ **계산은 비용이 아니다. 며칠이 걸린다면 그건 외주 왕복 시간이다.**
-⚠ 대조: 회신 P 3번이 "복합체 쪽을 LREAL=F 로 돌려야 한다" 로 답하면 잡당 5.8 h ×
-복합체 8개 + 슬랩 = **52 h(≈2일)** — 같은 양을 재는 데 40배다. 그래서 그 항목의 답이
-비용을 결정한다.
+### ⏭-0. SDCP doped — **재개 착수** (2026-08-28 심야, 1저자 지시)
+마감(active)은 유지 — **옛 프로토콜(n=1 wave1)의 숫자만 잠근 것**이고, 재개는 그 잠금과
+별개로 진행한다. 잠금은 재승인 조건이 채워지면 자동으로 풀린다 (planned_upgrade).
 
-**리뷰 2건 발송 대기** (둘 다 붙여넣기 완성본):
-- `kb/reviews/codex_P_prompt_wave1_incar_audit_2026_08_28.md` — 수치 프로토콜
-  (doped 마감 정당성 · LREAL 회계 · 두 키 동시변경 · MAGMOM 미검증 파급)
-- `kb/reviews/codex_Q_prompt_neutral_ptfe_closure_2026_08_28.md` — **살아 있는 결론**
-  (0.346 eV 헤드라인 · 자세 표본 4 vs 2 · **원자당 정규화 순위 역전** · dimer 를 근거에서
-  빼는 게 선택적 보고인지 · PTFE 마감문서 부재)
-  ⇒ **Q 를 먼저 보낸다** — 원고 문장에 걸린 쪽이다.
-자체 감사 기록은 `db/properties/sdcp_neutral_closed_2026_08_28.json` §🔎_자체감사 절.
+**재개 로드맵** (회신 O 조건 7 → 실행 순서):
+1. ✅ 설계 v2 작성 — `kb/questions/sdcp_doped_reopen_v2_2026_08_28.md`
+   (화학종 S1–S3c·N1–N3 · estimand=adiabatic E_ads+carrier_retention · 게이트 v2 · Stage 0 목록)
+2. ⏳ **회신 R 발송** — `kb/reviews/codex_R_prompt_doped_reopen_v2_2026_08_28.md`
+   (붙여넣기 완성본. GO/NO-GO 명시 요구). **R 통과 전 계산 금지.**
+3. R 통과 후: 빌더 확장(build_v7c_trimer → n=4·6, manifest 출력) → Stage 0 Z1–Z5
+   (ORCA r²SCAN-3c, desktop WSL — 외주 불필요, 로컬로 돈다)
+4. 병행: 조건 ⑥ 기준 분자 3잡(NUPDOWN=-1·LREAL=F, 외주 ~75분 — neutral 헤드라인과 공유)
+   · 조건 ⑦ manifest 도구
+5. 실험 요청(협력자): EPR spin count · carrier/산화도 측정 · counterion 조성
+   — polaron/bipolaron 분율은 계산이 못 정한다 (회신 O 7번)
+
+**리뷰 발송 대기 2건**: R(재개 설계) · Q(neutral·PTFE — `codex_Q_prompt_...`).
+**R 이 우선** — doped 재개가 1저자 최우선 지시라서.
 
 ### ⏭-1. T13 확인 — **먼저**
 kgy 800 ps 런 2개(`lpsocl_long` · `lpsocl_small800`)가 8/29 아침 완주.

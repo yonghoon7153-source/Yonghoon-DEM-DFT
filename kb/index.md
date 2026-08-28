@@ -1,6 +1,6 @@
 # kb 카탈로그 (생성물 — 손으로 고치지 말 것)
 
-> `python3 tools/kb_wiki.py index` 가 만든다 · 2026-08-28 · managed-files: 268
+> `python3 tools/kb_wiki.py index` 가 만든다 · 2026-08-28 · managed-files: 270
 
 규칙: kb/SCHEMA.md · 열린 질문: kb/questions/ · 논지 카드: kb/syntheses/ · 원장: kb/open_items.md · 문헌: litdb/INDEX.md
 
@@ -167,7 +167,7 @@
 - `kb/results/vgcf_hbn_figure_plan.md` — VGCF/h-BN 원고 — 층수 연구를 어디에 둘 것인가 (2026-07-31 결정)
 - `kb/results/vgcf_hbn_gallery_mechanism_2026_07_30.md` — h-BN@VGCF — 209 meV 층수효과의 정체: confinement 확정 (2026-07-30)
 
-## reviews/ (33)
+## reviews/ (34)
 - `kb/reviews/ECERD2600097_review_notes.md` — 📝 리뷰 노트 — ECER-D-26-00097 (Fan 외, *Stability Issues in Sulfide-Based ASSB*)
 - `kb/reviews/codex_A_cascade_ml_2026_08_20.md` — 교차리뷰 A — cascade 파이프라인 + 머신러닝 (codex 작업지시서) ○미열람
 - `kb/reviews/codex_B_neb_md_tools_2026_08_20.md` — 교차리뷰 B — NEB · MD · 도구 (codex 작업지시서) ○미열람
@@ -189,6 +189,7 @@
 - `kb/reviews/codex_P_prompt_wave1_incar_audit_2026_08_28.md` — Codex 회신 P 요청 프롬프트 — wave1 INCAR 전수 감사 + doped 마감 심사 ○미열람
 - `kb/reviews/codex_P_wave1_incar_audit_reply_2026_08_28.md` — 회신 P — INCAR 감사 fail-open · 추출부호 철회 · LREAL 회계 정정 (P0 3건) ○미열람
 - `kb/reviews/codex_Q_prompt_neutral_ptfe_closure_2026_08_28.md` — Codex 회신 Q 요청 프롬프트 — neutral·PTFE 마감과 0.346 eV 헤드라인 심사 ○미열람
+- `kb/reviews/codex_R_prompt_doped_reopen_v2_2026_08_28.md` — Codex 회신 R 요청 프롬프트 — doped 재개 설계 v2 의 계산 전 심사 ○미열람
 - `kb/reviews/codex_stats_question_2026_08_11.md` — Codex 질문 — 통계 판정 3건 (β 귀무분포 · 사다리 설계 · BVSE 부호 · 판정바닥 ddof)
 - `kb/reviews/section3_review_candidates.md` — 📋 §3 리뷰 코멘트 후보 — 소거법 작업용 (ECER-D-26-00097)
 - `kb/reviews/section3_review_comments_compressed.md` — Comments on Section 3 (Intrinsic Stability of Sulfide SEs) — 압축판 v2
@@ -229,10 +230,11 @@
 - `kb/projects/sei_products_2026_08_06.md` — SEI 분해상 6종 캠페인 — 확산장벽 · 형성전위 · 밴드갭
 - `kb/projects/symposium_2026_competitive_analysis.md` — 전지기술 심포지엄 2026 — 경쟁 좌표 분석 (이상욱 / 문장혁)
 
-## questions/ (4)
+## questions/ (5)
 - `kb/questions/esw_reduction_limit_field_2026_08_28.md` — `reduction_limit_V` 는 환원한계가 아닌 것 같다 — breakpoint 하나 아래를 가리킨다 ○미열람 [open]
 - `kb/questions/lpsocl_low_beta_mechanism.md` — 저β 런의 정체 — 케이지 절편인가, 진짜 sub-diffusion인가, 느린 전이인가 ⚠disputed ○미열람 [active]
 - `kb/questions/sdcp_doped_estimand_2026_08_28.md` — SDCP doped 흡착 — estimand 카드 (계산 전에 리뷰로 보내는 §1–3) ○미열람 [active]
+- `kb/questions/sdcp_doped_reopen_v2_2026_08_28.md` — sdcp_doped 재개 설계 v2 — 회신 O 재승인 조건 7 을 실제로 채우는 카드 ○미열람 [active]
 - `kb/questions/sdcp_site_preference.md` — SDCP 조각은 LiNiO₂(104)에서 Li 자리와 Ni 자리 중 어디에 붙는가 ○미열람 [active]
 
 ## syntheses/ (4)
