@@ -1,930 +1,930 @@
 {
-  "schema": "canonical_registry/v1",
-  "_purpose": "화면 정본값의 단일 진실 원천. webapp/data.py 는 여기서만 읽고 숫자를 자체 보관하지 않는다.",
-  "_rules": [
-    "값 하나 = 항목 하나. 반드시 source_path + source_key 로 원자료를 가리킨다.",
-    "webapp/canonical.py 의 resolve() 가 그 경로를 따라가 값을 대조한다 (tools/db/validate_canonical.py).",
-    "★ comparison_group 이 같은 값끼리만 순위·비교·레이더에 함께 올린다. 프로토콜이 다르면 group 도 다르다.",
-    "status: canonical(정본) · provisional(잠정) · superseded(철회) · source_pending(출처 미배선).",
-    "prohibitions 는 CLAUDE.md 데이터 규율의 기계 판독 가능한 형태다.",
-    "prefer:'registry' 는 **원자료가 반올림 사본일 때만** 쓰는 예외다. 기본은 원자료를 live 로 읽어 db 수정이 화면에 바로 반영되게 한다.",
-    "★ **수치 대조는 의미 일치를 보증하지 않는다.** 새 항목을 넣을 때 method_id 가 그 source_path 안의 계산을 실제로 서술하는지 사람이 읽고 확인한다 — comp2 가 값은 맞는데 method_id 가 다른 계산(disorder ensemble)을 가리켰다(2026-08-07 Codex 4라운드).",
-    "finite_duration_2026_08_27: 이 값은 동일한 200 ps 프로토콜의 독립 초기화 3–4개에서 얻은 **finite-duration 추정치**다. 제시한 산포는 200 ps run 간 변동이며 **단일궤적 block CI 도, 장시간 극한의 수렴도 뜻하지 않는다.** 유한시간 편향·느린 basin 혼합·무질서 realization 불확실도는 분리되지 않았다."
-  ],
-  "_history": {
-    "2026-08-07": "Codex 코드리뷰 P1 대응으로 신설. 이전에는 webapp/data.py 의 CANONICAL 딕셔너리가 정본이었다. 이관 중 MD_Ea_eV 안에서 단일시드(comp1 0.253 / modelc 0.224)와 4-seed(lpsocl 0.287)가 한 딕셔너리에 섞여 있던 것을 발견 — 대시보드의 '최저값' 순위가 프로토콜을 넘나들고 있었다. group 을 나눠 분리했다.",
-    "2026-08-07b": "Codex 재검증 반영. ★ LPSOCl MD_Ea 를 canonical→provisional 로 내렸다 — 600 K beta 0.615 게이트 탈락 점을 포함한 3점 적합이고 kb/open_items.md 가 인용 보류라 적고 있는데 첫 판에서 대조를 빠뜨렸다. comp1 ICOHP 원 출처 배선(-5.9381; bonds.json·nd_icohp.json 의 -5.944 는 낡은 요약 drift). comp2 ICOHP·gap 출처 배선(gap 은 legacy 유지).",
-    "2026-08-07c": "Codex 3라운드 반영. resolve_error 를 status=source_error 로 내려 자동판정에서 빼고, live 를 요청마다(mtime 캐시) 다시 읽게 했다. comp1 단일시드 Ea 출처 배선 (li_transport.json) — 단 beta 6/6 탈락이라 provisional 유지.",
-    "2026-08-07d": "Codex 4라운드 반영. ★ comp2 MD_Ea 항목이 **의미가 섞여 있었다** — 값 0.275 는 ordered single-champion baseline 인데 method_id/group 에 disorder-ensemble 을 붙여 뒀다. 둘을 별개 metric 으로 분리: MD_Ea_eV_ordered(0.2754597563, comp2_md_arrhenius.json) · MD_Ea_eV_disorder(0.1512±0.0676, comp2_disorder_ensemble.json d=0.50, n_config=3). d=1.00 은 게이트 FAIL 이라 등재하지 않는다. ⚠ 교훈: validator 가 provisional 무출처를 허용해 이 의미 오류를 못 잡았다 — 수치 대조는 method/value 의미 일치를 보증하지 않는다.",
-    "2026-08-07e": "Codex 5라운드 method_id 수동 감사 반영. gap k 표기 정정(modelc k882 · b2o3 25irr-k · comp1 은 미확인이라 표기 제거). B0 comp1/modelc 을 eos.json 의 PRIMARY_paper_value(_v3) 로 재배선 — prefer=registry 우회 제거. ICOHP modelc 을 직접 원자료(bonds_modelc_k663.json, -5.9997)로. E_VRH 는 원자료가 comp1<->comp2 만 완전비교쌍이라 해 네 조성 단일 묶음을 쪼갰다. ★ validator 28/28 통과가 method_id 의미 일치를 보증하지 않는다는 걸 이 감사가 실증했다.",
-    "2026-08-07f": "Codex 6라운드 종료 + provenance 감사 항목 확대. comp1 뿐 아니라 gap 정본 4종 **전부** fixed-occ nscf 의 입력·출력이 repo 에 없다 — standard_dos 의 *_nscf.in 은 전부 tetrahedra_opt(DOS용)다. ⚠ 5라운드에 modelc method_id 를 k882 로 '정정' 한 것도 그 tetrahedra 파일이 근거였으므로 철회하고 표기를 뺐다 — 정정하면서 같은 종류의 오류를 반복했다. 값 자체는 의심하지 않는다(electronic.json 이 정본 기록). provenance_open 필드로 표시하고 kb/open_items.md 에 감사 항목으로 올린다.",
-    "2026-08-07g": "Codex 6라운드 후속 2건. ① provenance_open 문구 정정 — 'fixed-occ 입력이 없다' 가 아니라 **'계통별 실제 실행 입력·출력이 없다'** 가 정확하다. generic 템플릿 nscf_gap.in 은 존재하고 occupations='fixed' 다(방법은 repo 에 있다). 그 템플릿 주석이 modelc 에 6 6 2 를 제시하는 것도 DOS 용 8 8 2 로 정정하면 안 됐다는 근거가 된다. ② lpsocl 의 정본 파일은 electronic.json 이 아니라 lpsocl_dos_gap.json 이다 — 문구를 고쳤다.",
-    "2026-08-20a": "codex 2·3차 리뷰 반영. b2o3 framework_beta_800_1000K 게이트 정정: (1) 옛 beta 0.59/0.63 은 b2o3_full(single-seed legacy)에서 잰 값이라 multiseed Ea 0.199 의 근거가 될 수 없다 → retracted + diagnostic_unbound 로 보존. (2) 새 판정은 not_assessed(required_artifact_set_incomplete) — 미보존은 9런이 아니라 **high-T 6런**이고 600 K 3런은 PMF 소비 기록이 있다(현존 확인 필요). 재실행 범위 = 6런. (3) single-seed 항목에 high-T 사유를 붙였던 1차 정정은 과교정이라 철회, lineage_match=unverified 로. (4) Ea 계보는 numerically_reproducible — build_final_conductivity.py 가 D 를 하드코딩해 미배선. webapp/data.py 는 blocking_gate 존재만으로 '미통과' 를 찍던 것을 gate_outcome 별 문구로 분기(_gate_prefix).",
-    "2026-08-20b": "게이트 판정을 db/governance/assessments.json (append-only sidecar) 으로 이관. canonical claim 에는 required_assessment_refs 만 남는다 — 판정을 값 옆에 두면 consumer 마다 '현재 판정' 을 다르게 고른다 (codex 동결감사). 옛 beta 판정(retracted·diagnostic_unbound)과 현재 판정(not_assessed)은 sidecar 에서 **병존**한다. lineage 는 lineage_binding + numeric_reproduction 두 축으로 쪼갰다 — 재현 가능성과 배선 여부는 독립인데 한 enum(numerically_reproducible)에 넣으면 또 사다리가 된다 (codex R4).",
-    "2026-08-20c": "provenance_open 4건(gap_eV)의 **후보 위치를 특정**했다. 오프라인 백업 전수조사에서 kgy_b2o3_eos / kgy_lpsocl_eos / modelC_v3 dos_pdos 폴더가 나왔다. 아직 위치만이고 fixed-occ 입력 확인은 안 했다. 인덱스 카드: kb/methodology/offline_archive_index_2026_08_20.md",
-    "2026-08-20d": "⭐ gap_eV/b2o3 의 provenance_open **해소**. 백업 A 의 b2o3_nscf_gap.{in,out} 이 occupations='fixed' nscf 이고 .out 이 'highest occupied, lowest unoccupied level (ev): 2.4717 4.4388' 을 직접 찍는다 — 정본 VBM/CBM 과 정확히 일치. 남은 3건(comp1·modelc·lpsocl)은 위치 후보만 있다. ⚠ 파일은 repo 밖 외장 SSD 한 벌이라 사본·CI 검증이 없다.",
-    "2026-08-20e": "gap_eV 나머지 3건(comp1·modelc·lpsocl)의 백업 수색 **실패**를 기록. 백업 두 벌 전수에서 fixed-occ nscf 입력은 b2o3_nscf_gap.in 하나뿐이었다. 같은 곳을 다시 뒤지지 않도록 negative 결과를 남긴다. ⚠ 부수 확인: b2o3 의 nscf_eps.out 은 2.4716/4.4390 으로 nscf_gap.out(2.4717/4.4388)과 4자리에서 갈린다 — 별개 계산(eps용 nscf)이고 **정본은 nscf_gap 쪽**이다.",
-    "2026-08-20f": "KISTI 원본 부재 확인(1저자) → provenance_open 3건의 남은 후보를 kgy·gabia 로 좁혔다. 거기에도 없으면 영구 미해소다. 백업 인덱스 카드의 한계 §4-1 을 '단일 매체' → '단일 매체이자 **유일본**' 으로 격상. 그리고 PDOS PERATOM 의 sigma 불일치는 **재smoothing 하지 않기로** 결정 — 1저자가 per-atom 을 안 쓰므로 결함이 소비 경로에 없다. repo 에 보관하되 총합 판만 인용한다.",
-    "2026-08-20g": "⭐ gap_eV/lpsocl provenance 해소 — kgy ~/work/lpsocl_v0/03b_nscf_gap.{in,out} 이 occupations='fixed' nscf 이고 VBM 2.3870 / CBM 4.6179 를 직접 찍는다(정본 완전 일치). provenance_open 3건 → **2건**(comp1·modelc). 그 둘은 백업 2벌 + kgy + gabia 3중 수색에서 전부 실패했고 KISTI 원본이 없으므로 **영구 미해소**로 본다. gabia comp1_cdd_phx/nscf.out(2.0654)은 CDD용 별개 계산이라 정본 근거가 못 된다.",
-    "2026-08-20h": "⛔ gap_eV/comp1·modelc 를 'provenance 미해소' 에서 **'방법 불일치 의심'** 으로 격상. 백업의 nscf 입력이 occupations='tetrahedra_opt' 이고 짝 출력이 0 바이트/부재다. 같은 폴더의 extract_gap.py 가 \"rerun with occupations='fixed'\" 라 적고 있고, nscf_gap.in 템플릿(fixed-occ)과도 다르다. electronic.json 에서 이 둘만 EF_eV 를 갖는 것도 같은 신호. ⚠ tetrahedra 에서도 고유값 VBM/CBM 은 가능하므로 '확정' 이 아니라 '의심' 이며, 출력이 0 바이트라 **확인 자체가 불가능**하다. 유일한 해소책은 fixed-occ nscf 재계산 — 구조와 레시피가 repo 에 있고 b2o3·lpsocl 이 같은 레시피로 통과했다."
-  },
-  "entries": [
-    {
-      "system": "comp1",
-      "metric": "gap_eV",
-      "value": 2.066,
-      "unit": "eV",
-      "source_path": "db/properties/electronic.json",
-      "source_key": "/eigenvalue_gaps_v100_2026_06_16/comp1/gap_eV",
-      "method_id": "qe-uspp__fixed-occ-nscf-eigenvalue__k888",
-      "comparison_group": "gap-fixedocc-eigenvalue-v1",
-      "status": "canonical",
-      "prohibitions": [
-        "dos_threshold_readout"
-      ],
-      "updated": "2026-06-16",
-      "note": null,
-      "provenance_open": "✅ comp1 해소 (2026-08-24, provenance_resolved_2026_08_24 참조). ⏳ modelc 는 재계산 진행 중. ⚠ **네 계통의 실제 실행 입력·출력이 repo 에 없다.** 값은 정본 파일이 기록하고 있지만, 정본 규칙(fixed-occupations nscf 고유값)을 만족한 그 실행을 파일로 재현할 수 없다. ★ generic 템플릿 `tools/electronic/standard_dos/nscf_gap.in` 은 존재하고 `occupations='fixed'` 다 — 즉 방법 자체는 repo 에 있다. 없는 건 **계통별 실행본**이다. 계통별로 남은 `*_nscf.in` 은 전부 `occupations='tetrahedra_opt'`(DOS 용)이라 fixed-occ 근거로 쓰면 안 된다. 2026-08-07 Codex 6라운드. → kb/open_items.md 의 별도 데이터 감사 항목. comp1: 정",
-      "method_integrity_flag": {
-        "severity": "✅ **해소됨 (2026-08-24)** — 아래 원문은 기록용으로 남긴다",
-        "resolution": "fixed-occ nscf 재계산이 정본 값을 **소수 넷째 자리까지 재현**했다 (2.0656 vs 2.066, 170 irr 일치). 따라서 옛 값이 tetrahedra_opt 재파싱본이었다 해도 **결과가 같다** — parse_eig_gap.py 의 주장(고유값 gap 은 smearing 과 무관하다)이 실측으로 확인된 것이다. 방법 비동질 우려는 논증이 아니라 **재현으로** 닫혔다.",
-        "scope": "⚠ **comp1 만 해소.** modelc 는 2026-08-24 10:24 에 scf 착수, 아직 진행 중이다.",
-        "_original_flag_2026_08_20": {
-          "severity": "⛔ 방법 불일치 의심 (재현 불가보다 심각)",
-          "date": "2026-08-20",
-          "finding": "백업 A `repo_dos/tools/electronic/standard_dos/{comp1,modelc}/` 의 nscf 입력이 **occupations='tetrahedra_opt'** 다 (comp1 nbnd=180 · modelc nbnd=210). 짝 출력은 **0 바이트**(comp1_nscf.out · comp1_dos.out)이거나 **아예 없다**(modelc).",
-          "why_it_matters": "CLAUDE.md 규율은 **fixed-occupations nscf 의 VBM/CBM 고유값만** 인정한다. QE 는 tetrahedra/smearing 에서 'highest occupied, lowest unoccupied' 를 찍지 않고 Fermi 만 찍는다 — 그래서 이 값들이 **어떤 경로로 VBM/CBM 이 됐는지 불명확**하다.",
-          "corroborating": "같은 폴더의 extract_gap.py 가 스스로 적고 있다: \"you used smearing; rerun with occupations='fixed'\". 그리고 nscf_gap.in 템플릿은 occupations='fixed' 에 'comp1 160 / modelc 190' 주석까지 달려 있으나 **실제 입력은 그것이 아니다**.",
-          "signal": "electronic.json 에서 comp1·modelc 만 EF_eV 를 갖고 b2o3(fixed-occ 확인)는 갖지 않는다 — smearing/tetrahedra 계열의 지문이다.",
-          "not_yet_proven": "⚠ tetrahedra_opt 에서도 밴드 고유값으로 VBM/CBM 을 얻는 것 자체는 가능하다. **출력이 0 바이트라 어느 쪽인지 확인할 수 없다** — 그래서 '확정' 이 아니라 '의심' 이다.",
-          "only_resolution": "**fixed-occ nscf 재계산.** 구조(comp1_V0_k444.cif · modelC_DFT_EOS_V0.cif)와 레시피(nscf_gap.in)가 repo 에 있고, 같은 레시피로 b2o3·lpsocl 이 이미 통과했다. 재계산하면 provenance 와 방법 일치가 **한 번에** 닫힌다.",
-          "until_then": "네 계 gap 을 한 표에 나란히 쓸 때 **b2o3·lpsocl 만 fixed-occ 확인됨**을 밝힐 것."
-        }
-      },
-      "provenance_resolved_2026_08_24": {
-        "verdict": "✅ **해소.** fixed-occ nscf 를 처음부터 다시 돌려 정본 값을 재현했다.",
-        "run": "gabia /data/work/runs/gap_nscf/comp1/{scf.in,scf.out,nscf_gap.in,nscf_gap.out} (2026-08-21 09:42 착수 → 08-24 10:23 완료, NP=10 NPOOL=10, CPU 빌드)",
-        "reproduced": {
-          "VBM_eV": 2.1281,
-          "CBM_eV": 4.1937,
-          "gap_eV": 2.0656
-        },
-        "canonical": {
-          "VBM_eV": 2.128,
-          "CBM_eV": 4.194,
-          "gap_eV": 2.066
-        },
-        "agreement": "소수 넷째 자리까지 일치 (반올림 차)",
-        "lineage_hook": "QE 가 찍은 irreducible k-point = **170**, electronic.json 의 kpts='170 irr (k888 nscf)' 와 일치. 셋업 계보가 기계적으로 확인됐다.",
-        "method": "occupations='fixed', nbnd 160, k 8 8 8, conv_thr 1e-10, USPP ecut 60/480. QE 가 'highest occupied, lowest unoccupied level (ev): 2.1281 4.1937' 을 직접 찍었다 — extract_gap.py 정본 경로다. JOB DONE.",
-        "tool": "tools/electronic/run_gap_nscf_gabia.sh"
-      }
-    },
-    {
-      "system": "modelc",
-      "metric": "gap_eV",
-      "value": 2.099,
-      "unit": "eV",
-      "source_path": "db/properties/electronic.json",
-      "source_key": "/eigenvalue_gaps_v100_2026_06_16/modelc/gap_eV",
-      "method_id": "qe-uspp__fixed-occ-nscf-eigenvalue",
-      "comparison_group": "gap-fixedocc-eigenvalue-v1",
-      "status": "canonical",
-      "prohibitions": [
-        "dos_threshold_readout"
-      ],
-      "updated": "2026-06-16",
-      "note": null,
-      "provenance_open": "⚠ **네 계통의 실제 실행 입력·출력이 repo 에 없다.** 값은 정본 파일이 기록하고 있지만, 정본 규칙(fixed-occupations nscf 고유값)을 만족한 그 실행을 파일로 재현할 수 없다. ★ generic 템플릿 `tools/electronic/standard_dos/nscf_gap.in` 은 존재하고 `occupations='fixed'` 다 — 즉 방법 자체는 repo 에 있다. 없는 건 **계통별 실행본**이다. 계통별로 남은 `*_nscf.in` 은 전부 `occupations='tetrahedra_opt'`(DOS 용)이라 fixed-occ 근거로 쓰면 안 된다. 2026-08-07 Codex 6라운드. → kb/open_items.md 의 별도 데이터 감사 항목. ⚠ 5라운드에 method_id 를 k882 로 '정정' 했는데 근거였던 modelc_nscf.in 이 tetrahedra_opt 였다 — **정정하면서 같은 종류의 오류를 반복했다.** 철회했다. ★ 게다가 템플릿 주석은 modelc(rhombo) 에 **6 6 2** 를 제시한다 — DOS 용 8 8 2 와 다르다. electronic.json 은 kpts='68 irr' 만 적어 k-mesh 를 단정할 수 없다.  ⛔ **2026-08-20 3중 수색 실패**: 오프라인 백업 2벌 + kgy(~/work·~/repo) + gabia(/data/work·/root) 전수에서 이 계의 fixed-occ nscf 출력이 **없다**. 같은 조사에서 b2o3(백업)·lpsocl(kgy ~/work/lpsocl_v0)은 찾았으므로 수색 자체는 유효했다. ⚠ gabia `/root/comp1_cdd_phx/nscf.out` 이 gap 2.0654 를 찍지만 정본 2.066 과 4자리에서 갈리고 **CDD/phonon 용 별개 계산**이라 정본 근거로 쓸 수 없다 (b2o3 의 nscf_eps 와 같은 유형). `runs/{comp1,modelc}_eps/nscf.in` 도 **유전율용**이다. ⇒ KISTI 원본이 없으므로 이 2건은 **영구 미해소로 본다.** 값 자체는 정본 파일과 일치하나 그 실행을 재현할 파일이 어디에도 없다.",
-      "method_integrity_flag": {
-        "severity": "⛔ 방법 불일치 의심 (재현 불가보다 심각)",
-        "date": "2026-08-20",
-        "finding": "백업 A `repo_dos/tools/electronic/standard_dos/{comp1,modelc}/` 의 nscf 입력이 **occupations='tetrahedra_opt'** 다 (comp1 nbnd=180 · modelc nbnd=210). 짝 출력은 **0 바이트**(comp1_nscf.out · comp1_dos.out)이거나 **아예 없다**(modelc).",
-        "why_it_matters": "CLAUDE.md 규율은 **fixed-occupations nscf 의 VBM/CBM 고유값만** 인정한다. QE 는 tetrahedra/smearing 에서 'highest occupied, lowest unoccupied' 를 찍지 않고 Fermi 만 찍는다 — 그래서 이 값들이 **어떤 경로로 VBM/CBM 이 됐는지 불명확**하다.",
-        "corroborating": "같은 폴더의 extract_gap.py 가 스스로 적고 있다: \"you used smearing; rerun with occupations='fixed'\". 그리고 nscf_gap.in 템플릿은 occupations='fixed' 에 'comp1 160 / modelc 190' 주석까지 달려 있으나 **실제 입력은 그것이 아니다**.",
-        "signal": "electronic.json 에서 comp1·modelc 만 EF_eV 를 갖고 b2o3(fixed-occ 확인)는 갖지 않는다 — smearing/tetrahedra 계열의 지문이다.",
-        "not_yet_proven": "⚠ tetrahedra_opt 에서도 밴드 고유값으로 VBM/CBM 을 얻는 것 자체는 가능하다. **출력이 0 바이트라 어느 쪽인지 확인할 수 없다** — 그래서 '확정' 이 아니라 '의심' 이다.",
-        "only_resolution": "**fixed-occ nscf 재계산.** 구조(comp1_V0_k444.cif · modelC_DFT_EOS_V0.cif)와 레시피(nscf_gap.in)가 repo 에 있고, 같은 레시피로 b2o3·lpsocl 이 이미 통과했다. 재계산하면 provenance 와 방법 일치가 **한 번에** 닫힌다.",
-        "until_then": "네 계 gap 을 한 표에 나란히 쓸 때 **b2o3·lpsocl 만 fixed-occ 확인됨**을 밝힐 것."
-      }
-    },
-    {
-      "system": "b2o3",
-      "metric": "gap_eV",
-      "value": 1.9671,
-      "unit": "eV",
-      "source_path": "db/properties/electronic.json",
-      "source_key": "/eigenvalue_gaps_v100_2026_06_16/b2o3/gap_eV",
-      "method_id": "qe-uspp__fixed-occ-nscf-eigenvalue__25irr-k",
-      "comparison_group": "gap-fixedocc-eigenvalue-v1",
-      "status": "canonical",
-      "prohibitions": [
-        "dos_threshold_readout"
-      ],
-      "updated": "2026-06-16",
-      "note": null,
-      "provenance_resolved": {
-        "status": "resolved",
-        "date": "2026-08-20",
-        "run": "오프라인 백업 A — T7 Shield D:/v100/kisti_backup_2026-07-14/kgy_b2o3_eos_2026-07-14/b2o3_eos/",
-        "input": "b2o3_nscf_gap.in — calculation='nscf' · occupations='fixed' · nbnd=388 · K_POINTS automatic 7 7 1 0 0 0",
-        "output": "b2o3_nscf_gap.out (222,677 B, 2026-07-14 21:13) — \"highest occupied, lowest unoccupied level (ev): 2.4717 4.4388\"",
-        "match": "정본값과 **정확히 일치** (VBM 2.4717 / CBM 4.4388 → gap 1.9671)",
-        "also": "b2o3_scf_fixed.{in,out} + run_scf_fixed.sh 도 같은 폴더에 있다",
-        "caveat": "⚠ 이 파일들은 **repo 밖(외장 SSD 한 벌)** 이다 — 사본이 없고 CI 가 검증하지 못한다. 인덱스: kb/methodology/offline_archive_index_2026_08_20.md",
-        "open_detail": "⚠ registry 의 kpts 표기가 '25 irr' 인데 입력은 automatic 7x7x1 이다. 그 격자의 irreducible 수가 25 인지는 .out 의 'number of k points' 로 확인해야 한다 (값 일치와는 별개)."
-      }
-    },
-    {
-      "system": "lpsocl",
-      "metric": "gap_eV",
-      "value": 2.2309,
-      "unit": "eV",
-      "source_path": "db/properties/lpsocl_dos_gap.json",
-      "source_key": "/gap_eV",
-      "method_id": "qe-uspp__fixed-occ-nscf-eigenvalue__standard_dos",
-      "comparison_group": "gap-fixedocc-eigenvalue-v1",
-      "status": "canonical",
-      "prohibitions": [
-        "dos_threshold_readout"
-      ],
-      "updated": "2026-07-16",
-      "related_decisions": [
-        "PDOS PERATOM 파일(sigma 0.05 잔존)은 **재smoothing 하지 않는다** — 1저자가 per-atom 을 쓰지 않으므로 결함이 소비 경로에 없다 (2026-08-20 결정). repo 에 그대로 보관하되 총합(states/eV) 판만 인용한다."
-      ],
-      "provenance_resolved": {
-        "status": "resolved",
-        "date": "2026-08-20",
-        "run": "kgy `~/work/lpsocl_v0/`",
-        "input": "03b_nscf_gap.in — occupations='fixed' · calculation='nscf'",
-        "output": "03b_nscf_gap.out — \"highest occupied, lowest unoccupied level (ev): 2.3870 4.6179\"",
-        "match": "정본과 **완전 일치** (VBM 2.387 / CBM 4.6179 → gap 2.2309)",
-        "caveat": "⚠ kgy 로컬 한 벌이다. repo 밖이라 CI 가 검증하지 못한다 — 회수하거나 최소한 sha256 을 남길 것."
-      }
-    },
-    {
-      "system": "comp2",
-      "metric": "gap_eV",
-      "value": 2.04,
-      "unit": "eV",
-      "source_path": "db/properties/electronic.json",
-      "source_key": "/band_gaps/[?id=comp2]/gap_eV",
-      "method_id": "legacy-dos-threshold__unverified",
-      "comparison_group": "gap-legacy-dos-threshold",
-      "status": "provisional",
-      "note": "출처는 배선됐지만 **legacy DOS-threshold 판독**이다(electronic.json 이 _DEPRECATED 로 표시). fixed-occ nscf 재계산 전까지 gap-fixedocc-eigenvalue-v1 묶음에 넣지 않는다 — 자동순위·레이더 제외.",
-      "prohibitions": [
-        "compare_with_fixedocc_group"
-      ],
-      "updated": "2026-08-07"
-    },
-    {
-      "system": "comp1",
-      "metric": "B0_GPa",
-      "value": 26.233,
-      "unit": "GPa",
-      "source_path": "db/properties/eos.json",
-      "source_key": "/results/[?id=comp1_v3]/B0_GPa",
-      "method_id": "dft-bm3-eos__uspp__paper-grade",
-      "comparison_group": "b0-dft-bm3-v1",
-      "status": "canonical",
-      "note": "★ 정밀 정본을 찾았다(2026-08-07 Codex 5라운드): eos.json 의 id=comp1_v3 가 note='PRIMARY_paper_value' 다. 이전엔 반올림 사본(id=comp1, 'confirmed')을 가리켜 prefer=registry 우회를 썼는데 이제 필요 없다.",
-      "updated": "2026-08-07"
-    },
-    {
-      "system": "comp2",
-      "metric": "B0_GPa",
-      "value": 25.8,
-      "unit": "GPa",
-      "source_path": "db/properties/eos.json",
-      "source_key": "/results/[?id=comp2]/B0_GPa",
-      "method_id": "dft-bm3-eos__uspp",
-      "comparison_group": "b0-dft-bm3-v1",
-      "status": "canonical",
-      "updated": "2026-08-07"
-    },
-    {
-      "system": "modelc",
-      "metric": "B0_GPa",
-      "value": 21.71,
-      "unit": "GPa",
-      "source_path": "db/properties/eos.json",
-      "source_key": "/results/[?id=modelc_v3]/B0_GPa",
-      "method_id": "dft-bm3-eos__uspp__paper-grade",
-      "comparison_group": "b0-dft-bm3-v1",
-      "status": "canonical",
-      "note": "★ 정밀 정본을 찾았다(2026-08-07 Codex 5라운드): eos.json 의 id=modelc_v3 가 note='PRIMARY_paper_value' 다. 이전엔 반올림 사본(id=modelc, 'confirmed')을 가리켜 prefer=registry 우회를 썼는데 이제 필요 없다.",
-      "updated": "2026-08-07"
-    },
-    {
-      "system": "lpsocl",
-      "metric": "B0_GPa",
-      "value": 24.71,
-      "unit": "GPa",
-      "source_path": "db/properties/lpsocl_eos_dft_result.json",
-      "source_key": "/B0_GPa",
-      "method_id": "dft-bm3-eos__uspp",
-      "comparison_group": "b0-dft-bm3-v1",
-      "status": "canonical",
-      "updated": "2026-07-16"
-    },
-    {
-      "system": "b2o3",
-      "metric": "B0_GPa",
-      "value": 24.48,
-      "unit": "GPa",
-      "source_path": "db/properties/b2o3_eos_dft_result.json",
-      "source_key": "/B0_GPa",
-      "method_id": "dft-bm3-eos__uspp",
-      "comparison_group": "b0-dft-bm3-v1",
-      "status": "canonical",
-      "updated": "2026-07-16"
-    },
-    {
-      "system": "comp1",
-      "metric": "E_VRH_GPa",
-      "value": 22.06,
-      "unit": "GPa",
-      "source_path": "db/properties/elastic.json",
-      "source_key": "/dft_0K_relaxed_ion_stress_strain_full_Cij/results/[?id=comp1_v3]/E_VRH",
-      "method_id": "dft-0K-relaxed-ion__stress-strain-full-Cij",
-      "comparison_group": "elastic-dft-relaxedion-comp1comp2-v1",
-      "status": "canonical",
-      "updated": "2026-07-26",
-      "note": "★ elastic.json 이 comp2 를 'comp1 과 유일한 완전비교쌍' 이라 적고 있다(USPP·ecut 52/520·k444·cubic-52 동일). 그래서 이 둘만 한 묶음이다."
-    },
-    {
-      "system": "modelc",
-      "metric": "E_VRH_GPa",
-      "value": 27.66,
-      "unit": "GPa",
-      "source_path": "db/properties/elastic.json",
-      "source_key": "/dft_0K_relaxed_ion_stress_strain_full_Cij/results/[?id=modelc_v3]/E_VRH",
-      "method_id": "dft-0K-relaxed-ion__stress-strain-full-Cij",
-      "comparison_group": "elastic-dft-relaxedion-modelc-standalone",
-      "status": "canonical",
-      "updated": "2026-07-26",
-      "note": "⚠ 설정이 comp1/comp2 쌍과 동일하다는 근거가 원자료에 없다 — 네 조성을 한 묶음으로 자동 순위화하면 안 된다(2026-08-07 Codex 5라운드). 같은 설정임을 확인하면 comp1/comp2 묶음으로 합칠 것."
-    },
-    {
-      "system": "lpsocl",
-      "metric": "E_VRH_GPa",
-      "value": 35.04,
-      "unit": "GPa",
-      "source_path": "db/properties/elastic.json",
-      "source_key": "/dft_0K_relaxed_ion_stress_strain_full_Cij/results/[?id=lpsocl_v0]/E_VRH",
-      "method_id": "dft-0K-relaxed-ion__stress-strain-full-Cij",
-      "comparison_group": "elastic-dft-relaxedion-lpsocl-standalone",
-      "status": "canonical",
-      "updated": "2026-07-26",
-      "note": "⚠ 설정이 comp1/comp2 쌍과 동일하다는 근거가 원자료에 없다 — 네 조성을 한 묶음으로 자동 순위화하면 안 된다(2026-08-07 Codex 5라운드). 같은 설정임을 확인하면 comp1/comp2 묶음으로 합칠 것."
-    },
-    {
-      "system": "comp2",
-      "metric": "E_VRH_GPa",
-      "value": 20.03,
-      "unit": "GPa",
-      "source_path": "db/properties/elastic.json",
-      "source_key": "/dft_0K_relaxed_ion_stress_strain_full_Cij/results/[?id=comp2_v3]/E_VRH",
-      "method_id": "dft-0K-relaxed-ion__stress-strain-full-Cij",
-      "comparison_group": "elastic-dft-relaxedion-comp1comp2-v1",
-      "status": "canonical",
-      "updated": "2026-07-26",
-      "note": "★ elastic.json 이 comp2 를 'comp1 과 유일한 완전비교쌍' 이라 적고 있다(USPP·ecut 52/520·k444·cubic-52 동일). 그래서 이 둘만 한 묶음이다."
-    },
-    {
-      "system": "modelc",
-      "metric": "MD_Ea_eV",
-      "value": 0.197,
-      "uncertainty": 0.032,
-      "unit": "eV",
-      "source_path": "db/properties/b2o3_vs_lpscl16_conductivity.csv",
-      "source_key": "/[?system=LPSCl1.6]/Ea_eV",
-      "n_seed": 3,
-      "method_id": "uma-s-1p1__600-800-1000K__3seed__msd2-50ps__NE-haven1",
-      "comparison_group": "md-ea-multiseed-v1",
-      "status": "canonical",
-      "prohibitions": [
-        "absolute_sigma",
-        "single_seed_ratio",
-        "single_trajectory_CI",
-        "long_time_convergence"
-      ],
-      "updated": "2026-07-09",
-      "blocking_gate": null,
-      "gate_detail": {
-        "rule": "beta on seed-ensemble-mean MSD, 2-50 ps, pass 0.8-1.2",
-        "beta_600K": 0.868,
-        "beta_800K": 0.934,
-        "beta_1000K": 0.924,
-        "verdict": "all three temperatures PASS (3-seed means, v2 2026-08-04)",
-        "source": "db/properties/msd_3sys_200ps_origin.csv",
-        "⛔_2026_08_27": "β 하드게이트(0.8–1.2)는 **폐기됐다** — 문헌 근거가 없고 우리 운영점에서 거짓탈락 50 %다. 이 항목은 **당시 판정 이력**으로 남긴다. 현행 판정축은 D_inc (kb/concepts/beta-gate.md §7-8b)."
-      },
-      "uncertainty_kind": "between_seed_sd — 평균의 CI 가 아니라 **run-to-run 산포**다. n=3–4 라 이 SD 자체의 상대오차가 41–50 % 다.",
-      "finite_duration": {
-        "prod_ps": 200,
-        "label": "MD_Ea_eV_200, provisional",
-        "wording": "이 값은 동일한 200 ps 프로토콜의 독립 초기화 3–4개에서 얻은 **finite-duration 추정치**다. 제시한 산포는 200 ps run 간 변동이며 **단일궤적 block CI 도, 장시간 극한의 수렴도 뜻하지 않는다.** 유한시간 편향·느린 basin 혼합·무질서 realization 불확실도는 분리되지 않았다.",
-        "why": "교차리뷰 H Q12 (2026-08-27). block 하한 (T−t₂max)/b 로 200 ps·lag 50 은 유효 block 1.5–3.0 개라 발행 기준 8–10 에 못 미친다 ⇒ 단일궤적 CI 불가. ⚠ 다만 8–10 은 **발행 기준**이지 점추정치를 무효화하는 정리가 아니다 — 값은 **조건부 유지**다."
-      }
-    },
-    {
-      "system": "b2o3",
-      "metric": "MD_Ea_eV",
-      "value": 0.199,
-      "uncertainty": 0.034,
-      "unit": "eV",
-      "source_path": "db/properties/b2o3_md_arrhenius.json",
-      "source_key": "/FINAL_for_paper/Ea_eV_PAPER_RETRACTED_2026_08_23",
-      "n_seed": 3,
-      "method_id": "uma-s-1p1__600-800-1000K__3seed__msd2-50ps__NE-haven1",
-      "comparison_group": "md-ea-multiseed-v1",
-      "status": "retracted",
-      "prohibitions": [
-        "absolute_claim",
-        "absolute_sigma",
-        "cite_until_framework_gate_resolved",
-        "ranking",
-        "single_line_fit_over_600_1000K",
-        "single_seed_ratio",
-        "single_trajectory_CI",
-        "long_time_convergence"
-      ],
-      "note": "⛔ **2026-08-25 철회** — 위 retracted 절 참조. 아래는 철회 이전의 보류 사유이며 기록으로 남긴다(사유가 바뀐 것이지 없어진 것이 아니다).\n⛔ 2026-08-20 (3차 정정) 인용 보류 유지 · **사유 정정**. 이전 사유였던 골격 beta 0.59/0.63 은 **이 값을 만든 궤적이 아니라 다른 run family(b2o3_full, single-seed legacy)에서 잰 것**이었다 — 계보 오류로 철회 (gate_detail.lineage.old_assessment 에 보존, diagnostic_unbound). 정정된 사유: 골격 게이트 **미평가(not_assessed / required_artifact_set_incomplete)** — high-T 6런(800·1000 K x 3시드)의 궤적이 --save_traj 미전달로 미보존이다. 600 K 3런은 PMF 가 소비한 기록이 있어 **현존 확인만 하면 된다** (재실행 범위는 9런이 아니라 **6런**). 미평가는 통과가 아니므로 ranking·absolute_claim·mechanism 은 계속 금지. 허용: 공개감사 + 비교(dEa = +0.002 +/- 0.047 — 같은 CSV 가 '구분 안 됨'이라 적는다). ⚠ 덱의 '수송 축 1등' 은 근거가 PMF dF_perc 0.1607 eV @600 K (4시드) 라 별건 (kb/open_items.md #11).",
-      "updated": "2026-08-20",
-      "blocking_gate": "framework_beta_800_1000K",
-      "gate_detail": {
-        "rule": "framework beta = dlog MSD/dlogt of the NON-Li elements (n>=8 atoms only), window 2-50 ps. pass < 0.30 (vibration). 0.30-0.60 mobile, >=0.60 diffusive.",
-        "beta_800K": {
-          "element": "S",
-          "n": 41,
-          "beta": 0.59
-        },
-        "beta_1000K": {
-          "element": "Cl",
-          "n": 16,
-          "beta": 0.63
-        },
-        "reference_modelc": {
-          "beta_800K": 0.03,
-          "beta_1000K": 0.08,
-          "note": "같은 온도 modelc 는 한 자릿수 작다 (5온도 전부 0.01-0.13)"
-        },
-        "verdict": "800/1000 K 에서 비-Li 부격자가 기어간다(creep). 그 두 온도가 아레니우스 3점 중 2점이다. 600 K 도 시드마다 갈린다(P n=8 에서 0.55/0.22/0.20).",
-        "why_not_conclusive": "⚠ 결론이 아니라 보류다. 자기리뷰에서 **이름과 기전을 둘 다 철회**했다: (1) '골격' 이라 부른 것 중 Cl·자유 S 는 우리 cage_assign 규약상 **케이지 음이온**이고 진짜 골격은 PS4 뿐이다 — 신호의 상당분이 알려진 고온 S/Cl 자리교환의 이른 발현일 수 있다. (2) 'D 과대·Ea 과소' 기전도 틀렸다 — Li MSD 는 Li 자신의 변위다. 진짜 위협은 **상태 혼합**(600 K 정렬 상태와 800/1000 K 부분무질서 상태를 한 아레니우스 선으로 잇는 것)이고 편향 방향은 자동으로 정해지지 않는다. (3) 문턱 0.30/0.60·MIN_N 8 은 13~19런 분포에서 정한 자의적 상수다.",
-        "source": "tools/ionic/msd_diffusive_check.py --framework --from_traj · kb/reviews/codex_B_neb_md_tools_2026_08_20.md §0·§5(B-R1,B-R2) · kb/methodology/computational_methods_canonical.md §6-2",
-        "lineage": {
-          "_moved": "게이트 판정(옛/현재)은 db/governance/assessments.json 으로 이관했다 (codex 동결감사 2026-08-20). 판정을 값 옆에 두면 consumer 마다 '현재 판정' 을 다르게 고른다.",
-          "beta_measured_on": "b2o3_full (single-seed legacy run family, pre-2026-07 reseed)",
-          "value_produced_by": "3-seed x 3-T reseed: 600 K = gabia /data/work/b2o3md/runs/b2o3_600_reseed (200 ps) · 800/1000 K = kgy ~/work/runs/highT_reseed/b2o3 (100 ps)",
-          "lineage_match": false,
-          "lineage_binding": "unwired",
-          "numeric_reproduction": "exact",
-          "numeric_reproduction_note": "9개 per-seed D 에서 Ea 0.199438 / D0 4.62463e-04 / sigma_Ea 0.034306 이 정확히 재현된다.",
-          "lineage_binding_note": "tools/ionic/build_final_conductivity.py 가 upstream 을 읽지 않고 D 를 하드코딩한다 — 값은 재현되지만 기계 계보는 배선되지 않았다. ⚠ L1 에 있는 것은 per-seed **D** 이지 per-seed **MSD** 가 아니다 — 골격 게이트는 궤적을 요구하므로 L1 만으로는 닫히지 않는다.",
-          "design_ref": "kb/projects/decision_registry_design_2026_08_20.md"
-        },
-        "⛔_2026_08_27": "β 하드게이트(0.8–1.2)는 **폐기됐다** — 문헌 근거가 없고 우리 운영점에서 거짓탈락 50 %다. 이 항목은 **당시 판정 이력**으로 남긴다. 현행 판정축은 D_inc (kb/concepts/beta-gate.md §7-8b)."
-      },
-      "required_assessment_refs": [
-        "A-2026-08-20-b2o3-framework-current"
-      ],
-      "retracted": {
-        "date": "2026-08-23 (레지스트리 반영 2026-08-25)",
-        "what": "0.199 ± 0.034 은 600–1000 K **전구간 단일 직선** 적합이다.",
-        "why": "아레니우스가 800 K 위에서 굽는다 — 구간 Ea 600→800 0.222 eV / 800→1000 0.077 eV, 145 meV 차. 단일 직선으로 기술할 수 없다. 인공물 가설 3개(β 게이트 · MSD 창 포화 · 1000 K 구조 붕괴)를 각각 실측으로 반증했다.",
-        "usable_instead": "저온 구간만: Ea = 0.2241 ± 0.0606 eV (600→800 K, 3시드 **각각** 적합). 평균 D 를 먼저 내고 적합하면 오차막대가 사라진다 — 그게 0.199 가 정밀해 보였던 이유다.",
-        "source": "db/properties/b2o3_md_arrhenius.json · segment_extrapolation_2026_08_24",
-        "card": "kb/results/b2o3_arrhenius_curvature_2026_08_23.md"
-      },
-      "uncertainty_kind": "between_seed_sd — 평균의 CI 가 아니라 **run-to-run 산포**다. n=3–4 라 이 SD 자체의 상대오차가 41–50 % 다.",
-      "finite_duration": {
-        "prod_ps": 200,
-        "label": "MD_Ea_eV_200, provisional",
-        "wording": "이 값은 동일한 200 ps 프로토콜의 독립 초기화 3–4개에서 얻은 **finite-duration 추정치**다. 제시한 산포는 200 ps run 간 변동이며 **단일궤적 block CI 도, 장시간 극한의 수렴도 뜻하지 않는다.** 유한시간 편향·느린 basin 혼합·무질서 realization 불확실도는 분리되지 않았다.",
-        "why": "교차리뷰 H Q12 (2026-08-27). block 하한 (T−t₂max)/b 로 200 ps·lag 50 은 유효 block 1.5–3.0 개라 발행 기준 8–10 에 못 미친다 ⇒ 단일궤적 CI 불가. ⚠ 다만 8–10 은 **발행 기준**이지 점추정치를 무효화하는 정리가 아니다 — 값은 **조건부 유지**다."
-      }
-    },
-    {
-      "system": "lpsocl",
-      "metric": "MD_Ea_eV",
-      "value": 0.2867,
-      "uncertainty": 0.024,
-      "unit": "eV",
-      "source_path": "db/properties/lpsocl_md_arrhenius.json",
-      "source_key": "/Ea_eV_central",
-      "n_seed": 4,
-      "method_id": "uma-s-1p1__600-800-1000K__4seed__msd2-50ps__NE-haven1",
-      "comparison_group": "md-ea-multiseed-v1",
-      "status": "provisional",
-      "prohibitions": [
-        "absolute_sigma",
-        "single_seed_ratio",
-        "cite_until_beta_gate_passes",
-        "single_trajectory_CI",
-        "long_time_convergence"
-      ],
-      "note": "⛔ 인용 보류. Ea 0.2867 은 **게이트 탈락한 600 K 점을 포함한 3점 적합**이다 — kb/open_items.md 가 '게이트 통과 전까지 전부 인용 보류' 라고 적고 있다. 2026-08-07: 레지스트리 첫 판에서 이 대조를 빠뜨려 canonical 로 올렸던 것을 Codex 재검증이 잡았다. 30런 MTO-β 판정 대기(안 되면 1600 ps 프로브).",
-      "updated": "2026-08-07",
-      "blocking_gate": "beta_600K",
-      "gate_detail": {
-        "rule": "beta = dlog<r^2>/dlogt on the SEED-ENSEMBLE-MEAN MSD, window 2-50 ps, pass 0.8-1.2",
-        "beta_600K": 0.615,
-        "beta_800K": 0.856,
-        "beta_1000K": 1.016,
-        "verdict": "600 K FAILS (cage-contaminated hop statistics; MSD size is fine at 97 A^2/200 ps)",
-        "source": "db/properties/msd_3sys_200ps_origin.csv (header lines) · kb/open_items.md",
-        "⛔_2026_08_27": "β 하드게이트(0.8–1.2)는 **폐기됐다** — 문헌 근거가 없고 우리 운영점에서 거짓탈락 50 %다. 이 항목은 **당시 판정 이력**으로 남긴다. 현행 판정축은 D_inc (kb/concepts/beta-gate.md §7-8b)."
-      },
-      "uncertainty_kind": "between_seed_sd — 평균의 CI 가 아니라 **run-to-run 산포**다. n=3–4 라 이 SD 자체의 상대오차가 41–50 % 다.",
-      "finite_duration": {
-        "prod_ps": 200,
-        "label": "MD_Ea_eV_200, provisional",
-        "wording": "이 값은 동일한 200 ps 프로토콜의 독립 초기화 3–4개에서 얻은 **finite-duration 추정치**다. 제시한 산포는 200 ps run 간 변동이며 **단일궤적 block CI 도, 장시간 극한의 수렴도 뜻하지 않는다.** 유한시간 편향·느린 basin 혼합·무질서 realization 불확실도는 분리되지 않았다.",
-        "why": "교차리뷰 H Q12 (2026-08-27). block 하한 (T−t₂max)/b 로 200 ps·lag 50 은 유효 block 1.5–3.0 개라 발행 기준 8–10 에 못 미친다 ⇒ 단일궤적 CI 불가. ⚠ 다만 8–10 은 **발행 기준**이지 점추정치를 무효화하는 정리가 아니다 — 값은 **조건부 유지**다."
-      }
-    },
-    {
-      "system": "modelc",
-      "metric": "MD_Ea_eV_singleseed",
-      "value": 0.2235,
-      "unit": "eV",
-      "source_path": "db/properties/lpsocl_md_arrhenius.json",
-      "source_key": "/anchors_same_window_singleseed/modelc_Ea_singleseed",
-      "n_seed": 1,
-      "method_id": "uma-s-1p1__600-800-1000K__1seed__msd2-50ps",
-      "comparison_group": "md-ea-singleseed-anchor-v1",
-      "status": "canonical",
-      "prohibitions": [
-        "absolute_sigma",
-        "cross_composition_ranking",
-        "single_trajectory_CI",
-        "long_time_convergence"
-      ],
-      "note": "deck 앵커. 같은 창의 단일 궤적끼리 짝지을 때만 쓴다.",
-      "updated": "2026-07-27",
-      "uncertainty_kind": "between_seed_sd — 평균의 CI 가 아니라 **run-to-run 산포**다. n=3–4 라 이 SD 자체의 상대오차가 41–50 % 다.",
-      "finite_duration": {
-        "prod_ps": 200,
-        "label": "MD_Ea_eV_singleseed_200, provisional",
-        "wording": "이 값은 동일한 200 ps 프로토콜의 독립 초기화 3–4개에서 얻은 **finite-duration 추정치**다. 제시한 산포는 200 ps run 간 변동이며 **단일궤적 block CI 도, 장시간 극한의 수렴도 뜻하지 않는다.** 유한시간 편향·느린 basin 혼합·무질서 realization 불확실도는 분리되지 않았다.",
-        "why": "교차리뷰 H Q12 (2026-08-27). block 하한 (T−t₂max)/b 로 200 ps·lag 50 은 유효 block 1.5–3.0 개라 발행 기준 8–10 에 못 미친다 ⇒ 단일궤적 CI 불가. ⚠ 다만 8–10 은 **발행 기준**이지 점추정치를 무효화하는 정리가 아니다 — 값은 **조건부 유지**다."
-      }
-    },
-    {
-      "system": "b2o3",
-      "metric": "MD_Ea_eV_singleseed",
-      "value": 0.2234,
-      "unit": "eV",
-      "source_path": "db/properties/lpsocl_md_arrhenius.json",
-      "source_key": "/anchors_same_window_singleseed/b2o3_Ea_singleseed",
-      "n_seed": 1,
-      "method_id": "uma-s-1p1__600-800-1000K__1seed__msd2-50ps",
-      "comparison_group": "md-ea-singleseed-anchor-v1",
-      "status": "provisional",
-      "prohibitions": [
-        "absolute_sigma",
-        "cite_until_framework_gate_resolved",
-        "cross_composition_ranking",
-        "single_trajectory_CI",
-        "long_time_convergence"
-      ],
-      "updated": "2026-08-20",
-      "blocking_gate": "framework_beta_800_1000K",
-      "gate_detail": {
-        "rule": "framework beta = dlog MSD/dlogt of the NON-Li elements (n>=8 atoms only), window 2-50 ps. pass < 0.30 (vibration). 0.30-0.60 mobile, >=0.60 diffusive.",
-        "beta_800K": {
-          "element": "S",
-          "n": 41,
-          "beta": 0.59
-        },
-        "beta_1000K": {
-          "element": "Cl",
-          "n": 16,
-          "beta": 0.63
-        },
-        "reference_modelc": {
-          "beta_800K": 0.03,
-          "beta_1000K": 0.08,
-          "note": "같은 온도 modelc 는 한 자릿수 작다 (5온도 전부 0.01-0.13)"
-        },
-        "verdict": "800/1000 K 에서 비-Li 부격자가 기어간다(creep). 그 두 온도가 아레니우스 3점 중 2점이다. 600 K 도 시드마다 갈린다(P n=8 에서 0.55/0.22/0.20).",
-        "why_not_conclusive": "⚠ 결론이 아니라 보류다. 자기리뷰에서 **이름과 기전을 둘 다 철회**했다: (1) '골격' 이라 부른 것 중 Cl·자유 S 는 우리 cage_assign 규약상 **케이지 음이온**이고 진짜 골격은 PS4 뿐이다 — 신호의 상당분이 알려진 고온 S/Cl 자리교환의 이른 발현일 수 있다. (2) 'D 과대·Ea 과소' 기전도 틀렸다 — Li MSD 는 Li 자신의 변위다. 진짜 위협은 **상태 혼합**(600 K 정렬 상태와 800/1000 K 부분무질서 상태를 한 아레니우스 선으로 잇는 것)이고 편향 방향은 자동으로 정해지지 않는다. (3) 문턱 0.30/0.60·MIN_N 8 은 13~19런 분포에서 정한 자의적 상수다.",
-        "source": "tools/ionic/msd_diffusive_check.py --framework --from_traj · kb/reviews/codex_B_neb_md_tools_2026_08_20.md §0·§5(B-R1,B-R2) · kb/methodology/computational_methods_canonical.md §6-2",
-        "lineage": {
-          "_moved": "게이트 판정(옛/현재)은 db/governance/assessments.json 으로 이관했다 (codex 동결감사 2026-08-20). 판정을 값 옆에 두면 consumer 마다 '현재 판정' 을 다르게 고른다.",
-          "beta_measured_on": "b2o3_full (single-seed legacy run family)",
-          "value_produced_by": "single-seed 600/800/1000 K (db/properties/lpsocl_md_arrhenius.json /anchors_same_window_singleseed)",
-          "lineage_match": "unverified",
-          "lineage_binding": "unverified",
-          "numeric_reproduction": "exact",
-          "numeric_reproduction_note": "600/800/1000 K D 가 b2o3_msd.csv 재계산과 일치한다.",
-          "lineage_binding_note": "run 해시가 확인되지 않았다.",
-          "design_ref": "kb/projects/decision_registry_design_2026_08_20.md"
-        },
-        "⛔_2026_08_27": "β 하드게이트(0.8–1.2)는 **폐기됐다** — 문헌 근거가 없고 우리 운영점에서 거짓탈락 50 %다. 이 항목은 **당시 판정 이력**으로 남긴다. 현행 판정축은 D_inc (kb/concepts/beta-gate.md §7-8b)."
-      },
-      "note": "⛔ 2026-08-20 (3차 정정) 인용 보류 유지. 골격 게이트는 **미평가(lineage_unverified)** 다 — beta 를 잰 b2o3_full 과 같은 계열로 보이지만(600/800/1000 K D 가 b2o3_msd.csv 재계산과 일치) run 해시가 확인되지 않았다. ⚠ 1차 정정에서 high-T reseed 궤적 미보존 사유를 이 항목에도 붙였던 것은 **과교정**이라 철회했다 — 그 결함은 multiseed 항목의 사유다. single-seed 값 자체의 인용 제한(단일시드 sigma 비 금지 등)은 그대로다.",
-      "required_assessment_refs": [
-        "A-2026-08-20-b2o3-singleseed-framework"
-      ],
-      "uncertainty_kind": "between_seed_sd — 평균의 CI 가 아니라 **run-to-run 산포**다. n=3–4 라 이 SD 자체의 상대오차가 41–50 % 다.",
-      "finite_duration": {
-        "prod_ps": 200,
-        "label": "MD_Ea_eV_singleseed_200, provisional",
-        "wording": "이 값은 동일한 200 ps 프로토콜의 독립 초기화 3–4개에서 얻은 **finite-duration 추정치**다. 제시한 산포는 200 ps run 간 변동이며 **단일궤적 block CI 도, 장시간 극한의 수렴도 뜻하지 않는다.** 유한시간 편향·느린 basin 혼합·무질서 realization 불확실도는 분리되지 않았다.",
-        "why": "교차리뷰 H Q12 (2026-08-27). block 하한 (T−t₂max)/b 로 200 ps·lag 50 은 유효 block 1.5–3.0 개라 발행 기준 8–10 에 못 미친다 ⇒ 단일궤적 CI 불가. ⚠ 다만 8–10 은 **발행 기준**이지 점추정치를 무효화하는 정리가 아니다 — 값은 **조건부 유지**다."
-      }
-    },
-    {
-      "system": "comp1",
-      "metric": "MD_Ea_eV_singleseed",
-      "value": 0.2532,
-      "unit": "eV",
-      "source_path": "db/properties/li_transport.json",
-      "source_key": "/results/[?id=comp1_v3_4fu_natural]/arrhenius_fit/PAPER_GRADE/Ea_eV",
-      "n_seed": 1,
-      "method_id": "uma-s-1p1__1seed__legacy-deck",
-      "comparison_group": "md-ea-singleseed-anchor-v1",
-      "status": "provisional",
-      "prohibitions": [
-        "absolute_sigma",
-        "cross_composition_ranking",
-        "cite_until_beta_gate_passes",
-        "single_trajectory_CI",
-        "long_time_convergence"
-      ],
-      "note": "Codex 3라운드가 원 출처를 찾아 줬다(0.2532, 표시 0.253). ⚠ 출처 발견과 정본 승격은 별개다 — 같은 파일과 kb/open_items.md §1 이 comp1 의 확산영역 게이트 6/6 탈락을 기록하고 있다. legacy deck 앵커로만 쓴다.",
-      "updated": "2026-08-07",
-      "tolerance": 0.0006,
-      "blocking_gate": "beta_all_temps",
-      "gate_detail": {
-        "rule": "beta on MSD, 2-50 ps, pass 0.8-1.2",
-        "verdict": "6/6 런 전부 케이지 판정 (beta 0.17-0.79). 창을 100-200 ps 로 옮겨도, 시드 MSD 를 평균해도 0.8 을 못 넘는다.",
-        "root_cause": "저이동도 계에서 200 ps 가 부족 — 셀 확대(2x2x2) 또는 시간 연장 필요",
-        "source": "kb/open_items.md §1 · db/properties/li_transport.json",
-        "⛔_2026_08_27": "β 하드게이트(0.8–1.2)는 **폐기됐다** — 문헌 근거가 없고 우리 운영점에서 거짓탈락 50 %다. 이 항목은 **당시 판정 이력**으로 남긴다. 현행 판정축은 D_inc (kb/concepts/beta-gate.md §7-8b)."
-      },
-      "uncertainty_kind": "between_seed_sd — 평균의 CI 가 아니라 **run-to-run 산포**다. n=3–4 라 이 SD 자체의 상대오차가 41–50 % 다.",
-      "finite_duration": {
-        "prod_ps": 200,
-        "label": "MD_Ea_eV_singleseed_200, provisional",
-        "wording": "이 값은 동일한 200 ps 프로토콜의 독립 초기화 3–4개에서 얻은 **finite-duration 추정치**다. 제시한 산포는 200 ps run 간 변동이며 **단일궤적 block CI 도, 장시간 극한의 수렴도 뜻하지 않는다.** 유한시간 편향·느린 basin 혼합·무질서 realization 불확실도는 분리되지 않았다.",
-        "why": "교차리뷰 H Q12 (2026-08-27). block 하한 (T−t₂max)/b 로 200 ps·lag 50 은 유효 block 1.5–3.0 개라 발행 기준 8–10 에 못 미친다 ⇒ 단일궤적 CI 불가. ⚠ 다만 8–10 은 **발행 기준**이지 점추정치를 무효화하는 정리가 아니다 — 값은 **조건부 유지**다."
-      }
-    },
-    {
-      "system": "comp2",
-      "metric": "MD_Ea_eV_ordered",
-      "value": 0.2754597563,
-      "uncertainty": 0.0327434522,
-      "unit": "eV",
-      "tolerance": 1e-09,
-      "source_path": "db/properties/comp2_md_arrhenius.json",
-      "source_key": "/Ea_eV_perseed_mean",
-      "n_seed": 3,
-      "method_id": "uma-s-1p1__600-800-1000K__3seed__msd2-50ps__ordered-champion",
-      "comparison_group": "md-ea-comp2-ordered-provisional",
-      "status": "provisional",
-      "prohibitions": [
-        "absolute_sigma",
-        "cross_composition_ranking",
-        "single_trajectory_CI",
-        "long_time_convergence"
-      ],
-      "note": "★ 이건 **ordered single-champion baseline** 이지 disorder ensemble 이 아니다. 2026-08-07 Codex 4라운드가 잡았다 — 레지스트리 첫 판이 이 값에 method_id=disorder-ensemble 을 붙여 두 개념을 섞었다. 원자료가 직접 '이 계산은 anion disorder mechanism 을 샘플링하지 않았다'고 적고 있다. 정밀 원자료를 저장하고 화면에서만 반올림한다(표시 0.275±0.033).",
-      "updated": "2026-08-07",
-      "uncertainty_kind": "between_seed_sd — 평균의 CI 가 아니라 **run-to-run 산포**다. n=3–4 라 이 SD 자체의 상대오차가 41–50 % 다.",
-      "finite_duration": {
-        "prod_ps": 200,
-        "label": "MD_Ea_eV_ordered_200, provisional",
-        "wording": "이 값은 동일한 200 ps 프로토콜의 독립 초기화 3–4개에서 얻은 **finite-duration 추정치**다. 제시한 산포는 200 ps run 간 변동이며 **단일궤적 block CI 도, 장시간 극한의 수렴도 뜻하지 않는다.** 유한시간 편향·느린 basin 혼합·무질서 realization 불확실도는 분리되지 않았다.",
-        "why": "교차리뷰 H Q12 (2026-08-27). block 하한 (T−t₂max)/b 로 200 ps·lag 50 은 유효 block 1.5–3.0 개라 발행 기준 8–10 에 못 미친다 ⇒ 단일궤적 CI 불가. ⚠ 다만 8–10 은 **발행 기준**이지 점추정치를 무효화하는 정리가 아니다 — 값은 **조건부 유지**다."
-      }
-    },
-    {
-      "system": "comp2",
-      "metric": "MD_Ea_eV_disorder",
-      "value": 0.1512,
-      "uncertainty": 0.0676,
-      "unit": "eV",
-      "source_path": "db/properties/comp2_disorder_ensemble.json",
-      "source_key": "/levels/d0.50/Ea_eV",
-      "n_config": 3,
-      "method_id": "uma-s-1p1__600-800-1000K__3config__msd2-50ps__anion-disorder-d0.50",
-      "comparison_group": "md-ea-comp2-disorder-d050",
-      "status": "provisional",
-      "prohibitions": [
-        "absolute_sigma",
-        "cross_composition_ranking",
-        "quote_value_precisely",
-        "single_trajectory_CI",
-        "long_time_convergence"
-      ],
-      "gate_detail": {
-        "rule": "beta on MSD, 2-50 ps, pass 0.8-1.2",
-        "verdict": "PASS — 개별 9/9 (β 0.81–1.12) + 온도별 평균 3/3 (β 0.92/1.00/0.97)",
-        "source": "db/properties/comp2_disorder_ensemble.json",
-        "⛔_2026_08_27": "β 하드게이트(0.8–1.2)는 **폐기됐다** — 문헌 근거가 없고 우리 운영점에서 거짓탈락 50 %다. 이 항목은 **당시 판정 이력**으로 남긴다. 현행 판정축은 D_inc (kb/concepts/beta-gate.md §7-8b)."
-      },
-      "note": "anion disorder d=0.50, config 3개. 게이트는 통과했지만 **config 산포 45%** 다 — 원자료가 직접 \"'ordered(0.276) 보다 낮다' 까지만 말하고 값 자체를 정밀 인용하지 말 것\" 이라고 적고 있다. ⚠ n_seed 가 아니라 **n_config** 다(시드가 아니라 무질서 배치를 샘플링). ⛔ d=1.00 (0.3775) 은 게이트 FAIL(개별 8/9 케이지) 이라 같은 항목에 섞지 않는다.",
-      "updated": "2026-08-01",
-      "uncertainty_kind": "between_seed_sd — 평균의 CI 가 아니라 **run-to-run 산포**다. n=3–4 라 이 SD 자체의 상대오차가 41–50 % 다.",
-      "finite_duration": {
-        "prod_ps": 200,
-        "label": "MD_Ea_eV_disorder_200, provisional",
-        "wording": "이 값은 동일한 200 ps 프로토콜의 독립 초기화 3–4개에서 얻은 **finite-duration 추정치**다. 제시한 산포는 200 ps run 간 변동이며 **단일궤적 block CI 도, 장시간 극한의 수렴도 뜻하지 않는다.** 유한시간 편향·느린 basin 혼합·무질서 realization 불확실도는 분리되지 않았다.",
-        "why": "교차리뷰 H Q12 (2026-08-27). block 하한 (T−t₂max)/b 로 200 ps·lag 50 은 유효 block 1.5–3.0 개라 발행 기준 8–10 에 못 미친다 ⇒ 단일궤적 CI 불가. ⚠ 다만 8–10 은 **발행 기준**이지 점추정치를 무효화하는 정리가 아니다 — 값은 **조건부 유지**다."
-      }
-    },
-    {
-      "system": "lpsocl",
-      "metric": "ICOHP_PS",
-      "value": -6.04,
-      "unit": "eV",
-      "source_path": "db/properties/lpsocl_icohp.json",
-      "source_key": "/bonds/P-S/ICOHP_total_eV_per_bond",
-      "method_id": "lobster__ext-basis__per-bond",
-      "comparison_group": "icohp-lobster-perbond-v1",
-      "status": "canonical",
-      "updated": "2026-07-29"
-    },
-    {
-      "system": "b2o3",
-      "metric": "ICOHP_PS",
-      "value": -6.023,
-      "unit": "eV",
-      "source_path": "db/properties/b2o3_icohp.json",
-      "source_key": "/bonds/P-S/ICOHP_total_eV_per_bond",
-      "method_id": "lobster__ext-basis__per-bond",
-      "comparison_group": "icohp-lobster-perbond-v1",
-      "status": "canonical",
-      "updated": "2026-07-29"
-    },
-    {
-      "system": "modelc_nd_doped",
-      "metric": "ICOHP_PS",
-      "value": -5.976,
-      "unit": "eV",
-      "source_path": "db/properties/nd_icohp.json",
-      "source_key": "/bonds/P-S/ICOHP_total_eV_per_bond",
-      "method_id": "lobster__ext-basis__per-bond",
-      "comparison_group": "icohp-lobster-perbond-v1",
-      "status": "canonical",
-      "updated": "2026-07-29"
-    },
-    {
-      "system": "modelc",
-      "metric": "ICOHP_PS",
-      "value": -5.9997,
-      "unit": "eV",
-      "source_path": "db/properties/per_bond_json/bonds_modelc_k663.json",
-      "source_key": "/icohp_per_bond_type_eV/P-S/icohp_eV",
-      "method_id": "lobster__ext-basis__per-bond__k663",
-      "comparison_group": "icohp-lobster-perbond-v1",
-      "status": "canonical",
-      "note": "직접 산출 원자료로 바꿨다(2026-08-07 Codex 5라운드). 이전엔 lpsocl 비교표의 복사값(-6.0)을 읽었다 — 원값은 -5.9997 이다.",
-      "updated": "2026-08-07",
-      "tolerance": 0.0006
-    },
-    {
-      "system": "comp1",
-      "metric": "ICOHP_PS",
-      "value": -5.938,
-      "unit": "eV",
-      "source_path": "db/properties/per_bond_json/bonds_comp1_k444.json",
-      "source_key": "/icohp_per_bond_type_eV/P-S/icohp_eV",
-      "method_id": "lobster__ext-basis__per-bond",
-      "comparison_group": "icohp-lobster-perbond-v1",
-      "status": "canonical",
-      "note": "원값 -5.9381 (세 자리 반올림해 표시). ⚠ db/properties/bonds.json 과 nd_icohp.json 에는 **-5.944** 가 남아 있는데 둘 다 낡은 요약이다 (2026-06-03 요약 vs 2026-06-05 직접 산출). cutoff 규약 차이가 아니라 drift — Codex 재검증 2026-08-07. 그 두 파일은 별도로 정리할 것.",
-      "updated": "2026-08-07",
-      "tolerance": 0.0006
-    },
-    {
-      "system": "comp2",
-      "metric": "ICOHP_PS",
-      "value": -5.913,
-      "unit": "eV",
-      "source_path": "db/properties/comp2_icohp_origin.csv",
-      "source_key": "/[?bond=P-S]/ICOHP_eV_mean",
-      "method_id": "lobster__ext-basis__per-bond",
-      "comparison_group": "icohp-lobster-perbond-v1",
-      "status": "canonical",
-      "note": "⚠ source 인 comp2_icohp_origin.csv 에는 **방법 정보가 없다** (값만 있다). 방법 근거는 db/compositions/comp2.json 의 ICOHP 절이다 — 값과 방법의 출처가 갈려 있으므로 인용할 때 둘 다 봐야 한다 (2026-08-07 Codex 5라운드).",
-      "updated": "2026-08-07"
-    },
-    {
-      "system": "sdcp",
-      "metric": "SDCP_dE_site_meV__ptfe_dimer_pm1",
-      "value": 36.07,
-      "unit": "meV",
-      "source_path": "db/properties/sdcp_wave1_citable.json",
-      "source_key": "/dE_site_meV/ptfe_dimer_pm1",
-      "method_id": "vasp-544__pbe-u62__mlip-geom-sp__box24ref",
-      "comparison_group": "sdcp-wave1-dE-site-v1",
-      "status": "canonical",
-      "prohibitions": [
-        "absolute_vs_other_codes",
-        "cell_level_claims",
-        "net4_reference_until_wave15"
-      ],
-      "updated": "2026-08-25",
-      "note": "★ 2-branch (net4 +36.16, 상호작용 0.09 meV — '0.1 meV 정확도' 표현 금지, k-미검증)"
-    },
-    {
-      "system": "sdcp",
-      "metric": "SDCP_dE_site_meV__ptfe_dimer_net4",
-      "value": 36.16,
-      "unit": "meV",
-      "source_path": "db/properties/sdcp_wave1_citable.json",
-      "source_key": "/dE_site_meV/ptfe_dimer_net4",
-      "method_id": "vasp-544__pbe-u62__mlip-geom-sp__box24ref",
-      "comparison_group": "sdcp-wave1-dE-site-v1",
-      "status": "canonical",
-      "prohibitions": [
-        "absolute_vs_other_codes",
-        "cell_level_claims",
-        "net4_reference_until_wave15"
-      ],
-      "updated": "2026-08-25",
-      "note": "pm1 과 쌍 — basin B 에서도 재현"
-    },
-    {
-      "system": "sdcp",
-      "metric": "SDCP_dE_site_meV__ptfe_c10_pm1",
-      "value": 49.77,
-      "unit": "meV",
-      "source_path": "db/properties/sdcp_wave1_citable.json",
-      "source_key": "/dE_site_meV/ptfe_c10_pm1",
-      "method_id": "vasp-544__pbe-u62__mlip-geom-sp__box24ref",
-      "comparison_group": "sdcp-wave1-dE-site-v1",
-      "status": "canonical",
-      "prohibitions": [
-        "absolute_vs_other_codes",
-        "cell_level_claims",
-        "net4_reference_until_wave15"
-      ],
-      "updated": "2026-08-25",
-      "note": "단일 branch — wave1.5 후 net4 재확인"
-    },
-    {
-      "system": "sdcp",
-      "metric": "SDCP_dE_site_meV__sdcp_neutral_pm1",
-      "value": 9.27,
-      "unit": "meV",
-      "source_path": "db/properties/sdcp_wave1_citable.json",
-      "source_key": "/dE_site_meV/sdcp_neutral_pm1",
-      "method_id": "vasp-544__pbe-u62__mlip-geom-sp__box24ref",
-      "comparison_group": "sdcp-wave1-dE-site-v1",
-      "status": "canonical",
-      "prohibitions": [
-        "absolute_vs_other_codes",
-        "cell_level_claims",
-        "net4_reference_until_wave15"
-      ],
-      "updated": "2026-08-25",
-      "note": "단일 branch · |ΔE|<10 meV = 사실상 무선호"
-    },
-    {
-      "system": "sdcp",
-      "metric": "SDCP_Eads_eV__ptfe_dimer_Litop",
-      "value": -0.3663,
-      "unit": "eV",
-      "source_path": "db/properties/sdcp_wave1_citable.json",
-      "source_key": "/Eads_eV_box24_pm1/ptfe_dimer_Litop",
-      "method_id": "vasp-544__pbe-u62__mlip-geom-sp__box24ref",
-      "comparison_group": "sdcp-wave1-Eads-box24-v1",
-      "status": "canonical",
-      "prohibitions": [
-        "absolute_vs_other_codes",
-        "cell_level_claims",
-        "net4_reference_until_wave15"
-      ],
-      "updated": "2026-08-25",
-      "note": "MLIP 기하 위 단일점 — DFT 최소 아님 (인용 시 병기)"
-    },
-    {
-      "system": "sdcp",
-      "metric": "SDCP_Eads_eV__ptfe_dimer_Nitop",
-      "value": -0.3302,
-      "unit": "eV",
-      "source_path": "db/properties/sdcp_wave1_citable.json",
-      "source_key": "/Eads_eV_box24_pm1/ptfe_dimer_Nitop",
-      "method_id": "vasp-544__pbe-u62__mlip-geom-sp__box24ref",
-      "comparison_group": "sdcp-wave1-Eads-box24-v1",
-      "status": "canonical",
-      "prohibitions": [
-        "absolute_vs_other_codes",
-        "cell_level_claims",
-        "net4_reference_until_wave15"
-      ],
-      "updated": "2026-08-25",
-      "note": "MLIP 기하 위 단일점 — DFT 최소 아님 (인용 시 병기)"
-    },
-    {
-      "system": "sdcp",
-      "metric": "SDCP_Eads_eV__ptfe_c10_Nitop",
-      "value": -0.3626,
-      "unit": "eV",
-      "source_path": "db/properties/sdcp_wave1_citable.json",
-      "source_key": "/Eads_eV_box24_pm1/ptfe_c10_Nitop",
-      "method_id": "vasp-544__pbe-u62__mlip-geom-sp__box24ref",
-      "comparison_group": "sdcp-wave1-Eads-box24-v1",
-      "status": "canonical",
-      "prohibitions": [
-        "absolute_vs_other_codes",
-        "cell_level_claims",
-        "net4_reference_until_wave15"
-      ],
-      "updated": "2026-08-25",
-      "note": "MLIP 기하 위 단일점 — DFT 최소 아님 (인용 시 병기)"
-    },
-    {
-      "system": "sdcp",
-      "metric": "SDCP_Eads_eV__sdcp_neutral_Litop",
-      "value": -0.7675,
-      "unit": "eV",
-      "source_path": "db/properties/sdcp_wave1_citable.json",
-      "source_key": "/Eads_eV_box24_pm1/sdcp_neutral_Litop",
-      "method_id": "vasp-544__pbe-u62__mlip-geom-sp__box24ref",
-      "comparison_group": "sdcp-wave1-Eads-box24-v1",
-      "status": "canonical",
-      "prohibitions": [
-        "absolute_vs_other_codes",
-        "cell_level_claims",
-        "net4_reference_until_wave15"
-      ],
-      "updated": "2026-08-25",
-      "note": "MLIP 기하 위 단일점 — DFT 최소 아님 (인용 시 병기)"
-    },
-    {
-      "system": "sdcp",
-      "metric": "SDCP_Eads_eV__sdcp_neutral_Nitop",
-      "value": -0.7582,
-      "unit": "eV",
-      "source_path": "db/properties/sdcp_wave1_citable.json",
-      "source_key": "/Eads_eV_box24_pm1/sdcp_neutral_Nitop",
-      "method_id": "vasp-544__pbe-u62__mlip-geom-sp__box24ref",
-      "comparison_group": "sdcp-wave1-Eads-box24-v1",
-      "status": "canonical",
-      "prohibitions": [
-        "absolute_vs_other_codes",
-        "cell_level_claims",
-        "net4_reference_until_wave15"
-      ],
-      "updated": "2026-08-25",
-      "note": "MLIP 기하 위 단일점 — DFT 최소 아님 (인용 시 병기)"
-    },
-    {
-      "system": "sdcp",
-      "metric": "SDCP_Eads_eV__sdcp_neutral_cross_Li_at_Ni",
-      "value": -0.7728,
-      "unit": "eV",
-      "source_path": "db/properties/sdcp_wave1_citable.json",
-      "source_key": "/Eads_eV_box24_pm1/sdcp_neutral_cross_Li_at_Ni",
-      "method_id": "vasp-544__pbe-u62__mlip-geom-sp__box24ref",
-      "comparison_group": "sdcp-wave1-Eads-box24-v1",
-      "status": "canonical",
-      "prohibitions": [
-        "absolute_vs_other_codes",
-        "cell_level_claims",
-        "net4_reference_until_wave15"
-      ],
-      "updated": "2026-08-25",
-      "note": "MLIP 기하 위 단일점 — DFT 최소 아님 (인용 시 병기)"
-    },
-    {
-      "system": "sdcp",
-      "metric": "SDCP_Eads_eV__sdcp_neutral_cross_Ni_at_Li",
-      "value": -0.7633,
-      "unit": "eV",
-      "source_path": "db/properties/sdcp_wave1_citable.json",
-      "source_key": "/Eads_eV_box24_pm1/sdcp_neutral_cross_Ni_at_Li",
-      "method_id": "vasp-544__pbe-u62__mlip-geom-sp__box24ref",
-      "comparison_group": "sdcp-wave1-Eads-box24-v1",
-      "status": "canonical",
-      "prohibitions": [
-        "absolute_vs_other_codes",
-        "cell_level_claims",
-        "net4_reference_until_wave15"
-      ],
-      "updated": "2026-08-25",
-      "note": "MLIP 기하 위 단일점 — DFT 최소 아님 (인용 시 병기)"
+ "schema": "canonical_registry/v1",
+ "_purpose": "화면 정본값의 단일 진실 원천. webapp/data.py 는 여기서만 읽고 숫자를 자체 보관하지 않는다.",
+ "_rules": [
+  "값 하나 = 항목 하나. 반드시 source_path + source_key 로 원자료를 가리킨다.",
+  "webapp/canonical.py 의 resolve() 가 그 경로를 따라가 값을 대조한다 (tools/db/validate_canonical.py).",
+  "★ comparison_group 이 같은 값끼리만 순위·비교·레이더에 함께 올린다. 프로토콜이 다르면 group 도 다르다.",
+  "status: canonical(정본) · provisional(잠정) · superseded(철회) · source_pending(출처 미배선).",
+  "prohibitions 는 CLAUDE.md 데이터 규율의 기계 판독 가능한 형태다.",
+  "prefer:'registry' 는 **원자료가 반올림 사본일 때만** 쓰는 예외다. 기본은 원자료를 live 로 읽어 db 수정이 화면에 바로 반영되게 한다.",
+  "★ **수치 대조는 의미 일치를 보증하지 않는다.** 새 항목을 넣을 때 method_id 가 그 source_path 안의 계산을 실제로 서술하는지 사람이 읽고 확인한다 — comp2 가 값은 맞는데 method_id 가 다른 계산(disorder ensemble)을 가리켰다(2026-08-07 Codex 4라운드).",
+  "finite_duration_2026_08_27: 이 값은 동일한 200 ps 프로토콜의 독립 초기화 3–4개에서 얻은 **finite-duration 추정치**다. 제시한 산포는 200 ps run 간 변동이며 **단일궤적 block CI 도, 장시간 극한의 수렴도 뜻하지 않는다.** 유한시간 편향·느린 basin 혼합·무질서 realization 불확실도는 분리되지 않았다."
+ ],
+ "_history": {
+  "2026-08-07": "Codex 코드리뷰 P1 대응으로 신설. 이전에는 webapp/data.py 의 CANONICAL 딕셔너리가 정본이었다. 이관 중 MD_Ea_eV 안에서 단일시드(comp1 0.253 / modelc 0.224)와 4-seed(lpsocl 0.287)가 한 딕셔너리에 섞여 있던 것을 발견 — 대시보드의 '최저값' 순위가 프로토콜을 넘나들고 있었다. group 을 나눠 분리했다.",
+  "2026-08-07b": "Codex 재검증 반영. ★ LPSOCl MD_Ea 를 canonical→provisional 로 내렸다 — 600 K beta 0.615 게이트 탈락 점을 포함한 3점 적합이고 kb/open_items.md 가 인용 보류라 적고 있는데 첫 판에서 대조를 빠뜨렸다. comp1 ICOHP 원 출처 배선(-5.9381; bonds.json·nd_icohp.json 의 -5.944 는 낡은 요약 drift). comp2 ICOHP·gap 출처 배선(gap 은 legacy 유지).",
+  "2026-08-07c": "Codex 3라운드 반영. resolve_error 를 status=source_error 로 내려 자동판정에서 빼고, live 를 요청마다(mtime 캐시) 다시 읽게 했다. comp1 단일시드 Ea 출처 배선 (li_transport.json) — 단 beta 6/6 탈락이라 provisional 유지.",
+  "2026-08-07d": "Codex 4라운드 반영. ★ comp2 MD_Ea 항목이 **의미가 섞여 있었다** — 값 0.275 는 ordered single-champion baseline 인데 method_id/group 에 disorder-ensemble 을 붙여 뒀다. 둘을 별개 metric 으로 분리: MD_Ea_eV_ordered(0.2754597563, comp2_md_arrhenius.json) · MD_Ea_eV_disorder(0.1512±0.0676, comp2_disorder_ensemble.json d=0.50, n_config=3). d=1.00 은 게이트 FAIL 이라 등재하지 않는다. ⚠ 교훈: validator 가 provisional 무출처를 허용해 이 의미 오류를 못 잡았다 — 수치 대조는 method/value 의미 일치를 보증하지 않는다.",
+  "2026-08-07e": "Codex 5라운드 method_id 수동 감사 반영. gap k 표기 정정(modelc k882 · b2o3 25irr-k · comp1 은 미확인이라 표기 제거). B0 comp1/modelc 을 eos.json 의 PRIMARY_paper_value(_v3) 로 재배선 — prefer=registry 우회 제거. ICOHP modelc 을 직접 원자료(bonds_modelc_k663.json, -5.9997)로. E_VRH 는 원자료가 comp1<->comp2 만 완전비교쌍이라 해 네 조성 단일 묶음을 쪼갰다. ★ validator 28/28 통과가 method_id 의미 일치를 보증하지 않는다는 걸 이 감사가 실증했다.",
+  "2026-08-07f": "Codex 6라운드 종료 + provenance 감사 항목 확대. comp1 뿐 아니라 gap 정본 4종 **전부** fixed-occ nscf 의 입력·출력이 repo 에 없다 — standard_dos 의 *_nscf.in 은 전부 tetrahedra_opt(DOS용)다. ⚠ 5라운드에 modelc method_id 를 k882 로 '정정' 한 것도 그 tetrahedra 파일이 근거였으므로 철회하고 표기를 뺐다 — 정정하면서 같은 종류의 오류를 반복했다. 값 자체는 의심하지 않는다(electronic.json 이 정본 기록). provenance_open 필드로 표시하고 kb/open_items.md 에 감사 항목으로 올린다.",
+  "2026-08-07g": "Codex 6라운드 후속 2건. ① provenance_open 문구 정정 — 'fixed-occ 입력이 없다' 가 아니라 **'계통별 실제 실행 입력·출력이 없다'** 가 정확하다. generic 템플릿 nscf_gap.in 은 존재하고 occupations='fixed' 다(방법은 repo 에 있다). 그 템플릿 주석이 modelc 에 6 6 2 를 제시하는 것도 DOS 용 8 8 2 로 정정하면 안 됐다는 근거가 된다. ② lpsocl 의 정본 파일은 electronic.json 이 아니라 lpsocl_dos_gap.json 이다 — 문구를 고쳤다.",
+  "2026-08-20a": "codex 2·3차 리뷰 반영. b2o3 framework_beta_800_1000K 게이트 정정: (1) 옛 beta 0.59/0.63 은 b2o3_full(single-seed legacy)에서 잰 값이라 multiseed Ea 0.199 의 근거가 될 수 없다 → retracted + diagnostic_unbound 로 보존. (2) 새 판정은 not_assessed(required_artifact_set_incomplete) — 미보존은 9런이 아니라 **high-T 6런**이고 600 K 3런은 PMF 소비 기록이 있다(현존 확인 필요). 재실행 범위 = 6런. (3) single-seed 항목에 high-T 사유를 붙였던 1차 정정은 과교정이라 철회, lineage_match=unverified 로. (4) Ea 계보는 numerically_reproducible — build_final_conductivity.py 가 D 를 하드코딩해 미배선. webapp/data.py 는 blocking_gate 존재만으로 '미통과' 를 찍던 것을 gate_outcome 별 문구로 분기(_gate_prefix).",
+  "2026-08-20b": "게이트 판정을 db/governance/assessments.json (append-only sidecar) 으로 이관. canonical claim 에는 required_assessment_refs 만 남는다 — 판정을 값 옆에 두면 consumer 마다 '현재 판정' 을 다르게 고른다 (codex 동결감사). 옛 beta 판정(retracted·diagnostic_unbound)과 현재 판정(not_assessed)은 sidecar 에서 **병존**한다. lineage 는 lineage_binding + numeric_reproduction 두 축으로 쪼갰다 — 재현 가능성과 배선 여부는 독립인데 한 enum(numerically_reproducible)에 넣으면 또 사다리가 된다 (codex R4).",
+  "2026-08-20c": "provenance_open 4건(gap_eV)의 **후보 위치를 특정**했다. 오프라인 백업 전수조사에서 kgy_b2o3_eos / kgy_lpsocl_eos / modelC_v3 dos_pdos 폴더가 나왔다. 아직 위치만이고 fixed-occ 입력 확인은 안 했다. 인덱스 카드: kb/methodology/offline_archive_index_2026_08_20.md",
+  "2026-08-20d": "⭐ gap_eV/b2o3 의 provenance_open **해소**. 백업 A 의 b2o3_nscf_gap.{in,out} 이 occupations='fixed' nscf 이고 .out 이 'highest occupied, lowest unoccupied level (ev): 2.4717 4.4388' 을 직접 찍는다 — 정본 VBM/CBM 과 정확히 일치. 남은 3건(comp1·modelc·lpsocl)은 위치 후보만 있다. ⚠ 파일은 repo 밖 외장 SSD 한 벌이라 사본·CI 검증이 없다.",
+  "2026-08-20e": "gap_eV 나머지 3건(comp1·modelc·lpsocl)의 백업 수색 **실패**를 기록. 백업 두 벌 전수에서 fixed-occ nscf 입력은 b2o3_nscf_gap.in 하나뿐이었다. 같은 곳을 다시 뒤지지 않도록 negative 결과를 남긴다. ⚠ 부수 확인: b2o3 의 nscf_eps.out 은 2.4716/4.4390 으로 nscf_gap.out(2.4717/4.4388)과 4자리에서 갈린다 — 별개 계산(eps용 nscf)이고 **정본은 nscf_gap 쪽**이다.",
+  "2026-08-20f": "KISTI 원본 부재 확인(1저자) → provenance_open 3건의 남은 후보를 kgy·gabia 로 좁혔다. 거기에도 없으면 영구 미해소다. 백업 인덱스 카드의 한계 §4-1 을 '단일 매체' → '단일 매체이자 **유일본**' 으로 격상. 그리고 PDOS PERATOM 의 sigma 불일치는 **재smoothing 하지 않기로** 결정 — 1저자가 per-atom 을 안 쓰므로 결함이 소비 경로에 없다. repo 에 보관하되 총합 판만 인용한다.",
+  "2026-08-20g": "⭐ gap_eV/lpsocl provenance 해소 — kgy ~/work/lpsocl_v0/03b_nscf_gap.{in,out} 이 occupations='fixed' nscf 이고 VBM 2.3870 / CBM 4.6179 를 직접 찍는다(정본 완전 일치). provenance_open 3건 → **2건**(comp1·modelc). 그 둘은 백업 2벌 + kgy + gabia 3중 수색에서 전부 실패했고 KISTI 원본이 없으므로 **영구 미해소**로 본다. gabia comp1_cdd_phx/nscf.out(2.0654)은 CDD용 별개 계산이라 정본 근거가 못 된다.",
+  "2026-08-20h": "⛔ gap_eV/comp1·modelc 를 'provenance 미해소' 에서 **'방법 불일치 의심'** 으로 격상. 백업의 nscf 입력이 occupations='tetrahedra_opt' 이고 짝 출력이 0 바이트/부재다. 같은 폴더의 extract_gap.py 가 \"rerun with occupations='fixed'\" 라 적고 있고, nscf_gap.in 템플릿(fixed-occ)과도 다르다. electronic.json 에서 이 둘만 EF_eV 를 갖는 것도 같은 신호. ⚠ tetrahedra 에서도 고유값 VBM/CBM 은 가능하므로 '확정' 이 아니라 '의심' 이며, 출력이 0 바이트라 **확인 자체가 불가능**하다. 유일한 해소책은 fixed-occ nscf 재계산 — 구조와 레시피가 repo 에 있고 b2o3·lpsocl 이 같은 레시피로 통과했다."
+ },
+ "entries": [
+  {
+   "system": "comp1",
+   "metric": "gap_eV",
+   "value": 2.066,
+   "unit": "eV",
+   "source_path": "db/properties/electronic.json",
+   "source_key": "/eigenvalue_gaps_v100_2026_06_16/comp1/gap_eV",
+   "method_id": "qe-uspp__fixed-occ-nscf-eigenvalue__k888",
+   "comparison_group": "gap-fixedocc-eigenvalue-v1",
+   "status": "canonical",
+   "prohibitions": [
+    "dos_threshold_readout"
+   ],
+   "updated": "2026-06-16",
+   "note": null,
+   "provenance_open": "✅ comp1 해소 (2026-08-24, provenance_resolved_2026_08_24 참조). ⏳ modelc 는 재계산 진행 중. ⚠ **네 계통의 실제 실행 입력·출력이 repo 에 없다.** 값은 정본 파일이 기록하고 있지만, 정본 규칙(fixed-occupations nscf 고유값)을 만족한 그 실행을 파일로 재현할 수 없다. ★ generic 템플릿 `tools/electronic/standard_dos/nscf_gap.in` 은 존재하고 `occupations='fixed'` 다 — 즉 방법 자체는 repo 에 있다. 없는 건 **계통별 실행본**이다. 계통별로 남은 `*_nscf.in` 은 전부 `occupations='tetrahedra_opt'`(DOS 용)이라 fixed-occ 근거로 쓰면 안 된다. 2026-08-07 Codex 6라운드. → kb/open_items.md 의 별도 데이터 감사 항목. comp1: 정",
+   "method_integrity_flag": {
+    "severity": "✅ **해소됨 (2026-08-24)** — 아래 원문은 기록용으로 남긴다",
+    "resolution": "fixed-occ nscf 재계산이 정본 값을 **소수 넷째 자리까지 재현**했다 (2.0656 vs 2.066, 170 irr 일치). 따라서 옛 값이 tetrahedra_opt 재파싱본이었다 해도 **결과가 같다** — parse_eig_gap.py 의 주장(고유값 gap 은 smearing 과 무관하다)이 실측으로 확인된 것이다. 방법 비동질 우려는 논증이 아니라 **재현으로** 닫혔다.",
+    "scope": "⚠ **comp1 만 해소.** modelc 는 2026-08-24 10:24 에 scf 착수, 아직 진행 중이다.",
+    "_original_flag_2026_08_20": {
+     "severity": "⛔ 방법 불일치 의심 (재현 불가보다 심각)",
+     "date": "2026-08-20",
+     "finding": "백업 A `repo_dos/tools/electronic/standard_dos/{comp1,modelc}/` 의 nscf 입력이 **occupations='tetrahedra_opt'** 다 (comp1 nbnd=180 · modelc nbnd=210). 짝 출력은 **0 바이트**(comp1_nscf.out · comp1_dos.out)이거나 **아예 없다**(modelc).",
+     "why_it_matters": "CLAUDE.md 규율은 **fixed-occupations nscf 의 VBM/CBM 고유값만** 인정한다. QE 는 tetrahedra/smearing 에서 'highest occupied, lowest unoccupied' 를 찍지 않고 Fermi 만 찍는다 — 그래서 이 값들이 **어떤 경로로 VBM/CBM 이 됐는지 불명확**하다.",
+     "corroborating": "같은 폴더의 extract_gap.py 가 스스로 적고 있다: \"you used smearing; rerun with occupations='fixed'\". 그리고 nscf_gap.in 템플릿은 occupations='fixed' 에 'comp1 160 / modelc 190' 주석까지 달려 있으나 **실제 입력은 그것이 아니다**.",
+     "signal": "electronic.json 에서 comp1·modelc 만 EF_eV 를 갖고 b2o3(fixed-occ 확인)는 갖지 않는다 — smearing/tetrahedra 계열의 지문이다.",
+     "not_yet_proven": "⚠ tetrahedra_opt 에서도 밴드 고유값으로 VBM/CBM 을 얻는 것 자체는 가능하다. **출력이 0 바이트라 어느 쪽인지 확인할 수 없다** — 그래서 '확정' 이 아니라 '의심' 이다.",
+     "only_resolution": "**fixed-occ nscf 재계산.** 구조(comp1_V0_k444.cif · modelC_DFT_EOS_V0.cif)와 레시피(nscf_gap.in)가 repo 에 있고, 같은 레시피로 b2o3·lpsocl 이 이미 통과했다. 재계산하면 provenance 와 방법 일치가 **한 번에** 닫힌다.",
+     "until_then": "네 계 gap 을 한 표에 나란히 쓸 때 **b2o3·lpsocl 만 fixed-occ 확인됨**을 밝힐 것."
     }
-  ],
-  "_provenance_audit": {
-    "audited": "2026-08-12",
-    "audited_by": "db provenance sweep (tools/db/validate_canonical.py --cited 로 대상 선정)",
-    "generator": "(없음 — 손으로 관리하는 메타 레지스트리)",
-    "source": "(계산 산출물 아님 — 28 entries 가 각각 source_path 로 다른 db 파일을 가리킨다)",
-    "collected": "2026-08-07",
-    "confidence": "high",
-    "note": "수치 대조가 의미 일치를 보증하지 않는다 — method_id 오배선 가능",
-    "caveat": "이 블록은 **사후 추적** 결과다. 원본 계산 시점에 기록된 것이 아니라 repo·git·파일 내용에서 역추적했다. confidence 를 같이 보라."
+   },
+   "provenance_resolved_2026_08_24": {
+    "verdict": "✅ **해소.** fixed-occ nscf 를 처음부터 다시 돌려 정본 값을 재현했다.",
+    "run": "gabia /data/work/runs/gap_nscf/comp1/{scf.in,scf.out,nscf_gap.in,nscf_gap.out} (2026-08-21 09:42 착수 → 08-24 10:23 완료, NP=10 NPOOL=10, CPU 빌드)",
+    "reproduced": {
+     "VBM_eV": 2.1281,
+     "CBM_eV": 4.1937,
+     "gap_eV": 2.0656
+    },
+    "canonical": {
+     "VBM_eV": 2.128,
+     "CBM_eV": 4.194,
+     "gap_eV": 2.066
+    },
+    "agreement": "소수 넷째 자리까지 일치 (반올림 차)",
+    "lineage_hook": "QE 가 찍은 irreducible k-point = **170**, electronic.json 의 kpts='170 irr (k888 nscf)' 와 일치. 셋업 계보가 기계적으로 확인됐다.",
+    "method": "occupations='fixed', nbnd 160, k 8 8 8, conv_thr 1e-10, USPP ecut 60/480. QE 가 'highest occupied, lowest unoccupied level (ev): 2.1281 4.1937' 을 직접 찍었다 — extract_gap.py 정본 경로다. JOB DONE.",
+    "tool": "tools/electronic/run_gap_nscf_gabia.sh"
+   }
   },
-  "changelog": {
-    "2026-08-25b": "SDCP wave1 인용 확정분 등록 (basin 일치 · pm1 정본): dE_site 4건 + Eads 7건. comparison_group 을 sdcp-wave1-* 로 분리해 argyrodite 4축과 절대 섞이지 않게. sdcp_doped·net4 Eads·50 meV offset 은 등록하지 않음 (citable.json not_citable). 원자료 재유도 파이프라인: sdcp_wave1_results.json → citable.json → registry."
+  {
+   "system": "modelc",
+   "metric": "gap_eV",
+   "value": 2.099,
+   "unit": "eV",
+   "source_path": "db/properties/electronic.json",
+   "source_key": "/eigenvalue_gaps_v100_2026_06_16/modelc/gap_eV",
+   "method_id": "qe-uspp__fixed-occ-nscf-eigenvalue",
+   "comparison_group": "gap-fixedocc-eigenvalue-v1",
+   "status": "canonical",
+   "prohibitions": [
+    "dos_threshold_readout"
+   ],
+   "updated": "2026-06-16",
+   "note": null,
+   "provenance_open": "⚠ **네 계통의 실제 실행 입력·출력이 repo 에 없다.** 값은 정본 파일이 기록하고 있지만, 정본 규칙(fixed-occupations nscf 고유값)을 만족한 그 실행을 파일로 재현할 수 없다. ★ generic 템플릿 `tools/electronic/standard_dos/nscf_gap.in` 은 존재하고 `occupations='fixed'` 다 — 즉 방법 자체는 repo 에 있다. 없는 건 **계통별 실행본**이다. 계통별로 남은 `*_nscf.in` 은 전부 `occupations='tetrahedra_opt'`(DOS 용)이라 fixed-occ 근거로 쓰면 안 된다. 2026-08-07 Codex 6라운드. → kb/open_items.md 의 별도 데이터 감사 항목. ⚠ 5라운드에 method_id 를 k882 로 '정정' 했는데 근거였던 modelc_nscf.in 이 tetrahedra_opt 였다 — **정정하면서 같은 종류의 오류를 반복했다.** 철회했다. ★ 게다가 템플릿 주석은 modelc(rhombo) 에 **6 6 2** 를 제시한다 — DOS 용 8 8 2 와 다르다. electronic.json 은 kpts='68 irr' 만 적어 k-mesh 를 단정할 수 없다.  ⛔ **2026-08-20 3중 수색 실패**: 오프라인 백업 2벌 + kgy(~/work·~/repo) + gabia(/data/work·/root) 전수에서 이 계의 fixed-occ nscf 출력이 **없다**. 같은 조사에서 b2o3(백업)·lpsocl(kgy ~/work/lpsocl_v0)은 찾았으므로 수색 자체는 유효했다. ⚠ gabia `/root/comp1_cdd_phx/nscf.out` 이 gap 2.0654 를 찍지만 정본 2.066 과 4자리에서 갈리고 **CDD/phonon 용 별개 계산**이라 정본 근거로 쓸 수 없다 (b2o3 의 nscf_eps 와 같은 유형). `runs/{comp1,modelc}_eps/nscf.in` 도 **유전율용**이다. ⇒ KISTI 원본이 없으므로 이 2건은 **영구 미해소로 본다.** 값 자체는 정본 파일과 일치하나 그 실행을 재현할 파일이 어디에도 없다.",
+   "method_integrity_flag": {
+    "severity": "⛔ 방법 불일치 의심 (재현 불가보다 심각)",
+    "date": "2026-08-20",
+    "finding": "백업 A `repo_dos/tools/electronic/standard_dos/{comp1,modelc}/` 의 nscf 입력이 **occupations='tetrahedra_opt'** 다 (comp1 nbnd=180 · modelc nbnd=210). 짝 출력은 **0 바이트**(comp1_nscf.out · comp1_dos.out)이거나 **아예 없다**(modelc).",
+    "why_it_matters": "CLAUDE.md 규율은 **fixed-occupations nscf 의 VBM/CBM 고유값만** 인정한다. QE 는 tetrahedra/smearing 에서 'highest occupied, lowest unoccupied' 를 찍지 않고 Fermi 만 찍는다 — 그래서 이 값들이 **어떤 경로로 VBM/CBM 이 됐는지 불명확**하다.",
+    "corroborating": "같은 폴더의 extract_gap.py 가 스스로 적고 있다: \"you used smearing; rerun with occupations='fixed'\". 그리고 nscf_gap.in 템플릿은 occupations='fixed' 에 'comp1 160 / modelc 190' 주석까지 달려 있으나 **실제 입력은 그것이 아니다**.",
+    "signal": "electronic.json 에서 comp1·modelc 만 EF_eV 를 갖고 b2o3(fixed-occ 확인)는 갖지 않는다 — smearing/tetrahedra 계열의 지문이다.",
+    "not_yet_proven": "⚠ tetrahedra_opt 에서도 밴드 고유값으로 VBM/CBM 을 얻는 것 자체는 가능하다. **출력이 0 바이트라 어느 쪽인지 확인할 수 없다** — 그래서 '확정' 이 아니라 '의심' 이다.",
+    "only_resolution": "**fixed-occ nscf 재계산.** 구조(comp1_V0_k444.cif · modelC_DFT_EOS_V0.cif)와 레시피(nscf_gap.in)가 repo 에 있고, 같은 레시피로 b2o3·lpsocl 이 이미 통과했다. 재계산하면 provenance 와 방법 일치가 **한 번에** 닫힌다.",
+    "until_then": "네 계 gap 을 한 표에 나란히 쓸 때 **b2o3·lpsocl 만 fixed-occ 확인됨**을 밝힐 것."
+   }
+  },
+  {
+   "system": "b2o3",
+   "metric": "gap_eV",
+   "value": 1.9671,
+   "unit": "eV",
+   "source_path": "db/properties/electronic.json",
+   "source_key": "/eigenvalue_gaps_v100_2026_06_16/b2o3/gap_eV",
+   "method_id": "qe-uspp__fixed-occ-nscf-eigenvalue__25irr-k",
+   "comparison_group": "gap-fixedocc-eigenvalue-v1",
+   "status": "canonical",
+   "prohibitions": [
+    "dos_threshold_readout"
+   ],
+   "updated": "2026-06-16",
+   "note": null,
+   "provenance_resolved": {
+    "status": "resolved",
+    "date": "2026-08-20",
+    "run": "오프라인 백업 A — T7 Shield D:/v100/kisti_backup_2026-07-14/kgy_b2o3_eos_2026-07-14/b2o3_eos/",
+    "input": "b2o3_nscf_gap.in — calculation='nscf' · occupations='fixed' · nbnd=388 · K_POINTS automatic 7 7 1 0 0 0",
+    "output": "b2o3_nscf_gap.out (222,677 B, 2026-07-14 21:13) — \"highest occupied, lowest unoccupied level (ev): 2.4717 4.4388\"",
+    "match": "정본값과 **정확히 일치** (VBM 2.4717 / CBM 4.4388 → gap 1.9671)",
+    "also": "b2o3_scf_fixed.{in,out} + run_scf_fixed.sh 도 같은 폴더에 있다",
+    "caveat": "⚠ 이 파일들은 **repo 밖(외장 SSD 한 벌)** 이다 — 사본이 없고 CI 가 검증하지 못한다. 인덱스: kb/methodology/offline_archive_index_2026_08_20.md",
+    "open_detail": "⚠ registry 의 kpts 표기가 '25 irr' 인데 입력은 automatic 7x7x1 이다. 그 격자의 irreducible 수가 25 인지는 .out 의 'number of k points' 로 확인해야 한다 (값 일치와는 별개)."
+   }
+  },
+  {
+   "system": "lpsocl",
+   "metric": "gap_eV",
+   "value": 2.2309,
+   "unit": "eV",
+   "source_path": "db/properties/lpsocl_dos_gap.json",
+   "source_key": "/gap_eV",
+   "method_id": "qe-uspp__fixed-occ-nscf-eigenvalue__standard_dos",
+   "comparison_group": "gap-fixedocc-eigenvalue-v1",
+   "status": "canonical",
+   "prohibitions": [
+    "dos_threshold_readout"
+   ],
+   "updated": "2026-07-16",
+   "related_decisions": [
+    "PDOS PERATOM 파일(sigma 0.05 잔존)은 **재smoothing 하지 않는다** — 1저자가 per-atom 을 쓰지 않으므로 결함이 소비 경로에 없다 (2026-08-20 결정). repo 에 그대로 보관하되 총합(states/eV) 판만 인용한다."
+   ],
+   "provenance_resolved": {
+    "status": "resolved",
+    "date": "2026-08-20",
+    "run": "kgy `~/work/lpsocl_v0/`",
+    "input": "03b_nscf_gap.in — occupations='fixed' · calculation='nscf'",
+    "output": "03b_nscf_gap.out — \"highest occupied, lowest unoccupied level (ev): 2.3870 4.6179\"",
+    "match": "정본과 **완전 일치** (VBM 2.387 / CBM 4.6179 → gap 2.2309)",
+    "caveat": "⚠ kgy 로컬 한 벌이다. repo 밖이라 CI 가 검증하지 못한다 — 회수하거나 최소한 sha256 을 남길 것."
+   }
+  },
+  {
+   "system": "comp2",
+   "metric": "gap_eV",
+   "value": 2.04,
+   "unit": "eV",
+   "source_path": "db/properties/electronic.json",
+   "source_key": "/band_gaps/[?id=comp2]/gap_eV",
+   "method_id": "legacy-dos-threshold__unverified",
+   "comparison_group": "gap-legacy-dos-threshold",
+   "status": "provisional",
+   "note": "출처는 배선됐지만 **legacy DOS-threshold 판독**이다(electronic.json 이 _DEPRECATED 로 표시). fixed-occ nscf 재계산 전까지 gap-fixedocc-eigenvalue-v1 묶음에 넣지 않는다 — 자동순위·레이더 제외.",
+   "prohibitions": [
+    "compare_with_fixedocc_group"
+   ],
+   "updated": "2026-08-07"
+  },
+  {
+   "system": "comp1",
+   "metric": "B0_GPa",
+   "value": 26.233,
+   "unit": "GPa",
+   "source_path": "db/properties/eos.json",
+   "source_key": "/results/[?id=comp1_v3]/B0_GPa",
+   "method_id": "dft-bm3-eos__uspp__paper-grade",
+   "comparison_group": "b0-dft-bm3-v1",
+   "status": "canonical",
+   "note": "★ 정밀 정본을 찾았다(2026-08-07 Codex 5라운드): eos.json 의 id=comp1_v3 가 note='PRIMARY_paper_value' 다. 이전엔 반올림 사본(id=comp1, 'confirmed')을 가리켜 prefer=registry 우회를 썼는데 이제 필요 없다.",
+   "updated": "2026-08-07"
+  },
+  {
+   "system": "comp2",
+   "metric": "B0_GPa",
+   "value": 25.8,
+   "unit": "GPa",
+   "source_path": "db/properties/eos.json",
+   "source_key": "/results/[?id=comp2]/B0_GPa",
+   "method_id": "dft-bm3-eos__uspp",
+   "comparison_group": "b0-dft-bm3-v1",
+   "status": "canonical",
+   "updated": "2026-08-07"
+  },
+  {
+   "system": "modelc",
+   "metric": "B0_GPa",
+   "value": 21.71,
+   "unit": "GPa",
+   "source_path": "db/properties/eos.json",
+   "source_key": "/results/[?id=modelc_v3]/B0_GPa",
+   "method_id": "dft-bm3-eos__uspp__paper-grade",
+   "comparison_group": "b0-dft-bm3-v1",
+   "status": "canonical",
+   "note": "★ 정밀 정본을 찾았다(2026-08-07 Codex 5라운드): eos.json 의 id=modelc_v3 가 note='PRIMARY_paper_value' 다. 이전엔 반올림 사본(id=modelc, 'confirmed')을 가리켜 prefer=registry 우회를 썼는데 이제 필요 없다.",
+   "updated": "2026-08-07"
+  },
+  {
+   "system": "lpsocl",
+   "metric": "B0_GPa",
+   "value": 24.71,
+   "unit": "GPa",
+   "source_path": "db/properties/lpsocl_eos_dft_result.json",
+   "source_key": "/B0_GPa",
+   "method_id": "dft-bm3-eos__uspp",
+   "comparison_group": "b0-dft-bm3-v1",
+   "status": "canonical",
+   "updated": "2026-07-16"
+  },
+  {
+   "system": "b2o3",
+   "metric": "B0_GPa",
+   "value": 24.48,
+   "unit": "GPa",
+   "source_path": "db/properties/b2o3_eos_dft_result.json",
+   "source_key": "/B0_GPa",
+   "method_id": "dft-bm3-eos__uspp",
+   "comparison_group": "b0-dft-bm3-v1",
+   "status": "canonical",
+   "updated": "2026-07-16"
+  },
+  {
+   "system": "comp1",
+   "metric": "E_VRH_GPa",
+   "value": 22.06,
+   "unit": "GPa",
+   "source_path": "db/properties/elastic.json",
+   "source_key": "/dft_0K_relaxed_ion_stress_strain_full_Cij/results/[?id=comp1_v3]/E_VRH",
+   "method_id": "dft-0K-relaxed-ion__stress-strain-full-Cij",
+   "comparison_group": "elastic-dft-relaxedion-comp1comp2-v1",
+   "status": "canonical",
+   "updated": "2026-07-26",
+   "note": "★ elastic.json 이 comp2 를 'comp1 과 유일한 완전비교쌍' 이라 적고 있다(USPP·ecut 52/520·k444·cubic-52 동일). 그래서 이 둘만 한 묶음이다."
+  },
+  {
+   "system": "modelc",
+   "metric": "E_VRH_GPa",
+   "value": 27.66,
+   "unit": "GPa",
+   "source_path": "db/properties/elastic.json",
+   "source_key": "/dft_0K_relaxed_ion_stress_strain_full_Cij/results/[?id=modelc_v3]/E_VRH",
+   "method_id": "dft-0K-relaxed-ion__stress-strain-full-Cij",
+   "comparison_group": "elastic-dft-relaxedion-modelc-standalone",
+   "status": "canonical",
+   "updated": "2026-07-26",
+   "note": "⚠ 설정이 comp1/comp2 쌍과 동일하다는 근거가 원자료에 없다 — 네 조성을 한 묶음으로 자동 순위화하면 안 된다(2026-08-07 Codex 5라운드). 같은 설정임을 확인하면 comp1/comp2 묶음으로 합칠 것."
+  },
+  {
+   "system": "lpsocl",
+   "metric": "E_VRH_GPa",
+   "value": 35.04,
+   "unit": "GPa",
+   "source_path": "db/properties/elastic.json",
+   "source_key": "/dft_0K_relaxed_ion_stress_strain_full_Cij/results/[?id=lpsocl_v0]/E_VRH",
+   "method_id": "dft-0K-relaxed-ion__stress-strain-full-Cij",
+   "comparison_group": "elastic-dft-relaxedion-lpsocl-standalone",
+   "status": "canonical",
+   "updated": "2026-07-26",
+   "note": "⚠ 설정이 comp1/comp2 쌍과 동일하다는 근거가 원자료에 없다 — 네 조성을 한 묶음으로 자동 순위화하면 안 된다(2026-08-07 Codex 5라운드). 같은 설정임을 확인하면 comp1/comp2 묶음으로 합칠 것."
+  },
+  {
+   "system": "comp2",
+   "metric": "E_VRH_GPa",
+   "value": 20.03,
+   "unit": "GPa",
+   "source_path": "db/properties/elastic.json",
+   "source_key": "/dft_0K_relaxed_ion_stress_strain_full_Cij/results/[?id=comp2_v3]/E_VRH",
+   "method_id": "dft-0K-relaxed-ion__stress-strain-full-Cij",
+   "comparison_group": "elastic-dft-relaxedion-comp1comp2-v1",
+   "status": "canonical",
+   "updated": "2026-07-26",
+   "note": "★ elastic.json 이 comp2 를 'comp1 과 유일한 완전비교쌍' 이라 적고 있다(USPP·ecut 52/520·k444·cubic-52 동일). 그래서 이 둘만 한 묶음이다."
+  },
+  {
+   "system": "modelc",
+   "metric": "MD_Ea_eV",
+   "value": 0.197,
+   "uncertainty": 0.032,
+   "unit": "eV",
+   "source_path": "db/properties/b2o3_vs_lpscl16_conductivity.csv",
+   "source_key": "/[?system=LPSCl1.6]/Ea_eV",
+   "n_seed": 3,
+   "method_id": "uma-s-1p1__600-800-1000K__3seed__msd2-50ps__NE-haven1",
+   "comparison_group": "md-ea-multiseed-v1",
+   "status": "canonical",
+   "prohibitions": [
+    "absolute_sigma",
+    "single_seed_ratio",
+    "single_trajectory_CI",
+    "long_time_convergence"
+   ],
+   "updated": "2026-07-09",
+   "blocking_gate": null,
+   "gate_detail": {
+    "rule": "beta on seed-ensemble-mean MSD, 2-50 ps, pass 0.8-1.2",
+    "beta_600K": 0.868,
+    "beta_800K": 0.934,
+    "beta_1000K": 0.924,
+    "verdict": "all three temperatures PASS (3-seed means, v2 2026-08-04)",
+    "source": "db/properties/msd_3sys_200ps_origin.csv",
+    "⛔_2026_08_27": "β 하드게이트(0.8–1.2)는 **폐기됐다** — 문헌 근거가 없고 우리 운영점에서 거짓탈락 50 %다. 이 항목은 **당시 판정 이력**으로 남긴다. 현행 판정축은 D_inc (kb/concepts/beta-gate.md §7-8b)."
+   },
+   "uncertainty_kind": "between_seed_sd — 평균의 CI 가 아니라 **run-to-run 산포**다. n=3–4 라 이 SD 자체의 상대오차가 41–50 % 다.",
+   "finite_duration": {
+    "prod_ps": 200,
+    "label": "MD_Ea_eV_200, provisional",
+    "wording": "이 값은 동일한 200 ps 프로토콜의 독립 초기화 3–4개에서 얻은 **finite-duration 추정치**다. 제시한 산포는 200 ps run 간 변동이며 **단일궤적 block CI 도, 장시간 극한의 수렴도 뜻하지 않는다.** 유한시간 편향·느린 basin 혼합·무질서 realization 불확실도는 분리되지 않았다.",
+    "why": "교차리뷰 H Q12 (2026-08-27). block 하한 (T−t₂max)/b 로 200 ps·lag 50 은 유효 block 1.5–3.0 개라 발행 기준 8–10 에 못 미친다 ⇒ 단일궤적 CI 불가. ⚠ 다만 8–10 은 **발행 기준**이지 점추정치를 무효화하는 정리가 아니다 — 값은 **조건부 유지**다."
+   }
+  },
+  {
+   "system": "b2o3",
+   "metric": "MD_Ea_eV",
+   "value": 0.199,
+   "uncertainty": 0.034,
+   "unit": "eV",
+   "source_path": "db/properties/b2o3_md_arrhenius.json",
+   "source_key": "/FINAL_for_paper/Ea_eV_PAPER_RETRACTED_2026_08_23",
+   "n_seed": 3,
+   "method_id": "uma-s-1p1__600-800-1000K__3seed__msd2-50ps__NE-haven1",
+   "comparison_group": "md-ea-multiseed-v1",
+   "status": "retracted",
+   "prohibitions": [
+    "absolute_claim",
+    "absolute_sigma",
+    "cite_until_framework_gate_resolved",
+    "ranking",
+    "single_line_fit_over_600_1000K",
+    "single_seed_ratio",
+    "single_trajectory_CI",
+    "long_time_convergence"
+   ],
+   "note": "⛔ **2026-08-25 철회** — 위 retracted 절 참조. 아래는 철회 이전의 보류 사유이며 기록으로 남긴다(사유가 바뀐 것이지 없어진 것이 아니다).\n⛔ 2026-08-20 (3차 정정) 인용 보류 유지 · **사유 정정**. 이전 사유였던 골격 beta 0.59/0.63 은 **이 값을 만든 궤적이 아니라 다른 run family(b2o3_full, single-seed legacy)에서 잰 것**이었다 — 계보 오류로 철회 (gate_detail.lineage.old_assessment 에 보존, diagnostic_unbound). 정정된 사유: 골격 게이트 **미평가(not_assessed / required_artifact_set_incomplete)** — high-T 6런(800·1000 K x 3시드)의 궤적이 --save_traj 미전달로 미보존이다. 600 K 3런은 PMF 가 소비한 기록이 있어 **현존 확인만 하면 된다** (재실행 범위는 9런이 아니라 **6런**). 미평가는 통과가 아니므로 ranking·absolute_claim·mechanism 은 계속 금지. 허용: 공개감사 + 비교(dEa = +0.002 +/- 0.047 — 같은 CSV 가 '구분 안 됨'이라 적는다). ⚠ 덱의 '수송 축 1등' 은 근거가 PMF dF_perc 0.1607 eV @600 K (4시드) 라 별건 (kb/open_items.md #11).",
+   "updated": "2026-08-20",
+   "blocking_gate": "framework_beta_800_1000K",
+   "gate_detail": {
+    "rule": "framework beta = dlog MSD/dlogt of the NON-Li elements (n>=8 atoms only), window 2-50 ps. pass < 0.30 (vibration). 0.30-0.60 mobile, >=0.60 diffusive.",
+    "beta_800K": {
+     "element": "S",
+     "n": 41,
+     "beta": 0.59
+    },
+    "beta_1000K": {
+     "element": "Cl",
+     "n": 16,
+     "beta": 0.63
+    },
+    "reference_modelc": {
+     "beta_800K": 0.03,
+     "beta_1000K": 0.08,
+     "note": "같은 온도 modelc 는 한 자릿수 작다 (5온도 전부 0.01-0.13)"
+    },
+    "verdict": "800/1000 K 에서 비-Li 부격자가 기어간다(creep). 그 두 온도가 아레니우스 3점 중 2점이다. 600 K 도 시드마다 갈린다(P n=8 에서 0.55/0.22/0.20).",
+    "why_not_conclusive": "⚠ 결론이 아니라 보류다. 자기리뷰에서 **이름과 기전을 둘 다 철회**했다: (1) '골격' 이라 부른 것 중 Cl·자유 S 는 우리 cage_assign 규약상 **케이지 음이온**이고 진짜 골격은 PS4 뿐이다 — 신호의 상당분이 알려진 고온 S/Cl 자리교환의 이른 발현일 수 있다. (2) 'D 과대·Ea 과소' 기전도 틀렸다 — Li MSD 는 Li 자신의 변위다. 진짜 위협은 **상태 혼합**(600 K 정렬 상태와 800/1000 K 부분무질서 상태를 한 아레니우스 선으로 잇는 것)이고 편향 방향은 자동으로 정해지지 않는다. (3) 문턱 0.30/0.60·MIN_N 8 은 13~19런 분포에서 정한 자의적 상수다.",
+    "source": "tools/ionic/msd_diffusive_check.py --framework --from_traj · kb/reviews/codex_B_neb_md_tools_2026_08_20.md §0·§5(B-R1,B-R2) · kb/methodology/computational_methods_canonical.md §6-2",
+    "lineage": {
+     "_moved": "게이트 판정(옛/현재)은 db/governance/assessments.json 으로 이관했다 (codex 동결감사 2026-08-20). 판정을 값 옆에 두면 consumer 마다 '현재 판정' 을 다르게 고른다.",
+     "beta_measured_on": "b2o3_full (single-seed legacy run family, pre-2026-07 reseed)",
+     "value_produced_by": "3-seed x 3-T reseed: 600 K = gabia /data/work/b2o3md/runs/b2o3_600_reseed (200 ps) · 800/1000 K = kgy ~/work/runs/highT_reseed/b2o3 (100 ps)",
+     "lineage_match": false,
+     "lineage_binding": "unwired",
+     "numeric_reproduction": "exact",
+     "numeric_reproduction_note": "9개 per-seed D 에서 Ea 0.199438 / D0 4.62463e-04 / sigma_Ea 0.034306 이 정확히 재현된다.",
+     "lineage_binding_note": "tools/ionic/build_final_conductivity.py 가 upstream 을 읽지 않고 D 를 하드코딩한다 — 값은 재현되지만 기계 계보는 배선되지 않았다. ⚠ L1 에 있는 것은 per-seed **D** 이지 per-seed **MSD** 가 아니다 — 골격 게이트는 궤적을 요구하므로 L1 만으로는 닫히지 않는다.",
+     "design_ref": "kb/projects/decision_registry_design_2026_08_20.md"
+    },
+    "⛔_2026_08_27": "β 하드게이트(0.8–1.2)는 **폐기됐다** — 문헌 근거가 없고 우리 운영점에서 거짓탈락 50 %다. 이 항목은 **당시 판정 이력**으로 남긴다. 현행 판정축은 D_inc (kb/concepts/beta-gate.md §7-8b)."
+   },
+   "required_assessment_refs": [
+    "A-2026-08-20-b2o3-framework-current"
+   ],
+   "retracted": {
+    "date": "2026-08-23 (레지스트리 반영 2026-08-25)",
+    "what": "0.199 ± 0.034 은 600–1000 K **전구간 단일 직선** 적합이다.",
+    "why": "아레니우스가 800 K 위에서 굽는다 — 구간 Ea 600→800 0.222 eV / 800→1000 0.077 eV, 145 meV 차. 단일 직선으로 기술할 수 없다. 인공물 가설 3개(β 게이트 · MSD 창 포화 · 1000 K 구조 붕괴)를 각각 실측으로 반증했다.",
+    "usable_instead": "저온 구간만: Ea = 0.2241 ± 0.0606 eV (600→800 K, 3시드 **각각** 적합). 평균 D 를 먼저 내고 적합하면 오차막대가 사라진다 — 그게 0.199 가 정밀해 보였던 이유다.",
+    "source": "db/properties/b2o3_md_arrhenius.json · segment_extrapolation_2026_08_24",
+    "card": "kb/results/b2o3_arrhenius_curvature_2026_08_23.md"
+   },
+   "uncertainty_kind": "between_seed_sd — 평균의 CI 가 아니라 **run-to-run 산포**다. n=3–4 라 이 SD 자체의 상대오차가 41–50 % 다.",
+   "finite_duration": {
+    "prod_ps": 200,
+    "label": "MD_Ea_eV_200, provisional",
+    "wording": "이 값은 동일한 200 ps 프로토콜의 독립 초기화 3–4개에서 얻은 **finite-duration 추정치**다. 제시한 산포는 200 ps run 간 변동이며 **단일궤적 block CI 도, 장시간 극한의 수렴도 뜻하지 않는다.** 유한시간 편향·느린 basin 혼합·무질서 realization 불확실도는 분리되지 않았다.",
+    "why": "교차리뷰 H Q12 (2026-08-27). block 하한 (T−t₂max)/b 로 200 ps·lag 50 은 유효 block 1.5–3.0 개라 발행 기준 8–10 에 못 미친다 ⇒ 단일궤적 CI 불가. ⚠ 다만 8–10 은 **발행 기준**이지 점추정치를 무효화하는 정리가 아니다 — 값은 **조건부 유지**다."
+   }
+  },
+  {
+   "system": "lpsocl",
+   "metric": "MD_Ea_eV",
+   "value": 0.2867,
+   "uncertainty": 0.024,
+   "unit": "eV",
+   "source_path": "db/properties/lpsocl_md_arrhenius.json",
+   "source_key": "/Ea_eV_central",
+   "n_seed": 4,
+   "method_id": "uma-s-1p1__600-800-1000K__4seed__msd2-50ps__NE-haven1",
+   "comparison_group": "md-ea-multiseed-v1",
+   "status": "provisional",
+   "prohibitions": [
+    "absolute_sigma",
+    "single_seed_ratio",
+    "cite_until_beta_gate_passes",
+    "single_trajectory_CI",
+    "long_time_convergence"
+   ],
+   "note": "⛔ 인용 보류. Ea 0.2867 은 **게이트 탈락한 600 K 점을 포함한 3점 적합**이다 — kb/open_items.md 가 '게이트 통과 전까지 전부 인용 보류' 라고 적고 있다. 2026-08-07: 레지스트리 첫 판에서 이 대조를 빠뜨려 canonical 로 올렸던 것을 Codex 재검증이 잡았다. 30런 MTO-β 판정 대기(안 되면 1600 ps 프로브).",
+   "updated": "2026-08-07",
+   "blocking_gate": "beta_600K",
+   "gate_detail": {
+    "rule": "beta = dlog<r^2>/dlogt on the SEED-ENSEMBLE-MEAN MSD, window 2-50 ps, pass 0.8-1.2",
+    "beta_600K": 0.615,
+    "beta_800K": 0.856,
+    "beta_1000K": 1.016,
+    "verdict": "600 K FAILS (cage-contaminated hop statistics; MSD size is fine at 97 A^2/200 ps)",
+    "source": "db/properties/msd_3sys_200ps_origin.csv (header lines) · kb/open_items.md",
+    "⛔_2026_08_27": "β 하드게이트(0.8–1.2)는 **폐기됐다** — 문헌 근거가 없고 우리 운영점에서 거짓탈락 50 %다. 이 항목은 **당시 판정 이력**으로 남긴다. 현행 판정축은 D_inc (kb/concepts/beta-gate.md §7-8b)."
+   },
+   "uncertainty_kind": "between_seed_sd — 평균의 CI 가 아니라 **run-to-run 산포**다. n=3–4 라 이 SD 자체의 상대오차가 41–50 % 다.",
+   "finite_duration": {
+    "prod_ps": 200,
+    "label": "MD_Ea_eV_200, provisional",
+    "wording": "이 값은 동일한 200 ps 프로토콜의 독립 초기화 3–4개에서 얻은 **finite-duration 추정치**다. 제시한 산포는 200 ps run 간 변동이며 **단일궤적 block CI 도, 장시간 극한의 수렴도 뜻하지 않는다.** 유한시간 편향·느린 basin 혼합·무질서 realization 불확실도는 분리되지 않았다.",
+    "why": "교차리뷰 H Q12 (2026-08-27). block 하한 (T−t₂max)/b 로 200 ps·lag 50 은 유효 block 1.5–3.0 개라 발행 기준 8–10 에 못 미친다 ⇒ 단일궤적 CI 불가. ⚠ 다만 8–10 은 **발행 기준**이지 점추정치를 무효화하는 정리가 아니다 — 값은 **조건부 유지**다."
+   }
+  },
+  {
+   "system": "modelc",
+   "metric": "MD_Ea_eV_singleseed",
+   "value": 0.2235,
+   "unit": "eV",
+   "source_path": "db/properties/lpsocl_md_arrhenius.json",
+   "source_key": "/anchors_same_window_singleseed/modelc_Ea_singleseed",
+   "n_seed": 1,
+   "method_id": "uma-s-1p1__600-800-1000K__1seed__msd2-50ps",
+   "comparison_group": "md-ea-singleseed-anchor-v1",
+   "status": "canonical",
+   "prohibitions": [
+    "absolute_sigma",
+    "cross_composition_ranking",
+    "single_trajectory_CI",
+    "long_time_convergence"
+   ],
+   "note": "deck 앵커. 같은 창의 단일 궤적끼리 짝지을 때만 쓴다.",
+   "updated": "2026-07-27",
+   "uncertainty_kind": "between_seed_sd — 평균의 CI 가 아니라 **run-to-run 산포**다. n=3–4 라 이 SD 자체의 상대오차가 41–50 % 다.",
+   "finite_duration": {
+    "prod_ps": 200,
+    "label": "MD_Ea_eV_singleseed_200, provisional",
+    "wording": "이 값은 동일한 200 ps 프로토콜의 독립 초기화 3–4개에서 얻은 **finite-duration 추정치**다. 제시한 산포는 200 ps run 간 변동이며 **단일궤적 block CI 도, 장시간 극한의 수렴도 뜻하지 않는다.** 유한시간 편향·느린 basin 혼합·무질서 realization 불확실도는 분리되지 않았다.",
+    "why": "교차리뷰 H Q12 (2026-08-27). block 하한 (T−t₂max)/b 로 200 ps·lag 50 은 유효 block 1.5–3.0 개라 발행 기준 8–10 에 못 미친다 ⇒ 단일궤적 CI 불가. ⚠ 다만 8–10 은 **발행 기준**이지 점추정치를 무효화하는 정리가 아니다 — 값은 **조건부 유지**다."
+   }
+  },
+  {
+   "system": "b2o3",
+   "metric": "MD_Ea_eV_singleseed",
+   "value": 0.2234,
+   "unit": "eV",
+   "source_path": "db/properties/lpsocl_md_arrhenius.json",
+   "source_key": "/anchors_same_window_singleseed/b2o3_Ea_singleseed",
+   "n_seed": 1,
+   "method_id": "uma-s-1p1__600-800-1000K__1seed__msd2-50ps",
+   "comparison_group": "md-ea-singleseed-anchor-v1",
+   "status": "provisional",
+   "prohibitions": [
+    "absolute_sigma",
+    "cite_until_framework_gate_resolved",
+    "cross_composition_ranking",
+    "single_trajectory_CI",
+    "long_time_convergence"
+   ],
+   "updated": "2026-08-20",
+   "blocking_gate": "framework_beta_800_1000K",
+   "gate_detail": {
+    "rule": "framework beta = dlog MSD/dlogt of the NON-Li elements (n>=8 atoms only), window 2-50 ps. pass < 0.30 (vibration). 0.30-0.60 mobile, >=0.60 diffusive.",
+    "beta_800K": {
+     "element": "S",
+     "n": 41,
+     "beta": 0.59
+    },
+    "beta_1000K": {
+     "element": "Cl",
+     "n": 16,
+     "beta": 0.63
+    },
+    "reference_modelc": {
+     "beta_800K": 0.03,
+     "beta_1000K": 0.08,
+     "note": "같은 온도 modelc 는 한 자릿수 작다 (5온도 전부 0.01-0.13)"
+    },
+    "verdict": "800/1000 K 에서 비-Li 부격자가 기어간다(creep). 그 두 온도가 아레니우스 3점 중 2점이다. 600 K 도 시드마다 갈린다(P n=8 에서 0.55/0.22/0.20).",
+    "why_not_conclusive": "⚠ 결론이 아니라 보류다. 자기리뷰에서 **이름과 기전을 둘 다 철회**했다: (1) '골격' 이라 부른 것 중 Cl·자유 S 는 우리 cage_assign 규약상 **케이지 음이온**이고 진짜 골격은 PS4 뿐이다 — 신호의 상당분이 알려진 고온 S/Cl 자리교환의 이른 발현일 수 있다. (2) 'D 과대·Ea 과소' 기전도 틀렸다 — Li MSD 는 Li 자신의 변위다. 진짜 위협은 **상태 혼합**(600 K 정렬 상태와 800/1000 K 부분무질서 상태를 한 아레니우스 선으로 잇는 것)이고 편향 방향은 자동으로 정해지지 않는다. (3) 문턱 0.30/0.60·MIN_N 8 은 13~19런 분포에서 정한 자의적 상수다.",
+    "source": "tools/ionic/msd_diffusive_check.py --framework --from_traj · kb/reviews/codex_B_neb_md_tools_2026_08_20.md §0·§5(B-R1,B-R2) · kb/methodology/computational_methods_canonical.md §6-2",
+    "lineage": {
+     "_moved": "게이트 판정(옛/현재)은 db/governance/assessments.json 으로 이관했다 (codex 동결감사 2026-08-20). 판정을 값 옆에 두면 consumer 마다 '현재 판정' 을 다르게 고른다.",
+     "beta_measured_on": "b2o3_full (single-seed legacy run family)",
+     "value_produced_by": "single-seed 600/800/1000 K (db/properties/lpsocl_md_arrhenius.json /anchors_same_window_singleseed)",
+     "lineage_match": "unverified",
+     "lineage_binding": "unverified",
+     "numeric_reproduction": "exact",
+     "numeric_reproduction_note": "600/800/1000 K D 가 b2o3_msd.csv 재계산과 일치한다.",
+     "lineage_binding_note": "run 해시가 확인되지 않았다.",
+     "design_ref": "kb/projects/decision_registry_design_2026_08_20.md"
+    },
+    "⛔_2026_08_27": "β 하드게이트(0.8–1.2)는 **폐기됐다** — 문헌 근거가 없고 우리 운영점에서 거짓탈락 50 %다. 이 항목은 **당시 판정 이력**으로 남긴다. 현행 판정축은 D_inc (kb/concepts/beta-gate.md §7-8b)."
+   },
+   "note": "⛔ 2026-08-20 (3차 정정) 인용 보류 유지. 골격 게이트는 **미평가(lineage_unverified)** 다 — beta 를 잰 b2o3_full 과 같은 계열로 보이지만(600/800/1000 K D 가 b2o3_msd.csv 재계산과 일치) run 해시가 확인되지 않았다. ⚠ 1차 정정에서 high-T reseed 궤적 미보존 사유를 이 항목에도 붙였던 것은 **과교정**이라 철회했다 — 그 결함은 multiseed 항목의 사유다. single-seed 값 자체의 인용 제한(단일시드 sigma 비 금지 등)은 그대로다.",
+   "required_assessment_refs": [
+    "A-2026-08-20-b2o3-singleseed-framework"
+   ],
+   "uncertainty_kind": "between_seed_sd — 평균의 CI 가 아니라 **run-to-run 산포**다. n=3–4 라 이 SD 자체의 상대오차가 41–50 % 다.",
+   "finite_duration": {
+    "prod_ps": 200,
+    "label": "MD_Ea_eV_singleseed_200, provisional",
+    "wording": "이 값은 동일한 200 ps 프로토콜의 독립 초기화 3–4개에서 얻은 **finite-duration 추정치**다. 제시한 산포는 200 ps run 간 변동이며 **단일궤적 block CI 도, 장시간 극한의 수렴도 뜻하지 않는다.** 유한시간 편향·느린 basin 혼합·무질서 realization 불확실도는 분리되지 않았다.",
+    "why": "교차리뷰 H Q12 (2026-08-27). block 하한 (T−t₂max)/b 로 200 ps·lag 50 은 유효 block 1.5–3.0 개라 발행 기준 8–10 에 못 미친다 ⇒ 단일궤적 CI 불가. ⚠ 다만 8–10 은 **발행 기준**이지 점추정치를 무효화하는 정리가 아니다 — 값은 **조건부 유지**다."
+   }
+  },
+  {
+   "system": "comp1",
+   "metric": "MD_Ea_eV_singleseed",
+   "value": 0.2532,
+   "unit": "eV",
+   "source_path": "db/properties/li_transport.json",
+   "source_key": "/results/[?id=comp1_v3_4fu_natural]/arrhenius_fit/PAPER_GRADE/Ea_eV",
+   "n_seed": 1,
+   "method_id": "uma-s-1p1__1seed__legacy-deck",
+   "comparison_group": "md-ea-singleseed-anchor-v1",
+   "status": "provisional",
+   "prohibitions": [
+    "absolute_sigma",
+    "cross_composition_ranking",
+    "cite_until_beta_gate_passes",
+    "single_trajectory_CI",
+    "long_time_convergence"
+   ],
+   "note": "Codex 3라운드가 원 출처를 찾아 줬다(0.2532, 표시 0.253). ⚠ 출처 발견과 정본 승격은 별개다 — 같은 파일과 kb/open_items.md §1 이 comp1 의 확산영역 게이트 6/6 탈락을 기록하고 있다. legacy deck 앵커로만 쓴다.",
+   "updated": "2026-08-07",
+   "tolerance": 0.0006,
+   "blocking_gate": "beta_all_temps",
+   "gate_detail": {
+    "rule": "beta on MSD, 2-50 ps, pass 0.8-1.2",
+    "verdict": "6/6 런 전부 케이지 판정 (beta 0.17-0.79). 창을 100-200 ps 로 옮겨도, 시드 MSD 를 평균해도 0.8 을 못 넘는다.",
+    "root_cause": "저이동도 계에서 200 ps 가 부족 — 셀 확대(2x2x2) 또는 시간 연장 필요",
+    "source": "kb/open_items.md §1 · db/properties/li_transport.json",
+    "⛔_2026_08_27": "β 하드게이트(0.8–1.2)는 **폐기됐다** — 문헌 근거가 없고 우리 운영점에서 거짓탈락 50 %다. 이 항목은 **당시 판정 이력**으로 남긴다. 현행 판정축은 D_inc (kb/concepts/beta-gate.md §7-8b)."
+   },
+   "uncertainty_kind": "between_seed_sd — 평균의 CI 가 아니라 **run-to-run 산포**다. n=3–4 라 이 SD 자체의 상대오차가 41–50 % 다.",
+   "finite_duration": {
+    "prod_ps": 200,
+    "label": "MD_Ea_eV_singleseed_200, provisional",
+    "wording": "이 값은 동일한 200 ps 프로토콜의 독립 초기화 3–4개에서 얻은 **finite-duration 추정치**다. 제시한 산포는 200 ps run 간 변동이며 **단일궤적 block CI 도, 장시간 극한의 수렴도 뜻하지 않는다.** 유한시간 편향·느린 basin 혼합·무질서 realization 불확실도는 분리되지 않았다.",
+    "why": "교차리뷰 H Q12 (2026-08-27). block 하한 (T−t₂max)/b 로 200 ps·lag 50 은 유효 block 1.5–3.0 개라 발행 기준 8–10 에 못 미친다 ⇒ 단일궤적 CI 불가. ⚠ 다만 8–10 은 **발행 기준**이지 점추정치를 무효화하는 정리가 아니다 — 값은 **조건부 유지**다."
+   }
+  },
+  {
+   "system": "comp2",
+   "metric": "MD_Ea_eV_ordered",
+   "value": 0.2754597563,
+   "uncertainty": 0.0327434522,
+   "unit": "eV",
+   "tolerance": 1e-09,
+   "source_path": "db/properties/comp2_md_arrhenius.json",
+   "source_key": "/Ea_eV_perseed_mean",
+   "n_seed": 3,
+   "method_id": "uma-s-1p1__600-800-1000K__3seed__msd2-50ps__ordered-champion",
+   "comparison_group": "md-ea-comp2-ordered-provisional",
+   "status": "provisional",
+   "prohibitions": [
+    "absolute_sigma",
+    "cross_composition_ranking",
+    "single_trajectory_CI",
+    "long_time_convergence"
+   ],
+   "note": "★ 이건 **ordered single-champion baseline** 이지 disorder ensemble 이 아니다. 2026-08-07 Codex 4라운드가 잡았다 — 레지스트리 첫 판이 이 값에 method_id=disorder-ensemble 을 붙여 두 개념을 섞었다. 원자료가 직접 '이 계산은 anion disorder mechanism 을 샘플링하지 않았다'고 적고 있다. 정밀 원자료를 저장하고 화면에서만 반올림한다(표시 0.275±0.033).",
+   "updated": "2026-08-07",
+   "uncertainty_kind": "between_seed_sd — 평균의 CI 가 아니라 **run-to-run 산포**다. n=3–4 라 이 SD 자체의 상대오차가 41–50 % 다.",
+   "finite_duration": {
+    "prod_ps": 200,
+    "label": "MD_Ea_eV_ordered_200, provisional",
+    "wording": "이 값은 동일한 200 ps 프로토콜의 독립 초기화 3–4개에서 얻은 **finite-duration 추정치**다. 제시한 산포는 200 ps run 간 변동이며 **단일궤적 block CI 도, 장시간 극한의 수렴도 뜻하지 않는다.** 유한시간 편향·느린 basin 혼합·무질서 realization 불확실도는 분리되지 않았다.",
+    "why": "교차리뷰 H Q12 (2026-08-27). block 하한 (T−t₂max)/b 로 200 ps·lag 50 은 유효 block 1.5–3.0 개라 발행 기준 8–10 에 못 미친다 ⇒ 단일궤적 CI 불가. ⚠ 다만 8–10 은 **발행 기준**이지 점추정치를 무효화하는 정리가 아니다 — 값은 **조건부 유지**다."
+   }
+  },
+  {
+   "system": "comp2",
+   "metric": "MD_Ea_eV_disorder",
+   "value": 0.1512,
+   "uncertainty": 0.0676,
+   "unit": "eV",
+   "source_path": "db/properties/comp2_disorder_ensemble.json",
+   "source_key": "/levels/d0.50/Ea_eV",
+   "n_config": 3,
+   "method_id": "uma-s-1p1__600-800-1000K__3config__msd2-50ps__anion-disorder-d0.50",
+   "comparison_group": "md-ea-comp2-disorder-d050",
+   "status": "provisional",
+   "prohibitions": [
+    "absolute_sigma",
+    "cross_composition_ranking",
+    "quote_value_precisely",
+    "single_trajectory_CI",
+    "long_time_convergence"
+   ],
+   "gate_detail": {
+    "rule": "beta on MSD, 2-50 ps, pass 0.8-1.2",
+    "verdict": "PASS — 개별 9/9 (β 0.81–1.12) + 온도별 평균 3/3 (β 0.92/1.00/0.97)",
+    "source": "db/properties/comp2_disorder_ensemble.json",
+    "⛔_2026_08_27": "β 하드게이트(0.8–1.2)는 **폐기됐다** — 문헌 근거가 없고 우리 운영점에서 거짓탈락 50 %다. 이 항목은 **당시 판정 이력**으로 남긴다. 현행 판정축은 D_inc (kb/concepts/beta-gate.md §7-8b)."
+   },
+   "note": "anion disorder d=0.50, config 3개. 게이트는 통과했지만 **config 산포 45%** 다 — 원자료가 직접 \"'ordered(0.276) 보다 낮다' 까지만 말하고 값 자체를 정밀 인용하지 말 것\" 이라고 적고 있다. ⚠ n_seed 가 아니라 **n_config** 다(시드가 아니라 무질서 배치를 샘플링). ⛔ d=1.00 (0.3775) 은 게이트 FAIL(개별 8/9 케이지) 이라 같은 항목에 섞지 않는다.",
+   "updated": "2026-08-01",
+   "uncertainty_kind": "between_seed_sd — 평균의 CI 가 아니라 **run-to-run 산포**다. n=3–4 라 이 SD 자체의 상대오차가 41–50 % 다.",
+   "finite_duration": {
+    "prod_ps": 200,
+    "label": "MD_Ea_eV_disorder_200, provisional",
+    "wording": "이 값은 동일한 200 ps 프로토콜의 독립 초기화 3–4개에서 얻은 **finite-duration 추정치**다. 제시한 산포는 200 ps run 간 변동이며 **단일궤적 block CI 도, 장시간 극한의 수렴도 뜻하지 않는다.** 유한시간 편향·느린 basin 혼합·무질서 realization 불확실도는 분리되지 않았다.",
+    "why": "교차리뷰 H Q12 (2026-08-27). block 하한 (T−t₂max)/b 로 200 ps·lag 50 은 유효 block 1.5–3.0 개라 발행 기준 8–10 에 못 미친다 ⇒ 단일궤적 CI 불가. ⚠ 다만 8–10 은 **발행 기준**이지 점추정치를 무효화하는 정리가 아니다 — 값은 **조건부 유지**다."
+   }
+  },
+  {
+   "system": "lpsocl",
+   "metric": "ICOHP_PS",
+   "value": -6.04,
+   "unit": "eV",
+   "source_path": "db/properties/lpsocl_icohp.json",
+   "source_key": "/bonds/P-S/ICOHP_total_eV_per_bond",
+   "method_id": "lobster__ext-basis__per-bond",
+   "comparison_group": "icohp-lobster-perbond-v1",
+   "status": "canonical",
+   "updated": "2026-07-29"
+  },
+  {
+   "system": "b2o3",
+   "metric": "ICOHP_PS",
+   "value": -6.023,
+   "unit": "eV",
+   "source_path": "db/properties/b2o3_icohp.json",
+   "source_key": "/bonds/P-S/ICOHP_total_eV_per_bond",
+   "method_id": "lobster__ext-basis__per-bond",
+   "comparison_group": "icohp-lobster-perbond-v1",
+   "status": "canonical",
+   "updated": "2026-07-29"
+  },
+  {
+   "system": "modelc_nd_doped",
+   "metric": "ICOHP_PS",
+   "value": -5.976,
+   "unit": "eV",
+   "source_path": "db/properties/nd_icohp.json",
+   "source_key": "/bonds/P-S/ICOHP_total_eV_per_bond",
+   "method_id": "lobster__ext-basis__per-bond",
+   "comparison_group": "icohp-lobster-perbond-v1",
+   "status": "canonical",
+   "updated": "2026-07-29"
+  },
+  {
+   "system": "modelc",
+   "metric": "ICOHP_PS",
+   "value": -5.9997,
+   "unit": "eV",
+   "source_path": "db/properties/per_bond_json/bonds_modelc_k663.json",
+   "source_key": "/icohp_per_bond_type_eV/P-S/icohp_eV",
+   "method_id": "lobster__ext-basis__per-bond__k663",
+   "comparison_group": "icohp-lobster-perbond-v1",
+   "status": "canonical",
+   "note": "직접 산출 원자료로 바꿨다(2026-08-07 Codex 5라운드). 이전엔 lpsocl 비교표의 복사값(-6.0)을 읽었다 — 원값은 -5.9997 이다.",
+   "updated": "2026-08-07",
+   "tolerance": 0.0006
+  },
+  {
+   "system": "comp1",
+   "metric": "ICOHP_PS",
+   "value": -5.938,
+   "unit": "eV",
+   "source_path": "db/properties/per_bond_json/bonds_comp1_k444.json",
+   "source_key": "/icohp_per_bond_type_eV/P-S/icohp_eV",
+   "method_id": "lobster__ext-basis__per-bond",
+   "comparison_group": "icohp-lobster-perbond-v1",
+   "status": "canonical",
+   "note": "원값 -5.9381 (세 자리 반올림해 표시). ⚠ db/properties/bonds.json 과 nd_icohp.json 에는 **-5.944** 가 남아 있는데 둘 다 낡은 요약이다 (2026-06-03 요약 vs 2026-06-05 직접 산출). cutoff 규약 차이가 아니라 drift — Codex 재검증 2026-08-07. 그 두 파일은 별도로 정리할 것.",
+   "updated": "2026-08-07",
+   "tolerance": 0.0006
+  },
+  {
+   "system": "comp2",
+   "metric": "ICOHP_PS",
+   "value": -5.913,
+   "unit": "eV",
+   "source_path": "db/properties/comp2_icohp_origin.csv",
+   "source_key": "/[?bond=P-S]/ICOHP_eV_mean",
+   "method_id": "lobster__ext-basis__per-bond",
+   "comparison_group": "icohp-lobster-perbond-v1",
+   "status": "canonical",
+   "note": "⚠ source 인 comp2_icohp_origin.csv 에는 **방법 정보가 없다** (값만 있다). 방법 근거는 db/compositions/comp2.json 의 ICOHP 절이다 — 값과 방법의 출처가 갈려 있으므로 인용할 때 둘 다 봐야 한다 (2026-08-07 Codex 5라운드).",
+   "updated": "2026-08-07"
+  },
+  {
+   "system": "sdcp",
+   "metric": "SDCP_dE_site_meV__ptfe_dimer_pm1",
+   "value": 36.07,
+   "unit": "meV",
+   "source_path": "db/properties/sdcp_wave1_citable.json",
+   "source_key": "/dE_site_meV/ptfe_dimer_pm1",
+   "method_id": "vasp-544__pbe-u62__mlip-geom-sp__box24ref",
+   "comparison_group": "sdcp-wave1-dE-site-v1",
+   "status": "canonical",
+   "prohibitions": [
+    "absolute_vs_other_codes",
+    "cell_level_claims",
+    "net4_basin_matched_only_see_wave15_record"
+   ],
+   "updated": "2026-08-28",
+   "note": "★ 2-branch (net4 +36.16, 상호작용 0.09 meV — '0.1 meV 정확도' 표현 금지, k-미검증) | 2026-08-28 wave1.5 basinA 확정 → net4 해제 (basin-matched 참조 필수, db/properties/sdcp_wave15_basinA.json)"
+  },
+  {
+   "system": "sdcp",
+   "metric": "SDCP_dE_site_meV__ptfe_dimer_net4",
+   "value": 36.16,
+   "unit": "meV",
+   "source_path": "db/properties/sdcp_wave1_citable.json",
+   "source_key": "/dE_site_meV/ptfe_dimer_net4",
+   "method_id": "vasp-544__pbe-u62__mlip-geom-sp__box24ref",
+   "comparison_group": "sdcp-wave1-dE-site-v1",
+   "status": "canonical",
+   "prohibitions": [
+    "absolute_vs_other_codes",
+    "cell_level_claims",
+    "net4_basin_matched_only_see_wave15_record"
+   ],
+   "updated": "2026-08-28",
+   "note": "pm1 과 쌍 — basin B 에서도 재현 | 2026-08-28 wave1.5 basinA 확정 → net4 해제 (basin-matched 참조 필수, db/properties/sdcp_wave15_basinA.json)"
+  },
+  {
+   "system": "sdcp",
+   "metric": "SDCP_dE_site_meV__ptfe_c10_pm1",
+   "value": 49.77,
+   "unit": "meV",
+   "source_path": "db/properties/sdcp_wave1_citable.json",
+   "source_key": "/dE_site_meV/ptfe_c10_pm1",
+   "method_id": "vasp-544__pbe-u62__mlip-geom-sp__box24ref",
+   "comparison_group": "sdcp-wave1-dE-site-v1",
+   "status": "canonical",
+   "prohibitions": [
+    "absolute_vs_other_codes",
+    "cell_level_claims",
+    "net4_basin_matched_only_see_wave15_record"
+   ],
+   "updated": "2026-08-28",
+   "note": "단일 branch — wave1.5 후 net4 재확인 | 2026-08-28 wave1.5 basinA 확정 → net4 해제 (basin-matched 참조 필수, db/properties/sdcp_wave15_basinA.json)"
+  },
+  {
+   "system": "sdcp",
+   "metric": "SDCP_dE_site_meV__sdcp_neutral_pm1",
+   "value": 9.27,
+   "unit": "meV",
+   "source_path": "db/properties/sdcp_wave1_citable.json",
+   "source_key": "/dE_site_meV/sdcp_neutral_pm1",
+   "method_id": "vasp-544__pbe-u62__mlip-geom-sp__box24ref",
+   "comparison_group": "sdcp-wave1-dE-site-v1",
+   "status": "canonical",
+   "prohibitions": [
+    "absolute_vs_other_codes",
+    "cell_level_claims",
+    "net4_basin_matched_only_see_wave15_record"
+   ],
+   "updated": "2026-08-28",
+   "note": "단일 branch · |ΔE|<10 meV = 사실상 무선호 | 2026-08-28 wave1.5 basinA 확정 → net4 해제 (basin-matched 참조 필수, db/properties/sdcp_wave15_basinA.json)"
+  },
+  {
+   "system": "sdcp",
+   "metric": "SDCP_Eads_eV__ptfe_dimer_Litop",
+   "value": -0.3663,
+   "unit": "eV",
+   "source_path": "db/properties/sdcp_wave1_citable.json",
+   "source_key": "/Eads_eV_box24_pm1/ptfe_dimer_Litop",
+   "method_id": "vasp-544__pbe-u62__mlip-geom-sp__box24ref",
+   "comparison_group": "sdcp-wave1-Eads-box24-v1",
+   "status": "canonical",
+   "prohibitions": [
+    "absolute_vs_other_codes",
+    "cell_level_claims",
+    "net4_basin_matched_only_see_wave15_record"
+   ],
+   "updated": "2026-08-28",
+   "note": "MLIP 기하 위 단일점 — DFT 최소 아님 (인용 시 병기) | 2026-08-28 wave1.5 basinA 확정 → net4 해제 (basin-matched 참조 필수, db/properties/sdcp_wave15_basinA.json)"
+  },
+  {
+   "system": "sdcp",
+   "metric": "SDCP_Eads_eV__ptfe_dimer_Nitop",
+   "value": -0.3302,
+   "unit": "eV",
+   "source_path": "db/properties/sdcp_wave1_citable.json",
+   "source_key": "/Eads_eV_box24_pm1/ptfe_dimer_Nitop",
+   "method_id": "vasp-544__pbe-u62__mlip-geom-sp__box24ref",
+   "comparison_group": "sdcp-wave1-Eads-box24-v1",
+   "status": "canonical",
+   "prohibitions": [
+    "absolute_vs_other_codes",
+    "cell_level_claims",
+    "net4_basin_matched_only_see_wave15_record"
+   ],
+   "updated": "2026-08-28",
+   "note": "MLIP 기하 위 단일점 — DFT 최소 아님 (인용 시 병기) | 2026-08-28 wave1.5 basinA 확정 → net4 해제 (basin-matched 참조 필수, db/properties/sdcp_wave15_basinA.json)"
+  },
+  {
+   "system": "sdcp",
+   "metric": "SDCP_Eads_eV__ptfe_c10_Nitop",
+   "value": -0.3626,
+   "unit": "eV",
+   "source_path": "db/properties/sdcp_wave1_citable.json",
+   "source_key": "/Eads_eV_box24_pm1/ptfe_c10_Nitop",
+   "method_id": "vasp-544__pbe-u62__mlip-geom-sp__box24ref",
+   "comparison_group": "sdcp-wave1-Eads-box24-v1",
+   "status": "canonical",
+   "prohibitions": [
+    "absolute_vs_other_codes",
+    "cell_level_claims",
+    "net4_basin_matched_only_see_wave15_record"
+   ],
+   "updated": "2026-08-28",
+   "note": "MLIP 기하 위 단일점 — DFT 최소 아님 (인용 시 병기) | 2026-08-28 wave1.5 basinA 확정 → net4 해제 (basin-matched 참조 필수, db/properties/sdcp_wave15_basinA.json)"
+  },
+  {
+   "system": "sdcp",
+   "metric": "SDCP_Eads_eV__sdcp_neutral_Litop",
+   "value": -0.7675,
+   "unit": "eV",
+   "source_path": "db/properties/sdcp_wave1_citable.json",
+   "source_key": "/Eads_eV_box24_pm1/sdcp_neutral_Litop",
+   "method_id": "vasp-544__pbe-u62__mlip-geom-sp__box24ref",
+   "comparison_group": "sdcp-wave1-Eads-box24-v1",
+   "status": "canonical",
+   "prohibitions": [
+    "absolute_vs_other_codes",
+    "cell_level_claims",
+    "net4_basin_matched_only_see_wave15_record"
+   ],
+   "updated": "2026-08-28",
+   "note": "MLIP 기하 위 단일점 — DFT 최소 아님 (인용 시 병기) | 2026-08-28 wave1.5 basinA 확정 → net4 해제 (basin-matched 참조 필수, db/properties/sdcp_wave15_basinA.json)"
+  },
+  {
+   "system": "sdcp",
+   "metric": "SDCP_Eads_eV__sdcp_neutral_Nitop",
+   "value": -0.7582,
+   "unit": "eV",
+   "source_path": "db/properties/sdcp_wave1_citable.json",
+   "source_key": "/Eads_eV_box24_pm1/sdcp_neutral_Nitop",
+   "method_id": "vasp-544__pbe-u62__mlip-geom-sp__box24ref",
+   "comparison_group": "sdcp-wave1-Eads-box24-v1",
+   "status": "canonical",
+   "prohibitions": [
+    "absolute_vs_other_codes",
+    "cell_level_claims",
+    "net4_basin_matched_only_see_wave15_record"
+   ],
+   "updated": "2026-08-28",
+   "note": "MLIP 기하 위 단일점 — DFT 최소 아님 (인용 시 병기) | 2026-08-28 wave1.5 basinA 확정 → net4 해제 (basin-matched 참조 필수, db/properties/sdcp_wave15_basinA.json)"
+  },
+  {
+   "system": "sdcp",
+   "metric": "SDCP_Eads_eV__sdcp_neutral_cross_Li_at_Ni",
+   "value": -0.7728,
+   "unit": "eV",
+   "source_path": "db/properties/sdcp_wave1_citable.json",
+   "source_key": "/Eads_eV_box24_pm1/sdcp_neutral_cross_Li_at_Ni",
+   "method_id": "vasp-544__pbe-u62__mlip-geom-sp__box24ref",
+   "comparison_group": "sdcp-wave1-Eads-box24-v1",
+   "status": "canonical",
+   "prohibitions": [
+    "absolute_vs_other_codes",
+    "cell_level_claims",
+    "net4_basin_matched_only_see_wave15_record"
+   ],
+   "updated": "2026-08-28",
+   "note": "MLIP 기하 위 단일점 — DFT 최소 아님 (인용 시 병기) | 2026-08-28 wave1.5 basinA 확정 → net4 해제 (basin-matched 참조 필수, db/properties/sdcp_wave15_basinA.json)"
+  },
+  {
+   "system": "sdcp",
+   "metric": "SDCP_Eads_eV__sdcp_neutral_cross_Ni_at_Li",
+   "value": -0.7633,
+   "unit": "eV",
+   "source_path": "db/properties/sdcp_wave1_citable.json",
+   "source_key": "/Eads_eV_box24_pm1/sdcp_neutral_cross_Ni_at_Li",
+   "method_id": "vasp-544__pbe-u62__mlip-geom-sp__box24ref",
+   "comparison_group": "sdcp-wave1-Eads-box24-v1",
+   "status": "canonical",
+   "prohibitions": [
+    "absolute_vs_other_codes",
+    "cell_level_claims",
+    "net4_basin_matched_only_see_wave15_record"
+   ],
+   "updated": "2026-08-28",
+   "note": "MLIP 기하 위 단일점 — DFT 최소 아님 (인용 시 병기) | 2026-08-28 wave1.5 basinA 확정 → net4 해제 (basin-matched 참조 필수, db/properties/sdcp_wave15_basinA.json)"
   }
+ ],
+ "_provenance_audit": {
+  "audited": "2026-08-12",
+  "audited_by": "db provenance sweep (tools/db/validate_canonical.py --cited 로 대상 선정)",
+  "generator": "(없음 — 손으로 관리하는 메타 레지스트리)",
+  "source": "(계산 산출물 아님 — 28 entries 가 각각 source_path 로 다른 db 파일을 가리킨다)",
+  "collected": "2026-08-07",
+  "confidence": "high",
+  "note": "수치 대조가 의미 일치를 보증하지 않는다 — method_id 오배선 가능",
+  "caveat": "이 블록은 **사후 추적** 결과다. 원본 계산 시점에 기록된 것이 아니라 repo·git·파일 내용에서 역추적했다. confidence 를 같이 보라."
+ },
+ "changelog": {
+  "2026-08-25b": "SDCP wave1 인용 확정분 등록 (basin 일치 · pm1 정본): dE_site 4건 + Eads 7건. comparison_group 을 sdcp-wave1-* 로 분리해 argyrodite 4축과 절대 섞이지 않게. sdcp_doped·net4 Eads·50 meV offset 은 등록하지 않음 (citable.json not_citable). 원자료 재유도 파이프라인: sdcp_wave1_results.json → citable.json → registry."
+ }
 }

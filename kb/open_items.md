@@ -585,6 +585,21 @@ ld1.x 생성도, VASP 외주도 필요 없다.
 
 ### P. 🔴 **SDCP·PTFE 자리 선호 — "Li 를 선호한다"는 지금까지 판정된 적이 없다** (2026-08-11 신설)
 
+**★★★ 2026-08-28 wave1.5 회신 — 이 항목의 물을 수 있는 부분은 전부 답해졌다.**
+독립 검증(OUTCAR 실측 3다리) 후 net4 basin A 확정 → net4 E_ads basin-matched 로 열림
+(`db/properties/sdcp_wave15_basinA.json` · citable v2). 자기민감도 |ΔE_pm1−ΔE_net4| =
+dimer 0.06 · neutral 0.28 · c10 0.73 meV — **셋 다 ≤10 게이트 통과, 두 자기 시드에서 재현**:
+
+| 조각 | ΔE_site (Ni−Li) | 판정 |
+|---|---:|---|
+| ptfe_c10 | +49.8/+50.5 meV | **Li-top 유리** (~50 meV) |
+| ptfe_dimer | +36.1/+36.2 meV | **Li-top 유리** (~36 meV) |
+| sdcp_neutral | +9.3/+9.0 meV | **무선호** (<10 meV) |
+| sdcp_doped | — | ⛔ **인용 불가 유지** (pm1 스핀 분기 105 meV + static 미수렴 1건) |
+
+남는 것 = doped 자리선호(재설계 필요) · freeze 0.85 기하 회수 · ORCA 기체상 기하 fetch.
+phaseB 원자료(zip)는 기인용 dE_extract +0.336 eV 와 6/6 TOTEN 대조 일치 — 감사 가능해졌다.
+
 프로토콜 정본: `kb/methodology/site_preference_protocol_2026_08_11.md`
 도구: `tools/sdcp/site_screen.py` (게이트 회귀시험 11/11 통과) · 실행기 `run_site_screen_gabia.sh`
 

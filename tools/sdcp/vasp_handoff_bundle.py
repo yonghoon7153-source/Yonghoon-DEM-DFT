@@ -1237,7 +1237,10 @@ def _read_outcar_raw(p):
     if is_gz_magic:
         try:
             raw = gzip.decompress(raw)         # CRC·절단이 여기서 예외로 드러난다
-        except (OSError, EOFError, gzip.BadGzipFile) as e:
+        # ⚠ py3.6 호환 — gzip.BadGzipFile 은 3.8+ 이고 OSError 의 하위클래스다.
+        #   wave1.5 회신(2026-08-28)이 실측으로 알려줬다: 클러스터 파이썬이 3.6.8 이라
+        #   손상 .gz 를 만나면 깔끔한 오류 대신 AttributeError 로 죽는다.
+        except (OSError, EOFError) as e:
             meta["read_error"] = f"gzip 손상/절단: {type(e).__name__} {e}"
             return None, meta
     if b"\x00" in raw[:4096]:

@@ -1,5 +1,5 @@
 {
- "schema": "sdcp_wave1_citable/v1",
+ "schema": "sdcp_wave1_citable/v2",
  "date": "2026-08-25",
  "derived_from": "db/properties/sdcp_wave1_results.json (총에너지에서 재유도 — 손 전사 아님)",
  "what": "SDCP wave1 인용 확정본 — basin 일치분만. 값·단서가 한 몸이다.",
@@ -8,20 +8,22 @@
   "진공·0 K·단분자 피복 — 실제 전극(용매·온도·피복률) 예측이 아니다",
   "k 직접검증은 ptfe_c10 만(ΔE 0.0 · E_ads 0.2 meV). dimer·neutral 은 k-transfer-screened",
   "VASP PAW 총에너지 기반 — 절대값을 타 코드/문헌과 직접 비교 금지. 내부 차이만 유효",
-  "net4 참조는 현재 basin-B — pm1 열이 정본. wave1.5 회신 시 net4 E_ads 가 열린다"
+  "net4 E_ads 는 **basin-matched** (각 복합체를 자기 basin 슬랩으로 참조: A=−944.896111 / B=−944.846393 eV, E(sigma→0)). 혼합-basin 원값과 최대 49.7 meV 다르다"
  ],
  "dE_site_meV": {
   "ptfe_dimer_pm1": 36.07,
   "ptfe_dimer_net4": 36.16,
   "ptfe_dimer_branch_interaction": 0.09,
   "ptfe_c10_pm1": 49.77,
-  "sdcp_neutral_pm1": 9.27
+  "sdcp_neutral_pm1": 9.27,
+  "ptfe_c10_net4": 50.5,
+  "sdcp_neutral_net4": 9.02
  },
  "dE_notes": {
   "ptfe_dimer": "★ 두 sampled branch(서로 다른 basin!)에서 상호작용 0.09 meV — 허용 문구: 'matched-pose ΔE 가 두 branch 에서 0.09 meV 차이'. ⚠ k-미검증이므로 '0.1 meV 정확도' 라 쓰지 않는다 · basin 무관성의 증명 아님",
-  "ptfe_c10": "단일 branch (pm1 A/A). net4 쪽은 basin 혼합으로 무효 — wave1.5 후 재확인",
-  "sdcp_neutral": "단일 branch. |ΔE| < 10 meV — 사실상 무선호로 서술",
-  "sdcp_doped": "⛔ 인용 불가 (라디칼 스핀 분기, 두 branch 105 meV 어긋남) — 값 자체를 싣지 않는다"
+  "ptfe_c10": "두 seed 완성 (pm1 49.77 / net4 50.50 meV, |차| 0.73) — wave1.5 로 net4 열림. Li-top 이 ~50 meV 유리",
+  "sdcp_neutral": "두 seed 완성 (pm1 9.27 / net4 9.02 meV, |차| 0.28) — |ΔE| < 10 meV = 사실상 무선호, 이제 두 자기 시드에서 재현",
+  "sdcp_doped": "⛔ 인용 불가 유지 (pm1 스핀 분기 105 meV + tier2 Litop pm1 static NELM 소진). net4 basin-A 쌍 −18.95 meV 는 wave15 기록에만 남긴다"
  },
  "Eads_eV_box24_pm1": {
   "ptfe_dimer_Litop": -0.3663,
@@ -46,5 +48,24 @@
   "sdcp_doped 전 항목",
   "net4 E_ads (wave1.5 대기)",
   "basin-branch offset ≈50 meV (진단값 — 수치 인용 금지)"
- ]
+ ],
+ "updated": "2026-08-28",
+ "v2_왜": "wave1.5 회신 — clean_slab net4 basin A 확정 (독립 검증: db/properties/sdcp_wave15_basinA.json). net4 E_ads 가 basin-matched 로 열렸다. 총에너지에서 재유도 — 손 전사 아님.",
+ "Eads_eV_box24_net4_basin_matched": {
+  "ptfe_c10_Litop": -0.4122,
+  "ptfe_c10_Nitop": -0.3617,
+  "ptfe_dimer_Litop": -0.3661,
+  "ptfe_dimer_Nitop": -0.33,
+  "sdcp_neutral_Litop": -0.768,
+  "sdcp_neutral_Nitop": -0.759,
+  "sdcp_neutral_cross_Li_at_Ni": -0.7734,
+  "sdcp_neutral_cross_Ni_at_Li": -0.7626
+ },
+ "magnetic_sensitivity_meV": {
+  "what": "|ΔE_site(pm1) − ΔE_site(net4, basin-matched)| — 게이트 ≤ 10",
+  "ptfe_dimer": 0.06,
+  "sdcp_neutral": 0.28,
+  "ptfe_c10": 0.73,
+  "판정": "셋 다 통과 — 자리 선호가 자기 시드에 둔감하다"
+ }
 }
