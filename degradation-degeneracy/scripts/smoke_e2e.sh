@@ -592,6 +592,32 @@ else
 fi
 rm -rf "$GFIT" && mv "$BASE/keep_run" "$GFIT"   # 변조본 폐기, 원본 복구
 
+# ────────────────────────────── 실행 전 gate (★ 46차 P0-11 · 계약 §13.4)
+# smoke 는 **gate 가 배선돼 있고 실제로 거부한다**는 것까지 본다. 계획 index 가
+# 일관되다는 것만 보면 gate 가 run.sh 에서 빠져도 초록이다.
+"$PY" - <<'PLANGATE'
+from tools.preserve import (assert_planned_index_consistent, assert_planned_leg,
+                            PreserveError)
+from src.io import source_digest
+
+assert assert_planned_index_consistent()
+try:
+    assert_planned_leg("__없는다리__", source_digest())
+except PreserveError:
+    pass
+else:
+    raise SystemExit("계획에 없는 다리를 gate 가 통과시켰다")
+print("   ✅ 계획 index 일관 · 계획 밖 다리는 거부 (46차 P0-11)")
+PLANGATE
+[[ $? -eq 0 ]] || bad "planned leg index gate (46차 P0-11)"
+
+# run.sh 의 비싼 mode 가 실제로 gate 를 부르는가 (배선이 빠지면 위 검사는 초록)
+if [[ "$(grep -c 'plan_gate' run.sh)" -ge 3 ]]; then
+  ok "run.sh 의 grid·fit 이 실행 전 gate 를 지난다 (46차 P0-11)"
+else
+  bad "run.sh 에서 실행 전 gate 배선이 사라졌다 (46차 P0-11)"
+fi
+
 # ────────────────────────────────────────────────────────────────── 마무리
 [[ -d "$STASH" ]] && cp -a "$STASH/." "$CACHE_DIR/" 2>/dev/null; rm -rf "$STASH"
 # ★ 실패했으면 $BASE 를 남긴다 — 지워버리면 무엇이 깨졌는지 조사할 수 없다.
@@ -620,14 +646,17 @@ printf '\n'
   '\033[33m⚠ dirty worktree 에서 돌렸다 — clean_worktree·코드_identity 는 제외했다.\n   본 실행은 반드시 커밋 후 clean 상태에서 시작할 것.\033[0m\n'
 if [[ "$fail" -eq 0 ]]; then
   # ★ 25차 발견 8 — 이 줄은 **실행 승인을 발행하면 안 된다.**
-  #   보존 gate(계약 v4 묶음 9)가 아직 없다. 이 smoke 에는 보존 트랜잭션이
-  #   없으므로 통과는 "기존 pipeline 이 온전하다" 는 뜻일 뿐, 새 leg 를
-  #   돌려도 된다는 뜻이 아니다. 8월 20일 warm 7다리를 그 구분 없이 돌렸고
-  #   보존 없이 끝나서 잃었다. 묶음 9 가 실제 gate 로 들어온 뒤에만 이 문구를
-  #   실행 승인으로 되돌린다.
+  #   8월 20일 warm 7다리를 그 구분 없이 돌렸고 보존 없이 끝나서 잃었다.
+  # ★ 46차 P0-11 — 실행 전 계획 gate 는 이제 배선돼 있다 (위 두 검사). 그래서
+  #   문구를 사실에 맞게 좁힌다: 남은 것은 **실물 provider 어댑터**다
+  #   (지금 보존 회귀는 hermetic fake provider 로만 돈다). 그때까지 이 통과는
+  #   "pipeline 이 온전하고 계획 gate 가 배선돼 있다" 는 뜻이며, 실물 WORM
+  #   보관에 대한 승인은 아니다.
   printf '\033[1m✅ pipeline smoke 통과\033[0m\n'
-  printf '\033[33m⚠ 보존 gate 미완료 (계약 v4 묶음 9) — 새 leg 실행 금지.\n'
-  printf '   이 통과는 실행 승인이 아니다. 보존 트랜잭션은 이 smoke 에 아직 없다.\033[0m\n'
+  printf '\033[33m⚠ 실행 전 계획 gate 는 배선됐다 (46차 P0-11). 남은 것은 실물\n'
+  printf '   provider 어댑터 — 지금 보존 회귀는 hermetic fake 로만 돈다.\n'
+  printf '   새 leg 를 돌리려면 `LEG_PRESERVATION.yaml` 의 `planned:` 에 먼저\n'
+  printf '   적고, 실물 보관 경로는 사람이 따로 확인할 것.\033[0m\n'
   exit 0
 fi
 printf '\033[1m❌ 실패 %d건 — 본 실행을 시작하지 말 것\033[0m\n' "$fail"

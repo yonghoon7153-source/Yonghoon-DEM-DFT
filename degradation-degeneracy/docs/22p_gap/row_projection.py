@@ -45,6 +45,7 @@ from __future__ import annotations
 import argparse
 import contextlib
 import os
+import posixpath
 import shutil
 import stat
 import time
@@ -672,7 +673,12 @@ def build(leg: str, out: Path | None = None) -> dict:
     #   가 두 세대를 함께 봤다. cohort 전체의 immutable generation 을 만들고
     #   **pointer 하나**를 원자적으로 옮긴다.
     # ★ 38차 #9 — roster 는 **보존 원장**에서 온다. 산출물에서 유도하지 않는다.
-    promote_cohort_generation(_stage, _out, leg, roster=_ledger_roster(_out))
+    # ★ 46차 #9 — staging 을 치우는 것은 **만든 쪽**의 일이다. publisher 는
+    #   caller 경로에 쓰거나 지우지 않는다 (45차까지는 지웠다).
+    try:
+        promote_cohort_generation(_stage, _out, leg, roster=_ledger_roster(_out))
+    finally:
+        shutil.rmtree(_stage, ignore_errors=True)
 
     return meta
 
@@ -694,6 +700,13 @@ def build(leg: str, out: Path | None = None) -> dict:
 #       out/CURRENT                    ← 이 한 파일만 원자적으로 바뀐다
 
 CURRENT_SCHEMA = "projection-current/v2"      # 45차 #9 — cohort·원장 결속
+#: ★ 46차 #9 — 이 문자열은 **generation 의 내용 주소에 들어간다**
+#:   (`generation_id()` 참조). 그래서 올리면 이미 굳은 generation 의
+#:   이름이 전부 바뀐다 — pointer 표현이 바뀌었다고 올릴 값이 아니다.
+#:   46차의 key 집합 변경(`cohort_id` echo 제거)은 닫힌 schema 검사가
+#:   그 자리에서 fail-closed 로 잡고, 이미 커밋된 pointer 는
+#:   `docs/22p_gap/migrate_pointer.py` 가 **같은 generation 을 가리킨 채**
+#:   한 번 옮긴다.
 
 
 def _sha(b: bytes) -> str:
@@ -1106,8 +1119,68 @@ def _authority(lock: "_PublishLock", out: Path):
         _Authority._ACTIVE.discard(id(auth))
 
 
+def _dir_identity(p) -> tuple:
+    """디렉터리의 **kernel identity** — pathname 이 아니다 (46차 #9).
+
+    `Path.resolve()` 는 symlink 만 편다. bind mount 는 다른 pathname·같은
+    `(st_dev, st_ino)` 이므로 경로 비교로는 보이지 않는다.
+    """
+    st = os.stat(p)
+    return (st.st_dev, st.st_ino)
+
+
+def _assert_outside_generations(stage: Path, out: Path) -> None:
+    """staging 이 generation namespace **안**인가 — 판정은 kernel identity 로.
+
+    ★ 45차는 `resolve()` 로 경로만 봤다. bind mount 는 다른 pathname · 같은
+      inode 이므로 안 보였다.
+
+    ★ 46차 초판은 **두 구현**을 나란히 뒀다 (경로 포함 검사 + inode 대조).
+      변이 재생이 잡았다: 경로 검사를 통째로 지워도 아무 시험이 안 빨개진다 —
+      inode 대조가 같은 경우를 전부 먼저 잡기 때문이다. 두 검사를 따로 두면
+      서로를 가린다는 것을 44차에도 실측했고, 이번에도 같은 형태였다.
+      그래서 **하나로 합친다**: `stage` 와 그 조상들을 `(st_dev, st_ino)` 로
+      `gen/` · 각 generation 과 대조한다. 이 한 함수가 셋을 다 덮는다.
+
+        · stage 가 generation 자신          (44차 반례 — 자기 자신을 지웠다)
+        · stage 가 `gen/` 바로 아래
+        · stage 가 generation **아래 더 깊은** 디렉터리
+        · 위 셋을 bind mount·symlink 로 우회한 경우
+    """
+    gen = Path(out) / "gen"
+    if not gen.is_dir():
+        return
+    forbidden = {}
+    for q in [gen] + [d for d in sorted(gen.iterdir()) if d.is_dir()]:
+        try:
+            forbidden[_dir_identity(q)] = q
+        except OSError:
+            continue
+    node, seen = Path(stage), set()
+    while True:
+        try:
+            key = _dir_identity(node)
+        except OSError:
+            return
+        hit = forbidden.get(key)
+        if hit is not None:
+            raise SystemExit(
+                f"✗ staging 이 generation namespace 안이다 (inode 일치): "
+                f"{stage} → {node} ≡ {hit} — pathname 이 달라도 bind "
+                "mount·symlink 면 같은 실물이다. generation 을 입력으로 삼으면 "
+                "immutable 하지 않다. 별도 staging 디렉터리를 쓰라")
+        if key in seen:
+            return
+        seen.add(key)
+        parent = node.parent
+        if parent == node:
+            return
+        node = parent
+
+
 def _staging_entries(stage: Path, out: Path,
-                     allow_inside_gen: bool = False) -> dict:
+                     allow_inside_gen: bool = False,
+                     what: str = "staging") -> dict:
     """staging 디렉터리의 **정확한** entry 집합을 bytes 로 읽는다 (45차 #9).
 
     `Path.is_file()` 은 symlink 를 따라가고, 걸러진 entry 도 디렉터리를
@@ -1119,16 +1192,14 @@ def _staging_entries(stage: Path, out: Path,
     `rmtree` 로 지웠다.
     """
     stage, out = Path(stage), Path(out)
-    try:
-        st_res, gen_res = stage.resolve(strict=True), (out / "gen").resolve()
-    except OSError as e:
-        raise SystemExit(f"✗ staging 을 열 수 없다: {stage} ({e})") from e
-    if not allow_inside_gen and (st_res == gen_res or gen_res in st_res.parents):
-        raise SystemExit(
-            f"✗ staging 이 generation namespace 안이다: {stage} — 자기 자신을 "
-            "자재화하면 되돌릴 수 없이 지운다. 별도 staging 디렉터리를 쓰라")
+    if not stage.exists():
+        raise SystemExit(f"✗ {what} 을 열 수 없다: {stage}")
+    if not allow_inside_gen:
+        # ★ 46차 #9 — namespace 판정은 **이 함수 하나**다 (경로 사본을 지웠다 —
+        #   변이가 안 물었고, 그것은 중복이라는 뜻이었다).
+        _assert_outside_generations(stage, out)
     if not stage.is_dir():
-        raise SystemExit(f"✗ staging 이 디렉터리가 아니다: {stage}")
+        raise SystemExit(f"✗ {what} 이 디렉터리가 아니다: {stage}")
 
     out_map, bad = {}, []
     for name in sorted(os.listdir(stage)):
@@ -1149,9 +1220,21 @@ def _staging_entries(stage: Path, out: Path,
             os.close(fd)
     if bad:
         raise SystemExit(
-            "✗ staging 에 게시할 수 없는 entry 가 있다 — generation 은 우리가 "
-            "소유한 regular file 만 담는다:\n  " + "\n  ".join(bad))
+            f"✗ {what} 에 게시할 수 없는 entry 가 있다 — generation 은 우리가 "
+            "소유한 regular file 만 담는다 (regular · st_nlink == 1 · "
+            "no-follow):\n  " + "\n  ".join(bad))
     return out_map
+
+
+def _generation_entries(gdir: Path, out: Path) -> dict:
+    """굳은 generation 을 **자재화와 같은 validator** 로 읽는다 (46차 #9).
+
+    45차는 no-follow·`nlink == 1` 검사를 자재화 경로에만 뒀다. 독자와 멱등
+    분기는 `Path.is_file()` + `read_bytes()` 였으므로, generation 안의 파일에
+    바깥에서 hardlink 를 걸면 "immutable generation" 의 바이트를 바깥 이름으로
+    바꿀 수 있는데도 둘 다 통과했다. 세 소비자가 같은 함수를 지난다.
+    """
+    return _staging_entries(gdir, out, allow_inside_gen=True, what="generation")
 
 
 def _read_all(fd: int) -> bytes:
@@ -1245,13 +1328,14 @@ def _promote_generation(stage: Path, auth: "_Authority") -> dict:
 
     if gdir.is_dir():
         # 같은 내용이면 멱등. 다른 바이트가 있으면 **덮지 않고 거부**한다.
-        got = {p.name: _sha(p.read_bytes())
-               for p in sorted(gdir.iterdir()) if p.is_file()}
+        # ★ 46차 #9 — 멱등 분기도 **자재화와 같은 validator** 를 지난다.
+        #   45차는 여기서 `is_file()` + `read_bytes()` 였으므로 alias 가 걸린
+        #   generation 을 "같은 내용" 으로 보고 그대로 CURRENT 로 올렸다.
+        got = {n: _sha(b) for n, b in _generation_entries(gdir, out).items()}
         if got != files:
             raise SystemExit(
                 f"✗ generation {gid[:16]} 자리에 다른 내용이 있다 — immutable "
                 f"generation 은 덮지 않는다 (기대 {sorted(files)} · 실제 {sorted(got)})")
-        shutil.rmtree(stage, ignore_errors=True)
     else:
         # ★ 45차 #9 — caller 디렉터리를 **옮기지 않는다.** 우리가 읽은
         #   바이트로 **새 inode** 를 만든다. rename 은 alias(symlink·hardlink)
@@ -1272,10 +1356,19 @@ def _promote_generation(stage: Path, auth: "_Authority") -> dict:
         _fsync_dir(tmp)
         os.rename(tmp, gdir)              # generation 이 통째로 보인다
         _fsync_dir(out / "gen")
-        shutil.rmtree(stage, ignore_errors=True)
+    # ★ 46차 #9 — **caller 의 staging 을 지우지 않는다.** 45차는 두 분기 모두
+    #   `shutil.rmtree(stage)` 로 끝났다. staging 은 caller 가 소유한 입력이고,
+    #   publisher 가 거기에 쓰거나 지우면 caller 가 무엇을 주든 (자기 소스
+    #   디렉터리든 bind alias 든) 파괴된다. 만든 쪽이 치운다 (`main()`).
 
+    # ★ 46차 #9 — pointer 는 **봉인 하나**만 싣는다. 45차는 `cohort_id` 를
+    #   echo 로 함께 실었지만 비교는 하지 않았다 (봉인이 덮으므로 중복이라고
+    #   판단했다 — 실제로 그 대조 변이가 안 물었다). 그러면 그 필드는 seal 과
+    #   **어긋날 수 있는 진단 문자열**로 남는다: 사람이 읽는 오류 메시지가
+    #   거짓말을 한다. 대조를 더하는 대신 **필드를 없앤다** — 진단이 필요하면
+    #   그때 살아 있는 원장에서 읽는다 (아래 `_parse_pointer` 가 그렇게 한다).
     rec = {"schema": CURRENT_SCHEMA, "generation_id": gid, "files": files,
-           "cohort_id": auth.cohort_id, "ledger_seal": auth.seal}
+           "ledger_seal": auth.seal}
 
     def _commit_guard():
         """**가시성 전환 직전에** 근거 전체를 다시 결속한다 (42·43차 #9).
@@ -1376,7 +1469,7 @@ def _read_pointer(out: Path, name: str, expect_legs=None,
 #:   함께 봉인한다. 44차까지 `CURRENT` 는 generation ID 와 files 뿐이라,
 #:   원장의 roster·status·cohort ID 가 바뀐 뒤에는 published state 의 authority
 #:   를 판정할 수 없었다 (reader 는 원장을 보지도 않았다).
-_CURRENT_KEYS = {"schema", "generation_id", "files", "cohort_id", "ledger_seal"}
+_CURRENT_KEYS = {"schema", "generation_id", "files", "ledger_seal"}
 _PENDING_KEYS = _CURRENT_KEYS | {"roster_digest", "base_generation"}
 
 
@@ -1405,27 +1498,28 @@ def _parse_pointer(out: Path, name: str, raw: bytes, expect_legs=None,
     #   immutable 이고, 바꾸려면 새 cohort ID 로 간다 — 계약 §13.3.2).
     if bind_ledger:
         cohort = _ledger_cohort(out)
-        # ★ 45차 #9 — `cohort_id` 를 **따로 비교하지 않는다.** 그것은 봉인
-        #   authority 네 필드 중 하나이므로 seal 이 이미 덮는다. 따로 두면
-        #   같은 규칙이 두 곳에 생기고 강한 쪽을 지워도 초록이 된다
-        #   (변이로 확인했다 — `pointer-binds-the-cohort-id` 가 안 물었다).
-        #   `cohort_id` 는 진단 메시지에만 쓴다.
+        # ★ 46차 #9 — 봉인 **하나**가 authority 다. pointer 에 `cohort_id`
+        #   echo 를 따로 싣지 않으므로 (그 echo 는 seal 과 어긋날 수 있는 사본
+        #   이었다) 진단용 ID 는 **살아 있는 원장**에서 지금 읽는다.
         live = _ledger_seal(cohort)
         if rec["ledger_seal"] != live:
             raise SystemExit(
                 f"✗ `{name}` 이 봉인한 원장 record 가 지금과 다르다 "
-                f"({rec['ledger_seal'][:12]} ≠ {live[:12]}; pointer cohort "
-                f"{rec['cohort_id']!r} · 원장 {cohort.get('cohort_id')!r}) — cohort lifetime "
-                "동안 원장 record 는 고정이다. roster·status 를 바꾸려면 "
-                "**새 cohort ID 와 새 출력 디렉터리**로 가라 (계약 §13.3.2)")
+                f"({rec['ledger_seal'][:12]} ≠ {live[:12]}; 원장 cohort "
+                f"{cohort.get('cohort_id')!r}) — cohort lifetime 동안 원장 "
+                "record(명부·상태·producer pin·사용 정책)는 고정이다. 그 중 "
+                "무엇이든 바꾸려면 **새 cohort ID 와 새 출력 디렉터리**로 "
+                "가라 (계약 §13.3.2)")
     gid = rec.get("generation_id")
     if generation_id(rec["files"]) != gid:
         raise SystemExit(f"✗ CURRENT 의 generation_id 가 files 와 다르다")
     gdir = out / "gen" / str(gid)
     if not gdir.is_dir():
         raise SystemExit(f"✗ CURRENT 가 없는 generation 을 가리킨다: {gid[:16]}")
-    got = {q.name: _sha(q.read_bytes())
-           for q in sorted(gdir.iterdir()) if q.is_file()}
+    # ★ 46차 #9 — 독자도 **자재화와 같은 validator** 를 지난다 (no-follow ·
+    #   regular · `st_nlink == 1`). 45차 독자는 `is_file()` 이었으므로 바깥
+    #   hardlink 로 바이트를 바꿀 수 있는 generation 을 immutable 로 읽었다.
+    got = {n: _sha(b) for n, b in _generation_entries(gdir, out).items()}
     if got != rec["files"]:
         raise SystemExit(f"✗ generation {gid[:16]} 의 실물이 CURRENT 와 다르다")
     # `.PENDING` 은 정의상 불완전할 수 있다 — 완전성은 `CURRENT` 의 계약이다.
@@ -1567,19 +1661,17 @@ def _promote_cohort_locked(stage: Path, auth: "_Authority", leg: str) -> dict:
     에 인자로 넘겼다. 인자로 넘길 수 있으면 인자로 위조할 수 있다.
     """
     out = auth.out
-    base: dict = {}
-    gdir = None
-    if auth.base_raw is not None:
-        # base 는 **명부 부분집합**이면 된다. 여기서 exact 를 요구하면
-        # bootstrap 이 불가능하다. exact 는 **reader** 의 주장이다.
-        # ★ 42차 #9 — record 와 기대 digest 가 **같은 바이트**에서 나온다.
-        cur = _parse_pointer(out, auth.base_ptr, auth.base_raw,
-                             pending=auth.base_ptr == ".PENDING",
-                             complete=auth.base_ptr != ".PENDING")
-        base = dict(cur["files"])
-        gdir = out / "gen" / cur["generation_id"]
-
-    fresh = {p.name for p in stage.iterdir() if p.is_file()}
+    stage = Path(stage)
+    # ── 1. caller staging 을 **처음부터 no-follow exact read** 로 본다 ──────
+    # ★ 46차 #9 — 45차는 `{p.name for p in stage.iterdir() if p.is_file()}` 로
+    #   이름 집합을 먼저 얻었다. `is_file()` 은 symlink 를 **따라가므로**
+    #   dangling symlink 는 그 집합에서 조용히 빠졌고, exact-set 검사를 통과한
+    #   뒤 아래 base 복사(`shutil.copyfile`)가 그 symlink 를 목적지에서
+    #   **따라가** cohort 디렉터리 **바깥**에 파일을 만들었다 (public API 만으로
+    #   성립한 반례다). 이제 첫 접촉이 `_staging_entries()` 이고, 그것이
+    #   regular · `st_nlink == 1` · no-follow 를 강제한다.
+    fresh_bytes = _staging_entries(stage, out)
+    fresh = set(fresh_bytes)
     # ★ 34차 #9 — "완전한 snapshot" 을 **구조로** 강제한다. 초판은 stage 의
     #   이름 집합을 얻은 뒤 그 leg 의 기존 파일을 base 에서 전부 제외했지만,
     #   stage 가 exact set 인지 보지 않았다. `{a.projection.yaml}` 만 넘기면
@@ -1589,16 +1681,54 @@ def _promote_cohort_locked(stage: Path, auth: "_Authority", leg: str) -> dict:
         raise SystemExit(
             f"✗ {leg} 의 staging 이 세 파일 exact set 이 아니다 — 남음 "
             f"{sorted(fresh - want)} · 모자람 {sorted(want - fresh)}")
-    # ★ 36차 #9b — base 완전성 검사를 여기서 **뺐다.** `read_current()` 가
-    #   모든 독자에 대해 같은 것을 보므로 (위 `read_current(out)` 호출이
-    #   그것이다) 여기 사본은 중복이었다 — 변이로 확인했다: 이 loop 를 지워도
-    #   suite 가 초록이었다. 검사가 하나 더 있는 것과 불변식이 한 곳에 있는
-    #   것은 다르다.
-    keep = {n: h for n, h in base.items() if _leg_of(n) != leg}
 
-    # base 에서 넘길 파일을 staging 에 복사한다 — generation 은 self-contained
-    for name in sorted(keep):
-        shutil.copyfile(gdir / name, stage / name)
+    # ── 2. base generation 도 **같은 safe reader** 로 읽는다 ────────────────
+    base: dict = {}
+    base_bytes: dict = {}
+    if auth.base_raw is None:
+        # ★ 46차 #9 — pointer 가 **둘 다** 없는데 generation 이 이미 있으면
+        #   그것은 bootstrap 이 아니라 **pointer 소실**이다. 45차는 이 상태에서
+        #   한 leg 만 담은 새 계보를 조용히 시작했고, 그 순간 "roster 는 cohort
+        #   수명 동안 불변" 이 깨졌다 — 무엇이 지워졌는지 알 방법이 없다
+        #   (durable history 를 두지 않기로 했으므로 복구할 근거가 없다).
+        #   지속 이력을 만드는 대신 **terminal fail-closed** 로 선언한다.
+        gen_root = out / "gen"
+        lost = sorted(q.name[:16] for q in gen_root.iterdir()
+                      if q.is_dir() and not q.name.startswith(".")) \
+            if gen_root.is_dir() else []
+        if lost:
+            raise SystemExit(
+                f"✗ cohort 에 generation 이 {len(lost)} 개 있는데 `CURRENT` 도 "
+                f"`.PENDING` 도 없다 ({out}) — bootstrap 이 아니라 pointer "
+                "소실이다. 여기서 새 계보를 시작하면 명부 불변식이 조용히 "
+                "깨진다(무엇이 있었는지 알 수 없다). 이 cohort 는 여기서 "
+                "끝이다 — **새 cohort ID 와 새 출력 디렉터리**로 가라 "
+                "(계약 §13.3.2)")
+    else:
+        # base 는 **명부 부분집합**이면 된다. 여기서 exact 를 요구하면
+        # bootstrap 이 불가능하다. exact 는 **reader** 의 주장이다.
+        # ★ 42차 #9 — record 와 기대 digest 가 **같은 바이트**에서 나온다.
+        cur = _parse_pointer(out, auth.base_ptr, auth.base_raw,
+                             pending=auth.base_ptr == ".PENDING",
+                             complete=auth.base_ptr != ".PENDING")
+        base = dict(cur["files"])
+        gdir = out / "gen" / cur["generation_id"]
+        base_bytes = _generation_entries(gdir, out)
+
+    # ── 3. 병합은 **메모리에서** 한다 — caller 경로에 쓰지 않는다 ──────────
+    # ★ 36차 #9b — base 완전성 검사를 여기서 **뺐다.** `read_current()` 가
+    #   모든 독자에 대해 같은 것을 보므로 여기 사본은 중복이었다 — 변이로
+    #   확인했다: 그 loop 를 지워도 suite 가 초록이었다.
+    merged = dict(fresh_bytes)
+    for name, want_sha in sorted(base.items()):
+        if _leg_of(name) == leg:
+            continue                       # 이번 갱신이 대체한다
+        blob = base_bytes.get(name)
+        if blob is None or _sha(blob) != want_sha:
+            raise SystemExit(
+                f"✗ base generation 의 {name} 이 그 pointer 와 다르다 — "
+                "옛 generation 을 근거로 새 generation 을 만들지 않는다")
+        merged[name] = blob
     # ★ 37차 #9 — publish 쪽에서도 **같은** validator 를 부른다. 36차에 이
     #   사본을 지웠던 것은 오판이었다: 변이가 안 문 것은 중복이어서가 아니라
     #   validator 가 약해서였다. 기대 명부는 base 에 있던 leg 들 ∪ {이번 leg}
@@ -1608,18 +1738,29 @@ def _promote_cohort_locked(stage: Path, auth: "_Authority", leg: str) -> dict:
     #     1) 명부에 없는 leg 를 만들지 않는다
     #     2) 이미 있던 leg 를 **줄이지 않는다** (한 leg 갱신이 cohort 를 깎지
     #        못하게 — 34차부터의 요구다)
-    staged = {p.name: _sha(p.read_bytes())
-              for p in sorted(stage.iterdir()) if p.is_file()}
+    staged = {n: _sha(b) for n, b in merged.items()}
     have = {_leg_of(n) for n in staged}
     undeclared = sorted(have - auth.roster)
     if undeclared:
         raise SystemExit(
             f"✗ 명부에 없는 다리를 게시하려 한다: {undeclared} "
             f"(roster={sorted(auth.roster)}) — 원장을 먼저 고쳐라")
-    #   (기존 leg 를 줄이는 것은 위 `keep` 복사가 구조로 막는다 — 검사를 하나
+    #   (기존 leg 를 줄이는 것은 위 base 병합이 구조로 막는다 — 검사를 하나
     #    더 두려 했으나 도달 불가능이었다. 확인했고 두지 않는다.)
     assert_cohort_complete(staged, "staging")
-    return _promote_generation(stage, auth)
+
+    # ── 4. **publisher 소유** private temp 에만 자재화한다 ──────────────────
+    #   실패하면 이 temp 만 지운다. caller 의 stage 는 어느 경로에서도
+    #   write·copy·unlink·rmtree 대상이 아니다.
+    out.mkdir(parents=True, exist_ok=True)
+    work = out / f".merge.{uuid.uuid4().hex}.tmp"
+    work.mkdir()
+    try:
+        for name in sorted(merged):
+            _write_owned(work / name, merged[name])
+        return _promote_generation(work, auth)
+    finally:
+        shutil.rmtree(work, ignore_errors=True)
 
 
 def _ledger_cohorts() -> list[dict]:
@@ -1647,7 +1788,12 @@ def _ledger_cohorts() -> list[dict]:
     reg = yaml.safe_load(reg_path.read_text(encoding="utf-8")) or {}
     cohorts = list(reg.get("cohorts") or [])
     ids = [c.get("cohort_id") for c in cohorts]
-    dirs = [str((REPO / c["dir"]).resolve()) for c in cohorts]
+    # ★ 46차 #9 — `dir` 을 **먼저** 위생 검사한다. 45차는 곧장
+    #   `(REPO / c["dir"]).resolve()` 를 했는데, `pathlib` 의 `/` 는 오른쪽이
+    #   절대 경로면 왼쪽을 **버린다**. `dir: /etc` 인 항목은 `/etc` 를 cohort
+    #   디렉터리로 만들었고, 중복 검사도 조회도 저장소 밖 경로에 대고 돌았다.
+    #   원장은 신뢰 입력이 아니라 파일이다 — 여기가 fail-closed 지점이다.
+    dirs = [str(_ledger_dir(c, reg_path)) for c in cohorts]
     dup_id = sorted({i for i in ids if ids.count(i) > 1})
     dup_dir = sorted({d for d in dirs if dirs.count(d) > 1})
     if dup_id or dup_dir:
@@ -1656,6 +1802,37 @@ def _ledger_cohorts() -> list[dict]:
             f"cohort_id {dup_id} · 중복 디렉터리 {dup_dir}. 어느 항목이 정본인지 "
             "정할 수 없다 (조용히 앞의 것을 쓰면 authority 가 목록 순서에 달린다)")
     return cohorts
+
+
+def _ledger_dir(cohort: dict, where) -> Path:
+    """원장 항목의 `dir` 을 **정규 · 저장소-상대 · 격리**로 강제한다 (46차 #9).
+
+    셋 다 필요하다:
+      · 절대 경로 금지 — `REPO / "/etc"` 는 `/etc` 다 (탈출)
+      · `..` 성분 금지 · `posixpath.normpath` 항등 — `a/../b`·`./a`·`a//b` 처럼
+        같은 곳을 가리키는 **여러 표기**가 있으면 중복 검사가 무의미하다
+        (같은 디렉터리를 두 표기로 두 번 선언할 수 있다)
+      · resolve 후에도 `REPO` 안 — symlink 로 나가는 것을 막는다
+    """
+    raw = cohort.get("dir")
+    cid = cohort.get("cohort_id")
+    if type(raw) is not str or not raw:
+        raise SystemExit(
+            f"✗ 원장 cohort {cid!r} 의 `dir` 이 비어 있지 않은 문자열이 아니다: "
+            f"{raw!r} ({where})")
+    if posixpath.isabs(raw) or posixpath.normpath(raw) != raw \
+            or ".." in raw.split("/"):
+        raise SystemExit(
+            f"✗ 원장 cohort {cid!r} 의 `dir` 이 정규 저장소-상대 경로가 아니다: "
+            f"{raw!r} — 절대 경로·`..`·`.`·중복 slash 를 쓰지 않는다 (같은 곳을 "
+            f"가리키는 표기가 여럿이면 중복 선언을 검사할 수 없다) ({where})")
+    root = REPO.resolve()
+    got = (REPO / raw).resolve()
+    if got != root and root not in got.parents:
+        raise SystemExit(
+            f"✗ 원장 cohort {cid!r} 의 `dir` 이 저장소 밖을 가리킨다: {raw!r} → "
+            f"{got} ({where})")
+    return got
 
 
 def _ledger_cohort(out: Path) -> dict:
@@ -1669,7 +1846,8 @@ def _ledger_cohort(out: Path) -> dict:
       게시했다. cohort ID·디렉터리·status 도 authority 다.
     """
     want = Path(out).resolve()
-    hit = [c for c in _ledger_cohorts() if (REPO / c["dir"]).resolve() == want]
+    reg_path = REPO / "docs" / "22p_gap" / "LEG_PRESERVATION.yaml"
+    hit = [c for c in _ledger_cohorts() if _ledger_dir(c, reg_path) == want]
     if hit:
         return hit[0]
     raise SystemExit(
@@ -1748,11 +1926,52 @@ def _assert_sealable(node, where: str = "cohort") -> None:
 #:   publication authority 는 **어느 cohort 가 · 어디에 · 어떤 상태로 · 어떤
 #:   명부로** 게시되는가다. 그 밖(pin·runtime·산문)은 기록이며 authority 가
 #:   아니다. 계약 §13.3.2 가 같은 것을 말한다.
-_LEDGER_AUTHORITY = ("cohort_id", "dir", "status", "legs")
+#:
+#:   ★ 46차 #9 — 그 좁히기가 **지나쳤다.** `pin` 은 bookkeeping 이 아니라 이
+#:     cohort 의 바이트를 만든 **producer identity** 다. authority 에서 빼면
+#:     `row_projection.py` 가 바뀌고 원장 pin 이 갱신돼도 옛 producer 가 만든
+#:     `CURRENT` 가 그대로 유효하고, bootstrap 중간에 pin 을 갈면 한 cohort
+#:     안에 서로 다른 producer 의 generation 이 섞인다 (`.PENDING` 은 옛 pin ·
+#:     `CURRENT` 는 새 pin). `cross_leg_comparison` 은 소비자가 **지켜야 하는
+#:     사용 정책**이므로 같은 이유로 authority 다.
+#:
+#:     `runtime` 과 산문 필드는 여전히 authority 밖이다 — 그것은 관측 기록이고,
+#:     바뀌어도 이미 게시된 바이트의 의미를 바꾸지 않는다.
+_LEDGER_AUTHORITY = ("cohort_id", "dir", "status", "legs",
+                     "pin", "cross_leg_comparison")
+
+#: 원장이 인정하는 **정확한** cohort 상태 (46차 #9). 45차는 "비어 있지 않은
+#: 문자열" 만 봤으므로 오타(`Active`)·새로 지어낸 값(`retired`)이 그대로
+#: 봉인됐고, `status == "active"` 를 보는 소비자에게는 frozen 도 active 도 아닌
+#: cohort 가 생겼다 (어느 검사도 안 걸린다).
+_LEDGER_STATUS = ("active", "frozen")
+
+#: cohort 간 비교 정책 — 소비자가 지켜야 하는 값이므로 자유 문자열이 아니다.
+_CROSS_LEG_POLICY = ("allowed_within_cohort", "not_applicable_single_leg")
+
+#: producer identity 의 **닫힌** 필드 집합. 하나라도 빠지거나 남으면 거부한다.
+_PIN_AUTHORITY = ("schema_version", "compute_sha256", "row_projection_py_sha256",
+                  "src_scoring_py_sha256", "analysis_spec_sha256")
+
+#: 그 중 **cohort 수명 동안 불변**인 부분 — 봉인에 들어가는 것은 이것뿐이다.
+#:
+#:   `schema_version` 은 산출 schema 이고 `analysis_spec_sha256` 은 비교 규칙
+#:   이다. 둘은 이 cohort 의 바이트가 **무엇을 뜻하는가** 를 정하므로, 바뀌면
+#:   같은 cohort 안에 뜻이 다른 generation 이 섞인다 → 새 cohort ID 로 가야
+#:   한다.
+#:
+#:   나머지 셋(`compute_sha256`·두 파일 digest)은 **provenance 기록**이다.
+#:   주석 한 줄만 고쳐도 움직이므로 봉인에 넣으면 라운드마다 cohort 를 새로
+#:   만들어야 한다 — 그것은 불변식이 아니라 잡음이다. 대신 그쪽 축은
+#:   `test_projection_analyzer_digests_recompute_from_the_current_tree` 가
+#:   **active cohort 의 manifest 는 현행 트리와 같아야 한다** 로 강제한다
+#:   (producer 가 바뀌면 cohort 를 통째로 재생성해야 통과한다). 두 규칙이
+#:   합쳐져야 "이 바이트를 누가 만들었는가" 가 닫힌다 — 계약 §13.3.2.
+_PIN_SEALED = ("schema_version", "analysis_spec_sha256")
 
 
 def _ledger_authority(cohort: dict) -> dict:
-    """원장 record 에서 **게시 authority 네 필드**를 닫힌 타입으로 뽑는다."""
+    """원장 record 에서 **게시 authority 필드**를 닫힌 타입으로 뽑는다."""
     # 전체 record 가 canonical domain 안인지 먼저 본다 — authority 밖 필드라도
     # canonicalizer 가 접을 수 있는 타입(tuple·date·NaN)은 원장 위생 문제다.
     _assert_sealable(cohort)
@@ -1764,9 +1983,37 @@ def _ledger_authority(cohort: dict) -> dict:
                 raise SystemExit(
                     f"✗ 원장 cohort 의 `legs` 가 문자열 목록이 아니다: {v!r}")
             rec[k] = sorted(v)
+        elif k == "pin":
+            # ★ 46차 #9 — producer identity 는 **닫힌 schema** 다. key 가 빠지면
+            #   `.get()` 이 `None` 을 돌려주고, 그 `None` 이 "선언하지 않았다" 와
+            #   구별되지 않는다 (pointer schema 에서 이미 겪은 형태다).
+            if type(v) is not dict or set(v) != set(_PIN_AUTHORITY):
+                raise SystemExit(
+                    f"✗ 원장 cohort 의 `pin` 이 계약 필드 집합이 아니다: "
+                    f"{sorted(v) if type(v) is dict else v!r} — "
+                    f"{sorted(_PIN_AUTHORITY)} 를 정확히 담아야 한다")
+            if type(v["schema_version"]) is not int:
+                raise SystemExit(
+                    f"✗ 원장 cohort 의 `pin.schema_version` 이 정수가 아니다: "
+                    f"{v['schema_version']!r}")
+            for pk in _PIN_AUTHORITY[1:]:
+                if type(v[pk]) is not str or not v[pk]:
+                    raise SystemExit(
+                        f"✗ 원장 cohort 의 `pin.{pk}` 가 비어 있지 않은 "
+                        f"문자열이 아니다: {v[pk]!r}")
+            rec[k] = {pk: v[pk] for pk in _PIN_SEALED}
         elif type(v) is not str or not v:
             raise SystemExit(
                 f"✗ 원장 cohort 의 `{k}` 가 비어 있지 않은 문자열이 아니다: {v!r}")
+        elif k == "status" and v not in _LEDGER_STATUS:
+            raise SystemExit(
+                f"✗ 원장 cohort 의 `status` 가 계약 enum 이 아니다: {v!r} — "
+                f"{list(_LEDGER_STATUS)} 중 하나여야 한다 (자유 문자열이면 "
+                "frozen 도 active 도 아닌 cohort 가 조용히 생긴다)")
+        elif k == "cross_leg_comparison" and v not in _CROSS_LEG_POLICY:
+            raise SystemExit(
+                f"✗ 원장 cohort 의 `cross_leg_comparison` 이 계약 enum 이 "
+                f"아니다: {v!r} — {list(_CROSS_LEG_POLICY)} 중 하나여야 한다")
         else:
             rec[k] = v
     return rec

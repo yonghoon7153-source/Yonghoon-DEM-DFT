@@ -21,6 +21,7 @@ import datetime as dt
 import hashlib
 import json
 import os
+import pathlib
 import shutil
 import tempfile
 import uuid
@@ -5399,3 +5400,239 @@ def test_a_falsy_version_id_from_put_is_refused(tmp_path, bogus):
         backend.lock_content_object(dg, until, data=data)
     assert "version" in str(ei.value), str(ei.value)
     assert dict(store._lock) == before_lock, "falsy version ID 로 잠갔다"
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# 46차 P0-8 — provider 가 주는 version 후보는 **전부** 검증한다
+#
+# 45차까지 `put()` 이 돌려준 VersionId 만 "비어 있지 않은 문자열" 로 봤다.
+# 그런데 담보 version 은 `versions(key)` 열거에서도 온다 (`protected_version`
+# · `_locked_versions` · store.json 정본 선택). 거기서 falsy·비문자열 후보가
+# 들어오면 `lock(key, "", until)` 을 부르고, 그 빈 문자열이 lease proof·
+# receipt locator 로 그대로 굳는다 — "정확히 이 version 을 담보했다" 가
+# 아무것도 가리키지 않는 값이 된다.
+# ─────────────────────────────────────────────────────────────────────────────
+
+class _WeakVersionStore(_LockingStore):
+    """실물 SDK 가 그럴 수 있듯 열거에 falsy·비문자열 후보를 섞는다."""
+
+    JUNK = ("", None, 0, b"v1", ["v1"])
+
+    def versions(self, key: str) -> list:
+        real = super().versions(key)
+        return list(self.JUNK) + real
+
+    def describe_object(self, key: str, version=None):
+        # junk 후보도 "잠긴 것처럼" 보이게 만든다 — 검증이 없으면 그대로 통과한다
+        if version in self.JUNK or (isinstance(version, (bytes, list))):
+            return {"mode": "COMPLIANCE",
+                    "retain_until": "2099-01-01T00:00:00Z"}
+        return super().describe_object(key, version)
+
+
+def test_every_enumerated_version_candidate_must_be_a_nonempty_string(tmp_path):
+    """★ 46차 P0-8 — 열거 후보를 검증하지 않으면 빈 locator 를 담보라고 부른다."""
+    store = _WeakVersionStore(name=str(tmp_path))
+    backend = _lockstore(tmp_path, store)
+    store.put("objects/x", b"payload")
+
+    with pytest.raises(PreserveError) as ei:
+        backend.protected_version("objects/x")
+    assert "version" in str(ei.value), str(ei.value)
+
+    with pytest.raises(PreserveError):
+        backend._locked_versions("objects/x")
+
+
+def test_a_falsy_version_never_reaches_lock(tmp_path):
+    """★ 46차 P0-8 — 거부는 `lock()` **앞**에서 일어나야 한다.
+
+    뒤에서 걸러도 이미 실물에 WORM 잠금이 걸린 뒤다 (되돌릴 수 없다).
+    """
+    store = _WeakVersionStore(name=str(tmp_path))
+    backend = _lockstore(tmp_path, store)
+    store.put("store.json", b"{}")
+
+    locked: list = []
+    real_lock = store.lock
+
+    def _spy(key, version, until, **kw):
+        locked.append((key, version))
+        return real_lock(key, version, until, **kw)
+
+    store.lock = _spy
+    with pytest.raises(PreserveError):
+        backend.ensure_store_lock("2099-01-01T00:00:00Z")
+    assert not locked, f"거부 전에 이미 잠갔다: {locked}"
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# 46차 P0-11 — planned leg index 를 **실행 전** gate 로 (묶음 9 의 남은 절반)
+#
+# 계약 §13.4 가 스스로 신고하던 구멍이다: 보존 원장의 coverage 기준이 **커밋된
+# 투영**이라, 새 다리를 돌려도 투영을 만들기 전에는 아무 회귀도 깨지지 않는다.
+# 2026-08-20 에 warm 7다리를 그렇게 돌렸고 보존 없이 잃었다.
+# ─────────────────────────────────────────────────────────────────────────────
+
+import textwrap
+
+_PLAN_LEDGER = textwrap.dedent('''\
+    schema_version: 4
+    cohorts:
+      - cohort_id: gA
+        dir: docs/22p_gap/coh
+        status: active
+        legs: ["L"]
+        cross_leg_comparison: not_applicable_single_leg
+        pin:
+          schema_version: 3
+          compute_sha256: "aaaaaaaaaaaaaaaa"
+          row_projection_py_sha256: "bbbbbbbbbbbbbbbb"
+          src_scoring_py_sha256: "cccccccccccccccc"
+          analysis_spec_sha256: "dddddddddddddddd"
+      - cohort_id: gF
+        dir: docs/22p_gap/frz
+        status: frozen
+        legs: ["Z"]
+        cross_leg_comparison: allowed_within_cohort
+        pin:
+          schema_version: 3
+          compute_sha256: "aaaaaaaaaaaaaaaa"
+          row_projection_py_sha256: "bbbbbbbbbbbbbbbb"
+          src_scoring_py_sha256: "cccccccccccccccc"
+          analysis_spec_sha256: "dddddddddddddddd"
+    planned:
+      - leg_id: L
+        cohort_id: gA
+        status: planned
+        authorized_source_digest: "0123456789abcdef"
+        recorded_on: "2026-08-28"
+        근거: "시험용"
+      - leg_id: Z
+        cohort_id: gF
+        status: executed
+        authorized_source_digest: "fedcba9876543210"
+        recorded_on: "2026-08-20"
+        근거: "시험용 — 소급 기록"
+    legs:
+      - leg_id: Z
+        preservation_status: full_bundle
+        evidence:
+          leg_source_digest: "fedcba9876543210"
+          cohorts: ["gF"]
+    ''')
+
+
+def _plan_ledger(tmp_path, body=None) -> pathlib.Path:
+    p = tmp_path / "LEG_PRESERVATION.yaml"
+    p.write_text(body if body is not None else _PLAN_LEDGER, encoding="utf-8")
+    return p
+
+
+def test_an_unplanned_leg_cannot_start_an_expensive_run(tmp_path):
+    """★ 46차 P0-11 — 계획에 없는 다리는 **실행 전에** 막힌다."""
+    from tools.preserve import assert_planned_leg
+
+    led = _plan_ledger(tmp_path)
+    assert assert_planned_leg("L", "0123456789abcdef", ledger=led)
+    with pytest.raises(PreserveError) as ei:
+        assert_planned_leg("ghost", "0123456789abcdef", ledger=led)
+    assert "계획" in str(ei.value) or "planned" in str(ei.value), str(ei.value)
+
+
+def test_the_gate_binds_the_plan_to_the_code_identity(tmp_path):
+    """★ 46차 P0-11 — 승인 뒤 RUN_SCOPE 가 바뀌면 승인이 만료된다.
+
+    "이 다리를 돌려도 좋다" 는 **어떤 코드로** 돌려도 좋다는 뜻이 아니다.
+    승인 시점의 `source_digest` 와 다르면 사람이 다시 승인해야 한다.
+    """
+    from tools.preserve import assert_planned_leg
+
+    led = _plan_ledger(tmp_path)
+    with pytest.raises(PreserveError) as ei:
+        assert_planned_leg("L", "ffffffffffffffff", ledger=led)
+    assert "source_digest" in str(ei.value), str(ei.value)
+
+
+def test_an_already_executed_leg_is_not_a_standing_authorization(tmp_path):
+    """★ 46차 P0-11 — `executed` 기록은 다음 실행의 승인이 아니다."""
+    from tools.preserve import assert_planned_leg
+
+    led = _plan_ledger(tmp_path)
+    with pytest.raises(PreserveError) as ei:
+        assert_planned_leg("Z", "fedcba9876543210", ledger=led)
+    assert "executed" in str(ei.value) or "이미 실행" in str(ei.value), str(ei.value)
+
+
+def test_the_plan_must_name_an_active_cohort(tmp_path):
+    """★ 46차 P0-11 — frozen cohort 로는 새 다리를 돌릴 수 없다."""
+    from tools.preserve import assert_planned_leg
+
+    body = _PLAN_LEDGER.replace("    cohort_id: gA\n", "    cohort_id: gF\n", 1)
+    led = _plan_ledger(tmp_path, body)
+    with pytest.raises(PreserveError) as ei:
+        assert_planned_leg("L", "0123456789abcdef", ledger=led)
+    assert "frozen" in str(ei.value) or "active" in str(ei.value), str(ei.value)
+
+
+def test_every_executed_leg_must_appear_in_the_planned_index(tmp_path):
+    """★ 46차 P0-11 — 반대 방향. 실행 기록이 계획 index 를 **덮어야** 한다.
+
+    이것이 없으면 index 는 장식이다: 계획에 없이 돌린 다리가 나중에 `legs:`
+    에만 나타나도 아무 검사도 깨지지 않는다 (§13.4 가 신고하던 그 구멍).
+    """
+    from tools.preserve import assert_planned_index_consistent
+
+    led = _plan_ledger(tmp_path)
+    assert assert_planned_index_consistent(ledger=led)
+
+    body = _PLAN_LEDGER + "  - leg_id: 유령\n    preservation_status: full_bundle\n"
+    other = tmp_path / "b"
+    other.mkdir()
+    with pytest.raises(PreserveError) as ei:
+        assert_planned_index_consistent(ledger=_plan_ledger(other, body))
+    assert "유령" in str(ei.value), str(ei.value)
+
+
+@pytest.mark.parametrize("break_it", [
+    ("    status: planned\n", "    status: 계획중\n"),                 # enum 밖
+    ('    authorized_source_digest: "0123456789abcdef"\n', ""),         # key 누락
+    ('    recorded_on: "2026-08-28"\n',
+     '    recorded_on: "2026-08-28"\n    extra: x\n'),                 # 남는 key
+])
+def test_the_planned_index_has_a_closed_schema(tmp_path, break_it):
+    """★ 46차 P0-11 — 계획 항목도 닫힌 schema 다 (빠진 key 의 `None` 금지)."""
+    from tools.preserve import assert_planned_index_consistent
+
+    old, new = break_it
+    body = _PLAN_LEDGER.replace(old, new, 1)
+    assert body != _PLAN_LEDGER, "전제: 변형 지점을 찾았다"
+    with pytest.raises(PreserveError):
+        assert_planned_index_consistent(ledger=_plan_ledger(tmp_path, body))
+
+
+def test_the_planned_index_is_bound_to_the_real_execution_record(tmp_path):
+    """★ 46차 P0-11 — 계획 항목은 **실물 원장 기록**을 가리켜야 한다.
+
+    이것이 없으면 `planned:` 는 자기 자신만 참조하는 목록이다 — 아무 digest 나
+    적어도 내부적으로 일관되고, "실행 전 gate" 가 아니라 장식이 된다.
+    """
+    from tools.preserve import assert_planned_index_consistent
+
+    assert assert_planned_index_consistent(ledger=_plan_ledger(tmp_path))
+
+    liar = _PLAN_LEDGER.replace('  leg_source_digest: "fedcba9876543210"\n',
+                                '  leg_source_digest: "0000000000000000"\n')
+    assert liar != _PLAN_LEDGER, "전제"
+    d2 = tmp_path / "d2"
+    d2.mkdir()
+    with pytest.raises(PreserveError) as ei:
+        assert_planned_index_consistent(ledger=_plan_ledger(d2, liar))
+    assert "실행 기록과 다르다" in str(ei.value), str(ei.value)
+
+
+def test_the_committed_ledger_passes_the_planned_index_gate():
+    """실제 `LEG_PRESERVATION.yaml` 이 계획 index 계약을 만족한다."""
+    from tools.preserve import assert_planned_index_consistent
+
+    assert assert_planned_index_consistent()

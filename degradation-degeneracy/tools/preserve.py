@@ -1466,6 +1466,44 @@ class ObjectLockBackend(CasBackend):
                 "durable 은 계약 전체를 만족할 때만 주장할 수 있다")
 
     # ── per-version locator ─────────────────────────────────────────────
+    def _version_candidates(self, key: str, required: bool = True) -> list:
+        """`provider.versions(key)` 를 **검증해서** 돌려주는 유일한 통로 (46차 P0-8).
+
+        45차까지는 `put()` 이 돌려준 VersionId 만 "비어 있지 않은 문자열" 로
+        봤다. 그런데 담보 version 은 **열거**에서도 온다
+        (`protected_version` · `_locked_versions` · store identity 선택).
+        거기서 falsy·비문자열 후보가 들어오면 `lock(key, "", until)` 을 부르고,
+        그 빈 문자열이 lease proof·receipt locator 로 굳는다 — "정확히 이
+        version 을 담보했다" 가 아무것도 가리키지 않는 값이 된다.
+
+        되돌릴 수 없는 `lock()` **앞**에서 fail-closed 한다. 후보를 조용히
+        걸러내지 않는다: 이런 provider 는 계약 위반이고, 남은 후보로 계속
+        진행하면 "무엇을 담보했는지" 가 provider 의 응답 순서에 달린다.
+        """
+        vs = getattr(self.provider, "versions", None)
+        if not callable(vs):
+            if required:
+                raise PreserveError(
+                    "capability",
+                    "provider 가 versions() 를 주지 않는다 — per-version 잠금에서 "
+                    "담보 version 을 찾을 수 없으면 durable 을 주장할 수 없다")
+            return []
+        got = vs(key)
+        if got is None:
+            return []
+        if not isinstance(got, list):
+            raise PreserveError(
+                "capability",
+                f"provider.versions({key!r}) 가 목록이 아니다: {type(got).__name__}")
+        bad = [v for v in got if not _nonempty_str(v if isinstance(v, str) else "")]
+        if bad:
+            raise PreserveError(
+                "capability",
+                f"provider.versions({key!r}) 가 version 이 아닌 후보를 담고 있다: "
+                f"{bad!r} — version locator 는 비어 있지 않은 문자열이어야 한다 "
+                "(falsy locator 를 잠그면 무엇을 담보했는지 되찾을 수 없다)")
+        return list(got)
+
     def protected_version(self, key: str):
         """그 key 에서 **지금 잠겨 있는** 가장 최신 version (36차 P0-1).
 
@@ -1474,14 +1512,8 @@ class ObjectLockBackend(CasBackend):
         도 lease proof 재발견도 잠금 밖의 바이트를 가리킨다. 담보를 들고 있는
         것은 head 가 아니라 잠긴 version 이다.
         """
-        vs = getattr(self.provider, "versions", None)
-        if not callable(vs):
-            raise PreserveError(
-                "capability",
-                "provider 가 versions() 를 주지 않는다 — per-version 잠금에서 "
-                "담보 version 을 찾을 수 없으면 durable 을 주장할 수 없다")
         now = dt.datetime.now(dt.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
-        for v in vs(key) or []:
+        for v in self._version_candidates(key):
             st = self.provider.describe_object(key, v)
             if not isinstance(st, dict):
                 continue
@@ -1498,12 +1530,10 @@ class ObjectLockBackend(CasBackend):
           Compliance proof 를 가릴 수 있었다.
         """
         want = self.DURABLE_MODES if modes is None else modes
-        vs = getattr(self.provider, "versions", None)
-        if not callable(vs):
-            return []
+        cands = self._version_candidates(key, required=False)
         now = dt.datetime.now(dt.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
         out = []
-        for v in vs(key) or []:
+        for v in cands:
             st = self.provider.describe_object(key, v)
             if not (isinstance(st, dict) and st.get("mode") in want
                     and _is_utc_stamp(st.get("retain_until"))
@@ -1619,12 +1649,10 @@ class ObjectLockBackend(CasBackend):
         `protected_version()` 은 최신을 고르므로 identity 에는 쓸 수 없다.
         최초 잠금이 authority 이고, 그 뒤에 무엇이 올라오든 바뀌지 않는다.
         """
-        vs = getattr(self.provider, "versions", None)
-        if not callable(vs):
-            return None
+        cands = self._version_candidates(key, required=False)
         now = dt.datetime.now(dt.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
         oldest = None
-        for v in vs(key) or []:                       # 최신순 → 마지막이 가장 오래됨
+        for v in cands:                               # 최신순 → 마지막이 가장 오래됨
             st = self.provider.describe_object(key, v)
             if not isinstance(st, dict):
                 continue
@@ -1656,7 +1684,7 @@ class ObjectLockBackend(CasBackend):
         # ★ 37차 P0-1 — 최신이 아니라 **정본** version 을 연장한다.
         vid = self._canonical_store_version(key)
         if vid is None:
-            vs = self.provider.versions(key) or []
+            vs = self._version_candidates(key)
             if not vs:
                 raise PreserveError("store", "store.json 의 version 을 알 수 없다")
             vid = vs[-1]                       # 아직 담보가 없다 → 가장 오래된 것
@@ -3535,3 +3563,185 @@ def finalize_only(leg_id: str, backend: CasBackend, index_path: Path) -> dict:
             "retention": lease,
             "durable": lease["enforcement"] == ENFORCEMENT_OBJECT_LOCK,
             "receipt_object": e["receipt_object"]}
+
+
+# ═════════════════════════════════════════════════════════════════════════════
+# 46차 P0-11 — planned leg index (계약 §13.4 가 신고하던 "묶음 9 의 남은 절반")
+#
+# 왜: 보존 원장의 coverage 기준이 **커밋된 투영**이었다. 그래서 새 다리를 돌려도
+#   투영을 만들기 전에는 아무 회귀도 깨지지 않았다 — 2026-08-20 에 warm 7다리를
+#   그렇게 돌렸고 보존 없이 잃었다. 실행 **전에** 막으려면 계획 index 와 그것을
+#   보는 gate 가 있어야 한다.
+#
+# 무엇이 authority 인가: 사람이 원장에 적은 `planned` 항목 하나다. 그 항목은
+#   (a) 어느 다리를 (b) 어느 **active** cohort 아래 (c) **어떤 code identity 로**
+#   돌려도 좋은지를 말한다. 셋 중 하나라도 다르면 실행하지 않는다.
+#
+# 무엇이 authority 가 아닌가: 실행기가 계산해서 넣는 값. 계획은 실행기의 출력이
+#   아니라 입력이다 (자기 출력이 자기 근거가 되면 gate 가 아니다 — 37차 #9 에서
+#   같은 형태를 이미 겪었다).
+# ═════════════════════════════════════════════════════════════════════════════
+
+#: 계획 항목의 **닫힌** key 집합. 빠진 key 의 `None` 은 "선언하지 않았다" 와
+#: 구별되지 않는다 — 이 저장소가 pointer schema 에서 이미 겪은 형태다.
+PLANNED_KEYS = ("leg_id", "cohort_id", "status", "authorized_source_digest",
+                "recorded_on", "근거")
+
+#: 계획 항목의 정확한 상태 enum.
+#:   planned  — 아직 안 돌렸다. **이것만이 실행 승인**이다.
+#:   executed — 이미 돌렸다. 기록이지 승인이 아니다.
+PLANNED_STATUS = ("planned", "executed")
+
+DEFAULT_LEDGER = (Path(__file__).resolve().parents[1]
+                  / "docs" / "22p_gap" / "LEG_PRESERVATION.yaml")
+
+
+def _load_ledger(ledger=None) -> dict:
+    import yaml
+
+    path = Path(ledger or DEFAULT_LEDGER)
+    if not path.is_file():
+        raise PreserveError(
+            "plan", f"보존 원장이 없다: {path} — 계획 index 를 읽을 수 없으므로 "
+                    "아무 것도 실행하지 않는다")
+    doc = yaml.safe_load(path.read_text(encoding="utf-8")) or {}
+    if not isinstance(doc, dict):
+        raise PreserveError("plan", f"보존 원장이 map 이 아니다: {path}")
+    return doc
+
+
+def planned_index(ledger=None) -> dict:
+    """`planned:` 를 **검증해서** leg_id → 항목으로 돌려준다 (순수 함수).
+
+    조회 **전에** 전체를 본다 — 40차 #9 에서 배운 것이다. 항목별로 lazy 하게
+    검사하면 어느 소비자를 부르냐에 따라 판정이 달라진다.
+    """
+    doc = _load_ledger(ledger)
+    raw = doc.get("planned")
+    if raw is None:
+        raise PreserveError(
+            "plan", "보존 원장에 `planned:` 계획 index 가 없다 — 실행 전 gate 의 "
+                    "근거가 없으므로 새 다리를 돌리지 않는다 (계약 §13.4)")
+    if not isinstance(raw, list) or not raw:
+        raise PreserveError("plan", f"`planned:` 이 비어 있지 않은 목록이 아니다: {raw!r}")
+
+    cohorts = {}
+    for c in (doc.get("cohorts") or []):
+        cid = c.get("cohort_id")
+        if not _nonempty_str(cid if isinstance(cid, str) else ""):
+            raise PreserveError("plan", f"cohort_id 가 문자열이 아니다: {cid!r}")
+        if cid in cohorts:
+            raise PreserveError("plan", f"cohort_id 가 중복이다: {cid!r}")
+        cohorts[cid] = c
+
+    out: dict = {}
+    for e in raw:
+        if not isinstance(e, dict) or set(e) != set(PLANNED_KEYS):
+            raise PreserveError(
+                "plan",
+                f"계획 항목이 닫힌 schema 가 아니다: "
+                f"{sorted(e) if isinstance(e, dict) else e!r} — "
+                f"{sorted(PLANNED_KEYS)} 를 정확히 담아야 한다")
+        for k in PLANNED_KEYS:
+            if not _nonempty_str(e[k] if isinstance(e[k], str) else ""):
+                raise PreserveError(
+                    "plan", f"계획 항목의 `{k}` 가 비어 있지 않은 문자열이 "
+                            f"아니다: {e[k]!r}")
+        if e["status"] not in PLANNED_STATUS:
+            raise PreserveError(
+                "plan", f"계획 항목의 `status` 가 계약 enum 이 아니다: "
+                        f"{e['status']!r} — {list(PLANNED_STATUS)} 중 하나여야 한다")
+        if e["leg_id"] in out:
+            raise PreserveError(
+                "plan", f"계획 index 에 같은 다리가 두 번 있다: {e['leg_id']!r} — "
+                        "어느 항목이 승인인지 정할 수 없다")
+        if e["cohort_id"] not in cohorts:
+            raise PreserveError(
+                "plan", f"계획 항목 {e['leg_id']!r} 이 원장에 없는 cohort 를 "
+                        f"가리킨다: {e['cohort_id']!r}")
+        out[e["leg_id"]] = dict(e, _cohort=cohorts[e["cohort_id"]])
+    return out
+
+
+def assert_planned_leg(leg_id: str, source_digest: str, ledger=None) -> dict:
+    """이 다리를 **지금 이 코드로** 돌려도 되는가 — 비싼 실행 앞의 gate."""
+    idx = planned_index(ledger)
+    e = idx.get(leg_id)
+    if e is None:
+        raise PreserveError(
+            "plan",
+            f"계획 index 에 없는 다리다: {leg_id!r} — 실행 전에 "
+            "`LEG_PRESERVATION.yaml` 의 `planned:` 에 사람이 적어야 한다 "
+            f"(현재 계획: {sorted(idx)})")
+    if e["status"] != "planned":
+        raise PreserveError(
+            "plan",
+            f"{leg_id!r} 은 이미 executed 로 기록돼 있다 — 실행 기록은 다음 "
+            "실행의 승인이 아니다. 다시 돌리려면 새 계획 항목을 적어라")
+    coh = e["_cohort"]
+    if coh.get("status") != "active":
+        raise PreserveError(
+            "plan",
+            f"{leg_id!r} 의 cohort {e['cohort_id']!r} 가 active 가 아니다 "
+            f"({coh.get('status')!r}) — frozen cohort 에 새 다리를 더할 수 없다")
+    if e["authorized_source_digest"] != source_digest:
+        raise PreserveError(
+            "plan",
+            f"{leg_id!r} 의 승인 code identity 가 지금과 다르다 "
+            f"(승인 source_digest {e['authorized_source_digest']} ≠ 현재 "
+            f"{source_digest}) — 승인 이후 RUN_SCOPE 가 바뀌었다. 사람이 다시 "
+            "승인해야 한다")
+    return e
+
+
+def assert_planned_index_consistent(ledger=None) -> bool:
+    """실행 기록이 계획 index 를 **덮는가** (반대 방향).
+
+    이것이 없으면 index 는 장식이다: 계획에 없이 돌린 다리가 나중에 `legs:`
+    에만 나타나도 아무 검사도 깨지지 않는다 — §13.4 가 신고하던 그 구멍이다.
+    """
+    idx = planned_index(ledger)
+    doc = _load_ledger(ledger)
+    executed = []
+    for leg in (doc.get("legs") or []):
+        lid = (leg or {}).get("leg_id")
+        if not _nonempty_str(lid if isinstance(lid, str) else ""):
+            raise PreserveError("plan", f"`legs:` 항목의 leg_id 가 없다: {leg!r}")
+        executed.append(lid)
+    missing = sorted(set(executed) - set(idx))
+    if missing:
+        raise PreserveError(
+            "plan",
+            f"실행 기록에만 있고 계획 index 에 없는 다리: {missing} — 계획 없이 "
+            "돌렸거나 index 를 안 적었다. 둘 다 실행 전 gate 가 없었다는 뜻이다")
+    wrong = sorted(l for l in executed if idx[l]["status"] != "executed")
+    if wrong:
+        raise PreserveError(
+            "plan",
+            f"실행 기록이 있는데 계획 상태가 executed 가 아닌 다리: {wrong}")
+    # ★ 46차 P0-11 — 계획 항목을 **실물 원장 기록**에 결속한다. 이것이 없으면
+    #   `planned:` 는 자기 자신만 참조하는 목록이고, 아무 digest 나 적어도
+    #   일관되다. 실행 기록이 있는 다리는 그 다리가 **실제로 돌았던** code
+    #   identity 를 계획이 그대로 담아야 한다.
+    for leg in (doc.get("legs") or []):
+        lid = leg["leg_id"]
+        e = idx[lid]
+        ev = leg.get("evidence") or {}
+        real = ev.get("leg_source_digest")
+        if not _nonempty_str(real if isinstance(real, str) else ""):
+            raise PreserveError(
+                "plan", f"{lid!r} 의 실행 기록에 `evidence.leg_source_digest` 가 "
+                        "없다 — 계획을 실물에 결속할 수 없다")
+        if e["authorized_source_digest"] != real:
+            raise PreserveError(
+                "plan",
+                f"{lid!r} 의 계획 digest 가 실행 기록과 다르다 "
+                f"(계획 {e['authorized_source_digest']} ≠ 기록 {real}) — "
+                "계획 index 가 실물을 가리키지 않으면 장식이다")
+        coh = ev.get("cohorts") or []
+        if isinstance(coh, list) and coh and e["cohort_id"] not in coh:
+            raise PreserveError(
+                "plan",
+                f"{lid!r} 의 계획 cohort {e['cohort_id']!r} 가 실행 기록의 "
+                f"cohort {coh} 에 없다")
+    return True

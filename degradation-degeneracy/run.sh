@@ -16,6 +16,7 @@ cd "$REPO_ROOT"
 # ---------------------------------------------------------------- defaults
 MODE=""
 CONFIG="configs/base.yaml"
+LEG="${LEG:-}"                    # 계획 index 의 다리 이름 (비우면 CANONICAL_RUN)
 
 # 열화 모드 축 — "start:stop:step" | "a,b,c" | "0.1" | "none"
 LLI="none"
@@ -72,6 +73,11 @@ MODE
   wsweep     dQ/dV 가중치 탐색 (층화 표본)   ★ "튜닝 아니냐"에 대한 근거
   report     목적함수 4종 비교표 + 그림 + docs/RESULTS.md
   all        grid -> fit -> score -> hessian -> report
+
+실행 전 gate (★ 46차 P0-11 · 계약 §13.4)
+  --leg NAME             `LEG_PRESERVATION.yaml` 의 `planned:` 에서 찾을 다리
+                         이름. 비우면 CANONICAL_RUN. grid·fit·all 은 이 gate 를
+                         **반드시** 지난다 (건너뛰는 환경변수는 없다).
 
 열화 모드 축   (형식: 0:0.2:0.02 | 0,0.05,0.1 | 0.1 | none)
   --lli VAL              LLI 축
@@ -152,6 +158,7 @@ HALFCELL_ARGS=()          # --halfcell-arg 는 여러 번 올 수 있다 (set -u
 while [[ $# -gt 0 ]]; do
   case "$1" in
     --mode)          MODE="$2"; shift 2 ;;
+    --leg)           LEG="$2"; shift 2 ;;      # ★ 46차 P0-11 — 실행 전 gate 대상
     --config)        CONFIG="$2"; shift 2 ;;
     --lli)           LLI="$2"; shift 2 ;;
     --lam-pe)        LAM_PE="$2"; shift 2 ;;
@@ -211,6 +218,35 @@ export PYTHONPATH="${REPO_ROOT}:${PYTHONPATH:-}"
 CANONICAL_RUN="${CANONICAL_RUN:-grid_fit_v4}"
 export MPLBACKEND="Agg"          # headless 강제
 
+# ---------------------------------------------------------------- 실행 전 gate
+#: ★ 46차 P0-11 (계약 §13.4) — **비싼 실행은 계획 index 를 지나야 한다.**
+#:
+#:   그동안 보존 coverage 의 기준은 커밋된 투영이었다. 그래서 새 다리를 돌려도
+#:   투영을 만들기 전에는 아무 회귀도 깨지지 않았고, 2026-08-20 에 warm 7다리를
+#:   그렇게 돌렸다가 보존 없이 잃었다. 이제 `LEG_PRESERVATION.yaml` 의
+#:   `planned:` 에 사람이 적은 항목이 있어야 하고, 그 항목이 승인한 RUN_SCOPE
+#:   code identity 가 **지금과 같아야** 한다.
+#:
+#:   `--leg` 를 주지 않으면 `CANONICAL_RUN` 을 다리 이름으로 본다.
+#:   gate 를 건너뛰는 환경변수는 두지 않는다 — 그런 문이 있으면 gate 가 아니다.
+plan_gate() {
+  local leg="${LEG:-$CANONICAL_RUN}"
+  python - "$leg" <<'PYGATE'
+import sys
+from src.io import source_digest
+from tools.preserve import assert_planned_leg, PreserveError
+
+leg = sys.argv[1]
+try:
+    e = assert_planned_leg(leg, source_digest())
+except PreserveError as exc:
+    print(f"❌ 실행 전 gate 거부 — {exc}", file=sys.stderr)
+    raise SystemExit(1)
+print(f"✅ 실행 전 gate 통과 — {leg} · cohort {e['cohort_id']} · "
+      f"승인 {e['recorded_on']}")
+PYGATE
+}
+
 # ---------------------------------------------------------------- dispatch
 not_impl() {
   echo "[NOT IMPLEMENTED] --mode $1"
@@ -253,6 +289,8 @@ case "$MODE" in
     if [[ "$BACKEND" == "gpu" ]]; then
       echo "[경고] --backend gpu 는 아직 미구현 (Phase 7). CPU로 fallback." >&2
     fi
+    # ★ 46차 P0-11 — dry-run 이 아니면 계획 index gate 를 **반드시** 지난다.
+    [[ "$DRY_RUN" == "true" ]] || plan_gate
     exec python -m src.grid "${GRID_ARGS[@]}"
     ;;
 
@@ -290,6 +328,7 @@ case "$MODE" in
       echo "${FIT_ARGS[*]}"
       exit 0
     fi
+    plan_gate                       # ★ 46차 P0-11
     exec python -m src.fitting "${FIT_ARGS[@]}"
     ;;
 
@@ -367,6 +406,10 @@ case "$MODE" in
     [[ "$RESUME" == "true" ]] && RESUME_FLAG=(--resume)
 
     GRID_ARGS=(--mode grid --config "$CONFIG" --nproc "$NPROC" --out "$D")
+    # ★ 46차 P0-11 — 실행 전 gate 의 대상 다리를 하위 단계로 **전파**한다.
+    #   안 넘기면 하위 grid·fit 이 CANONICAL_RUN 으로 gate 를 보게 되어,
+    #   사용자가 지정한 다리와 다른 계획 항목으로 승인될 수 있다.
+    [[ -n "$LEG" ]] && GRID_ARGS+=(--leg "$LEG")
     [[ "${NOISE_SET:-false}" == "true" ]] && GRID_ARGS+=(--noise "$NOISE")
     [[ -n "${NOISE_SEED:-}" ]] && GRID_ARGS+=(--noise-seed "$NOISE_SEED")
     GRID_ARGS+=("${RESUME_FLAG[@]}")
@@ -380,6 +423,7 @@ case "$MODE" in
     for _hca in "${HALFCELL_ARGS[@]:-}"; do
       [[ -n "$_hca" ]] && FIT_ARGS+=(--halfcell-arg "$_hca")
     done
+    [[ -n "$LEG" ]] && FIT_ARGS+=(--leg "$LEG")       # ★ 46차 P0-11
     [[ -n "$OBJECTIVE" ]] && FIT_ARGS+=(--objective "$OBJECTIVE")
     [[ "$N_RESTARTS" != "auto" ]] && FIT_ARGS+=(--n-restarts "$N_RESTARTS")
     [[ "$CLEAN" == "true" ]] && FIT_ARGS+=(--clean)

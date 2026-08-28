@@ -77,13 +77,113 @@ cohorts:
       (`cross_leg_comparison` 참조).
     pin:
       schema_version: 3
-      compute_sha256: ea7a0c1964eb4c3f
-      row_projection_py_sha256: 38749bd2def6f98e
+      compute_sha256: e042f733b4eb9851
+      row_projection_py_sha256: b7d8f645d1bc22a5
       src_scoring_py_sha256: 69e69cb046f4b4ae
       analysis_spec_sha256: 43d74dd385b1f66d28cc371dd7ebbd00fc0289323e0a515114eb2b8d45d56271
     runtime: {python: "3.11.15", pandas: "3.0.5", pyarrow: "25.0.1",
               numpy: "2.4.6", yaml: "6.0.3"}
     legs: [paired_fixed5_v4]
+
+
+# ─────────────────────────────────────────────────────────────────────────
+# planned leg index — **실행 전** gate 의 근거 (46차 P0-11 · 계약 §13.4)
+#
+# 이 index 가 없던 동안 보존 coverage 의 기준은 **커밋된 투영**이었다.
+# 그래서 새 다리를 돌려도 투영을 만들기 전에는 아무 회귀도 깨지지 않았고,
+# 2026-08-20 에 warm 7다리를 그렇게 돌렸다가 보존 없이 잃었다.
+#
+# 규칙 (`tools/preserve.py` 의 `assert_planned_leg` 가 강제한다):
+#   · `status: planned` 항목만이 **실행 승인**이다. `executed` 는 기록이다.
+#   · `authorized_source_digest` 는 그 실행을 승인한 RUN_SCOPE code identity
+#     다. 승인 뒤 코드가 바뀌면 사람이 다시 승인해야 한다.
+#   · `cohort_id` 는 **active** cohort 여야 한다.
+#   · 아래 `legs:` 의 모든 다리는 여기 `executed` 로 나타나야 하고, 그
+#     digest 는 `evidence.leg_source_digest` 와 **같아야** 한다.
+#
+# 아래 8건은 이 index 를 46차에 도입하면서 **소급 기록**한 것이다 —
+# 그때는 실행 전 gate 가 없었다. 소급이라는 사실을 지우지 않는다.
+planned:
+  - leg_id: paired_fixed5_v4
+    cohort_id: g2_2026_08_25
+    status: executed
+    authorized_source_digest: "d50295f980ccaa81"
+    recorded_on: "2026-08-28"
+    근거: >-
+      46차 P0-11 로 계획 index 를 도입하면서 소급 기록했다. 이 다리는
+      실행 전 gate 가 없던 시절에 돌았고, digest 는 원장의
+      `evidence.leg_source_digest` 를 그대로 옮긴 것이다 (새로 만든
+      값이 아니다).
+  - leg_id: paired_fixed5_v4_nowarm_now
+    cohort_id: g1_2026_08_20
+    status: executed
+    authorized_source_digest: "a72c0f3a485c19bb"
+    recorded_on: "2026-08-28"
+    근거: >-
+      46차 P0-11 로 계획 index 를 도입하면서 소급 기록했다. 이 다리는
+      실행 전 gate 가 없던 시절에 돌았고, digest 는 원장의
+      `evidence.leg_source_digest` 를 그대로 옮긴 것이다 (새로 만든
+      값이 아니다).
+  - leg_id: paired_fixed5_v4_warm
+    cohort_id: g1_2026_08_20
+    status: executed
+    authorized_source_digest: "a72c0f3a485c19bb"
+    recorded_on: "2026-08-28"
+    근거: >-
+      46차 P0-11 로 계획 index 를 도입하면서 소급 기록했다. 이 다리는
+      실행 전 gate 가 없던 시절에 돌았고, digest 는 원장의
+      `evidence.leg_source_digest` 를 그대로 옮긴 것이다 (새로 만든
+      값이 아니다).
+  - leg_id: fit_22p_seed_404_hc
+    cohort_id: g1_2026_08_20
+    status: executed
+    authorized_source_digest: "7250c6e689399381"
+    recorded_on: "2026-08-28"
+    근거: >-
+      46차 P0-11 로 계획 index 를 도입하면서 소급 기록했다. 이 다리는
+      실행 전 gate 가 없던 시절에 돌았고, digest 는 원장의
+      `evidence.leg_source_digest` 를 그대로 옮긴 것이다 (새로 만든
+      값이 아니다).
+  - leg_id: fit_22p_seed_404_hc_nowarm
+    cohort_id: g1_2026_08_20
+    status: executed
+    authorized_source_digest: "a72c0f3a485c19bb"
+    recorded_on: "2026-08-28"
+    근거: >-
+      46차 P0-11 로 계획 index 를 도입하면서 소급 기록했다. 이 다리는
+      실행 전 gate 가 없던 시절에 돌았고, digest 는 원장의
+      `evidence.leg_source_digest` 를 그대로 옮긴 것이다 (새로 만든
+      값이 아니다).
+  - leg_id: fit_22p_seed_404_hc_warm_now
+    cohort_id: g1_2026_08_20
+    status: executed
+    authorized_source_digest: "a72c0f3a485c19bb"
+    recorded_on: "2026-08-28"
+    근거: >-
+      46차 P0-11 로 계획 index 를 도입하면서 소급 기록했다. 이 다리는
+      실행 전 gate 가 없던 시절에 돌았고, digest 는 원장의
+      `evidence.leg_source_digest` 를 그대로 옮긴 것이다 (새로 만든
+      값이 아니다).
+  - leg_id: fit_seed404_pe5mv
+    cohort_id: g1_2026_08_20
+    status: executed
+    authorized_source_digest: "d842894dbbc2a0f9"
+    recorded_on: "2026-08-28"
+    근거: >-
+      46차 P0-11 로 계획 index 를 도입하면서 소급 기록했다. 이 다리는
+      실행 전 gate 가 없던 시절에 돌았고, digest 는 원장의
+      `evidence.leg_source_digest` 를 그대로 옮긴 것이다 (새로 만든
+      값이 아니다).
+  - leg_id: fit_seed404_pe5mv_nowarm
+    cohort_id: g1_2026_08_20
+    status: executed
+    authorized_source_digest: "a72c0f3a485c19bb"
+    recorded_on: "2026-08-28"
+    근거: >-
+      46차 P0-11 로 계획 index 를 도입하면서 소급 기록했다. 이 다리는
+      실행 전 gate 가 없던 시절에 돌았고, digest 는 원장의
+      `evidence.leg_source_digest` 를 그대로 옮긴 것이다 (새로 만든
+      값이 아니다).
 
 legs:
   # ── 원자료가 살아남은 유일한 다리 ────────────────────────────────────────
@@ -116,12 +216,12 @@ legs:
       #   commit SHA·실행 시각·dirty 여부는 stamp 로 뺐다 (그것들을 core 에
       #   두면 커밋된 영수증이 원리적으로 재생 불가능해진다).
       verification_receipt: docs/22p_gap/receipts/paired_fixed5_v4.validate.yaml
-      verification_receipt_core_sha256: bff345f6b2f1a12b8b7bd67fb974e9c037ae462758b5459cbee6ebaaf4a9fa94
+      verification_receipt_core_sha256: 67ca2ae20d9d7d05bd23aad39413ce5298542ac1f627271159bf048267805152
       verification_receipt_generator: docs/22p_gap/make_receipt.py
       empty_root_restore: true       # 원본 results/ 에 접근하지 않고 복원해 검증
       rescored_from_restored_fits: true
       validator_identity:
-        source_digest: ae4d82faf6c2281f
+        source_digest: ee9b0dcbf056edef
         n_checks: 34
         ok: true
       leg_source_digest: d50295f980ccaa81            # 산출물 쪽 (옛 세대)

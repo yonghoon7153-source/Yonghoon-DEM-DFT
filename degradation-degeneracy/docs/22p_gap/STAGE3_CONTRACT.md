@@ -812,7 +812,7 @@ receipt · atomic promotion 을 넣으면 그 순간 digest 가 움직인다. �
 | 6 | 구 `pairing_design_id`·`inference_status` 제거 · per-key linkage mutation test | **미착수** | 묶음 9 의 final gate 는 이것 없이 닫을 수 없다 (25차 Q3) |
 | 7 | 상태 schema 단일 authority | **부분** | §8 이 **제약**을 적고 회귀가 조합을 생성한다 (열거표가 아니다). `claim_roles` 는 `CLAIM_STATUS.yaml` 의 claim ID 와 role enum·protocol generation 에 묶였고, 중복·철회주장·원자료 없는 canonical 을 거부한다. **없는 것**: planned lifecycle (묶음 9) |
 | 8 | immutable bundle index · receipt schema | **부분** | member 전수 재해시 → 빈 root 복원 → **`repo_root` 로 검증기를 그 root 에 결속**(26차 P1-5 정정) → 복원본만으로 재채점 → file·semantic 두 digest → **봉인본과 semantic equality 강제**(26차 P1-6 정정). core/stamp 분리로 core 가 바이트 동일 재생성. **없는 것**: 비-git backend URI 형식, legacy 다리의 외부 store 사본 |
-| 9 | 트랜잭션 보존 gate | **부분** | §13.2 — 26차 P0 둘(CAS 복원·영수증 저장)을 고쳤다. 배선·backend canary·planned index 가 남았다 |
+| 9 | 트랜잭션 보존 gate | **부분** | §13.2 · §13.4 — 26차 P0 둘(CAS 복원·영수증 저장)을 고쳤고 46차에 planned leg index 를 실행 전 gate 로 배선했다. **실물 provider 어댑터**가 남았다 |
 | 10 | historical projection version dispatch | **부분** | §13.3 — 26차 P1-9·P1-10 으로 전역 회귀 둘을 cohort 화하고 frozen 목적지 쓰기를 코드가 거부하게 했다 |
 
 ### 13.2 묶음 9 — two-phase 보존 트랜잭션
@@ -975,29 +975,138 @@ misconfiguration(group/other write, 남의 소유, symlink 경유)은 잡지만
 principal 의 create/rename/link/write 가 **실제로 거부되는** negative canary 가
 필요하다. 그것은 미착수다.
 
-### 13.3.2 roster 는 cohort lifetime 동안 immutable 이다 (45차)
+### 13.3.2 cohort 게시 authority 는 무엇인가 (46차)
 
 `CURRENT` 와 `.PENDING` 은 게시 당시의 **원장 authority** 를 봉인한다:
 
 ```
-_LEDGER_AUTHORITY = ("cohort_id", "dir", "status", "legs")
+_LEDGER_AUTHORITY = ("cohort_id", "dir", "status", "legs",
+                     "pin", "cross_leg_comparison")
+_PIN_SEALED       = ("schema_version", "analysis_spec_sha256")
 ```
 
-reader(`read_current()`)도 그 봉인값을 지금의 원장과 대조한다. 따라서:
+reader(`read_current()`)도 그 봉인값을 지금의 원장과 대조한다. 따라서 이 중
+하나라도 바뀌면 그 cohort 의 기존 pointer 는 **더 이상 authority 가 아니다**
+(게시도 읽기도 거부된다). 바꾸려면 **새 cohort ID 와 새 출력 디렉터리**로 간다.
 
-- cohort 의 `legs`·`status`·`dir`·`cohort_id` 중 하나라도 바뀌면 그 cohort 의
-  기존 pointer 는 **더 이상 authority 가 아니다** (게시도 읽기도 거부된다).
-- 명부를 바꾸려면 **새 cohort ID 와 새 출력 디렉터리**로 간다.
+**45차의 좁히기가 지나쳤다.** 45차는 `pin` 을 통째로 authority 밖에 뒀는데,
+`pin` 에는 두 종류가 섞여 있다:
 
-`pin`·`runtime`·산문 키는 **authority 가 아니다** — 기록이다. 그것들은 라운드
-마다 바뀌므로 봉인 범위에 넣으면 pin 을 갱신하는 순간 이미 게시된 pointer 가
-전부 무효가 된다 (45차에 실측했다). 무엇이 authority 인지 정하지 않고 record
-전체를 봉인했던 것이 44차의 과했던 점이다.
+| 필드 | 성격 | 봉인 | 어디서 강제되나 |
+|---|---|---|---|
+| `schema_version` | 산출 schema | **○** | 봉인 대조 (`_parse_pointer`) |
+| `analysis_spec_sha256` | 비교 규칙 | **○** | 봉인 대조 |
+| `compute_sha256` | 계산 dependency closure digest | × | `..._digests_recompute_from_the_current_tree` |
+| `row_projection_py_sha256` | producer 파일 digest | × | 같은 회귀 |
+| `src_scoring_py_sha256` | 채점기 파일 digest | × | 같은 회귀 |
+| `runtime`·산문 | 관측 기록 | × | — |
 
-### 13.4 묶음 9 가 아직 못 하는 것 — planned leg index
+앞의 둘은 이 cohort 의 바이트가 **무엇을 뜻하는가** 를 정한다. 바뀌면 한
+cohort 안에 뜻이 다른 generation 이 섞이므로 새 cohort ID 로 가야 한다.
 
-보존 원장의 coverage 기준이 **커밋된 투영**이다. 그래서 새 다리를 돌려도 투영을
-만들기 전에는 회귀가 깨지지 않는다. 실행 **전에** 강제하려면 planned leg index
-와 실행 영수증이 있어야 하고, 그것이 **묶음 9** 의 남은 절반이다.
+뒤의 셋은 주석 한 줄에도 움직인다. 봉인에 넣으면 라운드마다 cohort 를 새로
+만들어야 하고 (45차에 실측했다) 그것은 불변식이 아니라 잡음이다. 대신 그
+축은 **active cohort 의 manifest 는 현행 트리와 같아야 한다** 는 회귀가
+강제한다 — producer 가 바뀌면 cohort 를 통째로 재생성해야 통과한다. 두 규칙이
+합쳐져야 "이 바이트를 누가 만들었는가" 가 닫힌다.
 
-그때까지 `LEG_PRESERVATION.yaml` 은 **이미 실행된 다리만** 담는다 (§8).
+`cross_leg_comparison` 은 소비자가 **지켜야 하는 사용 정책**이므로 같은 이유로
+authority 다.
+
+**원장 위생** (production parser 가 fail-closed 로 강제한다):
+
+- `status` 는 정확한 enum `("active", "frozen")` — 자유 문자열이면 frozen 도
+  active 도 아닌 cohort 가 조용히 생긴다.
+- `cross_leg_comparison` 도 정확한 enum이다.
+- `dir` 은 **정규 · 저장소-상대 · 격리** 경로여야 한다. `pathlib` 의 `/` 는
+  오른쪽이 절대 경로면 왼쪽을 버리므로, 45차까지 `dir: /etc` 인 항목은 `/etc`
+  를 cohort 디렉터리로 만들었다 (중복 검사도 조회도 저장소 밖에서 돌았다).
+- `pin` 은 닫힌 5필드 schema 다.
+
+**pointer 는 봉인 하나만 싣는다.** 45차는 `cohort_id` 를 echo 로 함께 실었지만
+비교하지 않았다 (봉인이 이미 덮으므로 중복이라고 판단했고, 실제로 그 대조
+변이가 안 물었다). 그러면 그 필드는 seal 과 어긋날 수 있는 **진단 문자열**로
+남아 오류 메시지가 거짓말을 한다. 대조를 더하는 대신 필드를 없앴다. 진단용
+ID 는 살아 있는 원장에서 그때 읽는다. 이미 커밋된 pointer 는
+`docs/22p_gap/migrate_pointer.py` 가 **같은 generation 을 가리킨 채** 한 번
+옮긴다 (`schema` 문자열은 `generation_id()` 의 preimage 라서 올리지 않는다).
+
+**pointer 소실은 terminal 이다.** `CURRENT` 도 `.PENDING` 도 없는데 `gen/` 에
+generation 이 있으면 그것은 bootstrap 이 아니라 pointer 소실이다. 45차는 그
+상태에서 한 leg 만 담은 새 계보를 조용히 시작했고, 그 순간 명부 불변식이
+깨졌다 — 무엇이 있었는지 알 방법이 없다 (durable commit history 를 두지 않기로
+했으므로 복구할 근거가 없다). 그래서 **fail-closed 로 끝낸다**: 사람이 새
+cohort ID 로 가야 한다.
+
+### 13.3.3 caller staging 은 읽기 전용 입력이다 (46차)
+
+`promote_cohort_generation(stage, out, leg, roster=...)` 의 `stage` 는
+publisher 가 **읽기만** 하는 입력이다. 성공하든 실패하든 그 디렉터리에
+write·copy·unlink·rmtree 를 하지 않는다. 치우는 것은 만든 쪽의 일이다.
+
+45차까지는 아니었다. `stage` 를 merge workspace 로 써서 base generation 의
+파일을 `shutil.copyfile` 로 복사해 넣었고, 성공 경로에서 `rmtree` 했다.
+결과로 public API 만으로 다음이 성립했다:
+
+> `stage` 에 `b.projection.yaml -> ../victim` 인 **dangling symlink** 를 두면
+> `Path.is_file()` 이 그것을 걸러 exact-set 검사를 통과시키고, 이어지는 base
+> 복사가 목적지 symlink 를 **따라가** cohort 디렉터리 **밖**에 파일을 만든다.
+
+이제 순서가 이렇다:
+
+1. `stage` 를 `_staging_entries()` 로 **처음부터** no-follow exact read
+   (regular · `st_nlink == 1` · 정확한 entry 집합)
+2. base generation 도 **같은 validator**(`_generation_entries()`)로 읽는다
+3. 병합은 **메모리에서** 한다
+4. publisher 소유 private temp(`out/.merge.<uuid>.tmp`)에만 `_write_owned` 로
+   자재화하고, 실패하면 그 temp 만 지운다
+
+생성·멱등 재게시·독자 셋이 **같은** generation validator 를 지난다. 45차에는
+자재화 경로에만 no-follow·`nlink` 검사가 있어서, generation 안의 파일에 바깥
+hardlink 를 걸면 "immutable generation" 의 바이트를 바깥 이름으로 바꿀 수
+있는데도 독자와 멱등 분기가 통과했다.
+
+alias 판정은 **`(st_dev, st_ino)`** 로 한다. `Path.resolve()` 는 symlink 만
+펴므로 bind mount(다른 pathname·같은 inode)를 못 본다.
+
+### 13.4 planned leg index — 실행 **전** gate (46차에 배선)
+
+45차까지 보존 원장의 coverage 기준은 **커밋된 투영**이었다. 그래서 새 다리를
+돌려도 투영을 만들기 전에는 아무 회귀도 깨지지 않았고, 2026-08-20 에 warm
+7다리를 그렇게 돌렸다가 보존 없이 잃었다. 이것이 "묶음 9 의 남은 절반" 이라고
+스스로 신고하던 자리다.
+
+`LEG_PRESERVATION.yaml` 에 `planned:` 가 생겼다. 항목은 닫힌 schema 다:
+
+```
+PLANNED_KEYS   = ("leg_id", "cohort_id", "status",
+                  "authorized_source_digest", "recorded_on", "근거")
+PLANNED_STATUS = ("planned", "executed")
+```
+
+강제하는 것은 `tools/preserve.py` 의 두 함수다.
+
+| 함수 | 무엇을 막나 |
+|---|---|
+| `assert_planned_leg(leg, source_digest)` | 계획에 없는 다리 · `executed` 를 승인으로 재사용 · frozen cohort 로 새 다리 · **승인 뒤 RUN_SCOPE 가 바뀐 경우** |
+| `assert_planned_index_consistent()` | `legs:` 에만 있고 계획에 없는 다리 · 계획 digest ≠ `evidence.leg_source_digest` · 계획 cohort ∉ 실행 기록의 cohort |
+
+두 방향이 다 필요하다. 앞의 것만 있으면 gate 를 안 부르고 돌린 다리가 나중에
+`legs:` 에만 나타나도 아무 검사가 안 깨진다. 뒤의 것만 있으면 계획 index 가
+자기 자신만 참조하는 목록이 된다 (아무 digest 나 적어도 일관되다).
+
+**배선** (건너뛰는 환경변수는 두지 않는다 — 그런 문이 있으면 gate 가 아니다):
+
+- `run.sh` 의 `grid`(dry-run 제외)·`fit` 은 `plan_gate` 를 지난다. `all` 은
+  `--leg` 를 하위 단계로 전파한다.
+- `scripts/smoke_e2e.sh` 는 (a) 계획 index 가 일관하고 (b) 계획 밖 다리를
+  gate 가 **실제로 거부**하며 (c) `run.sh` 에 배선이 남아 있는지 본다.
+
+**아직 남은 것**: 실물 provider 어댑터. 지금 보존 회귀는 hermetic fake
+provider 로만 돈다. 그래서 smoke 통과는 "pipeline 이 온전하고 계획 gate 가
+배선돼 있다" 는 뜻이며 실물 WORM 보관에 대한 승인이 아니다 (§13.5).
+
+현재 `planned:` 의 8건은 46차에 index 를 도입하면서 **소급 기록**한 것이다 —
+그때는 실행 전 gate 가 없었다. 소급이라는 사실을 지우지 않는다. digest 는
+새로 만든 값이 아니라 원장의 `evidence.leg_source_digest` 를 그대로 옮겼고,
+`assert_planned_index_consistent()` 가 그 일치를 강제한다.

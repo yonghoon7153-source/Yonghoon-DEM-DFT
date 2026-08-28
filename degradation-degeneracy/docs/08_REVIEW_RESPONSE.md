@@ -4546,3 +4546,207 @@ PASS · 변이 뒤 **call 단계** 실패 · setup/teardown/collection 오류 0 
 | publisher 전용 principal · negative canary | **미착수** |
 | 실제 object-lock provider adapter | **미구현** (별도 acceptance gate) |
 | power-loss ordering fault model | **미착수** (별도 acceptance gate) |
+
+---
+
+## §54 — 46차 게이트 리뷰 대응 (묶음 9)
+
+45차 리뷰의 진단: **"safe validator 앞에서 이미 쓴다 / authority 를 잘못 좁혔다."**
+12개 최소 반증 조건. 이번 라운드가 고친 것을 조건별로 적는다.
+
+### 46-1 caller staging 이 merge workspace 였다 (조건 1·2)
+
+45차 `_promote_cohort_locked()` 는 caller 가 준 `stage` 를 작업 공간으로 썼다:
+`fresh = {p.name for p in stage.iterdir() if p.is_file()}` 로 이름 집합을 얻고,
+base generation 의 파일을 `shutil.copyfile(gdir / name, stage / name)` 로
+**복사해 넣고**, 끝에서 `_promote_generation()` 이 `shutil.rmtree(stage)` 했다.
+
+public API 만으로 성립한 반례 (회귀
+`test_a_dangling_symlink_in_the_caller_stage_never_creates_an_outside_file`):
+
+```
+stage/ = {a.projection.csv.gz, a.projection.yaml, a.restarts.csv.gz}
+         + b.projection.yaml -> ../victim      (dangling symlink)
+```
+
+`Path.is_file()` 은 symlink 를 따라가므로 끊어진 link 는 `fresh` 에서 조용히
+빠져 exact-set 검사를 통과한다. 이어지는 base 복사가 **목적지 symlink 를 따라가**
+`../victim` 을 만든다 — cohort 출력 디렉터리 밖이다.
+
+고친 것: caller stage 는 **읽기 전용 입력**이다 (계약 §13.3.3).
+
+1. 첫 접촉이 `_staging_entries()` 다 — no-follow · regular · `st_nlink == 1` ·
+   정확한 entry 집합
+2. base generation 도 같은 validator(`_generation_entries()`)로 읽는다
+3. 병합은 메모리에서 한다
+4. publisher 소유 private temp(`out/.merge.<uuid>.tmp`)에만 `_write_owned` 로
+   자재화하고 실패하면 그 temp 만 지운다
+5. caller 경로에는 write·copy·unlink·rmtree 가 없다 — 성공해도 지우지 않는다
+   (치우는 것은 만든 쪽, 즉 `main()` 의 `_stage` 소유자의 일이다)
+
+회귀 셋: 바깥 파일이 생기지 않는다 · 마지막 guard 가 실패해도 caller 바이트가
+그대로다 · 성공해도 caller staging 이 살아 있다.
+
+### 46-2 생성·멱등·독자가 다른 validator 를 썼다 (조건 3)
+
+45차는 no-follow·`nlink` 검사를 **자재화 경로에만** 뒀다. 독자
+(`_parse_pointer`)와 멱등 재게시 분기는 `Path.is_file()` + `read_bytes()` 였다.
+그래서 generation 안의 파일에 바깥에서 hardlink 를 걸면 "immutable generation"
+의 바이트를 바깥 이름으로 바꿀 수 있는데도 둘 다 통과했다.
+
+셋이 `_generation_entries()` 하나를 지난다. 커밋된 generation 16개를 감사했고
+전부 regular · `nlink == 1` 이라 마이그레이션은 필요 없었다 (`warm_probe` 는
+`gen/` 자체가 없는 legacy fixed-namespace cohort다).
+
+### 46-3 alias 판정이 `resolve()` 에 의존했다 (조건 4)
+
+`Path.resolve()` 는 symlink 만 편다. bind mount 는 **다른 pathname · 같은
+`(st_dev, st_ino)`** 이므로 경로 비교로 안 보인다. `_assert_outside_generations()`
+가 stage 의 inode 를 `out/gen` 및 그 자식 전부와 대조한다. 회귀는 `resolve()` 를
+항등으로 만들어 그 관측 조건을 그대로 재현한다.
+
+### 46-4 authority 를 잘못 좁혔다 (조건 5)
+
+45차는 `pin` 을 통째로 authority 밖에 뒀다. `pin` 에는 두 종류가 섞여 있다.
+
+| 봉인 | 필드 | 왜 |
+|---|---|---|
+| ○ | `schema_version` · `analysis_spec_sha256` | 이 cohort 의 바이트가 **무엇을 뜻하는가** 를 정한다 |
+| × | `compute_sha256` · 두 파일 digest | 주석 한 줄에도 움직인다 — 봉인하면 라운드마다 새 cohort |
+
+앞의 둘이 바뀌면 한 cohort 안에 뜻이 다른 generation 이 섞이므로 **새 cohort
+ID** 로 가야 한다. 뒤의 셋은 `..._digests_recompute_from_the_current_tree` 가
+"active cohort 의 manifest 는 현행 트리와 같아야 한다" 로 강제한다 (producer 가
+바뀌면 cohort 를 통째로 재생성해야 통과한다). 그 선을
+`test_a_mutable_provenance_digest_is_deliberately_not_sealed` 가 **의도로**
+못 박는다 — 나중에 조용히 넓히거나 좁히지 못하게.
+
+`cross_leg_comparison` 은 소비자가 지켜야 하는 사용 정책이라 같은 이유로
+authority 다.
+
+### 46-5 원장 위생 (조건 6)
+
+- `status` 정확한 enum `("active", "frozen")` — 45차는 "비어 있지 않은 문자열"
+  만 봤다. 오타(`Active`)·새 값(`retired`)이 봉인됐고, `status == "active"` 를
+  보는 소비자에게는 frozen 도 active 도 아닌 cohort 가 생겼다.
+- `cross_leg_comparison` 도 정확한 enum.
+- `dir` 은 정규 · 저장소-상대 · 격리. `pathlib` 의 `/` 는 오른쪽이 절대 경로면
+  왼쪽을 **버리므로**, `dir: /etc` 인 항목은 `/etc` 를 cohort 디렉터리로 만들었다
+  (중복 검사도 조회도 저장소 밖에서 돌았다). production parser 가 fail-closed.
+- `pin` 은 닫힌 5필드 schema.
+
+### 46-6 pointer 의 `cohort_id` echo 와 pointer 소실 (조건 7)
+
+45차는 echo 를 싣고 비교하지 않았다 (봉인이 덮으므로 중복이라고 판단했고
+실제로 그 대조 변이가 안 물었다). 그러면 그 필드는 seal 과 어긋날 수 있는
+**진단 문자열**이 되어 오류 메시지가 거짓말을 한다. 대조를 더하는 대신
+**필드를 없앴다**. 진단 ID 는 살아 있는 원장에서 그때 읽는다.
+
+이미 커밋된 pointer 는 `docs/22p_gap/migrate_pointer.py` 가 **같은 generation 을
+가리킨 채** 한 번 옮긴다. `schema` 문자열은 `generation_id()` 의 preimage 라
+올리지 않는다 — 올리면 이미 굳은 generation 의 이름이 전부 바뀐다.
+
+pointer 소실은 **terminal** 이다. `CURRENT` 도 `.PENDING` 도 없는데 `gen/` 에
+generation 이 있으면 bootstrap 이 아니라 소실이다. 45차는 거기서 한 leg 짜리 새
+계보를 조용히 시작했고 명부 불변식이 깨졌다. durable commit history 를 두지
+않기로 했으므로 복구 근거가 없다 → fail-closed 로 끝내고 사람이 새 cohort ID 로
+간다.
+
+### 46-7 열거된 version 후보 (조건 8)
+
+45차까지 "비어 있지 않은 문자열" 검사는 `put()` 이 돌려준 VersionId 에만
+있었다. 담보 version 은 `versions(key)` **열거**에서도 온다
+(`protected_version` · `_locked_versions` · store identity 선택). 거기서
+falsy·비문자열 후보가 들어오면 `lock(key, "", until)` 을 부르고 그 빈 문자열이
+lease proof·receipt locator 로 굳는다.
+
+`_version_candidates()` 하나가 유일한 통로이고, 되돌릴 수 없는 `lock()` **앞**
+에서 fail-closed 한다. 후보를 조용히 걸러내지 않는다 — 그러면 무엇을 담보했는지가
+provider 의 응답 순서에 달린다.
+
+### 46-8 변이 재생 runner (조건 9)
+
+| 축 | 45차 | 46차 |
+|---|---|---|
+| 격리 | 작업 트리를 고쳤다 되돌림 | 저장소를 **temp sandbox 로 복사**해 그 안에서만 |
+| 복원 | `read_text`/`write_text` | **raw bytes** + 해시 대조 |
+| rc | `-k` 수집 rc != 0 만 | 수집 rc == 0 · baseline rc == 0 · 변이 rc == **1** |
+| collector | 안 봄 | `collectors` 오류를 따로 본다 |
+| node 집합 | "하나라도 call 실패" | **선언한 기대 실패 집합과 정확히 일치** |
+| 이유 | 없음 | **의미 증인** — 실패 메시지에 선언한 문자열이 있어야 한다 |
+
+기대 집합·증인이 없는 mutant 는 오류다 (조용히 통과시키지 않는다).
+`--emit-expect` 가 관측값을 찍어 준다.
+
+**강화한 runner 가 이번에 잡은 것** (전부 이 라운드 안에서 고쳤다):
+
+| 잡힌 것 | 무엇이었나 | 처리 |
+|---|---|---|
+| `planned-status-is-not-standing` · `planned-binds-the-code-identity` | preimage 들여쓰기가 실제 코드와 달라 **0번** 나타났다 | preimage 수정 |
+| `idempotent-shares-the-validator` 가 안 물었다 | alias 를 **현재 pointer 가 가리키는** generation 에 걸었더니 독자가 먼저 거부해 멱등 분기를 가렸다 | 시험을 보강 — alias 를 pointer 가 가리키지 않는 옛 generation 에 건다 |
+| `staging-not-inside-gen` 이 안 물었다 | namespace 판정이 **두 구현**(경로 포함 + inode 대조)으로 나뉘어 서로를 가렸다 — 44차에도 겪은 형태다 | **하나로 합쳤다**: `stage` 와 그 **조상들**을 `(st_dev, st_ino)` 로 `gen/`·각 generation 과 대조한다. 경로 사본은 지웠다 |
+| 휘발성 증인 둘 | 증인에 임시 경로가 들어가 라운드마다 달라진다 | 안정 접두로 줄였다 |
+
+특히 세 번째는 45차 runner 였다면 "물었다" 로 셌을 것이다 — 다른 검사가 잡고
+있었으므로 `rc != 0` 이었다. 기대 집합을 선언하고 정확히 대조해야 **어느 검사가
+일하고 있는지**가 보인다.
+
+증인을 mutant 당 문자열 **하나**로 뒀더니 또 걸렸다: 한 mutant 가 여러 시험을
+빨갛게 만들면(parametrize·다중 대상) 그 메시지들이 서로 다르다. 증인 하나를
+전부에 요구하면 통과시키려고 **가장 약한 공통 부분문자열**로 깎게 된다 — 그러면
+"그 이유로 물었다" 를 증명하지 못한다. 그래서 증인을 **node → 부분문자열 map**
+으로 바꿨다. 시각·임시 경로가 들어간 증인 셋은 안정 접두로 손질했다.
+
+최종: `scenario 44 · 실행 41 · 신고 3 · site 42` · rc 0 —
+**실행한 변이가 전부 기대 node 를 call 단계에서 물었다.**
+
+### 46-9 두 publisher 회귀와 warm 배선 (조건 10)
+
+- **시도마다 새 token**: marker 이름이 `public_{leg}_{token}.marker` 다. 45차는
+  `public_{leg}.marker` 라 B 의 첫 시도(실패)가 남긴 marker 가 재시도의 증거로
+  쓰였다. 이제 A · B 첫 시도 · B 재시도가 각자의 marker 를 갖는다.
+- **B 의 첫 실패 이유**: `rc != 0` 이 아니라 stderr 에 `다른 게시가 진행 중이다`
+  가 있는지 본다. 45차는 원장 오류·import 오류 등 lock 과 무관한 어떤 실패라도
+  "상호배제가 동작했다" 로 읽었다.
+- **warm 간선 명시**: `_WARM_CONSUMER_EDGES` 로 소비자 → accessor 간선을 못
+  박고 정확히 대조한다. 45차는 accessor **합집합**만 봤으므로, 새 소비자가
+  accessor 를 안 써도 다른 소비자가 그 accessor 를 쓰는 한 초록이었다.
+
+### 46-10 planned leg index — 실행 **전** gate (조건 11)
+
+계약 §13.4 가 스스로 "묶음 9 의 남은 절반" 이라고 신고하던 자리다. 보존
+coverage 의 기준이 **커밋된 투영**이라, 새 다리를 돌려도 투영을 만들기 전에는
+아무 회귀도 깨지지 않았다 — 2026-08-20 에 warm 7다리를 그렇게 돌렸다가 보존
+없이 잃었다.
+
+`LEG_PRESERVATION.yaml` 에 닫힌 schema 의 `planned:` 가 생겼고
+`tools/preserve.py` 가 두 방향을 강제한다.
+
+| 함수 | 무엇을 막나 |
+|---|---|
+| `assert_planned_leg(leg, source_digest)` | 계획에 없는 다리 · `executed` 기록을 승인으로 재사용 · frozen cohort · **승인 뒤 RUN_SCOPE 변경** |
+| `assert_planned_index_consistent()` | `legs:` 에만 있는 다리 · 계획 digest ≠ `evidence.leg_source_digest` · 계획 cohort ∉ 실행 기록 cohort |
+
+두 방향이 다 필요하다. 앞만 있으면 gate 를 안 부르고 돌린 다리가 나중에
+`legs:` 에만 나타나도 안 깨지고, 뒤만 있으면 계획 index 가 자기 자신만 참조하는
+목록이 된다.
+
+배선: `run.sh` 의 `grid`(dry-run 제외)·`fit` 이 `plan_gate` 를 지나고 `all` 이
+`--leg` 를 전파한다. smoke 는 (a) index 일관 (b) 계획 밖 다리를 gate 가 **실제로
+거부** (c) `run.sh` 배선 잔존을 본다. 건너뛰는 환경변수는 두지 않았다.
+
+smoke 의 마지막 문구를 사실에 맞게 좁혔다: "보존 gate 미완료" → "실행 전 계획
+gate 는 배선됐고, 남은 것은 실물 provider 어댑터".
+
+현재 `planned:` 8건은 index 도입 시점의 **소급 기록**이다. 소급이라는 사실을
+지우지 않았고, digest 는 새로 만들지 않고 원장의 `evidence.leg_source_digest` 를
+그대로 옮겼다 (일치를 gate 가 강제한다).
+
+### 아직 아닌 것 (조건 12 — 별도 acceptance)
+
+| 항 | 상태 |
+|---|---|
+| `os.replace` 직전~직후 창 | **전제로 배제** — 탐지도 복구도 안 된다 (계약 §13.3.1) |
+| publisher 전용 OS principal · negative canary | **미착수** |
+| 실제 object-lock provider adapter | **미구현** — 보존 회귀는 hermetic fake 로만 돈다 |
+| power-loss ordering fault model | **미착수** |
