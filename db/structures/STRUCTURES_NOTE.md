@@ -17,4 +17,16 @@
   ⚠ EOS 구조와 LOBSTER(k663) property 구조가 Cl 4a/4d 배치가 다를 수 있음 — per-site ICOHP는
   property 구조(bonds_modelc_k663.json) 기준.
 
-마지막 갱신: 2026-06-05
+## sdcp_wave1/ (2026-08-28 추가)
+
+wave1 VASP 회수 드롭의 `static/OUTCAR.gz` 에서 **계산에 실제로 들어간 기하**를 되꺼낸 것.
+조각 3종(ptfe_c10 · ptfe_dimer · sdcp_neutral) × 자세 × 시드 = **16 세트**,
+각각 `.xyz` + `.vasp` + `.vesta`. 자세한 설명은 `db/structures/sdcp_wave1/README.md`.
+
+- ⚠ **이완된 DFT 최소점이 아니다** — MLIP(UMA, freeze 0.85) 기하 위의 단일점(NSW=0).
+- ⚠ 기하는 **자세당 하나**다. pm1/net4 도, static/dense 도 좌표가 완전히 같다(실측).
+  두 시드 파일의 차이는 `.vesta` 의 **AFM 부격자 색(NiA/NiB)** 뿐이다.
+- 에너지 표는 `db/properties/sdcp_wave1_job_energies_2026_08_28.csv` (+ `.json`).
+- 생성: `python3 tools/sdcp/scfin_to_struct.py --outcar … --out db/structures/sdcp_wave1`
+
+마지막 갱신: 2026-08-28

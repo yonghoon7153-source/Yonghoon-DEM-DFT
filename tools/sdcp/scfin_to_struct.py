@@ -1,9 +1,20 @@
 #!/usr/bin/env python3
-"""scfin_to_struct.py — QE scf.in → xyz + POSCAR 페어 + 흡착/주기이미지 거리 점검.
+"""scfin_to_struct.py — QE scf.in / VASP OUTCAR → xyz + POSCAR + .vesta + 거리 점검(+에너지 CSV).
 
 계산에 **실제로 들어간** 기하를 그대로 꺼낸다. Phase-A 스캔 xyz 가 아니라 scf.in 을
 읽는 이유: 스캔 셀은 c=40 Å 인데 파이프라인이 슬랩 셀(c=28.79 Å)로 다시 앉히기
 때문에, 눈으로 봐야 하는 건 **재배치 후**의 기하다.
+
+**--outcar (2026-08-28 추가)** — wave1 VASP 결과처럼 *결과만 회수된* 드롭에서
+기하·에너지를 같은 파일 하나로 꺼낸다. OUTCAR 는 좌표·셀·이온별 모멘트·총에너지를
+전부 들고 있으므로 입력 파일이 안 돌아와도 **본 것을 그릴 수 있다**.
+
+⚠⚠ **에너지는 전자 스텝 TOTEN 을 읽으면 안 된다 (LDA+U 함정, 실측).**
+  ptfe_c10 Li-top pm1 static 에서 전자스텝 마지막 `energy(sigma->0) = -1094.74765`,
+  최종 이온스텝 블록 `= -1123.35770` — **28.6 eV 차**다. U 이중계산 보정이 최종
+  블록에서만 더해지기 때문이다 (OSZICAR 의 `E0=` 와 일치하는 쪽이 정본).
+  그래서 판독은 vasp_handoff_bundle.py 의 ANALYZER 를 **빌려 쓴다** — 복사하면
+  규약이 두 곳으로 갈린다(사각 C).
 
 ⚠ 2026-07-17 에 doped 결합에너지를 철회한 원인이 이 지점이었다 — 분자가 수직으로 서서
   티오펜 S 가 **c 를 넘은 이미지 슬랩의 O 와 1.506 Å**(결합거리)이었고, 그러면 E_bind 가
@@ -23,15 +34,34 @@
   구조처럼 보였다(실측 제보). 순서를 한 번만 정하고 두 파일에 똑같이 쓴다.
 
   cd ~/Yonghoon-DEM-DFT
+  python3 tools/sdcp/scfin_to_struct.py --selftest
   python3 tools/sdcp/scfin_to_struct.py --scf_in .../complex_doped/scf.in --out ~/sdcp_poses
+  python3 tools/sdcp/scfin_to_struct.py --outcar <drop>/tier1/*/static/OUTCAR.gz \\
+      --out db/structures/sdcp_wave1 \\
+      --energy_csv db/properties/sdcp_wave1_job_energies_2026_08_28.csv \\
+      --refs <drop>/refs
 
 관례(CLAUDE.md): 구조 배포는 **xyz + POSCAR(.vasp) 페어**. xyz 는 격자가 없으므로
 VESTA 에서 Boundary 타일링을 하려면 .vasp 쪽을 연다.
+
+이 도구가 **못 하는 것**
+  · 계산의 물리적 타당성을 판정하지 않는다. 기하를 꺼내 **거리 세 층**을 찍어줄 뿐이다.
+  · `--energy_csv` 는 **게이트 통과 판정이 아니다.** 입력 무결성(MANIFEST 해시)·INCAR
+    대조·상별 완결성은 vasp_handoff_bundle.py 의 ANALYZER 몫이고, 결과만 회수된
+    부분 드롭에서는 그 분석기가 (정당하게) exit 2 로 멈춘다. 여기 나오는 숫자는
+    **OUTCAR 원문 판독값**이지 캠페인 인용값이 아니다 — 인용 자격은
+    db/properties/sdcp_wave1_citable.json 이 정한다.
+  · 자기 basin 을 총자화로만 분류한다(A≈4 · B≈6 μB). 국소 모멘트 패턴은 안 본다 —
+    범위 밖이면 `unresolved` 로 두고 E_ads 에 표시만 한다.
+  · 분자 기준(box24)이 **어떤 전자상태인지** 검사하지 않는다. mol_doped 총자화 0.175
+    (doublet 이면 1.000) 같은 문제는 여기서 안 잡힌다 — estimand 카드 §4 몫이다.
 """
 import argparse
+import csv
 import itertools
 import os
 import re
+import sys
 
 import numpy as np
 
@@ -64,8 +94,127 @@ def read_extxyz(path):
     return cell, labels, np.array(pos)
 
 
+def is_outcar(path):
+    return os.path.basename(path).upper().startswith("OUTCAR")
+
+
 def read_any(path):
+    if is_outcar(path):
+        return read_outcar(path)[:3]
     return read_extxyz(path) if path.lower().endswith((".xyz", ".extxyz")) else read_scf_in(path)
+
+
+# ══ VASP OUTCAR ═══════════════════════════════════════════════════════════════
+#: 자기 basin 분류 — clean_slab 실측 총자화. A ≈ 4 · B ≈ 6 μB (차 49.718 meV).
+#: ⚠ 이 두 수는 **net4 branch 전용**이다. pm1 은 전 Ni 쌍이 상쇄돼 총자화 ≈ 0 이라
+#:   basin 이 갈리지 않는다 — 그래서 pm1 은 basin 을 묻지 않고 'pm1' 로 적는다.
+BASIN_MU = {"A": 4.0, "B": 6.0}
+BASIN_TOL = 0.35        # μB — 이 밖이면 판정하지 않는다(unresolved). 실측 최대 편차 0.11
+PM1_MU_MAX = 0.5        # μB — 이 아래면 pm1 branch
+
+
+def basin_of(mag_total):
+    """총자화 → 자기 basin 라벨. 모르면 'unresolved' (fail-closed).
+
+    ⚠ 이것은 **분류**지 검증이 아니다. 같은 총자화가 서로 다른 국소 배열에서
+      나올 수 있다 — 국소 모멘트 패턴 감사는 vasp_handoff_bundle 의 ANALYZER 몫.
+    """
+    if mag_total is None:
+        return "unresolved"
+    if abs(mag_total) <= PM1_MU_MAX:
+        return "pm1"
+    for lab, mu in BASIN_MU.items():
+        if abs(abs(mag_total) - mu) <= BASIN_TOL:
+            return lab
+    return "unresolved"
+
+
+def _analyzer(_cache={}):
+    """vasp_handoff_bundle.py 안의 ANALYZER 문자열을 실행해 OUTCAR 판독기를 **빌려온다**.
+
+    ⚠ 왜 import 가 아니라 exec 인가: 그 분석기는 번들에 *파일로 들어가는 문자열*이라
+      모듈 속성이 아니다. 여기서 정규식을 복사하면 `energy(sigma->0)` 규약이 두 곳으로
+      갈린다 — 사각 C(같은 규약의 두 경로), selftest_blind_spots 카드 참조.
+    """
+    if "ns" not in _cache:
+        sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+        import vasp_handoff_bundle as V
+        ns = {"__name__": "vhb_analyzer"}
+        exec(compile(V.ANALYZER, "<vasp_handoff_bundle.ANALYZER>", "exec"), ns)
+        for fn in ("read_outcar", "_read_outcar_raw", "_last_run_segment"):
+            if fn not in ns:
+                raise SystemExit(f"⛔ ANALYZER 에 {fn} 이 없다 — 번들 판독기가 바뀌었다")
+        _cache["ns"] = ns
+    return _cache["ns"]
+
+
+def _species_from_outcar(t, nat):
+    """POTCAR TITEL + `ions per type` → 원자별 원소 기호.
+
+    ⚠ TITEL 은 `PAW_PBE Ni_pv 06Sep2000` 처럼 **준중심 변형 접미사**가 붙는다.
+      Ni_pv 를 그대로 원소로 쓰면 뷰어가 모르는 종이 되므로 `_pv`/`_sv`/`_h` 를 뗀다.
+    """
+    tit = re.findall(r"TITEL\s*=\s*(.+)", t)
+    ipt = re.search(r"ions per type\s*=\s*([\d\s]+)", t)
+    if not tit or not ipt:
+        raise SystemExit("⛔ OUTCAR 에서 TITEL/ions per type 을 못 읽었다 — 원소 배정 불가")
+    counts = [int(v) for v in ipt.group(1).split()]
+    # ⚠ TITEL 은 반복 인쇄될 수 있다. **중복 제거로 접으면 안 된다** — 같은 원소를 두 종으로
+    #   나눈 계(자기 부격자 분리 POTCAR)에서 종 수가 줄어 배정이 밀린다. 앞에서부터 자른다.
+    if len(tit) % len(counts) == 0 and len(tit) >= len(counts):
+        tit = tit[:len(counts)]
+    if len(counts) != len(tit):
+        raise SystemExit(f"⛔ TITEL {len(tit)}종 ≠ ions per type {len(counts)}종")
+    els = [x.split()[1].split("_")[0] for x in tit]
+    if sum(counts) != nat:
+        raise SystemExit(f"⛔ ions per type 합 {sum(counts)} ≠ POSITION 원자수 {nat}")
+    return [e for e, c in zip(els, counts) for _ in range(c)]
+
+
+def read_outcar(path):
+    """OUTCAR(.gz) → (cell, labels, pos, meta). 라벨은 Ni 국소모멘트 부호로 부격자를 살린다.
+
+    meta = {E0, mag_total, basin, nions, normal_end, moments, source}
+
+    ⚠⚠ **에너지는 최종 이온스텝 블록의 energy(sigma->0) 다.** 전자스텝 TOTEN 을 읽으면
+      LDA+U 이중계산 보정이 빠져 28.6 eV 어긋난다(실측, 모듈 docstring 참조). 그 규약은
+      ANALYZER 하나에만 있고 여기서는 빌려 쓴다.
+    """
+    ns = _analyzer()
+    oc = ns["read_outcar"](path)
+    if oc is None:
+        raise SystemExit(f"⛔ {path} 없음")
+    if oc.get("read_error"):
+        raise SystemExit(f"⛔ {path} 판독 실패: {oc['read_error']}")
+    if not oc.get("positions"):
+        raise SystemExit(f"⛔ {path} 에 POSITION 블록이 없다 — 기하를 못 꺼낸다")
+    t, _seg = ns["_last_run_segment"](ns["_read_outcar_raw"](path)[0])
+    pos = np.array(oc["positions"], float)
+
+    k = t.rfind("direct lattice vectors")
+    if k < 0:
+        raise SystemExit(f"⛔ {path} 에 direct lattice vectors 가 없다")
+    cell = []
+    for ln in t[k:].splitlines()[1:4]:
+        v = ln.split()
+        if len(v) < 6:
+            raise SystemExit(f"⛔ 격자 줄 파싱 실패: {ln!r}")
+        cell.append([float(x) for x in v[:3]])
+    cell = np.array(cell, float)
+
+    els = _species_from_outcar(t, len(pos))
+    # Ni 부격자: 수렴된 **국소 모멘트 부호**로 가른다 (seed 가 아니라 결과다 — pm1/net4 가
+    # 같은 기하에서도 다른 그림이 되는 이유가 여기 보인다).
+    mom = oc.get("moments")
+    labels = list(els)
+    if mom and len(mom) == len(els):
+        for i, e in enumerate(els):
+            if e == "Ni":
+                labels[i] = "Ni1" if mom[i] >= 0 else "Ni2"
+    meta = {"E0": oc["E0"], "mag_total": oc["mag_total"], "nions": oc["nions"],
+            "normal_end": oc["normal_end"], "moments": mom,
+            "basin": basin_of(oc["mag_total"]), "source": os.path.abspath(path)}
+    return cell, labels, pos, meta
 
 
 def read_scf_in(path):
@@ -177,6 +326,44 @@ def split_molecule(cell, elems, pos):
     return mol
 
 
+def unwrap_fragment(cell, pos, sel):
+    """`sel` 조각을 PBC 로 **한 덩어리로 편다**(unwrap). 나머지 원자는 그대로.
+
+    ⚠⚠ **③ 면내 피복이 이것 없이는 오탐한다 (2026-08-28 실측).** 분자가 셀 경계를
+      걸치면 그 분자의 *내부 결합*이 shift (-1,0,0) 에서 보인다. `same=True` 는
+      (0,0,0) 만 빼므로 그 결합이 "옆 셀 분자와 1.369 Å" 으로 찍혔다 —
+      **C-F 1.369 Å 은 접촉이 아니라 공유결합이다.** 16개 중 8개가 이렇게 ⚠ 를 달았다.
+      (①②는 안전하다: ① 은 서로 다른 집합이고, ② 는 sh_z != 0 만 보는데 분자는 z 로
+      감기지 않는다. 그래서 ③ 에만 편 좌표를 쓴다.)
+
+    ⛔ 못 하는 것: 조각이 결합으로 안 이어져 있으면(끊어진 분자) 이어진 부분만 편다.
+    """
+    idx = np.flatnonzero(sel)
+    if len(idx) < 2:
+        return pos.copy()
+    inv = np.linalg.inv(cell)
+    out = pos.copy()
+    seen = {int(idx[0])}
+    stack = [int(idx[0])]
+    r = None
+    while stack:
+        i = stack.pop()
+        d = pos[idx] - out[i]
+        f = d @ inv
+        f -= np.round(f)
+        dm = f @ cell
+        dist = np.linalg.norm(dm, axis=1)
+        if r is None:
+            r = 3.0                                  # Å — 결합 상한(가장 긴 것이 S-O ~1.8)
+        for k, j in enumerate(idx):
+            j = int(j)
+            if j in seen or dist[k] > r:
+                continue
+            out[j] = out[i] + dm[k]
+            seen.add(j); stack.append(j)
+    return out
+
+
 def write_xyz(path, elems, pos, comment):
     with open(path, "w") as f:
         f.write(f"{len(elems)}\n{comment}\n")
@@ -208,6 +395,10 @@ VSTYLE = {
     "H":  (0.20, 255, 255, 255, 255, 204, 204),
     "Li": (0.42,  70, 175,  90,  70, 175,  90),
     "Ni": (0.46,  40,  90, 200,  40,  90, 200),
+    # F 는 사용자의 기존 분자 .vesta 에 없던 원소다 (PTFE 조각이 처음). VESTA 기본 F 는
+    # 옅은 연두라 **흰 배경에서 사라진다**(Ni 절반이 안 보였던 그 실측과 같은 함정) —
+    # 진한 청록으로 둔다. S(노랑)·O(빨강)·Li(초록)·Ni(파랑/보라)와 안 겹친다.
+    "F":  (0.32,   0, 160, 180,   0, 160, 180),
 }
 # ⚠ **반지름은 셀 크기에 맞춰 키워야 한다 (2026-08-03 실측).** 위 값은 ~10 A 분자용이라
 #   11.5 x 18.3 x 28.8 A 결정 셀에 그대로 쓰면 화면의 1% 짜리 **점**이 된다. 비율은
@@ -223,7 +414,8 @@ NI_SUB = {"Ni1": (40, 90, 200), "Ni2": (150, 60, 170)}
 VBONDS = [("Ni", "O", 2.40, 1),   # NiO6 팔면체 + 분자 O 와의 흡착결합(1.89 A)도 여기서 그려진다
           ("Li", "O", 2.60, 0),
           ("C", "C", 1.70, 0), ("C", "H", 1.15, 0), ("C", "O", 1.65, 0),
-          ("C", "S", 1.95, 0), ("S", "O", 1.80, 0), ("O", "H", 1.10, 0)]
+          ("C", "S", 1.95, 0), ("S", "O", 1.80, 0), ("O", "H", 1.10, 0),
+          ("C", "F", 1.60, 0)]      # PTFE 조각 — C-F 는 1.33~1.36 A
 
 
 def write_vesta(path, cell, labels, elems, pos, title, scale=RAD_SCALE_DEFAULT):
@@ -367,90 +559,405 @@ def pair_min(cell, labels, pos, sel_a, sel_b, layer, same=False):
     return best
 
 
+def default_tag(path):
+    """출력 접두어. OUTCAR 은 `<job>/<phase>/OUTCAR.gz` 라 **두 단계 위**가 잡 이름이다."""
+    if is_outcar(path):
+        d = os.path.dirname(os.path.abspath(path))
+        return f"{os.path.basename(os.path.dirname(d))}__{os.path.basename(d)}"
+    if path.lower().endswith((".xyz", ".extxyz")):
+        return os.path.splitext(os.path.basename(path))[0]
+    return os.path.basename(os.path.dirname(os.path.abspath(path)))
+
+
+def emit_struct(path, out, tag=None, scale=RAD_SCALE_DEFAULT, quiet=False):
+    """한 계산 → xyz + .vasp + .vesta + 거리 세 층 감사. → meta(dict)"""
+    tag = tag or default_tag(path)
+    meta = {}
+    if is_outcar(path):
+        cell, labels0, pos0, meta = read_outcar(path)
+        prov = (f"as-run geometry read back from {meta['source']} "
+                f"(VASP static single point, NSW=0) | "
+                f"E(sigma->0)={meta['E0']:.6f} eV | mag_tot={meta['mag_total']} muB | "
+                f"slab magnetic basin={meta['basin']}")
+    else:
+        cell, labels0, pos0 = read_any(path)
+        prov = f"UNRELAXED single-point geometry from {os.path.abspath(path)}"
+    elems0 = [element(x) for x in labels0]
+    elems, labels, pos, order, counts = group_by_species(elems0, labels0, pos0)
+
+    c_len = np.linalg.norm(cell[2])
+    span = pos[:, 2].max() - pos[:, 2].min()
+    comment = (f"{tag} | nat={len(elems)} | cell a={np.linalg.norm(cell[0]):.3f} "
+               f"b={np.linalg.norm(cell[1]):.3f} c={c_len:.3f} A | "
+               f"z-span={span:.3f} A | vertical vacuum={c_len - span:.3f} A | {prov}")
+    os.makedirs(out, exist_ok=True)
+    write_xyz(os.path.join(out, f"{tag}.xyz"), elems, pos, comment)
+    write_poscar(os.path.join(out, f"{tag}.vasp"), cell, order, counts, pos, comment)
+    # ⚠ .vesta 제목은 ASCII 만 (CLAUDE.md). basin 라벨은 영숫자라 안전하다.
+    vt = (f"{tag} (nat {len(elems)}) - as-run geometry, NiO6 polyhedra + "
+          f"AFM sublattice colors (NiA blue / NiB purple)")
+    if meta:
+        vt += f" - basin {meta['basin']}, E0 {meta['E0']:.4f} eV"
+    write_vesta(os.path.join(out, f"{tag}.vesta"), cell, labels, elems, pos, vt, scale=scale)
+    meta.update({"tag": tag, "nat": len(elems), "out": out})
+    if not quiet:
+        _audit(cell, labels, elems, pos, order, counts, tag, out, c_len, span)
+    return meta
+
+
+def _audit(cell, labels, elems, pos, order, counts, tag, out, c_len, span):
+    print(f"\n══ {tag}  (nat {len(elems)}) ══")
+    print(f"  cell  a {np.linalg.norm(cell[0]):.3f}  b {np.linalg.norm(cell[1]):.3f}"
+          f"  c {c_len:.3f} A     z-span {span:.3f} → 수직 진공 {c_len - span:.3f} A")
+    print(f"  xyz 와 vasp 는 **같은 원자 순서·같은 좌표** ({'+'.join(f'{e}{c}' for e, c in zip(order, counts))})")
+
+    mol = split_molecule(cell, elems, pos)
+    if not (mol.any() and (~mol).any()):
+        print("  (단일 조각 — 분자/슬랩 분할 없음)")
+        print(f"  → {out}/{tag}.xyz + .vasp + .vesta")
+        return
+
+    # ── ⓪ z 단면: 슬랩 위에 얹혀 있는 게 맞나 ───────────────────────────
+    zs, zm = pos[~mol][:, 2], pos[mol][:, 2]
+    print(f"  ⓪ z 범위  슬랩 [{zs.min():6.2f}, {zs.max():6.2f}]   "
+          f"분자 [{zm.min():6.2f}, {zm.max():6.2f}]  (A)")
+
+    # ── ① 흡착 접촉 — **면내 주기를 포함한** 진짜 표면과의 거리 ──────────
+    ads = pair_min(cell, labels, pos, mol, ~mol, "surface")
+    print(f"  ① 흡착 접촉  분자({mol.sum()}) ↔ 표면({(~mol).sum()})  "
+          f"{ads[0]:.3f} A  ({ads[1]}↔{ads[2]}, shift {ads[3]})")
+    print("     (슬랩은 면내로 연속된 하나의 표면 — shift 가 (±1,±1,0) 이어도 같은 표면이다)")
+    if ads[0] < 2.5:
+        print("     ✓ 화학흡착 (결합거리)")
+    elif ads[0] < 3.2:
+        print("     ✓ 근접 접촉")
+    elif ads[0] < 4.0:
+        print("     ⚠ 물리흡착 경계 — 화학결합 없음")
+    else:
+        print("     ⛔ 4 A 초과 — 접촉이 아니다. 흡착 자세가 아니라 떠 있는 것이다.")
+
+    # ── ② 진공 너머 = 인공 두 번째 표면 (2026-07-17 철회의 그 축) ────────
+    vac_s = pair_min(cell, labels, pos, mol, ~mol, "vacuum")
+    vac_m = pair_min(cell, labels, pos, mol, mol, "vacuum", same=True)
+    print(f"  ② 진공 너머 (c 를 넘는 이미지만)  분자↔슬랩 {vac_s[0]:.3f} A "
+          f"(shift {vac_s[3]})  ·  분자↔분자 {vac_m[0]:.3f} A")
+    img = min(vac_s[0], vac_m[0])
+    if img < 2.5:
+        print("     ⛔ 결합거리 — 이미지 샌드위치. 이 자세의 E_bind 는 단일표면 값이 아니다.")
+    elif img < 3.5:
+        print("     ⚠ vdW 접촉 — E_bind 에 이미지 상호작용이 섞인다. 진공을 키울 것.")
+    else:
+        print("     ✓ 진공 분리 확보 (2026-07-17 철회 사유 없음)")
+
+    # ── ③ 면내 피복 — 분자끼리 옆 셀에서 닿나 ───────────────────────────
+    #    ⚠ 편 좌표로 잰다. 안 그러면 셀 경계를 걸친 분자의 내부 결합을 접촉으로 센다.
+    lat = pair_min(cell, labels, unwrap_fragment(cell, pos, mol), mol, mol,
+                   "surface", same=True)
+    print(f"  ③ 면내 피복  분자 ↔ 옆 셀 분자 {lat[0]:.3f} A "
+          f"({lat[1]}↔{lat[2]}, shift {lat[3]})"
+          f"{'  ⚠ 3.5 A 미만 — 피복률이 너무 높다' if lat[0] < 3.5 else ''}")
+    ss = pair_min(cell, labels, pos, ~mol, ~mol, "surface", same=True)
+    print(f"     [참고] 슬랩 ↔ 옆 셀 슬랩 {ss[0]:.3f} A ({ss[1]}↔{ss[2]}) = 격자 결합, 정상")
+    print(f"  → {out}/{tag}.xyz + .vasp + .vesta")
+
+
+# ══ 잡 이름 · 에너지 표 ════════════════════════════════════════════════════════
+#: E_ads 를 만들지 않는 조각과 그 사유. **코드에 박는다** — 카드에 적어두면 9일이면
+#: 잊힌다(사각 D, 처방 E). 뚫으려면 --allow_not_citable 을 명시해야 한다.
+NOT_CITABLE = {
+    "sdcp_doped": "상태 미선언 다중해 — mol_doped 총자화 0.175(doublet 이면 1.000, "
+                  "ISMEAR=1/SIGMA=0.2 를 고립분자에 건 결과). 2026-08-28 회신 M/N",
+}
+CSV_COLS = ["job", "role", "fragment", "pose", "seed_branch", "phase", "n_ions",
+            "E_total_eV", "mag_total_muB", "slab_basin", "slab_ref_job",
+            "E_slab_ref_eV", "mol_ref_job", "E_mol_ref_eV", "E_ads_eV", "note"]
+
+
+def job_fields(job):
+    """wave1 디렉터리 이름 → (role, fragment, pose, seed_branch).
+
+    ⚠ 이 도구가 못 하는 것: 이름이 규약을 안 지키면 role='unknown' 으로 두고 **추측하지
+      않는다**. 잘못 추측한 role 은 잘못된 기준을 빼는 것과 같다.
+    """
+    p = job.split("__")
+    if job.startswith("mol__"):
+        # pose 칸에 상자 크기를 적는다 — 정본은 box24, box20 은 상자 수렴 점검용이다.
+        return "mol_ref", p[1], (p[2] if len(p) > 2 else ""), ""
+    if job.startswith("clean_slab"):
+        m = re.search(r"afm\d+_(\w+)$", job)
+        return "slab_ref", "clean_slab", "", (m.group(1) if m else "")
+    if len(p) >= 4:
+        m = re.search(r"afm\d+_(\w+)$", p[-1])
+        return "complex", p[0], p[2], (m.group(1) if m else "")
+    return "unknown", p[0], "", ""
+
+
+def collect_refs(refs_dir):
+    """refs/ → ({('slab',branch,basin,phase)|('mol',frag,box,phase): (job, E)}, [meta…])
+
+    ⚠ 슬랩 basin 은 파일 이름이 아니라 **수렴된 총자화**로 정한다. 이름의 `basinA` 는
+      의도이지 결과가 아니다 — wave1.5 에서 net4 가 의도와 다른 basin 으로 떨어진 것이
+      회신 M P0 의 출발점이었다.
+    """
+    out, metas = {}, []
+    if not refs_dir or not os.path.isdir(refs_dir):
+        return out, metas
+    for job in sorted(os.listdir(refs_dir)):
+        for phase in ("static", "dense"):
+            p = os.path.join(refs_dir, job, phase, "OUTCAR.gz")
+            if not os.path.isfile(p) and not os.path.isfile(p[:-3]):
+                continue
+            _c, _l, pos, meta = read_outcar(p)
+            meta.update(tag=f"{job}__{phase}", nat=len(pos))
+            metas.append(meta)
+            role, frag, box, tail = job_fields(job)
+            if role == "slab_ref":
+                out[("slab", tail.split("_")[0], meta["basin"], phase)] = (job, meta["E0"])
+            elif role == "mol_ref":
+                out[("mol", frag, box, phase)] = (job, meta["E0"])
+    return out, metas
+
+
+def energy_rows(metas, refs, allow_not_citable=False):
+    """잡 meta 목록 + refs → CSV 행. E_ads 를 못 만들면 **빈칸 + 사유**를 남긴다.
+
+    규약 (2026-08-28, 레지스트리와 일치 확인됨):
+      · 정본 분자 기준은 **box24** (box20 은 상자 수렴 점검용).
+      · dense 상의 E_ads 는 dense 슬랩 + **static 분자** — 진공 상자 분자는 Γ 하나라
+        k 를 늘려도 같은 값이다. c10 에서 이 규약이 E_ads 0.22 meV · ΔE_site 0.003 meV
+        를 재현한다(citable 파일의 "k 직접검증 ΔE 0.0 · E_ads 0.2 meV").
+      · net4 는 슬랩 basin(A≈4 · B≈6 μB)을 **복합체 총자화로 맞춰서** 뺀다. 안 맞추면
+        슬랩 basin gap 49.718 meV 가 차에 섞인다 (회신 M P0).
+    """
+    rows = []
+    for m in sorted(metas, key=lambda x: x["tag"]):
+        job, phase = m["tag"].rsplit("__", 1)
+        role, frag, pose, branch = job_fields(job)
+        r = dict.fromkeys(CSV_COLS, "")
+        r.update(job=job, role=role, fragment=frag, pose=pose, seed_branch=branch,
+                 phase=phase, n_ions=m["nat"], E_total_eV=f"{m['E0']:.6f}",
+                 mag_total_muB=f"{m['mag_total']:.6f}" if m["mag_total"] is not None else "",
+                 slab_basin=m["basin"])
+        notes = []
+        if not m.get("normal_end"):
+            notes.append("⛔ OUTCAR 정상종료 없음")
+        if role == "complex":
+            slab = refs.get(("slab", branch, m["basin"], phase)) \
+                or refs.get(("slab", branch, m["basin"], "static"))
+            mol = refs.get(("mol", frag, "box24", "static"))
+            if m["basin"] == "unresolved":
+                notes.append("자기 basin 미판정 — 기준 슬랩을 맞출 수 없다")
+            elif slab is None:
+                notes.append(f"기준 슬랩 없음 (branch={branch}, basin={m['basin']})")
+            if mol is None:
+                notes.append(f"기준 분자 없음 (mol__{frag}__box24)")
+            if frag in NOT_CITABLE and not allow_not_citable:
+                notes.append("⛔ E_ads 생략: " + NOT_CITABLE[frag])
+            elif slab and mol:
+                r["slab_ref_job"], r["E_slab_ref_eV"] = slab[0], f"{slab[1]:.6f}"
+                r["mol_ref_job"], r["E_mol_ref_eV"] = mol[0], f"{mol[1]:.6f}"
+                r["E_ads_eV"] = f"{m['E0'] - slab[1] - mol[1]:.6f}"
+                if phase == "dense":
+                    notes.append("dense-k: 슬랩은 dense, 분자는 static(Γ 하나라 k 무관)")
+        r["note"] = " · ".join(notes)
+        rows.append(r)
+    return rows
+
+
+def write_energy_csv(path, rows):
+    os.makedirs(os.path.dirname(os.path.abspath(path)) or ".", exist_ok=True)
+    with open(path, "w", newline="") as f:
+        w = csv.DictWriter(f, fieldnames=CSV_COLS)
+        w.writeheader()
+        for r in rows:
+            w.writerow(r)
+
+
+# ══ selftest ═════════════════════════════════════════════════════════════════
+_OUT_HEAD = """ vasp.6.3.0 fake
+   VRHFIN =Li: 1s2s2p
+   TITEL  = PAW_PBE Li_sv 10Sep2004
+   VRHFIN =C: s2p2
+   TITEL  = PAW_PBE C 08Apr2002
+   ions per type =               2   1
+   NIONS = 3
+"""
+
+
+def _fake_outcar(e_final=-20.0, e_scf=-10.0, nat=3, counts="2   1", banner=None,
+                 lattice="10.0 0.0 0.0\n     0.0 10.0 0.0\n     0.0 0.0 10.0"):
+    """전자스텝과 최종 블록이 **다른 값**인 OUTCAR (LDA+U 함정 재현)."""
+    body = (_OUT_HEAD.replace("ions per type =               2   1",
+                              f"ions per type =               {counts}")
+            + f"  energy without entropy =  {e_scf}  energy(sigma->0) =  {e_scf}\n"
+            + "      direct lattice vectors                 reciprocal lattice vectors\n"
+            + "     " + lattice.replace("\n", "  0 0 0\n") + "  0 0 0\n"
+            + " POSITION                                       TOTAL-FORCE (eV/Angst)\n"
+            + " ---------------------------------------------------------------\n"
+            + "".join(f"   {1.0 + i:.5f}  {2.0:.5f}  {3.0:.5f}   0.0 0.0 0.0\n"
+                      for i in range(nat))
+            + " ---------------------------------------------------------------\n"
+            + " magnetization (x)\n\n# of ion       s       p       d       tot\n"
+            + "------------------------------------------\n"
+            + "".join(f"    {i + 1}        0.0   0.0   0.0   {0.5 if i % 2 == 0 else -0.5}\n"
+                      for i in range(nat))
+            + "\n  FREE ENERGIE OF THE ION-ELECTRON SYSTEM (eV)\n"
+            + f"  free  energy   TOTEN  =  {e_final} eV\n"
+            + f"  energy  without entropy=  {e_final}  energy(sigma->0) =  {e_final}\n"
+            + " number of electron    10.0000000 magnetization       6.0000000\n"
+            + " General timing and accounting\n")
+    return (banner + body) if banner else body
+
+
+def selftest():
+    import tempfile
+    fails = []
+
+    def chk(ok, msg):
+        print(("  ✓ " if ok else "  ✗ ") + msg)
+        if not ok:
+            fails.append(msg)
+
+    print("── scfin_to_struct selftest ──")
+    with tempfile.TemporaryDirectory() as td:
+        p = os.path.join(td, "OUTCAR")
+        open(p, "w").write(_fake_outcar())
+        cell, labels, pos, meta = read_outcar(p)
+
+        # ★ 양성 — 기본 판독
+        chk(len(pos) == 3 and [element(x) for x in labels] == ["Li", "Li", "C"],
+            "OUTCAR → 원소 배정 (TITEL + ions per type)")
+        chk(abs(cell[0][0] - 10.0) < 1e-9, "OUTCAR → 셀")
+
+        # ⛔ 음성 1 — **전자스텝 TOTEN 을 읽으면 안 된다** (LDA+U 이중계산 함정).
+        #    실측 28.6 eV 차. 여기서 -10 을 잡으면 그 버그가 재발한 것이다.
+        chk(abs(meta["E0"] - (-20.0)) < 1e-9,
+            f"에너지는 **최종 이온스텝** 블록 (전자스텝 -10 이 아니라 -20): {meta['E0']}")
+
+        # ⛔ 음성 2 — ions per type 합이 POSITION 원자수와 다르면 멈춘다
+        p2 = os.path.join(td, "bad_counts", "OUTCAR")
+        os.makedirs(os.path.dirname(p2))
+        open(p2, "w").write(_fake_outcar(counts="2   5"))
+        try:
+            read_outcar(p2); ok = False
+        except SystemExit:
+            ok = True
+        chk(ok, "음성: ions per type 합 ≠ POSITION 원자수 → 멈춘다")
+
+        # ⛔ 음성 3 — 이어붙은 OUTCAR 는 **마지막 완결 실행**만 (옛 값이 이기면 안 된다)
+        p3 = os.path.join(td, "appended", "OUTCAR")
+        os.makedirs(os.path.dirname(p3))
+        open(p3, "w").write(_fake_outcar(e_final=-33.0)
+                            + _fake_outcar(e_final=-44.0, banner=" vasp.6.3.0 second run\n"))
+        chk(abs(read_outcar(p3)[3]["E0"] - (-44.0)) < 1e-9,
+            "음성: 이어붙은 OUTCAR 는 마지막 실행(-44) — 첫 실행(-33) 아님")
+
+        # basin 분류: 범위 밖은 판정하지 않는다 (fail-closed)
+        chk(basin_of(3.999) == "A" and basin_of(5.999) == "B" and basin_of(0.0003) == "pm1",
+            "basin 분류 A/B/pm1")
+        chk(basin_of(4.9) == "unresolved" and basin_of(None) == "unresolved",
+            "음성: basin 범위 밖·결측 → unresolved (가까운 쪽으로 반올림하지 않는다)")
+
+        # ⛔ 음성 4 — basin 이 unresolved 면 E_ads 를 만들지 않는다
+        refs = {("slab", "net4", "A", "static"): ("clean_slab__afm2424_net4_basinA", -100.0),
+                ("mol", "ptfe_c10", "box24", "static"): ("mol__ptfe_c10__box24", -10.0)}
+        base = dict(nat=3, normal_end=True, E0=-111.5)
+        good = dict(base, tag="ptfe_c10__d__Litop__afm2424_net4__static",
+                    mag_total=4.0, basin="A")
+        bad = dict(base, tag="ptfe_c10__d__Litop__afm2424_net4__static",
+                   mag_total=4.9, basin="unresolved")
+        rg = energy_rows([good], refs)[0]
+        rb = energy_rows([bad], refs)[0]
+        chk(abs(float(rg["E_ads_eV"]) - (-1.5)) < 1e-9, "E_ads = 복합체 − 슬랩(basin) − 분자")
+        chk(rb["E_ads_eV"] == "" and "basin" in rb["note"],
+            "음성: basin 미판정이면 E_ads 빈칸 + 사유 (기본 basin 으로 때우지 않는다)")
+
+        # ⛔ 음성 5 — NOT_CITABLE 조각은 E_ads 를 만들지 않는다
+        refs2 = dict(refs)
+        refs2[("mol", "sdcp_doped", "box24", "static")] = ("mol__sdcp_doped__box24", -10.0)
+        dop = dict(base, tag="sdcp_doped__d__Litop__afm2424_net4__static",
+                   mag_total=4.0, basin="A")
+        rd = energy_rows([dop], refs2)[0]
+        chk(rd["E_ads_eV"] == "" and "인용 불가" not in rd["note"] and "생략" in rd["note"],
+            "음성: NOT_CITABLE 조각은 E_ads 빈칸 (총에너지는 남긴다)")
+        chk(energy_rows([dop], refs2, allow_not_citable=True)[0]["E_ads_eV"] != "",
+            "--allow_not_citable 로만 뚫린다")
+
+        # ⛔ 음성 6 — 셀 경계를 걸친 분자의 **내부 결합**을 면내 피복으로 세면 안 된다
+        #    (2026-08-28 실측: C-F 1.369 Å 이 "옆 셀 분자와 접촉" 으로 찍혀 16개 중 8개가
+        #     ⚠ 를 달았다. 1.369 Å 은 접촉이 아니라 공유결합이다.)
+        cellb = np.eye(3) * 10.0
+        # C-F 두 원자가 경계를 사이에 두고 1.4 Å (9.8 과 0.2 -> 랩된 좌표로는 9.6 Å 떨어져 보임)
+        posb = np.array([[9.8, 5.0, 5.0], [0.4, 5.0, 5.0]])
+        selb = np.array([True, True])
+        naive = pair_min(cellb, ["C", "F"], posb, selb, selb, "surface", same=True)
+        fixed = pair_min(cellb, ["C", "F"], unwrap_fragment(cellb, posb, selb),
+                         selb, selb, "surface", same=True)
+        chk(abs(naive[0] - 0.6) < 1e-6,
+            f"(재현) 편기 전에는 내부 결합이 면내 접촉으로 보인다: {naive[0]:.3f} A")
+        chk(fixed[0] > 9.0,
+            f"음성: 편 좌표로는 옆 셀 분자까지 {fixed[0]:.3f} A — 내부 결합을 안 센다")
+
+        # 구조 3종이 실제로 써지고, .vesta 는 ASCII 전용 + CRLF (CLAUDE.md)
+        emit_struct(p, os.path.join(td, "o"), quiet=True)
+        vp = os.path.join(td, "o", os.listdir(os.path.join(td, "o"))[0])
+        vp = [x for x in os.listdir(os.path.join(td, "o")) if x.endswith(".vesta")][0]
+        raw = open(os.path.join(td, "o", vp), "rb").read()
+        chk(raw.decode("ascii", "ignore").encode() == raw and b"\r\n" in raw,
+            ".vesta 는 ASCII 전용 + CRLF")
+
+    print(f"── {'PASS' if not fails else 'FAIL ' + str(len(fails))} ──")
+    return 1 if fails else 0
+
+
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--scf_in", required=True, nargs="+",
+    ap.add_argument("--scf_in", nargs="+", default=[],
                     help="QE scf.in 또는 Phase-A pose .xyz (확장자로 자동 판별)")
-    ap.add_argument("--out", required=True)
+    ap.add_argument("--outcar", nargs="+", default=[],
+                    help="VASP OUTCAR / OUTCAR.gz (결과만 회수된 드롭용)")
+    ap.add_argument("--out", default=None)
     ap.add_argument("--tag", default=None, help="출력 접두어 (기본: 상위 디렉터리명)")
     ap.add_argument("--vesta_scale", type=float, default=RAD_SCALE_DEFAULT,
                     help="VESTA 원자 반지름 배율. 셀이 크면 키운다 (기본 1.7)")
+    ap.add_argument("--energy_csv", default=None,
+                    help="--outcar 전용. 잡별 총에너지·E_ads 표 (Origin-ready)")
+    ap.add_argument("--refs", default=None,
+                    help="refs/ 디렉터리 (clean_slab__* · mol__*). E_ads 에 필요")
+    ap.add_argument("--allow_not_citable", action="store_true",
+                    help=f"NOT_CITABLE 조각({'/'.join(NOT_CITABLE)})의 E_ads 도 계산")
+    ap.add_argument("--selftest", action="store_true")
     a = ap.parse_args()
-    os.makedirs(a.out, exist_ok=True)
+    if a.selftest:
+        return selftest()
+    if not (a.scf_in or a.outcar):
+        ap.error("--scf_in 또는 --outcar 중 하나는 필요하다")
+    if a.energy_csv and not a.refs:
+        ap.error("--energy_csv 는 --refs 가 있어야 한다 (기준 없이 E_ads 를 만들지 않는다)")
 
-    for path in a.scf_in:
-        tag = a.tag or (os.path.splitext(os.path.basename(path))[0]
-                        if path.lower().endswith((".xyz", ".extxyz"))
-                        else os.path.basename(os.path.dirname(os.path.abspath(path))))
-        cell, labels0, pos0 = read_any(path)
-        elems0 = [element(x) for x in labels0]
-        elems, labels, pos, order, counts = group_by_species(elems0, labels0, pos0)
-
-        c_len = np.linalg.norm(cell[2])
-        span = pos[:, 2].max() - pos[:, 2].min()
-        comment = (f"{tag} | nat={len(elems)} | cell a={np.linalg.norm(cell[0]):.3f} "
-                   f"b={np.linalg.norm(cell[1]):.3f} c={c_len:.3f} A | "
-                   f"z-span={span:.3f} A | vertical vacuum={c_len - span:.3f} A | "
-                   f"UNRELAXED single-point geometry from {os.path.abspath(path)}")
-        write_xyz(os.path.join(a.out, f"{tag}.xyz"), elems, pos, comment)
-        write_poscar(os.path.join(a.out, f"{tag}.vasp"), cell, order, counts, pos, comment)
-        write_vesta(os.path.join(a.out, f"{tag}.vesta"), cell, labels, elems, pos,
-                    f"{tag} (nat {len(elems)}) - unrelaxed single-point geometry, "
-                    f"NiO6 polyhedra + AFM sublattice colors (NiA blue / NiB purple)",
-                    scale=a.vesta_scale)
-
-        print(f"\n══ {tag}  (nat {len(elems)}) ══")
-        print(f"  cell  a {np.linalg.norm(cell[0]):.3f}  b {np.linalg.norm(cell[1]):.3f}"
-              f"  c {c_len:.3f} A     z-span {span:.3f} → 수직 진공 {c_len - span:.3f} A")
-        print(f"  xyz 와 vasp 는 **같은 원자 순서·같은 좌표** ({'+'.join(f'{e}{c}' for e, c in zip(order, counts))})")
-
-        mol = split_molecule(cell, elems, pos)
-        if not (mol.any() and (~mol).any()):
-            print("  (단일 조각 — 분자/슬랩 분할 없음)")
-            print(f"  → {a.out}/{tag}.xyz + .vasp + .vesta")
-            continue
-
-        # ── ⓪ z 단면: 슬랩 위에 얹혀 있는 게 맞나 ───────────────────────────
-        zs, zm = pos[~mol][:, 2], pos[mol][:, 2]
-        print(f"  ⓪ z 범위  슬랩 [{zs.min():6.2f}, {zs.max():6.2f}]   "
-              f"분자 [{zm.min():6.2f}, {zm.max():6.2f}]  (A)")
-
-        # ── ① 흡착 접촉 — **면내 주기를 포함한** 진짜 표면과의 거리 ──────────
-        ads = pair_min(cell, labels, pos, mol, ~mol, "surface")
-        print(f"  ① 흡착 접촉  분자({mol.sum()}) ↔ 표면({(~mol).sum()})  "
-              f"{ads[0]:.3f} A  ({ads[1]}↔{ads[2]}, shift {ads[3]})")
-        print("     (슬랩은 면내로 연속된 하나의 표면 — shift 가 (±1,±1,0) 이어도 같은 표면이다)")
-        if ads[0] < 2.5:
-            print("     ✓ 화학흡착 (결합거리)")
-        elif ads[0] < 3.2:
-            print("     ✓ 근접 접촉")
-        elif ads[0] < 4.0:
-            print("     ⚠ 물리흡착 경계 — 화학결합 없음")
+    metas = []
+    for path in list(a.scf_in) + list(a.outcar):
+        if a.out:
+            metas.append(emit_struct(path, a.out, tag=a.tag, scale=a.vesta_scale))
         else:
-            print("     ⛔ 4 A 초과 — 접촉이 아니다. 흡착 자세가 아니라 떠 있는 것이다.")
+            cell, labels, pos, meta = read_outcar(path)
+            meta.update(tag=default_tag(path), nat=len(pos))
+            metas.append(meta)
 
-        # ── ② 진공 너머 = 인공 두 번째 표면 (2026-07-17 철회의 그 축) ────────
-        vac_s = pair_min(cell, labels, pos, mol, ~mol, "vacuum")
-        vac_m = pair_min(cell, labels, pos, mol, mol, "vacuum", same=True)
-        print(f"  ② 진공 너머 (c 를 넘는 이미지만)  분자↔슬랩 {vac_s[0]:.3f} A "
-              f"(shift {vac_s[3]})  ·  분자↔분자 {vac_m[0]:.3f} A")
-        img = min(vac_s[0], vac_m[0])
-        if img < 2.5:
-            print("     ⛔ 결합거리 — 이미지 샌드위치. 이 자세의 E_bind 는 단일표면 값이 아니다.")
-        elif img < 3.5:
-            print("     ⚠ vdW 접촉 — E_bind 에 이미지 상호작용이 섞인다. 진공을 키울 것.")
-        else:
-            print("     ✓ 진공 분리 확보 (2026-07-17 철회 사유 없음)")
-
-        # ── ③ 면내 피복 — 분자끼리 옆 셀에서 닿나 ───────────────────────────
-        lat = pair_min(cell, labels, pos, mol, mol, "surface", same=True)
-        print(f"  ③ 면내 피복  분자 ↔ 옆 셀 분자 {lat[0]:.3f} A "
-              f"({lat[1]}↔{lat[2]}, shift {lat[3]})"
-              f"{'  ⚠ 3.5 A 미만 — 피복률이 너무 높다' if lat[0] < 3.5 else ''}")
-        ss = pair_min(cell, labels, pos, ~mol, ~mol, "surface", same=True)
-        print(f"     [참고] 슬랩 ↔ 옆 셀 슬랩 {ss[0]:.3f} A ({ss[1]}↔{ss[2]}) = 격자 결합, 정상")
-        print(f"  → {a.out}/{tag}.xyz + .vasp + .vesta")
+    if a.energy_csv:
+        refs, ref_metas = collect_refs(a.refs)
+        print(f"\n══ 기준 {len(refs)}건 ({a.refs}) ══")
+        for m in ref_metas:                          # 기준도 표에 남긴다 — 뺄셈이 파일 안에서 재현되게
+            print(f"  {m['tag']:<46s} E0 {m['E0']:14.6f}  mag {m['mag_total']:8.4f}  basin {m['basin']}")
+        rows = energy_rows([m for m in metas + ref_metas if m.get("E0") is not None], refs,
+                           a.allow_not_citable)
+        write_energy_csv(a.energy_csv, rows)
+        n_ads = sum(1 for r in rows if r["E_ads_eV"])
+        print(f"  → {a.energy_csv}  ({len(rows)}행 · E_ads {n_ads}건)")
+        print("  ⚠ 이 표는 OUTCAR **원문 판독값**이다 — 게이트 통과 판정이 아니다. "
+              "인용 자격은 db/properties/sdcp_wave1_citable.json 이 정한다.")
+    return 0
 
 
 if __name__ == "__main__":
-    main()
+    sys.exit(main())

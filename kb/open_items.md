@@ -7,6 +7,15 @@
 
 > 순서가 있다. 앞이 끝나야 뒤가 뜻이 있다.
 
+### ⏭-0. SDCP doped — **회신 O 를 보내고 답을 기다린다** (2026-08-28 밤 추가)
+프롬프트 완성본: `kb/reviews/codex_O_prompt_sdcp_doped_estimand_2026_08_28.md`
+심사 대상: `kb/questions/sdcp_doped_estimand_2026_08_28.md` **§1–3** (번들이 아니라 카드).
+⛔ **회신 O 전에는 doped 계산을 던지지 않는다.** 여덟 번의 원인이 그것이다.
+같이 결정 나야 하는 것: n=3 로 충분한가(카드 §8 첫 항목) · dE_carrier 의 정의역이
+비었을 때의 대체 판정 · 중성형 마감 유지 판단(카드 §6-6번).
+부수 정정 완료: `mol_doped 0.175` 는 **phaseB 값**이고 wave1 은 1.0000(NUPDOWN 강제) —
+wave1 의 결함은 **기준/복합체 스핀 제약 비대칭**이다 (세 문서 정정됨).
+
 ### ⏭-1. T13 확인 — **먼저**
 kgy 800 ps 런 2개(`lpsocl_long` · `lpsocl_small800`)가 8/29 아침 완주.
 `tools/ionic/msd_diffusive_check.py` 로 **"200 ps 로 충분한가"** 를 답한다.

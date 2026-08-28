@@ -1,0 +1,37 @@
+job,role,fragment,pose,seed_branch,phase,n_ions,E_total_eV,mag_total_muB,slab_basin,slab_ref_job,E_slab_ref_eV,mol_ref_job,E_mol_ref_eV,E_ads_eV,note
+clean_slab__afm2424_net4,slab_ref,clean_slab,,net4,static,192,-944.846393,5.998855,B,,,,,,
+clean_slab__afm2424_net4_basinA,slab_ref,clean_slab,,net4_basinA,static,192,-944.896111,3.999393,A,,,,,,
+clean_slab__afm2424_pm1,slab_ref,clean_slab,,pm1,dense,192,-944.977299,0.000003,pm1,,,,,,
+clean_slab__afm2424_pm1,slab_ref,clean_slab,,pm1,static,192,-944.974686,0.000275,pm1,,,,,,
+mol__ptfe_c10__box20,mol_ref,ptfe_c10,box20,,static,32,-177.970705,0.000000,pm1,,,,,,
+mol__ptfe_c10__box24,mol_ref,ptfe_c10,box24,,static,32,-177.970639,-0.000000,pm1,,,,,,
+mol__ptfe_dimer__box20,mol_ref,ptfe_dimer,box20,,static,14,-75.478542,0.000000,pm1,,,,,,
+mol__ptfe_dimer__box24,mol_ref,ptfe_dimer,box24,,static,14,-75.478599,0.000000,pm1,,,,,,
+mol__sdcp_doped__box20,mol_ref,sdcp_doped,box20,,static,34,-200.345288,1.000000,unresolved,,,,,,
+mol__sdcp_doped__box24,mol_ref,sdcp_doped,box24,,static,34,-200.345352,1.000000,unresolved,,,,,,
+mol__sdcp_neutral__box20,mol_ref,sdcp_neutral,box20,,static,35,-205.448886,0.000000,pm1,,,,,,
+mol__sdcp_neutral__box24,mol_ref,sdcp_neutral,box24,,static,35,-205.448564,-0.000000,pm1,,,,,,
+ptfe_c10__fib04vfib04_r090__Litop__afm2424_net4,complex,ptfe_c10,Litop,net4,static,224,-1123.278937,3.999125,A,clean_slab__afm2424_net4_basinA,-944.896111,mol__ptfe_c10__box24,-177.970639,-0.412187,
+ptfe_c10__fib04vfib04_r090__Litop__afm2424_pm1,complex,ptfe_c10,Litop,pm1,dense,224,-1123.360537,0.000456,pm1,clean_slab__afm2424_pm1,-944.977299,mol__ptfe_c10__box24,-177.970639,-0.412599,"dense-k: 슬랩은 dense, 분자는 static(Γ 하나라 k 무관)"
+ptfe_c10__fib04vfib04_r090__Litop__afm2424_pm1,complex,ptfe_c10,Litop,pm1,static,224,-1123.357704,0.000719,pm1,clean_slab__afm2424_pm1,-944.974686,mol__ptfe_c10__box24,-177.970639,-0.412380,
+ptfe_c10__fib04vfib04_r090__Nitop__afm2424_net4,complex,ptfe_c10,Nitop,net4,static,224,-1123.178717,5.998488,B,clean_slab__afm2424_net4,-944.846393,mol__ptfe_c10__box24,-177.970639,-0.361684,
+ptfe_c10__fib04vfib04_r090__Nitop__afm2424_pm1,complex,ptfe_c10,Nitop,pm1,dense,224,-1123.310773,0.000229,pm1,clean_slab__afm2424_pm1,-944.977299,mol__ptfe_c10__box24,-177.970639,-0.362835,"dense-k: 슬랩은 dense, 분자는 static(Γ 하나라 k 무관)"
+ptfe_c10__fib04vfib04_r090__Nitop__afm2424_pm1,complex,ptfe_c10,Nitop,pm1,static,224,-1123.307937,0.000502,pm1,clean_slab__afm2424_pm1,-944.974686,mol__ptfe_c10__box24,-177.970639,-0.362613,
+ptfe_dimer__fib08vfib08_r180__Litop__afm2424_net4,complex,ptfe_dimer,Litop,net4,static,206,-1020.691105,5.998942,B,clean_slab__afm2424_net4,-944.846393,mol__ptfe_dimer__box24,-75.478599,-0.366113,
+ptfe_dimer__fib08vfib08_r180__Litop__afm2424_pm1,complex,ptfe_dimer,Litop,pm1,static,206,-1020.819563,0.000363,pm1,clean_slab__afm2424_pm1,-944.974686,mol__ptfe_dimer__box24,-75.478599,-0.366278,
+ptfe_dimer__fib08vfib08_r180__Nitop__afm2424_net4,complex,ptfe_dimer,Nitop,net4,static,206,-1020.654948,5.999526,B,clean_slab__afm2424_net4,-944.846393,mol__ptfe_dimer__box24,-75.478599,-0.329955,
+ptfe_dimer__fib08vfib08_r180__Nitop__afm2424_pm1,complex,ptfe_dimer,Nitop,pm1,static,206,-1020.783492,0.000564,pm1,clean_slab__afm2424_pm1,-944.974686,mol__ptfe_dimer__box24,-75.478599,-0.330207,
+sdcp_doped__fib10vfib10_r000__Litop__afm2424_net4,complex,sdcp_doped,Litop,net4,static,226,-1146.112336,3.723864,A,,,,,,"⛔ E_ads 생략: 상태 미선언 다중해 — mol_doped 총자화 0.175(doublet 이면 1.000, ISMEAR=1/SIGMA=0.2 를 고립분자에 건 결과). 2026-08-28 회신 M/N"
+sdcp_doped__fib10vfib10_r000__Litop__afm2424_pm1,complex,sdcp_doped,Litop,pm1,dense,226,-1146.196731,-0.213312,pm1,,,,,,"⛔ E_ads 생략: 상태 미선언 다중해 — mol_doped 총자화 0.175(doublet 이면 1.000, ISMEAR=1/SIGMA=0.2 를 고립분자에 건 결과). 2026-08-28 회신 M/N"
+sdcp_doped__fib10vfib10_r000__Litop__afm2424_pm1,complex,sdcp_doped,Litop,pm1,static,226,-1146.296306,-0.306450,pm1,,,,,,"⛔ E_ads 생략: 상태 미선언 다중해 — mol_doped 총자화 0.175(doublet 이면 1.000, ISMEAR=1/SIGMA=0.2 를 고립분자에 건 결과). 2026-08-28 회신 M/N"
+sdcp_doped__fib10vfib10_r000__Nitop__afm2424_net4,complex,sdcp_doped,Nitop,net4,static,226,-1146.131282,3.630822,unresolved,,,,,,"자기 basin 미판정 — 기준 슬랩을 맞출 수 없다 · ⛔ E_ads 생략: 상태 미선언 다중해 — mol_doped 총자화 0.175(doublet 이면 1.000, ISMEAR=1/SIGMA=0.2 를 고립분자에 건 결과). 2026-08-28 회신 M/N"
+sdcp_doped__fib10vfib10_r000__Nitop__afm2424_pm1,complex,sdcp_doped,Nitop,pm1,dense,226,-1146.212568,-0.333921,pm1,,,,,,"⛔ E_ads 생략: 상태 미선언 다중해 — mol_doped 총자화 0.175(doublet 이면 1.000, ISMEAR=1/SIGMA=0.2 를 고립분자에 건 결과). 2026-08-28 회신 M/N"
+sdcp_doped__fib10vfib10_r000__Nitop__afm2424_pm1,complex,sdcp_doped,Nitop,pm1,static,226,-1146.209857,-0.334710,pm1,,,,,,"⛔ E_ads 생략: 상태 미선언 다중해 — mol_doped 총자화 0.175(doublet 이면 1.000, ISMEAR=1/SIGMA=0.2 를 고립분자에 건 결과). 2026-08-28 회신 M/N"
+sdcp_neutral__fib04vfib04_r180__Litop__afm2424_net4,complex,sdcp_neutral,Litop,net4,static,227,-1151.062932,5.890191,B,clean_slab__afm2424_net4,-944.846393,mol__sdcp_neutral__box24,-205.448564,-0.767975,
+sdcp_neutral__fib04vfib04_r180__Litop__afm2424_pm1,complex,sdcp_neutral,Litop,pm1,static,227,-1151.190751,0.133761,pm1,clean_slab__afm2424_pm1,-944.974686,mol__sdcp_neutral__box24,-205.448564,-0.767502,
+sdcp_neutral__fib04vfib04_r180__Nitop__afm2424_net4,complex,sdcp_neutral,Nitop,net4,static,227,-1151.103629,3.886666,A,clean_slab__afm2424_net4_basinA,-944.896111,mol__sdcp_neutral__box24,-205.448564,-0.758954,
+sdcp_neutral__fib04vfib04_r180__Nitop__afm2424_pm1,complex,sdcp_neutral,Nitop,pm1,static,227,-1151.181486,0.000413,pm1,clean_slab__afm2424_pm1,-944.974686,mol__sdcp_neutral__box24,-205.448564,-0.758237,
+sdcp_neutral__fib04vfib04_r180__cross_Li_at_Ni_pose__afm2424_net4,complex,sdcp_neutral,cross_Li_at_Ni_pose,net4,static,227,-1151.068361,5.891736,B,clean_slab__afm2424_net4,-944.846393,mol__sdcp_neutral__box24,-205.448564,-0.773404,
+sdcp_neutral__fib04vfib04_r180__cross_Li_at_Ni_pose__afm2424_pm1,complex,sdcp_neutral,cross_Li_at_Ni_pose,pm1,static,227,-1151.196001,0.132620,pm1,clean_slab__afm2424_pm1,-944.974686,mol__sdcp_neutral__box24,-205.448564,-0.772752,
+sdcp_neutral__fib04vfib04_r180__cross_Ni_at_Li_pose__afm2424_net4,complex,sdcp_neutral,cross_Ni_at_Li_pose,net4,static,227,-1151.057557,6.002343,B,clean_slab__afm2424_net4,-944.846393,mol__sdcp_neutral__box24,-205.448564,-0.762600,
+sdcp_neutral__fib04vfib04_r180__cross_Ni_at_Li_pose__afm2424_pm1,complex,sdcp_neutral,cross_Ni_at_Li_pose,pm1,static,227,-1151.186560,0.129822,pm1,clean_slab__afm2424_pm1,-944.974686,mol__sdcp_neutral__box24,-205.448564,-0.763310,

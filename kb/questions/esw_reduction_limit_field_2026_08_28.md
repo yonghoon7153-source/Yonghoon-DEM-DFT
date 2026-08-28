@@ -3,7 +3,7 @@ title: "`reduction_limit_V` 는 환원한계가 아닌 것 같다 — breakpoint
 date: 2026-08-28
 updated: 2026-08-28
 tags: [esw, oxidation, grand-potential, cascade, convention, question]
-status: 미해결
+status: open
 confidence: medium
 verificationStatus: unverified
 explored: false
@@ -31,7 +31,7 @@ reduction_limit = max(s["V_vs_Li"] for s in pos)          # ← 1.24
 v_neutral      = min(s["V_vs_Li"] for s in neutral)       # ← 1.72
 ```
 
-## 2. 🔑 breakpoint 를 보면 둘 사이가 비어 있다 (comp1)
+## Evidence For — breakpoint 를 보면 둘 사이가 비어 있다 (comp1)
 
 | V | 반응 | Li 증감 |
 |---:|---|---|
@@ -58,7 +58,7 @@ v_neutral      = min(s["V_vs_Li"] for s in neutral)       # ← 1.72
 
 **1.24 근처에 아무도 없다.**
 
-## 4. 무엇이 걸려 있나
+## 왜 중요한가 — 무엇이 걸려 있나
 
 - **ESW 폭**: 지금 `2.14 − 1.24 = 0.90 V` 로 낸다. 1.72 를 쓰면 **0.42 V**.
   문헌은 0.52–0.60 V 다 ⇒ 지금 값은 환원 쪽으로 **0.5 V 과대**다.
@@ -98,7 +98,7 @@ chempot 을 잰다. Li 를 더하면 μ_Li 가 **올라가고**, `V = μ_ref −
 "한 칸 위" 로 딱 떨어지지 않는다. 그리고 우리 canonical 산화 onset 은 이 파일의 2.14 가
 아니라 **2.256 V** 다(다른 파일). **산화 쪽은 별도로 봐야 한다** — 이 카드는 환원만 닫는다.
 
-## 5. ⛔ 그런데 단정 못 하는 이유
+## Evidence Against — ⛔ 그런데 단정 못 하는 이유
 
 - **우리 데이터가 스스로 1.52 를 "reduction limit" 이라 부른다.** `nd_doped` breakpoint
   주석에 `(reduction limit)` 이 손으로 적혀 있다 — 누군가 이 규약을 **의도적으로** 골랐다는
@@ -111,7 +111,7 @@ chempot 을 잰다. Li 를 더하면 μ_Li 가 **올라가고**, `V = μ_ref −
 - 문헌 두 편의 계산 조건(MP hull 세대·무질서 처리)이 우리와 다르다. 수치 일치가
   **정의 일치를 증명하지 않는다.**
 
-## 6. 닫는 방법 (제안)
+## 결정 실험 — 닫는 방법 (제안)
 
 1. pymatgen `get_element_profile` 의 chempot 규약을 **원문/소스에서** 확인 — 30분.
 2. 확인되면 필드를 **셋으로** 분리: `reduction_onset_V`(경계, 문헌 대응) ·
@@ -122,7 +122,14 @@ chempot 을 잰다. Li 를 더하면 μ_Li 가 **올라가고**, `V = μ_ref −
 
 ⚠ **정본 수치를 건드리는 일이라 사람 확인 없이 바꾸지 않았다.** 지금은 질문으로만 남긴다.
 
-## 7. 연결
+## Status Log
+
+- **2026-08-28** — 카드 작성 (wang2026 digest 가 발단). 같은 날 gabia 에서 pymatgen 소스를
+  확인해 §2 추론이 맞음을 확인(§4.5) — 규약은 각 경계의 **아래쪽**을 취한다.
+  ⛔ **사람 승인 대기**: 필드 이름/분할을 바꾸는 것은 cascade 하류 전체에 걸리므로
+  1저자 판단 없이 손대지 않는다.
+
+## 연결
 
 - `tools/oxidation/esw_grand_potential.py` — 정의 원본
 - `db/properties/oxidation_stability.json` — 위 breakpoint 표
