@@ -424,6 +424,63 @@ def _ast_normal_node(node) -> str:
     return _ast_canon(_strip_docstrings(copy.deepcopy(node)))
 
 
+#: ★ 49차 P0-2 — **지원하는 인터프리터 집합.** 정규형이 버전에 안 묶인다는
+#: 주장을 지키는 것은 지금 도는 인터프리터 하나뿐이었다. 새 문법이 새 field 를
+#: 들고 오면 정규형이 조용히 달라지고 producer identity 가 이유 없이 움직인다.
+#: 게시 identity 는 이 집합 **안에서만** 계산한다 (fail-closed).
+SUPPORTED_PYTHON = ((3, 11), (3, 12), (3, 13))
+
+
+def _ast_canon_of(source: str) -> str:
+    """구문 조각 하나의 정규형 — golden vector 를 재려고 연 창구다."""
+    import ast
+
+    return _ast_canon(ast.parse(source).body[0])
+
+
+#: 대표 구문의 정규형 golden. 새 인터프리터에서 달라지면 **여기서** 깨진다.
+#: (`python3 -c` 로 `_ast_canon_of` 를 찍어 갱신하되, 값이 달라졌다는 것은
+#:  그 버전에서 producer identity 가 달라진다는 뜻이므로 그냥 덮어쓰면 안 된다 —
+#:  `SUPPORTED_PYTHON` 을 좁히거나 정규형을 그 버전까지 덮게 고쳐야 한다.)
+AST_CANON_GOLDEN = {
+    "def f(a, b=1, *ar, c, **kw):\n    return a + b\n":
+        "FunctionDef(name='f', args=arguments(args=[arg(arg='a'), "
+        "arg(arg='b')], vararg=arg(arg='ar'), kwonlyargs=[arg(arg='c')], "
+        "kw_defaults=[None], kwarg=arg(arg='kw'), "
+        "defaults=[Constant(value=1, kind=None)]), "
+        "body=[Return(value=BinOp(left=Name(id='a', ctx=Load()), op=Add(), "
+        "right=Name(id='b', ctx=Load())))])",
+    "x = f'{a!r:>{w}} {b}'\n":
+        "Assign(targets=[Name(id='x', ctx=Store())], "
+        "value=JoinedStr(values=[FormattedValue(value=Name(id='a', "
+        "ctx=Load()), conversion=114, "
+        "format_spec=JoinedStr(values=[Constant(value='>', kind=None), "
+        "FormattedValue(value=Name(id='w', ctx=Load()), conversion=-1)])), "
+        "Constant(value=' ', kind=None), FormattedValue(value=Name(id='b', "
+        "ctx=Load()), conversion=-1)]))",
+    "y = [i for i in r if i]\n":
+        "Assign(targets=[Name(id='y', ctx=Store())], "
+        "value=ListComp(elt=Name(id='i', ctx=Load()), "
+        "generators=[comprehension(target=Name(id='i', ctx=Store()), "
+        "iter=Name(id='r', ctx=Load()), ifs=[Name(id='i', ctx=Load())], "
+        "is_async=0)]))",
+    "match p:\n    case {'k': v}:\n        pass\n":
+        "Match(subject=Name(id='p', ctx=Load()), "
+        "cases=[match_case(pattern=MatchMapping(keys=[Constant(value='k', "
+        "kind=None)], patterns=[MatchAs(name='v')]), body=[Pass()])])",
+}
+
+
+def assert_supported_interpreter() -> None:
+    """게시 identity 를 **선언한 인터프리터 밖에서** 계산하지 않는다 (49차 P0-2)."""
+    if sys.version_info[:2] not in SUPPORTED_PYTHON:
+        raise SystemExit(
+            f"✗ 이 인터프리터({sys.version_info[0]}.{sys.version_info[1]})는 "
+            f"지원 집합 {SUPPORTED_PYTHON} 밖이다 — producer identity 정규형이 "
+            "그 버전에서 같다는 증거가 없다. `AST_CANON_GOLDEN` 으로 확인한 뒤 "
+            "`SUPPORTED_PYTHON` 에 넣어라")
+
+
 def _ast_canon(node) -> str:
     """AST 를 **버전에 안 묶이는** 구조 문자열로 (48차 P0-2).
 
@@ -504,6 +561,85 @@ def _crossed_aliases(src: str) -> dict:
     return out
 
 
+def _crossed_modules(src: str) -> set:
+    """`import src.scoring as sc` → {지역이름}. `sc.foo` 를 따라가기 위한 것 (49차).
+
+    ★ 49차 P0-2 — 48차 닫힘은 `from ... import` **한 가지 문법만** 따라갔다.
+      같은 함수를 `import src.scoring as sc` + `sc.add_error_columns(...)` 로
+      부르면 닫힘이 그 자리에서 멈췄고, 채점 의미를 통째로 바꿔도 digest 가
+      움직이지 않았다. 문법 하나를 바꾸는 것만으로 identity 밖으로 나갈 수
+      있으면 그것은 identity 가 아니다.
+    """
+    import ast
+
+    out: set = set()
+    for node in ast.walk(ast.parse(src)):
+        if isinstance(node, ast.Import):
+            for al in node.names:
+                if al.name in _PRODUCER_MODULES:
+                    # `import src.scoring` (alias 없음) 은 지역 이름이
+                    # `src` 이고 `src.scoring.foo` 로 쓴다 — 그 형태는
+                    # 아래 `_dynamic_escapes()` 가 잡는 대신 여기서 정직하게
+                    # alias 를 요구한다 (as 없이 쓰면 닫힘이 애매해진다).
+                    if al.asname:
+                        out.add(al.asname)
+                    else:
+                        raise SystemExit(
+                            f"✗ `import {al.name}` 을 alias 없이 쓴다 — producer "
+                            "닫힘이 `src.scoring.foo` 형태를 따라가려면 "
+                            f"`import {al.name} as <이름>` 이어야 한다")
+    return out
+
+
+#: 이름 공간을 통째로 여는 호출 — 인자와 무관하게 거부한다.
+_DYNAMIC_ALWAYS = ("eval", "exec", "__import__")
+
+#: 대상이 **module 이름 공간**일 때만 거부하는 호출. `getattr(self, …)` 이나
+#: `getattr(node, …)` 처럼 객체의 속성을 읽는 정상 용법까지 막지 않는다 —
+#: 그것은 module-level 이름을 푸는 것이 아니므로 정적 닫힘이 잃는 것이 없다.
+_DYNAMIC_ON_NAMESPACE = ("globals", "locals", "vars", "getattr", "setattr")
+
+
+def _assert_no_dynamic_resolution(node, where: str, mods: set) -> None:
+    """계산 경로 안에서 **module-level 이름**을 동적으로 푸는가 (49차 P0-2).
+
+    `globals()[...]` · `getattr(sc, ...)` · `eval` 은 module-level 이름을 실행
+    시점에 고른다. 그런 코드가 닫힘 안에 있으면 닫힘은 "그 이름을 안 쓴다" 고
+    답하고 digest 는 태연히 값을 낸다 — 그것이 곧 identity 밖의 계산이다.
+    **볼 수 없으면 거부한다.**
+
+    경계는 좁게 잡는다: 막는 것은 이름 공간을 푸는 용법뿐이고,
+    `getattr(node, f, None)` 처럼 객체 속성을 읽는 것은 그대로 둔다 (실제로
+    이 파일의 정규형 함수들이 그렇게 쓰고, 그것은 닫힘을 흐리지 않는다).
+    """
+    import ast
+
+    for sub in ast.walk(node):
+        if not isinstance(sub, ast.Call) or not isinstance(sub.func, ast.Name):
+            if isinstance(sub, ast.Attribute) and sub.attr in (
+                    "__dict__", "__globals__", "__code__"):
+                raise SystemExit(
+                    f"✗ producer 닫힘 안에서 이름 공간을 직접 연다: "
+                    f"{where} 의 `.{sub.attr}` — 정적 닫힘이 볼 수 없다")
+            continue
+        fn = sub.func.id
+        if fn in _DYNAMIC_ALWAYS:
+            raise SystemExit(
+                f"✗ producer 닫힘 안에서 이름을 **동적으로** 푼다: "
+                f"{where} 의 `{fn}(...)` — 정적 닫힘이 볼 수 없는 계산은 "
+                "producer identity 밖이다. 직접 import 해서 부르라")
+        if fn not in _DYNAMIC_ON_NAMESPACE:
+            continue
+        # 인자가 없으면 **현재 module 이름 공간** 전체다
+        first = sub.args[0] if sub.args else None
+        if first is None or (isinstance(first, ast.Name) and first.id in mods):
+            target = "현재 module" if first is None else first.id
+            raise SystemExit(
+                f"✗ producer 닫힘 안에서 이름 공간({target})을 동적으로 푼다: "
+                f"{where} 의 `{fn}(...)` — 정적 닫힘이 볼 수 없는 계산은 "
+                "producer identity 밖이다")
+
+
 def _producer_closure(src: str, scoring_src: str | None = None) -> dict[str, str]:
     """**바이트를 만드는** 코드의 닫힘 (게시 경로는 절단면에서 멈춘다).
 
@@ -524,6 +660,7 @@ def _producer_closure(src: str, scoring_src: str | None = None) -> dict[str, str
     defs = _module_defs(src)
     sdefs = _module_defs(scoring_src)
     alias = _crossed_aliases(src)
+    mods = _crossed_modules(src)          # ★ 49차 P0-2 — `sc.foo` 형태
 
     missing = [x for x in _COMPUTE_NAMES if x not in defs]
     if missing:
@@ -552,8 +689,26 @@ def _producer_closure(src: str, scoring_src: str | None = None) -> dict[str, str
             out[key] = f"<cut:{name}>"          # 이름별 표식 (48차)
             continue
         node = defs[name] if kind == "rp" else sdefs[name]
+        # ★ 49차 P0-2 — 볼 수 없는 계산은 identity 밖이다. 닫힘에 들어오는
+        #   **모든** 노드에 대해 동적 이름 풀이를 거부한다.
+        _assert_no_dynamic_resolution(node, key, mods)
         out[key] = _ast_normal_node(node)
         for sub_node in ast.walk(node):
+            # ★ 49차 P0-2 — `sc.foo` (Import + Attribute). 48차는 이 문법을
+            #   전혀 따라가지 않아, import 형태만 바꾸면 채점 의미가 통째로
+            #   닫힘 밖으로 나갔다.
+            if kind == "rp" and isinstance(sub_node, ast.Attribute) \
+                    and isinstance(sub_node.value, ast.Name) \
+                    and sub_node.value.id in mods:
+                attr = sub_node.attr
+                if attr not in sdefs:
+                    raise SystemExit(
+                        f"✗ `src.scoring` 에 없는 이름을 참조한다: "
+                        f"{sub_node.value.id}.{attr} ({key}) — 닫힘이 조용히 "
+                        "좁아진다")
+                if f"src.scoring:{attr}" not in out:
+                    todo.append(("sc", attr))
+                continue
             if not isinstance(sub_node, ast.Name):
                 continue
             nid = sub_node.id
@@ -570,6 +725,7 @@ def _producer_closure(src: str, scoring_src: str | None = None) -> dict[str, str
 
 def _producer_semantic_over(src: str, scoring_src: str | None = None) -> str:
     """주어진 소스에 대한 producer 의미 digest (시험이 변형본을 넣을 수 있게)."""
+    assert_supported_interpreter()
     closure = _producer_closure(src, scoring_src)
     parts = [f"{k}\n{closure[k]}" for k in sorted(closure)]
     parts.append(json.dumps({"COLUMNS": COLUMNS,
@@ -633,9 +789,19 @@ def _analyzer_provenance() -> dict:
         "python": _sys.version.split()[0],
         "platform": platform.platform(),
     }
-    for mod in ("pandas", "pyarrow", "numpy", "yaml"):
+    # ★ 49차 P0-2 — `__import__(mod)` 는 이름을 **실행 시점에** 푼다. producer
+    #   닫힘은 그것을 볼 수 없으므로 거부되며, 여기서는 정적 import 로 같은
+    #   값을 얻는다 (버전 기록은 provenance 이고 행 바이트를 만들지 않지만,
+    #   그 판단을 정적 분석기에게 시킬 수는 없다).
+    import numpy as _np49
+    import pandas as _pd49
+    import pyarrow as _pa49
+    import yaml as _yaml49
+
+    for mod, _m in (("pandas", _pd49), ("pyarrow", _pa49),
+                    ("numpy", _np49), ("yaml", _yaml49)):
         try:
-            out[mod] = __import__(mod).__version__
+            out[mod] = _m.__version__
         except Exception:                                  # noqa: BLE001
             out[mod] = None
     return out

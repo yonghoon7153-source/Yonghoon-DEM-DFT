@@ -8780,6 +8780,123 @@ def test_breaking_the_crossing_into_src_scoring_is_fail_closed():
     assert "src.scoring" in str(ei.value), str(ei.value)
 
 
+# ─────────────────────────────────────────────────────────────────────────────
+# 49차 P0-2 — 닫힘이 **한 가지 import 문법**만 따라갔다
+# ─────────────────────────────────────────────────────────────────────────────
+
+def test_the_closure_follows_a_module_alias_attribute():
+    """★ 49차 P0-2 — `import src.scoring as sc` 뒤 `sc.foo()` 를 따라간다.
+
+    48차 `_crossed_aliases()` 는 `ImportFrom` 만 봤다. 그래서 같은 함수를
+    `import src.scoring as sc` + `sc.add_error_columns(...)` 로 부르면 닫힘이
+    그 자리에서 멈췄고 — **채점 의미를 통째로 바꿔도 digest 가 안 움직인다.**
+    문법 하나를 바꾸는 것만으로 identity 밖으로 나갈 수 있으면 identity 가
+    아니다.
+    """
+    rp = _rp()
+    sc = (_REPO / "src" / "scoring.py").read_text(encoding="utf-8")
+    src = (
+        "import src.scoring as sc\n"
+        "COLUMNS = ()\n"
+        "def _cell(x):\n    return x\n"
+        "def _restart_list(x):\n    return x\n"
+        "def _restart_facts(x):\n    return x\n"
+        "def _add_multistart_blocks(x):\n    return x\n"
+        "def _analyzer_provenance(x):\n    return x\n"
+        "def score_canonical(df):\n    return sc.add_error_columns(df)\n"
+        "def build(x):\n    return x\n"
+    ) + "".join(f"def {n}(*a, **k):\n    return None\n"
+                for n in rp._PRODUCER_CUT)
+    base = rp._producer_semantic_over(src, sc)
+
+    moved = rp._producer_semantic_over(
+        src, sc.replace("DEFAULT_TOL = 0.02", "DEFAULT_TOL = 0.05", 1))
+    assert moved != base, (
+        "module alias 로 부른 채점 함수가 닫힘 밖이다 — `from ... import` 만 "
+        "따라가면 문법 하나로 identity 를 빠져나간다")
+
+
+def test_an_unresolved_producer_module_reference_is_fail_closed():
+    """★ 49차 P0-2 — 모듈에 없는 이름을 참조하면 **거부**한다.
+
+    `sc.없는이름` 은 실행하면 `AttributeError` 지만, 정적 닫힘은 그것을 모르고
+    그냥 아무 것도 안 담는다 — 닫힘이 조용히 좁아진다. 좁아짐은 거부여야 한다.
+    """
+    rp = _rp()
+    sc = (_REPO / "src" / "scoring.py").read_text(encoding="utf-8")
+    src = (
+        "import src.scoring as sc\n"
+        "def _cell(x):\n    return x\n"
+        "def _restart_list(x):\n    return x\n"
+        "def _restart_facts(x):\n    return x\n"
+        "def _add_multistart_blocks(x):\n    return x\n"
+        "def _analyzer_provenance(x):\n    return x\n"
+        "def score_canonical(df):\n    return sc.그런것은없다(df)\n"
+        "def build(x):\n    return x\n"
+    ) + "".join(f"def {n}(*a, **k):\n    return None\n"
+                for n in rp._PRODUCER_CUT)
+    with pytest.raises(SystemExit) as ei:
+        rp._producer_semantic_over(src, sc)
+    assert "src.scoring" in str(ei.value), str(ei.value)
+
+
+@pytest.mark.parametrize("escape", [
+    "globals()['add_error_columns'](df)",
+    "eval('add_error_columns')(df)",
+    "exec('pass')",
+    "getattr(sc, 'add_error_columns')(df)",
+    "vars(sc)['add_error_columns'](df)",
+    "__import__('src.scoring').scoring.add_error_columns(df)",
+])
+def test_dynamic_name_resolution_inside_the_closure_is_fail_closed(escape):
+    """★ 49차 P0-2 — 이름을 **동적으로** 푸는 코드는 정적 닫힘이 볼 수 없다.
+
+    `globals()[...]` · `getattr(module, ...)` · `eval` 은 module-level 이름을
+    실행 시점에 고른다. 그런 코드가 계산 경로 안에 있으면 닫힘은 "그 이름을
+    안 쓴다" 고 답하고 digest 는 태연히 값을 낸다 — 그것이 곧 identity 밖의
+    계산이다. 볼 수 없으면 **거부**한다.
+    """
+    rp = _rp()
+    sc = (_REPO / "src" / "scoring.py").read_text(encoding="utf-8")
+    src = (
+        "import src.scoring as sc\n"
+        "def _cell(x):\n    return x\n"
+        "def _restart_list(x):\n    return x\n"
+        "def _restart_facts(x):\n    return x\n"
+        "def _add_multistart_blocks(x):\n    return x\n"
+        "def _analyzer_provenance(x):\n    return x\n"
+        f"def score_canonical(df):\n    return {escape}\n"
+        "def build(x):\n    return x\n"
+    ) + "".join(f"def {n}(*a, **k):\n    return None\n"
+                for n in rp._PRODUCER_CUT)
+    with pytest.raises(SystemExit) as ei:
+        rp._producer_semantic_over(src, sc)
+    assert "동적" in str(ei.value) or "dynamic" in str(ei.value), str(ei.value)
+
+
+def test_the_supported_interpreter_set_is_pinned_with_golden_vectors():
+    """★ 49차 P0-2 — 정규형이 **인터프리터에 따라 달라지지 않는다**는 주장의 증거.
+
+    48차는 `_ast_canon()` 을 버전 독립으로 만들었지만, 그 주장을 지키는 것은
+    지금 도는 인터프리터 하나뿐이었다. 새 문법이 새 field 를 들고 오면 정규형이
+    조용히 달라지고 producer identity 가 이유 없이 움직인다.
+
+    두 가지를 고정한다: (a) 지원하는 인터프리터 집합을 코드가 선언하고 그 밖에서는
+    게시 identity 를 계산하지 않는다(fail-closed), (b) 대표 구문의 정규형을
+    golden 으로 박아 새 버전에서 달라지면 **여기서** 깨진다.
+    """
+    import sys
+
+    rp = _rp()
+    assert sys.version_info[:2] in rp.SUPPORTED_PYTHON, (
+        f"지금 인터프리터 {sys.version_info[:2]} 는 선언된 지원 집합 "
+        f"{rp.SUPPORTED_PYTHON} 밖이다")
+    for snippet, want in rp.AST_CANON_GOLDEN.items():
+        got = rp._ast_canon_of(snippet)
+        assert got == want, (
+            f"정규형 golden 이 깨졌다 — {snippet!r}\n  기대 {want}\n  실제 {got}")
+
+
 def test_the_producer_digest_sees_decorators():
     """★ 48차 P0-2 — `ast.get_source_segment` 은 **decorator 를 버린다.**
 
