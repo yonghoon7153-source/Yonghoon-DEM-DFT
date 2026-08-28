@@ -2107,3 +2107,52 @@ def test_glossary_lit_field_is_separate_from_ours():
         h = c.get("/glossary").get_data(as_text=True)
     assert "문헌에서 본 것" in h and 'gd lit' in h, "lit 칸이 안 그려진다"
     assert 'gd ours' in h, "우리 계산 칸이 사라졌다"
+
+
+def test_sdcp_closure_consistency():
+    """SDCP 마감 기록과 citable 이 **서로 모순되면 실패** — 회신 N 이 요구한 회귀 봉인.
+
+    ⛔ 실측 (2026-08-28): 규율을 도입한 바로 그 커밋에서 어겼다.
+      citable v3 는 dE_notes 를 "30 meV 미해결" 로 고쳤는데 **headline_sentences_ko 는
+      "모두 Li 자리를 선호" · "약 2배"** 를 그대로 들고 있었다 — 같은 주장, 다른 표현이라
+      문자열 매칭 수정이 못 잡았다. 값이 아니라 **주장끼리** 대조해야 잡힌다.
+    """
+    import json
+
+    root = Path(__file__).resolve().parents[2]
+    c = json.loads((root / "db/properties/sdcp_wave1_citable.json").read_text(encoding="utf-8"))
+    cl = json.loads((root / "db/properties/sdcp_neutral_closed_2026_08_28.json")
+                    .read_text(encoding="utf-8"))
+
+    # ── neutral 자리선호가 '미해결' 인데, 어느 문서든 선호를 주장하면 모순이다
+    blob = json.dumps(c, ensure_ascii=False) + json.dumps(cl, ensure_ascii=False)
+    assert "미해결" in json.dumps(c.get("dE_notes", {}).get("sdcp_neutral", ""),
+                                ensure_ascii=False), "neutral 판정이 '미해결' 이어야 한다"
+    for h in c.get("headline_sentences_ko", []):
+        assert not ("모두" in h and "선호" in h), \
+            f"headline 이 neutral 까지 '선호' 로 묶는다 — dE_notes 와 모순: {h[:80]}"
+        assert "2배" not in h and "배 강하" not in h, \
+            f"headline 에 금지 서술('~배')이 있다: {h[:80]}"
+
+    # ── 마감 문서의 금지 서술이 citable headline 에 나타나면 실패
+    for bad in cl.get("⛔_금지_서술", []):
+        key = bad.split("'")[1] if "'" in bad else None
+        if key and key in ("자리 불문", "약 2배"):
+            for h in c.get("headline_sentences_ko", []):
+                assert key not in h, f"금지 서술 '{key}' 가 headline 에 있다"
+
+    # ── stale: **지위 필드**(not_citable·caveats)에 '대기' 가 남으면 안 된다.
+    #    ⚠ 전체 blob 검사는 안 된다 — 이력·설명 서술("'wave1.5 대기' 를 제거했다")까지
+    #    잡는다. 오늘 convention_check 오탐 교훈 그대로: 검사는 지위 필드에만.
+    status_fields = json.dumps(
+        {"not_citable": c.get("not_citable"),
+         "caveats": c.get("⚠_caveats_MUST_QUOTE_WITH_VALUES"),
+         "cross_checks": c.get("cross_checks")}, ensure_ascii=False)
+    assert "wave1.5 대기" not in status_fields, "지위 필드에 stale 'wave1.5 대기'"
+    assert not ("재현성 근거" in status_fields and "착시" not in status_fields), \
+        "cross_checks 가 회신 M 이 반려한 '≤1 meV 재현' 을 아직 근거로 부른다"
+
+    # ── 회신 M 이 반려한 혼합-basin 시드 비교를 마감 근거로 쓰면 실패
+    v = json.dumps(cl.get("닫는_근거_체크리스트", {}).get("값의_안정성", ""), ensure_ascii=False)
+    assert not ("basin-matched" in v and "제거" not in v), \
+        "혼합-basin E_ads 시드 비교가 마감 근거로 남아 있다 (회신 M 반려 산술)"

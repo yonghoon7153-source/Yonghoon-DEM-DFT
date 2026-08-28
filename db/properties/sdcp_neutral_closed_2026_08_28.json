@@ -30,11 +30,11 @@
   "타 코드·문헌 절대값과의 직접 비교 (VASP PAW 총에너지)"
  ],
  "닫는_근거_체크리스트": {
-  "값의_안정성": "자세 4종 14.6 meV · 상자 box20↔24 0.32 meV · 두 자기 시드 (pm1/net4 basin-matched E_ads) 0.5–0.8 meV",
+  "값의_안정성": "자세 4종 14.6 meV · 상자 box20↔24 0.32 meV. ⛔ '두 자기 시드' 는 근거에서 **제거** (회신 N): pm1 과 net4 의 E_ads 비교는 혼합-basin 조건부 증분 비교라 회신 M 이 반려한 그 산술이다. 시드 재현 근거는 **ptfe_dimer 고정-basin ΔE 0.087 meV 하나**뿐이고 그것은 PTFE 의 것이다",
   "대조군": "PTFE 조각 2종이 같은 슬랩·같은 상자·같은 규약으로 있다",
   "격차의_보수성": "가장 약한 SDCP 자세(−0.7582) vs 가장 강한 c10 자세(−0.4124) 로도 0.346 eV",
   "기전_확인": "접촉 종류(O···Li 배위)가 확인됐고 cross 자세가 그 기전을 재현했다",
-  "외부_리뷰": "회신 M 이 estimand·서술범위를 검토하고 위 문구까지 좁혀 승인",
+  "외부_리뷰": "회신 M 의 승인 범위는 **좁다**: 0.346 eV 비교 문구와 matched-pose 강등 문구. 접촉 기전(O···Li) 서술은 우리 판독이지 M 의 승인 대상이 아니다",
   "미해결_명시": "자리대비(30 meV 미해결)와 doped 를 **닫는 범위에서 제외**했다"
  },
  "재개_조건_이것들만": {
@@ -49,5 +49,23 @@
   "레지스트리": "db/properties/canonical_registry.json — SDCP_Eads_eV__* 7건",
   "원장": "db/properties/sdcp_wave1_results.json",
   "리뷰": "kb/reviews/codex_M_sdcp_wave15_close_2026_08_28.md"
- }
+ },
+ "status_history": [
+  {
+   "at": "2026-08-28a",
+   "state": "closed",
+   "note": "최초 마감"
+  },
+  {
+   "at": "2026-08-28b",
+   "state": "closed_for_scope_pending_consistency_fix",
+   "note": "회신 N P0 — citable headline 충돌 · 값의_안정성이 혼합-basin 시드 비교 재사용 · 외부_리뷰 과대표기"
+  },
+  {
+   "at": "2026-08-28c",
+   "state": "closed",
+   "note": "세 결함 수정 + 회귀시험(test_sdcp_closure_consistency) 봉인 후 재마감. ⚠ 이 마감은 사전등록이 아니라 사후 마감(post-hoc)이다 — 다음 캠페인부터 결과 전에 조건 고정 (회신 N D6-1)"
+  }
+ ],
+ "⚠_사후마감": "이 문서는 데이터와 회신 M 을 본 **뒤에** 조건을 만들었다 — 사전등록이 아니다. 규율의 취지(조건 먼저)는 다음 캠페인부터 적용된다"
 }

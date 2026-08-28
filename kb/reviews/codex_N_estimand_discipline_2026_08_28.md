@@ -3,7 +3,7 @@ title: "교차리뷰 N — estimand 규율·마감 규율: 이게 작동할 규�
 date: 2026-08-28
 updated: 2026-08-28
 tags: [review/codex, methodology, estimand, closure, process, sdcp]
-status: 리뷰대기
+status: 회신반영
 confidence: medium
 verificationStatus: unverified
 explored: false
@@ -226,3 +226,31 @@ evidenceScope: multi-source-primary
 - `CLAUDE.md` 「계산 규율」·「마감 규율」 — 규율 원본
 - `kb/reviews/codex_M_sdcp_wave15_close_2026_08_28.md` — 이 카드의 발단 (§8 이행 기록)
 - `kb/methodology/selftest_blind_spots_2026_08_28.md` — 사각 D 4건
+
+
+---
+
+## 8. 회신 N (2026-08-28) — 판정: **수정 전 채택 보류**. 요지와 이행
+
+**P0**: 규율 도입 커밋(f36bc26)이 그 규율을 어겼다 — ① citable headline 이 여전히
+"모두 Li 선호"·"약 2배" (v3 는 dE_notes 만 고치고 **같은 주장의 다른 표현**을 놓침)
+② closure 의 '값의_안정성' 이 회신 M 이 반려한 혼합-basin 시드 비교를 재사용
+③ '외부_리뷰' 가 M 의 좁은 승인을 전체 승인으로 과대 표기. **셋 다 실물 확인, 사실.**
+
+| 항목 | 회신 | 이행 |
+|---|---|---|
+| P0 | 마감 기록 지위 강등 후 수정 | citable **v4** (headline 교체·stale 제거·cross_checks 교체) · closure `status_history` 3단 + 근거 교체 · **회귀시험 `test_sdcp_closure_consistency`** (판별력 확인: 옛 headline 복원 시 실패) |
+| D1 | 반대 — "한 뿌리" 는 사후 정리. 층위로 서술 | 카드 §2 강등 (N 문구 인용) · "doped 만 죽음 = 증거" → 가설 지지로 완화 · M=2.378 "hole 이동" → 과대해석 명시 |
+| D2 | 조건부 — NUPDOWN 은 hole 위치를 안 고정. I/II 는 이름이지 상태 아님. 1잡은 갈림길 아니라 운영 게이트 (M=1.000 은 강제 결과 = 순환) | 카드 §6 전면 교체: 상태 5-튜플 정의 · vertical/adiabatic 구분 · **4단계 pilot** (NUPDOWN 1 vs 3 → pose·basin 고정 → 두 초기화 → 사전등록 분류) · mixed/unresolved 허용 |
+| D3 | 반대 — upgrade 트리거와 invalidation 트리거 분리. "밖으로 안 연다" 삭제 | governance `D-2026-08-28-closure-criteria-first` (proposed) 에 분리 원칙 명문화 · closure 에 사후마감(post-hoc) 명시 |
+| D4 | 조건부 — 여섯 물음은 DFT 전자상태 모듈. core+모듈 분리. 판정 규칙 완화 | 템플릿에 모듈 성격 명시 + 판정 규칙을 "admissible state 여럿 + 선택·집계 규칙 없음 → 미정의" 로 교체. core/모듈 분리는 후속 |
+| D5 | 반대 — 구현이 없다. **governance graph 가 이미 존재** (`db/governance/decisions.json`) — 우회한 것이 문제 | 정책 2건 **proposed 등록** (ratify 는 사람 몫) · 사각 D **5번째 사례** 등재 ("해석 레지스트리 제안" 이 기존 인프라를 몰랐음) |
+| D6-2 | 정수 자화는 범용 게이트 아님 | 템플릿 게이트를 "계·상태별 expected/tolerance/rationale 선언" 으로 교체 |
+| D6-6 | "일곱 번은 안 돌려도 됐다" 철회 (블라인드 재생 시 #7–8 만 확실) | CLAUDE.md·카드에서 철회 표기 + 다음 5–10 캠페인 계측 항목을 reopen_criteria 로 |
+
+**승인 조건 5개 중 이번 커밋에서**: ①(상충 제거+회귀시험) ②(문구 강등) ③(governance 연결,
+proposed 까지) 완료. ④(core/모듈 분리) ⑤(블라인드 backtest) 는 후속 — governance
+reopen_criteria 에 걸어 두었다.
+
+**ratify 대기**: `D-2026-08-28-estimand-before-compute` · `D-2026-08-28-closure-criteria-first`
+— scientific_owner 승인 없이 active 로 올리지 않는다 (governance 규칙).

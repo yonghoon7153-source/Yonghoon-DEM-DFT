@@ -14,7 +14,8 @@
  "_history": {
   "2026-08-20a": "신설. codex 3차 권고대로 12시드가 아니라 **core 5** 로 시작한다. core 4(source-authority · hash-bound-carry · no-fallback · defect-cell-metric)에 no-retro-gate-without-artifact 를 5번째로 편입했다 — b2o3 가 vertical slice 이고 그 slice 가 실증하는 것이 바로 이 결정이기 때문. gap-eigenvalue · uma-li3n-ban 2건은 read-only schema fixture 로만 동봉하며 consumer/preflight 에 연결하지 않으므로 end-to-end 검증에는 세지 않는다.",
   "2026-08-20b": "1저자 승인 — core 5 를 proposed → ratified/active 로. 승인은 decision_digest 로 그 시점 내용에 결속된다 (승인 뒤 statement·enforcement 를 고치면 지문이 어긋나 재승인이 요구된다). commit bb9f9c5d6534… (원장에는 full 40-hex).",
-  "2026-08-25": "랭킹 정규화 결정 추가 (D-2026-08-25-missing-axis-is-unknown-not-worst). cascade 재랭킹 ①~③ 실행 — 1등이 24% 캐스케이드에서 바뀌었다."
+  "2026-08-25": "랭킹 정규화 결정 추가 (D-2026-08-25-missing-axis-is-unknown-not-worst). cascade 재랭킹 ①~③ 실행 — 1등이 24% 캐스케이드에서 바뀌었다.",
+  "2026-08-28": "estimand·closure 정책 2건 **proposed** 등록 (회신 N §D5 통합안 1단계). ratification 없이 active 금지 규칙 준수 — ratify 는 scientific_owner 몫"
  },
  "decisions": [
   {
@@ -553,6 +554,77 @@
     ],
     "_note": "1저자가 A/B/C 세 갈래 중 **A** 를 직접 골랐다 (2026-08-25 대화, 'A인데 지금 47종보다 더 많은거 맞지' — 범위도 전수 302 캐스케이드로 지시). agent(claude) 제안 + 같은 agent 의 구현·검증 뒤의 사람 승인이며, 독립 승인 두 표가 아니다. manuscript 는 허용 용도에 넣지 않았다 — 재랭킹 결과가 아직 원고에 들어간 적이 없다."
    }
+  },
+  {
+   "id": "D-2026-08-28-estimand-before-compute",
+   "schema_version": 2,
+   "kind": "policy",
+   "scope": "computation.design",
+   "slot": "estimand_definition_required",
+   "applies_to": {
+    "systems": [
+     "*"
+    ],
+    "tasks": [
+     "confirmatory_compute"
+    ],
+    "methods": [
+     "*"
+    ],
+    "use_cases": [
+     "manuscript",
+     "canonical_value",
+     "closure"
+    ]
+   },
+   "title": "확증 계산은 estimand 정의 없이 던지지 않는다",
+   "statement": "확증(citable 목표) 계산은 kb/templates/estimand_card.md 의 §1–3 (무엇을·어떤 식으로·이 계에서 잘 정의되는가 — admissible state 가 여럿이면 선택·집계 규칙 포함)을 계산 전에 리뷰에 보낸 뒤 실행한다. 탐색 계산은 자유이되 자동으로 provisional·citable:false.",
+   "decision_state": "proposed",
+   "evidence": [
+    "sdcp_doped E_ads 8회 반려 — 전부 '제대로 돌렸나' 리뷰만 통과, '맞는 양인가' 는 8회째(회신 M)에 처음 질문되어 즉시 P0",
+    "mol_doped 총자화 0.175 (doublet 기대 1.0) 가 8회의 기준값으로 사용됨"
+   ],
+   "method_ref": "kb/templates/estimand_card.md",
+   "card": "kb/methodology/estimand_before_running_2026_08_28.md",
+   "reopen_criteria": [
+    "다음 5–10 캠페인에서 escaped P0/P1 · false-stop · override 비율 · 작성 비용 측정 후 재평가 (회신 N D6-6)"
+   ],
+   "enforcement": "현재 문서+리뷰 루프. 회신 N 통합안(estimand_id 를 잡·결과에 결속)은 runner 개편 시 적용 — 그 전까지 이 결정은 절차 규범이다"
+  },
+  {
+   "id": "D-2026-08-28-closure-criteria-first",
+   "schema_version": 2,
+   "kind": "policy",
+   "scope": "reporting.closure",
+   "slot": "closure_policy",
+   "applies_to": {
+    "systems": [
+     "*"
+    ],
+    "tasks": [
+     "*"
+    ],
+    "methods": [
+     "*"
+    ],
+    "use_cases": [
+     "closure",
+     "manuscript"
+    ]
+   },
+   "title": "마감은 조건 먼저 — upgrade 트리거와 invalidation 트리거를 분리한다",
+   "statement": "캠페인 마감 기록은 확정값·허용/금지 서술·재개 조건을 담되, 재개 조건은 planned_upgrade_triggers(범위 확장 투자 결정)와 mandatory_invalidation_triggers(estimand/산술/프로토콜 결함·source 변경·게이트 실패·상충 증거·scope 확대) 로 분리한다. '이 목록 밖으로는 열지 않는다' 는 upgrade 쪽에만 적용된다 — 결론의 반증 가능성은 닫을 수 없다. 마감 기록은 값을 복사하지 않고 claim/result/source 참조로 쓴다.",
+   "decision_state": "proposed",
+   "evidence": [
+    "SDCP: 조건 없는 마감 2회가 2회 반려 (07-17 doped v1 · 08-28 회신 M)",
+    "회신 N P0: 마감 도입 커밋 자체가 citable headline 충돌·혼합-basin 근거 재사용"
+   ],
+   "method_ref": "db/properties/sdcp_neutral_closed_2026_08_28.json",
+   "card": "kb/reviews/codex_N_estimand_discipline_2026_08_28.md",
+   "reopen_criteria": [
+    "회신 N 승인조건 5 항목 완료 후 ratify 검토"
+   ],
+   "enforcement": "webapp/tests/test_webapp.py::test_sdcp_closure_consistency 가 첫 사례를 봉인"
   }
  ]
 }

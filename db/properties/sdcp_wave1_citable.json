@@ -1,5 +1,5 @@
 {
- "schema": "sdcp_wave1_citable/v3",
+ "schema": "sdcp_wave1_citable/v4",
  "date": "2026-08-25",
  "derived_from": "db/properties/sdcp_wave1_results.json (총에너지에서 재유도 — 손 전사 아님)",
  "what": "SDCP wave1 인용 확정본 — basin 일치분만. 값·단서가 한 몸이다.",
@@ -36,17 +36,16 @@
  "cross_checks": {
   "dimer_Litop_net4_basinB_pair": -0.3661,
   "c10_Nitop_net4_basinB_pair": -0.3617,
-  "reading": "basin 이 (복합체=슬랩) 로 맞는 net4 쌍은 pm1 과 ≤1 meV — 재현성 근거. 단 net4 열은 wave1.5 전까지 정본으로 쓰지 않는다"
+  "reading": "⛔ 회신 M 으로 교체 (2026-08-28): 종전 '(basin 맞는) net4 쌍은 pm1 과 ≤1 meV — 재현성 근거' 는 혼합-basin 조건부 증분의 산술 착시였다. 유효한 시드 재현은 **ptfe_dimer 고정-basin(B/B) ΔE 0.087 meV 하나**다. c10·neutral 의 net4 자리대비는 같은-basin 쌍이 생길 때까지 미정의."
  },
  "headline_sentences_ko": [
-  "PTFE 조각과 SDCP 는 모두 LiNiO₂(104) 표면에서 Ni 자리보다 Li 자리를 선호한다 (ptfe_dimer ΔE = +36.1 meV, 두 자기 branch 에서 0.09 meV 차이).",
-  "SDCP(−0.77 eV)는 PTFE 조각(−0.33 ~ −0.37 eV)보다 약 2배 강하게 흡착한다.",
-  "흡착 기하는 MLIP 이완 위 단일점이며, 값은 내부 비교(차이)로만 사용한다."
+  "표본한 matched pose 에서 PTFE 조각의 Li-top 전자에너지가 낮았다 (ptfe_dimer 36.1 meV — 두 자기 시드 고정-basin 재현 0.087 meV · ptfe_c10 49.8 meV — pm1 단일). sdcp_neutral 의 자리 대비는 30 meV 판정 해상도에서 미해결이다 (+9.3 meV).",
+  "동일 pm1 자기 branch 와 고정된 MLIP-기하 DFT 단일점 규약에서, 표본한 중성 SDCP 의 단분자 흡착 전자에너지는 C₁₀F₂₂ 보다 최소 0.346 eV 더 음수였다 (−0.758 vs −0.412 eV)."
  ],
  "not_citable": [
   "sdcp_doped 전 항목",
-  "net4 E_ads (wave1.5 대기)",
-  "basin-branch offset ≈50 meV (진단값 — 수치 인용 금지)"
+  "basin-branch offset ≈50 meV (진단값 — 수치 인용 금지)",
+  "sdcp_doped 전부 (E_ads·자리) — 상태 미선언 다중해. 추출 부호 +0.336 eV 만 별도 유효"
  ],
  "updated": "2026-08-28",
  "v2_왜": "wave1.5 회신 — clean_slab net4 basin A 확정 (독립 검증: db/properties/sdcp_wave15_basinA.json). net4 E_ads 가 basin-matched 로 열렸다. 총에너지에서 재유도 — 손 전사 아님.",
@@ -75,5 +74,6 @@
   "2_lowest_sampled_Eads": "min_b E(복합체)−min_a E(슬랩)−E(분자) — 본문 용. lowest sampled 슬랩 = pm1-A (net4-A 보다 78.575 meV 낮음). ⛔ '전역 최소' 라 부르지 않는다 — 표본한 것 중 최저일 뿐",
   "3_fixed_basin_dE_site": "같은 basin 쌍의 복합체 총에너지 직접차 — 자리선호는 이것만"
  },
- "closure": "sdcp_neutral 은 2026-08-28 **닫혔다** — 허용 서술·금지 서술·재개 조건은 db/properties/sdcp_neutral_closed_2026_08_28.json 이 정본. 재개 조건 4개 밖의 이유로 다시 열지 않는다"
+ "closure": "sdcp_neutral 은 2026-08-28 **닫혔다** — 허용 서술·금지 서술·재개 조건은 db/properties/sdcp_neutral_closed_2026_08_28.json 이 정본. 재개 조건 4개 밖의 이유로 다시 열지 않는다",
+ "v4_왜": "회신 N P0: v3 가 dE_notes 는 고쳤지만 **headline_sentences_ko 를 안 고쳤다** — 문자열 매칭 수정의 전형적 실패(같은 주장, 다른 표현). '모두 Li 자리 선호'·'약 2배' 는 v3 자신의 dE_notes·금지서술과 정면 충돌였다. not_citable 의 'wave1.5 대기' stale 도 제거."
 }
