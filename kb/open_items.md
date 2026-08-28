@@ -21,7 +21,13 @@
    스핀 섹터 자동(s/t/bs, parity 가드) · **manifest_stage0.json**(estimand_id·조성·
    전자수·state-selection policy·중단 코드 — 조건 ⑦ 절반). selftest 13건(음성 3) PASS.
    레거시 트라이머 경로 하위호환 유지.
-   → R 통과 즉시: 데스크탑에서 이완 dimer_neutral.xyz 로 dp4/dp6 생성 · Z1 부터 실행
+   → ✅ **발사대 완성 (2026-08-28, 데스크탑 실측)**: repo 의 이완 다이머
+   (`db/structures/sdcp_v7c_dimer_neutral.xyz`, ORCA 최종기하 E −3351.3355 Eh)로
+   `~/orca_poly/dp4`(잡 2: neutral + hB doublet, 전자 641) ·
+   `~/orca_poly/dp6`(잡 7: neutral + hBE·hCD × s/t/bs, 전자 960) 조립 완료.
+   클라우드 dry-run 과 바이트 동일 (결정론 확인). manifest estimand_id 부착.
+   **ORCA 미실행 — R GO 가 유일한 남은 트리거.** GO 시 러너(neutral → doped
+   warm-start, 트라이머 관례) 생성해서 전달.
 4. 병행: 조건 ⑥ 기준 분자 3잡(NUPDOWN=-1·LREAL=F, 외주 ~75분 — neutral 헤드라인과 공유)
    · 조건 ⑦ manifest 도구
 5. 실험 요청(협력자): EPR spin count · carrier/산화도 측정 · counterion 조성
