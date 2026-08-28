@@ -785,7 +785,7 @@
     "net4_fixed_basin_pairs_only__dimer_BB_doped_AA__see_review_M"
    ],
    "updated": "2026-08-28",
-   "note": "단일 branch · |ΔE|<10 meV = 사실상 무선호 | 2026-08-28 회신 M: 혼합-basin ΔE 금지. 고정-basin net4 쌍은 dimer(B/B)·doped(A/A)뿐. pm1 열이 정본 유지"
+   "note": "⛔ 2026-08-28 회신 M 으로 **해석 철회**: |ΔE|<10 meV 를 '무선호' 로 읽던 것은 사전등록 판정바닥(max(30 meV, 쌍 편차) · n<3 NO_VERDICT, kb/questions/sdcp_site_preference.md)을 안 읽은 것이다 → 현재 판정은 **'30 meV 해상도에서 미해결'**. 값 9.27 meV 자체는 유효(단일 branch) | 2026-08-28 회신 M: 혼합-basin ΔE 금지. 고정-basin net4 쌍은 dimer(B/B)·doped(A/A)뿐. pm1 열이 정본 유지"
   },
   {
    "system": "sdcp",
