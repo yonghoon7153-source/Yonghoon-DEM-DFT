@@ -18,9 +18,24 @@
        개질층(DTD C₂H₄O₄S), Ni/Co/Mn = NCM955 양극, In = LiIn 음극, Ti = LTO 파우치 대극.
        ⛔ Cu·Zr 등은 이 논문에 없다.
      · methods — **실제로 한 것만.** DFT(VASP/PBE, H₂O 흡착E 2점) · XPS(S 2p·P 2p).
-       ⛔ AIMD·NEB·ICOHP/COHP·DOS/PDOS·ELF·Bader·BVSE·ESW(grand-potential)·탄성·phonon
-       **전부 없다** (§11 "⛔ 이 논문이 안 한 것"). LSV·EIS·DRT·TOF-SIMS·GPC·GITT 는
-       실험 기법이라 Glossary 태그 어휘에 없어 빼 두었다 — 본문 §13 에 전부 적혀 있다. -->
+       이 논문은 NEB·Bader·COHP·ELF·BVSE·ESW·phonon·AIMD·MLIP 를 **하나도 하지 않는다**
+       (§11-D). LSV·EIS·DRT·TOF-SIMS·GPC·GITT 는 실험 기법이라 Glossary 태그 어휘에
+       없어 뺐다 — §13 에 전부 적혀 있다.
+
+     ⚠ 알려진 webapp 한계 (2026-08-28 확인, 이 digest 가 만든 문제가 아님):
+       `webapp/data.py :: glossary_papers()` 는 `methods:` 태그 **∪ 본문 토큰 스캔**으로
+       링크를 만든다(`GLOSSARY_TOKENS` 부분문자열 일치). 그래서 §11-D 처럼 **"이 논문은
+       NEB 를 하지 않는다"** 라고 *부정* 으로 쓴 문장도 긁혀서, Glossary 의
+       neb/cohp/bader/elf/bvse/phonon 페이지에 이 논문이 **잘못 링크된다.**
+       ⇒ **`methods:` 줄이 정본이다.** 같은 증상이 `kim2025_csp_metastable_edge_sharing_sse`
+       에도 그대로 남아 있다(그 digest 도 §13 에 부정 목록을 둔다) — 즉 **개별 digest 로는
+       못 고치는 도구 쪽 과제**다. 고치려면 `glossary_papers()` 의 토큰 스캔에
+       부정문 필터를 넣거나, `methods:` 태그가 있는 digest 는 토큰 스캔을 끄면 된다. -->
+
+<!-- ⚠ 그림 참조 표기 규약: 본문 전체에서 `Fig. 3a` / `Fig. S8` / `Table S1` 형태를 쓴다
+     (webapp 이 이 표기를 잡아 오른쪽 여백에 크로핑 PNG 를 띄운다).
+     "그림 3" · "Fig3" 은 안 잡힌다. 2026-08-28 실측: 33장 전부 §12 Figure set 주석과 연결됨
+     (주석 없는 그림 0 · 그림 없는 주석 0). -->
 
 ---
 
@@ -596,7 +611,7 @@ grand-potential ESW · 탄성상수 · EOS · phonon · SQS/enumerate — 전부
 | **6a,b** ★★ | **XPS S 2p / P 2p**, 4단(사이클 전후 × 2시료) — LPSC 만 **S⁰ 166.5 · Li₂SO₄ 168.9 · P₂Sₓ 132.7** 신규 | **우리 grand-potential 첫 분해식(원소 S 생성)의 실험 대응.** BE 앵커표 (§3-E) |
 | **6c,d** ★ | 100 사이클 후 SEM+EDS(S) — LPSC 편석·균열 / PS-LPSC 균일 | `Fig. S22`(사이클 전) 와 짝지어 **전후 통제**를 한 좋은 설계 |
 | **6e,f,g** ★★ | EIS + **DRT** 4성분 분해 + 저항 막대 (R_CT/R_CEI/R_Diffusion) | **DRT 를 등가회로 대신 쓰는 관행의 실례.** 🔑 **1사이클째부터 R_Diffusion 이 2.8× 벌어져 있다** |
-| **S1–S3** | PS-Li₂S 모델계 — GPC(Mw 2,618, PDI 1.49) · IR · XPS(169.1/162.5/159.9 eV) | **"S²⁻ 개시" 주장의 유일한 독립 검증**. 우리가 기구 주장을 세울 때의 모델계 설계 참고 |
+| **S1, S2, S3** | PS-Li₂S 모델계 — GPC(Mw 2,618, PDI 1.49) · IR(C–H 2800–3000 · S=O 1268/1220 · C–O/S–O 882/756 cm⁻¹) · XPS(169.1 / 162.5 / 159.9 eV) | **"S²⁻ 개시" 주장의 유일한 독립 검증**. 우리가 기구 주장을 세울 때의 모델계 설계 참고 |
 | **S4** ★ | DTD 농도 0/0.05/0.1/0.4 M — σ 4.64/4.49/4.32/**3.19** + 1,000 사이클 | **막 두께 ↔ σ trade-off 곡선.** 개질량 최적점이 존재한다는 실측 |
 | **S5** | 반응시간 1/6/12/24 h — σ 거의 불변 (24 h 4.31) | **자기제한 반응**의 간접 증거 |
 | **S6,S7** | 무처리 LPSC TEM/HRTEM (대조군) | 코팅 유무 대조의 기본 |
@@ -959,7 +974,7 @@ gap 과 σ_e 는 같은 양이 아니지만(gap 은 캐리어 생성의 열역�
 | `Fig. S12` | CCD | 🔴 **y축 라벨 오류** (Specific capacity → Voltage) |
 | `Fig. S13` | PS 층 σ | ⚠ 고주파 절편이 측정범위 밖(첫 점이 이미 호 중간) → R 추출에 불확실성 |
 | `Fig. S19` | 파우치 (가장 실용적) | 🔴 **y축 라벨 오류** (vs Li⁺/Li → 풀셀 전압) · ⚠ 유지율이 1사이클 기준이라 초기 상승 포함 |
-| **SI p.13 전면 렌더** (추가 검증) | `Fig. S17` 크롭이 백지여서 | 🔴 **`Fig. S17` 의 그림이 SI 에 없다 — 캡션 2개(S17 위 / S18 아래)가 그래프 1장을 공유** |
+| `Fig. S17` **(SI 해당 쪽 전면 렌더로 추가 검증)** | 크롭이 백지로 나와서 | 🔴 **`Fig. S17` 의 그림이 SI 에 없다 — 캡션 2개(S17 위 / S18 아래)가 그래프 1장을 공유하고, 그 그래프는 S18 캡션의 내용(10.8 mg/cm²)이다** |
 
 **⬜ 안 본 것 (20장)** — `fig_S1`(GPC PS-Li₂S) · `S2`(IR PS-Li₂S) · `S5`(반응시간) · `S6`·`S7`(무처리 TEM/HRTEM) ·
 `S9`(GPC PS-LPSC) · `S10`(SIMS 깊이) · `S11`(DC 분극 원자료) · `S14`(NCM SEM) · `S15`·`S16`(율속·장기 곡선) ·
