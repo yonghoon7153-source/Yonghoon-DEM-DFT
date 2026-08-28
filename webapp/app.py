@@ -759,6 +759,49 @@ def api_file(rel):
                                download_name=p.name)
 
 
+@app.route("/api/note-image", methods=["POST"])
+def api_note_image():
+    """메모·코멘트에 붙일 그림 업로드 → {"url"}.
+
+    붙여넣기(Ctrl+V)한 캡처가 주 용도라 **multipart 와 data:URL 둘 다** 받는다.
+    브라우저가 클립보드 그림을 File 로 주기도 하고 base64 문자열로 주기도 한다.
+
+    ⛔ 확장자는 **매직바이트**로 정한다 — 클라이언트가 보낸 MIME 을 안 믿는다.
+    """
+    g = _guard_mutation()
+    if g:
+        return g
+    blob, kind = b"", ""
+    f = (request.files.get("file") if request.files else None)
+    if f is not None:
+        blob, kind = f.read(), (f.mimetype or "")
+    else:
+        d = request.get_json(silent=True) or {}
+        raw = str(d.get("data") or "")
+        if raw.startswith("data:"):
+            head, _, b64 = raw.partition(",")
+            kind = head[5:].split(";")[0]
+            import base64
+            import binascii
+            try:
+                blob = base64.b64decode(b64, validate=True)
+            except (ValueError, binascii.Error):
+                return jsonify({"error": "base64 를 못 읽었다"}), 400
+    r = D.save_note_image(blob, kind)
+    if r.get("error"):
+        return jsonify(r), 400
+    return jsonify(r)
+
+
+@app.route("/api/note-image/<name>")
+def api_note_image_get(name):
+    """저장된 메모 그림. 이름이 규격(해시+확장자)이 아니면 404 — 경로 탈출 차단."""
+    p = D.note_image_path(name)
+    if p is None:
+        abort(404)
+    return send_from_directory(p.parent, p.name, max_age=31536000)
+
+
 @app.route("/api/concept-upload/<cid>", methods=["POST"])
 def api_concept_upload(cid):
     """개념 문서 드래그 업로드. 저장 후 페이지 새로고침이 첨부를 다시 수집한다."""

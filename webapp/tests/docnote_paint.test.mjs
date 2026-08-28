@@ -17,6 +17,12 @@ import path from "node:path";
 
 const ROOT = path.resolve(new URL(".", import.meta.url).pathname, "../..");
 const JS = path.join(ROOT, "webapp/static/js/docnote.js");
+// ⛔ 2026-08-28 — docnote.js 는 이제 서식 함수(inline/autosize/wrapSel)를 **자기 사본으로
+//   두지 않고** comments.js 의 window.noteFmt 를 부른다. base.html 이 모든 페이지에
+//   comments.js 를 싣기 때문인데, 이 테스트는 docnote.js 만 싣고 있어서 메모 카드가
+//   아예 안 그려졌다 (NF() 가 던진다 — 의도한 fail-closed 다).
+//   ⇒ **실제 페이지와 같은 조합**으로 싣는다. 하나만 싣는 테스트는 실제를 안 시험한다.
+const CJS = path.join(ROOT, "webapp/static/js/comments.js");
 // ⚠ CSS 도 같이 물린다. 안 물리면 `.dn-card` 가 static 으로 놓여서 **자리·크기 검사가
 //   아무것도 재지 않는다** — 통과해도 보증이 없다 (2026-08-27 자체 발견).
 const CSS = path.join(ROOT, "webapp/static/css/style.css");
@@ -78,6 +84,7 @@ await pg.evaluate(({ hl, note }) => {
   };
 }, { hl: HL, note: NOTE });
 await pg.addStyleTag({ path: CSS });
+await pg.addScriptTag({ path: CJS });   // 서식의 집 — docnote.js 보다 **먼저**
 await pg.addScriptTag({ path: JS });
 await pg.evaluate(() =>
   window.mountDocNotes(document.getElementById("body"), "kb/x.md",

@@ -35,50 +35,21 @@
   var BLOCKS = "p,li,h1,h2,h3,h4,h5,h6,blockquote,pre,td,th,figcaption";
   var cur = null;          // {body, rel, host, gut, notes, map, draft}
 
-  function esc(s) {
-    return String(s == null ? "" : s).replace(/[&<>"]/g, function (c) {
-      return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c];
-    });
+  /* ⛔⛔ 2026-08-28 — 글 서식(esc/inline/autosize/wrapSel)의 **집을 comments.js 로 옮겼다.**
+   *   여기에만 있어서 문헌 코멘트는 `**87.2%**` 가 별표째 보였다(1저자 신고).
+   *   comments.js 는 base.html 이 **모든 페이지**에 싣고 이 파일은 일부 페이지에만
+   *   실리므로, 공용 규약은 저쪽이 집이다. 여기서는 **호출 시점에** 가져다 쓴다 —
+   *   불러오는 순서를 가정하지 않으려고 (호출은 항상 DOM 준비 뒤다).
+   *   ⚠ 사본을 다시 만들지 마라. 오늘만 "같은 규약의 두 경로" 를 세 번 고쳤다. */
+  function NF() {
+    if (!global.noteFmt) throw new Error("noteFmt 가 없다 — comments.js 가 안 실렸다");
+    return global.noteFmt;
   }
+  function esc(s) { return NF().esc(s); }
+  function inline(s) { return NF().inline(s); }
+  function autosize(ta) { return NF().autosize(ta); }
+  function wrapSel(ta, mk) { return NF().wrapSel(ta, mk); }
   function norm(s) { return String(s == null ? "" : s).replace(/\s+/g, " ").trim(); }
-
-  /* 메모 글의 아주 작은 인라인 서식. **esc 뒤에** 돌린다 — 순서가 뒤집히면 HTML 주입이다.
-   * `code` 를 먼저 처리해 그 안의 별표가 굵게 먹지 않게 한다.
-   * ⛔ 못 하는 것: 블록 문법(목록·표·제목)은 없다. 여기는 메모지 문서가 아니다. */
-  function inline(s) {
-    return esc(s)
-      .replace(/`([^`\n]+)`/g, '<code>$1</code>')
-      .replace(/\*\*([^*\n]+)\*\*/g, "<b>$1</b>")
-      .replace(/==([^=\n]+)==/g, '<mark class="dn-penmk">$1</mark>');
-  }
-
-  /* 입력창을 내용에 맞춰 늘린다 (1저자 2026-08-27: "수정할 때 창이 작아져서 불편해").
-   * 카드에 보이던 글이 rows=3 상자로 눌려서, 고치려고 열면 오히려 **덜 보였다** —
-   * 읽을 때보다 고칠 때 더 안 보이는 건 거꾸로다.
-   * 화면 높이의 55 % 를 넘지는 않는다 (그 위로는 상자 안에서 스크롤한다).
-   * ⚠ 높이가 바뀌면 여백 카드 배치가 어긋나므로 **layout() 을 같이 부른다.** */
-  function autosize(ta) {
-    if (!ta) return;
-    ta.style.height = "auto";
-    var max = Math.round((global.innerHeight || 800) * 0.55);
-    ta.style.height = Math.min(ta.scrollHeight + 2, max) + "px";
-  }
-
-  /* textarea 선택 영역을 표시로 감싼다/벗긴다 (Ctrl+B). 선택이 없으면 커서 자리에
-   * 빈 표시를 넣고 그 안으로 커서를 옮긴다 — 워드에서 굵게를 먼저 켜는 것과 같다. */
-  function wrapSel(ta, mk) {
-    var a = ta.selectionStart, b = ta.selectionEnd, v = ta.value, sel = v.slice(a, b), n = mk.length;
-    if (sel && v.slice(a - n, a) === mk && v.slice(b, b + n) === mk) {
-      ta.value = v.slice(0, a - n) + sel + v.slice(b + n);
-      ta.setSelectionRange(a - n, b - n);
-    } else if (sel.length > 2 * n && sel.slice(0, n) === mk && sel.slice(-n) === mk) {
-      ta.value = v.slice(0, a) + sel.slice(n, -n) + v.slice(b);
-      ta.setSelectionRange(a, b - 2 * n);
-    } else {
-      ta.value = v.slice(0, a) + mk + sel + mk + v.slice(b);
-      if (sel) ta.setSelectionRange(a + n, b + n); else ta.setSelectionRange(a + n, a + n);
-    }
-  }
 
   /* ── 본문 쪽: 형광펜 ───────────────────────────────────────────────────── */
 
@@ -463,7 +434,7 @@
     d.innerHTML =
       '<div class="dn-meta">새 메모<button type="button" class="dn-cancel" title="취소 (Esc)">✕</button></div>' +
       (anchor ? '<div class="dn-quote">' + esc(anchor) + "</div>" : "") +
-      '<textarea class="dn-in" rows="3" placeholder="메모… (Ctrl+Enter 저장 · Esc 취소 · Ctrl+B 굵게 · Ctrl+H 형광 · Shift+Enter 줄바꿈)"></textarea>' +
+      '<textarea class="dn-in" rows="3" placeholder="메모… (Ctrl+Enter 저장 · Esc 취소 · Ctrl+B 굵게 · Ctrl+H 형광 · Shift+Enter 줄바꿈 · 그림은 붙여넣기)"></textarea>' +
       '<div class="dn-act"><button type="button" class="btn sm dn-save">저장</button></div>';
     cur.gut.appendChild(d);
     layout();

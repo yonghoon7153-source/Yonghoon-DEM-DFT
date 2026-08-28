@@ -1,0 +1,152 @@
+{
+ "slug": "tu2026_diffusion_descriptor_ml_li_sse_interface",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-08-28",
+ "sources": [
+  "82. Tu2026_Diffusion_Descriptor_ML_SSE_Li_Metal.pdf",
+  "82. Sup) Tu2026_Diffusion_Descriptor_ML_SSE_Li_Metal.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 3,
+   "file": "fig_1.png",
+   "caption": "Fig. 1. The atomic conﬁgurations, band gaps, and PDOSs of (a) LLZO and Ta-LLZO, (b) LiPON and C-LiPON, (c) LPS and Sn-LPS, (d) LPSCl and Sn-LPSCl.",
+   "rotated_deg": 0,
+   "bbox": [
+    63.6,
+    51.6,
+    533.4,
+    371.2
+   ],
+   "w": 1958,
+   "h": 1332,
+   "dpi": 300,
+   "src": "82. Tu2026_Diffusion_Descriptor_ML_SSE_Li_Metal.pdf",
+   "blank": 0.65
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 4,
+   "file": "fig_2.png",
+   "caption": "Fig. 2. The schematic framework of machine learning accelerated ﬁrst principles calculations for screening novel SSEs for lithium anode.",
+   "rotated_deg": 0,
+   "bbox": [
+    75.6,
+    179.1,
+    519.6,
+    440.8
+   ],
+   "w": 1851,
+   "h": 1091,
+   "dpi": 300,
+   "src": "82. Tu2026_Diffusion_Descriptor_ML_SSE_Li_Metal.pdf",
+   "blank": 0.609
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 5,
+   "file": "fig_3.png",
+   "caption": "Fig. 3. The heat map for Pearson correlation coeﬃcients of the feature descriptors in ML algorithm.",
+   "rotated_deg": 0,
+   "bbox": [
+    75.6,
+    51.2,
+    519.6,
+    569.2
+   ],
+   "w": 1851,
+   "h": 2159,
+   "dpi": 300,
+   "src": "82. Tu2026_Diffusion_Descriptor_ML_SSE_Li_Metal.pdf",
+   "blank": 0.362
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 6,
+   "file": "fig_4.png",
+   "caption": "Fig. 4. The predicted interfacial formation energies from algorithms: (a) RF, (b) GBRT, (c) XGB, and (d) SVR; The predicted diffusion barriers from algorithms: (e) RF, (f) GBRT, (g) XGB, and (h) SVR; The MAE, MSE, RMSE and R2 of algorithms on (i) formation energy and (j) diffusion barrier prediction; The feature importance of descriptors in predicting (k) formation energy and (l) diffusion barrier.",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    51.3,
+    567.7,
+    461.2
+   ],
+   "w": 2235,
+   "h": 1709,
+   "dpi": 300,
+   "src": "82. Tu2026_Diffusion_Descriptor_ML_SSE_Li_Metal.pdf",
+   "blank": 0.775
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 7,
+   "file": "fig_5.png",
+   "caption": "Fig. 5. The atomic conﬁgurations and DOSs of (a) Li/ B-LLZO, (b) Li/Sn-LiPON, (c) Li/B-LPS, and (d) Li/Al-LPSCl, the charge density differences and charge transfer values of (e) Li/LLZO and Li/ B-LLZO, (f) Li/LiPON and Li/Sn-LiPON, (g) Li/LPS and Li/B-LiPON, (h) Li/ LPSCl and Li/Al-LPSCl.",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    51.6,
+    567.7,
+    410.2
+   ],
+   "w": 2235,
+   "h": 1495,
+   "dpi": 300,
+   "src": "82. Tu2026_Diffusion_Descriptor_ML_SSE_Li_Metal.pdf",
+   "blank": 0.781
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 8,
+   "file": "fig_6.png",
+   "caption": "Fig. 6. The diffusion path and barrier of lithium ion in (a) Li/ B-LLZO, (b) Li/Sn-LiPON, (c) Li/B-LPS, and (d) Li/Al-LPSCl, (e) the temperature-dependent MSDs of lithium-ions in these interfaces.",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    51.3,
+    567.7,
+    397.2
+   ],
+   "w": 2235,
+   "h": 1443,
+   "dpi": 300,
+   "src": "82. Tu2026_Diffusion_Descriptor_ML_SSE_Li_Metal.pdf",
+   "blank": 0.822
+  },
+  {
+   "key": "fS1",
+   "kind": "figure",
+   "label": "S1",
+   "page": 1,
+   "file": "fig_S1.png",
+   "caption": "Fig. S1. The learning curve of the ML algorithms for predicting interfacial formation energy: (a) RF, (b) GBRT, (c) XGB and (d) SVR; the learning curve of ML algorithms for predicting diffusion barrier: (e) RF, (f) GBRT, (g) XGB and (h) SVR. The predicted interfacial formation energies from different algorithms absent with the descriptor of freeze formation energy: (i) RF, (j) GBRT, (k) XGB, (l) SVR.",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    73.2,
+    521.1,
+    432.3
+   ],
+   "w": 1822,
+   "h": 1498,
+   "dpi": 300,
+   "src": "82. Sup) Tu2026_Diffusion_Descriptor_ML_SSE_Li_Metal.pdf",
+   "blank": 0.888
+  }
+ ]
+}

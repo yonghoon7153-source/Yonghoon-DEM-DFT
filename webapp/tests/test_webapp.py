@@ -1993,3 +1993,87 @@ def test_element_papers_declared_first():
     for s in ("B", "Ge"):
         assert deng not in [h["id"] for h in element_papers(s, limit=999)], \
             f"deng2026 이 선언하지 않은 {s} 에 링크됐다"
+
+
+def test_note_image_upload_guards():
+    """메모·코멘트 그림 첨부 — **확장자는 매직바이트로 정한다** (클라이언트 말을 안 믿는다).
+
+    1저자 요청 2026-08-28: "메모쪽에 capture본, png 등도 첨부 가능하게".
+    첨부는 남이 만든 파일일 수 있으므로 선언 MIME 이 아니라 내용으로 판정하고,
+    저장 이름은 내용의 sha256 이라 같은 캡처를 여러 번 붙여도 한 벌만 남는다.
+    """
+    import shutil
+
+    from data import NOTE_IMG_DIR, note_image_path, save_note_image
+
+    png = bytes.fromhex("89504e470d0a1a0a") + b"x" * 40
+    jpg = bytes.fromhex("ffd8ff") + b"y" * 40
+    try:
+        # ── 음성이 먼저다: 그림이 아닌 것을 받아주면 이 기능은 업로드 구멍이다
+        assert save_note_image(b"", "image/png").get("error"), "빈 파일을 받으면 안 된다"
+        assert save_note_image(b"not an image at all" * 4, "image/png").get("error"), \
+            "그림이 아닌 바이트를 png 라고 우기면 거부해야 한다"
+        assert save_note_image(png + b"0" * (9 * 1024 * 1024), "image/png").get("error"), \
+            "8 MB 를 넘으면 거부해야 한다"
+
+        # ── 선언과 실제가 다르면 **실제**를 쓴다
+        r = save_note_image(jpg, "image/png")
+        assert r.get("name", "").endswith(".jpg"), \
+            f"png 라고 선언해도 내용이 jpeg 면 .jpg 여야 한다 ({r})"
+
+        # ── 양성 + 같은 내용은 같은 이름 (참조가 안 갈라진다)
+        a = save_note_image(png, "image/png")
+        b = save_note_image(png, "image/png")
+        assert a["name"] == b["name"], "같은 내용이면 같은 이름이어야 한다"
+        assert note_image_path(a["name"]) is not None
+
+        # ── 경로 탈출 차단 (이름 규격 밖은 전부 None)
+        for bad in ("../../etc/passwd", "zz.png", "", "x" * 32 + ".exe",
+                    a["name"] + "/../x"):
+            assert note_image_path(bad) is None, f"이름 '{bad}' 이 통과했다"
+    finally:
+        shutil.rmtree(NOTE_IMG_DIR, ignore_errors=True)
+
+
+def test_note_format_lives_in_one_file():
+    """글 서식(inline/autosize/wrapSel)의 **사본이 둘이 아니다**.
+
+    ⛔ 2026-08-28 — 원래 docnote.js 에만 있어서 문헌 코멘트는 `**87.2%**` 가 별표째
+      보였다(1저자 신고). 사본을 두 벌 만들면 오늘만 세 번 겪은 "같은 규약의 두 경로"다.
+      comments.js 가 집이고 docnote.js 는 window.noteFmt 를 부른다.
+    """
+    root = Path(__file__).resolve().parents[2]
+    cjs = (root / "webapp/static/js/comments.js").read_text(encoding="utf-8")
+    djs = (root / "webapp/static/js/docnote.js").read_text(encoding="utf-8")
+
+    # 집: comments.js 가 정의하고 내보낸다
+    for fn in ("function inline(", "function autosize(", "function wrapSel("):
+        assert fn in cjs, f"comments.js 에 {fn} 이 없다 — 서식의 집이 비었다"
+    assert "global.noteFmt" in cjs, "noteFmt 를 안 내보낸다"
+
+    # 세입자: docnote.js 는 **자기 본문을 갖지 않고** 위임만 한다
+    assert "NF()" in djs, "docnote.js 가 noteFmt 를 안 쓴다"
+    for pat in ("<b>$1</b>", "ta.scrollHeight", "setSelectionRange(a + n"):
+        assert pat not in djs, \
+            f"docnote.js 에 서식 사본이 남아 있다 ({pat!r}) — 한쪽만 고쳐지는 사고가 난다"
+
+    # 두 입력창 모두 그림 붙여넣기를 받는다 (한쪽만 되면 손이 헷갈린다)
+    assert ".cmt-in, .dn-in" in cjs, "코멘트/메모 둘 다 그림 붙여넣기를 받아야 한다"
+    # 임의 URL 을 <img> 로 펴지 않는다
+    # 정규식 안이라 슬래시가 이스케이프돼 있다 — 형태가 아니라 **가드가 있는지**를 본다
+    assert "[0-9a-f]{32}" in cjs and "IMG_SRC.test(src)" in cjs, \
+        "우리 이름 규격 밖의 URL 을 <img> 로 펴면 메모 한 줄로 외부 요청을 만들 수 있다"
+
+
+def test_comment_edit_route_exists():
+    """코멘트 수정(PATCH) 이 서버·UI 양쪽에 있다.
+
+    서버 edit_file_comment 는 예전부터 있었는데 **UI 가 없어서** 못 고쳤다
+    (1저자 2026-08-28: "수정도 가능하게").
+    """
+    root = Path(__file__).resolve().parents[2]
+    app_py = (root / "webapp/app.py").read_text(encoding="utf-8")
+    cjs = (root / "webapp/static/js/comments.js").read_text(encoding="utf-8")
+    assert '"PATCH"' in app_py, "PATCH 라우트가 없다"
+    assert 'method: "PATCH"' in cjs, "UI 에 수정 저장이 없다"
+    assert "cmt-edit" in cjs and "cmt-save" in cjs, "수정 버튼/저장 버튼이 없다"

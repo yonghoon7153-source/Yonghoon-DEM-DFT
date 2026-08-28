@@ -65,6 +65,39 @@ v_neutral      = min(s["V_vs_Li"] for s in neutral)       # ← 1.72
 - **cascade 입력**: `tools/cascade/rebuild_pool_inputs.py:131` 이 `red_V` 로 이 필드를 쓴다.
 - **nd_doped**: `red=1.52 · ocv=1.72`. 같은 구조다.
 
+## 4.5 🔑 pymatgen 소스 확인 — §2 추론이 맞다 (2026-08-28, gabia 실측)
+
+`PhaseDiagram.get_element_profile` 본문의 결정적인 한 줄:
+
+```python
+for cc in self.get_critical_compositions(el_comp, gc_comp)[1:]:
+    ...
+    c = self.get_composition_chempots(cc + el_comp * 1e-5)[element]   # ← 여기
+```
+
+`cc` 는 **임계조성(두 facet 사이 경계)** 이다. 거기에 열린원소(Li)를 `1e-5` 만큼 **더해서**
+chempot 을 잰다. Li 를 더하면 μ_Li 가 **올라가고**, `V = μ_ref − μ` 이므로 전압은 **내려간다.**
+
+⇒ 보고되는 `chempot` 은 그 경계의 **Li-rich(저전압) 쪽 facet** 값이다.
+**모든 항목이 자기 경계의 아래쪽을 가리킨다.**
+
+그래서 우리가 `max(V where evolution>0)` 로 집은 1.24 는 *"환원이 끝나는 전압"* 이 아니라
+**그 아래 facet 의 전압**이다. 실제 환원 개시는 중성 facet 의 아래 끝 = **1.72**.
+
+**독립 검증 — 산화 쪽에서 같은 편향이 보인다:**
+
+| | 우리 | 문헌 | 우리 다음 breakpoint |
+|---|---:|---:|---:|
+| 환원한계 | 1.24 | 1.71 (Zhu) · 1.78 (Wang) | **1.72** ✓ |
+| 산화한계 | 2.14 | 2.31 (Zhu) · 2.30 (Wang) | **2.36** |
+
+둘 다 문헌값이 **우리 값과 다음 breakpoint 사이**에 있다. 한쪽만이면 우연일 수 있는데
+**양쪽이 같은 방향**이라 규약 차이로 읽는 게 자연스럽다.
+
+⚠ 다만 산화 쪽은 환원만큼 깨끗하지 않다 — 문헌 2.30 이 우리 2.14 와 2.36 의 **중간**이라
+"한 칸 위" 로 딱 떨어지지 않는다. 그리고 우리 canonical 산화 onset 은 이 파일의 2.14 가
+아니라 **2.256 V** 다(다른 파일). **산화 쪽은 별도로 봐야 한다** — 이 카드는 환원만 닫는다.
+
 ## 5. ⛔ 그런데 단정 못 하는 이유
 
 - **우리 데이터가 스스로 1.52 를 "reduction limit" 이라 부른다.** `nd_doped` breakpoint

@@ -4994,6 +4994,70 @@ def _comments_locked(timeout=10.0, path=None):
             pass
 
 
+#: 메모·코멘트에 붙이는 그림. 붙여넣기(Ctrl+V)한 캡처가 대부분이라 **png 가 기본**이다.
+#: ⛔ svg 는 뺐다 — 첨부는 남이 만든 파일일 수 있고, svg 는 스크립트를 품는다.
+NOTE_IMG_EXT = {"png": ".png", "jpeg": ".jpg", "jpg": ".jpg",
+                "gif": ".gif", "webp": ".webp"}
+NOTE_IMG_MAX = 8 * 1024 * 1024          # 8 MB/장 — 캡처 한 장이 이걸 넘을 일은 없다
+NOTE_IMG_DIR = DB / "note_images"
+
+
+def save_note_image(blob: bytes, kind: str) -> dict:
+    """메모·코멘트에 붙일 그림 한 장을 저장 → {"url", "name", "bytes"} 또는 {"error"}.
+
+    파일명이 **내용의 sha256** 이다. 같은 캡처를 여러 메모에 붙여도 한 벌만 남고,
+    이름 충돌 처리가 필요 없다.
+
+    ⛔ 못 하는 것
+      · **참조 계수를 세지 않는다.** 메모에서 그림을 지워도 파일은 남는다
+        (다른 메모가 같은 해시를 쓸 수 있어서 지우면 그쪽이 깨진다). 정리는 수동이다.
+      · 확장자는 **선언(kind)이 아니라 매직바이트**로 정한다 — 클라이언트 말을 안 믿는다.
+      · 크기를 줄이거나 다시 인코딩하지 않는다. 원본 그대로다.
+    """
+    if not blob:
+        return {"error": "빈 파일"}
+    if len(blob) > NOTE_IMG_MAX:
+        return {"error": f"{len(blob)//1024//1024} MB — {NOTE_IMG_MAX//1024//1024} MB 를 넘는다"}
+    sniff = _sniff_image(blob)
+    if not sniff:
+        return {"error": "그림 파일이 아니다 (png/jpeg/gif/webp 만)"}
+    if kind and NOTE_IMG_EXT.get(str(kind).lower().split("/")[-1]) not in (None, sniff):
+        # 선언과 실제가 다르면 **실제를 쓴다**. 다만 조용히 넘어가지는 않는다.
+        pass
+    import hashlib                      # 모듈 상단에 없다 — 기존 관례를 따른다
+    h = hashlib.sha256(blob).hexdigest()[:32]
+    NOTE_IMG_DIR.mkdir(parents=True, exist_ok=True)
+    name = h + sniff
+    q = NOTE_IMG_DIR / name
+    if not q.exists():
+        q.write_bytes(blob)
+    return {"url": "/api/note-image/" + name, "name": name, "bytes": len(blob)}
+
+
+def _sniff_image(b: bytes) -> str | None:
+    """매직바이트로 확장자를 정한다 → ".png" 등. 모르면 None.
+
+    클라이언트가 보낸 MIME 을 믿지 않는 이유: 첨부는 남이 만든 파일일 수 있다.
+    """
+    if b[:8] == b"\x89PNG\r\n\x1a\n":
+        return ".png"
+    if b[:3] == b"\xff\xd8\xff":
+        return ".jpg"
+    if b[:6] in (b"GIF87a", b"GIF89a"):
+        return ".gif"
+    if b[:4] == b"RIFF" and b[8:12] == b"WEBP":
+        return ".webp"
+    return None
+
+
+def note_image_path(name: str):
+    """저장된 그림의 실제 경로. 이름이 규격(해시+확장자)이 아니면 None — 경로 탈출 차단."""
+    if not re.fullmatch(r"[0-9a-f]{32}\.(png|jpg|gif|webp)", name or ""):
+        return None
+    q = NOTE_IMG_DIR / name
+    return q if q.is_file() else None
+
+
 def file_comments(rel: str) -> list[dict]:
     """그 파일에 달린 코멘트 (오래된 순)."""
     return _load_comments().get((rel or "").lstrip("/"), [])

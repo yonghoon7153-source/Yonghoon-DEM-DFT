@@ -989,6 +989,23 @@ tr.row-dim{opacity:.62}
 .cmt-del:hover{color:var(--red,#dc2626)}
 .cmt-t{font-size:.78rem;line-height:1.55;color:var(--text2,#334155);white-space:pre-wrap;
   word-break:break-word;margin-top:2px}
+/* 2026-08-28 — 코멘트에도 굵게·코드·형광·그림이 먹는다 (여백 메모와 같은 서식).
+   그전에는 `**87.2%**` 가 별표째 보였다 (1저자 신고). */
+.cmt-t b{font-weight:700;color:var(--text,#0f172a)}
+.cmt-t code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.92em;
+  background:var(--code-bg,#f1f5f9);border-radius:4px;padding:0 3px}
+/* 붙여넣은 캡처. 카드 폭을 넘지 않게 — 넘으면 여백 배치가 통째로 밀린다. */
+.note-img{display:block;max-width:100%;height:auto;border-radius:6px;margin:6px 0;
+  border:1px solid var(--border,#e5e7eb);cursor:zoom-in}
+.note-img:hover{border-color:var(--accent,#2563eb)}
+/* 수정 상자 — ✎ 로 연다. 저장 전까지 원문은 data-raw 에 그대로 있다. */
+.cmt-edit{background:none;border:0;color:var(--muted,#94a3b8);cursor:pointer;font-size:.7rem;
+  padding:0 2px;line-height:1;opacity:0;transition:opacity .12s}
+.cmt-i:hover .cmt-edit,.cmt-edit:focus-visible{opacity:1}
+.cmt-edit:hover{color:var(--accent,#2563eb)}
+.cmt-ed{margin-top:4px}
+.cmt-ed .cmt-in{width:100%;box-sizing:border-box}
+.cmt-edbtns{display:flex;gap:6px;margin-top:4px}
 .cmt-new{display:flex;gap:6px;align-items:flex-start;margin-top:2px}
 .cmt-in{flex:1;font:inherit;font-size:.78rem;padding:6px 8px;resize:vertical;
   border:1px solid var(--border,#e5e7eb);border-radius:8px;background:var(--surface,#fff);
@@ -1176,6 +1193,8 @@ tr.row-dim{opacity:.62}
 .dn-quote{font-size:.68rem;color:var(--muted);border-left:2px solid var(--border2);
   padding-left:6px;margin-bottom:5px;max-height:3.2em;overflow:hidden}
 .dn-text{white-space:pre-wrap;word-break:break-word}
+.dn-text code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.92em;
+  background:var(--code-bg,#f1f5f9);border-radius:4px;padding:0 3px}
 .dn-in{width:100%;box-sizing:border-box;font:inherit;font-size:.76rem;
   border:1px solid var(--border);border-radius:6px;padding:6px 7px;background:var(--surface);
   color:inherit;resize:vertical;min-height:4.6em;overflow-y:auto;line-height:1.5}
