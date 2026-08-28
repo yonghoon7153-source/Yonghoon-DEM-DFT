@@ -3,7 +3,7 @@ title: "교차리뷰 M — SDCP wave1.5 마감: basin-매칭 참조·자리선�
 date: 2026-08-28
 updated: 2026-08-28
 tags: [review/codex, sdcp, vasp, dftu, magnetism, adsorption]
-status: 리뷰대기
+status: 회신반영
 confidence: medium
 verificationStatus: unverified
 explored: false
@@ -159,3 +159,27 @@ statics 8개 대신, 있는 것만으로 서술을 좁혀 마감하는 선택지
 - `db/properties/sdcp_wave1_citable.json` (v2) — 인용 확정본
 - `db/properties/sdcp_wave1_results.json` — 총에너지 원장
 - `kb/open_items.md` §P — 자리선호 항목 (2026-08-28 갱신)
+
+
+---
+
+## 8. 회신 M (2026-08-28) — 판정: **마감 보류**. 요지와 이행
+
+**P0 (묻지 않은 것에서 나옴)** — basin-매칭 ΔE_site 는 estimand 오류. 혼합-basin 쌍에서
+슬랩 gap(49.718 meV)이 산술적으로 출입하며 "두 시드 1 meV 재현" 착시를 만들었다.
+직접 총에너지차: c10 +100.220(A/B) · neutral −40.697(B/A) · dimer +36.157(B/B) ·
+doped −18.946(A/A). **우리가 원장으로 전부 재현 확인.**
+
+| 항목 | 회신 | 이행 |
+|---|---|---|
+| M1 | 조건부 찬성 — estimand 3종 분리 (조건부 E_ads^β=SI / lowest-sampled=본문 / 고정-basin ΔE) | citable v3 `estimand_구분` |
+| M2 | 반대 — n=1. "matched pose 의 vertical contrast" 로 강등. neutral 은 **30 meV 해상도 미해결** (사전등록 규약을 우리가 안 읽음) | dE_notes 전면 교체 |
+| M3 | 조건부 — per-분자 유지, "동일 pm1 branch 에서 최소 0.346 eV 더 음수" 까지만. "자리 불문·이긴다·2배" 금지 | caveat 반영 |
+| M4 | 반대 — 8개로 부족. **16 statics** (라디칼 NUPDOWN 기여는 ±1: net4→3/5, pm1→AFM 정/역×1, **−1 금지**). "105 meV" 는 branch gap 아님 | 설계 §P 에 기록 |
+| M4-b | **③ 권고** — 원고에서 라디칼 흡착·자리선호 제외, 추출 부호만 유지. ① 은 SI 원값만(±0.05 금지), ② 방어 불가 | 사용자 결정 대기 |
+| M4-c | 조건부 — min 은 **복합체 총에너지**에서, basin-매칭 E_ads 의 min 금지. 높은 해는 SI 보존. "ground state 확정" 금지 | 규약 기록 |
+| M5 | 반대 — champion-only relax ×3 은 비대칭. 하려면 쌍으로 6개+, 먼저 잔류력 전수 확인 | 보류 |
+| M6 | citable 충돌·반올림 사슬(0.087→0.06 등)·k-transfer 정밀도·피복률 미수렴·흡착↔추출 estimand 분리 | v3 에서 수정 |
+
+**이행 커밋**: citable v3 · wave15 기록 정정블록 · registry 11항목 재정정 · open_items §P 재작성.
+**남은 결정 (사람)**: 라디칼 = ③ 제외 vs 16-static 실행. 원고 비중이 정한다.

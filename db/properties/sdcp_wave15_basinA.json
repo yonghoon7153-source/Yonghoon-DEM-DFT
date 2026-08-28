@@ -185,5 +185,17 @@
   }
  },
  "원자료_보관": "zip 4개는 로컬 업로드 (repo 미수록 — OUTCAR 원본 ~70 MB). 이 manifest 의 sha256 로 재대조 가능",
- "phaseB_원자료_대조": "RESULTS.txt 의 TOTEN 6종 전부 db/properties/sdcp_phaseB_dftu_v1.json 과 일치 (dE_extract +0.3356 eV 포함) — 기인용 값의 원자료 확보 완료"
+ "phaseB_원자료_대조": "RESULTS.txt 의 TOTEN 6종 전부 db/properties/sdcp_phaseB_dftu_v1.json 과 일치 (dE_extract +0.3356 eV 포함) — 기인용 값의 원자료 확보 완료",
+ "⛔_회신M_정정_2026_08_28": {
+  "철회": [
+   "'열린_것/dE_site_meV_net4_basin_matched' 의 c10 50.50 · neutral 9.02 — 혼합-basin 쌍이라 자리선호가 아니다 (직접차 +100.220 / −40.697 meV)",
+   "'자기민감도 게이트 셋 다 통과' — c10·neutral 은 estimand 미정의. 살아남는 것은 dimer(B/B) 0.087 meV 하나"
+  ],
+  "유지": [
+   "basin A 확정 자체 (3다리 검증)",
+   "basin-조건부 E_ads^β (SI 급으로 개명)",
+   "doped net4 A/A 쌍 −18.95 meV (고정-basin, 단일 시드)"
+  ],
+  "교훈": "다른 슬랩을 뺀 두 조건부 증분의 차를 ΔE_site 라 불렀다 — 슬랩 gap 49.718 meV 가 그 산술로 정확히 들어왔다 나가며 'pm1 재현' 착시를 만들었다"
+ }
 }

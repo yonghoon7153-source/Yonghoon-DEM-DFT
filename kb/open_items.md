@@ -585,20 +585,27 @@ ld1.x 생성도, VASP 외주도 필요 없다.
 
 ### P. 🔴 **SDCP·PTFE 자리 선호 — "Li 를 선호한다"는 지금까지 판정된 적이 없다** (2026-08-11 신설)
 
-**★★★ 2026-08-28 wave1.5 회신 — 이 항목의 물을 수 있는 부분은 전부 답해졌다.**
-독립 검증(OUTCAR 실측 3다리) 후 net4 basin A 확정 → net4 E_ads basin-matched 로 열림
-(`db/properties/sdcp_wave15_basinA.json` · citable v2). 자기민감도 |ΔE_pm1−ΔE_net4| =
-dimer 0.06 · neutral 0.28 · c10 0.73 meV — **셋 다 ≤10 게이트 통과, 두 자기 시드에서 재현**:
+**★★★ 2026-08-28 wave1.5 + 회신 M — 마감 보류로 정정.**
+wave1.5 는 성공(basin A 확정, 3다리 검증)했으나, 그 위에 우리가 세운 **basin-매칭 ΔE_site 가
+잘못된 estimand** 였다(회신 M P0): 혼합-basin 쌍에서 다른 슬랩을 빼면 슬랩 gap 49.718 meV 가
+산술적으로 들어와, "두 시드 1 meV 재현"(v2)은 착시였다. 직접 총에너지차가 진실이다:
 
-| 조각 | ΔE_site (Ni−Li) | 판정 |
-|---|---:|---|
-| ptfe_c10 | +49.8/+50.5 meV | **Li-top 유리** (~50 meV) |
-| ptfe_dimer | +36.1/+36.2 meV | **Li-top 유리** (~36 meV) |
-| sdcp_neutral | +9.3/+9.0 meV | **무선호** (<10 meV) |
-| sdcp_doped | — | ⛔ **인용 불가 유지** (pm1 스핀 분기 105 meV + static 미수렴 1건) |
+| 조각 | net4 쌍 basin | 직접차 Ni−Li | 판정 |
+|---|---|---:|---|
+| ptfe_c10 | A/B 혼합 | +100.22 meV | ⛔ 자리선호 아님 (gap 포함). **pm1 단일 +49.77** |
+| ptfe_dimer | **B/B** | +36.16 | ✅ 고정-basin. pm1 36.07 과 **0.087 meV** 재현 |
+| sdcp_neutral | B/A 혼합 | −40.70 | ⛔ 동상. pm1 +9.27 — **30 meV 해상도에서 미해결** |
+| sdcp_doped | **A/A** | −18.95 | 고정-basin이나 단일 시드·상대 스핀 미열거 — 인용 불가 |
 
-남는 것 = doped 자리선호(재설계 필요) · freeze 0.85 기하 회수 · ORCA 기체상 기하 fetch.
-phaseB 원자료(zip)는 기인용 dE_extract +0.336 eV 와 6/6 TOTEN 대조 일치 — 감사 가능해졌다.
+허용 서술 (회신 M): 전부 **"UMA-selected matched pose 에서의 vertical energy contrast"** 로
+한정. neutral 은 "무선호" 가 아니라 사전등록 판정바닥(max(30 meV, 쌍 편차) · n<3 NO_VERDICT —
+`kb/questions/sdcp_site_preference.md`, **v2 가 이 자체 규약을 안 읽었다**) 아래 미해결.
+"105 meV branch 갈림" 도 철회 — pm1 ΔE(+86.45, 미수렴 포함) vs net4 ΔE(−18.95)의 차였다.
+
+라디칼을 닫으려면 (회신 M 설계): **statics 16개** = 2 site × 2 기판상태 × 2 상대스핀 × 2 상.
+NUPDOWN 은 라디칼 기여 ±1 (2S_z) — net4 는 3과 5, pm1 은 AFM 배열 정/역 × NUPDOWN=1
+(**NUPDOWN=−1 금지** — 해제 예약값). 원고에 핵심 아니면 **③ 제외 + 추출 부호만 유지** 권고.
+phaseB 원자료(zip)는
 
 프로토콜 정본: `kb/methodology/site_preference_protocol_2026_08_11.md`
 도구: `tools/sdcp/site_screen.py` (게이트 회귀시험 11/11 통과) · 실행기 `run_site_screen_gabia.sh`

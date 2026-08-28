@@ -728,10 +728,10 @@
    "prohibitions": [
     "absolute_vs_other_codes",
     "cell_level_claims",
-    "net4_basin_matched_only_see_wave15_record"
+    "net4_fixed_basin_pairs_only__dimer_BB_doped_AA__see_review_M"
    ],
    "updated": "2026-08-28",
-   "note": "★ 2-branch (net4 +36.16, 상호작용 0.09 meV — '0.1 meV 정확도' 표현 금지, k-미검증) | 2026-08-28 wave1.5 basinA 확정 → net4 해제 (basin-matched 참조 필수, db/properties/sdcp_wave15_basinA.json)"
+   "note": "★ 2-branch (net4 +36.16, 상호작용 0.09 meV — '0.1 meV 정확도' 표현 금지, k-미검증) | 2026-08-28 회신 M: 혼합-basin ΔE 금지. 고정-basin net4 쌍은 dimer(B/B)·doped(A/A)뿐. pm1 열이 정본 유지"
   },
   {
    "system": "sdcp",
@@ -746,10 +746,10 @@
    "prohibitions": [
     "absolute_vs_other_codes",
     "cell_level_claims",
-    "net4_basin_matched_only_see_wave15_record"
+    "net4_fixed_basin_pairs_only__dimer_BB_doped_AA__see_review_M"
    ],
    "updated": "2026-08-28",
-   "note": "pm1 과 쌍 — basin B 에서도 재현 | 2026-08-28 wave1.5 basinA 확정 → net4 해제 (basin-matched 참조 필수, db/properties/sdcp_wave15_basinA.json)"
+   "note": "pm1 과 쌍 — basin B 에서도 재현 | 2026-08-28 회신 M: 혼합-basin ΔE 금지. 고정-basin net4 쌍은 dimer(B/B)·doped(A/A)뿐. pm1 열이 정본 유지"
   },
   {
    "system": "sdcp",
@@ -764,10 +764,10 @@
    "prohibitions": [
     "absolute_vs_other_codes",
     "cell_level_claims",
-    "net4_basin_matched_only_see_wave15_record"
+    "net4_fixed_basin_pairs_only__dimer_BB_doped_AA__see_review_M"
    ],
    "updated": "2026-08-28",
-   "note": "단일 branch — wave1.5 후 net4 재확인 | 2026-08-28 wave1.5 basinA 확정 → net4 해제 (basin-matched 참조 필수, db/properties/sdcp_wave15_basinA.json)"
+   "note": "단일 branch — wave1.5 후 net4 재확인 | 2026-08-28 회신 M: 혼합-basin ΔE 금지. 고정-basin net4 쌍은 dimer(B/B)·doped(A/A)뿐. pm1 열이 정본 유지"
   },
   {
    "system": "sdcp",
@@ -782,10 +782,10 @@
    "prohibitions": [
     "absolute_vs_other_codes",
     "cell_level_claims",
-    "net4_basin_matched_only_see_wave15_record"
+    "net4_fixed_basin_pairs_only__dimer_BB_doped_AA__see_review_M"
    ],
    "updated": "2026-08-28",
-   "note": "단일 branch · |ΔE|<10 meV = 사실상 무선호 | 2026-08-28 wave1.5 basinA 확정 → net4 해제 (basin-matched 참조 필수, db/properties/sdcp_wave15_basinA.json)"
+   "note": "단일 branch · |ΔE|<10 meV = 사실상 무선호 | 2026-08-28 회신 M: 혼합-basin ΔE 금지. 고정-basin net4 쌍은 dimer(B/B)·doped(A/A)뿐. pm1 열이 정본 유지"
   },
   {
    "system": "sdcp",
@@ -800,10 +800,10 @@
    "prohibitions": [
     "absolute_vs_other_codes",
     "cell_level_claims",
-    "net4_basin_matched_only_see_wave15_record"
+    "net4_fixed_basin_pairs_only__dimer_BB_doped_AA__see_review_M"
    ],
    "updated": "2026-08-28",
-   "note": "MLIP 기하 위 단일점 — DFT 최소 아님 (인용 시 병기) | 2026-08-28 wave1.5 basinA 확정 → net4 해제 (basin-matched 참조 필수, db/properties/sdcp_wave15_basinA.json)"
+   "note": "MLIP 기하 위 단일점 — DFT 최소 아님 (인용 시 병기) | 2026-08-28 회신 M: 혼합-basin ΔE 금지. 고정-basin net4 쌍은 dimer(B/B)·doped(A/A)뿐. pm1 열이 정본 유지"
   },
   {
    "system": "sdcp",
@@ -818,10 +818,10 @@
    "prohibitions": [
     "absolute_vs_other_codes",
     "cell_level_claims",
-    "net4_basin_matched_only_see_wave15_record"
+    "net4_fixed_basin_pairs_only__dimer_BB_doped_AA__see_review_M"
    ],
    "updated": "2026-08-28",
-   "note": "MLIP 기하 위 단일점 — DFT 최소 아님 (인용 시 병기) | 2026-08-28 wave1.5 basinA 확정 → net4 해제 (basin-matched 참조 필수, db/properties/sdcp_wave15_basinA.json)"
+   "note": "MLIP 기하 위 단일점 — DFT 최소 아님 (인용 시 병기) | 2026-08-28 회신 M: 혼합-basin ΔE 금지. 고정-basin net4 쌍은 dimer(B/B)·doped(A/A)뿐. pm1 열이 정본 유지"
   },
   {
    "system": "sdcp",
@@ -836,10 +836,10 @@
    "prohibitions": [
     "absolute_vs_other_codes",
     "cell_level_claims",
-    "net4_basin_matched_only_see_wave15_record"
+    "net4_fixed_basin_pairs_only__dimer_BB_doped_AA__see_review_M"
    ],
    "updated": "2026-08-28",
-   "note": "MLIP 기하 위 단일점 — DFT 최소 아님 (인용 시 병기) | 2026-08-28 wave1.5 basinA 확정 → net4 해제 (basin-matched 참조 필수, db/properties/sdcp_wave15_basinA.json)"
+   "note": "MLIP 기하 위 단일점 — DFT 최소 아님 (인용 시 병기) | 2026-08-28 회신 M: 혼합-basin ΔE 금지. 고정-basin net4 쌍은 dimer(B/B)·doped(A/A)뿐. pm1 열이 정본 유지"
   },
   {
    "system": "sdcp",
@@ -854,10 +854,10 @@
    "prohibitions": [
     "absolute_vs_other_codes",
     "cell_level_claims",
-    "net4_basin_matched_only_see_wave15_record"
+    "net4_fixed_basin_pairs_only__dimer_BB_doped_AA__see_review_M"
    ],
    "updated": "2026-08-28",
-   "note": "MLIP 기하 위 단일점 — DFT 최소 아님 (인용 시 병기) | 2026-08-28 wave1.5 basinA 확정 → net4 해제 (basin-matched 참조 필수, db/properties/sdcp_wave15_basinA.json)"
+   "note": "MLIP 기하 위 단일점 — DFT 최소 아님 (인용 시 병기) | 2026-08-28 회신 M: 혼합-basin ΔE 금지. 고정-basin net4 쌍은 dimer(B/B)·doped(A/A)뿐. pm1 열이 정본 유지"
   },
   {
    "system": "sdcp",
@@ -872,10 +872,10 @@
    "prohibitions": [
     "absolute_vs_other_codes",
     "cell_level_claims",
-    "net4_basin_matched_only_see_wave15_record"
+    "net4_fixed_basin_pairs_only__dimer_BB_doped_AA__see_review_M"
    ],
    "updated": "2026-08-28",
-   "note": "MLIP 기하 위 단일점 — DFT 최소 아님 (인용 시 병기) | 2026-08-28 wave1.5 basinA 확정 → net4 해제 (basin-matched 참조 필수, db/properties/sdcp_wave15_basinA.json)"
+   "note": "MLIP 기하 위 단일점 — DFT 최소 아님 (인용 시 병기) | 2026-08-28 회신 M: 혼합-basin ΔE 금지. 고정-basin net4 쌍은 dimer(B/B)·doped(A/A)뿐. pm1 열이 정본 유지"
   },
   {
    "system": "sdcp",
@@ -890,10 +890,10 @@
    "prohibitions": [
     "absolute_vs_other_codes",
     "cell_level_claims",
-    "net4_basin_matched_only_see_wave15_record"
+    "net4_fixed_basin_pairs_only__dimer_BB_doped_AA__see_review_M"
    ],
    "updated": "2026-08-28",
-   "note": "MLIP 기하 위 단일점 — DFT 최소 아님 (인용 시 병기) | 2026-08-28 wave1.5 basinA 확정 → net4 해제 (basin-matched 참조 필수, db/properties/sdcp_wave15_basinA.json)"
+   "note": "MLIP 기하 위 단일점 — DFT 최소 아님 (인용 시 병기) | 2026-08-28 회신 M: 혼합-basin ΔE 금지. 고정-basin net4 쌍은 dimer(B/B)·doped(A/A)뿐. pm1 열이 정본 유지"
   },
   {
    "system": "sdcp",
@@ -908,10 +908,10 @@
    "prohibitions": [
     "absolute_vs_other_codes",
     "cell_level_claims",
-    "net4_basin_matched_only_see_wave15_record"
+    "net4_fixed_basin_pairs_only__dimer_BB_doped_AA__see_review_M"
    ],
    "updated": "2026-08-28",
-   "note": "MLIP 기하 위 단일점 — DFT 최소 아님 (인용 시 병기) | 2026-08-28 wave1.5 basinA 확정 → net4 해제 (basin-matched 참조 필수, db/properties/sdcp_wave15_basinA.json)"
+   "note": "MLIP 기하 위 단일점 — DFT 최소 아님 (인용 시 병기) | 2026-08-28 회신 M: 혼합-basin ΔE 금지. 고정-basin net4 쌍은 dimer(B/B)·doped(A/A)뿐. pm1 열이 정본 유지"
   }
  ],
  "_provenance_audit": {

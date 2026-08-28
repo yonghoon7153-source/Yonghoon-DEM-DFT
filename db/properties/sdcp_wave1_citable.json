@@ -1,5 +1,5 @@
 {
- "schema": "sdcp_wave1_citable/v2",
+ "schema": "sdcp_wave1_citable/v3",
  "date": "2026-08-25",
  "derived_from": "db/properties/sdcp_wave1_results.json (총에너지에서 재유도 — 손 전사 아님)",
  "what": "SDCP wave1 인용 확정본 — basin 일치분만. 값·단서가 한 몸이다.",
@@ -8,22 +8,21 @@
   "진공·0 K·단분자 피복 — 실제 전극(용매·온도·피복률) 예측이 아니다",
   "k 직접검증은 ptfe_c10 만(ΔE 0.0 · E_ads 0.2 meV). dimer·neutral 은 k-transfer-screened",
   "VASP PAW 총에너지 기반 — 절대값을 타 코드/문헌과 직접 비교 금지. 내부 차이만 유효",
-  "net4 E_ads 는 **basin-matched** (각 복합체를 자기 basin 슬랩으로 참조: A=−944.896111 / B=−944.846393 eV, E(sigma→0)). 혼합-basin 원값과 최대 49.7 meV 다르다"
+  "자리선호 서술은 전부 'UMA-selected matched pose 에서의 vertical energy contrast' 로 한정 — n=1 쌍, 사전등록 판정바닥 30 meV (회신 M)",
+  "k 직접검증은 c10 뿐 — 0.1 meV 급 시드 재현(dimer 0.087)을 물리 정확도처럼 쓰지 않는다"
  ],
  "dE_site_meV": {
-  "ptfe_dimer_pm1": 36.07,
-  "ptfe_dimer_net4": 36.16,
+  "ptfe_dimer_pm1": 36.071,
+  "ptfe_dimer_net4": 36.157,
   "ptfe_dimer_branch_interaction": 0.09,
-  "ptfe_c10_pm1": 49.77,
-  "sdcp_neutral_pm1": 9.27,
-  "ptfe_c10_net4": 50.5,
-  "sdcp_neutral_net4": 9.02
+  "ptfe_c10_pm1": 49.767,
+  "sdcp_neutral_pm1": 9.265
  },
  "dE_notes": {
-  "ptfe_dimer": "★ 두 sampled branch(서로 다른 basin!)에서 상호작용 0.09 meV — 허용 문구: 'matched-pose ΔE 가 두 branch 에서 0.09 meV 차이'. ⚠ k-미검증이므로 '0.1 meV 정확도' 라 쓰지 않는다 · basin 무관성의 증명 아님",
-  "ptfe_c10": "두 seed 완성 (pm1 49.77 / net4 50.50 meV, |차| 0.73) — wave1.5 로 net4 열림. Li-top 이 ~50 meV 유리",
-  "sdcp_neutral": "두 seed 완성 (pm1 9.27 / net4 9.02 meV, |차| 0.28) — |ΔE| < 10 meV = 사실상 무선호, 이제 두 자기 시드에서 재현",
-  "sdcp_doped": "⛔ 인용 불가 유지 (pm1 스핀 분기 105 meV + tier2 Litop pm1 static NELM 소진). net4 basin-A 쌍 −18.95 meV 는 wave15 기록에만 남긴다"
+  "ptfe_dimer": "두 시드 고정-basin 완성 (pm1 36.07 / net4 B/B 36.16, 차 0.087 meV). 허용 서술: 'matched pose 한 쌍에서 Li-top 이 36.1 meV 낮음, 두 자기 시드 재현'",
+  "ptfe_c10": "pm1 단일 시드 +49.77 meV. net4 쌍은 혼합-basin(A/B) — 직접차 +100.22 meV 는 슬랩 basin gap 포함이라 자리선호 아님. **허용 서술: 'UMA 선택 matched pose 한 쌍에서 Li-top 전자에너지가 49.8 meV 낮았다'** — 일반화 금지",
+  "sdcp_neutral": "⛔ '무선호' 철회 → **'30 meV 판정 해상도에서 미해결'** — 사전등록 규약(kb/questions/sdcp_site_preference.md: 판정바닥 max(30 meV, 쌍 편차), n<3 NO_VERDICT)을 v2 가 안 읽었다. pm1 2×2 cross 실측: Li-자세 +4.2 / Ni-자세 +14.5 meV, pose×site 상호작용 10.3 meV",
+  "sdcp_doped": "⛔ 인용 불가 유지. ⚠ v2 의 '105 meV branch 갈림' 은 **branch gap 이 아니다** — pm1 ΔE(+86.45, Li-top 미수렴 포함)와 net4 ΔE(−18.95)의 차였다. net4 A/A 쌍 −18.95 meV 는 고정-basin 값이지만 단일 시드 + 상대 스핀 미열거"
  },
  "Eads_eV_box24_pm1": {
   "ptfe_dimer_Litop": -0.3663,
@@ -51,7 +50,17 @@
  ],
  "updated": "2026-08-28",
  "v2_왜": "wave1.5 회신 — clean_slab net4 basin A 확정 (독립 검증: db/properties/sdcp_wave15_basinA.json). net4 E_ads 가 basin-matched 로 열렸다. 총에너지에서 재유도 — 손 전사 아님.",
- "Eads_eV_box24_net4_basin_matched": {
+ "v3_왜": "회신 M (교차리뷰): v2 의 basin-매칭 ΔE_site 가 **잘못된 estimand** 였다. 혼합-basin 쌍(c10 A/B · neutral B/A)에서 서로 다른 슬랩을 빼면 그 차에 슬랩 basin gap(49.718 meV)이 인위적으로 들어가고 나가며, 'pm1 과 1 meV 재현' 은 그 산술이 만든 착시였다. 직접 총에너지차: c10 +100.220 · neutral −40.697 meV. 고정-basin net4 대비가 가능한 것은 dimer(B/B)와 doped(A/A)뿐이다.",
+ "seed_reproduction_fixed_basin": {
+  "what": "고정-basin ΔE_site 의 시드 간 재현 — **같은 basin 쌍에서만 정의된다**",
+  "ptfe_dimer": {
+   "pm1": 36.071,
+   "net4_BB": 36.157,
+   "차_meV": 0.087
+  },
+  "⛔": "c10·neutral 은 net4 쌍이 혼합-basin(A/B·B/A)이라 이 비교가 **정의되지 않는다** — v2 의 0.73/0.28 meV 는 철회 (슬랩 gap 산술의 착시)"
+ },
+ "Eads_eV_box24_net4_basin_conditioned_SI": {
   "ptfe_c10_Litop": -0.4122,
   "ptfe_c10_Nitop": -0.3617,
   "ptfe_dimer_Litop": -0.3661,
@@ -61,11 +70,9 @@
   "sdcp_neutral_cross_Li_at_Ni": -0.7734,
   "sdcp_neutral_cross_Ni_at_Li": -0.7626
  },
- "magnetic_sensitivity_meV": {
-  "what": "|ΔE_site(pm1) − ΔE_site(net4, basin-matched)| — 게이트 ≤ 10",
-  "ptfe_dimer": 0.06,
-  "sdcp_neutral": 0.28,
-  "ptfe_c10": 0.73,
-  "판정": "셋 다 통과 — 자리 선호가 자기 시드에 둔감하다"
+ "estimand_구분": {
+  "1_basin_conditioned_Eads": "E(복합체,β)−E(슬랩,β)−E(분자) — 자기상태 보존 조건부. SI 용",
+  "2_lowest_sampled_Eads": "min_b E(복합체)−min_a E(슬랩)−E(분자) — 본문 용. lowest sampled 슬랩 = pm1-A (net4-A 보다 78.575 meV 낮음). ⛔ '전역 최소' 라 부르지 않는다 — 표본한 것 중 최저일 뿐",
+  "3_fixed_basin_dE_site": "같은 basin 쌍의 복합체 총에너지 직접차 — 자리선호는 이것만"
  }
 }
