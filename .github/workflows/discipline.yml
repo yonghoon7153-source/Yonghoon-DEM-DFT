@@ -68,3 +68,6 @@ jobs:
 
       - name: 팔 payload 축소본 계약 (selftest)
         run: python scripts/reduce_arm_payloads.py --selftest
+
+      - name: A 트랙 판정식 (절댓값 · 부호반전 회귀) (selftest)
+        run: python scripts/bridge_grid_verdict.py --selftest

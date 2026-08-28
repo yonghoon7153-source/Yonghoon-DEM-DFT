@@ -1,6 +1,6 @@
 # Codex 적대 리뷰 요청 R9 — **판정 전 설계 리뷰** (2026-08-28)
 
-브랜치 `manuscript-track` @ **`40de9eae`**.  대상:
+브랜치 `manuscript-track` @ **`01ce2039`** (⚠ 초판 머리말의 `40de9eae` 는 오기 — R9 판정은 링크가 고정한 `01ce2039` 기준이다).  대상:
 - `docs/reviews/sdcp_bridge_prereg_amendment_A1_20260827.md` (**Q1 의 주 대상**)
 - `docs/reviews/sdcp_bridge_prereg_amendment_A2_20260828.md` (신규)
 - `docs/reviews/table_s3_data_20260827.md` §3·§4·§5 (W4b 로 채워진 부분)

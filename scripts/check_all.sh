@@ -66,6 +66,10 @@ run 'step3_sigma            --selftest' python3 scripts/step3_sigma.py --selftes
 #    단언한다.  이것이 깨지면 커밋된 증거로 §9 provenance 대조를 재실행할 수 없다 —
 #    즉 "증거를 넣었다" 가 조용히 거짓이 된다.
 run 'reduce_arm_payloads     --selftest' python3 scripts/reduce_arm_payloads.py --selftest
+#  ★★ A 트랙 판정식 (개정 A3 / R9 Q1) — A1 은 `1 − u/v` 였고 브리지가 격자 효과의
+#    **부호만 뒤집어도** A = 2 로 h1 을 통과했다.  원 사전등록 정의는 절댓값이다.
+#    `regr-sign-flip` 이 u = −v → A = 0 → h0 을 단언한다 (옛 식이 2.0 을 냈을 것도 함께).
+run 'bridge_grid_verdict    --selftest' python3 scripts/bridge_grid_verdict.py --selftest
 
 echo "── 리포 실물 (리포가 맞나 — selftest 가 **대신해 주지 않는다**) ──"
 #  ★★ 2026-08-25 — 배터리는 느려서 여기 없지만(~20분), **문법이라도** 본다.
