@@ -101,6 +101,14 @@ const FIT = {
   fitted_z_im: [-1.1, -12.2, -9.1, -0.5],
 }
 
+/** DRT 하나 — 봉우리가 하나인 γ(τ).  높이를 스펙트럼마다 다르게 두지 않는
+ *  이유는 이격 폭이 **가운데 곡선의 높이**에서 나오기 때문이다: 같으면 그 폭이
+ *  뻔해서, 올린 값이 맞는지 손으로 셀 수 있다. */
+const DRT = {
+  tau_s: [1e-4, 1e-3, 1e-2, 1e-1],
+  gamma_ohm: [1.0, 6.0, 3.0, 0.5],
+}
+
 /** 이 화면이 부르는 것 전부.  안 세운 길로 새면 시험이 그것을 말해야 한다. */
 function installFetch(seen: string[] = []) {
   const spy = vi.fn(async (url: string) => {
@@ -114,7 +122,10 @@ function installFetch(seen: string[] = []) {
         case '/api/eis/points': return [points(1), points(2)]
         // 서버는 **가장 잘 맞은** 것만, 그리고 있는 것만 돌려준다.
         case '/api/eis/fits': return [FIT]
-        default: return {}
+        default:
+          // DRT 는 스펙트럼마다 한 번씩 부른다 (`/api/eis/spectra/{id}/drt`).
+          if (/^\/api\/eis\/spectra\/\d+\/drt$/.test(path(url))) return DRT
+          return {}
       }
     })()
     return { ok: true, status: 200, statusText: 'OK', json: async () => body }
@@ -237,5 +248,91 @@ describe('EIS 비교 — SOC 스캔', () => {
     expect(table.textContent).toContain('SOC_scan')
     expect(table.textContent).toMatch(/#2 · 1\.00 mAh/)
     expect(table.textContent).not.toContain('#3')
+  })
+})
+
+/** 이격 — 곡선을 세로로 떼어 놓고 보는 자리.
+ *
+ *  이 보기의 위험은 하나다: **세로 눈금이 값이 아니게 된다.**  그래서 시험이
+ *  보는 것도 그 자리다 — 올린 양을 화면이 적는가, 클립보드가 본값을 함께
+ *  내는가, 그리고 fitting 에서는 아예 안 켜지는가 (거기서는 한 스펙트럼이
+ *  곡선 둘이라, 둘이 다른 만큼 올라가면 "안 맞는 맞춤" 으로 보인다).
+ */
+describe('EIS 비교 — 이격', () => {
+  const viewButton = (name: string) =>
+    within(screen.getByRole('group', { name: '보기' })).getByRole('button', { name })
+
+  function stubClipboard() {
+    const written: string[] = []
+    vi.stubGlobal('navigator', {
+      ...navigator,
+      clipboard: { writeText: async (text: string) => { written.push(text) } },
+    })
+    Object.defineProperty(window, 'isSecureContext', { value: true, configurable: true })
+    return written
+  }
+
+  it('나이퀴스트에서 이격을 켜면 올린 양을 적는다', async () => {
+    installFetch()
+    await renderPicked()
+
+    await userEvent.click(viewButton('이격'))
+    const note = await screen.findByText(/씩 올려/)
+    expect(note.textContent).toContain('세로 눈금은 그 스펙트럼의 값이 아닙니다')
+  })
+
+  it('DRT 에서도 켜진다', async () => {
+    installFetch()
+    await renderPicked()
+
+    await userEvent.click(modeButton('DRT'))
+    await userEvent.click(viewButton('이격'))
+    expect(await screen.findByText(/씩 올려/)).toBeTruthy()
+  })
+
+  //: 여기가 이 보기의 유일한 함정이다.  fitting 에서 스펙트럼 하나는 곡선
+  //  둘(점 = 측정, 파선 = 맞춤)이고, 둘이 서로 다른 만큼 올라가면 화면에
+  //  "맞춤이 측정에서 떨어진" 그림이 나온다.
+  it('fitting 에서는 단추도 없고 이격도 안 걸린다', async () => {
+    installFetch()
+    await renderPicked()
+
+    await userEvent.click(viewButton('이격'))
+    expect(await screen.findByText(/씩 올려/)).toBeTruthy()
+
+    await userEvent.click(modeButton('fitting'))
+    await waitFor(() => expect(screen.queryByText(/씩 올려/)).toBeNull())
+    expect(screen.queryByRole('group', { name: '보기' })).toBeNull()
+
+    // 나이퀴스트로 돌아오면 보던 대로 — 고른 것은 남아 있다.
+    await userEvent.click(modeButton('나이퀴스트'))
+    expect(await screen.findByText(/씩 올려/)).toBeTruthy()
+  })
+
+  it('이격 클립보드는 본값과 올린 값을 나란히 낸다', async () => {
+    const written = stubClipboard()
+    installFetch()
+    const bar = await renderPicked()
+
+    // 겹쳐 그린 동안에는 이격 칸이 아예 없다 — 안 보이는 그림은 복사할 수 없다.
+    await waitFor(() =>
+      expect(within(bar()).getByRole('button', { name: /나이퀴스트 복사/ }))
+        .toBeEnabled())
+    expect(within(bar()).queryByRole('button', { name: /이격/ })).toBeNull()
+
+    await userEvent.click(viewButton('이격'))
+    await userEvent.click(
+      within(bar()).getByRole('button', { name: '나이퀴스트 (이격) 복사' }))
+
+    const [tsv] = written
+    expect(tsv).toBeTruthy()
+    const [head, , first] = tsv!.split('\n')
+    // 곡선마다 세 열: Z′ · 본값 · 올린 값.
+    expect(head!.split('\t')).toHaveLength(6)
+    expect(head).toContain('−Z″ + 이격')
+    const cells = first!.split('\t')
+    // 첫 곡선은 안 올린다 (맨 아래).  둘째는 올린 값이 본값보다 크다.
+    expect(Number(cells[2])).toBeCloseTo(Number(cells[1]), 9)
+    expect(Number(cells[5])).toBeGreaterThan(Number(cells[4]))
   })
 })

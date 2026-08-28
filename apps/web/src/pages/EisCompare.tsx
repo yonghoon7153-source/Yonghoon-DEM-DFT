@@ -31,7 +31,8 @@ import {
 } from '../lib/zunit'
 import { rememberedLambda } from '../lib/drtlambda'
 import { inductiveCount, isScan, nyquistXy, sweepAt } from '../lib/eis'
-import { nyquistWideTsv, seriesWideTsv } from '../lib/origin'
+import { nyquistWideTsv, seriesWideTsv, stackedWideTsv } from '../lib/origin'
+import { stackOffsets, stackStep } from '../lib/stack'
 import type { EisKind, Spectrum, SpectrumFit, SpectrumPoints } from '../lib/types'
 
 /** 서버의 `/api/eis/points` 겹치기 상한과 같은 수. */
@@ -128,13 +129,30 @@ export function EisCompare() {
   //  쪽에서 f 가 나오면 같은 봉우리가 반대쪽 끝에 있는 것처럼 보인다.
   const [storedAxis, setAxis] = useStickyState<DrtAxis>(DRT_AXIS_KEY, 'tau')
   const drtAxis = validDrtAxis(storedAxis)
-  //: 겹쳐 그릴까 축 셋으로 세울까.  **깊이는 고른 스펙트럼**이다 — 여기는
-  //  SOC 스캔이 아니라 서로 다른 셀을 나란히 놓는 화면이라, 깊이에 놓을 물리량이
-  //  없다.  대신 이름을 눈금으로 적는다.
-  const [solid, setSolid] = useState(false)
+  //: 어떻게 볼까 — 겹쳐서(2D), 위로 비껴 쌓아서(이격), 축 셋으로(3D).
+  //
+  //  스캔 화면과 **같은 셋**이다 (`ScanDetail`).  이유도 같다: 열둘을 같은 축에
+  //  겹치면 가장 큰 것 하나가 화면을 다 쓰고 나머지는 그 안에서 납작해진다.
+  //  다른 점은 이격의 뜻이다 — 스캔에서는 한 셀의 SOC 계단이고, 여기서는
+  //  **서로 다른 셀**을 나란히 놓은 것이다.  그래도 하는 일은 같다: 모양을
+  //  견주려고 세로로 떼어 놓는다.
+  //
+  //  **깊이(3D)는 고른 스펙트럼**이다 — 여기는 SOC 스캔이 아니라 서로 다른
+  //  셀을 나란히 놓는 화면이라, 깊이에 놓을 물리량이 없다.  대신 이름을
+  //  눈금으로 적는다.
+  const [view, setView] = useState<'flat' | 'stack' | 'solid'>('flat')
   //: 어느 그림을 보고 있나.  Origin 클립보드가 이것을 따라간다 — 안 보이는
   //  그림을 복사할 수 있으면 사람은 방금 본 것을 복사했다고 믿는다.
   const [mode, setMode] = useState<Mode>('nyquist')
+  //: fitting 에서는 이격도 3D 도 **끈다.**  거기서는 한 스펙트럼이 곡선 둘
+  //  (점 = 측정, 파선 = 맞춤)이고, 둘은 서로 다른 만큼 올라간다 — 그러면
+  //  화면에 "맞춤이 측정에서 떨어져 있는" 그림이 나오고, 그것이 이 화면에서
+  //  사람이 읽는 바로 그 신호다.  단추 줄도 안 낸다.
+  //
+  //  **고른 것은 남겨 둔다** (`view` 는 그대로).  나이퀴스트로 돌아오면 보던
+  //  대로 돌아온다 — 모드를 오갈 때마다 2D 로 되돌아가면 손이 는다.
+  const solid = view === 'solid' && mode !== 'fit'
+  const stacked = view === 'stack' && mode !== 'fit'
 
   const spectra = useAsync(
     () => api.listSpectra({ kind: kind || undefined }), [kind], { live: true })
@@ -232,10 +250,6 @@ export function EisCompare() {
   const lambda = rememberedLambda()
   //: 저장한 그림의 꼬리말.  파일로 나간 뒤에는 이 화면의 맥락이 없다 —
   //  단위 기준이 Ω 인지 Ω·cm² 인지가 축 이름에만 있으면 슬라이드에서 못 읽는다.
-  const pngCaption = [
-    `단위 ${unitLabel}`,
-    mode === 'drt' ? `벌점 λ = ${lambda.toExponential(2)} · 평활 차수 0` : null,
-  ].filter(Boolean).join(' · ')
   const drt = useAsync(
     () => (mode === 'drt' && selected.length
       ? Promise.all(selected.map((id) =>
@@ -335,6 +349,43 @@ export function EisCompare() {
       }]
     })
   }, [shown, fresh, rows, dropInductive, mode, drt.data, unit, areaOf, fitOf, drtAxis])
+
+  //: 이격 — 곡선마다 한 칸씩 올린 것 (`lib/stack.ts`).  올린 양은 **가운데
+  //  곡선의 높이**에서 나오므로 고른 것이 바뀌면 달라진다.  그 수를 화면에도
+  //  클립보드에도 적는다: 안 적으면 언젠가 이 그림에서 저항을 읽는 사람이 나온다.
+  const stackStepValue = useMemo(
+    () => (stacked ? stackStep(series) : 0), [series, stacked])
+  const stackedSeries = useMemo<PlotSeries[]>(() => {
+    if (!stacked || !stackStepValue) return series
+    const lifts = stackOffsets(series, stackStepValue)
+    return series.map((one, index) => {
+      const lift = lifts[index]
+      if (lift === undefined || !Number.isFinite(lift)) return one
+      return { ...one, y: one.y.map((value) => value + lift) }
+    })
+  }, [series, stacked, stackStepValue])
+
+  //: 이격 클립보드는 **본값과 화면값을 나란히** 낸다.  둘의 차가 그 곡선의
+  //  offset 이라 전체 정밀도로 복원된다 — 붙여 넣은 표가 혼자서도 설명된다.
+  const stackedForCopy = useMemo(
+    () => stackedSeries
+      .map((one, index) => ({ ...one, raw: series[index]?.y ?? one.y }))
+      .filter((one) => !one.hidden),
+    [stackedSeries, series])
+
+  //: 2D 로 그리는 것.  이격이면 올린 쪽을 그린다 (3D 는 `Plot3D` 가 따로 받는다).
+  const plotSeries: PlotSeries[] = stacked ? stackedSeries : series
+
+  //: 저장한 그림 제목 아래 한 줄 — **파일로 나간 그림에는 맥락이 없다.**
+  //  단위 기준과 이격 폭을 여기 적어 두지 않으면, 슬라이드에 붙은 다음에는
+  //  세로 눈금이 무엇인지 알 방법이 없다.
+  const pngCaption = [
+    `단위 ${unitLabel}`,
+    stacked && stackStepValue
+      ? `곡선마다 ${num(stackStepValue, 3)} ${unitLabel} 씩 올려 그림 — 세로 눈금은 값이 아닙니다`
+      : null,
+    mode === 'drt' ? `벌점 λ = ${lambda.toExponential(2)} · 평활 차수 0` : null,
+  ].filter(Boolean).join(' · ')
 
   //: 축 셋으로 세울 때의 깊이 — 고른 차례다.  이름은 눈금 글자로 붙인다.
   const solidSeries = useMemo<Series3D[]>(() => {
@@ -471,16 +522,23 @@ export function EisCompare() {
               <button type="button" className={mode === 'drt' ? 'on' : ''}
                       onClick={() => setMode('drt')}>DRT</button>
             </div>
-            {/* 겹쳐 그리면 큰 곡선이 작은 것을 덮는다.  축 셋으로 세우면 고른
-                순서대로 뒤로 물러나서 넷·다섯을 한눈에 견줄 수 있다.
-                fitting 은 한 곡선이 둘(점 + 파선)이라 세우면 짝이 흩어진다. */}
+            {/* 겹쳐 그리면 큰 곡선이 작은 것을 덮는다.  이격은 그것을 세로로
+                떼어 놓고(인쇄물에 낫다), 축 셋은 고른 순서대로 뒤로 물러나게
+                한다(돌려 보는 데 낫다).
+                fitting 은 한 곡선이 둘(점 + 파선)이라, 이격도 3D 도 그 짝을
+                흩어 놓는다 — 측정과 맞춤이 서로 다른 만큼 올라가면 "안 맞는
+                맞춤" 으로 보인다.  그래서 fitting 에서는 이 줄을 안 낸다. */}
             {mode === 'fit' ? null : (
               <div className="segmented" role="group" aria-label="보기">
-                <button type="button" className={solid ? '' : 'on'}
-                        onClick={() => setSolid(false)}>2D</button>
-                <button type="button" className={solid ? 'on' : ''}
+                <button type="button" className={view === 'flat' ? 'on' : ''}
+                        title="같은 축에 겹쳐 그립니다 — 세로 눈금이 그대로 값입니다"
+                        onClick={() => setView('flat')}>2D</button>
+                <button type="button" className={view === 'stack' ? 'on' : ''}
+                        title="곡선마다 일정한 양을 올려 그립니다 (논문 관행) — 모양은 또렷해지고 세로 눈금은 값이 아니게 됩니다"
+                        onClick={() => setView('stack')}>이격</button>
+                <button type="button" className={view === 'solid' ? 'on' : ''}
                         title="고른 스펙트럼을 깊이로 세웁니다 — 눈금이 이름입니다"
-                        onClick={() => setSolid(true)}>3D</button>
+                        onClick={() => setView('solid')}>3D</button>
               </div>
             )}
             {/* DRT 를 볼 때만 뜬다 — 나이퀴스트에는 τ 축이 없다. */}
@@ -510,8 +568,10 @@ export function EisCompare() {
           items={[
             {
               label: '나이퀴스트',
+              // 이격을 보고 있으면 **이 단추가 내는 것은 본값**이다.  화면과
+              // 다른 수가 나가는 유일한 자리라, 제목에 적어 둔다.
               title: mode === 'nyquist'
-                ? `스펙트럼마다 Z′·−Z″ 두 열 (${unitLabel})`
+                ? `스펙트럼마다 Z′·−Z″ 두 열 (${unitLabel})${stacked ? ' — 올리기 전 본값입니다' : ''}`
                 : `${MODE_TITLE[mode]} 를 보고 있습니다 — 나이퀴스트로 바꾸면 켜집니다`,
               disabled: mode !== 'nyquist' || !fresh || !shown.kept.length,
               // 열마다 어느 스펙트럼인지.  열 한 쌍이 저마다 다른 셀이라
@@ -538,12 +598,29 @@ export function EisCompare() {
             {
               label: drtAxis === 'tau' ? 'γ(τ)' : 'γ(f)',
               title: mode === 'drt'
-                ? `스펙트럼마다 ${drtAxisShort(drtAxis)}·γ 두 열 (${unitLabel})`
+                ? `스펙트럼마다 ${drtAxisShort(drtAxis)}·γ 두 열 (${unitLabel})${stacked ? ' — 올리기 전 본값입니다' : ''}`
                 : `${MODE_TITLE[mode]} 를 보고 있습니다 — DRT 로 바꾸면 켜집니다`,
               disabled: mode !== 'drt' || !series.length,
               build: () => seriesWideTsv(series,
                                          { x: drtAxisLabel(drtAxis), y: `γ (${unitLabel})` }),
             },
+            // **이격 값은 이격을 보고 있을 때만 내보낸다.**  이 저장소의 규칙이
+            // "클립보드는 보이는 그림" 이고, 겹쳐 그린 화면에서 올린 수를
+            // 복사하면 붙여 넣은 표가 화면과 다른 것이 된다.
+            ...(stacked && stackStepValue ? [{
+              label: mode === 'drt' ? 'γ(τ) (이격)' : '나이퀴스트 (이격)',
+              title: '화면 그대로 — 곡선마다 본값과 올린 값을 나란히 냅니다'
+                + ' (둘의 차가 그 곡선의 이격입니다)',
+              disabled: !stackedForCopy.length,
+              // **본값을 함께 낸다.**  올린 양은 고른 곡선 집합에 달려 있어서
+              // 하나를 껐다 켜면 달라진다 — 옮긴 수만 있는 표는 나중에 되돌릴
+              // 근거가 없다.
+              build: () => stackedWideTsv(stackedForCopy, mode === 'drt'
+                ? { x: drtAxisLabel(drtAxis), rawY: `γ (${unitLabel})`,
+                    y: `γ + 이격 (${unitLabel})` }
+                : { x: `Z′ (${unitLabel})`, rawY: `−Z″ (${unitLabel})`,
+                    y: `−Z″ + 이격 (${unitLabel})` }),
+            }] : []),
           ]}
         />
 
@@ -584,7 +661,7 @@ export function EisCompare() {
           <Spinner />
         ) : series.length ? (
           <>
-            {solid && mode !== 'fit' ? (
+            {solid ? (
               <Plot3D
                 series={solidSeries}
                 xLabel={mode === 'drt' ? drtAxisLabel(drtAxis) : `Z′ (${unitLabel})`}
@@ -600,22 +677,55 @@ export function EisCompare() {
             ) : mode === 'drt' ? (
               // DRT 는 두 축의 뜻이 달라서 `equalAspect` 가 없다 — 가로는
               // 로그 초, 세로는 저항이다.
-              <Plot series={series} xLabel={drtAxisLabel(drtAxis)}
-                    yLabel={`γ (${unitLabel})`}
-                    height={380} legend busy={drt.loading}
+              <Plot series={plotSeries} xLabel={drtAxisLabel(drtAxis)}
+                    yLabel={stacked ? `γ + 이격 (${unitLabel})` : `γ (${unitLabel})`}
+                    height={stacked ? 520 : 380} legend busy={drt.loading}
                     xTick={(value) => drtAxisTick(drtAxis, value)}
                     xSplits={drtAxis === 'f' ? decadeSplits : undefined}
-                    pngName="EIS 비교 DRT" pngTitle="DRT 비교"
+                    pngName={`EIS 비교 DRT${stacked ? ' 이격' : ''}`}
+                    pngTitle={stacked ? 'DRT 비교 (이격)' : 'DRT 비교'}
                     pngCaption={pngCaption} />
             ) : (
-              <Plot series={series} xLabel={`Z′ (${unitLabel})`}
-                    yLabel={`−Z″ (${unitLabel})`}
-                    height={380} legend equalAspect positiveFit
+              // **이격이어도 `equalAspect` 는 켠 채로 둔다.**  두 축의 한 칸
+              // 길이가 다르면 이상적인 반원이 눌린 타원으로 그려지고, 그것은
+              // 찌그러진 아크(CPE 지수가 낮은 것)처럼 보인다 — 회로를 고를 때
+              // 보는 것이 정확히 그 차이다 (Codex 그림 리뷰 #1).
+              //
+              // `y ≥ 0` 은 진짜로 뜻을 잃는다: 0 아래를 자르는 것은 인덕턴스
+              // 꼬리를 자르는 것인데, 올려 놓은 화면에는 0 이 없다.
+              <Plot series={plotSeries} xLabel={`Z′ (${unitLabel})`}
+                    yLabel={stacked ? `−Z″ + 이격 (${unitLabel})` : `−Z″ (${unitLabel})`}
+                    height={stacked ? 760 : 380} legend equalAspect
+                    positiveFit={!stacked}
                     busy={points.loading || fits.loading || !fresh}
-                    pngName={mode === 'fit' ? 'EIS 비교 fitting' : 'EIS 비교 나이퀴스트'}
-                    pngTitle={mode === 'fit' ? '나이퀴스트 + fitting 비교' : '나이퀴스트 비교'}
+                    pngName={`${mode === 'fit' ? 'EIS 비교 fitting' : 'EIS 비교 나이퀴스트'}${stacked ? ' 이격' : ''}`}
+                    pngTitle={mode === 'fit'
+                      ? '나이퀴스트 + fitting 비교'
+                      : stacked ? '나이퀴스트 비교 (이격)' : '나이퀴스트 비교'}
                     pngCaption={pngCaption} />
             )}
+            {stacked ? (
+              // **올린 양을 적는다.**  이 그림의 세로 눈금은 값이 아니고, 그
+              // 사실이 축 이름에만 있으면 눈이 안 간다 — 인쇄물에서는 더더욱.
+              // 숫자를 적어 두면 되돌릴 수도 있다.
+              stackStepValue ? (
+                <div className="tiny faint" style={{ padding: '6px 0 0' }}>
+                  곡선마다 <b>{num(stackStepValue, 3)} {unitLabel}</b> 씩 올려
+                  그렸습니다 (아래에서 위로, 고른 차례대로). 세로 눈금은 그
+                  스펙트럼의 값이 아닙니다 — 모양을 보는 그림입니다.
+                  {mode === 'nyquist' ? (
+                    <> 두 축의 한 칸은 같은 길이로 두었습니다: 그래야 반원이
+                    반원으로 보입니다. 세로가 길어진 만큼 좌우가 비는데,
+                    🔍 로 좁히면 됩니다.</>
+                  ) : null}
+                </div>
+              ) : (
+                <div className="tiny warn" style={{ padding: '6px 0 0' }}>
+                  올릴 양을 정하지 못했습니다 (곡선 높이를 못 읽었습니다) —
+                  겹쳐 그린 것과 같은 그림입니다.
+                </div>
+              )
+            ) : null}
             {mode === 'fit' ? (
               <div className="tiny faint" style={{ padding: '6px 0 0' }}>
                 점이 측정, 파선이 fitting 입니다 — 같은 색이 한 쌍이고, 회로 이름은
