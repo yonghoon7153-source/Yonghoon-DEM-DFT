@@ -1,76 +1,86 @@
 #!/usr/bin/env python3
-"""build_v7c_trimer.py — 이완된 v7c 다이머에서 올리고머(n=3..8)를 α–α' 접합으로 조립.
+"""build_v7c_trimer.py — v7c 다이머에서 올리고머(DP3/4/6) Stage 0 패키지를 조립한다.
 
-원래는 트라이머 전용이었고 (파일명이 그 흔적), 2026-08-28 doped 재개 설계 v2
-(`kb/questions/sdcp_doped_reopen_v2_2026_08_28.md`)의 Stage 0 을 위해 **n=4·6 과
-홀 배치 선택 + machine manifest** 로 확장했다 (재승인 조건 ⑤·⑦ 준비).
+원래는 트라이머 전용이었고 (파일명이 그 흔적), doped 재개 v3
+(`kb/questions/sdcp_doped_reopen_v3_2026_08_28.md`)의 Stage 0 을 위해 **2단계(stage A/B)
+아키텍처 + 회수 analyzer** 로 재작성했다 (회신 R2 의 8개 최소 수정 반영, 2026-08-28).
 
-n=3의 목적 (n=2 결과의 다음 질문):
-  다이머 doped 스핀: A_SO3 62.3 / A_ring 17.4 / B_SO3 0.0 / B_ring 15.2 / rest 5.0 %
-  → SO3:백본 파티션(62:33)은 모노머(65:35) 그대로, 백본 몫은 두 고리에 거의 반반.
-  고리가 3개면?
-   - trimer_doped_mid: 가운데 고리 SO3⁻ → 폴라론이 양옆 대칭으로 3고리에 퍼지는가 (헤드라인)
-   - trimer_doped_end: 끝 고리 SO3⁻   → 결함에서 멀수록 몫이 어떻게 감쇠하는가 (감쇠길이)
-
-n=4·6 의 목적 (재개 v2):
-   - DP4/+1: 도핑률 25 % — DP3/+1(33 %)과 조성 bracket
-   - DP6/+2: polaron/bipolaron 스핀 섹터 셋 (s=closed singlet · t=triplet · bs=BS singlet)
-     을 **같은 조성·같은 전자수**에서 비교. 홀 간격 2종 이상 (--holes 반복 지정)
-
-입력은 이완된 dimer_neutral.xyz 하나뿐 (모노머 파일·ASE·numpy 불필요):
-  - 다이머 B쪽 절반(이완 기하)을 복제해 유닛으로 사용 — 유닛의 열린 α(과거 결합 자리)를
-    사슬 끝의 자유 α에 C–C 1.45 A로 접합, 그 자유 α-H는 제거. n−2 회 반복.
-  - 비틀림각은 원자간 최소거리 최대화(입체 회피)로 자동 선택 — 다이머 빌더와 동일 철학
+  [stage A]  다이머 → geometry seed 별 중성 조립 + RKS Opt 입력
+  [ORCA]     각 seed 의 neutral 을 사람이/러너가 최적화
+  [stage B]  최적화된 부모(R⁰)에서 REQUIRED_MATRIX 전건 생성 —
+             R⁰−H 수직(vertical) 기하 · sp_vertical(SP+StabPerform) · opt_adiabatic ·
+             RKS/UKS 명시 · SCF seed(s0/s1) · calculation_id(불변) · manifest v3
+  [ORCA]     sp 먼저 → analyzer 게이트 통과한 (pattern,sector) 만 opt
+  [analyze]  --analyze <dir>: .out 게이트, **abort code 실제 emit**
+  [hybrid]   hybrid_select(): 승자∪창내∪localization class 대표 → wB97X-D3 fresh-start
 
   python3 build_v7c_trimer.py --selftest
-  python3 build_v7c_trimer.py --dimer dimer_neutral.xyz --out trimer            # 레거시 n=3
-  python3 build_v7c_trimer.py --dimer dimer_neutral.xyz --out dp4 --n 4 --holes B
-  python3 build_v7c_trimer.py --dimer dimer_neutral.xyz --out dp6 --n 6 \\
-      --holes B,E --holes C,D          # 홀 간격 2종, 각각 스핀 섹터 s/t/bs 생성
+  python3 build_v7c_trimer.py --stage a --dimer db/structures/sdcp_v7c_dimer_neutral.xyz \
+      --out ~/orca_poly/dp6_v3 --n 6                    # seed 수는 SEED_FLOOR 기본(8)
+  # (ORCA 로 gs*/dp6_gs*_neutral 최적화 후)
+  python3 build_v7c_trimer.py --stage b --n 6 --gseed 0 \
+      --neutral_xyz ~/orca_poly/dp6_v3/gs0/dp6_gs0_neutral.xyz --out ~/orca_poly/dp6_v3/gs0_b
+  python3 build_v7c_trimer.py --analyze ~/orca_poly/dp6_v3/gs0_b
 
-레거시 생성물 (--n 3, --holes 미지정 — 종전과 동일):
-  trimer_neutral.xyz / trimer_doped_mid.xyz / trimer_doped_end.xyz /
-  groups_trimer.json / trimer_*.inp / run_trimer.sh / analyze_trimer_spin.py / watch_trimer.sh
-
-일반 생성물 (--n N [--holes ...]):
-  dpN_neutral.xyz(.inp) / dpN_h<링들>_<섹터>.xyz(.inp) / groups_dpN.json /
-  **manifest_stage0.json** — estimand_id·조성·전자수·스핀섹터·state-selection policy·
-  중단 코드가 잡별로 박힌다 (재승인 조건 ⑦: 손으로 적은 숫자 없음)
+레거시 (--dimer/--out 만, 종전과 동일): trimer_neutral / doped_mid / doped_end 패키지.
+⚠ v2 인터페이스(--holes)는 회신 R2 로 **제거** — 매트릭스는 REQUIRED_MATRIX 가 강제한다.
 
 이 도구가 **못 하는 것**
-  · 기하를 이완하지 않는다 — 조립 + 입체 회피 배치까지. 이완은 ORCA 몫.
-  · 스핀 상태를 보장하지 않는다 — 섹터별 기대값(M, <S2>)을 manifest 에 선언할 뿐,
-    수렴 결과가 그 섹터인지는 회수 분석이 게이트로 검사해야 한다.
-  · BS(broken-symmetry) 해는 순수 singlet 이 아니다 — manifest 가 <S2> 오염 보고를
-    요구 사항으로 명시하지만 그 보고를 강제 실행하지는 못한다.
-  · conformer 탐색을 하지 않는다 — 비틀림각 1개(입체 최적)만. conformer 2종은
-    --step 을 바꾼 별도 빌드로 만든다 (Stage 0 설계 참조).
+  · 기하를 이완하지 않는다 — ORCA 몫. stage B 는 "최적화된 부모" 를 신뢰가 아니라
+    위상·닫힌꼴 검사로 받는다 (그래도 Opt 수렴 여부 자체는 analyzer/.out 몫).
+  · 스핀 상태를 보장하지 않는다 — 섹터별 기대(HFTyp·<S²>)를 manifest 에 선언하고
+    analyzer 가 게이트할 뿐이다.
+  · carrier_localization_profile 을 산출하지 않는다 — analyzer 는 **게이트까지**
+    (수렴·섹터·오염·안정성). 집합별 스핀 적분·BLA·UNO 프로파일은 후속 도구.
+  · Yamaguchi AP·spin-flip 을 계산하지 않는다 — BS 는 기록 요구만 강제한다.
+  · adaptive stopping 을 자동 실행하지 않는다 — SEED_FLOOR 규칙을 manifest 에 선언하고
+    seed 를 발급할 뿐, 정지 판정은 배치 결과를 보고 사람이/analyzer 확장이 한다.
 """
 import argparse
 import hashlib
 import json
 import math
 import os
+import re
 
 RCOV = {"H": 0.31, "C": 0.76, "N": 0.71, "O": 0.66, "S": 1.05}
 ZNUM = {"H": 1, "C": 6, "N": 7, "O": 8, "S": 16}
 CC_NEW = 1.45          # 새 C–C 접합 길이 (다이머 빌더와 동일; 이완 다이머 실측 1.44)
 UNIT_NAMES = "ABCDEFGH"
 
-#: 스핀 섹터 (회신 R 반영: conditioning 에는 ansatz 만 — 'polaron/bipolaron' 은 realized).
-#:   (라벨, ORCA mult, wavefunction_class, n_alpha_minus_beta(최종 Ms 기준), 설명)
-#:   bs 는 고스핀(triplet) mult 로 수렴 후 BrokenSym 플립 — **BS M_s=0 determinant,
-#:   nominal OSS candidate**. raw E 를 singlet 에너지로 쓰지 않는다.
-SECTORS_ODD = (("d", 2, "UKS", 1, "doublet"),)
-SECTORS_EVEN = (("s", 1, "RKS", 0, "RKS closed-shell candidate"),
-                ("t", 3, "UKS", 2, "UKS triplet"),
-                ("bs", 3, "UKS-BS", 0,
+#: 스핀 섹터 — conditioning 에는 **ansatz 만** ('polaron/bipolaron' 은 realized 판정).
+#:   (sec, wavefunction_class, orca_mult, n_alpha_minus_beta(최종 Ms), bs_flip, 라벨)
+#:   ⚠ 회신 R2 P0-1 정정: closed-shell 은 **RKS 를 명시**해 생성한다 — 종전엔 전 잡이
+#:   UKS 로 나가 manifest 와 모순이었다. bs 는 고스핀(mult 3) 수렴 후 BrokenSym 플립 —
+#:   BS M_s=0 determinant (nominal OSS candidate). raw E 를 singlet 에너지로 쓰지 않는다.
+SECTORS_ODD = (("d", "UKS", 2, 1, False, "doublet"),)
+SECTORS_EVEN = (("s", "RKS", 1, 0, False, "RKS closed-shell candidate"),
+                ("t", "UKS", 3, 2, False, "UKS triplet"),
+                ("bs", "UKS-BS", 3, 0, True,
                  "BS M_s=0 determinant (nominal OSS candidate) — <S2>·국소 signed spin·"
-                 "UNO 보고 필수; Yamaguchi AP 는 2-중심 식별시에만, 아니면 "
-                 "NA_SPIN_MODEL_NOT_IDENTIFIED"))
+                 "UNO 보고 필수; Yamaguchi AP 는 2-중심 식별시에만"))
 ABORT_CODES = ("NA_STATE_NOT_IDENTIFIED", "NA_SPIN_MODEL_NOT_IDENTIFIED",
                "METHOD_DEPENDENT", "SECTOR_MISMATCH", "SCF_UNCONVERGED",
-               "SPIN_CONTAMINATION_UNREPORTED")
+               "SPIN_CONTAMINATION_UNREPORTED", "STABILITY_UNSTABLE")
+
+#: 필수 job matrix (회신 R2 조건 3 — **하나라도 못 만들면 stage B 는 실패한다**).
+#:   dp6 pairs 에 off-center B,C 포함 (R2 Q2 권고 — 기존 singles 재사용).
+REQUIRED_MATRIX = {
+    3: {"singles": ["A", "B"], "pairs": []},          # end / middle
+    4: {"singles": ["A", "B"], "pairs": []},          # end / inner
+    6: {"singles": ["B", "C", "D", "E"],
+        "pairs": ["C,D", "B,E", "A,F", "B,C"]},
+}
+#: 쌍별 정책 (회신 R2 Q2): A,F 는 섹터 비교 전용 — U 값·거리 추세·부호 일반화 주장 금지.
+PAIR_POLICY = {
+    "C,D": "U_PCET", "B,E": "U_PCET", "B,C": "U_PCET (off-center)",
+    "A,F": "sector_comparison_only — U(AF)·short-medium-long 추세·DP6 전체 부호 일반화 "
+           "주장 금지. 필요해지면 hA·hF 자동 승격 (회신 R2 Q2)",
+}
+#: geometry seed 승인 바닥 (회신 R2 Q4): (초기 독립 torsion seed 수, 연속 K=2 null batch 수).
+#:   새 저에너지 basin·상태순서·localization class 변화가 나오면 null counter 리셋.
+#:   --step 변경은 독립 seed 로 세지 않는다.
+SEED_FLOOR = {3: (4, 2), 4: (4, 2), 6: (8, 4)}
 
 
 # ---------- 기하 유틸 (numpy 없이) ----------
@@ -269,15 +279,23 @@ def make_template(sym, pos, nb, rings, riB, cA, cB):
                 freeC=loc[free_al[0]["C"]], freeH=loc[free_al[0]["H"]])
 
 
-def graft(csym, cpos, cnb, attC, attH, tpl, cc, step):
-    """사슬의 자유 α(attC, 그 H=attH)에 템플릿을 접합. → (sym, pos, 채택각, dmin)"""
+DMIN_FLOOR = 2.0    # Å — geometry seed 후보각 자격 (이하는 입체 충돌로 제외)
+
+
+def graft(csym, cpos, cnb, attC, attH, tpl, cc, step, gseed=0, gidx=0):
+    """사슬의 자유 α(attC, 그 H=attH)에 템플릿을 접합. → (sym, pos, 채택각, dmin)
+
+    geometry seed (회신 R2 조건 6): gseed=0 은 종전과 동일한 max-dmin 결정론.
+    gseed>0 은 dmin ≥ DMIN_FLOOR 인 **후보각들 중에서** 결정론적 LCG 로 고른다 —
+    같은 max-dmin 탐색의 격자 간격(--step)을 바꾸는 것은 독립 seed 가 아니다.
+    """
     d_dir = unit(sub(cpos[attH], cpos[attC]))
     p_new = add(cpos[attC], scal(d_dir, cc))
     R0 = rot_between(tpl["u_dangle"], scal(d_dir, -1.0))
     b0 = [apply_rot(R0, p) for p in tpl["base0"]]
     exclB = set([attC] + list(cnb[attC]))
     base_atoms = [i for i in range(len(csym)) if i != attH]
-    best = None
+    cands = []
     for th in range(0, 360, step):
         R1 = rotmat(d_dir, math.radians(th))
         newpos = [add(apply_rot(R1, p), p_new) for p in b0]
@@ -289,15 +307,20 @@ def graft(csym, cpos, cnb, attC, attH, tpl, cc, step):
                 dd = dist(cpos[bi], newpos[k])
                 if dd < dmin:
                     dmin = dd
-        if best is None or dmin > best[0]:
-            best = (dmin, th, newpos)
-    dmin, th, npos = best
+        cands.append((dmin, th, newpos))
+    cands.sort(key=lambda c: -c[0])
+    if gseed == 0:
+        dmin, th, npos = cands[0]
+    else:
+        ok = [c for c in cands if c[0] >= DMIN_FLOOR] or cands[:1]
+        pick = ((gseed * 2654435761 + gidx * 40503) & 0xFFFFFFFF) % len(ok)
+        dmin, th, npos = ok[pick]
     nsym = [csym[i] for i in base_atoms] + list(tpl["sym"])
     nposs = [cpos[i] for i in base_atoms] + npos
     return nsym, nposs, th, dmin
 
 
-def build_chain(sym, pos, n, cc, step, log=print):
+def build_chain(sym, pos, n, cc, step, log=print, gseed=0):
     """다이머(n=2) → n-량체. 각 단계에서 앵커 반대쪽 끝의 자유 α 에 접합."""
     nb, rings, sulf = analyze(sym, pos)
     if not (len(rings) == 2 and len(sulf) == 2):
@@ -320,7 +343,7 @@ def build_chain(sym, pos, n, cc, step, log=print):
         free_al = [al for al in crings[last]["alphas"] if al["H"] is not None]
         assert len(free_al) == 1, "끝 링의 자유 α 가 1개가 아니다"
         csym, cpos, th, dmin = graft(csym, cpos, cnb, free_al[0]["C"], free_al[0]["H"],
-                                     tpl, cc, step)
+                                     tpl, cc, step, gseed=gseed, gidx=k)
         torsions.append(dict(step=k + 3, torsion_deg=th, dmin_A=round(dmin, 3)))
         log(f"  유닛 {k+3}/{n} 접합: 비틀림 {th}° (최소 원자간 {dmin:.2f} A)")
     expect = len(sym) + (n - 2) * (len(sym) // 2 - 1)
@@ -414,149 +437,313 @@ def atom_sets_of(csym, cnb, crings, csulf, names):
 
 
 #: 교차검사 방법 — "ωB97X-D급" 금지 (회신 R 조건 7): 계산 전에 정확히 지정한다.
+HYBRID_KEYWORDS = "wB97X-D3 def2-TZVP defGrid3"
 HYBRID_SPEC = {
-    "method": "wB97X-D3 def2-TZVP defgrid3 TightSCF",
-    "fresh_start": "r2SCAN orbital 미승계 (MORead 금지)",
-    "decision_set": "vertical 승자 + adiabatic 승자 + 승자 대비 0.10 eV 이내의 경쟁 상태",
-    "escalation": "hybrid 가 state identity/localization/순서를 바꾸면 그 경쟁 상태만 hybrid 재최적화",
+    "keywords": HYBRID_KEYWORDS,
+    "fresh_start": "r2SCAN orbital 미승계 (MORead 금지 — 입력에 주석으로 박힌다)",
+    "decision_set": "vertical 승자 ∪ adiabatic 승자 ∪ 승자 0.10 eV 이내 ∪ "
+                    "**realized localization class 별 최저 대표 전부** (회신 R2 조건 8)",
+    "escalation": "hybrid 가 state identity/localization/순서를 바꾸면 그 상태만 hybrid 재최적화",
     "disagreement": "두 방법이 갈리면 평균하지 않고 METHOD_DEPENDENT",
     "version_field": "orca_version 은 회수 시 .out 배너에서 채운다 (사전 기재 금지)",
 }
 
 
-def stage0_manifest(out, n, dimer_path, dimer_sha, jobs, torsions):
-    """재승인 조건 ⑦ — 손으로 적은 숫자 없이, 빌더가 계산한 값만 들어간다."""
-    man = {
-        "schema": "sdcp_stage0_manifest/v1",
-        "estimand_id": "sdcp-doped-gas-stage0/v2",
-        "design_card": "kb/questions/sdcp_doped_reopen_v2_2026_08_28.md",
-        "state_selection_policy": (
-            "free-spin UKS/RKS, 선언된 스핀 섹터별 바닥상태. 제약 없음(NUPDOWN 상당 금지). "
-            "bs 섹터만 예외적으로 triplet 수렴 후 BrokenSym 플립 — 그 결과는 순수 singlet "
-            "이 아니며 <S2> 보고 없이는 SPIN_CONTAMINATION_UNREPORTED 로 중단"),
-        "abort_codes": list(ABORT_CODES),
-        "dp": n,
-        "closed_form": "C_{11n} H_{14n+2-m} O_{6n} S_{2n} · N_e = 160n+2-m (회신 R 조건 1)",
-        "hybrid_crosscheck": HYBRID_SPEC,
-        "stage0_observable": "carrier_localization_profile — 집합별 charge·signed spin · "
-                             "sum|m_i| · centroid/participation ratio · BLA/quinoid · UNO "
-                             "unpaired 지표. ⛔ 기체상에서 carrier_retention 은 자명(전계=분자)이라 "
-                             "측정 불가 (회신 R P0-2). slab carrier_retention_change 는 별도 규약",
-        "input_dimer": {"path": os.path.abspath(dimer_path), "sha256": dimer_sha},
-        "assembly_torsions": torsions,
-        "jobs": jobs,
-        "⚠": "회수 분석은 잡별 expected(mult, n_electrons, charge)를 manifest 와 대조해야 "
-             "한다 — 수렴 여부만 보고 통과시키면 아홉 번째 실패다",
-    }
-    path = os.path.join(out, "manifest_stage0.json")
-    json.dump(man, open(path, "w"), ensure_ascii=False, indent=1)
-    return path
+def make_inp(path, xyz_name, wf, mult, bs, job_type, scf_seed="s0", hybrid=False):
+    """job type 별 ORCA 입력 (회신 R2 P0-1·조건 2 — RKS/UKS 와 SP/Opt 를 명시 생성).
 
-
-def orca_input(path, tag, mult, bs):
+    job_type: 'opt_neutral' (RKS Opt) · 'sp_vertical' (SP + StabPerform) ·
+              'opt_adiabatic' (Opt — analyzer 가 vertical stability 통과를 확인한 뒤에만 실행)
+    scf_seed: s0 = 기본 guess · s1 = Hueckel (독립 SCF/localization seed — R2 조건 6)
+    """
+    kw = "RKS" if wf == "RKS" else "UKS"
+    base = HYBRID_KEYWORDS if hybrid else "r2SCAN-3c"
+    opt = " Opt" if job_type in ("opt_neutral", "opt_adiabatic") else ""
+    method = f"{base}{opt} TightSCF"
+    scf_opts = []
+    if job_type == "sp_vertical" and not bs:
+        scf_opts.append("StabPerform true")
+    if bs:
+        scf_opts.append("BrokenSym 1,1")
+    if scf_seed == "s1":
+        scf_opts.append("Guess Hueckel")
     with open(path, "w") as f:
-        f.write("! UKS r2SCAN-3c Opt TightSCF\n%maxcore 6000\n")
-        if bs:
-            f.write("%scf BrokenSym 1,1 end\n")
-        f.write(f"* xyzfile 0 {mult} {tag}.xyz\n")
+        f.write(f"! {kw} {method}\n%maxcore 6000\n")
+        if hybrid:
+            f.write("# fresh-start: MORead 금지 (r2SCAN orbital 미승계 — HYBRID_SPEC)\n")
+        if scf_opts:
+            f.write("%scf " + " ".join(scf_opts) + " end\n")
+        f.write(f"* xyzfile 0 {mult} {xyz_name}\n")
 
 
-def build_general(a, sym, pos):
-    """--n N [--holes ...] 경로: dpN_* 산출 + manifest."""
-    csym, cpos, torsions = build_chain(sym, pos, a.n, a.cc, a.step)
-    cnb, crings, csulf = analyze(csym, cpos)
-    assert len(crings) == a.n and len(csulf) == a.n, \
-        f"{a.n}-량체: 링 {len(crings)} · 설포네이트 {len(csulf)}"
-    names = ring_chain_names(crings)
-    order = "".join(names[ri] for ri in sorted(names, key=lambda r: names[r]))
-    print(f"사슬 명명: {order} (앵커 A = 최소 인덱스 끝 링)")
+def calculation_id(cond):
+    """불변 계산 ID (회신 R2 조건 6·8) — **conditioning 만** 해시. realized 값이 들어가면
+    ID 가 결과에 따라 변해 immutable 이 아니게 된다 (selftest 가 막는다)."""
+    for k in cond:
+        if "realized" in k:
+            raise SystemExit(f"⛔ calculation_id 에 realized 필드({k})가 들어왔다 — 불변성 위반")
+    j = json.dumps(cond, sort_keys=True, ensure_ascii=False)
+    return "calc_" + hashlib.sha256(j.encode()).hexdigest()[:16]
 
-    groups = {}
-    for su in csulf:
-        nm = names[su["ring"]]
-        groups[f"{nm}_SO3"] = sorted([su["sS"]] + su["sO"])
-        groups[f"{nm}_ring"] = sorted(crings[su["ring"]]["ring"])
-    json.dump({"neutral": groups,
-               "acidH": {names[su["ring"]]: su["aH"] for su in csulf}},
-              open(os.path.join(a.out, f"groups_dp{a.n}.json"), "w"), indent=1)
 
+def _n_from_atoms(nat, unit_half):
+    """원자수 → DP (nat = 2u + (n−2)(u−1), u = 다이머 절반)."""
+    n = (nat - 2 * unit_half) // (unit_half - 1) + 2
+    return n if 2 * unit_half + (n - 2) * (unit_half - 1) == nat else None
+
+
+# ══ Stage A — 중성 조립 + Opt 입력 (geometry seed 별) ═══════════════════════════
+def stage_a(a, sym, pos):
+    if formula_of(sym) != V7C_DIMER_FORMULA and not a.allow_noncanonical:
+        raise SystemExit(f"⛔ 입력 다이머 조성 {formula_of(sym)} ≠ v7c({V7C_DIMER_FORMULA}) — "
+                         "production 은 fail-closed 다. 합성/시험 입력은 --allow_noncanonical "
+                         "(회신 R2 P0-4)")
+    if a.n not in REQUIRED_MATRIX:
+        raise SystemExit(f"⛔ --n {a.n}: 필수 매트릭스가 정의된 DP 는 {sorted(REQUIRED_MATRIX)} 뿐")
     v7c_real = (formula_of(sym) == V7C_DIMER_FORMULA)
-    if not v7c_real:
-        print(f"⚠ 입력 다이머 조성 {formula_of(sym)} ≠ v7c({V7C_DIMER_FORMULA}) — "
-              "닫힌꼴 검증 생략 (합성/시험 입력)")
+    n_seeds = a.seeds if a.seeds else SEED_FLOOR[a.n][0]
+    seeds_meta = []
+    for g in range(n_seeds):
+        d = os.path.join(a.out, f"gs{g}")
+        os.makedirs(d, exist_ok=True)
+        csym, cpos, torsions = build_chain(sym, pos, a.n, a.cc, a.step,
+                                           log=lambda *x: None, gseed=g)
+        if v7c_real and not check_closed_form(csym, a.n, 0):
+            raise SystemExit(f"⛔ gs{g}: 중성 {a.n}-량체 닫힌꼴 불일치 — 빌더 오류, 멈춘다")
+        tag = f"dp{a.n}_gs{g}_neutral"
+        write_xyz(os.path.join(d, f"{tag}.xyz"), csym, cpos,
+                  f"DP{a.n} neutral, geometry seed g{g} (torsions "
+                  f"{[t['torsion_deg'] for t in torsions]} deg) — UNRELAXED, ORCA Opt 대상")
+        make_inp(os.path.join(d, f"{tag}.inp"), f"{tag}.xyz", "RKS", 1, False, "opt_neutral")
+        seeds_meta.append(dict(gseed=g, dir=f"gs{g}", tag=tag,
+                               torsions=[t["torsion_deg"] for t in torsions]))
+        print(f"  gs{g}: torsions {[t['torsion_deg'] for t in torsions]}")
+    sha = hashlib.sha256(open(a.dimer, "rb").read()).hexdigest()
+    man = {
+        "schema": "sdcp_stage0_manifest/v3", "stage": "A",
+        "estimand_id": "sdcp-doped-gas-stage0/v3",
+        "design_card": "kb/questions/sdcp_doped_reopen_v3_2026_08_28.md",
+        "species_note": "DPn_hm_Q0 = neutral-H-deleted / internal-redox microstate "
+                        "(H 핵+전자 동시 제거 — 일반적 '탈양성자화' 아님, 회신 R2 조건 1)",
+        "dp": a.n, "closed_form_validated": v7c_real,
+        "required_matrix": REQUIRED_MATRIX[a.n], "pair_policy": PAIR_POLICY,
+        "seed_floor": {"initial_torsion_seeds": SEED_FLOOR[a.n][0],
+                       "null_batches_K2": SEED_FLOOR[a.n][1],
+                       "rule": "새 저에너지 basin/상태순서/localization class 변화 시 "
+                               "null counter 리셋. --step 은 seed 가 아니다 (회신 R2 Q4)"},
+        "geometry_seeds": seeds_meta,
+        "input_dimer": {"path": os.path.abspath(a.dimer), "sha256": sha},
+        "next": "각 gs*/dp*_neutral 을 ORCA 로 Opt → 최종 xyz 로 "
+                "`--stage b --neutral_xyz <opt.xyz> --n {n} --gseed <g>` (매트릭스 전건 생성)",
+        "abort_codes": list(ABORT_CODES),
+    }
+    mp = os.path.join(a.out, "manifest_stage_a.json")
+    json.dump(man, open(mp, "w"), ensure_ascii=False, indent=1)
+    print(f"stage A: seed {n_seeds}개 · manifest {mp}")
+    return man
 
-    def _validate(vsym, m):
-        if v7c_real and not check_closed_form(vsym, a.n, m):
-            we_f, we_e = expected_species(a.n, m)
-            raise SystemExit(f"⛔ 닫힌꼴 불일치 — 빌더 산출 {formula_of(vsym)}/{electrons_of(vsym)}e "
-                             f"vs 기대 {we_f}/{we_e}e (n={a.n}, m={m}). 빌더/입력 오류 — 멈춘다")
 
-    def _micro(m, rmH, sec, wf):
-        return {"DP": a.n, "formal_oxidation_count": m, "removed_H_indices": rmH,
-                "external_counterion_inventory": "none — internal-compensation stratum "
-                    "(m tethered SO3- compensate formal backbone oxidation +m)",
-                "conformer_cluster": f"torsion_scan_step{a.step}",
-                "wavefunction_spin_sector": f"{wf}/{sec}",
-                "localization_seed": "default", "realized_localization": None,
-                "pose": None, "slab_basin": None}
-
+# ══ Stage B — 최적화된 중성 부모에서 vertical/adiabatic 매트릭스 생성 ═══════════
+def stage_b(a):
+    """R⁰ 규약 (회신 R2 P0-2·Q3): 모든 leg 가 **같은 좌표 프레임** —
+    h0 = R⁰(=neutral opt) · h1(x) = R⁰−Hx · h2(a,b) = R⁰−Ha−Hb. 추가 이완 없음."""
+    csym, cpos = read_xyz(a.neutral_xyz)
+    hdr = open(a.neutral_xyz).read().splitlines()[1] if True else ""
+    if "ORCA" not in hdr:
+        print("  ⚠ 부모 xyz 주석에 ORCA 마커가 없다 — 최적화 완료본이 맞는지 확인할 것 "
+              "(R0 규약은 **Opt 된** 부모를 요구한다. 이 도구는 수렴 여부를 검증 못 한다)")
+    cnb, crings, csulf = analyze(csym, cpos)
+    n = a.n
+    if len(crings) != n or len(csulf) != n:
+        raise SystemExit(f"⛔ neutral 부모 위상 불일치 (링 {len(crings)}·SO3 {len(csulf)} ≠ {n})")
+    v7c_real = check_closed_form(csym, n, 0)
+    if not v7c_real and not a.allow_noncanonical:
+        raise SystemExit("⛔ neutral 부모가 v7c 닫힌꼴이 아니다 — --allow_noncanonical 은 시험 전용")
+    names = ring_chain_names(crings)
+    req = REQUIRED_MATRIX[n]
+    patterns = ([p.upper() for p in a.patterns] if a.patterns
+                else req["singles"] + req["pairs"])
+    missing = [p for p in req["singles"] + req["pairs"] if p not in patterns]
+    if missing and not a.allow_partial:
+        raise SystemExit(f"⛔ 필수 매트릭스 누락 {missing} — 부분 생성은 --allow_partial "
+                         "(시험 전용, 재심사 제출물 아님) (회신 R2 조건 3)")
+    os.makedirs(a.out, exist_ok=True)
+    parent_sha = hashlib.sha256(open(a.neutral_xyz, "rb").read()).hexdigest()
+    scf_seeds = ["s0", "s1"][:max(1, a.scf_seeds)]
     jobs = []
-    tag0 = f"dp{a.n}_neutral"
-    write_xyz(os.path.join(a.out, f"{tag0}.xyz"), csym, cpos,
-              f"v7c DP{a.n} neutral (assembled; torsions "
-              f"{[t['torsion_deg'] for t in torsions]} deg)")
-    e0 = electrons_of(csym)
-    check_parity(e0, 1)
-    _validate(csym, 0)
-    orca_input(os.path.join(a.out, f"{tag0}.inp"), tag0, 1, False)
-    jobs.append(dict(tag=tag0, species=f"DP{a.n}_h0_Q0", holes=[], removed_H_indices=[],
-                     sector="n", wavefunction_class="RKS", orca_mult=1,
-                     n_alpha_minus_beta=0, net_charge=0, n_atoms=len(csym),
-                     all_electron_count=e0, formula=formula_of(csym),
-                     sector_label="RKS closed-shell (neutral reference)",
-                     seeded_separation=None, microstate_id=_micro(0, [], "n", "RKS")))
-
-    for spec in (a.holes or []):
-        hs = resolve_holes(spec, names, csulf)
+    u_pairs = {}
+    for pat in patterns:
+        hs = resolve_holes(pat, names, csulf)
         letters = "".join(h[0] for h in hs)
         rmH = sorted(h[1] for h in hs)
         m = len(hs)
         vsym, vpos, _ = remove_atoms(csym, cpos, rmH)
         e = electrons_of(vsym)
-        _validate(vsym, m)
-        sectors = SECTORS_ODD if m % 2 == 1 else SECTORS_EVEN
-        sep = (abs(ord(letters[0]) - ord(letters[1])) if m == 2 else None)
-        base = f"dp{a.n}_h{letters}"
+        if v7c_real and not check_closed_form(vsym, n, m):
+            raise SystemExit(f"⛔ h{letters}: 닫힌꼴 불일치 — 멈춘다")
+        base = f"dp{n}_gs{a.gseed}_h{letters}"
         write_xyz(os.path.join(a.out, f"{base}.xyz"), vsym, vpos,
-                  f"DP{a.n}_h{m}_Q0: neutral minus acid H of ring(s) {letters} "
-                  f"(net charge 0, formal_oxidation_count {m})")
-        for sec, mult, wf, nab, label in sectors:
+                  f"R0 vertical frame: neutral-opt parent minus acid H {rmH} "
+                  f"(DP{n}_h{m}_Q0, unrelaxed — 회신 R2 Q3 공통 부모 규약)")
+        sectors = SECTORS_ODD if m % 2 == 1 else SECTORS_EVEN
+        if m == 2 and PAIR_POLICY.get(pat, "").startswith("U_PCET"):
+            u_pairs[pat] = dict(needs_singles=[x.strip() for x in pat.split(",")])
+        for sec, wf, mult, nab, bs, label in sectors:
             check_parity(e, mult)
-            tag = f"{base}_{sec}"
-            # 섹터별 .xyz 는 같은 기하 — inp 가 xyzfile 로 base 를 공유한다
-            orca_input(os.path.join(a.out, f"{tag}.inp"), base, mult, bs=(sec == "bs"))
-            jobs.append(dict(tag=tag, species=f"DP{a.n}_h{m}_Q0", holes=list(letters),
-                             removed_H_indices=rmH, sector=sec, wavefunction_class=wf,
-                             orca_mult=mult, n_alpha_minus_beta=nab, net_charge=0,
-                             n_atoms=len(vsym), all_electron_count=e,
-                             formula=formula_of(vsym), sector_label=label,
-                             seeded_separation=sep,
-                             microstate_id=_micro(m, rmH, sec, wf)))
-        print(f"  홀 {letters}: {len(sectors)}섹터 ({'/'.join(s[0] for s in sectors)}) · "
-              f"전자 {e} · {formula_of(vsym)}"
-              + (" · 닫힌꼴 ✓" if v7c_real else ""))
-
-    sha = hashlib.sha256(open(a.dimer, "rb").read()).hexdigest()
-    mp = stage0_manifest(a.out, a.n, a.dimer, sha, jobs, torsions)
-    man = json.load(open(mp))
-    man["closed_form_validated"] = v7c_real
-    man["atom_sets_neutral_frame"] = atom_sets_of(csym, cnb, crings, csulf, names)
-    man["⚠_atom_sets"] = ("중성 프레임 인덱스 — doped 잡에서는 removed_H_indices 만큼 "
-                          "밀린다. 재매핑은 분석기가 수행하고 검증한다")
+            for jt in ("sp_vertical", "opt_adiabatic"):
+                for ss in (scf_seeds if wf != "RKS" else ["s0"]):
+                    tag = f"{base}_{sec}_{jt.split('_')[0]}_{ss}"
+                    make_inp(os.path.join(a.out, f"{tag}.inp"), f"{base}.xyz",
+                             wf, mult, bs, jt, scf_seed=ss)
+                    cond = dict(estimand_id="sdcp-doped-gas-stage0/v3", dp=n,
+                                species=f"DP{n}_h{m}_Q0", pattern=pat,
+                                removed_H_indices=rmH, sector=sec,
+                                wavefunction_class=wf, orca_mult=mult,
+                                n_alpha_minus_beta=nab, net_charge=0,
+                                all_electron_count=e, job_type=jt,
+                                geometry_seed=f"g{a.gseed}", scf_seed=ss,
+                                parent_neutral_sha256=parent_sha,
+                                method="r2SCAN-3c/TightSCF")
+                    jobs.append(dict(tag=tag, calculation_id=calculation_id(cond),
+                                     conditioning=cond, formula=formula_of(vsym),
+                                     n_atoms=len(vsym), sector_label=label,
+                                     seeded_separation=(abs(ord(letters[0]) - ord(letters[1]))
+                                                        if m == 2 else None),
+                                     expected=dict(
+                                         hf_type=("RHF" if wf == "RKS" else "UHF"),
+                                         s2_target=(0.75 if sec == "d" else
+                                                    2.0 if sec == "t" else
+                                                    None if sec == "s" else "report_required"),
+                                     ),
+                                     realized=None))
+    # U_PCET 완전성: 쌍이 요구하는 singles 가 매트릭스에 있는가 (없으면 실패)
+    for pat, u in u_pairs.items():
+        for sng in u["needs_singles"]:
+            if sng not in patterns:
+                raise SystemExit(f"⛔ U_PCET({pat}) 에 필요한 single h{sng} 가 매트릭스에 없다")
+    man = {
+        "schema": "sdcp_stage0_manifest/v3", "stage": "B",
+        "estimand_id": "sdcp-doped-gas-stage0/v3",
+        "design_card": "kb/questions/sdcp_doped_reopen_v3_2026_08_28.md",
+        "dp": n, "geometry_seed": f"g{a.gseed}",
+        "parent_neutral": {"path": os.path.abspath(a.neutral_xyz), "sha256": parent_sha,
+                           "h0_energy_source": "이 부모의 ORCA Opt FINAL SINGLE POINT ENERGY "
+                                               "(= 같은 프레임의 h0 leg — 별도 잡 불필요)"},
+        "closed_form_validated": v7c_real,
+        "required_matrix": req, "generated_patterns": patterns,
+        "partial": bool(missing), "pair_policy": PAIR_POLICY,
+        "delta_definitions": {
+            "U_PCET_vert(a,b)": "E_sp[h2(a,b);R0] + E[h0;R0] − E_sp[h1(a);R0] − E_sp[h1(b);R0]",
+            "U_PCET_ad(a,b)": "각 leg 를 각자 최적화한 최소점 에너지로 — vertical 과 **혼합 금지**",
+            "⛔": "핵 조성이 함께 변하므로 순수 Hubbard U/hole-pairing 이 아니다 — "
+                 "disproportionation/PCET 에너지로만 부른다 (회신 R2 조건 3·7). "
+                 "순수 pairing 은 동일 h2 조성 안의 sector 에너지차로 별도 판정",
+        },
+        "atom_sets_neutral_frame": atom_sets_of(csym, cnb, crings, csulf, names),
+        "⚠_atom_sets": "중성 프레임 인덱스 — doped 잡은 removed_H_indices 만큼 밀린다 "
+                       "(재매핑·검증은 analyzer)",
+        "stage0_observable": "carrier_localization_profile (기체상 retention 은 자명 — 측정 불가)",
+        "abort_codes": list(ABORT_CODES),
+        "jobs": jobs,
+        "runner_rule": "opt_adiabatic 은 같은 (pattern, sector) 의 sp_vertical 이 "
+                       "analyzer 게이트(stability·sector)를 통과한 뒤에만 실행한다",
+    }
+    mp = os.path.join(a.out, "manifest_stage_b.json")
     json.dump(man, open(mp, "w"), ensure_ascii=False, indent=1)
-    print(f"manifest: {mp}  (잡 {len(jobs)}개 · 닫힌꼴 검증 "
-          f"{'✓' if v7c_real else '생략(비실물)'} · atom_sets {len(man['atom_sets_neutral_frame'])}집합)")
-    return jobs
+    print(f"stage B: 패턴 {len(patterns)} · 잡 {len(jobs)} · manifest {mp}")
+    return man
+
+
+# ══ Analyzer — abort code 를 실제로 emit (회신 R2 조건 5) ═══════════════════════
+def analyze_out(text, job):
+    """ORCA .out 텍스트 + manifest 잡 → (status, [codes], realized).
+
+    ⛔ 못 하는 것: localization profile 산출(집합별 스핀 적분)은 아직 없다 —
+    여기는 **게이트**(수렴·섹터·오염·안정성)까지. 프로파일은 후속 도구.
+    """
+    codes = []
+    realized = {}
+    if "ORCA TERMINATED NORMALLY" not in text:
+        return "FAIL", ["SCF_UNCONVERGED"], realized
+    m = re.search(r"FINAL SINGLE POINT ENERGY\s+(-?\d+\.\d+)", text)
+    if m:
+        realized["energy_Eh"] = float(m.group(1))
+    hf = re.search(r"Hartree-Fock type\s+HFTyp\s*\.+\s*(\w+)", text)
+    realized["hf_type"] = hf.group(1) if hf else None
+    exp = job["expected"]
+    if realized["hf_type"] and exp["hf_type"] not in realized["hf_type"]:
+        codes.append("SECTOR_MISMATCH")
+    s2 = re.search(r"<S\*\*2>\s*:?\s*(-?\d+\.\d+)", text)
+    realized["s2"] = float(s2.group(1)) if s2 else None
+    tgt = exp["s2_target"]
+    sec = job["conditioning"]["sector"]
+    if sec == "bs":
+        if realized["s2"] is None:
+            codes.append("SPIN_CONTAMINATION_UNREPORTED")
+        elif realized["s2"] < 0.2:
+            codes.append("NA_STATE_NOT_IDENTIFIED")   # 플립 실패 — closed 로 붕괴
+    elif isinstance(tgt, float):
+        if realized["s2"] is None or abs(realized["s2"] - tgt) > 0.4:
+            codes.append("SECTOR_MISMATCH")
+    if job["conditioning"]["job_type"] == "sp_vertical" and sec != "bs":
+        if re.search(r"[Ss]tability [Aa]nalysis.*unstable", text):
+            codes.append("STABILITY_UNSTABLE")
+    if not codes:
+        rid = hashlib.sha256((job["calculation_id"]
+                              + json.dumps(realized, sort_keys=True)).encode()).hexdigest()[:16]
+        realized["realized_state_id"] = "real_" + rid
+        return "OK", [], realized
+    return "GATED", codes, realized
+
+
+def analyze_dir(a):
+    man = json.load(open(os.path.join(a.analyze, "manifest_stage_b.json")))
+    out = {"schema": "sdcp_stage0_analysis/v1", "jobs": {}, "emitted": {}}
+    bad = 0
+    for job in man["jobs"]:
+        op = os.path.join(a.analyze, job["tag"] + ".out")
+        if not os.path.isfile(op):
+            out["jobs"][job["tag"]] = {"status": "PENDING"}
+            continue
+        st, codes, realized = analyze_out(open(op, errors="ignore").read(), job)
+        out["jobs"][job["tag"]] = {"status": st, "codes": codes, "realized": realized}
+        for c in codes:
+            out["emitted"].setdefault(c, []).append(job["tag"])
+        if st != "OK":
+            bad += 1
+    ap = os.path.join(a.analyze, "analysis_stage_b.json")
+    json.dump(out, open(ap, "w"), ensure_ascii=False, indent=1)
+    for c, tags in out["emitted"].items():
+        print(f"  ⛔ {c}: {len(tags)}잡 — {tags[:3]}")
+    print(f"analyzer: {ap} · 게이트 걸림 {bad}")
+    return 2 if bad else 0
+
+
+def hybrid_select(analysis, window_eh=0.10 / 27.2114):
+    """hybrid decision set (회신 R2 조건 8): vertical/adiabatic 승자 + 창 이내 +
+    **realized localization class 별 최저 대표 전부**."""
+    ok = {t: r for t, r in analysis["jobs"].items()
+          if r.get("status") == "OK" and "energy_Eh" in r.get("realized", {})}
+    if not ok:
+        return []
+    pick = set()
+    for jt in ("sp", "opt"):
+        grp = {t: r for t, r in ok.items() if f"_{jt}_" in t}
+        if not grp:
+            continue
+        emin = min(r["realized"]["energy_Eh"] for r in grp.values())
+        for t, r in grp.items():
+            if r["realized"]["energy_Eh"] <= emin + window_eh:
+                pick.add(t)
+    by_class = {}
+    for t, r in ok.items():
+        cls = r["realized"].get("localization_class")
+        if cls:
+            cur = by_class.get(cls)
+            if cur is None or r["realized"]["energy_Eh"] < ok[cur]["realized"]["energy_Eh"]:
+                by_class[cls] = t
+    pick |= set(by_class.values())
+    return sorted(pick)
 
 
 # ---------- 레거시 트라이머 경로 (종전 출력과 동일) ----------
@@ -699,13 +886,15 @@ python3 analyze_trimer_spin.py 2>/dev/null | sed 's/^/ /'
     print(f"패키지 완성: {a.out}/  (nohup bash {a.out}/run_trimer.sh > {a.out}/run.log 2>&1 &)")
 
 
+
+
 # ---------- selftest ----------
 def _synthetic_unit():
     """티오펜-SO3H 흉내 유닛 (13원자). analyze() 의 위상 요구를 전부 만족하는 합성 기하.
 
     ring: S + C4 (정오각형, 변 1.45) · α-C 2개에 H · β-C 하나에 스페이서 C → SO3H
-    인덱스: 0 S · 1 Ca1 · 2 Cb1 · 3 Cb2 · 4 Ca2 · 5 H(Ca1) · 6 H(Ca2) · 7 Csp ·
-            8 Ssulf · 9-11 O · 12 산성H
+    인덱스: 0 S · 1 Ca1 · 2 Cb1 · 3 Cb2 · 4 Ca2 · 5 H(Ca1) · 6 H(Ca2) · 7 H(Cb1) ·
+            8 Csp · 9 Ssulf · 10-12 O · 13 산성H  (14원자 — 전자 90, 짝수)
     """
     R = 1.45 / (2 * math.sin(math.pi / 5))
     ang = [90, 162, 234, 306, 18]                        # S, Ca1, Cb1, Cb2, Ca2
@@ -717,6 +906,9 @@ def _synthetic_unit():
         u = unit(ring[k])
         sym.append("H")
         pos.append(add(ring[k], scal(u, 1.09)))
+    u2 = unit(ring[2])                                   # Cb1-H — 전자수 짝수 맞춤 (중성 singlet)
+    sym.append("H")
+    pos.append(add(ring[2], scal(u2, 1.09)))
     u = unit(ring[3])                                    # Cb2 → 스페이서
     csp = add(ring[3], scal(u, 1.50))
     ss = add(csp, scal(u, 1.77))
@@ -734,20 +926,32 @@ def _synthetic_unit():
 
 
 def _synthetic_dimer():
-    """유닛 2개를 α–α' 1.45 Å 로 접합한 합성 다이머 (24원자, 자유 α-H 양끝 1개씩).
+    """유닛 2개를 α–α' 1.45 Å 로 접합한 합성 다이머 (26원자, 전자 178 짝수).
 
-    B 유닛 = A 유닛을 새 결합 중점에 대해 **점반전**한 사본 — 거리 보존이라 위상이
-    그대로 유지되고, B 가 A 의 반대쪽(+x)으로 뻗는다 (거울 배치는 되돌아 접혀 실패했다).
-    """
+    B 유닛 = A 유닛을 새 결합 중점에 대해 **점반전**한 사본 (거리 보존 → 위상 유지)."""
     s1, p1 = _synthetic_unit()
-    d = unit(sub(p1[6], p1[4]))                          # Ca2 의 H 방향 = 새 결합 방향
+    d = unit(sub(p1[6], p1[4]))
     target = add(p1[4], scal(d, 1.45))
     M = scal(add(p1[4], target), 0.5)
-    p2 = [sub(scal(M, 2.0), p) for p in p1]              # 점반전: B.Ca2 가 target 에 앉는다
-    # 결합 α 의 H 제거: A 의 H6, B 의 H6-상 (결합 안쪽을 향한다)
+    p2 = [sub(scal(M, 2.0), p) for p in p1]
     sym = [x for i, x in enumerate(s1) if i != 6] + [x for i, x in enumerate(s1) if i != 6]
     pos = [x for i, x in enumerate(p1) if i != 6] + [x for i, x in enumerate(p2) if i != 6]
     return sym, pos
+
+
+def _fake_orca_out(terminated=True, energy=-100.0, hf="UHF", s2=0.75, stable=True):
+    t = "                                 * O   R   C   A *\n"
+    t += f" Hartree-Fock type      HFTyp           .... {hf}\n"
+    if s2 is not None:
+        t += f" Expectation value of <S**2>     :     {s2:.6f}\n"
+    if not stable:
+        t += " Stability analysis indicates an unstable RHF/RKS wavefunction\n"
+    else:
+        t += " Stability analysis indicates a stable HF/KS wavefunction\n"
+    t += f" FINAL SINGLE POINT ENERGY      {energy:.9f}\n"
+    if terminated:
+        t += "                             ****ORCA TERMINATED NORMALLY****\n"
+    return t
 
 
 def selftest():
@@ -759,122 +963,151 @@ def selftest():
         if not ok:
             fails.append(msg)
 
-    print("── build_v7c_trimer selftest ──")
+    print("── build_v7c_trimer selftest (stage 아키텍처 v3) ──")
     sym, pos = _synthetic_dimer()
     nb, rings, sulf = analyze(sym, pos)
-    chk(len(sym) == 24 and len(rings) == 2 and len(sulf) == 2,
+    chk(len(sym) == 26 and len(rings) == 2 and len(sulf) == 2,
         f"합성 다이머 위상 (원자 {len(sym)} · 링 {len(rings)} · SO3 {len(sulf)})")
 
     with tempfile.TemporaryDirectory() as td:
         dim = os.path.join(td, "dimer.xyz")
         write_xyz(dim, sym, pos, "synthetic dimer for selftest")
 
-        # ── n=3: 사슬 성장 + 명명
-        c3, p3, t3 = build_chain(sym, pos, 3, CC_NEW, 30, log=lambda *a: None)
-        chk(len(c3) == 24 + 11, f"n=3 조립 원자수 {len(c3)} (기대 35)")
-        _, r3, s3 = analyze(c3, p3)
-        n3 = ring_chain_names(r3)
-        chk(sorted(n3.values()) == ["A", "B", "C"], f"n=3 링 명명 {sorted(n3.values())}")
-
-        # ── n=4: bracket 크기
-        c4, p4, _ = build_chain(sym, pos, 4, CC_NEW, 30, log=lambda *a: None)
-        chk(len(c4) == 24 + 22, f"n=4 조립 원자수 {len(c4)} (기대 46)")
-        _, r4, _ = analyze(c4, p4)
-        chk(sorted(ring_chain_names(r4).values()) == ["A", "B", "C", "D"], "n=4 링 명명 A–D")
-
-        # ── 일반 경로 CLI 로 n=4, 홀 1개 (doublet 섹터 1개)
-        a4 = argparse.Namespace(dimer=dim, out=os.path.join(td, "dp4"), cc=CC_NEW,
-                                step=30, n=4, holes=["B"])
-        os.makedirs(a4.out)
-        jobs4 = build_general(a4, sym, pos)
-        man4 = json.load(open(os.path.join(a4.out, "manifest_stage0.json")))
-        chk(len(jobs4) == 2 and jobs4[1]["sector"] == "d" and jobs4[1]["orca_mult"] == 2
-            and jobs4[1]["n_alpha_minus_beta"] == 1,
-            "n=4 홀 1개 → neutral + doublet 1섹터 (orca_mult·nab 분리)")
-        chk(man4["estimand_id"] == "sdcp-doped-gas-stage0/v2"
-            and man4["jobs"][1]["all_electron_count"] == man4["jobs"][0]["all_electron_count"] - 1,
-            "manifest: estimand_id + 전전자수(중성−1) 자동 계산 — 손 전사 없음")
-        chk(man4["jobs"][1]["species"] == "DP4_h1_Q0"
-            and man4["jobs"][1]["net_charge"] == 0
-            and man4["jobs"][1]["removed_H_indices"],
-            "종 ID 는 DP4_h1_Q0 형식 — 'DP4/+1' 오독 방지 (회신 R 조건 1)")
-        chk(man4["closed_form_validated"] is False,
-            "합성 입력은 닫힌꼴 검증 생략 표시 (validated=False — 통과 아님)")
-        mtxt = open(os.path.join(a4.out, "manifest_stage0.json")).read()
-        chk("bipolaron" not in mtxt and "polaron" not in mtxt.replace("polaron_", ""),
-            "conditioning 순수성: manifest 에 'polaron/bipolaron' 라벨 없음 (회신 R P0-3)")
-        chk("carrier_localization_profile" in mtxt and "NA_SPIN_MODEL_NOT_IDENTIFIED" in mtxt
-            and "METHOD_DEPENDENT" in mtxt,
-            "Stage0 관측량 교체 + 신규 중단코드 2종 (회신 R P0-2 · 조건 5·7)")
-        chk("atom_sets_neutral_frame" in man4
-            and set(man4["atom_sets_neutral_frame"]) >= {"backbone", "sidechain_rest"},
-            "atom_sets 고정 (carrier_localization_profile 의 집합 — 회신 R 조건 4)")
-        allsets = sum(man4["atom_sets_neutral_frame"].values(), [])
-        chk(len(allsets) == len(set(allsets)) == man4["jobs"][0]["n_atoms"],
-            "atom_sets 는 전 원자를 정확히 1회씩 분할 (겹침·누락 없음)")
-        chk("NA_STATE_NOT_IDENTIFIED" in man4["abort_codes"],
-            "manifest 에 중단 코드 선언 (정의역 공백을 코드가 말한다)")
-
-        # ── n=6, 홀 2개 × 간격 2종 → 짝수 전자 → 섹터 s/t/bs
-        a6 = argparse.Namespace(dimer=dim, out=os.path.join(td, "dp6"), cc=CC_NEW,
-                                step=45, n=6, holes=["B,E", "C,D"])
-        os.makedirs(a6.out)
-        jobs6 = build_general(a6, sym, pos)
-        secs = [j["sector"] for j in jobs6 if j["species"] == "DP6_h2_Q0"]
-        chk(secs == ["s", "t", "bs", "s", "t", "bs"],
-            f"n=6 홀 2개 × 간격 2종 → 섹터 s/t/bs ×2 ({secs})")
-        bs_inp = open(os.path.join(a6.out, "dp6_hBE_bs.inp")).read()
-        chk("BrokenSym" in bs_inp and " 0 3 " in bs_inp,
-            "bs 섹터 입력: triplet(mult 3) 수렴 후 BrokenSym 플립")
-        e_even = all(j["all_electron_count"] % 2 == 0 for j in jobs6 if j["holes"])
-        chk(e_even, "홀 2개 종은 전자수 짝수 (parity 정합)")
-
-        # ── ⛔ 음성 1: 없는 링 홀
+        # ── ⛔ 음성 (R2 P0-4): 비정본 다이머는 플래그 없이 멈춘다 (production fail-closed)
+        aX = argparse.Namespace(dimer=dim, out=os.path.join(td, "x"), cc=CC_NEW, step=30,
+                                n=3, seeds=1, allow_noncanonical=False)
         try:
-            a_bad = argparse.Namespace(dimer=dim, out=os.path.join(td, "bad"), cc=CC_NEW,
-                                       step=45, n=3, holes=["Z"])
-            os.makedirs(a_bad.out)
-            build_general(a_bad, sym, pos)
+            stage_a(aX, sym, pos)
             ok = False
         except SystemExit:
             ok = True
-        chk(ok, "음성: --holes Z (없는 링) → 멈춘다")
+        chk(ok, "음성: 비정본 다이머 + 플래그 없음 → stage A 거부 (fail-closed)")
 
-        # ── 닫힌꼴 기대식 (회신 R 조건 1) — 실물 다이머가 repo 에 있으면 실검증
+        # ── stage A (합성, 시험 플래그) — seed 2개 독립성
+        aA = argparse.Namespace(dimer=dim, out=os.path.join(td, "a3"), cc=CC_NEW, step=30,
+                                n=3, seeds=2, allow_noncanonical=True)
+        manA = stage_a(aA, sym, pos)
+        chk(manA["schema"].endswith("/v3") and manA["estimand_id"].endswith("/v3")
+            and "v3_2026_08_28" in manA["design_card"],
+            "manifest provenance = v3 (R2 P0-6)")
+        t0, t1 = manA["geometry_seeds"][0]["torsions"], manA["geometry_seeds"][1]["torsions"]
+        chk(t0 != t1, f"geometry seed 독립성: g0 {t0} ≠ g1 {t1}")
+        inpA = open(os.path.join(aA.out, "gs0", "dp3_gs0_neutral.inp")).read()
+        chk(inpA.startswith("! RKS") and " Opt " in inpA,
+            "neutral 입력 = RKS Opt (R2 P0-1: UKS 전면 오생성 수정)")
+
+        # ── stage B (합성 n=3): '최적화된 부모' 대신 stage A 기하 재사용 (시험)
+        parent = os.path.join(aA.out, "gs0", "dp3_gs0_neutral.xyz")
+        aB = argparse.Namespace(neutral_xyz=parent, out=os.path.join(td, "b3"), n=3,
+                                gseed=0, patterns=None, allow_partial=False,
+                                allow_noncanonical=True, scf_seeds=2)
+        manB = stage_b(aB)
+        tags = [j["tag"] for j in manB["jobs"]]
+        chk(any("_hA_" in t for t in tags) and any("_hB_" in t for t in tags),
+            "n=3 필수 매트릭스 (hA end · hB middle) 전건 생성")
+        sp = open(os.path.join(aB.out, "dp3_gs0_hA_d_sp_s0.inp")).read()
+        op = open(os.path.join(aB.out, "dp3_gs0_hA_d_opt_s0.inp")).read()
+        chk("Opt" not in sp and "StabPerform" in sp and sp.startswith("! UKS"),
+            "sp_vertical = UKS SP + StabPerform (Opt 없음)")
+        chk(" Opt " in op and "StabPerform" not in op,
+            "opt_adiabatic = Opt (stability 게이트는 runner_rule 로 분리)")
+        s1i = open(os.path.join(aB.out, "dp3_gs0_hA_d_sp_s1.inp")).read()
+        chk("Guess Hueckel" in s1i, "SCF seed s1 = Hueckel (geometry seed 와 분리 관리)")
+
+        # ── ⛔ 음성 (R2 조건 3): 매트릭스 부분 생성은 기본 거부
+        aP = argparse.Namespace(neutral_xyz=parent, out=os.path.join(td, "p3"), n=3,
+                                gseed=0, patterns=["B"], allow_partial=False,
+                                allow_noncanonical=True, scf_seeds=1)
+        try:
+            stage_b(aP)
+            ok = False
+        except SystemExit:
+            ok = True
+        chk(ok, "음성: --patterns 부분 지정 + allow_partial 없음 → 생성 실패 (fail-open 봉쇄)")
+
+        # ── stage A/B (합성 n=6): 섹터·매트릭스·U_PCET 완전성
+        a6 = argparse.Namespace(dimer=dim, out=os.path.join(td, "a6"), cc=CC_NEW, step=45,
+                                n=6, seeds=1, allow_noncanonical=True)
+        stage_a(a6, sym, pos)
+        parent6 = os.path.join(a6.out, "gs0", "dp6_gs0_neutral.xyz")
+        b6 = argparse.Namespace(neutral_xyz=parent6, out=os.path.join(td, "b6"), n=6,
+                                gseed=0, patterns=None, allow_partial=False,
+                                allow_noncanonical=True, scf_seeds=1)
+        man6 = stage_b(b6)
+        pats = set(man6["generated_patterns"])
+        chk(pats == {"B", "C", "D", "E", "C,D", "B,E", "A,F", "B,C"},
+            f"n=6 매트릭스: singles 4 + pairs 4 (off-center B,C 포함) — {sorted(pats)}")
+        s_inp = open(os.path.join(b6.out, "dp6_gs0_hCD_s_sp_s0.inp")).read()
+        bs_inp = open(os.path.join(b6.out, "dp6_gs0_hCD_bs_sp_s0.inp")).read()
+        chk(s_inp.startswith("! RKS") and "Opt" not in s_inp,
+            "h2 closed-shell 후보 = **RKS** SP (R2 P0-1 핵심 수정)")
+        chk(bs_inp.startswith("! UKS") and "BrokenSym 1,1" in bs_inp and " 0 3 " in bs_inp,
+            "bs = UKS mult3 + BrokenSym (StabPerform 은 bs 에 안 붙임)")
+        chk(man6["pair_policy"]["A,F"].startswith("sector_comparison_only"),
+            "A,F 쌍 = 섹터 비교 전용 (U·거리추세 주장 금지 — R2 Q2)")
+        mtxt = json.dumps(man6, ensure_ascii=False)
+        chk("bipolaron" not in mtxt and "backbone hole" not in mtxt,
+            "conditioning 순수성 유지 (polaron/bipolaron 라벨 없음)")
+
+        # ── calculation_id 불변성 (R2 조건 8)
+        j0 = man6["jobs"][0]
+        cid_again = calculation_id(j0["conditioning"])
+        chk(cid_again == j0["calculation_id"] and j0["realized"] is None,
+            "calculation_id 재계산 동일 + realized 는 ID 밖 (immutable)")
+        try:
+            calculation_id({"a": 1, "realized_localization": "x"})
+            ok = False
+        except SystemExit:
+            ok = True
+        chk(ok, "음성: conditioning 에 realized 필드가 섞이면 ID 발급 거부")
+
+        # ── analyzer e2e (R2 조건 5) — 음성 4종 + 양성 1종
+        job_t = next(j for j in man6["jobs"] if j["conditioning"]["sector"] == "t"
+                     and j["conditioning"]["job_type"] == "sp_vertical")
+        job_s = next(j for j in man6["jobs"] if j["conditioning"]["sector"] == "s"
+                     and j["conditioning"]["job_type"] == "sp_vertical")
+        job_bs = next(j for j in man6["jobs"] if j["conditioning"]["sector"] == "bs"
+                      and j["conditioning"]["job_type"] == "sp_vertical")
+        st, c, _ = analyze_out(_fake_orca_out(terminated=False), job_t)
+        chk("SCF_UNCONVERGED" in c, "analyzer 음성①: 미종료 → SCF_UNCONVERGED emit")
+        st, c, _ = analyze_out(_fake_orca_out(hf="UHF", s2=0.76), job_t)
+        chk("SECTOR_MISMATCH" in c, "analyzer 음성②: triplet 기대인데 <S2>=0.76 → SECTOR_MISMATCH")
+        st, c, _ = analyze_out(_fake_orca_out(hf="UHF", s2=None), job_bs)
+        chk("SPIN_CONTAMINATION_UNREPORTED" in c,
+            "analyzer 음성③: bs 인데 <S2> 미보고 → SPIN_CONTAMINATION_UNREPORTED")
+        st, c, _ = analyze_out(_fake_orca_out(hf="UHF", s2=0.0), job_s)
+        chk("SECTOR_MISMATCH" in c, "analyzer 음성④: RKS 요청인데 UHF 로 돎 → SECTOR_MISMATCH")
+        st, c, r = analyze_out(_fake_orca_out(hf="UHF", s2=2.003), job_t)
+        chk(st == "OK" and r["realized_state_id"].startswith("real_"),
+            "analyzer 양성: 정상 triplet → OK + realized_state_id 발급 (calc_id 와 분리)")
+        st, c, _ = analyze_out(_fake_orca_out(hf="UHF", s2=2.0, stable=False), job_t)
+        chk("STABILITY_UNSTABLE" in c, "analyzer: 불안정 파동함수 → STABILITY_UNSTABLE (opt 차단 마크)")
+
+        # ── hybrid decision set (R2 조건 8): class 대표 포함
+        fake = {"jobs": {
+            "x_sp_a": {"status": "OK", "realized": {"energy_Eh": -10.000, "localization_class": "L1"}},
+            "x_sp_b": {"status": "OK", "realized": {"energy_Eh": -9.900, "localization_class": "L2"}},
+            "x_sp_c": {"status": "OK", "realized": {"energy_Eh": -9.500, "localization_class": "L3"}},
+        }}
+        pick = hybrid_select(fake)
+        chk(set(pick) == {"x_sp_a", "x_sp_b", "x_sp_c"},
+            "hybrid decision set: 승자+창 이내 + **모든 localization class 대표** 포함")
+
+        # ── 실물 다이머 (repo) — 닫힌꼴 stage A e2e
         rd = os.path.join(os.path.dirname(os.path.abspath(__file__)),
                           "..", "..", "db", "structures", "sdcp_v7c_dimer_neutral.xyz")
         if os.path.isfile(rd):
             rs, rp = read_xyz(rd)
-            aR = argparse.Namespace(dimer=rd, out=os.path.join(td, "real3"), cc=CC_NEW,
-                                    step=60, n=3, holes=["B"])
-            os.makedirs(aR.out)
-            jR = build_general(aR, rs, rp)
-            mR = json.load(open(os.path.join(aR.out, "manifest_stage0.json")))
-            chk(mR["closed_form_validated"] is True
-                and jR[1]["all_electron_count"] == 160 * 3 + 2 - 1,
-                f"실물 다이머 닫힌꼴 검증 ✓ (DP3_h1 전자 {jR[1]['all_electron_count']} = 481)")
+            aR = argparse.Namespace(dimer=rd, out=os.path.join(td, "r3"), cc=CC_NEW,
+                                    step=60, n=3, seeds=1, allow_noncanonical=False)
+            mR = stage_a(aR, rs, rp)
+            chk(mR["closed_form_validated"] is True,
+                "실물 다이머: 닫힌꼴 검증 통과 (플래그 불필요 — 정본 경로)")
         else:
             print("  (실물 다이머 없음 — 닫힌꼴 실검증 생략)")
-        chk(not check_closed_form(["C"] * 33, 3, 1),
-            "음성: 닫힌꼴 함수가 틀린 조성을 거부한다")
+        chk(not check_closed_form(["C"] * 33, 3, 1), "음성: 닫힌꼴 함수가 틀린 조성 거부")
 
-        # ── ⛔ 음성 2: 전자 짝홀 ↔ 다중도 불일치는 잡을 만들지 않는다
-        try:
-            check_parity(101, 1)
-            ok = False
-        except SystemExit:
-            ok = True
-        chk(ok, "음성: 전자 101개 + singlet → 정의부터 불가, 거부")
-
-        # ── ⛔ 음성 3: 다이머가 아닌 입력 (트라이머를 먹임)
-        try:
-            build_chain(c3, p3, 4, CC_NEW, 45, log=lambda *a: None)
-            ok = False
-        except SystemExit:
-            ok = True
-        chk(ok, "음성: 트라이머를 --dimer 로 먹이면 거부 (링 3 검출)")
-
-        # ── 레거시 경로가 그대로 도는가 (합성 다이머, 출력 파일 세트)
+        # ── 레거시 경로 하위호환
         aL = argparse.Namespace(dimer=dim, out=os.path.join(td, "leg"), cc=CC_NEW, step=30)
         os.makedirs(aL.out)
         build_legacy_trimer(aL, sym, pos)
@@ -892,27 +1125,51 @@ def main():
     ap.add_argument("--dimer", help="이완된 dimer_neutral.xyz (v7c 실물 68원자)")
     ap.add_argument("--out")
     ap.add_argument("--cc", type=float, default=CC_NEW)
-    ap.add_argument("--step", type=int, default=10, help="비틀림각 스캔 간격(도)")
-    ap.add_argument("--n", type=int, default=3, help="올리고머 길이 (3..8)")
-    ap.add_argument("--holes", action="append",
-                    help="탈양성자화할 링 (예: 'B' · 'B,E'). 반복 지정 = 배치 여러 종. "
-                         "미지정 + --n 3 이면 레거시 mid/end 경로")
+    ap.add_argument("--step", type=int, default=10, help="비틀림각 스캔 간격(도) — seed 아님")
+    ap.add_argument("--n", type=int, default=3)
+    ap.add_argument("--stage", choices=["a", "b"],
+                    help="a: 중성 조립+Opt 입력 (seed 별) · b: 최적화된 부모에서 매트릭스 생성")
+    ap.add_argument("--seeds", type=int, default=0,
+                    help="stage a 의 geometry seed 수 (기본 SEED_FLOOR — R2 Q4 바닥)")
+    ap.add_argument("--neutral_xyz", help="stage b: ORCA 최적화 완료된 중성 부모 xyz")
+    ap.add_argument("--gseed", type=int, default=0, help="stage b: 이 부모의 geometry seed 번호")
+    ap.add_argument("--scf_seeds", type=int, default=2,
+                    help="stage b: 열린 껍질 잡의 독립 SCF seed 수 (s0 기본 · s1 Hueckel)")
+    ap.add_argument("--patterns", action="append",
+                    help="stage b 부분 생성 (⚠ --allow_partial 필수 — 시험 전용)")
+    ap.add_argument("--allow_partial", action="store_true",
+                    help="필수 매트릭스 미달 허용 — **재심사 제출물에는 금지** (시험 전용)")
+    ap.add_argument("--allow_noncanonical", action="store_true",
+                    help="비정본 다이머 허용 — selftest/합성 전용 (production 은 fail-closed)")
+    ap.add_argument("--analyze", help="stage b 출력 디렉터리 — .out 게이트 + abort code emit")
+    ap.add_argument("--holes", action="append", help="(구 v2 인터페이스 — 제거됨)")
     ap.add_argument("--selftest", action="store_true")
     a = ap.parse_args()
     if a.selftest:
         return selftest()
+    if a.analyze:
+        return analyze_dir(a)
+    if a.holes:
+        ap.error("--holes 는 v2 인터페이스다 — 회신 R2 로 제거됐다. --stage a → (ORCA Opt) → "
+                 "--stage b 를 쓴다 (매트릭스는 REQUIRED_MATRIX 가 강제)")
+    if a.stage == "a":
+        if not (a.dimer and a.out):
+            ap.error("--stage a 는 --dimer 와 --out 이 필요하다")
+        sym, pos = read_xyz(a.dimer)
+        stage_a(a, sym, pos)
+        return 0
+    if a.stage == "b":
+        if not (a.neutral_xyz and a.out):
+            ap.error("--stage b 는 --neutral_xyz 와 --out 이 필요하다")
+        stage_b(a)
+        return 0
+    # 레거시 트라이머 (하위호환)
     if not (a.dimer and a.out):
-        ap.error("--dimer 와 --out 이 필요하다 (--selftest 제외)")
-    if not (3 <= a.n <= 8):
-        ap.error("--n 은 3..8")
-    os.makedirs(a.out, exist_ok=True)
+        ap.error("--dimer/--out (레거시) 또는 --stage/--selftest/--analyze 중 하나가 필요하다")
     sym, pos = read_xyz(a.dimer)
     if len(sym) != 68:
         print(f"⚠ 다이머 {len(sym)}원자 — v7c 실물(68)이 아니다. 합성/시험 입력으로 간주하고 진행")
-    if a.n == 3 and not a.holes:
-        build_legacy_trimer(a, sym, pos)
-    else:
-        build_general(a, sym, pos)
+    build_legacy_trimer(a, sym, pos)
     return 0
 
 

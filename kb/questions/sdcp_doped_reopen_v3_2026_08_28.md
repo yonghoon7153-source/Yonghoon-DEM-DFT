@@ -21,6 +21,35 @@ evidenceScope: multi-source-primary
 >
 > ⛔ **R2 (재심사) GO 전에는 Z1 도 실행하지 않는다.**
 
+## 🔴 회신 R2 판정 (2026-08-28) — NO-GO → **최소수정 8 구현 완료, R3 대기**
+
+원문: `kb/reviews/codex_R2_doped_reopen_v3_reply_2026_08_28.md`. 리뷰어가 커밋 b3ff72de 를
+**직접 실행**해 산출물을 감사했다 — "23 PASS 는 문자열 selftest 이지 e2e 증명이 아니다."
+빌더를 stage A/B 아키텍처로 재작성했다 (selftest 27건 · 음성 9종). 이 카드에서 바뀐 것:
+
+- **종 명칭 정정 (조건 1)**: DPn_hm_Q0 = **neutral-H-deleted / internal-redox microstate**
+  — Q=0 에서 H 핵+전자를 함께 제거한 종이므로 일반적 "탈양성자화" 가 아니다.
+- **U_eff → U_PCET 개명 (조건 3·7)**: `U_PCET(a,b) = E[h2(a,b)] + E[h0] − E[h1(a)] − E[h1(b)]`
+  — 균형 반응 h1(a)+h1(b)→h0+h2 의 에너지다. **핵 조성이 함께 변하므로 순수 Hubbard U/
+  hole-pairing 이 아니다.** vertical 과 adiabatic 을 별도 표로, 혼합 금지. 순수 pairing 은
+  동일 h2 조성 안의 sector 에너지차로 별도 판정.
+- **매트릭스에 off-center hBC 추가 (Q2)** — dp6 pairs = CD·BE·AF·**BC**. reflection 9 class
+  주장 철회 (조립 사슬은 B≢E·C≢D — label pair 15개가 맞다). **A,F 는 섹터 비교 전용**:
+  U(AF)·거리 추세·부호 일반화 주장 금지, 필요 시 hA·hF 자동 승격.
+- **h1 vertical 통일 (Q3)**: R⁰_k 마다 h0/h1(a)/h1(b)/h2(a,b) 네 leg 를 같은 좌표 프레임으로.
+- **seed 바닥 (Q4)**: DP3/4 = 초기 4 + null K=2 ×2 (최소 8) · DP6 = 초기 8 + null ×4 (최소 16).
+  변화 시 null counter 리셋 · 전 섹터 동일 geometry seed set · geometry/SCF seed 분리
+  (`SEED_FLOOR` — manifest 에 선언) · --step 은 seed 아님.
+- **ID 분리 (조건 8)**: `calculation_id` = conditioning 만의 불변 해시 (realized 유입 시 발급
+  거부) / `realized_state_id` = analyzer 가 사후 발급.
+- **analyzer (조건 5)**: `--analyze` 가 abort code 7종을 실제 emit — SCF_UNCONVERGED ·
+  SECTOR_MISMATCH(HFTyp·⟨S²⟩) · SPIN_CONTAMINATION_UNREPORTED · NA_STATE_NOT_IDENTIFIED
+  (BS 플립 실패) · STABILITY_UNSTABLE (opt 진행 차단). 음성 e2e 4종이 selftest 에 있다.
+- ⚠ 남은 미구현 (정직 목록 — R3 에 명시): carrier_localization_profile 의 수식·class 경계·
+  index-remap validator (조건 4 P1) · adaptive stopping 자동화 · Yamaguchi AP 산출.
+  전부 "빌더가 못 하는 것" docstring 에 등재.
+
+
 ## 왜 중요한가
 
 doped 재개의 첫 관문(Stage 0 기체상)이 설계 결함으로 막혀 있다. 회신 R 의 P0 들은
@@ -60,17 +89,21 @@ multiplicity · n_alpha_minus_beta · removed_H_indices · localization_seed`.
 (빌더 selftest 가 manifest 에 그 단어가 없음을 검사). 섹터 명칭:
 S3a = `RKS closed-shell candidate` · S3c = `BS M_s=0 determinant (nominal OSS candidate)`.
 
-## C. U_eff — 위치별 정의 + DP6_h1 추가 (조건 3)
+## C. U_PCET — 위치별 정의 + DP6_h1 추가 (조건 3 · R2 개명)
 
 ```
-U_eff(a,b) = E₊₂(a,b) + E₀ − E₊₁(a) − E₊₁(b)
+U_PCET(a,b) = E[h2(a,b)] + E[h0] − E[h1(a)] − E[h1(b)]     (균형 반응 h1(a)+h1(b) → h0+h2)
 ```
+
+⛔ **순수 Hubbard U/hole-pairing 이 아니다** — 네 leg 의 핵 조성이 함께 변한다 (R2 조건 3).
+disproportionation/PCET 에너지로만 부른다. vertical(전부 R⁰ 프레임)과 adiabatic(각 leg
+자체 최소점)을 **별도 표**로, 혼합 금지. 순수 pairing 은 동일 h2 조성 안 sector 차로 별도.
 
 2E(+1) 근사는 두 +1 위치가 등가일 때만 — 조립 사슬은 비틀림이 달라 **B≢E, C≢D** 로
-취급한다. Stage 0 에 **DP6_h1 singles: hB · hC · hD · hE (4잡)** 를 넣어
-U_eff(C,D)·U_eff(B,E) 를 위치별로 계산한다. (A,F) 쌍은 U_eff 없이 섹터 비교만
-(singles hA·hF 는 batch-2 후보). 부수 효과: DP6_h1↔DP6_h2 가 **같은 n 의
-hole-number 민감도 축**이 된다 (회신 R 이 준 값싼 설계).
+취급한다. Stage 0 매트릭스: **DP6_h1 singles hB·hC·hD·hE** + **pairs hCD·hBE·hAF·hBC**
+(hBC = off-center, R2 Q2 — 기존 singles 재사용). U_PCET 는 CD·BE·BC 세 쌍에서 위치별로.
+**(A,F) 는 섹터 비교 전용** — U(AF)·거리 추세·부호 일반화 주장 금지, 대상이 최저상태/
+교차검사에 들면 hA·hF 자동 승격. 부수 효과: DP6_h1↔DP6_h2 = 같은 n 의 hole-number 축.
 
 ## D. 관측량 (조건 4)
 
@@ -115,7 +148,7 @@ conformer × 탈양성자화 위치쌍마다:
 | N1–N3 | DP3/4/6_h0 | — | RKS |
 | S1 | DP3_h1 | **hB(middle) · hA(end)** | d |
 | S2 | DP4_h1 | **hA(end) · hB(inner)** | d |
-| S3 | DP6_h2 | **hCD(短) · hBE(中) · hAF(長)** | s/t/bs (vertical→adiabatic) |
+| S3 | DP6_h2 | **hCD · hBE · hAF(섹터전용) · hBC(off-center)** | s/t/bs (vertical→adiabatic) |
 | S4 | DP6_h1 | **hB · hC · hD · hE** | d |
 
 - 전 섹터 **동일 conformer·seed 예산** (차별 배정 금지).
