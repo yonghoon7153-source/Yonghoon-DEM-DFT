@@ -25,15 +25,19 @@
   {
    "anchor": "MTP 기반 CSP 로 12개 실험 구조를 재현하고, 4조성에서 준안정 edge-sharing 상이 안정 corner-sharing 상보다 Li 이동도가 우수함을 보였다.",
    "at": "2026-08-27 23:03",
-   "edited_at": "2026-08-27 23:13",
+   "edited_at": "2026-08-28 01:02",
    "history": [
     {
      "at": "2026-08-27 23:03",
      "text": "초록 관련해서 중요한 점 준안정 edge-sharing 상이 안정 corner-sharing 상보다 Li 이동도가 우수함"
+    },
+    {
+     "at": "2026-08-27 23:13",
+     "text": "초록 관련해서 중요한 점 준안정 edge-sharing 상이 안정 corner-sharing 상보다 Li 이동도가 우수함  Li–S₄ sublattice volume + CSM: Li 하나를 둘러싼 S 4개 사면체. 부피가 크면 Li–S 정전기 인력이 약해져서 잘 빠져나가고, 뒤틀림(CSM 값 ↑)이 크면 에너지 landscape가 평평해져서 migration barrier가 낮아짐. \"frustrated energy landscape\""
     }
    ],
    "id": "c1787839398081",
-   "text": "초록 관련해서 중요한 점 준안정 edge-sharing 상이 안정 corner-sharing 상보다 Li 이동도가 우수함  Li–S₄ sublattice volume + CSM: Li 하나를 둘러싼 S 4개 사면체. 부피가 크면 Li–S 정전기 인력이 약해져서 잘 빠져나가고, 뒤틀림(CSM 값 ↑)이 크면 에너지 landscape가 평평해져서 migration barrier가 낮아짐. \"frustrated energy landscape\"",
+   "text": "초록 관련해서 중요한 점 준안정 edge-sharing 상이 안정 corner-sharing 상보다 Li 이동도가 우수함\n** Li–S₄ sublattice volume + CSM**: Li 하나를 둘러싼 S 4개 사면체. 부피가 크면 Li–S 정전기 인력이 약해져서 잘 빠져나가고, 뒤틀림(CSM 값 ↑)이 크면 에너지 landscape가 평평해져서 migration barrier가 낮아짐. \"frustrated energy landscape\"",
    "who": ""
   },
   {
@@ -84,7 +88,7 @@
   {
    "anchor": "(p.47381 좌단, \"To pursue safer and more energy-dense lithium-ion batteries…\")",
    "at": "2026-08-27 23:19",
-   "edited_at": "2026-08-28 00:57",
+   "edited_at": "2026-08-28 01:30",
    "history": [
     {
      "at": "2026-08-27 23:19",
@@ -93,10 +97,262 @@
     {
      "at": "2026-08-27 23:40",
      "text": "SSE는 높은 이온전도도, 전기화학적 안정성, 계면 적합성을 동시에 만족해야 한다 결정 구조야말로 이온전도도와 물질 성능을 지배하는 핵심 인자다."
+    },
+    {
+     "at": "2026-08-28 00:57",
+     "text": "SSE는 높은 이온전도도, 전기화학적 안정성, 계면 적합성을 동시에 만족해야 한다 **결정 구조야말로 이온전도도와 물질 성능을 지배하는 핵심 인자다.**"
+    },
+    {
+     "at": "2026-08-28 01:17",
+     "text": "SSE는 높은 이온전도도, 전기화학적 안정성, 계면 적합성을 동시에 만족해야 한다 **결정 구조야말로 이온전도도와 물질 성능을 지배하는 핵심 인자다.**\n\n따라서 SSE 설계의 실질적 진전을 위해서는 더 근본적인 전략, 즉 본질적으로 우수한 이온 전달 특성을 갖는 새로운 결정 구조를 체계적으로 탐색하고 설계하는 접근이 필요하다."
+    },
+    {
+     "at": "2026-08-28 01:28",
+     "text": "SSE는 높은 이온전도도, 전기화학적 안정성, 계면 적합성을 동시에 만족해야 한다 **결정 구조야말로 이온전도도와 물질 성능을 지배하는 핵심 인자다.**\n\n따라서 SSE 설계의 실질적 진전을 위해서는 더 근본적인 전략, 즉 본질적으로 우수한 이온 전달 특성을 갖는 새로운 결정 구조를 체계적으로 탐색하고 설계하는 접근이 필요하다.\n\nICSD diff <-> csp는 화학 조성만을 새로운 결정 구조를 표적 탐색할 수 있는 유망한 경로 제공 (상평형도 기반 CSP는 구조적으로 뚜렷이 구별되는 준안정상이 나타날 수 있는 조성 공간을 찾아내는 데 효과적인 도구로 자리 잡았다)"
     }
    ],
    "id": "c1787840361674",
-   "text": "SSE는 높은 이온전도도, 전기화학적 안정성, 계면 적합성을 동시에 만족해야 한다 **결정 구조야말로 이온전도도와 물질 성능을 지배하는 핵심 인자다.**",
+   "text": "SSE는 높은 이온전도도, 전기화학적 안정성, 계면 적합성을 동시에 만족해야 한다 **결정 구조야말로 이온전도도와 물질 성능을 지배하는 핵심 인자다.**\n\n따라서 SSE 설계의 실질적 진전을 위해서는 더 근본적인 전략, 즉 본질적으로 우수한 이온 전달 특성을 갖는 새로운 결정 구조를 체계적으로 탐색하고 설계하는 접근이 필요하다.\n\nICSD diff <-> csp는 화학 조성만을 새로운 결정 구조를 표적 탐색할 수 있는 유망한 경로 제공 (상평형도 기반 CSP는 구조적으로 뚜렷이 구별되는 준안정상이 나타날 수 있는 조성 공간을 찾아내는 데 효과적인 도구로 자리 잡았다)\n\n이를 바탕으로 본 연구는 Li₂SiS₃ 조성계에 상평형도 기반 CSP를 적용하고, 14족 원소 치환(Ge, Sn)을 도입하여** Li₂SiS₃, Li₂GeS₃, Li₄SiGeS₆, Li₄SiSnS₆ **네 가지 후보를 검토했다",
+   "who": ""
+  },
+  {
+   "anchor": "뭐라고 하나: 14종 기지구조로 검증해 12종 성공 → 4조성에 적용해 각 10개 저에너지 폴리모프를 얻고 corner / edge / mixed 로 분류 → 특히 Li₂SiS₃ 의 준안정 edge 상(Kanno 그룹이 변형 합성조건에서 얻었고 σ 가 3자릿수 높은 그것)을 맞혔다.",
+   "at": "2026-08-28 01:53",
+   "edited_at": "2026-08-28 01:55",
+   "history": [
+    {
+     "at": "2026-08-28 01:53",
+     "text": "상평형도 기반·MLIP 결합 CSP는 Li₂SiS₃, Li₂GeS₃, Li₄SiGeS₆, Li₄SiSnS₆ 계에서 구조적으로 구별되는 준안정상들을 예측했으며, 세 가지 대표적 [MS₄] 다면체 토폴로지(M = Si, Ge, Sn) — corner-sharing, edge-sharing, 혼합형 — 를 갖는 10개의 저에너지 다형체를 도출했다."
+    }
+   ],
+   "id": "c1787849626100",
+   "text": "상평형도 기반·MLIP 결합 CSP는 Li₂SiS₃, Li₂GeS₃, Li₄SiGeS₆, Li₄SiSnS₆ 계에서 구조적으로 구별되는 준안정상들을 예측했으며, 세 가지 대표적 [MS₄] 다면체 토폴로지(M = Si, Ge, Sn) — corner-sharing, edge-sharing, 혼합형 — 를 갖는 10개의 저에너지 다형체를 도출했다.\n\n그 결과 가장** 안정한 상들은 대부분 corner-sharing 토폴로지를 채택하며 상대적으로 낮은 Li 이온 확산도를 보인 반면, 여러 준안정 edge-sharing 구조는 현저히 향상된 이온전도도를 나타냈다.**",
+   "who": ""
+  },
+  {
+   "anchor": "(p.47382 좌단 하단 → 우단 상단, \"To evaluate the impact of discovered structural motifs on Li-ion transport…\")",
+   "at": "2026-08-28 01:57",
+   "edited_at": "2026-08-28 01:58",
+   "history": [
+    {
+     "at": "2026-08-28 01:57",
+     "text": "the study establishes the predictive accuracy of phase-diagram-guided CSP and the mechanistic insight that machine-learning-driven dynamics can provide, clarifying the relationship between crystal structure and ion transport and offering a new perspective for designing high-performance SSEs for ASSBs."
+    }
+   ],
+   "id": "c1787849874004",
+   "text": "**the study establishes the predictive accuracy of phase-diagram-guided CSP and the mechanistic insight that machine-learning-driven dynamics can provide, clarifying the relationship between crystal structure and ion transport and offering a new perspective for designing high-performance SSEs for ASSBs.**",
+   "who": ""
+  },
+  {
+   "anchor": "(p.47382 우단 → p.47383 좌단 상단, \"All DFT calculations and molecular dynamics simulations were performed…\")",
+   "at": "2026-08-28 02:03",
+   "id": "c1787850223816",
+   "text": "NVT ensemble with a Nosé–Hoover thermostat",
+   "who": ""
+  },
+  {
+   "anchor": "그래서 amorphous 를 만든다: 4500 K 5 ps 가열 → 2500 K 10 ps 융해 → 200 K/ps 로 300 K 급랭 → 500 K 4 ps 어닐.",
+   "at": "2026-08-28 02:12",
+   "edited_at": "2026-08-28 02:27",
+   "history": [
+    {
+     "at": "2026-08-28 02:12",
+     "text": "amorphous 만드는 방법 관련"
+    },
+    {
+     "at": "2026-08-28 02:20",
+     "text": "amorphous 만드는 방법 관련\nMQA를 직접 한다"
+    }
+   ],
+   "id": "c1787850775228",
+   "text": "이를 해결하기 위해 목표 조성을 기반으로 **비정질 구조와 무작위 생성 구조라는 두 가지 상호보완적 전략**으로 초기 학습 데이터셋을 구축했다.\n\namorphous 만드는 방법 관련\nMQA를 직접 한다",
+   "who": ""
+  },
+  {
+   "anchor": "MTP 하이퍼파라미터",
+   "at": "2026-08-28 02:15",
+   "id": "c1787850922187",
+   "text": "AIMD      = 매 스텝 DFT 로 힘 계산.  느림. 수백 원자 × 수십 ps 가 한계.\nMTP+LAMMPS = DFT 로 학습한 퍼텐셜(MTP)을 LAMMPS 로 돌림.  빠름. 수천 원자 × 수 ns.",
+   "who": ""
+  },
+  {
+   "anchor": "뭐라고 하나: 워크플로는 3단(초기 학습셋 → CSP 루프 → 최종 예측). 새 구조를 찾는 게 목적이라 기존 DB 를 학습셋으로 못 쓴다(데이터 기근) → 그래서 amorphous 를 만든다: 4500 K 5 ps 가열 → 2500 K 10 ps 융해 → 200 K/ps 로 300 K",
+   "at": "2026-08-28 02:25",
+   "edited_at": "2026-08-28 02:25",
+   "history": [
+    {
+     "at": "2026-08-28 02:25",
+     "text": "MTP로 안정상을 정확히 예측하려면 고품질이면서 구조적으로 다양한 학습 데이터셋이 필수적이다."
+    }
+   ],
+   "id": "c1787851553098",
+   "text": "**MTP**로 안정상을 정확히 예측하려면 고품질이면서 구조적으로 다양한 학습 데이터셋이 필수적이다.",
+   "who": ""
+  },
+  {
+   "anchor": "뭐라고 하나: melt-quench 만으로는 \"정확한 구조 완화에 필요한 영역이 학습이 안 된 채 남는다\" → 그래서 USPEX 초기 집단 400 구조를 단일점 DFT 로 계산해 학습셋에 섞는다.",
+   "at": "2026-08-28 02:33",
+   "id": "c1787852038007",
+   "text": "To improve PES coverage and MTP quality, we also included randomly initialized structures: an initial population of 400 structures generated in USPEX with atoms arranged in random symmetric or topological configurations.",
+   "who": ""
+  },
+  {
+   "anchor": "뭐라고 하나: 루프 4단계 = MTP 학습·평가 → USPEX 구조생성 + MTP 완화 → active learning → query DFT. 초기에는 50세대로 돌린다. 다만 초기 학습셋이 amorphous+random 뿐이라 전역최소 근처를 정확히 완화하지 못한다 → 그래서 세대마다",
+   "at": "2026-08-28 08:40",
+   "edited_at": "2026-08-28 08:56",
+   "history": [
+    {
+     "at": "2026-08-28 08:40",
+     "text": "CSP 루프의 초기 반복에서는 50세대에 걸쳐 구조를 생성하고 각 단계마다 MTP로 후보 구조를 이완시킴으로써, 반복적 과정을 통해 저에너지 배열을 효율적으로 찾아낼 수 있었다."
+    }
+   ],
+   "id": "c1787874026167",
+   "text": "CSP 루프의 초기 반복에서는 50세대에 걸쳐 구조를 생성하고 각 단계마다 MTP로 후보 구조를 이완시킴으로써, 반복적 과정을 통해 저에너지 배열을 효율적으로 찾아낼 수 있었다.\n\nglobal minimum 구조를 정확히 최적화하는 것은 여전히 어렵다",
+   "who": ""
+  },
+  {
+   "anchor": "뭐라고 하나: 불확실도가 큰 구조(query structure)만 골라 완전 완화 + 단일점 DFT 를 돌려 학습셋에 넣는다 → 세대 수를 100 → 200 → 400 으로 올린다 → 종료 조건은 (a) 실험 보고 구조를 루프 안에서 예측하면 종료, (b) 실험 구조가 없으면 400세대",
+   "at": "2026-08-28 09:12",
+   "edited_at": "2026-08-28 09:22",
+   "history": [
+    {
+     "at": "2026-08-28 09:12",
+     "text": "a technique that identifies the most informative samples from uncertainty metrics and adds only those to the training set. It improves model performance with far fewer data points and is widely used in MTP studies of complex systems such as grain boundaries, interfaces, and CSP."
+    },
+    {
+     "at": "2026-08-28 09:13",
+     "text": "a technique that identifies the most informative samples from uncertainty metrics and adds only those to the training set. It improves model performance with **far fewer data points** and is widely used in MTP studies of complex systems such as grain boundaries, interfaces, and CSP."
+    },
+    {
+     "at": "2026-08-28 09:21",
+     "text": "a technique that identifies the most informative samples from uncertainty metrics and adds only those to the training set. It improves model performance with **far fewer data points** and is widely used in MTP studies of complex systems such as grain boundaries, interfaces, and CSP.\n\n이러한 반복적 재학습과 평가를 통해 예측 정확도가 점진적으로 향상되었으며, 이는 MTP–DFT 일관성 검사로 확인되었다. CSP 루프가 진행됨에 따라 진화 세대 수를 100 → 200 → 400으로 점진적으로 늘려 MTP의 예측 능력을 더욱 향상시키고 안정 구조 발굴을 촉진했다."
+    }
+   ],
+   "id": "c1787875968044",
+   "text": "a technique that identifies the most informative samples from uncertainty metrics and adds only those to the training set. It improves model performance with **far fewer data points** and is widely used in MTP studies of complex systems such as grain boundaries, interfaces, and CSP.\n\n이러한 반복적 재학습과 평가를 통해 예측 정확도가 점진적으로 향상되었으며, 이는 MTP–DFT 일관성 검사로 확인되었다. CSP 루프가 진행됨에 따라 진화 세대 수를 100 → 200 → 400으로 점진적으로 늘려 MTP의 예측 능력을 더욱 향상시키고 안정 구조 발굴을 촉진했다.\n-> 실험 구조가 예측되었을 떄 종료",
+   "who": ""
+  },
+  {
+   "anchor": "§2.3 ¶2 (p.47383 우단 하단 → p.47384 좌단 상단, \"To mitigate this issue, we adopted an active learning approach…\")",
+   "at": "2026-08-28 09:23",
+   "id": "c1787876605449",
+   "text": "초기 데이터 (비정질 + 랜덤 400)\n        ↓\n   [MTP 학습]  ←──────────────┐\n        ↓                      │\n   [USPEX 구조 생성]           │  재학습\n   (50 → 100 → 200 → 400 세대) │\n        ↓                      │\n   [MTP로 relax]               │\n        ↓                      │\n   [active learning: 불확실도 높은 것만 선별]\n        ↓                      │\n   [query 구조 DFT 계산] ───────┘\n        ↓\n   실험 구조 재현 시 종료 (없으면 400세대에서 종료)\n        ↓\n   [최종 CSP: fine-tuned MTP, 400+ 세대]",
+   "who": ""
+  },
+  {
+   "anchor": "§2.3 ¶2 (p.47383 우단 하단 → p.47384 좌단 상단, \"To mitigate this issue, we adopted an active learning approach…\")",
+   "at": "2026-08-28 09:24",
+   "id": "c1787876672036",
+   "text": "핵심 아이디어: 부트스트랩\n\n앞 문단에서 만든 초기 MTP는 저에너지 결정 영역이 텅 비어 있음. 그런데 그 영역의 데이터를 얻으려면 그 영역의 구조를 먼저 알아야 함 — 닭이 먼저냐 달걀이 먼저냐. 해법은 부정확한 MTP로라도 일단 탐색을 시작하고, 탐색이 뱉은 구조를 학습 데이터로 되먹이는 것. 초기 MTP는 형편없지만 \"대충 저에너지 방향\"은 가리켜 주고, 그쪽 구조들이 DFT 라벨을 받아 다시 학습되면 MTP가 그 영역에서 정확해지고, 그러면 다음 라운드는 더 깊이 파고들 수 있음.\n\n세대 수를 50 → 100 → 200 → 400으로 늘린 게 정확히 이 논리. 초기에는 MTP를 못 믿으니 얕게 훑고, 신뢰도가 올라가면서 깊게 파는 스케줄.\n\nactive learning — 무엇을 기준으로 고르나\n\n논문은 \"uncertainty metrics\"라고만 하고 넘어가는데, MLIP 패키지에서 쓰는 표준은 **extrapolation grade (γ, D-optimality 기준)**입니다. 학습 데이터의 descriptor 공간을 행렬로 보고, 새 구조가 그 공간 안에 들어오는지(interpolation) 밖으로 나가는지(extrapolation)를 행렬식으로 판정함. γ > 임계값이면 \"이 구조는 내가 본 적 없는 환경이다\" → query로 선정.\n\n비유하면, 시험 공부하면서 이미 아는 문제를 다시 푸는 게 아니라 헷갈리는 문제만 골라 답을 확인하는 것. DFT가 병목이니까 DFT를 쓸 문제를 최대한 아껴 쓰는 전략.\n\n논문에서 γ 임계값도, 라운드당 query 개수도 안 밝힘. 재현하려면 필요한 정보라 아쉬운 대목.\n\n종료 조건이 논쟁적\n\n\"The search was terminated when an experimentally reported structure was predicted within the CSP loop.\"\n\n이게 검증(validation) 파트, 즉 14개 기존 구조 재현 실험에 적용되는 조건입니다. 정답을 알고 있는 상태에서 \"정답이 나오면 멈춘다\"는 건 — 정답을 종료 조건으로 쓰는 것이므로 엄밀한 blind test가 아님. \"이만큼 돌리면 찾더라\"가 아니라 \"찾을 때까지 돌렸다\"에 가까움. 성공률 12/14가 실제 예측력을 얼마나 반영하는지 애매해지는 지점.\n\n반대로 실제 타겟 4개 조성(Li₂SiS₃ 등)은 정답이 없으니 400세대 고정. 여기는 blind에 가까움. 그리고 실제로 Li₂SiS₃의 실험적 corner-sharing과 edge-sharing 둘 다 나왔다는 게 진짜 검증 결과.\n\nRDF를 검증에 쓰는 이유\n\n공간군만 비교하면 위험함. 같은 공간군이어도 원자 배열이 다를 수 있고, 반대로 미세한 왜곡 때문에 공간군이 다르게 나와도 사실상 같은 구조일 수 있음(예: P2₁/c vs P1). RDF는 원자쌍 거리 분포라서 대칭 라벨과 무관하게 \"이웃 환경이 같은가\"를 직접 비교함. Figure S9(Li₂SiS₃의 Li–Li, Si–Si, S–S RDF)가 그 결과.",
+   "who": ""
+  },
+  {
+   "anchor": "뭐라고 하나: LiBiO₃ 와 LiGa(SeO₃)₂ 는 실패. 진단은 MAE_a(전체) vs MAE_f(저에너지)로 — LiBiO₃ 는 MAE_a 가 성공 계와 비슷하니 세대가 더 필요한 것이고, LiGa(SeO₃)₂(80 atoms/cell)는 MAE_f 가 커서 저에너지 영역 정확도",
+   "at": "2026-08-28 09:39",
+   "id": "c1787877546678",
+   "text": "**MAE**(Mean Absolute Error, 평균 절대 오차)는 실제 값과 예측 값의 차이를 절댓값으로 변환한 뒤 평균을 구한 회귀 모델 성능 평가지표",
+   "who": ""
+  },
+  {
+   "anchor": "§3.2 ¶1 (p.47384 우단, \"The CSP approach has proven to be an effective tool for exploring novel crystal structures in SSEs…\")",
+   "at": "2026-08-28 09:44",
+   "edited_at": "2026-08-28 09:45",
+   "history": [
+    {
+     "at": "2026-08-28 09:44",
+     "text": "**CSP**는 방대한 수의 후보 구조를 생성하므로 최안정 배열만 예측하는 데 그치지 않고 다수의 준안정상도 발굴할 수 있으며, 그중 일부는** 높은 이온전도도**를 나타낸다."
+    },
+    {
+     "at": "2026-08-28 09:44",
+     "text": "**CSP**는 방대한 수의 후보 구조를 생성하므로 최안정 배열만 예측하는 데 그치지 않고 다수의 준안정상도 발굴할 수 있으며, 그중 일부는** 높은 이온전도도**를 나타낸다.\n**Li₂SiS₃**"
+    }
+   ],
+   "id": "c1787877861673",
+   "text": "**CSP**는 방대한 수의 후보 구조를 생성하므로 최안정 배열만 예측하는 데 그치지 않고 다수의 준안정상도 발굴할 수 있으며, 그중 일부는** 높은 이온전도도**를 나타낸다.\n**Li₂SiS₃**\n**Li₂SiS₃ 외에, SSE 계에서 흔히 사용되는 14족 원소인 Ge로 Si를 치환하는 단순 치환 전략을 적용했다. 같은 14족 원소로서 Ge⁴⁺(67 pm)와 Si⁴⁺(54 pm)는 화학적 성질이 유사하지만, Ge⁴⁺의 더 큰 이온 반경은 확산 경로를 확장하여 이온 이동을 촉진할 것으로 기대된다. 반면 Sn은 Li₂SnS₃가 이미 SSE로 선행 연구된 바 있어 CSP에서 제외했다.**",
+   "who": ""
+  },
+  {
+   "anchor": "4조성을 왜 골랐",
+   "at": "2026-08-28 09:47",
+   "edited_at": "2026-08-28 09:48",
+   "history": [
+    {
+     "at": "2026-08-28 09:47",
+     "text": "phase-diagram 접근법"
+    }
+   ],
+   "id": "c1787878036573",
+   "text": "phase-diagram 접근법\n1:1 화학양론비를 근거로 Li₄SiGeS₆와 Li₄SiSnS₆를 선정했다(Figure S2)",
+   "who": ""
+  },
+  {
+   "anchor": "§3.2 ¶5 (p.47386 좌단 하단 → 우단, \"Specifically, the CSP framework accurately reproduced the experimentally reported corner-sharing structure…\")",
+   "at": "2026-08-28 10:02",
+   "id": "c1787878922023",
+   "text": "중요한 점은 최안정 corner-sharing과 준안정 edge-sharing 토폴로지 간 상대 퍼텐셜 에너지 차이가 0.2 eV/atom 미만이라는 것으로, edge-sharing 토폴로지의 합성 가능성이 충분함을 시사한다. 이 결과들은 CSP가 알려진 구조를 재현할 뿐 아니라 높은 이온전도도를 갖는 준안정 토폴로지를 발굴할 수 있음을 보여주며, edge-sharing 토폴로지를 유망한 SSE 후보로 부각한다.",
+   "who": ""
+  },
+  {
+   "anchor": "뭐라고 하나: 4원계 둘. Li₄SiGeS₆ 의 edge 상은 E_rel 이 ≤0.1 eV/atom 로 낮아 가장 유망하고, 그 이유는 이종원소(Si–Ge) 연결이라 \"구조적 무질서와 유연성이 커져 안정성이 좋아진다\". Li₄SiSnS₆ 는 Sn⁴⁺(83 pm)이 커서 결합 기하가 유연",
+   "at": "2026-08-28 10:05",
+   "id": "c1787879158344",
+   "text": "특히 Li₄SiSnS₆는 다른 계에 비해 corner-와 edge-sharing 혼합 모티프(초록 삼각형)가 더 자주 나타나는데, 이는 Sn⁴⁺(83 pm)의 상대적으로 큰 이온 반경이 Si⁴⁺(54 pm)나 Ge⁴⁺(67 pm)보다 유연한 결합 기하를 가능하게 하기 때문으로 해석된다. 그러나 혼합 토폴로지는 Li₄SiGeS₆에서와 마찬가지로 일관되게 저조한 Li 이온 전달을 보였는데, corner-sharing 단위가 병목으로 작용하여 Li 이온 이동을 방해하기 때문이다.",
+   "who": ""
+  },
+  {
+   "anchor": "뭐라고 하나: Li₂SiS₃ 와 Li₄SiGeS₆ 의 corner/edge 대표 상에서 Li 확률밀도 등가면과 van Hove 자기상관을 봤다(Fig. 4a,b, 60 ps @600 K). corner 은 r < 2 Å 에 단일 강피크가 60 ps 내내 = 갇힘. edge 는 첫 10",
+   "at": "2026-08-28 10:08",
+   "edited_at": "2026-08-28 10:10",
+   "history": [
+    {
+     "at": "2026-08-28 10:08",
+     "text": "Figure 4a,b는 600 K에서 60 ps AIMD로 얻은 Li 이온 확률밀도의 등가면(빨간색)과 van Hove 상관함수의 self-part를 보여준다."
+    }
+   ],
+   "id": "c1787879329902",
+   "text": "Figure 4a,b는 600 K에서 60 ps AIMD로 얻은 Li 이온 확률밀도의 등가면(빨간색)과 van Hove 상관함수의 self-part를 보여준다.\n**van Hove 상관함수**도 동일한 차이를 부각한다. corner-sharing 상에서는 2 Å 미만에서만 강한 피크가 관찰되어 60 ps 시뮬레이션 동안 Li 이온이 갇혀 있었음을 나타낸다. 반면 edge-sharing 상은 초기 10 ps 동안 2 Å 미만의 피크를 보인 뒤 더 긴 거리에 걸쳐 고르게 분포하는 패턴을 보여, Li 이온이 갇히지 않고 효율적으로 이동했음을 시사한다.",
+   "who": ""
+  },
+  {
+   "anchor": "뭐라고 하나: ★ 이 논문의 개념적 신규성. 연결된 다면체 사이의 틈에서는 corner 이든 edge 든 Li 이동이 전혀 관측되지 않는다(Fig. 4c) → 그 틈은 중심 양이온(Si⁴⁺/Ge⁴⁺/Sn⁴⁺)의 정전 반발로 Li 가 못 들어가는 pseudopolyhedron void 이",
+   "at": "2026-08-28 10:11",
+   "id": "c1787879516167",
+   "text": "이러한 영역은 다면체 중심의 양이온(Si⁴⁺, Ge⁴⁺, Sn⁴⁺)과** Li 이온 간 반발력으로 인해 필연적으로 유사다면체(pseudo-polyhedron) 공극을 형성하며**, Li 이온 확산을 실질적으로 방해한다.",
+   "who": ""
+  },
+  {
+   "anchor": "§3.3 ¶6 (p.47388 좌단, \"To this end, the investigation focused on the Li−S4 sublattice, which is a fundamental structural moiety…\")",
+   "at": "2026-08-28 10:18",
+   "id": "c1787879891488",
+   "text": "Figure 5는 Li₂SiS₃와 Li₄SiGeS₆ 조성의 가장 안정한 10개 예측 구조에 대한 packing ratio(α), Li–S₄ 부격자 부피, CSM을 보여준다. Figure 5a에서 Li₂SiS₃ 조성의 edge-sharing 상(초록 막대)은 현저히 낮은 α 값을 나타내는데, 이는 해당 구조의 dead volume 감소에 기인한 것으로 보인다. 이 경향은 α 값이 높은 패킹 효율을 갖는 edge-sharing 토폴로지의 구조적 특성을 효과적으로 포착함을 확인해 주며, Li 이온 이동도에서 부피 인자가 갖는 중요성을 부각한다. 또한 edge-sharing 상의 Li–S₄ 부격자 부피와 CSM 값이 모두 corner-sharing 상보다 높아, edge-sharing 상의 Li–S₄ 부격자가 더 크고 더 뒤틀려 있음을 나타낸다(색상 원). 이는 edge-sharing 상에서 관찰된 우수한 이온전도도에 대한 명확한 구조적 근거를 제공한다. 반면 corner-sharing 상은 상대적으로 높은 α 값을 보이며 Li–S₄ 부격자 부피와 CSM이 좁은 범위에 국한되어, 구조적 유연성이 제한적이고 Li 이온 이동이 억제됨을 시사한다. 특히 가장 안정한 corner-sharing 상들은 극히 낮은 CSM을 보였는데, 이는 두드러진 구조적 강성과 무시할 만한 Li 이온 변위를 반영하며, Figure 4a의 Li 이온 확률밀도 및 실험적으로 관찰된 극히 낮은 이온전도도와 일치한다.",
+   "who": ""
+  },
+  {
+   "anchor": "§3.3 ¶7 (p.47388 좌단 하단 → 우단, \"Figure 5 presents the packing ratio (α), Li−S4 sublattice volume, and CSM for the 10 most stable…\")",
+   "at": "2026-08-28 10:19",
+   "id": "c1787879978407",
+   "text": "결론적으로, packing ratio, Li–S₄ 부격자 부피, CSM의 통합 분석을 통해 edge-sharing 구조가 dead volume을 줄이고 Li 이온과 음이온(S²⁻) 간 정전기 상호작용을 약화시킴으로써 더 넓은 Li 이온 이동 공간을 제공함을 밝혔다.",
+   "who": ""
+  },
+  {
+   "anchor": "§4 결론 (p.47389 좌단, \"This study aimed to predict novel SSE structural phases to overcome the limitations…\")",
+   "at": "2026-08-28 10:22",
+   "id": "c1787880126507",
+   "text": "MTP 결합 CSP 개발 → 12/14 재현으로 검증\n        ↓\n상평형도로 조성 4개 선정 → CSP로 구조 예측\n        ↓\nAIMD: corner = 안정하나 느림 / edge = 준안정이나 빠름\n        ↓\n왜? → dead volume (Li가 못 가는 빈 공간)\n        ↓\n정량화 → α↓, Li–S₄ 부피↑, CSM↑",
+   "who": ""
+  },
+  {
+   "anchor": "MTP active learning = 그 비용을 없애는 장치 MTP(moment tensor potential)는 MLIP 의 한 종류다. 능동학습(active learning) 은 \"모델이 자신 없어 하는 구조만 골라 DFT 로 계산해서 다시 학습\" 하는 방식이다. 그래서 DFT 호",
+   "at": "2026-08-28 10:26",
+   "edited_at": "2026-08-28 10:27",
+   "history": [
+    {
+     "at": "2026-08-28 10:26",
+     "text": "Graph 기반 (NequIP, M3GNet, CHGNet)\tDescriptor 기반 (MTP, GAP, SNAP)\n파라미터 수\t많음 (10⁵~10⁷)\t적음 (10²~10³)\n범용성\t전 원소 pretrained\t계마다 새로 학습\n속도\t느림\t훨씬 빠름\n정확도\t높음\t계 특화 시 충분\nfine-tuning\t사실상 필수\t애초에 scratch 학습"
+    }
+   ],
+   "id": "c1787880403781",
+   "text": "Graph 기반 (NequIP, M3GNet, CHGNet)\tDescriptor 기반 (MTP, GAP, SNAP)\n파라미터 수\t많음 (10⁵~10⁷)\t적음 (10²~10³)\n범용성\t전 원소 pretrained\t계마다 새로 학습\n속도\t느림\t훨씬 빠름\n정확도\t높음\t계 특화 시 충분\nfine-tuning\t사실상 필수\t애초에 scratch 학습\n\n이 조성만 아는 대신 빠른 모델",
    "who": ""
   }
  ]
