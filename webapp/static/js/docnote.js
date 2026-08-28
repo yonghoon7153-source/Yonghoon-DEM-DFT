@@ -267,6 +267,12 @@
         if (rows[i + 1].t < rows[i].t + hHalf[i] + GAP) { half[i] = true; half[i + 1] = true; }
       }
     }
+    /* ⛔⛔ 2026-08-28 실측 — **고치는 중인 카드는 절대 반폭이 아니다.**
+     *   고치면 카드가 길어져 옆 카드와 겹치므로 위 규칙이 half=true 로 만들고,
+     *   그러면 아래 ③ 이 left 를 열 위치(11px)로 덮어썼다. 폭은 넓힌 그대로(739px)라
+     *   카드가 여백칸(460px)을 **오른쪽으로 290px 삐져나갔다** — 왼쪽으로 넓어져야 하는데
+     *   오른쪽으로 밀려난 것이다 (1저자: "이쪽 말고 왼쪽으로 확장되게"). */
+    rows.forEach(function (r, i) { if (isEd(r.c)) half[i] = false; });
 
     // ② 정해진 폭을 입히고 **다시 잰다**
     rows.forEach(function (r, i) {
@@ -303,7 +309,7 @@
         }
         t = Math.max(r.t, bottom[k]);
         bottom[k] = t + hh[i] + GAP;
-        r.c.style.left = (PAD + k * (colW + GAP)) + "px";
+        if (!isEd(r.c)) r.c.style.left = (PAD + k * (colW + GAP)) + "px";   // ②가 정한 자리를 지킨다
       }
       r.c.style.top = t + "px";
     });

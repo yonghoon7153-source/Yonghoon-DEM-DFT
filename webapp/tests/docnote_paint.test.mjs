@@ -243,6 +243,40 @@ if (!cols.err) {
   chk(bad.length === 0, `[배치·음성] 카드끼리 겹치지 않는다 (${bad.length}쌍 겹침)`);
 }
 
+/* ── 고칠 때 **왼쪽으로** 넓어진다 (1저자 2026-08-28: "이쪽 말고 왼쪽으로 확장되게") ──
+ * ⛔ 실측 회귀: 고치면 카드가 길어져 옆 카드와 겹치고, 그러면 배치가 half=true 로 보고
+ *   left 를 열 위치(11px)로 덮어썼다. 폭은 넓힌 그대로라 카드가 여백칸을 **오른쪽으로
+ *   290px 삐져나갔다** — 왼쪽으로 넓어져야 하는데 오른쪽으로 밀린 것이다.
+ * ⚠ 앞의 "고치기" 시험은 **통폭 카드**를 고쳐서 이걸 못 봤다. 반폭이던 카드를 고쳐야 보인다. */
+const edw = await pg.evaluate(() => {
+  const g = document.querySelector(".dnote-gut");
+  const cards = [...g.querySelectorAll(".dn-card")];
+  const t = cards.find((c) => c.classList.contains("dn-half")) || cards[0];
+  if (!t) return { err: "카드가 없다" };
+  const wasHalf = t.classList.contains("dn-half");
+  const btn = t.querySelector(".dn-edit");
+  if (!btn) return { err: "✎ 가 없다" };
+  btn.click();
+  const gr = g.getBoundingClientRect(), b = t.getBoundingClientRect();
+  const ta = t.querySelector(".dn-in");
+  return { wasHalf, gutW: Math.round(gr.width), w: Math.round(b.width),
+           left: Math.round(b.left - gr.left), right: Math.round(b.right - gr.left),
+           h: ta ? Math.round(ta.getBoundingClientRect().height) : 0,
+           scroll: ta ? ta.scrollHeight : 0 };
+});
+chk(!edw.err, `[고치기·왼쪽] 카드를 고칠 수 있다 ${edw.err || ""}`);
+if (!edw.err) {
+  chk(edw.wasHalf, `[고치기·왼쪽] **반폭이던** 카드를 고른다 (통폭만 보면 이 버그가 안 보인다)`);
+  chk(edw.left < 0,
+      `[고치기·왼쪽·실측회귀] **왼쪽으로** 넓어진다 (left ${edw.left}px < 0)`);
+  chk(edw.right <= edw.gutW + 1,
+      `[고치기·왼쪽·음성] 오른쪽으로 삐져나가지 않는다 (오른끝 ${edw.right} ≤ 여백칸 ${edw.gutW})`);
+  chk(edw.w > edw.gutW,
+      `[고치기·왼쪽] 여백칸보다 넓어진다 (${edw.w} > ${edw.gutW}px)`);
+  chk(edw.h <= edw.scroll + 10 && edw.h + 2 >= edw.scroll,
+      `[고치기·왼쪽] 상자 높이가 글에 딱 맞는다 (${edw.h} ≈ ${edw.scroll})`);
+}
+
 await b.close();
 console.log(ok ? "docnote paint PASS" : "docnote paint FAIL");
 process.exit(ok ? 0 : 1);
