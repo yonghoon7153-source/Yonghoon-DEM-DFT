@@ -526,7 +526,8 @@ else
   _rc=$?
   _sealed_after="$(sha256sum "$ARCH_TMP/$_NAME/payload_sha256.yaml" 2>/dev/null | cut -d' ' -f1)"
   # 중첩 흔적: mv 는 목적지가 존재하는 디렉터리면 그 **안으로** 넣는다
-  _nested="$(find "$ARCH_TMP/$_NAME" -maxdepth 1 -name '.candidate_*' -o -maxdepth 1 -name "$_NAME" 2>/dev/null | head -1)"
+  _nested="$(find "$ARCH_TMP/$_NAME" -mindepth 1 -maxdepth 1 \
+             \( -name '.candidate_*' -o -name "$_NAME" \) 2>/dev/null | head -1)"
   if [[ "$_rc" -ne 0 && -n "$_sealed_after" \
         && "$_sealed_before" == "$_sealed_after" && -z "$_nested" ]]; then
     ok "기존 묶음 이동 실패 → 승격 중단·묶음 보존 (14차 발견 7)"
