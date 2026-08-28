@@ -2801,7 +2801,11 @@ def freeze_cohort(cohort_id: str, reason: str) -> dict:
         raise SystemExit(
             f"✗ cohort {cohort_id!r} 의 상태가 {row.get('status')!r} 이라 "
             "얼릴 수 없다")
-    rec = _append_lifecycle(cohort_id, "active", "frozen", reason)
+    # 출발점은 **기록된** 상태다. journal 이 생기기 전부터 active 이던 cohort 는
+    # 기록이 없고(`None`), 그 경우도 얼릴 수 있어야 한다 — 게시는 lifecycle 을
+    # 움직이지 않으므로 "active 기록" 은 없는 것이 정상이다.
+    rec = _append_lifecycle(cohort_id, cohort_lifecycle_state(cohort_id),
+                            "frozen", reason)
     row["status"] = "frozen"
     row["frozen_reason"] = str(reason)
     led.write_text(yaml.safe_dump(doc, allow_unicode=True, sort_keys=False),

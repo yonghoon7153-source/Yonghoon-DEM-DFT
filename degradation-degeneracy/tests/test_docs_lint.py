@@ -9192,3 +9192,33 @@ def test_freezing_a_cohort_does_not_invalidate_what_it_published(tmp_path):
 
     assert after["generation_id"] == before["generation_id"], (
         "cohort 를 얼렸더니 게시된 generation 이 달라 보인다")
+
+
+def test_freezing_works_for_a_cohort_with_no_recorded_state(tmp_path):
+    """★ 49차 — journal 이 생기기 **전부터** active 이던 cohort 도 얼릴 수 있다.
+
+    게시는 lifecycle 을 움직이지 않으므로 "active 기록" 이 없는 것이 정상이다.
+    출발점을 `"active"` 로 못 박으면 그런 cohort 를 영영 못 얼린다 — 실측했다
+    (g3 을 얼리려다 `기록된 상태는 None 인데 'active' 에서 옮기려 한다` 로
+    거부됐다).
+    """
+    import yaml
+
+    rp = _fresh_rp()
+    rp.REPO = _ledger_repo(tmp_path, yaml.safe_dump({"cohorts": [{
+        "cohort_id": "gZ", "dir": "docs/22p_gap/coh", "status": "active",
+        "legs": ["a"], "cross_leg_comparison": "not_applicable_single_leg",
+        "pin": dict(_DEFAULT_PIN)}]}, allow_unicode=True, sort_keys=False))
+
+    assert rp.cohort_lifecycle_state("gZ") is None
+    rp.freeze_cohort("gZ", "연구 종료")
+    assert rp.cohort_lifecycle_state("gZ") == "frozen"
+    doc = yaml.safe_load(
+        (rp.REPO / "docs" / "22p_gap" / "LEG_PRESERVATION.yaml").read_text(
+            encoding="utf-8"))
+    row = doc["cohorts"][0]
+    assert row["status"] == "frozen" and row["frozen_reason"] == "연구 종료"
+
+    # 두 번 얼릴 수는 없다 — 원장도 journal 도 이미 frozen 이다
+    with pytest.raises(SystemExit):
+        rp.freeze_cohort("gZ", "또")
