@@ -2,7 +2,7 @@
  "schema": "campaign_closed/v1",
  "date": "2026-08-28",
  "제목": "sdcp_doped 흡착 캠페인 — 범위 마감 (scope closure) · **재개 전제**",
- "상태": "proposed — db/governance/decisions.json D-2026-08-28-sdcp-doped-scope-closure, 사람이 ratify 해야 active",
+ "상태": "**active** — 1저자 ratify 2026-08-28 (db/governance/decisions.json D-2026-08-28-sdcp-doped-scope-closure)",
  "닫는_범위": "sdcp_doped(자가도핑 단량체, C₁₁H₁₅O₆S₂ doublet)의 **표면 흡착 수치 전부** — E_ads·자리선호·carrier 상태 판정. 이 캠페인(wave1 프로토콜, n=1 단량체)에서는 만들지 않는다.",
  "닫지_않는_것": [
   "추출 부호 (아래 확정값 — 이미 별도 유효 판정)",
@@ -65,6 +65,11 @@
    "at": "2026-08-28b",
    "state": "proposed",
    "note": "1저자 방침 확인: 재개 전제. 성격을 '영구 종료'가 아니라 '재개까지의 방지 장치'로 명시. 재개 조건을 planned_upgrade / mandatory_invalidation 으로 분리(거버넌스 정책 준수). doped 자세 기록(fib10/r000, cross 없음)과 neutral 과의 자세 불일치를 재개 시 필수 수정 항목으로 등재"
+  },
+  {
+   "at": "2026-08-28c",
+   "state": "active",
+   "note": "1저자 ratify. 이 시점부터 금지 서술은 구속력이 있다 — doped 흡착 수치는 원고·발표·db 어디에도 나가지 않는다."
   }
  ],
  "⚠_이_마감의_성격": "영구 종료가 아니다. 1저자 방침은 **재개 예정**이고(2026-08-28), 이 문서는 그때까지 **이 프로토콜(n=1 단량체·wave1 설정)이 숫자를 만들지 못하게 막는 장치**다. 아홉 번째 실패를 예방하는 것이 목적이지 질문을 버리는 것이 아니다.",

@@ -15,10 +15,12 @@
 - 재개는 회신 O 7조건 전부로만. 부분 재개 없음.
 - 부수 판정 완료: LiNiO₂(104)+U 슬랩 **금속 아님** (gap ≈ 0.21 eV, dense 일치, 부분점유 0)
   — 음이온을 중성 셀로 받는 지름길 없음. 기록: doped 마감 문서 재개조건 절.
-**남은 유일한 필수 계산 = neutral spin-equivalence 짝검사** (0.346 eV headline 보류 해제용):
-mol_neutral·ptfe_c10·ptfe_dimer box24 를 **NUPDOWN=-1(자유)** 로 재실행 — 기존 NUPDOWN=0
-결과와의 차 δ_m. VASP 는 외주 파트너 몫이라 **의뢰 블록**이 세션 보고에 있다.
-δ_m ≲ 1 meV 면 보류 해제, 아니면 E_ads 전항 +δ_m 갱신.
+**남은 유일한 필수 계산 = 기준 분자 재실행** (0.346 eV headline 보류 해제용).
+2026-08-28 INCAR 전수 감사로 **바꿀 키가 둘**이 됐다:
+`NUPDOWN = 0 → -1` (δ_m) · `LREAL = F → T` (δ_LREAL — 복합체·슬랩이 T 인데 기준 분자만 F).
+대상 mol_neutral·ptfe_c10·ptfe_dimer box24, 기하 고정, static 상만.
+⚠ 회신 P 4번에서 **두 키를 한 잡에서 같이 바꾸는 게 옳은지**를 심사받는 중 — 답이 오면
+3잡(동시) / 6잡(분리) 중 정해서 던진다. 의뢰 블록은 세션 보고에.
 
 ### ⏭-1. T13 확인 — **먼저**
 kgy 800 ps 런 2개(`lpsocl_long` · `lpsocl_small800`)가 8/29 아침 완주.

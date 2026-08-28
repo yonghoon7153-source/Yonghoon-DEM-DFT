@@ -78,7 +78,7 @@
  "v4_왜": "회신 N P0: v3 가 dE_notes 는 고쳤지만 **headline_sentences_ko 를 안 고쳤다** — 문자열 매칭 수정의 전형적 실패(같은 주장, 다른 표현). '모두 Li 자리 선호'·'약 2배' 는 v3 자신의 dE_notes·금지서술과 정면 충돌였다. not_citable 의 'wave1.5 대기' stale 도 제거.",
  "⚠_hold_2026_08_28_회신O": {
   "대상": "Eads_eV_box24_pm1 · Eads_eV_box24_net4_basin_conditioned_SI 의 절대값과 headline 2문장(0.346 eV) — spin-equivalence δ_m 확인 전 조건부",
-  "이유": "분자 기준이 NUPDOWN=0 제약, 복합체는 자유 — δ_m=E_M^{M=0}−E_M^{free} 가 절대 E_ads 에 남는다 (회신 O 6번)",
+  "이유": "분자 기준이 NUPDOWN=0 제약, 복합체는 자유 — δ_m=E_M^{M=0}−E_M^{free} 가 절대 E_ads 에 남는다 (회신 O 6번) ⊕ 2026-08-28 INCAR 감사: **LREAL 비대칭**(복합체·슬랩 T / 기준 분자 F)이 같은 자리에 하나 더 남는다 — δ_LREAL. 근거: db/properties/sdcp_wave1_incar_echo_2026_08_28.json",
   "영향_없는_것": "dE_site_meV 전항 (같은 분자 기준을 쓰므로 δ_m 소거) · 자리선호 NO_VERDICT · doped 인용불가(이미 비움)",
   "해제": "db/properties/sdcp_neutral_closed_2026_08_28.json 의 해제_조건_spin_equivalence_짝검사 통과"
  }

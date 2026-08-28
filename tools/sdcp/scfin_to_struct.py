@@ -830,6 +830,47 @@ def energy_rows(metas, refs, allow_not_citable=False):
 CSV_ENCODING = "utf-8-sig"
 
 
+#: 감사 키에 없지만 **이 캠페인의 판정에 직접 걸리는** 것들. 특히
+#:  · SIGMA  — phaseB 의 mol_doped 0.175 를 만든 그 키 (ISMEAR 와 짝으로만 의미가 있다)
+#:  · NELECT — 회신 O 재승인 조건 ① 이 명시적으로 요구하는 값
+#:  · NSW    — 단일점인지 이완인지 (기하 승계 서술의 근거)
+INCAR_EXTRA = ("SIGMA", "NELECT", "NELM", "EDIFF", "PREC", "NBANDS", "NSW", "KSPACING")
+
+
+def read_incar_echo(path):
+    """OUTCAR 의 INCAR 되울림 → dict. 감사키 + INCAR_EXTRA.
+
+    ⛔ 못 하는 것: MAGMOM·ADDGRID 는 VASP 가 안 되울린다 — 원리적으로 None 이다
+      (통과도 실패도 아닌 **unverified**). INCAR 원본이 회수되지 않은 드롭에서는
+      그 두 키를 확인할 방법이 아예 없다.
+    """
+    ns = _analyzer()
+    t, _ = ns["_last_run_segment"](ns["_read_outcar_raw"](path)[0])
+    out = {k: ns["_echo_val"](t, k) for k in ns["AUDIT_KEYS_RUNTIME"]}
+    for k in INCAR_EXTRA:
+        m = re.search(r"(?m)^\s{2,}" + k + r"\s*=\s*([^\n;|]+?)(?:\s{2,}\w+\s*=|$)", t)
+        out[k] = m.group(1).strip() if m else None
+    return out
+
+
+def incar_diff(rows, key_of=lambda r: r["job"]):
+    """잡별 INCAR echo 목록 → **값이 갈리는 키만** 뽑는다.
+
+    회신 O G1 의 실제 검사 대상: "기준과 대상이 같은 state-selection policy 인가".
+    한 캠페인 안에서 갈리면 안 되는 키가 갈렸는지 **자동으로** 드러나게 한다.
+    → {key: {value: [job…]}} — 값이 하나뿐인 키는 빼고 돌려준다.
+    """
+    keys = sorted({k for r in rows for k in r if k not in ("job", "role", "fragment")})
+    diff = {}
+    for k in keys:
+        by = {}
+        for r in rows:
+            by.setdefault(str(r.get(k)), []).append(key_of(r))
+        if len(by) > 1:
+            diff[k] = by
+    return diff
+
+
 def write_energy_csv(path, rows):
     os.makedirs(os.path.dirname(os.path.abspath(path)) or ".", exist_ok=True)
     with open(path, "w", newline="", encoding=CSV_ENCODING) as f:
@@ -988,6 +1029,20 @@ def selftest():
         chk(dl is None and np.allclose(pl, posl),
             "음성: 감긴(주기 결합) 조각 → 재중심 포기(원본 유지), 조용히 절단하지 않는다")
 
+        # ⛔ 음성 9 — incar_diff 는 **갈린 키만** 집어야 한다 (같은 키를 오탐하면
+        #   진짜 비대칭이 노이즈에 묻힌다). 실제로 이 검사가 LREAL T/F 를 찾아냈다.
+        ir = [{"job": "complex", "role": "complex", "fragment": "x",
+               "LREAL": "T", "ENCUT": "520", "NUPDOWN": "-1"},
+              {"job": "mol", "role": "mol_ref", "fragment": "x",
+               "LREAL": "F", "ENCUT": "520", "NUPDOWN": "0"}]
+        dd = incar_diff(ir)
+        chk(set(dd) == {"LREAL", "NUPDOWN"},
+            f"incar_diff 가 갈린 키만 집는다 (ENCUT 는 같으니 제외): {sorted(dd)}")
+        chk(dd["LREAL"] == {"T": ["complex"], "F": ["mol"]},
+            "incar_diff 가 어느 잡이 어느 값인지 보존한다")
+        chk(incar_diff([ir[0], dict(ir[0], job="c2")]) == {},
+            "음성: 전부 같으면 빈 dict — 없는 차이를 만들지 않는다")
+
         # ⛔ 음성 7 — CSV 에 BOM 이 없으면 Excel 이 한글 note 열을 깨뜨린다 (실측 제보)
         cp = os.path.join(td, "e.csv")
         write_energy_csv(cp, [dict(rg, note="한글 사유")])
@@ -1022,6 +1077,8 @@ def main():
                     help="refs/ 디렉터리 (clean_slab__* · mol__*). E_ads 에 필요")
     ap.add_argument("--allow_not_citable", action="store_true",
                     help=f"NOT_CITABLE 조각({'/'.join(NOT_CITABLE)})의 E_ads 도 계산")
+    ap.add_argument("--incar_csv", default=None,
+                    help="--outcar 전용. 잡별 INCAR 되울림 표 + 갈린 키 요약")
     ap.add_argument("--no_recenter", action="store_true",
                     help="분자 재중심(뷰어에서 안 잘리게) 끄기 — OUTCAR 원문 좌표 그대로")
     ap.add_argument("--selftest", action="store_true")
@@ -1042,6 +1099,41 @@ def main():
             cell, labels, pos, meta = read_outcar(path)
             meta.update(tag=default_tag(path), nat=len(pos))
             metas.append(meta)
+
+    if a.incar_csv:
+        paths = list(a.outcar)
+        if a.refs and os.path.isdir(a.refs):
+            for job in sorted(os.listdir(a.refs)):
+                for ph in ("static", "dense"):
+                    q = os.path.join(a.refs, job, ph, "OUTCAR.gz")
+                    if os.path.isfile(q) or os.path.isfile(q[:-3]):
+                        paths.append(q)
+        irows = []
+        for q in paths:
+            tag = default_tag(q)
+            job, phase = tag.rsplit("__", 1)
+            role, frag, _pose, _b = job_fields(job)
+            r = {"job": job + "__" + phase, "role": role, "fragment": frag}
+            r.update(read_incar_echo(q))
+            irows.append(r)
+        cols = ["job", "role", "fragment"] + sorted(set(k for r in irows for k in r)
+                                                    - {"job", "role", "fragment"})
+        os.makedirs(os.path.dirname(os.path.abspath(a.incar_csv)) or ".", exist_ok=True)
+        with open(a.incar_csv, "w", newline="", encoding=CSV_ENCODING) as f:
+            w = csv.DictWriter(f, fieldnames=cols)
+            w.writeheader()
+            for r in irows:
+                w.writerow({k: ("" if r.get(k) is None else r[k]) for k in cols})
+        print(f"\n══ INCAR 되울림 {len(irows)}잡 → {a.incar_csv} ══")
+        d = incar_diff(irows)
+        if not d:
+            print("  ✓ 전 잡이 동일 — 갈린 키 없음")
+        for k, by in sorted(d.items()):
+            print(f"  ⚠ **{k}** 이 {len(by)}가지로 갈림:")
+            for v, jobs in sorted(by.items(), key=lambda x: -len(x[1])):
+                short = ", ".join(j.split("__")[0] + "/" + j.split("__")[-1] for j in jobs[:4])
+                print(f"      {v!s:<28s} ({len(jobs)}잡) {short}{' …' if len(jobs) > 4 else ''}")
+        print("  ⚠ MAGMOM·ADDGRID 는 VASP 가 안 되울린다 — 빈칸은 **미검증**이지 '없음' 이 아니다")
 
     if a.energy_csv:
         refs, ref_metas = collect_refs(a.refs)

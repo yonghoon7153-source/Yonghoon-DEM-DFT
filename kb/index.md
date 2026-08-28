@@ -1,6 +1,6 @@
 # kb 카탈로그 (생성물 — 손으로 고치지 말 것)
 
-> `python3 tools/kb_wiki.py index` 가 만든다 · 2026-08-28 · managed-files: 265
+> `python3 tools/kb_wiki.py index` 가 만든다 · 2026-08-28 · managed-files: 266
 
 규칙: kb/SCHEMA.md · 열린 질문: kb/questions/ · 논지 카드: kb/syntheses/ · 원장: kb/open_items.md · 문헌: litdb/INDEX.md
 
@@ -167,7 +167,7 @@
 - `kb/results/vgcf_hbn_figure_plan.md` — VGCF/h-BN 원고 — 층수 연구를 어디에 둘 것인가 (2026-07-31 결정)
 - `kb/results/vgcf_hbn_gallery_mechanism_2026_07_30.md` — h-BN@VGCF — 209 meV 층수효과의 정체: confinement 확정 (2026-07-30)
 
-## reviews/ (30)
+## reviews/ (31)
 - `kb/reviews/ECERD2600097_review_notes.md` — 📝 리뷰 노트 — ECER-D-26-00097 (Fan 외, *Stability Issues in Sulfide-Based ASSB*)
 - `kb/reviews/codex_A_cascade_ml_2026_08_20.md` — 교차리뷰 A — cascade 파이프라인 + 머신러닝 (codex 작업지시서) ○미열람
 - `kb/reviews/codex_B_neb_md_tools_2026_08_20.md` — 교차리뷰 B — NEB · MD · 도구 (codex 작업지시서) ○미열람
@@ -186,6 +186,7 @@
 - `kb/reviews/codex_N_estimand_discipline_2026_08_28.md` — 교차리뷰 N — estimand 규율·마감 규율: 이게 작동할 규율인가, 아니면 또 하나의 안 읽는 문서인가 ○미열람
 - `kb/reviews/codex_O_prompt_sdcp_doped_estimand_2026_08_28.md` — Codex 회신 O 요청 프롬프트 — SDCP doped estimand 카드 (계산 전 심사) ○미열람
 - `kb/reviews/codex_O_sdcp_doped_estimand_reply_2026_08_28.md` — 회신 O — SDCP doped estimand 카드 전면 반려 (P0, 슬랩 NO-GO) ○미열람
+- `kb/reviews/codex_P_prompt_wave1_incar_audit_2026_08_28.md` — Codex 회신 P 요청 프롬프트 — wave1 INCAR 전수 감사 + doped 마감 심사 ○미열람
 - `kb/reviews/codex_stats_question_2026_08_11.md` — Codex 질문 — 통계 판정 3건 (β 귀무분포 · 사다리 설계 · BVSE 부호 · 판정바닥 ddof)
 - `kb/reviews/section3_review_candidates.md` — 📋 §3 리뷰 코멘트 후보 — 소거법 작업용 (ECER-D-26-00097)
 - `kb/reviews/section3_review_comments_compressed.md` — Comments on Section 3 (Intrinsic Stability of Sulfide SEs) — 압축판 v2

@@ -16,7 +16,8 @@
   "2026-08-20b": "1저자 승인 — core 5 를 proposed → ratified/active 로. 승인은 decision_digest 로 그 시점 내용에 결속된다 (승인 뒤 statement·enforcement 를 고치면 지문이 어긋나 재승인이 요구된다). commit bb9f9c5d6534… (원장에는 full 40-hex).",
   "2026-08-25": "랭킹 정규화 결정 추가 (D-2026-08-25-missing-axis-is-unknown-not-worst). cascade 재랭킹 ①~③ 실행 — 1등이 24% 캐스케이드에서 바뀌었다.",
   "2026-08-28": "estimand·closure 정책 2건 **proposed** 등록 (회신 N §D5 통합안 1단계). ratification 없이 active 금지 규칙 준수 — ratify 는 scientific_owner 몫",
-  "2026-08-28-doped-closure": "D-2026-08-28-sdcp-doped-scope-closure proposed 등록 (agent)"
+  "2026-08-28-doped-closure": "D-2026-08-28-sdcp-doped-scope-closure proposed 등록 (agent)",
+  "2026-08-28-doped-closure-ratify": "D-2026-08-28-sdcp-doped-scope-closure → active (1저자 ratify)"
  },
  "decisions": [
   {
@@ -652,7 +653,7 @@
    },
    "title": "sdcp_doped 흡착 — 범위 마감: 이 캠페인(n=1 단량체)에서 흡착 수치를 만들지 않는다",
    "statement": "단일 스칼라 E_ads 는 이 계에서 정의되지 않음이 외부 리뷰 3연속(M·N·O)으로 확정됐고, 회신 O 는 화학종(n=1, 100% 산화) 자체가 목표(25-35% 평균 도핑 carrier)를 담지 못한다고 판정했다. doped 흡착·자리선호·carrier 판정은 전부 만들지 않는다. 유효 잔존: 추출 부호(+0.34 eV, 부호만) · 기체상 분자 열역학(DPE/LCA/EA). 재개는 회신 O 재승인 조건 7 전부 충족으로만 — 부분 재개 없음. 세부: db/properties/sdcp_doped_closed_2026_08_28.json",
-   "decision_state": "proposed",
+   "decision_state": "active",
    "evidence": [
     "8회 시도 전패 기록 (kb/methodology/estimand_before_running_2026_08_28.md §1)",
     "회신 O P0 전면 반려 + 슬랩 NO-GO (kb/reviews/codex_O_sdcp_doped_estimand_reply_2026_08_28.md)",
@@ -666,7 +667,21 @@
    "reopen_criteria": [
     "회신 O 재승인 조건 ①–⑦ 전부 충족 (부분 재개 없음)"
    ],
-   "enforcement": "tools/sdcp/scfin_to_struct.py NOT_CITABLE(sdcp_doped) 가 E_ads 생성을 코드에서 차단 (--allow_not_citable 로만 우회)"
+   "enforcement": "tools/sdcp/scfin_to_struct.py NOT_CITABLE(sdcp_doped) 가 E_ads 생성을 코드에서 차단 (--allow_not_citable 로만 우회)",
+   "ratification": {
+    "state": "ratified",
+    "actor_id": "yonghoon",
+    "role": "scientific_owner",
+    "timestamp": "2026-08-28T00:00:00Z",
+    "commit": "1341497ff84dbf0140f9221a2fb14683b1709d38",
+    "decision_digest": "sha256:2e2127e252a764f22e24af7e7ee1127de221f32b5d87bcbb96160c52f3d25adc",
+    "max_release_status": "approved",
+    "max_allowed_uses": [
+     "manuscript",
+     "closure"
+    ],
+    "_note": "1저자 승인 2026-08-28 (세션 지시 'active로 하고'). agent 제안(claude) + 외부 리뷰 M·N·O 뒤의 사람 승인이다. ⚠ evidence_digest 는 산출 헬퍼가 없어 생략했다 — 빈 지문을 넣지 않는다."
+   }
   }
  ]
 }
