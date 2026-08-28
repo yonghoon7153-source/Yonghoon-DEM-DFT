@@ -18,6 +18,8 @@ import { resolve } from 'node:path'
 
 import { describe, expect, it } from 'vitest'
 
+import { LABEL_FONT } from '../../components/Plot3D'
+
 /** 스타일시트를 찾는다.
  *
  *  `process.cwd()` 에 매달면 **어디서 돌렸느냐에 따라 통과가 갈린다** —
@@ -75,6 +77,17 @@ describe('app.css', () => {
     // 소그룹까지 파래진다.
     expect(ruleOf('.folder-name.sub')).toMatch(/color:/)
     expect(ruleOf('.folder-name.sub')).not.toMatch(/var\(--accent\)/)
+  })
+
+  //: 3D 그림은 **겹치는 축 글자를 그리기 전에 빼는데**, 그 계산이 글꼴 크기를
+  //  코드 쪽 상수(`LABEL_FONT`)로 안다.  CSS 를 키우고 상수를 안 고치면 어림이
+  //  실제보다 좁아지고, 겹친 글자가 다시 겹쳐 찍힌다 — 화면에는 "왜 또 겹치지"
+  //  로만 보이고 CSS 어디를 봐야 하는지는 안 나온다.
+  it('3D 축 글꼴 크기는 코드의 LABEL_FONT 와 같다', () => {
+    const sizeOf = (selector: string) =>
+      body.match(new RegExp(`\\${selector}\\s*\\{[^{}]*font:\\s*(\\d+)px`))?.[1]
+    expect(sizeOf('.plot3d-tick')).toBe(String(LABEL_FONT))
+    expect(sizeOf('.plot3d-axis')).toBe(String(LABEL_FONT))
   })
 
   it('창은 표 머리보다 위에 있다 — z-index 를 눈으로 대조한다', () => {

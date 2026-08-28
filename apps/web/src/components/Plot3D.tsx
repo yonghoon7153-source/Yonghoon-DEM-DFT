@@ -21,6 +21,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 
 import { num } from '../lib/format'
+import { labelBox, placeLabels } from '../lib/labelbox'
 import { paintColor } from '../lib/seriescolor'
 import {
   composePng, downloadCanvas, PNG_SCALE, svgToCanvas,
@@ -55,6 +56,11 @@ const AZIMUTH0 = -37.5
 const ELEVATION0 = 26
 
 const MARGIN = { left: 74, right: 28, top: 22, bottom: 62 }
+
+/** 눈금·축이름 글꼴 크기 (px).  `app.css` 의 `.plot3d-tick`/`.plot3d-axis` 와
+ *  같아야 한다 — 겹침을 여기서 어림으로 계산하므로, 실제보다 작게 잡으면
+ *  겹친 것을 못 보고 그대로 찍는다.  `stylesheet` 시험이 둘을 묶어 둔다. */
+export const LABEL_FONT = 11
 
 /** 눈금을 몇 칸으로 나눌까.  다섯이면 상자 세 면이 답답하지 않다. */
 const TICKS = 5
@@ -325,6 +331,72 @@ export function Plot3D({
     return { on, out: { x: on.x + (dx / len) * away, y: on.y + (dy / len) * away } }
   }
 
+  /** 축 셋의 눈금 글자 자리 — **겹치면 뺀다.**
+   *
+   *  돌리면 가로축의 끝과 깊이축의 시작이 같은 모서리로 모이는 각도가 반드시
+   *  생기고, 거기서 두 축의 글자가 포개진다 (`2.00` 이 스펙트럼 이름 위에
+   *  찍혔다).  어느 것을 남길지는 **정보량 순서**다:
+   *
+   *   1. **축 이름**은 안 뺀다.  `log₁₀ τ (s)` 가 없으면 그 축이 무엇인지
+   *      화면 어디에도 없다.  대신 자리는 차지하므로 눈금이 그것을 피한다.
+   *   2. **깊이 눈금**이 그다음이다.  비교 화면에서 그것은 스펙트럼 **이름**
+   *      이라, 빠지면 어느 곡선이 무엇인지 알 길이 없다.
+   *   3. 가로·세로 눈금은 규칙적이라 하나쯤 빠져도 나머지로 읽힌다.
+   *
+   *  **글자만 뺀다.**  눈금 선은 그대로 그린다 — 선까지 빼면 그 자리에 눈금이
+   *  있었다는 것조차 사라진다.
+   */
+  const axisTitles = [
+    { key: 'ax', text: xLabel, at: tickAt(uEdge, 0.5, 38).out, anchor: 'middle' as const },
+    { key: 'ay', text: yLabel, at: tickAt(vEdge, 0.5, 46).out, anchor: 'middle' as const },
+    { key: 'az', text: zLabel, at: tickAt(wEdge, 0.5, 40).out, anchor: 'middle' as const },
+  ]
+  const tickPlan: { key: string; box: ReturnType<typeof labelBox>; keep?: boolean }[] = [
+    ...axisTitles.map((one) => ({
+      key: one.key,
+      box: labelBox(one.at, one.text, LABEL_FONT, one.anchor),
+      keep: true,
+    })),
+  ]
+  //: 모서리 위의 자리를 **한 곳에서만** 계산한다.  자리 잡기(`tickPlan`)와
+  //  그리기가 각자 계산하면 언젠가 어긋나고, 그러면 겹치는지 본 자리와 찍는
+  //  자리가 다른 그림이 나온다.
+  const along = (edge: [number, number], unitAt: number, flip: boolean, away: number) =>
+    tickAt(edge, flip ? 1 - unitAt : unitAt, away)
+  const wFlip = !(wEdge[0] === 0 || wEdge[0] === 1 || wEdge[0] === 2 || wEdge[0] === 3)
+  const uFlip = !(uEdge[0] === 0 || uEdge[0] === 3 || uEdge[0] === 4 || uEdge[0] === 7)
+  const vFlip = !(vEdge[0] === 0 || vEdge[0] === 1 || vEdge[0] === 4 || vEdge[0] === 5)
+  for (const value of zTickValues) {
+    const w = unit.z(value)
+    if (w < 0 || w > 1) continue
+    const { out } = along(wEdge, w, wFlip, 14)
+    tickPlan.push({
+      key: `tz${value}`,
+      box: labelBox({ x: out.x, y: out.y + 4 },
+                    zTickLabel ? zTickLabel(value) : num(value, 3),
+                    LABEL_FONT, 'middle'),
+    })
+  }
+  for (const value of xTicks) {
+    const u = unit.x(value)
+    if (u < 0 || u > 1) continue
+    const { out } = along(uEdge, u, uFlip, 12)
+    tickPlan.push({
+      key: `tx${value}`,
+      box: labelBox({ x: out.x, y: out.y + 4 }, num(value, 3), LABEL_FONT, 'middle'),
+    })
+  }
+  for (const value of yTicks) {
+    const v = unit.y(value)
+    if (v < 0 || v > 1) continue
+    const { out } = along(vEdge, v, vFlip, 12)
+    tickPlan.push({
+      key: `ty${value}`,
+      box: labelBox({ x: out.x - 4, y: out.y + 4 }, num(value, 3), LABEL_FONT, 'end'),
+    })
+  }
+  const showLabel = placeLabels(tickPlan)
+
   /** 지금 각도·확대 그대로 인쇄 해상도 PNG.
    *
    *  SVG 라 배만 키우면 된다 — 다시 그릴 필요가 없다.  각도·확대·이동은 이미
@@ -487,59 +559,57 @@ export function Plot3D({
             )
           })}
 
-        {/* 눈금 셋. */}
+        {/* 눈금 셋.  **선은 늘 그리고, 글자는 자리가 있을 때만** (`showLabel`). */}
         {xTicks.map((value) => {
           const u = unit.x(value)
           if (u < 0 || u > 1) return null
-          const t = (uEdge[0] === 0 || uEdge[0] === 3 || uEdge[0] === 4 || uEdge[0] === 7)
-            ? u : 1 - u
-          const { on, out } = tickAt(uEdge, t, 12)
+          const { on, out } = along(uEdge, u, uFlip, 12)
           return (
             <g key={`tx${value}`}>
               <path d={line([on, out])} stroke="var(--muted)" strokeWidth={1} />
-              <text x={out.x} y={out.y + 4} textAnchor="middle"
-                    className="plot3d-tick">{num(value, 3)}</text>
+              {showLabel.has(`tx${value}`) ? (
+                <text x={out.x} y={out.y + 4} textAnchor="middle"
+                      className="plot3d-tick">{num(value, 3)}</text>
+              ) : null}
             </g>
           )
         })}
         {yTicks.map((value) => {
           const v = unit.y(value)
           if (v < 0 || v > 1) return null
-          const t = (vEdge[0] === 0 || vEdge[0] === 1 || vEdge[0] === 4 || vEdge[0] === 5)
-            ? v : 1 - v
-          const { on, out } = tickAt(vEdge, t, 12)
+          const { on, out } = along(vEdge, v, vFlip, 12)
           return (
             <g key={`ty${value}`}>
               <path d={line([on, out])} stroke="var(--muted)" strokeWidth={1} />
-              <text x={out.x - 4} y={out.y + 4} textAnchor="end"
-                    className="plot3d-tick">{num(value, 3)}</text>
+              {showLabel.has(`ty${value}`) ? (
+                <text x={out.x - 4} y={out.y + 4} textAnchor="end"
+                      className="plot3d-tick">{num(value, 3)}</text>
+              ) : null}
             </g>
           )
         })}
         {zTickValues.map((value) => {
           const w = unit.z(value)
           if (w < 0 || w > 1) return null
-          const t = (wEdge[0] === 0 || wEdge[0] === 1 || wEdge[0] === 2 || wEdge[0] === 3)
-            ? w : 1 - w
-          const { on, out } = tickAt(wEdge, t, 14)
+          const { on, out } = along(wEdge, w, wFlip, 14)
           return (
             <g key={`tz${value}`}>
               <path d={line([on, out])} stroke="var(--muted)" strokeWidth={1} />
-              <text x={out.x} y={out.y + 4} textAnchor="middle"
-                    className="plot3d-tick">
-                {zTickLabel ? zTickLabel(value) : num(value, 3)}
-              </text>
+              {showLabel.has(`tz${value}`) ? (
+                <text x={out.x} y={out.y + 4} textAnchor="middle"
+                      className="plot3d-tick">
+                  {zTickLabel ? zTickLabel(value) : num(value, 3)}
+                </text>
+              ) : null}
             </g>
           )
         })}
 
-        {/* 축 이름 — 각 모서리의 가운데에서 더 바깥으로. */}
-        <text {...(() => { const { out } = tickAt(uEdge, 0.5, 38); return { x: out.x, y: out.y } })()}
-              textAnchor="middle" className="plot3d-axis">{xLabel}</text>
-        <text {...(() => { const { out } = tickAt(vEdge, 0.5, 46); return { x: out.x, y: out.y } })()}
-              textAnchor="middle" className="plot3d-axis">{yLabel}</text>
-        <text {...(() => { const { out } = tickAt(wEdge, 0.5, 40); return { x: out.x, y: out.y } })()}
-              textAnchor="middle" className="plot3d-axis">{zLabel}</text>
+        {/* 축 이름 — 각 모서리의 가운데에서 더 바깥으로.  **안 뺀다** (`keep`). */}
+        {axisTitles.map((one) => (
+          <text key={one.key} x={one.at.x} y={one.at.y} textAnchor={one.anchor}
+                className="plot3d-axis">{one.text}</text>
+        ))}
       </svg>
       {saveError ? (
         <div className="tiny warn" style={{ padding: '6px 10px 0' }}>{saveError}</div>
