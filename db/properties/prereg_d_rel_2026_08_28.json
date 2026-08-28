@@ -1,0 +1,253 @@
+{
+  "frozen_at": "2026-08-28T05:09:21",
+  "predictor": "li_mobility_score",
+  "predictor_definition": "li_mobility_score = 3×migration_volume_fraction + bvs_li_proxy_score (tools/doping/bvse_proxy.py)",
+  "n_targets": 39,
+  "n_scored": 39,
+  "unscored": [],
+  "예측": "이 순위가 곧 측정될 D_rel_vs_host 순위와 **양의 상관**을 가진다",
+  "성공기준_사전확정": {
+    "1_주기준": "Spearman(predicted_rank, D_rel) < 0 (순위가 반대이므로 음수가 정합) 이고 |ρ| ≥ 0.35 · p < 0.05",
+    "2_보조": "상위 10개의 게이트 통과율(D_rel ≥ 0.9)이 하위 10개보다 높다",
+    "3_실패로_읽는_경우": "|ρ| < 0.2 이면 이동도 기술자는 D 를 예측하지 못한다 — cascade 이동도 축의 근거가 없어진다",
+    "⛔": "기준을 **측정 뒤에 고치지 않는다.** 고치면 이 기록의 의미가 사라진다"
+  },
+  "ranking": [
+    {
+      "name": "CaO_x020_cLi24gaS16e_s00",
+      "dopant": "CaO",
+      "li_mobility_score": 1.3699103243979875,
+      "predicted_rank": 1
+    },
+    {
+      "name": "SiO2_x020_cP4baS16e_s00",
+      "dopant": "SiO2",
+      "li_mobility_score": 1.36898888055037,
+      "predicted_rank": 2
+    },
+    {
+      "name": "WO3_x020_cP4baS16e_s00",
+      "dopant": "WO3",
+      "li_mobility_score": 1.3568089049933882,
+      "predicted_rank": 3
+    },
+    {
+      "name": "Sb2O5_x020_cP4baS16e_s00",
+      "dopant": "Sb2O5",
+      "li_mobility_score": 1.3488611074686405,
+      "predicted_rank": 4
+    },
+    {
+      "name": "V2O5_x020_cP4baS16e_s00",
+      "dopant": "V2O5",
+      "li_mobility_score": 1.3481048444182444,
+      "predicted_rank": 5
+    },
+    {
+      "name": "Y2O3_x020_cP4baS16e_s00",
+      "dopant": "Y2O3",
+      "li_mobility_score": 1.3470401746265925,
+      "predicted_rank": 6
+    },
+    {
+      "name": "Sb2O5_x020_cP4baS4a_s00",
+      "dopant": "Sb2O5",
+      "li_mobility_score": 1.338647073884332,
+      "predicted_rank": 7
+    },
+    {
+      "name": "SnO2_x020_cP4baS16e_s00",
+      "dopant": "SnO2",
+      "li_mobility_score": 1.3375283265546987,
+      "predicted_rank": 8
+    },
+    {
+      "name": "Ta2O5_x020_cP4baS16e_s00",
+      "dopant": "Ta2O5",
+      "li_mobility_score": 1.3312462426842069,
+      "predicted_rank": 9
+    },
+    {
+      "name": "Na2S_x020_cLi48haCl4d_s00",
+      "dopant": "Na2S",
+      "li_mobility_score": 1.3296599322113059,
+      "predicted_rank": 10
+    },
+    {
+      "name": "LaF3_x020_s00",
+      "dopant": "LaF3",
+      "li_mobility_score": 1.3250061393404007,
+      "predicted_rank": 11
+    },
+    {
+      "name": "Ta2O5_x020_cP4baS4a_s00",
+      "dopant": "Ta2O5",
+      "li_mobility_score": 1.3247594651493997,
+      "predicted_rank": 12
+    },
+    {
+      "name": "YCl3_x020_cP4baS4a_s00",
+      "dopant": "YCl3",
+      "li_mobility_score": 1.3204928825860267,
+      "predicted_rank": 13
+    },
+    {
+      "name": "Sm2O3_x020_cLi24gaS4a_s00",
+      "dopant": "Sm2O3",
+      "li_mobility_score": 1.316558244087452,
+      "predicted_rank": 14
+    },
+    {
+      "name": "LaCl3_x020_cLi24gaS4a_s00",
+      "dopant": "LaCl3",
+      "li_mobility_score": 1.313106594842428,
+      "predicted_rank": 15
+    },
+    {
+      "name": "Cu2O_x020_cLi48haS16e_s00",
+      "dopant": "Cu2O",
+      "li_mobility_score": 1.3097394498453487,
+      "predicted_rank": 16
+    },
+    {
+      "name": "Gd2O3_x020_cLi24gaS16e_s00",
+      "dopant": "Gd2O3",
+      "li_mobility_score": 1.3095431918822906,
+      "predicted_rank": 17
+    },
+    {
+      "name": "Y2O3_x020_cP4baS4a_s00",
+      "dopant": "Y2O3",
+      "li_mobility_score": 1.3089711337898184,
+      "predicted_rank": 18
+    },
+    {
+      "name": "Na2S_x020_cLi48haS4a_s00",
+      "dopant": "Na2S",
+      "li_mobility_score": 1.3075749864626698,
+      "predicted_rank": 19
+    },
+    {
+      "name": "HfCl4_x020_cP4baCl4d_s00",
+      "dopant": "HfCl4",
+      "li_mobility_score": 1.302686429321497,
+      "predicted_rank": 20
+    },
+    {
+      "name": "SiS2_x020_cP4baS4a_s00",
+      "dopant": "SiS2",
+      "li_mobility_score": 1.3023012282429012,
+      "predicted_rank": 21
+    },
+    {
+      "name": "TiCl4_x020_cP4baS4a_s00",
+      "dopant": "TiCl4",
+      "li_mobility_score": 1.3020071296000966,
+      "predicted_rank": 22
+    },
+    {
+      "name": "Na2S_x020_cLi24gaS16e_s00",
+      "dopant": "Na2S",
+      "li_mobility_score": 1.30189159916183,
+      "predicted_rank": 23
+    },
+    {
+      "name": "Sb2S3_x020_cP4baS4a_s00",
+      "dopant": "Sb2S3",
+      "li_mobility_score": 1.2993838828274444,
+      "predicted_rank": 24
+    },
+    {
+      "name": "Mg3N2_x020_s00",
+      "dopant": "Mg3N2",
+      "li_mobility_score": 1.2971724364838808,
+      "predicted_rank": 25
+    },
+    {
+      "name": "CaS_x020_cLi24gaCl4d_s00",
+      "dopant": "CaS",
+      "li_mobility_score": 1.2968082884986647,
+      "predicted_rank": 26
+    },
+    {
+      "name": "HfO2_x020_cP4baS16e_s00",
+      "dopant": "HfO2",
+      "li_mobility_score": 1.29327489080367,
+      "predicted_rank": 27
+    },
+    {
+      "name": "CaCl2_x020_cLi24gaCl4d_s00",
+      "dopant": "CaCl2",
+      "li_mobility_score": 1.2893379519849781,
+      "predicted_rank": 28
+    },
+    {
+      "name": "SiS2_x020_cP4baS16e_s00",
+      "dopant": "SiS2",
+      "li_mobility_score": 1.2891458480339786,
+      "predicted_rank": 29
+    },
+    {
+      "name": "Sb2S3_x020_cP4baCl4d_s00",
+      "dopant": "Sb2S3",
+      "li_mobility_score": 1.2850022483518821,
+      "predicted_rank": 30
+    },
+    {
+      "name": "GeS2_x020_cP4baS4a_s00",
+      "dopant": "GeS2",
+      "li_mobility_score": 1.2822284115953662,
+      "predicted_rank": 31
+    },
+    {
+      "name": "Ga2O3_x020_cLi24gaS16e_s00",
+      "dopant": "Ga2O3",
+      "li_mobility_score": 1.2713020776761392,
+      "predicted_rank": 32
+    },
+    {
+      "name": "ZrBr4_x020_cP4baCl4d_s00",
+      "dopant": "ZrBr4",
+      "li_mobility_score": 1.2700464826996976,
+      "predicted_rank": 33
+    },
+    {
+      "name": "SnS2_x020_cP4baS16e_s00",
+      "dopant": "SnS2",
+      "li_mobility_score": 1.2692333525591875,
+      "predicted_rank": 34
+    },
+    {
+      "name": "CaS_x020_cLi24gaS16e_s00",
+      "dopant": "CaS",
+      "li_mobility_score": 1.264698516656452,
+      "predicted_rank": 35
+    },
+    {
+      "name": "Sb2S3_x020_cP4baS16e_s00",
+      "dopant": "Sb2S3",
+      "li_mobility_score": 1.2590823205808483,
+      "predicted_rank": 36
+    },
+    {
+      "name": "LiBr_x020_cLi24gaCl4d_s00",
+      "dopant": "LiBr",
+      "li_mobility_score": 1.2572224238584517,
+      "predicted_rank": 37
+    },
+    {
+      "name": "MgS_x020_cLi24gaS16e_s00",
+      "dopant": "MgS",
+      "li_mobility_score": 1.2566419479164685,
+      "predicted_rank": 38
+    },
+    {
+      "name": "Li2O_x020_cLi48haS16e_s00",
+      "dopant": "Li2O",
+      "li_mobility_score": 1.2488413942553986,
+      "predicted_rank": 39
+    }
+  ],
+  "source_csv_sha256": "10d4882d772b28d4b5ac11c728e32dd819a8831aa368d90753a1980fda3a09ac",
+  "targets_file": "d_rel_targets_2026_08_28.json"
+}

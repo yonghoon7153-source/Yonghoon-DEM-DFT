@@ -25,6 +25,7 @@ from __future__ import annotations
 
 import argparse
 import csv
+import datetime as _dt
 import math
 import os
 import sys
@@ -106,6 +107,59 @@ INVALID_AXES = {
 #: 우리 문턱은 그 사이에서 보수적으로 잡는다 — host 대비 D 가 이 값 아래로 떨어지면 탈락.
 #: ⛔ 이건 **문헌에서 빌린 경계**지 우리가 잰 값이 아니다. 우리 계에서 재검토할 것.
 D_REL_GATE = 0.90
+
+
+def preregister(designs, targets, predictor="li_mobility_score", top_k=10):
+    """**측정 전에** 예측을 얼려 둔다 → 나중에 진짜 prospective 검증이 된다.
+
+    ⛔⛔ 왜 필요한가 (2026-08-28, tu2026 에서 이전) — 우리 acquisition 근거는
+      `db/properties/cascade_audit_ml_validation.csv` 의 enrichment 1.22 (p=0.426) 와
+      ordering 3.35 인데, **둘 다 retrospective** 다. 이미 아는 답 위에서 순위를 매긴 것이라
+      "맞혔다" 가 사후 서술이 된다. tu2026 은 prospective 검증(n=4)을 냈고 우리는 0이다.
+      그쪽 CV 규약은 우리와 병치 못 하지만(랜덤 폴드), **prospective 를 한다는 절차 자체**는
+      우리에게 없던 것이고, 비판만 옮기면 그대로 되돌아온다.
+
+    무엇을 얼리나: 라벨이 **아직 존재하지 않는** 39설계에 대한 순위 + 성공 기준 + 입력 해시.
+    D_rel 측정이 내일 들어오면 그때 채점한다. 지금은 채점할 수 없다 — 그게 요점이다.
+
+    ⛔ 못 하는 것
+      · **채점하지 않는다.** 라벨이 없다. 이 함수는 기록만 남긴다.
+      · 예측기를 고르지 않는다 — 부르는 쪽이 정하고, 그 이름이 기록에 남는다.
+      · 순위가 맞아도 **인과가 아니다.** 이동도 기술자와 D 가 같이 움직인다는 것뿐이다.
+    """
+    by_name = {}
+    for d in designs:
+        nm = d.get("name")
+        if nm:
+            by_name[nm] = d
+    rows = []
+    for t in targets:
+        d = by_name.get(t.get("name"))
+        v = _f((d or {}).get(predictor))
+        rows.append({"name": t.get("name"), "dopant": t.get("dopant"),
+                     predictor: v})
+    scored = [r for r in rows if r[predictor] is not None]
+    scored.sort(key=lambda r: -r[predictor])          # 클수록 이동도가 높다는 예측
+    for i, r in enumerate(scored):
+        r["predicted_rank"] = i + 1
+    return {
+        "frozen_at": _dt.datetime.now().isoformat(timespec="seconds"),
+        "predictor": predictor,
+        "predictor_definition": "li_mobility_score = 3×migration_volume_fraction "
+                                "+ bvs_li_proxy_score (tools/doping/bvse_proxy.py)",
+        "n_targets": len(targets), "n_scored": len(scored),
+        "unscored": [r["name"] for r in rows if r[predictor] is None],
+        "예측": f"이 순위가 곧 측정될 D_rel_vs_host 순위와 **양의 상관**을 가진다",
+        "성공기준_사전확정": {
+            "1_주기준": "Spearman(predicted_rank, D_rel) < 0 (순위가 반대이므로 음수가 정합) "
+                       "이고 |ρ| ≥ 0.35 · p < 0.05",
+            "2_보조": f"상위 {top_k}개의 게이트 통과율(D_rel ≥ {D_REL_GATE})이 "
+                     f"하위 {top_k}개보다 높다",
+            "3_실패로_읽는_경우": "|ρ| < 0.2 이면 이동도 기술자는 D 를 예측하지 못한다 — "
+                              "cascade 이동도 축의 근거가 없어진다",
+            "⛔": "기준을 **측정 뒤에 고치지 않는다.** 고치면 이 기록의 의미가 사라진다"},
+        "ranking": scored,
+    }
 
 
 def axis_fill(rows, axes):
@@ -476,6 +530,29 @@ def _selftest():
     _fk, _sk, _ak = pareto(RF, axes=AF[:1], min_axes=1)
     say(len(_sk) == 2, "[빈축] 빈 축을 빼면 나머지 축으로 정상 채점된다")
 
+    # ★★★ 사전등록 (2026-08-28, tu2026 에서 이전) — prospective 의 준비 ★★★
+    DS = [{"name": "a", "li_mobility_score": "1.2"},
+          {"name": "b", "li_mobility_score": "0.5"},
+          {"name": "c", "li_mobility_score": ""}]
+    TG = [{"name": "a", "dopant": "A"}, {"name": "b", "dopant": "B"},
+          {"name": "c", "dopant": "C"}, {"name": "zz", "dopant": "Z"}]
+    pr = preregister(DS, TG)
+    say([r["name"] for r in pr["ranking"]] == ["a", "b"],
+        f"[사전등록] 값이 큰 순으로 얼린다 ({[r['name'] for r in pr['ranking']]})")
+    say(pr["ranking"][0]["predicted_rank"] == 1, "[사전등록] 순위가 1부터 매겨진다")
+    # 음성 ①: 값이 없는 설계를 **조용히 빼지 않는다** — 뺀 걸 적어야 사후에 셈이 맞는다
+    say(sorted(pr["unscored"]) == ["c", "zz"],
+        f"[사전등록·음성] 채점 불가를 **기록**한다 ({pr['unscored']}) — 조용히 빠지면 "
+        f"나중에 '39개 중 몇 개' 가 안 맞는다")
+    # 음성 ②: 성공 기준이 **지금** 박혀 있어야 한다. 없으면 사후에 만들 수 있다.
+    k = pr.get("성공기준_사전확정") or {}
+    say(all(x in k for x in ("1_주기준", "2_보조", "3_실패로_읽는_경우")),
+        "[사전등록·음성] 성공·실패 기준이 **측정 전에** 박혀 있다")
+    say("3_실패로_읽는_경우" in k and "예측하지 못한다" in k["3_실패로_읽는_경우"],
+        "[사전등록] **실패 조건**도 적는다 — 성공 조건만 적으면 사후해석이 열린다")
+    say(pr.get("frozen_at") and pr.get("predictor") == "li_mobility_score",
+        "[사전등록] 언제·무엇으로 얼렸는지 남는다")
+
     print("  " + ("✅ selftest 통과" if ok else "⛔ selftest 실패"))
     return 0 if ok else 1
 
@@ -554,6 +631,9 @@ def main():
                          "— 진단 목적일 때만")
     ap.add_argument("--allow_invalid_axes", action="store_true",
                     help="⛔ 무효 판정된 축을 강제로 넣는다 (2026-08-19 판정을 무시)")
+    ap.add_argument("--preregister", default=None, metavar="TARGETS_JSON",
+                    help="측정 전 예측을 얼려 기록한다 (prospective 검증의 준비). "
+                         "인자는 대상 목록 JSON (db/properties/d_rel_targets_*.json)")
     ap.add_argument("--selftest", action="store_true")
     a = ap.parse_args()
     if a.selftest:
@@ -562,6 +642,29 @@ def main():
         print(f"⛔ 없다: {a.csv}")
         return 2
     rows = load(a.csv)
+    if a.preregister:
+        import hashlib
+        import json as _json
+        tj = _json.load(open(a.preregister, encoding="utf-8"))
+        designs, _gi = aggregate_designs(rows, AXES)
+        pre = preregister(designs, tj.get("targets") or [])
+        with open(a.csv, "rb") as f:
+            pre["source_csv_sha256"] = hashlib.sha256(f.read()).hexdigest()
+        pre["targets_file"] = os.path.basename(a.preregister)
+        out = os.path.join(ROOT, "db", "properties",
+                           "prereg_d_rel_" + _dt.date.today().strftime("%Y_%m_%d") + ".json")
+        with open(out, "w", encoding="utf-8") as f:
+            _json.dump(pre, f, ensure_ascii=False, indent=2)
+        print(f"■ 사전등록 — 라벨이 **아직 없는** {pre['n_scored']}설계 순위를 얼렸다")
+        print(f"   예측기 {pre['predictor']} · 채점 불가 {len(pre['unscored'])}개")
+        for r in pre["ranking"][:8]:
+            print(f"     {r['predicted_rank']:2}. {str(r['dopant'])[:16]:16} "
+                  f"{pre['predictor']}={r[pre['predictor']]:.4f}")
+        print(f"   … 하위 3: " + " · ".join(
+            f"{r['predicted_rank']}.{r['dopant']}" for r in pre["ranking"][-3:]))
+        print(f"   ⛔ 성공기준을 **지금** 못박았다 — 측정 뒤에 고치면 의미가 사라진다")
+        print(f"   저장: {out}")
+        return 0
     # ⛔ 2026-08-28 (리뷰 K) — 상관도 **설계 단위**로 봐야 한다. 행 단위로 보면 n=681 인데
     #   그중 독립인 것은 227뿐이라(복제본 3배) 유의성이 3배 부풀려진다. ρ 자체는 거의
     #   안 변하지만 n 은 변하고, 우리가 인용하는 건 둘 다다.

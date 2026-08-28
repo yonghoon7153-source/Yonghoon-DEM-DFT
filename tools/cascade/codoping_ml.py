@@ -49,12 +49,18 @@ v1(cascade_v23_synergy_pairs.csv, 휴리스틱)과 같은 지위 — 실험/계�
        + sendek2017_small_sample_defenses 절: 농축배수·cR²_p·적용영역·CV 누수)
 결정론: 순열 시드 고정(PERM_SEED) — 2회 실행 산출물 md5 동일.
 """
+import argparse
 import csv
 import json
 import re
+import sys
 from pathlib import Path
 
 import numpy as np
+
+#: 기본은 **끈다** — 플래그 없이 돌리면 예전과 같은 출력이다 (2026-08-28 추가분).
+RUN_LC = False
+RUN_ABL = False
 
 ROOT = Path(__file__).resolve().parents[2]
 PROP = ROOT / "db" / "properties"
@@ -311,6 +317,17 @@ def has_fluorine(formula):
 
 
 def main():
+    ap = argparse.ArgumentParser(description=__doc__)
+    ap.add_argument("--learning-curve", action="store_true",
+                    help="LODO R² 를 도펀트 표본 크기별로 낸다 (−0.18 이 표본 부족인가 모델 한계인가)")
+    ap.add_argument("--ablation", action="store_true",
+                    help="상호작용 항을 하나씩 빼고 LODO R² 변화를 본다")
+    ap.add_argument("--selftest", action="store_true")
+    a = ap.parse_args()
+    if a.selftest:
+        return _selftest()
+    global RUN_LC, RUN_ABL
+    RUN_LC, RUN_ABL = a.learning_curve, a.ablation
     dops = load_dopants()
     names = sorted(dops)  # 결정론적 순서
     n = len(names)
@@ -555,6 +572,94 @@ def main():
 
     def _wr2(pred):
         return float(1.0 - np.sum(sw * (yc3 - pred)**2) / np.sum(sw * yc3**2))
+
+    # ═══ 학습곡선 · 절제 (2026-08-28, tu2026 에서 이전) ═══════════════════════
+    # 왜: tu2026 은 **학습곡선과 절제를 냈고 우리는 둘 다 0** 이었다. 그쪽 R² 는
+    #   랜덤 폴드라 우리 LODO 와 병치 못 하지만, **그 두 절차 자체는 우리에게 없는 것**이고
+    #   비판만 옮기면 그대로 되돌아온다. 새 계산 0 — 있는 라벨로 하는 분석이다.
+    #
+    # ⛔ 둘 다 **LODO 로만** 잰다. pair-CV 로 재면 우리가 지적한 그 누수를 우리가 반복한다.
+    lc_rows, ab_rows = [], []
+
+    def lodo_wr2_subset(keep_dops):
+        """도펀트 부분집합 안에서의 LODO 가중 R². 표본이 적으면 None.
+
+        ⛔ 못 하는 것: 부분집합마다 λ 를 다시 안 고른다(λ3 고정). 다시 고르면 R² 변화가
+          '표본이 늘어서'인지 '규제가 달라져서'인지 갈리지 않는다 — 곡선의 뜻이 흐려진다.
+        """
+        ks = set(int(x) for x in keep_dops)
+        inside = np.array([(idx[a] in ks and idx[b] in ks) for a, b in pairs])
+        if inside.sum() < 30 or len(ks) < 4:
+            return None, int(inside.sum())
+        acc = np.zeros(len(pairs)); cnt = np.zeros(len(pairs))
+        for i in sorted(ks):
+            rows = inside & ~contains[i]
+            if rows.sum() < 10:
+                return None, int(inside.sum())
+            pr = stage3_refit(rows, lam3)
+            held = inside & contains[i]
+            acc[held] += pr[held]; cnt[held] += 1
+        m = cnt > 0
+        pred = np.zeros(len(pairs)); pred[m] = acc[m] / cnt[m]
+        num = float(np.sum(sw[m] * (yc3[m] - pred[m])**2))
+        den = float(np.sum(sw[m] * (yc3[m] - np.average(yc3[m], weights=sw[m]))**2))
+        return (None if den <= 0 else float(1.0 - num / den)), int(m.sum())
+
+    if RUN_LC:
+        rng_lc = np.random.default_rng(0)
+        for frac in (0.4, 0.55, 0.7, 0.85, 1.0):
+            k = max(4, int(round(n * frac)))
+            vals = []
+            reps = 1 if k >= n else 7          # 전량이면 부분집합이 하나뿐이다
+            for _ in range(reps):
+                sub = rng_lc.permutation(n)[:k] if k < n else np.arange(n)
+                r2v, npair = lodo_wr2_subset(sub)
+                if r2v is not None:
+                    vals.append(r2v)
+            if vals:
+                lc_rows.append({"n_dopants": k, "frac": frac, "reps": len(vals),
+                                "lodo_wr2_mean": round(float(np.mean(vals)), 4),
+                                "lodo_wr2_sd": (round(float(np.std(vals, ddof=1)), 4)
+                                                if len(vals) > 1 else None)})
+
+    if RUN_ABL:
+        base = _wr2(s3_lodo)
+        for j, nm in enumerate([x[0] for x in INTERACTIONS]):
+            cols = [c for c in range(Xi_z.shape[1]) if c != j]
+            Xk = Xi_z[:, cols]
+            acc = np.zeros(len(pairs)); cnt = np.zeros(len(pairs))
+            for i in range(n):
+                rows = ~contains[i]
+                Zs, ts, cZ, cy = _recenter(Xk[rows], t_z[rows], sw[rows])
+                wk = _wls_ridge(Zs, ts, lam3, sw[rows])
+                pr = (Xk - cZ) @ wk + cy
+                held = contains[i]
+                acc[held] += pr[held]; cnt[held] += 1
+            pred = acc / np.maximum(cnt, 1)
+            r2v = _wr2(pred)
+            ab_rows.append({"dropped": nm, "lodo_wr2": round(r2v, 4),
+                            "delta_vs_full": round(r2v - base, 4)})
+        ab_rows.sort(key=lambda r: r["delta_vs_full"])
+        # ★ 후속: **가장 센 항 하나만** 남기면? 절제에서 7항이 전부 |Δ| < 0.004 로 나오면
+        #   "빼도 그만" 이 아니라 **애초에 신호가 없다**는 뜻일 수 있다. 그건 하나씩 빼서는
+        #   안 보인다 — 다 같이 빼봐야 보인다.
+        keepj = [j for j, x in enumerate(INTERACTIONS)
+                 if x[0] == ab_rows[0]["dropped"]]          # Δ 가 가장 음수 = 가장 센 항
+        if keepj:
+            Xk = Xi_z[:, keepj]
+            acc = np.zeros(len(pairs)); cnt = np.zeros(len(pairs))
+            for i in range(n):
+                rows = ~contains[i]
+                Zs, ts, cZ, cy = _recenter(Xk[rows], t_z[rows], sw[rows])
+                wk = _wls_ridge(Zs, ts, lam3, sw[rows])
+                pr = (Xk - cZ) @ wk + cy
+                held = contains[i]
+                acc[held] += pr[held]; cnt[held] += 1
+            r2v = _wr2(acc / np.maximum(cnt, 1))
+            ab_rows.append({"dropped": f"[나머지 7항 전부] — {ab_rows[0]['dropped']} 만 남김",
+                            "lodo_wr2": round(r2v, 4),
+                            "delta_vs_full": round(r2v - base, 4)})
+    # ═════════════════════════════════════════════════════════════════════════
 
     cv_cmp = {
         "lambda_fixed": float(lam3),
@@ -949,6 +1054,18 @@ def main():
             "공유하는 쌍의 비독립성이 만든 낙관 편의 — 배포 순위 신뢰도는 LODO/L2DO 값을 기준으로 볼 것",
         ],
     }
+    if lc_rows:
+        meta["learning_curve_lodo"] = {
+            "왜": "tu2026 이 학습곡선을 냈고 우리는 없었다. LODO R² 가 표본과 함께 오르면 "
+                  "−0.18 은 표본 부족이고, 평평하면 모델·특징의 한계다",
+            "규약": "λ3 고정 · 부분집합 안에서 leave-one-dopant-out · 가중 R²",
+            "rows": lc_rows}
+    if ab_rows:
+        meta["ablation_lodo"] = {
+            "왜": "4축/8상호작용 중 무엇이 실제로 일하는지 안 봤다 (tu2026 은 절제를 냈다)",
+            "규약": "항 하나를 빼고 **LODO 로** 재적합 — pair-CV 로 재면 우리가 지적한 누수를 반복한다",
+            "base_lodo_wr2": round(_wr2(s3_lodo), 4),
+            "rows": ab_rows}
     out_meta = PROP / "codoping_ml_v2_meta.json"
     out_meta.write_text(json.dumps(meta, ensure_ascii=False, indent=1) + "\n")
 
@@ -1010,4 +1127,4 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    sys.exit(main() or 0)
