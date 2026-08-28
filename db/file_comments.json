@@ -95,6 +95,14 @@
    "who": ""
   }
  ],
+ "litdb/figures/deng2026_polysulfate_layer_moisture_oxidation_lpsc/fig_S23.png": [
+  {
+   "at": "2026-08-28 13:43",
+   "id": "c1787892222763",
+   "text": "GITT는 전류율 19.3 mA g⁻¹, 각 충/방전 단계 후 완화시간 1 h 조건으로 측정했다. GITT 시험의 양극 로딩은 약 2.59 mg이다. Li⁺ 확산계수는 식 (2)로 계산했다. ΔE_S와 ΔE_τ는 각각 완화 후 정상상태 전압변화와 펄스 방전 후 과도 전압변화다.** M, m, τ, V_M, S는 각각 NCM955의 몰질량, 질량, 펄스 시간, 몰부피, 유효 접촉면적**이다. S 값은 BET법으로 근사했음에 유의(Figure S25). 모든 전기화학 측정은 25 °C, 셀에 외부압력 180 MPa을 가한 상태에서 수행했다.",
+   "who": ""
+  }
+ ],
  "litdb/figures/deng2026_polysulfate_layer_moisture_oxidation_lpsc/fig_S4.png": [
   {
    "at": "2026-08-28 10:56",
