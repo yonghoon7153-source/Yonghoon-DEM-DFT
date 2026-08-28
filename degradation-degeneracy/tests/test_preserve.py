@@ -7226,3 +7226,44 @@ def test_the_crash_recovery_needs_the_owner_credential(tmp_path):
         P.finalize_leg("L", {"leg_source_digest": "0123456789abcdef"},
                        ledger=led, claims_root=claims, token="0" * 32)
     assert c.path.exists(), "틀린 증명으로 claim 이 치워졌다"
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# 49차 — 승격 금지가 **namespace 안의 이동**까지 막아 smoke 를 반토막 냈다
+#
+# 48차 P0-8 은 "smoke 산출은 승격 대상이 아니다" 를 넣었다. 옳다. 그런데 판정이
+# **입력만** 봤다. 그래서 smoke 자신이 `results/_smoke/x` 를
+# `results/_smoke/arch/x` 로 묶는 것도 거부됐고, `scripts/smoke_e2e.sh` 의 9단계
+# 이후(보관 → 격리 복원 → 검증 → 재채점)가 통째로 죽었다 — 실측: 실패 11건.
+#
+# 승격은 "인용되는 자리로 나가는 것" 이다. namespace **안**에 머무는 이동은
+# 승격이 아니다. 그 구분이 없으면 경계가 아니라 마비다: smoke 가 검증하던
+# 구간이 사라지고, 그 손실이 막은 위험보다 크다.
+# ─────────────────────────────────────────────────────────────────────────────
+
+def test_promotion_out_of_the_smoke_namespace_is_still_refused(tmp_path):
+    """밖으로 나가는 것은 여전히 거부한다 (48차 P0-8 유지)."""
+    from tools.preserve import (assert_not_smoke_provenance, SMOKE_NAMESPACE,
+                                SMOKE_REFUSAL, PreserveError)
+
+    src = SMOKE_NAMESPACE / "grid_fit"
+    with pytest.raises(PreserveError) as ei:
+        assert_not_smoke_provenance([src], "보관 묶음")
+    assert SMOKE_REFUSAL in str(ei.value)
+
+    with pytest.raises(PreserveError):            # 목적지가 밖이면 승격이다
+        assert_not_smoke_provenance([src], "보관 묶음",
+                                    dest="artifacts/grid_fit_v4")
+
+
+def test_moving_within_the_smoke_namespace_is_not_promotion(tmp_path):
+    """★ 49차 — namespace **안**의 이동은 승격이 아니다.
+
+    smoke 는 자기 산출을 자기 namespace 안에서 묶고 복원하고 재채점한다.
+    그것을 막으면 pipeline 의 뒷절반을 아무도 검사하지 않게 된다.
+    """
+    from tools.preserve import assert_not_smoke_provenance, SMOKE_NAMESPACE
+
+    src = SMOKE_NAMESPACE / "grid_fit"
+    assert_not_smoke_provenance([src], "보관 묶음",
+                                dest=SMOKE_NAMESPACE / "arch" / "grid_fit")

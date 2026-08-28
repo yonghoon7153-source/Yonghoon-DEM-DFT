@@ -531,7 +531,9 @@ def main(argv=None) -> int:
     if a.cmd == "bundle":
         # ★ 48차 P0-8 — 보관도 승격이다 (`artifacts/` 는 인용되는 자리다).
         from tools.preserve import assert_not_smoke_provenance
-        assert_not_smoke_provenance([a.run_dir], "보관 묶음")
+        # ★ 49차 — 목적지도 넘긴다. smoke 가 자기 namespace 안으로 묶는 것은
+        #   승격이 아니다 (48차는 입력만 봐서 smoke 뒷절반을 마비시켰다).
+        assert_not_smoke_provenance([a.run_dir], "보관 묶음", dest=a.out_dir)
         res = bundle(a.run_dir, a.out_dir)
         print(f"복사 {res['copied']}개"
               + (f", 하위 실행 {res['nested']}" if res["nested"] else ""))

@@ -3810,7 +3810,7 @@ def is_inside_namespace(path, namespace) -> bool:
 SMOKE_REFUSAL = "smoke namespace 산출은 승격 대상이 아니다"
 
 
-def assert_not_smoke_provenance(paths, sink: str) -> None:
+def assert_not_smoke_provenance(paths, sink: str, dest=None) -> None:
     """smoke 산출을 **정본으로 승격하지 못하게** 한다 (48차 P0-8).
 
     47차는 smoke 를 계획 gate 에서 **면제**했다 (계약 §13.3.3). 그 면제의 전제는
@@ -3824,7 +3824,19 @@ def assert_not_smoke_provenance(paths, sink: str) -> None:
 
     판정은 `is_inside_namespace()` 로 한다. 계획 gate 의 면제를 정하는 바로 그
     함수다 — 두 규칙이 갈리면 어느 쪽이 경계인지 정할 수 없다.
+
+    ★ 49차 — **목적지도 본다.** 48차는 입력만 봤고, 그래서 smoke 가 자기 산출을
+      자기 namespace 안(`results/_smoke/arch/…`)으로 묶는 것까지 거부됐다.
+      `scripts/smoke_e2e.sh` 의 9단계 이후(보관 → 격리 복원 → 검증 → 재채점)가
+      통째로 죽었다 — 실측 실패 11건. 승격은 "인용되는 자리로 **나가는** 것"
+      이고, namespace 안에 머무는 이동은 승격이 아니다. 그 구분이 없으면
+      경계가 아니라 마비이고, 검사를 잃은 손실이 막은 위험보다 크다.
+
+      `dest=None` 은 "목적지가 namespace 밖" 으로 본다 (보수적 기본값 —
+      caller 가 밝히지 않으면 승격으로 취급한다).
     """
+    if dest is not None and is_inside_namespace(dest, SMOKE_NAMESPACE):
+        return                      # namespace 안에 머문다 — 승격이 아니다
     bad = [str(p) for p in paths
            if p is not None and is_inside_namespace(p, SMOKE_NAMESPACE)]
     if bad:
