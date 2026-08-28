@@ -1,0 +1,84 @@
+{
+  "at": "2026-08-28T17:58:40Z",
+  "scenarios": {
+    "both-pointers-checked": {
+      "bit": true,
+      "class": "executable",
+      "kexpr": "pointer_moved_by_another",
+      "ran": true,
+      "sites": 1
+    },
+    "closure-refuses-dynamic-resolution": {
+      "bit": true,
+      "class": "executable",
+      "kexpr": "dynamic_name_resolution_inside_the_closure_is_fail_closed",
+      "ran": true,
+      "sites": 1
+    },
+    "finalize-rechecks-in-the-ledger-lock": {
+      "bit": true,
+      "class": "executable",
+      "kexpr": "finalize_rechecks_the_whole_authority_inside_the_ledger_lock",
+      "ran": true,
+      "sites": 1
+    },
+    "guard-before-commit": {
+      "bit": true,
+      "class": "executable",
+      "kexpr": "pathname_after_the_check or same_roster_ledger_change",
+      "ran": true,
+      "sites": 1
+    },
+    "lifecycle-chain-is-verified": {
+      "bit": true,
+      "class": "executable",
+      "kexpr": "the_lifecycle_journal_is_a_hash_chain",
+      "ran": true,
+      "sites": 1
+    },
+    "pin-is-publication-authority": {
+      "bit": true,
+      "class": "executable",
+      "kexpr": "producer_pin_is_part",
+      "ran": true,
+      "sites": 1
+    },
+    "policy-binds-the-roster": {
+      "bit": true,
+      "class": "executable",
+      "kexpr": "single_leg_policy_must_match_the_roster_cardinality",
+      "ran": true,
+      "sites": 1
+    },
+    "producer-crosses-into-scoring": {
+      "bit": true,
+      "class": "executable",
+      "kexpr": "producer_digest_crosses_into_src_scoring",
+      "ran": true,
+      "sites": 1
+    },
+    "public-lifecycle-in-two-publisher-fixture": {
+      "bit": null,
+      "class": "declared",
+      "kexpr": null,
+      "ran": false,
+      "sites": 1
+    },
+    "seal-exact-types": {
+      "bit": true,
+      "class": "executable",
+      "kexpr": "an_omap_and_a_list_of_lists_do_not_share_a_seal",
+      "ran": true,
+      "sites": 1
+    },
+    "thaw-transition-is-unrepresentable": {
+      "bit": true,
+      "class": "executable",
+      "kexpr": "frozen_cohort_cannot_be_thawed_and_published",
+      "ran": true,
+      "sites": 1
+    }
+  },
+  "schema": "mutation-coverage/v1",
+  "selector": ""
+}

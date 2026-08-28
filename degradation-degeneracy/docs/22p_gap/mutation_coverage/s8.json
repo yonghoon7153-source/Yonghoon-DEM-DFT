@@ -1,0 +1,84 @@
+{
+  "at": "2026-08-28T18:09:13Z",
+  "scenarios": {
+    "claim-is-atomic": {
+      "bit": true,
+      "class": "executable",
+      "kexpr": "exactly_one_attempt_enters_compute",
+      "ran": true,
+      "sites": 2
+    },
+    "crash-recovery-needs-the-credential": {
+      "bit": true,
+      "class": "executable",
+      "kexpr": "the_crash_recovery_needs_the_owner_credential",
+      "ran": true,
+      "sites": 1
+    },
+    "flock-two-publisher": {
+      "bit": true,
+      "class": "executable",
+      "kexpr": "two_independent_publishers",
+      "ran": true,
+      "sites": 2
+    },
+    "interpreter-set-is-pinned": {
+      "bit": null,
+      "class": "declared",
+      "kexpr": null,
+      "ran": false,
+      "sites": 1
+    },
+    "pending-base-generation": {
+      "bit": true,
+      "class": "executable",
+      "kexpr": "stale_bootstrap_pending",
+      "ran": true,
+      "sites": 1
+    },
+    "planned-binds-the-execution-record": {
+      "bit": true,
+      "class": "executable",
+      "kexpr": "planned_index_is_bound_to_the_real",
+      "ran": true,
+      "sites": 1
+    },
+    "prelock-readback-check": {
+      "bit": true,
+      "class": "executable",
+      "kexpr": "returns_the_wrong_version",
+      "ran": true,
+      "sites": 1
+    },
+    "producer-normalizes-the-node": {
+      "bit": true,
+      "class": "executable",
+      "kexpr": "producer_digest_sees_decorators",
+      "ran": true,
+      "sites": 2
+    },
+    "release-returns-the-plan": {
+      "bit": true,
+      "class": "executable",
+      "kexpr": "released_run_returns_the_plan_to_planned",
+      "ran": true,
+      "sites": 1
+    },
+    "sink-validates-itself": {
+      "bit": true,
+      "class": "executable",
+      "kexpr": "sink_refuses_an_incomplete",
+      "ran": true,
+      "sites": 1
+    },
+    "warm-consumer-wiring": {
+      "bit": null,
+      "class": "declared",
+      "kexpr": null,
+      "ran": false,
+      "sites": 1
+    }
+  },
+  "schema": "mutation-coverage/v1",
+  "selector": ""
+}

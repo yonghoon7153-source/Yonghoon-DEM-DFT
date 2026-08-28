@@ -8093,22 +8093,43 @@ def test_the_lifecycle_journal_is_a_hash_chain(tmp_path):
     rp = _fresh_rp()
     rp.REPO = _ledger_repo(tmp_path, "cohorts: []\n")
     rp._append_lifecycle("gX", None, "active", "첫 게시")
+    rp._append_lifecycle("gY", None, "active", "다른 cohort")
     rp._append_lifecycle("gX", "active", "frozen", "종료")
-    assert len(rp.read_lifecycle()) == 2
+    assert len(rp.read_lifecycle()) == 3
+
+    # ★ **중간** 줄을 고친다 — seq 도 그대로고 끝 digest 도 그대로라, 오직
+    #   `prev` 사슬만이 이것을 볼 수 있다 (49차: 이 경우가 없으면 사슬 검사가
+    #   끝 anchor 에 가려져 변이가 안 물린다 — 실측했다).
+    lp0 = rp._lifecycle_path()
+    lines0 = lp0.read_text(encoding="utf-8").splitlines()
+    mid = _j.loads(lines0[1])
+    mid["note"] = "다른 사연"
+    lines0[1] = _j.dumps(mid, sort_keys=True, ensure_ascii=False,
+                         separators=(",", ":"))
+    lp0.write_text("\n".join(lines0) + "\n", encoding="utf-8")
+    with pytest.raises(SystemExit) as ei0:
+        rp.read_lifecycle()
+    assert "사슬" in str(ei0.value), str(ei0.value)
+    lp0.write_text("\n".join(
+        _j.dumps(r, sort_keys=True, ensure_ascii=False, separators=(",", ":"))
+        for r in [_j.loads(l) for l in lines0[:1]]
+        + [{**_j.loads(lines0[1]), "note": "다른 cohort"}]
+        + [_j.loads(l) for l in lines0[2:]]) + "\n", encoding="utf-8")
+    assert len(rp.read_lifecycle()) == 3, "복원이 안 됐다 (시험 전제)"
 
     lp = rp._lifecycle_path()
     lines = lp.read_text(encoding="utf-8").splitlines()
-    rec = _j.loads(lines[1])
+    rec = _j.loads(lines[-1])
     rec["to"] = "active"                             # 마지막 전이를 위조한다
-    lines[1] = _j.dumps(rec, sort_keys=True, ensure_ascii=False,
-                        separators=(",", ":"))
+    lines[-1] = _j.dumps(rec, sort_keys=True, ensure_ascii=False,
+                         separators=(",", ":"))
     lp.write_text("\n".join(lines) + "\n", encoding="utf-8")
     with pytest.raises(SystemExit) as ei:
         rp.read_lifecycle()
     assert "사슬" in str(ei.value) or "chain" in str(ei.value), str(ei.value)
 
     # 줄을 통째로 지워도 마찬가지다 (seq 가 비면 보인다)
-    lp.write_text(lines[1] + "\n", encoding="utf-8")
+    lp.write_text(lines[-1] + "\n", encoding="utf-8")
     with pytest.raises(SystemExit):
         rp.read_lifecycle()
 

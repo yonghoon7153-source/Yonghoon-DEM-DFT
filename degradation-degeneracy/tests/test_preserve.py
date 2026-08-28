@@ -6755,6 +6755,15 @@ def test_the_diagnostic_reader_never_hands_out_the_credential(tmp_path):
     assert run.token not in json.dumps(view, ensure_ascii=False), (
         "진단 API 가 재개 credential 을 노출했다")
 
+    # 진단용으로 연 claim 객체에서도 credential 을 **꺼낼 수 없다** — 조용히
+    # `None` 을 돌려주면 그 값이 그대로 다음 호출로 흘러 들어간다.
+    from tools.preserve import resume_claim
+
+    ro = resume_claim("L", claims_root=claims)
+    assert ro.readonly and ro.attempt_id == run.attempt_id
+    with pytest.raises(PreserveError, match="소유 증명"):
+        ro.token
+
 
 def test_finalize_requires_the_owner_credential(tmp_path):
     """★ 49차 P0-3 — `finalize_leg()` 의 소유 증명은 **필수**다.
@@ -6774,9 +6783,16 @@ def test_finalize_requires_the_owner_credential(tmp_path):
     for ph in ("grid", "fit"):
         c.phase_done(ph, {"ok": True})
 
-    with pytest.raises(TypeError):
+    # ★ 49차 — 타입만 보면 **다른 이유의** TypeError 가 시험을 초록으로 만든다.
+    #   실측: 이 검사를 지워도 `read_token_file(None)` 안의 `Path(None)` 이
+    #   TypeError 를 내서 시험이 통과했다 (변이가 안 물었다). 이유까지 본다.
+    with pytest.raises(TypeError, match="소유 증명"):
         finalize_leg("L", {"leg_source_digest": "0123456789abcdef"},
                      ledger=led, claims_root=claims)
+    with pytest.raises(TypeError, match="소유 증명"):        # 둘 다 준 경우도
+        finalize_leg("L", {"leg_source_digest": "0123456789abcdef"},
+                     ledger=led, claims_root=claims,
+                     token=c.token, token_file=tok)
 
 
 def test_the_precheck_tells_a_new_run_from_an_owned_resume(tmp_path):

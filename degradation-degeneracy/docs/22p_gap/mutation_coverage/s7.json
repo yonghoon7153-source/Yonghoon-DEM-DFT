@@ -1,0 +1,84 @@
+{
+  "at": "2026-08-28T18:07:30Z",
+  "scenarios": {
+    "claim-checks-the-whole-index": {
+      "bit": true,
+      "class": "executable",
+      "kexpr": "whole_index_must_be_consistent_before_any_leg_is_claimed",
+      "ran": true,
+      "sites": 1
+    },
+    "crash-recovery-is-idempotent": {
+      "bit": true,
+      "class": "executable",
+      "kexpr": "finalize_is_idempotent_after_a_crash_before_cleanup",
+      "ran": true,
+      "sites": 1
+    },
+    "fit-axis-is-the-real-policy": {
+      "bit": true,
+      "class": "executable",
+      "kexpr": "fit_axis_seals_every_intent_that_changes_the_answer",
+      "ran": true,
+      "sites": 1
+    },
+    "inner-unbound-sentinel": {
+      "bit": true,
+      "class": "executable",
+      "kexpr": "blank_its_sentinel_check",
+      "ran": true,
+      "sites": 1
+    },
+    "namespace-check-rejects-symlinks": {
+      "bit": true,
+      "class": "executable",
+      "kexpr": "symlinked_path_is_not_inside_the_smoke_namespace or namespace_check_is_fail_closed_on_a_symlinked_component",
+      "ran": true,
+      "sites": 1
+    },
+    "planned-binds-the-code-identity": {
+      "bit": true,
+      "class": "executable",
+      "kexpr": "plan_to_the_code_identity",
+      "ran": true,
+      "sites": 1
+    },
+    "prelock-digest-check": {
+      "bit": true,
+      "class": "executable",
+      "kexpr": "wrong_bytes_are_never_locked",
+      "ran": true,
+      "sites": 1
+    },
+    "producer-cut-is-sealed": {
+      "bit": true,
+      "class": "executable",
+      "kexpr": "widening_the_producer_cut_moves_the_digest",
+      "ran": true,
+      "sites": 1
+    },
+    "recheck-before-rename": {
+      "bit": true,
+      "class": "executable",
+      "kexpr": "rechecked_immediately_before_the_rename",
+      "ran": true,
+      "sites": 1
+    },
+    "sink-subset-of-roster": {
+      "bit": true,
+      "class": "executable",
+      "kexpr": "complete_undeclared_leg_never_reaches_pending",
+      "ran": true,
+      "sites": 1
+    },
+    "warm-consumer-uses-accessor": {
+      "bit": true,
+      "class": "executable",
+      "kexpr": "warm_consumers_go_through_the_accessors",
+      "ran": true,
+      "sites": 1
+    }
+  },
+  "schema": "mutation-coverage/v1",
+  "selector": ""
+}

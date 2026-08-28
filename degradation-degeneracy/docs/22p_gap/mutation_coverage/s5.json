@@ -1,0 +1,84 @@
+{
+  "at": "2026-08-28T18:03:12Z",
+  "scenarios": {
+    "caller-stage-safe-read": {
+      "bit": true,
+      "class": "executable",
+      "kexpr": "dangling_symlink_in_the_caller",
+      "ran": true,
+      "sites": 1
+    },
+    "closure-unresolved-attr-is-fail-closed": {
+      "bit": true,
+      "class": "executable",
+      "kexpr": "unresolved_producer_module_reference_is_fail_closed",
+      "ran": true,
+      "sites": 1
+    },
+    "finalize-requires-the-credential": {
+      "bit": true,
+      "class": "executable",
+      "kexpr": "finalize_requires_the_owner_credential",
+      "ran": true,
+      "sites": 1
+    },
+    "idempotent-shares-the-validator": {
+      "bit": null,
+      "class": "declared",
+      "kexpr": null,
+      "ran": false,
+      "sites": 1
+    },
+    "lifecycle-head-anchors-the-tip": {
+      "bit": true,
+      "class": "executable",
+      "kexpr": "the_lifecycle_journal_is_a_hash_chain",
+      "ran": true,
+      "sites": 1
+    },
+    "plan-index-exact-equality": {
+      "bit": true,
+      "class": "executable",
+      "kexpr": "phantom_executed_plan_without_an_execution_record",
+      "ran": true,
+      "sites": 1
+    },
+    "pre-write-authority": {
+      "bit": true,
+      "class": "executable",
+      "kexpr": "frozen_cohort_publish_writes_nothing_before_it_refuses",
+      "ran": true,
+      "sites": 1
+    },
+    "producer-crossing-is-fail-closed": {
+      "bit": true,
+      "class": "executable",
+      "kexpr": "breaking_the_crossing_into_src_scoring_is_fail_closed",
+      "ran": true,
+      "sites": 1
+    },
+    "publisher-owns-the-merge-temp": {
+      "bit": true,
+      "class": "executable",
+      "kexpr": "caller_stage_is_untouched",
+      "ran": true,
+      "sites": 1
+    },
+    "seal-finite-floats": {
+      "bit": true,
+      "class": "executable",
+      "kexpr": "seal_domain_is_exact_not_isinstance",
+      "ran": true,
+      "sites": 1
+    },
+    "trust-boundary-declared": {
+      "bit": true,
+      "class": "executable",
+      "kexpr": "publisher_declares_its_trust_boundary",
+      "ran": true,
+      "sites": 1
+    }
+  },
+  "schema": "mutation-coverage/v1",
+  "selector": ""
+}

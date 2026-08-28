@@ -1,0 +1,84 @@
+{
+  "at": "2026-08-28T18:01:18Z",
+  "scenarios": {
+    "authority-registry": {
+      "bit": true,
+      "class": "executable",
+      "kexpr": "raw_publisher_takes_no",
+      "ran": true,
+      "sites": 1
+    },
+    "closure-follows-module-aliases": {
+      "bit": true,
+      "class": "executable",
+      "kexpr": "closure_follows_a_module_alias_attribute",
+      "ran": true,
+      "sites": 1
+    },
+    "finalize-holds-the-claim-lock": {
+      "bit": true,
+      "class": "executable",
+      "kexpr": "canonical_lock_order_is_declared_and_finalize_holds_the_claim",
+      "ran": true,
+      "sites": 1
+    },
+    "generation-root-nofollow": {
+      "bit": true,
+      "class": "executable",
+      "kexpr": "generation_root_symlink_is_never_read_as_a_generation or symlinked_gen_ancestor_never_holds_a_generation",
+      "ran": true,
+      "sites": 1
+    },
+    "ledger-status-enum": {
+      "bit": true,
+      "class": "executable",
+      "kexpr": "status_is_an_exact_enum",
+      "ran": true,
+      "sites": 1
+    },
+    "phase-input-binding-needs-a-receipt": {
+      "bit": true,
+      "class": "executable",
+      "kexpr": "fit_refuses_when_its_grid_phase_is_missing",
+      "ran": true,
+      "sites": 1
+    },
+    "pointer-loss-is-terminal": {
+      "bit": true,
+      "class": "executable",
+      "kexpr": "losing_the_pointer_of_a_cohort",
+      "ran": true,
+      "sites": 1
+    },
+    "producer-canon-drops-empty-fields": {
+      "bit": true,
+      "class": "executable",
+      "kexpr": "producer_digest_is_the_same_on_every_python_here",
+      "ran": true,
+      "sites": 1
+    },
+    "proof-until-equals-lease": {
+      "bit": null,
+      "class": "declared",
+      "kexpr": null,
+      "ran": false,
+      "sites": 1
+    },
+    "roster-is-a-set": {
+      "bit": true,
+      "class": "executable",
+      "kexpr": "ledger_roster_is_a_set_not_a_multiset",
+      "ran": true,
+      "sites": 1
+    },
+    "thaw-is-refused-before-the-first-write": {
+      "bit": true,
+      "class": "executable",
+      "kexpr": "publisher_refuses_a_thawed_cohort_before_the_first_write",
+      "ran": true,
+      "sites": 1
+    }
+  },
+  "schema": "mutation-coverage/v1",
+  "selector": ""
+}

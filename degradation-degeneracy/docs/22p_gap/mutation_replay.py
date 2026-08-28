@@ -151,7 +151,8 @@ MUTANTS = [
      # ★ 48차 P0-5 — gate 호출이 조건 집합·다리 이름을 넘기고 claim 을 돌려주도록
      #   바뀌었다. 호출 지점을 통째로 지우는 것이 이 변이의 뜻이다.
      "    _claim = _assert_grid_authorized(cfg, out_dir, conditions=conditions,\n"
-     "                                     dry_run=dry_run, leg=leg)\n",
+     "                                     dry_run=dry_run, leg=leg,\n"
+     "                                     token_file=token_file)\n",
      "    _claim = None\n",
      "run_grid_calls_the_gate_before_its_first_side_effect"),
     # ── 46차 (게이트 45차 반증 조건) ──────────────────────────────────────
@@ -204,7 +205,7 @@ MUTANTS = [
      "        bad = []",
      "every_enumerated_version_candidate or falsy_version_never_reaches_lock"),
     ("planned-status-is-not-standing", PRESERVE,
-     '    if e["status"] != "planned":',
+     '    if e["status"] not in allow:',
      "    if False:",
      "standing_authorization"),
     ("planned-binds-the-code-identity", PRESERVE,
@@ -338,6 +339,150 @@ MUTANTS = [
      '    assert {"_warm_summary", "_warm_manifest", "_warm_has_summary"} <= calls, (',
      "    assert True or (",
      None),          # 아래 주석 참조
+    # ── 49차 (게이트 48차 반증 조건) ──────────────────────────────────────
+    ("precheck-tells-new-from-resume", PRESERVE,
+     "    path = _claim_path(leg_id, claims_root)\n"
+     "    if path.is_file():\n"
+     "        if token_file is None:",
+     "    path = _claim_path(leg_id, claims_root)\n"
+     "    if False:\n"
+     "        if token_file is None:",
+     "precheck_tells_a_new_run_from_an_owned_resume"),
+    ("claim-stores-a-verifier-not-the-token", PRESERVE,
+     '           "attempt_id": attempt_id, "attempt_verifier": _token_verifier(token),',
+     '           "attempt_id": attempt_id, "attempt_verifier": token,',
+     "claim_file_never_stores_the_resume_credential"),
+    ("resume-compares-the-verifier", PRESERVE,
+     "        if not secrets.compare_digest(_token_verifier(token),\n"
+     '                                      str(rec["attempt_verifier"])):',
+     "        if False:",
+     "phase_cannot_be_recorded_without_the_owner_token or "
+     "crash_after_grid_resumes_and_finalizes"),
+    ("diagnostic-hides-the-credential", PRESERVE,
+     "        if self._token is None:\n"
+     "            raise PreserveError(\n"
+     '                "plan", f"{self.leg_id!r} 의 claim 을 소유 증명 없이 열었다 — "\n'
+     '                        "진단용 읽기에는 재개 credential 이 없다")',
+     "        if False:\n"
+     "            raise PreserveError(\n"
+     '                "plan", f"{self.leg_id!r} 의 claim 을 소유 증명 없이 열었다 — "\n'
+     '                        "진단용 읽기에는 재개 credential 이 없다")',
+     "the_diagnostic_reader_never_hands_out_the_credential"),
+    ("finalize-requires-the-credential", PRESERVE,
+     "    if (token is None) == (token_file is None):\n"
+     "        raise TypeError(\n"
+     '            "finalize_leg() 는 `token` 또는 `token_file` 중 정확히 하나를 "',
+     "    if False:\n"
+     "        raise TypeError(\n"
+     '            "finalize_leg() 는 `token` 또는 `token_file` 중 정확히 하나를 "',
+     "finalize_requires_the_owner_credential"),
+    ("finalize-holds-the-claim-lock", PRESERVE,
+     "    with _ledger_lock(_claim_path(leg_id, claims_root)):",
+     "    if True:",
+     "canonical_lock_order_is_declared_and_finalize_holds_the_claim"),
+    ("finalize-rechecks-in-the-ledger-lock", PRESERVE,
+     "            assert_planned_index_consistent(ledger)\n"
+     "            live = assert_planned_leg(leg_id, claim.source_digest,\n"
+     "                                      ledger=ledger,\n"
+     '                                      allow=("planned", "running"))',
+     '            live = {"cohort_id": claim.cohort_id,\n'
+     '                    "run_spec_digest": claim.run_spec_digest}',
+     "finalize_rechecks_the_whole_authority_inside_the_ledger_lock"),
+    ("crash-recovery-is-idempotent", PRESERVE,
+     "    done = _already_finalized(leg_id, token, ledger=ledger,\n"
+     "                              claims_root=claims_root)",
+     "    done = None",
+     "finalize_is_idempotent_after_a_crash_before_cleanup"),
+    ("crash-recovery-needs-the-credential", PRESERVE,
+     '    if not secrets.compare_digest(want, str(rec["attempt_verifier"])):\n'
+     "        raise PreserveError(\n"
+     "            \"plan\",\n"
+     '            f"{leg_id!r} 은 이미 닫혔고, 그 실행의 소유 증명이 아니다 — "',
+     "    if False:\n"
+     "        raise PreserveError(\n"
+     "            \"plan\",\n"
+     '            f"{leg_id!r} 은 이미 닫혔고, 그 실행의 소유 증명이 아니다 — "',
+     "the_crash_recovery_needs_the_owner_credential"),
+    ("preservation-status-inside-the-contract", PRESERVE,
+     'PRESERVATION_STATUS = ("full_bundle", "recorded_projection",\n'
+     '                       "preservation_pending", "missing")',
+     'PRESERVATION_STATUS = ("full_bundle", "recorded_projection",\n'
+     '                       "no_bundle", "missing")',
+     "the_runtime_preservation_enum_is_inside_the_contract"),
+    ("finalize-writes-the-whole-tuple", PRESERVE,
+     '                 "validation_status": PENDING_VALIDATION_STATUS,\n'
+     '                 "inference_role": PENDING_INFERENCE_ROLE,',
+     "",
+     "finalize_writes_a_complete_contract_status_tuple"),
+    ("fit-axis-is-the-real-policy", PRESERVE,
+     'LEG_SPEC_FIT_KEYS = ("config_digest", "objective_order", "reference",\n'
+     '                     "halfcell_recipe", "bounds_preset", "bounds_digest",\n'
+     '                     "optimizer", "use_noisy", "row_selection",\n'
+     '                     "in", "in_digest", "out")',
+     'LEG_SPEC_FIT_KEYS = ("config_digest", "objective_order", "out")',
+     "fit_axis_seals_every_intent_that_changes_the_answer"),
+    ("phase-input-binding", PRESERVE,
+     "    if not secrets.compare_digest(str(sealed), str(curves_sha256)):",
+     "    if False:",
+     "fit_refuses_curves_that_its_grid_phase_did_not_produce"),
+    ("phase-input-binding-needs-a-receipt", PRESERVE,
+     "    rec = claim.phase_receipt(\"grid\")\n"
+     "    if rec is None:",
+     "    rec = claim.phase_receipt(\"grid\")\n"
+     "    if False:",
+     "fit_refuses_when_its_grid_phase_is_missing"),
+    ("release-returns-the-plan", PRESERVE,
+     "    claim = resume_claim(leg_id, claims_root, token=token, ledger=ledger)\n"
+     "    _abandon_claim(claim, ledger=ledger)",
+     "    claim = resume_claim(leg_id, claims_root, token=token, ledger=ledger)",
+     "released_run_returns_the_plan_to_planned"),
+    ("dry-run-releases-the-claim", GRID,
+     "        if _claim is not None:\n"
+     "            from tools.preserve import release_leg_run",
+     "        if False:\n"
+     "            from tools.preserve import release_leg_run",
+     "dry_run_does_not_strand_the_plan_in_running"),
+    ("roster-is-a-set", RP,
+     "            dup = sorted({x for x in v if v.count(x) > 1})\n"
+     "            if dup:",
+     "            dup = []\n            if dup:",
+     "ledger_roster_is_a_set_not_a_multiset"),
+    ("thaw-is-refused-before-the-first-write", RP,
+     '    assert_not_thawed(_pre["cohort_id"])',
+     "    pass",
+     "publisher_refuses_a_thawed_cohort_before_the_first_write"),
+    ("thaw-transition-is-unrepresentable", RP,
+     "    if (frm, to) not in _LIFECYCLE_MOVES:",
+     "    if False:",
+     "frozen_cohort_cannot_be_thawed_and_published"),
+    ("lifecycle-chain-is-verified", RP,
+     '        if rec["prev"] != prev:',
+     "        if False:",
+     "the_lifecycle_journal_is_a_hash_chain"),
+    ("lifecycle-head-anchors-the-tip", RP,
+     "    if head != prev:",
+     "    if False:",
+     "the_lifecycle_journal_is_a_hash_chain"),
+    ("closure-follows-module-aliases", RP,
+     "            if kind == \"rp\" and isinstance(sub_node, ast.Attribute) \\\n"
+     "                    and isinstance(sub_node.value, ast.Name) \\\n"
+     "                    and sub_node.value.id in mods:",
+     "            if False:",
+     "closure_follows_a_module_alias_attribute"),
+    ("closure-unresolved-attr-is-fail-closed", RP,
+     "                if attr not in sdefs:\n"
+     "                    raise SystemExit(",
+     "                if False:\n"
+     "                    raise SystemExit(",
+     "unresolved_producer_module_reference_is_fail_closed"),
+    ("closure-refuses-dynamic-resolution", RP,
+     "        _assert_no_dynamic_resolution(node, key, mods)",
+     "        pass",
+     "dynamic_name_resolution_inside_the_closure_is_fail_closed"),
+    ("interpreter-set-is-pinned", RP,
+     "    if sys.version_info[:2] not in SUPPORTED_PYTHON:",
+     "    if False:",
+     None),          # 아래 주석 참조
 ]
 
 #: 여러 지점을 **함께** 되돌려야 관측되는 변이 (심층 방어라 하나만 지우면
@@ -450,6 +595,15 @@ DECLARED_MASKED = {
         "horizon 의 정본은 lease record 이고 verifier 가 exact ID 로 다시 "
         "확인한다. 이 assert 는 필드가 이름만 갖지 않게 하는 계약이며, "
         "현재 production 경로에서 둘이 갈라지는 반례가 없다.",
+    "interpreter-set-is-pinned":
+        "이 변이는 **지금 도는 인터프리터에서 관측할 수 없다.** 검사를 지우면 "
+        "지원 집합 밖 버전에서 identity 를 계산하게 되는데, 이 기계에는 그 "
+        "버전이 없다 — 관측하려면 지원 집합 밖 인터프리터를 하나 설치해 같은 "
+        "시험을 거기서 돌려야 한다. 대신 회귀"
+        "(`..._supported_interpreter_set_is_pinned_with_golden_vectors`)가 "
+        "(a) 지금 인터프리터가 선언 집합 안이고 (b) 대표 구문 넷의 정규형이 "
+        "golden 과 같음을 매번 확인한다. 즉 '정규형이 버전에 안 묶인다' 는 "
+        "주장이 깨지면 golden 이 먼저 빨개진다.",
     "warm-consumer-wiring":
         "positive wiring 회귀는 배선이 **끊길 때** 빨개진다. assert 를 지우는 "
         "변이는 그 시험 자신만 무력화하므로 다른 시험이 물지 않는다 — "
@@ -754,12 +908,126 @@ EXPECT: dict = {
             "tests/test_preserve.py::test_the_claim_seals_the_exact_run_spec": "Failed: DID NOT RAISE PreserveError"
         }
     },
+    "claim-stores-a-verifier-not-the-token": {
+        "fail": [
+            "tests/test_preserve.py::test_the_claim_file_never_stores_the_resume_credential"
+        ],
+        "witness": {
+            "tests/test_preserve.py::test_the_claim_file_never_stores_the_resume_credential": "AssertionError: claim 파일이 재개 credential 을 평문으로 담았다"
+        }
+    },
+    "closure-follows-module-aliases": {
+        "fail": [
+            "tests/test_docs_lint.py::test_the_closure_follows_a_module_alias_attribute"
+        ],
+        "witness": {
+            "tests/test_docs_lint.py::test_the_closure_follows_a_module_alias_attribute": "AssertionError: module alias 로 부른 채점 함수가 닫힘 밖이다 — `from ... import` 만 따라가면 문법 하나로 identity 를 빠져나간다"
+        }
+    },
+    "closure-refuses-dynamic-resolution": {
+        "fail": [
+            "tests/test_docs_lint.py::test_dynamic_name_resolution_inside_the_closure_is_fail_closed[__import__('src.scoring').scoring.add_error_columns(df)]",
+            "tests/test_docs_lint.py::test_dynamic_name_resolution_inside_the_closure_is_fail_closed[eval('add_error_columns')(df)]",
+            "tests/test_docs_lint.py::test_dynamic_name_resolution_inside_the_closure_is_fail_closed[exec('pass')]",
+            "tests/test_docs_lint.py::test_dynamic_name_resolution_inside_the_closure_is_fail_closed[getattr(sc, 'add_error_columns')(df)]",
+            "tests/test_docs_lint.py::test_dynamic_name_resolution_inside_the_closure_is_fail_closed[globals()['add_error_columns'](df)]",
+            "tests/test_docs_lint.py::test_dynamic_name_resolution_inside_the_closure_is_fail_closed[vars(sc)['add_error_columns'](df)]"
+        ],
+        "witness": {
+            "tests/test_docs_lint.py::test_dynamic_name_resolution_inside_the_closure_is_fail_closed[__import__('src.scoring').scoring.add_error_columns(df)]": "Failed: DID NOT RAISE SystemExit",
+            "tests/test_docs_lint.py::test_dynamic_name_resolution_inside_the_closure_is_fail_closed[eval('add_error_columns')(df)]": "Failed: DID NOT RAISE SystemExit",
+            "tests/test_docs_lint.py::test_dynamic_name_resolution_inside_the_closure_is_fail_closed[exec('pass')]": "Failed: DID NOT RAISE SystemExit",
+            "tests/test_docs_lint.py::test_dynamic_name_resolution_inside_the_closure_is_fail_closed[getattr(sc, 'add_error_columns')(df)]": "Failed: DID NOT RAISE SystemExit",
+            "tests/test_docs_lint.py::test_dynamic_name_resolution_inside_the_closure_is_fail_closed[globals()['add_error_columns'](df)]": "Failed: DID NOT RAISE SystemExit",
+            "tests/test_docs_lint.py::test_dynamic_name_resolution_inside_the_closure_is_fail_closed[vars(sc)['add_error_columns'](df)]": "Failed: DID NOT RAISE SystemExit"
+        }
+    },
+    "closure-unresolved-attr-is-fail-closed": {
+        "fail": [
+            "tests/test_docs_lint.py::test_an_unresolved_producer_module_reference_is_fail_closed"
+        ],
+        "witness": {
+            "tests/test_docs_lint.py::test_an_unresolved_producer_module_reference_is_fail_closed": "KeyError: '그런것은없다'"
+        }
+    },
     "complete-current-supersedes-pending": {
         "fail": [
             "tests/test_docs_lint.py::test_a_complete_current_supersedes_a_leftover_pending"
         ],
         "witness": {
             "tests/test_docs_lint.py::test_a_complete_current_supersedes_a_leftover_pending": "SystemExit: ✗ 남아 있는 `.PENDING` 이 다른 base 위에서 만들어졌다 (pending base None ≠ 현재 70ec079e9fd6) — 승인되지 않은 구성을 이어받지 않는다. `.PENDING` 을 지우고 지금의 base 에서 다시 쌓아라"
+        }
+    },
+    "crash-recovery-is-idempotent": {
+        "fail": [
+            "tests/test_preserve.py::test_finalize_is_idempotent_after_a_crash_before_cleanup"
+        ],
+        "witness": {
+            "tests/test_preserve.py::test_finalize_is_idempotent_after_a_crash_before_cleanup": "tools.preserve.PreserveError: [plan] 'L' 의 계획 상태가 'executed' 이라 승인이 아니다 (허용 ['planned', 'running']) — 실행 기록은 다음 실행의 승인이 아니고, 이미 running 인 다리를 새로 시작할 수도 없다. 다시 돌리려면 새 계획 항목을 적어라"
+        }
+    },
+    "crash-recovery-needs-the-credential": {
+        "fail": [
+            "tests/test_preserve.py::test_the_crash_recovery_needs_the_owner_credential"
+        ],
+        "witness": {
+            "tests/test_preserve.py::test_the_crash_recovery_needs_the_owner_credential": "Failed: DID NOT RAISE PreserveError"
+        }
+    },
+    "diagnostic-hides-the-credential": {
+        "fail": [
+            "tests/test_preserve.py::test_the_diagnostic_reader_never_hands_out_the_credential"
+        ],
+        "witness": {
+            "tests/test_preserve.py::test_the_diagnostic_reader_never_hands_out_the_credential": "Failed: DID NOT RAISE PreserveError"
+        }
+    },
+    "dry-run-releases-the-claim": {
+        "fail": [
+            "tests/test_grid.py::test_a_dry_run_does_not_strand_the_plan_in_running"
+        ],
+        "witness": {
+            "tests/test_grid.py::test_a_dry_run_does_not_strand_the_plan_in_running": "AssertionError: dry-run 이 계획을 running 에 남겼다 — 그 다리는 다시 시작할 수도 닫을 수도 없다"
+        }
+    },
+    "finalize-holds-the-claim-lock": {
+        "fail": [
+            "tests/test_preserve.py::test_the_canonical_lock_order_is_declared_and_finalize_holds_the_claim"
+        ],
+        "witness": {
+            "tests/test_preserve.py::test_the_canonical_lock_order_is_declared_and_finalize_holds_the_claim": "AssertionError: finalize 가 claim lock 을 쥐지 않고 지나갔다 — 검사한 receipt 와 기록한 receipt 가 다를 수 있다"
+        }
+    },
+    "finalize-rechecks-in-the-ledger-lock": {
+        "fail": [
+            "tests/test_preserve.py::test_finalize_rechecks_the_whole_authority_inside_the_ledger_lock"
+        ],
+        "witness": {
+            "tests/test_preserve.py::test_finalize_rechecks_the_whole_authority_inside_the_ledger_lock": "AssertionError: 얼어붙은 cohort 에 실행 기록을 썼다: 'ok'"
+        }
+    },
+    "finalize-requires-the-credential": {
+        "fail": [
+            "tests/test_preserve.py::test_finalize_requires_the_owner_credential"
+        ],
+        "witness": {
+            "tests/test_preserve.py::test_finalize_requires_the_owner_credential": "AssertionError: Regex pattern did not match."
+        }
+    },
+    "finalize-writes-the-whole-tuple": {
+        "fail": [
+            "tests/test_preserve.py::test_finalize_writes_a_complete_contract_status_tuple"
+        ],
+        "witness": {
+            "tests/test_preserve.py::test_finalize_writes_a_complete_contract_status_tuple": "AssertionError: 계약 §8 의 validation_status 축이 비었다 — 튜플이 불완전하다"
+        }
+    },
+    "fit-axis-is-the-real-policy": {
+        "fail": [
+            "tests/test_preserve.py::test_the_fit_axis_seals_every_intent_that_changes_the_answer"
+        ],
+        "witness": {
+            "tests/test_preserve.py::test_the_fit_axis_seals_every_intent_that_changes_the_answer": "tools.preserve.PreserveError: [plan] leg run spec 의 fit 축이 계약과 다르다 — 있어야 ['config_digest', 'objective_order', 'out'], 받은 것 ['bounds_digest', 'bounds_preset', 'config_digest', 'half"
         }
     },
     "flock-two-publisher": {
@@ -854,6 +1122,22 @@ EXPECT: dict = {
             "tests/test_docs_lint.py::test_the_ledger_status_is_an_exact_enum[retired]": "Failed: DID NOT RAISE SystemExit"
         }
     },
+    "lifecycle-chain-is-verified": {
+        "fail": [
+            "tests/test_docs_lint.py::test_the_lifecycle_journal_is_a_hash_chain"
+        ],
+        "witness": {
+            "tests/test_docs_lint.py::test_the_lifecycle_journal_is_a_hash_chain": "Failed: DID NOT RAISE SystemExit"
+        }
+    },
+    "lifecycle-head-anchors-the-tip": {
+        "fail": [
+            "tests/test_docs_lint.py::test_the_lifecycle_journal_is_a_hash_chain"
+        ],
+        "witness": {
+            "tests/test_docs_lint.py::test_the_lifecycle_journal_is_a_hash_chain": "Failed: DID NOT RAISE SystemExit"
+        }
+    },
     "module-gate-before-side-effects": {
         "fail": [
             "tests/test_preserve.py::test_run_grid_calls_the_gate_before_its_first_side_effect"
@@ -886,6 +1170,22 @@ EXPECT: dict = {
         ],
         "witness": {
             "tests/test_docs_lint.py::test_a_stale_bootstrap_pending_is_refused_not_inherited[missing_base_key]": "KeyError: 'base_generation'"
+        }
+    },
+    "phase-input-binding": {
+        "fail": [
+            "tests/test_preserve.py::test_fit_refuses_curves_that_its_grid_phase_did_not_produce"
+        ],
+        "witness": {
+            "tests/test_preserve.py::test_fit_refuses_curves_that_its_grid_phase_did_not_produce": "Failed: DID NOT RAISE PreserveError"
+        }
+    },
+    "phase-input-binding-needs-a-receipt": {
+        "fail": [
+            "tests/test_preserve.py::test_fit_refuses_when_its_grid_phase_is_missing"
+        ],
+        "witness": {
+            "tests/test_preserve.py::test_fit_refuses_when_its_grid_phase_is_missing": "AttributeError: 'NoneType' object has no attribute 'get'"
         }
     },
     "pin-is-publication-authority": {
@@ -970,6 +1270,14 @@ EXPECT: dict = {
             "tests/test_docs_lint.py::test_a_frozen_cohort_publish_writes_nothing_before_it_refuses": "AssertionError: 거부하기 전에 무언가를 만들었다: ['.publish.lock', 'gen']"
         }
     },
+    "precheck-tells-new-from-resume": {
+        "fail": [
+            "tests/test_preserve.py::test_the_precheck_tells_a_new_run_from_an_owned_resume"
+        ],
+        "witness": {
+            "tests/test_preserve.py::test_the_precheck_tells_a_new_run_from_an_owned_resume": "tools.preserve.PreserveError: [plan] 'L' 의 계획 상태가 'running' 이라 승인이 아니다 (허용 ['planned']) — 실행 기록은 다음 실행의 승인이 아니고, 이미 running 인 다리를 새로 시작할 수도 없다. 다시 돌리려면 새 계획 항목을 적어라"
+        }
+    },
     "prelock-digest-check": {
         "fail": [
             "tests/test_preserve.py::test_wrong_bytes_are_never_locked"
@@ -998,12 +1306,20 @@ EXPECT: dict = {
             "tests/test_preserve.py::test_a_falsy_version_id_from_put_is_refused[]": "AssertionError: falsy version ID 로 잠갔다"
         }
     },
+    "preservation-status-inside-the-contract": {
+        "fail": [
+            "tests/test_preserve.py::test_the_runtime_preservation_enum_is_inside_the_contract"
+        ],
+        "witness": {
+            "tests/test_preserve.py::test_the_runtime_preservation_enum_is_inside_the_contract": "AssertionError: 계약 §8 에 없는 보존 상태를 runtime 이 쓴다: ['no_bundle'] — 어휘의 정본이 둘이면 원장이 자기 lint 를 통과하지 못한다"
+        }
+    },
     "producer-canon-drops-empty-fields": {
         "fail": [
             "tests/test_docs_lint.py::test_the_producer_digest_is_the_same_on_every_python_here"
         ],
         "witness": {
-            "tests/test_docs_lint.py::test_the_producer_digest_is_the_same_on_every_python_here": "AssertionError: producer 의미 digest 가 인터프리터마다 다르다: ['3.12', '3.13'] 가 이 세션과 다른 값을 냈다 (대조 ['3.10', '3.11', '3.12', '3.13']) — 정규형이 버전 의존이다"
+            "tests/test_docs_lint.py::test_the_producer_digest_is_the_same_on_every_python_here": "AssertionError: producer 의미 digest 가 인터프리터마다 다르다"
         }
     },
     "producer-crosses-into-scoring": {
@@ -1088,6 +1404,14 @@ EXPECT: dict = {
             "tests/test_docs_lint.py::test_the_pointer_is_rechecked_immediately_before_the_rename": "Failed: DID NOT RAISE SystemExit"
         }
     },
+    "release-returns-the-plan": {
+        "fail": [
+            "tests/test_preserve.py::test_a_released_run_returns_the_plan_to_planned"
+        ],
+        "witness": {
+            "tests/test_preserve.py::test_a_released_run_returns_the_plan_to_planned": "AssertionError: 되돌렸는데 계획이 running 에 남았다 — 그 다리는 영영 못 돌린다"
+        }
+    },
     "repair-source-uses-the-snapshot": {
         "fail": [
             "tests/test_preserve.py::test_no_version_enumeration_bypasses_the_helper",
@@ -1096,6 +1420,22 @@ EXPECT: dict = {
         "witness": {
             "tests/test_preserve.py::test_no_version_enumeration_bypasses_the_helper": "AssertionError: version 열거 우회가 2곳 있다 (['self.provider.versions(', 'getattr(self.provider, \"versions\"']) — 모든 열거는 `_version_candidates()` 를 지나야 한다",
             "tests/test_preserve.py::test_repair_lookups_go_through_the_validated_version_snapshot": "Failed: DID NOT RAISE PreserveError"
+        }
+    },
+    "resume-compares-the-verifier": {
+        "fail": [
+            "tests/test_preserve.py::test_a_crash_after_grid_resumes_and_finalizes"
+        ],
+        "witness": {
+            "tests/test_preserve.py::test_a_crash_after_grid_resumes_and_finalizes": "Failed: DID NOT RAISE PreserveError"
+        }
+    },
+    "roster-is-a-set": {
+        "fail": [
+            "tests/test_docs_lint.py::test_the_ledger_roster_is_a_set_not_a_multiset"
+        ],
+        "witness": {
+            "tests/test_docs_lint.py::test_the_ledger_roster_is_a_set_not_a_multiset": "Failed: DID NOT RAISE SystemExit"
         }
     },
     "seal-exact-types": {
@@ -1156,6 +1496,22 @@ EXPECT: dict = {
             "tests/test_docs_lint.py::test_staging_aliases_never_become_an_immutable_generation[symlink]": "Failed: DID NOT RAISE SystemExit"
         }
     },
+    "thaw-is-refused-before-the-first-write": {
+        "fail": [
+            "tests/test_docs_lint.py::test_the_publisher_refuses_a_thawed_cohort_before_the_first_write"
+        ],
+        "witness": {
+            "tests/test_docs_lint.py::test_the_publisher_refuses_a_thawed_cohort_before_the_first_write": "AssertionError: 거부하면서 무언가를 만들었다 — 판정이 첫 write 뒤에 있다"
+        }
+    },
+    "thaw-transition-is-unrepresentable": {
+        "fail": [
+            "tests/test_docs_lint.py::test_a_frozen_cohort_cannot_be_thawed_and_published"
+        ],
+        "witness": {
+            "tests/test_docs_lint.py::test_a_frozen_cohort_cannot_be_thawed_and_published": "Failed: DID NOT RAISE SystemExit"
+        }
+    },
     "trust-boundary-declared": {
         "fail": [
             "tests/test_docs_lint.py::test_the_publisher_declares_its_trust_boundary"
@@ -1206,12 +1562,35 @@ def main() -> int:
                          "(49차 P1 — 조각 합집합 증명용)")
     ap.add_argument("--check-coverage", nargs="+", default=None, metavar="PATH",
                     help="조각 JSON 들을 합쳐 등록부 전체를 덮었는지 답한다")
+    ap.add_argument("--slice", default=None, metavar="I/N",
+                    help="등록부를 이름순 N 조각으로 나눠 I 번째만 돈다 "
+                         "(1부터). 전수를 한 번에 돌리면 시간이 넘치므로 "
+                         "조각으로 나누고 `--check-coverage` 로 합집합을 "
+                         "증명한다")
+    ap.add_argument("--check-preimages", action="store_true",
+                    help="모든 변이 지점이 **정확히 한 번** 나타나는지만 본다 "
+                         "(pytest 를 돌리지 않는다 — 코드가 옮겨가 죽은 변이를 "
+                         "싸게 찾는다)")
     a = ap.parse_args()
 
     if a.check_coverage:
         return check_coverage(a.check_coverage)
+    if a.check_preimages:
+        return check_preimages(a.k)
 
     items, multi, executed, declared = _select(a.k)
+    if a.slice:
+        i, n = (int(x) for x in a.slice.split("/"))
+        if not (1 <= i <= n):
+            print(f"✗ --slice {a.slice} 가 범위 밖이다")
+            return 2
+        names = sorted(m[0] for m in items + multi)
+        keep = {nm for j, nm in enumerate(names) if j % n == i - 1}
+        items = [m for m in items if m[0] in keep]
+        multi = [m for m in multi if m[0] in keep]
+        executed = [m for m in items if m[4] is not None]
+        declared = [m for m in items if m[4] is None] + \
+            [m for m in multi if m[3] is None]
     # ★ 48차 — **0건을 고르면 실패한다.** 47차 runner 는 `-k` 가 아무것도 고르지
     #   않아도 "전부 물었다" 를 찍고 rc 0 이었다 — 오타 하나로 증거 전체가
     #   조용히 사라지는 구조였다.
@@ -1237,7 +1616,8 @@ def main() -> int:
     SANDBOX = _make_sandbox()
     print(f"sandbox: {SANDBOX}\n")
     try:
-        rc = _replay(plan, bad, observed_all, a)
+        rc = _replay(plan, bad, observed_all, a,
+                     sel=(items, multi, executed, declared))
     finally:
         if a.keep_sandbox:
             print(f"\nsandbox 를 남긴다: {SANDBOX}")
@@ -1246,8 +1626,40 @@ def main() -> int:
     return rc
 
 
-def _replay(plan, bad, observed_all, a) -> int:
-    items, multi, executed, declared = _select(a.k)
+def check_preimages(k: str = "") -> int:
+    """변이 지점이 **살아 있는가** — pytest 없이 (49차).
+
+    코드가 옮겨 가면 preimage 가 0번 또는 2번 나타나게 되고, 그 변이는 조용히
+    "지점불량" 이 된다. 전수 재생은 비싸므로 그 전에 싸게 훑는다.
+    """
+    bad = []
+    for name, path, old, _new, kexpr in MUTANTS:
+        if k not in name:
+            continue
+        if kexpr is None:
+            continue                       # 신고 — 지점을 요구하지 않는다
+        c = path.read_text(encoding="utf-8").count(old)
+        if c != 1:
+            bad.append(f"{name:34s} {path.name:20s} preimage {c}회")
+    for name, path, pairs, kexpr in MULTI:
+        if k not in name or kexpr is None:
+            continue
+        src = path.read_text(encoding="utf-8")
+        for i, (old, _new) in enumerate(pairs):
+            c = src.count(old)
+            if c != 1:
+                bad.append(f"{name:34s} {path.name:20s} site {i} preimage {c}회")
+    if bad:
+        print("=== 죽은 변이 지점 ===")
+        for b in bad:
+            print(b)
+        return 1
+    print("모든 변이 지점이 정확히 한 번 나타난다")
+    return 0
+
+
+def _replay(plan, bad, observed_all, a, sel=None) -> int:
+    items, multi, executed, declared = sel or _select(a.k)
     ran = 0
     bit: dict = {}
 

@@ -1,0 +1,84 @@
+{
+  "at": "2026-08-28T18:05:15Z",
+  "scenarios": {
+    "children-read-through-dirfd": {
+      "bit": true,
+      "class": "executable",
+      "kexpr": "holds_a_directory_fd_for_its_children",
+      "ran": true,
+      "sites": 2
+    },
+    "complete-current-supersedes-pending": {
+      "bit": true,
+      "class": "executable",
+      "kexpr": "complete_current_supersedes_a_leftover_pending",
+      "ran": true,
+      "sites": 1
+    },
+    "finalize-writes-the-whole-tuple": {
+      "bit": true,
+      "class": "executable",
+      "kexpr": "finalize_writes_a_complete_contract_status_tuple",
+      "ran": true,
+      "sites": 1
+    },
+    "inner-unbound-kernel": {
+      "bit": true,
+      "class": "executable",
+      "kexpr": "blank_its_own_inner_check",
+      "ran": true,
+      "sites": 1
+    },
+    "module-gate-before-side-effects": {
+      "bit": true,
+      "class": "executable",
+      "kexpr": "run_grid_calls_the_gate_before_its_first_side_effect",
+      "ran": true,
+      "sites": 1
+    },
+    "plan-parser-dir-hygiene": {
+      "bit": true,
+      "class": "executable",
+      "kexpr": "plan_parser_requires_a_canonical_relative_dir or plan_parser_refuses_a_cohort_dir_outside_the_repository",
+      "ran": true,
+      "sites": 1
+    },
+    "precheck-tells-new-from-resume": {
+      "bit": true,
+      "class": "executable",
+      "kexpr": "precheck_tells_a_new_run_from_an_owned_resume",
+      "ran": true,
+      "sites": 1
+    },
+    "producer-cut-is-declared": {
+      "bit": true,
+      "class": "executable",
+      "kexpr": "producer_semantic_digest_excludes_the_publication_path",
+      "ran": true,
+      "sites": 1
+    },
+    "reader-shares-the-validator": {
+      "bit": true,
+      "class": "executable",
+      "kexpr": "generation_reader_refuses_an_aliased",
+      "ran": true,
+      "sites": 1
+    },
+    "seal-typed-input": {
+      "bit": true,
+      "class": "executable",
+      "kexpr": "types_differ_is_not_folded",
+      "ran": true,
+      "sites": 1
+    },
+    "version-candidates-typed": {
+      "bit": true,
+      "class": "executable",
+      "kexpr": "every_enumerated_version_candidate or falsy_version_never_reaches_lock",
+      "ran": true,
+      "sites": 1
+    }
+  },
+  "schema": "mutation-coverage/v1",
+  "selector": ""
+}
