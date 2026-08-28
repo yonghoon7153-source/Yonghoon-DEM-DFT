@@ -16,8 +16,8 @@
 | # | 발견 | 상태 |
 |---|---|---|
 | 2 | `source_digest()` 경로 정규화 (POSIX) + RUN_SCOPE 정합 | **완료** — §1.9 참조 (RED 5건 → GREEN, 286 passed) |
-| 1 | noise family 교차 invariant (`_verify_observed_curves`) | **다음 작업** (구조 조사 완료) |
-| 3 | sweep checker fail-closed (`tools/check_sweep_consistency.py:184-215`) | 대기 |
+| 1 | noise family 교차 invariant (`_verify_observed_curves`) | **완료** — §2.9 참조 (RED 3건 → GREEN, 289 passed) |
+| 3 | sweep checker fail-closed (`tools/check_sweep_consistency.py:184-215`) | **다음 작업** |
 | 4 | custom `w_grid` 충돌 (`src/weight_sweep.py:52-90`, `:350-355`) | 대기 |
 | 5 | guards → canonical 3-key recipe (`src/io.py:907-937`) | 대기 |
 | 6 | report reproduce command (`tools/make_results.py:1081-1108`) | 대기 |
@@ -305,6 +305,67 @@ seed 유도: `src/grid.py:105-111`
 3. noise level 하나 누락 → 실패해야 함.
 
 검증 명령: `python -m pytest tests/test_fitting.py -q -k "observed or noise_family"`
+
+### 2.9 구현 결과 (실측)
+
+**RED 증거** — 리뷰어 반례를 그대로 재현했다. 같은 truth 를 noise=0.0 은
+`q=4000`·절편 4.2, noise=0.005 는 `q=2000`·절편 3.2 로 만들면:
+
+```
+validate_curves_provenance → ok=True, fail=[], 29개 검사 전부 통과
+```
+
+분할 반례(진짜 불능 family 를 관측/실패로 가름)도 `fail=[]` 였다 — 즉
+`실패사유_불능재검`·`실패목록_ID결합`·관측∪실패 해시가 **모두 참인 채로** 통과한다.
+기존 검사와 겹치지 않는다는 뜻이고, 그 사실을 테스트에 함께 고정했다.
+
+**구현** — `src/io.py` 에 `_verify_noise_families(curves_path, d, man)` 를
+**별도 pass** 로 추가하고 `validate_curves_provenance` 에서
+`_verify_observed_curves` 바로 뒤에 호출한다. 기존 `groupby("cond_id")` 루프는
+건드리지 않았다 (`load_failed(d)` 를 앞으로 끌어올릴 필요도 없었다 — 새 함수가
+`failed.csv` 를 직접 읽는다).
+
+| 검사 키 | 내용 |
+|---|---|
+| `관측_noise_family_구성` | family 마다 noise 집합이 같고 중복 없음 |
+| `관측_noise_family_분할` | 한 family 가 관측/실패로 갈리지 않음 |
+| `관측_noise_family_q` | 계열 안 `q_mah` 편차 ≤ `1e-6` mAh |
+| `관측_noise_family_곡선` | 계열 안 clean 곡선 편차 ≤ `1e-10` V |
+
+보조: `_FAMILY_FIELDS`(noise·seed 를 뺀 5필드), `_family_key()`(float 은 1e-12
+자리 반올림 — 축 간격 0.02 이므로 서로 다른 축 값을 합치지 않는다),
+`_FAMILY_Q_TOL`·`_FAMILY_V_TOL`.
+
+기대 noise 집합은 **하드코딩하지 않는다**: manifest 의 `effective_axes.noise`
+(실제 조건에서 유도된 축, `src/grid.py:562-567`)를 쓰고, 없으면 관측∪실패에서
+유도한다. 전역 축은 서명된 `condition_ids_sha256` 이 이미 고정하므로 여기서
+보는 것은 **family 마다 같은가**이다.
+
+### 2.10 fixture 감사 — 기존 테스트가 하나도 안 깨졌다
+
+`_tiny_curves` 는 `noise=0.0` 하나만 만든다 → family 마다 원소가 1개 →
+새 검사 4종이 **전부 vacuous**. 그래서 286 → 289 로 신규 3건만 늘고 기존은
+그대로다. 이 저장소 규칙대로 이건 건강 신호가 아니라 **fixture 가 이 축을 아예
+못 태운다**는 신호다. 두 가지로 대응했다:
+
+1. `tests/test_fitting.py` 에 `_noise_family_curves(out_dir, specs, ...)` 를
+   따로 뒀다 — `(lli, lam_pe, lam_ne, noise, q_mah, 절편)` 을 직접 지정한다.
+2. **smoke 의 noise 축을 `0` → `0,0.005` 로 올렸다** (`scripts/smoke_e2e.sh`).
+   1수준이면 실제 파이프라인에서도 검사가 한 번도 실행되지 않은 채 10시간짜리
+   본 실행에 들어간다. smoke 는 새 검사 4종의 **존재**뿐 아니라
+   `effective_axes.noise` 가 2수준 이상인지도 확인해 **vacuous 통과를 거부**한다.
+
+실측 (커밋 `274dd2d4`):
+
+```
+python -m pytest tests -q          → 289 passed (3m02s)
+./scripts/smoke_e2e.sh             → 통과 (3m26s)
+  ✅ producer 독립 검증 (F74): 통과 (실패라벨 재검 + noise 계열 2수준 교차)
+  ✅ 12조건 × 2목적함수   ← 6조건에서 2배 (noise 2수준)
+```
+
+`scripts/` 가 이제 RUN_SCOPE 안이므로 smoke 수정은 `source_digest` 를 바꾼다
+(발견 2 의 범위 확대 결과). 본 실행 전이라 문제 없다.
 
 ---
 
