@@ -1,5 +1,7 @@
 # Machine Learning-Assisted Crystal Structure Prediction of Solid-State Electrolytes Reveals Superior Ionic Conductivity in Metastable Edge-Sharing Phases — Ji Hoon Kim (JACS 2025)
 
+> 🎤 **5분 발표 대본 + Figure별 예상 Q&A**: `litdb/papers/kim2025_csp_metastable_edge_sharing_sse__seminar_5min_qa.md` (2026-08-28, 발표용 — 수치 검증은 이 digest 가 정본)
+
 > slug `kim2025_csp_metastable_edge_sharing_sse` · DOI `10.1021/jacs.5c15665` · type `CSP(USPEX+MTP active learning) + DFT + AIMD` ·
 > *J. Am. Chem. Soc.* **2025, 147, 47381–47391** · 투고 2025-09-07 / 수정 2025-12-05 / 수리 2025-12-08 / 게재 2025-12-12 ·
 > 본문 11 pp + SI 24 pp · digested 2026-07-28 · status ✅ (본문 + SI 전수 정독, Fig 2/3/4/5·S1–S12·Table S1–S2 전부 판독)

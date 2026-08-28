@@ -1,5 +1,7 @@
 # A diffusion descriptor integrated machine learning approach toward the discovery of solid-state electrolytes for lithium metal batteries — Junye Tu / Ningbo Liao (JMST 2027)
 
+> 🎤 **5분 발표 대본 + Figure별 예상 Q&A**: `litdb/papers/tu2026_diffusion_descriptor_ml_li_sse_interface__seminar_5min_qa.md` (2026-08-28, 발표용 — 수치 검증은 이 digest 가 정본)
+
 > slug `tu2026_diffusion_descriptor_ml_li_sse_interface` · DOI `10.1016/j.jmst.2026.05.071` ·
 > type `CASTEP-DFT(계면 슬랩) + CI-NEB + AIMD + 고전 ML 회귀(GBRT/RF/XGB/SVR) 스크리닝` ·
 > *J. Mater. Sci. Technol.* **280 (2027) 18–26** · 접수 2026-02-19 / 수정 2026-05-15 /

@@ -2787,6 +2787,10 @@ def list_papers() -> list:
     for f in sorted(pd.glob("*.md")):
         if f.stem.startswith("_"):
             continue
+        # `<slug>__seminar_*` 는 digest 의 **동반 발표대본**이다 (2026-08-28 규약).
+        # digest 로 세면 인덱스 정합 점검이 '미등재 digest' 오탐을 낸다 — 본체에서 링크된다.
+        if "__seminar" in f.stem:
+            continue
         title, type_str, digested = f.stem.replace("_", " "), "", ""
         got_title = False
         try:

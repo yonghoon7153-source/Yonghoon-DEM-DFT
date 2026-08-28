@@ -1,5 +1,7 @@
 # A Surface Non-Destructive Modification Strategy Addressing Moisture and Oxidation Instabilities of Sulfide Solid-State Electrolytes — Yicheng Deng (Angew. Chem. 2026)
 
+> 🎤 **5분 발표 대본 + Figure별 예상 Q&A**: `litdb/papers/deng2026_polysulfate_layer_moisture_oxidation_lpsc__seminar_5min_qa.md` (2026-08-28, 발표용 — 수치 검증은 이 digest 가 정본)
+
 > slug `deng2026_polysulfate_layer_moisture_oxidation_lpsc` ·
 > DOI `10.1002/anie.202520531` (Int. Ed.) / `10.1002/ange.202520531` (독일판) ·
 > type `exp (표면 개질·전기화학) + DFT 보조 (H₂O 흡착E 2점이 전부)` ·
