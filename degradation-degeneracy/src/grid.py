@@ -374,21 +374,75 @@ def write_curves_manifest(out_dir, cfg: dict, conditions=None, extra=None) -> Pa
     return p
 
 
-def _assert_grid_authorized(cfg: dict, out_dir, dry_run: bool = False) -> None:
-    """계획 gate — smoke namespace 밖이면 승인된 claim 이 있어야 한다 (47차).
+def _assert_grid_authorized(cfg: dict, out_dir, conditions=None,
+                            dry_run: bool = False, leg: str | None = None,
+                            attempt: str | None = None):
+    """계획 gate — smoke namespace 밖이면 승인된 claim 이 있어야 한다.
 
-    `LEG` 환경변수(=`run.sh --leg`)가 대상 다리 이름이다. 없으면
-    `CANONICAL_RUN` 을 쓴다 — 정본 실행 이름이 곧 leg 이름이라는 기존 규약이다.
+    ★ 48차 P0-5 — 승인 spec 이 **실행을 고정한다.** 47차 spec 은
+      `{leg_id, mode, dry_run, config_digest}` 넷뿐이라 `--lli`·`--lam-pe`·
+      `--noise`(=조건 집합)와 `--out`(=결과가 놓일 자리)을 승인 뒤에 통째로
+      갈아도 같은 digest 가 나왔다. 그러면 승인한 것은 실행이 아니라 다리
+      **이름**이다.
+
+      이제 조건 집합의 내용 주소와 산출 위치가 spec 에 들어가고, fit 쪽 절반은
+      계획이 선언한 값을 그대로 쓴다 — 그래야 두 phase 가 **하나의 claim** 아래
+      묶인다 (`leg_run_spec()`).
+    """
+    import hashlib as _h
+
+    from src.io import source_digest
+    from tools.preserve import (assert_run_is_authorized, declared_leg_run_spec,
+                                leg_run_spec, is_inside_namespace,
+                                SMOKE_NAMESPACE)
+
+    leg = leg_name(leg)
+    # smoke namespace 안이면 계획을 요구하지 않는다 (계약 §13.3.3). 그 판정은
+    # `assert_run_is_authorized()` 와 **같은 함수**로 한다 — 두 규칙이 갈리면
+    # 어느 쪽이 경계인지 정할 수 없다.
+    if is_inside_namespace(out_dir, SMOKE_NAMESPACE):
+        return None
+    cond_ids = sorted(c.cond_id for c in (conditions or []))
+    live_grid = {
+        "config_digest": _cfg_digest(cfg),
+        "condition_ids_sha256": _h.sha256(
+            "\n".join(cond_ids).encode("utf-8")).hexdigest()[:16],
+        "n_conditions": len(cond_ids),
+        "out": leg_out_key(out_dir)}
+    declared = declared_leg_run_spec(leg)
+    spec = leg_run_spec(leg, live_grid, declared.get("fit") or {})
+    return assert_run_is_authorized(leg, "grid", [out_dir], spec,
+                                    source_digest(), attempt=attempt)
+
+def leg_name(explicit: str | None = None) -> str:
+    """이 실행이 어느 다리인가 (48차 P0-5).
+
+    47차는 `os.environ["LEG"]` 만 봤고, `run.sh` 는 `LEG` 를 **export 하지
+    않은 채** `--leg` 를 argv 로 넘겼는데 두 모듈 다 그 인자를 선언하지 않았다.
+    실측: `python -m src.grid --leg L --out ... --dry-run` →
+    `error: unrecognized arguments: --leg L`, rc 2. 즉 `--leg` 는 켜는 순간
+    실행이 죽는 축이었고 gate 는 한 번도 진짜 다리 이름을 본 적이 없다
+    (`grid_fit_v4` 로 떨어졌다).
+
+    이제 CLI 가 먼저, 그 다음 환경변수다. 둘 다 없으면 정본 실행 이름을 쓴다.
     """
     import os as _os
 
-    from src.io import source_digest
-    from tools.preserve import assert_run_is_authorized
+    return (explicit or _os.environ.get("LEG")
+            or _os.environ.get("CANONICAL_RUN") or "grid_fit_v4")
 
-    leg = _os.environ.get("LEG") or _os.environ.get("CANONICAL_RUN") or "grid_fit_v4"
-    spec = {"leg_id": leg, "mode": "grid", "dry_run": bool(dry_run),
-            "config_digest": _cfg_digest(cfg)}
-    assert_run_is_authorized(leg, "grid", [out_dir], spec, source_digest())
+
+def leg_out_key(out_dir) -> str:
+    """산출 위치를 **저장소 기준 경로**로 — spec 이 기계마다 달라지지 않게."""
+    from pathlib import Path as _P
+
+    root = _P(__file__).resolve().parents[1]
+    q = _P(out_dir).resolve()
+    try:
+        return q.relative_to(root).as_posix()
+    except ValueError:
+        return q.as_posix()
+
 
 
 def _cfg_digest(cfg: dict) -> str:
@@ -401,7 +455,8 @@ def _cfg_digest(cfg: dict) -> str:
 
 def run_grid(cfg: dict, conditions: list[Condition], nproc: int,
              chunk_size: int, out_dir: str | Path,
-             resume: bool = False, dry_run: bool = False) -> dict:
+             resume: bool = False, dry_run: bool = False,
+             leg: str | None = None) -> dict:
     """조합 격자 실행. 반환: 요약 dict."""
     from joblib import Parallel, delayed
     from tqdm import tqdm
@@ -410,7 +465,8 @@ def run_grid(cfg: dict, conditions: list[Condition], nproc: int,
     # ★ 47차 P0-2 (조건 11-c) — **첫 부작용 전에** 계획 gate 를 지난다.
     #   46차 gate 는 `run.sh` 안에만 있어서 `python -m src.grid` 직접 호출이
     #   계획을 전혀 보지 않았다. mkdir 도 부작용이므로 그보다 먼저 본다.
-    _assert_grid_authorized(cfg, out_dir, dry_run=dry_run)
+    _claim = _assert_grid_authorized(cfg, out_dir, conditions=conditions,
+                                     dry_run=dry_run, leg=leg)
     out_dir.mkdir(parents=True, exist_ok=True)
     protocol_name = cfg.get(GRID_PROTOCOL_KEY, "charge_first")
 
@@ -607,9 +663,20 @@ def run_grid(cfg: dict, conditions: list[Condition], nproc: int,
     })
     log.info("grid 완료: ok=%d failed=%d (누적 곡선 %d) elapsed=%.1fs",
              n_ok, n_failed, n_done_total - n_failed_total, elapsed)
-    return {"n_ok": n_ok, "n_failed": n_failed,
-            "n_curves_total": n_done_total - n_failed_total,
-            "elapsed_s": elapsed, "out_dir": str(out_dir)}
+    summary = {"n_ok": n_ok, "n_failed": n_failed,
+               "n_curves_total": n_done_total - n_failed_total,
+               "elapsed_s": elapsed, "out_dir": str(out_dir)}
+    # ★ 48차 P0-4 — 끝난 phase 를 **durable 하게 닫는다.** 47차는
+    #   `phase_done()`·`finalize_leg()` 을 만들어 놓고 production 에서 한 번도
+    #   부르지 않았다 — lifecycle 이 있는데 아무 것도 그 상태를 움직이지 않으면
+    #   그것은 lifecycle 이 아니라 죽은 코드다.
+    if _claim is not None:
+        _claim.phase_done("grid", {
+            "out": str(out_dir),
+            "n_curves_total": summary["n_curves_total"],
+            "grid_run_sig": g_sig,
+            "finished_at": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())})
+    return summary
 
 
 def _next_chunk_idx(out_dir: Path) -> int:
@@ -643,6 +710,9 @@ def main() -> None:
     ap.add_argument("--resume", action="store_true")
     ap.add_argument("--dry-run", dest="dry_run", action="store_true")
     ap.add_argument("--out", required=True)
+    ap.add_argument("--leg", default=None,
+                    help="`LEG_PRESERVATION.yaml` 의 `planned:` 에서 찾을 다리 "
+                         "이름 (48차 P0-5 — 없으면 LEG/CANONICAL_RUN 환경변수)")
     ap.add_argument("--tag", default="")
     ap.add_argument("--log-level", default="INFO")
     args = ap.parse_args()
@@ -666,7 +736,8 @@ def main() -> None:
     chunk = args.chunk_size or int(cfg.get("run", {}).get("chunk_size", 200))
 
     summary = run_grid(cfg, conds, nproc=args.nproc, chunk_size=chunk,
-                       out_dir=args.out, resume=args.resume, dry_run=args.dry_run)
+                       out_dir=args.out, resume=args.resume, dry_run=args.dry_run,
+                       leg=args.leg)
     if args.tag and not summary.get("dry_run"):
         write_manifest(args.out, {"tag": args.tag})
     print(json.dumps(summary, ensure_ascii=False, indent=2))

@@ -4153,6 +4153,7 @@ def _leg3(tmp: Path, leg: str, tag: bytes) -> Path:
                           f"{leg}.projection.yaml": b"meta: " + tag + b"\n"})
 
 
+
 #: ★ 46차 #9 — 게시 authority 에 **producer pin** 과 **사용 정책**이 들어간다.
 #:   임시 cohort 도 그 필드를 갖춰야 게시된다. 시험이 pin 을 바꾸고 싶으면
 #:   `_TMP_PIN[str(out.resolve())] = {...}` 로 덮어쓴다.
@@ -4250,11 +4251,42 @@ def _ptr_binding(rp, out, roster=None) -> dict:
     return {"ledger_seal": rp._ledger_seal(cohort)}
 
 
+#: ★ 48차 P0-1 — publisher 가 leg manifest 안의 producer identity 를 봉인과
+#:   대조한다. 그전까지 fixture 들은 `*.projection.yaml` 에 아무 바이트나 넣고
+#:   있었고 (82개가 그랬다) 그래서 그 축을 **하나도 실행하지 않았다.**
+#:
+#:   여기서는 producer 를 밝히지 않은 manifest 에만 기본 producer 를 붙인다 —
+#:   다른 축을 겨눈 시험의 의도는 건드리지 않는다. producer 축 자체는
+#:   `_leg3_by()` 를 쓰는 전용 시험 셋과 변이 재생이 본다.
+def _with_producer(name: str, b: bytes, producer: str | None = None) -> bytes:
+    if not name.endswith(".projection.yaml"):
+        return b
+    if b"producer_semantic_sha256" in b:
+        return b
+    import base64
+
+    import yaml as _y
+
+    pid = producer or _DEFAULT_PIN["producer_semantic_sha256"]
+    head = f'analyzer:\n  producer_semantic_sha256: "{pid}"\n'
+    try:
+        doc = _y.safe_load(b.decode("utf-8"))
+    except Exception:                                        # noqa: BLE001
+        doc = None
+    if isinstance(doc, dict):
+        # 원래 key 를 **잃지 않는다** — 내용 축을 보는 시험이 그대로 통과한다.
+        return (head + _y.safe_dump(doc, allow_unicode=True,
+                                    sort_keys=False)).encode("utf-8")
+    # 비-YAML fixture(`b"A0y"` 등)는 원본을 base64 로 실어 digest 를 구별한다.
+    return (head + f'_fixture_bytes: "{base64.b64encode(b).decode("ascii")}"\n'
+            ).encode("utf-8")
+
+
 def _stage(tmp_path, **files):
     d = tmp_path / "stage"
     d.mkdir(parents=True, exist_ok=True)
     for n, b in files.items():
-        (d / n).write_bytes(b)
+        (d / n).write_bytes(_with_producer(n, b))
     return d
 
 
@@ -4387,7 +4419,8 @@ def test_a_crash_between_generation_and_pointer_leaves_no_mixed_state(tmp_path,
     assert rp.read_current(out)["generation_id"] == first["generation_id"], (
         "pointer 가 안 옮겨졌는데 읽는 쪽이 새 generation 을 본다")
     assert rp.read_current(out)["files"]["a.projection.yaml"] == \
-        hashlib.sha256(b"meta: 1\n").hexdigest()
+        hashlib.sha256(_with_producer("a.projection.yaml",
+                                      b"meta: 1\n")).hexdigest()
 
 
 def test_the_live_gate_actually_opens_a_backend_when_an_index_exists(tmp_path,
@@ -4466,7 +4499,7 @@ def test_a_cohort_generation_keeps_every_leg_and_switches_once(tmp_path):
 
     # 옛 generation 은 그대로 남아 있다 (immutable)
     assert (out / "gen" / g0b["generation_id"] / "a.projection.yaml"
-            ).read_bytes() == b"A0y"
+            ).read_bytes() == _with_producer("a.projection.yaml", b"A0y")
 
 
 def test_the_production_writer_and_reader_go_through_current(tmp_path):
@@ -4489,7 +4522,8 @@ def test_the_production_writer_and_reader_go_through_current(tmp_path):
     rec = rp.promote_cohort_generation(_stage(tmp_path, **{"a.projection.csv.gz": b"A0c",
                             "a.projection.yaml": b"A0y",
                             "a.restarts.csv.gz": b"A0r"} ), out, "a", roster={"a"})
-    assert rp.cohort_bytes(out, "a.projection.yaml") == b"A0y"
+    assert rp.cohort_bytes(out, "a.projection.yaml") == \
+        _with_producer("a.projection.yaml", b"A0y")
 
     # CURRENT 가 가리키지 않는 이름은 못 읽는다 — fixed path 가 authority 가
     # 아니라는 뜻이다
@@ -4609,7 +4643,8 @@ def test_real_readers_see_only_the_new_generation_after_a_materialize_crash(
         _stage(tmp_path, **{"a.projection.csv.gz": b"A0c",
                             "a.projection.yaml": b"leg: a\nv: 0\n",
                             "a.restarts.csv.gz": b"A0r"}), out, "a", roster={"a"})
-    assert (out / "a.projection.yaml").read_bytes() == b"leg: a\nv: 0\n"
+    assert (out / "a.projection.yaml").read_bytes() == \
+        _with_producer("a.projection.yaml", b"leg: a\nv: 0\n")
 
     boom = RuntimeError("materialize 중에 죽었다 (주입)")
     monkeypatch.setattr(rp, "_materialize",
@@ -4623,14 +4658,16 @@ def test_real_readers_see_only_the_new_generation_after_a_materialize_crash(
 
     # pointer 는 G1, fixed 사본은 아직 G0 — 여기가 위험 구간이다
     assert rp.read_current(out)["generation_id"] != g0["generation_id"]
-    assert (out / "a.projection.yaml").read_bytes() == b"leg: a\nv: 0\n", "전제"
+    assert (out / "a.projection.yaml").read_bytes() == \
+        _with_producer("a.projection.yaml", b"leg: a\nv: 0\n"), "전제"
 
     # **실제 reader** 는 새 generation 을 본다
     cohort = {"cohort_id": "gX", "dir": str(out.relative_to(_REPO))
               if str(out).startswith(str(_REPO)) else None, "status": "active"}
-    assert rp.cohort_bytes(out, "a.projection.yaml") == b"leg: a\nv: 1\n"
+    _want = _with_producer("a.projection.yaml", b"leg: a\nv: 1\n")
+    assert rp.cohort_bytes(out, "a.projection.yaml") == _want
     assert rp.read_current(out)["files"]["a.projection.yaml"] == \
-        hashlib.sha256(b"leg: a\nv: 1\n").hexdigest()
+        hashlib.sha256(_want).hexdigest()
 
 
 @pytest.mark.parametrize("stage_files", [
@@ -4675,14 +4712,16 @@ def test_the_lint_readers_follow_current_not_the_fixed_copies(tmp_path):
     active = {"cohort_id": "gX", "dir": "unused", "status": "active"}
     frozen = {"cohort_id": "gF", "dir": "unused", "status": "frozen"}
     assert _cohort_names(active, base=out) == ["a.projection.yaml"]
-    assert _cohort_yaml(active, "a.projection.yaml", base=out) == {"v": 0}
+    # ★ 48차 P0-1 — manifest 가 producer provenance 도 담는다. 이 시험이 보는
+    #   것은 **내용 축**이므로 부분집합으로 확인한다.
+    assert _cohort_yaml(active, "a.projection.yaml", base=out)["v"] == 0
 
     # fixed 사본을 흔든다 — active reader 는 CURRENT 를 따라야 한다
     (out / "a.projection.yaml").write_bytes(b"v: 99\n")
     (out / "ghost.projection.yaml").write_bytes(b"v: 7\n")
     assert _cohort_names(active, base=out) == ["a.projection.yaml"], (
         "active reader 가 CURRENT 밖 파일을 봤다")
-    assert _cohort_yaml(active, "a.projection.yaml", base=out) == {"v": 0}, (
+    assert _cohort_yaml(active, "a.projection.yaml", base=out)["v"] == 0, (
         "active reader 가 흔들린 fixed 사본을 읽었다")
 
     # frozen 은 fixed layout fallback 이다 (원자료를 잃어 migration 불가)
@@ -4722,6 +4761,7 @@ def _handmade_generation(rp, out: Path, blobs: dict, roster=None) -> str:
     publisher 를 전혀 부르지 않는다 — publisher 가 무엇을 막든 상관없이
     "이미 이런 상태가 디스크에 있다" 를 그대로 재현하기 위한 것이다.
     """
+    blobs = {n: _with_producer(n, b) for n, b in blobs.items()}
     files = {n: hashlib.sha256(b).hexdigest() for n, b in blobs.items()}
     gid = rp.generation_id(files)
     gdir = Path(out) / "gen" / gid
@@ -4900,7 +4940,8 @@ def test_a_crash_midway_through_materialize_never_moves_the_authority(tmp_path, 
 
     # 1. 권위는 이미 새 generation 이고, 바이트도 새 것이다
     cur = rp.read_current(out)
-    assert rp.cohort_bytes(out, "a.projection.yaml") == b"v: 1\n", (
+    assert rp.cohort_bytes(out, "a.projection.yaml") == \
+        _with_producer("a.projection.yaml", b"v: 1\n"), (
         "섞인 사본이 권위 읽기를 오염시켰다")
     assert rp.cohort_bytes(out, "a.projection.csv.gz") == b"c1"
 
@@ -4959,12 +5000,14 @@ def test_reading_current_refuses_an_incomplete_cohort(tmp_path):
                                   "a.restarts.csv.gz": b"r0"}), out, "a", roster={"a"})
 
     # 세 파일 중 하나를 뺀 generation 을 **손으로** 만든다 (publisher 우회)
-    files = {"a.projection.yaml": hashlib.sha256(b"v: 0\n").hexdigest(),
+    files = {"a.projection.yaml": hashlib.sha256(
+                 _with_producer("a.projection.yaml", b"v: 0\n")).hexdigest(),
              "a.projection.csv.gz": hashlib.sha256(b"c0").hexdigest()}
     gid = rp.generation_id(files)
     gdir = out / "gen" / gid
     gdir.mkdir(parents=True)
-    (gdir / "a.projection.yaml").write_bytes(b"v: 0\n")
+    (gdir / "a.projection.yaml").write_bytes(
+        _with_producer("a.projection.yaml", b"v: 0\n"))
     (gdir / "a.projection.csv.gz").write_bytes(b"c0")
     (out / "CURRENT").write_text(json.dumps(
         {"schema": rp.CURRENT_SCHEMA, "generation_id": gid, "files": files,
@@ -5039,7 +5082,8 @@ def test_a_lost_update_cannot_silently_drop_another_legs_generation(tmp_path):
             "B 가 성공을 돌려줬는데 leg 가 사라졌다")
     if "a" in ok:
         assert cur["files"]["a.projection.yaml"] == \
-            hashlib.sha256(b"v: 1\n").hexdigest(), (
+            hashlib.sha256(_with_producer("a.projection.yaml",
+                                          b"v: 1\n")).hexdigest(), (
             "A 가 성공을 돌려줬는데 그 세대가 아니다")
 
 
@@ -5120,7 +5164,8 @@ def test_a_publish_between_compare_and_replace_cannot_be_lost(tmp_path):
             "CAS 가 아니다")
     if state["a_ok"]:
         assert cur["files"]["a.projection.yaml"] == \
-            hashlib.sha256(b"v: 1\n").hexdigest()
+            hashlib.sha256(_with_producer("a.projection.yaml",
+                                          b"v: 1\n")).hexdigest()
 
 
 def test_a_publish_lock_blocks_a_second_writer_and_dies_with_its_owner(tmp_path):
@@ -6908,7 +6953,7 @@ def test_the_warm_root_is_not_a_module_global():
 
 _PUBLISHER_SRC = '''
 import importlib.util, json, os, pathlib, sys, time
-rp_path, repo, out, leg, ready, release, token = sys.argv[1:8]
+rp_path, repo, out, leg, ready, release, token, producer = sys.argv[1:9]
 spec = importlib.util.spec_from_file_location("_rp_pub", rp_path)
 rp = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(rp)
@@ -6916,9 +6961,14 @@ rp.REPO = pathlib.Path(repo)          # 이 process 의 원장 root
 
 stage = pathlib.Path(out).parent / f"stage_{leg}_{os.getpid()}"
 stage.mkdir(parents=True, exist_ok=True)
-for sfx, b in ((".projection.csv.gz", b"c"), (".projection.yaml", b"v\\n"),
-               (".restarts.csv.gz", b"r")):
+# ★ 48차 P0-1 — manifest 는 **자기를 만든 producer 를 밝힌다.** 밝히지 않은
+#   leg 는 sink 가 거부한다 (한 cohort 안에 producer 를 섞지 않는다). 이 child
+#   는 production sink 를 그대로 지나므로 실물과 같은 모양을 굳혀야 한다.
+for sfx, b in ((".projection.csv.gz", b"c"), (".restarts.csv.gz", b"r")):
     (stage / f"{leg}{sfx}").write_bytes(leg.encode() + b)
+(stage / f"{leg}.projection.yaml").write_bytes(
+    b'analyzer:\\n  producer_semantic_sha256: "' + producer.encode()
+    + b'"\\nv: ' + leg.encode() + b'\\n')
 
 out = pathlib.Path(out)
 if release:
@@ -6984,7 +7034,8 @@ def _spawn_publisher(repo, out, leg, ready=None, release=None, token=None):
     proc = subprocess.Popen(
         [sys.executable, "-c", _PUBLISHER_SRC,
          str(_REPO / "docs" / "22p_gap" / "row_projection.py"), str(repo),
-         str(out), leg, str(ready or ""), str(release or ""), token],
+         str(out), leg, str(ready or ""), str(release or ""), token,
+         _DEFAULT_PIN["producer_semantic_sha256"]],
         stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
     proc.public_marker = Path(out).parent / f"public_{leg}_{token}.marker"
     return proc
@@ -7065,11 +7116,16 @@ def test_two_independent_publishers_lose_no_leg(tmp_path):
     # ★ 45차 #9 — **exact bytes** 까지 본다 (44차 리뷰: 결과만으로는 부족).
     gdir = out / "gen" / cur["generation_id"]
     for leg in ("a", "b"):
-        for sfx, want in ((".projection.csv.gz", b"c"), (".projection.yaml", b"v\n"),
+        for sfx, want in ((".projection.csv.gz", b"c"),
                           (".restarts.csv.gz", b"r")):
             got = (gdir / f"{leg}{sfx}").read_bytes()
             assert got == leg.encode() + want, (
                 f"{leg}{sfx}: staging 바이트가 아니다 ({got!r})")
+        _y = (b'analyzer:\n  producer_semantic_sha256: "'
+              + _DEFAULT_PIN["producer_semantic_sha256"].encode()
+              + b'"\nv: ' + leg.encode() + b'\n')
+        assert (gdir / f"{leg}.projection.yaml").read_bytes() == _y, (
+            f"{leg}.projection.yaml: staging 바이트가 아니다")
 
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -8067,7 +8123,7 @@ def test_the_generation_reader_holds_a_directory_fd_for_its_children(tmp_path):
     import inspect
 
     rp = _rp()
-    src = inspect.getsource(rp._staging_entries)
+    src = inspect.getsource(rp._entries_from_dirfd)
     # ★ 47차 — **두 자리 모두** 봐야 한다. `dir_fd` 가 어딘가 한 번 나오는지만
     #   보면 한 자리를 pathname 으로 되돌려도 통과한다 (변이로 실측했다).
     assert "os.stat(name, dir_fd=dfd" in src, (
@@ -8321,3 +8377,460 @@ def test_the_single_leg_policy_must_match_the_roster_cardinality(tmp_path):
     assert rp._ledger_seal(ok), "단일 leg 에서는 통과해야 한다"
     allowed = dict(rec, cross_leg_comparison="allowed_within_cohort")
     assert rp._ledger_seal(allowed), "multi-leg 는 허용 정책이면 통과해야 한다"
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# 48차 #9 P0-7 — `O_NOFOLLOW` 는 **마지막 성분**에만 걸린다
+#
+# 47차는 `os.open(out/gen/<gid>, O_DIRECTORY|O_NOFOLLOW)` 로 root 를 열었다.
+# POSIX 에서 `O_NOFOLLOW` 는 마지막 성분(`<gid>`)만 보고 조상(`out/gen`)은
+# 그대로 따라간다. 그래서 `out/gen` 자체를 바깥 디렉터리 symlink 로 두면
+# generation 실물이 namespace **밖**에 놓이고 reader 가 승인한다.
+# 비협조 writer 도 동시성도 필요 없다 — 정적 오배치 하나다.
+# ─────────────────────────────────────────────────────────────────────────────
+
+def test_a_symlinked_gen_ancestor_never_holds_a_generation(tmp_path):
+    """★ 48차 #9 P0-7 — 조상 alias 로 namespace 밖에 게시할 수 있었다."""
+    rp = _rp()
+    out = tmp_path / "out"
+    out.mkdir()
+    external = tmp_path / "external_gen"
+    external.mkdir()
+    (out / "gen").symlink_to(external, target_is_directory=True)
+
+    with pytest.raises(SystemExit) as ei:
+        rp.promote_cohort_generation(_leg3(tmp_path / "s0", "a", b"1"),
+                                     out, "a", roster={"a"})
+    assert "gen" in str(ei.value), str(ei.value)
+    assert not (out / "CURRENT").exists(), "거부하면서 pointer 를 만들었다"
+    assert not any(external.iterdir()), (
+        f"거부하면서 바깥에 썼다: {sorted(p.name for p in external.iterdir())}")
+
+
+def test_a_reader_refuses_a_generation_under_a_symlinked_gen_ancestor(tmp_path):
+    """같은 축의 reader 쪽 — 이미 그렇게 놓인 것도 읽지 않는다."""
+    rp = _rp()
+    out = tmp_path / "out"
+    rec = rp.promote_cohort_generation(_leg3(tmp_path / "s0", "a", b"1"),
+                                       out, "a", roster={"a"})
+    assert rp.read_current(out)["generation_id"] == rec["generation_id"]
+
+    # `gen` 을 같은 내용의 바깥 디렉터리 alias 로 바꾼다
+    external = tmp_path / "moved_gen"
+    shutil.move(str(out / "gen"), str(external))
+    (out / "gen").symlink_to(external, target_is_directory=True)
+
+    with pytest.raises(SystemExit) as ei:
+        rp.read_current(out)
+    assert "gen" in str(ei.value), str(ei.value)
+
+
+def test_the_generation_namespace_is_held_component_by_component():
+    """★ 48차 #9 P0-7 — 구조로 못 박는다: `out` anchor 부터 성분마다 dirfd.
+
+    경로 문자열 하나를 `O_NOFOLLOW` 로 여는 것은 **마지막 성분만** 보장한다.
+    신뢰하는 `out` 에서 시작해 `gen`, `<gid>` 를 각각 `openat` 으로 붙잡아야
+    조상 교체가 보인다.
+    """
+    import inspect
+
+    rp = _rp()
+    src = inspect.getsource(rp)
+    assert "def _open_child_dir(" in src, (
+        "성분별 openat helper 가 없다 — 경로 하나를 통째로 여는 것은 조상을 "
+        "따라간다")
+    body = inspect.getsource(rp._open_child_dir)
+    assert "dir_fd=" in body and "O_NOFOLLOW" in body and "O_DIRECTORY" in body
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# 48차 #9 P0-1 — 봉인한 producer 를 **staged bytes 에 결속하지 않았다**
+#
+# 47차는 `producer_semantic_sha256` 을 원장 봉인에 넣었지만, publisher 는 넘어온
+# `<leg>.projection.yaml` 안의 producer identity 를 읽지도 대조하지도 않았다.
+# 그래서 원장 pin 을 A 로 **그대로 둔 채** B 가 만든 세 파일을 넘기면 A+B
+# generation 이 만들어진다. 47차 회귀는 `_TMP_PIN` 자체를 B 로 바꿔서 "seal 이
+# 바뀌면 옛 pointer 를 거부한다" 만 증명했고, "파일을 만든 producer 가 seal 과
+# 같다" 는 축은 실행하지 않았다.
+# ─────────────────────────────────────────────────────────────────────────────
+
+def _manifest(producer: str, extra: str = "") -> bytes:
+    return (f"analyzer:\n  producer_semantic_sha256: \"{producer}\"\n"
+            f"{extra}").encode("utf-8")
+
+
+def _leg3_by(tmp, leg: str, producer: str, tag: bytes = b"1") -> Path:
+    """producer 를 **스스로 밝히는** staging 세 파일."""
+    d = tmp / "stage"
+    d.mkdir(parents=True, exist_ok=True)
+    (d / f"{leg}.projection.csv.gz").write_bytes(b"rows-" + tag)
+    (d / f"{leg}.restarts.csv.gz").write_bytes(b"restarts-" + tag)
+    (d / f"{leg}.projection.yaml").write_bytes(_manifest(producer))
+    return d
+
+
+def test_a_stage_from_another_producer_is_refused_with_the_pin_unchanged(tmp_path):
+    """★ 48차 #9 P0-1 — 원장 pin 은 A 그대로, staged 파일만 B.
+
+    46·47차 반례는 pin 을 바꿨으므로 seal 대조가 잡았다. 여기서는 pin 을
+    **건드리지 않는다** — sink 가 파일을 읽어야만 잡을 수 있다.
+    """
+    rp = _rp()
+    out = tmp_path / "out"
+    A = _DEFAULT_PIN["producer_semantic_sha256"]
+    B = "b" * 16
+
+    rp.promote_cohort_generation(_leg3_by(tmp_path / "s0", "a", A), out, "a",
+                                 roster={"a", "b"})
+    assert (out / ".PENDING").is_file(), "전제: a 가 pending 으로 올라갔다"
+
+    with pytest.raises(SystemExit) as ei:
+        rp.promote_cohort_generation(_leg3_by(tmp_path / "s1", "b", B), out, "b",
+                                     roster={"a", "b"})
+    assert not (out / "CURRENT").is_file(), (
+        "다른 producer 가 만든 leg 로 active CURRENT 가 만들어졌다")
+    assert "producer" in str(ei.value), str(ei.value)
+
+
+def test_an_inherited_leg_must_also_declare_the_sealed_producer(tmp_path):
+    """★ 48차 #9 P0-1 — **물려받는** leg 도 대조한다.
+
+    fresh leg 만 보면, 옛 producer 로 굳은 base 를 새 pin 아래로 그대로 끌고
+    올 수 있다.
+    """
+    rp = _rp()
+    out = tmp_path / "out"
+    A = _DEFAULT_PIN["producer_semantic_sha256"]
+    rp.promote_cohort_generation(_leg3_by(tmp_path / "s0", "a", A), out, "a",
+                                 roster={"a", "b"})
+    rp.promote_cohort_generation(_leg3_by(tmp_path / "s1", "b", A), out, "b",
+                                 roster={"a", "b"})
+    assert rp.read_current(out, expect_legs={"a", "b"})
+
+    # base 안의 a 를 다른 producer 의 manifest 로 바꾼 generation 을 손으로 만든다
+    cur = rp.read_current(out)
+    gdir = out / "gen" / cur["generation_id"]
+    (gdir / "a.projection.yaml").write_bytes(_manifest("c" * 16))
+    files = dict(cur["files"])
+    files["a.projection.yaml"] = _sha_short_full(_manifest("c" * 16))
+    gid = rp.generation_id(files)
+    ndir = out / "gen" / gid
+    ndir.mkdir()
+    for n in files:
+        (ndir / n).write_bytes((gdir / n).read_bytes())
+    (out / "CURRENT").write_text(
+        json.dumps({"schema": rp.CURRENT_SCHEMA, "generation_id": gid,
+                    "files": files, **_ptr_binding(rp, out, {"a", "b"})},
+                   sort_keys=True, separators=(",", ":")), encoding="utf-8")
+
+    with pytest.raises(SystemExit) as ei:
+        rp.read_current(out, expect_legs={"a", "b"})
+    assert "producer" in str(ei.value), str(ei.value)
+
+
+def _sha_short_full(b: bytes) -> str:
+    return hashlib.sha256(b).hexdigest()
+
+
+def test_a_leg_manifest_without_a_producer_is_refused(tmp_path):
+    """producer 를 밝히지 않은 manifest 는 게시할 수 없다 — 없으면 대조가 없다."""
+    rp = _rp()
+    out = tmp_path / "out"
+    d = tmp_path / "s0" / "stage"
+    d.mkdir(parents=True)
+    (d / "a.projection.csv.gz").write_bytes(b"c")
+    (d / "a.restarts.csv.gz").write_bytes(b"r")
+    (d / "a.projection.yaml").write_bytes(b"meta: 1\n")     # producer 없음
+    with pytest.raises(SystemExit) as ei:
+        rp.promote_cohort_generation(d, out, "a", roster={"a"})
+    assert "producer" in str(ei.value), str(ei.value)
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# 48차 #9 P0-2 — producer 의미 digest 의 네 구멍
+# ─────────────────────────────────────────────────────────────────────────────
+
+def test_the_producer_digest_crosses_into_src_scoring():
+    """★ 48차 P0-2 — **행 바이트를 만드는 코드**는 이 파일 밖에도 있다.
+
+    `score_canonical()` 은 `src.scoring` 의 `add_error_columns` ·
+    `classify_recoverability` · `apply_bias_correction` 을 불러 행을 만든다.
+    47차 닫힘은 `row_projection.py` 의 module-level 이름만 따라갔으므로
+    **채점 의미를 통째로 바꿔도** `producer_semantic_sha256` 이 움직이지
+    않았다. 그러면 "이 바이트를 무엇이 만들었나" 라는 질문에 답하지 못한다.
+
+    `src_scoring_py_sha256` 은 답이 아니다 — 파일 전체 sha 라 주석 한 줄에도
+    움직이고, 게다가 `_PIN_SEALED` 밖이라 아무도 그것으로 게시를 막지 않는다.
+    """
+    rp = _rp()
+    src = (_REPO / "docs" / "22p_gap" / "row_projection.py").read_text(encoding="utf-8")
+    sc = (_REPO / "src" / "scoring.py").read_text(encoding="utf-8")
+    base = rp._producer_semantic_over(src, sc)
+
+    # 주석만 바꾼다 → 불변
+    assert rp._producer_semantic_over(src, sc + "\n# 꼬리 주석\n") == base, (
+        "src/scoring.py 의 주석이 producer 의미 digest 를 움직였다")
+
+    # 채점 **의미**를 바꾼다 → 움직여야 한다
+    assert sc.count("DEFAULT_TOL = 0.02") == 1, "fixture 전제가 깨졌다"
+    moved = rp._producer_semantic_over(
+        src, sc.replace("DEFAULT_TOL = 0.02", "DEFAULT_TOL = 0.05", 1))
+    assert moved != base, (
+        "src.scoring 의 채점 허용오차를 바꿨는데 producer digest 가 그대로다 — "
+        "닫힘이 모듈 경계에서 멈춰 있다")
+
+    # 분류 함수의 **본문**을 바꾼다 → 움직여야 한다
+    assert sc.count("def classify_recoverability(df: pd.DataFrame, atol: float = 1e-3)") == 1
+    moved2 = rp._producer_semantic_over(
+        src, sc.replace("atol: float = 1e-3", "atol: float = 1e-6", 1))
+    assert moved2 != base, (
+        "src.scoring 의 분류 임계를 바꿨는데 producer digest 가 그대로다")
+
+
+def test_breaking_the_crossing_into_src_scoring_is_fail_closed():
+    """★ 48차 P0-2 — 건너감이 **조용히 끊길** 수 없다.
+
+    `row_projection.py` 가 가져오는 이름이 `src.scoring` 에서 사라지면 닫힘은
+    그 자리에서 좁아진다 — 그러면 채점 의미가 identity 밖으로 나가는데 digest
+    는 태연히 값을 낸다. 좁아짐은 **거부**여야 한다.
+    """
+    rp = _rp()
+    src = (_REPO / "docs" / "22p_gap" / "row_projection.py").read_text(encoding="utf-8")
+    sc = (_REPO / "src" / "scoring.py").read_text(encoding="utf-8")
+    with pytest.raises(SystemExit) as ei:
+        rp._producer_semantic_over(
+            src, sc.replace("DEFAULT_TOL = 0.02", "DEFAULT_TOL_GONE = 0.02", 1))
+    assert "src.scoring" in str(ei.value), str(ei.value)
+
+
+def test_the_producer_digest_sees_decorators():
+    """★ 48차 P0-2 — `ast.get_source_segment` 은 **decorator 를 버린다.**
+
+    `FunctionDef.lineno` 는 `def` 줄을 가리키고 `decorator_list` 는 그 위에
+    있다. 그래서 47차 정규형은 계산 함수에 `@lru_cache` 를 붙이거나 떼도
+    같은 digest 를 냈다 — 캐시 하나로 행 바이트가 달라질 수 있는데도.
+    """
+    rp = _rp()
+    src = (_REPO / "docs" / "22p_gap" / "row_projection.py").read_text(encoding="utf-8")
+    sc = (_REPO / "src" / "scoring.py").read_text(encoding="utf-8")
+    base = rp._producer_semantic_over(src, sc)
+
+    assert src.count("def _cell(") == 1, "fixture 전제가 깨졌다"
+    moved = rp._producer_semantic_over(
+        src.replace("def _cell(", "@staticmethod\ndef _cell(", 1), sc)
+    assert moved != base, (
+        "계산 함수에 decorator 를 붙였는데 producer digest 가 그대로다 — "
+        "정규형이 source segment 라 decorator 를 못 본다")
+
+
+def test_widening_the_producer_cut_moves_the_digest():
+    """★ 48차 P0-2 — 절단면이 **조용히 넓어질 수 있었다.**
+
+    47차는 `_PRODUCER_CUT` 의 이름이 **사라지면** fail-closed 였지만
+    **늘어나면** 아무 일도 없었다. 아직 닫힘에 없는 이름을 미리 넣어 두면
+    나중 refactor 가 그 이름을 계산 경로로 끌어오는 순간 조용히 제외된다.
+
+    절단면 정의 자체가 봉인 preimage 에 있어야 한다.
+    """
+    rp = _rp()
+    src = (_REPO / "docs" / "22p_gap" / "row_projection.py").read_text(encoding="utf-8")
+    sc = (_REPO / "src" / "scoring.py").read_text(encoding="utf-8")
+    base = rp._producer_semantic_over(src, sc)
+
+    old = rp._PRODUCER_CUT
+    try:
+        # 지금 닫힘에 **없는** 이름을 절단면에 더한다
+        assert "main" not in rp._producer_closure(src, sc), "fixture 전제가 깨졌다"
+        rp._PRODUCER_CUT = tuple(old) + ("main",)
+        moved = rp._producer_semantic_over(src, sc)
+    finally:
+        rp._PRODUCER_CUT = old
+    assert moved != base, (
+        "절단면을 넓혔는데 producer digest 가 그대로다 — 절단면 정의가 봉인 "
+        "preimage 밖이다")
+
+
+def test_the_producer_digest_is_the_same_on_every_python_here():
+    """★ 48차 P0-2 — `ast.dump` 는 **버전마다 다르다.**
+
+    3.12 는 `FunctionDef` 에 `type_params` 를 더했다. 정규형이 `ast.dump` 면
+    인터프리터를 올리는 것만으로 봉인이 깨지고, 그때 사람이 "코드는 안
+    바뀌었으니 pin 을 갱신하자" 고 판단하게 된다 — 봉인의 뜻이 사라진다.
+
+    이 기계에 있는 모든 `python3.X` 에서 같은 값이 나와야 한다.
+    """
+    import shutil
+    import subprocess
+
+    rp = _rp()
+    want = rp._producer_semantic_sha256()
+    prog = (
+        "import importlib.util,sys;"
+        f"spec=importlib.util.spec_from_file_location('_rpv', {str(_REPO / 'docs' / '22p_gap' / 'row_projection.py')!r});"
+        "m=importlib.util.module_from_spec(spec);spec.loader.exec_module(m);"
+        "print(m._producer_semantic_sha256())")
+    seen, missing = {}, []
+    for v in ("3.10", "3.11", "3.12", "3.13"):
+        exe = shutil.which(f"python{v}")
+        if not exe:
+            missing.append(v)
+            continue
+        r = subprocess.run([exe, "-c", prog], capture_output=True, text=True,
+                           cwd=str(_REPO))
+        if r.returncode != 0:
+            missing.append(f"{v}(실행실패)")
+            continue
+        seen[v] = r.stdout.strip()
+    assert len(seen) >= 2, f"비교할 인터프리터가 부족하다: {seen} / {missing}"
+    bad = sorted(v for v, g in seen.items() if g != want)
+    # ★ 실패 메시지에 digest 값을 넣지 않는다 — 값은 코드를 고칠 때마다 움직이고,
+    #   변이 재현의 **증인 문자열**이 그 값에 묶이면 회귀가 아니라 지뢰가 된다.
+    assert not bad, (
+        f"producer 의미 digest 가 인터프리터마다 다르다: {bad} 가 이 세션과 "
+        f"다른 값을 냈다 (대조 {sorted(seen)}) — 정규형이 버전 의존이다")
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# 48차 P0-5 · P0-8 — 실제 진입점이 계획을 본다
+# ─────────────────────────────────────────────────────────────────────────────
+
+def _run_module(mod: str, *args, env=None):
+    import os
+    import subprocess
+
+    e = dict(os.environ)
+    e.setdefault("PYTHONPATH", str(_REPO))
+    e.update(env or {})
+    return subprocess.run([sys.executable, "-m", mod, *args],
+                          cwd=str(_REPO), env=e, capture_output=True, text=True)
+
+
+def test_both_phase_entry_points_accept_the_leg_flag():
+    """★ 48차 P0-5 — `--leg` 는 **어느 모듈도 받지 않았다.**
+
+    `run.sh` 는 `--leg "$LEG"` 를 grid·fit 에 넘기는데 두 모듈 다 그 인자를
+    선언하지 않았다. 실측: `python -m src.grid --leg L --out ... --dry-run` 은
+    `error: unrecognized arguments: --leg L` 로 **rc 2** 였다. 즉 46차에 붙인
+    `--leg` 기능은 켜는 순간 실행 전체가 죽는, 아무도 쓸 수 없는 축이었고 —
+    그래서 gate 는 한 번도 진짜 다리 이름을 본 적이 없다 (`grid_fit_v4` 로
+    떨어졌다).
+    """
+    for mod in ("src.grid", "src.fitting"):
+        r = _run_module(mod, "--help")
+        assert "--leg" in r.stdout, (
+            f"{mod} 이 --leg 를 선언하지 않는다 — run.sh 가 그것을 넘긴다")
+
+
+def test_the_fit_entry_point_refuses_an_unplanned_leg(tmp_path):
+    """★ 48차 P0-8 — `src.fitting` 에는 gate 가 **아예 없었다.**
+
+    47차는 `src.grid` 만 배선하고 fit 은 다음 라운드로 미뤘다. 그동안 fit 은
+    계획을 전혀 보지 않고 돌 수 있었다 — 그리고 fit 이 실제 결과(`fits.parquet`)
+    를 만든다.
+    """
+    out = tmp_path / "fitout"
+    src_dir = tmp_path / "curves"
+    src_dir.mkdir()
+    r = _run_module("src.fitting", "--leg", "없는다리",
+                    "--in", str(src_dir), "--out", str(out))
+    both = r.stdout + r.stderr
+    assert r.returncode != 0, f"계획에 없는 다리로 fit 이 시작됐다: {both[-500:]}"
+    # ★ 거부 **이유**를 본다. argparse 가 인자를 몰라서 죽는 것도 rc≠0 이므로
+    #   rc 만 보면 gate 가 없어도 초록이다 (이 시험의 초판이 실제로 그랬다).
+    assert "계획 index" in both, (
+        f"거부 이유가 계획 gate 가 아니다:\n{both[-1200:]}")
+    assert not out.exists(), "거부됐는데 출력 디렉터리가 생겼다"
+
+
+def test_the_grid_entry_point_refuses_an_unplanned_leg(tmp_path):
+    """★ 48차 P0-5 — grid gate 도 **진짜 다리 이름**으로 작동해야 한다.
+
+    초판은 rc≠0 만 봤고 그래서 `--leg` 를 아무도 모르던 시절에도 초록이었다
+    (argparse 가 rc 2 로 죽었다). 거부 **이유**를 못 박는다.
+    """
+    out = tmp_path / "gridout"
+    r = _run_module("src.grid", "--leg", "없는다리", "--out", str(out), "--dry-run")
+    both = r.stdout + r.stderr
+    assert r.returncode != 0, f"계획에 없는 다리로 grid 가 시작됐다: {both[-500:]}"
+    assert "계획 index" in both, (
+        f"거부 이유가 계획 gate 가 아니다:\n{both[-1200:]}")
+    assert not out.exists(), "거부됐는데 출력 디렉터리가 생겼다"
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# 48차 P0-8 — smoke 산출이 **정본으로 승격될 수 있었다**
+# ─────────────────────────────────────────────────────────────────────────────
+
+#: 승격 거부의 **고유 표식**. 경로에 "smoke" 가 들어 있으므로 그 단어만으로는
+#: 거부 이유를 증명하지 못한다 — sink 가 이 문장을 내야 한다.
+_SMOKE_REFUSAL = "smoke namespace 산출은 승격 대상이 아니다"
+
+
+def _smoke_run(tmp_path):
+    """smoke namespace 안에 최소한의 '실행 결과' 를 만든다."""
+    d = _REPO / "results" / "_smoke" / f"p08_{uuid.uuid4().hex[:8]}"
+    d.mkdir(parents=True)
+    (d / "manifest.yaml").write_text("run_spec: {}\n", encoding="utf-8")
+    (d / "fits.parquet").write_bytes(b"not-really-parquet")
+    return d
+
+
+def test_a_smoke_run_cannot_be_promoted_to_a_canonical_report():
+    """★ 48차 P0-8 — 47차는 smoke 를 **격리**했지 **승격 금지**하지 않았다.
+
+    `results/_smoke/` 아래 실행은 계획 gate 를 면제받는다 (계약 §13.3.3). 그
+    면제의 전제는 "그 산출이 정본이 되지 않는다" 인데, 47차에는 그것을 막는
+    것이 아무 것도 없었다: `REPORT_OUT=docs/RESULTS.md` 로 `tools/make_results.py`
+    를 부르면 gate 를 한 번도 안 지난 실행이 인용 대상 정본을 덮어썼다.
+
+    면제와 승격 금지는 **같은 경계**여야 한다 — 한쪽만 있으면 우회로다.
+    """
+    from tools.preserve import assert_not_smoke_provenance, PreserveError
+
+    d = _smoke_run(None)
+    try:
+        with pytest.raises(PreserveError) as ei:
+            assert_not_smoke_provenance([d], "정본 보고서")
+        assert _SMOKE_REFUSAL in str(ei.value), str(ei.value)
+        # namespace 밖은 통과한다 (진행이 불가능하면 그것도 고장이다)
+        assert_not_smoke_provenance([_REPO / "results" / "grid_fit_v4"], "정본 보고서")
+    finally:
+        shutil.rmtree(d, ignore_errors=True)
+
+
+def test_the_report_writer_refuses_a_smoke_input():
+    """★ 48차 P0-8 — 승격 금지가 **실제 sink** 에 배선돼 있어야 한다."""
+    import subprocess
+
+    d = _smoke_run(None)
+    try:
+        r = subprocess.run(
+            [sys.executable, "tools/make_results.py", "--in", str(d),
+             "--out", "docs/RESULTS.md"],
+            cwd=str(_REPO), capture_output=True, text=True)
+        both = r.stdout + r.stderr
+        assert r.returncode != 0, f"smoke 실행으로 정본 보고서가 쓰였다: {both[-500:]}"
+        # ★ 경로 문자열에 이미 "smoke" 가 들어 있으므로 그것으로는 아무 것도
+        #   증명되지 않는다 (이 시험의 초판이 그래서 거짓 초록이었다).
+        assert _SMOKE_REFUSAL in both, f"거부 이유가 승격 금지가 아니다:\n{both[-800:]}"
+    finally:
+        shutil.rmtree(d, ignore_errors=True)
+
+
+def test_the_archive_sink_refuses_a_smoke_input():
+    """★ 48차 P0-8 — 보관도 승격이다 (`artifacts/` 는 인용되는 자리다)."""
+    import subprocess
+
+    d = _smoke_run(None)
+    try:
+        r = subprocess.run(
+            [sys.executable, "-m", "tools.archive_bundle", "bundle", str(d),
+             str(_REPO / "artifacts" / "_p08_should_not_exist")],
+            cwd=str(_REPO), capture_output=True, text=True)
+        both = r.stdout + r.stderr
+        assert r.returncode != 0, f"smoke 실행이 보관됐다: {both[-500:]}"
+        assert _SMOKE_REFUSAL in both, f"거부 이유가 승격 금지가 아니다:\n{both[-800:]}"
+    finally:
+        shutil.rmtree(d, ignore_errors=True)
+        shutil.rmtree(_REPO / "artifacts" / "_p08_should_not_exist",
+                      ignore_errors=True)

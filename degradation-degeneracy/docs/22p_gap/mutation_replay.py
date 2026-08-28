@@ -58,6 +58,28 @@ def _make_sandbox() -> pathlib.Path:
 
 #: 단일 지점 변이 — (이름, 파일, old, new, 빨개져야 하는 -k)
 MUTANTS = [
+    # ── 48차 (게이트 47차 반증 조건) ──────────────────────────────────────
+    #   P0-2: producer 닫힘의 네 구멍. 각 자리를 47차 상태로 되돌린다.
+    ("producer-crosses-into-scoring", RP,
+     '_PRODUCER_MODULES = ("src.scoring",)',
+     '_PRODUCER_MODULES = ()',
+     "producer_digest_crosses_into_src_scoring"),
+    ("producer-crossing-is-fail-closed", RP,
+     "    alias_missing = sorted({v for v in alias.values() if v not in sdefs})",
+     "    alias_missing = []",
+     "breaking_the_crossing_into_src_scoring_is_fail_closed"),
+    ("producer-cut-is-sealed", RP,
+     '                             "_PRODUCER_CUT": list(_PRODUCER_CUT),\n'
+     '                             "_PRODUCER_MODULES": list(_PRODUCER_MODULES)',
+     '                             "_PRODUCER_MODULES": list(_PRODUCER_MODULES)',
+     "widening_the_producer_cut_moves_the_digest"),
+    ("producer-canon-drops-empty-fields", RP,
+     "            if not isinstance(node, ast.Constant):\n"
+     "                if v is None or (isinstance(v, list) and not v):\n"
+     "                    continue\n",
+     "",
+     "producer_digest_is_the_same_on_every_python_here"),
+
     # ── 47차 (게이트 46차 반증 조건) ──────────────────────────────────────
     ("generation-root-nofollow", RP,
      "        return os.open(d, os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW)",
@@ -320,6 +342,19 @@ MUTANTS = [
 #: 여러 지점을 **함께** 되돌려야 관측되는 변이 (심층 방어라 하나만 지우면
 #: 다른 하나가 가린다). 41·42·43차에 실측했다.
 MULTI = [
+    # ★ 48차 P0-2 — decorator 축은 **정규형이 node 를 보는가**에 달렸다.
+    #   47차처럼 source segment 로 되돌리면 `FunctionDef.lineno` 가 `def`
+    #   줄이라 `decorator_list` 가 통째로 빠진다.
+    ("producer-normalizes-the-node", RP, [
+        ("def _ast_normal_node(node) -> str:",
+         "def _ast_normal_node(node, _src=None) -> str:"),
+        ("    return _ast_canon(_strip_docstrings(copy.deepcopy(node)))",
+         "    import ast\n"
+         "    seg = ast.unparse(node)\n"
+         "    body = ast.parse(seg).body[0]\n"
+         "    body.decorator_list = []\n"
+         "    return _ast_canon(_strip_docstrings(body))"),
+     ], "producer_digest_sees_decorators"),
     # ★ 47차 — `dir_fd` 는 두 자리에 있다(`os.stat` · `os.open`). 하나만
     #   되돌리면 다른 철자가 남아 구조 검사가 통과한다 — 실측했다.
     ("children-read-through-dirfd", RP, [
@@ -334,6 +369,15 @@ MULTI = [
     #   성공 증인으로 승인됐다. `staging-regular-only` 는 predicate 만 지워도
     #   `O_NOFOLLOW` 가 ELOOP 를 냈고 그 오류가 증인이 됐다. 둘 다 44차 이전
     #   동작을 그대로 되살리는 multi-site 로 고친다.
+    # ★ 48차 — 신고 항목도 **scenario 로 등록**한다. 47차에는 `DECLARED_MASKED`
+    #   에 설명만 있고 registry 에 이름이 없어서, 이름으로 고르면 0건을 고르고
+    #   rc 0 이었다 (신고가 아니라 침묵이었다). `-k None` 은 "실행하지 않고
+    #   신고한다" 는 뜻이고, registry 에 있으므로 목록·집계·선택에 나타난다.
+    ("generation-owns-its-bytes", RP, [
+        ("        for name in sorted(entries):\n"
+         "            _write_owned(tmp / name, entries[name])",
+         "        shutil.move(str(stage), str(tmp))"),
+     ], None),
     ("staging-regular-only", RP, [
         ("            if not stat.S_ISREG(st.st_mode):        # symlink·FIFO·directory",
          "            if False:"),
@@ -521,6 +565,27 @@ def _check(name: str, kexpr: str, before: dict, after: dict,
                 f"증인 {want!r} 이 실패 메시지에 없다 "
                 f"({_last_line(after['nodes'][k]['longrepr'])!r})")
     return bad, observed
+
+
+def _print_counts(items, multi, executed, declared, ran=None) -> None:
+    """total · executable · declared site 를 **서로 다른 이름**으로 (48차).
+
+    47차는 `--list` 가 declared 까지 세어 61, full run 이 executable 만 세어 58
+    을 **같은 `site` 이름**으로 찍었다. 같은 단어가 두 값을 가리키면 요청문의
+    숫자를 믿을 수 없다.
+    """
+    exec_multi = [m for m in multi if m[3] is not None]
+    decl_multi = [m for m in multi if m[3] is None]
+    total_sites = len(items) + sum(len(m[2]) for m in multi)
+    exec_sites = len(executed) + sum(len(m[2]) for m in exec_multi)
+    line = (f"\nscenario_total {len(items) + len(multi)} · "
+            f"scenario_executable {len(executed) + len(exec_multi)} · "
+            f"scenario_declared {len(declared)} · "
+            f"site_total {total_sites} · site_executable {exec_sites} · "
+            f"site_declared {total_sites - exec_sites}")
+    if ran is not None:
+        line += f" · ran {ran}"
+    print(line)
 
 
 def _last_line(text: str) -> str:
@@ -865,6 +930,30 @@ EXPECT: dict = {
             "tests/test_preserve.py::test_a_falsy_version_id_from_put_is_refused[]": "AssertionError: falsy version ID 로 잠갔다"
         }
     },
+    "producer-canon-drops-empty-fields": {
+        "fail": [
+            "tests/test_docs_lint.py::test_the_producer_digest_is_the_same_on_every_python_here"
+        ],
+        "witness": {
+            "tests/test_docs_lint.py::test_the_producer_digest_is_the_same_on_every_python_here": "AssertionError: producer 의미 digest 가 인터프리터마다 다르다 (이 세션 3096a363085f35ea): {'3.12': 'a637fef4e189f0e2', '3.13': 'a637fef4e189f0e2'} — 정규형이 버전 의존이다"
+        }
+    },
+    "producer-crosses-into-scoring": {
+        "fail": [
+            "tests/test_docs_lint.py::test_the_producer_digest_crosses_into_src_scoring"
+        ],
+        "witness": {
+            "tests/test_docs_lint.py::test_the_producer_digest_crosses_into_src_scoring": "AssertionError: src.scoring 의 채점 허용오차를 바꿨는데 producer digest 가 그대로다 — 닫힘이 모듈 경계에서 멈춰 있다"
+        }
+    },
+    "producer-crossing-is-fail-closed": {
+        "fail": [
+            "tests/test_docs_lint.py::test_breaking_the_crossing_into_src_scoring_is_fail_closed"
+        ],
+        "witness": {
+            "tests/test_docs_lint.py::test_breaking_the_crossing_into_src_scoring_is_fail_closed": "KeyError: 'DEFAULT_TOL'"
+        }
+    },
     "producer-cut-is-declared": {
         "fail": [
             "tests/test_docs_lint.py::test_the_producer_semantic_digest_excludes_the_publication_path"
@@ -873,13 +962,29 @@ EXPECT: dict = {
             "tests/test_docs_lint.py::test_the_producer_semantic_digest_excludes_the_publication_path": "Failed: DID NOT RAISE SystemExit"
         }
     },
+    "producer-cut-is-sealed": {
+        "fail": [
+            "tests/test_docs_lint.py::test_widening_the_producer_cut_moves_the_digest"
+        ],
+        "witness": {
+            "tests/test_docs_lint.py::test_widening_the_producer_cut_moves_the_digest": "AssertionError: 절단면을 넓혔는데 producer digest 가 그대로다 — 절단면 정의가 봉인 preimage 밖이다"
+        }
+    },
+    "producer-normalizes-the-node": {
+        "fail": [
+            "tests/test_docs_lint.py::test_the_producer_digest_sees_decorators"
+        ],
+        "witness": {
+            "tests/test_docs_lint.py::test_the_producer_digest_sees_decorators": "AssertionError: 계산 함수에 decorator 를 붙였는데 producer digest 가 그대로다 — 정규형이 source segment 라 decorator 를 못 본다"
+        }
+    },
     "producer-semantic-sealed": {
         "fail": [
             "tests/test_docs_lint.py::test_a_producer_change_cannot_mix_two_producers_in_one_generation",
             "tests/test_docs_lint.py::test_the_producer_semantic_identity_is_sealed"
         ],
         "witness": {
-            "tests/test_docs_lint.py::test_a_producer_change_cannot_mix_two_producers_in_one_generation": "Failed: DID NOT RAISE SystemExit",
+            "tests/test_docs_lint.py::test_a_producer_change_cannot_mix_two_producers_in_one_generation": "SystemExit: ✗ 게시하려는 generation 의 producer 가 원장 봉인과 다르다 — 한 cohort 안에 서로 다른 producer 가 만든 leg 를 섞지 않는다:",
             "tests/test_docs_lint.py::test_the_producer_semantic_identity_is_sealed": "AssertionError: producer 의미 identity 가 봉인 밖이다: ('schema_version', 'analysis_spec_sha256')"
         }
     },
@@ -1033,22 +1138,29 @@ def main() -> int:
     items = [m for m in MUTANTS if a.k in m[0]]
     multi = [m for m in MULTI if a.k in m[0]]
     executed = [m for m in items if m[4] is not None]
-    declared = [m for m in items if m[4] is None]
+    declared = [m for m in items if m[4] is None] + \
+        [m for m in multi if m[3] is None]
+    # ★ 48차 — **0건을 고르면 실패한다.** 47차 runner 는 `-k` 가 아무것도 고르지
+    #   않아도 "전부 물었다" 를 찍고 rc 0 이었다 — 오타 하나로 증거 전체가
+    #   조용히 사라지는 구조였다.
+    if not items and not multi:
+        print(f"✗ `-k {a.k}` 가 아무 scenario 도 고르지 않았다 — 이름을 "
+              "확인하라 (0건을 성공으로 세지 않는다)")
+        return 2
     if a.list:
         for name, path, _o, _n, kexpr in items:
             tag = "  (관측 안 됨 — 신고)" if kexpr is None else ""
             print(f"{name:30s} {path.name:20s} -k {kexpr}{tag}")
         for name, path, _pairs, kexpr in multi:
             print(f"{name:30s} {path.name:20s} -k {kexpr}  (2-site)")
-        print(f"\n총 {len(items) + len(multi)} scenario "
-              f"({len(executed) + len(multi)} 실행 · {len(declared)} 신고) · "
-              f"{sum(1 for m in items) + sum(len(m[2]) for m in multi)} site")
+        _print_counts(items, multi, executed, declared)
         return 0
 
     bad, ran = [], 0
     observed_all: dict = {}
     plan = [(n, p, [(o, w)], k) for n, p, o, w, k in executed]
-    plan += [(n, p, pairs, k) for n, p, pairs, k in multi]
+    # ★ 48차 — `-k None` 인 MULTI 는 **신고**다. 실행 계획에 넣지 않는다.
+    plan += [(n, p, pairs, k) for n, p, pairs, k in multi if k is not None]
 
     SANDBOX = _make_sandbox()
     print(f"sandbox: {SANDBOX}\n")
@@ -1110,7 +1222,8 @@ def _replay(plan, bad, observed_all, a) -> int:
               f"node {len(nodes)} · -k {kexpr}")
         bad += errs
 
-    for name, _p, _o, _n, _k in declared:
+    for decl in declared:
+        name = decl[0]
         print(f"{'신고':10s} {name:30s} — {DECLARED_MASKED[name]}")
 
     if a.emit_expect:
@@ -1120,9 +1233,7 @@ def _replay(plan, bad, observed_all, a) -> int:
              for k, v in sorted(observed_all.items())},
             ensure_ascii=False, indent=4, sort_keys=True))
 
-    print(f"\nscenario {len(items) + len(multi)} · 실행 {ran} · "
-          f"신고 {len(declared)} · site "
-          f"{len(executed) + sum(len(m[2]) for m in multi)}")
+    _print_counts(items, multi, executed, declared, ran=ran)
     if bad:
         print("\n=== 문제 ===")
         for b in bad:

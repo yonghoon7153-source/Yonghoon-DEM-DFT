@@ -1695,6 +1695,10 @@ def main() -> None:
     ap.add_argument("--out", default="docs/RESULTS.md")
     ap.add_argument("--log-level", default="INFO")
     args = ap.parse_args()
+    # ★ 48차 P0-8 — smoke 산출은 정본 보고서가 될 수 없다. `--out` 이 어디든
+    #   **입력**이 면제 namespace 안이면 그 결과는 인용 대상이 아니다.
+    from tools.preserve import assert_not_smoke_provenance
+    assert_not_smoke_provenance([args.in_dir], "보고서")
     logging.basicConfig(level=args.log_level,
                         format="%(asctime)s %(levelname)s %(name)s: %(message)s")
     print(build(args.in_dir, args.out))

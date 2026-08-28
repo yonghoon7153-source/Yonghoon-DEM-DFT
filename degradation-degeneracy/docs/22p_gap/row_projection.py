@@ -372,6 +372,10 @@ def _compute_closure(src: str) -> dict[str, str]:
 #:   **원장 authority**(어디에·써도 되는가). 둘 다 행 바이트를 만들지 않는다.
 #:   이름이 사라지면 `_producer_closure()` 가 fail-closed 로 거부하므로,
 #:   절단면이 조용히 넓어지거나 좁아질 수 없다.
+#: ★ 48차 P0-2 — 절단면 **정의 자체**가 봉인 preimage 에 들어간다
+#:   (`_producer_semantic_over()`). 47차는 이름이 *사라지면* fail-closed 였지만
+#:   *늘어나면* 아무 일도 없었다 — 아직 닫힘에 없는 이름을 미리 넣어 두면
+#:   나중 refactor 가 그 이름을 계산 경로로 끌어오는 순간 조용히 제외된다.
 _PRODUCER_CUT = ("promote_cohort_generation",
                  "_ledger_roster", "_ledger_cohort", "_ledger_cohorts",
                  "_ledger_dir", "_frozen_cohort_dirs", "_cohort_dir",
@@ -396,27 +400,83 @@ def _strip_docstrings(tree):
     return tree
 
 
-def _ast_normal(segment: str) -> str:
-    """정의 하나를 **AST 정규형**으로 — 주석·공백·줄바꿈이 사라진다."""
-    import ast
-    import textwrap
+def _ast_normal_node(node) -> str:
+    """정의 **node** 하나를 정규형 소스로 — 주석·공백·줄바꿈이 사라진다.
 
-    tree = _strip_docstrings(ast.parse(textwrap.dedent(segment)))
-    return ast.dump(tree, annotate_fields=True, include_attributes=False)
+    ★ 48차 P0-2 두 가지를 함께 고친다.
+
+    1. **node 를 직접 본다.** 47차는 `ast.get_source_segment()` 로 소스를 오려
+       다시 parse 했는데, `FunctionDef.lineno` 는 `def` 줄을 가리키고
+       `decorator_list` 는 그 **위**에 있다 — 그래서 `@lru_cache` 를 붙이거나
+       떼도 digest 가 그대로였다. node 를 쓰면 decorator 가 정규형에 들어온다.
+
+    2. **`ast.unparse` 로 찍는다.** 47차의 `ast.dump` 는 node 필드 목록을 그대로
+       쓰므로 인터프리터 버전에 묶인다. 실측: 같은 바이트에 대해
+       3.11 `908503e65162e7d9` · 3.12 `d4ae1c027b434e83` ·
+       3.13 `aa1cf2cf045c41ea` — 세 값이었다. 인터프리터를 올리는 것만으로
+       봉인이 깨지면, 그때 사람은 "코드는 그대로니 pin 을 갱신하자" 고 판단하게
+       되고 봉인의 뜻이 사라진다. `unparse` 는 **코드 자체**를 찍으므로 문법이
+       바뀌지 않는 한 버전을 타지 않는다 (회귀가 이 기계의 3.10~3.13 에서
+       실제로 대조한다).
+    """
+    import copy
+
+    return _ast_canon(_strip_docstrings(copy.deepcopy(node)))
 
 
-def _producer_closure(src: str) -> dict[str, str]:
-    """**바이트를 만드는** 코드의 닫힘 (게시 경로는 절단면에서 멈춘다).
+def _ast_canon(node) -> str:
+    """AST 를 **버전에 안 묶이는** 구조 문자열로 (48차 P0-2).
 
-    `_compute_closure()` 와 같은 walk 이지만 `_PRODUCER_CUT` 의 이름은 소스를
-    담지 않고 절단 표식만 남긴다 — 그 이름이 **불렸다는 사실**은 identity 에
-    남기고(호출이 사라지면 digest 가 움직인다) 그 구현은 빼는 것이다.
+    `ast.dump` 도 `ast.unparse` 도 인터프리터 버전을 탄다 — 이 기계에서 실측한
+    두 원인이 각각 하나씩이다.
+
+    - `ast.dump`: 3.12 가 `FunctionDef` 에 `type_params` 를 더했다. 필드가 하나
+      늘면 모든 함수의 문자열이 달라진다.
+    - `ast.unparse`: 3.12 의 PEP 701 이후 f-string 안 따옴표를 재사용해 찍는다
+      (`f'{r.get('i')}'` vs `f"{r.get('i')}"`). **같은 AST** 인데 렌더링이 다르다.
+
+    그래서 렌더링을 우리가 한다. 규칙 둘:
+
+    1. 노드의 `_fields` 만 쓰고 **빈 값(None·빈 목록)은 뺀다** — 새 버전이 더한
+       필드는 기본값이 비어 있으므로 저절로 무시된다. 값이 실제로 차면 그때는
+       digest 가 움직인다 (그게 맞다 — 그건 코드가 바뀐 것이다).
+    2. f-string 은 `JoinedStr(values=[...])` 구조로만 적는다 — 따옴표가 아예
+       등장하지 않으므로 렌더링 차이가 생길 자리가 없다.
+
+    `Constant` 만 `value` 를 무조건 적는다 (`None` 리터럴이 빈 노드로 접히면
+    서로 다른 코드가 같은 문자열이 된다).
     """
     import ast
 
-    tree = ast.parse(src)
-    defs: dict[str, ast.AST] = {}
-    for node in tree.body:
+    if isinstance(node, ast.AST):
+        parts = []
+        for f in node._fields:
+            v = getattr(node, f, None)
+            if not isinstance(node, ast.Constant):
+                if v is None or (isinstance(v, list) and not v):
+                    continue
+            parts.append(f"{f}={_ast_canon(v)}")
+        return f"{type(node).__name__}({', '.join(parts)})"
+    if isinstance(node, list):
+        return "[" + ", ".join(_ast_canon(x) for x in node) + "]"
+    return repr(node)
+
+
+#: ★ 48차 P0-2 — 행 바이트를 만드는 코드는 **이 파일 밖에도** 있다.
+#:   `score_canonical()` 은 `src.scoring` 의 채점 함수를 불러 행을 만든다.
+#:   47차 닫힘은 module-level 이름만 따라갔으므로 채점 의미를 통째로 바꿔도
+#:   `producer_semantic_sha256` 이 움직이지 않았다. `src_scoring_py_sha256` 은
+#:   답이 아니었다 — 파일 전체 sha 라 주석 한 줄에도 움직이고, `_PIN_SEALED`
+#:   밖이라 그것으로 게시를 막는 검사도 없었다.
+_PRODUCER_MODULES = ("src.scoring",)
+
+
+def _module_defs(src: str) -> dict:
+    """module-level 정의 이름 → node."""
+    import ast
+
+    defs: dict = {}
+    for node in ast.parse(src).body:
         if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef, ast.ClassDef)):
             defs[node.name] = node
         elif isinstance(node, ast.Assign):
@@ -425,6 +485,45 @@ def _producer_closure(src: str) -> dict[str, str]:
                     defs[t.id] = node
         elif isinstance(node, ast.AnnAssign) and isinstance(node.target, ast.Name):
             defs[node.target.id] = node
+    return defs
+
+
+def _crossed_aliases(src: str) -> dict:
+    """`from src.scoring import x as y` → {지역이름: 원래이름}.
+
+    import 는 함수 안에 있으므로 module body 가 아니라 **트리 전체**를 훑는다.
+    """
+    import ast
+
+    out: dict = {}
+    for node in ast.walk(ast.parse(src)):
+        if isinstance(node, ast.ImportFrom) and node.module in _PRODUCER_MODULES:
+            for al in node.names:
+                if al.name != "*":
+                    out[al.asname or al.name] = al.name
+    return out
+
+
+def _producer_closure(src: str, scoring_src: str | None = None) -> dict[str, str]:
+    """**바이트를 만드는** 코드의 닫힘 (게시 경로는 절단면에서 멈춘다).
+
+    `_compute_closure()` 와 같은 walk 이지만 두 가지가 다르다.
+
+    - `_PRODUCER_CUT` 의 이름은 소스를 담지 않고 절단 표식만 남긴다 — 그 이름이
+      **불렸다는 사실**은 identity 에 남기고(호출이 사라지면 digest 가 움직인다)
+      그 구현은 뺀다.
+    - ★ 48차 — `src.scoring` **안으로 건너간다.** 계산 경로가 부르는 채점
+      함수와 그 함수가 다시 읽는 module-level 이름까지 따라간다. 키는
+      `src.scoring:<name>` 으로 namespace 를 붙여 이름 충돌을 없앤다.
+    """
+    import ast
+
+    if scoring_src is None:
+        scoring_src = (REPO / "src" / "scoring.py").read_text(encoding="utf-8")
+
+    defs = _module_defs(src)
+    sdefs = _module_defs(scoring_src)
+    alias = _crossed_aliases(src)
 
     missing = [x for x in _COMPUTE_NAMES if x not in defs]
     if missing:
@@ -435,31 +534,52 @@ def _producer_closure(src: str) -> dict[str, str]:
             f"✗ producer 절단면 이름이 없다: {sorted(cut_missing)} — 이름을 "
             "바꿨다면 `_PRODUCER_CUT` 도 고쳐라 (조용히 닫힘이 넓어지면 게시 "
             "코드가 producer identity 에 들어온다)")
+    # 건너갈 이름이 상대 모듈에 실제로 있어야 한다 — 없으면 fail-closed.
+    alias_missing = sorted({v for v in alias.values() if v not in sdefs})
+    if alias_missing:
+        raise SystemExit(
+            f"✗ `src.scoring` 에서 가져오는 이름이 그 모듈에 없다: "
+            f"{alias_missing} — 닫힘이 조용히 좁아진다")
 
     out: dict[str, str] = {}
-    todo = [x for x in _COMPUTE_NAMES]
+    todo = [("rp", x) for x in _COMPUTE_NAMES]
     while todo:
-        name = todo.pop()
-        if name in out:
+        kind, name = todo.pop()
+        key = name if kind == "rp" else f"src.scoring:{name}"
+        if key in out:
             continue
-        if name in _PRODUCER_CUT:
-            out[name] = "<게시 경로 — producer identity 밖>"
+        if kind == "rp" and name in _PRODUCER_CUT:
+            out[key] = f"<cut:{name}>"          # 이름별 표식 (48차)
             continue
-        out[name] = _ast_normal(ast.get_source_segment(src, defs[name]) or "")
-        for sub_node in ast.walk(defs[name]):
-            if isinstance(sub_node, ast.Name) and sub_node.id in defs \
-                    and sub_node.id not in out:
-                todo.append(sub_node.id)
+        node = defs[name] if kind == "rp" else sdefs[name]
+        out[key] = _ast_normal_node(node)
+        for sub_node in ast.walk(node):
+            if not isinstance(sub_node, ast.Name):
+                continue
+            nid = sub_node.id
+            if kind == "rp":
+                if nid in alias and f"src.scoring:{alias[nid]}" not in out:
+                    todo.append(("sc", alias[nid]))
+                elif nid in defs and nid not in out:
+                    todo.append(("rp", nid))
+            else:
+                if nid in sdefs and f"src.scoring:{nid}" not in out:
+                    todo.append(("sc", nid))
     return out
 
 
-def _producer_semantic_over(src: str) -> str:
+def _producer_semantic_over(src: str, scoring_src: str | None = None) -> str:
     """주어진 소스에 대한 producer 의미 digest (시험이 변형본을 넣을 수 있게)."""
-    closure = _producer_closure(src)
+    closure = _producer_closure(src, scoring_src)
     parts = [f"{k}\n{closure[k]}" for k in sorted(closure)]
     parts.append(json.dumps({"COLUMNS": COLUMNS,
                              "RESTART_COLUMNS": RESTART_COLUMNS,
-                             "ANALYSIS_SPEC": ANALYSIS_SPEC},
+                             "ANALYSIS_SPEC": ANALYSIS_SPEC,
+                             # ★ 48차 P0-2 — 절단면·건너감 **정의 자체**를 봉인
+                             #   preimage 에 넣는다. 그래야 절단면을 넓히는 것도
+                             #   건너감을 끊는 것도 digest 를 움직인다.
+                             "_PRODUCER_CUT": list(_PRODUCER_CUT),
+                             "_PRODUCER_MODULES": list(_PRODUCER_MODULES)},
                             sort_keys=True, ensure_ascii=False))
     return hashlib.sha256("\n".join(parts).encode("utf-8")).hexdigest()[:16]
 
@@ -1115,7 +1235,7 @@ class _Authority:
     #: ★ 45차 #9 — `cohort` snapshot 을 **뺐다.** sink 가 쓰지 않는데 mutable
     #:   dict 라 "고정된 근거" 를 약하게 만들 뿐이었다 (근거는 `seal` 이다).
     __slots__ = ("out", "lock", "cohort_id", "seal", "roster", "roster_digest",
-                 "pend_stale",
+                 "pend_stale", "producer",
                  "cur_raw", "pend_raw", "base_ptr", "base_raw", "cur_gid",
                  "_sealed")
 
@@ -1198,6 +1318,9 @@ def _authority(lock: "_PublishLock", out: Path):
     auth.seal = _ledger_seal(cohort)
     # ★ 45차 #9 — **immutable 값**만 담는다 (`set` → `frozenset`).
     auth.roster = frozenset(cohort.get("legs") or ())
+    # ★ 48차 P0-1 — 봉인된 producer 를 authority 에 싣는다 (sink 가 대조한다).
+    auth.producer = (_ledger_authority(cohort)["pin"] or {}).get(
+        "producer_semantic_sha256", "")
     auth.roster_digest = _roster_digest(auth.roster)
     auth.cur_raw, auth.pend_raw = auth.pointers_now()
     auth.cur_gid = (_parse_pointer(auth.out, "CURRENT", auth.cur_raw)["generation_id"]
@@ -1309,6 +1432,36 @@ def _assert_outside_generations(stage: Path, out: Path) -> None:
         node = parent
 
 
+def _entries_from_dirfd(dfd: int, what: str) -> dict:
+    """붙잡은 dirfd 아래 entry 를 **exact**·no-follow 로 읽는다 (48차 #9).
+
+    `_staging_entries()` 의 body 를 나눈 것이다 — generation namespace 는
+    성분마다 붙잡은 fd 로 들어오고, caller staging 은 경로로 들어온다.
+    """
+    out_map, bad = {}, []
+    for name in sorted(os.listdir(dfd)):
+        st = os.stat(name, dir_fd=dfd, follow_symlinks=False)
+        if not stat.S_ISREG(st.st_mode):        # symlink·FIFO·directory
+            bad.append(f"{name}: regular file 이 아니다 "
+                       f"({'symlink' if stat.S_ISLNK(st.st_mode) else 'other'})")
+            continue
+        if st.st_nlink != 1:
+            bad.append(f"{name}: 다른 이름과 inode 를 공유한다 "
+                       f"(st_nlink={st.st_nlink})")
+            continue
+        fd = os.open(name, os.O_RDONLY | os.O_NOFOLLOW, dir_fd=dfd)
+        try:
+            out_map[name] = _read_all(fd)
+        finally:
+            os.close(fd)
+    if bad:
+        raise SystemExit(
+            f"✗ {what} 에 게시할 수 없는 entry 가 있다 — generation 은 우리가 "
+            "소유한 regular file 만 담는다 (regular · st_nlink == 1 · "
+            "no-follow):\n  " + "\n  ".join(bad))
+    return out_map
+
+
 def _staging_entries(stage: Path, out: Path,
                      allow_inside_gen: bool = False,
                      what: str = "staging") -> dict:
@@ -1338,38 +1491,18 @@ def _staging_entries(stage: Path, out: Path,
     #   root 교체를 못 본다. 한 번 연 dirfd 를 붙잡고 `openat` 으로만 읽는다.
     dfd = _open_dir_nofollow(stage, what)
     try:
-        out_map, bad = {}, []
-        for name in sorted(os.listdir(dfd)):
-            st = os.stat(name, dir_fd=dfd, follow_symlinks=False)
-            if not stat.S_ISREG(st.st_mode):        # symlink·FIFO·directory
-                bad.append(f"{name}: regular file 이 아니다 "
-                           f"({'symlink' if stat.S_ISLNK(st.st_mode) else 'other'})")
-                continue
-            if st.st_nlink != 1:
-                bad.append(f"{name}: 다른 이름과 inode 를 공유한다 "
-                           f"(st_nlink={st.st_nlink})")
-                continue
-            fd = os.open(name, os.O_RDONLY | os.O_NOFOLLOW, dir_fd=dfd)
-            try:
-                out_map[name] = _read_all(fd)
-            finally:
-                os.close(fd)
-        if bad:
-            raise SystemExit(
-                f"✗ {what} 에 게시할 수 없는 entry 가 있다 — generation 은 우리가 "
-                "소유한 regular file 만 담는다 (regular · st_nlink == 1 · "
-                "no-follow):\n  " + "\n  ".join(bad))
-        return out_map
+        return _entries_from_dirfd(dfd, what)
     finally:
         os.close(dfd)
 
 
 def _open_dir_nofollow(d: Path, what: str = "staging") -> int:
-    """디렉터리를 **따라가지 않고** 연다 (47차 #9). 실패는 fail-closed.
+    """디렉터리를 **따라가지 않고** 연다. 실패는 fail-closed.
 
-    `O_NOFOLLOW` 는 마지막 성분이 symlink 면 `ELOOP` 다. `O_DIRECTORY` 는 그것이
-    디렉터리가 아니면 `ENOTDIR` 다. 둘을 함께 주면 "실물 디렉터리이고 alias 가
-    아니다" 가 **커널에서** 판정된다 — 검사와 사용 사이에 창이 없다.
+    ★ 48차 — 이 함수는 **마지막 성분만** 보장한다. `O_NOFOLLOW` 는 POSIX 에서
+      마지막 성분에만 적용되고 조상은 그대로 따라가기 때문이다. 그래서 신뢰
+      경계 안의 경로(=caller 가 준 staging)에만 쓰고, generation namespace 는
+      `_open_child_dir()` 로 **성분마다** 붙잡는다.
     """
     try:
         return os.open(d, os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW)
@@ -1378,6 +1511,59 @@ def _open_dir_nofollow(d: Path, what: str = "staging") -> int:
             f"✗ {what} 을 실물 디렉터리로 열 수 없다: {d} ({e.strerror}) — "
             "symlink·junction 으로 가리킨 디렉터리는 generation 이 될 수 없다 "
             "(바깥에서 바이트가 바뀌면 immutable 이 아니다)") from e
+
+
+def _open_child_dir(dfd: int, name: str, what: str) -> int:
+    """붙잡은 dirfd 아래 **한 성분**을 따라가지 않고 연다 (48차 #9 P0-7).
+
+    47차는 `os.open(out/"gen"/gid, O_DIRECTORY|O_NOFOLLOW)` 하나로 root 를
+    열었다. `O_NOFOLLOW` 는 마지막 성분(`<gid>`)만 보므로 `out/gen` 자체를
+    바깥 디렉터리 symlink 로 두면 generation 실물이 namespace **밖**에 놓였고
+    reader 도 그것을 승인했다. 비협조 writer 도 동시성도 필요 없는, 정적
+    오배치 하나짜리 반례였다.
+
+    신뢰하는 `out` 에서 시작해 `gen` → `<gid>` 를 각각 이 함수로 붙잡는다.
+    """
+    if "/" in name or name in (".", ".."):
+        raise SystemExit(f"✗ generation namespace 성분이 아니다: {name!r}")
+    try:
+        return os.open(name, os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW,
+                       dir_fd=dfd)
+    except OSError as e:
+        raise SystemExit(
+            f"✗ {what} 성분 {name!r} 을 실물 디렉터리로 열 수 없다 "
+            f"({e.strerror}) — generation namespace 의 어느 성분도 symlink·"
+            "junction 일 수 없다 (그러면 바이트가 namespace 밖에 놓인다)") from e
+
+
+@contextlib.contextmanager
+def _generation_dirfd(out: Path, gid: str | None = None):
+    """`out` → `gen` → `<gid>` 를 **성분마다** 붙잡는다 (48차 #9 P0-7).
+
+    `gid` 가 `None` 이면 `gen` 까지만 연다 (생성 경로용).
+    """
+    ofd = _open_dir_nofollow(Path(out), "cohort 출력 디렉터리")
+    gfd = None
+    try:
+        gfd = _open_child_dir(ofd, "gen", "generation namespace")
+        if gid is None:
+            yield gfd
+            return
+        dfd = _open_child_dir(gfd, str(gid), "generation")
+        try:
+            yield dfd
+        finally:
+            os.close(dfd)
+    finally:
+        if gfd is not None:
+            os.close(gfd)
+        os.close(ofd)
+
+
+def _generation_entries_by_id(out: Path, gid: str) -> dict:
+    """generation 을 **성분마다 붙잡은** fd 로 읽는다 (48차 #9 P0-7)."""
+    with _generation_dirfd(out, gid) as dfd:
+        return _entries_from_dirfd(dfd, "generation")
 
 
 def _generation_entries(gdir: Path, out: Path) -> dict:
@@ -1478,6 +1664,9 @@ def _promote_generation(stage: Path, auth: "_Authority") -> dict:
             f"(roster={sorted(auth.roster)}) — 원장을 먼저 고쳐라")
     assert_cohort_complete(
         files, gid, expect_legs=auth.roster if seen == auth.roster else None)
+    # ★ 48차 P0-1 — 봉인한 producer 를 **실제 바이트**에 결속한다. 이 대조가
+    #   없으면 봉인은 "무엇을 승인했는가" 만 말하고 들어온 것은 안 본다.
+    assert_producer_binding(entries, auth.producer, "게시하려는 generation")
     gdir = out / "gen" / gid
 
     if gdir.is_dir():
@@ -1485,7 +1674,7 @@ def _promote_generation(stage: Path, auth: "_Authority") -> dict:
         # ★ 46차 #9 — 멱등 분기도 **자재화와 같은 validator** 를 지난다.
         #   45차는 여기서 `is_file()` + `read_bytes()` 였으므로 alias 가 걸린
         #   generation 을 "같은 내용" 으로 보고 그대로 CURRENT 로 올렸다.
-        got = {n: _sha(b) for n, b in _generation_entries(gdir, out).items()}
+        got = {n: _sha(b) for n, b in _generation_entries_by_id(out, gid).items()}
         if got != files:
             raise SystemExit(
                 f"✗ generation {gid[:16]} 자리에 다른 내용이 있다 — immutable "
@@ -1495,7 +1684,17 @@ def _promote_generation(stage: Path, auth: "_Authority") -> dict:
         #   바이트로 **새 inode** 를 만든다. rename 은 alias(symlink·hardlink)
         #   와 untracked entry 를 그대로 들여왔고, 그러면 게시 뒤 바깥에서
         #   generation 을 고칠 수 있다 (= immutable 이 아니다).
-        (out / "gen").mkdir(parents=True, exist_ok=True)
+        # ★ 48차 #9 P0-7 — `gen` 을 만들 때도 조상을 따라가지 않는다.
+        out.mkdir(parents=True, exist_ok=True)
+        _ofd = _open_dir_nofollow(out, "cohort 출력 디렉터리")
+        try:
+            try:
+                os.mkdir("gen", dir_fd=_ofd)
+            except FileExistsError:
+                pass
+            os.close(_open_child_dir(_ofd, "gen", "generation namespace"))
+        finally:
+            os.close(_ofd)
         _fsync_dir(out)
         tmp = out / "gen" / f".{gid}.{uuid.uuid4().hex}.tmp"
         tmp.mkdir()
@@ -1673,13 +1872,54 @@ def _parse_pointer(out: Path, name: str, raw: bytes, expect_legs=None,
     # ★ 46차 #9 — 독자도 **자재화와 같은 validator** 를 지난다 (no-follow ·
     #   regular · `st_nlink == 1`). 45차 독자는 `is_file()` 이었으므로 바깥
     #   hardlink 로 바이트를 바꿀 수 있는 generation 을 immutable 로 읽었다.
-    got = {n: _sha(b) for n, b in _generation_entries(gdir, out).items()}
+    _ents = _generation_entries_by_id(out, gid)
+    got = {n: _sha(b) for n, b in _ents.items()}
     if got != rec["files"]:
         raise SystemExit(f"✗ generation {gid[:16]} 의 실물이 CURRENT 와 다르다")
+    if bind_ledger:
+        # ★ 48차 P0-1 — 독자도 generation 안 **모든 leg** 의 producer 를 본다.
+        assert_producer_binding(
+            _ents, (_ledger_authority(cohort)["pin"] or {}).get(
+                "producer_semantic_sha256", ""), f"`{name}` 의 generation")
     # `.PENDING` 은 정의상 불완전할 수 있다 — 완전성은 `CURRENT` 의 계약이다.
     if complete:
         assert_cohort_complete(rec["files"], gid, expect_legs=expect_legs)
     return rec
+
+
+def assert_producer_binding(entries: dict, want: str, where: str) -> None:
+    """generation 의 **모든 leg 가 봉인된 producer 를 스스로 밝히는가** (48차 P0-1).
+
+    47차는 `producer_semantic_sha256` 을 원장 봉인에 넣었지만 publisher 도
+    reader 도 **파일 안**을 보지 않았다. 그래서 원장 pin 을 A 로 그대로 둔 채
+    B 가 만든 세 파일을 넘기면 A+B generation 이 만들어졌다 — 봉인은 "무엇을
+    승인했는가" 만 말하고 "실제로 무엇이 들어왔는가" 는 말하지 않았다.
+
+    manifest 는 `<leg>.projection.yaml` 이고 `analyzer.producer_semantic_sha256`
+    을 담아야 한다. 없으면 거부한다 — 밝히지 않은 것은 대조할 수 없다.
+    """
+    import yaml
+
+    bad = []
+    for name in sorted(entries):
+        if not name.endswith(".projection.yaml"):
+            continue
+        try:
+            doc = yaml.safe_load(entries[name].decode("utf-8"))
+        except (ValueError, UnicodeDecodeError) as e:
+            bad.append(f"{name}: manifest 를 읽을 수 없다 ({e})")
+            continue
+        got = ((doc or {}).get("analyzer") or {}).get("producer_semantic_sha256") \
+            if isinstance(doc, dict) else None
+        if not isinstance(got, str) or not got:
+            bad.append(f"{name}: `analyzer.producer_semantic_sha256` 이 없다")
+        elif got != want:
+            bad.append(f"{name}: producer {got} ≠ 봉인 {want}")
+    if bad:
+        raise SystemExit(
+            f"✗ {where} 의 producer 가 원장 봉인과 다르다 — 한 cohort 안에 "
+            "서로 다른 producer 가 만든 leg 를 섞지 않는다:\n  "
+            + "\n  ".join(bad))
 
 
 def assert_cohort_complete(files: dict, gid: str, expect_legs=None) -> None:
@@ -1886,7 +2126,7 @@ def _promote_cohort_locked(stage: Path, auth: "_Authority", leg: str) -> dict:
                              complete=auth.base_ptr != ".PENDING")
         base = dict(cur["files"])
         gdir = out / "gen" / cur["generation_id"]
-        base_bytes = _generation_entries(gdir, out)
+        base_bytes = _generation_entries_by_id(out, cur["generation_id"])
 
     # ── 3. 병합은 **메모리에서** 한다 — caller 경로에 쓰지 않는다 ──────────
     # ★ 36차 #9b — base 완전성 검사를 여기서 **뺐다.** `read_current()` 가

@@ -529,6 +529,9 @@ def main(argv=None) -> int:
 
     a = ap.parse_args(argv)
     if a.cmd == "bundle":
+        # ★ 48차 P0-8 — 보관도 승격이다 (`artifacts/` 는 인용되는 자리다).
+        from tools.preserve import assert_not_smoke_provenance
+        assert_not_smoke_provenance([a.run_dir], "보관 묶음")
         res = bundle(a.run_dir, a.out_dir)
         print(f"복사 {res['copied']}개"
               + (f", 하위 실행 {res['nested']}" if res["nested"] else ""))

@@ -5541,9 +5541,32 @@ _PLAN_LEDGER = textwrap.dedent('''\
     ''')
 
 
+def _with_run_spec(body: str) -> str:
+    """★ 48차 P0-5 — prospective 계획 항목에 `run_spec:` 을 채운다.
+
+    계약이 "승인은 이름이 아니라 **무엇을 실행할지**" 로 바뀌었으므로 fixture 도
+    그것을 담아야 한다. `run_spec` 없이도 통과하던 fixture 가 바로 47차의
+    구멍이었다 — 계획이 불투명 64hex 하나만 들고 있으면 gate 는 "그 digest 를
+    내는 dict 이면 무엇이든 통과" 가 된다.
+    """
+    import yaml
+    from tools.preserve import run_spec_digest
+
+    doc = yaml.safe_load(body)
+    for e in doc.get("planned") or []:
+        if e.get("authorization_kind") != "prospective":
+            continue
+        e.setdefault("run_spec", {"leg_id": e["leg_id"], "mode": "fit",
+                                  "objective": "pocv_dvdq", "n_restarts": 3,
+                                  "reference": "grid"})
+        e["run_spec_digest"] = run_spec_digest(e["run_spec"])
+    return yaml.safe_dump(doc, allow_unicode=True, sort_keys=False)
+
+
 def _plan_ledger(tmp_path, body=None) -> pathlib.Path:
     p = tmp_path / "LEG_PRESERVATION.yaml"
-    p.write_text(body if body is not None else _PLAN_LEDGER, encoding="utf-8")
+    p.write_text(_with_run_spec(body if body is not None else _PLAN_LEDGER),
+                 encoding="utf-8")
     return p
 
 
@@ -5813,6 +5836,12 @@ _LIFECYCLE_LEDGER = textwrap.dedent('''\
         authorization_kind: prospective
         authorized_source_digest: "0123456789abcdef"
         run_spec_digest: "%s"
+        run_spec:
+          leg_id: L
+          mode: fit
+          objective: pocv_dvdq
+          n_restarts: 3
+          reference: grid
         recorded_on: "2026-08-28"
         근거: "시험용 — 계획"
     legs:
@@ -5930,17 +5959,18 @@ def test_a_crashed_attempt_finalizes_without_recomputing(tmp_path):
 
     # finalize 는 아직 안 된다 — fit phase 가 없다
     with pytest.raises(PreserveError) as ei:
-        finalize_leg("L", ledger=led, claims_root=root,
+        finalize_leg("L", ledger=led, claims_root=root, attempt=attempt,
                      evidence={"leg_source_digest": "0123456789abcdef",
                                "cohorts": ["gA"]})
     assert "phase" in str(ei.value), str(ei.value)
 
-    r = resume_claim("L", claims_root=root)
+    # ★ 48차 P0-3 — 재개는 **소유 증명**을 든 실행만 한다.
+    r = resume_claim("L", claims_root=root, attempt=attempt, ledger=led)
     assert r.attempt == attempt, "재개가 새 attempt 를 만들었다"
     assert r.phases_done() == ("grid",)
     r.phase_done("fit", {"fits": 4})
 
-    finalize_leg("L", ledger=led, claims_root=root,
+    finalize_leg("L", ledger=led, claims_root=root, attempt=attempt,
                  evidence={"leg_source_digest": "0123456789abcdef",
                            "cohorts": ["gA"]})
     idx = planned_index(ledger=led)
@@ -5960,7 +5990,7 @@ def test_finalizing_moves_the_leg_from_prospective_to_executed_roster(tmp_path):
                           ledger=led, claims_root=root)
     c.phase_done("grid", {})
     c.phase_done("fit", {})
-    finalize_leg("L", ledger=led, claims_root=root,
+    finalize_leg("L", ledger=led, claims_root=root, attempt=c.attempt,
                  evidence={"leg_source_digest": "0123456789abcdef",
                            "cohorts": ["gA"]})
 
@@ -6181,11 +6211,19 @@ def test_run_grid_calls_the_gate_before_its_first_side_effect(tmp_path,
 
     monkeypatch.setenv("LEG", "__계획에없는다리__")
     out = tmp_path / "never_created"
-    with pytest.raises(PreserveError):
+    # ★ 48차 P1 — **순서를 먼저 본다.** 47차는 `pytest.raises(PreserveError)`
+    #   가 바깥이라, 호출 지점을 지우면 실행이 계속 흘러가 한참 뒤 다른 이유로
+    #   (`KeyError: 'discharged_state'`) 죽었고 그 KeyError 가 증인이 됐다.
+    #   그것은 "gate 가 mkdir 보다 먼저 불렸다" 를 증명하지 않는다 — 그냥
+    #   나중에 뭔가 터졌다는 뜻이다.
+    with pytest.raises(BaseException) as ei:
         G.run_grid({"x": 1}, [], nproc=1, chunk_size=1, out_dir=out)
     assert not out.exists(), (
         "gate 가 거부하기 전에 출력 디렉터리를 만들었다 — 첫 부작용보다 "
         "먼저 불려야 한다")
+    assert isinstance(ei.value, PreserveError), (
+        f"거부한 것이 계획 gate 가 아니다: "
+        f"{type(ei.value).__name__}: {ei.value}")
 
 
 def test_a_retrospective_row_cannot_be_claimed(tmp_path):
@@ -6199,12 +6237,389 @@ def test_a_retrospective_row_cannot_be_claimed(tmp_path):
 
     body = _LIFECYCLE_LEDGER % ("retrospective:no-preauthorization",
                                _spec_digest(_RUN_SPEC_L))
-    # L 을 소급으로 바꾼다 (상태는 planned 그대로 — 종류 축만 본다)
-    body = body.replace("    authorization_kind: prospective\n",
-                        "    authorization_kind: retrospective\n", 1)
+    # L 을 소급으로 바꾼다 (상태는 planned 그대로 — 종류 축만 본다).
+    # ★ 48차 P0-5 — 소급 항목은 `run_spec:` 을 담을 수 **없으므로** 그것도
+    #   함께 뗀다. 안 그러면 schema 검사가 먼저 거부해 이 시험이 보려는
+    #   **종류 축**이 아니라 key 집합 축을 보게 된다 (약한 증인).
+    import yaml as _y
+    _d = _y.safe_load(body)
+    _row = next(e for e in _d["planned"] if e["leg_id"] == "L")
+    _row["authorization_kind"] = "retrospective"
+    _row["run_spec_digest"] = "retrospective:no-preauthorization"
+    _row.pop("run_spec", None)
+    body = _y.safe_dump(_d, allow_unicode=True, sort_keys=False)
     led = tmp_path / "LEG_PRESERVATION.yaml"
     led.write_text(body, encoding="utf-8")
     with pytest.raises(PreserveError) as ei:
         claim_planned_leg("L", _RUN_SPEC_L, "0123456789abcdef",
                           ledger=led, claims_root=tmp_path / "claims")
     assert "소급" in str(ei.value) or "retrospective" in str(ei.value), str(ei.value)
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# 48차 P0-3 — public gate 가 `O_EXCL` 의 배타성을 되돌렸다
+#
+# 47차 `assert_run_is_authorized()` 는 claim 파일이 보이면 caller credential
+# 없이 `resume_claim()` 하고 같은 spec/source 면 그 claim 을 돌려줬다. 그래서
+# 같은 public 호출 둘이 **모두** 같은 attempt 로 compute 에 들어갔다.
+# `O_EXCL` 은 파일 최초 생성만 배타적이었지 **실행권**은 배타적이지 않았다.
+#
+# 공식 회귀는 production gate 가 아니라 low-level `claim_planned_leg()` 를 두 번
+# 부르고 있었으므로 이 우회를 보지 못했다.
+# ─────────────────────────────────────────────────────────────────────────────
+
+def _authorize(leg, spec, src, led, claims, **kw):
+    from tools.preserve import assert_run_is_authorized
+    return assert_run_is_authorized(leg, "grid", [Path("/nonsmoke/out")], spec,
+                                    src, ledger=led, claims_root=claims, **kw)
+
+
+def test_two_public_authorizations_do_not_both_enter_compute(tmp_path):
+    """★ 48차 P0-3 — 두 번째 public start 는 거부돼야 한다."""
+    from tools.preserve import PreserveError
+
+    led = _lifecycle_ledger(tmp_path)
+    claims = tmp_path / "claims"
+    a = _authorize("L", _RUN_SPEC_L, "0123456789abcdef", led, claims)
+    assert a is not None and a.attempt
+
+    with pytest.raises(PreserveError) as ei:
+        _authorize("L", _RUN_SPEC_L, "0123456789abcdef", led, claims)
+    assert "이미" in str(ei.value) or "token" in str(ei.value), str(ei.value)
+
+
+def test_resuming_requires_the_owner_token(tmp_path):
+    """★ 48차 P0-3 — 재개는 **소유 증명**이 있어야 한다.
+
+    이름과 spec 만으로 재개할 수 있으면 그것은 재개가 아니라 두 번째 발급이다.
+    """
+    from tools.preserve import PreserveError
+
+    led = _lifecycle_ledger(tmp_path)
+    claims = tmp_path / "claims"
+    a = _authorize("L", _RUN_SPEC_L, "0123456789abcdef", led, claims)
+
+    with pytest.raises(PreserveError):
+        _authorize("L", _RUN_SPEC_L, "0123456789abcdef", led, claims,
+                   attempt="0" * 32)
+    same = _authorize("L", _RUN_SPEC_L, "0123456789abcdef", led, claims,
+                      attempt=a.attempt)
+    assert same.attempt == a.attempt, "올바른 token 으로도 재개하지 못했다"
+
+
+def test_a_revoked_plan_stops_a_live_claim(tmp_path):
+    """★ 48차 P0-3 — 재개는 **살아 있는 원장 authority** 를 다시 본다.
+
+    47차 existing-claim 분기는 원장을 읽지 않았다. claim 을 얻은 뒤 계획에서
+    L 을 지우거나 cohort 를 frozen 으로 바꿔도 authorization 이 계속 성공했다.
+    """
+    from tools.preserve import PreserveError
+
+    led = _lifecycle_ledger(tmp_path)
+    claims = tmp_path / "claims"
+    a = _authorize("L", _RUN_SPEC_L, "0123456789abcdef", led, claims)
+
+    # ★ 48차 — 원장은 이제 claim 시점에 `yaml.safe_dump` 로 다시 쓰이므로
+    #   들여쓰기에 기대는 문자열 치환은 대상을 놓친다. 구조로 고친다.
+    import yaml
+    doc = yaml.safe_load(led.read_text(encoding="utf-8"))
+    doc["cohorts"][0]["status"] = "frozen"
+    led.write_text(yaml.safe_dump(doc, allow_unicode=True, sort_keys=False),
+                   encoding="utf-8")
+    with pytest.raises(PreserveError) as ei:
+        _authorize("L", _RUN_SPEC_L, "0123456789abcdef", led, claims,
+                   attempt=a.attempt)
+    assert "frozen" in str(ei.value) or "active" in str(ei.value), str(ei.value)
+
+
+def test_a_phase_cannot_be_recorded_without_the_owner_token(tmp_path):
+    """phase 도 소유 증명이 있어야 한다 — claim 파일이 보이는 것만으로는 안 된다."""
+    from tools.preserve import resume_claim, PreserveError
+
+    led = _lifecycle_ledger(tmp_path)
+    claims = tmp_path / "claims"
+    _authorize("L", _RUN_SPEC_L, "0123456789abcdef", led, claims)
+    with pytest.raises(PreserveError):
+        resume_claim("L", claims_root=claims, attempt="0" * 32)
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# 48차 P0-6 — 원장 전이가 원자적이지 않았다
+# ─────────────────────────────────────────────────────────────────────────────
+
+def _finish(claim):
+    """두 phase 를 닫아 finalize 가능한 claim 으로 만든다."""
+    for ph in ("grid", "fit"):
+        claim.phase_done(ph, {"ok": True})
+
+
+def test_two_concurrent_finalizations_lose_no_leg(tmp_path):
+    """★ 48차 P0-6 — `finalize_leg()` 은 원장을 **read-modify-write** 했다.
+
+    두 다리를 동시에 닫으면 둘 다 같은 `doc` 을 읽고 각자 통째로 덮어썼다 —
+    나중 쓰기가 먼저 쓰기를 지운다. 실행 기록 하나가 조용히 사라지는데
+    두 호출 모두 성공을 돌려준다. 원장은 **실행이 있었다는 유일한 증거**이므로
+    lost update 는 증거 소실이다.
+    """
+    import yaml
+    from tools import preserve as P
+
+    led = _lifecycle_ledger(tmp_path)
+    # 계획에 두 다리를 둔다
+    body = led.read_text(encoding="utf-8")
+    spec_m = dict(_RUN_SPEC_L, leg_id="M")
+    body = body.replace('    prospective_legs: ["L"]\n',
+                        '    prospective_legs: ["L", "M"]\n')
+    body += textwrap.dedent(f'''\
+        planned_extra_marker: 0
+        ''')
+    doc = yaml.safe_load(body)
+    doc["planned"].append({
+        "leg_id": "M", "cohort_id": "gA", "status": "planned",
+        "authorization_kind": "prospective",
+        "authorized_source_digest": "0123456789abcdef",
+        "run_spec_digest": _spec_digest(spec_m), "run_spec": dict(spec_m),
+        "recorded_on": "2026-08-28", "근거": "시험용 — 계획 2"})
+    doc.pop("planned_extra_marker", None)
+    led.write_text(yaml.safe_dump(doc, allow_unicode=True, sort_keys=False),
+                   encoding="utf-8")
+
+    claims = tmp_path / "claims"
+    cL = P.claim_planned_leg("L", _RUN_SPEC_L, "0123456789abcdef",
+                             ledger=led, claims_root=claims)
+    cM = P.claim_planned_leg("M", spec_m, "0123456789abcdef",
+                             ledger=led, claims_root=claims)
+    _finish(cL)
+    _finish(cM)
+
+    import threading
+    barrier = threading.Barrier(2)
+
+    def _go(leg, attempt, q):
+        try:
+            barrier.wait(timeout=30)
+            P.finalize_leg(leg, {"leg_source_digest": "0123456789abcdef",
+                                 "cohorts": ["gA"]},
+                           ledger=led, claims_root=claims, attempt=attempt)
+            q.put((leg, None))
+        except Exception as e:                              # noqa: BLE001
+            q.put((leg, f"{type(e).__name__}: {e}"))
+
+    import threading
+    q: "queue.Queue" = __import__("queue").Queue()
+    ts = [threading.Thread(target=_go, args=("L", cL.attempt, q)),
+          threading.Thread(target=_go, args=("M", cM.attempt, q))]
+    for t in ts:
+        t.start()
+    for t in ts:
+        t.join(timeout=60)
+    outcome = dict(q.get() for _ in range(2))
+
+    final = yaml.safe_load(led.read_text(encoding="utf-8"))
+    recorded = {e["leg_id"] for e in final.get("legs") or []}
+    ok = {leg for leg, err in outcome.items() if err is None}
+    assert ok, f"둘 다 거부됐다 — 진행 불가도 고장이다: {outcome}"
+    missing = ok - recorded
+    assert not missing, (
+        f"성공을 돌려준 다리가 원장에 없다: {sorted(missing)} — lost update "
+        f"(원장 legs={sorted(recorded)}, 결과={outcome})")
+    coh = final["cohorts"][0]
+    for leg in ok:
+        assert leg in coh["legs"], f"{leg} 이 실행 roster 에 없다"
+        assert leg not in (coh.get("prospective_legs") or []), (
+            f"{leg} 이 계획 roster 에 남아 있다")
+
+
+def test_a_claim_marks_the_plan_running(tmp_path):
+    """★ 48차 P0-6 — `planned → running` 이 **한 번도 쓰이지 않았다.**
+
+    `PLANNED_STATUS` 에 `running` 을 선언해 놓고 어떤 코드도 그 값을 쓰지
+    않았다. 그러면 원장만 보고 "지금 도는 다리가 있는가" 를 답할 수 없고,
+    claim 파일이 사라진 crash 뒤에 계획은 여전히 `planned` 이라 다른 실행이
+    태연히 새 claim 을 딴다. 선언만 있고 전이가 없는 상태는 상태 기계가 아니다.
+    """
+    import yaml
+    from tools import preserve as P
+
+    led = _lifecycle_ledger(tmp_path)
+    P.claim_planned_leg("L", _RUN_SPEC_L, "0123456789abcdef",
+                        ledger=led, claims_root=tmp_path / "claims")
+    doc = yaml.safe_load(led.read_text(encoding="utf-8"))
+    row = next(e for e in doc["planned"] if e["leg_id"] == "L")
+    assert row["status"] == "running", (
+        f"claim 을 땄는데 계획 상태가 {row['status']!r} 이다 — 원장만 보고 "
+        "실행 중인 다리를 알 수 없다")
+
+
+def test_two_phase_records_do_not_overwrite_each_other(tmp_path):
+    """★ 48차 P0-6 — `phase_done()` 도 read-modify-write 였다.
+
+    `grid` 와 `fit` 을 동시에 닫으면 둘 다 `phases` 가 빈 record 를 읽고 각자
+    자기 phase 하나만 담아 덮어쓴다. 하나가 사라지면 `finalize_leg()` 이
+    "phase 가 남았다" 며 거부하고, 이미 끝난 계산을 다시 돌리게 된다.
+    """
+    import threading
+    from tools import preserve as P
+
+    led = _lifecycle_ledger(tmp_path)
+    claim = P.claim_planned_leg("L", _RUN_SPEC_L, "0123456789abcdef",
+                                ledger=led, claims_root=tmp_path / "claims")
+    barrier = threading.Barrier(2)
+
+    def _go(ph):
+        barrier.wait(timeout=30)
+        claim.phase_done(ph, {"ok": ph})
+
+    ts = [threading.Thread(target=_go, args=(p,)) for p in ("grid", "fit")]
+    for t in ts:
+        t.start()
+    for t in ts:
+        t.join(timeout=60)
+    assert set(claim.phases_done()) == {"grid", "fit"}, (
+        f"동시에 닫은 phase 하나가 사라졌다: {claim.phases_done()}")
+
+
+def test_a_leg_id_cannot_escape_the_claims_root(tmp_path):
+    """★ 48차 P0-6 — claim 경로가 `check_id()` 를 안 썼다.
+
+    `_claim_path()` 는 `"/" in leg_id` 만 봤다. Windows separator 는 통과하고,
+    이 저장소는 이미 그 정확한 반례를 위해 `check_id()` 를 갖고 있었다
+    (27차 P1-4). 같은 도메인 검사가 두 곳에서 다르면 약한 쪽이 실효 규칙이다.
+    """
+    from tools import preserve as P
+
+    for bad in ("..\\..\\outside", "../escape", ".", "..", "nul", "a b",
+                "x" * 70):
+        with pytest.raises(P.PreserveError) as ei:
+            P._claim_path(bad, tmp_path / "claims")
+        assert ei.value.stage in ("id", "plan"), (bad, ei.value.stage)
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# 48차 P0-5 — 승인한 것과 실행한 것이 같다는 보장이 없었다
+# ─────────────────────────────────────────────────────────────────────────────
+
+def test_the_leg_run_spec_seals_what_actually_gets_computed():
+    """★ 48차 P0-5 — 47차 gate 가 승인한 spec 은 실행을 고정하지 못했다.
+
+    `_assert_grid_authorized()` 의 spec 은 `{leg_id, mode, dry_run,
+    config_digest}` 넷뿐이었다. 그런데 `--lli` · `--lam-pe` · `--noise` 는
+    **조건 집합 자체**를 바꾸고 `--out` 은 결과가 어디 놓일지를 바꾼다. 승인한
+    뒤 그 축들을 통째로 갈아도 같은 digest 가 나온다 — 그러면 승인은 다리
+    **이름**을 승인한 것이지 실행을 승인한 것이 아니다.
+
+    한 다리의 spec 은 두 phase 가 **같은 값**을 내야 한다 (그래야 하나의 claim
+    아래 grid 와 fit 이 묶인다). 그래서 phase 별 자원 축(nproc·chunk)은 넣지
+    않는다 — 그것은 결과를 바꾸지 않는다.
+    """
+    from tools.preserve import leg_run_spec, run_spec_digest
+
+    g = {"config_digest": "a" * 16, "condition_ids_sha256": "b" * 16,
+         "n_conditions": 12, "out": "results/grid_fit_v4"}
+    f = {"config_digest": "c" * 16, "objectives": ["pocv_dvdq"],
+         "out": "results/grid_fit_v4"}
+    base = run_spec_digest(leg_run_spec("L", g, f))
+
+    # 두 phase 가 같은 spec 을 만든다 (하나의 claim 아래 묶이는 조건)
+    assert leg_run_spec("L", g, f) == leg_run_spec("L", dict(g), dict(f))
+
+    # 결과를 바꾸는 축은 전부 digest 를 움직인다
+    for name, gg, ff in (
+            ("조건 집합", dict(g, condition_ids_sha256="0" * 16), f),
+            ("조건 수", dict(g, n_conditions=13), f),
+            ("grid config", dict(g, config_digest="0" * 16), f),
+            ("grid 산출 위치", dict(g, out="results/elsewhere"), f),
+            ("fit config", g, dict(f, config_digest="0" * 16)),
+            ("목적함수 집합", g, dict(f, objectives=["pocv_dvdq", "other"])),
+            ("fit 산출 위치", g, dict(f, out="results/elsewhere"))):
+        assert run_spec_digest(leg_run_spec("L", gg, ff)) != base, (
+            f"{name} 을 바꿨는데 승인 digest 가 그대로다")
+
+    # 다리 이름도 축이다
+    assert run_spec_digest(leg_run_spec("M", g, f)) != base
+
+
+def test_the_leg_run_spec_refuses_an_undeclared_axis():
+    """★ 48차 P0-5 — spec 은 **닫힌** key 집합이다.
+
+    열려 있으면 새 CLI 축이 생겨도 아무도 모른다 — 조용히 승인 밖으로 나간다.
+    """
+    from tools.preserve import leg_run_spec, PreserveError
+
+    g = {"config_digest": "a" * 16, "condition_ids_sha256": "b" * 16,
+         "n_conditions": 12, "out": "results/x"}
+    f = {"config_digest": "c" * 16, "objectives": ["o"], "out": "results/x"}
+    with pytest.raises(PreserveError):
+        leg_run_spec("L", dict(g, nproc=8), f)
+    with pytest.raises(PreserveError):
+        leg_run_spec("L", g, dict(f, seed=1))
+    with pytest.raises(PreserveError):
+        leg_run_spec("L", {k: v for k, v in g.items() if k != "out"}, f)
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# 48차 P0-4 — lifecycle 이 production 에 배선되지 않았다
+# ─────────────────────────────────────────────────────────────────────────────
+
+def test_finalize_does_not_fabricate_a_full_bundle(tmp_path):
+    """★ 48차 P0-4 — `finalize_leg()` 이 `full_bundle` 을 **지어냈다.**
+
+    47차는 caller 가 준 `evidence` 를 그대로 옮겨 적고 `preservation_status:
+    full_bundle` 을 붙였다. 그 상태의 뜻은 "clone 한 사람이 이 결과를 검증할 수
+    있는 묶음이 실재한다" 인데(계약 §8), `finalize_leg()` 은 디스크를 보지
+    않았다 — 아무 dict 나 주면 원장에 완전 묶음이 생겼다.
+
+    원장은 이 저장소에서 **증거의 정본**이다. 거기에 검증되지 않은 주장을
+    쓰는 함수는 증거를 만드는 것이 아니라 증거를 오염시킨다.
+    """
+    import yaml
+    from tools.preserve import PreserveError
+
+    led = _lifecycle_ledger(tmp_path)
+    claims = tmp_path / "claims"
+    c = _authorize("L", _RUN_SPEC_L, "0123456789abcdef", led, claims)
+    for ph in ("grid", "fit"):
+        c.phase_done(ph, {"ok": True})
+
+    # 실재하지 않는 묶음을 주장한다
+    with pytest.raises(PreserveError) as ei:
+        from tools.preserve import finalize_leg
+        finalize_leg("L", {"leg_source_digest": "0123456789abcdef",
+                           "bundle_uri": "artifacts/없는묶음",
+                           "bundle_files": 26, "payload_bytes": 23863555,
+                           "payload_index": "artifacts/없는묶음/payload_sha256.yaml",
+                           "payload_index_sha256": "0" * 64},
+                     ledger=led, claims_root=claims, attempt=c.attempt)
+    assert "묶음" in str(ei.value), str(ei.value)
+
+    doc = yaml.safe_load(led.read_text(encoding="utf-8"))
+    assert not any(e["leg_id"] == "L" for e in doc.get("legs") or []), (
+        "거부하면서 실행 기록을 남겼다")
+
+
+def test_finalize_records_what_it_could_verify(tmp_path):
+    """★ 48차 P0-4 — 묶음이 없으면 **없다고 적는다** (있는 척하지 않는다).
+
+    묶음 없이 끝난 다리도 실행 기록은 남아야 한다 — 그것이 `running` 을
+    영원히 붙들지 않게 하는 유일한 길이다. 다만 상태는 `full_bundle` 이 아니라
+    검증된 만큼이다.
+    """
+    import yaml
+    from tools.preserve import finalize_leg
+
+    led = _lifecycle_ledger(tmp_path)
+    claims = tmp_path / "claims"
+    c = _authorize("L", _RUN_SPEC_L, "0123456789abcdef", led, claims)
+    for ph in ("grid", "fit"):
+        c.phase_done(ph, {"ok": True})
+    finalize_leg("L", {"leg_source_digest": "0123456789abcdef"},
+                 ledger=led, claims_root=claims, attempt=c.attempt)
+
+    doc = yaml.safe_load(led.read_text(encoding="utf-8"))
+    rec = next(e for e in doc["legs"] if e["leg_id"] == "L")
+    assert rec["preservation_status"] != "full_bundle", (
+        "묶음을 확인하지 않고 full_bundle 이라고 적었다")
+    # phase receipt 가 기록에 남는다 — 무엇이 실제로 돌았는지의 근거다
+    assert set((rec.get("evidence") or {}).get("phases") or {}) == {"grid", "fit"}, (
+        "실행 기록이 phase receipt 를 담지 않는다 — lifecycle 이 남긴 유일한 "
+        "실측 증거인데 finalize 에서 버려진다")

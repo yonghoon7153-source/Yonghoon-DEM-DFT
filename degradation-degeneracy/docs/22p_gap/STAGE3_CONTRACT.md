@@ -65,9 +65,9 @@ for k in range(n_max):
 
 | # | 교란 | 근거 |
 |---|---|---|
-| 1 | `warm_start` 하나가 **원점과 조건 fitting 을 동시에** 바꾼다 | `src/fitting.py:862` 가 조건 task 를 그대로 물려받는다. 404 half-cell `p_ini(34p)` `[1.509716,…] → [1.518503,…]` |
+| 1 | `warm_start` 하나가 **원점과 조건 fitting 을 동시에** 바꾼다 | `src/fitting.py:922` 가 조건 task 를 그대로 물려받는다. 404 half-cell `p_ini(34p)` `[1.509716,…] → [1.518503,…]` |
 | 2 | `--n-restarts` 는 실행 횟수가 아니라 **예산 상한** | adaptive 조기 종료. 2회 종료 행 223 → 238 |
-| 3 | **noise 층을 바꾸면 restart 난수가 통째로 갈린다** | `cond_id = sha1(asdict(Condition))[:12]` 가 `noise`·`seed` 포함 (`src/grid.py:99`) → `task["seed"] = int(sha1(cond_id)[:8],16)` (`src/fitting.py:817`) |
+| 3 | **noise 층을 바꾸면 restart 난수가 통째로 갈린다** | `cond_id = sha1(asdict(Condition))[:12]` 가 `noise`·`seed` 포함 (`src/grid.py:99`) → `task["seed"] = int(sha1(cond_id)[:8],16)` (`src/fitting.py:877`) |
 | 4 | **warm 은 slot 을 교체한다** (§0) | 투영 `restart_sources` |
 | 5 | **예산을 바꾸면 warm 후보 자체가 바뀐다** | 연쇄 구조 (`src/fitting.py:392-406`) — 33p 예산 ↑ → 33p 해 변화 → 34p 가 받는 warm 좌표 변화. 22차 발견 2 |
 

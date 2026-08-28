@@ -4906,3 +4906,200 @@ hardlink 는 막으면서 root alias 는 허용하는 경계는 성립하지 않
 | 실물 object-lock provider adapter | **미구현** (별도 acceptance) |
 | power-loss ordering fault model | **미착수** (별도 acceptance) |
 | publisher 전용 OS principal | **미착수** |
+
+---
+
+## §56 — 48차 게이트 리뷰 대응 (묶음 9)
+
+47차 리뷰의 진단: **"producer 봉인과 계획 lifecycle이 실제 진입점에서 열려 있다."**
+맞았다. 그리고 이번 라운드에 실측한 것들은 대부분 리뷰어가 말한 것보다 **더 나빴다.**
+
+### 48-1 조건 P0-5 — `--leg` 는 켜는 순간 실행이 죽는 축이었다
+
+리뷰어는 "`--leg` 가 export 되지 않아 `src.grid` 가 `grid_fit_v4` 를 claim 한다"
+고 했다. 실측은 그보다 나쁘다:
+
+```
+$ python -m src.grid --leg L --out results/_smoke/x --dry-run
+grid.py: error: unrecognized arguments: --leg L      # rc 2
+```
+
+**두 모듈 다 `--leg` 인자를 선언하지 않았다.** `run.sh` 는 `--leg "$LEG"` 를
+하위 단계로 넘기므로, 46차에 붙인 이 기능은 **쓰는 순간 pipeline 전체가 죽는다.**
+아무도 쓸 수 없었고, 그래서 gate 는 한 번도 진짜 다리 이름을 본 적이 없다.
+
+고친 것: 두 모듈이 `--leg` 를 받고, `run.sh` 가 `LEG` 를 export 하고, 이름 결정을
+`leg_name()` 한 함수가 한다 (CLI → 환경변수 → 정본 실행 이름).
+
+### 48-2 조건 P0-5 — 승인한 spec 이 실행을 고정하지 못했다
+
+47차 grid gate 의 spec 은 `{leg_id, mode, dry_run, config_digest}` 넷뿐이었다.
+그런데 `--lli`·`--lam-pe`·`--noise` 는 **조건 집합 자체**를 바꾸고 `--out` 은
+결과가 놓일 자리를 바꾼다. 승인 뒤 그 축들을 통째로 갈아도 같은 digest 가 나온다
+— 그러면 승인한 것은 실행이 아니라 다리 **이름**이다.
+
+`leg_run_spec(leg_id, grid, fit)` 이 **다리 단위**로 한 값을 만든다. 두 phase 가
+같은 digest 를 내야 하나의 claim 아래 묶이므로, 각 phase 는 자기 축을 살아 있는
+입력에서 만들고 나머지 절반은 계획이 **선언한** 값(`planned[].run_spec`)에서
+읽는다. key 집합은 닫혀 있다 — 새 CLI 축은 여기 적히거나 거부되거나 둘 중 하나다.
+
+`nproc`·`chunk_size`·`resume` 은 **일부러 뺐다**: 결과를 바꾸지 않고, 넣으면 두
+phase 가 서로 다른 spec 을 만들어 하나의 claim 으로 묶을 수 없게 된다.
+
+계획 항목도 바뀌었다. 47차 계획은 불투명 64hex 하나만 들고 있어서 그 digest 가
+**무엇의** 주소인지 원장만 보고 알 수 없었다 — gate 는 사실상 "그 digest 를 내는
+dict 이면 무엇이든 통과" 였다. 이제 prospective 항목은 `run_spec:` 을 담고
+`planned_index()` 가 `run_spec_digest == digest(run_spec)` 를 강제한다.
+
+### 48-3 조건 P0-2 — producer 닫힘의 네 구멍 (전부 실측)
+
+| # | 구멍 | 실측 |
+|---|---|---|
+| 1 | 닫힘이 `row_projection.py` 안에서 멈췄다 | `score_canonical()` 이 부르는 `src.scoring` 채점 함수가 identity 밖. `DEFAULT_TOL` 을 0.02→0.05 로 바꿔도 digest 불변이었다 |
+| 2 | `ast.get_source_segment` 이 decorator 를 버렸다 | `FunctionDef.lineno` 가 `def` 줄이라 `decorator_list` 가 통째로 빠진다. `@staticmethod` 를 붙여도 불변 |
+| 3 | 절단면이 **넓어지는** 것은 안 막혔다 | 47차는 이름이 사라지면 fail-closed 였지만 늘어나면 무반응. 닫힘에 아직 없는 이름을 미리 넣어 두면 나중 refactor 가 그것을 계산 경로로 끌어오는 순간 조용히 제외된다 |
+| 4 | 정규형이 인터프리터 버전에 묶였다 | **같은 바이트에 세 값**: 3.11 `908503e65162e7d9` · 3.12 `d4ae1c027b434e83` · 3.13 `aa1cf2cf045c41ea` |
+
+(4)의 원인은 둘이고 각각 다르다. `ast.dump` 는 3.12 가 `FunctionDef` 에
+`type_params` 를 더해서 깨지고, `ast.unparse` 는 PEP 701 이후 f-string 안
+따옴표를 재사용해 찍어서 깨진다 (`f'{r.get('i')}'` vs `f"{r.get('i')}"` — **같은
+AST** 인데 렌더링이 다르다). 그래서 렌더링을 우리가 한다 (`_ast_canon`): 노드의
+`_fields` 만 쓰고 빈 값은 빼며(새 버전이 더한 필드는 기본값이 비어 있으므로 저절로
+무시된다), f-string 은 `JoinedStr(values=[...])` 구조로만 적는다(따옴표가 등장할
+자리가 없다). **실측: 3.10 · 3.11 · 3.12 · 3.13 이 `bbb1c4d6fc982610` 로 동일.**
+
+인터프리터를 올리는 것만으로 봉인이 깨지면, 그때 사람은 "코드는 그대로니 pin 을
+갱신하자" 고 판단하게 된다 — 봉인의 뜻이 거기서 사라진다.
+
+### 48-4 이 라운드는 **새 cohort 로 간다** (g3_2026_08_28)
+
+48-3 은 행 바이트를 바꾸지 않았다. 바뀐 것은 producer identity 의 **정의**다.
+그래도 계약 §13.3.2 는 pin 이 cohort lifetime 동안 고정이라고 말하고, publisher 가
+그것을 실제로 강제한다 — g2 pin 을 고쳐 재게시하려 하자 거부당했다:
+
+```
+✗ `CURRENT` 이 봉인한 원장 record 가 지금과 다르다 (ea56c4ed11d4 ≠ c47d4155ca71)
+  — cohort lifetime 동안 원장 record 는 고정이다. 새 cohort ID 와 새 출력
+  디렉터리로 가라 (계약 §13.3.2)
+```
+
+그래서 g2 를 얼리고 `g3_2026_08_28` / `docs/22p_gap/proj_g3` 로 갔다. **행 바이트는
+g2 와 동일하다** — 그 사실은 회귀가 확인하는 것이지 cross-cohort 인용의 근거가
+아니다 (`cross_leg_comparison` 은 여전히 금지).
+
+### 48-5 조건 P0-6 — 원장 전이가 원자적이지 않았다 (실측 lost update)
+
+`finalize_leg()` 은 원장을 read-modify-write 했다. 두 다리를 동시에 닫으면 둘 다
+같은 `doc` 을 읽고 각자 통째로 덮어쓴다. 실측:
+
+```
+결과 {'M': None, 'L': None}          # 둘 다 성공을 돌려줬다
+원장 legs=['L', 'done']              # M 이 사라졌다
+```
+
+원장은 이 저장소에서 **증거의 정본**이므로 lost update 는 증거 소실이다.
+`phase_done()` 도 같은 모양이었고 실측했다 — `grid` 와 `fit` 을 동시에 닫으면
+하나가 사라져 (`('fit',)`), `finalize_leg()` 이 "phase 가 남았다" 며 거부하고
+이미 끝난 10시간 계산을 다시 돌리게 된다.
+
+`_ledger_lock()`(flock) 임계 구역 + `_atomic_write_text()` 로 고쳤다. 함께:
+
+- `planned → running` 이 **한 번도 쓰이지 않았다** — enum 에 선언만 있고 전이가
+  없었다. 이제 claim 이 그 전이를 쓴다 (claim 파일이 먼저, 원장이 다음, 실패하면
+  claim 을 되돌린다).
+- `_claim_path()` 가 `"/" in leg_id` 만 봤다. Windows separator·device 이름·길이가
+  다 통과했다. 이 저장소는 27차 P1-4 에 **정확히 그 반례로** `check_id()` 를
+  만들어 뒀는데 claim 경로만 따로 약하게 검사하고 있었다 — 같은 도메인을 두 곳에서
+  다르게 정하면 약한 쪽이 실효 규칙이다. 이제 `check_id()` 하나다.
+
+### 48-6 조건 P0-4 — `full_bundle` 을 지어냈다
+
+`finalize_leg()` 은 caller 의 dict 를 그대로 옮겨 적고 `preservation_status:
+full_bundle` 을 붙였다. 그 상태의 뜻은 "clone 한 사람이 검증할 수 있는 묶음이
+실재한다"(계약 §8)인데 **디스크를 보지 않았다.** 아무 dict 나 주면 원장에 완전
+묶음이 생겼다 — 그리고 회귀
+(`test_full_bundle_claims_are_backed_by_a_real_bundle`)가 **나중에** 빨개진다.
+
+이제 `_verify_declared_bundle()` 이 파일 수·바이트 수·payload index 해시를
+디스크에서 다시 계산하고, 안 맞으면 아무 것도 쓰지 않는다. 확인하지 못한 경우엔
+`full_bundle` 이 아니라 `no_bundle` 로 적는다 — **없는 것을 있는 척하지 않는다.**
+
+lifecycle 도 배선했다. 47차는 `phase_done()`·`finalize_leg()` 을 만들어 놓고
+production 에서 한 번도 부르지 않았다 (lifecycle 이 있는데 아무 것도 그 상태를
+움직이지 않으면 그것은 lifecycle 이 아니라 죽은 코드다). 이제 `run_grid()` 와
+`run_fit()` 이 성공 직후 자기 phase 를 닫고, `finalize_leg()` 이 그 receipt 를
+실행 기록에 담는다.
+
+### 48-7 조건 P0-8 — smoke 는 격리됐지만 **승격 금지가 없었다**
+
+`results/_smoke/` 는 계획 gate 를 면제받는다 (계약 §13.3.3). 그 면제의 전제는
+"그 산출이 정본이 되지 않는다" 인데 그것을 지키는 것이 아무 것도 없었다:
+
+```
+REPORT_OUT=docs/RESULTS.md ./run.sh --mode report --in results/_smoke/x
+./scripts/archive_results.sh results/_smoke/x
+```
+
+둘 다 gate 를 한 번도 안 지난 실행을 인용 대상 자리에 올렸다. 면제와 승격 금지는
+**같은 경계**여야 한다 — 한쪽만 있으면 그것은 경계가 아니라 우회로다.
+`assert_not_smoke_provenance()` 가 `is_inside_namespace()`(면제를 정하는 바로 그
+함수)로 판정하고 두 sink 에 배선됐다.
+
+`src/fitting.py` 자체 gate 도 붙였다 (47차는 `grid` 만 배선하고 미뤘는데, 실제
+결과 `fits.parquet` 를 만드는 것은 fit 이다 — gate 없는 쪽이 결과를 만들면 gate 는
+장식이다).
+
+### 48-8 조건 P0-7 — `O_NOFOLLOW` 는 마지막 성분만 본다
+
+47차는 `os.open(out/"gen"/gid, O_DIRECTORY|O_NOFOLLOW)` 하나로 generation root 를
+열었다. POSIX 에서 `O_NOFOLLOW` 는 **마지막 성분에만** 적용되므로 `out/gen` 자체를
+바깥 디렉터리 symlink 로 두면 generation 실물이 namespace **밖**에 놓이고 reader 도
+그것을 승인했다. 비협조 writer 도 동시성도 필요 없는, 정적 오배치 하나짜리
+반례였다. 이제 `_open_child_dir()` 이 신뢰하는 `out` 에서 시작해 `gen` → `<gid>` 를
+**성분마다** 붙잡는다.
+
+### 48-9 P1 — 변이 runner 자신이 거짓 초록이었다
+
+`-k` 가 아무 scenario 도 고르지 않아도 "전부 물었다" 를 찍고 rc 0 이었다 — **오타
+하나로 증거 전체가 조용히 사라지는 구조**였다. 이제 0건 선택은 rc 2 다. 함께:
+
+- 신고(declared) 항목을 registry 에 **실제로 등록**했다. 47차에는 설명만 있고
+  이름이 없어 이름으로 고르면 0건이었다 (신고가 아니라 침묵이었다).
+- `--list` 가 declared 까지 세어 61, full run 이 executable 만 세어 58 을 **같은
+  `site` 이름**으로 찍었다. 이제 `scenario_total / scenario_executable /
+  scenario_declared / site_total / site_executable / site_declared` 로 가른다.
+- `module-gate-before-side-effects` 의 증인이 한참 뒤의 `KeyError:
+  'discharged_state'` 였다 — 그것은 "gate 가 mkdir 보다 먼저 불렸다" 를 증명하지
+  않는다. 순서 단언을 예외 종류 단언보다 **먼저** 두어 실제 순서가 증인이 되게 했다.
+- `pytest-json-report` 를 `requirements.txt` 에 넣었다. 증거 생성 도구의 의존성이
+  환경마다 다르면 증거를 재현할 수 없다.
+- 버전 이식성 회귀의 실패 메시지에서 **digest 값을 뺐다.** 값이 코드를 고칠 때마다
+  움직이는데 변이 재현의 증인 문자열이 그 값에 묶이면 회귀가 아니라 지뢰가 된다.
+
+### 48-10 fixture 가 진실을 가리고 있었다 (두 번)
+
+이 저장소의 기록된 패턴이 또 나왔다.
+
+1. **producer 결속을 붙이자 publish 경로 시험 82개가 깨졌다** — 게시 fixture 전체가
+   producer 를 밝히지 않는 쓰레기 YAML 을 굳히고 있었다는 뜻이다. `_with_producer()`
+   가 실물과 같은 모양의 manifest 를 내보내게 고쳤다.
+2. **계획에 `run_spec:` 을 요구하자 19개가 깨졌다** — 계획 fixture 가 승인 내용을
+   담지 않고도 통과하고 있었고, 그것이 정확히 48-2 의 구멍이었다.
+
+새로 쓴 회귀 중 **거짓 초록 둘도 스스로 잡아 고쳤다**: `--leg` 거부 시험이 rc≠0 만
+봐서 argparse 의 rc 2 로도 초록이었고(거부 **이유**를 못 박았다), smoke 승격 거부
+시험이 `"smoke" in 출력` 을 봤는데 경로 문자열에 이미 그 단어가 있었다(고유 표식
+문장으로 바꿨다).
+
+### 아직 아닌 것
+
+| 항 | 상태 |
+|---|---|
+| `os.replace` 직전~직후 창 | **전제로 배제** (계약 §13.3.1) |
+| 두 phase 를 **실제로** 돌린 end-to-end lifecycle 영수증 | **미착수** — 호출은 배선했고 단위 회귀도 있으나, 계획된 다리로 grid→fit→finalize 를 한 번 통과시킨 실측은 없다 |
+| `run_transaction` · `finalize_only` 의 production 호출자 | **여전히 없다** (CAS 보존 경로는 별도 acceptance) |
+| baseline·sweep1d·wsweep 의 계획 gate | **미착수** (grid·fit 만 배선했다) |
+| 실물 object-lock provider adapter | **미구현** (별도 acceptance) |
+| power-loss ordering fault model | **미착수** (별도 acceptance) |
+| publisher 전용 OS principal | **미착수** |
+| 외적타당도 #48/#49/#50 (단일 C-rate · 셀 간 산포 · `truth_provenance`) | **미착수** |

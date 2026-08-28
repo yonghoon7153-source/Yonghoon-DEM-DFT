@@ -54,6 +54,7 @@ content-addressed backend 로 트랜잭션 의미를 완전히 검증하면 된�
 
 from __future__ import annotations
 
+import contextlib
 import datetime as dt
 import errno
 import hashlib
@@ -3588,6 +3589,13 @@ PLANNED_KEYS = ("leg_id", "cohort_id", "status", "authorization_kind",
                 "authorized_source_digest", "run_spec_digest",
                 "recorded_on", "근거")
 
+#: ★ 48차 P0-5 — prospective 항목은 `run_spec:` 도 담는다. 47차는 계획이
+#:   `run_spec_digest`(불투명 64hex)만 들고 있어서, 그 digest 가 **무엇의**
+#:   주소인지 원장만 보고는 알 수 없었다. 사람이 승인한 내용이 기계가 읽을 수
+#:   없는 형태면 gate 는 "어떤 dict 든 이 digest 를 내면 통과" 가 된다.
+#:   소급 항목에는 없다 (그때는 봉인된 계획 자체가 없었다).
+PLANNED_KEYS_PROSPECTIVE = PLANNED_KEYS + ("run_spec",)
+
 #: ★ 47차 — 승인의 **종류**. 46차는 이 구분이 없어서 소급 기록 8건과 진짜
 #:   실행 전 승인이 같은 schema 로 섞였고, 그래서 "실행 전 gate 가 실제로
 #:   작동한 적이 있는가" 를 기계가 답할 수 없었다 (자유문자 근거 안에만
@@ -3678,7 +3686,7 @@ SMOKE_NAMESPACE = REPO_ROOT / "results" / "_smoke"
 
 def assert_run_is_authorized(leg_id: str, phase: str, paths, run_spec: dict,
                              source_digest: str, ledger=None,
-                             claims_root=None):
+                             claims_root=None, attempt: str | None = None):
     """비싼 계산 **직전**에 부르는 단 하나의 gate (47차 P0-2 조건 11-c).
 
     46차 gate 는 `run.sh` **안에만** 있었다. `--leg` 는 shell 이 소비했고
@@ -3698,7 +3706,17 @@ def assert_run_is_authorized(leg_id: str, phase: str, paths, run_spec: dict,
         return None
     path = _claim_path(leg_id, claims_root)
     if path.is_file():
-        claim = resume_claim(leg_id, claims_root)
+        # ★ 48차 P0-3 — **자동 재개하지 않는다.** 47차는 claim 이 보이면
+        #   credential 없이 이어받았고, 그래서 같은 public 호출 둘이 모두
+        #   compute 에 들어갔다. 재개는 attempt token 을 든 실행만 한다.
+        if not _nonempty_str(attempt or ""):
+            raise PreserveError(
+                "plan",
+                f"{leg_id!r} 은 이미 실행 중이다 (claim: {path}) — 두 번째 "
+                "실행을 시작할 수 없다. 중단된 실행을 이으려면 그 실행의 "
+                "attempt token 을 주라")
+        claim = resume_claim(leg_id, claims_root, attempt=attempt,
+                             ledger=ledger)
         want = run_spec_digest(run_spec)
         if claim.run_spec_digest != want:
             raise PreserveError(
@@ -3767,6 +3785,37 @@ def is_inside_namespace(path, namespace) -> bool:
         return False
 
 
+#: 승격 거부의 **고유 표식**. 경로에 "smoke" 가 들어 있으므로 그 단어만으로는
+#: 회귀가 거부 이유를 증명하지 못한다 — sink 는 이 문장을 낸다.
+SMOKE_REFUSAL = "smoke namespace 산출은 승격 대상이 아니다"
+
+
+def assert_not_smoke_provenance(paths, sink: str) -> None:
+    """smoke 산출을 **정본으로 승격하지 못하게** 한다 (48차 P0-8).
+
+    47차는 smoke 를 계획 gate 에서 **면제**했다 (계약 §13.3.3). 그 면제의 전제는
+    "그 산출이 정본이 되지 않는다" 인데, 그것을 지키는 것이 아무 것도 없었다:
+
+        REPORT_OUT=docs/RESULTS.md ./run.sh --mode report --in results/_smoke/x
+        ./scripts/archive_results.sh results/_smoke/x
+
+    둘 다 gate 를 한 번도 안 지난 실행을 인용 대상 자리에 올렸다. 면제와 승격
+    금지는 **같은 경계**여야 한다 — 한쪽만 있으면 그것은 경계가 아니라 우회로다.
+
+    판정은 `is_inside_namespace()` 로 한다. 계획 gate 의 면제를 정하는 바로 그
+    함수다 — 두 규칙이 갈리면 어느 쪽이 경계인지 정할 수 없다.
+    """
+    bad = [str(p) for p in paths
+           if p is not None and is_inside_namespace(p, SMOKE_NAMESPACE)]
+    if bad:
+        raise PreserveError(
+            "promote",
+            f"{SMOKE_REFUSAL} — {sink} 로 올리려는 입력이 {SMOKE_NAMESPACE} "
+            f"아래에 있다: {bad}. smoke 는 계획 gate 를 면제받는 자리이므로 "
+            "(계약 §13.3.3) 그 산출은 인용 대상이 될 수 없다. 정본을 만들려면 "
+            "계획된 다리로 namespace 밖에서 다시 돌려라")
+
+
 def planned_index(ledger=None) -> dict:
     """`planned:` 를 **검증해서** leg_id → 항목으로 돌려준다 (순수 함수).
 
@@ -3810,12 +3859,24 @@ def planned_index(ledger=None) -> dict:
 
     out: dict = {}
     for e in raw:
-        if not isinstance(e, dict) or set(e) != set(PLANNED_KEYS):
+        # ★ 48차 P0-5 — 승인 종류마다 닫힌 schema 가 다르다. prospective 는
+        #   `run_spec:` 을 담아야 하고 retrospective 는 담을 수 없다.
+        kinds = {"retrospective": PLANNED_KEYS,
+                 "prospective": PLANNED_KEYS_PROSPECTIVE}
+        want_keys = kinds.get(
+            e.get("authorization_kind") if isinstance(e, dict) else None)
+        if want_keys is None:
+            raise PreserveError(
+                "plan", f"계획 항목의 `authorization_kind` 가 계약 enum 이 "
+                        f"아니다: {(e.get('authorization_kind') if isinstance(e, dict) else e)!r}"
+                        f" — {list(AUTHORIZATION_KIND)} 중 하나여야 한다")
+        if set(e) != set(want_keys):
             raise PreserveError(
                 "plan",
                 f"계획 항목이 닫힌 schema 가 아니다: "
                 f"{sorted(e) if isinstance(e, dict) else e!r} — "
-                f"{sorted(PLANNED_KEYS)} 를 정확히 담아야 한다")
+                f"{e.get('authorization_kind')} 항목은 {sorted(want_keys)} 를 "
+                "정확히 담아야 한다")
         for k in PLANNED_KEYS:
             if not _nonempty_str(e[k] if isinstance(e[k], str) else ""):
                 raise PreserveError(
@@ -3849,11 +3910,30 @@ def planned_index(ledger=None) -> dict:
                     "plan", f"소급 항목 {e['leg_id']!r} 의 `run_spec_digest` 는 "
                             f"{RETROSPECTIVE_SPEC!r} 여야 한다 — 그때는 봉인된 "
                             "계획이 없었고, 없는 것을 있는 척하지 않는다")
-        elif len(e["run_spec_digest"]) != 64 or \
-                any(c not in "0123456789abcdef" for c in e["run_spec_digest"]):
-            raise PreserveError(
-                "plan", f"계획 항목 {e['leg_id']!r} 의 `run_spec_digest` 가 "
-                        f"64자리 hex 가 아니다: {e['run_spec_digest']!r}")
+        else:
+            if len(e["run_spec_digest"]) != 64 or \
+                    any(c not in "0123456789abcdef" for c in e["run_spec_digest"]):
+                raise PreserveError(
+                    "plan", f"계획 항목 {e['leg_id']!r} 의 `run_spec_digest` 가 "
+                            f"64자리 hex 가 아니다: {e['run_spec_digest']!r}")
+            # ★ 48차 P0-5 — 선언한 spec 과 그 주소가 **서로 맞아야** 한다.
+            #   안 맞으면 원장에 적힌 계획과 gate 가 대조하는 것이 다른 것이다.
+            spec = e["run_spec"]
+            if not isinstance(spec, dict):
+                raise PreserveError(
+                    "plan", f"계획 항목 {e['leg_id']!r} 의 `run_spec` 이 mapping 이 "
+                            f"아니다: {type(spec).__name__}")
+            got = run_spec_digest(spec)
+            if got != e["run_spec_digest"]:
+                raise PreserveError(
+                    "plan",
+                    f"계획 항목 {e['leg_id']!r} 의 `run_spec_digest` 가 선언한 "
+                    f"`run_spec` 의 주소가 아니다 ({e['run_spec_digest'][:16]} ≠ "
+                    f"{got[:16]}) — 승인 문서와 승인 주소가 다르다")
+            if spec.get("leg_id") != e["leg_id"]:
+                raise PreserveError(
+                    "plan", f"계획 항목 {e['leg_id']!r} 의 `run_spec.leg_id` 가 "
+                            f"다르다: {spec.get('leg_id')!r}")
         # ★ 47차 P0-1 — **계획 roster 와 실행 roster 를 분리한다.** 46차는
         #   실행 roster 하나뿐이라, 계획된 leg 를 어디에 두든 gate·lint·
         #   publisher 중 하나가 반드시 깨졌다 (리뷰어의 4행 표). 계획 중인
@@ -3872,8 +3952,14 @@ def planned_index(ledger=None) -> dict:
     return out
 
 
-def assert_planned_leg(leg_id: str, source_digest: str, ledger=None) -> dict:
-    """이 다리를 **지금 이 코드로** 돌려도 되는가 — 비싼 실행 앞의 gate."""
+def assert_planned_leg(leg_id: str, source_digest: str, ledger=None,
+                       allow: tuple = ("planned",)) -> dict:
+    """이 다리를 **지금 이 코드로** 돌려도 되는가 — 비싼 실행 앞의 gate.
+
+    ★ 48차 P0-6 — `allow` 는 **어느 계획 상태를 승인으로 볼 것인가** 다.
+      새 claim 은 `planned` 만 (`running` 이면 이미 누가 돌고 있다), 재개는
+      `running` 도 (자기가 그 상태로 옮겨 놓았으니까). 기본값은 좁은 쪽이다.
+    """
     idx = planned_index(ledger)
     e = idx.get(leg_id)
     if e is None:
@@ -3882,11 +3968,13 @@ def assert_planned_leg(leg_id: str, source_digest: str, ledger=None) -> dict:
             f"계획 index 에 없는 다리다: {leg_id!r} — 실행 전에 "
             "`LEG_PRESERVATION.yaml` 의 `planned:` 에 사람이 적어야 한다 "
             f"(현재 계획: {sorted(idx)})")
-    if e["status"] != "planned":
+    if e["status"] not in allow:
         raise PreserveError(
             "plan",
-            f"{leg_id!r} 은 이미 executed 로 기록돼 있다 — 실행 기록은 다음 "
-            "실행의 승인이 아니다. 다시 돌리려면 새 계획 항목을 적어라")
+            f"{leg_id!r} 의 계획 상태가 {e['status']!r} 이라 승인이 아니다 "
+            f"(허용 {list(allow)}) — 실행 기록은 다음 실행의 승인이 아니고, "
+            "이미 running 인 다리를 새로 시작할 수도 없다. 다시 돌리려면 새 "
+            "계획 항목을 적어라")
     coh = e["_cohort"]
     if coh.get("status") != "active":
         raise PreserveError(
@@ -3901,6 +3989,68 @@ def assert_planned_leg(leg_id: str, source_digest: str, ledger=None) -> dict:
             f"{source_digest}) — 승인 이후 RUN_SCOPE 가 바뀌었다. 사람이 다시 "
             "승인해야 한다")
     return e
+
+
+#: 한 다리의 승인 spec — **결과를 바꾸는 축만** 담는다 (48차 P0-5).
+#:
+#:   47차 grid gate 의 spec 은 `{leg_id, mode, dry_run, config_digest}` 넷뿐이라
+#:   `--lli`·`--lam-pe`·`--noise`(=조건 집합)와 `--out`(=결과가 놓일 자리)을
+#:   승인 뒤에 통째로 갈아도 같은 digest 가 나왔다. 그러면 승인한 것은 실행이
+#:   아니라 다리 **이름**이다.
+#:
+#:   반대로 `nproc`·`chunk_size`·`resume` 은 **넣지 않는다.** 결과를 바꾸지
+#:   않고(서명 검사가 resume 혼합을 따로 막는다), 넣으면 grid 와 fit 이 서로
+#:   다른 spec 을 만들어 **하나의 claim 아래 두 phase 를 묶을 수 없게** 된다.
+LEG_SPEC_GRID_KEYS = ("config_digest", "condition_ids_sha256",
+                      "n_conditions", "out")
+LEG_SPEC_FIT_KEYS = ("config_digest", "objectives", "out")
+
+
+def leg_run_spec(leg_id: str, grid: dict, fit: dict) -> dict:
+    """한 다리 **전체**의 승인 spec — 두 phase 가 같은 값을 만든다 (48차 P0-5).
+
+    `claim_planned_leg()` 은 `run_spec_digest` 로 승인을 내용 주소화한다. 그
+    주소가 phase 마다 다르면 grid 와 fit 은 서로 다른 claim 을 갖게 되고, 그러면
+    "이 다리 하나가 승인 아래 돌았다" 를 말할 수 없다. 그래서 spec 은 **다리
+    단위**이고 각 phase 는 자기 몫을 채운 뒤 나머지는 계획에서 읽어 온다.
+
+    key 집합은 **닫혀 있다** — 새 CLI 축이 생기면 여기 적히거나 거부되거나
+    둘 중 하나다. 열려 있으면 축이 조용히 승인 밖으로 나간다.
+    """
+    check_id(leg_id)
+    for name, got, want in (("grid", grid, LEG_SPEC_GRID_KEYS),
+                            ("fit", fit, LEG_SPEC_FIT_KEYS)):
+        if not isinstance(got, dict) or set(got) != set(want):
+            raise PreserveError(
+                "plan",
+                f"leg run spec 의 {name} 축이 계약과 다르다 — 있어야 {sorted(want)}, "
+                f"받은 것 {sorted(got) if isinstance(got, dict) else type(got).__name__}")
+    spec = {"leg_spec_version": 1, "leg_id": leg_id,
+            "grid": {k: grid[k] for k in LEG_SPEC_GRID_KEYS},
+            "fit": {k: fit[k] for k in LEG_SPEC_FIT_KEYS}}
+    _assert_json_domain(spec, "leg_run_spec")
+    return spec
+
+
+def declared_leg_run_spec(leg_id: str, ledger=None) -> dict:
+    """계획이 **선언한** spec 을 읽는다 (48차 P0-5).
+
+    한 phase 는 자기 축만 안다 — grid 는 fit config 를, fit 은 조건 집합을
+    모른다. 그래서 각자 자기 몫을 살아 있는 입력에서 만들고 나머지는 여기서
+    읽는다. 살아 있는 몫이 선언과 다르면 digest 가 달라져 claim 이 거부한다.
+    """
+    idx = planned_index(ledger)
+    e = idx.get(leg_id)
+    if e is None:
+        raise PreserveError(
+            "plan", f"계획 index 에 없는 다리다: {leg_id!r} (현재 계획: {sorted(idx)})")
+    spec = e.get("run_spec")
+    if not isinstance(spec, dict):
+        raise PreserveError(
+            "plan",
+            f"{leg_id!r} 의 계획에 `run_spec:` 이 없다 — 승인은 이름이 아니라 "
+            "**무엇을 실행할지**를 담아야 한다 (48차 P0-5)")
+    return spec
 
 
 def run_spec_digest(run_spec: dict) -> str:
@@ -3944,16 +4094,18 @@ class LegClaim:
     """살아 있는 실행 권한 하나 — **원자적으로** 하나만 존재한다 (47차 P0-2)."""
 
     __slots__ = ("leg_id", "cohort_id", "attempt", "run_spec_digest",
-                 "source_digest", "path")
+                 "source_digest", "path", "readonly")
 
     def __init__(self, leg_id, cohort_id, attempt, run_spec_digest,
-                 source_digest, path):
+                 source_digest, path, readonly: bool = False):
         self.leg_id = leg_id
         self.cohort_id = cohort_id
         self.attempt = attempt
         self.run_spec_digest = run_spec_digest
         self.source_digest = source_digest
         self.path = Path(path)
+        #: 소유 증명 없이 열린 claim — 진단용 읽기만 가능하다 (48차 P0-3).
+        self.readonly = readonly
 
     def _read(self) -> dict:
         return json.loads(self.path.read_text(encoding="utf-8"))
@@ -3964,19 +4116,76 @@ class LegClaim:
 
     def phase_done(self, phase: str, receipt: dict) -> None:
         """한 phase 를 **durable 하게** 닫는다. 중단 뒤 재개가 여기서 이어진다."""
+        if self.readonly:
+            raise PreserveError(
+                "plan", f"{self.leg_id!r} 의 claim 을 소유 증명 없이 열었다 — "
+                        "phase 를 기록할 수 없다 (진단용 읽기다)")
         if phase not in CLAIM_PHASES:
             raise PreserveError(
                 "plan", f"모르는 phase: {phase!r} — {list(CLAIM_PHASES)} 중 하나")
         _assert_json_domain(receipt, f"phase[{phase}]")
-        rec = self._read()
-        if rec["attempt"] != self.attempt:
-            raise PreserveError(
-                "plan", f"claim 이 다른 attempt 로 바뀌었다 ({rec['attempt']} ≠ "
-                        f"{self.attempt}) — 이 실행은 더 이상 권한이 없다")
-        rec.setdefault("phases", {})[phase] = {
-            "at": dt.datetime.now(dt.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
-            "receipt": receipt}
-        _atomic_write_json(self.path, rec)
+        # ★ 48차 P0-6 — read-modify-write 를 **임계 구역** 안에서 한다. 47차는
+        #   `grid` 와 `fit` 을 동시에 닫으면 둘 다 `phases` 가 빈 record 를 읽고
+        #   각자 자기 것만 담아 덮어써서 하나가 사라졌다 (실측). 그러면
+        #   `finalize_leg()` 이 "phase 가 남았다" 며 거부하고, 이미 끝난 10시간
+        #   계산을 다시 돌리게 된다.
+        with _ledger_lock(self.path):
+            rec = self._read()
+            if rec["attempt"] != self.attempt:
+                raise PreserveError(
+                    "plan", f"claim 이 다른 attempt 로 바뀌었다 ({rec['attempt']} ≠ "
+                            f"{self.attempt}) — 이 실행은 더 이상 권한이 없다")
+            rec.setdefault("phases", {})[phase] = {
+                "at": dt.datetime.now(dt.timezone.utc).strftime(
+                    "%Y-%m-%dT%H:%M:%SZ"),
+                "receipt": receipt}
+            _atomic_write_json(self.path, rec)
+
+
+@contextlib.contextmanager
+def _ledger_lock(path: Path):
+    """원장 전이의 **임계 구역** (48차 P0-6).
+
+    47차 `finalize_leg()` 는 원장을 read-modify-write 했다: `yaml.safe_load` →
+    dict 수정 → `write_text` 로 통째 덮어쓰기. 두 다리를 동시에 닫으면 둘 다
+    같은 `doc` 을 읽고 각자 자기 항목만 더해 덮으므로 **나중 쓰기가 먼저 쓰기를
+    지운다** — 그리고 두 호출 모두 성공을 돌려준다. 실측했다 (M 이 사라졌다).
+
+    원장은 "이 실행이 있었다" 의 유일한 증거이므로 lost update 는 증거 소실이다.
+    `flock` 은 같은 기계의 process·thread 사이에서 상호배제를 준다 (네트워크
+    파일시스템은 계약 §13.3.1 의 전제 밖이다).
+    """
+    import fcntl
+
+    lp = Path(path).with_name(Path(path).name + ".lock")
+    lp.parent.mkdir(parents=True, exist_ok=True)
+    fd = os.open(lp, os.O_CREAT | os.O_RDWR, 0o644)
+    try:
+        fcntl.flock(fd, fcntl.LOCK_EX)
+        try:
+            yield
+        finally:
+            fcntl.flock(fd, fcntl.LOCK_UN)
+    finally:
+        os.close(fd)
+
+
+def _atomic_write_text(path: Path, text: str) -> None:
+    """원장을 **원자적으로** 굳힌다 — 부분 쓰기가 보이지 않게 (48차 P0-6)."""
+    path = Path(path)
+    tmp = path.with_name(f".{path.name}.{uuid.uuid4().hex}.tmp")
+    tmp.write_text(text, encoding="utf-8")
+    fd = os.open(tmp, os.O_RDONLY)
+    try:
+        os.fsync(fd)
+    finally:
+        os.close(fd)
+    os.replace(tmp, path)
+    dfd = os.open(path.parent, os.O_RDONLY)
+    try:
+        os.fsync(dfd)
+    finally:
+        os.close(dfd)
 
 
 def _atomic_write_json(path: Path, rec: dict) -> None:
@@ -4000,10 +4209,41 @@ DEFAULT_CLAIMS_ROOT = (Path(__file__).resolve().parents[1] / "results" / "_claim
 
 
 def _claim_path(leg_id: str, claims_root=None) -> Path:
-    root = Path(claims_root or DEFAULT_CLAIMS_ROOT)
-    if "/" in leg_id or leg_id in (".", ".."):
-        raise PreserveError("plan", f"leg 이름이 경로 성분을 담고 있다: {leg_id!r}")
-    return root / f"{leg_id}.claim"
+    """★ 48차 P0-6 — ID 도메인은 **한 곳**이다.
+
+    47차는 `"/" in leg_id` 만 봤다. Windows separator(`..\\..\\outside`)·device
+    이름(`nul`)·길이는 다 통과했다. 이 저장소는 27차 P1-4 에 정확히 그 반례로
+    `check_id()` 를 만들었는데 claim 경로만 따로 약하게 검사하고 있었다 — 같은
+    도메인을 두 곳에서 다르게 정하면 **약한 쪽이 실효 규칙**이다.
+    """
+    check_id(leg_id)
+    return Path(claims_root or DEFAULT_CLAIMS_ROOT) / f"{leg_id}.claim"
+
+
+def _mark_plan_running(leg_id: str, ledger=None) -> None:
+    """계획을 `planned → running` 으로 옮긴다 (48차 P0-6).
+
+    47차는 `PLANNED_STATUS` 에 `running` 을 선언만 해 두고 **어떤 코드도 그
+    값을 쓰지 않았다.** 그래서 원장만 보고 "지금 도는 다리가 있는가" 를 답할 수
+    없었고, claim 파일이 사라진 crash 뒤에 계획은 여전히 `planned` 이라 다른
+    실행이 태연히 새 claim 을 땄다. 선언만 있고 전이가 없으면 상태 기계가 아니다.
+    """
+    import yaml
+
+    path = Path(ledger or DEFAULT_LEDGER)
+    with _ledger_lock(path):
+        doc = yaml.safe_load(path.read_text(encoding="utf-8")) or {}
+        row = next((e for e in doc.get("planned") or []
+                    if e.get("leg_id") == leg_id), None)
+        if row is None:
+            raise PreserveError("plan", f"계획 index 에 {leg_id!r} 이 없다")
+        if row.get("status") != "planned":
+            raise PreserveError(
+                "plan", f"{leg_id!r} 의 계획 상태가 {row.get('status')!r} 이라 "
+                        "running 으로 옮길 수 없다")
+        row["status"] = "running"
+        _atomic_write_text(path, yaml.safe_dump(doc, allow_unicode=True,
+                                                sort_keys=False))
 
 
 def claim_planned_leg(leg_id: str, run_spec: dict, source_digest: str,
@@ -4061,11 +4301,32 @@ def claim_planned_leg(leg_id: str, run_spec: dict, source_digest: str,
         os.fsync(dfd)
     finally:
         os.close(dfd)
+    # ★ 48차 P0-6 — claim 파일을 굳힌 **뒤** 계획을 running 으로 옮긴다.
+    #   순서가 중요하다: 파일이 먼저여야 `O_EXCL` 이 상호배제의 authority 로
+    #   남는다. 원장 전이가 실패하면 claim 을 되돌린다 — 잡아만 놓고 원장에는
+    #   안 보이는 다리를 남기지 않는다.
+    try:
+        _mark_plan_running(leg_id, ledger=ledger)
+    except BaseException:
+        path.unlink(missing_ok=True)
+        raise
     return LegClaim(leg_id, e["cohort_id"], attempt, want, source_digest, path)
 
 
-def resume_claim(leg_id: str, claims_root=None) -> LegClaim:
-    """중단된 실행을 **같은 attempt 로** 이어받는다 (재계산 없이 finalize)."""
+def resume_claim(leg_id: str, claims_root=None, attempt: str | None = None,
+                 ledger=None) -> LegClaim:
+    """중단된 실행을 **같은 attempt 로** 이어받는다 (재계산 없이 finalize).
+
+    ★ 48차 P0-3 — `attempt` 는 **소유 증명**이다. 47차는 claim 파일이 보이면
+      누구든 이어받을 수 있었고, public gate 가 그것을 자동으로 했다. 그래서
+      같은 public 호출 둘이 모두 같은 attempt 로 compute 에 들어갔다 —
+      `O_EXCL` 은 파일 최초 생성만 배타적이었지 **실행권**은 배타적이지
+      않았다. 이름과 spec 만으로 이어받을 수 있으면 그것은 재개가 아니라
+      두 번째 발급이다.
+
+      `attempt=None` 은 **진단용 읽기**이며 phase 를 쓸 수 없는 claim 을
+      돌려준다 (`_readonly=True`).
+    """
     path = _claim_path(leg_id, claims_root)
     if not path.is_file():
         raise PreserveError("plan", f"이어받을 claim 이 없다: {path}")
@@ -4073,12 +4334,89 @@ def resume_claim(leg_id: str, claims_root=None) -> LegClaim:
     if set(rec) != set(CLAIM_KEYS):
         raise PreserveError(
             "plan", f"claim schema 가 계약과 다르다: {sorted(rec)}")
+    if attempt is not None and attempt != rec["attempt"]:
+        raise PreserveError(
+            "plan",
+            f"{leg_id!r} 의 claim 소유 증명이 맞지 않는다 — 이 실행은 그 "
+            "attempt 를 갖고 있지 않다. 다른 실행이 이미 이 다리를 잡고 있다")
+    # ★ 48차 — 재개할 때마다 **살아 있는 원장 authority** 를 다시 본다.
+    #   47차 existing-claim 분기는 원장을 읽지 않아, claim 뒤 계획에서 L 을
+    #   지우거나 cohort 를 frozen 으로 바꿔도 계속 승인됐다.
+    if attempt is not None:
+        e = assert_planned_leg(rec["leg_id"], rec["source_digest"],
+                               ledger=ledger, allow=("planned", "running"))
+        if e["cohort_id"] != rec["cohort_id"]:
+            raise PreserveError(
+                "plan", f"{leg_id!r} 의 cohort 가 claim 이후 바뀌었다 "
+                        f"({rec['cohort_id']} → {e['cohort_id']})")
+        if e["run_spec_digest"] != rec["run_spec_digest"]:
+            raise PreserveError(
+                "plan", f"{leg_id!r} 의 승인된 run_spec 이 claim 이후 바뀌었다")
     return LegClaim(rec["leg_id"], rec["cohort_id"], rec["attempt"],
-                    rec["run_spec_digest"], rec["source_digest"], path)
+                    rec["run_spec_digest"], rec["source_digest"], path,
+                    readonly=attempt is None)
+
+
+#: 실행 기록의 보존 상태. **검증한 만큼만** 적는다 (48차 P0-4).
+#:
+#:   full_bundle          — clone 한 사람이 검증할 수 있는 묶음이 **실재한다**.
+#:                          `_verify_declared_bundle()` 이 디스크에서 확인한
+#:                          경우에만 붙는다.
+#:   recorded_projection  — 투영·요약은 남았고 원자료 묶음은 없다.
+#:   no_bundle            — 실행은 기록됐고 보존 묶음은 없다.
+PRESERVATION_STATUS = ("full_bundle", "recorded_projection", "no_bundle")
+
+#: 묶음 주장이 담아야 할 필드. 하나라도 있으면 **전부** 있어야 하고, 전부
+#: 디스크에서 다시 계산해 맞아야 한다.
+BUNDLE_EVIDENCE_KEYS = ("bundle_uri", "bundle_files", "payload_bytes",
+                        "payload_index", "payload_index_sha256")
+
+
+def _verify_declared_bundle(evidence: dict, repo_root=None) -> list:
+    """선언한 묶음을 **디스크에서** 확인한다 (48차 P0-4).
+
+    47차 `finalize_leg()` 은 caller 의 dict 를 그대로 옮겨 적고
+    `preservation_status: full_bundle` 을 붙였다. 그 상태의 뜻은 "clone 한
+    사람이 이 결과를 검증할 수 있는 묶음이 실재한다"(계약 §8)인데 디스크를
+    보지 않았다 — 아무 dict 나 주면 원장에 완전 묶음이 생겼다.
+
+    원장은 이 저장소에서 **증거의 정본**이다. 거기에 검증되지 않은 주장을 쓰는
+    함수는 증거를 만드는 것이 아니라 증거를 오염시킨다.
+
+    회귀(`test_full_bundle_claims_are_backed_by_a_real_bundle`)가 원장 전체에
+    대고 같은 검사를 한다 — 여기서 막지 않으면 그 회귀가 **나중에** 빨개진다.
+    """
+    root = Path(repo_root or Path(__file__).resolve().parents[1])
+    bad: list = []
+    present = [k for k in BUNDLE_EVIDENCE_KEYS if k in evidence]
+    if not present:
+        return bad                       # 묶음을 주장하지 않았다 — 그것도 사실이다
+    missing = [k for k in BUNDLE_EVIDENCE_KEYS if k not in evidence]
+    if missing:
+        return [f"묶음 주장이 불완전하다 — 없는 필드 {missing}"]
+
+    d = root / str(evidence["bundle_uri"])
+    if not d.is_dir():
+        return [f"묶음 경로가 없다: {evidence['bundle_uri']}"]
+    files = sorted(x for x in d.rglob("*") if x.is_file())
+    if len(files) != evidence["bundle_files"]:
+        bad.append(f"묶음 파일 수 {len(files)} ≠ 선언 {evidence['bundle_files']}")
+    nbytes = sum(x.stat().st_size for x in files)
+    if nbytes != evidence["payload_bytes"]:
+        bad.append(f"묶음 바이트 {nbytes} ≠ 선언 {evidence['payload_bytes']}")
+    idx = root / str(evidence["payload_index"])
+    if not idx.is_file():
+        bad.append(f"payload index 가 없다: {evidence['payload_index']}")
+    else:
+        got = hashlib.sha256(idx.read_bytes()).hexdigest()
+        if got != evidence["payload_index_sha256"]:
+            bad.append(f"payload index sha {got[:16]} ≠ 선언 "
+                       f"{str(evidence['payload_index_sha256'])[:16]}")
+    return bad
 
 
 def finalize_leg(leg_id: str, evidence: dict, ledger=None,
-                 claims_root=None) -> dict:
+                 claims_root=None, attempt: str | None = None) -> dict:
     """모든 phase 가 끝난 claim 을 **executed 로 닫는다** (47차 P0-1).
 
     계획 roster 에서 빼고 실행 roster 와 실행 기록에 넣는다. 이 전이가 없으면
@@ -4087,13 +4425,22 @@ def finalize_leg(leg_id: str, evidence: dict, ledger=None,
     """
     import yaml
 
-    claim = resume_claim(leg_id, claims_root)
+    claim = resume_claim(leg_id, claims_root, attempt=attempt, ledger=ledger)
     missing = [p for p in CLAIM_PHASES if p not in claim.phases_done()]
     if missing:
         raise PreserveError(
             "plan", f"{leg_id!r} 의 phase 가 남았다: {missing} — 모든 phase 가 "
                     "끝나야 executed 로 닫는다")
     _assert_json_domain(evidence, "evidence")
+    # ★ 48차 P0-4 — 묶음 주장을 **디스크에서** 확인한다. 확인 전에는 아무 것도
+    #   쓰지 않는다 (거부하면서 기록을 남기면 그것이 곧 오염이다).
+    bundle_bad = _verify_declared_bundle(evidence)
+    if bundle_bad:
+        raise PreserveError(
+            "plan",
+            f"{leg_id!r} 의 묶음 주장이 실물과 다르다 — 검증되지 않은 보존 "
+            "상태를 원장에 쓸 수 없다:\n  " + "\n  ".join(bundle_bad))
+    claimed_bundle = all(k in evidence for k in BUNDLE_EVIDENCE_KEYS)
     if not _nonempty_str(evidence.get("leg_source_digest") or ""):
         raise PreserveError(
             "plan", "evidence.leg_source_digest 가 없다 — 실행 기록을 실물에 "
@@ -4105,29 +4452,47 @@ def finalize_leg(leg_id: str, evidence: dict, ledger=None,
             f"({evidence['leg_source_digest']} ≠ {claim.source_digest})")
 
     path = Path(ledger or DEFAULT_LEDGER)
-    doc = yaml.safe_load(path.read_text(encoding="utf-8")) or {}
-    plan = next((e for e in doc.get("planned") or [] if e.get("leg_id") == leg_id),
-                None)
-    if plan is None:
-        raise PreserveError("plan", f"계획 index 에 {leg_id!r} 이 없다")
-    if plan.get("status") not in ("planned", "running"):
-        raise PreserveError(
-            "plan", f"{leg_id!r} 의 계획 상태가 {plan.get('status')!r} 이라 "
-                    "executed 로 닫을 수 없다")
-    coh = next((c for c in doc.get("cohorts") or []
-                if c.get("cohort_id") == claim.cohort_id), None)
-    if coh is None:
-        raise PreserveError("plan", f"원장에 cohort {claim.cohort_id!r} 이 없다")
+    # ★ 48차 P0-6 — 읽기·수정·쓰기 **전체**가 임계 구역 안이다. 밖에서 읽고
+    #   안에서 쓰면 읽은 값이 이미 낡았을 수 있으므로 의미가 없다.
+    with _ledger_lock(path):
+        doc = yaml.safe_load(path.read_text(encoding="utf-8")) or {}
+        plan = next((e for e in doc.get("planned") or []
+                     if e.get("leg_id") == leg_id), None)
+        if plan is None:
+            raise PreserveError("plan", f"계획 index 에 {leg_id!r} 이 없다")
+        if plan.get("status") not in ("planned", "running"):
+            raise PreserveError(
+                "plan", f"{leg_id!r} 의 계획 상태가 {plan.get('status')!r} 이라 "
+                        "executed 로 닫을 수 없다")
+        coh = next((c for c in doc.get("cohorts") or []
+                    if c.get("cohort_id") == claim.cohort_id), None)
+        if coh is None:
+            raise PreserveError("plan", f"원장에 cohort {claim.cohort_id!r} 이 없다")
+        if any(e.get("leg_id") == leg_id for e in doc.get("legs") or []):
+            raise PreserveError(
+                "plan", f"{leg_id!r} 의 실행 기록이 이미 있다 — 같은 다리를 두 번 "
+                        "닫을 수 없다")
 
-    plan["status"] = "executed"
-    coh["prospective_legs"] = sorted(
-        x for x in (coh.get("prospective_legs") or []) if x != leg_id)
-    coh["legs"] = sorted(set(coh.get("legs") or []) | {leg_id})
-    doc.setdefault("legs", []).append(
-        {"leg_id": leg_id, "preservation_status": "full_bundle",
-         "evidence": dict(evidence)})
-    path.write_text(
-        yaml.safe_dump(doc, allow_unicode=True, sort_keys=False), encoding="utf-8")
+        plan["status"] = "executed"
+        coh["prospective_legs"] = sorted(
+            x for x in (coh.get("prospective_legs") or []) if x != leg_id)
+        coh["legs"] = sorted(set(coh.get("legs") or []) | {leg_id})
+        # ★ 48차 P0-4 — **검증한 만큼만** 적고, lifecycle 이 실제로 남긴
+        #   증거(phase receipt)를 기록에 넣는다. 47차는 phase receipt 를 다
+        #   버리고 caller 의 주장만 옮겼다 — 그러면 원장에 남는 것은 "누가
+        #   그렇다고 했다" 뿐이고 "무엇이 실제로 돌았다" 가 아니다.
+        rec_evidence = dict(evidence)
+        rec_evidence["phases"] = {
+            ph: claim._read()["phases"][ph] for ph in CLAIM_PHASES}
+        rec_evidence["attempt"] = claim.attempt
+        rec_evidence["run_spec_digest"] = claim.run_spec_digest
+        doc.setdefault("legs", []).append(
+            {"leg_id": leg_id,
+             "preservation_status": "full_bundle" if claimed_bundle
+             else "no_bundle",
+             "evidence": rec_evidence})
+        _atomic_write_text(path, yaml.safe_dump(doc, allow_unicode=True,
+                                                sort_keys=False))
     claim.path.unlink(missing_ok=True)
     return {"leg_id": leg_id, "attempt": claim.attempt, "status": "executed"}
 

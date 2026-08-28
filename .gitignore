@@ -32,3 +32,6 @@ latest_run
 #   worktree 가 더러워지고, checkout·배포가 그 pathname 의 inode 를 갈아
 #   끼울 수 있다 (그 자체가 lock capability 를 무효화하는 조건이다).
 .publish.lock
+
+# ★ 48차 P0-8 — gated 진입점을 태우는 단위 시험의 산출 (면제 namespace 안)
+degradation-degeneracy/results/_smoke/_unit/

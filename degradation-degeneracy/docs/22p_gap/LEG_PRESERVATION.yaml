@@ -56,7 +56,16 @@ cohorts:
 
   - cohort_id: g2_2026_08_25
     dir: docs/22p_gap/proj_g2
-    status: active
+    status: frozen        # ★ 48차 — producer identity 정의가 바뀌어 g3 로 간다
+    frozen_reason: >-
+      48차에 `producer_semantic_sha256` 의 **정의**가 바뀌었다 (닫힘이
+      `src.scoring` 으로 넓어지고, decorator 가 정규형에 들어오고, 절단면이
+      봉인 preimage 에 들어가고, 정규형이 인터프리터 버전에서 풀렸다).
+      값은 `908503e65162e7d9` → `bbb1c4d6fc982610`. 계약 §13.3.2 대로 pin 은
+      cohort lifetime 동안 고정이므로 이 cohort 를 얼리고 `g3_2026_08_28` 로
+      간다. **행 바이트는 안 움직였다** — 움직인 것은 identity 의 정의다.
+      원자료(`results/paired_fixed5_v4/`)가 살아 있으므로 g1 과 달리 이
+      cohort 는 재생성 가능하지만, 얼린 것은 손대지 않는다.
     prospective_legs: []          # 47차 P0-1 — 계획 roster (실행 roster 와 분리)
     cross_leg_comparison: not_applicable_single_leg
     무엇이_달라졌나: >-
@@ -85,6 +94,48 @@ cohorts:
       src_scoring_py_sha256: 69e69cb046f4b4ae
       analysis_spec_sha256: 43d74dd385b1f66d28cc371dd7ebbd00fc0289323e0a515114eb2b8d45d56271
       producer_semantic_sha256: 908503e65162e7d9
+    runtime: {python: "3.11.15", pandas: "3.0.5", pyarrow: "25.0.1",
+              numpy: "2.4.6", yaml: "6.0.3"}
+    legs: [paired_fixed5_v4]
+
+  # ── 2026-08-28 (48차) — producer identity 정의가 바뀌어 **새 cohort** ──────
+  - cohort_id: g3_2026_08_28
+    dir: docs/22p_gap/proj_g3
+    status: active
+    prospective_legs: []
+    cross_leg_comparison: not_applicable_single_leg
+    무엇이_달라졌나: >-
+      **행 바이트가 아니라 producer identity 의 정의가 바뀌었다.** 48차 게이트
+      리뷰(47차 조건 P0-2)가 47차 `producer_semantic_sha256` 의 네 구멍을
+      짚었고, 넷을 다 막으면서 값이 `908503e65162e7d9` →
+      `bbb1c4d6fc982610` 로 움직였다:
+
+      (1) 닫힘이 `row_projection.py` 안에서 멈춰 `src.scoring` 의 채점 함수를
+          안 봤다 — 채점 의미를 통째로 바꿔도 digest 가 안 움직였다.
+      (2) `ast.get_source_segment` 이 `decorator_list` 를 버렸다 —
+          `@lru_cache` 를 붙이고 떼도 같은 값이었다.
+      (3) `_PRODUCER_CUT` 이 **넓어지는** 것은 막히지 않았다 (좁아지는 것만
+          fail-closed 였다).
+      (4) 정규형이 인터프리터 버전에 묶여 있었다. 실측: 같은 바이트에 대해
+          3.11 `908503e65162e7d9` · 3.12 `d4ae1c027b434e83` ·
+          3.13 `aa1cf2cf045c41ea` — 세 값이었다. 지금은 3.10~3.13 이
+          같은 값을 낸다 (회귀가 이 기계에서 대조한다).
+
+      계약 §13.3.2 대로 pin 은 cohort lifetime 동안 고정이므로 g2 를 얼리고
+      **새 cohort ID + 새 출력 디렉터리**로 간다. g2 의 바이트와 pin 은
+      그대로 두었다 — 얼린 것을 손대지 않는다.
+    행_바이트가_같은가: >-
+      같다. `projection_sha256` · `restart_projection_sha256` · `fits_sha256`
+      이 g2 와 바이트 동일하다 (48차 변경은 전부 identity 정의·게이트 배선이고
+      계산식이 아니다). 그래도 **cross-cohort 비교는 금지**다 — 같은 바이트라는
+      사실은 회귀가 확인하는 것이지 인용의 근거가 아니다.
+    pin:
+      schema_version: 3
+      compute_sha256: 48c85e8ada431242
+      row_projection_py_sha256: 154bd3764b15539c
+      src_scoring_py_sha256: 69e69cb046f4b4ae
+      analysis_spec_sha256: 43d74dd385b1f66d28cc371dd7ebbd00fc0289323e0a515114eb2b8d45d56271
+      producer_semantic_sha256: bbb1c4d6fc982610
     runtime: {python: "3.11.15", pandas: "3.0.5", pyarrow: "25.0.1",
               numpy: "2.4.6", yaml: "6.0.3"}
     legs: [paired_fixed5_v4]
@@ -236,18 +287,18 @@ legs:
       #   commit SHA·실행 시각·dirty 여부는 stamp 로 뺐다 (그것들을 core 에
       #   두면 커밋된 영수증이 원리적으로 재생 불가능해진다).
       verification_receipt: docs/22p_gap/receipts/paired_fixed5_v4.validate.yaml
-      verification_receipt_core_sha256: fd0791143e278c75c50ec5366ad4e5f8ab622a08bdf9908fdba1a74f41c47bbd
+      verification_receipt_core_sha256: 8e85739e03a2ec42a02710ab0515766af1b19e441968dab3950c081724496309
       verification_receipt_generator: docs/22p_gap/make_receipt.py
       empty_root_restore: true       # 원본 results/ 에 접근하지 않고 복원해 검증
       rescored_from_restored_fits: true
       validator_identity:
-        source_digest: 209dc305783f62a6
+        source_digest: e77598f97c40e809
         n_checks: 34
         ok: true
       leg_source_digest: d50295f980ccaa81            # 산출물 쪽 (옛 세대)
       fits_sha256: e033b19510ddbed951cfebe7e28793f19c5f0da915268b0731a30c56f0b3b064
       fits_봉인일치: true
-      cohorts: [g1_2026_08_20, g2_2026_08_25]
+      cohorts: [g1_2026_08_20, g2_2026_08_25, g3_2026_08_28]
       regeneration_capability: available_raw_present
     claim_roles:
       - claim_id: LEGACY_PAIRED_FIXED5

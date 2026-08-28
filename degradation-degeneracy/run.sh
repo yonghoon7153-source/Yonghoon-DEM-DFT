@@ -158,7 +158,7 @@ HALFCELL_ARGS=()          # --halfcell-arg 는 여러 번 올 수 있다 (set -u
 while [[ $# -gt 0 ]]; do
   case "$1" in
     --mode)          MODE="$2"; shift 2 ;;
-    --leg)           LEG="$2"; shift 2 ;;      # ★ 46차 P0-11 — 실행 전 gate 대상
+    --leg)           LEG="$2"; export LEG; shift 2 ;;   # ★ 48차 P0-5 — export
     --config)        CONFIG="$2"; shift 2 ;;
     --lli)           LLI="$2"; shift 2 ;;
     --lam-pe)        LAM_PE="$2"; shift 2 ;;

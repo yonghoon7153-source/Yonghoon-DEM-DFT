@@ -492,6 +492,55 @@ def parse_halfcell_kw(items) -> dict:
     return kw
 
 
+def _record_phase(claim, phase: str, summary: dict, out_dir) -> None:
+    """끝난 phase 의 receipt 를 claim 에 남긴다 (48차 P0-4).
+
+    smoke namespace 는 claim 이 없다(`None`) — 그때는 남길 것도 없다.
+    receipt 는 **재계산 없이 finalize** 하기 위한 근거이므로, 그 phase 가
+    무엇을 만들었는지 가리키는 값만 담는다.
+    """
+    if claim is None:
+        return
+    claim.phase_done(phase, {
+        "out": str(out_dir),
+        "n_rows": int(summary.get("n_rows") or summary.get("n_fits") or 0),
+        "finished_at": __import__("time").strftime("%Y-%m-%dT%H:%M:%SZ",
+                                                  __import__("time").gmtime())})
+
+
+def _assert_fit_authorized(objectives: dict, out_dir, obj_cfg: dict,
+                           leg: str | None = None,
+                           attempt: str | None = None):
+    """fit 쪽 계획 gate (48차 P0-8 · P0-5).
+
+    grid 와 **같은 spec** 을 만든다: 자기 축(목적함수 집합·config·산출 위치)은
+    살아 있는 입력에서, 조건 집합 절반은 계획이 선언한 값에서. 두 phase 가 같은
+    digest 를 내야 하나의 claim 아래 묶인다.
+    """
+    import hashlib as _h
+    import json as _j
+
+    from src.grid import leg_name, leg_out_key
+    from src.io import source_digest
+    from tools.preserve import (assert_run_is_authorized, declared_leg_run_spec,
+                                leg_run_spec, is_inside_namespace,
+                                SMOKE_NAMESPACE)
+
+    leg = leg_name(leg)
+    if is_inside_namespace(out_dir, SMOKE_NAMESPACE):
+        return None
+    live_fit = {
+        "config_digest": _h.sha256(
+            _j.dumps(obj_cfg, sort_keys=True, ensure_ascii=False,
+                     default=str).encode("utf-8")).hexdigest()[:16],
+        "objectives": sorted(objectives),
+        "out": leg_out_key(out_dir)}
+    declared = declared_leg_run_spec(leg)
+    spec = leg_run_spec(leg, declared.get("grid") or {}, live_fit)
+    return assert_run_is_authorized(leg, "fit", [out_dir], spec,
+                                    source_digest(), attempt=attempt)
+
+
 def run_fit(in_dir, out_dir, obj_cfg: dict, objectives: dict, bounds: dict,
             bounds_preset: str, n_restarts: int, nproc: int,
             use_noisy: bool = True, limit: int | None = None,
@@ -500,7 +549,8 @@ def run_fit(in_dir, out_dir, obj_cfg: dict, objectives: dict, bounds: dict,
             warm_start: bool = True, adaptive: bool = True,
             method: str = "Nelder-Mead",
             halfcell_method: str = "ocp",
-            halfcell_kw: dict | None = None) -> dict:
+            halfcell_kw: dict | None = None,
+            leg: str | None = None) -> dict:
     """grid 결과 전체에 fitting 수행 → fits.parquet.
 
     subset: 이 cond_id 집합만 fitting (Phase 6 가중치 sweep의 층화 표본용).
@@ -535,14 +585,24 @@ def run_fit(in_dir, out_dir, obj_cfg: dict, objectives: dict, bounds: dict,
     from src.io import acquire_run_lock, release_run_lock
 
     out_dir = Path(out_dir)
+    # ★ 48차 P0-8 — **첫 부작용 전에** 계획 gate 를 지난다. 47차는 `src.grid`
+    #   만 배선하고 fit 은 다음 라운드로 미뤘는데, 실제 결과(`fits.parquet`)를
+    #   만드는 것은 fit 이다. gate 없는 쪽이 결과를 만들면 gate 는 장식이다.
+    claim = _assert_fit_authorized(objectives, out_dir, obj_cfg, leg=leg)
     out_dir.mkdir(parents=True, exist_ok=True)
     acquire_run_lock(out_dir, ".fit.lock")
     try:
-        return _run_fit_locked(in_dir, out_dir, obj_cfg, objectives, bounds,
-                               bounds_preset, n_restarts, nproc, use_noisy,
-                               limit, base_config, reference, resume, subset,
-                               warm_start, adaptive, method, halfcell_method,
-                               halfcell_kw)
+        summary = _run_fit_locked(in_dir, out_dir, obj_cfg, objectives, bounds,
+                                  bounds_preset, n_restarts, nproc, use_noisy,
+                                  limit, base_config, reference, resume, subset,
+                                  warm_start, adaptive, method, halfcell_method,
+                                  halfcell_kw)
+        # ★ 48차 P0-4 — 끝난 phase 를 **durable 하게 닫는다.** 47차는
+        #   `phase_done()`·`finalize_leg()` 을 만들어 놓고 production 에서 한
+        #   번도 부르지 않았다 — lifecycle 이 있는데 아무 것도 그 상태를
+        #   움직이지 않으면 그것은 lifecycle 이 아니라 죽은 코드다.
+        _record_phase(claim, "fit", summary, out_dir)
+        return summary
     finally:
         release_run_lock(out_dir, ".fit.lock")
 
@@ -1099,6 +1159,9 @@ def main() -> None:
     from src.config import load_config
 
     ap = argparse.ArgumentParser(description="alpha/beta fitting (33p·34p)")
+    ap.add_argument("--leg", default=None,
+                    help="`LEG_PRESERVATION.yaml` 의 `planned:` 에서 찾을 다리 "
+                         "이름 (48차 P0-5 — 없으면 LEG/CANONICAL_RUN 환경변수)")
     ap.add_argument("--in", dest="in_dir", required=True, help="grid 결과 디렉터리")
     ap.add_argument("--out", default=None, help="기본: --in 과 동일")
     ap.add_argument("--objectives-config", default="configs/objectives.yaml")
@@ -1169,6 +1232,7 @@ def main() -> None:
     bounds = presets[args.bounds]
 
     summary = run_fit(
+        leg=args.leg,
         in_dir=args.in_dir, out_dir=args.out or args.in_dir,
         obj_cfg=cfg, objectives=objectives, bounds=bounds,
         bounds_preset=args.bounds,
