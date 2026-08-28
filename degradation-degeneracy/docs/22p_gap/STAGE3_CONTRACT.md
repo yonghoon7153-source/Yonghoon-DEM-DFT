@@ -945,13 +945,54 @@ writer" 를 위협 모델에 두고 검사를 계속 늘렸다. 44차에 그 중
 이 절은 그것을 가리킨다 (`test_the_publisher_declares_its_trust_boundary`
 가 둘이 함께 있는지 본다).
 
-남는 것은 다음 셋이며, 전제가 깨져도 **탐지**는 된다.
+남는 것은 다음 셋이다. **44차 리뷰 지적을 받아 과장을 걷어낸다** — 45차 정정:
 
 | 축 | 상태 |
 |---|---|
-| lock 취득~commit 사이의 pointer/원장 변경 | 검사한다 (`_commit_guard` + `os.replace` 직전 재확인) |
-| `os.replace` 직전~직후의 마지막 창 | **전제로 배제** — 검사로 못 닫는다 |
-| 잃은 pointer 의 복구 | generation directory 는 immutable 이므로 가능 |
+| lock 취득~`os.replace` 직전의 pointer/원장 변경 | 검사한다 (`_commit_guard` + `os.replace` 직전 pointer 재확인) |
+| `os.replace` 직전~직후의 마지막 창 | **전제로 배제** — 검사로 못 닫고 **탐지되지도 않는다** |
+| 그 창에서 덮인 pointer | **복구되지 않는다** (아래) |
+
+44차판은 "전제가 깨져도 탐지는 된다" 고 적었는데 **틀렸다.** 마지막 창에서
+덮인 pointer 는 아무도 못 본다 — 그것이 그 창의 정의다.
+
+generation directory 가 immutable 이라는 것은 **바이트가 남는다**는 뜻이지
+"어느 pointer 가 정본이었는지 회수된다" 는 뜻이 아니다. 여러 valid generation
+중 무엇이 active authority 였는지는 durable commit journal 이나 기대 pointer
+digest 없이는 정할 수 없고, 그런 것은 **없다**. 둘을 구분해 적는다:
+
+- **바이트 보존**: 된다 (generation 은 immutable 하게 굳어 있다)
+- **정본 pointer 복구**: 안 된다 (사람이 원장·수령증으로 재판단해야 한다)
+
+### 13.3.1.1 배포 점검이 증명하는 것과 못 하는 것
+
+디렉터리 소유자·퍼미션 점검은 **cooperative-local 설정 점검**이다. gross
+misconfiguration(group/other write, 남의 소유, symlink 경유)은 잡지만
+**cooperative behavior 를 증명하지 못한다** — 같은 principal 의 코드는
+퍼미션을 그대로 지나가고, uid 0 에서는 mode bit 가 잠금이 아니다.
+
+강한 enforcement 를 주장하려면 publisher 전용 service principal 과, worker
+principal 의 create/rename/link/write 가 **실제로 거부되는** negative canary 가
+필요하다. 그것은 미착수다.
+
+### 13.3.2 roster 는 cohort lifetime 동안 immutable 이다 (45차)
+
+`CURRENT` 와 `.PENDING` 은 게시 당시의 **원장 authority** 를 봉인한다:
+
+```
+_LEDGER_AUTHORITY = ("cohort_id", "dir", "status", "legs")
+```
+
+reader(`read_current()`)도 그 봉인값을 지금의 원장과 대조한다. 따라서:
+
+- cohort 의 `legs`·`status`·`dir`·`cohort_id` 중 하나라도 바뀌면 그 cohort 의
+  기존 pointer 는 **더 이상 authority 가 아니다** (게시도 읽기도 거부된다).
+- 명부를 바꾸려면 **새 cohort ID 와 새 출력 디렉터리**로 간다.
+
+`pin`·`runtime`·산문 키는 **authority 가 아니다** — 기록이다. 그것들은 라운드
+마다 바뀌므로 봉인 범위에 넣으면 pin 을 갱신하는 순간 이미 게시된 pointer 가
+전부 무효가 된다 (45차에 실측했다). 무엇이 authority 인지 정하지 않고 record
+전체를 봉인했던 것이 44차의 과했던 점이다.
 
 ### 13.4 묶음 9 가 아직 못 하는 것 — planned leg index
 

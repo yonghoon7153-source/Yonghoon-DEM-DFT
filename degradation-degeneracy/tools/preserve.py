@@ -1818,6 +1818,16 @@ class ObjectLockBackend(CasBackend):
                     f"{key} 에 넣으려는 바이트가 digest 와 다르다 — 잠그기 전에 "
                     "거부한다 (lock 은 되돌릴 수 없다)")
             vid = self.provider.put(key, data)
+            # ★ 45차 — **falsy·비문자열 VersionId 를 먼저 거부한다.** provider
+            #   의 `get(key, version)` 은 version 이 falsy 면 exact lookup 이
+            #   아니라 **head lookup** 이 된다 (실물 adapter 도 VersionId 생략
+            #   으로 매핑하기 쉽다). 그러면 read-back 은 head 를 읽어 통과하고,
+            #   그 사이 head 가 바뀌면 남의 version 을 잠근다.
+            if not _nonempty_str(vid if isinstance(vid, str) else ""):
+                raise PreserveError(
+                    "retention",
+                    f"{key}: provider 가 exact version ID 를 주지 않았다 "
+                    f"({vid!r}) — head 조회로 떨어지면 남의 version 을 잠근다")
             if not self._bytes_match(key, vid, dg):
                 raise PreserveError(
                     "retention",

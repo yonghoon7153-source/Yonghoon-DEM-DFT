@@ -5362,3 +5362,40 @@ def test_the_journal_seals_the_content_proof_the_repair_produced(tmp_path,
     st = store.describe_object(fresh._provider_obj_key(ld), cv)
     assert st and st["mode"] == "COMPLIANCE", f"봉인 ID 가 담보가 아니다: {st}"
     assert st["retain_until"] >= out["retention"]["retain_until_utc"]
+
+
+@pytest.mark.parametrize("bogus", [None, "", 0])
+def test_a_falsy_version_id_from_put_is_refused(tmp_path, bogus):
+    """★ 45차 — provider 가 falsy·비문자열 VersionId 를 주면 read-back 이
+    **exact version 이 아니라 head** 를 읽는다.
+
+        put(correct v1) → adapter 결함으로 None 반환
+        get(key, None)  → 지금의 head v1 을 읽어 digest 통과
+        다른 writer 가 wrong-bytes v2 를 head 로 올린다
+        lock(key, None) → **현재 head(v2)** 에 retention 이 걸린다
+
+    44차 회귀는 **다른 nonempty ID** 만 봤다. exact version ID 가 아니면
+    read-back 앞에서 거부한다.
+    """
+    class _FalsyPut(_LockingStore):
+        lie = False
+
+        def put(self, key, data):
+            v = super().put(key, data)
+            return bogus if (self.lie and key.startswith("objects/")) else v
+
+    store = _FalsyPut(name=str(tmp_path))
+    backend = _lockstore(tmp_path, store)
+    dg = backend.put_if_absent(b"honest-payload")["digest"]
+    until = (dt.datetime.now(dt.timezone.utc)
+             + dt.timedelta(days=MIN_RETENTION_DAYS)).strftime("%Y-%m-%dT%H:%M:%SZ")
+    key = backend._provider_obj_key(dg)
+    data = store.get(key, store.versions(key)[0])
+    store.delete(key, version=store.versions(key)[0])
+
+    store.lie = True
+    before_lock = dict(store._lock)
+    with pytest.raises(PreserveError) as ei:
+        backend.lock_content_object(dg, until, data=data)
+    assert "version" in str(ei.value), str(ei.value)
+    assert dict(store._lock) == before_lock, "falsy version ID 로 잠갔다"

@@ -19,6 +19,7 @@ from __future__ import annotations
 import hashlib
 import json
 import os
+import stat
 import time
 import re
 import shutil
@@ -4220,6 +4221,19 @@ def _rp():
     return _RP_CACHE[0]
 
 
+def _ptr_binding(rp, out, roster=None) -> dict:
+    """★ 45차 #9 — pointer 가 **어느 cohort·어느 원장 authority 아래** 게시됐는지
+    함께 싣는다. 손으로 pointer 를 쓰는 fixture 는 그 결속도 만들어야 한다.
+
+    `roster` 를 주면 그 명부로 seal 을 만든다 (아직 publisher 를 안 지난
+    fixture 는 원장 역할 map 에 명부가 없다)."""
+    cohort = dict(rp._ledger_cohort(Path(out)))
+    if roster is not None:
+        cohort["legs"] = sorted(roster)
+    return {"cohort_id": str(cohort.get("cohort_id") or ""),
+            "ledger_seal": rp._ledger_seal(cohort)}
+
+
 def _stage(tmp_path, **files):
     d = tmp_path / "stage"
     d.mkdir(parents=True, exist_ok=True)
@@ -4291,7 +4305,8 @@ def test_readers_follow_current_and_a_torn_pointer_is_refused(tmp_path):
     ghost = {"ghost.yaml": hashlib.sha256(b"nope").hexdigest()}
     (out / "CURRENT").write_text(
         json.dumps({"schema": rp.CURRENT_SCHEMA,
-                    "generation_id": rp.generation_id(ghost), "files": ghost}),
+                    "generation_id": rp.generation_id(ghost), "files": ghost,
+                    **_ptr_binding(rp, out)}),
         encoding="utf-8")
     with pytest.raises(SystemExit) as ei:
         rp.read_current(out)
@@ -4323,7 +4338,8 @@ def test_a_torn_pointer_write_never_replaces_a_good_one(tmp_path, monkeypatch):
     with pytest.raises(OSError):
         rp._publish_pointer(out, {"schema": rp.CURRENT_SCHEMA,
                                   "generation_id": "9" * 64,
-                                  "files": {"x": "y" * 64}})
+                                  "files": {"x": "y" * 64},
+                                  **_ptr_binding(rp, out)})
     state["armed"] = False
     monkeypatch.undo()
 
@@ -4669,7 +4685,7 @@ def test_an_incomplete_base_generation_cannot_be_carried_forward(tmp_path):
     """
     rp = _rp()
     out = tmp_path / "cohort"
-    _handmade_generation(rp, out, {"b.projection.yaml": b"y"})
+    _handmade_generation(rp, out, {"b.projection.yaml": b"y"}, roster={"a"})
 
     with pytest.raises(SystemExit) as ei:
         rp.promote_cohort_generation(
@@ -4679,7 +4695,7 @@ def test_an_incomplete_base_generation_cannot_be_carried_forward(tmp_path):
     assert "불완전" in str(ei.value)
 
 
-def _handmade_generation(rp, out: Path, blobs: dict) -> str:
+def _handmade_generation(rp, out: Path, blobs: dict, roster=None) -> str:
     """generation directory 와 CURRENT 를 **바이트에서** 만든다 (36차 #9b).
 
     publisher 를 전혀 부르지 않는다 — publisher 가 무엇을 막든 상관없이
@@ -4693,7 +4709,8 @@ def _handmade_generation(rp, out: Path, blobs: dict) -> str:
         (gdir / n).write_bytes(b)
     (Path(out) / "CURRENT").write_text(
         json.dumps({"schema": rp.CURRENT_SCHEMA, "generation_id": gid,
-                    "files": files}, sort_keys=True, separators=(",", ":")),
+                    "files": files, **_ptr_binding(rp, out, roster)},
+                   sort_keys=True, separators=(",", ":")),
         encoding="utf-8")
     return gid
 
@@ -4929,7 +4946,8 @@ def test_reading_current_refuses_an_incomplete_cohort(tmp_path):
     (gdir / "a.projection.yaml").write_bytes(b"v: 0\n")
     (gdir / "a.projection.csv.gz").write_bytes(b"c0")
     (out / "CURRENT").write_text(json.dumps(
-        {"schema": rp.CURRENT_SCHEMA, "generation_id": gid, "files": files},
+        {"schema": rp.CURRENT_SCHEMA, "generation_id": gid, "files": files,
+         **_ptr_binding(rp, out)},
         sort_keys=True, separators=(",", ":")), encoding="utf-8")
 
     with pytest.raises(SystemExit) as ei:
@@ -5309,14 +5327,19 @@ def test_a_base_leg_the_roster_dropped_blocks_the_next_publish(tmp_path):
                       f"{leg}.restarts.csv.gz": b"r" + tag}), out, leg,
             roster={"a", "b"})
 
-    # 원장이 b 를 뺐다 — 그런데 CURRENT 에는 남아 있다
+    # 원장이 b 를 뺐다 — 그런데 CURRENT 에는 남아 있다.
+    # ★ 45차 #9 — 이제 **더 앞에서** 잡힌다: `CURRENT` 가 게시 당시의 원장
+    #   authority 를 봉인하므로, 명부가 바뀐 뒤의 게시는 pointer 결속에서
+    #   거부된다 (roster 는 cohort lifetime 동안 immutable · 계약 §13.3.2).
+    #   38차가 넣은 `undeclared` 검사는 심층 방어로 남고, 그 축은
+    #   `..._complete_undeclared_leg_never_reaches_pending` 이 본다.
     with pytest.raises(SystemExit) as ei:
         rp.promote_cohort_generation(
             _stage(tmp_path / "sa2", **{"a.projection.csv.gz": b"c9",
                                         "a.projection.yaml": b"v: 9\n",
                                         "a.restarts.csv.gz": b"r9"}), out, "a",
             roster={"a"})
-    assert "b" in str(ei.value) and "명부" in str(ei.value), str(ei.value)
+    assert "원장" in str(ei.value) or "명부" in str(ei.value), str(ei.value)
 
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -5755,18 +5778,16 @@ def test_a_fabricated_lock_instance_is_refused(tmp_path):
 # 40차 #9 — `.PENDING` 이 `CURRENT` 위에서 누적되지 않는다
 # ─────────────────────────────────────────────────────────────────────────────
 
-def test_expanding_a_roster_over_an_active_cohort_reaches_completeness(tmp_path):
-    """★ 40차 #9 — `base_ptr` 이 `CURRENT` 가 있으면 `.PENDING` 을 안 본다.
+def test_expanding_a_roster_over_an_active_cohort_requires_a_new_cohort(tmp_path):
+    """★ 45차 #9 — 40차에는 "roster 확장이 complete 에 도달해야 한다" 였다.
 
-        active CURRENT = {a}
-        원장 roster    = {a,b,c}
+    44차 리뷰 Q2 답변으로 규칙이 바뀌었다: **roster 는 cohort lifetime 동안
+    immutable** 이고, 바꾸려면 새 cohort ID 와 새 출력 디렉터리로 간다.
+    `CURRENT` 가 게시 당시의 원장 authority(cohort_id·dir·status·legs) 를
+    봉인하므로, 명부를 넓힌 뒤의 게시는 **거부**된다.
 
-        publish b → base CURRENT {a} → .PENDING {a,b}
-        publish c → base CURRENT {a} → .PENDING {a,c}   ← b 가 사라진다
-        publish b → .PENDING {a,b}                       ← c 가 사라진다
-
-    complete roster 에 **영원히 도달하지 못한다.** `.PENDING` 은 최초
-    bootstrap 만 누적하고, 그 뒤 roster 확장은 매번 CURRENT 로 되돌아간다.
+    40차가 고친 것(누적이 안 되던 버그)은 여전히 필요하다 — 그것은 **같은
+    명부** 안에서의 bootstrap 누적이고, 아래 두 번째 부분이 그것을 본다.
     """
     rp = _rp()
     out = tmp_path / "cohort"
@@ -5775,21 +5796,40 @@ def test_expanding_a_roster_over_an_active_cohort_reaches_completeness(tmp_path)
                                    "a.projection.yaml": b"v: a\n",
                                    "a.restarts.csv.gz": b"ar"}), out, "a",
         roster={"a"})
-    assert set(rp.read_current(out)["files"]) == {
-        f"a{s}" for s in rp.LEG_SUFFIXES}, "전제: active {a} 다"
+    before = rp._pointer_bytes(out, "CURRENT")
 
-    # 원장이 roster 를 {a,b,c} 로 넓혔다
-    for leg in ("b", "c"):
+    with pytest.raises(SystemExit) as ei:
+        rp.promote_cohort_generation(
+            _stage(tmp_path / "sb", **{"b.projection.csv.gz": b"bc",
+                                       "b.projection.yaml": b"v: b\n",
+                                       "b.restarts.csv.gz": b"br"}), out, "b",
+            roster={"a", "b"})
+    assert "cohort" in str(ei.value), str(ei.value)
+    # (`read_current()` 로 확인할 수 없다 — 명부가 이미 넓혀졌으므로 reader 도
+    #  같은 이유로 거부한다. 그것이 이 규칙의 요점이다: **옛 pointer 는 새
+    #  명부 아래의 authority 가 아니다.** 그래서 바이트로 본다.)
+    assert rp._pointer_bytes(out, "CURRENT") == before, "명부를 넓힌 게시가 통과했다"
+
+
+def test_a_fixed_roster_still_accumulates_to_completeness(tmp_path):
+    """★ 40차 #9 의 원래 요구 — **같은 명부** 안에서는 누적이 완성돼야 한다.
+
+    `{a,b,c}` 로 고정된 명부에 셋을 차례로 올리면 `.PENDING` 이 누적되고
+    마지막에 active `CURRENT` 가 된다 (40차에는 매번 CURRENT 로 되돌아가
+    영원히 완성되지 않았다).
+    """
+    rp = _rp()
+    out = tmp_path / "cohort"
+    for leg in ("a", "b", "c"):
         rp.promote_cohort_generation(
             _stage(tmp_path / f"s{leg}",
                    **{f"{leg}.projection.csv.gz": b"c" + leg.encode(),
                       f"{leg}.projection.yaml": b"v: " + leg.encode() + b"\n",
                       f"{leg}.restarts.csv.gz": b"r" + leg.encode()}), out, leg,
             roster={"a", "b", "c"})
-
-    cur = rp.read_current(out)
+    cur = rp.read_current(out, expect_legs={"a", "b", "c"})
     assert {n.split(".", 1)[0] for n in cur["files"]} == {"a", "b", "c"}, (
-        f"roster 확장이 complete 에 도달하지 못했다: {sorted(cur['files'])}")
+        f"고정 명부에서 누적이 완성되지 않았다: {sorted(cur['files'])}")
 
 
 def test_a_pending_from_a_different_roster_is_not_inherited(tmp_path):
@@ -6118,17 +6158,31 @@ def test_the_roster_is_read_from_the_ledger_inside_the_publish_lock(tmp_path):
     out = tmp_path / "cohort"
     out.mkdir(parents=True)
     real = rp._ledger_cohort
+    real_promote = rp.promote_cohort_generation
     held: list = []
+    publishing = [False]
 
     def _watch(o):
-        held.append(bool(rp._PublishLock._ACTIVE))
+        # ★ 45차 #9 — reader 도 원장을 읽는다 (pointer 의 cohort·seal 결속).
+        #   여기서 보는 것은 **게시 중**의 조회다.
+        if publishing[0]:
+            held.append(bool(rp._PublishLock._ACTIVE))
         return real(o)
 
+    def _promote(*a, **kw):
+        publishing[0] = True
+        try:
+            return real_promote(*a, **kw)
+        finally:
+            publishing[0] = False
+
     rp._ledger_cohort = _watch
+    rp.promote_cohort_generation = _promote
     try:
         _one_leg_cohort(rp, tmp_path, out)
     finally:
         rp._ledger_cohort = real
+        rp.promote_cohort_generation = real_promote
     assert held, "원장을 한 번도 읽지 않았다"
     assert all(held), (
         f"원장을 lock 밖에서 읽었다 (lock 보유 여부 순서대로: {held})")
@@ -6648,7 +6702,7 @@ def test_the_raw_publisher_takes_no_caller_authority(tmp_path):
         forged.out, forged.lock = Path(out).resolve(), lock
         forged.roster = {"caller-chosen-leg"}
         forged.roster_digest = rp._roster_digest(forged.roster)
-        forged.cohort, forged.seal = {"legs": ["caller-chosen-leg"]}, "x"
+        forged.cohort_id, forged.seal = "gForged", "x"
         forged.cur_raw, forged.pend_raw = rp._pointer_bytes(out, "CURRENT"), None
         forged.base_ptr, forged.base_raw, forged.cur_gid = "CURRENT", None, None
         with pytest.raises(SystemExit) as ei:
@@ -6775,7 +6829,7 @@ def _one_leg_cohort_bytes(rp, tmp_path, out, tag=b"X"):
     for n, b in gid_src.items():
         (gdir / n).write_bytes(b)
     return json.dumps({"schema": rp.CURRENT_SCHEMA, "generation_id": gid,
-                       "files": files},
+                       "files": files, **_ptr_binding(rp, out)},
                       sort_keys=True, separators=(",", ":")).encode("utf-8")
 
 
@@ -6853,9 +6907,22 @@ if release:
 
     rp._promote_cohort_locked = _barrier
 
+# ★ 45차 #9 — **public entry 를 지났다는 marker** 를 남긴다. 44차 리뷰가
+#   "현행 구현은 맞지만 회귀 predicate 가 그것을 증명하지 않는다" 고 했다.
+real_public = rp.promote_cohort_generation
+marker = out.parent / f"public_{leg}.marker"
+
+
+def _marked(*a, **kw):
+    marker.write_text("public", encoding="utf-8")
+    return real_public(*a, **kw)
+
+
+rp.promote_cohort_generation = _marked
 res = rp.promote_cohort_generation(stage, out, leg,
                                    roster=rp._ledger_roster(out))
-print(json.dumps({"published": res.get("published")}))
+print(json.dumps({"published": res.get("published"),
+                  "public": marker.exists()}))
 '''
 
 
@@ -6925,11 +6992,31 @@ def test_two_independent_publishers_lose_no_leg(tmp_path):
     b2 = _spawn_publisher(repo, out, "b")
     b2.wait(timeout=60)
     assert b2.returncode == 0, f"B 재시도 실패: {b2.stderr.read()}"
+    # ★ 45차 #9 — **둘 다 public entry 를 지났는가** (44차 리뷰 evidence 지적).
+    for leg in ("a", "b"):
+        assert (out.parent / f"public_{leg}.marker").is_file(), (
+            f"{leg} 가 public `promote_cohort_generation()` 을 안 지났다")
+    assert json.loads(b2.stdout.read().strip())["public"] is True
 
-    rp = _rp()
+    # 최종 확인도 **그 repo 의 원장**으로 읽는다 (pointer 가 cohort·원장
+    # authority 를 봉인하므로 reader 도 같은 원장을 봐야 한다).
+    import importlib.util
+    spec = importlib.util.spec_from_file_location(
+        "_rp_two", _REPO / "docs" / "22p_gap" / "row_projection.py")
+    rp = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(rp)
+    rp.REPO = repo
     cur = rp.read_current(out, expect_legs={"a", "b"})
     assert {rp._leg_of(n) for n in cur["files"]} == {"a", "b"}, (
         f"두 publisher 중 하나의 leg 를 잃었다: {sorted(cur['files'])}")
+    # ★ 45차 #9 — **exact bytes** 까지 본다 (44차 리뷰: 결과만으로는 부족).
+    gdir = out / "gen" / cur["generation_id"]
+    for leg in ("a", "b"):
+        for sfx, want in ((".projection.csv.gz", b"c"), (".projection.yaml", b"v\n"),
+                          (".restarts.csv.gz", b"r")):
+            got = (gdir / f"{leg}{sfx}").read_bytes()
+            assert got == leg.encode() + want, (
+                f"{leg}{sfx}: staging 바이트가 아니다 ({got!r})")
 
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -7106,10 +7193,44 @@ def test_the_warm_consumers_go_through_the_accessors():
     src = Path(__file__).read_text(encoding="utf-8")
     tree = ast.parse(src)
 
-    calls = {n.func.id for n in ast.walk(tree)
-             if isinstance(n, ast.Call) and isinstance(n.func, ast.Name)}
-    assert {"_warm_summary", "_warm_manifest", "_warm_has_summary"} <= calls, (
-        "허용된 accessor 셋 중 쓰이지 않는 것이 있다 — 배선이 끊겼다")
+    #: ★ 45차 P1 — 44차는 accessor 이름이 **파일 어딘가에서** 한 번이라도
+    #:   불리는지만 봤다. 그러면 기존 호출이 남아 있는 동안 새 direct reader 를
+    #:   추가해도 통과한다. **각 소비자별로** 매핑한다.
+    consumers = {}
+    for fn in ast.walk(tree):
+        if not isinstance(fn, ast.FunctionDef):
+            continue
+        for n in ast.walk(fn):
+            if isinstance(n, ast.Call) and isinstance(n.func, ast.Name) \
+                    and n.func.id in ("_warm_summary", "_warm_manifest",
+                                      "_warm_has_summary"):
+                consumers.setdefault(fn.name, set()).add(n.func.id)
+    assert consumers, "warm accessor 를 쓰는 소비자가 하나도 없다 — 배선이 끊겼다"
+    used = set().union(*consumers.values())
+    assert used == {"_warm_summary", "_warm_manifest", "_warm_has_summary"}, (
+        f"쓰이지 않는 accessor 가 있다: "
+        f"{sorted({'_warm_summary', '_warm_manifest', '_warm_has_summary'} - used)}")
+
+    # ★ 45차 P1 — **실행 중에도** 확인한다: 선언된 소비자를 돌리면 accessor 가
+    #   실제로 불린다 (정적 호출이 dead code 일 수 있다).
+    mod = _this()
+    seen: set = set()
+    reals = {n: getattr(mod, n) for n in used}
+    try:
+        for n, real in reals.items():
+            setattr(mod, n, (lambda nm, f: (lambda *a, **k: (seen.add(nm),
+                                                             f(*a, **k))[1]))(n, real))
+        import inspect as _insp
+        for fname in sorted(consumers):
+            fn = getattr(mod, fname, None)
+            if fn is None or _insp.signature(fn).parameters:
+                continue          # 인자를 받는 소비자는 정적 매핑으로만 본다
+            fn()
+    finally:
+        for n, real in reals.items():
+            setattr(mod, n, real)
+    assert seen == used, (
+        f"선언된 소비자를 돌렸는데 안 불린 accessor 가 있다: {sorted(used - seen)}")
 
     where = []
     for fn in ast.walk(tree):
@@ -7148,3 +7269,230 @@ def test_the_publisher_declares_its_trust_boundary():
         "갈라지는 자리다")
     assert "보장 철회" in contract or "보장을 철회" in contract, (
         "계약서가 무엇을 철회했는지 적지 않았다")
+    # ★ 45차 #9 — 44차 문구의 **과장 둘**을 걷어냈다 (44차 리뷰 지적).
+    assert "탐지되지도 않는다" in contract, (
+        "마지막 창이 탐지된다는 과장이 남아 있다")
+    assert "정본 pointer 복구" in contract and "안 된다" in contract, (
+        "generation 바이트 보존과 정본 pointer 복구를 구분하지 않았다")
+    assert "cooperative-local 설정 점검" in contract, (
+        "배포 점검이 증명하는 범위를 적지 않았다")
+    assert "_LEDGER_AUTHORITY" in contract, (
+        "게시 authority 필드가 계약에 없다 (§13.3.2)")
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# 45차 #9 — 동결이 얕았고, staging 이 alias 를 들여왔다
+# ─────────────────────────────────────────────────────────────────────────────
+
+def test_a_frozen_authority_holds_only_immutable_values(tmp_path):
+    """★ 45차 #9 — 44차 동결은 **재대입만** 막았다.
+
+    `auth.roster` 가 mutable `set` 이라 다음은 `__setattr__` 를 아예 지나지
+    않는다::
+
+        with _PublishLock(out) as lock, _authority(lock, out) as auth:
+            auth.roster.clear(); auth.roster.add("evil")
+            _promote_generation(evil_three_file_stage, auth)
+
+    `_sealed` 도 `_ACTIVE` 도 그대로이고 원장 seal 도 안 바뀌었으므로 최종
+    guard 가 안 잡는다 — 원장에 없는 leg 의 active `CURRENT` 가 생긴다.
+    특별한 우회가 아니라 ordinary set API 다.
+    """
+    rp = _rp()
+    out = tmp_path / "cohort"
+    before = _one_leg_cohort(rp, tmp_path, out)
+    with rp._PublishLock(out) as lock, rp._authority(lock, out) as auth:
+        assert auth.frozen_values(), "authority 가 mutable 값을 들고 있다"
+        with pytest.raises(AttributeError):
+            auth.roster.add("evil")          # frozenset 에는 `add` 가 없다
+        evil = _stage(tmp_path / "sevil",
+                      **{"evil.projection.csv.gz": b"c",
+                         "evil.projection.yaml": b"v\n",
+                         "evil.restarts.csv.gz": b"r"})
+        with pytest.raises(SystemExit) as ei:
+            rp._promote_generation(evil, auth)
+        assert "명부" in str(ei.value), str(ei.value)
+    assert rp.read_current(out) == before, "명부 밖 leg 가 게시됐다"
+
+
+def test_a_complete_undeclared_leg_never_reaches_pending(tmp_path):
+    """★ 45차 #9 — 44차 sink 는 `seen == roster` 일 때만 명부를 대조했다.
+
+    roster {a,b} 에 `evil` 세 파일을 주면 `seen != roster` 라 완전성 검사가
+    `expect_legs=None` 으로 불리고, **명부에 없는 leg 가 `.PENDING` 으로**
+    게시됐다. 다음 publisher 는 그 pending 을 base 로 읽고 undeclared 검사에
+    막혀 — 사람이 치우기 전까지 cohort 가 멈춘다.
+
+    equality 는 active/pending **선택**에만 쓰고, 부분집합은 **모든 경로**에서
+    강제한다.
+    """
+    rp = _rp()
+    out = tmp_path / "cohort"
+    out.mkdir(parents=True)
+    rp.promote_cohort_generation(
+        _stage(tmp_path / "sa", **{"a.projection.csv.gz": b"ac",
+                                   "a.projection.yaml": b"v: a\n",
+                                   "a.restarts.csv.gz": b"ar"}), out, "a",
+        roster={"a", "b"})
+    pend_before = rp._pointer_bytes(out, ".PENDING")
+    assert pend_before, "전제: bootstrap pending 이 있다"
+
+    evil = _stage(tmp_path / "sevil", **{"evil.projection.csv.gz": b"c",
+                                         "evil.projection.yaml": b"v\n",
+                                         "evil.restarts.csv.gz": b"r"})
+    with rp._PublishLock(out) as lock, rp._authority(lock, out) as auth:
+        with pytest.raises(SystemExit) as ei:
+            rp._promote_generation(evil, auth)
+    assert "명부" in str(ei.value), str(ei.value)
+    assert rp._pointer_bytes(out, ".PENDING") == pend_before, (
+        "`.PENDING` 이 명부 밖 leg 로 오염됐다")
+
+
+def test_the_current_generation_cannot_be_used_as_its_own_staging(tmp_path):
+    """★ 45차 #9 — **public API 만으로** active generation 을 지울 수 있었다.
+
+        stage = out / "gen" / read_current(out)["generation_id"]
+        promote_cohort_generation(stage, out, leg, roster={leg})
+
+    한 leg cohort 의 현재 generation 에는 wrapper 가 요구하는 세 파일이 이미
+    있다. existing-generation 비교가 디렉터리를 **자기 자신**과 비교해 통과한
+    뒤 `rmtree(stage)` 가 그것을 지우고, 함수는 계속 진행해 `CURRENT` 가 방금
+    지운 gid 를 가리키게 만든다. raw authority 조합도 적대적 writer 도 필요
+    없다.
+    """
+    rp = _rp()
+    out = tmp_path / "cohort"
+    before = _one_leg_cohort(rp, tmp_path, out)
+    gdir = out / "gen" / before["generation_id"]
+    names = sorted(p.name for p in gdir.iterdir())
+
+    with pytest.raises(SystemExit) as ei:
+        rp.promote_cohort_generation(gdir, out, "a", roster={"a"})
+    assert "generation" in str(ei.value) or "staging" in str(ei.value), str(ei.value)
+    assert gdir.is_dir() and sorted(p.name for p in gdir.iterdir()) == names, (
+        "active generation 을 지웠다")
+    assert rp.read_current(out) == before
+
+
+@pytest.mark.parametrize("kind", ["symlink", "hardlink", "extra_dir"])
+def test_staging_aliases_never_become_an_immutable_generation(tmp_path, kind):
+    """★ 45차 #9 — `Path.is_file()` 은 symlink 를 **따라간다.**
+
+    44차는 staging 디렉터리를 통째로 `shutil.move` 해서 generation 으로
+    만들었다. 그래서 정상 public API 로 alias 를 들여올 수 있었고, 게시 뒤
+    바깥 target 을 고치면 "immutable" generation 바이트가 **바뀐다**. 걸러진
+    directory·FIFO·broken link 도 디렉터리 이동에 딸려가 record 밖 entry 가
+    됐다.
+
+    generation 은 우리가 읽은 바이트로 **새 inode** 를 만들어 담아야 한다.
+    """
+    rp = _rp()
+    out = tmp_path / "cohort"
+    out.mkdir(parents=True)
+    outside = tmp_path / "outside.bin"
+    outside.write_bytes(b"original")
+
+    stage = _stage(tmp_path / "s", **{"a.projection.csv.gz": b"ac",
+                                      "a.restarts.csv.gz": b"ar"})
+    tgt = stage / "a.projection.yaml"
+    if kind == "symlink":
+        tgt.symlink_to(outside)
+    elif kind == "hardlink":
+        os.link(outside, tgt)
+    else:
+        tgt.write_bytes(b"v: a\n")
+        (stage / "sneaky_dir").mkdir()
+        (stage / "sneaky_dir" / "x").write_bytes(b"x")
+
+    if kind == "extra_dir":
+        # directory entry 는 `is_file()` 에서 빠지지만 이동에는 딸려갔다 —
+        # 이제 staging 검사가 **거부**한다.
+        with pytest.raises(SystemExit) as ei:
+            rp.promote_cohort_generation(stage, out, "a", roster={"a"})
+        assert "staging" in str(ei.value), str(ei.value)
+        assert not (out / "CURRENT").is_file()
+        return
+
+    with pytest.raises(SystemExit) as ei:
+        rp.promote_cohort_generation(stage, out, "a", roster={"a"})
+    assert "staging" in str(ei.value), str(ei.value)
+    assert not (out / "CURRENT").is_file(), "alias 를 담은 generation 이 게시됐다"
+
+
+def test_a_published_generation_owns_its_bytes(tmp_path):
+    """★ 45차 #9 — 게시된 generation 은 **우리 inode** 여야 한다.
+
+    거부만으로는 부족하다. 정상 경로가 만든 generation 파일이 staging 파일과
+    같은 inode 를 공유하면, staging 을 지우지 않는 caller 가 나중에 그것을
+    고쳐 generation 을 바꿀 수 있다.
+    """
+    rp = _rp()
+    out = tmp_path / "cohort"
+    stage = _stage(tmp_path / "s", **{"a.projection.csv.gz": b"ac",
+                                      "a.projection.yaml": b"v: a\n",
+                                      "a.restarts.csv.gz": b"ar"})
+    inos = {q.name: q.stat().st_ino for q in stage.iterdir()}
+    rp.promote_cohort_generation(stage, out, "a", roster={"a"})
+    cur = rp.read_current(out)
+    gdir = out / "gen" / cur["generation_id"]
+    for name in cur["files"]:
+        st = os.stat(gdir / name, follow_symlinks=False)
+        assert stat.S_ISREG(st.st_mode) and st.st_nlink == 1, (
+            f"{name}: generation 파일이 우리 소유 regular inode 가 아니다 ({st})")
+        assert st.st_ino != inos.get(name), (
+            f"{name}: staging 과 같은 inode 다 — caller 가 나중에 고칠 수 있다")
+
+
+@pytest.mark.parametrize("kind", ["omap", "nonfinite", "date_key"])
+def test_the_seal_domain_is_exact_not_isinstance(tmp_path, monkeypatch, kind):
+    """★ 45차 #9 — 44차 `_assert_sealable()` 이 **tuple 을 허용**했다.
+
+    PyYAML SafeLoader 는 표준 `!!omap` 을 list[tuple] 로 만들고, `json.dumps`
+    는 tuple 과 list 를 똑같은 JSON array 로 접는다::
+
+        extra: !!omap        →  [("k","v")]   ┐ 둘 다
+        extra: [[k, v]]      →  [["k","v"]]   ┘ {"extra":[["k","v"]]}
+
+    record 타입이 다른데 seal 이 같다. `NaN`·`Infinity` 도 표준 JSON 밖인데
+    통과했다. `isinstance` 를 `type(...) is` 로 좁힌다.
+    """
+    import importlib.util
+
+    spec = importlib.util.spec_from_file_location(
+        "_rp_seal45", _REPO / "docs" / "22p_gap" / "row_projection.py")
+    rp = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(rp)
+
+    root = tmp_path / "repo"
+    (root / "docs" / "22p_gap" / "coh").mkdir(parents=True)
+    body = ('cohorts:\n'
+            '  - cohort_id: gX\n'
+            '    dir: docs/22p_gap/coh\n'
+            '    status: active\n'
+            '    legs: ["a"]\n')
+    body += {"omap": '    extra: !!omap\n      - k: v\n',
+             "nonfinite": '    extra: .nan\n',
+             "date_key": '    extra:\n      2026-08-28: v\n'}[kind]
+    (root / "docs" / "22p_gap" / "LEG_PRESERVATION.yaml").write_text(
+        body, encoding="utf-8")
+    monkeypatch.setattr(rp, "REPO", root)
+
+    coh = root / "docs" / "22p_gap" / "coh"
+    with pytest.raises(SystemExit) as ei:
+        rp._ledger_seal(rp._ledger_cohort(coh))
+    assert "봉인" in str(ei.value) or "유한" in str(ei.value), str(ei.value)
+
+
+def test_an_omap_and_a_list_of_lists_do_not_share_a_seal():
+    """★ 45차 #9 — 44차 collision 을 **직접** 보인다 (거부가 없었다면).
+
+    `_assert_sealable()` 이 tuple 을 거부하므로 이제 둘은 같은 seal 을 가질
+    수 없다 — 한쪽이 fail-closed 다. 그 성질을 못 박는다.
+    """
+    rp = _rp()
+    base = {"cohort_id": "gX", "dir": "d", "status": "active", "legs": ["a"]}
+    as_list = dict(base, extra=[["k", "v"]])
+    as_omap = dict(base, extra=[("k", "v")])
+    assert rp._ledger_seal(as_list), "list 형태는 봉인된다"
+    with pytest.raises(SystemExit):
+        rp._ledger_seal(as_omap)

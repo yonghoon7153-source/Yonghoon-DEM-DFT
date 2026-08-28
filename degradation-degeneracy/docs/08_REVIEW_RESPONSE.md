@@ -4485,3 +4485,64 @@ selector 도 닫았다: `cohort_id` 와 `purpose` 동시 지정, 모르는 purpo
 | same-process hostile Python | 보안 경계 아님 — 우연한 우회만 막는다 |
 | 실제 object-lock provider adapter | **미구현** (별도 acceptance gate) |
 | power-loss ordering fault model | **미착수** (별도 acceptance gate) |
+
+---
+
+## 53. 44차 리뷰 대응 — 얕은 동결, alias, 그리고 "무엇이 authority 인가"
+
+**대상 커밋**: `8549d259` · **판정**: NO-GO (publication P0 셋 + seal P0)
+**source_digest**: `1d0b9bde8e09792a` → `ae4d82faf6c2281f`
+
+44차 리뷰는 조건 1(active incomplete suffix)·2(date 흡수)·5·6·7·8 을 좁게
+인정하고, publication P0 셋과 seal P0 하나를 남겼다. 셋의 공통점은
+**"막았다고 부른 것의 가장자리"** 였다.
+
+### 발견별 대응
+
+| # | 44차 지적 | 이번에 한 것 | 시험 |
+|---|---|---|---|
+| P0-1 | `__setattr__` 동결이 **얕다** — `auth.roster` 가 mutable `set` | 담기는 값 자체를 immutable 로 (`frozenset`·`bytes`·`str`). 쓰이지 않던 mutable `cohort` snapshot 은 **제거** | `..._frozen_authority_holds_only_immutable_values` |
+| P0-1b | complete **undeclared** leg 가 `.PENDING` 을 오염 | `seen <= roster` 를 **모든 경로**에서. equality 는 active/pending 선택에만 | `..._complete_undeclared_leg_never_reaches_pending` |
+| P0-2 | 현재 `gen/<gid>` 를 stage 로 주면 **자기삭제** | staging 이 generation namespace 안이면 거부 (`resolve` 로 samefile·ancestor 판정) | `..._current_generation_cannot_be_used_as_its_own_staging` |
+| P0-3 | symlink·hardlink·extra entry 가 그대로 generation 이 됨 | `lstat` 으로 따라가지 않고 보고 regular·`nlink==1` 만 허용. caller 디렉터리를 **옮기지 않고** 우리가 읽은 바이트로 **새 inode** 를 만든 뒤 되읽어 확인 | `..._staging_aliases_never_become_an_immutable_generation[3축]` · `..._a_published_generation_owns_its_bytes` |
+| P0-4 | seal 이 `tuple`(=`!!omap`)·NaN 을 허용 → non-injective | `isinstance` → `type(...) is`. tuple·subclass·비유한수 거부, `allow_nan=False` | `..._seal_domain_is_exact_not_isinstance[3축]` · `..._an_omap_and_a_list_of_lists_do_not_share_a_seal` |
+| 조건 9 | falsy/비문자열 VersionId 가 head lookup 으로 | `put` 반환이 nonempty `str` 이 아니면 read-back **전에** 거부 | `..._a_falsy_version_id_from_put_is_refused[3축]` |
+| 조건 10 | roster immutable + `CURRENT` 에 cohort·원장 digest 결속 | pointer 가 **게시 authority 네 필드**를 봉인하고 reader 도 대조한다. roster 변경은 새 cohort ID 로 | `..._expanding_a_roster_over_an_active_cohort_requires_a_new_cohort` · `..._a_fixed_roster_still_accumulates_to_completeness` |
+| 조건 6 | 계약 문구의 과장 둘 | "전제가 깨져도 탐지" → **탐지되지도 않는다**. "복구 가능" → 바이트 보존과 **정본 pointer 복구를 구분**. 배포 점검을 `cooperative-local 설정 점검` 으로 명명 | `..._publisher_declares_its_trust_boundary` (문구별로) |
+| 조건 7 | mutation runner 가 모든 nonzero 를 "물었다" 로 셈 | node 단위 strict runner — 수집 목록·baseline 전원 PASS·**call 단계 실패**·setup/collection 오류 0·원복 해시 동일 | `mutation_replay.py` 자체 |
+| 조건 8 | public-lifecycle·warm wiring mutant 부재, wiring 증거가 약함 | 두 child 가 **public entry marker** 를 남기는지 + 최종 exact bytes 확인. warm 은 **소비자별 매핑 + 실행 중 spy** | 해당 두 시험 |
+
+### 봉인 범위를 좁힌 것 — 44차의 과했던 점
+
+44차는 cohort record **전체**를 봉인했다. 그런데 이 저장소의 원장 record 는
+`pin`·`runtime` 같은 **기록용 bookkeeping** 을 함께 담고 그것은 라운드마다
+바뀐다 — 전체를 봉인하면 pin 을 갱신하는 순간 이미 게시된 pointer 가 전부
+무효가 된다 (45차에 실측했다).
+
+`_LEDGER_AUTHORITY = ("cohort_id", "dir", "status", "legs")` 로 **닫힌
+authority schema** 를 정의하고 그것만 봉인한다. 계약 §13.3.2 가 같은 것을
+말한다. 44차 리뷰가 예고한 대로, "비권위 필드로 축소하려면 먼저 closed
+authoritative field schema 와 계약 문구를 바꾸라" 를 그대로 했다.
+
+### 변이 재생 — strict runner 로 다시 셌다
+
+**scenario 31 · 실행 28 · 신고 3 · site 29.** 44차 요청문의 `19/17/2` 는
+단위를 섞은 숫자였다 (리뷰 지적 수용).
+
+runner 가 이제 확인하는 것: `-k` 가 고르는 **정확한 node 목록** · baseline 전원
+PASS · 변이 뒤 **call 단계** 실패 · setup/teardown/collection 오류 0 · 원복
+바이트 해시 동일. `pytest-json-report` 가 없으면 조용히 넘어가지 않고 **실패**
+한다.
+
+이번에 다섯이 걸렸다: 지점 불량 셋(내가 코드를 고치고 mutant 를 안 고쳤다),
+`pointer-binds-the-cohort-id` 는 seal 이 이미 덮는 **중복**이라 코드를 지웠고,
+`guard-before-commit` 은 `-k` 가 좁았다.
+
+### 아직 아닌 것
+
+| 항 | 상태 |
+|---|---|
+| `os.replace` 직전~직후 창 | **전제로 배제** — 탐지도 복구도 안 된다 (계약 §13.3.1) |
+| publisher 전용 principal · negative canary | **미착수** |
+| 실제 object-lock provider adapter | **미구현** (별도 acceptance gate) |
+| power-loss ordering fault model | **미착수** (별도 acceptance gate) |
