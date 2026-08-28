@@ -66,3 +66,19 @@ MARGINAL_TENDENCY / SIGN_CONSISTENT_SMALL / UNRESOLVED_MIXED, n<3 은 즉시 NO_
   (프로토콜: kb/methodology/site_preference_protocol_2026_08_11.md). VASP 번들 v1 →
   Codex HOLD (kb/reviews/vasp_bundle_codex_reply_2026_08_11.md) → v2 전면 재작성,
   재리뷰 요청 송부. 외주 생성은 GO 이후.
+
+- 2026-08-28: ⚠ **판정바닥의 적용 범위 문제 발견 (미해결, 판정 아님)**.
+  `max(30 meV, 쌍 편차)` 의 고정항 30 meV 는 **UMA 실무 해상도**로 정한 값인데
+  (`tools/sdcp/site_screen.py` `GATE["decision_floor_eV"]`, 2026-08-11 Codex 재리뷰),
+  wave1 부터는 **DFT 값**에 그대로 쓰고 있다. 옮겨 쓸 근거가 문서에 없다.
+  옮길 만하다고 볼 이유는 있다 — **기하가 UMA 이완 결과**라 UMA 의 기하 오차가 모든
+  DFT 단일점에 실린다. 다만 이것은 추론이지 등재된 판정이 아니다.
+  DFT 전용 바닥을 유도한다면 들어갈 항(실측): 자기 basin gap **49.718 meV** ·
+  자세 폭 **14.6 meV** · 스핀 기준 보정 δ_m **미측정** · 시드 재현 0.087 meV ·
+  dense-k 0.003 meV. ⇒ 앞의 셋이 30 meV 와 같거나 큰 자릿수라, **DFT 바닥이 30 meV
+  보다 커질 가능성이 있다** (= 지금 판정이 지나치게 관대할 수 있다).
+  근거 기록: `db/properties/sdcp_wave1_job_energies_2026_08_28.md` §7.2.
+- 2026-08-28: `sdcp_doped` 는 자리선호 판정 대상에서 **빠졌다** — 범위 마감
+  (`db/properties/sdcp_doped_closed_2026_08_28.json`, proposed). 부수 기록: doped 는
+  `fib10/r000` 에서 Li/Ni 두 자리만 돌았고 **cross 자세가 없어** 자리·자세 분리 설계가
+  중성형보다 약했다. 재개 시 필수 수정 항목으로 등재.
