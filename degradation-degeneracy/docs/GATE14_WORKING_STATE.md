@@ -17,13 +17,15 @@
 |---|---|---|
 | 2 | `source_digest()` 경로 정규화 (POSIX) + RUN_SCOPE 정합 | **완료** — §1.9 참조 (RED 5건 → GREEN, 286 passed) |
 | 1 | noise family 교차 invariant (`_verify_observed_curves`) | **완료** — §2.9 참조 (RED 3건 → GREEN, 289 passed) |
-| 3 | sweep checker fail-closed (`tools/check_sweep_consistency.py:184-215`) | **다음 작업** |
-| 4 | custom `w_grid` 충돌 (`src/weight_sweep.py:52-90`, `:350-355`) | 대기 |
-| 5 | guards → canonical 3-key recipe (`src/io.py:907-937`) | 대기 |
-| 6 | report reproduce command (`tools/make_results.py:1081-1108`) | 대기 |
-| 7·8 | archive fail-closed / source_commit (`scripts/archive_results.sh:170-175, 229-241, 283-290`) | 대기 (계산 후 archive 전) |
+| 3 | sweep checker fail-closed (`tools/check_sweep_consistency.py`) | **완료** — §3.1 (RED 1건 → GREEN) |
+| 4 | custom `w_grid` 충돌 (`src/weight_sweep.py`) | **완료** — §3.2 (RED 2건 → GREEN) |
+| 5 | guards → canonical 3-key recipe (`src/modes.py`·`io.py`·`grid.py`) | **완료** — §3.3 (RED 2건 → GREEN) |
+| 6 | report reproduce command (`tools/make_results.py`) | **완료** — §3.4 (RED 4건 → GREEN) |
+| 7·8 | archive fail-closed / source_commit (`scripts/archive_results.sh`) | **완료** — §3.5 (smoke 반례 실측) |
 
-1·2 는 **grid v4 생성 전 필수 blocker**. 3~6 은 같은 pre-run 커밋에 함께 권고. 7·8 은 계산 후 archive 전.
+**7건 전부 닫혔다.** 전체 테스트 298 passed · strict smoke 통과 (exit 0).
+
+1·2 는 grid v4 생성 전 필수 blocker 였다. 3~6 은 같은 pre-run 커밋에, 7·8 은 archive 경로에 함께 넣었다.
 
 ---
 
@@ -381,6 +383,165 @@ python -m pytest tests -q          → 289 passed (3m02s)
 | 8 | `scripts/archive_results.sh:229-241`, `:283-290` | 계산 시작 커밋(`run_spec.git_commit` / `start_provenance.git_commit`)을 `source_commit` 으로 기록. "다음 commit" 문구 오류 수정 |
 | — | `src/modes.py:144-147` | 리뷰 지적 위치 (미착수) |
 | — | `src/runner.py:40-43, 75, 115` | 확인 결과 **정상** — 손대지 않는다 |
+
+---
+
+### 3.1 발견 3 구현 결과 — sweep checker (실측)
+
+**RED**: 본 실행 조건을 두 끝점 모두 **같은 절반**으로 줄이고 `n_conditions` 를
+그 수로 맞춘 뒤 `condition_ids_sha256` 를 지우면 `run_check(...)["일치"] == True`.
+조건 수도 맞고(`len(sweep_ids) == expected`), 끝점끼리 집합도 같고
+(`끝점_조건집합_동일`), sweep 조건이 전부 본 실행에 있어(`missing_in_main` 비어
+있음) 아무 검사도 안 걸린다.
+
+`n_conditions` 부재는 이미 fail-closed 였는데(13차 발견 2) **더 강한 쪽**인
+digest 부재가 빠져 있었다. 조건 "수" 로는 집합이 고정되지 않는다.
+
+**수정**: digest 부재·계산 불가·불일치 세 경우를 모두 fail-closed 로 만들고
+(`_fail_all()` 로 공통화), `끝점_서명digest_일치` 를 최상위 판정 conjunction 에
+명시적으로 넣었다. 빈 문자열도 "없음" 과 같게 다룬다. CLI 요약에 무엇으로
+조건집합을 고정했는지 한 줄 찍는다.
+
+회귀: `test_sweep_checker_requires_signed_condition_digest`
+
+### 3.2 발견 4 구현 결과 — `build_weight_objectives` (실측)
+
+**RED** (셋 다 그대로 통과했다):
+
+```
+build_weight_objectives([0, 0.001])
+  → {'wdqdv_0.00': {'w_pocv': 1.0, 'w_dvdq': 1.0, 'w_dqdv': 0.001}}
+build_weight_objectives([0, nan])  → 'wdqdv_nan' 생성
+build_weight_objectives([0, -0.5]) → 'wdqdv_-0.50' 생성
+```
+
+이름이 `f"wdqdv_{w:.2f}"` 라 소수 셋째 자리부터 충돌한다. 두 가지가 한꺼번에
+깨진다:
+
+1. dict 가 뒤엣것으로 덮어써 **w=0 seed 제공자가 사라진다.** `any(w == 0.0)` 는
+   참이라 `_seed` 도 안 끼워진다 → 아무도 warm start 를 못 받는다. F20d 가 잰
+   "dQ/dV 항은 좋은 초기값 없이는 optimizer 가 못 푼다" 상태로 되돌아간다.
+2. 남은 하나는 이름이 `wdqdv_0.00` 인데 실제 가중치가 0.001 이다.
+   `check_sweep_consistency` 의 `DEFAULT_PAIRS` 가 이 이름을 본 실행의
+   `pocv_dvdq`(w_dqdv=0) 와 짝지어 "정의가 같다" 며 대조한다.
+
+**수정**: 이름 형식을 바꾸면 기존 끝점 짝과 산출물이 깨지므로 **충돌을 거부**한다
+(0.01 이상 간격 안내 포함). 비유한·음수·빈 격자는 이름 짓기 **전에** 거부한다.
+`w_pocv`·`w_dvdq` 도 같이 검증한다.
+
+회귀: `test_build_weight_objectives_rejects_colliding_names`,
+`test_build_weight_objectives_rejects_invalid_weights`
+
+### 3.3 발견 5 구현 결과 — canonical guards (실측)
+
+**RED**: 옛 검사는 "스칼라인가" 뿐이라 다음이 전부 `replay_recipe_schema` 를
+통과했다 — 모르는 키(`bogus`), **bool**, 키 누락, 빈 dict, 범위 밖 값
+(`max_mode_value: 5.0`/`1.0`, `max_porosity: 0`, `min_vf: -1e-4`/`1.0`).
+
+bool 이 특히 나쁘다: `max_mode_value: True` → `float(True) = 1.0` → 불능 판정이
+`[0, 0.9]` 에서 `[0, 1.0]` 로 넓어진다. 불능이던 조건이 풀리고, 그건 인용
+모집단의 **분모**가 달라진다는 뜻이다. 키 누락도 재검이 조용히 코드 기본값으로
+도는데 서명은 "이 recipe 로 재검했다" 고 말한다.
+
+`validate_config` 는 guards 를 아예 보지 않는다 (실측: `src/config.py` 에 guards
+언급 0건). 그래서 관문이 여기뿐이다.
+
+**수정** — `src/modes.py` 를 정본으로:
+
+| 이름 | 내용 |
+|---|---|
+| `GUARD_DEFAULTS` | `max_mode_value 0.9 · max_porosity 0.95 · min_vf 1e-4` |
+| `GUARD_RANGES` | `0 ≤ v < 1` · `0 < v ≤ 1` · `0 < v < 1` |
+| `canonical_guards(g)` | 모르는 키 거부 · bool/비유한/범위 밖 거부 · 빠진 키 채움 |
+
+- `build_overrides` 가 인라인 리터럴 대신 이걸 쓴다
+- `src/grid.py` 가 **서명 전에** `canonical_guards(cfg.get("guards"))` 로 3키를
+  채워 봉인한다 — config 오타면 10시간 뒤가 아니라 거기서 죽는다
+- `src/io.py` validator 가 3키 정확 일치 + bool 불가 + 범위를 강제한다
+
+회귀: `test_replay_recipe_guards_must_be_canonical`(9케이스 + 경계 2건),
+`test_canonical_guards_fills_and_rejects`
+
+`sign_producer(..., guards=...)` / `_tiny_curves(..., guards=...)` 파라미터를
+추가해 fixture 가 이 축을 태울 수 있게 했다.
+
+### 3.4 발견 6 구현 결과 — 재현 명령 (실측)
+
+**RED**: 재현 명령이 fit 실행 디렉터리 하나로 두 단계를 다 가리켰다.
+
+```
+./run.sh --mode grid ... --out <fit 디렉터리>     ← 곡선을 여기 만들라고
+./run.sh --mode fit   --in <fit 디렉터리> ...      ← 거기서 읽으라고
+```
+
+실제 실행은 `--out <producer>` 로 곡선을 만들고 `--in <producer> --out <fit>` 으로
+fitting 했다. 그대로 따라 하면 다른 배치가 되고, 최악의 경우 기존 fit 산출물
+위에 곡선을 덮어쓴다. producer 경로는 fit manifest 의 `input` 에 있다.
+
+**수정**:
+
+- grid `--out` / fit `--in` = `manifest["input"]`, fit `--out` = 현재 `in_dir`
+- `run_spec.v_col`(또는 `target_column`) `== "v_full"` 이면 `--clean` 추가 —
+  없으면 재현 실행이 `v_full_noisy` 로 fitting 해 다른 숫자를 낸다
+- producer 경로가 없으면 **실행 가능한 명령을 만들지 않는다**. 주석으로 이유만
+  남긴다 (실행 가능한 틀린 명령이 가장 나쁘다)
+- 기본(비대칭) 보고서의 목적함수 비교에 `PAIRED_RESULTS_DOC`
+  (`docs/RESULTS_PAIRED_FIXED5.md`) 를 **명시 인용**한다. paired 문서에만 경고를
+  두면 기본 문서를 먼저 여는 사람에게는 안 보인다 — 경고는 **읽히는 쪽**에.
+  paired 문서 자신은 자기를 인용하라고 하지 않는다(그 사실도 테스트로 고정 —
+  안 그러면 첫 단언이 무조건 통과하는 vacuous 검사가 된다).
+
+회귀 4건: `..._uses_producer_path`, `..._emits_clean_flag`,
+`..._fails_closed_without_producer`, `test_default_results_points_objective_comparison_to_paired_doc`
+
+### 3.5 발견 7·8 구현 결과 — archive (실측 반례)
+
+**발견 7 RED — 진짜 반례를 측정했다.** PATH 앞에 실패하는 `mv` shim(목적지가
+`.previous_*` 일 때만 실패)을 끼우고, smoke 가 만든 **진짜 묶음**에 대해
+수정 전/후 스크립트를 같은 조건으로 돌렸다:
+
+| 스크립트 | exit | 기존 봉인 유지 | 중첩 |
+|---|---|---|---|
+| **수정 전** | **0 — 성공이라고 보고** | yes | **`.candidate_grid_fit`** |
+| 수정 후 | 1 | yes | 없음 |
+
+첫 `mv "$out" "$old"` 가 실패해도 결과를 안 봐서, `$out` 이 남은 채 다음 줄의
+`mv "$cand" "$out"` 이 돌았다. mv 는 목적지가 **존재하는 디렉터리**면 덮어쓰지
+않고 그 안으로 넣으므로 `$out/.candidate_$name` 중첩이 생기고, mv 자체는
+성공하니 승격 성공으로 계상되고 스크립트는 **exit 0** 으로 끝난다. 파이프라인은
+보관이 성공했다고 믿는다. 12차에서 "중단돼도 둘 중 하나는 남는다" 로 고친
+순서인데 그 순서의 첫 단계가 fail-open 이었다.
+
+**발견 8 RED**: smoke 검사를 수정 전 스크립트에 걸면
+`❌ source_commit 검사 실패 (14차 발견 8)`. `manifest.yaml` 의 top-level
+`git_commit` 은 **기록을 쓴 시점**(계산 종료 후)의 commit 이다.
+
+**수정**: 계산 **시작** 기록을 우선한다 —
+fit 은 `manifest.start_provenance.git_commit` → `manifest_start.yaml` →
+(fallback) `manifest.git_commit`, grid producer 는
+`curves_manifest_start.yaml` → (fallback) `curves_manifest.yaml`. 둘 다 묶음에
+동봉된다. 실행 중 코드가 바뀐 실행은 `_주의_실행중_코드변경` 으로 index 에
+남긴다. `artifact_index._주의` 의 "다음 commit" 문구도 바로잡았다(바로 위 주석의
+순서와 어긋났다).
+
+**smoke 검사에서 내가 만든 masking 통로 2건** (기록해 둔다):
+
+1. `_sealed_before`/`_sealed_after` 를 `sha256sum ... 2>/dev/null` 로만 잡으면
+   **둘 다 빈 문자열일 때 "같다"로 통과**한다. 묶음이 아예 없어도 보존된 것처럼
+   보인다 → `_sealed_before` 가 비면 전제가 깨진 것으로 보고 실패시킨다.
+2. `find "$out" -maxdepth 1 -name '.candidate_*' -o -maxdepth 1 -name "$_NAME"`
+   는 시작 디렉터리 자신(basename 이 곧 `$_NAME`)을 매치해 **항상** 중첩으로
+   판정했다. `-mindepth 1` + 괄호로 고쳤다.
+
+---
+
+### 3.6 남은 사실 하나 (숨기지 않는다)
+
+발견 3~6 커밋(`c23e9cd7`) **직후 첫 strict smoke 가 1건 실패**했다. 그 실행의
+로그를 남기지 않아 **어느 단계였는지 확인하지 못했다.** 이후 같은 커밋에서 6회
+연속(그리고 발견 7·8 반영 후 clean 상태에서 다시) 통과했고 재현되지 않았다.
+"재시도했더니 통과" 는 이 저장소 기준으로 근거가 아니므로, 원인 미상으로
+남긴다는 사실 자체를 15차 요청문에 적는다.
 
 ---
 
