@@ -216,12 +216,12 @@ legs:
       #   commit SHA·실행 시각·dirty 여부는 stamp 로 뺐다 (그것들을 core 에
       #   두면 커밋된 영수증이 원리적으로 재생 불가능해진다).
       verification_receipt: docs/22p_gap/receipts/paired_fixed5_v4.validate.yaml
-      verification_receipt_core_sha256: 67ca2ae20d9d7d05bd23aad39413ce5298542ac1f627271159bf048267805152
+      verification_receipt_core_sha256: 74c51fd67bbfdb78e9d84c82c5d6bc245637420d84b98dba002750c944082d92
       verification_receipt_generator: docs/22p_gap/make_receipt.py
       empty_root_restore: true       # 원본 results/ 에 접근하지 않고 복원해 검증
       rescored_from_restored_fits: true
       validator_identity:
-        source_digest: ee9b0dcbf056edef
+        source_digest: bd8cbc653d8bbffb
         n_checks: 34
         ok: true
       leg_source_digest: d50295f980ccaa81            # 산출물 쪽 (옛 세대)
