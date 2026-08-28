@@ -2472,6 +2472,17 @@ def _ledger_authority(cohort: dict) -> dict:
             if type(v) is not list or any(type(x) is not str for x in v):
                 raise SystemExit(
                     f"✗ 원장 cohort 의 `legs` 가 문자열 목록이 아니다: {v!r}")
+            # ★ 49차 P1 — 명부는 **집합**이다 (multiset 이 아니다). 이 값을
+            #   쓰는 쪽은 모두 `frozenset` 이거나 집합 대조인데, 48차는
+            #   `sorted(v)` 를 그대로 봉인했다. 중복이 있으면 봉인은 2개를
+            #   말하고 runtime 은 1개를 보므로 "seal 이 roster 를 덮는다" 가
+            #   깨지고, `not_applicable_single_leg` 의 길이 검사도 뜻이 뒤집힌다.
+            dup = sorted({x for x in v if v.count(x) > 1})
+            if dup:
+                raise SystemExit(
+                    f"✗ 원장 cohort 의 `legs` 에 중복이 있다: {dup} — 명부는 "
+                    "집합이고, 중복이 있으면 봉인이 세는 수와 runtime 이 보는 "
+                    "수가 달라진다")
             rec[k] = sorted(v)
         elif k == "pin":
             # ★ 46차 #9 — producer identity 는 **닫힌 schema** 다. key 가 빠지면

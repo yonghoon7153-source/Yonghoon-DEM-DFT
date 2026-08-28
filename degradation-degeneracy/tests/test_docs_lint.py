@@ -8023,6 +8023,36 @@ def test_the_ledger_status_is_an_exact_enum(tmp_path, bad_status):
     assert "status" in str(ei.value), str(ei.value)
 
 
+def test_the_ledger_roster_is_a_set_not_a_multiset(tmp_path):
+    """★ 49차 P1 — `legs: ["a", "a"]` 이 그대로 봉인됐다.
+
+    48차 `_ledger_authority()` 는 `legs` 를 "문자열 목록인가" 로만 보고
+    `sorted(v)` 를 그대로 담았다. 그런데 이 값을 쓰는 쪽은 모두 **집합**이다
+    (`roster` 는 `frozenset`, 완전성 검사는 명부와 실물 디렉터리를 집합으로
+    맞춘다). 그래서 중복이 있으면 봉인은 2개를 말하고 runtime 은 1개를 보는데,
+    둘 중 어느 쪽도 상대의 값을 모른다 — seal 이 roster 를 덮는다는 주장이
+    깨진다.
+
+    `not_applicable_single_leg` 검사도 같은 이유로 헛돈다: 단일 leg cohort 에
+    `legs: ["a", "a"]` 를 적으면 길이가 2라 "multi-leg 라면 allowed_within_
+    cohort 를 쓰라" 는 틀린 진단이 나온다.
+    """
+    rp = _rp()
+    rec = {"cohort_id": "gX", "dir": "docs/22p_gap/coh", "status": "active",
+           "legs": ["a", "a"], "pin": dict(_DEFAULT_PIN),
+           "cross_leg_comparison": "allowed_within_cohort"}
+    with pytest.raises(SystemExit) as ei:
+        rp._ledger_seal(rec)
+    assert "중복" in str(ei.value) or "legs" in str(ei.value), str(ei.value)
+
+    # 단일 leg 를 두 번 적어 `not_applicable_single_leg` 검사를 피해 가는 길도
+    # 같이 막힌다 (그 검사는 길이를 보므로 중복이 있으면 뜻이 뒤집힌다)
+    rec2 = dict(rec, legs=["a", "a"],
+                cross_leg_comparison="not_applicable_single_leg")
+    with pytest.raises(SystemExit):
+        rp._ledger_seal(rec2)
+
+
 def test_the_pointer_carries_no_cohort_id_echo():
     """★ 46차 #9 P0-7 — 봉인이 덮는 값을 **따로 또 싣지 않는다.**
 

@@ -137,7 +137,15 @@ def _plan_for_live_grid(led, leg, out_dir, cfg, src_digest):
         "condition_ids_sha256": _h.sha256(b"").hexdigest()[:16],
         "n_conditions": 0,
         "out": G.leg_out_key(out_dir)}
-    fit_axis = {"config_digest": "0" * 16, "objectives": ["pocv_dvdq"],
+    fit_axis = {"config_digest": "0" * 16, "objective_order": ["pocv_dvdq"],
+                "reference": "grid",
+                "halfcell_recipe": {"method": "ocp", "kw": {}},
+                "bounds_preset": "expanded", "bounds_digest": "0" * 16,
+                "optimizer": {"method": "Nelder-Mead", "n_restarts": 5,
+                              "adaptive": True, "warm_start": True},
+                "use_noisy": True,
+                "row_selection": {"mode": "full", "limit": None},
+                "in": G.leg_out_key(out_dir), "in_digest": None,
                 "out": G.leg_out_key(out_dir)}
     spec = leg_run_spec(leg, grid_axis, fit_axis)
     doc = {

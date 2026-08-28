@@ -65,9 +65,9 @@ for k in range(n_max):
 
 | # | 교란 | 근거 |
 |---|---|---|
-| 1 | `warm_start` 하나가 **원점과 조건 fitting 을 동시에** 바꾼다 | `src/fitting.py:923` 가 조건 task 를 그대로 물려받는다. 404 half-cell `p_ini(34p)` `[1.509716,…] → [1.518503,…]` |
+| 1 | `warm_start` 하나가 **원점과 조건 fitting 을 동시에** 바꾼다 | `src/fitting.py:1013` 가 조건 task 를 그대로 물려받는다. 404 half-cell `p_ini(34p)` `[1.509716,…] → [1.518503,…]` |
 | 2 | `--n-restarts` 는 실행 횟수가 아니라 **예산 상한** | adaptive 조기 종료. 2회 종료 행 223 → 238 |
-| 3 | **noise 층을 바꾸면 restart 난수가 통째로 갈린다** | `cond_id = sha1(asdict(Condition))[:12]` 가 `noise`·`seed` 포함 (`src/grid.py:99`) → `task["seed"] = int(sha1(cond_id)[:8],16)` (`src/fitting.py:878`) |
+| 3 | **noise 층을 바꾸면 restart 난수가 통째로 갈린다** | `cond_id = sha1(asdict(Condition))[:12]` 가 `noise`·`seed` 포함 (`src/grid.py:99`) → `task["seed"] = int(sha1(cond_id)[:8],16)` (`src/fitting.py:968`) |
 | 4 | **warm 은 slot 을 교체한다** (§0) | 투영 `restart_sources` |
 | 5 | **예산을 바꾸면 warm 후보 자체가 바뀐다** | 연쇄 구조 (`src/fitting.py:392-406`) — 33p 예산 ↑ → 33p 해 변화 → 34p 가 받는 warm 좌표 변화. 22차 발견 2 |
 
@@ -1125,10 +1125,46 @@ pathname 으로 child 를 다시 열면 그 사이의 root 교체를 못 본다.
 `LEG_PRESERVATION.yaml` 에 `planned:` 가 생겼다. 항목은 닫힌 schema 다:
 
 ```
-PLANNED_KEYS   = ("leg_id", "cohort_id", "status",
-                  "authorized_source_digest", "recorded_on", "근거")
-PLANNED_STATUS = ("planned", "executed")
+PLANNED_KEYS             = ("leg_id", "cohort_id", "status",
+                            "authorization_kind", "authorized_source_digest",
+                            "run_spec_digest", "recorded_on", "근거")
+PLANNED_KEYS_PROSPECTIVE = PLANNED_KEYS + ("run_spec",)
+PLANNED_STATUS           = ("planned", "running", "executed", "abandoned")
 ```
+
+`run_spec` 은 prospective 항목에만 있고 **없으면 시작하지 않는다.** 승인은
+이름이 아니라 **무엇을 실행할지**를 담는다. 그 축은 다리 하나 단위이고 두
+phase 가 각자 자기 몫을 살아 있는 입력에서 만들어 같은 digest 를 낸다
+(`tools/preserve.py::leg_run_spec`):
+
+```
+LEG_SPEC_GRID_KEYS = ("config_digest", "condition_ids_sha256",
+                      "n_conditions", "out")
+LEG_SPEC_FIT_KEYS  = ("config_digest", "objective_order", "reference",
+                      "halfcell_recipe", "bounds_preset", "bounds_digest",
+                      "optimizer", "use_noisy", "row_selection",
+                      "in", "in_digest", "out")
+```
+
+★ 49차 P0-5 — fit 축은 48차에 `{config_digest, objectives, out}` 셋뿐이었다.
+그런데 `src/fitting.py` 의 실제 F67 run_spec 이 쓰는 것은 목적함수 **순서**
+(warm 연쇄가 그 순서를 따른다) · bounds 실값 · reference · half-cell recipe
+(왜곡 인자) · optimizer 정책 · noise 사용 여부 · 행 선택 · 입력 위치다.
+승인이 그것을 안 담으면 `--reference halfcell --halfcell-arg pe_offset_mv=10
+--clean --no-adaptive --n-restarts 1` 로 통째로 갈아도 같은 digest 가 나온다 —
+그러면 승인한 것은 실행이 아니라 다리 **이름**이다. 런타임에서만 정해지는
+값(`git_commit`·env fingerprint·`p_ini`)은 넣지 않는다: 승인은 사람이 **고른
+것**을 담고, 그 밖은 실행 서명이 담는다.
+
+`in_digest` 는 입력의 **내용 identity** 이며 두 경우를 타입으로 가른다.
+
+| 값 | 뜻 | 런타임 대조 |
+|---|---|---|
+| hex64 | 이 다리 **밖**에서 온 입력 (F70 의 분리 producer 구조). 계획 시점에 실재하므로 사람이 적는다 | fit 이 읽은 바이트와 직접 대조 |
+| `null` | 이 다리의 grid 가 만든다. 계획 시점에는 알 수 없다 | grid **phase receipt** 의 `curves_sha256` 과 대조 (`assert_phase_input_binding()`) |
+
+경로만 봉인하면 같은 이름 아래 다른 바이트가 들어와도 fit 이 끝까지 성공한다 —
+그 결과는 계획이 승인한 실행의 산물이 아니다.
 
 강제하는 것은 `tools/preserve.py` 의 두 함수다.
 
@@ -1163,7 +1199,39 @@ prospective 승인(사람이 원장에 적는다)
 → finalize_leg()           executed 전이 + roster 이동 + 실행 기록
 ```
 
-중단되면 `resume_claim()` 이 **같은 attempt 로** 이어받아 남은 phase 만 하고
+**★ 49차 P0-3 — 실행권을 process 경계 너머로 넘기는 coordinator.** 48차의 두
+규칙(claim 이 계획을 `running` 으로 옮긴다 · claim 이 있으면 소유 증명 없이는
+못 이어받는다)은 각각 옳았지만, grid 가 딴 실행권을 **fit 에 넘길 경로가
+없었다.** 그래서 `run.sh --mode all --leg L` 은 grid 직후 fit 에서 반드시
+거부됐다 — production `grid → fit → finalize` 가 완주 불가였다. 규칙 둘 사이에
+있어야 하는 것은 예외가 아니라 **전달**이다.
+
+```
+open_leg_run(leg, spec, digest, token_file)   coordinator 가 한 번 발급
+  · claim 파일: attempt_id(공개) + attempt_verifier = sha256(token)
+  · token 자체는 0600 파일로만 나간다 (argv 금지 — `ps` 로 새어 나간다)
+→ attach_leg_run(leg, token_file)             각 phase process 가 붙는다
+→ phase_done("grid"|"fit", receipt)
+→ finalize_leg(leg, evidence, token_file=…)   소유 증명 **필수**
+   또는 release_leg_run(leg, token_file=…)    되돌림 (dry-run·중단 정리)
+```
+
+claim 파일은 재개 credential 을 **담지 않는다** — 담으면 claims root 를 읽을 수
+있는 주체에게 "소유 증명" 이 아무 것도 요구하지 않는 것과 같다. 진단 경로
+(`inspect_leg_run()`)는 공개 필드만 낸다. `finalize_leg()` 의 소유 증명은
+필수다: 기본값 `None` 이면 이름만 알아도 남의 실행을 executed 로 닫을 수 있다.
+
+`run.sh` 가 coordinator 다. `--attempt-file` 로 grid·fit 하위 process 에
+**경로**를 넘기고, `all` 은 끝에서 `leg_finalize` 로 닫는다. 두 phase 를 손으로
+나눠 돌렸으면 `--mode finalize`, 중단된 실행권 정리는 `--mode release`.
+
+**`--dry-run` 은 실행권을 되돌린다 (49차).** 47차가 dry-run 면제를 없앤 것은
+옳지만(dry-run 도 solver 를 부른다), 48차부터 그것이 계획을 `running` 으로
+옮겨 놓고 phase 를 하나도 닫지 않게 됐다. finalize 는 "phase 가 남았다" 며
+거부하므로 그 다리는 다시 시작할 수도 닫을 수도 없는 terminal 상태로 굳었다.
+면제가 아니라 되돌림이 답이다.
+
+중단되면 `attach_leg_run()` 이 **같은 attempt 로** 이어받아 남은 phase 만 하고
 닫는다 (재계산 없음). `claim` 은 실행 계획의 **내용 주소**(`run_spec_digest`)를
 봉인하므로, 같은 이름으로 다른 실행을 승인할 수 없다 — 46차 planned row 는
 `--objective A --n-restarts 1` 과 `--objective B --n-restarts 999` 를 똑같이

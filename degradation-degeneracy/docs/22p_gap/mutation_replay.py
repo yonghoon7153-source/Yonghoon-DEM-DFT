@@ -20,6 +20,7 @@
 from __future__ import annotations
 
 import argparse
+import datetime as dt
 import hashlib
 import json
 import pathlib
@@ -600,6 +601,40 @@ def _check(name: str, kexpr: str, before: dict, after: dict,
     return bad, observed
 
 
+def _select(k: str):
+    """고른 scenario 를 **한 곳에서** 분류한다 (49차 P1).
+
+    48차는 `main()` 과 `_replay()` 가 각자 분류했고, `_replay()` 쪽만
+    `MULTI` 의 declared 항목을 빠뜨렸다. 그래서 declared MULTI 하나만 고르면
+    `scenario_declared 0 · ran 0` 에 rc 0, 그리고 "실행한 변이가 전부 물었다"
+    라는 성공 문장이 나왔다 — **아무 것도 돌지 않았는데** 통과 보고였다.
+    같은 분류를 두 곳에서 하면 약한 쪽이 실효 규칙이 된다.
+    """
+    items = [m for m in MUTANTS if k in m[0]]
+    multi = [m for m in MULTI if k in m[0]]
+    executed = [m for m in items if m[4] is not None]
+    declared = [m for m in items if m[4] is None] + \
+        [m for m in multi if m[3] is None]
+    return items, multi, executed, declared
+
+
+def _registry() -> dict:
+    """전체 등록부 — 이름 → 분류·site 수·selector. 조각 합집합의 대조 기준이다."""
+    reg: dict = {}
+    for name, path, _o, _n, kexpr in MUTANTS:
+        reg[name] = {"class": "executable" if kexpr is not None else "declared",
+                     "sites": 1, "kexpr": kexpr, "file": path.name}
+    for name, path, pairs, kexpr in MULTI:
+        reg[name] = {"class": "executable" if kexpr is not None else "declared",
+                     "sites": len(pairs), "kexpr": kexpr, "file": path.name}
+    dup = len(MUTANTS) + len(MULTI) - len(reg)
+    if dup:
+        raise SystemExit(
+            f"✗ 등록부에 같은 이름이 {dup}건 겹친다 — 뒤엣것이 앞엣것을 덮으므로 "
+            "조각 합집합이 전수를 덮었는지 셀 수 없다")
+    return reg
+
+
 def _print_counts(items, multi, executed, declared, ran=None) -> None:
     """total · executable · declared site 를 **서로 다른 이름**으로 (48차).
 
@@ -1166,13 +1201,17 @@ def main() -> int:
                     help="관측한 기대 실패 집합·증인을 JSON 으로 찍는다")
     ap.add_argument("--keep-sandbox", action="store_true")
     ap.add_argument("-k", default="", help="이름 부분일치로 고른다")
+    ap.add_argument("--emit-coverage", default=None, metavar="PATH",
+                    help="이 조각이 덮은 scenario 를 기계 판독 JSON 으로 남긴다 "
+                         "(49차 P1 — 조각 합집합 증명용)")
+    ap.add_argument("--check-coverage", nargs="+", default=None, metavar="PATH",
+                    help="조각 JSON 들을 합쳐 등록부 전체를 덮었는지 답한다")
     a = ap.parse_args()
 
-    items = [m for m in MUTANTS if a.k in m[0]]
-    multi = [m for m in MULTI if a.k in m[0]]
-    executed = [m for m in items if m[4] is not None]
-    declared = [m for m in items if m[4] is None] + \
-        [m for m in multi if m[3] is None]
+    if a.check_coverage:
+        return check_coverage(a.check_coverage)
+
+    items, multi, executed, declared = _select(a.k)
     # ★ 48차 — **0건을 고르면 실패한다.** 47차 runner 는 `-k` 가 아무것도 고르지
     #   않아도 "전부 물었다" 를 찍고 rc 0 이었다 — 오타 하나로 증거 전체가
     #   조용히 사라지는 구조였다.
@@ -1208,11 +1247,9 @@ def main() -> int:
 
 
 def _replay(plan, bad, observed_all, a) -> int:
-    items = [m for m in MUTANTS if a.k in m[0]]
-    multi = [m for m in MULTI if a.k in m[0]]
-    executed = [m for m in items if m[4] is not None]
-    declared = [m for m in items if m[4] is None]
+    items, multi, executed, declared = _select(a.k)
     ran = 0
+    bit: dict = {}
 
     for name, repo_path, pairs, kexpr in plan:
         path = _sandboxed(repo_path)
@@ -1251,13 +1288,20 @@ def _replay(plan, bad, observed_all, a) -> int:
         errs, observed = _check(name, kexpr, before, after, nodes)
         observed_all[name] = observed
         ran += 1
+        bit[name] = not errs
         print(f"{'물었다' if not errs else '★ 안 물었다':10s} {name:30s} "
               f"node {len(nodes)} · -k {kexpr}")
         bad += errs
 
     for decl in declared:
         name = decl[0]
-        print(f"{'신고':10s} {name:30s} — {DECLARED_MASKED[name]}")
+        reason = DECLARED_MASKED.get(name)
+        if not reason:
+            # 신고에 **이유가 없으면** 그것은 신고가 아니라 누락이다.
+            print(f"{'★ 사유없음':10s} {name:30s} — DECLARED_MASKED 에 항목이 없다")
+            bad.append(f"{name}: 신고인데 DECLARED_MASKED 에 사유가 없다")
+            continue
+        print(f"{'신고':10s} {name:30s} — {reason}")
 
     if a.emit_expect:
         print("\n=== 관측한 EXPECT (그대로 붙여 넣어라) ===")
@@ -1267,12 +1311,111 @@ def _replay(plan, bad, observed_all, a) -> int:
             ensure_ascii=False, indent=4, sort_keys=True))
 
     _print_counts(items, multi, executed, declared, ran=ran)
+
+    n_exec = len(executed) + len([m for m in multi if m[3] is not None])
+    if a.emit_coverage:
+        _write_coverage(a.emit_coverage, a.k, items, multi, declared, bit)
+
     if bad:
         print("\n=== 문제 ===")
         for b in bad:
             print(b)
         return 1
-    print("실행한 변이가 전부 기대 node 를 call 단계에서 물었다")
+    # ★ 49차 P1 — **0건 실행을 성공으로 세지 않는다.** 48차는 실행 가능한
+    #   scenario 를 하나도 돌리지 않고도 "전부 물었다" 를 찍고 rc 0 이었다.
+    if ran != n_exec:
+        print(f"✗ 실행 가능한 scenario {n_exec}건 중 {ran}건만 돌았다 — "
+              "돌지 않은 것을 통과로 셀 수 없다")
+        return 1
+    if ran == 0:
+        print(f"이 조각에는 실행 가능한 변이가 없다 (신고 {len(declared)}건뿐) "
+              "— rc 0 이 '전부 물었다' 를 뜻하지 않는다")
+        return 0
+    print(f"실행한 변이 {ran}건이 전부 기대 node 를 call 단계에서 물었다")
+    return 0
+
+
+def _write_coverage(path, selector, items, multi, declared, bit) -> None:
+    """이 조각이 **무엇을 덮었는지** 기계 판독 가능하게 남긴다 (49차 P1).
+
+    전수(64건)를 한 번에 돌리면 시간이 넘치므로 조각으로 나눠 돌린다. 그러면
+    "조각 합집합이 등록부 전체를 덮었는가" 를 사람이 로그를 눈으로 세어 답하게
+    되는데, 그것은 증거가 아니다. `--check-coverage` 가 이 파일들을 합쳐 답한다.
+    """
+    decl_names = {d[0] for d in declared}
+    scen = {}
+    for name, _p, _o, _n, kexpr in items:
+        scen[name] = {"class": "declared" if name in decl_names else "executable",
+                      "sites": 1, "kexpr": kexpr,
+                      "ran": name in bit, "bit": bit.get(name)}
+    for name, _p, pairs, kexpr in multi:
+        scen[name] = {"class": "declared" if name in decl_names else "executable",
+                      "sites": len(pairs), "kexpr": kexpr,
+                      "ran": name in bit, "bit": bit.get(name)}
+    rec = {"schema": "mutation-coverage/v1",
+           "selector": selector,
+           "at": dt.datetime.now(dt.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
+           "scenarios": scen}
+    p = pathlib.Path(path)
+    p.parent.mkdir(parents=True, exist_ok=True)
+    p.write_text(json.dumps(rec, ensure_ascii=False, indent=2, sort_keys=True)
+                 + "\n", encoding="utf-8")
+    print(f"\ncoverage 조각을 남겼다: {p}")
+
+
+def check_coverage(paths) -> int:
+    """조각 합집합이 **등록부 전체**를 덮었는가 (49차 P1).
+
+    덮었다는 주장을 로그 눈대중이 아니라 파일로 답한다. 실행 가능한 scenario 는
+    전부 한 번 이상 **돌았고 물었어야** 하고, 신고는 전부 신고로 나타나야 한다.
+    """
+    reg = _registry()
+    seen: dict = {}
+    for path in paths:
+        rec = json.loads(pathlib.Path(path).read_text(encoding="utf-8"))
+        if rec.get("schema") != "mutation-coverage/v1":
+            print(f"✗ {path}: coverage schema 가 아니다: {rec.get('schema')!r}")
+            return 1
+        for name, v in (rec.get("scenarios") or {}).items():
+            cur = seen.setdefault(name, {"class": v["class"], "ran": False,
+                                         "bit": None, "slices": []})
+            if cur["class"] != v["class"]:
+                print(f"✗ {name}: 조각마다 분류가 다르다 "
+                      f"({cur['class']} ≠ {v['class']})")
+                return 1
+            cur["slices"].append(rec["selector"])
+            if v.get("ran"):
+                cur["ran"] = True
+                cur["bit"] = bool(v.get("bit")) if cur["bit"] is None \
+                    else (cur["bit"] and bool(v.get("bit")))
+
+    bad = []
+    for name, meta in sorted(reg.items()):
+        got = seen.get(name)
+        if got is None:
+            bad.append(f"{name}: 어느 조각에도 나타나지 않았다 ({meta['class']})")
+            continue
+        if got["class"] != meta["class"]:
+            bad.append(f"{name}: 분류가 등록부와 다르다 "
+                       f"({got['class']} ≠ {meta['class']})")
+        if meta["class"] == "executable" and not got["ran"]:
+            bad.append(f"{name}: 실행 가능한데 어느 조각에서도 돌지 않았다")
+        if meta["class"] == "executable" and got["ran"] and got["bit"] is False:
+            bad.append(f"{name}: 돌았지만 물지 않았다")
+    extra = sorted(set(seen) - set(reg))
+    for name in extra:
+        bad.append(f"{name}: 등록부에 없는 scenario 가 조각에 있다 (이름이 바뀌었나)")
+
+    n_exec = sum(1 for m in reg.values() if m["class"] == "executable")
+    n_decl = len(reg) - n_exec
+    print(f"등록부 scenario {len(reg)} (executable {n_exec} · declared {n_decl}) · "
+          f"조각 {len(paths)}개에서 관측 {len(seen)}")
+    if bad:
+        print("\n=== 덮이지 않은 것 ===")
+        for b in bad:
+            print(b)
+        return 1
+    print("조각 합집합이 등록부 전체를 정확히 덮었다")
     return 0
 
 

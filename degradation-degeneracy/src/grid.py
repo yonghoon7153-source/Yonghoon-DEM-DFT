@@ -686,10 +686,23 @@ def run_grid(cfg: dict, conditions: list[Condition], nproc: int,
     #   부르지 않았다 — lifecycle 이 있는데 아무 것도 그 상태를 움직이지 않으면
     #   그것은 lifecycle 이 아니라 죽은 코드다.
     if _claim is not None:
+        # ★ 49차 P0-5 — receipt 가 **곡선의 내용 identity** 를 봉인한다. 다음
+        #   phase(fit)가 자기가 읽은 바이트를 이것과 맞춘다
+        #   (`assert_phase_input_binding()`). 48차에는 두 phase 를 잇는 내용
+        #   결속이 전혀 없어서, grid 가 무엇을 만들었든 fit 은 `--in` 이
+        #   가리키는 아무 것이나 읽었다.
+        import hashlib as _h49
+
+        _curves = Path(out_dir) / "curves.parquet"
+        if not _curves.is_file():
+            raise SystemExit(
+                f"✗ grid 가 끝났는데 {_curves} 가 없다 — 다음 phase 가 결속할 "
+                "입력이 없으므로 phase 를 닫지 않는다")
         _claim.phase_done("grid", {
             "out": str(out_dir),
             "n_curves_total": summary["n_curves_total"],
             "grid_run_sig": g_sig,
+            "curves_sha256": _h49.sha256(_curves.read_bytes()).hexdigest(),
             "finished_at": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())})
     return summary
 

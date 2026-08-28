@@ -86,12 +86,16 @@ grid_axis = {
 
 ocfg = load_config("configs/objectives.yaml")
 objectives = {objective: ocfg["objectives"][objective]}
-fit_axis = {
-    "config_digest": hashlib.sha256(
-        json.dumps(ocfg, sort_keys=True, ensure_ascii=False,
-                   default=str).encode("utf-8")).hexdigest()[:16],
-    "objectives": sorted(objectives),
-    "out": leg_out_key(root / out_rel)}
+fcfg = ocfg["fitting"]
+# ★ 49차 P0-5 — 승인 축은 fit 이 실제로 하려는 것 전부다. 계획을 적는 사람이
+#   무엇을 적어야 하는지가 곧 이 함수이므로, production 과 **같은 함수**를 쓴다.
+from src.fitting import live_fit_axis
+fit_axis = live_fit_axis(
+    objectives, ocfg, fcfg["bounds_presets"]["expanded"], "expanded",
+    int(fcfg.get("n_restarts", 5)), True, None, None, "grid", True, True,
+    str(fcfg.get("method", "Nelder-Mead")), "ocp", None,
+    root / out_rel, root / out_rel)
+fit_axis["in_digest"] = None      # 이 다리의 grid 가 입력을 만든다 (49차 P0-5)
 
 spec = leg_run_spec(leg, grid_axis, fit_axis)
 doc = {
@@ -240,6 +244,18 @@ def test_grid_then_fit_then_finalize_completes_across_processes(tree):
                 "--objective", "pocv", "--nproc", "2", expect_rc=1)
     assert "소유 증명 파일이 없다" in (gone.stdout + gone.stderr), (
         gone.stdout + gone.stderr)
+
+    #   ②-d ★ 49차 P0-5 — grid 가 만든 것이 **아닌** 곡선은 읽지 못한다.
+    #        경로만 승인하면 같은 이름 아래 다른 바이트가 들어와도 fit 이
+    #        끝까지 성공한다 — 그 결과는 계획이 승인한 실행의 산물이 아니다.
+    curves = root / _OUT_REL / "curves.parquet"
+    keep = curves.read_bytes()
+    curves.write_bytes(keep + b"\x00")
+    swapped = _run(root, "--mode", "fit", "--leg", _LEG, "--in", _OUT_REL,
+                   "--objective", "pocv", "--nproc", "2", expect_rc=1)
+    assert "grid 가 만든 것이 아니다" in (swapped.stdout + swapped.stderr), (
+        swapped.stdout[-2000:] + swapped.stderr[-2000:])
+    curves.write_bytes(keep)
 
     # ── ③ fit process — 넘겨받은 증명으로 **같은 실행**에 붙는다
     f = _run(root, "--mode", "fit", "--leg", _LEG, "--in", _OUT_REL,

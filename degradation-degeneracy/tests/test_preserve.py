@@ -6517,8 +6517,8 @@ def test_the_leg_run_spec_seals_what_actually_gets_computed():
 
     g = {"config_digest": "a" * 16, "condition_ids_sha256": "b" * 16,
          "n_conditions": 12, "out": "results/grid_fit_v4"}
-    f = {"config_digest": "c" * 16, "objectives": ["pocv_dvdq"],
-         "out": "results/grid_fit_v4"}
+    # ★ 49차 P0-5 — fit 축이 넓어졌다 (아래 `_F49` 와 같은 계약)
+    f = dict(_F49, out="results/grid_fit_v4", **{"in": "results/grid_fit_v4"})
     base = run_spec_digest(leg_run_spec("L", g, f))
 
     # 두 phase 가 같은 spec 을 만든다 (하나의 claim 아래 묶이는 조건)
@@ -6531,7 +6531,7 @@ def test_the_leg_run_spec_seals_what_actually_gets_computed():
             ("grid config", dict(g, config_digest="0" * 16), f),
             ("grid 산출 위치", dict(g, out="results/elsewhere"), f),
             ("fit config", g, dict(f, config_digest="0" * 16)),
-            ("목적함수 집합", g, dict(f, objectives=["pocv_dvdq", "other"])),
+            ("목적함수 집합", g, dict(f, objective_order=["pocv_dvdq", "other"])),
             ("fit 산출 위치", g, dict(f, out="results/elsewhere"))):
         assert run_spec_digest(leg_run_spec("L", gg, ff)) != base, (
             f"{name} 을 바꿨는데 승인 digest 가 그대로다")
@@ -6549,7 +6549,7 @@ def test_the_leg_run_spec_refuses_an_undeclared_axis():
 
     g = {"config_digest": "a" * 16, "condition_ids_sha256": "b" * 16,
          "n_conditions": 12, "out": "results/x"}
-    f = {"config_digest": "c" * 16, "objectives": ["o"], "out": "results/x"}
+    f = dict(_F49, out="results/x", **{"in": "results/x"})
     with pytest.raises(PreserveError):
         leg_run_spec("L", dict(g, nproc=8), f)
     with pytest.raises(PreserveError):
@@ -6916,3 +6916,138 @@ def test_finalize_writes_a_complete_contract_status_tuple(tmp_path):
         assert rec.get(axis), f"계약 §8 의 {axis} 축이 비었다 — 튜플이 불완전하다"
     assert rec["validation_status"] == "unvalidated", (
         "묶음도 검증도 없이 검증됐다고 적었다")
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# 49차 P0-5 — 승인 spec 이 **fit 이 실제로 하는 일**을 담지 않았다
+#
+# 48차 fit 축은 `{config_digest, objectives, out}` 셋뿐이었다. 그런데
+# `src/fitting.py` 의 실제 F67 run_spec 은 목적함수 **순서**(warm 연쇄가 그 순서를
+# 따른다) · bounds 실값 · reference · half-cell recipe(왜곡 인자) · optimizer
+# 정책(method·restart·adaptive·warm) · noise 사용 여부 · 행 선택(limit/subset) ·
+# 입력 위치를 전부 쓴다. 승인이 그것을 안 담으면 `--reference halfcell
+# --halfcell-arg pe_offset_mv=10 --clean --no-adaptive --n-restarts 1` 로 갈아도
+# 같은 digest 가 나온다 — 그러면 승인한 것은 실행이 아니라 다리 **이름**이다.
+# ─────────────────────────────────────────────────────────────────────────────
+
+_G49 = {"config_digest": "a" * 16, "condition_ids_sha256": "b" * 16,
+        "n_conditions": 12, "out": "results/v4"}
+_F49 = {"config_digest": "c" * 16,
+        "objective_order": ["pocv", "pocv_dvdq"],
+        "reference": "grid",
+        "halfcell_recipe": {"method": "ocp", "kw": {}},
+        "bounds_preset": "expanded",
+        "bounds_digest": "d" * 16,
+        "optimizer": {"method": "Nelder-Mead", "n_restarts": 5,
+                      "adaptive": True, "warm_start": True},
+        "use_noisy": True,
+        "row_selection": {"mode": "full", "limit": None},
+        "in": "results/v4",
+        "in_digest": None,
+        "out": "results/v4"}
+
+
+def test_the_fit_axis_seals_every_intent_that_changes_the_answer():
+    """★ 49차 P0-5 — fit 쪽 승인이 실제 실행 정책을 고정한다."""
+    from tools.preserve import leg_run_spec, run_spec_digest
+
+    base = run_spec_digest(leg_run_spec("L", _G49, _F49))
+    for name, ff in (
+            ("목적함수 **순서**", dict(_F49, objective_order=["pocv_dvdq", "pocv"])),
+            ("기준 곡선", dict(_F49, reference="halfcell")),
+            ("half-cell recipe", dict(_F49, halfcell_recipe={
+                "method": "ocpbias", "kw": {"pe_offset_mv": 10}})),
+            ("bounds preset", dict(_F49, bounds_preset="original_33p")),
+            ("bounds 실값", dict(_F49, bounds_digest="0" * 16)),
+            ("optimizer", dict(_F49, optimizer=dict(
+                _F49["optimizer"], n_restarts=1))),
+            ("adaptive", dict(_F49, optimizer=dict(
+                _F49["optimizer"], adaptive=False))),
+            ("warm start", dict(_F49, optimizer=dict(
+                _F49["optimizer"], warm_start=False))),
+            ("noise 사용", dict(_F49, use_noisy=False)),
+            ("행 선택", dict(_F49, row_selection={"mode": "limit", "limit": 8})),
+            ("입력 위치", dict(_F49, **{"in": "results/elsewhere"})),
+            ("산출 위치", dict(_F49, out="results/elsewhere"))):
+        assert run_spec_digest(leg_run_spec("L", _G49, ff)) != base, (
+            f"{name} 을 바꿨는데 승인 digest 가 그대로다 — 승인이 실행을 "
+            "고정하지 못한다")
+
+
+def test_the_fit_axis_is_still_a_closed_key_set():
+    """새 축이 생기면 여기 적히거나 거부되거나 둘 중 하나다."""
+    from tools.preserve import leg_run_spec, PreserveError
+
+    with pytest.raises(PreserveError):
+        leg_run_spec("L", _G49, dict(_F49, nproc=8))
+    with pytest.raises(PreserveError):
+        leg_run_spec("L", _G49,
+                     {k: v for k, v in _F49.items() if k != "optimizer"})
+
+
+def test_the_fit_axis_pins_the_input_content_not_just_its_path(tmp_path):
+    """★ 49차 P0-5 — 입력의 **내용 identity** 를 승인이 담는다.
+
+    경로만 봉인하면 같은 이름 아래 다른 바이트가 들어와도 승인은 그대로다.
+    두 경우를 타입으로 가른다:
+
+      · `in_digest: <hex64>` — 이 다리 **밖**에서 온 입력 (F70 의 분리 producer
+        구조). 계획을 적는 시점에 이미 실재하므로 사람이 그 digest 를 적는다.
+      · `in_digest: null`    — 이 다리의 grid 가 만든다. 계획 시점에는 알 수
+        없으므로, 런타임에 **grid phase receipt** 가 봉인한 값과 맞춘다.
+    """
+    from tools.preserve import (leg_run_spec, run_spec_digest,
+                                LEG_SPEC_FIT_KEYS, PreserveError)
+
+    assert "in_digest" in LEG_SPEC_FIT_KEYS, (
+        "승인이 입력의 내용 identity 를 담지 않는다 — 같은 경로에 다른 바이트가 "
+        "들어와도 승인이 그대로다")
+    base = run_spec_digest(leg_run_spec("L", _G49, _F49))
+    moved = run_spec_digest(
+        leg_run_spec("L", _G49, dict(_F49, in_digest="f" * 64)))
+    assert moved != base, "입력 내용을 바꿨는데 승인 digest 가 그대로다"
+
+    with pytest.raises(PreserveError):           # hex64 도 null 도 아니다
+        leg_run_spec("L", _G49, dict(_F49, in_digest="짧다"))
+
+
+def test_fit_refuses_curves_that_its_grid_phase_did_not_produce(tmp_path):
+    """★ 49차 P0-5 — `in_digest: null` 이면 grid phase receipt 가 정본이다.
+
+    같은 claim 아래 grid 가 만든 곡선이 아닌 것을 fit 이 읽으면 그 다리의
+    결과는 계획이 승인한 실행이 아니다. 48차에는 두 phase 를 잇는 내용
+    결속이 전혀 없었다 — grid 가 무엇을 만들었든 fit 은 `--in` 이 가리키는
+    아무 것이나 읽었다.
+    """
+    from tools.preserve import (open_leg_run, attach_leg_run,
+                                assert_phase_input_binding, PreserveError)
+
+    led = _lifecycle_ledger(tmp_path)
+    claims = tmp_path / "claims"
+    tok = tmp_path / "L.token"
+    open_leg_run("L", _RUN_SPEC_L, "0123456789abcdef", tok,
+                 ledger=led, claims_root=claims)
+    c = attach_leg_run("L", tok, ledger=led, claims_root=claims)
+    c.phase_done("grid", {"out": "results/x", "curves_sha256": "a" * 64})
+
+    assert c.phase_receipt("grid")["curves_sha256"] == "a" * 64
+    assert_phase_input_binding(c, "a" * 64)          # 같은 바이트 — 통과
+
+    with pytest.raises(PreserveError) as ei:
+        assert_phase_input_binding(c, "b" * 64)
+    assert "grid" in str(ei.value), str(ei.value)
+
+
+def test_fit_refuses_when_its_grid_phase_is_missing(tmp_path):
+    """`in_digest: null` 인데 grid receipt 가 없으면 대조할 정본이 없다 — 거부한다."""
+    from tools.preserve import (open_leg_run, attach_leg_run,
+                                assert_phase_input_binding, PreserveError)
+
+    led = _lifecycle_ledger(tmp_path)
+    claims = tmp_path / "claims"
+    tok = tmp_path / "L.token"
+    open_leg_run("L", _RUN_SPEC_L, "0123456789abcdef", tok,
+                 ledger=led, claims_root=claims)
+    c = attach_leg_run("L", tok, ledger=led, claims_root=claims)
+    with pytest.raises(PreserveError):
+        assert_phase_input_binding(c, "a" * 64)

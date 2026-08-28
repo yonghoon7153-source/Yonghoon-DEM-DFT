@@ -508,19 +508,102 @@ def _record_phase(claim, phase: str, summary: dict, out_dir) -> None:
                                                   __import__("time").gmtime())})
 
 
-def _assert_fit_authorized(objectives: dict, out_dir, obj_cfg: dict,
-                           leg: str | None = None,
-                           token_file=None):
-    """fit 쪽 계획 gate (48차 P0-8 · P0-5).
+def live_fit_axis(objectives: dict, obj_cfg: dict, bounds: dict,
+                  bounds_preset: str, n_restarts: int, use_noisy: bool,
+                  limit, subset, reference: str, warm_start: bool,
+                  adaptive: bool, method: str, halfcell_method: str,
+                  halfcell_kw: dict | None, in_dir, out_dir) -> dict:
+    """이 실행이 **실제로 하려는 것** 을 승인 축으로 편다 (49차 P0-5).
 
-    grid 와 **같은 spec** 을 만든다: 자기 축(목적함수 집합·config·산출 위치)은
-    살아 있는 입력에서, 조건 집합 절반은 계획이 선언한 값에서. 두 phase 가 같은
-    digest 를 내야 하나의 claim 아래 묶인다.
+    48차 fit 축은 `{config_digest, objectives, out}` 셋뿐이었다. 그런데
+    아래 `_run_fit_locked()` 의 F67 run_spec 이 실제로 쓰는 것은 목적함수
+    **순서**(warm 연쇄가 그 순서를 따른다) · bounds 실값 · reference ·
+    half-cell recipe(왜곡 인자) · optimizer 정책 · noise 사용 여부 · 행 선택 ·
+    입력 위치다. 승인이 그것을 안 담으면 `--reference halfcell --halfcell-arg
+    pe_offset_mv=10 --clean --no-adaptive --n-restarts 1` 로 통째로 갈아도
+    같은 digest 가 나온다 — 그러면 승인한 것은 실행이 아니라 다리 **이름**이다.
+
+    런타임에서만 정해지는 값(`git_commit`·env fingerprint·`p_ini`)은 넣지
+    않는다. 승인은 사람이 **고른 것**을 담고, 그 밖은 실행 서명이 담는다.
     """
     import hashlib as _h
     import json as _j
 
-    from src.grid import leg_name, leg_out_key
+    from src.grid import leg_out_key
+
+    def _dg(obj) -> str:
+        return _h.sha256(_j.dumps(obj, sort_keys=True, ensure_ascii=False,
+                                  default=str).encode("utf-8")).hexdigest()[:16]
+
+    return {
+        "config_digest": _dg(obj_cfg),
+        # ★ **순서**다. `dict` 는 삽입 순서를 지키고 warm 연쇄가 그 순서를
+        #   따른다 — 정렬해 버리면 서로 다른 실험이 같은 승인으로 접힌다.
+        "objective_order": list(objectives),
+        "reference": str(reference),
+        "halfcell_recipe": {"method": str(halfcell_method),
+                            "kw": dict(halfcell_kw or {})},
+        "bounds_preset": str(bounds_preset),
+        "bounds_digest": _dg(bounds),
+        "optimizer": {"method": str(method), "n_restarts": int(n_restarts),
+                      "adaptive": bool(adaptive),
+                      "warm_start": bool(warm_start)},
+        "use_noisy": bool(use_noisy),
+        "row_selection": {
+            "mode": ("subset" if subset is not None
+                     else "limit" if limit else "full"),
+            "limit": (int(limit) if limit else None)},
+        # `in_digest` 는 여기서 만들지 않는다 — 계획이 정하는 축이고
+        # `_assert_fit_authorized()` 가 선언에서 읽어 채운다.
+        "in": leg_out_key(in_dir),
+        "out": leg_out_key(out_dir)}
+
+
+def _assert_fit_input_is_authorized(claim, live_fit: dict, in_dir) -> None:
+    """fit 이 **어떤 바이트를** 읽는지까지 승인이 덮는가 (49차 P0-5).
+
+    계획의 `fit.in_digest` 가 두 경우를 가른다:
+      · hex64 — 이 다리 **밖**에서 온 입력. 계획이 적은 digest 와 맞춘다.
+      · null  — 이 다리의 grid 가 만든다. grid phase receipt 가 정본이다.
+
+    48차에는 이 결속이 전혀 없었다. 경로만 승인했으므로 같은 이름 아래 다른
+    곡선을 놓아도 fit 은 끝까지 성공했고, 그 결과가 계획이 승인한 실행의
+    산물인지 말할 근거가 없었다.
+    """
+    import hashlib as _h
+
+    from pathlib import Path as _P
+
+    from tools.preserve import (assert_phase_input_binding, PreserveError)
+
+    if claim is None:
+        return                                   # smoke namespace — 계획 밖이다
+    curves = _P(in_dir) / "curves.parquet"
+    if not curves.is_file():
+        raise PreserveError(
+            "plan", f"fit 이 읽을 곡선이 없다: {curves}")
+    got = _h.sha256(curves.read_bytes()).hexdigest()
+    declared = live_fit["in_digest"]
+    if declared is None:
+        assert_phase_input_binding(claim, got)
+        return
+    if declared != got:
+        raise PreserveError(
+            "plan",
+            f"계획이 승인한 입력과 지금 읽는 곡선이 다르다 "
+            f"(계획 {str(declared)[:16]} ≠ 지금 {got[:16]}) — 경로가 같아도 "
+            "바이트가 다르면 다른 실행이다")
+
+
+def _assert_fit_authorized(live_fit: dict, out_dir, leg: str | None = None,
+                           token_file=None):
+    """fit 쪽 계획 gate (48차 P0-8 · P0-5 · 49차 P0-5).
+
+    grid 와 **같은 spec** 을 만든다: 자기 축은 살아 있는 입력에서
+    (`live_fit_axis()`), 조건 집합 절반은 계획이 선언한 값에서. 두 phase 가
+    같은 digest 를 내야 하나의 claim 아래 묶인다.
+    """
+    from src.grid import leg_name
     from src.io import source_digest
     from tools.preserve import (assert_run_is_authorized, declared_leg_run_spec,
                                 leg_run_spec, is_inside_namespace,
@@ -528,17 +611,19 @@ def _assert_fit_authorized(objectives: dict, out_dir, obj_cfg: dict,
 
     leg = leg_name(leg)
     if is_inside_namespace(out_dir, SMOKE_NAMESPACE):
-        return None
-    live_fit = {
-        "config_digest": _h.sha256(
-            _j.dumps(obj_cfg, sort_keys=True, ensure_ascii=False,
-                     default=str).encode("utf-8")).hexdigest()[:16],
-        "objectives": sorted(objectives),
-        "out": leg_out_key(out_dir)}
+        return None, live_fit
     declared = declared_leg_run_spec(leg)
-    spec = leg_run_spec(leg, declared.get("grid") or {}, live_fit)
-    return assert_run_is_authorized(leg, "fit", [out_dir], spec,
-                                    source_digest(), token_file=token_file)
+    # ★ 49차 P0-5 — `in_digest` 는 **계획만** 아는 축이다 (grid 절반과 같다).
+    #   "이 다리의 grid 가 입력을 만든다(null)" 인지 "밖에서 온 입력이다(hex64)"
+    #   인지는 사람이 계획에 적는 결정이고, fit 은 그것을 읽어 자기가 읽은
+    #   바이트를 대조한다. 계획이 이 key 를 안 적었으면 digest 가 달라져
+    #   gate 가 거부한다 (fail-closed).
+    fit_axis = dict(live_fit,
+                    in_digest=(declared.get("fit") or {}).get("in_digest"))
+    spec = leg_run_spec(leg, declared.get("grid") or {}, fit_axis)
+    claim = assert_run_is_authorized(leg, "fit", [out_dir], spec,
+                                     source_digest(), token_file=token_file)
+    return claim, fit_axis
 
 
 def run_fit(in_dir, out_dir, obj_cfg: dict, objectives: dict, bounds: dict,
@@ -588,8 +673,13 @@ def run_fit(in_dir, out_dir, obj_cfg: dict, objectives: dict, bounds: dict,
     # ★ 48차 P0-8 — **첫 부작용 전에** 계획 gate 를 지난다. 47차는 `src.grid`
     #   만 배선하고 fit 은 다음 라운드로 미뤘는데, 실제 결과(`fits.parquet`)를
     #   만드는 것은 fit 이다. gate 없는 쪽이 결과를 만들면 gate 는 장식이다.
-    claim = _assert_fit_authorized(objectives, out_dir, obj_cfg, leg=leg,
-                                   token_file=token_file)
+    _live = live_fit_axis(objectives, obj_cfg, bounds, bounds_preset,
+                          n_restarts, use_noisy, limit, subset, reference,
+                          warm_start, adaptive, method, halfcell_method,
+                          halfcell_kw, in_dir, out_dir)
+    claim, _fit_axis = _assert_fit_authorized(_live, out_dir, leg=leg,
+                                              token_file=token_file)
+    _assert_fit_input_is_authorized(claim, _fit_axis, in_dir)
     out_dir.mkdir(parents=True, exist_ok=True)
     acquire_run_lock(out_dir, ".fit.lock")
     try:

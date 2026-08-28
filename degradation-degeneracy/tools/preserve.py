@@ -4021,9 +4021,31 @@ def assert_planned_leg(leg_id: str, source_digest: str, ledger=None,
 #:   반대로 `nproc`·`chunk_size`·`resume` 은 **넣지 않는다.** 결과를 바꾸지
 #:   않고(서명 검사가 resume 혼합을 따로 막는다), 넣으면 grid 와 fit 이 서로
 #:   다른 spec 을 만들어 **하나의 claim 아래 두 phase 를 묶을 수 없게** 된다.
+#:
+#: ★ 49차 P0-5 — fit 축을 **실제 F67 run_spec 의 의도 축**으로 넓힌다. 48차
+#:   fit 축은 `{config_digest, objectives, out}` 셋뿐이었는데,
+#:   `src/fitting.py` 가 실제로 쓰는 것은 목적함수 **순서**(warm 연쇄가 그
+#:   순서를 따른다) · bounds 실값 · reference · half-cell recipe(왜곡 인자) ·
+#:   optimizer 정책 · noise 사용 여부 · 행 선택 · 입력 위치다. 승인이 그것을
+#:   안 담으면 `--reference halfcell --halfcell-arg pe_offset_mv=10 --clean
+#:   --no-adaptive --n-restarts 1` 로 통째로 갈아도 같은 digest 가 나온다 —
+#:   그러면 승인한 것은 실행이 아니라 다리 **이름**이다.
+#:
+#:   런타임에서만 정해지는 값(`git_commit`·env fingerprint·`p_ini`)은 넣지
+#:   않는다. 승인은 **사람이 고른 것**을 담고, 런타임 값은 실행 서명이 담는다.
 LEG_SPEC_GRID_KEYS = ("config_digest", "condition_ids_sha256",
                       "n_conditions", "out")
-LEG_SPEC_FIT_KEYS = ("config_digest", "objectives", "out")
+LEG_SPEC_FIT_KEYS = ("config_digest", "objective_order", "reference",
+                     "halfcell_recipe", "bounds_preset", "bounds_digest",
+                     "optimizer", "use_noisy", "row_selection",
+                     "in", "in_digest", "out")
+
+#: fit 축 안의 **중첩** 닫힌 집합. 열려 있으면 optimizer 정책 하나가 조용히
+#: 승인 밖으로 나간다 (`n_restarts` 를 지우면 그 축이 사라지는 것과 같다).
+LEG_SPEC_OPTIMIZER_KEYS = ("method", "n_restarts", "adaptive", "warm_start")
+LEG_SPEC_HALFCELL_KEYS = ("method", "kw")
+LEG_SPEC_SELECTION_KEYS = ("mode", "limit")
+LEG_SPEC_SELECTION_MODES = ("full", "limit", "subset")
 
 
 def leg_run_spec(leg_id: str, grid: dict, fit: dict) -> dict:
@@ -4045,11 +4067,76 @@ def leg_run_spec(leg_id: str, grid: dict, fit: dict) -> dict:
                 "plan",
                 f"leg run spec 의 {name} 축이 계약과 다르다 — 있어야 {sorted(want)}, "
                 f"받은 것 {sorted(got) if isinstance(got, dict) else type(got).__name__}")
-    spec = {"leg_spec_version": 1, "leg_id": leg_id,
+    # ★ 49차 P0-5 — 중첩 dict 도 **닫힌** 집합이다. 안쪽이 열려 있으면 축
+    #   하나(예: `n_restarts`)가 조용히 사라져도 아무도 모른다.
+    for key, want in (("optimizer", LEG_SPEC_OPTIMIZER_KEYS),
+                      ("halfcell_recipe", LEG_SPEC_HALFCELL_KEYS),
+                      ("row_selection", LEG_SPEC_SELECTION_KEYS)):
+        got = fit[key]
+        if not isinstance(got, dict) or set(got) != set(want):
+            raise PreserveError(
+                "plan",
+                f"leg run spec 의 fit.{key} 가 계약과 다르다 — 있어야 "
+                f"{sorted(want)}, 받은 것 "
+                f"{sorted(got) if isinstance(got, dict) else type(got).__name__}")
+    # ★ 49차 P0-5 — 입력의 **내용 identity**. 경로만 봉인하면 같은 이름 아래
+    #   다른 바이트가 들어와도 승인이 그대로다. 두 경우를 타입으로 가른다:
+    #     · hex64 — 이 다리 **밖**에서 온 입력 (F70 의 분리 producer 구조).
+    #               계획 시점에 실재하므로 사람이 그 digest 를 적는다.
+    #     · None  — 이 다리의 grid 가 만든다. 계획 시점에는 알 수 없으므로
+    #               런타임에 grid phase receipt 가 봉인한 값과 맞춘다
+    #               (`assert_phase_input_binding()`).
+    ind = fit["in_digest"]
+    if ind is not None and not _is_hex64(ind):
+        raise PreserveError(
+            "plan",
+            f"fit.in_digest 가 hex64 도 null 도 아니다: {ind!r} — 밖에서 온 "
+            "입력이면 그 내용 digest 를, 이 다리의 grid 가 만들면 null 을 적는다")
+    if fit["row_selection"]["mode"] not in LEG_SPEC_SELECTION_MODES:
+        raise PreserveError(
+            "plan",
+            f"fit.row_selection.mode 가 계약 enum 이 아니다: "
+            f"{fit['row_selection']['mode']!r} — {list(LEG_SPEC_SELECTION_MODES)} "
+            "중 하나여야 한다")
+    spec = {"leg_spec_version": 2, "leg_id": leg_id,
             "grid": {k: grid[k] for k in LEG_SPEC_GRID_KEYS},
             "fit": {k: fit[k] for k in LEG_SPEC_FIT_KEYS}}
     _assert_json_domain(spec, "leg_run_spec")
     return spec
+
+
+def assert_phase_input_binding(claim, curves_sha256: str) -> None:
+    """fit 이 읽는 곡선이 **이 claim 의 grid 가 만든 것**인가 (49차 P0-5).
+
+    계획이 `fit.in_digest: null` 이라고 적었다는 것은 "이 다리의 grid 가 그
+    입력을 만든다" 는 뜻이다. 그러면 내용의 정본은 grid phase receipt 이고,
+    fit 은 자기가 읽은 바이트를 그것과 맞춰야 한다.
+
+    48차에는 두 phase 를 잇는 내용 결속이 **전혀** 없었다 — grid 가 무엇을
+    만들었든 fit 은 `--in` 이 가리키는 아무 것이나 읽었고, 그 결과가 계획이
+    승인한 실행의 산물인지 말할 근거가 없었다.
+    """
+    if claim is None:
+        return
+    rec = claim.phase_receipt("grid")
+    if rec is None:
+        raise PreserveError(
+            "plan",
+            "계획이 `fit.in_digest: null` 이라 이 다리의 grid 가 입력을 만든다고 "
+            "선언했는데, 그 claim 에 grid phase receipt 가 없다 — 대조할 정본이 "
+            "없으므로 fit 을 시작할 수 없다 (grid 를 먼저 돌리라)")
+    sealed = rec.get("curves_sha256")
+    if not _is_hex64(sealed):
+        raise PreserveError(
+            "plan",
+            f"grid phase receipt 의 `curves_sha256` 이 hex64 가 아니다: "
+            f"{sealed!r} — 입력을 결속할 수 없다")
+    if not secrets.compare_digest(str(sealed), str(curves_sha256)):
+        raise PreserveError(
+            "plan",
+            f"fit 이 읽는 곡선이 이 claim 의 grid 가 만든 것이 아니다 "
+            f"(grid {str(sealed)[:16]} ≠ 지금 {str(curves_sha256)[:16]}) — "
+            "그러면 이 fit 의 결과는 계획이 승인한 실행의 산물이 아니다")
 
 
 def declared_leg_run_spec(leg_id: str, ledger=None) -> dict:
@@ -4153,6 +4240,11 @@ class LegClaim:
     def phases_done(self) -> tuple:
         rec = self._read()
         return tuple(p for p in CLAIM_PHASES if p in (rec.get("phases") or {}))
+
+    def phase_receipt(self, phase: str) -> dict | None:
+        """닫힌 phase 가 남긴 receipt — 다음 phase 가 **입력을 결속**할 근거다."""
+        ent = (self._read().get("phases") or {}).get(phase)
+        return None if ent is None else (ent.get("receipt") or {})
 
     def phase_done(self, phase: str, receipt: dict) -> None:
         """한 phase 를 **durable 하게** 닫는다. 중단 뒤 재개가 여기서 이어진다."""
