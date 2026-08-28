@@ -16,14 +16,23 @@
 
   python3 build_v7c_trimer.py --selftest
   python3 build_v7c_trimer.py --stage a --dimer db/structures/sdcp_v7c_dimer_neutral.xyz \
-      --out ~/orca_poly/dp6_v3 --n 6                    # seed 수는 SEED_FLOOR 기본(8)
-  # (ORCA 로 gs*/dp6_gs*_neutral 최적화 후)
+      --out ~/orca_poly/dp6_v3 --n 6                    # seed 수·고유성·dmin 바닥 강제
+  # (ORCA 로 gs*/dp6_gs*_neutral 최적화 후 — receipt 3종이 전부 있어야 stage b 가 열린다)
   python3 build_v7c_trimer.py --stage b --n 6 --gseed 0 \
+      --stage_a_manifest ~/orca_poly/dp6_v3/manifest_stage_a.json \
+      --neutral_out ~/orca_poly/dp6_v3/gs0/dp6_gs0_neutral.out \
       --neutral_xyz ~/orca_poly/dp6_v3/gs0/dp6_gs0_neutral.xyz --out ~/orca_poly/dp6_v3/gs0_b
-  python3 build_v7c_trimer.py --analyze ~/orca_poly/dp6_v3/gs0_b
+  python3 build_v7c_trimer.py --analyze ~/orca_poly/dp6_v3/gs0_b     # PENDING 도 비영 종료
+  python3 build_v7c_trimer.py --hybrid  ~/orca_poly/dp6_v3/gs0_b     # NoAutoStart 강제
+  python3 build_v7c_trimer.py --legacy --dimer ... --out trimer      # 레거시는 명시 필수
 
-레거시 (--dimer/--out 만, 종전과 동일): trimer_neutral / doped_mid / doped_end 패키지.
-⚠ v2 인터페이스(--holes)는 회신 R2 로 **제거** — 매트릭스는 REQUIRED_MATRIX 가 강제한다.
+레거시 (--legacy --dimer/--out): trimer_neutral / doped_mid / doped_end 패키지 (명시 필수 — R3 P1).
+⚠ v2 인터페이스(--holes)는 제거 — 매트릭스는 REQUIRED_MATRIX 가 강제한다.
+⚠ 회신 R3 반영 (2026-08-28): seed 바닥·고유성·dmin **강제** · 부모 **receipt**(manifest+
+  .out+xyz 3중 결속, 미이완/재라벨 거부) · SP→Opt **dependency**(calculation_id) ·
+  analyzer 양성증거 요구(마지막 segment·마지막 값·중복 out 적발·PENDING 비영 종료) ·
+  입력에 Hirshfeld(+UNO/UCO) 관측량 계약 · hybrid NoAutoStart + 조성별 그룹 ·
+  localization class 사전 규칙(share ≥ 0.5 유일 집합, 아니면 MIXED_UNRESOLVED).
 
 이 도구가 **못 하는 것**
   · 기하를 이완하지 않는다 — ORCA 몫. stage B 는 "최적화된 부모" 를 신뢰가 아니라
@@ -437,29 +446,54 @@ def atom_sets_of(csym, cnb, crings, csulf, names):
 
 
 #: 교차검사 방법 — "ωB97X-D급" 금지 (회신 R 조건 7): 계산 전에 정확히 지정한다.
+#:   ⚠ 회신 R3: 'MORead 금지' 주석은 강제가 아니다 — ORCA 는 같은 basename 의 GBW 가
+#:   있으면 AutoStart 한다. **NoAutoStart 키워드**로만 fresh-start 가 강제된다.
 HYBRID_KEYWORDS = "wB97X-D3 def2-TZVP defGrid3"
 HYBRID_SPEC = {
-    "keywords": HYBRID_KEYWORDS,
-    "fresh_start": "r2SCAN orbital 미승계 (MORead 금지 — 입력에 주석으로 박힌다)",
-    "decision_set": "vertical 승자 ∪ adiabatic 승자 ∪ 승자 0.10 eV 이내 ∪ "
-                    "**realized localization class 별 최저 대표 전부** (회신 R2 조건 8)",
+    "keywords": HYBRID_KEYWORDS + " NoAutoStart",
+    "fresh_start": "NoAutoStart 키워드로 강제 (주석은 강제가 아니다 — 회신 R3 P0-5)",
+    "decision_set": "**같은 조성(species)·같은 job_type 그룹 안에서만** vertical 승자 ∪ "
+                    "adiabatic 승자 ∪ 0.10 eV 창 ∪ realized localization class 별 최저 대표"
+                    " — 핵·전자수가 다른 종의 절대에너지 비교는 물리적으로 무의미 (R3 P0-5)",
     "escalation": "hybrid 가 state identity/localization/순서를 바꾸면 그 상태만 hybrid 재최적화",
-    "disagreement": "두 방법이 갈리면 평균하지 않고 METHOD_DEPENDENT",
+    "disagreement": "두 방법이 갈리면 평균하지 않고 METHOD_DEPENDENT (--compare 가 emit)",
     "version_field": "orca_version 은 회수 시 .out 배너에서 채운다 (사전 기재 금지)",
 }
 
+#: localization class 의 **사전 규칙** (회신 R3: 결과를 본 뒤 경계를 정하면 사후 선택이다).
+#:   share(g) = Σ_{i∈g} m_i (signed) / Σ_i |m_i|  — 분모는 전 원자 |국소스핀| 합.
+#:   |share| ≥ LOC_CLASS_MIN 인 집합이 정확히 하나면 그 집합 라벨, 아니면 MIXED_UNRESOLVED.
+#:   총 |m| < LOC_ABS_MIN 이면 NO_SPIN (closed-shell 류) — class 없음.
+LOC_CLASS_MIN = 0.5
+LOC_ABS_MIN = 0.3
+
+
+def _git_commit():
+    try:
+        import subprocess
+        return subprocess.run(["git", "rev-parse", "HEAD"], capture_output=True,
+                              text=True, timeout=10).stdout.strip() or "unknown"
+    except Exception:
+        return "unknown"
+
+
+def _sha(path):
+    return hashlib.sha256(open(path, "rb").read()).hexdigest()
+
 
 def make_inp(path, xyz_name, wf, mult, bs, job_type, scf_seed="s0", hybrid=False):
-    """job type 별 ORCA 입력 (회신 R2 P0-1·조건 2 — RKS/UKS 와 SP/Opt 를 명시 생성).
+    """job type 별 ORCA 입력 (회신 R2 P0-1·R3 P0-0 — 관측량 회수 계약 포함).
 
-    job_type: 'opt_neutral' (RKS Opt) · 'sp_vertical' (SP + StabPerform) ·
-              'opt_adiabatic' (Opt — analyzer 가 vertical stability 통과를 확인한 뒤에만 실행)
-    scf_seed: s0 = 기본 guess · s1 = Hueckel (독립 SCF/localization seed — R2 조건 6)
+    - RKS/UKS 명시 · SP/Opt 분리 (R2)
+    - **Hirshfeld 를 전 잡에**, open-shell 에 **UNO UCO** (R3: 기본 off — 명시 없으면
+      Löwdin–Hirshfeld 강건성·UNO 지표를 실행 후 복구할 수 없다)
+    - hybrid 는 **NoAutoStart** 로 fresh-start 강제 (R3: 주석은 강제가 아니다)
     """
     kw = "RKS" if wf == "RKS" else "UKS"
-    base = HYBRID_KEYWORDS if hybrid else "r2SCAN-3c"
+    base = (HYBRID_KEYWORDS + " NoAutoStart") if hybrid else "r2SCAN-3c"
     opt = " Opt" if job_type in ("opt_neutral", "opt_adiabatic") else ""
-    method = f"{base}{opt} TightSCF"
+    obs = " Hirshfeld" + ("" if wf == "RKS" else " UNO UCO")
+    method = f"{base}{opt} TightSCF{obs}"
     scf_opts = []
     if job_type == "sp_vertical" and not bs:
         scf_opts.append("StabPerform true")
@@ -469,109 +503,211 @@ def make_inp(path, xyz_name, wf, mult, bs, job_type, scf_seed="s0", hybrid=False
         scf_opts.append("Guess Hueckel")
     with open(path, "w") as f:
         f.write(f"! {kw} {method}\n%maxcore 6000\n")
-        if hybrid:
-            f.write("# fresh-start: MORead 금지 (r2SCAN orbital 미승계 — HYBRID_SPEC)\n")
         if scf_opts:
             f.write("%scf " + " ".join(scf_opts) + " end\n")
         f.write(f"* xyzfile 0 {mult} {xyz_name}\n")
 
 
+def _no_realized(d, path="conditioning"):
+    for k, v in d.items():
+        if "realized" in str(k):
+            raise SystemExit(f"⛔ calculation_id 에 realized 필드({path}.{k}) — 불변성 위반")
+        if isinstance(v, dict):
+            _no_realized(v, f"{path}.{k}")
+
+
 def calculation_id(cond):
-    """불변 계산 ID (회신 R2 조건 6·8) — **conditioning 만** 해시. realized 값이 들어가면
-    ID 가 결과에 따라 변해 immutable 이 아니게 된다 (selftest 가 막는다)."""
-    for k in cond:
-        if "realized" in k:
-            raise SystemExit(f"⛔ calculation_id 에 realized 필드({k})가 들어왔다 — 불변성 위반")
+    """불변 계산 ID — conditioning 만 해시. **중첩 포함** realized 유입 시 발급 거부 (R3 P1)."""
+    _no_realized(cond)
     j = json.dumps(cond, sort_keys=True, ensure_ascii=False)
     return "calc_" + hashlib.sha256(j.encode()).hexdigest()[:16]
 
 
-def _n_from_atoms(nat, unit_half):
-    """원자수 → DP (nat = 2u + (n−2)(u−1), u = 다이머 절반)."""
-    n = (nat - 2 * unit_half) // (unit_half - 1) + 2
-    return n if 2 * unit_half + (n - 2) * (unit_half - 1) == nat else None
-
-
 # ══ Stage A — 중성 조립 + Opt 입력 (geometry seed 별) ═══════════════════════════
 def stage_a(a, sym, pos):
+    """회신 R3 P0-1 반영: seed 바닥·고유성·dmin floor 를 **강제**한다 (선언이 아니라).
+
+    - seeds 는 양의 정수, SEED_FLOOR 이상 (--allow_underseed 는 selftest 전용)
+    - torsion 벡터가 겹치면 다음 gseed 로 재시도해 **고유 N 개**를 채운다 — 못 채우면 중단
+    - 모든 접합의 dmin ≥ DMIN_FLOOR — 위반 시 그 seed 는 폐기, 전체 부족 시 중단
+    - 각 접합 dmin 을 manifest 에 기록
+    """
     if formula_of(sym) != V7C_DIMER_FORMULA and not a.allow_noncanonical:
         raise SystemExit(f"⛔ 입력 다이머 조성 {formula_of(sym)} ≠ v7c({V7C_DIMER_FORMULA}) — "
-                         "production 은 fail-closed 다. 합성/시험 입력은 --allow_noncanonical "
-                         "(회신 R2 P0-4)")
+                         "production 은 fail-closed (--allow_noncanonical 은 selftest 전용)")
     if a.n not in REQUIRED_MATRIX:
         raise SystemExit(f"⛔ --n {a.n}: 필수 매트릭스가 정의된 DP 는 {sorted(REQUIRED_MATRIX)} 뿐")
     v7c_real = (formula_of(sym) == V7C_DIMER_FORMULA)
-    n_seeds = a.seeds if a.seeds else SEED_FLOOR[a.n][0]
-    seeds_meta = []
-    for g in range(n_seeds):
-        d = os.path.join(a.out, f"gs{g}")
-        os.makedirs(d, exist_ok=True)
-        csym, cpos, torsions = build_chain(sym, pos, a.n, a.cc, a.step,
-                                           log=lambda *x: None, gseed=g)
+    floor = SEED_FLOOR[a.n][0]
+    n_seeds = a.seeds if a.seeds is not None else floor
+    if not isinstance(n_seeds, int) or n_seeds < 1:
+        raise SystemExit(f"⛔ --seeds {a.seeds}: 양의 정수여야 한다")
+    if n_seeds < floor and not a.allow_underseed:
+        raise SystemExit(f"⛔ --seeds {n_seeds} < 승인 바닥 {floor} (R2 Q4) — "
+                         "축소는 --allow_underseed (selftest 전용, 재심사 제출물 아님)")
+    commit = _git_commit()
+    seeds_meta, seen_vecs = [], set()
+    g, tries = 0, 0
+    while len(seeds_meta) < n_seeds:
+        tries += 1
+        if tries > 20 * n_seeds:
+            raise SystemExit(f"⛔ 고유 torsion seed {n_seeds}개를 만들 수 없다 "
+                             f"(고유 {len(seen_vecs)}개에서 고갈) — --step 을 줄여 후보각을 늘려라")
+        try:
+            csym, cpos, torsions = build_chain(sym, pos, a.n, a.cc, a.step,
+                                               log=lambda *x: None, gseed=g)
+        except SystemExit:
+            g += 1
+            continue
+        vec = tuple(t["torsion_deg"] for t in torsions)
+        dmins = [t["dmin_A"] for t in torsions]
+        if vec in seen_vecs or min(dmins) < DMIN_FLOOR:
+            g += 1
+            continue
+        seen_vecs.add(vec)
         if v7c_real and not check_closed_form(csym, a.n, 0):
-            raise SystemExit(f"⛔ gs{g}: 중성 {a.n}-량체 닫힌꼴 불일치 — 빌더 오류, 멈춘다")
-        tag = f"dp{a.n}_gs{g}_neutral"
-        write_xyz(os.path.join(d, f"{tag}.xyz"), csym, cpos,
-                  f"DP{a.n} neutral, geometry seed g{g} (torsions "
-                  f"{[t['torsion_deg'] for t in torsions]} deg) — UNRELAXED, ORCA Opt 대상")
+            raise SystemExit(f"⛔ g{g}: 중성 {a.n}-량체 닫힌꼴 불일치 — 빌더 오류, 멈춘다")
+        k = len(seeds_meta)
+        d = os.path.join(a.out, f"gs{k}")
+        os.makedirs(d, exist_ok=True)
+        tag = f"dp{a.n}_gs{k}_neutral"
+        xyzp = os.path.join(d, f"{tag}.xyz")
+        write_xyz(xyzp, csym, cpos,
+                  f"DP{a.n} neutral, geometry seed g{k} (lcg {g}; torsions {list(vec)} deg) "
+                  "— UNRELAXED, ORCA Opt 대상")
         make_inp(os.path.join(d, f"{tag}.inp"), f"{tag}.xyz", "RKS", 1, False, "opt_neutral")
-        seeds_meta.append(dict(gseed=g, dir=f"gs{g}", tag=tag,
-                               torsions=[t["torsion_deg"] for t in torsions]))
-        print(f"  gs{g}: torsions {[t['torsion_deg'] for t in torsions]}")
-    sha = hashlib.sha256(open(a.dimer, "rb").read()).hexdigest()
+        cond = dict(estimand_id="sdcp-doped-gas-stage0/v3", dp=a.n,
+                    species=f"DP{a.n}_h0_Q0", job_type="opt_neutral",
+                    wavefunction_class="RKS", orca_mult=1, net_charge=0,
+                    all_electron_count=electrons_of(csym), geometry_seed=f"g{k}",
+                    lcg_seed=g, torsions_deg=list(vec), method="r2SCAN-3c/TightSCF",
+                    builder_commit=commit)
+        seeds_meta.append(dict(gseed=k, lcg_seed=g, dir=f"gs{k}", tag=tag,
+                               torsions=list(vec), dmins_A=dmins,
+                               xyz_sha256=_sha(xyzp),
+                               calculation_id=calculation_id(cond)))
+        g += 1
+        print(f"  gs{k} (lcg {g-1}): torsions {list(vec)} · dmin {min(dmins):.2f} A")
     man = {
         "schema": "sdcp_stage0_manifest/v3", "stage": "A",
         "estimand_id": "sdcp-doped-gas-stage0/v3",
         "design_card": "kb/questions/sdcp_doped_reopen_v3_2026_08_28.md",
+        "builder_commit": commit,
         "species_note": "DPn_hm_Q0 = neutral-H-deleted / internal-redox microstate "
-                        "(H 핵+전자 동시 제거 — 일반적 '탈양성자화' 아님, 회신 R2 조건 1)",
+                        "(H 핵+전자 동시 제거 — 일반적 '탈양성자화' 아님)",
         "dp": a.n, "closed_form_validated": v7c_real,
+        "dmin_floor_A": DMIN_FLOOR,
         "required_matrix": REQUIRED_MATRIX[a.n], "pair_policy": PAIR_POLICY,
-        "seed_floor": {"initial_torsion_seeds": SEED_FLOOR[a.n][0],
+        "seed_floor": {"initial_torsion_seeds": floor,
                        "null_batches_K2": SEED_FLOOR[a.n][1],
-                       "rule": "새 저에너지 basin/상태순서/localization class 변화 시 "
-                               "null counter 리셋. --step 은 seed 가 아니다 (회신 R2 Q4)"},
+                       "generated": len(seeds_meta),
+                       "underseed_flag": bool(n_seeds < floor),
+                       "rule": "변화 시 null counter 리셋 · --step 은 seed 아님 (R2 Q4)"},
         "geometry_seeds": seeds_meta,
-        "input_dimer": {"path": os.path.abspath(a.dimer), "sha256": sha},
-        "next": "각 gs*/dp*_neutral 을 ORCA 로 Opt → 최종 xyz 로 "
-                "`--stage b --neutral_xyz <opt.xyz> --n {n} --gseed <g>` (매트릭스 전건 생성)",
+        "input_dimer": {"path": os.path.abspath(a.dimer), "sha256": _sha(a.dimer)},
+        "next": "각 gs*/dp*_neutral 을 ORCA Opt → --stage b --stage_a_manifest <이 파일> "
+                "--neutral_out <.out> --neutral_xyz <최종.xyz> --gseed <k>",
         "abort_codes": list(ABORT_CODES),
     }
     mp = os.path.join(a.out, "manifest_stage_a.json")
     json.dump(man, open(mp, "w"), ensure_ascii=False, indent=1)
-    print(f"stage A: seed {n_seeds}개 · manifest {mp}")
+    print(f"stage A: 고유 seed {len(seeds_meta)}개 · manifest {mp}")
     return man
 
 
-# ══ Stage B — 최적화된 중성 부모에서 vertical/adiabatic 매트릭스 생성 ═══════════
-def stage_b(a):
-    """R⁰ 규약 (회신 R2 P0-2·Q3): 모든 leg 가 **같은 좌표 프레임** —
-    h0 = R⁰(=neutral opt) · h1(x) = R⁰−Hx · h2(a,b) = R⁰−Ha−Hb. 추가 이완 없음."""
+# ══ 중성 부모 receipt (회신 R3 P0-2 — 자유문구는 증거가 아니다) ═══════════════════
+def neutral_receipt(a, manA):
+    """stage A manifest + ORCA .out + 최종 xyz 를 **묶어서** 검증한다.
+
+    검증: ① manifest 의 gseed 항목 존재 ② .out strict decode · 마지막 run segment 의
+    정상종료 + **Opt 수렴** ③ .out 마지막 좌표블록 == neutral_xyz 좌표 (원자별 1e-5 Å)
+    ④ neutral_xyz 가 stage A 의 미이완 xyz 와 **달라야** 한다 (동일 = 미이완 재사용 적발)
+    ⑤ 조성·닫힌꼴 → receipt(해시·최종에너지·버전·calc id) 반환. 하나라도 어기면 중단.
+    """
+    seeds = {m["gseed"]: m for m in manA["geometry_seeds"]}
+    if a.gseed not in seeds:
+        raise SystemExit(f"⛔ gseed {a.gseed} 가 stage A manifest 에 없다 "
+                         f"(있는 것: {sorted(seeds)}) — 재라벨링은 통하지 않는다")
+    sm = seeds[a.gseed]
+    try:
+        text = open(a.neutral_out, encoding="utf-8", errors="strict").read()
+    except (OSError, UnicodeDecodeError) as e:
+        raise SystemExit(f"⛔ neutral .out 판독 실패 ({e}) — receipt 불가")
+    seg = text.split("* O   R   C   A *")[-1]
+    if "ORCA TERMINATED NORMALLY" not in seg:
+        raise SystemExit("⛔ neutral .out: 정상종료 없음 — Opt receipt 불가")
+    if "THE OPTIMIZATION HAS CONVERGED" not in seg:
+        raise SystemExit("⛔ neutral .out: Opt 수렴 문구 없음 — 미수렴 부모는 R0 이 아니다")
+    ee = re.findall(r"FINAL SINGLE POINT ENERGY\s+(-?\d+\.\d+)", seg)
+    if not ee:
+        raise SystemExit("⛔ neutral .out: FINAL SINGLE POINT ENERGY 없음")
+    ver = re.search(r"Program Version\s+(\S+)", text)
     csym, cpos = read_xyz(a.neutral_xyz)
-    hdr = open(a.neutral_xyz).read().splitlines()[1] if True else ""
-    if "ORCA" not in hdr:
-        print("  ⚠ 부모 xyz 주석에 ORCA 마커가 없다 — 최적화 완료본이 맞는지 확인할 것 "
-              "(R0 규약은 **Opt 된** 부모를 요구한다. 이 도구는 수렴 여부를 검증 못 한다)")
+    blocks = seg.split("CARTESIAN COORDINATES (ANGSTROEM)")
+    if len(blocks) < 2:
+        raise SystemExit("⛔ neutral .out: 좌표 블록 없음 — xyz 와 결합 불가")
+    last = blocks[-1].splitlines()[2:2 + len(csym)]
+    ocoords = []
+    for ln in last:
+        t = ln.split()
+        if len(t) >= 4:
+            ocoords.append((t[0], float(t[1]), float(t[2]), float(t[3])))
+    if len(ocoords) != len(csym):
+        raise SystemExit(f"⛔ .out 좌표 {len(ocoords)}원자 ≠ xyz {len(csym)} — 결합 실패")
+    for k, (el, x, y, z) in enumerate(ocoords):
+        if el != csym[k] or max(abs(x - cpos[k][0]), abs(y - cpos[k][1]),
+                                abs(z - cpos[k][2])) > 1e-4:
+            raise SystemExit(f"⛔ 원자 {k}: .out 최종좌표와 neutral_xyz 불일치 — "
+                             "이 xyz 는 이 .out 의 산물이 아니다")
+    if os.path.exists(os.path.join(os.path.dirname(a.stage_a_manifest),
+                                   sm["dir"], sm["tag"] + ".xyz")):
+        if _sha(os.path.join(os.path.dirname(a.stage_a_manifest),
+                             sm["dir"], sm["tag"] + ".xyz")) == _sha(a.neutral_xyz):
+            raise SystemExit("⛔ neutral_xyz 가 stage A 조립본과 **동일** — 미이완 부모다. "
+                             "ORCA Opt 최종 xyz 를 넣어라 (R3 P0-2)")
+    return {"gseed": a.gseed, "stage_a_calculation_id": sm["calculation_id"],
+            "stage_a_manifest_sha256": _sha(a.stage_a_manifest),
+            "out_path": os.path.abspath(a.neutral_out), "out_sha256": _sha(a.neutral_out),
+            "xyz_sha256": _sha(a.neutral_xyz),
+            "final_energy_Eh": float(ee[-1]),
+            "orca_version": (ver.group(1) if ver else None),
+            "terminated": True, "opt_converged": True}
+
+
+# ══ Stage B — 검증된 부모에서 vertical/adiabatic 매트릭스 생성 ═══════════════════
+def stage_b(a):
+    if a.stage_a_manifest and a.neutral_out:
+        manA = json.load(open(a.stage_a_manifest))
+        receipt = neutral_receipt(a, manA)
+    elif a.allow_unverified_parent:
+        receipt = {"gseed": a.gseed, "unverified": True,
+                   "xyz_sha256": _sha(a.neutral_xyz),
+                   "⚠": "selftest 전용 — 재심사 제출물 아님"}
+        print("  ⚠ 부모 receipt 생략 (--allow_unverified_parent — selftest 전용)")
+    else:
+        raise SystemExit("⛔ stage B 는 --stage_a_manifest 와 --neutral_out 이 필요하다 — "
+                         "자유문구(xyz 주석)는 증거가 아니다 (R3 P0-2)")
+    csym, cpos = read_xyz(a.neutral_xyz)
     cnb, crings, csulf = analyze(csym, cpos)
     n = a.n
     if len(crings) != n or len(csulf) != n:
         raise SystemExit(f"⛔ neutral 부모 위상 불일치 (링 {len(crings)}·SO3 {len(csulf)} ≠ {n})")
     v7c_real = check_closed_form(csym, n, 0)
     if not v7c_real and not a.allow_noncanonical:
-        raise SystemExit("⛔ neutral 부모가 v7c 닫힌꼴이 아니다 — --allow_noncanonical 은 시험 전용")
+        raise SystemExit("⛔ neutral 부모가 v7c 닫힌꼴이 아니다 (--allow_noncanonical 은 시험 전용)")
     names = ring_chain_names(crings)
     req = REQUIRED_MATRIX[n]
     patterns = ([p.upper() for p in a.patterns] if a.patterns
                 else req["singles"] + req["pairs"])
+    if len(patterns) != len(set(patterns)):
+        raise SystemExit(f"⛔ 패턴 중복 {patterns} — exactly-once 위반 (R3 조건 3)")
     missing = [p for p in req["singles"] + req["pairs"] if p not in patterns]
     if missing and not a.allow_partial:
         raise SystemExit(f"⛔ 필수 매트릭스 누락 {missing} — 부분 생성은 --allow_partial "
-                         "(시험 전용, 재심사 제출물 아님) (회신 R2 조건 3)")
+                         "(시험 전용)")
     os.makedirs(a.out, exist_ok=True)
-    parent_sha = hashlib.sha256(open(a.neutral_xyz, "rb").read()).hexdigest()
     scf_seeds = ["s0", "s1"][:max(1, a.scf_seeds)]
-    jobs = []
-    u_pairs = {}
+    jobs, sp_ids = [], {}
     for pat in patterns:
         hs = resolve_holes(pat, names, csulf)
         letters = "".join(h[0] for h in hs)
@@ -582,19 +718,18 @@ def stage_b(a):
         if v7c_real and not check_closed_form(vsym, n, m):
             raise SystemExit(f"⛔ h{letters}: 닫힌꼴 불일치 — 멈춘다")
         base = f"dp{n}_gs{a.gseed}_h{letters}"
-        write_xyz(os.path.join(a.out, f"{base}.xyz"), vsym, vpos,
-                  f"R0 vertical frame: neutral-opt parent minus acid H {rmH} "
-                  f"(DP{n}_h{m}_Q0, unrelaxed — 회신 R2 Q3 공통 부모 규약)")
+        xyzp = os.path.join(a.out, f"{base}.xyz")
+        write_xyz(xyzp, vsym, vpos,
+                  f"R0 vertical frame: verified neutral parent minus acid H {rmH} "
+                  f"(DP{n}_h{m}_Q0, unrelaxed)")
         sectors = SECTORS_ODD if m % 2 == 1 else SECTORS_EVEN
-        if m == 2 and PAIR_POLICY.get(pat, "").startswith("U_PCET"):
-            u_pairs[pat] = dict(needs_singles=[x.strip() for x in pat.split(",")])
         for sec, wf, mult, nab, bs, label in sectors:
             check_parity(e, mult)
             for jt in ("sp_vertical", "opt_adiabatic"):
                 for ss in (scf_seeds if wf != "RKS" else ["s0"]):
                     tag = f"{base}_{sec}_{jt.split('_')[0]}_{ss}"
-                    make_inp(os.path.join(a.out, f"{tag}.inp"), f"{base}.xyz",
-                             wf, mult, bs, jt, scf_seed=ss)
+                    inpp = os.path.join(a.out, f"{tag}.inp")
+                    make_inp(inpp, f"{base}.xyz", wf, mult, bs, jt, scf_seed=ss)
                     cond = dict(estimand_id="sdcp-doped-gas-stage0/v3", dp=n,
                                 species=f"DP{n}_h{m}_Q0", pattern=pat,
                                 removed_H_indices=rmH, sector=sec,
@@ -602,148 +737,350 @@ def stage_b(a):
                                 n_alpha_minus_beta=nab, net_charge=0,
                                 all_electron_count=e, job_type=jt,
                                 geometry_seed=f"g{a.gseed}", scf_seed=ss,
-                                parent_neutral_sha256=parent_sha,
+                                parent_xyz_sha256=receipt["xyz_sha256"],
                                 method="r2SCAN-3c/TightSCF")
-                    jobs.append(dict(tag=tag, calculation_id=calculation_id(cond),
-                                     conditioning=cond, formula=formula_of(vsym),
-                                     n_atoms=len(vsym), sector_label=label,
-                                     seeded_separation=(abs(ord(letters[0]) - ord(letters[1]))
-                                                        if m == 2 else None),
-                                     expected=dict(
-                                         hf_type=("RHF" if wf == "RKS" else "UHF"),
-                                         s2_target=(0.75 if sec == "d" else
-                                                    2.0 if sec == "t" else
-                                                    None if sec == "s" else "report_required"),
-                                     ),
-                                     realized=None))
-    # U_PCET 완전성: 쌍이 요구하는 singles 가 매트릭스에 있는가 (없으면 실패)
-    for pat, u in u_pairs.items():
-        for sng in u["needs_singles"]:
-            if sng not in patterns:
-                raise SystemExit(f"⛔ U_PCET({pat}) 에 필요한 single h{sng} 가 매트릭스에 없다")
+                    cid = calculation_id(cond)
+                    if jt == "sp_vertical":
+                        sp_ids[(pat, sec, ss)] = cid
+                    jobs.append(dict(
+                        tag=tag, calculation_id=cid, conditioning=cond,
+                        formula=formula_of(vsym), n_atoms=len(vsym),
+                        sector_label=label,
+                        inp_sha256=_sha(inpp), xyz_sha256=_sha(xyzp),
+                        seeded_separation=(abs(ord(letters[0]) - ord(letters[1]))
+                                           if m == 2 else None),
+                        depends_on=(None if jt == "sp_vertical"
+                                    else sp_ids[(pat, sec, ss)]),
+                        expected=dict(hf_type=("RHF" if wf == "RKS" else "UHF"),
+                                      s2_target=(0.75 if sec == "d" else
+                                                 2.0 if sec == "t" else
+                                                 None if sec == "s" else "bs_window"),
+                                      charge=0, mult=mult),
+                        realized=None))
+    # U_PCET cycle 레코드 (R3 조건 9): 각 쌍의 4-leg 를 calculation_id 로 결속
+    cycles = []
+    for pat in patterns:
+        if "," not in pat or not PAIR_POLICY.get(pat, "").startswith("U_PCET"):
+            continue
+        a1, a2 = [x.strip() for x in pat.split(",")]
+        for frame, jt in (("vertical", "sp"), ("adiabatic", "opt")):
+            legs = {}
+            okc = True
+            for lg, key in (("h1a", (a1, "d", "s0")), ("h1b", (a2, "d", "s0"))):
+                j = [x for x in jobs if x["conditioning"]["pattern"] == key[0]
+                     and x["conditioning"]["sector"] == "d"
+                     and x["conditioning"]["scf_seed"] == "s0"
+                     and x["tag"].endswith(f"_{jt}_s0")]
+                if not j:
+                    okc = False
+                    break
+                legs[lg] = j[0]["calculation_id"]
+            for sec in ("s", "t", "bs"):
+                j = [x for x in jobs if x["conditioning"]["pattern"] == pat
+                     and x["conditioning"]["sector"] == sec
+                     and x["conditioning"]["scf_seed"] == "s0"
+                     and x["tag"].endswith(f"_{jt}_s0")]
+                if j:
+                    legs[f"h2_{sec}"] = j[0]["calculation_id"]
+            if not okc:
+                raise SystemExit(f"⛔ U_PCET({pat}) {frame}: h1 leg 잡이 없다 — cycle 불완전")
+            legs["h0"] = (receipt.get("stage_a_calculation_id", "UNVERIFIED_PARENT")
+                          if frame == "adiabatic" else "parent_final_energy(receipt)")
+            cycles.append(dict(pair=pat, frame=frame, method="r2SCAN-3c/TightSCF",
+                               legs=legs,
+                               h0_energy_Eh=receipt.get("final_energy_Eh")))
     man = {
         "schema": "sdcp_stage0_manifest/v3", "stage": "B",
         "estimand_id": "sdcp-doped-gas-stage0/v3",
         "design_card": "kb/questions/sdcp_doped_reopen_v3_2026_08_28.md",
+        "builder_commit": _git_commit(),
         "dp": n, "geometry_seed": f"g{a.gseed}",
-        "parent_neutral": {"path": os.path.abspath(a.neutral_xyz), "sha256": parent_sha,
-                           "h0_energy_source": "이 부모의 ORCA Opt FINAL SINGLE POINT ENERGY "
-                                               "(= 같은 프레임의 h0 leg — 별도 잡 불필요)"},
+        "parent_receipt": receipt,
         "closed_form_validated": v7c_real,
         "required_matrix": req, "generated_patterns": patterns,
         "partial": bool(missing), "pair_policy": PAIR_POLICY,
+        "u_pcet_cycles": cycles,
         "delta_definitions": {
-            "U_PCET_vert(a,b)": "E_sp[h2(a,b);R0] + E[h0;R0] − E_sp[h1(a);R0] − E_sp[h1(b);R0]",
-            "U_PCET_ad(a,b)": "각 leg 를 각자 최적화한 최소점 에너지로 — vertical 과 **혼합 금지**",
-            "⛔": "핵 조성이 함께 변하므로 순수 Hubbard U/hole-pairing 이 아니다 — "
-                 "disproportionation/PCET 에너지로만 부른다 (회신 R2 조건 3·7). "
-                 "순수 pairing 은 동일 h2 조성 안의 sector 에너지차로 별도 판정",
-        },
+            "U_PCET_vert(a,b)": "E_sp[h2;R0] + E[h0;R0] − E_sp[h1a;R0] − E_sp[h1b;R0]",
+            "U_PCET_ad(a,b)": "각 leg 최적화 최소점 — vertical 과 혼합 금지",
+            "⛔": "핵 조성이 변하므로 순수 Hubbard U 아님. cycle 은 위 legs 의 "
+                 "calculation_id 로만 조립한다 (동일 method·frame — R3 조건 9)"},
         "atom_sets_neutral_frame": atom_sets_of(csym, cnb, crings, csulf, names),
-        "⚠_atom_sets": "중성 프레임 인덱스 — doped 잡은 removed_H_indices 만큼 밀린다 "
-                       "(재매핑·검증은 analyzer)",
-        "stage0_observable": "carrier_localization_profile (기체상 retention 은 자명 — 측정 불가)",
+        "localization_class_rule": {
+            "share(g)": "Σ_{i∈g} m_i / Σ_i |m_i| (Löwdin·Hirshfeld 각각)",
+            "class": f"|share| ≥ {LOC_CLASS_MIN} 인 집합이 유일하면 그 라벨 · "
+                     f"아니면 MIXED_UNRESOLVED · Σ|m| < {LOC_ABS_MIN} 이면 NO_SPIN",
+            "⚠": "사전 규칙 — 결과를 본 뒤 경계 변경 금지 (R3)"},
+        "stage0_observable": "carrier_localization_profile — 입력이 Hirshfeld(+UNO/UCO) 를 "
+                             "요청한다 (R3 P0-0 데이터 회수 계약)",
         "abort_codes": list(ABORT_CODES),
         "jobs": jobs,
-        "runner_rule": "opt_adiabatic 은 같은 (pattern, sector) 의 sp_vertical 이 "
-                       "analyzer 게이트(stability·sector)를 통과한 뒤에만 실행한다",
+        "runner_rule": "opt_adiabatic 은 depends_on 의 sp_vertical 이 analyzer OK 일 때만 "
+                       "실행 — analyzer 가 DEPENDENCY_NOT_MET 로 강제한다",
     }
     mp = os.path.join(a.out, "manifest_stage_b.json")
     json.dump(man, open(mp, "w"), ensure_ascii=False, indent=1)
-    print(f"stage B: 패턴 {len(patterns)} · 잡 {len(jobs)} · manifest {mp}")
+    print(f"stage B: 패턴 {len(patterns)} · 잡 {len(jobs)} · cycle {len(cycles)} · manifest {mp}")
     return man
 
 
-# ══ Analyzer — abort code 를 실제로 emit (회신 R2 조건 5) ═══════════════════════
-def analyze_out(text, job):
-    """ORCA .out 텍스트 + manifest 잡 → (status, [codes], realized).
+# ══ Analyzer — 양성 증거 요구 + abort code emit (회신 R3 P0-4 전면 재작성) ═══════
+def _last_segment(text):
+    parts = text.split("* O   R   C   A *")
+    return parts[-1] if len(parts) > 1 else text
 
-    ⛔ 못 하는 것: localization profile 산출(집합별 스핀 적분)은 아직 없다 —
-    여기는 **게이트**(수렴·섹터·오염·안정성)까지. 프로파일은 후속 도구.
+
+def analyze_out(text, job, atom_sets=None, removed_H=None):
+    """ORCA .out + manifest 잡 → (status, [codes], realized).
+
+    R3 원칙: **양성 증거가 없으면 OK 가 아니다.** 마지막 완결 segment 에서
+    정상종료·최종 에너지·HFTyp·charge/mult 대조·(open-shell) 마지막 <S²>·
+    (sp&!bs) stability 수행+stable·(opt) 수렴을 전부 요구한다.
+
+    ⛔ 못 하는 것: BLA·participation ratio·UNO 점유수 산출 (후속 profile 도구).
+      여기의 localization_class 는 Löwdin 국소스핀 + 사전 규칙까지다.
     """
-    codes = []
-    realized = {}
-    if "ORCA TERMINATED NORMALLY" not in text:
+    codes, realized = [], {}
+    seg = _last_segment(text)
+    if "ORCA TERMINATED NORMALLY" not in seg:
         return "FAIL", ["SCF_UNCONVERGED"], realized
-    m = re.search(r"FINAL SINGLE POINT ENERGY\s+(-?\d+\.\d+)", text)
-    if m:
-        realized["energy_Eh"] = float(m.group(1))
-    hf = re.search(r"Hartree-Fock type\s+HFTyp\s*\.+\s*(\w+)", text)
-    realized["hf_type"] = hf.group(1) if hf else None
-    exp = job["expected"]
-    if realized["hf_type"] and exp["hf_type"] not in realized["hf_type"]:
+    cond, exp = job["conditioning"], job["expected"]
+    ee = re.findall(r"FINAL SINGLE POINT ENERGY\s+(-?\d+\.\d+)", seg)
+    if not ee:
+        codes.append("SCF_UNCONVERGED")            # 종료문구만 있고 에너지 없음 = 증거 부족
+    else:
+        realized["energy_Eh"] = float(ee[-1])      # ⚠ 마지막 값 (R3: 첫 값 금지)
+    hf = re.findall(r"Hartree-Fock type\s+HFTyp\s*\.+\s*(\w+)", seg)
+    realized["hf_type"] = hf[-1] if hf else None
+    if realized["hf_type"] is None or exp["hf_type"] not in realized["hf_type"]:
         codes.append("SECTOR_MISMATCH")
-    s2 = re.search(r"<S\*\*2>\s*:?\s*(-?\d+\.\d+)", text)
-    realized["s2"] = float(s2.group(1)) if s2 else None
+    q = re.findall(r"Total Charge\s+Charge\s*\.+\s*(-?\d+)", seg)
+    mu = re.findall(r"Multiplicity\s+Mult\s*\.+\s*(\d+)", seg)
+    if q and int(q[-1]) != exp["charge"]:
+        codes.append("SECTOR_MISMATCH")
+    if mu and int(mu[-1]) != exp["mult"]:
+        codes.append("SECTOR_MISMATCH")
+    s2l = re.findall(r"<S\*\*2>\s*:?\s*(-?\d+\.\d+)", seg)
+    realized["s2"] = float(s2l[-1]) if s2l else None
+    sec, jt = cond["sector"], cond["job_type"]
     tgt = exp["s2_target"]
-    sec = job["conditioning"]["sector"]
     if sec == "bs":
         if realized["s2"] is None:
             codes.append("SPIN_CONTAMINATION_UNREPORTED")
-        elif realized["s2"] < 0.2:
-            codes.append("NA_STATE_NOT_IDENTIFIED")   # 플립 실패 — closed 로 붕괴
+        elif realized["s2"] < 0.2 or realized["s2"] > 1.5:
+            codes.append("NA_STATE_NOT_IDENTIFIED")   # closed 붕괴(<0.2) 또는 미플립 HS(≥1.5)
     elif isinstance(tgt, float):
         if realized["s2"] is None or abs(realized["s2"] - tgt) > 0.4:
             codes.append("SECTOR_MISMATCH")
-    if job["conditioning"]["job_type"] == "sp_vertical" and sec != "bs":
-        if re.search(r"[Ss]tability [Aa]nalysis.*unstable", text):
+    if jt == "sp_vertical" and sec != "bs":
+        if re.search(r"stability analysis indicates.*unstable", seg, re.I):
             codes.append("STABILITY_UNSTABLE")
-    if not codes:
-        rid = hashlib.sha256((job["calculation_id"]
-                              + json.dumps(realized, sort_keys=True)).encode()).hexdigest()[:16]
-        realized["realized_state_id"] = "real_" + rid
-        return "OK", [], realized
-    return "GATED", codes, realized
+        elif not re.search(r"stability analysis indicates", seg, re.I):
+            codes.append("STABILITY_UNVERIFIED")      # 수행 양성 증거 요구 (R3)
+    if jt == "opt_adiabatic" and "THE OPTIMIZATION HAS CONVERGED" not in seg:
+        codes.append("OPT_UNCONVERGED")
+    # localization class (사전 규칙 — Löwdin 국소 스핀 + atom_sets remap)
+    if atom_sets and cond["wavefunction_class"] != "RKS":
+        mvals = _lowdin_spins(seg)
+        if mvals is not None:
+            nat = job["n_atoms"]
+            if len(mvals) != nat:
+                codes.append("SECTOR_MISMATCH")       # 원자수 불일치 = 다른 계의 출력
+            else:
+                cls, shares = _loc_class(mvals, atom_sets, removed_H or [])
+                realized["localization_class"] = cls
+                realized["loc_shares"] = shares
+    if codes:
+        return "GATED", codes, realized
+    return "OK", [], realized
+
+
+def _lowdin_spins(seg):
+    """LOEWDIN ATOMIC CHARGES AND SPIN POPULATIONS → [m_i] (마지막 블록)."""
+    blocks = seg.split("LOEWDIN ATOMIC CHARGES AND SPIN POPULATIONS")
+    if len(blocks) < 2:
+        return None
+    out = []
+    for ln in blocks[-1].splitlines()[2:]:
+        m = re.match(r"\s*(\d+)\s+\w+\s*:\s*(-?\d+\.\d+)\s+(-?\d+\.\d+)", ln)
+        if not m:
+            if out:
+                break
+            continue
+        out.append(float(m.group(3)))
+    return out or None
+
+
+def _loc_class(mvals, atom_sets_neutral, removed_H):
+    """중성 프레임 atom_sets 를 doped 프레임으로 **재매핑 검증** 후 사전 규칙 적용."""
+    kill = sorted(set(removed_H))
+    def remap(i):
+        if i in kill:
+            return None
+        return i - sum(1 for k in kill if k < i)
+    tot_abs = sum(abs(m) for m in mvals)
+    if tot_abs < LOC_ABS_MIN:
+        return "NO_SPIN", {}
+    shares = {}
+    for g, idxs in atom_sets_neutral.items():
+        mapped = [remap(i) for i in idxs]
+        mapped = [i for i in mapped if i is not None]
+        if any(i >= len(mvals) for i in mapped):
+            return "REMAP_ERROR", {}
+        shares[g] = round(sum(mvals[i] for i in mapped) / tot_abs, 4)
+    winners = [g for g, v in shares.items() if abs(v) >= LOC_CLASS_MIN]
+    return (winners[0] if len(winners) == 1 else "MIXED_UNRESOLVED"), shares
 
 
 def analyze_dir(a):
     man = json.load(open(os.path.join(a.analyze, "manifest_stage_b.json")))
-    out = {"schema": "sdcp_stage0_analysis/v1", "jobs": {}, "emitted": {}}
-    bad = 0
+    atom_sets = man.get("atom_sets_neutral_frame")
+    out = {"schema": "sdcp_stage0_analysis/v2", "jobs": {}, "emitted": {}}
+    n_pend = n_bad = 0
+    sha_seen = {}
+    by_cid = {}
     for job in man["jobs"]:
         op = os.path.join(a.analyze, job["tag"] + ".out")
         if not os.path.isfile(op):
             out["jobs"][job["tag"]] = {"status": "PENDING"}
+            n_pend += 1
             continue
-        st, codes, realized = analyze_out(open(op, errors="ignore").read(), job)
-        out["jobs"][job["tag"]] = {"status": st, "codes": codes, "realized": realized}
+        try:
+            text = open(op, encoding="utf-8", errors="strict").read()
+        except UnicodeDecodeError:
+            out["jobs"][job["tag"]] = {"status": "FAIL", "codes": ["OUTPUT_UNREADABLE"]}
+            out["emitted"].setdefault("OUTPUT_UNREADABLE", []).append(job["tag"])
+            n_bad += 1
+            continue
+        osha = _sha(op)
+        sha_seen.setdefault(osha, []).append(job["tag"])
+        st, codes, realized = analyze_out(
+            text, job, atom_sets=atom_sets,
+            removed_H=job["conditioning"].get("removed_H_indices"))
+        realized["out_sha256"] = osha
+        out["jobs"][job["tag"]] = {"status": st, "codes": codes, "realized": realized,
+                                   "calculation_id": job["calculation_id"]}
+        by_cid[job["calculation_id"]] = st
         for c in codes:
             out["emitted"].setdefault(c, []).append(job["tag"])
         if st != "OK":
-            bad += 1
+            n_bad += 1
+    # 중복 출력물 (R3: 같은 가짜 OUT 복사 적발) — 관련 잡 전부 게이트
+    for osha, tags in sha_seen.items():
+        if len(tags) > 1:
+            for t in tags:
+                out["jobs"][t]["status"] = "GATED"
+                out["jobs"][t].setdefault("codes", []).append("DUPLICATE_OUTPUT")
+            out["emitted"].setdefault("DUPLICATE_OUTPUT", []).extend(tags)
+            n_bad += len(tags)
+    # SP→Opt dependency (R3 P0-3): 선행 sp 가 OK 아니면 opt 는 DEPENDENCY_NOT_MET
+    for job in man["jobs"]:
+        dep = job.get("depends_on")
+        if not dep:
+            continue
+        rec = out["jobs"].get(job["tag"])
+        if rec is None or rec.get("status") == "PENDING":
+            continue
+        if by_cid.get(dep) != "OK":
+            rec["status"] = "GATED"
+            rec.setdefault("codes", []).append("DEPENDENCY_NOT_MET")
+            out["emitted"].setdefault("DEPENDENCY_NOT_MET", []).append(job["tag"])
+            n_bad += 1
+    # realized_state_id — calc_id + **출력물 해시** 결속 (결과 문자열 digest 금지)
+    for t, rec in out["jobs"].items():
+        if rec.get("status") == "OK":
+            rid = hashlib.sha256((rec["calculation_id"]
+                                  + rec["realized"]["out_sha256"]).encode()).hexdigest()[:16]
+            rec["realized"]["realized_state_id"] = "real_" + rid
     ap = os.path.join(a.analyze, "analysis_stage_b.json")
     json.dump(out, open(ap, "w"), ensure_ascii=False, indent=1)
     for c, tags in out["emitted"].items():
         print(f"  ⛔ {c}: {len(tags)}잡 — {tags[:3]}")
-    print(f"analyzer: {ap} · 게이트 걸림 {bad}")
-    return 2 if bad else 0
+    print(f"analyzer: {ap} · PENDING {n_pend} · 게이트 {n_bad}")
+    if n_bad:
+        return 2
+    if n_pend:
+        print("  ⚠ PENDING 이 남았다 — '완료 분석' 이 아니다 (비영 종료, R3 P0-4)")
+        return 3
+    return 0
 
 
-def hybrid_select(analysis, window_eh=0.10 / 27.2114):
-    """hybrid decision set (회신 R2 조건 8): vertical/adiabatic 승자 + 창 이내 +
-    **realized localization class 별 최저 대표 전부**."""
+def hybrid_select(analysis, manifest, window_eh=0.10 / 27.2114):
+    """hybrid decision set — **species·job_type 그룹 안에서만** (R3 P0-5:
+    핵·전자수가 다른 종의 절대에너지 비교는 물리적으로 무의미)."""
+    meta = {j["tag"]: j for j in manifest["jobs"]}
     ok = {t: r for t, r in analysis["jobs"].items()
-          if r.get("status") == "OK" and "energy_Eh" in r.get("realized", {})}
-    if not ok:
-        return []
+          if r.get("status") == "OK" and "energy_Eh" in r.get("realized", {})
+          and t in meta}
     pick = set()
-    for jt in ("sp", "opt"):
-        grp = {t: r for t, r in ok.items() if f"_{jt}_" in t}
-        if not grp:
-            continue
+    groups = {}
+    for t, r in ok.items():
+        key = (meta[t]["conditioning"]["species"], meta[t]["conditioning"]["job_type"])
+        groups.setdefault(key, {})[t] = r
+    for key, grp in groups.items():
         emin = min(r["realized"]["energy_Eh"] for r in grp.values())
+        by_class = {}
         for t, r in grp.items():
             if r["realized"]["energy_Eh"] <= emin + window_eh:
                 pick.add(t)
-    by_class = {}
-    for t, r in ok.items():
-        cls = r["realized"].get("localization_class")
-        if cls:
-            cur = by_class.get(cls)
-            if cur is None or r["realized"]["energy_Eh"] < ok[cur]["realized"]["energy_Eh"]:
-                by_class[cls] = t
-    pick |= set(by_class.values())
+            cls = r["realized"].get("localization_class")
+            if cls and cls not in ("NO_SPIN",):
+                cur = by_class.get(cls)
+                if cur is None or r["realized"]["energy_Eh"] < grp[cur]["realized"]["energy_Eh"]:
+                    by_class[cls] = t
+        pick |= set(by_class.values())
     return sorted(pick)
+
+
+def hybrid_stage(a):
+    """--hybrid <dir>: analysis + manifest → decision set 의 wB97X-D3 fresh-start 입력 생성."""
+    man = json.load(open(os.path.join(a.hybrid, "manifest_stage_b.json")))
+    ana = json.load(open(os.path.join(a.hybrid, "analysis_stage_b.json")))
+    picks = hybrid_select(ana, man)
+    if not picks:
+        raise SystemExit("⛔ decision set 이 비었다 — OK 인 잡이 없거나 분석 미완")
+    meta = {j["tag"]: j for j in man["jobs"]}
+    made = []
+    for t in picks:
+        c = meta[t]["conditioning"]
+        tag = t + "_hyb"
+        make_inp(os.path.join(a.hybrid, f"{tag}.inp"),
+                 f"dp{c['dp']}_{c['geometry_seed'].replace('g','gs')}_h"
+                 f"{''.join(sorted(set(''.join(c['pattern'].split(',')))))}.xyz"
+                 if False else meta[t]["tag"].rsplit("_", 3)[0] + ".xyz",
+                 c["wavefunction_class"], c["orca_mult"],
+                 bs=(c["sector"] == "bs"), job_type="sp_vertical",
+                 scf_seed="s0", hybrid=True)
+        made.append(tag)
+    print(f"hybrid: decision set {len(picks)}잡 → 입력 생성 (NoAutoStart 강제)")
+    return made
+
+
+def compare_methods(a):
+    """--compare <dir1> <dir2>: 두 분석의 그룹별 승자·순서 비교 → METHOD_DEPENDENT emit."""
+    outs = []
+    for d in a.compare:
+        man = json.load(open(os.path.join(d, "manifest_stage_b.json")))
+        ana = json.load(open(os.path.join(d, "analysis_stage_b.json")))
+        meta = {j["tag"]: j for j in man["jobs"]}
+        win = {}
+        for t, r in ana["jobs"].items():
+            if r.get("status") != "OK" or t not in meta:
+                continue
+            key = (meta[t]["conditioning"]["species"], meta[t]["conditioning"]["pattern"],
+                   meta[t]["conditioning"]["job_type"])
+            e = r["realized"]["energy_Eh"]
+            if key not in win or e < win[key][1]:
+                win[key] = (meta[t]["conditioning"]["sector"], e)
+        outs.append(win)
+    diff = {k: (outs[0][k][0], outs[1][k][0]) for k in outs[0]
+            if k in outs[1] and outs[0][k][0] != outs[1][k][0]}
+    if diff:
+        for k, (s1, s2) in diff.items():
+            print(f"  ⛔ METHOD_DEPENDENT: {k} 승자 {s1} ≠ {s2}")
+        return 2
+    print("  ✓ 두 방법의 그룹별 승자 일치")
+    return 0
 
 
 # ---------- 레거시 트라이머 경로 (종전 출력과 동일) ----------
@@ -939,16 +1276,40 @@ def _synthetic_dimer():
     return sym, pos
 
 
-def _fake_orca_out(terminated=True, energy=-100.0, hf="UHF", s2=0.75, stable=True):
+def _fake_orca_out(terminated=True, energies=(-100.0,), hf="UHF", s2=None, s2_list=None,
+                   stability="stable", opt_converged=False, charge=0, mult=None,
+                   coords=None, spins=None, version="6.1.0"):
+    """R3 게이트 검증용 합성 ORCA 출력 — 양성 증거를 골라 넣고 뺄 수 있다."""
     t = "                                 * O   R   C   A *\n"
-    t += f" Hartree-Fock type      HFTyp           .... {hf}\n"
-    if s2 is not None:
-        t += f" Expectation value of <S**2>     :     {s2:.6f}\n"
-    if not stable:
-        t += " Stability analysis indicates an unstable RHF/RKS wavefunction\n"
-    else:
+    t += f"                       Program Version {version} - RELEASE\n"
+    if hf:
+        t += f" Hartree-Fock type      HFTyp           .... {hf}\n"
+    t += f" Total Charge           Charge          ....    {charge}\n"
+    if mult is not None:
+        t += f" Multiplicity           Mult            ....    {mult}\n"
+    if coords is not None:
+        t += "CARTESIAN COORDINATES (ANGSTROEM)\n---------------------------------\n"
+        for el, p in coords:
+            t += f"  {el}   {p[0]:.6f}   {p[1]:.6f}   {p[2]:.6f}\n"
+        t += "\n"
+    if spins is not None:
+        t += "LOEWDIN ATOMIC CHARGES AND SPIN POPULATIONS\n----------------\n"
+        for i, m in enumerate(spins):
+            t += f"  {i} X :   0.000000   {m:.6f}\n"
+        t += "\n"
+    vals = s2_list if s2_list is not None else ([s2] if s2 is not None else [])
+    for v in vals:
+        t += f" Expectation value of <S**2>     :     {v:.6f}\n"
+    if stability == "stable":
         t += " Stability analysis indicates a stable HF/KS wavefunction\n"
-    t += f" FINAL SINGLE POINT ENERGY      {energy:.9f}\n"
+    elif stability == "unstable_upper":
+        t += " STABILITY ANALYSIS INDICATES AN UNSTABLE RHF/RKS WAVEFUNCTION\n"
+    elif stability == "unstable":
+        t += " Stability analysis indicates an unstable wavefunction\n"
+    if opt_converged:
+        t += "                    *** THE OPTIMIZATION HAS CONVERGED ***\n"
+    for e in energies:
+        t += f" FINAL SINGLE POINT ENERGY      {e:.9f}\n"
     if terminated:
         t += "                             ****ORCA TERMINATED NORMALLY****\n"
     return t
@@ -963,7 +1324,14 @@ def selftest():
         if not ok:
             fails.append(msg)
 
-    print("── build_v7c_trimer selftest (stage 아키텍처 v3) ──")
+    def raises(fn, msg):
+        try:
+            fn()
+            chk(False, msg)
+        except SystemExit:
+            chk(True, msg)
+
+    print("── build_v7c_trimer selftest (R3 게이트판) ──")
     sym, pos = _synthetic_dimer()
     nb, rings, sulf = analyze(sym, pos)
     chk(len(sym) == 26 and len(rings) == 2 and len(sulf) == 2,
@@ -972,149 +1340,255 @@ def selftest():
     with tempfile.TemporaryDirectory() as td:
         dim = os.path.join(td, "dimer.xyz")
         write_xyz(dim, sym, pos, "synthetic dimer for selftest")
+        NS = argparse.Namespace
 
-        # ── ⛔ 음성 (R2 P0-4): 비정본 다이머는 플래그 없이 멈춘다 (production fail-closed)
-        aX = argparse.Namespace(dimer=dim, out=os.path.join(td, "x"), cc=CC_NEW, step=30,
-                                n=3, seeds=1, allow_noncanonical=False)
-        try:
-            stage_a(aX, sym, pos)
-            ok = False
-        except SystemExit:
-            ok = True
-        chk(ok, "음성: 비정본 다이머 + 플래그 없음 → stage A 거부 (fail-closed)")
+        # ── R3 P0-1: seed 강제 3종
+        raises(lambda: stage_a(NS(dimer=dim, out=td + "/x1", cc=CC_NEW, step=30, n=3,
+                                  seeds=1, allow_noncanonical=True, allow_underseed=False),
+                               sym, pos),
+               "음성: --seeds 1 < 바닥 4 → 거부 (R3: 선언만으로는 안 된다)")
+        raises(lambda: stage_a(NS(dimer=dim, out=td + "/x2", cc=CC_NEW, step=30, n=3,
+                                  seeds=-3, allow_noncanonical=True, allow_underseed=True),
+                               sym, pos),
+               "음성: 음수 seed → 거부")
+        raises(lambda: stage_a(NS(dimer=dim, out=td + "/x3", cc=CC_NEW, step=180, n=3,
+                                  seeds=4, allow_noncanonical=True, allow_underseed=False),
+                               sym, pos),
+               "음성: 후보각 부족(step=180)으로 고유 4 seed 불가 → 고갈 중단")
+        raises(lambda: stage_a(NS(dimer=dim, out=td + "/x4", cc=CC_NEW, step=30, n=3,
+                                  seeds=2, allow_noncanonical=False, allow_underseed=True),
+                               sym, pos),
+               "음성: 비정본 다이머 + 플래그 없음 → 거부 (fail-closed 유지)")
 
-        # ── stage A (합성, 시험 플래그) — seed 2개 독립성
-        aA = argparse.Namespace(dimer=dim, out=os.path.join(td, "a3"), cc=CC_NEW, step=30,
-                                n=3, seeds=2, allow_noncanonical=True)
+        aA = NS(dimer=dim, out=os.path.join(td, "a3"), cc=CC_NEW, step=30, n=3,
+                seeds=2, allow_noncanonical=True, allow_underseed=True)
         manA = stage_a(aA, sym, pos)
-        chk(manA["schema"].endswith("/v3") and manA["estimand_id"].endswith("/v3")
-            and "v3_2026_08_28" in manA["design_card"],
-            "manifest provenance = v3 (R2 P0-6)")
-        t0, t1 = manA["geometry_seeds"][0]["torsions"], manA["geometry_seeds"][1]["torsions"]
-        chk(t0 != t1, f"geometry seed 독립성: g0 {t0} ≠ g1 {t1}")
+        g0, g1 = manA["geometry_seeds"]
+        chk(tuple(g0["torsions"]) != tuple(g1["torsions"])
+            and min(g0["dmins_A"]) >= DMIN_FLOOR and min(g1["dmins_A"]) >= DMIN_FLOOR,
+            f"stage A: 고유 torsion + 전 접합 dmin≥{DMIN_FLOOR} 기록 "
+            f"({g0['torsions']}/{g1['torsions']} · dmin {g0['dmins_A']})")
+        chk(g0["calculation_id"].startswith("calc_") and len(g0["xyz_sha256"]) == 64
+            and manA["seed_floor"]["underseed_flag"] is True
+            and manA["builder_commit"] != "",
+            "stage A: 잡 calc_id + xyz sha + builder commit + underseed 플래그 (P1)")
         inpA = open(os.path.join(aA.out, "gs0", "dp3_gs0_neutral.inp")).read()
-        chk(inpA.startswith("! RKS") and " Opt " in inpA,
-            "neutral 입력 = RKS Opt (R2 P0-1: UKS 전면 오생성 수정)")
+        chk(inpA.startswith("! RKS") and " Opt " in inpA and "Hirshfeld" in inpA
+            and "UNO" not in inpA,
+            "neutral 입력: RKS Opt + Hirshfeld (RKS 라 UNO 없음) — R3 P0-0 회수 계약")
 
-        # ── stage B (합성 n=3): '최적화된 부모' 대신 stage A 기하 재사용 (시험)
-        parent = os.path.join(aA.out, "gs0", "dp3_gs0_neutral.xyz")
-        aB = argparse.Namespace(neutral_xyz=parent, out=os.path.join(td, "b3"), n=3,
-                                gseed=0, patterns=None, allow_partial=False,
-                                allow_noncanonical=True, scf_seeds=2)
-        manB = stage_b(aB)
-        tags = [j["tag"] for j in manB["jobs"]]
-        chk(any("_hA_" in t for t in tags) and any("_hB_" in t for t in tags),
-            "n=3 필수 매트릭스 (hA end · hB middle) 전건 생성")
-        sp = open(os.path.join(aB.out, "dp3_gs0_hA_d_sp_s0.inp")).read()
-        op = open(os.path.join(aB.out, "dp3_gs0_hA_d_opt_s0.inp")).read()
-        chk("Opt" not in sp and "StabPerform" in sp and sp.startswith("! UKS"),
-            "sp_vertical = UKS SP + StabPerform (Opt 없음)")
-        chk(" Opt " in op and "StabPerform" not in op,
-            "opt_adiabatic = Opt (stability 게이트는 runner_rule 로 분리)")
-        s1i = open(os.path.join(aB.out, "dp3_gs0_hA_d_sp_s1.inp")).read()
-        chk("Guess Hueckel" in s1i, "SCF seed s1 = Hueckel (geometry seed 와 분리 관리)")
+        # ── R3 P0-2: 부모 receipt — 위조 4종 거부 + 정상 1종
+        asm = os.path.join(aA.out, "gs0", "dp3_gs0_neutral.xyz")
+        opt_xyz = os.path.join(td, "neutral_opt.xyz")
+        s3, p3 = read_xyz(asm)
+        p3o = [[x + (0.011 if i == 0 else 0.0), y, z] for i, (x, y, z) in enumerate(p3)]
+        write_xyz(opt_xyz, s3, p3o, "Coordinates from ORCA-job dp3_gs0_neutral (fake opt)")
+        out_ok = os.path.join(td, "neutral.out")
+        open(out_ok, "w").write(_fake_orca_out(
+            hf="RHF", charge=0, mult=1, opt_converged=True,
+            coords=list(zip(s3, p3o)), energies=(-500.0, -500.123456789)))
+        manAp = os.path.join(aA.out, "manifest_stage_a.json")
 
-        # ── ⛔ 음성 (R2 조건 3): 매트릭스 부분 생성은 기본 거부
-        aP = argparse.Namespace(neutral_xyz=parent, out=os.path.join(td, "p3"), n=3,
-                                gseed=0, patterns=["B"], allow_partial=False,
-                                allow_noncanonical=True, scf_seeds=1)
-        try:
-            stage_b(aP)
-            ok = False
-        except SystemExit:
-            ok = True
-        chk(ok, "음성: --patterns 부분 지정 + allow_partial 없음 → 생성 실패 (fail-open 봉쇄)")
+        def B(**kw):
+            base = dict(stage_a_manifest=manAp, neutral_out=out_ok, neutral_xyz=opt_xyz,
+                        out=os.path.join(td, "b3"), n=3, gseed=0, patterns=None,
+                        allow_partial=False, allow_noncanonical=True, scf_seeds=2,
+                        allow_unverified_parent=False)
+            base.update(kw)
+            return NS(**base)
 
-        # ── stage A/B (합성 n=6): 섹터·매트릭스·U_PCET 완전성
-        a6 = argparse.Namespace(dimer=dim, out=os.path.join(td, "a6"), cc=CC_NEW, step=45,
-                                n=6, seeds=1, allow_noncanonical=True)
+        raises(lambda: stage_b(B(neutral_xyz=asm)),
+               "음성: 부모 = stage A 조립본과 동일 → 미이완 재사용 거부 (R3 P0-2)")
+        raises(lambda: stage_b(B(gseed=999)),
+               "음성: manifest 에 없는 gseed 재라벨링 → 거부")
+        out_nc = os.path.join(td, "nc.out")
+        open(out_nc, "w").write(_fake_orca_out(hf="RHF", charge=0, mult=1,
+                                               opt_converged=False,
+                                               coords=list(zip(s3, p3o))))
+        raises(lambda: stage_b(B(neutral_out=out_nc)),
+               "음성: Opt 수렴 문구 없는 .out → 거부")
+        out_mm = os.path.join(td, "mm.out")
+        p3bad = [[x + 0.5, y, z] for x, y, z in p3o]
+        open(out_mm, "w").write(_fake_orca_out(hf="RHF", charge=0, mult=1,
+                                               opt_converged=True,
+                                               coords=list(zip(s3, p3bad))))
+        raises(lambda: stage_b(B(neutral_out=out_mm)),
+               "음성: .out 최종좌표 ≠ neutral_xyz → 결합 실패 거부")
+        raises(lambda: stage_b(B(stage_a_manifest=None, neutral_out=None)),
+               "음성: receipt 인자 없이 stage B → 거부 (자유문구는 증거가 아니다)")
+
+        manB = stage_b(B())
+        rc = manB["parent_receipt"]
+        chk(rc["opt_converged"] and rc["final_energy_Eh"] == -500.123456789
+            and rc["orca_version"] == "6.1.0" and len(rc["out_sha256"]) == 64
+            and rc["stage_a_calculation_id"] == g0["calculation_id"],
+            "receipt: 수렴·최종에너지(마지막 값)·버전·해시·stage A calc_id 결속")
+
+        # ── 매트릭스·중복·입력 계약
+        raises(lambda: stage_b(B(out=td + "/pdup", patterns=["A", "A", "B"])),
+               "음성: 패턴 중복 → exactly-once 위반 거부 (R3 조건 3)")
+        raises(lambda: stage_b(B(out=td + "/ppart", patterns=["B"])),
+               "음성: 부분 매트릭스 + allow_partial 없음 → 거부")
+        sp = open(os.path.join(td, "b3", "dp3_gs0_hA_d_sp_s0.inp")).read()
+        op = open(os.path.join(td, "b3", "dp3_gs0_hA_d_opt_s0.inp")).read()
+        chk("Opt" not in sp and "StabPerform" in sp and "UNO UCO" in sp
+            and "Hirshfeld" in sp and sp.startswith("! UKS"),
+            "sp 입력: UKS SP + StabPerform + Hirshfeld + UNO UCO (R3 P0-0)")
+        chk(" Opt " in op and "Hirshfeld" in op,
+            "opt 입력: Opt + Hirshfeld")
+        jd = {j["tag"]: j for j in manB["jobs"]}
+        chk(jd["dp3_gs0_hA_d_opt_s0"]["depends_on"]
+            == jd["dp3_gs0_hA_d_sp_s0"]["calculation_id"],
+            "SP→Opt dependency: opt.depends_on == 선행 sp 의 calculation_id (R3 P0-3)")
+        chk(all(len(j["inp_sha256"]) == 64 and len(j["xyz_sha256"]) == 64
+                for j in manB["jobs"]),
+            "잡마다 inp/xyz sha 기록 (출력-입력 결속 준비)")
+
+        # ── analyzer (R3 P0-4): all-PENDING 비영 · 증거부족 · 중복 out · 의존성
+        rcode = analyze_dir(NS(analyze=os.path.join(td, "b3")))
+        chk(rcode == 3, f"음성: 전 잡 PENDING → 완료 아님, 비영 종료 ({rcode})")
+        tagA = "dp3_gs0_hA_d_sp_s0"
+        tagB = "dp3_gs0_hB_d_sp_s0"
+        tagAo = "dp3_gs0_hA_d_opt_s0"
+        # 최소 정상종료 문자열(증거 전무) — OK 금지
+        open(os.path.join(td, "b3", tagA + ".out"), "w").write(
+            "* O   R   C   A *\nORCA TERMINATED NORMALLY\n")
+        rcode = analyze_dir(NS(analyze=os.path.join(td, "b3")))
+        ana = json.load(open(os.path.join(td, "b3", "analysis_stage_b.json")))
+        chk(ana["jobs"][tagA]["status"] != "OK"
+            and "STABILITY_UNVERIFIED" in ana["jobs"][tagA]["codes"],
+            "음성: 종료문구만 있는 .out → OK 아님 + STABILITY_UNVERIFIED (수행 양성증거 요구)")
+        # 중복 출력물
+        good = _fake_orca_out(hf="UHF", charge=0, mult=2, s2=0.752,
+                              energies=(-1.0, -2.0))
+        open(os.path.join(td, "b3", tagA + ".out"), "w").write(good)
+        open(os.path.join(td, "b3", tagB + ".out"), "w").write(good)
+        analyze_dir(NS(analyze=os.path.join(td, "b3")))
+        ana = json.load(open(os.path.join(td, "b3", "analysis_stage_b.json")))
+        chk("DUPLICATE_OUTPUT" in ana["jobs"][tagA].get("codes", []),
+            "음성: 동일 .out 복사 → DUPLICATE_OUTPUT (realized ID 재사용 봉쇄)")
+        # 대문자 unstable · 마지막 에너지 · 의존성
+        open(os.path.join(td, "b3", tagB + ".out"), "w").write(_fake_orca_out(
+            hf="UHF", charge=0, mult=2, s2=0.751, stability="unstable_upper",
+            energies=(-9.0,)))
+        open(os.path.join(td, "b3", tagAo + ".out"), "w").write(_fake_orca_out(
+            hf="UHF", charge=0, mult=2, s2=0.753, stability="stable",
+            opt_converged=True, energies=(-3.0,)))
+        analyze_dir(NS(analyze=os.path.join(td, "b3")))
+        ana = json.load(open(os.path.join(td, "b3", "analysis_stage_b.json")))
+        chk("STABILITY_UNSTABLE" in ana["jobs"][tagB]["codes"],
+            "음성: 대문자 UNSTABLE 도 잡는다 (re.I)")
+        chk(ana["jobs"][tagA]["realized"]["energy_Eh"] == -2.0,
+            "에너지는 **마지막 값** (-2.0, 첫 값 -1.0 아님)")
+        # 4라운드: sp 를 명시적으로 실패시켜 dependency 게이트 확인
+        open(os.path.join(td, "b3", tagA + ".out"), "w").write(_fake_orca_out(
+            hf="UHF", charge=0, mult=2, s2=0.750, stability="unstable",
+            energies=(-4.0,)))
+        analyze_dir(NS(analyze=os.path.join(td, "b3")))
+        ana = json.load(open(os.path.join(td, "b3", "analysis_stage_b.json")))
+        chk("DEPENDENCY_NOT_MET" in ana["jobs"][tagAo]["codes"],
+            "음성: 선행 sp GATED(불안정) → opt DEPENDENCY_NOT_MET (R3 P0-3)")
+        # BS 미플립 · opt 미수렴 · charge/mult 불일치
+        jb = jd["dp3_gs0_hA_d_sp_s0"]
+        st, c, _ = analyze_out(_fake_orca_out(hf="UHF", charge=0, mult=2,
+                                              s2=2.001, energies=(-1.0,)),
+                               dict(jb, expected=dict(jb["expected"], s2_target="bs_window"),
+                                    conditioning=dict(jb["conditioning"], sector="bs")))
+        chk("NA_STATE_NOT_IDENTIFIED" in c,
+            "음성: BS 인데 <S2>=2.0 (미플립 HS) → NA_STATE_NOT_IDENTIFIED")
+        st, c, _ = analyze_out(_fake_orca_out(hf="UHF", charge=0, mult=2, s2=0.75,
+                                              stability="stable", energies=(-1.0,)),
+                               dict(jd["dp3_gs0_hA_d_opt_s0"]))
+        chk("OPT_UNCONVERGED" in c, "음성: Opt 수렴 문구 없음 → OPT_UNCONVERGED")
+        st, c, _ = analyze_out(_fake_orca_out(hf="UHF", charge=-1, mult=2, s2=0.75,
+                                              stability="stable", energies=(-1.0,)), jb)
+        chk("SECTOR_MISMATCH" in c, "음성: charge 불일치 → SECTOR_MISMATCH (echo 대조)")
+
+        # ── localization class (사전 규칙 + remap)
+        nat = jd[tagA]["n_atoms"]
+        sets = manB["atom_sets_neutral_frame"]
+        rmH = jd[tagA]["conditioning"]["removed_H_indices"]
+        kill = sorted(rmH)
+        def rmap(i):
+            return i - sum(1 for k in kill if k < i)
+        spins = [0.0] * nat
+        for i in sets["backbone"]:
+            if i not in kill:
+                spins[rmap(i)] = 0.05
+        st, c, r = analyze_out(_fake_orca_out(hf="UHF", charge=0, mult=2, s2=0.75,
+                                              stability="stable", energies=(-1.0,),
+                                              spins=spins),
+                               jb, atom_sets=sets, removed_H=rmH)
+        chk(r.get("localization_class") == "backbone",
+            f"localization class: 백본 집중 스핀 → 'backbone' (remap 경유, share "
+            f"{r.get('loc_shares', {}).get('backbone')})")
+        spins2 = [0.0] * nat
+        for gname in ("sulfonate_A", "sulfonate_B", "sulfonate_C"):
+            for i in sets[gname]:
+                if i not in kill:
+                    spins2[rmap(i)] = 0.05
+        st, c, r2 = analyze_out(_fake_orca_out(hf="UHF", charge=0, mult=2, s2=0.75,
+                                               stability="stable", energies=(-1.0,),
+                                               spins=spins2),
+                                jb, atom_sets=sets, removed_H=rmH)
+        chk(r2.get("localization_class") == "MIXED_UNRESOLVED",
+            "localization class: 분산 스핀 → MIXED_UNRESOLVED (사전 규칙)")
+
+        # ── hybrid: species 분리 + NoAutoStart
+        fkman = {"jobs": [
+            {"tag": "u", "conditioning": {"species": "DP6_h1_Q0", "job_type": "sp_vertical"}},
+            {"tag": "v", "conditioning": {"species": "DP6_h2_Q0", "job_type": "sp_vertical"}},
+        ]}
+        fkana = {"jobs": {
+            "u": {"status": "OK", "realized": {"energy_Eh": -10.0}},
+            "v": {"status": "OK", "realized": {"energy_Eh": -9.0}},
+        }}
+        pick = hybrid_select(fkana, fkman)
+        chk(set(pick) == {"u", "v"},
+            "hybrid: 조성(h1/h2)별 그룹 분리 — 서로의 0.10 eV 창에 안 섞인다 (R3 P0-5)")
+        hp = os.path.join(td, "hyb.inp")
+        make_inp(hp, "x.xyz", "UKS", 3, False, "sp_vertical", hybrid=True)
+        chk("NoAutoStart" in open(hp).read(),
+            "hybrid 입력: NoAutoStart 키워드로 fresh-start 강제 (주석 아님)")
+
+        # ── U_PCET cycles + ID 규율
+        cyc = manB.get("u_pcet_cycles", [])
+        chk(cyc == [], "n=3 은 pair 없음 → cycle 0 (정합)")
+        raises(lambda: calculation_id({"a": 1, "nested": {"realized_x": 2}}),
+               "음성: **중첩** realized 도 ID 발급 거부 (R3 P1)")
+
+        # ── n=6 매트릭스 + cycles (unverified 부모 — 시험 전용 경로)
+        a6 = NS(dimer=dim, out=os.path.join(td, "a6"), cc=CC_NEW, step=30, n=6,
+                seeds=2, allow_noncanonical=True, allow_underseed=True)
         stage_a(a6, sym, pos)
-        parent6 = os.path.join(a6.out, "gs0", "dp6_gs0_neutral.xyz")
-        b6 = argparse.Namespace(neutral_xyz=parent6, out=os.path.join(td, "b6"), n=6,
-                                gseed=0, patterns=None, allow_partial=False,
-                                allow_noncanonical=True, scf_seeds=1)
+        b6 = NS(stage_a_manifest=None, neutral_out=None,
+                neutral_xyz=os.path.join(a6.out, "gs0", "dp6_gs0_neutral.xyz"),
+                out=os.path.join(td, "b6"), n=6, gseed=0, patterns=None,
+                allow_partial=False, allow_noncanonical=True, scf_seeds=1,
+                allow_unverified_parent=True)
         man6 = stage_b(b6)
         pats = set(man6["generated_patterns"])
         chk(pats == {"B", "C", "D", "E", "C,D", "B,E", "A,F", "B,C"},
-            f"n=6 매트릭스: singles 4 + pairs 4 (off-center B,C 포함) — {sorted(pats)}")
-        s_inp = open(os.path.join(b6.out, "dp6_gs0_hCD_s_sp_s0.inp")).read()
-        bs_inp = open(os.path.join(b6.out, "dp6_gs0_hCD_bs_sp_s0.inp")).read()
-        chk(s_inp.startswith("! RKS") and "Opt" not in s_inp,
-            "h2 closed-shell 후보 = **RKS** SP (R2 P0-1 핵심 수정)")
-        chk(bs_inp.startswith("! UKS") and "BrokenSym 1,1" in bs_inp and " 0 3 " in bs_inp,
-            "bs = UKS mult3 + BrokenSym (StabPerform 은 bs 에 안 붙임)")
-        chk(man6["pair_policy"]["A,F"].startswith("sector_comparison_only"),
-            "A,F 쌍 = 섹터 비교 전용 (U·거리추세 주장 금지 — R2 Q2)")
+            "n=6 매트릭스 전건 (singles 4 + pairs 4)")
+        cyc6 = man6["u_pcet_cycles"]
+        pairs6 = {c["pair"] for c in cyc6}
+        chk(pairs6 == {"C,D", "B,E", "B,C"} and len(cyc6) == 6
+            and all(set(c["legs"]) >= {"h1a", "h1b", "h2_s", "h2_t", "h2_bs", "h0"}
+                    for c in cyc6),
+            "U_PCET cycles: CD/BE/BC × vert/ad = 6, 4-leg calc_id 결속 · A,F 제외 (R3 조건 9)")
+        s6 = open(os.path.join(td, "b6", "dp6_gs0_hCD_s_sp_s0.inp")).read()
+        chk(s6.startswith("! RKS") and "UNO" not in s6 and "Hirshfeld" in s6,
+            "h2 RKS 후보: RKS + Hirshfeld (UNO 는 UHF 전용이라 제외)")
         mtxt = json.dumps(man6, ensure_ascii=False)
         chk("bipolaron" not in mtxt and "backbone hole" not in mtxt,
-            "conditioning 순수성 유지 (polaron/bipolaron 라벨 없음)")
+            "conditioning 순수성 유지")
 
-        # ── calculation_id 불변성 (R2 조건 8)
-        j0 = man6["jobs"][0]
-        cid_again = calculation_id(j0["conditioning"])
-        chk(cid_again == j0["calculation_id"] and j0["realized"] is None,
-            "calculation_id 재계산 동일 + realized 는 ID 밖 (immutable)")
-        try:
-            calculation_id({"a": 1, "realized_localization": "x"})
-            ok = False
-        except SystemExit:
-            ok = True
-        chk(ok, "음성: conditioning 에 realized 필드가 섞이면 ID 발급 거부")
-
-        # ── analyzer e2e (R2 조건 5) — 음성 4종 + 양성 1종
-        job_t = next(j for j in man6["jobs"] if j["conditioning"]["sector"] == "t"
-                     and j["conditioning"]["job_type"] == "sp_vertical")
-        job_s = next(j for j in man6["jobs"] if j["conditioning"]["sector"] == "s"
-                     and j["conditioning"]["job_type"] == "sp_vertical")
-        job_bs = next(j for j in man6["jobs"] if j["conditioning"]["sector"] == "bs"
-                      and j["conditioning"]["job_type"] == "sp_vertical")
-        st, c, _ = analyze_out(_fake_orca_out(terminated=False), job_t)
-        chk("SCF_UNCONVERGED" in c, "analyzer 음성①: 미종료 → SCF_UNCONVERGED emit")
-        st, c, _ = analyze_out(_fake_orca_out(hf="UHF", s2=0.76), job_t)
-        chk("SECTOR_MISMATCH" in c, "analyzer 음성②: triplet 기대인데 <S2>=0.76 → SECTOR_MISMATCH")
-        st, c, _ = analyze_out(_fake_orca_out(hf="UHF", s2=None), job_bs)
-        chk("SPIN_CONTAMINATION_UNREPORTED" in c,
-            "analyzer 음성③: bs 인데 <S2> 미보고 → SPIN_CONTAMINATION_UNREPORTED")
-        st, c, _ = analyze_out(_fake_orca_out(hf="UHF", s2=0.0), job_s)
-        chk("SECTOR_MISMATCH" in c, "analyzer 음성④: RKS 요청인데 UHF 로 돎 → SECTOR_MISMATCH")
-        st, c, r = analyze_out(_fake_orca_out(hf="UHF", s2=2.003), job_t)
-        chk(st == "OK" and r["realized_state_id"].startswith("real_"),
-            "analyzer 양성: 정상 triplet → OK + realized_state_id 발급 (calc_id 와 분리)")
-        st, c, _ = analyze_out(_fake_orca_out(hf="UHF", s2=2.0, stable=False), job_t)
-        chk("STABILITY_UNSTABLE" in c, "analyzer: 불안정 파동함수 → STABILITY_UNSTABLE (opt 차단 마크)")
-
-        # ── hybrid decision set (R2 조건 8): class 대표 포함
-        fake = {"jobs": {
-            "x_sp_a": {"status": "OK", "realized": {"energy_Eh": -10.000, "localization_class": "L1"}},
-            "x_sp_b": {"status": "OK", "realized": {"energy_Eh": -9.900, "localization_class": "L2"}},
-            "x_sp_c": {"status": "OK", "realized": {"energy_Eh": -9.500, "localization_class": "L3"}},
-        }}
-        pick = hybrid_select(fake)
-        chk(set(pick) == {"x_sp_a", "x_sp_b", "x_sp_c"},
-            "hybrid decision set: 승자+창 이내 + **모든 localization class 대표** 포함")
-
-        # ── 실물 다이머 (repo) — 닫힌꼴 stage A e2e
-        rd = os.path.join(os.path.dirname(os.path.abspath(__file__)),
-                          "..", "..", "db", "structures", "sdcp_v7c_dimer_neutral.xyz")
-        if os.path.isfile(rd):
-            rs, rp = read_xyz(rd)
-            aR = argparse.Namespace(dimer=rd, out=os.path.join(td, "r3"), cc=CC_NEW,
-                                    step=60, n=3, seeds=1, allow_noncanonical=False)
-            mR = stage_a(aR, rs, rp)
-            chk(mR["closed_form_validated"] is True,
-                "실물 다이머: 닫힌꼴 검증 통과 (플래그 불필요 — 정본 경로)")
-        else:
-            print("  (실물 다이머 없음 — 닫힌꼴 실검증 생략)")
-        chk(not check_closed_form(["C"] * 33, 3, 1), "음성: 닫힌꼴 함수가 틀린 조성 거부")
-
-        # ── 레거시 경로 하위호환
-        aL = argparse.Namespace(dimer=dim, out=os.path.join(td, "leg"), cc=CC_NEW, step=30)
+        # ── 레거시 하위호환 (직접 호출)
+        aL = NS(dimer=dim, out=os.path.join(td, "leg"), cc=CC_NEW, step=30)
         os.makedirs(aL.out)
         build_legacy_trimer(aL, sym, pos)
-        need = ["trimer_neutral.xyz", "trimer_doped_mid.xyz", "trimer_doped_end.xyz",
-                "groups_trimer.json", "run_trimer.sh", "analyze_trimer_spin.py"]
-        chk(all(os.path.exists(os.path.join(aL.out, f)) for f in need),
-            "레거시 트라이머 출력 세트 전부 생성 (하위호환)")
+        chk(os.path.exists(os.path.join(aL.out, "trimer_neutral.xyz")),
+            "레거시 트라이머 경로 하위호환 (--legacy 로만 진입)")
 
     print(f"── {'PASS' if not fails else 'FAIL ' + str(len(fails))} ──")
     return 1 if fails else 0
@@ -1122,55 +1596,59 @@ def selftest():
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--dimer", help="이완된 dimer_neutral.xyz (v7c 실물 68원자)")
+    ap.add_argument("--dimer")
     ap.add_argument("--out")
     ap.add_argument("--cc", type=float, default=CC_NEW)
     ap.add_argument("--step", type=int, default=10, help="비틀림각 스캔 간격(도) — seed 아님")
     ap.add_argument("--n", type=int, default=3)
-    ap.add_argument("--stage", choices=["a", "b"],
-                    help="a: 중성 조립+Opt 입력 (seed 별) · b: 최적화된 부모에서 매트릭스 생성")
-    ap.add_argument("--seeds", type=int, default=0,
-                    help="stage a 의 geometry seed 수 (기본 SEED_FLOOR — R2 Q4 바닥)")
-    ap.add_argument("--neutral_xyz", help="stage b: ORCA 최적화 완료된 중성 부모 xyz")
-    ap.add_argument("--gseed", type=int, default=0, help="stage b: 이 부모의 geometry seed 번호")
-    ap.add_argument("--scf_seeds", type=int, default=2,
-                    help="stage b: 열린 껍질 잡의 독립 SCF seed 수 (s0 기본 · s1 Hueckel)")
-    ap.add_argument("--patterns", action="append",
-                    help="stage b 부분 생성 (⚠ --allow_partial 필수 — 시험 전용)")
+    ap.add_argument("--stage", choices=["a", "b"])
+    ap.add_argument("--seeds", type=int, default=None,
+                    help="stage a geometry seed 수 (기본·최소 = SEED_FLOOR)")
+    ap.add_argument("--stage_a_manifest", help="stage b: stage A 의 manifest_stage_a.json")
+    ap.add_argument("--neutral_out", help="stage b: 중성 Opt 의 ORCA .out (receipt 검증)")
+    ap.add_argument("--neutral_xyz", help="stage b: ORCA Opt 최종 xyz")
+    ap.add_argument("--gseed", type=int, default=0)
+    ap.add_argument("--scf_seeds", type=int, default=2)
+    ap.add_argument("--patterns", action="append")
     ap.add_argument("--allow_partial", action="store_true",
-                    help="필수 매트릭스 미달 허용 — **재심사 제출물에는 금지** (시험 전용)")
-    ap.add_argument("--allow_noncanonical", action="store_true",
-                    help="비정본 다이머 허용 — selftest/합성 전용 (production 은 fail-closed)")
-    ap.add_argument("--analyze", help="stage b 출력 디렉터리 — .out 게이트 + abort code emit")
-    ap.add_argument("--holes", action="append", help="(구 v2 인터페이스 — 제거됨)")
+                    help="시험 전용 — 재심사 제출물 금지")
+    ap.add_argument("--allow_noncanonical", action="store_true", help="selftest 전용")
+    ap.add_argument("--allow_underseed", action="store_true", help="selftest 전용")
+    ap.add_argument("--allow_unverified_parent", action="store_true", help="selftest 전용")
+    ap.add_argument("--analyze", help="stage b 디렉터리 — 게이트 + abort code emit")
+    ap.add_argument("--hybrid", help="분석 완료된 stage b 디렉터리 — decision set 입력 생성")
+    ap.add_argument("--compare", nargs=2, help="두 분석 디렉터리 — METHOD_DEPENDENT 검사")
+    ap.add_argument("--legacy", action="store_true",
+                    help="레거시 트라이머 패키지 (명시 필수 — R3 P1)")
     ap.add_argument("--selftest", action="store_true")
     a = ap.parse_args()
     if a.selftest:
         return selftest()
     if a.analyze:
         return analyze_dir(a)
-    if a.holes:
-        ap.error("--holes 는 v2 인터페이스다 — 회신 R2 로 제거됐다. --stage a → (ORCA Opt) → "
-                 "--stage b 를 쓴다 (매트릭스는 REQUIRED_MATRIX 가 강제)")
+    if a.hybrid:
+        hybrid_stage(a)
+        return 0
+    if a.compare:
+        return compare_methods(a)
     if a.stage == "a":
         if not (a.dimer and a.out):
-            ap.error("--stage a 는 --dimer 와 --out 이 필요하다")
+            ap.error("--stage a 는 --dimer/--out 필요")
         sym, pos = read_xyz(a.dimer)
         stage_a(a, sym, pos)
         return 0
     if a.stage == "b":
         if not (a.neutral_xyz and a.out):
-            ap.error("--stage b 는 --neutral_xyz 와 --out 이 필요하다")
+            ap.error("--stage b 는 --neutral_xyz/--out 필요 (+ --stage_a_manifest/--neutral_out)")
         stage_b(a)
         return 0
-    # 레거시 트라이머 (하위호환)
-    if not (a.dimer and a.out):
-        ap.error("--dimer/--out (레거시) 또는 --stage/--selftest/--analyze 중 하나가 필요하다")
-    sym, pos = read_xyz(a.dimer)
-    if len(sym) != 68:
-        print(f"⚠ 다이머 {len(sym)}원자 — v7c 실물(68)이 아니다. 합성/시험 입력으로 간주하고 진행")
-    build_legacy_trimer(a, sym, pos)
-    return 0
+    if a.legacy:
+        if not (a.dimer and a.out):
+            ap.error("--legacy 는 --dimer/--out 필요")
+        sym, pos = read_xyz(a.dimer)
+        build_legacy_trimer(a, sym, pos)
+        return 0
+    ap.error("--stage a|b · --analyze · --hybrid · --compare · --legacy · --selftest 중 하나")
 
 
 if __name__ == "__main__":

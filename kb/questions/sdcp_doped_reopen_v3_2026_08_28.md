@@ -50,6 +50,33 @@ evidenceScope: multi-source-primary
   전부 "빌더가 못 하는 것" docstring 에 등재.
 
 
+## 🔴 회신 R3 판정 (2026-08-28) — NO-GO → **P0 전건 구현, R4 대기**
+
+원문: `kb/reviews/codex_R3_doped_reopen_impl_reply_2026_08_28.md`. 리뷰어가 재차 직접
+실행해 fail-open 5건을 재현했다 ("27 PASS 는 실패 경로를 덮지 못한다"). 같은 날 구현:
+
+- **관측량 회수 계약 (P0-0)**: 전 입력에 `Hirshfeld`, open-shell 에 `UNO UCO` — 없으면
+  실행 후 profile 복구 불가라는 지적 수용. localization class 는 **사전 규칙**으로 고정:
+  share(g)=Σm_i/Σ|m_i|, |share|≥0.5 유일 집합만 라벨, 아니면 MIXED_UNRESOLVED,
+  Σ|m|<0.3 은 NO_SPIN. 중성→doped **remap validator** 가 class 산출 경로에 내장.
+- **seed 강제 (P0-1)**: 바닥 미만·음수·고유성 부족·dmin<2.0 Å 전부 SystemExit
+  (cands[:1] 폴백 제거). 접합별 dmin 을 manifest 에 기록.
+- **부모 receipt (P0-2)**: stage B 는 stage A manifest + 중성 .out + 최종 xyz 3중 결속 —
+  정상종료·**Opt 수렴**·.out 마지막 좌표 == xyz(1e-4 Å)·조립본과 동일하면 거부·
+  gseed 재라벨 거부. h0 에너지는 receipt 의 마지막 FINAL SP.
+- **SP→Opt dependency (P0-3)**: opt 잡에 `depends_on = 선행 sp 의 calculation_id` —
+  analyzer 가 `DEPENDENCY_NOT_MET` 로 강제.
+- **analyzer 재작성 (P0-4)**: 마지막 run segment · 마지막 값 · 양성증거 요구(에너지·HFTyp·
+  charge/mult echo·stability **수행+stable**·Opt 수렴) · `DUPLICATE_OUTPUT`(동일 .out
+  복사 적발 — realized ID 는 calc_id+out_sha) · strict decode(`OUTPUT_UNREADABLE`) ·
+  all-PENDING 은 비영 종료(3).
+- **hybrid (P0-5)**: `hybrid_select` 가 **species·job_type 그룹 안에서만** 비교 (h1/h2
+  절대에너지 혼합 금지) · `--hybrid` 가 입력 생성 · fresh-start 는 **NoAutoStart** 키워드
+  (주석은 강제가 아니라는 지적 수용) · `--compare` 가 METHOD_DEPENDENT 를 실제 emit.
+- P1: stage A 잡 calc_id·xyz sha·builder commit · 중첩 realized 거부 · `--legacy` 명시 필수.
+- **selftest 40건** — R3 의 GO 요건 9 를 1:1 음성/양성으로 (receipt 위조 4종 · all-PENDING ·
+  복제 out · 대문자 unstable · 미플립 BS · 미수렴 Opt · dependency · class 사전규칙 · cycle).
+
 ## 왜 중요한가
 
 doped 재개의 첫 관문(Stage 0 기체상)이 설계 결함으로 막혀 있다. 회신 R 의 P0 들은

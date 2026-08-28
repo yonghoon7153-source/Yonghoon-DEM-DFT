@@ -7,21 +7,18 @@
 
 > 순서가 있다. 앞이 끝나야 뒤가 뜻이 있다.
 
-### ⏭-0. SDCP doped 재개 — **R2 NO-GO → 빌더 재작성 완료, R3 재제출 대기** (2026-08-28 심야2)
-- 회신 R2 (`kb/reviews/codex_R2_doped_reopen_v3_reply_2026_08_28.md`): 리뷰어가 커밋을
-  **직접 실행**해 잡음 — 전 잡 UKS Opt 오생성 · R⁰ 미구현 · fail-open · manifest 라벨 낡음.
-  "23 PASS 는 문자열 selftest 이지 e2e 증명이 아니다."
-- ✅ 최소수정 8 구현: 빌더를 **stage A/B 아키텍처**로 재작성 —
-  A(중성 조립+RKS Opt, geometry seed 별) → ORCA → B(최적화 부모에서 R⁰−H vertical ·
-  sp+StabPerform / opt 분리 · REQUIRED_MATRIX 강제 · calculation_id 불변 · SCF seed s0/s1)
-  → `--analyze` (abort code 7종 실제 emit). selftest **27건** (음성 9종·실물 다이머 e2e).
-  U_eff → **U_PCET** 개명 · hBC off-center 추가 · A,F 섹터전용 · seed floor 4+2/8+4.
-- ⏳ **R3 발송**: `kb/reviews/codex_R3_prompt_doped_reopen_impl_2026_08_28.md`
-  (실물 .inp 4종·manifest·음성 e2e 원문 첨부 — R2 가 요구한 형식 그대로).
-- ⛔ R3 GO 전 Z1 금지. 데스크탑 구 dp4/dp6 (v2 산출) 은 **폐기 대상** — GO 후
-  `--stage a` 부터 재생성 (v2 --holes 인터페이스는 제거됨).
-- 미구현 잔여 (R3 에 정직 명시): localization profile 수식·remap validator ·
-  adaptive stopping 자동화 · Yamaguchi AP — R3 의 2번 질문이 승격 여부를 정한다.
+### ⏭-0. SDCP doped 재개 — **R3 NO-GO → P0 전건 구현, R4 재제출 대기** (2026-08-28 심야3)
+- 회신 R3: 실측 fail-open 5건 (seed 미강제 · 미이완 부모 수용 · dependency 문장뿐 ·
+  analyzer fail-open · hybrid 미배선) + **관측량 회수 계약 P0** (Hirshfeld/UNO 입력 부재).
+- ✅ 전건 구현 (`build_v7c_trimer.py` 재작성 3차): receipt 3중 결속 · seed/dmin 강제 ·
+  depends_on + DEPENDENCY_NOT_MET · analyzer 양성증거/중복적발/PENDING 비영 ·
+  Hirshfeld+UNO UCO 계약 · localization class 사전규칙 + remap validator ·
+  hybrid 조성별 그룹 + NoAutoStart · --compare METHOD_DEPENDENT.
+  **selftest 40건 = R3 GO 요건 9 의 1:1 봉인.** 실물 8-seed stage A 성공
+  (고유 torsion 8벡터 · 전 접합 dmin ≥ 2.04 Å).
+- ⏳ R4 발송: `kb/reviews/codex_R4_prompt_doped_reopen_impl2_2026_08_28.md`
+- ⛔ R4 GO 전 Z1 금지. GO 시 실행 순서: 데스크탑 stage A(8 seeds) → 중성 8개 ORCA Opt →
+  receipt 로 stage B → sp 회수 → --analyze 게이트 → opt.
 
 ### ⏭-1. T13 확인 — **먼저**
 kgy 800 ps 런 2개(`lpsocl_long` · `lpsocl_small800`)가 8/29 아침 완주.
