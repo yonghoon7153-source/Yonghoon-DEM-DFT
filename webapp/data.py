@@ -3247,25 +3247,29 @@ def _paper_index_c(_sig):
     for p in list_papers():
         blob = f"{p['id']} {p['title']} {p['type']}"
         el_tags, method_tags = set(), set()
+        has_el_decl = has_method_decl = False
         try:
             head = (pd / f"{p['id']}.md").read_text(encoding="utf-8", errors="ignore").splitlines()[:60]
             blob += " " + " ".join(head)
             for line in head:
                 m = re.search(r"(?:elements|원소)\s*[:：]\s*(.+)", line, re.I)
                 if m:
+                    has_el_decl = True
                     for t in re.split(r"[,\s/·]+", m.group(1)):
                         t = t.strip("`*_ ")
                         if t in _PSYMS:
                             el_tags.add(t)
                 m2 = re.search(r"(?:methods|기법|기술)\s*[:：]\s*(.+)", line, re.I)
                 if m2:
+                    has_method_decl = True
                     for t in re.split(r"[,/·]+", m2.group(1).lower()):
                         gid = METHOD_MAP.get(t.strip("`*_ ").strip())
                         if gid:
                             method_tags.add(gid)
         except Exception:
             pass
-        idx.append({**p, "blob": blob.lower(), "el_tags": el_tags, "method_tags": method_tags})
+        idx.append({**p, "blob": blob.lower(), "el_tags": el_tags, "method_tags": method_tags,
+                    "has_el_decl": has_el_decl, "has_method_decl": has_method_decl})
     return idx
 
 def element_papers(sym: str, limit: int = 14) -> list:
@@ -3280,10 +3284,19 @@ def element_papers(sym: str, limit: int = 14) -> list:
         pass
     hits, seen = [], set()
     for p in _paper_index():
-        if sym in p["el_tags"] or p["id"] in kb_slugs or (toks and any(t in p["blob"] for t in toks)):
+        # 선언(elements:)이 있으면 그것이 정본 — 토큰스캔은 끈다 (glossary_papers 와 같은 이유).
+        # kb_slugs 는 사람이 쓴 authored 소스라 그대로 둔다.
+        declared = (sym in p["el_tags"]) or (p["id"] in kb_slugs)
+        if declared or (not p.get("has_el_decl") and toks and any(t in p["blob"] for t in toks)):
             if p["id"] not in seen:
                 seen.add(p["id"])
-                hits.append({"id": p["id"], "title": p["title"], "track": p["track"]})
+                hits.append({"id": p["id"], "title": p["title"], "track": p["track"],
+                             "_rank": 0 if declared else 1})
+    # ⛔ 2026-08-28 — **선언한 논문을 먼저 낸다.** 예전에는 파일 순서라, 원소를 명시 선언한
+    #   논문이 본문에 스쳐 언급만 한 논문에 밀려 limit 밖으로 잘렸다 (deng2026 이 Li 에서
+    #   145편 중 21위였다). 잘리는 것 자체는 limit 의 문제지만, **무엇이 먼저 잘리느냐**는
+    #   우리가 정할 수 있다.
+    hits.sort(key=lambda h: h.pop("_rank"))
     return hits[:limit]
 
 # 용어(기법) → 논문 매칭 토큰 (그 기법을 쓴 논문 링크)
@@ -3315,12 +3328,26 @@ GLOSSARY_TOKENS = {
 }
 
 def glossary_papers(term_id: str, limit: int = 14) -> list:
-    """이 기법(용어)을 쓴 litdb 논문 — 태그(정밀) ∪ 토큰스캔(보조). 클릭 → digest."""
+    """이 기법(용어)을 쓴 litdb 논문 — **선언이 있으면 선언만**, 없을 때만 토큰스캔. 클릭 → digest.
+
+    ⛔⛔ 2026-08-28 — 예전에는 `태그 ∪ 토큰스캔` 이라 **선언을 토큰스캔이 덮어썼다.**
+      두 가지로 망가졌다:
+      · `deng2026` 은 §11-D 에 *"이 논문은 NEB·Bader·COHP·ELF·BVSE·phonon 을 **하지 않는다**"*
+        라고 적었는데, 그 **부정문이 긁혀** 여섯 기법 페이지에 전부 링크됐다.
+      · `kim2025_csp` 는 methods 를 바르게 선언해 놓고, 바로 아래 *"종전 methods 줄은
+        `bader, bvse, cohp, dos, elf, esw, neb, pdos` 였다"* 는 **정정 주석이 다시 긁혔다.**
+        정정문 자체가 버그를 되살린 것이다.
+      ⇒ 부정문 필터로는 못 고친다(표현이 무한하고 한국어·영어가 섞인다).
+        **선언이 있으면 그것이 정본**이고 스캔은 끈다. 스캔은 선언이 없는 옛 digest 용 보조다.
+    """
     toks = GLOSSARY_TOKENS.get(term_id, [])
     hits = []
     for p in _paper_index():
-        if term_id in p["method_tags"] or (toks and any(t in p["blob"] for t in toks)):
-            hits.append({"id": p["id"], "title": p["title"], "track": p["track"]})
+        declared = term_id in p["method_tags"]
+        if declared or (not p.get("has_method_decl") and toks and any(t in p["blob"] for t in toks)):
+            hits.append({"id": p["id"], "title": p["title"], "track": p["track"],
+                         "_rank": 0 if declared else 1})
+    hits.sort(key=lambda h: h.pop("_rank"))      # 선언한 논문이 먼저 (element_papers 와 같은 규약)
     return hits[:limit]
 
 def element_db_anchors(sym: str) -> dict:

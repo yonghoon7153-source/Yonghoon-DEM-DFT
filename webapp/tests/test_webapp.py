@@ -1928,3 +1928,68 @@ def test_docnote_highlight_paints_across_inline_tags():
         pytest.skip(out.strip().splitlines()[-1])
     assert r.returncode == 0, out
     assert "docnote paint PASS" in out, out
+
+
+def test_glossary_papers_declaration_beats_token_scan():
+    """`methods:` 선언이 있으면 **본문 토큰스캔을 끈다** — 부정문·정정주석이 긁히지 않게.
+
+    ⛔ 실측 회귀 (2026-08-28). 예전에는 `태그 ∪ 토큰스캔` 이라 선언을 스캔이 덮었다:
+      · deng2026 은 *"이 논문은 NEB·Bader·COHP·ELF·BVSE·phonon 을 **하지 않는다**"* 라고
+        적었는데 그 **부정문이 긁혀** 여섯 기법 페이지에 링크됐다.
+      · kim2025_csp 는 선언을 바르게 해놓고, 바로 아래 *"종전 methods 줄은 bader, bvse,
+        cohp … 였다"* 는 **정정 주석이 다시 긁혔다** — 정정문이 버그를 되살렸다.
+    부정문 필터로는 못 고친다(표현이 무한하다). 선언이 정본이다.
+    """
+    from data import _paper_index, glossary_papers
+
+    idx = {p["id"]: p for p in _paper_index()}
+    deng = "deng2026_polysulfate_layer_moisture_oxidation_lpsc"
+    if deng not in idx:
+        pytest.skip("deng2026 digest 가 없다")
+    assert idx[deng]["has_method_decl"], "deng2026 이 methods: 를 선언해야 이 시험이 뜻이 있다"
+
+    # ── 음성: 안 한 기법에 링크되면 안 된다 (본문에 그 단어가 **부정문으로** 있다)
+    for t in ("neb", "cohp", "bader", "elf", "bvse"):
+        ids = [h["id"] for h in glossary_papers(t, limit=999)]
+        assert deng not in ids, f"deng2026 이 '{t}' 에 잘못 링크됐다 — 부정문이 긁힌다"
+
+    # ── 양성: 선언한 기법에는 링크돼야 한다 (음성만 있으면 '아무것도 안 링크' 로도 통과한다)
+    assert deng in [h["id"] for h in glossary_papers("dft", limit=999)], \
+        "deng2026 은 DFT 를 선언했으므로 dft 에는 링크돼야 한다"
+
+    # ── 정정 주석 회귀: 선언과 다른 옛 목록이 본문에 남아 있어도 안 긁힌다
+    kim = "kim2025_csp_metastable_edge_sharing_sse"
+    if kim in idx and idx[kim]["has_method_decl"]:
+        for t in ("bader", "cohp", "elf", "bvse", "neb"):
+            assert kim not in [h["id"] for h in glossary_papers(t, limit=999)], \
+                f"kim2025_csp 가 '{t}' 에 링크됐다 — 정정 주석이 긁힌다"
+        assert kim in [h["id"] for h in glossary_papers("phonon", limit=999)], \
+            "kim2025_csp 는 phonon 을 선언했다 — 이건 남아야 한다"
+
+
+def test_element_papers_declared_first():
+    """원소를 **선언한** 논문이 본문에 스쳐 언급만 한 논문보다 앞에 온다.
+
+    limit 로 잘릴 때 무엇이 먼저 잘리느냐의 문제다. deng2026 은 Li 를 선언했는데
+    145편 중 21위라 limit=14 밖으로 잘렸었다.
+    """
+    from data import _paper_index, element_papers
+
+    idx = {p["id"]: p for p in _paper_index()}
+    deng = "deng2026_polysulfate_layer_moisture_oxidation_lpsc"
+    if deng not in idx or not idx[deng]["has_el_decl"]:
+        pytest.skip("deng2026 이 elements: 를 선언하지 않았다")
+    for s in ("Li", "P", "S", "Cl", "O", "C", "H", "Ni", "Co", "Mn", "In", "Ti"):
+        assert s in idx[deng]["el_tags"], f"deng2026 el_tags 에 {s} 가 파싱돼야 한다"
+        assert deng in [h["id"] for h in element_papers(s, limit=999)], \
+            f"{s}: 선언한 deng2026 이 목록에 있어야 한다"
+    # ⚠ 기본 limit(14) 안에 드는 것은 **흔한 원소에서는 보장 못 한다** — Li 를 선언한 논문만
+    #   이미 14편이 넘는다(deng 은 145편 중 21위). 그건 버그가 아니라 limit 의 설계 선택이다.
+    #   보장할 수 있는 것은 흔하지 않은 원소다.
+    for s in ("Ni", "Co", "Mn", "In", "Ti"):
+        assert deng in [h["id"] for h in element_papers(s)], \
+            f"{s}: 논문이 20편대인데도 기본 limit 밖이면 정렬이 안 먹은 것이다"
+    # 음성: 선언 안 한 원소에는 안 붙는다
+    for s in ("B", "Ge"):
+        assert deng not in [h["id"] for h in element_papers(s, limit=999)], \
+            f"deng2026 이 선언하지 않은 {s} 에 링크됐다"
