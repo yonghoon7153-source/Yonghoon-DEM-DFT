@@ -30,6 +30,15 @@ mol box24 잡당 sdcp_neutral 1262 s · ptfe_c10 1196 s · ptfe_dimer 554 s = **
 복합체 8개 + 슬랩 = **52 h(≈2일)** — 같은 양을 재는 데 40배다. 그래서 그 항목의 답이
 비용을 결정한다.
 
+**리뷰 2건 발송 대기** (둘 다 붙여넣기 완성본):
+- `kb/reviews/codex_P_prompt_wave1_incar_audit_2026_08_28.md` — 수치 프로토콜
+  (doped 마감 정당성 · LREAL 회계 · 두 키 동시변경 · MAGMOM 미검증 파급)
+- `kb/reviews/codex_Q_prompt_neutral_ptfe_closure_2026_08_28.md` — **살아 있는 결론**
+  (0.346 eV 헤드라인 · 자세 표본 4 vs 2 · **원자당 정규화 순위 역전** · dimer 를 근거에서
+  빼는 게 선택적 보고인지 · PTFE 마감문서 부재)
+  ⇒ **Q 를 먼저 보낸다** — 원고 문장에 걸린 쪽이다.
+자체 감사 기록은 `db/properties/sdcp_neutral_closed_2026_08_28.json` §🔎_자체감사 절.
+
 ### ⏭-1. T13 확인 — **먼저**
 kgy 800 ps 런 2개(`lpsocl_long` · `lpsocl_small800`)가 8/29 아침 완주.
 `tools/ionic/msd_diffusive_check.py` 로 **"200 ps 로 충분한가"** 를 답한다.
