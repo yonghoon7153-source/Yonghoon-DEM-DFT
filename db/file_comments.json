@@ -119,6 +119,119 @@
    "who": ""
   }
  ],
+ "litdb/figures/tu2026_diffusion_descriptor_ml_li_sse_interface/fig_1.png": [
+  {
+   "at": "2026-08-28 14:27",
+   "edited_at": "2026-08-28 14:28",
+   "history": [
+    {
+     "at": "2026-08-28 14:27",
+     "text": "those of LLZO and LiPON are comparable to reported experimental values of 4.3 and 6 eV. Substantial PDOS overlap indicates strong orbital hybridization, suggesting stable chemical bonding within the electrolytes.\nThe high density of states near the Fermi level of LLZO and LiPON is contributed mainly by O, followed by La and N respectively, whereas for the sulfide electrolytes the Fermi level is dominated by S. These elements make the principal contributions to interfacial charge transfer.\n\n**PDOS의 상당한 겹침은 원소 궤도 간 강한 혼성**을 나타내며, 전해질 내에 안정한 화학결합이 존재함을 시사한다. LLZO와 LiPON의 페르미 준위 근처 상태밀도는 주로 O가 기여하고 그다음이 각각 La와 N이며, 황화물계는 S가 지배한다. 이 원소들이 계면에서의 전하 이동 거동에 주된 기여를 한다."
+    },
+    {
+     "at": "2026-08-28 14:28",
+     "text": "those of LLZO and LiPON are comparable to reported experimental values of 4.3 and 6 eV. Substantial PDOS overlap indicates **strong orbital hybridization, suggesting stable chemical bonding within the electrolytes**.\nThe high density of states near the Fermi level of LLZO and LiPON is contributed mainly by O, followed by La and N respectively, whereas for the sulfide electrolytes the Fermi level is dominated by S. These elements make the principal contributions to interfacial charge transfer.\n\n**PDOS의 상당한 겹침은 원소 궤도 간 강한 혼성**을 나타내며, 전해질 내에 안정한 화학결합이 존재함을 시사한다. LLZO와 LiPON의 페르미 준위 근처 상태밀도는 주로 O가 기여하고 그다음이 각각 La와 N이며, 황화물계는 S가 지배한다. 이 원소들이 계면에서의 전하 이동 거동에 주된 기여를 한다."
+    }
+   ],
+   "id": "c1787894860267",
+   "text": "those of LLZO and LiPON are comparable to reported experimental values of 4.3 and 6 eV. Substantial PDOS overlap indicates **strong orbital hybridization, suggesting stable chemical bonding within the electrolytes**.\nThe high density of states near the Fermi level of LLZO and LiPON is contributed mainly by O, followed by La and N respectively, whereas for the sulfide electrolytes the Fermi level is dominated by S. These elements make the principal contributions to interfacial charge transfer.\n\n**PDOS의 상당한 겹침은 원소 궤도 간 강한 혼성**을 나타내며, 전해질 내에 안정한 화학결합이 존재함을 시사한다. LLZO와 LiPON의 페르미 준위 근처 상태밀도는 주로 O가 기여하고 그다음이 각각 La와 N이며, **황화물계는 S가 지배한다. 이 원소들이 계면에서의 전하 이동 거동에 주된 기여를 한다.**",
+   "who": ""
+  }
+ ],
+ "litdb/figures/tu2026_diffusion_descriptor_ml_li_sse_interface/fig_2.png": [
+  {
+   "at": "2026-08-28 14:18",
+   "id": "c1787894303339",
+   "text": "![](/api/note-image/b22d74a6da78f1f25994037bfa743a68.png)\nTable 1\nThe calculated γf (eV/ ˚ A2 ), Wad (eV /nm 2 ) , Eads (eV) and EB (eV) of the Li/SSEs interfaces with error range.",
+   "who": ""
+  },
+  {
+   "at": "2026-08-28 14:48",
+   "id": "c1787896093513",
+   "text": "Fig. 2에 우수한 Li/SSE 계면 조합을 스크리닝하기 위한 ML 가속 제일원리 계산의 흐름도를 제시했다. 데이터셋의 descriptor는 소재 descriptor와 계면 descriptor로 구성된다. 소재 descriptor는 원자반경, 원자밀도, 원자량, 녹는점, 전기음성도를 포함하며 전극·전해질·도펀트의 고유 물성을 기술한다. 예측 정확도를 높이기 위해 형성에너지·접착에너지·확산장벽을 포함하는 새로운 계면 descriptor를 제안했다.",
+   "who": ""
+  },
+  {
+   "at": "2026-08-28 14:48",
+   "id": "c1787896111467",
+   "text": "이들은 frozen interfacial model, 즉 전해질 층의 원자 위치를 고정한 모델로부터 계산되며, 자유도를 줄여 수렴을 빠르게 함으로써 계산시간을 full DFT의 약 1/10로 단축한다.",
+   "who": ""
+  }
+ ],
+ "litdb/figures/tu2026_diffusion_descriptor_ml_li_sse_interface/fig_3.png": [
+  {
+   "at": "2026-08-28 14:48",
+   "edited_at": "2026-08-28 14:48",
+   "history": [
+    {
+     "at": "2026-08-28 14:48",
+     "text": "The predominantly light-coloured distribution suggests low multicollinearity, indicating information diversity. Nonlinear algorithms are used to capture latent relationships among weakly correlated features."
+    }
+   ],
+   "id": "c1787896085831",
+   "text": "The predominantly light-coloured distribution suggests** low multicollinearity**, indicating information diversity. Nonlinear algorithms are used to capture latent relationships among weakly correlated features.",
+   "who": ""
+  },
+  {
+   "at": "2026-08-28 14:49",
+   "id": "c1787896194552",
+   "text": "model energy and SSE model energy (0.98) and between atomic number and atomic mass (0.99); Li number correlates strongly negatively with binding energy (−0.98), implying redundancy. Redundant features with high correlation are removed to reduce model complexity and improve generalization.",
+   "who": ""
+  }
+ ],
+ "litdb/figures/tu2026_diffusion_descriptor_ml_li_sse_interface/fig_4.png": [
+  {
+   "at": "2026-08-28 14:23",
+   "id": "c1787894637107",
+   "text": "![](/api/note-image/87fda9677ef911886dfb8053be2c58c0.png)\nTable 2\nThe γf (eV/ ˚ A2 ), EB (eV), Wad (eV/nm2 ), and Eads (eV) of the Li/B-LLZO, Li/Sn-LiPON,\nLi/B-LPS, and Li/Al-LPSCl interfaces.",
+   "who": ""
+  }
+ ],
+ "litdb/figures/tu2026_diffusion_descriptor_ml_li_sse_interface/fig_S1.png": [
+  {
+   "at": "2026-08-28 14:16",
+   "edited_at": "2026-08-28 14:19",
+   "history": [
+    {
+     "at": "2026-08-28 14:16",
+     "text": "![](/api/note-image/c348cd1bbd9328733de534c553093e7f.png)\nthe convergence test of cut off energy for Li/LLZO interface model.\n The convergence test of k point for Li/LLZO interface model."
+    }
+   ],
+   "id": "c1787894170835",
+   "text": "![](/api/note-image/c348cd1bbd9328733de534c553093e7f.png)\nthe convergence test of cut off energy for Li/LLZO interface model.\n The convergence test of k point for Li/LLZO interface model.\n\nz축 방향으로** 20 Å의** 진공층을 넣어 주기적 이미지 간 상호작용을 차단했다.",
+   "who": ""
+  },
+  {
+   "at": "2026-08-28 14:16",
+   "id": "c1787894187596",
+   "text": "![](/api/note-image/3d04d06cf43a8292964bed1db2c6d56e.png)\n The comparison of R2 and MAE of the GBRT model in this work with those\nof the other models reported in previous studies about designing of batteries materials.",
+   "who": ""
+  },
+  {
+   "at": "2026-08-28 14:16",
+   "id": "c1787894199827",
+   "text": "![](/api/note-image/28d682377c815dce52d3609a0267f868.png)\nThe interfacial energies (𝛾𝑓) and diffusion barriers (𝐸𝐵) of the remaining 17\npromising candidates.",
+   "who": ""
+  },
+  {
+   "at": "2026-08-28 14:17",
+   "id": "c1787894258114",
+   "text": "![](/api/note-image/a94a1acc2e888c7d2e62806104372f94.png)\nTable S5 The interfacial performance between Li/B-LLZO interface and other reported\ndoped systems.\n S6 The activation energies (Ea) and pre-exponential factor (D0) of Li-ions at the\nlithium/SSE interfaces.",
+   "who": ""
+  },
+  {
+   "at": "2026-08-28 14:17",
+   "id": "c1787894270635",
+   "text": "![](/api/note-image/c71e18d86f847dbf80fdd5cc532d0b8b.png)\nTable S7 The calculated lithium diffusion coefficients and ionic conductivity of B\nLLZO, Sn-LiPON, B-LPS, Al-LPSCl electrolytes are compared with those of the other\nreported doped systems .",
+   "who": ""
+  },
+  {
+   "at": "2026-08-28 14:52",
+   "id": "c1787896342651",
+   "text": "Ridge regressor로 평가한 feature 중요도에서는 **frozen 계의 형성에너지가 형성에너지 예측을 지배했고, 그다음이 dopant energy, binding energy, LLZO**였다. Frozen descriptor를 뺀 GBRT는 정확도가 다소 감소했다(Fig. S1). 확산 성능 평가에서는 frozen 계의 확산장벽(28.67%)과 일함수(18.91%)가 핵심이었고, 전기음성도(12.15%)와 밴드갭(11.58%)이 뒤를 이었다.",
+   "who": ""
+  }
+ ],
  "litdb/papers/deng2026_polysulfate_layer_moisture_oxidation_lpsc.md": [
   {
    "anchor": "1) 황화물 SE 의 두 고질병. Li₆PS₅Cl(이하 LPSC) 같은 황화물은 σ 가 높고(>1 mS/cm) 무르기까지 해서 좋은데, 두 가지가 발목을 잡는다. - 산화 불안정: S²⁻ 가 환원력이 강해 고전압 산화물 양극(LCO·NCM)과 닿으면 산화분해된다 → 전자·이온 절연성 부",
@@ -552,6 +665,134 @@
    ],
    "id": "c1787880403781",
    "text": "Graph 기반 (NequIP, M3GNet, CHGNet)\tDescriptor 기반 (MTP, GAP, SNAP)\n파라미터 수\t많음 (10⁵~10⁷)\t적음 (10²~10³)\n범용성\t전 원소 pretrained\t계마다 새로 학습\n속도\t느림\t훨씬 빠름\n정확도\t높음\t계 특화 시 충분\nfine-tuning\t사실상 필수\t애초에 scratch 학습\n\n이 조성만 아는 대신 빠른 모델",
+   "who": ""
+  }
+ ],
+ "litdb/papers/tu2026_diffusion_descriptor_ml_li_sse_interface.md": [
+  {
+   "anchor": "🎤 발표용 안내 — 이 digest 를 논문세미나에 쓰는 법",
+   "at": "2026-08-28 14:07",
+   "id": "c1787893676822",
+   "text": "한편 ML의 예측 정확도는 descriptor 선택에 크게 의존하므로, 특정 응용에 맞는 새로운 descriptor 개발이 정확도 향상의 핵심이다.\n\nHerein, a design framework integrating ML and first-principles calculations is proposed to screen novel SSEs for high-performance lithium-metal batteries.",
+   "who": ""
+  },
+  {
+   "anchor": "권장: A 를 뼈대로 깔고, §5.3(기술자 DB) 슬라이드에서 B 의 §6.1·§6.2·§6.7 세 개만 파고든다. 30개를 다 설명하면 20분이 그대로 날아가고, 실제로 중요한 건 세 개다 (동결 형성에너지 36.52 % · 동결 장벽 28.67 % · one-hot LLZO 10.",
+   "at": "2026-08-28 14:09",
+   "id": "c1787893761936",
+   "text": "LIB 한계(액체전해질) → ASSB → Li metal 음극 → 계면이 문제\n                                                    ↓\n                                    도핑으로 해결 → DFT로 분석 가능\n                                                    ↓\n                                    근데 조합이 너무 많음 → ML 도입\n                                                    ↓\n                        근데 기존 ML은 bulk만 다룸 + descriptor가 관건\n                                                    ↓\n                                              [우리 연구]",
+   "who": ""
+  },
+  {
+   "anchor": "Li 금속/SSE 계면을 DFT 로 하나씩 계산하면 조합이 너무 많다",
+   "at": "2026-08-28 14:09",
+   "edited_at": "2026-08-28 14:09",
+   "history": [
+    {
+     "at": "2026-08-28 14:09",
+     "text": "\"전해질 전단탄성률이 Li의 2배(≈ 8.4 GPa)를 넘으면 덴드라이트가 물리적으로 억제된다\"는 게 2005년 Monroe & Newman의 선형탄성 해석 결과야."
+    }
+   ],
+   "id": "c1787893790283",
+   "text": "\"**전해질 전단탄성률이 Li의 2배(≈ 8.4 GPa)를 넘으면 덴드라이트가 물리적으로 억제된다**\"는 게 2005년 Monroe & Newman의 선형탄성 해석 결과야.",
+   "who": ""
+  },
+  {
+   "anchor": "2b. 이 논문이 하지 않는 것 (은폐 방지 목록)",
+   "at": "2026-08-28 14:30",
+   "edited_at": "2026-08-28 14:30",
+   "history": [
+    {
+     "at": "2026-08-28 14:30",
+     "text": "리튬 덴드라이트 성장의 역학 모델에 따르면, 고체전해질의 전단탄성률이 금속 리튬(4.2 GPa)의 2배를 넘으면 덴드라이트 생성을 제어하는 유효 인자가 된다. 계산된 전단탄성률은 LLZO 58.86, Ta-LLZO 63.96, LiPON 41.26, C-LiPON 39.24, LPS 12.51, Sn-LPS 16.20, LPSCl 7.36, Sn-LPSCl 8.59 GPa다. LLZO와 LiPON은 실험값 56, 37 GPa와 유사하다."
+    }
+   ],
+   "id": "c1787895003349",
+   "text": "**리튬 덴드라이트 성장의 역학 모델에 따르면, 고체전해질의 전단탄성률이 금속 리튬(4.2 GPa)의 2배를 넘으면 덴드라이트 생성을 제어하는 유효 인자가 된다. **계산된 전단탄성률은 LLZO 58.86, Ta-LLZO 63.96, LiPON 41.26, C-LiPON 39.24, LPS 12.51, Sn-LPS 16.20, LPSCl 7.36, Sn-LPSCl 8.59 GPa다. LLZO와 LiPON은 실험값 56, 37 GPa와 유사하다.",
+   "who": ""
+  },
+  {
+   "anchor": "3a. Table 1 — 학습 라벨의 실체 (검증용 8계, 전수 전사)",
+   "at": "2026-08-28 14:31",
+   "edited_at": "2026-08-28 14:31",
+   "history": [
+    {
+     "at": "2026-08-28 14:31",
+     "text": "![](/api/note-image/d1281804ec7577fed5a1eb16eeee7c0a.png)\n에너지 정의\n\n식 (1) 흡착에너지: 계면 에너지에서 각각의 에너지 합을 뺀 값\n식 (2) 형성에너지 γf: bulk 기준 에너지와 변형에너지(E_str)를 뺀 뒤 2A로 나눔 → 계면 열역학 안정성 지표\n식 (3) 접착일 W_ad: 계면을 두 자유표면으로 분리하는 데 필요한 가역일\n\n리튬 이동 장벽은 CI-NEB로, 동적 확산 성능은 AIMD의 MSD로부터 확산계수를 구해 평가했다."
+    }
+   ],
+   "id": "c1787895101859",
+   "text": "![](/api/note-image/d1281804ec7577fed5a1eb16eeee7c0a.png)\n에너지 정의\n\n식 (1) **흡착에너지**: 계면 에너지에서 각각의 에너지 합을 뺀 값\n식 (2) **형성에너지 γf**: bulk 기준 에너지와 변형에너지(E_str)를 뺀 뒤 2A로 나눔 → 계면 열역학 안정성 지표\n식 (3) **접착일 W_ad**: 계면을 두 자유표면으로 분리하는 데 필요한 가역일\n\n리튬 이동 장벽은 CI-NEB로, 동적 확산 성능은 AIMD의 MSD로부터 확산계수를 구해 평가했다.",
+   "who": ""
+  },
+  {
+   "anchor": "3a. Table 1 — 학습 라벨의 실체 (검증용 8계, 전수 전사)",
+   "at": "2026-08-28 14:32",
+   "edited_at": "2026-08-28 14:33",
+   "history": [
+    {
+     "at": "2026-08-28 14:32",
+     "text": "LLZO·LiPON·LPS·LPSCl에 각각 Ta, C, Sn, Sn을 도핑하면 리튬 음극과의 계면 형성에너지·접착에너지·흡착에너지가 크게 증가하며, 특히 Li/Ta-LLZO가 9.91 eV/Å²로 가장 높다. Ta 도핑은 Li/LLZO 계면의 고유 반응성을 낮춰 이온전도도가 높은 입방정 LLZO 상을 안정화하는 데 유리하다."
+    }
+   ],
+   "id": "c1787895176698",
+   "text": "LLZO·LiPON·LPS·LPSCl에 각각 Ta, C, Sn, Sn을 도핑하면 리튬 음극과의 **계면 형성에너지·접착에너지·흡착에너지가 크게 증가**하며, 특히 Li/Ta-LLZO가 9.91 eV/Å²로 가장 높다. **Ta 도핑은 Li/LLZO 계면의 고유 반응성을 낮춰 이온전도도가 높은 입방정 LLZO 상을 안정화하는 데 유리**하다.",
+   "who": ""
+  },
+  {
+   "anchor": "★ 오차범위가 10⁻³–10⁻⁴ 다. 본문: \"three independent calculations exhibit minor errors that range from 10⁻³ to 10⁻⁴.\" ⇒ 라벨 잡음 ≈ 0. 이것이 §7 판정의 핵심 전제다. ⚠ \"세 번의 독립 계산\"이 무엇을",
+   "at": "2026-08-28 14:33",
+   "edited_at": "2026-08-28 14:33",
+   "history": [
+    {
+     "at": "2026-08-28 14:33",
+     "text": "도펀트는 리튬이온에 가해지는 정전기적 구속을 약화시켜 전해질 내에 다중 이온 수송 경로를 형성하도록 돕는다. 또한 Li/Ta-LLZO, Li/C-LiPON, Li/Sn-LPS, Li/Sn-LPSCl 계면은 무도핑 대비 낮은 확산장벽을 보인다. 형성에너지와 확산장벽은 ASSLIB의 수명 및 계면저항과 강한 상관을 가지므로 ML의 주요 예측 타깃으로 선정했다. 3회 독립 계산의 오차는 10⁻³~10⁻⁴ 수준이었다."
+    }
+   ],
+   "id": "c1787895226207",
+   "text": "**도펀트는 리튬이온에 가해지는 정전기적 구속을 약화시켜 전해질 내에 다중 이온 수송 경로를 형성하도록 돕는다.** 또한 Li/Ta-LLZO, Li/C-LiPON, Li/Sn-LPS, Li/Sn-LPSCl 계면은 무도핑 대비 낮은 확산장벽을 보인다. 형성에너지와 확산장벽은 ASSLIB의 수명 및 계면저항과 강한 상관을 가지므로 ML의 주요 예측 타깃으로 선정했다. 3회 독립 계산의 오차는 10⁻³~10⁻⁴ 수준이었다.",
+   "who": ""
+  },
+  {
+   "anchor": "3a. Table 1 — 학습 라벨의 실체 (검증용 8계, 전수 전사)",
+   "at": "2026-08-28 14:40",
+   "id": "c1787895639727",
+   "text": "==모순이 우연이 아니라 구조적이다.==\n\n`W_ad = |E_ads| / (2A)` 가 소수 4자리까지 성립 →\n**W_ad 와 E_ads 는 같은 양이다.** 새 정보 0 비트.\n\n그런데 논문은 그 **하나의 수**로 두 결론을 뽑는다:\n\"adhesion enhances\"(접착 좋아짐) + \"reactivity decreases\"(반응성 줄어듦).\n한 축에서 반대 방향 결론 둘 → 어느 계에선 반드시 어긋난다.\n\n그리고 애초에 **E_ads 는 접착과 분해를 같은 부호로 삼킨다.**\n붙어서 좋은 것도, 반응해서 나쁜 것도 둘 다 E_ads 를 음수로 만든다.\n⇒ 논지를 \"더 음수 = 반응성 높음\" 으로 세우지 말 것 (반박 가능).\n==올바른 형태: \"E_ads 로는 그 둘을 못 가른다. 논문은 못 가르는 양으로 갈랐다.\"==",
+   "who": ""
+  },
+  {
+   "anchor": "★ 오차범위가 10⁻³–10⁻⁴ 다. 본문: \"three independent calculations exhibit minor errors that range from 10⁻³ to 10⁻⁴.\" ⇒ 라벨 잡음 ≈ 0. 이것이 §7 판정의 핵심 전제다. ⚠ \"세 번의 독립 계산\"이 무엇을",
+   "at": "2026-08-28 14:41",
+   "id": "c1787895675075",
+   "text": "==여기가 화학이 붙어 있어서 제일 세다.==\n\nSn⁴⁺ + Li → **Li–Sn 합금**. LGPS 의 Ge 와 같은 자리이고,\n황화물 도핑에서 Sn 을 피하는 이유. E_ads −3.69 → −11.12 (**3배**) 는\n그 환원의 서명으로 읽는 게 자연스럽다.\n\n한 방 더: **Li–Sn 합금은 금속이다.**\nZhu 2015 부동태 조건 = \"산물이 전자절연성이어야 한다\" 를 정면 위반.\n그리고 **이 논문은 산물의 전자전도성을 한 번도 안 본다**\n(Wang 2026 도 같은 공백 — Ni₃S₂·Co₉S₈·금속 Ni 내놓고 MCI 언급 0).\n\n발표 문장:\n\"E_ads 가 3배 음수가 됐는데 그 산물이 금속이면, 그건 안정이 아니라 실패입니다.\"",
+   "who": ""
+  },
+  {
+   "anchor": "3. 핵심 수치 (소환값 — ⛔ 우리 db 절대값과 섞지 말 것)",
+   "at": "2026-08-28 14:41",
+   "id": "c1787895719197",
+   "text": "==표는 자기들끼리 맞고, 본문만 어긋난다.== 이 구분이 핵심.\n\n면적을 역산했더니 쌍 안에서 소수 4자리까지 같다 —\nLLZO 1.8218 ↔ Ta 1.8217 · LiPON/C-LiPON 1.9170 동일 ·\nLPS 1.7482 ↔ Sn 1.7481 · LPSCl 2.0006 ↔ Sn 1.9975.\n⇒ 쌍 안 E_ads 차이는 **셀 크기 인공물이 아니다. 진짜 변화다.**\n\nC-LiPON −9.29 → −3.38 은 실제 **2.7배 약화**인데\n본문은 \"significantly enhances\". `W_ad` 도 2.42 → 0.88 로 같이 줄어\n**표는 정합, 본문만 모순.**\n\n⛔ 단 **계 사이 비교는 금지.** E_ads 는 총에너지(eV)라 크기에 비례하고\n면적이 1.75–2.00 nm² 로 14 % 다르다. Ta-LLZO −9.05 vs Sn-LPS −11.12 는\n논문 프레임이지 정당한 비교가 아니다. ==쌍 안 비교만 방어 가능.==",
+   "who": ""
+  },
+  {
+   "anchor": "4f. ML 설정 (본문 §2 마지막 문단이 전부다)",
+   "at": "2026-08-28 14:50",
+   "edited_at": "2026-08-28 14:51",
+   "history": [
+    {
+     "at": "2026-08-28 14:50",
+     "text": "RF, GBRT, XGB, SVR의 예측 정확도를 MAE, MSE, RMSE, R²로 평가했다. GBRT가 형성에너지 예측에서 R² 0.99, MAE 0.12로 가장 우수했고, RF는 확산장벽에서 R² 0.93을 보였다. GBRT는 선행 연구 모델들(Table S3)보다 낮은 MAE와 높은 R²를 달성했다. 따라서 형성에너지는 GBRT, 확산장벽은 RF로 예측하기로 했다."
+    }
+   ],
+   "id": "c1787896255835",
+   "text": "**RF, GBRT, XGB, SVR**의 예측 정확도를** MAE, MSE, RMSE, R²**로 평가했다. **GBRT가 형성에너지 예측에서 R² 0.99**, MAE 0.12로 가장 우수했고, **RF는 확산장벽에서 R² 0.93을 보였다**. GBRT는 선행 연구 모델들(Table S3)보다 낮은 MAE와 높은 R²를 달성했다. 따라서 형성에너지는 GBRT, 확산장벽은 RF로 예측하기로 했다.",
+   "who": ""
+  },
+  {
+   "anchor": "GBRT · RF · SVR · XGB 4종",
+   "at": "2026-08-28 15:11",
+   "id": "c1787897519910",
+   "text": "RF (Random Forest) — 배깅\n\n비유: 독립적인 심사위원 100명의 평균 점수\n\n100명이 서로 상의 안 하고 동시에 각자 채점해. 그리고 그냥 평균 내.\n\n다만 심사위원들이 서로 너무 비슷하면 평균 내는 의미가 없으니까, 일부러 다르게 만들어:\n\n각 트리마다 데이터를 복원추출로 다시 샘플링(bootstrap) → 서로 다른 데이터를 봄\n각 분기마다 feature를 일부만 랜덤하게 골라서 그중 최선을 선택 → 서로 다른 관점\n\n이 논문 맥락으로 치면, 트리 A는 \"전기음성도부터 본다\", 트리 B는 \"frozen γf부터 본다\" 식으로 갈라지는 거야.\n\n효과: variance 감소. 개별 트리는 과적합해도 평균 내면 상쇄됨.\n성격: 안정적, 하이퍼파라미터에 둔감, 과적합 잘 안 함. \"무난한 기본값\"\n약점: 편향(bias)은 못 줄여. 그리고 평균을 내니까 극단값을 잘 못 맞춰.",
    "who": ""
   }
  ]
