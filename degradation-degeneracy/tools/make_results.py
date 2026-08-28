@@ -27,6 +27,14 @@ import yaml
 log = logging.getLogger(__name__)
 
 
+#: ★ 14차 발견 6 — 목적함수 간 비교를 인용해야 하는 **공정 paired 문서**.
+#:   기본 RESULTS 는 adaptive 조기 종료 + warm start 연쇄가 있는 비대칭
+#:   pipeline 결과라, 목적함수 사이의 우열을 그대로 인용하면 가중치가 아니라
+#:   optimizer 난이도를 비교하게 된다. paired 문서에만 경고를 두면 기본 문서를
+#:   먼저 여는 사람에게는 안 보이므로, **읽히는 쪽**에서 이 이름을 가리킨다.
+PAIRED_RESULTS_DOC = "docs/RESULTS_PAIRED_FIXED5.md"
+
+
 def _pct(x, digits: int = 0) -> str:
     return "—" if x is None or pd.isna(x) else f"{100 * float(x):.{digits}f}%"
 
@@ -75,7 +83,8 @@ def _warm_start_asymmetry(fits) -> str | None:
             f"early stop off의 paired 재실행이 필요합니다.")
 
 
-def _conclusion(cmp_res: dict, summary: dict, fits=None) -> list[str]:
+def _conclusion(cmp_res: dict, summary: dict, fits=None,
+                paired: bool = False) -> list[str]:
     """핵심 결론 3줄 — 숫자에서 직접 만든다."""
     tbl = pd.DataFrame(cmp_res["table"]).set_index("objective")
     lines = []
@@ -120,6 +129,16 @@ def _conclusion(cmp_res: dict, summary: dict, fits=None) -> list[str]:
         note = _warm_start_asymmetry(fits)
         if note:
             lines.append(note)
+        # ★ 14차 발견 6 — 이 비교는 protocol 에 따라 값이 달라진다. 기본
+        #   문서에서는 어느 문서를 인용해야 하는지 **여기서** 밝힌다.
+        if not paired:
+            lines.append(
+                f"   ⚠ **이 목적함수 비교는 비대칭 pipeline 의 값이다.** 이 문서는 "
+                f"adaptive 조기 종료와 목적함수 간 warm start 연쇄가 켜진 실행에서 "
+                f"나왔으므로, 목적함수 사이의 우열에는 가중치의 가치뿐 아니라 "
+                f"optimizer 난이도가 섞여 있다. **목적함수 간 비교를 인용할 때는 "
+                f"`{PAIRED_RESULTS_DOC}`(`--no-adaptive --no-warm-start`, restart "
+                f"고정) 의 값을 쓰고 이 문서의 값과 섞지 말 것.**")
     elif base in tbl.index:
         lines.append(f"1. 기존 목적함수({base})의 degeneracy는 "
                      f"{_pct(tbl.loc[base, 'degenerate_frac'])}다.")
@@ -694,7 +713,10 @@ def build(in_dir, out_path="docs/RESULTS.md", repo_root=".") -> Path:
 
     # ── 결론 ──
     P.append("## 핵심 결론\n")
-    for line in _conclusion(cmp_res, summary, fits):
+    # ★ 14차 발견 6 — 이 보고서가 공정 paired 실행인지 (위 배너와 같은 기준)
+    _is_paired = (_mopt0.get("adaptive") is False
+                  and _mspec0.get("warm_start") is False)
+    for line in _conclusion(cmp_res, summary, fits, paired=_is_paired):
         P.append(line + "\n")
 
     # ── 한계 (결론 바로 밑) ──
@@ -1083,13 +1105,23 @@ def build(in_dir, out_path="docs/RESULTS.md", repo_root=".") -> Path:
     P.append("```bash")
     P.append("./scripts/setup_env.sh && source .venv/bin/activate")
     P.append("./run.sh --mode verify")
-    P.append(f"./run.sh --mode grid --config configs/grid_fine.yaml "
-             f"--nproc $(nproc) --out {in_dir}")
-    # ★ 13차 발견 6 — 재현 명령을 **이 산출물의 run_spec 에서** 만든다.
-    #   예전에는 항상 기본 fit 명령이라, paired(--no-adaptive --no-warm-start)
-    #   보고서를 보고 그대로 실행하면 다른 비대칭 pipeline 이 돌았다.
+    # ★ 14차 발견 6 — grid 의 `--out` 과 fit 의 `--in` 은 **곡선 producer
+    #   디렉터리**다. 예전에는 둘 다 fit 실행 디렉터리(`in_dir`)를 가리켜서,
+    #   그대로 따라 하면 곡선을 fit 산출물 위에 만들라는 지시가 됐다.
+    #   producer 경로는 fit manifest 의 `input` 에 있다 (`src/fitting.py`).
     _rs = manifest.get("run_spec") or {}
-    _fit = [f"./run.sh --mode fit   --in {in_dir} --nproc $(nproc)"]
+    _prod_dir = manifest.get("input")
+    if _prod_dir:
+        P.append(f"./run.sh --mode grid --config configs/grid_fine.yaml "
+                 f"--nproc $(nproc) --out {_prod_dir}")
+        _fit = [f"./run.sh --mode fit   --in {_prod_dir} --out {in_dir} "
+                f"--nproc $(nproc)"]
+    else:
+        # 모르면 지어내지 않는다 — 실행 가능한 틀린 명령이 가장 나쁘다
+        P.append("# ⚠ manifest 에 곡선 producer 경로가 기록되지 않아 grid·fit "
+                 "명령을 만들 수 없다.")
+        P.append("#   (이 artifact 는 producer 를 봉인하지 않은 옛 형식이다)")
+        _fit = []
     if _rs.get("objective_order"):
         _fit.append(f"--objective {','.join(_rs['objective_order'])}")
     if _rs.get("reference") and _rs["reference"] != "grid":
@@ -1102,7 +1134,12 @@ def build(in_dir, out_path="docs/RESULTS.md", repo_root=".") -> Path:
         _fit.append("--no-adaptive")
     if _rs.get("warm_start") is False:
         _fit.append("--no-warm-start")
-    P.append(" ".join(_fit))
+    # ★ 14차 발견 6 — clean 곡선으로 돌린 실행은 `--clean` 이 있어야 한다.
+    #   빠지면 재현 실행이 `v_full_noisy` 로 fitting 해 다른 숫자를 낸다.
+    if (_rs.get("v_col") or manifest.get("target_column")) == "v_full":
+        _fit.append("--clean")
+    if _fit:
+        P.append(" ".join(_fit))
     P.append(f"./run.sh --mode score --in {in_dir}")
     P.append(f"./run.sh --mode hessian --in {in_dir}")
     P.append(f"./run.sh --mode report --in {in_dir}")

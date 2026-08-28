@@ -1119,12 +1119,35 @@ def validate_curves_provenance(curves_dir, repo_root=None) -> dict:
             if _badv:
                 _why = f"baseline 값이 유한 실수가 아니다: {_badv[:3]}"
             else:
-                _badg = [k for k, v in _rg.items()
-                         if not isinstance(v, (int, float, bool))
-                         or (isinstance(v, (int, float)) and not isinstance(v, bool)
-                             and not _m.isfinite(v))]
-                if _badg:
-                    _why = f"guards 값이 스칼라가 아니다: {_badg[:3]}"
+                # ★ 14차 발견 5 — guards 는 canonical 3키다. 예전 검사는
+                #   "스칼라인가" 뿐이라 모르는 키도, bool 도(→ float(True)=1.0
+                #   이 max_mode_value 가 되어 불능 판정이 [0,0.9] → [0,1.0] 로
+                #   넓어진다 = 인용 모집단의 분모가 바뀐다), 키 누락도(→ 재검이
+                #   조용히 코드 기본값을 쓴다), 범위 밖 값도 통과했다.
+                from src.modes import GUARD_DEFAULTS as _GD
+                from src.modes import GUARD_RANGES as _GR
+                _gmiss = sorted(set(_GD) - set(_rg))
+                _gextra = sorted(set(_rg) - set(_GD))
+                if _gmiss or _gextra:
+                    _why = (f"guards 키가 canonical 3키 {sorted(_GD)} 와 다르다 "
+                            f"(없음 {_gmiss}, 잉여 {_gextra}) — 빠진 키는 재검이 "
+                            f"조용히 코드 기본값으로 돌고, 잉여 키는 아무 효과도 "
+                            f"없이 서명에만 남는다")
+                else:
+                    _badg = []
+                    for _k, _v in _rg.items():
+                        _lo, _hi, _loin, _hiin = _GR[_k]
+                        if (isinstance(_v, bool)
+                                or not isinstance(_v, (int, float))
+                                or not _m.isfinite(_v)
+                                or not ((_lo <= _v if _loin else _lo < _v)
+                                        and (_v <= _hi if _hiin else _v < _hi))):
+                            _badg.append(
+                                f"{_k}={_v!r} (허용 "
+                                f"{'[' if _loin else '('}{_lo}, {_hi}"
+                                f"{']' if _hiin else ')'}, bool 불가)")
+                    if _badg:
+                        _why = f"guards 값이 canonical 범위 밖이다: {_badg[:3]}"
     checks["replay_recipe_schema"] = (_why is None, _why or "")
     _ds = spec.get("discharged_state")
     import math as _math

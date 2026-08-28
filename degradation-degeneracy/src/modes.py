@@ -23,6 +23,7 @@
 
 from __future__ import annotations
 
+import math
 from dataclasses import dataclass
 
 from src.baseline import DischargedState
@@ -40,6 +41,56 @@ P_PE_VF = "Positive electrode active material volume fraction"
 
 class InfeasibleConditionError(ValueError):
     """물리적으로 불가능한 조합 (guards 위반). grid에서 failed.csv로 기록."""
+
+
+#: ★ 14차 발견 5 — guard 의 **canonical 3키**와 기본값. 여기가 정본이다.
+#:   서명되는 `replay_recipe.guards` 는 이 3키를 모두 채운 완전한 형태여야
+#:   한다. 빠진 키가 있으면 재검이 조용히 이 기본값을 쓰는데, producer 의
+#:   config 가 달랐다면 **재검 기준이 producer 와 다른 채로** "서명된 recipe 로
+#:   재검했다" 가 된다.
+GUARD_DEFAULTS = {"max_mode_value": 0.9, "max_porosity": 0.95, "min_vf": 1.0e-4}
+
+#: guard 별 허용 범위 `(lo, hi, lo 포함, hi 포함)`.
+#:   max_mode_value  0 ≤ v < 1   — 1 이면 i→1 에서 /(1-i) 가 발산한다
+#:   max_porosity    0 < v ≤ 1   — porosity 는 부피분율이라 1 을 넘을 수 없다
+#:   min_vf          0 < v < 1
+GUARD_RANGES = {"max_mode_value": (0.0, 1.0, True, False),
+                "max_porosity": (0.0, 1.0, False, True),
+                "min_vf": (0.0, 1.0, False, False)}
+
+
+def canonical_guards(guards: dict | None) -> dict:
+    """guards 를 canonical 3키로 정규화한다 — 빠진 키는 채우고, 이상하면 죽는다.
+
+    ★ 14차 발견 5 — 예전에는 검증이 "스칼라인가" 뿐이었다. 그래서 모르는 키도,
+    **bool 도**, 범위 밖 값도 통과했다. bool 이 특히 나쁘다: `max_mode_value:
+    True` 는 `float(True)=1.0` 이라 불능 판정이 `[0, 0.9]` 에서 `[0, 1.0]` 로
+    넓어진다 — 불능이던 조건이 풀리고, 그건 인용 모집단의 **분모**가 달라진다는
+    뜻이다.
+
+    `validate_config` 는 guards 를 아예 보지 않으므로(실측: `src/config.py` 에
+    guards 언급 없음) config 오타를 잡는 관문도 여기다. 10시간짜리 실행이
+    끝난 뒤가 아니라 **서명 시점에** 죽는 것이 목적이다.
+    """
+    g = dict(guards or {})
+    unknown = sorted(set(g) - set(GUARD_DEFAULTS))
+    if unknown:
+        raise ValueError(
+            f"모르는 guard 키: {unknown} (허용 {sorted(GUARD_DEFAULTS)}) — "
+            f"오타면 그 guard 는 조용히 기본값으로 돌아간다")
+    out = dict(GUARD_DEFAULTS)
+    for k, v in g.items():
+        lo, hi, lo_in, hi_in = GUARD_RANGES[k]
+        if isinstance(v, bool) or not isinstance(v, (int, float)) \
+                or not math.isfinite(v) \
+                or not ((lo <= v if lo_in else lo < v)
+                        and (v <= hi if hi_in else v < hi)):
+            raise ValueError(
+                f"guard {k}={v!r} 이 허용 범위 밖이다 "
+                f"({'[' if lo_in else '('}{lo}, {hi}{']' if hi_in else ')'}, "
+                f"bool 불가)")
+        out[k] = float(v)
+    return out
 
 
 @dataclass(frozen=True)
@@ -141,10 +192,10 @@ def build_overrides(lli: float, lam_pe: float, lam_ne: float,
       (실측: lli=1e-4 조건의 r=0.98264, lam_pe_hat=0.0158, lli_hat=0.0157)
       영 조건도 완방 농도를 명시해 모든 조건을 같은 프레임에 둔다.
     """
-    g = guards or {}
-    max_mode = float(g.get("max_mode_value", 0.9))
-    max_por = float(g.get("max_porosity", 0.95))
-    min_vf = float(g.get("min_vf", 1e-4))
+    g = canonical_guards(guards)
+    max_mode = g["max_mode_value"]
+    max_por = g["max_porosity"]
+    min_vf = g["min_vf"]
 
     for name, v in (("lli", lli), ("lam_pe", lam_pe), ("lam_ne", lam_ne)):
         if not 0 <= v <= max_mode:

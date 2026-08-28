@@ -208,17 +208,32 @@ def run_check(sweep_dir, main_dir, pairs=DEFAULT_PAIRS, tol: float = 0.02) -> di
             p["일치"] = False
             p["판정"] = ("불일치 — 끝점끼리 조건 집합이 다르다 "
                         f"(digest {sorted(shas)}). " + str(p.get("판정", "")))
-    # 서명된 digest 가 있으면 그것과도 대조한다
-    if signed_sha and shas and next(iter(shas)) != signed_sha:
-        res["끝점_서명digest_일치"] = False
+    # ★ 14차 발견 3 — 서명된 조건 digest 는 **필수**다 (없으면 fail-closed).
+    #   조건 "수" 만으로는 집합이 고정되지 않는다. 두 끝점을 똑같이 본 실행의
+    #   절반으로 줄이고 n_conditions 를 그 수로 맞추면, 수도 맞고 끝점끼리도
+    #   같고 sweep 조건이 전부 본 실행에 있어서 **일치가 났다 (실측)**. sweep 이
+    #   어느 절반을 봤는지를 고정하는 것이 digest 의 역할이다.
+    def _fail_all(msg: str) -> None:
         for p in res["pairs"]:
             p["일치"] = False
-            p["판정"] = (f"불일치 — sweep 조건 digest {next(iter(shas))} ≠ 서명 "
-                        f"{signed_sha}. " + str(p.get("판정", "")))
-    elif signed_sha:
+            p["판정"] = f"불일치 — {msg} " + str(p.get("판정", ""))
+
+    if not signed_sha:
+        res["끝점_서명digest_일치"] = False
+        _fail_all("sweep manifest 의 run_spec.condition_ids_sha256 (서명된 조건 "
+                  "digest) 가 없다. 조건 수만으로는 sweep 이 본 실행의 어느 "
+                  "부분집합을 봤는지 고정되지 않는다.")
+    elif not shas:
+        res["끝점_서명digest_일치"] = False
+        _fail_all("끝점의 조건집합 digest 를 계산할 수 없어 서명과 대조하지 못했다.")
+    elif next(iter(shas)) != signed_sha:
+        res["끝점_서명digest_일치"] = False
+        _fail_all(f"sweep 조건 digest {next(iter(shas))} ≠ 서명 {signed_sha}.")
+    else:
         res["끝점_서명digest_일치"] = True
     res["일치"] = (bool(res["pairs"]) and all(p.get("일치") for p in res["pairs"])
-                  and res["끝점_조건집합_동일"])
+                  and res["끝점_조건집합_동일"]
+                  and res["끝점_서명digest_일치"])
     return res
 
 
@@ -258,7 +273,11 @@ def main() -> None:
                     print(f"  {k:22s} {s[k]:12.4f} {m[k]:12.4f}")
         print(f"  → {p['판정']}")
 
-    print(f"\n전체 일치: {res['일치']}")
+    # ★ 14차 발견 3 — 조건집합을 무엇으로 고정했는지 요약에 드러낸다
+    print(f"\n끝점 조건집합 동일: {res.get('끝점_조건집합_동일')}  ·  "
+          f"서명 digest 대조: {res.get('끝점_서명digest_일치')} "
+          f"(서명 {res.get('signed_condition_ids_sha256') or '없음'})")
+    print(f"전체 일치: {res['일치']}")
     if a.json:
         Path(a.json).write_text(json.dumps(res, ensure_ascii=False, indent=2),
                                 encoding="utf-8")

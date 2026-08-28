@@ -390,7 +390,7 @@ def test_pristine_p_ini_uses_same_warm_start_chain_as_main_fit(monkeypatch, tmp_
     assert p_ini["pocv_dvdq"][0] == 1.50, "seed 제공자는 warm을 받지 않는다"
 
 
-def _tiny_curves(tmp_path, n=48, n_cond=3, n_failed=0):
+def _tiny_curves(tmp_path, n=48, n_cond=3, n_failed=0, guards=None):
     """_run_fit_locked을 실제로 태울 수 있는 최소 curves.parquet.
 
     ★ 10차 발견 1 — `n_failed` 를 주면 실제 형식의 failed.csv 와 의도 = 관측
@@ -417,10 +417,11 @@ def _tiny_curves(tmp_path, n=48, n_cond=3, n_failed=0):
                          "v_full": v_full, "v_pe": v_full + v_ne, "v_ne": v_ne,
                          "q_mah": q, "lli": lli, "lam_pe": pe, "lam_ne": ne,
                          "noise": 0.0})
-    return sign_producer(tmp_path, pd.DataFrame(rows), n_infeasible=n_failed)
+    return sign_producer(tmp_path, pd.DataFrame(rows), n_infeasible=n_failed,
+                         guards=guards)
 
 
-def sign_producer(out_dir, df, n_infeasible=0):
+def sign_producer(out_dir, df, n_infeasible=0, guards=None):
     """curves df 를 **실제 run_grid 형식의 producer artifact** 로 서명해 쓴다.
 
     ★ F74 — spec 서명·행별 grid_run_sig·시작 기록이 필요하고, ★ 11차 발견 2·3
@@ -525,7 +526,8 @@ def sign_producer(out_dir, df, n_infeasible=0):
             # ★ 11차 발견 3 — 실패 라벨 재검 기준을 producer 가 서명한다
             "replay_recipe": {
                 "baseline": {k: float(v) for k, v in cfg["baseline"].items()},
-                "guards": cfg.get("guards") or {}},
+                # ★ 14차 발견 5 — guards 를 바꿔 끼워 schema 검사를 태울 수 있게
+                "guards": cfg.get("guards") if guards is None else guards},
             "source_digest": source_digest(), "env": env_fingerprint()}
     sig = _hl.sha1(_json.dumps(spec, sort_keys=True, default=str)
                    .encode()).hexdigest()[:12]
@@ -2079,6 +2081,74 @@ def test_noise_family_must_not_split_across_observed_and_failed(tmp_path):
     # 실패 라벨 자체는 참이다 — 기존 검사는 통과한다는 것을 함께 고정한다
     assert v["checks"]["실패사유_불능재검"][0]
     assert v["checks"]["실패목록_ID결합"][0]
+
+
+def test_replay_recipe_guards_must_be_canonical(tmp_path):
+    """★ 14차 발견 5 — 서명된 `replay_recipe.guards` 는 canonical 3키여야 한다.
+
+    예전 검사는 "스칼라인가" 만 봤다. 그래서 전부 통과했다:
+
+      · 모르는 키 (`bogus`) — config 오타가 조용히 지나간다
+      · **bool** — `max_mode_value: True` 는 `float(True)=1.0` 이라
+        불능 판정이 `[0, 0.9]` → `[0, 1.0]` 으로 넓어진다. 불능이던 조건이
+        풀리게 되고, 그건 인용 모집단의 **분모**가 달라진다는 뜻이다
+      · 키 누락 — `build_overrides` 가 조용히 코드 기본값을 쓴다. producer 의
+        config 가 달랐다면 재검이 producer 와 다른 기준으로 도는데, 서명은
+        "이 recipe 로 재검했다" 고 말한다
+      · 범위 밖 값 — `max_mode_value: 5.0`, `max_porosity: 0`, `min_vf: -1e-4`
+
+    guards 는 `validate_config` 도 안 보고 있었다(실측: `src/config.py` 에
+    guards 언급 자체가 없다). 그래서 여기가 유일한 관문이다.
+    """
+    from src.io import validate_curves_provenance
+    from src.modes import GUARD_DEFAULTS
+
+    G = dict(GUARD_DEFAULTS)
+    base = _tiny_curves(tmp_path / "ok")
+    v = validate_curves_provenance(base)
+    assert v["ok"], v["fail"]
+    assert v["checks"]["replay_recipe_schema"][0]
+
+    cases = {
+        "unknown_key": {**G, "bogus": 1.0},
+        "bool_value": {**G, "max_mode_value": True},
+        "missing_key": {k: x for k, x in G.items() if k != "max_mode_value"},
+        "empty": {},
+        "mode_too_high": {**G, "max_mode_value": 5.0},
+        "mode_is_one": {**G, "max_mode_value": 1.0},      # 0 ≤ v < 1
+        "porosity_zero": {**G, "max_porosity": 0.0},      # 0 < v ≤ 1
+        "min_vf_negative": {**G, "min_vf": -1e-4},        # 0 < v < 1
+        "min_vf_one": {**G, "min_vf": 1.0},
+    }
+    for name, g in cases.items():
+        d = _tiny_curves(tmp_path / name, guards=g)
+        assert "replay_recipe_schema" in validate_curves_provenance(d)["fail"], \
+            f"{name}: guards={g} 를 통과시켰다"
+
+    # 3키가 정확히 있고 범위 안이면 통과한다 (경계 포함 확인)
+    for g in ({**G, "max_mode_value": 0.0}, {**G, "max_porosity": 1.0}):
+        d = _tiny_curves(tmp_path / f"okrange{g['max_porosity']}{g['max_mode_value']}",
+                         guards=g)
+        assert validate_curves_provenance(d)["checks"]["replay_recipe_schema"][0]
+
+
+def test_canonical_guards_fills_and_rejects():
+    """서명 전에 3키를 **채우고**, 이상하면 거기서 죽는다 (10시간 뒤가 아니라)."""
+    import pytest
+
+    from src.modes import GUARD_DEFAULTS, canonical_guards
+
+    assert canonical_guards(None) == GUARD_DEFAULTS
+    assert canonical_guards({}) == GUARD_DEFAULTS
+    assert canonical_guards({"max_mode_value": 0.5}) == {
+        **GUARD_DEFAULTS, "max_mode_value": 0.5}
+
+    with pytest.raises(ValueError, match="모르는 guard 키"):
+        canonical_guards({"bogus": 1.0})
+    with pytest.raises(ValueError, match="범위"):
+        canonical_guards({"max_mode_value": True})
+    with pytest.raises(ValueError, match="범위"):
+        canonical_guards({"min_vf": 0.0})
 
 
 def test_worker_actual_solver_must_match_signature(tmp_path, monkeypatch):

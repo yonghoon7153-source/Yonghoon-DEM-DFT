@@ -222,6 +222,128 @@ def test_make_results_builds_document(tmp_path):
     assert text.count("%") > 10
 
 
+def _results_artifact(tmp_path, manifest=None,
+                      objectives=("pocv", "pocv_dvdq")):
+    """`build` 를 태울 수 있는 최소 결과 디렉터리 (+ 선택적 fit manifest)."""
+    import yaml
+
+    from tools.compare_objectives import run_compare
+
+    d = tmp_path / "res"
+    d.mkdir(parents=True)
+    _scored(_fits(objectives=objectives)).to_parquet(
+        d / "degeneracy_map.parquet", index=False)
+    (d / "degeneracy_summary.yaml").write_text(
+        yaml.safe_dump({"n_rows_recoverable": 100,
+                        "coverage_gap": {"max_lam_pe_at_low_lli": 0.1,
+                                         "max_lam_pe_overall": 0.2}}),
+        encoding="utf-8")
+    if manifest is not None:
+        (d / "manifest.yaml").write_text(yaml.safe_dump(manifest),
+                                         encoding="utf-8")
+    run_compare(d, d)
+    return d
+
+
+def test_results_reproduce_command_uses_producer_path(tmp_path):
+    """★ 14차 발견 6 — 재현 명령이 곡선 producer 경로를 쓰지 않았다.
+
+    예전 출력은 fit 실행 디렉터리 하나로 두 단계를 다 가리켰다.
+
+        ./run.sh --mode grid ... --out <fit 디렉터리>     ← 곡선을 여기 만들라고
+        ./run.sh --mode fit   --in <fit 디렉터리> ...      ← 거기서 읽으라고
+
+    실제 실행은 `--out <producer>` 로 곡선을 만들고
+    `--in <producer> --out <fit>` 으로 fitting 했다. 그대로 따라 하면 다른
+    배치가 되고, 최악의 경우 기존 fit 산출물 위에 곡선을 덮어쓴다. 보고서의
+    재현 명령은 "이 숫자를 어떻게 다시 만드는가" 의 정본이라 틀리면 안 된다.
+
+    fit manifest 는 producer 경로를 `input` 에 갖고 있다 (`src/fitting.py`).
+    """
+    from tools.make_results import build
+
+    d = _results_artifact(tmp_path, manifest={
+        "run_type": "fit",
+        "input": "results/grid_curves_v4",
+        "target_column": "v_full_noisy",
+        "run_spec": {"v_col": "v_full_noisy", "objective_order": ["pocv_dvdq"]},
+    })
+    text = build(d, tmp_path / "RESULTS.md", repo_root=tmp_path).read_text(
+        encoding="utf-8")
+
+    assert "--mode grid" in text
+    grid_line = next(ln for ln in text.splitlines() if "--mode grid" in ln)
+    fit_line = next(ln for ln in text.splitlines() if "--mode fit" in ln)
+    assert "--out results/grid_curves_v4" in grid_line, grid_line
+    assert "--in results/grid_curves_v4" in fit_line, fit_line
+    assert f"--out {d}" in fit_line, fit_line
+    assert "--clean" not in fit_line, "noisy 실행인데 --clean 을 붙였다"
+
+
+def test_results_reproduce_command_emits_clean_flag(tmp_path):
+    """★ 14차 발견 6 — clean 곡선으로 돌린 실행은 `--clean` 이 있어야 한다.
+
+    `--clean` 이 빠지면 재현 실행은 `v_full_noisy` 로 fitting 한다 — 같은
+    명령이 다른 target 을 쓰므로 숫자가 재현되지 않는다.
+    """
+    from tools.make_results import build
+
+    d = _results_artifact(tmp_path, manifest={
+        "run_type": "fit",
+        "input": "results/grid_curves_v4",
+        "target_column": "v_full",
+        "run_spec": {"v_col": "v_full"},
+    })
+    text = build(d, tmp_path / "RESULTS.md", repo_root=tmp_path).read_text(
+        encoding="utf-8")
+    fit_line = next(ln for ln in text.splitlines() if "--mode fit" in ln)
+    assert "--clean" in fit_line, fit_line
+
+
+def test_results_reproduce_command_fails_closed_without_producer(tmp_path):
+    """producer 경로가 기록에 없으면 **실행 가능한 명령을 지어내지 않는다.**"""
+    from tools.make_results import build
+
+    d = _results_artifact(tmp_path, manifest={"run_type": "fit"})
+    text = build(d, tmp_path / "RESULTS.md", repo_root=tmp_path).read_text(
+        encoding="utf-8")
+    assert "producer 경로가 기록되지 않아" in text
+    assert "--mode grid --config" not in text, \
+        "producer 경로를 모르는데 grid 명령을 만들어 냈다"
+
+
+def test_default_results_points_objective_comparison_to_paired_doc(tmp_path):
+    """★ 14차 발견 6 — 기본(비대칭) 보고서의 목적함수 비교는 **paired 문서를
+    명시 인용**해야 한다.
+
+    paired 문서에는 "기본 RESULTS 와 섞지 말라" 는 경고가 있지만, 기본 문서를
+    먼저 여는 사람에게는 그 경고가 보이지 않는다. 경고는 **읽히는 쪽**에
+    있어야 한다.
+    """
+    from tools.make_results import PAIRED_RESULTS_DOC, build
+
+    # 기본(비대칭) 실행 — adaptive 켜짐 / warm start 켜짐
+    d = _results_artifact(tmp_path, manifest={
+        "run_type": "fit", "input": "results/grid_curves_v4",
+        "run_spec": {"optimizer": {"adaptive": True}, "warm_start": True},
+    }, objectives=("pocv_dvdq", "pocv_dvdq_dqdv"))
+    text = build(d, tmp_path / "RESULTS.md", repo_root=tmp_path).read_text(
+        encoding="utf-8")
+    assert PAIRED_RESULTS_DOC in text, "paired 문서를 이름으로 가리키지 않는다"
+
+    # paired 문서 자신은 자기를 인용하라고 하지 않는다 (이미 자기 배너가 있다)
+    d2 = _results_artifact(tmp_path / "p", manifest={
+        "run_type": "fit", "input": "results/grid_curves_v4",
+        "run_spec": {"optimizer": {"adaptive": False}, "warm_start": False,
+                     "n_restarts": 5, "objective_order": ["pocv_dvdq"]},
+    }, objectives=("pocv_dvdq", "pocv_dvdq_dqdv"))
+    t2 = build(d2, tmp_path / "RESULTS_PAIRED.md", repo_root=tmp_path).read_text(
+        encoding="utf-8")
+    assert "공정 paired 비교" in t2
+    assert PAIRED_RESULTS_DOC not in t2, \
+        "paired 문서가 자기를 인용하라고 한다 — 경고가 protocol 로 갈리지 않는다"
+
+
 def test_run_compare_writes_expected_artifacts(tmp_path):
     from tools.compare_objectives import run_compare
 
@@ -542,6 +664,62 @@ def test_seed_objective_only_when_w_grid_lacks_zero():
     assert next(iter(without_zero)) == SEED_NAME, \
         "w=0이 없으면 seed 제공자가 없어 아무도 warm start를 못 받는다"
     assert without_zero[SEED_NAME]["w_dqdv"] == 0.0
+
+
+def test_build_weight_objectives_rejects_colliding_names():
+    """★ 14차 발견 4 — 이름이 `f"wdqdv_{w:.2f}"` 라 소수 셋째 자리부터 충돌한다.
+
+    실측: `build_weight_objectives([0, 0.001])` →
+
+        {'wdqdv_0.00': {'w_pocv': 1.0, 'w_dvdq': 1.0, 'w_dqdv': 0.001}}
+
+    두 가지가 한꺼번에 깨진다.
+      · dict comprehension 이 뒤엣것으로 덮어써 **w=0 seed 제공자가 조용히
+        사라진다.** `any(w == 0.0)` 는 참이라 `_seed` 도 안 끼워진다 → 아무도
+        warm start 를 못 받는다 (F20d 가 잰 바로 그 상태로 되돌아간다).
+      · 남은 하나는 이름이 `wdqdv_0.00` 인데 실제 가중치는 0.001 이다.
+        `check_sweep_consistency` 는 이 이름을 본 실행의 `pocv_dvdq`
+        (w_dqdv=0) 와 짝지어 "정의가 같다" 고 비교한다 — 다른 목적함수를
+        같은 것으로 대조하게 된다.
+
+    이름 형식을 바꾸면 기존 끝점 짝(`wdqdv_0.00`/`wdqdv_1.00`)과 산출물이
+    깨지므로, **충돌을 거부**한다.
+    """
+    import pytest
+
+    from src.weight_sweep import build_weight_objectives
+
+    with pytest.raises(ValueError, match="이름이 충돌"):
+        build_weight_objectives([0, 0.001])
+    with pytest.raises(ValueError, match="이름이 충돌"):
+        build_weight_objectives([0.5, 0.499])
+
+    # 2자리에서 구분되는 격자는 그대로 통과한다
+    objs = build_weight_objectives([0.0, 0.25, 1.0])
+    assert list(objs) == ["wdqdv_0.00", "wdqdv_0.25", "wdqdv_1.00"]
+    assert [o["w_dqdv"] for o in objs.values()] == [0.0, 0.25, 1.0]
+
+
+def test_build_weight_objectives_rejects_invalid_weights():
+    """★ 14차 발견 4 — 비유한·음수 가중치가 그대로 통과했다.
+
+    실측: `[0, nan]` → `wdqdv_nan` 이 만들어지고, `[0, -0.5]` →
+    `wdqdv_-0.50` 이 만들어진다. NaN 가중치는 J 를 통째로 NaN 으로 만들고,
+    음수 가중치는 목적함수를 아래로 발산시켜 "최적 w" 를 그쪽으로 끌고 간다.
+    """
+    import pytest
+
+    from src.weight_sweep import build_weight_objectives
+
+    for bad in ([0.0, float("nan")], [0.0, float("inf")], [0.0, -0.5]):
+        with pytest.raises(ValueError, match="유한한 0 이상"):
+            build_weight_objectives(bad)
+    with pytest.raises(ValueError, match="유한한 0 이상"):
+        build_weight_objectives([0.0, 1.0], w_pocv=float("nan"))
+    with pytest.raises(ValueError, match="유한한 0 이상"):
+        build_weight_objectives([0.0, 1.0], w_dvdq=-1.0)
+    with pytest.raises(ValueError, match="비어 있다"):
+        build_weight_objectives([])
 
 
 def test_sweep_yaml_warns_when_settings_diverge(tmp_path, monkeypatch):
@@ -2449,3 +2627,57 @@ def test_sweep_checker_is_fail_closed(tmp_path):
     assert not r["일치"], "manifest 없이 일치로 판정했다"
     mp.write_text(bak, encoding="utf-8")
     assert run_check(sub, d)["일치"], "복구 후 기준 상태로 돌아와야 한다"
+
+
+def test_sweep_checker_requires_signed_condition_digest(tmp_path):
+    """★ 14차 발견 3 — `condition_ids_sha256` 가 없으면 fail-closed 여야 한다.
+
+    반례: 두 끝점을 **똑같이** 본 실행의 절반으로 줄이고 `n_conditions` 를 그
+    줄어든 수로 맞춘 뒤 `condition_ids_sha256` 를 지우면 —
+
+      · 조건 수는 서명된 값과 일치하고 (`len(sweep_ids) == expected`)
+      · 끝점끼리 조건집합도 같고 (`끝점_조건집합_동일`)
+      · sweep 조건이 전부 본 실행에 있으니 `missing_in_main` 도 비어 있다
+
+    → "일치" 가 난다. sweep 이 본 실행의 **어느** 절반을 본 것인지는 아무도
+    확인하지 않은 채로 최적 w 가 인용된다. 조건 수만으로는 집합을 고정할 수
+    없고, 그 역할이 바로 digest 다.
+
+    `n_conditions` 부재는 이미 fail-closed 인데(13차 발견 2) digest 부재는
+    아니었다 — 더 강한 쪽이 빠져 있었다.
+    """
+    import yaml
+
+    from tools.check_sweep_consistency import run_check
+
+    d, _ = _complete_artifact(tmp_path,
+                              objectives=("pocv_dvdq", "pocv_dvdq_dqdv"))
+    sub = _wsweep_run(d)
+    assert run_check(sub, d)["일치"], "기준 상태가 일치여야 이 테스트가 유효하다"
+
+    # 두 끝점을 같은 절반으로 줄인다
+    f = pd.read_parquet(sub / "fits.parquet")
+    conds = sorted(set(f["cond_id"]))
+    keep = conds[: len(conds) // 2]
+    assert keep and len(keep) < len(conds), conds
+    f[f["cond_id"].isin(keep)].to_parquet(sub / "fits.parquet", index=False)
+
+    # 서명된 조건 수는 줄어든 수로 맞추고, digest 는 지운다
+    mp = sub / "manifest.yaml"
+    man = yaml.safe_load(mp.read_text(encoding="utf-8"))
+    man["run_spec"]["n_conditions"] = len(keep)
+    man["run_spec"].pop("condition_ids_sha256", None)
+    mp.write_text(yaml.safe_dump(man), encoding="utf-8")
+
+    r = run_check(sub, d)
+    assert not r["일치"], (
+        "서명된 조건 digest 없이 '일치' 로 판정했다 — 조건 수만 맞으면 본 "
+        "실행의 어느 부분집합이든 통과한다")
+    assert r.get("끝점_서명digest_일치") is False, r.get("끝점_서명digest_일치")
+    assert any("digest" in str(p.get("판정", "")) for p in r["pairs"]), \
+        [p.get("판정") for p in r["pairs"]]
+
+    # 빈 문자열도 "없음" 과 같게 취급해야 한다
+    man["run_spec"]["condition_ids_sha256"] = ""
+    mp.write_text(yaml.safe_dump(man), encoding="utf-8")
+    assert not run_check(sub, d)["일치"], "빈 digest 를 일치로 판정했다"

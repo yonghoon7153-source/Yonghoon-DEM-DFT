@@ -30,7 +30,8 @@ from src.curves import add_noise, extract_curves
 from src.io import (acquire_run_lock, append_failed, base_manifest, chunk_files,
                     git_info, load_completed, load_failed, mark_completed,
                     merge_chunks, release_run_lock, save_chunk, write_manifest)
-from src.modes import Baseline, InfeasibleConditionError, build_overrides
+from src.modes import (Baseline, InfeasibleConditionError, build_overrides,
+                       canonical_guards)
 from src.runner import make_solver, run_one, solver_name
 
 log = logging.getLogger(__name__)
@@ -248,7 +249,11 @@ def grid_run_spec(cfg: dict, conditions: list[Condition],
         #   없었다. 서명된 recipe 만 쓰면 어느 경로에서 검증하든 같은 기준이다.
         "replay_recipe": {
             "baseline": {k: float(v) for k, v in (cfg.get("baseline") or {}).items()},
-            "guards": cfg.get("guards") or {},
+            # ★ 14차 발견 5 — 3키를 **채워서** 봉인한다. 빠진 채로 봉인하면
+            #   재검이 조용히 코드 기본값으로 돌고, producer 의 config 가
+            #   달랐다면 서명과 실제 기준이 어긋난다. 이상한 값이면 여기서
+            #   즉시 죽는다 (10시간 실행이 끝난 뒤가 아니라).
+            "guards": canonical_guards(cfg.get("guards")),
         },
         # ★ 12차 발견 2 — 요청(cfg.solver)이 아니라 **실제로 쓰인** solver 를
         #   서명에 넣는다. IDAKLU 생성 실패 시 Casadi 로 조용히 fallback 하므로,

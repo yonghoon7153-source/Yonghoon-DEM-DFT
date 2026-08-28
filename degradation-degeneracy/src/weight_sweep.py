@@ -93,8 +93,33 @@ def build_weight_objectives(w_grid=DEFAULT_W_GRID, w_pocv: float = 1.0,
     #   검출되지 않는다. **오름차순으로 정규화**해 seed 제공자(w=0)를 항상
     #   맨 앞에 둔다.
     w_grid = sorted(float(w) for w in w_grid)
-    objs = {obj_name(w): {"w_pocv": w_pocv, "w_dvdq": w_dvdq, "w_dqdv": float(w)}
-            for w in w_grid}
+    # ★ 14차 발견 4 — 가중치를 **이름 짓기 전에** 검증한다.
+    #   비유한·음수가 그대로 통과했다 (실측: `[0, nan]` → `wdqdv_nan`,
+    #   `[0, -0.5]` → `wdqdv_-0.50`). NaN 은 J 를 통째로 NaN 으로 만들고,
+    #   음수는 목적함수를 아래로 발산시켜 "최적 w" 를 그쪽으로 끌고 간다.
+    if not w_grid:
+        raise ValueError("w_grid 가 비어 있다 — sweep 할 목적함수가 없다")
+    bad = [w for w in (*w_grid, w_pocv, w_dvdq)
+           if not np.isfinite(w) or w < 0.0]
+    if bad:
+        raise ValueError(f"가중치는 유한한 0 이상이어야 한다: {bad}")
+    # ★ 14차 발견 4 — 이름이 `wdqdv_{w:.2f}` 라 소수 셋째 자리부터 충돌한다.
+    #   실측: `build_weight_objectives([0, 0.001])` → `{'wdqdv_0.00':
+    #   {..., 'w_dqdv': 0.001}}`. dict 가 뒤엣것으로 덮어써 **w=0 seed
+    #   제공자가 조용히 사라지고**(`any(w == 0.0)` 는 참이라 `_seed` 도 안
+    #   끼워진다 → 아무도 warm start 를 못 받는다), 남은 하나는 이름이
+    #   `wdqdv_0.00` 인데 실제 가중치가 0.001 이라 checker 가 본 실행의
+    #   `pocv_dvdq`(w_dqdv=0) 와 "정의가 같다" 며 대조한다.
+    #   이름 형식을 바꾸면 기존 끝점 짝과 산출물이 깨지므로 **충돌을 거부**한다.
+    names = [obj_name(w) for w in w_grid]
+    if len(set(names)) != len(names):
+        dupes = sorted({n for n in names if names.count(n) > 1})
+        raise ValueError(
+            f"w_grid 의 이름이 충돌한다 (2자리 표기 {dupes}): {w_grid} — "
+            f"목적함수 이름이 1:1 이 아니면 seed 제공자가 사라지고 이름과 실제 "
+            f"가중치가 어긋난다. 0.01 이상 간격의 격자를 쓰라")
+    objs = {n: {"w_pocv": w_pocv, "w_dvdq": w_dvdq, "w_dqdv": float(w)}
+            for n, w in zip(names, w_grid)}
     if not any(float(w) == 0.0 for w in w_grid):
         # dict는 삽입 순서를 지키므로 맨 앞이 곧 seed 제공자가 된다
         return {SEED_NAME: {"w_pocv": w_pocv, "w_dvdq": w_dvdq, "w_dqdv": 0.0}} | objs
