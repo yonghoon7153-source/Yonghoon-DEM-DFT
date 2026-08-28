@@ -16,8 +16,12 @@
    (화학종 S1–S3c·N1–N3 · estimand=adiabatic E_ads+carrier_retention · 게이트 v2 · Stage 0 목록)
 2. ⏳ **회신 R 발송** — `kb/reviews/codex_R_prompt_doped_reopen_v2_2026_08_28.md`
    (붙여넣기 완성본. GO/NO-GO 명시 요구). **R 통과 전 계산 금지.**
-3. R 통과 후: 빌더 확장(build_v7c_trimer → n=4·6, manifest 출력) → Stage 0 Z1–Z5
-   (ORCA r²SCAN-3c, desktop WSL — 외주 불필요, 로컬로 돈다)
+3. ✅ **빌더 확장 완료** (R 대기 중 준비 작업 — 계산 아님):
+   `build_v7c_trimer.py --n 4/6 --holes B,E` — 사슬 성장 일반화 · 홀 배치 선택 ·
+   스핀 섹터 자동(s/t/bs, parity 가드) · **manifest_stage0.json**(estimand_id·조성·
+   전자수·state-selection policy·중단 코드 — 조건 ⑦ 절반). selftest 13건(음성 3) PASS.
+   레거시 트라이머 경로 하위호환 유지.
+   → R 통과 즉시: 데스크탑에서 이완 dimer_neutral.xyz 로 dp4/dp6 생성 · Z1 부터 실행
 4. 병행: 조건 ⑥ 기준 분자 3잡(NUPDOWN=-1·LREAL=F, 외주 ~75분 — neutral 헤드라인과 공유)
    · 조건 ⑦ manifest 도구
 5. 실험 요청(협력자): EPR spin count · carrier/산화도 측정 · counterion 조성

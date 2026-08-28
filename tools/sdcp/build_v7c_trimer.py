@@ -1,5 +1,9 @@
 #!/usr/bin/env python3
-"""build_v7c_trimer.py — 이완된 v7c 다이머에서 세 번째 고리를 α–α' 접합한 트라이머 패키지.
+"""build_v7c_trimer.py — 이완된 v7c 다이머에서 올리고머(n=3..8)를 α–α' 접합으로 조립.
+
+원래는 트라이머 전용이었고 (파일명이 그 흔적), 2026-08-28 doped 재개 설계 v2
+(`kb/questions/sdcp_doped_reopen_v2_2026_08_28.md`)의 Stage 0 을 위해 **n=4·6 과
+홀 배치 선택 + machine manifest** 로 확장했다 (재승인 조건 ⑤·⑦ 준비).
 
 n=3의 목적 (n=2 결과의 다음 질문):
   다이머 doped 스핀: A_SO3 62.3 / A_ring 17.4 / B_SO3 0.0 / B_ring 15.2 / rest 5.0 %
@@ -8,26 +12,60 @@ n=3의 목적 (n=2 결과의 다음 질문):
    - trimer_doped_mid: 가운데 고리 SO3⁻ → 폴라론이 양옆 대칭으로 3고리에 퍼지는가 (헤드라인)
    - trimer_doped_end: 끝 고리 SO3⁻   → 결함에서 멀수록 몫이 어떻게 감쇠하는가 (감쇠길이)
 
+n=4·6 의 목적 (재개 v2):
+   - DP4/+1: 도핑률 25 % — DP3/+1(33 %)과 조성 bracket
+   - DP6/+2: polaron/bipolaron 스핀 섹터 셋 (s=closed singlet · t=triplet · bs=BS singlet)
+     을 **같은 조성·같은 전자수**에서 비교. 홀 간격 2종 이상 (--holes 반복 지정)
+
 입력은 이완된 dimer_neutral.xyz 하나뿐 (모노머 파일·ASE·numpy 불필요):
-  - 다이머 B쪽 절반(이완 기하)을 복제해 C-유닛으로 사용 — C-유닛의 열린 α(과거 A와
-    결합하던 자리)를 B의 자유 α에 C–C 1.45 A로 접합, B의 자유 α-H는 제거
+  - 다이머 B쪽 절반(이완 기하)을 복제해 유닛으로 사용 — 유닛의 열린 α(과거 결합 자리)를
+    사슬 끝의 자유 α에 C–C 1.45 A로 접합, 그 자유 α-H는 제거. n−2 회 반복.
   - 비틀림각은 원자간 최소거리 최대화(입체 회피)로 자동 선택 — 다이머 빌더와 동일 철학
 
-  python3 build_v7c_trimer.py --dimer dimer_neutral.xyz --out trimer
+  python3 build_v7c_trimer.py --selftest
+  python3 build_v7c_trimer.py --dimer dimer_neutral.xyz --out trimer            # 레거시 n=3
+  python3 build_v7c_trimer.py --dimer dimer_neutral.xyz --out dp4 --n 4 --holes B
+  python3 build_v7c_trimer.py --dimer dimer_neutral.xyz --out dp6 --n 6 \\
+      --holes B,E --holes C,D          # 홀 간격 2종, 각각 스핀 섹터 s/t/bs 생성
 
-생성물 (out/):
-  trimer_neutral.xyz (101원자, 전하0 싱글렛) / trimer_doped_mid.xyz·trimer_doped_end.xyz
-  (100원자, 전하0 더블렛) / groups_trimer.json (그룹 인덱스 + 산성H 인덱스) /
-  trimer_*.inp (r2SCAN-3c Opt, 시리얼·maxcore 6000) / run_trimer.sh (neutral 완료 시
-  doped를 neutral 최종기하에서 warm-start) / analyze_trimer_spin.py / watch_trimer.sh
+레거시 생성물 (--n 3, --holes 미지정 — 종전과 동일):
+  trimer_neutral.xyz / trimer_doped_mid.xyz / trimer_doped_end.xyz /
+  groups_trimer.json / trimer_*.inp / run_trimer.sh / analyze_trimer_spin.py / watch_trimer.sh
+
+일반 생성물 (--n N [--holes ...]):
+  dpN_neutral.xyz(.inp) / dpN_h<링들>_<섹터>.xyz(.inp) / groups_dpN.json /
+  **manifest_stage0.json** — estimand_id·조성·전자수·스핀섹터·state-selection policy·
+  중단 코드가 잡별로 박힌다 (재승인 조건 ⑦: 손으로 적은 숫자 없음)
+
+이 도구가 **못 하는 것**
+  · 기하를 이완하지 않는다 — 조립 + 입체 회피 배치까지. 이완은 ORCA 몫.
+  · 스핀 상태를 보장하지 않는다 — 섹터별 기대값(M, <S2>)을 manifest 에 선언할 뿐,
+    수렴 결과가 그 섹터인지는 회수 분석이 게이트로 검사해야 한다.
+  · BS(broken-symmetry) 해는 순수 singlet 이 아니다 — manifest 가 <S2> 오염 보고를
+    요구 사항으로 명시하지만 그 보고를 강제 실행하지는 못한다.
+  · conformer 탐색을 하지 않는다 — 비틀림각 1개(입체 최적)만. conformer 2종은
+    --step 을 바꾼 별도 빌드로 만든다 (Stage 0 설계 참조).
 """
 import argparse
+import hashlib
 import json
 import math
 import os
 
 RCOV = {"H": 0.31, "C": 0.76, "N": 0.71, "O": 0.66, "S": 1.05}
+ZNUM = {"H": 1, "C": 6, "N": 7, "O": 8, "S": 16}
 CC_NEW = 1.45          # 새 C–C 접합 길이 (다이머 빌더와 동일; 이완 다이머 실측 1.44)
+UNIT_NAMES = "ABCDEFGH"
+
+#: 재개 v2 스핀 섹터 — 홀 수의 짝홀에 따라 자동 선택된다.
+#:   mult 는 ORCA 좌표줄 값. bs 는 **고스핀(triplet) mult 로 수렴 후 BrokenSym 플립**.
+SECTORS_ODD = (("d", 2, "doublet M=1"),)
+SECTORS_EVEN = (("s", 1, "closed-shell singlet M=0"),
+                ("t", 3, "triplet 2-polaron M=2"),
+                ("bs", 3, "broken-symmetry open-shell singlet (triplet 수렴 후 flip; "
+                          "<S2> 오염 보고 필수 — 순수 singlet 아님)"))
+ABORT_CODES = ("NA_STATE_NOT_IDENTIFIED", "SECTOR_MISMATCH", "SCF_UNCONVERGED",
+               "SPIN_CONTAMINATION_UNREPORTED")
 
 
 # ---------- 기하 유틸 (numpy 없이) ----------
@@ -104,7 +142,7 @@ def neighbors(sym, pos):
 
 
 def analyze(sym, pos):
-    """링/설포네이트/α/산성H 식별 — 모노머·다이머·트라이머 공통."""
+    """링/설포네이트/α/산성H 식별 — 모노머·다이머·올리고머 공통."""
     nb = neighbors(sym, pos)
     ringS, sulfS = [], []
     for i, s in enumerate(sym):
@@ -146,7 +184,6 @@ def analyze(sym, pos):
             for h in nb[o]:
                 if sym[h] == "H":
                     aH = h
-        # 이 설포네이트가 붙은 링: BFS로 처음 만나는 링
         owner = None
         seen, q = {sS}, [sS]
         while q and owner is None:
@@ -166,31 +203,41 @@ def analyze(sym, pos):
     return nb, rings, sulf
 
 
-def main():
-    ap = argparse.ArgumentParser()
-    ap.add_argument("--dimer", required=True, help="이완된 dimer_neutral.xyz (68원자)")
-    ap.add_argument("--out", required=True)
-    ap.add_argument("--cc", type=float, default=CC_NEW)
-    ap.add_argument("--step", type=int, default=10, help="비틀림각 스캔 간격(도)")
-    a = ap.parse_args()
-    os.makedirs(a.out, exist_ok=True)
+def ring_chain_names(rings):
+    """링을 사슬 순서로 A,B,C,... 명명. 앵커(A)=최소 원자 인덱스를 가진 끝 링.
 
-    sym, pos = read_xyz(a.dimer)
-    assert len(sym) == 68, f"다이머 68원자 기대, {len(sym)}개"
-    nb, rings, sulf = analyze(sym, pos)
-    assert len(rings) == 2 and len(sulf) == 2, "다이머: 링 2 + 설포네이트 2여야 함"
+    ⛔ 못 하는 것: 가지 친(branched) 사슬. 경로가 유일하지 않으면 멈춘다.
+    """
+    a2r = {}
+    for ri, r in enumerate(rings):
+        for al in r["alphas"]:
+            a2r[al["C"]] = ri
+    adj = {ri: set() for ri in range(len(rings))}
+    for ri, r in enumerate(rings):
+        for al in r["alphas"]:
+            c = al["coupled"]
+            if c is not None:
+                rj = a2r.get(c)
+                assert rj is not None, f"링 {ri} 의 coupled C{c} 가 어떤 링의 α 도 아니다"
+                adj[ri].add(rj)
+                adj[rj].add(ri)
+    ends = [ri for ri in adj if len(adj[ri]) == 1]
+    if len(rings) == 1:
+        return {0: "A"}
+    if len(ends) != 2:
+        raise SystemExit(f"⛔ 사슬 위상이 아니다 (끝 링 {len(ends)}개) — 가지/고리 구조는 지원 밖")
+    start = min(ends, key=lambda ri: min(rings[ri]["ring"]))
+    path = [start]
+    while len(path) < len(rings):
+        nxt = [x for x in adj[path[-1]] if x not in path]
+        assert len(nxt) == 1, "사슬 경로가 유일하지 않다"
+        path.append(nxt[0])
+    return {ri: UNIT_NAMES[k] for k, ri in enumerate(path)}
 
-    # ---- 다이머 위상: 링간 결합 (cA–cB), 각 링의 자유 α ----
-    coupled = [(r_i, al) for r_i, r in enumerate(rings) for al in r["alphas"] if al["coupled"] is not None]
-    assert len(coupled) == 2, "링간 결합 α는 정확히 2개여야 함"
-    free = {r_i: al for r_i, r in enumerate(rings) for al in r["alphas"] if al["H"] is not None}
-    assert len(free) == 2, "각 링에 자유 α-H 1개씩이어야 함"
 
-    # B쪽 = 인덱스가 큰 링 (구성상 34..67). 링간 결합을 끊고 flood-fill로 절반 분리.
-    riA, riB = 0, 1
-    cB = [al["C"] for r_i, al in coupled if r_i == riB][0]
-    cA = [al["C"] for r_i, al in coupled if r_i == riA][0]
-    assert cA in nb[cB], "링간 결합 불일치"
+# ---------- 조립 ----------
+def make_template(sym, pos, nb, rings, riB, cA, cB):
+    """다이머 B쪽 절반 → 재사용 가능한 접합 유닛 템플릿 (cB 원점 로컬 좌표)."""
     seen, q = {cB}, [cB]
     while q:
         cur = q.pop(0)
@@ -201,90 +248,255 @@ def main():
                 seen.add(j)
                 q.append(j)
     sideB = sorted(seen)
-    assert len(sideB) == 34 and cA not in seen, f"B쪽 분리 실패 ({len(sideB)}원자)"
+    assert len(sideB) * 2 == len(sym) and cA not in seen, \
+        f"B쪽 분리 실패 ({len(sideB)}/{len(sym)}원자)"
+    u_dangle = unit(sub(pos[cA], pos[cB]))
+    base0 = [sub(pos[i], pos[cB]) for i in sideB]
+    tsym = [sym[i] for i in sideB]
+    # 템플릿 내부 이웃 (접합부 제외 규칙용) + 자유 α/H 로컬 인덱스
+    loc = {g: k for k, g in enumerate(sideB)}
+    dangle_loc = loc[cB]
+    tnb = neighbors(tsym, base0)
+    free_al = [al for al in rings[riB]["alphas"] if al["H"] is not None]
+    assert len(free_al) == 1, "B 링의 자유 α 가 1개가 아니다"
+    return dict(sym=tsym, base0=base0, u_dangle=u_dangle, dangle=dangle_loc,
+                dangle_nb=set(tnb[dangle_loc]) | {dangle_loc},
+                freeC=loc[free_al[0]["C"]], freeH=loc[free_al[0]["H"]])
 
-    cBf, hBf = free[riB]["C"], free[riB]["H"]          # B의 자유 α와 그 H (제거 대상)
-    print(f"위상: 링간결합 C{cA}–C{cB} ({dist(pos[cA], pos[cB]):.3f} A) | "
-          f"B 자유 α = C{cBf} (H{hBf}) | B쪽 {len(sideB)}원자")
 
-    # ---- C-유닛 배치: 열린 α(cB 사본)를 cBf에 접합 ----
-    d_dir = unit(sub(pos[hBf], pos[cBf]))              # 새 결합 방향 (기존 C–H 방향)
-    p_new = add(pos[cBf], scal(d_dir, a.cc))           # cB 사본의 목표 위치
-    u_dangle = unit(sub(pos[cA], pos[cB]))             # 사본의 열린 원자가 방향
-    R0 = rot_between(u_dangle, scal(d_dir, -1.0))
-
-    base0 = [apply_rot(R0, sub(pos[i], pos[cB])) for i in sideB]   # cB 원점 로컬 좌표
-
-    exclB = set([cBf] + list(nb[cBf]))                  # 접합부 1-2/1-3 (θ 불변) 제외
-    exclC = set([cB] + [j for j in nb[cB] if j in seen])
-    baseAtoms = [i for i in range(68) if i != hBf]
-
+def graft(csym, cpos, cnb, attC, attH, tpl, cc, step):
+    """사슬의 자유 α(attC, 그 H=attH)에 템플릿을 접합. → (sym, pos, 채택각, dmin)"""
+    d_dir = unit(sub(cpos[attH], cpos[attC]))
+    p_new = add(cpos[attC], scal(d_dir, cc))
+    R0 = rot_between(tpl["u_dangle"], scal(d_dir, -1.0))
+    b0 = [apply_rot(R0, p) for p in tpl["base0"]]
+    exclB = set([attC] + list(cnb[attC]))
+    base_atoms = [i for i in range(len(csym)) if i != attH]
     best = None
-    for th in range(0, 360, a.step):
+    for th in range(0, 360, step):
         R1 = rotmat(d_dir, math.radians(th))
-        newpos = [add(apply_rot(R1, p), p_new) for p in base0]
+        newpos = [add(apply_rot(R1, p), p_new) for p in b0]
         dmin = 9e9
-        for bi in baseAtoms:
-            for k, oj in enumerate(sideB):
-                if bi in exclB and oj in exclC:
+        for bi in base_atoms:
+            for k in range(len(newpos)):
+                if bi in exclB and k in tpl["dangle_nb"]:
                     continue
-                dd = dist(pos[bi], newpos[k])
+                dd = dist(cpos[bi], newpos[k])
                 if dd < dmin:
                     dmin = dd
         if best is None or dmin > best[0]:
             best = (dmin, th, newpos)
-    dmin, th, cpos = best
-    print(f"비틀림각 {th}° 채택 (최소 원자간 {dmin:.2f} A)")
+    dmin, th, npos = best
+    nsym = [csym[i] for i in base_atoms] + list(tpl["sym"])
+    nposs = [cpos[i] for i in base_atoms] + npos
+    return nsym, nposs, th, dmin
 
-    # ---- 조립: 다이머(−hBf) + C-유닛 ----
-    tsym = [sym[i] for i in baseAtoms] + [sym[i] for i in sideB]
-    tpos = [pos[i] for i in baseAtoms] + cpos
-    n_tri = len(tsym)
-    assert n_tri == 101, f"트라이머 101원자 기대, {n_tri}"
-    write_xyz(os.path.join(a.out, "trimer_neutral.xyz"), tsym, tpos,
+
+def build_chain(sym, pos, n, cc, step, log=print):
+    """다이머(n=2) → n-량체. 각 단계에서 앵커 반대쪽 끝의 자유 α 에 접합."""
+    nb, rings, sulf = analyze(sym, pos)
+    if not (len(rings) == 2 and len(sulf) == 2):
+        raise SystemExit(f"⛔ 입력이 다이머가 아니다 (링 {len(rings)} · 설포네이트 {len(sulf)})")
+    coupled = [(ri, al) for ri, r in enumerate(rings) for al in r["alphas"]
+               if al["coupled"] is not None]
+    assert len(coupled) == 2, "링간 결합 α는 정확히 2개여야 함"
+    riA, riB = 0, 1
+    cB = [al["C"] for ri, al in coupled if ri == riB][0]
+    cA = [al["C"] for ri, al in coupled if ri == riA][0]
+    assert cA in nb[cB], "링간 결합 불일치"
+    tpl = make_template(sym, pos, nb, rings, riB, cA, cB)
+    torsions = []
+    csym, cpos = list(sym), list(pos)
+    for k in range(n - 2):
+        cnb, crings, _ = analyze(csym, cpos)
+        names = ring_chain_names(crings)
+        # 앵커(A) 반대쪽 끝 = 이름이 가장 뒤인 링의 자유 α
+        last = max(names, key=lambda ri: names[ri])
+        free_al = [al for al in crings[last]["alphas"] if al["H"] is not None]
+        assert len(free_al) == 1, "끝 링의 자유 α 가 1개가 아니다"
+        csym, cpos, th, dmin = graft(csym, cpos, cnb, free_al[0]["C"], free_al[0]["H"],
+                                     tpl, cc, step)
+        torsions.append(dict(step=k + 3, torsion_deg=th, dmin_A=round(dmin, 3)))
+        log(f"  유닛 {k+3}/{n} 접합: 비틀림 {th}° (최소 원자간 {dmin:.2f} A)")
+    expect = len(sym) + (n - 2) * (len(sym) // 2 - 1)
+    assert len(csym) == expect, f"{n}-량체 {expect}원자 기대, {len(csym)}"
+    return csym, cpos, torsions
+
+
+# ---------- 조성·홀·manifest ----------
+def formula_of(sym):
+    cnt = {}
+    for s in sym:
+        cnt[s] = cnt.get(s, 0) + 1
+    return "".join(f"{e}{cnt[e]}" for e in ("C", "H", "N", "O", "S") if e in cnt)
+
+
+def electrons_of(sym):
+    return sum(ZNUM[s] for s in sym)
+
+
+def check_parity(n_e, mult):
+    """전자수 짝홀 ↔ 다중도 정합. 어긋나면 그 잡은 정의부터 틀린 것 — 만들지 않는다."""
+    if (n_e + mult) % 2 != 1:
+        raise SystemExit(f"⛔ 전자 {n_e}개에 다중도 {mult} 는 불가능 — 잡을 만들지 않는다")
+
+
+def remove_atoms(sym, pos, kill):
+    kill = sorted(set(kill), reverse=True)
+    vsym, vpos = list(sym), list(pos)
+    for k in kill:
+        del vsym[k]
+        del vpos[k]
+    def remap(i):
+        return i - sum(1 for k in kill if k < i)
+    return vsym, vpos, remap
+
+
+def resolve_holes(spec, names, sulf):
+    """--holes 'B,E' → 제거할 산성 H 인덱스들. 없는 링/산성H 없는 링이면 멈춘다."""
+    ring_by_name = {v: k for k, v in names.items()}
+    out = []
+    for letter in [x.strip().upper() for x in spec.split(",") if x.strip()]:
+        if letter not in ring_by_name:
+            raise SystemExit(f"⛔ --holes {spec}: 링 '{letter}' 가 없다 (있는 링: "
+                             f"{''.join(sorted(ring_by_name))})")
+        su = [s for s in sulf if s["ring"] == ring_by_name[letter]]
+        if not su or su[0]["aH"] is None:
+            raise SystemExit(f"⛔ 링 {letter} 에 산성 H 가 없다 — 홀을 만들 수 없다")
+        out.append((letter, su[0]["aH"]))
+    if not out:
+        raise SystemExit(f"⛔ --holes '{spec}' 에서 링을 못 읽었다")
+    return out
+
+
+def stage0_manifest(out, n, dimer_path, dimer_sha, jobs, torsions):
+    """재승인 조건 ⑦ — 손으로 적은 숫자 없이, 빌더가 계산한 값만 들어간다."""
+    man = {
+        "schema": "sdcp_stage0_manifest/v1",
+        "estimand_id": "sdcp-doped-gas-stage0/v2",
+        "design_card": "kb/questions/sdcp_doped_reopen_v2_2026_08_28.md",
+        "state_selection_policy": (
+            "free-spin UKS/RKS, 선언된 스핀 섹터별 바닥상태. 제약 없음(NUPDOWN 상당 금지). "
+            "bs 섹터만 예외적으로 triplet 수렴 후 BrokenSym 플립 — 그 결과는 순수 singlet "
+            "이 아니며 <S2> 보고 없이는 SPIN_CONTAMINATION_UNREPORTED 로 중단"),
+        "abort_codes": list(ABORT_CODES),
+        "dp": n,
+        "input_dimer": {"path": os.path.abspath(dimer_path), "sha256": dimer_sha},
+        "assembly_torsions": torsions,
+        "jobs": jobs,
+        "⚠": "회수 분석은 잡별 expected(mult, n_electrons, charge)를 manifest 와 대조해야 "
+             "한다 — 수렴 여부만 보고 통과시키면 아홉 번째 실패다",
+    }
+    path = os.path.join(out, "manifest_stage0.json")
+    json.dump(man, open(path, "w"), ensure_ascii=False, indent=1)
+    return path
+
+
+def orca_input(path, tag, mult, bs):
+    with open(path, "w") as f:
+        f.write("! UKS r2SCAN-3c Opt TightSCF\n%maxcore 6000\n")
+        if bs:
+            f.write("%scf BrokenSym 1,1 end\n")
+        f.write(f"* xyzfile 0 {mult} {tag}.xyz\n")
+
+
+def build_general(a, sym, pos):
+    """--n N [--holes ...] 경로: dpN_* 산출 + manifest."""
+    csym, cpos, torsions = build_chain(sym, pos, a.n, a.cc, a.step)
+    cnb, crings, csulf = analyze(csym, cpos)
+    assert len(crings) == a.n and len(csulf) == a.n, \
+        f"{a.n}-량체: 링 {len(crings)} · 설포네이트 {len(csulf)}"
+    names = ring_chain_names(crings)
+    order = "".join(names[ri] for ri in sorted(names, key=lambda r: names[r]))
+    print(f"사슬 명명: {order} (앵커 A = 최소 인덱스 끝 링)")
+
+    groups = {}
+    for su in csulf:
+        nm = names[su["ring"]]
+        groups[f"{nm}_SO3"] = sorted([su["sS"]] + su["sO"])
+        groups[f"{nm}_ring"] = sorted(crings[su["ring"]]["ring"])
+    json.dump({"neutral": groups,
+               "acidH": {names[su["ring"]]: su["aH"] for su in csulf}},
+              open(os.path.join(a.out, f"groups_dp{a.n}.json"), "w"), indent=1)
+
+    jobs = []
+    tag0 = f"dp{a.n}_neutral"
+    write_xyz(os.path.join(a.out, f"{tag0}.xyz"), csym, cpos,
+              f"v7c DP{a.n} neutral (assembled; torsions "
+              f"{[t['torsion_deg'] for t in torsions]} deg)")
+    e0 = electrons_of(csym)
+    check_parity(e0, 1)
+    orca_input(os.path.join(a.out, f"{tag0}.inp"), tag0, 1, False)
+    jobs.append(dict(tag=tag0, species=f"DP{a.n}/0", holes=[], sector="n",
+                     mult=1, charge=0, n_atoms=len(csym), n_electrons=e0,
+                     formula=formula_of(csym), expected="closed-shell singlet M=0"))
+
+    for spec in (a.holes or []):
+        hs = resolve_holes(spec, names, csulf)
+        letters = "".join(h[0] for h in hs)
+        vsym, vpos, _ = remove_atoms(csym, cpos, [h[1] for h in hs])
+        e = electrons_of(vsym)
+        sectors = SECTORS_ODD if len(hs) % 2 == 1 else SECTORS_EVEN
+        base = f"dp{a.n}_h{letters}"
+        write_xyz(os.path.join(a.out, f"{base}.xyz"), vsym, vpos,
+                  f"DP{a.n}/+{len(hs)}: neutral minus acid H of ring(s) {letters} "
+                  f"(charge 0, {len(hs)} hole)")
+        for sec, mult, desc in sectors:
+            check_parity(e, mult)
+            tag = f"{base}_{sec}"
+            # 섹터별 .xyz 는 같은 기하 — inp 가 xyzfile 로 base 를 공유한다
+            orca_input(os.path.join(a.out, f"{tag}.inp"), base, mult, bs=(sec == "bs"))
+            jobs.append(dict(tag=tag, species=f"DP{a.n}/+{len(hs)}", holes=list(letters),
+                             sector=sec, mult=mult, charge=0, n_atoms=len(vsym),
+                             n_electrons=e, formula=formula_of(vsym), expected=desc))
+        print(f"  홀 {letters}: {len(sectors)}섹터 ({'/'.join(s[0] for s in sectors)}) · "
+              f"전자 {e} · {formula_of(vsym)}")
+
+    sha = hashlib.sha256(open(a.dimer, "rb").read()).hexdigest()
+    mp = stage0_manifest(a.out, a.n, a.dimer, sha, jobs, torsions)
+    print(f"manifest: {mp}  (잡 {len(jobs)}개 — estimand_id 부착, 손 전사 숫자 0)")
+    return jobs
+
+
+# ---------- 레거시 트라이머 경로 (종전 출력과 동일) ----------
+def build_legacy_trimer(a, sym, pos):
+    csym, cpos, torsions = build_chain(sym, pos, 3, a.cc, a.step)
+    th = torsions[0]["torsion_deg"]
+    dmin = torsions[0]["dmin_A"]
+    write_xyz(os.path.join(a.out, "trimer_neutral.xyz"), csym, cpos,
               f"v7c trimer (built from relaxed dimer; torsion {th} deg, dmin {dmin:.2f} A)")
 
-    # ---- 조립체 재분석 → 그룹/산성H (인덱스 부기 대신 신선 검출) ----
-    tnb, trings, tsulf = analyze(tsym, tpos)
+    tnb, trings, tsulf = analyze(csym, cpos)
     assert len(trings) == 3 and len(tsulf) == 3, "트라이머: 링 3 + 설포네이트 3이어야 함"
-    n_coup = [sum(1 for al in r["alphas"] if al["coupled"] is not None) for r in trings]
-    mids = [i for i, c in enumerate(n_coup) if c == 2]
-    ends = [i for i, c in enumerate(n_coup) if c == 1]
-    assert len(mids) == 1 and len(ends) == 2, f"사슬 위상 이상 (coupled={n_coup})"
-    ends.sort(key=lambda i: min(trings[i]["ring"]))
-    name = {ends[0]: "A", mids[0]: "B", ends[1]: "C"}   # A=원래 끝, B=가운데, C=새 유닛
-    print("링 판정:", {name[i]: f"S{trings[i]['rS']}(coupled α {n_coup[i]})" for i in range(3)})
+    names = ring_chain_names(trings)
+    print("링 판정:", {names[i]: f"S{trings[i]['rS']}" for i in range(3)})
 
     groups_n, acidH = {}, {}
     for su in tsulf:
-        nm = name[su["ring"]]
+        nm = names[su["ring"]]
         groups_n[f"{nm}_SO3"] = sorted([su["sS"]] + su["sO"])
         groups_n[f"{nm}_ring"] = sorted(trings[su["ring"]]["ring"])
         assert su["aH"] is not None, f"{nm} 설포네이트에 산성 H 없음"
         acidH[nm] = su["aH"]
     print("산성 H (neutral 기준):", acidH)
 
-    # ---- doped 변형: mid = B의 산성H 제거, end = A의 산성H 제거 ----
     variants = {"trimer_doped_mid": acidH["B"], "trimer_doped_end": acidH["A"]}
     groups_all = {"neutral": groups_n}
     for tag, k in variants.items():
-        vsym = [s for i, s in enumerate(tsym) if i != k]
-        vpos = [p for i, p in enumerate(tpos) if i != k]
+        vsym, vpos, remap = remove_atoms(csym, cpos, [k])
         write_xyz(os.path.join(a.out, f"{tag}.xyz"), vsym, vpos,
                   f"{tag}: trimer_neutral minus acid H{k} (charge 0, doublet)")
-        remap = lambda i: i - (1 if i > k else 0)
-        groups_all[tag] = {g: [remap(i) for i in idx if i != k] for g, idx in groups_n.items()}
-    groups_all["acidH"] = {t: k for t, k in variants.items()}
+        groups_all[tag] = {g: [remap(i) for i in idx if i != k]
+                           for g, idx in groups_n.items()}
+    groups_all["acidH"] = variants
     groups_all["dimer_ref"] = "doped: A_SO3 62.3 / A_ring 17.4 / B_SO3 0.0 / B_ring 15.2 / rest 5.0 %"
     groups_all["monomer_ref"] = "doped: O3 ~65% / backbone ~35%"
     json.dump(groups_all, open(os.path.join(a.out, "groups_trimer.json"), "w"), indent=1)
 
-    # ---- ORCA 입력 (시리얼 — 데스크톱 검증된 레시피: %pal 없음, maxcore 6000) ----
     for tag, mult in (("trimer_neutral", 1), ("trimer_doped_mid", 2), ("trimer_doped_end", 2)):
         with open(os.path.join(a.out, f"{tag}.inp"), "w") as f:
             f.write(f"! r2SCAN-3c Opt TightSCF\n%maxcore 6000\n* xyzfile 0 {mult} {tag}.xyz\n")
 
-    # ---- 러너: neutral → (완료 시 doped를 neutral 최종기하에서 warm-start) → mid → end ----
     with open(os.path.join(a.out, "run_trimer.sh"), "w") as f:
         f.write("""#!/bin/bash
 # 실행: nohup bash run_trimer.sh > run.log 2>&1 &
@@ -323,7 +535,6 @@ run_job trimer_doped_end
 python3 analyze_trimer_spin.py
 """)
 
-    # ---- 분석기 ----
     with open(os.path.join(a.out, "analyze_trimer_spin.py"), "w") as f:
         f.write('''#!/usr/bin/env python3
 """트라이머 doped 잡들의 Loewdin 스핀을 그룹 합산 — 모노머 65/35, 다이머 62/17/15와 비교."""
@@ -360,7 +571,6 @@ print("\\n참조: 모노머 O3 65 / 백본 35  |  다이머 A_SO3 62.3, 고리 1
 print("판독: mid는 대칭 확산(A~C), end는 감쇠(A>B>C)가 나오면 비편재 그림 완성.")
 ''')
 
-    # ---- watch ----
     with open(os.path.join(a.out, "watch_trimer.sh"), "w") as f:
         f.write("""#!/bin/bash
 # watch -n 60 bash ~/orca_poly/trimer/watch_trimer.sh
@@ -388,5 +598,185 @@ python3 analyze_trimer_spin.py 2>/dev/null | sed 's/^/ /'
     print(f"패키지 완성: {a.out}/  (nohup bash {a.out}/run_trimer.sh > {a.out}/run.log 2>&1 &)")
 
 
+# ---------- selftest ----------
+def _synthetic_unit():
+    """티오펜-SO3H 흉내 유닛 (13원자). analyze() 의 위상 요구를 전부 만족하는 합성 기하.
+
+    ring: S + C4 (정오각형, 변 1.45) · α-C 2개에 H · β-C 하나에 스페이서 C → SO3H
+    인덱스: 0 S · 1 Ca1 · 2 Cb1 · 3 Cb2 · 4 Ca2 · 5 H(Ca1) · 6 H(Ca2) · 7 Csp ·
+            8 Ssulf · 9-11 O · 12 산성H
+    """
+    R = 1.45 / (2 * math.sin(math.pi / 5))
+    ang = [90, 162, 234, 306, 18]                        # S, Ca1, Cb1, Cb2, Ca2
+    ring = [[R * math.cos(math.radians(t)), R * math.sin(math.radians(t)), 0.0]
+            for t in ang]
+    sym = ["S", "C", "C", "C", "C"]
+    pos = list(ring)
+    for k in (1, 4):                                     # α-H (radially outward)
+        u = unit(ring[k])
+        sym.append("H")
+        pos.append(add(ring[k], scal(u, 1.09)))
+    u = unit(ring[3])                                    # Cb2 → 스페이서
+    csp = add(ring[3], scal(u, 1.50))
+    ss = add(csp, scal(u, 1.77))
+    sym += ["C", "S"]
+    pos += [csp, ss]
+    perp = [0.0, 0.0, 1.0]
+    side = unit(cross(u, perp))
+    for kv in (scal(perp, 1.0), add(scal(perp, -0.5), scal(side, 0.86)),
+               add(scal(perp, -0.5), scal(side, -0.86))):
+        sym.append("O")
+        pos.append(add(ss, scal(unit(add(scal(u, 0.6), kv)), 1.45)))
+    sym.append("H")                                       # 산성 H (첫 O 에)
+    pos.append(add(pos[-3], scal(unit(sub(pos[-3], ss)), 0.97)))
+    return sym, pos
+
+
+def _synthetic_dimer():
+    """유닛 2개를 α–α' 1.45 Å 로 접합한 합성 다이머 (24원자, 자유 α-H 양끝 1개씩).
+
+    B 유닛 = A 유닛을 새 결합 중점에 대해 **점반전**한 사본 — 거리 보존이라 위상이
+    그대로 유지되고, B 가 A 의 반대쪽(+x)으로 뻗는다 (거울 배치는 되돌아 접혀 실패했다).
+    """
+    s1, p1 = _synthetic_unit()
+    d = unit(sub(p1[6], p1[4]))                          # Ca2 의 H 방향 = 새 결합 방향
+    target = add(p1[4], scal(d, 1.45))
+    M = scal(add(p1[4], target), 0.5)
+    p2 = [sub(scal(M, 2.0), p) for p in p1]              # 점반전: B.Ca2 가 target 에 앉는다
+    # 결합 α 의 H 제거: A 의 H6, B 의 H6-상 (결합 안쪽을 향한다)
+    sym = [x for i, x in enumerate(s1) if i != 6] + [x for i, x in enumerate(s1) if i != 6]
+    pos = [x for i, x in enumerate(p1) if i != 6] + [x for i, x in enumerate(p2) if i != 6]
+    return sym, pos
+
+
+def selftest():
+    import tempfile
+    fails = []
+
+    def chk(ok, msg):
+        print(("  ✓ " if ok else "  ✗ ") + msg)
+        if not ok:
+            fails.append(msg)
+
+    print("── build_v7c_trimer selftest ──")
+    sym, pos = _synthetic_dimer()
+    nb, rings, sulf = analyze(sym, pos)
+    chk(len(sym) == 24 and len(rings) == 2 and len(sulf) == 2,
+        f"합성 다이머 위상 (원자 {len(sym)} · 링 {len(rings)} · SO3 {len(sulf)})")
+
+    with tempfile.TemporaryDirectory() as td:
+        dim = os.path.join(td, "dimer.xyz")
+        write_xyz(dim, sym, pos, "synthetic dimer for selftest")
+
+        # ── n=3: 사슬 성장 + 명명
+        c3, p3, t3 = build_chain(sym, pos, 3, CC_NEW, 30, log=lambda *a: None)
+        chk(len(c3) == 24 + 11, f"n=3 조립 원자수 {len(c3)} (기대 35)")
+        _, r3, s3 = analyze(c3, p3)
+        n3 = ring_chain_names(r3)
+        chk(sorted(n3.values()) == ["A", "B", "C"], f"n=3 링 명명 {sorted(n3.values())}")
+
+        # ── n=4: bracket 크기
+        c4, p4, _ = build_chain(sym, pos, 4, CC_NEW, 30, log=lambda *a: None)
+        chk(len(c4) == 24 + 22, f"n=4 조립 원자수 {len(c4)} (기대 46)")
+        _, r4, _ = analyze(c4, p4)
+        chk(sorted(ring_chain_names(r4).values()) == ["A", "B", "C", "D"], "n=4 링 명명 A–D")
+
+        # ── 일반 경로 CLI 로 n=4, 홀 1개 (doublet 섹터 1개)
+        a4 = argparse.Namespace(dimer=dim, out=os.path.join(td, "dp4"), cc=CC_NEW,
+                                step=30, n=4, holes=["B"])
+        os.makedirs(a4.out)
+        jobs4 = build_general(a4, sym, pos)
+        man4 = json.load(open(os.path.join(a4.out, "manifest_stage0.json")))
+        chk(len(jobs4) == 2 and jobs4[1]["sector"] == "d" and jobs4[1]["mult"] == 2,
+            "n=4 홀 1개 → neutral + doublet 1섹터")
+        chk(man4["estimand_id"] == "sdcp-doped-gas-stage0/v2"
+            and man4["jobs"][1]["n_electrons"] == man4["jobs"][0]["n_electrons"] - 1,
+            "manifest: estimand_id + 전자수(중성−1) 자동 계산 — 손 전사 없음")
+        chk("NA_STATE_NOT_IDENTIFIED" in man4["abort_codes"],
+            "manifest 에 중단 코드 선언 (정의역 공백을 코드가 말한다)")
+
+        # ── n=6, 홀 2개 × 간격 2종 → 짝수 전자 → 섹터 s/t/bs
+        a6 = argparse.Namespace(dimer=dim, out=os.path.join(td, "dp6"), cc=CC_NEW,
+                                step=45, n=6, holes=["B,E", "C,D"])
+        os.makedirs(a6.out)
+        jobs6 = build_general(a6, sym, pos)
+        secs = [j["sector"] for j in jobs6 if j["species"] == "DP6/+2"]
+        chk(secs == ["s", "t", "bs", "s", "t", "bs"],
+            f"n=6 홀 2개 × 간격 2종 → 섹터 s/t/bs ×2 ({secs})")
+        bs_inp = open(os.path.join(a6.out, "dp6_hBE_bs.inp")).read()
+        chk("BrokenSym" in bs_inp and " 0 3 " in bs_inp,
+            "bs 섹터 입력: triplet(mult 3) 수렴 후 BrokenSym 플립")
+        e_even = all(j["n_electrons"] % 2 == 0 for j in jobs6 if j["holes"])
+        chk(e_even, "홀 2개 종은 전자수 짝수 (parity 정합)")
+
+        # ── ⛔ 음성 1: 없는 링 홀
+        try:
+            a_bad = argparse.Namespace(dimer=dim, out=os.path.join(td, "bad"), cc=CC_NEW,
+                                       step=45, n=3, holes=["Z"])
+            os.makedirs(a_bad.out)
+            build_general(a_bad, sym, pos)
+            ok = False
+        except SystemExit:
+            ok = True
+        chk(ok, "음성: --holes Z (없는 링) → 멈춘다")
+
+        # ── ⛔ 음성 2: 전자 짝홀 ↔ 다중도 불일치는 잡을 만들지 않는다
+        try:
+            check_parity(101, 1)
+            ok = False
+        except SystemExit:
+            ok = True
+        chk(ok, "음성: 전자 101개 + singlet → 정의부터 불가, 거부")
+
+        # ── ⛔ 음성 3: 다이머가 아닌 입력 (트라이머를 먹임)
+        try:
+            build_chain(c3, p3, 4, CC_NEW, 45, log=lambda *a: None)
+            ok = False
+        except SystemExit:
+            ok = True
+        chk(ok, "음성: 트라이머를 --dimer 로 먹이면 거부 (링 3 검출)")
+
+        # ── 레거시 경로가 그대로 도는가 (합성 다이머, 출력 파일 세트)
+        aL = argparse.Namespace(dimer=dim, out=os.path.join(td, "leg"), cc=CC_NEW, step=30)
+        os.makedirs(aL.out)
+        build_legacy_trimer(aL, sym, pos)
+        need = ["trimer_neutral.xyz", "trimer_doped_mid.xyz", "trimer_doped_end.xyz",
+                "groups_trimer.json", "run_trimer.sh", "analyze_trimer_spin.py"]
+        chk(all(os.path.exists(os.path.join(aL.out, f)) for f in need),
+            "레거시 트라이머 출력 세트 전부 생성 (하위호환)")
+
+    print(f"── {'PASS' if not fails else 'FAIL ' + str(len(fails))} ──")
+    return 1 if fails else 0
+
+
+def main():
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--dimer", help="이완된 dimer_neutral.xyz (v7c 실물 68원자)")
+    ap.add_argument("--out")
+    ap.add_argument("--cc", type=float, default=CC_NEW)
+    ap.add_argument("--step", type=int, default=10, help="비틀림각 스캔 간격(도)")
+    ap.add_argument("--n", type=int, default=3, help="올리고머 길이 (3..8)")
+    ap.add_argument("--holes", action="append",
+                    help="탈양성자화할 링 (예: 'B' · 'B,E'). 반복 지정 = 배치 여러 종. "
+                         "미지정 + --n 3 이면 레거시 mid/end 경로")
+    ap.add_argument("--selftest", action="store_true")
+    a = ap.parse_args()
+    if a.selftest:
+        return selftest()
+    if not (a.dimer and a.out):
+        ap.error("--dimer 와 --out 이 필요하다 (--selftest 제외)")
+    if not (3 <= a.n <= 8):
+        ap.error("--n 은 3..8")
+    os.makedirs(a.out, exist_ok=True)
+    sym, pos = read_xyz(a.dimer)
+    if len(sym) != 68:
+        print(f"⚠ 다이머 {len(sym)}원자 — v7c 실물(68)이 아니다. 합성/시험 입력으로 간주하고 진행")
+    if a.n == 3 and not a.holes:
+        build_legacy_trimer(a, sym, pos)
+    else:
+        build_general(a, sym, pos)
+    return 0
+
+
 if __name__ == "__main__":
-    main()
+    raise SystemExit(main())
