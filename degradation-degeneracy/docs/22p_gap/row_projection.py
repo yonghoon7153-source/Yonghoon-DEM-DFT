@@ -2374,8 +2374,27 @@ def _assert_sealable(node, where: str = "cohort") -> None:
 #:
 #:     `runtime` 과 산문 필드는 여전히 authority 밖이다 — 그것은 관측 기록이고,
 #:     바뀌어도 이미 게시된 바이트의 의미를 바꾸지 않는다.
-_LEDGER_AUTHORITY = ("cohort_id", "dir", "status", "legs",
-                     "pin", "cross_leg_comparison")
+_LEDGER_AUTHORITY = ("cohort_id", "dir", "legs", "pin", "cross_leg_comparison")
+
+#: ★ 48차 — `status` 는 **봉인에서 뺐다.**
+#:
+#:   47차는 `status` 를 봉인에 담았다. 그러면 `active → frozen` 이라는 **계약이
+#:   정한 정상 전이**를 하는 순간 그 cohort 의 `CURRENT` 가 봉인과 어긋나
+#:   영원히 재검증 불가가 된다. 48차에 g2 를 얼리며 실측했다:
+#:   `check_materialized(proj_g2)` 가 `ea56c4ed11d4 ≠ fba9073e065d` 로 죽었다.
+#:   보존 저장소에서 이것은 뒤집힌 결론이다 — **얼린 것일수록 검증 가능해야
+#:   한다.**
+#:
+#:   봉인의 일은 게시된 바이트의 **뜻**이 흔들리지 않게 하는 것이다: 어느
+#:   다리들인가(`legs`) · 무엇이 만들었는가(`pin`) · 어떤 비교가 허용되는가
+#:   (`cross_leg_comparison`) · 어디인가(`cohort_id`·`dir`). lifecycle 상태는
+#:   그 뜻의 일부가 아니다.
+#:
+#:   `frozen → active` 로 되돌려 얼린 cohort 에 쓰는 것은 이것으로 막지 않는다
+#:   — `_assert_writable()` 과 `_ledger_cohort_preflight()` 가 **살아 있는
+#:   원장**을 읽어 막는다. 그쪽이 맞는 자리다: 봉인은 과거의 사본이고 쓰기
+#:   권한은 현재의 사실이다.
+_LEDGER_UNSEALED = ("status",)
 
 #: 원장이 인정하는 **정확한** cohort 상태 (46차 #9). 45차는 "비어 있지 않은
 #: 문자열" 만 봤으므로 오타(`Active`)·새로 지어낸 값(`retired`)이 그대로

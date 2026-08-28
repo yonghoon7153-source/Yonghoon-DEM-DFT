@@ -4163,6 +4163,9 @@ _DEFAULT_PIN = {"schema_version": 3, "compute_sha256": "0" * 16,
                 "analysis_spec_sha256": "3" * 64,
                 "producer_semantic_sha256": "4" * 16}
 _TMP_PIN: dict = {}
+#: ★ 48차 — 임시 cohort 의 lifecycle 상태를 시험이 바꿀 수 있게 한다
+#:   (`active → frozen` 전이가 게시를 무효화하지 않는지 보려면 필요하다).
+_TMP_STATUS: dict = {}
 
 
 @pytest.fixture(autouse=True)
@@ -4192,7 +4195,8 @@ def _temp_cohort_ledger():
         key = str(Path(out).resolve())
         if key.startswith(("/tmp/", "/private/var/", "/var/folders/")):
             return {"cohort_id": f"tmp_{_sha_short(key)}", "dir": key,
-                    "status": "active", "legs": sorted(seen.get(key) or ()),
+                    "status": _TMP_STATUS.get(key, "active"),
+                    "legs": sorted(seen.get(key) or ()),
                     "pin": dict(_TMP_PIN.get(key) or _DEFAULT_PIN),
                     "cross_leg_comparison": "allowed_within_cohort"}
         return real(out)
@@ -4209,6 +4213,7 @@ def _temp_cohort_ledger():
     rp._ledger_cohort = _fake
     rp.promote_cohort_generation = _promote
     _TMP_PIN.clear()
+    _TMP_STATUS.clear()
     try:
         yield
     finally:
@@ -4563,9 +4568,22 @@ def test_the_active_cohort_is_published_through_a_single_current_pointer():
         for suffix in (".projection.csv.gz", ".projection.yaml", ".restarts.csv.gz"):
             assert leg + suffix in rec["files"], f"{leg}{suffix} 가 빠졌다"
 
+    # ★ 48차 — frozen 의 불변식은 "CURRENT 가 **없다**" 가 아니라 "**손대지
+    #   않는다**" 이다. 초판은 g1(=CURRENT layout 이 생기기 전에 얼었다)만 보고
+    #   전자로 적었는데, g2 는 active 로 살다가 48차에 얼었으므로 CURRENT 를
+    #   갖고 있다. 그것을 지우는 것이야말로 frozen 을 어기는 일이다.
+    #
+    #   그래서 두 모양을 **둘 다** 인정하되, CURRENT 가 있으면 그것이 지금도
+    #   자기 자신과 일치하는지 실제로 대조한다 (얼린 바이트가 온전한가).
     for c in frozen:
-        assert not (_REPO / c["dir"] / "CURRENT").exists(), (
-            f"{c['cohort_id']} 는 frozen 이다 — 새 layout 으로 바꾸지 않는다")
+        cur = _REPO / c["dir"] / "CURRENT"
+        if not cur.exists():
+            continue                     # layout 이전에 얼었다 (g1)
+        rec_f = rp.check_materialized(_REPO / c["dir"])
+        legs_f = sorted({x.split(".", 1)[0] for x in rec_f["files"]})
+        assert legs_f == sorted(c["legs"]), (
+            f"{c['cohort_id']}(frozen) 의 CURRENT 가 원장 구성과 다르다: "
+            f"{legs_f} ≠ {sorted(c['legs'])} — 얼린 cohort 가 흔들렸다")
 
 
 @pytest.mark.parametrize("damage", ["truncated", "empty_object", "foreign_receipt",
@@ -5623,14 +5641,21 @@ def test_the_publisher_reads_the_roster_from_the_ledger_not_the_caller(tmp_path)
             roster={"a", "b"})
     assert "원장" in str(ei.value), str(ei.value)
 
-    # 그리고 원장이 아는 cohort 라도 **신고가 다르면** 거부한다
-    real_dir = _REPO / "docs" / "22p_gap" / "proj_g2"
+    # 그리고 원장이 아는 cohort 라도 **신고가 다르면** 거부한다.
+    # ★ 48차 — cohort 이름을 **적어 두지 않는다.** 초판은 `proj_g2` 를 박아
+    #   뒀는데, 48차에 g2 가 frozen 이 되자 frozen guard 가 먼저 거부해 이
+    #   시험이 보려던 **roster 축**이 아니라 status 축을 보게 됐다 (약한 증인).
+    #   원장에서 active 를 찾는다 — 그것이 이 저장소의 정본이다.
+    _act = [c for c in _cohorts() if c.get("status") == "active"]
+    assert len(_act) == 1, f"active cohort 가 하나가 아니다: {_act}"
+    real_dir = _REPO / _act[0]["dir"]
+    _leg = sorted(_act[0]["legs"])[0]
     with pytest.raises(SystemExit) as ei2:
         raw.promote_cohort_generation(
-            _stage(tmp_path / "sc", **{"paired_fixed5_v4.projection.csv.gz": b"x",
-                                       "paired_fixed5_v4.projection.yaml": b"y",
-                                       "paired_fixed5_v4.restarts.csv.gz": b"z"}),
-            real_dir, "paired_fixed5_v4", roster={"paired_fixed5_v4", "ghost"})
+            _stage(tmp_path / "sc", **{f"{_leg}.projection.csv.gz": b"x",
+                                       f"{_leg}.projection.yaml": b"y",
+                                       f"{_leg}.restarts.csv.gz": b"z"}),
+            real_dir, _leg, roster={_leg, "ghost"})
     assert "원장" in str(ei2.value), str(ei2.value)
 
 
@@ -8834,3 +8859,46 @@ def test_the_archive_sink_refuses_a_smoke_input():
         shutil.rmtree(d, ignore_errors=True)
         shutil.rmtree(_REPO / "artifacts" / "_p08_should_not_exist",
                       ignore_errors=True)
+
+
+def test_freezing_a_cohort_does_not_invalidate_what_it_published(tmp_path):
+    """★ 48차 — cohort 를 **얼리는 것**이 그 cohort 의 게시를 무효화하면 안 된다.
+
+    47차 `_LEDGER_AUTHORITY` 는 `status` 를 봉인에 담았다. 그래서 `active →
+    frozen` 이라는 **계약이 정한 정상 전이**를 하는 순간 그 cohort 의 `CURRENT`
+    가 봉인과 어긋나 영원히 재검증 불가가 된다. 실측했다 — 48차에 g2 를 얼리자
+    `check_materialized(proj_g2)` 가 `ea56c4ed11d4 ≠ fba9073e065d` 로 죽었다.
+
+    보존 저장소에서 이것은 뒤집힌 결론이다: **얼린 것일수록 검증 가능해야 한다.**
+
+    봉인의 일은 게시된 바이트의 **뜻**이 흔들리지 않게 하는 것이다 — 어느
+    다리들인가(`legs`) · 무엇이 만들었는가(`pin`) · 어떤 비교가 허용되는가
+    (`cross_leg_comparison`) · 어디인가(`cohort_id`·`dir`). lifecycle 상태는 그
+    뜻의 일부가 아니다.
+
+    `frozen → active` 로 되돌려 얼린 cohort 에 쓰는 것은 봉인이 아니라
+    `_assert_writable()`·pre-flight 가 **살아 있는 원장**을 읽어 막는다 (그쪽이
+    맞는 자리다 — 봉인은 과거의 사본이고 쓰기 권한은 현재의 사실이다).
+    """
+    import yaml
+
+    rp = _rp()
+    out = tmp_path / "coh_freeze"
+    out.mkdir()
+    key = str(out.resolve())
+    try:
+        rp.promote_cohort_generation(
+            _stage(tmp_path / "s", **{"a.projection.csv.gz": b"c",
+                                      "a.projection.yaml": b"v: a\n",
+                                      "a.restarts.csv.gz": b"r"}),
+            out, "a", roster={"a"})
+        before = rp.check_materialized(out)
+
+        # 계약이 정한 정상 전이: active → frozen
+        _TMP_STATUS[key] = "frozen"
+        after = rp.check_materialized(out)
+    finally:
+        _TMP_STATUS.pop(key, None)
+
+    assert after["generation_id"] == before["generation_id"], (
+        "cohort 를 얼렸더니 게시된 generation 이 달라 보인다")
