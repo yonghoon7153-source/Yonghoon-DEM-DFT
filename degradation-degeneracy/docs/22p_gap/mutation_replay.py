@@ -147,8 +147,11 @@ MUTANTS = [
      "symlinked_path_is_not_inside_the_smoke_namespace or "
      "namespace_check_is_fail_closed_on_a_symlinked_component"),
     ("module-gate-before-side-effects", GRID,
-     "    _assert_grid_authorized(cfg, out_dir, dry_run=dry_run)\n",
-     "",
+     # ★ 48차 P0-5 — gate 호출이 조건 집합·다리 이름을 넘기고 claim 을 돌려주도록
+     #   바뀌었다. 호출 지점을 통째로 지우는 것이 이 변이의 뜻이다.
+     "    _claim = _assert_grid_authorized(cfg, out_dir, conditions=conditions,\n"
+     "                                     dry_run=dry_run, leg=leg)\n",
+     "    _claim = None\n",
      "run_grid_calls_the_gate_before_its_first_side_effect"),
     # ── 46차 (게이트 45차 반증 조건) ──────────────────────────────────────
     ("caller-stage-safe-read", RP,
@@ -163,17 +166,15 @@ MUTANTS = [
      "            _write_owned(stage / name, merged[name])",
      "caller_stage_is_untouched"),
     ("reader-shares-the-validator", RP,
-     "    got = {n: _sha(b) for n, b in _generation_entries(gdir, out).items()}\n"
-     "    if got != rec[\"files\"]:",
-     "    got = {q.name: _sha(q.read_bytes())\n"
-     "           for q in sorted(gdir.iterdir()) if q.is_file()}\n"
-     "    if got != rec[\"files\"]:",
+     # ★ 48차 — 검증 통로가 helper 하나로 모였고 call site 가 셋이다. 한 자리만
+     #   되돌리면 나머지 둘이 성질을 지켜 시험이 초록이다 — 성질이 사는 곳은
+     #   이제 helper 자신이므로 그 body 를 되돌린다.
+     "    with _generation_dirfd(out, gid) as dfd:\n"
+     "        return _entries_from_dirfd(dfd, \"generation\")",
+     "    return {q.name: q.read_bytes()\n"
+     "            for q in sorted((Path(out) / \"gen\" / gid).iterdir()) if q.is_file()}",
      "generation_reader_refuses_an_aliased"),
-    ("idempotent-shares-the-validator", RP,
-     "        got = {n: _sha(b) for n, b in _generation_entries(gdir, out).items()}",
-     "        got = {q.name: _sha(q.read_bytes())\n"
-     "               for q in sorted(gdir.iterdir()) if q.is_file()}",
-     "idempotent_branch_refuses_an_aliased"),
+    ("idempotent-shares-the-validator", RP, None, None, None),
     ("generation-namespace-guard", RP,
      "        hit = forbidden.get(key)\n        if hit is not None:",
      "        hit = None\n        if hit is not None:",
@@ -227,8 +228,8 @@ MUTANTS = [
      "    undeclared = []\n    if undeclared:",
      "complete_undeclared_leg_never_reaches_pending"),
     ("staging-nlink-one", RP,
-     "            if st.st_nlink != 1:\n                bad.append(f\"{name}: 다른 이름과 inode 를 공유한다 \"",
-     "            if False:\n                bad.append(f\"{name}: 다른 이름과 inode 를 공유한다 \"",
+     "        if st.st_nlink != 1:\n            bad.append(f\"{name}: 다른 이름과 inode 를 공유한다 \"",
+     "        if False:\n            bad.append(f\"{name}: 다른 이름과 inode 를 공유한다 \"",
      "staging_aliases_never_become_an_immutable_generation"),
     ("seal-exact-types", RP,
      "    if t is list:",
@@ -308,10 +309,6 @@ MUTANTS = [
      "    if type(auth) is not _Authority or id(auth) not in _Authority._ACTIVE:",
      "    if False:",
      "raw_publisher_takes_no"),
-    ("ledger-seal-record", RP,
-     "        if auth.ledger_seal_now() != auth.seal:",
-     "        if set(_ledger_cohort(out).get('legs') or ()) != auth.roster:",
-     "same_roster_ledger_change"),
     ("both-pointers-checked", RP,
      "        if live_cur != self.cur_raw or live_pend != self.pend_raw:",
      "        if live_pend != self.pend_raw:",
@@ -345,6 +342,17 @@ MUTANTS = [
 #: 여러 지점을 **함께** 되돌려야 관측되는 변이 (심층 방어라 하나만 지우면
 #: 다른 하나가 가린다). 41·42·43차에 실측했다.
 MULTI = [
+    # ★ 48차 — 이것도 방벽이 둘이 됐다. 42차 버그(재확인이 `set(legs)` 만 본다)를
+    #   복원해도, 48차가 임계 구역에 넣은 **살아 있는 status 재조회**가 freeze 를
+    #   먼저 잡아 시험이 초록이다. 즉 내가 이번에 더한 검사가 이 변이를 가린다.
+    #   둘 다 남기고(하나는 record 전체의 digest, 하나는 현재 쓰기 권한) 변이는
+    #   47차 상태를 복원한다.
+    ("ledger-seal-record", RP, [
+        ("        if auth.ledger_seal_now() != auth.seal:",
+         "        if set(_ledger_cohort(out).get('legs') or ()) != auth.roster:"),
+        ("        if _live.get(\"status\") != \"active\":",
+         "        if False:"),
+     ], "same_roster_ledger_change"),
     # ★ 48차 — `O_EXCL` **혼자로는** 더 이상 관측되지 않는다. 48차 P0-6 이
     #   claim 뒤에 `planned → running` 전이를 더했고, 그 전이는 원장 lock 안에서
     #   일어나므로 두 번째 claim 을 거기서 막는다. 즉 배타성을 지키는 것이 둘이
@@ -375,10 +383,10 @@ MULTI = [
     # ★ 47차 — `dir_fd` 는 두 자리에 있다(`os.stat` · `os.open`). 하나만
     #   되돌리면 다른 철자가 남아 구조 검사가 통과한다 — 실측했다.
     ("children-read-through-dirfd", RP, [
-        ("            st = os.stat(name, dir_fd=dfd, follow_symlinks=False)",
-         "            st = os.stat(Path(stage) / name, follow_symlinks=False)"),
-        ("            fd = os.open(name, os.O_RDONLY | os.O_NOFOLLOW, dir_fd=dfd)",
-         "            fd = os.open(Path(stage) / name, os.O_RDONLY | os.O_NOFOLLOW)"),
+        ("        st = os.stat(name, dir_fd=dfd, follow_symlinks=False)",
+         "        st = os.stat(name, follow_symlinks=False)"),
+        ("        fd = os.open(name, os.O_RDONLY | os.O_NOFOLLOW, dir_fd=dfd)",
+         "        fd = os.open(name, os.O_RDONLY | os.O_NOFOLLOW)"),
      ], "holds_a_directory_fd_for_its_children"),
     # ★ 47차 — 46차의 두 mutant 는 **옛 exploit 을 복원하지 않았다.**
     #   `generation-owns-its-bytes` 는 이미 만들어진 tmp 안으로 stage 를
@@ -396,10 +404,10 @@ MULTI = [
          "        shutil.move(str(stage), str(tmp))"),
      ], None),
     ("staging-regular-only", RP, [
-        ("            if not stat.S_ISREG(st.st_mode):        # symlink·FIFO·directory",
-         "            if False:"),
-        ("            fd = os.open(name, os.O_RDONLY | os.O_NOFOLLOW, dir_fd=dfd)",
-         "            fd = os.open(name, os.O_RDONLY, dir_fd=dfd)"),
+        ("        if not stat.S_ISREG(st.st_mode):        # symlink·FIFO·directory",
+         "        if False:"),
+        ("        fd = os.open(name, os.O_RDONLY | os.O_NOFOLLOW, dir_fd=dfd)",
+         "        fd = os.open(name, os.O_RDONLY, dir_fd=dfd)"),
      ], "staging_aliases_never_become_an_immutable_generation"),
     ("flock-two-publisher", RP, [
         ("            fcntl.flock(fd, fcntl.LOCK_EX | fcntl.LOCK_NB)\n"
@@ -415,6 +423,14 @@ MULTI = [
 #: **관측되지 않는다고 신고하는** 항목. 왜 안 보이는지와 그래도 왜 남기는지를
 #: 여기 적는다 — "masked but retained" 를 조용히 두지 않는다.
 DECLARED_MASKED = {
+    "idempotent-shares-the-validator":
+        "48차 P0-7 이 generation 읽기를 helper 하나(`_generation_entries_by_id`)로 "
+        "모았다. 그래서 idempotent 분기에 **고유한** 검증 자리가 더 이상 없고, "
+        "그 성질은 `reader-shares-the-validator` 가 helper body 에서 이미 "
+        "관측한다. 호출 지점만 되돌려도 시험이 초록인 것은 시험이 약해서가 "
+        "아니라 **자리가 하나로 합쳐졌기** 때문이다. 없는 자리를 만들어 내는 "
+        "대신 신고한다 — 회귀"
+        "(`..._idempotent_branch_refuses_an_aliased_generation_file`)는 남긴다.",
     "generation-owns-its-bytes":
         "옛 exploit(스테이징 디렉터리를 통째로 rename)을 **복원할 수 없다**. "
         "46차에 caller staging 이 sink 에 도달하지 않게 바뀌었고(병합은 "
@@ -708,7 +724,7 @@ EXPECT: dict = {
             "tests/test_docs_lint.py::test_a_complete_current_supersedes_a_leftover_pending"
         ],
         "witness": {
-            "tests/test_docs_lint.py::test_a_complete_current_supersedes_a_leftover_pending": "SystemExit: ✗ 남아 있는 `.PENDING` 이 다른 base 위에서 만들어졌다 (pending base None ≠ 현재 f71b9a788c32) — 승인되지 않은 구성을 이어받지 않는다. `.PENDING` 을 지우고 지금의 base 에서 다시 쌓아라"
+            "tests/test_docs_lint.py::test_a_complete_current_supersedes_a_leftover_pending": "SystemExit: ✗ 남아 있는 `.PENDING` 이 다른 base 위에서 만들어졌다 (pending base None ≠ 현재 70ec079e9fd6) — 승인되지 않은 구성을 이어받지 않는다. `.PENDING` 을 지우고 지금의 base 에서 다시 쌓아라"
         }
     },
     "flock-two-publisher": {
@@ -743,7 +759,7 @@ EXPECT: dict = {
             "tests/test_docs_lint.py::test_replacing_the_lock_pathname_after_the_check_refuses_the_commit"
         ],
         "witness": {
-            "tests/test_docs_lint.py::test_a_same_roster_ledger_change_is_refused": "AssertionError: 원장이 frozen 이 됐는데 게시됐다",
+            "tests/test_docs_lint.py::test_a_same_roster_ledger_change_is_refused": "Failed: DID NOT RAISE SystemExit",
             "tests/test_docs_lint.py::test_replacing_the_lock_pathname_after_the_check_refuses_the_commit": "Failed: DID NOT RAISE SystemExit"
         }
     },
@@ -788,7 +804,7 @@ EXPECT: dict = {
             "tests/test_docs_lint.py::test_a_same_roster_ledger_change_is_refused"
         ],
         "witness": {
-            "tests/test_docs_lint.py::test_a_same_roster_ledger_change_is_refused": "AssertionError: 원장이 frozen 이 됐는데 게시됐다"
+            "tests/test_docs_lint.py::test_a_same_roster_ledger_change_is_refused": "Failed: DID NOT RAISE SystemExit"
         }
     },
     "ledger-status-enum": {
@@ -842,7 +858,7 @@ EXPECT: dict = {
             "tests/test_docs_lint.py::test_the_producer_pin_is_part_of_the_publication_authority"
         ],
         "witness": {
-            "tests/test_docs_lint.py::test_the_producer_pin_is_part_of_the_publication_authority": "Failed: DID NOT RAISE SystemExit"
+            "tests/test_docs_lint.py::test_the_producer_pin_is_part_of_the_publication_authority": "KeyError: 'pin'"
         }
     },
     "plan-index-exact-equality": {
@@ -916,7 +932,7 @@ EXPECT: dict = {
             "tests/test_docs_lint.py::test_a_frozen_cohort_publish_writes_nothing_before_it_refuses"
         ],
         "witness": {
-            "tests/test_docs_lint.py::test_a_frozen_cohort_publish_writes_nothing_before_it_refuses": "Failed: DID NOT RAISE SystemExit"
+            "tests/test_docs_lint.py::test_a_frozen_cohort_publish_writes_nothing_before_it_refuses": "AssertionError: 거부하기 전에 무언가를 만들었다: ['.publish.lock', 'gen']"
         }
     },
     "prelock-digest-check": {

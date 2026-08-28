@@ -7577,7 +7577,11 @@ def test_staging_aliases_never_become_an_immutable_generation(tmp_path, kind):
     out = tmp_path / "cohort"
     out.mkdir(parents=True)
     outside = tmp_path / "outside.bin"
-    outside.write_bytes(b"original")
+    # ★ 48차 — alias 대상도 **producer 를 밝힌 manifest** 여야 이 시험이 보려는
+    #   축(alias 금지)이 증인이 된다. 안 그러면 P0-1 의 producer 결속이 먼저
+    #   거부해서, nlink/regular guard 를 지워도 "producer 가 없다" 로 빨개진다
+    #   — 빨갛기는 하지만 **선언한 이유가 아니다** (변이 재현이 잡아냈다).
+    outside.write_bytes(_with_producer("a.projection.yaml", b"v: a\n"))
 
     stage = _stage(tmp_path / "s", **{"a.projection.csv.gz": b"ac",
                                       "a.restarts.csv.gz": b"ar"})
