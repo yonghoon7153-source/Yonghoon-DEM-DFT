@@ -334,6 +334,11 @@ n=6 은 새로 만들어야 한다 (기존 trimer 빌더 확장 우선 — 새 �
   `db/properties/sdcp_doped_closed_2026_08_28.json` (proposed, ratify 대기).
   이 카드는 **재개 시 재설계의 출발점**으로 보존 — 회신 O 반영이 재개의 전제다.
   부수 판정: LiNiO₂(104)+U 슬랩 금속 아님 (gap ≈ 0.21 eV — 음이온 중성셀 지름길 없음).
+- **2026-08-28 (새벽) — 회신 P 접수·구현.** 마감 정당(P1) 단 허용문장 4건 교체 후
+  재-ratify 대기. **추출 부호 철회(P0)** — 원시 endpoint 차(citable:no)로 강등.
+  LREAL 회계 정정(P0): A_mix−A_F = ε_C−ε_S, 정본 all-F, 분자 T 생략.
+  seed 계보 서술 금지(P0) — 'pm1/net4 라벨 잡의 realized basin' 까지만.
+  감사기 fail-open 수정(P0) — 키 상태 5분류, 공란≠동일.
 
 ## 연결
 

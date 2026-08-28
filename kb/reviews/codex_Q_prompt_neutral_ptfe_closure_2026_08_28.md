@@ -51,8 +51,11 @@ DFT 단일점(NSW=0) · 분자 기준은 24 A 상자 · 자기 시드 2종(pm1 /
   - 자리선호는 판정바닥 max(30 meV, 쌍 편차) 미달로 NO_VERDICT
   - k 직접검증은 ptfe_c10 만 (E_ads 0.22 meV · dE_site 0.003 meV). 나머지는 transfer-screened
   - 상자 수렴 box20<->box24: 0.057~0.322 meV (게이트 10 meV) 전부 통과
-  - 절대 E_ads 는 **현재 조건부 보류** — 기준 분자가 NUPDOWN 고정·LREAL=F 인데 복합체는
-    자유·T 라 delta_m + delta_LREAL 이 남는다 (별건, 회신 P 에서 다룸)
+  - 절대 E_ads 는 **현재 보류 확정** — 회신 P(수치 프로토콜 심사)가 이미 판정했다:
+    기준 분자(NUPDOWN 고정·LREAL=F)와 복합체(자유·T)의 reference 비대칭으로 절대값과
+    0.346 헤드라인은 non-citable, 정본은 all-F, 복구는 free-spin+F 분자 3잡 → 필요시
+    complex F 재실행. **그러니 4번 질문은 '지금 쓸 수 있나' 가 아니라 '복구 후에도
+    자세표본·정규화 문제로 못 쓰게 되는 것이 있나' 로 읽어 달라.**
 
 우리가 자체 감사에서 찾은 것 셋 — 이것부터 심사해 달라:
 

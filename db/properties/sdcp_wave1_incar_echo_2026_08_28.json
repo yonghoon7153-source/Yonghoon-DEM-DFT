@@ -1,57 +1,41 @@
 {
- "schema": "sdcp_wave1_incar_echo/v1",
+ "schema": "sdcp_wave1_incar_echo/v2",
  "date": "2026-08-28",
  "csv": "db/properties/sdcp_wave1_incar_echo_2026_08_28.csv",
- "무엇": "wave1 회수 드롭 36잡의 **INCAR 되울림 전수** + 캠페인 안에서 값이 갈린 키. 입력 파일이 회수되지 않았으므로 OUTCAR 되울림이 유일한 증거다.",
+ "무엇": "wave1 회수 드롭 36잡의 INCAR 되울림 감사 — **키별 검증 상태 5분류** (verified_equal / verified_different / partial_missing / all_missing_unverified / not_applicable).",
  "만든_법": "python3 tools/sdcp/scfin_to_struct.py --outcar <drop>/tier{1,2}/*/{static,dense}/OUTCAR.gz --refs <drop>/refs --incar_csv <이 파일의 csv>",
 
- "⛔_원리적_한계": "MAGMOM 과 ADDGRID 는 VASP 가 되울리지 않는다 — 빈칸은 **미검증**이지 '설정 안 함' 이 아니다. 입력 INCAR 이 회수되지 않은 이 드롭에서는 그 두 키를 확인할 방법이 **아예 없다**. 자기 초기값(MAGMOM)이 확인 불가라는 것은 자기 basin 계보 주장에 직접 걸린다.",
+ "v2_왜": "회신 P P0 — v1 은 **fail-open** 이었다. 전 잡 공란인 키(SIGMA·KSPACING·NBANDS·NELM)가 '갈린 키' 목록에 안 나타나는 것을 '36잡 동일' 로 읽었다. 미검증을 통과로 승격한 것. v2 는 상태를 먼저 가르고 갈림은 verified 키에서만 정의한다. SIGMA 는 전용 파서(ISMEAR 줄의 `ISMEAR = 0; SIGMA = 0.05`)를 추가해 **실제로 검증**됐다.",
 
- "✅_통과한_것": {
-  "전자수_보존": {
-   "clean_slab": 1488,
-   "검산": {
-    "sdcp_neutral": "1488 + 108 = 1596 ✓",
-    "sdcp_doped": "1488 + 107 = 1595 ✓ (홀수 — doublet 과 정합)",
-    "ptfe_c10": "1488 + 194 = 1682 ✓",
-    "ptfe_dimer": "1488 + 74 = 1562 ✓"
-   },
-   "뜻": "복합체 = 슬랩 + 분자의 전자수가 네 조각 전부 정확히 맞는다. 회신 O 재승인 조건 ① 의 NELECT 항목은 이로써 실측 확인됨 (조성·protonation·counterion·reservoir 는 여전히 미확정)"
+ "키별_상태": {
+  "verified_equal_12": "EDIFF 1e-6 · ENCUT 520 · ISMEAR 0 · **SIGMA 0.05** · ISPIN 2 · ISTART · ISYM · IVDW 11 · LASPH T · LDIPOL T · NSW 0 · PREC accurate — 36잡 실측 동일",
+  "verified_different_7": {
+   "설계된_것": "ICHARG 2/1(상 사슬) · IDIPOL 3/4(계 모양) · NELECT(조성별 — 아래 검산) · LMAXMIX 4/2(LDA+U 유무에 따름)",
+   "🔴_비대칭_2건": "NUPDOWN −1(복합체·슬랩) vs 0/1(기준 분자) · **LREAL T(복합체·슬랩) vs F(기준 분자)**"
   },
-  "공통_고정된_키": "ENCUT 520 · PREC accurate · ISMEAR 0 / SIGMA 0.05 · EDIFF 1e-6 · LASPH T — 36잡 전부 동일",
-  "LDAU_값": "Ni 에만 U=6.2, 나머지 전 원소 LDAUL=-1 (U 무효) — 종 수에 따라 문자열 길이만 다르고 값 규약은 일관",
-  "ICHARG": "static 2(원자에서 생성) / dense 1(CHGCAR 승계) — 설계된 4상 사슬. 결함 아님",
-  "IDIPOL": "슬랩·복합체 3(z만) / 분자상자 4(전방향) — 계 모양에 맞는 정상 선택"
+  "partial_missing_5": "LDAU·LDAUU·LDAUJ·LDAUL·LDAUTYPE — 분자 잡 8개에서 공란 (LDA+U 산문이 없는 계라 되울림 자체가 없음. 분자에 U 를 주지 않은 것과 정합하지만 **증명은 아니다**)",
+  "all_missing_unverified_3": "**KSPACING · NBANDS · NELM — 전 잡 공란 (파서가 그 서식을 못 읽음). '동일' 이라고 말할 수 없다.** 이 키들이 필요한 주장은 fail-closed",
+  "not_applicable_2": "MAGMOM · ADDGRID — OUTCAR 이 원리적으로 되울리지 않음. 입력 INCAR 미회수라 **확인 방법이 없다**"
  },
 
- "🔴_발견_기준과_대상의_비대칭_2건": {
-  "1_NUPDOWN_스핀_제약": {
-   "복합체·슬랩": "-1 (자유) — 28잡",
-   "기준_분자": "0 (neutral·ptfe 6잡) · 1 (doped 2잡)",
-   "상태": "기지 — 회신 O 6번. δ_m = E_M^{M=0} − E_M^{free} 가 절대 E_ads 에 남는다"
-  },
-  "2_LREAL_실공간_투영": {
-   "발견": "2026-08-28 INCAR 전수 감사에서 **새로 발견**",
-   "복합체(224원자)": "T",
-   "기준_슬랩(192원자)": "T",
-   "기준_분자(32~35원자)": "**F**",
-   "왜_문제인가": "E_ads = E_복합체 − E_슬랩 − E_분자 에서 슬랩의 실공간 투영 오차는 복합체와 슬랩 사이에서 상쇄된다. 그런데 **분자는 복합체 안에서는 LREAL=T 로, 기준으로는 LREAL=F 로** 계산됐다. 그 차이는 상쇄되지 않고 잔차로 남는다.",
-   "남는_잔차": "≈ (복합체 안 분자 원자 32~35개의 실공간 투영 오차). LREAL=.TRUE. 는 VASP 실공간 옵션 중 가장 거친 쪽이고 ROPT 조정 없이는 원자당 수 meV 급이 인용된다 — 30~35 원자면 수십 meV 규모일 수 있다.",
-   "⚠_크기는_미측정": "위 규모는 일반론이지 우리 계의 실측이 아니다. **δ_LREAL 은 측정해야 하는 양이다** — 기준 분자를 LREAL=T 로 한 번 더 돌려 차를 보는 것이 유일한 확정 방법.",
-   "어디에_걸리나": {
-    "절대 E_ads": "걸린다 (δ_m 과 같은 자리)",
-    "0.346 eV 헤드라인": "부분적으로 걸린다 — SDCP(35원자)와 PTFE(32원자)의 잔차가 비슷해 상당 부분 상쇄되지만 정확히 0 은 아니다",
-    "자리대비 ΔE_site": "안 걸린다 — 같은 복합체끼리의 차라 기준이 통째로 소거된다",
-    "추출 부호 +0.34 eV": "안 걸린다 — 복합체 두 개의 차다"
-   }
-  },
-  "종합": "wave1 의 결함은 **스핀 축 하나가 아니라 두 축**이다 — 스핀 제약(NUPDOWN)과 수치 해밀토니안(LREAL). 둘 다 '기준과 대상이 같은 조건인가' 라는 같은 물음에 걸리고, 둘 다 **절대값에만** 남고 차이값에는 소거된다."
+ "✅_verified_로_확인된_것": {
+  "전자수_보존": "clean_slab 1488 + mol(108/107/194/74) = complex(1596/1595/1682/1562) — 네 조각 전부 정확. ⚠ 회신 P: 홀수 1595 는 doublet 과 **양립**한다는 뜻이지 doublet 바닥상태의 증명이 아니다",
+  "수치_공통키": "ENCUT/PREC/ISMEAR/SIGMA/EDIFF/LASPH 가 36잡 동일 (verified)"
  },
 
- "권고": {
-  "측정": "기준 분자 3종(sdcp_neutral·ptfe_c10·ptfe_dimer, box24)을 같은 기하에서 **NUPDOWN=-1 + LREAL=T** 로 재실행 — δ_m 과 δ_LREAL 을 한 번에 잡는다. 잡 3개.",
-  "재계산": "δ 합이 판정바닥 아래면 기존 절대 E_ads 유지, 아니면 전항 갱신",
-  "규율": "앞으로 기준과 대상은 **같은 수치 설정**으로 돌린다 — 계 크기가 달라 성능 최적화가 다를 수밖에 없다면, 그 차이를 δ 로 **측정해서 보정하거나 명시**한다"
+ "🔴_LREAL_비대칭_회계_v2_회신P_정정": {
+  "사실": "복합체(224원자) T · 기준 슬랩(192원자) T · 기준 분자(32~35원자) F",
+  "옳은_대수": "A_mix − A_F = ε_C − ε_S  (ε_X = E_X^T − E_X^F). ⛔ v1 의 '복합체 속 분자 원자 30~35개의 오차' 해석은 ε_C ≈ ε_S + ε_M 이라는 **가산성 가정**이 더 필요해서 틀렸다.",
+  "크기": "⛔ v1 의 '원자당 수 meV' 추정 철회 — 그것은 LREAL=Auto/ROPT 문맥의 수치를 .TRUE. 에 옮겨 쓴 것이다. .TRUE. 는 VASP 문서가 잠재적으로 매우 부정확하다고 하는 옵션이라 **크기를 선험적으로 말할 수 없다.**",
+  "측정_설계_v2": "⛔ v1 의 '기준 분자만 T 재실행' 은 all-T 값(A_mix − ε_M)을 만들 뿐 A_mix − A_F 를 재지 못한다. **정본은 all-F** — 절대 E_ads 는 molecule F + complex F + slab F, 0.346 cross-fragment 차는 slab 이 소거되므로 관련 complex F + free-spin molecule F 만 필요. 분자는 이미 F 라 **먼저 필요한 것은 free-spin+F 분자 3잡**이고, 분자 T 계산은 생략한다 (회신 P 4번 권고 순서)."
  },
- "출처": "wave1 회수 zip 4종의 OUTCAR 되울림 (입력 INCAR 미회수)"
+
+ "⛔_이_감사가_못_하는_것_회신P_6번": [
+  "'전수 통과' 를 말할 수 없다 — all_missing/not_applicable 키가 남는 한 verified 키에 대해서만 말한다",
+  "INCAR 밖의 축은 전혀 못 본다: KPOINTS 실제 mesh/shift · POTCAR 해시 · POSCAR/CONTCAR 해시와 기하 대응 · CHGCAR/WAVECAR 실제 read 증거(ICHARG 되울림은 승계 증명이 아니다) · FFT grid · DIPOL 중심 · 실행 바이너리/환경",
+  "seed 계보 복구 불가 — pm1/net4 는 **잡 이름 라벨**일 뿐이다. '두 seed 를 투입했다/독립 재현했다/basin 이 seed 계보를 보존했다' 는 서술은 금지, 허용 표현은 '라벨된 회신 잡에서 realized basin A/B 가 관찰됐다' 까지 (회신 P 5번 P0)",
+  "phaseB 추출 endpoint(complex_doped/complex_doped_extr)는 이 CSV 에 없다 — 이 감사는 그 값에 대해 아무것도 말하지 않는다 (회신 P P0)"
+ ],
+
+ "출처": "wave1 회수 zip 4종의 OUTCAR 되울림 (입력 INCAR 미회수) · 회신 P (kb/reviews/codex_P_wave1_incar_audit_reply_2026_08_28.md)"
 }

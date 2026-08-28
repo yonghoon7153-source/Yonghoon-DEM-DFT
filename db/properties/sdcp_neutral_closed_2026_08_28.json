@@ -16,11 +16,11 @@
   "대조군_ptfe_dimer_Nitop": -0.3302
  },
  "허용_서술_이대로만_쓴다": {
-  "비교": "동일 pm1 자기 branch 와 고정된 MLIP-기하 DFT 단일점 규약에서, 표본한 중성 SDCP 의 단분자 흡착 전자에너지는 C₁₀F₂₂ 보다 **최소 0.346 eV 더 음수**였다",
-  "자리_dimer": "matched pose 한 쌍에서 Li-top 이 36.1 meV 낮았고, 두 자기 시드에서 0.087 meV 로 재현됐다 (고정-basin B/B)",
+  "비교": "⏳ **보류 중 — 지금은 쓰지 않는다** (회신 P 7번: 허용/보류 모순 제거). reference-equivalence 복구(free-spin+LREAL=F 기준 + 필요한 complex/slab F) 후에만 승격. 복구 후 문구(그때 이대로): '동일 pm1 자기 branch 와 고정된 MLIP-기하 DFT 단일점 규약에서, 표본한 중성 SDCP 의 단분자 흡착 전자에너지는 C₁₀F₂₂ 보다 더 음수였다' — 수치는 복구값으로",
+  "자리_dimer": "matched pose 한 쌍에서 Li-top 이 36.1 meV 낮았다. ⚠ 회신 P 5번(P0): 'pm1/net4 두 자기 시드에서 재현' 이라 쓰지 않는다 — 입력 INCAR 미회수라 seed 투입·독립재현은 증명 불가. 허용 표현: **'pm1/net4 로 라벨된 회신 잡 두 개에서 realized basin (pm1 · net4-B/B) 이 관찰됐고 ΔE_site 가 0.087 meV 로 일치했다'**",
   "자리_c10": "UMA-selected matched pose 한 쌍에서 Li-top 전자에너지가 49.8 meV 낮았다 (pm1 단일 시드 — net4 쌍은 혼합-basin이라 비교 불가)",
   "자리_neutral": "**30 meV 판정 해상도에서 미해결** (pm1 +9.27 meV). ⛔ '무선호' 라고 쓰지 않는다 — 사전등록 판정바닥 아래는 판정이 아니다",
-  "접촉_기전": "술포네이트 O 가 표면 Li 에 배위한다 (O···Li 2.09 Å). cross 자세 2종이 명목상 Ni 자리에서도 Li 접촉을 찾아가 4자세가 14.6 meV 안에 모인다"
+  "접촉_기전": "**평가된 기하**(MLIP 이완 위 단일점 — DFT 최적구조 아님)에서 술포네이트 O 가 표면 Li 에 배위한다 (O···Li 2.09 Å). cross 자세 2종이 명목상 Ni 자리에서도 Li 접촉을 찾아가 4자세가 14.6 meV 안에 모인다"
  },
  "⛔_금지_서술": [
   "'자리 불문' — 자리대비는 미해결이다",
@@ -32,7 +32,7 @@
  "닫는_근거_체크리스트": {
   "값의_안정성": "자세 4종 14.6 meV · 상자 box20↔24 0.32 meV. ⛔ '두 자기 시드' 는 근거에서 **제거** (회신 N): pm1 과 net4 의 E_ads 비교는 혼합-basin 조건부 증분 비교라 회신 M 이 반려한 그 산술이다. 시드 재현 근거는 **ptfe_dimer 고정-basin ΔE 0.087 meV 하나**뿐이고 그것은 PTFE 의 것이다",
   "대조군": "PTFE 조각 2종이 같은 슬랩·같은 상자·같은 규약으로 있다",
-  "격차의_보수성": "가장 약한 SDCP 자세(−0.7582) vs 가장 강한 c10 자세(−0.4124) 로도 0.346 eV",
+  "격차의_보수성": "⏳ 보류 — 0.346 eV 수치는 reference-equivalence 복구 전까지 인용 금지 (회신 P). 복구 전 허용: '표본 자세 전부에서 SDCP 가 PTFE 보다 더 음수' 라는 **부등호 방향 서술도 쓰지 않는다** — 절대 E_ads 자체가 보류라서",
   "기전_확인": "접촉 종류(O···Li 배위)가 확인됐고 cross 자세가 그 기전을 재현했다",
   "외부_리뷰": "회신 M 의 승인 범위는 **좁다**: 0.346 eV 비교 문구와 matched-pose 강등 문구. 접촉 기전(O···Li) 서술은 우리 판독이지 M 의 승인 대상이 아니다",
   "미해결_명시": "자리대비(30 meV 미해결)와 doped 를 **닫는 범위에서 제외**했다"
@@ -85,6 +85,11 @@
    "at": "2026-08-28g",
    "state": "closed_for_scope_pending_spin_equivalence",
    "note": "1저자 요청으로 자체 감사 실시 — 자세 표본 비대칭(4 vs 2) · 정규화 의존성(원자당 순위 역전) · dense-k 배분 · PTFE 마감문서 부재 4건 기록. 확정값 변경 없음, 회신 Q 심사 대상으로 올림"
+  },
+  {
+   "at": "2026-08-28h",
+   "state": "closed_for_scope_pending_reference_equivalence",
+   "note": "회신 P 7번: 상태명 spin_equivalence → **reference_equivalence** (스핀만이 아니라 LREAL 까지 기준 프로토콜 문제). 허용_서술.비교(0.346)와 자리_dimer(시드 재현)가 뒤의 보류와 모순 — 허용 쪽을 보류로 정리. 접촉기하는 '평가된 기하' 로 표기"
   }
  ],
  "⚠_사후마감": "이 문서는 데이터와 회신 M 을 본 **뒤에** 조건을 만들었다 — 사전등록이 아니다. 규율의 취지(조건 먼저)는 다음 캠페인부터 적용된다",
@@ -110,11 +115,10 @@
   ],
   "추가_철회": "없음 (doped E_ads 는 이미 비어 있다)",
   "해제_조건_spin_equivalence_짝검사": [
-   "mol__sdcp_neutral__box24 와 mol__ptfe_c10__box24 를 같은 기하·설정에서 NUPDOWN=0 vs NUPDOWN=-1(자유) 짝계산 → δ_m",
-   "⊕ 2026-08-28 추가: **LREAL 도 같이 맞춰야 한다** — 기준 분자는 LREAL=F, 복합체·슬랩은 T 로 돌았다 (INCAR 전수 감사). 같은 분자가 복합체 안에서는 실공간, 기준으로는 역공간이라 그 몫이 절대 E_ads 에 남는다. 근거: db/properties/sdcp_wave1_incar_echo_2026_08_28.json",
-   "자유 복합체를 여러 초기 자화에서 재현",
-   "δ_m ≈ 0 이면 기존 E_ads 유지, 아니면 E_ads^ad = E_ads^old + δ_m 로 갱신",
-   "fixed-M=0 estimand 를 택하면 clean slab + 복합체 4종도 전부 M=0 재계산"
+   "1단계: 기준 분자 3종(box24, 기하 고정)을 **free-spin(NUPDOWN=-1) + LREAL=F** 로 재실행 → δ_m (spin-reference 동등성). ⚠ 회신 P 3·4번: LREAL 은 F 유지 — 분자 T 재실행은 all-T 값을 만들 뿐 all-F 정본을 재지 못한다. 분자 T 계산은 생략",
+   "2단계 (0.346 을 살릴 때만): 관련 SDCP/PTFE **complex 를 LREAL=F 로** 재실행 — slab 은 cross-fragment 차에서 소거되므로 불필요",
+   "3단계 (절대 E_ads 복구까지): matching slab F 추가",
+   "δ 판정 뒤 에너지 주장만 승격 — 사전 문턱을 넘으면 값 갱신, 아니면 기존 값 복권"
   ],
   "출처": "kb/reviews/codex_O_sdcp_doped_estimand_reply_2026_08_28.md §6"
  },

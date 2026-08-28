@@ -749,7 +749,7 @@
     "net4_fixed_basin_pairs_only__dimer_BB_doped_AA__see_review_M"
    ],
    "updated": "2026-08-28",
-   "note": "pm1 과 쌍 — basin B 에서도 재현 | 2026-08-28 회신 M: 혼합-basin ΔE 금지. 고정-basin net4 쌍은 dimer(B/B)·doped(A/A)뿐. pm1 열이 정본 유지"
+   "note": "pm1 라벨 잡과 쌍 — net4 라벨 잡의 realized basin B 에서도 일치 (⚠ seed 재현 주장 아님 — 회신 P 5번) | 2026-08-28 회신 M: 혼합-basin ΔE 금지. 고정-basin net4 쌍은 dimer(B/B)·doped(A/A)뿐. pm1 열이 정본 유지"
   },
   {
    "system": "sdcp",
@@ -933,6 +933,7 @@
  },
  "changelog": {
   "2026-08-25b": "SDCP wave1 인용 확정분 등록 (basin 일치 · pm1 정본): dE_site 4건 + Eads 7건. comparison_group 을 sdcp-wave1-* 로 분리해 argyrodite 4축과 절대 섞이지 않게. sdcp_doped·net4 Eads·50 meV offset 은 등록하지 않음 (citable.json not_citable). 원자료 재유도 파이프라인: sdcp_wave1_results.json → citable.json → registry.",
-  "2026-08-28-eads-hold": "SDCP_Eads_eV__* 7건 canonical → provisional (절대값 보류). 사유: 기준-대상 비대칭 2건(δ_m 스핀제약 · δ_LREAL 실공간투영). dE_site 4건은 복합체끼리 차라 canonical 유지"
+  "2026-08-28-eads-hold": "SDCP_Eads_eV__* 7건 canonical → provisional (절대값 보류). 사유: 기준-대상 비대칭 2건(δ_m 스핀제약 · δ_LREAL 실공간투영). dE_site 4건은 복합체끼리 차라 canonical 유지",
+  "2026-08-28-seed-wording": "회신 P 반영: seed '재현' 문구를 realized-basin '일치' 로 강등 (입력 INCAR 미회수 — seed 투입 미검증)"
  }
 }

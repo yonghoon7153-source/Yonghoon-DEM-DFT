@@ -15,13 +15,14 @@
 - 재개는 회신 O 7조건 전부로만. 부분 재개 없음.
 - 부수 판정 완료: LiNiO₂(104)+U 슬랩 **금속 아님** (gap ≈ 0.21 eV, dense 일치, 부분점유 0)
   — 음이온을 중성 셀로 받는 지름길 없음. 기록: doped 마감 문서 재개조건 절.
-**남은 유일한 필수 계산 = 기준 분자 재실행** (0.346 eV headline 보류 해제용).
-2026-08-28 INCAR 전수 감사로 **바꿀 키가 둘**이 됐다:
-`NUPDOWN = 0 → -1` (δ_m) · `LREAL = F → T` (δ_LREAL — 복합체·슬랩이 T 인데 기준 분자만 F).
-대상 mol_neutral·ptfe_c10·ptfe_dimer box24, 기하 고정, static 상만.
-⚠ 회신 P 4번에서 **두 키를 한 잡에서 같이 바꾸는 게 옳은지**를 심사받는 중 — 답이 오면
-3잡(동시) / 6잡(분리) 중 정해서 던진다. 의뢰 블록은 세션 보고에.
-
+**남은 유일한 필수 계산 — 회신 P 로 설계 확정 (delta_joint 금지)**:
+1단계 (지금): 기준 분자 3종(box24, 기하 고정)을 **NUPDOWN=-1 · LREAL=F 유지** 로 재실행
+  → δ_m 만 잰다. ⛔ LREAL 은 건드리지 않는다 — 정본이 all-F 라서, 분자 T 재실행은
+  all-T 값을 만들 뿐 아무 정본도 재지 못한다 (회신 P 3번 P0). 분자 T 계산은 생략.
+2단계 (0.346 을 살릴 때만): 관련 SDCP/PTFE **complex 를 LREAL=F 로** 재실행 —
+  cross-fragment 차에서 slab 은 소거되므로 slab F 는 불필요. 최소 2잡(SDCP Nitop pm1 +
+  c10 Litop pm1) × 5.8 h ≈ 12 h, 전 자세 복구는 8잡 ≈ 46 h.
+3단계 (절대 E_ads 까지): matching slab F 추가 (+5.2 h).
 **비용 실측** (wave1 OUTCAR 의 Elapsed time, 전부 48 MPI rank · Γ 1점):
 mol box24 잡당 sdcp_neutral 1262 s · ptfe_c10 1196 s · ptfe_dimer 554 s = **합 50분**.
 제약 해제로 SCF 스텝 +50% 를 잡아도 **~75분**, 6잡 분리해도 **~2.5시간**. core-h 40.

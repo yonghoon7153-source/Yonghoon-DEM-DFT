@@ -850,24 +850,66 @@ def read_incar_echo(path):
     for k in INCAR_EXTRA:
         m = re.search(r"(?m)^\s{2,}" + k + r"\s*=\s*([^\n;|]+?)(?:\s{2,}\w+\s*=|$)", t)
         out[k] = m.group(1).strip() if m else None
+    # ⚠ SIGMA 는 자기 줄이 없다 — `ISMEAR = 0;   SIGMA = 0.05 ...` 처럼 ISMEAR 줄에
+    #   붙어 나온다. 위 일반 패턴이 못 잡아 36잡 전부 공란이 됐고, 회신 P 가 그 공란을
+    #   "동일" 로 승격한 fail-open 을 잡았다. 전용 패턴으로 따로 읽는다.
+    if out.get("SIGMA") is None:
+        m = re.search(r"ISMEAR\s*=\s*-?\d+\s*;\s*SIGMA\s*=\s*([\d.Ee+-]+)", t)
+        out["SIGMA"] = m.group(1) if m else None
+    return out
+
+
+#: OUTCAR 이 원리적으로 되울리지 않는 키 — '없음' 이 아니라 **미검증**이다.
+ECHO_NEVER = ("MAGMOM", "ADDGRID")
+
+
+def incar_key_status(rows):
+    """잡별 INCAR echo → 키별 **검증 상태** 5분류 (회신 P P0 — fail-closed 스키마).
+
+    ⛔⛔ 왜 이 함수가 따로 있나 (2026-08-28 회신 P P0, 실제 사고):
+      종전 incar_diff 는 "값이 갈린 키" 만 돌려줬다. 그러면 **전부 공란인 키**
+      (SIGMA·KSPACING·NBANDS·NELM — 파싱 실패)가 갈린 키 목록에 안 나타나, 호출부가
+      그것을 "36잡 동일" 로 읽었다. **미검증을 통과로 승격한 fail-open** 이다.
+      이제 상태를 먼저 가르고, 갈림(diff)은 verified 인 키에서만 정의한다.
+
+    → {key: {"status": verified_equal|verified_different|all_missing_unverified|
+              partial_missing|not_applicable,
+             "values": {value: [job…]} (verified 만), "n_missing": int}}
+    """
+    keys = sorted({k for r in rows for k in r if k not in ("job", "role", "fragment")})
+    out = {}
+    for k in keys:
+        vals, miss = {}, []
+        for r in rows:
+            v = r.get(k)
+            if v is None or v == "":
+                miss.append(r["job"])
+            else:
+                vals.setdefault(str(v), []).append(r["job"])
+        if k in ECHO_NEVER and not vals:
+            st = "not_applicable"          # OUTCAR 이 원리적으로 안 되울림 — 별도 표기
+        elif not vals:
+            st = "all_missing_unverified"  # 파싱 실패/부재 — ⛔ '동일' 로 읽으면 안 된다
+        elif miss:
+            st = "partial_missing"
+        elif len(vals) > 1:
+            st = "verified_different"
+        else:
+            st = "verified_equal"
+        out[k] = {"status": st, "values": vals, "n_missing": len(miss)}
     return out
 
 
 def incar_diff(rows, key_of=lambda r: r["job"]):
-    """잡별 INCAR echo 목록 → **값이 갈리는 키만** 뽑는다.
+    """잡별 INCAR echo → **검증된 값이 실제로 갈린 키만**.
 
-    회신 O G1 의 실제 검사 대상: "기준과 대상이 같은 state-selection policy 인가".
-    한 캠페인 안에서 갈리면 안 되는 키가 갈렸는지 **자동으로** 드러나게 한다.
-    → {key: {value: [job…]}} — 값이 하나뿐인 키는 빼고 돌려준다.
+    ⚠ 이 함수는 갈림만 본다 — 공란/미검증 판정은 incar_key_status() 몫이고,
+      호출부는 반드시 둘을 같이 보고해야 한다 (회신 P: "전부 공란" ≠ "전부 동일").
     """
-    keys = sorted({k for r in rows for k in r if k not in ("job", "role", "fragment")})
     diff = {}
-    for k in keys:
-        by = {}
-        for r in rows:
-            by.setdefault(str(r.get(k)), []).append(key_of(r))
-        if len(by) > 1:
-            diff[k] = by
+    for k, st in incar_key_status(rows).items():
+        if st["status"] == "verified_different":
+            diff[k] = st["values"]
     return diff
 
 
@@ -1029,6 +1071,22 @@ def selftest():
         chk(dl is None and np.allclose(pl, posl),
             "음성: 감긴(주기 결합) 조각 → 재중심 포기(원본 유지), 조용히 절단하지 않는다")
 
+        # ⛔ 음성 10 (회신 P P0 — 실제 사고 재현) — **전부 공란인 키를 '동일' 로
+        #   승격하면 안 된다.** 종전 incar_diff 는 SIGMA 전 잡 공란을 갈린 키 목록에서
+        #   빼서, 호출부가 "36잡 동일" 로 읽었다. fail-open 이었다.
+        ir0 = [{"job": "a", "role": "complex", "fragment": "x", "SIGMA": None, "ENCUT": "520"},
+               {"job": "b", "role": "mol_ref", "fragment": "x", "SIGMA": None, "ENCUT": "520"}]
+        st0 = incar_key_status(ir0)
+        chk(st0["SIGMA"]["status"] == "all_missing_unverified",
+            "음성(회신 P): 전 잡 공란 키는 all_missing_unverified — verified_equal 아님")
+        chk(st0["ENCUT"]["status"] == "verified_equal", "값이 실제로 같은 키만 verified_equal")
+        st1 = incar_key_status([dict(ir0[0], SIGMA="0.05"), ir0[1]])
+        chk(st1["SIGMA"]["status"] == "partial_missing",
+            "음성: 일부만 공란이면 partial_missing — 그 잡들은 미검증")
+        st2 = incar_key_status([{"job": "a", "role": "c", "fragment": "x", "MAGMOM": None}])
+        chk(st2["MAGMOM"]["status"] == "not_applicable",
+            "MAGMOM 은 OUTCAR 이 원리적으로 안 되울림 — not_applicable 로 분리")
+
         # ⛔ 음성 9 — incar_diff 는 **갈린 키만** 집어야 한다 (같은 키를 오탐하면
         #   진짜 비대칭이 노이즈에 묻힌다). 실제로 이 검사가 LREAL T/F 를 찾아냈다.
         ir = [{"job": "complex", "role": "complex", "fragment": "x",
@@ -1125,15 +1183,37 @@ def main():
             for r in irows:
                 w.writerow({k: ("" if r.get(k) is None else r[k]) for k in cols})
         print(f"\n══ INCAR 되울림 {len(irows)}잡 → {a.incar_csv} ══")
-        d = incar_diff(irows)
-        if not d:
-            print("  ✓ 전 잡이 동일 — 갈린 키 없음")
-        for k, by in sorted(d.items()):
-            print(f"  ⚠ **{k}** 이 {len(by)}가지로 갈림:")
-            for v, jobs in sorted(by.items(), key=lambda x: -len(x[1])):
-                short = ", ".join(j.split("__")[0] + "/" + j.split("__")[-1] for j in jobs[:4])
-                print(f"      {v!s:<28s} ({len(jobs)}잡) {short}{' …' if len(jobs) > 4 else ''}")
-        print("  ⚠ MAGMOM·ADDGRID 는 VASP 가 안 되울린다 — 빈칸은 **미검증**이지 '없음' 이 아니다")
+        stat = incar_key_status(irows)
+        groups = {}
+        for k, st in stat.items():
+            groups.setdefault(st["status"], []).append(k)
+        eq = sorted(groups.get("verified_equal", []))
+        print(f"  ✓ verified_equal ({len(eq)}): {', '.join(eq)}")
+        # ⛔ 회신 P P0 — 공란을 '동일' 로 승격하지 않는다. 미검증은 미검증으로 찍는다.
+        for st_name, mark in (("verified_different", "⚠"),
+                              ("partial_missing", "⚠"),
+                              ("all_missing_unverified", "⛔"),
+                              ("not_applicable", "⛔")):
+            ks = sorted(groups.get(st_name, []))
+            if not ks:
+                continue
+            if st_name == "verified_different":
+                for k in ks:
+                    by = stat[k]["values"]
+                    print(f"  {mark} **{k}** 이 {len(by)}가지로 갈림 (verified_different):")
+                    for v, jobs in sorted(by.items(), key=lambda x: -len(x[1])):
+                        short = ", ".join(j.split("__")[0] + "/" + j.split("__")[-1]
+                                          for j in jobs[:4])
+                        print(f"      {v!s:<28s} ({len(jobs)}잡) {short}"
+                              f"{' …' if len(jobs) > 4 else ''}")
+            else:
+                note = {"partial_missing": "일부 잡에서 공란 — 그 잡들은 미검증",
+                        "all_missing_unverified": "전 잡 공란 — 파싱 실패/부재. '동일' 아님",
+                        "not_applicable": "OUTCAR 이 원리적으로 안 되울림 — 확인 불가"}[st_name]
+                print(f"  {mark} {st_name} ({len(ks)}): {', '.join(ks)} — {note}")
+        n_bad = len(groups.get("all_missing_unverified", [])) + len(groups.get("not_applicable", []))
+        print(f"  ⛔ '전수 통과' 는 말할 수 없다 — 미검증 키 {n_bad}개가 남는 한 "
+              f"이 표는 verified 키에 대해서만 말한다 (회신 P P0)")
 
     if a.energy_csv:
         refs, ref_metas = collect_refs(a.refs)

@@ -19,7 +19,7 @@
   "sdcp_neutral_pm1": 9.265
  },
  "dE_notes": {
-  "ptfe_dimer": "두 시드 고정-basin 완성 (pm1 36.07 / net4 B/B 36.16, 차 0.087 meV). 허용 서술: 'matched pose 한 쌍에서 Li-top 이 36.1 meV 낮음, 두 자기 시드 재현'",
+  "ptfe_dimer": "두 라벨(pm1 / net4) 회신 잡의 realized basin 이 pm1·B/B 였고 ΔE_site 가 36.07 / 36.16 meV (차 0.087) 로 일치. ⚠ '두 자기 시드 재현' 이라 쓰지 않는다 — seed 투입은 미검증 (회신 P 5번). 허용 서술: 'matched pose 한 쌍에서 Li-top 이 36.1 meV 낮음, 라벨된 두 잡의 realized basin 에서 일치'",
   "ptfe_c10": "pm1 단일 시드 +49.77 meV. net4 쌍은 혼합-basin(A/B) — 직접차 +100.22 meV 는 슬랩 basin gap 포함이라 자리선호 아님. **허용 서술: 'UMA 선택 matched pose 한 쌍에서 Li-top 전자에너지가 49.8 meV 낮았다'** — 일반화 금지",
   "sdcp_neutral": "⛔ '무선호' 철회 → **'30 meV 판정 해상도에서 미해결'** — 사전등록 규약(kb/questions/sdcp_site_preference.md: 판정바닥 max(30 meV, 쌍 편차), n<3 NO_VERDICT)을 v2 가 안 읽었다. pm1 2×2 cross 실측: Li-자세 +4.2 / Ni-자세 +14.5 meV, pose×site 상호작용 10.3 meV",
   "sdcp_doped": "⛔ 인용 불가 유지. ⚠ v2 의 '105 meV branch 갈림' 은 **branch gap 이 아니다** — pm1 ΔE(+86.45, Li-top 미수렴 포함)와 net4 ΔE(−18.95)의 차였다. net4 A/A 쌍 −18.95 meV 는 고정-basin 값이지만 단일 시드 + 상대 스핀 미열거"
@@ -39,19 +39,19 @@
   "reading": "⛔ 회신 M 으로 교체 (2026-08-28): 종전 '(basin 맞는) net4 쌍은 pm1 과 ≤1 meV — 재현성 근거' 는 혼합-basin 조건부 증분의 산술 착시였다. 유효한 시드 재현은 **ptfe_dimer 고정-basin(B/B) ΔE 0.087 meV 하나**다. c10·neutral 의 net4 자리대비는 같은-basin 쌍이 생길 때까지 미정의."
  },
  "headline_sentences_ko": [
-  "표본한 matched pose 에서 PTFE 조각의 Li-top 전자에너지가 낮았다 (ptfe_dimer 36.1 meV — 두 자기 시드 고정-basin 재현 0.087 meV · ptfe_c10 49.8 meV — pm1 단일). sdcp_neutral 의 자리 대비는 30 meV 판정 해상도에서 미해결이다 (+9.3 meV).",
-  "동일 pm1 자기 branch 와 고정된 MLIP-기하 DFT 단일점 규약에서, 표본한 중성 SDCP 의 단분자 흡착 전자에너지는 C₁₀F₂₂ 보다 최소 0.346 eV 더 음수였다 (−0.758 vs −0.412 eV)."
+  "표본한 matched pose 에서 PTFE 조각의 Li-top 전자에너지가 낮았다 (ptfe_dimer 36.1 meV — pm1/net4 로 **라벨된** 회신 잡 두 개의 realized basin(pm1·B/B)에서 0.087 meV 로 일치 · ptfe_c10 49.8 meV — pm1 단일). sdcp_neutral 의 자리 대비는 30 meV 판정 해상도에서 미해결이다 (+9.3 meV). ⚠ seed 투입·독립재현 표현 금지 — 입력 INCAR 미회수 (회신 P 5번)",
+  "⏳ 보류 (회신 O δ_m + 회신 P LREAL): 절대 E_ads 비교 문장(0.346 eV)은 reference-equivalence 복구 후에만 복권 — 그 전에는 부등호로도 쓰지 않는다"
  ],
  "not_citable": [
   "sdcp_doped 전 항목",
   "basin-branch offset ≈50 meV (진단값 — 수치 인용 금지)",
-  "sdcp_doped 전부 (E_ads·자리) — 상태 미선언 다중해. 추출 부호 +0.336 eV 만 별도 유효"
+  "sdcp_doped 전부 (E_ads·자리) — 상태 미선언 다중해. ⛔ 추출 '부호' 도 2026-08-28 회신 P 로 철회 — 두 endpoint 원시 차 +0.34 eV 는 내부 기록용(citable:no, 자기상태 2.378/0.518 불일치·basin 동등성 미입증)"
  ],
  "updated": "2026-08-28",
  "v2_왜": "wave1.5 회신 — clean_slab net4 basin A 확정 (독립 검증: db/properties/sdcp_wave15_basinA.json). net4 E_ads 가 basin-matched 로 열렸다. 총에너지에서 재유도 — 손 전사 아님.",
  "v3_왜": "회신 M (교차리뷰): v2 의 basin-매칭 ΔE_site 가 **잘못된 estimand** 였다. 혼합-basin 쌍(c10 A/B · neutral B/A)에서 서로 다른 슬랩을 빼면 그 차에 슬랩 basin gap(49.718 meV)이 인위적으로 들어가고 나가며, 'pm1 과 1 meV 재현' 은 그 산술이 만든 착시였다. 직접 총에너지차: c10 +100.220 · neutral −40.697 meV. 고정-basin net4 대비가 가능한 것은 dimer(B/B)와 doped(A/A)뿐이다.",
  "seed_reproduction_fixed_basin": {
-  "what": "고정-basin ΔE_site 의 시드 간 재현 — **같은 basin 쌍에서만 정의된다**",
+  "what": "라벨된 두 회신 잡(pm1 / net4)의 realized basin 에서 ΔE_site 일치 — **같은 basin 쌍에서만 정의**. ⚠ seed 투입·독립재현 주장 아님 (회신 P 5번 — 입력 INCAR 미회수)",
   "ptfe_dimer": {
    "pm1": 36.071,
    "net4_BB": 36.157,
@@ -78,8 +78,9 @@
  "v4_왜": "회신 N P0: v3 가 dE_notes 는 고쳤지만 **headline_sentences_ko 를 안 고쳤다** — 문자열 매칭 수정의 전형적 실패(같은 주장, 다른 표현). '모두 Li 자리 선호'·'약 2배' 는 v3 자신의 dE_notes·금지서술과 정면 충돌였다. not_citable 의 'wave1.5 대기' stale 도 제거.",
  "⚠_hold_2026_08_28_회신O": {
   "대상": "Eads_eV_box24_pm1 · Eads_eV_box24_net4_basin_conditioned_SI 의 절대값과 headline 2문장(0.346 eV) — spin-equivalence δ_m 확인 전 조건부",
-  "이유": "분자 기준이 NUPDOWN=0 제약, 복합체는 자유 — δ_m=E_M^{M=0}−E_M^{free} 가 절대 E_ads 에 남는다 (회신 O 6번) ⊕ 2026-08-28 INCAR 감사: **LREAL 비대칭**(복합체·슬랩 T / 기준 분자 F)이 같은 자리에 하나 더 남는다 — δ_LREAL. 근거: db/properties/sdcp_wave1_incar_echo_2026_08_28.json",
+  "이유": "분자 기준이 NUPDOWN=0 제약, 복합체는 자유 — δ_m=E_M^{M=0}−E_M^{free} 가 절대 E_ads 에 남는다 (회신 O 6번) ⊕ 2026-08-28 INCAR 감사: **LREAL 비대칭**(복합체·슬랩 T / 기준 분자 F)이 같은 자리에 하나 더 남는다 — δ_LREAL. 근거: db/properties/sdcp_wave1_incar_echo_2026_08_28.json ⊕ 회신 P 3번: LREAL 정본은 all-F — 복구는 분자 free-spin+F, 필요시 complex F 재실행으로 (분자 T 계산은 생략)",
   "영향_없는_것": "dE_site_meV 전항 (같은 분자 기준을 쓰므로 δ_m 소거) · 자리선호 NO_VERDICT · doped 인용불가(이미 비움)",
   "해제": "db/properties/sdcp_neutral_closed_2026_08_28.json 의 해제_조건_spin_equivalence_짝검사 통과"
- }
+ },
+ "v5_왜": "회신 P (2026-08-28): seed 재현 서술을 realized-basin 관찰로 강등(5번 P0) · 추출 부호 철회 반영(2번 P0) · 절대값 보류에 LREAL 사유 추가(3번 P0)"
 }
