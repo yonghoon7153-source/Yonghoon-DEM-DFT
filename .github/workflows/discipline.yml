@@ -65,3 +65,6 @@ jobs:
 
       - name: STEP3 솔버 규약 (selftest)
         run: python scripts/step3_sigma.py --selftest
+
+      - name: 팔 payload 축소본 계약 (selftest)
+        run: python scripts/reduce_arm_payloads.py --selftest

@@ -61,6 +61,11 @@ run 'sdcp_phase_ledger_match --selftest' python3 scripts/sdcp_phase_ledger_match
 run 'sr01_stamp_compare     --selftest' python3 scripts/sr01_stamp_compare.py --selftest
 run 'mpm_webapp_payload     --selftest-temperature' python3 scripts/mpm_webapp_payload.py --selftest-temperature
 run 'step3_sigma            --selftest' python3 scripts/step3_sigma.py --selftest
+#  ★ 축소본 계약 (R8 Q6 ⓐ) — 원본 payload 는 팔당 127 MB 라 커밋할 수 없다.  커밋되는 것은
+#    축소본이고, 그 selftest 의 마지막 항목이 **판정기가 축소본을 원본과 동일하게 읽는다**를
+#    단언한다.  이것이 깨지면 커밋된 증거로 §9 provenance 대조를 재실행할 수 없다 —
+#    즉 "증거를 넣었다" 가 조용히 거짓이 된다.
+run 'reduce_arm_payloads     --selftest' python3 scripts/reduce_arm_payloads.py --selftest
 
 echo "── 리포 실물 (리포가 맞나 — selftest 가 **대신해 주지 않는다**) ──"
 #  ★★ 2026-08-25 — 배터리는 느려서 여기 없지만(~20분), **문법이라도** 본다.
