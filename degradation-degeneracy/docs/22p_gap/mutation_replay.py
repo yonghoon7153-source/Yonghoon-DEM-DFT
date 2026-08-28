@@ -81,10 +81,17 @@ MUTANTS = [
      "producer_digest_is_the_same_on_every_python_here"),
 
     # ── 47차 (게이트 46차 반증 조건) ──────────────────────────────────────
+    # ★ 48차 P0-7 — generation namespace 는 이제 **성분마다** 붙잡는다
+    #   (`_open_child_dir`). 그래서 옛 자리(`_open_dir_nofollow`)를 되돌려도
+    #   generation root 경로는 더 이상 그곳을 지나지 않아 아무 시험도 안 깨진다
+    #   — 변이가 **코드가 옮겨가 죽은** 경우다. 성질이 실제로 사는 자리로
+    #   옮긴다: 성분 열기에서 `O_NOFOLLOW` 를 뺀다.
     ("generation-root-nofollow", RP,
-     "        return os.open(d, os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW)",
-     "        return os.open(d, os.O_RDONLY)",
-     "generation_root_symlink_is_never_read_as_a_generation"),
+     "        return os.open(name, os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW,\n"
+     "                       dir_fd=dfd)",
+     "        return os.open(name, os.O_RDONLY | os.O_DIRECTORY, dir_fd=dfd)",
+     "generation_root_symlink_is_never_read_as_a_generation or "
+     "symlinked_gen_ancestor_never_holds_a_generation"),
     ("producer-semantic-sealed", RP,
      '_PIN_SEALED = ("schema_version", "analysis_spec_sha256",\n'
      '               "producer_semantic_sha256")',
@@ -115,10 +122,6 @@ MUTANTS = [
      "            if self._bytes_match(key, v, dg):\n                return v",
      "repair_lookups_go_through_the_validated_version_snapshot or "
      "no_version_enumeration_bypasses_the_helper"),
-    ("claim-is-atomic", PRESERVE,
-     "        fd = os.open(path, os.O_CREAT | os.O_EXCL | os.O_WRONLY, 0o644)",
-     "        fd = os.open(path, os.O_CREAT | os.O_WRONLY, 0o644)",
-     "exactly_one_attempt_enters_compute"),
     ("claim-seals-the-run-spec", PRESERVE,
      '    if e["run_spec_digest"] != want:',
      "    if False:",
@@ -342,6 +345,20 @@ MUTANTS = [
 #: 여러 지점을 **함께** 되돌려야 관측되는 변이 (심층 방어라 하나만 지우면
 #: 다른 하나가 가린다). 41·42·43차에 실측했다.
 MULTI = [
+    # ★ 48차 — `O_EXCL` **혼자로는** 더 이상 관측되지 않는다. 48차 P0-6 이
+    #   claim 뒤에 `planned → running` 전이를 더했고, 그 전이는 원장 lock 안에서
+    #   일어나므로 두 번째 claim 을 거기서 막는다. 즉 배타성을 지키는 것이 둘이
+    #   됐다 — 하나만 지우면 다른 하나가 시험을 초록으로 유지한다.
+    #
+    #   중복이라서 하나를 지우는 것이 아니다: `O_EXCL` 은 **원자적 primitive**
+    #   이고 상태 전이는 lock 에 기대는 두 번째 방벽이다. 둘 다 남기되, 변이는
+    #   47차 상태(둘 다 없음)를 복원해 그 쌍이 실제로 일하는지 본다.
+    ("claim-is-atomic", PRESERVE, [
+        ("        fd = os.open(path, os.O_CREAT | os.O_EXCL | os.O_WRONLY, 0o644)",
+         "        fd = os.open(path, os.O_CREAT | os.O_WRONLY, 0o644)"),
+        ("        row[\"status\"] = \"running\"",
+         "        row[\"status\"] = \"planned\""),
+     ], "exactly_one_attempt_enters_compute"),
     # ★ 48차 P0-2 — decorator 축은 **정규형이 node 를 보는가**에 달렸다.
     #   47차처럼 source segment 로 되돌리면 `FunctionDef.lineno` 가 `def`
     #   줄이라 `decorator_list` 가 통째로 빠진다.
@@ -714,10 +731,10 @@ EXPECT: dict = {
     },
     "generation-root-nofollow": {
         "fail": [
-            "tests/test_docs_lint.py::test_a_generation_root_symlink_is_never_read_as_a_generation"
+            "tests/test_docs_lint.py::test_a_symlinked_gen_ancestor_never_holds_a_generation"
         ],
         "witness": {
-            "tests/test_docs_lint.py::test_a_generation_root_symlink_is_never_read_as_a_generation": "Failed: DID NOT RAISE SystemExit"
+            "tests/test_docs_lint.py::test_a_symlinked_gen_ancestor_never_holds_a_generation": "Failed: DID NOT RAISE SystemExit"
         }
     },
     "guard-before-commit": {
@@ -935,7 +952,7 @@ EXPECT: dict = {
             "tests/test_docs_lint.py::test_the_producer_digest_is_the_same_on_every_python_here"
         ],
         "witness": {
-            "tests/test_docs_lint.py::test_the_producer_digest_is_the_same_on_every_python_here": "AssertionError: producer 의미 digest 가 인터프리터마다 다르다 (이 세션 3096a363085f35ea): {'3.12': 'a637fef4e189f0e2', '3.13': 'a637fef4e189f0e2'} — 정규형이 버전 의존이다"
+            "tests/test_docs_lint.py::test_the_producer_digest_is_the_same_on_every_python_here": "AssertionError: producer 의미 digest 가 인터프리터마다 다르다: ['3.12', '3.13'] 가 이 세션과 다른 값을 냈다 (대조 ['3.10', '3.11', '3.12', '3.13']) — 정규형이 버전 의존이다"
         }
     },
     "producer-crosses-into-scoring": {
