@@ -5103,3 +5103,159 @@ REPORT_OUT=docs/RESULTS.md ./run.sh --mode report --in results/_smoke/x
 | power-loss ordering fault model | **미착수** (별도 acceptance) |
 | publisher 전용 OS principal | **미착수** |
 | 외적타당도 #48/#49/#50 (단일 C-rate · 셀 간 산포 · `truth_provenance`) | **미착수** |
+
+## §57 — 49차 게이트 리뷰 대응 (묶음 9)
+
+48차 판정은 **NO-GO** 였고 첫 문장이 이것이었다:
+
+> 정상 `run.sh --mode all --leg L` 은 grid 가 계획을 `running` 으로 바꾼 직후
+> fit 의 shell 사전검사에서 거부된다. shell 을 건너뛰어도 attempt 를 fit 에
+> 전달할 CLI/API 경로가 없다. production `grid → fit → finalize` 는 완주할 수
+> 없다.
+
+48차가 붙인 두 규칙은 **각각** 옳았다 — claim 을 따면 계획이 `planned →
+running` 으로 가고(P0-6), claim 이 있으면 소유 증명 없이는 이어받지 못한다
+(P0-3). 두 규칙의 단위 시험도 전부 통과했다. 깨진 것은 **그 사이의 전달**이고,
+그것은 한 process 안에서 도는 단위 시험에는 보이지 않는다. 규칙 둘 사이에
+있어야 하는 것은 예외가 아니라 전달이다.
+
+### 49-1 조건 P0-3/P0-4 — 실행권을 process 경계 너머로 넘긴다
+
+`open_leg_run()` 이 실행권을 한 번 발급하고 소유 증명을 0600 파일로 내놓는다.
+`attach_leg_run()` 이 그 파일로 같은 실행에 붙고, `finalize_leg()` 이 같은
+증명으로 닫는다. `run.sh` 가 coordinator 이고 `--attempt-file` 로 grid·fit
+하위 process 에 **경로**를 넘긴다 — token 자체는 argv 에 싣지 않는다
+(`ps` 와 `/proc/<pid>/cmdline` 은 같은 기계의 다른 주체에게 열려 있다).
+
+claim 파일이 담는 것은 `attempt_id`(공개)와 `attempt_verifier`
+(`sha256(token)`)다. 48차는 재개 credential 자체를 그 파일에 뒀으므로, claims
+root 를 읽을 수 있는 주체에게 "소유 증명" 은 아무 것도 요구하지 않는 것과
+같았다. 진단 경로(`inspect_leg_run()`)는 공개 필드만 내보내고, 진단용으로 연
+claim 객체는 `.token` 을 꺼내려 하면 거부한다.
+
+`precheck_leg_run()` 이 **새 발급**과 **소유한 재개**를 구분한다 — 48차
+`plan_gate()` 는 `planned` 만 통과시켰으므로 fit 사전검사가 자기 pipeline 의
+grid 때문에 거부됐다. `finalize_leg()` 의 소유 증명은 **필수**다 (48차 기본값
+`None` 은 이름만 알면 남의 실행을 닫을 수 있게 했다).
+
+lifecycle 이 production 에서 **닫힌다**: `run.sh --mode all` 이 grid·fit 뒤
+`leg_finalize` 를 부르고, `--mode finalize`·`--mode release` 가 손으로 나눠
+돌린 경우와 중단된 실행권의 통로다.
+
+`--dry-run` 은 실행권을 **되돌린다**. 47차가 dry-run 면제를 없앤 것은 옳지만
+(dry-run 도 solver 를 부른다), 48차부터 그것이 계획을 `running` 으로 옮겨 놓고
+phase 를 하나도 닫지 않게 됐다 — finalize 는 "phase 가 남았다" 며 거부하므로
+그 다리는 다시 시작할 수도 닫을 수도 없는 terminal 상태로 굳었다.
+
+### 49-2 조건 P0-5 — 승인이 fit 의 실행 정책과 입력 바이트를 덮지 않았다
+
+48차 fit 축은 `{config_digest, objectives, out}` 셋뿐이었다. 실제 F67 run_spec
+이 쓰는 것은 목적함수 **순서**(warm 연쇄가 그 순서를 따른다) · bounds 실값 ·
+reference · half-cell recipe(왜곡 인자) · optimizer 정책 · noise 사용 여부 ·
+행 선택 · 입력 위치다. 그 차이만큼 `--reference halfcell --halfcell-arg
+pe_offset_mv=10 --clean --no-adaptive --n-restarts 1` 로 통째로 갈아도 같은
+승인 digest 가 나왔다.
+
+`in_digest` 가 입력의 **내용 identity** 를 두 경우로 가른다: hex64 는 이 다리
+**밖**에서 온 입력(F70 의 분리 producer 구조)이고, `null` 은 이 다리의 grid 가
+만든다는 선언이라 grid **phase receipt** 의 `curves_sha256` 이 정본이 된다.
+
+### 49-3 조건 P0-6 — 정본 lock 순서와 finalize 임계 구역
+
+`LOCK_ORDER = ("claim", "ledger")`. `finalize_leg()` 이 claim lock 을 쥐고
+snapshot 을 한 번만 읽어 검사와 기록 모두의 근거로 쓴다 (48차는 잠그지 않고 두
+번 읽었다). 원장 lock **안에서** 전체 authority 를 다시 본다 — 48차는 lock
+밖에서 한 번 보고 말았으므로 그 뒤 cohort 가 얼어도 그대로 썼다.
+
+원장 write 뒤 claim 삭제 전에 죽으면 그 다리가 갇혔다. `_already_finalized()`
+가 **원장에서** 그 사실을 알아내 남은 정리만 하고 같은 답을 돌려준다.
+리뷰어는 "복구 journal" 을 요구했지만 별도 파일을 두지 않았다 — 근거는 원장
+자신이고, 파일을 하나 더 두면 "닫혔다" 의 정본이 둘이 된다.
+
+### 49-4 조건 P0 — 얼린 cohort 를 조용히 녹일 수 있었다
+
+48차에 `status` 를 봉인에서 뺀 것은 옳았다 (freeze 가 이미 게시된 generation 을
+무효로 만들면 freeze 가 곧 데이터 파괴다). 그러면 `status` 는 원장 파일의 한
+줄일 뿐이고 `active → frozen → active` 를 되돌린 뒤 게시하면 얼렸다는 사실이
+아무 데도 남지 않는다.
+
+답은 봉인이 아니라 **단조 전이 journal** 이다 (`COHORT_LIFECYCLE.jsonl`):
+append-only, 해시 사슬, `frozen → active` 는 `_LIFECYCLE_MOVES` 에 없어 표현할
+수 없다. 사슬은 중간을 지키지만 마지막 줄은 지키지 못하므로 끝 digest 를
+`.head` 에 따로 고정했다. 한계는 계약 §13.3.2 에 적었다.
+
+### 49-5 조건 P0-2 — 닫힘이 import 문법 하나만 따라갔다
+
+`import src.scoring as sc` + `sc.foo(...)` 를 통째로 놓쳤다. 문법 하나를 바꾸는
+것만으로 identity 밖으로 나갈 수 있으면 identity 가 아니다. `Import +
+Attribute` 를 따라가고, 풀리지 않는 참조는 fail-closed 이며,
+`globals()`·`getattr(module, …)`·`eval`·`exec`·`__import__` 는 거부한다
+(경계는 좁게 — `getattr(node, f, None)` 은 그대로 둔다).
+
+이 검사가 **실물 위반 하나를 찾았다**: `_analyzer_provenance()` 가
+`__import__(mod).__version__` 를 쓰고 있었다.
+
+지원 인터프리터 집합을 `SUPPORTED_PYTHON` 으로 고정하고, 대표 구문 넷의
+정규형을 `AST_CANON_GOLDEN` 으로 박았다.
+
+### 49-6 조건 P1 — 변이 재생이 0건 실행을 성공으로 셌다
+
+`_replay()` 가 `MULTI` 의 declared 항목을 분류에서 빠뜨려, declared MULTI
+하나만 고르면 `scenario_declared 0 · ran 0` 에 rc 0 과 "실행한 변이가 전부
+물었다" 가 나왔다 (실측). 분류를 `_select()` 한 곳으로 모으고, 실행 가능한
+scenario 수와 실제 실행 수가 다르면 실패한다.
+
+조각 합집합 증명: `--emit-coverage` / `--check-coverage`. 8 조각 전수 재생 결과
+**89 scenario (executable 83 · declared 6) 전부 덮었고 물었다** — 증거는
+`docs/22p_gap/mutation_coverage/s1..s8.json`.
+
+### 49-7 조건 P1 — 원장 명부가 multiset 이었다
+
+`_ledger_authority()` 가 `legs: ["a","a"]` 를 그대로 봉인했다. 쓰는 쪽은 모두
+집합이므로 봉인은 2개를 말하고 runtime 은 1개를 본다.
+
+### 49-8 조건 P0-4 — `no_bundle` 은 계약 §8 enum 밖이었다
+
+production `finalize_leg()` 이 원장에 쓰는 값을 이 저장소 자신의 lint
+(`test_registry_rejects_impossible_status_tuples`)가 거부하는 상태였다. 계약에
+`preservation_pending` 을 추가하고 (`missing` 과 뜻이 다르다 — "잃었다" 가
+아니라 "아직 안 묶었다"), finalize 는 세 축의 완전한 튜플을 쓴다.
+
+### 49-9 strict smoke 를 돌려 찾은 것 — 승격 금지가 smoke 의 뒷절반을 마비시켰다
+
+48차 §0 에 "strict smoke 6단계 이후 미완" 이라고 적었던 자리를 실제로 돌렸다.
+**실패 11건**이었고 원인은 48차 P0-8 이 심은 결함이었다:
+`assert_not_smoke_provenance()` 가 **입력만** 봐서, smoke 가 자기 산출을 자기
+namespace 안으로 묶는 것(`results/_smoke/arch/…`)과 자기 보고서를 쓰는 것까지
+거부됐다. 승격은 "인용되는 자리로 **나가는** 것" 이고 namespace 안에 머무는
+이동은 승격이 아니다. 그 구분이 없으면 경계가 아니라 마비이고, 잃은 검사가
+막은 위험보다 크다. 목적지를 인자로 받게 고쳤다 (`dest=None` 은 보수적으로
+"밖" 으로 본다). **지금은 strict smoke 가 rc 0 · 52 ✅ · 0 ❌ 로 통과한다.**
+
+### 49-10 fixture 가 진실을 가리고 있었다 (세 번)
+
+새 변이 24개를 돌리자 셋이 안 물었다. 전부 시험 쪽 문제였다.
+
+| 변이 | 왜 안 물었나 | 어떻게 고쳤나 |
+|---|---|---|
+| `finalize-requires-the-credential` | `pytest.raises(TypeError)` 가 **다른 이유의** TypeError 로 초록이었다 — 검사를 지우면 `Path(None)` 이 TypeError 를 낸다 | `match="소유 증명"` 으로 이유까지 고정 |
+| `diagnostic-hides-the-credential` | 진단용 claim 의 `.token` 을 아무도 읽지 않았다 (guard 가 도달 불가) | readonly claim 에서 `.token` 이 거부되는지 직접 확인 |
+| `lifecycle-chain-is-verified` | 끝 anchor 가 tip 위조를 먼저 잡아 `prev` 사슬의 고유 증인이 없었다 | **중간** 줄 위조 사례 추가 |
+
+그리고 **기전을 실제로 써 보다가** `freeze_cohort()` 의 결함을 찾았다: 출발점을
+`"active"` 로 못 박아, journal 도입 이후 게시만 한 cohort(기록 없음 = 정상)를
+영영 못 얼렸다. g3 을 얼리려다 실제로 거부됐다.
+
+### 아직 아닌 것
+
+| 항 | 상태 |
+|---|---|
+| 조건 P0-1 producer 결속 — 닫힌 typed manifest 파싱 · 두 payload 압축해제 재해시 · producer 발행 영수증 | **미착수** — 이번 라운드에 손대지 않았다 |
+| 조건 P0-8 — 경로 무관 typed·sealed 실행 class marker | **미착수** — 판정은 여전히 `is_inside_namespace()` 의 정규 격리다 (경로 기반). 49-9 로 sink 두 곳의 방향 판정은 고쳤다 |
+| 조건 P0-4 — typed CAS/archive/restore/validation/retention 영수증 소비 | **부분** — `preservation_pending` 중간 상태와 완전 튜플은 넣었고, 영수증 소비는 미착수 |
+| `run_transaction` · `finalize_only` 의 production 호출자 | **여전히 없다** (CAS 보존 경로는 별도 acceptance) |
+| baseline·sweep1d·wsweep 의 계획 gate | **미착수** (grid·fit·finalize·release 만 배선했다) |
+| 실물 object-lock provider adapter | **미구현** (별도 acceptance) |
+| power-loss ordering fault model | **미착수** (별도 acceptance) |
+| publisher 전용 OS principal | **미착수** |
+| 외적타당도 #48/#49/#50 | **미착수** |
