@@ -13,6 +13,7 @@
 | 약칭 | 논문 (저자·년·저널) | digest/status | 유형 |
 |---|---|---|---|
 | **[Wang26IF]** | **Kangli Wang**/**W. G. Zeier**/**J. Janek**/**D. Mollenhauer\*** 2026 *Angew. Chem. Int. Ed.* **65**, e19663 (JLU Giessen + HIPOLE/HZB/FSU Jena + Münster; BMBF FestBatt 03XP0431; **OA**) — "**Interface Stability and Kinetics of Sulfide Electrolytes in all-Solid-State Batteries**": VASP-PBE/GGA+U + pymatgen **pseudo-binary(식 1–3) + grand-potential(식 4–5)** 로 계면 **6종** × (SE 7 · 양극 20 · 중간층/코팅 ~70 · a-Li_xSi 6) 전수 + **AIMD**(300 eV·Γ·NVT-Nosé·**80 ps**·dt 1 fs·500–1200 K) 로 **a-Li_xSi/Li₆PS₅Cl** 한 계의 계면 kinetics. **⚠ 실험 0건**(Janek·Zeier 공저인데도). **`zhu2015` 와 같은 기계의 2026년 대규모판.** ⛔ **수치표 0개**(결과가 전부 히트맵 색) · **산물 전자전도성 판정 0** · **W_ad·표면E·계면저항·두께 0** | ✅ `papers/wang2026_interface_stability_kinetics_sulfide_assb.md` | DFT 열역학 스크리닝 + AIMD (계산 100 %) |
+| **[Tu27ML]** | **Junye Tu**/Chen/Xu/Qiu/Yang/Xue/**Ningbo Liao\*** 2027 *J. Mater. Sci. Technol.* **280**, 18–26 (温州大 Wenzhou Univ. 기전공학원 **단일기관**; NSFC 51675384·51202164; DOI 10.1016/j.jmst.2026.05.071, 온라인 **2026-06-12**) — "**A diffusion descriptor integrated machine learning approach toward the discovery of solid-state electrolytes for lithium metal batteries**": **CASTEP-PBE/ultrasoft 380 eV·3×3×1·진공 20 Å** 로 SSE 6종 × 도펀트 28종 = **174 Li/SSE 계면**의 γf·W_ad·E_ads·**CI-NEB E_B** 를 라벨화하고, **전해질 층을 얼린 '동결 모델'**(full 의 1/10 시간)에서 같은 양을 미리 계산해 기술자로 넣어 **GBRT/RF** 로 예측(γf **R² 0.99**·E_B **R² 0.93**) → 876 조합에서 21 후보 → **4종 DFT 재검증**. ⚠ **실험 0건 · 데이터/코드 공개 0 · AIMD 조건 전무.** ★ **우리 cascade ML 과 같은 영역이라 CV 규약 판정의 기준 사례**(J-8) | ✅ `papers/tu2026_diffusion_descriptor_ml_li_sse_interface.md` | DFT(계면 슬랩)+NEB+AIMD+고전 ML 회귀 (계산 100 %) |
 | **[Famprikis19]** | **Famprikis**/Canepa/Dawson/**M. S. Islam\***/**C. Masquelier\*** 2019 *Nature Materials* **18**, 1278–1291 (Amiens LRCS·RS2E + Bath) — "**Fundamentals of inorganic solid-state electrolytes for batteries**", 11 pp 튜토리얼 리뷰. **자체 계산·실험 0 → 전 수치가 소환값(2차 인용)**, 대부분 "≈" 반올림·오차 삭제. 4기둥 = **다중스케일 수송**(`Fig. 2` Å→cm 사다리) · **전기화학 안정성**(`Fig. 4`·`Fig. 5`·`Table 1`) · **역학**(`Fig. 6`·Box 1) · **공정**(`Fig. 7`). 우리 digest **5편을 직접 인용하는 허브**([Deng16]=ref110 · [Bucci17]=ref109 · [Bielefeld19]=ref68 · [Sakuda13]=ref58 · [Richards16]=ref65 · [Kraft]=ref29) | ✅ `papers/famprikis2019_fundamentals_inorganic_sse.md` | **review · 소환값 전용 — 절대값을 우리 표와 같은 칸에 넣지 않는다.** 축 정의·기전 근거로만 인용 |
 | **[Mulks24]** | **Mulks** 2024 *Chem* **10**, 2724–2744 (단독 저자, RWTH Aachen) — "**Hard and soft electrons and holes**": HSAB 를 **전자/홀의 hard–soft** 로 확장한 개념화학(HSEH). **EHR** `f^(2,±)(r)` / **EHI** `f_k^(2,±)` = 전자수에 대한 밀도(또는 원자전하)의 **2차 유한차분**, 고정 기하 단일점 3회로 계산(ORCA·DSD-BLYP-D3BJ/def2-QZVPP//PBEh-3c·기체상·Hirshfeld). **양=hard·음=soft**. ⚠ **분자 유기·유기금속 전용 — 무기 고체/황화물 적용 선례 0건, 정량 예측 모델 아님**(저자 명시). `fan2026` 리뷰 §3.1 ref [80] 의 원전 | ✅ `papers/mulks2024_hard_soft_electrons_holes.md` | **[EXTERNAL] theory framework only — 물성 4축 수치 비교 제외** |
 | **[Miao23]** | **Miao/Guan/Ma/Liangliang Li\*/Ce-Wen Nan\*** 2023 *Adv. Mater.* **35**, 2206402 (Tsinghua + USTC) — "**Role of Interfaces in Solid-State Batteries**", 21 pp **계면 전용 리뷰**. **자체 계산·실험 0**(본문에 DFT/first-principles/band gap/VBM **0회**) → **수치 행이 아니라 프레임 행으로만** 이 문서에 들어간다. 산출물 = **F1 계면 3층위** / **F2 Li·SE 계면 3유형**(열역학 안정·**MCI**·passivating SEI) / **F3 μ_c↔HOMO 정렬**(Fig 4c) + **Table 1·2·3**(압력↔성능 15행 / CAM 코팅 19행 / **Li‖SE 버퍼 27행**). **`fan2026_…ECERD2600097`(Nan 공저, 심사 중)의 3년 전 선행 리뷰** — digest §10 이 상속/신규/**누락**/상충을 전수 대조 | ✅ `papers/miao2023_role_of_interfaces_solid_state_batteries.md` | **review · 프레임 전용 — 물성 4축 *수치* 비교 제외** |
@@ -368,6 +369,7 @@
 | 주장 | 출처 | 우리 | 비고 |
 |---|---|---|---|
 | ⛔ **"LPSC Young's modulus 3.97 GPa" 는 우리 값과 같은 표에 놓으면 안 된다 — 물리량이 다르다** — AFM QNM/DMT 로 **냉간가압 펠릿 표면**을 300 nm 압입한 접촉강성이다. Li 금속 4.5 / pristine LPSC **3.97** / Li 접촉 LPSC 계면상 **2.29** / FG 펠릿 4.59 / Li 접촉 FG 계면상 **7.69** GPa. ⚠ 탄성률 맵 컬러바 하한이 **−3.1 GPa(음의 탄성률)** 이고 **팁 반경·스프링상수·모델 미기재** → 절대값 검증 불가 | **[Ling26]** `Fig. 3e,f` · `Fig. S14` | 우리 relaxed-ion **E_VRH 22.06(comp1) / 27.66(modelc)** · B₀ 26.23 / 21.71 GPa · **[Torii]** DFT-D3 E 27.4 · **[Sakuda]** 실험 유리 18–25 GPa | **✅ 쓸 수 있는 건 *비율* 뿐**: Li 접촉 후 LPSC 계면 **0.58× 연화**, FG 계면 **1.68× 경화**. 🔑 그리고 그 비율로 보면 **Monroe–Newman 기준에서 pristine LPSC(3.97) < Li(4.5) 로 애초에 미달**이고 FG 계면상(7.69)도 Li 의 **1.7배**라 통상 요구치 2배에 못 미친다 ⇒ **이 논문의 덴드라이트 억제는 기계가 아니라 *편향(deflection)* 으로 읽는 게 정직하다**(Fig. 3b,c 가 그렇게 보여준다) |
+| ⭕ **독립 그룹 CASTEP-PBE 전단탄성률: LPSCl G = 7.36 · Li₃PS₄ 12.51 · Sn-LPSCl 8.59 · LLZO 58.86 · LiPON 41.26 GPa** (참조 Li 금속 4.2 GPa, Monroe–Newman 2× 기준) | **[Tu27ML]** 본문 §3.1 (⚠ **계산법 한 줄도 없다** — clamped/relaxed·유한변형 여부 미기재) | comp1 **G_VRH 8.13** (relaxed-ion) / **20.1** (clamped-ion) · modelc **10.61** · lpsocl **13.58** · comp2 **7.47** GPa | 🔑 **7.36 이 우리 relaxed-ion 8.13 과 9.5 % 이내로 맞고 clamped-ion 과는 2.7배 어긋난다** ⇒ **'clamped-ion 은 argyrodite 탄성률을 계통적으로 과대평가' 판정의 3번째 외부 정합.** ⚠ 단 **논문이 방법을 안 밝혔으므로 정합이지 검증이 아니다.** ⭕ 부수: 논문 자신의 2× 기준으로 **LPSCl 7.36/4.2 = 1.75 는 미달**인데 본문은 8종을 뭉뚱그려 *"strong ability to inhibit lithium dendrites"* 라 쓴다 — 우리 값으로는 comp1 1.94(미달)·**modelc 2.53(통과)** 이라 **"Cl-rich 가 Monroe 기준을 처음 넘긴다"** 는 서술이 가능해진다 (⚠ Monroe 기준 자체가 등방탄성 가정이라 논쟁적이고, 우리 값도 0 K relaxed-ion) |
 | **★★★ soft thiophosphate glass 실측 E ≈ 20 GPa · G ≈ 7 GPa** (Li₂S–P₂S₅, 나노인덴테이션) | **[Famprikis19]** Box 1 (**ref 108 = McGrogan et al. *Adv. Energy Mater.* 7, 1602011 (2017), "Compliant yet brittle"**) | **relaxed-ion** comp1: **E_VRH 22.06 / G_VRH 8.13 GPa**; **clamped-ion** comp1: 52.31 / 20.12 | **✅✅ vacancy-paradox 판정의 *네 번째 외부 앵커*** — relaxed-ion 과 **+10 %(E)·+16 %(G)**, clamped-ion 은 **2.4×(E)·2.9×(G)** 어긋나 배제. [Deng16](PBEsol 계산)·[Torii](PBE-D3 계산) + `elastic.json` 기존 실측 메모(**~23 GPa, He et al. / G ~8 GPa**)에 더해 **재료가 다른(유리) 독립 실측**이 같은 자리를 가리킨다. ⚠ **"첫 실측 앵커" 라고 쓰면 틀린다.** ⚠ **유보 3**: ① 재료가 다르다(**Li₂S–P₂S₅ 유리** vs 결정질 argyrodite), ② hot-press 시편이라 **잔류 기공·GB 포함 → 진짜 단결정보다 낮게 나올 여지**(우연 일치 가능성), ③ 리뷰가 "≈" 로만 인용하고 오차·시편밀도 없음. **⇒ "실험이 우리를 검증했다" 금지. "같은 자릿수이고 clamped-ion 은 배제된다" 까지만.** 참고 E/G 비: 실측 2.86 / relaxed 2.71 / clamped 2.60 → **비율은 판별력 없음, 절대값에서만 갈린다** |
 | **산화물 끝점: 단결정 garnet E ≈ 150 GPa · G ≈ 60 GPa**; 가장 무른 끝: **LiBH₄ G ≈ 4 GPa** | **[Famprikis19]** Box 1 (ref 147 = Yu 2016 *Chem. Mater.* 28, 197 / ref 148 = Ahmad 2018 *ACS Cent. Sci.*) | 우리 argyrodite E_VRH 22–28 GPa | ✅ **스펙트럼 고정** — 우리는 4–150 GPa 스펙트럼의 **무른 끝**. [Kang] "sulfide SE 20–30 vs oxide CAM 150–200 GPa 변형 불일치" 서사와 같은 자리 |
 | **⚠ "무르다 ≠ 안 깨진다"** — *"such soft materials (for example, **lithium thiophosphate glasses**) **remain brittle and prone to fracture on stress**"*(ref 108) | **[Famprikis19]** §Mechanics | 우리 B/G 3.14(comp1)·2.21(modelc) = "연성" 판정 | **⚠ 우리 B/G 연성 결론의 한계 표시** — B/G(Pugh)는 **소성 변형능**의 지표이지 **균열 저항**의 지표가 아니다. [Deng16] "argyrodite = 가장 연성" 과 이 문장을 같이 인용해야 정직하다. **리뷰는 두 명제를 병치만 하고 화해시키지 않는다**(어느 조건에서 연성이 취성을 이기는지 판정 없음 — 그 판정은 `fan2026` >3 µm 파쇄 / <1 µm 완화) |
@@ -413,6 +415,7 @@
 ## D. 전자구조 / band gap — *방법 의존, 절대 비교 금지*
 | 주장 | 출처 | 우리 | 비고 |
 |---|---|---|---|
+| ⭕ **독립 그룹 CASTEP-PBE 밴드갭: Li₆PS₅Cl 2.293 eV (간접 Γ→Q) · Li₃PS₄ 2.164 · LLZO 3.982 · LiPON 5.587 eV** (+ Sn/C/Ta 도핑 시 전부 하락: 1.588 / 4.721 / 3.422) | **[Tu27ML]** `Fig. 1` 밴드구조 — **800 dpi 재렌더로 Q 점 CBM 확인**(화살표와 밴드 정합, DOS-threshold 아님) | comp1 **2.066** / modelc **2.099** / +B₂O₃ **1.9671** / LPSOCl **2.2309** eV (fixed-occ nscf 고유값) | ⭕ **차이 0.227 eV = 우리 baseline 의 ±0.2–0.3 eV 흔들림 창 안** ⇒ **method-dependent, real difference 아님.** ✅ 말할 수 있는 최대치: *"독립 그룹이 다른 코드(CASTEP/ultrasoft/380 eV)로 낸 PBE 갭도 2.3 eV 대이고 우리와 같은 구간 = 둘 다 wide-gap 절연체"*. ⛔ *"우리가 0.23 eV 낮다"* 류 방향성 주장 금지 — 코드·PP·컷오프·**무질서 규약(이 논문은 S/Cl 4a·4c 무질서를 한 번도 언급 안 함)** 이 전부 다르다. ★ PDOS(650 dpi figure-read): 총 무게는 **S 가 압도적**(본문 *"dominated by the S atom"* 은 맞다)이나 **E_F 최근접 뾰족 봉우리는 Cl 3p ≈−0.3 eV**(≈41 electrons/eV) — 우리 판정(VBM = S 3p 89.5 %)과 **모순은 아니고 강조점이 다르며, 그 차이가 S/Cl 배열 규약에서 올 수 있다** |
 | **PDOS 밴드갭 LPSC 1.78 → LPSCInF 2.75 eV** (PBE) | **[LiInF]** `Fig. 2e,f` | comp1 **2.066** / modelc **2.099** / +B₂O₃ **1.9671** / LPSOCl **2.2309** eV (**fixed-occ nscf VBM/CBM 고유값**) | ⛔ **직접 비교 금지.** ① 그들은 **DOS 문턱 판독**(통상 ~0.3 eV 과소) ② **k-mesh 미기재** ③ 무질서 **단일 배열** ④ 조성 다름 ⑤ **DFT 도핑 In 25 % = 실험의 4–12 배**. **PBE argyrodite 에서 2.75 eV 는 이례적으로 크다** — In³⁺→P⁵⁺ 가 Li 를 2 개 더 넣는데 그림의 E_F 가 VBM 에 붙어 있다. **"둘 다 wide-gap 절연체" 수준까지만 공유** |
 | ⚠ **원소분해 PDOS 가 없다** — VBM/CBM character 를 논문이 밝히지 않는다 | **[LiInF]** | comp1/modelc **둘 다 VBM = S 3p (89.5 %)**, 자리분해 mean-3p(−8..0 eV): free-S **−1.14** < B–S −2.15 ≈ PS₄-S −2.23 < Cl −2.99 < O −3.64 | **우리 정보 우위 칸.** 이 논문은 "갭이 넓어졌다"만 말하고 **어느 상태가 어디로 갔는지** 못 말한다 — In 5s·F 2p 의 위치가 미지 |
 | PBE gap **LPSCl 1.88 / LiCl 6.22 eV** | [Lu] | comp1 2.066 / modelc 2.098 (PBE) | 무질서·Γ-only k ±0.2–0.3 scatter. LiCl 6.22 = 전자절연 interphase 기준 |
@@ -851,6 +854,100 @@ preflight 이 알리바이로 쓰던 문구를 **철회한다.**
   de Klerk 앵커로 528 ps = intercage **93 사건**(Wu 의 20 ps = 3.5).
   정확한 우리 입장은 **"300 K AIMD 가 안 되는 게 아니라 20 ps 가 안 되고 300 ps 는 된다"** 다
   ⇒ **Wu(반례) + Lai(정례)** 를 나란히 놓으면 우리 시간척도 규율의 교과서 쌍이 된다.
+
+### J-8. ★★★ CV 규약 판정 — **[Tu27ML] R²=0.99 vs 우리 cascade LODO −0.18** (2026-08-28 신설)
+
+> **왜 이 블록이 있나**: 2026-08-25 에 우리 대리모델이 정직한 CV 에서 졌다고 판정했고
+> (`db/properties/cascade_audit_ml_validation.csv`), 그때 결론이 *"−0.18 은 우리 ML 이 나쁜 게 아니라
+> **우리 CV 가 정직한 것**"* 이었다. **[Tu27ML] 은 우리와 같은 영역(싼 기술자 → 비싼 DFT 라벨)에서
+> 0.99 를 보고한다.** 그 0.99 가 어느 범주인지를 여기서 확정한다.
+> 상세는 `papers/tu2026_diffusion_descriptor_ml_li_sse_interface.md` §7.
+
+| 항목 | **[Tu27ML]** | 우리 cascade predictor | 판정 |
+|---|---|---|---|
+| **분할** | **랜덤 90/10** — 그룹 언급 0건(전수 검색 `group`·`stratif`·`leave-one` 0) | **LOOCV(쌍) / LODO(도펀트 통째) / L2DO** | 🔴 **범주 다름** |
+| **CV 의 용도** | *"10-fold CV **on the training set**"* = **하이퍼파라미터 탐색 전용** | 일반화 성능 추정 | 🔴 **CV 점수를 성능으로 안 쓴다** |
+| **보고 점수** | γf **0.99**(GBRT, MAE 0.12) · E_B **0.93**(RF) · 학습곡선 CV γf ≈0.98–0.99·E_B ≈0.90–0.94 (`Fig. S1` figure-read, **랜덤 폴드**) | 쌍 LOOCV **0.0892** · **LODO −0.1805** · L2DO **−0.2548** | ⛔ **병치 금지** |
+| **라벨 잡음** | **≈ 0** — DFT 결정론값, ±10⁻³–10⁻⁴ (`Table 1`) ⇒ **R² 상한이 사실상 1.0** | MLIP-MD D — 시드·창 의존(modelc Ea 3-seed **0.197±0.032**) ⇒ **상한 자체가 낮다** | 🔴 **같은 척도 아님** |
+| **라벨 범위 vs 결정구간** | γf 축 **−16~+10**(폭 26) / E_B 축 **0~3** vs 실제 결정구간 **0.069–0.30**(폭 0.23) ⇒ **100배** | Pareto 축은 정규화 | 🔴 **R² 범위 인플레이션** |
+| **입력↔라벨 관계** | 🔴 **`Freeze γf`(36.52 %)·`Freeze E_B`(28.67 %) = 라벨의 동결판** ⇒ 사실상 **델타 러닝**인데 **동결값만의 베이스라인 미보고** | 기술자(BVSE·기하)가 라벨(MD D)과 **다른 물리량** | 🔴 **[Tu27ML] 쪽이 더 후하다** |
+| **화학군 정보** | 🔴 **one-hot 6종**(#25–30). **LLZO 단독이 γf 예측의 10.63 %** ⇒ 랜덤 분할에서 **공짜 점수** | 도펀트 one-hot (같은 병) | 🔴 **양쪽 다 병 — 우리만 벌점을 매긴다** |
+| **모구조 파생물 분리** | 🔴 안 함 — 174 = 6×29 라 같은 SSE 의 29 파생물이 train/test 로 갈린다 | LODO 가 정확히 이걸 막는다 (낙차 **0.089 → −0.181 = 0.27**) | 🔴 |
+| **prospective 검증** | ⭕ **있다** — `Table 2` **n=4**, ML→DFT 재계산. γf Δ 0.003–0.140 / **E_B Δ 0.009–0.035 eV** | ⛔ **0/270 미실행** | ⭕ **[Tu27ML] 이 낫다** (표본은 얇아도 **고리를 닫았다**) |
+| **음성 사례** | ⛔ 21 중 4 만 검증, 실패 0건 보고 | — | ⚠ |
+| **enrichment / p-값** | ⛔ **계산 불가** — 분모 *"over 876 datasets"* 가 분해되지 않는다(174=6×29 는 떨어지는데 876/6=146) | ✅ **1.22, p=0.426**(유의하지 않음) + ordering 3.35, p=0.0099(retrospective) | ⭕ **우리가 낫다** |
+| **축 공선성 보고** | 🔴 *"low multicollinearity"* 라 쓰는데 `Fig. 3` 에 **\|r\|=1.00 쌍이 둘**: (#6 Freeze Adhesion, #9 Adsorption) · (#22 Li Numbers, #25 LLZO). 제거 후 개수 미기재 | ✅ 유효 4축 **\|ρ\| ≤ 0.32**, \|ρ\|>0.85 없음 (`axis_corr_csv.py --pareto`) | ⭕ **우리가 낫다** |
+| **빈 축 / 정보 0 축** | 🔴 `Freeze W_ad` = **`\|E_ads\|/(2A)` 의 상수배**(우리 검산, 소수 4자리) ⇒ 정보 0 비트인데 신규 3종에 포함 | 🔴 `sigma_300K_S_cm_NE`·`wad_J_m2_mean` **0 % 채움**(2026-08-28 발견) | 🔴 **양쪽 다 병** |
+| **절제(ablation)** | γf 만 `Fig. S1i`–`l`, **수치 0** · **E_B(제목의 기술자)는 절제 자체가 없다** | ⛔ 축 절제 미실행 | ⚠ **양쪽 다 부족** |
+| **학습곡선** | ⭕ `Fig. S1a`–`h` (n=20→140) | ⛔ 낸 적 없음 | ⭕ **[Tu27ML] 이 낫다** |
+| **Dummy 베이스라인** | ⛔ 없음 | ⛔ 구현만 있고 미보고 | ⚠ **양쪽 다 없다** |
+| **시드 반복·오차막대(ML)** | ⛔ 없음 | ⛔ 단일 시드 `random_state=42` | ⚠ **양쪽 다 없다** |
+| **중요도 방법** | 🔴 **ridge regressor** — 예측은 트리 앙상블인데 중요도는 선형. SHAP/permutation 없음. 공선성 있으면 계수가 임의로 갈린다 | — | 🔴 |
+| **데이터·코드 공개** | ⛔ 전무 (학습셋 174 중 8행만 공개) | ✅ CSV + provenance + sha256 | ⭕ **우리가 낫다** |
+
+> ### 🔑 판정
+> **[Tu27ML] 의 0.99 는 우리가 2026-08-25 에 "범주가 다르다"고 판정한 세미나 0.99 와 같은 범주다.**
+> 5가지 인플레이션 요인(랜덤 폴드 · 잡음 0 라벨 · 범위 100배 · 라벨의 싼 버전이 입력 · one-hot 화학군)이
+> **모두** 걸린다. ⛔ **우리 LODO −0.1805 와 같은 표·같은 슬라이드에 놓지 않는다.**
+> 정확한 문장: **"자를 다르게 댄 값이다. 우리가 더 가혹한 자를 골랐다."**
+>
+> ⚖ **그러나 [Tu27ML] 이 우리를 앞서는 것이 셋 있다** — 되먹임 고리를 실제로 닫았고(n=4),
+> 학습곡선을 냈고, 절제를 시도는 했다. **우리는 셋 다 0 이다.** 비판만 옮기면 그대로 되돌아온다.
+
+**이식 항목 (계산 0회, 전부 기존 CSV 재분석)**
+
+| # | 항목 | 근거 |
+|---|---|---|
+| **T3-a** | 🔑 **"싼 기술자만 썼을 때의 R²" 베이스라인 보고.** 우리도 BVSE 기술자 → MD D 라벨 구조인데 **BVSE 만으로의 R² 를 낸 적이 없다.** [Tu27ML] 의 최대 공백을 우리가 먼저 메운다 | §7.2-④·§6.1 |
+| **T3-b** | Dummy/최근접이웃 **베이스라인 사다리** 보고 ([Kauwe 2021] J-4 가 이미 지적, [Tu27ML] 도 안 함) | J-4 + J-8 |
+| **T3-c** | **도펀트 one-hot → 원소물성(CBFV) 교체 실험.** [Tu27ML] 에서 원소 기술자 6종이 E_B 예측의 22 % 를 차지한다(전기음성도 12.15 · 반지름 5.09 · 녹는점 4.97 %). one-hot 은 새 도펀트에 원리적으로 0 벡터라 LODO 에서 불리하다 | §6.9·§6.7 |
+| **T3-d** | **축 절제 실험** — 유효 4축을 하나씩 빼고 Pareto front 변화 측정 | §7.3-3 |
+| **T3-e** | **학습곡선**(n vs CV score) 보고 | §7.3-2 |
+| **T-새** | **일함수를 계면 캠페인 기술자로.** [Tu27ML] E_B 예측 2위(18.91 %)이고 슬랩 SCF 후처리라 **추가 계산 0** | §6.4 |
+
+**⛔ 이 축에서 인용하면 안 되는 것 (J-6 에 추가)**
+
+- ⛔ **[Tu27ML] 의 R² 0.99 / 0.93 을 네 조건 없이 인용하는 것** — ① 랜덤 90/10 ② 라벨 잡음 ≈0
+  ③ 라벨 범위 폭 26(γf)·3(E_B) ④ 입력에 라벨의 동결판. 넷을 다 붙여야 문장이 참이 된다.
+- ⛔ **[Tu27ML] 0.99 를 우리 LODO −0.18 과 나란히 놓는 것** — 다른 자다.
+- ⛔ **[Tu27ML] 의 "동결 기술자가 정확도에 필수임이 절제로 확인됐다"** — γf 만·수치 없음,
+  **E_B 는 절제 자체가 없다**. `Fig. S1j`(GBRT 절제)는 `Fig. 4b`(전체)와 **육안 차이가 거의 없다**.
+- ⛔ **[Tu27ML] 의 "21개 신규 후보"** — 3종(Ta-LLZO·Sn-LPS·Sn-LPSCl)이 학습셋 자신이다(`Table S4`
+  값이 `Table 1` 과 반올림까지 동일). **18종**으로 고쳐 쓴다.
+- ⛔ **[Tu27ML] 의 D·Ea·σ 절대값 전부** — `Table S6`(Ea,D₀)가 `Table 3` 과 **8계 중 6계에서 정확히
+  10배 불일치**하고, Ea 0.02–0.03 eV 가 **자기 NEB 0.069–0.30 eV 의 1/5–1/10** 이며,
+  `Fig. 6e` MSD 가 **8계×3온도 전부 원점부터 완전 직선**(케이지 고원 없음)이고,
+  **500 K 는 Li 융점 453.7 K 위**다. `Table S7` σ 는 식·캐리어밀도가 없어 재현 불가이고
+  **σ 순위가 D 순위와 다르다**.
+- ⛔ **[Tu27ML] 의 `Table S3` 문헌 MAE 비교** — 단위·타깃이 다른 값(0.12 / 2.72 / 16.23 / 91.98)을
+  한 열에 세워 놓았다.
+
+**★★ 회전 자유도 — 문헌 공백 확정 (T16 근거 보강)**
+
+**[Tu27ML] 의 기술자 30종에 다원자 음이온의 회전·재배향·libration 이 없다.**
+확인: `Fig. 3` 범례 30항목 전수 대조 + 본문·SI 전문에서 `rotation`/`reorient`/`libration`/`paddle`/
+`correlation function` 검색 **0건**. 기하 기술자는 `Cell Volume`·`Model Density` **둘뿐**이고,
+자유부피·퍼콜레이션·병목반지름·BVSE·무질서 배열 통계도 **전부 없다**.
+⇒ **우리 T16**(`kb/methodology/ps4_libration_dopant_2026_08_28.md`: PS₄ 는 500–1000 K 에서 재배향
+**0/71**, 전부 원뿔 안 흔들림 · **+O 가 원뿔을 −0.5° 좁힌다**)이 **문헌 공백 기여**임을
+**[Shin26] 에 이어 두 번째로 확인**했다.
+⚠ 정직하게: **[Tu27ML] 은 계면, 우리 T16 은 벌크**다. *"같은 문제에서 우리가 낫다"* 가 아니라
+*"인접 문제에서 이 논문에 없는 축을 우리가 갖고 있다"* 가 정확한 표현이다.
+
+**우리 이동도 기술자와의 정면 비교 (요청 항목)**
+
+| 항목 | 우리 | **[Tu27ML]** | 판정 |
+|---|---|---|---|
+| 기술자 | `migration_volume_fraction`(20³ 격자 BVS ∈[0.8,1.2] 비율) · `bvs_li_proxy_score`(`std×(1−\|mean−1\|)`) | `Freeze Barrier`(동결 CI-NEB) · `Work Function` · `SSE Band Gap` | — |
+| **비용** | **DFT 0회 · 초 단위** (완화 구조 xyz 하나면 끝) | **DFT 5–7회**(NEB 이미지) / 1회 / SSE당 1회 | ⭕ **우리가 3–4자릿수 싸다** |
+| 물리 충실도 | 정전기 근사 — 공유결합성·분극·격자완화 못 봄 | **실제 안장점 높이** | ⭕ **[Tu27ML] 이 위** |
+| 대상 | **벌크 통로 기하 + 자리에너지 균일도** | **계면 관통 장벽** | 🔵 **다른 대상 — 겹치지 않는다** |
+| 독립성 | \|ρ\| ≤ 0.32 (4축) | `Freeze Barrier` 최대 \|r\| = **0.39** (30개 중 가장 독립적) | ⭕ **양쪽 다 양호** |
+| 퍼콜레이션 개념 | ✅ 있다 | ⛔ 없다 (기하 기술자 2개뿐) | ⭕ **우리가 낫다** |
+| 계면 축 | ⛔ 없다 (전부 벌크) | ✅ 있다 | ⭕ **[Tu27ML] 이 낫다** |
+
+⇒ **상충 관계이지 우열이 아니다.** 싸고 거친 것(우리) vs 비싸고 정확한 것([Tu27ML]),
+벌크(우리) vs 계면([Tu27ML]). **스크리닝 앞단은 우리 쪽, 최종 몇 개 가리기는 그쪽 방식이 맞다.**
 
 ### J-7. 🔧 방법 원전 — *물성값이 없어서 표에 못 넣는 편* (2026-08-26 신설)
 
