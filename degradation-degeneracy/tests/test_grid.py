@@ -113,3 +113,101 @@ def test_grid_cli_noise_seed_reaches_signed_spec(monkeypatch, tmp_path):
     # 조건별 seed 도 같은 값에서 유도된다 (조건 생성과 기록의 일원화)
     ref = G.conditions_from_config(captured["cfg"], cli={})
     assert [c.seed for c in captured["conds"]] == [c.seed for c in ref]
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# 49차 P0-3 — `--dry-run` 이 계획을 `running` 에 영구히 남겼다
+# ─────────────────────────────────────────────────────────────────────────────
+
+def _plan_for_live_grid(led, leg, out_dir, cfg, src_digest):
+    """지금 코드가 만들 **살아 있는** grid spec 을 그대로 승인하는 계획 원장.
+
+    사람이 계획을 적을 때 하는 일과 같다 — 무엇을 돌릴지 선언하고 그 digest 를
+    봉인한다. 조건이 없는 dry-run 이므로 조건 집합은 빈 목록이다.
+    """
+    import hashlib as _h
+
+    import yaml
+
+    import src.grid as G
+    from tools.preserve import leg_run_spec, run_spec_digest
+
+    grid_axis = {
+        "config_digest": G._cfg_digest(cfg),
+        "condition_ids_sha256": _h.sha256(b"").hexdigest()[:16],
+        "n_conditions": 0,
+        "out": G.leg_out_key(out_dir)}
+    fit_axis = {"config_digest": "0" * 16, "objectives": ["pocv_dvdq"],
+                "out": G.leg_out_key(out_dir)}
+    spec = leg_run_spec(leg, grid_axis, fit_axis)
+    doc = {
+        "schema_version": 4,
+        "cohorts": [{"cohort_id": "g49", "dir": "docs/22p_gap/coh",
+                     "status": "active", "legs": [],
+                     "prospective_legs": [leg],
+                     "cross_leg_comparison": "allowed_within_cohort",
+                     "pin": {"schema_version": 3,
+                             "compute_sha256": "a" * 16,
+                             "row_projection_py_sha256": "b" * 16,
+                             "src_scoring_py_sha256": "c" * 16,
+                             "analysis_spec_sha256": "d" * 16,
+                             "producer_semantic_sha256": "e" * 16}}],
+        "planned": [{"leg_id": leg, "cohort_id": "g49", "status": "planned",
+                     "authorization_kind": "prospective",
+                     "authorized_source_digest": src_digest,
+                     "run_spec_digest": run_spec_digest(spec),
+                     "run_spec": spec,
+                     "recorded_on": "2026-08-28",
+                     "근거": "시험용 — dry-run lifecycle"}],
+        "legs": []}
+    led.write_text(yaml.safe_dump(doc, allow_unicode=True, sort_keys=False),
+                   encoding="utf-8")
+    return spec
+
+
+def test_a_dry_run_does_not_strand_the_plan_in_running(monkeypatch, tmp_path):
+    """★ 49차 P0-3 — dry-run 은 실행권을 **되돌린다.**
+
+    47차가 dry-run 면제를 없앤 것은 옳다 — `run_grid(dry_run=True)` 는 최대 세
+    조건에 solver 를 실제로 부른다. 그런데 48차가 claim 에 원장 전이를
+    붙이면서, dry-run 은 계획을 `planned → running` 으로 옮겨 놓고 phase 를
+    하나도 닫지 않고 끝나게 됐다. `finalize_leg()` 은 "phase 가 남았다" 며
+    거부하므로 그 다리는 **다시 시작할 수도 닫을 수도 없는** terminal 상태로
+    굳는다. 면제가 아니라 되돌림이 답이다.
+    """
+    import pathlib
+    import tempfile
+
+    import src.grid as G
+    from src.baseline import DischargedState
+    from src.config import load_config
+    from src.io import source_digest
+    from tools import preserve as P
+
+    # smoke namespace **밖**이어야 gate 가 실제로 걸린다 (conftest 의 tmp_path
+    # 는 gated entrypoint 시험을 위해 smoke 안으로 옮겨져 있다).
+    out_dir = pathlib.Path(tempfile.mkdtemp(prefix="dd49-dry-"))
+    led = pathlib.Path(tempfile.mkstemp(prefix="dd49-led-", suffix=".yaml")[1])
+    claims = out_dir / "_claims"
+    monkeypatch.setattr(P, "DEFAULT_LEDGER", led)
+    monkeypatch.setattr(P, "DEFAULT_CLAIMS_ROOT", claims)
+    monkeypatch.setattr(G, "get_discharged_state",
+                        lambda cfg, *a, **k: DischargedState(1.0, 2.0, 3.0))
+
+    cfg = load_config("configs/grid_coarse.yaml")
+    _plan_for_live_grid(led, "L49", out_dir, cfg, source_digest())
+
+    tok = out_dir / "L49.token"
+    summary = G.run_grid(cfg, [], nproc=1, chunk_size=1, out_dir=out_dir,
+                         dry_run=True, leg="L49", token_file=tok)
+    assert summary["dry_run"] is True
+
+    assert P.planned_index(ledger=led)["L49"]["status"] == "planned", (
+        "dry-run 이 계획을 running 에 남겼다 — 그 다리는 다시 시작할 수도 "
+        "닫을 수도 없다")
+    assert not (claims / "L49.claim").exists(), "dry-run 이 claim 을 남겼다"
+    assert not tok.exists(), "dry-run 이 소유 증명 파일을 남겼다"
+
+    # 되돌렸으므로 **진짜 실행**이 바로 시작될 수 있다 — 되돌림의 유일한 증명
+    P.claim_planned_leg("L49", P.declared_leg_run_spec("L49", ledger=led),
+                        source_digest(), ledger=led, claims_root=claims)

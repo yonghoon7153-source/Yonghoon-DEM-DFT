@@ -376,7 +376,7 @@ def write_curves_manifest(out_dir, cfg: dict, conditions=None, extra=None) -> Pa
 
 def _assert_grid_authorized(cfg: dict, out_dir, conditions=None,
                             dry_run: bool = False, leg: str | None = None,
-                            attempt: str | None = None):
+                            token_file=None):
     """계획 gate — smoke namespace 밖이면 승인된 claim 이 있어야 한다.
 
     ★ 48차 P0-5 — 승인 spec 이 **실행을 고정한다.** 47차 spec 은
@@ -412,7 +412,7 @@ def _assert_grid_authorized(cfg: dict, out_dir, conditions=None,
     declared = declared_leg_run_spec(leg)
     spec = leg_run_spec(leg, live_grid, declared.get("fit") or {})
     return assert_run_is_authorized(leg, "grid", [out_dir], spec,
-                                    source_digest(), attempt=attempt)
+                                    source_digest(), token_file=token_file)
 
 def leg_name(explicit: str | None = None) -> str:
     """이 실행이 어느 다리인가 (48차 P0-5).
@@ -456,7 +456,7 @@ def _cfg_digest(cfg: dict) -> str:
 def run_grid(cfg: dict, conditions: list[Condition], nproc: int,
              chunk_size: int, out_dir: str | Path,
              resume: bool = False, dry_run: bool = False,
-             leg: str | None = None) -> dict:
+             leg: str | None = None, token_file=None) -> dict:
     """조합 격자 실행. 반환: 요약 dict."""
     from joblib import Parallel, delayed
     from tqdm import tqdm
@@ -466,7 +466,8 @@ def run_grid(cfg: dict, conditions: list[Condition], nproc: int,
     #   46차 gate 는 `run.sh` 안에만 있어서 `python -m src.grid` 직접 호출이
     #   계획을 전혀 보지 않았다. mkdir 도 부작용이므로 그보다 먼저 본다.
     _claim = _assert_grid_authorized(cfg, out_dir, conditions=conditions,
-                                     dry_run=dry_run, leg=leg)
+                                     dry_run=dry_run, leg=leg,
+                                     token_file=token_file)
     out_dir.mkdir(parents=True, exist_ok=True)
     protocol_name = cfg.get(GRID_PROTOCOL_KEY, "charge_first")
 
@@ -520,6 +521,20 @@ def run_grid(cfg: dict, conditions: list[Condition], nproc: int,
         for c, reason in infeasible[:5]:
             print(f"[dry-run] 불능 예시: lli={c.lli} lam_pe={c.lam_pe} "
                   f"lam_ne={c.lam_ne} → {reason}")
+        # ★ 49차 P0-3 — dry-run 은 실행권을 **되돌린다.** 47차가 dry-run 면제를
+        #   없앤 것은 옳다 (여기서 solver 를 최대 세 번 부른다). 그런데 48차가
+        #   claim 에 원장 전이를 붙이면서, dry-run 은 계획을 `running` 으로
+        #   옮겨 놓고 phase 를 하나도 닫지 않은 채 끝나게 됐다 — finalize 는
+        #   "phase 가 남았다" 며 거부하므로 그 다리는 다시 시작할 수도 닫을
+        #   수도 없는 terminal 상태로 굳었다. 면제가 아니라 되돌림이 답이다.
+        if _claim is not None:
+            from tools.preserve import release_leg_run
+
+            release_leg_run(_claim.leg_id, token=_claim.token,
+                            token_file=None)
+            if token_file is not None:
+                Path(token_file).unlink(missing_ok=True)
+            log.info("dry-run 이라 실행권을 되돌렸다 — 계획은 planned 로 남는다")
         return {"dry_run": True, "n_total": len(conditions), "n_todo": n,
                 "n_infeasible": len(infeasible), "est_min": est_min}
 
@@ -713,6 +728,11 @@ def main() -> None:
     ap.add_argument("--leg", default=None,
                     help="`LEG_PRESERVATION.yaml` 의 `planned:` 에서 찾을 다리 "
                          "이름 (48차 P0-5 — 없으면 LEG/CANONICAL_RUN 환경변수)")
+    ap.add_argument("--attempt-file", dest="attempt_file", default=None,
+                    help="★ 49차 P0-3 — coordinator 가 발급한 실행권의 소유 "
+                         "증명 파일 경로. 없으면 여기서 발급하고 그 자리에 "
+                         "남겨 다음 phase(fit)가 같은 실행에 붙는다. token "
+                         "자체는 argv 로 넘기지 않는다 (`ps` 로 새어 나간다)")
     ap.add_argument("--tag", default="")
     ap.add_argument("--log-level", default="INFO")
     args = ap.parse_args()
@@ -737,7 +757,7 @@ def main() -> None:
 
     summary = run_grid(cfg, conds, nproc=args.nproc, chunk_size=chunk,
                        out_dir=args.out, resume=args.resume, dry_run=args.dry_run,
-                       leg=args.leg)
+                       leg=args.leg, token_file=args.attempt_file)
     if args.tag and not summary.get("dry_run"):
         write_manifest(args.out, {"tag": args.tag})
     print(json.dumps(summary, ensure_ascii=False, indent=2))

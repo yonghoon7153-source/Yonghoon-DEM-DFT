@@ -510,7 +510,7 @@ def _record_phase(claim, phase: str, summary: dict, out_dir) -> None:
 
 def _assert_fit_authorized(objectives: dict, out_dir, obj_cfg: dict,
                            leg: str | None = None,
-                           attempt: str | None = None):
+                           token_file=None):
     """fit 쪽 계획 gate (48차 P0-8 · P0-5).
 
     grid 와 **같은 spec** 을 만든다: 자기 축(목적함수 집합·config·산출 위치)은
@@ -538,7 +538,7 @@ def _assert_fit_authorized(objectives: dict, out_dir, obj_cfg: dict,
     declared = declared_leg_run_spec(leg)
     spec = leg_run_spec(leg, declared.get("grid") or {}, live_fit)
     return assert_run_is_authorized(leg, "fit", [out_dir], spec,
-                                    source_digest(), attempt=attempt)
+                                    source_digest(), token_file=token_file)
 
 
 def run_fit(in_dir, out_dir, obj_cfg: dict, objectives: dict, bounds: dict,
@@ -550,7 +550,7 @@ def run_fit(in_dir, out_dir, obj_cfg: dict, objectives: dict, bounds: dict,
             method: str = "Nelder-Mead",
             halfcell_method: str = "ocp",
             halfcell_kw: dict | None = None,
-            leg: str | None = None) -> dict:
+            leg: str | None = None, token_file=None) -> dict:
     """grid 결과 전체에 fitting 수행 → fits.parquet.
 
     subset: 이 cond_id 집합만 fitting (Phase 6 가중치 sweep의 층화 표본용).
@@ -588,7 +588,8 @@ def run_fit(in_dir, out_dir, obj_cfg: dict, objectives: dict, bounds: dict,
     # ★ 48차 P0-8 — **첫 부작용 전에** 계획 gate 를 지난다. 47차는 `src.grid`
     #   만 배선하고 fit 은 다음 라운드로 미뤘는데, 실제 결과(`fits.parquet`)를
     #   만드는 것은 fit 이다. gate 없는 쪽이 결과를 만들면 gate 는 장식이다.
-    claim = _assert_fit_authorized(objectives, out_dir, obj_cfg, leg=leg)
+    claim = _assert_fit_authorized(objectives, out_dir, obj_cfg, leg=leg,
+                                   token_file=token_file)
     out_dir.mkdir(parents=True, exist_ok=True)
     acquire_run_lock(out_dir, ".fit.lock")
     try:
@@ -1162,6 +1163,11 @@ def main() -> None:
     ap.add_argument("--leg", default=None,
                     help="`LEG_PRESERVATION.yaml` 의 `planned:` 에서 찾을 다리 "
                          "이름 (48차 P0-5 — 없으면 LEG/CANONICAL_RUN 환경변수)")
+    ap.add_argument("--attempt-file", dest="attempt_file", default=None,
+                    help="★ 49차 P0-3 — coordinator 가 발급한 실행권의 소유 "
+                         "증명 파일 경로. grid 가 남긴 그 파일을 주면 같은 "
+                         "실행에 붙는다 (주지 않으면 grid 가 이미 잡은 다리를 "
+                         "두 번째로 시작하려는 것이라 거부된다)")
     ap.add_argument("--in", dest="in_dir", required=True, help="grid 결과 디렉터리")
     ap.add_argument("--out", default=None, help="기본: --in 과 동일")
     ap.add_argument("--objectives-config", default="configs/objectives.yaml")
@@ -1232,7 +1238,7 @@ def main() -> None:
     bounds = presets[args.bounds]
 
     summary = run_fit(
-        leg=args.leg,
+        leg=args.leg, token_file=args.attempt_file,
         in_dir=args.in_dir, out_dir=args.out or args.in_dir,
         obj_cfg=cfg, objectives=objectives, bounds=bounds,
         bounds_preset=args.bounds,

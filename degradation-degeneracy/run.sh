@@ -17,6 +17,12 @@ cd "$REPO_ROOT"
 MODE=""
 CONFIG="configs/base.yaml"
 LEG="${LEG:-}"                    # 계획 index 의 다리 이름 (비우면 CANONICAL_RUN)
+# ★ 49차 P0-3 — 실행권의 **소유 증명 파일** 경로. 이 스크립트가 coordinator 다:
+#   한 번 발급해 여기 두고, grid·fit 하위 process 에 **경로로** 넘긴다 (token
+#   자체는 argv 에 절대 싣지 않는다 — `ps` 로 새어 나간다). 비우면 다리 이름에서
+#   유도한다. 48차에는 이 통로가 없어서 `--mode all` 이 grid 직후 fit 에서
+#   자기 자신의 claim 때문에 거부됐다.
+ATTEMPT_FILE="${ATTEMPT_FILE:-}"
 
 # 열화 모드 축 — "start:stop:step" | "a,b,c" | "0.1" | "none"
 LLI="none"
@@ -73,11 +79,17 @@ MODE
   wsweep     dQ/dV 가중치 탐색 (층화 표본)   ★ "튜닝 아니냐"에 대한 근거
   report     목적함수 4종 비교표 + 그림 + docs/RESULTS.md
   all        grid -> fit -> score -> hessian -> report
+  finalize   ★ 49차 — 끝난 다리를 실행 기록으로 **닫는다** (all 은 자동)
+  release    ★ 49차 — 중단된 실행권을 되돌린다 (계획을 planned 로)
 
 실행 전 gate (★ 46차 P0-11 · 계약 §13.4)
   --leg NAME             `LEG_PRESERVATION.yaml` 의 `planned:` 에서 찾을 다리
                          이름. 비우면 CANONICAL_RUN. grid·fit·all 은 이 gate 를
                          **반드시** 지난다 (건너뛰는 환경변수는 없다).
+  --attempt-file PATH    ★ 49차 P0-3 — 실행권의 소유 증명 파일. grid 가 발급해
+                         여기 두고 fit 이 그것으로 같은 실행에 붙는다. 비우면
+                         `results/_claims/<leg>.token`. 파일 내용(token)은
+                         argv 로 넘기지 않는다 — `ps` 로 새어 나가기 때문이다.
 
 열화 모드 축   (형식: 0:0.2:0.02 | 0,0.05,0.1 | 0.1 | none)
   --lli VAL              LLI 축
@@ -159,6 +171,7 @@ while [[ $# -gt 0 ]]; do
   case "$1" in
     --mode)          MODE="$2"; shift 2 ;;
     --leg)           LEG="$2"; export LEG; shift 2 ;;   # ★ 48차 P0-5 — export
+    --attempt-file)  ATTEMPT_FILE="$2"; shift 2 ;;      # ★ 49차 P0-3
     --config)        CONFIG="$2"; shift 2 ;;
     --lli)           LLI="$2"; shift 2 ;;
     --lam-pe)        LAM_PE="$2"; shift 2 ;;
@@ -236,6 +249,15 @@ export MPLBACKEND="Agg"          # headless 강제
 #: 못한다. 다만 그렇게 하면 그 산출은 정본이 될 수 없다 (계약 §13.4).
 SMOKE_NS="results/_smoke"
 
+#: 소유 증명 파일의 기본 자리. claim 과 같은 root 에 두고 0600 으로 만든다
+#: (`tools.preserve.write_token_file`). `--attempt-file` 로 덮어쓸 수 있다.
+attempt_file_for() {
+  local leg="$1"
+  if [[ -n "$ATTEMPT_FILE" ]]; then echo "$ATTEMPT_FILE"; else
+    echo "results/_claims/${leg}.token"
+  fi
+}
+
 plan_gate() {
   local leg="${LEG:-$CANONICAL_RUN}"
   # 면제는 **모든** 경로가 smoke namespace 안일 때만이다. 하나라도 밖이면
@@ -245,25 +267,67 @@ plan_gate() {
   #   문자열 prefix 라 `results/_smoke/../grid_fit_v4` 와 symlink 가 통과했다.
   #   판정은 `tools.preserve.is_inside_namespace()` 하나이고 모듈 gate 도
   #   같은 함수를 쓴다.
-  python - "$leg" "$OUT" "${IN_DIR:-}" <<'PYGATE'
+  # ★ 49차 P0-3 — 사전검사는 **새 발급**과 **내가 가진 재개**를 구분해야 한다.
+  #   48차는 `assert_planned_leg()` 만 불렀고 그것은 `planned` 만 통과시켰다.
+  #   그래서 grid 가 계획을 `running` 으로 옮긴 직후 같은 pipeline 의 fit
+  #   사전검사가 **자기 자신 때문에** 거부됐다 — 정상 실행이 완주 불가였다.
+  python - "$leg" "$OUT" "${IN_DIR:-}" "$(attempt_file_for "$leg")" <<'PYGATE'
 import sys
 from src.io import source_digest
 from tools.preserve import (SMOKE_NAMESPACE, is_inside_namespace,
-                            assert_planned_leg, PreserveError)
+                            precheck_leg_run, PreserveError)
 
-leg, out, in_dir = sys.argv[1], sys.argv[2], sys.argv[3]
+leg, out, in_dir, tok = sys.argv[1], sys.argv[2], sys.argv[3], sys.argv[4]
 paths = [p for p in (out, in_dir) if p]
 if paths and all(is_inside_namespace(p, SMOKE_NAMESPACE) for p in paths):
     print("· 실행 전 gate 면제 — 모든 경로가 smoke namespace 안이다 (정규 격리)")
     raise SystemExit(0)
 try:
-    e = assert_planned_leg(leg, source_digest())
+    e = precheck_leg_run(leg, source_digest(), token_file=(tok or None))
 except PreserveError as exc:
     print(f"❌ 실행 전 gate 거부 — {exc}", file=sys.stderr)
     raise SystemExit(1)
-print(f"✅ 실행 전 gate 통과(사전 점검) — {leg} · cohort {e['cohort_id']} · "
-      f"승인 {e['recorded_on']}")
+if e["kind"] == "new":
+    print(f"✅ 실행 전 gate 통과(사전 점검·새 발급) — {leg} · "
+          f"cohort {e['cohort_id']} · 승인 {e['recorded_on']}")
+else:
+    print(f"✅ 실행 전 gate 통과(사전 점검·소유한 재개) — {leg} · "
+          f"cohort {e['cohort_id']} · attempt {e['attempt_id'][:12]} · "
+          f"끝난 phase {e['phases_done'] or ['없음']}")
 PYGATE
+}
+
+# ★ 49차 P0-3 — 실행이 끝난 다리를 **닫는다.** 48차는 `phase_done()` 과
+#   `finalize_leg()` 을 만들어 놓고 어느 production 경로도 부르지 않았다.
+#   그래서 계획은 `running` 에 영원히 남았고, "실행 전 승인 → 실행 → 실행
+#   기록" 의 마지막 변이 하나가 통째로 비어 있었다. lifecycle 은 닫히지
+#   않으면 lifecycle 이 아니라 그냥 열어 두기다.
+leg_finalize() {
+  local d="$1" tokf="$2"
+  local leg="${LEG:-$CANONICAL_RUN}"
+  python - "$leg" "$d" "$tokf" <<'PYFIN'
+import sys
+from src.io import source_digest
+from tools.preserve import (SMOKE_NAMESPACE, is_inside_namespace,
+                            finalize_leg, inspect_leg_run, PreserveError)
+
+leg, out, tok = sys.argv[1], sys.argv[2], sys.argv[3]
+if is_inside_namespace(out, SMOKE_NAMESPACE):
+    print("· 실행 기록 닫기 면제 — smoke namespace 다 (정본 실행이 아니다)")
+    raise SystemExit(0)
+try:
+    view = inspect_leg_run(leg)
+    r = finalize_leg(leg, {"leg_source_digest": source_digest(),
+                           "cohorts": [view["cohort_id"]],
+                           "out": out},
+                     token_file=tok)
+except PreserveError as exc:
+    print(f"\u274c 실행 기록을 닫지 못했다 — {exc}", file=sys.stderr)
+    raise SystemExit(1)
+print(f"\u2705 실행 기록을 닫았다 — {leg} · attempt {r['attempt_id'][:12]} · "
+      "preservation_status=preservation_pending "
+      "(보존 묶음 만들기·검증은 별도 단계다)")
+PYFIN
 }
 
 # ---------------------------------------------------------------- dispatch
@@ -313,6 +377,9 @@ case "$MODE" in
     #   완방상태·baseline 을 계산한 뒤 최대 세 조건에 solver 를 실제로 부른다.
     #   "flag 면제는 없다" 와 정면으로 어긋났다.
     plan_gate
+    # ★ 49차 P0-3 — 실행권의 소유 증명을 **경로로** 넘긴다. 처음이면 grid 가
+    #   여기에 발급해 두고, fit 이 그 파일로 같은 실행에 붙는다.
+    GRID_ARGS+=(--attempt-file "$(attempt_file_for "${LEG:-$CANONICAL_RUN}")")
     exec python -m src.grid "${GRID_ARGS[@]}"
     ;;
 
@@ -351,7 +418,37 @@ case "$MODE" in
       exit 0
     fi
     plan_gate                       # ★ 46차 P0-11
+    FIT_ARGS+=(--attempt-file "$(attempt_file_for "${LEG:-$CANONICAL_RUN}")")
     exec python -m src.fitting "${FIT_ARGS[@]}"
+    ;;
+
+  finalize)   # ★ 49차 P0-3 — 다리를 **닫는다** (grid·fit 을 따로 돌렸을 때)
+    # `--mode all` 은 이 단계를 스스로 부른다. 두 phase 를 손으로 나눠 돌렸거나
+    # 중단 뒤 이어 돌린 경우에는 여기로 닫는다. 닫히지 않은 계획은 `running` 에
+    # 남아 그 다리를 다시 시작할 수도 없게 만든다.
+    D="${IN_DIR:-$OUT}"
+    leg_finalize "$D" "$(attempt_file_for "${LEG:-$CANONICAL_RUN}")"
+    exit 0
+    ;;
+
+  release)    # ★ 49차 P0-3 — 실행권을 **되돌린다** (중단된 실행 정리)
+    # dry-run 은 스스로 되돌리지만, 계산 도중 죽어 claim 만 남은 경우는 사람이
+    # 정리해야 한다. 소유 증명이 있어야 하므로 남의 실행은 취소할 수 없다.
+    python - "${LEG:-$CANONICAL_RUN}" \
+             "$(attempt_file_for "${LEG:-$CANONICAL_RUN}")" <<'PYREL'
+import sys
+from tools.preserve import release_leg_run, PreserveError
+
+leg, tok = sys.argv[1], sys.argv[2]
+try:
+    r = release_leg_run(leg, token_file=tok)
+except PreserveError as exc:
+    print(f"\u274c 실행권을 되돌리지 못했다 — {exc}", file=sys.stderr)
+    raise SystemExit(1)
+print(f"\u2705 실행권을 되돌렸다 — {leg} · attempt {r['attempt_id'][:12]} · "
+      "계획은 planned 로 돌아갔다")
+PYREL
+    exit 0
     ;;
 
   score)      # Phase 5
@@ -432,6 +529,11 @@ case "$MODE" in
     #   안 넘기면 하위 grid·fit 이 CANONICAL_RUN 으로 gate 를 보게 되어,
     #   사용자가 지정한 다리와 다른 계획 항목으로 승인될 수 있다.
     [[ -n "$LEG" ]] && GRID_ARGS+=(--leg "$LEG")
+    # ★ 49차 P0-3 — `all` 이 **coordinator** 다. 소유 증명 경로 하나를 정해
+    #   grid 와 fit 두 하위 호출에 똑같이 넘긴다. 이것이 없으면 grid 가 딴
+    #   실행권을 fit 이 이어받을 방법이 없어 pipeline 이 완주하지 못한다.
+    _ATTEMPT="$(attempt_file_for "${LEG:-$CANONICAL_RUN}")"
+    GRID_ARGS+=(--attempt-file "$_ATTEMPT")
     [[ "${NOISE_SET:-false}" == "true" ]] && GRID_ARGS+=(--noise "$NOISE")
     [[ -n "${NOISE_SEED:-}" ]] && GRID_ARGS+=(--noise-seed "$NOISE_SEED")
     GRID_ARGS+=("${RESUME_FLAG[@]}")
@@ -446,6 +548,7 @@ case "$MODE" in
       [[ -n "$_hca" ]] && FIT_ARGS+=(--halfcell-arg "$_hca")
     done
     [[ -n "$LEG" ]] && FIT_ARGS+=(--leg "$LEG")       # ★ 46차 P0-11
+    FIT_ARGS+=(--attempt-file "$_ATTEMPT")            # ★ 49차 P0-3
     [[ -n "$OBJECTIVE" ]] && FIT_ARGS+=(--objective "$OBJECTIVE")
     [[ "$N_RESTARTS" != "auto" ]] && FIT_ARGS+=(--n-restarts "$N_RESTARTS")
     [[ "$CLEAN" == "true" ]] && FIT_ARGS+=(--clean)
@@ -464,6 +567,10 @@ case "$MODE" in
 
     "$0" "${GRID_ARGS[@]}"
     "$0" "${FIT_ARGS[@]}"
+    # ★ 49차 P0-3 — **여기서 닫는다.** 48차는 `phase_done()`·`finalize_leg()`
+    #   을 만들어 놓고 어느 production 경로도 부르지 않았다. 그래서 계획은
+    #   `running` 에 영원히 남고, 그 다리는 다시 시작할 수도 닫을 수도 없었다.
+    leg_finalize "$D" "$_ATTEMPT"
     "$0" --mode score --in "$D"
     exec "$0" --mode report --in "$D"
     ;;

@@ -22,6 +22,7 @@ import hashlib
 import json
 import os
 import pathlib
+import re
 import shutil
 import tempfile
 import uuid
@@ -5896,7 +5897,7 @@ def test_exactly_one_attempt_enters_compute(tmp_path):
     root = tmp_path / "claims"
     c1 = claim_planned_leg("L", _RUN_SPEC_L, "0123456789abcdef",
                            ledger=led, claims_root=root)
-    assert c1.attempt and len(c1.attempt) >= 16
+    assert c1.attempt_id and len(c1.attempt_id) >= 16
 
     with pytest.raises(PreserveError) as ei:
         claim_planned_leg("L", _RUN_SPEC_L, "0123456789abcdef",
@@ -5954,23 +5955,23 @@ def test_a_crashed_attempt_finalizes_without_recomputing(tmp_path):
     c = claim_planned_leg("L", _RUN_SPEC_L, "0123456789abcdef",
                           ledger=led, claims_root=root)
     c.phase_done("grid", {"rows": 10})
-    attempt = c.attempt
+    token = c.token
     del c                                            # process 가 죽었다
 
     # finalize 는 아직 안 된다 — fit phase 가 없다
     with pytest.raises(PreserveError) as ei:
-        finalize_leg("L", ledger=led, claims_root=root, attempt=attempt,
+        finalize_leg("L", ledger=led, claims_root=root, token=token,
                      evidence={"leg_source_digest": "0123456789abcdef",
                                "cohorts": ["gA"]})
     assert "phase" in str(ei.value), str(ei.value)
 
     # ★ 48차 P0-3 — 재개는 **소유 증명**을 든 실행만 한다.
-    r = resume_claim("L", claims_root=root, attempt=attempt, ledger=led)
-    assert r.attempt == attempt, "재개가 새 attempt 를 만들었다"
+    r = resume_claim("L", claims_root=root, token=token, ledger=led)
+    assert r.token == token, "재개가 새 attempt 를 만들었다"
     assert r.phases_done() == ("grid",)
     r.phase_done("fit", {"fits": 4})
 
-    finalize_leg("L", ledger=led, claims_root=root, attempt=attempt,
+    finalize_leg("L", ledger=led, claims_root=root, token=token,
                  evidence={"leg_source_digest": "0123456789abcdef",
                            "cohorts": ["gA"]})
     idx = planned_index(ledger=led)
@@ -5990,7 +5991,7 @@ def test_finalizing_moves_the_leg_from_prospective_to_executed_roster(tmp_path):
                           ledger=led, claims_root=root)
     c.phase_done("grid", {})
     c.phase_done("fit", {})
-    finalize_leg("L", ledger=led, claims_root=root, attempt=c.attempt,
+    finalize_leg("L", ledger=led, claims_root=root, token=c.token,
                  evidence={"leg_source_digest": "0123456789abcdef",
                            "cohorts": ["gA"]})
 
@@ -6281,7 +6282,7 @@ def test_two_public_authorizations_do_not_both_enter_compute(tmp_path):
     led = _lifecycle_ledger(tmp_path)
     claims = tmp_path / "claims"
     a = _authorize("L", _RUN_SPEC_L, "0123456789abcdef", led, claims)
-    assert a is not None and a.attempt
+    assert a is not None and a.attempt_id
 
     with pytest.raises(PreserveError) as ei:
         _authorize("L", _RUN_SPEC_L, "0123456789abcdef", led, claims)
@@ -6301,10 +6302,10 @@ def test_resuming_requires_the_owner_token(tmp_path):
 
     with pytest.raises(PreserveError):
         _authorize("L", _RUN_SPEC_L, "0123456789abcdef", led, claims,
-                   attempt="0" * 32)
+                   token="0" * 32)
     same = _authorize("L", _RUN_SPEC_L, "0123456789abcdef", led, claims,
-                      attempt=a.attempt)
-    assert same.attempt == a.attempt, "올바른 token 으로도 재개하지 못했다"
+                      token=a.token)
+    assert same.attempt_id == a.attempt_id, "올바른 token 으로도 재개하지 못했다"
 
 
 def test_a_revoked_plan_stops_a_live_claim(tmp_path):
@@ -6328,7 +6329,7 @@ def test_a_revoked_plan_stops_a_live_claim(tmp_path):
                    encoding="utf-8")
     with pytest.raises(PreserveError) as ei:
         _authorize("L", _RUN_SPEC_L, "0123456789abcdef", led, claims,
-                   attempt=a.attempt)
+                   token=a.token)
     assert "frozen" in str(ei.value) or "active" in str(ei.value), str(ei.value)
 
 
@@ -6340,7 +6341,7 @@ def test_a_phase_cannot_be_recorded_without_the_owner_token(tmp_path):
     claims = tmp_path / "claims"
     _authorize("L", _RUN_SPEC_L, "0123456789abcdef", led, claims)
     with pytest.raises(PreserveError):
-        resume_claim("L", claims_root=claims, attempt="0" * 32)
+        resume_claim("L", claims_root=claims, token="0" * 32)
 
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -6395,20 +6396,20 @@ def test_two_concurrent_finalizations_lose_no_leg(tmp_path):
     import threading
     barrier = threading.Barrier(2)
 
-    def _go(leg, attempt, q):
+    def _go(leg, token, q):
         try:
             barrier.wait(timeout=30)
             P.finalize_leg(leg, {"leg_source_digest": "0123456789abcdef",
                                  "cohorts": ["gA"]},
-                           ledger=led, claims_root=claims, attempt=attempt)
+                           ledger=led, claims_root=claims, token=token)
             q.put((leg, None))
         except Exception as e:                              # noqa: BLE001
             q.put((leg, f"{type(e).__name__}: {e}"))
 
     import threading
     q: "queue.Queue" = __import__("queue").Queue()
-    ts = [threading.Thread(target=_go, args=("L", cL.attempt, q)),
-          threading.Thread(target=_go, args=("M", cM.attempt, q))]
+    ts = [threading.Thread(target=_go, args=("L", cL.token, q)),
+          threading.Thread(target=_go, args=("M", cM.token, q))]
     for t in ts:
         t.start()
     for t in ts:
@@ -6589,7 +6590,7 @@ def test_finalize_does_not_fabricate_a_full_bundle(tmp_path):
                            "bundle_files": 26, "payload_bytes": 23863555,
                            "payload_index": "artifacts/없는묶음/payload_sha256.yaml",
                            "payload_index_sha256": "0" * 64},
-                     ledger=led, claims_root=claims, attempt=c.attempt)
+                     ledger=led, claims_root=claims, token=c.token)
     assert "묶음" in str(ei.value), str(ei.value)
 
     doc = yaml.safe_load(led.read_text(encoding="utf-8"))
@@ -6613,7 +6614,7 @@ def test_finalize_records_what_it_could_verify(tmp_path):
     for ph in ("grid", "fit"):
         c.phase_done(ph, {"ok": True})
     finalize_leg("L", {"leg_source_digest": "0123456789abcdef"},
-                 ledger=led, claims_root=claims, attempt=c.attempt)
+                 ledger=led, claims_root=claims, token=c.token)
 
     doc = yaml.safe_load(led.read_text(encoding="utf-8"))
     rec = next(e for e in doc["legs"] if e["leg_id"] == "L")
@@ -6623,3 +6624,295 @@ def test_finalize_records_what_it_could_verify(tmp_path):
     assert set((rec.get("evidence") or {}).get("phases") or {}) == {"grid", "fit"}, (
         "실행 기록이 phase receipt 를 담지 않는다 — lifecycle 이 남긴 유일한 "
         "실측 증거인데 finalize 에서 버려진다")
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# 49차 P0-3/P0-4 — **정상 lifecycle 이 완주하지 못했다**
+#
+# 48차가 붙인 두 규칙은 각각 옳았지만 함께 두면 production 을 막았다:
+#   · claim 을 따면 계획이 `planned → running` 으로 간다 (48차 P0-6)
+#   · claim 이 이미 있으면 소유 증명 없이는 이어받을 수 없다 (48차 P0-3)
+# 그런데 grid 가 딴 실행권을 **fit 에 전달할 경로가 없었다.** 그래서
+# `run.sh --mode all --leg L` 은 grid 직후 fit 에서 반드시 거부된다.
+# 두 규칙 사이에 **coordinator** 가 있어야 한다.
+# ─────────────────────────────────────────────────────────────────────────────
+
+def _nonsmoke(tmp_path, name="out"):
+    d = tmp_path / name
+    d.mkdir(parents=True, exist_ok=True)
+    return d
+
+
+def test_the_normal_pipeline_runs_grid_then_fit_under_one_claim(tmp_path):
+    """★ 49차 P0-3 — coordinator 가 실행권을 **한 번** 내고 끝까지 넘긴다.
+
+    48차 실측(리뷰어 probe): grid 가 claim 을 따고 계획을 `running` 으로 옮긴
+    직후, 같은 pipeline 의 fit 이 `"L 은 이미 실행 중이다"` 로 거부됐다.
+    두 phase 는 별도 process 이고 attempt 를 넘길 CLI/API 경로가 없었다.
+    """
+    from tools.preserve import (open_leg_run, attach_leg_run, finalize_leg,
+                                planned_index)
+
+    led = _lifecycle_ledger(tmp_path)
+    claims = tmp_path / "claims"
+    tok = tmp_path / "L.token"
+    out = _nonsmoke(tmp_path)
+
+    # ① coordinator — 한 번만 발급하고 소유 증명을 파일로 넘긴다
+    run = open_leg_run("L", _RUN_SPEC_L, "0123456789abcdef", tok,
+                       ledger=led, claims_root=claims)
+    assert planned_index(ledger=led)["L"]["status"] == "running"
+
+    # ② grid process — 넘겨받은 증명으로 붙는다
+    g = attach_leg_run("L", tok, ledger=led, claims_root=claims)
+    assert g.attempt_id == run.attempt_id, "붙었는데 다른 실행이 됐다"
+    g.phase_done("grid", {"rows": 10, "out": str(out)})
+
+    # ③ fit process — **여기가 48차에서 거부되던 지점이다**
+    f = attach_leg_run("L", tok, ledger=led, claims_root=claims)
+    assert f.attempt_id == run.attempt_id
+    f.phase_done("fit", {"fits": 4, "out": str(out)})
+
+    # ④ coordinator — 같은 증명으로 닫는다
+    finalize_leg("L", {"leg_source_digest": "0123456789abcdef",
+                       "cohorts": ["gA"]},
+                 ledger=led, claims_root=claims, token_file=tok)
+    assert planned_index(ledger=led)["L"]["status"] == "executed"
+    assert not tok.exists(), "닫은 뒤에도 소유 증명 파일이 남았다"
+
+
+def test_a_crash_after_grid_resumes_and_finalizes(tmp_path):
+    """★ 49차 P0-3 — grid 뒤 죽어도 **재계산 없이** 이어서 닫힌다.
+
+    소유 증명이 파일에 남아 있으므로 새 process 가 같은 실행에 붙는다. 소유
+    증명이 없으면 붙을 수 없다 — 그것이 두 번째 발급을 막는 유일한 장치다.
+    """
+    from tools.preserve import (open_leg_run, attach_leg_run, finalize_leg,
+                                planned_index, PreserveError)
+
+    led = _lifecycle_ledger(tmp_path)
+    claims = tmp_path / "claims"
+    tok = tmp_path / "L.token"
+
+    run = open_leg_run("L", _RUN_SPEC_L, "0123456789abcdef", tok,
+                       ledger=led, claims_root=claims)
+    attach_leg_run("L", tok, ledger=led, claims_root=claims).phase_done(
+        "grid", {"rows": 10})
+    del run                                           # process 가 죽었다
+
+    # 소유 증명 없는 제3자는 붙지 못한다
+    other = tmp_path / "other.token"
+    other.write_text("0" * 32, encoding="utf-8")
+    with pytest.raises(PreserveError):
+        attach_leg_run("L", other, ledger=led, claims_root=claims)
+
+    r = attach_leg_run("L", tok, ledger=led, claims_root=claims)
+    assert r.phases_done() == ("grid",), "재개가 grid receipt 를 잃었다"
+    r.phase_done("fit", {"fits": 4})
+    finalize_leg("L", {"leg_source_digest": "0123456789abcdef",
+                       "cohorts": ["gA"]},
+                 ledger=led, claims_root=claims, token=r.token)
+    assert planned_index(ledger=led)["L"]["status"] == "executed"
+
+
+def test_the_claim_file_never_stores_the_resume_credential(tmp_path):
+    """★ 49차 P0-3 — 48차 claim 파일은 재개 credential 을 **평문**으로 담았다.
+
+    claims root 를 읽을 수 있으면 누구든 `attempt` 를 그대로 읽어 소유 증명을
+    만들 수 있었다 — 즉 credential 이 곧 파일 내용이었다. 저장하는 것은
+    verifier 여야 한다.
+    """
+    from tools.preserve import open_leg_run
+
+    led = _lifecycle_ledger(tmp_path)
+    claims = tmp_path / "claims"
+    tok = tmp_path / "L.token"
+    run = open_leg_run("L", _RUN_SPEC_L, "0123456789abcdef", tok,
+                       ledger=led, claims_root=claims)
+
+    raw = (claims / "L.claim").read_text(encoding="utf-8")
+    assert run.token not in raw, "claim 파일이 재개 credential 을 평문으로 담았다"
+    assert hashlib.sha256(run.token.encode()).hexdigest() in raw, (
+        "verifier 가 없다 — 그러면 소유 증명을 확인할 수 없다")
+
+
+def test_the_diagnostic_reader_never_hands_out_the_credential(tmp_path):
+    """★ 49차 P0-3 — 진단용 읽기는 `attempt_id` 만 준다.
+
+    48차 `resume_claim(attempt=None)` 은 readonly claim 을 돌려주면서 그
+    객체의 `.attempt` 에 **평문 credential** 을 실어 보냈다. 쓰기를 막아도
+    credential 을 내주면 그 다음 호출에서 쓰기가 열린다.
+    """
+    from tools.preserve import open_leg_run, inspect_leg_run
+
+    led = _lifecycle_ledger(tmp_path)
+    claims = tmp_path / "claims"
+    run = open_leg_run("L", _RUN_SPEC_L, "0123456789abcdef",
+                       tmp_path / "L.token", ledger=led, claims_root=claims)
+
+    view = inspect_leg_run("L", claims_root=claims)
+    assert view["attempt_id"] == run.attempt_id
+    assert run.token not in json.dumps(view, ensure_ascii=False), (
+        "진단 API 가 재개 credential 을 노출했다")
+
+
+def test_finalize_requires_the_owner_credential(tmp_path):
+    """★ 49차 P0-3 — `finalize_leg()` 의 소유 증명은 **필수**다.
+
+    48차 `attempt` 는 기본값 `None` 이었고, 그러면 `resume_claim()` 이 readonly
+    claim 을 돌려주는데 finalize 는 그것으로도 원장을 닫았다 — 즉 이름만 알면
+    남의 실행을 executed 로 닫을 수 있었다.
+    """
+    from tools.preserve import open_leg_run, attach_leg_run, finalize_leg
+
+    led = _lifecycle_ledger(tmp_path)
+    claims = tmp_path / "claims"
+    tok = tmp_path / "L.token"
+    open_leg_run("L", _RUN_SPEC_L, "0123456789abcdef", tok,
+                 ledger=led, claims_root=claims)
+    c = attach_leg_run("L", tok, ledger=led, claims_root=claims)
+    for ph in ("grid", "fit"):
+        c.phase_done(ph, {"ok": True})
+
+    with pytest.raises(TypeError):
+        finalize_leg("L", {"leg_source_digest": "0123456789abcdef"},
+                     ledger=led, claims_root=claims)
+
+
+def test_the_precheck_tells_a_new_run_from_an_owned_resume(tmp_path):
+    """★ 49차 P0-3 — shell 사전검사가 두 경우를 **구분해야** 한다.
+
+    48차 `plan_gate()` 는 `assert_planned_leg()` 만 불렀고 그것은 `planned` 만
+    통과시켰다. 그래서 grid 가 계획을 `running` 으로 옮긴 뒤 같은 pipeline 의
+    fit 사전검사가 **자기 자신 때문에** 거부됐다.
+    """
+    from tools.preserve import open_leg_run, precheck_leg_run, PreserveError
+
+    led = _lifecycle_ledger(tmp_path)
+    claims = tmp_path / "claims"
+    tok = tmp_path / "L.token"
+
+    first = precheck_leg_run("L", "0123456789abcdef", token_file=tok,
+                             ledger=led, claims_root=claims)
+    assert first["kind"] == "new", first
+
+    open_leg_run("L", _RUN_SPEC_L, "0123456789abcdef", tok,
+                 ledger=led, claims_root=claims)
+    again = precheck_leg_run("L", "0123456789abcdef", token_file=tok,
+                             ledger=led, claims_root=claims)
+    assert again["kind"] == "resume", again
+
+    # 소유 증명이 없으면 재개가 아니라 **두 번째 시작**이다 — 거부한다
+    with pytest.raises(PreserveError):
+        precheck_leg_run("L", "0123456789abcdef", token_file=None,
+                         ledger=led, claims_root=claims)
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# 49차 P0-3 — `--dry-run` 이 계획을 `running` 에 **영구히** 남긴다
+#
+# 47차 P0-3 이 dry-run 면제를 없앤 것은 옳았다 (`run_grid(dry_run=True)` 는
+# 최대 세 조건에 solver 를 실제로 부른다). 그런데 48차가 claim 에 원장 전이를
+# 붙이면서, dry-run 은 계획을 `planned → running` 으로 옮기고 **아무 것도 닫지
+# 않은 채** 끝나게 됐다. phase 가 하나도 없으므로 finalize 도 못 한다 —
+# 그 다리는 다시 시작할 수도 닫을 수도 없는 terminal 상태로 굳는다.
+# ─────────────────────────────────────────────────────────────────────────────
+
+def test_a_released_run_returns_the_plan_to_planned(tmp_path):
+    """★ 49차 P0-3 — 되돌릴 수 있는 실행권이 있어야 한다."""
+    from tools.preserve import (open_leg_run, release_leg_run, planned_index,
+                                claim_planned_leg)
+
+    led = _lifecycle_ledger(tmp_path)
+    claims = tmp_path / "claims"
+    tok = tmp_path / "L.token"
+
+    run = open_leg_run("L", _RUN_SPEC_L, "0123456789abcdef", tok,
+                       ledger=led, claims_root=claims)
+    assert planned_index(ledger=led)["L"]["status"] == "running"
+
+    release_leg_run("L", token_file=tok, ledger=led, claims_root=claims)
+    assert planned_index(ledger=led)["L"]["status"] == "planned", (
+        "되돌렸는데 계획이 running 에 남았다 — 그 다리는 영영 못 돌린다")
+    assert not tok.exists() and not (claims / "L.claim").exists()
+
+    # 되돌린 뒤에는 **다시 딸 수 있다** — 그것이 되돌림의 유일한 증명이다
+    claim_planned_leg("L", _RUN_SPEC_L, "0123456789abcdef",
+                      ledger=led, claims_root=claims)
+
+
+def test_releasing_needs_the_owner_credential(tmp_path):
+    """되돌림도 소유 증명이 있어야 한다 — 남의 실행을 취소할 수 없다."""
+    from tools.preserve import open_leg_run, release_leg_run, PreserveError
+
+    led = _lifecycle_ledger(tmp_path)
+    claims = tmp_path / "claims"
+    tok = tmp_path / "L.token"
+    open_leg_run("L", _RUN_SPEC_L, "0123456789abcdef", tok,
+                 ledger=led, claims_root=claims)
+
+    bad = tmp_path / "bad.token"
+    bad.write_text("0" * 32, encoding="utf-8")
+    with pytest.raises(PreserveError):
+        release_leg_run("L", token_file=bad, ledger=led, claims_root=claims)
+    assert (claims / "L.claim").exists(), "틀린 증명으로 claim 이 지워졌다"
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# 49차 P0-4 — `no_bundle` 은 계약 §8 enum 밖이다
+#
+# `finalize_leg()` 은 묶음이 없으면 `preservation_status: no_bundle` 을 적는데
+# 계약 §8 의 축 enum 은 `full_bundle | recorded_projection | missing` 이다.
+# 즉 production lifecycle 이 원장에 쓰는 값이 **이 저장소 자신의 lint 를
+# 통과하지 못한다.** 상태 어휘의 정본이 둘이면 약한 쪽이 실효 규칙이 된다.
+# ─────────────────────────────────────────────────────────────────────────────
+
+def _contract_preservation_enum() -> set:
+    txt = (pathlib.Path(__file__).resolve().parents[1] / "docs" / "22p_gap"
+           / "STAGE3_CONTRACT.md").read_text(encoding="utf-8")
+    m = re.search(r"(?m)^preservation_status:\s*(.+)$", txt)
+    assert m, "계약 §8 에 preservation_status 축 정의가 없다"
+    return {v.strip() for v in m.group(1).split("|") if v.strip()}
+
+
+def test_the_runtime_preservation_enum_is_inside_the_contract():
+    """★ 49차 P0-4 — runtime enum ⊆ 계약 §8 enum."""
+    from tools.preserve import PRESERVATION_STATUS
+
+    outside = sorted(set(PRESERVATION_STATUS) - _contract_preservation_enum())
+    assert not outside, (
+        f"계약 §8 에 없는 보존 상태를 runtime 이 쓴다: {outside} — 어휘의 "
+        "정본이 둘이면 원장이 자기 lint 를 통과하지 못한다")
+
+
+def test_finalize_writes_a_complete_contract_status_tuple(tmp_path):
+    """★ 49차 P0-4 — 묶음 없이 닫은 다리도 **계약이 정의한** 튜플을 남긴다.
+
+    48차 기록은 `preservation_status` 하나만 적고 나머지 두 축을 비웠다.
+    `test_registry_rejects_impossible_status_tuples` 는 세 축의 튜플을 계약
+    허용 집합과 대조하므로, production finalize 가 쓴 기록은 그 회귀를
+    통과할 수 없다.
+    """
+    import yaml
+    from tools.preserve import open_leg_run, attach_leg_run, finalize_leg
+
+    led = _lifecycle_ledger(tmp_path)
+    claims = tmp_path / "claims"
+    tok = tmp_path / "L.token"
+    open_leg_run("L", _RUN_SPEC_L, "0123456789abcdef", tok,
+                 ledger=led, claims_root=claims)
+    c = attach_leg_run("L", tok, ledger=led, claims_root=claims)
+    for ph in ("grid", "fit"):
+        c.phase_done(ph, {"ok": True})
+    finalize_leg("L", {"leg_source_digest": "0123456789abcdef",
+                       "cohorts": ["gA"]},
+                 ledger=led, claims_root=claims, token_file=tok)
+
+    rec = next(e for e in yaml.safe_load(led.read_text(encoding="utf-8"))["legs"]
+               if e["leg_id"] == "L")
+    assert rec["preservation_status"] in _contract_preservation_enum(), (
+        f"계약 §8 밖의 보존 상태를 원장에 썼다: {rec['preservation_status']!r}")
+    for axis in ("validation_status", "inference_role"):
+        assert rec.get(axis), f"계약 §8 의 {axis} 축이 비었다 — 튜플이 불완전하다"
+    assert rec["validation_status"] == "unvalidated", (
+        "묶음도 검증도 없이 검증됐다고 적었다")

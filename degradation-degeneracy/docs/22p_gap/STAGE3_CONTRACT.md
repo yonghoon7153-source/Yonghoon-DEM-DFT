@@ -65,9 +65,9 @@ for k in range(n_max):
 
 | # | 교란 | 근거 |
 |---|---|---|
-| 1 | `warm_start` 하나가 **원점과 조건 fitting 을 동시에** 바꾼다 | `src/fitting.py:922` 가 조건 task 를 그대로 물려받는다. 404 half-cell `p_ini(34p)` `[1.509716,…] → [1.518503,…]` |
+| 1 | `warm_start` 하나가 **원점과 조건 fitting 을 동시에** 바꾼다 | `src/fitting.py:923` 가 조건 task 를 그대로 물려받는다. 404 half-cell `p_ini(34p)` `[1.509716,…] → [1.518503,…]` |
 | 2 | `--n-restarts` 는 실행 횟수가 아니라 **예산 상한** | adaptive 조기 종료. 2회 종료 행 223 → 238 |
-| 3 | **noise 층을 바꾸면 restart 난수가 통째로 갈린다** | `cond_id = sha1(asdict(Condition))[:12]` 가 `noise`·`seed` 포함 (`src/grid.py:99`) → `task["seed"] = int(sha1(cond_id)[:8],16)` (`src/fitting.py:877`) |
+| 3 | **noise 층을 바꾸면 restart 난수가 통째로 갈린다** | `cond_id = sha1(asdict(Condition))[:12]` 가 `noise`·`seed` 포함 (`src/grid.py:99`) → `task["seed"] = int(sha1(cond_id)[:8],16)` (`src/fitting.py:878`) |
 | 4 | **warm 은 slot 을 교체한다** (§0) | 투영 `restart_sources` |
 | 5 | **예산을 바꾸면 warm 후보 자체가 바뀐다** | 연쇄 구조 (`src/fitting.py:392-406`) — 33p 예산 ↑ → 33p 해 변화 → 34p 가 받는 warm 좌표 변화. 22차 발견 2 |
 
@@ -497,10 +497,22 @@ aggregate 하나로 보고하면 이 protocol 의존성이 사라진다.
 confounded 일 수 있는데 단일 필드로는 표현이 안 된다. 셋으로 나눈다:
 
 ```yaml
-preservation_status: full_bundle | recorded_projection | missing
+preservation_status: full_bundle | recorded_projection | preservation_pending | missing
 validation_status:   current_validated | historical_validated | unvalidated
 inference_role:      canonical | diagnostic | confounded | superseded | excluded
 ```
+
+**★ 49차 P0-4 — `preservation_pending` 을 추가한다.** 48차 `finalize_leg()` 은
+계산이 끝났지만 보존 묶음을 아직 만들지 않은 다리에 `no_bundle` 을 적었다 —
+이 표에 없는 값이다. 즉 production lifecycle 이 원장에 쓰는 값이 이 저장소
+자신의 lint(`test_registry_rejects_impossible_status_tuples`)를 통과하지 못했다.
+상태 어휘의 정본이 둘이면 약한 쪽이 실효 규칙이 된다.
+
+`missing` 과 뜻이 다르다: `missing` 은 **원자료가 있었는데 잃었다**,
+`preservation_pending` 은 **막 계산이 끝났고 묶음을 아직 만들지 않았다** 이다.
+둘을 한 값으로 적으면 "잃었다" 와 "아직 안 했다" 를 구분할 수 없고, 그 구분이
+바로 2026-08-20 warm 7다리 사고의 사후 판단 근거였다. 보존 묶음을 만들고
+검증하면 `full_bundle` 로 올라간다 — 그 승격은 사람이 증거를 보고 한다.
 
 | 축 | 답하는 질문 |
 |---|---|
@@ -545,9 +557,9 @@ allowed_status_constraints:
   - if:   {validation_status: [current_validated, historical_validated]}
     then: {preservation_status: [full_bundle]}
     왜:   원자료 없이 "검증됐다" 고 말할 수 없다
-  - if:   {preservation_status: [recorded_projection, missing]}
+  - if:   {preservation_status: [recorded_projection, preservation_pending, missing]}
     then: {validation_status: [unvalidated]}
-    왜:   같은 함의의 대우 — 투영만 남은 다리는 검증 대상이 없다
+    왜:   같은 함의의 대우 — 투영만 남았거나 아직 묶지 않은 다리는 검증 대상이 없다
   - if:   {inference_role: [canonical]}
     then: {preservation_status: [full_bundle], validation_status: [current_validated]}
     왜:   정본은 현행 검증기로 통과한 완전 묶음에서만 나온다
