@@ -5482,7 +5482,8 @@ _PLAN_LEDGER = textwrap.dedent('''\
       - cohort_id: gA
         dir: docs/22p_gap/coh
         status: active
-        legs: ["L"]
+        legs: ["ran"]
+        prospective_legs: ["L"]
         cross_leg_comparison: not_applicable_single_leg
         pin:
           schema_version: 3
@@ -5505,16 +5506,33 @@ _PLAN_LEDGER = textwrap.dedent('''\
       - leg_id: L
         cohort_id: gA
         status: planned
+        authorization_kind: prospective
         authorized_source_digest: "0123456789abcdef"
+        run_spec_digest: "aa11bb22cc33dd44ee55ff66aa77bb88cc99dd00ee11ff22aa33bb44cc55dd66"
         recorded_on: "2026-08-28"
         근거: "시험용"
+      - leg_id: ran
+        cohort_id: gA
+        status: executed
+        authorization_kind: retrospective
+        authorized_source_digest: "aabbccddeeff0011"
+        run_spec_digest: "retrospective:no-preauthorization"
+        recorded_on: "2026-08-20"
+        근거: "시험용 — active cohort 의 끝난 다리"
       - leg_id: Z
         cohort_id: gF
         status: executed
+        authorization_kind: retrospective
         authorized_source_digest: "fedcba9876543210"
+        run_spec_digest: "retrospective:no-preauthorization"
         recorded_on: "2026-08-20"
         근거: "시험용 — 소급 기록"
     legs:
+      - leg_id: ran
+        preservation_status: full_bundle
+        evidence:
+          leg_source_digest: "aabbccddeeff0011"
+          cohorts: ["gA"]
       - leg_id: Z
         preservation_status: full_bundle
         evidence:
@@ -5559,8 +5577,11 @@ def test_an_already_executed_leg_is_not_a_standing_authorization(tmp_path):
     from tools.preserve import assert_planned_leg
 
     led = _plan_ledger(tmp_path)
+    # ★ 47차 — **active** cohort 의 executed leg 를 쓴다. 46차는 frozen cohort
+    #   의 leg 였고, status 검사를 지워도 frozen guard 가 대신 거부해서 변이가
+    #   "물었다" 로 계상됐다 (리뷰어 지적, 실측했다).
     with pytest.raises(PreserveError) as ei:
-        assert_planned_leg("Z", "fedcba9876543210", ledger=led)
+        assert_planned_leg("ran", "aabbccddeeff0011", ledger=led)
     assert "executed" in str(ei.value) or "이미 실행" in str(ei.value), str(ei.value)
 
 
@@ -5568,7 +5589,12 @@ def test_the_plan_must_name_an_active_cohort(tmp_path):
     """★ 46차 P0-11 — frozen cohort 로는 새 다리를 돌릴 수 없다."""
     from tools.preserve import assert_planned_leg
 
-    body = _PLAN_LEDGER.replace("    cohort_id: gA\n", "    cohort_id: gF\n", 1)
+    # gF 로 옮기면서 그 cohort 의 계획 roster 에도 넣는다 — 그래야 이 시험이
+    # **frozen 이라서** 거부되는지 (roster 누락이 아니라) 확인된다.
+    body = (_PLAN_LEDGER
+            .replace("    cohort_id: gA\n", "    cohort_id: gF\n", 1)
+            .replace('    legs: ["Z"]\n',
+                     '    legs: ["Z"]\n    prospective_legs: ["L"]\n', 1))
     led = _plan_ledger(tmp_path, body)
     with pytest.raises(PreserveError) as ei:
         assert_planned_leg("L", "0123456789abcdef", ledger=led)
@@ -5636,3 +5662,549 @@ def test_the_committed_ledger_passes_the_planned_index_gate():
     from tools.preserve import assert_planned_index_consistent
 
     assert assert_planned_index_consistent()
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# 47차 P0-5 — "versions() 의 유일한 통로" 가 코드상 사실이 아니었다
+#
+# 46차는 `_version_candidates()` 를 만들고 요청문에 "유일한 통로" 라고 적었다.
+# 그런데 `_repair_source()` 와 `_repair_target()` 는 `provider.versions()` 를
+# **직접 다시** 부른다. provider 가 호출마다 다른 목록을 주면 (실물 SDK 의
+# 재시도·eventual consistency 에서 실제로 일어난다) 검증되지 않은 후보가
+# 되돌릴 수 없는 `lock()` 에 도달한다.
+# ─────────────────────────────────────────────────────────────────────────────
+
+class _AlternatingVersionStore(_LockingStore):
+    """첫 호출은 정상 목록, 그 다음부터 falsy locator 를 섞는다."""
+
+    def __init__(self, *a, **kw):
+        super().__init__(*a, **kw)
+        self.calls = 0
+        self.locked_with: list = []
+
+    def versions(self, key: str) -> list:
+        self.calls += 1
+        real = super().versions(key)
+        return real if self.calls <= 1 else ([""] + real)
+
+    def get(self, key: str, version=None) -> bytes:
+        # falsy locator 를 head lookup 으로 해석하는 adapter 를 흉내낸다
+        return super().get(key, version or None)
+
+    def describe_object(self, key: str, version=None):
+        if version == "":
+            return {"mode": None, "retain_until": None}      # "아직 안 잠겼다"
+        return super().describe_object(key, version)
+
+    def lock(self, key: str, version=None, until=None, **kw):
+        self.locked_with.append((key, version))
+        return super().lock(key, version, until, **kw)
+
+
+def test_repair_lookups_go_through_the_validated_version_snapshot(tmp_path):
+    """★ 47차 P0-5 — 수리 경로도 검증된 후보만 본다."""
+    store = _AlternatingVersionStore(name=str(tmp_path))
+    backend = _lockstore(tmp_path, store)
+    key, data = "objects/x", b"payload"
+    dg = hashlib.sha256(data).hexdigest()
+    store.put(key, data)
+
+    store.calls = 1          # 다음 열거부터 falsy 후보가 섞이게 한다
+    with pytest.raises(PreserveError) as ei:
+        backend._repair_source(key, dg)
+    assert "version" in str(ei.value), str(ei.value)
+
+    store.calls = 1
+    with pytest.raises(PreserveError):
+        backend._repair_target(key, dg)
+    assert not store.locked_with, f"거부 전에 이미 잠갔다: {store.locked_with}"
+
+
+def test_a_falsy_locator_never_reaches_lock_through_repair(tmp_path):
+    """★ 47차 P0-5 — alternating 응답에서 `lock()` 호출이 **0** 이어야 한다.
+
+    되돌릴 수 없는 WORM lock 이 잘못된 version 에 걸리면 사후 proof 재유도가
+    실패해도 되돌릴 수 없다.
+    """
+    store = _AlternatingVersionStore(name=str(tmp_path))
+    backend = _lockstore(tmp_path, store)
+    key, data = "objects/y", b"payload-y"
+    dg = hashlib.sha256(data).hexdigest()
+    store.put(key, data)
+    before = dict(store._lock)
+
+    store.calls = 1
+    with pytest.raises(PreserveError):
+        backend._lock_to_proof(key, dg, "2099-01-01T00:00:00Z", lambda: data)
+    assert not store.locked_with, f"lock 이 불렸다: {store.locked_with}"
+    assert dict(store._lock) == before, "lock map 이 바뀌었다"
+
+
+def test_no_version_enumeration_bypasses_the_helper():
+    """★ 47차 P0-5 — 구조로 못 박는다: `provider.versions(` 직접 호출 금지.
+
+    46차 요청문은 "유일한 통로" 라고 주장했지만 코드에는 우회 둘이 있었다.
+    주장 대신 검사를 둔다.
+    """
+    import re
+
+    src = (pathlib.Path(__file__).resolve().parents[1]
+           / "tools" / "preserve.py").read_text(encoding="utf-8")
+    body = src.split("def _version_candidates", 1)
+    assert len(body) == 2, "전제: 검증 helper 가 있다"
+    # helper 정의 앞뒤 어디서든 provider.versions( 를 직접 부르면 안 된다.
+    # helper 자신은 `vs(key)` 로 부르므로 이 패턴에 걸리지 않는다.
+    # 두 철자를 다 막는다. 46차 우회는 `getattr(self.provider, "versions")`
+    # 였으므로 `self.provider.versions(` 만 보는 검사는 통과했다 (실측).
+    direct = [m.group(0) for m in
+              re.finditer(r"self\.provider\.versions\(", src)]
+    indirect = [m.group(0) for m in
+                re.finditer(r'getattr\(\s*self\.provider\s*,\s*["\']versions["\']',
+                            src)]
+    outside = direct + [x for x in indirect]
+    # helper 자신은 capability 확인을 위해 한 번 getattr 을 쓴다 — 그 하나만 허용.
+    assert len(outside) <= 1, (
+        f"version 열거 우회가 {len(outside)}곳 있다 ({outside}) — 모든 열거는 "
+        "`_version_candidates()` 를 지나야 한다")
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# 47차 P0-1 · P0-2 — prospective lifecycle (조건 11 의 본체)
+#
+# 46차 판정: "정상적인 prospective leg 가 gate·원장 lint·publisher 를 동시에
+# 통과할 상태가 없다." 실제로 그렇다 —
+#
+#   L 이 roster 밖 · plan=planned          → gate 통과, publisher 가 undeclared 로 거부
+#   L 을 roster 에만 추가 · plan=planned   → roster ↔ 실행 legs exact 불변식 실패
+#   L 을 실행 legs 에도 추가 · plan=planned → planned-index consistency 실패
+#   plan=executed 로 변경                   → gate 가 거부 (실행 전에 실행됨으로 기록)
+#
+# 즉 46차의 gate 는 read-only predicate 였고 lifecycle 이 아니었다.
+# ─────────────────────────────────────────────────────────────────────────────
+
+_LIFECYCLE_LEDGER = textwrap.dedent('''\
+    schema_version: 4
+    cohorts:
+      - cohort_id: gA
+        dir: docs/22p_gap/coh
+        status: active
+        legs: ["done"]
+        prospective_legs: ["L"]
+        cross_leg_comparison: allowed_within_cohort
+        pin:
+          schema_version: 3
+          compute_sha256: "aaaaaaaaaaaaaaaa"
+          row_projection_py_sha256: "bbbbbbbbbbbbbbbb"
+          src_scoring_py_sha256: "cccccccccccccccc"
+          analysis_spec_sha256: "dddddddddddddddd"
+          producer_semantic_sha256: "eeeeeeeeeeeeeeee"
+    planned:
+      - leg_id: done
+        cohort_id: gA
+        status: executed
+        authorization_kind: retrospective
+        authorized_source_digest: "fedcba9876543210"
+        run_spec_digest: "%s"
+        recorded_on: "2026-08-20"
+        근거: "시험용 — 소급 기록"
+      - leg_id: L
+        cohort_id: gA
+        status: planned
+        authorization_kind: prospective
+        authorized_source_digest: "0123456789abcdef"
+        run_spec_digest: "%s"
+        recorded_on: "2026-08-28"
+        근거: "시험용 — 계획"
+    legs:
+      - leg_id: done
+        preservation_status: full_bundle
+        evidence:
+          leg_source_digest: "fedcba9876543210"
+          cohorts: ["gA"]
+    ''')
+
+_RUN_SPEC_L = {"leg_id": "L", "mode": "fit", "objective": "pocv_dvdq",
+               "n_restarts": 3, "reference": "grid"}
+
+
+def _spec_digest(spec: dict) -> str:
+    return hashlib.sha256(json.dumps(spec, sort_keys=True, ensure_ascii=False,
+                                     separators=(",", ":")).encode("utf-8")).hexdigest()
+
+
+def _lifecycle_ledger(tmp_path) -> pathlib.Path:
+    body = _LIFECYCLE_LEDGER % ("retrospective:no-preauthorization",
+                               _spec_digest(_RUN_SPEC_L))
+    p = tmp_path / "LEG_PRESERVATION.yaml"
+    p.write_text(body, encoding="utf-8")
+    return p
+
+
+def test_a_prospective_leg_has_a_state_that_passes_every_gate(tmp_path):
+    """★ 47차 P0-1 — 계획된 leg 가 **실행 전에** 존재할 수 있어야 한다.
+
+    prospective roster 를 executed roster 와 분리한다. 그러지 않으면 어떤
+    배치를 해도 gate·lint·publisher 중 하나가 반드시 실패한다.
+    """
+    from tools.preserve import (assert_planned_index_consistent, planned_index)
+
+    led = _lifecycle_ledger(tmp_path)
+    assert assert_planned_index_consistent(ledger=led)
+    idx = planned_index(ledger=led)
+    assert idx["L"]["status"] == "planned"
+    assert idx["done"]["status"] == "executed"
+
+
+def test_exactly_one_attempt_enters_compute(tmp_path):
+    """★ 47차 P0-2 — 승인은 read-only predicate 가 아니라 **원자적 claim** 이다.
+
+    46차 `assert_planned_leg()` 는 같은 row 로 몇 번이고 통과했고 동시 실행도
+    둘 다 계산에 들어갔다.
+    """
+    from tools.preserve import claim_planned_leg, PreserveError
+
+    led = _lifecycle_ledger(tmp_path)
+    root = tmp_path / "claims"
+    c1 = claim_planned_leg("L", _RUN_SPEC_L, "0123456789abcdef",
+                           ledger=led, claims_root=root)
+    assert c1.attempt and len(c1.attempt) >= 16
+
+    with pytest.raises(PreserveError) as ei:
+        claim_planned_leg("L", _RUN_SPEC_L, "0123456789abcdef",
+                          ledger=led, claims_root=root)
+    assert "이미" in str(ei.value) or "claim" in str(ei.value), str(ei.value)
+
+
+def test_the_claim_seals_the_exact_run_spec(tmp_path):
+    """★ 47차 P0-2 — 같은 이름이 아무 실행이나 승인하면 allowlist 지 계획이 아니다.
+
+    46차 planned row 는 leg·cohort·source digest 만 담아
+    `--objective A --n-restarts 1` 과 `--objective B --n-restarts 999` 를
+    똑같이 승인했다.
+    """
+    from tools.preserve import claim_planned_leg, PreserveError
+
+    led = _lifecycle_ledger(tmp_path)
+    root = tmp_path / "claims"
+    other = dict(_RUN_SPEC_L, objective="pocv", n_restarts=999)
+    with pytest.raises(PreserveError) as ei:
+        claim_planned_leg("L", other, "0123456789abcdef",
+                          ledger=led, claims_root=root)
+    assert "run_spec" in str(ei.value), str(ei.value)
+    assert not root.exists() or not any(root.rglob("*.claim")), (
+        "거부하면서 claim 을 만들었다")
+
+
+def test_the_whole_index_must_be_consistent_before_any_leg_is_claimed(tmp_path):
+    """★ 47차 — target predicate 만 보면 다른 leg 때문에 깨진 원장으로도 시작한다."""
+    from tools.preserve import claim_planned_leg, PreserveError
+
+    body = (_LIFECYCLE_LEDGER % ("retrospective:no-preauthorization",
+                                _spec_digest(_RUN_SPEC_L))).replace(
+        'leg_source_digest: "fedcba9876543210"',
+        'leg_source_digest: "0000000000000000"')
+    led = tmp_path / "LEG_PRESERVATION.yaml"
+    led.write_text(body, encoding="utf-8")
+    with pytest.raises(PreserveError) as ei:
+        claim_planned_leg("L", _RUN_SPEC_L, "0123456789abcdef",
+                          ledger=led, claims_root=tmp_path / "claims")
+    assert "실행 기록과 다르다" in str(ei.value), str(ei.value)
+
+
+def test_a_crashed_attempt_finalizes_without_recomputing(tmp_path):
+    """★ 47차 P0-1 — 중단 뒤 **재계산 없이** finalize 할 수 있어야 한다.
+
+    phase receipt 를 남긴 뒤 process 가 죽어도, 같은 claim 을 재개해 남은
+    phase 만 하고 executed 로 닫는다.
+    """
+    from tools.preserve import (claim_planned_leg, resume_claim, finalize_leg,
+                                planned_index, PreserveError)
+
+    led = _lifecycle_ledger(tmp_path)
+    root = tmp_path / "claims"
+    c = claim_planned_leg("L", _RUN_SPEC_L, "0123456789abcdef",
+                          ledger=led, claims_root=root)
+    c.phase_done("grid", {"rows": 10})
+    attempt = c.attempt
+    del c                                            # process 가 죽었다
+
+    # finalize 는 아직 안 된다 — fit phase 가 없다
+    with pytest.raises(PreserveError) as ei:
+        finalize_leg("L", ledger=led, claims_root=root,
+                     evidence={"leg_source_digest": "0123456789abcdef",
+                               "cohorts": ["gA"]})
+    assert "phase" in str(ei.value), str(ei.value)
+
+    r = resume_claim("L", claims_root=root)
+    assert r.attempt == attempt, "재개가 새 attempt 를 만들었다"
+    assert r.phases_done() == ("grid",)
+    r.phase_done("fit", {"fits": 4})
+
+    finalize_leg("L", ledger=led, claims_root=root,
+                 evidence={"leg_source_digest": "0123456789abcdef",
+                           "cohorts": ["gA"]})
+    idx = planned_index(ledger=led)
+    assert idx["L"]["status"] == "executed", "executed 로 닫히지 않았다"
+
+
+def test_finalizing_moves_the_leg_from_prospective_to_executed_roster(tmp_path):
+    """★ 47차 P0-1 — executed 전이는 roster·실행 기록까지 한 번에 옮긴다."""
+    import yaml
+
+    from tools.preserve import (claim_planned_leg, finalize_leg,
+                                assert_planned_index_consistent)
+
+    led = _lifecycle_ledger(tmp_path)
+    root = tmp_path / "claims"
+    c = claim_planned_leg("L", _RUN_SPEC_L, "0123456789abcdef",
+                          ledger=led, claims_root=root)
+    c.phase_done("grid", {})
+    c.phase_done("fit", {})
+    finalize_leg("L", ledger=led, claims_root=root,
+                 evidence={"leg_source_digest": "0123456789abcdef",
+                           "cohorts": ["gA"]})
+
+    doc = yaml.safe_load(led.read_text(encoding="utf-8"))
+    coh = doc["cohorts"][0]
+    assert "L" in coh["legs"], "실행 roster 에 안 들어갔다"
+    assert "L" not in (coh.get("prospective_legs") or []), "계획 roster 에 남았다"
+    assert any(l["leg_id"] == "L" for l in doc["legs"]), "실행 기록이 없다"
+    assert assert_planned_index_consistent(ledger=led)
+
+
+def test_an_executed_leg_cannot_be_reclaimed(tmp_path):
+    """★ 47차 P0-2 — executed 기록은 다음 실행의 승인이 아니다 (46차 규칙 유지)."""
+    from tools.preserve import claim_planned_leg, PreserveError
+
+    led = _lifecycle_ledger(tmp_path)
+    with pytest.raises(PreserveError) as ei:
+        claim_planned_leg("done", _RUN_SPEC_L, "fedcba9876543210",
+                          ledger=led, claims_root=tmp_path / "claims")
+    assert "executed" in str(ei.value) or "이미 실행" in str(ei.value), str(ei.value)
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# 47차 — 계획 parser 가 publisher 와 **같은 authority** 를 봐야 한다
+#
+# 46차 진단(리뷰어 in-memory probe): 계획 parser 는 cohort 목록을 따로 약하게
+# 읽었다. 그래서 저장소 밖 `dir` 을 가진 cohort 를 승인했고, 반대 방향
+# consistency 도 exact equality 가 아니라 phantom executed 항목을 통과시켰다.
+# ─────────────────────────────────────────────────────────────────────────────
+
+def test_the_plan_parser_refuses_a_cohort_dir_outside_the_repository(tmp_path):
+    """★ 47차 — `dir` 위생을 publisher 와 **같은 규칙**으로 본다."""
+    from tools.preserve import planned_index, PreserveError
+
+    body = _PLAN_LEDGER.replace("    dir: docs/22p_gap/coh\n",
+                                "    dir: ../../outside\n", 1)
+    with pytest.raises(PreserveError) as ei:
+        planned_index(ledger=_plan_ledger(tmp_path, body))
+    assert "dir" in str(ei.value) or "저장소" in str(ei.value), str(ei.value)
+
+
+@pytest.mark.parametrize("bad", ["/etc", "docs//22p_gap/coh", "./docs/22p_gap/coh"])
+def test_the_plan_parser_requires_a_canonical_relative_dir(tmp_path, bad):
+    from tools.preserve import planned_index, PreserveError
+
+    body = _PLAN_LEDGER.replace("    dir: docs/22p_gap/coh\n", f"    dir: {bad}\n", 1)
+    with pytest.raises(PreserveError):
+        planned_index(ledger=_plan_ledger(tmp_path, body))
+
+
+@pytest.mark.parametrize("bad", ["Active", "retired", ""])
+def test_the_plan_parser_requires_the_exact_cohort_status_enum(tmp_path, bad):
+    from tools.preserve import planned_index, PreserveError
+
+    body = _PLAN_LEDGER.replace("    status: active\n", f"    status: {bad}\n", 1)
+    with pytest.raises(PreserveError):
+        planned_index(ledger=_plan_ledger(tmp_path, body))
+
+
+def test_a_phantom_executed_plan_without_an_execution_record_is_refused(tmp_path):
+    """★ 47차 — 반대 방향도 **exact equality** 다.
+
+    46차는 "실행 기록 ⊆ 계획" 만 봤으므로, 실행 기록이 없는 executed 계획
+    항목(phantom)이 조용히 통과했다.
+    """
+    from tools.preserve import assert_planned_index_consistent, PreserveError
+
+    # 유령을 cohort 의 **실행 roster 에도** 넣는다 — 그래야 roster 검사가
+    # 아니라 **exact equality** 로 죽는지 확인된다 (처음 썼을 때 roster 검사가
+    # 가려서 false green 이었다).
+    body = _PLAN_LEDGER.replace('    legs: ["Z"]\n',
+                                '    legs: ["Z", "유령"]\n', 1)
+    assert '"유령"' in body, "전제: gF 실행 roster 에 유령을 넣었다"
+    body = body.replace("legs:\n  - leg_id: ran\n", (
+        "  - leg_id: 유령\n"
+        "    cohort_id: gF\n"
+        "    status: executed\n"
+        "    authorization_kind: retrospective\n"
+        '    authorized_source_digest: "1111111111111111"\n'
+        '    run_spec_digest: "retrospective:no-preauthorization"\n'
+        '    recorded_on: "2026-08-28"\n'
+        "    근거: 유령\n"
+        "legs:\n  - leg_id: Z\n"), 1)
+    with pytest.raises(PreserveError) as ei:
+        assert_planned_index_consistent(ledger=_plan_ledger(tmp_path, body))
+    assert "유령" in str(ei.value), str(ei.value)
+
+
+def test_the_committed_ledger_reports_no_gate_backed_execution_yet():
+    """★ 47차 — 소급 기록을 **실행 gate 증거로 세지 않는다**.
+
+    지금 원장의 8건은 전부 소급이다. 그 사실을 기계가 답할 수 있어야 한다
+    (자유문자 근거를 사람이 읽고 세는 것이 아니라).
+    """
+    from tools.preserve import planned_coverage
+
+    cov = planned_coverage()
+    assert cov["retrospective"] == 8, cov
+    assert cov["prospective"] == 0, cov
+    assert cov["gate_backed_executions"] == 0, (
+        "실행 전 gate 를 실제로 지난 실행이 있다고 셌다 — 지금은 하나도 없다")
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# 47차 P0-3 — smoke 경계는 문자열 prefix 가 아니라 **정규 격리**여야 한다
+#
+# 46차 `plan_gate()` 는 shell `case` pattern 으로만 `results/_smoke` 를 봤다.
+# `results/_smoke/../grid_fit_v4` 는 두 문자열이 prefix 에 맞아 gate 를
+# 면제받지만 실제 출력은 `results/grid_fit_v4` 다. symlink 도 같다.
+# ─────────────────────────────────────────────────────────────────────────────
+
+@pytest.mark.parametrize("bad", [
+    "results/_smoke/../grid_fit_v4",       # 어휘적으로는 안, 실제로는 밖
+    "results/_smoke/./../x",               # 같은 축
+])
+def test_a_traversing_path_is_not_inside_the_smoke_namespace(tmp_path, bad):
+    from tools.preserve import is_inside_namespace
+
+    root = tmp_path / "repo"
+    (root / "results" / "_smoke").mkdir(parents=True)
+    assert not is_inside_namespace(root / bad, root / "results" / "_smoke"), (
+        f"{bad} 가 smoke namespace 안이라고 판정됐다")
+
+
+def test_a_symlinked_path_is_not_inside_the_smoke_namespace(tmp_path):
+    from tools.preserve import is_inside_namespace
+
+    root = tmp_path / "repo"
+    ns = root / "results" / "_smoke"
+    ns.mkdir(parents=True)
+    outside = root / "outside"
+    outside.mkdir()
+    (ns / "link").symlink_to(outside, target_is_directory=True)
+    assert not is_inside_namespace(ns / "link" / "run", ns), (
+        "symlink 을 지나 밖으로 나가는 경로가 안이라고 판정됐다")
+    assert is_inside_namespace(ns / "real" / "run", ns), (
+        "아직 없는 실제 하위 경로가 밖이라고 판정됐다")
+
+
+def test_the_namespace_check_is_fail_closed_on_a_symlinked_component(tmp_path):
+    """중간 성분이 symlink 면 그 자체로 '안' 이 아니다 — 뒤에 뭐가 오든."""
+    from tools.preserve import is_inside_namespace
+
+    root = tmp_path / "repo"
+    ns = root / "results" / "_smoke"
+    ns.mkdir(parents=True)
+    (ns / "self").symlink_to(ns, target_is_directory=True)
+    assert not is_inside_namespace(ns / "self" / "run", ns), (
+        "symlink 성분을 지난 경로를 안으로 봤다 — 나중에 target 을 바꾸면 밖이다")
+
+
+def test_the_module_entrypoint_is_gated_not_just_the_wrapper(tmp_path, monkeypatch):
+    """★ 47차 조건 11-c — `python -m src.grid` 직접 호출도 계획을 본다.
+
+    46차 gate 는 `run.sh` 안에만 있었다. `--leg` 는 shell 이 소비했고 모듈
+    직접 호출은 계획을 전혀 보지 않았다. gate 가 wrapper 에 있으면 wrapper 를
+    안 쓰면 그만이다.
+    """
+    import src.grid as G
+
+    monkeypatch.setenv("LEG", "__계획에없는다리__")
+    with pytest.raises(PreserveError) as ei:
+        G._assert_grid_authorized({"x": 1}, tmp_path / "outside_run")
+    assert "계획" in str(ei.value), str(ei.value)
+
+
+def test_the_module_gate_is_exempt_only_inside_the_smoke_namespace(monkeypatch,
+                                                                   tmp_path):
+    """면제는 정규 격리로 판정한 smoke namespace 하나뿐이다."""
+    import src.grid as G
+    from tools.preserve import SMOKE_NAMESPACE
+
+    monkeypatch.setenv("LEG", "__계획에없는다리__")
+    SMOKE_NAMESPACE.mkdir(parents=True, exist_ok=True)
+    assert G._assert_grid_authorized({"x": 1}, SMOKE_NAMESPACE / "probe") is None
+
+    # 어휘적으로만 안인 경로는 면제되지 않는다
+    with pytest.raises(PreserveError):
+        G._assert_grid_authorized({"x": 1}, SMOKE_NAMESPACE / ".." / "escaped")
+
+
+def test_a_dry_run_still_needs_authorization(tmp_path, monkeypatch):
+    """★ 47차 조건 11-e — `--dry-run` 은 두 번째 flag 면제였다.
+
+    `run_grid(dry_run=True)` 는 출력 디렉터리를 만들고 완방상태·baseline 을
+    계산한 뒤 최대 세 조건에 solver 를 실제로 부른다. 계산이 있으면 gate 도
+    있어야 한다.
+    """
+    import src.grid as G
+
+    monkeypatch.setenv("LEG", "__계획에없는다리__")
+    with pytest.raises(PreserveError):
+        G._assert_grid_authorized({"x": 1}, tmp_path / "probe", dry_run=True)
+
+
+def test_run_sh_has_no_flag_exemption_for_the_plan_gate():
+    """구조로 못 박는다 — `plan_gate` 를 조건부로 부르지 않는다."""
+    import re
+
+    src = (pathlib.Path(__file__).resolve().parents[1] / "run.sh").read_text(
+        encoding="utf-8")
+    calls = [l.strip() for l in src.splitlines()
+             if re.search(r"(^|\s)plan_gate\s*$", l)]
+    assert calls, "plan_gate 호출이 없다"
+    for c in calls:
+        assert c == "plan_gate", (
+            f"plan_gate 호출에 조건이 붙어 있다: {c!r} — flag 면제는 두지 않는다")
+
+
+def test_run_grid_calls_the_gate_before_its_first_side_effect(tmp_path,
+                                                              monkeypatch):
+    """★ 47차 조건 11-c — gate 함수가 있는 것과 **불리는** 것은 다르다.
+
+    `_assert_grid_authorized()` 를 직접 부르는 시험만 두면 호출 지점을 지워도
+    초록이다. `run_grid()` 가 mkdir 보다 **먼저** 부르는지 본다.
+    """
+    import src.grid as G
+
+    monkeypatch.setenv("LEG", "__계획에없는다리__")
+    out = tmp_path / "never_created"
+    with pytest.raises(PreserveError):
+        G.run_grid({"x": 1}, [], nproc=1, chunk_size=1, out_dir=out)
+    assert not out.exists(), (
+        "gate 가 거부하기 전에 출력 디렉터리를 만들었다 — 첫 부작용보다 "
+        "먼저 불려야 한다")
+
+
+def test_a_retrospective_row_cannot_be_claimed(tmp_path):
+    """★ 47차 — 소급 기록은 **실행 승인이 아니다**.
+
+    `authorization_kind` 를 도입만 하고 claim 이 그것을 보지 않으면, 소급 8건이
+    그대로 실행 승인으로 재사용된다 (46차가 `executed` 로 막던 것을 종류
+    축에서 다시 열어 주는 셈이다).
+    """
+    from tools.preserve import claim_planned_leg, PreserveError
+
+    body = _LIFECYCLE_LEDGER % ("retrospective:no-preauthorization",
+                               _spec_digest(_RUN_SPEC_L))
+    # L 을 소급으로 바꾼다 (상태는 planned 그대로 — 종류 축만 본다)
+    body = body.replace("    authorization_kind: prospective\n",
+                        "    authorization_kind: retrospective\n", 1)
+    led = tmp_path / "LEG_PRESERVATION.yaml"
+    led.write_text(body, encoding="utf-8")
+    with pytest.raises(PreserveError) as ei:
+        claim_planned_leg("L", _RUN_SPEC_L, "0123456789abcdef",
+                          ledger=led, claims_root=tmp_path / "claims")
+    assert "소급" in str(ei.value) or "retrospective" in str(ei.value), str(ei.value)

@@ -241,30 +241,27 @@ plan_gate() {
   # 면제는 **모든** 경로가 smoke namespace 안일 때만이다. 하나라도 밖이면
   # 그 실행은 정본 산출을 만들 수 있으므로 gate 를 지난다 (읽기 전용 입력만
   # 밖인 경우까지 막지만, 그 쪽으로 틀리는 편이 안전하다).
-  local outside=0 d
-  for d in "$OUT" "${IN_DIR:-}"; do
-    [[ -z "$d" ]] && continue
-    case "$d" in
-      "$SMOKE_NS"|"$SMOKE_NS"/*) ;;
-      *) outside=1 ;;
-    esac
-  done
-  if [[ "$outside" -eq 0 ]]; then
-    echo "· 실행 전 gate 면제 — 모든 경로가 smoke namespace 안이다"
-    return 0
-  fi
-  python - "$leg" <<'PYGATE'
+  # ★ 47차 P0-3 — 면제 판정을 **정규 격리**로 옮긴다. 46차 shell `case` 는
+  #   문자열 prefix 라 `results/_smoke/../grid_fit_v4` 와 symlink 가 통과했다.
+  #   판정은 `tools.preserve.is_inside_namespace()` 하나이고 모듈 gate 도
+  #   같은 함수를 쓴다.
+  python - "$leg" "$OUT" "${IN_DIR:-}" <<'PYGATE'
 import sys
 from src.io import source_digest
-from tools.preserve import assert_planned_leg, PreserveError
+from tools.preserve import (SMOKE_NAMESPACE, is_inside_namespace,
+                            assert_planned_leg, PreserveError)
 
-leg = sys.argv[1]
+leg, out, in_dir = sys.argv[1], sys.argv[2], sys.argv[3]
+paths = [p for p in (out, in_dir) if p]
+if paths and all(is_inside_namespace(p, SMOKE_NAMESPACE) for p in paths):
+    print("· 실행 전 gate 면제 — 모든 경로가 smoke namespace 안이다 (정규 격리)")
+    raise SystemExit(0)
 try:
     e = assert_planned_leg(leg, source_digest())
 except PreserveError as exc:
     print(f"❌ 실행 전 gate 거부 — {exc}", file=sys.stderr)
     raise SystemExit(1)
-print(f"✅ 실행 전 gate 통과 — {leg} · cohort {e['cohort_id']} · "
+print(f"✅ 실행 전 gate 통과(사전 점검) — {leg} · cohort {e['cohort_id']} · "
       f"승인 {e['recorded_on']}")
 PYGATE
 }
@@ -311,8 +308,11 @@ case "$MODE" in
     if [[ "$BACKEND" == "gpu" ]]; then
       echo "[경고] --backend gpu 는 아직 미구현 (Phase 7). CPU로 fallback." >&2
     fi
-    # ★ 46차 P0-11 — dry-run 이 아니면 계획 index gate 를 **반드시** 지난다.
-    [[ "$DRY_RUN" == "true" ]] || plan_gate
+    # ★ 47차 P0-3 — dry-run 면제를 **없앴다.** 46차는 `--dry-run` 이면 gate 를
+    #   건너뛰었는데, `run_grid(dry_run=True)` 는 출력 디렉터리를 만들고
+    #   완방상태·baseline 을 계산한 뒤 최대 세 조건에 solver 를 실제로 부른다.
+    #   "flag 면제는 없다" 와 정면으로 어긋났다.
+    plan_gate
     exec python -m src.grid "${GRID_ARGS[@]}"
     ;;
 

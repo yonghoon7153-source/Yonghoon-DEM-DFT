@@ -360,6 +360,116 @@ def _compute_closure(src: str) -> dict[str, str]:
     return out
 
 
+#: ★ 47차 #9 — producer 닫힘에서 **잘라 내는** 이름. 게시 경로는 바이트를
+#:   만들지 않으므로 producer identity 가 아니다.
+#:
+#:   46차까지 `compute_sha256` 닫힘은 `build()` 가 뿌리라서 publisher 전체를
+#:   빨아들였고, 그래서 게시 코드를 고칠 때마다 값이 움직였다. 그 값을 봉인에
+#:   넣으면 라운드마다 새 cohort ID 가 필요해지고, 빼면 producer 가 섞인다
+#:   (46차가 뺐고 47차 리뷰가 섞이는 schedule 을 보였다). 답은 셋째다:
+#:   **바이트를 만드는 코드만** 닫힘에 넣는다.
+#:   절단면은 두 종류다 — **게시**(바이트를 어디에 굳히는가)와
+#:   **원장 authority**(어디에·써도 되는가). 둘 다 행 바이트를 만들지 않는다.
+#:   이름이 사라지면 `_producer_closure()` 가 fail-closed 로 거부하므로,
+#:   절단면이 조용히 넓어지거나 좁아질 수 없다.
+_PRODUCER_CUT = ("promote_cohort_generation",
+                 "_ledger_roster", "_ledger_cohort", "_ledger_cohorts",
+                 "_ledger_dir", "_frozen_cohort_dirs", "_cohort_dir",
+                 "_assert_writable")
+
+
+def _strip_docstrings(tree):
+    """docstring 을 떼어 낸다 — 산문 변경이 producer identity 를 흔들지 않게."""
+    import ast
+
+    for node in ast.walk(tree):
+        body = getattr(node, "body", None)
+        if not isinstance(body, list) or not body:
+            continue
+        if not isinstance(node, (ast.Module, ast.FunctionDef,
+                                 ast.AsyncFunctionDef, ast.ClassDef)):
+            continue
+        first = body[0]
+        if isinstance(first, ast.Expr) and isinstance(first.value, ast.Constant) \
+                and isinstance(first.value.value, str):
+            node.body = body[1:] or [ast.Pass()]
+    return tree
+
+
+def _ast_normal(segment: str) -> str:
+    """정의 하나를 **AST 정규형**으로 — 주석·공백·줄바꿈이 사라진다."""
+    import ast
+    import textwrap
+
+    tree = _strip_docstrings(ast.parse(textwrap.dedent(segment)))
+    return ast.dump(tree, annotate_fields=True, include_attributes=False)
+
+
+def _producer_closure(src: str) -> dict[str, str]:
+    """**바이트를 만드는** 코드의 닫힘 (게시 경로는 절단면에서 멈춘다).
+
+    `_compute_closure()` 와 같은 walk 이지만 `_PRODUCER_CUT` 의 이름은 소스를
+    담지 않고 절단 표식만 남긴다 — 그 이름이 **불렸다는 사실**은 identity 에
+    남기고(호출이 사라지면 digest 가 움직인다) 그 구현은 빼는 것이다.
+    """
+    import ast
+
+    tree = ast.parse(src)
+    defs: dict[str, ast.AST] = {}
+    for node in tree.body:
+        if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef, ast.ClassDef)):
+            defs[node.name] = node
+        elif isinstance(node, ast.Assign):
+            for t in node.targets:
+                if isinstance(t, ast.Name):
+                    defs[t.id] = node
+        elif isinstance(node, ast.AnnAssign) and isinstance(node.target, ast.Name):
+            defs[node.target.id] = node
+
+    missing = [x for x in _COMPUTE_NAMES if x not in defs]
+    if missing:
+        raise SystemExit(f"✗ 계산 함수를 못 찾았다: {sorted(missing)}")
+    cut_missing = [x for x in _PRODUCER_CUT if x not in defs]
+    if cut_missing:
+        raise SystemExit(
+            f"✗ producer 절단면 이름이 없다: {sorted(cut_missing)} — 이름을 "
+            "바꿨다면 `_PRODUCER_CUT` 도 고쳐라 (조용히 닫힘이 넓어지면 게시 "
+            "코드가 producer identity 에 들어온다)")
+
+    out: dict[str, str] = {}
+    todo = [x for x in _COMPUTE_NAMES]
+    while todo:
+        name = todo.pop()
+        if name in out:
+            continue
+        if name in _PRODUCER_CUT:
+            out[name] = "<게시 경로 — producer identity 밖>"
+            continue
+        out[name] = _ast_normal(ast.get_source_segment(src, defs[name]) or "")
+        for sub_node in ast.walk(defs[name]):
+            if isinstance(sub_node, ast.Name) and sub_node.id in defs \
+                    and sub_node.id not in out:
+                todo.append(sub_node.id)
+    return out
+
+
+def _producer_semantic_over(src: str) -> str:
+    """주어진 소스에 대한 producer 의미 digest (시험이 변형본을 넣을 수 있게)."""
+    closure = _producer_closure(src)
+    parts = [f"{k}\n{closure[k]}" for k in sorted(closure)]
+    parts.append(json.dumps({"COLUMNS": COLUMNS,
+                             "RESTART_COLUMNS": RESTART_COLUMNS,
+                             "ANALYSIS_SPEC": ANALYSIS_SPEC},
+                            sort_keys=True, ensure_ascii=False))
+    return hashlib.sha256("\n".join(parts).encode("utf-8")).hexdigest()[:16]
+
+
+def _producer_semantic_sha256() -> str:
+    """이 트리의 producer 의미 identity — **봉인 대상**이다 (계약 §13.3.2)."""
+    return _producer_semantic_over(
+        Path(__file__).resolve().read_text(encoding="utf-8"))
+
+
 def _compute_sha256() -> str:
     """계산 경로의 **닫힘** + 출력 규격 상수를 해시한다.
 
@@ -395,6 +505,9 @@ def _analyzer_provenance() -> dict:
         #   차이는 `main()` 의 표시 코드뿐이었다 (계산 함수는 바이트 동일).
         #   리뷰어는 sha 만 보고 그것을 알 수 없다 → **계산 경로만** 해시한다.
         "compute_sha256": _compute_sha256(),
+        # ★ 47차 #9 — **봉인되는** producer identity. 주석·서식·게시 코드에는
+        #   흔들리지 않고 계산 정의에는 흔들린다.
+        "producer_semantic_sha256": _producer_semantic_sha256(),
         "row_projection_py_sha256": _sha(Path(__file__).resolve()),   # 참고용(전체 파일)
         "src_scoring_py_sha256": _sha(REPO / "src" / "scoring.py"),
         "python": _sys.version.split()[0],
@@ -1002,6 +1115,7 @@ class _Authority:
     #: ★ 45차 #9 — `cohort` snapshot 을 **뺐다.** sink 가 쓰지 않는데 mutable
     #:   dict 라 "고정된 근거" 를 약하게 만들 뿐이었다 (근거는 `seal` 이다).
     __slots__ = ("out", "lock", "cohort_id", "seal", "roster", "roster_digest",
+                 "pend_stale",
                  "cur_raw", "pend_raw", "base_ptr", "base_raw", "cur_gid",
                  "_sealed")
 
@@ -1089,7 +1203,24 @@ def _authority(lock: "_PublishLock", out: Path):
     auth.cur_gid = (_parse_pointer(auth.out, "CURRENT", auth.cur_raw)["generation_id"]
                     if auth.cur_raw is not None else None)
     auth.base_ptr = "CURRENT" if auth.cur_raw is not None else ".PENDING"
-    if auth.pend_raw is not None:
+    # ★ 47차 P1-a — **완전한 `CURRENT` 는 남아 있는 `.PENDING` 을 supersede 한다.**
+    #
+    #   publisher 는 `os.replace(tmp, CURRENT)` 로 가시성을 넘긴 **뒤**
+    #   `.PENDING` 을 지운다. 그 사이에 예외가 나면 (power-loss 가 아니라
+    #   평범한 소프트웨어 예외로도) 새 CURRENT 는 유효한데 옛 pending 이 남고,
+    #   46차는 그 상태에서 "pending base 가 현재와 다르다" 로 **영구 정지**
+    #   했다 — 사람이 파일을 지워야만 풀렸다.
+    #
+    #   구조적으로 그럴 필요가 없다: `CURRENT` 는 계약상 항상 명부가 찬
+    #   generation 이고(불완전한 것은 `.PENDING` 으로만 간다), `.PENDING` 은
+    #   완성을 향해 쌓는 중간물이다. 그러므로 유효한 `CURRENT` 옆의
+    #   `.PENDING` 은 **정의상 그 이전** 것이고, 버려도 굳은 바이트를 잃지
+    #   않는다 (generation 은 immutable 하게 남는다).
+    #
+    #   `CURRENT` 가 없을 때(=bootstrap 누적 중)는 46차 규칙 그대로다 —
+    #   base 가 어긋난 pending 은 승인되지 않은 구성이므로 거부한다.
+    auth.pend_stale = auth.pend_raw is not None and auth.cur_raw is not None
+    if auth.pend_raw is not None and not auth.pend_stale:
         # ★ 42차 #9 — pending 은 **닫힌 schema** 로 읽는다. key 가 빠지면
         #   `.get()` 의 `None` 이 "bootstrap 이다" 와 구별되지 않는다.
         pend = _parse_pointer(auth.out, ".PENDING", auth.pend_raw,
@@ -1192,38 +1323,61 @@ def _staging_entries(stage: Path, out: Path,
     `rmtree` 로 지웠다.
     """
     stage, out = Path(stage), Path(out)
-    if not stage.exists():
-        raise SystemExit(f"✗ {what} 을 열 수 없다: {stage}")
     if not allow_inside_gen:
         # ★ 46차 #9 — namespace 판정은 **이 함수 하나**다 (경로 사본을 지웠다 —
         #   변이가 안 물었고, 그것은 중복이라는 뜻이었다).
         _assert_outside_generations(stage, out)
-    if not stage.is_dir():
-        raise SystemExit(f"✗ {what} 이 디렉터리가 아니다: {stage}")
+    # ★ 47차 #9 — **root 자신도 따라가지 않는다.** 46차는 child 만 lstat/
+    #   O_NOFOLLOW 로 열고 root 는 `exists()`·`is_dir()`·`os.listdir(path)` 로
+    #   봤다. 그래서 `gen/<gid>` 를 바깥 디렉터리 symlink 로 바꾸면 immutable
+    #   generation 의 바이트가 namespace 밖에 있게 되고, 나중에 그 target 을
+    #   고치면 "immutable" 이 아니다. child hardlink 는 막으면서 root alias 는
+    #   허용하는 경계는 성립하지 않는다.
+    #
+    #   그리고 root 를 검사한 뒤 child 를 **pathname 으로 다시 열면** 그 사이의
+    #   root 교체를 못 본다. 한 번 연 dirfd 를 붙잡고 `openat` 으로만 읽는다.
+    dfd = _open_dir_nofollow(stage, what)
+    try:
+        out_map, bad = {}, []
+        for name in sorted(os.listdir(dfd)):
+            st = os.stat(name, dir_fd=dfd, follow_symlinks=False)
+            if not stat.S_ISREG(st.st_mode):        # symlink·FIFO·directory
+                bad.append(f"{name}: regular file 이 아니다 "
+                           f"({'symlink' if stat.S_ISLNK(st.st_mode) else 'other'})")
+                continue
+            if st.st_nlink != 1:
+                bad.append(f"{name}: 다른 이름과 inode 를 공유한다 "
+                           f"(st_nlink={st.st_nlink})")
+                continue
+            fd = os.open(name, os.O_RDONLY | os.O_NOFOLLOW, dir_fd=dfd)
+            try:
+                out_map[name] = _read_all(fd)
+            finally:
+                os.close(fd)
+        if bad:
+            raise SystemExit(
+                f"✗ {what} 에 게시할 수 없는 entry 가 있다 — generation 은 우리가 "
+                "소유한 regular file 만 담는다 (regular · st_nlink == 1 · "
+                "no-follow):\n  " + "\n  ".join(bad))
+        return out_map
+    finally:
+        os.close(dfd)
 
-    out_map, bad = {}, []
-    for name in sorted(os.listdir(stage)):
-        q = stage / name
-        st = os.stat(q, follow_symlinks=False)
-        if not stat.S_ISREG(st.st_mode):        # symlink·FIFO·directory
-            bad.append(f"{name}: regular file 이 아니다 "
-                       f"({'symlink' if stat.S_ISLNK(st.st_mode) else 'other'})")
-            continue
-        if st.st_nlink != 1:
-            bad.append(f"{name}: 다른 이름과 inode 를 공유한다 "
-                       f"(st_nlink={st.st_nlink})")
-            continue
-        fd = os.open(q, os.O_RDONLY | os.O_NOFOLLOW)
-        try:
-            out_map[name] = _read_all(fd)
-        finally:
-            os.close(fd)
-    if bad:
+
+def _open_dir_nofollow(d: Path, what: str = "staging") -> int:
+    """디렉터리를 **따라가지 않고** 연다 (47차 #9). 실패는 fail-closed.
+
+    `O_NOFOLLOW` 는 마지막 성분이 symlink 면 `ELOOP` 다. `O_DIRECTORY` 는 그것이
+    디렉터리가 아니면 `ENOTDIR` 다. 둘을 함께 주면 "실물 디렉터리이고 alias 가
+    아니다" 가 **커널에서** 판정된다 — 검사와 사용 사이에 창이 없다.
+    """
+    try:
+        return os.open(d, os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW)
+    except OSError as e:
         raise SystemExit(
-            f"✗ {what} 에 게시할 수 없는 entry 가 있다 — generation 은 우리가 "
-            "소유한 regular file 만 담는다 (regular · st_nlink == 1 · "
-            "no-follow):\n  " + "\n  ".join(bad))
-    return out_map
+            f"✗ {what} 을 실물 디렉터리로 열 수 없다: {d} ({e.strerror}) — "
+            "symlink·junction 으로 가리킨 디렉터리는 generation 이 될 수 없다 "
+            "(바깥에서 바이트가 바뀌면 immutable 이 아니다)") from e
 
 
 def _generation_entries(gdir: Path, out: Path) -> dict:
@@ -1646,6 +1800,25 @@ def promote_cohort_generation(stage: Path, out: Path, leg: str, *, roster) -> di
     #   값으로 게시했다. 원장은 이 게시의 근거이므로 근거를 읽는 순간부터
     #   상호배제 안이어야 한다.
     claimed = set(roster or ())
+    # ★ 47차 P1-b — **첫 write 전에** 원장 authority 를 확정한다. 46차는 exact
+    #   status·pin·policy 검사가 `_ledger_seal()` 안에 늦게 있어서, 그 앞에서
+    #   lock 파일·출력 디렉터리·private temp 가 만들어질 수 있었다. crash 가
+    #   나면 frozen namespace 에 잔여물이 남는다.
+    #
+    #   여기서 읽는 것은 **판정 전용 사본**이고, 게시의 근거는 여전히 임계
+    #   구역 안에서 다시 읽는 `_authority()` 다 (그 사이 변경은 seal 대조가
+    #   잡는다). 이 앞선 검사는 "쓰기 전에 거절한다" 만 담당한다.
+    _pre = _ledger_cohort_preflight(Path(out))
+    if _pre.get("status") != "active":
+        raise SystemExit(
+            f"✗ cohort {_pre.get('cohort_id')!r} 가 active 가 아니다 "
+            f"({_pre.get('status')!r}) — frozen cohort 에는 쓸 수 없다. "
+            "아무 것도 만들지 않고 멈춘다")
+    _pre_roster = set(_pre.get("legs") or ())
+    if claimed != _pre_roster:
+        raise SystemExit(
+            f"✗ 신고한 roster {sorted(claimed)} 가 원장 {sorted(_pre_roster)} 와 "
+            "다르다 — 원장이 정본이다 (아무 것도 만들지 않고 멈춘다)")
     with _PublishLock(out) as lock, _authority(lock, out) as auth:
         if claimed != auth.roster:
             raise SystemExit(
@@ -1835,6 +2008,30 @@ def _ledger_dir(cohort: dict, where) -> Path:
     return got
 
 
+def _ledger_cohort_preflight(out: Path) -> dict:
+    """**게시 authority 가 아닌** 사전 점검용 원장 조회 (47차 P1-b).
+
+    쓰기(=lock 파일 생성) 전에 frozen·schema 위반을 걸러 내기 위한 것이다.
+    여기서 읽은 값은 게시의 근거가 **아니다** — 근거는 임계 구역 안에서
+    `_authority()` 가 다시 읽고, 그 사이의 변경은 게시 직전 seal 대조가
+    잡는다. 이름을 따로 두는 이유는 "원장을 lock 안에서 읽는다"(41차 #9)는
+    불변식이 이 사전 점검 때문에 흐려지지 않게 하기 위해서다.
+    """
+    global _IN_PREFLIGHT
+    _IN_PREFLIGHT = True
+    try:
+        rec = _ledger_cohort(out)
+        _ledger_seal(rec)          # schema·enum·정책 위생을 **쓰기 전에**
+        return rec
+    finally:
+        _IN_PREFLIGHT = False
+
+
+#: 사전 점검 중인가 — "원장은 lock 안에서 읽는다"(41차 #9) 불변식의 회귀가
+#: 사전 점검 읽기를 authority 읽기와 구별할 수 있게 하는 표식이다.
+_IN_PREFLIGHT = False
+
+
 def _ledger_cohort(out: Path) -> dict:
     """이 cohort 디렉터리를 선언한 원장 항목 **전체** (43차 #9).
 
@@ -1951,7 +2148,8 @@ _CROSS_LEG_POLICY = ("allowed_within_cohort", "not_applicable_single_leg")
 
 #: producer identity 의 **닫힌** 필드 집합. 하나라도 빠지거나 남으면 거부한다.
 _PIN_AUTHORITY = ("schema_version", "compute_sha256", "row_projection_py_sha256",
-                  "src_scoring_py_sha256", "analysis_spec_sha256")
+                  "src_scoring_py_sha256", "analysis_spec_sha256",
+                  "producer_semantic_sha256")
 
 #: 그 중 **cohort 수명 동안 불변**인 부분 — 봉인에 들어가는 것은 이것뿐이다.
 #:
@@ -1967,7 +2165,8 @@ _PIN_AUTHORITY = ("schema_version", "compute_sha256", "row_projection_py_sha256"
 #:   **active cohort 의 manifest 는 현행 트리와 같아야 한다** 로 강제한다
 #:   (producer 가 바뀌면 cohort 를 통째로 재생성해야 통과한다). 두 규칙이
 #:   합쳐져야 "이 바이트를 누가 만들었는가" 가 닫힌다 — 계약 §13.3.2.
-_PIN_SEALED = ("schema_version", "analysis_spec_sha256")
+_PIN_SEALED = ("schema_version", "analysis_spec_sha256",
+               "producer_semantic_sha256")
 
 
 def _ledger_authority(cohort: dict) -> dict:
@@ -2014,6 +2213,15 @@ def _ledger_authority(cohort: dict) -> dict:
             raise SystemExit(
                 f"✗ 원장 cohort 의 `cross_leg_comparison` 이 계약 enum 이 "
                 f"아니다: {v!r} — {list(_CROSS_LEG_POLICY)} 중 하나여야 한다")
+        elif k == "cross_leg_comparison" and v == "not_applicable_single_leg" \
+                and len(rec.get("legs") or ()) != 1:
+            # ★ 47차 P1-c — 정책 **문자열**만 봉인하고 의미를 안 보면,
+            #   multi-leg cohort 가 "단일 leg 라 해당 없음" 을 달고 통과한다.
+            raise SystemExit(
+                f"✗ `not_applicable_single_leg` 은 단일 leg cohort 의 값이다 — "
+                f"명부가 {len(rec.get('legs') or ())} 개다 "
+                f"({sorted(rec.get('legs') or ())}). multi-leg 라면 "
+                f"`allowed_within_cohort` 를 쓰라")
         else:
             rec[k] = v
     return rec

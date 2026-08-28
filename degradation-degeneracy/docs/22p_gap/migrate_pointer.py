@@ -1,10 +1,17 @@
 #!/usr/bin/env python3
 """이미 커밋된 cohort pointer 를 46차 계약으로 **한 번** 옮긴다.
 
-46차 #9 에서 pointer 의 닫힌 key 집합이 바뀌었고(`cohort_id` echo 제거) 원장
-봉인 authority 에 producer pin 의 불변 부분과 사용 정책이 들어왔다. 그래서
-이미 커밋된 `CURRENT` 는 (a) key 집합이 다르고 (b) 봉인 값이 다르다 — 둘 다
-reader 가 fail-closed 로 거부한다.
+pointer 의 **표현**(닫힌 key 집합)이나 **봉인 authority 의 schema** 가 바뀌면
+이미 커밋된 `CURRENT` 를 reader 가 fail-closed 로 거부한다. 46차에는
+`cohort_id` echo 제거였고, 47차에는 producer 의미 identity 가 봉인 부분집합에
+들어왔다.
+
+**authority 변경을 눈감아 주는 도구가 아니다**: 옮기기 전에 pointer 가 가리키는
+generation 의 실물 바이트를 다시 읽어 `files` 와 대조하고 `generation_id` 를
+재계산한다. 하나라도 어긋나면 옮기지 않는다. 바꾸는 것은 **봉인 값의 표현**
+뿐이고 계보·바이트는 그대로다. producer 나 명부가 실제로 바뀌었다면 그것은 새
+cohort ID 의 일이고 이 도구로 덮을 수 없다 — 바이트가 달라지므로 위 대조에서
+걸린다.
 
 `schema` 문자열은 **올리지 않는다.** 그것은 `generation_id()` 의 preimage 에
 들어가므로 올리면 이미 굳은 generation 의 이름이 전부 바뀐다.
@@ -60,11 +67,12 @@ def migrate(out: pathlib.Path, dry_run: bool = False) -> int:
         if rec.get("schema") != rp.CURRENT_SCHEMA:
             print(f"✗ {name}: 옮길 수 있는 schema 가 아니다: {rec.get('schema')!r}")
             return 1
-        if set(rec) == want:
-            print(f"{name}: 이미 46차 key 집합이다 — 건드리지 않는다")
+        live_seal = rp._ledger_seal(rp._ledger_cohort(out))
+        if set(rec) == want and rec.get("ledger_seal") == live_seal:
+            print(f"{name}: 이미 현행 계약이다 — 건드리지 않는다")
             continue
-        if set(rec) - want != {"cohort_id"}:
-            print(f"✗ {name}: 46차 이전 pointer 로 보이지 않는다 — "
+        if set(rec) != want and set(rec) - want != {"cohort_id"}:
+            print(f"✗ {name}: 옮길 수 있는 pointer 로 보이지 않는다 — "
                   f"여분 {sorted(set(rec) - want)} · 모자람 {sorted(want - set(rec))}")
             return 1
         gid = rec["generation_id"]

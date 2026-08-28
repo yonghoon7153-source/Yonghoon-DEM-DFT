@@ -4159,7 +4159,8 @@ def _leg3(tmp: Path, leg: str, tag: bytes) -> Path:
 _DEFAULT_PIN = {"schema_version": 3, "compute_sha256": "0" * 16,
                 "row_projection_py_sha256": "1" * 16,
                 "src_scoring_py_sha256": "2" * 16,
-                "analysis_spec_sha256": "3" * 64}
+                "analysis_spec_sha256": "3" * 64,
+                "producer_semantic_sha256": "4" * 16}
 _TMP_PIN: dict = {}
 
 
@@ -6185,7 +6186,10 @@ def test_the_roster_is_read_from_the_ledger_inside_the_publish_lock(tmp_path):
     def _watch(o):
         # ★ 45차 #9 — reader 도 원장을 읽는다 (pointer 의 cohort·seal 결속).
         #   여기서 보는 것은 **게시 중**의 조회다.
-        if publishing[0]:
+        # ★ 47차 P1-b — 사전 점검 읽기는 **authority 가 아니다** (쓰기 전에
+        #   frozen·schema 를 거르는 용도이고, 게시의 근거는 임계 구역 안에서
+        #   다시 읽는다). 그 하나만 제외한다 — 표식은 production 이 세운다.
+        if publishing[0] and not rp._IN_PREFLIGHT:
             held.append(bool(rp._PublishLock._ACTIVE))
         return real(o)
 
@@ -6759,6 +6763,10 @@ def test_a_same_roster_ledger_change_is_refused(tmp_path):
     seen: list = []
 
     def _freezing(o):
+        # ★ 47차 — 사전 점검 읽기는 세지 않는다. 이 시험이 겨누는 것은
+        #   "authority snapshot 이후 · commit 이전" 의 변경이다.
+        if rp._IN_PREFLIGHT:
+            return dict(real(o))
         seen.append(1)
         rec = dict(real(o))
         if len(seen) > 1:                      # 게시 직전 재확인
@@ -6815,6 +6823,8 @@ def test_a_pointer_moved_by_another_writer_is_never_overwritten(tmp_path, when):
     seals: list = []
 
     def _s(cohort):
+        if rp._IN_PREFLIGHT:            # ★ 47차 — 사전 점검은 세지 않는다
+            return real_s(cohort)
         seals.append(1)
         got = real_s(cohort)
         # `_ledger_seal` 은 두 번 불린다: authority 고정(1) · commit guard(2).
@@ -7843,7 +7853,10 @@ def test_a_mutable_provenance_digest_is_deliberately_not_sealed(tmp_path):
     그 선을 **의도**로 못 박는다 — 나중에 조용히 넓히거나 좁히지 못하게.
     """
     rp = _rp()
-    assert set(rp._PIN_SEALED) == {"schema_version", "analysis_spec_sha256"}, (
+    # ★ 47차 P0-4 — producer 의미 identity 가 들어왔다. 46차의 두 필드로는
+    #   producer 를 갈아도 seal 이 같아 한 CURRENT 에 A·B 가 섞였다.
+    assert set(rp._PIN_SEALED) == {"schema_version", "analysis_spec_sha256",
+                                   "producer_semantic_sha256"}, (
         f"봉인 pin 부분집합이 바뀌었다: {rp._PIN_SEALED}")
     assert set(rp._PIN_SEALED) < set(rp._PIN_AUTHORITY)
 
@@ -7967,3 +7980,344 @@ def test_losing_the_pointer_of_a_cohort_that_has_generations_is_terminal(tmp_pat
     assert "새 cohort" in str(ei.value) or "소실" in str(ei.value), str(ei.value)
     assert sorted(p.name for p in (out / "gen").iterdir()) == gens, (
         "거부하면서 generation 을 늘렸다")
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# 47차 #9 P0-6 — generation **디렉터리 자신**도 따라가지 않는다
+#
+# 46차는 child entry 를 lstat/O_NOFOLLOW 로 열었지만 root 는 `exists()` ·
+# `is_dir()` · `os.listdir(path)` 로 봤다. 그래서 `out/gen/<gid>` 를 바깥
+# 디렉터리를 가리키는 symlink 로 바꾸면 immutable generation 의 바이트가
+# namespace **밖**에 있게 되고, 나중에 그 target 을 고치면 "immutable" 이
+# 아니다. child hardlink 는 막으면서 root alias 는 허용하는 경계는 성립하지
+# 않는다 (46차가 조건 3 의 증거로 든 것이 바로 child hardlink 였다).
+# ─────────────────────────────────────────────────────────────────────────────
+
+def _external_generation(tmp_path, blobs: dict) -> Path:
+    d = tmp_path / "external"
+    d.mkdir()
+    for n, b in blobs.items():
+        (d / n).write_bytes(b)
+    return d
+
+
+def _alias_generation_root(out: Path, gid: str, target: Path) -> None:
+    """`gen/<gid>` 를 바깥 디렉터리 symlink 로 **바꾼다** (root alias)."""
+    gdir = out / "gen" / gid
+    shutil.rmtree(gdir)
+    gdir.symlink_to(target, target_is_directory=True)
+
+
+def test_a_generation_root_symlink_is_never_read_as_a_generation(tmp_path):
+    """★ 47차 #9 P0-6 — 독자가 generation root alias 를 따라가면 안 된다."""
+    rp = _rp()
+    out = tmp_path / "out"
+    rec = rp.promote_cohort_generation(_leg3(tmp_path / "s0", "a", b"1"),
+                                       out, "a", roster={"a"})
+    gid = rec["generation_id"]
+    blobs = {"a.projection.csv.gz": b"rows-1", "a.restarts.csv.gz": b"restarts-1",
+             "a.projection.yaml": b"meta: 1\n"}
+    ext = _external_generation(tmp_path, blobs)
+    _alias_generation_root(out, gid, ext)
+
+    with pytest.raises(SystemExit) as ei:
+        rp.read_current(out)
+    assert "generation" in str(ei.value), str(ei.value)
+    assert sorted(p.name for p in ext.iterdir()) == sorted(blobs), (
+        "거부하면서 바깥 디렉터리를 건드렸다")
+
+
+def test_a_generation_root_symlink_is_never_reused_by_the_publisher(tmp_path):
+    """★ 47차 #9 P0-6 — 멱등 재게시도 root alias 를 generation 으로 승인하면 안 된다.
+
+    reader 가 먼저 거부하지 못하도록 alias 를 **pointer 가 가리키지 않는**
+    옛 generation 에 건다 (46차에 같은 축에서 배운 배치다).
+    """
+    rp = _rp()
+    out = tmp_path / "out"
+    g1 = rp.promote_cohort_generation(_leg3(tmp_path / "s0", "a", b"1"),
+                                      out, "a", roster={"a"})
+    g2 = rp.promote_cohort_generation(_leg3(tmp_path / "s1", "a", b"2"),
+                                      out, "a", roster={"a"})
+    assert rp.read_current(out)["generation_id"] == g2["generation_id"]
+
+    blobs = {"a.projection.csv.gz": b"rows-1", "a.restarts.csv.gz": b"restarts-1",
+             "a.projection.yaml": b"meta: 1\n"}
+    ext = _external_generation(tmp_path, blobs)
+    _alias_generation_root(out, g1["generation_id"], ext)
+
+    with pytest.raises(SystemExit) as ei:
+        rp.promote_cohort_generation(_leg3(tmp_path / "s2", "a", b"1"),
+                                     out, "a", roster={"a"})
+    assert "generation" in str(ei.value), str(ei.value)
+    assert rp.read_current(out)["generation_id"] == g2["generation_id"], (
+        "거부하면서 pointer 를 옮겼다")
+
+
+def test_the_generation_reader_holds_a_directory_fd_for_its_children(tmp_path):
+    """★ 47차 #9 P0-6 — child 읽기는 **붙잡은 dirfd** 를 통해야 한다.
+
+    root 를 한 번 검사한 뒤 pathname 으로 child 를 다시 열면, 그 사이에 root 를
+    갈아 끼운 공격을 못 본다 (검사-직후 창). `openat(dirfd, name)` 이면 root 가
+    바뀌어도 우리가 검사한 그 디렉터리를 계속 읽는다.
+
+    구조를 못 박는다 — `os.listdir`/`os.stat`/`os.open` 이 전부 `dir_fd` 를
+    받아야 한다.
+    """
+    import inspect
+
+    rp = _rp()
+    src = inspect.getsource(rp._staging_entries)
+    # ★ 47차 — **두 자리 모두** 봐야 한다. `dir_fd` 가 어딘가 한 번 나오는지만
+    #   보면 한 자리를 pathname 으로 되돌려도 통과한다 (변이로 실측했다).
+    assert "os.stat(name, dir_fd=dfd" in src, (
+        "child stat 이 dirfd 를 쓰지 않는다")
+    assert "dir_fd=dfd)" in src and "os.open(name," in src, (
+        "child open 이 dirfd 를 쓰지 않는다 — pathname 으로 다시 열면 root "
+        "교체를 못 본다")
+    assert "O_DIRECTORY" in inspect.getsource(rp), (
+        "디렉터리 root 를 O_DIRECTORY|O_NOFOLLOW 로 열지 않는다")
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# 47차 #9 P0-4 — 한 CURRENT 에 서로 다른 producer 의 leg 가 섞였다
+#
+# 46차는 `_PIN_SEALED` 를 (schema_version, analysis_spec_sha256) 둘로 좁히고,
+# compute·row projection·scoring producer 축은 "active cohort 의 manifest 는
+# 현행 트리와 같아야 한다"는 **나중에 채점하는** 회귀에 맡겼다. 그 회귀는
+# reader 불변식도 publisher 불변식도 아니므로, 그 사이로 빠지는 상태가 있다:
+#
+#   roster {a,b} · pin A 로 a 만 게시(.PENDING) → schema/spec 는 그대로 두고
+#   producer identity 만 B 로 → 원장 pin 을 B 로 → b 를 게시
+#   ⇒ a(A)+b(B) 를 담은 active CURRENT 가 만들어지고 reader 가 승인한다.
+# ─────────────────────────────────────────────────────────────────────────────
+
+def test_a_producer_change_cannot_mix_two_producers_in_one_generation(tmp_path):
+    """★ 47차 #9 P0-4 — 리뷰어가 준 5단계 schedule 을 그대로 고정한다."""
+    rp = _rp()
+    out = tmp_path / "out"
+    key = str(out.resolve())
+
+    rp.promote_cohort_generation(_leg3(tmp_path / "s0", "a", b"1"), out, "a",
+                                 roster={"a", "b"})
+    assert (out / ".PENDING").is_file(), "전제: a 가 pending 으로 올라갔다"
+
+    # schema_version·analysis_spec_sha256 은 **그대로** 두고 producer 만 바꾼다
+    _TMP_PIN[key] = dict(_DEFAULT_PIN,
+                         compute_sha256="b" * 16,
+                         row_projection_py_sha256="b" * 16,
+                         src_scoring_py_sha256="b" * 16,
+                         producer_semantic_sha256="b" * 16)
+
+    with pytest.raises(SystemExit) as ei:
+        rp.promote_cohort_generation(_leg3(tmp_path / "s1", "b", b"1"), out, "b",
+                                     roster={"a", "b"})
+    assert not (out / "CURRENT").is_file(), (
+        "서로 다른 producer 의 leg 를 담은 generation 이 active 로 게시됐다")
+    # ★ 이 시험이 **봉인 대조**로 죽는지 확인한다. pin schema 오류로 죽으면
+    #   fixture 가 진실을 가린 것이다 (처음 작성했을 때 실제로 그랬다).
+    assert "봉인한 원장 record" in str(ei.value), (
+        f"거부됐지만 봉인 대조 때문이 아니다: {ei.value}")
+
+
+def test_the_producer_semantic_identity_is_sealed(tmp_path):
+    """★ 47차 #9 P0-4 — producer 의미 identity 는 **봉인** 안에 있다.
+
+    46차의 두 필드로는 producer 를 갈아도 seal 이 같았다. 봉인 부분집합에
+    producer 의미 digest 가 들어가야 한다.
+    """
+    rp = _rp()
+    assert "producer_semantic_sha256" in rp._PIN_SEALED, (
+        f"producer 의미 identity 가 봉인 밖이다: {rp._PIN_SEALED}")
+    assert "producer_semantic_sha256" in rp._PIN_AUTHORITY
+
+    out = tmp_path / "out"
+    rp.promote_cohort_generation(_leg3(tmp_path / "s0", "a", b"1"), out, "a",
+                                 roster={"a"})
+    key = str(out.resolve())
+    _TMP_PIN[key] = dict(_DEFAULT_PIN, producer_semantic_sha256="9" * 16)
+    with pytest.raises(SystemExit):
+        rp.read_current(out)
+
+
+def test_the_producer_semantic_digest_ignores_comments_but_not_computation():
+    """★ 47차 #9 P0-4 — 의미 digest 는 주석·서식에 흔들리지 않고 계산에는 흔들린다.
+
+    이것이 없으면 두 선택지밖에 없다: producer 를 봉인 밖에 두거나(46차 —
+    섞임을 허용한다) 주석 한 줄에도 새 cohort ID 로 가거나. 둘 다 답이 아니다.
+    """
+    rp = _rp()
+    base = rp._producer_semantic_sha256()
+    assert len(base) == 16
+
+    src = (_REPO / "docs" / "22p_gap" / "row_projection.py").read_text(encoding="utf-8")
+    # 주석·docstring·공백만 바꾼다 → digest 불변이어야 한다
+    same = rp._producer_semantic_over(src.replace(
+        "def _restart_list(", "def _restart_list(  # 주석을 붙인다\n", 1)
+        if "def _restart_list(" in src else src)
+    assert same == base, "주석/서식 변경이 producer 의미 digest 를 움직였다"
+
+    # 계산을 바꾼다 → digest 가 움직여야 한다
+    moved = rp._producer_semantic_over(
+        src.replace("_RESTART_SOURCES = frozenset(", "_RESTART_SOURCES = set(", 1))
+    assert moved != base, "계산 정의 변경이 producer 의미 digest 를 안 움직였다"
+
+
+def test_the_producer_semantic_digest_excludes_the_publication_path():
+    """★ 47차 #9 P0-4 — 게시 machinery 는 **바이트를 만들지 않는다.**
+
+    `build()` 가 뿌리라서 46차 `compute_sha256` 닫힘에는 publisher 전체가
+    딸려 들어왔다 (그래서 게시 코드를 고칠 때마다 움직였다). producer 는
+    "이 바이트를 무엇이 만들었나" 이므로 게시 경로를 잘라 낸다 — 그 자리가
+    선언돼 있는지 못 박는다.
+    """
+    rp = _rp()
+    assert rp._PRODUCER_CUT, "게시 경로 절단면이 선언되지 않았다"
+    assert "promote_cohort_generation" in rp._PRODUCER_CUT
+
+    src = (_REPO / "docs" / "22p_gap" / "row_projection.py").read_text(encoding="utf-8")
+    names = set(rp._producer_closure(src))
+    assert "build" in names, "행을 조립하는 build 는 닫힘 안이어야 한다"
+    for root in ("_cell", "_restart_list", "score_canonical"):
+        assert root in names, f"행을 만드는 {root} 가 닫힘 밖이다"
+    leaked = sorted(n for n in names if n not in rp._PRODUCER_CUT and any(
+        k in n for k in ("publish", "pointer", "Authority", "PublishLock",
+                         "staging", "generation", "promote", "commit",
+                         "merge", "ledger", "cohort_dir", "writable")))
+    assert not leaked, (
+        f"게시·원장 authority 가 producer 닫힘에 들어 있다: {leaked} — 그 코드를 "
+        "고칠 때마다 cohort 를 새로 만들어야 한다 (46차가 그래서 producer 를 "
+        "봉인 밖으로 뺐고, 그 결과 producer 가 섞였다)")
+
+    # 절단면 이름이 사라지면 **조용히 넓어지지 않고** 거부해야 한다
+    broken = src.replace("def _assert_writable(", "def _assert_writable_renamed(", 1)
+    with pytest.raises(SystemExit) as ei:
+        rp._producer_closure(broken)
+    assert "절단면" in str(ei.value), str(ei.value)
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# 47차 P1-a — CURRENT commit 뒤 PENDING cleanup 전 crash 가 cohort 를 막는다
+#
+# publisher 는 `os.replace(tmp, CURRENT)` 로 가시성을 넘긴 **뒤**
+# `.PENDING` 을 지운다. 그 사이에 예외가 나면 새 CURRENT 는 유효한데 옛
+# PENDING 이 남고, 다음 publisher 가 "pending base 가 현재와 다르다" 로 영구
+# 정지한다. power-loss 파일시스템이 아니라 **평범한 예외**로 재현된다.
+# ─────────────────────────────────────────────────────────────────────────────
+
+def test_a_complete_current_supersedes_a_leftover_pending(tmp_path):
+    """★ 47차 P1-a — 완전한 CURRENT 옆의 PENDING 은 commit 창의 잔여다.
+
+    `CURRENT` 는 계약상 **항상 명부가 찬** generation 이다 (불완전한 것은
+    `.PENDING` 으로만 간다). 그러므로 유효한 `CURRENT` 와 나란히 있는
+    `.PENDING` 은 정의상 그 CURRENT **이전**의 것이고, 사람이 파일을 지워야만
+    풀리는 상태로 둘 이유가 없다.
+    """
+    rp = _rp()
+    out = tmp_path / "out"
+    # roster {a,b} — a 를 pending 으로, b 로 완성해 CURRENT 를 만든다
+    rp.promote_cohort_generation(_leg3(tmp_path / "s0", "a", b"1"), out, "a",
+                                 roster={"a", "b"})
+    pend_before = (out / ".PENDING").read_bytes()
+
+    real_unlink = rp.Path.unlink
+
+    def _crash(self, *a, **kw):
+        if self.name == ".PENDING":
+            raise RuntimeError("commit 직후 crash")
+        return real_unlink(self, *a, **kw)
+
+    rp.Path.unlink = _crash
+    try:
+        with pytest.raises(RuntimeError):
+            rp.promote_cohort_generation(_leg3(tmp_path / "s1", "b", b"1"),
+                                         out, "b", roster={"a", "b"})
+    finally:
+        rp.Path.unlink = real_unlink
+
+    assert (out / "CURRENT").is_file(), "전제: CURRENT 는 넘어갔다"
+    assert (out / ".PENDING").read_bytes() == pend_before, "전제: 잔여가 남았다"
+    cur = rp.read_current(out, expect_legs={"a", "b"})
+    assert {rp._leg_of(n) for n in cur["files"]} == {"a", "b"}
+
+    # ★ 여기가 46차에 막혔다 — 다음 게시가 잔여 pending 때문에 영구 정지했다.
+    again = rp.promote_cohort_generation(_leg3(tmp_path / "s2", "a", b"2"),
+                                         out, "a", roster={"a", "b"})
+    assert again["published"] is True
+    assert not (out / ".PENDING").is_file(), "잔여 pending 이 아직 남았다"
+    final = rp.read_current(out, expect_legs={"a", "b"})
+    assert final["generation_id"] == again["generation_id"]
+
+
+def test_a_pending_from_a_different_lineage_is_still_refused(tmp_path):
+    """잔여 정리가 **아무 pending 이나** 삼키면 안 된다.
+
+    CURRENT 가 없는(=bootstrap) 상태에서 base 가 어긋난 pending 은 46차처럼
+    그대로 거부해야 한다 — 그것은 commit 창의 잔여가 아니라 승인되지 않은
+    구성이다.
+    """
+    rp = _rp()
+    out = tmp_path / "out"
+    rp.promote_cohort_generation(_leg3(tmp_path / "s0", "a", b"1"), out, "a",
+                                 roster={"a", "b"})
+    rec = json.loads((out / ".PENDING").read_text(encoding="utf-8"))
+    rec["base_generation"] = "f" * 64                     # 다른 계보
+    (out / ".PENDING").write_text(
+        json.dumps(rec, sort_keys=True, separators=(",", ":")), encoding="utf-8")
+
+    with pytest.raises(SystemExit) as ei:
+        rp.promote_cohort_generation(_leg3(tmp_path / "s1", "b", b"1"), out, "b",
+                                     roster={"a", "b"})
+    assert "base" in str(ei.value), str(ei.value)
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# 47차 P1-b · P1-c — 최종 authority 검사 **전에** 쓰지 않는다 / 정책은 명부와 결속
+# ─────────────────────────────────────────────────────────────────────────────
+
+def test_a_frozen_cohort_publish_writes_nothing_before_it_refuses(tmp_path,
+                                                                  monkeypatch):
+    """★ 47차 P1-b — frozen·invalid authority 는 **첫 write 전에** 걸러야 한다.
+
+    46차는 exact status/pin/policy 검사가 `_ledger_seal()` 안에 늦게 있었고,
+    그 앞에서 lock·mkdir·private temp 가 만들어질 수 있었다. crash 가 나면
+    frozen namespace 에 잔여물이 남는다.
+    """
+    rp = _rp()
+    out = tmp_path / "out"
+    out.mkdir()
+    before = sorted(p.name for p in out.iterdir())
+
+    real = rp._ledger_cohort
+    rp._ledger_cohort = lambda o: dict(real(o), status="frozen")
+    try:
+        with pytest.raises(SystemExit) as ei:
+            rp.promote_cohort_generation(_leg3(tmp_path / "s0", "a", b"1"),
+                                         out, "a", roster={"a"})
+    finally:
+        rp._ledger_cohort = real
+    assert "frozen" in str(ei.value) or "쓸 수 없다" in str(ei.value) \
+        or "active" in str(ei.value), str(ei.value)
+    assert sorted(p.name for p in out.iterdir()) == before, (
+        f"거부하기 전에 무언가를 만들었다: "
+        f"{sorted(set(p.name for p in out.iterdir()) - set(before))}")
+
+
+def test_the_single_leg_policy_must_match_the_roster_cardinality(tmp_path):
+    """★ 47차 P1-c — `not_applicable_single_leg` 는 정말 단일 leg 여야 한다.
+
+    46차는 정책 문자열을 봉인했지만 **소비 의미**를 검증하지 않아서,
+    multi-leg cohort 도 그 값을 달고 통과했다.
+    """
+    rp = _rp()
+    rec = {"cohort_id": "gX", "dir": "docs/22p_gap/coh", "status": "active",
+           "legs": ["a", "b"], "pin": dict(_DEFAULT_PIN),
+           "cross_leg_comparison": "not_applicable_single_leg"}
+    with pytest.raises(SystemExit) as ei:
+        rp._ledger_seal(rec)
+    assert "single" in str(ei.value) or "단일" in str(ei.value), str(ei.value)
+
+    ok = dict(rec, legs=["a"])
+    assert rp._ledger_seal(ok), "단일 leg 에서는 통과해야 한다"
+    allowed = dict(rec, cross_leg_comparison="allowed_within_cohort")
+    assert rp._ledger_seal(allowed), "multi-leg 는 허용 정책이면 통과해야 한다"

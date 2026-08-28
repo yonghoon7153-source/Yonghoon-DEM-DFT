@@ -982,7 +982,8 @@ principal 의 create/rename/link/write 가 **실제로 거부되는** negative c
 ```
 _LEDGER_AUTHORITY = ("cohort_id", "dir", "status", "legs",
                      "pin", "cross_leg_comparison")
-_PIN_SEALED       = ("schema_version", "analysis_spec_sha256")
+_PIN_SEALED       = ("schema_version", "analysis_spec_sha256",
+                     "producer_semantic_sha256")
 ```
 
 reader(`read_current()`)도 그 봉인값을 지금의 원장과 대조한다. 따라서 이 중
@@ -996,19 +997,40 @@ reader(`read_current()`)도 그 봉인값을 지금의 원장과 대조한다. �
 |---|---|---|---|
 | `schema_version` | 산출 schema | **○** | 봉인 대조 (`_parse_pointer`) |
 | `analysis_spec_sha256` | 비교 규칙 | **○** | 봉인 대조 |
+| `producer_semantic_sha256` | **누가 만들었는가** (47차 추가) | **○** | 봉인 대조 |
 | `compute_sha256` | 계산 dependency closure digest | × | `..._digests_recompute_from_the_current_tree` |
 | `row_projection_py_sha256` | producer 파일 digest | × | 같은 회귀 |
 | `src_scoring_py_sha256` | 채점기 파일 digest | × | 같은 회귀 |
 | `runtime`·산문 | 관측 기록 | × | — |
 
-앞의 둘은 이 cohort 의 바이트가 **무엇을 뜻하는가** 를 정한다. 바뀌면 한
-cohort 안에 뜻이 다른 generation 이 섞이므로 새 cohort ID 로 가야 한다.
+**46차의 두 필드 선택은 틀렸다 (47차 정정).** 46차는 producer 축 전체를
+봉인 밖에 두고 "active cohort 의 manifest 는 현행 트리와 같아야 한다"는
+**나중에 채점하는** 회귀에 맡겼다. 그 회귀는 publisher 불변식도 reader
+불변식도 아니므로 그 사이로 빠지는 상태가 있었고, 47차 리뷰가 실제 schedule 을
+보였다:
 
-뒤의 셋은 주석 한 줄에도 움직인다. 봉인에 넣으면 라운드마다 cohort 를 새로
-만들어야 하고 (45차에 실측했다) 그것은 불변식이 아니라 잡음이다. 대신 그
-축은 **active cohort 의 manifest 는 현행 트리와 같아야 한다** 는 회귀가
-강제한다 — producer 가 바뀌면 cohort 를 통째로 재생성해야 통과한다. 두 규칙이
-합쳐져야 "이 바이트를 누가 만들었는가" 가 닫힌다.
+> roster {a,b} · pin A 로 a 만 게시(`.PENDING`) → schema/spec 는 그대로 두고
+> producer 만 B 로 → 원장 pin 을 B 로 → b 를 게시
+> ⇒ **a(A)+b(B) 를 담은 active CURRENT** 가 만들어지고 reader 가 승인한다.
+
+그래서 producer identity 를 봉인에 넣되, **주석에 흔들리지 않는 형태**로
+정의한다. `producer_semantic_sha256` 은
+
+- **바이트를 만드는 코드의 닫힘**만 담는다. 게시·원장 authority 는
+  `_PRODUCER_CUT` 에서 잘라 낸다 — 그 코드는 바이트를 만들지 않는다.
+  (46차 `compute_sha256` 은 `build()` 가 뿌리라 publisher 전체를 빨아들였고,
+  그래서 게시 코드를 고칠 때마다 움직였다. 그것이 "봉인하면 라운드마다 새
+  cohort" 의 진짜 원인이었다.)
+- 각 정의를 **AST 정규형**으로 접는다 (주석·docstring·서식이 사라진다).
+- 절단면 이름이 사라지면 fail-closed 로 거부한다 — 닫힘이 조용히 넓어지거나
+  좁아질 수 없다.
+
+실측: 47차에 publisher·원장 authority·계획 lifecycle 을 크게 고쳤는데
+`producer_semantic_sha256` 은 `908503e65162e7d9` 그대로였고 (그래서 이미 게시된
+pointer 가 유효했다) `compute_sha256` 은 세 번 움직였다.
+
+나머지 셋은 여전히 기록이며, `..._digests_recompute_from_the_current_tree` 가
+그 축을 본다.
 
 `cross_leg_comparison` 은 소비자가 **지켜야 하는 사용 정책**이므로 같은 이유로
 authority 다.
@@ -1069,6 +1091,18 @@ hardlink 를 걸면 "immutable generation" 의 바이트를 바깥 이름으로 
 alias 판정은 **`(st_dev, st_ino)`** 로 한다. `Path.resolve()` 는 symlink 만
 펴므로 bind mount(다른 pathname·같은 inode)를 못 본다.
 
+**디렉터리 root 자신도 따라가지 않는다 (47차).** 46차는 child entry 만
+`lstat`/`O_NOFOLLOW` 로 열고 root 는 `exists()`·`is_dir()`·`os.listdir(path)`
+로 봤다. 그래서 `gen/<gid>` 를 바깥 디렉터리 symlink 로 바꾸면 immutable
+generation 의 바이트가 namespace **밖**에 있게 되고, 나중에 그 target 을 고치면
+immutable 이 아니다. child hardlink 는 막으면서 root alias 는 허용하는 경계는
+성립하지 않는다 — 46차가 조건 3 의 증거로 든 것이 바로 child hardlink 였다.
+
+이제 root 는 `O_DIRECTORY | O_NOFOLLOW` 로 열고 (실물 디렉터리이고 alias 가
+아니라는 판정을 **커널이** 한다 — 검사와 사용 사이에 창이 없다) child 는 그
+**붙잡은 dirfd** 에 대한 `openat`/`fstatat` 으로만 읽는다. root 를 검사한 뒤
+pathname 으로 child 를 다시 열면 그 사이의 root 교체를 못 본다.
+
 ### 13.4 planned leg index — 실행 **전** gate (46차에 배선)
 
 45차까지 보존 원장의 coverage 기준은 **커밋된 투영**이었다. 그래서 새 다리를
@@ -1095,25 +1129,77 @@ PLANNED_STATUS = ("planned", "executed")
 `legs:` 에만 나타나도 아무 검사가 안 깨진다. 뒤의 것만 있으면 계획 index 가
 자기 자신만 참조하는 목록이 된다 (아무 digest 나 적어도 일관되다).
 
+**46차의 gate 는 lifecycle 이 아니었다 (47차 정정).** 47차 리뷰가 보인 것:
+정상적인 prospective leg 가 gate·원장 lint·publisher 를 **동시에 통과할 상태가
+없었다.**
+
+| L 의 배치 | 실행 전 gate | publisher / lint |
+|---|---|---|
+| roster 밖 · `planned` | 통과 | publisher 가 undeclared 로 거부 |
+| roster 에만 추가 · `planned` | 통과 | roster ↔ 실행 legs exact 불변식 실패 |
+| 실행 legs 에도 추가 · `planned` | 통과 | planned-index consistency 실패 |
+| `executed` 로 변경 | 거부 | 실행 전에 이미 실행됨으로 기록 |
+
+그래서 47차는 **계획 roster 와 실행 roster 를 분리**하고(`prospective_legs` ↔
+`legs`) read-only predicate 를 **상태 전이**로 바꿨다.
+
+```
+prospective 승인(사람이 원장에 적는다)
+→ claim_planned_leg()      원자적 claim (O_EXCL) · run_spec digest 대조
+→ phase_done("grid", …)    durable phase receipt
+→ phase_done("fit", …)
+→ finalize_leg()           executed 전이 + roster 이동 + 실행 기록
+```
+
+중단되면 `resume_claim()` 이 **같은 attempt 로** 이어받아 남은 phase 만 하고
+닫는다 (재계산 없음). `claim` 은 실행 계획의 **내용 주소**(`run_spec_digest`)를
+봉인하므로, 같은 이름으로 다른 실행을 승인할 수 없다 — 46차 planned row 는
+`--objective A --n-restarts 1` 과 `--objective B --n-restarts 999` 를 똑같이
+승인하는 allowlist 였다.
+
+**승인의 종류를 기계가 구분한다.** `authorization_kind: prospective |
+retrospective`. 소급 항목은 `run_spec_digest: "retrospective:no-preauthorization"`
+이고 claim 대상이 아니다. `planned_coverage()` 가 종류별로 세므로 "실행 전
+gate 가 실제로 몇 번 작동했는가" 를 자유문자 근거를 읽지 않고 답할 수 있다.
+**현재 값은 prospective 0 · retrospective 8 · gate_backed_executions 0 이다.**
+
 **배선** (건너뛰는 환경변수·flag 는 두지 않는다 — 그런 문이 있으면 gate 가
 아니다):
 
-- `run.sh` 의 `grid`(dry-run 제외)·`fit` 은 `plan_gate` 를 지난다. `all` 은
-  `--leg` 를 하위 단계로 전파한다.
+- `run.sh` 의 `grid`·`fit` 은 `plan_gate` 를 지난다. `all` 은 `--leg` 를 하위
+  단계로 전파한다. **`--dry-run` 면제는 47차에 없앴다** — `run_grid(dry_run=True)`
+  는 출력 디렉터리를 만들고 완방상태·baseline 을 계산한 뒤 최대 세 조건에
+  solver 를 실제로 부른다. 계산이 있으면 gate 도 있다.
+- **모듈 자신이 gate 를 지난다.** 46차 gate 는 `run.sh` 안에만 있었고 `--leg`
+  는 shell 이 소비했으므로 `python -m src.grid` 직접 호출은 계획을 전혀 보지
+  않았다. gate 가 wrapper 에 있으면 wrapper 를 안 쓰면 그만이다.
+  `src/grid.py` 는 **첫 부작용(`mkdir`) 보다 먼저** 공유 gate 를 부른다.
 - `scripts/smoke_e2e.sh` 는 (a) 계획 index 가 일관하고 (b) 계획 밖 다리를
   gate 가 **실제로 거부**하며 (`--out` 이 smoke namespace 밖인 실제 호출로
   확인한다 — grep 만 보면 함수가 빈 껍데기여도 초록이다) (c) `run.sh` 에
   배선이 남아 있는지 본다.
 
-**면제는 산출 namespace 하나뿐이다.** `results/_smoke/` **안으로만** 읽고 쓰는
-실행은 gate 를 지나지 않는다 (smoke 자신이 pipeline 을 돌려야 하기 때문이다).
-경로가 하나라도 그 밖이면 gate 를 지난다.
+**면제는 산출 namespace 하나뿐이고, 판정은 정규 격리다 (47차).**
+`results/_smoke/` **안으로만** 읽고 쓰는 실행은 gate 를 지나지 않는다 (smoke
+자신이 pipeline 을 돌려야 하기 때문이다). 경로가 하나라도 그 밖이면 gate 를
+지난다.
 
-> **한계**: 같은 principal 이 비싼 실행을 `results/_smoke/` 로 밀어 넣으면 gate
-> 를 피할 수 있다. 다만 그 산출은 **정본이 될 수 없다** — `archive_results.sh`
-> 승격 · 보존 원장 등록 · `docs/RESULTS.md` 정본 경로가 그 namespace 를 받지
-> 않는다. 이것은 flag 가 아니라 namespace 경계이지만, 적대적 같은-principal
-> writer 에 대한 방어는 아니다 (§13.3.1 의 신뢰 경계와 같은 전제다).
+46차 판정은 shell `case` **문자열 prefix** 였고 그래서 다음이 면제를 받았다:
+
+```
+--out results/_smoke/../grid_fit_v4    # 문자열은 안, 실물은 results/grid_fit_v4
+--out results/_smoke/link/x            # link 가 밖을 가리킨다
+```
+
+`is_inside_namespace()` 하나가 판정한다: `..` 성분 금지 · namespace 부터 마지막
+존재 성분까지 어느 것도 symlink 가 아님 · 실물 경로가 namespace 아래. `run.sh`
+와 모듈 gate 가 **같은 함수**를 쓴다.
+
+> **여전히 남는 한계**: 같은 principal 이 비싼 실행을 `results/_smoke/` 로 밀어
+> 넣으면 gate 를 피할 수 있다. 47차 리뷰가 지적한 대로 "그 산출은 정본이 될 수
+> 없다" 는 **아직 코드로 강제되지 않는다** — `archive_results.sh` 와 report 는
+> source namespace 를 거부하지 않는다. typed smoke provenance 를 모든 sink 가
+> 거부하게 하는 것은 **다음 라운드로 신고한다** (§13.5).
 
 **아직 남은 것**: 실물 provider 어댑터. 지금 보존 회귀는 hermetic fake
 provider 로만 돈다. 그래서 smoke 통과는 "pipeline 이 온전하고 계획 gate 가

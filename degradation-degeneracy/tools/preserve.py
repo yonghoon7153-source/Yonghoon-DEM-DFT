@@ -60,6 +60,7 @@ import hashlib
 import json
 import os
 import re
+import stat
 import shutil
 import tempfile
 import unicodedata
@@ -1762,10 +1763,11 @@ class ObjectLockBackend(CasBackend):
         찾은 version 은 아직 proof 가 아니다. 호출자가 잠근 **뒤**
         `_version_for()` 로 다시 확인해야 proof 로 승격된다.
         """
-        vs = getattr(self.provider, "versions", None)
-        if not callable(vs):
-            return None
-        for v in vs(key) or []:
+        # ★ 47차 P0-5 — 수리 경로도 **검증된 snapshot** 만 본다. 46차는 여기서
+        #   `provider.versions()` 를 직접 다시 불렀고, provider 가 호출마다 다른
+        #   목록을 주면 (실물 SDK 의 재시도·eventual consistency) 검증되지 않은
+        #   후보가 되돌릴 수 없는 `lock()` 까지 갔다.
+        for v in self._version_candidates(key, required=False):
             if self._bytes_match(key, v, dg):
                 return v
         return None
@@ -1798,10 +1800,8 @@ class ObjectLockBackend(CasBackend):
           후보가 아니다 — 잠그면 되돌릴 수 없이 막힌다. 하나도 없으면 `None`
           이고 호출자가 **새 version** 을 만든다.
         """
-        vs = getattr(self.provider, "versions", None)
-        if not callable(vs):
-            return None
-        for v in vs(key) or []:
+        # ★ 47차 P0-5 — `_repair_source()` 와 같은 이유로 검증된 snapshot 만.
+        for v in self._version_candidates(key, required=False):
             if not self._bytes_match(key, v, dg):
                 continue
             st = self.provider.describe_object(key, v)
@@ -3584,13 +3584,39 @@ def finalize_only(leg_id: str, backend: CasBackend, index_path: Path) -> dict:
 
 #: 계획 항목의 **닫힌** key 집합. 빠진 key 의 `None` 은 "선언하지 않았다" 와
 #: 구별되지 않는다 — 이 저장소가 pointer schema 에서 이미 겪은 형태다.
-PLANNED_KEYS = ("leg_id", "cohort_id", "status", "authorized_source_digest",
+PLANNED_KEYS = ("leg_id", "cohort_id", "status", "authorization_kind",
+                "authorized_source_digest", "run_spec_digest",
                 "recorded_on", "근거")
 
-#: 계획 항목의 정확한 상태 enum.
-#:   planned  — 아직 안 돌렸다. **이것만이 실행 승인**이다.
-#:   executed — 이미 돌렸다. 기록이지 승인이 아니다.
-PLANNED_STATUS = ("planned", "executed")
+#: ★ 47차 — 승인의 **종류**. 46차는 이 구분이 없어서 소급 기록 8건과 진짜
+#:   실행 전 승인이 같은 schema 로 섞였고, 그래서 "실행 전 gate 가 실제로
+#:   작동한 적이 있는가" 를 기계가 답할 수 없었다 (자유문자 근거 안에만
+#:   있었다).
+#:
+#:   prospective  — 실행 **전에** 사람이 승인했다. `run_spec_digest` 가 실제
+#:                  계획의 내용 주소이고 claim 이 이것만 받는다.
+#:   retrospective— index 도입 **전에** 이미 돌았다. 역사 목록일 뿐이며
+#:                  실행 gate 증거로 세지 않는다. claim 대상이 아니다.
+AUTHORIZATION_KIND = ("prospective", "retrospective")
+
+#: 소급 항목의 `run_spec_digest` 자리. 그때는 봉인된 계획이 없었다 — 없는 것을
+#: 있는 척하는 대신 **없었다고 적는다**.
+RETROSPECTIVE_SPEC = "retrospective:no-preauthorization"
+
+#: 계획 항목의 정확한 상태 enum (47차 P0-1 — lifecycle 로 넓혔다).
+#:
+#:   planned   — 아직 안 돌렸다. **이것만이 claim 대상**이다.
+#:   running   — claim 이 살아 있다. 재개(resume)만 가능하고 새 claim 은 못 한다.
+#:   executed  — 끝났다. 기록이지 승인이 아니다.
+#:   abandoned — 사람이 접었다. claim 도 finalize 도 안 된다.
+PLANNED_STATUS = ("planned", "running", "executed", "abandoned")
+
+#: lifecycle 의 phase — 둘 다 끝나야 finalize 된다.
+CLAIM_PHASES = ("grid", "fit")
+
+#: claim 파일이 담는 **닫힌** key 집합.
+CLAIM_KEYS = ("leg_id", "cohort_id", "attempt", "run_spec_digest",
+              "source_digest", "opened_at", "phases")
 
 DEFAULT_LEDGER = (Path(__file__).resolve().parents[1]
                   / "docs" / "22p_gap" / "LEG_PRESERVATION.yaml")
@@ -3610,6 +3636,137 @@ def _load_ledger(ledger=None) -> dict:
     return doc
 
 
+#: cohort 상태 enum — publisher(`row_projection._LEDGER_STATUS`)와 같은 값이다.
+#: 두 곳에 적혀 있으므로 `test_the_two_parsers_agree_on_the_cohort_contract` 가
+#: 둘이 갈라지지 않는지 본다.
+COHORT_STATUS = ("active", "frozen")
+
+
+def _cohort_dir_of(cohort: dict, where) -> Path:
+    """cohort `dir` 을 **정규 · 저장소-상대 · 격리**로 강제한다 (47차).
+
+    `pathlib` 의 `/` 는 오른쪽이 절대 경로면 왼쪽을 버린다. 그래서 검사 없이
+    join 하면 `dir: /etc` 가 저장소 밖을 가리킨다. 같은 곳을 여러 표기로 적을
+    수 있으면 중복 선언 검사도 무의미해진다.
+    """
+    import posixpath
+
+    raw = cohort.get("dir")
+    cid = cohort.get("cohort_id")
+    if type(raw) is not str or not raw:
+        raise PreserveError(
+            "plan", f"cohort {cid!r} 의 `dir` 이 비어 있지 않은 문자열이 아니다: "
+                    f"{raw!r} ({where})")
+    if posixpath.isabs(raw) or posixpath.normpath(raw) != raw \
+            or ".." in raw.split("/"):
+        raise PreserveError(
+            "plan", f"cohort {cid!r} 의 `dir` 이 정규 저장소-상대 경로가 아니다: "
+                    f"{raw!r} — 절대 경로·`..`·`.`·중복 slash 를 쓰지 않는다")
+    root = REPO_ROOT.resolve()
+    got = (REPO_ROOT / raw).resolve()
+    if got != root and root not in got.parents:
+        raise PreserveError(
+            "plan", f"cohort {cid!r} 의 `dir` 이 저장소 밖을 가리킨다: {raw!r} → {got}")
+    return got
+
+
+REPO_ROOT = Path(__file__).resolve().parents[1]
+
+
+SMOKE_NAMESPACE = REPO_ROOT / "results" / "_smoke"
+
+
+def assert_run_is_authorized(leg_id: str, phase: str, paths, run_spec: dict,
+                             source_digest: str, ledger=None,
+                             claims_root=None):
+    """비싼 계산 **직전**에 부르는 단 하나의 gate (47차 P0-2 조건 11-c).
+
+    46차 gate 는 `run.sh` **안에만** 있었다. `--leg` 는 shell 이 소비했고
+    `python -m src.grid` · `python -m src.fitting` 직접 호출은 계획을 전혀
+    보지 않았다. gate 가 wrapper 에 있으면 wrapper 를 안 쓰면 그만이다.
+
+    `paths` 의 **모든** 경로가 smoke namespace 안이면 면제한다 — smoke 자신이
+    pipeline 을 돌아야 하기 때문이다. 판정은 어휘가 아니라
+    `is_inside_namespace()` 의 정규 격리다.
+
+    돌려주는 것은 살아 있는 claim 이다. 없으면 만들고(계획 대조 + 원자적
+    발급), 있으면 같은 attempt 를 이어받는다. 두 phase(grid·fit)가 한 claim 을
+    공유하므로 `all` 이 두 process 로 갈라져도 attempt 는 하나다.
+    """
+    real = [Path(x) for x in paths if x]
+    if real and all(is_inside_namespace(x, SMOKE_NAMESPACE) for x in real):
+        return None
+    path = _claim_path(leg_id, claims_root)
+    if path.is_file():
+        claim = resume_claim(leg_id, claims_root)
+        want = run_spec_digest(run_spec)
+        if claim.run_spec_digest != want:
+            raise PreserveError(
+                "plan",
+                f"{leg_id!r} 의 살아 있는 claim 은 다른 run_spec 을 봉인했다 "
+                f"({claim.run_spec_digest[:16]} ≠ {want[:16]}) — 같은 claim 으로 "
+                "다른 실행을 이어붙일 수 없다")
+        if claim.source_digest != source_digest:
+            raise PreserveError(
+                "plan",
+                f"{leg_id!r} 의 claim 이 다른 code identity 로 열렸다 "
+                f"({claim.source_digest} ≠ {source_digest}) — 실행 도중 "
+                "RUN_SCOPE 가 바뀌었다")
+        return claim
+    return claim_planned_leg(leg_id, run_spec, source_digest,
+                             ledger=ledger, claims_root=claims_root)
+
+
+def is_inside_namespace(path, namespace) -> bool:
+    """`path` 가 `namespace` **안**인가 — 어휘가 아니라 실물로 (47차 P0-3).
+
+    46차 gate 는 shell `case` pattern 이었다. 그래서 다음이 면제를 받았다::
+
+        --out results/_smoke/../grid_fit_v4      # 문자열은 안, 실물은 밖
+        --out results/_smoke/link/x              # link 가 밖을 가리킨다
+
+    규칙 셋을 모두 만족해야 안이다:
+
+      1. `..` 성분이 없다 (정규 형태)
+      2. namespace 부터 마지막 **존재하는** 성분까지 어느 것도 symlink 가 아니다
+      3. 그 실물 경로가 namespace 의 실물 경로 아래다
+
+    아직 없는 하위 경로는 허용한다 (출력 디렉터리는 실행이 만든다). 다만 없는
+    성분 **앞**까지는 위 규칙이 그대로 적용된다.
+    """
+    ns = Path(namespace)
+    try:
+        ns_real = ns.resolve(strict=True)
+    except OSError:
+        return False
+    p = Path(path)
+    if ".." in p.parts:
+        return False
+    # namespace 실물부터 한 성분씩 내려가며 symlink 를 거부한다
+    try:
+        rel = p.absolute().relative_to(ns.absolute())
+    except ValueError:
+        return False
+    cur = ns_real
+    for part in rel.parts:
+        if part in (".", ""):
+            continue
+        nxt = cur / part
+        try:
+            st = os.stat(nxt, follow_symlinks=False)
+        except FileNotFoundError:
+            return True                 # 여기부터는 아직 없다 — 실행이 만든다
+        except OSError:
+            return False
+        if stat.S_ISLNK(st.st_mode):
+            return False                # alias 는 언제든 밖을 가리킬 수 있다
+        cur = nxt
+    try:
+        return cur == ns_real or ns_real in cur.parents or cur.samefile(ns_real)
+    except OSError:
+        return False
+
+
 def planned_index(ledger=None) -> dict:
     """`planned:` 를 **검증해서** leg_id → 항목으로 돌려준다 (순수 함수).
 
@@ -3617,6 +3774,7 @@ def planned_index(ledger=None) -> dict:
     검사하면 어느 소비자를 부르냐에 따라 판정이 달라진다.
     """
     doc = _load_ledger(ledger)
+    path = Path(ledger or DEFAULT_LEDGER)
     raw = doc.get("planned")
     if raw is None:
         raise PreserveError(
@@ -3625,13 +3783,29 @@ def planned_index(ledger=None) -> dict:
     if not isinstance(raw, list) or not raw:
         raise PreserveError("plan", f"`planned:` 이 비어 있지 않은 목록이 아니다: {raw!r}")
 
+    # ★ 47차 — cohort record 를 **publisher 와 같은 규칙**으로 본다. 46차의
+    #   계획 parser 는 cohort 목록을 따로 약하게 읽어서 저장소 **밖** `dir` 을
+    #   가진 cohort 와 enum 밖 `status` 를 승인했다. 같은 원장을 두 parser 가
+    #   다르게 읽으면 어느 쪽이 authority 인지 정할 수 없다.
     cohorts = {}
+    dirs = {}
     for c in (doc.get("cohorts") or []):
         cid = c.get("cohort_id")
         if not _nonempty_str(cid if isinstance(cid, str) else ""):
             raise PreserveError("plan", f"cohort_id 가 문자열이 아니다: {cid!r}")
         if cid in cohorts:
             raise PreserveError("plan", f"cohort_id 가 중복이다: {cid!r}")
+        st = c.get("status")
+        if st not in COHORT_STATUS:
+            raise PreserveError(
+                "plan", f"cohort {cid!r} 의 status 가 계약 enum 이 아니다: "
+                        f"{st!r} — {list(COHORT_STATUS)} 중 하나여야 한다")
+        resolved = _cohort_dir_of(c, path)
+        if resolved in dirs:
+            raise PreserveError(
+                "plan", f"cohort {cid!r} 과 {dirs[resolved]!r} 이 같은 "
+                        f"디렉터리를 선언한다: {resolved}")
+        dirs[resolved] = cid
         cohorts[cid] = c
 
     out: dict = {}
@@ -3659,7 +3833,42 @@ def planned_index(ledger=None) -> dict:
             raise PreserveError(
                 "plan", f"계획 항목 {e['leg_id']!r} 이 원장에 없는 cohort 를 "
                         f"가리킨다: {e['cohort_id']!r}")
-        out[e["leg_id"]] = dict(e, _cohort=cohorts[e["cohort_id"]])
+        if e["authorization_kind"] not in AUTHORIZATION_KIND:
+            raise PreserveError(
+                "plan", f"계획 항목 {e['leg_id']!r} 의 `authorization_kind` 가 "
+                        f"계약 enum 이 아니다: {e['authorization_kind']!r} — "
+                        f"{list(AUTHORIZATION_KIND)} 중 하나여야 한다")
+        if e["authorization_kind"] == "retrospective":
+            if e["status"] != "executed":
+                raise PreserveError(
+                    "plan", f"소급 항목 {e['leg_id']!r} 의 status 가 executed 가 "
+                            f"아니다: {e['status']!r} — 소급은 이미 돌아간 것의 "
+                            "기록이다")
+            if e["run_spec_digest"] != RETROSPECTIVE_SPEC:
+                raise PreserveError(
+                    "plan", f"소급 항목 {e['leg_id']!r} 의 `run_spec_digest` 는 "
+                            f"{RETROSPECTIVE_SPEC!r} 여야 한다 — 그때는 봉인된 "
+                            "계획이 없었고, 없는 것을 있는 척하지 않는다")
+        elif len(e["run_spec_digest"]) != 64 or \
+                any(c not in "0123456789abcdef" for c in e["run_spec_digest"]):
+            raise PreserveError(
+                "plan", f"계획 항목 {e['leg_id']!r} 의 `run_spec_digest` 가 "
+                        f"64자리 hex 가 아니다: {e['run_spec_digest']!r}")
+        # ★ 47차 P0-1 — **계획 roster 와 실행 roster 를 분리한다.** 46차는
+        #   실행 roster 하나뿐이라, 계획된 leg 를 어디에 두든 gate·lint·
+        #   publisher 중 하나가 반드시 깨졌다 (리뷰어의 4행 표). 계획 중인
+        #   leg 는 `prospective_legs` 에, 끝난 leg 는 `legs` 에 있는다.
+        coh = cohorts[e["cohort_id"]]
+        want = "prospective_legs" if e["status"] in ("planned", "running") \
+            else "legs"
+        roster = coh.get(want) or []
+        if not isinstance(roster, list) or e["leg_id"] not in roster:
+            raise PreserveError(
+                "plan",
+                f"계획 항목 {e['leg_id']!r}(status={e['status']}) 이 cohort "
+                f"{e['cohort_id']!r} 의 `{want}` 에 없다: {roster!r} — 계획 "
+                "roster 와 실행 roster 는 분리돼 있고 둘 다 원장이 정본이다")
+        out[e["leg_id"]] = dict(e, _cohort=coh)
     return out
 
 
@@ -3694,6 +3903,251 @@ def assert_planned_leg(leg_id: str, source_digest: str, ledger=None) -> dict:
     return e
 
 
+def run_spec_digest(run_spec: dict) -> str:
+    """실행 계획의 **내용 주소** (47차 P0-2).
+
+    46차 planned row 는 leg·cohort·source digest 만 담았다. 그래서 같은 이름이
+    `--objective A --n-restarts 1` 과 `--objective B --n-restarts 999` 를
+    똑같이 승인했다 — allowlist 였지 계획이 아니었다.
+    """
+    _assert_json_domain(run_spec, "run_spec")
+    body = json.dumps(run_spec, sort_keys=True, ensure_ascii=False,
+                      allow_nan=False, separators=(",", ":"))
+    return hashlib.sha256(body.encode("utf-8")).hexdigest()
+
+
+def _assert_json_domain(node, where: str) -> None:
+    """canonicalizer 가 접을 수 있는 값을 거부한다 (publisher seal 과 같은 규칙)."""
+    t = type(node)
+    if t is float:
+        if node != node or node in (float("inf"), float("-inf")):
+            raise PreserveError("plan", f"{where} 에 유한하지 않은 수가 있다")
+        return
+    if t in (str, int, bool, type(None)):
+        return
+    if t is dict:
+        for k, v in node.items():
+            if type(k) is not str:
+                raise PreserveError(
+                    "plan", f"{where} 의 key 가 문자열이 아니다: {type(k).__name__}")
+            _assert_json_domain(v, f"{where}.{k}")
+        return
+    if t is list:
+        for i, v in enumerate(node):
+            _assert_json_domain(v, f"{where}[{i}]")
+        return
+    raise PreserveError(
+        "plan", f"{where} 의 값 타입이 봉인 가능하지 않다: {type(node).__name__}")
+
+
+class LegClaim:
+    """살아 있는 실행 권한 하나 — **원자적으로** 하나만 존재한다 (47차 P0-2)."""
+
+    __slots__ = ("leg_id", "cohort_id", "attempt", "run_spec_digest",
+                 "source_digest", "path")
+
+    def __init__(self, leg_id, cohort_id, attempt, run_spec_digest,
+                 source_digest, path):
+        self.leg_id = leg_id
+        self.cohort_id = cohort_id
+        self.attempt = attempt
+        self.run_spec_digest = run_spec_digest
+        self.source_digest = source_digest
+        self.path = Path(path)
+
+    def _read(self) -> dict:
+        return json.loads(self.path.read_text(encoding="utf-8"))
+
+    def phases_done(self) -> tuple:
+        rec = self._read()
+        return tuple(p for p in CLAIM_PHASES if p in (rec.get("phases") or {}))
+
+    def phase_done(self, phase: str, receipt: dict) -> None:
+        """한 phase 를 **durable 하게** 닫는다. 중단 뒤 재개가 여기서 이어진다."""
+        if phase not in CLAIM_PHASES:
+            raise PreserveError(
+                "plan", f"모르는 phase: {phase!r} — {list(CLAIM_PHASES)} 중 하나")
+        _assert_json_domain(receipt, f"phase[{phase}]")
+        rec = self._read()
+        if rec["attempt"] != self.attempt:
+            raise PreserveError(
+                "plan", f"claim 이 다른 attempt 로 바뀌었다 ({rec['attempt']} ≠ "
+                        f"{self.attempt}) — 이 실행은 더 이상 권한이 없다")
+        rec.setdefault("phases", {})[phase] = {
+            "at": dt.datetime.now(dt.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
+            "receipt": receipt}
+        _atomic_write_json(self.path, rec)
+
+
+def _atomic_write_json(path: Path, rec: dict) -> None:
+    tmp = path.with_name(f".{path.name}.{uuid.uuid4().hex}.tmp")
+    tmp.write_text(json.dumps(rec, sort_keys=True, ensure_ascii=False,
+                              separators=(",", ":")) + "\n", encoding="utf-8")
+    fd = os.open(tmp, os.O_RDONLY)
+    try:
+        os.fsync(fd)
+    finally:
+        os.close(fd)
+    os.replace(tmp, path)
+    dfd = os.open(path.parent, os.O_RDONLY)
+    try:
+        os.fsync(dfd)
+    finally:
+        os.close(dfd)
+
+
+DEFAULT_CLAIMS_ROOT = (Path(__file__).resolve().parents[1] / "results" / "_claims")
+
+
+def _claim_path(leg_id: str, claims_root=None) -> Path:
+    root = Path(claims_root or DEFAULT_CLAIMS_ROOT)
+    if "/" in leg_id or leg_id in (".", ".."):
+        raise PreserveError("plan", f"leg 이름이 경로 성분을 담고 있다: {leg_id!r}")
+    return root / f"{leg_id}.claim"
+
+
+def claim_planned_leg(leg_id: str, run_spec: dict, source_digest: str,
+                      ledger=None, claims_root=None) -> LegClaim:
+    """실행 권한을 **원자적으로 하나만** 발급한다 (47차 P0-1 · P0-2).
+
+    46차 `assert_planned_leg()` 는 read-only predicate 였다. 같은 row 로 몇
+    번이고 통과했고 동시 실행 둘도 모두 계산에 들어갔다. 승인은 상태 전이여야
+    한다.
+
+    검사 순서 — **전체 원장 일관성이 먼저다.** 46차는 target predicate 만
+    봤으므로 다른 leg 때문에 원장이 깨져 있어도 이 leg 의 계산이 시작됐다.
+    """
+    assert_planned_index_consistent(ledger)          # 전체가 먼저
+    e = assert_planned_leg(leg_id, source_digest, ledger=ledger)
+    # ★ 47차 — "소급은 승인이 아니다" 를 여기서 **다시 검사하지 않는다.**
+    #   `planned_index()` 가 이미 `retrospective ⇒ status == executed` 를
+    #   강제하고 `assert_planned_leg()` 는 `status == planned` 만 통과시키므로,
+    #   claim 에 도달하는 retrospective 항목은 **표현할 수 없다.** 변이로
+    #   확인했다: 여기 검사를 지워도 아무 시험이 빨개지지 않았다 — 중복이라는
+    #   뜻이다 (도달 불가능한 검사는 방어가 아니라 소음이다).
+
+    want = run_spec_digest(run_spec)
+    if e["run_spec_digest"] != want:
+        raise PreserveError(
+            "plan",
+            f"{leg_id!r} 의 run_spec 이 승인된 계획과 다르다 "
+            f"(계획 {e['run_spec_digest'][:16]} ≠ 지금 {want[:16]}) — 계획은 "
+            "이름이 아니라 **무엇을 실행할지**를 승인한다")
+
+    path = _claim_path(leg_id, claims_root)
+    path.parent.mkdir(parents=True, exist_ok=True)
+    attempt = uuid.uuid4().hex
+    rec = {"leg_id": leg_id, "cohort_id": e["cohort_id"], "attempt": attempt,
+           "run_spec_digest": want, "source_digest": source_digest,
+           "opened_at": dt.datetime.now(dt.timezone.utc).strftime(
+               "%Y-%m-%dT%H:%M:%SZ"),
+           "phases": {}}
+    body = json.dumps(rec, sort_keys=True, ensure_ascii=False,
+                      separators=(",", ":")) + "\n"
+    try:
+        fd = os.open(path, os.O_CREAT | os.O_EXCL | os.O_WRONLY, 0o644)
+    except FileExistsError as exc:
+        raise PreserveError(
+            "plan",
+            f"{leg_id!r} 의 claim 이 이미 열려 있다: {path} — 같은 다리를 두 번 "
+            "시작할 수 없다. 중단된 실행이면 `resume_claim()` 으로 이어라") from exc
+    try:
+        os.write(fd, body.encode("utf-8"))
+        os.fsync(fd)
+    finally:
+        os.close(fd)
+    dfd = os.open(path.parent, os.O_RDONLY)
+    try:
+        os.fsync(dfd)
+    finally:
+        os.close(dfd)
+    return LegClaim(leg_id, e["cohort_id"], attempt, want, source_digest, path)
+
+
+def resume_claim(leg_id: str, claims_root=None) -> LegClaim:
+    """중단된 실행을 **같은 attempt 로** 이어받는다 (재계산 없이 finalize)."""
+    path = _claim_path(leg_id, claims_root)
+    if not path.is_file():
+        raise PreserveError("plan", f"이어받을 claim 이 없다: {path}")
+    rec = json.loads(path.read_text(encoding="utf-8"))
+    if set(rec) != set(CLAIM_KEYS):
+        raise PreserveError(
+            "plan", f"claim schema 가 계약과 다르다: {sorted(rec)}")
+    return LegClaim(rec["leg_id"], rec["cohort_id"], rec["attempt"],
+                    rec["run_spec_digest"], rec["source_digest"], path)
+
+
+def finalize_leg(leg_id: str, evidence: dict, ledger=None,
+                 claims_root=None) -> dict:
+    """모든 phase 가 끝난 claim 을 **executed 로 닫는다** (47차 P0-1).
+
+    계획 roster 에서 빼고 실행 roster 와 실행 기록에 넣는다. 이 전이가 없으면
+    "실행 전 승인" 은 사람이 나중에 원장 여러 필드를 한꺼번에 고치는 일이 되고,
+    그것은 실행 **뒤** authority 선택이지 gate 가 아니다.
+    """
+    import yaml
+
+    claim = resume_claim(leg_id, claims_root)
+    missing = [p for p in CLAIM_PHASES if p not in claim.phases_done()]
+    if missing:
+        raise PreserveError(
+            "plan", f"{leg_id!r} 의 phase 가 남았다: {missing} — 모든 phase 가 "
+                    "끝나야 executed 로 닫는다")
+    _assert_json_domain(evidence, "evidence")
+    if not _nonempty_str(evidence.get("leg_source_digest") or ""):
+        raise PreserveError(
+            "plan", "evidence.leg_source_digest 가 없다 — 실행 기록을 실물에 "
+                    "결속할 수 없다")
+    if evidence["leg_source_digest"] != claim.source_digest:
+        raise PreserveError(
+            "plan",
+            f"실행 기록의 code identity 가 claim 과 다르다 "
+            f"({evidence['leg_source_digest']} ≠ {claim.source_digest})")
+
+    path = Path(ledger or DEFAULT_LEDGER)
+    doc = yaml.safe_load(path.read_text(encoding="utf-8")) or {}
+    plan = next((e for e in doc.get("planned") or [] if e.get("leg_id") == leg_id),
+                None)
+    if plan is None:
+        raise PreserveError("plan", f"계획 index 에 {leg_id!r} 이 없다")
+    if plan.get("status") not in ("planned", "running"):
+        raise PreserveError(
+            "plan", f"{leg_id!r} 의 계획 상태가 {plan.get('status')!r} 이라 "
+                    "executed 로 닫을 수 없다")
+    coh = next((c for c in doc.get("cohorts") or []
+                if c.get("cohort_id") == claim.cohort_id), None)
+    if coh is None:
+        raise PreserveError("plan", f"원장에 cohort {claim.cohort_id!r} 이 없다")
+
+    plan["status"] = "executed"
+    coh["prospective_legs"] = sorted(
+        x for x in (coh.get("prospective_legs") or []) if x != leg_id)
+    coh["legs"] = sorted(set(coh.get("legs") or []) | {leg_id})
+    doc.setdefault("legs", []).append(
+        {"leg_id": leg_id, "preservation_status": "full_bundle",
+         "evidence": dict(evidence)})
+    path.write_text(
+        yaml.safe_dump(doc, allow_unicode=True, sort_keys=False), encoding="utf-8")
+    claim.path.unlink(missing_ok=True)
+    return {"leg_id": leg_id, "attempt": claim.attempt, "status": "executed"}
+
+
+def planned_coverage(ledger=None) -> dict:
+    """계획 index 를 **종류별로** 센다 (47차 — 소급을 gate 증거로 세지 않게).
+
+    요청문·계약이 "실행 전 gate 가 몇 번 실제로 작동했는가" 를 인용할 때 이
+    함수의 값을 쓴다. 자유문자 근거를 읽고 사람이 세는 대신.
+    """
+    idx = planned_index(ledger)
+    out = {"prospective": 0, "retrospective": 0}
+    for e in idx.values():
+        out[e["authorization_kind"]] += 1
+    out["gate_backed_executions"] = sum(
+        1 for e in idx.values()
+        if e["authorization_kind"] == "prospective" and e["status"] == "executed")
+    return out
+
+
 def assert_planned_index_consistent(ledger=None) -> bool:
     """실행 기록이 계획 index 를 **덮는가** (반대 방향).
 
@@ -3719,6 +4173,15 @@ def assert_planned_index_consistent(ledger=None) -> bool:
         raise PreserveError(
             "plan",
             f"실행 기록이 있는데 계획 상태가 executed 가 아닌 다리: {wrong}")
+    # ★ 47차 — **exact equality** 다. 46차는 "실행 기록 ⊆ 계획" 만 봤으므로
+    #   실행 기록이 없는 executed 계획 항목(phantom)이 조용히 통과했다.
+    phantom = sorted(l for l, e in idx.items()
+                     if e["status"] == "executed" and l not in set(executed))
+    if phantom:
+        raise PreserveError(
+            "plan",
+            f"executed 로 기록됐는데 실행 기록이 없는 다리: {phantom} — 계획과 "
+            "실행 기록은 executed 에 대해 **정확히 같은 집합**이어야 한다")
     # ★ 46차 P0-11 — 계획 항목을 **실물 원장 기록**에 결속한다. 이것이 없으면
     #   `planned:` 는 자기 자신만 참조하는 목록이고, 아무 digest 나 적어도
     #   일관되다. 실행 기록이 있는 다리는 그 다리가 **실제로 돌았던** code

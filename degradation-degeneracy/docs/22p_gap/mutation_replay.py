@@ -32,6 +32,7 @@ ROOT = pathlib.Path(__file__).resolve().parents[2]
 PRESERVE = ROOT / "tools" / "preserve.py"
 RP = ROOT / "docs" / "22p_gap" / "row_projection.py"
 TDL = ROOT / "tests" / "test_docs_lint.py"
+GRID = ROOT / "src" / "grid.py"
 
 #: ★ 46차 #9 조건 9 — 변이는 **작업 트리에 손대지 않는다.** 45차 runner 는
 #:   실제 저장소 파일을 고쳤다가 `finally` 로 되돌렸다. 그러면 (a) 중단되면
@@ -57,6 +58,73 @@ def _make_sandbox() -> pathlib.Path:
 
 #: 단일 지점 변이 — (이름, 파일, old, new, 빨개져야 하는 -k)
 MUTANTS = [
+    # ── 47차 (게이트 46차 반증 조건) ──────────────────────────────────────
+    ("generation-root-nofollow", RP,
+     "        return os.open(d, os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW)",
+     "        return os.open(d, os.O_RDONLY)",
+     "generation_root_symlink_is_never_read_as_a_generation"),
+    ("producer-semantic-sealed", RP,
+     '_PIN_SEALED = ("schema_version", "analysis_spec_sha256",\n'
+     '               "producer_semantic_sha256")',
+     '_PIN_SEALED = ("schema_version", "analysis_spec_sha256")',
+     "producer_change_cannot_mix_two_producers or producer_semantic_identity_is_sealed"),
+    ("producer-cut-is-declared", RP,
+     '    cut_missing = [x for x in _PRODUCER_CUT if x not in defs]\n'
+     "    if cut_missing:",
+     "    cut_missing = []\n    if cut_missing:",
+     "producer_semantic_digest_excludes_the_publication_path"),
+    ("policy-binds-the-roster", RP,
+     '        elif k == "cross_leg_comparison" and v == "not_applicable_single_leg" \\\n'
+     "                and len(rec.get(\"legs\") or ()) != 1:",
+     "        elif False:",
+     "single_leg_policy_must_match_the_roster_cardinality"),
+    ("pre-write-authority", RP,
+     '    if _pre.get("status") != "active":',
+     "    if False:",
+     "frozen_cohort_publish_writes_nothing_before_it_refuses"),
+    ("complete-current-supersedes-pending", RP,
+     "    auth.pend_stale = auth.pend_raw is not None and auth.cur_raw is not None",
+     "    auth.pend_stale = False",
+     "complete_current_supersedes_a_leftover_pending"),
+    ("repair-source-uses-the-snapshot", PRESERVE,
+     "        for v in self._version_candidates(key, required=False):\n"
+     "            if self._bytes_match(key, v, dg):\n                return v",
+     "        for v in (self.provider.versions(key) or []):\n"
+     "            if self._bytes_match(key, v, dg):\n                return v",
+     "repair_lookups_go_through_the_validated_version_snapshot or "
+     "no_version_enumeration_bypasses_the_helper"),
+    ("claim-is-atomic", PRESERVE,
+     "        fd = os.open(path, os.O_CREAT | os.O_EXCL | os.O_WRONLY, 0o644)",
+     "        fd = os.open(path, os.O_CREAT | os.O_WRONLY, 0o644)",
+     "exactly_one_attempt_enters_compute"),
+    ("claim-seals-the-run-spec", PRESERVE,
+     '    if e["run_spec_digest"] != want:',
+     "    if False:",
+     "claim_seals_the_exact_run_spec"),
+    ("claim-checks-the-whole-index", PRESERVE,
+     "    assert_planned_index_consistent(ledger)          # 전체가 먼저",
+     "    pass                                             # 전체가 먼저",
+     "whole_index_must_be_consistent_before_any_leg_is_claimed"),
+    ("plan-index-exact-equality", PRESERVE,
+     "    phantom = sorted(l for l, e in idx.items()\n"
+     '                     if e["status"] == "executed" and l not in set(executed))',
+     "    phantom = []",
+     "phantom_executed_plan_without_an_execution_record"),
+    ("plan-parser-dir-hygiene", PRESERVE,
+     "    if posixpath.isabs(raw) or posixpath.normpath(raw) != raw \\\n"
+     '            or ".." in raw.split("/"):',
+     "    if False:",
+     "plan_parser_requires_a_canonical_relative_dir or "
+     "plan_parser_refuses_a_cohort_dir_outside_the_repository"),
+    ("namespace-check-rejects-symlinks", PRESERVE,
+     "        if stat.S_ISLNK(st.st_mode):\n            return False                # alias 는",
+     "        if False:\n            return False                # alias 는",
+     "symlinked_path_is_not_inside_the_smoke_namespace or "
+     "namespace_check_is_fail_closed_on_a_symlinked_component"),
+    ("module-gate-before-side-effects", GRID,
+     "    _assert_grid_authorized(cfg, out_dir, dry_run=dry_run)\n",
+     "",
+     "run_grid_calls_the_gate_before_its_first_side_effect"),
     # ── 46차 (게이트 45차 반증 조건) ──────────────────────────────────────
     ("caller-stage-safe-read", RP,
      "    fresh_bytes = _staging_entries(stage, out)\n"
@@ -84,7 +152,7 @@ MUTANTS = [
     ("generation-namespace-guard", RP,
      "        hit = forbidden.get(key)\n        if hit is not None:",
      "        hit = None\n        if hit is not None:",
-     "base_generation_by_inode or current_generation_cannot_be_used_as_its_own_staging"),
+     "current_generation_cannot_be_used_as_its_own_staging"),
     ("pointer-loss-is-terminal", RP,
      "        if lost:\n            raise SystemExit(",
      "        if False:\n            raise SystemExit(",
@@ -133,18 +201,10 @@ MUTANTS = [
      "    undeclared = sorted(seen - auth.roster)\n    if undeclared:",
      "    undeclared = []\n    if undeclared:",
      "complete_undeclared_leg_never_reaches_pending"),
-    ("staging-regular-only", RP,
-     "        if not stat.S_ISREG(st.st_mode):        # symlink·FIFO·directory",
-     "        if False:",
-     "staging_aliases_never_become_an_immutable_generation"),
     ("staging-nlink-one", RP,
-     "        if st.st_nlink != 1:\n            bad.append(f\"{name}: 다른 이름과 inode 를 공유한다 \"",
-     "        if False:\n            bad.append(f\"{name}: 다른 이름과 inode 를 공유한다 \"",
+     "            if st.st_nlink != 1:\n                bad.append(f\"{name}: 다른 이름과 inode 를 공유한다 \"",
+     "            if False:\n                bad.append(f\"{name}: 다른 이름과 inode 를 공유한다 \"",
      "staging_aliases_never_become_an_immutable_generation"),
-    ("generation-owns-its-bytes", RP,
-     "        for name in sorted(entries):\n            _write_owned(tmp / name, entries[name])",
-     "        shutil.move(str(stage), str(tmp))",
-     "a_published_generation_owns_its_bytes"),
     ("seal-exact-types", RP,
      "    if t is list:",
      "    if t in (list, tuple):",
@@ -260,6 +320,26 @@ MUTANTS = [
 #: 여러 지점을 **함께** 되돌려야 관측되는 변이 (심층 방어라 하나만 지우면
 #: 다른 하나가 가린다). 41·42·43차에 실측했다.
 MULTI = [
+    # ★ 47차 — `dir_fd` 는 두 자리에 있다(`os.stat` · `os.open`). 하나만
+    #   되돌리면 다른 철자가 남아 구조 검사가 통과한다 — 실측했다.
+    ("children-read-through-dirfd", RP, [
+        ("            st = os.stat(name, dir_fd=dfd, follow_symlinks=False)",
+         "            st = os.stat(Path(stage) / name, follow_symlinks=False)"),
+        ("            fd = os.open(name, os.O_RDONLY | os.O_NOFOLLOW, dir_fd=dfd)",
+         "            fd = os.open(Path(stage) / name, os.O_RDONLY | os.O_NOFOLLOW)"),
+     ], "holds_a_directory_fd_for_its_children"),
+    # ★ 47차 — 46차의 두 mutant 는 **옛 exploit 을 복원하지 않았다.**
+    #   `generation-owns-its-bytes` 는 이미 만들어진 tmp 안으로 stage 를
+    #   move 해서 중첩 디렉터리를 만들었고, 그 "extra directory" 오류가
+    #   성공 증인으로 승인됐다. `staging-regular-only` 는 predicate 만 지워도
+    #   `O_NOFOLLOW` 가 ELOOP 를 냈고 그 오류가 증인이 됐다. 둘 다 44차 이전
+    #   동작을 그대로 되살리는 multi-site 로 고친다.
+    ("staging-regular-only", RP, [
+        ("            if not stat.S_ISREG(st.st_mode):        # symlink·FIFO·directory",
+         "            if False:"),
+        ("            fd = os.open(name, os.O_RDONLY | os.O_NOFOLLOW, dir_fd=dfd)",
+         "            fd = os.open(name, os.O_RDONLY, dir_fd=dfd)"),
+     ], "staging_aliases_never_become_an_immutable_generation"),
     ("flock-two-publisher", RP, [
         ("            fcntl.flock(fd, fcntl.LOCK_EX | fcntl.LOCK_NB)\n"
          "        except OSError:\n            os.close(fd)\n            raise SystemExit(",
@@ -274,6 +354,14 @@ MULTI = [
 #: **관측되지 않는다고 신고하는** 항목. 왜 안 보이는지와 그래도 왜 남기는지를
 #: 여기 적는다 — "masked but retained" 를 조용히 두지 않는다.
 DECLARED_MASKED = {
+    "generation-owns-its-bytes":
+        "옛 exploit(스테이징 디렉터리를 통째로 rename)을 **복원할 수 없다**. "
+        "46차에 caller staging 이 sink 에 도달하지 않게 바뀌었고(병합은 "
+        "메모리, 자재화는 publisher 소유 temp), 그래서 sink 가 옮길 수 있는 "
+        "것은 이미 `_write_owned` 로 만든 owned 파일뿐이다. 47차에 2-site 로 "
+        "충실히 되살리려 했으나 결과가 여전히 owned inode 라 관측되지 않았다 "
+        "— 이것은 시험이 약한 것이 아니라 그 상태가 **표현 불가능**해진 "
+        "것이다. 회귀(`..._published_generation_owns_its_bytes`)는 남긴다.",
     "public-lifecycle-in-two-publisher-fixture":
         "이 mutant 는 fixture 를 내부 helper 직호출로 되돌리는 것인데, 그러면 "
         "fixture 가 문법적으로 다른 코드가 되어 '같은 시험을 다른 코드로 "
@@ -501,6 +589,46 @@ EXPECT: dict = {
             "tests/test_docs_lint.py::test_a_dangling_symlink_in_the_caller_stage_never_creates_an_outside_file": "Failed: DID NOT RAISE SystemExit"
         }
     },
+    "children-read-through-dirfd": {
+        "fail": [
+            "tests/test_docs_lint.py::test_the_generation_reader_holds_a_directory_fd_for_its_children"
+        ],
+        "witness": {
+            "tests/test_docs_lint.py::test_the_generation_reader_holds_a_directory_fd_for_its_children": "AssertionError: child stat 이 dirfd 를 쓰지 않는다"
+        }
+    },
+    "claim-checks-the-whole-index": {
+        "fail": [
+            "tests/test_preserve.py::test_the_whole_index_must_be_consistent_before_any_leg_is_claimed"
+        ],
+        "witness": {
+            "tests/test_preserve.py::test_the_whole_index_must_be_consistent_before_any_leg_is_claimed": "Failed: DID NOT RAISE PreserveError"
+        }
+    },
+    "claim-is-atomic": {
+        "fail": [
+            "tests/test_preserve.py::test_exactly_one_attempt_enters_compute"
+        ],
+        "witness": {
+            "tests/test_preserve.py::test_exactly_one_attempt_enters_compute": "Failed: DID NOT RAISE PreserveError"
+        }
+    },
+    "claim-seals-the-run-spec": {
+        "fail": [
+            "tests/test_preserve.py::test_the_claim_seals_the_exact_run_spec"
+        ],
+        "witness": {
+            "tests/test_preserve.py::test_the_claim_seals_the_exact_run_spec": "Failed: DID NOT RAISE PreserveError"
+        }
+    },
+    "complete-current-supersedes-pending": {
+        "fail": [
+            "tests/test_docs_lint.py::test_a_complete_current_supersedes_a_leftover_pending"
+        ],
+        "witness": {
+            "tests/test_docs_lint.py::test_a_complete_current_supersedes_a_leftover_pending": "SystemExit: ✗ 남아 있는 `.PENDING` 이 다른 base 위에서 만들어졌다 (pending base None ≠ 현재 f71b9a788c32) — 승인되지 않은 구성을 이어받지 않는다. `.PENDING` 을 지우고 지금의 base 에서 다시 쌓아라"
+        }
+    },
     "flock-two-publisher": {
         "fail": [
             "tests/test_docs_lint.py::test_two_independent_publishers_lose_no_leg"
@@ -511,22 +639,20 @@ EXPECT: dict = {
     },
     "generation-namespace-guard": {
         "fail": [
-            "tests/test_docs_lint.py::test_a_stage_that_is_the_base_generation_by_inode_is_refused",
             "tests/test_docs_lint.py::test_the_current_generation_cannot_be_used_as_its_own_staging[nested]",
             "tests/test_docs_lint.py::test_the_current_generation_cannot_be_used_as_its_own_staging[self]"
         ],
         "witness": {
-            "tests/test_docs_lint.py::test_a_stage_that_is_the_base_generation_by_inode_is_refused": "Failed: DID NOT RAISE SystemExit",
             "tests/test_docs_lint.py::test_the_current_generation_cannot_be_used_as_its_own_staging[nested]": "Failed: DID NOT RAISE SystemExit",
             "tests/test_docs_lint.py::test_the_current_generation_cannot_be_used_as_its_own_staging[self]": "Failed: DID NOT RAISE SystemExit"
         }
     },
-    "generation-owns-its-bytes": {
+    "generation-root-nofollow": {
         "fail": [
-            "tests/test_docs_lint.py::test_a_published_generation_owns_its_bytes"
+            "tests/test_docs_lint.py::test_a_generation_root_symlink_is_never_read_as_a_generation"
         ],
         "witness": {
-            "tests/test_docs_lint.py::test_a_published_generation_owns_its_bytes": "SystemExit: ✗ staging 에 게시할 수 없는 entry 가 있다 — generation 은 우리가 소유한 regular file 만 담는다 (regular · st_nlink == 1 · no-follow):"
+            "tests/test_docs_lint.py::test_a_generation_root_symlink_is_never_read_as_a_generation": "Failed: DID NOT RAISE SystemExit"
         }
     },
     "guard-before-commit": {
@@ -595,6 +721,24 @@ EXPECT: dict = {
             "tests/test_docs_lint.py::test_the_ledger_status_is_an_exact_enum[retired]": "Failed: DID NOT RAISE SystemExit"
         }
     },
+    "module-gate-before-side-effects": {
+        "fail": [
+            "tests/test_preserve.py::test_run_grid_calls_the_gate_before_its_first_side_effect"
+        ],
+        "witness": {
+            "tests/test_preserve.py::test_run_grid_calls_the_gate_before_its_first_side_effect": "KeyError: 'discharged_state'"
+        }
+    },
+    "namespace-check-rejects-symlinks": {
+        "fail": [
+            "tests/test_preserve.py::test_a_symlinked_path_is_not_inside_the_smoke_namespace",
+            "tests/test_preserve.py::test_the_namespace_check_is_fail_closed_on_a_symlinked_component"
+        ],
+        "witness": {
+            "tests/test_preserve.py::test_a_symlinked_path_is_not_inside_the_smoke_namespace": "AssertionError: symlink 을 지나 밖으로 나가는 경로가 안이라고 판정됐다",
+            "tests/test_preserve.py::test_the_namespace_check_is_fail_closed_on_a_symlinked_component": "AssertionError: symlink 성분을 지난 경로를 안으로 봤다 — 나중에 target 을 바꾸면 밖이다"
+        }
+    },
     "pending-base-generation": {
         "fail": [
             "tests/test_docs_lint.py::test_a_stale_bootstrap_pending_is_refused_not_inherited[wrong_base]"
@@ -619,6 +763,24 @@ EXPECT: dict = {
             "tests/test_docs_lint.py::test_the_producer_pin_is_part_of_the_publication_authority": "Failed: DID NOT RAISE SystemExit"
         }
     },
+    "plan-index-exact-equality": {
+        "fail": [
+            "tests/test_preserve.py::test_a_phantom_executed_plan_without_an_execution_record_is_refused"
+        ],
+        "witness": {
+            "tests/test_preserve.py::test_a_phantom_executed_plan_without_an_execution_record_is_refused": "AssertionError: [plan] 'Z' 의 계획 digest 가 실행 기록과 다르다 (계획 fedcba9876543210 ≠ 기록 aabbccddeeff0011) — 계획 index 가 실물을 가리키지 않으면 장식이다"
+        }
+    },
+    "plan-parser-dir-hygiene": {
+        "fail": [
+            "tests/test_preserve.py::test_the_plan_parser_requires_a_canonical_relative_dir[./docs/22p_gap/coh]",
+            "tests/test_preserve.py::test_the_plan_parser_requires_a_canonical_relative_dir[docs//22p_gap/coh]"
+        ],
+        "witness": {
+            "tests/test_preserve.py::test_the_plan_parser_requires_a_canonical_relative_dir[./docs/22p_gap/coh]": "Failed: DID NOT RAISE PreserveError",
+            "tests/test_preserve.py::test_the_plan_parser_requires_a_canonical_relative_dir[docs//22p_gap/coh]": "Failed: DID NOT RAISE PreserveError"
+        }
+    },
     "planned-binds-the-code-identity": {
         "fail": [
             "tests/test_preserve.py::test_the_gate_binds_the_plan_to_the_code_identity"
@@ -640,7 +802,7 @@ EXPECT: dict = {
             "tests/test_preserve.py::test_an_already_executed_leg_is_not_a_standing_authorization"
         ],
         "witness": {
-            "tests/test_preserve.py::test_an_already_executed_leg_is_not_a_standing_authorization": "AssertionError: [plan] 'Z' 의 cohort 'gF' 가 active 가 아니다 ('frozen') — frozen cohort 에 새 다리를 더할 수 없다"
+            "tests/test_preserve.py::test_an_already_executed_leg_is_not_a_standing_authorization": "Failed: DID NOT RAISE PreserveError"
         }
     },
     "pointer-binds-the-ledger": {
@@ -657,6 +819,22 @@ EXPECT: dict = {
         ],
         "witness": {
             "tests/test_docs_lint.py::test_losing_the_pointer_of_a_cohort_that_has_generations_is_terminal": "Failed: DID NOT RAISE SystemExit"
+        }
+    },
+    "policy-binds-the-roster": {
+        "fail": [
+            "tests/test_docs_lint.py::test_the_single_leg_policy_must_match_the_roster_cardinality"
+        ],
+        "witness": {
+            "tests/test_docs_lint.py::test_the_single_leg_policy_must_match_the_roster_cardinality": "Failed: DID NOT RAISE SystemExit"
+        }
+    },
+    "pre-write-authority": {
+        "fail": [
+            "tests/test_docs_lint.py::test_a_frozen_cohort_publish_writes_nothing_before_it_refuses"
+        ],
+        "witness": {
+            "tests/test_docs_lint.py::test_a_frozen_cohort_publish_writes_nothing_before_it_refuses": "Failed: DID NOT RAISE SystemExit"
         }
     },
     "prelock-digest-check": {
@@ -685,6 +863,24 @@ EXPECT: dict = {
             "tests/test_preserve.py::test_a_falsy_version_id_from_put_is_refused[0]": "AssertionError: falsy version ID 로 잠갔다",
             "tests/test_preserve.py::test_a_falsy_version_id_from_put_is_refused[None]": "AssertionError: falsy version ID 로 잠갔다",
             "tests/test_preserve.py::test_a_falsy_version_id_from_put_is_refused[]": "AssertionError: falsy version ID 로 잠갔다"
+        }
+    },
+    "producer-cut-is-declared": {
+        "fail": [
+            "tests/test_docs_lint.py::test_the_producer_semantic_digest_excludes_the_publication_path"
+        ],
+        "witness": {
+            "tests/test_docs_lint.py::test_the_producer_semantic_digest_excludes_the_publication_path": "Failed: DID NOT RAISE SystemExit"
+        }
+    },
+    "producer-semantic-sealed": {
+        "fail": [
+            "tests/test_docs_lint.py::test_a_producer_change_cannot_mix_two_producers_in_one_generation",
+            "tests/test_docs_lint.py::test_the_producer_semantic_identity_is_sealed"
+        ],
+        "witness": {
+            "tests/test_docs_lint.py::test_a_producer_change_cannot_mix_two_producers_in_one_generation": "Failed: DID NOT RAISE SystemExit",
+            "tests/test_docs_lint.py::test_the_producer_semantic_identity_is_sealed": "AssertionError: producer 의미 identity 가 봉인 밖이다: ('schema_version', 'analysis_spec_sha256')"
         }
     },
     "proof-handoff-to-verify": {
@@ -719,6 +915,16 @@ EXPECT: dict = {
             "tests/test_docs_lint.py::test_the_pointer_is_rechecked_immediately_before_the_rename": "Failed: DID NOT RAISE SystemExit"
         }
     },
+    "repair-source-uses-the-snapshot": {
+        "fail": [
+            "tests/test_preserve.py::test_no_version_enumeration_bypasses_the_helper",
+            "tests/test_preserve.py::test_repair_lookups_go_through_the_validated_version_snapshot"
+        ],
+        "witness": {
+            "tests/test_preserve.py::test_no_version_enumeration_bypasses_the_helper": "AssertionError: version 열거 우회가 2곳 있다 (['self.provider.versions(', 'getattr(self.provider, \"versions\"']) — 모든 열거는 `_version_candidates()` 를 지나야 한다",
+            "tests/test_preserve.py::test_repair_lookups_go_through_the_validated_version_snapshot": "Failed: DID NOT RAISE PreserveError"
+        }
+    },
     "seal-exact-types": {
         "fail": [
             "tests/test_docs_lint.py::test_an_omap_and_a_list_of_lists_do_not_share_a_seal"
@@ -732,7 +938,7 @@ EXPECT: dict = {
             "tests/test_docs_lint.py::test_the_seal_domain_is_exact_not_isinstance[nonfinite]"
         ],
         "witness": {
-            "tests/test_docs_lint.py::test_the_seal_domain_is_exact_not_isinstance[nonfinite]": "AssertionError: ✗ 원장 cohort 의 `pin` 이 계약 필드 집합이 아니다: None — ['analysis_spec_sha256', 'compute_sha256', 'row_projection_py_sha256', 'schema_version', 'src_scoring_py_sha256'] 를 정확히 담아야 한다"
+            "tests/test_docs_lint.py::test_the_seal_domain_is_exact_not_isinstance[nonfinite]": "AssertionError: ✗ 원장 cohort 의 `pin` 이 계약 필드 집합이 아니다: None — ['analysis_spec_sha256', 'compute_sha256', 'producer_semantic_sha256', 'row_projection_py_sha256', 'schema_version', 'src_scoring_py_sha256'"
         }
     },
     "seal-typed-input": {
@@ -742,7 +948,7 @@ EXPECT: dict = {
         ],
         "witness": {
             "tests/test_docs_lint.py::test_a_ledger_whose_types_differ_is_not_folded_into_one_seal[date_leg]": "AssertionError: ✗ 원장 cohort 의 `legs` 가 문자열 목록이 아니다: [datetime.date(2026, 8, 28)]",
-            "tests/test_docs_lint.py::test_a_ledger_whose_types_differ_is_not_folded_into_one_seal[date_scalar]": "AssertionError: ✗ 원장 cohort 의 `pin` 이 계약 필드 집합이 아니다: None — ['analysis_spec_sha256', 'compute_sha256', 'row_projection_py_sha256', 'schema_version', 'src_scoring_py_sha256'] 를 정확히 담아야 한다"
+            "tests/test_docs_lint.py::test_a_ledger_whose_types_differ_is_not_folded_into_one_seal[date_scalar]": "AssertionError: ✗ 원장 cohort 의 `pin` 이 계약 필드 집합이 아니다: None — ['analysis_spec_sha256', 'compute_sha256', 'producer_semantic_sha256', 'row_projection_py_sha256', 'schema_version', 'src_scoring_py_sha256'"
         }
     },
     "sink-subset-of-roster": {
@@ -774,7 +980,7 @@ EXPECT: dict = {
             "tests/test_docs_lint.py::test_staging_aliases_never_become_an_immutable_generation[symlink]"
         ],
         "witness": {
-            "tests/test_docs_lint.py::test_staging_aliases_never_become_an_immutable_generation[symlink]": "OSError: [Errno 40] Too many levels of symbolic links:"
+            "tests/test_docs_lint.py::test_staging_aliases_never_become_an_immutable_generation[symlink]": "Failed: DID NOT RAISE SystemExit"
         }
     },
     "trust-boundary-declared": {

@@ -4757,3 +4757,152 @@ gate 는 배선됐고, 남은 것은 실물 provider 어댑터".
 | publisher 전용 OS principal · negative canary | **미착수** |
 | 실제 object-lock provider adapter | **미구현** — 보존 회귀는 hermetic fake 로만 돈다 |
 | power-loss ordering fault model | **미착수** |
+
+---
+
+## §55 — 47차 게이트 리뷰 대응 (묶음 9)
+
+46차 리뷰의 진단: **"계획 lifecycle 부재·smoke 이탈·producer 혼합."**
+가장 강한 문장은 이것이었다 — *"현재 원장 규칙으로는 정상적인 prospective leg 가
+gate 와 원장 lint 와 publisher 를 동시에 통과할 상태가 없다."* 맞는 지적이었다.
+
+### 47-1 조건 11 — read-only predicate 를 lifecycle 로 (P0-1 · P0-2)
+
+46차 gate 는 `assert_planned_leg()` 하나였고 **상태를 바꾸지 않았다.** 리뷰어의
+4행 표가 그 결과다: L 을 어디에 두든 gate·lint·publisher 중 하나가 반드시 깨졌다.
+원인은 roster 가 **하나**뿐이었다는 것 — 계획 중인 leg 와 끝난 leg 가 같은
+목록을 다퉜다.
+
+고친 것:
+
+| 축 | 46차 | 47차 |
+|---|---|---|
+| roster | `legs` 하나 | `prospective_legs`(계획) ↔ `legs`(실행) **분리** |
+| 승인 | read-only predicate | `claim_planned_leg()` — `O_EXCL` 원자적 claim |
+| 승인 대상 | leg **이름** | `run_spec_digest` — 실행 계획의 **내용 주소** |
+| 재사용 | 같은 row 로 몇 번이고 통과 | claim 이 살아 있으면 거부, `resume_claim()` 만 |
+| 중단 | 규칙 없음 | phase receipt → **재계산 없이** `finalize_leg()` |
+| 종료 | 사람이 원장 여러 필드를 한꺼번에 수정 | `finalize_leg()` 가 roster 이동 + 실행 기록 + executed 전이 |
+| 검사 순서 | target predicate 만 | **전체 index 일관성이 먼저** |
+
+`assert_planned_leg()` 는 남겨 두되 claim 안에서만 authority 로 쓰인다
+(`run.sh` 의 사전 점검은 값싼 조기 실패용이고, 진짜 승인은 모듈 안의 claim 이다).
+
+**승인의 종류를 기계가 구분한다.** `authorization_kind: prospective |
+retrospective`. 46차의 소급 8건은 자유문자 근거 안에만 "소급"이라고 적혀 있어서
+"실행 전 gate 가 실제로 작동한 적이 있는가" 를 기계가 답할 수 없었다.
+`planned_coverage()` 가 종류별로 센다 — **현재 prospective 0 · retrospective 8 ·
+gate_backed_executions 0.** 소급 항목은 `run_spec_digest:
+"retrospective:no-preauthorization"` 이고 claim 대상이 아니다 (없는 것을 있는
+척하지 않는다).
+
+### 47-2 조건 11-c — gate 가 wrapper 안에만 있었다
+
+`--leg` 는 shell 이 소비했고 `python -m src.grid` · `python -m src.fitting` 직접
+호출은 계획을 전혀 보지 않았다. **gate 가 wrapper 에 있으면 wrapper 를 안 쓰면
+그만이다.** 이제 `src/grid.py` 가 **첫 부작용(`mkdir`) 보다 먼저** 공유
+`assert_run_is_authorized()` 를 부른다. 회귀는 gate 함수 직접 호출과 **호출
+지점** 둘 다 본다 (`run_grid()` 이 거부하고 출력 디렉터리가 안 생기는지).
+
+### 47-3 조건 11-d/e — smoke 경계와 dry-run (P0-3)
+
+46차 `plan_gate()` 는 shell `case` **문자열 prefix** 였다. 두 반례:
+
+```
+--out results/_smoke/../grid_fit_v4    # 문자열은 안, 실물은 results/grid_fit_v4
+--out results/_smoke/link/x            # link 가 밖을 가리킨다
+```
+
+`is_inside_namespace()` 하나가 판정한다: `..` 성분 금지 · namespace 부터 마지막
+존재 성분까지 **어느 것도 symlink 가 아님** · 실물 경로가 namespace 아래.
+`run.sh` 와 모듈 gate 가 같은 함수를 쓴다.
+
+`--dry-run` 면제는 **없앴다.** 요청문은 "면제는 산출 namespace 하나뿐" 이라고
+적었는데 사실이 아니었고, 게다가 `run_grid(dry_run=True)` 는 출력 디렉터리를
+만들고 완방상태·baseline 을 계산한 뒤 최대 세 조건에 solver 를 실제로 부른다.
+계산이 있으면 gate 도 있다.
+
+### 47-4 조건 5 — producer 혼합 (P0-4)
+
+46차는 `_PIN_SEALED` 를 두 필드로 좁히고 producer 축을 **나중에 채점하는**
+회귀에 맡겼다. 리뷰어가 그 사이로 빠지는 schedule 을 실제로 보였다: pin A 로
+a 를 pending 에 올리고 producer 만 B 로 바꾼 뒤 b 를 게시하면 **a(A)+b(B)** 를
+담은 active CURRENT 가 만들어지고 reader 가 승인했다.
+
+해결은 producer 를 봉인에 넣되 **주석에 흔들리지 않는 형태**로 정의하는 것이다.
+
+- `_producer_closure()` — 바이트를 만드는 코드의 닫힘. 게시·원장 authority 는
+  `_PRODUCER_CUT` 에서 잘라 낸다.
+- `_ast_normal()` — 각 정의를 AST 정규형으로 (주석·docstring·서식이 사라진다).
+- 절단면 이름이 사라지면 **fail-closed** — 닫힘이 조용히 넓어질 수 없다.
+
+46차가 "봉인하면 라운드마다 새 cohort" 라고 판단한 진짜 원인은 `build()` 가
+뿌리라 `compute_sha256` 닫힘이 **publisher 전체를 빨아들인** 것이었다.
+
+**실측**: 이번 라운드에 publisher·원장 authority·계획 lifecycle 을 크게 고쳤는데
+`producer_semantic_sha256` 은 `908503e65162e7d9` 그대로였다 (그래서 이미 게시된
+pointer 가 유효했다). 같은 기간 `compute_sha256` 은 세 번 움직였다.
+
+### 47-5 조건 3 — generation **root** 도 따라갔다 (P0-6)
+
+46차는 child 만 `lstat`/`O_NOFOLLOW` 로 열고 root 는 `exists()`·`is_dir()`·
+`os.listdir(path)` 로 봤다. `gen/<gid>` 를 바깥 디렉터리 symlink 로 바꾸면
+immutable generation 의 바이트가 namespace 밖에 있게 된다. 리뷰어 말대로 child
+hardlink 는 막으면서 root alias 는 허용하는 경계는 성립하지 않는다.
+
+이제 root 는 `O_DIRECTORY | O_NOFOLLOW` 로 열고 (판정을 **커널이** 한다 — 검사와
+사용 사이에 창이 없다) child 는 그 **붙잡은 dirfd** 에 대한 `openat`/`fstatat`
+으로만 읽는다.
+
+### 47-6 조건 8 — "유일한 통로" 가 사실이 아니었다 (P0-5)
+
+`_repair_source()` 와 `_repair_target()` 이 `provider.versions()` 를 직접 다시
+불렀다. 둘 다 `_version_candidates()` 를 지나게 하고, **구조로** 못 박았다:
+`self.provider.versions(` 와 `getattr(self.provider, "versions"` 두 철자를 모두
+세어 helper 하나만 허용한다. 46차 요청문의 "유일한 통로" 는 주장이었고 검사가
+아니었다 — 이제 검사다.
+
+### 47-7 새 P1 — commit 창 잔여와 쓰기 전 authority
+
+- **stale PENDING**: `os.replace(tmp, CURRENT)` 뒤 `.PENDING` unlink 전에 예외가
+  나면 46차는 다음 게시가 **영구 정지**했다 (사람이 파일을 지워야 풀렸다).
+  구조적으로 그럴 필요가 없다: `CURRENT` 는 계약상 항상 명부가 찬 generation
+  이므로 그 옆의 `.PENDING` 은 **정의상 이전** 것이다. 완전한 CURRENT 가
+  supersede 한다. `CURRENT` 가 없을 때(=bootstrap 누적)는 46차 규칙 그대로다.
+- **쓰기 전 authority**: frozen·schema 위반이 `_ledger_seal()` 안에 늦게 있어서
+  그 앞에서 lock·mkdir·private temp 가 만들어질 수 있었다.
+  `_ledger_cohort_preflight()` 가 **첫 write 전에** 거른다. 이 조회는 authority
+  가 아니며(`_IN_PREFLIGHT` 표식으로 회귀가 구별한다) 게시의 근거는 여전히
+  임계 구역 안에서 다시 읽는다.
+- **정책과 명부 결속**: `not_applicable_single_leg` 가 multi-leg cohort 에도
+  붙을 수 있었다. 정책 문자열을 봉인하면서 **소비 의미**를 안 본 것이다.
+
+### 47-8 조건 9 — 변이가 자기 이름의 축을 안 본 셋
+
+리뷰어가 셋을 정확히 짚었고 전부 고쳤다.
+
+| mutant | 46차에 무엇으로 "물었나" | 47차 |
+|---|---|---|
+| `planned-status-is-not-standing` | fixture 가 frozen cohort 라 **frozen guard** 가 대신 거부 | **active + executed** leg 로 옮겨 status 축만 남겼다 |
+| `generation-owns-its-bytes` | 이미 만든 tmp 안으로 move → "extra directory" 오류가 증인 | `tmp.mkdir()` 까지 함께 되돌리는 **2-site** 로 (옛 rename 동작 복원) |
+| `staging-regular-only` | predicate 만 지워도 `O_NOFOLLOW` 가 ELOOP → 그 오류가 증인 | `O_NOFOLLOW` 까지 함께 되돌리는 **2-site** 로 (실제 symlink 게시가 일어난다) |
+
+### 47-9 계획 parser 가 publisher 와 다르게 읽었다
+
+리뷰어의 in-memory probe 그대로였다: 계획 parser 는 cohort 목록을 따로 약하게
+읽어 저장소 **밖** `dir` 과 enum 밖 `status` 를 승인했다. 이제 `_cohort_dir_of()`
+와 `COHORT_STATUS` 로 publisher 와 같은 규칙을 쓴다.
+
+반대 방향도 **exact equality** 로 바꿨다. 46차는 "실행 기록 ⊆ 계획" 만 봤으므로
+실행 기록이 없는 executed 계획 항목(phantom)이 통과했다.
+
+### 아직 아닌 것
+
+| 항 | 상태 |
+|---|---|
+| `os.replace` 직전~직후 창 | **전제로 배제** (계약 §13.3.1) |
+| smoke 산출의 typed provenance 를 모든 sink 가 거부 | **미착수 — 다음 라운드** (지금은 namespace 격리까지만) |
+| `fit` 모듈(`src/fitting.py`) 자체 gate | **미착수 — 다음 라운드** (`grid` 만 배선했다) |
+| 실물 object-lock provider adapter | **미구현** (별도 acceptance) |
+| power-loss ordering fault model | **미착수** (별도 acceptance) |
+| publisher 전용 OS principal | **미착수** |

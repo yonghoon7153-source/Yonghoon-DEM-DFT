@@ -374,6 +374,31 @@ def write_curves_manifest(out_dir, cfg: dict, conditions=None, extra=None) -> Pa
     return p
 
 
+def _assert_grid_authorized(cfg: dict, out_dir, dry_run: bool = False) -> None:
+    """계획 gate — smoke namespace 밖이면 승인된 claim 이 있어야 한다 (47차).
+
+    `LEG` 환경변수(=`run.sh --leg`)가 대상 다리 이름이다. 없으면
+    `CANONICAL_RUN` 을 쓴다 — 정본 실행 이름이 곧 leg 이름이라는 기존 규약이다.
+    """
+    import os as _os
+
+    from src.io import source_digest
+    from tools.preserve import assert_run_is_authorized
+
+    leg = _os.environ.get("LEG") or _os.environ.get("CANONICAL_RUN") or "grid_fit_v4"
+    spec = {"leg_id": leg, "mode": "grid", "dry_run": bool(dry_run),
+            "config_digest": _cfg_digest(cfg)}
+    assert_run_is_authorized(leg, "grid", [out_dir], spec, source_digest())
+
+
+def _cfg_digest(cfg: dict) -> str:
+    import hashlib as _h
+    import json as _j
+
+    return _h.sha256(_j.dumps(cfg, sort_keys=True, ensure_ascii=False,
+                              default=str).encode("utf-8")).hexdigest()[:16]
+
+
 def run_grid(cfg: dict, conditions: list[Condition], nproc: int,
              chunk_size: int, out_dir: str | Path,
              resume: bool = False, dry_run: bool = False) -> dict:
@@ -382,6 +407,10 @@ def run_grid(cfg: dict, conditions: list[Condition], nproc: int,
     from tqdm import tqdm
 
     out_dir = Path(out_dir)
+    # ★ 47차 P0-2 (조건 11-c) — **첫 부작용 전에** 계획 gate 를 지난다.
+    #   46차 gate 는 `run.sh` 안에만 있어서 `python -m src.grid` 직접 호출이
+    #   계획을 전혀 보지 않았다. mkdir 도 부작용이므로 그보다 먼저 본다.
+    _assert_grid_authorized(cfg, out_dir, dry_run=dry_run)
     out_dir.mkdir(parents=True, exist_ok=True)
     protocol_name = cfg.get(GRID_PROTOCOL_KEY, "charge_first")
 

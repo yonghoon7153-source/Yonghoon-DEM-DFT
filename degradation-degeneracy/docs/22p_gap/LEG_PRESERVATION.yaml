@@ -34,6 +34,7 @@ cohorts:
   - cohort_id: g1_2026_08_20
     dir: docs/22p_gap/warm_probe
     status: frozen
+    prospective_legs: []          # 47차 P0-1 — 계획 roster (실행 roster 와 분리)
     frozen_reason: >-
       8다리 중 7다리의 원자료가 소실됐다. 이 cohort 는 다시 만들 수 없으므로
       기록된 analyzer 바이트에 대고만 검증한다. 25차 발견 2 로 analyzer 가
@@ -45,6 +46,7 @@ cohorts:
       row_projection_py_sha256: bbb4744256e42b8f
       src_scoring_py_sha256: 69e69cb046f4b4ae
       analysis_spec_sha256: f1898eb6117c89b8e43b9d7c76ba4c2abb1cc880f36ccbbdd8d6d329cf4cf727
+      producer_semantic_sha256: "frozen:not-recorded"   # 47차 — 이 cohort 는 이 필드가 생기기 전에 얼었다
     runtime: {python: "3.12.3", pandas: "3.0.5", pyarrow: "25.0.1",
               numpy: "2.5.2", yaml: "6.0.3"}
     legs: [fit_22p_seed_404_hc, fit_22p_seed_404_hc_nowarm,
@@ -55,6 +57,7 @@ cohorts:
   - cohort_id: g2_2026_08_25
     dir: docs/22p_gap/proj_g2
     status: active
+    prospective_legs: []          # 47차 P0-1 — 계획 roster (실행 roster 와 분리)
     cross_leg_comparison: not_applicable_single_leg
     무엇이_달라졌나: >-
       계산 digest 를 손으로 고른 함수 목록이 아니라 **dependency closure** 에서
@@ -77,10 +80,11 @@ cohorts:
       (`cross_leg_comparison` 참조).
     pin:
       schema_version: 3
-      compute_sha256: e042f733b4eb9851
-      row_projection_py_sha256: b7d8f645d1bc22a5
+      compute_sha256: d6619c2c32438e65
+      row_projection_py_sha256: d0dbbd29ddd9fb2f
       src_scoring_py_sha256: 69e69cb046f4b4ae
       analysis_spec_sha256: 43d74dd385b1f66d28cc371dd7ebbd00fc0289323e0a515114eb2b8d45d56271
+      producer_semantic_sha256: 908503e65162e7d9
     runtime: {python: "3.11.15", pandas: "3.0.5", pyarrow: "25.0.1",
               numpy: "2.4.6", yaml: "6.0.3"}
     legs: [paired_fixed5_v4]
@@ -107,6 +111,8 @@ planned:
   - leg_id: paired_fixed5_v4
     cohort_id: g2_2026_08_25
     status: executed
+    authorization_kind: retrospective
+    run_spec_digest: "retrospective:no-preauthorization"
     authorized_source_digest: "d50295f980ccaa81"
     recorded_on: "2026-08-28"
     근거: >-
@@ -117,6 +123,8 @@ planned:
   - leg_id: paired_fixed5_v4_nowarm_now
     cohort_id: g1_2026_08_20
     status: executed
+    authorization_kind: retrospective
+    run_spec_digest: "retrospective:no-preauthorization"
     authorized_source_digest: "a72c0f3a485c19bb"
     recorded_on: "2026-08-28"
     근거: >-
@@ -127,6 +135,8 @@ planned:
   - leg_id: paired_fixed5_v4_warm
     cohort_id: g1_2026_08_20
     status: executed
+    authorization_kind: retrospective
+    run_spec_digest: "retrospective:no-preauthorization"
     authorized_source_digest: "a72c0f3a485c19bb"
     recorded_on: "2026-08-28"
     근거: >-
@@ -137,6 +147,8 @@ planned:
   - leg_id: fit_22p_seed_404_hc
     cohort_id: g1_2026_08_20
     status: executed
+    authorization_kind: retrospective
+    run_spec_digest: "retrospective:no-preauthorization"
     authorized_source_digest: "7250c6e689399381"
     recorded_on: "2026-08-28"
     근거: >-
@@ -147,6 +159,8 @@ planned:
   - leg_id: fit_22p_seed_404_hc_nowarm
     cohort_id: g1_2026_08_20
     status: executed
+    authorization_kind: retrospective
+    run_spec_digest: "retrospective:no-preauthorization"
     authorized_source_digest: "a72c0f3a485c19bb"
     recorded_on: "2026-08-28"
     근거: >-
@@ -157,6 +171,8 @@ planned:
   - leg_id: fit_22p_seed_404_hc_warm_now
     cohort_id: g1_2026_08_20
     status: executed
+    authorization_kind: retrospective
+    run_spec_digest: "retrospective:no-preauthorization"
     authorized_source_digest: "a72c0f3a485c19bb"
     recorded_on: "2026-08-28"
     근거: >-
@@ -167,6 +183,8 @@ planned:
   - leg_id: fit_seed404_pe5mv
     cohort_id: g1_2026_08_20
     status: executed
+    authorization_kind: retrospective
+    run_spec_digest: "retrospective:no-preauthorization"
     authorized_source_digest: "d842894dbbc2a0f9"
     recorded_on: "2026-08-28"
     근거: >-
@@ -177,6 +195,8 @@ planned:
   - leg_id: fit_seed404_pe5mv_nowarm
     cohort_id: g1_2026_08_20
     status: executed
+    authorization_kind: retrospective
+    run_spec_digest: "retrospective:no-preauthorization"
     authorized_source_digest: "a72c0f3a485c19bb"
     recorded_on: "2026-08-28"
     근거: >-
@@ -216,12 +236,12 @@ legs:
       #   commit SHA·실행 시각·dirty 여부는 stamp 로 뺐다 (그것들을 core 에
       #   두면 커밋된 영수증이 원리적으로 재생 불가능해진다).
       verification_receipt: docs/22p_gap/receipts/paired_fixed5_v4.validate.yaml
-      verification_receipt_core_sha256: 74c51fd67bbfdb78e9d84c82c5d6bc245637420d84b98dba002750c944082d92
+      verification_receipt_core_sha256: fd0791143e278c75c50ec5366ad4e5f8ab622a08bdf9908fdba1a74f41c47bbd
       verification_receipt_generator: docs/22p_gap/make_receipt.py
       empty_root_restore: true       # 원본 results/ 에 접근하지 않고 복원해 검증
       rescored_from_restored_fits: true
       validator_identity:
-        source_digest: bd8cbc653d8bbffb
+        source_digest: 209dc305783f62a6
         n_checks: 34
         ok: true
       leg_source_digest: d50295f980ccaa81            # 산출물 쪽 (옛 세대)
