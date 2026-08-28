@@ -3,7 +3,7 @@ title: "sdcp_doped 재개 설계 v2 — 회신 O 재승인 조건 7 을 실제�
 date: 2026-08-28
 updated: 2026-08-28
 tags: [sdcp, estimand, reopen, polaron, stage0, design]
-status: active
+status: answered
 confidence: medium
 verificationStatus: unverified
 explored: false
@@ -13,7 +13,13 @@ claimType: prescriptive
 evidenceScope: multi-source-primary
 ---
 
-# sdcp_doped 재개 설계 v2
+# sdcp_doped 재개 설계 v2 — ⛔SUPERSEDED (회신 R NO-GO)
+
+> **2026-08-28 회신 R: Stage 0 NO-GO** (`kb/reviews/codex_R_doped_reopen_v2_reply_2026_08_28.md`).
+> P0: U_eff 자료 부재(DP6_h1 누락) · 기체상 carrier_retention 자명 · conditioning 에
+> realized 오염 · bracket 오명명 · vertical 기하 편향 · 방법 미지정 · microstate 차원 누락.
+> **반영본 = v3**: `kb/questions/sdcp_doped_reopen_v3_2026_08_28.md`. 이 문서는 기록 보존용.
+
 
 > **이 카드가 재개 그 자체다.** 마감 문서(`db/properties/sdcp_doped_closed_2026_08_28.json`)는
 > 옛 프로토콜(n=1 단량체·wave1)의 숫자 생산만 잠근다 — 잠금은 이 카드의 조건들이 채워지는

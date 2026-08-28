@@ -57,14 +57,19 @@ ZNUM = {"H": 1, "C": 6, "N": 7, "O": 8, "S": 16}
 CC_NEW = 1.45          # 새 C–C 접합 길이 (다이머 빌더와 동일; 이완 다이머 실측 1.44)
 UNIT_NAMES = "ABCDEFGH"
 
-#: 재개 v2 스핀 섹터 — 홀 수의 짝홀에 따라 자동 선택된다.
-#:   mult 는 ORCA 좌표줄 값. bs 는 **고스핀(triplet) mult 로 수렴 후 BrokenSym 플립**.
-SECTORS_ODD = (("d", 2, "doublet M=1"),)
-SECTORS_EVEN = (("s", 1, "closed-shell singlet M=0"),
-                ("t", 3, "triplet 2-polaron M=2"),
-                ("bs", 3, "broken-symmetry open-shell singlet (triplet 수렴 후 flip; "
-                          "<S2> 오염 보고 필수 — 순수 singlet 아님)"))
-ABORT_CODES = ("NA_STATE_NOT_IDENTIFIED", "SECTOR_MISMATCH", "SCF_UNCONVERGED",
+#: 스핀 섹터 (회신 R 반영: conditioning 에는 ansatz 만 — 'polaron/bipolaron' 은 realized).
+#:   (라벨, ORCA mult, wavefunction_class, n_alpha_minus_beta(최종 Ms 기준), 설명)
+#:   bs 는 고스핀(triplet) mult 로 수렴 후 BrokenSym 플립 — **BS M_s=0 determinant,
+#:   nominal OSS candidate**. raw E 를 singlet 에너지로 쓰지 않는다.
+SECTORS_ODD = (("d", 2, "UKS", 1, "doublet"),)
+SECTORS_EVEN = (("s", 1, "RKS", 0, "RKS closed-shell candidate"),
+                ("t", 3, "UKS", 2, "UKS triplet"),
+                ("bs", 3, "UKS-BS", 0,
+                 "BS M_s=0 determinant (nominal OSS candidate) — <S2>·국소 signed spin·"
+                 "UNO 보고 필수; Yamaguchi AP 는 2-중심 식별시에만, 아니면 "
+                 "NA_SPIN_MODEL_NOT_IDENTIFIED"))
+ABORT_CODES = ("NA_STATE_NOT_IDENTIFIED", "NA_SPIN_MODEL_NOT_IDENTIFIED",
+               "METHOD_DEPENDENT", "SECTOR_MISMATCH", "SCF_UNCONVERGED",
                "SPIN_CONTAMINATION_UNREPORTED")
 
 
@@ -324,6 +329,24 @@ def build_chain(sym, pos, n, cc, step, log=print):
 
 
 # ---------- 조성·홀·manifest ----------
+#: v7c 실물 선형 n-량체의 닫힌꼴 기대식 (회신 R): C_{11n} H_{14n+2-m} O_{6n} S_{2n},
+#: 전전자 N_e = 160n + 2 - m. 빌더 산출이 이것과 다르면 **빌더가 틀린 것** — 멈춘다.
+V7C_DIMER_FORMULA = "C22H30O12S4"
+
+
+def expected_species(n, m):
+    return ({"C": 11 * n, "H": 14 * n + 2 - m, "O": 6 * n, "S": 2 * n},
+            160 * n + 2 - m)
+
+
+def check_closed_form(sym, n, m):
+    want_f, want_e = expected_species(n, m)
+    cnt = {}
+    for x in sym:
+        cnt[x] = cnt.get(x, 0) + 1
+    return cnt == want_f and electrons_of(sym) == want_e
+
+
 def formula_of(sym):
     cnt = {}
     for s in sym:
@@ -369,6 +392,38 @@ def resolve_holes(spec, names, sulf):
     return out
 
 
+def atom_sets_of(csym, cnb, crings, csulf, names):
+    """carrier_localization_profile 용 원자 집합 (중성 프레임 인덱스).
+
+    backbone = 공액 고리 원자 + 고리에 붙은 H · sulfonate_X = S+3O(+산성H) ·
+    sidechain_rest = 나머지(스페이서 등). ⛔ doped 프레임 인덱스는 removed_H 로
+    밀린다 — 재매핑은 분석기 몫 (manifest 에 경고 포함).
+    """
+    ring_atoms = set()
+    for r in crings:
+        ring_atoms |= set(r["ring"])
+    ring_H = {h for i in ring_atoms for h in cnb[i] if csym[h] == "H"}
+    sets = {"backbone": sorted(ring_atoms | ring_H)}
+    used = set(sets["backbone"])
+    for su in csulf:
+        grp = sorted([su["sS"]] + su["sO"] + ([su["aH"]] if su["aH"] is not None else []))
+        sets[f"sulfonate_{names[su['ring']]}"] = grp
+        used |= set(grp)
+    sets["sidechain_rest"] = sorted(set(range(len(csym))) - used)
+    return sets
+
+
+#: 교차검사 방법 — "ωB97X-D급" 금지 (회신 R 조건 7): 계산 전에 정확히 지정한다.
+HYBRID_SPEC = {
+    "method": "wB97X-D3 def2-TZVP defgrid3 TightSCF",
+    "fresh_start": "r2SCAN orbital 미승계 (MORead 금지)",
+    "decision_set": "vertical 승자 + adiabatic 승자 + 승자 대비 0.10 eV 이내의 경쟁 상태",
+    "escalation": "hybrid 가 state identity/localization/순서를 바꾸면 그 경쟁 상태만 hybrid 재최적화",
+    "disagreement": "두 방법이 갈리면 평균하지 않고 METHOD_DEPENDENT",
+    "version_field": "orca_version 은 회수 시 .out 배너에서 채운다 (사전 기재 금지)",
+}
+
+
 def stage0_manifest(out, n, dimer_path, dimer_sha, jobs, torsions):
     """재승인 조건 ⑦ — 손으로 적은 숫자 없이, 빌더가 계산한 값만 들어간다."""
     man = {
@@ -381,6 +436,12 @@ def stage0_manifest(out, n, dimer_path, dimer_sha, jobs, torsions):
             "이 아니며 <S2> 보고 없이는 SPIN_CONTAMINATION_UNREPORTED 로 중단"),
         "abort_codes": list(ABORT_CODES),
         "dp": n,
+        "closed_form": "C_{11n} H_{14n+2-m} O_{6n} S_{2n} · N_e = 160n+2-m (회신 R 조건 1)",
+        "hybrid_crosscheck": HYBRID_SPEC,
+        "stage0_observable": "carrier_localization_profile — 집합별 charge·signed spin · "
+                             "sum|m_i| · centroid/participation ratio · BLA/quinoid · UNO "
+                             "unpaired 지표. ⛔ 기체상에서 carrier_retention 은 자명(전계=분자)이라 "
+                             "측정 불가 (회신 R P0-2). slab carrier_retention_change 는 별도 규약",
         "input_dimer": {"path": os.path.abspath(dimer_path), "sha256": dimer_sha},
         "assembly_torsions": torsions,
         "jobs": jobs,
@@ -419,6 +480,26 @@ def build_general(a, sym, pos):
                "acidH": {names[su["ring"]]: su["aH"] for su in csulf}},
               open(os.path.join(a.out, f"groups_dp{a.n}.json"), "w"), indent=1)
 
+    v7c_real = (formula_of(sym) == V7C_DIMER_FORMULA)
+    if not v7c_real:
+        print(f"⚠ 입력 다이머 조성 {formula_of(sym)} ≠ v7c({V7C_DIMER_FORMULA}) — "
+              "닫힌꼴 검증 생략 (합성/시험 입력)")
+
+    def _validate(vsym, m):
+        if v7c_real and not check_closed_form(vsym, a.n, m):
+            we_f, we_e = expected_species(a.n, m)
+            raise SystemExit(f"⛔ 닫힌꼴 불일치 — 빌더 산출 {formula_of(vsym)}/{electrons_of(vsym)}e "
+                             f"vs 기대 {we_f}/{we_e}e (n={a.n}, m={m}). 빌더/입력 오류 — 멈춘다")
+
+    def _micro(m, rmH, sec, wf):
+        return {"DP": a.n, "formal_oxidation_count": m, "removed_H_indices": rmH,
+                "external_counterion_inventory": "none — internal-compensation stratum "
+                    "(m tethered SO3- compensate formal backbone oxidation +m)",
+                "conformer_cluster": f"torsion_scan_step{a.step}",
+                "wavefunction_spin_sector": f"{wf}/{sec}",
+                "localization_seed": "default", "realized_localization": None,
+                "pose": None, "slab_basin": None}
+
     jobs = []
     tag0 = f"dp{a.n}_neutral"
     write_xyz(os.path.join(a.out, f"{tag0}.xyz"), csym, cpos,
@@ -426,35 +507,55 @@ def build_general(a, sym, pos):
               f"{[t['torsion_deg'] for t in torsions]} deg)")
     e0 = electrons_of(csym)
     check_parity(e0, 1)
+    _validate(csym, 0)
     orca_input(os.path.join(a.out, f"{tag0}.inp"), tag0, 1, False)
-    jobs.append(dict(tag=tag0, species=f"DP{a.n}/0", holes=[], sector="n",
-                     mult=1, charge=0, n_atoms=len(csym), n_electrons=e0,
-                     formula=formula_of(csym), expected="closed-shell singlet M=0"))
+    jobs.append(dict(tag=tag0, species=f"DP{a.n}_h0_Q0", holes=[], removed_H_indices=[],
+                     sector="n", wavefunction_class="RKS", orca_mult=1,
+                     n_alpha_minus_beta=0, net_charge=0, n_atoms=len(csym),
+                     all_electron_count=e0, formula=formula_of(csym),
+                     sector_label="RKS closed-shell (neutral reference)",
+                     seeded_separation=None, microstate_id=_micro(0, [], "n", "RKS")))
 
     for spec in (a.holes or []):
         hs = resolve_holes(spec, names, csulf)
         letters = "".join(h[0] for h in hs)
-        vsym, vpos, _ = remove_atoms(csym, cpos, [h[1] for h in hs])
+        rmH = sorted(h[1] for h in hs)
+        m = len(hs)
+        vsym, vpos, _ = remove_atoms(csym, cpos, rmH)
         e = electrons_of(vsym)
-        sectors = SECTORS_ODD if len(hs) % 2 == 1 else SECTORS_EVEN
+        _validate(vsym, m)
+        sectors = SECTORS_ODD if m % 2 == 1 else SECTORS_EVEN
+        sep = (abs(ord(letters[0]) - ord(letters[1])) if m == 2 else None)
         base = f"dp{a.n}_h{letters}"
         write_xyz(os.path.join(a.out, f"{base}.xyz"), vsym, vpos,
-                  f"DP{a.n}/+{len(hs)}: neutral minus acid H of ring(s) {letters} "
-                  f"(charge 0, {len(hs)} hole)")
-        for sec, mult, desc in sectors:
+                  f"DP{a.n}_h{m}_Q0: neutral minus acid H of ring(s) {letters} "
+                  f"(net charge 0, formal_oxidation_count {m})")
+        for sec, mult, wf, nab, label in sectors:
             check_parity(e, mult)
             tag = f"{base}_{sec}"
             # 섹터별 .xyz 는 같은 기하 — inp 가 xyzfile 로 base 를 공유한다
             orca_input(os.path.join(a.out, f"{tag}.inp"), base, mult, bs=(sec == "bs"))
-            jobs.append(dict(tag=tag, species=f"DP{a.n}/+{len(hs)}", holes=list(letters),
-                             sector=sec, mult=mult, charge=0, n_atoms=len(vsym),
-                             n_electrons=e, formula=formula_of(vsym), expected=desc))
+            jobs.append(dict(tag=tag, species=f"DP{a.n}_h{m}_Q0", holes=list(letters),
+                             removed_H_indices=rmH, sector=sec, wavefunction_class=wf,
+                             orca_mult=mult, n_alpha_minus_beta=nab, net_charge=0,
+                             n_atoms=len(vsym), all_electron_count=e,
+                             formula=formula_of(vsym), sector_label=label,
+                             seeded_separation=sep,
+                             microstate_id=_micro(m, rmH, sec, wf)))
         print(f"  홀 {letters}: {len(sectors)}섹터 ({'/'.join(s[0] for s in sectors)}) · "
-              f"전자 {e} · {formula_of(vsym)}")
+              f"전자 {e} · {formula_of(vsym)}"
+              + (" · 닫힌꼴 ✓" if v7c_real else ""))
 
     sha = hashlib.sha256(open(a.dimer, "rb").read()).hexdigest()
     mp = stage0_manifest(a.out, a.n, a.dimer, sha, jobs, torsions)
-    print(f"manifest: {mp}  (잡 {len(jobs)}개 — estimand_id 부착, 손 전사 숫자 0)")
+    man = json.load(open(mp))
+    man["closed_form_validated"] = v7c_real
+    man["atom_sets_neutral_frame"] = atom_sets_of(csym, cnb, crings, csulf, names)
+    man["⚠_atom_sets"] = ("중성 프레임 인덱스 — doped 잡에서는 removed_H_indices 만큼 "
+                          "밀린다. 재매핑은 분석기가 수행하고 검증한다")
+    json.dump(man, open(mp, "w"), ensure_ascii=False, indent=1)
+    print(f"manifest: {mp}  (잡 {len(jobs)}개 · 닫힌꼴 검증 "
+          f"{'✓' if v7c_real else '생략(비실물)'} · atom_sets {len(man['atom_sets_neutral_frame'])}집합)")
     return jobs
 
 
@@ -687,11 +788,30 @@ def selftest():
         os.makedirs(a4.out)
         jobs4 = build_general(a4, sym, pos)
         man4 = json.load(open(os.path.join(a4.out, "manifest_stage0.json")))
-        chk(len(jobs4) == 2 and jobs4[1]["sector"] == "d" and jobs4[1]["mult"] == 2,
-            "n=4 홀 1개 → neutral + doublet 1섹터")
+        chk(len(jobs4) == 2 and jobs4[1]["sector"] == "d" and jobs4[1]["orca_mult"] == 2
+            and jobs4[1]["n_alpha_minus_beta"] == 1,
+            "n=4 홀 1개 → neutral + doublet 1섹터 (orca_mult·nab 분리)")
         chk(man4["estimand_id"] == "sdcp-doped-gas-stage0/v2"
-            and man4["jobs"][1]["n_electrons"] == man4["jobs"][0]["n_electrons"] - 1,
-            "manifest: estimand_id + 전자수(중성−1) 자동 계산 — 손 전사 없음")
+            and man4["jobs"][1]["all_electron_count"] == man4["jobs"][0]["all_electron_count"] - 1,
+            "manifest: estimand_id + 전전자수(중성−1) 자동 계산 — 손 전사 없음")
+        chk(man4["jobs"][1]["species"] == "DP4_h1_Q0"
+            and man4["jobs"][1]["net_charge"] == 0
+            and man4["jobs"][1]["removed_H_indices"],
+            "종 ID 는 DP4_h1_Q0 형식 — 'DP4/+1' 오독 방지 (회신 R 조건 1)")
+        chk(man4["closed_form_validated"] is False,
+            "합성 입력은 닫힌꼴 검증 생략 표시 (validated=False — 통과 아님)")
+        mtxt = open(os.path.join(a4.out, "manifest_stage0.json")).read()
+        chk("bipolaron" not in mtxt and "polaron" not in mtxt.replace("polaron_", ""),
+            "conditioning 순수성: manifest 에 'polaron/bipolaron' 라벨 없음 (회신 R P0-3)")
+        chk("carrier_localization_profile" in mtxt and "NA_SPIN_MODEL_NOT_IDENTIFIED" in mtxt
+            and "METHOD_DEPENDENT" in mtxt,
+            "Stage0 관측량 교체 + 신규 중단코드 2종 (회신 R P0-2 · 조건 5·7)")
+        chk("atom_sets_neutral_frame" in man4
+            and set(man4["atom_sets_neutral_frame"]) >= {"backbone", "sidechain_rest"},
+            "atom_sets 고정 (carrier_localization_profile 의 집합 — 회신 R 조건 4)")
+        allsets = sum(man4["atom_sets_neutral_frame"].values(), [])
+        chk(len(allsets) == len(set(allsets)) == man4["jobs"][0]["n_atoms"],
+            "atom_sets 는 전 원자를 정확히 1회씩 분할 (겹침·누락 없음)")
         chk("NA_STATE_NOT_IDENTIFIED" in man4["abort_codes"],
             "manifest 에 중단 코드 선언 (정의역 공백을 코드가 말한다)")
 
@@ -700,13 +820,13 @@ def selftest():
                                 step=45, n=6, holes=["B,E", "C,D"])
         os.makedirs(a6.out)
         jobs6 = build_general(a6, sym, pos)
-        secs = [j["sector"] for j in jobs6 if j["species"] == "DP6/+2"]
+        secs = [j["sector"] for j in jobs6 if j["species"] == "DP6_h2_Q0"]
         chk(secs == ["s", "t", "bs", "s", "t", "bs"],
             f"n=6 홀 2개 × 간격 2종 → 섹터 s/t/bs ×2 ({secs})")
         bs_inp = open(os.path.join(a6.out, "dp6_hBE_bs.inp")).read()
         chk("BrokenSym" in bs_inp and " 0 3 " in bs_inp,
             "bs 섹터 입력: triplet(mult 3) 수렴 후 BrokenSym 플립")
-        e_even = all(j["n_electrons"] % 2 == 0 for j in jobs6 if j["holes"])
+        e_even = all(j["all_electron_count"] % 2 == 0 for j in jobs6 if j["holes"])
         chk(e_even, "홀 2개 종은 전자수 짝수 (parity 정합)")
 
         # ── ⛔ 음성 1: 없는 링 홀
@@ -719,6 +839,24 @@ def selftest():
         except SystemExit:
             ok = True
         chk(ok, "음성: --holes Z (없는 링) → 멈춘다")
+
+        # ── 닫힌꼴 기대식 (회신 R 조건 1) — 실물 다이머가 repo 에 있으면 실검증
+        rd = os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                          "..", "..", "db", "structures", "sdcp_v7c_dimer_neutral.xyz")
+        if os.path.isfile(rd):
+            rs, rp = read_xyz(rd)
+            aR = argparse.Namespace(dimer=rd, out=os.path.join(td, "real3"), cc=CC_NEW,
+                                    step=60, n=3, holes=["B"])
+            os.makedirs(aR.out)
+            jR = build_general(aR, rs, rp)
+            mR = json.load(open(os.path.join(aR.out, "manifest_stage0.json")))
+            chk(mR["closed_form_validated"] is True
+                and jR[1]["all_electron_count"] == 160 * 3 + 2 - 1,
+                f"실물 다이머 닫힌꼴 검증 ✓ (DP3_h1 전자 {jR[1]['all_electron_count']} = 481)")
+        else:
+            print("  (실물 다이머 없음 — 닫힌꼴 실검증 생략)")
+        chk(not check_closed_form(["C"] * 33, 3, 1),
+            "음성: 닫힌꼴 함수가 틀린 조성을 거부한다")
 
         # ── ⛔ 음성 2: 전자 짝홀 ↔ 다중도 불일치는 잡을 만들지 않는다
         try:

@@ -7,34 +7,18 @@
 
 > 순서가 있다. 앞이 끝나야 뒤가 뜻이 있다.
 
-### ⏭-0. SDCP doped — **재개 착수** (2026-08-28 심야, 1저자 지시)
-마감(active)은 유지 — **옛 프로토콜(n=1 wave1)의 숫자만 잠근 것**이고, 재개는 그 잠금과
-별개로 진행한다. 잠금은 재승인 조건이 채워지면 자동으로 풀린다 (planned_upgrade).
-
-**재개 로드맵** (회신 O 조건 7 → 실행 순서):
-1. ✅ 설계 v2 작성 — `kb/questions/sdcp_doped_reopen_v2_2026_08_28.md`
-   (화학종 S1–S3c·N1–N3 · estimand=adiabatic E_ads+carrier_retention · 게이트 v2 · Stage 0 목록)
-2. ⏳ **회신 R 발송** — `kb/reviews/codex_R_prompt_doped_reopen_v2_2026_08_28.md`
-   (붙여넣기 완성본. GO/NO-GO 명시 요구). **R 통과 전 계산 금지.**
-3. ✅ **빌더 확장 완료** (R 대기 중 준비 작업 — 계산 아님):
-   `build_v7c_trimer.py --n 4/6 --holes B,E` — 사슬 성장 일반화 · 홀 배치 선택 ·
-   스핀 섹터 자동(s/t/bs, parity 가드) · **manifest_stage0.json**(estimand_id·조성·
-   전자수·state-selection policy·중단 코드 — 조건 ⑦ 절반). selftest 13건(음성 3) PASS.
-   레거시 트라이머 경로 하위호환 유지.
-   → ✅ **발사대 완성 (2026-08-28, 데스크탑 실측)**: repo 의 이완 다이머
-   (`db/structures/sdcp_v7c_dimer_neutral.xyz`, ORCA 최종기하 E −3351.3355 Eh)로
-   `~/orca_poly/dp4`(잡 2: neutral + hB doublet, 전자 641) ·
-   `~/orca_poly/dp6`(잡 7: neutral + hBE·hCD × s/t/bs, 전자 960) 조립 완료.
-   클라우드 dry-run 과 바이트 동일 (결정론 확인). manifest estimand_id 부착.
-   **ORCA 미실행 — R GO 가 유일한 남은 트리거.** GO 시 러너(neutral → doped
-   warm-start, 트라이머 관례) 생성해서 전달.
-4. 병행: 조건 ⑥ 기준 분자 3잡(NUPDOWN=-1·LREAL=F, 외주 ~75분 — neutral 헤드라인과 공유)
-   · 조건 ⑦ manifest 도구
-5. 실험 요청(협력자): EPR spin count · carrier/산화도 측정 · counterion 조성
-   — polaron/bipolaron 분율은 계산이 못 정한다 (회신 O 7번)
-
-**리뷰 발송 대기 2건**: R(재개 설계) · Q(neutral·PTFE — `codex_Q_prompt_...`).
-**R 이 우선** — doped 재개가 1저자 최우선 지시라서.
+### ⏭-0. SDCP doped 재개 — **회신 R: NO-GO → v3 반영 완료, R2 재심사 대기** (2026-08-28 심야)
+- 회신 R 판정: Stage 0 NO-GO (설계 결함 P0 다수) · 재개 방향 승인 · 재심사 조건 8.
+  원문: `kb/reviews/codex_R_doped_reopen_v2_reply_2026_08_28.md`
+- ✅ 조건 8 전부 반영: **v3 카드** `kb/questions/sdcp_doped_reopen_v3_2026_08_28.md` +
+  빌더 manifest v2 (`build_v7c_trimer.py` — 닫힌꼴 검증·conditioning 순수성·atom_sets·
+  microstate_id·HYBRID_SPEC·중단코드 6종. selftest 23건 PASS, 실물 다이머 481e 검증).
+- 주요 설계 변경: DP6_h1 4잡 추가(U_eff 위치별 + hole-number 축) · S1/S2 = sentinel
+  (bracket 철회) · Stage 0 관측량 = carrier_localization_profile · R⁰ = N3 기하 − 2H
+  (state-neutral vertical) · EPR ⊕ total-carrier **paired requirement**.
+- ⏳ **다음: R2 재심사 발송** — `kb/reviews/codex_R2_prompt_doped_reopen_v3_2026_08_28.md`
+  (GO 나오면 데스크탑 dp 패키지 재생성 — manifest v2 라 재생성 필요 — 후 러너 착화).
+- ⛔ R2 GO 전 Z1 금지. 데스크탑의 기존 dp4/dp6 패키지는 manifest v1 이라 **재생성 대상**.
 
 ### ⏭-1. T13 확인 — **먼저**
 kgy 800 ps 런 2개(`lpsocl_long` · `lpsocl_small800`)가 8/29 아침 완주.
