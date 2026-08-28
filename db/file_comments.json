@@ -37,6 +37,64 @@
    "who": ""
   }
  ],
+ "litdb/figures/deng2026_polysulfate_layer_moisture_oxidation_lpsc/fig_6.png": [
+  {
+   "at": "2026-08-28 13:29",
+   "id": "c1787891360181",
+   "text": "사이클된 LPSC 복합전극은 분해 부산물 축적에 기인하는 심한 황 편석**(sulfur segregation)**과 광범위한** microcrack **형성을 겪었다.",
+   "who": ""
+  },
+  {
+   "at": "2026-08-28 13:31",
+   "edited_at": "2026-08-28 13:32",
+   "history": [
+    {
+     "at": "2026-08-28 13:31",
+     "text": "나아가 LPSC ASSB는 완화시간 10–110 s 영역에서도 큰 임피던스 증가를 보였는데, 이는 전자적/이온적 절연성 분해 생성물과 microcrack의 축적이 복합양극 내 리튬이온 수송을 방해하기 때문으로 보인다. 이 추론은 GITT 측정(Figure S23)으로 뒷받침되었다. Figure S24에서 보듯 50% DoD에서 PS-LPSC ASSB의 리튬이온 확산계수는 1.85 × 10⁻¹³ cm² s⁻¹로, LPSC ASSB(3.47 × 10⁻¹⁴ cm² s⁻¹)를 약 한 자릿수 앞섰다."
+    }
+   ],
+   "id": "c1787891474325",
+   "text": "나아가 LPSC ASSB는 완화시간 10–110 s 영역에서도 큰 임피던스 증가를 보였는데, 이는** 전자적/이온적 절연성 분해 생성물과 microcrack의 축적이 복합양극 내 리튬이온 수송을 방해**하기 때문으로 보인다. 이 추론은 GITT 측정(Figure S23)으로 뒷받침되었다. Figure S24에서 보듯 50% DoD에서 PS-LPSC ASSB의 리튬이온 확산계수는 1.85 × 10⁻¹³ cm² s⁻¹로, LPSC ASSB(3.47 × 10⁻¹⁴ cm² s⁻¹)를 약 한 자릿수 앞섰다.",
+   "who": ""
+  }
+ ],
+ "litdb/figures/deng2026_polysulfate_layer_moisture_oxidation_lpsc/fig_S17.png": [
+  {
+   "at": "2026-08-28 13:19",
+   "id": "c1787890760805",
+   "text": "![](/api/note-image/893223485d3de2d1f39239bcc7097ca6.png)",
+   "who": ""
+  },
+  {
+   "at": "2026-08-28 13:21",
+   "edited_at": "2026-08-28 13:22",
+   "history": [
+    {
+     "at": "2026-08-28 13:21",
+     "text": "60 °C에서도 PS-LPSC ASSB는 ICE 88.9%와 **뚜렷한 충방전 평탄부를 보인 반면**(Figure 5a), LPSC ASSB는 ICE가 70.3%에 불과했고(Figure S17) 2.6–3.4 V **저전압 영역에 LPSC의 뚜렷한 산화분해 평탄부가 나타나 심한 계면 부반응을 나타냈다.**"
+    }
+   ],
+   "id": "c1787890897714",
+   "text": "60 °C에서도 PS-LPSC ASSB는 ICE 88.9%와 **뚜렷한 충방전 평탄부를 보인 반면**(Figure 5a), LPSC ASSB는 ICE가 70.3%에 불과했고(Figure S17) 2.6–3.4 V **저전압 영역에 LPSC의 뚜렷한 산화분해 평탄부가 나타나 심한 계면 부반응을 나타냈다.** distinct **oxidative decomposition plateau **of LPSC in the low-voltage region of 2.6–3.4 V (vs. Li⁺/Li).",
+   "who": ""
+  }
+ ],
+ "litdb/figures/deng2026_polysulfate_layer_moisture_oxidation_lpsc/fig_S20.png": [
+  {
+   "at": "2026-08-28 13:27",
+   "id": "c1787891224523",
+   "text": "미분용량 분석(dQ/dV, Figure S20)에서 PS-LPSC ASSB는 NCM955 특유의 H1↔M, M↔H2, H2↔H3 상전이에 해당하는 세 개의 날카롭고 안정한 산화-환원 피크를 보였다. 사이클 전반에 걸쳐 이 피크들의 위치와 강도 변화가 미미하다는 것은 PS-LPSC와 NCM955 사이의 뛰어난 계면 안정성을 뜻한다.",
+   "who": ""
+  }
+ ],
+ "litdb/figures/deng2026_polysulfate_layer_moisture_oxidation_lpsc/fig_S21.png": [
+  {
+   "at": "2026-08-28 13:27",
+   "id": "c1787891238565",
+   "text": "반면 LPSC ASSB는 비교적 뚜렷한 산화-환원 쌍이 하나뿐이었고(Figure S21), 사이클 중 **눈에 띄는 전위 이동을 보여 심각한 계면 열화와 구조 불안정성**을 나타냈다.",
+   "who": ""
+  }
+ ],
  "litdb/figures/deng2026_polysulfate_layer_moisture_oxidation_lpsc/fig_S4.png": [
   {
    "at": "2026-08-28 10:56",
@@ -102,6 +160,13 @@
    ],
    "id": "c1787881922677",
    "text": "First, its symmetric molecular structure and** highly electron-deficient center** allow it to readily undergo ring-opening polymerization initiated by nucleophilic attack from S²⁻ anions. Secondly, the resulting PS has strong antioxidant capacity, and, as a surface modification layer, can effectively enhance the oxidation stability of LPSC.",
+   "who": ""
+  },
+  {
+   "anchor": "Fig. 5a · ⚠ LPSC 값의 근거 그림(Fig. S17)이 SI 에 없다 — §16-2",
+   "at": "2026-08-28 13:17",
+   "id": "c1787890669799",
+   "text": "![](/api/note-image/2654c3a1c7ec8b04eb30d108e8aa6e09.png)",
    "who": ""
   }
  ],
