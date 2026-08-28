@@ -1972,6 +1972,115 @@ def test_observed_curves_check_physics_columns(tmp_path):
     assert "관측_x_norm_공통격자" in validate_curves_provenance(d)["fail"]
 
 
+def _noise_family_curves(out_dir, specs, n=48, n_failed=0):
+    """noise family 별 clean 곡선을 **직접 지정**하는 fixture.
+
+    `specs` = [(lli, lam_pe, lam_ne, noise, q_mah, v_full 절편), ...]
+    같은 (lli, lam_pe, lam_ne) 를 noise 만 바꿔 여러 번 주면 한 family 가 된다.
+    `_tiny_curves` 는 noise=0.0 하나만 만들기 때문에 family 교차 검사를 태울 수
+    없다 — 그래서 별도 fixture 를 둔다.
+    """
+    import numpy as np
+    import pandas as pd
+
+    x = np.linspace(0.0, 1.0, n)
+    rows = []
+    for lli, pe, ne, nz, q, off in specs:
+        for xi in x:
+            v_full = off - 0.9 * xi
+            v_ne = 0.1 + 0.4 * xi
+            rows.append({"lli": lli, "lam_pe": pe, "lam_ne": ne, "noise": nz,
+                         "x_norm": xi, "v_full": v_full, "v_ne": v_ne,
+                         "v_pe": v_full + v_ne, "q_mah": q})
+    return sign_producer(Path(out_dir), pd.DataFrame(rows),
+                         n_infeasible=n_failed)
+
+
+def test_noise_family_clean_curves_must_agree(tmp_path):
+    """★ 14차 발견 1 — noise 는 solve **뒤에** 입힌다. 같은 물리조건이면
+    clean 곡선(`v_pe`·`v_ne`·`v_full`)과 `q_mah` 는 noise 수준과 무관하게
+    같아야 한다 (`src/grid.py`: `add_noise(curves["v_full"], cond.noise, ...)`).
+
+    반례(실측): 같은 (lli, lam_pe, lam_ne) 를
+      noise=0.0   → q=4000, 절편 4.2
+      noise=0.005 → q=2000, 절편 3.2
+    로 만들어도 **29개 검사가 전부 통과했다 (ok=True)**. 조건 하나만 놓고 보면
+    모든 검사가 성립하기 때문이다 — 위조가 아니라 조건 **사이**에만 존재하는
+    invariant 라서 조건별 루프로는 원리적으로 못 잡는다.
+
+    이게 숫자를 바꾼다: fitting 은 조건별 q_mah 로 r=q/q_ref 를 만들고 noise
+    수준별 복원오차를 비교해 degeneracy 를 판정한다. 같은 truth 의 noise 계열이
+    서로 다른 곡선이면 "noise 가 커지면 복원이 나빠진다" 는 비교 자체가 성립하지
+    않는다.
+    """
+    from src.io import validate_curves_provenance
+
+    fam = (0.02, 0.02, 0.02)
+    forged = _noise_family_curves(tmp_path / "forged", [
+        (*fam, 0.0, 4000.0, 4.2),
+        (*fam, 0.005, 2000.0, 3.2),
+    ])
+    v = validate_curves_provenance(forged)
+    assert not v["ok"]
+    assert "관측_noise_family_곡선" in v["fail"], v["fail"]
+    assert "관측_noise_family_q" in v["fail"], v["fail"]
+
+    # 정상 계열(같은 clean 곡선, noise 만 다름)은 통과해야 한다
+    good = _noise_family_curves(tmp_path / "good", [
+        (*fam, 0.0, 4000.0, 4.2),
+        (*fam, 0.005, 4000.0, 4.2),
+    ])
+    v2 = validate_curves_provenance(good)
+    assert v2["ok"], v2["fail"]
+    for k in ("관측_noise_family_구성", "관측_noise_family_분할",
+              "관측_noise_family_q", "관측_noise_family_곡선"):
+        assert k in v2["checks"], f"{k} 검사가 없다"
+
+
+def test_noise_family_must_have_same_noise_set(tmp_path):
+    """family 마다 noise 수준 집합이 같아야 한다 — 한 계열만 빠지면 실패.
+
+    한 truth 의 noise 계열이 통째로 빠지면 그 조건은 noise 비교에서 분모가
+    다른 조건들과 달라진다. 조건 **집합** 해시는 통과하는데(빠진 조건이 애초에
+    의도에 없으면) family 구성만 어긋나는 경우를 잡는다.
+    """
+    from src.io import validate_curves_provenance
+
+    d = _noise_family_curves(tmp_path / "missing", [
+        (0.02, 0.02, 0.02, 0.0, 4000.0, 4.2),
+        (0.02, 0.02, 0.02, 0.005, 4000.0, 4.2),
+        (0.04, 0.04, 0.04, 0.0, 4000.0, 4.2),      # noise=0.005 가 없다
+    ])
+    v = validate_curves_provenance(d)
+    assert "관측_noise_family_구성" in v["fail"], v["fail"]
+
+
+def test_noise_family_must_not_split_across_observed_and_failed(tmp_path):
+    """같은 family 가 관측과 실패로 갈리면 실패다.
+
+    불능 판정(`build_overrides`)은 noise 를 보지 않는다 — 한 계열이 불능이면
+    그 family 전체가 불능이어야 한다. 갈렸다는 것은 실행이 조건별로 다른 기준을
+    썼다는 뜻이고(예: resume 중 guard 변경), 그러면 인용 모집단의 분모가
+    조건마다 다른 규칙으로 정해진 것이 된다.
+
+    기존 검사로는 안 잡힌다: 실패 행은 서명된 recipe 재검에서 **정말 불능**이라
+    통과하고(`실패사유_불능재검`), 관측 행은 조건별 검사를 전부 통과하며,
+    관측∪실패 ID 해시도 맞는다.
+    """
+    from src.io import validate_curves_provenance
+
+    # sign_producer 의 n_infeasible 조건: lli=1.0, pe=ne=0.0, noise=0.0 (진짜 불능)
+    # → 같은 family 를 noise=0.005 로 관측에 넣으면 분할이 된다
+    d = _noise_family_curves(tmp_path / "split",
+                             [(1.0, 0.0, 0.0, 0.005, 4000.0, 4.2)],
+                             n_failed=1)
+    v = validate_curves_provenance(d)
+    assert "관측_noise_family_분할" in v["fail"], v["fail"]
+    # 실패 라벨 자체는 참이다 — 기존 검사는 통과한다는 것을 함께 고정한다
+    assert v["checks"]["실패사유_불능재검"][0]
+    assert v["checks"]["실패목록_ID결합"][0]
+
+
 def test_worker_actual_solver_must_match_signature(tmp_path, monkeypatch):
     """★ 13차 발견 3 — 실제 solve 는 loky worker 안에서 일어난다 (숫자가 바뀜).
 

@@ -89,14 +89,18 @@ fi
 
 # ─────────────────────────────────────────────────────────────────── 1. 격자
 step "1. PyBaMM 합성 격자 (producer artifact)"
+# ★ 14차 발견 1 — noise 축을 **2수준**으로 돈다. 1수준이면 family 마다 원소가
+#   하나뿐이라 noise 계열 교차 검사가 통째로 vacuous 하다 (검사는 있는데 한 번도
+#   실행되지 않는 상태로 10시간짜리 본 실행에 들어간다).
 ./run.sh --mode grid --lli 0,0.1 --lam-pe 0,0.1 --lam-ne 0,0.1 \
-         --noise 0 --nproc "$NPROC" --out "$CURVES" --log-level WARNING \
+         --noise 0,0.005 --nproc "$NPROC" --out "$CURVES" --log-level WARNING \
   && ok "곡선 생성" || bad "곡선 생성 실패"
 [[ -f "$CURVES/curves_manifest.yaml" ]] \
   && ok "curves_manifest.yaml (F70 producer 기록)" \
   || bad "producer 기록이 없다 (F70)"
 "$PY" - "$CURVES" <<'PYEOF'
-import sys
+import sys, yaml
+from pathlib import Path
 from src.io import validate_curves_provenance
 # ★ 11차 발견 3 — 실패라벨 재검은 producer 가 서명한 replay_recipe 로 하므로
 #   호출자가 cfg 를 줄 필요가 없다. 실패 2건 격자라 이 경로가 실제로 돈다.
@@ -105,12 +109,22 @@ need = {"실패목록_ID결합", "실패사유_불능재검", "실패사유_미�
         # ★ 12차 발견 1·2 — 관측 곡선 invariant 와 실제 solver identity
         "effective_solver_identity", "replay_recipe_schema",
         "관측조건_단일성", "관측조건_ID결합", "관측조건_행수",
-        "관측_x_norm_공통격자"}
+        "관측_x_norm_공통격자",
+        # ★ 14차 발견 1 — noise 계열 교차 invariant
+        "관측_noise_family_구성", "관측_noise_family_분할",
+        "관측_noise_family_q", "관측_noise_family_곡선"}
 missing = need - set(v["checks"])
-print(f"   {'✅' if v['ok'] and not missing else '❌'} producer 독립 검증 (F74): "
-      + ("통과 (실패라벨 재검 포함)" if v["ok"] and not missing
-         else f"실패 — {v['fail']} / 누락 {sorted(missing)}"))
-sys.exit(0 if v["ok"] and not missing else 1)
+# ★ 14차 발견 1 — 검사가 **실제로 비교를 했는지**까지 본다. noise 축이 1수준이면
+#   family 마다 원소가 하나라 통과가 아무것도 증명하지 않는다.
+man = yaml.safe_load((Path(sys.argv[1]) / "curves_manifest.yaml").read_text())
+axes = ((man or {}).get("effective_axes") or {}).get("noise") or []
+vacuous = len(axes) < 2
+ok = v["ok"] and not missing and not vacuous
+print(f"   {'✅' if ok else '❌'} producer 독립 검증 (F74): "
+      + (f"통과 (실패라벨 재검 + noise 계열 {len(axes)}수준 교차)" if ok
+         else f"실패 — {v['fail']} / 누락 {sorted(missing)}"
+              + (f" / noise 축 {axes} 로는 family 검사가 vacuous" if vacuous else "")))
+sys.exit(0 if ok else 1)
 PYEOF
 [[ $? -eq 0 ]] || bad "producer 검증 실패"
 

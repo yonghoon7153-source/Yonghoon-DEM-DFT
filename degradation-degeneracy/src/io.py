@@ -897,6 +897,156 @@ def _verify_failed_reasons(d: Path, spec: dict, ds: dict) -> dict:
     return checks
 
 
+#: ★ 14차 발견 1 — noise 를 뺀 물리조건. 한 family = 같은 truth 의 noise 계열.
+_FAMILY_FIELDS = ("lli", "lam_pe", "lam_ne", "lam_pe_type", "lam_ne_type")
+
+#: 같은 family 안에서 허용하는 편차. 조건마다 독립적으로 solve 하지만 입력이
+#: 같으므로 결정적으로 같은 값이 나와야 한다 (2워커 표본 실측 편차 정확히 0).
+_FAMILY_Q_TOL = 1e-6       # mAh
+_FAMILY_V_TOL = 1e-10      # V
+
+
+def _family_key(get) -> tuple:
+    """`get(field)` 로 읽어 family 키를 만든다 (float 은 1e-12 자리에서 반올림).
+
+    축 간격이 0.02 이므로 반올림이 서로 다른 축 값을 합치지 않는다.
+    """
+    return tuple(round(float(get(k)), 12) if k in ("lli", "lam_pe", "lam_ne")
+                 else str(get(k)) for k in _FAMILY_FIELDS)
+
+
+def _verify_noise_families(curves_path: Path, d: Path, man: dict) -> dict:
+    """★ 14차 발견 1 — 조건 **사이**에만 존재하는 invariant.
+
+    noise 는 solve 가 끝난 **뒤에** 입힌다
+    (`src/grid.py`: `add_noise(curves["v_full"], cond.noise, cond.seed)`).
+    따라서 같은 (lli, lam_pe, lam_ne, lam_pe_type, lam_ne_type) 의 noise 계열은
+    clean 곡선(`v_pe`·`v_ne`·`v_full`)과 `q_mah` 가 **같아야** 하고, 불능 판정도
+    noise 를 보지 않으므로 계열 전체가 함께 관측이거나 함께 실패여야 한다.
+
+    기존 검사는 전부 `groupby("cond_id")` 안에 있어서 조건을 하나씩만 본다.
+    그래서 리뷰어의 반례 — 같은 truth 를 noise=0 은 `q=4000`·절편 4.2 로,
+    noise=0.005 는 `q=2000`·절편 3.2 로 만든 곡선 — 이 29개 검사를 **전부
+    통과했다 (실측 ok=True)**. 위조를 겨냥한 검사가 아니라, 조건별 루프로는
+    원리적으로 못 보는 축을 채우는 검사다.
+
+    숫자에 직접 닿는다: fitting 은 조건별 `q_mah` 로 r=q/q_ref 를 만들고,
+    결론은 "noise 가 커질수록 복원이 나빠지는가" 를 noise 계열끼리 비교해서
+    낸다. 계열의 clean truth 가 서로 다르면 그 비교의 전제가 없다.
+
+    기대 noise 집합은 manifest 의 `effective_axes.noise`(실제 조건에서 유도된
+    축)를 쓴다. 없으면 관측∪실패에서 유도한다 — 전역 축 자체는 서명된
+    `condition_ids_sha256` 이 이미 고정하므로, 여기서 보는 것은 **family 마다
+    같은가**이다.
+    """
+    import numpy as np
+
+    checks: dict[str, tuple[bool, str]] = {}
+    cols = ["cond_id", "x_norm", *_COND_FIELDS, "q_mah", "v_pe", "v_ne", "v_full"]
+    try:
+        df = pd.read_parquet(curves_path, columns=cols)
+    except Exception as e:  # noqa: BLE001
+        checks["관측_noise_family_스키마"] = (
+            False, f"family 교차 검사에 필요한 열이 없다 ({e}) — 같은 truth 의 "
+                   f"noise 계열이 일치하는지 증명할 수 없다 (14차 발견 1)")
+        return checks
+
+    obs: dict[tuple, dict[float, dict]] = {}
+    dup: list[str] = []
+    for cid, g in df.groupby("cond_id", sort=True):
+        first = g.iloc[0]
+        fam = _family_key(lambda k: first[k])
+        nz = round(float(first["noise"]), 12)
+        order = np.argsort(g["x_norm"].to_numpy(dtype=float))
+        entry = {"cond_id": str(cid),
+                 "q": float(g["q_mah"].to_numpy(dtype=float)[0]),
+                 "v": {c: g[c].to_numpy(dtype=float)[order]
+                       for c in ("v_pe", "v_ne", "v_full")}}
+        if nz in obs.setdefault(fam, {}):
+            dup.append(f"{fam}(noise={nz})")
+        obs[fam][nz] = entry
+
+    failed: dict[tuple, dict[float, str]] = {}
+    fp = d / "failed.csv"
+    if fp.exists():
+        with open(fp, newline="", encoding="utf-8") as f:
+            for row in csv.DictReader(f):
+                try:                      # payload 파손은 실패목록_ID결합 이 잡는다
+                    c = json.loads(row.get("condition") or "{}")
+                    fam = _family_key(lambda k: c[k])
+                    nz = round(float(c["noise"]), 12)
+                except Exception:  # noqa: BLE001
+                    continue
+                failed.setdefault(fam, {})[nz] = str(row.get("cond_id"))
+
+    axes_noise = ((man or {}).get("effective_axes") or {}).get("noise")
+    if axes_noise:
+        want_noise = sorted({round(float(x), 12) for x in axes_noise})
+        want_src = "manifest.effective_axes.noise"
+    else:
+        want_noise = sorted({n for m in (*obs.values(), *failed.values())
+                             for n in m})
+        want_src = "관측∪실패에서 유도 (manifest 에 effective_axes.noise 가 없다)"
+
+    bad_set, split = [], []
+    for fam in sorted(set(obs) | set(failed), key=str):
+        got = sorted(set(obs.get(fam, {})) | set(failed.get(fam, {})))
+        if got != want_noise:
+            bad_set.append(f"{fam}: {got} ≠ {want_noise}")
+        if obs.get(fam) and failed.get(fam):
+            split.append(f"{fam}: 관측 {sorted(obs[fam])} / 실패 "
+                         f"{sorted(failed[fam])}")
+
+    bad_q, bad_v = [], []
+    for fam, members in sorted(obs.items(), key=lambda kv: str(kv[0])):
+        if len(members) < 2:
+            continue
+        ref_nz = min(members)
+        ref = members[ref_nz]
+        for nz, cur in sorted(members.items()):
+            if nz == ref_nz:
+                continue
+            dq = abs(cur["q"] - ref["q"])
+            if not (dq <= _FAMILY_Q_TOL):
+                bad_q.append(f"{fam}: q_mah noise={ref_nz} {ref['q']:.6g} vs "
+                             f"noise={nz} {cur['q']:.6g} (Δ={dq:.3g})")
+            for col in ("v_pe", "v_ne", "v_full"):
+                a, b = ref["v"][col], cur["v"][col]
+                if len(a) != len(b):
+                    bad_v.append(f"{fam}: {col} 길이 {len(a)} vs {len(b)} "
+                                 f"(noise={ref_nz} vs {nz})")
+                    continue
+                dv = float(np.max(np.abs(a - b))) if len(a) else 0.0
+                if not (dv <= _FAMILY_V_TOL):
+                    bad_v.append(f"{fam}: max|Δ{col}| = {dv:.3g} "
+                                 f"(noise={ref_nz} vs {nz})")
+
+    checks["관측_noise_family_구성"] = (
+        not bad_set and not dup,
+        f"{len(bad_set)}개 family 의 noise 계열이 기대 집합과 다르다 "
+        f"[기대 {want_noise}, 출처 {want_src}]: {bad_set[:3]}"
+        + (f" · 같은 family 에 같은 noise 가 둘 이상: {dup[:3]}" if dup else ""))
+    checks["관측_noise_family_분할"] = (
+        not split,
+        f"{len(split)}개 family 가 관측과 실패로 갈렸다: {split[:3]} — 불능 "
+        f"판정은 noise 를 보지 않으므로 계열은 함께 관측이거나 함께 실패여야 "
+        f"한다. 갈렸다면 조건마다 다른 기준이 적용된 것이고, 인용 모집단의 "
+        f"분모가 조건별로 다른 규칙으로 정해졌다는 뜻이다")
+    checks["관측_noise_family_q"] = (
+        not bad_q,
+        f"{len(bad_q)}개 family 에서 noise 수준마다 q_mah 가 다르다 "
+        f"(허용 {_FAMILY_Q_TOL} mAh): {bad_q[:3]} — noise 는 solve 뒤에 "
+        f"입히므로 같은 truth 의 용량은 noise 와 무관해야 한다. fitting 이 "
+        f"r=q/q_ref 를 여기서 만든다")
+    checks["관측_noise_family_곡선"] = (
+        not bad_v,
+        f"{len(bad_v)}개 family 에서 noise 수준마다 clean 곡선이 다르다 "
+        f"(허용 {_FAMILY_V_TOL} V): {bad_v[:3]} — 같은 truth 의 noise 계열은 "
+        f"clean 곡선이 같아야 하고, 다르면 'noise 가 커지면 복원이 나빠진다' 는 "
+        f"비교의 전제가 성립하지 않는다")
+    return checks
+
+
 def validate_curves_provenance(curves_dir, repo_root=None) -> dict:
     """★ F74 — 곡선 producer 를 **독립적으로** 검증한다 (8차 리뷰 발견 1).
 
@@ -1058,6 +1208,10 @@ def validate_curves_provenance(curves_dir, repo_root=None) -> dict:
         #   label 을 truth 로 채점하므로 복원오차·degeneracy 의 분자·분모가
         #   직접 달라진다. 위조가 아니라 **정상 실행의 회귀**를 잡는 검사다.
         checks.update(_verify_observed_curves(cp, spec))
+        # ★ 14차 발견 1 — 위 검사는 전부 `groupby("cond_id")` 안이라 조건을
+        #   하나씩만 본다. noise 계열(같은 truth) 사이의 invariant 는 조건별
+        #   루프로는 원리적으로 볼 수 없어 **별도 pass** 로 돌린다.
+        checks.update(_verify_noise_families(cp, d, man))
         fail_ids = load_failed(d)
         if n_fail and not (d / "failed.csv").exists():
             checks["실패목록_존재"] = (False,
