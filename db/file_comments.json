@@ -7,6 +7,104 @@
    "who": ""
   }
  ],
+ "litdb/figures/deng2026_polysulfate_layer_moisture_oxidation_lpsc/fig_1.png": [
+  {
+   "at": "2026-08-28 10:50",
+   "id": "c1787881819158",
+   "text": "PS-LPSC 제조 과정은 Figure 1a에 나와 있다. LPSC 분말을 DTD가 녹아 있는 IBB 용액에 담근다. LPSC 표면 S²⁻ 음이온의 친핵공격에 의해 고리형 DTD 단량체가 개환중합을 일으키고, 그 결과 전해질 입자 위에 poly(sulfate)(PS) 개질층이 in situ로 형성된다. 이 메커니즘을 검증하기 위해, 잘 정의된 S²⁻ 공급원으로 Li₂S를 써서 동일 조건에서 DTD 중합을 개시시켰다. 생성물의 multi-scale 분석 결과 Li₂S 위에도 PS층이 성공적으로 형성됨이 확인되어, S²⁻ 종이 실제로 DTD의 개환중합을 개시할 수 있음을 입증했다(Figure S1–S3).",
+   "who": ""
+  }
+ ],
+ "litdb/figures/deng2026_polysulfate_layer_moisture_oxidation_lpsc/fig_2.png": [
+  {
+   "at": "2026-08-28 11:00",
+   "id": "c1787882409245",
+   "text": "GPC 결과(Figure S9), 이 폴리머는 수평균분자량(Mn) 약 7,000, 분산도(PDI) 1.85로, 폴리머성 물질이며 분자량 분포가 좁음을 확인했다. TOF-SIMS도 이 결과를 뒷받침한다. Figure 2c와 S10에서 보듯, PS-LPSC 표면에서 산소 함유 파편(PO⁻, PO₂⁻, SO⁻, SO₂⁻)과 탄소 함유 파편(C₂HO⁻ 등)의 강도가 pristine LPSC보다 뚜렷하게 컸다. 나아가 이들의 공간 분포가 개질층 위치와 잘 일치했다.",
+   "who": ""
+  }
+ ],
+ "litdb/figures/deng2026_polysulfate_layer_moisture_oxidation_lpsc/fig_4.png": [
+  {
+   "at": "2026-08-28 12:57",
+   "id": "c1787889421786",
+   "text": "Figure 4a에서 PS-LPSC ASSB의 초기 쿨롱효율(ICE)은 **87.2%**로 LPSC ASSB(83.0%)를 앞섰다. 이는 PS 개질층이 LPSC 전해질과 NCM955 입자의 직접 접촉을 줄여 계면 부반응을 효과적으로 억제함을 확인해 준다. CV 결과도 이를 뒷받침한다(Figure 4b,c). LPSC-ASSB의 CV는 세 쌍의 뚜렷한 산화-환원 피크를 보였다. 3.71, 4.07, 4.21 V의 산화 피크는 각각 NCM955의 육방정→단사정(H1→M), 단사정→육방정(M→H2), 육방정→다른 육방정(H2→H3) 상전이에 해당하고, 대응하는 환원 피크는 3.65, 4.01, 4.12 V에 나타났다. 초기 3사이클 동안 LPSC-ASSB의 피크 강도가 점진적으로 감소해 지속적인 계면 부반응을 시사했다. 반면 PS-LPSC ASSB는 훨씬 강하고 안정한 산화-환원 피크와 잘 겹치는 CV 곡선을 보였다.",
+   "who": ""
+  },
+  {
+   "at": "2026-08-28 13:00",
+   "id": "c1787889623278",
+   "text": "3.71, 4.07, and 4.21 V correspond to the sequential phase transitions of NCM955 from hexagonal to monoclinic (H1→M), monoclinic to hexagonal (M→H2), and hexagonal to another hexagonal structure (H2→H3)",
+   "who": ""
+  }
+ ],
+ "litdb/figures/deng2026_polysulfate_layer_moisture_oxidation_lpsc/fig_S4.png": [
+  {
+   "at": "2026-08-28 10:56",
+   "id": "c1787882188920",
+   "text": "0.1M이 가장 좋아",
+   "who": ""
+  }
+ ],
+ "litdb/figures/deng2026_polysulfate_layer_moisture_oxidation_lpsc/fig_S5.png": [
+  {
+   "at": "2026-08-28 10:57",
+   "id": "c1787882223119",
+   "text": "0.1 M DTD / 12 h",
+   "who": ""
+  }
+ ],
+ "litdb/papers/deng2026_polysulfate_layer_moisture_oxidation_lpsc.md": [
+  {
+   "anchor": "1) 황화물 SE 의 두 고질병. Li₆PS₅Cl(이하 LPSC) 같은 황화물은 σ 가 높고(>1 mS/cm) 무르기까지 해서 좋은데, 두 가지가 발목을 잡는다. - 산화 불안정: S²⁻ 가 환원력이 강해 고전압 산화물 양극(LCO·NCM)과 닿으면 산화분해된다 → 전자·이온 절연성 부",
+   "at": "2026-08-28 10:41",
+   "edited_at": "2026-08-28 10:42",
+   "history": [
+    {
+     "at": "2026-08-28 10:41",
+     "text": "황화물계 고체전해질은 높은 이온전도도와 우수한 계면 정합성(interfacial conformability) 덕분에 전고체전지(ASSB)의 유력한 후보다. 하지만 본질적인 산화 불안정성과 높은 수분 민감성 때문에 실제 적용이 막혀 있다."
+    },
+    {
+     "at": "2026-08-28 10:42",
+     "text": "황화물계 고체전해질은 높은 이온전도도와 우수한 계면 정합성(interfacial conformability) 덕분에 전고체전지(ASSB)의 유력한 후보다. 하지만 본질적인** 산화 불안정성과 높은 수분 민감성** 때문에 실제 적용이 막혀 있다."
+    },
+    {
+     "at": "2026-08-28 10:42",
+     "text": "황화물계 고체전해질은 높은 이온전도도와 우수한 계면 정합성(interfacial conformability) 덕분에 전고체전지(ASSB)의 유력한 후보다. 하지만 본질적인** 산화 불안정성과 높은 수분 민감성** 때문에 실제 적용이 막혀 있다.\n\n본 연구에서는 LPSC(Li₆PS₅Cl) 표면에 존재하는 친핵성 S²⁻ 음이온을 이용해 DTD(ethylene sulfate)의 개환중합(ring-opening polymerization)을 개시시키는, in situ·비파괴적(non-destructive) 표면 개질 전략을 제안한다. 그 결과 균일하고 치밀한 poly(sulfate)(PS) 개질층이 형성된다. 이 층이 전해질을 수분 및 고전압 양극과의 직접 접촉으로부터 차단해, 내습성과 산화 안정성을 동시에 크게 향상시킨다."
+    }
+   ],
+   "id": "c1787881311157",
+   "text": "황화물계 고체전해질은 높은 이온전도도와 우수한 계면 정합성(interfacial conformability) 덕분에 전고체전지(ASSB)의 유력한 후보다. 하지만 본질적인** 산화 불안정성과 높은 수분 민감성** 때문에 실제 적용이 막혀 있다.\n\n본 연구에서는 LPSC(Li₆PS₅Cl) 표면에 존재하는 친**핵성 S²⁻ 음이온을 이용해 DTD(ethylene sulfate)의 개환중합(ring-opening polymerization)을 개시시키는, in situ·비파괴적(non-destructive) 표면 개질 전략을 제안한다. **그 결과 균일하고 치밀한 poly(sulfate)(PS) 개질층이 형성된다. 이 층이 전해질을 수분 및 고전압 양극과의 직접 접촉으로부터 차단해, 내습성과 산화 안정성을 동시에 크게 향상시킨다.",
+   "who": ""
+  },
+  {
+   "anchor": "3) 이 논문의 수(手). LPSC 표면의 S²⁻ 를 친핵체(nucleophile) 로 써서, 고리형 단량체 DTD(1,3,2-dioxathiolane 2,2-dioxide = ethylene sulfate, 흔히 리튬전지 전해액 첨가제)의 개환중합(ring-opening polymer",
+   "at": "2026-08-28 10:46",
+   "edited_at": "2026-08-28 10:46",
+   "history": [
+    {
+     "at": "2026-08-28 10:46",
+     "text": "이런 고려에서 본 연구는 LPSC에 대해 온화하고 비파괴적인 표면 개질 전략을 제안하여, 구조 손상이라는 흔한 함정을 우회한다. 이 방식에서 LPSC 표면의 S²⁻는 DTD의 in situ 개환중합 개시제로 작용해 보호성 poly(sulfate)(PS) 층을 형성한다. 표면 전반에 걸친 S²⁻의 다중 사이트 개시(multi-site initiation) 덕분에 생성된 PS층은 균일하고 치밀하며, 전해질의 내습성과 산화 안정성을 크게 향상시킨다. 결정적으로 이 전략은 LPSC bulk 구조에 거의 악영향을 주지 않는다."
+    }
+   ],
+   "id": "c1787881593801",
+   "text": "이런 고려에서 본 연구는 LPSC에 대해 온화하고 비파괴적인 표면 개질 전략을 제안하여, 구조 손상이라는 흔한 함정을 우회한다. **이 방식에서 LPSC 표면의 S²⁻는 DTD의 in situ 개환중합 개시제로 작용해 보호성 poly(sulfate)(PS) 층을 형성한다. **표면 전반에 걸친 S²⁻의 다중 사이트 개시(multi-site initiation) 덕분에 생성된 PS층은 균일하고 치밀하며, 전해질의 내습성과 산화 안정성을 크게 향상시킨다. 결정적으로 이 전략은 LPSC bulk 구조에 거의 악영향을 주지 않는다.",
+   "who": ""
+  },
+  {
+   "anchor": "4) 왜 하필 DTD 인가 (본문이 직접 밝힌 두 이유). ① 분자가 대칭이고 중심 S 가 전자결핍이라 친핵공격에 개환이 잘 된다. ② 생성된 poly(sulfate) 자체가 내산화성이 강해 고전압 차단막으로 쓸 만하다.",
+   "at": "2026-08-28 10:52",
+   "edited_at": "2026-08-28 10:52",
+   "history": [
+    {
+     "at": "2026-08-28 10:52",
+     "text": "First, its symmetric molecular structure and highly electron-deficient center allow it to readily undergo ring-opening polymerization initiated by nucleophilic attack from S²⁻ anions. Secondly, the resulting PS has strong antioxidant capacity, and, as a surface modification layer, can effectively enhance the oxidation stability of LPSC."
+    }
+   ],
+   "id": "c1787881922677",
+   "text": "First, its symmetric molecular structure and** highly electron-deficient center** allow it to readily undergo ring-opening polymerization initiated by nucleophilic attack from S²⁻ anions. Secondly, the resulting PS has strong antioxidant capacity, and, as a surface modification layer, can effectively enhance the oxidation stability of LPSC.",
+   "who": ""
+  }
+ ],
  "litdb/papers/kim2025_csp_metastable_edge_sharing_sse.md": [
   {
    "anchor": "안정성 순위. 마커 모양 3종(파란 원 corner / 주황 사각 edge / 초록 삼각 mixed)만 읽으면 논문의 결론이 여기서 끝난다: 왼쪽(안정)이 바닥에 붙어 있고 오른쪽(준안정)이 떠 있다.",

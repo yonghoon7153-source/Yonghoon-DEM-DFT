@@ -1,4 +1,18 @@
 {
+ "litdb/papers/deng2026_polysulfate_layer_moisture_oxidation_lpsc.md": [
+  {
+   "at": "2026-08-28 10:42",
+   "color": "yellow",
+   "id": "h1787881345481",
+   "text": "A Surface Non-Destructive Modification"
+  },
+  {
+   "at": "2026-08-28 10:51",
+   "color": "yellow",
+   "id": "h1787881886630",
+   "text": "4) 왜 하필 DTD 인가 (본문이 직접 밝힌 두 이유). ① 분자가 대칭이고 중심 S 가 전자결핍이라 친핵공격에 개환이 잘 된다. ② 생성된 poly(sulfate) 자체가 내산화성이 강해 고전압 차단막으로 쓸 만하다."
+  }
+ ],
  "litdb/papers/kim2025_csp_metastable_edge_sharing_sse.md": [
   {
    "at": "2026-08-28 00:24",
