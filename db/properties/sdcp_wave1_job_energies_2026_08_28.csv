@@ -1,4 +1,4 @@
-job,role,fragment,pose,seed_branch,phase,n_ions,E_total_eV,mag_total_muB,slab_basin,slab_ref_job,E_slab_ref_eV,mol_ref_job,E_mol_ref_eV,E_ads_eV,note
+﻿job,role,fragment,pose,seed_branch,phase,n_ions,E_total_eV,mag_total_muB,slab_basin,slab_ref_job,E_slab_ref_eV,mol_ref_job,E_mol_ref_eV,E_ads_eV,note
 clean_slab__afm2424_net4,slab_ref,clean_slab,,net4,static,192,-944.846393,5.998855,B,,,,,,
 clean_slab__afm2424_net4_basinA,slab_ref,clean_slab,,net4_basinA,static,192,-944.896111,3.999393,A,,,,,,
 clean_slab__afm2424_pm1,slab_ref,clean_slab,,pm1,dense,192,-944.977299,0.000003,pm1,,,,,,

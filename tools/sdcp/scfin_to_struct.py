@@ -764,9 +764,14 @@ def energy_rows(metas, refs, allow_not_citable=False):
     return rows
 
 
+#: CSV 인코딩 — repo 규약(tools/ionic/*.py 다수와 동일). ⚠ 이것 없이 쓰면 **Excel 이
+#: UTF-8 을 못 알아보고 한글 note 열이 깨진다** (2026-08-28 실측 제보). Origin 도 같다.
+CSV_ENCODING = "utf-8-sig"
+
+
 def write_energy_csv(path, rows):
     os.makedirs(os.path.dirname(os.path.abspath(path)) or ".", exist_ok=True)
-    with open(path, "w", newline="") as f:
+    with open(path, "w", newline="", encoding=CSV_ENCODING) as f:
         w = csv.DictWriter(f, fieldnames=CSV_COLS)
         w.writeheader()
         for r in rows:
@@ -897,6 +902,12 @@ def selftest():
             f"(재현) 편기 전에는 내부 결합이 면내 접촉으로 보인다: {naive[0]:.3f} A")
         chk(fixed[0] > 9.0,
             f"음성: 편 좌표로는 옆 셀 분자까지 {fixed[0]:.3f} A — 내부 결합을 안 센다")
+
+        # ⛔ 음성 7 — CSV 에 BOM 이 없으면 Excel 이 한글 note 열을 깨뜨린다 (실측 제보)
+        cp = os.path.join(td, "e.csv")
+        write_energy_csv(cp, [dict(rg, note="한글 사유")])
+        head = open(cp, "rb").read(3)
+        chk(head == b"\xef\xbb\xbf", f"음성: CSV 는 utf-8-sig(BOM) — repo 규약. 실제 앞 3바이트 {head!r}")
 
         # 구조 3종이 실제로 써지고, .vesta 는 ASCII 전용 + CRLF (CLAUDE.md)
         emit_struct(p, os.path.join(td, "o"), quiet=True)
