@@ -221,13 +221,86 @@
       return;
     }
     rows.sort(function (a, b) { return a.t - b.t; });
-    var prev = head ? head.offsetHeight + 6 : 0;
-    rows.forEach(function (r) {
-      var t = Math.max(r.t, prev);
-      r.c.style.top = t + "px";
-      prev = t + r.c.offsetHeight + 8;
+
+    /* ⛔ 2026-08-28 (1저자: "중복된 층에서는 1열, 2열 느낌으로 나눠서") —
+     *   예전에는 카드가 겹치면 **무조건 아래로 밀었다.** 그러면 본문의 그 줄과
+     *   나란히 있어야 할 카드가 한참 아래로 내려가 **어느 줄 메모인지 알 수 없어졌다.**
+     *   이제 자기 자리에 못 놓으면 **옆 열로** 간다. 아래로 미는 건 두 열이 다 찼을 때만.
+     *
+     *   그리고 폭은 **필요할 때만** 반으로 준다: 옆 열 카드와 세로로 겹치는 카드만
+     *   좁아지고, 혼자 있는 메모는 여백 통폭을 다 쓴다 (그림 첨부가 답답하지 않게).
+     *
+     * ⛔ 못 하는 것
+     *   · 3열 이상은 안 만든다. 여백이 그만큼 넓지 않고, 열이 늘수록 "어느 줄 메모인가"가
+     *     오히려 흐려진다.
+     *   · 좁은 화면(폭 < MIN_2COL)에서는 그냥 1열로 민다 — 반으로 가르면 글이 안 읽힌다.
+     */
+    var PAD = 10, GAP = 8, MIN_2COL = 360, OVER = 300;   // OVER = 고칠 때 본문 위로 넘는 폭
+    var W = cur.gut.clientWidth || 0;
+    var nCol = W >= MIN_2COL ? 2 : 1;
+    var fullW = W - PAD * 2;
+    var colW = Math.floor((fullW - GAP * (nCol - 1)) / nCol);
+    var top0 = head ? head.offsetHeight + 6 : 0;
+
+    function isEd(c) {
+      return c.classList.contains("dn-editing") || c.classList.contains("dn-draft");
+    }
+    function setW(c, w, left) {
+      c.style.right = "auto";
+      c.style.left = left + "px";
+      c.style.width = w + "px";
+    }
+
+    /* ⛔⛔ 순서가 중요하다 (2026-08-28 브라우저 테스트가 잡았다) — 폭을 바꾸면 글이
+     *   접혀 **높이가 달라진다.** 첫 판은 통폭에서 잰 높이로 배치해 놓고 반폭을 입혀서
+     *   카드 두 쌍이 겹쳤다. ⇒ ① 폭을 정하고 ② 다시 재고 ③ 그 다음 자리를 잡는다. */
+
+    // ① 반폭으로 한 번 재서 "이 카드가 다음 카드와 부딪히나" 를 본다
+    if (nCol > 1) {
+      rows.forEach(function (r) { if (!isEd(r.c)) setW(r.c, colW, PAD); });
+    }
+    var hHalf = rows.map(function (r) { return r.c.offsetHeight; });
+    var half = rows.map(function () { return false; });
+    if (nCol > 1) {
+      for (var i = 0; i < rows.length - 1; i++) {
+        if (rows[i + 1].t < rows[i].t + hHalf[i] + GAP) { half[i] = true; half[i + 1] = true; }
+      }
+    }
+
+    // ② 정해진 폭을 입히고 **다시 잰다**
+    rows.forEach(function (r, i) {
+      if (isEd(r.c) && nCol > 1) setW(r.c, fullW + OVER, PAD - OVER);
+      else setW(r.c, half[i] ? colW : fullW, PAD);
+      r.c.classList.toggle("dn-half", half[i] && !isEd(r.c));
     });
-    cur.gut.style.minHeight = (prev + 24) + "px";
+    var hh = rows.map(function (r) { return r.c.offsetHeight; });
+
+    // ③ 자리 잡기. **통폭 카드는 두 열을 다 막는다** — 안 그러면 옆 열 카드가 겹친다.
+    var bottom = [];
+    for (var z0 = 0; z0 < nCol; z0++) bottom.push(top0);
+    rows.forEach(function (r, i) {
+      var t, k = 0;
+      if (!half[i]) {                       // 통폭 — 모든 열이 비어야 놓는다
+        t = r.t;
+        for (var q = 0; q < nCol; q++) if (bottom[q] > t) t = bottom[q];
+        for (var q2 = 0; q2 < nCol; q2++) bottom[q2] = t + hh[i] + GAP;
+      } else {
+        k = -1;
+        for (var j = 0; j < nCol; j++) if (r.t >= bottom[j]) { k = j; break; }
+        if (k < 0) {                        // 두 열 다 찼다 → 먼저 비는 열로 민다
+          k = 0;
+          for (var m = 1; m < nCol; m++) if (bottom[m] < bottom[k]) k = m;
+        }
+        t = Math.max(r.t, bottom[k]);
+        bottom[k] = t + hh[i] + GAP;
+        r.c.style.left = (PAD + k * (colW + GAP)) + "px";
+      }
+      r.c.style.top = t + "px";
+    });
+
+    var deep = top0;
+    for (var z = 0; z < bottom.length; z++) if (bottom[z] > deep) deep = bottom[z];
+    cur.gut.style.minHeight = (deep + 24) + "px";
   }
 
   /* 카드·본문 자리로 데려가고 잠깐 반짝인다. /notes 목록에서 넘어올 때 쓴다. */

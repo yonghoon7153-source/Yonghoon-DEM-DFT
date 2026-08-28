@@ -1157,21 +1157,30 @@ tr.row-dim{opacity:.62}
 /* ── 여백 메모 (docnote.js) — Word 식. 본문 옆에 카드가 붙는다 ────────────
    ⚠ 카드는 gut 안에서 absolute 다. gut 과 본문이 **같은 스크롤 상자** 안에 있어야
      rect 차이가 스크롤과 무관해진다 (.modal-body / .concept-wrap 이 그 상자). */
+/* 여백 메모 폭 — **한 곳에서만 정한다.** 두 배치(모달·개념페이지)가 같은 값을 쓴다.
+   2026-08-28: 288 → 460. 그림 첨부가 들어가면서 288px 카드가 답답해졌다(1저자).
+   넓힌 대신 **겹치는 카드만 2열로** 갈라서(layout()), 안 겹치는 메모는 통폭을 다 쓴다. */
+:root{--dn-w:460px}
 .dnote-gut{position:relative;min-width:0}
-#pmbox.dnote-on{max-width:min(1180px,96vw)!important;display:grid;
-  grid-template-columns:minmax(0,1fr) 288px;
+#pmbox.dnote-on{max-width:min(1400px,96vw)!important;display:grid;
+  grid-template-columns:minmax(0,1fr) var(--dn-w);
   grid-template-areas:"head head" "body gut"}
 #pmbox.dnote-on .modal-head{grid-area:head}
 #pmbox.dnote-on #pbody{grid-area:body}
 #pmbox.dnote-on .dnote-gut{grid-area:gut;border-left:1px solid var(--border);
   background:var(--bg);padding:0 0 20px}
-.concept-wrap.dnote-on{grid-template-columns:220px minmax(0,1fr) 288px}
+.concept-wrap.dnote-on{grid-template-columns:220px minmax(0,1fr) var(--dn-w)}
 .concept-wrap.dnote-on .dnote-gut{border-left:1px solid var(--border);padding-left:14px}
-@media(max-width:1100px){
+/* ⚠ 여백이 넓어진 만큼 한 열로 접는 지점도 올린다 (1100 → 1280).
+   그전 값으로 두면 1150px 화면에서 본문이 눌린다. */
+@media(max-width:1280px){
   #pmbox.dnote-on{grid-template-columns:minmax(0,1fr);grid-template-areas:"head" "body" "gut"}
   .concept-wrap.dnote-on{grid-template-columns:1fr}
   /* 좁은 화면에선 자리 맞춤을 포기하고 그냥 아래에 쌓는다 — 억지로 맞추면 겹친다 */
-  .dnote-gut .dn-card,.dnote-gut .dn-draft{position:static!important;margin:0 0 8px}
+  /* ⚠ layout() 이 인라인으로 잡아 둔 left/width 를 **되돌려야** 한다 —
+     안 그러면 접힌 화면에서 카드가 반폭으로 남거나 왼쪽으로 삐져나간다. */
+  .dnote-gut .dn-card,.dnote-gut .dn-draft{position:static!important;margin:0 0 8px;
+    left:auto!important;right:auto!important;width:auto!important}
 }
 .dn-h{position:sticky;top:0;z-index:2;background:var(--bg);padding:10px 12px 8px;
   font-size:.78rem;font-weight:700;color:var(--dim);display:flex;gap:6px;align-items:baseline}
@@ -1193,18 +1202,22 @@ tr.row-dim{opacity:.62}
 .dn-quote{font-size:.68rem;color:var(--muted);border-left:2px solid var(--border2);
   padding-left:6px;margin-bottom:5px;max-height:3.2em;overflow:hidden}
 .dn-text{white-space:pre-wrap;word-break:break-word}
+/* 첨부 그림은 **카드 폭에 맞춘다** (1저자 2026-08-28: "사진같은거는 이 사이즈에 맞게").
+   세로로도 잘라 둔다 — 긴 캡처 하나가 여백을 통째로 밀어내면 다른 메모가 안 보인다.
+   눌러서 원본을 새 창으로 연다. */
+.dn-text .note-img,.cmt-t .note-img{max-width:100%;max-height:min(46vh,420px);
+  object-fit:contain;object-position:left top}
+.dn-card.dn-half .note-img{max-height:min(30vh,260px)}
 .dn-text code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.92em;
   background:var(--code-bg,#f1f5f9);border-radius:4px;padding:0 3px}
 .dn-in{width:100%;box-sizing:border-box;font:inherit;font-size:.76rem;
   border:1px solid var(--border);border-radius:6px;padding:6px 7px;background:var(--surface);
   color:inherit;resize:vertical;min-height:4.6em;overflow-y:auto;line-height:1.5}
 /* 고칠 때는 카드가 **왼쪽으로 넓어진다** (1저자 2026-08-27: "수정할 때 창이 작아져서 불편해").
-   여백 칸이 288px 이라 다섯 줄짜리 메모가 세 줄 상자에 눌렸다 — 읽을 때보다 덜 보였다.
-   본문 위로 잠깐 덮는 형태다(z-index:3 은 이미 있다). 칸이 아래로 접히는 좁은 화면에서는
-   덮을 곳이 없으므로 넓히지 않는다. */
-@media(min-width:1101px){
-  .dn-card.dn-editing{left:-300px;box-shadow:0 14px 38px rgba(16,24,40,.24)}
-  .dn-draft{left:-300px;box-shadow:0 14px 38px rgba(16,24,40,.24)}
+   ⛔ 2026-08-28 — 넓히는 **좌표는 이제 layout() 이 인라인으로** 잡는다(OVER=300).
+   여기 `left` 를 두면 인라인에 져서 아무 일도 안 일어난다. 그림자만 남긴다. */
+@media(min-width:1281px){
+  .dn-card.dn-editing,.dn-draft{box-shadow:0 14px 38px rgba(16,24,40,.24)}
 }
 .dn-act{display:flex;justify-content:flex-end;margin-top:6px}
 /* 메모 글 안의 인라인 서식 (Ctrl+B / Ctrl+H) */

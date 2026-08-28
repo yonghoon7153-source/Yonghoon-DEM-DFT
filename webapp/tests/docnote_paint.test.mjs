@@ -165,6 +165,71 @@ if (!box.err) {
       + `카드 left ${Math.round(box.cardLeft)}px)`);
 }
 
+/* ── 2열 배치 (1저자 2026-08-28: "중복된 층에서는 1열, 2열 느낌으로 나눠서") ──
+ * 예전에는 자리가 겹치면 **무조건 아래로 밀었다** — 본문 그 줄과 나란히 있어야 할
+ * 카드가 한참 내려가 어느 줄 메모인지 알 수 없었다. 이제 옆 열로 간다.
+ * 그리고 폭은 **겹칠 때만** 반이다 — 혼자 있는 메모는 통폭을 다 쓴다. */
+/* ⚠ 위 시험들은 메모 **하나**로 돌았다. 겹침 배치는 그걸로 못 본다 —
+ *   서로 가까운 자리에 붙은 메모 셋으로 다시 올린다. */
+await pg.evaluate(() => {
+  const mk = (id, anchor, text) => ({ id, at: "2026-08-28 13:17", anchor, text });
+  const many = [
+    mk("m1", "한 노드 안에 통째로", "첫 메모. 여기에 **굵게** 와 여러 줄이 들어간다.\n둘째 줄\n셋째 줄"),
+    mk("m2", "굵은 글자", "둘째 메모 — 바로 아래 문단이라 첫 메모와 자리가 겹친다."),
+    mk("m3", "치환/도핑", "셋째 메모. 목록 항목에 붙는다."),
+  ];
+  window.fetch = function (url) {
+    const hi = String(url).includes("/api/highlights/");
+    return Promise.resolve({ ok: true, json: () => Promise.resolve({ items: hi ? [] : many }) });
+  };
+  window.unmountDocNotes();
+  window.mountDocNotes(document.getElementById("body"), "kb/x.md",
+                       document.getElementById("pmbox"));
+});
+await pg.waitForFunction(() => document.querySelectorAll(".dn-card").length >= 3,
+                         null, { timeout: 5000 }).catch(() => {});
+
+const cols = await pg.evaluate(() => {
+  const g = document.querySelector(".dnote-gut");
+  if (!g) return { err: "여백칸이 없다" };
+  const cards = [...g.querySelectorAll(".dn-card")];
+  if (cards.length < 2) return { err: `카드가 ${cards.length}개뿐이다` };
+  const gr = g.getBoundingClientRect();
+  const r = cards.map((c) => {
+    const b = c.getBoundingClientRect();
+    return { left: Math.round(b.left - gr.left), w: Math.round(b.width),
+             top: Math.round(b.top - gr.top), h: Math.round(b.height),
+             half: c.classList.contains("dn-half") };
+  });
+  return { gutW: Math.round(gr.width), cards: r };
+});
+chk(!cols.err, `[배치] 카드가 여럿 있다 ${cols.err || ""}`);
+if (!cols.err) {
+  chk(cols.gutW >= 380,
+      `[배치·실측] 여백칸이 넓어졌다 (${cols.gutW}px, 예전 288px)`);
+  // 겹치는 카드는 서로 다른 left 를 갖는다 = 2열로 갈렸다
+  const halves = cols.cards.filter((c) => c.half);
+  const lefts = new Set(cols.cards.map((c) => c.left));
+  chk(lefts.size >= (halves.length ? 2 : 1),
+      `[배치] 겹친 카드는 **다른 열**에 놓인다 (열 시작점 ${[...lefts].join("/")}px, `
+      + `반폭 ${halves.length}장)`);
+  // ⛔ 음성: 어느 카드도 여백칸 밖으로 삐져나가지 않는다 (고치는 중인 카드는 제외)
+  const over = cols.cards.filter((c) => c.left < -1 || c.left + c.w > cols.gutW + 1);
+  chk(over.length === 0,
+      `[배치·음성] 카드가 여백칸을 벗어나지 않는다 (${over.length}장 벗어남)`);
+  // ⛔ 음성: 같은 열에서 세로로 겹치지 않는다 — 겹치면 글이 가려진다
+  const bad = [];
+  for (let i = 0; i < cols.cards.length; i++) {
+    for (let j = i + 1; j < cols.cards.length; j++) {
+      const a = cols.cards[i], c = cols.cards[j];
+      const xo = a.left < c.left + c.w && c.left < a.left + a.w;
+      const yo = a.top < c.top + c.h && c.top < a.top + a.h;
+      if (xo && yo) bad.push([i, j]);
+    }
+  }
+  chk(bad.length === 0, `[배치·음성] 카드끼리 겹치지 않는다 (${bad.length}쌍 겹침)`);
+}
+
 await b.close();
 console.log(ok ? "docnote paint PASS" : "docnote paint FAIL");
 process.exit(ok ? 0 : 1);
