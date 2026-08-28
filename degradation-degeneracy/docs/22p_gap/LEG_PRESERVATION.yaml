@@ -131,8 +131,8 @@ cohorts:
       사실은 회귀가 확인하는 것이지 인용의 근거가 아니다.
     pin:
       schema_version: 3
-      compute_sha256: a77cf2254298f796
-      row_projection_py_sha256: ed3275db2cb322c0
+      compute_sha256: 6f44ae4a3ce50d4d
+      row_projection_py_sha256: 6f4d9d21d38947b9
       src_scoring_py_sha256: 69e69cb046f4b4ae
       analysis_spec_sha256: 43d74dd385b1f66d28cc371dd7ebbd00fc0289323e0a515114eb2b8d45d56271
       producer_semantic_sha256: bbb1c4d6fc982610
@@ -287,7 +287,7 @@ legs:
       #   commit SHA·실행 시각·dirty 여부는 stamp 로 뺐다 (그것들을 core 에
       #   두면 커밋된 영수증이 원리적으로 재생 불가능해진다).
       verification_receipt: docs/22p_gap/receipts/paired_fixed5_v4.validate.yaml
-      verification_receipt_core_sha256: 53ac1b9fe583a872b755229bd5278a50c0e7d4074d60dbbbcc3f82ecae0bec96
+      verification_receipt_core_sha256: b9322e4495d976a4c01fcc563d4756def9c4156568d4e41a8e3be8c0647fa8d8
       verification_receipt_generator: docs/22p_gap/make_receipt.py
       empty_root_restore: true       # 원본 results/ 에 접근하지 않고 복원해 검증
       rescored_from_restored_fits: true

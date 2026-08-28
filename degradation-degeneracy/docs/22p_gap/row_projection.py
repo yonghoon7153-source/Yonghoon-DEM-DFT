@@ -1744,6 +1744,22 @@ def _promote_generation(stage: Path, auth: "_Authority") -> dict:
           그것은 설계 항목으로 신고한다.
         """
         _PublishLock.assert_held_for(lock, out)
+        # ★ 48차 — **쓰기 권한은 살아 있는 원장에서 다시 본다.**
+        #
+        #   43차가 못 박은 것: 게시 도중 cohort 가 얼면 옛 writer 는 져야 한다
+        #   (freeze 는 진행 중인 게시보다 우선하는 전환이다). 그때는 `status` 가
+        #   봉인 안에 있어서 seal 대조가 그 일을 대신 해 줬다.
+        #
+        #   48차에 `status` 를 봉인에서 뺐다 — 얼린 cohort 의 CURRENT 가 영원히
+        #   재검증 불가가 되기 때문이다. 그래서 그 검사를 **원래 있어야 할
+        #   자리**로 옮긴다: 봉인(과거의 사본)이 아니라 임계 구역 안에서 읽는
+        #   **현재의 사실**. 두 요구는 충돌하지 않는다 — 서로 다른 질문이었다.
+        _live = _ledger_cohort(out)
+        if _live.get("status") != "active":
+            raise SystemExit(
+                f"✗ 원장 cohort 가 게시 도중에 active 가 아니게 됐다 "
+                f"({_live.get('status')!r}) — freeze 는 진행 중인 게시보다 "
+                "우선한다. 아무 것도 옮기지 않고 멈춘다")
         if auth.ledger_seal_now() != auth.seal:
             raise SystemExit(
                 "✗ 원장이 게시 도중에 바뀌었다 — 옛 근거로 게시하지 않는다. "
@@ -2374,7 +2390,9 @@ def _assert_sealable(node, where: str = "cohort") -> None:
 #:
 #:     `runtime` 과 산문 필드는 여전히 authority 밖이다 — 그것은 관측 기록이고,
 #:     바뀌어도 이미 게시된 바이트의 의미를 바꾸지 않는다.
-_LEDGER_AUTHORITY = ("cohort_id", "dir", "legs", "pin", "cross_leg_comparison")
+#: 원장 cohort record 가 **만족해야 하는** 필드 (타입·enum 검사 대상).
+_LEDGER_AUTHORITY = ("cohort_id", "dir", "status", "legs",
+                     "pin", "cross_leg_comparison")
 
 #: ★ 48차 — `status` 는 **봉인에서 뺐다.**
 #:
@@ -2395,6 +2413,12 @@ _LEDGER_AUTHORITY = ("cohort_id", "dir", "legs", "pin", "cross_leg_comparison")
 #:   원장**을 읽어 막는다. 그쪽이 맞는 자리다: 봉인은 과거의 사본이고 쓰기
 #:   권한은 현재의 사실이다.
 _LEDGER_UNSEALED = ("status",)
+
+#: 실제로 **봉인되는** 부분집합. 검사 대상(`_LEDGER_AUTHORITY`)과 봉인 대상은
+#: 다른 질문이다 — 48차에 그 둘을 한 tuple 로 섞어 두었다가 `status` 를 봉인에서
+#: 빼면서 **검사까지 함께 사라졌다** (`..._ledger_status_is_an_exact_enum` 4건이
+#: 잡았다). 검사는 "원장이 위생적인가", 봉인은 "게시된 바이트의 뜻이 고정인가".
+_LEDGER_SEALED = tuple(k for k in _LEDGER_AUTHORITY if k not in _LEDGER_UNSEALED)
 
 #: 원장이 인정하는 **정확한** cohort 상태 (46차 #9). 45차는 "비어 있지 않은
 #: 문자열" 만 봤으므로 오타(`Active`)·새로 지어낸 값(`retired`)이 그대로
@@ -2429,7 +2453,15 @@ _PIN_SEALED = ("schema_version", "analysis_spec_sha256",
 
 
 def _ledger_authority(cohort: dict) -> dict:
-    """원장 record 에서 **게시 authority 필드**를 닫힌 타입으로 뽑는다."""
+    """원장 record 를 **검사하고** 그 중 봉인 대상만 닫힌 타입으로 뽑는다.
+
+    ★ 48차 — 검사 대상(`_LEDGER_AUTHORITY`)과 봉인 대상(`_LEDGER_SEALED`)은
+      **다른 질문**이다. 한 tuple 로 섞어 두었다가 `status` 를 봉인에서 빼면서
+      그 필드의 enum 검사까지 함께 사라졌다 — `..._ledger_status_is_an_exact_enum`
+      4건이 그것을 잡았다. 검사는 "원장이 위생적인가"이고 봉인은 "게시된
+      바이트의 뜻이 고정인가"이다. 이제 loop 는 `_LEDGER_AUTHORITY` 전체를
+      검사하고, `rec` 에는 `_LEDGER_SEALED` 만 담는다.
+    """
     # 전체 record 가 canonical domain 안인지 먼저 본다 — authority 밖 필드라도
     # canonicalizer 가 접을 수 있는 타입(tuple·date·NaN)은 원장 위생 문제다.
     _assert_sealable(cohort)
@@ -2481,7 +2513,7 @@ def _ledger_authority(cohort: dict) -> dict:
                 f"명부가 {len(rec.get('legs') or ())} 개다 "
                 f"({sorted(rec.get('legs') or ())}). multi-leg 라면 "
                 f"`allowed_within_cohort` 를 쓰라")
-        else:
+        elif k in _LEDGER_SEALED:
             rec[k] = v
     return rec
 
