@@ -2077,3 +2077,33 @@ def test_comment_edit_route_exists():
     assert '"PATCH"' in app_py, "PATCH 라우트가 없다"
     assert 'method: "PATCH"' in cjs, "UI 에 수정 저장이 없다"
     assert "cmt-edit" in cjs and "cmt-save" in cjs, "수정 버튼/저장 버튼이 없다"
+
+
+def test_glossary_lit_field_is_separate_from_ours():
+    """용어 카드의 **문헌에서 본 것** 칸이 「우리 계산」과 **따로** 있다.
+
+    ⛔ litdb 규율: 문헌 소환값과 우리 절대값을 섞지 않는다. 한 칸에 넣으면 섞인다.
+      2026-08-28 신설, 첫 사례는 NEB ← tu2026 의 계면 CI-NEB (끝점의 결합 위상이
+      달라서 그 장벽이 이동 장벽이 아니라는 것).
+    """
+    import sys as _sys
+    _sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+    from glossary import GLOSSARY
+
+    neb = [g for g in GLOSSARY if g["id"] == "neb"]
+    assert neb, "neb 용어가 없다"
+    neb = neb[0]
+    assert neb.get("lit"), "neb 에 lit 이 없다"
+    # 두 칸이 **각각** 있어야 한다 — 하나로 합치면 규율이 깨진다
+    assert neb.get("ours") and neb["lit"] != neb["ours"], "lit 과 ours 가 같은 칸이면 안 된다"
+    for must in ("결합 위상", "tu2026", "인용 금지"):
+        assert must in neb["lit"], f"lit 에 '{must}' 가 없다"
+    # ⛔ 음성: lit 은 **선택 필드**다. 없는 용어가 있어야 정상이고, 없어도 페이지가 떠야 한다
+    assert any(not g.get("lit") for g in GLOSSARY), \
+        "lit 이 모든 용어에 있으면 선택 필드가 아니다 — 템플릿의 {% if %} 가 시험되지 않는다"
+
+    from app import app as flask_app
+    with flask_app.test_client() as c:
+        h = c.get("/glossary").get_data(as_text=True)
+    assert "문헌에서 본 것" in h and 'gd lit' in h, "lit 칸이 안 그려진다"
+    assert 'gd ours' in h, "우리 계산 칸이 사라졌다"
