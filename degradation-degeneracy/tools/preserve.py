@@ -4275,6 +4275,18 @@ class LegClaim:
             _atomic_write_json(self.path, rec)
 
 
+#: ★ 49차 P0-6 — **정본 잠금 순서.** 두 lock 을 함께 쥐는 경로는 반드시 이
+#: 순서로 잡는다. 반대로 잡는 경로가 하나라도 있으면 deadlock 이고, 순서가
+#: 어디에도 적혀 있지 않으면 다음 사람이 반대로 잡는다.
+#:
+#:   claim  — `<claims_root>/<leg>.claim.lock` (phase receipt 의 임계 구역)
+#:   ledger — `LEG_PRESERVATION.yaml.lock` (계획·roster·실행 기록)
+#:
+#: 이유: claim 은 실행 하나에 국한되고 원장은 전역이다. 좁은 것을 먼저 잡아야
+#: 전역 lock 을 쥔 채 좁은 것을 기다리는 시간이 생기지 않는다.
+LOCK_ORDER = ("claim", "ledger")
+
+
 @contextlib.contextmanager
 def _ledger_lock(path: Path):
     """원장 전이의 **임계 구역** (48차 P0-6).
@@ -4632,6 +4644,14 @@ def release_leg_run(leg_id: str, token=None, token_file=None, ledger=None,
             "요구한다 — 소유 증명 없이 남의 실행권을 취소할 수 없다")
     if token is None:
         token = read_token_file(token_file)
+    # ★ 49차 P0-6 — 이미 닫힌 다리는 되돌릴 수 없다. crash 로 남은 claim 이면
+    #   그 정리는 `finalize_leg()` 이 한다 (원장이 이미 executed 이므로).
+    if _already_finalized(leg_id, token, ledger=ledger,
+                          claims_root=claims_root) is not None:
+        raise PreserveError(
+            "plan",
+            f"{leg_id!r} 은 이미 executed 로 닫혔다 — 되돌릴 수 없다. 남은 "
+            "claim 정리는 `--mode finalize` 가 한다")
     claim = resume_claim(leg_id, claims_root, token=token, ledger=ledger)
     _abandon_claim(claim, ledger=ledger)
     if token_file is not None:
@@ -4764,6 +4784,48 @@ def _verify_declared_bundle(evidence: dict, repo_root=None) -> list:
     return bad
 
 
+def _already_finalized(leg_id: str, token: str, ledger=None,
+                       claims_root=None) -> dict | None:
+    """이미 닫힌 다리인가 — **소유 증명을 확인한 뒤에만** 그렇다고 답한다 (49차 P0-6).
+
+    48차는 원장 write 와 claim 삭제 사이에 죽으면 그 다리가 갇혔다: 계획은
+    `executed` 라 `resume_claim()` 이 거부하고, claim 파일이 남아 있으니 새
+    실행도 거부된다 — 지울 수도 닫을 수도 없었다.
+
+    복구의 근거는 **원장 자신**이다. 계획이 `executed` 이고 실행 기록의
+    `attempt_id` 가 살아남은 claim 의 것과 같으면 그 다리는 닫혔다. 별도 journal
+    파일을 두지 않는다 — 그러면 "닫혔다" 의 정본이 둘이 되고, 이 저장소가
+    반복해서 고쳐 온 실패 형태가 바로 그것이다 (정본이 둘이면 약한 쪽이 실효
+    규칙이 된다). 원장 write 는 `os.replace` 로 원자적이므로 옛 상태 아니면 새
+    상태이고, 옛 상태면 그냥 다시 닫으면 된다.
+
+    token 은 살아남은 claim 의 verifier 와 맞아야 한다 — 남의 claim 을 아무나
+    치울 수 없다.
+    """
+    want = _token_verifier(token)
+    cp = _claim_path(leg_id, claims_root)
+    if not cp.is_file():
+        return None
+    rec = json.loads(cp.read_text(encoding="utf-8"))
+    if set(rec) != set(CLAIM_KEYS):
+        return None
+    doc = _load_ledger(ledger)
+    row = next((e for e in doc.get("planned") or []
+                if e.get("leg_id") == leg_id), None)
+    leg = next((e for e in doc.get("legs") or []
+                if e.get("leg_id") == leg_id), None)
+    if row is None or leg is None or row.get("status") != "executed":
+        return None
+    if ((leg.get("evidence") or {}).get("attempt_id") != rec["attempt_id"]):
+        return None
+    if not secrets.compare_digest(want, str(rec["attempt_verifier"])):
+        raise PreserveError(
+            "plan",
+            f"{leg_id!r} 은 이미 닫혔고, 그 실행의 소유 증명이 아니다 — "
+            "남의 claim 을 치울 수 없다")
+    return {"attempt_id": rec["attempt_id"]}
+
+
 def finalize_leg(leg_id: str, evidence: dict, ledger=None,
                  claims_root=None, *, token: str | None = None,
                  token_file=None) -> dict:
@@ -4786,12 +4848,21 @@ def finalize_leg(leg_id: str, evidence: dict, ledger=None,
             "요구한다 — 소유 증명 없이 원장을 닫을 수 없다")
     if token is None:
         token = read_token_file(token_file)
+
+    # ★ 49차 P0-6 — **복구가 먼저다.** 원장을 쓴 뒤 claim 을 지우기 전에 죽으면
+    #   그 다리는 갇힌다 (계획은 executed 라 재개가 거부되고, claim 파일이
+    #   남아 새 실행도 거부된다). 이미 닫힌 것을 다시 닫으라고 하면 남은
+    #   정리만 하고 같은 답을 돌려준다 — idempotent.
+    done = _already_finalized(leg_id, token, ledger=ledger,
+                              claims_root=claims_root)
+    if done is not None:
+        _claim_path(leg_id, claims_root).unlink(missing_ok=True)
+        if token_file is not None:
+            Path(token_file).unlink(missing_ok=True)
+        return {"leg_id": leg_id, "attempt_id": done["attempt_id"],
+                "status": "executed"}
+
     claim = resume_claim(leg_id, claims_root, token=token, ledger=ledger)
-    missing = [p for p in CLAIM_PHASES if p not in claim.phases_done()]
-    if missing:
-        raise PreserveError(
-            "plan", f"{leg_id!r} 의 phase 가 남았다: {missing} — 모든 phase 가 "
-                    "끝나야 executed 로 닫는다")
     _assert_json_domain(evidence, "evidence")
     # ★ 48차 P0-4 — 묶음 주장을 **디스크에서** 확인한다. 확인 전에는 아무 것도
     #   쓰지 않는다 (거부하면서 기록을 남기면 그것이 곧 오염이다).
@@ -4813,57 +4884,94 @@ def finalize_leg(leg_id: str, evidence: dict, ledger=None,
             f"({evidence['leg_source_digest']} ≠ {claim.source_digest})")
 
     path = Path(ledger or DEFAULT_LEDGER)
-    # ★ 48차 P0-6 — 읽기·수정·쓰기 **전체**가 임계 구역 안이다. 밖에서 읽고
-    #   안에서 쓰면 읽은 값이 이미 낡았을 수 있으므로 의미가 없다.
-    with _ledger_lock(path):
-        doc = yaml.safe_load(path.read_text(encoding="utf-8")) or {}
-        plan = next((e for e in doc.get("planned") or []
-                     if e.get("leg_id") == leg_id), None)
-        if plan is None:
-            raise PreserveError("plan", f"계획 index 에 {leg_id!r} 이 없다")
-        if plan.get("status") not in ("planned", "running"):
+    # ★ 49차 P0-6 — 잠금은 **정본 순서**(`LOCK_ORDER`)로 claim → 원장이다.
+    #   48차는 claim 을 잠그지 않고 두 번 읽었다: 한 번은 `phases_done()` 으로
+    #   검사하고 한 번은 원장 lock 안에서 receipt 를 옮겨 적었다. 그 사이에
+    #   phase 가 바뀌면 **검사한 것과 기록한 것이 다르다.**
+    with _ledger_lock(_claim_path(leg_id, claims_root)):
+        # receipt 를 **한 번만** 읽는다 — 이 snapshot 이 검사와 기록 모두의 근거다
+        snap = claim._read()
+        if snap["attempt_id"] != claim.attempt_id:
             raise PreserveError(
-                "plan", f"{leg_id!r} 의 계획 상태가 {plan.get('status')!r} 이라 "
-                        "executed 로 닫을 수 없다")
-        coh = next((c for c in doc.get("cohorts") or []
-                    if c.get("cohort_id") == claim.cohort_id), None)
-        if coh is None:
-            raise PreserveError("plan", f"원장에 cohort {claim.cohort_id!r} 이 없다")
-        if any(e.get("leg_id") == leg_id for e in doc.get("legs") or []):
+                "plan", f"claim 이 다른 attempt 로 바뀌었다 "
+                        f"({snap['attempt_id']} ≠ {claim.attempt_id})")
+        missing = [p for p in CLAIM_PHASES
+                   if p not in (snap.get("phases") or {})]
+        if missing:
             raise PreserveError(
-                "plan", f"{leg_id!r} 의 실행 기록이 이미 있다 — 같은 다리를 두 번 "
-                        "닫을 수 없다")
+                "plan", f"{leg_id!r} 의 phase 가 남았다: {missing} — 모든 phase 가 "
+                        "끝나야 executed 로 닫는다")
+        # ★ 48차 P0-6 — 읽기·수정·쓰기 **전체**가 임계 구역 안이다. 밖에서 읽고
+        #   안에서 쓰면 읽은 값이 이미 낡았을 수 있으므로 의미가 없다.
+        with _ledger_lock(path):
+            # ★ 49차 P0-6 — authority 를 **lock 안에서 다시** 본다. 48차는
+            #   `resume_claim()` 이 lock 밖에서 한 번 보고 말았으므로, 그 뒤
+            #   사람이 cohort 를 얼려도 이미 통과한 finalize 가 그대로 썼다.
+            assert_planned_index_consistent(ledger)
+            live = assert_planned_leg(leg_id, claim.source_digest,
+                                      ledger=ledger,
+                                      allow=("planned", "running"))
+            if live["cohort_id"] != claim.cohort_id:
+                raise PreserveError(
+                    "plan", f"{leg_id!r} 의 cohort 가 claim 이후 바뀌었다 "
+                            f"({claim.cohort_id} → {live['cohort_id']})")
+            if live["run_spec_digest"] != claim.run_spec_digest:
+                raise PreserveError(
+                    "plan", f"{leg_id!r} 의 승인된 run_spec 이 claim 이후 바뀌었다")
+            doc = yaml.safe_load(path.read_text(encoding="utf-8")) or {}
+            plan = next((e for e in doc.get("planned") or []
+                         if e.get("leg_id") == leg_id), None)
+            if plan is None:
+                raise PreserveError("plan", f"계획 index 에 {leg_id!r} 이 없다")
+            if plan.get("status") not in ("planned", "running"):
+                raise PreserveError(
+                    "plan", f"{leg_id!r} 의 계획 상태가 {plan.get('status')!r} 이라 "
+                            "executed 로 닫을 수 없다")
+            coh = next((c for c in doc.get("cohorts") or []
+                        if c.get("cohort_id") == claim.cohort_id), None)
+            if coh is None:
+                raise PreserveError("plan",
+                                    f"원장에 cohort {claim.cohort_id!r} 이 없다")
+            if any(e.get("leg_id") == leg_id for e in doc.get("legs") or []):
+                raise PreserveError(
+                    "plan", f"{leg_id!r} 의 실행 기록이 이미 있다 — 같은 다리를 두 번 "
+                            "닫을 수 없다")
 
-        plan["status"] = "executed"
-        coh["prospective_legs"] = sorted(
-            x for x in (coh.get("prospective_legs") or []) if x != leg_id)
-        coh["legs"] = sorted(set(coh.get("legs") or []) | {leg_id})
-        # ★ 48차 P0-4 — **검증한 만큼만** 적고, lifecycle 이 실제로 남긴
-        #   증거(phase receipt)를 기록에 넣는다. 47차는 phase receipt 를 다
-        #   버리고 caller 의 주장만 옮겼다 — 그러면 원장에 남는 것은 "누가
-        #   그렇다고 했다" 뿐이고 "무엇이 실제로 돌았다" 가 아니다.
-        rec_evidence = dict(evidence)
-        rec_evidence["phases"] = {
-            ph: claim._read()["phases"][ph] for ph in CLAIM_PHASES}
-        rec_evidence["attempt_id"] = claim.attempt_id
-        rec_evidence["run_spec_digest"] = claim.run_spec_digest
-        # ★ 49차 P0-4 — 계약 §8 은 **세 축의 튜플**을 요구한다. 48차는
-        #   `preservation_status` 하나만 적고 나머지를 비웠으므로 그 기록은
-        #   `test_registry_rejects_impossible_status_tuples` 를 통과할 수
-        #   없었다 — production 이 쓴 원장을 자기 lint 가 거부하는 상태였다.
-        #   묶음을 확인하지 못한 다리는 `preservation_pending` 이고, 나머지 두
-        #   축은 계약 제약이 강제하는 바닥값이다.
-        doc.setdefault("legs", []).append(
-            {"leg_id": leg_id,
-             "preservation_status": "full_bundle" if claimed_bundle
-             else "preservation_pending",
-             # 묶음을 확인했어도 **검증**은 별개 단계다 (validator 가 복원해
-             # 재채점한다). finalize 는 그것을 하지 않았으므로 unvalidated 다.
-             "validation_status": PENDING_VALIDATION_STATUS,
-             "inference_role": PENDING_INFERENCE_ROLE,
-             "evidence": rec_evidence})
-        _atomic_write_text(path, yaml.safe_dump(doc, allow_unicode=True,
-                                                sort_keys=False))
+            plan["status"] = "executed"
+            coh["prospective_legs"] = sorted(
+                x for x in (coh.get("prospective_legs") or []) if x != leg_id)
+            coh["legs"] = sorted(set(coh.get("legs") or []) | {leg_id})
+            # ★ 48차 P0-4 — **검증한 만큼만** 적고, lifecycle 이 실제로 남긴
+            #   증거(phase receipt)를 기록에 넣는다. 47차는 phase receipt 를 다
+            #   버리고 caller 의 주장만 옮겼다 — 그러면 원장에 남는 것은 "누가
+            #   그렇다고 했다" 뿐이고 "무엇이 실제로 돌았다" 가 아니다.
+            # ★ 49차 P0-6 — 옮기는 것은 위에서 **한 번 읽은** snapshot 이다.
+            #   48차는 여기서 claim 을 다시 읽었으므로, 검사한 receipt 와
+            #   기록한 receipt 가 다를 수 있었다.
+            rec_evidence = dict(evidence)
+            rec_evidence["phases"] = {ph: snap["phases"][ph]
+                                      for ph in CLAIM_PHASES}
+            rec_evidence["attempt_id"] = claim.attempt_id
+            rec_evidence["run_spec_digest"] = claim.run_spec_digest
+            # ★ 49차 P0-4 — 계약 §8 은 **세 축의 튜플**을 요구한다. 48차는
+            #   `preservation_status` 하나만 적고 나머지를 비웠으므로 그 기록은
+            #   `test_registry_rejects_impossible_status_tuples` 를 통과할 수
+            #   없었다 — production 이 쓴 원장을 자기 lint 가 거부하는 상태였다.
+            #   묶음을 확인하지 못한 다리는 `preservation_pending` 이고, 나머지
+            #   두 축은 계약 제약이 강제하는 바닥값이다.
+            doc.setdefault("legs", []).append(
+                {"leg_id": leg_id,
+                 "preservation_status": "full_bundle" if claimed_bundle
+                 else "preservation_pending",
+                 # 묶음을 확인했어도 **검증**은 별개 단계다 (validator 가 복원해
+                 # 재채점한다). finalize 는 그것을 하지 않았으므로 unvalidated 다.
+                 "validation_status": PENDING_VALIDATION_STATUS,
+                 "inference_role": PENDING_INFERENCE_ROLE,
+                 "evidence": rec_evidence})
+            # 원장 write 는 원자적이고, 여기부터 claim 삭제 사이에 죽어도
+            # `_already_finalized()` 가 **원장에서** 그 사실을 알아낸다.
+            _atomic_write_text(path, yaml.safe_dump(doc, allow_unicode=True,
+                                                    sort_keys=False))
     claim.path.unlink(missing_ok=True)
     # 실행권이 닫혔으므로 소유 증명도 남길 이유가 없다 — 쓸모를 잃은
     # credential 을 디스크에 두는 것은 그 자체가 노출면이다.

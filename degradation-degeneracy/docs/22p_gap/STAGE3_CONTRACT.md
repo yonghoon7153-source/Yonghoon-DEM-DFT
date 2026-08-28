@@ -1002,6 +1002,41 @@ reader(`read_current()`)도 그 봉인값을 지금의 원장과 대조한다. �
 하나라도 바뀌면 그 cohort 의 기존 pointer 는 **더 이상 authority 가 아니다**
 (게시도 읽기도 거부된다). 바꾸려면 **새 cohort ID 와 새 출력 디렉터리**로 간다.
 
+**★ 48차 — `status` 는 검사하되 봉인하지 않는다.** 봉인의 일은 게시된 바이트의
+**뜻**이 흔들리지 않게 하는 것이다: 어느 다리들인가(`legs`) · 무엇이
+만들었는가(`pin`) · 어떤 비교가 허용되는가(`cross_leg_comparison`) · 어디인가
+(`cohort_id`·`dir`). lifecycle 상태는 그 뜻의 일부가 아니므로
+`_LEDGER_SEALED = _LEDGER_AUTHORITY − ("status",)` 다. 얼리는 것이 이미 게시된
+generation 을 무효로 만들면, freeze 가 곧 데이터 파괴가 된다.
+
+**★ 49차 P0 — 그래서 해동은 봉인이 아니라 단조 journal 이 막는다.** `status`
+가 봉인 밖이면 그것은 원장 파일의 한 줄일 뿐이고, `active → frozen → active`
+로 되돌린 뒤 게시하면 얼렸다는 사실이 아무 데도 남지 않는다. 얼린다는 것은
+"이 cohort 는 더 이상 자라지 않는다" 는 선언인데, 조용히 되돌릴 수 있으면
+선언이 아니다.
+
+```
+docs/22p_gap/COHORT_LIFECYCLE.jsonl     append-only · 해시 사슬
+docs/22p_gap/COHORT_LIFECYCLE.head      사슬의 끝 anchor
+_LIFECYCLE_KEYS  = ("seq", "at", "cohort_id", "from", "to", "note", "prev")
+_LIFECYCLE_MOVES = ((None,"active"), (None,"frozen"), ("active","frozen"))
+```
+
+`frozen → active` 는 `_LIFECYCLE_MOVES` 에 **없다** — 없는 상태를 막는 가장 싼
+방법은 그 상태를 만들 수 없게 하는 것이다. 게시 경로는 **첫 write 전에**
+`assert_not_thawed()` 를 지나고, 임계 구역 안에서 다시 지난다. `frozen_reason`
+이 남아 있는 cohort 도 status 와 무관하게 거부한다 (journal 도입 전에 얼린
+g1·g2 를 덮는다). frozen cohort 의 `CURRENT` 는 **계속 읽힌다** — 막아야 하는
+것은 읽기가 아니라 새 게시다.
+
+사슬은 중간을 지키지만 마지막 줄은 지키지 못한다 (뒤따르는 줄이 없어 그
+digest 를 담을 곳이 없다). 그래서 끝 digest 를 `.head` 에 따로 고정한다.
+**한계**: 원장·journal·anchor 세 파일 모두에 쓸 수 있는 주체는 역사를 다시 쓸
+수 있다. 여기서 막는 것은 "조용한" 되돌림이고, 그 밖은 tracked 파일의 diff 를
+사람이 보는 것이 바깥 통제다 (`flock` 이 같은 기계만 가정하는 것과 같은 종류의
+경계다 — §13.3.1). 회귀
+`test_every_frozen_cohort_is_frozen_in_the_journal_too` 가 세 곳의 일치를 본다.
+
 **45차의 좁히기가 지나쳤다.** 45차는 `pin` 을 통째로 authority 밖에 뒀는데,
 `pin` 에는 두 종류가 섞여 있다:
 

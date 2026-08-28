@@ -1,0 +1,2 @@
+{"at":"2026-08-28T17:13:27Z","cohort_id":"g1_2026_08_20","from":null,"note":"49차에 전이 journal 을 도입하기 전에 이미 frozen 이던 cohort 다 — 원장에서 소급 기입했다 (이후 freeze 는 `freeze_cohort()` 가 기록한다).","prev":"","seq":0,"to":"frozen"}
+{"at":"2026-08-28T17:13:27Z","cohort_id":"g2_2026_08_25","from":null,"note":"49차에 전이 journal 을 도입하기 전에 이미 frozen 이던 cohort 다 — 원장에서 소급 기입했다 (이후 freeze 는 `freeze_cohort()` 가 기록한다).","prev":"f77a12a5cf3b04d10e304e29cb574d059b9ccfe74984bac9768fdc2b957b6174","seq":1,"to":"frozen"}

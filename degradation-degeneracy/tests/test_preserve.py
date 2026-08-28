@@ -7051,3 +7051,162 @@ def test_fit_refuses_when_its_grid_phase_is_missing(tmp_path):
     c = attach_leg_run("L", tok, ledger=led, claims_root=claims)
     with pytest.raises(PreserveError):
         assert_phase_input_binding(c, "a" * 64)
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# 49차 P0-6 — lock 순서와 finalize 의 임계 구역
+#
+# 48차 `finalize_leg()` 은 claim 을 **잠그지 않고** 두 번 읽었다: 한 번은
+# `phases_done()` 으로 검사하고, 한 번은 원장 lock 안에서 receipt 를 옮겨 적었다.
+# 그 사이에 phase 가 바뀌면 **검사한 것과 기록한 것이 다르다.** 그리고 원장
+# authority 는 lock **밖에서** 한 번 보고 말았으므로, 그 뒤 cohort 가 얼어도
+# 이미 통과한 finalize 는 그대로 썼다. 마지막으로 원장을 쓴 뒤 claim 을 지우기
+# 전에 죽으면 그 다리는 **다시 닫을 수도 지울 수도 없는** 상태로 남았다.
+# ─────────────────────────────────────────────────────────────────────────────
+
+def _ready_claim(tmp_path):
+    from tools.preserve import open_leg_run, attach_leg_run
+
+    led = _lifecycle_ledger(tmp_path)
+    claims = tmp_path / "claims"
+    tok = tmp_path / "L.token"
+    open_leg_run("L", _RUN_SPEC_L, "0123456789abcdef", tok,
+                 ledger=led, claims_root=claims)
+    c = attach_leg_run("L", tok, ledger=led, claims_root=claims)
+    for ph in ("grid", "fit"):
+        c.phase_done(ph, {"ok": True})
+    return led, claims, tok, c
+
+
+def test_the_canonical_lock_order_is_declared_and_finalize_holds_the_claim(tmp_path):
+    """★ 49차 P0-6 — finalize 는 claim lock 을 **쥐고** 원장으로 내려간다.
+
+    잠금 순서가 한 곳에 선언돼 있어야 서로 다른 경로가 반대로 잡아 deadlock 이
+    나지 않는다. 그리고 claim 을 쥐지 않으면 검사한 receipt 와 기록한 receipt 가
+    다를 수 있다 (48차는 잠그지 않고 두 번 읽었다).
+    """
+    import threading
+
+    from tools import preserve as P
+
+    assert P.LOCK_ORDER == ("claim", "ledger"), (
+        "정본 잠금 순서가 선언돼 있지 않다 — 두 경로가 반대로 잡으면 deadlock 이다")
+
+    led, claims, tok, c = _ready_claim(tmp_path)
+    done = threading.Event()
+
+    def _go():
+        try:
+            P.finalize_leg("L", {"leg_source_digest": "0123456789abcdef",
+                                 "cohorts": ["gA"]},
+                           ledger=led, claims_root=claims, token_file=tok)
+        finally:
+            done.set()
+
+    with P._ledger_lock(c.path):              # claim lock 을 테스트가 쥔다
+        t = threading.Thread(target=_go, daemon=True)
+        t.start()
+        assert not done.wait(1.5), (
+            "finalize 가 claim lock 을 쥐지 않고 지나갔다 — 검사한 receipt 와 "
+            "기록한 receipt 가 다를 수 있다")
+    t.join(timeout=30)
+    assert done.is_set(), "lock 을 놓았는데 finalize 가 끝나지 않았다"
+    assert P.planned_index(ledger=led)["L"]["status"] == "executed"
+
+
+def test_finalize_rechecks_the_whole_authority_inside_the_ledger_lock(tmp_path):
+    """★ 49차 P0-6 — 원장 lock **안에서** authority 를 다시 본다.
+
+    48차는 `resume_claim()` 이 lock 밖에서 한 번 보고 말았다. 그 뒤 사람이
+    cohort 를 얼려도 이미 통과한 finalize 는 그대로 원장을 썼다 — frozen cohort
+    에 실행 기록이 새로 생긴다.
+
+    잠금 순서(claim → 원장)를 이용해 정확히 그 창을 만든다: 원장 lock 을 테스트가
+    쥐고 있으면 finalize 는 claim lock 을 잡은 채 거기서 멈춘다. 그 사이에
+    원장을 바꾸고 놓아 준다.
+    """
+    import threading
+
+    import yaml
+
+    from tools import preserve as P
+
+    led, claims, tok, c = _ready_claim(tmp_path)
+    out: dict = {}
+
+    def _go():
+        try:
+            P.finalize_leg("L", {"leg_source_digest": "0123456789abcdef",
+                                 "cohorts": ["gA"]},
+                           ledger=led, claims_root=claims, token_file=tok)
+            out["rc"] = "ok"
+        except Exception as e:                             # noqa: BLE001
+            out["rc"] = f"{type(e).__name__}: {e}"
+
+    with P._ledger_lock(led):
+        t = threading.Thread(target=_go, daemon=True)
+        t.start()
+        t.join(timeout=1.5)
+        assert t.is_alive(), "finalize 가 원장 lock 을 기다리지 않았다"
+        doc = yaml.safe_load(led.read_text(encoding="utf-8"))
+        doc["cohorts"][0]["status"] = "frozen"             # 창 안에서 얼린다
+        P._atomic_write_text(led, yaml.safe_dump(doc, allow_unicode=True,
+                                                 sort_keys=False))
+    t.join(timeout=30)
+    assert out.get("rc", "").startswith("PreserveError"), (
+        f"얼어붙은 cohort 에 실행 기록을 썼다: {out.get('rc')!r}")
+    doc = yaml.safe_load(led.read_text(encoding="utf-8"))
+    assert not any(e["leg_id"] == "L" for e in doc.get("legs") or []), (
+        "거부하면서 실행 기록을 남겼다")
+
+
+def test_finalize_is_idempotent_after_a_crash_before_cleanup(tmp_path):
+    """★ 49차 P0-6 — 원장을 쓴 **뒤** 죽어도 다시 닫을 수 있다.
+
+    48차는 원장 write 와 claim 삭제 사이에 죽으면 그 다리가 갇혔다: 계획은
+    `executed` 라 `resume_claim()` 이 거부하고, claim 파일이 남아 있으니 새
+    실행도 거부된다 — 지울 수도 닫을 수도 없다.
+
+    복구의 근거는 **원장 자신**이다 (별도 journal 파일을 두지 않는다 — 그러면
+    "닫혔다" 의 정본이 둘이 된다).
+    """
+    import yaml
+
+    from tools import preserve as P
+
+    led, claims, tok, c = _ready_claim(tmp_path)
+    before = c.path.read_bytes()
+    token = tok.read_text(encoding="utf-8").strip()
+
+    P.finalize_leg("L", {"leg_source_digest": "0123456789abcdef",
+                         "cohorts": ["gA"]},
+                   ledger=led, claims_root=claims, token=token)
+    # crash 재현 — 원장은 이미 닫혔는데 claim 파일이 살아남았다
+    c.path.write_bytes(before)
+
+    again = P.finalize_leg("L", {"leg_source_digest": "0123456789abcdef",
+                                 "cohorts": ["gA"]},
+                           ledger=led, claims_root=claims, token=token)
+    assert again["status"] == "executed"
+    assert not c.path.exists(), "복구가 남은 claim 을 치우지 않았다"
+    doc = yaml.safe_load(led.read_text(encoding="utf-8"))
+    assert sum(1 for e in doc["legs"] if e["leg_id"] == "L") == 1, (
+        "복구가 실행 기록을 두 번 적었다")
+
+
+def test_the_crash_recovery_needs_the_owner_credential(tmp_path):
+    """복구도 소유 증명이 필요하다 — 남의 claim 을 아무나 치울 수 없다."""
+    from tools import preserve as P
+
+    led, claims, tok, c = _ready_claim(tmp_path)
+    before = c.path.read_bytes()
+    token = tok.read_text(encoding="utf-8").strip()
+    P.finalize_leg("L", {"leg_source_digest": "0123456789abcdef",
+                         "cohorts": ["gA"]},
+                   ledger=led, claims_root=claims, token=token)
+    c.path.write_bytes(before)
+
+    with pytest.raises(P.PreserveError):
+        P.finalize_leg("L", {"leg_source_digest": "0123456789abcdef"},
+                       ledger=led, claims_root=claims, token="0" * 32)
+    assert c.path.exists(), "틀린 증명으로 claim 이 치워졌다"

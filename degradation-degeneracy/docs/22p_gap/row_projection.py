@@ -1760,6 +1760,9 @@ def _promote_generation(stage: Path, auth: "_Authority") -> dict:
                 f"✗ 원장 cohort 가 게시 도중에 active 가 아니게 됐다 "
                 f"({_live.get('status')!r}) — freeze 는 진행 중인 게시보다 "
                 "우선한다. 아무 것도 옮기지 않고 멈춘다")
+        # ★ 49차 P0 — 임계 구역 안에서 **다시** 본다. 사전 점검은 판정 전용
+        #   사본이고 게시의 근거는 여기서 읽은 값이다.
+        assert_not_thawed(_live["cohort_id"])
         if auth.ledger_seal_now() != auth.seal:
             raise SystemExit(
                 "✗ 원장이 게시 도중에 바뀌었다 — 옛 근거로 게시하지 않는다. "
@@ -2070,6 +2073,17 @@ def promote_cohort_generation(stage: Path, out: Path, leg: str, *, roster) -> di
             f"✗ cohort {_pre.get('cohort_id')!r} 가 active 가 아니다 "
             f"({_pre.get('status')!r}) — frozen cohort 에는 쓸 수 없다. "
             "아무 것도 만들지 않고 멈춘다")
+    # ★ 49차 P0 — 원장이 `active` 라고 **말하는** 것과 이 cohort 가 얼린 적이
+    #   없다는 것은 다른 주장이다. 앞의 것은 사람이 고칠 수 있는 한 줄이고,
+    #   뒤의 것은 되돌릴 수 없는 journal 이 답한다.
+    assert_not_thawed(_pre["cohort_id"])
+    # ★ 49차 P0 — 얼렸다는 **흔적**이 원장에 남아 있는데 status 만 active 인
+    #   경우도 해동이다. journal 이 생기기 전에 얼린 cohort(g1·g2)까지 덮는다.
+    if _pre.get("frozen_reason"):
+        raise SystemExit(
+            f"✗ cohort {_pre['cohort_id']!r} 에 `frozen_reason` 이 남아 있다 "
+            f"({_pre['frozen_reason']!r}) — status 만 active 로 되돌린 해동이다. "
+            "얼린 cohort 는 자라지 않는다. 새 cohort 를 만들어라")
     _pre_roster = set(_pre.get("legs") or ())
     if claimed != _pre_roster:
         raise SystemExit(
@@ -2080,6 +2094,9 @@ def promote_cohort_generation(stage: Path, out: Path, leg: str, *, roster) -> di
             raise SystemExit(
                 f"✗ 신고한 roster {sorted(claimed)} 가 원장 "
                 f"{sorted(auth.roster)} 와 다르다 — 원장이 정본이다")
+        # 게시는 lifecycle 을 **움직이지 않는다.** 기록해야 할 전이는 freeze
+        # 하나뿐이고(`freeze_cohort()`), "아직 안 얼었다" 를 매 게시마다
+        # 적으면 journal 이 게시 로그가 된다 — 그것은 다른 파일의 일이다.
         return _promote_cohort_locked(stage, auth, leg)
 
 
@@ -2428,6 +2445,202 @@ _LEDGER_STATUS = ("active", "frozen")
 
 #: cohort 간 비교 정책 — 소비자가 지켜야 하는 값이므로 자유 문자열이 아니다.
 _CROSS_LEG_POLICY = ("allowed_within_cohort", "not_applicable_single_leg")
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# ★ 49차 P0 — **해동**(frozen → active)을 막는 단조 전이 journal
+#
+# 48차에 `status` 를 봉인에서 뺐다. freeze 가 이미 게시된 generation 을 무효로
+# 만들면 안 되기 때문이고, 그 결정 자체는 옳다. 그런데 그러면 `status` 는 원장
+# 파일의 한 줄일 뿐이고 `active → frozen → active` 로 되돌린 뒤 게시하면
+# **얼렸다는 사실이 아무 데도 남지 않는다.** 얼린다는 것은 "이 cohort 는 더
+# 이상 자라지 않는다" 는 선언인데, 조용히 되돌릴 수 있으면 선언이 아니다.
+#
+# 답은 봉인이 아니라 단조 journal 이다. append-only 이고 각 줄이 앞줄의 digest
+# 를 담으므로 중간을 들어내면 사슬이 끊긴다. `frozen → active` 전이는 **표현할
+# 수 없다** — 없는 상태를 막는 가장 싼 방법은 그 상태를 만들 수 없게 하는 것이다.
+#
+# frozen cohort 의 CURRENT 는 계속 읽힌다. 막아야 하는 것은 읽기가 아니라
+# **새 게시**다.
+# ─────────────────────────────────────────────────────────────────────────────
+
+#: 전이 journal 한 줄의 **닫힌** key 집합.
+_LIFECYCLE_KEYS = ("seq", "at", "cohort_id", "from", "to", "note", "prev")
+
+#: 허용 전이. 여기 없는 순서쌍은 만들 수 없다.
+_LIFECYCLE_MOVES = ((None, "active"), (None, "frozen"), ("active", "frozen"))
+
+
+def _lifecycle_path() -> Path:
+    """전이 journal 의 자리 — 원장 **옆**이다 (cohort 디렉터리 안이 아니다).
+
+    cohort 디렉터리 안에 두면 generation 완전성 검사의 열거 대상이 되어,
+    lifecycle 기록이 게시 내용의 일부인 것처럼 섞인다. 두 질문은 다르다.
+    """
+    return Path(REPO) / "docs" / "22p_gap" / "COHORT_LIFECYCLE.jsonl"
+
+
+def _lifecycle_head_path() -> Path:
+    """사슬의 **끝**을 고정하는 anchor.
+
+    해시 사슬은 중간을 지키지만 **마지막 줄은 지키지 못한다** — 뒤따르는 줄이
+    없어 그 digest 를 담을 곳이 없기 때문이다. 끝 digest 를 따로 두면 tip 을
+    위조하려는 사람은 두 파일을 **일관되게** 고쳐야 한다.
+
+    한계는 분명히 적는다: 두 파일 모두에 쓸 수 있는 주체는 역사를 다시 쓸 수
+    있다. 여기서 막는 것은 "조용한" 되돌림이고, 그 밖은 tracked 파일의 diff 를
+    사람이 보는 것이 바깥 통제다 (`flock` 이 같은 기계만 가정하는 것과 같은
+    종류의 경계다).
+    """
+    return _lifecycle_path().with_suffix(".head")
+
+
+def _lifecycle_line(rec: dict) -> str:
+    return json.dumps(rec, sort_keys=True, ensure_ascii=False,
+                      separators=(",", ":"))
+
+
+def read_lifecycle() -> list:
+    """journal 을 읽고 **사슬을 검증한다** (49차 P0).
+
+    append-only 를 파일 권한으로만 주장하면 그것은 주장이지 증거가 아니다.
+    `seq` 가 0부터 빈틈없이 이어지고, 각 줄의 `prev` 가 앞줄 바이트의 digest 와
+    같아야 한다. 중간을 고치거나 들어내면 여기서 보인다.
+    """
+    p = _lifecycle_path()
+    if not p.is_file():
+        return []
+    out, prev = [], ""
+    for i, raw in enumerate(p.read_text(encoding="utf-8").splitlines()):
+        if not raw.strip():
+            continue
+        try:
+            rec = json.loads(raw)
+        except json.JSONDecodeError as exc:
+            raise SystemExit(
+                f"✗ cohort lifecycle journal {i}번째 줄이 JSON 이 아니다: {exc}")
+        if type(rec) is not dict or set(rec) != set(_LIFECYCLE_KEYS):
+            raise SystemExit(
+                f"✗ cohort lifecycle journal {i}번째 줄의 schema 가 계약과 "
+                f"다르다: {sorted(rec) if type(rec) is dict else type(rec).__name__}")
+        if rec["seq"] != i:
+            raise SystemExit(
+                f"✗ cohort lifecycle journal 의 사슬이 끊겼다 — {i}번째 줄의 "
+                f"seq 가 {rec['seq']!r} 이다 (줄이 지워졌거나 순서가 바뀌었다)")
+        if rec["prev"] != prev:
+            raise SystemExit(
+                f"✗ cohort lifecycle journal 의 사슬이 끊겼다 — {i}번째 줄의 "
+                "prev 가 앞줄의 digest 와 다르다 (앞줄이 고쳐졌다)")
+        prev = hashlib.sha256(
+            _lifecycle_line(rec).encode("utf-8")).hexdigest()
+        out.append(rec)
+    hp = _lifecycle_head_path()
+    head = hp.read_text(encoding="utf-8").strip() if hp.is_file() else ""
+    if head != prev:
+        raise SystemExit(
+            f"✗ cohort lifecycle journal 의 사슬이 끊겼다 — 끝 digest 가 anchor "
+            f"와 다르다 ({prev[:16] or '없음'} ≠ {head[:16] or '없음'}). "
+            "마지막 줄이 고쳐졌거나 anchor 가 낡았다")
+    return out
+
+
+def cohort_lifecycle_state(cohort_id: str, entries=None):
+    """이 cohort 의 **마지막으로 기록된** 상태 (기록이 없으면 `None`)."""
+    last = None
+    for rec in (read_lifecycle() if entries is None else entries):
+        if rec["cohort_id"] == cohort_id:
+            last = rec["to"]
+    return last
+
+
+def _append_lifecycle(cohort_id: str, frm, to: str, note: str) -> dict:
+    """전이 하나를 **덧붙인다.** 허용 전이가 아니면 만들지 않는다."""
+    entries = read_lifecycle()
+    live = cohort_lifecycle_state(cohort_id, entries)
+    if live != frm:
+        raise SystemExit(
+            f"✗ cohort {cohort_id!r} 의 기록된 상태는 {live!r} 인데 {frm!r} 에서 "
+            "옮기려 한다 — 전이는 기록된 상태에서만 출발한다")
+    if (frm, to) not in _LIFECYCLE_MOVES:
+        raise SystemExit(
+            f"✗ 허용되지 않는 cohort 전이다: {frm!r} → {to!r} — 얼린 cohort 는 "
+            "되돌릴 수 없다 (그것이 freeze 의 뜻이다). 다시 쓰려면 **새 "
+            "cohort** 를 만들어라")
+    prev = ""
+    if entries:
+        prev = hashlib.sha256(
+            _lifecycle_line(entries[-1]).encode("utf-8")).hexdigest()
+    rec = {"seq": len(entries), "cohort_id": cohort_id, "from": frm, "to": to,
+           "note": str(note),
+           "at": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
+           "prev": prev}
+    p = _lifecycle_path()
+    p.parent.mkdir(parents=True, exist_ok=True)
+    body = "".join(_lifecycle_line(r) + "\n" for r in entries + [rec])
+    tmp = p.with_name(f".{p.name}.{uuid.uuid4().hex}.tmp")
+    tmp.write_text(body, encoding="utf-8")
+    fd = os.open(tmp, os.O_RDONLY)
+    try:
+        os.fsync(fd)
+    finally:
+        os.close(fd)
+    os.replace(tmp, p)
+    # 사슬의 끝을 anchor 에 고정한다 — journal **다음**에 쓴다. 그 사이에
+    # 죽으면 anchor 가 낡아 `read_lifecycle()` 이 fail-closed 로 멈춘다
+    # (조용히 통과하는 것보다 낫다).
+    hp = _lifecycle_head_path()
+    tip = hashlib.sha256(_lifecycle_line(rec).encode("utf-8")).hexdigest()
+    htmp = hp.with_name(f".{hp.name}.{uuid.uuid4().hex}.tmp")
+    htmp.write_text(tip + "\n", encoding="utf-8")
+    hfd = os.open(htmp, os.O_RDONLY)
+    try:
+        os.fsync(hfd)
+    finally:
+        os.close(hfd)
+    os.replace(htmp, hp)
+    dfd = os.open(p.parent, os.O_RDONLY)
+    try:
+        os.fsync(dfd)
+    finally:
+        os.close(dfd)
+    return rec
+
+
+def assert_not_thawed(cohort_id: str) -> None:
+    """얼린 적이 있는 cohort 인가 — **첫 write 전에** 묻는다 (49차 P0).
+
+    원장의 `status` 는 사람이 고칠 수 있는 한 줄이다. journal 은 되돌릴 수 없다.
+    """
+    if cohort_lifecycle_state(cohort_id) == "frozen":
+        raise SystemExit(
+            f"✗ cohort {cohort_id!r} 는 이미 frozen 으로 기록됐다 "
+            f"({_lifecycle_path()}) — 원장의 status 를 active 로 되돌려도 게시할 "
+            "수 없다. 얼린 cohort 는 자라지 않는다. 새 cohort 를 만들어라")
+
+
+def freeze_cohort(cohort_id: str, reason: str) -> dict:
+    """cohort 를 얼린다 — 원장과 전이 journal **양쪽**에 (49차 P0).
+
+    원장만 고치면 그 사실이 되돌릴 수 있는 한 줄로만 남는다.
+    """
+    import yaml
+
+    led = Path(REPO) / "docs" / "22p_gap" / "LEG_PRESERVATION.yaml"
+    doc = yaml.safe_load(led.read_text(encoding="utf-8")) or {}
+    row = next((c for c in doc.get("cohorts") or []
+                if c.get("cohort_id") == cohort_id), None)
+    if row is None:
+        raise SystemExit(f"✗ 원장에 cohort {cohort_id!r} 이 없다")
+    if row.get("status") != "active":
+        raise SystemExit(
+            f"✗ cohort {cohort_id!r} 의 상태가 {row.get('status')!r} 이라 "
+            "얼릴 수 없다")
+    rec = _append_lifecycle(cohort_id, "active", "frozen", reason)
+    row["status"] = "frozen"
+    row["frozen_reason"] = str(reason)
+    led.write_text(yaml.safe_dump(doc, allow_unicode=True, sort_keys=False),
+                   encoding="utf-8")
+    return rec
 
 #: producer identity 의 **닫힌** 필드 집합. 하나라도 빠지거나 남으면 거부한다.
 _PIN_AUTHORITY = ("schema_version", "compute_sha256", "row_projection_py_sha256",

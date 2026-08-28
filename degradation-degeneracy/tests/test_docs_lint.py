@@ -8023,6 +8023,124 @@ def test_the_ledger_status_is_an_exact_enum(tmp_path, bad_status):
     assert "status" in str(ei.value), str(ei.value)
 
 
+# ─────────────────────────────────────────────────────────────────────────────
+# 49차 P0 — **해동**(frozen → active)을 막는 단조 전이 journal
+#
+# 48차에 `status` 를 봉인에서 뺐다 (freeze 가 이미 게시된 generation 을 무효로
+# 만들면 안 되기 때문이다 — 옳은 결정이었다). 그런데 그러면 `status` 는 원장
+# 파일의 한 줄일 뿐이고, `active → frozen → active` 로 되돌린 뒤 게시하면
+# **frozen 이었다는 사실이 아무 데도 남지 않는다.** 얼렸다는 것은 "이 cohort 는
+# 더 이상 자라지 않는다" 는 선언이고, 그것을 조용히 되돌릴 수 있으면 선언이
+# 아니다.
+#
+# 답은 봉인이 아니라 **단조 전이 journal** 이다: append-only, 해시 사슬,
+# `frozen → active` 는 표현 불가능. frozen cohort 의 CURRENT 는 계속 읽힌다
+# (읽기는 막지 않는다 — 막아야 하는 것은 **새 게시**다).
+# ─────────────────────────────────────────────────────────────────────────────
+
+def test_every_frozen_cohort_is_frozen_in_the_journal_too():
+    """★ 49차 P0 — 살아 있는 원장의 freeze 는 journal 에도 있어야 한다.
+
+    원장의 `status` 만 고쳐 얼리면 그 사실이 되돌릴 수 있는 한 줄로만 남는다.
+    `frozen_reason` 과 journal 두 곳이 함께 있어야 해동이 **세 곳**을 일관되게
+    고치는 일이 되고, 그 정도면 git diff 에서 보인다.
+    """
+    import yaml
+
+    rp = _rp()
+    doc = yaml.safe_load(_PRESERVE.read_text(encoding="utf-8"))
+    bad = []
+    for c in doc.get("cohorts") or []:
+        cid, st = c["cohort_id"], c.get("status")
+        has_reason = bool(c.get("frozen_reason"))
+        if (st == "frozen") != has_reason:
+            bad.append(f"{cid}: status={st!r} 인데 frozen_reason 은 "
+                       f"{'있다' if has_reason else '없다'}")
+        journal = rp.cohort_lifecycle_state(cid)
+        if st == "frozen" and journal != "frozen":
+            bad.append(f"{cid}: 원장은 frozen 인데 전이 journal 은 {journal!r}")
+        if st == "active" and journal == "frozen":
+            bad.append(f"{cid}: 원장은 active 인데 journal 은 frozen 이다 — 해동")
+    assert not bad, "cohort freeze 기록이 어긋난다:\n  " + "\n  ".join(bad)
+
+
+def test_a_frozen_cohort_cannot_be_thawed_and_published(tmp_path):
+    """★ 49차 P0 — 얼린 적이 있는 cohort 에는 다시 게시할 수 없다."""
+    rp = _fresh_rp()
+    rp.REPO = _ledger_repo(tmp_path, "cohorts: []\n")
+
+    rp._append_lifecycle("gX", None, "active", "첫 게시")
+    rp.assert_not_thawed("gX")                       # 아직 얼지 않았다
+    rp._append_lifecycle("gX", "active", "frozen", "연구 종료")
+
+    with pytest.raises(SystemExit) as ei:
+        rp.assert_not_thawed("gX")
+    assert "frozen" in str(ei.value) or "얼" in str(ei.value), str(ei.value)
+
+    # 되돌리는 전이 자체가 표현 불가능하다
+    with pytest.raises(SystemExit):
+        rp._append_lifecycle("gX", "frozen", "active", "다시 쓰고 싶다")
+
+
+def test_the_lifecycle_journal_is_a_hash_chain(tmp_path):
+    """★ 49차 P0 — journal 한 줄을 지우거나 고치면 그 사실이 보인다.
+
+    append-only 를 파일 권한으로만 주장하면 그것은 주장이지 증거가 아니다.
+    각 줄이 앞줄의 digest 를 담으므로 중간을 들어내면 사슬이 끊긴다.
+    """
+    import json as _j
+
+    rp = _fresh_rp()
+    rp.REPO = _ledger_repo(tmp_path, "cohorts: []\n")
+    rp._append_lifecycle("gX", None, "active", "첫 게시")
+    rp._append_lifecycle("gX", "active", "frozen", "종료")
+    assert len(rp.read_lifecycle()) == 2
+
+    lp = rp._lifecycle_path()
+    lines = lp.read_text(encoding="utf-8").splitlines()
+    rec = _j.loads(lines[1])
+    rec["to"] = "active"                             # 마지막 전이를 위조한다
+    lines[1] = _j.dumps(rec, sort_keys=True, ensure_ascii=False,
+                        separators=(",", ":"))
+    lp.write_text("\n".join(lines) + "\n", encoding="utf-8")
+    with pytest.raises(SystemExit) as ei:
+        rp.read_lifecycle()
+    assert "사슬" in str(ei.value) or "chain" in str(ei.value), str(ei.value)
+
+    # 줄을 통째로 지워도 마찬가지다 (seq 가 비면 보인다)
+    lp.write_text(lines[1] + "\n", encoding="utf-8")
+    with pytest.raises(SystemExit):
+        rp.read_lifecycle()
+
+
+def test_the_publisher_refuses_a_thawed_cohort_before_the_first_write(
+        tmp_path):
+    """★ 49차 P0 — 판정은 **첫 write 전에** 난다 (frozen namespace 에 잔여 금지)."""
+    rp = _rp()
+    out = tmp_path / "out"
+    lp = tmp_path / "COHORT_LIFECYCLE.jsonl"
+    real = rp._lifecycle_path
+    rp._lifecycle_path = lambda: lp
+    try:
+        rp.promote_cohort_generation(_leg3(tmp_path / "s0", "a", b"1"), out, "a",
+                                     roster={"a"})
+        cid = rp._ledger_cohort(out)["cohort_id"]
+        # 게시는 lifecycle 을 움직이지 않는다 — 기록해야 할 전이는 freeze 하나다
+        assert rp.read_lifecycle() == []
+        rp._append_lifecycle(cid, None, "frozen", "종료")
+        before = sorted(p.name for p in out.rglob("*"))
+        with pytest.raises(SystemExit) as ei:
+            rp.promote_cohort_generation(_leg3(tmp_path / "s1", "a", b"2"), out,
+                                         "a", roster={"a"})
+        assert "frozen" in str(ei.value) or "얼" in str(ei.value), str(ei.value)
+        assert sorted(p.name for p in out.rglob("*")) == before, (
+            "거부하면서 무언가를 만들었다 — 판정이 첫 write 뒤에 있다")
+        # 읽기는 막지 않는다 — frozen cohort 의 CURRENT 는 계속 읽힌다
+        assert rp.read_current(out)["files"]
+    finally:
+        rp._lifecycle_path = real
+
+
 def test_the_ledger_roster_is_a_set_not_a_multiset(tmp_path):
     """★ 49차 P1 — `legs: ["a", "a"]` 이 그대로 봉인됐다.
 
