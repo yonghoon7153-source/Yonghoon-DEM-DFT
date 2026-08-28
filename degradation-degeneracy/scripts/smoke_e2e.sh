@@ -613,9 +613,23 @@ PLANGATE
 
 # run.sh 의 비싼 mode 가 실제로 gate 를 부르는가 (배선이 빠지면 위 검사는 초록)
 if [[ "$(grep -c 'plan_gate' run.sh)" -ge 3 ]]; then
-  ok "run.sh 의 grid·fit 이 실행 전 gate 를 지난다 (46차 P0-11)"
+  ok "run.sh 에 실행 전 gate 가 배선돼 있다 (46차 P0-11)"
 else
   bad "run.sh 에서 실행 전 gate 배선이 사라졌다 (46차 P0-11)"
+fi
+
+# ★ 46차 P0-11 — 배선이 **실제로 거부하는가**. grep 만 보면 함수가 빈 껍데기
+#   여도 초록이다. smoke namespace **밖**을 목적지로, 계획에 없는 다리 이름으로
+#   부른다. gate 가 살아 있으면 `exec` 전에 죽으므로 아무 것도 계산되지 않는다.
+_PROBE="results/_plangate_probe_$$"
+_msg="$(./run.sh --mode fit --in "$CURVES" --out "$_PROBE" --leg __계획에없는다리__ \
+        --objective pocv_dvdq --n-restarts 1 --nproc 1 --log-level ERROR 2>&1)"
+_rc=$?
+rm -rf "$_PROBE"
+if [[ "$_rc" -ne 0 ]] && grep -q "실행 전 gate 거부" <<<"$_msg"; then
+  ok "smoke namespace 밖 · 계획에 없는 다리는 실행 전에 거부된다 (46차 P0-11)"
+else
+  bad "실행 전 gate 가 거부하지 않았다 (rc=$_rc) — 46차 P0-11"
 fi
 
 # ────────────────────────────────────────────────────────────────── 마무리

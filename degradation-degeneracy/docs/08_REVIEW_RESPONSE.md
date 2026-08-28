@@ -4733,7 +4733,14 @@ coverage 의 기준이 **커밋된 투영**이라, 새 다리를 돌려도 투�
 
 배선: `run.sh` 의 `grid`(dry-run 제외)·`fit` 이 `plan_gate` 를 지나고 `all` 이
 `--leg` 를 전파한다. smoke 는 (a) index 일관 (b) 계획 밖 다리를 gate 가 **실제로
-거부** (c) `run.sh` 배선 잔존을 본다. 건너뛰는 환경변수는 두지 않았다.
+거부** (`--out` 이 smoke namespace 밖인 실제 호출로 — grep 만 보면 함수가 빈
+껍데기여도 초록이다) (c) `run.sh` 배선 잔존을 본다.
+
+면제는 **산출 namespace 하나**다: `results/_smoke/` **안으로만** 읽고 쓰는
+실행만 gate 를 지나지 않는다 (smoke 자신이 pipeline 을 돌려야 한다). 경로가
+하나라도 그 밖이면 gate 를 지난다. 건너뛰는 환경변수·flag 는 두지 않았다.
+한계는 계약 §13.4 에 적었다 — 같은 principal 이 비싼 실행을 그 namespace 로
+밀어 넣는 것은 막지 못한다 (다만 그 산출은 정본이 될 수 없다).
 
 smoke 의 마지막 문구를 사실에 맞게 좁혔다: "보존 gate 미완료" → "실행 전 계획
 gate 는 배선됐고, 남은 것은 실물 provider 어댑터".

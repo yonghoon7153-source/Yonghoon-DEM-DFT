@@ -1095,12 +1095,25 @@ PLANNED_STATUS = ("planned", "executed")
 `legs:` 에만 나타나도 아무 검사가 안 깨진다. 뒤의 것만 있으면 계획 index 가
 자기 자신만 참조하는 목록이 된다 (아무 digest 나 적어도 일관되다).
 
-**배선** (건너뛰는 환경변수는 두지 않는다 — 그런 문이 있으면 gate 가 아니다):
+**배선** (건너뛰는 환경변수·flag 는 두지 않는다 — 그런 문이 있으면 gate 가
+아니다):
 
 - `run.sh` 의 `grid`(dry-run 제외)·`fit` 은 `plan_gate` 를 지난다. `all` 은
   `--leg` 를 하위 단계로 전파한다.
 - `scripts/smoke_e2e.sh` 는 (a) 계획 index 가 일관하고 (b) 계획 밖 다리를
-  gate 가 **실제로 거부**하며 (c) `run.sh` 에 배선이 남아 있는지 본다.
+  gate 가 **실제로 거부**하며 (`--out` 이 smoke namespace 밖인 실제 호출로
+  확인한다 — grep 만 보면 함수가 빈 껍데기여도 초록이다) (c) `run.sh` 에
+  배선이 남아 있는지 본다.
+
+**면제는 산출 namespace 하나뿐이다.** `results/_smoke/` **안으로만** 읽고 쓰는
+실행은 gate 를 지나지 않는다 (smoke 자신이 pipeline 을 돌려야 하기 때문이다).
+경로가 하나라도 그 밖이면 gate 를 지난다.
+
+> **한계**: 같은 principal 이 비싼 실행을 `results/_smoke/` 로 밀어 넣으면 gate
+> 를 피할 수 있다. 다만 그 산출은 **정본이 될 수 없다** — `archive_results.sh`
+> 승격 · 보존 원장 등록 · `docs/RESULTS.md` 정본 경로가 그 namespace 를 받지
+> 않는다. 이것은 flag 가 아니라 namespace 경계이지만, 적대적 같은-principal
+> writer 에 대한 방어는 아니다 (§13.3.1 의 신뢰 경계와 같은 전제다).
 
 **아직 남은 것**: 실물 provider 어댑터. 지금 보존 회귀는 hermetic fake
 provider 로만 돈다. 그래서 smoke 통과는 "pipeline 이 온전하고 계획 gate 가

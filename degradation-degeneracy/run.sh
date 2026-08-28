@@ -229,8 +229,30 @@ export MPLBACKEND="Agg"          # headless 강제
 #:
 #:   `--leg` 를 주지 않으면 `CANONICAL_RUN` 을 다리 이름으로 본다.
 #:   gate 를 건너뛰는 환경변수는 두지 않는다 — 그런 문이 있으면 gate 가 아니다.
+#: smoke 전용 산출 namespace. 이 아래로 나가는 산출은 **정본 실행이 아니다** —
+#: `archive_results.sh`·보존 원장·`docs/RESULTS.md` 정본 경로가 받지 않는다.
+#: gate 의 예외는 이 **namespace 하나**이고, 환경변수나 flag 로는 열 수 없다.
+#: 한계: 같은 principal 이 비싼 실행을 이 namespace 로 밀어 넣는 것은 막지
+#: 못한다. 다만 그렇게 하면 그 산출은 정본이 될 수 없다 (계약 §13.4).
+SMOKE_NS="results/_smoke"
+
 plan_gate() {
   local leg="${LEG:-$CANONICAL_RUN}"
+  # 면제는 **모든** 경로가 smoke namespace 안일 때만이다. 하나라도 밖이면
+  # 그 실행은 정본 산출을 만들 수 있으므로 gate 를 지난다 (읽기 전용 입력만
+  # 밖인 경우까지 막지만, 그 쪽으로 틀리는 편이 안전하다).
+  local outside=0 d
+  for d in "$OUT" "${IN_DIR:-}"; do
+    [[ -z "$d" ]] && continue
+    case "$d" in
+      "$SMOKE_NS"|"$SMOKE_NS"/*) ;;
+      *) outside=1 ;;
+    esac
+  done
+  if [[ "$outside" -eq 0 ]]; then
+    echo "· 실행 전 gate 면제 — 모든 경로가 smoke namespace 안이다"
+    return 0
+  fi
   python - "$leg" <<'PYGATE'
 import sys
 from src.io import source_digest
