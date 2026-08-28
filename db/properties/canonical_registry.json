@@ -796,14 +796,15 @@
    "source_key": "/Eads_eV_box24_pm1/ptfe_dimer_Litop",
    "method_id": "vasp-544__pbe-u62__mlip-geom-sp__box24ref",
    "comparison_group": "sdcp-wave1-Eads-box24-v1",
-   "status": "canonical",
+   "status": "provisional",
    "prohibitions": [
     "absolute_vs_other_codes",
     "cell_level_claims",
-    "net4_fixed_basin_pairs_only__dimer_BB_doped_AA__see_review_M"
+    "net4_fixed_basin_pairs_only__dimer_BB_doped_AA__see_review_M",
+    "absolute_value_on_hold__delta_m_and_delta_LREAL__2026_08_28"
    ],
    "updated": "2026-08-28",
-   "note": "MLIP 기하 위 단일점 — DFT 최소 아님 (인용 시 병기) | 2026-08-28 회신 M: 혼합-basin ΔE 금지. 고정-basin net4 쌍은 dimer(B/B)·doped(A/A)뿐. pm1 열이 정본 유지"
+   "note": "MLIP 기하 위 단일점 — DFT 최소 아님 (인용 시 병기) | 2026-08-28 회신 M: 혼합-basin ΔE 금지. 고정-basin net4 쌍은 dimer(B/B)·doped(A/A)뿐. pm1 열이 정본 유지 | ⚠ 2026-08-28 회신 O + INCAR 감사: **절대값 조건부 보류** — 기준 분자가 NUPDOWN 고정·LREAL=F 인데 복합체는 자유·T 라 δ_m + δ_LREAL 이 절대 E_ads 에 남는다. 해제 조건: db/properties/sdcp_neutral_closed_2026_08_28.json. ⚠ dE_site 는 영향 없음(복합체끼리 차라 소거)."
   },
   {
    "system": "sdcp",
@@ -814,14 +815,15 @@
    "source_key": "/Eads_eV_box24_pm1/ptfe_dimer_Nitop",
    "method_id": "vasp-544__pbe-u62__mlip-geom-sp__box24ref",
    "comparison_group": "sdcp-wave1-Eads-box24-v1",
-   "status": "canonical",
+   "status": "provisional",
    "prohibitions": [
     "absolute_vs_other_codes",
     "cell_level_claims",
-    "net4_fixed_basin_pairs_only__dimer_BB_doped_AA__see_review_M"
+    "net4_fixed_basin_pairs_only__dimer_BB_doped_AA__see_review_M",
+    "absolute_value_on_hold__delta_m_and_delta_LREAL__2026_08_28"
    ],
    "updated": "2026-08-28",
-   "note": "MLIP 기하 위 단일점 — DFT 최소 아님 (인용 시 병기) | 2026-08-28 회신 M: 혼합-basin ΔE 금지. 고정-basin net4 쌍은 dimer(B/B)·doped(A/A)뿐. pm1 열이 정본 유지"
+   "note": "MLIP 기하 위 단일점 — DFT 최소 아님 (인용 시 병기) | 2026-08-28 회신 M: 혼합-basin ΔE 금지. 고정-basin net4 쌍은 dimer(B/B)·doped(A/A)뿐. pm1 열이 정본 유지 | ⚠ 2026-08-28 회신 O + INCAR 감사: **절대값 조건부 보류** — 기준 분자가 NUPDOWN 고정·LREAL=F 인데 복합체는 자유·T 라 δ_m + δ_LREAL 이 절대 E_ads 에 남는다. 해제 조건: db/properties/sdcp_neutral_closed_2026_08_28.json. ⚠ dE_site 는 영향 없음(복합체끼리 차라 소거)."
   },
   {
    "system": "sdcp",
@@ -832,14 +834,15 @@
    "source_key": "/Eads_eV_box24_pm1/ptfe_c10_Nitop",
    "method_id": "vasp-544__pbe-u62__mlip-geom-sp__box24ref",
    "comparison_group": "sdcp-wave1-Eads-box24-v1",
-   "status": "canonical",
+   "status": "provisional",
    "prohibitions": [
     "absolute_vs_other_codes",
     "cell_level_claims",
-    "net4_fixed_basin_pairs_only__dimer_BB_doped_AA__see_review_M"
+    "net4_fixed_basin_pairs_only__dimer_BB_doped_AA__see_review_M",
+    "absolute_value_on_hold__delta_m_and_delta_LREAL__2026_08_28"
    ],
    "updated": "2026-08-28",
-   "note": "MLIP 기하 위 단일점 — DFT 최소 아님 (인용 시 병기) | 2026-08-28 회신 M: 혼합-basin ΔE 금지. 고정-basin net4 쌍은 dimer(B/B)·doped(A/A)뿐. pm1 열이 정본 유지"
+   "note": "MLIP 기하 위 단일점 — DFT 최소 아님 (인용 시 병기) | 2026-08-28 회신 M: 혼합-basin ΔE 금지. 고정-basin net4 쌍은 dimer(B/B)·doped(A/A)뿐. pm1 열이 정본 유지 | ⚠ 2026-08-28 회신 O + INCAR 감사: **절대값 조건부 보류** — 기준 분자가 NUPDOWN 고정·LREAL=F 인데 복합체는 자유·T 라 δ_m + δ_LREAL 이 절대 E_ads 에 남는다. 해제 조건: db/properties/sdcp_neutral_closed_2026_08_28.json. ⚠ dE_site 는 영향 없음(복합체끼리 차라 소거)."
   },
   {
    "system": "sdcp",
@@ -850,14 +853,15 @@
    "source_key": "/Eads_eV_box24_pm1/sdcp_neutral_Litop",
    "method_id": "vasp-544__pbe-u62__mlip-geom-sp__box24ref",
    "comparison_group": "sdcp-wave1-Eads-box24-v1",
-   "status": "canonical",
+   "status": "provisional",
    "prohibitions": [
     "absolute_vs_other_codes",
     "cell_level_claims",
-    "net4_fixed_basin_pairs_only__dimer_BB_doped_AA__see_review_M"
+    "net4_fixed_basin_pairs_only__dimer_BB_doped_AA__see_review_M",
+    "absolute_value_on_hold__delta_m_and_delta_LREAL__2026_08_28"
    ],
    "updated": "2026-08-28",
-   "note": "MLIP 기하 위 단일점 — DFT 최소 아님 (인용 시 병기) | 2026-08-28 회신 M: 혼합-basin ΔE 금지. 고정-basin net4 쌍은 dimer(B/B)·doped(A/A)뿐. pm1 열이 정본 유지"
+   "note": "MLIP 기하 위 단일점 — DFT 최소 아님 (인용 시 병기) | 2026-08-28 회신 M: 혼합-basin ΔE 금지. 고정-basin net4 쌍은 dimer(B/B)·doped(A/A)뿐. pm1 열이 정본 유지 | ⚠ 2026-08-28 회신 O + INCAR 감사: **절대값 조건부 보류** — 기준 분자가 NUPDOWN 고정·LREAL=F 인데 복합체는 자유·T 라 δ_m + δ_LREAL 이 절대 E_ads 에 남는다. 해제 조건: db/properties/sdcp_neutral_closed_2026_08_28.json. ⚠ dE_site 는 영향 없음(복합체끼리 차라 소거)."
   },
   {
    "system": "sdcp",
@@ -868,14 +872,15 @@
    "source_key": "/Eads_eV_box24_pm1/sdcp_neutral_Nitop",
    "method_id": "vasp-544__pbe-u62__mlip-geom-sp__box24ref",
    "comparison_group": "sdcp-wave1-Eads-box24-v1",
-   "status": "canonical",
+   "status": "provisional",
    "prohibitions": [
     "absolute_vs_other_codes",
     "cell_level_claims",
-    "net4_fixed_basin_pairs_only__dimer_BB_doped_AA__see_review_M"
+    "net4_fixed_basin_pairs_only__dimer_BB_doped_AA__see_review_M",
+    "absolute_value_on_hold__delta_m_and_delta_LREAL__2026_08_28"
    ],
    "updated": "2026-08-28",
-   "note": "MLIP 기하 위 단일점 — DFT 최소 아님 (인용 시 병기) | 2026-08-28 회신 M: 혼합-basin ΔE 금지. 고정-basin net4 쌍은 dimer(B/B)·doped(A/A)뿐. pm1 열이 정본 유지"
+   "note": "MLIP 기하 위 단일점 — DFT 최소 아님 (인용 시 병기) | 2026-08-28 회신 M: 혼합-basin ΔE 금지. 고정-basin net4 쌍은 dimer(B/B)·doped(A/A)뿐. pm1 열이 정본 유지 | ⚠ 2026-08-28 회신 O + INCAR 감사: **절대값 조건부 보류** — 기준 분자가 NUPDOWN 고정·LREAL=F 인데 복합체는 자유·T 라 δ_m + δ_LREAL 이 절대 E_ads 에 남는다. 해제 조건: db/properties/sdcp_neutral_closed_2026_08_28.json. ⚠ dE_site 는 영향 없음(복합체끼리 차라 소거)."
   },
   {
    "system": "sdcp",
@@ -886,14 +891,15 @@
    "source_key": "/Eads_eV_box24_pm1/sdcp_neutral_cross_Li_at_Ni",
    "method_id": "vasp-544__pbe-u62__mlip-geom-sp__box24ref",
    "comparison_group": "sdcp-wave1-Eads-box24-v1",
-   "status": "canonical",
+   "status": "provisional",
    "prohibitions": [
     "absolute_vs_other_codes",
     "cell_level_claims",
-    "net4_fixed_basin_pairs_only__dimer_BB_doped_AA__see_review_M"
+    "net4_fixed_basin_pairs_only__dimer_BB_doped_AA__see_review_M",
+    "absolute_value_on_hold__delta_m_and_delta_LREAL__2026_08_28"
    ],
    "updated": "2026-08-28",
-   "note": "MLIP 기하 위 단일점 — DFT 최소 아님 (인용 시 병기) | 2026-08-28 회신 M: 혼합-basin ΔE 금지. 고정-basin net4 쌍은 dimer(B/B)·doped(A/A)뿐. pm1 열이 정본 유지"
+   "note": "MLIP 기하 위 단일점 — DFT 최소 아님 (인용 시 병기) | 2026-08-28 회신 M: 혼합-basin ΔE 금지. 고정-basin net4 쌍은 dimer(B/B)·doped(A/A)뿐. pm1 열이 정본 유지 | ⚠ 2026-08-28 회신 O + INCAR 감사: **절대값 조건부 보류** — 기준 분자가 NUPDOWN 고정·LREAL=F 인데 복합체는 자유·T 라 δ_m + δ_LREAL 이 절대 E_ads 에 남는다. 해제 조건: db/properties/sdcp_neutral_closed_2026_08_28.json. ⚠ dE_site 는 영향 없음(복합체끼리 차라 소거)."
   },
   {
    "system": "sdcp",
@@ -904,14 +910,15 @@
    "source_key": "/Eads_eV_box24_pm1/sdcp_neutral_cross_Ni_at_Li",
    "method_id": "vasp-544__pbe-u62__mlip-geom-sp__box24ref",
    "comparison_group": "sdcp-wave1-Eads-box24-v1",
-   "status": "canonical",
+   "status": "provisional",
    "prohibitions": [
     "absolute_vs_other_codes",
     "cell_level_claims",
-    "net4_fixed_basin_pairs_only__dimer_BB_doped_AA__see_review_M"
+    "net4_fixed_basin_pairs_only__dimer_BB_doped_AA__see_review_M",
+    "absolute_value_on_hold__delta_m_and_delta_LREAL__2026_08_28"
    ],
    "updated": "2026-08-28",
-   "note": "MLIP 기하 위 단일점 — DFT 최소 아님 (인용 시 병기) | 2026-08-28 회신 M: 혼합-basin ΔE 금지. 고정-basin net4 쌍은 dimer(B/B)·doped(A/A)뿐. pm1 열이 정본 유지"
+   "note": "MLIP 기하 위 단일점 — DFT 최소 아님 (인용 시 병기) | 2026-08-28 회신 M: 혼합-basin ΔE 금지. 고정-basin net4 쌍은 dimer(B/B)·doped(A/A)뿐. pm1 열이 정본 유지 | ⚠ 2026-08-28 회신 O + INCAR 감사: **절대값 조건부 보류** — 기준 분자가 NUPDOWN 고정·LREAL=F 인데 복합체는 자유·T 라 δ_m + δ_LREAL 이 절대 E_ads 에 남는다. 해제 조건: db/properties/sdcp_neutral_closed_2026_08_28.json. ⚠ dE_site 는 영향 없음(복합체끼리 차라 소거)."
   }
  ],
  "_provenance_audit": {
@@ -925,6 +932,7 @@
   "caveat": "이 블록은 **사후 추적** 결과다. 원본 계산 시점에 기록된 것이 아니라 repo·git·파일 내용에서 역추적했다. confidence 를 같이 보라."
  },
  "changelog": {
-  "2026-08-25b": "SDCP wave1 인용 확정분 등록 (basin 일치 · pm1 정본): dE_site 4건 + Eads 7건. comparison_group 을 sdcp-wave1-* 로 분리해 argyrodite 4축과 절대 섞이지 않게. sdcp_doped·net4 Eads·50 meV offset 은 등록하지 않음 (citable.json not_citable). 원자료 재유도 파이프라인: sdcp_wave1_results.json → citable.json → registry."
+  "2026-08-25b": "SDCP wave1 인용 확정분 등록 (basin 일치 · pm1 정본): dE_site 4건 + Eads 7건. comparison_group 을 sdcp-wave1-* 로 분리해 argyrodite 4축과 절대 섞이지 않게. sdcp_doped·net4 Eads·50 meV offset 은 등록하지 않음 (citable.json not_citable). 원자료 재유도 파이프라인: sdcp_wave1_results.json → citable.json → registry.",
+  "2026-08-28-eads-hold": "SDCP_Eads_eV__* 7건 canonical → provisional (절대값 보류). 사유: 기준-대상 비대칭 2건(δ_m 스핀제약 · δ_LREAL 실공간투영). dE_site 4건은 복합체끼리 차라 canonical 유지"
  }
 }
