@@ -7,14 +7,19 @@
 
 > 순서가 있다. 앞이 끝나야 뒤가 뜻이 있다.
 
-### ⏭-0. SDCP doped — **회신 O 를 보내고 답을 기다린다** (2026-08-28 밤 추가)
-프롬프트 완성본: `kb/reviews/codex_O_prompt_sdcp_doped_estimand_2026_08_28.md`
-심사 대상: `kb/questions/sdcp_doped_estimand_2026_08_28.md` **§1–3** (번들이 아니라 카드).
-⛔ **회신 O 전에는 doped 계산을 던지지 않는다.** 여덟 번의 원인이 그것이다.
-같이 결정 나야 하는 것: n=3 로 충분한가(카드 §8 첫 항목) · dE_carrier 의 정의역이
-비었을 때의 대체 판정 · 중성형 마감 유지 판단(카드 §6-6번).
-부수 정정 완료: `mol_doped 0.175` 는 **phaseB 값**이고 wave1 은 1.0000(NUPDOWN 강제) —
-wave1 의 결함은 **기준/복합체 스핀 제약 비대칭**이다 (세 문서 정정됨).
+### ⏭-0. SDCP doped — **회신 O 접수: P0 전면 반려, 슬랩 NO-GO** (2026-08-28 밤 갱신)
+원문: `kb/reviews/codex_O_sdcp_doped_estimand_reply_2026_08_28.md` · 구현 기록: 카드 판정 절.
+⛔ **재승인 조건 7 을 채우기 전에는 슬랩 계산 금지.** 다음 순서:
+1. **조건 ⑥ 이 가장 싸고 가장 급하다** — neutral spin-equivalence 짝검사
+   (mol_neutral·ptfe_c10 box24 를 같은 기하에서 NUPDOWN=0 vs 자유 → δ_m).
+   이것이 나와야 0.346 eV headline 의 보류가 풀리거나 값이 갱신된다.
+   지금 마감 상태: `closed_for_scope_pending_spin_equivalence`.
+2. 조건 ① 화학종 확정 — SO₃H/SO₃⁻/counterion/Q/NELECT/reservoir. 협력자 실험 정보 필요.
+   ⚠ 기체상 음이온은 **이미 있다** (ORCA DPE/LCA/EA — 카드 정정 절). SO₃Li 가 알짜중성 착지점.
+3. 조건 ⑤ 기체상 Stage 0 — DP3/+1 · DP4/+1 · n=6 manifold(A6/A7a/A7b) 설계.
+   Kumar 2018 PDF 확보 후 (전제 정정됨 — 별도 하전종이었다).
+4. 조건 ⑦ machine manifest — estimand_id·state-selection policy 를 분석기에 연결 (도구 작업).
+부수 선행확인 (비용 0): wave1 DOS 재판독으로 **LiNiO₂(104)+U 슬랩 금속/절연체** 판정.
 
 ### ⏭-1. T13 확인 — **먼저**
 kgy 800 ps 런 2개(`lpsocl_long` · `lpsocl_small800`)가 8/29 아침 완주.

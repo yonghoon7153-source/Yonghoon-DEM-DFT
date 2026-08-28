@@ -70,6 +70,11 @@
    "at": "2026-08-28d",
    "state": "closed",
    "note": "wave1 전수 재판독 관측 2건 기록 (스핀 제약 비대칭 · 자세별 총자화 0.1338/0.0004/0.1326/0.1298 μB). **재개 아님** — 재개 조건 1 의 요구를 좁혔다. 확정값은 총에너지 뺄셈이라 영향 없음"
+  },
+  {
+   "at": "2026-08-28e",
+   "state": "closed_for_scope_pending_spin_equivalence",
+   "note": "회신 O 6번: '총에너지 뺄셈이라 영향 없음' 반려 — 분자 기준이 NUPDOWN=0 제약이라 δ_m=E_M^{M=0}−E_M^{free} 가 절대 E_ads 와 0.346 eV headline 에 남는다(자세차에는 소거). spin-equivalence 짝검사(neutral·c10 기체 기준 NUPDOWN=0 vs 자유, 같은 기하·설정 + 복합체 다중 초기자화 재현) 통과 시 closed 복귀"
   }
  ],
  "⚠_사후마감": "이 문서는 데이터와 회신 M 을 본 **뒤에** 조건을 만들었다 — 사전등록이 아니다. 규율의 취지(조건 먼저)는 다음 캠페인부터 적용된다",
@@ -84,5 +89,22 @@
   },
   "왜_안_여나": "닫는 규율(2026-08-28): 재개 조건 밖의 이유로 다시 열지 않는다. 이 관측은 조건 1·2 의 **요구를 좁히는 데** 반영했다.",
   "출처": "db/properties/sdcp_wave1_job_energies_2026_08_28.json"
+ },
+ "⚠_회신O_보류_2026_08_28": {
+  "무엇이_보류인가": "neutral 네 E_ads 의 '무조건적 확정값' 지위와 0.346 eV headline 의 정밀 수치 — δ_m 확인 전까지 조건부",
+  "무엇은_유지인가": [
+   "원시 총에너지",
+   "명시된 혼합-tag protocol 의 조건부 값",
+   "접촉 기하(O···Li 배위)",
+   "자리선호 NO_VERDICT(원래 미해결)"
+  ],
+  "추가_철회": "없음 (doped E_ads 는 이미 비어 있다)",
+  "해제_조건_spin_equivalence_짝검사": [
+   "mol__sdcp_neutral__box24 와 mol__ptfe_c10__box24 를 같은 기하·설정에서 NUPDOWN=0 vs NUPDOWN=-1(자유) 짝계산 → δ_m",
+   "자유 복합체를 여러 초기 자화에서 재현",
+   "δ_m ≈ 0 이면 기존 E_ads 유지, 아니면 E_ads^ad = E_ads^old + δ_m 로 갱신",
+   "fixed-M=0 estimand 를 택하면 clean slab + 복합체 4종도 전부 M=0 재계산"
+  ],
+  "출처": "kb/reviews/codex_O_sdcp_doped_estimand_reply_2026_08_28.md §6"
  }
 }

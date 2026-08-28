@@ -1,63 +1,63 @@
 {
-  "schema": "sdcp_wave1_job_energies/v1",
-  "date": "2026-08-28",
-  "csv": "db/properties/sdcp_wave1_job_energies_2026_08_28.csv",
-  "무엇": "wave1 VASP 드롭의 **잡별 총에너지 원문 판독값**과 그로부터 만든 E_ads. 36행 = 복합체 24 + 기준 12.",
-  "만든_법": "python3 tools/sdcp/scfin_to_struct.py --outcar <drop>/tier{1,2}/*/{static,dense}/OUTCAR.gz --refs <drop>/refs --energy_csv <이 파일의 csv>",
-  "⛔_이_표가_아닌_것": [
-    "게이트 통과 판정이 아니다. 회수된 드롭에는 입력 파일이 없어(211건 결측) vasp_handoff_bundle 의 ANALYZER 가 무결성 검사에서 정당하게 exit 2 로 멈춘다 — 그 검사를 통과했다는 뜻이 전혀 아니다.",
-    "인용 자격을 주지 않는다. 무엇을 인용해도 되는지는 db/properties/sdcp_wave1_citable.json 과 db/properties/sdcp_neutral_closed_2026_08_28.json 이 정한다.",
-    "sdcp_doped 의 E_ads 는 **일부러 비웠다** (총에너지만 남김). 사유는 note 열에 있다."
-  ],
-  "열": {
-    "job": "잡 디렉터리 이름 (조각__방향_roll__자세__afm2424_시드)",
-    "role": "complex | slab_ref | mol_ref",
-    "fragment": "ptfe_c10 | ptfe_dimer | sdcp_neutral | sdcp_doped | clean_slab",
-    "pose": "복합체는 흡착 자세(Litop/Nitop/cross_*), 분자 기준은 상자 크기(box20/box24)",
-    "seed_branch": "자기 시드 branch (pm1 | net4 | net4_basinA)",
-    "phase": "static | dense (dense = k-mesh 조밀화 확인)",
-    "n_ions": "원자 수",
-    "E_total_eV": "**E(sigma→0), 최종 이온스텝 블록** (OSZICAR 의 E0 와 일치). ⚠ 전자스텝 TOTEN 이 아니다 — LDA+U 이중계산 보정이 최종 블록에서만 더해져 28.6 eV 어긋난다",
-    "mag_total_muB": "수렴된 총자화",
-    "slab_basin": "총자화로 분류한 자기 basin (A≈4 · B≈6 μB · pm1≈0 · 범위 밖은 unresolved)",
-    "slab_ref_job": "뺀 슬랩 기준 잡",
-    "E_slab_ref_eV": "그 슬랩의 E(sigma→0)",
-    "mol_ref_job": "뺀 분자 기준 잡 (정본 box24)",
-    "E_mol_ref_eV": "그 분자의 E(sigma→0)",
-    "E_ads_eV": "E(복합체) − E(슬랩, 같은 basin) − E(분자, box24). basin 이 안 맞거나 미판정이면 빈칸",
-    "note": "빈칸 사유 · dense 규약 · 게이트 표시"
+ "schema": "sdcp_wave1_job_energies/v1",
+ "date": "2026-08-28",
+ "csv": "db/properties/sdcp_wave1_job_energies_2026_08_28.csv",
+ "무엇": "wave1 VASP 드롭의 **잡별 총에너지 원문 판독값**과 그로부터 만든 E_ads. 36행 = 복합체 24 + 기준 12.",
+ "만든_법": "python3 tools/sdcp/scfin_to_struct.py --outcar <drop>/tier{1,2}/*/{static,dense}/OUTCAR.gz --refs <drop>/refs --energy_csv <이 파일의 csv>",
+ "⛔_이_표가_아닌_것": [
+  "게이트 통과 판정이 아니다. 회수된 드롭에는 입력 파일이 없어(211건 결측) vasp_handoff_bundle 의 ANALYZER 가 무결성 검사에서 정당하게 exit 2 로 멈춘다 — 그 검사를 통과했다는 뜻이 전혀 아니다.",
+  "인용 자격을 주지 않는다. 무엇을 인용해도 되는지는 db/properties/sdcp_wave1_citable.json 과 db/properties/sdcp_neutral_closed_2026_08_28.json 이 정한다.",
+  "sdcp_doped 의 E_ads 는 **일부러 비웠다** (총에너지만 남김). 사유는 note 열에 있다."
+ ],
+ "열": {
+  "job": "잡 디렉터리 이름 (조각__방향_roll__자세__afm2424_시드)",
+  "role": "complex | slab_ref | mol_ref",
+  "fragment": "ptfe_c10 | ptfe_dimer | sdcp_neutral | sdcp_doped | clean_slab",
+  "pose": "복합체는 흡착 자세(Litop/Nitop/cross_*), 분자 기준은 상자 크기(box20/box24)",
+  "seed_branch": "자기 시드 branch (pm1 | net4 | net4_basinA)",
+  "phase": "static | dense (dense = k-mesh 조밀화 확인)",
+  "n_ions": "원자 수",
+  "E_total_eV": "**E(sigma→0), 최종 이온스텝 블록** (OSZICAR 의 E0 와 일치). ⚠ 전자스텝 TOTEN 이 아니다 — LDA+U 이중계산 보정이 최종 블록에서만 더해져 28.6 eV 어긋난다",
+  "mag_total_muB": "수렴된 총자화",
+  "slab_basin": "총자화로 분류한 자기 basin (A≈4 · B≈6 μB · pm1≈0 · 범위 밖은 unresolved)",
+  "slab_ref_job": "뺀 슬랩 기준 잡",
+  "E_slab_ref_eV": "그 슬랩의 E(sigma→0)",
+  "mol_ref_job": "뺀 분자 기준 잡 (정본 box24)",
+  "E_mol_ref_eV": "그 분자의 E(sigma→0)",
+  "E_ads_eV": "E(복합체) − E(슬랩, 같은 basin) − E(분자, box24). basin 이 안 맞거나 미판정이면 빈칸",
+  "note": "빈칸 사유 · dense 규약 · 게이트 표시"
+ },
+ "규약": {
+  "basin_matching": "net4 는 슬랩 basin 을 **복합체 총자화로 맞춰** 뺀다. 안 맞추면 슬랩 basin gap 49.718 meV 가 차에 섞인다 (2026-08-28 회신 M P0).",
+  "dense_E_ads": "dense 행은 dense 슬랩 + **static 분자**를 쓴다 — 진공 상자 분자는 Γ 하나라 k 에 무관하다. c10 에서 이 규약이 E_ads 0.22 meV · ΔE_site 0.003 meV 를 재현한다.",
+  "molecule_ref": "정본은 box24. box20 은 상자 수렴 점검용."
+ },
+ "검산": "E_ads 18건이 db/properties/sdcp_wave1_citable.json 의 Eads_eV_box24_pm1 · Eads_eV_box24_net4_basin_conditioned_SI 와 소수 4자리까지 전부 일치 (독립 재유도).",
+ "🔴_이_표를_만들며_나온_정정_2026_08_28": {
+  "무엇": "kb 세 곳이 'mol_doped 총자화 0.175' 를 **wave1 의 결함**으로 적고 있었다. 실측은 다르다.",
+  "실측": {
+   "phaseB(2026-08-08, 실패 #6)": "ISMEAR=1 · mol_doped mag 0.1753 · complex_doped mag 2.3783 — 여기가 0.175 의 출처다",
+   "wave1(실패 #7-8)": "ISMEAR=0 · mol_doped mag **1.0000** — 스미어링 결함은 wave1 에 없다"
   },
-  "규약": {
-    "basin_matching": "net4 는 슬랩 basin 을 **복합체 총자화로 맞춰** 뺀다. 안 맞추면 슬랩 basin gap 49.718 meV 가 차에 섞인다 (2026-08-28 회신 M P0).",
-    "dense_E_ads": "dense 행은 dense 슬랩 + **static 분자**를 쓴다 — 진공 상자 분자는 Γ 하나라 k 에 무관하다. c10 에서 이 규약이 E_ads 0.22 meV · ΔE_site 0.003 meV 를 재현한다.",
-    "molecule_ref": "정본은 box24. box20 은 상자 수렴 점검용."
+  "그럼_wave1_의_결함은": "**기준과 복합체의 스핀 제약이 다르다.** 기준 분자는 NUPDOWN 으로 묶었고(doped=1 · neutral=0), 복합체·슬랩은 NUPDOWN=-1(자유)이다. 제약된 기준에서 자유로운 복합체를 빼고 있었다. 그리고 NUPDOWN=1 뒤의 mag 1.000 은 **강제 결과라 검증이 아니다** (회신 N 문구).",
+  "자유_복합체가_실제로_간_곳": {
+   "sdcp_doped__Litop__pm1": -0.3065,
+   "sdcp_doped__Nitop__pm1": -0.3347,
+   "sdcp_doped__Litop__net4": 3.7239,
+   "sdcp_doped__Nitop__net4": 3.6308,
+   "읽기": "슬랩(pm1≈0 · net4 basinA≈4.0)에 doublet 이 얹혔다면 총자화는 slab±1 이 기대되는데 넷 다 그 어느 쪽도 아니다 — **상태 배정 불가**. ⚠ 회신 O(2026-08-28): 총자화는 fragment-local carrier 위치의 증거가 아니므로 '홀이 남지 않았다/이동했다' 로 읽지 않는다. 판정하려면 per-Ni signed moment vector·분자영역 charge/spin 적분이 필요하다."
   },
-  "검산": "E_ads 18건이 db/properties/sdcp_wave1_citable.json 의 Eads_eV_box24_pm1 · Eads_eV_box24_net4_basin_conditioned_SI 와 소수 4자리까지 전부 일치 (독립 재유도).",
-  "🔴_이_표를_만들며_나온_정정_2026_08_28": {
-    "무엇": "kb 세 곳이 'mol_doped 총자화 0.175' 를 **wave1 의 결함**으로 적고 있었다. 실측은 다르다.",
-    "실측": {
-      "phaseB(2026-08-08, 실패 #6)": "ISMEAR=1 · mol_doped mag 0.1753 · complex_doped mag 2.3783 — 여기가 0.175 의 출처다",
-      "wave1(실패 #7-8)": "ISMEAR=0 · mol_doped mag **1.0000** — 스미어링 결함은 wave1 에 없다"
-    },
-    "그럼_wave1_의_결함은": "**기준과 복합체의 스핀 제약이 다르다.** 기준 분자는 NUPDOWN 으로 묶었고(doped=1 · neutral=0), 복합체·슬랩은 NUPDOWN=-1(자유)이다. 제약된 기준에서 자유로운 복합체를 빼고 있었다. 그리고 NUPDOWN=1 뒤의 mag 1.000 은 **강제 결과라 검증이 아니다** (회신 N 문구).",
-    "자유_복합체가_실제로_간_곳": {
-      "sdcp_doped__Litop__pm1": -0.3065,
-      "sdcp_doped__Nitop__pm1": -0.3347,
-      "sdcp_doped__Litop__net4": 3.7239,
-      "sdcp_doped__Nitop__net4": 3.6308,
-      "읽기": "슬랩(pm1≈0 · net4 basinA≈4.0)에 doublet 이 얹혔다면 총자화는 slab±1 이어야 한다. 넷 다 그 어느 쪽도 아니다 — 홀전자가 그대로 있지 않다. 이것이 회신 M/N 이 말한 '상태 미선언 다중해' 의 wave1 증거다."
-    },
-    "중성형에도_있는_같은_비대칭": {
-      "sdcp_neutral__Litop__pm1": 0.1338,
-      "sdcp_neutral__Nitop__pm1": 0.0004,
-      "sdcp_neutral__cross_Li_at_Ni__pm1": 0.1326,
-      "sdcp_neutral__cross_Ni_at_Li__pm1": 0.1298,
-      "읽기": "닫힌 껍질 분자 + 상쇄 슬랩이면 0 이 기대값인데 네 자세 중 셋이 0.13 μB 다. 크기는 작지만 **자세끼리 총자화가 다르다** — 자리대비(+9.3 meV)는 상태가 안 맞춰진 쌍의 비교다.",
-      "⚠_처리": "이것은 sdcp_neutral 마감(db/properties/sdcp_neutral_closed_2026_08_28.json)의 **재개 조건 넷 중 어디에도 해당하지 않는다 — 그래서 열지 않는다.** 확정 E_ads 값은 총에너지 뺄셈이라 영향 없다. 재개 조건 1(자리대비 n≥3)의 요구사항을 **좁히는 데만** 반영했다."
-    }
-  },
-  "출처": {
-    "drop": "wave1 회수 zip 4종 (tier1 · tier2 · refs · wave1.5), 결과만 회수(입력 미포함)",
-    "구조": "db/structures/sdcp_wave1/ (같은 OUTCAR 에서 뽑은 xyz+vasp+vesta 16세트)"
+  "중성형에도_있는_같은_비대칭": {
+   "sdcp_neutral__Litop__pm1": 0.1338,
+   "sdcp_neutral__Nitop__pm1": 0.0004,
+   "sdcp_neutral__cross_Li_at_Ni__pm1": 0.1326,
+   "sdcp_neutral__cross_Ni_at_Li__pm1": 0.1298,
+   "읽기": "닫힌 껍질 분자 + 상쇄 슬랩이면 0 이 기대값인데 네 자세 중 셋이 0.13 μB 다. 크기는 작지만 **자세끼리 총자화가 다르다** — 자리대비(+9.3 meV)는 상태가 안 맞춰진 쌍의 비교다.",
+   "⚠_처리": "⚠ 회신 O 6번(2026-08-28)이 종전 처리('총에너지 뺄셈이라 영향 없음')를 반려 — δ_m=E_M^{M=0}−E_M^{free} 가 절대 E_ads 에 남는다(자세차에는 소거). 마감은 closed_for_scope_pending_spin_equivalence 로 조정, 해제 조건은 sdcp_neutral_closed_2026_08_28.json 참조."
   }
+ },
+ "출처": {
+  "drop": "wave1 회수 zip 4종 (tier1 · tier2 · refs · wave1.5), 결과만 회수(입력 미포함)",
+  "구조": "db/structures/sdcp_wave1/ (같은 OUTCAR 에서 뽑은 xyz+vasp+vesta 16세트)"
+ }
 }

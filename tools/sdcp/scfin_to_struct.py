@@ -364,6 +364,52 @@ def unwrap_fragment(cell, pos, sel):
     return out
 
 
+#: 재중심 후 분자의 분율 span 이 이 값을 넘으면 한 셀 안에 담기지 않는다 → 경고하고 포기.
+MOL_SPAN_MAX = 0.95
+
+
+def recenter_on_fragment(cell, pos, sel):
+    """`sel` 조각이 **셀 가운데(면내 0.5, 0.5)** 에 오도록 전 원자를 평행이동한다.
+
+    왜 필요한가 (2026-08-28, 실측 제보): 분자가 셀 경계에 걸쳐 있으면 VESTA 기본
+    Boundary(0–1)에서 **분자가 두 조각으로 잘려 보인다.** 실제로 16개 전부 그랬다
+    (ptfe 계열은 a 축, sdcp_neutral 은 b 축으로 갈림).
+
+    ⚠ **좌표는 물리적으로 동일하다** — 주기 평행이동은 대칭 조작이다. 에너지·거리·
+      결합 무엇도 안 바뀐다. 다만 OUTCAR 원문과 숫자가 달라지므로 이동량을 파일
+      주석에 남긴다 (`--no_recenter` 로 끌 수 있다).
+
+    ⚠ z 는 건드리지 않는다. 슬랩+진공은 c 방향으로 감으면 슬랩이 잘린다.
+
+    → (pos_new, dfrac | None). 담을 수 없으면 (원본, None).
+    """
+    inv = np.linalg.inv(cell)
+    un = unwrap_fragment(cell, pos, sel)
+    # ⚠ 감김(주기 결합) 검출 — 셀보다 긴 조각은 반드시 경계를 돌아 자기와 이어진다.
+    #   그런 조각은 BFS 로 한 덩어리로 펼 수 없다(일관된 배치가 존재하지 않는다):
+    #   MIC 로는 결합인 쌍이 편 좌표에서는 멀어진다. 그때는 포기한다 — 조용히 자르지 않는다.
+    idx = np.flatnonzero(sel)
+    df = (pos[idx][:, None, :] - pos[idx][None, :, :]) @ inv
+    df -= np.round(df)
+    d_mic = np.linalg.norm(df @ cell, axis=-1)
+    d_un = np.linalg.norm(un[idx][:, None, :] - un[idx][None, :, :], axis=-1)
+    bonded = (d_mic < 3.0) & ~np.eye(len(idx), dtype=bool)
+    if bonded.any() and (d_un[bonded] > d_mic[bonded] + 0.5).any():
+        return pos, None                        # 감겨 있다 — 이동으로는 못 고친다
+    f = un[sel] @ inv
+    span = f.max(axis=0) - f.min(axis=0)
+    if (span[:2] >= MOL_SPAN_MAX).any():
+        return pos, None                        # 한 셀보다 길다 — 이동으로는 못 고친다
+    com = f.mean(axis=0)
+    d = np.array([0.5 - com[0], 0.5 - com[1], 0.0])
+    out = (un + d @ cell)
+    fo = out @ inv
+    fo[:, :2] -= np.floor(fo[:, :2])            # 면내만 접는다
+    out = fo @ cell
+    # 접는 과정에서 분자가 다시 갈릴 수 있다 (경계에 딱 걸친 원자) — 한 번 더 편다.
+    return unwrap_fragment(cell, out, sel), d
+
+
 def write_xyz(path, elems, pos, comment):
     with open(path, "w") as f:
         f.write(f"{len(elems)}\n{comment}\n")
@@ -569,7 +615,7 @@ def default_tag(path):
     return os.path.basename(os.path.dirname(os.path.abspath(path)))
 
 
-def emit_struct(path, out, tag=None, scale=RAD_SCALE_DEFAULT, quiet=False):
+def emit_struct(path, out, tag=None, scale=RAD_SCALE_DEFAULT, quiet=False, recenter=True):
     """한 계산 → xyz + .vasp + .vesta + 거리 세 층 감사. → meta(dict)"""
     tag = tag or default_tag(path)
     meta = {}
@@ -585,11 +631,26 @@ def emit_struct(path, out, tag=None, scale=RAD_SCALE_DEFAULT, quiet=False):
     elems0 = [element(x) for x in labels0]
     elems, labels, pos, order, counts = group_by_species(elems0, labels0, pos0)
 
+    # ── 분자를 셀 가운데로 (뷰어에서 안 잘리게). 물리적으로 동일한 평행이동이다.
+    rec_note = ""
+    if recenter:
+        mol0 = split_molecule(cell, elems, pos)
+        if mol0.any() and (~mol0).any():
+            pos2, d = recenter_on_fragment(cell, pos, mol0)
+            if d is None:
+                print(f"  ⚠ {tag}: 분자 면내 span 이 셀의 {MOL_SPAN_MAX:.0%} 이상 — "
+                      "재중심으로 못 담는다. 원본 좌표 유지 (뷰어에서 Boundary 를 넓힐 것)")
+            else:
+                pos = pos2
+                rec_note = (f" | recentered: molecule COM moved to cell center, "
+                            f"shift frac=({d[0]:+.4f},{d[1]:+.4f},0) — same structure, "
+                            f"coords differ from OUTCAR by this lattice translation")
+
     c_len = np.linalg.norm(cell[2])
     span = pos[:, 2].max() - pos[:, 2].min()
     comment = (f"{tag} | nat={len(elems)} | cell a={np.linalg.norm(cell[0]):.3f} "
                f"b={np.linalg.norm(cell[1]):.3f} c={c_len:.3f} A | "
-               f"z-span={span:.3f} A | vertical vacuum={c_len - span:.3f} A | {prov}")
+               f"z-span={span:.3f} A | vertical vacuum={c_len - span:.3f} A | {prov}{rec_note}")
     os.makedirs(out, exist_ok=True)
     write_xyz(os.path.join(out, f"{tag}.xyz"), elems, pos, comment)
     write_poscar(os.path.join(out, f"{tag}.vasp"), cell, order, counts, pos, comment)
@@ -903,6 +964,30 @@ def selftest():
         chk(fixed[0] > 9.0,
             f"음성: 편 좌표로는 옆 셀 분자까지 {fixed[0]:.3f} A — 내부 결합을 안 센다")
 
+        # ★ 재중심 — 경계를 걸친 분자가 셀 가운데로 오고, 전 원자가 [0,1) 안에 있다
+        #   (2026-08-28 실측 제보: VESTA 기본 Boundary 0-1 에서 분자가 두 조각으로 보였다)
+        cellr = np.eye(3) * 10.0
+        posr = np.array([[5.0, 5.0, 2.0],            # 슬랩 역할 (Li)
+                         [9.8, 5.0, 6.0], [0.9, 5.0, 6.0]])   # 경계 걸친 C-F (wrap 1.1 A)
+        elr = ["Li", "C", "F"]
+        selr = np.array([False, True, True])
+        pr, dr = recenter_on_fragment(cellr, posr, selr)
+        fr = pr @ np.linalg.inv(cellr)
+        chk(dr is not None and abs(pr[1][0] - pr[2][0]) < 2.0,
+            f"재중심 후 분자가 한 덩어리 (C-F 간격 {abs(pr[1][0]-pr[2][0]):.2f} A, 종전 8.9)")
+        chk((fr[1:, :2] > 0.05).all() and (fr[1:, :2] < 0.95).all(),
+            "재중심 후 분자 전체가 셀 내부 (기본 Boundary 0-1 에서 안 잘림)")
+        chk(abs(pr[0][2] - 2.0) < 1e-9 and abs(pr[1][2] - 6.0) < 1e-9,
+            "z 는 안 건드린다 (슬랩+진공 방향)")
+
+        # ⛔ 음성 8 — 경계를 돌아 자기와 이어진(감긴) 조각은 재중심으로 못 담는다.
+        #   셀보다 긴 사슬은 반드시 이 형태가 된다 (끝끼리 MIC 로 결합거리 안).
+        posl = np.array([[0.1 + 2.4 * i, 5.0, 5.0] for i in range(5)])   # 0.1..9.7, 끝 간격 0.4
+        sell = np.ones(5, bool)
+        pl, dl = recenter_on_fragment(cellr, posl, sell)
+        chk(dl is None and np.allclose(pl, posl),
+            "음성: 감긴(주기 결합) 조각 → 재중심 포기(원본 유지), 조용히 절단하지 않는다")
+
         # ⛔ 음성 7 — CSV 에 BOM 이 없으면 Excel 이 한글 note 열을 깨뜨린다 (실측 제보)
         cp = os.path.join(td, "e.csv")
         write_energy_csv(cp, [dict(rg, note="한글 사유")])
@@ -937,6 +1022,8 @@ def main():
                     help="refs/ 디렉터리 (clean_slab__* · mol__*). E_ads 에 필요")
     ap.add_argument("--allow_not_citable", action="store_true",
                     help=f"NOT_CITABLE 조각({'/'.join(NOT_CITABLE)})의 E_ads 도 계산")
+    ap.add_argument("--no_recenter", action="store_true",
+                    help="분자 재중심(뷰어에서 안 잘리게) 끄기 — OUTCAR 원문 좌표 그대로")
     ap.add_argument("--selftest", action="store_true")
     a = ap.parse_args()
     if a.selftest:
@@ -949,7 +1036,8 @@ def main():
     metas = []
     for path in list(a.scf_in) + list(a.outcar):
         if a.out:
-            metas.append(emit_struct(path, a.out, tag=a.tag, scale=a.vesta_scale))
+            metas.append(emit_struct(path, a.out, tag=a.tag, scale=a.vesta_scale,
+                                     recenter=not a.no_recenter))
         else:
             cell, labels, pos, meta = read_outcar(path)
             meta.update(tag=default_tag(path), nat=len(pos))

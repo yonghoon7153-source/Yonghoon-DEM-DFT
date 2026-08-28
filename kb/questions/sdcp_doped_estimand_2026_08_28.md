@@ -3,7 +3,7 @@ title: "SDCP doped 흡착 — estimand 카드 (계산 전에 리뷰로 보내는
 date: 2026-08-28
 updated: 2026-08-28
 tags: [sdcp, estimand, dft, adsorption, polaron, self-doping, open-question]
-status: open
+status: active
 confidence: medium
 verificationStatus: unverified
 explored: false
@@ -19,6 +19,60 @@ evidenceScope: multi-source-primary
 > 여덟 번 돌리고 여덟 번 반려된 뒤 처음으로, 돌리기 **전에** 쓰는 문서다.
 >
 > ⛔ 이 카드가 못 하는 것: 계산이 맞는지는 안 본다. **질문이 성립하는지만** 본다.
+
+## 🔴 회신 O 판정 (2026-08-28) — **P0 전면 반려. 슬랩 NO-GO.**
+
+원문: `kb/reviews/codex_O_sdcp_doped_estimand_reply_2026_08_28.md`. 요지:
+
+> *"아홉 번째 실패는 계산 오류가 아니라, **평균적인 실제 재료를 임의의 단일 oligomer
+> microstate 로 바꿔 측정한 데서** 생긴다."*
+
+이 카드의 아래 절들은 **원문 보존용**이다 — 어디가 반려됐는지 ⛔SUPERSEDED 표시를 달았다.
+핵심 반려 사유 여덟:
+
+1. **세 근거는 독립 반복증거가 아니라 triangulation** — 같은 방향의 prior 셋. 50.1 % 는
+   PASS 가 아니라 unresolved. "모든 trimer 에 중앙 홀 하나" 는 평균을 microstate 로 오독.
+2. **n=3 은 도핑률의 최소 정수 모델이지 수렴 모델이 아니다** — DP4/+1(25 %) bracket 필수.
+3. **ΔE_carrier 식이 무효** — 같은 기준을 쓰면 기준이 상쇄돼 "흡착에너지 차" 가 아니라
+   복합체 국소화상태 에너지차다. 주 estimand 는 **adiabatic E_ads(s*) + 연속
+   carrier_retention** 으로, ΔE_loc^vert 는 두 상태가 실재할 때만 여는 보조로.
+   s 도 **conditioning(제어변수) / realized diagnostics(관측값)** 로 갈라야 한다.
+4. **G1 폐기**(같은 NUPDOWN 태그가 아니라 같은 state-selection policy) · **G2 계별 분리**
+   (M≈1 은 필요조건일 뿐) · **G3 폐기**(50 % 문턱은 분할법 오차 안) · **G4 폐기**(총자화가
+   아니라 per-Ni signed moment vector + flip indices — **carrier 이동이 만든 Ni 변화는
+   답일 수 있는데 G4 가 그것을 버린다**) · G5 분리 · G6 강등.
+5. A2 는 MAGMOM(초기조건)이 아니라 **fresh-start multistart** 로. A5 는 최소세트 제외.
+   A7 은 **A7a(triplet) / A7b(BS singlet)** 로 분리. `2E(n3,+1) vs E(n6,+2)` 직접 비교는
+   말단·중합 에너지가 섞여 **무효** — 동일 N 의 U_eff = E(+2)+E(0)−2E(+1) 만 보조로.
+6. **"총에너지 뺄셈이라 영향 없음" 은 틀렸다** — δ_m = E_M^{M=0} − E_M^{free} 가
+   절대 E_ads 와 0.346 eV headline 에 남는다 (자세차에는 소거). neutral 마감은
+   `closed_for_scope_pending_spin_equivalence` 로. **"홀이 사라졌다" 해석도 성립 안 함** —
+   총자화는 fragment-local carrier 위치의 증거가 아니다.
+7. **Kumar 2018 전제 정정** — (EDOT6)²⁺ 와 (SS6)²⁻ 를 **별도 흡착종**으로 썼다
+   (자가도핑 중성 모델이 아니다). singlet/triplet 비교도 없다. de-doping 보고는 오히려
+   "흡착 중 carrier 상태가 바뀐다" 는 경고. Yano 2019 는 실측이 아니라 가정 환산 → prior 로
+   강등. **polaron/bipolaron 은 도핑률만으로 못 고른다** (PEDOT triplet pair 실측 존재) —
+   둘 다 후보 microstate 로 두고, 실제 분율은 EPR 등 실험이 정한다.
+8. 규율이 prose 에 머물러 있다 — machine-readable estimand_id·화학식·Q·NELECT·
+   state-selection policy·중단 코드가 **job manifest 와 분석기에 연결**돼야 한다.
+
+**재승인 조건 7** (전부 채우기 전 슬랩 NO-GO):
+① 분자식·protonation·counterion·Q·NELECT·reservoir 확정
+② 주 estimand = adiabatic E_ads + 연속 carrier_retention
+③ 보조 ΔE_loc 는 두 재현 가능한 상태가 있을 때만
+④ G1–G4 전면 교체 ⑤ DP3/+1·DP4/+1·n=6 spin manifold 기체상 선행검사
+⑥ neutral wave1 spin-equivalence 짝검사 ⑦ 규칙의 manifest/analyzer 연결
+
+### 회신 O 와 별개의 사실 정정 (같은 날, 이온화-상태 문헌 조사)
+
+이 카드의 "협력자 3종" 표 1번에 **"⛔ 계산 없음"** 이라 적은 것은 **범위가 틀렸다**:
+기체상 SO₃⁻ 음이온은 **이미 있다** — 로컬 ORCA r²SCAN-3c so3li/anion 런
+(DPE +14.17 / LCA −6.76 / EA +3.67 eV, `kb/projects/sdcp_master_v2_2026_07_11.md` §3.9(b),
+인용 가능 판정 완료). 없는 것은 **흡착용** 음이온뿐이다. 1저자가 이미 있는 것을 다시
+돌리지 않도록 여기 적는다. 그리고 알짜중성 counter-ion 접근의 실물이 이미 우리 db 에
+있다 — **SO₃Li** (LCA −6.76 eV, operando 형태 판정). 하전 슬랩 없이 협력자의 SO₃⁻ 요구를
+받는 착지점이다. 선행 확인 1건: **LiNiO₂(104)+U 슬랩이 금속인가 절연체인가** — 금속이면
+음이온 흡착을 중성 셀로 자연스럽게 받을 수 있다 (wave1 DOS 재판독으로 답 가능, 비용 0).
 
 ## 왜 중요한가 — 이 카드를 지금 쓰는 이유 (두 개의 새 입력)
 
@@ -46,7 +100,7 @@ evidenceScope: multi-source-primary
 ⚠ 종전 문장은 *"doped SDCP 가 얼마나 강하게 흡착하는가"* 였다. 그 문장이 여덟 번의 원인이다 —
 **단일 스칼라를 요구하는데 계는 상태가 여럿**이기 때문이다.
 
-## 2. 그것을 재는 양 (식으로)
+## 2. 그것을 재는 양 (식으로) — ⛔SUPERSEDED (회신 O 3번: 기준 상쇄로 무효. 위 판정 절의 새 구조로 교체)
 
 상태를 **선언한** 흡착에너지, 그리고 그 차:
 
@@ -167,7 +221,7 @@ DFT(litdb: Han 2025 NCM811 · Kang 2025 NMC · Cho 2026 Zn)는 전부 fragment �
 Yano et al. 2019, *Sci. Adv.* (10.1126/sciadv.aav9492) 의 **"3–4 모노머당 전하 1개 ·
 술폰산기의 22–35 % 해리"** 와 정합한다. 근거 ③ 이 우리 내부 수치만이 아니게 됐다.
 
-### 🔴 문헌이 열어 준 **제3의 길** — 바이폴라론이면 열린 껍질 문제가 사라진다
+### ⛔SUPERSEDED — "제3의 길" (회신 O 7번: Kumar 는 별도 하전종이었고, 바이폴라론은 선험적으로 못 고른다)
 
 Kumar 의 +2 바이폴라론을 **자가도핑 계에 그대로 옮기면**:
 
@@ -190,7 +244,7 @@ Kumar 의 +2 바이폴라론을 **자가도핑 계에 그대로 옮기면**:
 
 ⇒ 회신 O 에 **n=3 doublet 대 n=6 바이폴라론 중 무엇을 물어야 하는가**를 넣는다.
 
-## 4. 검증 게이트 — 결과를 보기 전에 정한다
+## 4. 검증 게이트 — ⛔SUPERSEDED (회신 O 4번: G1·G3·G4 폐기, G2 계별 분리, G5 분리, G6 강등)
 
 계·상태별로 expected / tolerance / rationale 을 **선언**한다 (회신 N: "정수 자화" 는 범용 게이트가 아니다).
 
@@ -226,7 +280,7 @@ grep -rl "E_ads\|폴라론\|NUPDOWN" kb/ | head
 `kb/reviews/codex_M_sdcp_wave15_close_2026_08_28.md`(basin) ·
 `kb/reviews/codex_N_estimand_discipline_2026_08_28.md`(NUPDOWN 은 위치를 안 묶는다).
 
-## 결정 실험 — 제안하는 최소 계산 (리뷰 승인 후에만 던진다)
+## 결정 실험 — ⛔SUPERSEDED (회신 O 5번: A2 multistart 교체, A5 제외, A7→A7a/A7b 분리, cross-n 직접비교 무효)
 
 **전부 기체상**이다 — 슬랩은 §3.1 이 리뷰를 통과한 뒤에.
 
@@ -270,6 +324,12 @@ n=6 은 새로 만들어야 한다 (기존 trimer 빌더 확장 우선 — 새 �
   (Yano 2019 Sci. Adv.) 확보. ⇒ **제3의 길(n=6 바이폴라론, 알짜중성·닫힌 껍질)** 을
   결정 실험 A6·A7 로 추가하고 회신 O 7번 항목으로 올림.
   ⚠ 전량 초록/스니펫 — proxy 차단으로 본문 0편. 설계 확정 전 PDF 확보 필요.
+- **2026-08-28 (밤) — 회신 O 접수: P0 전면 반려, 슬랩 NO-GO, 재승인 조건 7.**
+  G1·G3·G4 폐기, ΔE_carrier 식 무효(기준 상쇄), "제3의 길" 전제 정정(Kumar 는 별도
+  하전종), n=3 은 수렴 모델 아님(DP4 bracket 필수), "총에너지 뺄셈이라 영향 없음" 반려
+  (δ_m 잔존 → neutral 마감 `closed_for_scope_pending_spin_equivalence`), Yano prior 강등.
+  같은 날 이온화 조사: 기체상 음이온은 **이미 있음**(ORCA DPE/LCA/EA) — "계산 없음" 정정.
+  다음 행동: 재승인 조건 ①(화학종 확정)과 ⑥(spin-equivalence 짝검사, 가장 싼 계산)부터.
 
 ## 연결
 

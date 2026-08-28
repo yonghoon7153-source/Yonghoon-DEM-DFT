@@ -106,13 +106,19 @@ wave1 OUTCAR 을 구조 배포용으로 전수 재판독하다 잡았다. 위 �
 | `sdcp_doped Nitop net4` | 3.6308 | 3.0 또는 5.0 |
 
 넷 다 어느 쪽도 아니다. §1 의 "상태 미선언 다중해" 가 wave1 에서 이렇게 나타났다.
-⚠ 어디로 갔는지는 총자화만으로 못 말한다 (회신 N 의 과대해석 경고 그대로).
+⚠ **회신 O 정정 (2026-08-28)**: 표 3열의 "홀전자가 분자에 남았다면" 산술 자체가 과대해석이다 —
+총자화는 fragment-local carrier 위치의 증거가 아니므로 "홀이 그대로 있지 않다/사라졌다"
+로 읽으면 안 된다. 말할 수 있는 것은 **"총자화가 어느 단순 배정과도 안 맞는다 — 상태
+배정 불가"** 까지다.
 
 같은 비대칭이 **중성형에도** 있다: `sdcp_neutral` pm1 자세 넷의 총자화가
 0.1338 / 0.0004 / 0.1326 / 0.1298 μB — 닫힌 껍질 + 상쇄 슬랩이면 0 이 기대값인데
 **자세끼리 다르다.** 자리대비(+9.3 meV)는 상태가 안 맞춰진 쌍의 비교다.
-⚠ 이것은 `sdcp_neutral` 마감의 재개 조건 넷 중 **어디에도 해당하지 않으므로 열지 않는다**;
-확정 E_ads(총에너지 뺄셈)는 영향받지 않는다. 재개 조건 1 의 요구를 좁히는 데만 썼다.
+⚠ ~~확정 E_ads(총에너지 뺄셈)는 영향받지 않는다~~ — **회신 O 6번이 이 판단을 반려했다**:
+분자 기준이 NUPDOWN=0 제약이라 δ_m = E_M^{M=0} − E_M^{free} 가 절대 E_ads 와 0.346 eV
+headline 에 남는다 (같은 분자를 쓰는 자세차에는 소거). neutral 마감은
+`closed_for_scope_pending_spin_equivalence` 로 내렸고, 해제는 spin-equivalence 짝검사
+(`db/properties/sdcp_neutral_closed_2026_08_28.json`)가 정한다.
 
 실측: `db/properties/sdcp_wave1_job_energies_2026_08_28.json` §🔴 절 ·
 표: `db/properties/sdcp_wave1_job_energies_2026_08_28.csv` (mag_total_muB 열)
