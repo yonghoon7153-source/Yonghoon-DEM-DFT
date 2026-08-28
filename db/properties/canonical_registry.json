@@ -718,7 +718,7 @@
   {
    "system": "sdcp",
    "metric": "SDCP_dE_site_meV__ptfe_dimer_pm1",
-   "value": 36.07,
+   "value": 36.071,
    "unit": "meV",
    "source_path": "db/properties/sdcp_wave1_citable.json",
    "source_key": "/dE_site_meV/ptfe_dimer_pm1",
@@ -736,7 +736,7 @@
   {
    "system": "sdcp",
    "metric": "SDCP_dE_site_meV__ptfe_dimer_net4",
-   "value": 36.16,
+   "value": 36.157,
    "unit": "meV",
    "source_path": "db/properties/sdcp_wave1_citable.json",
    "source_key": "/dE_site_meV/ptfe_dimer_net4",
@@ -754,7 +754,7 @@
   {
    "system": "sdcp",
    "metric": "SDCP_dE_site_meV__ptfe_c10_pm1",
-   "value": 49.77,
+   "value": 49.767,
    "unit": "meV",
    "source_path": "db/properties/sdcp_wave1_citable.json",
    "source_key": "/dE_site_meV/ptfe_c10_pm1",
@@ -772,7 +772,7 @@
   {
    "system": "sdcp",
    "metric": "SDCP_dE_site_meV__sdcp_neutral_pm1",
-   "value": 9.27,
+   "value": 9.265,
    "unit": "meV",
    "source_path": "db/properties/sdcp_wave1_citable.json",
    "source_key": "/dE_site_meV/sdcp_neutral_pm1",

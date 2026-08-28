@@ -74,5 +74,6 @@
   "1_basin_conditioned_Eads": "E(복합체,β)−E(슬랩,β)−E(분자) — 자기상태 보존 조건부. SI 용",
   "2_lowest_sampled_Eads": "min_b E(복합체)−min_a E(슬랩)−E(분자) — 본문 용. lowest sampled 슬랩 = pm1-A (net4-A 보다 78.575 meV 낮음). ⛔ '전역 최소' 라 부르지 않는다 — 표본한 것 중 최저일 뿐",
   "3_fixed_basin_dE_site": "같은 basin 쌍의 복합체 총에너지 직접차 — 자리선호는 이것만"
- }
+ },
+ "closure": "sdcp_neutral 은 2026-08-28 **닫혔다** — 허용 서술·금지 서술·재개 조건은 db/properties/sdcp_neutral_closed_2026_08_28.json 이 정본. 재개 조건 4개 밖의 이유로 다시 열지 않는다"
 }

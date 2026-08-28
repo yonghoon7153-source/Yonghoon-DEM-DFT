@@ -1,6 +1,6 @@
 # kb 카탈로그 (생성물 — 손으로 고치지 말 것)
 
-> `python3 tools/kb_wiki.py index` 가 만든다 · 2026-08-28 · managed-files: 260
+> `python3 tools/kb_wiki.py index` 가 만든다 · 2026-08-28 · managed-files: 261
 
 규칙: kb/SCHEMA.md · 열린 질문: kb/questions/ · 논지 카드: kb/syntheses/ · 원장: kb/open_items.md · 문헌: litdb/INDEX.md
 
@@ -25,7 +25,7 @@
 - `kb/physics/vacancy_effects.md` — Vacancy Effects in Argyrodite
 - `kb/physics/vacancy_mechanism_corrected_2026_05_08.md` — Vacancy + Halogen Distribution → Adhesion: Corrected Mechanism
 
-## methodology/ (47)
+## methodology/ (48)
 - `kb/methodology/PHASE1_QUICKSTART_doping.md` — Phase 1 Quickstart Guide
 - `kb/methodology/adhesion_calibration_decision_2026_05_17.md` — Adhesion Calibration Decision — 2026-05-17
 - `kb/methodology/adhesion_energy.md` — Adhesion Energy (Wad) Calculation
@@ -50,6 +50,7 @@
 - `kb/methodology/electron_localization_framework_2026_07_08.md` — 전자 국소화 프레임워크 — LPSCl이 작동하는 이유, B₂O₃ 도핑이 그것을 강화하는 방식
 - `kb/methodology/eos_fitting.md` — EOS Fitting — Birch-Murnaghan Equation of State
 - `kb/methodology/esp_z590_setup.md` — esp-Z590-AORUS-MASTER Server Setup (new home/lab server)
+- `kb/methodology/estimand_before_running_2026_08_28.md` — 여덟 번 계산하고 여덟 번 반려된 이유 — 우리는 '제대로 돌렸나'만 리뷰했다 ○미열람
 - `kb/methodology/esw_grandpotential_staircase_explained.md` — 전기화학 안정성 창(ESW) — 전압별 분해 staircase 완전 해설
 - `kb/methodology/external_review_response_2026_05_16.md` — External Review Response (2026-05-16)
 - `kb/methodology/handoff_2026_08_20_night.md` — 인수인계 2026-08-20 밤 — 밤새 도는 것 · 아침에 볼 것 ○미열람
@@ -293,6 +294,6 @@
 - `kb/seminars/seminar_redirect_2026_08_11.md` — 세미나 방향 전환 브리프 (2026-08-11 밤) — Codex 재구성용 재료 목록
 
 ## elements/ — 118개 (생성물/템플릿, 목록 생략)
-## templates/ — 1개 (생성물/템플릿, 목록 생략)
+## templates/ — 2개 (생성물/템플릿, 목록 생략)
 
 ## litdb/ — digest 198개 (정본 목록: litdb/INDEX.md)
