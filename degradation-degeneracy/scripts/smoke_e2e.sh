@@ -502,6 +502,60 @@ assert e["curves_sha256"] == man["run_spec"]["producer"]["curves_sha256"], \
 print("   ✅ artifact_index: 승격분만·kind·64자리·봉인 곡선 digest 일치 (12차 발견 5)")
 PYEOF
 [[ $? -eq 0 ]] || bad "artifact_index 검사 실패 (12차 발견 5)"
+
+# ★ 14차 발견 7 — 기존 묶음을 옆으로 치우는 **첫 mv** 가 실패하는 경로를 실제로
+#   태운다. 예전 코드는 그 결과를 안 봐서, `$out` 이 남은 채 다음 줄의
+#   `mv "$cand" "$out"` 이 돌았다 — mv 는 목적지가 존재하는 디렉터리면 덮어쓰지
+#   않고 **그 안으로 집어넣으므로** `$out/$name` 중첩이 생기고, 그런데도 승격
+#   성공으로 계상돼 artifact_index 에 오른다. PATH 앞에 실패하는 mv 를 끼운다.
+_NAME="$(basename "$GFIT")"
+_SHIM="$BASE/shim"; mkdir -p "$_SHIM"
+cat > "$_SHIM/mv" <<'SHIMEOF'
+#!/usr/bin/env bash
+# 목적지가 `.previous_*` 인 이동만 실패시킨다 (나머지는 진짜 mv 로 넘긴다)
+case "$(basename "${!#}")" in .previous_*) exit 1 ;; esac
+exec /bin/mv "$@"
+SHIMEOF
+chmod +x "$_SHIM/mv"
+_sealed_before="$(sha256sum "$ARCH_TMP/$_NAME/payload_sha256.yaml" 2>/dev/null | cut -d' ' -f1)"
+if [[ -z "$_sealed_before" ]]; then
+  bad "발견 7 검사의 전제가 깨졌다 — 승격된 묶음이 없어 보존 여부를 잴 수 없다"
+else
+  PATH="$_SHIM:$PATH" ARCHIVE_DEST="$ARCH_TMP" ./scripts/archive_results.sh "$GFIT" \
+    >/dev/null 2>&1
+  _rc=$?
+  _sealed_after="$(sha256sum "$ARCH_TMP/$_NAME/payload_sha256.yaml" 2>/dev/null | cut -d' ' -f1)"
+  # 중첩 흔적: mv 는 목적지가 존재하는 디렉터리면 그 **안으로** 넣는다
+  _nested="$(find "$ARCH_TMP/$_NAME" -maxdepth 1 -name '.candidate_*' -o -maxdepth 1 -name "$_NAME" 2>/dev/null | head -1)"
+  if [[ "$_rc" -ne 0 && -n "$_sealed_after" \
+        && "$_sealed_before" == "$_sealed_after" && -z "$_nested" ]]; then
+    ok "기존 묶음 이동 실패 → 승격 중단·묶음 보존 (14차 발견 7)"
+  else
+    bad "첫 mv 실패인데 승격이 진행됐다 (rc=$_rc, 봉인 $_sealed_before→${_sealed_after:-없음}, 중첩 ${_nested:-없음})"
+  fi
+fi
+rm -rf "$_SHIM"
+
+# ★ 14차 발견 8 — source_commit 은 **계산 시작** 기록의 commit 이어야 한다
+#   (manifest 를 쓴 시점도, 보관 시점 HEAD 도 아니다).
+"$PY" - "$ARCH_TMP" "$GFIT" <<'PYEOF'
+import sys
+from pathlib import Path
+import yaml
+dest, run = Path(sys.argv[1]), Path(sys.argv[2])
+idx = yaml.safe_load((dest / "artifact_index.yaml").read_text(encoding="utf-8"))
+e = idx["runs"][run.name]
+man = yaml.safe_load((run / "manifest.yaml").read_text(encoding="utf-8"))
+want = (man.get("start_provenance") or {}).get("git_commit")
+assert want, "manifest 에 start_provenance.git_commit 이 없다"
+assert e["source_commit"] == want, \
+    f"source_commit {e['source_commit']} ≠ 계산 시작 commit {want}"
+assert "다음 commit" not in idx["_주의"], "옛 (틀린) 순서 설명이 남아 있다"
+assert "계산한 코드" in idx["_주의"]
+print("   ✅ source_commit = 계산 시작 기록의 commit (14차 발견 8)")
+PYEOF
+[[ $? -eq 0 ]] || bad "source_commit 검사 실패 (14차 발견 8)"
+
 _before="$(sha256sum "$ARCH_TMP/$(basename "$GFIT")/payload_sha256.yaml" | cut -d' ' -f1)"
 "$PY" - "$GFIT" <<'PYEOF'
 import sys

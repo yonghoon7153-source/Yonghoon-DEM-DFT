@@ -170,7 +170,18 @@ PYEOF
     if [[ -d "$out" ]]; then
       old="$DEST/.previous_$name.$$"
       rm -rf "$old"
-      mv "$out" "$old"
+      # ★ 14차 발견 7 — **첫 mv 도 fail-closed 여야 한다.** 예전에는 결과를 안
+      #   봐서, 이 mv 가 실패하면 `$out` 이 그대로 남은 채 다음 줄의
+      #   `mv "$cand" "$out"` 이 돌았다. 목적지가 존재하는 디렉터리면 mv 는
+      #   덮어쓰는 게 아니라 **그 안으로 집어넣는다** — `$out/$name` 이 생기고
+      #   기존 묶음과 새 묶음이 한 디렉터리에 겹친다. 그런데도 승격 성공으로
+      #   계상돼 artifact_index 에 오른다.
+      if ! mv "$out" "$old"; then
+        echo "  기존 묶음을 옆으로 옮기지 못했습니다 ($out) — 승격을 건너뜁니다" >&2
+        rm -rf "$cand"
+        n_bad=$((n_bad+1))
+        continue
+      fi
     fi
     if mv "$cand" "$out"; then
       [[ -n "$old" ]] && rm -rf "$old"
@@ -228,17 +239,44 @@ for name in names:
     ent = {"artifact_kind": kind, "payload_index_sha256": _sha(pi)}
     # ★ 13차 발견 7 — 이 산출물을 **계산한** commit (archive 시점 HEAD 가 아니라).
     #   grid producer 는 curves_manifest 가, fit 은 manifest 가 소유한다.
-    _mm = b / "manifest.yaml"
-    _man0 = (yaml.safe_load(_mm.read_text(encoding="utf-8")) or {}) if _mm.is_file() else {}
-    ent["source_commit"] = _man0.get("git_commit")
-    _cm0 = b / "curves_manifest.yaml"
-    if _cm0.is_file():
-        _cman0 = yaml.safe_load(_cm0.read_text(encoding="utf-8")) or {}
-        _cc = _cman0.get("git_commit")
-        if kind == "grid_producer":
-            ent["source_commit"] = _cc
-        elif _cc and ent.get("source_commit") and _cc != ent["source_commit"]:
-            ent["_주의_producer_commit"] = _cc
+    # ★ 14차 발견 8 — 그런데 manifest 의 top-level `git_commit` 은 **기록을 쓴
+    #   시점**(계산이 끝난 뒤)의 commit 이다. 계산 도중에 코드가 바뀌면
+    #   (manifest 스스로 `git_commit_changed_during_run` 으로 인정하는 상황)
+    #   그 값은 계산에 쓰인 코드가 아니다. 시작 기록의 commit 을 먼저 쓴다:
+    #     fit          manifest.start_provenance.git_commit / manifest_start.yaml
+    #     grid producer curves_manifest_start.yaml
+    #   둘 다 묶음에 동봉된다 (`tools/archive_bundle.py` REQUIRED_*).
+    def _yload(p):
+        return (yaml.safe_load(p.read_text(encoding="utf-8")) or {}) \
+            if p.is_file() else {}
+
+    def _start_commit(*cands):
+        for c in cands:
+            if c:
+                return c
+        return None
+
+    _man0 = _yload(b / "manifest.yaml")
+    _ms0 = _yload(b / "manifest_start.yaml")
+    _fit_commit = _start_commit(
+        (_man0.get("start_provenance") or {}).get("git_commit"),
+        _ms0.get("git_commit"),
+        _man0.get("git_commit"))
+    ent["source_commit"] = _fit_commit
+    _cman0 = _yload(b / "curves_manifest.yaml")
+    _cs0 = _yload(b / "curves_manifest_start.yaml")
+    _cc = _start_commit(_cs0.get("git_commit"), _cman0.get("git_commit"))
+    if kind == "grid_producer":
+        ent["source_commit"] = _cc
+    elif _cc and ent.get("source_commit") and _cc != ent["source_commit"]:
+        ent["_주의_producer_commit"] = _cc
+    # 계산 도중 코드가 바뀐 실행은 숨기지 않는다 — 그 자체가 인용 판단 재료다
+    if _man0.get("git_commit_changed_during_run") \
+            or _man0.get("source_digest_changed_during_run"):
+        ent["_주의_실행중_코드변경"] = {
+            "git_commit": bool(_man0.get("git_commit_changed_during_run")),
+            "source_digest": bool(_man0.get("source_digest_changed_during_run")),
+            "manifest_기록시점_commit": _man0.get("git_commit")}
     rm = b / "restore_map.yaml"
     meta = (yaml.safe_load(rm.read_text(encoding="utf-8")) or {}) if rm.is_file() else {}
     ent["run_dir"] = meta.get("run_dir")
@@ -285,8 +323,12 @@ out = dest / "artifact_index.yaml"
 #   쓸 수 없다 (artifact commit A → 이 index 를 갱신하는 commit B 순서).
 out.write_text(yaml.safe_dump(
     {"_주의": ("RESULTS.md 의 앵커(fits/curves digest)와 여기 값이 같아야 그 보고서의 "
-             "근거 묶음이다. source_commit 은 **계산 코드**의 commit 이고, 이 묶음이 "
-             "실제로 담긴 commit 은 이 파일을 커밋한 다음 commit 이다 (12차 발견 5-b)."),
+             "근거 묶음이다. source_commit 은 그 산출물을 **계산한 코드**의 commit "
+             "이다 — 보관 시점 HEAD 도, manifest 를 쓴 시점의 commit 도 아니고 "
+             "계산 **시작** 기록의 commit 이다 (14차 발견 8). 이 묶음이 저장소에 "
+             "실제로 담긴 commit 은 이 파일 자신을 포함하는 commit 이라 파일 안에 "
+             "적을 수 없다 — `git log -1 --oneline -- <이 파일>` 로 확인할 것 "
+             "(12차 발견 5-b)."),
      "source_commit": commit, "runs": runs},
     allow_unicode=True, sort_keys=False), encoding="utf-8")
 print(f"\n인덱스: {out} ({len(runs)}개 승격 묶음, full 64자리 digest)")
