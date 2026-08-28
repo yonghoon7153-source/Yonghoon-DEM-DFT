@@ -190,3 +190,70 @@ export function arcWindow(
   const span = arcs[arcs.length - 1]!.x - arcs[0]!.x
   return { xMax: arcs[arcs.length - 1]!.x + span * 0.1, yMax: arcTop }
 }
+
+/** 접힌 스캔 한 줄이 말해야 하는 fitting 상태.
+ *
+ *  `label` 은 줄에 적을 짧은 말, `detail` 은 그 밑에 적을 회로와 χ² 다.
+ */
+export interface ScanFit {
+  /** 이 줄이 대표하는 스윕 수 (분모). */
+  sweeps: number
+  /** 그 중 맞춤이 하나라도 있는 스윕 수. */
+  fitted: number
+  /** 스윕 **전부**에 맞춤이 있는가. */
+  done: boolean
+  label: string
+  detail: string
+}
+
+/** 접힌 스캔 줄의 fitting 상태 — 대표 스윕 하나가 아니라 **스윕 전부**.
+ *
+ *  접으면 줄은 하나인데 파일 안에는 스윕이 스물이다.  그 줄에 첫 스윕의 χ² 만
+ *  적으면 "이 스캔은 맞췄다" 로 읽히는데, 실제로는 하나만 맞추고 열아홉은 안
+ *  맞춘 것일 수 있다.  그것이 이 함수가 있는 이유다: **센다**.
+ *
+ *  **χ² 는 가장 나쁜 것을 적는다.**  스윕 스물의 χ² 를 평균 내면 하나가 크게
+ *  틀려도 묻힌다.  한 줄에 숫자 하나만 적을 수 있다면, 그 줄을 믿어도 되는지를
+ *  정하는 것은 가장 나쁜 스윕이다.
+ *
+ *  **분모는 파일이 말하는 스윕 수**(`declared`)다.  라이브러리의 거르개가 스윕
+ *  일부를 가릴 수 있는데, 그때 보이는 것만 세면 열하나 중 셋만 맞춘 파일이
+ *  "완료" 로 보인다.  안 보이는 스윕은 안 맞춘 것으로 세므로, 이 함수는
+ *  덜 세는 쪽으로만 틀린다 — 거짓 '완료' 는 나오지 않는다 (§0.4).
+ */
+export function scanFit(
+  sweeps: {
+    fit_count: number
+    best_circuit?: string | null
+    best_chi_squared?: number | null
+  }[],
+  declared?: number | null,
+): ScanFit {
+  const total = Math.max(sweeps.length, declared ?? 0)
+  const done = sweeps.filter((one) => one.fit_count > 0)
+  const circuits = [...new Set(done.map((one) => one.best_circuit || '')
+    .filter((one) => one !== ''))]
+  let worst: number | null = null
+  for (const one of done) {
+    const chi = one.best_chi_squared
+    if (chi === null || chi === undefined || !Number.isFinite(chi)) continue
+    if (worst === null || chi > worst) worst = chi
+  }
+
+  const parts: string[] = []
+  if (circuits.length === 1) parts.push(circuits[0]!)
+  else if (circuits.length > 1) parts.push(`회로 ${circuits.length}종`)
+  if (worst !== null) parts.push(`χ²≤${num(worst, 3)}`)
+
+  return {
+    sweeps: total,
+    fitted: done.length,
+    done: done.length > 0 && done.length === total,
+    label: done.length === 0
+      ? '—'
+      : done.length === total
+        ? 'fitting 완료'
+        : `fitting ${done.length}/${total}`,
+    detail: done.length === 0 ? '' : parts.join(' '),
+  }
+}

@@ -14,7 +14,7 @@ import userEvent from '@testing-library/user-event'
 import { useState } from 'react'
 import { describe, expect, it } from 'vitest'
 
-import { PickGrid, foldItems, type PickItem } from '../PickGrid'
+import { PickGrid, foldDone, foldItems, type PickItem } from '../PickGrid'
 
 /** 스캔 한 파일의 스윕들.  `fold.key` 는 파일(sha256)이다. */
 function sweeps(sha: string, label: string, count: number, from = 1): PickItem[] {
@@ -119,5 +119,58 @@ describe('foldItems', () => {
     expect(blocks).toHaveLength(2)
     expect(blocks[0]!.kind === 'fold' && blocks[0]!.items.map((one) => one.id))
       .toEqual([1, 2])
+  })
+})
+
+/** 접힌 줄이 **파일 전체**의 fitting 을 말하는가.
+ *
+ *  머리말 줄만 보고 고르는 사람이 많다.  스윕 열하나 중 셋만 맞춰진 파일에
+ *  체크가 붙으면, 골라 놓고 그림에서 곡선 여덟 개가 비는 것을 보게 된다.
+ */
+describe('접힌 줄의 fitting 표시', () => {
+  const fitted = (sha: string, label: string, count: number, done: number) =>
+    sweeps(sha, label, count).map((one, i) => ({
+      ...one, done: i < done, doneNote: 'fitting 완료',
+    }))
+
+  it('스윕 전부가 맞춰졌으면 접힌 줄에 완료라고 적는다', () => {
+    render(<Controlled items={fitted('sha-a', 'A_scan', 11, 11)} />)
+    const head = document.querySelector('.pick-fold-head') as HTMLElement
+    expect(head.querySelector('.done-mark')).toBeTruthy()
+    expect(head.querySelector('.done-note')!.textContent).toBe('fitting 완료')
+  })
+
+  //: 여기가 이 표시가 있는 이유다 — 셋만 맞춘 파일이 맞춘 파일로 보이면 안 된다.
+  it('일부만 맞춰졌으면 체크 없이 몇 개인지 적는다', () => {
+    render(<Controlled items={fitted('sha-a', 'A_scan', 11, 3)} />)
+    const head = document.querySelector('.pick-fold-head') as HTMLElement
+    expect(head.querySelector('.done-mark')).toBeNull()
+    expect(head.querySelector('.done-note')!.textContent).toBe('3개 fitting 완료')
+  })
+
+  it('하나도 안 맞춰졌으면 아무 말도 안 한다', () => {
+    render(<Controlled items={fitted('sha-a', 'A_scan', 11, 0)} />)
+    const head = document.querySelector('.pick-fold-head') as HTMLElement
+    expect(head.querySelector('.done-mark')).toBeNull()
+    expect(head.querySelector('.done-note')).toBeNull()
+  })
+
+  it('펴 놓아도 스윕 하나하나의 표시는 그대로다', async () => {
+    render(<Controlled items={fitted('sha-a', 'A_scan', 4, 2)} />)
+    await userEvent.click(screen.getByRole('button', { name: '스윕 고르기' }))
+    const body = document.querySelector('.pick-fold-body') as HTMLElement
+    expect(body.querySelectorAll('.done-mark')).toHaveLength(2)
+  })
+})
+
+describe('foldDone', () => {
+  it("빈 덩어리는 '다 된' 것이 아니다", () => {
+    expect(foldDone([])).toEqual({ done: 0, total: 0, all: false })
+  })
+
+  it('전부여야 all 이다', () => {
+    const some = sweeps('sha-a', 'A', 3).map((one, i) => ({ ...one, done: i < 2 }))
+    expect(foldDone(some)).toEqual({ done: 2, total: 3, all: false })
+    expect(foldDone(some.map((one) => ({ ...one, done: true }))).all).toBe(true)
   })
 })

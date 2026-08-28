@@ -8,7 +8,7 @@
 import { describe, expect, it } from 'vitest'
 
 import {
-  arcWindow, inductiveCount, inductiveRun, isScan, nyquistXy, sweepAt,
+  arcWindow, inductiveCount, inductiveRun, isScan, nyquistXy, scanFit, sweepAt,
 } from '../eis'
 
 /** 반원 하나 + 45° 확산 꼬리.  실제 전고체 풀셀의 모양이다. */
@@ -158,5 +158,75 @@ describe('SOC 스캔의 스윕', () => {
   it('둘 다 없으면 빈 문자열 — 0 으로 적으면 만방전과 구분되지 않는다', () => {
     expect(sweepAt({ capacity_mah: null, potential_v: null })).toBe('')
     expect(sweepAt({})).toBe('')
+  })
+})
+
+/** 접힌 스캔 한 줄의 fitting 상태.
+ *
+ *  이 함수가 있는 이유는 하나다: 접힌 줄에 **첫 스윕의** χ² 를 적으면 스물 중
+ *  하나만 맞춘 파일이 맞춘 파일로 보인다.  그래서 시험도 그 자리를 본다 —
+ *  "일부만 맞춘 것은 절대 완료라고 하지 않는다".
+ */
+describe('scanFit', () => {
+  const sweep = (fits: number, chi: number | null = 0.002, circuit = 'R0-p(R1,CPE1)') => ({
+    fit_count: fits,
+    best_circuit: fits ? circuit : null,
+    best_chi_squared: fits ? chi : null,
+  })
+
+  it('스윕 전부가 맞춰졌으면 완료라고 한다', () => {
+    const state = scanFit([sweep(1), sweep(2), sweep(1)], 3)
+    expect(state.done).toBe(true)
+    expect(state.label).toBe('fitting 완료')
+    expect(state.fitted).toBe(3)
+    expect(state.sweeps).toBe(3)
+  })
+
+  it('하나라도 안 맞춰졌으면 완료가 아니라 센 것을 적는다', () => {
+    const state = scanFit([sweep(1), sweep(0), sweep(1)], 3)
+    expect(state.done).toBe(false)
+    expect(state.label).toBe('fitting 2/3')
+  })
+
+  it('맞춘 적이 없으면 0/N 이 아니라 —', () => {
+    const state = scanFit([sweep(0), sweep(0)], 2)
+    expect(state.done).toBe(false)
+    expect(state.label).toBe('—')
+    expect(state.detail).toBe('')
+  })
+
+  //: 거르개가 스윕을 가려도 거짓 '완료' 는 나오지 않아야 한다.  분모는 파일이
+  //  말하는 수이고, 안 보이는 스윕은 안 맞춘 것으로 센다.
+  it('거르개에 가려진 스윕이 있으면 완료라고 하지 않는다', () => {
+    const state = scanFit([sweep(1), sweep(1)], 11)
+    expect(state.done).toBe(false)
+    expect(state.label).toBe('fitting 2/11')
+    expect(state.sweeps).toBe(11)
+  })
+
+  //: 평균이 아니라 **가장 나쁜** χ² 다.  하나가 크게 틀렸는데 나머지가 좋으면
+  //  평균은 그것을 감춘다.
+  it('χ² 는 가장 나쁜 스윕의 것을 적는다', () => {
+    const state = scanFit([sweep(1, 0.002), sweep(1, 0.5), sweep(1, 0.01)], 3)
+    expect(state.detail).toContain('χ²≤0.5')
+    expect(state.detail).toContain('R0-p(R1,CPE1)')
+  })
+
+  it('회로가 섞여 있으면 하나를 대표로 적지 않는다', () => {
+    const state = scanFit(
+      [sweep(1, 0.002, 'R0-p(R1,CPE1)'), sweep(1, 0.003, 'R0-TL')], 2)
+    expect(state.detail).toContain('회로 2종')
+    expect(state.detail).not.toContain('R0-TL')
+  })
+
+  it('χ² 가 없는 맞춤도 셈에는 들어간다', () => {
+    const state = scanFit([sweep(1, null), sweep(1, null)], 2)
+    expect(state.label).toBe('fitting 완료')
+    expect(state.detail).toBe('R0-p(R1,CPE1)')
+  })
+
+  it('빈 목록은 완료가 아니다', () => {
+    expect(scanFit([], 0).done).toBe(false)
+    expect(scanFit([], 0).label).toBe('—')
   })
 })

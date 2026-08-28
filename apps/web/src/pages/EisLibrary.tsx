@@ -20,7 +20,7 @@ import { DeleteMeasurementButton, RelatedCellSelect } from '../components/Relate
 import { GroupTag, OwnerTag, leafOf } from '../components/RowTags'
 import { Alert, Card, Empty, Field, Spinner } from '../components/ui'
 import { api } from '../lib/api'
-import { isScan } from '../lib/eis'
+import { isScan, scanFit } from '../lib/eis'
 import { dateTime, num } from '../lib/format'
 import { useAsync, useStickyState } from '../lib/hooks'
 import type { EisKind, Spectrum } from '../lib/types'
@@ -119,14 +119,19 @@ export function EisLibrary() {
     })
   }, [matched, foldScans])
 
-  //: 접힌 줄이 대표하는 스윕의 수.  줄에 그 수를 적어야 "이 파일에 스물이
+  //: 접힌 줄이 대표하는 스윕들.  줄에 그 수를 적어야 "이 파일에 스물이
   //  있다" 가 보인다 -- 안 적으면 접은 것과 원래 하나인 것이 같아 보인다.
+  //  그리고 fitting 칸도 이것으로 센다: 접힌 줄에 **첫 스윕의** χ² 만 적으면
+  //  하나만 맞춘 파일이 맞춘 파일로 보인다 (`scanFit`).
   const sweepsOf = useMemo(() => {
-    const count = new Map<string, number>()
+    const rows = new Map<string, Spectrum[]>()
     for (const item of matched) {
-      if (isScan(item)) count.set(item.sha256, (count.get(item.sha256) ?? 0) + 1)
+      if (!isScan(item)) continue
+      const seen = rows.get(item.sha256)
+      if (seen) seen.push(item)
+      else rows.set(item.sha256, [item])
     }
-    return count
+    return rows
   }, [matched])
 
   // 스캔은 파일 단위로 세어야 뜻이 맞는다 — 스윕 21개는 스캔 1개다.
@@ -284,6 +289,10 @@ export function EisLibrary() {
   )
 
   function row(item: Spectrum) {
+    // 접혀 있을 때만 스캔 전체를 센다.  펴 놓으면 한 줄이 스윕 하나이므로
+    // 그 스윕 자신의 맞춤을 적는 것이 맞다.
+    const sweeps = foldScans && isScan(item) ? sweepsOf.get(item.sha256) : undefined
+    const scan = sweeps ? scanFit(sweeps, item.sweep_count) : null
     return (
                   <tr key={item.id}>
                     <td className="text">
@@ -315,7 +324,7 @@ export function EisLibrary() {
                           {' '}
                           <Link to={`/scans/${item.sha256}`} className="tiny">
                             {foldScans
-                              ? `[SOC 스캔 · 스윕 ${sweepsOf.get(item.sha256)
+                              ? `[SOC 스캔 · 스윕 ${sweepsOf.get(item.sha256)?.length
                                   ?? item.sweep_count}개]`
                               : `[스캔 ${item.sweep_index}/${item.sweep_count}]`}
                           </Link>
@@ -352,8 +361,17 @@ export function EisLibrary() {
                       {item.at_cycle === null ? '—' : item.at_cycle}
                     </td>
                     <td className="text dim tiny">
-                      {/* 맞춘 적이 없는 것과 맞췄는데 나쁜 것은 다르다. */}
-                      {item.fit_count
+                      {/* 맞춘 적이 없는 것과 맞췄는데 나쁜 것은 다르다.
+                          접힌 스캔 줄은 이 줄이 대표하는 **스윕 전부**를 센다 —
+                          첫 스윕의 χ² 는 그 파일의 상태가 아니다. */}
+                      {scan ? (
+                        <>
+                          {scan.label}
+                          {scan.detail
+                            ? <div className="faint">{scan.detail}</div>
+                            : null}
+                        </>
+                      ) : item.fit_count
                         ? `${item.best_circuit} χ²=${num(item.best_chi_squared, 3)}`
                         : '—'}
                     </td>

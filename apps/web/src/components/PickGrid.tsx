@@ -55,6 +55,20 @@ type Block =
   | { kind: 'one'; item: PickItem }
   | { kind: 'fold'; key: string; label: string; note?: string; items: PickItem[] }
 
+/** 접힌 파일 한 줄이 말해야 하는 '다 된' 상태 — 스윕 전부인가, 몇 개인가.
+ *
+ *  머리말 줄만 보고 고르는 사람이 많다 (펴는 것이 한 번 더 누르는 일이라).
+ *  그래서 **그 줄이 파일 전체를 말해야** 한다: 스윕 열하나 중 셋만 맞춰진
+ *  파일에 체크가 붙으면, 골라 놓고 그림에서 곡선 여덟 개가 비는 것을 본다.
+ *  반대로 전부 맞춰진 파일에 아무 표시가 없으면 펴서 열하나를 세어야 안다.
+ */
+export function foldDone(
+  items: PickItem[],
+): { done: number; total: number; all: boolean } {
+  const done = items.filter((one) => one.done).length
+  return { done, total: items.length, all: items.length > 0 && done === items.length }
+}
+
 /** 평평한 목록을 접힌 덩어리로.  **첫 등장 자리**를 지킨다 — 스캔을 목록
  *  끝으로 몰면 방금 올린 파일이 맨 밑에 가 있다. */
 export function foldItems(items: PickItem[]): Block[] {
@@ -265,12 +279,20 @@ export function PickGrid({
               const ids = block.items.map((one) => one.id)
               const on = ids.filter((id) => picked.includes(id)).length
               const shown = open.includes(block.key)
+              // 접힌 줄의 '다 된' 상태 — 스윕 하나가 아니라 파일 전체 (`foldDone`).
+              const mark = foldDone(block.items)
+              const doneWord = block.items.find((one) => one.doneNote)?.doneNote
+              const doneLine = doneWord && mark.done
+                ? (mark.all ? doneWord : `${mark.done}개 ${doneWord}`)
+                : ''
               return (
                 <div className="pick-fold" key={`fold:${block.key}`}>
                   <div className="pick-fold-head">
                     <label
                       className="pick-item small"
-                      title={`${block.label}\n스윕 ${ids.length}개`}
+                      title={[`${block.label}`, `스윕 ${ids.length}개`,
+                              doneLine ? `${mark.done}/${mark.total} ${doneWord}` : null]
+                        .filter(Boolean).join('\n')}
                       style={{
                         cursor: !on && full ? 'default' : 'pointer',
                         opacity: !on && full ? 0.45 : 1,
@@ -287,10 +309,19 @@ export function PickGrid({
                       />
                       <span style={{ minWidth: 0 }}>
                         <span className="truncate" style={{ display: 'block' }}>
+                          {/* 스윕 **전부**가 됐을 때만 체크다.  일부에 체크가
+                              붙으면 접힌 줄을 믿고 골랐다가 빈 곡선을 본다. */}
+                          {mark.all ? <span className="done-mark" aria-hidden>✓</span> : null}
                           {block.label}
                         </span>
                         <span className="tiny faint truncate" style={{ display: 'block' }}>
                           스윕 {ids.length}개{on ? ` · ${on}개 켬` : ''}
+                          {doneLine ? (
+                            <>
+                              {' · '}
+                              <span className="done-note">{doneLine}</span>
+                            </>
+                          ) : null}
                           {block.note ? ` · ${block.note}` : ''}
                         </span>
                       </span>
