@@ -113,6 +113,43 @@
     return null;
   }
 
+  /* 붙여넣은 그림을 눌러 크게 본다 (1저자 2026-08-28: "사진 눌러도 zoom 안 된다").
+   * 카드 안에서는 폭·높이를 잘라 두기 때문에(다른 메모를 밀어내지 않으려고) **원본을 볼
+   * 길이 따로 있어야 한다.** 기존 `.modal`/`.modal-body` 규약을 그대로 쓴다 — 새 껍데기를
+   * 만들면 닫기·배경막·z-index 규칙이 두 벌이 된다.
+   * ⛔ 못 하는 것: 확대·축소 단계가 없다. 원본 크기로 한 번 보여줄 뿐이다
+   *   (그림 팝업의 figref Zoom 과 달리 여기 그림은 캡처라 대개 그걸로 충분하다). */
+  function openImage(src, alt) {
+    var m = document.getElementById("noteimg-lb");
+    if (!m) {
+      m = document.createElement("div");
+      m.id = "noteimg-lb";
+      m.className = "modal";
+      m.innerHTML = '<div class="modal-body"><img alt=""></div>';
+      document.body.appendChild(m);
+      m.addEventListener("click", function (e) {
+        // 그림 자체를 누른 게 아니면 닫는다 (배경막 어디를 눌러도 닫히게)
+        if (!e.target.closest("img")) m.classList.remove("open");
+      });
+    }
+    var img = m.querySelector("img");
+    img.src = src;
+    img.alt = alt || "";
+    m.classList.add("open");
+  }
+  document.addEventListener("click", function (e) {
+    var im = e.target.closest && e.target.closest(".note-img");
+    if (!im) return;
+    e.preventDefault();
+    e.stopPropagation();          // ⚠ 메모 카드의 "눌러서 고치기" 가 같이 열리면 안 된다
+    openImage(im.getAttribute("src"), im.getAttribute("alt"));
+  }, true);
+  document.addEventListener("keydown", function (e) {
+    if (e.key !== "Escape") return;
+    var m = document.getElementById("noteimg-lb");
+    if (m && m.classList.contains("open")) { m.classList.remove("open"); e.stopPropagation(); }
+  }, true);
+
   /* ⚠ 이 묶음이 **정본**이다. docnote.js 는 자기 사본을 두지 않고 여기를 부른다. */
   global.noteFmt = {
     esc: esc, inline: inline, autosize: autosize, wrapSel: wrapSel,

@@ -277,6 +277,76 @@ if (!edw.err) {
       `[고치기·왼쪽] 상자 높이가 글에 딱 맞는다 (${edw.h} ≈ ${edw.scroll})`);
 }
 
+/* ── ⤢ 넓게 보기 · 그림 확대 (1저자 2026-08-28) ─────────────────────────── */
+const wide = await pg.evaluate(() => {
+  const g = document.querySelector(".dnote-gut");
+  const cards = [...g.querySelectorAll(".dn-card")];
+  const t = cards.find((c) => c.classList.contains("dn-half")) || cards[0];
+  if (!t) return { err: "카드가 없다" };
+  const btn = t.querySelector(".dn-expand");
+  if (!btn) return { err: "⤢ 가 없다" };
+  const gr = g.getBoundingClientRect();
+  const w0 = Math.round(t.getBoundingClientRect().width);
+  const top0 = Math.round(t.getBoundingClientRect().top - gr.top);
+  btn.click();
+  const b1 = t.getBoundingClientRect();
+  const on = { w: Math.round(b1.width), left: Math.round(b1.left - gr.left),
+               right: Math.round(b1.right - gr.left),
+               top: Math.round(b1.top - gr.top),
+               editing: t.classList.contains("dn-editing"),
+               hasTa: !!t.querySelector(".dn-in") };
+  btn.click();                                   // 다시 눌러 되돌린다
+  const w2 = Math.round(t.getBoundingClientRect().width);
+  return { w0, top0, on, w2, gutW: Math.round(gr.width) };
+});
+chk(!wide.err, `[⤢] 버튼이 있다 ${wide.err || ""}`);
+if (!wide.err) {
+  chk(wide.on.w > wide.w0,
+      `[⤢] 누르면 넓어진다 (${wide.w0} → ${wide.on.w}px)`);
+  chk(wide.on.left < 0 && wide.on.right <= wide.gutW + 1,
+      `[⤢] **왼쪽으로** 넓어지고 여백칸을 안 벗어난다 (left ${wide.on.left}, 오른끝 ${wide.on.right})`);
+  // ⛔ 핵심: 넓게 보기는 **고치기가 아니다.** 입력창이 열리면 안 된다 —
+  //   읽으려고 눌렀는데 편집이 시작되면 잘못 고칠 수 있다.
+  chk(!wide.on.editing && !wide.on.hasTa,
+      `[⤢·음성] 넓게 보기가 **고치기를 열지 않는다** (editing=${wide.on.editing}, 입력창=${wide.on.hasTa})`);
+  chk(wide.w2 === wide.w0,
+      `[⤢] 다시 누르면 되돌아온다 (${wide.on.w} → ${wide.w2}px, 원래 ${wide.w0})`);
+}
+
+/* 붙여넣은 그림을 누르면 확대창이 열린다 (카드 안에서는 잘라 두므로 원본 볼 길이 필요) */
+const zoom = await pg.evaluate(() => {
+  // ⚠ 앞 시험이 카드 하나를 **고치기 상태로 열어 둔 채** 끝난다. 그걸 집으면
+  //   "그림을 눌러서 열렸다" 와 "원래 열려 있었다" 를 구분 못 한다 — 안 열린 카드를 고르고,
+  //   절대 상태가 아니라 **전/후 변화**로 잰다.
+  const card = [...document.querySelectorAll(".dn-card")]
+    .find((c) => !c.classList.contains("dn-editing"));
+  if (!card) return { err: "고치기 아닌 카드가 없다" };
+  const wasEditing = card.classList.contains("dn-editing");
+  const box = card.querySelector(".dn-text");
+  box.innerHTML = window.noteFmt.inline(
+    "![](/api/note-image/" + "a".repeat(32) + ".png)");
+  const im = box.querySelector(".note-img");
+  if (!im) return { err: "note-img 가 안 생겼다" };
+  im.click();
+  const m = document.getElementById("noteimg-lb");
+  const openNow = !!(m && m.classList.contains("open"));
+  const src = m ? m.querySelector("img").getAttribute("src") : null;
+  const alsoEditing = card.classList.contains("dn-editing") && !wasEditing;
+  // Esc 로 닫힌다
+  document.dispatchEvent(new KeyboardEvent("keydown", { key: "Escape", bubbles: true }));
+  return { openNow, src, alsoEditing,
+           closed: !!(m && !m.classList.contains("open")) };
+});
+chk(!zoom.err, `[그림확대] 붙여넣은 그림이 렌더된다 ${zoom.err || ""}`);
+if (!zoom.err) {
+  chk(zoom.openNow, "[그림확대·실측회귀] 그림을 누르면 확대창이 열린다");
+  chk(/note-image/.test(zoom.src || ""), `[그림확대] 원본 src 를 띄운다 (${zoom.src})`);
+  // ⛔ 음성: 그림을 눌렀는데 "눌러서 고치기" 가 같이 열리면 안 된다
+  chk(!zoom.alsoEditing,
+      "[그림확대·음성] 그림을 눌러도 **고치기가 같이 열리지 않는다**");
+  chk(zoom.closed, "[그림확대] Esc 로 닫힌다");
+}
+
 await b.close();
 console.log(ok ? "docnote paint PASS" : "docnote paint FAIL");
 process.exit(ok ? 0 : 1);

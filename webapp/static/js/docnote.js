@@ -124,6 +124,7 @@
       esc(nt.at) + (nt.who ? " · " + esc(nt.who) : "") +
       (nt.edited_at ? ' <span class="dn-edited" title="' + esc(nt.edited_at) + ' 에 고침'
         + (nh ? " · 옛 글 " + nh + "판 보관" : "") + '">✎ 수정됨</span>' : "") +
+      '<button type="button" class="dn-expand" title="넓게 보기 (다시 누르면 되돌림)">⤢</button>' +
       '<button type="button" class="dn-edit" title="고치기">✎</button>' +
       '<button type="button" class="dn-del" title="지우기">✕</button></div>' +
       (nt.anchor ? '<div class="dn-quote">' + esc(nt.anchor) + "</div>" : "") +
@@ -243,8 +244,11 @@
     var colW = Math.floor((fullW - GAP * (nCol - 1)) / nCol);
     var top0 = head ? head.offsetHeight + 6 : 0;
 
+    /* 폭을 통째로 쓰는 카드 = 고치는 중 · 새 메모 초안 · **사용자가 ⤢ 로 편 것**.
+     * 세 경우를 한 이름으로 묶는다 — 규칙이 갈라지면 한쪽만 고쳐진다(오늘 세 번 겪음). */
     function isEd(c) {
-      return c.classList.contains("dn-editing") || c.classList.contains("dn-draft");
+      return c.classList.contains("dn-editing") || c.classList.contains("dn-draft")
+          || c.classList.contains("dn-wide");
     }
     function setW(c, w, left) {
       c.style.right = "auto";
@@ -631,6 +635,15 @@
       var d = e.target.closest(".dn-draft");
       save(d.querySelector(".dn-in").value, cur.draftAnchor);
       killDraft();
+      return;
+    }
+    /* ⤢ — 카드를 **자리는 그대로 둔 채** 넓게 편다 (1저자 2026-08-28: "확장시킬 수 있거나").
+     * 자리를 옮기지 않는 이유: 카드의 세로 위치가 곧 "본문 어느 줄 메모인가" 다.
+     * 옮기면 그 뜻이 사라진다 — 넓히는 건 그 뜻을 안 건드리고 읽기만 해결한다. */
+    if (e.target.closest(".dn-expand")) {
+      var wc = e.target.closest(".dn-card");
+      wc.classList.toggle("dn-wide");
+      layout();
       return;
     }
     if (e.target.closest(".dn-edit")) {
