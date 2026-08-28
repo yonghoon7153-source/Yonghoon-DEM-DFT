@@ -50,6 +50,9 @@ AXES = [
     ("wad_J_m2_mean",           "부착일 W_ad",  True),
     ("screen_dV_over_V0",       "|ΔV/V0|",      False),   # 작을수록 좋다(절대값)
     ("migration_volume_fraction", "이동부피비", True),
+    # ⭐ 2026-08-28 신설 — 절대 σ 를 대체하는 **비** 축. host(modelc) 대비 600 K D 비.
+    #   아직 비어 있다: T13(200 ps 타당성)이 내일 답해지면 Pareto front 39설계에 돌린다.
+    ("D_rel_vs_host",           "D비(vs host)", True),
 ]
 
 #: ⛔ **파생 축** — 다른 축들의 산술 조합이라 그 축들과의 상관이 **정의상** 높다.
@@ -80,7 +83,29 @@ INVALID_AXES = {
     "screen_de_per_atom":
         "기준이 미수렴이라 **절대값 인용 금지**. Pareto 는 설계간 절대 비교라 해당된다 "
         "(2026-08-19 판정). 같은 cascade 안 상대 비교는 별개 문제다",
+    # ⛔ 2026-08-28 결정 — 절대 σ 는 **우리가 스스로 인용 금지한 값**이다.
+    #   CLAUDE.md: "σ는 Nernst–Einstein(Haven=1) — 절대값 인용 금지, 비율도 멀티시드 판정만."
+    #   컬럼 이름이 절대값(S/cm)이라, 채우면 못 쓴다고 정한 값을 축으로 삼는 셈이 된다.
+    #   ⇒ 대체 축은 `D_rel_vs_host` (아래). 같은 MD 로 나오지만 **비**라서 규율에 맞고,
+    #     1T 로 충분해 아레니우스(3T)보다 3배 싸다.
+    "sigma_300K_S_cm_NE":
+        "절대 σ 는 인용 금지 (CLAUDE.md). 대체 축 `D_rel_vs_host` 를 쓸 것 (2026-08-28 결정)",
+    "sigma_md_D_300K_cm2s":
+        "절대 D 도 같은 이유로 축이 될 수 없다 — 비로 바꿀 것 (2026-08-28)",
+    # ⛔ W_ad 는 '무효' 가 아니라 **미교정**이다. rigid-분리 W_ad 가 45–225 J/m² 인데
+    #   실험은 0.2–0.4 다 (adhesion_calibration_decision_2026_05_17.md). 100배 어긋난 축을
+    #   채우는 것은 빈 축보다 나쁘다 — 빈 축은 없다는 걸 알지만, 틀린 축은 믿게 된다.
+    #   교정된 v2 melt-quench 계열(1.107 J/m²)로 파이프라인을 옮긴 뒤 풀 것.
+    "wad_J_m2_mean":
+        "**미교정** — rigid-분리 45–225 J/m² vs 실험 0.2–0.4. v2 melt-quench 로 교정 후 해제 "
+        "(2026-08-28 보류)",
 }
+
+#: 상대 D 축의 게이트. **외부 근거**: Deng 2026 Angew (litdb `deng2026_polysulfate…`) 가
+#: 표면 개질에서 σ 손실 **7 % 는 허용, 31 %(0.4 M) 는 실패**로 실험 경계를 그었다.
+#: 우리 문턱은 그 사이에서 보수적으로 잡는다 — host 대비 D 가 이 값 아래로 떨어지면 탈락.
+#: ⛔ 이건 **문헌에서 빌린 경계**지 우리가 잰 값이 아니다. 우리 계에서 재검토할 것.
+D_REL_GATE = 0.90
 
 
 def axis_fill(rows, axes):
@@ -341,16 +366,17 @@ def _selftest():
     # ── Pareto (A3, 2026-08-28) — **음성 경로가 핵심**이다 ────────────────────
     # ⚠ 2026-08-28 — 이 fixture 는 원래 `screen_de_per_atom` 을 썼는데 그 축이 **무효 판정**을
     #   받아 도구가 거부한다. 여기서 시험하는 건 Pareto 역학이지 그 축이 아니므로,
-    #   유효한 "낮을수록 좋은" 축(Pugh G/B)으로 바꾼다. --allow_invalid 로 우회하지 않는다 —
+    #   유효한 "낮을수록 좋은" 축(Pugh G/B)으로 바꾼다. **2026-08-28 재차**: 짝이던
+    #   `wad_J_m2_mean` 도 미교정으로 보류돼 `elastic_G_hill_GPa` 로 바꿨다. --allow_invalid 로 우회하지 않는다 —
     #   그러면 거부 기능이 테스트에서만 꺼진 채 남는다.
-    A = [("elastic_pugh_GoverB", "낮을수록", False), ("wad_J_m2_mean", "높을수록", True)]
-    R = [{"id": "win_both", "elastic_pugh_GoverB": "-1.0", "wad_J_m2_mean": "9.0"},
-         {"id": "lose_both", "elastic_pugh_GoverB": "0.0", "wad_J_m2_mean": "1.0"},
-         {"id": "tradeoff_a", "elastic_pugh_GoverB": "-2.0", "wad_J_m2_mean": "1.0"},
+    A = [("elastic_pugh_GoverB", "낮을수록", False), ("elastic_G_hill_GPa", "높을수록", True)]
+    R = [{"id": "win_both", "elastic_pugh_GoverB": "-1.0", "elastic_G_hill_GPa": "9.0"},
+         {"id": "lose_both", "elastic_pugh_GoverB": "0.0", "elastic_G_hill_GPa": "1.0"},
+         {"id": "tradeoff_a", "elastic_pugh_GoverB": "-2.0", "elastic_G_hill_GPa": "1.0"},
          # ⚠ wad 를 10 으로 둔다 — 9 면 win_both(-1.0, 9.0) 에게 **지배당해서**
          #   "둘 다 남는다" 를 시험하지 못한다 (fixture 를 한 번 그렇게 짰다)
-         {"id": "tradeoff_b", "elastic_pugh_GoverB": "0.0", "wad_J_m2_mean": "10.0"},
-         {"id": "missing", "elastic_pugh_GoverB": "-9.0", "wad_J_m2_mean": ""}]
+         {"id": "tradeoff_b", "elastic_pugh_GoverB": "0.0", "elastic_G_hill_GPa": "10.0"},
+         {"id": "missing", "elastic_pugh_GoverB": "-9.0", "elastic_G_hill_GPa": ""}]
     fr, sc, _ax = pareto(R, axes=A, min_axes=2)
     ids = {r["id"] for r in fr}
     say("lose_both" not in ids, "[Pareto] 전 축에서 지는 점은 빠진다")
@@ -381,8 +407,11 @@ def _selftest():
     say(all(k not in INVALID_AXES for k, _l, _h in ax3),
         f"[무효축·양성] 기본 축 집합에 무효 축이 없다 ({sorted(INVALID_AXES)})")
     _keep, _drop = valid_axes(AXES)
-    say({k for k, _w in _drop} == set(INVALID_AXES),
-        f"[무효축] 무효 축 {len(_drop)}개를 **사유와 함께** 걷어낸다")
+    _in_axes = {k for k, _l, _h in AXES} & set(INVALID_AXES)
+    say({k for k, _w in _drop} == _in_axes,
+        f"[무효축] AXES 안의 무효 축 {len(_drop)}개를 **사유와 함께** 걷어낸다 "
+        f"(INVALID_AXES 에는 {len(INVALID_AXES)}개 — 나머지는 AXES 에 없는 방어용)")
+    say(all(w.strip() for _k, w in _drop), "[무효축] 사유가 빈 항목이 없다")
     # 음성: 무효 축만 주면 front 를 만들지 않고 **빈손으로** 돌려준다 (조용히 통과 금지)
     _fi, _si, _ai = pareto(RV, axes=AV, min_axes=1)
     say(_fi == [] and _ai == [],
@@ -416,6 +445,22 @@ def _selftest():
     RS[1]["anion_site"] = "S_4a"
     _ds, gs = aggregate_designs(RS, AG)
     say(gs["n_designs"] == 2, "[묶기·음성] 조성이 같아도 **자리가 다르면** 다른 설계다")
+
+    # ★★★ 2026-08-28 결정: 절대 σ 는 축이 될 수 없다 (CLAUDE.md 인용금지) ★★★
+    say("sigma_300K_S_cm_NE" in INVALID_AXES and "sigma_md_D_300K_cm2s" in INVALID_AXES,
+        "[결정] 절대 σ·D 는 무효 축이다 — 우리가 인용 금지한 값을 축으로 안 쓴다")
+    say("wad_J_m2_mean" in INVALID_AXES,
+        "[결정] W_ad 는 **미교정**이라 보류다 (45–225 vs 실험 0.2–0.4)")
+    say(any(k == "D_rel_vs_host" for k, _l, _h in AXES),
+        "[결정] 대체 축 `D_rel_vs_host` 가 AXES 에 있다")
+    _dr = [a for a in AXES if a[0] == "D_rel_vs_host"][0]
+    say(_dr[2] is True, "[결정] D비는 클수록 좋다")
+    say(0.5 < D_REL_GATE < 1.0,
+        f"[결정] 게이트가 (0,1) 안이다 ({D_REL_GATE}) — host 대비 비이므로")
+    # 음성: 절대 σ 를 축으로 주면 **거부해야** 한다
+    _fs, _ss, _as = pareto([{"sigma_300K_S_cm_NE": "1e-3"}, {"sigma_300K_S_cm_NE": "2e-3"}],
+                           axes=[("sigma_300K_S_cm_NE", "σ", True)], min_axes=1)
+    say(_as == [], "[결정·음성] 절대 σ 만 주면 front 를 안 만든다")
 
     # ★★★ 빈 축 (2026-08-28 실측) — σ·W_ad 가 3,615행 **전부** 비어 있었다 ★★★
     AF = [("elastic_G_hill_GPa", "G", True), ("sigma_300K_S_cm_NE", "σ", True)]
