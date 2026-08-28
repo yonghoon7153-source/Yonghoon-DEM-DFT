@@ -7267,3 +7267,22 @@ def test_moving_within_the_smoke_namespace_is_not_promotion(tmp_path):
     src = SMOKE_NAMESPACE / "grid_fit"
     assert_not_smoke_provenance([src], "보관 묶음",
                                 dest=SMOKE_NAMESPACE / "arch" / "grid_fit")
+
+
+def test_a_report_written_inside_the_smoke_namespace_is_not_promotion(tmp_path):
+    """★ 49차 — smoke 안에 쓰는 보고서도 승격이 아니다.
+
+    48차 `make_results.py` 는 목적지를 안 보고 입력만 봤다. 그래서 smoke 가
+    자기 보고서(`results/_smoke/R_hess.md`)를 만드는 것도 거부됐고, 8단계의
+    `score → hessian → report` 회귀가 죽었다 (실측). 정본 자리
+    (`docs/RESULTS.md`)로 나가는 것은 그대로 거부한다.
+    """
+    from tools.preserve import (assert_not_smoke_provenance, SMOKE_NAMESPACE,
+                                SMOKE_REFUSAL, PreserveError)
+
+    src = SMOKE_NAMESPACE / "hess"
+    assert_not_smoke_provenance([src], "보고서",
+                                dest=SMOKE_NAMESPACE / "R_hess.md")
+    with pytest.raises(PreserveError) as ei:
+        assert_not_smoke_provenance([src], "보고서", dest="docs/RESULTS.md")
+    assert SMOKE_REFUSAL in str(ei.value)
