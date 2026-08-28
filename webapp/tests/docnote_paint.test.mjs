@@ -68,9 +68,16 @@ const pg = await b.newPage();
 await pg.setContent(`<!doctype html><meta charset="utf-8">${PAGE}`);
 const NOTE = {
   id: "n1", at: "2026-08-27 23:06", anchor: "한 노드 안에 통째로",
-  text: "초록 (p.47381 전폭)\n\nmore distorted — dead volume / packing ratio (α):\n"
-      + "결정 안에 공간은 있는데 중심 양이온(Si⁴⁺ 등)의 정전기 반발 때문에\n"
-      + "Li 가 못 들어가는 죽은 공간. **굵게** 도 된다.",
+  /* ⚠ **줄바꿈 없는 긴 문단**이어야 한다 (2026-08-28). 첫 fixture 는 \n 이 박혀 있어서
+   *   카드를 넓혀도 줄 수가 거의 안 줄었고, 그래서 "빈 여백" 시험이 **고치기 전에도
+   *   통과했다** — 판별력이 0 이었다. 실제 메모는 이렇게 이어지는 문단이라 좁을 때
+   *   10줄이던 게 넓히면 3줄로 접힌다. 거기서만 그 버그가 보인다. */
+  text: "First, its symmetric molecular structure and **highly electron-deficient center** "
+      + "allow it to readily undergo ring-opening polymerization initiated by nucleophilic "
+      + "attack from S2- anions. Secondly, the resulting PS has strong antioxidant capacity, "
+      + "and, as a surface modification layer, can effectively enhance the oxidation "
+      + "stability of LPSC, which is exactly the point this fixture needs to reflow across "
+      + "several lines when the card is narrow and far fewer when it widens.",
 };
 await pg.evaluate(({ hl, note }) => {
   window.__calls = [];
@@ -155,6 +162,12 @@ chk(!box.err, `[고치기] 입력창이 열린다 ${box.err || ""}`);
 if (!box.err) {
   chk(box.h + 2 >= box.scroll,
       `[고치기·실측회귀] 상자가 **내용을 다 담는다** (높이 ${Math.round(box.h)} ≥ 내용 ${box.scroll})`);
+  /* ⛔ 반대 방향도 본다 (1저자 2026-08-28: "저 흰색 여백을 안보게").
+   *   전에는 **좁은 카드에서 높이를 재고** 그 뒤에 카드가 왼쪽으로 넓어져서,
+   *   글은 3줄로 접혔는데 상자는 좁을 때 줄 수로 남아 아래가 통째로 비었다.
+   *   "다 담는가" 만 보면 그 상태도 통과한다 — 한 방향만 보는 시험은 절반이다. */
+  chk(box.h <= box.scroll + 10,
+      `[고치기·실측회귀] 상자에 **빈 여백이 남지 않는다** (높이 ${Math.round(box.h)} ≈ 내용 ${box.scroll})`);
   chk(box.h > 60, `[고치기] rows=3 (약 46px) 보다 크다 (${Math.round(box.h)}px)`);
   chk(box.after > box.h + 20,
       `[고치기] 줄을 더 치면 더 커진다 (${Math.round(box.h)} → ${Math.round(box.after)}px)`);

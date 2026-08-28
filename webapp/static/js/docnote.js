@@ -147,7 +147,8 @@
       '<button type="button" class="btn sm dn-save">저장</button></div>';
     var ta = box.querySelector(".dn-in");
     ta.value = nt ? nt.text : "";
-    autosize(ta);
+    // ⚠ autosize 를 여기서 부르지 않는다 — 아직 카드가 **안 넓어졌다.**
+    //   layout() 이 폭을 정한 뒤 스스로 맞춘다 (위 주석 참조).
     layout();
     ta.focus();
     ta.setSelectionRange(ta.value.length, ta.value.length);
@@ -272,6 +273,15 @@
       if (isEd(r.c) && nCol > 1) setW(r.c, fullW + OVER, PAD - OVER);
       else setW(r.c, half[i] ? colW : fullW, PAD);
       r.c.classList.toggle("dn-half", half[i] && !isEd(r.c));
+    });
+    /* ⛔⛔ 2026-08-28 (1저자: "저 흰색 여백을 안보게") — 입력창 높이를 **폭이 정해진 뒤에**
+     *   다시 맞춘다. openEdit() 이 좁은 카드에서 autosize 를 부르고 그 다음에 카드가
+     *   왼쪽으로 넓어졌기 때문에, 글은 3줄로 접혔는데 상자는 좁을 때 줄 수(10줄)로
+     *   남아 **아래가 통째로 흰 여백**이었다. 배치 버그와 같은 병이다 — 재는 순서.
+     *   여기서 하는 이유: 폭을 정하는 곳이 여기뿐이라 순서가 어긋날 수 없다. */
+    rows.forEach(function (r) {
+      var ta = r.c.querySelector(".dn-in");
+      if (ta) autosize(ta);
     });
     var hh = rows.map(function (r) { return r.c.offsetHeight; });
 
