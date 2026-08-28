@@ -1,0 +1,131 @@
+---
+title: "교차리뷰 M — SDCP wave1.5 마감: basin-매칭 참조·자리선호 종결·라디칼 닫기 설계"
+date: 2026-08-28
+updated: 2026-08-28
+tags: [review/codex, sdcp, vasp, dftu, magnetism, adsorption]
+status: 리뷰대기
+confidence: medium
+verificationStatus: unverified
+explored: false
+authoredBy: agent
+effort: high
+claimType: empirical
+evidenceScope: multi-source-primary
+---
+
+> 아래 전문을 그대로 Codex 에 붙인다. 리뷰 K·L(cascade/van Hove)과 **독립**이다.
+> 여기는 **VASP DFT+U 흡착 캠페인의 마감 판정**이고, 우리가 처음 쓰는 참조 방식이 하나 있다.
+
+---
+
+# SDCP wave1.5 — 마감했다고 주장하기 전에 세 가지를 묻는다
+
+## 0. 배경 (두 문단)
+
+LiNiO₂(104) 슬랩(192원자, DFT+U, PBE+D3, VASP 5.4.4) 위 분자 흡착 캠페인.
+분자 4종: SDCP 중성형(C₁₁H₁₆O₆S₂)·라디칼(−SO₃•, C₁₁H₁₅O₆S₂)·PTFE 조각 2종(C₄H₂F₈·C₁₀F₂₂).
+기하는 MLIP(UMA) 이완 위 **DFT 단일점**. 자기 시드 2종(pm1·net4)으로 같은 자세쌍을
+반복해 자리선호 ΔE_site = E(Ni-top) − E(Li-top) 를 잰다. 상자 수렴(box20↔box24) < 0.4 meV.
+
+wave1 에서 net4 참조 슬랩이 시드와 다른 자기 basin(Ni 1개 반전, "B")으로 수렴해 net4 열이
+통째로 보류됐다. wave1.5 로 **NUPDOWN=4 pin → pinned CHGCAR 승계 → 제약 해제 재수렴**을
+돌려 basin A 를 얻었다(승계 마커·PIN_CHECK·PROVENANCE 를 OUTCAR 실측으로 독립 검증,
+release 가 시드 배열 26↑/22↓ 유지, basin A 가 B 보다 0.0497 eV 낮음).
+
+## 1. 실측 (전수)
+
+**슬랩 참조 (E(sigma→0), eV)**: net4-A −944.896111 · net4-B −944.846393 · pm1-A −944.974686
+
+**E_ads (box24), basin-매칭 후**:
+
+| 자세 | sdcp_neutral | ptfe_c10 | ptfe_dimer | sdcp_doped |
+|---|---:|---:|---:|---:|
+| Li-top (pm1/net4) | −0.7675/−0.7680 | −0.4124/−0.4122 | −0.3663/−0.3661 | ⛔/−0.8709 |
+| Ni-top (pm1/net4) | −0.7582/−0.7590 | −0.3626/−0.3617 | −0.3302/−0.3300 | ⛔/−0.8898 |
+| cross ×2 (pm1/net4) | −0.7728/−0.7734 · −0.7633/−0.7626 | — | — | — |
+
+**ΔE_site [meV] (양수 = Li-top 유리)** 와 자기민감도 |ΔE_pm1 − ΔE_net4|:
+
+| 조각 | pm1 | net4(bm) | \|차\| |
+|---|---:|---:|---:|
+| ptfe_c10 | +49.77 | +50.50 | 0.73 |
+| ptfe_dimer | +36.10 | +36.16 | 0.06 |
+| sdcp_neutral | +9.27 | +9.02 | 0.28 |
+| sdcp_doped | ⛔ (아래) | −18.95 | — |
+
+**sdcp_doped 가 ⛔ 인 이유 둘**: ① pm1 쪽 두 sampled branch 의 ΔE 가 **105 meV** 어긋남
+(라디칼 스핀 분기로 추정) ② Li-top pm1 static 이 NELM=200 소진 미수렴 — 수렴 궤적이
+특징적이다: rms(c) 가 3.4e-3 까지 갔다가 0.36→0.57 로 **튈 때마다 총에너지가 내려간다**
+(−1117.428 → −1117.502 → −1117.614 eV). 준안정 스핀 배치를 계단식으로 타고 내려가는 중.
+
+**별건**: DFT+U 는 라디칼의 표면 Li 추출을 dE_extract = **+0.336 eV (불리)** 로 이미 쟀고,
+UMA(MLIP)는 같은 추출 끝점을 −1.267 eV 로 **과안정화**한다 (기판정, 원자료 6/6 대조 완료).
+
+## 2. 우리가 새로 한 것 — **basin-매칭 참조** (여기를 봐 달라)
+
+wave1.5 이후 net4 슬랩이 **두 basin 값**을 다 갖게 됐다 (A −944.896111 / B −944.846393).
+net4 복합체 10잡은 자기들끼리 basin 이 갈린다 (A 4잡·B 6잡). 우리는 각 복합체를
+**자기 basin 의 슬랩**으로 참조했다:
+
+> E_ads(복합체 X, basin β) = E(X) − E(slab, basin β) − E(분자, box24)
+
+이렇게 하면 이전에 잘못된 기준(B 슬랩)에 얹혀 있던 basin-A 복합체 4잡이 정확히
+basin 격차(49.7 meV)만큼 이동하고, 그 뒤 자기민감도가 0.06–0.73 meV 로 닫힌다.
+
+**묻는 것 (M1)** — 이 참조 방식이 표준적인가?
+- 우리 논리: 흡착 전후로 **슬랩의 자기 상태가 보존된다**고 가정하면, 흡착에너지는 같은
+  basin 안의 차여야 한다. 복합체가 A 로 수렴했는데 B 슬랩을 빼면 그 차에는 흡착이 아니라
+  **슬랩 basin 전이 에너지**가 섞인다.
+- 반론 가능성: "진짜 E_ads 는 **가장 낮은 슬랩**(전역 최소) 기준이어야 한다. basin-매칭은
+  준안정 참조를 허용하는 것"— 이러면 basin-B 복합체 6잡의 E_ads 가 49.7 meV 얕아진다.
+- 어느 쪽이 문헌 관행인가? 둘 다 보고해야 하나?
+
+## 3. 자리선호 종결 주장 (M2)
+
+우리는 이렇게 마감하려 한다: *"ptfe_c10 은 Li-top 이 ~50 meV, dimer 는 ~36 meV 유리,
+sdcp_neutral 은 |ΔE| < 10 meV 로 무선호 — 두 자기 시드에서 1 meV 미만으로 재현."*
+
+**약점을 우리가 안다**: 조각당 **matched-pose 쌍이 1개**다 (fib 방향 격자에서 게이트를
+통과한 챔피언 쌍 하나). 216자세 스캔은 UMA 로 했고 DFT 는 그 쌍만 밟았다.
+- n=1 쌍으로 "자리선호" 를 말해도 되나, 아니면 "이 자세쌍에서의 선호" 로 좁혀야 하나?
+- neutral 의 cross-자세 2개(자리↔포즈 교차)가 4점 모두 15 meV 안에 있는 것이
+  무선호 주장의 보강 근거가 되나?
+
+## 4. 비교 주장 (M3)
+
+*"SDCP 중성형이 PTFE 조각을 분자당 ~0.35 eV 차이로 이긴다(−0.77 vs −0.41), 자리 불문"* —
+크기 비슷(35 vs 32원자), 같은 방법·같은 슬랩·같은 상자, 가장 보수적 조합(-0.759 vs −0.412)
+으로도 0.346 eV. 우리가 걸어둔 선: PTFE **고분자**로 확장 금지(다가 접촉), 절대값 3단서
+(MLIP 기하 단일점·진공 0 K 단분자·타 코드 비교 금지) 병기.
+- 이 선이면 과주장이 아닌가? per-분자 말고 per-접촉원자/면적으로 정규화해야 하나?
+
+## 5. 라디칼 닫기 설계 (M4·M5) — **여기가 "더 돌리면 닫히나"**
+
+제안: 슬랩에서 성공한 pin→release 를 라디칼 복합체에 이식.
+- 잡: doped {Li-top, Ni-top} × {pm1, net4} × {pin, release} = **statics 8개** (+미수렴 1건 재시도)
+- pin 대상: 복합체 총 NUPDOWN — 그런데 **무엇으로 고정하나?** 슬랩(짝수 전자) + 라디칼
+  (S=1/2) 이라 총자화 홀수. 시드 슬랩 net4(+4)·pm1(+1?) 에 라디칼 ±1/2 이 **정렬/반정렬**
+  두 갈래가 생긴다. 105 meV 분기가 바로 이것이라면, 두 갈래를 **둘 다** 유도해 둘 다
+  보고하는 게 맞나, 아니면 낮은 쪽만 정본인가?
+- 미수렴 static 처방: 궤적이 "계단식 하강" 인데 NUPDOWN pin 이 맞나, 아니면
+  스핀 믹싱 감쇠(AMIX_MAG/BMIX_MAG)나 ICHARG=1 승계가 먼저인가?
+- (M5) champion 자세만 **DFT relax** 로 승격(MLIP-기하 단서 제거)하는 게 값어치 있나?
+  192+35원자 DFT+U relax ×3 이다. 아니면 단일점으로 충분하고 relax 는 과투자인가?
+
+## 6. 묻는 것 정리
+
+- **M1.** basin-매칭 참조가 표준인가, 전역최소 참조인가, 둘 다인가.
+- **M2.** matched-pose n=1 로 자리선호를 마감해도 되나. cross-자세가 보강 근거가 되나.
+- **M3.** SDCP vs PTFE 0.35 eV 비교의 허용 서술 범위.
+- **M4.** 라디칼 스핀 분기 — pin 설계(총 NUPDOWN 값·정렬/반정렬 두 갈래 처리)와
+  미수렴 static 처방. **statics 8–10개로 닫히는 설계인가.**
+- **M5.** champion DFT relax 승격이 필요한가.
+- **M6.** 우리가 놓친 마감 조건이 있나 (예: 라디칼의 흡착 vs Li-추출 경쟁을 한 표에서
+  어떻게 보고할지 — dE_extract +0.336 은 DFT+U, 흡착 E_ads 도 DFT+U 라 내부 비교 가능).
+
+## 7. 참고
+
+- `db/properties/sdcp_wave15_basinA.json` — wave1.5 독립검증 3다리 + 119파일 sha256
+- `db/properties/sdcp_wave1_citable.json` (v2) — 인용 확정본
+- `db/properties/sdcp_wave1_results.json` — 총에너지 원장
+- `kb/open_items.md` §P — 자리선호 항목 (2026-08-28 갱신)
