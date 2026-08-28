@@ -15,8 +15,8 @@
 
 | # | 발견 | 상태 |
 |---|---|---|
-| 2 | `source_digest()` 경로 정규화 (POSIX) + RUN_SCOPE 정합 | **다음 작업** (설계 완료, 코드 미작성) |
-| 1 | noise family 교차 invariant (`_verify_observed_curves`) | 대기 (구조 조사 완료) |
+| 2 | `source_digest()` 경로 정규화 (POSIX) + RUN_SCOPE 정합 | **완료** — §1.9 참조 (RED 5건 → GREEN, 286 passed) |
+| 1 | noise family 교차 invariant (`_verify_observed_curves`) | **다음 작업** (구조 조사 완료) |
 | 3 | sweep checker fail-closed (`tools/check_sweep_consistency.py:184-215`) | 대기 |
 | 4 | custom `w_grid` 충돌 (`src/weight_sweep.py:52-90`, `:350-355`) | 대기 |
 | 5 | guards → canonical 3-key recipe (`src/io.py:907-937`) | 대기 |
@@ -154,9 +154,82 @@ tests/test_compare.py:815, 839, 868, 873, 907, 1037, 1704
 
 ### 함께 고칠 문서
 
-- root `CLAUDE.md` 하드룰 3 의 RUN_SCOPE 문구
+- root `CLAUDE.md` 하드룰 3 의 RUN_SCOPE 문구 — **수정 완료**. `RUN_SCOPE` 7개를
+  그대로 적고, digest 와 dirty 판정이 같은 목록을 본다고 명시.
 - 스크래치패드 `review_request_14.md` — "`source_digest` 가 RUN_SCOPE 6개를 모두 본다"는
-  **틀린 주장**이 들어가 있다.
+  **틀린 주장**이 들어가 있다. 이미 리뷰어에게 보낸 문서라 소급 수정하지 않고
+  **15차 요청문에서 정정**한다 (보낸 기록을 고쳐 쓰지 않는다).
+- `docs/08_REVIEW_RESPONSE.md:605` 의 "(src/tools/configs 전체 내용 해시)" 는
+  **그 시점 F49 의 사실 기록**이라 그대로 둔다. 범위 확대는 14차 항목으로 적는다.
+
+### 1.9 구현 결과 (실측)
+
+`src/io.py`:
+
+- `from pathlib import Path, PurePath` (import 확장)
+- `_digest_path_key(rel) -> bytes` — `PurePath(rel).as_posix().encode("utf-8")`
+- `_digest_files(root=None, scope=RUN_SCOPE)` — `(POSIX 키, 경로)` 를 **키 기준
+  전역 정렬**해서 반환. 항목이 `/` 로 끝나면 `rglob`, 아니면 `root.glob(이름)`.
+  `__pycache__`·`.pyc`·`.pyo` 제외는 그대로.
+- `source_digest(root=None, scope=RUN_SCOPE)` — 시그니처가 `dirs=` → `scope=` 로
+  바뀌었다. 인자를 주는 호출자는 `src/io.py:1280,1282` 의 `source_digest(root)`
+  뿐이라(positional) 영향 없음.
+
+**정렬을 전역으로 한 이유**: 항목별로 정렬하면 `RUN_SCOPE` 나열 순서를 바꾸는
+것만으로 digest 가 변한다. 전역 정렬이면 목록의 순서는 무관하다.
+
+**`git_info` 와의 유일한 차이**: dirty 판정은 prefix 매칭(`startswith`)이라
+`run.sh.bak` 같은 파생 이름도 세지만, digest 는 이름이 정확히 같은 파일만 센다.
+digest = "이 파일들의 내용", dirty = "건드렸는가" 이므로 좁은 쪽이 안전하다.
+
+정렬 divergence 의 **실제 원인은 구분자가 아니라 대소문자 접기**였다 (설계 당시
+가정이 틀렸다). `PurePath` 비교는 부분 tuple 비교라 구분자에 안 흔들리지만,
+Windows flavour 는 각 부분을 소문자로 접는다 — 실측:
+
+```
+sorted(PureWindowsPath) → ['src\apple.py', 'src\Zebra.py']
+sorted(PurePosixPath)   → ['src/Zebra.py', 'src/apple.py']
+str(PureWindowsPath('src/io.py')) → 'src\io.py'
+```
+
+구분자는 **해시 키**를 갈라놓고(`str()`), 대소문자 접기는 **정렬**을 갈라놓는다.
+둘 다 `_digest_path_key` 로 닫힌다.
+
+**digest 실측 변화** (`root = degradation-degeneracy/`):
+
+| 범위 | 값 | 파일 수 |
+|---|---|---|
+| 옛 구현 `dirs=("src","tools","configs")` | `a27732aa85181c7d` | 33 |
+| 새 구현·좁은 범위 (전역 정렬만 적용) | `f8237e509f0cc457` | 33 |
+| 새 구현·`RUN_SCOPE` 전체 | **`e4b10de012b23ff6`** | 46 |
+
+같은 33개 파일인데도 값이 바뀐다 — 전역 정렬로 `configs/` 가 `src/` 앞에 오기
+때문이다. 범위 확대로 들어온 13개:
+`requirements.txt`, `requirements-gpu.txt`, `run.sh`, `scripts/` 10개
+(`archive_results.sh` `bg.sh` `check_run.py` `diagnose_objective.py`
+`recompute_lli.py` `setup_env.sh` `smoke_e2e.sh` `verify_env.py`
+`watch_fit.sh` `watch_grid.sh`).
+
+→ **기존 baseline·half-cell 캐시는 무효화된다.** GO 후 실행 순서가 이미
+`--force` 로 재생성하므로 감당 가능 (§4).
+
+### 1.10 회귀 테스트 (`tests/test_io_bookkeeping.py`)
+
+RED 5건을 먼저 확인하고(`ImportError: cannot import name '_digest_files'` 외)
+고친 뒤 GREEN.
+
+| 테스트 | 무엇을 고정하나 |
+|---|---|
+| `test_digest_path_key_is_posix_on_every_os` | `PureWindowsPath("src/io.py")` → `b"src/io.py"` |
+| `test_digest_order_is_posix_order_not_os_path_order` | 대소문자 접기로 갈리는 정렬을 POSIX 바이트 키로 고정 |
+| `test_digest_files_sorts_by_posix_key` | 수집 순서가 `Zebra.py` → `apple.py` |
+| `test_digest_scope_matches_run_scope` | digest 범위 == `RUN_SCOPE` 전 항목 |
+| `test_digest_sources_have_no_crlf` | worktree 바이트에 CRLF 0건 (정책이 아니라 내용) |
+
+마지막 것이 리뷰어의 세 번째 digest(`808f19ea5556d018`, CRLF 잔존 Windows
+worktree)를 겨냥한 **positive** 검사다. 기존
+`tests/test_compare.py:1604-1605` 는 `.gitattributes` 에 `eol=lf` 가 **있는지만**
+봤다 — 정책 존재는 준수의 증거가 아니다.
 
 ---
 

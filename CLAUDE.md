@@ -17,11 +17,12 @@
 1. **브랜치**: push 는 `claude/zip-git-gpu-setup-vdqdtd` 로만. 다른 브랜치 금지.
 2. **비밀정보**: 토큰·비밀번호·API 키를 대화나 파일에 넣지 않는다. 자격증명은
    실행 터미널에서만.
-3. **RUN_SCOPE 경계**: degradation-degeneracy 의 code identity(`source_digest`)는
-   `src/ tools/ configs/ scripts/ run.sh requirements*.txt` 만 본다. `wiki/`·
-   `.claude/`·루트 문서는 그 밖 → 이 파일들을 고쳐도 게이트 리뷰 대상 코드
-   identity 는 안 바뀐다. 반대로 저 6개를 고치면 **기존 산출물이 무효화**될 수
-   있다 (재생성 비용 ~28분 + 10시간).
+3. **RUN_SCOPE 경계**: degradation-degeneracy 의 code identity(`source_digest`)와
+   dirty 판정(`git_info`)은 **같은 목록** — `src/io.py` 의 `RUN_SCOPE` 7개
+   (`src/ tools/ configs/ scripts/ run.sh requirements.txt requirements-gpu.txt`)
+   — 를 본다. `wiki/`·`.claude/`·루트 문서는 그 밖 → 이 파일들을 고쳐도 게이트
+   리뷰 대상 코드 identity 는 안 바뀐다. 반대로 저 7개를 고치면 **기존 산출물이
+   무효화**될 수 있다 (재생성 비용 ~28분 + 10시간).
 4. **정본**: 연구 수치의 정본은 artifact + `degradation-degeneracy/docs/RESULTS*.md`.
    위키·요약·대화에 적힌 숫자는 사본이며 인용 근거가 아니다.
 

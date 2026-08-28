@@ -9,6 +9,8 @@ V100 실행에서 드러난 버그의 회귀 방지:
 
 from __future__ import annotations
 
+from pathlib import PurePosixPath, PureWindowsPath
+
 import pandas as pd
 
 from src.io import (append_failed, load_completed, load_failed, mark_completed,
@@ -127,3 +129,85 @@ def test_stale_lock_is_reclaimed(tmp_path):
     (tmp_path / ".run.lock").write_text("999999 2026-01-01T00:00:00\n")
     acquire_run_lock(tmp_path)               # 예외 없이 통과해야 함
     assert (tmp_path / ".run.lock").exists()
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# ★ 14차 발견 2 — source_digest 의 OS 의존성
+#
+# 리뷰어 실측: **같은 Git blob** 인데 digest 가 세 가지로 갈렸다.
+#   POSIX (V100)                      4fa3e2af0a2e8106
+#   경로 구분자만 `\` 인 경우          7ac22c1055eae262
+#   CRLF 가 남은 실제 Windows worktree 808f19ea5556d018
+# `source_digest` 는 `str(f.relative_to(root))` 를 해시하므로 경로 구분자가
+# 그대로 들어가고, 정렬도 OS 문자열 순서다. code identity 가 OS 마다 달라지면
+# "같은 코드로 만든 행" 이라는 판정 자체가 성립하지 않는다.
+# ─────────────────────────────────────────────────────────────────────────────
+
+
+def test_digest_path_key_is_posix_on_every_os():
+    """digest 경로 키는 OS 무관 POSIX 정규형이어야 한다."""
+    from src.io import _digest_path_key
+
+    assert _digest_path_key(PureWindowsPath("src/io.py")) == b"src/io.py"
+    assert _digest_path_key(PurePosixPath("src/io.py")) == b"src/io.py"
+    assert (_digest_path_key(PureWindowsPath("configs/sub/base.yaml"))
+            == b"configs/sub/base.yaml")
+
+
+def test_digest_order_is_posix_order_not_os_path_order():
+    """정렬 키도 같아야 한다 — `sorted(rglob())` 는 `Path` 비교다.
+
+    `Path` 비교는 구분자에는 안 흔들리지만(부분 tuple 비교) **Windows 에서는
+    각 부분을 소문자로 접어서** 비교한다. 그래서 대소문자가 섞인 파일 집합은
+    OS 별로 순서가 뒤집힌다 (실측: Windows `apple.py, Zebra.py` /
+    POSIX `Zebra.py, apple.py`). 순서가 바뀌면 내용이 같아도 digest 가 갈린다.
+    """
+    from src.io import _digest_path_key
+
+    win = [PureWindowsPath("src/Zebra.py"), PureWindowsPath("src/apple.py")]
+    assert sorted(win) == [PureWindowsPath("src/apple.py"),
+                           PureWindowsPath("src/Zebra.py")]   # 소문자 접기
+    assert sorted(_digest_path_key(p) for p in win) == [b"src/Zebra.py",
+                                                        b"src/apple.py"]
+
+
+def test_digest_files_sorts_by_posix_key(tmp_path):
+    """수집 순서는 POSIX 바이트 키 기준으로 고정한다 (`Path` 비교가 아니라)."""
+    from src.io import _digest_files
+
+    (tmp_path / "src").mkdir(parents=True)
+    (tmp_path / "src" / "Zebra.py").write_text("z\n")
+    (tmp_path / "src" / "apple.py").write_text("a\n")
+
+    keys = [k for k, _ in _digest_files(tmp_path, scope=("src/",))]
+    assert keys == [b"src/Zebra.py", b"src/apple.py"]
+
+
+def test_digest_scope_matches_run_scope():
+    """digest 범위 == `RUN_SCOPE` (git dirty 판정 범위와 같아야 한다).
+
+    실제 기본값은 `dirs=("src","tools","configs")` 뿐이었다 — `scripts/`·
+    `run.sh`·`requirements*.txt` 를 고쳐도 code identity 가 안 바뀐다.
+    smoke·실행 스크립트·의존성 핀이 바뀐 채 같은 서명이 찍히면, 그 서명은
+    "이 결과를 만든 코드" 를 가리키지 못한다.
+    """
+    from src.io import RUN_SCOPE, _digest_files
+
+    keys = {k.decode() for k, _ in _digest_files()}
+    for entry in RUN_SCOPE:
+        if entry.endswith("/"):
+            assert any(k.startswith(entry) for k in keys), entry
+        else:
+            assert entry in keys, entry
+
+
+def test_digest_sources_have_no_crlf():
+    """digest 대상 파일에 CRLF 가 남아 있으면 안 된다.
+
+    `.gitattributes` 의 `eol=lf` 는 정책일 뿐이고, worktree 바이트를 세지 않으면
+    지켜졌는지 모른다 (리뷰어의 세 번째 digest 가 바로 이 경우다).
+    """
+    from src.io import _digest_files
+
+    bad = [k.decode() for k, f in _digest_files() if b"\r\n" in f.read_bytes()]
+    assert bad == []

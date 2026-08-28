@@ -17,7 +17,7 @@ import platform
 import subprocess
 import time
 from collections import Counter
-from pathlib import Path
+from pathlib import Path, PurePath
 
 import pandas as pd
 import yaml
@@ -129,7 +129,56 @@ def git_info(repo_dir: str | Path | None = None, save_diff_to=None,
         return {"git_commit": "unavailable", "git_dirty": None}
 
 
-def source_digest(root=None, dirs=("src", "tools", "configs")) -> str:
+def _digest_path_key(rel) -> bytes:
+    """★ 14차 발견 2 — digest 에 들어가는 경로 키. OS 무관 POSIX 정규형.
+
+    `str(Path)` 는 Windows 에서 `src\\io.py` 가 된다. 경로 문자열을 그대로
+    해시하면 **같은 Git blob 이 OS 마다 다른 code identity** 로 찍힌다
+    (리뷰어 실측: POSIX `4fa3e2af0a2e8106` vs `\\` 구분자 `7ac22c1055eae262`).
+    """
+    return PurePath(rel).as_posix().encode("utf-8")
+
+
+def _digest_files(root=None, scope: tuple = RUN_SCOPE):
+    """digest 대상 파일 목록 — `(POSIX 키, 경로)` 를 **키 기준**으로 정렬해서 준다.
+
+    ★ 14차 발견 2 — 두 가지를 여기서 고정한다.
+      1. 정렬 키가 `Path` 비교가 아니라 POSIX 바이트 키다. `sorted(rglob("*"))`
+         는 Windows 에서 각 부분을 **소문자로 접어서** 비교하므로, 대소문자가
+         섞인 파일 집합은 OS 별로 순서가 뒤집힌다 (실측: Windows
+         `apple.py, Zebra.py` / POSIX `Zebra.py, apple.py`). 순서가 바뀌면
+         내용이 같아도 digest 가 갈린다.
+      2. 범위가 `RUN_SCOPE` 다. 이전 기본값은 `("src","tools","configs")` 뿐이라
+         `scripts/`·`run.sh`·`requirements*.txt` 를 고쳐도 code identity 가
+         안 바뀌었다 — smoke·실행 스크립트·의존성 핀이 바뀐 채 같은 서명이
+         찍히면 그 서명은 "이 결과를 만든 코드" 를 가리키지 못한다.
+         dirty 판정(`git_info`)과 **같은 범위**를 쓴다.
+
+    정렬은 scope 항목별이 아니라 **전역**이다 — `RUN_SCOPE` 의 나열 순서를 바꿔도
+    digest 가 안 변한다.
+
+    `git_info` 와 딱 한 군데 다르다: dirty 판정은 prefix 매칭이라 `run.sh.bak`
+    같은 파생 이름도 세지만, digest 는 이름이 정확히 같은 파일만 센다. digest 는
+    "이 파일들의 내용" 이고 dirty 는 "건드렸는가" 이므로 좁은 쪽이 안전하다.
+    """
+    root = Path(root) if root else Path(__file__).resolve().parent.parent
+    found: dict[bytes, Path] = {}
+    for entry in scope:
+        if entry.endswith("/"):
+            base = root / entry.rstrip("/")
+            paths = base.rglob("*") if base.exists() else ()
+        else:
+            paths = root.glob(entry)          # run.sh, requirements*.txt
+        for f in paths:
+            if not f.is_file() or "__pycache__" in f.parts:
+                continue
+            if f.suffix in (".pyc", ".pyo"):
+                continue
+            found[_digest_path_key(f.relative_to(root))] = f
+    return sorted(found.items())
+
+
+def source_digest(root=None, scope: tuple = RUN_SCOPE) -> str:
     """★ F49 — 실제로 import되는 source tree의 내용 해시.
 
     `run_sig` 에 코드 identity 가 없으면, **코드만 바꾸고 같은 output 에 resume 했을
@@ -138,20 +187,12 @@ def source_digest(root=None, dirs=("src", "tools", "configs")) -> str:
     같은 `run_sig` 79f2e9c798ee 로 병합되고 validator 가 ok=True 를 냈다.)
 
     git commit 만으로는 dirty 실행을 못 잡으므로 파일 내용을 직접 해시한다.
+    범위·경로 키·정렬은 `_digest_files` 가 정한다 (★ 14차 발견 2).
     """
-    root = Path(root) if root else Path(__file__).resolve().parent.parent
     h = hashlib.sha256()
-    for d in dirs:
-        base = root / d
-        if not base.exists():
-            continue
-        for f in sorted(base.rglob("*")):
-            if not f.is_file() or "__pycache__" in f.parts:
-                continue
-            if f.suffix in (".pyc", ".pyo"):
-                continue
-            h.update(str(f.relative_to(root)).encode())
-            h.update(f.read_bytes())
+    for key, f in _digest_files(root, scope):
+        h.update(key)
+        h.update(f.read_bytes())
     return h.hexdigest()[:16]
 
 
