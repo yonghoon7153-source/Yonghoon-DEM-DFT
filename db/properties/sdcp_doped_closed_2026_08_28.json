@@ -1,0 +1,65 @@
+{
+ "schema": "campaign_closed/v1",
+ "date": "2026-08-28",
+ "제목": "sdcp_doped 흡착 캠페인 — 범위 마감 (scope closure)",
+ "상태": "proposed — db/governance/decisions.json D-2026-08-28-sdcp-doped-scope-closure, 사람이 ratify 해야 active",
+
+ "닫는_범위": "sdcp_doped(자가도핑 단량체, C₁₁H₁₅O₆S₂ doublet)의 **표면 흡착 수치 전부** — E_ads·자리선호·carrier 상태 판정. 이 캠페인(wave1 프로토콜, n=1 단량체)에서는 만들지 않는다.",
+ "닫지_않는_것": [
+  "추출 부호 (아래 확정값 — 이미 별도 유효 판정)",
+  "기체상 분자 열역학 (ORCA DPE/LCA/EA — kb/projects/sdcp_master_v2_2026_07_11.md §3.9(b), 기존 인용 규율 그대로)",
+  "sdcp_neutral 흡착 (별도 마감 문서 — 현재 closed_for_scope_pending_spin_equivalence)"
+ ],
+
+ "닫힘_조건_먼저_정한_것": {
+  "조건1": "단일 스칼라 E_ads 가 이 계(열린 껍질 × 자성 × 산화환원 활성 기판)에서 정의되지 않음이 외부 리뷰로 확정될 것",
+  "조건1_충족": "회신 M(2026-08-28, basin 혼합) · 회신 N(admissible state 다중 — estimand 미정의) · 회신 O(2026-08-28, P0 전면 반려 + 슬랩 NO-GO) — 3연속. 그리고 8회 시도 전패의 실측 기록",
+  "조건2": "화학종 자체가 목표를 담지 못함이 판정될 것",
+  "조건2_충족": "회신 O 1번: n=1 +1 hole = 고리당 홀 1개(100% 산화)로 25–35% 평균 도핑의 bulk carrier 를 대표하지 못한다 — 좁은 명제로 동의됨. 국소 SO₃–표면 결합·음성대조 모델로만 사용 가능",
+  "조건3": "원고 서사가 doped 흡착 수치 없이 성립할 것",
+  "조건3_충족": "회신 M 선택지 ③ 구도 — 중성형 흡착(별도 마감) + doped 추출 부호 + 기체상 화학(DPE/LCA/EA). doped 의 역할은 '전자 상태가 흡착에서 어떻게 되는가' 라는 **미해결 질문의 명시**로 전환"
+ },
+
+ "확정값": {
+  "dE_extract_sign": {
+   "value_sigma0_eV": 0.3395,
+   "value_TOTEN_eV": 0.3356,
+   "인용_형태": "**부호만** — 'Li 추출은 이 조건에서 열역학적으로 불리(+0.34 eV)'. 장벽·자유에너지·전극전위 아님",
+   "출처": "db/properties/sdcp_phaseB_dftu_v1.json dE_extract_* (complex_doped vs complex_doped_extr — 같은 분자·같은 설정의 복합체 차라 mol_doped 기준 결함이 안 들어간다)",
+   "⚠": "citable 의 '+0.336' 은 TOTEN 값이다 — 파이프라인 규약(E(sigma→0))으로는 +0.3395. 부호 판정에는 무관"
+  }
+ },
+
+ "허용_서술_이대로만": [
+  "자가도핑형(개방 껍질 doublet)의 단일 흡착에너지는 이 계에서 잘 정의되지 않았다 — 분자 스핀 × 슬랩 자기 basin × 전하이동 가능성이 만드는 다중 SCF 해 때문이며, 외부 리뷰 3회(M·N·O)가 이를 확인했다.",
+  "wave1 자유 스핀 복합체의 총자화(−0.31/−0.33/3.72/3.63 μB)는 어느 단순 상태 배정과도 일치하지 않았다 — 상태 배정 불가의 실측 근거로만 인용.",
+  "고정 기하에서 Li 추출은 열역학적으로 불리했다 (+0.34 eV, 부호만).",
+  "단량체 모델은 자가도핑 캐리어를 담기에 부적합하다 (100% 산화에 해당) — 방법론적 한계 서술로."
+ ],
+ "⛔_금지_서술": [
+  "doped E_ads 수치 일체 (−0.32 eV 등 과거 값 포함)",
+  "'doped 가 중성보다 강하게/약하게 붙는다' — 비교 자체가 미정의",
+  "'홀이 슬랩으로 이동했다/분자에 남았다' — 총자화는 그 증거가 아니다 (회신 O)",
+  "'무선호' 또는 자리선호 방향 일체",
+  "n=1 결과를 고분자/실물로 외삽하는 문장"
+ ],
+
+ "재개_조건_이것들만": {
+  "유일_경로": "회신 O 재승인 조건 7 전부 (kb/reviews/codex_O_sdcp_doped_estimand_reply_2026_08_28.md) — ① 화학종 확정(분자식·protonation·counterion·Q·NELECT·reservoir) ② 주 estimand = adiabatic E_ads + 연속 carrier_retention ③ 보조 ΔE_loc 는 두 재현 상태 확인 후 ④ G1–G4 전면 교체 ⑤ DP3/+1·DP4/+1·n=6 manifold 기체상 선행검사 ⑥ neutral spin-equivalence 짝검사 ⑦ machine manifest 연결",
+  "⛔": "위 일곱 밖의 이유(새 자세·새 시드·부분 조건 충족)로 열지 않는다. 부분 재개 없음 — 일곱 전부다.",
+  "참고_판정_2026_08_28": "LiNiO₂(104)+U 슬랩은 금속이 아니다 — wave1 OUTCAR 고유값 재판독: gap ≈ 0.21 eV(pm1 static/dense 일치, net4 basinA 0.20/0.23), 부분점유 밴드 0/12600. '금속 슬랩 = 전자 저장소라 음이온을 중성 셀로 받는' 지름길은 **닫혀 있다**. 좁은 갭이므로 하전 흡착종 경로는 슬랩 전용 보정(Komsa–Pasquarello 계열) 없이 불가"
+ },
+
+ "선례와_구분": {
+  "sdcp_neutral_closed_2026_08_28.json": "값을 확정하고 닫은 마감. 이 문서는 **값을 만들지 않기로 확정**하고 닫는 범위 마감 — 종류가 다르다",
+  "사전_조건": "이 마감은 조건(위 셋)을 먼저 선언하고 충족을 확인한 뒤 닫는다 — 2026-08-28 마감 규율 준수. 사후마감 아님"
+ },
+ "출처": {
+  "리뷰": ["kb/reviews/codex_M_sdcp_wave15_close_2026_08_28.md", "kb/reviews/codex_N_estimand_discipline_2026_08_28.md", "kb/reviews/codex_O_sdcp_doped_estimand_reply_2026_08_28.md"],
+  "실측": ["db/properties/sdcp_wave1_job_energies_2026_08_28.json", "db/properties/sdcp_phaseB_dftu_v1.json"],
+  "재개_설계_원본": "kb/questions/sdcp_doped_estimand_2026_08_28.md (P0 반려된 카드 — 재개 시 회신 O 반영 재설계의 출발점)"
+ },
+ "status_history": [
+  {"at": "2026-08-28", "state": "proposed", "note": "1저자 지시('돌아가지 말고 doped 를 닫을 수 있는')로 범위 마감 작성. 회신 O 의 슬랩 NO-GO 를 재개 조건으로 승계. ratify 대기"}
+ ]
+}

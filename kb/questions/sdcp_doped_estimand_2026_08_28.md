@@ -330,6 +330,10 @@ n=6 은 새로 만들어야 한다 (기존 trimer 빌더 확장 우선 — 새 �
   (δ_m 잔존 → neutral 마감 `closed_for_scope_pending_spin_equivalence`), Yano prior 강등.
   같은 날 이온화 조사: 기체상 음이온은 **이미 있음**(ORCA DPE/LCA/EA) — "계산 없음" 정정.
   다음 행동: 재승인 조건 ①(화학종 확정)과 ⑥(spin-equivalence 짝검사, 가장 싼 계산)부터.
+- **2026-08-28 (심야) — 1저자 결정: 재승인 경로를 밟지 않고 doped 를 범위 마감으로 닫는다.**
+  `db/properties/sdcp_doped_closed_2026_08_28.json` (proposed, ratify 대기).
+  이 카드는 **재개 시 재설계의 출발점**으로 보존 — 회신 O 반영이 재개의 전제다.
+  부수 판정: LiNiO₂(104)+U 슬랩 금속 아님 (gap ≈ 0.21 eV — 음이온 중성셀 지름길 없음).
 
 ## 연결
 

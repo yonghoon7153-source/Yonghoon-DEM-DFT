@@ -7,19 +7,18 @@
 
 > 순서가 있다. 앞이 끝나야 뒤가 뜻이 있다.
 
-### ⏭-0. SDCP doped — **회신 O 접수: P0 전면 반려, 슬랩 NO-GO** (2026-08-28 밤 갱신)
-원문: `kb/reviews/codex_O_sdcp_doped_estimand_reply_2026_08_28.md` · 구현 기록: 카드 판정 절.
-⛔ **재승인 조건 7 을 채우기 전에는 슬랩 계산 금지.** 다음 순서:
-1. **조건 ⑥ 이 가장 싸고 가장 급하다** — neutral spin-equivalence 짝검사
-   (mol_neutral·ptfe_c10 box24 를 같은 기하에서 NUPDOWN=0 vs 자유 → δ_m).
-   이것이 나와야 0.346 eV headline 의 보류가 풀리거나 값이 갱신된다.
-   지금 마감 상태: `closed_for_scope_pending_spin_equivalence`.
-2. 조건 ① 화학종 확정 — SO₃H/SO₃⁻/counterion/Q/NELECT/reservoir. 협력자 실험 정보 필요.
-   ⚠ 기체상 음이온은 **이미 있다** (ORCA DPE/LCA/EA — 카드 정정 절). SO₃Li 가 알짜중성 착지점.
-3. 조건 ⑤ 기체상 Stage 0 — DP3/+1 · DP4/+1 · n=6 manifold(A6/A7a/A7b) 설계.
-   Kumar 2018 PDF 확보 후 (전제 정정됨 — 별도 하전종이었다).
-4. 조건 ⑦ machine manifest — estimand_id·state-selection policy 를 분석기에 연결 (도구 작업).
-부수 선행확인 (비용 0): wave1 DOS 재판독으로 **LiNiO₂(104)+U 슬랩 금속/절연체** 판정.
+### ⏭-0. SDCP doped — **범위 마감(proposed) 등록, 계산 없음** (2026-08-28 밤 확정)
+1저자 지시: "돌아가지 말고 doped 를 닫을 수 있는 것만" — 회신 O 재승인 7조건을 밟는 대신
+**범위 마감**으로 닫았다: `db/properties/sdcp_doped_closed_2026_08_28.json` +
+`decisions.json D-2026-08-28-sdcp-doped-scope-closure` (proposed — **ratify 는 1저자 몫**).
+- 유효 잔존: 추출 부호 +0.34 eV(부호만) · 기체상 DPE/LCA/EA · (중성형은 별도 마감)
+- 재개는 회신 O 7조건 전부로만. 부분 재개 없음.
+- 부수 판정 완료: LiNiO₂(104)+U 슬랩 **금속 아님** (gap ≈ 0.21 eV, dense 일치, 부분점유 0)
+  — 음이온을 중성 셀로 받는 지름길 없음. 기록: doped 마감 문서 재개조건 절.
+**남은 유일한 필수 계산 = neutral spin-equivalence 짝검사** (0.346 eV headline 보류 해제용):
+mol_neutral·ptfe_c10·ptfe_dimer box24 를 **NUPDOWN=-1(자유)** 로 재실행 — 기존 NUPDOWN=0
+결과와의 차 δ_m. VASP 는 외주 파트너 몫이라 **의뢰 블록**이 세션 보고에 있다.
+δ_m ≲ 1 meV 면 보류 해제, 아니면 E_ads 전항 +δ_m 갱신.
 
 ### ⏭-1. T13 확인 — **먼저**
 kgy 800 ps 런 2개(`lpsocl_long` · `lpsocl_small800`)가 8/29 아침 완주.
