@@ -139,6 +139,11 @@ python3 analyze_results.py .     # stdlib 만 씁니다
 | 계획 병렬도 | **256 코어/잡 · 동시 8잡** |
 | 예상 makespan | **약 3일** (가장 긴 잡 ~19 h @256코어) |
 
+> ⚠ 묶음 안 `SUBMIT_CONTRACT.md` 는 "잡 40 / 총 VASP 실행 24" 로 **서로 어긋난 두 숫자**를
+> 적고 있습니다 (생성기가 실행 횟수를 셀 때 D3-off 쌍둥이 16잡을 빠뜨립니다).
+> **실제는 40잡 전부가 각각 static 1회** — 즉 40회입니다. `run_job.sh` 가 있는 폴더 수가
+> 정답입니다: `find . -name run_job.sh | wc -l`.
+
 ⚠ 위 시간은 실측 기반 **모형값이고 ±2배** 범위입니다 (`tools/sdcp/vasp_cost_estimate.py`,
 2026-08-08 납품 OUTCAR 기준). walltime 은 넉넉히 잡아 주세요 — 잘리면 그 잡을 다시 돌려야 합니다.
 
@@ -148,10 +153,13 @@ python3 analyze_results.py .     # stdlib 만 씁니다
 
 ## 6. 무결성
 
-| 파일 | SHA256 |
-|---|---|
-| `sdcp_stageA_v2.zip` | *(발송 시 기입)* |
-| `sdcp_motifprobe_v2.zip` | *(발송 시 기입)* |
+| 파일 | 크기 | SHA256 |
+|---|---:|---|
+| `sdcp_stageA_v2.zip` | 380,929 B | `ddfa7cc08e54d2aaa5b01e4cc823b22e4dc5ae72658e64845e4b4a2d6ca8695f` |
+| `sdcp_motifprobe_v2.zip` | 150,658 B | `59cdfff5553f2bb943cb9d873dad83c5216aa488c6cbf5b90a2ecb494b442ba6` |
+
+받으신 뒤 대조해 주세요 — `sha256sum sdcp_stageA_v2.zip`.
+⚠ 파일명 끝의 **`_v2`** 를 확인해 주세요. `_v1` 판은 폐기본입니다.
 
 각 묶음 안 `MANIFEST.json` 의 `files_sha256` 로 개별 파일까지 대조하실 수 있습니다:
 `sha256sum <파일>`.
