@@ -2727,11 +2727,11 @@ def _closure_estimand(man, results, E, emol, jobs):
             _incoh.append(f"{_jn}: fragment={_fg} 인데 경로가 그렇지 않다")
         if _sd and _sd not in _base:
             _incoh.append(f"{_jn}: seed={_sd} 인데 경로에 없다")
-        if _d3 is not None:
-            if (_d3 == "off") != _base.endswith("__d3off"):
-                _incoh.append(f"{_jn}: d3={_d3} 인데 경로 접미어와 어긋난다")
-        elif _base.endswith("__d3off"):
-            _incoh.append(f"{_jn}: 경로는 d3off 인데 job.json 에 d3 필드가 없다")
+        if _d3 not in ("on", "off"):
+            _incoh.append(f"{_jn}: job.json 에 d3 필드가 없다 (필드 없는 잡이 남으면 "
+                          f"분류가 다시 이름으로 샌다 — v7 실측)")
+        elif (_d3 == "off") != _base.endswith("__d3off"):
+            _incoh.append(f"{_jn}: d3={_d3} 인데 경로 접미어와 어긋난다")
     if _incoh:
         out["blocks"].append(
             "COHORT_INCOHERENT(%d건 — 경로와 구조화 필드가 어긋난다: %s). "
@@ -4867,19 +4867,9 @@ def build_bundle(a, ledger: Optional[Dict[str, Any]] = None) -> Path:
             for extra in ("dense", "pre", "relax"):
                 if (td / extra).exists():
                     shutil.rmtree(td / extra)     # 쌍둥이는 static 만
-            # ★ 회신 AA P0-3 — 쌍둥이 job.json 이 부모와 **완전히 같았다**. 그래서
-            #   분석기가 on/off 를 이름 접미어(`__d3off`)로만 가를 수 있었고, 그것이
-            #   경로 문자열 파싱 의존의 근본 원인이다. 구조화 필드를 박는다.
-            #   부모에도 `d3: "on"` 을 찍어 **모든 잡이 한 필드로 분류**되게 한다
-            #   (필드가 없는 잡이 남으면 cohort 조립이 다시 이름으로 샌다).
-            for _jp, _d3, _par in ((jd / "job.json", "on", None),
-                                   (td / "job.json", "off", rel)):
-                _m = json.loads(_jp.read_text())
-                _m["d3"] = _d3
-                _m["ivdw_expected"] = 11 if _d3 == "on" else None
-                if _par is not None:
-                    _m["d3_twin_of"] = _par
-                _jp.write_text(json.dumps(_m, indent=1, ensure_ascii=False))
+            _m = json.loads((td / "job.json").read_text())
+            _m["d3_twin_of"] = rel
+            (td / "job.json").write_text(json.dumps(_m, indent=1, ensure_ascii=False))
             twins[rel] = rel + "__d3off"
             n_jobs += 1
         # ★ 회신 Z P0-3 — census 를 **기계로** 세고 못박는다. 리뷰어가 "net4/off 까지
@@ -4933,6 +4923,31 @@ def build_bundle(a, ledger: Optional[Dict[str, Any]] = None) -> Path:
         sys.exit(f"⛔ 슬랩 잡들의 고정 원자 수가 갈린다 {nfs} — 쌍 ΔE 가 구속 차이로 "
                  f"오염된다. 자세 z-범위를 확인할 것")
     man["n_fixed_all_slab_jobs"] = nfs[0]
+
+    # ★★ 회신 AA P0-3 — `d3` 를 **전 잡에** 박는다. 종전엔 쌍둥이 생성 루프 안에서만
+    #   찍어서 쌍둥이가 없는 잡(--d3_seed_main_only 의 net4 복합체 8잡)이 통째로
+    #   비었다 — v7 실측. "필드가 없는 잡이 남으면 cohort 조립이 다시 이름으로 샌다"
+    #   고 적어 놓고 그 구멍을 남겼다. 이제 **INCAR 실물**에서 유도한다: 플래그를
+    #   기억해서 찍는 게 아니라 배포되는 입력 자체가 근거다.
+    _nod3 = []
+    for _jj in sorted(out.rglob("job.json")):
+        _inc = _jj.parent / "static" / "INCAR"
+        if not _inc.is_file():
+            _nod3.append(str(_jj.parent.relative_to(out)))
+            continue
+        _on = bool(re.search(r"(?m)^\s*IVDW\s*=\s*11\b", _inc.read_text()))
+        _m = json.loads(_jj.read_text())
+        _m["d3"] = "on" if _on else "off"
+        _m["ivdw_expected"] = 11 if _on else None
+        _jj.write_text(json.dumps(_m, indent=1, ensure_ascii=False))
+    if _nod3:
+        sys.exit(f"⛔ static/INCAR 이 없어 d3 를 정할 수 없는 잡 {len(_nod3)}개: "
+                 f"{_nod3[:5]} — 구조화 필드가 빈 채로 내보내지 않는다")
+    # 계약: **모든** 잡에 d3 가 있다 (분석기가 이름으로 되돌아가지 않게)
+    _chk = [str(q.parent.relative_to(out)) for q in out.rglob("job.json")
+            if json.loads(q.read_text()).get("d3") not in ("on", "off")]
+    if _chk:
+        sys.exit(f"⛔ d3 필드가 없는 잡 {len(_chk)}개: {_chk[:5]}")
 
     man["potcar_spec"] = {e: POTCAR_SPEC.get(e, e) for e in sorted(used_els)}
     (out / "analyze_results.py").write_text(ANALYZER)
@@ -5632,12 +5647,15 @@ def selftest() -> int:
     chk(any("COHORT_INCOHERENT" in b for b in _rx1["blocks"]),
         "⛔음성: job.json 의 fragment 가 경로와 다르면 차단 (어느 쪽이 맞는지 우리가 못 정한다)")
 
+    # ⛔음성 ★ v7 실측 — d3 가 **하나라도** 비면 막는다. 종전엔 "경로가 d3off 가
+    #   아니면 정합" 으로 봐줬는데, 그 관용 때문에 net4 복합체 8잡이 필드 없이
+    #   나갔다. 우연히 동작하는 것과 보증되는 것은 다르다.
     _jb_x2 = dict(_jobs)
     _jb_x2[_k1] = {**_BAS("aaaa1111", _k1)}
     _jb_x2[_k1]["meta"] = {k: v for k, v in _jb_x2[_k1]["meta"].items() if k != "d3"}
     _rx2 = _closure_estimand(_man, {"pairs": {}}, _E, _emol, _jb_x2)
-    chk(_rx2["cohort_fields"]["incoherent"] == 0,
-        "양성: d3 필드가 없어도 경로가 d3off 가 아니면 정합 (부모 잡)")
+    chk(any("COHORT_INCOHERENT" in b for b in _rx2["blocks"]),
+        "⛔음성: d3 필드가 비면 경로가 정상이어도 차단 (v7 의 net4 8잡이 그 모양이었다)")
 
     _jb_x3 = dict(_jobs)
     _k3 = "prospective/sdcp_neutral__b00__afm2424_pm1__d3off"
