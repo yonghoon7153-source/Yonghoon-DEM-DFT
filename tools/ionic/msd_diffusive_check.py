@@ -319,6 +319,14 @@ def directional_msd_tensor(traj_path, save_fs=100.0, species="Li",
     dt = save_fs / 1000.0                                   # ps
     if prefix_ps:                                           # 누적 prefix 분석 (회신 G 권고 ①)
         keep = int(prefix_ps / dt) + 1
+        # ⛔⛔ 2026-08-29 (회신 S) — **파이썬 슬라이스가 조용히 잘렸다.** `frames[:keep]` 은
+        #   keep 이 프레임 수보다 커도 에러 없이 **전체**를 돌려준다. 그래서 60 ps 궤적에
+        #   `--prefixes 70,150,200,400,800` 을 주면 60 ps 값 하나가 **다섯 개의 다른 라벨로**
+        #   찍혔다 (실측 kgy `lpsocl_md/licube`: 0.0704/0.0733/0.0388 이 5행 전부 동일).
+        #   같은 숫자가 반복되는 것이 유일한 단서였고, 그건 우연히 눈에 띈 것이지 검사가 아니다.
+        #   ⇒ 요청한 prefix 를 궤적이 못 덮으면 **숫자를 내지 않는다.**
+        if keep > len(frames):
+            return {"__short__": (len(frames) - 1) * dt, "__requested__": float(prefix_ps)}
         frames = frames[:keep]
         if len(frames) < 20:
             return None
@@ -448,6 +456,13 @@ def cmd_directional(a):
             if got is None:
                 print(f"{str(traj.parent)[-30:]:30s} {(pp or 'all'):>8} "
                       f" ⛔ 프레임 부족 — 이 prefix 는 아직 못 잰다")
+                continue
+            if isinstance(got, dict) and "__short__" in got:
+                # 회신 S — 요청 prefix 를 궤적이 못 덮는다. 잘린 값을 그 라벨로 내보내면
+                # 서로 다른 prefix 행이 **같은 숫자**가 되고 그게 측정처럼 읽힌다.
+                print(f"{str(traj.parent)[-30:]:30s} {(pp or 'all'):>8} "
+                      f" ⛔ 궤적이 {got['__short__']:.1f} ps 뿐 — prefix "
+                      f"{got['__requested__']:.0f} ps 를 못 덮는다 (잘린 값을 내지 않는다)")
                 continue
             t, M = got
             lo, hi = a.window

@@ -1,0 +1,151 @@
+{
+ "slug": "han2025_icep_binder_ultrahigh_loading_ncm811",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-08-29",
+ "sources": [
+  "83. Han2025_ICEP_Binder_Ultrahigh_Loading_NCM811.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 4,
+   "file": "fig_1.png",
+   "caption": "Figure 1. Chemomechanical and ion-conductive characteristics of the ICEP binder. a) Tensile S-S curves of ICEP-8 and PVDF polymer ﬁlms. b) Load- displacement proﬁles obtained from nanoindentation tests on ICEP-8 and PVDF polymer ﬁlms and corresponding elastic modulus and hardness values. d) FT-IR spectra of pristine and electrolyte-immersed ICEP-8 ﬁlms. e) Ionic conductivity of ICEP-8 and PVDF polymers. f) Quantitative analysis of Mn2+ ions captured by ICEP-8 and PVDF polymer ﬁlms.",
+   "rotated_deg": 0,
+   "bbox": [
+    42.0,
+    71.0,
+    550.1,
+    384.7
+   ],
+   "w": 2118,
+   "h": 1309,
+   "dpi": 300,
+   "src": "83. Han2025_ICEP_Binder_Ultrahigh_Loading_NCM811.pdf",
+   "blank": 0.854
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 6,
+   "file": "fig_2.png",
+   "caption": "Figure 2. TEM images of a) PVDF and d) ICEP-8 on the NCM811 surface in the pristine state. Top SEM images of the b) PVDF and e) ICEP-8 cathodes. 3D Optical Proﬁler images of the cathodes with c) PVDF and (f) ICEP-8 binders. g) Binding energies and optimized structures of ICEP_AN, ICEP_AMPS, ICEP_AMPS (-H), and PVDF on NCM811 (001) surface. h) The schematic illustration of the SAICAS experiment. i) The adhesive strength of the cathodes with PVDF and ICEP-8 binders at various electrode depths. j) Elastic modulus and hardness of NCM811 cathodes with diﬀerent binders.",
+   "rotated_deg": 0,
+   "bbox": [
+    42.0,
+    70.8,
+    550.0,
+    578.7
+   ],
+   "w": 2118,
+   "h": 2118,
+   "dpi": 300,
+   "src": "83. Han2025_ICEP_Binder_Ultrahigh_Loading_NCM811.pdf",
+   "blank": 0.471
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 8,
+   "file": "fig_3.png",
+   "caption": "Figure 3. Electrochemical performance and Li-ion transport properties of NCM811 cathodes. a) Long-term cycling stability at 0.5 C and b) discharge rate capabilities at varying current densities of cathodes with PVDF and ICEP-8 binders. c) Internal resistance and Li-ion diﬀusion coeﬃcients (DLi +) across diﬀerent SOC and DOD. d) Ex situ DRT results of Li||NCM811 cells employing diﬀerent binders after the ﬁrst and 50th cycles. In situ DRT results of Li||NCM811 cells during cycling with e) PVDF and f) ICEP-8 binders.",
+   "rotated_deg": 0,
+   "bbox": [
+    42.0,
+    70.7,
+    550.1,
+    528.7
+   ],
+   "w": 2118,
+   "h": 1910,
+   "dpi": 300,
+   "src": "83. Han2025_ICEP_Binder_Ultrahigh_Loading_NCM811.pdf",
+   "blank": 0.775
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 9,
+   "file": "fig_4.png",
+   "caption": "Figure 4. Interfacial stability analysis of NCM811 cathodes. a) Quantitative analysis of metallic Ni, Co, and Mn deposited on Li-metal anodes after cycling. Normalized TOF-SIMS depth proﬁles of representative secondary-ion fragments at the cathode-electrolyte interfaces formed on cycled NCM811 cathodes employing b) PVDF and c) ICEP-8 binders. d) 3D TOF-SIMS visualization of secondary-ion fragments on the cathode surface with diﬀerent binders.",
+   "rotated_deg": 0,
+   "bbox": [
+    44.8,
+    70.5,
+    552.9,
+    402.7
+   ],
+   "w": 2118,
+   "h": 1386,
+   "dpi": 300,
+   "src": "83. Han2025_ICEP_Binder_Ultrahigh_Loading_NCM811.pdf",
+   "blank": 0.672
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 11,
+   "file": "fig_5.png",
+   "caption": "Figure 5. Structural stability analysis of cycled NCM811 cathodes. Synchrotron-based X-ray nano-computed tomography images of cycled cathodes with a) PVDF and b) ICEP-8 binders (Scale bar = 10 μm). STEM images with corresponding FFT patterns for NCM811 cathodes with c) PVDF and d) ICEP-8 binders. EELS spectra (O K-, Co L-, Ni L3-, and L2-edges) of cycled NCM811 cathodes with e) PVDF and f) ICEP-8 binders.",
+   "rotated_deg": 0,
+   "bbox": [
+    44.8,
+    70.5,
+    552.9,
+    508.7
+   ],
+   "w": 2118,
+   "h": 1827,
+   "dpi": 300,
+   "src": "83. Han2025_ICEP_Binder_Ultrahigh_Loading_NCM811.pdf",
+   "blank": 0.513
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 12,
+   "file": "fig_6.png",
+   "caption": "Figure 6. Electrochemical performance and energy density of high-mass-loading ICEP-8 cathodes. a) Galvanostatic charge/discharge proﬁles at increas- ing areal capacities of ICEP-8 cathodes. b) Comparison of areal capacity as a function of mass loading between ICEP-8 cathodes (this work) and previously reported cathode binders. c) Gravimetric energy density of coin-type cells versus areal mass loading for ICEP-8 and PVDF cathodes (Inset: Photographs of PVDF and ICEP-8 cathodes). d) Cross-sectional SEM image of fully charged ICEP-8 cathode (4.3 V) for Raman spectroscopy analysis. Raman spectra and Eg/A1g intensity ratios at top and bottom regions of e) PVDF and f) ICEP-8 cathodes. g) Cycling stability of Li metal full cells with varying mass loadings of ICEP-8 cathodes. h) A pie chart of the weight distributions of components in a double-stacked Li metal pouch-type full cell. i) Comparativ",
+   "rotated_deg": 0,
+   "bbox": [
+    42.0,
+    71.2,
+    550.1,
+    633.6
+   ],
+   "w": 2118,
+   "h": 2345,
+   "dpi": 300,
+   "src": "83. Han2025_ICEP_Binder_Ultrahigh_Loading_NCM811.pdf",
+   "blank": 0.767
+  },
+  {
+   "key": "s1",
+   "kind": "scheme",
+   "label": "1",
+   "page": 3,
+   "file": "fig_1.png",
+   "caption": "Scheme 1. Design and function of the ICEP binder. a) Schematic illustration demonstrating enhanced electrode integrity, interfacial stability, and uniform ion/electron conduction pathways enabled by the ICEP binder compared to conventional PVDF binder. b) Synthetic processes and key multifunctional components of the ICEP binder.",
+   "rotated_deg": 0,
+   "bbox": [
+    44.8,
+    70.4,
+    552.9,
+    608.7
+   ],
+   "w": 2118,
+   "h": 2244,
+   "dpi": 300,
+   "src": "83. Han2025_ICEP_Binder_Ultrahigh_Loading_NCM811.pdf",
+   "blank": 0.797
+  }
+ ]
+}

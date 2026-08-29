@@ -179,6 +179,9 @@ def main():
                     help="가우시안 rattle 표준편차 [Å]")
     ap.add_argument("--rattle_seeds", type=int, default=0,
                     help="rattle 시드 K개 — r0(무변형 기준선) + r1..rK 를 만든다")
+    ap.add_argument("--degauss", type=float, default=DEGAUSS,
+                    help=f"smearing 폭 [Ry] (기본 {DEGAUSS}). ⚠ control 로 쓸 때는 **대조 대상과 "
+                         "같은 값**이어야 한다 — cc333 NEB 는 0.02 로 돌았다")
     ap.add_argument("--control_relax", action="store_true",
                     help="P0-2 control 모드: **nosym 고정셀 relax 입력 하나만** 만든다 "
                          "(vc-relax/scf/갭/DOS 단계 없음). 셀은 원본 그대로 둔다 — "
@@ -286,7 +289,7 @@ def main():
         def block(calc, kpts, fixed, extra="", nosym=False, verbose=False, dos=False):
             occ = ("    occupations     = 'fixed'\n" if fixed else
                    f"    occupations     = 'smearing'\n    smearing        = 'mv'\n"
-                   f"    degauss         = {DEGAUSS}\n")
+                   f"    degauss         = {a.degauss}\n")
             hub = ""
             if has_nd and a.nd_u > 0:
                 hub = f"\nHUBBARD (ortho-atomic)\n  U Nd-4f {a.nd_u}\n"
