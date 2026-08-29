@@ -9,6 +9,8 @@ Preview :  --demo   (synthesise a few AM + VGCF fibres + Super P, render the loo
   python3 scripts/viz_additives.py --demo --out docs/figures/additives_preview.png
 """
 import argparse
+import math
+
 import numpy as np
 
 #: phase → (colour, label, marker size).
@@ -124,10 +126,74 @@ def selftest():
         chk('④ --allow-undrawn 이면 그린다', r2.returncode == 0
             and os.path.exists(os.path.join(tmp, 'o.png')), f'rc={r2.returncode} {r2.stderr[-200:]}')
 
+    # ⑤ AM scaffold 단위 — 크기 휴리스틱이 냈던 1000배 오차의 재현 시험
+    #    우리 scaffold 는 **mm** 다 (헤더: "lateral 0..0.05 = 50um").
+    mm = np.array([[0.000157, 0.010], [0.025033, 0.030], [0.049955, 0.049]])
+    chk('⑤ mm 을 mm 으로 읽는다', am_scale_to_um(mm, 50.0) == 1e3, str(am_scale_to_um(mm, 50.0)))
+    chk('⑤ 옛 휴리스틱이면 상자 밖', 0.025033 * 1e6 > 50.0)     # = 25,033 µm
+    um = mm * 1e3
+    chk('⑤ µm 을 µm 으로 읽는다', am_scale_to_um(um, 50.0) == 1.0, str(am_scale_to_um(um, 50.0)))
+    chk('⑤ 명시 단위가 이긴다', am_scale_to_um(mm, 50.0, 'mm') == 1e3)
+    try:                                                       # 잘못 지정하면 거부 (음성 경로)
+        am_scale_to_um(mm, 50.0, 'm')
+        chk('⑤ 틀린 단위 거부', False, '거부하지 않았다')
+    except SystemExit:
+        chk('⑤ 틀린 단위 거부', True)
+
+    # ⑥ 리포의 **실제** scaffold 로 확인한다 (합성 픽스처만으로는 규약을 못 맞춘다)
+    real = os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                        '..', 'docs', 'data', 'real14_am_scaffold.csv')
+    if os.path.exists(real):
+        arr = np.loadtxt(real, delimiter=',', comments='#', ndmin=2)
+        s_real = am_scale_to_um(arr[:, 1:3], 50.0)
+        chk('⑥ 실제 scaffold = mm', s_real == 1e3, str(s_real))
+        chk('⑥ 반지름이 2·6 µm 로 나온다',
+            sorted(set(np.round(arr[:, 4] * s_real, 6).tolist())) == [2.0, 6.0],
+            str(sorted(set(np.round(arr[:, 4] * s_real, 6).tolist()))))
+    else:                                                      # pragma: no cover
+        bad.append('⑥ real14_am_scaffold.csv 가 없다 — 규약 대조를 건너뛸 수 없다')
+
     print(f'viz_additives selftest: {ok}/{ok + len(bad)} PASS')
     for b in bad:
         print('  ✗', b)
     return 0 if not bad else 1
+
+
+#: AM scaffold CSV 의 길이 단위 후보 → µm 환산 배수.
+#  우리 scaffold 헤더가 *"LIGGGHTS box units (lateral 0..0.05 = 50um)"* 라고 적는다
+#  ⇒ 1 단위 = 1 mm.  µm 로 저장된 것도 있을 수 있어 둘 다 둔다.
+_AM_UNIT_UM = {'mm': 1e3, 'um': 1.0, 'm': 1e6}
+
+
+def am_scale_to_um(xy, box_um, unit='auto'):
+    """AM scaffold 좌표 → µm 배수.  `auto` 는 **상자 폭에 맞춰** 고르고 검증한다.
+
+    ⚠⚠ 2026-08-29 실사고: 옛 코드가 `v*1e6 if v < 1 else v` 라는 **크기 휴리스틱**을 썼다.
+    우리 scaffold 는 mm 라 0.025 → **25,033 µm** 가 되고, 축은 0–50 이라 **AM 원이 전부
+    화면 밖으로 나갔다.**  경고는 없다 — 그림은 그냥 AM 이 없는 것처럼 보인다.
+    상 누락(위 `_STYLE` 주석)과 **같은 부류**이고, Figure 4a 는 AM 골격이 요지의 절반이다.
+    ⇒ 배수를 고른 뒤 **정말 상자 안에 들어오는지 확인**하고, 아니면 거부한다.
+    """
+    xy = np.asarray(xy, dtype=float)
+    if unit != 'auto':
+        if unit not in _AM_UNIT_UM:
+            raise SystemExit(f'⛔ --am-units {unit} 은 모른다 (auto/mm/um/m)')
+        s = _AM_UNIT_UM[unit]
+    else:
+        span = float(np.nanmax(xy) - np.nanmin(xy))
+        if not np.isfinite(span) or span <= 0:
+            raise SystemExit('⛔ AM scaffold 의 좌표 폭이 0 이다 — 단위를 정할 수 없다')
+        #  상자 폭에 **가장 가깝게** 만드는 배수 (로그 거리로 고른다)
+        s = min(_AM_UNIT_UM.values(), key=lambda m: abs(math.log((span * m) / box_um)))
+    out = xy * s
+    lo, hi = float(np.nanmin(out)), float(np.nanmax(out))
+    if lo < -0.05 * box_um or hi > 1.05 * box_um:
+        name = next((k for k, v in _AM_UNIT_UM.items() if v == s), s)
+        raise SystemExit(
+            f'⛔ AM scaffold 를 {name} 로 읽으면 좌표가 {lo:.3g}~{hi:.3g} µm 라 '
+            f'상자 0~{box_um:g} µm 밖이다 — 그대로 그리면 **AM 이 화면 밖으로 사라진다**.  '
+            '`--am-units` 로 단위를 지정할 것.')
+    return s
 
 
 def main():
@@ -139,6 +205,8 @@ def main():
     ap.add_argument('--out', default='docs/figures/additives_preview.png')
     ap.add_argument('--allow-undrawn', action='store_true',
                     help='표시 규약이 없는 상을 빼고 그린다 — 진단 전용, 그림 산출 금지')
+    ap.add_argument('--am-units', default='auto', choices=('auto', 'mm', 'um', 'm'),
+                    help='AM scaffold CSV 의 길이 단위.  auto 는 상자 폭에 맞춰 고르고 검증한다')
     ap.add_argument('--selftest', action='store_true')
     a = ap.parse_args()
     if a.selftest:
@@ -177,10 +245,14 @@ def main():
         m = (sz >= sz.min() + zlo * (sz.max() - sz.min())) & (sz <= sz.min() + zhi * (sz.max() - sz.min()))
         um = box / (sx.max() - sx.min() + 1e-9)
         if a.am:
-            amr = np.loadtxt(a.am, delimiter=',')
+            amr = np.loadtxt(a.am, delimiter=',', comments='#', ndmin=2)
+            #  ★ 크기 휴리스틱이 아니라 **상자 폭에 맞춰 고르고 검증한 배수** (am_scale_to_um)
+            s_am = am_scale_to_um(amr[:, 1:3], box, a.am_units)
+            print(f'AM scaffold {len(amr)}개 · 배수 x{s_am:g} → '
+                  f'{amr[:, 1].min() * s_am:.2f}~{amr[:, 1].max() * s_am:.2f} µm')
             for row in amr:
-                ax.add_patch(Circle((row[1] * 1e6 if row[1] < 1 else row[1], row[2] * 1e6 if row[2] < 1 else row[2]),
-                                    row[4] * 1e6 if row[4] < 1 else row[4], fc='#5a6b7a', ec='none', alpha=0.5, zorder=1))
+                ax.add_patch(Circle((row[1] * s_am, row[2] * s_am), row[4] * s_am,
+                                    fc='#5a6b7a', ec='none', alpha=0.5, zorder=1))
         for code, (c, lab, ms) in COL.items():
             sel = m & (ph == code)
             if sel.any():
