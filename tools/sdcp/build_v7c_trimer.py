@@ -291,6 +291,14 @@ def make_template(sym, pos, nb, rings, riB, cA, cB):
 DMIN_FLOOR = 2.0    # Å — geometry seed 후보각 자격 (이하는 입체 충돌로 제외)
 
 
+class SteticClash(Exception):
+    """자격(dmin ≥ DMIN_FLOOR)을 만족하는 접합각이 하나도 없다 → 그 seed 를 폐기한다.
+
+    회신 R4 P0-1 대응. 종전에는 `or cands[:1]` 로 충돌 구조를 조용히 채택했고,
+    stage_a 의 사후 dmin 검사에 **우연히** 걸리는 데 의존했다.
+    """
+
+
 def graft(csym, cpos, cnb, attC, attH, tpl, cc, step, gseed=0, gidx=0):
     """사슬의 자유 α(attC, 그 H=attH)에 템플릿을 접합. → (sym, pos, 채택각, dmin)
 
@@ -318,10 +326,17 @@ def graft(csym, cpos, cnb, attC, attH, tpl, cc, step, gseed=0, gidx=0):
                     dmin = dd
         cands.append((dmin, th, newpos))
     cands.sort(key=lambda c: -c[0])
+    # 회신 R4 P0-1: `or cands[:1]` 폴백은 **문서와 다른 fail-open** 이었다 —
+    # 자격 후보가 하나도 없으면 최상위(=여전히 충돌)를 조용히 채택했다.
+    # 이제 두 경로 모두 fail-closed: 자격 미달이면 SteticClash 로 이 seed 를 폐기시킨다.
+    ok = [c for c in cands if c[0] >= DMIN_FLOOR]
+    if not ok:
+        raise SteticClash(
+            f"접합 후보 {len(cands)}개 전부 dmin < {DMIN_FLOOR} Å "
+            f"(최선 {cands[0][0]:.3f} Å, gseed={gseed} gidx={gidx}) — 이 seed 는 폐기한다")
     if gseed == 0:
-        dmin, th, npos = cands[0]
+        dmin, th, npos = ok[0]                      # 종전과 동일: 자격 후보 중 max-dmin
     else:
-        ok = [c for c in cands if c[0] >= DMIN_FLOOR] or cands[:1]
         pick = ((gseed * 2654435761 + gidx * 40503) & 0xFFFFFFFF) % len(ok)
         dmin, th, npos = ok[pick]
     nsym = [csym[i] for i in base_atoms] + list(tpl["sym"])
@@ -556,7 +571,7 @@ def stage_a(a, sym, pos):
         try:
             csym, cpos, torsions = build_chain(sym, pos, a.n, a.cc, a.step,
                                                log=lambda *x: None, gseed=g)
-        except SystemExit:
+        except (SystemExit, SteticClash):
             g += 1
             continue
         vec = tuple(t["torsion_deg"] for t in torsions)
@@ -616,13 +631,57 @@ def stage_a(a, sym, pos):
 
 
 # ══ 중성 부모 receipt (회신 R3 P0-2 — 자유문구는 증거가 아니다) ═══════════════════
+#: 미이완 판정 문턱 [Å] — Opt 최종구조가 조립본에서 이만큼도 안 움직였으면 이완이 아니다.
+#:   회신 R4 P0-2: SHA 비교는 **주석 한 줄**로 깨진다. 좌표로 판정해야 한다.
+RELAX_MIN_DISP_A = 1e-3
+
+
+def _coord_blocks(text, nat):
+    """text 의 모든 CARTESIAN COORDINATES (ANGSTROEM) 블록 → [[(el,x,y,z)]*nat].
+
+    ⛔ 못 하는 것: 좌표계 회전·병진을 되돌리지 않는다. ORCA 가 입력 프레임을
+      그대로 echo 한다는 전제에 의존한다 (r2SCAN-3c gas-phase 에서는 성립).
+    """
+    out = []
+    for blk in text.split("CARTESIAN COORDINATES (ANGSTROEM)")[1:]:
+        rows = []
+        for ln in blk.splitlines()[2:2 + nat]:
+            t = ln.split()
+            if len(t) >= 4:
+                try:
+                    rows.append((t[0], float(t[1]), float(t[2]), float(t[3])))
+                except ValueError:
+                    break
+        if len(rows) == nat:
+            out.append(rows)
+    return out
+
+
+def _max_disp(rows, sym, pos):
+    """좌표블록 vs (sym,pos) 의 원소별 최대 변위 [Å]. 원소가 어긋나면 None."""
+    if len(rows) != len(sym):
+        return None
+    d = 0.0
+    for k, (el, x, y, z) in enumerate(rows):
+        if el != sym[k]:
+            return None
+        d = max(d, abs(x - pos[k][0]), abs(y - pos[k][1]), abs(z - pos[k][2]))
+    return d
+
+
 def neutral_receipt(a, manA):
     """stage A manifest + ORCA .out + 최종 xyz 를 **묶어서** 검증한다.
 
-    검증: ① manifest 의 gseed 항목 존재 ② .out strict decode · 마지막 run segment 의
-    정상종료 + **Opt 수렴** ③ .out 마지막 좌표블록 == neutral_xyz 좌표 (원자별 1e-5 Å)
-    ④ neutral_xyz 가 stage A 의 미이완 xyz 와 **달라야** 한다 (동일 = 미이완 재사용 적발)
-    ⑤ 조성·닫힌꼴 → receipt(해시·최종에너지·버전·calc id) 반환. 하나라도 어기면 중단.
+    검증 (회신 R4 P0-2 로 ⑤⑥⑦ 추가):
+      ① manifest 의 gseed 항목 존재
+      ② .out strict decode · 마지막 run segment 정상종료 + **Opt 수렴**
+      ③ .out 마지막 좌표블록 == neutral_xyz 좌표 (원자별 1e-4 Å)
+      ④ neutral_xyz 가 stage A 조립본에서 **실제로 움직였다** (≥ RELAX_MIN_DISP_A)
+         — 종전의 SHA 비교는 주석 한 줄로 우회됐다
+      ⑤ **.out 의 시작 좌표블록 == 그 gseed 의 stage A 조립본** (교차-seed 재라벨링 차단)
+      ⑥ **HFTyp / Total Charge / Multiplicity 가 중성 RKS 부모와 일치** — 종전에는
+         UHF·charge +1·doublet 출력도 통과했다
+      ⑦ stage A 조립본 xyz 가 **없으면 거부** (종전에는 조용히 검사를 건너뛰었다)
     """
     seeds = {m["gseed"]: m for m in manA["geometry_seeds"]}
     if a.gseed not in seeds:
@@ -642,33 +701,72 @@ def neutral_receipt(a, manA):
     if not ee:
         raise SystemExit("⛔ neutral .out: FINAL SINGLE POINT ENERGY 없음")
     ver = re.search(r"Program Version\s+(\S+)", text)
+
+    # ⑥ 섹터 대조 — 중성 부모는 RKS · charge 0 · singlet 이어야 한다 (R4 P0-2)
+    hf = re.findall(r"Hartree-Fock type\s+HFTyp\s*\.+\s*(\w+)", seg)
+    if not hf:
+        raise SystemExit("⛔ neutral .out: HFTyp 없음 — RKS 부모임을 확인할 수 없다 (R4 P0-2)")
+    if "RKS" not in hf[-1].upper() and "RHF" not in hf[-1].upper():
+        raise SystemExit(f"⛔ neutral .out: HFTyp={hf[-1]} — 중성 부모는 RKS 여야 한다. "
+                         "open-shell 출력을 부모로 쓸 수 없다 (R4 P0-2)")
+    q = re.findall(r"Total Charge\s+Charge\s*\.+\s*(-?\d+)", seg)
+    mu = re.findall(r"Multiplicity\s+Mult\s*\.+\s*(\d+)", seg)
+    if not q or not mu:
+        raise SystemExit("⛔ neutral .out: charge/multiplicity echo 없음 — "
+                         "섹터를 확인할 수 없는 출력은 부모가 될 수 없다 (R4 P0-2)")
+    if int(q[-1]) != 0 or int(mu[-1]) != 1:
+        raise SystemExit(f"⛔ neutral .out: charge {q[-1]} · mult {mu[-1]} — "
+                         "중성 부모는 (0, 1) 이어야 한다 (R4 P0-2)")
+
     csym, cpos = read_xyz(a.neutral_xyz)
-    blocks = seg.split("CARTESIAN COORDINATES (ANGSTROEM)")
-    if len(blocks) < 2:
+
+    # ⑦ stage A 조립본은 **필수** — 없으면 ④⑤ 를 할 수 없으므로 거부한다
+    a_xyz = os.path.join(os.path.dirname(a.stage_a_manifest), sm["dir"], sm["tag"] + ".xyz")
+    if not os.path.isfile(a_xyz):
+        raise SystemExit(f"⛔ stage A 조립본을 찾을 수 없다: {a_xyz} — "
+                         "시작구조 없이는 receipt 를 발급하지 않는다 (R4 P0-2 ⑦)")
+    asym, apos = read_xyz(a_xyz)
+    if len(asym) != len(csym):
+        raise SystemExit(f"⛔ 원자수 불일치: stage A 조립본 {len(asym)} ≠ neutral_xyz {len(csym)}")
+
+    blocks = _coord_blocks(text, len(csym))
+    if not blocks:
         raise SystemExit("⛔ neutral .out: 좌표 블록 없음 — xyz 와 결합 불가")
-    last = blocks[-1].splitlines()[2:2 + len(csym)]
-    ocoords = []
-    for ln in last:
-        t = ln.split()
-        if len(t) >= 4:
-            ocoords.append((t[0], float(t[1]), float(t[2]), float(t[3])))
-    if len(ocoords) != len(csym):
-        raise SystemExit(f"⛔ .out 좌표 {len(ocoords)}원자 ≠ xyz {len(csym)} — 결합 실패")
-    for k, (el, x, y, z) in enumerate(ocoords):
-        if el != csym[k] or max(abs(x - cpos[k][0]), abs(y - cpos[k][1]),
-                                abs(z - cpos[k][2])) > 1e-4:
-            raise SystemExit(f"⛔ 원자 {k}: .out 최종좌표와 neutral_xyz 불일치 — "
-                             "이 xyz 는 이 .out 의 산물이 아니다")
-    if os.path.exists(os.path.join(os.path.dirname(a.stage_a_manifest),
-                                   sm["dir"], sm["tag"] + ".xyz")):
-        if _sha(os.path.join(os.path.dirname(a.stage_a_manifest),
-                             sm["dir"], sm["tag"] + ".xyz")) == _sha(a.neutral_xyz):
-            raise SystemExit("⛔ neutral_xyz 가 stage A 조립본과 **동일** — 미이완 부모다. "
-                             "ORCA Opt 최종 xyz 를 넣어라 (R3 P0-2)")
+
+    # ⑤ 시작 좌표블록 == 그 gseed 의 조립본 (다른 seed 출력을 이 gseed 로 못 붙인다)
+    d_start = _max_disp(blocks[0], asym, apos)
+    if d_start is None:
+        raise SystemExit("⛔ .out 첫 좌표블록의 원소 배열이 stage A 조립본과 다르다 — "
+                         "이 출력은 이 계의 것이 아니다 (R4 P0-2 ⑤)")
+    if d_start > 1e-3:
+        raise SystemExit(
+            f"⛔ .out 시작구조가 gseed {a.gseed} 조립본과 다르다 (최대 {d_start:.4f} Å) — "
+            "다른 seed 의 출력을 재라벨링한 것이다 (R4 P0-2 ⑤)")
+
+    # ③ 마지막 좌표블록 == neutral_xyz
+    d_end = _max_disp(blocks[-1], csym, cpos)
+    if d_end is None or d_end > 1e-4:
+        raise SystemExit("⛔ .out 최종좌표와 neutral_xyz 불일치 — "
+                         "이 xyz 는 이 .out 의 산물이 아니다")
+
+    # ④ 실제로 이완됐나 — SHA 가 아니라 **좌표**로 본다 (주석 한 줄 우회 차단)
+    d_relax = _max_disp(blocks[-1], asym, apos)
+    if d_relax is None or d_relax < RELAX_MIN_DISP_A:
+        raise SystemExit(
+            f"⛔ 최종구조가 stage A 조립본에서 {0.0 if d_relax is None else d_relax:.6f} Å 밖에 "
+            f"안 움직였다 (< {RELAX_MIN_DISP_A}) — 미이완 부모다. ORCA Opt 최종 xyz 를 "
+            "넣어라 (R4 P0-2 ④: SHA 비교는 주석 변경으로 우회됐다)")
+
+    inp = os.path.splitext(a.neutral_out)[0] + ".inp"
     return {"gseed": a.gseed, "stage_a_calculation_id": sm["calculation_id"],
             "stage_a_manifest_sha256": _sha(a.stage_a_manifest),
+            "stage_a_start_xyz": os.path.abspath(a_xyz),
+            "stage_a_start_xyz_sha256": _sha(a_xyz),
             "out_path": os.path.abspath(a.neutral_out), "out_sha256": _sha(a.neutral_out),
+            "inp_sha256": (_sha(inp) if os.path.isfile(inp) else None),
             "xyz_sha256": _sha(a.neutral_xyz),
+            "start_to_final_max_disp_A": round(d_relax, 6),
+            "hf_type": hf[-1], "charge": int(q[-1]), "mult": int(mu[-1]),
             "final_energy_Eh": float(ee[-1]),
             "orca_version": (ver.group(1) if ver else None),
             "terminated": True, "opt_converged": True}
@@ -1278,8 +1376,13 @@ def _synthetic_dimer():
 
 def _fake_orca_out(terminated=True, energies=(-100.0,), hf="UHF", s2=None, s2_list=None,
                    stability="stable", opt_converged=False, charge=0, mult=None,
-                   coords=None, spins=None, version="6.1.0"):
-    """R3 게이트 검증용 합성 ORCA 출력 — 양성 증거를 골라 넣고 뺄 수 있다."""
+                   coords=None, coords_start=None, spins=None, version="6.1.0"):
+    """R3 게이트 검증용 합성 ORCA 출력 — 양성 증거를 골라 넣고 뺄 수 있다.
+
+    R4 P0-2 ⑤ 이후로 **좌표블록이 두 개**여야 실제 Opt 출력을 닮는다:
+    `coords_start` = 입력(시작) 기하, `coords` = 최종 기하. `coords_start` 를 빼면
+    블록이 하나뿐이라 시작=최종으로 읽히므로, 그것 자체가 미이완 음성 픽스처가 된다.
+    """
     t = "                                 * O   R   C   A *\n"
     t += f"                       Program Version {version} - RELEASE\n"
     if hf:
@@ -1287,9 +1390,11 @@ def _fake_orca_out(terminated=True, energies=(-100.0,), hf="UHF", s2=None, s2_li
     t += f" Total Charge           Charge          ....    {charge}\n"
     if mult is not None:
         t += f" Multiplicity           Mult            ....    {mult}\n"
-    if coords is not None:
+    for blk in (coords_start, coords):
+        if blk is None:
+            continue
         t += "CARTESIAN COORDINATES (ANGSTROEM)\n---------------------------------\n"
-        for el, p in coords:
+        for el, p in blk:
             t += f"  {el}   {p[0]:.6f}   {p[1]:.6f}   {p[2]:.6f}\n"
         t += "\n"
     if spins is not None:
@@ -1386,7 +1491,8 @@ def selftest():
         out_ok = os.path.join(td, "neutral.out")
         open(out_ok, "w").write(_fake_orca_out(
             hf="RHF", charge=0, mult=1, opt_converged=True,
-            coords=list(zip(s3, p3o)), energies=(-500.0, -500.123456789)))
+            coords_start=list(zip(s3, p3)), coords=list(zip(s3, p3o)),
+            energies=(-500.0, -500.123456789)))
         manAp = os.path.join(aA.out, "manifest_stage_a.json")
 
         def B(**kw):
@@ -1404,6 +1510,7 @@ def selftest():
         out_nc = os.path.join(td, "nc.out")
         open(out_nc, "w").write(_fake_orca_out(hf="RHF", charge=0, mult=1,
                                                opt_converged=False,
+                                               coords_start=list(zip(s3, p3)),
                                                coords=list(zip(s3, p3o))))
         raises(lambda: stage_b(B(neutral_out=out_nc)),
                "음성: Opt 수렴 문구 없는 .out → 거부")
@@ -1411,9 +1518,57 @@ def selftest():
         p3bad = [[x + 0.5, y, z] for x, y, z in p3o]
         open(out_mm, "w").write(_fake_orca_out(hf="RHF", charge=0, mult=1,
                                                opt_converged=True,
+                                               coords_start=list(zip(s3, p3)),
                                                coords=list(zip(s3, p3bad))))
         raises(lambda: stage_b(B(neutral_out=out_mm)),
                "음성: .out 최종좌표 ≠ neutral_xyz → 결합 실패 거부")
+
+        # ══ 회신 R4 회귀시험 ① — **교차-seed receipt** ═══════════════════════
+        #   gs1 의 시작구조로 돌린 출력을 gseed 0 이라 주장한다. 종전 코드는
+        #   "gseed 가 manifest 에 있나" 만 봐서 통과시켰다.
+        s3b, p3b = read_xyz(os.path.join(aA.out, "gs1", "dp3_gs1_neutral.xyz"))
+        p3bo = [[x + (0.011 if i == 0 else 0.0), y, z] for i, (x, y, z) in enumerate(p3b)]
+        xyz_x = os.path.join(td, "cross.xyz")
+        write_xyz(xyz_x, s3b, p3bo, "gs1 opt")
+        out_x = os.path.join(td, "cross.out")
+        open(out_x, "w").write(_fake_orca_out(
+            hf="RHF", charge=0, mult=1, opt_converged=True,
+            coords_start=list(zip(s3b, p3b)), coords=list(zip(s3b, p3bo))))
+        raises(lambda: stage_b(B(neutral_out=out_x, neutral_xyz=xyz_x, gseed=0)),
+               "음성 R4①: gs1 출력을 gseed 0 으로 재라벨링 → 시작구조 불일치로 거부")
+
+        # ══ 회신 R4 회귀시험 ② — **wrong-state receipt (UHF·+1·doublet)** ════
+        #   R4 실측: 이 출력이 neutral RKS 부모로 **통과**했다.
+        for kw, why in (
+                (dict(hf="UHF"), "UHF 출력"),
+                (dict(charge=1), "charge +1"),
+                (dict(mult=2), "doublet"),
+                (dict(hf=None), "HFTyp 없음"),
+                (dict(mult=None), "multiplicity echo 없음")):
+            base_kw = dict(hf="RHF", charge=0, mult=1, opt_converged=True,
+                           coords_start=list(zip(s3, p3)), coords=list(zip(s3, p3o)))
+            base_kw.update(kw)
+            p = os.path.join(td, "ws_" + why.replace(" ", "_") + ".out")
+            open(p, "w").write(_fake_orca_out(**base_kw))
+            raises(lambda p=p: stage_b(B(neutral_out=p)),
+                   f"음성 R4②: {why} 이 중성 RKS 부모로 통과 → 거부")
+
+        # ══ 회신 R4 회귀시험 ③ — **주석만 바꾼 미이완 부모** ═════════════════
+        #   좌표는 조립본과 동일하고 주석만 다르다 ⇒ SHA 는 달라져 종전 검사를 빠져나갔다.
+        xyz_cm = os.path.join(td, "comment_only.xyz")
+        write_xyz(xyz_cm, s3, p3, "주석만 바꾼 사본 — 좌표는 조립본과 동일하다")
+        chk(_sha(xyz_cm) != _sha(asm),
+            "  (전제) 주석만 바꾼 xyz 는 SHA 가 다르다 — 그래서 SHA 검사는 못 잡았다")
+        out_cm = os.path.join(td, "comment_only.out")
+        open(out_cm, "w").write(_fake_orca_out(
+            hf="RHF", charge=0, mult=1, opt_converged=True,
+            coords_start=list(zip(s3, p3)), coords=list(zip(s3, p3))))
+        raises(lambda: stage_b(B(neutral_out=out_cm, neutral_xyz=xyz_cm)),
+               "음성 R4③: 주석만 바꾼 미이완 부모 → 좌표 변위로 거부")
+
+        # 양성 대조 — 위 셋과 같은 경로인데 진짜로 이완된 것은 통과해야 한다
+        chk(neutral_receipt(B(), json.load(open(manAp)))["start_to_final_max_disp_A"] > 0,
+            "양성: 실제로 이완된 부모는 receipt 발급 (변위 > 0)")
         raises(lambda: stage_b(B(stage_a_manifest=None, neutral_out=None)),
                "음성: receipt 인자 없이 stage B → 거부 (자유문구는 증거가 아니다)")
 
