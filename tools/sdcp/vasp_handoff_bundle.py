@@ -792,7 +792,8 @@ def _emit_slab_job(jd: Path, atoms, nslab: int, freeze: float, frag: str,
                    ledger: Dict[str, Any], zcut=None, dense: bool = False,
                    prescf: bool = True, single_point: bool = False,
                    kmesh_over: Optional[Dict[str, str]] = None,
-                   dense_cand: bool = False, closure: bool = False) -> Dict[str, Any]:
+                   dense_cand: bool = False, closure: bool = False,
+                   d3_off: bool = False) -> Dict[str, Any]:
     """슬랩 잡 v3 — POSCAR(루트) + pre/ + relax/ + static/ (+dense/). MAGMOM 재매핑·검산."""
     kmesh_over = kmesh_over or {}
     jd.mkdir(parents=True, exist_ok=True)
@@ -810,7 +811,16 @@ def _emit_slab_job(jd: Path, atoms, nslab: int, freeze: float, frag: str,
            **_ldau_lines(pos["species_order"])}
     tpls = {"pre": SLAB_PRE, "relax": SLAB_RELAX, "static": SLAB_STATIC,
             "dense": SLAB_STATIC}
-    if closure:
+    if closure and d3_off:
+        # ⛔ 회신 W Q2/P0-2 — UMA−DFT 오프셋의 원인이 셋(missing D3 · 기체 기준 오차 ·
+        #   자기 basin)인데 **가른 적이 없다.** 같은 기하·같은 자기 basin 에서 D3 만 끄면
+        #   D3 기여가 직접 빠진다. IVDW 를 지우고 나머지는 **글자 하나까지 같게** 둔다.
+        _sp0 = SLAB_SP.replace("LREAL    = Auto", "LREAL    = .FALSE.") \
+                      .replace("IVDW     = 11\n", "") \
+                      .replace("[static · single-point]",
+                               "[closure D3-OFF twin · all-F fixed geometry]")
+        tpls = {"static": _sp0}
+    elif closure:
         # ⛔⛔ 회신 U P0-5 — 종전 `--single_point` 는 고정기하이면서도 `LREAL = Auto` 였다.
         #   조각 간 대비에서 LREAL 오차는 **서로 다른 흡착종이라 소거되지 않는다.**
         #   closure 모드는 전 endpoint 를 `.FALSE.` 로 못박는다.
@@ -4253,6 +4263,41 @@ def build_bundle(a, ledger: Optional[Dict[str, Any]] = None) -> Path:
                     f"mol__{frag}__{tag}"] = relz
                 n_jobs += 1
 
+    # ══ D3-off 쌍둥이 (회신 W Q2 — 오프셋 원인 분해) ═══════════════════════
+    #   완성된 endpoint 를 통째로 복사하고 **IVDW 한 줄만** 지운다. 후처리로 하는 이유는
+    #   호출부가 여러 곳이라, 복사가 "글자 하나까지 같음" 을 **보장**하기 때문이다.
+    #   ⛔ 못 하는 것: D3 를 끈 값은 **판정에 쓰지 않는다.** 오프셋 원인 진단 전용이다.
+    if getattr(a, "d3_pairs", False):
+        if not a.closure:
+            sys.exit("⛔ --d3_pairs 는 --closure 와 함께만 쓴다 (고정기하·all-F 가 전제)")
+        twins = {}
+        for inc in sorted(out.rglob("static/INCAR")):
+            jd = inc.parent.parent
+            rel = str(jd.relative_to(out))
+            if rel.endswith("__d3off"):
+                continue
+            td = out / (rel + "__d3off")
+            if td.exists():
+                shutil.rmtree(td)
+            shutil.copytree(jd, td)
+            ti = td / "static" / "INCAR"
+            txt = ti.read_text()
+            if "IVDW     = 11" not in txt:
+                sys.exit(f"⛔ {rel}: IVDW=11 줄이 없다 — D3-off 쌍을 만들 수 없다")
+            ti.write_text(txt.replace("IVDW     = 11\n", "")
+                             .replace("[closure ", "[closure D3-OFF twin · "))
+            for extra in ("dense", "pre", "relax"):
+                if (td / extra).exists():
+                    shutil.rmtree(td / extra)     # 쌍둥이는 static 만
+            twins[rel] = rel + "__d3off"
+            n_jobs += 1
+        man["d3_off_twins"] = twins
+        man["d3_off_note"] = (
+            "같은 POSCAR·같은 MAGMOM·같은 k 로 **IVDW 줄만** 뺀 쌍. "
+            "E(D3on) − E(D3off) = D3 기여. 회신 W Q2 의 원인 셋(missing D3 · 기체 기준 "
+            "오차 · 자기 basin) 중 첫 번째를 직접 잰다. ⛔ **판정값이 아니다.**")
+        print(f"→ D3-off 쌍둥이 {len(twins)}개 (IVDW 줄만 제거)")
+
     if viol:
         man["contract_violations"] = viol
         if not a.allow_partial:
@@ -4662,6 +4707,11 @@ def _synth_ledger(atoms, nslab: int) -> Dict[str, Any]:
             "source_qe": "(selftest)", "source_slab": "(selftest)"}
 
 
+def _sha_file(p):
+    import hashlib
+    return hashlib.sha256(Path(p).read_bytes()).hexdigest()
+
+
 def selftest() -> int:
     """전 경로 + **음성 경로**. 음성이 없는 selftest 는 통과해도 아무것도 보증 못 한다.
 
@@ -4750,7 +4800,7 @@ def selftest() -> int:
     a0 = argparse.Namespace(runs=str(td / "runs"), out=str(td / "bundle_short"),
                             freeze=0.85, nslab=nslab, frags=["ptfe_dimer"],
                             qe="(none)", expect=None, allow_partial=False,
-                            no_prescf=False, allow_stale_gate=False, top_n=None, closure=False, single_point=False, champion=False, kmesh_static=None, kmesh_dense=None, refs=True, cross_endpoints=None, mag_controls=False, dense_frags=None, cores=48, concurrency=8, no_cross=False, global_champion_meV=20.0, adaptive_dense=False)
+                            no_prescf=False, allow_stale_gate=False, top_n=None, d3_pairs=False, closure=False, single_point=False, champion=False, kmesh_static=None, kmesh_dense=None, refs=True, cross_endpoints=None, mag_controls=False, dense_frags=None, cores=48, concurrency=8, no_cross=False, global_champion_meV=20.0, adaptive_dense=False)
     try:
         build_bundle(a0, ledger=led)
         chk(False, "N0 xyz 누락 → **번들이 만들어졌다** (축소 정본 = fail-open)")
@@ -4766,7 +4816,7 @@ def selftest() -> int:
     ab = argparse.Namespace(runs=str(td / "runs"), out=str(td / "bundle_nofp"),
                             freeze=0.85, nslab=nslab, frags=["ptfe_dimer"],
                             qe="(none)", expect=None, allow_partial=False,
-                            no_prescf=False, allow_stale_gate=False, top_n=None, closure=False, single_point=False, champion=False, kmesh_static=None, kmesh_dense=None, refs=True, cross_endpoints=None, mag_controls=False, dense_frags=None, cores=48, concurrency=8, no_cross=False, global_champion_meV=20.0, adaptive_dense=False)
+                            no_prescf=False, allow_stale_gate=False, top_n=None, d3_pairs=False, closure=False, single_point=False, champion=False, kmesh_static=None, kmesh_dense=None, refs=True, cross_endpoints=None, mag_controls=False, dense_frags=None, cores=48, concurrency=8, no_cross=False, global_champion_meV=20.0, adaptive_dense=False)
     try:
         build_bundle(ab, ledger=led)
         chk(False, "N0b 지문 없는 소스 → **번들이 만들어졌다**")
@@ -4790,7 +4840,7 @@ def selftest() -> int:
     at3 = argparse.Namespace(runs=str(td / "runs"), out=str(td / "bundle_top3"),
                              freeze=0.85, nslab=nslab, frags=["ptfe_dimer"],
                              qe="(none)", expect=None, allow_partial=False,
-                             no_prescf=False, allow_stale_gate=False, top_n=3, closure=False, single_point=False, champion=False, kmesh_static=None, kmesh_dense=None, refs=True, cross_endpoints=None, mag_controls=False, dense_frags=None, cores=48, concurrency=8, no_cross=False, global_champion_meV=20.0, adaptive_dense=False)
+                             no_prescf=False, allow_stale_gate=False, top_n=3, d3_pairs=False, closure=False, single_point=False, champion=False, kmesh_static=None, kmesh_dense=None, refs=True, cross_endpoints=None, mag_controls=False, dense_frags=None, cores=48, concurrency=8, no_cross=False, global_champion_meV=20.0, adaptive_dense=False)
     o3 = build_bundle(at3, ledger=led)
     m3 = json.loads((o3 / "MANIFEST.json").read_text())
     kept = sorted({v["dir"] for v in m3["pairs"].values()})
@@ -4807,7 +4857,7 @@ def selftest() -> int:
     a = argparse.Namespace(runs=str(td / "runs"), out=str(td / "bundle"),
                            freeze=0.85, nslab=nslab, frags=["ptfe_dimer"],
                            qe="(none)", expect=None, allow_partial=False,
-                           no_prescf=False, allow_stale_gate=False, top_n=None, closure=False, single_point=False, champion=False, kmesh_static=None, kmesh_dense=None, refs=True, cross_endpoints=None, mag_controls=False, dense_frags=None, cores=48, concurrency=8, no_cross=False, global_champion_meV=20.0, adaptive_dense=False)
+                           no_prescf=False, allow_stale_gate=False, top_n=None, d3_pairs=False, closure=False, single_point=False, champion=False, kmesh_static=None, kmesh_dense=None, refs=True, cross_endpoints=None, mag_controls=False, dense_frags=None, cores=48, concurrency=8, no_cross=False, global_champion_meV=20.0, adaptive_dense=False)
     out = build_bundle(a, ledger=led)
     man = json.loads((out / "MANIFEST.json").read_text())
     n_pre = sum(1 for p in man["planned"].values() if "pre" in (p.get("phases") or []))
@@ -4818,7 +4868,7 @@ def selftest() -> int:
     a_sp = argparse.Namespace(
         runs=str(td / "runs"), out=str(td / "bundle_sp"), freeze=0.85, nslab=nslab,
         frags=["ptfe_dimer"], qe="(none)", expect=None, allow_partial=False,
-        no_prescf=False, allow_stale_gate=False, top_n=None, closure=False, single_point=True,
+        no_prescf=False, allow_stale_gate=False, top_n=None, d3_pairs=False, closure=False, single_point=True,
         champion=True, kmesh_static=None, kmesh_dense=None, refs=False,
         cross_endpoints=["ptfe_dimer"], mag_controls=True, dense_frags=["ptfe_dimer"], cores=48, concurrency=8, no_cross=False, global_champion_meV=20.0, adaptive_dense=False)
     out_sp = build_bundle(a_sp, ledger=led)
@@ -4907,6 +4957,34 @@ def selftest() -> int:
                            {"pairs": {}}, _E, _emol, _jobs)
     chk(any("MOLECULAR_SPIN_CONTROL_MISSING" in b for b in r5["blocks"]),
         "[음성 V P0-3] 자기상태 대조가 없으면 그것도 block")
+
+    # ══ 회신 W Q2 — D3-off 쌍둥이가 IVDW **만** 다른지 e2e ══════════════════
+    a_d3 = argparse.Namespace(**{**vars(a_cl), "out": str(td / "bundle_d3"),
+                                 "d3_pairs": True})
+    build_bundle(a_d3, ledger=led)
+    _d3 = Path(str(td / "bundle_d3"))
+    _tw = sorted(_d3.rglob("*__d3off/static/INCAR"))
+    chk(bool(_tw), f"[W Q2] D3-off 쌍둥이 생성 ({len(_tw)}개)")
+    _bad, _same = [], 0
+    for t in _tw:
+        base = Path(str(t).replace("__d3off", ""))
+        if not base.is_file():
+            _bad.append(("짝 없음", t.parent.parent.name)); continue
+        bl = [x for x in base.read_text().splitlines() if not x.startswith("SYSTEM")]
+        tl = [x for x in t.read_text().splitlines() if not x.startswith("SYSTEM")]
+        diff = [x for x in bl if x not in tl] + [x for x in tl if x not in bl]
+        if diff != ["IVDW     = 11"]:
+            _bad.append((diff[:3], t.parent.parent.name))
+        else:
+            _same += 1
+        if (base.parent.parent / "POSCAR").is_file():
+            chk(_sha_file(base.parent.parent / "POSCAR")
+                == _sha_file(t.parent.parent / "POSCAR"),
+                "  POSCAR 해시 동일") if _same == 1 else None
+    chk(not _bad, f"[W Q2] 쌍둥이가 **IVDW 줄만** 다르다 ({_same}/{len(_tw)}) · "
+                  f"위반 {_bad[:2]}")
+    chk(not list(_d3.rglob("*__d3off/dense")) and not list(_d3.rglob("*__d3off/relax")),
+        "[W Q2] 쌍둥이는 static 만 (dense·relax 없음)")
 
     chk(any("LREAL    = Auto" in f.read_text() for f in _sp_inc),
          "  (음성 대조) --single_point 만으로는 LREAL=Auto 가 남는다 — closure 가 그것을 고친다")
@@ -5844,6 +5922,9 @@ def main():
     ap.add_argument("--champion", action="store_true",
                     help="조각마다 **Li 위 최선 · Ni 위 최선** 한 쌍만 (방향 무관). "
                          "두 챔피언이 다른 방향이면 ΔE 에 배향 효과가 섞인다 — 표시된다.")
+    ap.add_argument("--d3_pairs", action="store_true",
+                    help="각 endpoint 의 **D3-off 쌍둥이**를 만든다 (IVDW 줄만 제거). "
+                         "회신 W Q2 원인 분해용 — 판정값이 아니다. --closure 필수")
     ap.add_argument("--closure", action="store_true",
                     help="닫힘 모드 (회신 U P0-5) — 전 endpoint 고정기하 static 단독 + "
                          "LREAL=.FALSE. 강제. 기체 기준도 relax 를 돌지 않는다. "
