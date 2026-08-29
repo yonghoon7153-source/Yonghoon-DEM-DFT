@@ -15,10 +15,17 @@
      (selftest 가 0.7 % 안에서 재현하는지 단언한다), 그래서 사전등록 §3-2 의
      150,000 상한을 **GPU 없이** 강제할 수 있다.
 
-  ③ **상한을 기각재추출이 아니라 `r_SE` 구간 절단으로 건다.**  기각재추출은 층화를
-     깨고 편향을 보이지 않게 만든다.  입자 수는 r_SE 가 지배하므로 (N_SE ∝ r_SE⁻³),
-     각 점에서 상한을 만족하는 최소 r_SE 를 **해석적으로** 풀어 그 위에서만 뽑는다.
-     ⇒ 절단은 CSV 에 `rSE_lo_um` 로 남고, 편향이 보고 가능한 형태로 드러난다.
+  ③ **상한은 실제 추첨값에만 건다.**  `r_SE` 를 전 구간에서 뽑고 총입자수를 계산한 뒤,
+     **넘을 때만** 상한을 만족하는 최소 `r_SE` 로 구간을 좁혀 다시 사상하고 표시한다.
+     ⚠ 초판은 순서가 반대였다 — 하한을 **먼저** 올리고 같은 분위를 좁힌 구간에 사상했다.
+     그런데 그렇게 절단된 네 점은 **nominal 반지름으로도 상한 아래**였다 (Codex Q3 [P1]):
+     "그 축의 최솟값이 뽑혔다면" 이라는 최악 가정으로 좌표를 움직인 것이고, 저-φ_AM 에서만
+     nuisance 분포를 바꿔 추정값을 흔들 수 있다.
+
+  ④ **층당 하나의 8칸 LHS.**  초판은 bimodal 6점과 mono 2점을 따로 추첨해 붙여서 합친
+     8점이 공통 LHS 가 **아니었다** (64칸 중 11 빈칸·10 중복, Codex Q5 [P1]).
+     ⇒ 공통 4축에 8점 LHS 하나를 세우고 type 별 추가축만 따로 뽑는다.
+     `check_lhs()` 가 **산출물에서** 점유를 검사하고 `--verify` 가 CSV 를 다시 본다.
 
 ⚠ 조성 규약: 헤더의 `pdd` 는 **질량분율(wt%)** 이다 (사전등록 §0-1, 실측 대조).
    부피분율은 밀도로 환산해야 나온다 — `ρ_AM = 4800`, `ρ_SE = 2000` kg/m³.
@@ -225,73 +232,118 @@ def generate(box: dict, seed: int = DESIGN_SEED) -> tuple[list[dict], list[str]]
     for st in range(N_STRATA):
         lo = PDD_SE_LO + st * width
         hi = lo + width
-        for nt, cnt in ((3, THREE_TYPE_PER_STRATUM),
-                        (2, PER_STRATUM - THREE_TYPE_PER_STRATUM)):
+        #  ★★ **층당 하나의 8칸 LHS** (Codex Q5 [P1], 2026-08-29).
+        #     초판은 bimodal 6점과 mono 2점을 **따로** 추첨해 붙였다 ⇒ 합친 8점은 공통
+        #     LHS 가 아니었고, 8층을 통틀어 공통 8칸을 정확히 한 번씩 쓴 층이 **하나뿐**,
+        #     64칸 중 11칸이 비고 10칸이 중복됐다.  그러면 §3-1 이 예산을 층화에 쓴 근거
+        #     ("나머지 노브가 층마다 균형을 이뤄 상쇄된다")가 **성립하지 않는다.**
+        #  ⇒ 공통 4축(pdd_SE · volfrac · rP분위 · rSE분위)에 **8점 LHS 하나**를 세우고,
+        #     type 별 추가축(rS · s_AM_P)만 bimodal 6점에 대해 따로 LHS 를 세운다.
+        #     rP 는 **분위를 공유**하고 type 별 범위로 사상한다 — 범위가 달라도 단위입방체
+        #     위의 LHS 성질은 유지된다.
+        U = lhs_unit(PER_STRATUM, 4, rng)           # [pdd_SE, volfrac, rP_q, rSE_q]
+        Ub = lhs_unit(THREE_TYPE_PER_STRATUM, 2, rng)   # [rS, s_AM_P] — bimodal 전용
+        #  type 배정: bimodal 6 · mono_AM_P 1 · mono_AM_S 1.  행 순서와 축값의 상관을
+        #  없애려 배정 벡터를 섞는다 (lhs_unit 이 축마다 독립 셔플이라 이미 무상관이지만
+        #  명시적으로 둔다).
+        kinds2 = sorted(box[2]['per_kind'])
+        assign = ([(3, None)] * THREE_TYPE_PER_STRATUM
+                  + [(2, kd) for kd in kinds2][:PER_STRATUM - THREE_TYPE_PER_STRATUM])
+        rng.shuffle(assign)
+        bi = 0
+        for u, (nt, kd_assigned) in zip(U, assign):
             b = box[nt]
-            k = 5 if nt == 3 else 3          # pdd_SE, rP, rSE, volfrac (+rS, s)
-            k = 6 if nt == 3 else 4
-            #  ⚠ 2-type 은 종류를 **먼저 균형 배정**하고 그 종류의 범위에서 뽑는다.
-            #     합집합에서 뽑으면 넓은 쪽(mono_AM_P, 2.5–7.5)이 77 % 를 차지해
-            #     13:3 으로 치우친다 — 기존 배치는 15:15 다.  치우친 쪽이 하필 큰 AM 이라
-            #     유한크기 오염(§4-3b)까지 키운다.
-            kd_cycle = sorted(b['per_kind']) if nt == 2 else [None]
-            U = lhs_unit(cnt, k, rng)
-            for _i, u in enumerate(U):
-                kd_assigned = kd_cycle[_i % len(kd_cycle)]
-                pdd_se = _scale(u[0], lo, hi)
-                phi_se = 1.0 - phi_am_of_pdd_se(pdd_se)
-                volfrac = _scale(u[1], *b['volfrac'])
-                rP_rng = (b['rP_um'] if nt == 3
-                          else b['per_kind'][kd_assigned]['rP_um'])
-                rP = _scale(u[2], *rP_rng)
-                if nt == 3:
-                    rS = _scale(u[3], *b['rS_um'])
-                    s = _scale(u[4], *b['s_AM_P'])
-                    ui_rse = u[5]
-                else:
-                    rS, s, ui_rse = None, 1.0, u[3]
+            pdd_se = _scale(u[0], lo, hi)
+            phi_se = 1.0 - phi_am_of_pdd_se(pdd_se)
+            volfrac = _scale(u[1], *b['volfrac'])
+            rP_rng = b['rP_um'] if nt == 3 else b['per_kind'][kd_assigned]['rP_um']
+            rP = _scale(u[2], *rP_rng)
+            if nt == 3:
+                rS = _scale(Ub[bi][0], *b['rS_um'])
+                s = _scale(Ub[bi][1], *b['s_AM_P'])
+                bi += 1
+            else:
+                rS, s = None, 1.0
 
-                # AM 입자 수는 r_SE 와 무관 → 먼저 확정한다
-                phi_am = 1.0 - phi_se
-                if nt == 3:
-                    # 질량 분할 s 를 부피 분할로 옮긴다 (두 AM 은 밀도가 같다)
-                    n_am = (n_spheres(phi_am * s, rP, volfrac)
-                            + n_spheres(phi_am * (1 - s), rS, volfrac))
-                else:
-                    n_am = n_spheres(phi_am, rP, volfrac)
+            # AM 입자 수는 r_SE 와 무관 → 먼저 확정한다
+            phi_am = 1.0 - phi_se
+            if nt == 3:
+                # 질량 분할 s 를 부피 분할로 옮긴다 (두 AM 은 밀도가 같다)
+                n_am = (n_spheres(phi_am * s, rP, volfrac)
+                        + n_spheres(phi_am * (1 - s), rS, volfrac))
+            else:
+                n_am = n_spheres(phi_am, rP, volfrac)
 
-                r_lo_ceiling = r_se_min_for_ceiling(n_am, phi_se, volfrac)
-                r_lo = max(b['rSE_um'][0], r_lo_ceiling)
-                r_hi = b['rSE_um'][1]
+            #  ★ 상한은 **실제 추첨값**에만 건다 (Codex Q3 [P1]).
+            #    초판은 `r_SE` 하한을 **먼저** 올리고 같은 LHS 분위를 좁힌 구간에 재사상했다.
+            #    그런데 절단된 네 점은 **nominal 반지름으로도 상한 아래**였다 —
+            #    "그 축의 최솟값이 뽑혔다면" 이라는 최악 가정으로 좌표를 움직인 것이고,
+            #    저-φ_AM 에서만 nuisance 분포를 바꿔 추정값을 흔들 수 있다.
+            r_lo0, r_hi = b['rSE_um']
+            rSE = _scale(u[3], r_lo0, r_hi)
+            n_se = n_spheres(phi_se, rSE, volfrac)
+            r_lo, truncated = r_lo0, 0
+            if n_am + n_se > N_MAX_PARTICLES:
+                r_lo = max(r_lo0, r_se_min_for_ceiling(n_am, phi_se, volfrac))
                 if not math.isfinite(r_lo) or r_lo > r_hi:
-                    notes.append(f'stratum {st} nt{nt}: AM 만으로 상한 초과 → 점 재추출 필요 '
-                                 f'(rP={rP:.2f} vf={volfrac:.3f})')
-                    r_lo = r_hi                       # 상한 반지름으로 눌러 담는다
-                rSE = _scale(ui_rse, r_lo, r_hi)
-
+                    notes.append(f'stratum {st} nt{nt}: AM 만으로 상한 초과 '
+                                 f'(rP={rP:.2f} vf={volfrac:.3f}) — r_hi 로 눌렀다')
+                    r_lo = r_hi
+                rSE = _scale(u[3], r_lo, r_hi)
                 n_se = n_spheres(phi_se, rSE, volfrac)
-                idx += 1
-                pts.append(dict(
-                    id=f'lhsx_{idx:03d}', stratum=st, ntype=nt,
-                    #  배정된 종류를 쓴다.  `kind_for_radius` 는 이제 **불변식 검사**다 —
-                    #  뽑힌 반지름이 배정된 종류로 되돌아오지 않으면 범위 배선이 틀린 것이다.
-                    kind='bimodal' if nt == 3 else kd_assigned,
-                    pdd_SE=round(pdd_se, 6),
-                    w_AM_P=round((1 - pdd_se) * s, 6),
-                    w_AM_S=round((1 - pdd_se) * (1 - s), 6) if nt == 3 else 0.0,
-                    rP_um=round(rP, 4), rS_um=round(rS, 4) if rS else '',
-                    rSE_um=round(rSE, 4), rSE_lo_um=round(r_lo, 4),
-                    rSE_truncated=int(r_lo > b['rSE_um'][0] + 1e-12),
-                    volfrac=round(volfrac, 6),
-                    phi_AM=round(phi_am, 6),
-                    n_AM_est=int(round(n_am)), n_SE_est=int(round(n_se)),
-                    n_total_est=int(round(n_am + n_se)),
-                    seed=rng.randint(20000, 29999)))
-                if nt == 2 and kind_for_radius(b, rP) != kd_assigned:
-                    raise SystemExit(
-                        f'불변식 위반: {kd_assigned} 로 배정했는데 r={rP:.4f} µm 는 '
-                        f'{kind_for_radius(b, rP)} 범위다 — 범위 배선이 틀렸다')
+                truncated = 1
+
+            idx += 1
+            pts.append(dict(
+                id=f'lhsx_{idx:03d}', stratum=st, ntype=nt,
+                #  배정된 종류를 쓴다.  `kind_for_radius` 는 이제 **불변식 검사**다 —
+                #  뽑힌 반지름이 배정된 종류로 되돌아오지 않으면 범위 배선이 틀린 것이다.
+                kind='bimodal' if nt == 3 else kd_assigned,
+                pdd_SE=round(pdd_se, 6),
+                w_AM_P=round((1 - pdd_se) * s, 6),
+                w_AM_S=round((1 - pdd_se) * (1 - s), 6) if nt == 3 else 0.0,
+                rP_um=round(rP, 4), rS_um=round(rS, 4) if rS else '',
+                rSE_um=round(rSE, 4), rSE_lo_um=round(r_lo, 4),
+                rSE_truncated=truncated,
+                volfrac=round(volfrac, 6),
+                phi_AM=round(phi_am, 6),
+                n_AM_est=int(round(n_am)), n_SE_est=int(round(n_se)),
+                n_total_est=int(round(n_am + n_se)),
+                lhs_cell=','.join(str(int(v * PER_STRATUM)) for v in u),
+                seed=rng.randint(20000, 29999)))
+            if nt == 2 and kind_for_radius(b, rP) != kd_assigned:
+                raise SystemExit(
+                    f'불변식 위반: {kd_assigned} 로 배정했는데 r={rP:.4f} µm 는 '
+                    f'{kind_for_radius(b, rP)} 범위다 — 범위 배선이 틀렸다')
     return pts, notes
+
+
+def check_lhs(pts: list[dict], per_stratum: int = PER_STRATUM) -> list[str]:
+    """★ 층마다 4개 공통축이 **각 칸을 정확히 한 번씩** 쓰는가 (Codex Q5 [P1]).
+
+    초판은 이 성질이 없었는데 **아무도 검사하지 않아서** 몰랐다 — selftest 는 `lhs_unit`
+    만 봤고 `generate()` 의 결과나 고정 CSV 는 안 봤다.  여기서 실제 산출물을 본다.
+    """
+    from collections import Counter
+    bad = []
+    by_st = {}
+    for p in pts:
+        by_st.setdefault(p['stratum'], []).append(p)
+    for st, rows in sorted(by_st.items()):
+        if len(rows) != per_stratum:
+            bad.append(f'층 {st}: {len(rows)}점 (기대 {per_stratum})')
+            continue
+        cells = [r.get('lhs_cell', '') for r in rows]
+        if any(not c for c in cells):
+            bad.append(f'층 {st}: lhs_cell 이 없다 — 검사 불가')
+            continue
+        for ax in range(len(cells[0].split(','))):
+            col = Counter(int(c.split(',')[ax]) for c in cells)
+            if sorted(col) != list(range(per_stratum)) or set(col.values()) != {1}:
+                miss = [i for i in range(per_stratum) if i not in col]
+                dup = [i for i, n in col.items() if n > 1]
+                bad.append(f'층 {st} 축 {ax}: 빈칸 {miss} · 중복 {dup}')
+    return bad
 
 
 # =========================================================================
@@ -341,6 +393,12 @@ def report(box: dict, pts: list[dict], notes: list[str], unread: list[str]) -> N
           f'median {s_am[len(s_am)//2]["n_AM_est"]:,} · max {s_am[-1]["n_AM_est"]:,}')
     print(f'  §4-3b 하위 10 % ({k10}점, 런 전 확정): '
           + ', '.join(p['id'] for p in s_am[:k10]))
+    #  ★ LHS 성질을 **산출물에서** 검사한다 (Codex Q5) — fail-closed
+    bad = check_lhs(pts)
+    print('\n  LHS 점유 검사 (층×공통4축): ' + ('✓ 전부 정확히 한 번' if not bad
+          else '⛔ ' + str(len(bad)) + ' 건'))
+    for x in bad[:6]:
+        print('     ', x)
     mx = max(p['n_total_est'] for p in pts)
     print(f'\n  최대 예상 입자 수 {mx:,}  (상한 {N_MAX_PARTICLES:,})'
           f'  {"✓" if mx <= N_MAX_PARTICLES else "⛔ 초과"}')
@@ -450,6 +508,15 @@ def selftest() -> int:
         chk('parse: 못 읽은 파일은 조용히 버리지 않고 돌려준다',
             not rows and len(unread) == 1, f'rows={len(rows)} unread={len(unread)}')
 
+    # ④b ★ generate() **산출물**의 LHS 성질 — 초판이 못 잡은 자리
+    _fake = [dict(stratum=0, lhs_cell=f'{i},{(i*3)%8},{(i*5)%8},{(7-i)}')
+             for i in range(8)]
+    chk('check_lhs: 완전 점유를 통과시킨다', not check_lhs(_fake), str(check_lhs(_fake)))
+    _fake[0]['lhs_cell'] = _fake[1]['lhs_cell']
+    chk('check_lhs: 빈칸·중복을 잡는다', bool(check_lhs(_fake)))
+    chk('check_lhs: 층 점수 부족을 잡는다',
+        bool(check_lhs([dict(stratum=0, lhs_cell='0,0,0,0')])))
+
     # ④ LHS 성질 — 축마다 n 칸을 정확히 한 번씩
     import random
     rng = random.Random(7)
@@ -478,17 +545,67 @@ def selftest() -> int:
     return 1 if fails else 0
 
 
+def verify_csv(path: str) -> int:
+    """★ F④ — 생성 **후** CSV 를 다시 읽어 계약을 fail-closed 로 검사한다.
+
+    생성기가 맞다는 것과 **디스크에 있는 파일이 맞다는 것**은 다르다.  손으로 편집되거나
+    다른 판본이 섞여도 여기서 걸린다.  실행 전 마지막 관문이다.
+    """
+    import hashlib
+    rows = list(csv.DictReader(open(path, newline='', encoding='utf-8')))
+    fails = []
+
+    def chk(name, cond, detail=''):
+        (print(f'  ok   {name}') if cond
+         else (fails.append(name), print(f'  FAIL {name} {detail}')))
+
+    print(f'verify {path}')
+    chk('행 수 = 층 × 층당', len(rows) == N_STRATA * PER_STRATUM, str(len(rows)))
+    pdd = [float(r['pdd_SE']) for r in rows]
+    chk(f'창 ({PDD_SE_LO}, {PDD_SE_HI}] 안 (열림/닫힘)',
+        all(PDD_SE_LO < v <= PDD_SE_HI for v in pdd),
+        f'{min(pdd):.4f}–{max(pdd):.4f}')
+    nt = [int(r['n_total_est']) for r in rows]
+    chk(f'입자수 상한 {N_MAX_PARTICLES:,}', max(nt) <= N_MAX_PARTICLES, f'max {max(nt):,}')
+    seeds = [r['seed'] for r in rows]
+    chk('seed 전부 다름', len(set(seeds)) == len(seeds),
+        f'{len(seeds)-len(set(seeds))} 중복')
+    chk('phi_AM 이 pdd_SE 와 정합', all(
+        abs(float(r['phi_AM']) - phi_am_of_pdd_se(float(r['pdd_SE']))) < 1e-5
+        for r in rows))
+    pts = [dict(stratum=int(r['stratum']), lhs_cell=r.get('lhs_cell', ''),
+                n_AM_est=int(r['n_AM_est']), id=r['id']) for r in rows]
+    bad = check_lhs(pts)
+    chk('층×공통4축 LHS 점유', not bad, '; '.join(bad[:3]))
+    from collections import Counter
+    kc = Counter(r['kind'] for r in rows)
+    chk('mono 두 종류가 같은 수', kc.get('mono_AM_P', 0) == kc.get('mono_AM_S', 0),
+        str(dict(kc)))
+    tr = [r['id'] for r in rows if r['rSE_truncated'] == '1']
+    print(f'  info r_SE 절단 {len(tr)}점' + (f' — {", ".join(tr)}' if tr else ''))
+    lo = sorted(pts, key=lambda p: p['n_AM_est'])[:max(1, len(pts) // 10)]
+    print('  info §4-3b 하위 10 %: ' + ', '.join(
+        f'{p["id"]}({p["n_AM_est"]:,})' for p in lo))
+    h = hashlib.sha256(open(path, 'rb').read()).hexdigest()
+    print(f'  sha256 {h}')
+    print(f'\n{len(fails)} failure(s)')
+    return 1 if fails else 0
+
+
 def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__,
                                  formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument('--scan', help='LHS 루트 (lhs00_* 가 있는 디렉터리)')
     ap.add_argument('--out', help='설계 CSV 출력 경로')
     ap.add_argument('--seed', type=int, default=DESIGN_SEED)
+    ap.add_argument('--verify', help='생성된 CSV 를 다시 읽어 계약 검사 (F④)')
     ap.add_argument('--selftest', action='store_true')
     a = ap.parse_args(argv)
 
     if a.selftest:
         return selftest()
+    if a.verify:
+        return verify_csv(a.verify)
     if not a.scan:
         ap.error('--scan 또는 --selftest 가 필요하다')
 
