@@ -25,10 +25,13 @@
     · 축척 = `um_box_um` (= 54.3478 µm/unit).  ⚠ `lateral_box × 1000` (= 50) **아니다**
     · 가로 origin = `(1 − lateral_box·1000/um_box_um)/2` = 0.04 — 50 µm 침대가 54.35 µm
       도메인 **가운데** 놓여 있다 (50/54.3478 = 0.92003, 관측 x 범위 0.0400–0.9602 와 일치)
-    · z origin = `wall_z − thickness_um/축척` = 0.04995
-  두 독립 확인: 두께 `(1.3846−0.05)×54.3478 = 72.533` (기록 **72.534**) ·
-  가로 폭 `(0.9602−0.0400)×54.3478 = 50.011` (**50**).
-  ⚠ 초판은 `×50, origin 0` 이라 **양 축 다 8 % 작았고**, 그래서 전부 흩어졌다.
+    · z = **`dilate_z` 로 되나눈 뒤** origin `wall_z − thickness_um/축척` (= 0.04995) 을 뺀다
+  독립 확인 셋 (전부 접촉과 무관):
+    · 가로 폭 `(0.9602−0.0400)×54.3478 = 50.011` µm (**50** µm 상자)
+    · 구름 z 바닥 **−0.18** µm ↔ scaffold 의 구 포함 바닥 **−0.178** µm
+    · 반경 밀도가 `d/r < 0.8` 에서 **0.001** (배제가 실재)
+  ⚠ 오답 이력 셋 — `×lateral_box, origin 0` (48 %) · 축척은 고쳤으나 **z 되나눔 누락**
+  (17 %) · 그리고 `d < r` 로 검사해 흐린 경계를 오류로 읽음 (9 %).
   `am_scaffold` 는 이미 실좌표다 (AM 반지름 0.0025 = 2.5 µm).
   ⚠⚠ **이 배선을 접촉으로 검증하지 않는다** — 접촉이 생길 때까지 변환을 맞추면 그 변환이
   답을 만든다.  대신 **독립 성질**로 검사한다: AM 은 MPM 에서 얼어붙은 장애물이므로
@@ -159,8 +162,21 @@ def count_contacts(bed_dir, scaffold, band_um=0.15, include_ptfe=False,
     off_z = float(meta['wall_z']) - float(meta['thickness_um']) / scale_um
     if se_scale is not None:                      # 수동 override (진단 전용)
         scale_um, off_xy, off_z = se_scale * um_per_unit, 0.0, 0.0
+    #  ★ z 는 **`dilate_z` 로 되나눈 뒤** offset 을 뺀다.
+    #    ⚠ 이것을 빼먹으면 z 가 7 % 늘어난 채로 남고 깊은-안쪽 비율이 17 % 로 뜬다
+    #    (2026-08-29: 진단에서 확인해 놓고 코드에 옮기지 않아 실제로 그랬다).
+    #    ⚠⚠ 정직하게 적는다 — `off_z = wall_z − thickness/축척` 은 **원래 dilation 없는
+    #    가정에서 유도**한 값이고, 되나눔을 넣으면 그 두께 항등식은 더 이상 안 맞는다.
+    #    즉 지금 `off_z` 는 유도가 아니라 **경험적으로 맞는 offset** 이다.
+    #    근거는 둘, 둘 다 접촉과 무관하다:
+    #      · 구름 z 바닥 −0.18 µm ↔ scaffold 의 구 포함 바닥 −0.178 µm (0.002 µm)
+    #      · 반경 밀도가 d/r < 0.8 에서 0.001 로 떨어진다 (배제가 실재)
+    dil = float(meta.get('dilate_z') or 1.0)
+    raw = np.asarray(pos[idx], dtype=np.float64)
+    apos = np.c_[(raw[:, 0] - off_xy) * scale_um,
+                 (raw[:, 1] - off_xy) * scale_um,
+                 (raw[:, 2] / dil - off_z) * scale_um]
     origin = np.array([off_xy, off_xy, off_z])
-    apos = (np.asarray(pos[idx], dtype=np.float64) - origin) * scale_um
     aid = np.asarray(fid[idx])
 
     xs, ys, zs, rs, tt = _load_scaffold(scaffold)
@@ -294,7 +310,7 @@ def selftest() -> int:
     r_sim = 0.0025                             # 2.5 µm
     band = 0.15                                # µm
 
-    LB, UBOX, WALL, THK = 0.05, 54.3478, 1.3846, 72.534   # 실제 metrics 와 같은 형태
+    LB, UBOX, WALL, THK, DIL = 0.05, 54.3478, 1.3846, 72.534, 1.0719
     _sc = UBOX
     _oxy = (1.0 - LB * U / UBOX) / 2.0
     _oz = WALL - THK / UBOX
@@ -308,7 +324,9 @@ def selftest() -> int:
         import math
         a = 0.7 * k
         p = [cx * U + dist_um * math.cos(a), cy * U + dist_um * math.sin(a), cz * U]
-        return [p[0] / _sc + _oxy, p[1] / _sc + _oxy, p[2] / _sc + _oz]
+        #  z 는 코드가 `/DIL` 로 되나누므로 픽스처는 **곱해서** 넣는다 —
+        #  그래야 그 배선이 실제로 시험된다 (누락하면 selftest 가 초록인 채 지나간다)
+        return [p[0] / _sc + _oxy, p[1] / _sc + _oxy, (p[2] / _sc + _oz) * DIL]
 
     with tempfile.TemporaryDirectory() as td:
         P, F, X = [], [], []
@@ -344,7 +362,7 @@ def selftest() -> int:
         np.save(os.path.join(td, 'fibre.npy'), np.array(F, dtype=np.float32))
         np.save(os.path.join(td, 'se_dump.npy'),
                 np.array(X, dtype=np.float32).ravel())
-        meta = dict(n_pts=n_pts, lateral_box=LB, um_box_um=UBOX,
+        meta = dict(n_pts=n_pts, lateral_box=LB, um_box_um=UBOX, dilate_z=DIL,
                     wall_z=WALL, thickness_um=THK, additives=dict(
             VGCF=dict(n_points=sum(1 for p in P if p == PHASE['VGCF'])),
             PTFE=dict(n_points=sum(1 for p in P if p == PHASE['PTFE']))))
@@ -369,8 +387,8 @@ def selftest() -> int:
         chk('band 를 넓히면 먼 개체가 들어온다', cnt3 == [4], str(cnt3))
 
         #  ── fail-closed 검사 셋
-        json.dump(dict(n_pts=n_pts + 1, lateral_box=LB, um_box_um=UBOX, wall_z=WALL,
-                       thickness_um=THK, additives=meta['additives']),
+        json.dump(dict(n_pts=n_pts + 1, lateral_box=LB, um_box_um=UBOX, dilate_z=DIL,
+                       wall_z=WALL, thickness_um=THK, additives=meta['additives']),
                   open(os.path.join(td, 'mpm_metrics.json'), 'w'))
         try:
             count_contacts(td, sc, band_um=band)
