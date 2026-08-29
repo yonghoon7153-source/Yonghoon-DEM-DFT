@@ -792,7 +792,7 @@ def _emit_slab_job(jd: Path, atoms, nslab: int, freeze: float, frag: str,
                    ledger: Dict[str, Any], zcut=None, dense: bool = False,
                    prescf: bool = True, single_point: bool = False,
                    kmesh_over: Optional[Dict[str, str]] = None,
-                   dense_cand: bool = False) -> Dict[str, Any]:
+                   dense_cand: bool = False, closure: bool = False) -> Dict[str, Any]:
     """슬랩 잡 v3 — POSCAR(루트) + pre/ + relax/ + static/ (+dense/). MAGMOM 재매핑·검산."""
     kmesh_over = kmesh_over or {}
     jd.mkdir(parents=True, exist_ok=True)
@@ -810,7 +810,16 @@ def _emit_slab_job(jd: Path, atoms, nslab: int, freeze: float, frag: str,
            **_ldau_lines(pos["species_order"])}
     tpls = {"pre": SLAB_PRE, "relax": SLAB_RELAX, "static": SLAB_STATIC,
             "dense": SLAB_STATIC}
-    if single_point:
+    if closure:
+        # ⛔⛔ 회신 U P0-5 — 종전 `--single_point` 는 고정기하이면서도 `LREAL = Auto` 였다.
+        #   조각 간 대비에서 LREAL 오차는 **서로 다른 흡착종이라 소거되지 않는다.**
+        #   closure 모드는 전 endpoint 를 `.FALSE.` 로 못박는다.
+        _sp = SLAB_SP.replace("LREAL    = Auto", "LREAL    = .FALSE.") \
+                     .replace("[static · single-point]", "[closure · all-F fixed geometry]")
+        tpls = {"static": _sp,
+                "dense": _sp.replace("ICHARG   = 2", "ICHARG   = 1")
+                            .replace("[closure · all-F", "[closure dense · all-F")}
+    elif single_point:
         # MLIP 로 기하를 닫고 DFT 는 결합에너지만.
         # ⚠ dense 는 static 의 CHGCAR 를 승계해야 하므로 ICHARG=1 이어야 한다.
         #   같은 SLAB_SP(ICHARG=2)를 재사용하면 복사한 CHGCAR 를 **안 쓴다**.
@@ -822,7 +831,7 @@ def _emit_slab_job(jd: Path, atoms, nslab: int, freeze: float, frag: str,
         #   처음부터 시작하므로 "승계했다" 는 기록만 남고 실제로는 안 한 게 된다.
         tpls["relax"] = SLAB_RELAX.replace("ISTART   = 1", "ISTART   = 0") \
                                   .replace("ICHARG   = 0", "ICHARG   = 2")
-    phases = (["static"] if single_point
+    phases = (["static"] if (single_point or closure)
               else (["pre"] if prescf else []) + ["relax", "static"]) \
         + (["dense"] if dense else [])
     kmesh, incar_exp = {}, {}
@@ -877,7 +886,8 @@ def _emit_slab_job(jd: Path, atoms, nslab: int, freeze: float, frag: str,
 
 
 def _emit_mol_job(jd: Path, frag: str, mol, margin: float,
-                  free_spin: bool = False) -> Dict[str, Any]:
+                  free_spin: bool = False,
+                  closure: bool = False) -> Dict[str, Any]:
     """기체상 기준계 v3 — 상자 span+margin, IDIPOL=4+DIPOL(COM), NUPDOWN, 2상.
 
     `free_spin=True` → `NUPDOWN = -1` (자유 스핀).
@@ -930,7 +940,12 @@ def _emit_mol_job(jd: Path, frag: str, mol, margin: float,
            "nupdown": 1 if open_shell else (-1 if free_spin else 0),
            "magmom": " ".join(f"{mags[i]:.3f}" for i in idx)}
     kmesh, incar_exp = {}, {}
-    for ph, tpl in (("relax", MOL_RELAX), ("static", MOL_STATIC)):
+    # ⛔⛔ 회신 U P0-5 — 기체 기준이 **항상 relax → static** 이었다. 그러면 얻는 차이가
+    #   "스핀 제약 해제 + 재이완/구조경로 변화" 라 순수 δ_m 이 아니다. closure 모드는
+    #   **고정 기하 static 단독**으로 간다 (MOL_STATIC 은 이미 LREAL=.FALSE. 다).
+    _phases = ((("static", MOL_STATIC),) if closure
+               else (("relax", MOL_RELAX), ("static", MOL_STATIC)))
+    for ph, tpl in _phases:
         (jd / ph).mkdir(exist_ok=True)
         txt = tpl.format(**fmt)
         (jd / ph / "INCAR").write_text(txt)
@@ -3890,7 +3905,7 @@ def build_bundle(a, ledger: Optional[Dict[str, Any]] = None) -> Path:
                              "fragment": frag, "source_pose": rec["label"],
                              "uma_E_pose_eV": rec["E_pose_eV"]},
                             ledger, zcut=zcut, dense=dense and sd == SEED_MAIN,
-                            prescf=not a.no_prescf, single_point=a.single_point,
+                            prescf=not a.no_prescf, single_point=a.single_point, closure=a.closure,
                             kmesh_over=kover,
                             dense_cand=(a.adaptive_dense and dense
                                         and sd != SEED_MAIN))
@@ -3934,7 +3949,7 @@ def build_bundle(a, ledger: Optional[Dict[str, Any]] = None) -> Path:
                                  "source_pose": rec["label"],
                                  "uma_E_pose_eV": rec["E_pose_eV"]},
                                 ledger, zcut=zcut, dense=False,
-                                prescf=not a.no_prescf, single_point=a.single_point,
+                                prescf=not a.no_prescf, single_point=a.single_point, closure=a.closure,
                                 kmesh_over=kover)
                             slab_metas.append(m)
                             plan(rel, m["phases"], req)
@@ -3990,7 +4005,7 @@ def build_bundle(a, ledger: Optional[Dict[str, Any]] = None) -> Path:
                              "source_pose": rec["label"],
                              "uma_E_pose_eV": rec["E_pose_eV"]},
                             ledger, zcut=zcut, dense=False,
-                            prescf=not a.no_prescf, single_point=a.single_point,
+                            prescf=not a.no_prescf, single_point=a.single_point, closure=a.closure,
                             kmesh_over=kover)
                         slab_metas.append(m)
                         plan(rel, m["phases"], req)
@@ -4034,7 +4049,7 @@ def build_bundle(a, ledger: Optional[Dict[str, Any]] = None) -> Path:
                            f"clean slab {sd}", sd,
                            {"kind": "clean_ref" if a.refs else "clean_magnetic_control"},
                            ledger, zcut=zcut, dense=(a.refs and sd == SEED_MAIN),
-                           prescf=not a.no_prescf, single_point=a.single_point,
+                           prescf=not a.no_prescf, single_point=a.single_point, closure=a.closure,
                            kmesh_over=kover)
         slab_metas.append(m)
         plan(rel, m["phases"], True)
@@ -4092,7 +4107,7 @@ def build_bundle(a, ledger: Optional[Dict[str, Any]] = None) -> Path:
         for margin, tag in ((20.0, "box20"), (24.0, "box24")):
             rel = f"refs/mol__{frag}__{tag}"
             m = _emit_mol_job(out / rel, frag, mol, margin,
-                              free_spin=getattr(a, "free_spin_refs", False))
+                              free_spin=getattr(a, "free_spin_refs", False), closure=a.closure)
             plan(rel, m["phases"], True)
             man["refs"][f"mol__{frag}__{tag}"] = rel
             n_jobs += 1
@@ -4594,7 +4609,7 @@ def selftest() -> int:
     a0 = argparse.Namespace(runs=str(td / "runs"), out=str(td / "bundle_short"),
                             freeze=0.85, nslab=nslab, frags=["ptfe_dimer"],
                             qe="(none)", expect=None, allow_partial=False,
-                            no_prescf=False, allow_stale_gate=False, top_n=None, single_point=False, champion=False, kmesh_static=None, kmesh_dense=None, refs=True, cross_endpoints=None, mag_controls=False, dense_frags=None, cores=48, concurrency=8, no_cross=False, global_champion_meV=20.0, adaptive_dense=False)
+                            no_prescf=False, allow_stale_gate=False, top_n=None, closure=False, single_point=False, champion=False, kmesh_static=None, kmesh_dense=None, refs=True, cross_endpoints=None, mag_controls=False, dense_frags=None, cores=48, concurrency=8, no_cross=False, global_champion_meV=20.0, adaptive_dense=False)
     try:
         build_bundle(a0, ledger=led)
         chk(False, "N0 xyz 누락 → **번들이 만들어졌다** (축소 정본 = fail-open)")
@@ -4610,7 +4625,7 @@ def selftest() -> int:
     ab = argparse.Namespace(runs=str(td / "runs"), out=str(td / "bundle_nofp"),
                             freeze=0.85, nslab=nslab, frags=["ptfe_dimer"],
                             qe="(none)", expect=None, allow_partial=False,
-                            no_prescf=False, allow_stale_gate=False, top_n=None, single_point=False, champion=False, kmesh_static=None, kmesh_dense=None, refs=True, cross_endpoints=None, mag_controls=False, dense_frags=None, cores=48, concurrency=8, no_cross=False, global_champion_meV=20.0, adaptive_dense=False)
+                            no_prescf=False, allow_stale_gate=False, top_n=None, closure=False, single_point=False, champion=False, kmesh_static=None, kmesh_dense=None, refs=True, cross_endpoints=None, mag_controls=False, dense_frags=None, cores=48, concurrency=8, no_cross=False, global_champion_meV=20.0, adaptive_dense=False)
     try:
         build_bundle(ab, ledger=led)
         chk(False, "N0b 지문 없는 소스 → **번들이 만들어졌다**")
@@ -4634,7 +4649,7 @@ def selftest() -> int:
     at3 = argparse.Namespace(runs=str(td / "runs"), out=str(td / "bundle_top3"),
                              freeze=0.85, nslab=nslab, frags=["ptfe_dimer"],
                              qe="(none)", expect=None, allow_partial=False,
-                             no_prescf=False, allow_stale_gate=False, top_n=3, single_point=False, champion=False, kmesh_static=None, kmesh_dense=None, refs=True, cross_endpoints=None, mag_controls=False, dense_frags=None, cores=48, concurrency=8, no_cross=False, global_champion_meV=20.0, adaptive_dense=False)
+                             no_prescf=False, allow_stale_gate=False, top_n=3, closure=False, single_point=False, champion=False, kmesh_static=None, kmesh_dense=None, refs=True, cross_endpoints=None, mag_controls=False, dense_frags=None, cores=48, concurrency=8, no_cross=False, global_champion_meV=20.0, adaptive_dense=False)
     o3 = build_bundle(at3, ledger=led)
     m3 = json.loads((o3 / "MANIFEST.json").read_text())
     kept = sorted({v["dir"] for v in m3["pairs"].values()})
@@ -4651,7 +4666,7 @@ def selftest() -> int:
     a = argparse.Namespace(runs=str(td / "runs"), out=str(td / "bundle"),
                            freeze=0.85, nslab=nslab, frags=["ptfe_dimer"],
                            qe="(none)", expect=None, allow_partial=False,
-                           no_prescf=False, allow_stale_gate=False, top_n=None, single_point=False, champion=False, kmesh_static=None, kmesh_dense=None, refs=True, cross_endpoints=None, mag_controls=False, dense_frags=None, cores=48, concurrency=8, no_cross=False, global_champion_meV=20.0, adaptive_dense=False)
+                           no_prescf=False, allow_stale_gate=False, top_n=None, closure=False, single_point=False, champion=False, kmesh_static=None, kmesh_dense=None, refs=True, cross_endpoints=None, mag_controls=False, dense_frags=None, cores=48, concurrency=8, no_cross=False, global_champion_meV=20.0, adaptive_dense=False)
     out = build_bundle(a, ledger=led)
     man = json.loads((out / "MANIFEST.json").read_text())
     n_pre = sum(1 for p in man["planned"].values() if "pre" in (p.get("phases") or []))
@@ -4662,10 +4677,36 @@ def selftest() -> int:
     a_sp = argparse.Namespace(
         runs=str(td / "runs"), out=str(td / "bundle_sp"), freeze=0.85, nslab=nslab,
         frags=["ptfe_dimer"], qe="(none)", expect=None, allow_partial=False,
-        no_prescf=False, allow_stale_gate=False, top_n=None, single_point=True,
+        no_prescf=False, allow_stale_gate=False, top_n=None, closure=False, single_point=True,
         champion=True, kmesh_static=None, kmesh_dense=None, refs=False,
         cross_endpoints=["ptfe_dimer"], mag_controls=True, dense_frags=["ptfe_dimer"], cores=48, concurrency=8, no_cross=False, global_champion_meV=20.0, adaptive_dense=False)
     out_sp = build_bundle(a_sp, ledger=led)
+
+    # ══ 회신 U P0-5 — closure 모드 e2e. "계획대로 생성되는가" 를 파일로 확인한다 ══
+    a_cl = argparse.Namespace(**{**vars(a_sp), "out": str(td / "bundle_closure"),
+                                 "closure": True, "refs": True, "dense_frags": None})
+    build_bundle(a_cl, ledger=led)
+    _cl = Path(str(td / "bundle_closure"))
+    _inc = sorted(_cl.rglob("INCAR"))
+    chk(bool(_inc), "closure: INCAR 가 생성된다")
+    _bad_lreal = [f for f in _inc if "LREAL    = .FALSE." not in f.read_text()]
+    chk(not _bad_lreal,
+         f"[P0-5] closure 전 endpoint 가 LREAL=.FALSE. ({len(_inc)}개 · "
+         f"위반 {[x.parent.name for x in _bad_lreal][:3]})")
+    _bad_fix = [f for f in _inc
+                if "NSW      = 0" not in f.read_text()
+                or "IBRION   = -1" not in f.read_text()]
+    chk(not _bad_fix, f"[P0-5] closure 전 endpoint 가 고정기하 (NSW=0·IBRION=-1) · "
+                       f"위반 {[x.parent.name for x in _bad_fix][:3]}")
+    _bad_vdw = [f for f in _inc if "IVDW     = 11" not in f.read_text()]
+    chk(not _bad_vdw, "[P0-5] closure 전 endpoint 가 IVDW=11 (D3 zero — 'D3(BJ)' 아님)")
+    _rel = [f for f in _cl.rglob("relax/INCAR")]
+    chk(not _rel, f"[P0-5b] closure 에는 relax 상이 **없다** (기체 기준 포함) · "
+                   f"발견 {[str(x.parent.parent.name) for x in _rel][:3]}")
+    # 음성: closure 를 끄면 위 성질이 실제로 깨진다 (시험이 무엇을 지키는지 증명)
+    _sp_inc = sorted(Path(str(td / "bundle_sp")).rglob("INCAR"))
+    chk(any("LREAL    = Auto" in f.read_text() for f in _sp_inc),
+         "  (음성 대조) --single_point 만으로는 LREAL=Auto 가 남는다 — closure 가 그것을 고친다")
     # ★ **배포되는 분석기**의 k 라벨·guard band selftest 를 그대로 돌린다.
     #   이 로직은 문자열 템플릿 안이라 여기서 import 로 시험할 수 없다 — 실행이 유일한 길.
     rk = subprocess.run([sys.executable, "analyze_results.py", "--selftest"],
@@ -5600,6 +5641,10 @@ def main():
     ap.add_argument("--champion", action="store_true",
                     help="조각마다 **Li 위 최선 · Ni 위 최선** 한 쌍만 (방향 무관). "
                          "두 챔피언이 다른 방향이면 ΔE 에 배향 효과가 섞인다 — 표시된다.")
+    ap.add_argument("--closure", action="store_true",
+                    help="닫힘 모드 (회신 U P0-5) — 전 endpoint 고정기하 static 단독 + "
+                         "LREAL=.FALSE. 강제. 기체 기준도 relax 를 돌지 않는다. "
+                         "조각 간 대비(ΔΔE)를 낼 때만 쓴다")
     ap.add_argument("--single_point", action="store_true",
                     help="MLIP 기하 위의 **단일점만** — DFT 는 결합에너지만 낸다. "
                          "relax 를 안 돌리므로 기하는 DFT 최소점이 아니다(인용 시 명시).")

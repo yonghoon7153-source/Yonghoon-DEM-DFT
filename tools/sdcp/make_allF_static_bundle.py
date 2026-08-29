@@ -1,5 +1,21 @@
 #!/usr/bin/env python3
-"""make_allF_static_bundle.py — 조각 간 대비(ΔΔE_ads) 하나를 살리기 위한 **최소 번들**.
+"""make_allF_static_bundle.py — ⛔ **폐기 (2026-08-29). 쓰지 마라.**
+
+`vasp_handoff_bundle.py --closure` 를 써라.
+
+왜 폐기했나: 이 도구는 복합체의 AFM 씨앗을 스스로 만들려 했는데, 부격자 원장은
+**슬랩 기준 인덱스**로 부호를 주고 복합체 POSCAR 는 원자 순서가 다르다. 정본 생성기는
+`_assert_slab_lineage` + 순열 재매핑으로 그걸 처리한다. 그 기계를 병렬로 다시 만드는 것은
+CLAUDE.md 가 금지하는 중복이고, 틀리면 **자기 배치가 조용히 어긋난다** (2026-08-12 에
+"파일 순서로 반 갈랐더니 실제 부격자와 24/48 일치" = 동전 던지기였던 이력이 있다).
+
+회신 U P0-5 의 처방도 "새 도구" 가 아니라 **기존 생성기의 closure mode** 였다.
+그 모드는 e2e selftest 로 전 endpoint 의 LREAL/.FALSE./NSW=0/IBRION=-1/IVDW=11 과
+relax 상 부재를 확인한다.
+
+── 아래는 폐기 전 원문 ──
+
+조각 간 대비(ΔΔE_ads) 하나를 살리기 위한 **최소 번들**.
 
 회신 T (2026-08-29) 최단 경로 그대로:
   *"0.35 eV 조각 간 대비만 필요: neutral/c10 분자 static 2잡 + 해당 complex all-F static 2잡"*
@@ -96,7 +112,15 @@ def _seed_magmom(poscar, frag, seed):
         nslab = max((i for i, s in enumerate(sym) if s in ("Li", "Ni", "O")), default=-1) + 1
         while nslab > 0 and sym[nslab - 1] not in ("Li", "Ni", "O"):
             nslab -= 1
-        seeds = VH.seed_configs(at, nslab, frag)
+        # ⚠ 원장은 **좌표로 확정한 Ni1/Ni2 부격자**다. 파일 순서로 반 갈랐던 옛 구현은
+        #   실측에서 24/48 일치(동전 던지기)였다 — 개수만 24/24 였을 뿐 다른 자기 배치다.
+        _root = os.path.dirname(os.path.dirname(
+            os.path.dirname(os.path.abspath(__file__))))          # tools/sdcp/x.py → repo
+        _lp = os.path.join(_root, "db", "properties", "afm_ledger.json")
+        if not os.path.isfile(_lp):
+            raise FileNotFoundError(f"부격자 원장이 없다: {_lp}")
+        led = json.load(open(_lp))
+        seeds = VH.seed_configs(at, nslab, frag, led)
         mag = seeds.get(seed)
         if not mag:
             return "", None
