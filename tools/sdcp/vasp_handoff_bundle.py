@@ -1286,22 +1286,60 @@ def global_sign(moments, want):
     return sg, bad
 
 
-def realized_basin_id(mom, ni_sign, mol_sign, mom_min):
+#: 회신 AA Q5 — **단일 문턱 금지.** 확실한 붕괴 / 회색 / 확실한 자성으로 나누고
+#: 회색은 unresolved 로 뺀다. 값은 wave1 clean slab 분포(|m| ~1.2 μB)와 반복
+#: 산포에서 잡았다: 0.25 아래는 어떤 basin 에서도 안 나오고, 0.55 위는 정상
+#: Ni 모멘트다. 그 사이는 **우리가 못 가르는 구간**이다.
+MOM_COLLAPSE = 0.25      # 이 아래 = 확실한 붕괴
+MOM_MAGNETIC = 0.55      # 이 위   = 확실한 자성
+#: 같은 부호벡터라도 크기가 이보다 더 벌어지면 자동 동일 판정하지 않는다 (Q5)
+MOM_RMS_TOL = 0.30       # μB
+
+
+def _spin_setup_ok(incar_echo):
+    """전역 시간반전을 접어도 되는 계인가 (회신 AA Q5).
+
+    collinear · SOC 없음 · 외부장 없음 · signed spin constraint 없음일 때만
+    `+++−` 와 `−−−+` 가 같은 상태다. **INCAR 되울림에서 기계적으로 확인한다** —
+    전제를 사람이 기억하는 것에 맡기지 않는다.
+    """
+    e = {str(k).upper(): str(v).strip().upper().strip(".")
+         for k, v in (incar_echo or {}).items()}
+    bad = []
+    if e.get("LNONCOLLINEAR") in ("T", "TRUE"):
+        bad.append("LNONCOLLINEAR=T (비공선)")
+    if e.get("LSORBIT") in ("T", "TRUE"):
+        bad.append("LSORBIT=T (SOC)")
+    if e.get("I_CONSTRAINED_M") not in (None, "", "0"):
+        bad.append(f"I_CONSTRAINED_M={e.get('I_CONSTRAINED_M')} (스핀 제약)")
+    if e.get("BEXT") not in (None, "", "0", "0.0"):
+        bad.append(f"BEXT={e.get('BEXT')} (외부장)")
+    return (not bad), bad
+
+
+def realized_basin_id(mom, ni_sign, mol_sign, mom_min=None, incar_echo=None):
     """OUTCAR 국소모멘트 표 → **실제로 수렴한** 자기 basin 의 지문 (회신 Z P0-4).
 
     `pm1` · `net4` 는 **초기 MAGMOM seed 이름**이지 최종 상태가 아니다. wave1.5 에서
     raw `net4` 가 의도한 topology 가 아니라 Ni 하나 뒤집힌 basin 으로 반복 수렴한
-    전례가 있다. seed 이름으로 짝지어 빼면 **다른 상태를 가로질러 뺀 것**이 된다.
+    전례가 있다. seed 이름으로 짝지어 빼면 상태를 가로질러 뺀 것이 된다.
 
-    지문 = (전역부호로 정규화한 Ni 부호벡터, 붕괴한 Ni 자리, 유기종 상대스핀).
-    전역 반전은 시간반전이라 같은 상태이므로 **정규화 뒤에** 지문을 만든다.
+    v2 (회신 AA Q5 반영):
+      · 전역 시간반전을 접기 전에 **collinear·무SOC·무외부장·무제약**을 INCAR
+        되울림에서 확인한다. 아니면 접지 않고 unresolved 를 낸다.
+      · 붕괴 판정을 **두 문턱**으로 (확실한 붕괴 / 회색 / 확실한 자성).
+        회색이 하나라도 있으면 지문을 만들지 않는다 — 그 자리가 basin 을 가른다.
+      · 지문 해시는 **정규화 canonical JSON 의 full SHA256**. 12자는 표시용이다.
+      · raw 모멘트 벡터와 Ni 인덱스 매핑을 그대로 보존한다 (사후 재판독용).
 
-    반환 (id, detail) — id 가 None 이면 판정 불가 사유가 detail["why"] 에 있다.
+    반환 (id, detail) — id 가 None 이면 사유가 detail["why"] 에 있다.
 
-    ⛔ 이 함수가 못 하는 것
+    ⛔ 이 함수가 **못 하는 것**
       · 어느 basin 이 **바닥**인지 말하지 못한다. 같은가 다른가만 가른다.
+      · OUTCAR 의 site moment 는 PAW 구 안으로 투영한 **관측량**이지 basin 그
+        자체가 아니다. 같은 설정 안에서만 쓰는 지문이다.
       · 모멘트 표가 없거나 불완전하면 **추측하지 않는다** — None 을 낸다.
-      · Ni 인덱스 집합이 다른 두 계(예: 다른 슬랩)를 비교할 수 없다.
+      · Ni 인덱스 집합이 다른 두 계(다른 슬랩)를 비교할 수 없다.
     """
     if not mom:
         return None, {"why": "모멘트 표 없음 (LORBIT)"}
@@ -1310,18 +1348,70 @@ def realized_basin_id(mom, ni_sign, mol_sign, mom_min):
         return None, {"why": "ni_sign_poscar_idx 없음"}
     if max(ni) >= len(mom):
         return None, {"why": f"Ni 인덱스가 모멘트 표 {len(mom)}행 밖"}
+    if incar_echo is not None:
+        ok_setup, why = _spin_setup_ok(incar_echo)
+        if not ok_setup:
+            return None, {"why": "전역 시간반전을 접을 수 없는 설정: " + " · ".join(why)}
     got = {i: mom[i] for i in ni}
     sg, _flip = global_sign(got, ni)
     idx = sorted(ni)
+    gray = [k for k, i in enumerate(idx) if MOM_COLLAPSE <= abs(got[i]) < MOM_MAGNETIC]
+    if gray:
+        return None, {"why": (f"회색구간 모멘트 {len(gray)}자리 "
+                              f"({MOM_COLLAPSE}–{MOM_MAGNETIC} μB) — 붕괴인지 자성인지 "
+                              f"못 가른다. 이 잡으로는 뺄셈하지 않는다"),
+                      "gray_positions": gray,
+                      "gray_moments_muB": [round(got[idx[k]], 3) for k in gray]}
     vec = "".join("+" if got[i] * sg > 0 else "-" for i in idx)
-    collapsed = [k for k, i in enumerate(idx) if abs(got[i]) < mom_min]
+    collapsed = [k for k, i in enumerate(idx) if abs(got[i]) < MOM_COLLAPSE]
     ms = {int(k): float(v) for k, v in (mol_sign or {}).items() if int(k) < len(mom)}
     org = "".join("+" if mom[i] * sg > 0 else "-" for i in sorted(ms)) if ms else ""
-    key = f"{vec}|{','.join(map(str, collapsed))}|{org}"
-    return hashlib.sha256(key.encode()).hexdigest()[:12], {
+    # 정규화 canonical JSON → full SHA256 (12자는 표시용)
+    canon = json.dumps({"ni_sign_vector": vec, "collapsed": collapsed,
+                        "organic_relative_spin": org},
+                       sort_keys=True, separators=(",", ":"), ensure_ascii=False)
+    full = hashlib.sha256(canon.encode()).hexdigest()
+    return full, {
+        "id_short": full[:12], "canonical": canon,
         "ni_sign_vector": vec, "n_ni": len(idx), "global_sign": sg,
         "collapsed_ni_positions": collapsed, "organic_relative_spin": org or None,
-        "⚠": "seed 이름이 아니라 **수렴 결과**의 지문이다"}
+        "ni_index_poscar": idx,
+        "ni_moments_muB": [round(got[i], 4) for i in idx],
+        "abs_mean_muB": round(sum(abs(got[i]) for i in idx) / len(idx), 4),
+        "thresholds": {"collapse": MOM_COLLAPSE, "magnetic": MOM_MAGNETIC},
+        "⚠": "seed 이름이 아니라 **수렴 결과**의 지문이다. site moment 는 PAW 투영 관측량이다"}
+
+
+def basin_distance(da, db):
+    """두 realized basin 사이의 **거리** (회신 AA Q5-c).
+
+    지문이 다르다는 것만으로는 "얼마나 다른가" 를 못 말한다. Ni 하나가 뒤집힌
+    것과 20개가 뒤집힌 것은 다른 사건이다.
+
+    반환: {hamming, collapse_symdiff, moment_rms_muB, moment_max_muB,
+           flipped_index_poscar, same}
+    `same` 은 부호·붕괴가 같고 **크기 RMS 도 MOM_RMS_TOL 안**일 때만 참이다 —
+    같은 부호라도 크기가 크게 다르면 자동 동일 판정하지 않는다.
+    """
+    if not da or not db:
+        return None
+    va, vb = da.get("ni_sign_vector"), db.get("ni_sign_vector")
+    ia, ib = da.get("ni_index_poscar"), db.get("ni_index_poscar")
+    if not (va and vb) or len(va) != len(vb) or ia != ib:
+        return {"same": False, "why": "Ni 인덱스 집합이 다르다 — 비교 불가"}
+    ham = [k for k in range(len(va)) if va[k] != vb[k]]
+    ca, cb = set(da.get("collapsed_ni_positions") or []), set(db.get("collapsed_ni_positions") or [])
+    ma = da.get("ni_moments_muB") or []
+    mb = db.get("ni_moments_muB") or []
+    sa, sb = da.get("global_sign", 1.0), db.get("global_sign", 1.0)
+    diff = [abs(ma[k] * sa - mb[k] * sb) for k in range(min(len(ma), len(mb)))]
+    rms = (sum(x * x for x in diff) / len(diff)) ** 0.5 if diff else float("inf")
+    mx = max(diff) if diff else float("inf")
+    return {"hamming": len(ham), "flipped_index_poscar": [ia[k] for k in ham],
+            "collapse_symdiff": sorted(ca ^ cb),
+            "moment_rms_muB": round(rms, 4), "moment_max_muB": round(mx, 4),
+            "same": (not ham and not (ca ^ cb) and rms <= MOM_RMS_TOL),
+            "rms_tol_muB": MOM_RMS_TOL}
 
 
 def read_moments(t):
@@ -1994,27 +2084,56 @@ def selftest_k() -> int:
     #   pm1/net4 는 초기 seed 이름이지 최종 basin 이 아니다. 지문이 **수렴 결과**를
     #   따라가는지, 그리고 안 따라가야 할 것(시간반전)에 안 따라가는지 본다.
     _NS = {str(i): v for i, v in _w.items()}
-    _b_same, _ = realized_basin_id([1.2, -1.2, 1.2, -1.2], _NS, {}, 0.4)
-    _b_rev, _ = realized_basin_id([-1.2, 1.2, -1.2, 1.2], _NS, {}, 0.4)
+    _b_same, _d_same = realized_basin_id([1.2, -1.2, 1.2, -1.2], _NS, {})
+    _b_rev, _d_rev = realized_basin_id([-1.2, 1.2, -1.2, 1.2], _NS, {})
     chk(_b_same is not None and _b_same == _b_rev,
         "완전한 시간반전은 **같은 basin** (전역 부호 정규화 후 지문)")
-    _b_flip, _ = realized_basin_id([1.2, 1.2, 1.2, -1.2], _NS, {}, 0.4)
+    chk(len(_b_same) == 64 and _d_same["id_short"] == _b_same[:12],
+        "지문은 canonical JSON 의 **full SHA256** — 12자는 표시용 (회신 AA Q5-b)")
+    _b_flip, _d_flip = realized_basin_id([1.2, 1.2, 1.2, -1.2], _NS, {})
     chk(_b_flip is not None and _b_flip != _b_same,
         "⛔음성: Ni 하나가 뒤집히면 **다른 basin** (wave1.5 의 실제 사고 모양)")
-    _b_col, _ = realized_basin_id([1.2, -1.2, 0.1, -1.2], _NS, {}, 0.4)
+    _b_col, _ = realized_basin_id([1.2, -1.2, 0.1, -1.2], _NS, {})
     chk(_b_col != _b_same and _b_col is not None,
         "⛔음성: 모멘트 붕괴도 다른 basin (부호는 살아 있어도 상태가 다르다)")
+    # ★ 회신 AA Q5-c — 두 문턱. 회색은 판정하지 않는다
+    _b_gray, _dg = realized_basin_id([1.2, -1.2, 0.40, -1.2], _NS, {})
+    chk(_b_gray is None and "회색구간" in _dg["why"],
+        f"⛔음성: 회색구간(0.25–0.55 μB) 모멘트는 **unresolved** — 단일 문턱이면 "
+        f"0.4 를 자성으로 오판했다")
     _MS = {"4": 1.0}
-    _b_o1, _ = realized_basin_id([1.2, -1.2, 1.2, -1.2, 0.9], _NS, _MS, 0.4)
-    _b_o2, _ = realized_basin_id([1.2, -1.2, 1.2, -1.2, -0.9], _NS, _MS, 0.4)
+    _b_o1, _ = realized_basin_id([1.2, -1.2, 1.2, -1.2, 0.9], _NS, _MS)
+    _b_o2, _ = realized_basin_id([1.2, -1.2, 1.2, -1.2, -0.9], _NS, _MS)
     chk(_b_o1 != _b_o2,
         "⛔음성: Ni 는 같은데 **유기종 상대스핀**만 갈려도 다른 basin")
-    chk(realized_basin_id(None, _NS, {}, 0.4)[0] is None
-        and realized_basin_id([1.2], _NS, {}, 0.4)[0] is None,
+    chk(realized_basin_id(None, _NS, {})[0] is None
+        and realized_basin_id([1.2], _NS, {})[0] is None,
         "⛔음성: 표가 없거나 짧으면 **추측하지 않고** None (뺄셈을 막는다)")
-    _b_o1b, _ = realized_basin_id([-1.2, 1.2, -1.2, 1.2, -0.9], _NS, _MS, 0.4)
+    _b_o1b, _ = realized_basin_id([-1.2, 1.2, -1.2, 1.2, -0.9], _NS, _MS)
     chk(_b_o1b == _b_o1,
         "유기종까지 통째로 반전해도 같은 basin (시간반전은 상대부호를 안 바꾼다)")
+    # ★ 회신 AA Q5 — 시간반전을 접을 수 있는 계인지 INCAR 로 확인
+    chk(realized_basin_id([1.2, -1.2, 1.2, -1.2], _NS, {},
+                          incar_echo={"LSORBIT": ".TRUE."})[0] is None,
+        "⛔음성: SOC 가 켜져 있으면 시간반전을 접지 않는다 (전제가 깨진다)")
+    chk(realized_basin_id([1.2, -1.2, 1.2, -1.2], _NS, {},
+                          incar_echo={"I_CONSTRAINED_M": "1"})[0] is None,
+        "⛔음성: signed spin constraint 가 걸려 있으면 접지 않는다")
+    chk(realized_basin_id([1.2, -1.2, 1.2, -1.2], _NS, {},
+                          incar_echo={"LSORBIT": ".FALSE.", "ISPIN": "2"})[0] is not None,
+        "양성: collinear·무SOC·무제약이면 접는다")
+    # ★ basin_distance (회신 AA Q5-c) — "얼마나 다른가"
+    _dd = basin_distance(_d_same, _d_flip)
+    chk(_dd["hamming"] == 1 and _dd["flipped_index_poscar"] == [1] and not _dd["same"],
+        f"거리: Ni 하나 뒤집힘 → hamming 1, 인덱스 {_dd['flipped_index_poscar']}")
+    _dd2 = basin_distance(_d_same, _d_rev)
+    chk(_dd2["same"] and _dd2["hamming"] == 0 and _dd2["moment_rms_muB"] < 1e-9,
+        "거리: 시간반전끼리는 hamming 0 · RMS 0 (전역부호로 정규화해 비교한다)")
+    _b_big, _d_big = realized_basin_id([2.0, -2.0, 2.0, -2.0], _NS, {})
+    _dd3 = basin_distance(_d_same, _d_big)
+    chk(_dd3["hamming"] == 0 and not _dd3["same"] and _dd3["moment_rms_muB"] > 0.3,
+        f"⛔음성: 부호가 같아도 **크기**가 벌어지면 동일 판정 안 한다 "
+        f"(RMS {_dd3['moment_rms_muB']} > {MOM_RMS_TOL})")
 
     # guard band
     D = 0.030
@@ -2934,7 +3053,8 @@ def main():
                     "abs_mean_muB": round(sum(map(abs, got.values())) / len(got), 3),
                     "total_muB": st.get("mag_total")}
                 # ★ 회신 Z P0-4 — realized basin 지문. seed 이름으로 짝지으면 안 된다.
-                _rb, _rbd = realized_basin_id(mom, want_sign, mol_sign, MOM_MIN)
+                _rb, _rbd = realized_basin_id(mom, want_sign, mol_sign,
+                                             incar_echo=st.get("incar_echo"))
                 rec["geom"]["magnetic"]["realized_basin_id"] = _rb
                 rec["geom"]["magnetic"]["realized_basin"] = _rbd
                 if _rb is None:
