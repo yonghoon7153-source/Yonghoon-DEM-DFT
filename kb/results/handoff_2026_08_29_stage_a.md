@@ -59,9 +59,55 @@ python3 tools/sdcp/vasp_handoff_bundle.py \
 검산: `candidate_set = motif_probe (…)` · `emitted_basin_roles = ['motif_probe']` ·
 `prospective/` 아래 자세 **2개**(probe0 `NiO_bridge__fib04__r180` · probe1 `Ni_top__fib04__r000`).
 
+## 1.5 보조 세션 진행 (2026-08-29 저녁, 이 절만 추가)
+
+**경로 확정: 외주** (wave1 과 같은 곳). KISTI 는 배제 — `kb/methodology/kisti_setup.md`
+에 VASP 모듈이 없고(QE-GPU/A100), 배치 예시가 `-t 24:00:00` 인데 가장 긴 잡이 19 h,
+SUBMIT_CONTRACT 는 120 h 를 권한다.
+
+| 한 것 | 어디 |
+|---|---|
+| 제출 전 무결성 검사 도구 | `vasp_handoff_bundle.py --verify_bundle <dir> [--expect_jobs N]` |
+| 두 번들 검증 **통과** (rc=0) | stageA_v2 40잡 · motifprobe_v2 10잡, 배포파일 245·65 전건 해시 일치 |
+| 외주 요청문 | `runs/sdcp_stageA_2026_08_29/REQUEST.md` (봉인 zip 은 안 건드리고 바깥에서 정정) |
+| **닫힘 조건 (결과 전 등록)** | `db/properties/sdcp_stageA_closure_conditions_2026_08_29.json` |
+| 회신 Q2 발송본 | `kb/reviews/codex_Q2_prompt_claim_and_normalization_2026_08_29.md` |
+| P0-5 재현 시험 도구 | `site_screen.py score --clean_probe 2` |
+
+**확정 해시** (외주 대조용):
+`sdcp_stageA_v2.zip` 380,929 B `ddfa7cc0…6ca8695f` ·
+`sdcp_motifprobe_v2.zip` 150,658 B `59cdfff5…b442ba6`
+두 번들 clean_slab 동일: `d5f18feb…c43676`.
+
+### 🔴 이 셋은 이 절을 읽고 알아야 한다
+
+1. **primary X 는 이 캠페인에서 안 나온다.** 두 번들의 `candidate_set` 이
+   `calibration_pilot` · `motif_probe` 이고, 분석기 `_closure_estimand()` 가 그 이름에서
+   `CALIBRATION_ONLY_TRANCHE` 를 걸어 `NO_VALUE` 를 낸다. **설계된 fail-closed 다.**
+   3일 뒤 그게 나오면 정상 — 우회하지 않는다. 대신 닫는 것은 C1~C4(닫힘 조건 파일).
+2. **P0-5(clean slab provenance)가 아직 안 닫혔다.** 회신 X 가 "실행 전 P0" 로 격상한
+   건인데 해소 기록이 없다. 조각 간 대비는 두 조각이 같은 슬랩이라 성립하지만(회신 X
+   Q2 조건부 승인) "재현 가능한 동결 기하" 라 부를 근거는 없다. `--clean_probe 2` 를
+   외주와 **병행**해 돌린다 (gabia GPU 는 비어 있다 — VASP 는 외주가 돈다).
+3. **`/data/work/runs/` 에 zip 이 9개**고 `sdcp_stageA_v1.zip`(380,307 B)이
+   `v2`(380,929 B)와 622 바이트 차이다. 목록에서 골라 보내면 사고다 —
+   `/data/work/outbox_2026_08_29/` 에 둘만 격리해 발송한다.
+
+### 부수적으로 고친 것
+
+- `--verify_bundle` 첫 판이 **멀쩡한 번들을 차단**했다 ("n_jobs 40 vs planned 24").
+  생성기가 D3-off 쌍둥이를 `plan()` 없이 만들어 `n_jobs` 에만 센다 — 40 = 24 + 16 이
+  정상이다. 잡 목록의 정본을 `planned` 에서 **디스크의 run_job.sh 폴더**로 바꿨고,
+  그 구조를 selftest 양성 케이스에 심었다.
+- 번들 `SUBMIT_CONTRACT.md` 가 "잡 40 / 총 VASP 실행 24" 로 자기모순이다(같은 쌍둥이
+  누락). 외주가 24회로 견적을 잡으면 40 % 를 덜 잡는다 — 요청문에서 정정했다.
+- `kb` lint **0 errors** (§5 의 doped 카드 6건 해소 — 구조 절만 붙였고 내용 불변).
+
+---
+
 ## 2. 할 일
 
-1. 두 번들 제출 (KISTI 또는 외주). **동시 8잡 이상**이면 가장 긴 잡(19 h @256코어)이 바닥.
+1. 두 번들 제출 (**외주 — 확정**). **동시 8잡 이상**이면 가장 긴 잡(19 h @256코어)이 바닥.
 2. 회수되면 각 번들에서 분석기 실행 — 번들 안에 들어 있다 (`ANALYZER`). fail-closed 로
    막히면 **막힌 이유를 그대로 보고한다.** 우회하지 않는다.
 3. 나온 값을 `db/properties/` 에 등재하고 마감 문서를 쓴다 (닫힘 조건 먼저, 그 다음 값).
@@ -94,10 +140,13 @@ python3 tools/sdcp/vasp_handoff_bundle.py \
 
 ## 5. 아직 안 한 것
 
-- **회신 Q2 미발송** — `kb/reviews/codex_Q2_prompt_claim_and_normalization_2026_08_29.md`.
-  정규화(분자당 vs 원자당 순위 역전)·표본밀도 비대칭·과잉방어를 묻는다. 보내면 좋다.
-- `kb/questions/doped_declared_state_feasibility_2026_08_29.md` lint 6건 (구조 절 없음).
-- 번들 `README_REQUEST.md` 가 `--from_basins` 구조를 설명 못 한다 (tier/pair 판 문구 그대로).
+- **회신 Q2 — 발송본 완료, 아직 미발송** (2026-08-29 저녁 갱신). Q3(기전 부활 방어) ·
+  Q7(b)(Stage A 단독이 정당한 정지점인가) · Q8(b)(동수 N=4 calibration) 를 현재
+  사실로 다시 썼다. **붙여넣을 프롬프트 절을 그대로 보내면 된다.**
+- ~~`kb/questions/doped_declared_state_feasibility_2026_08_29.md` lint 6건~~ ✅ 해소 (2026-08-29 저녁).
+- ~~번들 `README_REQUEST.md` 가 `--from_basins` 구조를 설명 못 한다~~ ✅ 우회 (2026-08-29 저녁) —
+  봉인 zip 을 고치면 `files_sha256` 이 전부 깨지므로 **바깥 요청문**으로 정정했다
+  (`runs/sdcp_stageA_2026_08_29/REQUEST.md` §0).
 - wave1 정본값의 **k 메시 provenance 불명** — 납품 OUTCAR 가 repo·gabia 어디에도 없다.
   세 기록이 어긋난다(요청문 2×2×1 · 생성기 3×4×1 · 비용도구 시나리오 2×3×1).
 
