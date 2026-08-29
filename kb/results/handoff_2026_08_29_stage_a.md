@@ -43,7 +43,13 @@ evidenceScope: multi-source-primary
 
 두 번들 다 **생성·검산 완료** (2026-08-29). 총 **50잡**.
 `sdcp_motifprobe_v2` 검산 실적: 잡 10 · `probe0` 3 · `probe1` 3 · `candidate_set = motif_probe (frozen motif_probe_decl) ['motif_probe']`.
-⚠ `sdcp_motifprobe_v1`(7잡·1자세)은 **폐기본**이다 — 던지지 말 것.
+⚠ **폐기본 — 던지지 말 것**
+  · `sdcp_motifprobe_v1` (7잡·1자세) — probe 가 하나뿐이라 앵커 원소 대비가 안 된다
+  · `sdcp_stageA_v3` (34잡) — c10 을 4→2자세로 줄여 본 판. **쓰지 않는다**:
+    아끼는 시간이 2.99→2.37일 = **약 15시간**뿐인데, 그 대가로 c10 의 C1
+    (UMA–DFT 오프셋 상수성)이 n=2 로 떨어져 **평가 불가**가 된다. C1 이
+    조각당 4자세를 요구하는 조건이라 c10 쪽 선택기 검증이 통째로 빠진다.
+    1저자 판단(2026-08-29): 반나절 아끼자고 마감조건 하나를 버리지 않는다.
 
 재생성이 필요하면:
 
