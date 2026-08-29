@@ -100,7 +100,10 @@ def r_se_min_for_ceiling(n_am: float, phi_se: float, volfrac: float,
 # =========================================================================
 # 헤더 파싱 — 두 형식
 # =========================================================================
-_RE_KIND = re.compile(r'^#\s*(lhs\d+_\d+):\s*(\S+)')
+#  ⚠ `re.M` 필수 — 이 헤더는 파일의 **둘째 줄**이다 (첫 줄은 `# ====` 구분선).
+#     MULTILINE 없이 `^` 를 쓰면 130 건이 **전부 조용히 unread 로 간다** (2026-08-29 실측).
+#     selftest `parse-*` 가 이 결함을 재현한다.
+_RE_KIND = re.compile(r'^#\s*(lhs\d+_\d+):\s*(\S+)', re.M)
 _RE_3T = re.compile(r'rP=([\d.eE+-]+)\s+rS=([\d.eE+-]+)\s+rSE=([\d.eE+-]+)')
 _RE_3P = re.compile(r'AM_P=([\d.]+)\s+AM_S=([\d.]+)\s+SE=([\d.]+)')
 _RE_2T = re.compile(r'rAM=([\d.eE+-]+)\s+rSE=([\d.eE+-]+)')
@@ -330,6 +333,56 @@ def selftest() -> int:
             abs(tot - N_MAX_PARTICLES) < 1.0, f'{tot:,.1f}')
     chk('AM 만으로 초과하면 inf', math.isinf(r_se_min_for_ceiling(200_000, 0.5, 0.3)))
 
+    # ③b ★ 헤더 파싱 — **실제 파일 모양 그대로** (구분선이 첫 줄, 헤더가 둘째 줄).
+    #     2026-08-29: `^` 에 re.M 을 안 붙여 130 건이 전부 조용히 unread 로 갔다.
+    #     이 검사가 그것을 재현한다 — 없었으면 ibb 에서야 드러났다 (실제로 그랬다).
+    import tempfile
+    _H3 = ('# ============================================================\n'
+           '# lhs00_000: bimodal (3-type) | LHS design\n'
+           '# rP=0.0055 rS=0.0005 rSE=0.001 | pdd AM_P=0.5100 AM_S=0.3400 SE=0.1500\n'
+           '# volfrac=0.222984 | E_se=0.135e7 (고정) | seed=10007\n'
+           '# ============================================================\n'
+           'atom_style      granular\n')
+    _H2 = ('# ============================================================\n'
+           '# lhs00_100: mono_AM_S (2-type) | LHS design\n'
+           '# rAM=0.0025 rSE=0.00075 | pdd AM=0.7000 SE=0.3000\n'
+           '# volfrac=0.317759 | E_se=0.135e7 (고정) | seed=10949\n'
+           '# ============================================================\n')
+    with tempfile.TemporaryDirectory() as td:
+        for case, body in (('lhs00_000', _H3), ('lhs00_100', _H2)):
+            d = os.path.join(td, case)
+            os.makedirs(d)
+            with open(os.path.join(d, f'input_{case}.liggghts'), 'w',
+                      encoding='utf-8') as fh:
+                fh.write(body)
+        rows, unread = parse_headers(td)
+        chk('parse-both: 두 형식 모두 읽힌다 (구분선이 첫 줄이어도)',
+            len(rows) == 2 and not unread, f'rows={len(rows)} unread={len(unread)}')
+        if len(rows) == 2:
+            r3 = next(r for r in rows if r['ntype'] == 3)
+            r2 = next(r for r in rows if r['ntype'] == 2)
+            chk('parse-3type: 반지름이 µm 로 환산된다',
+                (r3['rP_um'], r3['rS_um'], r3['rSE_um']) == (5.5, 0.5, 1.0),
+                str((r3['rP_um'], r3['rS_um'], r3['rSE_um'])))
+            chk('parse-3type: wt% 와 kind', r3['pdd_SE'] == 0.15
+                and r3['kind'] == 'bimodal', f"{r3['pdd_SE']} {r3['kind']}")
+            chk('parse-2type: rAM 이 rP 자리로', r2['rP_um'] == 2.5
+                and r2['rSE_um'] == 0.75 and r2['rS_um'] is None)
+            chk('parse-2type: kind 가 보존된다', r2['kind'] == 'mono_AM_S', r2['kind'])
+            chk('parse: phi_AM 이 붙는다 (0.15 wt% SE → 0.7025)',
+                abs(r3['phi_AM'] - 0.70248) < 1e-4, f"{r3['phi_AM']}")
+            box = derive_box(rows)
+            chk('derive_box: 두 종류를 따로 낸다', set(box) == {2, 3}, str(sorted(box)))
+    #  못 읽는 파일은 **반환**되어야 한다 (조용히 사라지면 안 된다)
+    with tempfile.TemporaryDirectory() as td:
+        d = os.path.join(td, 'lhs00_777')
+        os.makedirs(d)
+        with open(os.path.join(d, 'input_lhs00_777.liggghts'), 'w') as fh:
+            fh.write('# 형식이 다른 무언가\n')
+        rows, unread = parse_headers(td)
+        chk('parse: 못 읽은 파일은 조용히 버리지 않고 돌려준다',
+            not rows and len(unread) == 1, f'rows={len(rows)} unread={len(unread)}')
+
     # ④ LHS 성질 — 축마다 n 칸을 정확히 한 번씩
     import random
     rng = random.Random(7)
@@ -372,9 +425,21 @@ def main(argv=None):
     if not a.scan:
         ap.error('--scan 또는 --selftest 가 필요하다')
 
-    rows, unread = parse_headers(os.path.expanduser(a.scan))
+    root = os.path.expanduser(a.scan)
+    rows, unread = parse_headers(root)
     if not rows:
-        raise SystemExit(f'헤더를 하나도 못 읽었다: {a.scan}')
+        found = glob.glob(os.path.join(root, 'lhs*_*', 'input_lhs*_*.liggghts'))
+        msg = [f'헤더를 하나도 못 읽었다: {root}',
+               f'  glob 이 찾은 파일 {len(found)} 건 · 그 중 파싱 실패 {len(unread)} 건']
+        if found:
+            msg.append(f'  첫 파일: {found[0]}')
+            msg.append('  --- 앞 6 줄 ---')
+            msg += ['  ' + l for l in
+                    open(found[0], encoding='utf-8',
+                         errors='replace').read(600).splitlines()[:6]]
+        else:
+            msg.append(f'  ⇒ 경로에 lhs*_*/input_lhs*_*.liggghts 가 없다.  ls 로 확인할 것')
+        raise SystemExit('\n'.join(msg))
     print(f'읽은 케이스 {len(rows)} 건 (못 읽음 {len(unread)})\n')
     box = derive_box(rows)
     pts, notes = generate(box, a.seed)
