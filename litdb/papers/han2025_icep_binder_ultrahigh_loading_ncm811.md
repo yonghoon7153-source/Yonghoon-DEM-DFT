@@ -471,8 +471,10 @@ TM 40개 ÷ (5 × 4 = 20 사이트/층) = **TM 층 2겹**.
    **산화물 슬랩 버전**에 해당한다. 우리에겐 그게 없다 → `comparison_vs_ours.md` 에
    "우리가 만들어야 할 것" 으로 등록했다.
 
-> 문헌-대-문헌 비교(Kang 2025 의 Na⁺ 짝이온 방식 vs ICEP 의 H 이동 방식)와 우리 쪽 해석 전문은
-> **`comparison_vs_ours.md` §F-2** 와 `kb/syntheses/binder_adsorption_charge_state_2026_08_29.md` 로 보냈다.
+> 문헌-대-문헌 비교(**[Kang25]** `papers/kang2025_bollard_anchored_binder_dry_electrode.md` 의 **Na⁺ 짝이온** 방식
+> vs 이 논문의 **H 이동** 방식)와 우리 쪽 해석 전문은 **`comparison_vs_ours.md` 의 🧲 바인더 흡착 전하상태 note** 와
+> `kb/syntheses/binder_adsorption_charge_state_2026_08_29.md` 로 보냈다.
+> ⚠ [Kang25] 는 **DFT 가 아니라 PFP/Matlantis 범용 NNP** 다 — 두 논문의 값을 같은 축에 두지 말 것.
 
 ### 7.3 부수 접점
 
