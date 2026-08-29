@@ -1,0 +1,832 @@
+{
+ "slug": "kang2025_bollard_anchored_binder_dry_electrode",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-08-29",
+ "sources": [
+  "f5fb19c3-Advanced_Materials__2025__Kang__Bollard_Anchored_Binder_System_for_High_Loading_Cathodes_Fabricated_via_Dry_Electrode.pdf",
+  "26749347-adma202416872sup0001suppmat.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 3,
+   "file": "fig_1.png",
+   "caption": "Figure 1. Schematic images of each binder in the cathode electrode: a) PVdF binder from the wet process, b) PTFE binder from the dry process, and c) PC_PTFE binder from the dry process. The binding mechanisms of each binder to electrode materials: d) PVdF binder, e) PTFE binder, and f) PC_PTFE binder. The actual behavior of binders as observed through FE-SEM: g) PTFE binder, and h) PC_PTFE binder in cathode mixture; The PTFE and PC_PTFE binders are indicated with arrows within the yellow dashed boxes.",
+   "rotated_deg": 0,
+   "bbox": [
+    44.8,
+    70.8,
+    552.9,
+    414.7
+   ],
+   "w": 2118,
+   "h": 1435,
+   "dpi": 300,
+   "src": "f5fb19c3-Advanced_Materials__2025__Kang__Bollard_Anchored_Binder_System_for_High_Loading_Cathodes_Fabricated_via_Dry_Electrode.pdf",
+   "blank": 0.464
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 4,
+   "file": "fig_2.png",
+   "caption": "Figure 2. The capacity deviation was measured at varying C-rates (0.1 C, 1/3 C, 1 C, and 2 C) for a-c) the PVdF-based wet process and d–f) the PTFE-based solvent-free process loading amount from 15 to 30 mg cm−2 (mixing was performed three times using a ball mill mixer). Capacity deviation at a 30 mg cm−2 under diﬀerent mixing processes for g) PVdF-based wet process, h) the PTFE-based solvent-free process with one-time mixing using a planetary mixer, and i) the PTFE-based solvent-free process with three-time mixing using a ball mill mixer. to the carbon main chain.[40–42] This structure lacks the ability to form intermolecular hydrogen bonds, which results in re- duced ionic conductivity and particle adhesion. Therefore, the additional binder should be compatible with the existing com- ponents, which also exhibit high ionic and electrical conduc- tivity, mechanical stability, and strong ",
+   "rotated_deg": 0,
+   "bbox": [
+    42.0,
+    72.0,
+    550.1,
+    459.7
+   ],
+   "w": 2118,
+   "h": 1616,
+   "dpi": 300,
+   "src": "f5fb19c3-Advanced_Materials__2025__Kang__Bollard_Anchored_Binder_System_for_High_Loading_Cathodes_Fabricated_via_Dry_Electrode.pdf",
+   "blank": 0.932
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 8,
+   "file": "fig_4.png",
+   "caption": "Figure 4. a) FTIR spectra of binder powders (PAA, CMC, and PC). b) schematic of the PC formation (carbon: dark brown, hydrogen: pale pink, oxygen: red, sodium: yellow). c) Adsorption energy of PC monomers and PTFE dimers on the NMC surface (carbon: dark brown, hydrogen: pale pink, oxygen: red, sodium: yellow, ﬂuorine: blue, nickel: gray, manganese: pink); d) PTFE, and e) PC_2Na with PTFE on the NMC surface after running MD simulations at 400 K for 10 ps. The same length of the PTFE binder was used in both calculations (carbon: dark brown, hydrogen: pale pink, oxygen: red, sodium: yellow, NMC surface: light gray). f) Average change in distance of the PTFE binder with and without PC on the NMC surface. For distance calculation, the C and F atoms in dark brown and blue from (d) and (e) were only considered.",
+   "rotated_deg": 0,
+   "bbox": [
+    42.0,
+    60.4,
+    550.1,
+    493.7
+   ],
+   "w": 2118,
+   "h": 1807,
+   "dpi": 300,
+   "src": "f5fb19c3-Advanced_Materials__2025__Kang__Bollard_Anchored_Binder_System_for_High_Loading_Cathodes_Fabricated_via_Dry_Electrode.pdf",
+   "blank": 0.857
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 10,
+   "file": "fig_5.png",
+   "caption": "Figure 5. Galvanostatic charge/discharge proﬁles of diﬀerent binders between 2.5 and 4.25 V at a) 0.1 C and b) 2 C. c) Rate capability at rates ranging from 0.1 C to 2 C for a 30 mg cm−2 electrode. d) Cycle performance of each binder at 1/3 C for a 25 mg cm−2. e) Nyquist plot and corresponding ﬁtted lines for the PTFE and PC_PTFE electrodes after 10 cycles and 100 cycles. f) Changes in the interfacial resistances of PC_PTFE and PTFE during cycling. g) Galvanostatic charge/discharge proﬁles of ultra-high loading (90 mg cm−2) at 0.1 C. h) Cycle performance of 90 mg cm−2 at 0.1 C. i) Performance of the areal density and energy density of this study and previous studies on the DBE cathode half-cell at 1 C.",
+   "rotated_deg": 0,
+   "bbox": [
+    42.0,
+    252.7,
+    550.1,
+    452.7
+   ],
+   "w": 2118,
+   "h": 834,
+   "dpi": 300,
+   "src": "f5fb19c3-Advanced_Materials__2025__Kang__Bollard_Anchored_Binder_System_for_High_Loading_Cathodes_Fabricated_via_Dry_Electrode.pdf",
+   "blank": 0.87
+  },
+  {
+   "key": "fS2",
+   "kind": "figure",
+   "label": "S2",
+   "page": 13,
+   "file": "fig_S2.png",
+   "caption": "Figure S2. Capacity deviation at a 30 mg cm-2 loading amount for the PTFE-based solvent-free process using ball-mill mixing once.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    30.0,
+    546.0,
+    349.0
+   ],
+   "w": 2000,
+   "h": 1330,
+   "dpi": 300,
+   "src": "26749347-adma202416872sup0001suppmat.pdf",
+   "blank": 0.962
+  },
+  {
+   "key": "fS3",
+   "kind": "figure",
+   "label": "S3",
+   "page": 14,
+   "file": "fig_S3.png",
+   "caption": "Figure S3. EIS spectra of PVdF (light blue), CMC (light green), PAA-CMC (pink), PAA (orange), and PTFE (purple) binder films.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    30.0,
+    546.0,
+    224.0
+   ],
+   "w": 2000,
+   "h": 809,
+   "dpi": 300,
+   "src": "26749347-adma202416872sup0001suppmat.pdf",
+   "blank": 0.926
+  },
+  {
+   "key": "fS4",
+   "kind": "figure",
+   "label": "S4",
+   "page": 15,
+   "file": "fig_S4.png",
+   "caption": "Figure S4. To evaluate resistivity and electrical conductivity, cathodes were fabricated using a PVdF binder in a conventional wet process with the same thickness (100 μm) as the electrodes made using a binder additive in the dry process. Wet processed electrode of (a) resistivity and (b) electrical conductivity. The cathode with a PVdF binder in a conventional wet process exhibits non-uniform resistivity and low electrical conductivity compared to the cathode fabricated using the dry process.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    30.0,
+    546.7,
+    340.3
+   ],
+   "w": 2003,
+   "h": 1293,
+   "dpi": 300,
+   "src": "26749347-adma202416872sup0001suppmat.pdf",
+   "blank": 0.97
+  },
+  {
+   "key": "fS5",
+   "kind": "figure",
+   "label": "S5",
+   "page": 16,
+   "file": "fig_S5.png",
+   "caption": "Figure S5. Images of (a) PTFE, PAA-CMC, PAA, CMC, and PVdF binder films immersed in 1 M LiPF6 electrolyte before swelling; (b) the same films after 120 h of swelling.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    30.0,
+    546.0,
+    184.9
+   ],
+   "w": 2000,
+   "h": 646,
+   "dpi": 300,
+   "src": "26749347-adma202416872sup0001suppmat.pdf",
+   "blank": 0.443
+  },
+  {
+   "key": "fS6",
+   "kind": "figure",
+   "label": "S6",
+   "page": 17,
+   "file": "fig_S6.png",
+   "caption": "Figure S6. The adhesion force of the (a) PC_PTFE and (b) PTFE based electrodes with the current collector measured by applying a constant displacement rate (6 mm min-1).",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    30.0,
+    546.0,
+    257.1
+   ],
+   "w": 2000,
+   "h": 947,
+   "dpi": 300,
+   "src": "26749347-adma202416872sup0001suppmat.pdf",
+   "blank": 0.911
+  },
+  {
+   "key": "fS7",
+   "kind": "figure",
+   "label": "S7",
+   "page": 18,
+   "file": "fig_S7.png",
+   "caption": "Figure S7. Rate performance for various binder additives. (a) PC_PTFE; (b) PTFE; (c) PAA_PTFE; (d) CMC_PTFE; (e) PVdF_PTFE from 0.1 C to 2 C.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    30.0,
+    546.0,
+    342.1
+   ],
+   "w": 2000,
+   "h": 1301,
+   "dpi": 300,
+   "src": "26749347-adma202416872sup0001suppmat.pdf",
+   "blank": 0.902
+  },
+  {
+   "key": "fS8",
+   "kind": "figure",
+   "label": "S8",
+   "page": 19,
+   "file": "fig_S8.png",
+   "caption": "Figure S8. The FTIR spectra of binder powders with varying PAA:CMC weight ratios—9:1, 8:2, 7:3, 6:4, 5:5, 4:6, and 3:7. These ratios were denoted as PC91 (light blue), PC82 (light green), PC73 (violet), PC64 (orange), PC55(pink), PC46(navy), and PC37(gray).",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    30.0,
+    548.5,
+    370.6
+   ],
+   "w": 2011,
+   "h": 1420,
+   "dpi": 300,
+   "src": "26749347-adma202416872sup0001suppmat.pdf",
+   "blank": 0.935
+  },
+  {
+   "key": "fS9",
+   "kind": "figure",
+   "label": "S9",
+   "page": 20,
+   "file": "fig_S9.png",
+   "caption": "Figure S9. Capacity retention based on the PAA:CMC binder ratio.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    30.0,
+    549.3,
+    349.1
+   ],
+   "w": 2014,
+   "h": 1330,
+   "dpi": 300,
+   "src": "26749347-adma202416872sup0001suppmat.pdf",
+   "blank": 0.953
+  },
+  {
+   "key": "fS10",
+   "kind": "figure",
+   "label": "S10",
+   "page": 21,
+   "file": "fig_S10.png",
+   "caption": "Figure S10. Image of the cathode using the PC_PTFE91 binder; The electrode was cracked and the fabrication of a dough-type cathode was challenging when the PTFE weight ratio was reduced.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    30.0,
+    546.0,
+    296.5
+   ],
+   "w": 2000,
+   "h": 1111,
+   "dpi": 300,
+   "src": "26749347-adma202416872sup0001suppmat.pdf",
+   "blank": 0.596
+  },
+  {
+   "key": "fS11",
+   "kind": "figure",
+   "label": "S11",
+   "page": 22,
+   "file": "fig_S11.png",
+   "caption": "Figure S11. XPS C 1s spectra for PC.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    147.1,
+    434.3,
+    363.2
+   ],
+   "w": 1535,
+   "h": 902,
+   "dpi": 300,
+   "src": "26749347-adma202416872sup0001suppmat.pdf",
+   "blank": 0.851
+  },
+  {
+   "key": "fS12",
+   "kind": "figure",
+   "label": "S12",
+   "page": 23,
+   "file": "fig_S12.png",
+   "caption": "Figure S12. XRD pattern of PC, CMC, and PAA.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    111.8,
+    441.2,
+    331.3
+   ],
+   "w": 1564,
+   "h": 916,
+   "dpi": 300,
+   "src": "26749347-adma202416872sup0001suppmat.pdf",
+   "blank": 0.933
+  },
+  {
+   "key": "fS13",
+   "kind": "figure",
+   "label": "S13",
+   "page": 24,
+   "file": "fig_S13.png",
+   "caption": "Figure S13. DFT calculated FTIR spectra of binders. The spectra of PAA dimer, CMC monomer, and PC are shown in red, violet, and orange. The frequency values are scaled by a scale factor of 0.945.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    30.0,
+    548.1,
+    408.6
+   ],
+   "w": 2009,
+   "h": 1578,
+   "dpi": 300,
+   "src": "26749347-adma202416872sup0001suppmat.pdf",
+   "blank": 0.947
+  },
+  {
+   "key": "fS14",
+   "kind": "figure",
+   "label": "S14",
+   "page": 25,
+   "file": "fig_S14.png",
+   "caption": "Figure S14. FE-SEM images and EDS mapping of (a) NMC 622 particle, (b) NMC 622 particle with PC binder after ball milling.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    30.0,
+    546.0,
+    404.6
+   ],
+   "w": 2000,
+   "h": 1561,
+   "dpi": 300,
+   "src": "26749347-adma202416872sup0001suppmat.pdf",
+   "blank": 0.228
+  },
+  {
+   "key": "fS15",
+   "kind": "figure",
+   "label": "S15",
+   "page": 26,
+   "file": "fig_S15.png",
+   "caption": "Figure S15. Optimized structures and corresponding adsorption energies; 14 different stabilized structural configurations and corresponding adsorption energies of (a) PC_2Na, (b) PC_1Na, and (c) PC_0Na. (carbon: dark brown, hydrogen: pale pink, oxygen: red, sodium: yellow, nickel: gray, manganese: pink)",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    30.0,
+    547.0,
+    508.9
+   ],
+   "w": 2005,
+   "h": 1996,
+   "dpi": 300,
+   "src": "26749347-adma202416872sup0001suppmat.pdf",
+   "blank": 0.904
+  },
+  {
+   "key": "fS16",
+   "kind": "figure",
+   "label": "S16",
+   "page": 27,
+   "file": "fig_S16.png",
+   "caption": "Figure S16. Snapshot images before and after MD simulations. The initial images of (a) PTFE, (b) PC_2Na with PTFE, and (c) PC_1Na with PTFE on the NMC surface before MD simulations. (d) The last image of PC_1Na with PTFE on the NMC surface after MD simulations at 400 K for 10 ps (carbon: dark brown, hydrogen: pale pink, oxygen: red, sodium: yellow, NMC surface: light gray). Red arrow shows the strong adhesion between free Na and F atoms. The C and F atoms in dark brown and blue, respectively, are only considered for the average distance calculation (Figure 4f).",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    30.0,
+    547.9,
+    468.6
+   ],
+   "w": 2009,
+   "h": 1828,
+   "dpi": 300,
+   "src": "26749347-adma202416872sup0001suppmat.pdf",
+   "blank": 0.687
+  },
+  {
+   "key": "fS17",
+   "kind": "figure",
+   "label": "S17",
+   "page": 28,
+   "file": "fig_S17.png",
+   "caption": "Figure S17. XPS spectra of binder film; F 1s and Na 1s of (a) PTFE; (c) PC; (b, d) PC_PTFE 73.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    30.0,
+    548.9,
+    207.0
+   ],
+   "w": 2012,
+   "h": 738,
+   "dpi": 300,
+   "src": "26749347-adma202416872sup0001suppmat.pdf",
+   "blank": 0.866
+  },
+  {
+   "key": "fS18",
+   "kind": "figure",
+   "label": "S18",
+   "page": 29,
+   "file": "fig_S18.png",
+   "caption": "Figure S18. Cross-sectional SEM and EDS elemental mapping images of F (cyan) in binder, and Al (green) current collector for (a) PVdF, (b) PTFE, and (c) PC_PTFE73 based cathodes. (a) is reproduced from Kang et al.[21] (Our previous data) with permission from Elsevier B.V, Copyright 2023.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    30.0,
+    546.9,
+    485.6
+   ],
+   "w": 2004,
+   "h": 1899,
+   "dpi": 300,
+   "src": "26749347-adma202416872sup0001suppmat.pdf",
+   "blank": 0.379
+  },
+  {
+   "key": "fS19",
+   "kind": "figure",
+   "label": "S19",
+   "page": 30,
+   "file": "fig_S19.png",
+   "caption": "Figure S19. Image of the cathode using the PVdF binder; (a) Mechanical cracks occurred on the high loading PVdF-based wet cathode (154 μm, loading amount over 30 mg cm-2), (b) Conventional PVdF-based wet cathode (50 μm, 15 mg cm-2).",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    30.0,
+    546.0,
+    356.5
+   ],
+   "w": 2000,
+   "h": 1361,
+   "dpi": 300,
+   "src": "26749347-adma202416872sup0001suppmat.pdf",
+   "blank": 0.338
+  },
+  {
+   "key": "fS20",
+   "kind": "figure",
+   "label": "S20",
+   "page": 31,
+   "file": "fig_S20.png",
+   "caption": "Figure S20. NMC 622 cathode structures were reconstructed using 3D X-ray Tomography Microscope Systems (XRM). (a-c) The following components of the PC_PTFE73 cathode: (a) NMC, (b) conductive carbon and binder components, and (c) the complete dry cathode. (d-f) The following components of the PVdF-based wet cathode: (d) NMC, (e) conductive carbon and binder components, and (f) the complete wet cathode.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    30.0,
+    547.5,
+    343.7
+   ],
+   "w": 2007,
+   "h": 1307,
+   "dpi": 300,
+   "src": "26749347-adma202416872sup0001suppmat.pdf",
+   "blank": 0.541
+  },
+  {
+   "key": "fS21",
+   "kind": "figure",
+   "label": "S21",
+   "page": 32,
+   "file": "fig_S21.png",
+   "caption": "Figure S21. FE-SEM image of NMC 622 cathode after 100 cycles of (a) PC_PTFE73, (b) PTFE; white circles indicate secondary NMC particles fractured into smaller parts.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    30.0,
+    548.6,
+    252.9
+   ],
+   "w": 2011,
+   "h": 929,
+   "dpi": 300,
+   "src": "26749347-adma202416872sup0001suppmat.pdf",
+   "blank": 0.274
+  },
+  {
+   "key": "fS22",
+   "kind": "figure",
+   "label": "S22",
+   "page": 33,
+   "file": "fig_S22.png",
+   "caption": "Figure S22. XRD spectra of NMC 622 cathode before and after 100 cycles.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    30.0,
+    546.0,
+    298.1
+   ],
+   "w": 2000,
+   "h": 1118,
+   "dpi": 300,
+   "src": "26749347-adma202416872sup0001suppmat.pdf",
+   "blank": 0.938
+  },
+  {
+   "key": "fS23",
+   "kind": "figure",
+   "label": "S23",
+   "page": 34,
+   "file": "fig_S23.png",
+   "caption": "Figure S23. (a) Cyclic voltammetry (CV) and (b) linear sweep voltammetry (LSV) curves of PC_PTFE73 film in 1 M LiPF6 in EC/DMC electrolyte.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    147.8,
+    555.1,
+    258.6
+   ],
+   "w": 2038,
+   "h": 463,
+   "dpi": 300,
+   "src": "26749347-adma202416872sup0001suppmat.pdf",
+   "blank": 0.926
+  },
+  {
+   "key": "fS24",
+   "kind": "figure",
+   "label": "S24",
+   "page": 35,
+   "file": "fig_S24.png",
+   "caption": "Figure S24. Impedance spectra of the PTFE and PC_PTFE73 cells with enlarged medium- frequency regions after 10 and 100 cycles.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    191.9,
+    514.5,
+    348.6
+   ],
+   "w": 1869,
+   "h": 654,
+   "dpi": 300,
+   "src": "26749347-adma202416872sup0001suppmat.pdf",
+   "blank": 0.898
+  },
+  {
+   "key": "fS25",
+   "kind": "figure",
+   "label": "S25",
+   "page": 36,
+   "file": "fig_S25.png",
+   "caption": "Figure S25. Li-ion diffusion coefficient (DLi+) of each cathode; The relationship between the Z’(Ω) and Warburg impedance after 10 cycles.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    30.0,
+    546.0,
+    355.5
+   ],
+   "w": 2000,
+   "h": 1357,
+   "dpi": 300,
+   "src": "26749347-adma202416872sup0001suppmat.pdf",
+   "blank": 0.949
+  },
+  {
+   "key": "fS26",
+   "kind": "figure",
+   "label": "S26",
+   "page": 37,
+   "file": "fig_S26.png",
+   "caption": "Figure S26. Cycle stability test of NMC 622@PC_PTFE73 under a mass loading of >25 mg cm- 2 at 1/3 C.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    30.0,
+    546.0,
+    347.1
+   ],
+   "w": 2000,
+   "h": 1322,
+   "dpi": 300,
+   "src": "26749347-adma202416872sup0001suppmat.pdf",
+   "blank": 0.881
+  },
+  {
+   "key": "fS27",
+   "kind": "figure",
+   "label": "S27",
+   "page": 38,
+   "file": "fig_S27.png",
+   "caption": "Figure S27. Charge/discharge curves of NMC 622@PC_PTFE73 with varying loading amounts. (a) 35 mg cm-2, (b) 40 mg cm-2, and (c) 45 mg cm-2; (d) Rate capabilities with varying loading amounts at various C-rates (0.1 C, 1/3 C, and 1 C)",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    30.0,
+    546.1,
+    424.5
+   ],
+   "w": 2001,
+   "h": 1644,
+   "dpi": 300,
+   "src": "26749347-adma202416872sup0001suppmat.pdf",
+   "blank": 0.898
+  },
+  {
+   "key": "fS28",
+   "kind": "figure",
+   "label": "S28",
+   "page": 39,
+   "file": "fig_S28.png",
+   "caption": "Figure S28. XPS spectra of the cycled NMC 622 cathode; C 1s, O 1s, and F 1s XPS spectra of NMC 622 cathodes after 100 cycles at 1 C between 2.5 and 4.25 V: (a–c) PC_PTFE73 cathode; (d–f) PTFE cathode.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    30.0,
+    557.3,
+    383.3
+   ],
+   "w": 2048,
+   "h": 1473,
+   "dpi": 300,
+   "src": "26749347-adma202416872sup0001suppmat.pdf",
+   "blank": 0.842
+  },
+  {
+   "key": "fS32",
+   "kind": "figure",
+   "label": "S32",
+   "page": 43,
+   "file": "fig_S32.png",
+   "caption": "Figure S32. Performance analysis of a Graphite@PTFE half cell. (a) Charge/discharge curves of a Graphite@PTFE half cell at various C-rates (0.1 C, 1/3 C, 1 C, and 2 C). (b) Rate capabilities of a Graphite@PTFE half cell.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    30.0,
+    546.0,
+    263.2
+   ],
+   "w": 2000,
+   "h": 972,
+   "dpi": 300,
+   "src": "26749347-adma202416872sup0001suppmat.pdf",
+   "blank": 0.923
+  },
+  {
+   "key": "fS33",
+   "kind": "figure",
+   "label": "S33",
+   "page": 44,
+   "file": "fig_S33.png",
+   "caption": "Figure S33. Performance analysis of NMC 622@PC_PTFE73//Graphite@PTFE full cells; (a) Charge/discharge curves of NMC 622@PC_PTFE73//Graphite@PTFE full cells at various C- rates (1/3 C, 1 C, and 2 C). (b) Rate capabilities of full cells.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    30.0,
+    546.0,
+    258.7
+   ],
+   "w": 2000,
+   "h": 954,
+   "dpi": 300,
+   "src": "26749347-adma202416872sup0001suppmat.pdf",
+   "blank": 0.911
+  },
+  {
+   "key": "fS34",
+   "kind": "figure",
+   "label": "S34",
+   "page": 45,
+   "file": "fig_S34.png",
+   "caption": "Figure S34. Cycle performance and coulombic efficiency of NMC 622@PC_PTFE73//Graphite@PTFE full cells cycled at 0.5 C.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    96.6,
+    440.8,
+    319.2
+   ],
+   "w": 1562,
+   "h": 928,
+   "dpi": 300,
+   "src": "26749347-adma202416872sup0001suppmat.pdf",
+   "blank": 0.902
+  },
+  {
+   "key": "fS35",
+   "kind": "figure",
+   "label": "S35",
+   "page": 46,
+   "file": "fig_S35.png",
+   "caption": "Figure S35. Cycle performance and coulombic efficiency of NMC 622@PC_PTFE73//Graphite@CMC full cells cycled at 0.2 C.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    86.4,
+    501.7,
+    242.9
+   ],
+   "w": 1816,
+   "h": 653,
+   "dpi": 300,
+   "src": "26749347-adma202416872sup0001suppmat.pdf",
+   "blank": 0.896
+  },
+  {
+   "key": "fS37",
+   "kind": "figure",
+   "label": "S37",
+   "page": 48,
+   "file": "fig_S37.png",
+   "caption": "Figure S37. Images of the cathode using PC_PTFE73; A 10 cm × 8 cm freestanding and flexible NMC 622 dry electrode before and after it was folded and lifted using tweezers.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    30.0,
+    546.4,
+    173.2
+   ],
+   "w": 2002,
+   "h": 597,
+   "dpi": 300,
+   "src": "26749347-adma202416872sup0001suppmat.pdf",
+   "blank": 0.358
+  },
+  {
+   "key": "fS38",
+   "kind": "figure",
+   "label": "S38",
+   "page": 49,
+   "file": "fig_S38.png",
+   "caption": "Figure S38. Images of a large-scale cathode sheet using PC_PTFE73; A 21 cm (width) × 12 cm (length) freestanding and flexible NMC 622@PC_PTFE73 dry electrode sheet.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    30.0,
+    546.0,
+    342.9
+   ],
+   "w": 2000,
+   "h": 1304,
+   "dpi": 300,
+   "src": "26749347-adma202416872sup0001suppmat.pdf",
+   "blank": 0.374
+  },
+  {
+   "key": "tS1",
+   "kind": "table",
+   "label": "S1",
+   "page": 50,
+   "file": "tab_S1.png",
+   "caption": "Table S1. Electrochemical performance of the NMC 622 cathode with the PC_PTFE73 binder (this work) and the performance of the cathode based on previously reported DBE processes.",
+   "rotated_deg": 0,
+   "bbox": [
+    67.0,
+    88.1,
+    729.2,
+    528.1
+   ],
+   "w": 2760,
+   "h": 1834,
+   "dpi": 300,
+   "src": "26749347-adma202416872sup0001suppmat.pdf",
+   "blank": 0.882
+  },
+  {
+   "key": "tS2",
+   "kind": "table",
+   "label": "S2",
+   "page": 51,
+   "file": "tab_S2.png",
+   "caption": "Table S2. Electrochemical performance of the NMC 622 cathode with the PC_PTFE73 binder (this work) and the performance of previously reported high-loading cathodes with the conventional wet process.",
+   "rotated_deg": 0,
+   "bbox": [
+    67.0,
+    67.5,
+    729.2,
+    367.3
+   ],
+   "w": 2760,
+   "h": 1250,
+   "dpi": 300,
+   "src": "26749347-adma202416872sup0001suppmat.pdf",
+   "blank": 0.9
+  },
+  {
+   "key": "tS3",
+   "kind": "table",
+   "label": "S3",
+   "page": 52,
+   "file": "tab_S3.png",
+   "caption": "Table S3. The Porosity of each NMC622 cathode The porosities of the electrodes (ε) were determined using the following equation.[42] + 𝑤𝑠𝑢𝑝𝑒𝑟 𝑃 ε = 1 − 𝑚𝑎𝑟𝑒𝑎𝑙 𝐿 (𝑤𝑁𝐶𝑀 + 𝑤𝑃𝐶_𝑃𝑇𝐹𝐸73 𝑜𝑟 𝑃𝑇𝐹𝐸𝑜𝑟 𝑃𝑉𝑑𝐹 ) 𝜌𝑁𝐶𝑀 𝜌𝑠𝑢𝑝𝑒𝑟 𝑃 𝜌𝑃𝐶_𝑃𝑇𝐹𝐸73 𝑜𝑟 𝑃𝑇𝐹𝐸𝑜𝑟 𝑃𝑉𝑑𝐹 For this equation, the tap densities for NMC, Super P, PC_PTFE73, PTFE, and PVdF were 4.86, 1.60, 1.17, 0.52, and 0.45 g cm-3, respectively. The weight fractions and densities of each component were assumed to have remained constant throughout the electrode fabrication process. Loading amount Thickness PC_PTFE73 Cathode Porosity PTFE Cathode PVdF Cathode Density (g cm-3) (g cm-2) (cm) Porosity (%) Porosity (%) (%) 0.015 0.0050 25.90 19.47 17.68 3.00 0.020 0.0066 25.15 18.66 16.84 3.03 0.025 0.0083 25.60 19.15 17.35 3.01 0.030 0.0100 25.90 19.47 Not Available 3.00 0.035 0.0116 25.48 - Not Available 3.02 0.040 0.0133 25.72 - Not Available 3.01 0.045 0.0150 ",
+   "rotated_deg": 0,
+   "bbox": [
+    67.0,
+    67.5,
+    528.2,
+    391.8
+   ],
+   "w": 1922,
+   "h": 1352,
+   "dpi": 300,
+   "src": "26749347-adma202416872sup0001suppmat.pdf",
+   "blank": 0.902
+  },
+  {
+   "key": "tS4",
+   "kind": "table",
+   "label": "S4",
+   "page": 53,
+   "file": "tab_S4.png",
+   "caption": "Table S4. Details of the coin cell components used in this study.",
+   "rotated_deg": 0,
+   "bbox": [
+    63.8,
+    67.5,
+    531.6,
+    465.9
+   ],
+   "w": 1950,
+   "h": 1661,
+   "dpi": 300,
+   "src": "26749347-adma202416872sup0001suppmat.pdf",
+   "blank": 0.914
+  }
+ ]
+}

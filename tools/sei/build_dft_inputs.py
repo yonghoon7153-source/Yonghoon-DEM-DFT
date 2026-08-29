@@ -262,6 +262,17 @@ def main():
             bad = [e for e, v in zs.items() if v is None]
             print(f"\n⏭  {tag} — UPF 에서 z_valence 를 못 읽었다: {','.join(bad)}")
             skipped.append(tag); continue
+        # ⛔⛔ 2026-08-29 — **원자가에 없는 껍질에 U 를 걸고 있었다.**
+        #   PP_PIN 이 Nd 를 frozen-4f (`Nd.pbe-spdn…`, z_valence ≈ 11, 4f 가 core)로 고정하는데
+        #   `--nd_u` 기본값 6.0 이 그대로 `HUBBARD U Nd-4f` 를 찍었다. 4f 가 원자가에 없으므로
+        #   그 U 는 걸 대상이 없다 — QE 가 죽거나(원자궤도 없음) 조용히 무시한다.
+        #   nd_frozen4f.py 의 판별 기준을 그대로 쓴다: z ≈ 14 = 4f 원자가 · z ≈ 11 = frozen.
+        if has_nd and a.nd_u > 0 and zs.get("Nd") is not None and zs["Nd"] < 12.0:
+            sys.exit(
+                f"⛔ {tag}: Nd PP 가 frozen-4f 다 (z_valence {zs['Nd']:.1f} < 12, "
+                f"{pool['Nd']}) — 4f 가 core 에 있어 `HUBBARD U Nd-4f {a.nd_u}` 는 걸 대상이 없다.\n"
+                "   frozen-4f 로 갈 거면 `--nd_u 0 --no_nd_spin`, 4f 를 원자가에 둘 거면 "
+                "z≈14 PP 로 바꿔라. 어느 쪽이든 **비교 대상(cc333/NEB)과 같은 선택**이어야 한다.")
         nelec = sum(zs[e] for e in at.get_chemical_symbols())
         # Nd 계는 스핀분극 + U 로 간다 (아래 --nd_spin 주석). n_nd 는 tot_magnetization 용.
         n_nd = at.get_chemical_symbols().count("Nd")
