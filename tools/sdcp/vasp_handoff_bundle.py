@@ -876,8 +876,19 @@ def _emit_slab_job(jd: Path, atoms, nslab: int, freeze: float, frag: str,
     return meta
 
 
-def _emit_mol_job(jd: Path, frag: str, mol, margin: float) -> Dict[str, Any]:
-    """기체상 기준계 v3 — 상자 span+margin, IDIPOL=4+DIPOL(COM), NUPDOWN, 2상."""
+def _emit_mol_job(jd: Path, frag: str, mol, margin: float,
+                  free_spin: bool = False) -> Dict[str, Any]:
+    """기체상 기준계 v3 — 상자 span+margin, IDIPOL=4+DIPOL(COM), NUPDOWN, 2상.
+
+    `free_spin=True` → `NUPDOWN = -1` (자유 스핀).
+      ⛔⛔ 2026-08-28 회신 O/P P0 — **기준과 복합체가 다른 저울로 쟀다.** 기준 분자는
+      `NUPDOWN` 고정(중성 = 0)으로, 복합체·슬랩은 `NUPDOWN=-1` 자유로 돌았다.
+      그 둘을 뺀 것이 `E_ads` 이고, 그래서 0.346 eV headline 이 보류됐다.
+      고칠 것은 "전 계에 같은 값" 이 아니라 **같은 state-selection policy** 다 —
+      복합체가 자유였으므로 기준도 자유여야 한다.
+      ⚠ 이 플래그는 **중성(닫힌 껍질) 기준계를 위한 것**이다. open-shell 조각은
+      `NUPDOWN=1` 로 doublet 을 못박는 것이 선언된 상태이므로 건드리지 않는다.
+    """
     from ase import Atoms
     jd.mkdir(parents=True, exist_ok=True)
     p = mol.get_positions()
@@ -916,7 +927,7 @@ def _emit_mol_job(jd: Path, frag: str, mol, margin: float) -> Dict[str, Any]:
     com = _com_frac(at)                     # ⚠ centroid 가 아니라 질량중심 (VASP DIPOL 권고)
     fmt = {"system": f"gas {frag} box+{margin:.0f}", "common": _COMMON,
            "com0": float(com[0]), "com1": float(com[1]), "com2": float(com[2]),
-           "nupdown": 1 if open_shell else 0,
+           "nupdown": 1 if open_shell else (-1 if free_spin else 0),
            "magmom": " ".join(f"{mags[i]:.3f}" for i in idx)}
     kmesh, incar_exp = {}, {}
     for ph, tpl in (("relax", MOL_RELAX), ("static", MOL_STATIC)):
@@ -4080,7 +4091,8 @@ def build_bundle(a, ledger: Optional[Dict[str, Any]] = None) -> Path:
         used_els |= set(mol.get_chemical_symbols())
         for margin, tag in ((20.0, "box20"), (24.0, "box24")):
             rel = f"refs/mol__{frag}__{tag}"
-            m = _emit_mol_job(out / rel, frag, mol, margin)
+            m = _emit_mol_job(out / rel, frag, mol, margin,
+                              free_spin=getattr(a, "free_spin_refs", False))
             plan(rel, m["phases"], True)
             man["refs"][f"mol__{frag}__{tag}"] = rel
             n_jobs += 1
@@ -5563,6 +5575,10 @@ def main():
     ap.add_argument("--no_cross", action="store_true",
                     help="교차 끝점을 아예 안 만든다. ⚠ 챔피언 자세키가 다른 조각의 ΔE 는 "
                          "자리 효과와 배향 효과가 섞인 값이 되고 분리할 방법이 없어진다.")
+    ap.add_argument("--free_spin_refs", action="store_true",
+                    help="기체 기준계를 **NUPDOWN=-1(자유 스핀)** 으로 만든다. 복합체가 자유로 "
+                         "돌았으므로 기준도 자유여야 한다 (회신 O/P P0 — 0.346 eV headline "
+                         "보류 해제 1단계). open-shell 조각은 doublet 선언을 유지한다")
     ap.add_argument("--refs", action="store_true",
                     help="clean 슬랩 + 기체 분자 기준계를 포함한다 (절대 E_ads 용). "
                          "기본은 **미포함** — 자리 대비 ΔE 에서는 정확히 소거되므로 "
