@@ -6455,7 +6455,7 @@ STALE_OUTPUT_NAMES = ("OUTCAR", "vasprun.xml", "CONTCAR", "WAVECAR", "CHGCAR",
                       "OSZICAR", "XDATCAR")
 
 
-def verify_bundle(root, expect_jobs=None) -> int:
+def verify_bundle(root, expect_jobs=None, check_sibling_zip=True) -> int:
     """번들을 **제출 전에** 검사한다 — 생성 시점의 바이트 그대로인가.
 
     분석기(analyze_results.py)의 무결성 검사와 목적이 다르다: 저쪽은 **회수 후**
@@ -6588,9 +6588,11 @@ def verify_bundle(root, expect_jobs=None) -> int:
     # ⑧ 옆 zip — 실제로 나가는 물건이 이것이다
     zp = root.with_suffix(".zip")
     zinfo = ""
-    if not zp.is_file():
+    if not check_sibling_zip:
+        zp = None                       # --verify_zip 경로 — 이미 ZIP 을 직접 봤다
+    elif not zp.is_file():
         warn.append(f"zip 없음 ({zp.name}) — 폴더로 직접 전달할 때만 정상")
-    else:
+    if zp is not None and zp.is_file():
         try:
             with zipfile.ZipFile(zp) as z:
                 members = {n for n in z.namelist() if not n.endswith("/")}
@@ -6656,6 +6658,158 @@ def verify_bundle(root, expect_jobs=None) -> int:
         print(f"  ⛔ {b}")
     print("  " + ("✅ 제출 가능" if not bad else f"❌ 제출 차단 — {len(bad)}건"))
     return 0 if not bad else 1
+
+
+def _zip_entry_hazards(zf, root_name):
+    """ZIP 엔트리 자체의 위험 (회신 AA Q6). 풀기 **전에** 본다.
+
+    폴더를 먼저 풀고 검사하면 이 중 몇은 이미 밖에 파일을 쓴 뒤다.
+    """
+    bad = []
+    names = zf.namelist()
+    seen = {}
+    for n in names:
+        if n.endswith("/"):
+            continue
+        if n.startswith("/") or ".." in Path(n).parts:
+            bad.append(f"경로 탈출 엔트리: {n}")
+        if not n.startswith(root_name + "/"):
+            bad.append(f"최상위가 {root_name}/ 이 아님: {n}")
+        k = n.lower()
+        if k in seen and seen[k] != n:
+            bad.append(f"대소문자 충돌: {seen[k]} vs {n}")
+        seen.setdefault(k, n)
+    dup = [n for n in set(names) if names.count(n) > 1]
+    if dup:
+        bad.append(f"중복 엔트리 {len(dup)}건: {sorted(dup)[:3]}")
+    for zi in zf.infolist():
+        # 상위 16비트가 유닉스 모드 — symlink 는 0o120000
+        if (zi.external_attr >> 16) & 0o170000 == 0o120000:
+            bad.append(f"symlink 엔트리: {zi.filename}")
+    return bad
+
+
+def verify_zip(zip_path, expect_jobs=None, attest_out=None) -> int:
+    """**ZIP 바이트**를 입력으로 받아 검증하고 detached attestation 을 낸다.
+
+    왜 폴더가 아니라 ZIP 인가 (회신 AA P0-1 · Q6): 외주에 나가는 물건은 ZIP 이다.
+    폴더를 검사하면 "검사한 것"과 "보낸 것"이 다를 수 있고, 실제로 2026-08-29 에
+    경로 충돌 뒤 **옛 번들 폴더를 검사하고 정상이라 보고**한 전력이 있다.
+
+    순서: ① ZIP 전체 SHA → ② 엔트리 위험(중복·대소문자·경로탈출·symlink) →
+    ③ 새 임시 디렉터리에 풀기 → ④ 디스크에서 **독립 열거** → ⑤ 기존 검사 →
+    ⑥ attestation(도구 자신의 SHA·commit 포함) 기록.
+
+    이 도구가 **못 하는 것** (회신 AA Q6 이 적은 그대로)
+      · 자기 자신의 의미론적 버그를 못 잡는다. attestation 에 verifier SHA 를
+        같이 묶는 이유가 그것이다 — 나중에 "무엇이 검사했나" 를 되짚게.
+      · 과학적 estimand 가 옳은지 말하지 않는다.
+      · 실제 PP 트리·VASP build·스케줄러 환경·SCF 수렴·OUTCAR 형식은 범위 밖이다.
+    """
+    import tempfile
+    zp = Path(zip_path)
+    if not zp.is_file():
+        print(f"⛔ {zp} 없음")
+        return 1
+    raw = zp.read_bytes()
+    zsha = hashlib.sha256(raw).hexdigest()
+    print(f"■ ZIP {zp.name}  {len(raw)} B")
+    print(f"  sha256 {zsha}")
+    try:
+        zf = zipfile.ZipFile(zp)
+    except Exception as e:                                   # noqa: BLE001
+        print(f"⛔ ZIP 을 열 수 없다: {e}")
+        return 1
+    roots = {n.split("/", 1)[0] for n in zf.namelist() if "/" in n}
+    if len(roots) != 1:
+        print(f"⛔ 최상위 디렉터리가 하나가 아니다: {sorted(roots)[:4]}")
+        return 1
+    root_name = roots.pop()
+    haz = _zip_entry_hazards(zf, root_name)
+    for h in haz:
+        print(f"  ⛔ {h}")
+
+    with tempfile.TemporaryDirectory(prefix="verify_zip_") as td:
+        zf.extractall(td)
+        root = Path(td) / root_name
+        rc = verify_bundle(root, expect_jobs=expect_jobs,
+                           check_sibling_zip=False)
+        # ── ④ 디스크 독립 열거 (MANIFEST 를 안 보고 다시 센다) ──────────────
+        jobs = sorted(str(q.parent.relative_to(root))
+                      for q in root.rglob("run_job.sh") if q.is_file())
+        phases = {}
+        for j in jobs:
+            for ph in ("pre", "relax", "static", "dense"):
+                if (root / j / ph / "INCAR").is_file():
+                    phases[ph] = phases.get(ph, 0) + 1
+        census = {"jobs_on_disk": len(jobs), "phase_runs_on_disk": phases,
+                  "files_on_disk": sum(1 for q in root.rglob("*") if q.is_file()),
+                  "note": "files_on_disk = 배포파일(files_sha256) + MANIFEST.json"}
+        man = json.loads((root / "MANIFEST.json").read_text())
+        msha = hashlib.sha256((root / "MANIFEST.json").read_bytes()).hexdigest()
+        # 후보집합 **전체** SHA (16자리 접두어로는 부족하다 — 회신 AA P0-1)
+        fb = (man.get("from_basins") or {}).get("path")
+        fb_sha, fb_local = None, None
+        if fb:
+            cand = HERE.parents[1] / "db" / "properties" / Path(fb).name
+            if cand.is_file():
+                fb_sha = hashlib.sha256(cand.read_bytes()).hexdigest()
+                fb_local = str(cand.relative_to(HERE.parents[1]))
+
+    def _sha(p):
+        return hashlib.sha256(Path(p).read_bytes()).hexdigest() if Path(p).is_file() else None
+
+    def _git(*a):
+        try:
+            return subprocess.run(["git", "-C", str(HERE.parents[1]), *a],
+                                  capture_output=True, text=True,
+                                  timeout=20).stdout.strip() or None
+        except Exception:                                    # noqa: BLE001
+            return None
+
+    att = {
+        "schema": "bundle_attestation/v1",
+        "utc": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
+        "verdict": "PASS" if (rc == 0 and not haz) else "FAIL",
+        "zip": {"name": zp.name, "bytes": len(raw), "sha256": zsha},
+        "manifest_sha256": msha,
+        "candidate_set": {
+            "label": man.get("candidate_set"),
+            "manifest_path": fb,
+            "repo_path": fb_local,
+            "sha256": fb_sha,
+            "⚠": "16자리 접두어가 아니라 **전체 SHA** 다 (회신 AA P0-1)"},
+        "clean_slab_sha256": (man.get("clean_slab") or {}).get("sha256"),
+        "generated": {"utc": man.get("generated_utc"),
+                      "argv": man.get("generated_argv")},
+        "census_recomputed_from_disk": census,
+        "manifest_census": man.get("job_census"),
+        "zip_entry_hazards": haz,
+        "tooling": {
+            "generator_verifier": {
+                "path": "tools/sdcp/vasp_handoff_bundle.py",
+                "sha256": _sha(HERE / "vasp_handoff_bundle.py")},
+            "analyzer_in_bundle_sha256": man.get("files_sha256", {}).get(
+                "analyze_results.py"),
+            "git_commit": _git("rev-parse", "HEAD"),
+            "git_dirty": bool(_git("status", "--porcelain")),
+            "git_branch": _git("rev-parse", "--abbrev-ref", "HEAD")},
+        "command": f"--verify_zip {zip_path}"
+                   + (f" --expect_jobs {expect_jobs}" if expect_jobs else ""),
+        "verify_bundle_rc": rc,
+        "⛔_이_증서가_보증하지_않는_것": [
+            "verifier 자신의 의미론적 버그", "과학적 estimand 의 타당성",
+            "실제 PP 트리·VASP build·스케줄러 환경", "SCF 수렴·OUTCAR 형식"],
+    }
+    if attest_out:
+        Path(attest_out).write_text(
+            json.dumps(att, indent=1, ensure_ascii=False) + "\n")
+        print(f"  → attestation {attest_out}")
+    else:
+        print(json.dumps(att, indent=1, ensure_ascii=False))
+    ok = rc == 0 and not haz
+    print("  " + ("✅ ZIP 검증 통과" if ok else "❌ ZIP 검증 실패"))
+    return 0 if ok else 1
 
 
 def _selftest_verify() -> int:
@@ -6804,6 +6958,63 @@ def _selftest_verify() -> int:
             "양성: repo 에 있는 후보 파일이면 경로가 절대경로여도 통과 "
             "(도구 자기 위치로 찾으므로 cwd 무관)")
 
+    # ══ --verify_zip 경로 (회신 AA P0-1 · Q6) ═══════════════════════════════
+    with tempfile.TemporaryDirectory() as d:
+        d = Path(d)
+        r = build(d / "z")
+        zp = d / "ok.zip"
+        with zipfile.ZipFile(zp, "w") as z:
+            for q in sorted(r.rglob("*")):
+                if q.is_file():
+                    z.write(q, "bundle_v0/" + str(q.relative_to(r)))
+        att = d / "att.json"
+        chk(verify_zip(zp, expect_jobs=2, attest_out=str(att)) == 0,
+            "양성: ZIP 입력 검증 통과 + attestation 기록")
+        a = json.loads(att.read_text())
+        chk(a["verdict"] == "PASS"
+            and a["zip"]["sha256"] == hashlib.sha256(zp.read_bytes()).hexdigest()
+            and a["census_recomputed_from_disk"]["jobs_on_disk"] == 2
+            and a["tooling"]["generator_verifier"]["sha256"],
+            "attestation 에 ZIP SHA · **디스크 재계산 census** · verifier SHA 가 실린다")
+
+        def zbad(name, mutate):
+            q = d / name
+            with zipfile.ZipFile(q, "w") as z:
+                for f in sorted(r.rglob("*")):
+                    if f.is_file():
+                        z.write(f, "bundle_v0/" + str(f.relative_to(r)))
+                mutate(z)
+            return q
+
+        chk(verify_zip(zbad("dup.zip", lambda z: z.writestr(
+            "bundle_v0/MANIFEST.json", "{}")), expect_jobs=2) == 1,
+            "⛔음성: **중복 엔트리** 차단 (같은 이름 둘 — 푸는 쪽이 뭘 쓸지 우리가 못 정한다)")
+        chk(verify_zip(zbad("esc.zip", lambda z: z.writestr(
+            "bundle_v0/../evil.txt", "x")), expect_jobs=2) == 1,
+            "⛔음성: **경로 탈출**(..) 차단 — 풀기 전에 잡는다")
+        chk(verify_zip(zbad("abs.zip", lambda z: z.writestr(
+            "/etc/evil", "x")), expect_jobs=2) == 1,
+            "⛔음성: 절대경로·최상위 이탈 엔트리 차단")
+        chk(verify_zip(zbad("case.zip", lambda z: z.writestr(
+            "bundle_v0/manifest.JSON", "{}")), expect_jobs=2) == 1,
+            "⛔음성: **대소문자 충돌** 차단 (대소문자 무시 파일계에서 덮어쓴다)")
+
+        def _sym(z):
+            zi = zipfile.ZipInfo("bundle_v0/link")
+            zi.external_attr = (0o120777 << 16)
+            z.writestr(zi, "/etc/passwd")
+        chk(verify_zip(zbad("sym.zip", _sym), expect_jobs=2) == 1,
+            "⛔음성: **symlink 엔트리** 차단")
+
+        r2 = build(d / "z2")
+        z2 = d / "jobs.zip"
+        with zipfile.ZipFile(z2, "w") as z:
+            for q in sorted(r2.rglob("*")):
+                if q.is_file():
+                    z.write(q, "bundle_v0/" + str(q.relative_to(r2)))
+        chk(verify_zip(z2, expect_jobs=40) == 1,
+            "⛔음성: ZIP 경로에서도 잡 수 불일치를 잡는다 (디스크 독립 열거)")
+
     print(f"  verify selftest {ok[1]}/{ok[0]}")
     return 0 if ok[0] == ok[1] else 1
 
@@ -6811,6 +7022,13 @@ def _selftest_verify() -> int:
 def main():
     if "--selftest_verify" in sys.argv:
         sys.exit(_selftest_verify())
+    if "--verify_zip" in sys.argv:
+        i = sys.argv.index("--verify_zip")
+        _ej = (int(sys.argv[sys.argv.index("--expect_jobs") + 1])
+               if "--expect_jobs" in sys.argv else None)
+        _ao = (sys.argv[sys.argv.index("--attest") + 1]
+               if "--attest" in sys.argv else None)
+        sys.exit(verify_zip(sys.argv[i + 1], expect_jobs=_ej, attest_out=_ao))
     if "--verify_bundle" in sys.argv:
         i = sys.argv.index("--verify_bundle")
         _ej = None
