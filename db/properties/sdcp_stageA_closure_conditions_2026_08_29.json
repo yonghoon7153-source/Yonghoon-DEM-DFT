@@ -22,10 +22,10 @@
   ],
   "clean_slab_전제": "두 번들 모두 d5f18feb15701f3fc932a1c8f64a09ed48c39ca270d8d8a8f5339658b6c43676 (2026-08-29 gabia 실측). 이 전제가 깨지면 아래 전부 무효다.",
   "발송_번들_정체성_2026_08_29": {
-   "파일": "sdcp_stageA_v8.zip (462,233 B)",
-   "zip_sha256": "56ee99ec07fececab0dbbc9dd1fb360b53854ac25a6af76ca1e6e88af13feb14",
-   "manifest_sha256": "7cae59ad1cf051219dbd56e59a81887a646da871d9e2b6d5cb509e85b7c5ca1c",
-   "attestation": "runs/sdcp_stageA_2026_08_29/ATTESTATION_v8.json (ZIP 바이트에서 직접 생성)",
+   "파일": "sdcp_stageA_v9.zip (476238 B)",
+   "zip_sha256": "246da98748e9f2754925504e0cbeb865db91ddd4c68e401b456abfc008dabc3b",
+   "manifest_sha256": "e232e975e0659f8756c993d1dd1d093c6d701f7f98ce46ff43bf88eee3c053a0",
+   "attestation": "runs/sdcp_stageA_2026_08_29/ATTESTATION_v9.json",
    "잡": "40 (references 16 + calibration complexes 24 · 전부 static)",
    "후보집합": "db/properties/prospective_basins_2026_08_29.json · 전체 SHA 20fdde06760b36e15a9bd544925c71e4b1a52f430348ff64a2224f1bf61f6d6e",
    "자세": "sdcp_neutral b00 b01 b07 b08 · ptfe_c10 b00 b01 b74 b75 · sealed_audit 미개봉",
@@ -38,7 +38,8 @@
     "자기 제약 대칭": "기체 NUPDOWN=-1 · 복합체/슬랩 NUPDOWN 줄 없음(자유) — **전 계 자유 바닥상태**",
     "물리": "ENCUT 520 · LREAL .FALSE. · NSW 0 · IBRION -1 · ISMEAR 0 이 40/40 동일"
    },
-   "⚠_폐기본": "v1~v7 은 보내지 않는다. v7 은 net4 복합체 8잡의 d3 필드가 비어 있었다."
+   "⚠_폐기본": "v1~v8 은 보내지 않는다. v7 은 net4 8잡의 d3 가 비었고, v8 까지는 분석기에 C1·C3 코드가 없었다(닫힘 조건이 손계산이 된다).",
+   "동봉_분석기": "closure_C1 · closure_C3 · realized_basin_id · basin_distance · COHORT_INCOHERENT 포함. 번들 안 analyze_results.py 가 **스스로 selftest 를 통과**한다(외주 손에서도 검증 가능, exit 0 / 실패 0)"
   }
  },
  "2_닫힘_조건_C1_UMA_DFT_오프셋_상수성": {
@@ -270,6 +271,11 @@
    "at": "2026-08-29f",
    "state": "bundle_frozen_pre_results",
    "note": "회신 AA P0 5건 반영 후 v8 재생성. **다른 기계에서 zip 실물을 독립 감사**해 전 항목 통과. 여전히 DFT 0잡 시점이고 C1~C3 문턱은 최초 등록값 그대로다."
+  },
+  {
+   "at": "2026-08-29g",
+   "state": "bundle_frozen_pre_results",
+   "note": "C1·C3 를 분석기에 구현한 뒤 v9 재생성. 번들 안 분석기가 자체 selftest 통과. 여전히 DFT 0잡 시점이고 C1~C3 문턱은 최초 등록값 그대로다."
   }
  ]
 }

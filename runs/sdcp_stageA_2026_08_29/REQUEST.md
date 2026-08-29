@@ -79,18 +79,18 @@ POSCAR 의 **종 순서가 잡마다 다릅니다**:
 
 | 항목 | 값 |
 |---|---|
-| 파일 | `sdcp_stageA_v8.zip` (462,233 B) |
-| ZIP SHA256 | `56ee99ec07fececab0dbbc9dd1fb360b53854ac25a6af76ca1e6e88af13feb14` |
-| `MANIFEST.json` SHA256 | `7cae59ad1cf051219dbd56e59a81887a646da871d9e2b6d5cb509e85b7c5ca1c` |
+| 파일 | `sdcp_stageA_v9.zip` (476238 B) |
+| ZIP SHA256 | `246da98748e9f2754925504e0cbeb865db91ddd4c68e401b456abfc008dabc3b` |
+| `MANIFEST.json` SHA256 | `e232e975e0659f8756c993d1dd1d093c6d701f7f98ce46ff43bf88eee3c053a0` |
 | 잡 | 40 (references 16 + calibration complexes 24) |
 | 총 VASP 실행 | 40 (전부 `static`) |
 | clean slab | `d5f18feb15701f3fc932a1c8f64a09ed48c39ca270d8d8a8f5339658b6c43676` |
 | 후보집합 | `db/properties/prospective_basins_2026_08_29.json` · 전체 SHA `20fdde06760b36e15a9bd544925c71e4b1a52f430348ff64a2224f1bf61f6d6e` |
 
-받으신 뒤 대조해 주세요 — `sha256sum sdcp_stageA_v8.zip`.
-증서는 `ATTESTATION_v8.json` 에 같이 있습니다 (ZIP 바이트에서 직접 생성).
+받으신 뒤 대조해 주세요 — `sha256sum sdcp_stageA_v9.zip`.
+증서는 `ATTESTATION_v9.json` 에 같이 있습니다 (ZIP 바이트에서 직접 생성).
 
-⚠ 파일명 끝의 **`_v8`** 을 확인해 주세요. `_v1` ~ `_v7` 은 전부 폐기본입니다.
+⚠ 파일명 끝의 **`_v9`** 을 확인해 주세요. `_v1` ~ `_v8` 은 전부 폐기본입니다.
 
 ---
 
