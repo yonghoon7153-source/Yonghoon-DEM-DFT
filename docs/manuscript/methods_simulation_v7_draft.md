@@ -147,7 +147,12 @@ constant: at the single-filament value, a hundredfold higher, the ordering rever
 arm is **not better physics** but a doubly idealised sensitivity at one origin phase, assuming
 perfect fibre–fibre contact on top of equipotential fibres; a single scalar can absorb part of
 the missing resistance numerically but is **not identified** as a fibre–fibre contact parameter.
-Two further limits apply: the beds are more compacted than the experimental porosity anchor, and
+Three further limits apply to the beds themselves. They are more compacted than the experimental
+porosity anchor. **The compaction was not quasi-static**: the platen advanced at 0.27 of the
+dilatational wave speed against an internal limit of 0.01, so the bed state carries a rate
+contribution. Both electrodes were compacted at the same platen speed, so that contribution is
+common to them and the ratio is unaffected, but the **absolute** geometric quantities (thickness,
+ε_union) would require a slower re-compaction before being quoted as converged values. Finally,
 the specimen provenance of the SDCP conductivity (250 S cm⁻¹) is not established.
 
 ---
@@ -200,9 +205,12 @@ established. Restoring the additive contacts that voxelisation drops recovers ab
 that dependence, **measured under the binder-omitted convention only**. The magnitude is also
 conditional on the carbon conductivity being an effective network constant: at the
 single-filament value the ordering reverses, but that arm is **not better physics** — it is a
-doubly idealised sensitivity at one origin phase. Two further limits: the beds are more
-compacted than the experimental porosity anchor, and the specimen provenance of the SDCP
-conductivity (250 S cm⁻¹) is not established.
+doubly idealised sensitivity at one origin phase. Three further limits: the beds are more
+compacted than the experimental porosity anchor; the compaction was **not quasi-static** (platen
+at 0.27 of the dilatational wave speed against an internal limit of 0.01), which is common to
+both electrodes and so cancels in the ratio but leaves the **absolute** thickness and ε_union
+requiring a slower re-compaction; and the specimen provenance of the SDCP conductivity
+(250 S cm⁻¹) is not established.
 
 ---
 
@@ -237,12 +245,30 @@ conductivity (250 S cm⁻¹) is not established.
 | σ_ele,eff — `PTFE centerline voxels excluded (exact-zero sensitivity convention)` | 54.0 | 70.6 | mS cm⁻¹ |
 | σ_ele ratio (paired, 8 origin phases) — omitted / centerline-excluded | 1.124 | 1.308 | — |
 | ⌐ spread / range | 0.003 / 1.120–1.127 | 0.003 / 1.302–1.310 | — |
-| σ_ion,eff | *not evaluated in this cohort* | *not evaluated in this cohort* | — |
-| SE coverage of AM | *pending — new bed* | *pending — new bed* | % |
-| VGCF coverage of AM | *pending — new bed* | *pending — new bed* | % |
-| Median CBD contacts per AM | *pending — new bed* | *pending — new bed* | ea |
-| Electronic connectivity | *pending — new bed* | *pending — new bed* | % |
-| Areal capacity | *pending — new bed* | *pending — new bed* | mAh cm⁻² |
+| σ_ion,eff | *not evaluated in this cohort* | *not evaluated in this cohort* | mS cm⁻¹ |
+| SE coverage of AM (Tabor band) | **86.6** | **86.6** | % |
+| VGCF coverage of AM | **13.1** | **15.5** | % |
+| Electronic connectivity | **100** | **100** | % |
+| Areal capacity | **[비용량 확인 필요 — §아래]** | **동일** | mAh cm⁻² |
+| Median CBD contacts per AM | *pending — 계산 미실행* | *pending — 계산 미실행* | ea |
+
+**⚠ Areal capacity — SI v6 의 `3.11 / 3.07` 은 이 침대에서 성립하지 않는다.**
+두 전극은 **같은 AM scaffold** 를 쓰고(`n_AM = 1271`, `seed_AM_frac_pct = 45.68` 동일) 정지
+두께도 같다(`72.534 µm`).  ⇒ 면적 용량이 **서로 다를 수 없다.**
+우리 기하가 주는 면적 하중은 두 전극 모두
+
+  `0.4568 × 72.534 µm × 4.8 g cm⁻³ = 0.015904 g cm⁻²`
+
+이고, 여기에 곱할 **비용량이 원고에 적혀 있지 않다.**  SI 의 3.11 을 재현하는 값은
+**195.5 mAh g⁻¹**, 3.07 은 193.0 이다 — 즉 v6 의 두 값은 **같은 침대에 서로 다른 비용량을
+곱한 것처럼** 보인다.  ⇒ 협업자에게 *"어느 비용량을 썼는가"* 를 확인한 뒤 채운다.
+**추정해서 적지 않는다** (§F1).
+
+**⚠ coverage 세 행의 규약**: `SE coverage of AM` 은 **Tabor 밴드**(0.26 µm) 값이다 —
+v6 의 86.7 이 이 규약이며 새 침대가 86.6 으로 재현했다.  같은 침대의 다른 규약 값도 함께
+산출된다 (Hertz 밴드 65.7 · 복셀 인접 40.4) — **셋은 서로 다른 양이므로 섞어 인용하지 않는다.**
+`VGCF coverage of AM` 은 첨가제 인접 복셀 규약(`coverage_AM_S_add_pct`)이다.
+⚠ `AM_P` 계열은 전부 0 이다 — 이 침대의 NCM811 이 **단일 크기**라 큰 AM 개체군이 없다.
 
 ⚠ **두 규약을 같은 서식으로 적는다** — 굵은 글씨·`reported`·`resolved` 금지 (R10 재판정 1).
 ⚠ **`σ_ion` 은 이번 cohort 에서 평가하지 않았다** (`LEAN=2` 가 이온을 안 푼다).  옛 값을
