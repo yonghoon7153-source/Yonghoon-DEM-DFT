@@ -247,6 +247,10 @@ terminal wall separation and a high-rate diagnostic; and the specimen provenance
 
 ## Table S3 — σ_ele 만 갱신, 나머지는 미완 (⚠ 투고용 아님)
 
+★ **수치 정본은 `docs/reviews/table_s3_data_20260827.md`** 다 — σ_e 두 규약은 §2·§3,
+**구조 지표·접촉 수·면적 하중은 §10** (2026-08-29 등재).  아래 표는 그 인용이고,
+값이 갈리면 **원장이 이긴다**.
+
 | Parameter | SBE | DBE | Unit |
 |---|---|---|---|
 | Thickness | 72.53 | 72.53 | µm |
