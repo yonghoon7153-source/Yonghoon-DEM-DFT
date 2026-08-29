@@ -230,12 +230,20 @@ def generate(box: dict, seed: int = DESIGN_SEED) -> tuple[list[dict], list[str]]
             b = box[nt]
             k = 5 if nt == 3 else 3          # pdd_SE, rP, rSE, volfrac (+rS, s)
             k = 6 if nt == 3 else 4
+            #  ⚠ 2-type 은 종류를 **먼저 균형 배정**하고 그 종류의 범위에서 뽑는다.
+            #     합집합에서 뽑으면 넓은 쪽(mono_AM_P, 2.5–7.5)이 77 % 를 차지해
+            #     13:3 으로 치우친다 — 기존 배치는 15:15 다.  치우친 쪽이 하필 큰 AM 이라
+            #     유한크기 오염(§4-3b)까지 키운다.
+            kd_cycle = sorted(b['per_kind']) if nt == 2 else [None]
             U = lhs_unit(cnt, k, rng)
-            for u in U:
+            for _i, u in enumerate(U):
+                kd_assigned = kd_cycle[_i % len(kd_cycle)]
                 pdd_se = _scale(u[0], lo, hi)
                 phi_se = 1.0 - phi_am_of_pdd_se(pdd_se)
                 volfrac = _scale(u[1], *b['volfrac'])
-                rP = _scale(u[2], *b['rP_um'])
+                rP_rng = (b['rP_um'] if nt == 3
+                          else b['per_kind'][kd_assigned]['rP_um'])
+                rP = _scale(u[2], *rP_rng)
                 if nt == 3:
                     rS = _scale(u[3], *b['rS_um'])
                     s = _scale(u[4], *b['s_AM_P'])
@@ -265,7 +273,9 @@ def generate(box: dict, seed: int = DESIGN_SEED) -> tuple[list[dict], list[str]]
                 idx += 1
                 pts.append(dict(
                     id=f'lhsx_{idx:03d}', stratum=st, ntype=nt,
-                    kind='bimodal' if nt == 3 else kind_for_radius(b, rP),
+                    #  배정된 종류를 쓴다.  `kind_for_radius` 는 이제 **불변식 검사**다 —
+                    #  뽑힌 반지름이 배정된 종류로 되돌아오지 않으면 범위 배선이 틀린 것이다.
+                    kind='bimodal' if nt == 3 else kd_assigned,
                     pdd_SE=round(pdd_se, 6),
                     w_AM_P=round((1 - pdd_se) * s, 6),
                     w_AM_S=round((1 - pdd_se) * (1 - s), 6) if nt == 3 else 0.0,
@@ -277,6 +287,10 @@ def generate(box: dict, seed: int = DESIGN_SEED) -> tuple[list[dict], list[str]]
                     n_AM_est=int(round(n_am)), n_SE_est=int(round(n_se)),
                     n_total_est=int(round(n_am + n_se)),
                     seed=rng.randint(20000, 29999)))
+                if nt == 2 and kind_for_radius(b, rP) != kd_assigned:
+                    raise SystemExit(
+                        f'불변식 위반: {kd_assigned} 로 배정했는데 r={rP:.4f} µm 는 '
+                        f'{kind_for_radius(b, rP)} 범위다 — 범위 배선이 틀렸다')
     return pts, notes
 
 
@@ -311,6 +325,22 @@ def report(box: dict, pts: list[dict], notes: list[str], unread: list[str]) -> N
         cut = sum(p['rSE_truncated'] for p in s)
         print(f'   {st}      {pv[0]:.3f}–{pv[-1]:.3f}    '
               f'{ph[-1]:.3f}–{ph[0]:.3f}    {nt[len(nt)//2]:>8,}     {cut}/{len(s)}')
+    #  ★ 2-type 종류 균형 — 기존 배치와 같은 영역인지 (초판은 13:3 으로 치우쳤다)
+    two = [p for p in pts if p['ntype'] == 2]
+    if two:
+        from collections import Counter
+        got = Counter(p['kind'] for p in two)
+        base = {k: v['n'] for k, v in box[2]['per_kind'].items()}
+        fmt = lambda d: ' · '.join(f'{k} {d[k]}' for k in sorted(d))   # noqa: E731
+        print(f'\n  2-type 종류 균형   확장: {fmt(got)}')
+        print(f'                     기존: {fmt(base)}')
+    #  ★ 유한크기 — §4-3b 절단 대상이 어느 점인지 런 전에 확정한다
+    s_am = sorted(pts, key=lambda p: p['n_AM_est'])
+    k10 = max(1, len(pts) // 10)
+    print(f'\n  n_AM_est  min {s_am[0]["n_AM_est"]:,} · p10 {s_am[k10]["n_AM_est"]:,} · '
+          f'median {s_am[len(s_am)//2]["n_AM_est"]:,} · max {s_am[-1]["n_AM_est"]:,}')
+    print(f'  §4-3b 하위 10 % ({k10}점, 런 전 확정): '
+          + ', '.join(p['id'] for p in s_am[:k10]))
     mx = max(p['n_total_est'] for p in pts)
     print(f'\n  최대 예상 입자 수 {mx:,}  (상한 {N_MAX_PARTICLES:,})'
           f'  {"✓" if mx <= N_MAX_PARTICLES else "⛔ 초과"}')
