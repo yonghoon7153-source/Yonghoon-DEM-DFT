@@ -1460,6 +1460,213 @@ def shortlist_with_matched_pairs(rigid: List[Dict[str, Any]], top_per_site: int,
     return sorted(picked.values(), key=lambda r: (r["site"], r["E_pose_eV"]))
 
 
+
+# ══ basin 중복제거 + calibration/audit 선정 (회신 W 절차 2~4) ═══════════════
+#: 접촉으로 셀 원자쌍의 상한 거리 [Å]. `min_contact_pair` **하나**가 아니라
+#:   이 안의 **전체 접촉 graph** 를 지문으로 쓴다 (회신 W 2단계).
+BASIN_CONTACT_CUT = 3.2
+#: 같은 basin 으로 묶는 무거운원자 RMSD 상한 [Å] (PBC 최소이미지, 슬랩 프레임 고정)
+BASIN_RMSD_TOL = 0.75
+#: 분자 높이 차 상한 [Å]
+BASIN_HEIGHT_TOL = 0.40
+#: 초기 scheduling shell [eV] — **coverage 규칙이 아니다** (회신 W Q3).
+#:   최종 창은 W = max(W0, B + TAU) 로 calibration 뒤에 정한다.
+BASIN_W0_EV = 0.15
+BASIN_TAU_EV = 0.04
+
+
+def _mol_slab_split(at, nslab):
+    return list(range(nslab)), list(range(nslab, len(at)))
+
+
+def basin_descriptor(at, nslab, cut=BASIN_CONTACT_CUT):
+    """이완 최종 구조 → basin 서술자.
+
+    → dict(fingerprint, anchor, height_A, tilt_deg, heavy_xyz)
+
+    ⛔ 못 하는 것: 슬랩 공간군 대칭으로 **등가 자세를 접지 않는다** (병진만 PBC 로
+      처리한다). 대칭으로 같은 자세가 서로 다른 basin 으로 남을 수 있다 — 그건
+      과다분할이라 **보수적** 이지만, 예산을 낭비한다.
+    """
+    import numpy as np
+    sym = at.get_chemical_symbols()
+    sl, mo = _mol_slab_split(at, nslab)
+    D = at.get_all_distances(mic=True)
+    sub = D[np.ix_(mo, sl)]
+    # 접촉 graph — cut 안의 (분자원소, 슬랩원소) 쌍을 전부 센다
+    from collections import Counter
+    c = Counter()
+    for i in range(len(mo)):
+        for j in range(len(sl)):
+            if sub[i, j] <= cut:
+                c[(sym[mo[i]], sym[sl[j]])] += 1
+    fp = tuple(sorted((k[0], k[1], v) for k, v in c.items()))
+    i, j = divmod(int(sub.argmin()), sub.shape[1])
+    anchor = (sym[mo[i]], sym[sl[j]], round(float(sub[i, j]), 3))
+    z = at.positions[:, 2]
+    height = float(np.mean(z[mo]) - np.max(z[sl]))
+    heavy = [k for k in mo if sym[k] != "H"]
+    hx = at.positions[heavy]
+    # tilt — 분자 주축과 표면법선 사이 각
+    q = hx - hx.mean(0)
+    try:
+        ax = np.linalg.svd(q, full_matrices=False)[2][0]
+        tilt = float(np.degrees(np.arccos(abs(ax[2]))))
+    except Exception:
+        tilt = float("nan")
+    return {"fingerprint": fp, "anchor": anchor, "height_A": round(height, 3),
+            "tilt_deg": round(tilt, 1), "heavy_xyz": hx, "n_heavy": len(heavy)}
+
+
+def _pbc_rmsd(a, b, cell):
+    """무거운원자 RMSD (최소이미지). 슬랩 프레임이 같으므로 회전맞춤은 안 한다."""
+    import numpy as np
+    if a.shape != b.shape:
+        return float("inf")
+    d = a - b
+    f = np.linalg.solve(np.array(cell).T, d.T).T
+    f -= np.round(f)
+    d = f @ np.array(cell)
+    return float(np.sqrt((d ** 2).sum(1).mean()))
+
+
+def dedup_basins(poses, rmsd_tol=BASIN_RMSD_TOL, height_tol=BASIN_HEIGHT_TOL):
+    """(라벨, E, 서술자, cell) 목록 → basin 묶음. 에너지 낮은 자세가 대표.
+
+    같은 basin 조건: **접촉지문 동일 AND 높이차 < tol AND RMSD < tol**.
+    ⛔ 못 하는 것: 대칭 등가를 안 접는다 (위 docstring 참조).
+    """
+    order = sorted(poses, key=lambda x: x[1])
+    basins = []
+    for lab, e, desc, cell in order:
+        hit = None
+        for b in basins:
+            if b["fingerprint"] != desc["fingerprint"]:
+                continue
+            if abs(b["height_A"] - desc["height_A"]) > height_tol:
+                continue
+            if _pbc_rmsd(b["_xyz"], desc["heavy_xyz"], cell) > rmsd_tol:
+                continue
+            hit = b
+            break
+        if hit is None:
+            basins.append({"basin_id": "b%02d" % len(basins), "rep_label": lab,
+                           "E_pose_eV": round(e, 6), "fingerprint": desc["fingerprint"],
+                           "anchor": desc["anchor"], "height_A": desc["height_A"],
+                           "tilt_deg": desc["tilt_deg"], "members": [lab],
+                           "_xyz": desc["heavy_xyz"]})
+        else:
+            hit["members"].append(lab)
+    for b in basins:
+        b.pop("_xyz", None)
+        b["n_members"] = len(b["members"])
+    return basins
+
+
+def cmd_basins(a):
+    """basin 중복제거 → calibration 4 + sealed audit 2 를 **DFT 전에** 고른다."""
+    import glob
+    import hashlib
+    import json
+    import os
+    import random
+    from ase.io import read
+
+    out = {"schema": "prospective_basins/v1", "date": a.date,
+           "params": {"contact_cut_A": BASIN_CONTACT_CUT, "rmsd_tol_A": BASIN_RMSD_TOL,
+                      "height_tol_A": BASIN_HEIGHT_TOL, "W0_eV": BASIN_W0_EV,
+                      "tau_eV": BASIN_TAU_EV, "audit_seed": a.seed},
+           "⚠": ("이 문서는 **DFT 를 보기 전에** 만든다. calibration 은 값을 보고 고르고, "
+                 "sealed audit 은 그 밖에서 고른다 — audit 를 보고 모델/창을 고치면 "
+                 "그것은 더 이상 holdout 이 아니다 (회신 W 4단계)."),
+           "fragments": {}}
+    for frag in a.frag:
+        D = os.path.join(a.out, frag, "relax_f%.2f" % a.freeze)
+        ref = json.load(open(os.path.join(D, "_references.json")))
+        poses = []
+        gated = []
+        for f in sorted(glob.glob(os.path.join(D, "*.json"))):
+            lab = os.path.basename(f)[:-5]
+            if lab.startswith("_"):
+                continue
+            d = json.load(open(f))
+            g = d.get("gate_reasons") or d.get("gates") or []
+            e = d.get("E_pose_eV")
+            if e is None and "E_complex_eV" in d:
+                e = d["E_complex_eV"] - ref["E_slab_eV"] - ref["E_mol_eV"]
+            if e is None:
+                continue
+            if g:
+                gated.append({"label": lab, "E_pose_eV": round(e, 6), "gates": g})
+                continue
+            xp = os.path.join(D, lab + ".xyz")
+            if not os.path.isfile(xp):
+                sys.exit("⛔ %s 의 최종 구조가 없다 — basin 을 만들 수 없다" % lab)
+            at = read(xp)
+            poses.append((lab, e, basin_descriptor(at, a.nslab), at.get_cell()[:]))
+        if not poses:
+            sys.exit("⛔ %s: 게이트 통과 자세가 없다" % frag)
+        basins = dedup_basins(poses)
+        emin = basins[0]["E_pose_eV"]
+        inside = [b for b in basins if b["E_pose_eV"] - emin <= BASIN_W0_EV]
+        outside = [b for b in basins if b["E_pose_eV"] - emin > BASIN_W0_EV]
+
+        # calibration 4 (회신 W 3단계)
+        cal, seen = [], set()
+
+        def take(b, why):
+            if b and b["basin_id"] not in seen:
+                seen.add(b["basin_id"])
+                cal.append({**{k: v for k, v in b.items() if k != "members"},
+                            "role": "calibration", "why": why})
+        take(basins[0], "UMA global-min basin")
+        take(next((b for b in basins[1:]
+                   if b["fingerprint"] != basins[0]["fingerprint"]), None),
+             "다른 접촉지문 중 최저")
+        take(inside[-1] if inside else None, "provisional 창 W0 안쪽 경계")
+        take(outside[0] if outside else None, "W0 바깥 최근접")
+
+        # sealed audit 2 (회신 W 4단계) — 선택집합 **밖**에서, seed 를 먼저 기록
+        pool = [b for b in basins if b["basin_id"] not in seen]
+        aud = []
+        if pool:
+            aud.append({**{k: v for k, v in pool[0].items() if k != "members"},
+                        "role": "sealed_audit", "why": "창 바깥 최근접 excluded"})
+        rest = [b for b in pool if b["basin_id"] != (aud[0]["basin_id"] if aud else None)]
+        if rest:
+            # 접촉지문 층화 난수 — seed 를 params 에 박아 뒀다
+            rng = random.Random(a.seed)
+            strata = {}
+            for b in rest:
+                strata.setdefault(b["fingerprint"], []).append(b)
+            key = rng.choice(sorted(strata, key=str))
+            pick = rng.choice(strata[key])
+            aud.append({**{k: v for k, v in pick.items() if k != "members"},
+                        "role": "sealed_audit", "why": "접촉지문 층화 난수 (seed %d)" % a.seed})
+        out["fragments"][frag] = {
+            "n_poses_passed": len(poses), "n_gated": len(gated),
+            "n_basins": len(basins), "E_min_eV": emin,
+            "gated": gated,
+            "basins": [{k: v for k, v in b.items() if k != "members"} for b in basins],
+            "basin_members": {b["basin_id"]: b["members"] for b in basins},
+            "calibration": cal, "sealed_audit": aud}
+        print("■ %s: 자세 %d(게이트 %d) → **basin %d** · 최저 %+.4f eV"
+              % (frag, len(poses), len(gated), len(basins), emin))
+        for b in cal:
+            print("   cal   %s %+.4f  %-46s %s"
+                  % (b["basin_id"], b["E_pose_eV"], b["rep_label"][:46], b["why"]))
+        for b in aud:
+            print("   AUDIT %s %+.4f  %-46s %s"
+                  % (b["basin_id"], b["E_pose_eV"], b["rep_label"][:46], b["why"]))
+
+    body = json.dumps(out, ensure_ascii=False, sort_keys=True, default=str)
+    out["freeze_sha256"] = hashlib.sha256(body.encode()).hexdigest()
+    json.dump(out, open(a.save, "w"), ensure_ascii=False, indent=1, default=str)
+    print("\n→ %s  (freeze %s)" % (a.save, out["freeze_sha256"][:16]))
+    print("⛔ 이 파일을 DFT 전에 커밋해 동결하라 — audit 를 보고 고치면 holdout 이 아니다")
+    return 0
+
+
 def cmd_verdict(a) -> int:
     """자리 선호 판정 — 검열 회계 · 대조쌍 · 판정 바닥을 한 표에."""
     rows: List[Dict[str, Any]] = []
@@ -2017,6 +2224,42 @@ def cmd_selftest(a) -> int:
     ok &= good
     print(f"   {'✔' if good else '⛔'}   └ 판정={v} · 경고 표시됨")
 
+    # ══ basin 중복제거 (회신 W 2단계) ═══════════════════════════════════════
+    def _chk(good, name):
+        nonlocal ok
+        ok &= bool(good)
+        print(f"   {'✔' if good else '⛔'} {name}")
+
+    import numpy as _np
+    from ase import Atoms as _A
+    _cell = _np.diag([18.0, 11.0, 30.0])
+
+    def _mk(dz, dx=0.0, el="C"):
+        # 슬랩 4 (Li,Ni,O,O) + 분자 3 (heavy 2 + H)
+        pos = [[0, 0, 0], [3, 0, 0], [6, 0, 0], [9, 0, 0],
+               [0 + dx, 0, 2.5 + dz], [1.4 + dx, 0, 2.5 + dz], [0.7 + dx, 0, 3.5 + dz]]
+        return _A(symbols=["Li", "Ni", "O", "O", el, "C", "H"],
+                  positions=pos, cell=_cell, pbc=True)
+
+    d0 = basin_descriptor(_mk(0.0), 4)
+    d1 = basin_descriptor(_mk(0.05), 4)          # 거의 같은 자세
+    d2 = basin_descriptor(_mk(3.0), 4)           # 훨씬 위 — 접촉이 끊긴다
+    d3 = basin_descriptor(_mk(0.0, el="S"), 4)   # 접촉 원소가 다르다
+    _chk(d0["fingerprint"] == d1["fingerprint"], "basin: 미세 이동은 같은 접촉지문")
+    _chk(d0["fingerprint"] != d3["fingerprint"],
+         "[음성] 접촉 **원소**가 다르면 다른 지문 (min_contact 하나가 아니라 graph)")
+    _chk(d0["fingerprint"] != d2["fingerprint"],
+         "[음성] 높이가 3 Å 다르면 접촉이 끊겨 다른 지문")
+    b = dedup_basins([("a", -1.0, d0, _cell), ("b", -0.9, d1, _cell),
+                      ("c", -0.8, d3, _cell)])
+    _chk(len(b) == 2, f"basin 묶기: 같은 지문 2개 → 1 basin, 다른 지문은 별도 (실제 {len(b)})")
+    _chk(b[0]["rep_label"] == "a" and "b" in b[0]["members"],
+         "대표는 **에너지 낮은 쪽**, 나머지는 members 로 보존")
+    far = basin_descriptor(_mk(0.0, dx=6.0), 4)
+    if far["fingerprint"] == d0["fingerprint"]:
+        b2 = dedup_basins([("a", -1.0, d0, _cell), ("x", -0.9, far, _cell)])
+        _chk(len(b2) == 2, "[음성] 지문이 같아도 RMSD 가 크면 **다른 basin**")
+
     print(f"\n{'✔ 전부 통과' if ok else '⛔ 실패 있음'}")
     return 0 if ok else 1
 
@@ -2428,6 +2671,16 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("--top-per-site", type=int, default=2)
     p.add_argument("--pairs", type=int, default=5, help="강제로 살릴 Li/Ni 대조쌍 수")
 
+    p = sub.add_parser("basins", help="basin 중복제거 + calibration/audit 선정 (회신 W 2~4)")
+    p.add_argument("--out", required=True, help="스크린 디렉터리")
+    p.add_argument("--frag", nargs="+", required=True)
+    p.add_argument("--freeze", type=float, default=0.85)
+    p.add_argument("--nslab", type=int, default=192)
+    p.add_argument("--seed", type=int, required=True,
+                   help="sealed audit 층화 난수 seed — **DFT 전에** 정하고 기록한다")
+    p.add_argument("--date", default="2026-08-29")
+    p.add_argument("--save", required=True, help="동결할 manifest 경로")
+
     p = sub.add_parser("verdict", help="자리 선호 판정표")
     p.add_argument("rows", nargs="+", help="atlas_rows.json 또는 점수가 붙은 rows json")
 
@@ -2466,6 +2719,7 @@ def main() -> int:
         "gate": cmd_gate, "verdict": cmd_verdict, "crosscheck": cmd_crosscheck,
         "bond-limits": cmd_bond_limits, "selftest": cmd_selftest, "score": cmd_score,
         "bundle": cmd_bundle, "regate": cmd_regate, "dft-handoff": cmd_dft_handoff,
+        "basins": cmd_basins,
     }[a.cmd](a)
 
 
