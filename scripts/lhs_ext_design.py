@@ -167,8 +167,27 @@ def derive_box(rows: list[dict]) -> dict:
             b['s_AM_P'] = rng(r['w_AM_P'] / (r['w_AM_P'] + r['w_AM_S'])
                               for r in sub if (r['w_AM_P'] + r['w_AM_S']) > 0)
         b['kinds'] = sorted({r['kind'] for r in sub})
+        #  ⚠ 2-type 은 `mono_AM_P` / `mono_AM_S` 로 갈리고 **반지름 범위가 다르다**.
+        #     합집합에서 뽑으면 어느 쪽에도 없는 반지름이 나오고 라벨이 임의가 된다.
+        #     ⇒ 종류별 범위를 따로 유도해 라벨을 **반지름이 정하게** 한다.
+        b['per_kind'] = {
+            kd: dict(n=sum(1 for r in sub if r['kind'] == kd),
+                     rP_um=rng(r['rP_um'] for r in sub if r['kind'] == kd),
+                     rSE_um=rng(r['rSE_um'] for r in sub if r['kind'] == kd))
+            for kd in b['kinds']}
         box[nt] = b
     return box
+
+
+def kind_for_radius(b: dict, r_um: float) -> str:
+    """관측된 종류별 반지름 범위로 라벨을 정한다 — 라벨이 반지름을 따르지, 그 반대가 아니다."""
+    pk = b['per_kind']
+    inside = [kd for kd, v in pk.items()
+              if v['rP_um'][0] - 1e-9 <= r_um <= v['rP_um'][1] + 1e-9]
+    if len(inside) == 1:
+        return inside[0]
+    cands = inside or list(pk)
+    return min(cands, key=lambda kd: abs(r_um - sum(pk[kd]['rP_um']) / 2.0))
 
 
 # =========================================================================
@@ -246,7 +265,7 @@ def generate(box: dict, seed: int = DESIGN_SEED) -> tuple[list[dict], list[str]]
                 idx += 1
                 pts.append(dict(
                     id=f'lhsx_{idx:03d}', stratum=st, ntype=nt,
-                    kind='bimodal' if nt == 3 else 'mono_AM',
+                    kind='bimodal' if nt == 3 else kind_for_radius(b, rP),
                     pdd_SE=round(pdd_se, 6),
                     w_AM_P=round((1 - pdd_se) * s, 6),
                     w_AM_S=round((1 - pdd_se) * (1 - s), 6) if nt == 3 else 0.0,
@@ -270,6 +289,11 @@ def report(box: dict, pts: list[dict], notes: list[str], unread: list[str]) -> N
         for k in ('rP_um', 'rS_um', 'rSE_um', 'pdd_SE', 'volfrac', 's_AM_P', 'phi_AM'):
             if k in b and b[k][0] is not None:
                 print(f'     {k:10s} {b[k][0]:>9.4g} .. {b[k][1]:>9.4g}')
+        if len(b['kinds']) > 1:
+            print('     ── 종류별 r_AM (라벨을 이 범위가 정한다)')
+            for kd, v in sorted(b['per_kind'].items()):
+                print(f'        {kd:12s} n={v["n"]:<4d} '
+                      f'{v["rP_um"][0]:>6.3g} .. {v["rP_um"][1]:>6.3g} µm')
     if unread:
         print(f'\n  ⚠ 못 읽은 파일 {len(unread)} 건:')
         for f in unread[:5]:
@@ -373,6 +397,19 @@ def selftest() -> int:
                 abs(r3['phi_AM'] - 0.70248) < 1e-4, f"{r3['phi_AM']}")
             box = derive_box(rows)
             chk('derive_box: 두 종류를 따로 낸다', set(box) == {2, 3}, str(sorted(box)))
+            chk('derive_box: 종류별 반지름 범위를 낸다',
+                box[2]['per_kind']['mono_AM_S']['rP_um'] == (2.5, 2.5),
+                str(box[2]['per_kind']))
+    #  라벨은 반지름이 정한다 — 겹치지 않는 두 범위에서 각각, 그리고 사이 값에서
+    _b = dict(kinds=['mono_AM_P', 'mono_AM_S'], per_kind={
+        'mono_AM_P': dict(n=15, rP_um=(4.0, 7.5), rSE_um=(0.5, 1.0)),
+        'mono_AM_S': dict(n=15, rP_um=(1.0, 2.5), rSE_um=(0.5, 1.0))})
+    chk('kind_for_radius: 범위 안이면 그 종류', kind_for_radius(_b, 6.0) == 'mono_AM_P'
+        and kind_for_radius(_b, 1.5) == 'mono_AM_S')
+    chk('kind_for_radius: 사이 값은 가까운 중심으로',
+        kind_for_radius(_b, 3.0) == 'mono_AM_S'
+        and kind_for_radius(_b, 3.9) == 'mono_AM_P',
+        f'{kind_for_radius(_b, 3.0)} {kind_for_radius(_b, 3.9)}')
     #  못 읽는 파일은 **반환**되어야 한다 (조용히 사라지면 안 된다)
     with tempfile.TemporaryDirectory() as td:
         d = os.path.join(td, 'lhs00_777')
