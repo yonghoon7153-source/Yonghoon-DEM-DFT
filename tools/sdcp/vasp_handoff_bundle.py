@@ -2570,22 +2570,56 @@ def _closure_estimand(man, results, E, emol, jobs):
     if len(frags) < 2:
         return None
 
-    def _is(jn, f):
-        """잡 키가 조각 f 의 복합체인가.
+    # ══ cohort 조립은 **구조화 필드**로 한다 (회신 AA P0-3) ══════════════════
+    #   경로 문자열 파싱은 임시봉합이다. job.json 이 이미 kind·role·fragment·
+    #   seed·basin_id·source_pose·phases·d3 를 갖고 있으므로 그것으로 조립하고,
+    #   **경로와 구조화 필드가 어긋나면 hard fail** 한다 (조용히 한쪽을 믿지 않는다).
+    def _meta(jr):
+        return (jr.get("meta") or {})
 
-        🔴 실제 키에는 **그룹 접두어**가 붙는다 (`prospective/sdcp_neutral__b00__…`,
-        `_pk()` 가 상대경로를 그대로 쓴다). 종전엔 `jn.startswith(f + "__")` 로만
-        봐서 **실물에서 하나도 안 걸렸다** — J_f 가 조용히 비고 basin 강제가 죽은
-        코드가 됐다. selftest fixture 가 접두어 없는 키를 써서 못 봤다
-        (2026-08-29 자체 적대검토).
-        """
-        return jn.rsplit("/", 1)[-1].startswith(f + "__")
+    def _cohort(jn, jr):
+        """이 잡의 (kind, fragment, seed, basin, d3) — 전부 구조화 필드에서."""
+        m = _meta(jr)
+        return {"kind": m.get("kind"), "fragment": m.get("fragment"),
+                "seed": m.get("seed"), "basin": m.get("basin_id"),
+                "d3": m.get("d3"), "role": m.get("role")}
+
+    def _is(jn, f):
+        """조각 f 의 **복합체**인가 — 구조화 필드로만 판단한다."""
+        c = _cohort(jn, jobs.get(jn) or {})
+        return c["kind"] == "prospective_pose" and c["fragment"] == f
     out = {
         "schema": "prereg_closure/v1",
         "prereg_doc": "db/properties/prereg_sdcp_neutral_contrast_2026_08_29.json",
         "candidate_set": man.get("candidate_set") or "legacy_champion/cross (미동결)",
         "blocks": [], "A_by_frag": {},
     }
+
+    # ── 경로 ↔ 필드 정합성. 어긋나면 값을 만들지 않는다 ──────────────────────
+    _incoh = []
+    for _jn, _jr in jobs.items():
+        _m = _meta(_jr)
+        if not _m.get("kind"):
+            _incoh.append(f"{_jn}: job.json 에 kind 없음")
+            continue
+        _base = _jn.rsplit("/", 1)[-1]
+        _fg, _sd, _d3 = _m.get("fragment"), _m.get("seed"), _m.get("d3")
+        if _fg and _m["kind"] == "prospective_pose" and not _base.startswith(_fg + "__"):
+            _incoh.append(f"{_jn}: fragment={_fg} 인데 경로가 그렇지 않다")
+        if _sd and _sd not in _base:
+            _incoh.append(f"{_jn}: seed={_sd} 인데 경로에 없다")
+        if _d3 is not None:
+            if (_d3 == "off") != _base.endswith("__d3off"):
+                _incoh.append(f"{_jn}: d3={_d3} 인데 경로 접미어와 어긋난다")
+        elif _base.endswith("__d3off"):
+            _incoh.append(f"{_jn}: 경로는 d3off 인데 job.json 에 d3 필드가 없다")
+    if _incoh:
+        out["blocks"].append(
+            "COHORT_INCOHERENT(%d건 — 경로와 구조화 필드가 어긋난다: %s). "
+            "어느 쪽이 맞는지 우리가 정할 수 없으므로 값을 만들지 않는다"
+            % (len(_incoh), _incoh[:3]))
+    out["cohort_fields"] = {"checked": len(jobs), "incoherent": len(_incoh)}
+
 
     # (0) calibration 전용 tranche 면 **primary 를 내지 않는다** (회신 X P0-2)
     if str(out["candidate_set"]).startswith(("calibration_pilot", "motif_probe")):
@@ -2658,7 +2692,7 @@ def _closure_estimand(man, results, E, emol, jobs):
     # (2d) clean slab 과의 동종성 — E_ads 를 만들 때 필요하다 (회신 Z P0-4)
     _slab_rb = set()
     for jn, jr in jobs.items():
-        if "clean_slab" not in jn or not jr.get("ok"):
+        if _cohort(jn, jr)["kind"] != "clean_ref" or not jr.get("ok"):
             continue
         rb = ((jr.get("geom") or {}).get("magnetic") or {}).get("realized_basin_id")
         if rb:
@@ -2678,11 +2712,12 @@ def _closure_estimand(man, results, E, emol, jobs):
     for f in frags:
         d = {}
         for jn, jr in jobs.items():
-            if not _is(jn, f) or not jr.get("ok") or jn.endswith("__d3off"):
+            c = _cohort(jn, jr)
+            if not _is(jn, f) or not jr.get("ok") or c["d3"] == "off":
                 continue
-            for sd in ("afm2424_pm1", "afm2424_net4"):
-                if jn.endswith(sd):
-                    d.setdefault(jn[: -len(sd) - 2], {})[sd] = E(jn)
+            if not c["basin"] or not c["seed"]:
+                continue                      # 구조화 필드가 없으면 짝을 못 맞춘다
+            d.setdefault(c["basin"], {})[c["seed"]] = E(jn)
         dp = {k: v["afm2424_net4"] - v["afm2424_pm1"] for k, v in d.items()
               if v.get("afm2424_net4") is not None and v.get("afm2424_pm1") is not None}
         if len(dp) < 2:
@@ -5437,28 +5472,71 @@ def selftest() -> int:
     # ★ 회신 Z P0-4 — 모든 잡이 realized basin 을 달고 있어야 뺄셈이 허용된다.
     #   합성 레코드였던 옛 fixture 는 basin 이 없어 새 게이트에 걸렸다 —
     #   **게이트가 맞고 fixture 가 낡았다** (실물은 LORBIT 로 항상 표가 있다).
-    _BAS = lambda b: {"ok": True, "gates": [],                       # noqa: E731
-                      "geom": {"magnetic": {"realized_basin_id": b}}}
-    _jobs = {k: _BAS("aaaa1111") for k in _en if k.startswith("prospective/")}
+    def _BAS(b, jn="prospective/sdcp_neutral__b00__afm2424_pm1", **kw):
+        """실물 스키마의 job 레코드. **meta 없이 만들면 cohort 조립이 막힌다** —
+        회신 AA P0-3 이후 조각·seed·d3 판정이 전부 구조화 필드에서 나온다."""
+        base = jn.rsplit("/", 1)[-1]
+        m = {"kind": "prospective_pose", "role": "calibration",
+             "fragment": base.split("__")[0], "basin_id": base.split("__")[1],
+             "seed": "afm2424_" + base.split("afm2424_")[1].replace("__d3off", ""),
+             "d3": "off" if base.endswith("__d3off") else "on"}
+        m.update(kw)
+        return {"ok": True, "gates": [], "meta": m,
+                "geom": {"magnetic": {"realized_basin_id": b}}}
+
+    _jobs = {k: _BAS("aaaa1111", k) for k in _en if k.startswith("prospective/")}
     _E = lambda j: _en.get(j)
     r = _closure_estimand(_man, {"pairs": {}}, _E, _emol, _jobs)
     chk(not r["blocks"], f"[V P0-4] 정상 입력에 blocks 없음 · {r.get('blocks')}")
 
     # ⛔음성 (회신 Z P0-4) — seed 이름이 같아도 **수렴 결과**가 갈리면 막는다
     _jb_het = dict(_jobs)
-    _jb_het["prospective/sdcp_neutral__b01__afm2424_pm1"] = _BAS("bbbb2222")
+    _jb_het["prospective/sdcp_neutral__b01__afm2424_pm1"] = _BAS(
+        "bbbb2222", "prospective/sdcp_neutral__b01__afm2424_pm1")
     _rh = _closure_estimand(_man, {"pairs": {}}, _E, _emol, _jb_het)
     chk(any("BASIN_HETEROGENEOUS" in b for b in _rh["blocks"])
         and "primary_ddE_lowE_eV" not in _rh,
         "⛔음성: 한 조각 안에 서로 다른 realized basin 이 섞이면 min 을 안 뽑는다")
     _jb_none = dict(_jobs)
-    _jb_none["prospective/ptfe_c10__b00__afm2424_pm1"] = {
-        "ok": True, "gates": [], "geom": {"magnetic": {}}}
+    _jb_none["prospective/ptfe_c10__b00__afm2424_pm1"] = _BAS(
+        None, "prospective/ptfe_c10__b00__afm2424_pm1")
     _rn = _closure_estimand(_man, {"pairs": {}}, _E, _emol, _jb_none)
     chk(any("BASIN_UNRESOLVED_IN_SET" in b for b in _rn["blocks"]),
         "⛔음성: realized basin 을 못 만든 잡이 있으면 그 집합으로 뺄셈하지 않는다")
+    # ⛔음성 (회신 AA P0-3) — 경로와 구조화 필드가 어긋나면 값을 만들지 않는다
+    _jb_x1 = dict(_jobs)
+    _k1 = "prospective/sdcp_neutral__b00__afm2424_pm1"
+    _jb_x1[_k1] = {**_BAS("aaaa1111", _k1)}
+    _jb_x1[_k1]["meta"] = {**_jb_x1[_k1]["meta"], "fragment": "ptfe_c10"}
+    _rx1 = _closure_estimand(_man, {"pairs": {}}, _E, _emol, _jb_x1)
+    chk(any("COHORT_INCOHERENT" in b for b in _rx1["blocks"]),
+        "⛔음성: job.json 의 fragment 가 경로와 다르면 차단 (어느 쪽이 맞는지 우리가 못 정한다)")
+
+    _jb_x2 = dict(_jobs)
+    _jb_x2[_k1] = {**_BAS("aaaa1111", _k1)}
+    _jb_x2[_k1]["meta"] = {k: v for k, v in _jb_x2[_k1]["meta"].items() if k != "d3"}
+    _rx2 = _closure_estimand(_man, {"pairs": {}}, _E, _emol, _jb_x2)
+    chk(_rx2["cohort_fields"]["incoherent"] == 0,
+        "양성: d3 필드가 없어도 경로가 d3off 가 아니면 정합 (부모 잡)")
+
+    _jb_x3 = dict(_jobs)
+    _k3 = "prospective/sdcp_neutral__b00__afm2424_pm1__d3off"
+    _jb_x3[_k3] = {**_BAS("aaaa1111", _k1)}          # 경로는 d3off, 필드는 on
+    _rx3 = _closure_estimand(_man, {"pairs": {}}, _E, _emol, _jb_x3)
+    chk(any("COHORT_INCOHERENT" in b for b in _rx3["blocks"]),
+        "⛔음성: 경로는 __d3off 인데 job.json 이 d3=on 이면 차단 "
+        "(D3 분해가 통째로 뒤집힌다)")
+
+    _jb_x4 = dict(_jobs)
+    _jb_x4[_k1] = {"ok": True, "gates": [], "geom": {"magnetic": {"realized_basin_id": "a"}}}
+    _rx4 = _closure_estimand(_man, {"pairs": {}}, _E, _emol, _jb_x4)
+    chk(any("COHORT_INCOHERENT" in b for b in _rx4["blocks"]),
+        "⛔음성: job.json(meta) 이 아예 없으면 차단 — 이름으로 추측하지 않는다")
+
     _jb_slab = dict(_jobs)
-    _jb_slab["refs/clean_slab__afm2424_pm1"] = _BAS("cccc3333")
+    _jb_slab["refs/clean_slab__afm2424_pm1"] = _BAS(
+        "cccc3333", "prospective/sdcp_neutral__b00__afm2424_pm1",
+        kind="clean_ref", fragment=None, basin_id=None)
     _rs = _closure_estimand(_man, {"pairs": {}}, _E, _emol, _jb_slab)
     chk(any("BASIN_MISMATCH_SLAB" in b for b in _rs["blocks"]),
         "⛔음성: clean slab 이 복합체와 다른 basin 이면 흡착에너지를 만들지 않는다")
@@ -5488,7 +5566,8 @@ def selftest() -> int:
     # 음성: 자기 topology 게이트된 자세는 버리고 값도 안 낸다
     _j4 = dict(_jobs)
     _j4["prospective/sdcp_neutral__b00__afm2424_pm1"] = {
-        "ok": True, "gates": ["MAGNETIC_PARTIAL_FLIP(3/48 Ni)"]}
+        **_BAS("aaaa1111", "prospective/sdcp_neutral__b00__afm2424_pm1"),
+        "gates": ["MAGNETIC_PARTIAL_FLIP(3/48 Ni)"]}
     r4 = _closure_estimand(_man, {"pairs": {}}, _E, _emol, _j4)
     chk(any("GATED_POSE" in b for b in r4["blocks"]) and "primary_ddE_lowE_eV" not in r4,
         "[음성 V P0-4] 자기 topology 게이트된 자세는 **다음 순위로 조용히 대체하지 않는다**")
