@@ -160,14 +160,17 @@ and a material point method (MPM) for the plastic deformation of the electrolyte
 effective conductivities were then obtained with a finite-volume solver on a voxel grid.
 Rigid-sphere packing was computed in LIGGGHTS from 1,271 NCM811 spheres (r = 2.5 μm) and
 146,420 LPSCl spheres (r = 0.5 μm), mixed 70:27 by weight in a 50 × 50 μm² domain and compacted
-under displacement control. Since rigid-sphere contacts cannot reproduce the plastic flattening
-and rearrangement that densify sulfide powders, the LPSCl contact stiffness was calibrated
-against the measured compaction response (~10 % porosity, 11–12 % contact overlap at 300 MPa);
-the calibrated value (1.35 GPa) is an effective parameter, and the dense-material modulus
-(24 GPa) is listed alongside it in Table S2. Plastic deformation was then resolved on the fixed
-DEM skeleton by MPM with von Mises plasticity (E = 1.53 GPa, ν = 0.49, σ_y = 0.30 GPa), the high
-ν confining the softening to shear (K = 25.5 GPa, G = 0.51 GPa). VGCF, PTFE and SDCP were seeded
-into the pore space at the experimental weight fractions.
+under displacement control. Rigid spheres do rearrange but cannot flatten, fracture or deform
+grain boundaries, so the LPSCl contact stiffness was selected against a densification target for
+sulfide cold pressing rather than taken from the dense material: **1.35 GPa is an empirical
+contact-law input, not an intrinsic modulus and not a validation of these beds**, and 24 GPa is
+listed alongside it in Table S2. The ~10 % target is derived from composite and glass literature
+rather than measured on pure LPSCl, and the 11–12 % overlap is a pure-SE simulation result, not
+a measured target. Plastic deformation was then resolved on the fixed DEM skeleton by MPM with
+J2 plasticity (σ_y = 0.30 GPa); the elastic pair E = 1.53 GPa, ν = 0.49 is a model choice giving
+K = 25.5 GPa and G = 0.51 GPa, confining the softening to shear. VGCF, PTFE and SDCP were
+**present in the material-point cloud during compaction** at the experimental weight fractions.
+The resulting beds are more compacted than the experimental porosity anchor.
 
 Each microstructure was rasterized at a voxel edge of 0.15 μm; adjacent conducting voxels were
 coupled through harmonic-mean conductances and ∇·(σ∇φ) = 0 solved with 1 V between the
@@ -186,14 +189,20 @@ the powder-scale value was adopted and rescaled to preserve axial fibre conducta
 Each electrode was solved at all eight half-voxel grid-origin shifts of a 2 × 2 × 2 factorial,
 SBE and DBE sharing the same origins so that ratios are paired. These eight phases are a
 complete factorial of a single bed rather than independent replicates, so ratios are given as
-the mean over the prescribed phases with the spread and observed range, and no standard error is
-implied. Ohmic loss per phase was evaluated as Σ g_k Δφ_k². Absolute conductivities are those of
-an idealised bulk model containing no interfacial contact resistance and are not
-composition-matched to a measurement; the ratio is not grid-converged and increases on
-refinement, so the reported gain is a lower bound on that axis. Its magnitude is likewise
-conditional on the carbon conductivity being an effective network constant — at the
-single-filament value, which assumes perfect fibre–fibre contact as well, the ordering
-reverses.
+the mean over the prescribed phases with the spread and observed range; **no standard error and
+no confidence interval** are implied. Ohmic loss per phase was evaluated as Σ g_k Δφ_k². The two
+binder conventions give 72.3/81.3 mS cm⁻¹ (ratio 1.124) and 54.0/70.6 mS cm⁻¹ (ratio 1.308):
+**the direction is common to both, the magnitude is not.** Absolute conductivities are those of
+an idealised bulk model with no interfacial contact resistance anywhere and are not
+composition-matched to a measurement. The ratio is not grid-converged and grew at finer voxels
+**over the refinement interval examined**; no continuum extrapolation or global bound is
+established. Restoring the additive contacts that voxelisation drops recovers about a fifth of
+that dependence, **measured under the binder-omitted convention only**. The magnitude is also
+conditional on the carbon conductivity being an effective network constant: at the
+single-filament value the ordering reverses, but that arm is **not better physics** — it is a
+doubly idealised sensitivity at one origin phase. Two further limits: the beds are more
+compacted than the experimental porosity anchor, and the specimen provenance of the SDCP
+conductivity (250 S cm⁻¹) is not established.
 
 ---
 
@@ -209,33 +218,51 @@ reverses.
 | 블록 | 들어가는 행 |
 |---|---|
 | **DEM (packing)** | 도메인 50 × 50 µm² · NCM811 r 2.5 / E 140 GPa · LPSCl r 0.5 / E(dense) 24 / **E(DEM contact) 1.35 `Calibrated`** |
-| **MPM (plastic compaction)** | E 1.53 · ν 0.49 · σ_y 0.30 (전부 `Calibrated`) |
+| **MPM (plastic compaction)** | E 1.53 · ν 0.49 → **`Model choice`** (K 25.5 · G 0.51 을 만든다) · σ_y 0.30 → **`Selected against densification target`** |
 | **Voxel transport** | Voxel edge 0.15 µm · σ_e(NCM) 1.0 × 10⁻² · σ_ion(LPSCl) 3.0 × 10⁻³ · **σ_e(VGCF, powder) 1.0 × 10²** · **σ_e(VGCF, voxel diameter-preserving) 78.5** · σ_e(SDCP) 250 · PTFE 0 |
 
-⚠ `E(dense) 24` 와 `E(DEM contact) 1.35` 를 **둘 다 남긴다.**  `Calibrated` 라벨도 그대로.
-VGCF 두 행(powder / voxel)도 그대로 — 규약이 표에서 보여야 한다.
+⚠ `E(dense) 24` 와 `E(DEM contact) 1.35` 를 **둘 다 남긴다.**  VGCF 두 행(powder / voxel)도
+그대로 — 규약이 표에서 보여야 한다.
+⚠⚠ **`Calibrated` 한 라벨로 뭉치지 않는다** (R10 재판정): `E(DEM contact) 1.35` 는
+**`Empirical contact-law input`**, MPM 의 `E, ν` 는 **`Model choice`**, `σ_y` 는
+**`Selected against densification target`**.  세 역할이 다르다.
 
-## Table S3 — 갱신 (옛 값 전량 교체)
+## Table S3 — σ_ele 만 갱신, 나머지는 미완 (⚠ 투고용 아님)
 
 | Parameter | SBE | DBE | Unit |
 |---|---|---|---|
 | Thickness | 72.53 | 72.53 | µm |
 | ε_union (simulation-geometry diagnostic) | 7.86 | 7.37 | % |
-| σ_ele,eff (PTFE resolved — reported) | **54.0** | **70.6** | mS cm⁻¹ |
-| σ_ele ratio (paired, 8 origin phases) | — | **1.308** | — |
-| ⌐ spread / range | — | 0.003 / 1.302–1.310 | — |
-| σ_ion,eff | *재측정 필요* | *재측정 필요* | — |
-| SE coverage of AM · VGCF coverage · CBD contacts · connectivity · areal capacity | *새 침대에서 재측정 필요* | | |
+| σ_ele,eff — `PTFE omitted from the electronic grid (legacy/default convention)` | 72.3 | 81.3 | mS cm⁻¹ |
+| σ_ele,eff — `PTFE centerline voxels excluded (exact-zero sensitivity convention)` | 54.0 | 70.6 | mS cm⁻¹ |
+| σ_ele ratio (paired, 8 origin phases) — omitted / centerline-excluded | 1.124 | 1.308 | — |
+| ⌐ spread / range | 0.003 / 1.120–1.127 | 0.003 / 1.302–1.310 | — |
+| σ_ion,eff | *not evaluated in this cohort* | *not evaluated in this cohort* | — |
+| SE coverage of AM | *pending — new bed* | *pending — new bed* | % |
+| VGCF coverage of AM | *pending — new bed* | *pending — new bed* | % |
+| Median CBD contacts per AM | *pending — new bed* | *pending — new bed* | ea |
+| Electronic connectivity | *pending — new bed* | *pending — new bed* | % |
+| Areal capacity | *pending — new bed* | *pending — new bed* | mAh cm⁻² |
 
-⚠ **`Porosity` 를 `ε_union` 으로 개명하고 각주**: 시뮬레이션 기하 진단값이며 통상적인 전극
-porosity 가 아니다.  실험 앵커(~15.6 %) 대비 과압축이다.
+⚠ **두 규약을 같은 서식으로 적는다** — 굵은 글씨·`reported`·`resolved` 금지 (R10 재판정 1).
+⚠ **`σ_ion` 은 이번 cohort 에서 평가하지 않았다** (`LEAN=2` 가 이온을 안 푼다).  옛 값을
+재사용하지 않는다.  나머지 다섯 행은 **각각** 상태를 적는다 (한 행에 합치지 않는다).
+
+**`ε_union` · thickness 연산 정의** (R10 재판정 6):
+- `ε_union = 1 − V_solid / (A · (z_plate − z_floor))` — 분자는 **겹침을 한 번만 세는 합집합
+  부피**, 분모는 바닥판과 플래튼 사이의 상자 부피.  통상적인 전극 porosity 가 **아니다**.
+- `Thickness` = **terminal wall separation under the kinematic stopping rule** — 플래튼이
+  멈춘 위치로 정해지는 값이지 응력 평형에서 창발한 두께가 아니다.
+- ⚠ 두 침대의 thickness 가 **같다는 것이 과압축이 비에서 상쇄된다는 뜻이 아니다.**
+  같은 속도·같은 정지 위치는 **like-for-like 입력**을 보장할 뿐이다.
+- 실험 앵커(~15.6 %) 대비 **과압축**이다.
 
 ## Table S3b (신설) — PTFE 표현 민감도
 
 | PTFE convention | σ_ele SBE | σ_ele DBE | ratio | spread | range |
 |---|---|---|---|---|---|
-| **resolved as blocking phase (reported)** | **54.0** | **70.6** | **1.308** | 0.003 | 1.302–1.310 |
-| left unresolved | 72.3 | 81.3 | 1.124 | 0.003 | 1.120–1.127 |
+| PTFE omitted from the electronic grid (legacy/default convention) | 72.3 | 81.3 | 1.124 | 0.003 | 1.120–1.127 |
+| PTFE centerline voxels excluded (exact-zero sensitivity convention) | 54.0 | 70.6 | 1.308 | 0.003 | 1.302–1.310 |
 
 각주: *Both conventions were evaluated on the same beds with the same code and grid, differing
 only in whether the insulating binder occupies conduction cells; a machine-checked contract
@@ -252,9 +279,11 @@ of the change is common to both conventions, its magnitude is not.*
 
 | 자리 | 현재 | 고침 |
 |---|---|---|
-| §전송 문단 | *"σ_ele increases from 1.98 to 3.00 S cm⁻¹"* | **"from 54.0 to 70.6 mS cm⁻¹"** (+30.8 %) — ⚠ 같은 문장 또는 바로 뒤에 **미표현 규약 값(72.3 → 81.3, +12.4 %)도 함께**.  한쪽만 적지 않는다 |
+| §전송 문단 | *"σ_ele increases from 1.98 to 3.00 S cm⁻¹"* | **두 규약을 동등하게** — *"72.3 → 81.3 mS cm⁻¹ (ratio 1.124) with the binder omitted from the electronic grid, and 54.0 → 70.6 (1.308) with its centerline voxels excluded"*.  ⚠ **어느 쪽도 먼저 headline 으로 주지 않는다** |
 | 같은 문단 | *"σ_ion … 0.203 and 0.215 mS cm⁻¹"* | ⚠ **재측정 전까지 보류** |
-| 같은 문단 | *"reconstructed using a discrete element method (DEM)"* | *"reconstructed with a DEM–MPM workflow"* |
-| Figure 4a 설명 | *"DEM-reconstructed …"* | *"DEM–MPM-reconstructed …"* |
-| Figure 4b | 옛 σ 값 그림 | 새 값으로 재작도 |
-| Table S3 제목 | *"…from the DEM simulations"* | *"…from the DEM–MPM–voxel transport workflow"* |
+| 같은 문단 | *"reconstructed using a discrete element method (DEM)"* | *"**generated** by DEM packing and MPM compaction"* — ⚠ `reconstructed` 는 tomography 재구성을 암시한다 |
+| Figure 4a 설명 | *"DEM-reconstructed …"* | *"DEM-packed and MPM-compacted …"* |
+| Figure 4b | 옛 σ 값 그림 | **재작도 필요** (두 규약 병기) |
+| Table S3 제목 | *"…from the DEM simulations"* | *"Structural metrics from the DEM–MPM geometry and transport metrics from the voxel finite-volume solver"* |
+| Figure S16–S18 설명 | *"…for the DEM simulations"* | ⚠ **미감사** — 외부 DOCX 라 리포 스윕 사정권 밖 |
+| §전송 문단 첫 문장 | 한쪽 규약만 | **두 값을 한 문장 또는 병렬 표로 동등하게** |

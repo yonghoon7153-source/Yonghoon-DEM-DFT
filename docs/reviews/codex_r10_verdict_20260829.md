@@ -40,9 +40,9 @@
 
 | # | 조건 | 상태 |
 |---|---|---|
-| 1 | centerline 단일 primary·굵은글씨·`reported`/`resolved` 제거, 두 규약 **동등 sensitivity** | ✅ 적용 — ⚠ **1차 반영은 머리만 고치고 본문 3곳을 놓쳤다** (아래 부록 B) |
-| 2 | calibration provenance · DEM/MPM 역할 · **첨가제 단계 순서** 정정 | ✅ 적용 |
-| 3 | `lower bound` · "contact resistance 복원" · 무조건 SDCP 개선 주장 → 조건부 문구 | ✅ 적용 |
+| 1 | centerline 단일 primary·굵은글씨·`reported`/`resolved` 제거, 두 규약 **동등 sensitivity** | **PARTIAL → 2차 반영** (1차는 머리만·2차는 Full 만 — 부록 B·C) |
+| 2 | calibration provenance · DEM/MPM 역할 · **첨가제 단계 순서** 정정 | **PARTIAL → 2차 반영** (Full 만 고쳤고 Compact 가 오류를 되살렸다) |
+| 3 | `lower bound` · "contact resistance 복원" · 무조건 SDCP 개선 주장 → 조건부 문구 | **PARTIAL → 2차 반영** (Compact 에 `lower bound` 가 남아 있었다) |
 | 4 | **W4 원자료·receipt 를 고정 커밋에** 넣어 원장 HOLD 해제 | ⛔ 미착수 (task #10) |
 | 5 | σ_ion 및 나머지 Table S3 행 **재측정 또는 명시적 제외** | ⛔ 미착수 |
 | 6 | `ε_union`·thickness 의 **연산 정의** + 과압축 한계 추가 | ⛔ 미착수 |
@@ -109,3 +109,38 @@ R10 반영 커밋(`6e65e28b`)은 문서 **머리**에 *"centerline 은 resolved 
 지금 그렇게 했다: `grep -c "PTFE was resolved\|half of the compositional"` → **0**.
 ⚠ 이것을 검사기로 만들 수 없는 이유: 철회 문구는 매번 다르고 `quotation_ban` 은 **수치**
 등록부다.  ⇒ 절차로만 막힌다 (반영 커밋마다 잔여 grep).
+
+---
+
+## 부록 C — 재판정 (2026-08-29) : **0/8**, 그리고 `grep 0` 이 **거짓 영**이었다
+
+재판정 대상 `6a024dfc`.  결과: **완전 충족 0/8**, 조건 1·2·3 의 `✅` 는 **전부 되돌림**.
+
+**무엇이 남아 있었나** — Full 은 고쳐졌는데 **Compact 와 SI 표가 정정 전 판단을 재도입**:
+
+| 자리 | 재도입된 것 |
+|---|---|
+| Table S3 | `σ_ele,eff (PTFE resolved — reported)` + centerline 값만 굵게 |
+| Table S3b | `resolved as blocking phase (reported)` + 그 행만 굵게 — **각주는 반대로 "neither is designated primary"** |
+| Compact 보정 문단 | rigid-sphere 가 rearrangement 를 못 한다 · `~10 %`·`11–12 %` 를 `measured` 로 · 첨가제 `were seeded` |
+| Compact 한계 | **`lower bound on that axis`** (철회된 문장) · `no CI` 누락 · 두 규약 수치 누락 · A-track 1/5 범위 누락 · σ_VGCF 상한팔 한정 누락 |
+| Table S2 | MPM `E·ν·σ_y` 를 **전부 `Calibrated`** 로 뭉침 |
+
+★★ **`grep 0` 이 왜 거짓 영이었나** — 부록 B 의 검색식은
+`PTFE was resolved|half of the compositional` **두 문자열만** 봤다.  그 결과 0 은 맞다.
+그러나 표는 **변형**(`resolved — reported`)을 쓰고 Compact 는 **다른 말로 같은 주장**을 한다.
+⇒ **내가 방금 고친 것만 볼 수 있게 짜인 검사**였다.  스스로에게 초록불을 준 셈이다.
+
+**대체 검사** (지금 쓴 것) — 승인 라벨 + 금지 표현을 **함께** 본다:
+```
+금지: reported\)  |  — reported  |  resolved as blocking  |  PTFE was resolved
+      lower bound on that axis  |  half of the compositional  |  전부 `Calibrated`
+승인: PTFE omitted from the electronic grid (legacy/default convention)
+      PTFE centerline voxels excluded (exact-zero sensitivity convention)
+```
+⚠ 이것도 **완전하지 않다** — 다른 말로 같은 주장을 하는 것은 문자열로 못 잡는다.
+Compact 의 재도입이 그 증거다.  ⇒ **정정 반영은 두 판을 나란히 읽어 대조**해야 한다.
+
+★ **오늘 이 형태가 다섯 번**이다: ① Table S3 헤더 ② §5 국문 요약 ③ A1 §4
+④ 같은 문서 머리↔본문 ⑤ **Full ↔ Compact·표**.  ⇒ 문서를 **쌍으로** 유지하는 구조
+자체가 이 실패를 만든다.  압축형을 **Full 에서 기계적으로 파생**시키지 않는 한 반복된다.
