@@ -80,10 +80,13 @@ SUBMIT_CONTRACT 는 120 h 를 권한다.
 | 회신 Q2 발송본 | `kb/reviews/codex_Q2_prompt_claim_and_normalization_2026_08_29.md` |
 | P0-5 재현 시험 도구 | `site_screen.py score --clean_probe 2` |
 
-**확정 해시** (외주 대조용):
-`sdcp_stageA_v2.zip` 380,929 B `ddfa7cc0…6ca8695f` ·
-`sdcp_motifprobe_v2.zip` 150,658 B `59cdfff5…b442ba6`
-두 번들 clean_slab 동일: `d5f18feb…c43676`.
+**발송본 = `sdcp_stageA_v5.zip` (40잡) 하나뿐이다.**
+zip `8c658763…56ba713c` · MANIFEST `0860ae43…a876670e` ·
+clean_slab `d5f18feb…c43676` · 후보 frozen `94675e66e02c855a`.
+
+⚠ **v1~v4 는 전부 폐기본이다** — v2 문서가 이완판(반송계약 오류) · v3 후보집합이
+다름(c10 2자세, 그 후보 파일은 repo 에 없다) · v4 MANIFEST 실행횟수 24(문서는 40).
+`sdcp_motifprobe_v2` 는 **Stage B 동결 뒤로 미뤘다** (회신 Z P0-5).
 
 ### 🔴 이 셋은 이 절을 읽고 알아야 한다
 

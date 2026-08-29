@@ -20,7 +20,18 @@
    "자리 선호(Li vs Ni) — matched pose n≥3 미충족 (사전등록 ⛔_금지 승계)",
    "sdcp_doped — 별도 미해결"
   ],
-  "clean_slab_전제": "두 번들 모두 d5f18feb15701f3fc932a1c8f64a09ed48c39ca270d8d8a8f5339658b6c43676 (2026-08-29 gabia 실측). 이 전제가 깨지면 아래 전부 무효다."
+  "clean_slab_전제": "두 번들 모두 d5f18feb15701f3fc932a1c8f64a09ed48c39ca270d8d8a8f5339658b6c43676 (2026-08-29 gabia 실측). 이 전제가 깨지면 아래 전부 무효다.",
+  "발송_번들_정체성_2026_08_29": {
+   "파일": "sdcp_stageA_v5.zip",
+   "zip_sha256": "8c6587635e559e81dff68be0b960d318e852ea2b4b608d26f0f11bc656ba713c",
+   "manifest_sha256": "0860ae4340218b599100052d12fa941aa2a319a74f1b43de8c6ddd36a876670e",
+   "잡": "40 (references 16 + calibration complexes 24 · 전부 static)",
+   "후보집합": "db/properties/prospective_basins_2026_08_29.json · frozen 94675e66e02c855a",
+   "자세": "sdcp_neutral b00 b01 b07 b08 · ptfe_c10 b00 b01 b74 b75 — 사전등록 동결본 그대로. sealed_audit(b09 b62 · b76 b21)은 열지 않았다",
+   "clean_slab": "d5f18feb15701f3fc932a1c8f64a09ed48c39ca270d8d8a8f5339658b6c43676",
+   "⚠_폐기본": "v1~v4 는 보내지 않는다. v2 문서가 이완판(반송계약 오류) · v3 후보집합이 다름(c10 2자세, 그 후보 파일은 repo 에 없다) · v4 MANIFEST 실행횟수 24 (문서는 40) — 셋 다 이 캠페인의 번들이 아니다",
+   "검증": "vasp_handoff_bundle.py --verify_bundle --expect_jobs 40 → rc=0 (배포파일 245 전건 해시 일치)"
+  }
  },
  "2_닫힘_조건_C1_UMA_DFT_오프셋_상수성": {
   "무엇을_묻나": "UMA(omat) 를 **조각 내** 자세 선택기로 써도 되는가.",
@@ -176,6 +187,11 @@
    "at": "2026-08-29b",
    "state": "conditions_amended_pre_results",
    "note": "외부 리뷰(회신 Z) NO-GO 반영. 여전히 **DFT 0잡** 시점이다 — 값을 보고 고친 것이 아니다. C4(모티프 대비)를 이번 범위에서 **빼고** Stage B 동결 뒤로 미뤘다. C1~C3 문턱은 손대지 않았다."
+  },
+  {
+   "at": "2026-08-29c",
+   "state": "bundle_frozen_pre_results",
+   "note": "회신 Z P0 8건 반영 후 v5 재생성·검증 완료. 여전히 **DFT 0잡** 시점이다. C1~C3 문턱은 최초 등록(2026-08-29) 이후 손대지 않았다."
   }
  ]
 }

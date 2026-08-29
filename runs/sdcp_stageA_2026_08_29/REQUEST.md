@@ -1,6 +1,6 @@
 # VASP 계산 요청 — SDCP / perfluorodecane 조각의 LiNiO₂(104) 흡착 (Stage A)
 
-- 요청일: 2026-08-29 · 묶음 **하나**: `sdcp_stageA_v4.zip` (**40잡**)
+- 요청일: 2026-08-29 · 묶음 **하나**: `sdcp_stageA_v5.zip` (**40잡**)
 - ⚠ `sdcp_motifprobe_v2`(10잡)는 **이번에 보내지 않습니다** (아래 §8)
 - 생성기: `tools/sdcp/vasp_handoff_bundle.py` (모드 `--closure --d3_pairs --both_seeds`)
 - 계보: 2026-08-12 묶음(30잡, 2026-08-25 반송)과 **같은 생성기·같은 U·같은 ENCUT**.
@@ -154,14 +154,22 @@ python3 analyze_results.py .     # stdlib 만 씁니다
 
 ## 6. 무결성
 
-| 파일 | 크기 | SHA256 |
-|---|---:|---|
-| `sdcp_stageA_v4.zip` | *(재생성 후 기입)* | *(재생성 후 기입)* |
+| 항목 | 값 |
+|---|---|
+| 파일 | `sdcp_stageA_v5.zip` (약 0.4 MB) |
+| ZIP SHA256 | `8c6587635e559e81dff68be0b960d318e852ea2b4b608d26f0f11bc656ba713c` |
+| `MANIFEST.json` SHA256 | `0860ae4340218b599100052d12fa941aa2a319a74f1b43de8c6ddd36a876670e` |
+| 잡 | 40 (references 16 + calibration complexes 24) |
+| 총 VASP 실행 | 40 (전부 `static`) |
+| clean slab | `d5f18feb15701f3fc932a1c8f64a09ed48c39ca270d8d8a8f5339658b6c43676` |
+| 후보집합 | `db/properties/prospective_basins_2026_08_29.json` · frozen `94675e66e02c855a` |
 
-받으신 뒤 대조해 주세요 — `sha256sum sdcp_stageA_v2.zip`.
-⚠ 파일명 끝의 **`_v4`** 를 확인해 주세요. `_v1`·`_v2`·`_v3` 는 폐기본입니다.
-특히 `_v3`(34잡)는 후보집합이 다릅니다 — SDCP 4 + c10 **2** 자세이고,
-그 후보 파일이 repo 에 없어 재현·감사가 안 됩니다.
+받으신 뒤 대조해 주세요 — `sha256sum sdcp_stageA_v5.zip`.
+
+⚠ 파일명 끝의 **`_v5`** 를 확인해 주세요. `_v1` ~ `_v4` 는 전부 폐기본입니다:
+`_v2`(40잡)는 문서가 이완판이라 반송 계약이 틀렸고, `_v3`(34잡)는 후보집합이 다르며
+(c10 이 2자세), `_v4`(40잡)는 `MANIFEST` 의 실행 횟수가 24 로 잘못 적혀 있었습니다.
+`_v5` 만이 위 해시와 맞습니다.
 
 각 묶음 안 `MANIFEST.json` 의 `files_sha256` 로 개별 파일까지 대조하실 수 있습니다:
 `sha256sum <파일>`.
