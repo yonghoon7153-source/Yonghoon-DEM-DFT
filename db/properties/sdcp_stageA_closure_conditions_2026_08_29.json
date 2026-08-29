@@ -1,0 +1,173 @@
+{
+ "schema": "campaign_closure_prereg/v1",
+ "date": "2026-08-29",
+ "제목": "Stage A 닫힘 조건 — **DFT 결과를 하나도 보기 전에** 박는다",
+ "지위": "conditions_registered_pre_results",
+ "왜_이_파일이_먼저인가": "CLAUDE.md 마감 규율: '데이터를 보고 닫혔다고 판단하지 않는다. 조건을 먼저 정하고, 그게 채워졌으므로 닫는다.' SDCP 는 조건 없이 두 번 닫았다가 두 번 물렸다(2026-07-17 doped v1 철회 · 2026-08-28 회신 M 마감보류). 선례 db/properties/sdcp_neutral_closed_2026_08_28.json 은 스스로 '사후 마감(post-hoc)이다 — 다음 캠페인부터 결과 전에 조건 고정(회신 N D6-1)' 이라고 적었다. **이 파일이 그 다음 캠페인이다.**",
+ "시각_증거": "이 파일의 최초 커밋은 두 번들이 gabia 에서 검증만 되고 **VASP 가 한 잡도 돌지 않은 시점**이다. git log 가 그 순서의 증거다 — 나중에 값을 채워 넣어도 조건은 이 커밋의 것이다.",
+
+ "0_먼저_박는_사실_이것을_모르면_3일_뒤에_놀란다": {
+  "실측": "두 번들의 candidate_set 은 `calibration_pilot` (Stage A) 과 `motif_probe` (probe) 다 (2026-08-29 gabia MANIFEST 실측).",
+  "분석기가_무엇을_하나": "tools/sdcp/vasp_handoff_bundle.py 의 ANALYZER `_closure_estimand()` 는 candidate_set 이 그 두 이름으로 시작하면 `CALIBRATION_ONLY_TRANCHE` 를 blocks 에 넣고 `verdict = NO_VALUE` 로 끝낸다. **설계된 fail-closed 다.**",
+  "⇒": "**사전등록 primary X (ΔΔE_lowE) 는 이 캠페인에서 나오지 않는다.** 그것은 창 W 확정 → 창 안 전 자세(S_W≈83) 계산 → audit 봉인해제 → regret 판정을 마쳐야 나오고, 그것이 Stage B(최대 277잡·4개월)다. Stage B 는 이번 원고 경로가 아니다 (인계 §3).",
+  "이것은_실패가_아니다": "Stage A 는 그 값을 내려고 던지는 것이 아니라 **창을 정하고 선택기를 교정하려고** 던진다. 3일 뒤 분석기가 NO_VALUE 를 내면 그것이 정상 동작이다 — 우회하지 않는다.",
+  "⛔_따라서_금지": "회수된 24개 complex 값에서 min−min 을 손으로 계산해 '결합에너지 숫자' 로 쓰는 것. 그것은 사전등록 estimand 가 아니고, 분석기가 막은 것을 손으로 넘는 것이다."
+ },
+
+ "1_닫는_범위": {
+  "포함": "sdcp_stageA_v2(40잡) + sdcp_motifprobe_v2(10잡) 의 all-F 고정기하 static 단일점이 답할 수 있는 것 — 아래 C1~C4 넷.",
+  "제외": [
+   "사전등록 primary X (ΔΔE_lowE) — Stage B 없이는 정의되지 않는다",
+   "절대 흡착에너지의 원고 인용 — legacy(wave1) 는 clean slab 이 다르고(daf71160 vs d5f18feb) 신규는 후보집합이 calibration 이다",
+   "자리 선호(Li vs Ni) — matched pose n≥3 미충족 (사전등록 ⛔_금지 승계)",
+   "sdcp_doped — 별도 미해결"
+  ],
+  "clean_slab_전제": "두 번들 모두 d5f18feb15701f3fc932a1c8f64a09ed48c39ca270d8d8a8f5339658b6c43676 (2026-08-29 gabia 실측). 이 전제가 깨지면 아래 전부 무효다."
+ },
+
+ "2_닫힘_조건_C1_UMA_DFT_오프셋_상수성": {
+  "무엇을_묻나": "UMA(omat) 를 **조각 내** 자세 선택기로 써도 되는가.",
+  "왜_지금_묻나": "사전등록이 '조각내_후보_선택기 ✅ 유효' 라고 적었는데 근거가 **조각당 자세 2개**뿐이다. 같은 문서가 '확정하려면 조각당 3자세 이상 DFT 가 필요하다' 고 스스로 적었다. Stage A calibration 이 조각당 4자세를 준다.",
+  "계산식": "각 자세 p 에서 off(f,p) = E_UMA(f,p) − E_DFT(f,p) (같은 기하, pm1 D3-on). 조각 내 산포 S_f = max_p off − min_p off.",
+  "판정_문턱_결과_보기_전_고정": {
+   "S_f ≤ 0.050 eV": "**조각 내 근사 상수 확정** — UMA 를 조각 내 선택기로 쓴 것이 정당화된다",
+   "S_f > 0.050 eV": "**'조각 내 상수' 기각** — 사전등록의 '조각내_후보_선택기 ✅ 유효' 판정을 철회하고, 그 위에 세운 prospective 설계 전체를 재심사 대상으로 올린다"
+  },
+  "왜_0.050_인가": "사전등록 게이트 6 의 보고 해상도가 0.01 eV 이고 방향성 guard band 가 0.10 eV 다. 선택기 오차가 보고 해상도의 5배·guard 의 절반을 넘으면 그 선택기로 고른 후보의 순위를 신뢰할 근거가 없다. ⚠ 이 값은 **어림**이다 — 기존 실측(SDCP 2자세 6 meV · PTFE 2자세 37 meV)이 둘 다 아래에 있는 것을 보고 정했으므로, 통과하면 '기존 관측과 모순 없음' 이지 강한 확증이 아니다.",
+  "⚠_이_조건이_약한_지점": "n=4 도 여전히 작다. 통과해도 '4자세 표본에서 산포가 문턱 아래' 까지만 쓴다."
+ },
+
+ "3_닫힘_조건_C2_자기_seed_민감도_J_f": {
+  "지위": "**새로 정하지 않는다.** 회신 X Q1 이 결과 전에 이미 고정했고 분석기에 구현돼 있다 (`pose_basin_interaction`).",
+  "식": "조각별로 d_p = E(p, net4) − E(p, pm1) 를 모아 J_f = max_p d_p − min_p d_p",
+  "문턱": {
+   "≤ 10 meV": "시험한 자세 안에서 seed-insensitive",
+   "10–40 meV": "magnetic-sensitive — 값을 인용할 때 자기상태를 병기한다",
+   "> 40 meV": "**SELECTOR_FAIL** — UMA 단일 에너지로 순위를 닫을 수 없다. Stage B 설계를 다시 한다"
+  },
+  "⚠_전제": "두 seed 가 서로 **다른 realized basin** 으로 갔으면 J_f 는 seed 민감도가 아니라 basin 섞임이다. 회신 X P0-4 의 `realized_basin_id`(Ni sign-vector · moment collapse · 유기종 상대스핀) 확인이 먼저다. 확인 못 하면 J_f 를 판정에 쓰지 않는다."
+ },
+
+ "4_닫힘_조건_C3_D3_분해": {
+  "무엇을_묻나": "조각 간 UMA 오프셋 차등 0.90 eV (SDCP ~1.070 vs PTFE ~0.167) 의 원인이 **빠진 분산**인가.",
+  "왜_지금_묻나": "회신 W 가 우리 귀속을 철회시키고 원인 후보 셋을 세웠다 — ① missing D3 의 조각별 평균차 ② 기체 유기분자 기준의 조각별 오차 ③ 자세별 magnetic basin. **우리는 셋을 못 가른다.** D3 짝(IVDW 줄만 뺀 쌍둥이)이 ①을 직접 잰다.",
+  "계산식": "ΔE_D3(ads,f) = [E_on−E_off]_complex(f) − [E_on−E_off]_slab − [E_on−E_off]_gas(f). 조각 간 차 D = |ΔE_D3(ads,SDCP) − ΔE_D3(ads,c10)|.",
+  "세_항_전부_필요한_이유": "회신 X Q4 — 조각 간 절대 대비에는 complex·clean slab·gas 셋 다 필요하다. 특히 기체의 분자내 D3 는 조각 사이에서 소거되지 않는다. Stage A refs 가 세 항의 D3 짝을 전부 담고 있다.",
+  "판정_문턱_결과_보기_전_고정": {
+   "D ≥ 0.63 eV (0.90 의 70 %)": "**① 채택** — 조각 간 오프셋 차등의 주원인은 빠진 분산이다",
+   "D ≤ 0.27 eV (0.90 의 30 %)": "**① 기각** — 원인은 ② 또는 ③ 이다. 기체 기준 오차 쪽이 남으면 UMA 절대값 인용 금지가 더 강해진다",
+   "0.27 < D < 0.63": "**미해결** — 셋 다 살아 있다. 어느 것도 채택하지 않는다"
+  },
+  "왜_70/30_인가": "'주원인' 이라 부르려면 과반을 넘어야 하고, '기각' 하려면 소수 기여로 남아야 한다. 사이 구간을 넓게 둔 것은 의도다 — 한 번의 계산으로 셋 중 하나를 고르기에는 표본이 작다(조각당 4자세). ⚠ 이 문턱은 물리에서 유도한 것이 아니라 **판정 규칙**이다.",
+  "⛔_D3_off_값의_지위": "원인 진단 전용. **판정값이 아니다** (MANIFEST d3_off_note 승계). D3-off 에너지를 흡착에너지로 인용하지 않는다."
+ },
+
+ "5_닫힘_조건_C4_모티프_대비": {
+  "무엇을_묻나": "SDCP 의 표면 결합이 **술폰산 O–H···표면 O 수소결합**에서 오는가, **백본 C–H 접촉**에서 오는가.",
+  "왜_이_형태로_묻나": "동결된 calibration 4자세가 **전부 산성 H 앵커**다(H···O 1.827/1.848/1.871/2.294 Å, 4/4 단조). 그대로면 '수소결합 자세들의 에너지' 는 재지만 '수소결합이 백본보다 유리한가' 는 못 잰다 — 대조 모티프가 집합 안에 없다. motif probe 가 그 대조군이다.",
+  "계산식": "ΔE_motif = min{E_complex(probe0), E_complex(probe1)} − min{E_complex(b00), E_complex(b01), E_complex(b07), E_complex(b08)}, 전부 sdcp_neutral · pm1 · D3-on · 같은 clean slab.",
+  "🔑_기준계가_필요_없다": "같은 조각·같은 슬랩이라 E_mol 과 E_slab 이 **정확히 소거된다.** 이 값은 wave1 을 물린 reference-equivalence 문제(NUPDOWN 비대칭 · LREAL 비대칭)에 원리적으로 걸리지 않는다 — 캠페인에서 가장 견고한 비교다. ⚠ 단 두 번들의 INCAR·KPOINTS·자기 seed 가 실제로 같아야 하고, 분석기의 INCAR 되울림 감사가 그것을 확인한다.",
+  "판정_문턱_결과_보기_전_고정": {
+   "ΔE_motif ≥ +0.05 eV": "백본 probe 가 더 높다 = **수소결합 자세가 낮다** → 술폰산 O–H 가 결합을 지배한다 (Han 2025 과 일치)",
+   "|ΔE_motif| < 0.05 eV": "**두 모티프가 구별되지 않는다** — 기전 주장 없이 에너지만 쓴다",
+   "ΔE_motif ≤ −0.05 eV": "**백본 probe 가 낮다** → 회신 T 의 기전 철회가 신규 자세에서도 유지. 기전 주장 없음"
+  },
+  "왜_0.05_인가": "사전등록 게이트 4 의 '두 selector 일치' 판정에 쓴 보고 해상도와 같은 값이다. 새 문턱을 만들지 않고 승계한다.",
+  "🔴_비대칭을_지금_적어_둔다_결과를_보고_해석을_고르지_않기_위해": {
+   "선택기_편향의_방향": "probe 자세는 UMA-omat 으로 골랐고 omat 에는 분산이 없다. 분산은 접촉 면적에 비례하므로 **납작하게 눕는 백본 자세가 손해**를 본다. 즉 선택기가 백본을 **불리하게** 매긴다.",
+   "따라서_백본_우세가_나오면": "**강한 결과다** — 불리한 선택기로 고른 자세가 그럼에도 이겼다.",
+   "따라서_수소결합_우세가_나오면": "**약한 결과다** — 선택기 편향과 결과 방향이 같다. 'Han 2025 과 일치' 를 쓰더라도 이 편향을 같은 문단에 병기한다.",
+   "⚠_이_비대칭은_문턱을_바꾸지_않는다": "해석의 강도만 바꾼다. 결과를 보고 문턱을 옮기지 않는다."
+  },
+  "⚠_표본": "probe 2자세 vs calibration 4자세다. 'SDCP 의 결합 모티프' 가 아니라 **'평가한 이 6자세 안에서'** 로만 쓴다. probe 는 백본접촉 88자세 중 UMA 최저와 앵커원소가 다른 최저 둘이다 — DFT 최적 백본 자세라는 보장이 없다.",
+  "⛔": "motif_probe 를 calibration 과 합쳐 min 을 다시 뽑지 않는다 (인계 §3 · motif_probe_2026_08_29.json ⛔_지위). 별도 문장 하나에만 쓴다."
+ },
+
+ "6_승계_게이트_새로_정하지_않는다": {
+  "출처": "db/properties/prereg_sdcp_neutral_contrast_2026_08_29.json 의 `게이트_결과_보기_전_고정` 1~6 전부",
+  "요지": [
+   "1 국소 자기 topology (총자화 아님) — flip_indices_poscar == [] · n_small == 0",
+   "2 실패 자세는 삭제하지 않는다 — pin→release rescue 1회 후 MAGNETIC_STATE_UNRESOLVED 로 남기고 그 selector 를 실패 처리",
+   "3 기체 자기상태 zero/nonzero 양쪽 — 더 낮은 상태가 나오면 자동 채택하지 말고 MOLECULAR_STATE_UNRESOLVED 로 멈춤",
+   "4 두 selector 일치는 0.05 eV 미만일 때만, 'pose-insensitive' 금지",
+   "5 방향성 guard band ≤ −0.10 eV",
+   "6 보고 자릿수 0.01 eV, 게이트에 걸리면 단일 X 를 보고하지 않음"
+  ],
+  "추가하지_않는_이유": "결과 전 고정된 게이트를 결과 전에 또 손대면 '조건을 먼저 정한다' 가 무의미해진다. 이 파일은 **Stage A 가 답할 수 있는 것(C1~C4)** 에만 조건을 새로 단다."
+ },
+
+ "7_닫힘_판정_규칙": {
+  "닫는다": "C1~C4 각각이 위 문턱에 따라 (판정 or 명시적 미해결) 로 귀결되고, 승계 게이트 1~6 이 통과하면 Stage A 를 닫는다.",
+  "⚠_미해결도_닫힘이다": "C3 가 '0.27 < D < 0.63 미해결' 로 끝나도 그것은 **결론**이다. 미해결을 없애려고 자세를 더 돌리는 것은 Stage B 이고 범위 밖이다.",
+  "닫지_못한다": [
+   "승계 게이트 1·2·3 중 하나라도 미해소 (MAGNETIC/MOLECULAR_STATE_UNRESOLVED)",
+   "J_f > 40 meV (SELECTOR_FAIL) — 이때는 Stage A 가 자기 전제를 부수므로 닫는 대신 설계를 다시 한다",
+   "두 번들의 clean slab 해시가 다름",
+   "분석기가 blocks 를 남겼는데 그 이유를 설명하지 못함"
+  ],
+  "산출물": "닫으면 db/properties/sdcp_stageA_closed_<날짜>.json 을 이 파일의 조건을 인용해 쓴다. 값은 복사하지 않고 결과 파일을 참조한다 (D-2026-08-28-closure-criteria-first)."
+ },
+
+ "8_허용_서술_이대로만": {
+  "C1": "'UMA-omat 과 DFT 의 자세별 에너지 차는 평가한 조각당 4자세에서 <S_f> eV 안에 모였다' — 통과 시. 기각 시: '4자세에서 <S_f> eV 로 흩어져, 조각 내 선택기로서의 근거가 약하다'",
+  "C2": "'평가한 자세 집합에서 두 자기 seed 사이의 pose×basin 상호작용은 J_f = <값> meV 였다' + 그 등급",
+  "C3": "'고정기하 D3(zero) 짝계산에서 조각 간 분산 기여 차는 <D> eV 로, 관측된 UMA 오프셋 차등 0.90 eV 의 <%> 에 해당한다' + 채택/기각/미해결",
+  "C4": "'평가한 6자세(수소결합 4 · 백본 2)에서 <어느 쪽>이 <ΔE_motif> eV 낮았다' + 위 비대칭 병기",
+  "공통_전치사": "'all-F 고정기하 단일점과 명시된 분자·국소 자기상태 gate 아래' (회신 V 승인 틀 승계)"
+ },
+
+ "9_금지_서술": [
+  "'ΔΔE_lowE' · 'primary' · 'prospective_lowE' — 이 캠페인은 calibration tranche 다",
+  "Stage A 의 24 complex 에서 min−min 을 뽑아 '결합에너지' 로 인용",
+  "calibration 과 motif_probe 를 합쳐 min 재추출",
+  "legacy(wave1) 값과 신규 값의 평균·혼합·좋은 쪽 선택 — clean slab 이 다르다",
+  "'low-energy' · 'pose-insensitive' · '전역 최소' · '결합 선호를 종결했다'",
+  "UMA 절대값 인용, UMA 로 조각 간 비교 (rigid·relax 둘 다 DFT 와 부호가 반대다)",
+  "D3-off 에너지를 흡착에너지로 인용",
+  "자리선호(Li vs Ni) 방향 일체 (matched pose n≥3 미충족)",
+  "'술포네이트가 앵커링한다' 를 C4 판정 없이 쓰기"
+ ],
+
+ "10_재개_조건": {
+  "⚠_두_갈래로_나눈다": "D-2026-08-28-closure-criteria-first — '이 목록 밖으로는 열지 않는다' 는 **planned_upgrade 쪽에만** 적용된다. 결론의 반증 가능성은 닫을 수 없다.",
+  "planned_upgrade_triggers_투자_결정": [
+   "원고가 사전등록 primary X 를 실제로 요구한다고 1저자가 판단 → Stage B 예산 결정 (최대 277잡)",
+   "회신 Y 가 표본밀도 대응(동수 N · Boltzmann 집계 · diversity-stratified 중 하나)을 승인 → 그 설계로 재등록",
+   "기전 문장을 원고에 넣기로 확정 → 백본 자세의 DFT 이완 (지금은 고정기하라 백본이 불리한 채로 비교된다)",
+   "⛔ 이 셋 **밖의 이유로 범위를 넓히지 않는다.** '자세를 하나 더 봤다' 는 사유가 아니다"
+  ],
+  "mandatory_invalidation_triggers_이건_언제든": [
+   "primary·C1~C4 식의 **산술 오류**, 입력 정체성 오류, provenance 오류",
+   "candidate_set 이 동결본과 다름 · 후보 선택 구현 결함",
+   "전자·자기상태 배정 오류 (realized basin 이 의도와 다름)",
+   "게이트 실패를 통과로 기록한 사실이 드러남",
+   "두 번들의 clean slab 이 실제로는 달랐음",
+   "clean slab 재현 시험(site_screen score --clean_probe)이 NONDETERMINISTIC 또는 REF_MISMATCH",
+   "결합 절단 · 양성자 이동 · 탈착 · 비정상 슬랩 변형",
+   "상충하는 독립 증거 (문헌 포함)",
+   "결론의 적용 범위를 넓히려는 시도 자체 (조각→고분자, 진공→실전극)"
+  ]
+ },
+
+ "11_미해결인_채로_던진다고_기록하는_것": {
+  "P0_5_clean_slab_provenance": "회신 X 가 '실행 전 P0' 로 격상했는데 **아직 안 닫혔다.** d5f18feb 가 daf71160 과 달라진 원인을 확인하지 않았다. 조각 간 대비는 두 조각이 같은 슬랩이므로 대수적으로 성립하지만(회신 X Q2 조건부 승인), '재현 가능한 동결 기하' 라고 부를 근거는 없다. → site_screen score --clean_probe 2 로 병행 확인하고, 결과를 위 mandatory_invalidation 에 연결했다.",
+  "wave1_k메시_provenance": "요청문 2×2×1 · 생성기 3×4×1 · 비용도구 2×3×1 로 세 기록이 어긋나고 납품 OUTCAR 가 repo·gabia 어디에도 없다. **이 캠페인은 legacy 값을 안 쓰므로 영향 없다** — 다만 legacy 를 다시 인용하려면 먼저 이것부터 닫아야 한다.",
+  "SUBMIT_CONTRACT_내부_불일치": "번들의 SUBMIT_CONTRACT.md 가 '잡 40' 과 '총 VASP 실행 24' 를 같이 적는다 (생성기가 실행 횟수를 planned 에서만 세어 D3-off 쌍둥이 16잡이 빠진다). 외주에 나가는 문서라 요청문(runs/sdcp_stageA_2026_08_29/REQUEST.md)에서 '잡 50 · 잡당 static 1회' 로 정정했다."
+ },
+
+ "출처": [
+  "db/properties/prereg_sdcp_neutral_contrast_2026_08_29.json",
+  "db/properties/motif_probe_2026_08_29.json",
+  "kb/reviews/codex_X_bundle_reply_2026_08_29.md",
+  "kb/results/handoff_2026_08_29_stage_a.md",
+  "db/properties/sdcp_neutral_closed_2026_08_28.json (선례 — 사후 마감)",
+  "db/governance/decisions.json D-2026-08-28-closure-criteria-first"
+ ],
+ "status_history": [
+  {
+   "at": "2026-08-29",
+   "state": "conditions_registered_pre_results",
+   "note": "두 번들 무결성 검증 완료(gabia), VASP 0잡 실행. 조건만 등록."
+  }
+ ]
+}
