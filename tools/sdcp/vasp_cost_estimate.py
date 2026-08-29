@@ -24,6 +24,11 @@
   · 병렬 효율(코어를 늘렸을 때의 감쇠)을 모형에 안 넣었다 — 같은 코어 수 가정이다.
   · 이온스텝 수는 구조·시작점에 따라 크게 흔들린다. 여기서는 가정값이고
     **이 가정이 총비용을 지배한다** (n_ionic 을 바꿔 보면 바로 보인다).
+  · **기체 상자 잡을 크게 과소계상한다.** 비용을 원자수^1.5 로만 재는데 진공
+    상자는 FFT 격자 **부피**가 지배한다 — box24(13824 Å³)는 슬랩 셀(~5260 Å³)보다
+    크다. 모형은 기체 잡을 ~1 h 로 내지만 실제로는 10 h대일 수 있다.
+    가장 긴 잡이 아니라 결론(makespan)은 안 바뀌지만 총량은 틀린다.
+  · 병렬 스케일링(par_speedup)은 **벤치마크가 아니라 두 구간 어림**이다 (±50 %).
 """
 from __future__ import annotations
 
@@ -70,6 +75,35 @@ def outcar_baseline(path):
     return {"atoms": int(nat), "nkpts": int(nk),
             "cores": int(cores) if cores else BASE["cores"],
             "sec_per_estep": float(el) / n_est, "source": path}
+
+
+# ── 병렬 스케일링 (2026-08-29 추가) ────────────────────────────────────────
+#: KPAR(k-point 병렬) 구간은 거의 선형, 그 위 밴드/FFT 병렬은 감쇠가 크다.
+PAR_KP_EXP = 0.95
+PAR_PW_EXP = 0.70
+
+
+def par_speedup(cores, base_cores, nk):
+    """코어를 base_cores → cores 로 늘렸을 때의 **속도향상 배수**.
+
+    두 구간 모형:
+      · KPAR 구간 — 최대 nk 배까지 거의 선형 (지수 0.95)
+      · 그 위 — 밴드/평면파 병렬, 감쇠가 크다 (지수 0.70)
+
+    ⛔ 이 함수가 **못 하는 것**
+      · 벤치마크가 아니다. 두 지수는 어림이고 메모리 대역·통신망에 따라 크게
+        다르다 — **±50 % 는 예상 범위**다.
+      · 메모리 한계를 모른다. 코어를 늘리면 랭크당 메모리가 줄어 오히려 죽는
+        구간이 있는데 그것을 모형에 안 넣었다.
+      · 코어를 **줄이는** 쪽(r<1)은 감쇠 없이 선형으로만 되돌린다 (보수적).
+    """
+    if cores <= 0 or base_cores <= 0:
+        return 1.0
+    r = cores / float(base_cores)
+    if r <= 1.0:
+        return r
+    kp = min(r, max(1.0, float(nk)))
+    return kp ** PAR_KP_EXP * (r / kp) ** PAR_PW_EXP
 
 
 def nk_eff(mesh):
@@ -147,7 +181,7 @@ def schedule_makespan(job_hours, m):
     return max(free) if free else 0.0
 
 
-def manifest_jobs(path, base, atoms_fallback):
+def manifest_jobs(path, base, atoms_fallback, drop=(), mesh_over=None, cores=None):
     """MANIFEST.json(+같은 폴더의 job.json)에서 **실제 계획**을 회수한다.
 
     반환 [(상대경로, 총시간h, {상: h})]. job.json 이 있으면 원자수·k·LREAL 을
@@ -179,14 +213,19 @@ def manifest_jobs(path, base, atoms_fallback):
             inc = meta.get("incar_expected") or {}
             ph_h = {}
             for ph in meta.get("phases") or []:
+                if ph in drop:                      # --drop_phase
+                    continue
                 lr = str((inc.get(ph) or {}).get("LREAL", ".TRUE.")).upper()
                 # ⚠ 이온스텝 수는 계 크기에 크게 의존한다. 기체 분자(수십 원자)를
                 #   슬랩과 같은 60 스텝으로 잡으면 과대계상된다.
                 _ni = N_IONIC if n_at > 60 else 25
-                ph_h[ph] = phase_hours(
+                _mesh = (mesh_over or {}).get(ph, km.get(ph, "3 4 1"))
+                _h = phase_hours(
                     ph if ph in ESTEP else "static", n_at,
-                    km.get(ph, "3 4 1"), base,
-                    lr.startswith(".F"), _ni)
+                    _mesh, base, lr.startswith(".F"), _ni)
+                if cores:
+                    _h /= par_speedup(cores, base["cores"], nk_eff(_mesh))
+                ph_h[ph] = _h
             out.append((os.path.relpath(os.path.dirname(jp), root),
                         sum(ph_h.values()), ph_h))
     else:
@@ -231,6 +270,12 @@ def main() -> int:
                          "(같은 폴더의 job.json 이 있으면 원자수·k·LREAL 을 잡마다 정확히 읽음)")
     ap.add_argument("--cores", type=int, default=None,
                     help="잡당 코어 수 (기본: 기준선과 동일). README 예시가 64 면 여기도 64.")
+    ap.add_argument("--drop_phase", nargs="+", default=None,
+                    help="이 상들을 계획에서 뺀다 (예: --drop_phase dense)")
+    ap.add_argument("--static_mesh", default=None,
+                    help="static/dense 의 k 메시를 통째로 교체 (예: '2 3 1')")
+    ap.add_argument("--target_days", type=float, default=None,
+                    help="목표 벽시계 일수 — 이를 맞추는 (코어/잡, 동시잡) 조합을 역산")
     ap.add_argument("--selftest", action="store_true")
     a = ap.parse_args()
     if a.selftest:
@@ -276,16 +321,45 @@ def main() -> int:
     return 0
 
 
+
+def solve_target(jobs_h, base_cores, target_days, nk=7.2,
+                 core_grid=(48, 64, 96, 128, 192, 256, 384),
+                 conc_grid=tuple(range(2, 49))):
+    """목표 일수를 맞추는 (코어/잡, 동시잡) 조합 중 **총 코어수가 최소**인 것들.
+
+    반환 [(총코어, 코어/잡, 동시잡, 일수)] — 총코어 오름차순.
+    ⛔ 못 하는 것: 큐 정책·노드 경계·메모리를 모른다. 총코어가 그 기계에서
+      실제로 동시에 잡히는지는 **여기서 판정하지 않는다.**
+    """
+    tgt_h = target_days * 24.0
+    out = []
+    for c in core_grid:
+        sp = par_speedup(c, base_cores, nk)
+        hs = [h / sp for h in jobs_h]
+        if max(hs) > tgt_h:            # 가장 긴 잡이 이미 목표를 넘으면 불가
+            continue
+        for m in conc_grid:
+            mk = schedule_makespan(hs, m)
+            if mk <= tgt_h:
+                out.append((c * m, c, m, mk / 24.0))
+                break                  # 이 코어수에서 최소 동시잡
+    return sorted(out)
+
+
 def report_manifest(a, base) -> int:
     """실제 번들 계획 기반 보고 — 산술 하한과 **스케줄링 makespan** 을 같이 낸다."""
     if not os.path.isfile(a.manifest):
         print(f"⛔ MANIFEST 가 없다: {a.manifest}")
         return 2
-    man, jobs, mode = manifest_jobs(a.manifest, base, a.atoms)
+    cores = a.cores or base["cores"]
+    man, jobs, mode = manifest_jobs(
+        a.manifest, base, a.atoms, drop=tuple(a.drop_phase or ()),
+        mesh_over=({"static": a.static_mesh, "dense": a.static_mesh}
+                   if a.static_mesh else None),
+        cores=cores)
     if not jobs:
         print(f"⛔ {a.manifest} 에 계획된 잡이 0개 — 비용을 낼 수 없다")
         return 2
-    cores = a.cores or base["cores"]
     hs = [h for _r, h, _p in jobs]
     total = sum(hs)
     lo = max(total / max(1, a.concurrent), max(hs))     # 도달 가능한 하한
@@ -299,6 +373,14 @@ def report_manifest(a, base) -> int:
           f"전자스텝당 {base['sec_per_estep']:.0f} s")
     print(f"  출처 {base['source']}")
     print(f"MANIFEST: {a.manifest}")
+    if cores != base["cores"]:
+        print(f"  ⚡ 코어/잡 {base['cores']} → {cores} · 속도향상 "
+              f"{par_speedup(cores, base['cores'], 7.2):.2f}배 가정 "
+              f"(k 7.2 기준 · ±50 %)")
+    if a.drop_phase:
+        print(f"  ⚡ 제거한 상: {' '.join(a.drop_phase)}")
+    if a.static_mesh:
+        print(f"  ⚡ static/dense k 교체: {a.static_mesh}")
     print(f"  회수 방식 {mode} · 잡 {len(jobs)} · VASP 실행 {n_ph}회 · "
           f"모드 {man.get('contract_mode', '(기본)')} · wave {man.get('wave', '?')}")
     print(f"  dense 보정자 {man.get('dense_calibrators') or '(없음)'}")
@@ -324,6 +406,16 @@ def report_manifest(a, base) -> int:
     for rel, h, p in sorted(jobs, key=lambda t: -t[1])[:5]:
         print(f"     {h:6.1f} h  {rel}  "
               + " ".join(f"{k}:{v:.0f}" for k, v in sorted(p.items())))
+    if a.target_days:
+        print(f"\n★ 목표 {a.target_days} 일을 맞추는 조합 (총 코어 최소순):")
+        sol = solve_target(hs if cores == base["cores"] else
+                           [h * par_speedup(cores, base["cores"], 7.2) for h in hs],
+                           base["cores"], a.target_days)
+        if not sol:
+            print(f"   ⛔ 없다 — 이 상 구성으로는 목표에 못 간다.")
+            print(f"      가장 긴 잡을 줄여야 한다 (상 제거 · k 축소 · 잡 분할).")
+        for tot, c, m, d in sol[:6]:
+            print(f"   총 {tot:5d} 코어 = {c:3d} 코어/잡 × {m:2d} 동시  → {d:.2f} 일")
     print("\n⚠ 이건 모형이다 — **±2배는 예상 범위**다. 계약값이 아니라 계획용 수치다.")
     print("   확정하려면 대표 잡 하나를 전 상 돌려 실측한 뒤 곱한다.")
     return 0
@@ -445,12 +537,47 @@ def selftest() -> int:
         # ★ 음성: 없는 MANIFEST 는 0 이 아니라 exit 2
         class _A:
             manifest, atoms, concurrent, cores = "/nonexistent/MANIFEST.json", 222, 8, None
+            drop_phase = static_mesh = target_days = None
         chk(report_manifest(_A(), b) == 2, "없는 MANIFEST → exit 2 (조용한 0 아님)")
         with open(mp, "w") as fh:
             json.dump({"planned": {}}, fh)
         class _B:
             manifest, atoms, concurrent, cores = mp, 222, 8, None
+            drop_phase = static_mesh = target_days = None
         chk(report_manifest(_B(), b) == 2, "계획 0잡 → exit 2 (0 h 를 내지 않는다)")
+
+    # ── 병렬 스케일링 (2026-08-29) ────────────────────────────────────────
+    chk(abs(par_speedup(48, 48, 7.2) - 1.0) < 1e-9, "같은 코어 → 속도향상 1.0")
+    #  ★ 음성: **선형을 절대 넘지 않는다** (초선형 speedup 은 모형 오류다)
+    for _c in (64, 96, 128, 192, 256, 384, 1024):
+        chk(par_speedup(_c, 48, 7.2) <= _c / 48.0 + 1e-9,
+            f"[음성] {_c}코어 speedup {par_speedup(_c, 48, 7.2):.2f} ≤ 선형 {_c/48:.2f}")
+    #  ★ 음성: 코어를 늘렸는데 **느려지면** 안 된다
+    _prev = 0.0
+    for _c in (48, 64, 96, 128, 192, 256, 384):
+        _sp = par_speedup(_c, 48, 7.2)
+        chk(_sp >= _prev - 1e-9, f"[음성] 단조증가 {_c}코어 {_sp:.2f} ≥ {_prev:.2f}")
+        _prev = _sp
+    #  ★ 음성: k 가 적으면 KPAR 구간이 짧아 speedup 이 **더 작아야** 한다
+    chk(par_speedup(384, 48, 2.0) < par_speedup(384, 48, 12.0),
+        f"[음성] k 적을수록 감쇠 크다 ({par_speedup(384,48,2.0):.2f} "
+        f"< {par_speedup(384,48,12.0):.2f})")
+    chk(abs(par_speedup(24, 48, 7.2) - 0.5) < 1e-9, "코어를 줄이면 선형으로 되돌린다")
+
+    # ── 목표 역산 ────────────────────────────────────────────────────────
+    _hs = [94.3] * 24 + [73.4] * 4 + [0.8] * 12
+    _sol = solve_target(_hs, 48, 3.0)
+    chk(bool(_sol), f"3일 목표에 해가 있다 ({len(_sol)}개)")
+    chk(all(d <= 3.0 + 1e-9 for _t, _c, _m, d in _sol), "모든 해가 목표 이내")
+    chk(_sol == sorted(_sol), "총 코어 오름차순")
+    #  ★ 음성: 가장 긴 잡보다 짧은 목표는 **해가 없어야** 한다
+    chk(solve_target([500.0], 48, 0.5, core_grid=(48,)) == [],
+        "[음성] 가장 긴 잡(500 h)보다 짧은 목표 → 해 없음 (조용히 내지 않는다)")
+    #  ★ 음성: 상을 빼면 총량이 **반드시** 줄어야 한다
+    _b0 = phase_hours("dense", 192, "4 6 1", b, True)
+    chk(_b0 > 0 and phase_hours("static", 192, "3 4 1", b, True) < _b0,
+        "dense 제거가 static 보다 큰 절감이다")
+
     # ── 실물 번들이 있으면 **그걸로** 돌린다 (합성 fixture 만으론 모양이 어긋난다) ──
     #   2026-08-12: counts 를 dict 로 만든 fixture 는 통과했는데 실물(list)에서 죽었다.
     import glob as _g
