@@ -1,6 +1,6 @@
 # kb 카탈로그 (생성물 — 손으로 고치지 말 것)
 
-> `python3 tools/kb_wiki.py index` 가 만든다 · 2026-08-29 · managed-files: 290
+> `python3 tools/kb_wiki.py index` 가 만든다 · 2026-08-29 · managed-files: 291
 
 규칙: kb/SCHEMA.md · 열린 질문: kb/questions/ · 논지 카드: kb/syntheses/ · 원장: kb/open_items.md · 문헌: litdb/INDEX.md
 
@@ -75,7 +75,7 @@
 - `kb/methodology/terminology_register.md` — 🗣 용어 대장 — 우리 말 → 필드 표준어 → 근거
 - `kb/methodology/vanhove_plateau_70traj_2026_08_28.md` — van Hove 70궤적 — 고원은 세 계 공통이고, 고원 안 온도차는 대부분 못 읽는다 ○미열람
 
-## results/ (91)
+## results/ (92)
 - `kb/results/MASTER_structure_property_logic_2026_06_21.md` — Structure–Property Relationship of Argyrodite SEs — 통합 논리 (MASTER)
 - `kb/results/adhesion_100seeds_analysis.md` — Adhesion Energy — Complete Analysis (2026-04-17)
 - `kb/results/adhesion_final.md` — Adhesion Energy — Final Results (2026-04-14, CONFIRMED)
@@ -116,6 +116,7 @@
 - `kb/results/dualx_blocking_2026_06_29.md` — dual-x 도핑 농도 스크리닝: Li-channel blocking_fraction (x=0.0625 vs 0.25)
 - `kb/results/elastic_0K_protocol_status.md` — 0K Cij DFT Protocol Status (Paper #1)
 - `kb/results/halogen_wad_refutation.md` — Wad Mechanism Refutation — 직관적 설명
+- `kb/results/handoff_2026_08_29_stage_a.md` — 인수인계 2026-08-29 — Stage A 제출·회수 (보조 세션용) ○미열람
 - `kb/results/interface_axes_90_2026_08_19.md` — 계면 축 4종을 90종에 붙였다 — 우리 산화 창은 계면을 예측하지 못한다 ○미열람
 - `kb/results/interface_reactivity_v2_voltage_resolved_2026_06_21.md` — Voltage-resolved SE/cathode interface reactivity (v2) — 2026-06-21
 - `kb/results/ionic_cage_descriptors_comp1_modelc.md` — LPSCl vs LPSCl1.6 — ionic conductivity, NEB-free geometric descriptors
