@@ -256,7 +256,8 @@ requiring a slower re-compaction; and the specimen provenance of the SDCP conduc
 | VGCF coverage of AM | **13.1** | **15.5** | % |
 | Electronic connectivity | **100** | **100** | % |
 | Areal capacity | **[비용량 확인 필요 — §아래]** | **동일** | mAh cm⁻² |
-| Median CBD contacts per AM | *pending — 계산 미실행* | *pending — 계산 미실행* | ea |
+| Median conductive-additive contacts per AM (VGCF + SDCP) | **74** | **86** | ea |
+| ⌐ including the binder (VGCF + SDCP + PTFE) | 80 | 88 | ea |
 
 **⚠ Areal capacity — SI v6 의 `3.11 / 3.07` 은 이 침대에서 성립하지 않는다.**
 두 전극은 **같은 AM scaffold** 를 쓰고(`n_AM = 1271`, `seed_AM_frac_pct = 45.68` 동일) 정지
@@ -269,6 +270,21 @@ requiring a slower re-compaction; and the specimen provenance of the SDCP conduc
 **195.5 mAh g⁻¹**, 3.07 은 193.0 이다 — 즉 v6 의 두 값은 **같은 침대에 서로 다른 비용량을
 곱한 것처럼** 보인다.  ⇒ 협업자에게 *"어느 비용량을 썼는가"* 를 확인한 뒤 채운다.
 **추정해서 적지 않는다** (§F1).
+
+**⚠ 접촉 수는 규약 의존이고, 그 규약이 이득까지 바꾼다.**
+정의: AM 구 **표면 바깥** 0.15 µm(= σ_e 격자 한 복셀) 껍질 안에 있는 첨가제 물질점이 속한
+**서로 다른 개체의 수** — 점 수가 아니다 (굵은 섬유 하나는 접촉 1).  경계는 침대 규약대로
+`periodic_xy + z_open`.  접촉이 0 인 AM 은 **양 침대 모두 0/1271** 이다.
+- 전도성만(VGCF+SDCP): 74 → 86 = **+16.2 %**
+- 절연 바인더 포함: 80 → 88 = **+10.0 %**
+⇒ PTFE 를 *"conductive binder domain"* 에 넣느냐가 **이득을 16.2 % ↔ 10.0 % 로 바꾼다.**
+본문이 이 수를 기전 근거로 쓰므로 **규약을 함께 적지 않으면 인용할 수 없다.**
+⚠ **SI v6 의 `433 → 517` 은 재현되지 않는다** (절대값 5.8배 차).  v6 이 무엇을 셌는지
+(점 수 / 개체 수 · band 폭 · 격자 세대) 기록이 없다.  **방향과 상대 크기는 정합적**이다
+(+16.2 % vs +19.4 %) — 즉 *"SDCP 가 AM 당 접촉을 늘린다"* 는 본문 주장은 유지되고,
+**절대 수치만** 규약과 함께 갱신된다.
+★ 좌표 프레임 검증(접촉과 무관): AM 구 깊은 안쪽(d < 0.8 r) 첨가제 밀도 **0.0006–0.0017**
+(bulk = 1), 표면 바로 밖 **1.41** ⇒ 배제가 실재하고 사상이 맞다.
 
 **⚠ coverage 세 행의 규약**: `SE coverage of AM` 은 **Tabor 밴드**(0.26 µm) 값이다 —
 v6 의 86.7 이 이 규약이며 새 침대가 86.6 으로 재현했다.  같은 침대의 다른 규약 값도 함께
