@@ -143,7 +143,7 @@ HANDOFF_MANIFEST.json
 | `LASPH` | `.TRUE.` | DFT+U 에 필수 |
 | `LDIPOL`·`IDIPOL=3` | 켬 | 한쪽만 흡착한 슬랩 |
 | `ISMEAR` | **0** (SIGMA 0.05) | 자성 반도체 슬랩. 이전 외주가 `ISMEAR=1 SIGMA=0.2` 를 분자에까지 써서 `E_ads` 를 인용 불가로 만든 이력 |
-| `IVDW` | 11 (D3-BJ) | 우리 규약 |
+| `IVDW` | 11 (**D3 zero damping** (⛔ 2026-08-29 정정: 종전 'D3-BJ' 는 오기다 — `site_screen.py:2023` 이 `IVDW = 11` 이고 그 줄 주석이 'IVDW=11 은 D3 zero damping 이다. D3(BJ) 는 12 다' 라고 명시한다)) | 우리 규약 |
 | `LORBIT` | 11 | 국소 모멘트를 봐야 판정이 조건부에서 풀린다 |
 | POTCAR | **안 넣음** | 라이선스. `species_order` 를 manifest 에 박아 뒀다 |
 

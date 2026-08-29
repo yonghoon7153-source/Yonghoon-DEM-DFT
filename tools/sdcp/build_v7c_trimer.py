@@ -451,6 +451,13 @@ def atom_sets_of(csym, cnb, crings, csulf, names):
         ring_atoms |= set(r["ring"])
     ring_H = {h for i in ring_atoms for h in cnb[i] if csym[h] == "H"}
     sets = {"backbone": sorted(ring_atoms | ring_H)}
+    # 회신 R4 보완 3 — `backbone` 하나로는 **어느 ring 의 polaron 인지 구별 못 한다.**
+    #   ring 별 집합을 따로 낸다. (합집합인 `backbone` 도 하위호환으로 남긴다 —
+    #   share 합이 1 을 넘게 되므로 소비 쪽은 `_` 로 시작하지 않는 키만 골라 쓴다.)
+    for ri, r in enumerate(crings):
+        ra = set(r["ring"])
+        rh = {h for i in ra for h in cnb[i] if csym[h] == "H"}
+        sets[f"ring{ri}_{names[ri]}" if ri < len(names) else f"ring{ri}"] = sorted(ra | rh)
     used = set(sets["backbone"])
     for su in csulf:
         grp = sorted([su["sS"]] + su["sO"] + ([su["aH"]] if su["aH"] is not None else []))
@@ -954,10 +961,16 @@ def analyze_out(text, job, atom_sets=None, removed_H=None):
         codes.append("SECTOR_MISMATCH")
     q = re.findall(r"Total Charge\s+Charge\s*\.+\s*(-?\d+)", seg)
     mu = re.findall(r"Multiplicity\s+Mult\s*\.+\s*(\d+)", seg)
-    if q and int(q[-1]) != exp["charge"]:
-        codes.append("SECTOR_MISMATCH")
-    if mu and int(mu[-1]) != exp["mult"]:
-        codes.append("SECTOR_MISMATCH")
+    # ⛔⛔ 회신 R4 P0-4 — **echo 가 아예 없으면 통과했다.** `if q and ...` 는 q 가 비면
+    #   조건 자체가 거짓이라 코드가 안 붙는다. 섹터를 확인할 수 없는 출력은 통과가 아니다.
+    if not q or not mu:
+        codes.append("SECTOR_UNVERIFIED")
+    else:
+        if int(q[-1]) != exp["charge"]:
+            codes.append("SECTOR_MISMATCH")
+        if int(mu[-1]) != exp["mult"]:
+            codes.append("SECTOR_MISMATCH")
+        realized["charge"], realized["mult"] = int(q[-1]), int(mu[-1])
     s2l = re.findall(r"<S\*\*2>\s*:?\s*(-?\d+\.\d+)", seg)
     realized["s2"] = float(s2l[-1]) if s2l else None
     sec, jt = cond["sector"], cond["job_type"]
@@ -970,64 +983,139 @@ def analyze_out(text, job, atom_sets=None, removed_H=None):
     elif isinstance(tgt, float):
         if realized["s2"] is None or abs(realized["s2"] - tgt) > 0.4:
             codes.append("SECTOR_MISMATCH")
-    if jt == "sp_vertical" and sec != "bs":
-        if re.search(r"stability analysis indicates.*unstable", seg, re.I):
+    # ⛔⛔ 회신 R4 P0-4 — 안정성 검사에 구멍이 둘 있었다.
+    #   ① **임의 문자열이 stable 증거로 통과**했다. `stability analysis indicates` 만
+    #      있으면 그 뒤가 무엇이든(바나나여도) unstable 이 아니므로 stable 취급됐다.
+    #      → **양성 문구를 명시적으로** 요구한다. unstable 도 stable 도 아니면 UNVERIFIED.
+    #   ② **BS 는 SP 단계에서도 면제**였다. ORCA 는 UHF/UKS SP 에 안정성 분석을 지원하므로
+    #      면제에 별도 근거가 필요하다 — 근거가 없으니 면제를 없앤다.
+    if jt == "sp_vertical":
+        if re.search(r"stability analysis indicates.{0,80}unstable", seg, re.I | re.S):
             codes.append("STABILITY_UNSTABLE")
-        elif not re.search(r"stability analysis indicates", seg, re.I):
-            codes.append("STABILITY_UNVERIFIED")      # 수행 양성 증거 요구 (R3)
+        elif re.search(r"stability analysis indicates.{0,80}\bstable\b", seg, re.I | re.S):
+            realized["stability"] = "stable"
+        else:
+            codes.append("STABILITY_UNVERIFIED")
     if jt == "opt_adiabatic" and "THE OPTIMIZATION HAS CONVERGED" not in seg:
         codes.append("OPT_UNCONVERGED")
-    # localization class (사전 규칙 — Löwdin 국소 스핀 + atom_sets remap)
-    if atom_sets and cond["wavefunction_class"] != "RKS":
-        mvals = _lowdin_spins(seg)
-        if mvals is not None:
+    # ── localization (회신 R4 P0-0/P0-4) ────────────────────────────────────
+    #   ⛔⛔ 종전 fail-open 셋:
+    #     ① Löwdin 블록이 **없으면 `mvals is None` 이라 아무 코드도 안 붙었다** —
+    #        열린 껍질인데 국소스핀을 못 읽은 것은 통과가 아니라 hard gate 다.
+    #     ② `NO_SPIN`·`REMAP_ERROR` 를 **정상 class 처럼 realized 에 넣고 통과**시켰다.
+    #        예상 open-shell 에서 그 둘은 class 가 아니라 **실패**다.
+    #     ③ Hirshfeld 를 입력으로 요구해 놓고 **읽지도 않았다.** 두 분할이 갈리면
+    #        어느 쪽도 단독으로 못 쓴다 → PARTITION_DEPENDENT.
+    if cond["wavefunction_class"] != "RKS":
+        if not atom_sets:
+            codes.append("LOCALIZATION_UNVERIFIED")
+        else:
             nat = job["n_atoms"]
-            if len(mvals) != nat:
-                codes.append("SECTOR_MISMATCH")       # 원자수 불일치 = 다른 계의 출력
+            low = _lowdin_spins(seg, nat)
+            hir = _hirshfeld_spins(seg, nat)
+            if low is None:
+                codes.append("LOCALIZATION_MISSING")   # 열린 껍질인데 블록이 없다
             else:
-                cls, shares = _loc_class(mvals, atom_sets, removed_H or [])
+                cls, shares, sens = _loc_class(low, atom_sets, removed_H or [])
                 realized["localization_class"] = cls
                 realized["loc_shares"] = shares
+                realized["loc_threshold_sensitivity"] = sens
+                realized["loc_partition"] = "loewdin"
+                if cls in ("NO_SPIN", "REMAP_ERROR"):
+                    codes.append("LOCALIZATION_" + cls)   # class 가 아니라 hard gate
+                if sens.get("threshold_dependent"):
+                    codes.append("THRESHOLD_DEPENDENT")
+                if hir is not None:
+                    hcls, hshares, _ = _loc_class(hir, atom_sets, removed_H or [])
+                    realized["localization_class_hirshfeld"] = hcls
+                    realized["loc_shares_hirshfeld"] = hshares
+                    if hcls != cls:
+                        codes.append("PARTITION_DEPENDENT")
+                else:
+                    codes.append("HIRSHFELD_MISSING")
     if codes:
         return "GATED", codes, realized
     return "OK", [], realized
 
 
-def _lowdin_spins(seg):
-    """LOEWDIN ATOMIC CHARGES AND SPIN POPULATIONS → [m_i] (마지막 블록)."""
-    blocks = seg.split("LOEWDIN ATOMIC CHARGES AND SPIN POPULATIONS")
+def _spin_block(seg, header, nat):
+    """`header` 블록의 마지막 것 → 원자 index 로 정렬한 [m_i], 또는 None.
+
+    ⛔⛔ 회신 R4 P0-0 — 종전에는 **출력 순서대로 append** 했다. 정규식이 index 를
+      잡아 놓고도 **버렸기** 때문에, 행이 재배열된 출력에서 원자가 통째로 어긋난 채
+      조용히 통과했다. 이제 index 를 **자리로 쓰고**, 0..nat-1 이 정확히 한 번씩
+      나오지 않으면 **None** 을 돌려 상위에서 게이트되게 한다.
+    """
+    blocks = seg.split(header)
     if len(blocks) < 2:
         return None
-    out = []
-    for ln in blocks[-1].splitlines()[2:]:
-        m = re.match(r"\s*(\d+)\s+\w+\s*:\s*(-?\d+\.\d+)\s+(-?\d+\.\d+)", ln)
+    got = {}
+    for ln in blocks[-1].splitlines()[1:]:
+        m = re.match(r"\s*(\d+)\s+[A-Za-z]{1,2}\s*:\s*(-?\d+\.\d+)\s+(-?\d+\.\d+)", ln)
         if not m:
-            if out:
+            if got:
                 break
             continue
-        out.append(float(m.group(3)))
-    return out or None
+        i = int(m.group(1))
+        if i in got:                     # 같은 index 가 두 번 = 파싱 경계를 넘었다
+            break
+        got[i] = float(m.group(3))
+    if len(got) != nat or set(got) != set(range(nat)):
+        return None                      # 개수/index 집합 불일치 → 판정 불가
+    return [got[i] for i in range(nat)]
 
 
-def _loc_class(mvals, atom_sets_neutral, removed_H):
-    """중성 프레임 atom_sets 를 doped 프레임으로 **재매핑 검증** 후 사전 규칙 적용."""
+def _lowdin_spins(seg, nat):
+    return _spin_block(seg, "LOEWDIN ATOMIC CHARGES AND SPIN POPULATIONS", nat)
+
+
+def _hirshfeld_spins(seg, nat):
+    """HIRSHFELD ANALYSIS 의 스핀 열. 회신 R4 보완 5 — 두 분할을 **둘 다** 본다."""
+    return _spin_block(seg, "HIRSHFELD ANALYSIS", nat)
+
+
+def _loc_class(mvals, atom_sets_neutral, removed_H, thr=LOC_CLASS_MIN):
+    """중성 프레임 atom_sets 를 doped 프레임으로 재매핑 검증 후 사전 규칙 적용.
+
+    → (class, shares, sensitivity)
+
+    회신 R4 보완 반영:
+      · **원값 보존** — threshold 적용 전에 반올림하지 않는다 (표시용만 반올림).
+      · **0.4/0.5/0.6 경계 민감도** — class 가 바뀌면 `threshold_dependent`.
+      · **BS 의 양·음 lobe 분리** — signed 합만 보면 서로 상쇄돼 "스핀 없음" 으로 보인다.
+        집합마다 `pos`/`neg` 를 따로 남긴다.
+
+    ⛔ 못 하는 것: 어느 **ring** 의 polaron 인지는 atom_sets 가 ring 별로 쪼개져
+      들어와야 알 수 있다 (backbone 을 한 덩어리로 주면 여기서도 한 덩어리다).
+    """
     kill = sorted(set(removed_H))
+
     def remap(i):
-        if i in kill:
-            return None
-        return i - sum(1 for k in kill if k < i)
+        return None if i in kill else i - sum(1 for k in kill if k < i)
+
     tot_abs = sum(abs(m) for m in mvals)
     if tot_abs < LOC_ABS_MIN:
-        return "NO_SPIN", {}
-    shares = {}
+        return "NO_SPIN", {}, {}
+    raw, lobes = {}, {}
     for g, idxs in atom_sets_neutral.items():
-        mapped = [remap(i) for i in idxs]
-        mapped = [i for i in mapped if i is not None]
+        mapped = [i for i in (remap(j) for j in idxs) if i is not None]
         if any(i >= len(mvals) for i in mapped):
-            return "REMAP_ERROR", {}
-        shares[g] = round(sum(mvals[i] for i in mapped) / tot_abs, 4)
-    winners = [g for g, v in shares.items() if abs(v) >= LOC_CLASS_MIN]
-    return (winners[0] if len(winners) == 1 else "MIXED_UNRESOLVED"), shares
+            return "REMAP_ERROR", {}, {}
+        vals = [mvals[i] for i in mapped]
+        raw[g] = sum(vals) / tot_abs                       # ⚠ 반올림 안 한다
+        lobes[g] = {"pos": round(sum(v for v in vals if v > 0) / tot_abs, 4),
+                    "neg": round(sum(v for v in vals if v < 0) / tot_abs, 4)}
+
+    def classify(t):
+        w = [g for g, v in raw.items() if abs(v) >= t]
+        return w[0] if len(w) == 1 else "MIXED_UNRESOLVED"
+
+    cls = classify(thr)
+    alt = {f"{t:.1f}": classify(t) for t in (0.4, 0.5, 0.6)}
+    shares = {g: round(v, 4) for g, v in raw.items()}
+    shares["_lobes"] = lobes
+    return cls, shares, {"by_threshold": alt,
+                         "threshold_dependent": len(set(alt.values())) > 1}
 
 
 def _content_fingerprint(text):
@@ -1126,7 +1214,11 @@ def analyze_dir(a):
             if not dep:
                 continue
             rec = out["jobs"].get(job["tag"])
-            if rec is None or rec.get("status") in ("PENDING", "GATED", "FAIL"):
+            # ⚠ 이미 다른 사유로 GATED 된 잡도 **의존성 코드는 받아야 한다** — 코드 목록이
+            #   불완전하면 "왜 막혔나" 를 사람이 못 읽는다. 중복 부착만 막는다.
+            if rec is None or rec.get("status") == "PENDING":
+                continue
+            if "DEPENDENCY_NOT_MET" in rec.get("codes", []):
                 continue
             if by_cid.get(dep) != "OK":
                 rec["status"] = "GATED"
@@ -1201,25 +1293,40 @@ def hybrid_stage(a):
     if not picks:
         raise SystemExit("⛔ decision set 이 비었다 — OK 인 잡이 없거나 분석 미완")
     meta = {j["tag"]: j for j in man["jobs"]}
-    made = []
+    made, skipped = [], []
     for t in picks:
         c = meta[t]["conditioning"]
         tag = t + "_hyb"
-        make_inp(os.path.join(a.hybrid, f"{tag}.inp"),
-                 f"dp{c['dp']}_{c['geometry_seed'].replace('g','gs')}_h"
-                 f"{''.join(sorted(set(''.join(c['pattern'].split(',')))))}.xyz"
-                 if False else meta[t]["tag"].rsplit("_", 3)[0] + ".xyz",
+        # ⛔⛔ 회신 R4 위험 ① — 종전에는 `meta[t]["tag"].rsplit("_",3)[0] + ".xyz"`,
+        #   즉 **원래 vertical XYZ** 로 hybrid SP 를 만들었다. adiabatic 승자를 골라 놓고
+        #   그 **최종구조를 버린** 것이라, hybrid 는 "선택된 상태의 다른 방법 재계산" 이
+        #   아니었다. → adiabatic 은 그 Opt 의 **최종 xyz** 를 쓴다. 없으면 **건너뛴다.**
+        if c["job_type"] == "opt_adiabatic":
+            xyz = f"{t}_final.xyz"
+            if not os.path.isfile(os.path.join(a.hybrid, xyz)):
+                skipped.append((tag, f"adiabatic 최종구조 {xyz} 가 없다"))
+                continue
+        else:
+            xyz = meta[t]["tag"].rsplit("_", 3)[0] + ".xyz"
+        make_inp(os.path.join(a.hybrid, f"{tag}.inp"), xyz,
                  c["wavefunction_class"], c["orca_mult"],
-                 bs=(c["sector"] == "bs"), job_type="sp_vertical",
+                 bs=(c["sector"] == "bs"),
+                 job_type=c["job_type"],          # vertical 을 강제하지 않는다
                  scf_seed="s0", hybrid=True)
         made.append(tag)
+    if skipped:
+        for tag, why in skipped:
+            print(f"  ⛔ {tag} 건너뜀 — {why}")
+        raise SystemExit(
+            f"⛔ decision set {len(picks)}개 중 {len(skipped)}개가 최종구조 없이 남았다. "
+            "vertical XYZ 로 대체 생성하지 않는다 (R4 위험 ①) — Opt 를 먼저 회수하라.")
     print(f"hybrid: decision set {len(picks)}잡 → 입력 생성 (NoAutoStart 강제)")
     return made
 
 
 def compare_methods(a):
     """--compare <dir1> <dir2>: 두 분석의 그룹별 승자·순서 비교 → METHOD_DEPENDENT emit."""
-    outs = []
+    outs, methods = [], []
     for d in a.compare:
         man = json.load(open(os.path.join(d, "manifest_stage_b.json")))
         ana = json.load(open(os.path.join(d, "analysis_stage_b.json")))
@@ -1228,19 +1335,47 @@ def compare_methods(a):
         for t, r in ana["jobs"].items():
             if r.get("status") != "OK" or t not in meta:
                 continue
-            key = (meta[t]["conditioning"]["species"], meta[t]["conditioning"]["pattern"],
-                   meta[t]["conditioning"]["job_type"])
+            c = meta[t]["conditioning"]
+            key = (c["species"], c["pattern"], c["job_type"])
             e = r["realized"]["energy_Eh"]
             if key not in win or e < win[key][1]:
-                win[key] = (meta[t]["conditioning"]["sector"], e)
+                # ⛔ 회신 R4 P0-5 — 종전엔 sector 만 봤다. 같은 sector 안에서
+                #   localization/state 가 달라도 "일치" 로 읽혔다.
+                win[key] = (c["sector"], e,
+                            r["realized"].get("localization_class"),
+                            r["realized"].get("realized_state_id"))
         outs.append(win)
-    diff = {k: (outs[0][k][0], outs[1][k][0]) for k in outs[0]
-            if k in outs[1] and outs[0][k][0] != outs[1][k][0]}
-    if diff:
-        for k, (s1, s2) in diff.items():
-            print(f"  ⛔ METHOD_DEPENDENT: {k} 승자 {s1} ≠ {s2}")
+        methods.append(man.get("method") or man.get("hybrid_spec", {}).get("keywords")
+                       or os.path.basename(os.path.abspath(d)))
+
+    # ⛔⛔ 회신 R4 P0-5 — **한쪽이 비어도 성공**했다. `for k in outs[0] if k in outs[1]`
+    #   은 교집합만 보므로, outs 중 하나가 통째로 비면 diff 가 {} 라 "일치" 로 통과했다.
+    if not outs[0] or not outs[1]:
+        print(f"  ⛔ 비교 불가 — OK 인 잡: {len(outs[0])} vs {len(outs[1])}. "
+              "한쪽이 비면 '일치' 가 아니라 **미비교**다")
         return 2
-    print("  ✓ 두 방법의 그룹별 승자 일치")
+    if methods[0] == methods[1]:
+        print(f"  ⛔ 두 디렉터리의 method 가 같다 ({methods[0]}) — 교차검사가 성립하지 않는다")
+        return 2
+    only0, only1 = set(outs[0]) - set(outs[1]), set(outs[1]) - set(outs[0])
+    if only0 or only1:
+        print(f"  ⛔ 그룹이 한쪽에만 있다 — {methods[0]} 전용 {len(only0)}개 · "
+              f"{methods[1]} 전용 {len(only1)}개. 교집합만 보고 넘어가지 않는다")
+        for k in sorted(only0 | only1)[:5]:
+            print(f"      {k}")
+        return 2
+    bad = 0
+    for k in sorted(outs[0]):
+        a0, a1 = outs[0][k], outs[1][k]
+        for lbl, i in (("sector", 0), ("localization", 2)):
+            if a0[i] != a1[i]:
+                print(f"  ⛔ METHOD_DEPENDENT[{lbl}]: {k} — {methods[0]} {a0[i]} "
+                      f"≠ {methods[1]} {a1[i]}")
+                bad += 1
+    if bad:
+        return 2
+    print(f"  ✓ {methods[0]} 와 {methods[1]} 의 그룹별 승자·localization 일치 "
+          f"({len(outs[0])} 그룹)")
     return 0
 
 
@@ -1736,6 +1871,76 @@ def selftest():
         ana = json.load(open(os.path.join(td, "b3", "analysis_stage_b.json")))
         chk("DEPENDENCY_NOT_MET" in ana["jobs"][tagAo]["codes"],
             "음성: 선행 sp GATED(불안정) → opt DEPENDENCY_NOT_MET (R3 P0-3)")
+        # ══ 회신 R4 회귀시험 ①~③ — analyzer fail-open 4종 ═══════════════════
+        jb0 = jd["dp3_gs0_hA_d_sp_s0"]
+        nat0 = jb0["n_atoms"]
+        _as = {"backbone": list(range(nat0 // 2)),
+               "rest": list(range(nat0 // 2, nat0))}
+
+        # ① 안정성 — 임의 문자열이 stable 증거로 통과했다
+        st, c, _ = analyze_out(_fake_orca_out(
+            hf="UHF", charge=0, mult=2, s2=0.752, energies=(-1.0,),
+            stability="banana"), jb0)
+        chk("STABILITY_UNVERIFIED" in c,
+            "음성 R4①: 'stability analysis indicates …' 뒤가 stable/unstable 이 아니면 "
+            "**UNVERIFIED** (아무 문자열이나 통과하던 경로)")
+        st, c, r = analyze_out(_fake_orca_out(
+            hf="UHF", charge=0, mult=2, s2=0.752, energies=(-1.0,),
+            stability="stable"), jb0)
+        chk("STABILITY_UNVERIFIED" not in c and r.get("stability") == "stable",
+            "  양성: 진짜 stable 문구는 통과하고 realized 에 남는다")
+
+        # ② charge/mult echo 가 **아예 없으면** 통과했다
+        st, c, _ = analyze_out(_fake_orca_out(
+            hf="UHF", charge=0, mult=None, s2=0.752, energies=(-1.0,),
+            stability="stable"), jb0)
+        chk("SECTOR_UNVERIFIED" in c,
+            "음성 R4②: multiplicity echo 가 없으면 **SECTOR_UNVERIFIED** "
+            "(종전엔 `if mu and …` 라 조용히 통과)")
+
+        # ③ BS 는 SP 에서도 안정성 면제였다
+        # ⚠ n=3 매트릭스에는 pairs 가 없어 bs 잡이 안 생긴다. 매트릭스 구성에 의존하지
+        #   않도록 **bs 잡을 직접 구성**해 analyze_out 의 그 분기를 곧장 친다.
+        import copy as _copy
+        jbs = _copy.deepcopy(jb0)
+        jbs["conditioning"]["sector"] = "bs"
+        jbs["conditioning"]["job_type"] = "sp_vertical"
+        jbs["expected"]["mult"] = 1
+        jbs["expected"]["s2_target"] = None
+        st, c, _ = analyze_out(_fake_orca_out(
+            hf="UHF", charge=jbs["expected"]["charge"], mult=1, s2=0.9,
+            energies=(-1.0,), stability=None), jbs)
+        chk("STABILITY_UNVERIFIED" in c,
+            "음성 R4③: **BS SP 도 안정성 검사를 면제받지 않는다** "
+            "(ORCA 가 UHF/UKS SP 에 지원하므로 면제엔 근거가 필요하다)")
+        st, c, _ = analyze_out(_fake_orca_out(
+            hf="UHF", charge=jbs["expected"]["charge"], mult=1, s2=0.9,
+            energies=(-1.0,), stability="stable"), jbs)
+        chk("STABILITY_UNVERIFIED" not in c,
+            "  양성: BS 도 진짜 stable 문구가 있으면 통과한다")
+
+        # ④ localization 블록이 없으면 아무 코드도 안 붙었다
+        st, c, _ = analyze_out(_fake_orca_out(
+            hf="UHF", charge=0, mult=2, s2=0.752, energies=(-1.0,),
+            stability="stable"), jb0, atom_sets=_as)
+        chk("LOCALIZATION_MISSING" in c,
+            "음성 R4④: 열린 껍질인데 Löwdin 블록이 없으면 **hard gate** "
+            "(종전엔 mvals is None 이라 조용히 통과)")
+
+        # ⑤ 행 재배열 — index 를 무시하고 순서대로 읽던 경로
+        good_sp = [0.9] + [0.0] * (nat0 - 1)
+        txt = _fake_orca_out(hf="UHF", charge=0, mult=2, s2=0.752,
+                             energies=(-1.0,), stability="stable", spins=good_sp)
+        st, c, r = analyze_out(txt, jb0, atom_sets=_as)
+        base_cls = r.get("localization_class")
+        chk(base_cls is not None and "LOCALIZATION_MISSING" not in c,
+            f"  양성: 정상 Löwdin 블록은 class 를 낸다 ({base_cls})")
+        shuffled = txt.replace(f"  0 X :   0.000000   {good_sp[0]:.6f}\n", "")
+        st2, c2, _ = analyze_out(shuffled, jb0, atom_sets=_as)
+        chk("LOCALIZATION_MISSING" in c2,
+            "음성 R4⑤: 행이 빠져 index 집합이 0..N-1 이 아니면 **판정 불가로 막는다** "
+            "(종전엔 순서대로 읽어 원자가 통째로 밀린 채 통과)")
+
         # BS 미플립 · opt 미수렴 · charge/mult 불일치
         jb = jd["dp3_gs0_hA_d_sp_s0"]
         st, c, _ = analyze_out(_fake_orca_out(hf="UHF", charge=0, mult=2,
