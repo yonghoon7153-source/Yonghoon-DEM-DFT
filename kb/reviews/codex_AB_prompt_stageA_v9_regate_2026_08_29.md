@@ -36,9 +36,16 @@ PBE+U(Ni 6.2) · ENCUT 520 · D3 zero damping(IVDW=11) · MLIP 기하 위 all-F 
 사전등록 primary(min−min)는 Stage B 없이 안 나오며 Stage B 는 이번 원고 경로가 아니다.
 
 ━━━ 발송본 ━━━
-`sdcp_stageA_v9.zip` (40잡). ⚠ **ZIP 실물을 첨부한다** — 지난 라운드부터 붙이고 있다.
-증서 `ATTESTATION_v9.json` 도 같이 (ZIP 바이트에서 직접 생성).
-(v8 까지는 분석기에 C1·C3 코드가 없었다 — §F-1 때문에 재생성했다.)
+`sdcp_stageA_v9.zip` — 40잡 · 476,238 B
+  ZIP SHA256  246da98748e9f2754925504e0cbeb865db91ddd4c68e401b456abfc008dabc3b
+  MANIFEST    e232e975e0659f8756c993d1dd1d093c6d701f7f98ce46ff43bf88eee3c053a0
+  clean slab  d5f18feb15701f3fc932a1c8f64a09ed48c39ca270d8d8a8f5339658b6c43676
+  후보집합    prospective_basins_2026_08_29.json ·
+              전체 SHA 20fdde06760b36e15a9bd544925c71e4b1a52f430348ff64a2224f1bf61f6d6e
+⚠ **ZIP 실물을 첨부한다.** 증서 `ATTESTATION_v9.json` 도 같이 (ZIP 바이트에서 직접 생성).
+그리고 번들 안 `analyze_results.py` 가 **스스로 selftest 를 통과한다** — 우리 repo 없이
+`python3 analyze_results.py --selftest` 로 판정 코드를 직접 검증하실 수 있다.
+(v8 까지는 그 분석기에 C1·C3 코드가 없었다 — §F-1 때문에 재생성했다.)
 
 ━━━ AA P0 5건 처리 ━━━
 
