@@ -3,7 +3,7 @@ title: "Codex 재검토 요청 AA — 회신 Z 의 P0 8건 처리 후 Stage A v5
 date: 2026-08-29
 updated: 2026-08-29
 tags: [review, codex, sdcp, vasp, bundle, stage-a, regate]
-status: 발송 대기
+status: 발송 완료 — 회신 AA 접수, 후속은 codex_AB_prompt_stageA_v9_regate_2026_08_29.md
 confidence: medium
 verificationStatus: unverified
 explored: false
