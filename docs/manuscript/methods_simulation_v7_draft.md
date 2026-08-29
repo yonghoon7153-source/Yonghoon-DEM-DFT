@@ -50,15 +50,20 @@
 | **`PTFE centerline voxels excluded`** — **본문 보고값** | 54.0 | 70.6 mS cm⁻¹ | **1.308** | **0.43** |
 | `PTFE omitted from the electronic grid` — 병기 sensitivity | 72.3 | 81.3 | 1.124 | **0.00** |
 
-★★ **보고 규약 = centerline** (사용자 결정 2026-08-29).  ⚠ **정당화를 정확히 적는다** —
-A1 사전등록 판정은 *"centerline 을 교정된 표현으로 채택하지 않는다"* 였고 그것은 유지된다
-(부피비 0.428 / 0.422, 등록 밴드 [0.5, 2.0] 밖).  그 검사가 물은 것은 **"교정됐는가"** 이지
-**"둘 중 어느 쪽인가"** 가 아니다.  후자에 대해 우리가 가진 **유일한 정량 측정**은
-표현 부피이고, 거기서 centerline 은 **0.43**, 생략은 **0.00** 이다 — 실재하는 절연상에
-차단 0 을 주는 것은 **부호가 정해진 오류**다.
-⚠ **"부피를 더 그리니 전도가 더 맞다" 는 따라오지 않는다** — 차단은 부피가 아니라 **연결
-위상**을 따르고, 얇고 연결된 막은 같은 부피의 덩어리보다 더 막는다.  ⇒ 두 값을 **모두**
-싣고, 어느 쪽도 **검증된 규약이라 부르지 않는다.**
+★★ **보고 규약 = centerline** (사용자 결정 2026-08-29).  본문은 **값 하나**를 쓰고,
+규약 민감도는 **Table S3c** 에 둔다.
+
+⚠ **형식 근거 (2026-08-29 확인)**: 같은 재료계·같은 코드의 **Bazzoun 2025** 는 파라미터
+민감도를 **별도 절**에 싣고 본문은 공칭값 하나를 쓴다.  우리 litdb **65장 어디에도**
+*"두 규약을 동등하게 병기하고 어느 쪽도 primary 로 지정하지 않는다"* 는 형태가 **없다**.
+⇒ 초안이 그 형태였던 것은 **출판 관행이 아니라 내가 지어낸 형식**이었다.
+
+⚠ **내부적으로 유지되는 것** (원고에 쓰지 않는다): A1 사전등록 판정은
+*"centerline 을 **교정된 표현**으로 채택하지 않는다"* 였고 **그대로다** (부피비 0.428 / 0.422,
+등록 밴드 [0.5, 2.0] 밖).  본문이 centerline 을 쓰는 것은 *"교정됐다"* 가 아니라
+**공칭 규약**으로 쓰는 것이고, 그 선택의 정량 근거(표현 부피 0.43 vs 0.00)는 Table S3c
+각주에 있다.  ⛔ *"centerline 이 참값에 가깝다"* · *"부피를 더 그리니 전도가 더 맞다"* ·
+*"실험에 더 가까워서 골랐다"* 는 **셋 다 쓰지 않는다** (근거는 `ptfe_convention_prereg`).
 
 **코드 기본값은 옮기지 않는다** (R10 Q2 — 사후 primary 를 정당화하지 못하고 옛 영수증만
 흔든다).  대신: ① 재현 러너에서 `PTFE_STAMP` **필수 명시** ② `software default` ·
@@ -105,14 +110,9 @@ edge of 0.15 μm. Adjacent conducting voxels were coupled through harmonic-mean 
 the potential field obtained from ∇·(σ∇φ) = 0, with 1 V applied between the separator (φ = 0)
 and current-collector (φ = 1 V) faces and the remaining boundaries insulating; the effective
 conductivity was taken from the total current. NCM811, VGCF and SDCP carried the electronic
-network and LPSCl and SDCP the ionic network. The insulating binder was treated under **two
-conventions, reported as equivalent sensitivity points rather than one primary result**: omitted
-from the electronic grid, and with its centerline voxels excluded from conduction. Neither is
-established as closer to a real thin coating — the one-cell centerline under-represents the
-coating's spatial extent while over-blocking where it is stamped, and the diameter-aware variant
-is not implemented. Note that omitting the binder from the conduction grid does not remove it
-from the model: its mass and stiffness are present in the DEM–MPM bed, and only its direct
-insulating exclusion on the electronic grid is absent.
+network and LPSCl and SDCP the ionic network. The insulating binder was represented by
+excluding its centerline voxels from conduction. Sensitivity of the reported conductivities to
+this representation is given in Table S3c.
 
 *Conductivity of the carbon network.* The conductivity assigned to VGCF is an **effective
 network value, not a fibre material constant**. Voxelisation fuses touching fibres into shared
@@ -143,13 +143,8 @@ represent **0 %** and **43 %** of it respectively (327,093 and 161,407 stamped v
 and DBE against true binder volumes of 2,581 and 1,290 μm³ — a consistent 2.4-fold
 under-representation, the two electrodes agreeing to within 1.3 %); neither reproduces the real
 volume, and which of the two errs less for conduction is not determined by volume alone, since
-blocking follows connected topology rather than volume. **The values quoted in the main text use the centerline convention**, in preference to omitting
-the binder because omission represents none of a phase that is present and insulating, whereas
-the centerline represents 43 % of it; neither, however, is established as a calibrated
-representation, and the value obtained by omitting the binder is reported alongside. Which of
-the two is closer for conduction is not settled by volume, since blocking follows connected
-topology rather than volume. The direction of the change is common to both conventions, its
-magnitude is not. Ohmic loss per phase was evaluated as Σ g_k Δφ_k², summed over the
+blocking follows connected topology rather than volume. Ohmic loss per phase was evaluated as Σ gₖ Δφₖ², summed over the voxel-to-voxel connections
+belonging to that phase. Ohmic loss per phase was evaluated as Σ g_k Δφ_k², summed over the
 voxel-to-voxel connections belonging to that phase.
 
 *Limitations.* The absolute conductivities have not been calibrated against a
@@ -200,12 +195,9 @@ The resulting beds are more compacted than the experimental porosity anchor.
 Each microstructure was rasterized at a voxel edge of 0.15 μm; adjacent conducting voxels were
 coupled through harmonic-mean conductances and ∇·(σ∇φ) = 0 solved with 1 V between the
 separator and current-collector faces, the remaining boundaries insulating. NCM811, VGCF and
-SDCP carried the electronic network and LPSCl and SDCP the ionic network. The insulating binder
-was treated under two conventions reported as equivalent sensitivity points — omitted from the
-electronic grid, and with its centerline voxels excluded — since neither is established as closer
-to a real thin coating: the one-cell centerline under-represents the coating's extent while
-over-blocking where stamped, and omitting it removes only the electronic exclusion, the binder's
-mass and stiffness remaining in the bed. The VGCF conductivity is an effective network
+SDCP carried the electronic network and LPSCl and SDCP the ionic network. The insulating binder was
+represented by excluding its centerline voxels from conduction; sensitivity to this
+representation is given in Table S3c. The VGCF conductivity is an effective network
 value rather than a fibre constant, since voxelisation removes the fibre–fibre contact
 resistance that separates the powder (≈ 83 S cm⁻¹) and single-filament (≈ 10⁴ S cm⁻¹) values;
 the powder-scale value was adopted and rescaled to preserve axial fibre conductance
@@ -215,12 +207,8 @@ Each electrode was solved at all eight half-voxel grid-origin shifts of a 2 × 2
 SBE and DBE sharing the same origins so that ratios are paired. These eight phases are a
 complete factorial of a single bed rather than independent replicates, so ratios are given as
 the mean over the prescribed phases with the spread and observed range; **no standard error and
-no confidence interval** are implied. Ohmic loss per phase was evaluated as Σ g_k Δφ_k². The two binder
-conventions give 54.0/70.6 mS cm⁻¹ (ratio 1.308, centerline voxels excluded) and
-72.3/81.3 mS cm⁻¹ (ratio 1.124, binder omitted); the first is quoted in the main text because
-omission represents none of a phase that is present and insulating while the centerline
-represents 43 % of it, though neither is a calibrated representation and volume does not settle
-which is closer for conduction. **The direction is common to both, the magnitude is not.** Absolute conductivities are those of
+no confidence interval** are implied. Ohmic loss per phase was evaluated as Σ g_k Δφ_k². The effective electronic conductivity is
+54.0/70.6 mS cm⁻¹, a paired ratio of 1.308 (spread 0.003; range 1.302–1.310). Absolute conductivities are those of
 an idealised bulk model with no interfacial contact resistance anywhere and are not
 composition-matched to a measurement. The ratio is not grid-converged and grew at finer voxels
 **over the refinement interval examined**; no continuum extrapolation or global bound is
@@ -264,11 +252,8 @@ requiring a slower re-compaction; and the specimen provenance of the SDCP conduc
 |---|---|---|---|
 | Thickness | 72.53 | 72.53 | µm |
 | ε_union (simulation-geometry diagnostic) | 7.86 | 7.37 | % |
-| **σ_ele,eff — `PTFE centerline voxels excluded`** (main-text convention) | **54.0** | **70.6** | mS cm⁻¹ |
-| σ_ele,eff — `PTFE omitted from the electronic grid` (sensitivity) | 72.3 | 81.3 | mS cm⁻¹ |
-| σ_ele ratio (paired, 8 origin phases) — centerline / omitted | **1.308** | 1.124 | — |
-| ⌐ spread / range | 0.003 / 1.302–1.310 | 0.003 / 1.120–1.127 | — |
-| ⌐ binder volume represented | **0.43** | 0.00 | — |
+| σ_ele,eff | **54.0** | **70.6** | mS cm⁻¹ |
+| σ_ele ratio, DBE/SBE (paired over 8 grid-origin phases) | SPAN **1.308** (spread 0.003; range 1.302–1.310) | | — |
 | σ_ion,eff | *not evaluated in this cohort* | *not evaluated in this cohort* | mS cm⁻¹ |
 | SE coverage of AM (Tabor band) | **86.6** | **86.6** | % |
 | VGCF coverage of AM | **13.1** | **15.5** | % |
@@ -323,21 +308,25 @@ v6 의 86.7 이 이 규약이며 새 침대가 86.6 으로 재현했다.  같은
   같은 속도·같은 정지 위치는 **like-for-like 입력**을 보장할 뿐이다.
 - 실험 앵커(~15.6 %) 대비 **과압축**이다.
 
-## Table S3b (신설) — PTFE 표현 민감도
+## Table S3c (신설) — 모델-형식 민감도
 
-| PTFE convention | σ_ele SBE | σ_ele DBE | ratio | spread | range |
-|---|---|---|---|---|---|
-| PTFE omitted from the electronic grid (legacy/default convention) | 72.3 | 81.3 | 1.124 | 0.003 | 1.120–1.127 |
-| PTFE centerline voxels excluded (exact-zero sensitivity convention) | 54.0 | 70.6 | 1.308 | 0.003 | 1.302–1.310 |
+⚠ **형식 근거**: 같은 재료계·같은 코드(LIGGGHTS)의 Bazzoun 2025 (Electrochim. Acta,
+`litdb: bazzoun2025_dem_parameter_sensitivity_assb_cathode`) 가 파라미터 8개 × 1920 케이스
+OAT 민감도를 **별도 절**에 싣고 본문은 공칭값 하나를 쓴다.  우리 litdb 65장에 *"두 규약을
+동등하게 병기"* 하는 선례는 **없다**.  ⇒ 본문은 공칭 규약 값 하나, 민감도는 이 표.
 
-각주: *Both conventions were evaluated on the same beds with the same code and grid, differing
-only in whether the insulating binder occupies conduction cells; a machine-checked contract
-confirms that no other parameter differs. Neither convention is designated primary: the
-one-cell centerline under-represents the spatial extent of a thin coating while over-blocking
-the cells it occupies, and the diameter-aware variant is not implemented, so neither is
-established as closer to the real film. Omitting the binder from the conduction grid removes
-only its electronic exclusion; its mass and stiffness remain in the DEM–MPM bed. The direction
-of the change is common to both conventions, its magnitude is not.*
+| Varied | Setting | σ_ele SBE | σ_ele DBE | ratio |
+|---|---|---|---|---|
+| Binder representation | centerline voxels excluded (**as reported**) | 54.0 | 70.6 | **1.308** |
+| | omitted from the electronic grid | 72.3 | 81.3 | 1.124 |
+
+각주: *Both settings were evaluated on the same beds with the same code and grid, differing only
+in whether the insulating binder occupies conduction cells; a machine-checked contract confirms
+that no other parameter differs. The reported setting stamps a one-voxel centerline through each
+binder fibril and removes those cells from conduction, which accounts for 43 % of the binder
+volume present in the bed; omitting the binder accounts for none of it. The increase from SBE to
+DBE is obtained under both settings. The binder's mass and stiffness are present in the DEM–MPM
+bed under either, since the setting affects only the conduction grid.*
 
 ---
 
@@ -345,7 +334,7 @@ of the change is common to both conventions, its magnitude is not.*
 
 | 자리 | 현재 | 고침 |
 |---|---|---|
-| §전송 문단 | *"σ_ele increases from 1.98 to 3.00 S cm⁻¹"* | *"54.0 → 70.6 mS cm⁻¹ (ratio 1.308) with the binder's centerline voxels excluded from conduction; omitting the binder instead gives 72.3 → 81.3 (1.124)"*.  ⚠ 본문 값은 centerline, **병기 필수** |
+| §전송 문단 | *"σ_ele increases from 1.98 to 3.00 S cm⁻¹"* | *"the simulated effective σ_ele increases from **54.0 to 70.6 mS cm⁻¹** (a ratio of 1.308)"*.  민감도는 **Table S3c** 로 (본문에 규약 논쟁을 넣지 않는다) |
 | 같은 문단 | *"σ_ion … 0.203 and 0.215 mS cm⁻¹"* | ⚠ **재측정 전까지 보류** |
 | 같은 문단 | *"reconstructed using a discrete element method (DEM)"* | *"**generated** by DEM packing and MPM compaction"* — ⚠ `reconstructed` 는 tomography 재구성을 암시한다 |
 | Figure 4a 설명 | *"DEM-reconstructed …"* | *"DEM-packed and MPM-compacted …"* |
@@ -353,4 +342,4 @@ of the change is common to both conventions, its magnitude is not.*
 | Table S3 제목 | *"…from the DEM simulations"* | *"Structural metrics from the DEM–MPM geometry and transport metrics from the voxel finite-volume solver"* |
 | Figure S16 설명 | *"**Reconstructed** SBE and DBE geometries used for the **DEM** simulations"* | *"SBE and DBE geometries **generated by DEM packing and MPM compaction**"* — 두 군데다 (`Reconstructed` + 전 과정을 DEM 으로 부름) |
 | Figure S17·S18 설명 | *"Simulated ionic / electronic current-density distributions in the SBE and DBE"* | ✅ **DEM 오귀속 없음.**  다만 솔버가 무명이라 *"…computed with the voxel finite-volume solver"* 를 붙이는 것이 낫다 (선택) |
-| §전송 문단 첫 문장 | 한쪽 규약만 | **두 값을 한 문장 또는 병렬 표로 동등하게** |
+| §전송 문단 첫 문장 | 옛 세대 값 | 위 행으로 교체.  ⚠ **자릿수가 바뀐다** (S cm⁻¹ → mS cm⁻¹) |

@@ -7,7 +7,10 @@
 
 ★ 판정 순서 (prereg §5, 여기서 바꾸면 사전등록 위반):
   1. 미수렴 팔(cg_info ≠ 0)이 하나라도 → **판정 보류**
-  2. 8 팔 표준오차 > 1.17 %p       → **판정 보류**, origin 16 으로
+  2. 8 팔 origin-위상 산포 > 1.17 %p → **판정 보류**, origin 16 으로
+     ⚠ 이 양은 `sd/√n` 이지만 **표준오차가 아니다** — 8 위상은 한 침대의 완전 {0,½}³
+       factorial 이라 복제 오차 자유도가 0 이다 (R8 Q1).  게이트로서의 뜻(산포가 크면
+       판정을 미룬다)은 그대로이고, **이름만** 고쳤다.  문턱·변수명·판정 로직 불변.
   3. 비 ≥ 1.05                      → h0 채택
   4. 비 ≤ 1.025                     → h1 채택 ⇒ SDCP 전자 이득 원고에서 철회
   5. 그 사이                        → 둘 다 기각, 제3 기전
@@ -944,7 +947,8 @@ def verdict(arms, seed_ensemble=False, require_arms=None, require_ionic=False,
         #    초판이 정확히 그것을 했다 — 같은 커밋에서 '누설 없음' 을 주장하면서.
         #    절대값은 `out['se_ratio_abs_pp']` 로 JSON 에 남는다 (비-blind 소비자용).
         return dict(out, decision='HOLD', hold_code='SE_EXCEEDED',
-                    reason=f'비의 상대 표준오차 {se_ratio_rel_pct:.2f} % > {SE_MAX_REL_PCT} % — '
+                    reason=f'비의 상대 origin-위상 산포 {se_ratio_rel_pct:.2f} % > '
+                           f'{SE_MAX_REL_PCT} % — '
                            f'prereg §5-2 (origin 16 으로 늘릴 것)')
     # ③④⑤ 본 판정
     if ratio >= H0_MIN_RATIO:
@@ -1085,8 +1089,8 @@ def _selftest():
     chk(f'③ 비 1.015 → h1 ({v1["ratio"]})', v1['decision'] == 'h1')
     chk('④ 비 1.035 (중간대) → 둘 다 기각',
         verdict(mk(base, [v * 1.035 for v in base]))['decision'] == 'BOTH_REJECTED')
-    noisy = [1.0, 1.10, 0.90, 1.08, 0.92, 1.06, 0.94, 1.0]      # SE 큼
-    chk('⑤ 표준오차가 크면 판정 보류 (origin 을 늘리라고 말한다)',
+    noisy = [1.0, 1.10, 0.90, 1.08, 0.92, 1.06, 0.94, 1.0]      # 산포 큼
+    chk('⑤ origin-위상 산포가 크면 판정 보류 (origin 을 늘리라고 말한다)',
         verdict(mk(noisy, [v * 1.08 for v in noisy]))['decision'] == 'HOLD')
     chk('⑥ 팔 수가 다르면 HOLD',
         verdict(mk(base, base[:4]))['decision'] == 'HOLD')
@@ -2694,12 +2698,14 @@ if __name__ == '__main__':
     if _rel is not None:
         _abs = v.get('se_ratio_abs_pp')
         _abs_s = f' = 절대 {_abs} %p' if _abs is not None else ''
-        print(f'  비의 상대 표준오차 = {_rel} % (문턱 {SE_MAX_REL_PCT} %, 비대응 = 게이트 '
-              f'규약){_abs_s}')
+        print(f'  비의 상대 origin-위상 산포 = {_rel} % (문턱 {SE_MAX_REL_PCT} %, 비대응 = '
+              f'게이트 규약){_abs_s}')
     _prel = v.get('se_ratio_paired_rel_pct', v.get('se_ratio_paired_pct'))
     if _prel is not None:
         print(f'  쌍대응(origin-key join) 평균 = {v.get("ratio_paired_mean")} · '
-              f'SE = {_prel} % · n = {v.get("n_origin")}')
+              f'산포 {_prel} % · n = {v.get("n_origin")} 위상')
+        print('  ⚠ 이 산포는 **표준오차가 아니다** — 8 위상은 한 침대의 완전 {0,½}³ '
+              'factorial 이라 복제 오차 자유도가 0 이다 (R8 Q1).  신뢰구간을 함의하지 않는다.')
     if a.out:
         json.dump({'rows': rows, 'verdict': v}, open(a.out, 'w'), ensure_ascii=False, indent=1)
         print(f'\n  → {a.out}')
