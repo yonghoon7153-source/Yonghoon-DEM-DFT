@@ -6076,7 +6076,255 @@ def _selftest_rescue():
     return 0 if ok[0] == ok[1] else 1
 
 
+# ─────────────────────────────────────────────────────────────────────────────
+# 제출 **직전** 무결성 — 던지기 전에 한 번 (2026-08-29)
+# ─────────────────────────────────────────────────────────────────────────────
+#: 번들 안에 있으면 안 되는 것 — 라이선스(POTCAR) · 이미 돈 흔적(산출물).
+#: 산출물이 섞여 있으면 run_job.sh 의 "이미 완료 — 건너뜀" 분기가 **남의 계산을
+#: 우리 것으로 반송**한다. 회수 후에는 못 잡는다 (해시는 배포물만 본다).
+FORBIDDEN_NAMES = ("POTCAR",)
+STALE_OUTPUT_NAMES = ("OUTCAR", "vasprun.xml", "CONTCAR", "WAVECAR", "CHGCAR",
+                      "OSZICAR", "XDATCAR")
+
+
+def verify_bundle(root, expect_jobs=None) -> int:
+    """번들을 **제출 전에** 검사한다 — 생성 시점의 바이트 그대로인가.
+
+    분석기(analyze_results.py)의 무결성 검사와 목적이 다르다: 저쪽은 **회수 후**
+    OUTCAR 를 요구하며 fail-closed 로 막는다. 이쪽은 산출물이 아직 없는 번들을
+    본다 — 그래서 제출 전에 돌 수 있는 유일한 검사다.
+
+    검사:
+      ① MANIFEST.json 파싱 · ② files_sha256 전건 대조(변조·누락)
+      ③ 배포물에 없는 파일이 끼어들었나(extra) · ④ 계획 잡 폴더 존재·필수 파일
+      ⑤ POTCAR 혼입(라이선스) · ⑥ 이미 돈 흔적(OUTCAR 등)
+      ⑦ analyze_results.py 존재 · ⑧ 옆 zip 의 멤버 집합이 폴더와 같은가
+
+    이 도구가 **못 하는 것**
+      · **물리를 보지 않는다.** INCAR 값·자기 seed·기하가 옳은지는 생성기와
+        분석기의 몫이다. 여기를 통과해도 "맞는 양을 재고 있다"는 뜻이 아니다.
+      · POTCAR 를 검증하지 못한다 (번들에 없다 — 조립 뒤 OUTCAR TITEL 로만 가능).
+      · 잡 수가 **캠페인 설계와 맞는지** 모른다. `--expect_jobs` 로 불러 준
+        숫자와만 대조한다 (안 주면 MANIFEST 의 n_jobs 와만 대조).
+    """
+    root = Path(root)
+    bad, warn = [], []
+    mp = root / "MANIFEST.json"
+    if not mp.is_file():
+        print(f"⛔ {mp} 없음 — 번들이 아니다")
+        return 1
+    try:
+        man = json.loads(mp.read_text())
+    except Exception as e:                                   # noqa: BLE001
+        print(f"⛔ MANIFEST.json 파싱 실패: {e}")
+        return 1
+
+    # ② 배포물 해시 전건 대조
+    fh = man.get("files_sha256") or {}
+    if not fh:
+        bad.append("files_sha256 가 비어 있다 — 무결성을 확인할 근거가 없다")
+    changed, missing = [], []
+    for rel, want in sorted(fh.items()):
+        p = root / rel
+        if not p.is_file():
+            missing.append(rel); continue
+        if hashlib.sha256(p.read_bytes()).hexdigest() != want:
+            changed.append(rel)
+    if changed:
+        bad.append(f"내용이 바뀐 파일 {len(changed)}건: {changed[:5]}")
+    if missing:
+        bad.append(f"없어진 파일 {len(missing)}건: {missing[:5]}")
+
+    # ③ 매니페스트에 없는 파일이 끼어들었나
+    on_disk = {str(p.relative_to(root)) for p in root.rglob("*") if p.is_file()}
+    extra = sorted(on_disk - set(fh) - {"MANIFEST.json"})
+    # ⑤⑥ 그중에서도 **이유가 다른 두 종류**는 따로 이름을 붙여 말한다
+    potcar = [e for e in extra if Path(e).name in FORBIDDEN_NAMES]
+    stale = [e for e in extra if Path(e).name in STALE_OUTPUT_NAMES]
+    rest = [e for e in extra if e not in potcar and e not in stale]
+    if potcar:
+        bad.append(f"POTCAR 가 번들 안에 있다 {len(potcar)}건 (라이선스 · 종 순서가 "
+                   f"잡마다 다르다 — 조립기로만 만들 것): {potcar[:3]}")
+    if stale:
+        bad.append(f"이미 돈 흔적 {len(stale)}건 — run_job.sh 가 '이미 완료' 로 "
+                   f"건너뛰어 **남의 계산을 반송**한다: {stale[:3]}")
+    if rest:
+        bad.append(f"매니페스트에 없는 파일 {len(rest)}건: {rest[:5]}")
+
+    # ④ 계획된 잡이 실제로 있고, 던질 수 있는 상태인가
+    planned = man.get("planned") or {}
+    n_jobs = man.get("n_jobs")
+    if n_jobs is not None and len(planned) != n_jobs:
+        bad.append(f"MANIFEST 자기모순 — n_jobs {n_jobs} vs planned {len(planned)}")
+    if expect_jobs is not None and len(planned) != expect_jobs:
+        bad.append(f"잡 수가 기대와 다르다 — 기대 {expect_jobs} vs planned {len(planned)}")
+    NEED = ("run_job.sh", "POTCAR_ASSEMBLE.sh", "job.json", "POSCAR")
+    nojob, nofile = [], []
+    for k in sorted(planned):
+        jd = root / k
+        if not jd.is_dir():
+            nojob.append(k); continue
+        for f in NEED:
+            if not (jd / f).is_file():
+                nofile.append(f"{k}/{f}")
+        # 상 폴더가 하나도 없으면 이 잡은 아무것도 안 돈다
+        if not any((jd / ph / "INCAR").is_file()
+                   for ph in ("pre", "relax", "static", "dense", "static_pin")):
+            nofile.append(f"{k}/<상>/INCAR")
+    if nojob:
+        bad.append(f"계획됐는데 폴더가 없는 잡 {len(nojob)}건: {nojob[:5]}")
+    if nofile:
+        bad.append(f"잡에 필수 파일이 없다 {len(nofile)}건: {nofile[:5]}")
+
+    # ⑦ 분석기
+    if not (root / "analyze_results.py").is_file():
+        bad.append("analyze_results.py 없음 — 회수해도 판정할 도구가 같이 안 간다")
+
+    # ⑧ 옆 zip — 실제로 나가는 물건이 이것이다
+    zp = root.with_suffix(".zip")
+    zinfo = ""
+    if not zp.is_file():
+        warn.append(f"zip 없음 ({zp.name}) — 폴더로 직접 전달할 때만 정상")
+    else:
+        try:
+            with zipfile.ZipFile(zp) as z:
+                members = {n for n in z.namelist() if not n.endswith("/")}
+        except Exception as e:                               # noqa: BLE001
+            bad.append(f"zip 을 열 수 없다: {e}")
+            members = None
+        if members is not None:
+            pref = root.name + "/"
+            inner = {m[len(pref):] for m in members if m.startswith(pref)}
+            odd = sorted(m for m in members if not m.startswith(pref))
+            if odd:
+                bad.append(f"zip 최상위가 {root.name}/ 이 아닌 항목 {len(odd)}건: {odd[:3]}")
+            only_zip = sorted(inner - on_disk)
+            only_dir = sorted(on_disk - inner)
+            if only_zip or only_dir:
+                bad.append(f"zip 과 폴더가 다르다 — zip 에만 {len(only_zip)}건 "
+                           f"{only_zip[:3]} · 폴더에만 {len(only_dir)}건 {only_dir[:3]}")
+            zinfo = (f"{zp.name}  {zp.stat().st_size / 1e6:.1f} MB  "
+                     f"sha256 {hashlib.sha256(zp.read_bytes()).hexdigest()}")
+
+    # ── 기록용 (제출 이력에 그대로 붙일 것) ─────────────────────────────────
+    print(f"■ 번들 {root}")
+    print(f"  잡 {len(planned)} · 배포파일 {len(fh)} · 해시확인 {len(fh) - len(missing)}")
+    print(f"  candidate_set : {man.get('candidate_set', '(없음)')}")
+    print(f"  fragments     : {man.get('fragments', '(없음)')}")
+    print(f"  generated_utc : {man.get('generated_utc', '(없음)')}")
+    print(f"  generated_argv: {' '.join(man.get('generated_argv') or []) or '(없음)'}")
+    sub = man.get("submission") or {}
+    print(f"  submission    : {sub.get('cores_per_job', '?')} 코어/잡 · "
+          f"동시 {sub.get('max_concurrency', '?')} · VASP 실행 "
+          f"{sub.get('n_vasp_executions_total', '?')}회")
+    print(f"  MANIFEST      : sha256 {hashlib.sha256(mp.read_bytes()).hexdigest()}")
+    if zinfo:
+        print(f"  ZIP           : {zinfo}")
+    for w in warn:
+        print(f"  ⚠ {w}")
+    for b in bad:
+        print(f"  ⛔ {b}")
+    print("  " + ("✅ 제출 가능" if not bad else f"❌ 제출 차단 — {len(bad)}건"))
+    return 0 if not bad else 1
+
+
+def _selftest_verify() -> int:
+    """--verify_bundle 의 양성 1 + **음성 7**.
+
+    음성이 없는 selftest 는 통과해도 아무것도 보증하지 않는다 (v2 선례).
+    여기서 심는 결함은 전부 **회수 후에는 못 잡는 것**들이다.
+    """
+    import tempfile
+    ok = [0, 0]
+
+    def chk(c, m):
+        ok[0] += 1; ok[1] += bool(c)
+        print(("  ✔ " if c else "  ✘ ") + m)
+
+    def build(d: Path) -> Path:
+        """최소 번들 — verify 는 물리를 안 보므로 파일 구조만 있으면 된다."""
+        root = d / "bundle_v0"
+        jd = root / "refs" / "clean_slab__pm1"
+        (jd / "static").mkdir(parents=True)
+        (jd / "POSCAR").write_text("t\n1.0\n5 0 0\n0 5 0\n0 0 5\nLi\n1\nDirect\n0 0 0\n")
+        (jd / "run_job.sh").write_text("#!/bin/sh\necho run\n")
+        (jd / "POTCAR_ASSEMBLE.sh").write_text("cat Li > POTCAR\n")
+        (jd / "job.json").write_text('{"species_order": ["Li"]}')
+        (jd / "static" / "INCAR").write_text("ENCUT = 520\n")
+        (jd / "static" / "KPOINTS").write_text("a\n0\nGamma\n1 1 1\n0 0 0\n")
+        (root / "analyze_results.py").write_text("#!/usr/bin/env python3\n")
+        man = {"n_jobs": 1, "planned": {"refs/clean_slab__pm1": {"phases": ["static"]}},
+               "candidate_set": "selftest", "fragments": ["none"],
+               "generated_argv": ["--selftest"], "generated_utc": "1970-01-01T00:00:00Z",
+               "submission": {"cores_per_job": 48, "max_concurrency": 8}}
+        man["files_sha256"] = {
+            str(p.relative_to(root)): hashlib.sha256(p.read_bytes()).hexdigest()
+            for p in sorted(root.rglob("*")) if p.is_file()}
+        (root / "MANIFEST.json").write_text(json.dumps(man, indent=1, ensure_ascii=False))
+        with zipfile.ZipFile(root.with_suffix(".zip"), "w", zipfile.ZIP_DEFLATED) as z:
+            for q in sorted(root.rglob("*")):
+                if q.is_file():
+                    z.write(q, q.relative_to(root.parent))
+        return root
+
+    def rezip(root: Path):
+        with zipfile.ZipFile(root.with_suffix(".zip"), "w", zipfile.ZIP_DEFLATED) as z:
+            for q in sorted(root.rglob("*")):
+                if q.is_file():
+                    z.write(q, q.relative_to(root.parent))
+
+    with tempfile.TemporaryDirectory() as d:
+        d = Path(d)
+        r = build(d / "p")
+        chk(verify_bundle(r) == 0, "양성: 갓 만든 번들은 통과")
+        chk(verify_bundle(r, expect_jobs=1) == 0, "양성: --expect_jobs 일치")
+        chk(verify_bundle(r, expect_jobs=40) == 1,
+            "⛔음성: 잡 수가 기대와 다르면 차단 (40잡 번들에 10잡을 던지는 사고)")
+
+        r = build(d / "n1")
+        p = r / "refs" / "clean_slab__pm1" / "static" / "INCAR"
+        p.write_text(p.read_text() + "IVDW = 0\n"); rezip(r)
+        chk(verify_bundle(r) == 1, "⛔음성: INCAR 한 줄이 바뀌면 차단 (해시 불일치)")
+
+        r = build(d / "n2")
+        (r / "refs" / "clean_slab__pm1" / "POTCAR_ASSEMBLE.sh").unlink(); rezip(r)
+        chk(verify_bundle(r) == 1, "⛔음성: 조립기가 없으면 차단 (그 잡은 exit 127)")
+
+        r = build(d / "n3")
+        (r / "refs" / "clean_slab__pm1" / "POTCAR").write_text("PAW_PBE Li_sv\n"); rezip(r)
+        chk(verify_bundle(r) == 1, "⛔음성: POTCAR 혼입 차단 (라이선스 · 종 순서)")
+
+        r = build(d / "n4")
+        (r / "refs" / "clean_slab__pm1" / "static" / "OUTCAR").write_text(
+            "General timing and accounting informations\n"); rezip(r)
+        chk(verify_bundle(r) == 1,
+            "⛔음성: 이미 돈 OUTCAR 차단 (run_job 이 건너뛰어 남의 값을 반송)")
+
+        r = build(d / "n5")
+        shutil.rmtree(r / "refs" / "clean_slab__pm1"); rezip(r)
+        chk(verify_bundle(r) == 1, "⛔음성: 계획된 잡 폴더가 통째로 없으면 차단")
+
+        r = build(d / "n6")
+        (r / "NOTE.txt").write_text("손으로 끼워 넣은 파일\n")     # zip 은 그대로 둔다
+        chk(verify_bundle(r) == 1, "⛔음성: zip 과 폴더가 어긋나면 차단 (나가는 물건이 다르다)")
+
+        r = build(d / "n7")
+        (r / "MANIFEST.json").unlink()
+        chk(verify_bundle(r) == 1, "⛔음성: MANIFEST 없으면 번들로 취급하지 않는다")
+
+    print(f"  verify selftest {ok[1]}/{ok[0]}")
+    return 0 if ok[0] == ok[1] else 1
+
+
 def main():
+    if "--selftest_verify" in sys.argv:
+        sys.exit(_selftest_verify())
+    if "--verify_bundle" in sys.argv:
+        i = sys.argv.index("--verify_bundle")
+        _ej = None
+        if "--expect_jobs" in sys.argv:
+            _ej = int(sys.argv[sys.argv.index("--expect_jobs") + 1])
+        sys.exit(verify_bundle(sys.argv[i + 1], expect_jobs=_ej))
     if "--selftest_rescue" in sys.argv:
         sys.exit(_selftest_rescue())
     if "--basin_rescue" in sys.argv:
@@ -6179,7 +6427,11 @@ def main():
     ap.add_argument("--selftest", action="store_true")
     a = ap.parse_args()
     if a.selftest:
-        return selftest()
+        # ⚠ verify 는 생성기 selftest 와 독립이다 — 표준 명령 하나가
+        #   전건을 덮지 않으면 아무도 안 돌린다 (음성 경로가 특히).
+        rc = selftest()
+        print("\n── --verify_bundle 경로 ──")
+        return rc or _selftest_verify()
     build_bundle(a)
     return 0
 
