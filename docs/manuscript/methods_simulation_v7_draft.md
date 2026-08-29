@@ -128,8 +128,14 @@ ratio of 1.124 (spread 0.003; range 1.120–1.127). The two differ only in wheth
 centerline voxels are excluded from conduction — a machine-checked contract confirms that no
 other parameter differs — and **neither is established as closer to a real thin coating**: the
 one-cell centerline under-represents the coating's spatial extent while over-blocking where it
-is stamped. They are therefore reported as **two equivalent model-form sensitivity points**;
-the direction of the change is common to both, its magnitude is not. Ohmic loss per phase was evaluated as Σ g_k Δφ_k², summed over the
+is stamped. Measured against the binder volume actually present in the bed, the two conventions
+represent **0 %** and **43 %** of it respectively (327,093 and 161,407 stamped voxels for the SBE
+and DBE against true binder volumes of 2,581 and 1,290 μm³ — a consistent 2.4-fold
+under-representation, the two electrodes agreeing to within 1.3 %); neither reproduces the real
+volume, and which of the two errs less for conduction is not determined by volume alone, since
+blocking follows connected topology rather than volume. They are therefore reported as **two
+equivalent model-form sensitivity points**; the direction of the change is common to both, its
+magnitude is not. Ohmic loss per phase was evaluated as Σ g_k Δφ_k², summed over the
 voxel-to-voxel connections belonging to that phase.
 
 *Limitations.* The absolute conductivities have not been calibrated against a
