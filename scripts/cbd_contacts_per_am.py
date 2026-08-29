@@ -21,13 +21,22 @@
     모르므로 **두 구성을 다 내고** 어느 쪽이 v6 과 맞는지 보고한다.
 
 좌표 프레임 (2026-08-29 실측으로 확정):
-  `se_dump` 는 MPM **정규화** 좌표다 — 실측 범위 x·y 0.040–0.960, z 0.050–**1.3843** 이고
-  그 z 최댓값이 `mpm_metrics.wall_z = 1.3846`(플래튼 위치)과 같다.  실좌표로 되돌리려면
-  `lateral_box`(0.05)를 곱한다.  `am_scaffold` 는 이미 실좌표다 (AM 반지름 0.0025 = 2.5 µm).
+  `se_dump` 는 MPM **정규화** 좌표다.  실좌표로 되돌리는 사상은 **기록된 양에서 유도**한다 —
+    · 축척 = `um_box_um` (= 54.3478 µm/unit).  ⚠ `lateral_box × 1000` (= 50) **아니다**
+    · 가로 origin = `(1 − lateral_box·1000/um_box_um)/2` = 0.04 — 50 µm 침대가 54.35 µm
+      도메인 **가운데** 놓여 있다 (50/54.3478 = 0.92003, 관측 x 범위 0.0400–0.9602 와 일치)
+    · z origin = `wall_z − thickness_um/축척` = 0.04995
+  두 독립 확인: 두께 `(1.3846−0.05)×54.3478 = 72.533` (기록 **72.534**) ·
+  가로 폭 `(0.9602−0.0400)×54.3478 = 50.011` (**50**).
+  ⚠ 초판은 `×50, origin 0` 이라 **양 축 다 8 % 작았고**, 그래서 전부 흩어졌다.
+  `am_scaffold` 는 이미 실좌표다 (AM 반지름 0.0025 = 2.5 µm).
   ⚠⚠ **이 배선을 접촉으로 검증하지 않는다** — 접촉이 생길 때까지 변환을 맞추면 그 변환이
   답을 만든다.  대신 **독립 성질**로 검사한다: AM 은 MPM 에서 얼어붙은 장애물이므로
   그 구 **안에는 물질점이 없어야** 하고, 변환이 틀리면 그 비율이 AM 부피분율(≈46 %) 근처로
   튄다.  `inside_frac` 이 그 검사이고 초과하면 **거부한다**.
+  ★ 이 검사가 유효한 이유: 상 코드 전수를 세니 **AM 상이 없다** (SE 97.23 % · VGCF 2.42 % ·
+  PTFE 0.35 %) — AM 은 격자 마스크이지 물질점이 아니다.  ⇒ *"첨가제가 AM 을 배제하지 않고
+  시딩됐다"* 라는 대안 설명이 배제되고, 높은 `inside_frac` 은 변환 오류만을 뜻한다.
 
 ⚠⚠ **이 값은 규약 의존이다.**  band 폭·개체 정의·PTFE 포함 여부가 각각 값을 바꾼다.
 그래서 산출물에 규약을 함께 적고, 원고에는 규약과 함께 인용한다.
@@ -133,9 +142,23 @@ def count_contacts(bed_dir, scaffold, band_um=0.15, include_ptfe=False,
     #  ── 좌표 프레임.  `se_dump` 는 MPM **정규화** 좌표다 (도메인 ≈ [0,1], 플래튼이
     #     `wall_z`).  실좌표로 되돌리려면 `lateral_box` 를 곱한다.  scaffold 는 이미 실좌표다.
     #     ⚠ 이 배선은 아래 `inside_frac` 검사가 **접촉과 무관하게** 검증한다.
-    if se_scale is None:
-        se_scale = float(meta.get('lateral_box', 0.05))
-    apos = np.asarray(pos[idx], dtype=np.float64) * se_scale * um_per_unit
+    #  ⚠⚠ 초판은 `× lateral_box × 1000` (= ×50, offset 0) 이었고 **양 축 다 8 % 작았다**
+    #     — 그래서 첨가제가 AM 에 대해 흩어져 `inside_frac` 이 48 % 로 나왔다.
+    #     정확한 사상은 **기록된 양에서 유도**한다 (접촉에 맞추지 않는다):
+    #       · 축척 = `um_box_um` (µm / 정규화 단위)
+    #       · 가로 offset = 침대가 도메인 **가운데** 놓인 여백.  50/54.3478 = 0.92003 이고
+    #         관측 x 범위가 0.0400–0.9602 로 정확히 그것이다
+    #       · z offset = `wall_z − thickness_um/축척`  ⇒ 두께가 기록값으로 되돌아온다
+    scale_um = float(meta.get('um_box_um') or 0.0)
+    if scale_um <= 0:
+        raise SystemExit('mpm_metrics 에 um_box_um 이 없다 — 좌표 축척을 유도할 수 없다')
+    L_dem_um = float(meta.get('lateral_box', 0.05)) * um_per_unit
+    off_xy = (1.0 - L_dem_um / scale_um) / 2.0
+    off_z = float(meta['wall_z']) - float(meta['thickness_um']) / scale_um
+    if se_scale is not None:                      # 수동 override (진단 전용)
+        scale_um, off_xy, off_z = se_scale * um_per_unit, 0.0, 0.0
+    origin = np.array([off_xy, off_xy, off_z])
+    apos = (np.asarray(pos[idx], dtype=np.float64) - origin) * scale_um
     aid = np.asarray(fid[idx])
 
     xs, ys, zs, rs, tt = _load_scaffold(scaffold)
@@ -167,7 +190,7 @@ def count_contacts(bed_dir, scaffold, band_um=0.15, include_ptfe=False,
         raise SystemExit(
             f'첨가제 점의 {inside_frac:.1%} 가 AM 구 **안**에 있다 (허용 {inside_tol:.0%}).\n'
             '  AM 은 얼어붙은 장애물이라 안에 물질점이 없어야 한다 ⇒ 좌표 변환이 틀렸다.\n'
-            f'  현재 se_scale={se_scale} · um_per_unit={um_per_unit}\n'
+            f'  현재 축척 {scale_um:.4f} µm/unit · origin {origin.round(5).tolist()}\n'
             '  ⚠ 접촉이 생길 때까지 변환을 맞추지 말 것 — 그 변환이 답을 만든다.')
 
     out = []
@@ -193,7 +216,8 @@ def count_contacts(bed_dir, scaffold, band_um=0.15, include_ptfe=False,
             '     결과를 만든다.')
 
     return out, dict(band_um=band_um, kinds=kinds, n_am=len(out),
-                     se_scale=se_scale, inside_frac=round(inside_frac, 6),
+                     scale_um_per_unit=scale_um, origin_norm=origin.tolist(),
+                     inside_frac=round(inside_frac, 6),
                      range_additive_um=[rng_add[0].tolist(), rng_add[1].tolist()],
                      range_am_um=[rng_am[0].tolist(), rng_am[1].tolist()],
                      um_per_unit=um_per_unit, n_pts=n_pts,
@@ -231,17 +255,21 @@ def selftest() -> int:
     r_sim = 0.0025                             # 2.5 µm
     band = 0.15                                # µm
 
-    LB = 0.05                                  # lateral_box — se_dump 는 정규화 좌표다
+    LB, UBOX, WALL, THK = 0.05, 54.3478, 1.3846, 72.534   # 실제 metrics 와 같은 형태
+    _sc = UBOX
+    _oxy = (1.0 - LB * U / UBOX) / 2.0
+    _oz = WALL - THK / UBOX
 
     def shell_pt(dist_um, k):
         """중심에서 dist_um 떨어진 점을 **se_dump 의 정규화 좌표로** 돌려준다.
 
-        실제 파일이 그 프레임이므로 픽스처도 그래야 변환 배선이 실제로 시험된다
-        (초판 픽스처는 scaffold 와 같은 프레임이라 변환을 안 태웠다)."""
+        실제 파일이 그 프레임이므로 픽스처도 그래야 변환 배선이 시험된다.
+        ⚠ 초판 픽스처는 scaffold 와 같은 프레임이라 변환을 아예 안 태웠고, 그다음 판은
+        `×lateral_box` 라는 **틀린** 사상을 태웠다 — 둘 다 실제 결함을 못 잡았다."""
         import math
         a = 0.7 * k
-        p = [cx + dist_um / U * math.cos(a), cy + dist_um / U * math.sin(a), cz]
-        return [v / LB for v in p]
+        p = [cx * U + dist_um * math.cos(a), cy * U + dist_um * math.sin(a), cz * U]
+        return [p[0] / _sc + _oxy, p[1] / _sc + _oxy, p[2] / _sc + _oz]
 
     with tempfile.TemporaryDirectory() as td:
         P, F, X = [], [], []
@@ -249,8 +277,11 @@ def selftest() -> int:
         def add(ph, oid, xyz):
             P.append(PHASE[ph]); F.append(float(oid)); X.append(xyz)
         #  VGCF 개체 3개 — 하나는 **점 5개** (개체 수 ≠ 점 수 검사)
+        #  ⚠ 표면(r = 2.5 µm)에 **정확히** 놓지 않는다 — 부동소수로 안/밖이 갈려
+        #    `inside_frac` 이 흔들린다.  실침대는 점이 많아 한 점이 좌우하지 않지만
+        #    픽스처는 69점이라 한 점이 1.4 %p 다.
         for j in range(5):
-            add('VGCF', 11, shell_pt(2.5 + 0.05 * j, j))
+            add('VGCF', 11, shell_pt(2.52 + 0.02 * j, j))
         add('VGCF', 12, shell_pt(2.6, 7))
         add('VGCF', 13, shell_pt(2.55, 9))
         #  PTFE 개체 하나 — 기본에서 빠져야 한다
@@ -267,14 +298,15 @@ def selftest() -> int:
             add('VGCF', 88, shell_pt(10.0 + 0.01 * j, j))
         #  패딩 (SE, 상 코드에 없음)
         for j in range(20):
-            P.append(9); F.append(0.0); X.append([0.03 / LB + 1e-4 * j, 0.03 / LB, 0.03 / LB])
+            P.append(9); F.append(0.0); X.append([0.5 + 1e-4 * j, 0.5, 0.5])
 
         n_pts = len(P)
         np.save(os.path.join(td, 'phase.npy'), np.array(P, dtype=np.int8))
         np.save(os.path.join(td, 'fibre.npy'), np.array(F, dtype=np.float32))
         np.save(os.path.join(td, 'se_dump.npy'),
                 np.array(X, dtype=np.float32).ravel())
-        meta = dict(n_pts=n_pts, lateral_box=LB, additives=dict(
+        meta = dict(n_pts=n_pts, lateral_box=LB, um_box_um=UBOX,
+                    wall_z=WALL, thickness_um=THK, additives=dict(
             VGCF=dict(n_points=sum(1 for p in P if p == PHASE['VGCF'])),
             PTFE=dict(n_points=sum(1 for p in P if p == PHASE['PTFE']))))
         json.dump(meta, open(os.path.join(td, 'mpm_metrics.json'), 'w'))
@@ -298,7 +330,8 @@ def selftest() -> int:
         chk('band 를 넓히면 먼 개체가 들어온다', cnt3 == [4], str(cnt3))
 
         #  ── fail-closed 검사 셋
-        json.dump(dict(n_pts=n_pts + 1, lateral_box=LB, additives=meta['additives']),
+        json.dump(dict(n_pts=n_pts + 1, lateral_box=LB, um_box_um=UBOX, wall_z=WALL,
+                       thickness_um=THK, additives=meta['additives']),
                   open(os.path.join(td, 'mpm_metrics.json'), 'w'))
         try:
             count_contacts(td, sc, band_um=band)
@@ -370,8 +403,9 @@ def main(argv=None):
           f'AM 표면 바깥 껍질만')
     print(f'   물질점 {info["n_pts"]:,} 중 첨가제 {info["n_additive_points"]:,} · '
           f'상별 점수 {info["phase_counts"]}')
-    print(f'   프레임: se_scale {info["se_scale"]} · AM 구 **안**에 든 첨가제 점 '
-          f'{info["inside_frac"]:.2%}  (얼어붙은 장애물이므로 ≈0 이어야 한다)')
+    print(f'   프레임: {info["scale_um_per_unit"]:.4f} µm/unit · origin '
+          f'{[round(v,5) for v in info["origin_norm"]]} · AM 구 **안**에 든 첨가제 점 '
+          f'{info["inside_frac"]:.2%}  (AM 은 격자 마스크라 물질점이 없다 ⇒ ≈0 이어야 한다)')
     print('⚠ 이 값은 규약 의존이다 — band 폭·개체 정의·PTFE 포함 여부가 각각 값을 바꾼다.')
     if a.out:
         json.dump(res, open(a.out, 'w', encoding='utf-8'), ensure_ascii=False, indent=1)
