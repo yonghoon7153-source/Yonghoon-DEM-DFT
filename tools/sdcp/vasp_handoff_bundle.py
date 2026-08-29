@@ -272,10 +272,32 @@ set -e
 V=${VASP_CMD:-"mpirun -np ${NP:-48} vasp_std"}   # 계약·비용모형과 같은 48
 [ -f POTCAR ] || { echo "⛔ POTCAR 를 이 폴더에 놓으세요 (POTCAR_SPEC.txt 의 변형)"; exit 1; }
 need() { [ -s "$1" ] || { echo "⛔ $1 없음/빈 파일 — $2"; exit 1; }; }
+
+# ★ 회신 AA P0-5 / Q8 — **1회용(one-shot) 실행이다.** 시작 전에 산출물이 있으면
+#   거부한다. 종전엔 "이미 완료 — 건너뜀" 으로 넘어갔는데, 그러면 남이 다른 설정으로
+#   돌려 둔 결과를 우리 것으로 반송하게 된다 (회수 후에는 구별할 방법이 없다).
+#   진짜로 이어서 돌려야 하면 ALLOW_RESUME=1 을 **명시적으로** 주고, 그 사실을
+#   NOTES.txt 에 남겨 주세요.
+if [ "${ALLOW_RESUME:-0}" != "1" ]; then
+  _stale=""
+  for ph in pre relax static dense; do
+    [ -d "$ph" ] || continue
+    for f in OUTCAR WAVECAR CHGCAR vasprun.xml CONTCAR OSZICAR; do
+      [ -e "$ph/$f" ] && _stale="$_stale $ph/$f"
+    done
+  done
+  if [ -n "$_stale" ]; then
+    echo "⛔ 실행 전 산출물이 이미 있습니다:$_stale"
+    echo "   이 잡은 **1회용**입니다. 이어 돌리면 다른 설정의 결과가 섞입니다."
+    echo "   폴더를 새로 풀고 다시 시작하거나, 의도한 재개면 ALLOW_RESUME=1 로 주세요."
+    exit 1
+  fi
+fi
+
 for ph in pre relax static dense; do
   [ -d "$ph" ] || continue
   if [ -f "$ph/OUTCAR" ] && grep -aq "General timing" "$ph/OUTCAR"; then
-    echo "  ✓ $ph 이미 완료 — 건너뜀"; continue
+    echo "  ✓ $ph 이미 완료 — 건너뜀 (ALLOW_RESUME)"; continue
   fi
   cp POTCAR "$ph/"
   case "$ph" in
@@ -805,15 +827,40 @@ def _write_potcar_asm(jd: Path, species_order: List[str]) -> None:
         '  [ "$got" = "$v" ] || { echo "⛔ ${i}번째 TITEL 이 $got — $v 여야 합니다"; exit 1; }\n'
         '  [ "$fun" = "PAW_PBE" ] || { echo "⛔ ${i}번째가 $fun — PAW_PBE 여야 합니다"; exit 1; }\n'
         'done\n'
-        '# ③ provenance — 이 파일을 결과와 **함께 반송**해 주세요\n'
+        '# ③ trusted hash allowlist 대조 (회신 AA P0-2)\n'
+        '#    variant 이름·PAW_PBE·잡 간 일관성은 "전부 같은 잘못된 PP 트리" 를 못 막는다.\n'
+        '#    정본 SHA 는 라이선스상 우리가 못 싣는다 → **외주처 site-local 목록**을 받는다.\n'
+        'if [ -n "${POTCAR_ALLOWLIST:-}" ]; then\n'
+        '  [ -f "$POTCAR_ALLOWLIST" ] || { echo "⛔ allowlist 파일 없음: $POTCAR_ALLOWLIST"; exit 1; }\n'
+        '  for t in $srcsha; do\n'
+        '    v="${t%%:*}"; h="${t#*:}"\n'
+        '    grep -q "$h" "$POTCAR_ALLOWLIST" || {\n'
+        '      echo "⛔ $v 의 SHA256 이 allowlist 에 없습니다: $h"; exit 1; }\n'
+        '  done\n'
+        '  echo "  ✔ allowlist 대조 통과 ($POTCAR_ALLOWLIST)"\n'
+        'elif [ "${POTCAR_ALLOWLIST_WAIVED:-0}" = "1" ]; then\n'
+        '  echo "  ⚠ allowlist 미대조 — 면제 선언됨. 반송물에 기록됩니다."\n'
+        'else\n'
+        '  echo "⛔ POTCAR_ALLOWLIST 가 지정되지 않았습니다."\n'
+        '  echo "   신뢰하는 PBE.54 세트의 sha256 목록을 **한 번** 만들어 전 잡에 같은"\n'
+        '  echo "   파일을 쓰세요 (잡마다 새로 만들면 아무것도 검증하지 않습니다):"\n'
+        '  echo "     for v in \\$(ls \\$PP); do sha256sum \\$PP/\\$v/POTCAR; done > site_allow.txt"\n'
+        '  echo "     POTCAR_ALLOWLIST=/abs/site_allow.txt bash POTCAR_ASSEMBLE.sh"\n'
+        '  echo "   대조 없이 진행해야 하면 POTCAR_ALLOWLIST_WAIVED=1 (반송물에 남습니다)."\n'
+        '  exit 1\n'
+        'fi\n'
+        '# ④ provenance — 이 파일을 결과와 **함께 반송**해 주세요\n'
         'python3 - "$srcsha" <<\'PY\' > POTCAR_PROVENANCE.json\n'
-        'import hashlib, json, subprocess, sys\n'
+        'import hashlib, json, sys, os as _os\n'
         'src = dict(t.split(":", 1) for t in sys.argv[1].split())\n'
         'titel = [l.strip() for l in open("POTCAR", errors="ignore") if "TITEL" in l]\n'
         'print(json.dumps({"schema": "potcar_provenance/v1",\n'
         '                  "species_order": "' + " ".join(species_order) + '".split(),\n'
         '                  "expected_variants": "' + " ".join(pv) + '".split(),\n'
         '                  "titel_lines": titel, "source_sha256": src,\n'
+        '                  "allowlist": _os.environ.get("POTCAR_ALLOWLIST"),\n'
+        '                  "allowlist_waived":\n'
+        '                      _os.environ.get("POTCAR_ALLOWLIST_WAIVED") == "1",\n'
         '                  "assembled_sha256": hashlib.sha256(\n'
         '                      open("POTCAR","rb").read()).hexdigest()},\n'
         '                 indent=1, ensure_ascii=False))\n'
@@ -4665,6 +4712,19 @@ def build_bundle(a, ledger: Optional[Dict[str, Any]] = None) -> Path:
             for extra in ("dense", "pre", "relax"):
                 if (td / extra).exists():
                     shutil.rmtree(td / extra)     # 쌍둥이는 static 만
+            # ★ 회신 AA P0-3 — 쌍둥이 job.json 이 부모와 **완전히 같았다**. 그래서
+            #   분석기가 on/off 를 이름 접미어(`__d3off`)로만 가를 수 있었고, 그것이
+            #   경로 문자열 파싱 의존의 근본 원인이다. 구조화 필드를 박는다.
+            #   부모에도 `d3: "on"` 을 찍어 **모든 잡이 한 필드로 분류**되게 한다
+            #   (필드가 없는 잡이 남으면 cohort 조립이 다시 이름으로 샌다).
+            for _jp, _d3, _par in ((jd / "job.json", "on", None),
+                                   (td / "job.json", "off", rel)):
+                _m = json.loads(_jp.read_text())
+                _m["d3"] = _d3
+                _m["ivdw_expected"] = 11 if _d3 == "on" else None
+                if _par is not None:
+                    _m["d3_twin_of"] = _par
+                _jp.write_text(json.dumps(_m, indent=1, ensure_ascii=False))
             twins[rel] = rel + "__d3off"
             n_jobs += 1
         # ★ 회신 Z P0-3 — census 를 **기계로** 세고 못박는다. 리뷰어가 "net4/off 까지
