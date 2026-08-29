@@ -2430,6 +2430,13 @@ def _closure_estimand(man, results, E, emol, jobs):
         "blocks": [], "A_by_frag": {},
     }
 
+    # (0) calibration 전용 tranche 면 **primary 를 내지 않는다** (회신 X P0-2)
+    if str(out["candidate_set"]).startswith("calibration_pilot"):
+        out["blocks"].append(
+            "CALIBRATION_ONLY_TRANCHE — 이 잡들은 창 W 를 정하려고 돌린 것이고 "
+            "후보집합이 아니다. primary 는 창 확정 → 창 안 전 자세 계산 → audit "
+            "봉인해제 → regret 판정 순서를 마친 뒤에만 낸다 (회신 X Q6).")
+
     # (1) 기체 자기상태 대조 — 값을 내기 **전에** 본다 (회신 V P0-3)
     ctls = man.get("molecular_spin_controls") or {}
     for f in frags:
@@ -2468,6 +2475,29 @@ def _closure_estimand(man, results, E, emol, jobs):
         out["A_by_frag"][f] = {"n": len(rows),
                                "min": rows[0] if rows else None,
                                "max": rows[-1] if rows else None}
+
+    # (2b) J_f — pose × magnetic-basin interaction (회신 X Q1)
+    #   조각별로 자세 p 의 두 seed 차 d_p = E(p,net4) − E(p,pm1) 를 모아
+    #   J_f = max_p d_p − min_p d_p. 자세마다 자기 basin 이 다르게 잡히면 커진다.
+    for f in frags:
+        d = {}
+        for jn, jr in jobs.items():
+            if not jn.startswith(f + "__") or not jr.get("ok") or jn.endswith("__d3off"):
+                continue
+            for sd in ("afm2424_pm1", "afm2424_net4"):
+                if jn.endswith(sd):
+                    d.setdefault(jn[: -len(sd) - 2], {})[sd] = E(jn)
+        dp = {k: v["afm2424_net4"] - v["afm2424_pm1"] for k, v in d.items()
+              if v.get("afm2424_net4") is not None and v.get("afm2424_pm1") is not None}
+        if len(dp) < 2:
+            continue
+        jf = max(dp.values()) - min(dp.values())
+        out.setdefault("pose_basin_interaction", {})[f] = {
+            "n_pose": len(dp), "J_f_meV": round(jf * 1000, 2),
+            "delta_by_pose_meV": {k: round(v * 1000, 2) for k, v in sorted(dp.items())},
+            "판정": ("seed-insensitive (시험한 자세 안에서)" if jf <= 0.010 else
+                     "magnetic-sensitive" if jf <= 0.040 else
+                     "⛔ SELECTOR_FAIL — J_f > 40 meV")}
 
     if out["blocks"]:
         out["verdict"] = "NO_VALUE — blocks 를 해소하기 전에는 단일 X 를 보고하지 않는다"
@@ -3972,7 +4002,15 @@ def build_bundle(a, ledger: Optional[Dict[str, Any]] = None) -> Path:
     #      생성기는 그것만 읽는다 — 그래야 "사전등록된 집합" 이 실제로 강제된다.
     if getattr(a, "from_basins", None):
         fb = json.load(open(a.from_basins))
-        man["candidate_set"] = "prospective_lowE (frozen %s)" % fb.get("freeze_sha256", "?")[:16]
+        # 회신 X P0-2 — calibration 만 낸 것은 **최종 후보집합이 아니다.**
+        #   이름을 그대로 두면 분석기가 primary 를 내고, audit 이 나중에 더 낮게
+        #   나와도 "더 낮은 자세를 찾았다" 로 흡수돼 selector 실패가 사라진다.
+        _rl = tuple(getattr(a, "roles", None) or ("calibration", "sealed_audit"))
+        man["candidate_set"] = ("%s (frozen %s)"
+                                % ("prospective_lowE" if len(_rl) > 1
+                                   else "calibration_pilot",
+                                   fb.get("freeze_sha256", "?")[:16]))
+        man["emitted_roles"] = list(_rl)
         man["from_basins"] = {"path": os.path.abspath(a.from_basins),
                               "sha256": hashlib.sha256(
                                   open(a.from_basins, "rb").read()).hexdigest(),
