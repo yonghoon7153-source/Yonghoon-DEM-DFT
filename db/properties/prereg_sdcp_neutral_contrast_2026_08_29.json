@@ -4,12 +4,10 @@
  "제목": "중성 SDCP vs perfluorodecane 조각 간 대비 — **결과 보기 전** 사전등록",
  "성격": "⚠ 엄밀한 완전 사전등록이 아니다. 우리는 이미 MLIP 결과와 wave1 을 봤다. 회신 U 문구대로 **new all-F DFT outcome-blinded prospective analysis plan** 이 정확한 명칭이다 — 새로 돌릴 all-F DFT 결과에 대해서만 눈을 가린 계획이다.",
  "왜_지금_박나": "같은 데이터에서 선택 방식에 따라 0.3458 / 0.3604 / 0.3780 / 0.4102 eV 가 전부 나온다. 결과를 보고 고르면 마음에 드는 숫자를 고른 것이 된다. 지난 두 마감이 사후마감이라 물렸다.",
-
  "정의": {
   "A(f,p)": "E_complex(f,p) − E_mol(f)  — 공통 슬랩이 소거되는 양. f=조각, p=자세",
   "⚠": "A 자체는 흡착에너지가 아니다. 슬랩 항이 빠져 있어 **조각 간 차이에서만** 의미가 있다"
  },
-
  "primary_estimand": {
   "이름": "ΔΔE_lowE",
   "식": "min_p A(SDCP,p) − min_q A(c10,q)",
@@ -19,7 +17,6 @@
    "탐색을 더 하면 양쪽 최저가 내려가 **값이 정확해지는 방향**이다"
   ]
  },
-
  "secondary": {
   "이름": "G",
   "식": "min_q A(c10,q) − max_p A(SDCP,p)",
@@ -27,7 +24,6 @@
   "지위": "**보조 강건성 진술**. primary 를 대체하지 않는다",
   "⚠_왜_primary_가_아닌가": "G 는 **자세를 더 볼수록 나빠진다** — 약한 SDCP 자세를 하나만 더 찾아도 줄어든다. 성실하게 탐색할수록 결론이 약해지는 통계라 primary 로 두면 탐색을 덜 할 유인이 생긴다"
  },
-
  "⛔_금지": [
   "primary 와 secondary 를 **평균**하기",
   "결과를 보고 primary 를 바꾸기",
@@ -36,13 +32,11 @@
   "'술포네이트가 앵커링한다' — 최저 자세가 실제로 술포네이트 접촉일 때, 그것을 **결과로** 기술할 때만 허용",
   "자리선호(Li vs Ni) 방향 일체 (matched pose n≥3 미충족)"
  ],
-
  "자세_집합": {
   "legacy_champion_cross": "wave1 6자세 — `vasp_handoff_bundle.py` champion 분기('짝 확인 풀에서 Li 위 최선 vs Ni 위 최선') 산출. **보조 민감도 분석 전용**, primary 아님",
   "prospective_lowE": "신규. UMA 후보 풀에서 basin 중복제거 후 저에너지 — **유일한 primary 입력**",
   "⚠_명명": "'deepest' · 'screened minimum' 이라 부르지 않는다. 정확한 명칭은 **UMA-ranked low-energy candidates evaluated by DFT** 이며 전역 최저를 뜻하지 않는다"
  },
-
  "게이트_결과_보기_전_고정": {
   "1_국소_자기_topology": "총자화가 아니라 **48 Ni 의 signed local-moment topology** 로 판정한다 (회신 U P0-4). 전역 시간반전은 동등. `flip_indices_poscar == []` · `n_small == 0` · 모멘트 표 완결. 총자화는 보조 기록.",
   "2_실패_자세_처리": "**삭제하지 않는다.** 사전등록한 pin→release rescue 1회 후에도 실패하면 `MAGNETIC_STATE_UNRESOLVED` 로 남기고 그 selector 의 닫힘을 **실패 처리**한다. 다음 순위 자세로 조용히 교체 금지.",
@@ -51,7 +45,6 @@
   "5_방향성_guard_band": "부호가 같은 것만으로 부족하다. primary 가 **≤ −0.10 eV** 일 때만 방향성 주장을 허용한다.",
   "6_보고_자릿수": "X 는 primary 식의 결과를 **0.01 eV 로 반올림**한다. primary 가 게이트에 걸리면 **단일 X 를 보고하지 않는다.**"
  },
-
  "무조건_재개": "입력 정체성 · 후보 선택 구현 · 에너지 산술 · 전자·자기상태 배정 · provenance · 분석 코드에서 **primary estimand 를 바꿀 수 있는 오류**가 확인되면 아래 목록과 무관하게 즉시 재개한다 (회신 U C3).",
  "추가_재개_조건": [
   "holdout/cutoff 후보가 DFT 최저가 되어 MLIP rank 가정이 실패",
@@ -63,10 +56,29 @@
   "화학종 · 양성자화 · 말단 모델 해석이 바뀜"
  ],
  "⚠_slab_F_차등": "공통 슬랩을 정확히 쓰면 조각 간 slab-F 차등은 **대수적으로 0** 이다. 비영이 나오면 재개 조건이 아니라 **서로 다른 slab/basin 을 섞었다는 P0** 다.",
-
  "대조군_명명": "PTFE 가 아니라 **CF₃–(CF₂)₈–CF₃ (perfluorodecane) 조각**. 최강 접촉이 말단 CF₃ 의 F–Li 2.365 Å 이므로 '내부 CF₂ 사슬' 대표가 아니다 (회신 T P0-2).",
  "분산_보정": "**D3 zero damping (IVDW=11)**. ⛔ 'D3(BJ)' 는 오기 — wave1 INCAR 되울림 36/36 이 IVDW=11 이다.",
- "출처": ["kb/reviews/codex_T_prompt_sdcp_binding_energy_path_2026_08_29.md",
-          "kb/reviews/codex_U_prompt_neutral_close_plan_2026_08_29.md",
-          "db/properties/sdcp_neutral_closed_2026_08_28.json"]
+ "출처": [
+  "kb/reviews/codex_T_prompt_sdcp_binding_energy_path_2026_08_29.md",
+  "kb/reviews/codex_U_prompt_neutral_close_plan_2026_08_29.md",
+  "db/properties/sdcp_neutral_closed_2026_08_28.json"
+ ],
+ "🔴_MLIP_순위가_DFT_와_반대다_2026_08_29": {
+  "실측": {
+   "sdcp_neutral_rigid_최저": "+0.3109 eV (O_top__fib08__r000) — **척력**",
+   "ptfe_c10_rigid_최저": "-0.0323 eV (Li_top__fib07__r000) — 약한 인력",
+   "sdcp_neutral_DFT": "-0.7728 eV",
+   "ptfe_c10_DFT": "-0.4124 eV"
+  },
+  "무엇이_문제인가": "rigid 스크린에서는 **PTFE 가 이기고** DFT 에서는 **SDCP 가 이긴다.** 부호까지 뒤집힌다. rigid 는 gap 2.4 Å 고정·이완 없음이라 부피 큰 SDCP 가 가까이 오지 못하고 변형 대가만 물린다.",
+  "⇒": "**rigid E_pose 순위를 이 질문의 후보 선택기로 쓸 수 없다.** 회신 U Q-A4 가 'MLIP 순위와 DFT 순위가 갈리면?' 이라 물은 것이 실측으로 확인됐다. 후보 선정은 **이완 에너지(relax_f0.85)** 로 해야 한다.",
+  "남는_문제": "relax 집합은 조각당 24자세뿐이고 sulfonate_down 이 **0개**다. prospective_lowE 를 만들려면 후보를 더 이완시켜야 한다 (UMA, GPU)."
+ },
+ "🔬_술포네이트_배향_rigid_순위_2026_08_29": {
+  "실측": "sdcp_neutral 자격 322 자세 중 sulfonate_down 28개. **최상 101등**, E_pose +0.5613 eV, 1등(+0.3109)과 **+0.2504 eV** 차.",
+  "상위10_배향": "O_top·NiO_bridge·LiO_bridge·hollow 의 기하 배향(fib*) 뿐 — 화학 태그(sulfonate_down·thiophene_down)는 상위권에 없다.",
+  "읽기": "'이완 선정에서 억울하게 잘렸다' 가 **아니다** — rigid 스크린에서 애초에 상위권이 아니었다.",
+  "⚠_확정_못_하는_이유": "rigid 는 gap 2.4 Å 고정·이완 없음이다. 0.25 eV 는 이완으로 뒤집힐 수 있는 크기고, 게다가 위 항목대로 **rigid 순위 자체가 DFT 와 반대**다. 따라서 '술포네이트 배향이 불리하다' 로 쓸 수 없다.",
+  "쓸_수_있는_문장": "UMA rigid 스크린(gap 2.4 Å 고정)에서 술포네이트-down 배향은 상위 후보에 들지 않았다. ⚠ 이 스크린의 조각 간 순위는 DFT 와 반대이므로 **배향 선호의 근거로 쓰지 않는다.**"
+ }
 }

@@ -953,7 +953,13 @@ def _emit_mol_job(jd: Path, frag: str, mol, margin: float,
     # ⛔⛔ 회신 U P0-5 — 기체 기준이 **항상 relax → static** 이었다. 그러면 얻는 차이가
     #   "스핀 제약 해제 + 재이완/구조경로 변화" 라 순수 δ_m 이 아니다. closure 모드는
     #   **고정 기하 static 단독**으로 간다 (MOL_STATIC 은 이미 LREAL=.FALSE. 다).
-    _phases = ((("static", MOL_STATIC),) if closure
+    # ⛔⛔ 회신 V P0-1 — `MOL_STATIC` 은 `ICHARG=1`(CHGCAR 읽기)인데 closure 는
+    #   relax 를 안 돌아 **공급할 CHGCAR 가 없다.** 없으면 fallback 에 의존하고,
+    #   낡은 CHGCAR 가 있으면 **조용히 읽는다.** 독립 고정기하 단일점은 원자중첩에서
+    #   시작해야 한다 → ISTART=0 · ICHARG=2.
+    _MOL_STATIC_CL = MOL_STATIC.replace("ICHARG   = 1", "ICHARG   = 2") \
+                               .replace("[static]", "[closure static · 원자중첩 시작]")
+    _phases = ((("static", _MOL_STATIC_CL),) if closure
                else (("relax", MOL_RELAX), ("static", MOL_STATIC)))
     for ph, tpl in _phases:
         (jd / ph).mkdir(exist_ok=True)
@@ -967,7 +973,11 @@ def _emit_mol_job(jd: Path, frag: str, mol, margin: float,
     (jd / "run_job.sh").write_text(RUN_JOB)
     meta = {"kind": "mol_ref", "fragment": frag, "species_order": seen, "counts": counts,
             "kmesh": kmesh, "incar_expected": incar_exp,
-            "open_shell": open_shell, "box_margin_A": margin, "phases": ["relax", "static"],
+            "open_shell": open_shell, "box_margin_A": margin,
+            # ⛔ 회신 V P0-2 — 종전엔 closure 여도 ["relax","static"] 을 박아
+            #   분석기가 **없는 relax 를 필수 phase 로 읽고** static 이 정상 완료돼도
+            #   기체 잡을 차단했다. 실제 생성한 phase 에서 만든다.
+            "phases": [ph for ph, _ in _phases],
             "box_A": [round(float(b), 2) for b in box],
             # ⚠ 기체 기준계도 결합 그래프를 감사해야 한다 — 없으면 그 검사가 꺼진다
             #   (Codex P0-G). 슬랩이 없으므로 registry/탈착 검사는 분석기가 건너뛴다.
@@ -4724,6 +4734,15 @@ def selftest() -> int:
                    f"발견 {[str(x.parent.parent.name) for x in _rel][:3]}")
     # 음성: closure 를 끄면 위 성질이 실제로 깨진다 (시험이 무엇을 지키는지 증명)
     _sp_inc = sorted(Path(str(td / "bundle_sp")).rglob("INCAR"))
+    _molinc = sorted(_cl.rglob("refs/mol__*/static/INCAR"))
+    chk(bool(_molinc) and all("ICHARG   = 2" in f.read_text() for f in _molinc),
+        f"[V P0-1] closure 기체 static 이 ICHARG=2 (공급할 CHGCAR 가 없다) · {len(_molinc)}개")
+    import json as _json
+    _mj = sorted(_cl.rglob("refs/mol__*/job.json"))
+    _badph = [f for f in _mj if _json.load(open(f)).get("phases") != ["static"]]
+    chk(bool(_mj) and not _badph,
+        f"[V P0-2] 기체 job.json 의 phases 가 실제 생성분(static)과 일치 · "
+        f"위반 {[x.parent.name for x in _badph][:3]}")
     chk(any("LREAL    = Auto" in f.read_text() for f in _sp_inc),
          "  (음성 대조) --single_point 만으로는 LREAL=Auto 가 남는다 — closure 가 그것을 고친다")
     # ★ **배포되는 분석기**의 k 라벨·guard band selftest 를 그대로 돌린다.
