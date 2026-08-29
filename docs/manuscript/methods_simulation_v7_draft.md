@@ -22,7 +22,7 @@
 | 1 | 전 과정을 "DEM" 으로 부름 | **DEM · MPM · voxel FV 를 이름으로 분리** | 세 도구다.  표 제목·그림 설명이 전부 DEM 이라 협업자도 MPM 을 못 봤다 |
 | 2 | *"E 를 24 → 1.35 로 연화"* 가 앞 | **porosity 표적이 앞, E 는 노브로 뒤** | 실제로 한 일이 그것이다.  ⚠ 두 값은 표에 **그대로 남긴다** |
 | 3 | *"paired mean with its **standard error**"* | **origin-phase spread + range**, SE·CI 명시 부정 | 8 origin 은 한 침대의 완전 factorial — 복제 오차 자유도 0 (R8 Q1) |
-| 4 | PTFE 규약·σ_VGCF 규약 암묵 | **둘 다 명시**, PTFE 는 두 규약 병기 | 이득이 규약에 크게 의존한다 (12.4 ↔ 30.8 %) |
+| 4 | PTFE 규약·σ_VGCF 규약 암묵 | **둘 다 명시**.  본문은 공칭 규약 값 하나, 규약 민감도는 **Table S3c** | 이득이 규약에 의존한다 (1.124 ↔ 1.308) — 관행대로 **민감도 절**에 둔다 |
 
 ★★ ~~**주 규약 = PTFE 를 차단상으로 그린다**~~ — **R10 Q1 [P1] 로 기각**.
 
@@ -42,13 +42,13 @@
   **DEM–MPM 침대에 남는다** (W2 실측: PTFE 만 E 가 바뀌어 변위가 달라졌다).  사라지는 것은
   **전자격자의 직접 절연배제 채널** 하나다.
 
-⇒ **두 규약은 동등한 model-form sensitivity 두 점**이다 (R8 Q2 와 동일).  굵은 글씨 ·
-`reported` · `resolved` 를 **전부 제거**한다.  라벨은 이렇게 쓴다:
+⇒ `resolved` 라는 말을 **쓰지 않는다** — 어느 쪽도 PTFE 를 해상하지 않았다.  본문은 **공칭
+규약 값 하나**를 쓰고, 규약을 바꿨을 때의 변화는 **Table S3c (민감도)** 로 내린다:
 
 | 규약 라벨 | σ_ele SBE | DBE | 비 | PTFE 부피 표현 |
 |---|---|---|---|---|
-| **`PTFE centerline voxels excluded`** — **본문 보고값** | 54.0 | 70.6 mS cm⁻¹ | **1.308** | **0.43** |
-| `PTFE omitted from the electronic grid` — 병기 sensitivity | 72.3 | 81.3 | 1.124 | **0.00** |
+| **`PTFE centerline voxels excluded`** — **본문 공칭 규약** | 54.0 | 70.6 mS cm⁻¹ | **1.308** | **0.43** |
+| `PTFE omitted from the electronic grid` — Table S3c 민감도 | 72.3 | 81.3 | 1.124 | **0.00** |
 
 ★★ **보고 규약 = centerline** (사용자 결정 2026-08-29).  본문은 **값 하나**를 쓰고,
 규약 민감도는 **Table S3c** 에 둔다.
@@ -68,7 +68,7 @@
 **코드 기본값은 옮기지 않는다** (R10 Q2 — 사후 primary 를 정당화하지 못하고 옛 영수증만
 흔든다).  대신: ① 재현 러너에서 `PTFE_STAMP` **필수 명시** ② `software default` ·
 `analysis role` · `publication profile` 을 **별도 필드**로 ③ 로그 라벨을
-`explicit exact-zero sensitivity protocol` 로 중립화 ④ 두 규약 **동등 보고**.
+`explicit exact-zero sensitivity protocol` 로 중립화 ④ 규약 변화는 **Table S3c 민감도**로.
 
 ---
 
@@ -130,22 +130,7 @@ single bed rather than independent replicates**, so ratios are reported as the m
 eight prescribed phases together with the spread across them and the observed range; no standard
 error or confidence interval is implied. All arms reached the solver convergence criterion.
 
-*Values under the two binder conventions.* With PTFE centerline voxels excluded (exact-zero
-sensitivity convention) the effective electronic conductivity is 54.0 mS cm⁻¹
-(SBE) and 70.6 mS cm⁻¹ (DBE), a paired ratio of 1.308 (spread 0.003 across the eight origin
-phases; observed range 1.302–1.310). Leaving PTFE unresolved gives 72.3 and 81.3 mS cm⁻¹, a
-ratio of 1.124 (spread 0.003; range 1.120–1.127). The two differ only in whether the binder's
-centerline voxels are excluded from conduction — a machine-checked contract confirms that no
-other parameter differs — and **neither is established as closer to a real thin coating**: the
-one-cell centerline under-represents the coating's spatial extent while over-blocking where it
-is stamped. Measured against the binder volume actually present in the bed, the two conventions
-represent **0 %** and **43 %** of it respectively (327,093 and 161,407 stamped voxels for the SBE
-and DBE against true binder volumes of 2,581 and 1,290 μm³ — a consistent 2.4-fold
-under-representation, the two electrodes agreeing to within 1.3 %); neither reproduces the real
-volume, and which of the two errs less for conduction is not determined by volume alone, since
-blocking follows connected topology rather than volume. Ohmic loss per phase was evaluated as Σ gₖ Δφₖ², summed over the voxel-to-voxel connections
-belonging to that phase. Ohmic loss per phase was evaluated as Σ g_k Δφ_k², summed over the
-voxel-to-voxel connections belonging to that phase.
+*Values.* The effective electronic conductivity is 54.0 mS cm⁻¹ (SBE) and 70.6 mS cm⁻¹ (DBE), a paired ratio of 1.308 (spread 0.003 across the eight origin phases; observed range 1.302–1.310). Ohmic loss per phase was evaluated as Σ gₖ Δφₖ², summed over the voxel-to-voxel connections belonging to that phase. Sensitivity of these values to how the insulating binder is represented on the conduction grid is given in Table S3c.
 
 *Limitations.* The absolute conductivities have not been calibrated against a
 composition-matched measurement and should be read as the output of an idealised bulk model:
