@@ -14,8 +14,18 @@
 | 3 | *"paired mean with its **standard error**"* | **origin-phase spread + range**, SE·CI 명시 부정 | 8 origin 은 한 침대의 완전 factorial — 복제 오차 자유도 0 (R8 Q1) |
 | 4 | PTFE 규약·σ_VGCF 규약 암묵 | **둘 다 명시**, PTFE 는 두 규약 병기 | 이득이 규약에 크게 의존한다 (12.4 ↔ 30.8 %) |
 
-⚠ **주 규약 = PTFE 미표현** (v6 Methods 가 이미 *"PTFE was not resolved"* 라고 적는다).
-차단 규약은 **SI 민감도**로 싣는다.
+★★ **주 규약 = PTFE 를 차단상으로 그린다** (v6 의 *"not resolved"* 에서 **바뀐다**).
+
+**근거 — 결과와 무관하게 성립하는 것만 쓴다** (숫자를 보고 고른 것이 아님을 분명히 하기 위해):
+PTFE 는 절연체이고 **두 전극의 함량이 다르다** (SBE 1.0 · DBE 0.5 wt%).  이 논문의 개입이
+*"PTFE 절반을 SDCP 로 치환"* 인데, 절연 바인더를 전도 격자에서 **빼면 그 치환의 절반이
+수송 모델에서 사라진다.**  ⇒ 미표현 규약은 중립적 단순화가 아니라 **연구 대상인 조성 차이를
+모델이 못 보게 하는 선택**이다.  이 논거는 값이 어느 쪽으로 나왔든 동일하다.
+(부수: 절대값도 문헌에 가까워진다 — SBE 73 → 54 mS cm⁻¹, Lee 2025 의 34 대비 2.15× → 1.61×.)
+
+⚠ **그래도 두 값을 모두 싣는다.**  `exact-zero` 는 셀을 통째로 비우므로 얇은 표면 코팅보다
+**국소 차단을 과대**할 수 있다 — 어느 규약이 실물에 가까운지는 **미정**이다.
+⇒ 본문은 **두 값을 함께** 적고, 견고한 주장은 **방향(DBE > SBE)** 이다.
 
 ---
 
@@ -51,10 +61,13 @@ edge of 0.15 μm. Adjacent conducting voxels were coupled through harmonic-mean 
 the potential field obtained from ∇·(σ∇φ) = 0, with 1 V applied between the separator (φ = 0)
 and current-collector (φ = 1 V) faces and the remaining boundaries insulating; the effective
 conductivity was taken from the total current. NCM811, VGCF and SDCP carried the electronic
-network, LPSCl and SDCP the ionic network. **In the reported configuration PTFE is not resolved
-on the conduction grid**; because the binder is insulating and its two electrodes differ in
-PTFE content, this choice affects the result, and the alternative convention in which PTFE is
-stamped as a blocking phase is reported as a sensitivity in Table S3b.
+network and LPSCl and SDCP the ionic network. **PTFE was resolved on the conduction grid as a
+blocking phase**: the binder is insulating and its content differs between the two electrodes
+(1.0 wt% in the SBE against 0.5 wt% in the DBE), so a transport model that omitted it could not
+represent half of the compositional change under study. Because a voxel emptied of conduction
+may over-represent the local blocking of a thin surface coating, the alternative convention in
+which PTFE is left unresolved is reported alongside it in Table S3b, and both are quoted in the
+text.
 
 *Conductivity of the carbon network.* The conductivity assigned to VGCF is an **effective
 network value, not a fibre material constant**. Voxelisation fuses touching fibres into shared
@@ -72,10 +85,14 @@ single bed rather than independent replicates**, so ratios are reported as the m
 eight prescribed phases together with the spread across them and the observed range; no standard
 error or confidence interval is implied. All arms reached the solver convergence criterion.
 
-*Reported values.* Under this configuration the effective electronic conductivity is
-72.3 mS cm⁻¹ (SBE) and 81.3 mS cm⁻¹ (DBE), a paired ratio of 1.124 (spread 0.003 across the
-eight origin phases; observed range 1.120–1.127). Ohmic loss per phase was evaluated as
-Σ g_k Δφ_k², summed over the voxel-to-voxel connections belonging to that phase.
+*Reported values.* With PTFE resolved, the effective electronic conductivity is 54.0 mS cm⁻¹
+(SBE) and 70.6 mS cm⁻¹ (DBE), a paired ratio of 1.308 (spread 0.003 across the eight origin
+phases; observed range 1.302–1.310). Leaving PTFE unresolved gives 72.3 and 81.3 mS cm⁻¹, a
+ratio of 1.124 (spread 0.003; range 1.120–1.127). The two conventions differ only in whether
+the insulating binder occupies conduction cells — a machine-checked contract confirms that no
+other parameter differs between them — so the direction of the change is robust to this choice
+while its magnitude is not. Ohmic loss per phase was evaluated as Σ g_k Δφ_k², summed over the
+voxel-to-voxel connections belonging to that phase.
 
 *Limitations.* The absolute conductivities have not been calibrated against a
 composition-matched measurement and should be read as the output of an idealised bulk model:
@@ -109,9 +126,10 @@ into the pore space at the experimental weight fractions.
 Each microstructure was rasterized at a voxel edge of 0.15 μm; adjacent conducting voxels were
 coupled through harmonic-mean conductances and ∇·(σ∇φ) = 0 solved with 1 V between the
 separator and current-collector faces, the remaining boundaries insulating. NCM811, VGCF and
-SDCP carried the electronic network and LPSCl and SDCP the ionic network; PTFE was not resolved
-on the conduction grid, and the alternative convention in which it is stamped as a blocking
-phase is given as a sensitivity in Table S3b. The VGCF conductivity is an effective network
+SDCP carried the electronic network and LPSCl and SDCP the ionic network. PTFE was resolved as a
+blocking phase, since it is insulating and its content differs between the two electrodes
+(1.0 against 0.5 wt%), so omitting it would remove half of the compositional change under study;
+the alternative convention in which it is left unresolved is given alongside in Table S3b. The VGCF conductivity is an effective network
 value rather than a fibre constant, since voxelisation removes the fibre–fibre contact
 resistance that separates the powder (≈ 83 S cm⁻¹) and single-filament (≈ 10⁴ S cm⁻¹) values;
 the powder-scale value was adopted and rescaled to preserve axial fibre conductance
@@ -152,9 +170,9 @@ VGCF 두 행(powder / voxel)도 그대로 — 규약이 표에서 보여야 한�
 |---|---|---|---|
 | Thickness | 72.53 | 72.53 | µm |
 | ε_union (simulation-geometry diagnostic) | 7.86 | 7.37 | % |
-| σ_ele,eff | **72.3** | **81.3** | mS cm⁻¹ |
-| σ_ele ratio (paired, 8 origin phases) | — | **1.124** | — |
-| ⌐ spread / range | — | 0.003 / 1.120–1.127 | — |
+| σ_ele,eff (PTFE resolved — reported) | **54.0** | **70.6** | mS cm⁻¹ |
+| σ_ele ratio (paired, 8 origin phases) | — | **1.308** | — |
+| ⌐ spread / range | — | 0.003 / 1.302–1.310 | — |
 | σ_ion,eff | *재측정 필요* | *재측정 필요* | — |
 | SE coverage of AM · VGCF coverage · CBD contacts · connectivity · areal capacity | *새 침대에서 재측정 필요* | | |
 
@@ -165,13 +183,16 @@ porosity 가 아니다.  실험 앵커(~15.6 %) 대비 과압축이다.
 
 | PTFE convention | σ_ele SBE | σ_ele DBE | ratio | spread | range |
 |---|---|---|---|---|---|
-| not resolved (reported) | 72.3 | 81.3 | 1.124 | 0.003 | 1.120–1.127 |
-| stamped as blocking phase | 54.0 | 70.6 | 1.308 | 0.003 | 1.302–1.310 |
+| **resolved as blocking phase (reported)** | **54.0** | **70.6** | **1.308** | 0.003 | 1.302–1.310 |
+| left unresolved | 72.3 | 81.3 | 1.124 | 0.003 | 1.120–1.127 |
 
 각주: *Both conventions were evaluated on the same beds with the same code and grid, differing
-only in whether the insulating binder occupies conduction cells; the machine-checked contract
-confirms that no other parameter differs. Which convention is closer to a real thin surface
-coating is not established, so both are reported.*
+only in whether the insulating binder occupies conduction cells; a machine-checked contract
+confirms that no other parameter differs. PTFE is resolved in the reported configuration
+because it is insulating and its content differs between the two electrodes, so omitting it
+would remove half of the compositional change under study. Because a fully emptied voxel may
+over-represent the local blocking of a thin surface coating, the unresolved convention is given
+alongside; the direction of the change is common to both, its magnitude is not.*
 
 ---
 
@@ -179,7 +200,7 @@ coating is not established, so both are reported.*
 
 | 자리 | 현재 | 고침 |
 |---|---|---|
-| §전송 문단 | *"σ_ele increases from 1.98 to 3.00 S cm⁻¹"* | **"from 72.3 to 81.3 mS cm⁻¹"** (+12.4 %) |
+| §전송 문단 | *"σ_ele increases from 1.98 to 3.00 S cm⁻¹"* | **"from 54.0 to 70.6 mS cm⁻¹"** (+30.8 %) — ⚠ 같은 문장 또는 바로 뒤에 **미표현 규약 값(72.3 → 81.3, +12.4 %)도 함께**.  한쪽만 적지 않는다 |
 | 같은 문단 | *"σ_ion … 0.203 and 0.215 mS cm⁻¹"* | ⚠ **재측정 전까지 보류** |
 | 같은 문단 | *"reconstructed using a discrete element method (DEM)"* | *"reconstructed with a DEM–MPM workflow"* |
 | Figure 4a 설명 | *"DEM-reconstructed …"* | *"DEM–MPM-reconstructed …"* |
