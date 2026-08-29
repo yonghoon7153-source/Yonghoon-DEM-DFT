@@ -3960,7 +3960,69 @@ def build_bundle(a, ledger: Optional[Dict[str, Any]] = None) -> Path:
         viol.append(msg)
         print(("  ⚠ " if a.allow_partial else "  ⛔ ") + msg)
 
-    for tier, frags in TIERS.items():
+    # ══ 동결된 prospective 후보에서 생성 (회신 W 5단계) ══════════════════════
+    #   ⛔ champion/cross 자동탐색을 **쓰지 않는다.** 자세는 동결 manifest 가 정하고,
+    #      생성기는 그것만 읽는다 — 그래야 "사전등록된 집합" 이 실제로 강제된다.
+    if getattr(a, "from_basins", None):
+        fb = json.load(open(a.from_basins))
+        man["candidate_set"] = "prospective_lowE (frozen %s)" % fb.get("freeze_sha256", "?")[:16]
+        man["from_basins"] = {"path": os.path.abspath(a.from_basins),
+                              "sha256": hashlib.sha256(
+                                  open(a.from_basins, "rb").read()).hexdigest(),
+                              "declared_freeze": fb.get("freeze_sha256"),
+                              "audit_seed": (fb.get("params") or {}).get("audit_seed")}
+        for frag, fr in sorted((fb.get("fragments") or {}).items()):
+            if a.frags and frag not in a.frags:
+                continue
+            # tier 루프를 안 타므로 여기서 조각 목록을 채운다 (clean slab·기체 기준이 읽는다)
+            if frag not in man["fragments"]:
+                man["fragments"].append(frag)
+            run = Path(a.runs) / frag / f"relax_f{a.freeze:.2f}"
+            picks = list(fr.get("calibration") or []) + list(fr.get("sealed_audit") or [])
+            if not picks:
+                bad(f"{frag}: 동결 manifest 에 calibration/audit 이 없다")
+                continue
+            print(f"■ {frag}: 동결 후보 {len(picks)}개 "
+                  f"(cal {len(fr.get('calibration') or [])} · "
+                  f"audit {len(fr.get('sealed_audit') or [])})")
+            for b in picks:
+                lab = b["rep_label"]
+                xp = run / f"{lab}.xyz"
+                if not xp.is_file():
+                    bad(f"{frag}/{b['basin_id']}: {xp} 없음")
+                    continue
+                cx = ase_read(xp)
+                cx.set_cell(slab.cell.array)
+                cx.set_pbc(True)
+                _assert_slab_lineage(cx, nslab, slab, f"{frag}/{b['basin_id']}", man)
+                _assert_mol_topology(cx, nslab, frag, f"{frag}/{b['basin_id']}", man)
+                used_els |= set(cx.get_chemical_symbols())
+                for sd in (list(SEEDS_FULL) if a.both_seeds else [SEED_MAIN]):
+                    rel = f"prospective/{frag}__{b['basin_id']}__{sd}"
+                    m = _emit_slab_job(
+                        out / rel, cx, nslab, a.freeze, frag,
+                        f"{frag} {b['basin_id']} ({b['role']}) {sd}", sd,
+                        {"kind": "prospective_pose", "fragment": frag,
+                         "basin_id": b["basin_id"], "role": b["role"],
+                         "why": b.get("why"), "source_pose": lab,
+                         "uma_E_pose_eV": b.get("E_pose_eV"),
+                         "contact_fingerprint": b.get("fingerprint"),
+                         "anchor": b.get("anchor"), "height_A": b.get("height_A"),
+                         "source_xyz_sha256": hashlib.sha256(
+                             xp.read_bytes()).hexdigest()},
+                        ledger, zcut=zcut, dense=False,
+                        prescf=not a.no_prescf, single_point=a.single_point,
+                        closure=a.closure, kmesh_over=kover)
+                    slab_metas.append(m)
+                    plan(rel, m["phases"], True)
+                    n_jobs += 1
+                    print(f"   {b['basin_id']} {b['role']:14s} {sd:14s} "
+                          f"UMA {b.get('E_pose_eV'):+8.4f}  {lab[:40]}")
+    else:
+        pass  # 아래 champion/cross 경로
+
+    for tier, frags in ({} if getattr(a, 'from_basins', None)
+                        else TIERS).items():
         # 82잡을 이번 원샷의 **전체 범위**로 선언했으므로 tier2 도 필수다.
         # (Codex P0-4 — required=False 면 tier2 가 전부 실패해도 wrapper 가 exit 0 이된다.)
         req = True
@@ -4168,7 +4230,13 @@ def build_bundle(a, ledger: Optional[Dict[str, Any]] = None) -> Path:
                         print(f"    ⚠ {pid}: 교차 끝점 {t2} 없음 — {why}")
                 man["pairs"][pid] = pm
 
-    if not man["pairs"]:
+    # ⚠ `--from_basins` 는 **basin 단위**로 생성한다 (Li/Ni 대조쌍이 아니다). 그래서
+    #   쌍 개수 게이트를 적용하지 않는다 — 대신 생성된 잡이 0개면 그때 막는다.
+    if getattr(a, "from_basins", None):
+        if not slab_metas:
+            shutil.rmtree(out)
+            sys.exit("⛔ 동결본에서 생성된 자세가 0개다 — rep_label 과 relax 산출물을 확인할 것")
+    elif not man["pairs"]:
         shutil.rmtree(out)
         sys.exit("⛔ 자격 쌍이 0개다 — 번들을 만들지 않는다 "
                  "(--runs/--freeze 경로와 relax 산출물을 확인할 것)")
@@ -4800,7 +4868,7 @@ def selftest() -> int:
     a0 = argparse.Namespace(runs=str(td / "runs"), out=str(td / "bundle_short"),
                             freeze=0.85, nslab=nslab, frags=["ptfe_dimer"],
                             qe="(none)", expect=None, allow_partial=False,
-                            no_prescf=False, allow_stale_gate=False, top_n=None, d3_pairs=False, closure=False, single_point=False, champion=False, kmesh_static=None, kmesh_dense=None, refs=True, cross_endpoints=None, mag_controls=False, dense_frags=None, cores=48, concurrency=8, no_cross=False, global_champion_meV=20.0, adaptive_dense=False)
+                            no_prescf=False, allow_stale_gate=False, top_n=None, from_basins=None, both_seeds=False, d3_pairs=False, closure=False, single_point=False, champion=False, kmesh_static=None, kmesh_dense=None, refs=True, cross_endpoints=None, mag_controls=False, dense_frags=None, cores=48, concurrency=8, no_cross=False, global_champion_meV=20.0, adaptive_dense=False)
     try:
         build_bundle(a0, ledger=led)
         chk(False, "N0 xyz 누락 → **번들이 만들어졌다** (축소 정본 = fail-open)")
@@ -4816,7 +4884,7 @@ def selftest() -> int:
     ab = argparse.Namespace(runs=str(td / "runs"), out=str(td / "bundle_nofp"),
                             freeze=0.85, nslab=nslab, frags=["ptfe_dimer"],
                             qe="(none)", expect=None, allow_partial=False,
-                            no_prescf=False, allow_stale_gate=False, top_n=None, d3_pairs=False, closure=False, single_point=False, champion=False, kmesh_static=None, kmesh_dense=None, refs=True, cross_endpoints=None, mag_controls=False, dense_frags=None, cores=48, concurrency=8, no_cross=False, global_champion_meV=20.0, adaptive_dense=False)
+                            no_prescf=False, allow_stale_gate=False, top_n=None, from_basins=None, both_seeds=False, d3_pairs=False, closure=False, single_point=False, champion=False, kmesh_static=None, kmesh_dense=None, refs=True, cross_endpoints=None, mag_controls=False, dense_frags=None, cores=48, concurrency=8, no_cross=False, global_champion_meV=20.0, adaptive_dense=False)
     try:
         build_bundle(ab, ledger=led)
         chk(False, "N0b 지문 없는 소스 → **번들이 만들어졌다**")
@@ -4840,7 +4908,7 @@ def selftest() -> int:
     at3 = argparse.Namespace(runs=str(td / "runs"), out=str(td / "bundle_top3"),
                              freeze=0.85, nslab=nslab, frags=["ptfe_dimer"],
                              qe="(none)", expect=None, allow_partial=False,
-                             no_prescf=False, allow_stale_gate=False, top_n=3, d3_pairs=False, closure=False, single_point=False, champion=False, kmesh_static=None, kmesh_dense=None, refs=True, cross_endpoints=None, mag_controls=False, dense_frags=None, cores=48, concurrency=8, no_cross=False, global_champion_meV=20.0, adaptive_dense=False)
+                             no_prescf=False, allow_stale_gate=False, top_n=3, from_basins=None, both_seeds=False, d3_pairs=False, closure=False, single_point=False, champion=False, kmesh_static=None, kmesh_dense=None, refs=True, cross_endpoints=None, mag_controls=False, dense_frags=None, cores=48, concurrency=8, no_cross=False, global_champion_meV=20.0, adaptive_dense=False)
     o3 = build_bundle(at3, ledger=led)
     m3 = json.loads((o3 / "MANIFEST.json").read_text())
     kept = sorted({v["dir"] for v in m3["pairs"].values()})
@@ -4857,7 +4925,7 @@ def selftest() -> int:
     a = argparse.Namespace(runs=str(td / "runs"), out=str(td / "bundle"),
                            freeze=0.85, nslab=nslab, frags=["ptfe_dimer"],
                            qe="(none)", expect=None, allow_partial=False,
-                           no_prescf=False, allow_stale_gate=False, top_n=None, d3_pairs=False, closure=False, single_point=False, champion=False, kmesh_static=None, kmesh_dense=None, refs=True, cross_endpoints=None, mag_controls=False, dense_frags=None, cores=48, concurrency=8, no_cross=False, global_champion_meV=20.0, adaptive_dense=False)
+                           no_prescf=False, allow_stale_gate=False, top_n=None, from_basins=None, both_seeds=False, d3_pairs=False, closure=False, single_point=False, champion=False, kmesh_static=None, kmesh_dense=None, refs=True, cross_endpoints=None, mag_controls=False, dense_frags=None, cores=48, concurrency=8, no_cross=False, global_champion_meV=20.0, adaptive_dense=False)
     out = build_bundle(a, ledger=led)
     man = json.loads((out / "MANIFEST.json").read_text())
     n_pre = sum(1 for p in man["planned"].values() if "pre" in (p.get("phases") or []))
@@ -4868,7 +4936,7 @@ def selftest() -> int:
     a_sp = argparse.Namespace(
         runs=str(td / "runs"), out=str(td / "bundle_sp"), freeze=0.85, nslab=nslab,
         frags=["ptfe_dimer"], qe="(none)", expect=None, allow_partial=False,
-        no_prescf=False, allow_stale_gate=False, top_n=None, d3_pairs=False, closure=False, single_point=True,
+        no_prescf=False, allow_stale_gate=False, top_n=None, from_basins=None, both_seeds=False, d3_pairs=False, closure=False, single_point=True,
         champion=True, kmesh_static=None, kmesh_dense=None, refs=False,
         cross_endpoints=["ptfe_dimer"], mag_controls=True, dense_frags=["ptfe_dimer"], cores=48, concurrency=8, no_cross=False, global_champion_meV=20.0, adaptive_dense=False)
     out_sp = build_bundle(a_sp, ledger=led)
@@ -4957,6 +5025,46 @@ def selftest() -> int:
                            {"pairs": {}}, _E, _emol, _jobs)
     chk(any("MOLECULAR_SPIN_CONTROL_MISSING" in b for b in r5["blocks"]),
         "[음성 V P0-3] 자기상태 대조가 없으면 그것도 block")
+
+    # ══ 회신 W 5단계 — --from_basins 가 **동결본에 적힌 자세만** 내는지 e2e ══
+    _labs = sorted(x.stem for x in
+                   (Path(str(td)) / "runs" / "ptfe_dimer" / "relax_f0.85").glob("*.xyz")
+                   if not x.stem.startswith("_"))
+    if len(_labs) >= 3:
+        _fb = {"freeze_sha256": "deadbeef" * 8,
+               "params": {"audit_seed": 4242},
+               "fragments": {"ptfe_dimer": {
+                   "calibration": [{"basin_id": "b00", "rep_label": _labs[0],
+                                    "role": "calibration", "why": "UMA global-min",
+                                    "E_pose_eV": -0.5, "fingerprint": [["C", "O", 1]],
+                                    "anchor": ["F", "Li", 2.4], "height_A": 2.5},
+                                   {"basin_id": "b01", "rep_label": _labs[1],
+                                    "role": "calibration", "why": "다른 지문 최저",
+                                    "E_pose_eV": -0.4, "fingerprint": [["F", "Ni", 1]],
+                                    "anchor": ["F", "Ni", 2.5], "height_A": 2.6}],
+                   "sealed_audit": [{"basin_id": "b09", "rep_label": _labs[2],
+                                     "role": "sealed_audit", "why": "창 바깥",
+                                     "E_pose_eV": -0.1, "fingerprint": [["F", "O", 1]],
+                                     "anchor": ["F", "O", 2.7], "height_A": 2.8}]}}}
+        _fbp = Path(str(td)) / "frozen_basins.json"
+        _fbp.write_text(json.dumps(_fb, ensure_ascii=False))
+        a_fb = argparse.Namespace(**{**vars(a_cl), "out": str(td / "bundle_fb"),
+                                     "from_basins": str(_fbp), "both_seeds": False,
+                                     "frags": ["ptfe_dimer"], "champion": False,
+                                     "refs": False, "d3_pairs": False})
+        build_bundle(a_fb, ledger=led)
+        _mfb = json.load(open(Path(str(td)) / "bundle_fb" / "MANIFEST.json"))
+        _dirs = sorted(x.parent.parent.name for x in
+                       (Path(str(td)) / "bundle_fb").rglob("prospective/*/static/INCAR"))
+        chk(len(_dirs) == 3, f"[W-5] 동결본의 3자세만 생성 (실제 {len(_dirs)}: {_dirs[:3]})")
+        chk(all(any(b in d for b in ("b00", "b01", "b09")) for d in _dirs),
+            "[W-5] 디렉터리 이름에 basin_id 가 박힌다")
+        chk("prospective_lowE (frozen deadbeefdeadbeef" in str(_mfb.get("candidate_set")),
+            f"[W-5] candidate_set 에 동결 해시가 박힌다 · {_mfb.get('candidate_set')}")
+        chk((_mfb.get("from_basins") or {}).get("audit_seed") == 4242,
+            "[W-5] audit seed 를 manifest 에 승계한다")
+        _tier = list(Path(str(td / "bundle_fb")).rglob("tier*/*/static/INCAR"))
+        chk(not _tier, f"[음성 W-5] champion/cross 경로를 **타지 않는다** (tier {len(_tier)})")
 
     # ══ 회신 W Q2 — D3-off 쌍둥이가 IVDW **만** 다른지 e2e ══════════════════
     a_d3 = argparse.Namespace(**{**vars(a_cl), "out": str(td / "bundle_d3"),
@@ -5922,6 +6030,11 @@ def main():
     ap.add_argument("--champion", action="store_true",
                     help="조각마다 **Li 위 최선 · Ni 위 최선** 한 쌍만 (방향 무관). "
                          "두 챔피언이 다른 방향이면 ΔE 에 배향 효과가 섞인다 — 표시된다.")
+    ap.add_argument("--from_basins",
+                    help="동결된 prospective_basins manifest 에서 **그 자세만** 생성한다 "
+                         "(champion/cross 자동탐색을 쓰지 않는다). 회신 W 5단계")
+    ap.add_argument("--both_seeds", action="store_true",
+                    help="--from_basins 에서 두 자기 seed 를 다 낸다 (기본 pm1 만)")
     ap.add_argument("--d3_pairs", action="store_true",
                     help="각 endpoint 의 **D3-off 쌍둥이**를 만든다 (IVDW 줄만 제거). "
                          "회신 W Q2 원인 분해용 — 판정값이 아니다. --closure 필수")
