@@ -42,8 +42,11 @@ CLAUDE.md: **σ_e Stage 22.5 는 `φ_AM < 0.3` 에서 쓰면 안 된다.**  코�
 
 $$\varphi_{AM}=\frac{\rho_{SE}\,w}{\rho_{AM}-(\rho_{AM}-\rho_{SE})w},\qquad w = 1-\texttt{pdd\_SE}$$
 
-⚠ **원자료 receipt 는 아직 없다** (Codex Q4).  두 케이스의 원 header·dump·type별 count 와
-해시를 붙이는 것이 해제조건 ⑧ 이고, **제출 전에 닫는다.**
+**원자료 receipt**: `docs/data/pdd_massfraction_receipt_20260829.md` (해제조건 ⑧).
+`lhs00_110` 은 `rAM = rSE` 라 개수분율 = 부피분율이므로 **두 대안 해석을 하나의 실측으로
+동시에 기각**한다 — 실측 0.625013 / 0.374987 vs 헤더 0.80 / 0.20.
+⚠ 입력·덤프의 **sha256 은 아직 리포에 없다** (`pdd_receipt.tgz`, 업로드 대기).
+그전까지는 *"보고된 개수"* 에 대한 서술이고 파일 동일성까지 대조된 것은 아니다.
 
 ## 3. 설계
 
@@ -159,5 +162,6 @@ h0/h1 을 붙이지 않는다.  v1 초판이 달았던 문턱 넷(`D` 0.5·1.5, 
 
 ## 7. 제출 전 남은 것
 
-- 해제조건 **⑧** — 질량분율 판정의 원 header·dump·count receipt (§2 의 ⚠).
-- 그 외 Codex 8개 조건은 이 문서와 `62fd5b7f` 로 닫힌다.
+Codex 8개 조건은 이 문서 · `62fd5b7f` · `docs/data/pdd_massfraction_receipt_20260829.md`
+로 닫힌다.  ⚠ 잔여는 **receipt 의 sha256** 하나 (`pdd_receipt.tgz` 업로드) — 판정을 바꾸는
+항목이 아니라 **파일 동일성 대조**를 위한 것이다.
