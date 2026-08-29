@@ -1,249 +1,268 @@
 ---
-title: "음이온성 바인더의 흡착에너지 — 탈양성자 상태를 어떻게 다루나 (ICEP vs Kang 대조)"
+title: "음이온성 바인더의 흡착에너지 — ICEP 의 (−H) 는 탈양성자가 아니라 H 이동이었다"
 date: 2026-08-29
 updated: 2026-08-29
-tags: [binder, adsorption, charge-state, estimand, nnp, pcet, sdcp, literature]
-status: 진행 — 두 논문 본문 판독 완료, ICEP SI 미확보
+tags: [binder, adsorption, charge-state, estimand, pcet, sdcp, literature, castep]
+status: 판독 완료 — ICEP 본문 + SI, Kang 본문 + SI 모두 확보
 confidence: high
-verificationStatus: partial
+verificationStatus: verified
+verifiedAt: 2026-08-29
 explored: false
 authoredBy: agent
 effort: high
-claimType: prescriptive
+claimType: empirical
 evidenceScope: multi-source-primary
 targetVenue:
 ---
 
 ## Thesis
 
-바인더의 산성기(-SO₃H·-COOH)에서 H 를 뗀 구조로 흡착에너지를 재고 그것을 H 가 있는
-구조의 값과 **같은 축에 올리면**, 두 막대의 차이는 "탈양성자화 효과" 가 아니라
-**조성이 다른 두 분자의 값**이다. 물어야 할 양은 흡착에너지가 아니라 **양성자 이동
-반응에너지**이고, 그건 양변 중성·조성 보존으로 정의된다.
+ICEP 의 `AMPS(−H)` 는 **탈양성자 음이온이 아니라 H 가 슬랩으로 옮겨간 상태**다
+(SI Figure S13 캡션 명시). 따라서 조성·전하가 보존되고 **두 막대의 뺄셈은 정의된다** —
+그것은 흡착에너지 차가 아니라 **표면으로의 H 이동 에너지**다.
+남는 문제는 전하가 아니라 **H 이동으로 TM 이 환원되는데 슬랩 자기상태 선택 규칙이 없다**는 것이다.
+
+> ⛔ **2026-08-29 자기정정**: 이 카드의 초판은 *"조성이 다른 두 분자라 뺄셈이 정의되지
+> 않는다"* 고 썼다. **틀렸다.** 그림만 보고 `(−H)` 를 원자 제거로 읽었는데,
+> SI 캡션이 H **이동**이라고 못박는다. 아래 §3 에 정정 내용을 남긴다.
 
 ---
 
-## 0. 무엇을 봤고 무엇을 안 봤나
+## 0. 무엇을 봤나
 
 | 자료 | 상태 |
 |---|---|
-| **ICEP** — *Adv. Mater.* **2025**, 37, 2506266, 본문 p.3–15 | ✅ **직접 읽음** |
-| ICEP **Supporting Information** (Figure S12·S13, Experimental Section) | ⛔ **미확보** — 계산 조건이 여기 있다 |
-| **Kang** — *Adv. Mater.* **2025**, 37, 2416872, 본문 p.5–14 + **SI p.1–9** | ✅ **직접 읽음** |
-
-⚠ ICEP 의 **계산 method(코드·범함수·전하 처리)는 본문에 없다.** 본문 어디에도
-Experimental Section 이 없고 SI 로 넘어간다. 따라서 §1-3 은 **미확정**이다.
+| **ICEP** 본문 — *Adv. Mater.* **2025**, 37, 2506266, p.3–15 | ✅ 직접 읽음 |
+| **ICEP SI** — Experimental Section + Figure S12·S13 캡션 | ✅ **직접 읽음** (docx) |
+| **Kang** 본문 — *Adv. Mater.* **2025**, 37, 2416872, p.5–14 | ✅ 직접 읽음 |
+| **Kang SI** — Computational method p.7–8 | ✅ 직접 읽음 |
+| ICEP Figure S13 **그림 자체** (원자별 접촉) | ⛔ 캡션만 봄 |
 
 ---
 
-# I. ICEP 논문 (*Adv. Mater.* 2025, 37, 2506266)
+# I. ICEP (*Adv. Mater.* 2025, 37, 2506266)
 
 ## 1-1. 무슨 논문인가
 
-- **ICEP** = ionically conductive elastic polymer. RAFT 로 만든 **삼블록**
+- **ICEP** = ionically conductive elastic polymer. RAFT 삼블록
   `P(AN-co-AMPS)-b-PEO₄₆-b-P(AN-co-AMPS)`, Mw ≈ 100 kDa.
-- `[AN]/[AMPS]` 비로 **ICEP-5 / ICEP-8 / ICEP-19** 세 조성. **ICEP-8 채택**
-  (x/y ≈ 8; 파단신율 283 %, 인성 601.2 J m⁻³ vs PVDF 31.8 % · 151.8 J m⁻³).
-- 기능기 역할 배정: **AMPS 의 SO₃H = 빠른 Li 전도 + 수소결합**, **AN = 구조/기계 물성**,
-  **PEO = 유연성 + Li 전도**, 아미드 **N–H = 수소결합**.
-- 계: **NCM811** 양극, Li 금속 풀셀. 초고로딩 62.4 mg cm⁻², 12.7 mAh cm⁻².
+- `[AN]/[AMPS]` 비로 **ICEP-5 / 8 / 19**. **ICEP-8 채택**
+  (파단신율 283 % · 인성 601.2 J m⁻³ vs PVDF 31.8 % · 151.8 J m⁻³).
+- 기능기 배정: **AMPS 의 SO₃H = Li 전도 + 수소결합** · **AN = 기계물성** ·
+  **PEO = 유연성 + Li 전도** · 아미드 **N–H = 수소결합**.
+- 계: **NCM811**, Li 금속 풀셀, 초고로딩 **62.4 mg cm⁻² · 12.7 mAh cm⁻²**.
 
-## 1-2. ⭐ 본문의 DFT 단락은 **이것 하나가 전부다** (p.6 하단 → p.7 상단)
+## 1-2. 계산 조건 (SI Experimental Section) — **실제 DFT 다**
 
-> "To further elucidate the molecular origins of this interfacial behavior, we conducted
-> **density functional theory (DFT) calculations** to investigate the binding interactions
-> between model segments of the ICEP and PVDF polymers and the NCM811 surface
-> (Figure S12, Supporting Information). The ICEP structure was **dissected into two
-> representative functional blocks, denoted as ICEP_AN and ICEP_AMPS**. Notably,
-> **ICEP_AMPS exhibited a significantly stronger binding affinity to the NCM811 surface
-> compared to PVDF**, primarily due to **robust hydrogen bonding between the sulfonate
-> group and surface oxygen atoms** (Figure 2g and Figure S13, Supporting Information).
-> These DFT calculation results provide direct theoretical support for the experimentally
-> observed interfacial adhesion and cohesion achieved with ICEP-8 binder."
-
-Figure 2g 캡션:
-
-> "Binding energies and optimized structures of ICEP_AN, ICEP_AMPS, **ICEP_AMPS (-H)**,
-> and PVDF on **NCM811 (001) surface**."
-
-## 1-3. 여기서 확정되는 것 세 가지
-
-### ① **`AMPS(−H)` 는 본문에 한 번도 안 나온다** ✅ 확정
-
-본문은 *"**two** representative functional blocks, denoted as ICEP_AN and ICEP_AMPS"* 라고
-쓴다. **둘**이다. `(−H)` 는 **그림과 캡션에만** 있는 **예고 없는 네 번째 막대**다.
-
-⇒ *"위에 있을 때랑 밑에 있을 때랑 분리를 안 하고 바로 PVDF 비교로 갔다"* 는
-**원문으로 확인됐다.** 분리를 안 한 정도가 아니라 **언급 자체가 없다.**
-
-### ② **본문에 binding energy 수치가 하나도 없다** ✅ 확정
-
-−0.162 / −1.819 / −2.243 / −0.703 eV 는 **전부 `figure-read ≈`** 다. 본문은 값을 인용하지
-않고 *"significantly stronger ... compared to PVDF"* 라는 **정성 서술만** 한다.
-
-⇒ *"그냥 figure 용일 수도 있어"* 라는 판단이 맞다. 논지가 실제로 쓰는 것은
-**"AMPS > PVDF"** 라는 부등호 하나뿐이고, 네 막대의 크기 관계는 본문이 안 쓴다.
-
-### ③ 🔴 **메커니즘 서술과 `(−H)` 그림이 서로 안 맞는다**
-
-본문이 대는 이유는 *"**sulfonate group** 과 표면 O 사이의 수소결합"* 이다.
-그런데 `(−H)` 는 **그 H 를 뗀 것**이라 술포네이트가 **수소결합 주개가 될 수 없다.**
-그럼에도 그림에는 `ICEP_AMPS` 와 `ICEP_AMPS (−H)` **둘 다** "Hydrogen bonding" 화살표가
-붙어 있다 (`figure-read`).
-
-남는 주개는 **아미드 N–H** 뿐이다 — AMPS 는 acrylamide 라 N–H 가 있고, 본문도 FT-IR 절에서
-*"The N–H bending vibration frequency (≈1540 cm⁻¹) of the AMPS unit"* 를 따로 다룬다.
-즉 `(−H)` 막대가 가장 센데(−2.243), **본문이 그 세기의 근거로 댄 결합은 그 구조에 없다.**
-
-⚠ 이건 그림 판독 기반 지적이다. Figure S13 이 원자별 접촉을 보여 줄 수 있으므로
-**SI 확보 전까지 확정으로 쓰지 않는다.**
-
-## 1-4. ⛔ 아직 모르는 것 — ICEP SI 없이는 못 닫는다
-
-| 물음 | 왜 중요한가 |
+| 항목 | 값 |
 |---|---|
-| 코드·범함수·vdW·U·k-point | "DFT" 라고만 썼다. 실제 DFT 면 전하를 **지정할 수 있다** |
-| **`AMPS(−H)` 의 총전하가 0 인가 −1 인가** | 이 한 줄이 §3 판정을 확정한다 |
-| 하전이면 **배경전하(jellium) / `NELECT`** 처리 | 없으면 하전 슬랩의 발산 항이 안 잡힌다 |
-| **뗀 H 의 참조상태** (H• / ½H₂ / H⁺) | 명시가 없으면 `E_bind` 의 `E(X)` 가 정의 안 된다 |
-| 슬랩 두께·진공·고정층·리튬화 상태 | (001) 이라는 것만 캡션에 있다 |
-| 스핀/자성 (Ni³⁺ 는 열린 껍질이다) | 우리 2026-08-28 카드의 그 위험신호 |
+| 코드 | **CASTEP** (Clark 2005) — 평면파, Materials Studio 계열 |
+| 범함수 | **GGA-PBE** |
+| 스핀 | **spin-polarized** ✅ |
+| PP | **ultrasoft** |
+| vdW | **Tkatchenko–Scheffler** |
+| 최적화 | BFGS (원자위치 + 셀 파라미터) |
+| 수렴 | E 2×10⁻⁵ eV/at · F **0.05 eV/Å** · σ 0.1 GPa · d 2×10⁻³ Å · SCF 2×10⁻⁶ eV/at |
+| **컷오프** | **300 eV** |
+| **k-point** | LiNiO₂ 단위셀 최적화 **6×6×1** · **NCM811 (001) 표면 = 1×1×1 (Γ 만)** |
+| **Hubbard U** | **Ni 6.0 · Co 3.4 · Mn 3.9 eV** |
+| 슬랩 | (001), Ni:Co:Mn = 8:1:1 → **32 Ni · 4 Co · 4 Mn**, **8층**, **5×4 초격자** |
+| 구속·진공 | **하단 2층 고정**, **진공 > 15 Å** (Fig S12 캡션) |
 
-**Kang 과 달리 ICEP 는 "DFT" 라고 명시했다.** 그러면 전하를 지정할 **수단은 있다** —
-문제는 지정했는지, 했다면 무엇으로 했는지를 본문이 말하지 않는다는 것이다.
+**결합에너지 식 (5)**:
+```
+E_bind = E_total − ( E_molecule + E_NCM811 surface )
+```
+> "where …, …, and … are the total energy of the system, the energy of the
+> **PVDF, ICEP_AN, or ICEP_AMPS molecule**, and the energy of (001) surface of NCM811"
+
+⚠ 이 목록에 **`ICEP_AMPS (−H)` 는 없다.** 즉 `(−H)` 막대의 기준 분자를 SI 가 따로 안 정한다.
+
+## 1-3. ⭐ 결정적 문장 — Figure S13 캡션
+
+> "Figure S13. Geometrically optimized structures of ICEP_AN, ICEP_AMPS, ICEP_AMPS (-H),
+> and PVDF. **Note that ICEP_AMPS (-H) indicates hydrogen transfer from ICEP_AMPS to the
+> NCM811 (001) surface.**"
+
+**`(−H)` 는 원자를 뺀 게 아니라 H 를 슬랩으로 옮긴 것이다.**
+
+- H 가 **계 안에 남아 있다** ⇒ **조성 보존**
+- 총전하 **0 유지** ⇒ 음이온도 라디칼도 아니다
+- `NELECT`·배경전하 이야기가 SI 에 없는 게 **정상**이다 — 필요가 없다
+
+## 1-4. 본문에서 확정되는 것 (SI 를 봐도 안 바뀜)
+
+### ① `(−H)` 는 **본문에 한 번도 안 나온다** ✅ 유지
+
+본문 DFT 단락 전체:
+
+> "…we conducted **density functional theory (DFT) calculations**… The ICEP structure was
+> **dissected into two representative functional blocks, denoted as ICEP_AN and ICEP_AMPS**.
+> Notably, **ICEP_AMPS exhibited a significantly stronger binding affinity … compared to
+> PVDF**, primarily due to robust hydrogen bonding between the sulfonate group and surface
+> oxygen atoms (Figure 2g and Figure S13)."
+
+**"two"** 라고 못박고 둘만 이름을 댄다. `(−H)` 는 **그림·캡션에만** 있다.
+⇒ *"분리를 안 하고 바로 PVDF 비교로 갔다"* 는 원문으로 확인. **언급 자체가 없다.**
+
+### ② 본문에 binding energy **수치가 하나도 없다** ✅ 유지
+
+−0.162 / −1.819 / −2.243 / −0.703 eV 는 전부 `figure-read ≈`.
+본문이 쓰는 것은 **"AMPS > PVDF"** 부등호 하나뿐이다.
+
+### ③ ⛔ **철회** — "메커니즘 서술과 그림이 안 맞는다"
+
+초판에서 *"`(−H)` 는 술포네이트가 H 를 잃어 수소결합 주개가 될 수 없는데 그림엔 화살표가
+있다"* 고 썼다. **철회한다.** H 가 표면으로 갔으므로 이제 **표면 O–H 가 주개**이고
+술포네이트 O 가 받개다. 방향만 뒤집혔을 뿐 *"sulfonate group 과 surface oxygen atoms
+사이의 수소결합"* 이라는 본문 서술은 **두 경우 다 맞다.**
 
 ---
 
-# II. 판정 — 무엇이 정의되고 무엇이 안 되나
+# II. 판정 (정정판)
 
-`E_bind(X) = E(slab+X) − E(slab) − E(X)` 는 **X 가 양변에 같으므로 X 마다 내부적으로 정합**이다.
+## II-1. 뺄셈은 **정의될 수 있다** — 단 기준이 명시되지 않았다
 
-- ✅ **AMPS vs PVDF 비교는 성립한다.** 서로 다른 분자를 각자 정합한 기준으로 잰 값이다.
-  그리고 이것이 본문이 실제로 주장하는 전부다.
-- ⛔ **AMPS vs AMPS(−H) 차이는 성립하지 않는다.** 두 X 의 **조성이 다르다.**
-  차이 −0.424 eV 안에는 H 제거 에너지가 섞여 있고, 한쪽이 하전됐다면 **전하 상태 불일치**까지
-  섞인다.
+조성이 보존되므로 두 막대를 같은 기준으로 놓을 수 있다. 읽기가 둘이다:
 
-**그래서 "PVDF 로 바로 간 것" 은 흠이 아니라 오히려 방어 가능한 쪽이다.**
-진짜 문제는 **비교하면 안 되는 두 막대를 한 축 위에 나란히 그려 놓은 것**이다 —
-막대 넷을 한 그래프에 올리면 독자는 당연히 −1.819 와 −2.243 을 뺀다.
+| 읽기 | `E_molecule` | 결과 |
+|---|---|---|
+| **(a)** SI 목록대로 `ICEP_AMPS` (온전한 분자) | 양쪽 동일 | **조성 균형 ✅** — 차 −0.424 eV = **흡착 복합체 안에서의 H 이동 에너지** |
+| (b) `(−H)` 조각을 따로 기준으로 | 서로 다름 | 조성 불균형 ⇒ 차가 정의 안 됨 |
 
-## II-1. 물어야 할 양은 흡착에너지가 아니다
-
-실제 과정이 `-SO₃H + NMC → -SO₃⁻ + H⁺ + e⁻(→NMC)` 라면 정의되는 양은 **양성자 이동
-반응에너지**다:
+SI 의 기준 분자 목록이 **"PVDF, ICEP_AN, or ICEP_AMPS"** 세 개뿐이고 `(−H)` 를 따로 안
+적었으므로 **(a) 가 자연스러운 읽기**다. 그러면 −0.424 eV 는 다름 아닌
 
 ```
-ΔE_PT = E(NMC–H + binder⁻) − E(NMC + binder–H)
+ΔE_PT = E[slab–H ··· AMPS⁻] − E[slab ··· AMPS–H]
 ```
 
-- 양변 **둘 다 중성**, **조성 보존**.
-- 전자가 어디로 갔는지 **물을 필요가 없다** — 반응 양변에 다 들어 있다.
+즉 **우리가 "이걸 계산해야 한다" 고 한 바로 그 양**이다. 그들은 계산해 놓고
+**이름을 안 붙였고 본문에서 논하지 않았다.**
 
-**PEDOT 이 다른 이유**: self-doped 라 전자가 폴리머 골격에 비편재화될 수 있다.
-AMPS 는 갈 데가 NMC 뿐이라 H 와 전자가 **같이** NMC 로 간다.
+⚠ (a) 는 **추론**이다. SI 가 명시하지 않았으므로 확정이 아니다.
 
-## II-2. 우리 쪽 연결
+## II-2. 그래서 진짜 남는 문제는 전하가 아니다
 
-- 이 양을 이미 갖고 있다 — **`U_PCET`** (SDCP). 다만 **분자계 정의뿐이고 산화물 슬랩 버전은 없다.**
-- 함정은 **2026-08-28 에 카드로 박아놨다**:
-  *"admissible state 가 여럿인데 **선택·집계 규칙이 없으면** scalar estimand 는 정의되지 않는다"*
-  (`kb/methodology/estimand_before_running_2026_08_28.md`).
-- 회신 O 의 정정: *"고치는 법은 전 계에 같은 NUPDOWN 값이 **아니라** 같은
-  **state-selection policy** 다."*
-- ICEP Figure 2g 는 **그 규칙 없이 상태 둘을 한 축에 올린** 사례다. 우리가 wave1 에서
-  *"제약된 기준에서 자유로운 복합체를 뺐다"* 로 걸린 것과 **같은 층위**다.
+`(−H)` 는 **화학흡착(H 이동)** 이고 나머지 셋은 **물리흡착/수소결합**이다.
+**서로 다른 과정을 같은 축에 이름표 없이 올렸다.** 독자는 네 막대를 "결합 세기 순위" 로
+읽는데, 세 번째만 반응 좌표가 다르다.
+
+그리고 이게 우리 규율과 정확히 만나는 지점:
+
+> **H 가 표면으로 옮겨가면 TM 하나가 환원된다** (Ni³⁺ → Ni²⁺).
+> 그런데 `spin-polarized` + `U(Ni 6.0)` 를 쓰면서 **슬랩의 자기 배열(FM/AFM)이나
+> 환원된 상태의 스핀 선택 규칙을 SI 가 한 줄도 안 적는다.**
+
+`admissible state 가 여럿인데 선택·집계 규칙이 없으면 scalar estimand 는 정의되지 않는다`
+(`kb/methodology/estimand_before_running_2026_08_28.md`) — **열린 껍질 · 자성 기판 ·
+산화환원 활성** 세 위험신호가 전부 켜져 있다. 우리가 wave1 에서
+*"제약된 기준에서 자유로운 복합체를 뺐다"* 로 걸린 것과 같은 층위다.
+
+회신 O: *"고치는 법은 전 계에 같은 NUPDOWN 값이 아니라 같은 **state-selection policy** 다."*
+
+## II-3. 부차적 약점
+
+- **Γ-only (1×1×1)** 로 5×4 초격자 표면 최적화 — 측면으로 크긴 하나 금속성 계에 성기다.
+- **컷오프 300 eV** — USPP 라 가능하지만 O·S 포함 계에 낮은 편.
+- **시드·오차막대 없음.** 흡착 자세 탐색 절차가 SI 에 없다 (Kang 은 15 회전을 적었다).
+- 결합에너지 정의에 **분자의 기하 이완 여부**(고정 vs 재이완)가 안 적혀 있다.
+
+## II-4. 배영진 논지 — **캡션으로 확증됨**
+
+> "전자가 애초에 NCM쪽으로 H랑 전자랑 같이 NCM 쪽으로 이동한거같은디"
+
+**맞다.** 캡션이 *"hydrogen transfer from ICEP_AMPS to the NCM811 (001) surface"* 라고
+직접 말한다. H 원자(양성자 + 전자)가 통째로 표면으로 간다. 그리고 PEDOT 대비
+*"self-doping 이 아니라서"* 라는 설명도 맞는 방향이다 — 전자가 폴리머에 남을 곳이 없다.
 
 ---
 
-# III. Kang 논문 — 같은 문제를 **짝이온으로** 푼 대조군
+# III. Kang — 같은 문제를 **짝이온으로** 푼 대조군
 
-*Adv. Mater.* **2025**, 37, 2416872, "Bollard-Anchored Binder System" (PAA-CMC 그래프트
-= **PC**, + PTFE, NMC622 건식전극).
+*Adv. Mater.* **2025**, 37, 2416872, PAA-CMC 그래프트(**PC**) + PTFE, NMC622 건식전극.
 
-## III-1. 🔴 Kang 은 DFT 를 안 썼다 (SI p.7–8, 확인됨)
+## III-1. 🔴 Kang 은 DFT 를 안 썼다 (SI p.7–8)
 
-> "**Deep-learning based density functional theory (DFT)** and molecular dynamics (MD)
-> simulations were conducted using the **preferred potential (PFP) version v3.0.0** as a
-> **universal neural network potential (NNP)** estimator for the computation of atomic
-> forces. The calculations were performed using **Matlantis** software"
+> "**Deep-learning based density functional theory (DFT)** and MD simulations were conducted
+> using the **preferred potential (PFP) version v3.0.0** as a **universal neural network
+> potential (NNP)** estimator … using **Matlantis** software"
 
-- Figure 4c 흡착에너지 = **PFP(Matlantis) NNP 값**. 이름만 "DFT-based" 다.
-- **Gaussian16 B3LYP/6-31G + diffuse 2 + d/p 분극** 은 **FTIR 진동수 배정 전용**.
-- 슬랩: NMC622 `LiNi₀.₆Mn₀.₂Co₀.₂O₂`, *R-3m*, **fully lithiated**, **2×2×1**, 진공 **40 Å**,
-  하반부 고정. TM 층은 같은 원소끼리 √3 간격.
-- 최적화 ASE **L-BFGS**, `fmax 0.01`. 정의 `E_ads = E_slab-binder − (E_slab + E_binder)`.
-- MD: **NVT Langevin, 400 K, 10 ps, 1 fs, friction 0.01**.
-- 흡착점: PC 를 **15 configuration 으로 회전**시켜 각각 계산.
+- Figure 4c 값 = **PFP NNP**. Gaussian16 B3LYP 는 **FTIR 진동수 배정 전용**.
+- 슬랩 NMC622 *R-3m* **fully lithiated 2×2×1**, 진공 **40 Å**, 하반부 고정.
+- ASE **L-BFGS** `fmax 0.01` · `E_ads = E_slab-binder − (E_slab + E_binder)`.
+- MD **NVT Langevin 400 K · 10 ps · 1 fs · friction 0.01**.
+- 흡착점: **15 configuration 회전**.
 
-### 왜 이게 "이온 상태로 붙여도 되나" 의 절반이 되나
+⚠ **범용 NNP 에는 전하 입력칸이 없다.** 원자종 + 좌표만 받는다. 그래서 Kang 방식에서는
+음이온/중성을 **구별해 지정할 수 없다**. **ICEP 는 CASTEP 이므로 이 제약이 없다** —
+두 논문의 차이가 여기서 갈린다.
 
-**범용 NNP 에는 전하 입력칸이 없다.** 원자종 + 좌표만 받는다. H 를 뗀 구조를 NNP 에
-넣으면 그건 "SO₃⁻" 가 아니라 **H 가 하나 없는 중성 조성**이다. 전자 하나의 행방은
-모델이 정하는 게 아니라 훈련셋이 중성 주기계였으니 **암묵적으로 중성**이다.
-물리적으로는 SO₃⁻ 보다 **SO₃• 라디칼**에 가깝다.
+## III-2. Kang 의 해법 = 짝이온을 넣고 **개수를 상태 이름으로**
 
-⇒ **Kang 방식이었다면** 그림에 `SO₃⁻` 로 그려도 계산은 음이온이 아니다.
-**ICEP 는 "DFT" 라고 썼으므로 이 논거가 그대로 적용되지 않는다** — §1-4 확인이 필요하다.
-
-## III-2. Kang 의 해법 = 짝이온을 계에 넣고 **개수를 상태 이름으로**
-
-PC 도 -COO⁻ 를 가진 음이온성 바인더다. 그런데 원료가 **sodium** CMC 라 Na⁺ 가 실제로 있다.
+PC 도 −COO⁻ 를 갖지만 원료가 **sodium** CMC 라 Na⁺ 가 실제로 있다.
 
 | 상태 | E_ads | 설명 |
 |---|---:|---|
-| **PC_2Na** | **−2.24 eV** | Na 2개가 NMC 표면 O 에 결합 |
+| **PC_2Na** | **−2.24 eV** | Na 2개가 표면 O 에 결합 |
 | **PC_1Na** | −1.12 eV | Na 1개 |
-| **PC_0Na** | −0.37 eV | Na 없이 −OH·−COOH 의 장거리 쌍극자 |
-| PTFE_dimer | −0.09 eV | 표면 O 와 PTFE 의 F 가 **정전기적 반발** |
+| **PC_0Na** | −0.37 eV | −OH·−COOH 의 장거리 쌍극자만 |
+| PTFE_dimer | −0.09 eV | 표면 O 와 F 가 **정전기적 반발** |
 
-**전하 중성을 유지하면서 음이온기를 표현하는 정석**: 조성 보존 · 총전하 0 ·
-**상태 이름에 Na 개수가 박혀 있다.**
+조성 보존 · 총전하 0 · **상태 이름에 Na 개수**. 그리고 결정적으로 —
+**결합 세기를 정하는 것은 COO⁻ 가 아니라 Na 가 몇 개 다리를 놓느냐**다.
 
-그리고 결정적으로 — **결합 세기를 정하는 것은 COO⁻ 자체가 아니라 Na 가 몇 개 다리를
-놓느냐**다 (2.24 → 1.12 → 0.37). "음이온기가 세게 붙는다" 가 아니라
-**"짝이온이 다리를 놓는다"** 가 물리다.
-
-⚠ 다만 이건 **사전 설계가 아니라 사후 분류**로 읽힌다 — 15개 회전 configuration 을 돌린 뒤
+⚠ 사전 설계가 아니라 **사후 분류**로 읽힌다 — 15 configuration 을 돌린 뒤
 *"The adsorption states were **classified into** three categories"*.
 
-## III-3. 덤 — Kang Figure 4c 축 단위가 틀렸다 (확인됨)
+## III-3. 덤 — Kang Figure 4c 축 단위 오기 (확인됨)
 
-축 라벨 **"Adsorption energy (kJ mol⁻¹)"**, 축 범위 **0.5 ~ −2.5**.
-본문 값 **−2.24 / −1.12 / −0.37 / −0.09 eV**. −2.24 eV = **−216 kJ/mol** 이라 그 축에
-안 들어간다. 축 범위가 eV 와 정확히 맞으므로 **단위 라벨 오기**다. 게재본에 남아 있다.
+축 라벨 **"Adsorption energy (kJ mol⁻¹)"**, 축 범위 0.5 ~ −2.5, 본문 값 −2.24 eV.
+−2.24 eV = **−216 kJ/mol** 이라 그 축에 안 들어간다. **단위 라벨이 틀렸다.**
+
+## III-4. 두 논문이 같은 문제를 푼 두 방식
+
+| | ICEP | Kang |
+|---|---|---|
+| 엔진 | **CASTEP DFT** (전하 지정 가능) | **PFP NNP** (전하 개념 없음) |
+| 음이온기 처리 | **H 를 슬랩으로 옮겨** 중성 유지 | **Na⁺ 짝이온**을 계에 넣어 중성 유지 |
+| 상태 선언 | ⛔ 그림 라벨 `(−H)` 뿐, 본문 무언급 | ✅ `PC_2Na / 1Na / 0Na` 로 이름에 박음 |
+| 상태별 논의 | ⛔ 없음 | ✅ 세 값을 본문에서 비교 |
+| 자기상태 정책 | ⛔ 없음 (spin-pol + U 인데) | 해당 없음 (NNP) |
+
+**두 방법 다 "중성을 유지한다" 는 같은 원칙**을 지킨다. 갈리는 것은
+**그 상태를 이름 붙여 선언했는가**다.
 
 ---
 
 ## Counter-arguments (보존)
 
 **반론 ①** — "NNP 도 훈련셋에 이온성 계가 있으면 국소 전하를 흉내 낼 수 있다."
-→ 부분적으로 타당하다. NNP 는 **국소 화학환경**으로 에너지를 내므로 Na⁺-SO₃⁻ 같은
-환경이 훈련셋에 있으면 그 환경의 에너지는 잘 낸다. 그러나 **총전하를 입력으로 받지
-않으므로** 같은 원자배열에 대해 중성/음이온 두 상태를 **구별해 줄 수 없다.**
-"흉내" 와 "선택" 은 다르다. NNP 값이 틀렸다는 뜻이 아니라 **어느 상태를 잰 것인지 말할 수
-없다**는 뜻이다.
+→ 부분적으로 타당하다. 다만 **총전하를 입력으로 받지 않으므로** 같은 원자배열의
+중성/음이온 두 상태를 **구별해 줄 수 없다.** 값이 틀렸다는 뜻이 아니라
+**어느 상태를 잰 것인지 말할 수 없다**는 뜻이다.
 
-**반론 ②** — "슬랩이 NCM 이라 전자를 받아 주므로 중성으로 돌려도 실제로는 전하이동이
-일어나 자동으로 옳은 상태가 된다."
-→ 배영진의 논지이고 **물리적으로 가장 그럴듯하다.** 다만 그렇다면 그 계산이 재는 것은
-"SO₃⁻ 의 흡착에너지" 가 아니라 **§II-1 의 ΔE_PT 에 가까운 무언가**이고, H 원자 하나가
-계에서 **사라진** 상태라 반응식이 닫히지 않는다. **반론이 맞을수록 "흡착에너지" 라는
-이름이 더 틀린다.**
+**반론 ②** — "슬랩이 전자를 받아 주므로 중성으로 돌려도 자동으로 옳은 상태가 된다."
+→ 배영진 논지. **ICEP 에서는 이게 맞았다** (§1-3 캡션). 다만 그렇다면 그 막대는
+흡착에너지가 아니라 **반응에너지**이고, 같은 축에 올릴 때 **그렇게 말해야** 한다.
 
 **반론 ③** — "논문들이 다 이렇게 한다. 우리가 과하게 판다."
-→ 관행인 것은 맞다. 그러나 우리는 SDCP 에서 **같은 오류로 여덟 번 반려**됐다
-(`CLAUDE.md` 계산 규율). 관행을 근거로 삼으면 그 여덟 번이 무의미해진다.
-그리고 이번 판독의 결론은 *"ICEP 가 틀렸다"* 가 아니라 **"그 그림에서 뺄셈을 하면 안 된다"**
-다 — 논문의 주장(AMPS > PVDF)은 그대로 살아 있다.
+→ 관행인 것은 맞다. 그러나 이번 판독에서 **우리 초판이 틀렸던 것도 같은 이유**다 —
+그림만 보고 판정했다. SI 한 줄이 결론을 뒤집었다. **관행을 근거로 삼든 그림을 근거로
+삼든, 원문을 안 보면 틀린다**는 것이 이번 교훈이다.
+
+**반론 ④ (신규)** — "그럼 ICEP 그림에 문제가 없는 것 아닌가?"
+→ 뺄셈은 정의된다. 그러나 **`(−H)` 만 반응 좌표가 다른데 축이 그걸 안 말한다**,
+**본문이 그 막대를 아예 안 다룬다**, **환원된 TM 의 스핀 상태 선택 규칙이 없다** —
+세 가지는 그대로 남는다.
 
 ---
 
 ## Gap
 
-- **ICEP SI 미확보** — §1-4 표 전부. 특히 `AMPS(−H)` 총전하 한 줄.
-- §1-3 ③ (메커니즘–그림 불일치)은 **그림 판독 기반**이다. Figure S13 로 확인해야 확정.
+- **ICEP `(−H)` 의 기준 분자**가 SI 에 명시되지 않았다 (§II-1 (a) 는 추론).
+- Figure S13 **그림 자체**를 못 봤다 — 표면 O–H 결합 위치와 H 이동 후 국소 구조 미확인.
+- ICEP 슬랩의 **자기 배열·환원 TM 의 스핀 상태** 미기재.
 - Kang 의 Na 상태 분류가 사전 설계인지 사후 분류인지 미확정 (SI Fig S15).
-- **`U_PCET` 의 산화물 슬랩 버전이 없다.** 우리가 이 지적을 실제로 쓰려면 만들어야 한다.
-- 두 논문 다 **오차막대·시드가 없다.** 단일 구조 흡착에너지의 재현성은 어느 쪽도 안 보인다.
-  (Kang 은 15 configuration 의 분포를 SI Fig S15 에 두었다고 하나 미확인.)
+- **`U_PCET` 의 산화물 슬랩 버전이 없다.** 이 지적을 우리 계에 쓰려면 만들어야 한다.
+- 두 논문 다 **오차막대·시드 없음.**

@@ -247,7 +247,7 @@
 - `kb/questions/sdcp_site_preference.md` — SDCP 조각은 LiNiO₂(104)에서 Li 자리와 Ni 자리 중 어디에 붙는가 ○미열람 [active]
 
 ## syntheses/ (5)
-- `kb/syntheses/binder_adsorption_charge_state_2026_08_29.md` — 음이온성 바인더의 흡착에너지 — 탈양성자 상태를 어떻게 다루나 (ICEP vs Kang 대조) ○미열람
+- `kb/syntheses/binder_adsorption_charge_state_2026_08_29.md` — 음이온성 바인더의 흡착에너지 — ICEP 의 (−H) 는 탈양성자가 아니라 H 이동이었다 ○미열람
 - `kb/syntheses/li3n_barrier_revision_defense_2026_08_12.md` — Li3N(001) 장벽 — 리비전 방어 카드 (AF-ASSB 원고 v5) ○미열람
 - `kb/syntheses/md_sampling_variance_defense_2026_08_25.md` — 왜 3시드·200 ps·β 게이트인가 — 짧은 단일 런은 산포를 없애지 않고 가린다 ○미열람
 - `kb/syntheses/nd_doping_two_axis_verdict.md` — Nd₂O₃ 도핑 — 열역학 창과 전자구조가 **같은 방향으로** 진다 ○미열람
