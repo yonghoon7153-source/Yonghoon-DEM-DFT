@@ -1,6 +1,6 @@
 # Bollard-Anchored Binder System for High-Loading Cathodes Fabricated via Dry Electrode Process — Kang, Jihyeon (Adv. Mater. 2025)
 
-> slug `kang2025_bollard_anchored_binder_dry_electrode` · DOI `10.1002/adma.202416872` · type `exp + NNP(PFP) 흡착/MD + Gaussian16 DFT(IR)` · PDF 본문 `f5fb19c3-…Bollard_Anchored…pdf` · SI `26749347-adma202416872sup0001suppmat.pdf` · digested `2026-07-08` → **재digest(SI 전수) `2026-08-29`** · status ✅
+> slug `kang2025_bollard_anchored_binder_dry_electrode` · DOI `10.1002/adma.202416872` · type `exp + NNP(PFP) 흡착/MD + Gaussian16 DFT(IR)` · PDF 본문 `f5fb19c3-…Bollard_Anchored…pdf` · SI `26749347-adma202416872sup0001suppmat.pdf` · digested `2026-08-29` (**SI 전수 재digest**; 초판 본문-only `2026-07-08`) · status ✅
 >
 > elements: C Co F H Li Mn Na Ni O
 > methods: dft, md, mlip, xps

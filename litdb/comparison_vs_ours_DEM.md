@@ -652,6 +652,11 @@
   입력으로 세분**할 문헌 근거(SDCP·PC류 극성/도전 바인더는 PTFE보다 덜 막음).  ⚠ 액체전해질 팽윤 필름 값 —
   ASSB SE-neck 차단과 물리 다름, **비율·방향만**.  양극 σ_e 1.30 S/cm(최고)는 분산효과(§C) — σ_e 폼의 바인더
   항이 아니라 A5 dispersion 축 증거.
+  🔴 **2026-08-29 정정 — σ_ion 1위는 PC가 아니다**: Fig 3a 실물 판독 결과 **PVdF_PTFE 255 > CMC_PTFE 178 >
+  PC_PTFE 131 > PAA_PTFE 127 ≫ PTFE 4.88** (×10⁻⁶ S/cm).  즉 "27×" 는 **PTFE-only 대비**일 뿐이고 PC는 5종 중
+  **3위**다.  세분 페널티를 만들 때 "앵커형 바인더가 가장 덜 막는다" 로 쓰면 틀린다 — 맞는 서술은 **"PTFE만
+  유독 2자릿수 낮고, 나머지 극성 바인더 4종은 127–255로 같은 대역"**.  측정도 SS│film│**liquid electrolyte**│SS
+  구성이라 **팽윤량이 큰 바인더가 유리해지는** 측정임을 함께 밝힐 것.
 - **★ Han 2025 (ICEP 이온전도 탄성 binder, Adv. Mater. 2506266, ⚠액체 LIB *습식* — Kang(J) bollard의 습식 자매편) —
   "binder=σ0 차단자"를 깨는 클래스의 *두 번째 독립점* + 7 nm coat ASR 스케일**
   (digest `papers/han2025_icep_conductive_elastic_binder.md`, CSV `docs/data/han2025_icep_binder_anchors.csv`):
@@ -1178,6 +1183,33 @@
     앵커+전자전도 겸업, PTFE-free 지향); (iii) 그들 σ_e 1.30 S/cm 최고는 **분산/3D망 효과**(PC 절연) — 우리 SDCP
     전도축과 다른 채널(=A5 dispersion 증거); (iv) 역학 매핑은 우리가 앞섬(footprint→γ 0.93 J/m²→coh) vs 그들
     fragment E_ads에서 종료.  ⚠ 절대 E 비교 금지(fragment·facet·코드 다름) — 서열만.
+  - ★★ **우리 SDCP에 직접 쓰이는 한 조각 — 음이온기(−COO⁻/−SO₃⁻)를 중성계로 다루는 레시피와 그 함정**
+    (2026-08-29 SI 판독 소득; digest §4.5):
+    - **왜 Na가 있나 — 둘 다다.** (i) *실재*: 원료가 **Sodium carboxymethyl cellulose**(Samchun C0292; 초록도
+      "PAA-grafted **sodium** CMC"), FTIR이 카복실산 C=O 1710이 아니라 **carboxylate COO⁻ 1590**으로 배정,
+      Na1s **1070.5 eV = Na–COO⁻** 검출, EDS에서 Na를 **PC의 마커**로 사용.  (ii) *계산상 역할*: −COO⁻ 2개 +
+      **Na⁺ 2개 = 총전하 0의 닫힌 껍질 중성 fragment** ⇒ 배경전하·대전슬랩 보정을 전부 회피.  NNP는 대전계를
+      못 다루므로 **필수 선택**이었다.
+    - **라벨 2Na/1Na/0Na 는 조성이 아니다** — **15배열 전부 Na 2개**(Fig S15 실물 확인; PC_0Na 배열에도 Na 2개가
+      표면에 안 닿은 채 존재).  본문의 *"the **free Na site** in the PC_1Na system"* 이 이를 확정.  즉 라벨은
+      **완화 후 표면에 접촉한 Na 수**다.
+    - **결합 모티프 = `–COO⁻ ··· Na⁺ ··· O²⁻(surface)` 양이온 브리지** — 각 Na⁺가 위로 카복실레이트 O 2개
+      (4원환 킬레이트), 아래로 표면 O 2개에 배위.  **유기 음이온기가 산화물에 직접 붙는 게 아니다.**
+    - 🔴 **함정 ①(estimand 이동)**: 짝이온을 넣는 순간 **그 짝이온이 결합 자리가 된다.**  그들 −2.24 eV는
+      "−COO⁻ 가 NMC에 붙는 에너지"가 **아니라** "Na⁺ 2개가 표면 O에 붙는 에너지"다.  우리가 −SO₃⁻ + Li⁺ 로
+      중성화하면 재는 것이 술폰산–표면 결합이 아니라 **Li⁺ 브리지**일 수 있다.
+    - 🔴 **함정 ②(상태선택이 곧 프로토콜)**: 짝이온 **초기 배치**가 상태 분포를 정한다.  그들은 15회전으로
+      우연히 3상태를 얻고 사후에 묶었다.
+    - ⇒ **우리 대응**: `kb/templates/estimand_card.md` §1–3 에 **"짝이온 종·개수·초기배치 정책"과 "무엇을 X로
+      정의하는가"를 먼저** 적고, 가능하면 **짝이온-중성화 경로 / 대전계+보정 경로 둘 다** 계산해 차이를 보고한다.
+      ⛔ "결과 보고 3분류 → class 평균" 은 우리 규율 위반(→ `db/governance/decisions.json` 등록 대상).
+  - **PTFE `n = 48` 장쇄의 용처 확정**: 흡착에너지(Fig 4c)는 **PTFE _dimer_**, MD(Fig 4d–f·S16)는 **장쇄 n=48**.
+    ⇒ **−0.09 eV를 MD 장쇄의 결합력으로 읽으면 안 된다**(장쇄 E_ads는 아예 계산 안 됨).  실제로 MD에서 장쇄는
+    10 ps 안에 **떨어지지 않고 ~6.6 Å에서 멈춘다** — "탈착"이 아니라 **≈1.9 Å 들뜸 뒤 정지**.  남는 주장은
+    "PC가 있으면 그 들뜸조차 없다" 이고 그건 그림이 지지한다.
+  - ⚠ **거리 지표 정의가 3중으로 어긋난다**: 본문 "**F atoms**" / Fig 4 캡션 "**C and F**" / S16 캡션 "**C and F**".
+    게다가 그림에서 PTFE 사슬이 **진한색/옅은색 2색**이고 **진한색 부분집합만 평균에 들어가는데 선택 규칙 미기재**.
+    ⇒ 4.75→6.60 Å 라는 숫자의 신뢰도를 결정적으로 깎는다.  우리가 이식할 때는 **전-원자 평균 + 정의 명시**로.
   - **bollard 형상 = 우리 SDCP 시딩과 동형**: bollard = NMC 표면 **불연속 앵커 입자/패치 + 입자간 fibril 스팬**
     (EDS Na 균일분포) — conformal 필름이 아니라 우리 additives.py SDCP `particle` regime + `surface_frac`(AM-앵커
     분율 bias) 그림과 일치; `seed_coat` conformal 필름은 SuperP coat_block 쪽.  SDCP+PTFE 콤보 시 fibril이
@@ -1189,10 +1221,20 @@
   - **PTFE fibrillation 하한 + 혼합 앵커**: dough 성립 PTFE **0.6 wt%**(bollard 지원; 0.2 wt% 실패) vs **2 wt%**
     (단독) = 우리 `--ptfe-fibril`/PTFE-wt 축의 첫 문헌 하한.  혼합법→2C 용량 STD **16.52→5.59(planetary)→4.28
     (ballmill×3)** = **A5 dispersion-CV 정량 실험앵커** + ADDITIVE_PROCESS(ballmill 우위) 방향 정합.
-  - ⚠ **LIB 액체전해질 — 이온위상 역전**: 그들 "porosity↑(25.9% 또는 ~22.3% — 본문 문장 중의적; PVdF 17.7%)·
+  - ⚠ **LIB 액체전해질 — 이온위상 역전**: 그들 "porosity↑(**25.90 %** vs PTFE 19.47 / PVdF 17.68 — Table S3 확정)·
     τ 1.30 = 장점"은 pore=전도체 논리 → 우리 ASSB(SE망=전도체, porosity=죽은 공간)로 부호까지 반대 — 절대 전이
     금지.  바인더 필름 E도 MPa-스케일(PTFE 3.50/PC_PTFE 0.15 MPa, 다공 시트) — 우리 ADD dict PTFE 0.30 GPa와
     1000× 층위차, 서열만.
+  - ⚠ **그들 주장 중 그들 그림이 지지하지 않는 것 2개** (인용 전 확인용):
+    ① **σ_ionic 1위는 PC가 아니라 PVdF_PTFE(255×10⁻⁶ S/cm)** — PC 131은 CMC 178 뒤 **3위**.  "PC가 이온전도를
+    올린다"는 **PTFE-only 4.88 대비 27×** 라는 뜻일 뿐.  우리 W2 바인더별 σ_ion 페널티 세분화에 쓸 때 기준 명시 필수.
+    ② **Fig 3j(PTFE 분율 스윕)가 PC_PTFE73 최적을 지지하지 않는다** — 2C 용량이 PTFE/(PC_PTFE) 0.1–0.9 에서
+    **평평**(≈138–148, 추세 없음), 73(148.3) vs 91(147.9) 차이는 **0.4 mAh/g = 노이즈**.  **73 선택의 실제 근거는
+    dough 성형성**(PC_PTFE91 = PTFE 0.2 wt% 는 반죽 실패, Fig S10)이고 논문도 그렇게 쓴다.  ⇒ 우리가 인용할 하한은
+    "**용량 최적 조성**"이 아니라 "**fibril-web 성립 하한 0.6 wt%**" 쪽이다.
+  - **부수 정정**: 90 mg/cm² areal capacity 는 본문 **15.6** vs Table S1/S2 **15.3** mAh/cm² 로 불일치 ⇒ "≈15.3–15.6"
+    으로 인용.  Table S1/S2 의 Wh/kg 은 `비용량 × 3.7 V` = **활물질 기준**(집전체·분리막·전해질·케이스 제외) ⇒
+    **651 Wh/kg 를 셀 수준으로 인용 ⛔**(셀 재계산이 필요하면 Table S4 부품 질량 사용).
 - **★ Han 2025 (ICEP, 실험+DFT흡착, 액체 LIB 습식) — binder 역학·접착 앵커 + coat-morphology + 전극-스케일 유효 E 실측**
   (digest `papers/han2025_icep_conductive_elastic_binder.md`; Kang(J) bollard와 자매 — 그들 *건식 앵커-입자+fibril*,
   이들 *습식 conformal-coat*):

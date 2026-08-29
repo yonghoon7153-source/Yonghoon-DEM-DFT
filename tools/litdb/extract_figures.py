@@ -276,6 +276,18 @@ def _side_rect(page, cap, blocks, up, margin=6.0):
     return (rect if rect.height >= 36 else None), ks.count("img"), ks.count("draw")
 
 
+def _fname_prefix(kind):
+    """kind → 파일이름 접두사. **scheme 은 fig 와 갈라야 한다.**
+
+    🐛 2026-08-29 (han2025 실측): `Scheme 1` 과 `Figure 1` 이 둘 다 `fig_1.png` 로 저장돼
+    **먼저 쓴 Scheme 1 이 통째로 사라졌다.** figures.json 에는 `s1`·`f1` 두 행이 남아 있어
+    "7장 추출" 로 보이는데 실제 PNG 는 6장이고, webapp `_fig_keys()` 는 파일이름을 키로 쓰므로
+    한쪽 주석이 통째로 다른 그림에 붙는다. dedupe 는 `key` 로 묶어서 이걸 못 잡는다.
+    ⚠ 이미 만들어 둔 폴더는 소급되지 않는다 — `--clean` 으로 다시 돌려야 고쳐진다.
+    """
+    return {"table": "tab", "scheme": "sch"}.get(kind, "fig")
+
+
 def region_for(page, cap, kind, blocks, tables=(), min_draw=6, stop_y=1e9):
     """캡션 블록 → (잘라낼 사각형, 이미지수, 벡터수).
 
@@ -421,7 +433,7 @@ def extract(pdf_paths, slug, dpi=200, dry=False, min_draw=6, keep_blank=0.985,
                         skipped.append((key, pno + 1, "중복(작은 쪽)"))
                         continue
                     found = [f for f in found if f["key"] != key]
-                fn = f"{'tab' if kind == 'table' else 'fig'}_{label.upper()}.png"
+                fn = f"{_fname_prefix(kind)}_{label.upper()}.png"
                 rec = {"key": key, "kind": kind, "label": label.upper(), "page": pno + 1,
                        "file": fn, "caption": caption[:900], "rotated_deg": rot,
                        "bbox": [round(v, 1) for v in rect],
@@ -1200,6 +1212,15 @@ def selftest():
         nonlocal ok, fail
         print(("  ⭕ " if cond else "  ⛔ ") + name)
         ok, fail = ok + bool(cond), fail + (not cond)
+
+    # --- 파일이름 접두사 (2026-08-29 han2025 회귀: Scheme 1 이 Figure 1 을 덮어썼다)
+    chk("양성: figure → fig_", _fname_prefix("figure") == "fig")
+    chk("양성: table → tab_", _fname_prefix("table") == "tab")
+    chk("양성: scheme → sch_", _fname_prefix("scheme") == "sch")
+    chk("음성⑩: scheme 과 figure 의 접두사가 **다르다** (같으면 같은 번호끼리 덮어쓴다)",
+        _fname_prefix("scheme") != _fname_prefix("figure"))
+    chk("음성⑪: 모르는 kind 는 fig 로 떨어진다 (예외로 죽지 않는다)",
+        _fname_prefix("plate") == "fig")
 
     with tempfile.TemporaryDirectory() as td:
         root = Path(td)
