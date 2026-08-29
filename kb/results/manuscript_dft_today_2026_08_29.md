@@ -22,26 +22,31 @@ evidenceScope: multi-source-primary
 
 ## ✅ 써도 되는 것
 
-### 1. 접촉 기하 — **이게 오늘 가장 강한 결과다**
+### 1. 접촉 기하 — ⚠ **2026-08-29 재판정: legacy 자세에 한정된다**
 
 에너지 기준 비대칭(δ_m·δ_LREAL)은 **거리에 영향을 주지 않는다.** 좌표는 좌표다.
+다만 **어느 자세의 좌표인가**가 결정적이다 — 두 집합이 서로 다른 말을 한다.
 
-> In the evaluated geometries (MLIP-relaxed, DFT single-point; not DFT-optimised),
-> the acidic sulfonic O–H hydrogen lies 7.08–7.17 Å from the slab and the
-> sulfonate oxygens 4.88–5.39 Å from the nearest surface Li. The shortest
-> molecule–surface contacts are instead carbon-bound H ··· surface O/Ni at
-> 2.44–2.46 Å. Contact in these configurations is therefore made through the
-> backbone rather than through the polar sulfonate group.
+**legacy(wave1) 4자세 — DFT 단일점을 실제로 받은 것들**
 
-⚠ 반드시 같이: *MLIP-relaxed geometry, DFT single point, vacuum, 0 K, single molecule.*
+> In the four wave-1 configurations, the acidic sulfonic O–H hydrogen lies
+> 7.08–7.17 Å from the slab and the sulfonate oxygens 4.88–5.39 Å from the
+> nearest surface Li; the closest contacts are carbon-bound H ··· surface O/Ni
+> at 2.44–2.46 Å.
 
-### 2. 배향 선호 — 위와 독립적으로 같은 결론
+**신규(동결) 후보 최저 2자세 — MLIP 기하, DFT 아직 없음**
 
-> Across the relaxed MLIP screen, sulfonate-down orientations ranked 88th of 109
-> surviving poses (81st percentile), 0.39 eV above the lowest-energy pose; in the
-> rigid screen the best sulfonate-down orientation ranked 101st of 322.
+> b00 `O_top__fib08__r000`   : 산성 O–H 1.020 Å · H ··· 표면 O **1.827 Å**
+> b01 `LiO_bridge__fib08__r000`: 산성 O–H 1.018 Å · H ··· 표면 O **1.848 Å**
+> (같은 자세의 C-결합 H 는 슬랩에서 3.38–3.95 Å)
 
-⚠ MLIP 절대값·조각 간 비교는 **인용 금지** (부호가 DFT와 반대). **순위만** 쓴다.
+⇒ **신규 최저 자세에서는 술폰산이 표면 O 와 수소결합한다.** O–H 가 자유값 ~0.97 Å
+에서 1.02 Å 로 늘어난 것도 실제 주개라는 것과 정합적이다.
+
+⛔ **오늘 원고에 이 수소결합을 쓸 수 없다** — MLIP 기하이고 DFT 확인이 없다.
+   Stage A 의 b00·b01 이 정확히 그 확인이다.
+⛔ 반대로 *"술포네이트가 표면과 상호작용하지 않는다"* 도 **이제 못 쓴다** — legacy
+   자세에 한정된 관찰이었다는 것이 드러났다.
 
 ### 3. 자리 선호 (조각 내부 — 분자 기준이 소거되므로 살아 있다)
 
@@ -64,14 +69,14 @@ evidenceScope: multi-source-primary
 > Molecular reference boxes converged between 20 and 24 Å to 0.057–0.322 meV
 > against a 10 meV gate.
 
-### 5. 문헌과의 불일치 — 쓸 수 있고, 쓸 값어치가 있다
+### 5. 문헌 — ⛔ **"불일치" 라고 쓰면 안 된다 (2026-08-29 정정)**
 
-Han 2025 (Adv. Mater., ICEP)은 NCM811(001) 위에서 ICEP_AMPS 의 결합을
-*"술폰산기와 표면 산소 사이의 강한 수소결합"* 으로 귀속한다. 우리는 LiNiO₂(104)
-위의 이 조각에서 **그 모티프를 관측하지 못했다** (위 §1).
+Han 2025 (Adv. Mater., ICEP)는 NCM811(001) 위 ICEP_AMPS 의 결합을 *"술폰산기와 표면
+산소 사이의 강한 수소결합"* 으로 귀속한다. **우리 신규 최저 자세가 바로 그 모티프다**
+(위 §1). 초판에서 "우리는 그 모티프를 관측하지 못했다" 고 적었는데 **철회한다** —
+그것은 legacy 자세만 본 진술이었다.
 
-> ⚠ 서로 다른 표면·조각·코드(CASTEP vs VASP)이므로 **절대값 비교는 하지 않는다.**
-> 관측된 접촉 모티프가 다르다는 사실만 적는다.
+지금 상태에서 문헌에 대해 쓸 수 있는 것은 **없다.** DFT 확인 전이다.
 
 ---
 
@@ -81,7 +86,9 @@ Han 2025 (Adv. Mater., ICEP)은 NCM811(001) 위에서 ICEP_AMPS 의 결합을
 |---|---|
 | 절대 흡착에너지 (−0.77 eV 등) | 기준 비대칭 δ_m(NUPDOWN 제약 분자) + δ_LREAL(복합체 T vs 분자 F) 미측정 — 회신 P |
 | **0.346 eV** · "SDCP 가 PTFE 보다 강하게 붙는다" | 위와 같음. 부등호 방향 서술도 보류 |
-| "술포네이트가 표면을 앵커링한다" · "O···Li 2.09 Å" | **철회** — 실측 4.88–5.39 Å (회신 T P0-1) |
+| "O···Li 2.09 Å" (술포네이트 O 가 Li 에 배위) | **철회** — 어느 구조에서도 재현 안 됨 (회신 T P0-1) |
+| "술포네이트가 표면과 상호작용하지 않는다" | ⛔ **이것도 못 쓴다** — 신규 최저 자세는 O–H···O 1.83 Å 수소결합 (2026-08-29) |
+| 그 수소결합 자체 | 아직 **MLIP 기하**뿐 — Stage A b00·b01 의 DFT 가 나와야 쓴다 |
 | "자리 불문" · neutral "무선호" | 30 meV 판정바닥 아래 |
 | PTFE **고분자**로 확장 · 접착력/계면저항 | 조각 vs 조각, 진공 0 K 단분자 |
 | 타 코드·문헌 절대값과 직접 비교 | VASP PAW 총에너지 |
