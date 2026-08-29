@@ -4,20 +4,30 @@
     python3 scripts/cbd_contacts_per_am.py --bed <run_dir> --scaffold am_scaffold.csv
     python3 scripts/cbd_contacts_per_am.py --selftest
 
-★ 왜 이 스크립트가 필요한가.  침대는 **복셀 배열**로만 저장돼 있다 (`phase.npy` 등,
-침대당 ≈ 1.9 GB).  `phase.npy` 는 int8 이라 *"이 복셀은 VGCF"* 는 알아도 *"몇 번 AM 입자"*
-는 모른다.  AM 개체 정보는 런 디렉터리 **밖의** `am_scaffold.csv` (AM 1,271개) 에 있다.
+★ 왜 이 스크립트가 필요한가.  침대는 **MPM 물질점 구름**으로 저장돼 있다 (침대당 ≈ 1.9 GB):
+`phase.npy` 는 점당 상 라벨(int8), `fibre.npy` 는 점당 개체 id, `se_dump.npy` 는 점당 좌표
+(3 × float32).  상 라벨은 *"이 점은 VGCF"* 만 알고 *"몇 번 AM 입자"* 는 모른다 — AM 개체
+정보는 런 디렉터리 **밖의** `am_scaffold.csv` (AM 1,271개) 에 있다.
 ⇒ 둘을 합쳐야 **입자별** 접촉 수가 나온다.
 
 세는 방법 (규약을 여기 못박는다 — 나중에 바꾸면 값이 바뀐다):
 
-  · **접촉** = AM 구 표면에서 `--band` (기본 1 복셀) 안에 있는 복셀 중 첨가제 상인 것.
-  · **접촉 수** = 그 복셀들이 속한 **서로 다른 첨가제 개체(object)의 개수**.
-    ⚠ 복셀 개수가 아니다 — 굵은 섬유 하나가 여러 복셀을 차지해도 접촉 1 이다.
-    개체 구분은 `fibre.npy` (복셀별 개체 id) 로 한다.
+  · **접촉** = AM 구 **표면 바깥** `band_um` (기본 0.15 µm = σ_e 격자 한 복셀 폭) 껍질 안에
+    있는 첨가제 물질점.
+  · **접촉 수** = 그 점들이 속한 **서로 다른 첨가제 개체(object)의 개수**.
+    ⚠ 점 개수가 아니다 — 굵은 섬유 하나가 점을 여럿 차지해도 접촉 1 이다.
   · **CBD 구성**: 기본은 **전도성** 첨가제만 = VGCF(2) + SDCP(5).  PTFE(4)는 절연이라
     기본에서 뺀다.  `--include-ptfe` 로 넣을 수 있다 — v6 의 433/517 이 어느 구성인지
     모르므로 **두 구성을 다 내고** 어느 쪽이 v6 과 맞는지 보고한다.
+
+좌표 프레임 (2026-08-29 실측으로 확정):
+  `se_dump` 는 MPM **정규화** 좌표다 — 실측 범위 x·y 0.040–0.960, z 0.050–**1.3843** 이고
+  그 z 최댓값이 `mpm_metrics.wall_z = 1.3846`(플래튼 위치)과 같다.  실좌표로 되돌리려면
+  `lateral_box`(0.05)를 곱한다.  `am_scaffold` 는 이미 실좌표다 (AM 반지름 0.0025 = 2.5 µm).
+  ⚠⚠ **이 배선을 접촉으로 검증하지 않는다** — 접촉이 생길 때까지 변환을 맞추면 그 변환이
+  답을 만든다.  대신 **독립 성질**로 검사한다: AM 은 MPM 에서 얼어붙은 장애물이므로
+  그 구 **안에는 물질점이 없어야** 하고, 변환이 틀리면 그 비율이 AM 부피분율(≈46 %) 근처로
+  튄다.  `inside_frac` 이 그 검사이고 초과하면 **거부한다**.
 
 ⚠⚠ **이 값은 규약 의존이다.**  band 폭·개체 정의·PTFE 포함 여부가 각각 값을 바꾼다.
 그래서 산출물에 규약을 함께 적고, 원고에는 규약과 함께 인용한다.
@@ -74,7 +84,8 @@ def _load_scaffold(path):
 
 
 def count_contacts(bed_dir, scaffold, band_um=0.15, include_ptfe=False,
-                   max_am=None, um_per_unit=1000.0):
+                   max_am=None, um_per_unit=1000.0, se_scale=None,
+                   inside_tol=0.02):
     """AM 입자별 접촉 **개체** 수.
 
     ⚠ 침대는 **복셀 격자가 아니라 MPM 물질점 구름**이다 (2026-08-29 실측):
@@ -119,7 +130,12 @@ def count_contacts(bed_dir, scaffold, band_um=0.15, include_ptfe=False,
     idx = np.flatnonzero(sel)
     if idx.size == 0:
         raise SystemExit(f'{kinds} 상의 점이 하나도 없다')
-    apos = np.asarray(pos[idx], dtype=np.float64) * um_per_unit
+    #  ── 좌표 프레임.  `se_dump` 는 MPM **정규화** 좌표다 (도메인 ≈ [0,1], 플래튼이
+    #     `wall_z`).  실좌표로 되돌리려면 `lateral_box` 를 곱한다.  scaffold 는 이미 실좌표다.
+    #     ⚠ 이 배선은 아래 `inside_frac` 검사가 **접촉과 무관하게** 검증한다.
+    if se_scale is None:
+        se_scale = float(meta.get('lateral_box', 0.05))
+    apos = np.asarray(pos[idx], dtype=np.float64) * se_scale * um_per_unit
     aid = np.asarray(fid[idx])
 
     xs, ys, zs, rs, tt = _load_scaffold(scaffold)
@@ -138,6 +154,22 @@ def count_contacts(bed_dir, scaffold, band_um=0.15, include_ptfe=False,
     rng_am = (ampos.min(axis=0), ampos.max(axis=0))
 
     tree = cKDTree(apos)
+
+    #  ★ 프레임 검증 — **접촉과 무관하다.**  AM 은 MPM 에서 **얼어붙은 장애물**이라
+    #    그 구 **안에는 물질점이 없어야** 한다.  변환이 맞으면 내부 비율 ≈ 0,
+    #    틀리면 무작위로 섞여 AM 부피분율(≈ 0.46) 근처가 나온다.
+    #    ⇒ 접촉이 생기도록 변환을 맞추는 것이 아니라, **독립 성질**로 변환을 검사한다.
+    inside = set()
+    for c, r in zip(ampos, rs_um):
+        inside.update(tree.query_ball_point(c, r * (1.0 - 1e-9)))
+    inside_frac = len(inside) / float(apos.shape[0])
+    if max_am is None and inside_frac > inside_tol:
+        raise SystemExit(
+            f'첨가제 점의 {inside_frac:.1%} 가 AM 구 **안**에 있다 (허용 {inside_tol:.0%}).\n'
+            '  AM 은 얼어붙은 장애물이라 안에 물질점이 없어야 한다 ⇒ 좌표 변환이 틀렸다.\n'
+            f'  현재 se_scale={se_scale} · um_per_unit={um_per_unit}\n'
+            '  ⚠ 접촉이 생길 때까지 변환을 맞추지 말 것 — 그 변환이 답을 만든다.')
+
     out = []
     for c, r in zip(ampos, rs_um):
         near = tree.query_ball_point(c, r + band_um)
@@ -161,6 +193,7 @@ def count_contacts(bed_dir, scaffold, band_um=0.15, include_ptfe=False,
             '     결과를 만든다.')
 
     return out, dict(band_um=band_um, kinds=kinds, n_am=len(out),
+                     se_scale=se_scale, inside_frac=round(inside_frac, 6),
                      range_additive_um=[rng_add[0].tolist(), rng_add[1].tolist()],
                      range_am_um=[rng_am[0].tolist(), rng_am[1].tolist()],
                      um_per_unit=um_per_unit, n_pts=n_pts,
@@ -198,11 +231,17 @@ def selftest() -> int:
     r_sim = 0.0025                             # 2.5 µm
     band = 0.15                                # µm
 
+    LB = 0.05                                  # lateral_box — se_dump 는 정규화 좌표다
+
     def shell_pt(dist_um, k):
-        """중심에서 dist_um 떨어진 점 (시뮬 단위)."""
+        """중심에서 dist_um 떨어진 점을 **se_dump 의 정규화 좌표로** 돌려준다.
+
+        실제 파일이 그 프레임이므로 픽스처도 그래야 변환 배선이 실제로 시험된다
+        (초판 픽스처는 scaffold 와 같은 프레임이라 변환을 안 태웠다)."""
         import math
         a = 0.7 * k
-        return [cx + dist_um / U * math.cos(a), cy + dist_um / U * math.sin(a), cz]
+        p = [cx + dist_um / U * math.cos(a), cy + dist_um / U * math.sin(a), cz]
+        return [v / LB for v in p]
 
     with tempfile.TemporaryDirectory() as td:
         P, F, X = [], [], []
@@ -220,16 +259,22 @@ def selftest() -> int:
         add('VGCF', 77, shell_pt(3.4, 13))
         #  AM 안쪽 첨가제 — 표면 **바깥** 껍질만 세므로 빠져야 한다
         add('VGCF', 55, shell_pt(1.2, 15))
+        #  ★ 첨가제 패딩 — 모든 AM 밖 멀리 (band 검사 최대 1.2 µm 껍질 밖).
+        #    ⚠ 없으면 위의 **의도적 내부 점 1개**가 첨가제의 11 % 가 되어 `inside_frac`
+        #    검사에 걸린다.  실침대는 첨가제가 188만 점이라 그런 일이 없다 —
+        #    픽스처가 그 비율을 흉내내야 검사를 제대로 시험한다.
+        for j in range(60):
+            add('VGCF', 88, shell_pt(10.0 + 0.01 * j, j))
         #  패딩 (SE, 상 코드에 없음)
         for j in range(20):
-            P.append(9); F.append(0.0); X.append([0.03 + 1e-4 * j, 0.03, 0.03])
+            P.append(9); F.append(0.0); X.append([0.03 / LB + 1e-4 * j, 0.03 / LB, 0.03 / LB])
 
         n_pts = len(P)
         np.save(os.path.join(td, 'phase.npy'), np.array(P, dtype=np.int8))
         np.save(os.path.join(td, 'fibre.npy'), np.array(F, dtype=np.float32))
         np.save(os.path.join(td, 'se_dump.npy'),
                 np.array(X, dtype=np.float32).ravel())
-        meta = dict(n_pts=n_pts, additives=dict(
+        meta = dict(n_pts=n_pts, lateral_box=LB, additives=dict(
             VGCF=dict(n_points=sum(1 for p in P if p == PHASE['VGCF'])),
             PTFE=dict(n_points=sum(1 for p in P if p == PHASE['PTFE']))))
         json.dump(meta, open(os.path.join(td, 'mpm_metrics.json'), 'w'))
@@ -253,7 +298,7 @@ def selftest() -> int:
         chk('band 를 넓히면 먼 개체가 들어온다', cnt3 == [4], str(cnt3))
 
         #  ── fail-closed 검사 셋
-        json.dump(dict(n_pts=n_pts + 1, additives=meta['additives']),
+        json.dump(dict(n_pts=n_pts + 1, lateral_box=LB, additives=meta['additives']),
                   open(os.path.join(td, 'mpm_metrics.json'), 'w'))
         try:
             count_contacts(td, sc, band_um=band)
@@ -261,7 +306,7 @@ def selftest() -> int:
         except SystemExit:
             chk('n_pts 불일치를 잡는다 (fail-closed)', True)
 
-        bad = dict(meta); bad['additives'] = dict(VGCF=dict(n_points=999))
+        bad = dict(meta); bad['additives'] = dict(VGCF=dict(n_points=999))  # noqa
         json.dump(bad, open(os.path.join(td, 'mpm_metrics.json'), 'w'))
         try:
             count_contacts(td, sc, band_um=band)
@@ -295,6 +340,8 @@ def main(argv=None):
     ap.add_argument('--scaffold', help='am_scaffold.csv')
     ap.add_argument('--band-um', type=float, default=0.15,
                     help='접촉 판정 껍질 두께 (µm).  기본 0.15 = σ_e 격자 한 복셀')
+    ap.add_argument('--se-scale', type=float,
+                    help='se_dump 정규화 좌표 → 실좌표 배율 (기본 metrics.lateral_box)')
     ap.add_argument('--um-per-unit', type=float, default=1000.0,
                     help='scaffold·se_dump 길이 단위 → µm (기본 1000; 함수가 검사한다)')
     ap.add_argument('--include-ptfe', action='store_true',
@@ -312,7 +359,7 @@ def main(argv=None):
     for inc in (False, True):
         cnt, info = count_contacts(a.bed, a.scaffold, band_um=a.band_um,
                                    include_ptfe=inc, max_am=a.max_am,
-                                   um_per_unit=a.um_per_unit)
+                                   um_per_unit=a.um_per_unit, se_scale=a.se_scale)
         tag = 'conductive+PTFE' if inc else 'conductive only (VGCF+SDCP)'
         res[tag] = dict(summary=summarise(cnt), convention=info, counts=cnt)
         s = res[tag]['summary']
@@ -323,6 +370,8 @@ def main(argv=None):
           f'AM 표면 바깥 껍질만')
     print(f'   물질점 {info["n_pts"]:,} 중 첨가제 {info["n_additive_points"]:,} · '
           f'상별 점수 {info["phase_counts"]}')
+    print(f'   프레임: se_scale {info["se_scale"]} · AM 구 **안**에 든 첨가제 점 '
+          f'{info["inside_frac"]:.2%}  (얼어붙은 장애물이므로 ≈0 이어야 한다)')
     print('⚠ 이 값은 규약 의존이다 — band 폭·개체 정의·PTFE 포함 여부가 각각 값을 바꾼다.')
     if a.out:
         json.dump(res, open(a.out, 'w', encoding='utf-8'), ensure_ascii=False, indent=1)
