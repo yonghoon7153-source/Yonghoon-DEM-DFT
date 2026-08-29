@@ -6,7 +6,7 @@ tags: [review, codex, sdcp, ptfe, claim, normalization, manuscript, closure]
 status: 발송 대기
 supersedes: kb/reviews/codex_Q_prompt_neutral_ptfe_closure_2026_08_28.md
 confidence: medium
-verificationStatus: partial
+verificationStatus: unverified
 explored: false
 authoredBy: agent
 effort: high

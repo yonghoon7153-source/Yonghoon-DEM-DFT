@@ -5,7 +5,7 @@ updated: 2026-08-29
 tags: [review, codex, sdcp, mlip, uma, omat, selector, dispersion, prereg]
 status: 발송 대기
 confidence: high
-verificationStatus: partial
+verificationStatus: unverified
 explored: false
 authoredBy: agent
 effort: high

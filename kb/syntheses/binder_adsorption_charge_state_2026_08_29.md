@@ -7,6 +7,8 @@ status: 판독 완료 — ICEP 본문 + SI, Kang 본문 + SI 모두 확보
 confidence: high
 verificationStatus: verified
 verifiedAt: 2026-08-29
+verifiedBy: litdb digest (han2025 · kang2025) SI 대조
+verifiedAt: 2026-08-29
 explored: false
 authoredBy: agent
 effort: high

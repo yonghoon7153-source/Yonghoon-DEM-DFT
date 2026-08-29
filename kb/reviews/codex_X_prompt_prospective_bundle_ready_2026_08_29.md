@@ -5,7 +5,7 @@ updated: 2026-08-29
 tags: [review, codex, sdcp, vasp, prereg, closure, bundle]
 status: 발송 대기
 confidence: medium
-verificationStatus: partial
+verificationStatus: unverified
 explored: false
 authoredBy: agent
 effort: high

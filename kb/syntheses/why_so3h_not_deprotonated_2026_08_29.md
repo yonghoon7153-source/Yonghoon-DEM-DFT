@@ -5,7 +5,7 @@ updated: 2026-08-29
 tags: [sdcp, manuscript, estimand, adsorption, so3h, doped, justification]
 status: 초안 — 1저자·공저자 확인 대기 (2026-08-29 all-stop 결정 반영)
 confidence: high
-verificationStatus: partial
+verificationStatus: unverified
 explored: false
 authoredBy: agent
 effort: medium

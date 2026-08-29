@@ -6,10 +6,12 @@ tags: [manuscript, sdcp, dft, closure, citable]
 status: 사용 중
 confidence: high
 verificationStatus: verified
+verifiedAt: 2026-08-29
+verifiedBy: db/properties/sdcp_neutral_closed_2026_08_28.json + 좌표 재측정
 explored: false
 authoredBy: agent
 effort: medium
-claimType: descriptive
+claimType: empirical
 evidenceScope: multi-source-primary
 ---
 
