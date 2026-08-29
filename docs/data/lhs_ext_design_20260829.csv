@@ -1,3 +1,5 @@
+# SUPERSEDED — v1 설계 (폐기).  정본은 lhs_ext_design_v2_20260829.csv
+# 사유: 층당 8점이 공통 LHS 가 아님 (11 빈칸·10 중복) · r_SE 절단 4건 불필요
 id,stratum,ntype,kind,pdd_SE,w_AM_P,w_AM_S,rP_um,rS_um,rSE_um,rSE_lo_um,rSE_truncated,volfrac,phi_AM,n_AM_est,n_SE_est,n_total_est,seed
 lhsx_001,0,3,bimodal,0.308681,0.171454,0.519864,6.1005,1.7988,0.6925,0.5,0,0.199787,0.482712,1002,24818,25820,27213
 lhsx_002,0,3,bimodal,0.300468,0.298407,0.401125,5.3512,0.504,0.6211,0.5,0,0.274544,0.492401,48316,46374,94690,26870

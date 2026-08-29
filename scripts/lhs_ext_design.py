@@ -631,7 +631,10 @@ def main(argv=None):
 
     if a.out:
         with open(a.out, 'w', newline='', encoding='utf-8') as fh:
-            w = csv.DictWriter(fh, fieldnames=list(pts[0]))
+            #  ⚠ LF 로 쓴다.  `csv.writer` 기본은 `\r\n` 이라 리포(LF)와 **해시가
+            #  달라진다** — 사전등록이 CSV 를 해시로 참조하므로 그 어긋남이 봉인을 깬다.
+            #  (2026-08-29: ibb 산출 CRLF 37fa2db0 ↔ 리포 LF 7923b61f, 내용은 동일)
+            w = csv.DictWriter(fh, fieldnames=list(pts[0]), lineterminator='\n')
             w.writeheader()
             w.writerows(pts)
         print(f'\nwrote {a.out}  ({len(pts)} rows, seed={a.seed})')
