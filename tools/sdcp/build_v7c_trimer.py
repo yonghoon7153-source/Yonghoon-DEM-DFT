@@ -1030,12 +1030,43 @@ def _loc_class(mvals, atom_sets_neutral, removed_H):
     return (winners[0] if len(winners) == 1 else "MIXED_UNRESOLVED"), shares
 
 
+def _content_fingerprint(text):
+    """ORCA 출력의 **물리 내용** 지문 — 바이트가 아니라 값으로 같은지 본다.
+
+    회신 R4 P0-4: 종전 중복검사는 파일 SHA256 이라 **주석 한 줄만 추가하면 통과**했다.
+    복사본은 에너지·S²·섹터·좌표·**실행시간**이 전부 같고, 진짜 재실행은 실행시간이 다르다.
+    그래서 그 조합을 지문으로 쓴다.
+
+    ⛔ 이 함수가 못 하는 것:
+      · 값 자체를 위조하면 못 잡는다 (그건 다른 게이트의 몫이다).
+      · 실행시간 문구가 없는 출력(합성 픽스처 등)에서는 에너지·섹터만으로 판정하므로,
+        **s0/s1 처럼 같은 계를 두 번 돌려 같은 해에 수렴한 경우 위양성**이 될 수 있다.
+        그래서 코드가 `DUPLICATE_CONTENT` 로 따로 나간다 — 바이트 동일(`DUPLICATE_OUTPUT`)과
+        구별해서 보고하고, 게이트지 판결이 아니다.
+    """
+    seg = _last_segment(text)
+    parts = [
+        ";".join(re.findall(r"FINAL SINGLE POINT ENERGY\s+(-?\d+\.\d+)", seg)),
+        ";".join(re.findall(r"Hartree-Fock type\s+HFTyp\s*\.+\s*(\w+)", seg)),
+        ";".join(re.findall(r"Total Charge\s+Charge\s*\.+\s*(-?\d+)", seg)),
+        ";".join(re.findall(r"Multiplicity\s+Mult\s*\.+\s*(\d+)", seg)),
+        ";".join(re.findall(r"<S\*\*2>\s*:?\s*(-?\d+\.\d+)", seg)),
+        ";".join(re.findall(r"TOTAL RUN TIME:.*", seg)),
+        ";".join(re.findall(r"LOEWDIN ATOMIC CHARGES[\s\S]{0,4000}", seg)[-1:]),
+    ]
+    blocks = seg.split("CARTESIAN COORDINATES (ANGSTROEM)")
+    if len(blocks) > 1:
+        parts.append("\n".join(blocks[-1].splitlines()[:400]))
+    return hashlib.sha256("|".join(parts).encode()).hexdigest()
+
+
 def analyze_dir(a):
     man = json.load(open(os.path.join(a.analyze, "manifest_stage_b.json")))
     atom_sets = man.get("atom_sets_neutral_frame")
     out = {"schema": "sdcp_stage0_analysis/v2", "jobs": {}, "emitted": {}}
     n_pend = n_bad = 0
     sha_seen = {}
+    fp_seen = {}
     by_cid = {}
     for job in man["jobs"]:
         op = os.path.join(a.analyze, job["tag"] + ".out")
@@ -1052,6 +1083,7 @@ def analyze_dir(a):
             continue
         osha = _sha(op)
         sha_seen.setdefault(osha, []).append(job["tag"])
+        fp_seen.setdefault(_content_fingerprint(text), []).append(job["tag"])
         st, codes, realized = analyze_out(
             text, job, atom_sets=atom_sets,
             removed_H=job["conditioning"].get("removed_H_indices"))
@@ -1063,23 +1095,54 @@ def analyze_dir(a):
             out["emitted"].setdefault(c, []).append(job["tag"])
         if st != "OK":
             n_bad += 1
-    # 중복 출력물 (R3: 같은 가짜 OUT 복사 적발) — 관련 잡 전부 게이트
-    for osha, tags in sha_seen.items():
-        if len(tags) > 1:
-            for t in tags:
-                out["jobs"][t]["status"] = "GATED"
-                out["jobs"][t].setdefault("codes", []).append("DUPLICATE_OUTPUT")
-            out["emitted"].setdefault("DUPLICATE_OUTPUT", []).extend(tags)
-            n_bad += len(tags)
-    # SP→Opt dependency (R3 P0-3): 선행 sp 가 OK 아니면 opt 는 DEPENDENCY_NOT_MET
+    # 중복 출력물 — 두 층으로 본다 (회신 R4 P0-4)
+    #   ① 바이트 동일  → DUPLICATE_OUTPUT (종전)
+    #   ② 내용 동일   → DUPLICATE_CONTENT. **주석 한 줄만 넣으면 ① 을 빠져나갔다.**
+    def _gate_dupes(seen, code):
+        nonlocal n_bad
+        for _k, tags in seen.items():
+            if len(tags) > 1:
+                fresh = [t for t in tags if code not in out["jobs"][t].get("codes", [])]
+                for t in fresh:
+                    out["jobs"][t]["status"] = "GATED"
+                    out["jobs"][t].setdefault("codes", []).append(code)
+                if fresh:
+                    out["emitted"].setdefault(code, []).extend(fresh)
+                    n_bad += len(fresh)
+    _gate_dupes(sha_seen, "DUPLICATE_OUTPUT")
+    _gate_dupes(fp_seen, "DUPLICATE_CONTENT")
+
+    # ⛔⛔ 회신 R4 P0-3 — **dependency map 이 낡은 채로 쓰였다.** `by_cid` 는 첫 루프에서
+    #   채워지는데 그 뒤 중복 게이트가 `out["jobs"][t]["status"]` 를 GATED 로 바꿔도
+    #   `by_cid` 는 그대로 `OK` 였다. 그래서 **중복으로 막힌 SP 에 딸린 Opt 가 승인**됐다.
+    #   ⇒ 최종 gate 뒤에 map 을 **다시 만들고**, 사슬(A→B→C)을 위해 **고정점까지 전파**한다.
+    tag_of_cid = {j["calculation_id"]: j["tag"] for j in man["jobs"]}
+    for _ in range(len(man["jobs"]) + 1):
+        by_cid = {j["calculation_id"]: out["jobs"].get(j["tag"], {}).get("status")
+                  for j in man["jobs"]}
+        changed = False
+        for job in man["jobs"]:
+            dep = job.get("depends_on")
+            if not dep:
+                continue
+            rec = out["jobs"].get(job["tag"])
+            if rec is None or rec.get("status") in ("PENDING", "GATED", "FAIL"):
+                continue
+            if by_cid.get(dep) != "OK":
+                rec["status"] = "GATED"
+                rec.setdefault("codes", []).append("DEPENDENCY_NOT_MET")
+                out["emitted"].setdefault("DEPENDENCY_NOT_MET", []).append(job["tag"])
+                n_bad += 1
+                changed = True
+        if not changed:
+            break
+    else:
+        raise SystemExit("⛔ dependency 전파가 고정점에 도달하지 않았다 — 순환 의존 의심")
+    # 선행이 manifest 에 아예 없는 경우도 미충족이다 (선언만 있고 잡이 없는 dep)
     for job in man["jobs"]:
         dep = job.get("depends_on")
-        if not dep:
-            continue
         rec = out["jobs"].get(job["tag"])
-        if rec is None or rec.get("status") == "PENDING":
-            continue
-        if by_cid.get(dep) != "OK":
+        if dep and dep not in tag_of_cid and rec and rec.get("status") == "OK":
             rec["status"] = "GATED"
             rec.setdefault("codes", []).append("DEPENDENCY_NOT_MET")
             out["emitted"].setdefault("DEPENDENCY_NOT_MET", []).append(job["tag"])
@@ -1622,6 +1685,36 @@ def selftest():
         ana = json.load(open(os.path.join(td, "b3", "analysis_stage_b.json")))
         chk("DUPLICATE_OUTPUT" in ana["jobs"][tagA].get("codes", []),
             "음성: 동일 .out 복사 → DUPLICATE_OUTPUT (realized ID 재사용 봉쇄)")
+
+        # ══ 회신 R4 회귀시험 ④ — **주석 한 줄로 중복검사 우회** ═══════════════
+        #   R4 실측: 출력에 아무 줄이나 하나 넣으면 파일 SHA 가 달라져 통과했다.
+        open(os.path.join(td, "b3", tagB + ".out"), "w").write(
+            good + "#  (사람이 나중에 붙인 메모 한 줄)\n")
+        analyze_dir(NS(analyze=os.path.join(td, "b3")))
+        ana = json.load(open(os.path.join(td, "b3", "analysis_stage_b.json")))
+        cA = ana["jobs"][tagA].get("codes", [])
+        chk("DUPLICATE_OUTPUT" not in cA,
+            "  (전제) 주석 한 줄이면 바이트 SHA 가 달라져 DUPLICATE_OUTPUT 은 안 뜬다")
+        chk("DUPLICATE_CONTENT" in cA and "DUPLICATE_CONTENT" in ana["jobs"][tagB]["codes"],
+            "음성 R4④: 주석만 다른 복사본 → DUPLICATE_CONTENT 로 잡는다 (내용 지문)")
+
+        # ══ 회신 R4 회귀시험 ⑤ — **중복으로 막힌 SP 의 종속 Opt** ═════════════
+        #   종전 버그: by_cid 가 첫 루프에서 굳어 중복 게이트 뒤에도 OK 로 남아
+        #   딸린 Opt 가 승인됐다. 이제 최종 gate 뒤 map 을 다시 만든다.
+        open(os.path.join(td, "b3", tagAo + ".out"), "w").write(_fake_orca_out(
+            hf="UHF", charge=0, mult=2, s2=0.753, stability="stable",
+            opt_converged=True, energies=(-3.0,)))
+        analyze_dir(NS(analyze=os.path.join(td, "b3")))
+        ana = json.load(open(os.path.join(td, "b3", "analysis_stage_b.json")))
+        chk(ana["jobs"][tagA]["status"] == "GATED",
+            "  (전제) 선행 sp 는 중복으로 GATED 다")
+        chk(ana["jobs"][tagAo]["status"] != "OK"
+            and "DEPENDENCY_NOT_MET" in ana["jobs"][tagAo].get("codes", []),
+            "음성 R4⑤: **중복으로 막힌** sp 의 종속 opt 도 DEPENDENCY_NOT_MET "
+            "(종전엔 낡은 dependency map 때문에 OK 로 통과)")
+        chk(ana["jobs"][tagAo]["realized"].get("realized_state_id") is None
+            if "realized" in ana["jobs"][tagAo] else True,
+            "  게이트된 잡에는 realized_state_id 를 발급하지 않는다")
         # 대문자 unstable · 마지막 에너지 · 의존성
         open(os.path.join(td, "b3", tagB + ".out"), "w").write(_fake_orca_out(
             hf="UHF", charge=0, mult=2, s2=0.751, stability="unstable_upper",

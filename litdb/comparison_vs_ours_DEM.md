@@ -1143,10 +1143,34 @@
 - **★ Kang(Jihyeon) 2025 (Adv. Mater. 2416872, 중앙대+현대차, LIB 건식전극 — ⚠랩 Junhee Kang 아님) — "bollard hitch"
   앵커 바인더 = 우리 SDCP 화학앵커의 개념-클래스 독립 선례** (digest `papers/kang2025_bollard_anchored_binder_dry_electrode.md`,
   CSV `docs/data/kang2025_bollard_binder_anchors.csv`):
-  - **앵커링 물리 (그들)**: PC(PAA-grafted CMC)가 NMC 산화물 표면에 **Na⁺-매개 화학흡착** — MLP-DFT E_ads
-    **PC_2Na −2.24 ≫ PC_1Na −1.12 ≫ 극성쌍극자 −0.37 ≫ PTFE vdW −0.09 eV**; PTFE fibril은 bollard의 자유 Na에
-    **Na–F −0.35 eV**(PTFE-NMC의 2–4.5×) + PAA 가지 물리얽힘으로 계류.  400 K NVT-MD 10 ps: PTFE-only 탈착
-    (표면거리 4.2→6.6 Å) vs PC 동반 계류(4.5–4.9 Å).  XPS F1s Na–F>C–F로 실험 확인.
+  - **앵커링 물리 (그들)**: PC(PAA-grafted **sodium** CMC)가 NMC 산화물 표면에 **Na⁺-매개 화학흡착** — E_ads
+    **PC_2Na −2.24 ≫ PC_1Na −1.12 ≫ 극성쌍극자 −0.37 ≫ PTFE_dimer vdW −0.09 eV**; PTFE fibril은 bollard의 자유 Na에
+    **Na–F −0.35 eV**(PTFE-NMC의 2–4.5×) + PAA 가지 물리얽힘으로 계류.  400 K NVT-MD 10 ps: PTFE-only 들뜸
+    (표면거리 4.2→6.6 Å, **그림 디지타이즈로는 `figure-read` 4.75→6.60**) vs PC 동반 계류(4.53–5.04 Å).
+  - 🔴 **2026-08-29 SI 전수 재digest에서 뒤집힌 것 4가지** (초판은 본문만 봤다):
+    ① **"MLP-DFT" 는 DFT가 아니다** — SI p.7 원문 = **PFP v3.0.0 (Matlantis 범용 NNP)**.  논문의 "deep-learning
+    based DFT" 는 명명 오류.  ⇒ **우리 uma-s-1p1 과 정확히 같은 층위**이므로 "그들 DFT vs 우리 MLIP" 프레이밍은
+    폐기.  (진짜 DFT는 Gaussian16 B3LYP/6-31++G(d,2p) 로 **IR 진동수만**, scale 0.945 — 계산 1710/1527/1043 vs
+    실험 1710/1590/1021 로 C=O만 정확.)
+    ② **−2.24/−1.12/−0.37 eV 는 "상태의 흡착에너지"가 아니라 사후분류 class의 표본평균이다.**  Fig S15 실물
+    판독 = **15개 회전배열 → 완화 후 표면접촉 Na 수로 사후 3분류 → class 평균**, class 크기 **8 / 3 / 4**(=15,
+    본문 "15" 가 맞고 SI 캡션 "14" 가 오기).  개별값: 2Na −2.33…−2.16(평균 재계산 **−2.251**) · 1Na −1.14/−1.12/
+    −1.10(스프레드 0.04, 사실상 1점) · 0Na **−0.71/−0.34/−0.29/−0.12**(스프레드 0.59 > class 평균 0.37 ⇒ 이
+    class 평균은 무의미).  PTFE_dimer 는 개별 배열이 SI에 없어 **n 미상**.  ⇒ 우리 규율 언어로 **집계 규칙을
+    결과를 보고 정한 것** — 사다리 *방향*은 견고하나 **숫자를 estimand로 이식 ⛔**.
+    ③ **porosity 중의성 해소** — Table S3 정본: **25.90 / 19.47 / 17.68 %**(절대).  단 `ε = 1 − ρ_el·Σ(w_i/ρ_i)`
+    로 **가정한 tap density**(NMC 4.86 / SuperP 1.60 / PC_PTFE73 **1.17** / PTFE **0.52** / PVdF **0.45**)에서
+    계산한 값이고, 세 전극의 밀도·조성이 같으므로 **차이는 binder tap density 하나가 전부 만든다**.  명시 입력으로
+    재계산하면 일률 **+2.2 %p** 어긋난다(차이는 정확히 재현) ⇒ **순위·격차만 인용, 절대값 ⛔**.  XRM은 카본·바인더가
+    X선 투명이라 porosity 산출에 쓰이지 않았다.
+    ④ **Fig 4c y축 라벨 `kJ mol⁻¹` 은 오기 — 실제 eV** (Fig S15 개별 라벨이 전부 eV; kJ/mol이면 −2.24 kJ/mol =
+    −0.023 eV 로 저자 자신의 PTFE vdW −0.09 eV 보다 약해져 논지 자기모순).
+  - ⚠ **XPS Na–F 는 결정적 증거가 아니다**(저자의 유일한 실험 기둥): F1s 신규 **691.99 eV**·Na1s 신규 **1073.5 eV**
+    를 Na–F로 배정하나 (i) 이온성 NaF F1s는 **≈684–685 eV로 C–F(689)보다 낮아야** 하는데 **더 높은** 쪽에 배정했고
+    저자 근거("F 주변 전자밀도 감소")가 Na⁺···F⁻ 물리와 반대, (ii) F1s 신규성분 **+2.77 eV**·Na1s 신규성분 **+3.0 eV**
+    로 **두 원소가 같은 양 밀렸다** = 절연 폴리머 2상의 **차등대전** 신호에 더 잘 맞는다(대전보정·flood gun 언급 0),
+    (iii) PC70:PTFE30 에서 F는 Na의 **≥6배** 몰인데 F1s 면적 다수가 Na–F로 배정.  ⇒ 인용 시 **"저자 해석"**임을
+    명시하고 우리 주장의 하중을 걸지 않는다.
   - ★ **우리 SDCP와 판정 — 같은 개념-클래스, 4가지 차이**: 둘 다 "CAM 산화물 표면 *이온성* 화학흡착이 PTFE
     vdW-only 접착을 대체"; 이온성≫극성≫vdW 사다리 = 우리 **doped(−4.797) ≫ neutral(−3.02 eV)** 방향의 분자스케일
     외부 확인(frame[4]-형).  차이: (i) 그들 **양이온 Na⁺ 표면 브리지** vs 우리 **음이온 −SO₃⁻ Li-O층 삽입**(O–Li
