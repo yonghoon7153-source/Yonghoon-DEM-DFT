@@ -45,10 +45,20 @@
 ⇒ **두 규약은 동등한 model-form sensitivity 두 점**이다 (R8 Q2 와 동일).  굵은 글씨 ·
 `reported` · `resolved` 를 **전부 제거**한다.  라벨은 이렇게 쓴다:
 
-| 규약 라벨 | σ_ele SBE | DBE | 비 |
-|---|---|---|---|
-| `PTFE omitted from the electronic grid (legacy/default convention)` | 72.3 | 81.3 mS cm⁻¹ | 1.124 |
-| `PTFE centerline voxels excluded (exact-zero sensitivity convention)` | 54.0 | 70.6 | 1.308 |
+| 규약 라벨 | σ_ele SBE | DBE | 비 | PTFE 부피 표현 |
+|---|---|---|---|---|
+| **`PTFE centerline voxels excluded`** — **본문 보고값** | 54.0 | 70.6 mS cm⁻¹ | **1.308** | **0.43** |
+| `PTFE omitted from the electronic grid` — 병기 sensitivity | 72.3 | 81.3 | 1.124 | **0.00** |
+
+★★ **보고 규약 = centerline** (사용자 결정 2026-08-29).  ⚠ **정당화를 정확히 적는다** —
+A1 사전등록 판정은 *"centerline 을 교정된 표현으로 채택하지 않는다"* 였고 그것은 유지된다
+(부피비 0.428 / 0.422, 등록 밴드 [0.5, 2.0] 밖).  그 검사가 물은 것은 **"교정됐는가"** 이지
+**"둘 중 어느 쪽인가"** 가 아니다.  후자에 대해 우리가 가진 **유일한 정량 측정**은
+표현 부피이고, 거기서 centerline 은 **0.43**, 생략은 **0.00** 이다 — 실재하는 절연상에
+차단 0 을 주는 것은 **부호가 정해진 오류**다.
+⚠ **"부피를 더 그리니 전도가 더 맞다" 는 따라오지 않는다** — 차단은 부피가 아니라 **연결
+위상**을 따르고, 얇고 연결된 막은 같은 부피의 덩어리보다 더 막는다.  ⇒ 두 값을 **모두**
+싣고, 어느 쪽도 **검증된 규약이라 부르지 않는다.**
 
 **코드 기본값은 옮기지 않는다** (R10 Q2 — 사후 primary 를 정당화하지 못하고 옛 영수증만
 흔든다).  대신: ① 재현 러너에서 `PTFE_STAMP` **필수 명시** ② `software default` ·
@@ -133,8 +143,12 @@ represent **0 %** and **43 %** of it respectively (327,093 and 161,407 stamped v
 and DBE against true binder volumes of 2,581 and 1,290 μm³ — a consistent 2.4-fold
 under-representation, the two electrodes agreeing to within 1.3 %); neither reproduces the real
 volume, and which of the two errs less for conduction is not determined by volume alone, since
-blocking follows connected topology rather than volume. They are therefore reported as **two
-equivalent model-form sensitivity points**; the direction of the change is common to both, its
+blocking follows connected topology rather than volume. **The values quoted in the main text use the centerline convention**, in preference to omitting
+the binder because omission represents none of a phase that is present and insulating, whereas
+the centerline represents 43 % of it; neither, however, is established as a calibrated
+representation, and the value obtained by omitting the binder is reported alongside. Which of
+the two is closer for conduction is not settled by volume, since blocking follows connected
+topology rather than volume. The direction of the change is common to both conventions, its
 magnitude is not. Ohmic loss per phase was evaluated as Σ g_k Δφ_k², summed over the
 voxel-to-voxel connections belonging to that phase.
 
@@ -201,9 +215,12 @@ Each electrode was solved at all eight half-voxel grid-origin shifts of a 2 × 2
 SBE and DBE sharing the same origins so that ratios are paired. These eight phases are a
 complete factorial of a single bed rather than independent replicates, so ratios are given as
 the mean over the prescribed phases with the spread and observed range; **no standard error and
-no confidence interval** are implied. Ohmic loss per phase was evaluated as Σ g_k Δφ_k². The two
-binder conventions give 72.3/81.3 mS cm⁻¹ (ratio 1.124) and 54.0/70.6 mS cm⁻¹ (ratio 1.308):
-**the direction is common to both, the magnitude is not.** Absolute conductivities are those of
+no confidence interval** are implied. Ohmic loss per phase was evaluated as Σ g_k Δφ_k². The two binder
+conventions give 54.0/70.6 mS cm⁻¹ (ratio 1.308, centerline voxels excluded) and
+72.3/81.3 mS cm⁻¹ (ratio 1.124, binder omitted); the first is quoted in the main text because
+omission represents none of a phase that is present and insulating while the centerline
+represents 43 % of it, though neither is a calibrated representation and volume does not settle
+which is closer for conduction. **The direction is common to both, the magnitude is not.** Absolute conductivities are those of
 an idealised bulk model with no interfacial contact resistance anywhere and are not
 composition-matched to a measurement. The ratio is not grid-converged and grew at finer voxels
 **over the refinement interval examined**; no continuum extrapolation or global bound is
@@ -247,10 +264,11 @@ requiring a slower re-compaction; and the specimen provenance of the SDCP conduc
 |---|---|---|---|
 | Thickness | 72.53 | 72.53 | µm |
 | ε_union (simulation-geometry diagnostic) | 7.86 | 7.37 | % |
-| σ_ele,eff — `PTFE omitted from the electronic grid (legacy/default convention)` | 72.3 | 81.3 | mS cm⁻¹ |
-| σ_ele,eff — `PTFE centerline voxels excluded (exact-zero sensitivity convention)` | 54.0 | 70.6 | mS cm⁻¹ |
-| σ_ele ratio (paired, 8 origin phases) — omitted / centerline-excluded | 1.124 | 1.308 | — |
-| ⌐ spread / range | 0.003 / 1.120–1.127 | 0.003 / 1.302–1.310 | — |
+| **σ_ele,eff — `PTFE centerline voxels excluded`** (main-text convention) | **54.0** | **70.6** | mS cm⁻¹ |
+| σ_ele,eff — `PTFE omitted from the electronic grid` (sensitivity) | 72.3 | 81.3 | mS cm⁻¹ |
+| σ_ele ratio (paired, 8 origin phases) — centerline / omitted | **1.308** | 1.124 | — |
+| ⌐ spread / range | 0.003 / 1.302–1.310 | 0.003 / 1.120–1.127 | — |
+| ⌐ binder volume represented | **0.43** | 0.00 | — |
 | σ_ion,eff | *not evaluated in this cohort* | *not evaluated in this cohort* | mS cm⁻¹ |
 | SE coverage of AM (Tabor band) | **86.6** | **86.6** | % |
 | VGCF coverage of AM | **13.1** | **15.5** | % |
@@ -327,7 +345,7 @@ of the change is common to both conventions, its magnitude is not.*
 
 | 자리 | 현재 | 고침 |
 |---|---|---|
-| §전송 문단 | *"σ_ele increases from 1.98 to 3.00 S cm⁻¹"* | **두 규약을 동등하게** — *"72.3 → 81.3 mS cm⁻¹ (ratio 1.124) with the binder omitted from the electronic grid, and 54.0 → 70.6 (1.308) with its centerline voxels excluded"*.  ⚠ **어느 쪽도 먼저 headline 으로 주지 않는다** |
+| §전송 문단 | *"σ_ele increases from 1.98 to 3.00 S cm⁻¹"* | *"54.0 → 70.6 mS cm⁻¹ (ratio 1.308) with the binder's centerline voxels excluded from conduction; omitting the binder instead gives 72.3 → 81.3 (1.124)"*.  ⚠ 본문 값은 centerline, **병기 필수** |
 | 같은 문단 | *"σ_ion … 0.203 and 0.215 mS cm⁻¹"* | ⚠ **재측정 전까지 보류** |
 | 같은 문단 | *"reconstructed using a discrete element method (DEM)"* | *"**generated** by DEM packing and MPM compaction"* — ⚠ `reconstructed` 는 tomography 재구성을 암시한다 |
 | Figure 4a 설명 | *"DEM-reconstructed …"* | *"DEM-packed and MPM-compacted …"* |
