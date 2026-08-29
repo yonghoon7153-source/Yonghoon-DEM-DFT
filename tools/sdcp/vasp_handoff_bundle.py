@@ -6151,19 +6151,26 @@ def verify_bundle(root, expect_jobs=None) -> int:
     if rest:
         bad.append(f"매니페스트에 없는 파일 {len(rest)}건: {rest[:5]}")
 
-    # ④ 계획된 잡이 실제로 있고, 던질 수 있는 상태인가
+    # ④ 잡이 실제로 있고, 던질 수 있는 상태인가
+    #   ⚠ `planned` 를 잡 목록으로 쓰면 안 된다 — 생성기가 D3-off 쌍둥이를
+    #     `plan()` 없이 만들어서 `n_jobs` 에만 센다 (2026-08-29 실측: Stage A
+    #     n_jobs 40 = planned 24 + 쌍둥이 16). 정본은 **디스크의 잡 폴더**다:
+    #     run_job.sh 가 있는 폴더 하나 = 던지는 단위 하나.
     planned = man.get("planned") or {}
+    found = sorted(str(q.parent.relative_to(root))
+                   for q in root.rglob("run_job.sh") if q.is_file())
     n_jobs = man.get("n_jobs")
-    if n_jobs is not None and len(planned) != n_jobs:
-        bad.append(f"MANIFEST 자기모순 — n_jobs {n_jobs} vs planned {len(planned)}")
-    if expect_jobs is not None and len(planned) != expect_jobs:
-        bad.append(f"잡 수가 기대와 다르다 — 기대 {expect_jobs} vs planned {len(planned)}")
+    if n_jobs is not None and len(found) != n_jobs:
+        bad.append(f"MANIFEST 의 n_jobs {n_jobs} vs 실제 잡 폴더 {len(found)}")
+    if expect_jobs is not None and len(found) != expect_jobs:
+        bad.append(f"잡 수가 기대와 다르다 — 기대 {expect_jobs} vs 실제 {len(found)}")
+    miss_plan = [k for k in planned if k not in set(found)]
+    if miss_plan:
+        bad.append(f"계획됐는데 폴더가 없는 잡 {len(miss_plan)}건: {miss_plan[:5]}")
     NEED = ("run_job.sh", "POTCAR_ASSEMBLE.sh", "job.json", "POSCAR")
-    nojob, nofile = [], []
-    for k in sorted(planned):
+    nofile = []
+    for k in found:                      # ★ planned 가 아니라 **전 잡**을 본다
         jd = root / k
-        if not jd.is_dir():
-            nojob.append(k); continue
         for f in NEED:
             if not (jd / f).is_file():
                 nofile.append(f"{k}/{f}")
@@ -6171,8 +6178,6 @@ def verify_bundle(root, expect_jobs=None) -> int:
         if not any((jd / ph / "INCAR").is_file()
                    for ph in ("pre", "relax", "static", "dense", "static_pin")):
             nofile.append(f"{k}/<상>/INCAR")
-    if nojob:
-        bad.append(f"계획됐는데 폴더가 없는 잡 {len(nojob)}건: {nojob[:5]}")
     if nofile:
         bad.append(f"잡에 필수 파일이 없다 {len(nofile)}건: {nofile[:5]}")
 
@@ -6208,7 +6213,8 @@ def verify_bundle(root, expect_jobs=None) -> int:
 
     # ── 기록용 (제출 이력에 그대로 붙일 것) ─────────────────────────────────
     print(f"■ 번들 {root}")
-    print(f"  잡 {len(planned)} · 배포파일 {len(fh)} · 해시확인 {len(fh) - len(missing)}")
+    print(f"  잡 {len(found)} (planned {len(planned)} + 쌍둥이 등 {len(found) - len(planned)})"
+          f" · 배포파일 {len(fh)} · 해시확인 {len(fh) - len(missing)}")
     print(f"  candidate_set : {man.get('candidate_set', '(없음)')}")
     print(f"  emitted_roles : {man.get('emitted_basin_roles', man.get('emitted_roles', '(없음)'))}")
     print(f"  fragments     : {man.get('fragments', '(없음)')}")
@@ -6247,18 +6253,27 @@ def _selftest_verify() -> int:
         print(("  ✔ " if c else "  ✘ ") + m)
 
     def build(d: Path) -> Path:
-        """최소 번들 — verify 는 물리를 안 보므로 파일 구조만 있으면 된다."""
+        """최소 번들 — verify 는 물리를 안 보므로 파일 구조만 있으면 된다.
+
+        ★ **잡 둘 중 하나는 D3-off 쌍둥이**로 만든다: `files_sha256` 에는 있지만
+          `planned` 에는 **없다**. 실물 번들이 정확히 그 모양이고(생성기가 쌍둥이에
+          `plan()` 을 안 부른다), 2026-08-29 에 이 검사가 그걸 자기모순으로 오진해
+          멀쩡한 40잡 번들의 제출을 막았다. 양성 케이스가 그 구조를 담아야 재발을 막는다.
+        """
         root = d / "bundle_v0"
-        jd = root / "refs" / "clean_slab__pm1"
-        (jd / "static").mkdir(parents=True)
-        (jd / "POSCAR").write_text("t\n1.0\n5 0 0\n0 5 0\n0 0 5\nLi\n1\nDirect\n0 0 0\n")
-        (jd / "run_job.sh").write_text("#!/bin/sh\necho run\n")
-        (jd / "POTCAR_ASSEMBLE.sh").write_text("cat Li > POTCAR\n")
-        (jd / "job.json").write_text('{"species_order": ["Li"]}')
-        (jd / "static" / "INCAR").write_text("ENCUT = 520\n")
-        (jd / "static" / "KPOINTS").write_text("a\n0\nGamma\n1 1 1\n0 0 0\n")
+        for name in ("refs/clean_slab__pm1", "refs/clean_slab__pm1__d3off"):
+            jd = root / name
+            (jd / "static").mkdir(parents=True)
+            (jd / "POSCAR").write_text("t\n1.0\n5 0 0\n0 5 0\n0 0 5\nLi\n1\nDirect\n0 0 0\n")
+            (jd / "run_job.sh").write_text("#!/bin/sh\necho run\n")
+            (jd / "POTCAR_ASSEMBLE.sh").write_text("cat Li > POTCAR\n")
+            (jd / "job.json").write_text('{"species_order": ["Li"]}')
+            (jd / "static" / "INCAR").write_text(
+                "ENCUT = 520\n" + ("" if name.endswith("d3off") else "IVDW = 11\n"))
+            (jd / "static" / "KPOINTS").write_text("a\n0\nGamma\n1 1 1\n0 0 0\n")
         (root / "analyze_results.py").write_text("#!/usr/bin/env python3\n")
-        man = {"n_jobs": 1, "planned": {"refs/clean_slab__pm1": {"phases": ["static"]}},
+        # n_jobs 2 = planned 1 + 쌍둥이 1 — 이것이 정상이다
+        man = {"n_jobs": 2, "planned": {"refs/clean_slab__pm1": {"phases": ["static"]}},
                "candidate_set": "selftest", "fragments": ["none"],
                "generated_argv": ["--selftest"], "generated_utc": "1970-01-01T00:00:00Z",
                "submission": {"cores_per_job": 48, "max_concurrency": 8}}
@@ -6281,8 +6296,10 @@ def _selftest_verify() -> int:
     with tempfile.TemporaryDirectory() as d:
         d = Path(d)
         r = build(d / "p")
-        chk(verify_bundle(r) == 0, "양성: 갓 만든 번들은 통과")
-        chk(verify_bundle(r, expect_jobs=1) == 0, "양성: --expect_jobs 일치")
+        chk(verify_bundle(r) == 0,
+            "양성: planned(1) ⊂ 실물 잡(2, D3-off 쌍둥이 포함) 은 정상 — 자기모순 아님")
+        chk(verify_bundle(r, expect_jobs=2) == 0,
+            "양성: --expect_jobs 는 **실물 잡 수**와 맞춘다 (planned 가 아니라)")
         chk(verify_bundle(r, expect_jobs=40) == 1,
             "⛔음성: 잡 수가 기대와 다르면 차단 (40잡 번들에 10잡을 던지는 사고)")
 
@@ -6308,6 +6325,11 @@ def _selftest_verify() -> int:
         r = build(d / "n5")
         shutil.rmtree(r / "refs" / "clean_slab__pm1"); rezip(r)
         chk(verify_bundle(r) == 1, "⛔음성: 계획된 잡 폴더가 통째로 없으면 차단")
+
+        r = build(d / "n5b")
+        shutil.rmtree(r / "refs" / "clean_slab__pm1__d3off"); rezip(r)
+        chk(verify_bundle(r) == 1,
+            "⛔음성: **쌍둥이**가 사라져도 차단 — planned 에 없다고 안 보면 D3 분해가 통째로 죽는다")
 
         r = build(d / "n6")
         (r / "NOTE.txt").write_text("손으로 끼워 넣은 파일\n")     # zip 은 그대로 둔다

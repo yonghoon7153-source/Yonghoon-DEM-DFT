@@ -1234,6 +1234,197 @@ def _freeze_mask(slab_n: int, slab: Atoms, freeze_frac: float):
     return FixAtoms(indices=idx), len(idx), float(zcut)
 
 
+# ─────────────────────────────────────────────────────────────────────────────
+# clean slab provenance 재현 시험 (회신 X P0-5 / M1) — 2026-08-29
+# ─────────────────────────────────────────────────────────────────────────────
+def _clean_probe_verdict(runs, ref, cell, tol_A: float, tol_eV: float):
+    """재현 판정 — **이 함수가 P0-5 의 판정 로직 전부**다 (그래서 selftest 가 여기를 친다).
+
+    runs: [{"E_eV": float, "pos": (N,3)}] — 완전히 같은 입력의 독립 재실행
+    ref : 비교 기준 좌표 (없으면 None) — 번들이 실제로 쓴 `_clean_slab.vasp`
+
+    반환: (verdict, detail).  verdict 는 넷 중 하나 —
+      REPRODUCIBLE            반복끼리 tol 안 · 기준과도 tol 안
+      NONDETERMINISTIC        **반복끼리** 어긋난다 → 동결기하라 부를 수 없다
+      REF_MISMATCH            반복은 일치하나 기준과 다르다 → 번들 기하가 이 설정 산물이 아니다
+      NO_REFERENCE            기준 파일이 없어 대조 불가 (판정 아님)
+    """
+    det = {"n_runs": len(runs), "tol_A": tol_A, "tol_eV": tol_eV}
+    if len(runs) < 2:
+        return "NONDETERMINISTIC", {**det, "why": "재실행이 2회 미만 — 재현을 시험하지 않았다"}
+    # ① 반복끼리
+    pair = []
+    for i in range(1, len(runs)):
+        r, m = _pbc_rmsd(runs[0]["pos"], runs[i]["pos"], cell, with_max=True)
+        pair.append({"vs_run0_rmsd_A": round(r, 6), "vs_run0_maxdisp_A": round(m, 6),
+                     "dE_eV": round(runs[i]["E_eV"] - runs[0]["E_eV"], 8)})
+    det["repeats"] = pair
+    worst = max(p["vs_run0_maxdisp_A"] for p in pair)
+    worst_e = max(abs(p["dE_eV"]) for p in pair)
+    if worst > tol_A or worst_e > tol_eV:
+        return "NONDETERMINISTIC", {**det, "why": (
+            f"같은 입력의 재실행이 최대 {worst:.4f} Å · {worst_e:.6f} eV 어긋난다 "
+            f"(허용 {tol_A} Å · {tol_eV} eV) — 이 기하는 reproducible frozen geometry 가 아니다")}
+    # ② 기준과
+    if ref is None:
+        return "NO_REFERENCE", {**det, "why": "대조할 _clean_slab.vasp 가 없다 — 재현성만 확인했다"}
+    r, m = _pbc_rmsd(ref, runs[0]["pos"], cell, with_max=True)
+    det["vs_reference"] = {"rmsd_A": round(r, 6), "maxdisp_A": round(m, 6)}
+    if m > tol_A:
+        return "REF_MISMATCH", {**det, "why": (
+            f"반복은 일치하는데 번들이 쓴 기하와 최대 {m:.4f} Å 다르다 — 번들의 "
+            f"`_clean_slab.vasp` 는 지금 설정의 산물이 아니다")}
+    return "REPRODUCIBLE", det
+
+
+def clean_probe(a, slab, calc, FIRE) -> int:
+    """`--clean_probe N` — clean slab 이완을 **완전히 같은 입력으로 N 회** 돌려 비교한다.
+
+    왜 (회신 X P0-5 · 우리 M1): 2026-08-29 재이완이 `_clean_slab.vasp` 를 다시 썼고
+    8월 11일 판(`daf71160`)과 값이 달라졌다(`d5f18feb`). **같은 모델·task 인데 왜
+    달라졌는지 확인하지 않았다.** 원인을 모르는 채로는 reproducible frozen geometry
+    라 부를 수 없고, 그 위에 올린 50잡 전부의 provenance 가 같이 흔들린다.
+
+    회신 X 가 실행 전에 기록하라고 한 것을 그대로 남긴다 — 시작 POSCAR·constraint
+    해시 · UMA checkpoint/task/device/dtype · FIRE 설정·fmax·steps·최종 force ·
+    PBC 정렬 RMSD/최대변위 · **완전히 같은 입력의 독립 재실행 2회**.
+
+    이 도구가 **못 하는 것**
+      · **원인을 말하지 못한다.** 재현되는지 아닌지만 가른다. NONDETERMINISTIC 이
+        나와도 그게 GPU 비결정성인지 dtype 인지 라이브러리 판인지는 별건이다.
+      · 8월 11일 판을 재현하지 못한다 — 그때의 코드·환경이 남아 있지 않다.
+        지금 설정이 자기 자신을 재현하는가만 본다.
+      · UMA 호출 자체는 selftest 로 검증되지 않는다 (GPU 필요). selftest 가 치는 것은
+        **판정 로직**(_clean_probe_verdict)이고, 그 경계는 여기 적은 그대로다.
+    """
+    import numpy as _np
+    from ase.io import read as _read, write as _write
+    n_rep = int(a.clean_probe)
+    if n_rep < 2:
+        sys.exit("⛔ --clean_probe 는 2 이상 — 1회는 재현 시험이 아니다")
+    ff = float(a.freeze[0]) if a.freeze else 0.85
+    out = Path(a.out)
+    nslab = len(slab)
+    cons, nfix, zcut = _freeze_mask(nslab, slab, ff)
+
+    # 시작 상태의 해시 — "무엇을 재현했나" 가 경로가 아니라 내용으로 남게
+    start_pos = slab.get_positions().copy()
+    h_start = hashlib.sha256(_np.ascontiguousarray(start_pos).tobytes()).hexdigest()
+    h_cons = hashlib.sha256(
+        _np.ascontiguousarray(_np.array(sorted(cons.get_indices()))).tobytes()).hexdigest()
+
+    runs = []
+    for k in range(n_rep):
+        cs = slab.copy(); cs.set_constraint(cons); cs.calc = calc
+        log = out / f"_clean_probe_f{ff:.2f}_run{k}.log"
+        nsteps = None
+        if ff < 1.0:
+            opt = FIRE(cs, logfile=str(log))
+            opt.run(fmax=a.fmax, steps=a.steps)
+            nsteps = int(getattr(opt, "nsteps", -1))
+        e = float(cs.get_potential_energy())
+        f = cs.get_forces()
+        # 고정 원자의 힘은 판정에 안 넣는다 — constraint 가 0 으로 만든다
+        free = [i for i in range(nslab) if i not in set(cons.get_indices())]
+        fmax_fin = float(_np.linalg.norm(f[free], axis=1).max()) if free else 0.0
+        runs.append({"E_eV": e, "pos": cs.get_positions().copy(),
+                     "fmax_final_eV_A": fmax_fin, "n_steps": nsteps})
+        print(f"  run{k}: E = {e:.8f} eV · fmax(free) = {fmax_fin:.5f} · steps = {nsteps}",
+              flush=True)
+
+    ref_path = Path(a.clean_ref) if getattr(a, "clean_ref", None) else (
+        out / "sdcp_neutral" / f"relax_f{ff:.2f}" / "_clean_slab.vasp")
+    ref = None
+    if ref_path.is_file():
+        ra = _read(str(ref_path))
+        if len(ra) == nslab:
+            ref = ra.get_positions()
+        else:
+            print(f"  ⚠ 기준 {ref_path} 의 원자수 {len(ra)} ≠ {nslab} — 대조 생략")
+
+    verdict, detail = _clean_probe_verdict(
+        runs, ref, slab.cell.array, tol_A=a.clean_tol_A, tol_eV=a.clean_tol_eV)
+
+    try:
+        import torch as _torch
+        dtype = str(getattr(_torch, "get_default_dtype", lambda: "?")())
+        tver = _torch.__version__
+    except Exception:                                        # noqa: BLE001
+        dtype, tver = "?", "?"
+    rec = {
+        "schema": "clean_slab_provenance/v1",
+        "질문": "같은 입력으로 다시 이완하면 같은 clean slab 이 나오나 (회신 X P0-5)",
+        "verdict": verdict, "detail": detail,
+        "freeze_frac": ff, "n_fixed": nfix, "z_cut_A": round(zcut, 3),
+        "start_positions_sha256": h_start, "constraint_indices_sha256": h_cons,
+        "uma": {"model": a.model, "task": a.task, "device": a.device,
+                "torch": tver, "default_dtype": dtype},
+        "fire": {"fmax": a.fmax, "steps": a.steps},
+        "runs": [{"E_eV": r["E_eV"], "fmax_final_eV_A": r["fmax_final_eV_A"],
+                  "n_steps": r["n_steps"]} for r in runs],
+        "reference_path": str(ref_path), "reference_found": ref is not None,
+        "⚠": ("이 기록은 **지금 설정이 자기 자신을 재현하는가**만 답한다. "
+              "2026-08-11 판(daf71160)과 달라진 원인은 여기서 안 나온다."),
+    }
+    op = out / f"_clean_slab_provenance_f{ff:.2f}.json"
+    _atomic_json(op, rec)
+    _write(str(out / f"_clean_probe_f{ff:.2f}_run0.vasp"),
+           slab.__class__(numbers=slab.numbers, positions=runs[0]["pos"],
+                          cell=slab.cell, pbc=True), format="vasp", direct=True)
+    print(f"\n■ clean slab provenance: **{verdict}**")
+    print(f"  {detail.get('why', '반복·기준 모두 허용 안')}")
+    print(f"  → {op}")
+    return 0 if verdict in ("REPRODUCIBLE", "NO_REFERENCE") else 1
+
+
+def cmd_clean_probe_selftest(a) -> int:
+    """판정 로직의 양성 1 + **음성 4**. UMA 는 안 부른다 (GPU 없이 돌아야 한다).
+
+    ⚠ 이것이 보증하는 범위: `_clean_probe_verdict` 의 분기와 PBC RMSD 산술.
+    UMA 이완 자체·GPU 비결정성은 **검증하지 않는다** — 그건 실기로만 확인된다.
+    """
+    import numpy as _np
+    ok = [0, 0]
+
+    def chk(c, m):
+        ok[0] += 1; ok[1] += bool(c)
+        print(("  ✔ " if c else "  ✘ ") + m)
+
+    cell = _np.diag([10.0, 10.0, 30.0])
+    base = _np.array([[1.0, 1.0, 5.0], [3.0, 2.0, 5.0], [5.0, 3.0, 5.0]])
+    R = lambda p, e=0.0: {"E_eV": -100.0 + e, "pos": p}      # noqa: E731
+
+    v, _ = _clean_probe_verdict([R(base), R(base.copy())], base, cell, 0.01, 1e-4)
+    chk(v == "REPRODUCIBLE", "양성: 같은 좌표·같은 에너지면 REPRODUCIBLE")
+
+    v, d = _clean_probe_verdict([R(base)], base, cell, 0.01, 1e-4)
+    chk(v == "NONDETERMINISTIC" and "2회 미만" in d["why"],
+        "⛔음성: 재실행 1회는 재현 시험이 아니다 (통과시키면 P0-5 를 안 본 것)")
+
+    moved = base.copy(); moved[1, 0] += 0.05
+    v, _ = _clean_probe_verdict([R(base), R(moved)], base, cell, 0.01, 1e-4)
+    chk(v == "NONDETERMINISTIC", "⛔음성: 반복끼리 0.05 Å 어긋나면 차단")
+
+    v, _ = _clean_probe_verdict([R(base), R(base.copy(), e=0.01)], base, cell, 0.01, 1e-4)
+    chk(v == "NONDETERMINISTIC",
+        "⛔음성: 좌표가 같아도 **에너지**가 갈리면 차단 (좌표만 보면 놓친다)")
+
+    v, _ = _clean_probe_verdict([R(moved), R(moved.copy())], base, cell, 0.01, 1e-4)
+    chk(v == "REF_MISMATCH",
+        "⛔음성: 반복은 일치하는데 번들 기하와 다르면 REF_MISMATCH (재현성과 다른 병)")
+
+    # PBC — 경계를 넘어간 좌표를 '10 Å 이동' 으로 읽으면 안 된다
+    wrap = base.copy(); wrap[0, 0] += 10.0
+    r, m = _pbc_rmsd(base, wrap, cell, with_max=True)
+    chk(m < 1e-9, "PBC 최소이미지: 격자벡터만큼의 이동은 변위 0 으로 읽는다")
+
+    v, d = _clean_probe_verdict([R(base), R(base.copy())], None, cell, 0.01, 1e-4)
+    chk(v == "NO_REFERENCE", "기준 파일이 없으면 판정이 아니라 NO_REFERENCE 로 남긴다")
+
+    print(f"  clean_probe selftest {ok[1]}/{ok[0]}")
+    return 0 if ok[0] == ok[1] else 1
+
+
 def cmd_score(a) -> int:
     """UMA rigid SP / relax. **재개 가능** — 완료된 JSON 은 건너뛴다."""
     _guard_gpu(allow_concurrent=getattr(a, "allow_concurrent_pwx", False))
@@ -1260,6 +1451,10 @@ def cmd_score(a) -> int:
     print(f"프로토콜 {proto['fingerprint']} · {a.model}/{a.task} · stage={a.stage} "
           f"· freeze={getattr(a, 'freeze', None)} · gate {proto['gate_version']}")
     clean_cache: Dict[float, Any] = {}      # freeze → (e_slab, clean, cons, nfix, zcut) — 조각과 무관
+
+    # ★ clean slab provenance 만 보고 끝낸다 (조각 아틀라스를 안 건드린다)
+    if getattr(a, "clean_probe", 0):
+        return clean_probe(a, slab, calc, FIRE)
 
     def sp(atoms: Atoms) -> float:
         atoms = atoms.copy(); atoms.calc = calc
@@ -1524,16 +1719,24 @@ def basin_descriptor(at, nslab, cut=BASIN_CONTACT_CUT):
             "tilt_deg": round(tilt, 1), "heavy_xyz": hx, "n_heavy": len(heavy)}
 
 
-def _pbc_rmsd(a, b, cell):
-    """무거운원자 RMSD (최소이미지). 슬랩 프레임이 같으므로 회전맞춤은 안 한다."""
+def _pbc_rmsd(a, b, cell, with_max: bool = False):
+    """무거운원자 RMSD (최소이미지). 슬랩 프레임이 같으므로 회전맞춤은 안 한다.
+
+    with_max=True 면 `(RMSD, 최대변위)` 를 낸다 — 재현성 판정에는 평균보다
+    **최대변위**가 옳다. 원자 200개 중 하나만 0.5 Å 튀어도 RMSD 는 0.035 로
+    묻히지만, 그건 다른 기하다 (clean slab provenance, 회신 X P0-5).
+    기본 반환형은 그대로라 기존 호출부(dedup_basins)는 영향받지 않는다.
+    """
     import numpy as np
     if a.shape != b.shape:
-        return float("inf")
+        return (float("inf"), float("inf")) if with_max else float("inf")
     d = a - b
     f = np.linalg.solve(np.array(cell).T, d.T).T
     f -= np.round(f)
     d = f @ np.array(cell)
-    return float(np.sqrt((d ** 2).sum(1).mean()))
+    r = np.linalg.norm(d, axis=1)
+    rmsd = float(np.sqrt((r ** 2).mean()))
+    return (rmsd, float(r.max())) if with_max else rmsd
 
 
 def dedup_basins(poses, rmsd_tol=BASIN_RMSD_TOL, height_tol=BASIN_HEIGHT_TOL):
@@ -2669,6 +2872,8 @@ def build_parser() -> argparse.ArgumentParser:
     sub.add_parser("sites", help="표면 자리 열거 + 대표 동치성 검사")
     sub.add_parser("bond-limits", help="결합 임계표와 실측치")
     sub.add_parser("selftest", help="게이트 회귀시험 — 일부러 나쁜 구조를 넣어 발동 확인")
+    sub.add_parser("clean-probe-selftest",
+                   help="clean slab 재현 **판정 로직**의 회귀시험 (GPU 불필요)")
 
     p = sub.add_parser("atlas", help="자세 아틀라스 생성")
     p.add_argument("--frag", nargs="*", default=None, help=f"기본: {' '.join(PRIMARY)}")
@@ -2708,6 +2913,17 @@ def build_parser() -> argparse.ArgumentParser:
                         "VRAM 여유가 8 GiB 미만이면 그래도 막는다. CPU 빌드 pw.x 는 원래 안 막는다")
     p.add_argument("--top-per-site", type=int, default=2)
     p.add_argument("--pairs", type=int, default=5, help="강제로 살릴 Li/Ni 대조쌍 수")
+    # ── clean slab provenance (회신 X P0-5) ──────────────────────────────────
+    p.add_argument("--clean_probe", type=int, default=0, metavar="N",
+                   help="조각을 돌지 않고 **clean slab 이완만 N 회** 반복해 재현성을 "
+                        "본다 (N≥2). 회신 X P0-5 — d5f18feb 가 daf71160 과 달라진 "
+                        "원인을 모르면 reproducible frozen geometry 라 부를 수 없다")
+    p.add_argument("--clean_ref", default=None,
+                   help="대조할 _clean_slab.vasp (기본: <out>/sdcp_neutral/relax_f<ff>/)")
+    p.add_argument("--clean_tol_A", type=float, default=1e-3,
+                   help="재현 판정 최대변위 허용 (Å)")
+    p.add_argument("--clean_tol_eV", type=float, default=1e-5,
+                   help="재현 판정 에너지 허용 (eV)")
 
     p = sub.add_parser("basins", help="basin 중복제거 + calibration/audit 선정 (회신 W 2~4)")
     p.add_argument("--out", required=True, help="스크린 디렉터리")
@@ -2756,6 +2972,7 @@ def main() -> int:
         "inputs": cmd_inputs, "sites": cmd_sites, "atlas": cmd_atlas,
         "gate": cmd_gate, "verdict": cmd_verdict, "crosscheck": cmd_crosscheck,
         "bond-limits": cmd_bond_limits, "selftest": cmd_selftest, "score": cmd_score,
+        "clean-probe-selftest": cmd_clean_probe_selftest,
         "bundle": cmd_bundle, "regate": cmd_regate, "dft-handoff": cmd_dft_handoff,
         "basins": cmd_basins,
     }[a.cmd](a)
