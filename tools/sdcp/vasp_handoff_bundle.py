@@ -839,8 +839,13 @@ def _write_potcar_asm(jd: Path, species_order: List[str]) -> None:
         '  [ -f "$POTCAR_ALLOWLIST" ] || { echo "⛔ allowlist 파일 없음: $POTCAR_ALLOWLIST"; exit 1; }\n'
         '  for t in $srcsha; do\n'
         '    v="${t%%:*}"; h="${t#*:}"\n'
-        '    grep -q "$h" "$POTCAR_ALLOWLIST" || {\n'
-        '      echo "⛔ $v 의 SHA256 이 allowlist 에 없습니다: $h"; exit 1; }\n'
+        '    # ★ 해시만 보면 안 된다 — **variant 와 묶여** 있어야 한다.\n'
+        '    #   Li_sv 와 Ni_pv 의 파일이 서로 바뀐 트리는 두 해시가 모두 목록에\n'
+        '    #   있으므로 해시 존재만으로는 통과한다 (2026-08-29 자체 검토).\n'
+        '    grep -E "^$h[[:space:]].*(^|[/[:space:]])$v(/|[[:space:]]|$)" \\\n'
+        '         "$POTCAR_ALLOWLIST" > /dev/null || {\n'
+        '      echo "⛔ $v 가 allowlist 의 그 해시와 묶여 있지 않습니다"; echo "   $h";\n'
+        '      echo "   (목록 형식: sha256sum \\$PP/<variant>/POTCAR 출력 그대로)"; exit 1; }\n'
         '  done\n'
         '  echo "  ✔ allowlist 대조 통과 ($POTCAR_ALLOWLIST)"\n'
         'elif [ "${POTCAR_ALLOWLIST_WAIVED:-0}" = "1" ]; then\n'
@@ -2140,6 +2145,78 @@ def selftest_k() -> int:
         f"⛔음성: 부호가 같아도 **크기**가 벌어지면 동일 판정 안 한다 "
         f"(RMS {_dd3['moment_rms_muB']} > {MOM_RMS_TOL})")
 
+    # ── 닫힘 조건 C1 · C3 (회신 AA P0-4 — 코드로 낸다) ────────────────────
+    def _J(kind, **kw):
+        m = {"kind": kind, "d3": "on"}; m.update(kw)
+        return {"ok": True, "gates": [], "meta": m,
+                "geom": {"magnetic": {"realized_basin_id": "B"}}}
+
+    _en3, _jb3 = {}, {}
+    _CS = "refs/clean_slab__" + SEED_MAIN
+    _jb3[_CS] = _J("clean_ref", seed=SEED_MAIN); _en3[_CS] = -900.0
+    _jb3[_CS + "__d3off"] = _J("clean_ref", seed=SEED_MAIN, d3="off", d3_twin_of=_CS)
+    _en3[_CS + "__d3off"] = -899.0                    # d_slab = -1.0
+    for _f, _em, _dm in (("sdcp_neutral", -200.0, -0.5), ("ptfe_c10", -100.0, -0.2)):
+        _mk = "refs/mol__%s__box24" % _f
+        _jb3[_mk] = _J("mol_ref", fragment=_f); _en3[_mk] = _em
+        _jb3[_mk + "__d3off"] = _J("mol_ref", fragment=_f, d3="off", d3_twin_of=_mk)
+        _en3[_mk + "__d3off"] = _em - _dm             # d_mol = _dm
+        for _i in range(4):
+            _k = "prospective/%s__b%02d__%s" % (_f, _i, SEED_MAIN)
+            _jb3[_k] = _J("prospective_pose", fragment=_f, seed=SEED_MAIN,
+                          basin_id="b%02d" % _i, role="calibration",
+                          uma_E_pose_eV=0.10 + 0.01 * _i)
+            _en3[_k] = -900.0 + _em + (-1.20 - 0.01 * _i)   # 잔차 range = 0.06
+            _dcx = -2.0 if _f == "sdcp_neutral" else -1.0
+            _jb3[_k + "__d3off"] = _J("prospective_pose", fragment=_f, seed=SEED_MAIN,
+                                      basin_id="b%02d" % _i, d3="off", d3_twin_of=_k)
+            _en3[_k + "__d3off"] = _en3[_k] - _dcx
+    _E3 = lambda j: _en3.get(j)                       # noqa: E731
+    _emol3 = {"sdcp_neutral": -200.0, "ptfe_c10": -100.0}
+    _F3 = ["sdcp_neutral", "ptfe_c10"]
+
+    #   ★ manifest 를 준다 — 기대 자세 수의 정본이다 (회수분에서 세지 않는다)
+    _man3 = {"planned": {k: {} for k in _jb3
+                         if k.startswith("prospective/") and k.endswith(SEED_MAIN)}}
+    _c1 = closure_C1(_man3, _jb3, _E3, _emol3, _F3)
+    chk(all(abs(_c1["by_frag"][f]["S_f_eV"] - 0.06) < 1e-6 for f in _F3),
+        "C1: S_f 가 **range** 로 계산된다 (0.06) — 실제 %s"
+        % [round(_c1["by_frag"][f]["S_f_eV"], 4) for f in _F3])
+    _jb_p = dict(_jb3); _jb_p.pop("prospective/sdcp_neutral__b03__" + SEED_MAIN)
+    chk(closure_C1(_man3, _jb_p, _E3, _emol3, _F3)["by_frag"]["sdcp_neutral"]["verdict"]
+        == "unresolved",
+        "⛔음성 C1: 자세 하나가 빠지면 **unresolved** — 남은 것으로 range 를 내면 "
+        "표본이 줄어 통과 쪽으로 편향된다")
+    _kb = "prospective/ptfe_c10__b01__" + SEED_MAIN
+    _jb_b = dict(_jb3)
+    _jb_b[_kb] = dict(_jb3[_kb], geom={"magnetic": {"realized_basin_id": "OTHER"}})
+    chk(closure_C1(_man3, _jb_b, _E3, _emol3, _F3)["by_frag"]["ptfe_c10"]["verdict"]
+        == "unresolved",
+        "⛔음성 C1: clean slab 과 basin 이 다른 자세가 있으면 unresolved")
+
+    _c3 = closure_C3({}, _jb3, _E3, _F3)
+    chk(abs(_c3["D_eV"] - (-0.7)) < 1e-6,
+        "C3: D = mean(δ_SDCP) − mean(δ_c10) = −0.7 (실제 %s)" % _c3.get("D_eV"))
+    chk("미해결" in _c3["verdict"] and "부호" in _c3["verdict"],
+        "⛔음성 C3: D 가 음수인데 설명 대상(+0.90)은 양수 → **부호 게이트**로 미해결 "
+        "(절댓값이면 0.78 로 '설명' 오판했다)")
+    _en3p = dict(_en3)
+    for _i in range(4):
+        for _f, _d in (("sdcp_neutral", 2.0), ("ptfe_c10", 1.0)):
+            _k = "prospective/%s__b%02d__%s" % (_f, _i, SEED_MAIN)
+            _en3p[_k + "__d3off"] = _en3p[_k] - _d      # d_cx = E_on − E_off = +_d
+    _c3b = closure_C3({}, _jb3, lambda j: _en3p.get(j), _F3)
+    chk(_c3b["D_eV"] > 0 and _c3b["ratio"] >= 0.70 and "수치상" in _c3b["verdict"],
+        "C3 양성: 부호가 같고 비율 %s ≥ 0.70 → '수치상 설명'(인과 아님)"
+        % _c3b.get("ratio"))
+    _kx = "prospective/sdcp_neutral__b00__%s__d3off" % SEED_MAIN
+    _jb_x = dict(_jb3)
+    _jb_x[_kx] = dict(_jb3[_kx], geom={"magnetic": {"realized_basin_id": "Z"}})
+    chk(closure_C3({}, _jb_x, _E3, _F3)["by_frag"]["sdcp_neutral"]["verdict"]
+        == "unresolved",
+        "⛔음성 C3: on/off 가 다른 realized basin 이면 unresolved "
+        "(그 차이는 D3 기여가 아니다)")
+
     # guard band
     D = 0.030
     chk(apply_k_guard("ROBUST", 0.005, "K_DIRECTLY_CHECKED", D).startswith("UNRESOLVED_SIGN"),
@@ -2673,6 +2750,194 @@ PREREG_ROUND_EV = 0.01            # 보고 반올림
 PREREG_SELECTOR_AGREE_EV = 0.05   # 두 selector 차가 이 미만이면 "시험한 selector 간 일치"
 
 
+#: ⚠ 분석기는 **번들 안에 단독 배포**된다 — 생성기 상수를 못 본다. 판정 branch 를
+#:   여기 따로 박는다 (문자열이 갈라지면 C1·C3 가 조용히 빈다).
+SEED_MAIN = "afm2424_pm1"
+
+#: 닫힘 조건 문턱 — db/properties/sdcp_stageA_closure_conditions_2026_08_29.json
+#: 에 **DFT 0잡 시점**으로 등록된 값. 코드와 문서가 갈라지면 문서가 정본이다.
+C1_S_TOL_EV = 0.050          # 조각 내 잔차 range 허용
+C3_REF_GAP_EV = 0.90         # 설명 대상 — 관측된 조각 간 UMA 오프셋 차등
+C3_HI, C3_LO = 0.70, 0.30    # 채택 / 기각 비율
+
+
+def _pick(jobs, **want):
+    """구조화 필드로 잡을 고른다 (이름 파싱 금지)."""
+    out = []
+    for jn, jr in jobs.items():
+        m = jr.get("meta") or {}
+        if all(m.get(k) == v for k, v in want.items()):
+            out.append(jn)
+    return sorted(out)
+
+
+def _twin_of(jobs, parent_key):
+    """그 잡의 D3-off 쌍둥이 키. `d3_twin_of` 로만 찾는다 (접미어 추측 금지)."""
+    for jn, jr in jobs.items():
+        if (jr.get("meta") or {}).get("d3_twin_of") == parent_key:
+            return jn
+    return None
+
+
+def closure_C1(man, jobs, E, emol, frags):
+    """C1 — **선택된 네 자세에서의 국소 calibration 일관성**.
+
+      e_{f,p} = E_ads^DFT(f,p) − E_ads^UMA(f,p)
+      S_f     = max_p e − min_p e          ← **range 다 (SD 아님)**
+
+    branch 는 pm1 · D3-on 만. 조각당 사전 지정 4자세 **전부**가 있어야 하고
+    하나라도 빠지면 `unresolved` — 남은 자세로 계산하면 표본이 줄어 range 가
+    자동으로 작아져 **통과 쪽으로 편향된다**.
+
+    ⛔ 이 값이 말하지 않는 것: 후보 전체의 selector 검증이 **아니다.** UMA 가
+    고른 자세만 DFT 로 봤으므로 통과는 독립 검증이 아니다. 일반 selector 주장은
+    sealed audit 이나 UMA 순위를 가로지르는 사전 층화 holdout 이 있어야 한다.
+    """
+    res = {"schema": "closure_C1/v1", "S_tol_eV": C1_S_TOL_EV,
+           "⚠": "선택된 네 자세의 국소 일관성. selector 일반 검증이 아니다",
+           "by_frag": {}}
+    slabs = _pick(jobs, kind="clean_ref", seed=SEED_MAIN, d3="on")
+    if len(slabs) != 1:
+        res["verdict"] = f"unresolved — clean slab(pm1·D3-on)이 {len(slabs)}개"
+        return res
+    e_slab = E(slabs[0])
+    slab_rb = (((jobs[slabs[0]].get("geom") or {}).get("magnetic") or {})
+               .get("realized_basin_id"))
+    for f in frags:
+        poses = _pick(jobs, kind="prospective_pose", fragment=f,
+                      seed=SEED_MAIN, d3="on")
+        rows, miss = [], []
+        for jn in poses:
+            jr = jobs[jn]
+            m = jr.get("meta") or {}
+            rb = ((jr.get("geom") or {}).get("magnetic") or {}).get("realized_basin_id")
+            ec, um = E(jn), m.get("uma_E_pose_eV")
+            if jr.get("gates") or ec is None or um is None or e_slab is None:
+                miss.append(f"{jn}(게이트/에너지 결측)"); continue
+            if rb is None or (slab_rb is not None and rb != slab_rb):
+                miss.append(f"{jn}(basin 불일치/미판정)"); continue
+            rows.append({"job": jn, "basin": m.get("basin_id"),
+                         "E_ads_DFT_eV": round(ec - e_slab - emol[f], 6),
+                         "E_ads_UMA_eV": round(float(um), 6),
+                         "residual_eV": round(ec - e_slab - emol[f] - float(um), 6)})
+        # ★ 기대 자세 수는 **동결된 manifest** 에서 온다. 회수된 잡에서 세면
+        #   빠진 자세를 영영 못 잡는다 (없으면 기대도 같이 줄어든다).
+        n_want = len([k for k in (man.get("planned") or {})
+                      if k.startswith("prospective/")
+                      and k.rsplit("/", 1)[-1].startswith(f + "__")
+                      and k.endswith(SEED_MAIN)])
+        if not n_want:
+            res["by_frag"][f] = {"verdict": "unresolved",
+                                 "why": "MANIFEST.planned 에 이 조각의 pm1 자세가 없다 "
+                                        "— 기대 자세 수를 회수분에서 세지 않는다"}
+            continue
+        if miss or len(rows) != n_want or not rows:
+            res["by_frag"][f] = {"verdict": "unresolved", "missing": miss,
+                                 "n_used": len(rows), "n_required": n_want,
+                                 "why": "4자세 전부가 있어야 한다 — 부분집합은 range 를 "
+                                        "작게 만들어 통과 쪽으로 편향된다"}
+            continue
+        r = [x["residual_eV"] for x in rows]
+        S = max(r) - min(r)
+        res["by_frag"][f] = {
+            "n": len(rows), "S_f_eV": round(S, 6), "rows": rows,
+            "verdict": ("국소 calibration 일관 (이 네 자세 안에서 잔차 range 가 작다)"
+                        if S <= C1_S_TOL_EV else
+                        "⛔ 국소 일관성 실패 — 선택기를 쓴 근거가 약해진다")}
+    return res
+
+
+def closure_C3(man, jobs, E, frags):
+    """C3 — D3 분해. **부호를 먼저 본다.**
+
+      δ_{f,p} = [E_C,on − E_C,off] − [E_S,on − E_S,off] − [E_M,on − E_M,off]
+      D       = mean_p(δ_SDCP) − mean_p(δ_c10)      ← 부호 있는 값, 산술평균
+
+    D 와 0.90 eV 의 **부호가 같을 때만** 70/30 % 를 적용한다. 절댓값을 쓰면
+    반대 방향 효과도 "설명" 으로 오판한다.
+
+    전제(코드가 확인한다): on/off 두 잡의 POSCAR 가 같고, 같은 realized basin 이며,
+    쌍둥이 연결이 `d3_twin_of` 로 실제로 있어야 한다. 하나라도 깨지면 unresolved.
+
+    ⛔ 허용 문구는 "원인의 70 % 를 증명" 이 아니라 **"이 네 자세에서 관측된
+    0.90 eV 차등을 수치상 70 % 이상 설명"** — 인과가 아니라 수치 분해다.
+    """
+    res = {"schema": "closure_C3/v1", "ref_gap_eV": C3_REF_GAP_EV,
+           "hi": C3_HI, "lo": C3_LO, "by_frag": {}}
+
+    def pair_delta(jn):
+        """[E_on − E_off] — 쌍둥이가 없거나 전제가 깨지면 (None, 사유)."""
+        tw = _twin_of(jobs, jn)
+        if tw is None:
+            return None, f"{jn}: D3-off 쌍둥이 없음"
+        a, b = jobs[jn], jobs[tw]
+        if a.get("gates") or b.get("gates"):
+            return None, f"{jn}: 게이트됨"
+        ea, eb = E(jn), E(tw)
+        if ea is None or eb is None:
+            return None, f"{jn}: 에너지 결측"
+        ra = ((a.get("geom") or {}).get("magnetic") or {}).get("realized_basin_id")
+        rb = ((b.get("geom") or {}).get("magnetic") or {}).get("realized_basin_id")
+        if ra is not None and rb is not None and ra != rb:
+            return None, (f"{jn}: on/off 가 **다른 realized basin** — 그 차이는 "
+                          f"D3 기여가 아니다")
+        return ea - eb, None
+
+    d_slab, why = pair_delta((_pick(jobs, kind="clean_ref", seed=SEED_MAIN,
+                                    d3="on") or [None])[0]) \
+        if _pick(jobs, kind="clean_ref", seed=SEED_MAIN, d3="on") else (None, "clean slab 없음")
+    if d_slab is None:
+        res["verdict"] = f"unresolved — clean slab D3 짝: {why}"
+        return res
+    means = {}
+    for f in frags:
+        mol = [j for j in _pick(jobs, kind="mol_ref", fragment=f, d3="on")
+               if "box24" in j and "nzmag" not in j]
+        if len(mol) != 1:
+            res["by_frag"][f] = {"verdict": "unresolved",
+                                 "why": f"box24 기체 기준이 {len(mol)}개"}
+            continue
+        d_mol, why_m = pair_delta(mol[0])
+        if d_mol is None:
+            res["by_frag"][f] = {"verdict": "unresolved", "why": why_m}
+            continue
+        rows, miss = [], []
+        for jn in _pick(jobs, kind="prospective_pose", fragment=f,
+                        seed=SEED_MAIN, d3="on"):
+            d_cx, why_c = pair_delta(jn)
+            if d_cx is None:
+                miss.append(why_c); continue
+            rows.append({"job": jn, "delta_eV": round(d_cx - d_slab - d_mol, 6)})
+        if miss or not rows:
+            res["by_frag"][f] = {"verdict": "unresolved", "missing": miss,
+                                 "why": "네 자세 중 하나라도 짝이 깨지면 unresolved"}
+            continue
+        m = sum(x["delta_eV"] for x in rows) / len(rows)
+        means[f] = m
+        res["by_frag"][f] = {"n": len(rows), "mean_delta_eV": round(m, 6),
+                             "rows": rows, "d_slab_eV": round(d_slab, 6),
+                             "d_mol_eV": round(d_mol, 6)}
+    sd = next((f for f in means if "sdcp" in f), None)
+    ct = next((f for f in means if f != sd), None)
+    if not (sd and ct):
+        res["verdict"] = "unresolved — 두 조각이 다 필요하다"
+        return res
+    D = means[sd] - means[ct]
+    res["D_eV"] = round(D, 6)
+    res["ratio"] = round(D / C3_REF_GAP_EV, 4)
+    if D * C3_REF_GAP_EV <= 0:
+        res["verdict"] = ("**미해결** — D 의 부호가 설명 대상과 반대다. 절댓값으로 "
+                          "비율을 적용하면 반대 방향 효과를 '설명' 으로 오판한다")
+    elif res["ratio"] >= C3_HI:
+        res["verdict"] = (f"이 네 자세에서 관측된 {C3_REF_GAP_EV} eV 차등을 "
+                          f"**수치상 {res['ratio']:.0%} 설명**한다 (인과가 아니라 분해)")
+    elif res["ratio"] <= C3_LO:
+        res["verdict"] = "분산 기여로는 설명되지 않는다 — 원인은 기체 기준 오차 또는 자기 basin 쪽"
+    else:
+        res["verdict"] = "**미해결** — 어느 것도 채택하지 않는다"
+    return res
+
+
 def _closure_estimand(man, results, E, emol, jobs):
     """사전등록한 조각 간 대비를 **코드로** 계산한다 (회신 V P0-4).
 
@@ -2853,6 +3118,15 @@ def _closure_estimand(man, results, E, emol, jobs):
             "판정": ("seed-insensitive (시험한 자세 안에서)" if jf <= 0.010 else
                      "magnetic-sensitive" if jf <= 0.040 else
                      "⛔ SELECTOR_FAIL — J_f > 40 meV")}
+
+    # ── 닫힘 조건 C1 · C3 — **코드로** 낸다 (회신 AA P0-4 "실행 가능한 estimand")
+    #   primary 가 막혀도 이 둘은 나온다. 손계산으로 넘기면 결과를 보고 식을 고를
+    #   여지가 남고, 그것이 이 캠페인을 여덟 번 물린 경로다.
+    try:
+        out["closure_C1"] = closure_C1(man, jobs, E, emol, frags)
+        out["closure_C3"] = closure_C3(man, jobs, E, frags)
+    except Exception as _e:                                  # noqa: BLE001
+        out["blocks"].append(f"CLOSURE_COND_ERROR({_e!r})")
 
     if out["blocks"]:
         out["verdict"] = "NO_VALUE — blocks 를 해소하기 전에는 단일 X 를 보고하지 않는다"
