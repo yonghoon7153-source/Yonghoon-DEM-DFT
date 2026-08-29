@@ -58,6 +58,7 @@ import re
 import shutil
 import subprocess
 import sys
+import time
 import zipfile
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
@@ -3984,11 +3985,17 @@ def build_bundle(a, ledger: Optional[Dict[str, Any]] = None) -> Path:
             if frag not in man["fragments"]:
                 man["fragments"].append(frag)
             run = Path(a.runs) / frag / f"relax_f{a.freeze:.2f}"
-            picks = list(fr.get("calibration") or []) + list(fr.get("sealed_audit") or [])
+            # ⛔ 회신 X P0-2 — calibration 과 audit 을 **동시에 던지면 안 된다.**
+            #    audit 은 calibration 이 창 W 를 확정한 **뒤에** 봉인을 푼다.
+            #    처음부터 둘을 함께 내면 audit 이 최저가 돼도 "더 낮은 자세를
+            #    찾았다" 로 흡수돼 selector 실패가 사라진다 (회신 X Q6).
+            _roles = tuple(getattr(a, "roles", None)
+                           or ("calibration", "sealed_audit"))
+            picks = [b for r in _roles for b in (fr.get(r) or [])]
             if not picks:
-                bad(f"{frag}: 동결 manifest 에 calibration/audit 이 없다")
+                bad(f"{frag}: 동결 manifest 에 {'/'.join(_roles)} 가 없다")
                 continue
-            print(f"■ {frag}: 동결 후보 {len(picks)}개 "
+            print(f"■ {frag}: 동결 후보 {len(picks)}개 [{','.join(_roles)}] "
                   f"(cal {len(fr.get('calibration') or [])} · "
                   f"audit {len(fr.get('sealed_audit') or [])})")
             for b in picks:
@@ -4264,7 +4271,9 @@ def build_bundle(a, ledger: Optional[Dict[str, Any]] = None) -> Path:
         m = _emit_slab_job(out / rel, clean, len(clean), a.freeze, man["fragments"][0],
                            f"clean slab {sd}", sd,
                            {"kind": "clean_ref" if a.refs else "clean_magnetic_control"},
-                           ledger, zcut=zcut, dense=(a.refs and sd == SEED_MAIN),
+                           ledger, zcut=zcut,
+                           dense=(a.refs and sd == SEED_MAIN
+                                  and not getattr(a, 'no_refs_dense', False)),
                            prescf=not a.no_prescf, single_point=a.single_point, closure=a.closure,
                            kmesh_over=kover)
         slab_metas.append(m)
@@ -4349,6 +4358,13 @@ def build_bundle(a, ledger: Optional[Dict[str, Any]] = None) -> Path:
             jd = inc.parent.parent
             rel = str(jd.relative_to(out))
             if rel.endswith("__d3off"):
+                continue
+            # 회신 X Q1 — 고정기하 D3(zero)는 원자종·기하의 additive correction 이라
+            #   **자기상태에 무관**하다. 두 번째 자기 seed 에 쌍둥이를 또 만들 필요가
+            #   없다. 기준계(clean slab·기체)는 회신 X Stage A 목록대로 그대로 둔다.
+            if (getattr(a, "d3_seed_main_only", False)
+                    and rel.startswith("prospective/")
+                    and any(rel.endswith(sd) for sd in SEEDS_FULL if sd != SEED_MAIN)):
                 continue
             td = out / (rel + "__d3off")
             if td.exists():
@@ -4509,6 +4525,14 @@ def build_bundle(a, ledger: Optional[Dict[str, Any]] = None) -> Path:
     except Exception as _e:
         man["cost_frozen"] = {"error": f"{type(_e).__name__}: {_e}"}
     man["files_sha256"] = files
+
+    # 번들이 **자기가 어떻게 만들어졌는지**를 담는다. wave1 은 이게 없어서
+
+    #   2026-08-29 에 k 메시를 repo·기계 어디서도 확정하지 못했다.
+
+    man["generated_argv"] = list(sys.argv[1:])
+
+    man["generated_utc"] = time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())
     (out / "MANIFEST.json").write_text(json.dumps(man, indent=1, ensure_ascii=False))
 
     if out_final.exists():
@@ -4874,7 +4898,7 @@ def selftest() -> int:
     a0 = argparse.Namespace(runs=str(td / "runs"), out=str(td / "bundle_short"),
                             freeze=0.85, nslab=nslab, frags=["ptfe_dimer"],
                             qe="(none)", expect=None, allow_partial=False,
-                            no_prescf=False, allow_stale_gate=False, top_n=None, from_basins=None, both_seeds=False, d3_pairs=False, closure=False, single_point=False, champion=False, kmesh_static=None, kmesh_dense=None, refs=True, cross_endpoints=None, mag_controls=False, dense_frags=None, cores=48, concurrency=8, no_cross=False, global_champion_meV=20.0, adaptive_dense=False)
+                            no_prescf=False, allow_stale_gate=False, top_n=None, roles=None, d3_seed_main_only=False, no_refs_dense=False, from_basins=None, both_seeds=False, d3_pairs=False, closure=False, single_point=False, champion=False, kmesh_static=None, kmesh_dense=None, refs=True, cross_endpoints=None, mag_controls=False, dense_frags=None, cores=48, concurrency=8, no_cross=False, global_champion_meV=20.0, adaptive_dense=False)
     try:
         build_bundle(a0, ledger=led)
         chk(False, "N0 xyz 누락 → **번들이 만들어졌다** (축소 정본 = fail-open)")
@@ -4890,7 +4914,7 @@ def selftest() -> int:
     ab = argparse.Namespace(runs=str(td / "runs"), out=str(td / "bundle_nofp"),
                             freeze=0.85, nslab=nslab, frags=["ptfe_dimer"],
                             qe="(none)", expect=None, allow_partial=False,
-                            no_prescf=False, allow_stale_gate=False, top_n=None, from_basins=None, both_seeds=False, d3_pairs=False, closure=False, single_point=False, champion=False, kmesh_static=None, kmesh_dense=None, refs=True, cross_endpoints=None, mag_controls=False, dense_frags=None, cores=48, concurrency=8, no_cross=False, global_champion_meV=20.0, adaptive_dense=False)
+                            no_prescf=False, allow_stale_gate=False, top_n=None, roles=None, d3_seed_main_only=False, no_refs_dense=False, from_basins=None, both_seeds=False, d3_pairs=False, closure=False, single_point=False, champion=False, kmesh_static=None, kmesh_dense=None, refs=True, cross_endpoints=None, mag_controls=False, dense_frags=None, cores=48, concurrency=8, no_cross=False, global_champion_meV=20.0, adaptive_dense=False)
     try:
         build_bundle(ab, ledger=led)
         chk(False, "N0b 지문 없는 소스 → **번들이 만들어졌다**")
@@ -4914,7 +4938,7 @@ def selftest() -> int:
     at3 = argparse.Namespace(runs=str(td / "runs"), out=str(td / "bundle_top3"),
                              freeze=0.85, nslab=nslab, frags=["ptfe_dimer"],
                              qe="(none)", expect=None, allow_partial=False,
-                             no_prescf=False, allow_stale_gate=False, top_n=3, from_basins=None, both_seeds=False, d3_pairs=False, closure=False, single_point=False, champion=False, kmesh_static=None, kmesh_dense=None, refs=True, cross_endpoints=None, mag_controls=False, dense_frags=None, cores=48, concurrency=8, no_cross=False, global_champion_meV=20.0, adaptive_dense=False)
+                             no_prescf=False, allow_stale_gate=False, top_n=3, roles=None, d3_seed_main_only=False, no_refs_dense=False, from_basins=None, both_seeds=False, d3_pairs=False, closure=False, single_point=False, champion=False, kmesh_static=None, kmesh_dense=None, refs=True, cross_endpoints=None, mag_controls=False, dense_frags=None, cores=48, concurrency=8, no_cross=False, global_champion_meV=20.0, adaptive_dense=False)
     o3 = build_bundle(at3, ledger=led)
     m3 = json.loads((o3 / "MANIFEST.json").read_text())
     kept = sorted({v["dir"] for v in m3["pairs"].values()})
@@ -4931,7 +4955,7 @@ def selftest() -> int:
     a = argparse.Namespace(runs=str(td / "runs"), out=str(td / "bundle"),
                            freeze=0.85, nslab=nslab, frags=["ptfe_dimer"],
                            qe="(none)", expect=None, allow_partial=False,
-                           no_prescf=False, allow_stale_gate=False, top_n=None, from_basins=None, both_seeds=False, d3_pairs=False, closure=False, single_point=False, champion=False, kmesh_static=None, kmesh_dense=None, refs=True, cross_endpoints=None, mag_controls=False, dense_frags=None, cores=48, concurrency=8, no_cross=False, global_champion_meV=20.0, adaptive_dense=False)
+                           no_prescf=False, allow_stale_gate=False, top_n=None, roles=None, d3_seed_main_only=False, no_refs_dense=False, from_basins=None, both_seeds=False, d3_pairs=False, closure=False, single_point=False, champion=False, kmesh_static=None, kmesh_dense=None, refs=True, cross_endpoints=None, mag_controls=False, dense_frags=None, cores=48, concurrency=8, no_cross=False, global_champion_meV=20.0, adaptive_dense=False)
     out = build_bundle(a, ledger=led)
     man = json.loads((out / "MANIFEST.json").read_text())
     n_pre = sum(1 for p in man["planned"].values() if "pre" in (p.get("phases") or []))
@@ -4942,7 +4966,7 @@ def selftest() -> int:
     a_sp = argparse.Namespace(
         runs=str(td / "runs"), out=str(td / "bundle_sp"), freeze=0.85, nslab=nslab,
         frags=["ptfe_dimer"], qe="(none)", expect=None, allow_partial=False,
-        no_prescf=False, allow_stale_gate=False, top_n=None, from_basins=None, both_seeds=False, d3_pairs=False, closure=False, single_point=True,
+        no_prescf=False, allow_stale_gate=False, top_n=None, roles=None, d3_seed_main_only=False, no_refs_dense=False, from_basins=None, both_seeds=False, d3_pairs=False, closure=False, single_point=True,
         champion=True, kmesh_static=None, kmesh_dense=None, refs=False,
         cross_endpoints=["ptfe_dimer"], mag_controls=True, dense_frags=["ptfe_dimer"], cores=48, concurrency=8, no_cross=False, global_champion_meV=20.0, adaptive_dense=False)
     out_sp = build_bundle(a_sp, ledger=led)
@@ -5071,6 +5095,40 @@ def selftest() -> int:
             "[W-5] audit seed 를 manifest 에 승계한다")
         _tier = list(Path(str(td / "bundle_fb")).rglob("tier*/*/static/INCAR"))
         chk(not _tier, f"[음성 W-5] champion/cross 경로를 **타지 않는다** (tier {len(_tier)})")
+
+        # ══ 회신 X — Stage A 구성 플래그 (P0-2 · Q1 · dense 제거) ════════════
+        a_sa = argparse.Namespace(**{**vars(a_fb), "out": str(td / "bundle_stageA"),
+                                     "roles": ["calibration"], "both_seeds": True,
+                                     "d3_pairs": True, "d3_seed_main_only": True})
+        build_bundle(a_sa, ledger=led)
+        _sa = Path(str(td / "bundle_stageA"))
+        _pv = sorted(x.parent.parent.name for x in
+                     _sa.rglob("prospective/*/static/INCAR"))
+        # ★ 음성: audit 를 calibration 과 **같이 던지면 안 된다** (회신 X P0-2)
+        chk(all("b09" not in d for d in _pv),
+            f"[음성 X P0-2] --roles calibration 이 sealed_audit(b09)를 안 낸다 · {_pv}")
+        chk(sum(1 for d in _pv if not d.endswith("__d3off")) == 4,
+            f"[X P0-2] calibration 2자세 × 2 seed = 4 (실제 {_pv})")
+        # ★ 음성: net4 복합체에는 D3-off 쌍둥이가 **없어야** 한다 (회신 X Q1)
+        _n4 = [d for d in _pv if d.endswith("__d3off")
+               and any(sd in d for sd in SEEDS_FULL if sd != SEED_MAIN)]
+        chk(not _n4, f"[음성 X Q1] net4 복합체에 D3-off 쌍둥이가 없다 · {_n4}")
+        _p1 = [d for d in _pv if d.endswith("__d3off") and SEED_MAIN in d]
+        chk(len(_p1) == 2, f"[X Q1] pm1 복합체에는 쌍둥이가 있다 ({len(_p1)}) · {_p1}")
+
+        a_nd = argparse.Namespace(**{**vars(a_fb), "out": str(td / "bundle_nodense"),
+                                     "roles": ["calibration"], "refs": True,
+                                     "no_refs_dense": True, "d3_pairs": False})
+        build_bundle(a_nd, ledger=led)
+        _has = lambda p: bool(list(Path(str(td / p)).rglob("refs/clean_slab*/dense")))
+        chk(not _has("bundle_nodense"),
+            "[음성] --no_refs_dense → clean slab 에 dense 상이 없다")
+        a_wd = argparse.Namespace(**{**vars(a_nd),
+                                     "out": str(td / "bundle_withdense"),
+                                     "no_refs_dense": False})
+        build_bundle(a_wd, ledger=led)
+        chk(_has("bundle_withdense"),
+            "  (양성 대조) 플래그 없으면 dense 가 **있다** — 늘 통과하는 시험이 아니다")
 
     # ══ 회신 W Q2 — D3-off 쌍둥이가 IVDW **만** 다른지 e2e ══════════════════
     a_d3 = argparse.Namespace(**{**vars(a_cl), "out": str(td / "bundle_d3"),
@@ -6039,6 +6097,16 @@ def main():
     ap.add_argument("--from_basins",
                     help="동결된 prospective_basins manifest 에서 **그 자세만** 생성한다 "
                          "(champion/cross 자동탐색을 쓰지 않는다). 회신 W 5단계")
+    ap.add_argument("--roles", nargs="+", default=None,
+                    choices=["calibration", "sealed_audit"],
+                    help="--from_basins 에서 **이 역할만** 낸다. 회신 X P0-2 — Stage A 는 "
+                         "`--roles calibration` 으로 audit 을 봉인한 채 던진다")
+    ap.add_argument("--d3_seed_main_only", action="store_true",
+                    help="복합체의 D3-off 쌍둥이를 " + SEED_MAIN + " 에만 만든다 "
+                         "(고정기하 D3 는 자기상태 무관 · 회신 X Q1)")
+    ap.add_argument("--no_refs_dense", action="store_true",
+                    help="clean slab 의 dense 상을 뺀다 — 슬랩은 A=E_복합체−E_분자 에서 "
+                         "대수적으로 소거되므로 사전등록 판정에 안 들어간다")
     ap.add_argument("--both_seeds", action="store_true",
                     help="--from_basins 에서 두 자기 seed 를 다 낸다 (기본 pm1 만)")
     ap.add_argument("--d3_pairs", action="store_true",
