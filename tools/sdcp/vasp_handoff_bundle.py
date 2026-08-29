@@ -6210,7 +6210,12 @@ def verify_bundle(root, expect_jobs=None) -> int:
     print(f"■ 번들 {root}")
     print(f"  잡 {len(planned)} · 배포파일 {len(fh)} · 해시확인 {len(fh) - len(missing)}")
     print(f"  candidate_set : {man.get('candidate_set', '(없음)')}")
+    print(f"  emitted_roles : {man.get('emitted_basin_roles', man.get('emitted_roles', '(없음)'))}")
     print(f"  fragments     : {man.get('fragments', '(없음)')}")
+    # ★ 두 번들을 같은 표에 올리려면 **같은 clean slab** 이어야 한다. 다른 슬랩을
+    #   섞는 것은 재개 조건이 아니라 P0 다 (prereg ⚠_slab_F_차등).
+    _cs = man.get("clean_slab") or {}
+    print(f"  clean_slab    : sha256 {_cs.get('sha256', '(없음)')}")
     print(f"  generated_utc : {man.get('generated_utc', '(없음)')}")
     print(f"  generated_argv: {' '.join(man.get('generated_argv') or []) or '(없음)'}")
     sub = man.get("submission") or {}
