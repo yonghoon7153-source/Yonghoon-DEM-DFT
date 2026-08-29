@@ -887,7 +887,8 @@ def _emit_slab_job(jd: Path, atoms, nslab: int, freeze: float, frag: str,
 
 def _emit_mol_job(jd: Path, frag: str, mol, margin: float,
                   free_spin: bool = False,
-                  closure: bool = False) -> Dict[str, Any]:
+                  closure: bool = False,
+                  nonzero_start: bool = False) -> Dict[str, Any]:
     """기체상 기준계 v3 — 상자 span+margin, IDIPOL=4+DIPOL(COM), NUPDOWN, 2상.
 
     `free_spin=True` → `NUPDOWN = -1` (자유 스핀).
@@ -908,6 +909,15 @@ def _emit_mol_job(jd: Path, frag: str, mol, margin: float,
                cell=np.diag(box), pbc=True)
     open_shell = "DOUBLET" in str(SS.FRAGMENTS.get(frag, {}).get("electrons", "")).upper()
     mags = [0.0] * len(at)
+    if nonzero_start and not open_shell:
+        # ⛔⛔ 회신 U B3 (P0) — `NUPDOWN=-1` 은 **무제약**이지 singlet 확정이 아니다.
+        #   그런데 닫힌 껍질 기준계를 **항상 MAGMOM 0 에서** 출발시키면 M=0 basin 을
+        #   재현하기 쉬울 뿐, 더 낮은 spin-broken 해를 탐색했다는 증거가 못 된다.
+        #   같은 POSCAR·같은 all-F 로 비영 시작을 하나 둔다.
+        #   ⚠ 이 대조가 **더 낮은 상태**를 내면 자동 채택하지 말고 멈춘다
+        #     (MOLECULAR_STATE_UNRESOLVED) — 전자상태 estimand 를 다시 심사해야 한다.
+        for _k in range(min(2, len(mags))):
+            mags[_k] = 1.0 if _k == 0 else -1.0
     if open_shell:
         try:
             gi = [i for i in SS.group_indices(at, "SO3")
@@ -3571,7 +3581,7 @@ static  (독립 — 잡끼리 완전 병렬)
 # ⚠ 폴더 이름을 손으로 적지 않는다 — refs/ 냐 controls/ 냐가 모드에 따라 다르다.
 #   2026-08-12: controls/ 로 적어 두는 바람에 기준계 10잡이 통째로 빠질 뻔했다.
 find . -mindepth 2 -maxdepth 2 -type d -name '*__*' -o \
-     -mindepth 2 -maxdepth 2 -type d -path './refs/*' | sed 's|^\./||' | sort > JOBS.txt
+     -mindepth 2 -maxdepth 2 -type d -path './refs/*' | sed 's|^\\./||' | sort > JOBS.txt
 n=$(wc -l < JOBS.txt)
 [ "$n" = {man.get("n_jobs", 0)} ] || {{ echo "⛔ 잡 {man.get("n_jobs", 0)}개여야 하는데 $n 개"; exit 1; }}
 # Slurm 예시 — 동시 8개
@@ -4111,6 +4121,15 @@ def build_bundle(a, ledger: Optional[Dict[str, Any]] = None) -> Path:
             plan(rel, m["phases"], True)
             man["refs"][f"mol__{frag}__{tag}"] = rel
             n_jobs += 1
+            if a.closure and tag == "box24":
+                relz = f"refs/mol__{frag}__{tag}__nzmag"
+                mz = _emit_mol_job(out / relz, frag, mol, margin,
+                                   free_spin=getattr(a, "free_spin_refs", False),
+                                   closure=True, nonzero_start=True)
+                plan(relz, mz["phases"], True)
+                man.setdefault("molecular_spin_controls", {})[
+                    f"mol__{frag}__{tag}"] = relz
+                n_jobs += 1
 
     if viol:
         man["contract_violations"] = viol
@@ -5466,7 +5485,7 @@ log = open("static/vasp.log", errors="replace").read()
 NEG = re.compile(r"not|error|fail|could|unable|cannot|warn", re.I)
 hits = [ln.strip() for ln in log.splitlines()
         if re.search(r"charg", ln, re.I)
-        and re.search(r"read|from\s+\S*\s*file", ln, re.I)]
+        and re.search(r"read|from\\s+\\S*\\s*file", ln, re.I)]
 pos = [ln for ln in hits if not NEG.search(ln)]
 # ⚠ 부정문('could not be read')은 증거가 아니다 (codex E-4차 P0-5) —
 #   양성만 증거로, 부정문은 따로 남겨 재협상 근거로 쓴다.
