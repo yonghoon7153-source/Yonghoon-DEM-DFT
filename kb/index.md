@@ -1,6 +1,6 @@
 # kb 카탈로그 (생성물 — 손으로 고치지 말 것)
 
-> `python3 tools/kb_wiki.py index` 가 만든다 · 2026-08-29 · managed-files: 278
+> `python3 tools/kb_wiki.py index` 가 만든다 · 2026-08-29 · managed-files: 279
 
 규칙: kb/SCHEMA.md · 열린 질문: kb/questions/ · 논지 카드: kb/syntheses/ · 원장: kb/open_items.md · 문헌: litdb/INDEX.md
 
@@ -167,7 +167,7 @@
 - `kb/results/vgcf_hbn_figure_plan.md` — VGCF/h-BN 원고 — 층수 연구를 어디에 둘 것인가 (2026-07-31 결정)
 - `kb/results/vgcf_hbn_gallery_mechanism_2026_07_30.md` — h-BN@VGCF — 209 meV 층수효과의 정체: confinement 확정 (2026-07-30)
 
-## reviews/ (41)
+## reviews/ (42)
 - `kb/reviews/ECERD2600097_review_notes.md` — 📝 리뷰 노트 — ECER-D-26-00097 (Fan 외, *Stability Issues in Sulfide-Based ASSB*)
 - `kb/reviews/codex_A_cascade_ml_2026_08_20.md` — 교차리뷰 A — cascade 파이프라인 + 머신러닝 (codex 작업지시서) ○미열람
 - `kb/reviews/codex_B_neb_md_tools_2026_08_20.md` — 교차리뷰 B — NEB · MD · 도구 (codex 작업지시서) ○미열람
@@ -193,6 +193,7 @@
 - `kb/reviews/codex_R2_prompt_doped_reopen_v3_2026_08_28.md` — Codex 회신 R2 요청 프롬프트 — 재개 설계 v3 재심사 (회신 R 조건 8 반영 확인) ○미열람
 - `kb/reviews/codex_R3_doped_reopen_impl_reply_2026_08_28.md` — 회신 R3 — Stage 0 재차 NO-GO: 실측 fail-open 5건 + 관측량 회수 계약 (GO 요건 9) ○미열람
 - `kb/reviews/codex_R3_prompt_doped_reopen_impl_2026_08_28.md` — Codex 회신 R3 요청 프롬프트 — 최소수정 8 구현 재제출 (실물 .inp·manifest·음성 e2e 첨부) ○미열람
+- `kb/reviews/codex_R4_doped_reopen_impl2_reply_2026_08_29.md` — 회신 R4 — 조건부 GO: 중성 Stage A 8개 ORCA Opt만 승인, Stage 0·B·hybrid 전부 NO-GO ○미열람
 - `kb/reviews/codex_R4_prompt_doped_reopen_impl2_2026_08_28.md` — Codex 회신 R4 요청 프롬프트 — R3 P0 전건 구현 재제출 (receipt·analyzer·계약 증빙) ○미열람
 - `kb/reviews/codex_R_doped_reopen_v2_reply_2026_08_28.md` — 회신 R — Stage 0 NO-GO: 재심사 조건 8 (U_eff 자료부재 · 기체상 retention 자명 · conditioning 오염) ○미열람
 - `kb/reviews/codex_R_prompt_doped_reopen_v2_2026_08_28.md` — Codex 회신 R 요청 프롬프트 — doped 재개 설계 v2 의 계산 전 심사 ○미열람

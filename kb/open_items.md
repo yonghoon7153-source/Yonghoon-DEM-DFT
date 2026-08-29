@@ -16,9 +16,23 @@
   hybrid 조성별 그룹 + NoAutoStart · --compare METHOD_DEPENDENT.
   **selftest 40건 = R3 GO 요건 9 의 1:1 봉인.** 실물 8-seed stage A 성공
   (고유 torsion 8벡터 · 전 접합 dmin ≥ 2.04 Å).
-- ⏳ R4 발송: `kb/reviews/codex_R4_prompt_doped_reopen_impl2_2026_08_28.md`
-- ⛔ R4 GO 전 Z1 금지. GO 시 실행 순서: 데스크탑 stage A(8 seeds) → 중성 8개 ORCA Opt →
-  receipt 로 stage B → sp 회수 → --analyze 게이트 → opt.
+- ✅ **회신 R4 접수 (2026-08-29)** — `kb/reviews/codex_R4_doped_reopen_impl2_reply_2026_08_29.md`
+  **판정: 중성 Stage A 8개 ORCA Opt 조건부 GO / Stage 0·Stage B·hybrid 전부 NO-GO.**
+  검증 고정점 커밋 `096122b`. selftest 40건은 통과했으나 **별도 공격 재현에서 fail-open 다수** —
+  R2(문서만 봄) → R3(실행해 봄) → R4(공격해 봄) 로 검사 강도가 한 단계씩 올라왔고 매번 걸렸다.
+  - 새 위험 4: hybrid 가 **vertical XYZ 로 SP 생성**(adiabatic 최종구조 아님) · Opt 에
+    `StabPerform` 없음(BS 는 SP 도 면제) · 예시 `--neutral_xyz` 경로가 **시작구조를 덮어씀** ·
+    실제 cycle 은 4-leg 이 아니라 **6항**(`h1a·h1b·h2_s·h2_t·h2_bs·h0`).
+  - P0-0~5 전부 **불충분**. 대표적 통과 사례: Löwdin 블록 없어도 OK · **UHF·+1·doublet 출력이
+    neutral RKS 부모로 통과** · 주석 한 줄로 중복검사 우회 · 임의 문자열이 stable 증거.
+  - localization 0.5/0.3 은 **라우팅 기준으로만** 조건부 수용. Hirshfeld 병기 + partition
+    일치(`PARTITION_DEPENDENT`) + ring 별 집합 + BS 양·음 lobe 분리 필요.
+- ▶ **지금 할 수 있는 것은 데스크탑 ORCA 8잡뿐** (조건 6: SHA 동결 · `--allow_*` 전면 금지 ·
+  읽기전용 정본 + seed 별 scratch · 시작/최종 XYZ 파일 분리 + SHA·ORCA 버전·명령 기록 ·
+  builder 파일 SHA · **이 결과로 Stage B 를 열지 않는다**). GPU 자원과 경합 없음.
+- ⛔ Stage B 의 열쇠는 계산이 아니라 **P0-2~5 재수정 + 회귀시험 6**
+  (교차-seed/wrong-state receipt · localization 누락·행 재배열 · duplicate→dependency ·
+  BS 안정성 · adiabatic 최종구조 hybrid · 빈 method 비교).
 
 ### ⏭-1. T13 확인 — ✅ **판정 완료 (2026-08-29)**
 `db/properties/t13_msd_length_verdict_2026_08_29.json`
