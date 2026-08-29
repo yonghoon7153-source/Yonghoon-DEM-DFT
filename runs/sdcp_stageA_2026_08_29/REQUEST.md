@@ -79,102 +79,45 @@ POSCAR 의 **종 순서가 잡마다 다릅니다**:
 
 | 항목 | 값 |
 |---|---|
-| 범함수 | PBE |
-| `LDAU` | Ni 만 U = 6.2 eV (Dudarev, `LDAUTYPE=2`), `LMAXMIX=4` |
-| `ENCUT` | 520 |
-| `ISMEAR` / `SIGMA` | 0 / 0.05 |
-| `LASPH` / `ADDGRID` | `.TRUE.` |
-| `LREAL` | **`.FALSE.`** (이 묶음은 전 잡 강제) |
-| `IVDW` | **11 = D3 zero damping** — 일부 잡은 `IVDW` 없음(분산 없는 짝) |
-| `ISPIN` / `MAGMOM` | 2 / 잡마다 다름 — `job.json` 에 기대값 |
-| 슬랩 | `LDIPOL=.TRUE.` · `IDIPOL=3` · `DIPOL`=질량중심 |
-| 기체 | `IDIPOL=4` · 진공 상자 |
-
-> ⚠ 2026-08-11 요청문이 `IVDW=11` 을 "D3-BJ" 라고 적었는데 **오기**입니다.
-> `IVDW=11` 은 **D3 zero damping** 입니다. 계산은 그때와 같고 이름만 정정한 것입니다.
-
-**D3 짝(pair)**: 같은 기하를 `IVDW=11` 있는 판과 없는 판으로 각각 돌립니다.
-둘의 차이가 분산 기여입니다 — 그래서 **두 잡이 같은 POSCAR 를 씁니다. 정상입니다.**
-중복이라고 하나만 돌리지 말아 주세요.
-
-**자기 seed 2종**: 같은 기하를 서로 다른 `MAGMOM` 으로 시작하는 잡이 있습니다
-(`pm1` / `net4`). 이것도 **중복이 아닙니다** — 자기상태 민감도를 재는 것이 목적입니다.
-
-### SCF 가 안 붙을 때만 (순서대로)
-
-1. `ALGO = All`
-2. `AMIX=0.1 · BMIX=0.0001 · AMIX_MAG=0.2 · BMIX_MAG=0.0001`
-
-쓰신 것을 그 잡 폴더의 `NOTES.txt` 에 남겨 주세요. 그래도 안 되면 **그 잡은 중단하고
-알려 주세요** — 임의로 조건을 바꾸는 것보다 미수렴으로 남는 편이 낫습니다.
-`NCORE` / `KPAR` / `NSIM` 등 병렬 태그는 자유롭게 조정하셔도 됩니다.
-
----
-
-## 4. 반송물 (잡마다)
-
-- **`static/OUTCAR` — 필수** (`.gz` 그대로 가능). 이것 하나면 판정이 됩니다.
-- `static/vasprun.xml` — 선택
-- `NOTES.txt` — 위 SCF 조치를 쓰셨다면 필수
-- **CHGCAR / WAVECAR 반송 불필요** (용량)
-- ⚠ `INCAR` · `KPOINTS` · `POSCAR` 를 고치지 마세요. 저희 분석기가 `MANIFEST.json` 의
-  `files_sha256` 과 대조해 바뀐 파일을 잡아냅니다 (병렬 태그는 예외 — 고치셨으면 알려 주세요).
-- 발산·미수렴 잡은 **지우지 말고 그대로** 보내 주세요. 어느 잡이 왜 실패했는지가 판정의 일부입니다.
-
-완주 후 확인용(선택):
-
-```bash
-python3 analyze_results.py .     # stdlib 만 씁니다
-```
-
-필수 산출이 빠지면 `exit 2` 로 알려 줍니다.
-
----
-
-## 5. 규모 · 일정
-
-| | |
-|---|---:|
-| 잡 | 50 (40 + 10) |
-| 상 | 잡당 `static` 1회 |
-| 계획 병렬도 | **256 코어/잡 · 동시 8잡** |
-| 예상 makespan | **약 3일** (가장 긴 잡 ~19 h @256코어) |
-
-> ⚠ 묶음 안 `SUBMIT_CONTRACT.md` 는 "잡 40 / 총 VASP 실행 24" 로 **서로 어긋난 두 숫자**를
-> 적고 있습니다 (생성기가 실행 횟수를 셀 때 D3-off 쌍둥이 16잡을 빠뜨립니다).
-> **실제는 40잡 전부가 각각 static 1회** — 즉 40회입니다. `run_job.sh` 가 있는 폴더 수가
-> 정답입니다: `find . -name run_job.sh | wc -l`.
-
-⚠ 위 시간은 실측 기반 **모형값이고 ±2배** 범위입니다 (`tools/sdcp/vasp_cost_estimate.py`,
-2026-08-08 납품 OUTCAR 기준). walltime 은 넉넉히 잡아 주세요 — 잘리면 그 잡을 다시 돌려야 합니다.
-
-잡 사이에 의존성이 **없습니다.** 순서는 자유이고 전부 동시에 던지셔도 됩니다.
-
----
-
-## 6. 무결성
-
-| 항목 | 값 |
-|---|---|
-| 파일 | `sdcp_stageA_v5.zip` (약 0.4 MB) |
-| ZIP SHA256 | `8c6587635e559e81dff68be0b960d318e852ea2b4b608d26f0f11bc656ba713c` |
-| `MANIFEST.json` SHA256 | `0860ae4340218b599100052d12fa941aa2a319a74f1b43de8c6ddd36a876670e` |
+| 파일 | `sdcp_stageA_v8.zip` (462,233 B) |
+| ZIP SHA256 | `56ee99ec07fececab0dbbc9dd1fb360b53854ac25a6af76ca1e6e88af13feb14` |
+| `MANIFEST.json` SHA256 | `7cae59ad1cf051219dbd56e59a81887a646da871d9e2b6d5cb509e85b7c5ca1c` |
 | 잡 | 40 (references 16 + calibration complexes 24) |
 | 총 VASP 실행 | 40 (전부 `static`) |
 | clean slab | `d5f18feb15701f3fc932a1c8f64a09ed48c39ca270d8d8a8f5339658b6c43676` |
-| 후보집합 | `db/properties/prospective_basins_2026_08_29.json` · frozen `94675e66e02c855a` |
+| 후보집합 | `db/properties/prospective_basins_2026_08_29.json` · 전체 SHA `20fdde06760b36e15a9bd544925c71e4b1a52f430348ff64a2224f1bf61f6d6e` |
 
-받으신 뒤 대조해 주세요 — `sha256sum sdcp_stageA_v5.zip`.
+받으신 뒤 대조해 주세요 — `sha256sum sdcp_stageA_v8.zip`.
+증서는 `ATTESTATION_v8.json` 에 같이 있습니다 (ZIP 바이트에서 직접 생성).
 
-⚠ 파일명 끝의 **`_v5`** 를 확인해 주세요. `_v1` ~ `_v4` 는 전부 폐기본입니다:
-`_v2`(40잡)는 문서가 이완판이라 반송 계약이 틀렸고, `_v3`(34잡)는 후보집합이 다르며
-(c10 이 2자세), `_v4`(40잡)는 `MANIFEST` 의 실행 횟수가 24 로 잘못 적혀 있었습니다.
-`_v5` 만이 위 해시와 맞습니다.
-
-각 묶음 안 `MANIFEST.json` 의 `files_sha256` 로 개별 파일까지 대조하실 수 있습니다:
-`sha256sum <파일>`.
+⚠ 파일명 끝의 **`_v8`** 을 확인해 주세요. `_v1` ~ `_v7` 은 전부 폐기본입니다.
 
 ---
+
+## 7. POTCAR 검증 — 실행 전에 목록이 필요합니다
+
+`POTCAR_ASSEMBLE.sh` 가 조립 전에 **신뢰하는 PBE.54 세트의 sha256 목록**과
+대조합니다. variant 이름과 `PAW_PBE` 만 확인해서는 "전부 같은 잘못된 세트" 를
+못 막기 때문입니다.
+
+목록은 **한 번만** 만들어 전 잡에 같은 파일을 쓰세요 (잡마다 새로 만들면
+아무것도 검증하지 않습니다):
+
+```bash
+for v in $(ls "$PP"); do sha256sum "$PP/$v/POTCAR"; done > /abs/site_allow.txt
+# 그 다음 각 잡에서
+PP=/path/to/potpaw_PBE.54 POTCAR_ALLOWLIST=/abs/site_allow.txt bash POTCAR_ASSEMBLE.sh
+```
+
+이 목록은 **외주처 내부에만** 두시면 됩니다 — 저희에게 보내실 필요 없습니다.
+대조 없이 진행하셔야 하면 `POTCAR_ALLOWLIST_WAIVED=1` 로 명시해 주세요
+(그 사실이 `POTCAR_PROVENANCE.json` 에 기록됩니다).
+
+## 8. 이 잡들은 **1회용**입니다
+
+`run_job.sh` 가 시작 전에 `OUTCAR`·`WAVECAR`·`CHGCAR` 등이 있으면 **거부**합니다.
+같은 폴더에서 두 번 돌리면 다른 설정의 결과가 섞이고, 회수 후에는 구별할 방법이
+없기 때문입니다. 의도한 재개면 `ALLOW_RESUME=1` 로 주시고 `NOTES.txt` 에 남겨 주세요.
 
 ## 7. 범위 밖
 
@@ -184,7 +127,7 @@ python3 analyze_results.py .     # stdlib 만 씁니다
 
 ---
 
-## 8. 이번에 보내지 않는 것 — `sdcp_motifprobe_v2`
+## 9. 이번에 보내지 않는 것 — `sdcp_motifprobe_v2`
 
 접촉 모티프 대비를 묻는 10잡 묶음을 따로 만들어 두었지만 **이번 요청에서 뺐습니다.**
 
