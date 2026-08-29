@@ -2384,6 +2384,111 @@ def rescue_provenance_ok(jd):
     return True, "ok"
 
 
+
+#: 사전등록 문턱 — `prereg_sdcp_neutral_contrast_2026_08_29.json` 과 **같은 값**이어야 한다.
+#:   ⚠ 두 곳에 복사돼 있다. 고치면 그 json 도 같이 고칠 것.
+PREREG_GUARD_EV = -0.10           # primary 가 이 값 이하일 때만 방향성 주장
+PREREG_ROUND_EV = 0.01            # 보고 반올림
+PREREG_SELECTOR_AGREE_EV = 0.05   # 두 selector 차가 이 미만이면 "시험한 selector 간 일치"
+
+
+def _closure_estimand(man, results, E, emol, jobs):
+    """사전등록한 조각 간 대비를 **코드로** 계산한다 (회신 V P0-4).
+
+      A(f,p) = E_complex(f,p) - E_mol(f)      <- 공통 슬랩이 소거되는 양
+      primary   ddE_lowE = min_p A(SDCP,p) - min_q A(c10,q)
+      secondary G        = min_q A(c10,q) - max_p A(SDCP,p)
+
+    회신 V P0-3 — 기체 자기상태 대조(zero vs nzmag)를 **여기서 실제로 비교**한다.
+    대조가 더 낮으면 `MOLECULAR_STATE_UNRESOLVED` 로 막고 **값을 내지 않는다.**
+
+    ⛔ 이 함수가 못 하는 것:
+      · 후보집합이 **사전등록된 것인지 검사하지 않는다** (그 manifest 가 아직 없다 —
+        회신 V P0-5). `candidate_set` 에 무엇을 썼는지 기록만 한다.
+      · 국소 Ni topology 판정을 다시 하지 않는다 — 잡별 `gates` 를 읽어 **버린다**.
+      · dense/k 보정을 적용하지 않는다. coarse static 값이다.
+      · 게이트된 자세를 다음 순위로 **대체하지 않는다** (회신 U C-2: 조용한 교체 금지).
+    """
+    frags = [f for f in (man.get("fragments") or []) if f in emol]
+    if len(frags) < 2:
+        return None
+    out = {
+        "schema": "prereg_closure/v1",
+        "prereg_doc": "db/properties/prereg_sdcp_neutral_contrast_2026_08_29.json",
+        "candidate_set": man.get("candidate_set") or "legacy_champion/cross (미동결)",
+        "blocks": [], "A_by_frag": {},
+    }
+
+    # (1) 기체 자기상태 대조 — 값을 내기 **전에** 본다 (회신 V P0-3)
+    ctls = man.get("molecular_spin_controls") or {}
+    for f in frags:
+        rel = ctls.get("mol__%s__box24" % f)
+        if not rel:
+            out["blocks"].append("MOLECULAR_SPIN_CONTROL_MISSING(%s)" % f)
+            continue
+        e1 = E(str(rel).split("/")[-1])
+        e0 = emol.get(f)
+        if e1 is None:
+            out["blocks"].append("MOLECULAR_SPIN_CONTROL_PENDING(%s)" % f)
+        elif e0 is not None and e1 < e0 - 1e-4:
+            out["blocks"].append(
+                "MOLECULAR_STATE_UNRESOLVED(%s: 비영 시작이 %.4f eV 더 낮다 — "
+                "자동 채택하지 않는다. 전자상태 estimand 와 box 수렴을 다시 심사할 것)"
+                % (f, e0 - e1))
+        else:
+            out.setdefault("spin_control_delta_eV", {})[f] = round(e1 - e0, 5)
+
+    # (2) A(f,p) — 게이트 통과한 복합체만. 게이트된 것은 **버리되 기록한다**
+    for f in frags:
+        rows = []
+        for jn, jr in jobs.items():
+            if not jn.startswith(f + "__") or not jr.get("ok"):
+                continue
+            g = [x for x in (jr.get("gates") or [])
+                 if x.startswith(("MAGNETIC", "RADICAL", "PAIR_", "SOURCE_"))]
+            e = E(jn)
+            if e is None:
+                continue
+            if g:
+                out["blocks"].append("GATED_POSE(%s: %s)" % (jn, g[0]))
+                continue
+            rows.append([round(e - emol[f], 6), jn])
+        rows.sort()
+        out["A_by_frag"][f] = {"n": len(rows),
+                               "min": rows[0] if rows else None,
+                               "max": rows[-1] if rows else None}
+
+    if out["blocks"]:
+        out["verdict"] = "NO_VALUE — blocks 를 해소하기 전에는 단일 X 를 보고하지 않는다"
+        return out
+
+    sd = next((f for f in frags if "sdcp" in f), None)
+    ct = next((f for f in frags if f != sd), None)
+    a_s = out["A_by_frag"].get(sd) or {}
+    a_c = out["A_by_frag"].get(ct) or {}
+    if not (a_s.get("min") and a_c.get("min")):
+        out["verdict"] = "NO_VALUE — 조각 한쪽에 게이트 통과 자세가 없다"
+        return out
+
+    primary = a_s["min"][0] - a_c["min"][0]
+    secondary = a_c["min"][0] - a_s["max"][0]
+    out["primary_ddE_lowE_eV"] = round(primary, 4)
+    out["secondary_G_eV"] = round(secondary, 4)
+    out["reported_X_eV"] = round(round(primary / PREREG_ROUND_EV) * PREREG_ROUND_EV, 2)
+    out["fragments"] = {"sdcp": sd, "control": ct}
+    if primary <= PREREG_GUARD_EV:
+        out["guard"] = "통과 (primary %.4f <= %.2f)" % (primary, PREREG_GUARD_EV)
+        out["verdict"] = "보고 가능"
+    else:
+        out["guard"] = ("⛔ primary %+.4f > %.2f — guard band 미달"
+                        % (primary, PREREG_GUARD_EV))
+        out["verdict"] = "NO_DIRECTIONAL_CLAIM"
+    out["⚠_후보집합"] = ("candidate_set 이 동결된 prospective_lowE 가 아니면 이 값은 "
+                         "primary 가 아니라 **legacy 교정 tranche** 다 (회신 V P0-5). "
+                         "'primary'·'low-energy'·'pose-insensitive'·'전역 최소' 로 쓰지 말 것")
+    return out
+
+
 def main():
     if "--selftest" in sys.argv:
         return selftest_k()
@@ -3267,6 +3372,13 @@ def main():
                     "estimand": "E_ads(static target mesh) — dense 는 k 게이트 전용",
                     "k_check": "관측된 dense 보정이 게이트 안이면 통과. 값 교체 아님"}
         results["pairs"][pid] = rec
+
+    # ══ 사전등록 closure estimand (회신 V P0-3 · P0-4) ══════════════════════
+    #   `prereg_sdcp_neutral_contrast_2026_08_29.json` 을 코드로 옮긴 것.
+    #   ⛔ 종전엔 사전등록이 **문서로만** 있었다 — 잡이 다 끝나도 판정이 재현되지 않았다.
+    _pc = _closure_estimand(man, results, E, emol, jobs)
+    if _pc:
+        results["prereg_closure"] = _pc
 
     # ── k 전이 게이트 (Codex 5차 taxonomy · 6차 §6) ───────────────────────────
     #   MANIFEST 에 k_label_rule 을 적어 놓고 **계산은 안 하던** 구멍을 막는다.
@@ -4743,6 +4855,59 @@ def selftest() -> int:
     chk(bool(_mj) and not _badph,
         f"[V P0-2] 기체 job.json 의 phases 가 실제 생성분(static)과 일치 · "
         f"위반 {[x.parent.name for x in _badph][:3]}")
+    # ══ 회신 V P0-3 · P0-4 — 사전등록 estimand 를 **함수로 직접** 친다 ═══════
+    # 분석기는 **문자열 템플릿**으로 배포된다 (live 코드가 아니다). 그래서 배포될
+    # 그 소스를 exec 해서 친다 — 템플릿을 고쳐도 시험이 따라온다.
+    _ns = {}
+    exec(compile(ANALYZER, "<analyzer-template>", "exec"), _ns)
+    _closure_estimand = _ns["_closure_estimand"]
+    _man = {"fragments": ["sdcp_neutral", "ptfe_c10"],
+            "molecular_spin_controls": {
+                "mol__sdcp_neutral__box24": "refs/mol__sdcp_neutral__box24__nzmag",
+                "mol__ptfe_c10__box24": "refs/mol__ptfe_c10__box24__nzmag"}}
+    _emol = {"sdcp_neutral": -200.0, "ptfe_c10": -100.0}
+    _en = {"mol__sdcp_neutral__box24__nzmag": -200.0,
+           "mol__ptfe_c10__box24__nzmag": -100.0,
+           "sdcp_neutral__poseA": -201.0, "sdcp_neutral__poseB": -200.9,
+           "ptfe_c10__poseA": -100.5}
+    _jobs = {k: {"ok": True, "gates": []} for k in _en if "__pose" in k}
+    _E = lambda j: _en.get(j)
+    r = _closure_estimand(_man, {"pairs": {}}, _E, _emol, _jobs)
+    chk(not r["blocks"], f"[V P0-4] 정상 입력에 blocks 없음 · {r.get('blocks')}")
+    chk(abs(r["primary_ddE_lowE_eV"] - (-0.5)) < 1e-6,
+        f"[V P0-4] primary = min-min = -0.5 · 실제 {r.get('primary_ddE_lowE_eV')}")
+    # G = min(A_c10) - max(A_sdcp) = -0.5 - (-0.9) = +0.4.
+    #   G>0 = 가장 약한 SDCP 도 가장 센 c10 보다 더 음수 (사전등록 정의와 일치).
+    chk(abs(r["secondary_G_eV"] - 0.4) < 1e-6,
+        f"[V P0-4] secondary G = +0.4 (>0 = 최약 SDCP 도 최강 c10 보다 음수) · "
+        f"실제 {r.get('secondary_G_eV')}")
+    chk(r["verdict"] == "보고 가능" and r["reported_X_eV"] == -0.5,
+        "[V P0-4] guard(-0.10) 통과 + 0.01 eV 반올림")
+    # 음성: guard band 미달
+    _en2 = dict(_en); _en2["sdcp_neutral__poseA"] = -200.55
+    _en2["sdcp_neutral__poseB"] = -200.55
+    r2 = _closure_estimand(_man, {"pairs": {}}, lambda j: _en2.get(j), _emol, _jobs)
+    chk(r2["verdict"] == "NO_DIRECTIONAL_CLAIM",
+        f"[음성 V P0-4] primary {r2.get('primary_ddE_lowE_eV')} > -0.10 → 방향성 주장 금지")
+    # 음성: 비영 시작이 더 낮으면 값을 내지 않는다
+    _en3 = dict(_en); _en3["mol__sdcp_neutral__box24__nzmag"] = -200.3
+    r3 = _closure_estimand(_man, {"pairs": {}}, lambda j: _en3.get(j), _emol, _jobs)
+    chk(any("MOLECULAR_STATE_UNRESOLVED" in b for b in r3["blocks"])
+        and "primary_ddE_lowE_eV" not in r3,
+        "[음성 V P0-3] 비영 MAGMOM 대조가 더 낮으면 **MOLECULAR_STATE_UNRESOLVED 로 막고 "
+        "값을 안 낸다** (자동 채택 금지)")
+    # 음성: 자기 topology 게이트된 자세는 버리고 값도 안 낸다
+    _j4 = dict(_jobs); _j4["sdcp_neutral__poseA"] = {
+        "ok": True, "gates": ["MAGNETIC_PARTIAL_FLIP(3/48 Ni)"]}
+    r4 = _closure_estimand(_man, {"pairs": {}}, _E, _emol, _j4)
+    chk(any("GATED_POSE" in b for b in r4["blocks"]) and "primary_ddE_lowE_eV" not in r4,
+        "[음성 V P0-4] 자기 topology 게이트된 자세는 **다음 순위로 조용히 대체하지 않는다**")
+    # 음성: 대조가 아예 없으면
+    r5 = _closure_estimand({"fragments": ["sdcp_neutral", "ptfe_c10"]},
+                           {"pairs": {}}, _E, _emol, _jobs)
+    chk(any("MOLECULAR_SPIN_CONTROL_MISSING" in b for b in r5["blocks"]),
+        "[음성 V P0-3] 자기상태 대조가 없으면 그것도 block")
+
     chk(any("LREAL    = Auto" in f.read_text() for f in _sp_inc),
          "  (음성 대조) --single_point 만으로는 LREAL=Auto 가 남는다 — closure 가 그것을 고친다")
     # ★ **배포되는 분석기**의 k 라벨·guard band selftest 를 그대로 돌린다.
