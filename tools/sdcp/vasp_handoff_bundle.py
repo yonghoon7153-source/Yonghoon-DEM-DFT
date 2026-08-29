@@ -1239,6 +1239,44 @@ def global_sign(moments, want):
     return sg, bad
 
 
+def realized_basin_id(mom, ni_sign, mol_sign, mom_min):
+    """OUTCAR 국소모멘트 표 → **실제로 수렴한** 자기 basin 의 지문 (회신 Z P0-4).
+
+    `pm1` · `net4` 는 **초기 MAGMOM seed 이름**이지 최종 상태가 아니다. wave1.5 에서
+    raw `net4` 가 의도한 topology 가 아니라 Ni 하나 뒤집힌 basin 으로 반복 수렴한
+    전례가 있다. seed 이름으로 짝지어 빼면 **다른 상태를 가로질러 뺀 것**이 된다.
+
+    지문 = (전역부호로 정규화한 Ni 부호벡터, 붕괴한 Ni 자리, 유기종 상대스핀).
+    전역 반전은 시간반전이라 같은 상태이므로 **정규화 뒤에** 지문을 만든다.
+
+    반환 (id, detail) — id 가 None 이면 판정 불가 사유가 detail["why"] 에 있다.
+
+    ⛔ 이 함수가 못 하는 것
+      · 어느 basin 이 **바닥**인지 말하지 못한다. 같은가 다른가만 가른다.
+      · 모멘트 표가 없거나 불완전하면 **추측하지 않는다** — None 을 낸다.
+      · Ni 인덱스 집합이 다른 두 계(예: 다른 슬랩)를 비교할 수 없다.
+    """
+    if not mom:
+        return None, {"why": "모멘트 표 없음 (LORBIT)"}
+    ni = {int(k): float(v) for k, v in (ni_sign or {}).items()}
+    if not ni:
+        return None, {"why": "ni_sign_poscar_idx 없음"}
+    if max(ni) >= len(mom):
+        return None, {"why": f"Ni 인덱스가 모멘트 표 {len(mom)}행 밖"}
+    got = {i: mom[i] for i in ni}
+    sg, _flip = global_sign(got, ni)
+    idx = sorted(ni)
+    vec = "".join("+" if got[i] * sg > 0 else "-" for i in idx)
+    collapsed = [k for k, i in enumerate(idx) if abs(got[i]) < mom_min]
+    ms = {int(k): float(v) for k, v in (mol_sign or {}).items() if int(k) < len(mom)}
+    org = "".join("+" if mom[i] * sg > 0 else "-" for i in sorted(ms)) if ms else ""
+    key = f"{vec}|{','.join(map(str, collapsed))}|{org}"
+    return hashlib.sha256(key.encode()).hexdigest()[:12], {
+        "ni_sign_vector": vec, "n_ni": len(idx), "global_sign": sg,
+        "collapsed_ni_positions": collapsed, "organic_relative_spin": org or None,
+        "⚠": "seed 이름이 아니라 **수렴 결과**의 지문이다"}
+
+
 def read_moments(t):
     """LORBIT=11 의 마지막 'magnetization (x)' 표 → 이온별 tot 모멘트 [μB]."""
     k = t.rfind("magnetization (x)")
@@ -1905,6 +1943,32 @@ def selftest_k() -> int:
     chk(len(global_sign(_zero, _w)[1]) == len(_w),
         "모멘트 전부 0 → 전부 불일치 (붕괴를 통과시키지 않는다)")
 
+    # ── realized_basin_id (회신 Z P0-4) ──────────────────────────────────
+    #   pm1/net4 는 초기 seed 이름이지 최종 basin 이 아니다. 지문이 **수렴 결과**를
+    #   따라가는지, 그리고 안 따라가야 할 것(시간반전)에 안 따라가는지 본다.
+    _NS = {str(i): v for i, v in _w.items()}
+    _b_same, _ = realized_basin_id([1.2, -1.2, 1.2, -1.2], _NS, {}, 0.4)
+    _b_rev, _ = realized_basin_id([-1.2, 1.2, -1.2, 1.2], _NS, {}, 0.4)
+    chk(_b_same is not None and _b_same == _b_rev,
+        "완전한 시간반전은 **같은 basin** (전역 부호 정규화 후 지문)")
+    _b_flip, _ = realized_basin_id([1.2, 1.2, 1.2, -1.2], _NS, {}, 0.4)
+    chk(_b_flip is not None and _b_flip != _b_same,
+        "⛔음성: Ni 하나가 뒤집히면 **다른 basin** (wave1.5 의 실제 사고 모양)")
+    _b_col, _ = realized_basin_id([1.2, -1.2, 0.1, -1.2], _NS, {}, 0.4)
+    chk(_b_col != _b_same and _b_col is not None,
+        "⛔음성: 모멘트 붕괴도 다른 basin (부호는 살아 있어도 상태가 다르다)")
+    _MS = {"4": 1.0}
+    _b_o1, _ = realized_basin_id([1.2, -1.2, 1.2, -1.2, 0.9], _NS, _MS, 0.4)
+    _b_o2, _ = realized_basin_id([1.2, -1.2, 1.2, -1.2, -0.9], _NS, _MS, 0.4)
+    chk(_b_o1 != _b_o2,
+        "⛔음성: Ni 는 같은데 **유기종 상대스핀**만 갈려도 다른 basin")
+    chk(realized_basin_id(None, _NS, {}, 0.4)[0] is None
+        and realized_basin_id([1.2], _NS, {}, 0.4)[0] is None,
+        "⛔음성: 표가 없거나 짧으면 **추측하지 않고** None (뺄셈을 막는다)")
+    _b_o1b, _ = realized_basin_id([-1.2, 1.2, -1.2, 1.2, -0.9], _NS, _MS, 0.4)
+    chk(_b_o1b == _b_o1,
+        "유기종까지 통째로 반전해도 같은 basin (시간반전은 상대부호를 안 바꾼다)")
+
     # guard band
     D = 0.030
     chk(apply_k_guard("ROBUST", 0.005, "K_DIRECTLY_CHECKED", D).startswith("UNRESOLVED_SIGN"),
@@ -2492,24 +2556,63 @@ def _closure_estimand(man, results, E, emol, jobs):
             out.setdefault("spin_control_delta_eV", {})[f] = round(e1 - e0, 5)
 
     # (2) A(f,p) — 게이트 통과한 복합체만. 게이트된 것은 **버리되 기록한다**
+    #   ★ 회신 Z P0-4 — realized basin 을 같이 모은다. seed 이름(pm1/net4)으로
+    #     짝지어 빼면 다른 상태를 가로질러 뺀 것이 된다.
+    basins = {}
     for f in frags:
         rows = []
         for jn, jr in jobs.items():
             if not jn.startswith(f + "__") or not jr.get("ok"):
                 continue
             g = [x for x in (jr.get("gates") or [])
-                 if x.startswith(("MAGNETIC", "RADICAL", "PAIR_", "SOURCE_"))]
+                 if x.startswith(("MAGNETIC", "RADICAL", "PAIR_", "SOURCE_", "BASIN_"))]
             e = E(jn)
             if e is None:
                 continue
             if g:
                 out["blocks"].append("GATED_POSE(%s: %s)" % (jn, g[0]))
                 continue
-            rows.append([round(e - emol[f], 6), jn])
+            rb = (((jr.get("geom") or {}).get("magnetic") or {})
+                  .get("realized_basin_id"))
+            basins.setdefault(f, {}).setdefault(rb, []).append(jn)
+            rows.append([round(e - emol[f], 6), jn, rb])
         rows.sort()
         out["A_by_frag"][f] = {"n": len(rows),
                                "min": rows[0] if rows else None,
                                "max": rows[-1] if rows else None}
+    out["realized_basins"] = {f: {str(k): v for k, v in (b or {}).items()}
+                              for f, b in basins.items()}
+
+    # (2c) 🔴 동종 basin 강제 — 여러 basin 이 섞인 집합에서 min 을 뽑지 않는다
+    for f, b in basins.items():
+        if None in b:
+            out["blocks"].append(
+                "BASIN_UNRESOLVED_IN_SET(%s: %d잡이 realized basin 없음 — %s)"
+                % (f, len(b[None]), b[None][:3]))
+        real = {k: v for k, v in b.items() if k is not None}
+        if len(real) > 1:
+            out["blocks"].append(
+                "BASIN_HETEROGENEOUS(%s: 서로 다른 realized basin %d개가 한 집합에 "
+                "있다 %s — 상태를 가로질러 min 을 뽑지 않는다. seed 이름이 아니라 "
+                "수렴 결과가 갈렸다는 뜻이다)"
+                % (f, len(real), {k: len(v) for k, v in real.items()}))
+
+    # (2d) clean slab 과의 동종성 — E_ads 를 만들 때 필요하다 (회신 Z P0-4)
+    _slab_rb = set()
+    for jn, jr in jobs.items():
+        if "clean_slab" not in jn or not jr.get("ok"):
+            continue
+        rb = ((jr.get("geom") or {}).get("magnetic") or {}).get("realized_basin_id")
+        if rb:
+            _slab_rb.add(rb)
+    if _slab_rb:
+        out["clean_slab_basins"] = sorted(_slab_rb)
+        _cx = {k for b in basins.values() for k in b if k is not None}
+        if _cx and not (_cx & _slab_rb):
+            out["blocks"].append(
+                "BASIN_MISMATCH_SLAB(복합체 basin %s 이 clean slab basin %s 과 "
+                "겹치지 않는다 — 이 둘로 흡착에너지를 만들지 않는다)"
+                % (sorted(_cx)[:2], sorted(_slab_rb)[:2]))
 
     # (2b) J_f — pose × magnetic-basin interaction (회신 X Q1)
     #   조각별로 자세 p 의 두 seed 차 d_p = E(p,net4) − E(p,pm1) 를 모아
@@ -2737,6 +2840,14 @@ def main():
                     "n_small": len(small), "min_abs_muB": round(min(map(abs, got.values())), 3),
                     "abs_mean_muB": round(sum(map(abs, got.values())) / len(got), 3),
                     "total_muB": st.get("mag_total")}
+                # ★ 회신 Z P0-4 — realized basin 지문. seed 이름으로 짝지으면 안 된다.
+                _rb, _rbd = realized_basin_id(mom, want_sign, mol_sign, MOM_MIN)
+                rec["geom"]["magnetic"]["realized_basin_id"] = _rb
+                rec["geom"]["magnetic"]["realized_basin"] = _rbd
+                if _rb is None:
+                    rec["gates"].append(
+                        f"BASIN_UNRESOLVED({_rbd.get('why')}) — realized basin 을 "
+                        f"만들 수 없어 이 잡으로는 뺄셈을 하지 않는다")
                 if flip:
                     rec["gates"].append(
                         f"MAGNETIC_PARTIAL_FLIP({len(flip)}/{len(ni)} Ni 가 시드 topology 와 "
@@ -5221,10 +5332,32 @@ def selftest() -> int:
            "mol__ptfe_c10__box24__nzmag": -100.0,
            "sdcp_neutral__poseA": -201.0, "sdcp_neutral__poseB": -200.9,
            "ptfe_c10__poseA": -100.5}
-    _jobs = {k: {"ok": True, "gates": []} for k in _en if "__pose" in k}
+    # ★ 회신 Z P0-4 — 모든 잡이 realized basin 을 달고 있어야 뺄셈이 허용된다.
+    #   합성 레코드였던 옛 fixture 는 basin 이 없어 새 게이트에 걸렸다 —
+    #   **게이트가 맞고 fixture 가 낡았다** (실물은 LORBIT 로 항상 표가 있다).
+    _BAS = lambda b: {"ok": True, "gates": [],                       # noqa: E731
+                      "geom": {"magnetic": {"realized_basin_id": b}}}
+    _jobs = {k: _BAS("aaaa1111") for k in _en if "__pose" in k}
     _E = lambda j: _en.get(j)
     r = _closure_estimand(_man, {"pairs": {}}, _E, _emol, _jobs)
     chk(not r["blocks"], f"[V P0-4] 정상 입력에 blocks 없음 · {r.get('blocks')}")
+
+    # ⛔음성 (회신 Z P0-4) — seed 이름이 같아도 **수렴 결과**가 갈리면 막는다
+    _jb_het = dict(_jobs); _jb_het["sdcp_neutral__poseB"] = _BAS("bbbb2222")
+    _rh = _closure_estimand(_man, {"pairs": {}}, _E, _emol, _jb_het)
+    chk(any("BASIN_HETEROGENEOUS" in b for b in _rh["blocks"])
+        and "primary_ddE_lowE_eV" not in _rh,
+        "⛔음성: 한 조각 안에 서로 다른 realized basin 이 섞이면 min 을 안 뽑는다")
+    _jb_none = dict(_jobs)
+    _jb_none["ptfe_c10__poseA"] = {"ok": True, "gates": [], "geom": {"magnetic": {}}}
+    _rn = _closure_estimand(_man, {"pairs": {}}, _E, _emol, _jb_none)
+    chk(any("BASIN_UNRESOLVED_IN_SET" in b for b in _rn["blocks"]),
+        "⛔음성: realized basin 을 못 만든 잡이 있으면 그 집합으로 뺄셈하지 않는다")
+    _jb_slab = dict(_jobs)
+    _jb_slab["refs/clean_slab__afm2424_pm1"] = _BAS("cccc3333")
+    _rs = _closure_estimand(_man, {"pairs": {}}, _E, _emol, _jb_slab)
+    chk(any("BASIN_MISMATCH_SLAB" in b for b in _rs["blocks"]),
+        "⛔음성: clean slab 이 복합체와 다른 basin 이면 흡착에너지를 만들지 않는다")
     chk(abs(r["primary_ddE_lowE_eV"] - (-0.5)) < 1e-6,
         f"[V P0-4] primary = min-min = -0.5 · 실제 {r.get('primary_ddE_lowE_eV')}")
     # G = min(A_c10) - max(A_sdcp) = -0.5 - (-0.9) = +0.4.
