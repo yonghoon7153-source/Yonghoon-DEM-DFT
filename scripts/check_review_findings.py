@@ -619,7 +619,15 @@ def _selftest():
                                  'dangling probe (selftest)'],
                                 capture_output=True, text=True, timeout=10)
             if _c.returncode == 0:
-                _dang = _c.stdout.strip()[:8]
+                #  ⚠ 간헐 실패 (2026-08-29 실측): 단순히 `[:8]` 로 자르면 그 접두사가
+                #    **모호**할 수 있고 (다른 객체와 충돌) 그때 검사가 거짓 실패한다.
+                #    `--short=8` 은 모호하면 git 이 자동으로 길이를 늘린다.
+                #    ⇒ 검사기가 가끔 빨간불을 내면 언젠가 이유 없이 GPU 런을 막는다.
+                _sr = subprocess.run(['git', '-C', here, 'rev-parse', '--short=8',
+                                      _c.stdout.strip()], capture_output=True, text=True,
+                                     timeout=10)
+                _dang = (_sr.stdout.strip() if _sr.returncode == 0
+                         else _c.stdout.strip()[:8])
     except Exception:                                       # noqa: BLE001
         _dang = None
     if _dang:
