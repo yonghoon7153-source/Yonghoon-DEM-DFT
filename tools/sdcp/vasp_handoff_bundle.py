@@ -768,24 +768,59 @@ def _write_potcar_asm(jd: Path, species_order: List[str]) -> None:
       잡을 만드는 자리가 두 곳이면 배포물도 두 곳에서 만들어야 한다 — 한 함수로 뺀다.
     """
     pv = [POTCAR_SPEC.get(e, e) for e in species_order]
+    # ★ 회신 Z P0-6 — 개수만 세면 부족하다. 실제 실패 모드는 "$PP/Ni_pv/POTCAR 가
+    #   사실은 Ni 였다" · "PBE.52 세트였다" 이고, 둘 다 개수는 맞는다. 그래서
+    #   ① POSCAR 종 순서 ↔ POTCAR_SPEC ↔ 실제 TITEL **순서**를 자리별로 맞추고
+    #   ② variant 를 **토큰 전체**로 비교하며 (`Ni` 가 `Ni_pv` 안에서 오탐되면 안 된다)
+    #   ③ 원본·조립본 SHA256 을 POTCAR_PROVENANCE.json 에 남겨 **반송**시킨다.
+    #      정본 SHA 는 라이선스 때문에 우리가 못 싣는다 — 대신 분석기가 잡 사이
+    #      **일관성**을 본다(같은 variant 는 전 잡에서 같은 SHA 여야 한다).
     (jd / "POTCAR_ASSEMBLE.sh").write_text(
         "#!/usr/bin/env bash\n"
         "# 이 잡의 POTCAR 를 만든다. PBE PAW 5.4 세트 경로를 PP 로 준다.\n"
         "#   PP=/path/to/potpaw_PBE.54 bash POTCAR_ASSEMBLE.sh\n"
         "# ⚠ 종 순서는 이 잡 POSCAR 전용이다 — 다른 잡에 복사하지 말 것.\n"
+        "#   (하나를 돌려 쓰면 에러 없이 **다른 계**를 계산합니다.)\n"
         "set -e\n"
         f'ORDER="{" ".join(pv)}"\n'
+        f'SPECIES="{" ".join(species_order)}"\n'
         ': "${PP:?PP 를 지정하세요 (PBE PAW 5.4 세트 루트)}"\n'
-        'rm -f POTCAR\n'
+        'rm -f POTCAR POTCAR_PROVENANCE.json\n'
+        'srcsha=""\n'
         'for v in $ORDER; do\n'
         '  f="$PP/$v/POTCAR"\n'
         '  [ -f "$f" ] || { echo "⛔ 없음: $f"; exit 1; }\n'
+        '  srcsha="$srcsha $v:$(sha256sum "$f" | cut -d" " -f1)"\n'
         '  cat "$f" >> POTCAR\n'
         'done\n'
+        '# ① 개수\n'
         'n=$(grep -ac TITEL POTCAR)\n'
         f'[ "$n" = {len(pv)} ] || {{ echo "⛔ TITEL {len(pv)}개여야 하는데 $n개"; exit 1; }}\n'
+        '# ② 자리별 variant — 토큰 전체 비교 (Ni 가 Ni_pv 에 오탐되지 않게)\n'
+        'i=0\n'
+        'for v in $ORDER; do\n'
+        '  i=$((i+1))\n'
+        '  got=$(grep -a TITEL POTCAR | sed -n "${i}p" | awk \'{print $4}\')\n'
+        '  fun=$(grep -a TITEL POTCAR | sed -n "${i}p" | awk \'{print $3}\')\n'
+        '  [ "$got" = "$v" ] || { echo "⛔ ${i}번째 TITEL 이 $got — $v 여야 합니다"; exit 1; }\n'
+        '  [ "$fun" = "PAW_PBE" ] || { echo "⛔ ${i}번째가 $fun — PAW_PBE 여야 합니다"; exit 1; }\n'
+        'done\n'
+        '# ③ provenance — 이 파일을 결과와 **함께 반송**해 주세요\n'
+        'python3 - "$srcsha" <<\'PY\' > POTCAR_PROVENANCE.json\n'
+        'import hashlib, json, subprocess, sys\n'
+        'src = dict(t.split(":", 1) for t in sys.argv[1].split())\n'
+        'titel = [l.strip() for l in open("POTCAR", errors="ignore") if "TITEL" in l]\n'
+        'print(json.dumps({"schema": "potcar_provenance/v1",\n'
+        '                  "species_order": "' + " ".join(species_order) + '".split(),\n'
+        '                  "expected_variants": "' + " ".join(pv) + '".split(),\n'
+        '                  "titel_lines": titel, "source_sha256": src,\n'
+        '                  "assembled_sha256": hashlib.sha256(\n'
+        '                      open("POTCAR","rb").read()).hexdigest()},\n'
+        '                 indent=1, ensure_ascii=False))\n'
+        'PY\n'
         'grep -a TITEL POTCAR\n'
-        f'echo "✔ 조립 완료 — 종 순서 {" ".join(species_order)}"\n')
+        f'echo "✔ 조립 완료 — 종 순서 {" ".join(species_order)} · variant·순서·PAW_PBE 확인"\n'
+        'echo "  → POTCAR_PROVENANCE.json (결과와 함께 반송해 주세요)"\n')
 
 
 def _emit_slab_job(jd: Path, atoms, nslab: int, freeze: float, frag: str,
@@ -3637,6 +3672,21 @@ def _readme_sp(man: Dict[str, Any], a, zcut: float, n_jobs: int,
     longest = 56          # h — C10 static→dense 사슬 (비용 모형 중앙 추정, ±2배)
     groups = "` · `".join(sorted({k.split("/")[0] for k in man["planned"]}))
     ph_line = " · ".join(f"{k} {v}" for k, v in sorted((by_ph or {}).items()))
+    ncore_hint = "4"
+    # ★ census 를 문서에 **산출물에서 센 값으로** 박는다 (회신 Z P0-3)
+    cs = man.get("job_census") or {}
+    if cs:
+        census_md = (
+            "## 잡 census (산출물에서 센 값)\n\n"
+            "| | 끝점 | D3-off 쌍둥이 | 계 |\n|---|---:|---:|---:|\n"
+            f"| references | {cs['references']['endpoints']} | "
+            f"{cs['references']['d3_off_twins']} | **{cs['references']['총']}** |\n"
+            f"| calibration complexes | {cs['complexes']['pose×seed']} | "
+            f"{cs['complexes']['d3_off_twins']} | **{cs['complexes']['총']}** |\n"
+            f"| | | | **{cs['총잡수']}** |\n\n"
+            f"audit pose **{cs['audit_pose']}개**. pose 당: {cs['pose당']}\n")
+    else:
+        census_md = ""
     return f"""# VASP 계산 요청 — LiNiO₂(104) 위 분자 조각 단일점
 
 바쁘신 중에 부탁드려 죄송합니다. **VASP 실행 {n_all or (n_st + n_dn)}회**입니다
@@ -3647,40 +3697,83 @@ def _readme_sp(man: Dict[str, Any], a, zcut: float, n_jobs: int,
 ## 하실 일
 
 ```
+mkdir -p <이 묶음 전용 빈 디렉터리> && cd <그 디렉터리>
+unzip <이 묶음>.zip
 cd <잡폴더>
 PP=/path/to/potpaw_PBE.54 bash POTCAR_ASSEMBLE.sh     # 그 잡 전용 POTCAR 조립
 VASP_CMD="mpirun -np {a.cores} vasp_std" bash run_job.sh
 ```
 
+⚠ **묶음이 둘 이상이면 반드시 서로 다른 빈 디렉터리에 풀고 따로 반송해 주세요.**
+같은 자리에 겹쳐 풀면 어느 결과가 어느 묶음 것인지 저희가 되살릴 수 없습니다.
+
 잡 폴더 {n_jobs}개가 `{groups}` 에 있습니다.
 서로 **완전히 독립**이라 원하시는 만큼 동시에 돌리셔도 됩니다.
 
-## 미리 아셔야 할 것 두 가지
+{census_md}
 
-- **가장 긴 잡이 약 {longest} 시간**입니다 (48코어 기준 추정, ±2배). walltime 상한이
-  이보다 짧으면 그 잡만 알려 주세요 — 저희가 나눠서 다시 만들어 드리겠습니다.
-- **POTCAR 는 잡마다 종 순서가 다릅니다.** 위 `POTCAR_ASSEMBLE.sh` 가 그 잡에 맞게
-  만들고 검증까지 합니다. 하나를 만들어 전체에 복사하시면 틀립니다.
+## 실행 단계와 결과 범위 (읽어 주세요)
+
+이 요청은 **최종 흡착 결론이 아니라 Stage A calibration tranche** 입니다.
+포함된 복합체는 사전 지정된 calibration pose 뿐이고 **audit pose 는 없습니다.**
+
+각 calibration pose 는 `pm1/D3-on` · `pm1/D3-off` · `net4/D3-on` 세 계산으로
+구성됩니다. **`net4/D3-off` 는 의도적으로 만들지 않습니다** — 고정기하 D3(zero)는
+구조 기반 additive correction 이라 자기상태에 무관하므로 반복이 불필요합니다.
+따라서 같은 POSCAR 가 여러 번 보이는 것은 **정상이고 설계**입니다.
+중복으로 보고 하나만 돌리시면 그 짝이 통째로 무의미해집니다.
+
+Stage A 회수 **후에만** 상대오차 경계 (B)와 최종 선택창 (W)를 확정하고, 창 안의
+전체 candidate 와 창 밖 sealed audit 로 Stage B 를 새로 생성합니다.
+**Stage A 결과만으로 두 조각의 최종 흡착 선호를 종결하지 않습니다.**
+
+`pm1` 과 `net4` 는 **초기 MAGMOM seed 이름**입니다. 최종 자기상태가 아닙니다.
+저희 분석기가 최종 Ni 국소모멘트 부호벡터 · moment collapse · 유기종 상대스핀으로
+realized magnetic basin 을 판정하고, **같은 realized basin 으로 매칭되지 않은**
+complex 와 clean slab 에너지로는 흡착에너지를 만들지 않습니다.
+그래서 `LORBIT` 를 켜 두었습니다 — OUTCAR 의 국소모멘트 표가 판정 근거입니다.
+
+가능하시면 **`refs/clean_slab__*` 두 잡을 먼저** 돌려 보내 주세요. 그것으로 자기
+topology gate 를 통과시킨 뒤 complex 결과를 씁니다. raw `net4` 가 pose 마다 다른
+basin 으로 수렴하면 저희가 계산을 중단하고 별도 절차를 요청드립니다.
+
+모든 결과는 MLIP 이 고른 **고정기하에서의 PBE+U+D3 단일점 전자에너지**입니다.
+DFT-relaxed adsorption energy · 평형 결합에너지 · 자유에너지로 표현하지 않습니다.
+
+## 미리 아셔야 할 것
+
+- **전 잡이 단일점입니다.** `relax/` 폴더가 아예 없습니다. 확인하실 수 있습니다:
+  `find . -maxdepth 3 -type d -name relax | wc -l` → **0**
+  잡 수는 `find . -name run_job.sh | wc -l` 이 정답입니다.
+- **가장 긴 잡이 약 {longest} 시간**입니다 ({a.cores}코어 기준 추정, ±2배).
+  walltime 상한이 이보다 짧으면 그 잡만 알려 주세요 — 나눠서 다시 만들어 드립니다.
+- **POTCAR 는 잡마다 종 순서가 다릅니다.** `POTCAR_ASSEMBLE.sh` 가 그 잡에 맞게
+  조립하고 순서·variant·PAW_PBE 까지 확인합니다. 하나를 만들어 전체에 복사하시면
+  **에러 없이 다른 계를 계산합니다.**
 
 ## 보내 주실 것
 
-각 잡의 **`static/OUTCAR`** (있는 잡은 `dense/OUTCAR` 도). `.gz` 그대로 좋습니다.
+각 잡의 **`static/OUTCAR`** — 이것 하나면 판정이 됩니다. `.gz` 그대로 좋습니다.
+그리고 각 잡의 **`POTCAR_PROVENANCE.json`** (조립기가 자동 생성합니다).
 
-⚠ **`refs/mol__*` 잡만은 `relax/OUTCAR` 와 `relax/CONTCAR` 도 함께** 보내 주세요.
-   분자가 이완 중에 깨지지 않았는지 좌표로 확인합니다. 이게 없으면 그 조각의
-   결합에너지를 못 만듭니다.
+- `static/vasprun.xml` — 선택
+- **CHGCAR / WAVECAR 반송 불필요** (용량)
+- 발산·미수렴 잡도 **지우지 말고 그대로** 보내 주세요. 어느 잡이 왜 실패했는지가
+  판정의 일부입니다.
 
-슬랩 잡의 `CONTCAR`·`CHGCAR`·`WAVECAR` 는 필요 없습니다.
+## 부탁 — 입력을 고치지 말아 주세요
 
-## 부탁
+`INCAR` · `KPOINTS` · `POSCAR` 를 **한 글자도 고치지 말아 주세요.**
+분석기가 `MANIFEST.json` 의 sha256 으로 대조하며, **예외 태그 목록을 두지 않았습니다.**
+`NCORE` 를 포함해 무엇이든 한 줄이 바뀌면 그 잡은 거부됩니다
+(`NCORE` 는 {ncore_hint} 로 넣어 두었습니다).
 
-`INCAR`·`KPOINTS`·`POSCAR` 를 **한 글자도 고치지 말아 주세요.** 분석기가 sha256 으로
-대조해서, 병렬 태그 한 줄만 바꿔도 전체를 거부합니다 (NCORE 는 4 로 넣어 두었습니다).
-병렬 조정이 꼭 필요하시면 알려 주세요 — 저희가 다시 만들어 드리는 게 빠릅니다.
-
-SCF 가 안 붙는 잡이 있으면 **그대로 두고 알려만 주세요.** 설정을 바꿔 다시 돌리시는
-것보다, 저희가 그 잡만 새로 만들어 드리는 편이 확실합니다 (바뀐 입력은 저희 쪽
-검증을 통과하지 못합니다).
+- 병렬 조정이 꼭 필요하시면 **알려 주세요** — 저희가 다시 만들어 드리는 게 빠릅니다.
+- **SCF 가 안 붙는 잡은 그대로 두고 알려만 주세요.** 설정을 바꿔 다시 돌리신 값은
+  저희 검증을 통과하지 못해 버려집니다.
+- 그래도 직접 재시도해 보셔야 한다면, **원본을 덮지 마시고**
+  `<잡폴더>/_retry_1/` 처럼 별도 디렉터리에 남겨 주세요. 원본 실패 상태와 재시도를
+  둘 다 받아야 저희가 원인을 압니다.
 
 ## 확인용
 
@@ -3718,8 +3811,26 @@ def _submit_contract(man: Dict[str, Any], a) -> str:
     for _p in man["planned"].values():
         for _ph in (_p.get("phases") or []):
             by[_ph] = by.get(_ph, 0) + 1
+    # 🔴 회신 Z P0-1 — `planned` 에는 D3-off 쌍둥이가 **없다**(생성기가 plan() 을
+    #   안 부른다). 그래서 종전 문서는 "잡 40 / 총 VASP 실행 24" 라는 **자기모순**을
+    #   외주에 보냈다 — 실행량을 40 % 덜 잡게 만든다. 쌍둥이는 static 뿐이므로
+    #   그 수만큼 static 에 더한다.
+    _n_tw = len(man.get("d3_off_twins") or {})
+    if _n_tw:
+        by["static"] = by.get("static", 0) + _n_tw
+        n_st += _n_tw
     n_all = sum(by.values())
     ph_line = " · ".join(f"{k} {v}" for k, v in sorted(by.items()))
+    _cs = man.get("job_census") or {}
+    _census_block = ("### census\n\n"
+                     f"- references {_cs['references']['총']} "
+                     f"(끝점 {_cs['references']['endpoints']} + 쌍둥이 "
+                     f"{_cs['references']['d3_off_twins']})\n"
+                     f"- calibration complexes {_cs['complexes']['총']} "
+                     f"(pose×seed {_cs['complexes']['pose×seed']} + 쌍둥이 "
+                     f"{_cs['complexes']['d3_off_twins']})\n"
+                     f"- audit pose {_cs['audit_pose']}\n"
+                     f"- pose 당: {_cs['pose당']}\n") if _cs else ""
     return f"""# 제출 계약 (SUBMIT_CONTRACT)
 
 ## 상 의존성
@@ -3737,6 +3848,11 @@ static  (독립 — 잡끼리 완전 병렬)
 | dense 실행 | {n_dn} |
 | 총 VASP 실행 | **{n_all}** |
 | 상별 | {ph_line} |
+
+⚠ **잡 수의 정본은 `find . -name run_job.sh | wc -l`** 입니다 —
+`MANIFEST.planned` 에는 D3-off 쌍둥이가 들어 있지 않으므로 그것으로 세면 적게 나옵니다.
+
+{_census_block}
 
 ## 병렬 제출 (권장)
 `run_all.sh` 는 **직렬 디버그용**입니다. 실제로는 잡 목록을 배열로 던지세요:
@@ -3803,10 +3919,14 @@ POTCAR 는 미포함(라이선스) — `POTCAR_SPEC.txt` 변형 그대로. **Ni 
 (2026-08-08 납품과 동일). VASP 5.4.4 또는 6.x + PBE PAW 5.4 세트.
 
 ## ⚠ 지켜야 결과가 성립하는 것
-- **INCAR 수정 금지.** 예외 ①: NCORE/KPAR/NSIM 등 병렬 자유.
-  예외 ② — SCF 가 안 붙을 때만, 순서대로: 1) `ALGO = All`
-  2) `AMIX=0.1 · BMIX=0.0001 · AMIX_MAG=0.2 · BMIX_MAG=0.0001` — 쓴 것을 그 잡의
-  `NOTES.txt` 에 남기고, 그래도 안 되면 그 잡은 중단 후 알려 주세요.
+- **INCAR 수정 금지 — 예외 없습니다.** 분석기에 태그 allowlist 가 **구현돼 있지
+  않고**, `files_sha256` 이 INCAR 전체를 덮으므로 `NCORE` 한 줄만 바꿔도 그 잡은
+  거부됩니다 (회신 Z P0-7 — 종전 문구는 있지도 않은 예외를 약속했습니다).
+  · 병렬 조정이 필요하면 **알려 주세요.** 저희가 다시 만들어 드립니다.
+  · **SCF 가 안 붙으면 그대로 두고 알려만 주세요.** 설정을 바꿔 얻은 값은 검증을
+    통과하지 못해 버려집니다.
+  · 그래도 재시도하셔야 하면 **원본을 덮지 마시고** `<잡폴더>/_retry_1/` 에 남겨
+    주세요 — 실패 상태와 재시도를 둘 다 받아야 원인을 압니다.
 - static 은 relax 의 CONTCAR/CHGCAR 를 승계합니다 (run_job.sh 가 자동으로 합니다).
 - 발산/미수렴 잡은 그대로 두고 알려 주세요.
 
@@ -3825,7 +3945,8 @@ tier1 32잡 + refs 10잡이 1차 목표. 분자 기준계는 분 단위.
 - vasprun.xml 선택. **CHGCAR/WAVECAR 반송 불필요**
   (CHGCAR 는 가능하면 보관 — 후속 U-ramp 대비).
 - ⚠ **INCAR/KPOINTS/POSCAR 를 고치지 마세요.** 분석기가 MANIFEST 의 sha256 과 대조해
-  바뀐 파일을 잡아냅니다 (병렬 태그 NCORE/KPAR/NSIM 은 예외 — 고쳤으면 알려 주세요).
+  바뀐 파일을 잡아냅니다. **예외 태그는 없습니다** — 병렬 태그를 포함해 무엇이든
+  한 줄이 바뀌면 그 잡은 거부됩니다.
 
 ## 완주 후
 ```
@@ -4429,6 +4550,34 @@ def build_bundle(a, ledger: Optional[Dict[str, Any]] = None) -> Path:
                     shutil.rmtree(td / extra)     # 쌍둥이는 static 만
             twins[rel] = rel + "__d3off"
             n_jobs += 1
+        # ★ 회신 Z P0-3 — census 를 **기계로** 세고 못박는다. 리뷰어가 "net4/off 까지
+        #   생성됐다면 48잡이므로 manifest 와 설명 중 하나가 틀린 것" 이라고 조건을
+        #   걸었다. 설명이 아니라 **산출물**이 답해야 한다.
+        _bad_net4 = sorted(t for t in twins.values()
+                           if t.startswith("prospective/")
+                           and any(f"__{sd}__d3off" in t
+                                   for sd in SEEDS_FULL if sd != SEED_MAIN))
+        if getattr(a, "d3_seed_main_only", False) and _bad_net4:
+            sys.exit(f"⛔ --d3_seed_main_only 인데 비주-seed complex 에 D3-off 쌍둥이가 "
+                     f"{len(_bad_net4)}개 생겼다: {_bad_net4[:3]} — 고정기하 D3(zero)는 "
+                     f"자기상태에 무관하므로 반복이 불필요하고, 잡 수 설명과 어긋난다")
+        _cx_on = [k for k in man["planned"] if k.startswith("prospective/")]
+        _rf_on = [k for k in man["planned"] if not k.startswith("prospective/")]
+        _cx_tw = [v for v in twins.values() if v.startswith("prospective/")]
+        _rf_tw = [v for v in twins.values() if not v.startswith("prospective/")]
+        man["job_census"] = {
+            "references": {"endpoints": len(_rf_on), "d3_off_twins": len(_rf_tw),
+                           "총": len(_rf_on) + len(_rf_tw)},
+            "complexes": {"pose×seed": len(_cx_on), "d3_off_twins": len(_cx_tw),
+                          "총": len(_cx_on) + len(_cx_tw)},
+            "총잡수": len(_rf_on) + len(_rf_tw) + len(_cx_on) + len(_cx_tw),
+            "pose당": ("pm1/D3-on · pm1/D3-off · net4/D3-on — **net4/D3-off 는 만들지 "
+                       "않는다** (고정기하 D3 zero 는 구조 기반 additive correction 이라 "
+                       "자기상태에 무관)") if getattr(a, "d3_seed_main_only", False) else
+                      "전 seed × D3 on/off",
+            "audit_pose": 0,
+            "⚠": "이 표는 산출물에서 센 것이다 — 설명문이 아니라 실물이다",
+        }
         man["d3_off_twins"] = twins
         man["d3_off_note"] = (
             "같은 POSCAR·같은 MAGMOM·같은 k 로 **IVDW 줄만** 뺀 쌍. "
@@ -4469,7 +4618,13 @@ def build_bundle(a, ledger: Optional[Dict[str, Any]] = None) -> Path:
     # ★ 모드별 README (Codex 6차 §8) — 옛 README 는 82계·259상·relax 반송·refs 표를
     #   그대로 담고 있어 **단일점 Wave 1 과 정면으로 모순**된다. 실행 계약과 provenance
     #   문서를 옛 판으로 내보내는 것은 문구 문제가 아니라 반송 계약 위반이다.
-    if a.single_point:
+    # 🔴 회신 Z P0-1 — 종전엔 `a.single_point` 만 봤다. `--closure` 도 상을
+    #   `["static"]` 하나로 만드는데(_emit_slab_job: `if single_point or closure`)
+    #   README 분기가 그걸 안 봐서 **4상짜리 옛 README** 가 그대로 나갔다 —
+    #   82 systems · 259 phase runs · relax 반송 · tier/pair 표. 이 함수의 주석이
+    #   스스로 "문구 문제가 아니라 반송 계약 위반" 이라고 적어 둔 그 사고다.
+    #   (2026-08-29 sdcp_stageA_v2·motifprobe_v2 가 그 상태로 만들어졌다.)
+    if a.single_point or a.closure:
         n_st = sum(1 for p in man["planned"].values()
                    if "static" in (p.get("phases") or []))
         n_dn = sum(1 for p in man["planned"].values()
@@ -4594,7 +4749,7 @@ def build_bundle(a, ledger: Optional[Dict[str, Any]] = None) -> Path:
     print(f"\n→ {out_final}  · 잡 {n_jobs}개 · 쌍 {len(man['pairs'])}개 · 조각 {man['fragments']}")
     print(f"→ {zp}  ({zp.stat().st_size / 1e6:.1f} MB)")
     # ⚠ 모드가 바뀌었는데 메시지가 안 따라오면 외주처가 없는 절차를 찾는다.
-    if a.single_point:
+    if a.single_point or a.closure:
         print("  ⚠ POTCAR 미포함(라이선스) — 잡마다 POTCAR_ASSEMBLE.sh 로 조립할 것 "
               "(종 순서가 잡마다 다르다)")
         print("  ⚠ 단일점 — relax 상이 없다. static (+일부 dense) 만 돈다")
@@ -6185,6 +6340,32 @@ def verify_bundle(root, expect_jobs=None) -> int:
     if not (root / "analyze_results.py").is_file():
         bad.append("analyze_results.py 없음 — 회수해도 판정할 도구가 같이 안 간다")
 
+    # ⑦b 🔴 문서가 **실물과 같은 모드**를 설명하나 (회신 Z P0-1)
+    #   2026-08-29 실사고: `--closure` 는 상을 static 하나로 만드는데 README 분기가
+    #   `--single_point` 만 봐서 4상짜리 옛 README(82 systems·259 phase runs·
+    #   relax 반송)가 그대로 나갔다. 외주는 있지도 않은 relax/CONTCAR 를 찾는다.
+    #   해시는 이걸 못 잡는다 — 그 문서가 **원래 그 내용으로** 배포됐기 때문이다.
+    n_relax = sum(1 for k in found if (root / k / "relax").is_dir())
+    rq = root / "README_REQUEST.md"
+    if rq.is_file():
+        txt = rq.read_text(errors="ignore")
+        if n_relax == 0:
+            stale = [m for m in ("259", "82 systems", "82계",
+                                 "relax/OUTCAR", "relax/CONTCAR") if m in txt]
+            if stale:
+                bad.append(f"README_REQUEST.md 가 **이완판 문구**를 담고 있는데 실물에는 "
+                           f"relax 상이 하나도 없다 {stale[:3]} — 외주가 없는 산출을 "
+                           f"찾는다 (반송 계약 위반)")
+        elif "relax/OUTCAR" not in txt:
+            bad.append(f"실물에 relax 상이 {n_relax}잡 있는데 README 가 그 반송을 "
+                       f"요구하지 않는다")
+    sc = root / "SUBMIT_CONTRACT.md"
+    if sc.is_file():
+        m = re.search(r"총 VASP 실행 \| \*\*(\d+)\*\*", sc.read_text(errors="ignore"))
+        if m and int(m.group(1)) < len(found):
+            bad.append(f"SUBMIT_CONTRACT 의 총 실행 {m.group(1)}회 < 잡 {len(found)}개 "
+                       f"— 외주가 실행량을 적게 잡는다 (쌍둥이 누락)")
+
     # ⑧ 옆 zip — 실제로 나가는 물건이 이것이다
     zp = root.with_suffix(".zip")
     zinfo = ""
@@ -6252,7 +6433,10 @@ def _selftest_verify() -> int:
         ok[0] += 1; ok[1] += bool(c)
         print(("  ✔ " if c else "  ✘ ") + m)
 
-    def build(d: Path) -> Path:
+    DOC_OK = "이 묶음은 static 단일점만 돕니다. static/OUTCAR 를 보내 주세요.\n"
+    SC_OK = "| 총 VASP 실행 | **2** |\n"
+
+    def build(d: Path, readme: str = DOC_OK, contract: str = SC_OK) -> Path:
         """최소 번들 — verify 는 물리를 안 보므로 파일 구조만 있으면 된다.
 
         ★ **잡 둘 중 하나는 D3-off 쌍둥이**로 만든다: `files_sha256` 에는 있지만
@@ -6272,6 +6456,9 @@ def _selftest_verify() -> int:
                 "ENCUT = 520\n" + ("" if name.endswith("d3off") else "IVDW = 11\n"))
             (jd / "static" / "KPOINTS").write_text("a\n0\nGamma\n1 1 1\n0 0 0\n")
         (root / "analyze_results.py").write_text("#!/usr/bin/env python3\n")
+        # ★ 문서도 배포물이다 — 매니페스트에 들어가야 해시·문서 검사가 **따로** 걸린다
+        (root / "README_REQUEST.md").write_text(readme)
+        (root / "SUBMIT_CONTRACT.md").write_text(contract)
         # n_jobs 2 = planned 1 + 쌍둥이 1 — 이것이 정상이다
         man = {"n_jobs": 2, "planned": {"refs/clean_slab__pm1": {"phases": ["static"]}},
                "candidate_set": "selftest", "fragments": ["none"],
@@ -6338,6 +6525,20 @@ def _selftest_verify() -> int:
         r = build(d / "n7")
         (r / "MANIFEST.json").unlink()
         chk(verify_bundle(r) == 1, "⛔음성: MANIFEST 없으면 번들로 취급하지 않는다")
+
+        # ── 회신 Z P0-1 회귀 — **해시로는 절대 안 잡히는** 결함 ────────────────
+        #   문서를 build 인자로 심는다: 해시는 처음부터 그 내용으로 계산되므로
+        #   무결성은 통과하고 **문서 검사만** 걸려야 한다 (아니면 엉뚱한 이유로
+        #   통과한 음성이 된다 — v2 selftest 가 정확히 그 함정에 빠졌었다).
+        r = build(d / "n8", readme="각 잡의 relax/OUTCAR 와 relax/CONTCAR 를 보내 주세요\n")
+        rc = verify_bundle(r)
+        chk(rc == 1,
+            "⛔음성: relax 상이 0인데 README 가 relax 반송을 요구하면 차단 "
+            "(2026-08-29 실사고 — 해시는 통과한다)")
+
+        r = build(d / "n9", contract="| 총 VASP 실행 | **1** |\n")
+        chk(verify_bundle(r) == 1,
+            "⛔음성: 총 실행 수가 잡 수보다 적으면 차단 (외주가 40 % 덜 잡는다)")
 
     print(f"  verify selftest {ok[1]}/{ok[0]}")
     return 0 if ok[0] == ok[1] else 1
