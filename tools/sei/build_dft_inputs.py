@@ -104,6 +104,52 @@ def kmesh(cell, dens):
     return [max(1, int(np.ceil(np.linalg.norm(v) / dens))) for v in b]
 
 
+def make_control_structures(a, files):
+    """--supercell / --rattle_seeds → 파생 .vasp 를 만들고 그 경로 목록을 돌려준다.
+
+    회신 I (2026-08-27) §2 P0-2 · 실행순서 3 의 control 용:
+      *"pristine 3×3×3 에 대칭 끄고 rattle 여러 개 → 이완. 같은 Nd 패턴이 나오면
+        끝점부터 다시."*
+    공공이 **없는** 셀에서도 같은 재배열이 나오면 원인은 공공이 아니라 셀 자체의
+    soft mode 이고, 그러면 cc333 의 두 끝점이 애초에 무효다.
+
+    rattle 은 **결정론적**이다 (`default_rng(seed)`) — 같은 명령이 같은 구조를 준다.
+    seed 0 = 무변형 기준선(순수 초격자). 기준선이 있어야 "rattle 이 만든 것"과
+    "초격자가 원래 그런 것"을 가른다.
+
+    ⛔ 이 함수가 못 하는 것:
+      · 대칭이 실제로 깨졌는지 **검사하지 않는다** (nosym 은 QE 쪽 플래그일 뿐이다).
+      · 이완이 원본 대칭으로 되돌아가는지 못 본다 — 그건 이완 **결과** 분석 몫이다.
+      · rattle 크기가 soft mode 를 깨우기에 충분한지 보장하지 않는다. 너무 작으면
+        원위치로 돌아가고, 너무 크면 무관한 국소최소로 떨어진다. 여러 크기가 필요하면
+        --rattle 을 바꿔 여러 번 돌려라.
+    """
+    import numpy as np
+    from ase.io import read, write
+    sc = [int(x) for x in a.supercell.split()] if a.supercell else [1, 1, 1]
+    if len(sc) != 3 or any(x < 1 for x in sc):
+        sys.exit(f"⛔ --supercell '{a.supercell}': 양의 정수 3개여야 한다")
+    if a.rattle_seeds and a.rattle <= 0:
+        sys.exit("⛔ --rattle_seeds 를 줬는데 --rattle 이 0 이다 — 변형 없는 사본만 K개 나온다")
+    ctl = os.path.join(a.work, "_control_structures")
+    os.makedirs(ctl, exist_ok=True)
+    out = []
+    for f in files:
+        base = os.path.basename(f)[len("sei_"):-len(".vasp")]
+        prim = read(f)
+        for s in range(0, a.rattle_seeds + 1):
+            at = prim * tuple(sc)
+            if s > 0:
+                rng = np.random.default_rng(s)
+                at.positions = at.positions + rng.normal(0.0, a.rattle, at.positions.shape)
+            p = os.path.join(ctl, f"sei_{base}_p{''.join(map(str, sc))}_r{s}.vasp")
+            write(p, at, format="vasp", direct=True)
+            out.append(p)
+            print(f"  control 구조 {os.path.basename(p)} — {len(at)}원자 · "
+                  f"rattle {a.rattle if s else 0.0:.3f} Å (seed {s})")
+    return out
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--pattern", default="db/structures/sei_*.vasp")
@@ -126,6 +172,17 @@ def main():
                     help="Nd starting_magnetization (4f³ 국소모멘트 씨앗)")
     ap.add_argument("--nd_u", type=float, default=6.0,
                     help="Nd 4f 에 U [eV] (0 = 안 걺). 기본 6.0 — 란타나이드 4f 통상값")
+    # ── 회신 I P0-2 control (pristine 초격자 + rattle → nosym 이완) ──────────
+    ap.add_argument("--supercell", default=None,
+                    help="'n1 n2 n3' — 읽은 구조를 이 배수로 확장 (예: '3 3 3')")
+    ap.add_argument("--rattle", type=float, default=0.0,
+                    help="가우시안 rattle 표준편차 [Å]")
+    ap.add_argument("--rattle_seeds", type=int, default=0,
+                    help="rattle 시드 K개 — r0(무변형 기준선) + r1..rK 를 만든다")
+    ap.add_argument("--control_relax", action="store_true",
+                    help="P0-2 control 모드: **nosym 고정셀 relax 입력 하나만** 만든다 "
+                         "(vc-relax/scf/갭/DOS 단계 없음). 셀은 원본 그대로 둔다 — "
+                         "묻는 것이 '내부좌표가 재배열하는가' 이기 때문이다")
     ap.add_argument("--diagnose_undetermined", action="store_true",
                     help="⚠ electronic_class=undetermined 상도 갭 단계를 만든다 (진단 전용). "
                          "그 숫자는 갭이 아니다 — db 에 넣지 말 것")
@@ -138,6 +195,8 @@ def main():
     if not files:
         sys.exit(f"⛔ {a.pattern} 에 구조가 없다")
     os.makedirs(a.work, exist_ok=True)
+    if a.supercell or a.rattle_seeds:
+        files = make_control_structures(a, files)
     prov = json.load(open(PROV)) if os.path.isfile(PROV) else {}
 
     # ── pseudo 점검을 먼저 전부 한다 — 중간에 죽는 것보다 낫다 ──────────────
@@ -289,6 +348,25 @@ def main():
             body += f"\nK_POINTS automatic\n  {kpts[0]} {kpts[1]} {kpts[2]} 0 0 0\n"
             return body + extra
 
+        # ── P0-2 control 모드 — nosym 고정셀 relax 하나만 (회신 I 실행순서 3) ──
+        #   셀을 고정하는 이유: 묻는 것이 "내부좌표가 재배열하는가" 이고, cc333 과
+        #   **같은 셀**이어야 대조가 성립한다. vc-relax 는 셀까지 움직여 비교를 깬다.
+        if a.control_relax:
+            cin = os.path.join(d, "00_control_relax.in")
+            open(cin, "w").write(block("relax", k_scf, False, nosym=True))
+            json.dump({"mode": "P0-2 control (회신 I 실행순서 3)",
+                       "구조": os.path.abspath(f), "원자수": nat,
+                       "supercell": a.supercell, "rattle_A": a.rattle,
+                       "질문": "공공 없는 pristine 셀에서도 같은 Nd 재배열이 나오는가",
+                       "판정": "나오면 원인은 공공이 아니라 셀 자체의 soft mode "
+                               "⇒ cc333 끝점 두 개가 무효, 끝점부터 다시",
+                       "⛔_이_입력이_못_하는_것":
+                           "이완 후 대칭 복원 여부를 자동 판정하지 않는다 — "
+                           "symmetric_saddle.py --align_check 로 사후 비교할 것"},
+                      open(os.path.join(d, "control_meta.json"), "w"),
+                      ensure_ascii=False, indent=1)
+            print(f"\n{tag}: control relax 입력 {cin} ({nat}원자, nosym, 셀 고정)")
+            continue
         open(os.path.join(d, "01_vcrelax.in"), "w").write(block("vc-relax", k_scf, False))
         open(os.path.join(d, "02_scf.in"), "w").write(block("scf", k_scf, False))
         # ★ 갭의 정본 — fixed occupations + 조밀 k. nbnd 를 넉넉히 줘 CBM 을 잡는다

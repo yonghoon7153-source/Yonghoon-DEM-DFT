@@ -64,6 +64,15 @@ for t in "${TARGETS[@]}"; do
     ts "  ✗ $in 실패 — 꼬리:"; tail -6 "$out"; return 1
   }
 
+  # ── P0-2 control (회신 I 실행순서 3) — 이 디렉터리는 control relax **하나만** 돈다.
+  #   갭/DOS 체인을 타지 않는다: 묻는 것이 전자구조가 아니라 "공공 없는 pristine 셀에서도
+  #   같은 Nd 재배열이 나오는가" 이기 때문이다.
+  if [ -f 00_control_relax.in ]; then
+    run 00_control_relax.in 00_control_relax.out || continue
+    ts "  ✓ control relax 완료 — 대칭 복원 여부는 symmetric_saddle.py --align_check 로 본다"
+    continue
+  fi
+
   run 01_vcrelax.in 01_vcrelax.out || continue
   # ⚠ vc-relax 의 최종 좌표·셀을 scf 이후 입력에 반영해야 한다.
   #   QE 는 vc-relax 뒤 'Begin final coordinates' 블록을 찍는다 — 그걸 스플라이스한다.
