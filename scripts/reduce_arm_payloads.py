@@ -92,7 +92,17 @@ def reduce_one(path, max_list=MAX_LIST):
     out = _prune({k: v for k, v in s.items() if k != 'manifest'}, 'step3', dropped, max_list)
     if man is not None:
         out['manifest'] = man
+    #  ⚠⚠ `_prune` 는 **step3 안**의 긴 리스트만 적는다.  131 MB → 5.8 kB 의 대부분은
+    #  **step3 밖을 통째로 안 가져와서** 줄어든 것이고, 초판은 그것을 **한 줄도 안 남겼다**
+    #  — 32팔 전부 `dropped=[]` 라 "아무것도 안 버렸다" 로 읽힌다 (Codex R11 A2).
+    #  ⇒ 버린 최상위 키와 그 크기를 적는다.
+    top_dropped = [
+        {'key': k, 'bytes': len(json.dumps(v, ensure_ascii=False, default=str))}
+        for k, v in d.items() if k != 'step3']
+    top_dropped.sort(key=lambda x: -x['bytes'])
     out['_reduced'] = {'source': os.path.basename(path),
+                       'top_level_dropped': top_dropped[:40],
+                       'top_level_dropped_bytes': sum(x['bytes'] for x in top_dropped),
                        'source_bytes': os.path.getsize(path),
                        'source_sha256': _sha256(path),
                        'dropped': dropped, 'schema': SCHEMA,

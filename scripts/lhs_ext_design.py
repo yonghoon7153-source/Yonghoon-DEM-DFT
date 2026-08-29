@@ -573,10 +573,65 @@ def verify_csv(path: str) -> int:
     chk('phi_AM 이 pdd_SE 와 정합', all(
         abs(float(r['phi_AM']) - phi_am_of_pdd_se(float(r['pdd_SE']))) < 1e-5
         for r in rows))
+    #  ★★ `lhs_cell` 문자열을 **믿지 않는다** — 좌표에서 다시 계산해 대조한다.
+    #  ⚠ 초판은 문자열만 봤고, Codex R11 B2 가 반례를 냈다: 64점의 `pdd_SE` 를 전부
+    #    0.310000 으로 바꿔도 `lhs_cell` 이 그대로면 **0 failure 로 통과**했다.
+    #    검사기가 검사 대상이 아니라 **검사 대상의 자기 신고**를 본 것이다.
     pts = [dict(stratum=int(r['stratum']), lhs_cell=r.get('lhs_cell', ''),
                 n_AM_est=int(r['n_AM_est']), id=r['id']) for r in rows]
     bad = check_lhs(pts)
-    chk('층×공통4축 LHS 점유', not bad, '; '.join(bad[:3]))
+    chk('층×공통4축 LHS 점유 (신고된 cell)', not bad, '; '.join(bad[:3]))
+
+    #  좌표 → cell 재계산.  층 안에서 각 축의 **순위**가 곧 cell 이어야 한다
+    #  (LHS 는 축마다 n 칸을 한 번씩 쓰므로 값의 순위 = 칸 번호).
+    recomputed_bad = []
+    by_st = {}
+    for r in rows:
+        by_st.setdefault(int(r['stratum']), []).append(r)
+    AXES = ('pdd_SE', 'volfrac', 'rP_um', 'rSE_um')
+    for st, rs in sorted(by_st.items()):
+        if len(rs) != PER_STRATUM:
+            continue
+        for j, ax in enumerate(AXES):
+            #  rP 는 종류별 범위로 사상되므로 **분위**로 되돌려 순위를 낸다
+            if ax == 'rP_um':
+                vals = []
+                for r in rs:
+                    lo, hi = ((1.0, 2.5) if r['kind'] == 'mono_AM_S'
+                              else (2.5, 7.5))
+                    vals.append((float(r[ax]) - lo) / (hi - lo))
+            else:
+                vals = [float(r[ax]) for r in rs]
+            order = sorted(range(len(vals)), key=lambda i: vals[i])
+            rank = [0] * len(vals)
+            for pos, i in enumerate(order):
+                rank[i] = pos
+            for i, r in enumerate(rs):
+                claimed = int(r['lhs_cell'].split(',')[j])
+                if claimed != rank[i]:
+                    recomputed_bad.append(
+                        f'{r["id"]} 축{j}({ax}): 신고 {claimed} vs 좌표순위 {rank[i]}')
+    chk('★ 좌표에서 재계산한 cell 이 신고와 일치', not recomputed_bad,
+        '; '.join(recomputed_bad[:3]) + (f' … 총 {len(recomputed_bad)}건'
+                                         if len(recomputed_bad) > 3 else ''))
+
+    #  저장된 입자수도 재산술한다 (신고를 믿지 않는다)
+    n_bad = []
+    for r in rows:
+        phi_am = phi_am_of_pdd_se(float(r['pdd_SE']))
+        vf = float(r['volfrac'])
+        if r['ntype'] == '3':
+            wp, ws = float(r['w_AM_P']), float(r['w_AM_S'])
+            sfrac = wp / (wp + ws) if (wp + ws) else 1.0
+            n_am = (n_spheres(phi_am * sfrac, float(r['rP_um']), vf)
+                    + n_spheres(phi_am * (1 - sfrac), float(r['rS_um']), vf))
+        else:
+            n_am = n_spheres(phi_am, float(r['rP_um']), vf)
+        n_se = n_spheres(1.0 - phi_am, float(r['rSE_um']), vf)
+        tot = n_am + n_se
+        if abs(tot - float(r['n_total_est'])) > max(2.0, 0.005 * tot):
+            n_bad.append(f'{r["id"]}: 신고 {r["n_total_est"]} vs 재산술 {tot:.0f}')
+    chk('★ 입자수를 좌표에서 재산술해 대조', not n_bad, '; '.join(n_bad[:3]))
     from collections import Counter
     kc = Counter(r['kind'] for r in rows)
     chk('mono 두 종류가 같은 수', kc.get('mono_AM_P', 0) == kc.get('mono_AM_S', 0),
@@ -624,7 +679,16 @@ def main(argv=None):
         else:
             msg.append(f'  ⇒ 경로에 lhs*_*/input_lhs*_*.liggghts 가 없다.  ls 로 확인할 것')
         raise SystemExit('\n'.join(msg))
-    print(f'읽은 케이스 {len(rows)} 건 (못 읽음 {len(unread)})\n')
+    #  ★ 못 읽은 파일이 하나라도 있으면 **멈춘다** (Codex R11 B4).
+    #    초판은 한 건만 성공해도 그 범위로 CSV 를 쓰고 exit 0 했다 — 상자를 **읽은 만큼만**
+    #    유도하므로, 조용히 좁은 상자 위에 설계가 선다.
+    if unread:
+        raise SystemExit(
+            f'⛔ 헤더를 못 읽은 파일 {len(unread)} 건 — 상자를 좁게 유도하게 되므로 멈춘다.\n'
+            + '\n'.join('   ' + x for x in unread[:8])
+            + ('\n   …' if len(unread) > 8 else '')
+            + '\n  ⚠ 형식이 늘었으면 파서를 고칠 것.  건너뛰면 설계가 조용히 틀린다.')
+    print(f'읽은 케이스 {len(rows)} 건 (못 읽음 0 — 강제)\n')
     box = derive_box(rows)
     pts, notes = generate(box, a.seed)
     report(box, pts, notes, unread)

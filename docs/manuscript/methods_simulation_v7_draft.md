@@ -130,7 +130,14 @@ single bed rather than independent replicates**, so ratios are reported as the m
 eight prescribed phases together with the spread across them and the observed range; no standard
 error or confidence interval is implied. All arms reached the solver convergence criterion.
 
-*Values.* The effective electronic conductivity is 54.0 mS cm⁻¹ (SBE) and 70.6 mS cm⁻¹ (DBE), a paired ratio of 1.308 (spread 0.003 across the eight origin phases; observed range 1.302–1.310). Ohmic loss per phase was evaluated as Σ gₖ Δφₖ², summed over the voxel-to-voxel connections belonging to that phase. Sensitivity of these values to how the insulating binder is represented on the conduction grid is given in Table S3c.
+*Values.* Under the centerline convention **selected for reporting, but not calibrated**, the
+effective electronic conductivity is 54.0 mS cm⁻¹ (SBE) and 70.6 mS cm⁻¹ (DBE), a paired ratio
+of 1.308 (spread 0.003 across the eight origin phases; observed range 1.302–1.310). Omitting the
+binder from the conduction grid instead gives 72.3 and 81.3 mS cm⁻¹, a ratio of **1.124**; the
+two conventions differ only in whether the binder occupies conduction cells, and **neither is a
+calibrated representation of it**, so the magnitude of the increase is convention-dependent while
+its direction is not. Ohmic loss per phase was evaluated as Σ gₖ Δφₖ², summed over the
+voxel-to-voxel connections belonging to that phase. Table S3c gives the two settings.
 
 *Limitations.* The absolute conductivities have not been calibrated against a
 composition-matched measurement and should be read as the output of an idealised bulk model:
@@ -150,9 +157,12 @@ the missing resistance numerically but is **not identified** as a fibre–fibre 
 Three further limits apply to the beds themselves. They are more compacted than the experimental
 porosity anchor. **The compaction was not quasi-static**: the platen advanced at 0.27 of the
 dilatational wave speed against an internal limit of 0.01, so the bed state carries a rate
-contribution. Both electrodes were compacted at the same platen speed, so that contribution is
-common to them and the ratio is unaffected, but the **absolute** geometric quantities (thickness,
-ε_union) would require a slower re-compaction before being quoted as converged values. Finally,
+contribution. Both electrodes were compacted at the same platen speed, which makes the inputs like-for-like
+but **does not imply that the rate contribution cancels in the ratio** — equal driving speed is
+not equal dynamic response for two different compositions. The reported ratio is therefore
+**conditional on this high-rate compaction protocol**, and the absolute geometric quantities are
+a terminal wall separation and a high-rate simulation-geometry diagnostic rather than
+quasi-static converged values. Finally,
 the specimen provenance of the SDCP conductivity (250 S cm⁻¹) is not established.
 
 ---
@@ -192,8 +202,11 @@ Each electrode was solved at all eight half-voxel grid-origin shifts of a 2 × 2
 SBE and DBE sharing the same origins so that ratios are paired. These eight phases are a
 complete factorial of a single bed rather than independent replicates, so ratios are given as
 the mean over the prescribed phases with the spread and observed range; **no standard error and
-no confidence interval** are implied. Ohmic loss per phase was evaluated as Σ g_k Δφ_k². The effective electronic conductivity is
-54.0/70.6 mS cm⁻¹, a paired ratio of 1.308 (spread 0.003; range 1.302–1.310). Absolute conductivities are those of
+no confidence interval** are implied. Ohmic loss per phase was evaluated as Σ g_k Δφ_k². Under the centerline convention selected for reporting but **not calibrated**, the effective
+electronic conductivity is 54.0/70.6 mS cm⁻¹, a paired ratio of 1.308 (spread 0.003; range
+1.302–1.310); omitting the binder instead gives 72.3/81.3 and a ratio of **1.124**. Neither
+convention is a calibrated representation of the binder, so the magnitude is
+convention-dependent while the direction is not. Absolute conductivities are those of
 an idealised bulk model with no interfacial contact resistance anywhere and are not
 composition-matched to a measurement. The ratio is not grid-converged and grew at finer voxels
 **over the refinement interval examined**; no continuum extrapolation or global bound is
@@ -202,10 +215,11 @@ that dependence, **measured under the binder-omitted convention only**. The magn
 conditional on the carbon conductivity being an effective network constant: at the
 single-filament value the ordering reverses, but that arm is **not better physics** — it is a
 doubly idealised sensitivity at one origin phase. Three further limits: the beds are more
-compacted than the experimental porosity anchor; the compaction was **not quasi-static** (platen
-at 0.27 of the dilatational wave speed against an internal limit of 0.01), which is common to
-both electrodes and so cancels in the ratio but leaves the **absolute** thickness and ε_union
-requiring a slower re-compaction; and the specimen provenance of the SDCP conductivity
+compacted than the experimental porosity anchor; the compaction was **not quasi-static** (platen at 0.27 of the
+dilatational wave speed against an internal limit of 0.01), and although both electrodes moved at
+the same speed this makes the inputs like-for-like rather than making the rate contribution
+cancel, so the ratio is **conditional on this protocol** and the thickness and ε_union are a
+terminal wall separation and a high-rate diagnostic; and the specimen provenance of the SDCP conductivity
 (250 S cm⁻¹) is not established.
 
 ---
