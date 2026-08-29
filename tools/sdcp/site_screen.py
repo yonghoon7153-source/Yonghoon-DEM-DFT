@@ -1500,7 +1500,13 @@ def basin_descriptor(at, nslab, cut=BASIN_CONTACT_CUT):
         for j in range(len(sl)):
             if sub[i, j] <= cut:
                 c[(sym[mo[i]], sym[sl[j]])] += 1
-    fp = tuple(sorted((k[0], k[1], v) for k, v in c.items()))
+    # ⛔⛔ 2026-08-29 — 초판은 `(원소쌍, **개수 정확값**)` 이라 3.2 Å 안 원자수가 ±1 만
+    #   달라도 다른 지문이 됐다. 실측에서 자세 109 → basin 103 (6개만 병합) 으로
+    #   **중복제거가 사실상 작동하지 않았다.** 개수는 거친 구간(1 / 2-3 / 4-6 / 7+)으로
+    #   접고, 물리적으로 뜻이 있는 **어느 원소쌍이 닿았나** 를 지문의 중심에 둔다.
+    def _bin(n):
+        return 1 if n <= 1 else (2 if n <= 3 else (3 if n <= 6 else 4))
+    fp = tuple(sorted((k[0], k[1], _bin(v)) for k, v in c.items()))
     i, j = divmod(int(sub.argmin()), sub.shape[1])
     anchor = (sym[mo[i]], sym[sl[j]], round(float(sub[i, j]), 3))
     z = at.positions[:, 2]
@@ -1627,12 +1633,22 @@ def cmd_basins(a):
         take(outside[0] if outside else None, "W0 바깥 최근접")
 
         # sealed audit 2 (회신 W 4단계) — 선택집합 **밖**에서, seed 를 먼저 기록
-        pool = [b for b in basins if b["basin_id"] not in seen]
+        # ⛔⛔ 2026-08-29 — 초판은 `pool[0]`(선택 안 된 것 중 **최저**)을 집어
+        #   "창 바깥 최근접" 이라 라벨했다. 실측에서 그것이 W0 **안쪽**이었다
+        #   (sdcp +0.0765 vs 창 ~+0.17). 회신 W 4단계가 못박은 금지사항이다 —
+        #   **창 안에서 하나를 빼 holdout 이라 부르면 안 된다.**
+        pool_out = [b for b in outside if b["basin_id"] not in seen]
+        pool_in = [b for b in inside if b["basin_id"] not in seen]
         aud = []
-        if pool:
-            aud.append({**{k: v for k, v in pool[0].items() if k != "members"},
-                        "role": "sealed_audit", "why": "창 바깥 최근접 excluded"})
-        rest = [b for b in pool if b["basin_id"] != (aud[0]["basin_id"] if aud else None)]
+        if pool_out:
+            aud.append({**{k: v for k, v in pool_out[0].items() if k != "members"},
+                        "role": "sealed_audit",
+                        "why": "W0 **바깥** 최근접 excluded (calibration 다음)"})
+        else:
+            out.setdefault("warnings", []).append(
+                "%s: W0 바깥에 남은 basin 이 없다 — audit#1 을 만들 수 없다" % frag)
+        rest = [b for b in (pool_out + pool_in)
+                if b["basin_id"] != (aud[0]["basin_id"] if aud else None)]
         if rest:
             # 접촉지문 층화 난수 — seed 를 params 에 박아 뒀다
             rng = random.Random(a.seed)
@@ -1641,6 +1657,8 @@ def cmd_basins(a):
                 strata.setdefault(b["fingerprint"], []).append(b)
             key = rng.choice(sorted(strata, key=str))
             pick = rng.choice(strata[key])
+            # 층화 난수는 제외 풀 전체에서 뽑는다 (창 안팎 모두) — 회신 W 는
+            # "나머지 제외 풀에서 접촉지문 층화 난수" 라고만 했다.
             aud.append({**{k: v for k, v in pick.items() if k != "members"},
                         "role": "sealed_audit", "why": "접촉지문 층화 난수 (seed %d)" % a.seed})
         out["fragments"][frag] = {
@@ -2255,6 +2273,26 @@ def cmd_selftest(a) -> int:
     _chk(len(b) == 2, f"basin 묶기: 같은 지문 2개 → 1 basin, 다른 지문은 별도 (실제 {len(b)})")
     _chk(b[0]["rep_label"] == "a" and "b" in b[0]["members"],
          "대표는 **에너지 낮은 쪽**, 나머지는 members 로 보존")
+    # ⛔ 회신 W 4단계 — **sealed audit 은 창 안에서 뽑으면 안 된다.**
+    #   초판이 그랬고(실측 +0.0765 vs 창 ~+0.17) 시험이 없어서 놓쳤다.
+    _fake = [{"basin_id": "b%02d" % i, "E_pose_eV": e, "rep_label": "L%d" % i,
+              "fingerprint": (("C", "O", 1),) if i % 2 else (("C", "Ni", 1),),
+              "anchor": ("C", "O", 2.4), "height_A": 2.5, "tilt_deg": 30.0,
+              "members": ["L%d" % i], "n_members": 1}
+             for i, e in enumerate([0.00, 0.02, 0.08, 0.14, 0.19, 0.31, 0.45])]
+    _emin = _fake[0]["E_pose_eV"]
+    _inside = [b for b in _fake if b["E_pose_eV"] - _emin <= BASIN_W0_EV]
+    _outside = [b for b in _fake if b["E_pose_eV"] - _emin > BASIN_W0_EV]
+    _chk(len(_inside) == 4 and len(_outside) == 3,
+         f"창 W0=0.15 분할: 안 {len(_inside)} / 밖 {len(_outside)}")
+    _seen = {"b00", "b01", "b03", "b04"}          # calibration 4 가 잡았다고 가정
+    _pool_out = [b for b in _outside if b["basin_id"] not in _seen]
+    _chk(bool(_pool_out) and _pool_out[0]["basin_id"] == "b05",
+         "[음성 W-4] audit#1 은 **창 바깥**에서 (b05) — 창 안 b02 를 집으면 안 된다")
+    _chk(_pool_out[0]["E_pose_eV"] - _emin > BASIN_W0_EV,
+         f"[음성 W-4] 그 basin 이 실제로 창 밖이다 (+{_pool_out[0]['E_pose_eV'] - _emin:.3f} "
+         f"> {BASIN_W0_EV})")
+
     far = basin_descriptor(_mk(0.0, dx=6.0), 4)
     if far["fingerprint"] == d0["fingerprint"]:
         b2 = dedup_basins([("a", -1.0, d0, _cell), ("x", -0.9, far, _cell)])
