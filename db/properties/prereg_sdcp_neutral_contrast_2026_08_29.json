@@ -195,5 +195,41 @@
   "지금_문제인가": "❌ 아니다 — **이 번들의 두 조각이 서로 같다**(d5f18feb). 조각 간 대비에서 슬랩은 대수적으로 소거되므로 성립한다.",
   "🔴_그러나_남는_것": "**legacy wave1 값과 새 prospective 값은 슬랩 기준이 다르다.** 둘을 섞거나 평균하면 안 된다 — 사전등록이 이미 금지하고 있고, 이 관찰이 그 금지의 **물리적 근거**다.",
   "미해결": "같은 모델·task 로 재이완했는데 clean slab 이 왜 달라졌나. 비결정성인지, 시작 구조가 달랐는지, fmax 경로 차이인지 **확인 안 했다.** 재현성 문제라면 UMA 이완 전반의 provenance 에 영향을 준다."
+ },
+ "⛔_회신X_NO_GO_2026_08_29": {
+  "판정": "**NO-GO**. 40잡 번들은 final prospective bundle 이 아니라 잘못 조립된 calibration tranche 다.",
+  "출처": "kb/reviews/codex_X_bundle_reply_2026_08_29.md",
+  "P0_6건": [
+   "1. PTFE b21 은 sealed audit 이 아니다 — −0.1983−(−0.2660)=+0.0677 < W0=0.15 → 창 안쪽. 우리가 회신 도착 전 독립 발견했다 (site_screen.py:1650 `rest = pool_out + pool_in`).",
+   "2. 4+2 는 최종 candidate set 이 아니라 calibration pilot 이다. 최종 W 를 모르는 채 audit 과 candidate 를 동시에 동결했다.",
+   "3. 창 안 후보 83개 중 6개만 돌리며 prospective_lowE 라 불렀다.",
+   "4. 두 seed 이름이 아니라 두 **realized magnetic basin** 이 필요하다 (realized_basin_id: Ni sign-vector · moment collapse · 유기종 상대스핀).",
+   "5. 새 clean slab d5f18feb 의 provenance 미해결 — **실행 전 P0** 로 격상.",
+   "6. zip·digest 미첨부, digest 명령이 head -400 · SHA 16자리로 잘라 실물 감사 불가."
+  ],
+  "고쳐진_설계_pose당_3잡": "pm1 D3-on · pm1 D3-off · net4 D3-on. 두 번째 자기 seed 에 D3-off 쌍둥이는 불필요 — 고정기하 D3(zero)는 원자종·기하 additive 라 자기상태에 무관.",
+  "Stage_A_40잡": "refs 16 (clean slab pm1/net4 × D3 on/off · 조각별 mol box20/box24/box24-nzmag × D3 on/off) + calibration complexes 24 (SDCP b00 b01 b07 b08 · c10 b00 b01 b74 b75, 각 3잡). audit complex 8잡은 던지지 않고 그 자리를 calibration net4 8잡으로 교체 — 총량 40 그대로.",
+  "Stage_B": "총잡수 = 40 + 3·(|S_W \\ C_cal| + 4). calibration 회수 전에는 확정 불가.",
+  "⛔_분석_순서_고정": "calibration→(B)·W 확정→창 안 candidate 동결→**candidate-only minimum 기록**→audit unseal→regret→실패면 audit 편입하되 selector 는 FAIL 로 기록→새 audit 재봉인→통과 후에만 최종 minimum. audit 을 처음부터 candidate 라 부르면 audit 이 최저가 돼도 '더 낮은 자세를 찾았다' 로 흡수돼 selector 실패가 사라진다."
+ },
+ "🔴_두_팔의_표본밀도가_다르다_2026_08_29": {
+  "무엇": "primary `min_p A(SDCP,p) − min_q A(c10,q)` 는 **두 팔의 표본수에 의존한다.** 같은 창 규칙(W=0.15)이 c10 에는 75 pose, SDCP 에는 8 pose 를 준다.",
+  "왜_그런가": "c10(96 basin)은 0.19 eV 안에 뭉쳐 있고 SDCP(101 basin)는 넓게 퍼져 있다. 퍼플루오로데칸은 유연한 사슬이라 약하게·거의 등방적으로 붙는다.",
+  "창폭별_실측": {
+   "W=0.03": "SDCP 2 / c10 5",
+   "W=0.05": "SDCP 2 / c10 13",
+   "W=0.08": "SDCP 4 / c10 32",
+   "W=0.10": "SDCP 6 / c10 51",
+   "W=0.15": "SDCP 8 / c10 75"
+  },
+  "편향_크기_UMA": "c10 min: 상위 8개만 −0.2269 → 75개 전부 −0.2660 = **39 meV 하락**. SDCP min: 8개든 2개든 +0.0200 = **0 하락**.",
+  "DFT_환산": "UMA 는 자세 간 차이를 2.9–3.9배 압축한다 (이 문서 Δ_압축). 되돌리면 **~110–150 meV** — 주장 격차 0.346 eV 의 약 1/3 이 표본밀도만으로 생길 수 있다.",
+  "회신X_Q6와_다른_병": "Q6 은 audit 회계 문제(흡수)다. 이쪽은 **estimand 자체가 표본수에 의존**한다는 것이다. 사전등록이 G 를 primary 에서 뺀 이유(자세를 더 볼수록 나빠진다)가 min−min 에도 약한 형태로 남아 있다.",
+  "⛔_아직_판정_아님": "이 관찰은 회신 Y 로 올린다. **우리 손으로 estimand 를 바꾸지 않는다** — 결과를 보고 통계를 고르는 모양이 된다.",
+  "후보_대응_셋": [
+   "① 조각당 **동수** N 으로 자른다 (창 규칙 포기, 예산도 대칭). 단 N 을 DFT 전에 박아야 한다.",
+   "② 표본수에 둔감한 집계로 바꾼다 (Boltzmann 가중 평균 등) — 단 estimand 변경이라 재등록 대상.",
+   "③ UMA 를 순위 선택기에서 강등하고 diversity-stratified 설계로 간다 (회신 X 가 제시한 탈출구)."
+  ]
  }
 }
