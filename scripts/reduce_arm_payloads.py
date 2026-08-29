@@ -158,22 +158,41 @@ def preflight(src_dir, expect_arms):
     return paths, rcpt
 
 
+_VERDICT = os.path.join(_SCR, 'sdcp_gain_verdict.py')
+
+
 def _verdict_out(d, mode):
     """판정기를 한 모드로 돌려 stdout 을 돌려준다 (경로는 지운다 — 반드시 다르므로)."""
-    r = subprocess.run([sys.executable, os.path.join(_SCR, 'sdcp_gain_verdict.py'),
-                        '--dir', d] + ([mode] if mode else []),
+    r = subprocess.run([sys.executable, _VERDICT, '--dir', d]
+                       + ([mode] if mode else []),
                        capture_output=True, text=True, timeout=600)
     txt = (r.stdout or '') + (r.stderr or '')
     return r.returncode, txt.replace(os.path.abspath(d), '<DIR>')
 
 
 def equivalence(src, dst):
-    """⑤ 원본 ↔ 축소본의 **seal · collect · 전체 판정**을 canonical 비교한다."""
+    """⑤ 원본 ↔ 축소본의 **seal · collect · 전체 판정**을 canonical 비교한다.
+
+    ⚠⚠ **양쪽이 똑같이 실패하는 것은 동등이 아니다** (Codex 2026-08-29 지적).
+    판정기가 없으면 두 호출이 같은 `No such file` 을 내고 rc 도 같아 **차이 0 = 통과**로
+    읽힌다 — 배포 zip 에 `sdcp_gain_verdict.py` 를 안 넣었을 때 실제로 그렇게 됐다.
+    ⇒ ⓐ 판정기 **존재**를 먼저 확인하고, ⓑ **원본 쪽 호출이 성공**해야 비교를 인정한다.
+    """
+    if not os.path.exists(_VERDICT):
+        raise SystemExit(
+            f'판정기가 없다: {_VERDICT}\n'
+            '  ⚠ 이 상태에서는 두 호출이 똑같이 실패해 **거짓 동등**이 된다.\n'
+            '     축약기는 리포 안에서 돌려야 한다 (scripts/ 가 함께 있어야 한다).')
     diffs = []
     for mode in ('--seal-only', '--collect-only', None):
         rc_a, out_a = _verdict_out(src, mode)
         rc_b, out_b = _verdict_out(dst, mode)
         name = mode or '(full verdict)'
+        if rc_a != 0:
+            diffs.append(f'{name}: **원본 판정이 실패했다** (rc {rc_a}) — '
+                         '양쪽이 같이 실패하는 것은 동등이 아니다: '
+                         + ' '.join(out_a.split())[:160])
+            continue
         if rc_a != rc_b or out_a != out_b:
             diffs.append(f'{name}: rc {rc_a} vs {rc_b}'
                          + ('' if out_a == out_b else ' · stdout 불일치'))
@@ -262,15 +281,42 @@ def _selftest():
         print(('  PASS  ' if cond else '  FAIL  ') + label)
         ok = ok and bool(cond)
 
+    #  ★ 픽스처 manifest 는 **실제 커밋된 팔**에서 가져온다.
+    #    손으로 쓰면 55키짜리 생산 계약(schema_version · component_plan · components ·
+    #    backend 증거 · PTFE 기록 · 규약 id …)을 따라잡을 수 없고, 실제로 못 따라잡아
+    #    봉인이 계속 깨졌다.  ⇒ 계약이 자라도 픽스처가 따라온다.
+    _REF = os.path.join(_SCR, '..', 'docs', 'data',
+                        'w4_ptfe_centerline_20260827', 'p2_SBE_sph_a0.json')
+    _ref_man = None
+    if os.path.exists(_REF):
+        try:
+            _ref_man = json.load(open(_REF, encoding='utf-8'))['step3']['manifest']
+        except Exception:                                          # noqa: BLE001
+            _ref_man = None
+
     def arm(bed, bits, sig):
         h = 0.075
+        shift = [b * h for b in bits]
+        man = dict(_ref_man) if _ref_man else {}
+        man.update({'input_digest': ('d1022e090ab625a9' if bed == 'DBE'
+                                     else '04b5a565ff4069f4'),
+                    'code_sha': 'c2f5b047', 'vox_um': 0.15,
+                    'ptfe_stamp': 'centerline', 'sdcp_bridge_um': 0.01,
+                    'origin_shift_um': shift})
+        #  ★ manifest 를 고쳤으면 규약 id 도 다시 계산해야 한다 — 안 하면 판정기가
+        #    (정당하게) "저장된 id 가 재계산과 다르다" 로 봉인을 깬다.  생산 코드의
+        #    같은 함수를 쓴다: 손으로 흉내내면 그 흉내가 검사를 통과시킨다.
+        try:
+            sys.path.insert(0, _SCR)
+            import run_contract as _RC
+            man['physics_protocol_id'] = _RC.physics_protocol_id(man)
+        except Exception:                                          # noqa: BLE001
+            pass
         return {'step3': {
             'sigma_e_eff_S_cm': sig, 'n_dof': 26816923, 'cg_info': 0, 'cg_resid': 1e-9,
-            'unconverged': False, 'origin_shift_um': [b * h for b in bits],
-            'viz_points': list(range(2000)),
-            'manifest': {'input_digest': 'd1022e090ab625a9', 'code_sha': 'c2f5b047',
-                         'vox_um': 0.15, 'ptfe_stamp': 'centerline',
-                         'sdcp_bridge_um': 0.01, 'origin_shift_um': [b * h for b in bits]}}}
+            'unconverged': False, 'origin_shift_um': shift,
+            'viz_points': list(range(200000)),  # 실제 팔은 배열이 지배한다 (131 MB → 5.8 kB)
+            'manifest': man}}
 
     def build(td, arms=16, receipt=True, rejected=False, drop_step3=False):
         d = os.path.join(td, 'src')
@@ -331,7 +377,7 @@ def _selftest():
         chk('정상 cohort 는 통과한다 (rc 0)', rc == 0)
         red = json.load(open(os.path.join(out, 'p2_DBE_sph_a0.json'), encoding='utf-8'))
         s = red['step3']
-        chk('manifest 통째 보존', s['manifest']['input_digest'] == 'd1022e090ab625a9')
+        chk('manifest 통째 보존', s['manifest']['input_digest'] in ('d1022e090ab625a9', '04b5a565ff4069f4'))
         chk('긴 배열 제거 + 기록', s['viz_points'] is None
             and any(x['path'] == 'step3.viz_points' for x in s['_reduced']['dropped']))
         chk('⑥ 원본 SHA256 을 남긴다', len(s['_reduced']['source_sha256']) == 64)
