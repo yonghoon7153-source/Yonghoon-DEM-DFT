@@ -50,6 +50,8 @@ import sys
 
 PHASE = {'VGCF': 2, 'PTFE': 4, 'SDCP': 5}
 CONDUCTIVE = ('VGCF', 'SDCP')
+#  프레임 검증을 **표면이 아니라 깊은 안쪽**에서 한다 — 배제 경계가 ≈ 0.5 µm 흐리다.
+DEEP_FRAC = 0.8
 
 
 def _load_scaffold(path):
@@ -176,22 +178,58 @@ def count_contacts(bed_dir, scaffold, band_um=0.15, include_ptfe=False,
     rng_add = (apos.min(axis=0), apos.max(axis=0))
     rng_am = (ampos.min(axis=0), ampos.max(axis=0))
 
-    tree = cKDTree(apos)
+    #  ── 경계 규약: `periodic_xy + z_open` (metrics `coverage_boundary`).
+    #     AM 구가 상자를 넘어간다 (실측 x −2.4 … 52.4 µm) ⇒ 감아서 세지 않으면 경계
+    #     입자의 접촉을 놓친다.  cKDTree 주기 상자는 **모든 좌표가 ≥ 0** 이어야 하므로
+    #     z 를 양쪽 같은 양만큼 밀어 올린다 (거리 불변).
+    apos[:, 0] %= L_dem_um
+    apos[:, 1] %= L_dem_um
+    ampos[:, 0] %= L_dem_um
+    ampos[:, 1] %= L_dem_um
+    z0 = min(apos[:, 2].min(), ampos[:, 2].min()) - 1.0
+    apos[:, 2] -= z0
+    ampos[:, 2] -= z0
+    zbox = max(apos[:, 2].max(), ampos[:, 2].max()) + 10.0
+    tree = cKDTree(apos, boxsize=[L_dem_um, L_dem_um, zbox])
 
-    #  ★ 프레임 검증 — **접촉과 무관하다.**  AM 은 MPM 에서 **얼어붙은 장애물**이라
-    #    그 구 **안에는 물질점이 없어야** 한다.  변환이 맞으면 내부 비율 ≈ 0,
-    #    틀리면 무작위로 섞여 AM 부피분율(≈ 0.46) 근처가 나온다.
-    #    ⇒ 접촉이 생기도록 변환을 맞추는 것이 아니라, **독립 성질**로 변환을 검사한다.
+    #  ★ 프레임 검증 — **접촉과 무관하다.**  AM 은 MPM 에서 격자 마스크라 그 **깊은
+    #    안쪽**에는 물질점이 없어야 한다.  변환이 틀리면 무작위로 섞여 AM 부피분율
+    #    (≈ 0.46) 근처가 나온다.
+    #  ⚠⚠ **표면이 아니라 `DEEP_FRAC × r` 안쪽을 본다.**  실측 반경 밀도(2026-08-29):
+    #      d/r < 0.8 에서 **0.001**, 0.8–1.0 에서 0.07 → 0.52, 표면 바로 밖 1.34.
+    #      배제는 실재하지만 경계가 **≈ 0.5 µm 흐리다** (격자 셀 0.207 µm · 압밀 중 이동).
+    #      초판은 `d < r` 로 봐서 그 전이층 9.5 % 를 "변환 오류" 로 잘못 읽었다 —
+    #      날카로운 경계를 가정한 검사가 흐린 경계를 만난 것이다.
     inside = set()
     for c, r in zip(ampos, rs_um):
-        inside.update(tree.query_ball_point(c, r * (1.0 - 1e-9)))
+        inside.update(tree.query_ball_point(c, DEEP_FRAC * r))
     inside_frac = len(inside) / float(apos.shape[0])
     if max_am is None and inside_frac > inside_tol:
         raise SystemExit(
-            f'첨가제 점의 {inside_frac:.1%} 가 AM 구 **안**에 있다 (허용 {inside_tol:.0%}).\n'
-            '  AM 은 얼어붙은 장애물이라 안에 물질점이 없어야 한다 ⇒ 좌표 변환이 틀렸다.\n'
+            f'첨가제 점의 {inside_frac:.1%} 가 AM 구 **깊은 안쪽**(d < {DEEP_FRAC}·r)에 '
+            f'있다 (허용 {inside_tol:.0%}).\n'
+            '  AM 은 격자 마스크라 거기 물질점이 없어야 한다 ⇒ 좌표 변환이 틀렸다.\n'
             f'  현재 축척 {scale_um:.4f} µm/unit · origin {origin.round(5).tolist()}\n'
             '  ⚠ 접촉이 생길 때까지 변환을 맞추지 말 것 — 그 변환이 답을 만든다.')
+
+    #  ★ 반경 밀도 프로파일 — 배제가 어디까지 실재하고 경계가 얼마나 흐린지 남긴다.
+    #    이것이 `band_um` 규약을 읽는 근거이고, 값이 규약 의존임을 보이는 자리다.
+    prof_edges = [0.0, 0.4, 0.6, 0.8, 0.9, 1.0, 1.1, 1.2, 1.4, 1.6]   # d / r
+    prof = [0] * (len(prof_edges) - 1)
+    rmax = max(rs_um)
+    for c, r in zip(ampos, rs_um):
+        nb = tree.query_ball_point(c, prof_edges[-1] * r)   # ⚠ `idx` 를 덮지 않는다
+        if not nb:
+            continue
+        dd = np.linalg.norm(apos[nb] - c, axis=1) / r
+        for j in range(len(prof)):
+            prof[j] += int(((dd >= prof_edges[j]) & (dd < prof_edges[j + 1])).sum())
+    shell = [(prof_edges[j + 1] ** 3 - prof_edges[j] ** 3) for j in range(len(prof))]
+    tot = sum(s_ * 1.0 for s_ in shell)
+    bulk = (prof[-1] / shell[-1]) if shell[-1] and prof[-1] else 1.0
+    radial = {f'{prof_edges[j]:.1f}-{prof_edges[j+1]:.1f}':
+              round((prof[j] / shell[j]) / bulk, 4) if shell[j] and bulk else None
+              for j in range(len(prof))}
 
     out = []
     for c, r in zip(ampos, rs_um):
@@ -217,7 +255,8 @@ def count_contacts(bed_dir, scaffold, band_um=0.15, include_ptfe=False,
 
     return out, dict(band_um=band_um, kinds=kinds, n_am=len(out),
                      scale_um_per_unit=scale_um, origin_norm=origin.tolist(),
-                     inside_frac=round(inside_frac, 6),
+                     inside_frac=round(inside_frac, 6), deep_frac=DEEP_FRAC,
+                     radial_density_norm=radial, boundary='periodic_xy+z_open',
                      range_additive_um=[rng_add[0].tolist(), rng_add[1].tolist()],
                      range_am_um=[rng_am[0].tolist(), rng_am[1].tolist()],
                      um_per_unit=um_per_unit, n_pts=n_pts,
@@ -405,7 +444,9 @@ def main(argv=None):
           f'상별 점수 {info["phase_counts"]}')
     print(f'   프레임: {info["scale_um_per_unit"]:.4f} µm/unit · origin '
           f'{[round(v,5) for v in info["origin_norm"]]} · AM 구 **안**에 든 첨가제 점 '
-          f'{info["inside_frac"]:.2%}  (AM 은 격자 마스크라 물질점이 없다 ⇒ ≈0 이어야 한다)')
+          f'{info["inside_frac"]:.2%}  (d < {info["deep_frac"]}·r, AM 은 격자 마스크 ⇒ ≈0)')
+    print('   반경 밀도 (d/r, bulk=1): ' + ' · '.join(
+        f'{k} {v}' for k, v in info['radial_density_norm'].items()))
     print('⚠ 이 값은 규약 의존이다 — band 폭·개체 정의·PTFE 포함 여부가 각각 값을 바꾼다.')
     if a.out:
         json.dump(res, open(a.out, 'w', encoding='utf-8'), ensure_ascii=False, indent=1)
