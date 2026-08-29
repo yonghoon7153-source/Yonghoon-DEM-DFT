@@ -3907,29 +3907,24 @@ dense 는 k 검증용이라 {n_dn}개 잡에만 있습니다: {dc or '(없음)'}
 """
 
 
-def _submit_contract(man: Dict[str, Any], a) -> str:
+def _submit_contract(man: Dict[str, Any], a, by_ph: Optional[dict] = None) -> str:
     """제출 계약 — 병렬도·의존성·비용 추정의 **출처**를 못 박는다 (Codex 6차 §7).
 
     이 파일이 없으면 "2.4일" 이 어떤 병렬도의 산술 하한인지 아무도 모른다.
     이 도구가 못 하는 것: 실제 대기열 지연·노드 성능 차이 반영.
     """
-    n_st = sum(1 for p in man["planned"].values()
-               if "static" in (p.get("phases") or []))
-    n_dn = sum(1 for p in man["planned"].values()
-               if "dense" in (p.get("phases") or []))
-    # ⚠ 기체 기준계는 relax 상이 있다 — static+dense 만 세면 실제보다 적다
-    by = {}
-    for _p in man["planned"].values():
-        for _ph in (_p.get("phases") or []):
-            by[_ph] = by.get(_ph, 0) + 1
-    # 🔴 회신 Z P0-1 — `planned` 에는 D3-off 쌍둥이가 **없다**(생성기가 plan() 을
-    #   안 부른다). 그래서 종전 문서는 "잡 40 / 총 VASP 실행 24" 라는 **자기모순**을
-    #   외주에 보냈다 — 실행량을 40 % 덜 잡게 만든다. 쌍둥이는 static 뿐이므로
-    #   그 수만큼 static 에 더한다.
-    _n_tw = len(man.get("d3_off_twins") or {})
-    if _n_tw:
-        by["static"] = by.get("static", 0) + _n_tw
-        n_st += _n_tw
+    # ★ 상별 실행 횟수는 **호출부가 센 값**을 그대로 쓴다 (공통 출처 · 회신 Z P0-1).
+    #   여기서 다시 세면 갈라진다 — v4 가 정확히 그래서 문서는 40, MANIFEST 는 24 였다.
+    by = dict(by_ph or {})
+    if not by:                                   # 하위호환 (호출부가 안 주면)
+        for _p in man["planned"].values():
+            for _ph in (_p.get("phases") or []):
+                by[_ph] = by.get(_ph, 0) + 1
+        _n_tw = len(man.get("d3_off_twins") or {})
+        if _n_tw:
+            by["static"] = by.get("static", 0) + _n_tw
+    n_st = by.get("static", 0)
+    n_dn = by.get("dense", 0)
     n_all = sum(by.values())
     ph_line = " · ".join(f"{k} {v}" for k, v in sorted(by.items()))
     _cs = man.get("job_census") or {}
@@ -4725,6 +4720,13 @@ def build_bundle(a, ledger: Optional[Dict[str, Any]] = None) -> Path:
     for _p in man["planned"].values():
         for _ph in (_p.get("phases") or []):
             n_by_ph[_ph] = n_by_ph.get(_ph, 0) + 1
+    # 🔴 회신 Z P0-1 — `planned` 에 D3-off 쌍둥이가 없다. 여기서 안 더하면 문서와
+    #   MANIFEST 가 실행량을 40 % 덜 잡는다 (v4 실측: 잡 40인데 "실행 24회").
+    #   **이 한 곳이 공통 출처다** — README·SUBMIT_CONTRACT·MANIFEST 가 전부 이걸 쓴다.
+    #   따로 세면 또 갈라진다(v4 가 문서만 고치고 MANIFEST 를 놓친 이유).
+    _n_twins = len(man.get("d3_off_twins") or {})
+    if _n_twins:
+        n_by_ph["static"] = n_by_ph.get("static", 0) + _n_twins   # 쌍둥이는 static 뿐
     n_ph_all = sum(n_by_ph.values())
     # ★ 모드별 README (Codex 6차 §8) — 옛 README 는 82계·259상·relax 반송·refs 표를
     #   그대로 담고 있어 **단일점 Wave 1 과 정면으로 모순**된다. 실행 계약과 provenance
@@ -4746,7 +4748,7 @@ def build_bundle(a, ledger: Optional[Dict[str, Any]] = None) -> Path:
         (out / "README_REQUEST.md").write_text(README.format(
             freeze_pct=int(a.freeze * 100), zcut_note=f"{zcut:.3f} Å",
             k_relax=KMESH["relax"], k_static=KMESH["static"]))
-    (out / "SUBMIT_CONTRACT.md").write_text(_submit_contract(man, a))
+    (out / "SUBMIT_CONTRACT.md").write_text(_submit_contract(man, a, n_by_ph))
     (out / "POTCAR_SPEC.txt").write_text(
         "# 원소 → POTCAR 변형 (PBE PAW 5.4). 각 잡 POSCAR 의 종 순서대로 이어붙일 것.\n"
         "# Ni_pv 는 2026-08-08 납품과 동일 계보다 — 바꾸지 말 것.\n"
@@ -4758,10 +4760,8 @@ def build_bundle(a, ledger: Optional[Dict[str, Any]] = None) -> Path:
             files[str(p.relative_to(out))] = hashlib.sha256(p.read_bytes()).hexdigest()
     # ── 제출 계약을 MANIFEST 에 못 박는다 (Codex 6차 §7) ─────────────────────
     #   "2.4일" 이 어떤 코어 수·병렬도의 값인지 기록이 없으면 나중에 아무도 모른다.
-    n_st = sum(1 for p in man["planned"].values()
-               if "static" in (p.get("phases") or []))
-    n_dn = sum(1 for p in man["planned"].values()
-               if "dense" in (p.get("phases") or []))
+    n_st = n_by_ph.get("static", 0)          # ★ 쌍둥이 포함 (위 공통 출처)
+    n_dn = n_by_ph.get("dense", 0)
     # ⚠ 기체 기준계는 relax 상이 있다. static+dense 만 세면 실제 실행 횟수보다 적다
     #   (2026-08-12: 35 라고 적었는데 실제 43 이었다).
     n_cd = len(list(out.rglob("dense_cand/INCAR")))
@@ -6498,6 +6498,12 @@ def verify_bundle(root, expect_jobs=None) -> int:
         if m and int(m.group(1)) < len(found):
             bad.append(f"SUBMIT_CONTRACT 의 총 실행 {m.group(1)}회 < 잡 {len(found)}개 "
                        f"— 외주가 실행량을 적게 잡는다 (쌍둥이 누락)")
+    # ★ MANIFEST 쪽도 본다 — v4 는 문서를 고쳤는데 MANIFEST 는 24 로 남아 있었다.
+    #   외주가 둘 중 무엇을 읽을지 우리가 못 정한다. **둘 다** 맞아야 한다.
+    _nex = (man.get("submission") or {}).get("n_vasp_executions_total")
+    if isinstance(_nex, int) and _nex < len(found):
+        bad.append(f"MANIFEST.submission 의 총 실행 {_nex}회 < 잡 {len(found)}개 "
+                   f"— 문서를 고쳐도 MANIFEST 가 남아 있으면 같은 오해가 난다")
 
     # ⑧ 옆 zip — 실제로 나가는 물건이 이것이다
     zp = root.with_suffix(".zip")
@@ -6700,6 +6706,15 @@ def _selftest_verify() -> int:
         chk(verify_bundle(r) == 1,
             "⛔음성: from_basins 가 repo(db/)에 없으면 차단 — candidate set 을 "
             "재현·감사할 수 없다")
+
+        r = build(d / "n11b")
+        _m = json.loads((r / "MANIFEST.json").read_text())
+        _m["submission"] = {"cores_per_job": 48, "max_concurrency": 8,
+                            "n_vasp_executions_total": 1}
+        (r / "MANIFEST.json").write_text(json.dumps(_m, indent=1, ensure_ascii=False))
+        chk(verify_bundle(r) == 1,
+            "⛔음성: MANIFEST 의 총 실행 수가 잡 수보다 적으면 차단 "
+            "(v4 실측 — 문서만 고치고 MANIFEST 를 놓쳤다)")
 
         r = build(d / "n12")
         _m = json.loads((r / "MANIFEST.json").read_text())
