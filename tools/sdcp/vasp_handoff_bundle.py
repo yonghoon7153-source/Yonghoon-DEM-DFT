@@ -2522,6 +2522,17 @@ def _closure_estimand(man, results, E, emol, jobs):
     frags = [f for f in (man.get("fragments") or []) if f in emol]
     if len(frags) < 2:
         return None
+
+    def _is(jn, f):
+        """잡 키가 조각 f 의 복합체인가.
+
+        🔴 실제 키에는 **그룹 접두어**가 붙는다 (`prospective/sdcp_neutral__b00__…`,
+        `_pk()` 가 상대경로를 그대로 쓴다). 종전엔 `jn.startswith(f + "__")` 로만
+        봐서 **실물에서 하나도 안 걸렸다** — J_f 가 조용히 비고 basin 강제가 죽은
+        코드가 됐다. selftest fixture 가 접두어 없는 키를 써서 못 봤다
+        (2026-08-29 자체 적대검토).
+        """
+        return jn.rsplit("/", 1)[-1].startswith(f + "__")
     out = {
         "schema": "prereg_closure/v1",
         "prereg_doc": "db/properties/prereg_sdcp_neutral_contrast_2026_08_29.json",
@@ -2562,7 +2573,7 @@ def _closure_estimand(man, results, E, emol, jobs):
     for f in frags:
         rows = []
         for jn, jr in jobs.items():
-            if not jn.startswith(f + "__") or not jr.get("ok"):
+            if not _is(jn, f) or not jr.get("ok"):
                 continue
             g = [x for x in (jr.get("gates") or [])
                  if x.startswith(("MAGNETIC", "RADICAL", "PAIR_", "SOURCE_", "BASIN_"))]
@@ -2620,7 +2631,7 @@ def _closure_estimand(man, results, E, emol, jobs):
     for f in frags:
         d = {}
         for jn, jr in jobs.items():
-            if not jn.startswith(f + "__") or not jr.get("ok") or jn.endswith("__d3off"):
+            if not _is(jn, f) or not jr.get("ok") or jn.endswith("__d3off"):
                 continue
             for sd in ("afm2424_pm1", "afm2424_net4"):
                 if jn.endswith(sd):
@@ -5328,28 +5339,35 @@ def selftest() -> int:
                 "mol__sdcp_neutral__box24": "refs/mol__sdcp_neutral__box24__nzmag",
                 "mol__ptfe_c10__box24": "refs/mol__ptfe_c10__box24__nzmag"}}
     _emol = {"sdcp_neutral": -200.0, "ptfe_c10": -100.0}
+    # 🔴 키를 **실물 모양**으로 쓴다 (2026-08-29 자체 적대검토). 생성기는
+    #   `prospective/<frag>__<basin>__<seed>` 로 낸다(_pk 가 상대경로 그대로).
+    #   접두어 없는 옛 fixture 때문에 `startswith(f+"__")` 버그가 안 보였고,
+    #   실물에서는 조각 매칭이 **하나도 안 걸려** J_f 가 조용히 비었다.
     _en = {"mol__sdcp_neutral__box24__nzmag": -200.0,
            "mol__ptfe_c10__box24__nzmag": -100.0,
-           "sdcp_neutral__poseA": -201.0, "sdcp_neutral__poseB": -200.9,
-           "ptfe_c10__poseA": -100.5}
+           "prospective/sdcp_neutral__b00__afm2424_pm1": -201.0,
+           "prospective/sdcp_neutral__b01__afm2424_pm1": -200.9,
+           "prospective/ptfe_c10__b00__afm2424_pm1": -100.5}
     # ★ 회신 Z P0-4 — 모든 잡이 realized basin 을 달고 있어야 뺄셈이 허용된다.
     #   합성 레코드였던 옛 fixture 는 basin 이 없어 새 게이트에 걸렸다 —
     #   **게이트가 맞고 fixture 가 낡았다** (실물은 LORBIT 로 항상 표가 있다).
     _BAS = lambda b: {"ok": True, "gates": [],                       # noqa: E731
                       "geom": {"magnetic": {"realized_basin_id": b}}}
-    _jobs = {k: _BAS("aaaa1111") for k in _en if "__pose" in k}
+    _jobs = {k: _BAS("aaaa1111") for k in _en if k.startswith("prospective/")}
     _E = lambda j: _en.get(j)
     r = _closure_estimand(_man, {"pairs": {}}, _E, _emol, _jobs)
     chk(not r["blocks"], f"[V P0-4] 정상 입력에 blocks 없음 · {r.get('blocks')}")
 
     # ⛔음성 (회신 Z P0-4) — seed 이름이 같아도 **수렴 결과**가 갈리면 막는다
-    _jb_het = dict(_jobs); _jb_het["sdcp_neutral__poseB"] = _BAS("bbbb2222")
+    _jb_het = dict(_jobs)
+    _jb_het["prospective/sdcp_neutral__b01__afm2424_pm1"] = _BAS("bbbb2222")
     _rh = _closure_estimand(_man, {"pairs": {}}, _E, _emol, _jb_het)
     chk(any("BASIN_HETEROGENEOUS" in b for b in _rh["blocks"])
         and "primary_ddE_lowE_eV" not in _rh,
         "⛔음성: 한 조각 안에 서로 다른 realized basin 이 섞이면 min 을 안 뽑는다")
     _jb_none = dict(_jobs)
-    _jb_none["ptfe_c10__poseA"] = {"ok": True, "gates": [], "geom": {"magnetic": {}}}
+    _jb_none["prospective/ptfe_c10__b00__afm2424_pm1"] = {
+        "ok": True, "gates": [], "geom": {"magnetic": {}}}
     _rn = _closure_estimand(_man, {"pairs": {}}, _E, _emol, _jb_none)
     chk(any("BASIN_UNRESOLVED_IN_SET" in b for b in _rn["blocks"]),
         "⛔음성: realized basin 을 못 만든 잡이 있으면 그 집합으로 뺄셈하지 않는다")
@@ -5368,8 +5386,9 @@ def selftest() -> int:
     chk(r["verdict"] == "보고 가능" and r["reported_X_eV"] == -0.5,
         "[V P0-4] guard(-0.10) 통과 + 0.01 eV 반올림")
     # 음성: guard band 미달
-    _en2 = dict(_en); _en2["sdcp_neutral__poseA"] = -200.55
-    _en2["sdcp_neutral__poseB"] = -200.55
+    _en2 = dict(_en)
+    _en2["prospective/sdcp_neutral__b00__afm2424_pm1"] = -200.55
+    _en2["prospective/sdcp_neutral__b01__afm2424_pm1"] = -200.55
     r2 = _closure_estimand(_man, {"pairs": {}}, lambda j: _en2.get(j), _emol, _jobs)
     chk(r2["verdict"] == "NO_DIRECTIONAL_CLAIM",
         f"[음성 V P0-4] primary {r2.get('primary_ddE_lowE_eV')} > -0.10 → 방향성 주장 금지")
@@ -5381,7 +5400,8 @@ def selftest() -> int:
         "[음성 V P0-3] 비영 MAGMOM 대조가 더 낮으면 **MOLECULAR_STATE_UNRESOLVED 로 막고 "
         "값을 안 낸다** (자동 채택 금지)")
     # 음성: 자기 topology 게이트된 자세는 버리고 값도 안 낸다
-    _j4 = dict(_jobs); _j4["sdcp_neutral__poseA"] = {
+    _j4 = dict(_jobs)
+    _j4["prospective/sdcp_neutral__b00__afm2424_pm1"] = {
         "ok": True, "gates": ["MAGNETIC_PARTIAL_FLIP(3/48 Ni)"]}
     r4 = _closure_estimand(_man, {"pairs": {}}, _E, _emol, _j4)
     chk(any("GATED_POSE" in b for b in r4["blocks"]) and "primary_ddE_lowE_eV" not in r4,
