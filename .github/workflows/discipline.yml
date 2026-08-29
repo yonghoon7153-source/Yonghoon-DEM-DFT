@@ -71,3 +71,11 @@ jobs:
 
       - name: A 트랙 판정식 (절댓값 · 부호반전 회귀) (selftest)
         run: python scripts/bridge_grid_verdict.py --selftest
+
+      # ★★ LHS 확장 분석기 둘 (2026-08-29, Codex R11 B1) — 결과가 나오기 **전에** 배선한다.
+      #   런이 끝난 뒤 분석기를 짜면 규약이 데이터를 보고 정해지고, 그때는 사전등록이 아니다.
+      - name: LHS 퍼콜 추출기 (그래프 규약 · 경계 fixture) (selftest)
+        run: python scripts/lhs_perc_extract.py --selftest
+
+      - name: LHS 문턱 적합기 (Firth · 프로파일 구간 · 예외 규칙) (selftest)
+        run: python scripts/lhs_perc_fit.py --selftest

@@ -794,6 +794,11 @@ K_REQUIRED_SELFTESTS = (
     ('scripts/sr01_stamp_compare.py', '--selftest'),
     ('scripts/mpm_webapp_payload.py', '--selftest-temperature'),
     ('scripts/step3_sigma.py', '--selftest'),
+    #  ★ LHS 확장 분석기 둘 (2026-08-29, Codex R11 B1) — 분석기가 **결과 전에** 커밋돼야
+    #    사전등록의 `perc_i` 규약이 실재한다.  여기 넣는 것은 그 둘이 나중에 조용히
+    #    배선에서 빠지는 것을 막는다 (규칙 K 의 원래 사고와 같은 부류).
+    ('scripts/lhs_perc_extract.py', '--selftest'),
+    ('scripts/lhs_perc_fit.py', '--selftest'),
 )
 K_CHECK_ALL = 'scripts/check_all.sh'
 K_CI_YML = '.github/workflows/discipline.yml'

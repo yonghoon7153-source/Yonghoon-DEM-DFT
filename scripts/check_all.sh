@@ -70,6 +70,12 @@ run 'reduce_arm_payloads     --selftest' python3 scripts/reduce_arm_payloads.py 
 #    **부호만 뒤집어도** A = 2 로 h1 을 통과했다.  원 사전등록 정의는 절댓값이다.
 #    `regr-sign-flip` 이 u = −v → A = 0 → h0 을 단언한다 (옛 식이 2.0 을 냈을 것도 함께).
 run 'bridge_grid_verdict    --selftest' python3 scripts/bridge_grid_verdict.py --selftest
+#  ★★ LHS 확장 분석기 둘 (2026-08-29, Codex R11 B1) — **결과가 나오기 전에** 배선한다.
+#    R11: "추출기와 적합기를 결과 전에 커밋해야 사전등록의 규약이 실재한다."  런이 끝난 뒤
+#    분석기를 짜면 규약이 데이터를 보고 정해지고, 그때는 사전등록이 아니다.
+#    extract = AM 접촉 그래프의 z-퍼콜 (1차 관측량) · fit = Firth 문턱 + 프로파일 구간.
+run 'lhs_perc_extract       --selftest' python3 scripts/lhs_perc_extract.py --selftest
+run 'lhs_perc_fit           --selftest' python3 scripts/lhs_perc_fit.py --selftest
 
 echo "── 리포 실물 (리포가 맞나 — selftest 가 **대신해 주지 않는다**) ──"
 #  ★★ 2026-08-25 — 배터리는 느려서 여기 없지만(~20분), **문법이라도** 본다.
