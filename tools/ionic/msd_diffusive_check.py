@@ -38,8 +38,33 @@ D_HOP_A = 3.0               # 이웃 Li 자리 간격 [Å] — hops_per_ion.py �
 BETA_NOISE_5PCT = 0.12
 
 
+def _covers(t, hi):
+    """t 가 hi 까지 실제로 도달하는가 (마지막 간격 하나만큼의 여유 허용).
+
+    ⛔⛔ 2026-08-29 (회신 S) — **이 검사가 없었다.** `lin_fit`/`d_incremental` 은
+      `lo <= x <= hi` 로 거른 뒤 점이 3개 이상이기만 하면 맞춤을 돌려줬다.
+      그래서 곡선이 100 ps 에서 끝나는데 창 `50–200` 을 요청하면 **50–100 을 맞춰 놓고
+      라벨은 50–200** 이 붙었다. MTO 는 최대 lag 를 T/2 로 자르므로 200 ps 생산런의
+      최대 lag 가 100 ps 다 — 즉 이건 예외가 아니라 **200 ps 런의 기본 상황**이었다.
+      못 잰 것은 통과가 아니다 (이 파일 1502행 주석의 같은 원칙).
+    """
+    if not t:
+        return False
+    tmax = max(t)
+    if tmax >= hi:
+        return True
+    if len(t) < 2:
+        return False
+    dts = sorted(b - a for a, b in zip(t[:-1], t[1:]) if b > a)
+    step = dts[len(dts) // 2] if dts else 0.0
+    return tmax >= hi - step
+
+
 def lin_fit(t, y, lo, hi):
     """[lo,hi] 에서 MSD = c + m·t 를 자유 절편으로 맞춘다. (m, c, R²) 또는 None.
+
+    ⛔ 곡선이 hi 까지 안 닿으면 **None** 이다 (회신 S). 잘린 창을 요청한 라벨로
+      돌려주면 서로 다른 창이 같은 값이 되고 그게 측정처럼 읽힌다.
 
     ★★ 2026-08-11 — **이 절편이 β 게이트의 정체다.**
       고체 MSD 는 어느 계든 `MSD(t) = C + 6Dt` 꼴이다 (C = 케이지 진폭 + ballistic 잔재).
@@ -64,6 +89,8 @@ def lin_fit(t, y, lo, hi):
         · 절편이 **상수**·기울기 불변·β 가 1 로 올라감 → 케이지 절편. **D 인용 가능**
         · 절편이 **커지고** 기울기가 떨어지며 β 가 모든 창에서 그대로 → 진짜 sub-diffusion
     """
+    if not _covers(t, hi):
+        return None
     pts = [(a, b) for a, b in zip(t, y) if lo <= a <= hi]
     if len(pts) < 3:
         return None
@@ -99,6 +126,8 @@ def d_incremental(t, y, lo, hi):
         (실무 확정은 block/seed bootstrap CI 로 — 아직 미구현).
       · lag 이 궤적 길이에 가까우면 MSD(t2) 자체가 시간원점 부족으로 못 믿는다.
     """
+    if not _covers(t, hi):     # 회신 S — 잘린 창을 요청 라벨로 돌려주지 않는다
+        return None
     pts = [(a, b) for a, b in zip(t, y) if lo <= a <= hi]
     if len(pts) < 3 or pts[-1][0] - pts[0][0] <= 0:
         return None
@@ -1221,6 +1250,24 @@ def selftest():
     chk(d_incremental(_t, _cage, 200, 300) is None,
         "[음성] 창이 궤적 밖이면 None — 빈 구간에서 0 을 반환하지 않는다")
 
+    # ── 회신 S P0 — **부분적으로만 덮이는 창** (종전 fail-open) ────────────────
+    #   곡선이 100 ps 에서 끝나는데 창 50–200 을 요청하면 예전에는 50–100 을 맞춰
+    #   놓고 라벨만 50–200 을 붙였다. MTO 는 최대 lag 를 T/2 로 자르므로 200 ps
+    #   생산런의 최대 lag 가 100 ps 다 — 예외가 아니라 **기본 상황**이었다.
+    _t100 = [0.5 * k for k in range(1, 201)]                     # 0.5 … 100.0 ps
+    _lin100 = [0.7 * x for x in _t100]
+    chk(lin_fit(_t100, _lin100, 50, 200) is None,
+        "[음성 S] 곡선이 100 ps 인데 창 50–200 → lin_fit None (잘린 창을 그 라벨로 안 준다)")
+    chk(d_incremental(_t100, _lin100, 50, 200) is None,
+        "[음성 S] 같은 상황에서 d_incremental 도 None")
+    _ok = lin_fit(_t100, _lin100, 50, 100)
+    chk(_ok is not None and abs(_ok[0] - 0.7) < 1e-6,
+        "[양성 S] 창이 실제로 덮이면(50–100) 그대로 맞춘다 — 정상까지 막지 않는다")
+    chk(lin_fit(_t100, _lin100, 2, 100.4) is not None,
+        "[양성 S] hi 가 마지막 점을 간격 하나만큼 넘어서는 것은 허용 (격자 끝 반올림)")
+    chk(lin_fit(_t100, _lin100, 2, 130) is None,
+        "[음성 S] 간격 하나를 넘게 모자라면 거부한다")
+
     # ── τ_int (2026-08-27, 교차리뷰 H) ───────────────────────────────────────
     try:
         import numpy as _np
@@ -1297,6 +1344,15 @@ def selftest():
             "[양성] 같은 궤적의 **unwrap 판은 그대로 통과**한다 — 정상까지 막지 않는다")
         chk(directional_msd_tensor(_d / "traj.xyz", save_fs=100.0, prefix_ps=0.5) is None,
             "[음성] prefix 가 너무 짧으면 None — 프레임 20개 미만은 재지 않는다")
+        # 회신 S P0 — 궤적보다 긴 prefix. `frames[:keep]` 이 조용히 전체를 돌려줘서
+        #   서로 다른 prefix 행이 **같은 값**으로 찍혔다 (실측 kgy lpsocl_md/licube 5행 동일).
+        _short = directional_msd_tensor(_d / "traj.xyz", save_fs=100.0, prefix_ps=1e6)
+        chk(isinstance(_short, dict) and "__short__" in _short,
+            "[음성 S] 궤적보다 긴 prefix → 잘린 값 대신 __short__ 표식 "
+            f"(실제 {_short.get('__short__', float('nan')):.2f} ps)")
+        _full = directional_msd_tensor(_d / "traj.xyz", save_fs=100.0, prefix_ps=None)
+        chk(_full is not None and not isinstance(_full, dict),
+            "[양성 S] prefix 없이는 그대로 잰다 — 정상 경로를 막지 않는다")
         chk(directional_msd_tensor(_d / "traj.xyz", save_fs=100.0, species="Xx") is None,
             "[음성] 없는 원소를 달라면 None — 빈 배열로 0 을 반환하지 않는다")
 
@@ -1505,6 +1561,8 @@ def main():
     print(("**MTO 곡선**" if a.mto else "STO 곡선") + " · "
           + f"창 {lo}–{hi} ps · β=1 확산 · β<{BETA_OK[0]} 케이지 · "
           f"창끝 MSD < {MSD_MIN_A2} Å² 면 통계 부족")
+    print(f"  D 계열 = **{'MTO' if a.mto else 'STO'}** — β·c·D_inc 와 같은 곡선에서 낸다 "
+          "(회신 S P0: 종전엔 --mto 여도 D 만 STO 를 읽어 한 표에 두 추정량이 섞였다)")
     # ⚠⚠ β<0.8 을 곧바로 '케이지' 로 읽지 말 것 — **창끝 MSD 를 같이 본다.**
     #   2026-08-11 귀무분포 검정(tools/ionic/beta_null_test.py): 케이지가 0 인 이상
     #   브라운 운동을 Li 27개·200 ps 로 재면 창 2–50 에서 β = 1.01 (5–95% 0.86–1.14),
@@ -1521,7 +1579,23 @@ def main():
     for f in files:
         d = json.load(open(f))
         t, y = _curve(d, a.mto, f, a.rebuild_mto)
-        D = d.get("D_Li_cm2_s")
+        # ⛔⛔ 2026-08-29 (회신 S P0) — **추정량을 섞고 있었다.** `--mto` 를 줘도 이 줄이
+        #   저장된 STO `D_Li_cm2_s` 를 읽었다. β·c·D_inc 는 MTO 곡선에서 나오는데 D 만
+        #   STO 였으므로, 한 표 안에서 **두 추정량이 섞였다.** 실측 격차:
+        #     558원자 1.190e-05(STO) vs 1.238e-05(MTO m/6) · 62원자 6.632e-06 vs 7.817e-06.
+        #   생성 코드가 `D_Li_cm2_s` 와 `D_Li_cm2_s_mto` 를 **별도 필드로** 저장하는데
+        #   (disorder_ensemble_diffusion.py) 소비 쪽이 그걸 안 봤다.
+        #   ⇒ 보고 있는 곡선과 **같은 계열**의 D 만 쓴다. 없으면 조용히 후퇴하지 않는다.
+        if a.mto:
+            D = d.get("D_Li_cm2_s_mto")
+            D_src = "MTO"
+            if D is None:                       # 같은 창·같은 곡선에서 직접 낸다
+                _lf = lin_fit(t, y, lo, hi) if (t and y) else None
+                D = (_lf[0] / 6.0 * 1e-4) if _lf else None
+                D_src = "MTO(창내 재적합)" if D is not None else "없음"
+        else:
+            D = d.get("D_Li_cm2_s")
+            D_src = "STO"
         tag = case_label(f)
         # ⚠ P1-6 — D 가 null 인 msd.json 하나만 있어도 옛 코드는 TypeError 로 죽어
         #   **전수 게이트가 통째로** 날아갔다 (MD 가 중간에 죽으면 실제로 생긴다).
