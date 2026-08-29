@@ -1,6 +1,7 @@
 # VASP 계산 요청 — SDCP / perfluorodecane 조각의 LiNiO₂(104) 흡착 (Stage A)
 
-- 요청일: 2026-08-29 · 묶음 **둘**: `sdcp_stageA_v2.zip` (40잡) · `sdcp_motifprobe_v2.zip` (10잡) — 합 **50잡**
+- 요청일: 2026-08-29 · 묶음 **하나**: `sdcp_stageA_v3.zip` (**40잡**)
+- ⚠ `sdcp_motifprobe_v2`(10잡)는 **이번에 보내지 않습니다** (아래 §8)
 - 생성기: `tools/sdcp/vasp_handoff_bundle.py` (모드 `--closure --d3_pairs --both_seeds`)
 - 계보: 2026-08-12 묶음(30잡, 2026-08-25 반송)과 **같은 생성기·같은 U·같은 ENCUT**.
   달라진 것은 아래 §3 에 전부 적었습니다.
@@ -155,11 +156,10 @@ python3 analyze_results.py .     # stdlib 만 씁니다
 
 | 파일 | 크기 | SHA256 |
 |---|---:|---|
-| `sdcp_stageA_v2.zip` | 380,929 B | `ddfa7cc08e54d2aaa5b01e4cc823b22e4dc5ae72658e64845e4b4a2d6ca8695f` |
-| `sdcp_motifprobe_v2.zip` | 150,658 B | `59cdfff5553f2bb943cb9d873dad83c5216aa488c6cbf5b90a2ecb494b442ba6` |
+| `sdcp_stageA_v3.zip` | *(재생성 후 기입)* | *(재생성 후 기입)* |
 
 받으신 뒤 대조해 주세요 — `sha256sum sdcp_stageA_v2.zip`.
-⚠ 파일명 끝의 **`_v2`** 를 확인해 주세요. `_v1` 판은 폐기본입니다.
+⚠ 파일명 끝의 **`_v3`** 를 확인해 주세요. `_v1`·`_v2` 는 폐기본입니다.
 
 각 묶음 안 `MANIFEST.json` 의 `files_sha256` 로 개별 파일까지 대조하실 수 있습니다:
 `sha256sum <파일>`.
@@ -170,3 +170,25 @@ python3 analyze_results.py .     # stdlib 만 씁니다
 
 변형에너지 분해(E_int/E_deform) · DOS/Bader · 진동/ZPE · 구조 이완 —
 이번 요청 범위 밖입니다.
+
+
+---
+
+## 8. 이번에 보내지 않는 것 — `sdcp_motifprobe_v2`
+
+접촉 모티프 대비를 묻는 10잡 묶음을 따로 만들어 두었지만 **이번 요청에서 뺐습니다.**
+
+이유는 순서입니다. 그 묶음은 Stage A 회수 뒤에 정할 선택창 (W) 안팎을 가르는
+후보 선정과 **같은 자세 풀**에서 나옵니다. 결과를 먼저 보면 Stage B 후보 선정이
+그 결과에 오염됩니다 — 즉 "무엇이 낮은지 보고 나서 무엇을 후보로 삼을지 정하는"
+모양이 됩니다.
+
+그래서 순서를 이렇게 고정했습니다:
+
+1. **Stage A 40잡** (이 요청)
+2. 회수 → (B)·(W) 확정 → Stage B candidate·audit **동결**
+3. 그 다음에야 motif probe 실행
+
+실행하게 되면 exact 10잡 · matched contrast · seed · D3 상태를 별도 manifest 에
+박아 다시 요청드리겠습니다. 그 결과는 primary minimum 에 **포함하지 않고**,
+사전 지정된 matched contrast 의 descriptive 결과로만 씁니다.
