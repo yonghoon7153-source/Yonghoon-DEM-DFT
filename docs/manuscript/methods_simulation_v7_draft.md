@@ -95,13 +95,14 @@ edge of 0.15 μm. Adjacent conducting voxels were coupled through harmonic-mean 
 the potential field obtained from ∇·(σ∇φ) = 0, with 1 V applied between the separator (φ = 0)
 and current-collector (φ = 1 V) faces and the remaining boundaries insulating; the effective
 conductivity was taken from the total current. NCM811, VGCF and SDCP carried the electronic
-network and LPSCl and SDCP the ionic network. **PTFE was resolved on the conduction grid as a
-blocking phase**: the binder is insulating and its content differs between the two electrodes
-(1.0 wt% in the SBE against 0.5 wt% in the DBE), so a transport model that omitted it could not
-represent half of the compositional change under study. Because a voxel emptied of conduction
-may over-represent the local blocking of a thin surface coating, the alternative convention in
-which PTFE is left unresolved is reported alongside it in Table S3b, and both are quoted in the
-text.
+network and LPSCl and SDCP the ionic network. The insulating binder was treated under **two
+conventions, reported as equivalent sensitivity points rather than one primary result**: omitted
+from the electronic grid, and with its centerline voxels excluded from conduction. Neither is
+established as closer to a real thin coating — the one-cell centerline under-represents the
+coating's spatial extent while over-blocking where it is stamped, and the diameter-aware variant
+is not implemented. Note that omitting the binder from the conduction grid does not remove it
+from the model: its mass and stiffness are present in the DEM–MPM bed, and only its direct
+insulating exclusion on the electronic grid is absent.
 
 *Conductivity of the carbon network.* The conductivity assigned to VGCF is an **effective
 network value, not a fibre material constant**. Voxelisation fuses touching fibres into shared
@@ -171,10 +172,12 @@ into the pore space at the experimental weight fractions.
 Each microstructure was rasterized at a voxel edge of 0.15 μm; adjacent conducting voxels were
 coupled through harmonic-mean conductances and ∇·(σ∇φ) = 0 solved with 1 V between the
 separator and current-collector faces, the remaining boundaries insulating. NCM811, VGCF and
-SDCP carried the electronic network and LPSCl and SDCP the ionic network. PTFE was resolved as a
-blocking phase, since it is insulating and its content differs between the two electrodes
-(1.0 against 0.5 wt%), so omitting it would remove half of the compositional change under study;
-the alternative convention in which it is left unresolved is given alongside in Table S3b. The VGCF conductivity is an effective network
+SDCP carried the electronic network and LPSCl and SDCP the ionic network. The insulating binder
+was treated under two conventions reported as equivalent sensitivity points — omitted from the
+electronic grid, and with its centerline voxels excluded — since neither is established as closer
+to a real thin coating: the one-cell centerline under-represents the coating's extent while
+over-blocking where stamped, and omitting it removes only the electronic exclusion, the binder's
+mass and stiffness remaining in the bed. The VGCF conductivity is an effective network
 value rather than a fibre constant, since voxelisation removes the fibre–fibre contact
 resistance that separates the powder (≈ 83 S cm⁻¹) and single-filament (≈ 10⁴ S cm⁻¹) values;
 the powder-scale value was adopted and rescaled to preserve axial fibre conductance
@@ -236,11 +239,12 @@ porosity 가 아니다.  실험 앵커(~15.6 %) 대비 과압축이다.
 
 각주: *Both conventions were evaluated on the same beds with the same code and grid, differing
 only in whether the insulating binder occupies conduction cells; a machine-checked contract
-confirms that no other parameter differs. PTFE is resolved in the reported configuration
-because it is insulating and its content differs between the two electrodes, so omitting it
-would remove half of the compositional change under study. Because a fully emptied voxel may
-over-represent the local blocking of a thin surface coating, the unresolved convention is given
-alongside; the direction of the change is common to both, its magnitude is not.*
+confirms that no other parameter differs. Neither convention is designated primary: the
+one-cell centerline under-represents the spatial extent of a thin coating while over-blocking
+the cells it occupies, and the diameter-aware variant is not implemented, so neither is
+established as closer to the real film. Omitting the binder from the conduction grid removes
+only its electronic exclusion; its mass and stiffness remain in the DEM–MPM bed. The direction
+of the change is common to both conventions, its magnitude is not.*
 
 ---
 

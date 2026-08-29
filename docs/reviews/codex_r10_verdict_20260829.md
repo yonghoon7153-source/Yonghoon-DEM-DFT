@@ -40,7 +40,7 @@
 
 | # | 조건 | 상태 |
 |---|---|---|
-| 1 | centerline 단일 primary·굵은글씨·`reported`/`resolved` 제거, 두 규약 **동등 sensitivity** | ✅ 적용 (`이 커밋`) |
+| 1 | centerline 단일 primary·굵은글씨·`reported`/`resolved` 제거, 두 규약 **동등 sensitivity** | ✅ 적용 — ⚠ **1차 반영은 머리만 고치고 본문 3곳을 놓쳤다** (아래 부록 B) |
 | 2 | calibration provenance · DEM/MPM 역할 · **첨가제 단계 순서** 정정 | ✅ 적용 |
 | 3 | `lower bound` · "contact resistance 복원" · 무조건 SDCP 개선 주장 → 조건부 문구 | ✅ 적용 |
 | 4 | **W4 원자료·receipt 를 고정 커밋에** 넣어 원장 HOLD 해제 | ⛔ 미착수 (task #10) |
@@ -84,3 +84,28 @@ PTFE-off · `standard error` · 옛 Table S3 골격을 쓴다.  **Markdown 수�
 
 **후속 (미착수)**: 실패한 probe SHA 를 파일에 남겨 재현 가능하게 만들고
 (`_dang` 을 로그), 그 SHA 로 `check()` 를 직접 호출해 어느 분기에서 갈리는지 본다.
+
+---
+
+## 부록 B — 1차 반영이 **머리만 고쳤다** (2026-08-29, 재판정 직전에 발견)
+
+R10 반영 커밋(`6e65e28b`)은 문서 **머리**에 *"centerline 은 resolved 가 아니다 — 기각"* 을
+적었으나, **본문 세 곳에 그 문장이 그대로 남아 있었다**:
+
+| 자리 | 남아 있던 문장 |
+|---|---|
+| Full · Stage 3 | *"**PTFE was resolved on the conduction grid as a blocking phase** … could not represent **half of the compositional change** under study"* |
+| Compact | *"PTFE was resolved as a blocking phase … omitting it would remove half of the compositional change"* |
+| Table S3b 각주 | *"PTFE is **resolved in the reported configuration** …"* |
+
+⇒ **머리와 본문이 정반대를 말하는 상태로 재판정에 낼 뻔했다.**  Codex 가 재판정을 제안한
+직후, 보내기 전에 본문을 다시 읽다 발견했다.
+
+★★ **오늘 네 번째 같은 형태이고, 이번엔 고치고 있던 파일 안에서 났다**:
+① Table S3 헤더(`RAW_W4_VERIFIED`) ② §5 국문 요약 ③ A1 §4 (A3 이 대체했는데 A1 무표시)
+④ **이 건**.  앞의 셋은 "다른 문서" 였는데 이번엔 **같은 문서 안**이다.
+
+**교훈 — 문자열 치환으로 철회를 반영할 때는 `grep` 으로 잔여를 세고 0 을 확인한다.**
+지금 그렇게 했다: `grep -c "PTFE was resolved\|half of the compositional"` → **0**.
+⚠ 이것을 검사기로 만들 수 없는 이유: 철회 문구는 매번 다르고 `quotation_ban` 은 **수치**
+등록부다.  ⇒ 절차로만 막힌다 (반영 커밋마다 잔여 grep).
