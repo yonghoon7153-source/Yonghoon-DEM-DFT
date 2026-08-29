@@ -130,10 +130,16 @@ def count_contacts(bed_dir, scaffold, band_um=0.15, include_ptfe=False,
         raise SystemExit(f'AM 반지름이 {min(rs_um):.3g}–{max(rs_um):.3g} µm 로 나온다 — '
                          f'um_per_unit={um_per_unit} 이 틀렸다')
 
+    #  ── 좌표계가 같은가.  scaffold 는 DEM 좌표, se_dump 는 **MPM 압밀 후** 좌표라
+    #     프레임이 다를 수 있다 (`dilate_z` · `um_box_um` ≠ `lateral_box`×1000).
+    #     프레임이 어긋나면 결과가 "전부 0" 으로 나오는데, 그것은 **측정값이 아니라 실패**다.
+    ampos = np.array([[x, y, z] for x, y, z in zip(xs, ys, zs)]) * um_per_unit
+    rng_add = (apos.min(axis=0), apos.max(axis=0))
+    rng_am = (ampos.min(axis=0), ampos.max(axis=0))
+
     tree = cKDTree(apos)
     out = []
-    for x, y, z, r in zip(xs, ys, zs, rs_um):
-        c = np.array([x, y, z]) * um_per_unit
+    for c, r in zip(ampos, rs_um):
         near = tree.query_ball_point(c, r + band_um)
         if not near:
             out.append(0)
@@ -142,7 +148,21 @@ def count_contacts(bed_dir, scaffold, band_um=0.15, include_ptfe=False,
         d = np.linalg.norm(apos[near] - c, axis=1)
         keep = near[d >= r]                     # 구 **표면 바깥** 껍질만
         out.append(int(np.unique(aid[keep]).size) if keep.size else 0)
+
+    if out and max(out) == 0:
+        ax = lambda t: ' · '.join(f'{a:8.3f}–{b:<8.3f}' for a, b in zip(*t))  # noqa: E731
+        raise SystemExit(
+            'AM 전부가 접촉 0 이다 — 이것은 측정값이 아니라 **좌표계 불일치**다.\n'
+            f'  첨가제 점 (se_dump, MPM 압밀 후) x·y·z 범위 [µm]:\n    {ax(rng_add)}\n'
+            f'  AM   (am_scaffold, DEM 좌표)     x·y·z 범위 [µm]:\n    {ax(rng_am)}\n'
+            '  ⇒ 두 범위가 겹치지 않거나 축척이 다르면 프레임이 다른 것이다.\n'
+            '     mpm_metrics 의 `dilate_z` · `um_box_um` · `wall_z` 를 확인할 것.\n'
+            '  ⚠ 자동 보정하지 않는다 — 어떤 변환인지 확정하기 전에 맞추면 그 변환이\n'
+            '     결과를 만든다.')
+
     return out, dict(band_um=band_um, kinds=kinds, n_am=len(out),
+                     range_additive_um=[rng_add[0].tolist(), rng_add[1].tolist()],
+                     range_am_um=[rng_am[0].tolist(), rng_am[1].tolist()],
                      um_per_unit=um_per_unit, n_pts=n_pts,
                      n_additive_points=int(idx.size),
                      phase_counts=counts, representation='mpm_material_points')
