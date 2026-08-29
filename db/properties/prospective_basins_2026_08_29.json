@@ -1,0 +1,6501 @@
+{
+ "schema": "prospective_basins/v1",
+ "date": "2026-08-29",
+ "params": {
+  "contact_cut_A": 3.2,
+  "rmsd_tol_A": 0.75,
+  "height_tol_A": 0.4,
+  "W0_eV": 0.15,
+  "tau_eV": 0.04,
+  "audit_seed": 20260829
+ },
+ "⚠": "이 문서는 **DFT 를 보기 전에** 만든다. calibration 은 값을 보고 고르고, sealed audit 은 그 밖에서 고른다 — audit 를 보고 모델/창을 고치면 그것은 더 이상 holdout 이 아니다 (회신 W 4단계).",
+ "fragments": {
+  "sdcp_neutral": {
+   "n_poses_passed": 109,
+   "n_gated": 3,
+   "n_basins": 101,
+   "E_min_eV": 0.019954,
+   "gated": [
+    {
+     "label": "sdcp_neutral__O_top__fib11__r000",
+     "E_pose_eV": -0.478778,
+     "gates": [
+      "COLLISION(1.03Å<1.5)",
+      "BOND_TOPOLOGY(H-O:5-23:1.558)",
+      "NOT_CONVERGED(steps>300)"
+     ]
+    },
+    {
+     "label": "sdcp_neutral__hollow__fib11__r090",
+     "E_pose_eV": 0.247847,
+     "gates": [
+      "IMAGE_LATERAL(4.49Å<4.5)"
+     ]
+    },
+    {
+     "label": "sdcp_neutral__hollow__fib11__r270",
+     "E_pose_eV": -0.316905,
+     "gates": [
+      "COLLISION(1.04Å<1.5)",
+      "IMAGE_LATERAL(4.47Å<4.5)",
+      "BOND_TOPOLOGY(H-O:5-23:1.528)"
+     ]
+    }
+   ],
+   "basins": [
+    {
+     "basin_id": "b00",
+     "rep_label": "sdcp_neutral__O_top__fib08__r000",
+     "E_pose_eV": 0.019954,
+     "fingerprint": [
+      [
+       "H",
+       "Li",
+       1
+      ],
+      [
+       "H",
+       "Ni",
+       2
+      ],
+      [
+       "H",
+       "O",
+       2
+      ],
+      [
+       "O",
+       "Ni",
+       1
+      ],
+      [
+       "O",
+       "O",
+       1
+      ]
+     ],
+     "anchor": [
+      "H",
+      "O",
+      1.827
+     ],
+     "height_A": 5.072,
+     "tilt_deg": 85.5,
+     "n_members": 1
+    },
+    {
+     "basin_id": "b01",
+     "rep_label": "sdcp_neutral__LiO_bridge__fib08__r000",
+     "E_pose_eV": 0.042481,
+     "fingerprint": [
+      [
+       "H",
+       "Li",
+       2
+      ],
+      [
+       "H",
+       "Ni",
+       2
+      ],
+      [
+       "H",
+       "O",
+       1
+      ],
+      [
+       "O",
+       "O",
+       1
+      ]
+     ],
+     "anchor": [
+      "H",
+      "O",
+      1.848
+     ],
+     "height_A": 5.051,
+     "tilt_deg": 86.0,
+     "n_members": 1
+    },
+    {
+     "basin_id": "b02",
+     "rep_label": "sdcp_neutral__O_top__fib08__r180",
+     "E_pose_eV": 0.076453,
+     "fingerprint": [
+      [
+       "H",
+       "Li",
+       2
+      ],
+      [
+       "H",
+       "Ni",
+       2
+      ],
+      [
+       "H",
+       "O",
+       1
+      ],
+      [
+       "O",
+       "Li",
+       1
+      ],
+      [
+       "O",
+       "O",
+       1
+      ]
+     ],
+     "anchor": [
+      "H",
+      "O",
+      1.871
+     ],
+     "height_A": 5.106,
+     "tilt_deg": 85.4,
+     "n_members": 1
+    },
+    {
+     "basin_id": "b03",
+     "rep_label": "sdcp_neutral__hollow__fib08__r180",
+     "E_pose_eV": 0.087651,
+     "fingerprint": [
+      [
+       "H",
+       "Li",
+       2
+      ],
+      [
+       "H",
+       "Ni",
+       2
+      ],
+      [
+       "H",
+       "O",
+       2
+      ],
+      [
+       "O",
+       "Li",
+       1
+      ],
+      [
+       "O",
+       "O",
+       1
+      ]
+     ],
+     "anchor": [
+      "H",
+      "O",
+      1.836
+     ],
+     "height_A": 5.079,
+     "tilt_deg": 84.9,
+     "n_members": 1
+    },
+    {
+     "basin_id": "b04",
+     "rep_label": "sdcp_neutral__NiO_bridge__fib08__r000",
+     "E_pose_eV": 0.118264,
+     "fingerprint": [
+      [
+       "H",
+       "Ni",
+       2
+      ],
+      [
+       "H",
+       "O",
+       2
+      ],
+      [
+       "O",
+       "Ni",
+       1
+      ],
+      [
+       "O",
+       "O",
+       1
+      ]
+     ],
+     "anchor": [
+      "H",
+      "O",
+      1.999
+     ],
+     "height_A": 5.072,
+     "tilt_deg": 85.2,
+     "n_members": 1
+    },
+    {
+     "basin_id": "b05",
+     "rep_label": "sdcp_neutral__NiO_bridge__fib08__r180",
+     "E_pose_eV": 0.119721,
+     "fingerprint": [
+      [
+       "H",
+       "Li",
+       1
+      ],
+      [
+       "H",
+       "Ni",
+       2
+      ],
+      [
+       "H",
+       "O",
+       1
+      ],
+      [
+       "O",
+       "O",
+       1
+      ]
+     ],
+     "anchor": [
+      "H",
+      "O",
+      1.915
+     ],
+     "height_A": 5.106,
+     "tilt_deg": 86.0,
+     "n_members": 1
+    },
+    {
+     "basin_id": "b06",
+     "rep_label": "sdcp_neutral__hollow__fib08__r000",
+     "E_pose_eV": 0.137722,
+     "fingerprint": [
+      [
+       "H",
+       "Li",
+       1
+      ],
+      [
+       "H",
+       "Ni",
+       2
+      ],
+      [
+       "H",
+       "O",
+       1
+      ],
+      [
+       "O",
+       "O",
+       1
+      ]
+     ],
+     "anchor": [
+      "H",
+      "O",
+      2.055
+     ],
+     "height_A": 5.137,
+     "tilt_deg": 86.0,
+     "n_members": 1
+    },
+    {
+     "basin_id": "b07",
+     "rep_label": "sdcp_neutral__LiO_bridge__fib11__r270",
+     "E_pose_eV": 0.166058,
+     "fingerprint": [
+      [
+       "H",
+       "Li",
+       2
+      ],
+      [
+       "H",
+       "Ni",
+       2
+      ],
+      [
+       "H",
+       "O",
+       3
+      ],
+      [
+       "O",
+       "Li",
+       1
+      ],
+      [
+       "O",
+       "O",
+       1
+      ]
+     ],
+     "anchor": [
+      "H",
+      "O",
+      1.871
+     ],
+     "height_A": 5.025,
+     "tilt_deg": 58.3,
+     "n_members": 1
+    },
+    {
+     "basin_id": "b08",
+     "rep_label": "sdcp_neutral__LiO_bridge__fib08__r180",
+     "E_pose_eV": 0.198211,
+     "fingerprint": [
+      [
+       "H",
+       "Li",
+       2
+      ],
+      [
+       "H",
+       "Ni",
+       1
+      ],
+      [
+       "H",
+       "O",
+       1
+      ],
+      [
+       "O",
+       "Li",
+       1
+      ]
+     ],
+     "anchor": [
+      "H",
+      "O",
+      2.294
+     ],
+     "height_A": 5.166,
+     "tilt_deg": 85.7,
+     "n_members": 1
+    },
+    {
+     "basin_id": "b09",
+     "rep_label": "sdcp_neutral__LiNi_bridge__fib08__r000",
+     "E_pose_eV": 0.26911,
+     "fingerprint": [
+      [
+       "H",
+       "Li",
+       1
+      ],
+      [
+       "H",
+       "Ni",
+       1
+      ],
+      [
+       "H",
+       "O",
+       2
+      ]
+     ],
+     "anchor": [
+      "H",
+      "O",
+      2.645
+     ],
+     "height_A": 5.272,
+     "tilt_deg": 86.3,
+     "n_members": 1
+    },
+    {
+     "basin_id": "b10",
+     "rep_label": "sdcp_neutral__NiO_bridge__fib04__r180",
+     "E_pose_eV": 0.285284,
+     "fingerprint": [
+      [
+       "H",
+       "Li",
+       2
+      ],
+      [
+       "H",
+       "Ni",
+       1
+      ],
+      [
+       "H",
+       "O",
+       3
+      ]
+     ],
+     "anchor": [
+      "H",
+      "O",
+      2.531
+     ],
+     "height_A": 4.553,
+     "tilt_deg": 81.9,
+     "n_members": 1
+    },
+    {
+     "basin_id": "b11",
+     "rep_label": "sdcp_neutral__O_top__fib04__r180",
+     "E_pose_eV": 0.2966,
+     "fingerprint": [
+      [
+       "H",
+       "Li",
+       2
+      ],
+      [
+       "H",
+       "Ni",
+       2
+      ],
+      [
+       "H",
+       "O",
+       3
+      ]
+     ],
+     "anchor": [
+      "H",
+      "O",
+      2.365
+     ],
+     "height_A": 4.577,
+     "tilt_deg": 81.9,
+     "n_members": 1
+    },
+    {
+     "basin_id": "b12",
+     "rep_label": "sdcp_neutral__LiNi_bridge__fib11__r270",
+     "E_pose_eV": 0.297624,
+     "fingerprint": [
+      [
+       "H",
+       "Li",
+       1
+      ],
+      [
+       "H",
+       "Ni",
+       2
+      ],
+      [
+       "H",
+       "O",
+       2
+      ],
+      [
+       "O",
+       "Li",
+       1
+      ],
+      [
+       "O",
+       "O",
+       2
+      ]
+     ],
+     "anchor": [
+      "O",
+      "Li",
+      2.407
+     ],
+     "height_A": 5.137,
+     "tilt_deg": 58.0,
+     "n_members": 1
+    },
+    {
+     "basin_id": "b13",
+     "rep_label": "sdcp_neutral__Ni_top__fib04__r000",
+     "E_pose_eV": 0.300563,
+     "fingerprint": [
+      [
+       "H",
+       "Li",
+       3
+      ],
+      [
+       "H",
+       "Ni",
+       1
+      ],
+      [
+       "H",
+       "O",
+       4
+      ]
+     ],
+     "anchor": [
+      "H",
+      "Ni",
+      2.444
+     ],
+     "height_A": 4.545,
+     "tilt_deg": 82.0,
+     "n_members": 1
+    },
+    {
+     "basin_id": "b14",
+     "rep_label": "sdcp_neutral__LiO_bridge__fib04__r000",
+     "E_pose_eV": 0.301147,
+     "fingerprint": [
+      [
+       "H",
+       "Li",
+       1
+      ],
+      [
+       "H",
+       "Ni",
+       2
+      ],
+      [
+       "H",
+       "O",
+       4
+      ]
+     ],
+     "anchor": [
+      "H",
+      "Ni",
+      2.492
+     ],
+     "height_A": 4.55,
+     "tilt_deg": 82.0,
+     "n_members": 1
+    },
+    {
+     "basin_id": "b15",
+     "rep_label": "sdcp_neutral__Li_top__fib04__r180",
+     "E_pose_eV": 0.30533,
+     "fingerprint": [
+      [
+       "H",
+       "Li",
+       1
+      ],
+      [
+       "H",
+       "Ni",
+       3
+      ],
+      [
+       "H",
+       "O",
+       3
+      ]
+     ],
+     "anchor": [
+      "H",
+      "O",
+      2.462
+     ],
+     "height_A": 4.516,
+     "tilt_deg": 82.0,
+     "n_members": 1
+    },
+    {
+     "basin_id": "b16",
+     "rep_label": "sdcp_neutral__O_top__fib10__r090",
+     "E_pose_eV": 0.306045,
+     "fingerprint": [
+      [
+       "H",
+       "Ni",
+       2
+      ],
+      [
+       "H",
+       "O",
+       1
+      ]
+     ],
+     "anchor": [
+      "H",
+      "O",
+      2.34
+     ],
+     "height_A": 5.952,
+     "tilt_deg": 64.0,
+     "n_members": 1
+    },
+    {
+     "basin_id": "b17",
+     "rep_label": "sdcp_neutral__O_top__fib07__r180",
+     "E_pose_eV": 0.306902,
+     "fingerprint": [
+      [
+       "H",
+       "Li",
+       1
+      ],
+      [
+       "H",
+       "Ni",
+       2
+      ],
+      [
+       "H",
+       "O",
+       2
+      ]
+     ],
+     "anchor": [
+      "H",
+      "O",
+      2.333
+     ],
+     "height_A": 5.511,
+     "tilt_deg": 58.1,
+     "n_members": 1
+    },
+    {
+     "basin_id": "b18",
+     "rep_label": "sdcp_neutral__Ni_top__fib04__r180",
+     "E_pose_eV": 0.3085,
+     "fingerprint": [
+      [
+       "H",
+       "Li",
+       3
+      ],
+      [
+       "H",
+       "Ni",
+       1
+      ],
+      [
+       "H",
+       "O",
+       4
+      ]
+     ],
+     "anchor": [
+      "H",
+      "Ni",
+      2.441
+     ],
+     "height_A": 4.542,
+     "tilt_deg": 81.9,
+     "n_members": 1
+    },
+    {
+     "basin_id": "b19",
+     "rep_label": "sdcp_neutral__LiNi_bridge__fib08__r180",
+     "E_pose_eV": 0.310354,
+     "fingerprint": [
+      [
+       "H",
+       "Li",
+       1
+      ],
+      [
+       "H",
+       "Ni",
+       1
+      ],
+      [
+       "H",
+       "O",
+       2
+      ]
+     ],
+     "anchor": [
+      "H",
+      "O",
+      2.663
+     ],
+     "height_A": 5.266,
+     "tilt_deg": 86.2,
+     "n_members": 1
+    },
+    {
+     "basin_id": "b20",
+     "rep_label": "sdcp_neutral__hollow__fib04__r180",
+     "E_pose_eV": 0.313987,
+     "fingerprint": [
+      [
+       "H",
+       "Li",
+       3
+      ],
+      [
+       "H",
+       "Ni",
+       2
+      ],
+      [
+       "H",
+       "O",
+       3
+      ]
+     ],
+     "anchor": [
+      "H",
+      "O",
+      2.557
+     ],
+     "height_A": 4.573,
+     "tilt_deg": 82.0,
+     "n_members": 2
+    },
+    {
+     "basin_id": "b21",
+     "rep_label": "sdcp_neutral__NiO_bridge__fib11__r000",
+     "E_pose_eV": 0.314308,
+     "fingerprint": [
+      [
+       "H",
+       "Li",
+       1
+      ],
+      [
+       "H",
+       "Ni",
+       2
+      ],
+      [
+       "H",
+       "O",
+       2
+      ],
+      [
+       "O",
+       "Ni",
+       1
+      ],
+      [
+       "O",
+       "O",
+       2
+      ]
+     ],
+     "anchor": [
+      "H",
+      "O",
+      2.494
+     ],
+     "height_A": 5.139,
+     "tilt_deg": 58.3,
+     "n_members": 1
+    },
+    {
+     "basin_id": "b22",
+     "rep_label": "sdcp_neutral__LiO_bridge__fib11__r180",
+     "E_pose_eV": 0.315946,
+     "fingerprint": [
+      [
+       "H",
+       "Li",
+       2
+      ],
+      [
+       "H",
+       "Ni",
+       1
+      ],
+      [
+       "H",
+       "O",
+       2
+      ],
+      [
+       "O",
+       "Li",
+       1
+      ],
+      [
+       "O",
+       "O",
+       2
+      ]
+     ],
+     "anchor": [
+      "O",
+      "Li",
+      2.41
+     ],
+     "height_A": 5.131,
+     "tilt_deg": 58.5,
+     "n_members": 1
+    },
+    {
+     "basin_id": "b23",
+     "rep_label": "sdcp_neutral__Li_top__fib04__r000",
+     "E_pose_eV": 0.317744,
+     "fingerprint": [
+      [
+       "H",
+       "Li",
+       1
+      ],
+      [
+       "H",
+       "Ni",
+       3
+      ],
+      [
+       "H",
+       "O",
+       3
+      ]
+     ],
+     "anchor": [
+      "H",
+      "O",
+      2.462
+     ],
+     "height_A": 4.523,
+     "tilt_deg": 82.0,
+     "n_members": 1
+    },
+    {
+     "basin_id": "b24",
+     "rep_label": "sdcp_neutral__O_top__fib07__r000",
+     "E_pose_eV": 0.319713,
+     "fingerprint": [
+      [
+       "H",
+       "Ni",
+       2
+      ],
+      [
+       "H",
+       "O",
+       2
+      ]
+     ],
+     "anchor": [
+      "H",
+      "O",
+      2.349
+     ],
+     "height_A": 5.524,
+     "tilt_deg": 58.1,
+     "n_members": 1
+    },
+    {
+     "basin_id": "b25",
+     "rep_label": "sdcp_neutral__LiO_bridge__fib07__r180",
+     "E_pose_eV": 0.321582,
+     "fingerprint": [
+      [
+       "H",
+       "Li",
+       2
+      ],
+      [
+       "H",
+       "Ni",
+       1
+      ],
+      [
+       "H",
+       "O",
+       2
+      ]
+     ],
+     "anchor": [
+      "H",
+      "O",
+      2.519
+     ],
+     "height_A": 5.47,
+     "tilt_deg": 58.1,
+     "n_members": 1
+    },
+    {
+     "basin_id": "b26",
+     "rep_label": "sdcp_neutral__hollow__fib04__r000",
+     "E_pose_eV": 0.321877,
+     "fingerprint": [
+      [
+       "H",
+       "Li",
+       2
+      ],
+      [
+       "H",
+       "Ni",
+       2
+      ],
+      [
+       "H",
+       "O",
+       4
+      ]
+     ],
+     "anchor": [
+      "H",
+      "O",
+      2.552
+     ],
+     "height_A": 4.576,
+     "tilt_deg": 82.0,
+     "n_members": 1
+    },
+    {
+     "basin_id": "b27",
+     "rep_label": "sdcp_neutral__O_top__fib04__r000",
+     "E_pose_eV": 0.323955,
+     "fingerprint": [
+      [
+       "H",
+       "Li",
+       1
+      ],
+      [
+       "H",
+       "Ni",
+       3
+      ],
+      [
+       "H",
+       "O",
+       3
+      ]
+     ],
+     "anchor": [
+      "H",
+      "O",
+      2.369
+     ],
+     "height_A": 4.579,
+     "tilt_deg": 82.0,
+     "n_members": 1
+    },
+    {
+     "basin_id": "b28",
+     "rep_label": "sdcp_neutral__LiO_bridge__fib04__r180",
+     "E_pose_eV": 0.324336,
+     "fingerprint": [
+      [
+       "H",
+       "Li",
+       2
+      ],
+      [
+       "H",
+       "Ni",
+       1
+      ],
+      [
+       "H",
+       "O",
+       3
+      ]
+     ],
+     "anchor": [
+      "H",
+      "O",
+      2.434
+     ],
+     "height_A": 4.543,
+     "tilt_deg": 82.0,
+     "n_members": 1
+    },
+    {
+     "basin_id": "b29",
+     "rep_label": "sdcp_neutral__NiO_bridge__fib04__r000",
+     "E_pose_eV": 0.325438,
+     "fingerprint": [
+      [
+       "H",
+       "Li",
+       1
+      ],
+      [
+       "H",
+       "Ni",
+       2
+      ],
+      [
+       "H",
+       "O",
+       3
+      ]
+     ],
+     "anchor": [
+      "H",
+      "O",
+      2.461
+     ],
+     "height_A": 4.566,
+     "tilt_deg": 82.2,
+     "n_members": 1
+    },
+    {
+     "basin_id": "b30",
+     "rep_label": "sdcp_neutral__hollow__fib07__r180",
+     "E_pose_eV": 0.330426,
+     "fingerprint": [
+      [
+       "H",
+       "Li",
+       2
+      ],
+      [
+       "H",
+       "Ni",
+       1
+      ],
+      [
+       "H",
+       "O",
+       3
+      ]
+     ],
+     "anchor": [
+      "H",
+      "O",
+      2.52
+     ],
+     "height_A": 5.51,
+     "tilt_deg": 58.1,
+     "n_members": 2
+    },
+    {
+     "basin_id": "b31",
+     "rep_label": "sdcp_neutral__LiNi_bridge__fib11__r090",
+     "E_pose_eV": 0.336064,
+     "fingerprint": [
+      [
+       "H",
+       "Li",
+       2
+      ],
+      [
+       "H",
+       "Ni",
+       1
+      ],
+      [
+       "H",
+       "O",
+       2
+      ],
+      [
+       "O",
+       "Ni",
+       1
+      ],
+      [
+       "O",
+       "O",
+       2
+      ]
+     ],
+     "anchor": [
+      "O",
+      "Ni",
+      2.539
+     ],
+     "height_A": 5.177,
+     "tilt_deg": 58.0,
+     "n_members": 1
+    },
+    {
+     "basin_id": "b32",
+     "rep_label": "sdcp_neutral__NiO_bridge__fib10__r090",
+     "E_pose_eV": 0.340374,
+     "fingerprint": [
+      [
+       "H",
+       "Ni",
+       1
+      ],
+      [
+       "H",
+       "O",
+       2
+      ]
+     ],
+     "anchor": [
+      "H",
+      "O",
+      2.509
+     ],
+     "height_A": 5.944,
+     "tilt_deg": 64.0,
+     "n_members": 1
+    },
+    {
+     "basin_id": "b33",
+     "rep_label": "sdcp_neutral__LiO_bridge__fib07__r000",
+     "E_pose_eV": 0.34086,
+     "fingerprint": [
+      [
+       "H",
+       "Li",
+       1
+      ],
+      [
+       "H",
+       "Ni",
+       2
+      ],
+      [
+       "H",
+       "O",
+       3
+      ]
+     ],
+     "anchor": [
+      "H",
+      "O",
+      2.539
+     ],
+     "height_A": 5.488,
+     "tilt_deg": 58.2,
+     "n_members": 1
+    },
+    {
+     "basin_id": "b34",
+     "rep_label": "sdcp_neutral__NiO_bridge__fib09__r270",
+     "E_pose_eV": 0.341312,
+     "fingerprint": [
+      [
+       "H",
+       "Ni",
+       2
+      ],
+      [
+       "H",
+       "O",
+       2
+      ]
+     ],
+     "anchor": [
+      "H",
+      "O",
+      2.539
+     ],
+     "height_A": 5.846,
+     "tilt_deg": 44.8,
+     "n_members": 1
+    },
+    {
+     "basin_id": "b35",
+     "rep_label": "sdcp_neutral__hollow__fib10__r090",
+     "E_pose_eV": 0.341582,
+     "fingerprint": [
+      [
+       "H",
+       "Li",
+       1
+      ],
+      [
+       "H",
+       "Ni",
+       1
+      ],
+      [
+       "H",
+       "O",
+       2
+      ]
+     ],
+     "anchor": [
+      "H",
+      "O",
+      2.538
+     ],
+     "height_A": 5.965,
+     "tilt_deg": 64.0,
+     "n_members": 2
+    },
+    {
+     "basin_id": "b36",
+     "rep_label": "sdcp_neutral__O_top__fib10__r270",
+     "E_pose_eV": 0.342227,
+     "fingerprint": [
+      [
+       "H",
+       "Ni",
+       2
+      ],
+      [
+       "H",
+       "O",
+       1
+      ]
+     ],
+     "anchor": [
+      "H",
+      "O",
+      2.341
+     ],
+     "height_A": 5.949,
+     "tilt_deg": 64.0,
+     "n_members": 1
+    },
+    {
+     "basin_id": "b37",
+     "rep_label": "sdcp_neutral__LiO_bridge__fib10__r090",
+     "E_pose_eV": 0.345096,
+     "fingerprint": [
+      [
+       "H",
+       "Li",
+       1
+      ],
+      [
+       "H",
+       "O",
+       1
+      ]
+     ],
+     "anchor": [
+      "H",
+      "O",
+      2.52
+     ],
+     "height_A": 5.91,
+     "tilt_deg": 64.0,
+     "n_members": 1
+    },
+    {
+     "basin_id": "b38",
+     "rep_label": "sdcp_neutral__LiNi_bridge__fib04__r000",
+     "E_pose_eV": 0.347652,
+     "fingerprint": [
+      [
+       "C",
+       "O",
+       1
+      ],
+      [
+       "H",
+       "Li",
+       2
+      ],
+      [
+       "H",
+       "Ni",
+       3
+      ],
+      [
+       "H",
+       "O",
+       3
+      ]
+     ],
+     "anchor": [
+      "H",
+      "O",
+      2.545
+     ],
+     "height_A": 4.529,
+     "tilt_deg": 82.0,
+     "n_members": 1
+    },
+    {
+     "basin_id": "b39",
+     "rep_label": "sdcp_neutral__O_top__fib10__r000",
+     "E_pose_eV": 0.348284,
+     "fingerprint": [
+      [
+       "H",
+       "Ni",
+       2
+      ],
+      [
+       "H",
+       "O",
+       1
+      ]
+     ],
+     "anchor": [
+      "H",
+      "O",
+      2.342
+     ],
+     "height_A": 5.953,
+     "tilt_deg": 64.0,
+     "n_members": 1
+    },
+    {
+     "basin_id": "b40",
+     "rep_label": "sdcp_neutral__hollow__fib07__r000",
+     "E_pose_eV": 0.349682,
+     "fingerprint": [
+      [
+       "H",
+       "Li",
+       1
+      ],
+      [
+       "H",
+       "Ni",
+       2
+      ],
+      [
+       "H",
+       "O",
+       2
+      ]
+     ],
+     "anchor": [
+      "H",
+      "O",
+      2.532
+     ],
+     "height_A": 5.521,
+     "tilt_deg": 58.1,
+     "n_members": 1
+    },
+    {
+     "basin_id": "b41",
+     "rep_label": "sdcp_neutral__NiO_bridge__fib07__r180",
+     "E_pose_eV": 0.350669,
+     "fingerprint": [
+      [
+       "H",
+       "Li",
+       2
+      ],
+      [
+       "H",
+       "Ni",
+       1
+      ],
+      [
+       "H",
+       "O",
+       3
+      ]
+     ],
+     "anchor": [
+      "H",
+      "O",
+      2.511
+     ],
+     "height_A": 5.506,
+     "tilt_deg": 58.2,
+     "n_members": 1
+    },
+    {
+     "basin_id": "b42",
+     "rep_label": "sdcp_neutral__NiO_bridge__fib07__r000",
+     "E_pose_eV": 0.357515,
+     "fingerprint": [
+      [
+       "H",
+       "Li",
+       1
+      ],
+      [
+       "H",
+       "Ni",
+       2
+      ],
+      [
+       "H",
+       "O",
+       3
+      ]
+     ],
+     "anchor": [
+      "H",
+      "O",
+      2.517
+     ],
+     "height_A": 5.506,
+     "tilt_deg": 58.1,
+     "n_members": 1
+    },
+    {
+     "basin_id": "b43",
+     "rep_label": "sdcp_neutral__LiNi_bridge__fib07__r000",
+     "E_pose_eV": 0.357637,
+     "fingerprint": [
+      [
+       "H",
+       "Li",
+       1
+      ],
+      [
+       "H",
+       "Ni",
+       2
+      ],
+      [
+       "H",
+       "O",
+       3
+      ]
+     ],
+     "anchor": [
+      "H",
+      "Ni",
+      2.71
+     ],
+     "height_A": 5.475,
+     "tilt_deg": 58.2,
+     "n_members": 1
+    },
+    {
+     "basin_id": "b44",
+     "rep_label": "sdcp_neutral__Li_top__fib08__r180",
+     "E_pose_eV": 0.358095,
+     "fingerprint": [
+      [
+       "H",
+       "Li",
+       1
+      ],
+      [
+       "H",
+       "O",
+       1
+      ]
+     ],
+     "anchor": [
+      "H",
+      "Li",
+      2.696
+     ],
+     "height_A": 5.264,
+     "tilt_deg": 86.5,
+     "n_members": 1
+    },
+    {
+     "basin_id": "b45",
+     "rep_label": "sdcp_neutral__O_top__fib10__r180",
+     "E_pose_eV": 0.360855,
+     "fingerprint": [
+      [
+       "H",
+       "Ni",
+       2
+      ],
+      [
+       "H",
+       "O",
+       1
+      ]
+     ],
+     "anchor": [
+      "H",
+      "O",
+      2.34
+     ],
+     "height_A": 5.949,
+     "tilt_deg": 64.0,
+     "n_members": 1
+    },
+    {
+     "basin_id": "b46",
+     "rep_label": "sdcp_neutral__LiO_bridge__fib09__r090",
+     "E_pose_eV": 0.361097,
+     "fingerprint": [
+      [
+       "H",
+       "Li",
+       2
+      ],
+      [
+       "H",
+       "O",
+       1
+      ]
+     ],
+     "anchor": [
+      "H",
+      "O",
+      2.545
+     ],
+     "height_A": 5.819,
+     "tilt_deg": 44.7,
+     "n_members": 1
+    },
+    {
+     "basin_id": "b47",
+     "rep_label": "sdcp_neutral__LiO_bridge__fib10__r270",
+     "E_pose_eV": 0.363948,
+     "fingerprint": [
+      [
+       "H",
+       "Li",
+       1
+      ],
+      [
+       "H",
+       "O",
+       1
+      ]
+     ],
+     "anchor": [
+      "H",
+      "O",
+      2.531
+     ],
+     "height_A": 5.921,
+     "tilt_deg": 64.0,
+     "n_members": 1
+    },
+    {
+     "basin_id": "b48",
+     "rep_label": "sdcp_neutral__Li_top__fib07__r000",
+     "E_pose_eV": 0.364098,
+     "fingerprint": [
+      [
+       "H",
+       "Li",
+       1
+      ],
+      [
+       "H",
+       "Ni",
+       1
+      ],
+      [
+       "H",
+       "O",
+       4
+      ]
+     ],
+     "anchor": [
+      "H",
+      "Li",
+      2.473
+     ],
+     "height_A": 5.448,
+     "tilt_deg": 58.1,
+     "n_members": 1
+    },
+    {
+     "basin_id": "b49",
+     "rep_label": "sdcp_neutral__Ni_top__fib09__r270",
+     "E_pose_eV": 0.368371,
+     "fingerprint": [
+      [
+       "H",
+       "Ni",
+       1
+      ],
+      [
+       "H",
+       "O",
+       3
+      ]
+     ],
+     "anchor": [
+      "H",
+      "Ni",
+      2.437
+     ],
+     "height_A": 5.829,
+     "tilt_deg": 44.8,
+     "n_members": 1
+    },
+    {
+     "basin_id": "b50",
+     "rep_label": "sdcp_neutral__hollow__fib09__r090",
+     "E_pose_eV": 0.369399,
+     "fingerprint": [
+      [
+       "H",
+       "Li",
+       2
+      ],
+      [
+       "H",
+       "Ni",
+       1
+      ],
+      [
+       "H",
+       "O",
+       2
+      ]
+     ],
+     "anchor": [
+      "H",
+      "O",
+      2.557
+     ],
+     "height_A": 5.865,
+     "tilt_deg": 44.8,
+     "n_members": 2
+    },
+    {
+     "basin_id": "b51",
+     "rep_label": "sdcp_neutral__hollow__fib10__r000",
+     "E_pose_eV": 0.369499,
+     "fingerprint": [
+      [
+       "H",
+       "Li",
+       1
+      ],
+      [
+       "H",
+       "Ni",
+       1
+      ],
+      [
+       "H",
+       "O",
+       2
+      ]
+     ],
+     "anchor": [
+      "H",
+      "O",
+      2.521
+     ],
+     "height_A": 5.938,
+     "tilt_deg": 64.0,
+     "n_members": 2
+    },
+    {
+     "basin_id": "b52",
+     "rep_label": "sdcp_neutral__Li_top__fib07__r180",
+     "E_pose_eV": 0.371721,
+     "fingerprint": [
+      [
+       "H",
+       "Li",
+       1
+      ],
+      [
+       "H",
+       "Ni",
+       1
+      ],
+      [
+       "H",
+       "O",
+       3
+      ]
+     ],
+     "anchor": [
+      "H",
+      "Li",
+      2.474
+     ],
+     "height_A": 5.457,
+     "tilt_deg": 58.1,
+     "n_members": 1
+    },
+    {
+     "basin_id": "b53",
+     "rep_label": "sdcp_neutral__hollow__fib10__r270",
+     "E_pose_eV": 0.372056,
+     "fingerprint": [
+      [
+       "H",
+       "Li",
+       1
+      ],
+      [
+       "H",
+       "Ni",
+       1
+      ],
+      [
+       "H",
+       "O",
+       2
+      ]
+     ],
+     "anchor": [
+      "H",
+      "O",
+      2.529
+     ],
+     "height_A": 5.949,
+     "tilt_deg": 64.0,
+     "n_members": 2
+    },
+    {
+     "basin_id": "b54",
+     "rep_label": "sdcp_neutral__O_top__fib09__r270",
+     "E_pose_eV": 0.373957,
+     "fingerprint": [
+      [
+       "H",
+       "Ni",
+       2
+      ],
+      [
+       "H",
+       "O",
+       1
+      ]
+     ],
+     "anchor": [
+      "H",
+      "O",
+      2.4
+     ],
+     "height_A": 5.864,
+     "tilt_deg": 44.9,
+     "n_members": 1
+    },
+    {
+     "basin_id": "b55",
+     "rep_label": "sdcp_neutral__Ni_top__fib09__r090",
+     "E_pose_eV": 0.377407,
+     "fingerprint": [
+      [
+       "H",
+       "Ni",
+       1
+      ],
+      [
+       "H",
+       "O",
+       3
+      ]
+     ],
+     "anchor": [
+      "H",
+      "Ni",
+      2.443
+     ],
+     "height_A": 5.839,
+     "tilt_deg": 45.0,
+     "n_members": 1
+    },
+    {
+     "basin_id": "b56",
+     "rep_label": "sdcp_neutral__LiO_bridge__fib10__r000",
+     "E_pose_eV": 0.378412,
+     "fingerprint": [
+      [
+       "H",
+       "Li",
+       1
+      ],
+      [
+       "H",
+       "O",
+       1
+      ]
+     ],
+     "anchor": [
+      "H",
+      "O",
+      2.529
+     ],
+     "height_A": 5.908,
+     "tilt_deg": 63.9,
+     "n_members": 1
+    },
+    {
+     "basin_id": "b57",
+     "rep_label": "sdcp_neutral__NiO_bridge__fib10__r270",
+     "E_pose_eV": 0.378886,
+     "fingerprint": [
+      [
+       "H",
+       "Ni",
+       1
+      ],
+      [
+       "H",
+       "O",
+       2
+      ]
+     ],
+     "anchor": [
+      "H",
+      "O",
+      2.503
+     ],
+     "height_A": 5.933,
+     "tilt_deg": 64.1,
+     "n_members": 1
+    },
+    {
+     "basin_id": "b58",
+     "rep_label": "sdcp_neutral__Li_top__fib03__r270",
+     "E_pose_eV": 0.381257,
+     "fingerprint": [
+      [
+       "H",
+       "O",
+       1
+      ],
+      [
+       "O",
+       "Li",
+       1
+      ],
+      [
+       "O",
+       "O",
+       2
+      ]
+     ],
+     "anchor": [
+      "O",
+      "Li",
+      2.153
+     ],
+     "height_A": 5.738,
+     "tilt_deg": 71.0,
+     "n_members": 1
+    },
+    {
+     "basin_id": "b59",
+     "rep_label": "sdcp_neutral__Li_top__fib08__r000",
+     "E_pose_eV": 0.381268,
+     "fingerprint": [
+      [
+       "H",
+       "Li",
+       1
+      ]
+     ],
+     "anchor": [
+      "H",
+      "Li",
+      2.645
+     ],
+     "height_A": 5.294,
+     "tilt_deg": 86.5,
+     "n_members": 1
+    },
+    {
+     "basin_id": "b60",
+     "rep_label": "sdcp_neutral__hollow__fib10__r180",
+     "E_pose_eV": 0.383113,
+     "fingerprint": [
+      [
+       "H",
+       "Li",
+       1
+      ],
+      [
+       "H",
+       "Ni",
+       1
+      ],
+      [
+       "H",
+       "O",
+       2
+      ]
+     ],
+     "anchor": [
+      "H",
+      "O",
+      2.544
+     ],
+     "height_A": 5.947,
+     "tilt_deg": 64.0,
+     "n_members": 2
+    },
+    {
+     "basin_id": "b61",
+     "rep_label": "sdcp_neutral__Ni_top__fib07__r180",
+     "E_pose_eV": 0.384002,
+     "fingerprint": [
+      [
+       "H",
+       "Li",
+       1
+      ],
+      [
+       "H",
+       "Ni",
+       1
+      ],
+      [
+       "H",
+       "O",
+       4
+      ]
+     ],
+     "anchor": [
+      "H",
+      "Ni",
+      2.425
+     ],
+     "height_A": 5.488,
+     "tilt_deg": 58.2,
+     "n_members": 1
+    },
+    {
+     "basin_id": "b62",
+     "rep_label": "sdcp_neutral__NiO_bridge__fib10__r000",
+     "E_pose_eV": 0.385601,
+     "fingerprint": [
+      [
+       "H",
+       "Ni",
+       1
+      ],
+      [
+       "H",
+       "O",
+       2
+      ]
+     ],
+     "anchor": [
+      "H",
+      "O",
+      2.539
+     ],
+     "height_A": 5.941,
+     "tilt_deg": 64.1,
+     "n_members": 1
+    },
+    {
+     "basin_id": "b63",
+     "rep_label": "sdcp_neutral__LiNi_bridge__fib09__r270",
+     "E_pose_eV": 0.387229,
+     "fingerprint": [
+      [
+       "H",
+       "Li",
+       1
+      ],
+      [
+       "H",
+       "Ni",
+       2
+      ],
+      [
+       "H",
+       "O",
+       3
+      ]
+     ],
+     "anchor": [
+      "H",
+      "O",
+      2.736
+     ],
+     "height_A": 5.814,
+     "tilt_deg": 45.0,
+     "n_members": 1
+    },
+    {
+     "basin_id": "b64",
+     "rep_label": "sdcp_neutral__O_top__fib09__r090",
+     "E_pose_eV": 0.387747,
+     "fingerprint": [
+      [
+       "H",
+       "Li",
+       1
+      ],
+      [
+       "H",
+       "Ni",
+       2
+      ],
+      [
+       "H",
+       "O",
+       1
+      ]
+     ],
+     "anchor": [
+      "H",
+      "O",
+      2.395
+     ],
+     "height_A": 5.866,
+     "tilt_deg": 44.9,
+     "n_members": 1
+    },
+    {
+     "basin_id": "b65",
+     "rep_label": "sdcp_neutral__Ni_top__fib07__r000",
+     "E_pose_eV": 0.388074,
+     "fingerprint": [
+      [
+       "H",
+       "Li",
+       1
+      ],
+      [
+       "H",
+       "Ni",
+       1
+      ],
+      [
+       "H",
+       "O",
+       4
+      ]
+     ],
+     "anchor": [
+      "H",
+      "Ni",
+      2.425
+     ],
+     "height_A": 5.49,
+     "tilt_deg": 58.2,
+     "n_members": 1
+    },
+    {
+     "basin_id": "b66",
+     "rep_label": "sdcp_neutral__Li_top__fib10__r090",
+     "E_pose_eV": 0.392939,
+     "fingerprint": [
+      [
+       "H",
+       "Li",
+       1
+      ],
+      [
+       "H",
+       "O",
+       2
+      ]
+     ],
+     "anchor": [
+      "H",
+      "Li",
+      2.488
+     ],
+     "height_A": 5.887,
+     "tilt_deg": 64.1,
+     "n_members": 1
+    },
+    {
+     "basin_id": "b67",
+     "rep_label": "sdcp_neutral__hollow__fib09__r270",
+     "E_pose_eV": 0.39511,
+     "fingerprint": [
+      [
+       "H",
+       "Li",
+       1
+      ],
+      [
+       "H",
+       "Ni",
+       1
+      ],
+      [
+       "H",
+       "O",
+       3
+      ]
+     ],
+     "anchor": [
+      "H",
+      "O",
+      2.594
+     ],
+     "height_A": 5.863,
+     "tilt_deg": 45.0,
+     "n_members": 1
+    },
+    {
+     "basin_id": "b68",
+     "rep_label": "sdcp_neutral__LiO_bridge__fib10__r180",
+     "E_pose_eV": 0.397077,
+     "fingerprint": [
+      [
+       "H",
+       "Li",
+       1
+      ],
+      [
+       "H",
+       "O",
+       1
+      ]
+     ],
+     "anchor": [
+      "H",
+      "O",
+      2.55
+     ],
+     "height_A": 5.917,
+     "tilt_deg": 64.1,
+     "n_members": 1
+    },
+    {
+     "basin_id": "b69",
+     "rep_label": "sdcp_neutral__Ni_top__fib10__r270",
+     "E_pose_eV": 0.397085,
+     "fingerprint": [
+      [
+       "H",
+       "Ni",
+       1
+      ],
+      [
+       "H",
+       "O",
+       3
+      ]
+     ],
+     "anchor": [
+      "H",
+      "Ni",
+      2.446
+     ],
+     "height_A": 5.93,
+     "tilt_deg": 64.1,
+     "n_members": 1
+    },
+    {
+     "basin_id": "b70",
+     "rep_label": "sdcp_neutral__NiO_bridge__fib10__r180",
+     "E_pose_eV": 0.397909,
+     "fingerprint": [
+      [
+       "H",
+       "Ni",
+       1
+      ],
+      [
+       "H",
+       "O",
+       2
+      ]
+     ],
+     "anchor": [
+      "H",
+      "O",
+      2.511
+     ],
+     "height_A": 5.929,
+     "tilt_deg": 64.0,
+     "n_members": 1
+    },
+    {
+     "basin_id": "b71",
+     "rep_label": "sdcp_neutral__Ni_top__fib03__r270",
+     "E_pose_eV": 0.401551,
+     "fingerprint": [
+      [
+       "O",
+       "Ni",
+       1
+      ],
+      [
+       "O",
+       "O",
+       3
+      ]
+     ],
+     "anchor": [
+      "O",
+      "Ni",
+      2.43
+     ],
+     "height_A": 5.945,
+     "tilt_deg": 71.3,
+     "n_members": 1
+    },
+    {
+     "basin_id": "b72",
+     "rep_label": "sdcp_neutral__Ni_top__fib03__r090",
+     "E_pose_eV": 0.401937,
+     "fingerprint": [
+      [
+       "H",
+       "O",
+       1
+      ],
+      [
+       "O",
+       "Ni",
+       1
+      ],
+      [
+       "O",
+       "O",
+       3
+      ]
+     ],
+     "anchor": [
+      "O",
+      "Ni",
+      2.417
+     ],
+     "height_A": 5.948,
+     "tilt_deg": 71.2,
+     "n_members": 1
+    },
+    {
+     "basin_id": "b73",
+     "rep_label": "sdcp_neutral__Ni_top__fib10__r090",
+     "E_pose_eV": 0.404237,
+     "fingerprint": [
+      [
+       "H",
+       "Ni",
+       1
+      ],
+      [
+       "H",
+       "O",
+       3
+      ]
+     ],
+     "anchor": [
+      "H",
+      "Ni",
+      2.448
+     ],
+     "height_A": 5.939,
+     "tilt_deg": 64.1,
+     "n_members": 1
+    },
+    {
+     "basin_id": "b74",
+     "rep_label": "sdcp_neutral__Li_top__fib09__r090",
+     "E_pose_eV": 0.405554,
+     "fingerprint": [
+      [
+       "H",
+       "Li",
+       1
+      ],
+      [
+       "H",
+       "O",
+       2
+      ]
+     ],
+     "anchor": [
+      "H",
+      "Li",
+      2.458
+     ],
+     "height_A": 5.79,
+     "tilt_deg": 44.8,
+     "n_members": 1
+    },
+    {
+     "basin_id": "b75",
+     "rep_label": "sdcp_neutral__NiO_bridge__fib09__r180",
+     "E_pose_eV": 0.407367,
+     "fingerprint": [
+      [
+       "H",
+       "Li",
+       1
+      ],
+      [
+       "H",
+       "Ni",
+       1
+      ],
+      [
+       "H",
+       "O",
+       2
+      ]
+     ],
+     "anchor": [
+      "H",
+      "O",
+      2.544
+     ],
+     "height_A": 5.853,
+     "tilt_deg": 45.0,
+     "n_members": 1
+    },
+    {
+     "basin_id": "b76",
+     "rep_label": "sdcp_neutral__LiNi_bridge__fib09__r180",
+     "E_pose_eV": 0.408856,
+     "fingerprint": [
+      [
+       "H",
+       "Li",
+       1
+      ],
+      [
+       "H",
+       "Ni",
+       1
+      ],
+      [
+       "H",
+       "O",
+       2
+      ]
+     ],
+     "anchor": [
+      "H",
+      "O",
+      2.717
+     ],
+     "height_A": 5.805,
+     "tilt_deg": 44.9,
+     "n_members": 1
+    },
+    {
+     "basin_id": "b77",
+     "rep_label": "sdcp_neutral__O_top__fib09__r180",
+     "E_pose_eV": 0.409171,
+     "fingerprint": [
+      [
+       "H",
+       "Li",
+       1
+      ],
+      [
+       "H",
+       "Ni",
+       2
+      ],
+      [
+       "H",
+       "O",
+       1
+      ]
+     ],
+     "anchor": [
+      "H",
+      "O",
+      2.393
+     ],
+     "height_A": 5.872,
+     "tilt_deg": 44.9,
+     "n_members": 1
+    },
+    {
+     "basin_id": "b78",
+     "rep_label": "sdcp_neutral__LiO_bridge__fib09__r180",
+     "E_pose_eV": 0.411719,
+     "fingerprint": [
+      [
+       "H",
+       "Li",
+       2
+      ],
+      [
+       "H",
+       "O",
+       1
+      ]
+     ],
+     "anchor": [
+      "H",
+      "O",
+      2.575
+     ],
+     "height_A": 5.828,
+     "tilt_deg": 44.7,
+     "n_members": 1
+    },
+    {
+     "basin_id": "b79",
+     "rep_label": "sdcp_neutral__Li_top__fib10__r270",
+     "E_pose_eV": 0.412463,
+     "fingerprint": [
+      [
+       "H",
+       "Li",
+       1
+      ],
+      [
+       "H",
+       "O",
+       2
+      ]
+     ],
+     "anchor": [
+      "H",
+      "Li",
+      2.494
+     ],
+     "height_A": 5.904,
+     "tilt_deg": 64.1,
+     "n_members": 1
+    },
+    {
+     "basin_id": "b80",
+     "rep_label": "sdcp_neutral__Ni_top__sulfonate_down__r000",
+     "E_pose_eV": 0.413136,
+     "fingerprint": [
+      [
+       "O",
+       "Ni",
+       1
+      ],
+      [
+       "O",
+       "O",
+       3
+      ]
+     ],
+     "anchor": [
+      "O",
+      "Ni",
+      2.398
+     ],
+     "height_A": 6.599,
+     "tilt_deg": 20.9,
+     "n_members": 1
+    },
+    {
+     "basin_id": "b81",
+     "rep_label": "sdcp_neutral__NiO_bridge__fib09__r090",
+     "E_pose_eV": 0.414905,
+     "fingerprint": [
+      [
+       "H",
+       "Ni",
+       1
+      ],
+      [
+       "H",
+       "O",
+       2
+      ]
+     ],
+     "anchor": [
+      "H",
+      "O",
+      2.605
+     ],
+     "height_A": 5.855,
+     "tilt_deg": 45.1,
+     "n_members": 1
+    },
+    {
+     "basin_id": "b82",
+     "rep_label": "sdcp_neutral__hollow__fib01__r180",
+     "E_pose_eV": 0.414994,
+     "fingerprint": [
+      [
+       "H",
+       "Li",
+       1
+      ],
+      [
+       "H",
+       "Ni",
+       1
+      ],
+      [
+       "H",
+       "O",
+       2
+      ]
+     ],
+     "anchor": [
+      "H",
+      "O",
+      2.547
+     ],
+     "height_A": 5.846,
+     "tilt_deg": 67.6,
+     "n_members": 2
+    },
+    {
+     "basin_id": "b83",
+     "rep_label": "sdcp_neutral__Li_top__fib09__r000",
+     "E_pose_eV": 0.418945,
+     "fingerprint": [
+      [
+       "H",
+       "Li",
+       1
+      ],
+      [
+       "H",
+       "O",
+       2
+      ]
+     ],
+     "anchor": [
+      "H",
+      "Li",
+      2.46
+     ],
+     "height_A": 5.791,
+     "tilt_deg": 44.8,
+     "n_members": 1
+    },
+    {
+     "basin_id": "b84",
+     "rep_label": "sdcp_neutral__LiO_bridge__fib09__r000",
+     "E_pose_eV": 0.42036,
+     "fingerprint": [
+      [
+       "H",
+       "Li",
+       1
+      ],
+      [
+       "H",
+       "Ni",
+       1
+      ],
+      [
+       "H",
+       "O",
+       2
+      ]
+     ],
+     "anchor": [
+      "H",
+      "O",
+      2.56
+     ],
+     "height_A": 5.835,
+     "tilt_deg": 44.8,
+     "n_members": 1
+    },
+    {
+     "basin_id": "b85",
+     "rep_label": "sdcp_neutral__Li_top__fib09__r180",
+     "E_pose_eV": 0.424005,
+     "fingerprint": [
+      [
+       "H",
+       "Li",
+       1
+      ],
+      [
+       "H",
+       "O",
+       2
+      ]
+     ],
+     "anchor": [
+      "H",
+      "Li",
+      2.458
+     ],
+     "height_A": 5.789,
+     "tilt_deg": 44.7,
+     "n_members": 1
+    },
+    {
+     "basin_id": "b86",
+     "rep_label": "sdcp_neutral__Li_top__fib09__r270",
+     "E_pose_eV": 0.424943,
+     "fingerprint": [
+      [
+       "H",
+       "Li",
+       1
+      ],
+      [
+       "H",
+       "O",
+       2
+      ]
+     ],
+     "anchor": [
+      "H",
+      "Li",
+      2.461
+     ],
+     "height_A": 5.81,
+     "tilt_deg": 44.8,
+     "n_members": 1
+    },
+    {
+     "basin_id": "b87",
+     "rep_label": "sdcp_neutral__O_top__fib01__r180",
+     "E_pose_eV": 0.425866,
+     "fingerprint": [
+      [
+       "H",
+       "Ni",
+       2
+      ],
+      [
+       "H",
+       "O",
+       1
+      ]
+     ],
+     "anchor": [
+      "H",
+      "O",
+      2.386
+     ],
+     "height_A": 5.842,
+     "tilt_deg": 67.6,
+     "n_members": 1
+    },
+    {
+     "basin_id": "b88",
+     "rep_label": "sdcp_neutral__hollow__fib09__r180",
+     "E_pose_eV": 0.426892,
+     "fingerprint": [
+      [
+       "H",
+       "Li",
+       2
+      ],
+      [
+       "H",
+       "Ni",
+       1
+      ],
+      [
+       "H",
+       "O",
+       2
+      ]
+     ],
+     "anchor": [
+      "H",
+      "O",
+      2.601
+     ],
+     "height_A": 5.862,
+     "tilt_deg": 44.9,
+     "n_members": 1
+    },
+    {
+     "basin_id": "b89",
+     "rep_label": "sdcp_neutral__Ni_top__fib10__r000",
+     "E_pose_eV": 0.430622,
+     "fingerprint": [
+      [
+       "H",
+       "Ni",
+       1
+      ],
+      [
+       "H",
+       "O",
+       3
+      ]
+     ],
+     "anchor": [
+      "H",
+      "Ni",
+      2.449
+     ],
+     "height_A": 5.933,
+     "tilt_deg": 64.1,
+     "n_members": 1
+    },
+    {
+     "basin_id": "b90",
+     "rep_label": "sdcp_neutral__LiO_bridge__fib01__r180",
+     "E_pose_eV": 0.430867,
+     "fingerprint": [
+      [
+       "H",
+       "Li",
+       1
+      ],
+      [
+       "H",
+       "O",
+       1
+      ]
+     ],
+     "anchor": [
+      "H",
+      "O",
+      2.542
+     ],
+     "height_A": 5.81,
+     "tilt_deg": 67.6,
+     "n_members": 1
+    },
+    {
+     "basin_id": "b91",
+     "rep_label": "sdcp_neutral__Ni_top__fib09__r180",
+     "E_pose_eV": 0.43144,
+     "fingerprint": [
+      [
+       "H",
+       "Ni",
+       1
+      ],
+      [
+       "H",
+       "O",
+       3
+      ]
+     ],
+     "anchor": [
+      "H",
+      "Ni",
+      2.44
+     ],
+     "height_A": 5.832,
+     "tilt_deg": 44.8,
+     "n_members": 1
+    },
+    {
+     "basin_id": "b92",
+     "rep_label": "sdcp_neutral__NiO_bridge__fib01__r000",
+     "E_pose_eV": 0.433616,
+     "fingerprint": [
+      [
+       "H",
+       "Ni",
+       1
+      ],
+      [
+       "H",
+       "O",
+       2
+      ]
+     ],
+     "anchor": [
+      "H",
+      "O",
+      2.528
+     ],
+     "height_A": 5.83,
+     "tilt_deg": 67.6,
+     "n_members": 1
+    },
+    {
+     "basin_id": "b93",
+     "rep_label": "sdcp_neutral__Li_top__fib10__r000",
+     "E_pose_eV": 0.433772,
+     "fingerprint": [
+      [
+       "H",
+       "Li",
+       1
+      ],
+      [
+       "H",
+       "O",
+       2
+      ]
+     ],
+     "anchor": [
+      "H",
+      "Li",
+      2.487
+     ],
+     "height_A": 5.896,
+     "tilt_deg": 64.0,
+     "n_members": 1
+    },
+    {
+     "basin_id": "b94",
+     "rep_label": "sdcp_neutral__Ni_top__fib01__r180",
+     "E_pose_eV": 0.436317,
+     "fingerprint": [
+      [
+       "H",
+       "Ni",
+       1
+      ],
+      [
+       "H",
+       "O",
+       3
+      ]
+     ],
+     "anchor": [
+      "H",
+      "Ni",
+      2.441
+     ],
+     "height_A": 5.798,
+     "tilt_deg": 67.7,
+     "n_members": 1
+    },
+    {
+     "basin_id": "b95",
+     "rep_label": "sdcp_neutral__Ni_top__fib09__r000",
+     "E_pose_eV": 0.44022,
+     "fingerprint": [
+      [
+       "H",
+       "Ni",
+       1
+      ],
+      [
+       "H",
+       "O",
+       3
+      ]
+     ],
+     "anchor": [
+      "H",
+      "Ni",
+      2.437
+     ],
+     "height_A": 5.829,
+     "tilt_deg": 44.8,
+     "n_members": 1
+    },
+    {
+     "basin_id": "b96",
+     "rep_label": "sdcp_neutral__Li_top__fib10__r180",
+     "E_pose_eV": 0.441078,
+     "fingerprint": [
+      [
+       "H",
+       "Li",
+       1
+      ],
+      [
+       "H",
+       "O",
+       2
+      ]
+     ],
+     "anchor": [
+      "H",
+      "Li",
+      2.491
+     ],
+     "height_A": 5.885,
+     "tilt_deg": 64.1,
+     "n_members": 1
+    },
+    {
+     "basin_id": "b97",
+     "rep_label": "sdcp_neutral__NiO_bridge__fib01__r090",
+     "E_pose_eV": 0.441583,
+     "fingerprint": [
+      [
+       "H",
+       "Ni",
+       1
+      ],
+      [
+       "H",
+       "O",
+       2
+      ]
+     ],
+     "anchor": [
+      "H",
+      "O",
+      2.556
+     ],
+     "height_A": 5.821,
+     "tilt_deg": 67.6,
+     "n_members": 1
+    },
+    {
+     "basin_id": "b98",
+     "rep_label": "sdcp_neutral__Ni_top__fib01__r000",
+     "E_pose_eV": 0.444211,
+     "fingerprint": [
+      [
+       "H",
+       "Ni",
+       1
+      ],
+      [
+       "H",
+       "O",
+       3
+      ]
+     ],
+     "anchor": [
+      "H",
+      "Ni",
+      2.439
+     ],
+     "height_A": 5.815,
+     "tilt_deg": 67.7,
+     "n_members": 1
+    },
+    {
+     "basin_id": "b99",
+     "rep_label": "sdcp_neutral__O_top__fib01__r090",
+     "E_pose_eV": 0.446241,
+     "fingerprint": [
+      [
+       "H",
+       "Ni",
+       2
+      ],
+      [
+       "H",
+       "O",
+       1
+      ]
+     ],
+     "anchor": [
+      "H",
+      "O",
+      2.399
+     ],
+     "height_A": 5.849,
+     "tilt_deg": 67.6,
+     "n_members": 1
+    },
+    {
+     "basin_id": "b100",
+     "rep_label": "sdcp_neutral__Li_top__fib01__r270",
+     "E_pose_eV": 0.464579,
+     "fingerprint": [
+      [
+       "H",
+       "Li",
+       1
+      ],
+      [
+       "H",
+       "O",
+       2
+      ]
+     ],
+     "anchor": [
+      "H",
+      "Li",
+      2.455
+     ],
+     "height_A": 5.765,
+     "tilt_deg": 67.6,
+     "n_members": 1
+    }
+   ],
+   "basin_members": {
+    "b00": [
+     "sdcp_neutral__O_top__fib08__r000"
+    ],
+    "b01": [
+     "sdcp_neutral__LiO_bridge__fib08__r000"
+    ],
+    "b02": [
+     "sdcp_neutral__O_top__fib08__r180"
+    ],
+    "b03": [
+     "sdcp_neutral__hollow__fib08__r180"
+    ],
+    "b04": [
+     "sdcp_neutral__NiO_bridge__fib08__r000"
+    ],
+    "b05": [
+     "sdcp_neutral__NiO_bridge__fib08__r180"
+    ],
+    "b06": [
+     "sdcp_neutral__hollow__fib08__r000"
+    ],
+    "b07": [
+     "sdcp_neutral__LiO_bridge__fib11__r270"
+    ],
+    "b08": [
+     "sdcp_neutral__LiO_bridge__fib08__r180"
+    ],
+    "b09": [
+     "sdcp_neutral__LiNi_bridge__fib08__r000"
+    ],
+    "b10": [
+     "sdcp_neutral__NiO_bridge__fib04__r180"
+    ],
+    "b11": [
+     "sdcp_neutral__O_top__fib04__r180"
+    ],
+    "b12": [
+     "sdcp_neutral__LiNi_bridge__fib11__r270"
+    ],
+    "b13": [
+     "sdcp_neutral__Ni_top__fib04__r000"
+    ],
+    "b14": [
+     "sdcp_neutral__LiO_bridge__fib04__r000"
+    ],
+    "b15": [
+     "sdcp_neutral__Li_top__fib04__r180"
+    ],
+    "b16": [
+     "sdcp_neutral__O_top__fib10__r090"
+    ],
+    "b17": [
+     "sdcp_neutral__O_top__fib07__r180"
+    ],
+    "b18": [
+     "sdcp_neutral__Ni_top__fib04__r180"
+    ],
+    "b19": [
+     "sdcp_neutral__LiNi_bridge__fib08__r180"
+    ],
+    "b20": [
+     "sdcp_neutral__hollow__fib04__r180",
+     "sdcp_neutral__LiNi_bridge__fib04__r180"
+    ],
+    "b21": [
+     "sdcp_neutral__NiO_bridge__fib11__r000"
+    ],
+    "b22": [
+     "sdcp_neutral__LiO_bridge__fib11__r180"
+    ],
+    "b23": [
+     "sdcp_neutral__Li_top__fib04__r000"
+    ],
+    "b24": [
+     "sdcp_neutral__O_top__fib07__r000"
+    ],
+    "b25": [
+     "sdcp_neutral__LiO_bridge__fib07__r180"
+    ],
+    "b26": [
+     "sdcp_neutral__hollow__fib04__r000"
+    ],
+    "b27": [
+     "sdcp_neutral__O_top__fib04__r000"
+    ],
+    "b28": [
+     "sdcp_neutral__LiO_bridge__fib04__r180"
+    ],
+    "b29": [
+     "sdcp_neutral__NiO_bridge__fib04__r000"
+    ],
+    "b30": [
+     "sdcp_neutral__hollow__fib07__r180",
+     "sdcp_neutral__LiNi_bridge__fib07__r180"
+    ],
+    "b31": [
+     "sdcp_neutral__LiNi_bridge__fib11__r090"
+    ],
+    "b32": [
+     "sdcp_neutral__NiO_bridge__fib10__r090"
+    ],
+    "b33": [
+     "sdcp_neutral__LiO_bridge__fib07__r000"
+    ],
+    "b34": [
+     "sdcp_neutral__NiO_bridge__fib09__r270"
+    ],
+    "b35": [
+     "sdcp_neutral__hollow__fib10__r090",
+     "sdcp_neutral__LiNi_bridge__fib10__r090"
+    ],
+    "b36": [
+     "sdcp_neutral__O_top__fib10__r270"
+    ],
+    "b37": [
+     "sdcp_neutral__LiO_bridge__fib10__r090"
+    ],
+    "b38": [
+     "sdcp_neutral__LiNi_bridge__fib04__r000"
+    ],
+    "b39": [
+     "sdcp_neutral__O_top__fib10__r000"
+    ],
+    "b40": [
+     "sdcp_neutral__hollow__fib07__r000"
+    ],
+    "b41": [
+     "sdcp_neutral__NiO_bridge__fib07__r180"
+    ],
+    "b42": [
+     "sdcp_neutral__NiO_bridge__fib07__r000"
+    ],
+    "b43": [
+     "sdcp_neutral__LiNi_bridge__fib07__r000"
+    ],
+    "b44": [
+     "sdcp_neutral__Li_top__fib08__r180"
+    ],
+    "b45": [
+     "sdcp_neutral__O_top__fib10__r180"
+    ],
+    "b46": [
+     "sdcp_neutral__LiO_bridge__fib09__r090"
+    ],
+    "b47": [
+     "sdcp_neutral__LiO_bridge__fib10__r270"
+    ],
+    "b48": [
+     "sdcp_neutral__Li_top__fib07__r000"
+    ],
+    "b49": [
+     "sdcp_neutral__Ni_top__fib09__r270"
+    ],
+    "b50": [
+     "sdcp_neutral__hollow__fib09__r090",
+     "sdcp_neutral__LiNi_bridge__fib09__r090"
+    ],
+    "b51": [
+     "sdcp_neutral__hollow__fib10__r000",
+     "sdcp_neutral__LiNi_bridge__fib10__r000"
+    ],
+    "b52": [
+     "sdcp_neutral__Li_top__fib07__r180"
+    ],
+    "b53": [
+     "sdcp_neutral__hollow__fib10__r270",
+     "sdcp_neutral__LiNi_bridge__fib10__r270"
+    ],
+    "b54": [
+     "sdcp_neutral__O_top__fib09__r270"
+    ],
+    "b55": [
+     "sdcp_neutral__Ni_top__fib09__r090"
+    ],
+    "b56": [
+     "sdcp_neutral__LiO_bridge__fib10__r000"
+    ],
+    "b57": [
+     "sdcp_neutral__NiO_bridge__fib10__r270"
+    ],
+    "b58": [
+     "sdcp_neutral__Li_top__fib03__r270"
+    ],
+    "b59": [
+     "sdcp_neutral__Li_top__fib08__r000"
+    ],
+    "b60": [
+     "sdcp_neutral__hollow__fib10__r180",
+     "sdcp_neutral__LiNi_bridge__fib10__r180"
+    ],
+    "b61": [
+     "sdcp_neutral__Ni_top__fib07__r180"
+    ],
+    "b62": [
+     "sdcp_neutral__NiO_bridge__fib10__r000"
+    ],
+    "b63": [
+     "sdcp_neutral__LiNi_bridge__fib09__r270"
+    ],
+    "b64": [
+     "sdcp_neutral__O_top__fib09__r090"
+    ],
+    "b65": [
+     "sdcp_neutral__Ni_top__fib07__r000"
+    ],
+    "b66": [
+     "sdcp_neutral__Li_top__fib10__r090"
+    ],
+    "b67": [
+     "sdcp_neutral__hollow__fib09__r270"
+    ],
+    "b68": [
+     "sdcp_neutral__LiO_bridge__fib10__r180"
+    ],
+    "b69": [
+     "sdcp_neutral__Ni_top__fib10__r270"
+    ],
+    "b70": [
+     "sdcp_neutral__NiO_bridge__fib10__r180"
+    ],
+    "b71": [
+     "sdcp_neutral__Ni_top__fib03__r270"
+    ],
+    "b72": [
+     "sdcp_neutral__Ni_top__fib03__r090"
+    ],
+    "b73": [
+     "sdcp_neutral__Ni_top__fib10__r090"
+    ],
+    "b74": [
+     "sdcp_neutral__Li_top__fib09__r090"
+    ],
+    "b75": [
+     "sdcp_neutral__NiO_bridge__fib09__r180"
+    ],
+    "b76": [
+     "sdcp_neutral__LiNi_bridge__fib09__r180"
+    ],
+    "b77": [
+     "sdcp_neutral__O_top__fib09__r180"
+    ],
+    "b78": [
+     "sdcp_neutral__LiO_bridge__fib09__r180"
+    ],
+    "b79": [
+     "sdcp_neutral__Li_top__fib10__r270"
+    ],
+    "b80": [
+     "sdcp_neutral__Ni_top__sulfonate_down__r000"
+    ],
+    "b81": [
+     "sdcp_neutral__NiO_bridge__fib09__r090"
+    ],
+    "b82": [
+     "sdcp_neutral__hollow__fib01__r180",
+     "sdcp_neutral__LiNi_bridge__fib01__r180"
+    ],
+    "b83": [
+     "sdcp_neutral__Li_top__fib09__r000"
+    ],
+    "b84": [
+     "sdcp_neutral__LiO_bridge__fib09__r000"
+    ],
+    "b85": [
+     "sdcp_neutral__Li_top__fib09__r180"
+    ],
+    "b86": [
+     "sdcp_neutral__Li_top__fib09__r270"
+    ],
+    "b87": [
+     "sdcp_neutral__O_top__fib01__r180"
+    ],
+    "b88": [
+     "sdcp_neutral__hollow__fib09__r180"
+    ],
+    "b89": [
+     "sdcp_neutral__Ni_top__fib10__r000"
+    ],
+    "b90": [
+     "sdcp_neutral__LiO_bridge__fib01__r180"
+    ],
+    "b91": [
+     "sdcp_neutral__Ni_top__fib09__r180"
+    ],
+    "b92": [
+     "sdcp_neutral__NiO_bridge__fib01__r000"
+    ],
+    "b93": [
+     "sdcp_neutral__Li_top__fib10__r000"
+    ],
+    "b94": [
+     "sdcp_neutral__Ni_top__fib01__r180"
+    ],
+    "b95": [
+     "sdcp_neutral__Ni_top__fib09__r000"
+    ],
+    "b96": [
+     "sdcp_neutral__Li_top__fib10__r180"
+    ],
+    "b97": [
+     "sdcp_neutral__NiO_bridge__fib01__r090"
+    ],
+    "b98": [
+     "sdcp_neutral__Ni_top__fib01__r000"
+    ],
+    "b99": [
+     "sdcp_neutral__O_top__fib01__r090"
+    ],
+    "b100": [
+     "sdcp_neutral__Li_top__fib01__r270"
+    ]
+   },
+   "calibration": [
+    {
+     "basin_id": "b00",
+     "rep_label": "sdcp_neutral__O_top__fib08__r000",
+     "E_pose_eV": 0.019954,
+     "fingerprint": [
+      [
+       "H",
+       "Li",
+       1
+      ],
+      [
+       "H",
+       "Ni",
+       2
+      ],
+      [
+       "H",
+       "O",
+       2
+      ],
+      [
+       "O",
+       "Ni",
+       1
+      ],
+      [
+       "O",
+       "O",
+       1
+      ]
+     ],
+     "anchor": [
+      "H",
+      "O",
+      1.827
+     ],
+     "height_A": 5.072,
+     "tilt_deg": 85.5,
+     "n_members": 1,
+     "role": "calibration",
+     "why": "UMA global-min basin"
+    },
+    {
+     "basin_id": "b01",
+     "rep_label": "sdcp_neutral__LiO_bridge__fib08__r000",
+     "E_pose_eV": 0.042481,
+     "fingerprint": [
+      [
+       "H",
+       "Li",
+       2
+      ],
+      [
+       "H",
+       "Ni",
+       2
+      ],
+      [
+       "H",
+       "O",
+       1
+      ],
+      [
+       "O",
+       "O",
+       1
+      ]
+     ],
+     "anchor": [
+      "H",
+      "O",
+      1.848
+     ],
+     "height_A": 5.051,
+     "tilt_deg": 86.0,
+     "n_members": 1,
+     "role": "calibration",
+     "why": "다른 접촉지문 중 최저"
+    },
+    {
+     "basin_id": "b07",
+     "rep_label": "sdcp_neutral__LiO_bridge__fib11__r270",
+     "E_pose_eV": 0.166058,
+     "fingerprint": [
+      [
+       "H",
+       "Li",
+       2
+      ],
+      [
+       "H",
+       "Ni",
+       2
+      ],
+      [
+       "H",
+       "O",
+       3
+      ],
+      [
+       "O",
+       "Li",
+       1
+      ],
+      [
+       "O",
+       "O",
+       1
+      ]
+     ],
+     "anchor": [
+      "H",
+      "O",
+      1.871
+     ],
+     "height_A": 5.025,
+     "tilt_deg": 58.3,
+     "n_members": 1,
+     "role": "calibration",
+     "why": "provisional 창 W0 안쪽 경계"
+    },
+    {
+     "basin_id": "b08",
+     "rep_label": "sdcp_neutral__LiO_bridge__fib08__r180",
+     "E_pose_eV": 0.198211,
+     "fingerprint": [
+      [
+       "H",
+       "Li",
+       2
+      ],
+      [
+       "H",
+       "Ni",
+       1
+      ],
+      [
+       "H",
+       "O",
+       1
+      ],
+      [
+       "O",
+       "Li",
+       1
+      ]
+     ],
+     "anchor": [
+      "H",
+      "O",
+      2.294
+     ],
+     "height_A": 5.166,
+     "tilt_deg": 85.7,
+     "n_members": 1,
+     "role": "calibration",
+     "why": "W0 바깥 최근접"
+    }
+   ],
+   "sealed_audit": [
+    {
+     "basin_id": "b09",
+     "rep_label": "sdcp_neutral__LiNi_bridge__fib08__r000",
+     "E_pose_eV": 0.26911,
+     "fingerprint": [
+      [
+       "H",
+       "Li",
+       1
+      ],
+      [
+       "H",
+       "Ni",
+       1
+      ],
+      [
+       "H",
+       "O",
+       2
+      ]
+     ],
+     "anchor": [
+      "H",
+      "O",
+      2.645
+     ],
+     "height_A": 5.272,
+     "tilt_deg": 86.3,
+     "n_members": 1,
+     "role": "sealed_audit",
+     "why": "W0 **바깥** 최근접 excluded (calibration 다음)"
+    },
+    {
+     "basin_id": "b62",
+     "rep_label": "sdcp_neutral__NiO_bridge__fib10__r000",
+     "E_pose_eV": 0.385601,
+     "fingerprint": [
+      [
+       "H",
+       "Ni",
+       1
+      ],
+      [
+       "H",
+       "O",
+       2
+      ]
+     ],
+     "anchor": [
+      "H",
+      "O",
+      2.539
+     ],
+     "height_A": 5.941,
+     "tilt_deg": 64.1,
+     "n_members": 1,
+     "role": "sealed_audit",
+     "why": "접촉지문 층화 난수 (seed 20260829)"
+    }
+   ]
+  },
+  "ptfe_c10": {
+   "n_poses_passed": 112,
+   "n_gated": 0,
+   "n_basins": 96,
+   "E_min_eV": -0.265953,
+   "gated": [],
+   "basins": [
+    {
+     "basin_id": "b00",
+     "rep_label": "ptfe_c10__Ni_top__fib05__r270",
+     "E_pose_eV": -0.265953,
+     "fingerprint": [
+      [
+       "F",
+       "Li",
+       2
+      ],
+      [
+       "F",
+       "Ni",
+       1
+      ],
+      [
+       "F",
+       "O",
+       4
+      ]
+     ],
+     "anchor": [
+      "F",
+      "Ni",
+      2.538
+     ],
+     "height_A": 4.208,
+     "tilt_deg": 86.1,
+     "n_members": 1
+    },
+    {
+     "basin_id": "b01",
+     "rep_label": "ptfe_c10__Ni_top__fib05__r090",
+     "E_pose_eV": -0.260306,
+     "fingerprint": [
+      [
+       "F",
+       "Li",
+       3
+      ],
+      [
+       "F",
+       "Ni",
+       1
+      ],
+      [
+       "F",
+       "O",
+       4
+      ]
+     ],
+     "anchor": [
+      "F",
+      "Ni",
+      2.525
+     ],
+     "height_A": 4.195,
+     "tilt_deg": 86.1,
+     "n_members": 1
+    },
+    {
+     "basin_id": "b02",
+     "rep_label": "ptfe_c10__NiO_bridge__fib05__r090",
+     "E_pose_eV": -0.253866,
+     "fingerprint": [
+      [
+       "F",
+       "Li",
+       2
+      ],
+      [
+       "F",
+       "Ni",
+       2
+      ],
+      [
+       "F",
+       "O",
+       2
+      ]
+     ],
+     "anchor": [
+      "F",
+      "Li",
+      2.589
+     ],
+     "height_A": 4.214,
+     "tilt_deg": 86.0,
+     "n_members": 1
+    },
+    {
+     "basin_id": "b03",
+     "rep_label": "ptfe_c10__O_top__fib05__r270",
+     "E_pose_eV": -0.241556,
+     "fingerprint": [
+      [
+       "F",
+       "Li",
+       1
+      ],
+      [
+       "F",
+       "Ni",
+       1
+      ],
+      [
+       "F",
+       "O",
+       3
+      ]
+     ],
+     "anchor": [
+      "F",
+      "O",
+      2.701
+     ],
+     "height_A": 4.308,
+     "tilt_deg": 87.0,
+     "n_members": 1
+    },
+    {
+     "basin_id": "b04",
+     "rep_label": "ptfe_c10__NiO_bridge__fib06__r000",
+     "E_pose_eV": -0.239578,
+     "fingerprint": [
+      [
+       "F",
+       "Li",
+       2
+      ],
+      [
+       "F",
+       "Ni",
+       2
+      ],
+      [
+       "F",
+       "O",
+       2
+      ]
+     ],
+     "anchor": [
+      "F",
+      "Li",
+      2.699
+     ],
+     "height_A": 4.315,
+     "tilt_deg": 85.8,
+     "n_members": 1
+    },
+    {
+     "basin_id": "b05",
+     "rep_label": "ptfe_c10__Li_top__fib07__r180",
+     "E_pose_eV": -0.233212,
+     "fingerprint": [
+      [
+       "F",
+       "Li",
+       1
+      ],
+      [
+       "F",
+       "O",
+       2
+      ]
+     ],
+     "anchor": [
+      "F",
+      "Li",
+      2.362
+     ],
+     "height_A": 5.357,
+     "tilt_deg": 75.9,
+     "n_members": 1
+    },
+    {
+     "basin_id": "b06",
+     "rep_label": "ptfe_c10__Li_top__fib04__r090",
+     "E_pose_eV": -0.226887,
+     "fingerprint": [
+      [
+       "F",
+       "Li",
+       1
+      ],
+      [
+       "F",
+       "O",
+       2
+      ]
+     ],
+     "anchor": [
+      "F",
+      "Li",
+      2.365
+     ],
+     "height_A": 5.35,
+     "tilt_deg": 75.0,
+     "n_members": 1
+    },
+    {
+     "basin_id": "b07",
+     "rep_label": "ptfe_c10__Li_top__fib04__r270",
+     "E_pose_eV": -0.226552,
+     "fingerprint": [
+      [
+       "F",
+       "Li",
+       1
+      ],
+      [
+       "F",
+       "O",
+       2
+      ]
+     ],
+     "anchor": [
+      "F",
+      "Li",
+      2.374
+     ],
+     "height_A": 5.347,
+     "tilt_deg": 75.0,
+     "n_members": 1
+    },
+    {
+     "basin_id": "b08",
+     "rep_label": "ptfe_c10__Li_top__fib07__r000",
+     "E_pose_eV": -0.226232,
+     "fingerprint": [
+      [
+       "F",
+       "Li",
+       1
+      ],
+      [
+       "F",
+       "O",
+       2
+      ]
+     ],
+     "anchor": [
+      "F",
+      "Li",
+      2.371
+     ],
+     "height_A": 5.357,
+     "tilt_deg": 75.9,
+     "n_members": 1
+    },
+    {
+     "basin_id": "b09",
+     "rep_label": "ptfe_c10__Ni_top__fib06__r180",
+     "E_pose_eV": -0.219794,
+     "fingerprint": [
+      [
+       "F",
+       "Li",
+       2
+      ],
+      [
+       "F",
+       "Ni",
+       1
+      ],
+      [
+       "F",
+       "O",
+       3
+      ]
+     ],
+     "anchor": [
+      "F",
+      "Ni",
+      2.542
+     ],
+     "height_A": 4.306,
+     "tilt_deg": 86.0,
+     "n_members": 1
+    },
+    {
+     "basin_id": "b10",
+     "rep_label": "ptfe_c10__O_top__fib05__r090",
+     "E_pose_eV": -0.218423,
+     "fingerprint": [
+      [
+       "F",
+       "Li",
+       1
+      ],
+      [
+       "F",
+       "O",
+       3
+      ]
+     ],
+     "anchor": [
+      "F",
+      "O",
+      2.65
+     ],
+     "height_A": 4.255,
+     "tilt_deg": 86.4,
+     "n_members": 1
+    },
+    {
+     "basin_id": "b11",
+     "rep_label": "ptfe_c10__NiO_bridge__fib05__r270",
+     "E_pose_eV": -0.217244,
+     "fingerprint": [
+      [
+       "F",
+       "Li",
+       2
+      ],
+      [
+       "F",
+       "Ni",
+       1
+      ],
+      [
+       "F",
+       "O",
+       3
+      ]
+     ],
+     "anchor": [
+      "F",
+      "Ni",
+      2.715
+     ],
+     "height_A": 4.231,
+     "tilt_deg": 86.5,
+     "n_members": 1
+    },
+    {
+     "basin_id": "b12",
+     "rep_label": "ptfe_c10__O_top__fib06__r000",
+     "E_pose_eV": -0.216879,
+     "fingerprint": [
+      [
+       "F",
+       "Li",
+       1
+      ],
+      [
+       "F",
+       "Ni",
+       1
+      ],
+      [
+       "F",
+       "O",
+       3
+      ]
+     ],
+     "anchor": [
+      "F",
+      "O",
+      2.648
+     ],
+     "height_A": 4.345,
+     "tilt_deg": 85.9,
+     "n_members": 1
+    },
+    {
+     "basin_id": "b13",
+     "rep_label": "ptfe_c10__Ni_top__fib04__r090",
+     "E_pose_eV": -0.214203,
+     "fingerprint": [
+      [
+       "F",
+       "Ni",
+       1
+      ],
+      [
+       "F",
+       "O",
+       2
+      ]
+     ],
+     "anchor": [
+      "F",
+      "Ni",
+      2.523
+     ],
+     "height_A": 5.403,
+     "tilt_deg": 75.4,
+     "n_members": 1
+    },
+    {
+     "basin_id": "b14",
+     "rep_label": "ptfe_c10__LiO_bridge__fib05__r270",
+     "E_pose_eV": -0.214172,
+     "fingerprint": [
+      [
+       "F",
+       "Li",
+       2
+      ],
+      [
+       "F",
+       "Ni",
+       2
+      ],
+      [
+       "F",
+       "O",
+       3
+      ]
+     ],
+     "anchor": [
+      "F",
+      "Ni",
+      2.707
+     ],
+     "height_A": 4.219,
+     "tilt_deg": 86.3,
+     "n_members": 1
+    },
+    {
+     "basin_id": "b15",
+     "rep_label": "ptfe_c10__Li_top__fib08__r270",
+     "E_pose_eV": -0.2096,
+     "fingerprint": [
+      [
+       "F",
+       "Li",
+       2
+      ],
+      [
+       "F",
+       "O",
+       2
+      ]
+     ],
+     "anchor": [
+      "F",
+      "Li",
+      2.397
+     ],
+     "height_A": 5.767,
+     "tilt_deg": 65.1,
+     "n_members": 1
+    },
+    {
+     "basin_id": "b16",
+     "rep_label": "ptfe_c10__Ni_top__fib08__r090",
+     "E_pose_eV": -0.205988,
+     "fingerprint": [
+      [
+       "F",
+       "Ni",
+       2
+      ],
+      [
+       "F",
+       "O",
+       2
+      ]
+     ],
+     "anchor": [
+      "F",
+      "Ni",
+      2.61
+     ],
+     "height_A": 5.816,
+     "tilt_deg": 65.4,
+     "n_members": 1
+    },
+    {
+     "basin_id": "b17",
+     "rep_label": "ptfe_c10__Ni_top__fib08__r270",
+     "E_pose_eV": -0.205764,
+     "fingerprint": [
+      [
+       "F",
+       "Ni",
+       2
+      ],
+      [
+       "F",
+       "O",
+       2
+      ]
+     ],
+     "anchor": [
+      "F",
+      "Ni",
+      2.611
+     ],
+     "height_A": 5.818,
+     "tilt_deg": 65.4,
+     "n_members": 1
+    },
+    {
+     "basin_id": "b18",
+     "rep_label": "ptfe_c10__hollow__fib04__r090",
+     "E_pose_eV": -0.204625,
+     "fingerprint": [
+      [
+       "F",
+       "Li",
+       1
+      ],
+      [
+       "F",
+       "Ni",
+       1
+      ],
+      [
+       "F",
+       "O",
+       2
+      ]
+     ],
+     "anchor": [
+      "F",
+      "Ni",
+      2.878
+     ],
+     "height_A": 5.454,
+     "tilt_deg": 75.7,
+     "n_members": 2
+    },
+    {
+     "basin_id": "b19",
+     "rep_label": "ptfe_c10__LiO_bridge__fib04__r270",
+     "E_pose_eV": -0.201887,
+     "fingerprint": [
+      [
+       "F",
+       "Li",
+       1
+      ],
+      [
+       "F",
+       "O",
+       1
+      ]
+     ],
+     "anchor": [
+      "F",
+      "Li",
+      2.667
+     ],
+     "height_A": 5.402,
+     "tilt_deg": 75.4,
+     "n_members": 1
+    },
+    {
+     "basin_id": "b20",
+     "rep_label": "ptfe_c10__NiO_bridge__fib06__r180",
+     "E_pose_eV": -0.199277,
+     "fingerprint": [
+      [
+       "F",
+       "Li",
+       2
+      ],
+      [
+       "F",
+       "Ni",
+       1
+      ],
+      [
+       "F",
+       "O",
+       2
+      ]
+     ],
+     "anchor": [
+      "F",
+      "Ni",
+      2.746
+     ],
+     "height_A": 4.337,
+     "tilt_deg": 86.1,
+     "n_members": 1
+    },
+    {
+     "basin_id": "b21",
+     "rep_label": "ptfe_c10__Li_top__fib08__r090",
+     "E_pose_eV": -0.1983,
+     "fingerprint": [
+      [
+       "F",
+       "Li",
+       2
+      ],
+      [
+       "F",
+       "O",
+       3
+      ]
+     ],
+     "anchor": [
+      "F",
+      "Li",
+      2.385
+     ],
+     "height_A": 5.762,
+     "tilt_deg": 64.9,
+     "n_members": 1
+    },
+    {
+     "basin_id": "b22",
+     "rep_label": "ptfe_c10__NiO_bridge__fib08__r090",
+     "E_pose_eV": -0.192695,
+     "fingerprint": [
+      [
+       "F",
+       "Ni",
+       1
+      ],
+      [
+       "F",
+       "O",
+       2
+      ]
+     ],
+     "anchor": [
+      "F",
+      "Ni",
+      2.816
+     ],
+     "height_A": 5.845,
+     "tilt_deg": 65.7,
+     "n_members": 1
+    },
+    {
+     "basin_id": "b23",
+     "rep_label": "ptfe_c10__NiO_bridge__fib04__r090",
+     "E_pose_eV": -0.192391,
+     "fingerprint": [
+      [
+       "F",
+       "Ni",
+       1
+      ],
+      [
+       "F",
+       "O",
+       2
+      ]
+     ],
+     "anchor": [
+      "F",
+      "Ni",
+      2.7
+     ],
+     "height_A": 5.43,
+     "tilt_deg": 75.6,
+     "n_members": 1
+    },
+    {
+     "basin_id": "b24",
+     "rep_label": "ptfe_c10__LiO_bridge__fib07__r000",
+     "E_pose_eV": -0.192028,
+     "fingerprint": [
+      [
+       "F",
+       "Li",
+       1
+      ],
+      [
+       "F",
+       "O",
+       1
+      ]
+     ],
+     "anchor": [
+      "F",
+      "Li",
+      2.66
+     ],
+     "height_A": 5.413,
+     "tilt_deg": 76.3,
+     "n_members": 1
+    },
+    {
+     "basin_id": "b25",
+     "rep_label": "ptfe_c10__NiO_bridge__fib04__r270",
+     "E_pose_eV": -0.191332,
+     "fingerprint": [
+      [
+       "F",
+       "Ni",
+       1
+      ],
+      [
+       "F",
+       "O",
+       1
+      ]
+     ],
+     "anchor": [
+      "F",
+      "Ni",
+      2.813
+     ],
+     "height_A": 5.449,
+     "tilt_deg": 75.9,
+     "n_members": 1
+    },
+    {
+     "basin_id": "b26",
+     "rep_label": "ptfe_c10__LiNi_bridge__fib04__r270",
+     "E_pose_eV": -0.189744,
+     "fingerprint": [
+      [
+       "F",
+       "Li",
+       1
+      ],
+      [
+       "F",
+       "Ni",
+       1
+      ],
+      [
+       "F",
+       "O",
+       2
+      ]
+     ],
+     "anchor": [
+      "F",
+      "Li",
+      2.829
+     ],
+     "height_A": 5.396,
+     "tilt_deg": 75.6,
+     "n_members": 2
+    },
+    {
+     "basin_id": "b27",
+     "rep_label": "ptfe_c10__Li_top__fib00__r270",
+     "E_pose_eV": -0.188495,
+     "fingerprint": [
+      [
+       "F",
+       "Li",
+       1
+      ],
+      [
+       "F",
+       "O",
+       2
+      ]
+     ],
+     "anchor": [
+      "F",
+      "Li",
+      2.342
+     ],
+     "height_A": 8.794,
+     "tilt_deg": 24.1,
+     "n_members": 1
+    },
+    {
+     "basin_id": "b28",
+     "rep_label": "ptfe_c10__Li_top__fib02__r000",
+     "E_pose_eV": -0.18712,
+     "fingerprint": [
+      [
+       "F",
+       "Li",
+       1
+      ],
+      [
+       "F",
+       "O",
+       2
+      ]
+     ],
+     "anchor": [
+      "F",
+      "Li",
+      2.367
+     ],
+     "height_A": 7.119,
+     "tilt_deg": 54.3,
+     "n_members": 1
+    },
+    {
+     "basin_id": "b29",
+     "rep_label": "ptfe_c10__O_top__fib06__r180",
+     "E_pose_eV": -0.186745,
+     "fingerprint": [
+      [
+       "F",
+       "Li",
+       1
+      ],
+      [
+       "F",
+       "Ni",
+       1
+      ],
+      [
+       "F",
+       "O",
+       3
+      ]
+     ],
+     "anchor": [
+      "F",
+      "O",
+      2.653
+     ],
+     "height_A": 4.355,
+     "tilt_deg": 86.1,
+     "n_members": 1
+    },
+    {
+     "basin_id": "b30",
+     "rep_label": "ptfe_c10__hollow__fib07__r000",
+     "E_pose_eV": -0.18651,
+     "fingerprint": [
+      [
+       "F",
+       "Li",
+       1
+      ],
+      [
+       "F",
+       "Ni",
+       1
+      ],
+      [
+       "F",
+       "O",
+       2
+      ]
+     ],
+     "anchor": [
+      "F",
+      "O",
+      2.743
+     ],
+     "height_A": 5.44,
+     "tilt_deg": 76.3,
+     "n_members": 2
+    },
+    {
+     "basin_id": "b31",
+     "rep_label": "ptfe_c10__LiO_bridge__fib08__r270",
+     "E_pose_eV": -0.186074,
+     "fingerprint": [
+      [
+       "F",
+       "Li",
+       1
+      ],
+      [
+       "F",
+       "O",
+       2
+      ]
+     ],
+     "anchor": [
+      "F",
+      "Li",
+      2.771
+     ],
+     "height_A": 5.822,
+     "tilt_deg": 65.6,
+     "n_members": 1
+    },
+    {
+     "basin_id": "b32",
+     "rep_label": "ptfe_c10__Ni_top__fib04__r270",
+     "E_pose_eV": -0.185883,
+     "fingerprint": [
+      [
+       "F",
+       "Ni",
+       1
+      ],
+      [
+       "F",
+       "O",
+       3
+      ]
+     ],
+     "anchor": [
+      "F",
+      "Ni",
+      2.47
+     ],
+     "height_A": 5.386,
+     "tilt_deg": 75.1,
+     "n_members": 1
+    },
+    {
+     "basin_id": "b33",
+     "rep_label": "ptfe_c10__Li_top__fib02__r180",
+     "E_pose_eV": -0.185624,
+     "fingerprint": [
+      [
+       "F",
+       "Li",
+       1
+      ],
+      [
+       "F",
+       "O",
+       2
+      ]
+     ],
+     "anchor": [
+      "F",
+      "Li",
+      2.371
+     ],
+     "height_A": 7.118,
+     "tilt_deg": 54.3,
+     "n_members": 1
+    },
+    {
+     "basin_id": "b34",
+     "rep_label": "ptfe_c10__LiNi_bridge__fib07__r180",
+     "E_pose_eV": -0.185346,
+     "fingerprint": [
+      [
+       "F",
+       "Li",
+       1
+      ],
+      [
+       "F",
+       "Ni",
+       1
+      ],
+      [
+       "F",
+       "O",
+       2
+      ]
+     ],
+     "anchor": [
+      "F",
+      "Li",
+      2.826
+     ],
+     "height_A": 5.399,
+     "tilt_deg": 76.5,
+     "n_members": 2
+    },
+    {
+     "basin_id": "b35",
+     "rep_label": "ptfe_c10__LiO_bridge__fib07__r180",
+     "E_pose_eV": -0.184189,
+     "fingerprint": [
+      [
+       "F",
+       "Li",
+       1
+      ],
+      [
+       "F",
+       "O",
+       1
+      ]
+     ],
+     "anchor": [
+      "F",
+      "Li",
+      2.66
+     ],
+     "height_A": 5.4,
+     "tilt_deg": 76.2,
+     "n_members": 1
+    },
+    {
+     "basin_id": "b36",
+     "rep_label": "ptfe_c10__hollow__fib08__r270",
+     "E_pose_eV": -0.18263,
+     "fingerprint": [
+      [
+       "F",
+       "Li",
+       1
+      ],
+      [
+       "F",
+       "Ni",
+       1
+      ],
+      [
+       "F",
+       "O",
+       2
+      ]
+     ],
+     "anchor": [
+      "F",
+      "O",
+      2.965
+     ],
+     "height_A": 5.853,
+     "tilt_deg": 65.5,
+     "n_members": 2
+    },
+    {
+     "basin_id": "b37",
+     "rep_label": "ptfe_c10__Li_top__fib00__r090",
+     "E_pose_eV": -0.181748,
+     "fingerprint": [
+      [
+       "F",
+       "Li",
+       1
+      ],
+      [
+       "F",
+       "O",
+       2
+      ]
+     ],
+     "anchor": [
+      "F",
+      "Li",
+      2.36
+     ],
+     "height_A": 8.793,
+     "tilt_deg": 24.1,
+     "n_members": 1
+    },
+    {
+     "basin_id": "b38",
+     "rep_label": "ptfe_c10__Ni_top__fib07__r000",
+     "E_pose_eV": -0.181475,
+     "fingerprint": [
+      [
+       "F",
+       "Ni",
+       1
+      ],
+      [
+       "F",
+       "O",
+       3
+      ]
+     ],
+     "anchor": [
+      "F",
+      "Ni",
+      2.464
+     ],
+     "height_A": 5.395,
+     "tilt_deg": 76.1,
+     "n_members": 1
+    },
+    {
+     "basin_id": "b39",
+     "rep_label": "ptfe_c10__Ni_top__fib07__r180",
+     "E_pose_eV": -0.180949,
+     "fingerprint": [
+      [
+       "F",
+       "Ni",
+       1
+      ],
+      [
+       "F",
+       "O",
+       3
+      ]
+     ],
+     "anchor": [
+      "F",
+      "Ni",
+      2.465
+     ],
+     "height_A": 5.395,
+     "tilt_deg": 76.0,
+     "n_members": 1
+    },
+    {
+     "basin_id": "b40",
+     "rep_label": "ptfe_c10__Li_top__fib00__r180",
+     "E_pose_eV": -0.1799,
+     "fingerprint": [
+      [
+       "F",
+       "Li",
+       1
+      ],
+      [
+       "F",
+       "O",
+       2
+      ]
+     ],
+     "anchor": [
+      "F",
+      "Li",
+      2.362
+     ],
+     "height_A": 8.792,
+     "tilt_deg": 24.1,
+     "n_members": 1
+    },
+    {
+     "basin_id": "b41",
+     "rep_label": "ptfe_c10__Li_top__fib00__r000",
+     "E_pose_eV": -0.178862,
+     "fingerprint": [
+      [
+       "F",
+       "Li",
+       1
+      ],
+      [
+       "F",
+       "O",
+       2
+      ]
+     ],
+     "anchor": [
+      "F",
+      "Li",
+      2.359
+     ],
+     "height_A": 8.792,
+     "tilt_deg": 24.1,
+     "n_members": 1
+    },
+    {
+     "basin_id": "b42",
+     "rep_label": "ptfe_c10__NiO_bridge__fib07__r180",
+     "E_pose_eV": -0.176543,
+     "fingerprint": [
+      [
+       "F",
+       "Ni",
+       1
+      ],
+      [
+       "F",
+       "O",
+       1
+      ]
+     ],
+     "anchor": [
+      "F",
+      "Ni",
+      2.69
+     ],
+     "height_A": 5.43,
+     "tilt_deg": 76.4,
+     "n_members": 1
+    },
+    {
+     "basin_id": "b43",
+     "rep_label": "ptfe_c10__LiNi_bridge__fib08__r090",
+     "E_pose_eV": -0.175965,
+     "fingerprint": [
+      [
+       "F",
+       "Li",
+       1
+      ],
+      [
+       "F",
+       "Ni",
+       1
+      ],
+      [
+       "F",
+       "O",
+       3
+      ]
+     ],
+     "anchor": [
+      "F",
+      "O",
+      2.935
+     ],
+     "height_A": 5.81,
+     "tilt_deg": 65.6,
+     "n_members": 1
+    },
+    {
+     "basin_id": "b44",
+     "rep_label": "ptfe_c10__Li_top__fib11__r000",
+     "E_pose_eV": -0.175891,
+     "fingerprint": [
+      [
+       "F",
+       "Li",
+       1
+      ],
+      [
+       "F",
+       "O",
+       2
+      ]
+     ],
+     "anchor": [
+      "F",
+      "Li",
+      2.34
+     ],
+     "height_A": 8.828,
+     "tilt_deg": 23.3,
+     "n_members": 1
+    },
+    {
+     "basin_id": "b45",
+     "rep_label": "ptfe_c10__Li_top__fib11__r270",
+     "E_pose_eV": -0.174428,
+     "fingerprint": [
+      [
+       "F",
+       "Li",
+       1
+      ],
+      [
+       "F",
+       "O",
+       2
+      ]
+     ],
+     "anchor": [
+      "F",
+      "Li",
+      2.344
+     ],
+     "height_A": 8.827,
+     "tilt_deg": 23.3,
+     "n_members": 1
+    },
+    {
+     "basin_id": "b46",
+     "rep_label": "ptfe_c10__Li_top__fib11__r180",
+     "E_pose_eV": -0.171889,
+     "fingerprint": [
+      [
+       "F",
+       "Li",
+       1
+      ],
+      [
+       "F",
+       "O",
+       2
+      ]
+     ],
+     "anchor": [
+      "F",
+      "Li",
+      2.347
+     ],
+     "height_A": 8.827,
+     "tilt_deg": 23.3,
+     "n_members": 1
+    },
+    {
+     "basin_id": "b47",
+     "rep_label": "ptfe_c10__NiO_bridge__fib07__r000",
+     "E_pose_eV": -0.171876,
+     "fingerprint": [
+      [
+       "F",
+       "Ni",
+       1
+      ],
+      [
+       "F",
+       "O",
+       2
+      ]
+     ],
+     "anchor": [
+      "F",
+      "Ni",
+      2.686
+     ],
+     "height_A": 5.42,
+     "tilt_deg": 76.4,
+     "n_members": 1
+    },
+    {
+     "basin_id": "b48",
+     "rep_label": "ptfe_c10__Li_top__fib11__r090",
+     "E_pose_eV": -0.171293,
+     "fingerprint": [
+      [
+       "F",
+       "Li",
+       1
+      ],
+      [
+       "F",
+       "O",
+       2
+      ]
+     ],
+     "anchor": [
+      "F",
+      "Li",
+      2.345
+     ],
+     "height_A": 8.827,
+     "tilt_deg": 23.3,
+     "n_members": 1
+    },
+    {
+     "basin_id": "b49",
+     "rep_label": "ptfe_c10__O_top__fib07__r000",
+     "E_pose_eV": -0.171029,
+     "fingerprint": [
+      [
+       "F",
+       "Ni",
+       1
+      ],
+      [
+       "F",
+       "O",
+       1
+      ]
+     ],
+     "anchor": [
+      "F",
+      "O",
+      2.673
+     ],
+     "height_A": 5.46,
+     "tilt_deg": 76.8,
+     "n_members": 1
+    },
+    {
+     "basin_id": "b50",
+     "rep_label": "ptfe_c10__Ni_top__fib09__r270",
+     "E_pose_eV": -0.169102,
+     "fingerprint": [
+      [
+       "F",
+       "Li",
+       1
+      ],
+      [
+       "F",
+       "Ni",
+       1
+      ],
+      [
+       "F",
+       "O",
+       3
+      ]
+     ],
+     "anchor": [
+      "F",
+      "Ni",
+      2.549
+     ],
+     "height_A": 6.669,
+     "tilt_deg": 55.2,
+     "n_members": 1
+    },
+    {
+     "basin_id": "b51",
+     "rep_label": "ptfe_c10__hollow__fib08__r090",
+     "E_pose_eV": -0.163627,
+     "fingerprint": [
+      [
+       "F",
+       "Li",
+       1
+      ],
+      [
+       "F",
+       "Ni",
+       1
+      ],
+      [
+       "F",
+       "O",
+       1
+      ]
+     ],
+     "anchor": [
+      "F",
+      "O",
+      2.852
+     ],
+     "height_A": 5.867,
+     "tilt_deg": 65.7,
+     "n_members": 2
+    },
+    {
+     "basin_id": "b52",
+     "rep_label": "ptfe_c10__O_top__fib04__r090",
+     "E_pose_eV": -0.160238,
+     "fingerprint": [
+      [
+       "F",
+       "O",
+       1
+      ]
+     ],
+     "anchor": [
+      "F",
+      "O",
+      2.676
+     ],
+     "height_A": 5.46,
+     "tilt_deg": 75.9,
+     "n_members": 1
+    },
+    {
+     "basin_id": "b53",
+     "rep_label": "ptfe_c10__hollow__fib09__r000",
+     "E_pose_eV": -0.159868,
+     "fingerprint": [
+      [
+       "F",
+       "Li",
+       1
+      ],
+      [
+       "F",
+       "Ni",
+       2
+      ],
+      [
+       "F",
+       "O",
+       2
+      ]
+     ],
+     "anchor": [
+      "F",
+      "Ni",
+      2.828
+     ],
+     "height_A": 6.711,
+     "tilt_deg": 55.3,
+     "n_members": 2
+    },
+    {
+     "basin_id": "b54",
+     "rep_label": "ptfe_c10__O_top__fib07__r180",
+     "E_pose_eV": -0.15847,
+     "fingerprint": [
+      [
+       "F",
+       "O",
+       1
+      ]
+     ],
+     "anchor": [
+      "F",
+      "O",
+      2.673
+     ],
+     "height_A": 5.463,
+     "tilt_deg": 76.7,
+     "n_members": 1
+    },
+    {
+     "basin_id": "b55",
+     "rep_label": "ptfe_c10__O_top__fib04__r270",
+     "E_pose_eV": -0.155925,
+     "fingerprint": [
+      [
+       "F",
+       "O",
+       1
+      ]
+     ],
+     "anchor": [
+      "F",
+      "O",
+      2.674
+     ],
+     "height_A": 5.462,
+     "tilt_deg": 75.8,
+     "n_members": 1
+    },
+    {
+     "basin_id": "b56",
+     "rep_label": "ptfe_c10__Ni_top__fib00__r000",
+     "E_pose_eV": -0.15571,
+     "fingerprint": [
+      [
+       "F",
+       "Ni",
+       1
+      ],
+      [
+       "F",
+       "O",
+       3
+      ]
+     ],
+     "anchor": [
+      "F",
+      "Ni",
+      2.459
+     ],
+     "height_A": 8.84,
+     "tilt_deg": 24.3,
+     "n_members": 1
+    },
+    {
+     "basin_id": "b57",
+     "rep_label": "ptfe_c10__Ni_top__fib00__r270",
+     "E_pose_eV": -0.153269,
+     "fingerprint": [
+      [
+       "F",
+       "Ni",
+       1
+      ],
+      [
+       "F",
+       "O",
+       3
+      ]
+     ],
+     "anchor": [
+      "F",
+      "Ni",
+      2.461
+     ],
+     "height_A": 8.84,
+     "tilt_deg": 24.3,
+     "n_members": 1
+    },
+    {
+     "basin_id": "b58",
+     "rep_label": "ptfe_c10__Ni_top__fib00__r090",
+     "E_pose_eV": -0.15095,
+     "fingerprint": [
+      [
+       "F",
+       "Ni",
+       1
+      ],
+      [
+       "F",
+       "O",
+       3
+      ]
+     ],
+     "anchor": [
+      "F",
+      "Ni",
+      2.456
+     ],
+     "height_A": 8.838,
+     "tilt_deg": 24.2,
+     "n_members": 1
+    },
+    {
+     "basin_id": "b59",
+     "rep_label": "ptfe_c10__LiO_bridge__fib11__r270",
+     "E_pose_eV": -0.14632,
+     "fingerprint": [
+      [
+       "F",
+       "Li",
+       1
+      ],
+      [
+       "F",
+       "O",
+       1
+      ]
+     ],
+     "anchor": [
+      "F",
+      "Li",
+      2.612
+     ],
+     "height_A": 8.884,
+     "tilt_deg": 23.7,
+     "n_members": 1
+    },
+    {
+     "basin_id": "b60",
+     "rep_label": "ptfe_c10__NiO_bridge__fib08__r270",
+     "E_pose_eV": -0.146231,
+     "fingerprint": [
+      [
+       "F",
+       "Li",
+       1
+      ],
+      [
+       "F",
+       "Ni",
+       1
+      ],
+      [
+       "F",
+       "O",
+       1
+      ]
+     ],
+     "anchor": [
+      "F",
+      "O",
+      2.798
+     ],
+     "height_A": 5.837,
+     "tilt_deg": 65.3,
+     "n_members": 1
+    },
+    {
+     "basin_id": "b61",
+     "rep_label": "ptfe_c10__Ni_top__fib02__r000",
+     "E_pose_eV": -0.142204,
+     "fingerprint": [
+      [
+       "F",
+       "Ni",
+       1
+      ],
+      [
+       "F",
+       "O",
+       3
+      ]
+     ],
+     "anchor": [
+      "F",
+      "Ni",
+      2.467
+     ],
+     "height_A": 7.156,
+     "tilt_deg": 54.4,
+     "n_members": 1
+    },
+    {
+     "basin_id": "b62",
+     "rep_label": "ptfe_c10__LiO_bridge__fib02__r000",
+     "E_pose_eV": -0.142163,
+     "fingerprint": [
+      [
+       "F",
+       "Li",
+       1
+      ],
+      [
+       "F",
+       "O",
+       1
+      ]
+     ],
+     "anchor": [
+      "F",
+      "Li",
+      2.627
+     ],
+     "height_A": 7.168,
+     "tilt_deg": 54.6,
+     "n_members": 1
+    },
+    {
+     "basin_id": "b63",
+     "rep_label": "ptfe_c10__Ni_top__fib00__r180",
+     "E_pose_eV": -0.142049,
+     "fingerprint": [
+      [
+       "F",
+       "Ni",
+       1
+      ],
+      [
+       "F",
+       "O",
+       3
+      ]
+     ],
+     "anchor": [
+      "F",
+      "Ni",
+      2.448
+     ],
+     "height_A": 8.832,
+     "tilt_deg": 24.2,
+     "n_members": 1
+    },
+    {
+     "basin_id": "b64",
+     "rep_label": "ptfe_c10__NiO_bridge__fib11__r090",
+     "E_pose_eV": -0.142017,
+     "fingerprint": [
+      [
+       "F",
+       "Ni",
+       1
+      ],
+      [
+       "F",
+       "O",
+       2
+      ]
+     ],
+     "anchor": [
+      "F",
+      "Ni",
+      2.65
+     ],
+     "height_A": 8.914,
+     "tilt_deg": 23.7,
+     "n_members": 1
+    },
+    {
+     "basin_id": "b65",
+     "rep_label": "ptfe_c10__LiO_bridge__fib00__r090",
+     "E_pose_eV": -0.14136,
+     "fingerprint": [
+      [
+       "F",
+       "Li",
+       1
+      ],
+      [
+       "F",
+       "O",
+       1
+      ]
+     ],
+     "anchor": [
+      "F",
+      "Li",
+      2.617
+     ],
+     "height_A": 8.854,
+     "tilt_deg": 24.5,
+     "n_members": 1
+    },
+    {
+     "basin_id": "b66",
+     "rep_label": "ptfe_c10__LiO_bridge__fib04__r090",
+     "E_pose_eV": -0.140565,
+     "fingerprint": [
+      [
+       "F",
+       "Li",
+       1
+      ],
+      [
+       "F",
+       "O",
+       1
+      ]
+     ],
+     "anchor": [
+      "F",
+      "Li",
+      2.663
+     ],
+     "height_A": 5.389,
+     "tilt_deg": 75.1,
+     "n_members": 1
+    },
+    {
+     "basin_id": "b67",
+     "rep_label": "ptfe_c10__Ni_top__fib02__r180",
+     "E_pose_eV": -0.139457,
+     "fingerprint": [
+      [
+       "F",
+       "Ni",
+       1
+      ],
+      [
+       "F",
+       "O",
+       3
+      ]
+     ],
+     "anchor": [
+      "F",
+      "Ni",
+      2.465
+     ],
+     "height_A": 7.156,
+     "tilt_deg": 54.4,
+     "n_members": 1
+    },
+    {
+     "basin_id": "b68",
+     "rep_label": "ptfe_c10__LiNi_bridge__fib09__r180",
+     "E_pose_eV": -0.139011,
+     "fingerprint": [
+      [
+       "F",
+       "Li",
+       2
+      ],
+      [
+       "F",
+       "Ni",
+       1
+      ],
+      [
+       "F",
+       "O",
+       2
+      ]
+     ],
+     "anchor": [
+      "F",
+      "Li",
+      2.793
+     ],
+     "height_A": 6.658,
+     "tilt_deg": 55.2,
+     "n_members": 2
+    },
+    {
+     "basin_id": "b69",
+     "rep_label": "ptfe_c10__LiNi_bridge__fib11__r000",
+     "E_pose_eV": -0.129324,
+     "fingerprint": [
+      [
+       "F",
+       "Li",
+       1
+      ],
+      [
+       "F",
+       "Ni",
+       1
+      ],
+      [
+       "F",
+       "O",
+       2
+      ]
+     ],
+     "anchor": [
+      "F",
+      "O",
+      2.81
+     ],
+     "height_A": 8.873,
+     "tilt_deg": 23.6,
+     "n_members": 2
+    },
+    {
+     "basin_id": "b70",
+     "rep_label": "ptfe_c10__hollow__fib11__r180",
+     "E_pose_eV": -0.128146,
+     "fingerprint": [
+      [
+       "F",
+       "Li",
+       1
+      ],
+      [
+       "F",
+       "Ni",
+       1
+      ],
+      [
+       "F",
+       "O",
+       2
+      ]
+     ],
+     "anchor": [
+      "F",
+      "O",
+      2.84
+     ],
+     "height_A": 8.923,
+     "tilt_deg": 23.6,
+     "n_members": 2
+    },
+    {
+     "basin_id": "b71",
+     "rep_label": "ptfe_c10__hollow__fib00__r090",
+     "E_pose_eV": -0.124271,
+     "fingerprint": [
+      [
+       "F",
+       "Li",
+       1
+      ],
+      [
+       "F",
+       "Ni",
+       1
+      ],
+      [
+       "F",
+       "O",
+       2
+      ]
+     ],
+     "anchor": [
+      "F",
+      "O",
+      2.813
+     ],
+     "height_A": 8.889,
+     "tilt_deg": 24.4,
+     "n_members": 2
+    },
+    {
+     "basin_id": "b72",
+     "rep_label": "ptfe_c10__LiO_bridge__fib11__r000",
+     "E_pose_eV": -0.12307,
+     "fingerprint": [
+      [
+       "F",
+       "Li",
+       1
+      ],
+      [
+       "F",
+       "O",
+       1
+      ]
+     ],
+     "anchor": [
+      "F",
+      "Li",
+      2.63
+     ],
+     "height_A": 8.866,
+     "tilt_deg": 23.4,
+     "n_members": 1
+    },
+    {
+     "basin_id": "b73",
+     "rep_label": "ptfe_c10__O_top__fib03__r090",
+     "E_pose_eV": -0.122417,
+     "fingerprint": [
+      [
+       "F",
+       "Li",
+       2
+      ],
+      [
+       "F",
+       "O",
+       2
+      ]
+     ],
+     "anchor": [
+      "F",
+      "Li",
+      2.674
+     ],
+     "height_A": 5.711,
+     "tilt_deg": 66.6,
+     "n_members": 1
+    },
+    {
+     "basin_id": "b74",
+     "rep_label": "ptfe_c10__NiO_bridge__fib00__r180",
+     "E_pose_eV": -0.122414,
+     "fingerprint": [
+      [
+       "F",
+       "Ni",
+       1
+      ],
+      [
+       "F",
+       "O",
+       1
+      ]
+     ],
+     "anchor": [
+      "F",
+      "Ni",
+      2.643
+     ],
+     "height_A": 8.875,
+     "tilt_deg": 24.5,
+     "n_members": 1
+    },
+    {
+     "basin_id": "b75",
+     "rep_label": "ptfe_c10__LiO_bridge__fib00__r000",
+     "E_pose_eV": -0.114597,
+     "fingerprint": [
+      [
+       "F",
+       "Li",
+       1
+      ],
+      [
+       "F",
+       "O",
+       1
+      ]
+     ],
+     "anchor": [
+      "F",
+      "Li",
+      2.621
+     ],
+     "height_A": 8.838,
+     "tilt_deg": 24.3,
+     "n_members": 1
+    },
+    {
+     "basin_id": "b76",
+     "rep_label": "ptfe_c10__NiO_bridge__fib02__r180",
+     "E_pose_eV": -0.111876,
+     "fingerprint": [
+      [
+       "F",
+       "Ni",
+       1
+      ],
+      [
+       "F",
+       "O",
+       2
+      ]
+     ],
+     "anchor": [
+      "F",
+      "Ni",
+      2.656
+     ],
+     "height_A": 7.189,
+     "tilt_deg": 54.7,
+     "n_members": 1
+    },
+    {
+     "basin_id": "b77",
+     "rep_label": "ptfe_c10__LiO_bridge__fib00__r270",
+     "E_pose_eV": -0.107304,
+     "fingerprint": [
+      [
+       "F",
+       "Li",
+       1
+      ],
+      [
+       "F",
+       "O",
+       1
+      ]
+     ],
+     "anchor": [
+      "F",
+      "Li",
+      2.623
+     ],
+     "height_A": 8.834,
+     "tilt_deg": 24.1,
+     "n_members": 1
+    },
+    {
+     "basin_id": "b78",
+     "rep_label": "ptfe_c10__LiO_bridge__fib00__r180",
+     "E_pose_eV": -0.106866,
+     "fingerprint": [
+      [
+       "F",
+       "Li",
+       1
+      ],
+      [
+       "F",
+       "O",
+       1
+      ]
+     ],
+     "anchor": [
+      "F",
+      "Li",
+      2.655
+     ],
+     "height_A": 8.845,
+     "tilt_deg": 24.2,
+     "n_members": 1
+    },
+    {
+     "basin_id": "b79",
+     "rep_label": "ptfe_c10__NiO_bridge__fib11__r180",
+     "E_pose_eV": -0.105889,
+     "fingerprint": [
+      [
+       "F",
+       "Ni",
+       1
+      ],
+      [
+       "F",
+       "O",
+       2
+      ]
+     ],
+     "anchor": [
+      "F",
+      "Ni",
+      2.646
+     ],
+     "height_A": 8.884,
+     "tilt_deg": 23.4,
+     "n_members": 1
+    },
+    {
+     "basin_id": "b80",
+     "rep_label": "ptfe_c10__LiO_bridge__fib09__r180",
+     "E_pose_eV": -0.099369,
+     "fingerprint": [
+      [
+       "F",
+       "Li",
+       2
+      ],
+      [
+       "F",
+       "O",
+       1
+      ]
+     ],
+     "anchor": [
+      "F",
+      "O",
+      2.729
+     ],
+     "height_A": 6.669,
+     "tilt_deg": 55.0,
+     "n_members": 1
+    },
+    {
+     "basin_id": "b81",
+     "rep_label": "ptfe_c10__LiNi_bridge__fib00__r270",
+     "E_pose_eV": -0.099078,
+     "fingerprint": [
+      [
+       "F",
+       "Li",
+       1
+      ],
+      [
+       "F",
+       "Ni",
+       1
+      ],
+      [
+       "F",
+       "O",
+       2
+      ]
+     ],
+     "anchor": [
+      "F",
+      "Ni",
+      2.806
+     ],
+     "height_A": 8.816,
+     "tilt_deg": 24.2,
+     "n_members": 2
+    },
+    {
+     "basin_id": "b82",
+     "rep_label": "ptfe_c10__hollow__fib00__r000",
+     "E_pose_eV": -0.098953,
+     "fingerprint": [
+      [
+       "F",
+       "Li",
+       1
+      ],
+      [
+       "F",
+       "Ni",
+       1
+      ],
+      [
+       "F",
+       "O",
+       2
+      ]
+     ],
+     "anchor": [
+      "F",
+      "O",
+      2.752
+     ],
+     "height_A": 8.883,
+     "tilt_deg": 24.4,
+     "n_members": 2
+    },
+    {
+     "basin_id": "b83",
+     "rep_label": "ptfe_c10__NiO_bridge__fib00__r090",
+     "E_pose_eV": -0.097532,
+     "fingerprint": [
+      [
+       "F",
+       "Ni",
+       1
+      ],
+      [
+       "F",
+       "O",
+       2
+      ]
+     ],
+     "anchor": [
+      "F",
+      "Ni",
+      2.643
+     ],
+     "height_A": 8.852,
+     "tilt_deg": 24.2,
+     "n_members": 1
+    },
+    {
+     "basin_id": "b84",
+     "rep_label": "ptfe_c10__hollow__fib11__r270",
+     "E_pose_eV": -0.09568,
+     "fingerprint": [
+      [
+       "F",
+       "Li",
+       1
+      ],
+      [
+       "F",
+       "Ni",
+       1
+      ],
+      [
+       "F",
+       "O",
+       2
+      ]
+     ],
+     "anchor": [
+      "F",
+      "O",
+      2.71
+     ],
+     "height_A": 8.902,
+     "tilt_deg": 23.4,
+     "n_members": 2
+    },
+    {
+     "basin_id": "b85",
+     "rep_label": "ptfe_c10__LiO_bridge__fib11__r090",
+     "E_pose_eV": -0.095679,
+     "fingerprint": [
+      [
+       "F",
+       "Li",
+       1
+      ],
+      [
+       "F",
+       "O",
+       1
+      ]
+     ],
+     "anchor": [
+      "F",
+      "Li",
+      2.633
+     ],
+     "height_A": 8.867,
+     "tilt_deg": 23.3,
+     "n_members": 1
+    },
+    {
+     "basin_id": "b86",
+     "rep_label": "ptfe_c10__LiNi_bridge__fib11__r090",
+     "E_pose_eV": -0.091273,
+     "fingerprint": [
+      [
+       "F",
+       "Li",
+       1
+      ],
+      [
+       "F",
+       "Ni",
+       1
+      ],
+      [
+       "F",
+       "O",
+       2
+      ]
+     ],
+     "anchor": [
+      "F",
+      "Ni",
+      2.803
+     ],
+     "height_A": 8.848,
+     "tilt_deg": 23.3,
+     "n_members": 2
+    },
+    {
+     "basin_id": "b87",
+     "rep_label": "ptfe_c10__LiNi_bridge__fib02__r000",
+     "E_pose_eV": -0.088999,
+     "fingerprint": [
+      [
+       "F",
+       "Li",
+       1
+      ],
+      [
+       "F",
+       "Ni",
+       1
+      ],
+      [
+       "F",
+       "O",
+       2
+      ]
+     ],
+     "anchor": [
+      "F",
+      "Ni",
+      2.825
+     ],
+     "height_A": 7.142,
+     "tilt_deg": 54.4,
+     "n_members": 2
+    },
+    {
+     "basin_id": "b88",
+     "rep_label": "ptfe_c10__O_top__fib02__r000",
+     "E_pose_eV": -0.087016,
+     "fingerprint": [
+      [
+       "F",
+       "O",
+       1
+      ]
+     ],
+     "anchor": [
+      "F",
+      "O",
+      2.643
+     ],
+     "height_A": 7.233,
+     "tilt_deg": 55.0,
+     "n_members": 1
+    },
+    {
+     "basin_id": "b89",
+     "rep_label": "ptfe_c10__O_top__fib11__r090",
+     "E_pose_eV": -0.079172,
+     "fingerprint": [
+      [
+       "F",
+       "Ni",
+       1
+      ],
+      [
+       "F",
+       "O",
+       1
+      ]
+     ],
+     "anchor": [
+      "F",
+      "O",
+      2.634
+     ],
+     "height_A": 8.942,
+     "tilt_deg": 23.7,
+     "n_members": 1
+    },
+    {
+     "basin_id": "b90",
+     "rep_label": "ptfe_c10__NiO_bridge__fib11__r270",
+     "E_pose_eV": -0.078934,
+     "fingerprint": [
+      [
+       "F",
+       "Ni",
+       1
+      ],
+      [
+       "F",
+       "O",
+       1
+      ]
+     ],
+     "anchor": [
+      "F",
+      "Ni",
+      2.658
+     ],
+     "height_A": 8.886,
+     "tilt_deg": 23.3,
+     "n_members": 1
+    },
+    {
+     "basin_id": "b91",
+     "rep_label": "ptfe_c10__O_top__fib11__r180",
+     "E_pose_eV": -0.074679,
+     "fingerprint": [
+      [
+       "F",
+       "Ni",
+       1
+      ],
+      [
+       "F",
+       "O",
+       1
+      ]
+     ],
+     "anchor": [
+      "F",
+      "O",
+      2.637
+     ],
+     "height_A": 8.943,
+     "tilt_deg": 23.7,
+     "n_members": 1
+    },
+    {
+     "basin_id": "b92",
+     "rep_label": "ptfe_c10__O_top__fib11__r000",
+     "E_pose_eV": -0.072847,
+     "fingerprint": [
+      [
+       "F",
+       "O",
+       1
+      ]
+     ],
+     "anchor": [
+      "F",
+      "O",
+      2.635
+     ],
+     "height_A": 8.943,
+     "tilt_deg": 23.7,
+     "n_members": 1
+    },
+    {
+     "basin_id": "b93",
+     "rep_label": "ptfe_c10__O_top__fib11__r270",
+     "E_pose_eV": -0.071539,
+     "fingerprint": [
+      [
+       "F",
+       "O",
+       1
+      ]
+     ],
+     "anchor": [
+      "F",
+      "O",
+      2.638
+     ],
+     "height_A": 8.944,
+     "tilt_deg": 23.7,
+     "n_members": 1
+    },
+    {
+     "basin_id": "b94",
+     "rep_label": "ptfe_c10__O_top__fib00__r000",
+     "E_pose_eV": -0.06479,
+     "fingerprint": [
+      [
+       "F",
+       "Ni",
+       1
+      ],
+      [
+       "F",
+       "O",
+       1
+      ]
+     ],
+     "anchor": [
+      "F",
+      "O",
+      2.633
+     ],
+     "height_A": 8.909,
+     "tilt_deg": 24.5,
+     "n_members": 1
+    },
+    {
+     "basin_id": "b95",
+     "rep_label": "ptfe_c10__O_top__fib00__r090",
+     "E_pose_eV": -0.062287,
+     "fingerprint": [
+      [
+       "F",
+       "O",
+       1
+      ]
+     ],
+     "anchor": [
+      "F",
+      "O",
+      2.63
+     ],
+     "height_A": 8.909,
+     "tilt_deg": 24.5,
+     "n_members": 1
+    }
+   ],
+   "basin_members": {
+    "b00": [
+     "ptfe_c10__Ni_top__fib05__r270"
+    ],
+    "b01": [
+     "ptfe_c10__Ni_top__fib05__r090"
+    ],
+    "b02": [
+     "ptfe_c10__NiO_bridge__fib05__r090"
+    ],
+    "b03": [
+     "ptfe_c10__O_top__fib05__r270"
+    ],
+    "b04": [
+     "ptfe_c10__NiO_bridge__fib06__r000"
+    ],
+    "b05": [
+     "ptfe_c10__Li_top__fib07__r180"
+    ],
+    "b06": [
+     "ptfe_c10__Li_top__fib04__r090"
+    ],
+    "b07": [
+     "ptfe_c10__Li_top__fib04__r270"
+    ],
+    "b08": [
+     "ptfe_c10__Li_top__fib07__r000"
+    ],
+    "b09": [
+     "ptfe_c10__Ni_top__fib06__r180"
+    ],
+    "b10": [
+     "ptfe_c10__O_top__fib05__r090"
+    ],
+    "b11": [
+     "ptfe_c10__NiO_bridge__fib05__r270"
+    ],
+    "b12": [
+     "ptfe_c10__O_top__fib06__r000"
+    ],
+    "b13": [
+     "ptfe_c10__Ni_top__fib04__r090"
+    ],
+    "b14": [
+     "ptfe_c10__LiO_bridge__fib05__r270"
+    ],
+    "b15": [
+     "ptfe_c10__Li_top__fib08__r270"
+    ],
+    "b16": [
+     "ptfe_c10__Ni_top__fib08__r090"
+    ],
+    "b17": [
+     "ptfe_c10__Ni_top__fib08__r270"
+    ],
+    "b18": [
+     "ptfe_c10__hollow__fib04__r090",
+     "ptfe_c10__LiNi_bridge__fib04__r090"
+    ],
+    "b19": [
+     "ptfe_c10__LiO_bridge__fib04__r270"
+    ],
+    "b20": [
+     "ptfe_c10__NiO_bridge__fib06__r180"
+    ],
+    "b21": [
+     "ptfe_c10__Li_top__fib08__r090"
+    ],
+    "b22": [
+     "ptfe_c10__NiO_bridge__fib08__r090"
+    ],
+    "b23": [
+     "ptfe_c10__NiO_bridge__fib04__r090"
+    ],
+    "b24": [
+     "ptfe_c10__LiO_bridge__fib07__r000"
+    ],
+    "b25": [
+     "ptfe_c10__NiO_bridge__fib04__r270"
+    ],
+    "b26": [
+     "ptfe_c10__LiNi_bridge__fib04__r270",
+     "ptfe_c10__hollow__fib04__r270"
+    ],
+    "b27": [
+     "ptfe_c10__Li_top__fib00__r270"
+    ],
+    "b28": [
+     "ptfe_c10__Li_top__fib02__r000"
+    ],
+    "b29": [
+     "ptfe_c10__O_top__fib06__r180"
+    ],
+    "b30": [
+     "ptfe_c10__hollow__fib07__r000",
+     "ptfe_c10__LiNi_bridge__fib07__r000"
+    ],
+    "b31": [
+     "ptfe_c10__LiO_bridge__fib08__r270"
+    ],
+    "b32": [
+     "ptfe_c10__Ni_top__fib04__r270"
+    ],
+    "b33": [
+     "ptfe_c10__Li_top__fib02__r180"
+    ],
+    "b34": [
+     "ptfe_c10__LiNi_bridge__fib07__r180",
+     "ptfe_c10__hollow__fib07__r180"
+    ],
+    "b35": [
+     "ptfe_c10__LiO_bridge__fib07__r180"
+    ],
+    "b36": [
+     "ptfe_c10__hollow__fib08__r270",
+     "ptfe_c10__LiNi_bridge__fib08__r270"
+    ],
+    "b37": [
+     "ptfe_c10__Li_top__fib00__r090"
+    ],
+    "b38": [
+     "ptfe_c10__Ni_top__fib07__r000"
+    ],
+    "b39": [
+     "ptfe_c10__Ni_top__fib07__r180"
+    ],
+    "b40": [
+     "ptfe_c10__Li_top__fib00__r180"
+    ],
+    "b41": [
+     "ptfe_c10__Li_top__fib00__r000"
+    ],
+    "b42": [
+     "ptfe_c10__NiO_bridge__fib07__r180"
+    ],
+    "b43": [
+     "ptfe_c10__LiNi_bridge__fib08__r090"
+    ],
+    "b44": [
+     "ptfe_c10__Li_top__fib11__r000"
+    ],
+    "b45": [
+     "ptfe_c10__Li_top__fib11__r270"
+    ],
+    "b46": [
+     "ptfe_c10__Li_top__fib11__r180"
+    ],
+    "b47": [
+     "ptfe_c10__NiO_bridge__fib07__r000"
+    ],
+    "b48": [
+     "ptfe_c10__Li_top__fib11__r090"
+    ],
+    "b49": [
+     "ptfe_c10__O_top__fib07__r000"
+    ],
+    "b50": [
+     "ptfe_c10__Ni_top__fib09__r270"
+    ],
+    "b51": [
+     "ptfe_c10__hollow__fib08__r090",
+     "ptfe_c10__LiO_bridge__fib08__r090"
+    ],
+    "b52": [
+     "ptfe_c10__O_top__fib04__r090"
+    ],
+    "b53": [
+     "ptfe_c10__hollow__fib09__r000",
+     "ptfe_c10__LiNi_bridge__fib09__r000"
+    ],
+    "b54": [
+     "ptfe_c10__O_top__fib07__r180"
+    ],
+    "b55": [
+     "ptfe_c10__O_top__fib04__r270"
+    ],
+    "b56": [
+     "ptfe_c10__Ni_top__fib00__r000"
+    ],
+    "b57": [
+     "ptfe_c10__Ni_top__fib00__r270"
+    ],
+    "b58": [
+     "ptfe_c10__Ni_top__fib00__r090"
+    ],
+    "b59": [
+     "ptfe_c10__LiO_bridge__fib11__r270"
+    ],
+    "b60": [
+     "ptfe_c10__NiO_bridge__fib08__r270"
+    ],
+    "b61": [
+     "ptfe_c10__Ni_top__fib02__r000"
+    ],
+    "b62": [
+     "ptfe_c10__LiO_bridge__fib02__r000"
+    ],
+    "b63": [
+     "ptfe_c10__Ni_top__fib00__r180"
+    ],
+    "b64": [
+     "ptfe_c10__NiO_bridge__fib11__r090"
+    ],
+    "b65": [
+     "ptfe_c10__LiO_bridge__fib00__r090"
+    ],
+    "b66": [
+     "ptfe_c10__LiO_bridge__fib04__r090"
+    ],
+    "b67": [
+     "ptfe_c10__Ni_top__fib02__r180"
+    ],
+    "b68": [
+     "ptfe_c10__LiNi_bridge__fib09__r180",
+     "ptfe_c10__hollow__fib09__r180"
+    ],
+    "b69": [
+     "ptfe_c10__LiNi_bridge__fib11__r000",
+     "ptfe_c10__hollow__fib11__r000"
+    ],
+    "b70": [
+     "ptfe_c10__hollow__fib11__r180",
+     "ptfe_c10__LiNi_bridge__fib11__r180"
+    ],
+    "b71": [
+     "ptfe_c10__hollow__fib00__r090",
+     "ptfe_c10__LiNi_bridge__fib00__r090"
+    ],
+    "b72": [
+     "ptfe_c10__LiO_bridge__fib11__r000"
+    ],
+    "b73": [
+     "ptfe_c10__O_top__fib03__r090"
+    ],
+    "b74": [
+     "ptfe_c10__NiO_bridge__fib00__r180"
+    ],
+    "b75": [
+     "ptfe_c10__LiO_bridge__fib00__r000"
+    ],
+    "b76": [
+     "ptfe_c10__NiO_bridge__fib02__r180"
+    ],
+    "b77": [
+     "ptfe_c10__LiO_bridge__fib00__r270"
+    ],
+    "b78": [
+     "ptfe_c10__LiO_bridge__fib00__r180"
+    ],
+    "b79": [
+     "ptfe_c10__NiO_bridge__fib11__r180"
+    ],
+    "b80": [
+     "ptfe_c10__LiO_bridge__fib09__r180"
+    ],
+    "b81": [
+     "ptfe_c10__LiNi_bridge__fib00__r270",
+     "ptfe_c10__hollow__fib00__r270"
+    ],
+    "b82": [
+     "ptfe_c10__hollow__fib00__r000",
+     "ptfe_c10__LiNi_bridge__fib00__r000"
+    ],
+    "b83": [
+     "ptfe_c10__NiO_bridge__fib00__r090"
+    ],
+    "b84": [
+     "ptfe_c10__hollow__fib11__r270",
+     "ptfe_c10__LiNi_bridge__fib11__r270"
+    ],
+    "b85": [
+     "ptfe_c10__LiO_bridge__fib11__r090"
+    ],
+    "b86": [
+     "ptfe_c10__LiNi_bridge__fib11__r090",
+     "ptfe_c10__hollow__fib11__r090"
+    ],
+    "b87": [
+     "ptfe_c10__LiNi_bridge__fib02__r000",
+     "ptfe_c10__hollow__fib02__r000"
+    ],
+    "b88": [
+     "ptfe_c10__O_top__fib02__r000"
+    ],
+    "b89": [
+     "ptfe_c10__O_top__fib11__r090"
+    ],
+    "b90": [
+     "ptfe_c10__NiO_bridge__fib11__r270"
+    ],
+    "b91": [
+     "ptfe_c10__O_top__fib11__r180"
+    ],
+    "b92": [
+     "ptfe_c10__O_top__fib11__r000"
+    ],
+    "b93": [
+     "ptfe_c10__O_top__fib11__r270"
+    ],
+    "b94": [
+     "ptfe_c10__O_top__fib00__r000"
+    ],
+    "b95": [
+     "ptfe_c10__O_top__fib00__r090"
+    ]
+   },
+   "calibration": [
+    {
+     "basin_id": "b00",
+     "rep_label": "ptfe_c10__Ni_top__fib05__r270",
+     "E_pose_eV": -0.265953,
+     "fingerprint": [
+      [
+       "F",
+       "Li",
+       2
+      ],
+      [
+       "F",
+       "Ni",
+       1
+      ],
+      [
+       "F",
+       "O",
+       4
+      ]
+     ],
+     "anchor": [
+      "F",
+      "Ni",
+      2.538
+     ],
+     "height_A": 4.208,
+     "tilt_deg": 86.1,
+     "n_members": 1,
+     "role": "calibration",
+     "why": "UMA global-min basin"
+    },
+    {
+     "basin_id": "b01",
+     "rep_label": "ptfe_c10__Ni_top__fib05__r090",
+     "E_pose_eV": -0.260306,
+     "fingerprint": [
+      [
+       "F",
+       "Li",
+       3
+      ],
+      [
+       "F",
+       "Ni",
+       1
+      ],
+      [
+       "F",
+       "O",
+       4
+      ]
+     ],
+     "anchor": [
+      "F",
+      "Ni",
+      2.525
+     ],
+     "height_A": 4.195,
+     "tilt_deg": 86.1,
+     "n_members": 1,
+     "role": "calibration",
+     "why": "다른 접촉지문 중 최저"
+    },
+    {
+     "basin_id": "b74",
+     "rep_label": "ptfe_c10__NiO_bridge__fib00__r180",
+     "E_pose_eV": -0.122414,
+     "fingerprint": [
+      [
+       "F",
+       "Ni",
+       1
+      ],
+      [
+       "F",
+       "O",
+       1
+      ]
+     ],
+     "anchor": [
+      "F",
+      "Ni",
+      2.643
+     ],
+     "height_A": 8.875,
+     "tilt_deg": 24.5,
+     "n_members": 1,
+     "role": "calibration",
+     "why": "provisional 창 W0 안쪽 경계"
+    },
+    {
+     "basin_id": "b75",
+     "rep_label": "ptfe_c10__LiO_bridge__fib00__r000",
+     "E_pose_eV": -0.114597,
+     "fingerprint": [
+      [
+       "F",
+       "Li",
+       1
+      ],
+      [
+       "F",
+       "O",
+       1
+      ]
+     ],
+     "anchor": [
+      "F",
+      "Li",
+      2.621
+     ],
+     "height_A": 8.838,
+     "tilt_deg": 24.3,
+     "n_members": 1,
+     "role": "calibration",
+     "why": "W0 바깥 최근접"
+    }
+   ],
+   "sealed_audit": [
+    {
+     "basin_id": "b76",
+     "rep_label": "ptfe_c10__NiO_bridge__fib02__r180",
+     "E_pose_eV": -0.111876,
+     "fingerprint": [
+      [
+       "F",
+       "Ni",
+       1
+      ],
+      [
+       "F",
+       "O",
+       2
+      ]
+     ],
+     "anchor": [
+      "F",
+      "Ni",
+      2.656
+     ],
+     "height_A": 7.189,
+     "tilt_deg": 54.7,
+     "n_members": 1,
+     "role": "sealed_audit",
+     "why": "W0 **바깥** 최근접 excluded (calibration 다음)"
+    },
+    {
+     "basin_id": "b21",
+     "rep_label": "ptfe_c10__Li_top__fib08__r090",
+     "E_pose_eV": -0.1983,
+     "fingerprint": [
+      [
+       "F",
+       "Li",
+       2
+      ],
+      [
+       "F",
+       "O",
+       3
+      ]
+     ],
+     "anchor": [
+      "F",
+      "Li",
+      2.385
+     ],
+     "height_A": 5.762,
+     "tilt_deg": 64.9,
+     "n_members": 1,
+     "role": "sealed_audit",
+     "why": "접촉지문 층화 난수 (seed 20260829)"
+    }
+   ]
+  }
+ },
+ "freeze_sha256": "94675e66e02c855aa16dcc4a0fd8d11c966bff909287c96fbd81b990d923735b"
+}
