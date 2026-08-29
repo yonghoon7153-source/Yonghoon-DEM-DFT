@@ -5111,25 +5111,51 @@ def _runner_regression(out: Path, chk) -> None:
     chk(sin is not None and sin.group(1) == "(none)",
         "R6b static 은 CHGCAR 를 안 받았다 (ISTART=0/ICHARG=2 단일점이 맞다)")
 
-    # ── R7 재개: 다 끝난 잡을 다시 돌리면 **아무 상도 안 돈다** ──────────────
+    # ── R7 ★ 계약 변경 (회신 AA P0-5) — 기본은 **1회용**이다 ────────────────
+    #   종전 계약: 완주한 잡을 다시 돌리면 전 상을 건너뛴다(조용한 재개).
+    #   새 계약  : 시작 전에 산출물이 있으면 **거부한다.** 재개는 ALLOW_RESUME=1.
+    #   왜: "이미 완료 — 건너뜀" 은 남이 다른 설정으로 돌려 둔 결과를 우리 것으로
+    #   반송하게 만든다. 회수 후에는 구별할 방법이 없다.
     log2 = jd / "_phases.log"
     log2.unlink()
     r2 = subprocess.run(["bash", "run_job.sh"], cwd=jd, capture_output=True, text=True,
                         env={**os.environ, "PATH": f"{stub_dir}:{os.environ.get('PATH','')}",
                              "VASP_CMD": "vasp_std", "STUB_LOG": str(log2)})
     ran2 = log2.read_text().split() if log2.is_file() else []
-    chk(r2.returncode == 0 and ran2 == [],
-        f"R7 완주 잡 재실행 → 전 상 건너뜀 rc={r2.returncode} 실행 {ran2}")
+    chk(r2.returncode != 0 and ran2 == [] and "1회용" in (r2.stdout + r2.stderr),
+        f"⛔음성 R7: 산출물이 있는 잡을 그냥 재실행하면 **거부** "
+        f"rc={r2.returncode} 실행 {ran2}")
 
-    # ── R8 부분 재개: dense 산출만 지우면 dense 만 다시 돈다 ────────────────
+    # ── R7b 재개는 **명시적 선언**으로만 ───────────────────────────────────
+    log2.unlink(missing_ok=True)
+    r2b = subprocess.run(["bash", "run_job.sh"], cwd=jd, capture_output=True, text=True,
+                         env={**os.environ, "PATH": f"{stub_dir}:{os.environ.get('PATH','')}",
+                              "VASP_CMD": "vasp_std", "STUB_LOG": str(log2),
+                              "ALLOW_RESUME": "1"})
+    ran2b = log2.read_text().split() if log2.is_file() else []
+    chk(r2b.returncode == 0 and ran2b == [],
+        f"R7b ALLOW_RESUME=1 이면 전 상 건너뜀 rc={r2b.returncode} 실행 {ran2b}")
+
+    # ── R8 부분 재개도 ALLOW_RESUME 아래에서만 ─────────────────────────────
     (jd / "dense" / "OUTCAR").unlink()
     log2.unlink(missing_ok=True)
     r3 = subprocess.run(["bash", "run_job.sh"], cwd=jd, capture_output=True, text=True,
                         env={**os.environ, "PATH": f"{stub_dir}:{os.environ.get('PATH','')}",
-                             "VASP_CMD": "vasp_std", "STUB_LOG": str(log2)})
+                             "VASP_CMD": "vasp_std", "STUB_LOG": str(log2),
+                             "ALLOW_RESUME": "1"})
     ran3 = log2.read_text().split() if log2.is_file() else []
     chk(r3.returncode == 0 and ran3 == ["dense"],
-        f"R8 dense 만 재개 rc={r3.returncode} 실행 {ran3}")
+        f"R8 ALLOW_RESUME 부분 재개 rc={r3.returncode} 실행 {ran3}")
+
+    # ── R8b ★ 그 부분 재개도 **선언 없이는** 막힌다 (dense OUTCAR 는 지웠지만
+    #   static/CHGCAR 등 다른 산출물이 남아 있다) ──────────────────────────
+    (jd / "dense" / "OUTCAR").unlink(missing_ok=True)
+    log2.unlink(missing_ok=True)
+    r3b = subprocess.run(["bash", "run_job.sh"], cwd=jd, capture_output=True, text=True,
+                         env={**os.environ, "PATH": f"{stub_dir}:{os.environ.get('PATH','')}",
+                              "VASP_CMD": "vasp_std", "STUB_LOG": str(log2)})
+    chk(r3b.returncode != 0,
+        f"⛔음성 R8b: 일부만 지우고 재실행해도 선언 없이는 거부 rc={r3b.returncode}")
 
     # ── R9 음성: static 이 죽으면 dense 를 **시작하지 않는다** ───────────────
     jd9, r9, ran9 = run("crash", fail="static:crash")
