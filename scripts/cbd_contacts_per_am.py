@@ -34,75 +34,118 @@ CONDUCTIVE = ('VGCF', 'SDCP')
 
 
 def _load_scaffold(path):
-    """AM 중심·반지름 (µm).  열 이름은 관용적인 것들을 받아들인다."""
+    """AM 중심·반지름을 **시뮬 단위 그대로** 읽는다 (변환은 호출자가).
+
+    파일 첫 줄이 `# type,x,y,z,r  # AM scaffold ...` 형태라 표준 DictReader 로는 열 이름이
+    `'# type'` 이 된다.  ⇒ 주석 표지와 꼬리 주석을 벗겨서 읽는다.
+    """
     import csv
-    xs, ys, zs, rs = [], [], [], []
+    rows, header = [], None
     with open(path, newline='', encoding='utf-8') as fh:
-        rd = csv.DictReader(fh)
-        cols = {c.lower().strip(): c for c in (rd.fieldnames or [])}
+        for line in fh:
+            line = line.strip()
+            if not line:
+                continue
+            if header is None:
+                head = line.lstrip('#').strip()
+                head = head.split('#')[0].strip()          # 꼬리 주석 제거
+                header = [c.strip().lower() for c in head.split(',')]
+                continue
+            if line.startswith('#'):
+                continue
+            rows.append(dict(zip(header, next(csv.reader([line])))))
+    if header is None:
+        raise SystemExit(f'am_scaffold 가 비었다: {path}')
 
-        def pick(*names):
-            for n in names:
-                if n in cols:
-                    return cols[n]
-            raise SystemExit(f'am_scaffold 에 {names} 중 어느 열도 없다: {rd.fieldnames}')
-        cx, cy, cz = pick('x', 'x_um'), pick('y', 'y_um'), pick('z', 'z_um')
-        cr = pick('r', 'radius', 'r_um', 'radius_um')
-        for row in rd:
-            xs.append(float(row[cx])); ys.append(float(row[cy]))
-            zs.append(float(row[cz])); rs.append(float(row[cr]))
-    return xs, ys, zs, rs
+    def pick(*names):
+        for n in names:
+            if n in header:
+                return n
+        raise SystemExit(f'am_scaffold 에 {names} 중 어느 열도 없다: {header}')
+    cx, cy, cz = pick('x', 'x_um'), pick('y', 'y_um'), pick('z', 'z_um')
+    cr = pick('r', 'radius', 'r_um', 'radius_um')
+    ct = 'type' if 'type' in header else None
+    xs = [float(r[cx]) for r in rows]
+    ys = [float(r[cy]) for r in rows]
+    zs = [float(r[cz]) for r in rows]
+    rr = [float(r[cr]) for r in rows]
+    tt = [int(float(r[ct])) for r in rows] if ct else [0] * len(rows)
+    return xs, ys, zs, rr, tt
 
 
-def count_contacts(bed_dir, scaffold, vox_um, band_vox=1.0,
-                   include_ptfe=False, max_am=None):
-    """AM 입자별 접촉 개체 수를 센다.  numpy memmap 으로 읽어 전부 올리지 않는다."""
+def count_contacts(bed_dir, scaffold, band_um=0.15, include_ptfe=False,
+                   max_am=None, um_per_unit=1000.0):
+    """AM 입자별 접촉 **개체** 수.
+
+    ⚠ 침대는 **복셀 격자가 아니라 MPM 물질점 구름**이다 (2026-08-29 실측):
+    `mpm_metrics.n_pts` = `phase.npy` 길이이고 `se_dump.npy` 는 그 3배 float32 = **좌표**다.
+    (초판은 `n_grid²·nz` 격자로 읽으려다 fail-closed 검사에 걸렸다 — 2.55배 안 맞았다.)
+    ⇒ 접촉을 격자가 아니라 **기하**로 직접 잰다.
+
+    `um_per_unit`: scaffold·se_dump 의 길이 단위 → µm.  기본 1000 은 데이터가 정한다 —
+    scaffold 의 AM 반지름 0.0025 가 NCM811 의 2.5 µm 이고 상자 0.05 가 50 µm 다.
+    함수가 그 정합성을 **검사**한다.
+    """
     import numpy as np
+    from scipy.spatial import cKDTree
 
-    phase = np.load(os.path.join(bed_dir, 'phase.npy'), mmap_mode='r')
-    fid = np.load(os.path.join(bed_dir, 'fibre.npy'), mmap_mode='r')
     meta = json.load(open(os.path.join(bed_dir, 'mpm_metrics.json'), encoding='utf-8'))
-    n_grid, nz = int(meta['n_grid']), int(meta['nz'])
-    box_um = float(meta['um_box_um'])
-    dx = box_um / n_grid                      # 가로 복셀 크기 (µm)
+    n_pts = int(meta['n_pts'])
+    phase = np.load(os.path.join(bed_dir, 'phase.npy'), mmap_mode='r')
+    if phase.size != n_pts:
+        raise SystemExit(f'phase.npy 길이 {phase.size} != mpm_metrics.n_pts {n_pts}')
+    pos = np.load(os.path.join(bed_dir, 'se_dump.npy'), mmap_mode='r')
+    if pos.size != 3 * n_pts:
+        raise SystemExit(f'se_dump.npy 원소 {pos.size} != 3·n_pts {3*n_pts} — '
+                         f'좌표 배열이 아니다')
+    pos = pos.reshape(n_pts, 3)
+    fid = np.load(os.path.join(bed_dir, 'fibre.npy'), mmap_mode='r')
+    if fid.size != n_pts:
+        raise SystemExit(f'fibre.npy 길이 {fid.size} != n_pts {n_pts}')
 
-    if phase.size != n_grid * n_grid * nz:
-        raise SystemExit(f'phase.npy 크기 {phase.size} != n_grid²·nz '
-                         f'{n_grid}²·{nz} = {n_grid*n_grid*nz} — 격자 해석이 틀렸다')
-    phase = phase.reshape(n_grid, n_grid, nz)
-    fid = np.asarray(fid).reshape(n_grid, n_grid, nz)
+    #  ── 상 개수를 매니페스트와 대조한다 (배열이 서로 같은 색인인지 fail-closed)
+    ph = np.asarray(phase)
+    counts = {k: int((ph == c).sum()) for k, c in PHASE.items()}
+    add = meta.get('additives', {})
+    for k in ('VGCF', 'PTFE', 'SDCP'):
+        if k in add and 'n_points' in add[k]:
+            want = int(add[k]['n_points'])
+            if counts[k] != want:
+                raise SystemExit(f'{k}: phase.npy 가 {counts[k]:,} 점인데 '
+                                 f'metrics 는 {want:,} — 배열 색인이 다르다')
 
     kinds = list(CONDUCTIVE) + (['PTFE'] if include_ptfe else [])
-    codes = [PHASE[k] for k in kinds]
+    sel = np.isin(ph, [PHASE[k] for k in kinds])
+    idx = np.flatnonzero(sel)
+    if idx.size == 0:
+        raise SystemExit(f'{kinds} 상의 점이 하나도 없다')
+    apos = np.asarray(pos[idx], dtype=np.float64) * um_per_unit
+    aid = np.asarray(fid[idx])
 
-    xs, ys, zs, rs = _load_scaffold(scaffold)
+    xs, ys, zs, rs, tt = _load_scaffold(scaffold)
     if max_am:
-        xs, ys, zs, rs = xs[:max_am], ys[:max_am], zs[:max_am], rs[:max_am]
+        xs, ys, zs, rs, tt = (v[:max_am] for v in (xs, ys, zs, rs, tt))
+    rs_um = [r * um_per_unit for r in rs]
+    if not (0.1 <= min(rs_um) and max(rs_um) <= 20.0):
+        raise SystemExit(f'AM 반지름이 {min(rs_um):.3g}–{max(rs_um):.3g} µm 로 나온다 — '
+                         f'um_per_unit={um_per_unit} 이 틀렸다')
 
-    band = band_vox * dx
+    tree = cKDTree(apos)
     out = []
-    for x, y, z, r in zip(xs, ys, zs, rs):
-        #  AM 구를 감싸는 껍질만 훑는다 — 전체 격자를 도는 대신
-        lo = [int(np.floor((c - r - band) / dx)) for c in (x, y, z)]
-        hi = [int(np.ceil((c + r + band) / dx)) for c in (x, y, z)]
-        i0, j0, k0 = (max(0, v) for v in lo)
-        i1 = min(n_grid, hi[0] + 1); j1 = min(n_grid, hi[1] + 1)
-        k1 = min(nz, hi[2] + 1)
-        if i0 >= i1 or j0 >= j1 or k0 >= k1:
+    for x, y, z, r in zip(xs, ys, zs, rs_um):
+        c = np.array([x, y, z]) * um_per_unit
+        near = tree.query_ball_point(c, r + band_um)
+        if not near:
             out.append(0)
             continue
-        sub_p = np.asarray(phase[i0:i1, j0:j1, k0:k1])
-        sub_f = fid[i0:i1, j0:j1, k0:k1]
-        ii, jj, kk = np.meshgrid(np.arange(i0, i1), np.arange(j0, j1),
-                                 np.arange(k0, k1), indexing='ij')
-        d = np.sqrt(((ii + 0.5) * dx - x) ** 2 + ((jj + 0.5) * dx - y) ** 2
-                    + ((kk + 0.5) * dx - z) ** 2)
-        shell = (d >= r) & (d <= r + band)
-        m = shell & np.isin(sub_p, codes)
-        out.append(int(np.unique(sub_f[m]).size) if m.any() else 0)
-    return out, dict(vox_um=dx, band_um=band, band_vox=band_vox,
-                     kinds=kinds, n_am=len(out), box_um=box_um,
-                     n_grid=n_grid, nz=nz)
+        near = np.asarray(near)
+        d = np.linalg.norm(apos[near] - c, axis=1)
+        keep = near[d >= r]                     # 구 **표면 바깥** 껍질만
+        out.append(int(np.unique(aid[keep]).size) if keep.size else 0)
+    return out, dict(band_um=band_um, kinds=kinds, n_am=len(out),
+                     um_per_unit=um_per_unit, n_pts=n_pts,
+                     n_additive_points=int(idx.size),
+                     phase_counts=counts, representation='mpm_material_points')
 
 
 def summarise(counts):
@@ -124,65 +167,100 @@ def selftest() -> int:
     print('cbd_contacts selftest')
     try:
         import numpy as np
-    except ImportError:
-        print('  numpy 없음 — 렌더 검사 생략'); return 0
-    import tempfile, csv
+        from scipy.spatial import cKDTree                  # noqa: F401
+    except ImportError as e:
+        print(f'  {e} — 수치 검사 생략'); return 0
+    import tempfile
 
-    #  합성 침대: 32³ 격자, 가운데 AM 구 하나, 첨가제 개체 3개를 그 표면에 붙인다
-    n, nz = 32, 32
+    #  합성 침대 = **물질점 구름** (실제 형식).  시뮬 단위, 1 unit = 1000 µm.
+    U = 1000.0
+    cx = cy = cz = 0.016                       # 16 µm
+    r_sim = 0.0025                             # 2.5 µm
+    band = 0.15                                # µm
+
+    def shell_pt(dist_um, k):
+        """중심에서 dist_um 떨어진 점 (시뮬 단위)."""
+        import math
+        a = 0.7 * k
+        return [cx + dist_um / U * math.cos(a), cy + dist_um / U * math.sin(a), cz]
+
     with tempfile.TemporaryDirectory() as td:
-        phase = np.zeros((n, n, nz), dtype=np.int8)
-        fidv = np.zeros((n, n, nz), dtype=np.float32)
-        box = 32.0                      # µm → dx = 1.0 µm
-        cx = cy = cz = 16.0
-        r = 5.0
-        ii, jj, kk = np.meshgrid(np.arange(n), np.arange(n), np.arange(nz), indexing='ij')
-        d = np.sqrt(((ii + .5) - cx) ** 2 + ((jj + .5) - cy) ** 2 + ((kk + .5) - cz) ** 2)
-        shell = (d >= r) & (d <= r + 1.0)
-        idx = np.argwhere(shell)
-        #  세 개체를 껍질에 심는다 — 하나는 복셀 여러 개 (개체 수 ≠ 복셀 수 검사)
-        for oid, cells in ((11, idx[:5]), (12, idx[10:11]), (13, idx[20:21])):
-            for c in cells:
-                phase[tuple(c)] = PHASE['VGCF']; fidv[tuple(c)] = oid
+        P, F, X = [], [], []
+
+        def add(ph, oid, xyz):
+            P.append(PHASE[ph]); F.append(float(oid)); X.append(xyz)
+        #  VGCF 개체 3개 — 하나는 **점 5개** (개체 수 ≠ 점 수 검사)
+        for j in range(5):
+            add('VGCF', 11, shell_pt(2.5 + 0.05 * j, j))
+        add('VGCF', 12, shell_pt(2.6, 7))
+        add('VGCF', 13, shell_pt(2.55, 9))
         #  PTFE 개체 하나 — 기본에서 빠져야 한다
-        c = idx[30]; phase[tuple(c)] = PHASE['PTFE']; fidv[tuple(c)] = 99
-        #  껍질 **밖**이지만 넓힌 band 안에는 드는 첨가제 — 기본에선 빠지고 band↑ 면 들어와야
-        #  한다.  ⚠ `argwhere(d > r+3)[0]` 로 뽑으면 격자 코너(거리 ≈ 27)가 잡혀 band 6
-        #  으로도 안 들어온다 — 거리를 **구간으로** 지정해 뽑는다.
-        far = np.argwhere((d > r + 3.0) & (d < r + 4.0))[0]
-        phase[tuple(far)] = PHASE['VGCF']; fidv[tuple(far)] = 77
+        add('PTFE', 99, shell_pt(2.58, 11))
+        #  껍질 밖.  기본 band(0.15)에는 안 들어오고 넓히면 들어와야 한다
+        add('VGCF', 77, shell_pt(3.4, 13))
+        #  AM 안쪽 첨가제 — 표면 **바깥** 껍질만 세므로 빠져야 한다
+        add('VGCF', 55, shell_pt(1.2, 15))
+        #  패딩 (SE, 상 코드에 없음)
+        for j in range(20):
+            P.append(9); F.append(0.0); X.append([0.03 + 1e-4 * j, 0.03, 0.03])
 
-        np.save(os.path.join(td, 'phase.npy'), phase.ravel())
-        np.save(os.path.join(td, 'fibre.npy'), fidv.ravel())
-        json.dump(dict(n_grid=n, nz=nz, um_box_um=box),
-                  open(os.path.join(td, 'mpm_metrics.json'), 'w'))
+        n_pts = len(P)
+        np.save(os.path.join(td, 'phase.npy'), np.array(P, dtype=np.int8))
+        np.save(os.path.join(td, 'fibre.npy'), np.array(F, dtype=np.float32))
+        np.save(os.path.join(td, 'se_dump.npy'),
+                np.array(X, dtype=np.float32).ravel())
+        meta = dict(n_pts=n_pts, additives=dict(
+            VGCF=dict(n_points=sum(1 for p in P if p == PHASE['VGCF'])),
+            PTFE=dict(n_points=sum(1 for p in P if p == PHASE['PTFE']))))
+        json.dump(meta, open(os.path.join(td, 'mpm_metrics.json'), 'w'))
+
         sc = os.path.join(td, 'am.csv')
-        with open(sc, 'w', newline='') as fh:
-            w = csv.writer(fh); w.writerow(['x', 'y', 'z', 'r'])
-            w.writerow([cx, cy, cz, r])
+        with open(sc, 'w', encoding='utf-8') as fh:
+            fh.write('# type,x,y,z,r  # AM scaffold (AM_P=1,AM_S=2) — fixture\n')
+            fh.write(f'2,{cx:.6f},{cy:.6f},{cz:.6f},{r_sim:.6f}\n')
 
-        cnt, info = count_contacts(td, sc, vox_um=1.0, band_vox=1.0)
-        chk('전도성 개체 3개만 센다 (복셀 7개 → 개체 3)', cnt == [3], str(cnt))
-        chk('PTFE 는 기본에서 빠진다', PHASE['PTFE'] not in
-            [PHASE[k] for k in info['kinds']])
-        chk('격자 크기가 metrics 에서 유도된다', abs(info['vox_um'] - 1.0) < 1e-9)
+        cnt, info = count_contacts(td, sc, band_um=band)
+        chk('전도성 개체 3개 (점 7개 → 개체 3)', cnt == [3], str(cnt))
+        chk('AM 표면 **안쪽** 점은 안 센다', 55 not in [11, 12, 13] and cnt == [3])
+        chk('PTFE 는 기본에서 빠진다', 'PTFE' not in info['kinds'])
+        chk('물질점 표현으로 읽는다',
+            info['representation'] == 'mpm_material_points')
 
-        cnt2, info2 = count_contacts(td, sc, vox_um=1.0, band_vox=1.0, include_ptfe=True)
+        cnt2, _ = count_contacts(td, sc, band_um=band, include_ptfe=True)
         chk('--include-ptfe 면 4개', cnt2 == [4], str(cnt2))
 
-        #  껍질 밖 개체가 안 세어지는지 (band 를 넓히면 세어져야 한다)
-        cnt3, _ = count_contacts(td, sc, vox_um=1.0, band_vox=6.0)
-        chk('band 를 넓히면 멀리 있는 개체가 들어온다', cnt3[0] > cnt[0],
-            f'{cnt3} vs {cnt}')
+        cnt3, _ = count_contacts(td, sc, band_um=1.2)
+        chk('band 를 넓히면 먼 개체가 들어온다', cnt3 == [4], str(cnt3))
 
-        #  격자 불일치는 조용히 넘어가지 않는다
-        json.dump(dict(n_grid=n + 1, nz=nz, um_box_um=box),
+        #  ── fail-closed 검사 셋
+        json.dump(dict(n_pts=n_pts + 1, additives=meta['additives']),
                   open(os.path.join(td, 'mpm_metrics.json'), 'w'))
         try:
-            count_contacts(td, sc, vox_um=1.0)
-            chk('격자 불일치를 잡는다', False, '예외가 안 났다')
+            count_contacts(td, sc, band_um=band)
+            chk('n_pts 불일치를 잡는다', False, '예외가 안 났다')
         except SystemExit:
-            chk('격자 불일치를 잡는다 (fail-closed)', True)
+            chk('n_pts 불일치를 잡는다 (fail-closed)', True)
+
+        bad = dict(meta); bad['additives'] = dict(VGCF=dict(n_points=999))
+        json.dump(bad, open(os.path.join(td, 'mpm_metrics.json'), 'w'))
+        try:
+            count_contacts(td, sc, band_um=band)
+            chk('상 개수 불일치를 잡는다', False, '예외가 안 났다')
+        except SystemExit:
+            chk('상 개수 불일치를 잡는다 (배열 색인이 다르면 멈춘다)', True)
+
+        json.dump(meta, open(os.path.join(td, 'mpm_metrics.json'), 'w'))
+        try:
+            count_contacts(td, sc, band_um=band, um_per_unit=1.0)
+            chk('단위 스케일 오류를 잡는다', False, '예외가 안 났다')
+        except SystemExit:
+            chk('단위 스케일 오류를 잡는다 (AM 반지름이 비현실적)', True)
+
+        #  주석 머리글이 붙은 scaffold 를 읽는가
+        xs, ys, zs, rr, tt = _load_scaffold(sc)
+        chk('scaffold: 주석 머리글을 벗겨 읽는다',
+            len(xs) == 1 and abs(rr[0] - r_sim) < 1e-12 and tt == [2],
+            f'{xs} {rr} {tt}')
 
     s = summarise([0, 1, 2, 3, 4, 5, 6, 7, 8, 9])
     chk('summarise: 중앙값·0 개수', s['median'] == 4.5 and s['zero'] == 1, str(s))
@@ -193,10 +271,14 @@ def selftest() -> int:
 def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__,
                                  formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument('--bed', help='침대 런 디렉터리 (phase.npy · fibre.npy · mpm_metrics.json)')
+    ap.add_argument('--bed', help='침대 런 디렉터리 (phase·fibre·se_dump·mpm_metrics)')
     ap.add_argument('--scaffold', help='am_scaffold.csv')
-    ap.add_argument('--band-vox', type=float, default=1.0, help='접촉 판정 껍질 두께 (복셀)')
-    ap.add_argument('--include-ptfe', action='store_true')
+    ap.add_argument('--band-um', type=float, default=0.15,
+                    help='접촉 판정 껍질 두께 (µm).  기본 0.15 = σ_e 격자 한 복셀')
+    ap.add_argument('--um-per-unit', type=float, default=1000.0,
+                    help='scaffold·se_dump 길이 단위 → µm (기본 1000; 함수가 검사한다)')
+    ap.add_argument('--include-ptfe', action='store_true',
+                    help='(참고) 기본 실행은 두 구성을 다 낸다')
     ap.add_argument('--max-am', type=int, help='앞 N 개만 (시험용)')
     ap.add_argument('--out', help='결과 JSON')
     ap.add_argument('--selftest', action='store_true')
@@ -206,19 +288,21 @@ def main(argv=None):
     if not (a.bed and a.scaffold):
         ap.error('--bed 와 --scaffold 가 필요하다')
 
-    res = {}
+    res, info = {}, None
     for inc in (False, True):
-        cnt, info = count_contacts(a.bed, a.scaffold, vox_um=None,
-                                   band_vox=a.band_vox, include_ptfe=inc,
-                                   max_am=a.max_am)
+        cnt, info = count_contacts(a.bed, a.scaffold, band_um=a.band_um,
+                                   include_ptfe=inc, max_am=a.max_am,
+                                   um_per_unit=a.um_per_unit)
         tag = 'conductive+PTFE' if inc else 'conductive only (VGCF+SDCP)'
-        res[tag] = dict(summary=summarise(cnt), convention=info)
+        res[tag] = dict(summary=summarise(cnt), convention=info, counts=cnt)
         s = res[tag]['summary']
         print(f'── {tag}')
         print(f'   median {s["median"]}  mean {s["mean"]}  p10–p90 {s["p10"]}–{s["p90"]}  '
               f'min–max {s["min"]}–{s["max"]}  접촉 0 인 AM {s["zero"]}/{s["n"]}')
-    print(f'\n규약: band {a.band_vox} vox = {res[tag]["convention"]["band_um"]:.4f} µm · '
-          f'접촉 = 서로 다른 개체 수 (복셀 수 아님)')
+    print(f'\n규약: band {a.band_um} µm · 접촉 = 서로 다른 **개체** 수 (점 수 아님) · '
+          f'AM 표면 바깥 껍질만')
+    print(f'   물질점 {info["n_pts"]:,} 중 첨가제 {info["n_additive_points"]:,} · '
+          f'상별 점수 {info["phase_counts"]}')
     print('⚠ 이 값은 규약 의존이다 — band 폭·개체 정의·PTFE 포함 여부가 각각 값을 바꾼다.')
     if a.out:
         json.dump(res, open(a.out, 'w', encoding='utf-8'), ensure_ascii=False, indent=1)
