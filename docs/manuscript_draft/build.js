@@ -133,24 +133,28 @@ body.push(new Paragraph({ children: [ new TextRun({
   text: 'Replaces the single “Discrete element method:” paragraph.',
   font: FONT, size: 19, italics: true, color: '555555' }) ], spacing: { after: 160 } }));
 
-body.push(RunIn('Microstructure reconstruction:',
-  'Three-dimensional SBE and DBE microstructures were reconstructed in two stages. '
+body.push(RunIn('Microstructure generation:',
+  'Three-dimensional SBE and DBE microstructures were generated in two stages. '
 + 'Rigid-sphere packing was computed by the discrete element method (DEM) in LIGGGHTS,^[33]^ '
 + 'using 1,271 NCM811 spheres (*r* = 2.5 μm) and 146,420 LPSCl spheres (*r* = 0.5 μm) sized '
 + 'after the experimental powders, mixed at 70:27 by weight in a 50 × 50 μm^2^ domain and '
-+ 'compacted under displacement control to 300 MPa. Because rigid-sphere contacts cannot '
-+ 'reproduce the plastic flattening, particle rearrangement and grain-boundary sliding that '
-+ 'densify sulfide powders, the contact Young’s modulus of LPSCl was softened from the '
-+ 'dense-material value of 24 GPa^[34]^ to 1.35 GPa, which reproduces the ~10 % porosity and '
-+ '11–12 % contact overlap reported for cold-pressed LPSCl at 300 MPa.^[9]^ Plastic deformation '
-+ 'of the electrolyte was then resolved on the fixed DEM skeleton by a GPU-accelerated material '
-+ 'point method (MPM)^[35]^ with von Mises plasticity (*E* = 1.53 GPa, *ν* = 0.49, yield strength '
-+ '0.30 GPa); the high Poisson’s ratio confines the softening to shear, retaining a dense-solid '
-+ 'bulk modulus (*K* = 25.5 GPa) while lowering the shear modulus to *μ* = 0.51 GPa. The two '
-+ 'models were calibrated independently against the same experimental porosity rather than '
-+ 'against each other. VGCF fibres, PTFE fibrils and SDCP particles were then seeded into the '
-+ 'pore space at the experimental weight fractions. All inputs are listed in Table S2, and the '
-+ 'resulting thicknesses and porosities in Table S3.'));
++ 'compacted under displacement control to 300 MPa. Rigid spheres do rearrange but cannot '
++ 'flatten, fracture or deform grain boundaries, so the contact stiffness of LPSCl was selected '
++ 'against a densification target for sulfide cold pressing rather than taken from the dense '
++ 'material. The 1.35 GPa value is an empirical contact-law input, not an intrinsic LPSCl '
++ 'modulus and not an independent validation of the present beds; the dense-material value '
++ '(24 GPa)^[34]^ is listed beside it in Table S2. The ~10 % target is derived from composite '
++ 'and glass literature rather than measured directly on pure LPSCl, and the 11–12 % contact '
++ 'overlap is a pure-SE simulation consistency result rather than a measured target.^[9]^ '
++ 'Plastic deformation was then resolved on the fixed DEM skeleton by a GPU-accelerated material '
++ 'point method (MPM)^[35]^ with J2 plasticity (yield strength 0.30 GPa); the elastic pair '
++ '*E* = 1.53 GPa and *ν* = 0.49 is a model choice that sets *K* = 25.5 GPa and *μ* = 0.51 GPa, '
++ 'confining the softening to shear. VGCF fibres, PTFE fibrils and SDCP particles were present '
++ 'in the material-point cloud during this stage at the experimental weight fractions, so their '
++ 'stiffness enters the compaction rather than being added afterwards. The resulting beds are '
++ 'more compacted than the experimental porosity anchor, so this parameterisation is not a '
++ 'validation of the present SBE/DBE geometry. All inputs are listed in Table S2, and the '
++ 'resulting thicknesses and geometric diagnostics in Table S3.'));
 
 body.push(RunIn('Effective transport simulations:',
   'Each microstructure was rasterized onto a cubic grid with a voxel edge of 0.15 μm. Adjacent '
@@ -160,12 +164,22 @@ body.push(Eq('∇·(*σ*∇*φ*) = 0', 1));
 body.push(P('where *σ* is the local conductivity of each voxel and *φ* the electric potential. A '
 + 'potential difference was applied between the separator and current-collector faces with the '
 + 'remaining boundaries insulating, and the effective conductivity was taken from the total current. '
-+ 'NCM811, VGCF and SDCP carried the electronic network and LPSCl and SDCP the ionic network; PTFE '
-+ 'was not resolved on the conduction grid. Phase conductivities are listed in Table S2, in which '
-+ 'the VGCF value is rescaled so that a fiber resolved as a one-voxel-wide tube retains its axial '
-+ 'conductance. Each electrode was solved at eight half-voxel grid-origin shifts (2 × 2 × 2), the '
-+ 'SBE and DBE sharing the same origins, and conductivity ratios are reported as the paired mean '
-+ 'with its standard error. The Joule dissipation of a phase was evaluated as'));
++ 'NCM811, VGCF and SDCP carried the electronic network and LPSCl and SDCP the ionic network. The '
++ 'insulating binder was treated under two conventions, reported as equivalent sensitivity points '
++ 'rather than one primary result: omitted from the electronic grid, and with its centerline '
++ 'voxels excluded from conduction. Neither is established as closer to a real thin coating — the '
++ 'one-cell centerline under-represents the coating’s spatial extent while over-blocking where it '
++ 'is stamped — and omitting the binder removes only its electronic exclusion, its mass and '
++ 'stiffness remaining in the DEM–MPM bed. Phase conductivities are listed in Table S2; the VGCF '
++ 'value is an effective network conductivity rather than a fibre material constant, since '
++ 'voxelisation removes the fibre–fibre contact resistance that separates the compressed-powder '
++ 'and single-filament values, and it is rescaled so that a fibre resolved as a one-voxel-wide '
++ 'tube retains its axial conductance. Each electrode was solved at all eight half-voxel '
++ 'grid-origin shifts (2 × 2 × 2), the SBE and DBE sharing the same origins so that ratios are '
++ 'paired. These eight phases are a complete factorial of a single bed rather than independent '
++ 'replicates, so ratios are given as the mean over the prescribed phases with the spread across '
++ 'them and the observed range; no standard error and no confidence interval are implied. The '
++ 'Joule dissipation of a phase was evaluated as'));
 body.push(Eq('*P* = Σ *g*_k_ (Δ*φ*_k_)^2^', 2));
 body.push(P('where *g*_k_ and Δ*φ*_k_ are the conductance of and the potential difference across the '
 + '*k*-th voxel-to-voxel connection, summed over the connections belonging to that phase.'));

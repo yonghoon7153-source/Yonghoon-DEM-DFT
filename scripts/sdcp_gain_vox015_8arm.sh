@@ -217,6 +217,15 @@ LEAN_FLAGS=""
 #       shift 팔에서 `_bot_mask` 가 origin 을 안 더해 **어차피 무효**다 (위 주석 참조).
 [ "${LEAN:-0}" = "2" ] && { LEAN_FLAGS=" --no-step4 --no-thermal --no-trackb --no-field --no-ion --no-pore --no-collector"; \
   echo "[p2] ★ LEAN=2 (σ_e 전용) — 이온·pore-τ·집전체기하 를 전부 끈다 (팔당 솔브 3회 → 1회)"; }
+#  ★★ LEAN=3 (2026-08-29) — **σ_e + σ_ion**.  LEAN=2 에서 `--no-ion` 하나만 뺀다.
+#    왜 축을 새로 만드나: `P2_EXTRA="--step3-ion"` 은 허용목록(수치 전용)에 없어 거부된다
+#    (`:174` 게이트).  물리를 바꾸는 것은 **러너 노브여야** 매니페스트·OUTDIR·영수증에
+#    같이 기록된다 — 그 게이트가 없었으면 "요청한 것 ≠ 쓰인 것" 이 또 났다.
+#    ⚠ pore-τ·집전체는 계속 끈다 (DR3-07/08 로 이 침대에서 pore-τ 가 무의미하고, 집전체
+#      기하는 shift 팔에서 `_bot_mask` 가 origin 을 안 더해 어차피 무효다).
+#    비용: 팔당 솔브 1 → 2회.
+[ "${LEAN:-0}" = "3" ] && { LEAN_FLAGS=" --no-step4 --no-thermal --no-trackb --no-field --no-pore --no-collector"; \
+  echo "[p2] ★ LEAN=3 (σ_e + σ_ion) — pore-τ·집전체기하만 끈다 (팔당 솔브 2회)"; }
 #  ⚠ LEAN=1 은 **옛 접미사 `_lean` 그대로** 둔다 — 이미 끝난 팔(STEP 2/3/5)이 살아 있는
 #    디렉터리라 이름을 바꾸면 전부 다시 돈다.  LEAN=2 만 새 접미사를 받는다.
 #  ★★ 2026-08-20 (게이트 ⑤ factorial) — **섬유 스탬프 축**.  CL-19 가 retired 된 이유가
@@ -235,6 +244,8 @@ esac
 FS_TAG=""; [ "$FIBRE_STAMP" = "point" ] && FS_TAG="_fspt"
 FS_FLAG=""; [ "$FIBRE_STAMP" = "point" ] && FS_FLAG=" --step3-fibre-stamp point"
 LEAN_TAG=""; [ "${LEAN:-0}" = "1" ] && LEAN_TAG="_lean"; [ "${LEAN:-0}" = "2" ] && LEAN_TAG="_lean2"
+#  ⚠ 새 접미사 — LEAN=2 산출물과 **섞이면 안 된다** (이온 유무가 다른 런이다)
+[ "${LEAN:-0}" = "3" ] && LEAN_TAG="_lean3"
 #  ★★★ 2026-08-25 (R5-CX-03, Codex 5차) — **런 영수증**.  러너가 무엇으로 돌라고 했는지
 #    한 곳에 적고, cache/fresh/final 이 전부 이 값을 요구한다.
 #    ⚠ 왜: Codex 실측에서 HEAD·vox·구경·code SHA·input digest 가 전부 달라도 캐시된 팔이
@@ -590,6 +601,9 @@ if [ "$ARMS" -eq "$PREREG_ARMS" ]; then
   #    옛 판은 안 넘겨서, 같은 침대라는 증거도 재현 가능한 코드라는 증거도 없이 통과했다.
   #  ⚠ `--require-ionic` 은 **넘기지 않는다** — LEAN=2 는 σ_e 전용이고 이온을 안 푼다.
   #    이온축이 결론인 트랙은 LEAN 을 끄고 그 옵션을 켠 채로 따로 봉인한다.
+  #  ★ LEAN=3 (2026-08-29) 은 이온을 **푼다**.  그래도 여기서 `--require-ionic` 을 자동으로
+  #    켜지 않는다 — 이 봉인은 σ_e 축의 계약이고, 이온이 결론인 트랙은 여전히 그 옵션을
+  #    **명시적으로** 붙여 따로 봉인해야 한다 (자동으로 켜면 어느 축이 결론인지가 흐려진다).
   if ! python3 "$SCR/sdcp_gain_verdict.py" --dir "$OUTDIR" --seal-only \
        --require-arms "$PREREG_ARMS" --require-digest; then
     echo "[p2] ✗ 계약 봉인이 깨졌다 — 위 근거를 고치고 다시 돌 것"
