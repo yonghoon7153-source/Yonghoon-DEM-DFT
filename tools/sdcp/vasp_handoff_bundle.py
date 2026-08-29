@@ -6530,6 +6530,25 @@ def verify_bundle(root, expect_jobs=None) -> int:
     print(f"  잡 {len(found)} (planned {len(planned)} + 쌍둥이 등 {len(found) - len(planned)})"
           f" · 배포파일 {len(fh)} · 해시확인 {len(fh) - len(missing)}")
     print(f"  candidate_set : {man.get('candidate_set', '(없음)')}")
+    # ★ 후보집합의 **출처 파일**을 찍는다 (2026-08-29 사고): 생성기가 out 경로 충돌로
+    #   거부했는데, 그 자리에 있던 **다른 후보 파일로 만든 옛 번들**을 verify 가
+    #   그대로 검사했다. candidate_set 문자열은 둘 다 "calibration_pilot" 이라
+    #   구별이 안 된다 — 갈라주는 것은 from_basins 경로와 freeze 해시다.
+    _fb = man.get("from_basins") or {}
+    if _fb:
+        _fbp = str(_fb.get("path", "?"))
+        print(f"  from_basins   : {_fbp}")
+        # 그 파일이 **repo 안에 있나** — 없으면 후보집합을 재현할 수 없다.
+        #   ⚠ cwd 에 의존하면 repo 밖에서 돌릴 때 오진한다. 도구 자기 위치로 찾는다.
+        _nm = Path(_fbp).name
+        _db = HERE.parents[1] / "db"
+        if not _nm:
+            pass
+        elif not _db.is_dir():
+            warn.append(f"repo 의 db/ 를 못 찾아 후보집합 출처 `{_nm}` 를 확인하지 못했다")
+        elif not list(_db.rglob(_nm)):
+            bad.append(f"후보집합 출처 `{_nm}` 가 repo(db/)에 없다 — 이 번들의 "
+                       f"candidate set 은 재현·감사할 수 없다")
     print(f"  emitted_roles : {man.get('emitted_basin_roles', man.get('emitted_roles', '(없음)'))}")
     print(f"  fragments     : {man.get('fragments', '(없음)')}")
     # ★ 두 번들을 같은 표에 올리려면 **같은 clean slab** 이어야 한다. 다른 슬랩을
@@ -6672,6 +6691,23 @@ def _selftest_verify() -> int:
         r = build(d / "n9", contract="| 총 VASP 실행 | **1** |\n")
         chk(verify_bundle(r) == 1,
             "⛔음성: 총 실행 수가 잡 수보다 적으면 차단 (외주가 40 % 덜 잡는다)")
+
+        # ⛔음성 (2026-08-29 사고) — 후보집합 출처가 repo 에 없으면 재현 불가
+        r = build(d / "n11")
+        _m = json.loads((r / "MANIFEST.json").read_text())
+        _m["from_basins"] = {"path": "/data/work/only_on_that_machine.json"}
+        (r / "MANIFEST.json").write_text(json.dumps(_m, indent=1, ensure_ascii=False))
+        chk(verify_bundle(r) == 1,
+            "⛔음성: from_basins 가 repo(db/)에 없으면 차단 — candidate set 을 "
+            "재현·감사할 수 없다")
+
+        r = build(d / "n12")
+        _m = json.loads((r / "MANIFEST.json").read_text())
+        _m["from_basins"] = {"path": "/anywhere/prospective_basins_2026_08_29.json"}
+        (r / "MANIFEST.json").write_text(json.dumps(_m, indent=1, ensure_ascii=False))
+        chk(verify_bundle(r) == 0,
+            "양성: repo 에 있는 후보 파일이면 경로가 절대경로여도 통과 "
+            "(도구 자기 위치로 찾으므로 cwd 무관)")
 
     print(f"  verify selftest {ok[1]}/{ok[0]}")
     return 0 if ok[0] == ok[1] else 1

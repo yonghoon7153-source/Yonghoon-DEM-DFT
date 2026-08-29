@@ -1,6 +1,6 @@
 # VASP 계산 요청 — SDCP / perfluorodecane 조각의 LiNiO₂(104) 흡착 (Stage A)
 
-- 요청일: 2026-08-29 · 묶음 **하나**: `sdcp_stageA_v3.zip` (**40잡**)
+- 요청일: 2026-08-29 · 묶음 **하나**: `sdcp_stageA_v4.zip` (**40잡**)
 - ⚠ `sdcp_motifprobe_v2`(10잡)는 **이번에 보내지 않습니다** (아래 §8)
 - 생성기: `tools/sdcp/vasp_handoff_bundle.py` (모드 `--closure --d3_pairs --both_seeds`)
 - 계보: 2026-08-12 묶음(30잡, 2026-08-25 반송)과 **같은 생성기·같은 U·같은 ENCUT**.
@@ -156,10 +156,12 @@ python3 analyze_results.py .     # stdlib 만 씁니다
 
 | 파일 | 크기 | SHA256 |
 |---|---:|---|
-| `sdcp_stageA_v3.zip` | *(재생성 후 기입)* | *(재생성 후 기입)* |
+| `sdcp_stageA_v4.zip` | *(재생성 후 기입)* | *(재생성 후 기입)* |
 
 받으신 뒤 대조해 주세요 — `sha256sum sdcp_stageA_v2.zip`.
-⚠ 파일명 끝의 **`_v3`** 를 확인해 주세요. `_v1`·`_v2` 는 폐기본입니다.
+⚠ 파일명 끝의 **`_v4`** 를 확인해 주세요. `_v1`·`_v2`·`_v3` 는 폐기본입니다.
+특히 `_v3`(34잡)는 후보집합이 다릅니다 — SDCP 4 + c10 **2** 자세이고,
+그 후보 파일이 repo 에 없어 재현·감사가 안 됩니다.
 
 각 묶음 안 `MANIFEST.json` 의 `files_sha256` 로 개별 파일까지 대조하실 수 있습니다:
 `sha256sum <파일>`.
