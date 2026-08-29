@@ -69,6 +69,11 @@ HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE))
 import site_screen as SS                      # noqa: E402  (게이트·POSCAR·조각 레지스트리)
 
+#: ⚠ selftest 가 `SS.load_slab` 를 몽키패치한다. 시험 간 **전역 오염**을 막으려고
+#:   적재 시점의 원본을 붙잡아 둔다 — E2E 는 이것을 쓴다 (2026-08-29 실측: 대형
+#:   selftest 뒤에 E2E 를 돌리면 장난감 슬랩을 받아 원장과 어긋났다).
+_SS_LOAD_SLAB_ORIG = SS.load_slab
+
 TIERS = {"tier1": ["ptfe_c10", "ptfe_dimer"],      # 이번 판의 목적 (미해결 경향 2건)
          "tier2": ["sdcp_neutral", "sdcp_doped"]}
 RMSD_TOL_CHK = 0.75    # selftest 에서 쓰는 사본 (분석기는 문자열 안에 있다)
@@ -5457,6 +5462,7 @@ def selftest() -> int:
         "fingerprint": "stfp0001",
         "protocol": {"fingerprint": "stfp0001", "gate_version": SS.gate_version()}}))
 
+    _slab_patched = SS.load_slab            # 복원용 (아래 finally 에서 되돌린다)
     SS.load_slab = lambda: slab_at
     SS.load_fragment = lambda f: (Atoms(symbols=mol_syms, positions=mol_at(3.0)),
                                   {"status": "OK"})
@@ -6389,6 +6395,7 @@ def selftest() -> int:
     fr = res["fragments"]["ptfe_dimer"]
     chk(fr["class"] == "NO_VERDICT_n<3",
         f"유효 1/계획 5 → n<3 게이트 선행 (실제 {fr['class']})")
+    SS.load_slab = _SS_LOAD_SLAB_ORIG       # ★ 전역 오염 복원 (다음 시험이 실물을 본다)
     print("✔ selftest 전부 통과" if ok else "⛔ selftest 실패")
     return 0 if ok else 1
 
@@ -6698,7 +6705,8 @@ STALE_OUTPUT_NAMES = ("OUTCAR", "vasprun.xml", "CONTCAR", "WAVECAR", "CHGCAR",
                       "OSZICAR", "XDATCAR")
 
 
-def verify_bundle(root, expect_jobs=None, check_sibling_zip=True) -> int:
+def verify_bundle(root, expect_jobs=None, check_sibling_zip=True,
+                  prov_roots=None) -> int:
     """번들을 **제출 전에** 검사한다 — 생성 시점의 바이트 그대로인가.
 
     분석기(analyze_results.py)의 무결성 검사와 목적이 다르다: 저쪽은 **회수 후**
@@ -6872,12 +6880,16 @@ def verify_bundle(root, expect_jobs=None, check_sibling_zip=True) -> int:
         # 그 파일이 **repo 안에 있나** — 없으면 후보집합을 재현할 수 없다.
         #   ⚠ cwd 에 의존하면 repo 밖에서 돌릴 때 오진한다. 도구 자기 위치로 찾는다.
         _nm = Path(_fbp).name
-        _db = HERE.parents[1] / "db"
+        #   ⚠ 정책은 "후보집합은 repo 에 있어야 한다" 이고 기본은 db/ 만 본다.
+        #     `prov_roots` 는 **selftest 전용 탈출구**다 — 시험은 임시 디렉터리에
+        #     후보를 만들므로 자기 근원을 명시적으로 선언한다. 생산 호출은 안 준다.
+        _roots = [HERE.parents[1] / "db"] + [Path(r) for r in (prov_roots or [])]
+        _have = [r for r in _roots if r.is_dir()]
         if not _nm:
             pass
-        elif not _db.is_dir():
+        elif not _have:
             warn.append(f"repo 의 db/ 를 못 찾아 후보집합 출처 `{_nm}` 를 확인하지 못했다")
-        elif not list(_db.rglob(_nm)):
+        elif not any(list(r.rglob(_nm)) for r in _have):
             bad.append(f"후보집합 출처 `{_nm}` 가 repo(db/)에 없다 — 이 번들의 "
                        f"candidate set 은 재현·감사할 수 없다")
     print(f"  emitted_roles : {man.get('emitted_basin_roles', man.get('emitted_roles', '(없음)'))}")
@@ -6932,7 +6944,8 @@ def _zip_entry_hazards(zf, root_name):
     return bad
 
 
-def verify_zip(zip_path, expect_jobs=None, attest_out=None) -> int:
+def verify_zip(zip_path, expect_jobs=None, attest_out=None,
+               prov_roots=None) -> int:
     """**ZIP 바이트**를 입력으로 받아 검증하고 detached attestation 을 낸다.
 
     왜 폴더가 아니라 ZIP 인가 (회신 AA P0-1 · Q6): 외주에 나가는 물건은 ZIP 이다.
@@ -6976,7 +6989,7 @@ def verify_zip(zip_path, expect_jobs=None, attest_out=None) -> int:
         zf.extractall(td)
         root = Path(td) / root_name
         rc = verify_bundle(root, expect_jobs=expect_jobs,
-                           check_sibling_zip=False)
+                           check_sibling_zip=False, prov_roots=prov_roots)
         # ── ④ 디스크 독립 열거 (MANIFEST 를 안 보고 다시 센다) ──────────────
         jobs = sorted(str(q.parent.relative_to(root))
                       for q in root.rglob("run_job.sh") if q.is_file())
@@ -7053,6 +7066,182 @@ def verify_zip(zip_path, expect_jobs=None, attest_out=None) -> int:
     ok = rc == 0 and not haz
     print("  " + ("✅ ZIP 검증 통과" if ok else "❌ ZIP 검증 실패"))
     return 0 if ok else 1
+
+
+def _selftest_e2e() -> int:
+    """**생산 생성기 → 독립 verifier → 분석기** 왕복 (회신 AA Q2).
+
+    왜 따로 필요한가 — 우리는 같은 병을 **세 번** 맞았다:
+      ① POTCAR 검사가 개수만 셌다 (전부 같은 잘못된 세트를 통과시킨다)
+      ② 조각 매칭이 실물 잡 키(`prospective/…`)에서 하나도 안 걸렸다
+      ③ `d3` 가 net4 복합체 8잡에서 비어 있었다
+    셋 다 selftest 는 **통과**했다. 공통 원인은 손으로 만든 fixture 가 실제 생산
+    스키마와 갈라진 것이다. fixture 의 한 축만 실물처럼 고치면 네 번째 변형에서
+    또 깨진다.
+
+    그래서 이 시험은 fixture 를 만들지 않는다:
+      · 슬랩·조각·자기원장을 **생산 경로 그대로** 불러온다 (SS.load_slab /
+        SS.load_fragment / afm_ledger) — 장난감을 쓰면 계보·토폴로지 게이트가
+        막는데, 그 게이트가 바로 우리가 지키려는 것이다
+      · `build_bundle()` 이 만든 실물을 검사한다
+      · MANIFEST 를 믿지 않고 **디스크에서 다시 센다**
+      · 합성 OUTCAR 를 주입해 분석기까지 왕복한다
+      · 흔들면(mutation) 깨지는지 본다
+
+    이 시험이 **못 하는 것**
+      · 실제 VASP·PP 트리·스케줄러를 대신하지 않는다 (합성 OUTCAR 다).
+      · 과학적 estimand 가 옳은지 말하지 않는다.
+      · 여기 통과가 실물 번들(v8 등)의 통과를 뜻하지 않는다 — 규모·조각이 다르다.
+    """
+    import argparse as _ap
+    import shutil as _sh
+    import tempfile
+    from ase import Atoms
+    from ase.io import write as ase_write
+    ok = [0, 0]
+
+    def chk(c, m):
+        ok[0] += 1; ok[1] += bool(c)
+        print(("  ✔ " if c else "  ✘ ") + m)
+
+    td = Path(tempfile.mkdtemp(prefix="e2e_"))
+    slab = _SS_LOAD_SLAB_ORIG()                # ★ 생산 슬랩 (몽키패치 무관)
+    nslab = len(slab)
+    mol0, _mf = SS.load_fragment("ptfe_dimer")  # ★ 생산 조각 (정본 결합표와 맞아야 한다)
+    if mol0 is None:
+        print("  ✘ ptfe_dimer 조각을 못 읽었다 — e2e 불가")
+        return 1
+    run = td / "runs" / "ptfe_dimer" / "relax_f0.85"
+    run.mkdir(parents=True)
+    ase_write(run / "_clean_slab.vasp", slab, format="vasp", direct=True)
+    ztop = max(p[2] for p in slab.get_positions())
+    mp0 = mol0.get_positions() - mol0.get_positions().mean(axis=0)
+
+    N_POSE = 3
+    basins = {"schema": "prospective_basins/v1", "freeze_sha256": "e2e_frozen",
+              "fragments": {"ptfe_dimer": {"calibration": []}}}
+    for k in range(N_POSE):
+        lab = f"ptfe_dimer__Li_top__fib{k:02d}__r000"
+        shift = np.array([4.0 + 1.2 * k, 3.0 + 1.5 * k, ztop + 3.2])
+        cx = Atoms(symbols=list(slab.get_chemical_symbols())
+                          + list(mol0.get_chemical_symbols()),
+                   positions=list(slab.get_positions()) + list(mp0 + shift),
+                   cell=slab.cell.array, pbc=True)
+        ase_write(run / f"{lab}.xyz", cx, format="extxyz")
+        basins["fragments"]["ptfe_dimer"]["calibration"].append(
+            {"basin_id": f"b{k:02d}", "rep_label": lab, "role": "calibration",
+             "why": "e2e", "E_pose_eV": 0.01 * k})
+    bp = td / "basins.json"
+    bp.write_text(json.dumps(basins, ensure_ascii=False))
+
+    a = _ap.Namespace(
+        runs=str(td / "runs"), out=str(td / "bundle"), freeze=0.85, nslab=nslab,
+        frags=["ptfe_dimer"],
+        qe=str(Path(SS.REPO) / "db" / "inputs" / "sdcp_v2" / "slab_relax" / "relax.in"),
+        expect=None, allow_partial=True, dense_frags=None, cross_endpoints=None,
+        adaptive_dense=False, global_champion_meV=20.0, no_cross=True,
+        free_spin_refs=True, refs=True, cores=48, concurrency=8, mag_controls=True,
+        kmesh_static=None, kmesh_dense=None, champion=False, from_basins=str(bp),
+        roles=["calibration"], d3_seed_main_only=True, no_refs_dense=True,
+        both_seeds=True, d3_pairs=True, closure=True, single_point=False,
+        top_n=None, allow_stale_gate=True, no_prescf=True, selftest=False)
+    try:
+        out = build_bundle(a)
+    except SystemExit as e:                                  # noqa: BLE001
+        print(f"  ✘ 생산 생성기가 번들을 못 만들었다: {e}")
+        return 1
+    chk(out.is_dir(), "A. 생산 build_bundle() 이 실물 슬랩·조각·원장으로 번들을 만든다")
+
+    # ── C. 예상 cardinality — "0개가 아님" 이 아니라 **정확히** N ────────────
+    #   refs    clean 2seed + mol 3box = 5 끝점 × D3 on/off = 10
+    #   complex 3 pose × 2 seed = 6, pm1 만 쌍둥이 3        =  9
+    N_EXPECT, N_ON, N_OFF = 19, 11, 8
+    zp = out.with_suffix(".zip")
+    att = td / "att.json"
+    chk(verify_zip(zp, expect_jobs=N_EXPECT, attest_out=str(att),
+                   prov_roots=[td]) == 0,
+        f"B. verifier 가 **ZIP 바이트**에서 통과시킨다 (잡 {N_EXPECT})")
+    A = json.loads(att.read_text())
+    dsk = A["census_recomputed_from_disk"]
+    chk(dsk["jobs_on_disk"] == N_EXPECT
+        and dsk["phase_runs_on_disk"] == {"static": N_EXPECT},
+        f"C. **디스크 재계산**이 정확히 {N_EXPECT}·static{N_EXPECT} "
+        f"(MANIFEST 를 안 보고 센 값) — 실제 {dsk['jobs_on_disk']}·"
+        f"{dsk['phase_runs_on_disk']}")
+
+    # ── D. 모든 잡이 정확히 한 구조화 role 로 소비되나 ──────────────────────
+    metas = {str(q.parent.relative_to(out)): json.loads(q.read_text())
+             for q in out.rglob("job.json")}
+    kinds = {}
+    for m in metas.values():
+        kinds[m.get("kind")] = kinds.get(m.get("kind"), 0) + 1
+    unclassified = [k for k, m in metas.items()
+                    if not m.get("kind") or m.get("d3") not in ("on", "off")]
+    chk(len(metas) == N_EXPECT and not unclassified,
+        f"D. 전 잡이 한 구조화 role 로 분류된다 — kind {kinds} · 미분류 {unclassified[:3]}")
+    n_on = sum(1 for m in metas.values() if m.get("d3") == "on")
+    n_off = sum(1 for m in metas.values() if m.get("d3") == "off")
+    chk(n_on == N_ON and n_off == N_OFF,
+        f"D2. d3 on/off 가 정확히 {N_ON}/{N_OFF} (실제 {n_on}/{n_off}) — "
+        f"net4 복합체가 빠지면 {N_ON - N_POSE}/{N_OFF} 가 된다 (③ 사고의 모양)")
+    chk(all((out / k / "static" / "INCAR").is_file()
+            and (("IVDW     = 11" in (out / k / "static" / "INCAR").read_text())
+                 == (m.get("d3") == "on"))
+            for k, m in metas.items()),
+        "D3. d3 필드가 **INCAR 실물과 전건 일치** (기억이 아니라 입력에서 유도)")
+
+    # ── E. 합성 OUTCAR 주입 → 분석기 왕복 ──────────────────────────────────
+    for jn, m in metas.items():
+        _fake_phase(out / jn, m, -100.0 - 0.01 * len(jn), POTCAR_SPEC)
+    ns = {}
+    exec(compile(ANALYZER, "<analyzer-template>", "exec"), ns)
+    jobs = {}
+    for jn, m in metas.items():
+        oc = ns["read_outcar"](str(out / jn / "static" / "OUTCAR"))
+        jobs[jn] = {"ok": True, "gates": [], "meta": m, "static": oc,
+                    "geom": {"magnetic": {"realized_basin_id": "same"}}}
+    chk(all((jobs[j]["static"] or {}).get("E0") is not None for j in jobs),
+        "E. 합성 OUTCAR 가 분석기 판독기를 통과한다 (에너지 전건 회수)")
+    man = json.loads((out / "MANIFEST.json").read_text())
+    ce = ns["_closure_estimand"](
+        man, {"pairs": {}}, lambda j: (jobs.get(j, {}).get("static") or {}).get("E0"),
+        {"ptfe_dimer": -10.0}, jobs)
+    chk(ce is None or ce.get("cohort_fields", {}).get("incoherent") == 0,
+        "E2. 생산 번들의 잡 키가 cohort 정합성을 통과한다 — ② 사고의 회귀시험")
+
+    # ── F. mutation — 흔들면 **깨져야** 한다 ────────────────────────────────
+    def mut(name, fn):
+        m2 = td / name
+        _sh.copytree(out, m2)
+        fn(m2)
+        z2 = m2.with_suffix(".zip")
+        with zipfile.ZipFile(z2, "w", zipfile.ZIP_DEFLATED) as z:
+            for q in sorted(m2.rglob("*")):
+                if q.is_file():
+                    z.write(q, m2.name + "/" + str(q.relative_to(m2)))
+        return verify_zip(z2, expect_jobs=N_EXPECT, prov_roots=[td])
+
+    def _drop_d3(root):
+        q = sorted(root.rglob("prospective/*/job.json"))[0]
+        m = json.loads(q.read_text()); m.pop("d3", None)
+        q.write_text(json.dumps(m, ensure_ascii=False))
+
+    def _rename(root):
+        q = sorted(root.rglob("prospective/*/job.json"))[0].parent
+        q.rename(q.parent / (q.name + "_X"))
+
+    for nm, fn, why in (
+            ("m_d3", _drop_d3, "잡 하나의 d3 를 지우면 깨진다 (③ 사고)"),
+            ("m_name", _rename, "잡 폴더 이름을 바꾸면 깨진다 (경로 ↔ 필드 불일치)"),
+            ("m_extra", lambda r: (r / "EXTRA.txt").write_text("x"),
+             "매니페스트에 없는 파일을 끼우면 깨진다"),
+            ("m_rm", lambda r: _sh.rmtree(sorted(r.rglob("refs/mol__*"))[0]),
+             "잡 하나를 지우면 깨진다 (cardinality)")):
+        chk(mut(nm, fn) == 1, f"F mutation: {why}")
+
+    print(f"  e2e selftest {ok[1]}/{ok[0]}")
+    _sh.rmtree(td, ignore_errors=True)
+    return 0 if ok[0] == ok[1] else 1
 
 
 def _selftest_verify() -> int:
@@ -7265,6 +7454,8 @@ def _selftest_verify() -> int:
 def main():
     if "--selftest_verify" in sys.argv:
         sys.exit(_selftest_verify())
+    if "--selftest_e2e" in sys.argv:
+        sys.exit(_selftest_e2e())
     if "--verify_zip" in sys.argv:
         i = sys.argv.index("--verify_zip")
         _ej = (int(sys.argv[sys.argv.index("--expect_jobs") + 1])
@@ -7384,7 +7575,11 @@ def main():
         #   전건을 덮지 않으면 아무도 안 돌린다 (음성 경로가 특히).
         rc = selftest()
         print("\n── --verify_bundle 경로 ──")
-        return rc or _selftest_verify()
+        rc = rc or _selftest_verify()
+        # ★ 회신 AA Q2 — E2E 를 표준 명령에 **물린다**. 따로 두면 아무도 안 돌리고,
+        #   우리가 세 번 맞은 병이 바로 "안 돌린 층" 에서 나왔다.
+        print("\n── 생산 생성기 E2E 경로 ──")
+        return rc or _selftest_e2e()
     build_bundle(a)
     return 0
 
