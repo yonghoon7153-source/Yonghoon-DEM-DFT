@@ -1235,6 +1235,50 @@
   - **부수 정정**: 90 mg/cm² areal capacity 는 본문 **15.6** vs Table S1/S2 **15.3** mAh/cm² 로 불일치 ⇒ "≈15.3–15.6"
     으로 인용.  Table S1/S2 의 Wh/kg 은 `비용량 × 3.7 V` = **활물질 기준**(집전체·분리막·전해질·케이스 제외) ⇒
     **651 Wh/kg 를 셀 수준으로 인용 ⛔**(셀 재계산이 필요하면 Table S4 부품 질량 사용).
+
+- **★★★ Kang(bollard) vs Han(ICEP) 정면대조 — "음이온성 바인더의 산성기(−COO⁻ / −SO₃⁻)를 계산에서 어떻게 다루나"**
+  (2026-08-29 신설.  정리본 `kb/syntheses/binder_adsorption_charge_state_2026_08_29.md`;
+  digest 짝 = `papers/kang2025_bollard_anchored_binder_dry_electrode.md` ↔ `papers/han2025_icep_conductive_elastic_binder.md`.
+  ★ **우리 SDCP 캠페인이 그대로 베낄 레시피가 어느 쪽인지 정하는 대조다** — 우리 −SO₃⁻ 는 ICEP 와 같은 작용기다):
+
+  | 축 | **Kang** (Adv. Mater. **2416872**) | **Han / ICEP** (Adv. Mater. **2506266**) |
+  |---|---|---|
+  | 엔진 | **PFP v3.0.0 (Matlantis 범용 NNP)** — **전하 입력칸 자체가 없다** | **CASTEP 평면파 DFT** — 전하 지정 가능 |
+  | 슬랩 | NMC**622** `R-3m`, fully lithiated, **2×2×1**, 진공 **40 Å**, 하반부 고정 | NMC**811** (001), Ni:Co:Mn 8:1:1 (32/4/4), **8층**, **5×4 초격자**, 하단 2층 고정, 진공 **>15 Å** |
+  | 이론수준 | NNP (Gaussian16 B3LYP 는 **FTIR 진동수 전용**) | GGA-PBE · spin-pol · USPP · **TS vdW** · **U(Ni 6.0 / Co 3.4 / Mn 3.9)** · 컷오프 **300 eV** · 표면 k **Γ-only** |
+  | **중성 유지 방법** | **짝이온을 계에 넣는다** — Na⁺ ×2 (sodium CMC 라 실제로 존재) | **양성자를 슬랩으로 옮긴다** — *"hydrogen transfer from ICEP_AMPS to the NCM811 (001) surface"* (Fig S13 캡션) |
+  | **상태 선언** | ✅ **`PC_2Na` / `PC_1Na` / `PC_0Na`** — **이름에 Na 개수를 박았다** | ⛔ 그림 라벨 `(−H)` 뿐, **본문에 한 번도 안 나온다**(본문은 *"dissected into **two** … ICEP_AN and ICEP_AMPS"*) |
+  | **상태별 논의** | ✅ 세 값(**−2.24 / −1.12 / −0.37 eV**)을 본문에서 비교하고 **Na 개수가 세기를 정한다**고 명시 | ⛔ 본문에 **수치가 하나도 없다**. *"AMPS > PVDF"* 부등호만.  값은 SI 그림에서만: **AMPS(−H) −2.243 / AMPS −1.819 / PVDF −0.703 / AN −0.162 eV** |
+  | 자기상태 정책 | 해당 없음 (NNP) | ⛔ 없음 — spin-pol + U 인데 **FM/AFM 미기재**, H 이동으로 환원된 TM 의 스핀 선택도 미기재 |
+
+  - **⇒ 이 축에서는 Kang 이 낫다.** 둘 다 "중성을 유지한다"는 같은 원칙을 지키지만, **Kang 만 그 상태를 이름 붙여
+    선언하고 본문에서 논했다.**  ICEP 의 `(−H)` 와 `intact` 는 **0.424 eV(−2.243 vs −1.819) 차이**를 만드는데,
+    그 선택이 무엇이었는지 본문 어디에도 없다 — **estimand 가 그림 라벨 괄호 안에 숨어 있다.**
+  - 🔴 **유보 — Kang 의 3분류는 "사전 설계"가 아니라 "사후 분류"다 (2026-08-29 SI Figure S15 로 확정).**
+    근거 3중: ① 본문 문장 순서가 *"rotated through **15** different configurations … The adsorption states **were
+    classified into** three primary categories"* (회전 → 계산 → *그 다음* 분류) · ② **Fig S15 실물 판독에서
+    class 크기가 8 / 3 / 4 = 15 로 정확히 맞는다** (사전 설계였다면 5/5/5 같은 균형 배분이 나왔을 것) ·
+    ③ 라벨 자체가 **완화 *후* 결과의 서술**("Na 몇 개가 표면 O에 붙었나")이지 입력 조건이 아니다.
+    ⇒ **판정: Kang 의 우위는 "상태에 *이름*을 붙이고 본문에서 논했다"까지이고, "상태를 *미리* 선언했다"는 아니다.**
+    partition 을 결과를 보고 정했으므로 우리 규율(estimand)로는 **여전히 위반**이다.  두 논문의 등급:
+    **ICEP = 선언 없음 < Kang = 사후 명명 ≪ 우리가 해야 할 것 = 사전 선언(목표)**.
+  - ★ **가장 중요한 한 줄 — 결합 세기를 정하는 것은 −COO⁻ 가 아니라 "Na 가 몇 개 다리를 놓느냐"다**
+    (**−2.24 → −1.12 → −0.37 eV**, 25× 스팬).  Fig S15 확대 판독으로 모티프도 확정: 각 Na⁺ 가 위로 카복실레이트
+    O 2개(4원환 킬레이트), 아래로 **표면 O 2개**에 배위 = `–COO⁻ ··· Na⁺ ··· O²⁻(surface)` **양이온 브리지**.
+    **유기 음이온기가 산화물에 직접 붙지 않는다.**  ⇒ **짝이온 조성이 결과를 지배한다.**
+    ICEP 쪽도 같은 구조다 — `(−H)`(양성자를 슬랩에 넘김) vs `intact` 가 0.42 eV 를 가른다.
+  - **⇒ 우리 SDCP 로의 이행 (−SO₃⁻ 는 ICEP 와 같은 작용기다)**:
+    - 우리도 **짝이온(Li⁺)/양성자 배치를 정하지 않고 돌리면 같은 함정**에 빠진다 — 재는 것이 술폰산–표면 결합이
+      아니라 **Li⁺ 브리지** 또는 **표면 양성자화 에너지**가 된다.
+    - `kb/methodology/estimand_before_running_2026_08_28.md`: *"admissible state 가 여럿인데 선택·집계 규칙이
+      없으면 scalar estimand 는 정의되지 않는다."* → Kang 의 `PC_nNa` 는 **그 선택 규칙을 이름에 박은** 사례로
+      인용할 수 있다(단 **사후 명명**이라는 단서 포함).
+    - 회신 O: *"고치는 법은 전 계에 같은 NUPDOWN 값이 아니라 같은 **state-selection policy**."* →
+      우리 estimand 카드에 **`X(짝이온 종·개수·초기배치·양성자 귀속)` 을 사전 선언**하고,
+      가능하면 **짝이온-중성화 경로 / 대전계+보정 경로 둘 다** 계산해 차이를 보고한다.
+    - ⛔ **"결과 보고 3분류 → class 평균"(Kang) 도, "괄호 라벨로만 표기"(ICEP) 도 우리는 하지 않는다.**
+      → `db/governance/decisions.json` 등록 대상.
+
 - **★ Han 2025 (ICEP, 실험+DFT흡착, 액체 LIB 습식) — binder 역학·접착 앵커 + coat-morphology + 전극-스케일 유효 E 실측**
   (digest `papers/han2025_icep_conductive_elastic_binder.md`; Kang(J) bollard와 자매 — 그들 *건식 앵커-입자+fibril*,
   이들 *습식 conformal-coat*):
