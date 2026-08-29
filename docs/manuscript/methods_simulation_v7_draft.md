@@ -1,5 +1,15 @@
 # Methods — 시뮬레이션 절 개정안 v7 (2026-08-29)
 
+> # ⛔⛔ `PROVISIONAL — NOT FOR SUBMISSION`
+> **Codex R10 판정: 투고 준비 NO-GO · 완성된 Methods 교체안으로 전달 NO-GO.**
+> 공저자에게는 **쟁점을 결정하기 위한 provisional review package** 로만 보낸다.
+> 해제조건 8개: `docs/reviews/codex_r10_verdict_20260829.md`.
+>
+> ⚠ **정본 원장이 이미 HOLD 다** — `table_s3_data_20260827.md` 헤더가
+> `RAW_W4_VERIFIED_UNTRACKED · 원고 승격 HOLD` 라고 적는다 (W4 16팔 JSON·receipt 가
+> 리포에 없어 제3자가 σ_e 를 재검증할 수 없다).  **그런데 이 초안은 그 값을 reported 로
+> 승격했다** — 내가 쓴 헤더를 내가 어겼다.  원자료 커밋 전까지 이 표는 투고용이 아니다.
+
 > 대상: `Manuscript v6` 의 *"DEM simulations:"* 문단 (Methods) + SI Table S2 · S3.
 > 감사 근거: `ms_si_v6_audit_20260829.md` · 수치 정본 `table_s3_data_20260827.md`.
 > **두 판을 낸다** — ⓐ **설명형**(독자가 이해하게) · ⓑ **압축형**(지면 제약용).
@@ -14,33 +24,36 @@
 | 3 | *"paired mean with its **standard error**"* | **origin-phase spread + range**, SE·CI 명시 부정 | 8 origin 은 한 침대의 완전 factorial — 복제 오차 자유도 0 (R8 Q1) |
 | 4 | PTFE 규약·σ_VGCF 규약 암묵 | **둘 다 명시**, PTFE 는 두 규약 병기 | 이득이 규약에 크게 의존한다 (12.4 ↔ 30.8 %) |
 
-★★ **주 규약 = PTFE 를 차단상으로 그린다** (v6 의 *"not resolved"* 에서 **바뀐다**).
+★★ ~~**주 규약 = PTFE 를 차단상으로 그린다**~~ — **R10 Q1 [P1] 로 기각**.
 
-**근거 — 결과와 무관하게 성립하는 것만 쓴다** (숫자를 보고 고른 것이 아님을 분명히 하기 위해):
-PTFE 는 절연체이고 **두 전극의 함량이 다르다** (SBE 1.0 · DBE 0.5 wt%).  이 논문의 개입이
-*"PTFE 절반을 SDCP 로 치환"* 인데, 절연 바인더를 전도 격자에서 **빼면 그 치환의 절반이
-수송 모델에서 사라진다.**  ⇒ 미표현 규약은 중립적 단순화가 아니라 **연구 대상인 조성 차이를
-모델이 못 보게 하는 선택**이다.  이 논거는 값이 어느 쪽으로 나왔든 동일하다.
-(부수: 절대값도 문헌에 가까워진다 — SBE 73 → 54 mS cm⁻¹, Lee 2025 의 34 대비 2.15× → 1.61×.)
+⚠⚠ **두 번 틀렸다.**
+① 처음엔 "안 그림" 을 주 규약으로 썼고 이유는 **편집 편의**였다.
+② 지적받고 "차단" 으로 뒤집었는데, **두 값을 본 뒤에 큰 쪽으로 옮긴 것**이라 결과 독립이
+   아니다.  물리적 우려 자체는 결과 전에도 있었으나, **생산 승격은 명시적으로 보류돼**
+   있었고 그것을 값을 본 뒤 바꿨다.
 
-⚠⚠ **미해결 — 코드는 이 규약을 "생산 아님" 이라 부른다.**  러너가 centerline 팔에
-`생산 규약 아님 (CDXR2-6)` 을 찍고(`sdcp_gain_vox015_8arm.sh:139`), payload selftest 는
-`ptfe-legacy-off … → off (생산 기본 **불변**)` 를 단언한다(`mpm_webapp_payload.py:369`).
-⇒ 원고가 centerline 을 보고하면 **원고와 코드가 "생산" 의 뜻을 다르게 쓴다.**
+★ 더 근본적으로 — **centerline 은 PTFE 를 "resolved" 한 규약이 아니다.**
+구현은 **한 셀 폭 centerline** 을 찍고 그 셀을 **정확히 0-DOF 로 제거**한다.  직경 인식
+`capsule` 은 **미구현 예약값**이다.  ⇒ 얇은 코팅의 **공간 범위는 과소**표현하면서 찍힌
+셀에서는 **차단을 과대**한다.  따라서:
+- `off` 가 **보수적이라는 판정도 성립하지 않는다** — 더 작은 이득을 냈을 뿐 물리적 하한임이
+  입증된 바 없다.
+- *"PTFE 를 빼면 치환의 절반이 사라진다"* 도 **과장**이다.  PTFE 의 함량과 역학 효과는
+  **DEM–MPM 침대에 남는다** (W2 실측: PTFE 만 E 가 바뀌어 변위가 달라졌다).  사라지는 것은
+  **전자격자의 직접 절연배제 채널** 하나다.
 
-★ 다만 그 라벨이 기록하는 것은 **물리 판단이 아니라 변경 관리**다 — 옆줄이 "생산 기본
-**불변**" 이라고 적는다.  PTFE 스탬프를 새로 넣으면서 **기본값을 조용히 바꾸지 않으려고**
-off 를 유지한 것이지, off 가 더 옳다고 판정한 것이 아니다.  ⇒ 위 물리 논거는 유지된다.
+⇒ **두 규약은 동등한 model-form sensitivity 두 점**이다 (R8 Q2 와 동일).  굵은 글씨 ·
+`reported` · `resolved` 를 **전부 제거**한다.  라벨은 이렇게 쓴다:
 
-**처분 (지금은 b, a 는 후속 등재)**:
-- **(b) 채택** — 코드 기본값은 그대로 두고, **보고 규약이 스탬프됨**을 이 문서와 Methods 에
-  명시한다.  지금 A2 런이 그 규약으로 돌고 있어 기본값을 바꾸면 진행 중인 것과 어긋난다.
-- **(a) 후속** — 생산 기본값을 centerline 으로 옮기는 것.  ⚠ 안 하면 훗날 러너 로그를 본
-  사람이 *"논문이 진단 팔을 보고했다"* 로 읽는다.  하류 영향이 커 별도 작업이다.
+| 규약 라벨 | σ_ele SBE | DBE | 비 |
+|---|---|---|---|
+| `PTFE omitted from the electronic grid (legacy/default convention)` | 72.3 | 81.3 mS cm⁻¹ | 1.124 |
+| `PTFE centerline voxels excluded (exact-zero sensitivity convention)` | 54.0 | 70.6 | 1.308 |
 
-⚠ **그래도 두 값을 모두 싣는다.**  `exact-zero` 는 셀을 통째로 비우므로 얇은 표면 코팅보다
-**국소 차단을 과대**할 수 있다 — 어느 규약이 실물에 가까운지는 **미정**이다.
-⇒ 본문은 **두 값을 함께** 적고, 견고한 주장은 **방향(DBE > SBE)** 이다.
+**코드 기본값은 옮기지 않는다** (R10 Q2 — 사후 primary 를 정당화하지 못하고 옛 영수증만
+흔든다).  대신: ① 재현 러너에서 `PTFE_STAMP` **필수 명시** ② `software default` ·
+`analysis role` · `publication profile` 을 **별도 필드**로 ③ 로그 라벨을
+`explicit exact-zero sensitivity protocol` 로 중립화 ④ 두 규약 **동등 보고**.
 
 ---
 
@@ -57,19 +70,25 @@ the effective conductivities.
 *Stage 1 — DEM packing.* Rigid-sphere packing was computed in LIGGGHTS using 1,271 NCM811
 spheres (radius 2.5 μm) and 146,420 LPSCl spheres (radius 0.5 μm), sized after the experimental
 powders and mixed at 70:27 by weight in a 50 × 50 μm² domain, compacted under displacement
-control. Because rigid-sphere contacts cannot reproduce the plastic flattening, particle
-rearrangement and grain-boundary sliding that densify sulfide powders, **the contact stiffness
-of LPSCl was calibrated against the measured compaction response** — the ~10 % porosity and
-11–12 % contact overlap reported for cold-pressed LPSCl at 300 MPa. The calibrated contact
-modulus (1.35 GPa) is therefore an effective parameter that stands in for those unresolved
-mechanisms; the dense-material modulus (24 GPa) is retained in Table S2 for reference.
+control. Rigid-sphere contacts do reproduce particle rearrangement, but not the plastic
+flattening, fracture and grain-boundary deformation that also densify sulfide powders, so the
+contact stiffness of LPSCl was selected against a densification target for sulfide cold pressing
+rather than taken from the dense material. **The 1.35 GPa value is an empirical contact-law
+input, not an intrinsic LPSCl modulus and not an independent validation of the present SBE/DBE
+beds**; the dense-material value (24 GPa) is listed beside it in Table S2. The ~10 % target is
+derived from composite and glass literature rather than measured directly on pure LPSCl at
+300 MPa, and the 11–12 % contact overlap is a pure-SE simulation consistency result rather than
+a measured calibration target.
 
-*Stage 2 — MPM compaction.* The plastic deformation of the electrolyte was then resolved on the
-fixed DEM skeleton with a GPU-accelerated MPM using von Mises plasticity (E = 1.53 GPa,
-ν = 0.49, yield strength 0.30 GPa). The high Poisson ratio confines the softening to shear:
-the bulk modulus stays at a dense-solid value (K = 25.5 GPa) while the shear modulus is reduced
-(G = 0.51 GPa). VGCF fibres, PTFE fibrils and SDCP particles were then seeded into the pore
-space at the experimental weight fractions.
+*Stage 2 — MPM compaction.* Plastic deformation was then resolved on the fixed DEM skeleton with
+a GPU-accelerated MPM. VGCF fibres, PTFE fibrils and SDCP particles were **present in the
+material-point cloud during this stage** at the experimental weight fractions, so their stiffness
+enters the compaction rather than being added afterwards. The deviatoric plasticity follows a
+J2 (von Mises) model with a yield strength of 0.30 GPa; the elastic pair E = 1.53 GPa and
+ν = 0.49 is a **model choice** that sets K = 25.5 GPa and G = 0.51 GPa, confining the softening
+to shear while leaving the bulk response at a dense-solid value. ⚠ The resulting beds are
+**more compacted than the experimental porosity anchor**, so this parameterisation is not a
+validation of the present SBE/DBE geometry.
 
 *Stage 3 — voxel transport.* Each microstructure was rasterized onto a cubic grid with a voxel
 edge of 0.15 μm. Adjacent conducting voxels were coupled through harmonic-mean conductances and
@@ -100,13 +119,16 @@ single bed rather than independent replicates**, so ratios are reported as the m
 eight prescribed phases together with the spread across them and the observed range; no standard
 error or confidence interval is implied. All arms reached the solver convergence criterion.
 
-*Reported values.* With PTFE resolved, the effective electronic conductivity is 54.0 mS cm⁻¹
+*Values under the two binder conventions.* With PTFE centerline voxels excluded (exact-zero
+sensitivity convention) the effective electronic conductivity is 54.0 mS cm⁻¹
 (SBE) and 70.6 mS cm⁻¹ (DBE), a paired ratio of 1.308 (spread 0.003 across the eight origin
 phases; observed range 1.302–1.310). Leaving PTFE unresolved gives 72.3 and 81.3 mS cm⁻¹, a
-ratio of 1.124 (spread 0.003; range 1.120–1.127). The two conventions differ only in whether
-the insulating binder occupies conduction cells — a machine-checked contract confirms that no
-other parameter differs between them — so the direction of the change is robust to this choice
-while its magnitude is not. Ohmic loss per phase was evaluated as Σ g_k Δφ_k², summed over the
+ratio of 1.124 (spread 0.003; range 1.120–1.127). The two differ only in whether the binder's
+centerline voxels are excluded from conduction — a machine-checked contract confirms that no
+other parameter differs — and **neither is established as closer to a real thin coating**: the
+one-cell centerline under-represents the coating's spatial extent while over-blocking where it
+is stamped. They are therefore reported as **two equivalent model-form sensitivity points**;
+the direction of the change is common to both, its magnitude is not. Ohmic loss per phase was evaluated as Σ g_k Δφ_k², summed over the
 voxel-to-voxel connections belonging to that phase.
 
 *Limitations.* The absolute conductivities have not been calibrated against a
@@ -115,14 +137,17 @@ the solver places no contact resistance at any interface — between active part
 active material and carbon, or at the current collector — so it does not reproduce the quantity
 a two-terminal DC-polarisation measurement returns. The ratio is not grid-converged: refining
 the voxel edge increases it monotonically without following a power law, so the reported gain is
-a **lower bound on that axis**. Explicitly restoring the fibre–fibre and additive contacts that
-voxelisation drops recovers only about a fifth of that grid dependence, indicating that the
-remainder originates elsewhere, most plausibly in how the additive volume is represented.
-The magnitude is also conditional on the carbon conductivity being treated as an effective
-network constant: raising it by two orders of magnitude to the single-filament value — which
-would additionally assume perfect fibre–fibre contact on top of equipotential fibres — reverses
-the ordering, so the reported gain presumes that voxel fusion has removed a contact resistance
-that the powder-scale value restores.
+larger at finer voxels **over the refinement interval examined**; neither a continuum
+extrapolation nor a global bound is established. Explicitly restoring the additive contacts that
+voxelisation drops recovers only about a fifth of that grid dependence — **measured under the
+binder-omitted convention only**, and not transferable to the exact-zero convention. The
+magnitude is also conditional on the carbon conductivity being treated as an effective network
+constant: at the single-filament value, a hundredfold higher, the ordering reverses. That upper
+arm is **not better physics** but a doubly idealised sensitivity at one origin phase, assuming
+perfect fibre–fibre contact on top of equipotential fibres; a single scalar can absorb part of
+the missing resistance numerically but is **not identified** as a fibre–fibre contact parameter.
+Two further limits apply: the beds are more compacted than the experimental porosity anchor, and
+the specimen provenance of the SDCP conductivity (250 S cm⁻¹) is not established.
 
 ---
 
