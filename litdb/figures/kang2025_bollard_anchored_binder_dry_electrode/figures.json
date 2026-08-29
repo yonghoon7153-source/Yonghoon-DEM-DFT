@@ -49,6 +49,26 @@
    "blank": 0.932
   },
   {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 5,
+   "file": "fig_3.png",
+   "caption": "Figure 3. Performances of different properties were conducted to identify the optimal additive binder for the dry process. PVdF_PTFE (blue), CMC_PTFE (green), PC_PTFE (pink), PAA_PTFE (orange), and PTFE (purple) were compared. a) Ionic conductivity, b) resistivity, c) electrical conductivity, d) Swelling ratio, e) Young's modulus, and f) Strain (%) of each binder additive sheet formulated with PTFE. g) Radar chart summarizing the overall performance of binders across key parameters, as derived from the evaluations in (a-f). h) Specific capacity of the sheet-type cathodes with different binder additives. i) Specific capacity as a function of the CMC/PC ratio. j) Specific capacity as a function of the PTFE/(PC_PTFE) ratio.",
+   "rotated_deg": 0,
+   "bbox": [
+    44.8,
+    62.0,
+    552.9,
+    525.0
+   ],
+   "w": 2118,
+   "h": 1930,
+   "dpi": 300,
+   "src": "f5fb19c3-Advanced_Materials__2025__Kang__Bollard_Anchored_Binder_System_for_High_Loading_Cathodes_Fabricated_via_Dry_Electrode.pdf",
+   "note": "manual render (auto bbox detection failed on this page)"
+  },
+  {
    "key": "f4",
    "kind": "figure",
    "label": "4",
