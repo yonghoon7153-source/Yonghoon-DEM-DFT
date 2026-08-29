@@ -118,6 +118,11 @@ the voxel edge increases it monotonically without following a power law, so the 
 a **lower bound on that axis**. Explicitly restoring the fibre–fibre and additive contacts that
 voxelisation drops recovers only about a fifth of that grid dependence, indicating that the
 remainder originates elsewhere, most plausibly in how the additive volume is represented.
+The magnitude is also conditional on the carbon conductivity being treated as an effective
+network constant: raising it by two orders of magnitude to the single-filament value — which
+would additionally assume perfect fibre–fibre contact on top of equipotential fibres — reverses
+the ordering, so the reported gain presumes that voxel fusion has removed a contact resistance
+that the powder-scale value restores.
 
 ---
 
@@ -157,7 +162,10 @@ the mean over the prescribed phases with the spread and observed range, and no s
 implied. Ohmic loss per phase was evaluated as Σ g_k Δφ_k². Absolute conductivities are those of
 an idealised bulk model containing no interfacial contact resistance and are not
 composition-matched to a measurement; the ratio is not grid-converged and increases on
-refinement, so the reported gain is a lower bound on that axis.
+refinement, so the reported gain is a lower bound on that axis. Its magnitude is likewise
+conditional on the carbon conductivity being an effective network constant — at the
+single-filament value, which assumes perfect fibre–fibre contact as well, the ordering
+reverses.
 
 ---
 
