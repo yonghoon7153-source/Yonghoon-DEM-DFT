@@ -1179,13 +1179,45 @@ def _atomic_json(path: Path, payload: Any) -> None:
     os.replace(tmp, path)
 
 
-def _guard_gpu() -> None:
-    """gabia 규약 — pw.x 와 UMA 동시 실행 금지 (VRAM 47/48 GB 점유 사례)."""
+def _guard_gpu(allow_concurrent: bool = False, need_gib: float = 8.0) -> None:
+    """gabia 규약 — **GPU 빌드** pw.x 와 UMA 동시 실행 금지 (VRAM 47/48 GB 점유 사례).
+
+    ⛔⛔ 2026-08-29 — 종전 가드는 `pgrep -fa pw.x` 로 **아무 pw.x** 나 잡았다. 그래서
+      VRAM 과 무관한 **CPU 빌드**(`qe-*-cpu/bin/pw.x`, 예: nscf_gap) 가 돌기만 해도
+      UMA 가 막혔다. 실제 위험은 GPU 빌드뿐이다 — 경로로 가른다.
+
+    `allow_concurrent=True` 는 **명시적 옵트인**이다 (1저자 승인 필요). 그때도
+    남은 VRAM 이 `need_gib` 미만이면 막는다 — "OOM 나면 끄지" 는 계획이지 보장이 아니다.
+
+    ⛔ 못 하는 것: 다른 사용자의 GPU 프로세스나 곧 늘어날 점유를 예측하지 못한다.
+      여유는 **지금 이 순간**의 값이다.
+    """
     try:
         import subprocess
         out = subprocess.run(["pgrep", "-fa", "pw.x"], capture_output=True, text=True).stdout.strip()
-        if out:
-            sys.exit("⛔ pw.x 가 돌고 있다 — UMA 와 동시 실행 금지 (CLAUDE.md).\n" + out)
+        gpu = [ln for ln in out.splitlines() if "-gpu/bin/pw.x" in ln]
+        cpu = [ln for ln in out.splitlines() if "-cpu/bin/pw.x" in ln]
+        if cpu and not gpu:
+            print(f"  ⓘ CPU 빌드 pw.x {len(cpu)}개는 VRAM 을 쓰지 않는다 — 통과")
+        if gpu:
+            free = None
+            try:
+                q = subprocess.run(
+                    ["nvidia-smi", "--query-gpu=memory.free", "--format=csv,noheader,nounits"],
+                    capture_output=True, text=True).stdout.strip().splitlines()
+                free = float(q[0]) / 1024.0
+            except Exception:
+                pass
+            if not allow_concurrent:
+                sys.exit("⛔ **GPU 빌드** pw.x 가 돌고 있다 — UMA 와 동시 실행 금지 (CLAUDE.md).\n"
+                         + "\n".join(gpu)
+                         + (f"\n   현재 VRAM 여유 {free:.1f} GiB." if free else "")
+                         + "\n   승인이 있으면 --allow_concurrent_pwx 로 명시적으로 켜라.")
+            if free is not None and free < need_gib:
+                sys.exit(f"⛔ --allow_concurrent_pwx 를 줬으나 VRAM 여유가 {free:.1f} GiB "
+                         f"< {need_gib} GiB 다. 지금 띄우면 OOM 이 거의 확실하다.")
+            print(f"  ⚠ GPU pw.x 와 **동시 실행** (명시 승인). VRAM 여유 "
+                  f"{free:.1f} GiB" if free is not None else "  ⚠ GPU pw.x 와 동시 실행 (명시 승인)")
         me = subprocess.run(["pgrep", "-fc", "site_screen.py score"], capture_output=True, text=True).stdout.strip()
         if me.isdigit() and int(me) > 1:
             sys.exit("⛔ site_screen score 가 이미 돌고 있다 — 중복 실행 방지")
@@ -1204,7 +1236,7 @@ def _freeze_mask(slab_n: int, slab: Atoms, freeze_frac: float):
 
 def cmd_score(a) -> int:
     """UMA rigid SP / relax. **재개 가능** — 완료된 JSON 은 건너뛴다."""
-    _guard_gpu()
+    _guard_gpu(allow_concurrent=getattr(a, "allow_concurrent_pwx", False))
     from ase.optimize import FIRE
     from fairchem.core import pretrained_mlip
     from fairchem.core.calculate.ase_calculator import FAIRChemCalculator
@@ -2390,6 +2422,9 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("--steps", type=int, default=300)
     p.add_argument("--freeze", nargs="*", type=float, default=[1.0, 0.85],
                    help="1.0=Phase-A/Codex 프로토콜, 0.85=표면 이완 허용. 둘 다 돌려 편향을 드러낸다.")
+    p.add_argument("--allow_concurrent_pwx", action="store_true",
+                   help="⚠ GPU 빌드 pw.x 와 **동시 실행**을 명시적으로 허용 (1저자 승인 필요). "
+                        "VRAM 여유가 8 GiB 미만이면 그래도 막는다. CPU 빌드 pw.x 는 원래 안 막는다")
     p.add_argument("--top-per-site", type=int, default=2)
     p.add_argument("--pairs", type=int, default=5, help="강제로 살릴 Li/Ni 대조쌍 수")
 
