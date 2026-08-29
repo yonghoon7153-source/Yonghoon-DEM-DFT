@@ -3913,13 +3913,19 @@ def build_bundle(a, ledger: Optional[Dict[str, Any]] = None) -> Path:
     # ── clean slab provenance (Codex P0-B) ──────────────────────────────────
     # ⚠ 옛 구현은 **첫 번째** _clean_slab.vasp 하나만 집고, 없으면 raw slab 로 조용히
     #   fallback 했다. 조각마다 clean 이 다르면 E_ads 가 전부 어긋나는데 아무도 모른다.
-    cps = sorted(Path(a.runs).glob(f"*/relax_f{a.freeze:.2f}/_clean_slab.vasp"))
+    # ⚠ 2026-08-29 — 종전엔 **전 조각**을 훑었다. 이 번들에 안 들어가는 조각의 clean 이
+    #   달라도 막혀서, `--frags` 로 두 조각만 뽑을 때 무관한 조각 때문에 중단됐다.
+    #   제약의 뜻은 "**이 번들 안의** 조각들이 같은 슬랩을 쓴다" 이므로 범위를 그렇게 좁힌다.
+    _want = set(a.frags) if a.frags else None
+    cps = sorted(q for q in Path(a.runs).glob(f"*/relax_f{a.freeze:.2f}/_clean_slab.vasp")
+                 if _want is None or q.parent.parent.name in _want)
     if not cps:
         sys.exit(f"⛔ {a.runs}/*/relax_f{a.freeze:.2f}/_clean_slab.vasp 이 하나도 없다 — "
                  f"raw 슬랩으로 조용히 대체하지 않는다 (E_ads 기준계가 달라진다)")
     hashes = {str(p): hashlib.sha256(p.read_bytes()).hexdigest() for p in cps}
     if len(set(hashes.values())) != 1:
-        sys.exit("⛔ 조각별 clean slab 이 서로 다르다 — E_ads 기준계가 갈린다:\n  "
+        sys.exit("⛔ **이 번들 안의** 조각별 clean slab 이 서로 다르다 — E_ads 기준계가 "
+                 "갈린다 (--frags 로 좁힌 범위에서 본 것이다):\n  "
                  + "\n  ".join(f"{h[:12]}  {p}" for p, h in sorted(hashes.items())))
     clean = ase_read(cps[0])
     man["clean_slab"] = {"path": str(cps[0]), "sha256": list(hashes.values())[0],
