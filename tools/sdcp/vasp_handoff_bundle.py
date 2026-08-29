@@ -2431,7 +2431,7 @@ def _closure_estimand(man, results, E, emol, jobs):
     }
 
     # (0) calibration 전용 tranche 면 **primary 를 내지 않는다** (회신 X P0-2)
-    if str(out["candidate_set"]).startswith("calibration_pilot"):
+    if str(out["candidate_set"]).startswith(("calibration_pilot", "motif_probe")):
         out["blocks"].append(
             "CALIBRATION_ONLY_TRANCHE — 이 잡들은 창 W 를 정하려고 돌린 것이고 "
             "후보집합이 아니다. primary 는 창 확정 → 창 안 전 자세 계산 → audit "
@@ -4006,11 +4006,21 @@ def build_bundle(a, ledger: Optional[Dict[str, Any]] = None) -> Path:
         #   이름을 그대로 두면 분석기가 primary 를 내고, audit 이 나중에 더 낮게
         #   나와도 "더 낮은 자세를 찾았다" 로 흡수돼 selector 실패가 사라진다.
         _rl = tuple(getattr(a, "roles", None) or ("calibration", "sealed_audit"))
-        man["candidate_set"] = ("%s (frozen %s)"
-                                % ("prospective_lowE" if len(_rl) > 1
-                                   else "calibration_pilot",
-                                   fb.get("freeze_sha256", "?")[:16]))
+        # 이름은 manifest 의 **키**가 아니라 뽑힌 basin 의 `role` 이 정한다 —
+        #   motif_probe 를 calibration 키에 담아 넘기는 판이 있어서, 키만 보면
+        #   probe 번들이 `calibration_pilot` 으로 잘못 라벨된다.
+        _actual = sorted({b.get("role") or r
+                          for fr2 in (fb.get("fragments") or {}).values()
+                          for r in _rl for b in (fr2.get(r) or [])})
+        if _actual == ["motif_probe"]:
+            _name = "motif_probe"
+        elif len(_rl) > 1:
+            _name = "prospective_lowE"
+        else:
+            _name = "calibration_pilot"
+        man["candidate_set"] = "%s (frozen %s)" % (_name, fb.get("freeze_sha256", "?")[:16])
         man["emitted_roles"] = list(_rl)
+        man["emitted_basin_roles"] = _actual
         man["from_basins"] = {"path": os.path.abspath(a.from_basins),
                               "sha256": hashlib.sha256(
                                   open(a.from_basins, "rb").read()).hexdigest(),
