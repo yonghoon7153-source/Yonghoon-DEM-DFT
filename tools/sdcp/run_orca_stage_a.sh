@@ -1,0 +1,210 @@
+#!/usr/bin/env bash
+# =============================================================================
+# run_orca_stage_a.sh — SDCP Stage A (중성 n=6 올리고머) ORCA Opt 실행기
+#
+# 회신 R4 (2026-08-29) 가 **조건부 GO** 를 낸 정확히 그 8잡을 위한 러너다.
+# 조건 6개를 코드로 강제한다:
+#   ① 현재 8개의 manifest·INP·XYZ SHA256 **동결** — 실행 전 기록하고, 바뀌면 멈춘다
+#   ② `--allow_*` 우회 옵션 **사용 금지** — 이 러너는 빌더를 아예 호출하지 않는다
+#   ③ 정본 입력 **읽기 전용** 보존, 계산은 **seed 별 별도 scratch 복사본**에서
+#   ④ 시작 XYZ · INP · OUT · 최종 XYZ 를 **서로 다른 파일**로 보존
+#      + SHA256 · ORCA 버전 · 실행 명령 기록
+#   ⑤ `builder_commit` 만 믿지 말고 **builder 파일 자체의 SHA256** 도 기록
+#   ⑥ 이 결과로 Stage B 를 열지 않는다 — receipt 에 그 문구를 박는다
+#
+# ⛔⛔ 이 러너가 막는 가장 큰 함정 (R4 위험 ③):
+#   ORCA 는 `* xyzfile 0 1 foo.xyz` 로 시작해 최적화가 끝나면 **`foo.xyz` 를
+#   최종구조로 덮어쓴다.** 같은 폴더에서 돌리면 **시작구조 증거가 사라진다.**
+#   → scratch 로 복사해 거기서 돌리고, 정본과 `*_start.xyz` 는 손대지 않는다.
+#
+# ⛔ 이 도구가 **못 하는 것**:
+#   · ORCA 출력의 물리적 타당성을 판정하지 않는다 (수렴·안정성 판정은 analyzer 몫).
+#   · Stage B 로 넘어가도 되는지 판단하지 않는다 — 조건 ⑥ 때문에 **넘어가면 안 된다**.
+#   · 병렬화를 위해 `%pal` 을 덧붙이는데, 그래서 **실행된 입력은 정본과 1줄 다르다.**
+#     그 차이를 숨기지 않고 receipt 에 정본 SHA·실행본 SHA·diff 를 **둘 다** 남긴다.
+#
+#   ORCA=/path/to/orca NPROCS=8 bash tools/sdcp/run_orca_stage_a.sh <stageA_dir> <work_dir>
+#   bash tools/sdcp/run_orca_stage_a.sh --selftest
+# =============================================================================
+set -uo pipefail; set +H
+
+REPO="$(cd "$(dirname "$0")/../.." && pwd)"
+BUILDER="$REPO/tools/sdcp/build_v7c_trimer.py"
+ORCA=${ORCA:-orca}
+NPROCS=${NPROCS:-8}
+MAXCORE=${MAXCORE:-6000}
+
+ts(){ echo "[$(date +%H:%M:%S)] $*"; }
+sha(){ sha256sum "$1" 2>/dev/null | cut -d' ' -f1; }
+
+# ── selftest ────────────────────────────────────────────────────────────────
+if [ "${1:-}" = "--selftest" ]; then
+  T=$(mktemp -d); ok=0; bad=0
+  chk(){ if [ "$1" = "1" ]; then echo "  ⭕ $2"; ok=$((ok+1)); else echo "  ⛔ $2"; bad=$((bad+1)); fi; }
+
+  # 가짜 stage A: gs0 하나
+  mkdir -p "$T/a/gs0"
+  printf '! RKS r2SCAN-3c Opt TightSCF Hirshfeld\n%%maxcore 6000\n* xyzfile 0 1 dp6_gs0_neutral.xyz\n' \
+    > "$T/a/gs0/dp6_gs0_neutral.inp"
+  printf '2\ncomment\nH 0.0 0.0 0.0\nH 0.0 0.0 0.9\n' > "$T/a/gs0/dp6_gs0_neutral.xyz"
+  echo '{"geometry_seeds":[{"gseed":0,"dir":"gs0","tag":"dp6_gs0_neutral"}]}' \
+    > "$T/a/manifest_stage_a.json"
+
+  # 가짜 orca: 최종 xyz 를 **덮어쓰고** out 을 낸다 (실제 ORCA 동작 재현)
+  cat > "$T/fakeorca" <<'EOS'
+#!/usr/bin/env bash
+d=$(dirname "$1"); b=$(basename "$1" .inp)
+printf '2\ncomment relaxed\nH 0.0 0.0 0.0\nH 0.0 0.0 0.74\n' > "$d/$b.xyz"
+echo "Program Version 6.1.0 - RELEASE"
+echo "THE OPTIMIZATION HAS CONVERGED"
+echo "FINAL SINGLE POINT ENERGY      -1.234567890"
+echo "****ORCA TERMINATED NORMALLY****"
+EOS
+  chmod +x "$T/fakeorca"
+
+  START_SHA=$(sha "$T/a/gs0/dp6_gs0_neutral.xyz")
+  ORCA="$T/fakeorca" NPROCS=2 bash "$0" "$T/a" "$T/w" >"$T/log" 2>&1
+  rc=$?
+  chk "$([ $rc -eq 0 ] && echo 1 || echo 0)" "정상 실행이 exit 0"
+  chk "$([ "$(sha "$T/a/gs0/dp6_gs0_neutral.xyz")" = "$START_SHA" ] && echo 1 || echo 0)" \
+      "[음성 R4③] **정본 시작 xyz 가 안 덮어써졌다** (ORCA 가 덮어쓰는 것을 scratch 가 막는다)"
+  chk "$([ -f "$T/w/gs0/dp6_gs0_neutral_start.xyz" ] && echo 1 || echo 0)" \
+      "시작 xyz 를 별도 파일로 보존한다 (*_start.xyz)"
+  chk "$([ -f "$T/w/gs0/dp6_gs0_neutral_final.xyz" ] && echo 1 || echo 0)" \
+      "최종 xyz 를 **다른 이름으로** 보존한다 (*_final.xyz)"
+  chk "$([ "$(sha "$T/w/gs0/dp6_gs0_neutral_start.xyz")" \
+        != "$(sha "$T/w/gs0/dp6_gs0_neutral_final.xyz")" ] && echo 1 || echo 0)" \
+      "시작과 최종이 서로 다른 파일·다른 내용이다"
+  for k in canonical_inp_sha256 canonical_xyz_sha256 executed_inp_sha256 \
+           final_xyz_sha256 out_sha256 orca_version builder_sha256 command; do
+    chk "$(grep -q "\"$k\"" "$T/w/gs0/receipt.json" && echo 1 || echo 0)" "receipt 에 $k"
+  done
+  chk "$(grep -q "Stage B" "$T/w/gs0/receipt.json" && echo 1 || echo 0)" \
+      "receipt 에 조건⑥(이 결과로 Stage B 를 열지 않는다) 문구"
+
+  # 음성: 정본이 실행 후 바뀌면 다음 실행이 멈춘다
+  echo "# tampered" >> "$T/a/gs0/dp6_gs0_neutral.inp"
+  ORCA="$T/fakeorca" NPROCS=2 bash "$0" "$T/a" "$T/w" >"$T/log2" 2>&1
+  chk "$([ $? -ne 0 ] && echo 1 || echo 0)" \
+      "[음성 ①] 정본 INP 가 바뀌면 **동결 위반으로 멈춘다** (조용히 재실행 안 한다)"
+  chk "$(grep -q "동결" "$T/log2" && echo 1 || echo 0)" "그 사유를 로그에 남긴다"
+
+  # 음성: ORCA 가 없으면 깨끗하게 거부
+  ORCA="$T/nonexistent_orca" bash "$0" "$T/a" "$T/w2" >"$T/log3" 2>&1
+  chk "$([ $? -ne 0 ] && echo 1 || echo 0)" "[음성] ORCA 실행파일이 없으면 거부"
+
+  rm -rf "$T"
+  echo "selftest: $ok 통과 / $bad 실패"
+  [ $bad -eq 0 ] || exit 1
+  exit 0
+fi
+
+# ── 실행 ────────────────────────────────────────────────────────────────────
+A=${1:?"stage A 디렉터리가 필요하다 (manifest_stage_a.json 이 있는 곳)"}
+W=${2:?"작업 디렉터리가 필요하다 (정본과 분리된 scratch 루트)"}
+MAN="$A/manifest_stage_a.json"
+[ -f "$MAN" ] || { ts "⛔ $MAN 이 없다"; exit 1; }
+command -v "$ORCA" >/dev/null 2>&1 || [ -x "$ORCA" ] || {
+  ts "⛔ ORCA 를 찾을 수 없다: $ORCA  (ORCA=/full/path 로 지정)"; exit 1; }
+
+LOCK=/tmp/sdcp_orca_stage_a.lock; exec 9>"$LOCK"
+command -v flock >/dev/null && { flock -n 9 || { ts "⛔ 이미 돈다"; exit 0; }; }
+
+BSHA=$(sha "$BUILDER")                                   # 조건 ⑤
+BCOMMIT=$(cd "$REPO" && git rev-parse HEAD 2>/dev/null || echo unknown)
+mkdir -p "$W"
+FREEZE="$W/FREEZE.sha256"                                # 조건 ①
+
+TAGS=$(python3 -c "
+import json,sys
+m=json.load(open('$MAN'))
+for s in m['geometry_seeds']: print(s['dir'], s['tag'])")
+[ -n "$TAGS" ] || { ts "⛔ manifest 에 geometry_seeds 가 없다"; exit 1; }
+
+# ① 동결 검사 — 처음이면 기록하고, 두 번째부터는 대조한다
+NOW=$(mktemp)
+{ echo "$(sha "$MAN")  manifest_stage_a.json"
+  while read -r d t; do
+    echo "$(sha "$A/$d/$t.inp")  $d/$t.inp"
+    echo "$(sha "$A/$d/$t.xyz")  $d/$t.xyz"
+  done <<< "$TAGS"; } | sort > "$NOW"
+if [ -f "$FREEZE" ]; then
+  if ! diff -q "$FREEZE" "$NOW" >/dev/null; then
+    ts "⛔ 정본이 **동결** 이후 바뀌었다 (R4 조건①). 차이:"
+    diff "$FREEZE" "$NOW" | head -10
+    ts "   재생성은 금지다. 되돌리거나, 새 감사 고정점으로 리뷰를 다시 받아라."
+    rm -f "$NOW"; exit 1
+  fi
+  ts "✓ 동결 대조 통과 ($(wc -l < "$FREEZE") 항목)"
+else
+  cp "$NOW" "$FREEZE"; ts "✓ 동결 기록 생성 — $FREEZE ($(wc -l < "$FREEZE") 항목)"
+fi
+rm -f "$NOW"
+
+VER=$("$ORCA" 2>&1 | grep -am1 "Program Version" | sed 's/^ *//' || true)
+
+while read -r d t; do
+  SD="$W/$d"                                              # ③ seed 별 scratch
+  if grep -aq "ORCA TERMINATED NORMALLY" "$SD/$t.out" 2>/dev/null; then
+    ts "  ✓ $d/$t 이미 완료"; continue
+  fi
+  ts "═══ $d/$t ═══"
+  mkdir -p "$SD"
+  cp "$A/$d/$t.inp" "$SD/$t.inp"
+  cp "$A/$d/$t.xyz" "$SD/$t.xyz"
+  cp "$A/$d/$t.xyz" "$SD/${t}_start.xyz"                   # ④ 시작구조 별도 보존
+  chmod a-w "$SD/${t}_start.xyz"
+
+  # 병렬화 — 정본을 안 건드리고 실행본을 따로 만든다. 차이를 receipt 에 남긴다.
+  RUN="$SD/${t}_run.inp"
+  { head -1 "$SD/$t.inp"; echo "%pal nprocs $NPROCS end"; tail -n +2 "$SD/$t.inp"; } > "$RUN"
+  CMD="$ORCA ${t}_run.inp"
+  ts "  ▶ $CMD  (nprocs $NPROCS)"
+  ( cd "$SD" && "$ORCA" "${t}_run.inp" > "$t.out" 2>&1 )
+  RC=$?
+
+  # ORCA 는 `<base>.xyz` 를 최종구조로 덮어쓴다 → 다른 이름으로 확보
+  [ -f "$SD/${t}_run.xyz" ] && cp "$SD/${t}_run.xyz" "$SD/${t}_final.xyz"
+  [ -f "$SD/${t}_final.xyz" ] || { [ -f "$SD/$t.xyz" ] && cp "$SD/$t.xyz" "$SD/${t}_final.xyz"; }
+
+  python3 - "$SD" "$t" "$A/$d" "$BSHA" "$BCOMMIT" "$CMD" "$VER" "$RC" <<'PY'
+import hashlib, json, os, sys
+sd, t, adir, bsha, bcommit, cmd, ver, rc = sys.argv[1:9]
+h = lambda p: (hashlib.sha256(open(p,'rb').read()).hexdigest()
+               if os.path.isfile(p) else None)
+start, final = f"{sd}/{t}_start.xyz", f"{sd}/{t}_final.xyz"
+r = {
+ "schema": "sdcp_stage_a_orca_receipt/v1",
+ "seed_tag": t, "returncode": int(rc),
+ "canonical_dir": os.path.abspath(adir),
+ "canonical_inp_sha256": h(f"{adir}/{t}.inp"),
+ "canonical_xyz_sha256": h(f"{adir}/{t}.xyz"),
+ "executed_inp_sha256": h(f"{sd}/{t}_run.inp"),
+ "executed_inp_differs_only_by": "%pal nprocs 줄 1개 (병렬화). 정본은 손대지 않았다",
+ "start_xyz_sha256": h(start),
+ "final_xyz_sha256": h(final),
+ "out_sha256": h(f"{sd}/{t}.out"),
+ "orca_version": ver or None,
+ "command": cmd,
+ "builder_sha256": bsha, "repo_commit": bcommit,
+ "⛔_조건6": "이 결과로 Stage B 를 열지 않는다 — P0-2~5 수정 후 실제 Stage A 산출물로 재심사 (회신 R4)",
+ "⚠": "이 8개는 서로 다른 시작 conformer 이지 통계적으로 독립인 8개 반복측정이 아니다 (회신 R4)",
+}
+r["relaxed"] = bool(r["start_xyz_sha256"] and r["final_xyz_sha256"]
+                    and r["start_xyz_sha256"] != r["final_xyz_sha256"])
+json.dump(r, open(f"{sd}/receipt.json","w"), ensure_ascii=False, indent=1)
+print(f"  receipt: relaxed={r['relaxed']} · rc={rc}")
+PY
+  grep -aq "ORCA TERMINATED NORMALLY" "$SD/$t.out" \
+    && ts "  ✓ 정상종료" || { ts "  ✗ 비정상 — 꼬리:"; tail -5 "$SD/$t.out"; }
+done <<< "$TAGS"
+
+ts "═══ 결산 ═══"
+for f in "$W"/*/receipt.json; do
+  [ -f "$f" ] || continue
+  python3 -c "
+import json,sys; r=json.load(open('$f'))
+print(f\"  {r['seed_tag']:22s} rc={r['returncode']} relaxed={r['relaxed']} \"
+      f\"final={str(r['final_xyz_sha256'])[:12]}\")"
+done
+ts "⛔ 조건⑥ — 이 결과로 Stage B 를 열지 않는다. P0-2~5 수정 후 재심사."
