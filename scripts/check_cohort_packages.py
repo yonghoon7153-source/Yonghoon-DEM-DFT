@@ -159,11 +159,20 @@ def audit(d):
 
 
 def find_packages(root):
+    """`p2_*.json` 을 가진 디렉터리를 **깊이 제한 없이** 찾는다.
+
+    ⚠ 초판은 `root/*` 한 층만 봤다.  패키지를 `docs/data/cohorts/<이름>/` 처럼 한 층
+      아래 두면 **조용히 0 개**가 되고 검사는 초록이 된다 — CLAUDE.md 작업 규율 ⑤
+      ("부분집합 필터로 훑으면 조용히 초록이 된다") 가 말하는 그 형태다.  그래서
+      깊이로 거르지 않고 **실물을 잡는다**.
+    """
     out = []
-    for d in sorted(glob.glob(os.path.join(root, '*'))):
-        if os.path.isdir(d) and glob.glob(os.path.join(d, 'p2_*.json')):
-            out.append(d)
-    return out
+    for cur, dirs, files in os.walk(root):
+        dirs.sort()
+        if any(f.startswith('p2_') and f.endswith('.json') for f in files):
+            out.append(cur)
+            dirs[:] = []          # 패키지 안으로는 더 안 들어간다
+    return sorted(out)
 
 
 def run(root=DATA, ledger=LEDGER, quiet=False):
@@ -262,6 +271,14 @@ def selftest():
         open(led, 'w').write('비는 1.200000 이고 산포는 0.000000 이다.\n')
 
         chk('① 정상 패키지는 통과', run(root, led, quiet=True) == 0)
+
+        #  ★ 중첩 배치 — 한 층 아래 두어도 찾아야 한다 (초판은 조용히 0개였다)
+        nested = os.path.join(root, 'cohorts')
+        _fixture(nested, 'deep')
+        chk('①b ★ 하위 디렉터리의 패키지도 찾는다',
+            len(find_packages(root)) == 2)
+        chk('①c ★ 중첩된 것도 검사를 통과한다', run(root, led, quiet=True) == 0)
+        import shutil as _sh; _sh.rmtree(nested)
 
         r, p, info = audit(os.path.join(root, 'good'))
         chk('② 비를 원자료에서 재계산한다', abs(r - 1.2) < 1e-12)
