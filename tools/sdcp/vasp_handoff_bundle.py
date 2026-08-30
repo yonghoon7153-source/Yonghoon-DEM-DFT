@@ -973,11 +973,20 @@ def _emit_slab_job(jd: Path, atoms, nslab: int, freeze: float, frag: str,
                             .replace("[closure · all-F", "[closure dense · all-F")}
     elif single_point:
         # MLIP 로 기하를 닫고 DFT 는 결합에너지만.
+        # ⛔⛔ 2026-08-31 — **`LREAL = .FALSE.` 를 여기서도 못박는다.**
+        #   회신 U P0-5 가 정확히 이 결함을 판정했는데(`--single_point` 가 고정기하이면서
+        #   `LREAL = Auto`), 그때 고친 것은 `closure` 가지뿐이었다. C-12 는 `--single_point`
+        #   를 쓰므로 그대로 `Auto` 가 나왔다. 실측(v5): 슬랩 static 은 `Auto` 인데
+        #   **기체 기준 static 은 `.FALSE.`** — `E_ads = E_복합체(Auto) − E_기체(.FALSE.)` 로
+        #   **한 양 안에서 두 해밀토니안이 섞였다.**
+        #   회신 U 의 이유가 그대로 적용된다: 조각 간 대비에서 LREAL 오차는
+        #   **서로 다른 흡착종이라 소거되지 않는다.**
         # ⚠ dense 는 static 의 CHGCAR 를 승계해야 하므로 ICHARG=1 이어야 한다.
         #   같은 SLAB_SP(ICHARG=2)를 재사용하면 복사한 CHGCAR 를 **안 쓴다**.
-        tpls = {"static": SLAB_SP,
-                "dense": SLAB_SP.replace("ICHARG   = 2", "ICHARG   = 1")
-                                .replace("[static · single-point]", "[dense · single-point]")}
+        _spf = SLAB_SP.replace("LREAL    = Auto", "LREAL    = .FALSE.")
+        tpls = {"static": _spf,
+                "dense": _spf.replace("ICHARG   = 2", "ICHARG   = 1")
+                             .replace("[static · single-point]", "[dense · single-point]")}
     if not prescf:
         # ⚠ pre 를 빼면 relax 의 ISTART=1 이 읽을 WAVECAR 가 없다. VASP 는 조용히
         #   처음부터 시작하므로 "승계했다" 는 기록만 남고 실제로는 안 한 게 된다.
@@ -8170,8 +8179,18 @@ def selftest() -> int:
     chk(not list(_d3.rglob("*__d3off/dense")) and not list(_d3.rglob("*__d3off/relax")),
         "[W Q2] 쌍둥이는 static 만 (dense·relax 없음)")
 
-    chk(any("LREAL    = Auto" in f.read_text() for f in _sp_inc),
-         "  (음성 대조) --single_point 만으로는 LREAL=Auto 가 남는다 — closure 가 그것을 고친다")
+    # ⛔⛔ 2026-08-31 — 이 시험은 **옛 동작을 일부러 못박고 있었다**
+    #   ("--single_point 만으로는 LREAL=Auto 가 남는다 — closure 가 그것을 고친다").
+    #   그 전제가 틀렸다. 회신 U P0-5 의 이유("조각 간 대비에서 LREAL 오차는 서로 다른
+    #   흡착종이라 소거되지 않는다")는 closure 만의 사정이 아니라 **조각을 대비하는
+    #   모든 번들**에 적용된다. C-12 가 `--single_point` 를 쓰는데 실측(v5)에서
+    #   슬랩 static 은 Auto, **기체 기준 static 은 .FALSE.** 로 나왔다 —
+    #   `E_ads = E_복합체(Auto) − E_기체(.FALSE.)` 로 한 양 안에서 해밀토니안이 섞였다.
+    #   ⇒ single_point 도 `.FALSE.` 로 못박고, 이 시험을 **양성**으로 뒤집는다.
+    chk(all("LREAL    = .FALSE." in f.read_text() for f in _sp_inc)
+        and not any("LREAL    = Auto" in f.read_text() for f in _sp_inc),
+        "[U P0-5 확장] --single_point 도 LREAL=.FALSE. 다 — 기체 기준(.FALSE.)과 "
+        "같은 해밀토니안이어야 E_ads 가 한 양이 된다 (%d개)" % len(_sp_inc))
     # ★ **배포되는 분석기**의 k 라벨·guard band selftest 를 그대로 돌린다.
     #   이 로직은 문자열 템플릿 안이라 여기서 import 로 시험할 수 없다 — 실행이 유일한 길.
     rk = subprocess.run([sys.executable, "analyze_results.py", "--selftest"],
