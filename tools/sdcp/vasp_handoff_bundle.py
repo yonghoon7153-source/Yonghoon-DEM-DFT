@@ -561,6 +561,16 @@ SEAL_POTCAR_ROOT = r'''#!/usr/bin/env bash
 set -e
 : "${PP:?PP=/path/to/potpaw_PBE.54 를 주세요}"
 : "${POTCAR_ALLOWLIST:?POTCAR_ALLOWLIST=/abs/site_allow.txt 를 주세요}"
+# ⛔ 회신 AR P0-6 — 받은 **정확한 ZIP** 과 결박한다. 번들 안에는 자기 해시를 넣을
+#   수 없으므로 현장이 받은 ZIP 에서 직접 계산해 여기서 박는다:
+#     BUNDLE_ZIP_SHA256=$(sha256sum sdcp_c12_vNN.zip | cut -d" " -f1)
+: "${BUNDLE_ZIP_SHA256:?BUNDLE_ZIP_SHA256=\$(sha256sum <받은 zip> | cut -d' ' -f1) 를 주세요}"
+case "$BUNDLE_ZIP_SHA256" in
+  [0-9a-f][0-9a-f]*) [ ${#BUNDLE_ZIP_SHA256} -eq 64 ] || {
+      echo "⛔ BUNDLE_ZIP_SHA256 이 64자리 hex 가 아닙니다"; exit 1; } ;;
+  *) echo "⛔ BUNDLE_ZIP_SHA256 이 64자리 hex 가 아닙니다"; exit 1 ;;
+esac
+printf '%s\n' "$BUNDLE_ZIP_SHA256" > ZIP_SHA256.txt
 SEAL=POTCAR_ROOT_SEAL.json
 
 # ── AP #7 ① 최초 봉인 전에 **생산 산출물이 있으면 거부** ────────────────
@@ -604,7 +614,7 @@ if [ -n "$VASP_BIN" ]; then
   VASP_SHA=$(sha256sum "$VASP_BIN" | cut -d" " -f1)
   VASP_VER=$("$VASP_BIN" --version 2>&1 | head -1 || true)
 fi
-export AL_SHA VASP_BIN VASP_SHA VASP_VER
+export AL_SHA VASP_BIN VASP_SHA VASP_VER BUNDLE_ZIP_SHA256
 python3 - <<'PYSEAL'
 import json, glob, os, sys, hashlib, time
 seal, asm, conflict = {}, {}, []
@@ -628,6 +638,7 @@ rec = {
     "vasp_executable": os.environ.get("VASP_BIN") or None,
     "vasp_executable_sha256": os.environ.get("VASP_SHA") or None,
     "vasp_version_banner": os.environ.get("VASP_VER") or None,
+    "bundle_zip_sha256": os.environ.get("BUNDLE_ZIP_SHA256") or None,
     "sealed_at_utc": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
     "sealed_before_production": True,
     "sealed_before_production_evidence":
@@ -1087,15 +1098,23 @@ POTCAR 파일 자체는 주고받지 않습니다 — 지문과 버전 문자열
 그 파일만 반송해 주시면 됩니다.
 
 ```bash
+# 먼저 받으신 ZIP 의 SHA256 을 구합니다 (번들 안에는 자기 해시를 넣을 수 없습니다)
+ZS=$(sha256sum /경로/받은번들.zip | cut -d" " -f1)
+
 PP=/path/to/potpaw_PBE.54 \
 POTCAR_ALLOWLIST=/abs/site_allow.txt \
 RELEASE_LABEL="potpaw_PBE.54" \
 SITE="기관/담당자" \
+BUNDLE_ZIP_SHA256="$ZS" \
 bash MAKE_POTCAR_ATTESTATION.sh
 ```
 
+⚠ **첫 VASP 실행 전에** 돌려 주세요. 스크립트가 OUTCAR/CONTCAR/CHGCAR 등 산출물이
+있으면 거부합니다 — "계산 전에 만들었다" 를 선언이 아니라 **검사**로 남기기
+위해서입니다.
+
 담기는 것 (회신 AP #12 목록 그대로):
-- 이 묶음 ZIP / MANIFEST.json 의 SHA256
+- 받으신 **정확한 ZIP** 의 SHA256 (BUNDLE_ZIP_SHA256) 과 MANIFEST.json 의 SHA256
 - release label 과 variant 목록
 - variant 별 **원본 파일 전체** SHA256
 - POTCAR 내부 `TITEL` 줄과 embedded hash
@@ -1115,10 +1134,24 @@ set -e
 : "${POTCAR_ALLOWLIST:?POTCAR_ALLOWLIST=/abs/site_allow.txt}"
 : "${RELEASE_LABEL:?RELEASE_LABEL='potpaw_PBE.54' 처럼 배포판 이름}"
 : "${SITE:?SITE='기관/담당자'}"
+# ⛔ 회신 AR P0-6 — 봉인과 **같은 출처**의 ZIP 해시를 쓴다 (문자열 하나).
+#   종전엔 스크립트가 근처 *.zip 을 스스로 찾아 {파일명: sha} 사전을 만들었다 —
+#   무엇에 대한 attestation 인지 모호하고 분석기와 형이 달랐다.
+: "${BUNDLE_ZIP_SHA256:?BUNDLE_ZIP_SHA256=\$(sha256sum <받은 zip> | cut -d' ' -f1)}"
+# ⛔ 회신 AR P0-6 — `made_before_production` 을 **자기선언이 아니라 산출물 부재로**
+#   입증한다. 하나라도 있으면 계산 전이 아니므로 거부한다.
+PROD=$(find . \( -name OUTCAR -o -name "OUTCAR.gz" -o -name vasprun.xml \
+                 -o -name OSZICAR -o -name CONTCAR -o -name WAVECAR \
+                 -o -name CHGCAR \) -print -quit 2>/dev/null || true)
+if [ -n "$PROD" ]; then
+  echo "⛔ 생산 산출물이 이미 있습니다: $PROD"
+  echo "   attestation 은 **첫 VASP 실행 전에만** 만들 수 있습니다 (회신 AR P0-6)."
+  exit 1
+fi
 VASP_BIN=$(command -v "${VASP_EXE:-vasp_std}")
-export VASP_BIN
+export VASP_BIN BUNDLE_ZIP_SHA256
 python3 - <<'PYA'
-import json, os, hashlib, time, subprocess, glob
+import json, os, hashlib, time, subprocess
 man = json.load(open("MANIFEST.json"))
 spec = man.get("potcar_spec") or {}
 def sha(p):
@@ -1142,23 +1175,32 @@ for el, var in sorted(spec.items()):
             emb.append(t)
         if len(titel) and ln.startswith("   END of PSCTR"):
             break
+    # ⛔ 회신 AR P0-6 — 분석기가 관측 TITEL 과 대조하므로 **문자열 하나**로 낸다
     variants[var] = {"element": el, "source_sha256": sha(f),
-                     "titel": titel[:2], "embedded_hash_lines": emb[:2]}
+                     "titel": (titel[0] if titel else ""),
+                     "titel_all": titel[:2],
+                     "embedded_hash": (emb[0] if emb else ""),
+                     "embedded_hash_lines": emb[:2]}
+    if not titel:
+        raise SystemExit("TITEL 을 못 읽었다: %s" % f)
 vb = os.environ["VASP_BIN"]
 try:
     ver = subprocess.run([vb, "--version"], capture_output=True, text=True,
                          timeout=60).stdout.strip()
 except Exception as e:
     ver = "실행 실패: %r" % e
-zips = sorted(glob.glob("../*.zip")) + sorted(glob.glob("*.zip"))
 rec = {
     "schema": "potcar_attestation/v1",
     "made_before_production": True,
+    "made_before_production_evidence":
+        "attestation 생성 시점에 OUTCAR/OUTCAR.gz/vasprun.xml/OSZICAR/CONTCAR/"
+        "WAVECAR/CHGCAR 가 하나도 없었다 (MAKE_POTCAR_ATTESTATION.sh 가 검사하고 "
+        "있으면 거부한다 — 회신 AR P0-6)",
     "release_label": os.environ["RELEASE_LABEL"],
     "site": os.environ["SITE"],
     "created_utc": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
     "manifest_sha256": sha("MANIFEST.json"),
-    "bundle_zip_sha256": {os.path.basename(z): sha(z) for z in zips[:2]},
+    "bundle_zip_sha256": os.environ["BUNDLE_ZIP_SHA256"].strip().lower(),
     "allowlist_path": os.environ["POTCAR_ALLOWLIST"],
     "allowlist_sha256": sha(os.environ["POTCAR_ALLOWLIST"]),
     "pp_root": pp,
@@ -3089,49 +3131,105 @@ def selftest_k() -> int:
         "⛔음성 AO Q1: 봉인에 없는 variant 가 관측되면 막는다")
     # 양성 — 봉인과 관측이 일치하면 라벨이 sealed_root_v13 로 올라간다
     # ⛔ 회신 AP #7 — 봉인 픽스처도 **실물 v2 스키마**여야 한다
+    # ⛔ 회신 AR P0-5 — 봉인 schema 를 **전부** 요구한다. 반쪽 봉인은 사전 승인이 아니다.
     _SEALOK = {"source_sha256": {"Ni": _H64("aa")}, "schema": "potcar_root_seal/v2",
-               "sealed_before_production": True}
-    _sealed = potcar_identity_gates(
-        _one, {"files_sha256": {"x": "y"}, "_potcar_root_seal": _SEALOK})
+               "sealed_before_production": True,
+               "sealed_before_production_evidence": "봉인 시 산출물 0건",
+               "allowlist_sha256": _H64("ab"), "manifest_sha256": _H64("dc"),
+               "bundle_zip_sha256": _H64("ed"),
+               "vasp_executable": "/opt/vasp/bin/vasp_std",
+               "vasp_executable_sha256": _H64("fa"),
+               "vasp_version_banner": "vasp.6.4.1 24Jul23",
+               "sealed_at_utc": "2026-08-31T00:00:00Z",
+               "assembled_sha256_by_job": {"p/a": _H64("1a"), "p/b": _H64("1b")}}
+    # 계획 잡 — 봉인 variant 집합과 **일치**해야 한다 (미실행 잡 포함)
+    _PLAN = {"p/a": {"meta": {"species_order": ["Ni"]}},
+             "p/b": {"meta": {"species_order": ["Ni"]}}}
+    _MBASE = {"files_sha256": {"x": "y"}, "_manifest_sha256_actual": _H64("dc"),
+              "_zip_sha256_observed": _H64("ed"), "planned": _PLAN,
+              "potcar_spec": {"Ni": "Ni"}}
+    _sealed = potcar_identity_gates(_one, dict(_MBASE, _potcar_root_seal=_SEALOK))
     chk(str(_sealed.get("identity_scope", "")).startswith("sealed_root_v13"),
         "양성 AO Q1: 봉인 일치 + 완전성 통과면 라벨이 **sealed_root_v13** 다 "
         f"(실제 {str(_sealed.get('identity_scope'))[:40]})")
     # ⛔음성 AP #7 — 생산 전 봉인이라는 근거가 없으면 sealed 라벨을 안 준다
     _nopre = potcar_identity_gates(
-        _one, {"files_sha256": {"x": "y"},
-               "_potcar_root_seal": {"source_sha256": {"Ni": _H64("aa")}}})
+        _one, dict(_MBASE, _potcar_root_seal={k: v for k, v in _SEALOK.items()
+                                              if k != "sealed_before_production"}))
     chk(any("NOT_PREPRODUCTION" in g for g in _nopre["blocking"])
         and not str(_nopre.get("identity_scope", "")).startswith("sealed_root"),
         "⛔음성 AP #7: `sealed_before_production` 근거가 없으면 막고 sealed 라벨도 "
         "안 준다 (계산 뒤에 만든 봉인과 구별되지 않는다)")
     # ⛔음성 AP #7 — 봉인이 **다른 묶음**의 MANIFEST 에 대한 것이면 막는다
     _wrong = potcar_identity_gates(
-        _one, {"files_sha256": {"x": "y"}, "_manifest_sha256_actual": _H64("cc"),
-               "_potcar_root_seal": dict(_SEALOK, manifest_sha256=_H64("dd"))})
+        _one, dict(_MBASE, _manifest_sha256_actual=_H64("ca"),
+                   _potcar_root_seal=dict(_SEALOK, manifest_sha256=_H64("da"))))
     chk(any("WRONG_BUNDLE" in g for g in _wrong["blocking"]),
         "⛔음성 AP #7: 봉인이 다른 MANIFEST 에 대한 것이면 막는다")
+
+    # ══ 회신 AR P0-5 · 해제조건 7 — 봉인 검증의 fail-open 을 닫는다 ═══════════
+    #   AR 이 재현한 것: `source_sha256` 과 `sealed_before_production:true` 만 있는
+    #   **반쪽 봉인**도 `sealed_root_v13` 라벨을 받았다.
+    _half = potcar_identity_gates(
+        _one, dict(_MBASE, _potcar_root_seal={
+            "source_sha256": {"Ni": _H64("aa")}, "sealed_before_production": True}))
+    chk(any("ROOT_SEAL_INCOMPLETE_SCHEMA" in g for g in _half["blocking"])
+        and not str(_half.get("identity_scope", "")).startswith("sealed_root")
+        and _half["root_seal_coverage"]["ok"] is False,
+        "⛔음성 AR P0-5: 반쪽 봉인(source_sha256 + 선언만)은 막고 sealed 라벨을 "
+        "안 준다 — 리뷰가 재현한 fail-open 이다")
+    for _mut, _code, _why in (
+            ({"schema": "potcar_root_seal/v1"}, "ROOT_SEAL_SCHEMA", "schema 가 v2 가 아니다"),
+            ({"manifest_sha256": "deadbeef"}, "ROOT_SEAL_BAD_HASH", "해시가 64자리가 아니다"),
+            ({"bundle_zip_sha256": _H64("cb")}, "ROOT_SEAL_ZIP_MISMATCH",
+             "봉인한 ZIP 이 받은 ZIP 과 다르다"),
+            ({"vasp_version_banner": "vasp.5.4.4"}, "ROOT_SEAL_VASP_MISMATCH",
+             "봉인 배너에 관측 버전이 없다"),
+            ({"assembled_sha256_by_job": {"p/a": _H64("1a")}}, "ROOT_SEAL_JOB_COVERAGE",
+             "계획 잡 하나가 봉인 밖이다")):
+        chk(any(_code in g for g in potcar_identity_gates(
+                _one, dict(_MBASE, _potcar_root_seal=dict(_SEALOK, **_mut)))["blocking"]),
+            "⛔음성 AR P0-5: %s → %s" % (_why, _code))
+    # 봉인이 **계획 잡이 요구하는 variant** 를 다 포괄하지 않으면 막는다
+    chk(any("ROOT_SEAL_PLAN_COVERAGE" in g for g in potcar_identity_gates(
+            _one, dict(_MBASE, planned={"p/a": {"meta": {"species_order": ["Ni", "O"]}}},
+                       potcar_spec={"Ni": "Ni", "O": "O"},
+                       _potcar_root_seal=_SEALOK))["blocking"]),
+        "⛔음성 AR P0-5: 미실행 잡이 요구하는 variant 가 봉인 밖이면 막는다 "
+        "(사전 승인은 **앞으로 돌 잡**까지 포괄해야 한다)")
+    chk(any("ROOT_SEAL_PLAN_UNREADABLE" in g for g in potcar_identity_gates(
+            _one, dict(_MBASE, planned={"p/a": {"meta": {}}},
+                       _potcar_root_seal=_SEALOK))["blocking"]),
+        "⛔음성 AR P0-5: 계획 잡에 species_order 가 없어 필요한 variant 를 못 세면 "
+        "**통과가 아니라 차단**이다")
     # ── 회신 AP #12 — release attestation 이 Methods 문구를 정한다 ────────
+    # ⛔ 회신 AR P0-6 — attestation 도 **전 필드 + 3자 집합 일치 + 교차 결박**이다
     _ATT = {"schema": "potcar_attestation/v1", "made_before_production": True,
+            "made_before_production_evidence": "생성 시 산출물 0건",
             "release_label": "potpaw_PBE.54", "site": "테스트",
-            "manifest_sha256": _H64("mm"), "allowlist_sha256": _H64("al"),
-            "vasp_version_raw": "vasp.6.4.1", "vasp_executable_sha256": _H64("vx"),
+            "created_utc": "2026-08-31T00:00:00Z",
+            "manifest_sha256": _H64("dc"), "allowlist_sha256": _H64("ab"),
+            "bundle_zip_sha256": _H64("ed"),
+            "vasp_version_raw": "vasp.6.4.1",
+            "vasp_executable": "/opt/vasp/bin/vasp_std",
+            "vasp_executable_sha256": _H64("fa"),
             "variants": {"Ni": {"element": "Ni", "source_sha256": _H64("aa"),
-                                "titel": ["TITEL  = PAW_PBE Ni_pv 01Jan2000"]}}}
-    _MB2 = {"files_sha256": {"x": "y"}, "_manifest_sha256_actual": _H64("mm"),
-            "_potcar_root_seal": _SEALOK}
+                                "titel": "TITEL  = PAW_PBE Ni 01Jan2000",
+                                "embedded_hash": "SHA256 = abc"}}}
+    _MB2 = dict(_MBASE, _potcar_root_seal=_SEALOK)
     _ra = potcar_identity_gates(_one, dict(_MB2, _potcar_attestation=_ATT))
     chk(_ra["attestation"]["usable"] and "PAW-PBE datasets from the" in
-        _ra["methods_sentence"],
+        _ra["methods_candidate"],
         "양성 AP #12: attestation 이 있으면 **release 를 적는 Methods 문구**가 나온다")
     _rn = potcar_identity_gates(_one, _MB2)
     chk(not _rn["attestation"]["present"]
-        and "단정하지 않는다" in _rn["methods_sentence"]
-        and "원고 Methods 로는 약하다" in str(_rn.get("methods_sentence_⛔")),
+        and "단정하지 않는다" in _rn["methods_candidate"]
+        and "원고 Methods 로는 약하다" in str(_rn.get("methods_candidate_⛔")),
         "⛔음성 AP #12: attestation 이 없으면 release 를 **단정하지 않고**, "
         "그 문구가 원고엔 약하다고 명시한다 (AP Q3)")
     chk(any("ATTESTATION_WRONG_BUNDLE" in g for g in potcar_identity_gates(
             _one, dict(_MB2, _potcar_attestation=dict(_ATT,
-                                                      manifest_sha256=_H64("zz"))))
+                                                      manifest_sha256=_H64("fe"))))
             ["blocking"]),
         "⛔음성 AP #12: 다른 묶음의 attestation 이면 막는다")
     chk(any("ATTESTATION_SEAL_MISMATCH" in g for g in potcar_identity_gates(
@@ -3143,10 +3241,63 @@ def selftest_k() -> int:
                 _ATT, made_before_production=False)))["blocking"]),
         "⛔음성 AP #12: 계산 전에 만든 근거가 없는 attestation 은 막는다")
 
+    # ══ 회신 AR P0-6 · 해제조건 7 — attestation fail-open 을 닫는다 ══════════
+    #   AR 이 재현한 것: `FAKE_RELEASE` 와 **실제 사용 집합에 없는** `UNRELATED`
+    #   variant 하나만 준 합성 attestation 이 usable:true 가 되고 강한 Methods
+    #   문장을 냈다. 이제 세 집합의 완전일치를 요구한다:
+    #     attestation variants = root-seal source variants = 계획 잡 POTCAR variants
+    _fake = potcar_identity_gates(_one, dict(_MB2, _potcar_attestation=dict(
+        _ATT, release_label="FAKE_RELEASE",
+        variants={"UNRELATED": {"element": "Xx", "source_sha256": _H64("ce"),
+                                "titel": "TITEL  = PAW_PBE Xx", "embedded_hash": "h"}})))
+    chk(_fake["attestation"]["usable"] is False
+        and any("ATTESTATION_SET_MISMATCH" in g for g in _fake["blocking"])
+        and any("ATTESTATION_PLAN_MISMATCH" in g for g in _fake["blocking"])
+        and "단정하지 않는다" in _fake["methods_candidate"],
+        "⛔음성 AR P0-6: FAKE_RELEASE + 쓰지도 않는 UNRELATED variant 는 "
+        "usable 이 아니고 강한 Methods 문구도 안 나온다 — 리뷰가 재현한 fail-open")
+    for _mut, _code, _why in (
+            ({"bundle_zip_sha256": _H64("cb")}, "ATTESTATION_ZIP_MISMATCH",
+             "받은 ZIP 과 다른 ZIP 을 말한다"),
+            ({"allowlist_sha256": _H64("ba")}, "ATTESTATION_ALLOWLIST_MISMATCH",
+             "봉인과 다른 allowlist"),
+            ({"vasp_executable_sha256": _H64("bd")}, "ATTESTATION_VASP_MISMATCH",
+             "봉인과 다른 VASP 바이너리"),
+            ({"vasp_version_raw": "vasp.5.4.4"}, "ATTESTATION_VASP_VERSION_MISMATCH",
+             "봉인 배너와 다른 버전"),
+            ({"made_before_production_evidence": ""},
+             "ATTESTATION_PREPRODUCTION_UNEVIDENCED", "생산 전 근거가 선언뿐이다"),
+            ({"site": None}, "ATTESTATION_INCOMPLETE", "site 가 없다"),
+            ({"created_utc": None}, "ATTESTATION_INCOMPLETE", "created_utc 가 없다"),
+            ({"variants": {"Ni": {"element": "Ni", "source_sha256": _H64("aa")}}},
+             "ATTESTATION_VARIANT_FIELDS", "variant 에 titel/embedded_hash 가 없다")):
+        _rr = potcar_identity_gates(_one, dict(_MB2, _potcar_attestation=dict(_ATT, **_mut)))
+        chk(any(_code in g for g in _rr["blocking"]) and not _rr["attestation"]["usable"],
+            "⛔음성 AR P0-6: %s → %s" % (_why, _code))
+    # ZIP 관측이 아예 없으면 "결박 확인 못 함" 이고 그것은 통과가 아니다
+    _nz = potcar_identity_gates(_one, dict(_MB2, _zip_sha256_observed=None,
+                                           _potcar_attestation=_ATT))
+    chk(any("ATTESTATION_ZIP_UNBOUND" in g for g in _nz["blocking"])
+        and not _nz["attestation"]["usable"],
+        "⛔음성 AR P0-6: 받은 ZIP 의 SHA 를 모르면 **확인 못 함 = 통과 아님**")
+    # 관측 TITEL 과 attestation 의 TITEL 이 다르면 막는다
+    _jt = {"a": dict(_J2("aa", "6.4.1"),
+                     static={"vasp_version": "6.4.1", "normal_end": True, "E0": -1.0,
+                             "titels": ["PAW_PBE Ni 09Sep1999"]})}
+    chk(any("ATTESTATION_TITEL_MISMATCH" in g for g in potcar_identity_gates(
+            _jt, dict(_MB2, _potcar_attestation=_ATT))["blocking"]),
+        "⛔음성 AR P0-6: 관측 TITEL 에 없는 TITEL 을 attestation 이 주장하면 막는다")
+    # 양성 — allowed_claim 이 두 상태를 구분한다 (필드명 AR Q5)
+    chk(_ra.get("allowed_claim") == "paw_release_attested"
+        and _rn.get("allowed_claim") == "bundle_conditional_only"
+        and "후보 문구" in str(_ra.get("methods_candidate_⚠")),
+        "회신 AR Q5: 필드명이 methods_candidate/allowed_claim 이고 **후보**임을 "
+        "명시한다 (도구가 원고를 채택하지 않는다)")
+
     # ⛔음성 AP #7 — blocking 이 있으면 **절대** sealed 라벨이 안 나온다
     _mm = potcar_identity_gates(
-        _one, {"files_sha256": {"x": "y"},
-               "_potcar_root_seal": dict(_SEALOK, source_sha256={"Ni": _H64("bb")})})
+        _one, dict(_MBASE, _potcar_root_seal=dict(_SEALOK,
+                                                  source_sha256={"Ni": _H64("bb")})))
     chk(any("ROOT_SEAL_MISMATCH" in g for g in _mm["blocking"])
         and not str(_mm.get("identity_scope", "")).startswith("sealed_root"),
         "⛔음성 AP #7: ROOT_SEAL_MISMATCH 와 sealed 라벨이 **동시에** 나오지 않는다 "
@@ -4016,9 +4167,24 @@ def potcar_identity_gates(jobs, man):
     """
     res = {"schema": "potcar_identity/v1", "blocking": [], "n_with_prov": 0,
            "pin": (man or {}).get("potcar_pin"), "observed": {}}
+    _spec_map = (man or {}).get("potcar_spec") or {}
     src, ver = {}, {}
+    # ⛔ 회신 AR P0-6 — attestation 의 TITEL 을 **관측과 대조**하려면 관측 TITEL 을
+    #   variant 별로 모아야 한다. provenance 의 titel_lines 와 OUTCAR 의 titels
+    #   둘 다 " PAW_PBE Ni_pv 06Sep2000" 꼴이라 variant 토큰으로 색인한다.
+    _titel_obs = {}
+
+    def _titel_index(line):
+        for _tok in str(line or "").replace("=", " ").split():
+            if _tok in _spec_map.values() or _tok in _spec_map:
+                _titel_obs.setdefault(_tok, set()).add(str(line).strip())
+
     for jn, jr in sorted((jobs or {}).items()):
         pv = (jr.get("geom") or {}).get("potcar_provenance") or jr.get("_prov")
+        for _tl in ((pv or {}).get("titel_lines") or []):
+            _titel_index(_tl)
+        for _tl in (((jr.get("static") or {}) or {}).get("titels") or []):
+            _titel_index(_tl)
         if not pv:
             continue
         res["n_with_prov"] += 1
@@ -4037,14 +4203,15 @@ def potcar_identity_gates(jobs, man):
             "VASP_VERSION_SPLIT(묶음 안에서 %s — 다른 코드 세대의 에너지를 뺄 수 없다)"
             % sorted(ver))
     res["observed"] = {"source_sha256": {e: sorted(d) for e, d in src.items()},
-                       "vasp_version": sorted(ver)}
+                       "vasp_version": sorted(ver),
+                       "titel_by_variant": {k: sorted(v) for k, v in
+                                            sorted(_titel_obs.items())}}
     # ⛔⛔ 회신 AO P0-8 (2026-08-31) — 종전 검사는 **관측된 것끼리 갈리지 않으면 통과**
     #   였다. source sha 가 일부·전부 없어도, VASP 버전이 0개 관측이어도 막지 않았다.
     #   그래서 `identity_scope = self_consistent_only`("14잡 신원 일치 확인") 라벨이
     #   사실보다 강했다. ⇒ **에너지를 낸 모든 잡**에 대해 기대되는 **모든 variant** 의
     #   원본 SHA256(64자리)과 정확한 VASP 버전을 필수로 한다.
     #   ⚠ 아직 안 돈 잡은 세지 않는다 (단계별 실행에서 2단계가 비어 있는 것은 정상).
-    _spec_map = (man or {}).get("potcar_spec") or {}
 
     def _is_hex64(x):
         x = str(x or "")
@@ -4124,21 +4291,93 @@ def potcar_identity_gates(jobs, man):
     #   대조한다. 사후 provenance 끼리만 비교하는 것은 사전 승인과 같지 않다.
     _seal = ((man or {}).get("_potcar_root_seal") or {}).get("source_sha256") or {}
     _seal_rec = ((man or {}).get("_potcar_root_seal") or {})
+    # ⛔⛔ 회신 AR P0-5/P0-6 · 해제조건 7 (2026-08-31) — 종전 검증은 **fail-open** 이었다.
+    #   `source_sha256` 과 `sealed_before_production:true` 만 있는 반쪽 봉인도
+    #   `sealed_root_v13` 라벨을 받았고, `FAKE_RELEASE` + 실제로 쓰지 않는
+    #   `UNRELATED` variant 하나짜리 합성 attestation 도 `usable:true` 가 됐다.
+    #   ⇒ ① 봉인 schema 를 **전부 필수**로 ② 봉인·attestation·실제 계획 잡의
+    #     variant 집합을 **완전일치**로 ③ manifest/ZIP/allowlist/VASP 신원까지 결박.
+    #   ⚠ 여기서 "계획 잡" 은 미실행 2단계를 포함한다 — 봉인은 앞으로 돌 잡의
+    #     기대 POTCAR 까지 포괄해야 사전 승인이다 (AR Q4).
+    _plan_var, _plan_nospec = set(), []
+    for _pj, _pl in sorted(((man or {}).get("planned") or {}).items()):
+        _els = list(((_pl or {}).get("meta") or {}).get("species_order") or [])
+        if not _els:
+            _plan_nospec.append(_pj)
+            continue
+        _plan_var |= {str(_spec_map.get(e, e)) for e in _els}
+    _mh = (man or {}).get("_manifest_sha256_actual")
+    _zip_obs = (man or {}).get("_zip_sha256_observed")
+    _cov, _covwhy = False, []
     if _seal:
         res["root_seal_variants"] = sorted(_seal)
         res["root_seal_meta"] = {
             k: _seal_rec.get(k) for k in
-            ("schema", "allowlist_sha256", "manifest_sha256", "vasp_executable_sha256",
-             "vasp_version_banner", "sealed_at_utc", "sealed_before_production")}
-        # ⛔ 회신 AP #7 — 봉인이 **이 묶음의** MANIFEST 에 대한 것인지 확인한다
-        _mh = (man or {}).get("_manifest_sha256_actual")
-        if _seal_rec.get("manifest_sha256") and _mh and _seal_rec["manifest_sha256"] != _mh:
+            ("schema", "allowlist_sha256", "manifest_sha256", "vasp_executable",
+             "vasp_executable_sha256", "vasp_version_banner", "sealed_at_utc",
+             "sealed_before_production")}
+        # ── ① schema 전부 필수 (없는 것은 통과가 아니다) ──────────────────
+        _seal_need = ("schema", "allowlist_sha256", "manifest_sha256",
+                      "vasp_executable", "vasp_executable_sha256",
+                      "vasp_version_banner", "sealed_at_utc", "bundle_zip_sha256",
+                      "assembled_sha256_by_job", "sealed_before_production_evidence")
+        _seal_miss = [k for k in _seal_need if not _seal_rec.get(k)]
+        if _seal_miss:
+            res["blocking"].append(
+                "ROOT_SEAL_INCOMPLETE_SCHEMA(봉인에 %s 가 없다 — 반쪽 봉인은 "
+                "사전 승인이 아니다)" % _seal_miss)
+        if str(_seal_rec.get("schema") or "") != "potcar_root_seal/v2":
+            res["blocking"].append(
+                "ROOT_SEAL_SCHEMA(schema=%r — potcar_root_seal/v2 가 아니다)"
+                % _seal_rec.get("schema"))
+        for _hk in ("allowlist_sha256", "manifest_sha256", "vasp_executable_sha256",
+                    "bundle_zip_sha256"):
+            if _seal_rec.get(_hk) and not _is_hex64(_seal_rec[_hk]):
+                res["blocking"].append("ROOT_SEAL_BAD_HASH(%s)" % _hk)
+        # 봉인이 말하는 ZIP 과 실제로 받은 ZIP 이 같은가 (둘 다 있을 때만 대조)
+        if (_zip_obs and _seal_rec.get("bundle_zip_sha256")
+                and _seal_rec["bundle_zip_sha256"] != _zip_obs):
+            res["blocking"].append(
+                "ROOT_SEAL_ZIP_MISMATCH(봉인 %s ≠ 받은 ZIP %s — 다른 배포본을 "
+                "봉인했다)" % (str(_seal_rec["bundle_zip_sha256"])[:12], str(_zip_obs)[:12]))
+        # ── ② 봉인이 **계획 잡 전체**를 포괄하는가 ────────────────────────
+        if _plan_nospec:
+            res["blocking"].append(
+                "ROOT_SEAL_PLAN_UNREADABLE(계획 잡 %d개에 species_order 가 없어 "
+                "필요한 variant 를 셀 수 없다: %s)"
+                % (len(_plan_nospec), _plan_nospec[:3]))
+        elif _plan_var and set(_seal) != _plan_var:
+            res["blocking"].append(
+                "ROOT_SEAL_PLAN_COVERAGE(봉인 variant %s ≠ 계획 잡이 요구하는 %s — "
+                "미실행 잡의 기대 POTCAR 까지 포괄해야 사전 승인이다)"
+                % (sorted(_seal), sorted(_plan_var)))
+        _asm = (_seal_rec.get("assembled_sha256_by_job") or {})
+        _plan_dirs = sorted((man or {}).get("planned") or {})
+        _asm_miss = [j for j in _plan_dirs if j not in _asm]
+        if _asm and _asm_miss:
+            res["blocking"].append(
+                "ROOT_SEAL_JOB_COVERAGE(봉인의 assembled 해시에 계획 잡 %d개가 "
+                "없다: %s)" % (len(_asm_miss), _asm_miss[:3]))
+        # ── ③ 이 묶음의 MANIFEST 인가 (해시가 없으면 그것도 실패다) ────────
+        if not _seal_rec.get("manifest_sha256") or not _mh:
+            res["blocking"].append(
+                "ROOT_SEAL_MANIFEST_UNBOUND(봉인 또는 현재 MANIFEST 해시가 없어 "
+                "결박을 확인할 수 없다)")
+        elif _seal_rec["manifest_sha256"] != _mh:
             res["blocking"].append(
                 "ROOT_SEAL_WRONG_BUNDLE(봉인이 다른 MANIFEST 에 대한 것이다: "
                 "봉인 %s ≠ 지금 %s)" % (_seal_rec["manifest_sha256"][:12], _mh[:12]))
         if _seal_rec.get("sealed_before_production") is not True:
             res["blocking"].append(
                 "ROOT_SEAL_NOT_PREPRODUCTION(봉인이 생산 전이라는 근거가 없다)")
+        # ── ④ 실제로 돌린 VASP 와 결박 ────────────────────────────────────
+        _seal_ver = str(_seal_rec.get("vasp_version_banner") or "")
+        _obs_ver = sorted(ver)
+        _ver_bad = [v for v in _obs_ver if v and v not in _seal_ver]
+        if _obs_ver and _seal_ver and _ver_bad:
+            res["blocking"].append(
+                "ROOT_SEAL_VASP_MISMATCH(봉인 배너 %r 에 관측 버전 %s 가 없다 — "
+                "봉인한 바이너리로 돌았다는 근거가 없다)" % (_seal_ver[:40], _ver_bad[:2]))
         for _v, _sh in sorted(_seal.items()):
             _got = sorted(src.get(_v, {}))
             if _ran and not _got:
@@ -4158,45 +4397,108 @@ def potcar_identity_gates(jobs, man):
     #   고르게 두면 강한 쪽을 고르게 된다. attestation 유무가 문구를 정한다.
     _att = (man or {}).get("_potcar_attestation") or {}
     _att_ok = False
+    _att_why = []
     if _att:
+        # ⛔⛔ 회신 AR P0-6 · 해제조건 7 — **exact-set 및 교차 결박**을 요구한다.
+        #   종전엔 `FAKE_RELEASE` + 실제 쓰지 않는 `UNRELATED` variant 하나짜리
+        #   합성 attestation 도 usable:true 였다. 다음 셋의 **완전일치**를 본다:
+        #     attestation variants = root-seal source variants = 계획 잡 POTCAR variants
         _need_att = ("release_label", "variants", "vasp_version_raw",
-                     "vasp_executable_sha256", "allowlist_sha256", "manifest_sha256")
+                     "vasp_executable", "vasp_executable_sha256", "allowlist_sha256",
+                     "manifest_sha256", "bundle_zip_sha256", "site", "created_utc",
+                     "made_before_production_evidence")
         _att_miss = [k for k in _need_att if not _att.get(k)]
-        _att_wrong = (_att.get("manifest_sha256")
-                      and (man or {}).get("_manifest_sha256_actual")
-                      and _att["manifest_sha256"]
-                      != man["_manifest_sha256_actual"])
+        _av = set(_att.get("variants") or {})
+        if _att_miss:
+            _att_why.append("ATTESTATION_INCOMPLETE(필드 누락 %s)" % _att_miss)
+        if (_att.get("manifest_sha256") and _mh
+                and _att["manifest_sha256"] != _mh):
+            _att_why.append("ATTESTATION_WRONG_BUNDLE(다른 MANIFEST 에 대한 "
+                            "attestation 이다: %s ≠ %s)"
+                            % (str(_att["manifest_sha256"])[:12], str(_mh)[:12]))
+        elif not _mh:
+            _att_why.append("ATTESTATION_MANIFEST_UNBOUND(현재 MANIFEST 해시가 없다)")
+        # 정확한 ZIP SHA — 받은 ZIP 과 결박한다 (관측값이 없으면 결박 실패다)
+        if not _zip_obs:
+            _att_why.append("ATTESTATION_ZIP_UNBOUND(받은 ZIP 의 SHA256 이 없다 — "
+                            "`--zip_sha256 <sha>` 로 넘기거나 ZIP_SHA256.txt 를 "
+                            "번들에 넣어야 정확한 ZIP 결박을 확인할 수 있다)")
+        elif str(_att.get("bundle_zip_sha256") or "") != str(_zip_obs):
+            _att_why.append("ATTESTATION_ZIP_MISMATCH(attestation %s ≠ 받은 ZIP %s)"
+                            % (str(_att.get("bundle_zip_sha256"))[:12], str(_zip_obs)[:12]))
+        if (_att.get("allowlist_sha256") and _seal_rec.get("allowlist_sha256")
+                and _att["allowlist_sha256"] != _seal_rec["allowlist_sha256"]):
+            _att_why.append("ATTESTATION_ALLOWLIST_MISMATCH(봉인과 다른 allowlist)")
+        for _k in ("vasp_executable", "vasp_executable_sha256"):
+            if (_att.get(_k) and _seal_rec.get(_k) and _att[_k] != _seal_rec[_k]):
+                _att_why.append("ATTESTATION_VASP_MISMATCH(%s: attestation 과 봉인이 "
+                                "다른 바이너리를 말한다)" % _k)
+        if (_att.get("vasp_version_raw") and _seal_rec.get("vasp_version_banner")
+                and str(_att["vasp_version_raw"]) not in
+                str(_seal_rec["vasp_version_banner"])):
+            _att_why.append("ATTESTATION_VASP_VERSION_MISMATCH(%r vs 봉인 %r)"
+                            % (str(_att["vasp_version_raw"])[:30],
+                               str(_seal_rec["vasp_version_banner"])[:30]))
         _att_var_bad = [v for v, d in (_att.get("variants") or {}).items()
                         if not _is_hex64((d or {}).get("source_sha256"))]
-        if _att_miss:
-            res["blocking"].append(
-                "ATTESTATION_INCOMPLETE(필드 누락 %s)" % _att_miss)
-        elif _att_wrong:
-            res["blocking"].append(
-                "ATTESTATION_WRONG_BUNDLE(다른 MANIFEST 에 대한 attestation 이다)")
-        elif _att_var_bad:
-            res["blocking"].append(
-                "ATTESTATION_VARIANT_SHA_BAD(%s)" % _att_var_bad[:3])
-        elif _att.get("made_before_production") is not True:
-            res["blocking"].append(
-                "ATTESTATION_NOT_PREPRODUCTION(계산 전에 만든 근거가 없다)")
-        else:
-            # 봉인과 attestation 이 **같은 원본 지문**을 말하는가
-            _mis = sorted(v for v, d in (_att.get("variants") or {}).items()
-                          if _seal.get(v) and _seal[v] != d.get("source_sha256"))
-            if _mis:
-                res["blocking"].append(
-                    "ATTESTATION_SEAL_MISMATCH(%s: attestation 과 root seal 의 "
-                    "원본 sha 가 다르다)" % _mis[:3])
-            else:
-                _att_ok = True
+        if _att_var_bad:
+            _att_why.append("ATTESTATION_VARIANT_SHA_BAD(%s)" % _att_var_bad[:3])
+        # variant **집합**의 완전일치 — 부분집합도 초과집합도 안 된다
+        if _seal and _av != set(_seal):
+            _att_why.append("ATTESTATION_SET_MISMATCH(attestation %s ≠ root seal %s)"
+                            % (sorted(_av), sorted(_seal)))
+        if _plan_var and _av != _plan_var:
+            _att_why.append("ATTESTATION_PLAN_MISMATCH(attestation %s ≠ 계획 잡이 "
+                            "요구하는 %s — 쓰지도 않는 variant 로는 release 를 "
+                            "주장할 수 없다)" % (sorted(_av), sorted(_plan_var)))
+        # TITEL·embedded hash 를 variant 마다 요구하고 관측과 대조한다
+        for _v, _d in sorted((_att.get("variants") or {}).items()):
+            _d = _d or {}
+            if not _d.get("titel") or not _d.get("embedded_hash"):
+                _att_why.append("ATTESTATION_VARIANT_FIELDS(%s: titel/embedded_hash "
+                                "가 없다)" % _v)
+            if _seal.get(_v) and _seal[_v] != _d.get("source_sha256"):
+                _att_why.append("ATTESTATION_SEAL_MISMATCH(%s: attestation 과 root "
+                                "seal 의 원본 sha 가 다르다)" % _v)
+            _obs_t = sorted(set(_titel_obs.get(_v) or []))
+            if _obs_t and _d.get("titel") and _d["titel"] not in _obs_t:
+                _att_why.append("ATTESTATION_TITEL_MISMATCH(%s: attestation %r 가 "
+                                "관측 TITEL %s 에 없다)" % (_v, _d["titel"], _obs_t[:2]))
+        # `made_before_production` 은 **자기선언이 아니라 산출물 부재**로 입증한다
+        if _att.get("made_before_production") is not True:
+            _att_why.append("ATTESTATION_NOT_PREPRODUCTION(계산 전에 만든 근거가 없다)")
+        elif not str(_att.get("made_before_production_evidence") or "").strip():
+            _att_why.append("ATTESTATION_PREPRODUCTION_UNEVIDENCED(선언만 있고 "
+                            "산출물 부재 검사 기록이 없다)")
+        _att_ok = not _att_why
+        res["blocking"].extend(_att_why)
     res["attestation"] = {
         "present": bool(_att), "usable": _att_ok,
+        "why_not": _att_why[:6],
+        "checked": ["schema 필드 전건", "manifest 해시", "정확한 ZIP 해시",
+                    "allowlist", "VASP 경로·해시·버전", "variant 집합 3자 완전일치",
+                    "variant 별 TITEL·embedded hash·원본 sha", "생산 전 근거"],
         "release_label": _att.get("release_label"),
         "site": _att.get("site"), "created_utc": _att.get("created_utc")}
+    # ── 회신 AR 해제조건 5 — stage-1 선결조건이 읽는 **봉인 포괄** 판정 ────
+    _seal_blk = [b for b in res["blocking"] if b.startswith("ROOT_SEAL")]
+    _cov = bool(_seal) and not _seal_blk
+    res["root_seal_coverage"] = {
+        "ok": _cov,
+        "why": (_seal_blk[:3] if _seal_blk else
+                ("봉인이 없다 — 생산 전 root seal 을 만들지 않았다" if not _seal else
+                 "봉인이 현재 MANIFEST·계획 잡 %d개·variant %s 를 포괄한다"
+                 % (len((man or {}).get("planned") or {}), sorted(_seal)))),
+        "sealed_variants": sorted(_seal),
+        "planned_variants": sorted(_plan_var),
+        "⛔": ("이 판정은 '봉인이 이 묶음을 포괄한다' 까지다 — 봉인한 트리가 "
+               "공식 배포판인지는 attestation 의 몫이다")}
     _vv = sorted(ver) or [_att.get("vasp_version_raw")]
+    # ⛔ 회신 AR Q5 — 필드명을 `methods_sentence` 에서 바꾼다. 도구는 **후보 문구**를
+    #   고를 뿐 원고 채택 권한이 없다. 최종 채택은 사람의 검토를 거친다.
     if _att_ok and not (res.get("blocking") or []):
-        res["methods_sentence"] = (
+        res["allowed_claim"] = "paw_release_attested"
+        res["methods_candidate"] = (
             "Calculations were performed using VASP %s with PAW-PBE datasets from the "
             "%s release (%s). Each source dataset was identified by its embedded VASP "
             "hash and a full-file SHA-256 fingerprint fixed before production; the "
@@ -4205,16 +4507,21 @@ def potcar_identity_gates(jobs, man):
             % (_vv[0], _att.get("release_label"),
                ", ".join(sorted(_att.get("variants") or {}))))
     else:
-        res["methods_sentence"] = (
+        res["allowed_claim"] = "bundle_conditional_only"
+        res["methods_candidate"] = (
             "⚠ 공식 release 를 단정하지 않는다 — 계산 전 attestation 이 %s. "
             "허용 문구: 'the reported D is conditional on this bundle's PAW dataset; "
             "the fingerprints were not independently matched to an archived POTCAR "
             "release.' (회신 AP #12·Q3)"
             % ("없다" if not _att else "있으나 사용 불가"))
-        res["methods_sentence_⛔"] = (
+        res["methods_candidate_⛔"] = (
             "이 문구는 내부 기록용으로는 되지만 **원고 Methods 로는 약하다**(AP Q3). "
             "원고에 PAW release 를 적으려면 POTCAR_ATTESTATION_REQUEST.md 를 "
             "외주처에 보내 계산 전에 받아야 한다")
+    res["methods_candidate_⚠"] = ("이것은 **후보 문구**다 (회신 AR Q5). 도구가 "
+                                  "검증 상태로 상한을 정할 뿐이고, 원고 채택은 "
+                                  "사람이 검토한 뒤에 한다. 더 강한 문장으로 "
+                                  "바꿔 쓰지 말 것.")
     # ⛔ 회신 AJ — 종전 pin 대조는 **세 군데가 fail-open** 이었다:
     #   ① 관측이 비면 `if got and ...` 이 참이 안 돼 조용히 건너뛰었다
     #   ② VASP 버전이 하나도 관측 안 되면 `sorted(ver) in ([], ...)` 이 통과시켰다
@@ -5630,6 +5937,20 @@ def main():
             open(os.path.join(root, "POTCAR_ATTESTATION.json")))
     except Exception:
         man["_potcar_attestation"] = None
+    # ⛔ 회신 AR P0-6 — attestation 은 **정확한 ZIP** 과도 결박돼야 한다.
+    #   받은 ZIP 의 SHA256 은 번들 안에 있을 수 없으므로(자기 해시) 두 경로로 받는다:
+    #     ① `--zip_sha256 <sha>`  ② 번들 루트의 ZIP_SHA256.txt (verify_zip 이 남긴다)
+    #   둘 다 없으면 "결박 확인 못 함" 이고 그것은 **통과가 아니다**.
+    _zsha = None
+    if "--zip_sha256" in sys.argv:
+        _zi = sys.argv.index("--zip_sha256")
+        _zsha = sys.argv[_zi + 1] if len(sys.argv) > _zi + 1 else None
+    if not _zsha:
+        try:
+            _zsha = open(os.path.join(root, "ZIP_SHA256.txt")).read().split()[0]
+        except Exception:
+            _zsha = None
+    man["_zip_sha256_observed"] = (_zsha or "").strip().lower() or None
     spec = man.get("potcar_spec", {})
     planned = man.get("planned", {})
 
@@ -6993,6 +7314,46 @@ def main():
                                 "why": (_pi.get("blocking") or [])[:2]
                                        or _pi.get("identity_scope")},
         }
+        # ⛔⛔ 회신 AR 해제조건 5 (2026-08-31) — 위 네 조건만으로는
+        #   **이미 primary estimand 가 실패한 뒤에도** STAGE1_PASS 를 쓰고 2단계를
+        #   열 수 있었다. δ_gas 도 pm1 topology 도 잔여 exact/global block 도
+        #   보지 않았기 때문이다. 네 개를 더 결박한다.
+        #   ⚠ 이 네 조건은 **1단계 산출만으로 판정 가능한 것들**이다 —
+        #     2단계(대안자세·net4)의 미실행을 요구하지 않는다.
+        _gbd = (_cl.get("gas_box_delta") or {})
+        _gpc = (_cl.get("gas_pair_contract") or {})
+        _gas_why = ([b for b in (_cl.get("blocks") or [])
+                     if b.startswith(("GAS_BOX", "GAS_PAIR"))][:2]
+                    or {"delta_gas_meV": _gbd.get("delta_gas_meV"),
+                        "tol_meV": _gbd.get("tol_meV")})
+        _pre["gas_box_delta"] = {
+            "pass": bool(_gbd.get("pass") is True and _gpc.get("ok") is True),
+            "why": _gas_why}
+        _tp1 = ((_cl.get("estimand_topology") or {}).get("pm1") or {})
+        _pre["estimand_topology_pm1"] = {
+            "pass": bool(_tp1 and _tp1.get("same") is True and not _tp1.get("blocks")),
+            "why": (_tp1.get("blocks") or [])[:2]
+                   or ("두 complex 가 같은 자기 branch (%s)" % _tp1.get("why")
+                       if _tp1 else "pm1 topology 판정이 없다")}
+        # 잔여 exact-estimand / 전역 차단 — pooled_diagnostic 만 제외한다
+        #   (그 강등은 회신 AP #3 에서 근거를 남기고 한 것이고, 정본 blocks 는
+        #    회신 AR Q1 이후 그대로 남아 있으므로 여기서 scope 로 걸러야 한다)
+        _recs = (_cl.get("block_records") or [])
+        _res_blk = [r["msg"] for r in _recs
+                    if r.get("scope") in ("estimand", "global")
+                    and r.get("affects_estimand") is not False]
+        # 구조화되지 않은 옛 문자열 block 도 남아 있으면 통과가 아니다
+        _unstruct = [b for b in (_cl.get("blocks") or [])
+                     if b not in {r["msg"] for r in _recs}]
+        _pre["closure_blocks_clear"] = {
+            "pass": not _res_blk and not _unstruct,
+            "why": ([b[:70] for b in (_res_blk + _unstruct)][:3]
+                    or "exact/global closure block 0건")}
+        # 생산 전 root seal 이 **이 manifest 와 예정 잡 전체**를 포괄하는가
+        _sealcov = (_cl.get("root_seal_coverage") or _pi.get("root_seal_coverage") or {})
+        _pre["root_seal_covers_plan"] = {
+            "pass": bool(_sealcov.get("ok") is True),
+            "why": (_sealcov.get("why") or "root seal 포괄 검사 결과가 없다")}
         _pre_bad = [k for k, v in _pre.items() if not v["pass"]]
         print("■ stage-1 prerequisites:")
         for _k, _v in _pre.items():
