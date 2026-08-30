@@ -89,7 +89,24 @@
 - 부수 실측: 큰 셀 단일시드 D RSD **8.4 %** ⇒ D_rel(1시드/1시드) RSD 11.8 %
   = 게이트 여유 10 % 가 **0.84σ**. 그리고 `D_rel(300)/D_rel(600) = exp(−ΔEa/k·600)` 이라
   600 K 게이트가 300 K σ 대리가 되려면 ΔEa < **5 meV** 여야 한다.
-- 리뷰 대기: `kb/reviews/codex_AL_prompt_cascade_d_rel_2026_08_30.md`
+- ⛔⛔ **회신 AL 접수 = NO-GO** (312 GPU-h 본계산 **및 5×2 파일럿 둘 다 금지**).
+  `kb/reviews/codex_AL_reply_cascade_d_rel_2026_08_30.md`
+  - **내 '같은 구조' 전제가 틀렸다** — 동일성 물증으로 쓴 `screen_de_per_atom` 은
+    **anneal 전** 값인데 축(BVS·G)은 anneal 뒤 `post_relax.xyz` 에서 계산된다.
+    실측: 227 삼중쌍에서 anneal 전은 110개 일치, **anneal 후는 0개** (중앙 산포 6e-3).
+    원인은 `run_anneal.py` 가 Langevin RNG·초기속도 seed 를 안 받는 것.
+    ⇒ ρ 0.22·Jaccard 0.23–0.27 은 **파이프라인 재실행 불안정성**이지 metric 재현성이 아니다.
+  - **P0-1** 39 target 이 합성 벡터다 (축마다 독립 중앙값 ⇒ 어느 실제 행에도 없다).
+    이름을 구조 ID 로 쓰면 predictor(config A)와 D(config B)를 상관시킨다.
+  - **P0-2** 집계식 불일치 — `median(3m+b) ≠ 3·median(m)+median(b)`.
+    실측 **169/227** 설계가 다르다 (최대차 0.0696).
+  - **P0-4** `|ρ|<0.2 ⇒ 축 근거 없음` **삭제**. n=39 에서 ρ̂=0 도 Fisher 95% ±0.31.
+    ±0.2 동등성엔 n≥69 필요하고 39개는 독립도 아니다 (30 dopant·10여 구조환경).
+  - **P0-5** tracer D 는 σ 게이트가 아니다 — σ비 = (n_Li 비)(D* 비)(H_R 비)이고
+    Li 수가 host 24 대비 **18–28** 이다. Deng 7%/31% 는 표면코팅 pellet EIS 라 이식 불가.
+    ⇒ estimand 를 **600 K 조건부 tracer D_rel** 로 한정하고 300 K σ·0.90 게이트는 **제거**.
+  - **해제조건 8개** (회신 §실행 승인 해제조건) 를 다 채우기 전엔 안 던진다.
+    파일럿도 39 밖 sentinel 이거나 blind 여야 한다 — rank-spaced 5×2 는 **격리 실패**.
 
 **⛔ 아직 없는 것 (착수 전 필수)**
 0. **재평가 잡음 원인** (위 🔴🔴) — 이게 먼저다.

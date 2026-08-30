@@ -568,11 +568,13 @@ def _selftest():
         "[안정성·음성] 끝이 sNN 이 아니면 None")
 
     def _mk(i, x, s, bvs, g, pu, mvf, de="-1.0"):
+        # ⚠ 2026-08-30 — 동일성 프로브가 `anneal_E_post_per_atom` 으로 바뀌었다
+        #   (회신 AL P0-3: 축은 anneal **뒤** 구조에서 계산된다). 픽스처도 그 열을 갖는다.
         return {"name": f"D{i}_{x}_site_{s}", "composition_A": str(i),
                 "cation_site": "c", "anion_site": "a", "charge_compensation": "cc",
                 "bvs_li_proxy_score": str(bvs), "elastic_G_hill_GPa": str(g),
                 "elastic_pugh_GoverB": str(pu), "migration_volume_fraction": str(mvf),
-                "screen_de_per_atom": de}
+                "anneal_E_post_per_atom": de, "screen_de_per_atom": "-9.0"}
     SAX = [("bvs_li_proxy_score", "BVS", True), ("elastic_G_hill_GPa", "G", True),
            ("elastic_pugh_GoverB", "Pugh", False),
            ("migration_volume_fraction", "MVF", True)]
@@ -625,6 +627,22 @@ def _selftest():
     SAX_EMPTY = SAX + [("D_rel_vs_host", "D비", True)]
     say(stability(R, axes=SAX_EMPTY)["info"]["n_triplets"] == 40,
         "ⓕ [음성] 한 줄도 없는 축은 자동으로 빠진다 (안 빼면 삼중쌍이 0 이 된다)")
+    # ⛔ 2026-08-30 (회신 AL P0-3) — **동일성은 anneal 뒤 값으로 본다.**
+    #   초판은 anneal **전** `screen_de_per_atom` 을 봤는데, 정작 채점 축(BVS·G)은
+    #   500 K anneal 뒤 `post_relax.xyz` 에서 계산된다. 실측으로 갈렸다:
+    #   227 삼중쌍에서 anneal 전은 110개가 일치하는데 anneal 후는 **0개**다.
+    say(IDENTITY_PROBE == "anneal_E_post_per_atom",
+        "ⓖ 동일성 프로브는 축이 실제로 계산되는 **anneal 뒤** 구조의 값이다")
+    R5 = []
+    for i in range(40):                      # anneal 전은 같은데 anneal 후가 갈린 경우
+        for j, x in enumerate(X_LABELS):
+            r = _mk(i, x, "s00", 0.5, 10, 0.6, 0.1, de="-1.%06d" % (j * 500000))
+            r["screen_de_per_atom"] = "-1.000000"     # 전 단계는 완전히 일치
+            R5.append(r)
+    say(stability(R5, axes=SAX)["info"]["n_triplets"] == 0,
+        "ⓖ [음성·핵심] anneal **전**이 일치해도 **후**가 갈리면 동일 구조가 아니다")
+    say(stability(R5, axes=SAX, strict=False)["info"]["n_triplets"] == 40,
+        "ⓖ --loose_identity 로는 들어온다 — 단 그건 '파이프라인 재실행 안정성' 이다")
 
     print("  " + ("✅ selftest 통과" if ok else "⛔ selftest 실패"))
     return 0 if ok else 1
@@ -699,11 +717,20 @@ def print_pareto(front, scored, ax, total):
 #:      그 셋이 얼마나 갈리는지가 곧 그 축의 **재평가 잡음**이다.
 X_LABELS = ("x020", "x050", "x100")
 
-#: 구조 동일성의 물증으로 쓰는 축 — 같은 구조면 에너지는 같은 값이 나와야 한다.
-#:   ⚠ 이 축은 `INVALID_AXES` 다 (2026-08-19: 기준이 미수렴이라 **절대값 인용 금지**).
-#:     여기서는 값을 인용하지 않고 **같은 구조가 같은 숫자를 주는지**만 본다 — 자기일치
-#:     검사라서 기준의 수렴 여부와 무관하다. 채점 축으로는 절대 쓰지 않는다.
-IDENTITY_PROBE = "screen_de_per_atom"
+#: 구조 동일성의 물증으로 쓰는 축.
+#:   ⛔⛔ **2026-08-30 정정 (회신 AL P0-3).** 초판은 `screen_de_per_atom` 을 썼는데
+#:     그건 **anneal 전** 값이다. 정작 채점 축(BVS·탄성 G)은 500 K anneal 뒤의
+#:     `post_relax.xyz` 에서 계산된다. 즉 **엉뚱한 단계의 에너지로 동일성을 주장했다.**
+#:     실측으로 갈렸다 — 227 삼중쌍에서
+#:       anneal 전 `screen_de` 가 1e-4 안에서 일치: **110개**
+#:       anneal 후 `anneal_E_post_per_atom` 이 일치:  **0개** (상대산포 중앙 6e-3, 최대 2.8e-2)
+#:     예: Ag2O_cLi24gaS16e_s00 삼중쌍 post-anneal E = −4.1964 / −4.1888 / −4.1113 eV/atom,
+#:         부피변화 −7.97 / −3.69 / −2.85 %.
+#:   ⇒ 삼중쌍은 **같은 구조가 아니다.** `tools/doping/run_anneal.py` 가 Langevin RNG·
+#:     초기속도 seed 를 받지도 기록하지도 않아서, 비결정적 anneal 이 서로 다른 endpoint 로 간다.
+#:   ⇒ 이 도구가 재는 것은 "동일 구조의 metric 재현성" 이 **아니라**
+#:     `config → anneal → axes → score → rank/front` **파이프라인 전체의 재실행 안정성**이다.
+IDENTITY_PROBE = "anneal_E_post_per_atom"
 #: 이 상대편차 안이면 '같은 구조' 로 본다 (실측 중앙값은 1e-4 급).
 IDENTITY_TOL = 1e-4
 
@@ -742,13 +769,18 @@ def retest_triplets(rows, need, strict=True):
     for r in rows:
         g.setdefault(design_key(r, comp_cols), []).append(r)
     trip, n_mixed_seed, n_partial, n_not_identical = [], 0, 0, 0
+    n_extra_seeds = 0
     for _k, rs in g.items():
         got = [r for r in rs if all(_f(r.get(c)) is not None for c in need)]
         by = {}
         for r in got:
             x, s = replicate_label(r.get("name", "")), seed_label(r.get("name", ""))
             by.setdefault(s, {})[x] = r
-        full = [d for d in by.values() if set(d) == set(X_LABELS)]
+        # ⛔ 2026-08-30 (회신 AL P0-3) — 초판은 `full[0]` 하나만 썼다. 시드가 여럿이면
+        #   **어느 시드를 잡느냐에 따라 ρ 가 달라지는 순서 의존**이 된다. 시드를 정렬해
+        #   결정론적으로 고르고, 몇 개를 버렸는지 센다.
+        full = [by[sd] for sd in sorted(by) if set(by[sd]) == set(X_LABELS)]
+        n_extra_seeds += max(0, len(full) - 1)
         if not full:
             if got:
                 if len(got) >= len(X_LABELS):
@@ -766,7 +798,8 @@ def retest_triplets(rows, need, strict=True):
         trip.append(d)
     return trip, {"n_designs": len(g), "n_triplets": len(trip),
                   "n_mixed_seed": n_mixed_seed, "n_partial": n_partial,
-                  "n_not_identical": n_not_identical, "strict": strict}
+                  "n_not_identical": n_not_identical, "strict": strict,
+                  "n_extra_seeds_unused": n_extra_seeds}
 
 
 def _mean(xs):
@@ -834,14 +867,24 @@ def stability(rows, axes=None, strict=True):
 def print_stability(s):
     i = s["info"]
     print("\n" + "=" * 78)
-    print("■ 재평가 안정성 — **같은 구조를 세 번 잰 값이 같은 순위를 주나**")
+    print("■ 재실행 안정성 — **파이프라인을 다시 돌리면 같은 순위·front 가 나오나**")
     print(f"   삼중쌍 **{i['n_triplets']}개** / {i['n_designs']}설계 "
           f"(같은 시드 안의 x020·x050·x100"
           + (f" · {IDENTITY_PROBE} 일치 {IDENTITY_TOL:g} 이내" if i["strict"] else "") + ")")
     print(f"   제외: 시드 섞임 {i['n_mixed_seed']} · 축 결측 {i['n_partial']} · "
           f"에너지 불일치 {i['n_not_identical']}")
     if not s["retest"]:
-        print(f"   ⛔ 삼중쌍이 {MIN_N}개 미만이거나 축이 비어 판정하지 않는다.")
+        if i["strict"] and i["n_not_identical"] and not i["n_triplets"]:
+            print(f"   ⛔ **동일 구조 삼중쌍이 하나도 없다** ({i['n_not_identical']}개 전부 "
+                  f"{IDENTITY_PROBE} 불일치).")
+            print("      ⇒ 이 CSV 로는 *동일 구조의 metric 재현성* 을 못 잰다. anneal 이")
+            print("        비결정적이라(run_anneal.py 가 RNG·초기속도 seed 를 안 받는다)")
+            print("        복제본마다 다른 endpoint 로 간다 — 회신 AL P0-3.")
+            print("      ⇒ 재실행 **전체**의 안정성을 보려면 --loose_identity 를 준다.")
+            print("        그 수치는 '같은 구조를 다시 쟀다' 가 **아니라** "
+                  "'파이프라인을 다시 돌렸다' 이다.")
+        else:
+            print(f"   ⛔ 삼중쌍이 {MIN_N}개 미만이거나 축이 비어 판정하지 않는다.")
         return
     print("\n   축별 재검사 상관 (ρ=1 이면 완전 재현):")
     for k, v in s["retest"].items():
@@ -853,9 +896,11 @@ def print_stability(s):
     print("     크기: " + " · ".join(f"{k} {v}" for k, v in s["front"].items()))
     print("     겹침(Jaccard): " + " · ".join(
         f"{k} {v:.2f}" for k, v in s["jaccard"].items() if v is not None))
-    print("\n   ⛔ 이 표는 **어느 값이 옳은지 말하지 않는다.** 축이 자기 자신을 얼마나"
-          "\n      재현하는지만 잰다 — 그게 낮으면 그 축으로 세운 순위·front·사전등록의"
-          "\n      판정력이 그만큼 깎인다 (감쇠 상한 = √(재검사 신뢰도)).")
+    print("\n   ⛔ 이 표는 **어느 값이 옳은지 말하지 않는다.** 그리고 `--loose_identity` 면"
+          "\n      **동일 구조의 재현성이 아니라 파이프라인 재실행의 안정성**이다"
+          "\n      (anneal 이 비결정적이라 복제본이 서로 다른 endpoint 다 — 회신 AL P0-3)."
+          "\n      ⛔ 이 ρ 를 D 와의 상관 **상한**으로 쓰지 마라 — 고전 감쇠식이라면"
+          "\n         감쇠계수는 √ρ 이고, Spearman·중앙값·이분산 anneal 에는 그것도 안 맞는다.")
 
 
 def main():
