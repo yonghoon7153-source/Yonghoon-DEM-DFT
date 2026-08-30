@@ -5270,6 +5270,16 @@ def build_bundle(a, ledger: Optional[Dict[str, Any]] = None) -> Path:
         _rf_on = [k for k in man["planned"] if not k.startswith("prospective/")]
         _cx_tw = [v for v in twins.values() if v.startswith("prospective/")]
         _rf_tw = [v for v in twins.values() if not v.startswith("prospective/")]
+        # ★ **어떻게 만들었는지를 산출물이 답하게 한다.** v9 까지 MANIFEST 에 호출
+        #   인자가 없어서 재생성 명령을 번들 내용에서 **역추론**해야 했다 (플래그
+        #   하나만 틀려도 다른 번들이 나온다). 설명이 아니라 실물이 답해야 한다.
+        man["invocation"] = {
+            "argv": list(sys.argv[1:]),
+            "flags": {k: v for k, v in sorted(vars(a).items())
+                      if not k.startswith("_") and v not in (None, False, [], "")},
+            "⚠": ("`argv` 는 이 번들을 만든 실제 명령이다. 재생성은 이것을 그대로 "
+                  "쓴다 — 번들 내용에서 플래그를 역추론하지 마라"),
+        }
         man["job_census"] = {
             "references": {"endpoints": len(_rf_on), "d3_off_twins": len(_rf_tw),
                            "총": len(_rf_on) + len(_rf_tw)},
