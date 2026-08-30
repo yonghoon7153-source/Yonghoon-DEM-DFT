@@ -70,6 +70,9 @@ run 'reduce_arm_payloads     --selftest' python3 scripts/reduce_arm_payloads.py 
 #    **부호만 뒤집어도** A = 2 로 h1 을 통과했다.  원 사전등록 정의는 절댓값이다.
 #    `regr-sign-flip` 이 u = −v → A = 0 → h0 을 단언한다 (옛 식이 2.0 을 냈을 것도 함께).
 run 'bridge_grid_verdict    --selftest' python3 scripts/bridge_grid_verdict.py --selftest
+#  ★ 2026-08-31 — STEP B 판정기.  사전등록 문턱(0.10/0.30)이 **파일 안에서 동결**돼
+#    있고 selftest 첫 줄이 그 값을 대조한다 ⇒ 결과를 보고 문턱을 옮기면 여기서 터진다.
+run 'ion_r_verdict          --selftest' python3 scripts/ion_r_verdict.py --selftest
 #  ★★ LHS 확장 분석기 둘 (2026-08-29, Codex R11 B1) — **결과가 나오기 전에** 배선한다.
 #    R11: "추출기와 적합기를 결과 전에 커밋해야 사전등록의 규약이 실재한다."  런이 끝난 뒤
 #    분석기를 짜면 규약이 데이터를 보고 정해지고, 그때는 사전등록이 아니다.
