@@ -43,6 +43,12 @@ SHARED_AXES = ('vox_um', 'bridge_um', 'sdcp_bridge_um', 'ptfe_block_um',
 #  ② **같은 침대끼리** 시나리오 사이에서 같아야 하는 축 (침대가 안 바뀌었다는 증거).
 #     ⚠ 두 침대 사이에서는 당연히 다르다 — 그래서 ① 과 분리한다.
 PER_BED_AXES = ('input_digest',)
+#  ③ **코드가 안 바뀌었다는 증거.**  ⚠ 2026-08-31 실사고: 런 도중에 러너 워크트리를
+#     체크아웃해 `code_sha` 가 시나리오 1 과 2·3 사이에서 갈렸다.  그때 바뀐 것은
+#     argparse 도움말 문자열뿐이라 수치는 무관했지만, **그 판단은 사람이 사후에 한
+#     것이고 검사에는 없었다.**  "무해했다" 와 "검사가 봤다" 는 다르다.
+#     ⇒ 기본은 HOLD, 넘기려면 `--accept-code-drift 사유` 로 **사유를 남겨야** 한다.
+CODE_AXES = ('code_sha',)
 #  ③ 시나리오 사이에서 **달라야** 하는 축 (등록된 유일한 자유축).
 SWEPT_AXIS = 'sigma_ion_sdcp_S_cm'
 #  ④ σ_SE 는 전 시나리오 동일해야 한다 (prereg §3).  ref = 등록값, applied = T-스케일 후.
@@ -82,7 +88,8 @@ def read_arm(path):
             'se': m.get(SE_AXIS, s.get(SE_AXIS)),
             'se_applied': m.get(SE_APPLIED_AXIS, s.get(SE_APPLIED_AXIS)),
             'axes': axes,
-            'bed_axes': {k: m.get(k) for k in PER_BED_AXES}}
+            'bed_axes': {k: m.get(k) for k in PER_BED_AXES},
+            'code_axes': {k: m.get(k) for k in CODE_AXES}}
 
 
 def read_dir(d):
@@ -111,7 +118,7 @@ def read_dir(d):
     return beds
 
 
-def judge(scen):
+def judge(scen, accept_code_drift=None):
     """scen = [(name, beds), …] → 판정 dict.  문턱은 동결.
 
     `beds` = `read_dir()` 의 반환 (`{'SBE': arm, 'DBE': arm}`).  **비는 여기서 나눈다** —
@@ -135,6 +142,28 @@ def judge(scen):
             if diff:
                 raise SystemExit(f'HOLD — {bed} 침대가 시나리오 사이에서 바뀌었다 '
                                  f'({scen[0][0]} vs {nm}): {diff}')
+    #  ③-2b 코드가 안 바뀌었는가.  ⚠ 침대 사이에서도 같아야 한다 — 한 시나리오 안에서
+    #      SBE 와 DBE 가 다른 코드로 돌았다면 그 쌍대응 자체가 성립하지 않는다.
+    codes = {}
+    for nm, bd in scen:
+        for bed in ('SBE', 'DBE'):
+            for k, v in bd[bed]['code_axes'].items():
+                codes.setdefault(k, {}).setdefault(v, []).append(f'{nm}/{bed}')
+    drift = {k: v for k, v in codes.items() if len(v) > 1}
+    if drift and not accept_code_drift:
+        det = '; '.join(f'{k}: ' + ' vs '.join(f'{val!s:.12}…({",".join(w)})'
+                                               for val, w in sorted(v.items(), key=str))
+                        for k, v in drift.items())
+        raise SystemExit(
+            f'HOLD — 시나리오 사이에서 코드가 바뀌었다: {det}\n'
+            '  런 도중에 러너 워크트리를 체크아웃하면 이렇게 된다.  같은 코드로 다시 돌리거나,\n'
+            '  바뀐 것이 수치와 무관함을 확인했다면 --accept-code-drift "사유" 로 사유를 남길 것.')
+    if drift:
+        print(f'  ⚠ code drift 를 사유와 함께 통과시킨다: {accept_code_drift}')
+        for k, v in drift.items():
+            for val, w in sorted(v.items(), key=str):
+                print(f'      {k} = {val} ← {", ".join(w)}')
+
     #  ④ σ_SE 고정 — 등록값과 실제 적용값 **둘 다**.
     for key, label in (('se', 'σ_ion(SE) 등록값'), ('se_applied', 'σ_ion(SE) 적용값')):
         vals = {bd[b][key] for _, bd in scen for b in ('SBE', 'DBE')}
@@ -195,7 +224,7 @@ def _man(sdcp, se, bed, **over):
          'fibre_stamp': 'segment', 'periodic_xy': False, 'plate_rule': 'p1',
          'sigma_vgcf_S_cm': 78.5398, 'sigma_sdcp_S_cm': 250.0,
          'origin_shift_um': [0, 0, 0],
-         'input_digest': f'digest-{bed}',
+         'input_digest': f'digest-{bed}', 'code_sha': 'abc123',
          SWEPT_AXIS: sdcp, SE_AXIS: se, SE_APPLIED_AXIS: se}
     m.update(over)
     return m
@@ -357,6 +386,21 @@ def selftest():
     ok, why = raises(lambda: judge(scen_of(('MG', a))), '2개 미만')
     chk('음성 — 시나리오 하나면 폭이 정의되지 않는다', ok, why)
 
+    #  ★ 2026-08-31 실사고 회귀 — 런 도중 워크트리 체크아웃으로 code_sha 가 갈렸다.
+    drift = _mk(tmp, 'codedrift', PROD, SE, 1.0, 1.1, man={'code_sha': 'def456'})
+    ok, why = raises(lambda: judge(scen_of(('MG', a), ('X', drift))), '코드가 바뀌었다')
+    chk('음성 — 시나리오 사이 code_sha 가 갈리면 HOLD', ok, why)
+    #    한 시나리오 **안에서** 두 침대가 다른 코드로 돌아도 잡아야 한다 (쌍대응 무효).
+    half_code = _mk(tmp, 'codehalf', PROD, SE, 1.0, 1.1,
+                    per_bed={'DBE': {'code_sha': 'def456'}})
+    ok, why = raises(lambda: judge(scen_of(('MG', a), ('X', half_code))), '코드가 바뀌었다')
+    chk('음성 — 한 시나리오 안에서 침대끼리 코드가 갈려도 HOLD', ok, why)
+    #    사유를 주면 통과하되, 사유 없이 조용히 통과하는 길은 없다.
+    jd = judge(scen_of(('MG', a), ('X', drift)), accept_code_drift='도움말 문자열만 바뀜')
+    chk('사유를 주면 통과한다 (조용한 통과 경로는 없다)', jd['verdict'] in ('h1', 'h0', 'INDETERMINATE'))
+    chk('회귀 — 코드가 같으면 사유 없이 통과',
+        judge(scen_of(('MG', a), ('RSA', b)))['verdict'] in ('h1', 'h0', 'INDETERMINATE'))
+
     print(f'\n{len(fails)} failure(s)')
     return 1 if fails else 0
 
@@ -366,6 +410,9 @@ def main():
         description='STEP B 판정기 — σ_ion 비의 r-민감도 (사전등록 문턱 동결)')
     ap.add_argument('dirs', nargs='*', help='시나리오 OUTDIR (MG RSA PROD 순)')
     ap.add_argument('--names', default='MG,RSA,PROD', help='시나리오 이름 (쉼표)')
+    ap.add_argument('--accept-code-drift', metavar='REASON', default=None,
+                    help='시나리오 사이에서 code_sha 가 갈린 것을 **사유와 함께** 통과시킨다. '
+                         '사유는 보고에 그대로 찍힌다.  기본은 HOLD.')
     ap.add_argument('--selftest', action='store_true')
     a = ap.parse_args()
     if a.selftest:
@@ -376,7 +423,7 @@ def main():
     if len(names) < len(a.dirs):
         names += [f'S{i}' for i in range(len(names), len(a.dirs))]
     scen = [(nm, read_dir(d)) for nm, d in zip(names, a.dirs)]
-    res = judge(scen)
+    res = judge(scen, accept_code_drift=a.accept_code_drift)
     _report(scen, res)
     return 0
 
