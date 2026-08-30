@@ -1,6 +1,6 @@
 # kb 카탈로그 (생성물 — 손으로 고치지 말 것)
 
-> `python3 tools/kb_wiki.py index` 가 만든다 · 2026-08-30 · managed-files: 310
+> `python3 tools/kb_wiki.py index` 가 만든다 · 2026-08-30 · managed-files: 311
 
 규칙: kb/SCHEMA.md · 열린 질문: kb/questions/ · 논지 카드: kb/syntheses/ · 원장: kb/open_items.md · 문헌: litdb/INDEX.md
 
@@ -170,7 +170,7 @@
 - `kb/results/vgcf_hbn_figure_plan.md` — VGCF/h-BN 원고 — 층수 연구를 어디에 둘 것인가 (2026-07-31 결정)
 - `kb/results/vgcf_hbn_gallery_mechanism_2026_07_30.md` — h-BN@VGCF — 209 meV 층수효과의 정체: confinement 확정 (2026-07-30)
 
-## reviews/ (65)
+## reviews/ (66)
 - `kb/reviews/ECERD2600097_review_notes.md` — 📝 리뷰 노트 — ECER-D-26-00097 (Fan 외, *Stability Issues in Sulfide-Based ASSB*)
 - `kb/reviews/codex_AA_prompt_stageA_v5_regate_2026_08_29.md` — Codex 재검토 요청 AA — 회신 Z 의 P0 8건 처리 후 Stage A v5 재게이트 ○미열람
 - `kb/reviews/codex_AB_prompt_stageA_v9_regate_2026_08_29.md` — Codex 재검토 요청 AB — 회신 AA 의 P0 5건 + Q2 처리, 그리고 자체검토에서 나온 넷 ○미열람
@@ -217,6 +217,7 @@
 - `kb/reviews/codex_R4_prompt_doped_reopen_impl2_2026_08_28.md` — Codex 회신 R4 요청 프롬프트 — R3 P0 전건 구현 재제출 (receipt·analyzer·계약 증빙) ○미열람
 - `kb/reviews/codex_R_doped_reopen_v2_reply_2026_08_28.md` — 회신 R — Stage 0 NO-GO: 재심사 조건 8 (U_eff 자료부재 · 기체상 retention 자명 · conditioning 오염) ○미열람
 - `kb/reviews/codex_R_prompt_doped_reopen_v2_2026_08_28.md` — Codex 회신 R 요청 프롬프트 — doped 재개 설계 v2 의 계산 전 심사 ○미열람
+- `kb/reviews/codex_S_prompt_backbone_polaron_estimand_2026_08_31.md` — 리뷰 요청 S — SDCP 백본 폴라론 estimand (계산 전, §1–3 선심사) ○미열람
 - `kb/reviews/codex_S_prompt_t13_msd_length_2026_08_29.md` — Codex 회신 S 요청 프롬프트 — T13 (MSD 생산길이 200 ps 타당성) 판정 + ⏭-2 착수 가부 ○미열람
 - `kb/reviews/codex_T_prompt_sdcp_binding_energy_path_2026_08_29.md` — Codex 회신 T 요청 — 중성 SO₃H 흡착에너지를 원고에 넣는 최단 경로 ○미열람
 - `kb/reviews/codex_U_prompt_neutral_close_plan_2026_08_29.md` — Codex 회신 U 요청 — 중성 SDCP 흡착 **닫힘 조건 사전등록** + 자세·기준 동시 교정 계획 ○미열람
