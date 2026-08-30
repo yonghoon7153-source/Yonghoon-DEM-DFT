@@ -1767,6 +1767,30 @@
    "hold_reason": "★★ 2026-08-25 (R5-CX-06, Codex 5차 canonical NO-GO) — 이 값들은 전부 **p1 plate rule** (옛 `cond`-우선 표면 선택) 로 푼 것이다.  p2(`p2-occupied-surface-first`) 는 판에 붙는 셀 집합을 바꾸므로 σ_e 절대값이 달라진다.  ★ **비도 안전하지 않다** — 공통모드 상쇄의 근거가 없고(κ_DBE = κ_SBE 를 보인 적이 없다), plate rule 은 같은 conductivity solve 를 쓰므로 σ_ion·STEP4 에도 걸린다.  ⇒ 재측정(새 p2 GPU 8팔) 전까지 **인용 금지**.  역사 기록은 이 항목 안에 그대로 보존된다 — 지우지 말 것.",
    "hold_since": "2026-08-25",
    "superseded_by_protocol": "p2-occupied-surface-first"
+  },
+  {
+   "id": "CL-59",
+   "date": "2026-08-31",
+   "status": "live",
+   "kind": "hypothesis",
+   "claim": "σ_ion 비가 **미식별 파라미터 `r = σ_ion(SDCP)/σ_ion(SE)` 에 얼마나 의존하는가** — Fig 4b 에 이온을 실을 수 있는지의 게이트",
+   "measured": {
+    "metric": "R(r) = σ_ion_eff(DBE)/σ_ion_eff(SBE) (arm 0 쌍대응, vox 0.15 · 구 스탬프 Ø0.30 · PTFE centerline · σ_ion(SE) 0.00357 고정) · W = (max R − min R)/mean R",
+    "value": "MG   r=0.018400 (σ_ion_sdcp 6.5688e-05) → SBE 6.585636e-04 · DBE 6.455487e-04 · R **0.980238**\nRSA  r=0.173700 (6.20109e-04)          → SBE 6.585636e-04 · DBE 6.566943e-04 · R **0.997162**\nPROD r=0.333333 (1.19e-03)             → SBE 6.585636e-04 · DBE 6.640011e-04 · R **1.008257**\nW = **0.0282**  ·  같은 부호 = **False**",
+    "unit": "dimensionless"
+   },
+   "asserted": "펠릿 측정의 model-form 비식별성(RSA r=0.1737 vs MG r=0.0184, 9.45배)이 **보고량인 비로 전파되는가**",
+   "h0": "비가 비식별성을 물려받는다 — W ≥ 0.30 또는 부호가 갈린다",
+   "h1": "전파되지 않는다 — 세 R 이 같은 부호 ∧ W ≤ 0.10",
+   "h0_predicts": "부호 갈림 또는 W ≥ 0.30",
+   "h1_predicts": "같은 부호 ∧ W ≤ 0.10",
+   "resolution": "판정선은 두 조건의 곱이고 사전등록 §4 에서 동결됐다",
+   "prereg": "docs/reviews/ion_r_sensitivity_prereg_20260831.md (런 전 커밋 c1bcec0c) · §7 개정도 값 봉인 상태에서 등록",
+   "bridge": "같은 침대쌍·같은 origin(0,0,0)·같은 격자·같은 스탬프 규약.  움직인 것은 `--sigma-ion-sdcp` 하나뿐이고 `--sigma-ion-se` 는 0.00357 고정.  판정기 `scripts/ion_r_verdict.py` 가 규약축 14개·침대 digest·code_sha 를 전수로 대조하고, 비를 payload 의 자기 신고가 아니라 σ 원자료에서 다시 나눈다.",
+   "shared_input": "두 침대는 같은 DEM AM+SE 입력 골격(scaffold SHA 동일)에 레시피만 다르다 (W2, 2026-08-27 세대, ADD_E_SET_20260818).",
+   "verdict": "── 2026-08-31 **실측 · 판정 = h0** ──\n등록된 h1 은 **두 조건의 곱**이었고 **폭은 통과, 부호가 실패**다: W = 0.0282 는 h1 문턱 0.10 을 한참 밑돌지만 세 R 이 1 을 가로지른다(0.980 · 0.997 · 1.008).\n⇒ **방향을 말할 수 없다.**  `r` 을 18.1배 흔들면 비가 2.8 % 밖에 안 움직이는데, 비 자체가 1 근처라 그 2.8 %가 부호를 바꾼다.  사전등록이 물은 것이 정확히 이것이고 답이 나왔다.\n★ **물리적 내용**: 어느 규약에서도 |R − 1| < 2 % ⇒ 0.5 wt% SDCP 치환은 SE 가 지배하는 이온망을 사실상 안 건드린다.  이온 손해도 이득도 없다.\n★ **음성 대조가 완전 통과** (판정기가 보지 않는 것): SBE σ_ion 이 세 팔에서 6.585636e-04 로 **7자리까지 동일**하다.  SBE 에는 SDCP 가 없으므로 이 축이 아무 영향도 주지 말아야 하고 정확히 그렇다 ⇒ 축이 건드려야 할 것만 건드렸다.\n★ **옛 이온 결함이 해소된 상태의 측정이다**.  원장 §6-1 의 \"쟀는데 못 쓴다\"(SBE 의 PTFE 1 wt% 가 격자에 없어 비대칭)는 `PTFE_STAMP=centerline` 으로 **양 침대에 바인더를 그려** 해소됐다.\n⇒ **결과**: Fig 4b 의 비는 전자 전용 (등록 §4).  σ_ion 은 §7 개정대로 **규약 span** 으로 싣는다 — 빠지지 않는다.  **D13 · 8팔 이온 런은 원고에 불필요해졌다.**\n⛔ 쓸 수 없는 것: \"σ_ion 이 증가/감소한다\"(부호 미식별) · span 의 평균·중앙값(§7-4) · `r` 값 자체(식별 안 됨).\n⚠ 미완: §7-3 이 요구하는 네 번째 규약 `r = 0`(SDCP 이온 절연) 팔이 이 등록의 세 시나리오에 없다 — span 표를 채우려면 한 팔 더 필요하다.\n⚠ arm 0 한 팔씩이라 origin 산포가 없다.  등록이 그것을 근거로 8팔을 면제했다(같은 규약 8팔 산포 0.30 % vs 문턱 10~30 %).",
+   "date_resolved": "2026-08-31",
+   "provenance": "러너 `scripts/sdcp_gain_vox015_8arm.sh` — `ARMS=1 LEAN=3 VOX=0.15 SDCP_SPHERE_D=0.30 PTFE_STAMP=centerline SIGMA_ION_SE=0.00357 SIGMA_ION_SDCP={6.5688e-05, 6.20109e-04, 1.19e-03}` (2026-08-31, kgy, 사용자 실행).\n출력: `~/sdcp/prereg_v2_vox015_sph_b048_ptscenterline_isd{6568800e-05_…_r53ddbaf5af0a, 6201090e-04_…_r58b263e5e586, 1190000e-03_…_rf454bf61b6d8}_arm1`.\n판정: `scripts/ion_r_verdict.py` (문턱 동결, selftest 24/24).\n⚠ 이력: 첫 실행에서 시나리오 1 의 DBE 와 시나리오 2 전체가 `RCPT|code_sha|differ` 로 거부됐다 — 런 도중 러너 워크트리를 체크아웃했다가 되돌린 탓이다 (원장 §19).  거부된 팔은 **재활용하지 않고** 같은 코드(657c2192)에서 다시 돌렸다."
   }
  ],
  "quotation_ban": [
