@@ -1034,8 +1034,44 @@ if want("prereq"):
         npt = txt.count("  ▶ ")
         if run:
             live()          # ⛔ 이걸 안 찍으면 **도는 중인데도 접힌다** (2026-08-28 실측)
+        # ★ 2026-08-30 — 프로세스 생존만 보고 "진행 중" 이라 찍고 있었다. 그런데
+        #   run_prereq_chain.sh 는 GPU 가 안 비면 `while …; do sleep 600; done` 으로
+        #   **로그 없이 잔다**. 살아 있지만 아무 진행이 없는 상태를 정상처럼 보여준다 —
+        #   이 파일 머리말이 경고한 그 오탐(재부팅 인지)과 같은 종류다.
+        #   실측: 08-28 01:15 이후 58시간 무로그인데 화면은 "🔄 진행 중" 이었다.
+        #   ⇒ **로그 나이와 GPU 게이트를 같이 찍는다** (ELF 절은 이미 그렇게 한다).
+        _plm = mtime(f)
+        _page = (NOW - datetime.fromtimestamp(_plm)).total_seconds() / 60 if _plm else 1e9
+        _stall = run and _page > 90        # 정상 SCF 점 간격보다 넉넉히 크게
         print(f"  로그 {os.path.basename(f)} · SCF 시작 {npt}점 · "
+              f"로그 {_page:.0f}분 전 · "
               f"{'🔄 진행 중' if run else '⏹ 안 돌고 있다'}")
+        if _stall:
+            def _gpu_free_mib():
+                """GPU 여유 MiB. **못 재면 None** — 0 이나 큰 수로 때우지 않는다."""
+                try:
+                    q = subprocess.run(
+                        ["nvidia-smi", "--query-gpu=memory.total,memory.used",
+                         "--format=csv,noheader,nounits"],
+                        capture_output=True, text=True, timeout=10)
+                    t, u = (int(x) for x in q.stdout.strip().splitlines()[0].split(","))
+                    return t - u
+                except Exception:                                # noqa: BLE001
+                    return None
+
+            _free = _gpu_free_mib()
+            print(f"  ⚠ 프로세스는 살아 있는데 로그가 {_page / 60:.1f}시간째 안 늘었다.")
+            if _free is None:
+                # ⛔ 못 잰 것을 "비었다" 로 말하면 안 된다 — 정지와 대기를 반대로 가른다
+                print("     GPU 여유를 못 쟀다(nvidia-smi 없음/실패) — 대기인지 정지인지 "
+                      "여기서는 못 가른다. pw.x 와 산출물 mtime 을 직접 볼 것.")
+            elif _free < 20000:
+                print(f"     GPU 여유 {_free} MiB < 20000 — **GPU 대기 루프에 잠들어 있다**"
+                      f" (run_prereq_chain.sh 의 sleep 600 은 로그를 안 남긴다).")
+                print("     GPU 를 쓰는 작업이 끝나야 이어진다. 지금 죽일 필요는 없다.")
+            else:
+                print(f"     GPU 여유 {_free} MiB ≥ 20000 인데 안 나아간다 — 대기가 아니라 "
+                      f"**정지 의심**. pw.x 와 산출물 mtime 을 직접 볼 것.")
         if stage:
             print(f"  현재 단계: {stage[-1].split('──')[-1].strip()}")
         for l in done[-3:]:
