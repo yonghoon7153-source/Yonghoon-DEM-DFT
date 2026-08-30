@@ -2363,7 +2363,7 @@ def _pil_cpcm(eps):
 
 
 def _pil_inp(path, xyz, charge, mult, wf, eps, functional,
-             loc=False, moread=None, rotate=None, stab=False):
+             loc=False, moread=None, rotate=None, stab=False, nprocs=1):
     """pilot 용 ORCA 입력. 관측량 계약(Hirshfeld · open-shell 에 UNO UCO)을 강제한다.
 
     ⚠ `NoAutoStart` 는 **항상** 켠다 — 같은 basename 의 GBW 를 우연히 물지 않게.
@@ -2372,6 +2372,11 @@ def _pil_inp(path, xyz, charge, mult, wf, eps, functional,
     obs = " Hirshfeld" + ("" if wf == "RKS" else " UNO UCO")
     kw = "! %s %s TightSCF NoAutoStart%s" % (wf, functional, obs)
     body = [kw, "%maxcore 6000"]
+    # ⛔ 2026-08-31 — `%pal` 이 없으면 ORCA 는 **직렬**로 돈다. 200원자 r2SCAN-3c SP 를
+    #   1코어로 돌리면 pilot 이 끝나지 않는다. (병렬 실행은 ORCA 를 **절대경로**로
+    #   불러야 한다 — 2026-08-31 stage A 에서 rc=126 으로 실측한 사고다.)
+    if nprocs and nprocs > 1:
+        body.append("%%pal nprocs %d end" % nprocs)
     scf = []
     if moread:
         body.append('%%moinp "%s"' % moread)
@@ -2448,6 +2453,8 @@ def pilot_generate(a):
                           "⚠ 분석기가 ether 제외 값도 **같이** 보고한다 — class 가 갈리면 "
                           "BACKBONE_DEFINITION_DEPENDENT (억지 선택 금지)"),
         "functional": a.functional,
+        "nprocs": int(a.nprocs),
+        "eps_basis": a.eps_why,
         "environments": {n: {"epsilon": e,
                              "cpcm": ("vacuum (블록 없음)" if abs(e - 1.0) < 1e-9
                                       else "CPCM epsilon=%.4f refrac=1.4000" % e)}
@@ -2473,7 +2480,7 @@ def pilot_generate(a):
             write_xyz(jd / (tag + ".xyz"), csym2, cpos2,
                       "%s %s eps=%g" % (tag, man["formula_neutral"], ev))
             _pil_inp(jd / (tag + ".inp"), tag + ".xyz", ch, mult, "RKS", ev,
-                     a.functional, loc=True)
+                     a.functional, loc=True, nprocs=a.nprocs)
             man["jobs"]["L/%s/%s" % (en, tag)] = {
                 "phase": "L", "env": en, "epsilon": ev, "charge": ch, "mult": mult,
                 "wf": "RKS", "roles": roles,
@@ -2647,7 +2654,7 @@ def pilot_seeds(d):
             _pil_inp(sdir / (sd + ".inp"), xyzn, spec["charge"], spec["mult"],
                      spec["wf"], jm["epsilon"], man["functional"],
                      moread=(None if sd == "default" else gbw),
-                     rotate=rot, stab=True)
+                     rotate=rot, stab=True, nprocs=man.get("nprocs", 1))
             man["jobs"]["S/%s/%s/%s" % (env, "Dradical" if is_dm else "Pcation", sd)] = {
                 "phase": "S", "env": env, "epsilon": jm["epsilon"],
                 "charge": spec["charge"], "mult": spec["mult"], "wf": spec["wf"],
@@ -2925,6 +2932,10 @@ def main():
     ap.add_argument("--eps", nargs="+", type=float, default=None,
                     help="유전상수 목록 (예: 1.0 4.0). 사전등록에 근거를 적을 것")
     ap.add_argument("--functional", default="r2SCAN-3c")
+    ap.add_argument("--nprocs", type=int, default=1,
+                    help="ORCA %pal nprocs. 1 이면 직렬 — 200원자 SP 는 사실상 안 끝난다")
+    ap.add_argument("--eps_why",
+                    help="ε=1 이 아닌 환경의 **근거**. 사전등록 항목이라 생략하면 거부한다")
     a = ap.parse_args()
     if a.selftest:
         return selftest()
@@ -2934,6 +2945,18 @@ def main():
         if not a.eps:
             ap.error("--eps 를 명시하세요 (예: --eps 1.0 4.0). "
                      "환경은 사전등록 항목이라 기본값을 두지 않습니다")
+        # ⛔ 사전등록(db/properties/sdcp_polaron_pilot_prereg_2026_08_31.json)이
+        #   dry-polymer ε 을 "⏳ 값 미정 — litdb 근거 필요" 로 박아 놨다.
+        #   근거 없이 값을 넣으면 **우리 사전등록을 우리가 어기는 것**이다.
+        if any(abs(e - 1.0) > 1e-9 for e in a.eps) and not a.eps_why:
+            ap.error("ε≠1 환경을 쓰려면 --eps_why 로 근거를 적으세요.\n"
+                     "  사전등록이 'dry-polymer ε — 값 미정, litdb 근거 필요' 로 "
+                     "박혀 있습니다.\n"
+                     "  근거가 아직 없으면 --eps 1.0 만으로 시작하세요 "
+                     "(vacuum control 은 사전등록에 이미 있습니다).")
+        if a.nprocs <= 1:
+            print("⚠ --nprocs 1 (직렬) — 200원자 r2SCAN-3c SP 는 사실상 끝나지 않습니다. "
+                  "가용 코어를 주세요 (예: --nprocs 8)")
         pilot_generate(a)
         return 0
     if a.polaron_seeds:
