@@ -41,7 +41,7 @@ import argparse as _ap
 _p = _ap.ArgumentParser(add_help=False)
 _p.add_argument("--full", action="store_true", help="끝난 항목까지 전부 펼친다")
 _p.add_argument("--only", default="",
-                help="disorder|sdcp|committee|elf|bader|prereq 중 하나만")
+                help="disorder|sdcp|committee|elf|bader|prereq|orca 중 하나만")
 _p.add_argument("--selftest", action="store_true",
                 help="타입 계약·진리값 회귀시험 (화면을 죽인 적 있는 것만)")
 ARGS, _ = _p.parse_known_args()
@@ -482,16 +482,20 @@ print(f"  pw.x {alive('pw.x', exact=True)}  ·  pp.x {alive('pp.x', exact=True)}
 print(BAR)
 
 # ═══ ⓪ 생존 판정 ═════════════════════════════════════════════════════════
-print("⓪ 생존 판정")
+# ⚠ `restart` 는 ⓪ 안에서 채워지는데 그 절이 --only 로 접힐 수 있다.
+#   밖에서 먼저 만들어 둔다 — 안 그러면 --only 가 NameError 로 죽는다 (실측).
 restart = []
-for j in JOBS:
-    msg, need = verdict(j)
-    if "완료" not in msg:
-        live()
-    print(f"  {j['key']:8s} {msg}")
-    if need and j["start"]:
-        restart.append(j)
-print(BAR)
+if not ONLY:
+  print("⓪ 생존 판정")
+  restart = []
+  for j in JOBS:
+      msg, need = verdict(j)
+      if "완료" not in msg:
+          live()
+      print(f"  {j['key']:8s} {msg}")
+      if need and j["start"]:
+          restart.append(j)
+  print(BAR)
 
 # ═══ ① comp2 disorder ════════════════════════════════════════════════════
 if want("disorder"):
@@ -1014,83 +1018,85 @@ elif want("committee"):
   print(BAR)
 
 # ═══ ⑤ LPSOCl ELF (CPU — GPU 안 건드림) ═════════════════════════════════
-print("⑤ LPSOCl ELF (CPU pw.x/pp.x — GPU 작업과 동시 실행 안전)")
-E = "/data/work/runs/lpsocl_elf"
-elog = os.path.join(E, "run.log")
-if os.path.isfile(elog):
-    t = open(elog, errors="ignore").read()
-    stage = elf_stage(E)
-    # ⚠ scf_must_converge 함정 — 반복수가 electron_maxstep 과 같으면 가짜 수렴
-    conv = [l.strip() for l in t.splitlines() if "convergence has been achieved" in l]
-    it = [l.strip() for l in t.splitlines()
-          if re.search(r"iteration #|estimated scf accuracy|total energy\s+=", l)]
-    # ⚠⚠ **전역 pw.x 생존으로 판정하면 안 된다.** SDCP 의 GPU pw.x 가 켜지자마자
-    #   이미 끝난 ELF 가 '진행 중' 으로 되살아났다 (2026-07-30 실측: 화면에
-    #   "단계: ⑥ 완료 (rho_atomic 까지) · pw.x ALIVE" 가 살아있는 섹션으로 떴다).
-    #   pw.x 는 이 서버에서 여러 작업이 공유하는 이름이라 소유자를 못 가린다.
-    #   **이 작업의 로그 신선도**로 본다.
-    _elm = mtime(elog)
-    _eage = (NOW - _elm).total_seconds() / 60 if _elm else 1e9
-    _efresh = _eage < 15
-    if _efresh:
-        live()
-    print(f"  단계: {stage} · 로그 "
-          + (f"{_eage:.0f}분 전" if _elm else "없음")
-          + (" (진행 중)" if _efresh else " (정지)"))
-    if conv:
-        print("  " + conv[-1] + "   ⚠ maxstep(200) 과 같으면 가짜 수렴")
-    for l in it[-2:]:
-        print("    " + l)
-    err = [l.strip() for l in t.splitlines() if "Error" in l or "%%%%" in l]
-    if err:
-        print("  ⛔ " + err[-1][:100])
-    cubes = glob.glob(os.path.join(E, "*.cube"))
-    # ⚠ 이 섹션은 ✅ 를 한 번도 안 찍어서 compact 렌더러가 **끝난 ELF 를 '자료 없음'** 으로
-    #   굴렸다 (2026-07-30 실측: cube 3개가 멀쩡히 있는데 그렇게 나왔다).
-    #   "완료"와 "자료 없음"을 가르는 건 ✅ 유무이므로 여기서 명시적으로 찍는다.
-    _need = ["lpsocl_elf.cube", "lpsocl_rho_scf.cube", "lpsocl_rho_atomic.cube"]
-    _have = {os.path.basename(c) for c in cubes}
-    if set(_need) <= _have:
-        print(f"  ✅ 완료 — cube {len(cubes)}개 ({', '.join(sorted(_have))[:70]})")
-    else:
-        print(f"  산출 cube: {len(cubes)}개" +
-              (" — " + ", ".join(os.path.basename(c) for c in cubes[:3]) if cubes else " (아직)")
-              + f"   [남은 것: {', '.join(x for x in _need if x not in _have)}]")
-else:
-    print("  (미가동)")
-print(BAR)
+if want('elf'):
+  print("⑤ LPSOCl ELF (CPU pw.x/pp.x — GPU 작업과 동시 실행 안전)")
+  E = "/data/work/runs/lpsocl_elf"
+  elog = os.path.join(E, "run.log")
+  if os.path.isfile(elog):
+      t = open(elog, errors="ignore").read()
+      stage = elf_stage(E)
+      # ⚠ scf_must_converge 함정 — 반복수가 electron_maxstep 과 같으면 가짜 수렴
+      conv = [l.strip() for l in t.splitlines() if "convergence has been achieved" in l]
+      it = [l.strip() for l in t.splitlines()
+            if re.search(r"iteration #|estimated scf accuracy|total energy\s+=", l)]
+      # ⚠⚠ **전역 pw.x 생존으로 판정하면 안 된다.** SDCP 의 GPU pw.x 가 켜지자마자
+      #   이미 끝난 ELF 가 '진행 중' 으로 되살아났다 (2026-07-30 실측: 화면에
+      #   "단계: ⑥ 완료 (rho_atomic 까지) · pw.x ALIVE" 가 살아있는 섹션으로 떴다).
+      #   pw.x 는 이 서버에서 여러 작업이 공유하는 이름이라 소유자를 못 가린다.
+      #   **이 작업의 로그 신선도**로 본다.
+      _elm = mtime(elog)
+      _eage = (NOW - _elm).total_seconds() / 60 if _elm else 1e9
+      _efresh = _eage < 15
+      if _efresh:
+          live()
+      print(f"  단계: {stage} · 로그 "
+            + (f"{_eage:.0f}분 전" if _elm else "없음")
+            + (" (진행 중)" if _efresh else " (정지)"))
+      if conv:
+          print("  " + conv[-1] + "   ⚠ maxstep(200) 과 같으면 가짜 수렴")
+      for l in it[-2:]:
+          print("    " + l)
+      err = [l.strip() for l in t.splitlines() if "Error" in l or "%%%%" in l]
+      if err:
+          print("  ⛔ " + err[-1][:100])
+      cubes = glob.glob(os.path.join(E, "*.cube"))
+      # ⚠ 이 섹션은 ✅ 를 한 번도 안 찍어서 compact 렌더러가 **끝난 ELF 를 '자료 없음'** 으로
+      #   굴렸다 (2026-07-30 실측: cube 3개가 멀쩡히 있는데 그렇게 나왔다).
+      #   "완료"와 "자료 없음"을 가르는 건 ✅ 유무이므로 여기서 명시적으로 찍는다.
+      _need = ["lpsocl_elf.cube", "lpsocl_rho_scf.cube", "lpsocl_rho_atomic.cube"]
+      _have = {os.path.basename(c) for c in cubes}
+      if set(_need) <= _have:
+          print(f"  ✅ 완료 — cube {len(cubes)}개 ({', '.join(sorted(_have))[:70]})")
+      else:
+          print(f"  산출 cube: {len(cubes)}개" +
+                (" — " + ", ".join(os.path.basename(c) for c in cubes[:3]) if cubes else " (아직)")
+                + f"   [남은 것: {', '.join(x for x in _need if x not in _have)}]")
+  else:
+      print("  (미가동)")
+  print(BAR)
 
 # ═══ ⑥ LPSOCl AE Bader (ELF 뒤 체인) ════════════════════════════════════
-print("⑥ LPSOCl AE Bader (kjpaw + plot_num=17 — 기존 표와 비교 가능한 방법)")
-B = "/data/work/runs/lpsocl_bader"
-blog = os.path.join(B, "run.log")
-if os.path.isfile(blog):
-    t = open(blog, errors="ignore").read()
-    for k, name in (("bader -p all_atom", "bader"), ("pp.x plot_num=17", "pp.x AE"),
-                    ("pw.x scf_paw.in", "scf(kjpaw)"), ("[pseudo] OK", "pseudo 수집"),
-                    ("ELF(pw.x/pp.x) 진행 중", "ELF 종료 대기")):
-        if k in t:
-            print(f"  단계: {name}")
-            break
-    else:
-        print("  단계: ? (로그 시작 직후)")
-    nit = re.findall(r"SCF 수렴 반복수 = (\S+)", t)
-    if nit:
-        print(f"  SCF 반복수 {nit[-1]}  ⚠ 200(=maxstep)이면 가짜 수렴")
-    err = [l.strip() for l in t.splitlines() if l.strip().startswith("ERROR")]
-    if err:
-        print("  ⛔ " + err[-1][:100])
-    s = os.path.join(B, "lpsocl_bader_summary.json")
-    if not os.path.exists(s):
-        live()
-    if os.path.exists(s):
-        try:
-            d = json.load(open(s))["per_species"]
-            print("  ✅ " + "  ".join(f"{k} {v['mean']:+.3f}" for k, v in d.items()))
-        except Exception:
-            print("  (summary 파싱 실패)")
-else:
-    print("  (미가동)")
+if want('bader'):
+  print("⑥ LPSOCl AE Bader (kjpaw + plot_num=17 — 기존 표와 비교 가능한 방법)")
+  B = "/data/work/runs/lpsocl_bader"
+  blog = os.path.join(B, "run.log")
+  if os.path.isfile(blog):
+      t = open(blog, errors="ignore").read()
+      for k, name in (("bader -p all_atom", "bader"), ("pp.x plot_num=17", "pp.x AE"),
+                      ("pw.x scf_paw.in", "scf(kjpaw)"), ("[pseudo] OK", "pseudo 수집"),
+                      ("ELF(pw.x/pp.x) 진행 중", "ELF 종료 대기")):
+          if k in t:
+              print(f"  단계: {name}")
+              break
+      else:
+          print("  단계: ? (로그 시작 직후)")
+      nit = re.findall(r"SCF 수렴 반복수 = (\S+)", t)
+      if nit:
+          print(f"  SCF 반복수 {nit[-1]}  ⚠ 200(=maxstep)이면 가짜 수렴")
+      err = [l.strip() for l in t.splitlines() if l.strip().startswith("ERROR")]
+      if err:
+          print("  ⛔ " + err[-1][:100])
+      s = os.path.join(B, "lpsocl_bader_summary.json")
+      if not os.path.exists(s):
+          live()
+      if os.path.exists(s):
+          try:
+              d = json.load(open(s))["per_species"]
+              print("  ✅ " + "  ".join(f"{k} {v['mean']:+.3f}" for k, v in d.items()))
+          except Exception:
+              print("  (summary 파싱 실패)")
+  else:
+      print("  (미가동)")
 
 # ═══ ⑦ ORCA Stage A (SDCP n=6 올리고머) ══════════════════════════════════
 #   2026-08-30 신설. 왜 뒤늦게 붙나 — **이게 화면에 없어서 죽은 것을 하루 놓쳤다.**
@@ -1101,64 +1107,65 @@ else:
 # ⛔ 이 패널이 **못 하는 것**: ORCA 결과의 물리적 타당성을 판정하지 않는다.
 #   수렴 표식·사이클 수·에너지를 읽어 **어디까지 갔나**만 본다. 스핀 상태가
 #   옳은지, 기하가 말이 되는지는 분석기 몫이다.
-print(BAR)
-print("⑦ ORCA Stage A — SDCP n=6 올리고머 (CPU 전용 · GPU 안 건드림)")
-_OA, _OW = "/data/work/runs/sdcp_stageA", "/data/work/runs/sdcp_stageA_run"
-_oman = os.path.join(_OA, "manifest_stage_a.json")
-_oseeds = []
-if os.path.isfile(_oman):
-    try:
-        _oseeds = [(x["dir"], x["tag"])
-                   for x in json.load(open(_oman)).get("geometry_seeds", [])]
-    except Exception:
-        print("  ⛔ manifest_stage_a.json 파싱 실패")
-if not _oseeds:
-    print("  (미가동 — manifest_stage_a.json 없음)")
-else:
-    _orun = alive("run_orca_stage_a") or alive("orca ")
-    _odone, _opend, _onewest = 0, [], None
-    for _d, _t in _oseeds:
-        _o = os.path.join(_OW, _d, _t + ".out")
-        if not os.path.isfile(_o):
-            _opend.append(_d)
-            continue
-        _tx = open(_o, errors="ignore").read()
-        _cy = _tx.count("GEOMETRY OPTIMIZATION CYCLE")
-        _e = re.findall(r"FINAL SINGLE POINT ENERGY\s+(-?[\d.]+)", _tx)
-        _ok = "ORCA TERMINATED NORMALLY" in _tx
-        _cv = "THE OPTIMIZATION HAS CONVERGED" in _tx
-        _ag = mtime(_o)
-        _ag = (NOW - _ag).total_seconds() / 60 if _ag else None
-        if _onewest is None or (_ag is not None and _ag < _onewest):
-            _onewest = _ag
-        _odone += 1 if (_ok and _cv) else 0
-        print("  %-5s %s cyc=%-4s %s %s" % (
-            _d,
-            "✓" if (_ok and _cv) else ("⛔종료·미수렴" if _ok else "▶"),
-            _cy,
-            ("E=%s" % _e[-1]) if _e else "E=?",
-            ("· %.0f분 전" % _ag) if _ag is not None else ""))
-    _left = len(_oseeds) - _odone
-    print("  진행 %d/%d · 남은 %d · 러너 %s"
-          % (_odone, len(_oseeds), _left, "🔄 돈다" if _orun else "⏹ 안 돈다"))
-    # ★ 이 한 줄이 이 패널의 존재 이유다 — **끝난 seed 가 있는데 러너가 없고
-    #   남은 seed 가 있으면** 그건 완주가 아니라 중단이다. gs0 이 정확히 그랬다.
-    _ostate = orca_runner_state(len(_oseeds), _odone, bool(_orun))
-    if _ostate == "dead":
-        print("  ⛔ **러너가 죽었다** — %d개 남았는데 프로세스가 없다 (%s)"
-              % (_left, ", ".join(_opend[:4]) + (" …" if len(_opend) > 4 else "")))
-        print("     ⚠ nohup 없이 띄우면 터미널이 닫힐 때 같이 죽는다 — gs0 뒤가 그랬다")
-        print("     ORCA=/data/apps/orca-6.1.1/orca NPROCS=8 nohup bash "
-              "tools/sdcp/run_orca_stage_a.sh \\")
-        print("       %s %s > /data/work/runs/orca_stageA.log 2>&1 &" % (_OA, _OW))
-    elif _ostate == "running":
-        live()
-        if _onewest is not None and _onewest > 180:
-            print("  ⚠ 러너는 살아 있는데 최신 로그가 %.0f분 전이다 — 한 seed 가 "
-                  "오래 걸리는 중이거나 멈춰 있다 (gs0 실측 18.5시간)" % _onewest)
-    else:
-        print("  ✅ 전 seed 완주")
-        print("  ⛔ **이 결과로 Stage B 를 열지 않는다** (receipt 조건 6 · 회신 R4)")
+if want("orca"):
+  print(BAR)
+  print("⑦ ORCA Stage A — SDCP n=6 올리고머 (CPU 전용 · GPU 안 건드림)")
+  _OA, _OW = "/data/work/runs/sdcp_stageA", "/data/work/runs/sdcp_stageA_run"
+  _oman = os.path.join(_OA, "manifest_stage_a.json")
+  _oseeds = []
+  if os.path.isfile(_oman):
+      try:
+          _oseeds = [(x["dir"], x["tag"])
+                     for x in json.load(open(_oman)).get("geometry_seeds", [])]
+      except Exception:
+          print("  ⛔ manifest_stage_a.json 파싱 실패")
+  if not _oseeds:
+      print("  (미가동 — manifest_stage_a.json 없음)")
+  else:
+      _orun = alive("run_orca_stage_a") or alive("orca ")
+      _odone, _opend, _onewest = 0, [], None
+      for _d, _t in _oseeds:
+          _o = os.path.join(_OW, _d, _t + ".out")
+          if not os.path.isfile(_o):
+              _opend.append(_d)
+              continue
+          _tx = open(_o, errors="ignore").read()
+          _cy = _tx.count("GEOMETRY OPTIMIZATION CYCLE")
+          _e = re.findall(r"FINAL SINGLE POINT ENERGY\s+(-?[\d.]+)", _tx)
+          _ok = "ORCA TERMINATED NORMALLY" in _tx
+          _cv = "THE OPTIMIZATION HAS CONVERGED" in _tx
+          _ag = mtime(_o)
+          _ag = (NOW - _ag).total_seconds() / 60 if _ag else None
+          if _onewest is None or (_ag is not None and _ag < _onewest):
+              _onewest = _ag
+          _odone += 1 if (_ok and _cv) else 0
+          print("  %-5s %s cyc=%-4s %s %s" % (
+              _d,
+              "✓" if (_ok and _cv) else ("⛔종료·미수렴" if _ok else "▶"),
+              _cy,
+              ("E=%s" % _e[-1]) if _e else "E=?",
+              ("· %.0f분 전" % _ag) if _ag is not None else ""))
+      _left = len(_oseeds) - _odone
+      print("  진행 %d/%d · 남은 %d · 러너 %s"
+            % (_odone, len(_oseeds), _left, "🔄 돈다" if _orun else "⏹ 안 돈다"))
+      # ★ 이 한 줄이 이 패널의 존재 이유다 — **끝난 seed 가 있는데 러너가 없고
+      #   남은 seed 가 있으면** 그건 완주가 아니라 중단이다. gs0 이 정확히 그랬다.
+      _ostate = orca_runner_state(len(_oseeds), _odone, bool(_orun))
+      if _ostate == "dead":
+          print("  ⛔ **러너가 죽었다** — %d개 남았는데 프로세스가 없다 (%s)"
+                % (_left, ", ".join(_opend[:4]) + (" …" if len(_opend) > 4 else "")))
+          print("     ⚠ nohup 없이 띄우면 터미널이 닫힐 때 같이 죽는다 — gs0 뒤가 그랬다")
+          print("     ORCA=/data/apps/orca-6.1.1/orca NPROCS=8 nohup bash "
+                "tools/sdcp/run_orca_stage_a.sh \\")
+          print("       %s %s > /data/work/runs/orca_stageA.log 2>&1 &" % (_OA, _OW))
+      elif _ostate == "running":
+          live()
+          if _onewest is not None and _onewest > 180:
+              print("  ⚠ 러너는 살아 있는데 최신 로그가 %.0f분 전이다 — 한 seed 가 "
+                    "오래 걸리는 중이거나 멈춰 있다 (gs0 실측 18.5시간)" % _onewest)
+      else:
+          print("  ✅ 전 seed 완주")
+          print("  ⛔ **이 결과로 Stage B 를 열지 않는다** (receipt 조건 6 · 회신 R4)")
 
 # ═══ 재기동 안내 ═════════════════════════════════════════════════════════
 # ⚠ 예전 판은 JOBS 목록만 보고 "재기동 필요 없음" 을 찍었다. SDCP 섹션이 바로 위에서
