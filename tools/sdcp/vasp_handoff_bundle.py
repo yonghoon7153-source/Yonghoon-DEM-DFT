@@ -1434,7 +1434,10 @@ from glob import glob
 
 DELTA = 0.030
 SEED_TOL = 0.010          # eV — seed-매칭 ΔE 게이트
-BOX_TOL = 0.010           # eV — 기체상 상자 수렴
+BOX_TOL = 0.010           # eV — 기체상 **조각별** 상자 수렴 (진단용)
+#: ⛔ 회신 AP #11 — 판정은 조각별이 아니라 **두 기체의 차**에 건다. D 에 남는 것이
+#:   그 차이기 때문이다. 0.01 eV 보고를 유지하려면 5 meV 다 (AP 가 지정한 사전 문턱).
+GAS_BOX_DELTA_TOL = 0.005
 K_TOL = 0.010             # eV — dense-k 민감도
 GUARD_EV = 0.010          # ±10 meV — k 전이 불확실성. **30 meV 판정바닥과 별개다**
                           #   (Codex 5차: 두 숫자를 하나로 합치면 경계 결과를 오판한다)
@@ -5102,6 +5105,46 @@ def _closure_estimand(man, results, E, emol, jobs, merge_info=None):
     #   ⇒ **그 네 잡을 언급하지 않는 집합-블록은 차단이 아니라 민감도 주석**으로 내린다.
     #     전역 블록(후보집합·기체 canary·spin control·POTCAR)은 그대로 둔다.
     #   ⚠ 이 강등은 **조기 return 앞에서** 해야 한다 — 뒤에 두면 이미 return 된 뒤다.
+    # ⛔⛔ 회신 AP #11 (2026-08-31) — 기체 상자 수렴 게이트를 **조각별 10 meV 가
+    #   아니라 최종 estimand 에 직접** 건다. D 에 남는 것은 두 기체의 **차이**이고,
+    #   조각별로 각각 10 meV 안이어도 부호가 반대면 차에서 20 meV 가 된다.
+    #       δ_gas = [E_G^SDCP(24) − E_G^SDCP(20)] − [E_G^PTFE(24) − E_G^PTFE(20)]
+    #   0.01 eV 로 보고하려면 |δ_gas| ≤ 5 meV 여야 한다 (AP 가 지정한 사전 문턱).
+    _sdf = next((f for f in frags if "sdcp" in f), None)
+    _ctf = next((f for f in frags if f != _sdf), None)
+    if _sdf and _ctf:
+        _g = {}
+        for _f in (_sdf, _ctf):
+            _g[_f] = (E("refs/mol__%s__box24" % _f), E("refs/mol__%s__box20" % _f))
+        _miss_g = [f for f, (a24, a20) in _g.items() if a24 is None or a20 is None]
+        if _miss_g:
+            _blk("GAS_BOX_NOT_MEASURED",
+                 "GAS_BOX_NOT_MEASURED(%s: box20/box24 중 하나가 없다 — 이 묶음에서 "
+                 "기체 상자 수렴을 재지 못했다. D 에는 E_G^SDCP − E_G^control 이 "
+                 "남으므로 상자 오차가 소거되지 않는다)" % _miss_g,
+                 job_keys=["refs/mol__%s__box%s" % (f, b)
+                           for f in _miss_g for b in ("20", "24")],
+                 scope="estimand")
+        else:
+            _d24_20 = {f: (v[0] - v[1]) for f, v in _g.items()}
+            _dgas = _d24_20[_sdf] - _d24_20[_ctf]
+            out["gas_box_delta"] = {
+                "delta_gas_meV": round(_dgas * 1000, 3),
+                "by_fragment_meV": {f: round(v * 1000, 3) for f, v in _d24_20.items()},
+                "tol_meV": round(GAS_BOX_DELTA_TOL * 1000, 1),
+                "pass": bool(abs(_dgas) <= GAS_BOX_DELTA_TOL),
+                "식": "δ_gas = [E_G^sdcp(24)−E_G^sdcp(20)] − [E_G^ctl(24)−E_G^ctl(20)]",
+                "⚠": ("조각별 값이 각각 작아도 **부호가 반대면 차에서 커진다** — "
+                      "그래서 조각별이 아니라 이 차에 문턱을 건다 (회신 AP #11)")}
+            if abs(_dgas) > GAS_BOX_DELTA_TOL:
+                _blk("GAS_BOX_DELTA",
+                     "GAS_BOX_DELTA(δ_gas %.2f meV > %.0f — 0.01 eV 로 보고할 수 없다. "
+                     "상자를 키우거나 보고 해상도를 낮춘다)"
+                     % (_dgas * 1000, GAS_BOX_DELTA_TOL * 1000),
+                     job_keys=["refs/mol__%s__box%s" % (f, b)
+                               for f in (_sdf, _ctf) for b in ("20", "24")],
+                     scope="estimand")
+
     _ejk0 = (man.get("estimand_job_keys") or {})
     if _ejk0:
         # ⛔⛔ 회신 AP #2 — **네 잡 자신**의 자기 상태 검사는 다른 block 유무와
@@ -7970,7 +8013,9 @@ def build_bundle(a, ledger: Optional[Dict[str, Any]] = None) -> Path:
     #   출처: 2026-08-12 wave1 (db/properties/sdcp_wave1_results.json).
     #   ⚠ 같은 conformer·같은 Hamiltonian 이라는 보증은 **그 출처가 진다** — 여기서
     #     증명하지 않는다. 그래서 `ref` 와 한계를 같이 싣는다.
-    if _skip_clean:
+    # ⛔ 회신 AP #11 — box20 을 실제로 계산하므로 **선행 대조를 싣지 않는다.**
+    #   (남겨두면 분석기가 참고정보로 쓰고, 원고에 "선행값" 이 흘러들 여지가 있다)
+    if False:
         man["gas_box_prior"] = {
             "ptfe_c10": {"dE_meV": 0.07, "box20_eV": -177.970705, "box24_eV": -177.970639},
             "sdcp_neutral": {"dE_meV": 0.32, "box20_eV": -205.448886, "box24_eV": -205.448564},
@@ -8074,8 +8119,14 @@ def build_bundle(a, ledger: Optional[Dict[str, Any]] = None) -> Path:
             bad(f"{frag}: 분자 파일 {info.get('status', 'MISSING')} — E_ads 기준계 없음")
             continue
         used_els |= set(mol.get_chemical_symbols())
-        _boxes = (((24.0, "box24"),) if getattr(a, "refs_minimal", False)
-                  else ((20.0, "box20"), (24.0, "box24")))
+        # ⛔⛔ 회신 AP #11 (2026-08-31) — box20 을 **다시 낸다.**
+        #   종전엔 refs_minimal 이 box24 하나로 좁혀서 상자 수렴을 이 묶음에서
+        #   검증하지 못했고, 선행 대조(gas_box_prior)로 때웠다. AP 판정:
+        #   *"비차단 강등은 box24 조건부 내부값에는 정직하지만 0.01 eV 원고값에는
+        #   부족하다. box20 두 잡을 **결과를 보기 전** 지금 추가하는 쪽이 맞다."*
+        #   두 잡 다 --single_point 라 **독립 재이완이 없다** — 같은 원본 분자에서
+        #   셀만 바꾼 고정기하 static 이고 state-selection policy 도 같다.
+        _boxes = ((20.0, "box20"), (24.0, "box24"))
         for margin, tag in _boxes:
             rel = f"refs/mol__{frag}__{tag}"
             m = _emit_mol_job(out / rel, frag, mol, margin,
@@ -9264,6 +9315,10 @@ def selftest() -> int:
                                capture_output=True, text=True)
         _r_gate = subprocess.run([sys.executable, _az, ".", "--gate", "vacconv"],
                                  cwd=_st, capture_output=True, text=True)
+        # ⛔ 분석기가 **예외로 죽으면** 아래 검사들이 전부 무의미해진다 — 먼저 본다
+        chk(_r_no.returncode in (0, 2),
+            "분석기가 예외로 죽지 않는다 (rc %s) · %s"
+            % (_r_no.returncode, (_r_no.stderr or "")[-300:]))
         _hit_no = [j for j in _s2n if j in _r_no.stdout]
         _hit_gate = [j for j in _s2n if j in (_r_gate.stdout.split("미완")[-1]
                                               if "미완" in _r_gate.stdout else "")]
@@ -9338,8 +9393,15 @@ def selftest() -> int:
     #   `prospective/<frag>__<basin>__<seed>` 로 낸다(_pk 가 상대경로 그대로).
     #   접두어 없는 옛 fixture 때문에 `startswith(f+"__")` 버그가 안 보였고,
     #   실물에서는 조각 매칭이 **하나도 안 걸려** J_f 가 조용히 비었다.
+    # ⛔ 회신 AP #11 — δ_gas 게이트가 box20/box24 를 요구한다. 픽스처를 실물화한다.
+    #   sdcp: 24−20 = +0.3 meV · ptfe: 24−20 = +0.2 meV ⇒ δ_gas = +0.1 meV (통과)
+    _GASE = {"refs/mol__sdcp_neutral__box24": -205.4486,
+             "refs/mol__sdcp_neutral__box20": -205.4489,
+             "refs/mol__ptfe_c10__box24": -177.9706,
+             "refs/mol__ptfe_c10__box20": -177.9708}
     _en = {"mol__sdcp_neutral__box24__nzmag": -200.0,
            "mol__ptfe_c10__box24__nzmag": -100.0,
+           **_GASE,
            "prospective/sdcp_neutral__b00__afm2424_pm1": -201.0,
            "prospective/sdcp_neutral__b01__afm2424_pm1": -200.9,
            "prospective/ptfe_c10__b00__afm2424_pm1": -100.5}
@@ -9487,7 +9549,7 @@ def selftest() -> int:
         "E_G_control": "mol__ptfe_c10__box24__nzmag"})
     _en8 = {_KA: -201.0, _KB: -100.5,
             "mol__sdcp_neutral__box24__nzmag": -200.0,
-            "mol__ptfe_c10__box24__nzmag": -100.0}
+            "mol__ptfe_c10__box24__nzmag": -100.0, **_GASE}
     _ok8 = {_KA: _J8(_up8, _KA), _KB: _J8(_dn8, _KB)}
     _r8 = _closure_estimand(_man8, _RES(), lambda j: _en8.get(j), _emol, _ok8)
     chk(not any("TOPOLOGY" in b for b in _r8["blocks"])
@@ -9539,6 +9601,31 @@ def selftest() -> int:
         and "D_net4_minus_D_pm1_eV" in (_r7n.get("branch_sensitivity") or {}),
         "AO P0-7: net4 가 봉인돼 있으면 **D_net4 − D_pm1 을 계산한다** "
         f"(종전엔 요구해 놓고 안 냈다) · {_r7n.get('branch_sensitivity')}")
+
+    # ── 회신 AP #11 — δ_gas 를 **최종 estimand 에 직접** 건다 ────────────
+    _rg = _closure_estimand(_man, _RES(), _E, _emol, _jobs)
+    chk((_rg.get("gas_box_delta") or {}).get("pass") is True,
+        f"AP #11 양성: δ_gas {_rg.get('gas_box_delta', {}).get('delta_gas_meV')} meV "
+        f"≤ {_rg.get('gas_box_delta', {}).get('tol_meV')} — 0.01 eV 보고 가능")
+    # ⛔음성 — 조각별로는 각각 작아도 **부호가 반대면 차에서 커진다**
+    _enbad = dict(_en, **{"refs/mol__sdcp_neutral__box20": -205.4486 - 0.004,
+                          "refs/mol__ptfe_c10__box20": -177.9706 + 0.004})
+    _rgb = _closure_estimand(_man, _RES(), lambda j: _enbad.get(j), _emol, _jobs)
+    _gd = _rgb.get("gas_box_delta") or {}
+    chk(any("GAS_BOX_DELTA" in b for b in _rgb["blocks"]),
+        "⛔음성 AP #11: 조각별 4 meV 씩이어도 **부호가 반대면** δ_gas 8 meV → 차단 "
+        f"(실제 {_gd.get('delta_gas_meV')} meV · 조각별 {_gd.get('by_fragment_meV')})")
+    chk(abs((_gd.get("delta_gas_meV") or 0)) > 5.0
+        and all(abs(v) <= 5.0 for v in (_gd.get("by_fragment_meV") or {}).values()),
+        "⛔음성 AP #11 요점: **조각별 문턱이었으면 통과했을** 경우다 "
+        "(그래서 조각별이 아니라 차에 건다)")
+    # ⛔음성 — box20 이 아예 없으면 "측정 안 함" 으로 막는다 (선행값으로 때우지 않는다)
+    _enno = {k: v for k, v in _en.items() if not k.endswith("box20")}
+    chk(any("GAS_BOX_NOT_MEASURED" in b for b in
+            _closure_estimand(_man, _RES(), lambda j: _enno.get(j),
+                              _emol, _jobs)["blocks"]),
+        "⛔음성 AP #11: box20 이 없으면 **이 묶음에서 재지 못했다**고 막는다 "
+        "(선행 대조로 때우지 않는다)")
 
     _jb_slab = dict(_jobs)
     _jb_slab["refs/clean_slab__afm2424_pm1"] = _BAS(
