@@ -48,6 +48,24 @@ ARGS, _ = _p.parse_known_args()
 FULL, ONLY = ARGS.full, ARGS.only.lower()
 
 
+#: gabia 판별 — 호스트명은 바뀔 수 있으니 **그 기계에만 있는 것**으로 본다.
+#:   ⚠ 처음엔 `/data/work/runs` 하나만 봤는데 **너무 약했다**: 다른 컨테이너에
+#:     같은 이름의 **빈 디렉터리**가 있어서 통과했다 (2026-08-30 실측).
+#:     작업 루트 + 설치된 툴체인을 **둘 다** 요구한다.
+#:   ⚠ 그리고 **애매하면 '아니다' 로 판정**한다 — 안내를 막는 쪽은 아무것도 안
+#:     망가뜨리지만, 틀린 재기동 명령을 뿌리는 쪽은 중복 작업을 만든다.
+GABIA_MARKERS = ("/data/work/runs", "/data/apps")
+
+
+def is_gabia_host(markers=GABIA_MARKERS, exists=os.path.isdir):
+    """마커가 **전부** 있어야 gabia 다. 하나라도 없으면 아니다 (fail-closed).
+
+    ⛔ 못 하는 것: 진짜 gabia 인지 증명하지 않는다. '이 대시보드가 볼 것이
+      여기 있나' 를 볼 뿐이다. 그게 재기동 안내를 낼 자격의 전부다.
+    """
+    return all(exists(m) for m in markers)
+
+
 def _selftest() -> int:
     """`--selftest` — 화면을 죽인 적 있는 것만 친다 (2026-08-30).
 
@@ -94,6 +112,16 @@ def _selftest() -> int:
         '⛔음성 ORCA: 8/8 이면 프로세스가 없는 게 **정상** — 완주를 죽음으로 오탐 안 함')
     chk(orca_runner_state(8, 0, False) == "dead",
         '⛔음성 ORCA: 0/8 · 프로세스 없음 → dead (한 번도 안 돈 것도 중단이다)')
+    # 호스트 판별 — **틀린 기계에 재기동 명령을 뿌리지 않는 것**이 요점이다.
+    chk(is_gabia_host(("/a", "/b"), lambda m: True),
+        '호스트: 마커가 전부 있으면 gabia')
+    chk(not is_gabia_host(("/a", "/b"), lambda m: m == "/a"),
+        '⛔음성 호스트: 마커 하나만 있으면 **아니다** — 빈 /data/work/runs 가 있는 '
+        '컨테이너가 gabia 로 통과했던 실측 사고')
+    chk(not is_gabia_host(("/a",), lambda m: False),
+        '⛔음성 호스트: 하나도 없으면 아니다')
+    chk(not is_gabia_host((), lambda m: False) is False,
+        '마커가 비면 all(()) 은 True — 이 함수는 마커 목록이 비지 않는다고 전제한다')
     print(f"  watch_all selftest {ok[1]}/{ok[0]}")
     return 0 if ok[0] == ok[1] else 1
 
@@ -404,21 +432,49 @@ def render(captured: str) -> str:
     return "\n".join(out)
 
 
+# ═══ 이 화면이 **어느 기계**를 보고 있나 ══════════════════════════════════
+#: 🔴 2026-08-30 실측 사고 — 헤더가 `gabia 전체 상황` 을 **박아서** 찍었다.
+#:   데스크탑 WSL(DESKTOP-IK8J81H)에서 돌렸더니 화면이 "gabia" 라고 우기면서
+#:   전 작업을 `미가동` 으로 찍었고(그 경로가 이 기계에 없을 뿐인데),
+#:   맨 아래 `⛔ 재기동 필요` 가 ELF·Bader·LNOrelax 를 **데스크탑에서 시작하라**고
+#:   시켰다. 실행했으면 실패하거나 중복 작업이 떴다.
+#:   ⇒ 화면은 자기가 어디 있는지 알아야 한다. 모르면 **판정을 하지 않는다**.
+HOSTNAME = (sh("hostname").strip() or "?")
+IS_GABIA = is_gabia_host()
+
+
+def host_banner():
+    """→ (제목, 경고줄 or None). 경고가 있으면 재기동 안내를 **막는다**."""
+    if IS_GABIA:
+        return "gabia 전체 상황", None
+    return ("⚠ 이 기계는 gabia 가 아니다 — %s" % HOSTNAME,
+            "  ⛔ gabia 마커(%s)가 없다. 아래 `미가동` 은 **작업이 죽은 것이 아니라 "
+            % ", ".join(m for m in GABIA_MARKERS if not os.path.isdir(m)) +
+            "이 기계에 그 경로가 없다는 뜻**이다.\n"
+            "     재기동 안내는 **막았다** — 여기서 실행하면 실패하거나 중복 작업이 뜬다.\n"
+            "     gabia 에서 보려면: ssh root@121.78.116.27 · cd /data/work/repo")
+
+
 # ═══ 헤더 ════════════════════════════════════════════════════════════════
 up = sh("uptime -p").strip() or "?"
 gpu = sh("nvidia-smi --query-gpu=utilization.gpu,memory.used,memory.total "
          "--format=csv,noheader,nounits").strip() or "(조회 실패)"
+_TITLE, _WRONGHOST = host_banner()
 if FULL:
     print("=" * 70)
-    print(f"gabia 전체 상황  {NOW:%m-%d %H:%M}")
+    print(f"{_TITLE}  {NOW:%m-%d %H:%M}")
     print("=" * 70)
+    if _WRONGHOST:
+        print(_WRONGHOST)
     print(f"부팅: {BOOT:%m-%d %H:%M} ({up})" if BOOT else f"부팅 시각 조회 실패 ({up})")
     print(f"tmux 세션: {' '.join(TMUX) if TMUX else '(없음)'}")
     print(f"GPU: {gpu}   [util%, used MiB, total MiB]")
 else:
     # 한 줄로 — 14주 uptime 같은 건 매 30초 볼 정보가 아니다.
-    print(f"gabia {NOW:%m-%d %H:%M} · {up} · tmux {' '.join(TMUX) if TMUX else '없음'} "
-          f"· GPU {gpu}")
+    print(f"{HOSTNAME if not IS_GABIA else 'gabia'} {NOW:%m-%d %H:%M} · {up} · "
+          f"tmux {' '.join(TMUX) if TMUX else '없음'} · GPU {gpu}")
+    if _WRONGHOST:
+        print("  ⛔ gabia 가 아니다 — 아래 판정은 이 기계 기준이다 (--full 로 사유)")
 if BOOT and (NOW - BOOT).total_seconds() < 3600:
     print("  ⚠ 1시간 안에 부팅됨 — tmux 세션은 재부팅으로 전부 사라진다. 생존판정 확인.")
 print(f"  pw.x {alive('pw.x', exact=True)}  ·  pp.x {alive('pp.x', exact=True)}  ·  "
@@ -1108,7 +1164,12 @@ else:
 # ⚠ 예전 판은 JOBS 목록만 보고 "재기동 필요 없음" 을 찍었다. SDCP 섹션이 바로 위에서
 #   ⛔ 를 띄우고 있는데도 그랬다 — 서로 모순되는 화면이 나왔다(2026-07-30).
 #   이제 **출력 전체의 ⛔ 개수**로 판정한다.
-if restart:
+if restart and not IS_GABIA:
+    # ⛔ 다른 기계에서 gabia 용 재기동 명령을 뿌리지 않는다 (2026-08-30 실측).
+    print("⛔ 재기동 안내 %d건을 **막았다** — 여기는 gabia 가 아니다 (%s)"
+          % (len(restart), HOSTNAME))
+    print("   경로가 없어서 '미가동' 으로 보이는 것이지 작업이 죽은 것이 아니다.")
+elif restart:
     print("⛔ 재기동 필요 — 아래를 repo 루트에서 그대로 실행")
     for j in restart:
         print(f"  # {j['key']}")
