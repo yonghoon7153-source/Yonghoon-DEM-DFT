@@ -176,7 +176,7 @@
 - `kb/reviews/codex_AB_prompt_stageA_v9_regate_2026_08_29.md` — Codex 재검토 요청 AB — 회신 AA 의 P0 5건 + Q2 처리, 그리고 자체검토에서 나온 넷 ○미열람
 - `kb/reviews/codex_AC_prompt_manuscript_v8_crosscheck_2026_08_30.md` — 회신 AC 요청 — 원고 v6 · SI v6 대조 (Methods/Table v8) ○미열람
 - `kb/reviews/codex_AD_prompt_stageA_v10_final_regate_2026_08_30.md` — 회신 AD 요청 — Stage A v10 최종 재게이트 (P0 8건 처리 후) ○미열람
-- `kb/reviews/codex_AE_prompt_stageA_v11_submit_gate_2026_08_30.md` — 회신 AE — 제출 게이트: sdcp_stageA_v11 + holdout_v2 (42잡) GO/NO-GO ○미열람
+- `kb/reviews/codex_AE_prompt_stageA_v13_submit_gate_2026_08_30.md` — 회신 AE — 제출 게이트: sdcp_stageA_v13 + holdout_v4 (42잡) GO/NO-GO ○미열람
 - `kb/reviews/codex_A_cascade_ml_2026_08_20.md` — 교차리뷰 A — cascade 파이프라인 + 머신러닝 (codex 작업지시서) ○미열람
 - `kb/reviews/codex_B_neb_md_tools_2026_08_20.md` — 교차리뷰 B — NEB · MD · 도구 (codex 작업지시서) ○미열람
 - `kb/reviews/codex_C_funnel_2026_08_20.md` — 교차리뷰 C v2.1 — cascade 깔때기는 잘 작동했나 (codex 2라운드 종료) ○미열람
