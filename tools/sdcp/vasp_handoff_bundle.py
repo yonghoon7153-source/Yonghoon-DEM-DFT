@@ -5211,6 +5211,27 @@ def poscar_set_c(path, new_c: float) -> None:
     path.write_text("\n".join(L) + "\n")
 
 
+def _jobjson_rescale(job_dir: Path, k: float) -> int:
+    """c 를 늘렸으면 `job.json` 의 **분율** 필드도 같이 줄인다.
+
+    ⛔ 회신 AF P0-1 후단 — INCAR 의 DIPOL 만 고치고 job.json 을 안 고쳤다.
+       `zcom_frac` 이 분율 질량중심이라 셀을 늘리면 어긋난다.
+       (`z_cut_A` 는 Å 단위라 무관 · `incar_expected` 에는 DIPOL 이 없다.)
+    """
+    jp = job_dir / "job.json"
+    if not jp.is_file():
+        return 0
+    d = json.loads(jp.read_text())
+    n = 0
+    for key in ("zcom_frac",):
+        if isinstance(d.get(key), (int, float)):
+            d[key] = round(float(d[key]) * k, 6)
+            n += 1
+    if n:
+        jp.write_text(json.dumps(d, indent=1, ensure_ascii=False))
+    return n
+
+
 def _dipol_rescale(job_dir: Path, k: float) -> int:
     """c 를 늘렸으면 **분율 DIPOL 의 z 성분도 같은 비율로** 줄여야 한다.
 
@@ -5274,7 +5295,7 @@ def fit_bundle_vacuum(out: Path, planned: dict, min_vac: float,
     # ⚠ c 를 Δ 늘려도 최단거리는 Δ 만큼 안 는다 — 최단 쌍에 xy 성분이 있으면
     #   sqrt(dxy²+dz²) 라 증가분이 Δ 보다 작다. 한 번만 늘리면 미달로 끝난다
     #   (실측: 15.0 목표에 14.978 에서 멈췄다). 수렴할 때까지 반복한다.
-    c1, cur, n_dip = c0, worst, 0
+    c1, cur, n_dip, n_jj = c0, worst, 0, 0
     if target_c:                            # 두 묶음 공통 c — 요청값이 이긴다
         if target_c < c0 - 1e-9:
             raise ValueError("target_c %.4f < 현재 c %.4f — 셀을 줄이지 않는다"
@@ -5282,6 +5303,7 @@ def fit_bundle_vacuum(out: Path, planned: dict, min_vac: float,
         c1 = float(target_c)
         for k in jobs:
             n_dip += _dipol_rescale(out / k, c0 / c1)
+            n_jj += _jobjson_rescale(out / k, c0 / c1)
             poscar_set_c(out / k / "POSCAR", c1)
         cur = min([v for v in (image_separation_A(out / k / "POSCAR") for k in meas)
                    if v is not None] or [worst])
@@ -5293,6 +5315,7 @@ def fit_bundle_vacuum(out: Path, planned: dict, min_vac: float,
             c1 += (min_vac - cur) + 1e-3
             for k in jobs:                  # ★ 복합체·clean slab 만 (기체 제외)
                 n_dip += _dipol_rescale(out / k, _prev / c1)
+                n_jj += _jobjson_rescale(out / k, _prev / c1)
                 poscar_set_c(out / k / "POSCAR", c1)
             cur = min(v for v in (image_separation_A(out / k / "POSCAR") for k in meas)
                       if v is not None)
@@ -5301,6 +5324,7 @@ def fit_bundle_vacuum(out: Path, planned: dict, min_vac: float,
             "min_before_A": round(worst, 3),
             "min_after_A": round(min(v for v in after.values() if v is not None), 3),
             "n_below_before": n_below, "n_dipol_rescaled": n_dip,
+            "n_jobjson_rescaled": n_jj,
             "target_c_A": target_c,
             "gas_refs_untouched": True,
             "per_job_A": {k: round(v, 3) for k, v in sorted(after.items())
@@ -7761,6 +7785,28 @@ def selftest() -> int:
         "(Direct 되scale 을 빠뜨리면 슬랩이 늘어난다)")
     chk(abs(image_separation_A(_vd / "POSCAR") - 15.0) < 1e-6,
         "확장 뒤 분리 = 15.00 Å")
+
+    # ⛔ 회신 AF P0-1 후단 — INCAR 의 DIPOL 만 고치고 job.json 의 **분율** 필드를
+    #   안 고쳤다. zcom_frac 은 분율 질량중심이라 셀을 늘리면 어긋난다.
+    _vj = td / "vacjj"
+    _vj.mkdir(parents=True, exist_ok=True)
+    (_vj / "POSCAR").write_text(
+        "t\n1.0\n 10.0 0 0\n 0 10.0 0\n 0 0 20.0\nNi O H\n1 1 1\nDirect\n"
+        "0.0 0.0 0.10\n0.5 0.5 0.10\n0.0 0.0 0.60\n")
+    (_vj / "job.json").write_text(json.dumps({"zcom_frac": 0.6, "z_cut_A": 3.0}))
+    (_vj / "static").mkdir(exist_ok=True)
+    (_vj / "static" / "INCAR").write_text("LDIPOL   = .TRUE.\nDIPOL    = 0.5 0.5 0.6000\n")
+    _fj = fit_bundle_vacuum(_vj.parent, {"vacjj": {}}, 15.0)
+    _jd = json.loads((_vj / "job.json").read_text())
+    _k = _fj["c_before_A"] / _fj["c_after_A"]
+    chk(_fj["n_jobjson_rescaled"] == 1 and abs(_jd["zcom_frac"] - 0.6 * _k) < 1e-5,
+        "job.json 의 분율 zcom_frac 이 c 와 같이 되scale 된다 (%.6f)" % _jd["zcom_frac"])
+    chk(_jd["z_cut_A"] == 3.0,
+        "[음성] Å 단위 z_cut_A 는 **안 건드린다** (분율이 아니다)")
+    _dz = float(re.search(r"DIPOL\s*=\s*[\d.]+\s+[\d.]+\s+([\d.]+)",
+                          (_vj / "static" / "INCAR").read_text()).group(1))
+    chk(abs(_dz - 0.6 * _k) < 1e-3 and _fj["n_dipol_rescaled"] == 1,
+        "INCAR 의 DIPOL z 도 같은 비율 (%.4f)" % _dz)
     # [음성] 미달 번들은 fit 이 c 를 실제로 늘려서만 통과한다
     _fit = fit_bundle_vacuum(_vd.parent, {"vactest": {}}, 18.0)
     chk(_fit["n_below_before"] == 1 and _fit["min_after_A"] >= 18.0
