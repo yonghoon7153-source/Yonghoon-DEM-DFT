@@ -177,6 +177,18 @@ C 는 "기체 기준 2잡" 이라고 적었는데, 생성기가 실제로 내는
 | 입력 preflight | **0건** (job.json 19개) |
 | `potcar_pin` | **미고정** — §1 의 질문 |
 
+**발송 후보 정체 (`sdcp_c12_v3`)**
+
+| | |
+|---|---|
+| ZIP sha256 | `9476938f1b6500a18bb9e84c2336d5d0ed57c7f126ec4bb58265445d93bbad1b` (309,777 B) |
+| MANIFEST sha256 | `bae583208868f1e426d41fe9c3882370e4d2889bc78a9075da35bdd003d3f07f` |
+| generated_utc | `2026-08-30T12:58:24Z` |
+| 자세 동결 | `db/properties/c12_poses_2026_08_30.json` (`0ac106d152b96458`) |
+
+⚠ ZIP 은 **도구가 만든 것 하나**다 — verify 보고값과 `sha256sum` 이 일치한다
+(§7-2 의 덧쓰기 사고는 v3 에서 해소).
+
 **진공** — c 30.2609 → **36.6551 Å**, 최소 주기영상 분리 **15.38 → 21.773 Å**.
 DIPOL 14곳 · `job.json` 13곳 되scale (슬랩 13잡 + clean slab 의 두 번째 INCAR 1).
 
