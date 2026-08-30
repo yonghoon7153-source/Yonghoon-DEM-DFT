@@ -37,7 +37,12 @@ from step3_sigma import solve_sigma_z                            # noqa: E402
 SID_AM, SID_SE, SID_SDCP = 1, 6, 5
 SIGMA_ION_SE = 3.0e-3                                            # S/cm (Cronau, se_material)
 SIGMA_E_AM = 0.010                                               # S/cm (AM_S, SIGMA_DEFAULT)
-SIGMA_E_SDCP = 250.0                                             # S/cm (USER anchor 2026-07-16)
+SIGMA_E_SDCP = 250.0    # S/cm — EFFECTIVE PHASE conductivity, voxel-network convention
+#   ⚠ not a material property (ledger §15, same category as sigma_vgcf / CL-47): the grid
+#   fuses touching cells, so SDCP-SDCP contact resistance is absent from the model and any
+#   source value means only 'effective sigma under this convention'.  USER anchor 2026-07-16;
+#   cast-film vs pressed-pellet provenance is UNRECORDED.  Keep it off material-property
+#   tables and out of bare sigma_SDCP-vs-sigma_SE comparisons.
 SDCP_D_UM = 0.30
 
 

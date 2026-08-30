@@ -71,6 +71,42 @@ R8 Q1: 8 origin 은 같은 침대의 **완전한 {0,½}³ factorial** 이라 복
 Table S2 를 **세 블록**으로 나누고 제목을 *"Material and numerical parameters used for the
 DEM–MPM–voxel transport workflow"* 류로 바꾸는 것이 최소 수정이다.
 
+### 3-1. ★ 세 블록 안에서 **σ 행이 가장 잘못 놓여 있다** (2026-08-30 추가, 원장 §15)
+
+블록을 나누는 것만으로는 부족하다.  현재 표는 `σ_SDCP` · `σ_VGCF` 를 σ_SE·E 와 **같은
+재료 물성 목록**에 섞어 두는데, 그 둘은 **범주가 다르다**:
+
+| 블록 | 행 | 이 값이 무엇인가 |
+|---|---|---|
+| ① DEM (LIGGGHTS) | `Contact modulus E (dense) 24` · `E (DEM contact, calibrated) 1.35` · `ν 0.30` | 재료 앵커 + 보정된 접촉 강성 |
+| ② MPM (von Mises) | `E 1.53` · `ν 0.49` · `σ_y 0.30` | 연속체 구성 파라미터 |
+| ③ 복셀 수송 솔버 | `Voxel edge length 0.15 µm` · `σ_ion(SE)` · **`σ_e(VGCF)`** · **`σ_e(SDCP)`** | **규약 의존 유효 상 전도도** |
+
+★ ③ 안에서도 **두 줄을 더 갈라야 한다**:
+
+- **재료 앵커** — `σ_ion(SE)` 는 문헌 단결정/펠릿 측정에 걸려 있다.
+- **유효 상 전도도 (voxel-network convention)** — `σ_e(VGCF)` · `σ_e(SDCP)`.  복셀 격자는
+  **닿은 셀을 융합**하므로 섬유-섬유 · 입자-입자 **접촉저항을 표현하지 않는다**.  그래서 이
+  두 값은 그 결손을 lumping 한 **망 상수**이지 물성이 아니다 (CL-47 이 σ_VGCF 에서 이미
+  확정한 범주 — DEM 의 `E_eff` 18배 연화와 같은 인식론, frame[2]).
+
+**표에 적을 것** (권장 문구):
+
+> *Effective phase conductivities (voxel-network convention).  The transport grid fuses
+> contacting cells, so fibre–fibre and particle–particle contact resistances are not
+> represented; these values therefore lump that missing loss and are not material
+> properties.*
+
+**지켜야 할 선 셋** (원장 §15-3 과 동일 — 여기서 표 형태로 재진술):
+1. `σ_SDCP` · `σ_VGCF` 를 **재료 물성 행에 올리지 않는다.**
+2. *"이 규약 안에서"* 라는 한정 없이 `σ_SDCP` 와 `σ_SE` 를 **나란히 비교하지 않는다.**
+3. `σ_SDCP = 250` 의 출처(캐스트 필름 / 압착 펠릿)는 **기록에 없다** — 표에 `Assumed` 가
+   아니라 **`Effective (convention-dependent); provenance unrecorded`** 로 적는다.
+   "필름이다" 라고 적으면 그것이 **없는 근거**다.
+
+⇒ 코드 쪽 라벨은 2026-08-30 에 이미 맞췄다 (`mpm_webapp_payload.py --sigma-sdcp` 도움말 ·
+`step3_transport_resolution.py:40` 주석).  **남은 것은 docx 쪽 Table S2 뿐이다.**
+
 ## 4. E 연화 서술 — 사용자 요청("영률 얘기는 숨기고 porosity 타겟팅 느낌으로")
 
 **현재 문장** (line 62):
@@ -116,7 +152,8 @@ DEM–MPM–voxel transport workflow"* 류로 바꾸는 것이 최소 수정이�
 |---|---|---|
 | 1 | 본문 §전송 + Table S3 + Fig 4b 의 σ 값 교체 (규약 병기) | **[P1] 미착수** |
 | 2 | Methods 의 `standard error` → origin-phase spread | **[P1] 미착수** |
-| 3 | Table S2 를 DEM / MPM / 복셀 세 블록으로 분리, 제목 수정 | 미착수 |
+| 3 | Table S2 를 DEM / MPM / 복셀 세 블록으로 분리, 제목 수정 | 미착수 (**행 사양은 §3-1 에 확정**) |
+| 3b | σ_e(VGCF)·σ_e(SDCP) 를 *유효 상 전도도* 로 라벨 (§3-1) | 코드 ✅ 2026-08-30 · **docx 미착수** |
 | 4 | E 연화 문장을 porosity-표적 순서로 (§4 제안문) | 미착수 |
 | 5 | Table S3 나머지 항목 새 침대에서 재측정 (σ_ion 포함 — 이온 런 필요) | 미착수 |
 | 6 | ban 등록부에 **σ 쌍**(1.98/3.00) 추가 — 파생 백분율만으로는 못 잡는다 | 미착수 |

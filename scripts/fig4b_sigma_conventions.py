@@ -46,7 +46,9 @@ CAPTION = (
     'same origins so that ratios are paired; the shaded band in (b) spans the observed range '
     'over those eight phases. The eight phases form a complete factorial of a single bed rather '
     'than independent replicates, so the band is not a standard error and no confidence interval '
-    'is implied. The direction of the change is common to both conventions; its magnitude is not.'
+    'is implied. The direction of the change is common to both conventions; its magnitude is not. '
+    'The value quoted in the main text uses the centerline convention; that is a reporting choice '
+    'and not a determination that either convention is closer to a real coating.'
 )
 
 
@@ -165,6 +167,14 @@ def selftest() -> int:
         'direction of the change is common' in CAPTION and 'magnitude is not' in CAPTION)
     chk('캡션이 factorial 임을 적는다',
         'complete factorial of a single bed' in CAPTION)
+    #  ★ 본문이 centerline 을 공칭으로 쓰는 것과 캡션이 어긋나면 안 된다 (R15 P2).
+    #    ⚠ 이것은 규약 판정의 번복이 **아니다** — 사전등록의 "채택 안 함" 은 그대로이고,
+    #    본문 선택이 **편집 결정**임을 캡션이 스스로 밝히게 하는 것뿐이다.
+    chk('캡션이 본문의 공칭 선택을 편집 결정으로 밝힌다',
+        'quoted in the main text uses the centerline convention' in CAPTION
+        and 'a reporting choice' in CAPTION)
+    chk('그 문장이 우열 주장으로 새지 않는다',
+        'not a determination that either convention is closer' in CAPTION)
 
     # ④ 철회된 세대의 값이 새지 않는가
     blob = CAPTION + repr(DATA)

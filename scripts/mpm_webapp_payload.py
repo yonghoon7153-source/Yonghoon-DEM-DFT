@@ -920,9 +920,16 @@ def main():
                          '1e4 S/cm).  Same epistemology as the DEM E_eff 18x softening.')
     ap.add_argument('--sigma-superp', type=float, default=10.0, help='σ_e SuperP (S/cm) — lit order ⚠hook')
     ap.add_argument('--sigma-sdcp', type=float, default=250.0,
-                    help='σ_e SDCP material (S/cm) — 250 = USER-provided anchor UPDATE (2026-07-16, '
-                         'supersedes interim 150 of 2026-07-10, S-PEDOT-class); pellet ×5.1 stays '
-                         'COMPOSITE-level.  Doped/neutral split = future.')
+                    help='σ_e SDCP (S/cm).  ⚠ NOT a material property — like --sigma-vgcf this is '
+                         'an EFFECTIVE PHASE conductivity in the VOXEL-NETWORK convention (ledger '
+                         '§15): the grid fuses touching cells, so SDCP-SDCP contact resistance is '
+                         'not represented and any source value only means "effective σ under this '
+                         'convention".  250 = USER anchor 2026-07-16 (supersedes interim 150 of '
+                         '2026-07-10, S-PEDOT-class); whether that number was measured on a cast '
+                         'film or a pressed pellet is UNRECORDED.  Do NOT tabulate it next to '
+                         'material anchors (σ_SE, E) and do not compare it to σ_SE without the '
+                         '"within this convention" qualifier.  Sensitivity: CL-11 measured a '
+                         'sub-linear (saturating) response over a 5-point σ_SDCP sweep.')
     ap.add_argument('--sigma-ptfe', type=float, default=0.0,
                     help='σ_e PTFE (S/cm) — SENSITIVITY hook (default 0 = production: PTFE는 전도 격자에 '
                          '아예 미스탬프, bulk PTFE ~1e-16 S/cm 절연체).  >0이면 PTFE phase-4 점을 sid7로 '
