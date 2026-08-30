@@ -2212,9 +2212,17 @@ def selftest_k() -> int:
     _c3 = closure_C3(_man3, _jb3, _E3, _F3)
     chk(abs(_c3["D_eV"] - (-0.7)) < 1e-6,
         "C3: D = mean(δ_SDCP) − mean(δ_c10) = −0.7 (실제 %s)" % _c3.get("D_eV"))
-    chk("미해결" in _c3["verdict"] and "부호" in _c3["verdict"],
-        "⛔음성 C3: D 가 음수인데 설명 대상(+0.90)은 양수 → **부호 게이트**로 미해결 "
-        "(절댓값이면 0.78 로 '설명' 오판했다)")
+    # ★★ 부호 규약 (회신 AB P0-3). 봉인된 0.90 eV 는 **(UMA − DFT)** 규약이고
+    #   D3 는 additive 라 offset ≈ −δ 다 ⇒ 예측 오프셋 차등 = −D.
+    #   ⚠ 2026-08-30 이전 이 두 시험은 **틀린 규약을 그대로 인코딩**하고 있었다 —
+    #     코드와 시험이 서로 동의하면서 둘 다 틀렸다. 정확히 설명적인 D=−0.7 을
+    #     "반대 부호" 로 기각했다. 그래서 여기 규약을 글로 박아 둔다.
+    chk(abs(_c3["predicted_offset_gap_eV"] - 0.7) < 1e-6,
+        "C3: 예측 오프셋 차등 = −D = +0.7 (offset 규약, 실제 %s)"
+        % _c3.get("predicted_offset_gap_eV"))
+    chk(_c3["ratio"] > 0 and _c3["ratio"] >= C3_HI and "수치상" in _c3["verdict"],
+        "C3 양성: −D 가 +0.90 과 같은 부호이고 비율 %s ≥ 0.70 → '수치상 설명'"
+        % _c3.get("ratio"))
     _en3p, _jb3p = dict(_en3), dict(_jb3)
     for _i in range(4):
         for _f, _d in (("sdcp_neutral", 2.0), ("ptfe_c10", 1.0)):
@@ -2224,9 +2232,28 @@ def selftest_k() -> int:
             _jb3p[_k] = dict(_jb3[_k],
                              static=dict(_jb3[_k]["static"], edisp_eV=_d))
     _c3b = closure_C3(_man3, _jb3p, lambda j: _en3p.get(j), _F3)
-    chk(_c3b["D_eV"] > 0 and _c3b["ratio"] >= 0.70 and "수치상" in _c3b["verdict"],
-        "C3 양성: 부호가 같고 비율 %s ≥ 0.70 → '수치상 설명'(인과 아님)"
-        % _c3b.get("ratio"))
+    chk(_c3b["D_eV"] > 0 and "미해결" in _c3b["verdict"] and "부호" in _c3b["verdict"],
+        "⛔음성 C3: D 가 양수면 예측 오프셋 차등(−D)이 관측 +0.90 과 **반대 부호** → "
+        "미해결 (절댓값이면 %s 로 '설명' 오판했다)" % abs(_c3b.get("ratio", 0)))
+    # ⛔ 음성 C3-e — **평균이 맞아도 조각내 일관성이 깨지면 미해결.**
+    #   D3 는 기하 의존 항이라 자세마다 달라야 하는데 관측 오프셋은 조각 안에서
+    #   상수(SDCP 6 meV)였다. δ 가 그보다 훨씬 흔들리면 D3 귀속이 성립 안 한다.
+    _jb_w = dict(_jb3)
+    for _i, _d in enumerate((-2.0, -2.3, -1.7, -2.0)):
+        _kw = "prospective/sdcp_neutral__b%02d__%s" % (_i, SEED_MAIN)
+        _jb_w[_kw] = dict(_jb3[_kw],
+                          static=dict(_jb3[_kw]["static"], edisp_eV=_d))
+        # 이 픽스처는 **조각내 range** 를 시험한다. 쌍둥이를 남겨 두면 항등식
+        # 교차검증이 먼저 걸려서(그 자체는 정상 동작) 시험하려던 경로에 못 간다.
+        _jb_w.pop(_kw + "__d3off", None)
+    _c3w = closure_C3(_man3, _jb_w, _E3, _F3)
+    chk("조각내 일관성" in _c3w["verdict"]
+        and _c3w["within_fragment"]["sdcp_neutral"]["ok"] is False,
+        "⛔음성 C3: δ 의 조각내 range 0.6 eV 가 관측 오프셋 상수성(6 meV)의 5배를 "
+        "넘으면 **평균이 맞아도** 미해결 (%s)" % _c3w["verdict"][:40])
+    chk(_c3["within_fragment"]["sdcp_neutral"]["ok"] is True,
+        "양성 대조: δ 가 조각내 상수면 일관성 통과 (range %s)"
+        % _c3["within_fragment"]["sdcp_neutral"]["delta_range_eV"])
     _kx = "prospective/sdcp_neutral__b00__%s__d3off" % SEED_MAIN
     _jb_x = dict(_jb3)
     _jb_x[_kx] = dict(_jb3[_kx], geom={"magnetic": {"realized_basin_id": "Z"}})
@@ -2799,6 +2826,22 @@ C3_HI, C3_LO = 0.70, 0.30    # 채택 / 기각 비율
 # EDIFF(1e-6 eV) 급 잔차는 정상이고, 그보다 훨씬 크면 쌍둥이가 IVDW 말고 다른
 # 데서 갈렸다는 뜻이다. 1 meV 는 EDIFF 의 1000배 — 넉넉하되 실제 결함은 잡는다.
 C3_EDISP_TOL_EV = 1.0e-3
+#: ★ 0.90 eV 의 **원자료 정의를 봉인한다** (회신 AB P0-3).
+#:   정본 db/properties/prereg_sdcp_neutral_contrast_2026_08_29.json
+#:   → `🔬_UMA_대_DFT_오프셋_실측_2026_08_29.오프셋_UMA_빼기_DFT_eV`
+#:   부호규약은 문자 그대로 **(UMA − DFT)** 다. 흡착에너지 오프셋이지
+#:   총에너지 오프셋이 아니므로 원소별 energy-zero 는 소거된다 (AB P0-3 후단 해소).
+C3_OFFSET_UMA_MINUS_DFT = {
+    "sdcp_neutral": {"Li_top": 1.0728, "Ni_top": 1.0667},
+    "ptfe_c10": {"Li_top": 0.1855, "Ni_top": 0.1484},
+}
+#: 조각 내 오프셋 **상수성** (관측 range). D3 가설이 살아남으려면 δ 의 조각내
+#: range 가 이 정도여야 한다 — D3 는 기하 의존이라 자세마다 달라야 하는데
+#: 관측 오프셋은 조각 안에서 상수였다 (prereg ⛔_분산_귀속_철회_2026_08_29).
+C3_OFFSET_RANGE_EV = {"sdcp_neutral": 0.0061, "ptfe_c10": 0.0371}
+#: 조각내 일관성 판정의 여유배수 — δ range 가 관측 range 의 이 배를 넘으면
+#: "D3 로 설명" 은 성립하지 않는다 (평균이 맞아도).
+C3_WITHIN_SLACK = 5.0
 
 
 def _pick(jobs, **want):
@@ -2918,9 +2961,11 @@ def closure_C3(man, jobs, E, frags):
     ⛔ 이 함수가 **못 하는 것**: Edisp 값 자체가 맞는지는 검증하지 않는다.
       VASP 가 찍은 수를 그대로 쓴다. 독립 D3 구현과 대조하지 않는다.
     """
-    res = {"schema": "closure_C3/v2", "ref_gap_eV": C3_REF_GAP_EV,
+    res = {"schema": "closure_C3/v3", "ref_gap_eV": C3_REF_GAP_EV,
            "hi": C3_HI, "lo": C3_LO, "edisp_tol_eV": C3_EDISP_TOL_EV,
            "source": "Edisp (eV) from the D3-on OUTCAR — no D3-off twin required",
+           "offset_definition": C3_OFFSET_UMA_MINUS_DFT,
+           "offset_within_fragment_range_eV": C3_OFFSET_RANGE_EV,
            "by_frag": {}}
 
     def pair_delta(jn):
@@ -3010,10 +3055,51 @@ def closure_C3(man, jobs, E, frags):
         return res
     D = means[sd] - means[ct]
     res["D_eV"] = round(D, 6)
-    res["ratio"] = round(D / C3_REF_GAP_EV, 4)
-    if D * C3_REF_GAP_EV <= 0:
-        res["verdict"] = ("**미해결** — D 의 부호가 설명 대상과 반대다. 절댓값으로 "
-                          "비율을 적용하면 반대 방향 효과를 '설명' 으로 오판한다")
+    # ★★ 부호 규약 정정 (회신 AB P0-3) — 종전 코드는 **정확히 설명적인 경우를
+    #    기각**했다. 봉인된 0.90 eV 는 (UMA − DFT) 규약이고, D3 는 총에너지에
+    #    **더해지는** 항이므로
+    #        offset_f = E_ads^UMA − E_ads^DFT ≈ −δ_f
+    #    ⇒ 예측되는 오프셋 차등 = (−δ_SDCP) − (−δ_c10) = δ_c10 − δ_SDCP = **−D**
+    #    이다. 그래서 비교하는 양을 offset 규약으로 **이름부터** 맞춘다 —
+    #    부호를 뒤집는 게 아니라 같은 규약에서 재는 것이다.
+    res["predicted_offset_gap_eV"] = round(-D, 6)
+    res["ratio"] = round(-D / C3_REF_GAP_EV, 4)
+    res["sign_convention"] = (
+        "0.90 eV = mean(UMA − DFT)_SDCP − mean(UMA − DFT)_c10 = +0.9028 "
+        "(prereg 오프셋_UMA_빼기_DFT_eV). D3 는 additive 이므로 offset ≈ −δ ⇒ "
+        "예측 오프셋 차등 = −D. **흡착에너지 오프셋이지 총에너지 오프셋이 아니다** "
+        "— 원소별 energy-zero 는 소거된다")
+
+    # ★ 조각내 일관성 — **평균만으로 판정하지 않는다.** D3 는 기하 의존 항이라
+    #   자세마다 달라야 하는데, 관측 오프셋은 조각 안에서 상수였다
+    #   (SDCP 6 meV · c10 37 meV). δ 가 그보다 훨씬 크게 흔들리면 평균이 맞아도
+    #   "D3 로 설명" 은 성립하지 않는다 (prereg ⛔_분산_귀속_철회_2026_08_29).
+    within = {}
+    for f, r in res["by_frag"].items():
+        rows = r.get("rows") or []
+        if len(rows) < 2:
+            continue
+        vals = [x["delta_eV"] for x in rows]
+        rng = max(vals) - min(vals)
+        obs = C3_OFFSET_RANGE_EV.get(f)
+        within[f] = {"delta_range_eV": round(rng, 6),
+                     "observed_offset_range_eV": obs,
+                     "slack": C3_WITHIN_SLACK,
+                     "ok": None if obs is None else bool(rng <= obs * C3_WITHIN_SLACK)}
+        r["within_fragment_range_eV"] = round(rng, 6)
+    res["within_fragment"] = within
+    _bad = sorted(f for f, w in within.items() if w["ok"] is False)
+
+    if -D * C3_REF_GAP_EV <= 0:
+        res["verdict"] = ("**미해결** — 예측 오프셋 차등(−D)의 부호가 관측 "
+                          f"{C3_REF_GAP_EV:+.2f} eV 와 반대다. 절댓값으로 비율을 "
+                          "적용하면 반대 방향 효과를 '설명' 으로 오판한다")
+    elif _bad:
+        res["verdict"] = (
+            "**미해결 — 조각내 일관성 실패** (%s). δ 의 조각내 range 가 관측 오프셋 "
+            "상수성의 %g배를 넘는다. D3 는 기하 의존 항이라 자세마다 달라야 하는데 "
+            "관측 오프셋은 조각 안에서 상수였다 — 평균 비율이 맞아도 D3 귀속은 "
+            "성립하지 않는다 (prereg 분산 귀속 철회)." % (", ".join(_bad), C3_WITHIN_SLACK))
     elif res["ratio"] >= C3_HI:
         res["verdict"] = (f"이 네 자세에서 관측된 {C3_REF_GAP_EV} eV 차등을 "
                           f"**수치상 {res['ratio']:.0%} 설명**한다 (인과가 아니라 분해)")
