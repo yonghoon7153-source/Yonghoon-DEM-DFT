@@ -5638,15 +5638,62 @@ function _captureHiRes(state, scale) {
   return url;
 }
 
+/* 캔버스 폭에 글줄을 맞춘다 — 글꼴을 줄이고, 그래도 안 맞으면 낱말 경계로 줄바꿈.
+ * ★★ 2026-08-31 — 왜 생겼나: 컬러바 제목을 정직한 이름으로 고치자마자 **PNG 에서 잘렸다**
+ *   (오른쪽 "— NOT a contact count" 가 통째로 사라졌다).  폭이 `470*S2` 로 고정인데 제목만
+ *   길어졌기 때문이다.  ⚠ 이 실패 방식이 나쁜 이유는 **조용하다**는 것이다 — 잘린 PNG 는
+ *   여전히 그럴듯해 보이고, 하필 잘려 나가는 부분이 **경고 문구**다.  라벨을 정직하게 쓸수록
+ *   길어지므로 사람 눈에 기대면 안 된다.  ⇒ 폭에 맞추는 것을 코드가 한다.
+ * `measure(text, px)` 를 주입받아 순수 함수로 둔다 (headless 검사 가능 — check_all 규율).
+ */
+export function fitTextLines(measure, text, maxW, basePx, minPx, maxLines) {
+  const t = String(text == null ? '' : text).trim();
+  if (!t) return { lines: [], px: basePx };
+  const lim = Math.max(1, maxLines || 2);
+  const wrapAt = (px) => {                       // 낱말 경계 greedy 줄바꿈
+    const words = t.split(/\s+/);
+    const out = [];
+    let cur = '';
+    for (const w of words) {
+      const cand = cur ? cur + ' ' + w : w;
+      if (cur && measure(cand, px) > maxW) { out.push(cur); cur = w; } else { cur = cand; }
+    }
+    if (cur) out.push(cur);
+    return out;
+  };
+  for (let px = basePx; px >= minPx; px -= 0.5) {
+    const ls = wrapAt(px);
+    //  한 낱말이 혼자서도 폭을 넘으면 그 px 는 실패다 (greedy 가 못 자른다).
+    if (ls.length <= lim && ls.every(l => measure(l, px) <= maxW)) return { lines: ls, px };
+  }
+  return { lines: wrapAt(minPx), px: minPx };    // 최후 — 줄이 늘어도 자르지는 않는다
+}
+
 function exportColorbarPNG(spec, fname) {
   const sp = spec || { map: 'jet', gamma: 1.6, title: '|J| (normalized)', left: '0', right: 'high' };
-  const S2 = 6, W2 = 470 * S2, H2 = (sp.sub ? 96 : 80) * S2;
+  const S2 = 6, W2 = 470 * S2;
+  //  레이아웃을 **먼저 재고** 그 다음에 캔버스 높이를 정한다 (캔버스 크기를 바꾸면 컨텍스트가
+  //  초기화되므로 그린 뒤에 늘릴 수 없다).
+  const mcv = document.createElement('canvas');
+  const mcx = mcv.getContext('2d');
+  const mkMeasure = (weight) => (txt, px) => {
+    mcx.font = `${weight}${px}px Arial`;
+    return mcx.measureText(txt).width;
+  };
+  const innerW = W2 - 20 * S2;
+  const tFit = fitTextLines(mkMeasure('600 '), sp.title, innerW, 13 * S2, 8.5 * S2, 2);
+  const sFit = sp.sub ? fitTextLines(mkMeasure(''), sp.sub, innerW, 9.5 * S2, 7 * S2, 2)
+                      : { lines: [], px: 9.5 * S2 };
+  const tLH = tFit.px * 1.18, sLH = sFit.px * 1.22;
+  const titleH = Math.max(1, tFit.lines.length) * tLH;
+  const H2 = Math.round(titleH + 8 * S2 + 25 * S2 + 20 * S2
+                        + (sFit.lines.length ? sFit.lines.length * sLH + 4 * S2 : 0));
   const cv = document.createElement('canvas'); cv.width = W2; cv.height = H2;
   const cx = cv.getContext('2d');
   cx.fillStyle = '#ffffff'; cx.fillRect(0, 0, W2, H2);
-  cx.fillStyle = '#111111'; cx.font = `600 ${13 * S2}px Arial`; cx.textAlign = 'left';
-  cx.fillText(sp.title, 10 * S2, 17 * S2);
-  const bx = 10 * S2, by = 25 * S2, bw = W2 - 20 * S2, bh = 25 * S2;
+  cx.fillStyle = '#111111'; cx.font = `600 ${tFit.px}px Arial`; cx.textAlign = 'left';
+  tFit.lines.forEach((ln, i) => cx.fillText(ln, 10 * S2, tFit.px + i * tLH));
+  const bx = 10 * S2, by = titleH + 8 * S2, bw = innerW, bh = 25 * S2;
   for (let i = 0; i < bw; i++) {
     const t = i / (bw - 1);
     const hx = sp.map === 'coolwarm' ? coolwarmColor(t) : jetColor(sp.gamma ? Math.pow(t, sp.gamma) : t);
@@ -5668,9 +5715,9 @@ function exportColorbarPNG(spec, fname) {
     if (sp.mid != null) { cx.textAlign = 'center'; cx.fillText(String(sp.mid), bx + bw / 2, by + bh + 15 * S2); }
     cx.textAlign = 'right'; cx.fillText(sp.right != null ? String(sp.right) : '', bx + bw, by + bh + 15 * S2);
   }
-  if (sp.sub) {
-    cx.fillStyle = '#444444'; cx.font = `${9.5 * S2}px Arial`; cx.textAlign = 'left';
-    cx.fillText(String(sp.sub), bx, by + bh + 28 * S2);
+  if (sFit.lines.length) {
+    cx.fillStyle = '#444444'; cx.font = `${sFit.px}px Arial`; cx.textAlign = 'left';
+    sFit.lines.forEach((ln, i) => cx.fillText(ln, bx, by + bh + 22 * S2 + sFit.px + i * sLH));
   }
   const a2 = document.createElement('a'); a2.href = cv.toDataURL('image/png');
   a2.download = fname || 'colorbar.png'; document.body.appendChild(a2); a2.click(); a2.remove();
