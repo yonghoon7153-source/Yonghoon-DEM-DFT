@@ -9,7 +9,7 @@ verificationStatus: unverified
 explored: false
 authoredBy: agent
 effort: high
-claimType: descriptive
+claimType: mixed
 evidenceScope: multi-source-primary
 ---
 
@@ -29,7 +29,7 @@ evidenceScope: multi-source-primary
 
 | 축 | 정본 | 브랜치 |
 |---|---|---|
-| DEM/MPM/복셀 수송 (Table S2·S3, Figure 4, Methods 시뮬) | `docs/reviews/table_s3_data_20260827.md` · `manuscript_state_20260830.md` | `manuscript-track` |
+| DEM/MPM/복셀 수송 (Table S2·S3, Figure 4, Methods 시뮬) | `manuscript-track` 브랜치 `docs/reviews/` 안의 `table_s3_data_20260827.md` · `manuscript_state_20260830.md` | `manuscript-track` |
 | DFT (Table S1, Figure 2e, Methods DFT) | `db/properties/sdcp_wave1_citable.json` · `sdcp_neutral_closed_2026_08_28.json` | `claude/friendly-meitner-lldvar` |
 
 v8 문서는 **둘을 옮겨 적은 것**이다. 어긋나면 정본이 이긴다.

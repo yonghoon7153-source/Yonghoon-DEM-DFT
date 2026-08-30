@@ -1,6 +1,6 @@
 # kb 카탈로그 (생성물 — 손으로 고치지 말 것)
 
-> `python3 tools/kb_wiki.py index` 가 만든다 · 2026-08-30 · managed-files: 295
+> `python3 tools/kb_wiki.py index` 가 만든다 · 2026-08-30 · managed-files: 296
 
 규칙: kb/SCHEMA.md · 열린 질문: kb/questions/ · 논지 카드: kb/syntheses/ · 원장: kb/open_items.md · 문헌: litdb/INDEX.md
 
@@ -251,7 +251,7 @@
 - `kb/projects/sei_products_2026_08_06.md` — SEI 분해상 6종 캠페인 — 확산장벽 · 형성전위 · 밴드갭
 - `kb/projects/symposium_2026_competitive_analysis.md` — 전지기술 심포지엄 2026 — 경쟁 좌표 분석 (이상욱 / 문장혁)
 
-## questions/ (7)
+## questions/ (8)
 - `kb/questions/doped_declared_state_feasibility_2026_08_29.md` — doped E_ads 를 '상태 선언' 으로 살릴 수 있나 — NUPDOWN 은 홀 위치를 안 묶는다 ○미열람 [open]
 - `kb/questions/esw_reduction_limit_field_2026_08_28.md` — `reduction_limit_V` 는 환원한계가 아닌 것 같다 — breakpoint 하나 아래를 가리킨다 ○미열람 [open]
 - `kb/questions/lpsocl_low_beta_mechanism.md` — 저β 런의 정체 — 케이지 절편인가, 진짜 sub-diffusion인가, 느린 전이인가 ⚠disputed ○미열람 [active]
@@ -259,6 +259,7 @@
 - `kb/questions/sdcp_doped_reopen_v2_2026_08_28.md` — sdcp_doped 재개 설계 v2 — 회신 O 재승인 조건 7 을 실제로 채우는 카드 ○미열람 [answered]
 - `kb/questions/sdcp_doped_reopen_v3_2026_08_28.md` — sdcp_doped 재개 설계 v3 — 회신 R 재심사 조건 8 반영 (Stage 0 재심사용) ○미열람 [active]
 - `kb/questions/sdcp_site_preference.md` — SDCP 조각은 LiNiO₂(104)에서 Li 자리와 Ni 자리 중 어디에 붙는가 ○미열람 [active]
+- `kb/questions/sdcp_stageA_holdout_selector_2026_08_30.md` — estimand 카드 — Stage A 홀드아웃: UMA 선택기가 DFT 순위를 맞히나 ○미열람 [open]
 
 ## syntheses/ (6)
 - `kb/syntheses/binder_adsorption_charge_state_2026_08_29.md` — 음이온성 바인더의 흡착에너지 — ICEP 의 (−H) 는 탈양성자가 아니라 H 이동이었다 ○미열람

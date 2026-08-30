@@ -84,21 +84,21 @@
  "4_닫힘_조건_C3_D3_분해": {
   "⚠_2026_08_29e_개정": "회신 AA P0-4 — 식·부호·branch·집계·결측 규칙을 못박는다. **결과는 아직 0잡이다.**",
   "정의": {
-   "자세별_분산기여": "δ_{f,p} = [E_{C,on} − E_{C,off}](f,p) − [E_{S,on} − E_{S,off}] − [E_{M,on} − E_{M,off}](f)",
+   "자세별_분산기여": "δ_{f,p} = Edisp_C(f,p) − Edisp_S − Edisp_M(f)   [= 종전 식 [E_C,on−E_C,off] − [E_S,on−E_S,off] − [E_M,on−E_M,off] 와 항등]",
    "C_S_M": "C = complex(f,p) · S = clean slab · M = gas 분자(f)",
    "조각간_차": "D = mean_p(δ_{SDCP,p}) − mean_p(δ_{c10,p})   ← **평균이다. 부호 있는 값이다**",
-   "branch": "pm1 만 (D3 짝이 pm1 에만 있다 — --d3_seed_main_only)",
-   "clean_slab": "refs/clean_slab__afm2424_pm1 (on) 과 그 __d3off (off)",
+   "branch": "pm1 만 (D3 는 자기상태에 무관하지만 기하가 branch 별로 같아야 한다)",
+   "clean_slab": "refs/clean_slab__afm2424_pm1 의 Edisp",
    "gas_box": "box24 (정본). box20 은 상자 수렴 확인용이지 C3 의 입력이 아니다",
    "집계": "조각별 **4자세 산술평균**. 중앙값·최저 아님"
   },
   "전제_실행_전_확인": [
-   "D3 on/off 두 잡의 POSCAR 가 바이트 동일 (쌍둥이는 copytree 라 보장되지만 확인한다)",
-   "INCAR 이 IVDW 줄 하나 말고 동일",
-   "두 잡의 realized_basin_id 가 같다 — **다른 상태끼리 빼면 D3 기여가 아니다**",
-   "가능하면 D3-on OUTCAR 의 dispersion 항(Edisp)과 (on−off) 총에너지 차를 교차검증"
+   "그 잡의 OUTCAR 에 `Edisp (eV)` 가 **있다** — 없으면 IVDW 가 실제로 안 걸린 것이고 그 조각은 unresolved (0 으로 읽지 않는다)",
+   "NSW=0 이라 Edisp 가 한 번만 찍힌다",
+   "쌍둥이가 남아 있는 번들이면 |(E_on−E_off) − Edisp| ≤ 1 meV — 넘으면 쌍둥이가 IVDW 밖에서 갈렸다는 뜻이라 unresolved",
+   "네 자세 수는 MANIFEST.planned 에서 센다 (회수분에서 세지 않는다)"
   ],
-  "결측_처리": "네 자세 중 하나라도 on/off 짝이 깨지거나 basin 이 다르면 그 조각의 C3 는 **unresolved**",
+  "결측_처리": "네 자세 중 하나라도 Edisp 결측·검사 실패면 그 조각의 C3 는 **unresolved**. 부분집합 평균을 내지 않는다",
   "판정_문턱_결과_보기_전_고정": {
    "⚠_부호_먼저": "**D 와 0.90 eV 의 부호가 같을 때만** 아래 비율을 적용한다. 절댓값을 쓰면 반대 방향 효과도 '설명' 으로 오판한다 (회신 AA).",
    "D/0.90 ≥ 0.70": "이 네 자세에서 관측된 0.90 eV 차등을 **수치상 70 % 이상 설명한다**",
@@ -107,7 +107,23 @@
    "부호가 반대": "**미해결**. '설명' 이라고 쓰지 않는다"
   },
   "⛔_허용_문구": "'원인의 70 % 를 증명' 이 아니라 **'이 네 자세에서 관측된 0.90 eV 차등을 수치상 70 % 이상 설명'**. 인과가 아니라 수치 분해다.",
-  "IVDW_11": "D3 zero damping 이다 (D3-BJ 아님). 이 값은 wave1 INCAR 되울림 36/36 과 같다."
+  "IVDW_11": "D3 zero damping 이다 (D3-BJ 아님). 이 값은 wave1 INCAR 되울림 36/36 과 같다.",
+  "⚠_2026_08_30_v2_개정": "**D3-off 쌍둥이 잡을 쓰지 않는다.** D3(IVDW=11)는 SCF 에 안 들어가고 핵좌표만 보고 총에너지에 더해지는 항이라, 고정기하 static(NSW=0)에서 E_on − E_off = Edisp 가 근사가 아니라 **항등식**이다. VASP 는 그 Edisp 를 OUTCAR 에 직접 찍는다 ⇒ δ 의 세 괄호가 각각 Edisp 로 접힌다. 쌍둥이 16잡은 정보가 0이므로 버리고, 그 예산을 prospective holdout 으로 돌린다 (1저자 결정 2026-08-30, 회신 AB Q6 옵션 A). ⚠ 이 개정은 **DFT 결과 0잡 시점**에 이루어졌다 — 결과를 보고 고친 것이 아니다.",
+  "실물_근거_2026_08_30": {
+   "출처": "runs/sdcp_phaseB_vasp_v1_2026_08_08 (같은 IVDW=11)",
+   "Edisp_eV": {
+    "slab": -27.49493,
+    "mol_neutral": -0.71798,
+    "complex_neutral": -28.58614,
+    "mol_doped": -0.6807,
+    "complex_doped": -28.56751
+   },
+   "delta_eV": {
+    "neutral": -0.37323,
+    "doped": -0.39188
+   },
+   "⚠": "이 값들은 phaseB 세대다 — Stage A 판정에 인용하지 않는다. Edisp 가 실제로 찍힌다는 것과 식이 도는 것을 보인 것뿐이다"
+  }
  },
  "5_닫힘_조건_C4_모티프_대비": {
   "무엇을_묻나": "SDCP 의 표면 결합이 **술폰산 O–H···표면 O 수소결합**에서 오는가, **백본 C–H 접촉**에서 오는가.",
@@ -276,6 +292,11 @@
    "at": "2026-08-29g",
    "state": "bundle_frozen_pre_results",
    "note": "C1·C3 를 분석기에 구현한 뒤 v9 재생성. 번들 안 분석기가 자체 selftest 통과. 여전히 DFT 0잡 시점이고 C1~C3 문턱은 최초 등록값 그대로다."
+  },
+  {
+   "at": "2026-08-30",
+   "state": "conditions_fixed_C3_v2_edisp",
+   "note": "C3 를 Edisp 기반으로 개정. D3-off 16잡 제거 → prospective holdout 으로 전환 (옵션 A). **DFT 결과 여전히 0잡.** 문턱(0.90 eV · 70/30 · 부호 게이트)은 손대지 않았다 — 계산 방식만 바꿨고 판정 규칙은 그대로다."
   }
  ]
 }

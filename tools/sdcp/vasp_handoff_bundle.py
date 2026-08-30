@@ -1558,6 +1558,7 @@ def read_outcar(p):
     t, rmeta = _read_outcar_raw(p)
     if rmeta["read_error"]:
         return {"read_error": rmeta["read_error"], "normal_end": False, "E0": None,
+                "edisp_eV": None, "edisp_n": 0,
                 "nelm_hit": False, "ionic_conv": False, "nions": None, "nkpts": None,
                 "titels": [], "incar_echo": {}, "moments": None, "mag_total": None,
                 "run_segments": None}
@@ -1565,6 +1566,15 @@ def read_outcar(p):
         return None
     t, seg = _last_run_segment(t)
     e = re.findall(r"energy\(sigma->0\)\s*=\s*(-?[\d.]+)", t)
+    # ── D3 분산항. **VASP 가 IVDW=11 에서 직접 찍는다** (repo 실물 확인:
+    #   runs/sdcp_phaseB_vasp_v1_2026_08_08/{slab,mol_neutral,complex_neutral}/OUTCAR.gz
+    #   → " Edisp (eV)  -27.49493 / -0.71798 / -28.58614").
+    #   D3 는 SCF 에 안 들어가고 핵좌표만 보고 총에너지에 **더해지는** 항이라
+    #   고정기하 static 에서 `E_on − E_off = Edisp` 가 **항등식**이다 ⇒ C3 의 세 괄호가
+    #   각각 Edisp 로 접힌다. 그래서 D3-off 쌍둥이 잡이 **필요 없다**.
+    #   ⚠ NSW>0 이면 이온스텝마다 갱신될 수 있으므로 **마지막 것**을 쓴다. 이 캠페인은
+    #     전 잡 NSW=0 이라 하나뿐이고, 개수도 같이 돌려준다(검사용).
+    _ed = re.findall(r"Edisp\s*\(eV\)\s*:?\s*(-?[\d.]+)", t)
     nions = re.search(r"NIONS\s*=\s*(\d+)", t)
     nk = re.search(r"NKPTS\s*=\s*(\d+)", t)
     nelm = re.search(r"NELM\s*=\s*(\d+)", t)
@@ -1613,6 +1623,8 @@ def read_outcar(p):
     chg_from_file = (True if (_sup and not _atoms) else
                      False if _atoms else None)
     return {"E0": float(e[-1]) if e else None,
+            "edisp_eV": float(_ed[-1]) if _ed else None,
+            "edisp_n": len(_ed),
             "chgcar_from_file": chg_from_file,
             "ionic_conv": "reached required accuracy" in t,
             # ⚠ 정상종료를 안 보면 **잘린 OUTCAR 도 에너지만 있으면 통과**한다
@@ -2146,28 +2158,31 @@ def selftest_k() -> int:
         f"(RMS {_dd3['moment_rms_muB']} > {MOM_RMS_TOL})")
 
     # ── 닫힘 조건 C1 · C3 (회신 AA P0-4 — 코드로 낸다) ────────────────────
-    def _J(kind, **kw):
+    def _J(kind, _edisp=None, **kw):
         m = {"kind": kind, "d3": "on"}; m.update(kw)
         return {"ok": True, "gates": [], "meta": m,
+                # C3 v2 는 OUTCAR 의 Edisp 를 읽는다 — 픽스처도 실물과 같은 자리에 둔다
+                "static": {"edisp_eV": _edisp, "edisp_n": 0 if _edisp is None else 1,
+                           "incar_echo": {"NSW": "0"}},
                 "geom": {"magnetic": {"realized_basin_id": "B"}}}
 
     _en3, _jb3 = {}, {}
     _CS = "refs/clean_slab__" + SEED_MAIN
-    _jb3[_CS] = _J("clean_ref", seed=SEED_MAIN); _en3[_CS] = -900.0
+    _jb3[_CS] = _J("clean_ref", seed=SEED_MAIN, _edisp=-1.0); _en3[_CS] = -900.0
     _jb3[_CS + "__d3off"] = _J("clean_ref", seed=SEED_MAIN, d3="off", d3_twin_of=_CS)
-    _en3[_CS + "__d3off"] = -899.0                    # d_slab = -1.0
+    _en3[_CS + "__d3off"] = -899.0                    # d_slab = -1.0 = Edisp_slab
     for _f, _em, _dm in (("sdcp_neutral", -200.0, -0.5), ("ptfe_c10", -100.0, -0.2)):
         _mk = "refs/mol__%s__box24" % _f
-        _jb3[_mk] = _J("mol_ref", fragment=_f); _en3[_mk] = _em
+        _jb3[_mk] = _J("mol_ref", fragment=_f, _edisp=_dm); _en3[_mk] = _em
         _jb3[_mk + "__d3off"] = _J("mol_ref", fragment=_f, d3="off", d3_twin_of=_mk)
-        _en3[_mk + "__d3off"] = _em - _dm             # d_mol = _dm
+        _en3[_mk + "__d3off"] = _em - _dm             # d_mol = _dm = Edisp_mol
         for _i in range(4):
             _k = "prospective/%s__b%02d__%s" % (_f, _i, SEED_MAIN)
+            _dcx = -2.0 if _f == "sdcp_neutral" else -1.0
             _jb3[_k] = _J("prospective_pose", fragment=_f, seed=SEED_MAIN,
                           basin_id="b%02d" % _i, role="calibration",
-                          uma_E_pose_eV=0.10 + 0.01 * _i)
+                          uma_E_pose_eV=0.10 + 0.01 * _i, _edisp=_dcx)
             _en3[_k] = -900.0 + _em + (-1.20 - 0.01 * _i)   # 잔차 range = 0.06
-            _dcx = -2.0 if _f == "sdcp_neutral" else -1.0
             _jb3[_k + "__d3off"] = _J("prospective_pose", fragment=_f, seed=SEED_MAIN,
                                       basin_id="b%02d" % _i, d3="off", d3_twin_of=_k)
             _en3[_k + "__d3off"] = _en3[_k] - _dcx
@@ -2194,28 +2209,49 @@ def selftest_k() -> int:
         == "unresolved",
         "⛔음성 C1: clean slab 과 basin 이 다른 자세가 있으면 unresolved")
 
-    _c3 = closure_C3({}, _jb3, _E3, _F3)
+    _c3 = closure_C3(_man3, _jb3, _E3, _F3)
     chk(abs(_c3["D_eV"] - (-0.7)) < 1e-6,
         "C3: D = mean(δ_SDCP) − mean(δ_c10) = −0.7 (실제 %s)" % _c3.get("D_eV"))
     chk("미해결" in _c3["verdict"] and "부호" in _c3["verdict"],
         "⛔음성 C3: D 가 음수인데 설명 대상(+0.90)은 양수 → **부호 게이트**로 미해결 "
         "(절댓값이면 0.78 로 '설명' 오판했다)")
-    _en3p = dict(_en3)
+    _en3p, _jb3p = dict(_en3), dict(_jb3)
     for _i in range(4):
         for _f, _d in (("sdcp_neutral", 2.0), ("ptfe_c10", 1.0)):
             _k = "prospective/%s__b%02d__%s" % (_f, _i, SEED_MAIN)
             _en3p[_k + "__d3off"] = _en3p[_k] - _d      # d_cx = E_on − E_off = +_d
-    _c3b = closure_C3({}, _jb3, lambda j: _en3p.get(j), _F3)
+            # 항등식이 성립하도록 Edisp 도 같이 뒤집는다 — 안 그러면 교차검증에 걸린다
+            _jb3p[_k] = dict(_jb3[_k],
+                             static=dict(_jb3[_k]["static"], edisp_eV=_d))
+    _c3b = closure_C3(_man3, _jb3p, lambda j: _en3p.get(j), _F3)
     chk(_c3b["D_eV"] > 0 and _c3b["ratio"] >= 0.70 and "수치상" in _c3b["verdict"],
         "C3 양성: 부호가 같고 비율 %s ≥ 0.70 → '수치상 설명'(인과 아님)"
         % _c3b.get("ratio"))
     _kx = "prospective/sdcp_neutral__b00__%s__d3off" % SEED_MAIN
     _jb_x = dict(_jb3)
     _jb_x[_kx] = dict(_jb3[_kx], geom={"magnetic": {"realized_basin_id": "Z"}})
-    chk(closure_C3({}, _jb_x, _E3, _F3)["by_frag"]["sdcp_neutral"]["verdict"]
+    chk(closure_C3(_man3, _jb_x, _E3, _F3)["by_frag"]["sdcp_neutral"]["verdict"]
         == "unresolved",
         "⛔음성 C3: on/off 가 다른 realized basin 이면 unresolved "
         "(그 차이는 D3 기여가 아니다)")
+    # ⛔ 음성 C3-c — **Edisp 가 없으면 unresolved.** IVDW 가 실제로 안 걸린 잡을
+    #   "D3 기여 0" 으로 조용히 읽으면 D 가 통째로 틀린다.
+    _kn = "prospective/sdcp_neutral__b02__" + SEED_MAIN
+    _jb_n = dict(_jb3)
+    _jb_n[_kn] = dict(_jb3[_kn], static=dict(_jb3[_kn]["static"], edisp_eV=None))
+    _r_n = closure_C3(_man3, _jb_n, _E3, _F3)["by_frag"]["sdcp_neutral"]
+    chk(_r_n["verdict"] == "unresolved" and any("Edisp" in str(x) for x in
+                                                (_r_n.get("missing") or [])),
+        "⛔음성 C3: OUTCAR 에 Edisp 가 없으면 unresolved (0 으로 읽지 않는다)")
+    # ⛔ 음성 C3-d — **항등식이 깨지면 unresolved.** 쌍둥이가 남아 있는데
+    #   (E_on−E_off) 와 Edisp 가 다르면 IVDW 말고 다른 축이 갈린 것이다.
+    _jb_i = dict(_jb3)
+    _jb_i[_kn] = dict(_jb3[_kn],
+                      static=dict(_jb3[_kn]["static"], edisp_eV=-2.5))  # 참값은 -2.0
+    _r_i = closure_C3(_man3, _jb_i, _E3, _F3)["by_frag"]["sdcp_neutral"]
+    chk(_r_i["verdict"] == "unresolved" and any("항등식" in str(x) for x in
+                                                (_r_i.get("missing") or [])),
+        "⛔음성 C3: (E_on−E_off) ≠ Edisp 면 unresolved — 쌍둥이가 IVDW 밖에서 갈렸다")
 
     # guard band
     D = 0.030
@@ -2759,6 +2795,10 @@ SEED_MAIN = "afm2424_pm1"
 C1_S_TOL_EV = 0.050          # 조각 내 잔차 range 허용
 C3_REF_GAP_EV = 0.90         # 설명 대상 — 관측된 조각 간 UMA 오프셋 차등
 C3_HI, C3_LO = 0.70, 0.30    # 채택 / 기각 비율
+# D3 항등식 `E_on − E_off == Edisp` 의 허용 오차. 두 SCF 가 독립 수렴하므로
+# EDIFF(1e-6 eV) 급 잔차는 정상이고, 그보다 훨씬 크면 쌍둥이가 IVDW 말고 다른
+# 데서 갈렸다는 뜻이다. 1 meV 는 EDIFF 의 1000배 — 넉넉하되 실제 결함은 잡는다.
+C3_EDISP_TOL_EV = 1.0e-3
 
 
 def _pick(jobs, **want):
@@ -2851,37 +2891,71 @@ def closure_C3(man, jobs, E, frags):
     """C3 — D3 분해. **부호를 먼저 본다.**
 
       δ_{f,p} = [E_C,on − E_C,off] − [E_S,on − E_S,off] − [E_M,on − E_M,off]
+              = Edisp_C(f,p) − Edisp_S − Edisp_M(f)          ← **v2: 쌍둥이 없이**
       D       = mean_p(δ_SDCP) − mean_p(δ_c10)      ← 부호 있는 값, 산술평균
+
+    ★ **v2 개정 (2026-08-30, DFT 결과 0잡 시점)** — D3-off 쌍둥이 잡을 쓰지 않는다.
+      D3(IVDW=11)는 SCF 에 안 들어간다: 핵좌표만 보고 총에너지·힘에 **더해지는** 항이라
+      KS 해밀토니안을 안 건드린다. 그래서 고정기하 static(NSW=0)에서
+          E_on − E_off = Edisp
+      가 근사가 아니라 **항등식**이고, 위 세 괄호가 각각 Edisp 로 접힌다.
+      VASP 는 그 Edisp 를 OUTCAR 에 직접 찍는다 — repo 실물로 확인했다:
+      `runs/sdcp_phaseB_vasp_v1_2026_08_08/{slab,mol_neutral,complex_neutral}/OUTCAR.gz`
+      → −27.49493 / −0.71798 / −28.58614 ⇒ δ = **−0.373230 eV**.
+      ⇒ 쌍둥이 16잡은 절충으로 버린 것이 아니라 **정보가 0이라** 버린 것이고,
+        쌍둥이가 IVDW 말고 다른 축에서 갈릴 위험도 함께 사라진다.
+
+    ⚠ 쌍둥이가 **있으면 버리지 않고 교차검증**한다 (v9 이하 번들 호환):
+      |(E_on − E_off) − Edisp| > C3_EDISP_TOL_EV 면 그 조각은 unresolved 다.
+      항등식이 깨졌다는 뜻이고 그건 D3 문제가 아니라 **번들 문제**다.
 
     D 와 0.90 eV 의 **부호가 같을 때만** 70/30 % 를 적용한다. 절댓값을 쓰면
     반대 방향 효과도 "설명" 으로 오판한다.
 
-    전제(코드가 확인한다): on/off 두 잡의 POSCAR 가 같고, 같은 realized basin 이며,
-    쌍둥이 연결이 `d3_twin_of` 로 실제로 있어야 한다. 하나라도 깨지면 unresolved.
-
     ⛔ 허용 문구는 "원인의 70 % 를 증명" 이 아니라 **"이 네 자세에서 관측된
     0.90 eV 차등을 수치상 70 % 이상 설명"** — 인과가 아니라 수치 분해다.
+
+    ⛔ 이 함수가 **못 하는 것**: Edisp 값 자체가 맞는지는 검증하지 않는다.
+      VASP 가 찍은 수를 그대로 쓴다. 독립 D3 구현과 대조하지 않는다.
     """
-    res = {"schema": "closure_C3/v1", "ref_gap_eV": C3_REF_GAP_EV,
-           "hi": C3_HI, "lo": C3_LO, "by_frag": {}}
+    res = {"schema": "closure_C3/v2", "ref_gap_eV": C3_REF_GAP_EV,
+           "hi": C3_HI, "lo": C3_LO, "edisp_tol_eV": C3_EDISP_TOL_EV,
+           "source": "Edisp (eV) from the D3-on OUTCAR — no D3-off twin required",
+           "by_frag": {}}
 
     def pair_delta(jn):
-        """[E_on − E_off] — 쌍둥이가 없거나 전제가 깨지면 (None, 사유)."""
-        tw = _twin_of(jobs, jn)
-        if tw is None:
-            return None, f"{jn}: D3-off 쌍둥이 없음"
-        a, b = jobs[jn], jobs[tw]
-        if a.get("gates") or b.get("gates"):
+        """δ 의 한 항 = 그 잡의 Edisp. 없으면 (None, 사유).
+
+        쌍둥이가 남아 있으면 (E_on − E_off) 와 대조해 항등식을 확인한다.
+        """
+        a = jobs.get(jn)
+        if a is None:
+            return None, f"{jn}: 잡 없음"
+        if a.get("gates"):
             return None, f"{jn}: 게이트됨"
-        ea, eb = E(jn), E(tw)
-        if ea is None or eb is None:
-            return None, f"{jn}: 에너지 결측"
-        ra = ((a.get("geom") or {}).get("magnetic") or {}).get("realized_basin_id")
-        rb = ((b.get("geom") or {}).get("magnetic") or {}).get("realized_basin_id")
-        if ra is not None and rb is not None and ra != rb:
-            return None, (f"{jn}: on/off 가 **다른 realized basin** — 그 차이는 "
-                          f"D3 기여가 아니다")
-        return ea - eb, None
+        st = a.get("static") or {}
+        ed = st.get("edisp_eV")
+        if ed is None:
+            return None, (f"{jn}: OUTCAR 에 `Edisp (eV)` 가 없다 — IVDW=11 이 실제로 "
+                          f"걸렸는지 확인해야 한다 (D3 없이 돈 잡일 수 있다)")
+        if (st.get("edisp_n") or 0) > 1 and (st.get("incar_echo") or {}).get("NSW") not in (None, "0", 0):
+            return None, (f"{jn}: Edisp 가 {st['edisp_n']}회 찍혔는데 NSW≠0 — 기하가 "
+                          f"바뀌었으면 마지막 값이 어느 기하의 것인지 보장 못 한다")
+        # ── 쌍둥이가 있으면 항등식을 **검사**한다 (없는 게 정상이다)
+        tw = _twin_of(jobs, jn)
+        if tw is not None and not (jobs[tw].get("gates")):
+            ea, eb = E(jn), E(tw)
+            if ea is not None and eb is not None:
+                if abs((ea - eb) - ed) > C3_EDISP_TOL_EV:
+                    return None, (f"{jn}: (E_on−E_off)={ea - eb:.6f} 인데 Edisp={ed:.6f} "
+                                  f"— 차 {abs((ea - eb) - ed):.6f} eV 가 허용 "
+                                  f"{C3_EDISP_TOL_EV} 를 넘는다. D3 항등식이 깨졌다 = "
+                                  f"쌍둥이가 IVDW 말고 다른 데서 갈렸다는 뜻")
+                ra = ((a.get("geom") or {}).get("magnetic") or {}).get("realized_basin_id")
+                rb = ((jobs[tw].get("geom") or {}).get("magnetic") or {}).get("realized_basin_id")
+                if ra is not None and rb is not None and ra != rb:
+                    return None, f"{jn}: on/off 가 다른 realized basin"
+        return ed, None
 
     d_slab, why = pair_delta((_pick(jobs, kind="clean_ref", seed=SEED_MAIN,
                                     d3="on") or [None])[0]) \
@@ -2908,9 +2982,21 @@ def closure_C3(man, jobs, E, frags):
             if d_cx is None:
                 miss.append(why_c); continue
             rows.append({"job": jn, "delta_eV": round(d_cx - d_slab - d_mol, 6)})
-        if miss or not rows:
+        # ★ 기대 자세 수는 **동결된 manifest** 에서 온다 (C1 과 같은 규율) — 회수분에서
+        #   세면 자세가 통째로 빠져도 기대가 같이 줄어 영영 못 잡는다.
+        n_want = len([k for k in (man.get("planned") or {})
+                      if k.startswith("prospective/")
+                      and k.rsplit("/", 1)[-1].startswith(f + "__")
+                      and k.endswith(SEED_MAIN)])
+        if not n_want:
+            res["by_frag"][f] = {"verdict": "unresolved",
+                                 "why": "MANIFEST.planned 에 이 조각의 pm1 자세가 없다"}
+            continue
+        if miss or len(rows) != n_want or not rows:
             res["by_frag"][f] = {"verdict": "unresolved", "missing": miss,
-                                 "why": "네 자세 중 하나라도 짝이 깨지면 unresolved"}
+                                 "n_used": len(rows), "n_required": n_want,
+                                 "why": "자세 하나라도 Edisp 가 없거나 검사에 걸리면 "
+                                        "unresolved — 부분집합 평균을 내지 않는다"}
             continue
         m = sum(x["delta_eV"] for x in rows) / len(rows)
         means[f] = m
@@ -5117,10 +5203,10 @@ def build_bundle(a, ledger: Optional[Dict[str, Any]] = None) -> Path:
     #   완성된 endpoint 를 통째로 복사하고 **IVDW 한 줄만** 지운다. 후처리로 하는 이유는
     #   호출부가 여러 곳이라, 복사가 "글자 하나까지 같음" 을 **보장**하기 때문이다.
     #   ⛔ 못 하는 것: D3 를 끈 값은 **판정에 쓰지 않는다.** 오프셋 원인 진단 전용이다.
+    twins = {}
     if getattr(a, "d3_pairs", False):
         if not a.closure:
             sys.exit("⛔ --d3_pairs 는 --closure 와 함께만 쓴다 (고정기하·all-F 가 전제)")
-        twins = {}
         for inc in sorted(out.rglob("static/INCAR")):
             jd = inc.parent.parent
             rel = str(jd.relative_to(out))
@@ -5162,6 +5248,10 @@ def build_bundle(a, ledger: Optional[Dict[str, Any]] = None) -> Path:
             sys.exit(f"⛔ --d3_seed_main_only 인데 비주-seed complex 에 D3-off 쌍둥이가 "
                      f"{len(_bad_net4)}개 생겼다: {_bad_net4[:3]} — 고정기하 D3(zero)는 "
                      f"자기상태에 무관하므로 반복이 불필요하고, 잡 수 설명과 어긋난다")
+    # ★ census 는 **쌍둥이 유무와 무관하게** 쓴다. 종전엔 이 블록이 --d3_pairs 안에만
+    #   있어서, 쌍둥이를 안 만드는 판(옵션 A)에서는 census 가 통째로 없어지고
+    #   README·verify_bundle 이 조용히 빈 값을 읽었다.
+    if True:
         _cx_on = [k for k in man["planned"] if k.startswith("prospective/")]
         _rf_on = [k for k in man["planned"] if not k.startswith("prospective/")]
         _cx_tw = [v for v in twins.values() if v.startswith("prospective/")]
@@ -5172,7 +5262,9 @@ def build_bundle(a, ledger: Optional[Dict[str, Any]] = None) -> Path:
             "complexes": {"pose×seed": len(_cx_on), "d3_off_twins": len(_cx_tw),
                           "총": len(_cx_on) + len(_cx_tw)},
             "총잡수": len(_rf_on) + len(_rf_tw) + len(_cx_on) + len(_cx_tw),
-            "pose당": ("pm1/D3-on · pm1/D3-off · net4/D3-on — **net4/D3-off 는 만들지 "
+            "pose당": ("pm1/D3-on · net4/D3-on — **D3-off 쌍둥이를 만들지 않는다** "
+                       "(C3 는 D3-on OUTCAR 의 Edisp 로 낸다)") if not twins else
+                      ("pm1/D3-on · pm1/D3-off · net4/D3-on — **net4/D3-off 는 만들지 "
                        "않는다** (고정기하 D3 zero 는 구조 기반 additive correction 이라 "
                        "자기상태에 무관)") if getattr(a, "d3_seed_main_only", False) else
                       "전 seed × D3 on/off",
@@ -5180,11 +5272,22 @@ def build_bundle(a, ledger: Optional[Dict[str, Any]] = None) -> Path:
             "⚠": "이 표는 산출물에서 센 것이다 — 설명문이 아니라 실물이다",
         }
         man["d3_off_twins"] = twins
+        man["c3_source"] = ("d3_off_twins (+ Edisp 교차검증)" if twins else
+                            "Edisp (eV) from the D3-on OUTCAR — no twin jobs")
         man["d3_off_note"] = (
             "같은 POSCAR·같은 MAGMOM·같은 k 로 **IVDW 줄만** 뺀 쌍. "
             "E(D3on) − E(D3off) = D3 기여. 회신 W Q2 의 원인 셋(missing D3 · 기체 기준 "
-            "오차 · 자기 basin) 중 첫 번째를 직접 잰다. ⛔ **판정값이 아니다.**")
-        print(f"→ D3-off 쌍둥이 {len(twins)}개 (IVDW 줄만 제거)")
+            "오차 · 자기 basin) 중 첫 번째를 직접 잰다. ⛔ **판정값이 아니다.**"
+            ) if twins else (
+            "쌍둥이 없음 — C3 는 D3-on OUTCAR 이 직접 찍는 `Edisp (eV)` 로 낸다. "
+            "D3(IVDW=11)는 SCF 에 안 들어가는 additive 항이라 고정기하에서 "
+            "`E_on − E_off = Edisp` 가 **항등식**이고, 쌍둥이 잡은 정보가 0이다. "
+            "실물 확인: runs/sdcp_phaseB_vasp_v1_2026_08_08 의 세 OUTCAR "
+            "(slab −27.49493 · mol −0.71798 · complex −28.58614 ⇒ δ −0.373230 eV).")
+        if twins:
+            print(f"→ D3-off 쌍둥이 {len(twins)}개 (IVDW 줄만 제거)")
+        else:
+            print("→ D3-off 쌍둥이 **0개** — C3 는 Edisp 로 낸다 (쌍둥이는 정보가 0)")
 
     if viol:
         man["contract_violations"] = viol
