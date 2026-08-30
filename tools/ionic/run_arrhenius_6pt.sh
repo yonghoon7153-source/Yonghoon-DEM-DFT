@@ -171,7 +171,12 @@ while IFS='|' read -r LABEL XYZ; do
     for TP in $TP_LIST; do
       T=${TP%%:*}; P=${TP##*:}
       OUT="$OUTROOT/$LABEL/T${T}_s${S}"
-      if [ -s "$OUT/msd.json" ]; then ts "  ✓ $LABEL T${T} s${S} 이미 있음 — 건너뜀"; continue; fi
+      # ⛔⛔ 2026-08-31 실측 — **msd.json 은 최상위에 없다.** 드라이버가
+      #   `$OUT/d0.00_cfg0/T<온도>/msd.json` 로 쓴다. 최상위만 보던 옛 판은
+      #   이미 끝난 점을 **못 찾고 다시 돌렸다** (lpsocl_3x3x1 T1000 3점이
+      #   그대로 재실행 대기에 올라 있었다 — 19 h × 3 = 57 GPU-h 낭비 직전).
+      if [ -n "$(find "$OUT" -name msd.json -size +0 2>/dev/null | head -1)" ]; then
+        ts "  ✓ $LABEL T${T} s${S} 이미 있음 — 건너뜀"; continue; fi
       ts "  ▶ $LABEL  T=${T} K  seed=${S}  prod=${P} ps"
       python3 "$DRIVER" \
         --v0_xyz "$REPO/$XYZ" --label "$LABEL" \
