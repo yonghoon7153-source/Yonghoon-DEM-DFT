@@ -5857,9 +5857,30 @@ def _closure_estimand(man, results, E, emol, jobs, merge_info=None):
                        + [k for k, v in _n4v.items() if v is None]
                        + [k for k in _need if _n4k.get(k)
                           and (jobs.get(_n4k[k]) or {}).get("gates")])
-            if _n4_bad:
+            # ⛔⛔ 회신 AR P1-9 · 해제조건 6 (2026-08-31) — `usable_as_sensitivity`
+            #   를 **저장만 하고 읽지 않았다.** net4 두 complex 가 다른 자기 basin
+            #   이어도 `D_net4` 가 계산되고 status 가 computed 로 나갔다.
+            #   민감도의 요점은 "같은 계를 다른 분기에서 보면 얼마나 움직이나" 인데,
+            #   상태를 가로질러 뺀 값은 그 질문에 답하지 않는다 ⇒ **값도 status 도
+            #   같이 막는다.** (D_pm1 은 여전히 영향받지 않는다.)
+            _tp4r = ((out.get("estimand_topology") or {}).get("net4") or {})
+            _n4_topo_bad = (_tp4r.get("usable_as_sensitivity") is not True)
+            if _n4_topo_bad:
+                out["branch_sensitivity"] = {
+                    "status": "suppressed_topology",
+                    "why": ((_tp4r.get("blocks") or
+                             ["net4 topology 판정이 없다 — 확인 못 한 것은 통과가 아니다"])[:2]),
+                    "D_net4_eV": None,
+                    "D_net4_minus_D_pm1_eV": None,
+                    "⛔": ("net4 두 complex 가 같은 자기 branch 임을 확인하지 못했다. "
+                           "상태를 가로질러 뺀 차는 분기 민감도가 아니므로 값을 내지 "
+                           "않는다 (회신 AR P1-9). D_pm1 은 영향받지 않는다"),
+                    "⚠_민감도_불완전": True}
+            elif _n4_bad:
                 out["branch_sensitivity"] = {
                     "status": "unavailable", "why": "net4 키 사용 불가: %s" % sorted(set(_n4_bad)),
+                    "D_net4_eV": None, "D_net4_minus_D_pm1_eV": None,
+                    "⚠_민감도_불완전": True,
                     "⚠": "D_pm1 은 영향받지 않는다 — net4 는 민감도다"}
             else:
                 _dn4 = ((_n4v["E_C_sdcp"] - _n4v["E_G_sdcp"])
@@ -5872,8 +5893,65 @@ def _closure_estimand(man, results, E, emol, jobs, merge_info=None):
                            "둘을 평균하지 않는다")}
         else:
             out["branch_sensitivity"] = {
-                "status": "not_sealed",
+                "status": "not_sealed", "D_net4_eV": None,
+                "⚠_민감도_불완전": True,
                 "why": "manifest 에 estimand_job_keys_net4 가 없다 (net4 잡이 계획에 없음)"}
+        # ⛔⛔ 회신 AR P1-10 · 해제조건 6 — **대안 자세 민감도**를 봉인식으로 낸다.
+        #   종전엔 완료 여부만 보고돼 "sensitivity 를 봤다" 가 무엇을 뜻하는지
+        #   결과에 없었다. net4 와 **같은 게이트**를 건다.
+        _paltk = (man.get("estimand_job_keys_pose_alt") or {})
+        _palt_out = {}
+        for _role, _pk4 in sorted(_paltk.items()):
+            if not isinstance(_pk4, dict) or not _pk4.get("E_C_sdcp"):
+                continue                                  # "⛔" 주석 키는 건너뛴다
+            _tpp = _estimand_topology_check(_pk4, jobs, "pose_%s" % _role)
+            _pv = {k: E(_pk4[k]) for k in _need if _pk4.get(k)}
+            _pbad = ([k for k in _need if not _pk4.get(k)]
+                     + [k for k, v in _pv.items() if v is None]
+                     + [k for k in _need if _pk4.get(k)
+                        and (jobs.get(_pk4[k]) or {}).get("gates")])
+            if _tpp["blocks"] or _tpp.get("same") is not True:
+                _palt_out[_role] = {
+                    "status": "suppressed_topology", "D_pose_eV": None,
+                    "D_pose_minus_D_pm1_eV": None,
+                    "why": (_tpp["blocks"] or ["topology 판정 없음"])[:2]}
+            elif _pbad:
+                _palt_out[_role] = {
+                    "status": "unavailable", "D_pose_eV": None,
+                    "D_pose_minus_D_pm1_eV": None,
+                    "why": "자세 키 사용 불가: %s" % sorted(set(_pbad))}
+            else:
+                _dp = ((_pv["E_C_sdcp"] - _pv["E_G_sdcp"])
+                       - (_pv["E_C_control"] - _pv["E_G_control"]))
+                _palt_out[_role] = {
+                    "status": "computed", "D_pose_eV": round(_dp, 4),
+                    "D_pose_minus_D_pm1_eV": round(_dp - primary, 4),
+                    "식": _pk4.get("formula")}
+        if _paltk:
+            out["pose_sensitivity"] = dict(
+                _palt_out,
+                **{"⛔": ("자세 민감도다 — 보고값은 primary 자세의 pm1 조건부 D 이고 "
+                         "이 값들로 min 을 다시 뽑거나 평균하지 않는다")})
+        elif man.get("altpose_purpose"):
+            out["pose_sensitivity"] = {"status": "exploratory_only",
+                                       "why": man["altpose_purpose"]}
+        # ⛔ 회신 AR 해제조건 6 — "민감도 완료" 를 **한 곳에서** 판정한다.
+        #   종전엔 어디에도 이 라벨이 없어서, 결과를 읽는 쪽이 D_net4 유무만 보고
+        #   완료로 읽을 수 있었다.
+        _bs = out["branch_sensitivity"]
+        _palt_bad = sorted(r for r, v in _palt_out.items()
+                           if v.get("status") != "computed")
+        out["sensitivity_complete"] = bool(_bs.get("status") == "computed"
+                                           and not _palt_bad)
+        if _bs.get("status") != "computed":
+            out.setdefault("nonprimary_notes", []).append(
+                "SENSITIVITY_INCOMPLETE(자기 분기 민감도가 %s — D 를 '분기에 강건' "
+                "이라고 서술하지 말 것)" % _bs.get("status"))
+        if _palt_bad:
+            out.setdefault("nonprimary_notes", []).append(
+                "POSE_SENSITIVITY_INCOMPLETE(%s — D 를 '자세에 강건' 이라고 "
+                "서술하지 말 것)" % ", ".join(
+                    "%s:%s" % (r, _palt_out[r].get("status")) for r in _palt_bad))
     else:
         out["estimand_mode"] = "fragment_min (⚠ 조각마다 다른 seed 가 뽑힐 수 있다)"
         primary = a_s["min"][0] - a_c["min"][0]
@@ -8442,6 +8520,12 @@ def build_bundle(a, ledger: Optional[Dict[str, Any]] = None) -> Path:
                     #   나중에 되짚을 수 없다 (v9 에서 estimand_job_keys 가 비었던 이유).
                     if b["role"] == "primary" and sd == SEED_MAIN:
                         man.setdefault("_primary_by_frag", {})[frag] = rel
+                    # ⛔ 회신 AR P1-10 — 대안 자세도 **어느 역할의 무엇인지** 기록한다.
+                    #   종전엔 완료 여부만 보고돼 봉인된 식·비교·판정이 없었다.
+                    elif b["role"] in ("sensitivity", "stress_sensitivity") \
+                            and sd == SEED_MAIN:
+                        man.setdefault("_altpose_by_frag", {}).setdefault(
+                            b["role"], {})[frag] = rel
                     n_jobs += 1
                     print(f"   {b['basin_id']} {b['role']:14s} {sd:14s} "
                           f"UMA {b.get('E_pose_eV'):+8.4f}  {lab[:40]}")
@@ -8813,7 +8897,51 @@ def build_bundle(a, ledger: Optional[Dict[str, Any]] = None) -> Path:
                                  "D_net4 − D_pm1 은 자기 분기 민감도로만 병기한다. "
                                  "net4 가 다른 basin 이어도 pm1 조건부 D 를 지우지 않는다")})
 
+            # ⛔⛔ 회신 AR P1-10 · 해제조건 6 (2026-08-31) — **대안 자세를 봉인한다.**
+            #   AR: "대안자세 네 잡은 완료 여부만 보고될 뿐 봉인된 exact 식·비교·
+            #   판정이 없다. sensitivity claim 에 쓸 것이라면 key·식·gate·status 를
+            #   정의하고, 아니면 단순 탐색용임을 명시해야 한다."
+            #   ⇒ 자세 민감도를 net4 분기 민감도와 **같은 모양**으로 봉인한다:
+            #        D_pose(role) = (E_C_sdcp[role] − E_G_sdcp)
+            #                     − (E_C_control[role] − E_G_control)
+            #        보고량 = D_pose(role) − D_pm1
+            #      게이트도 같다 — 두 complex 가 같은 자기 branch 여야 하고,
+            #      게이트된 잡이 있으면 값을 내지 않는다.
+            _alt_by_role = (man.get("_altpose_by_frag") or {})
+            _sealed_alt = {}
+            for _role in sorted(_alt_by_role):
+                _rr = _alt_by_role[_role]
+                if not (_rr.get(_sd) and _rr.get(_ct)):
+                    continue
+                if not all(v in man["planned"] for v in (_rr[_sd], _rr[_ct])):
+                    continue
+                _sealed_alt[_role] = {
+                    "E_C_sdcp": _rr[_sd], "E_C_control": _rr[_ct],
+                    "E_G_sdcp": f"refs/mol__{_sd}__box24",
+                    "E_G_control": f"refs/mol__{_ct}__box24",
+                    "formula": ("D_pose[%s] = (E_C_sdcp - E_G_sdcp) "
+                                "- (E_C_control - E_G_control)" % _role),
+                    "reported": "D_pose[%s] - D_pm1 (자세 민감도)" % _role,
+                    "branch": SEED_MAIN,
+                    "gate": ("두 complex 가 같은 자기 branch (전역 반전 동치) · "
+                             "두 잡 모두 게이트 없음 · 두 에너지 모두 회수 — "
+                             "하나라도 어긋나면 값과 status 를 함께 막는다"),
+                }
+            if _sealed_alt:
+                man["estimand_job_keys_pose_alt"] = dict(
+                    _sealed_alt,
+                    **{"⛔": ("이것은 **자세 민감도**다. 사전등록 보고값은 primary "
+                             "자세의 pm1 조건부 D 이고, 이 값들을 대신 쓰거나 "
+                             "평균하지 않는다. 자세 min 을 다시 뽑지도 않는다 "
+                             "(champion pool size bias)")})
+            else:
+                man["altpose_purpose"] = (
+                    "대안 자세 잡은 **탐색용**이다 — 봉인된 비교식이 없으므로 "
+                    "완료 여부만 보고하고 sensitivity claim 에 쓰지 않는다 "
+                    "(회신 AR P1-10)")
+
     man.pop("_primary_by_frag", None)
+    man.pop("_altpose_by_frag", None)
     man["wave"] = 1 if not a.refs else "1+refs"
     # ★ 조각마다 주장 범위가 다르다 (2026-08-12 설계 변경). 공통 mode 문장 하나로
     #   두면 PTFE 에도 "2×2 완성" 이 적혀 오독된다.
@@ -10469,9 +10597,82 @@ def selftest() -> int:
         "E_G_control": "mol__ptfe_c10__box24__nzmag"})
     _r7n = _closure_estimand(_man7n, _RES(), lambda j: _en7.get(j), _emol, _jb7)
     chk((_r7n.get("branch_sensitivity") or {}).get("status") == "computed"
-        and "D_net4_minus_D_pm1_eV" in (_r7n.get("branch_sensitivity") or {}),
+        and "D_net4_minus_D_pm1_eV" in (_r7n.get("branch_sensitivity") or {})
+        and _r7n.get("sensitivity_complete") is True,
         "AO P0-7: net4 가 봉인돼 있으면 **D_net4 − D_pm1 을 계산한다** "
         f"(종전엔 요구해 놓고 안 냈다) · {_r7n.get('branch_sensitivity')}")
+
+    # ══ 회신 AR P1-9 · 해제조건 6 — net4 topology 실패가 **실제로** 막는가 ═════
+    #   `usable_as_sensitivity` 를 저장만 하고 안 읽어서, 두 complex 가 다른
+    #   basin 이어도 D_net4 가 계산되고 complete 로 보고됐다.
+    _KN4A = "prospective/sdcp_neutral__b09__afm2424_net4"
+    _KN4B = "prospective/ptfe_c10__b09__afm2424_net4"
+    _mixfp = [1.2] * 23 + [-1.2] + [-1.2] * 23 + [1.2]     # 배열이 다르다
+    _jb7t = dict(_jb7)
+    _jb7t[_KN4A] = _J8([1.2] * 24 + [-1.2] * 24, _KN4A)
+    _jb7t[_KN4B] = _J8(_mixfp, _KN4B)
+    _r7t = _closure_estimand(_man7n, _RES(), lambda j: _en7.get(j), _emol, _jb7t)
+    _bs7 = _r7t.get("branch_sensitivity") or {}
+    chk(_bs7.get("status") == "suppressed_topology"
+        and _bs7.get("D_net4_eV") is None
+        and _bs7.get("D_net4_minus_D_pm1_eV") is None
+        and _r7t.get("sensitivity_complete") is False
+        and _r7t.get("primary_ddE_lowE_eV") is not None,
+        "⛔음성 AR P1-9: net4 두 complex 가 다른 basin 이면 **D_net4 값과 status 를 "
+        f"같이 막는다** (D_pm1 은 산다) · {_bs7.get('status')}")
+    # 모멘트 표를 못 읽어도 마찬가지다 — 확인 못 한 것은 통과가 아니다
+    _jb7u = dict(_jb7)
+    for _k in (_KN4A, _KN4B):
+        _ju = _BAS("aaaa1111", _k)
+        _ju["geom"]["magnetic"] = {"realized_basin_id": "aaaa1111"}
+        _jb7u[_k] = _ju
+    _r7u = _closure_estimand(_man7n, _RES(), lambda j: _en7.get(j), _emol, _jb7u)
+    chk((_r7u.get("branch_sensitivity") or {}).get("status") == "suppressed_topology"
+        and _r7u.get("sensitivity_complete") is False,
+        "⛔음성 AR P1-9: net4 topology 를 **못 읽어도** 민감도를 완료로 보고하지 않는다")
+
+    # ══ 회신 AR P1-10 · 해제조건 6 — 대안 자세를 **봉인식**으로 낸다 ══════════
+    _KPA = "prospective/sdcp_neutral__b04__afm2424_pm1"
+    _KPB = "prospective/ptfe_c10__b04__afm2424_pm1"
+    _enp = dict(_en7, **{_KPA: -201.15, _KPB: -100.52})
+    _manp = dict(_man7n, estimand_job_keys_pose_alt={
+        "sensitivity": {"E_C_sdcp": _KPA, "E_C_control": _KPB,
+                        "E_G_sdcp": "mol__sdcp_neutral__box24__nzmag",
+                        "E_G_control": "mol__ptfe_c10__box24__nzmag",
+                        "formula": "D_pose[sensitivity] = ..."},
+        "⛔": "주석 키 — 순회에서 건너뛰어야 한다"})
+    _up = [1.2] * 24 + [-1.2] * 24
+    _jbp = dict(_jb7, **{_KPA: _J8(_up, _KPA), _KPB: _J8(_up, _KPB)})
+    _rp = _closure_estimand(_manp, _RES(), lambda j: _enp.get(j), _emol, _jbp)
+    _ps = (_rp.get("pose_sensitivity") or {}).get("sensitivity") or {}
+    chk(_ps.get("status") == "computed" and _ps.get("D_pose_eV") is not None
+        and _ps.get("D_pose_minus_D_pm1_eV") is not None
+        and _rp.get("sensitivity_complete") is True,
+        "회신 AR P1-10 양성: 대안 자세가 봉인돼 있으면 **D_pose − D_pm1 을 낸다** "
+        f"· {_ps.get('D_pose_minus_D_pm1_eV')} eV")
+    # ⛔음성 — 두 자세 complex 가 다른 basin 이면 값도 status 도 막는다
+    _jbp2 = dict(_jbp, **{_KPB: _J8(_mixfp, _KPB)})
+    _rp2 = _closure_estimand(_manp, _RES(), lambda j: _enp.get(j), _emol, _jbp2)
+    _ps2 = (_rp2.get("pose_sensitivity") or {}).get("sensitivity") or {}
+    chk(_ps2.get("status") == "suppressed_topology" and _ps2.get("D_pose_eV") is None
+        and _rp2.get("sensitivity_complete") is False
+        and any("POSE_SENSITIVITY_INCOMPLETE" in n
+                for n in (_rp2.get("nonprimary_notes") or []))
+        and _rp2.get("primary_ddE_lowE_eV") is not None,
+        "⛔음성 AR P1-10: 자세 두 complex 가 다른 basin 이면 D_pose 를 막고 "
+        "'자세에 강건' 서술을 금지한다 (D_pm1 은 산다)")
+    # ⛔음성 — 잡이 게이트돼 있으면 unavailable
+    _jbp3 = dict(_jbp)
+    _jbp3[_KPA] = dict(_jbp3[_KPA], gates=["MAGNETIC_COLLAPSE(합성)"])
+    _rp3 = _closure_estimand(_manp, _RES(), lambda j: _enp.get(j), _emol, _jbp3)
+    chk(((_rp3.get("pose_sensitivity") or {}).get("sensitivity") or {}).get("status")
+        == "unavailable" and _rp3.get("sensitivity_complete") is False,
+        "⛔음성 AR P1-10: 자세 잡이 게이트되면 unavailable 이고 완료가 아니다")
+    # 봉인이 아예 없으면 **탐색용**임을 명시한다 (완료 여부만 보고하지 않는다)
+    _rp4 = _closure_estimand(dict(_man7n, altpose_purpose="탐색용"),
+                             _RES(), lambda j: _en7.get(j), _emol, _jb7)
+    chk((_rp4.get("pose_sensitivity") or {}).get("status") == "exploratory_only",
+        "회신 AR P1-10: 봉인식이 없으면 **탐색용**이라고 결과에 박는다")
 
     # ── 회신 AP #11 — δ_gas 를 **최종 estimand 에 직접** 건다 ────────────
     _rg = _closure_estimand(_man, _RES(), _E, _emol, _jobs)
