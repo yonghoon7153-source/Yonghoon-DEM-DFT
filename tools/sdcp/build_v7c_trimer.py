@@ -2202,8 +2202,18 @@ def selftest():
     _txt_r = _pil_inp(os.path.join(_td, "r.inp"),
                       "x.xyz", 0, 2, "UKS", 1.0, "r2SCAN-3c",
                       moread="p.loc", rotate=(237, 480), stab=True)
-    chk("Rotate {237, 480, 90, 0, 0}" in _txt_r and 'moinp "p.loc"' in _txt_r,
-        "실측: HOMO 가 아니면 Rotate 를 쓰고, **.loc** 를 MORead 한다")
+    chk("Rotate {237, 480, 90, 1, 1}" in _txt_r and 'moinp "p.loc"' in _txt_r,
+        "실측: 회전이 필요하면 Rotate 를 쓰고 **.loc** 를 MORead 한다")
+    # ⛔음성 2026-08-31 실측 — 연산자가 **베타(1,1)** 여야 한다. 알파(0,0)는 no-op:
+    #   D•(961전자 doublet)는 알파 0..480 이 **전부 점유**라 알파끼리 돌려도
+    #   밀도가 안 변한다. 그러면 seed 전부가 같은 기본 해로 수렴하고
+    #   "방법이 backbone 상태를 못 찾는다" 로 오판하게 된다.
+    chk("90, 0, 0}" not in _txt_r,
+        "⛔음성 실측: Rotate 연산자가 **알파(0,0)가 아니다** — 알파는 전부 점유라 "
+        "no-op 이고 seed 가 통째로 무의미해진다")
+    chk(_txt_r.count("end") >= 2 and "\n" in _txt_r.split("%scf")[1][:40],
+        "⛔음성: `%scf` 를 여러 줄로 쓴다 (Rotate 의 end 와 %scf 의 end 가 "
+        "한 줄에 붙으면 모호하다)")
     print("── 폴라론 pilot 끝 ──")
     return 1 if fails else 0
 
@@ -2451,12 +2461,22 @@ def _pil_inp(path, xyz, charge, mult, wf, eps, functional,
         body.append('%%moinp "%s"' % moread)
         scf.append("Guess MORead")
     if rotate:
-        # {from, to, angle, spin_from, spin_to} — 선택한 국재 MO 를 HOMO 자리로
-        scf.append("Rotate {%d, %d, 90, 0, 0} end" % (rotate[0], rotate[1]))
+        # ⛔⛔ 2026-08-31 실측 — `{from, to, angle, op_from, op_to}` 의 마지막 둘은
+        #   **스핀 채널**이다 (0 = 알파, 1 = 베타). 처음엔 `0,0`(알파)로 냈는데
+        #   그것은 **완전한 no-op** 이다:
+        #     D•(961전자 doublet) = 알파 0..480 **전부 점유** · 베타 0..479 점유
+        #     ⇒ 알파 237 ↔ 알파 480 은 둘 다 점유라 밀도가 안 변한다.
+        #   홀은 **베타**에 있다. 목표 집합에 스핀을 놓으려면 그 국재 MO 를
+        #   **베타의 첫 빈자리**로 보내야 한다 ⇒ 연산자 `1,1`.
+        #   (이대로 돌렸으면 seed 전부가 같은 기본 해로 수렴하고 "방법이 backbone
+        #    상태를 못 찾는다" 로 오판했을 것이다.)
+        scf.append("Rotate {%d, %d, 90, 1, 1} end" % (rotate[0], rotate[1]))
     if stab:
         scf.append("StabPerform true")
     if scf:
-        body.append("%scf " + " ".join(scf) + " end")
+        # ⚠ 한 줄로 쓰면 `Rotate {...} end` 의 end 와 `%scf` 의 end 가 붙어 모호하다.
+        #   여러 줄로 쓴다 (ORCA 파서에 명확하다).
+        body.append("%scf\n  " + "\n  ".join(scf) + "\nend")
     txt = "\n".join(body) + "\n"
     if loc:
         txt += PIL_LOC_KW
@@ -2779,7 +2799,11 @@ def pilot_seeds(d):
         if nel is None:
             raise SystemExit("⛔ %s 의 전자수를 모른다 (L 잡 %s 에도 없다) — "
                              "HOMO 인덱스를 계산할 수 없다" % (jk, src_jk))
-        homo = nel // 2 - 1
+        # ⛔ 목표 자리는 **S 계(D•/P⁺)의 베타 첫 빈자리**다. 부모(닫힌껍질)의 HOMO
+        #   인덱스와 **우연히 같지만**(전자 하나만 빼므로) 뜻이 다르므로 명시 계산한다.
+        #     nel_S = electrons_of(조성) − charge_S · n_beta = (nel_S − (mult−1)) / 2
+        #     D• : 961전자 mult2 → 베타 480개(0..479) ⇒ 첫 빈자리 = 480
+        homo = nel // 2 - 1              # 부모 닫힌껍질 HOMO (참고용)
         spec = man["seed_plan"]["Dradical" if is_dm else "Pcation"]
         env = jm["env"]
         for sd in spec["seeds"]:
@@ -2788,6 +2812,11 @@ def pilot_seeds(d):
             src_xyz = src / (tag + ".xyz")
             xyzn = "%s.xyz" % sd
             (sdir / xyzn).write_text(src_xyz.read_text())
+            # S 계의 전자수 — 부모와 **조성은 같고 charge 만 다르다**.
+            #   D• (charge 0)  ← D⁻ (charge −1) : 962 − 1 = 961
+            #   P⁺ (charge +1) ← P  (charge  0) : 962 − 1 = 961
+            _nel_s = nel - (spec["charge"] - jm.get("charge", 0))
+            _nbeta = (_nel_s - (spec["mult"] - 1)) // 2   # 베타 점유 수 = 첫 빈자리 index
             rot, w, mo = None, None, None
             if sd != "default":
                 gi = (amap["sets"]["sulfonate"] if sd == "A_sulfonate"
@@ -2804,7 +2833,8 @@ def pilot_seeds(d):
                 #   (ring5 → mo 480 = HOMO). 그러면 `Rotate {480,480,...}` 이 되어
                 #   자기 자신과 회전한다 — 무의미하거나 ORCA 가 거부한다.
                 #   그 경우 회전이 **필요 없다**: 홀이 이미 그 자리에 생긴다.
-                rot = None if mo == homo else (mo, homo)
+                #   목표 = 베타 첫 빈자리 (_nbeta). 고른 MO 가 이미 거기면 회전 불필요.
+                rot = None if mo == _nbeta else (mo, _nbeta)
             # ⛔ **`.loc`** 를 읽는다. `.gbw`(정준)를 읽으면 국재 인구로 고른
             #   인덱스가 다른 궤도를 가리킨다 (2026-08-31 실측).
             gbw = os.path.relpath(locf, sdir)
@@ -2823,7 +2853,10 @@ def pilot_seeds(d):
                                        "**위 loc_sha256 의 국재화에 조건부**다"),
                 "seed_mo": (mo if sd != "default" else None),
                 "seed_mo_weight_pct": (None if w is None else round(w, 2)),
-                "homo_index": homo,
+                "homo_index_parent": homo,
+                "n_electrons": _nel_s,
+                "beta_first_empty": _nbeta,
+                "rotate_operator": "1,1 (베타) — 알파는 전부 점유라 no-op 이다",
                 "rotate": (None if rot is None else list(rot)),
                 "rotate_skipped_why": (None if rot is not None or sd == "default"
                                        else "고른 MO 가 HOMO 자체다 — 회전 불필요"),
