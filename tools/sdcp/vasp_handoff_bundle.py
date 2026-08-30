@@ -1085,6 +1085,13 @@ def _emit_mol_job(jd: Path, frag: str, mol, margin: float,
             # ⚠ 기체 기준계도 결합 그래프를 감사해야 한다 — 없으면 그 검사가 꺼진다
             #   (Codex P0-G). 슬랩이 없으므로 registry/탈착 검사는 분석기가 건너뛴다.
             "mol_poscar_idx": list(range(len(at))),
+            # 🔴 회신 AB P0-1 — 바로 위 주석이 "없으면 그 검사가 꺼진다" 고 적어
+            #   놓고 **정작 안 썼다.** 그래서 기체 기준계 전 잡이 OUTCAR 오기 전에
+            #   SOURCE_TOPOLOGY_UNVERIFIED 로 막혔다. 슬랩이 없으니 nslab=0 이고
+            #   POSCAR 순서가 곧 원자 순서다.
+            "mol_graph_canonical": _mol_graph_canon(at, 0, list(range(len(at)))),
+            # 기체에는 표면이 없다 — Li/Ni 등록 기대가 **존재하지 않는다**.
+            "registry_role": None,
             "slab_li_poscar_idx": [], "slab_ni_poscar_idx": [],
             "top_li_poscar_idx": [], "top_ni_poscar_idx": []}
     (jd / "job.json").write_text(json.dumps(meta, indent=1, ensure_ascii=False))
@@ -1764,7 +1771,21 @@ def geometry_audit(jd, meta):
         info["registry"] = {"d_Li": round(dli, 3), "d_Ni": round(dni, 3),
                             "nearest": "Li" if dli < dni else "Ni",
                             "top_only": bool(meta.get("top_li_poscar_idx"))}
-        want = meta.get("role")
+        # 🔴 회신 AB P0-1 — `role` 이 **두 가지 뜻**으로 쓰이고 있었다.
+        #   champion/cross 경로는 `role = "Li"|"Ni"`(등록 역할)를 쓰는데,
+        #   from_basins 경로는 `role = "calibration"|"holdout"`(분석 역할)을 쓴다.
+        #   그래서 동결본 번들의 복합체 전 잡이 `calibration -> Ni` 로 **항상**
+        #   불일치했다 — OUTCAR 가 와도 그대로 막힌다.
+        #   ⇒ 등록 기대는 `registry_role` 에서만 읽고, 옛 번들 호환으로
+        #     `role` 은 그 값이 실제 Li/Ni 일 때만 받는다.
+        want = meta.get("registry_role")
+        if want is None and meta.get("role") in ("Li", "Ni"):
+            want = meta["role"]
+        info["registry"]["expected"] = want
+        if want is None:
+            # ⚠ **조용한 통과가 아니다.** 기대가 없다는 사실을 기록한다 —
+            #   안 적으면 나중에 "검사했는데 통과" 로 읽힌다.
+            info["registry"]["checked"] = False
         if want and info["registry"]["nearest"] != want:
             # ⚠ 단일점에서 이건 "이완 중 옮겨갔다" 가 아니라 **애초에 그 자리가 아니다**
             #   이다 (Codex 6차 §4). 이름이 원인을 오도하면 진단이 엉뚱한 데로 간다.
@@ -4970,6 +4991,11 @@ def build_bundle(a, ledger: Optional[Dict[str, Any]] = None) -> Path:
                         f"{frag} {b['basin_id']} ({b['role']}) {sd}", sd,
                         {"kind": "prospective_pose", "fragment": frag,
                          "basin_id": b["basin_id"], "role": b["role"],
+                         # ★ 회신 AB P0-1 — basin 자세는 Li/Ni **짝**으로 정의된 게
+                         #   아니라 anchor 로 정의된다. 등록 기대가 **없다**는 것을
+                         #   비워 두지 말고 선언한다 (없으면 role 이 그 자리로 읽혀
+                         #   `calibration -> Ni` 로 항상 불일치했다).
+                         "registry_role": None,
                          "why": b.get("why"), "source_pose": lab,
                          "uma_E_pose_eV": b.get("E_pose_eV"),
                          "contact_fingerprint": b.get("fingerprint"),
@@ -5071,7 +5097,8 @@ def build_bundle(a, ledger: Optional[Dict[str, Any]] = None) -> Path:
                         m = _emit_slab_job(
                             out / rel, cx, nslab, a.freeze, frag,
                             f"{pid} {role}-top {sd}", sd,
-                            {"kind": "pose", "role": role, "pair_id": pid,
+                            {"kind": "pose", "role": role, "registry_role": role,
+                             "pair_id": pid,
                              "fragment": frag, "source_pose": rec["label"],
                              "uma_E_pose_eV": rec["E_pose_eV"]},
                             ledger, zcut=zcut, dense=dense and sd == SEED_MAIN,
@@ -5100,7 +5127,8 @@ def build_bundle(a, ledger: Optional[Dict[str, Any]] = None) -> Path:
                         pm.setdefault("global_best", {})[role] = {
                             "prefix": f"{tier}/{pid}__global_{role}",
                             "down_dir": rec["down_dir"], "roll_deg": rec.get("roll_deg"),
-                            "role": role, "source_pose": rec["label"],
+                            "role": role, "registry_role": role,
+                            "source_pose": rec["label"],
                             "uma_E_pose_eV": rec["E_pose_eV"],
                             "source_sha256": {
                                 "xyz": hashlib.sha256(xg.read_bytes()).hexdigest(),
@@ -5156,7 +5184,8 @@ def build_bundle(a, ledger: Optional[Dict[str, Any]] = None) -> Path:
                     pm.setdefault("cross", {})[tag] = {
                         "prefix": f"{tier}/{pid}__cross_{tag}",
                         "down_dir": rec["down_dir"], "roll_deg": rec.get("roll_deg"),
-                        "role": role, "source_pose": rec["label"],
+                        "role": role, "registry_role": role,
+                        "source_pose": rec["label"],
                         # ★ 교차 끝점도 main 과 **같은 provenance** 를 남긴다 (Codex 6차 §8).
                         #   없으면 "어느 프로토콜 산출인가" 를 교차만 확인할 수 없다.
                         "source_sha256": {
@@ -6288,6 +6317,20 @@ def selftest() -> int:
             % (_mfh.get("job_census") or {}).get("총잡수"))
         chk("Edisp" in str(_mfh.get("d3_off_note", "")),
             "⛔음성: 쌍둥이가 없으면 manifest 가 **C3 를 Edisp 로 낸다**고 적는다")
+        # ★ 회신 AB P0-1 — **생산 생성기가 만든 실물**에 입력 preflight 를 건다.
+        #   v9 는 해시·census·selftest 를 다 통과하고도 40잡 중 36잡이
+        #   OUTCAR 오기 전에 막혔다. 그 결함은 해시로 못 잡는다.
+        for _bp in (Path(str(td)) / "bundle_fb", Path(str(td)) / "bundle_fh"):
+            _miss = []
+            for _jj in sorted(_bp.rglob("job.json")):
+                _jm = json.loads(_jj.read_text())
+                if _jm.get("mol_poscar_idx") and not _jm.get("mol_graph_canonical"):
+                    _miss.append(str(_jj.parent.name) + ":graph")
+                if "registry_role" not in _jm and _jm.get("role") not in ("Li", "Ni", None):
+                    _miss.append(str(_jj.parent.name) + ":role")
+            chk(not _miss,
+                "⛔음성 P0-1: %s 의 전 잡이 입력만으로 게이트에 안 걸린다 "
+                "(걸리면 %s)" % (_bp.name, _miss[:3]))
 
         # ══ 회신 X — Stage A 구성 플래그 (P0-2 · Q1 · dense 제거) ════════════
         a_sa = argparse.Namespace(**{**vars(a_fb), "out": str(td / "bundle_stageA"),
@@ -7297,6 +7340,39 @@ def verify_bundle(root, expect_jobs=None, check_sibling_zip=True,
                    f"건너뛰어 **남의 계산을 반송**한다: {stale[:3]}")
     if rest:
         bad.append(f"매니페스트에 없는 파일 {len(rest)}건: {rest[:5]}")
+
+    # ★ 회신 AB P0-1 / 게이트 조건 ③ — **배포 전에 입력만으로 게이트를 돌려 본다.**
+    #   v9 는 이 검사가 없어서, 해시·census·selftest 를 전부 통과한 번들이
+    #   실제로는 40잡 중 36잡을 OUTCAR 오기도 전에 차단했다 (복합체 24 =
+    #   SOURCE_ROLE_MISMATCH · 기체 12 = SOURCE_TOPOLOGY_UNVERIFIED).
+    #   ⇒ 해시는 그 결함을 원리적으로 못 잡는다. **산출물의 의미**를 봐야 한다.
+    _pf = []
+    for jd in sorted(root.rglob("job.json")):
+        try:
+            jm = json.loads(jd.read_text())
+        except Exception as e:                                   # noqa: BLE001
+            _pf.append(f"{jd.parent.relative_to(root)}: job.json 파싱 실패 ({e})")
+            continue
+        rel = str(jd.parent.relative_to(root))
+        # (1) 분자를 든 잡은 **정본 결합 그래프**가 있어야 한다 — 없으면 단일점에서
+        #     위상 검사가 통째로 꺼지고 분석기가 그 잡을 막는다.
+        if jm.get("mol_poscar_idx") and not jm.get("mol_graph_canonical"):
+            _pf.append(f"{rel}: mol_graph_canonical 없음 → SOURCE_TOPOLOGY_UNVERIFIED")
+        # (2) 등록 역할은 **Li/Ni 이거나 명시적 None** 이어야 한다. 분석 역할
+        #     (calibration/holdout)이 그 자리에 오면 항상 불일치한다.
+        _rr = jm.get("registry_role", "\x00MISSING")
+        if _rr == "\x00MISSING":
+            if jm.get("role") not in ("Li", "Ni", None):
+                _pf.append(f"{rel}: registry_role 이 없고 role={jm.get('role')!r} 이 "
+                           f"Li/Ni 가 아니다 → SOURCE_ROLE_MISMATCH 확정")
+        elif _rr not in ("Li", "Ni", None):
+            _pf.append(f"{rel}: registry_role={_rr!r} 이 Li/Ni/None 이 아니다")
+    if _pf:
+        bad.append("⛔ **입력 preflight 실패 %d건** — OUTCAR 가 와도 이 잡들은 막힌다: %s"
+                   % (len(_pf), _pf[:4]))
+    else:
+        print("  ✓ 입력 preflight — 결과 없이도 걸리는 게이트 0건 "
+              "(job.json %d개 검사)" % len(list(root.rglob("job.json"))))
 
     # ④ 잡이 실제로 있고, 던질 수 있는 상태인가
     #   ⚠ `planned` 를 잡 목록으로 쓰면 안 된다 — 생성기가 D3-off 쌍둥이를
