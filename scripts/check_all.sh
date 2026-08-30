@@ -108,6 +108,8 @@ run 'check_cohort_packages  (커밋된 패키지 ↔ 원장)' python3 scripts/ch
 #    사람이 한 번 돌려 보고 끝이었다.  손으로만 도는 검사는 없는 것과 같다 (규칙 K).
 #    ⚠ 해시를 여기 박아 두는 것이 요점이다 — CSV 가 바뀌면 이 줄이 **빨간불**이 되고,
 #      그때 사전등록의 봉인도 같이 고쳐야 한다는 것이 강제된다.
+run 'lhs_ext_materialize     --selftest' python3 scripts/lhs_ext_materialize.py --selftest
+run 'lhs_ext_submit_gate     --selftest' python3 scripts/lhs_ext_submit_gate.py --selftest
 run 'lhs_ext_design (봉인 CSV ↔ 상자 ↔ 해시)' \
   python3 scripts/lhs_ext_design.py --verify docs/data/lhs_ext_design_v2_20260829.csv \
     --box docs/data/lhs_ext_box_v2_20260829.json \

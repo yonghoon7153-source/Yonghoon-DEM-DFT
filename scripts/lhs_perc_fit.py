@@ -331,6 +331,22 @@ def profile_ci_phi_c(X, y, phi_hat, lmax, span, level=CHI2_1DOF_95, b_hint=1.0):
 # ──────────────────────────────────────────────────────────────────────────────
 # 한 배치의 판정
 # ──────────────────────────────────────────────────────────────────────────────
+#: 판정이 실패·미식별일 때 **반드시 null 이어야 하는** 인용 가능한 양들.
+_QUOTABLE = ('phi_c', 'ci95', 'bound')
+
+
+def _seal_failed(res):
+    """실패·미식별 판정에서 인용 가능한 양을 **전부 지운다**.
+
+    ★ 한 자리에 모으는 이유 (R15 §2): 옛 판은 경로마다 따로 지웠고, 그중 하나가
+      `phi_c` 를 채운 채 `FIT_FAILED` 를 냈다.  지우는 일을 각 경로에 맡기면 새 경로가
+      생길 때마다 같은 누출이 재발한다.  ⇒ 실패 반환은 **전부 이 함수를 통과**한다.
+    """
+    for k in _QUOTABLE:
+        res[k] = None
+    return res
+
+
 def fit_curve(phi, y, label='all'):
     phi = np.asarray(phi, dtype=float)
     y = np.asarray(y, dtype=int)
@@ -342,7 +358,7 @@ def fit_curve(phi, y, label='all'):
                phi_c=None, ci95=None, bound=None, verdict=None, notes=[])
     if n == 0:
         res['verdict'] = 'EMPTY'
-        return res
+        return _seal_failed(res)
 
     # §4-4 — 창 전체가 한쪽인 경우.
     #  ★★ 옛 판은 여기서 **결정론적 부등식**을 냈다 (전부 0 ⇒ φ_c ≥ max φ).  그것은
@@ -359,7 +375,7 @@ def fit_curve(phi, y, label='all'):
             f'창에서 {"전부 미퍼콜" if side == "all_zero" else "전부 퍼콜"} ⇒ '
             '**관측창 안에서 전이를 보지 못했다.**  φ_c 점추정도 hard 부등식도 인용하지 '
             '않는다 — Bernoulli 관측에서는 참 문턱이 창 안이어도 이 결과가 나올 수 있다')
-        return res
+        return _seal_failed(res)
 
     res['separation'] = separation_kind(phi, y)
     X = np.column_stack([np.ones(n), phi])
@@ -367,22 +383,32 @@ def fit_curve(phi, y, label='all'):
     bF, okF = fit_firth(X, y)
     res['firth'] = dict(a=float(bF[0]), b=float(bF[1]), converged=bool(okF))
     bM, stM = fit_mle(X, y)
+    #  ★ 분리(complete·quasi)에서는 MLE 가 **수학적으로 존재하지 않는다**.  그 사실을
+    #    반복이 어디서 멈췄는지(`diverged` / `not_converged`)로 표현하면 라벨이 BLAS·
+    #    numpy 판본에 따라 흔들린다 — 실제로 NumPy 2.3.5 에서 완전분리가 `not_converged`
+    #    로 나와 selftest 가 47/48 이 됐다 (R15 이식성).  ⇒ 분리가 확인되면 라벨은
+    #    **분리에서 유도**한다.  수치 경로는 `mle_numeric` 에 그대로 남긴다.
+    if res['separation'] in ('complete', 'quasi') and stM != 'ok':
+        res['mle_numeric'] = stM
+        stM = 'diverged'
     res['mle'] = dict(a=float(bM[0]), b=float(bM[1]), status=stM)
     if stM != 'ok':
         res['notes'].append(f'일반 MLE {stM} — 분리({res["separation"]})의 수치적 지문이다.  '
                             'Firth 가 primary 라 판정은 유지된다')
 
+    #  ★★ 비수렴을 **먼저** 판정한다 (R15 §2).  옛 순서는 `b <= 0` 을 먼저 봐서,
+    #     수렴하지도 않은 적합의 부호를 읽고 `SIGN_REVERSED` 로 **오분류**했다.
+    #     수렴하지 않은 계수의 부호는 물리적 진술이 아니라 반복 중단 지점의 잔재다.
+    if not okF:
+        res.update(verdict='FIT_FAILED')
+        res['notes'].append('Firth 벌점우도가 비수렴 — 점추정·구간을 내지 않는다 '
+                            '(부호도 읽지 않는다: 수렴 전 계수의 부호는 물리가 아니다)')
+        return _seal_failed(res)
+
     if bF[1] <= 0:
         res.update(verdict='SIGN_REVERSED')
         res['notes'].append('b <= 0 (φ_AM 이 늘수록 퍼콜 확률이 준다) ⇒ φ_c 를 인용하지 않는다')
-        return res
-
-    #  ★ Firth 자체가 비수렴이면 점추정을 내지 않는다 (R14 P1-05).  옛 판은
-    #    `converged=false` 인 2행 fixture 에서도 `verdict="OK"` 와 φ_c 를 냈다.
-    if not okF:
-        res.update(verdict='FIT_FAILED')
-        res['notes'].append('Firth 벌점우도가 비수렴 — 점추정·구간을 내지 않는다')
-        return res
+        return _seal_failed(res)
 
     phi_hat = float(-bF[0] / bF[1])
     lmax = penalised_loglik(X, y, bF)
@@ -390,11 +416,14 @@ def fit_curve(phi, y, label='all'):
     lo, hi, diag = profile_ci_phi_c(X, y, phi_hat, lmax, span, b_hint=float(bF[1]))
     res['profile'] = diag
     if not diag['ok']:
-        #  프로파일이 건전성(D(φ̂)=0 · D≥0)을 못 지키면 **구간을 인용하지 않는다**.
-        res.update(phi_c=phi_hat, ci95=None, verdict='FIT_FAILED')
+        #  ⚠⚠ 옛 판은 여기서 `phi_c=phi_hat` 을 **채운 채** FIT_FAILED 를 냈다 (R15 §2).
+        #     "점추정·구간 없음" 이라고 적어 놓고 정반대를 짠 것이다.  판정이 실패면
+        #     **모든 인용 가능한 양이 null 이어야** 한다 — 그래야 하류가 실수로 읽지 못한다.
+        res.update(verdict='FIT_FAILED')
         res['notes'].append(
-            '프로파일 우도 건전성 위반 — 구간을 내지 않는다: ' + '; '.join(diag['why'][:3]))
-        return res
+            '프로파일 우도 건전성 위반 — 점추정·구간을 내지 않는다: '
+            + '; '.join(diag['why'][:3]))
+        return _seal_failed(res)
     res.update(phi_c=phi_hat, ci95=[lo, hi], verdict='OK')
     if lo is None or hi is None:
         res['notes'].append('프로파일 구간의 한쪽이 안 닫힌다 — 무한으로 적는다 (자르지 않는다)')
@@ -604,10 +633,25 @@ def selftest():
     # ── 5-b. 그 부등식이 왜 거짓인가 — 반례를 **계산해서** 둔다 ──────────────
     #   64개 설계 φ 에서 logit P = 100(φ − 0.48) 이면 참 φ_c = 0.48 이 관측 최댓값
     #   0.485723 **안쪽**인데도 전부 0 이 나올 확률이 6 % 대다.
-    _phi64 = np.linspace(0.151875, 0.485723, 64)
-    _pz = float(np.prod(1.0 / (1.0 + np.exp(100.0 * (_phi64 - 0.48)))))
-    chk('★5-b 참 문턱이 창 안이어도 all-zero 확률이 무시 못 할 크기',
-        0.01 < _pz < 0.5, f'P(all zero) = {_pz:.4f}')
+    #  ⚠ 옛 판은 창 양끝을 `linspace` 로 채워 0.0494 를 냈다 — 실제 봉인 64점에서는
+    #    0.0623 이다.  증거 문구가 실제 설계가 아닌 근사에서 나오면 안 된다 (R15 P3).
+    import os as _os
+    _dp = _os.path.join(_os.path.dirname(_os.path.dirname(_os.path.abspath(__file__))),
+                        'docs', 'data', 'lhs_ext_design_v2_20260829.csv')
+    if not _os.path.exists(_dp):
+        bad.append('⑤-b 봉인 설계 CSV 가 없다 — 증거값을 근사로 대체하지 않는다')
+        _phi64 = None
+    else:
+        _phi64 = np.array([float(r['phi_AM'])
+                           for r in csv.DictReader(open(_dp, newline=''))])
+    if _phi64 is not None:
+        _pz = float(np.prod(1.0 / (1.0 + np.exp(100.0 * (_phi64 - 0.48)))))
+        chk('★5-b 참 문턱이 창 안이어도 all-zero 확률이 무시 못 할 크기 (봉인 64점)',
+            0.01 < _pz < 0.5, f'P(all zero) = {_pz:.6f}')
+        chk('★5-b 그 확률이 등록된 증거값 0.0623 과 일치',
+            abs(_pz - 0.062286) < 5e-5, f'{_pz:.6f}')
+        chk('★5-b 참 문턱 0.48 이 관측창 **안**이다 (그래서 반례다)',
+            _phi64.max() > 0.48 > _phi64.min(), f'{_phi64.min():.6f}–{_phi64.max():.6f}')
 
     # ── 6. 부호 역전 → φ_c 인용 안 함 (음성 경로) ──────────────────────────
     phr = np.array([0.20, 0.22, 0.24, 0.26, 0.34, 0.36, 0.38, 0.40])
@@ -739,6 +783,40 @@ def selftest():
     chk('★12 설계에 없는 ID 거부', _r.returncode == 2 and '없는 ID' in _r.stderr,
         f'rc={_r.returncode}')
 
+    # ── 13. R15 P1 둘 — 인용 가능한 양의 누출 · 공변량 정본 ────────────────
+    #  ⓐ 실패 판정에서는 phi_c·ci95·bound 가 **전부** null 이어야 한다.
+    #     옛 판은 프로파일 건전성 실패 경로에서 `phi_c` 를 채운 채 FIT_FAILED 를 냈다.
+    for _nm, _r in (('EMPTY', fit_curve(np.array([]), np.array([], dtype=int))),
+                    ('NOT_IDENTIFIED', r4),
+                    ('SIGN_REVERSED', r6)):
+        chk(f'★13ⓐ {_nm} 은 인용 가능한 양을 하나도 안 남긴다',
+            all(_r.get(k) is None for k in _QUOTABLE),
+            {k: _r.get(k) for k in _QUOTABLE})
+    _probe = dict(phi_c=0.5, ci95=[0.1, 0.9], bound=['>=', 0.3])
+    chk('★13ⓐ _seal_failed 가 셋을 다 지운다',
+        all(v is None for v in _seal_failed(_probe).values()))
+
+    #  ⓑ 결과 CSV 가 φ 를 옮겨 실어도 **설계가 정본**이라 거부한다.
+    _dz2 = _os.path.join(_d, 'design2.csv')
+    with open(_dz2, 'w', newline='', encoding='utf-8') as fh:
+        fh.write('id,phi_AM\n')
+        for i in range(1, 9):
+            fh.write(f'lhsx_{i:03d},{0.15 + 0.04 * i:.6f}\n')
+    _sha2 = _hl.sha256(open(_dz2, 'rb').read()).hexdigest()
+    _tam = _os.path.join(_d, 'tampered.csv')
+    with open(_tam, 'w', newline='', encoding='utf-8') as fh:
+        fh.write('id,phi_AM,perc\n')
+        for i in range(1, 9):
+            fh.write(f'lhsx_{i:03d},{0.90 + 0.01 * i:.6f},{1 if i > 4 else 0}\n')
+    _r = _run('--csv', _tam, '--design', _dz2, '--expect-sha256', _sha2)
+    chk('★13ⓑ 결과 CSV 의 φ 가 설계와 다르면 거부한다',
+        _r.returncode == 2 and '정본' in _r.stderr, f'rc={_r.returncode}')
+    _r = _run('--csv', _full, '--design', _dz, '--expect-sha256', _sha)
+    chk('13ⓑ 공변량 출처를 기록한다', '"covariate_source"' in _r.stdout)
+    _r = _run('--csv', _full, '--design', _dz)
+    chk('★13ⓑ --expect-sha256 없으면 거부한다',
+        _r.returncode == 2 and 'expect-sha256' in _r.stderr, f'rc={_r.returncode}')
+
     print(f'lhs_perc_fit selftest: {ok}/{ok + len(bad)} PASS')
     for b in bad:
         print('  ✗', b)
@@ -785,29 +863,75 @@ def main(argv=None):
                 '빼는 것으로 사전등록을 우회할 수 있다 (R14 P1-04).  '
                 '진단 목적이면 --allow-no-design.')
     else:
-        rid = []
+        #  ★★★ 공변량은 **봉인 설계가 정본**이다 (R15 §1).
+        #  ⚠⚠ 옛 판은 결과행이 있는 ID 의 φ 를 **결과 CSV 에서** 읽고 설계 좌표는 누락
+        #     ID 에만 보충했다.  그러면 ID 와 SHA 가 다 맞아도 **분석 위치를 임의로 옮길 수
+        #     있다** — 실제로 `lhsx_001…008` 의 φ 를 0.90~0.97 로 바꾸고 결과를 00001111 로
+        #     주자 `verdict=OK · phi_c=0.935 · design_sha256=bc72…ea19` 가 나왔다.
+        #     봉인이 이름만 봉인이었던 셈이다.
+        #  ⇒ 결과 파일에서는 **결과(perc·unresolved·batch)만** 받는다.  φ 는 ID 로
+        #    join 해 설계에서 가져오고, 결과 CSV 가 φ 를 실어 보내면 **대조해서 다르면
+        #    거부**한다 (조용히 무시하면 조작이 무해해 보이게 된다).
+        if not a.expect_sha256:
+            raise FitRefusal('--expect-sha256 이 필요하다 — 해시 없이는 어떤 설계를 '
+                             '봉인했다는 주장이 검증되지 않는다 (R15 §1)')
+        res_rows = []
         with open(a.csv, newline='', encoding='utf-8-sig') as fh:
             for r in csv.DictReader(fh):
                 if r and any((v or '').strip() for v in r.values()):
-                    rid.append((r.get(a.id_col) or '').strip())
+                    res_rows.append(r)
+        rid = [(r.get(a.id_col) or '').strip() for r in res_rows]
         if any(not v for v in rid):
             raise FitRefusal(f'결과 CSV 에 `{a.id_col}` 열이 비어 있는 행이 있다')
         census, refusals = design_census(a.design, a.expect_sha256, rid, id_col=a.id_col)
         if refusals:
             raise FitRefusal(' · '.join(refusals))
-        add_phi, add_b = [], []
-        for mid in census['missing']:
-            drow = census['rows'][mid]
+        drows = census['rows']
+        by_id = {(r.get(a.id_col) or '').strip(): r for r in res_rows}
+
+        phi_l, y_l, batch_l, unres_l, drift = [], [], [], [], []
+        for did, drow in drows.items():
             if a.phi_col not in drow:
-                raise FitRefusal(f'설계 CSV 에 `{a.phi_col}` 열이 없어 누락 ID 의 φ 를 못 넣는다')
-            add_phi.append(float(drow[a.phi_col]))
-            add_b.append(str(drow.get(a.batch_col, 'all')).strip()
-                         if a.batch_col else 'all')
-        if add_phi:
-            phi = np.concatenate([phi, np.asarray(add_phi)])
-            y = np.concatenate([y, -np.ones(len(add_phi), dtype=int)])
-            batch = np.concatenate([batch, np.asarray(add_b, dtype=object)])
-            unres = np.concatenate([unres, np.ones(len(add_phi), dtype=bool)])
+                raise FitRefusal(f'설계 CSV 에 `{a.phi_col}` 열이 없다 — 공변량을 못 가져온다')
+            phi_d = float(drow[a.phi_col])
+            rr = by_id.get(did)
+            if rr is None:                               # 결과 없음 → 미확정
+                phi_l.append(phi_d)
+                y_l.append(-1)
+                unres_l.append(True)
+                batch_l.append(str(drow.get(a.batch_col, 'all')).strip()
+                               if a.batch_col else 'all')
+                continue
+            #  결과 파일이 φ 를 실어 보냈으면 **설계와 같아야 한다**
+            if a.phi_col in rr and str(rr[a.phi_col]).strip():
+                if abs(float(rr[a.phi_col]) - phi_d) > 1e-9:
+                    drift.append(f'{did}: 결과 {rr[a.phi_col]} vs 설계 {phi_d:.6f}')
+            u = False
+            if a.unresolved_col and a.unresolved_col in rr:
+                u = str(rr[a.unresolved_col]).strip().lower() in (
+                    '1', 'true', 'yes', 'unresolved')
+            raw = str(rr.get(a.perc_col, '')).strip()
+            if not u:
+                if raw not in ('0', '1'):
+                    raise FitRefusal(
+                        f'{did}: `{a.perc_col}` = {raw!r} — 0/1 이 아니다.  미확정이면 '
+                        f'`{a.unresolved_col or "unresolved"}` 열로 표시할 것 (§4-4b)')
+                y_l.append(int(raw))
+            else:
+                y_l.append(-1)
+            phi_l.append(phi_d)
+            unres_l.append(u)
+            batch_l.append(str(rr[a.batch_col]).strip()
+                           if a.batch_col and a.batch_col in rr else 'all')
+        if drift:
+            raise FitRefusal(
+                f'결과 CSV 의 `{a.phi_col}` 이 봉인 설계와 다르다 ({len(drift)}건) — '
+                '공변량은 설계가 정본이다: ' + ' · '.join(drift[:3]))
+        phi = np.asarray(phi_l, dtype=float)
+        y = np.asarray(y_l, dtype=int)
+        batch = np.asarray(batch_l, dtype=object)
+        unres = np.asarray(unres_l, dtype=bool)
+        census['covariate_source'] = 'sealed design (ID join)'
         census.pop('rows', None)
 
     out = analyse(phi, y, batch, unres, pooled_sensitivity=a.pooled_sensitivity)
