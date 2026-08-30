@@ -808,27 +808,33 @@ def _write_potcar_asm(jd: Path, species_order: List[str]) -> None:
         "#   PP=/path/to/potpaw_PBE.54 bash POTCAR_ASSEMBLE.sh\n"
         "# ⚠ 종 순서는 이 잡 POSCAR 전용이다 — 다른 잡에 복사하지 말 것.\n"
         "#   (하나를 돌려 쓰면 에러 없이 **다른 계**를 계산합니다.)\n"
-        "set -e\n"
+        "set -euo pipefail\n"
+        "# 🔴 회신 AB P0-8 — 종전엔 POTCAR 를 **제자리에서** 만들고 나중에 검사했다.\n"
+        "#   검사가 실패해 exit 1 이 나도 **완성된 POTCAR 는 남았고**, 이어지는\n"
+        "#   run_job.sh 가 그것으로 VASP 를 돌렸다 — allowlist 실패가 계산 중단으로\n"
+        "#   이어지지 않았다. 임시본에 조립·검증하고 통과 시에만 원자적으로 옮긴다.\n"
+        "trap 'rc=$?; if [ $rc -ne 0 ]; then rm -f POTCAR.tmp POTCAR POTCAR_PROVENANCE.json; "
+        "echo \"  ⛔ 실패 — POTCAR 를 남기지 않았습니다\"; fi' EXIT\n"
         f'ORDER="{" ".join(pv)}"\n'
         f'SPECIES="{" ".join(species_order)}"\n'
         ': "${PP:?PP 를 지정하세요 (PBE PAW 5.4 세트 루트)}"\n'
-        'rm -f POTCAR POTCAR_PROVENANCE.json\n'
+        'rm -f POTCAR POTCAR.tmp POTCAR_PROVENANCE.json\n'
         'srcsha=""\n'
         'for v in $ORDER; do\n'
         '  f="$PP/$v/POTCAR"\n'
         '  [ -f "$f" ] || { echo "⛔ 없음: $f"; exit 1; }\n'
         '  srcsha="$srcsha $v:$(sha256sum "$f" | cut -d" " -f1)"\n'
-        '  cat "$f" >> POTCAR\n'
+        '  cat "$f" >> POTCAR.tmp\n'
         'done\n'
         '# ① 개수\n'
-        'n=$(grep -ac TITEL POTCAR)\n'
+        'n=$(grep -ac TITEL POTCAR.tmp)\n'
         f'[ "$n" = {len(pv)} ] || {{ echo "⛔ TITEL {len(pv)}개여야 하는데 $n개"; exit 1; }}\n'
         '# ② 자리별 variant — 토큰 전체 비교 (Ni 가 Ni_pv 에 오탐되지 않게)\n'
         'i=0\n'
         'for v in $ORDER; do\n'
         '  i=$((i+1))\n'
-        '  got=$(grep -a TITEL POTCAR | sed -n "${i}p" | awk \'{print $4}\')\n'
-        '  fun=$(grep -a TITEL POTCAR | sed -n "${i}p" | awk \'{print $3}\')\n'
+        '  got=$(grep -a TITEL POTCAR.tmp | sed -n "${i}p" | awk \'{print $4}\')\n'
+        '  fun=$(grep -a TITEL POTCAR.tmp | sed -n "${i}p" | awk \'{print $3}\')\n'
         '  [ "$got" = "$v" ] || { echo "⛔ ${i}번째 TITEL 이 $got — $v 여야 합니다"; exit 1; }\n'
         '  [ "$fun" = "PAW_PBE" ] || { echo "⛔ ${i}번째가 $fun — PAW_PBE 여야 합니다"; exit 1; }\n'
         'done\n'
@@ -848,33 +854,31 @@ def _write_potcar_asm(jd: Path, species_order: List[str]) -> None:
         '      echo "   (목록 형식: sha256sum \\$PP/<variant>/POTCAR 출력 그대로)"; exit 1; }\n'
         '  done\n'
         '  echo "  ✔ allowlist 대조 통과 ($POTCAR_ALLOWLIST)"\n'
-        'elif [ "${POTCAR_ALLOWLIST_WAIVED:-0}" = "1" ]; then\n'
-        '  echo "  ⚠ allowlist 미대조 — 면제 선언됨. 반송물에 기록됩니다."\n'
         'else\n'
         '  echo "⛔ POTCAR_ALLOWLIST 가 지정되지 않았습니다."\n'
         '  echo "   신뢰하는 PBE.54 세트의 sha256 목록을 **한 번** 만들어 전 잡에 같은"\n'
         '  echo "   파일을 쓰세요 (잡마다 새로 만들면 아무것도 검증하지 않습니다):"\n'
         '  echo "     for v in \\$(ls \\$PP); do sha256sum \\$PP/\\$v/POTCAR; done > site_allow.txt"\n'
         '  echo "     POTCAR_ALLOWLIST=/abs/site_allow.txt bash POTCAR_ASSEMBLE.sh"\n'
-        '  echo "   대조 없이 진행해야 하면 POTCAR_ALLOWLIST_WAIVED=1 (반송물에 남습니다)."\n'
+        '  echo "   ⛔ 면제(waiver)는 폐지했습니다 (회신 AB P0-8)."\n'
         '  exit 1\n'
         'fi\n'
         '# ④ provenance — 이 파일을 결과와 **함께 반송**해 주세요\n'
         'python3 - "$srcsha" <<\'PY\' > POTCAR_PROVENANCE.json\n'
         'import hashlib, json, sys, os as _os\n'
         'src = dict(t.split(":", 1) for t in sys.argv[1].split())\n'
-        'titel = [l.strip() for l in open("POTCAR", errors="ignore") if "TITEL" in l]\n'
+        'titel = [l.strip() for l in open("POTCAR.tmp", errors="ignore") if "TITEL" in l]\n'
         'print(json.dumps({"schema": "potcar_provenance/v1",\n'
         '                  "species_order": "' + " ".join(species_order) + '".split(),\n'
         '                  "expected_variants": "' + " ".join(pv) + '".split(),\n'
         '                  "titel_lines": titel, "source_sha256": src,\n'
         '                  "allowlist": _os.environ.get("POTCAR_ALLOWLIST"),\n'
-        '                  "allowlist_waived":\n'
-        '                      _os.environ.get("POTCAR_ALLOWLIST_WAIVED") == "1",\n'
+        '                  "allowlist_waived": False,\n'
         '                  "assembled_sha256": hashlib.sha256(\n'
-        '                      open("POTCAR","rb").read()).hexdigest()},\n'
+        '                      open("POTCAR.tmp","rb").read()).hexdigest()},\n'
         '                 indent=1, ensure_ascii=False))\n'
         'PY\n'
+        'mv POTCAR.tmp POTCAR\n'        # 전건 통과 후에야 이 이름이 생긴다 (원자적)
         'grep -a TITEL POTCAR\n'
         f'echo "✔ 조립 완료 — 종 순서 {" ".join(species_order)} · variant·순서·PAW_PBE 확인"\n'
         'echo "  → POTCAR_PROVENANCE.json (결과와 함께 반송해 주세요)"\n')
