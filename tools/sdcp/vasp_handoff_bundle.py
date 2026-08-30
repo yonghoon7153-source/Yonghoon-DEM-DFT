@@ -1145,7 +1145,16 @@ FP_JACCARD = 0.80         # 접촉 지문 겹침 — 경계 원자 하나로 뒤
 #:  물리 규약 키(LASPH/ADDGRID/ISYM/NUPDOWN/LDAUU)도 넣어 외주처의 우발적 수정을 잡는다.
 AUDIT_KEYS_RUNTIME = ("ENCUT", "ISMEAR", "IVDW", "LREAL", "ISTART", "ICHARG", "LDIPOL",
                       "LASPH", "ADDGRID", "ISYM", "NUPDOWN", "LDAUU", "LDAUTYPE", "IDIPOL",
-                      "ISPIN", "LDAUL", "LDAUJ", "MAGMOM", "LDAU", "LMAXMIX")
+                      "ISPIN", "LDAUL", "LDAUJ", "MAGMOM", "LDAU", "LMAXMIX",
+                      # 🔴 회신 AB P0-5 — `_spin_setup_ok()` 가 이 넷을 검사하는데
+                      #   여기 없어서 `read_outcar()` 가 **아예 안 읽었다**. 손으로 만든
+                      #   dict 를 넣는 단위시험은 통과하고 실제 OUTCAR 경로에서는
+                      #   검사가 통째로 꺼져 있었다 (전형적인 가짜 초록).
+                      #   ⚠ 넷 다 **미출력이 기본값**이다: VASP 는 기본값이면 안 찍는
+                      #     경우가 있어 None 이 곧 "안전한 기본" 이다. 그래서
+                      #     _spin_setup_ok 은 None 을 통과로 본다 — 그 해석을 여기 적어
+                      #     둔다(안 적으면 다음 사람이 fail-closed 로 바꿔 전 잡을 막는다).
+                      "LNONCOLLINEAR", "LSORBIT", "I_CONSTRAINED_M", "BEXT")
 
 # ── 되울림 형식 3종 (2026-08-25 실측, wave1 43개 OUTCAR) ─────────────────────
 #   ① 행두형: `   ENCUT  =  520.0 eV …` · `   NUPDOWN=      -1.0000` (= 앞 공백 0개 허용)
@@ -1324,7 +1333,15 @@ def _spin_setup_ok(incar_echo):
     `+++−` 와 `−−−+` 가 같은 상태다. **INCAR 되울림에서 기계적으로 확인한다** —
     전제를 사람이 기억하는 것에 맡기지 않는다.
     """
-    e = {str(k).upper(): str(v).strip().upper().strip(".")
+    # 🔴 회신 AB P0-5 — `str(None)` 이 **"NONE"** 이 된다. 종전 정규화는 None 을
+    #   그 문자열로 만들었고, 그러면 `not in (None, "", "0")` 이 참이라 **미출력이
+    #   곧 "스핀 제약 있음"** 이 됐다. 이 키들이 AUDIT_KEYS_RUNTIME 에 없어서
+    #   실제 OUTCAR 경로로는 한 번도 안 들어왔기 때문에 드러나지 않았다 —
+    #   손으로 만든 dict 를 넣는 단위시험만 통과하던 자리다.
+    #   ⚠ VASP 는 이 넷이 기본값이면 **되울리지 않는다**. 그러므로 미출력(None)은
+    #     "확인 불가" 가 아니라 **기본값(꺼짐)** 으로 읽는 것이 맞다. 반대로
+    #     fail-closed 로 두면 전 잡이 BASIN_UNRESOLVED 가 된다(실측).
+    e = {str(k).upper(): (None if v is None else str(v).strip().upper().strip("."))
          for k, v in (incar_echo or {}).items()}
     bad = []
     if e.get("LNONCOLLINEAR") in ("T", "TRUE"):
@@ -1333,7 +1350,7 @@ def _spin_setup_ok(incar_echo):
         bad.append("LSORBIT=T (SOC)")
     if e.get("I_CONSTRAINED_M") not in (None, "", "0"):
         bad.append(f"I_CONSTRAINED_M={e.get('I_CONSTRAINED_M')} (스핀 제약)")
-    if e.get("BEXT") not in (None, "", "0", "0.0"):
+    if e.get("BEXT") not in (None, "", "0", "0.0", "0.00"):
         bad.append(f"BEXT={e.get('BEXT')} (외부장)")
     return (not bad), bad
 
@@ -2233,6 +2250,25 @@ def selftest_k() -> int:
     chk(closure_C1(_man3, _jb_b, _E3, _emol3, _F3)["by_frag"]["ptfe_c10"]["verdict"]
         == "unresolved",
         "⛔음성 C1: clean slab 과 basin 이 다른 자세가 있으면 unresolved")
+
+    # ── P0-5 회귀: **production 이 실제로 쓰는 경로**로 친다 ─────────────────
+    #   read_outcar 는 `{k: _echo_val(t, k) for k in AUDIT_KEYS_RUNTIME}` 로
+    #   되울림을 만든다. 손으로 만든 dict 를 넣으면 그 키가 목록에 없어도 통과한다 —
+    #   회신 AB P0-5 가 잡은 것이 정확히 그 상태였다. 그래서 **같은 식으로** 만든다.
+    for _k5 in ("LNONCOLLINEAR", "LSORBIT", "I_CONSTRAINED_M", "BEXT"):
+        chk(_k5 in AUDIT_KEYS_RUNTIME,
+            "⛔음성 P0-5: %s 가 AUDIT_KEYS_RUNTIME 에 있다 — 없으면 read_outcar 가 "
+            "안 읽어서 _spin_setup_ok 이 **실제로는 안 돈다**" % _k5)
+    _echo = lambda t: {k: _echo_val(t, k) for k in AUDIT_KEYS_RUNTIME}   # noqa: E731
+    _e5 = _echo("  ENCUT  =  520.0 eV\n  ISMEAR =      0\n")
+    chk(_spin_setup_ok(_e5)[0] is True,
+        "⛔음성 P0-5: 그 넷이 **미출력이면 통과**다 (VASP 기본값은 안 찍는다). "
+        "종전엔 str(None)='NONE' 이 되어 전 잡을 '스핀 제약 있음' 으로 막았다: %s"
+        % (_spin_setup_ok(_e5)[1],))
+    chk(_spin_setup_ok(_echo("  LSORBIT =      T\n"))[0] is False,
+        "⛔음성 P0-5: SOC 가 켜져 있으면 같은 경로에서 잡힌다")
+    chk(_spin_setup_ok(_echo("  I_CONSTRAINED_M =      1\n"))[0] is False,
+        "⛔음성 P0-5: 스핀 제약이 켜져 있으면 같은 경로에서 잡힌다")
 
     _c3 = closure_C3(_man3, _jb3, _E3, _F3)
     chk(abs(_c3["D_eV"] - (-0.7)) < 1e-6,
@@ -3316,13 +3352,31 @@ def _closure_estimand(man, results, E, emol, jobs):
             d.setdefault(c["basin"], {})[c["seed"]] = E(jn)
         dp = {k: v["afm2424_net4"] - v["afm2424_pm1"] for k, v in d.items()
               if v.get("afm2424_net4") is not None and v.get("afm2424_pm1") is not None}
-        if len(dp) < 2:
+        # 🔴 회신 AB P0-7 — 종전엔 짝이 **2개만 있어도** J_f 를 냈다. 네 자세 중
+        #   한둘이 빠지면 range 가 자동으로 좁아져 **거짓 PASS** 가 된다(C1 과 같은
+        #   편향). 기대 자세 수는 동결 manifest 에서 세고, 그 수만큼 두 seed 가
+        #   **모두** 유효할 때만 낸다.
+        _want = len({k.rsplit("/", 1)[-1].split("__")[1]
+                     for k in (man.get("planned") or {})
+                     if k.startswith("prospective/")
+                     and k.rsplit("/", 1)[-1].startswith(f + "__")
+                     and len(k.rsplit("/", 1)[-1].split("__")) > 2})
+        if not _want or len(dp) != _want:
+            out.setdefault("pose_basin_interaction", {})[f] = {
+                "판정": "unresolved", "n_pose_used": len(dp), "n_pose_required": _want,
+                "why": ("계획한 자세 전부가 두 seed 다 유효해야 한다 — 부분집합은 "
+                        "range 를 좁혀 통과 쪽으로 편향된다 (회신 AB P0-7)")}
             continue
         jf = max(dp.values()) - min(dp.values())
         out.setdefault("pose_basin_interaction", {})[f] = {
-            "n_pose": len(dp), "J_f_meV": round(jf * 1000, 2),
+            "n_pose": len(dp), "n_pose_required": _want,
+            "J_f_meV": round(jf * 1000, 2),
             "delta_by_pose_meV": {k: round(v * 1000, 2) for k, v in sorted(dp.items())},
-            "판정": ("seed-insensitive (시험한 자세 안에서)" if jf <= 0.010 else
+            # ⚠ 회신 AB P0-7 — "seed-insensitive" 는 **과한 말**이다. 시험한 네 자세
+            #   안에서 range 가 작았다는 것뿐이고, seed 에 둔감하다는 일반 진술이
+            #   아니다. 허용 문구를 그대로 박는다.
+            "판정": ("seed×pose interaction range 가 작았다 (시험한 %d자세 안에서)"
+                     % len(dp) if jf <= 0.010 else
                      "magnetic-sensitive" if jf <= 0.040 else
                      "⛔ SELECTOR_FAIL — J_f > 40 meV")}
 
