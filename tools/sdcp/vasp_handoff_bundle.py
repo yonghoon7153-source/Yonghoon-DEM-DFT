@@ -407,6 +407,8 @@ python3 analyze_results.py .
 exit $?
 """
 
+RUN_STAGED = '#!/usr/bin/env bash\n# 2단계 러너 — 정지 규칙을 **실제로 적용**하려면 순서가 있어야 한다 (회신 AJ).\n#\n#   1단계: primary 두 조각 x 셀 두 높이 (4잡) + 기체 기준 (2잡) = 6잡\n#          -> 진공 두께 수렴 시험을 여기서 판정한다.\n#          |D(c2) - D(c1)| <= 5 meV **그리고** 0.01 eV 반올림 일치여야 다음으로 간다.\n#          기체 기준이 1단계에 있는 이유 — 반올림 비교에 공통 기체 offset 이 필요하다.\n#   2단계: primary 다른 seed (2잡) + 대안 자세 두 seed (4잡) = 6잡\n#\n# 실패하면 2단계를 돌리지 않는다. 추가 셀 탐색도 하지 않는다 (Figure 2e 제거).\nset -u\nVASP_CMD=${VASP_CMD:?VASP_CMD 를 지정하세요 (예: \'mpirun -np 256 vasp_std\')}\nstage=${1:-1}\n\n# 잡 분류는 job.json 의 **구조화 필드**로 한다 — 이름 파싱 금지\npython3 -c \'\nimport json, sys, glob, os\nwant = sys.argv[1]\nfor jp in sorted(glob.glob("*/*/job.json")):\n    m = json.load(open(jp)); d = os.path.dirname(jp)\n    kind, role, vac = m.get("kind"), m.get("role"), m.get("vacconv")\n    if kind == "mol_ref":\n        s = "1"\n    elif kind == "prospective_pose" and role == "primary":\n        s = "1" if (vac or m.get("seed") == "afm2424_pm1") else "2"\n    else:\n        s = "2"\n    if s == want:\n        print(d)\n\' "$stage" > _stage_jobs.txt\n\necho "== 단계 $stage · $(wc -l < _stage_jobs.txt) 잡 =="\ncat _stage_jobs.txt\nfail=0\nwhile read -r j; do\n  [ -f "$j/run_job.sh" ] || { echo "없음: $j"; fail=1; continue; }\n  echo "=== $j ==="\n  ( cd "$j" && bash run_job.sh ) || { echo "$j 실패"; fail=1; }\ndone < _stage_jobs.txt\n\nif [ "$stage" = 1 ]; then\n  echo "== 1단계 판정 =="\n  python3 analyze_results.py . || {\n    echo "1단계 판정이 막혔다 — 2단계를 돌리지 않는다."; exit 2; }\n  echo "1단계 통과 — 2단계는 \'bash run_staged.sh 2\'"\nfi\nexit $fail\n'
+
 RUN_ALL = """#!/usr/bin/env bash
 # ⚠⚠ 이건 **직렬 디버그 러너**다 — 병렬 제출기가 아니다.
 #   이대로 돌리면 잡을 하나씩 순서대로 돈다 (Wave 1 기준 20일 규모).
@@ -844,7 +846,7 @@ def _write_potcar_asm(jd: Path, species_order: List[str]) -> None:
     (jd / "POTCAR_ASSEMBLE.sh").write_text(
         "#!/usr/bin/env bash\n"
         "# 이 잡의 POTCAR 를 만든다. PBE PAW 5.4 세트 경로를 PP 로 준다.\n"
-        "#   PP=/path/to/potpaw_PBE.54 bash POTCAR_ASSEMBLE.sh\n"
+        "#   PP=/path/to/potpaw_PBE.54 POTCAR_ALLOWLIST=/abs/site_allow.txt bash POTCAR_ASSEMBLE.sh\n"
         "# ⚠ 종 순서는 이 잡 POSCAR 전용이다 — 다른 잡에 복사하지 말 것.\n"
         "#   (하나를 돌려 쓰면 에러 없이 **다른 계**를 계산합니다.)\n"
         "set -euo pipefail\n"
@@ -5890,7 +5892,7 @@ def _readme_sp(man: Dict[str, Any], a, zcut: float, n_jobs: int,
 mkdir -p <이 묶음 전용 빈 디렉터리> && cd <그 디렉터리>
 unzip <이 묶음>.zip
 cd <잡폴더>
-PP=/path/to/potpaw_PBE.54 bash POTCAR_ASSEMBLE.sh     # 그 잡 전용 POTCAR 조립
+PP=/path/to/potpaw_PBE.54 POTCAR_ALLOWLIST=/abs/site_allow.txt bash POTCAR_ASSEMBLE.sh     # 그 잡 전용 POTCAR 조립
 VASP_CMD="mpirun -np {a.cores} vasp_std" bash run_job.sh
 ```
 
@@ -5904,14 +5906,15 @@ VASP_CMD="mpirun -np {a.cores} vasp_std" bash run_job.sh
 
 ## 실행 단계와 결과 범위 (읽어 주세요)
 
-이 요청은 **최종 흡착 결론이 아니라 Stage A calibration tranche** 입니다.
-포함된 복합체는 사전 지정된 calibration pose 뿐이고 **audit pose 는 없습니다.**
+이 요청은 **이것으로 끝나는 계산**입니다 — 뒤에 이어지는 단계가 없습니다.
+조각당 primary 1자세 + 대안 1자세를 자기 시드 둘로 재고, primary 는 셀 두 높이에서
+한 번 더 잽니다(진공 두께 수렴 시험). 보고하는 것은 **두 조각의 흡착에너지 차 하나**이고,
+개별 절대값은 보고하지 않습니다(깨끗한 슬랩을 계산하지 않으므로 대비에서 소거됩니다).
+
+대안 자세는 최저값 후보가 **아닙니다** — "다른 접촉 방식에서도 방향이 유지되는가" 만
+봅니다. 최저·평균·순위에 섞지 않습니다.
 
 {pose_para}
-
-Stage A 회수 **후에만** 상대오차 경계 (B)와 최종 선택창 (W)를 확정하고, 창 안의
-전체 candidate 와 창 밖 sealed audit 로 Stage B 를 새로 생성합니다.
-**Stage A 결과만으로 두 조각의 최종 흡착 선호를 종결하지 않습니다.**
 
 `pm1` 과 `net4` 는 **초기 MAGMOM seed 이름**입니다. 최종 자기상태가 아닙니다.
 저희 분석기가 최종 Ni 국소모멘트 부호벡터 · moment collapse · 유기종 상대스핀으로
@@ -6049,7 +6052,7 @@ sbatch --array=1-$(wc -l < JOBS.txt)%{a.concurrency} \
   --ntasks={a.cores} --time=120:00:00 --wrap='
   j=$(sed -n "${{SLURM_ARRAY_TASK_ID}}p" JOBS.txt)
   cd "$j"
-  PP=/path/to/potpaw_PBE.54 bash POTCAR_ASSEMBLE.sh    # ★ 잡마다 종 순서가 다르다
+  PP=/path/to/potpaw_PBE.54 POTCAR_ALLOWLIST=/abs/site_allow.txt bash POTCAR_ASSEMBLE.sh    # ★ 잡마다 종 순서가 다르다
   VASP_CMD="srun -n {a.cores} vasp_std" bash run_job.sh'
 ```
 ⚠ **공통 POTCAR 를 전 잡에 복사하면 안 됩니다.** 조각마다 POSCAR 종 순서가 달라
@@ -6715,6 +6718,14 @@ def build_bundle(a, ledger: Optional[Dict[str, Any]] = None) -> Path:
              "note": "자리 선호 중심"})
         for f in man.get("fragments", [])}
     man["claim_scope"] = (
+        "두 조각 모델의 **흡착에너지 차** 하나 (adsorption-energy difference). "
+        "⚠ 고정 기하(MLIP 이완) 단일점이고, 기체 기준은 조각당 conformer 하나를 모든 "
+        "자세에 공통으로 쓰므로 **변형에너지가 포함**된다. 값은 pm1 자기 branch 조건부이고 "
+        "비교하는 잡들이 같은 realized topology 여야 한다. "
+        "⛔ 개별 절대 흡착에너지·자리 선호(Li vs Ni)·평형 결합에너지·자유에너지·고분자 "
+        "전체의 결합력으로 확장 금지."
+        if getattr(a, "refs_minimal", False) else
+
         "fixed-geometry site contrast (ΔE = E_Ni − E_Li, 같은 조각·같은 슬랩). "
         "⚠ 값은 **pm1 자기 branch 조건부**다 — 두 seed 중 어느 쪽이 바닥인지 주장하지 "
         "않는다(그러려면 각 끝점의 최저 branch에 dense가 필요하다). 보호막은 seed 산포 "
@@ -6905,6 +6916,8 @@ def build_bundle(a, ledger: Optional[Dict[str, Any]] = None) -> Path:
     man["potcar_spec"] = {e: POTCAR_SPEC.get(e, e) for e in sorted(used_els)}
     (out / "analyze_results.py").write_text(ANALYZER)
     (out / "run_all.sh").write_text(RUN_ALL)
+    if getattr(a, "refs_minimal", False):
+        (out / "run_staged.sh").write_text(RUN_STAGED)
     if a.adaptive_dense:
         (out / "run_dense_selected.sh").write_text(RUN_DENSE_SEL)
     # ⚠ 문서가 잡 수를 읽으므로 **문서보다 먼저** 확정한다 (Codex 7차 §11 —
@@ -8344,6 +8357,25 @@ def selftest() -> int:
         "[음성] relax 상이 없는데 README 가 이완을 요구하지 않는다")
     chk(bool(_rx_jobs) or "폴더가 하나도 없습니다" in _rd,
         "relax 가 없으면 README 가 그렇게 적는다")
+
+    # ⛔ 회신 AJ ⑤ — quickstart 가 allowlist 없이 조립기를 부르면 외주처는 즉시 막힌다
+    for _doc, _nm in ((_rd, "README"), (_sub, "SUBMIT_CONTRACT")):
+        for _ln in _doc.splitlines():
+            if "bash POTCAR_ASSEMBLE.sh" in _ln and "POTCAR_ALLOWLIST" not in _ln:
+                chk(False, "⛔음성 AJ: %s 가 allowlist 없이 조립기를 부른다 — "
+                           "조립기는 없으면 즉시 종료한다: %s" % (_nm, _ln.strip()[:70]))
+                break
+        else:
+            chk(True, "%s 의 조립기 호출에 POTCAR_ALLOWLIST 가 있다" % _nm)
+
+    # run_all.sh 가 그룹을 하드코딩하지 않는다
+    _ra = (out_sp / "run_all.sh").read_text()
+    #   ⚠ 주석에는 그 문자열이 **이력으로** 남아 있다 — 실행 줄만 본다
+    _ra_code = [l for l in _ra.splitlines() if not l.lstrip().startswith("#")]
+    chk(not any("controls tier1 refs tier2" in l for l in _ra_code)
+        and any("*/*/run_job.sh" in l for l in _ra_code),
+        "⛔음성 AJ: run_all.sh 의 **실행 줄**이 그룹을 하드코딩하지 않는다 "
+        "(11잡을 건너뛴 원인)")
 
     # ★ 주기영상 진공 (회신 AF P0-1) — 실물 v13 이 9자세 미달인데 문서는 ">15 Å" 였다
     _vac = m_sp.get("vacuum") or {}
