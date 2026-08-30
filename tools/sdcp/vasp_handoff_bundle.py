@@ -6059,8 +6059,21 @@ def _readme_sp(man: Dict[str, Any], a, zcut: float, n_jobs: int,
     #   "잡은 독립이니 동시에 제출" 로 읽혀 stop rule 을 우회시켰다.
     #   ⇒ staged 러너가 있으면 **그것이 유일한 실행 지침**이라고 못박는다.
     _staged = bool(man.get("staged_runner"))
-    staged_block = ("""⛔ **`run_staged.sh` 로만 실행해 주세요. 12잡을 한꺼번에 던지지 마십시오.**
-1단계(6잡)가 진공 두께 수렴 시험을 통과해야 2단계를 돌립니다 — 통과 못 하면
+    # ⚠ 잡 수를 **계획에서 센다.** 하드코딩하면 canary 를 넣는 순간 문서가 거짓이 된다
+    #   (2026-08-31 실측: 12 → 14 인데 README 는 "12잡" 이라고 적고 있었다).
+    #   1단계 분류는 run_staged.sh 와 **같은 규칙**이다 — mol_ref 전부 + primary·주 seed.
+    _n1 = 0
+    for _pm in (man.get("planned") or {}).values():
+        _mm = _pm.get("meta") or {}
+        _k, _r = _mm.get("kind"), (_mm.get("role") or "primary")
+        if _k == "mol_ref":
+            _n1 += 1
+        elif _k == "prospective_pose" and _r == "primary" and (
+                _mm.get("vacconv") or _mm.get("seed") == SEED_MAIN):
+            _n1 += 1
+    _n1 = _n1 or 6
+    staged_block = ("""⛔ **`run_staged.sh` 로만 실행해 주세요. %d잡을 한꺼번에 던지지 마십시오.**
+1단계(%d잡)가 진공 두께 수렴 시험을 통과해야 2단계를 돌립니다 — 통과 못 하면
 2단계는 **돌리지 않는 것이 맞습니다**(추가 계산으로 메우지 않습니다).
 
 ```
@@ -6070,7 +6083,7 @@ VASP_CMD="mpirun -np %d vasp_std" bash run_staged.sh 2     # 1단계 통과 뒤�
 
 아래 단일 잡 실행은 **한 잡을 다시 돌릴 때만** 쓰십시오:
 
-""" % (getattr(a, "cores", 48), getattr(a, "cores", 48))) if _staged else ""
+""" % (n_jobs, _n1, getattr(a, "cores", 48), getattr(a, "cores", 48))) if _staged else ""
 
     relax_return = ("""⚠ **`relax/` 폴더가 있는 잡은 `relax/OUTCAR` 와 `relax/CONTCAR` 도 같이**
   보내 주세요 (이 묶음에 **%d잡**). 단일점 묶음에서도 **기체 기준(`refs/mol__*`)에는
@@ -6590,8 +6603,20 @@ def build_bundle(a, ledger: Optional[Dict[str, Any]] = None) -> Path:
     man["z_cut_shared_A"] = round(zcut, 3)
     slab_metas: List[Dict[str, Any]] = []
 
-    def plan(relpath: str, phases: List[str], required: bool):
+    def plan(relpath: str, phases: List[str], required: bool, meta=None):
+        """계획에 잡 하나를 등록한다.
+
+        ⛔ 2026-08-31 — `meta` 를 같이 담는다. 종전엔 phases/required 만 담아서
+          문서·분석기가 잡의 성격(kind/role/seed)을 **되짚을 수 없었다**.
+          그래서 estimand_job_keys 가 비었고(v9), README 의 단계별 잡 수가
+          하드코딩(12)으로 남아 canary 추가 뒤 거짓이 됐다.
+        """
         man["planned"][relpath] = {"phases": phases, "required": required}
+        if meta:
+            man["planned"][relpath]["meta"] = {
+                k: meta.get(k) for k in
+                ("kind", "fragment", "role", "seed", "basin_id", "vacconv")
+                if meta.get(k) is not None}
 
     # ── 계약 (Codex P0-A) ────────────────────────────────────────────────────
     # ⚠⚠ 옛 구현은 조각/쌍/xyz/분자 ref 가 없으면 **조용히 건너뛰고** 축소된 MANIFEST 를
@@ -6714,7 +6739,7 @@ def build_bundle(a, ledger: Optional[Dict[str, Any]] = None) -> Path:
                         prescf=not a.no_prescf, single_point=a.single_point,
                         closure=a.closure, kmesh_over=kover)
                     slab_metas.append(m)
-                    plan(rel, m["phases"], True)
+                    plan(rel, m["phases"], True, m)
                     # ⛔ 2026-08-31 (회신 AN P0-1) — D 에 들어갈 **primary·주 seed** 잡을
                     #   여기서 바로 기록한다. `planned` 는 phases/required 만 담아서
                     #   나중에 되짚을 수 없다 (v9 에서 estimand_job_keys 가 비었던 이유).
@@ -7003,7 +7028,7 @@ def build_bundle(a, ledger: Optional[Dict[str, Any]] = None) -> Path:
                            prescf=not a.no_prescf, single_point=a.single_point, closure=a.closure,
                            kmesh_over=kover)
         slab_metas.append(m)
-        plan(rel, m["phases"], True)
+        plan(rel, m["phases"], True, m)
         n_jobs += 1
         # ★ 둘째 셀의 clean slab — **절대 E_ads 를 보고하려면** 필요하다.
         #   대비만 볼 거면 소거되지만, 절대값의 수렴은 따로 봐야 한다. 주 seed 만.
@@ -7127,7 +7152,7 @@ def build_bundle(a, ledger: Optional[Dict[str, Any]] = None) -> Path:
             rel = f"refs/mol__{frag}__{tag}"
             m = _emit_mol_job(out / rel, frag, mol, margin,
                               free_spin=getattr(a, "free_spin_refs", False), closure=a.closure)
-            plan(rel, m["phases"], True)
+            plan(rel, m["phases"], True, m)
             man["refs"][f"mol__{frag}__{tag}"] = rel
             n_jobs += 1
             # ⛔⛔ 2026-08-31 (회신 AN Q3) — canary 를 **C-12 에서도 낸다.**
@@ -7141,8 +7166,13 @@ def build_bundle(a, ledger: Optional[Dict[str, Any]] = None) -> Path:
             #    초기 국소모멘트를 새로 설정하지 않는다.)
             if tag == "box24" and (a.closure or getattr(a, "refs_minimal", False)):
                 relz = f"refs/mol__{frag}__{tag}__nzmag"
+                # ⛔⛔ 2026-08-31 실측 — canary 가 `NUPDOWN = 0` 으로 나왔다.
+                #   `free_spin` 을 CLI 플래그에서 받아서, 우리 호출에선 False 였다.
+                #   그러면 **일중항으로 묶인 채** 비영 MAGMOM 만 준 꼴이라
+                #   spin-broken 해를 찾을 수 없다 — 대조군이 아무것도 대조하지 못한다.
+                #   canary 는 정의상 **자유 스핀**이다: free_spin=True 를 못박는다.
                 mz = _emit_mol_job(out / relz, frag, mol, margin,
-                                   free_spin=getattr(a, "free_spin_refs", False),
+                                   free_spin=True,
                                    closure=True, nonzero_start=True)
                 plan(relz, mz["phases"], True)
                 man.setdefault("molecular_spin_controls", {})[
