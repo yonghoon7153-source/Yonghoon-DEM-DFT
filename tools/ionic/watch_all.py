@@ -41,7 +41,7 @@ import argparse as _ap
 _p = _ap.ArgumentParser(add_help=False)
 _p.add_argument("--full", action="store_true", help="끝난 항목까지 전부 펼친다")
 _p.add_argument("--only", default="",
-                help="disorder|sdcp|committee|elf|bader|chain|prereq|vanhove 중 하나만")
+                help="disorder|sdcp|committee|elf|bader|prereq 중 하나만")
 ARGS, _ = _p.parse_known_args()
 FULL, ONLY = ARGS.full, ARGS.only.lower()
 
@@ -209,11 +209,6 @@ JOBS = [
               "--slab db/structures/linio2_104_sym_1x4L4_relaxed.vasp "
               "--moldir /data/work/runs/sdcp_linio2_binding/inputs/sdcp_v7c "
               "--out /data/work/runs/sdcp_v2/phaseA 2>&1 | tee -a ~/logs/phaseA.log'"},
-    {"key": "chain2", "log": os.path.join(H, "logs", "chain2.log"),
-     # ⚠ 이 체인은 "GPU 해방 대기 → 알림" 이 전부고 READY_FOR_QE_AND_SLAB 가 **정상 종료**다.
-     #   done 을 비워 뒀더니 완주한 런이 ⛔ 죽음으로 분류됐다 (실측 08-03).
-     "done_marker": ("READY_FOR_QE_AND_SLAB", "GPU 해방 대기 완료 — 후속 ①② 는 수동 착수"),
-     "done": [], "proc": (), "tmux": "chain2", "start": None},
 ]
 
 
@@ -964,47 +959,6 @@ if os.path.isfile(blog):
             print("  (summary 파싱 실패)")
 else:
     print("  (미가동)")
-print(BAR)
-
-# ═══ ④ 체인 ══════════════════════════════════════════════════════════════
-print("④ 후속 체인 (GPU 해방 대기 → QE 단일점 + Li 슬랩)")
-cl = os.path.join(H, "logs", "chain2.log")
-# ⚠ 여기서 pgrep -f 를 쓰지 않는다. 패턴이 호출한 셸의 명령줄에 들어 있으면 자기 자신을
-#   물어 늘 '살아있음' 이 된다(실제로 개발 중 그렇게 오탐했다). tmux 세션 + 로그 신선도로 본다.
-_clm = mtime(os.path.join(H, "logs", "chain2.log"))
-# ⚠⚠ **로그가 새것이라는 건 살아있다는 뜻이 아니다 (2026-08-03 실측).** 중복가드에 걸려
-#   즉사한 런이 방금 로그 두 줄을 남겨서, 15분 신선도 규칙이 "세션 살아있음"으로 오판했다.
-#   같은 화면의 ⓪ 은 "tmux 없음 → 멈춤"이라 **한 화면 안에서 두 판정이 모순**됐다.
-#   생존의 근거는 tmux 세션(또는 프로세스)뿐이고, 로그 신선도는 참고 표시로만 쓴다.
-# ⚠ 지역변수 이름을 live 로 두면 모듈 함수 live() 를 가려서 TypeError 가 난다.
-live_chain = "chain2" in TMUX
-_fresh = _clm is not None and (NOW - _clm).total_seconds() < 900
-if os.path.isfile(cl):
-    ls = [l for l in open(cl, errors="ignore").read().splitlines() if l.strip()]
-    if live_chain:
-        live()
-    _done = any("READY_FOR_QE_AND_SLAB" in l for l in ls)
-    print(f"  세션 {'살아있음' if live_chain else '없음'} · 로그 {len(ls)}줄"
-          + ("  (로그는 15분 내 갱신 — 그러나 세션이 없으므로 생존 근거가 아니다)"
-             if _fresh and not live_chain else ""))
-    for l in ls[-2:]:
-        print("    " + l[:110])
-    if live_chain:
-        pass
-    elif _done:
-        print("  ✅ 완주 — GPU 해방까지가 이 체인의 일이고 그건 끝났다 (READY_FOR_QE_AND_SLAB).")
-        print("     남은 ①② 는 자동 실행되지 않는다: 필요할 때 손으로 착수.")
-    else:
-        print("  ⛔ 로그는 있는데 세션이 없다 — 완주 표시도 없으니 죽은 것이다.")
-elif live_chain:
-    print("  ▶ 세션은 있는데 ~/logs/chain2.log 가 없다 — 로그 경로가 다르다")
-else:
-    # ⚠ 실제 사고: `tmux new -d -s chain2 '... > ~/logs/chain2.log 2>&1'` 인데 ~/logs 가
-    #   없어서 리다이렉트 실패 → 셸 즉사 → 세션도 로그도 안 남았다. "안 걸렸네"로 오해하기 쉽다.
-    print("  ⛔ 미가동 (세션도 로그도 없음). ~/logs 부재로 즉사했을 가능성이 크다.")
-    print("     재기동: tmux new -d -s chain2 'bash tools/ionic/chain_gpu_release.sh'")
-    print("     (그 스크립트가 로그 디렉터리를 직접 만들고, CPU 빌드 QE 는 대기 조건에서 뺀다)")
-print(BAR)
 
 # ═══ 재기동 안내 ═════════════════════════════════════════════════════════
 # ⚠ 예전 판은 JOBS 목록만 보고 "재기동 필요 없음" 을 찍었다. SDCP 섹션이 바로 위에서
@@ -1105,39 +1059,6 @@ if want("prereq"):
         elif not run:
             print("  ⚠ 로그에 ⛔ 도 '체인 끝' 도 없는데 프로세스가 없다 — 죽었을 수 있다")
 
-if want("vanhove"):
-    print(BAR)
-    print("■ van Hove 쓸이 (T12)")
-    lg = _tail_logs("/data/work/runs/vanhove*.log")
-    run = alive("run_vanhove_sweep") or alive("aimd_jump_stats")
-    if not lg:
-        print("  · 로그 없음")
-    else:
-        f = lg[0]
-        L = open(f, errors="replace").read().splitlines()
-        starts = [l for l in L if l.startswith("▶")]
-        ver = [l for l in L if "⇒" in l]
-        # ⛔ 2026-08-28 — 첫 판은 "제자리" 로 cage 를 셌는데, **확산 판정 문구 안에도**
-        #   "cage 면 제자리에 머문다" 가 있어서 확산 줄이 양쪽에 다 세어졌다.
-        #   합계가 `중간 -12` 로 나왔다 — 음수가 화면에 뜨고서야 알았다.
-        #   ⇒ 고유 표지로 매치하고, **합이 안 맞으면 숨기지 말고 그렇게 말한다.**
-        diff = sum(1 for l in ver if "확산한다" in l)
-        cage = sum(1 for l in ver if "제자리다" in l)
-        tr = sum(1 for l in ver if "잘려서" in l)
-        mid = len(ver) - diff - cage - tr
-        if run:
-            live()
-        print(f"  로그 {os.path.basename(f)} · 궤적 {len(starts)}개 시작 · 판정 {len(ver)}건 · "
-              f"{'🔄 진행 중' if run else '⏹ 끝'}")
-        if ver:
-            print(f"    확산 {diff} · 제자리(cage) {cage} · 중간 {max(mid,0)} · ⛔잘림 {tr}")
-            if mid < 0:
-                print(f"  ⛔ 분류 합({diff+cage+tr})이 판정 수({len(ver)})를 넘는다 — "
-                      f"**한 줄이 두 분류에 걸린다.** 분류기를 고칠 것")
-        if tr:
-            print("  ⛔ 잘린 궤적이 있다 — rmax 가 모자란다. --rmax 를 키워 그것만 다시 돌릴 것")
-        if ver and not run:
-            print("  ✅ 끝 — 같은 계·다른 시드를 **나란히** 놓고 봐야 시드 산포가 보인다")
 
 if not FULL:
     sys.stdout = _REAL_STDOUT
