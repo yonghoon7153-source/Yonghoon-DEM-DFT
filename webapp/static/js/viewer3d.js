@@ -6095,13 +6095,29 @@ export async function showLabCompareModal(pidA, pidB, nameA, nameB) {
   const wireB = _wiringCounts(B.particles, B.additive_points, mmB.additive_counts,
                               (B.box || {}).x_max || 0, (B.box || {}).y_max || 0);
   const gsh = (s, k, ph) => 100 * (((s || {})[k] || {})[ph] || 0);
+  //  ★★★ 2026-08-30 — **어느 팔을 보고 있는지 제목에 박는다.**
+  //    뷰어는 payload **하나**만 읽으므로 여기 σ 는 그 팔(single origin)의 값이다.
+  //    코호트 8팔 평균과 셋째 자리에서 갈리는데(예: 0.0545 vs 0.0540) 화면 값을 논문에
+  //    인용하면 표와 어긋난다.  ⇒ origin 을 보여 **팔 값임을 자명하게** 만든다.
+  //    ⚠ 8팔 평균을 여기 표시하지 않는다 — 로드한 파일에 없는 숫자를 그리는 것은
+  //      이 리포가 반복해서 맞은 실패 유형이다.  평균이 필요하면 코호트 요약을 따로 싣는다.
+  const _armTag = (a, b) => {
+    const o = (s) => {
+      const v = ((s || {}).manifest || {}).origin_shift_um;
+      return (Array.isArray(v) && v.length === 3)
+        ? '(' + v.map((x) => (+x === 0 ? '0' : '½')).join(',') + ')' : null;
+    };
+    const oa = o(a), ob = o(b);
+    if (!oa && !ob) return '';
+    return '  ⟨팔 ' + (oa || '?') + (ob && ob !== oa ? ' / ' + ob : '') + ' · 코호트 평균 아님⟩';
+  };
   // 운전(1C) 평균 전류밀도 = 면적용량[mAh/cm²]×1C = j_1C [mA/cm²] (payload field_scale_e.j_1C_mA_cm2).
   //   초표면(σ_eff/L) 평균 → 전류보존으로 전자·이온 동일값.  국소 피크는 ×focus(아래 집중 행).
   const jc1 = (s) => { const f = (s || {}).field_scale_e || {}; return (f.j_1C_mA_cm2 != null ? f.j_1C_mA_cm2 : f.areal_capacity_mAh_cm2); };
   // 축별 설명 카드 (hover) — 정의·유도식·논문 표현 팁 (분석 요약 문법)
   const rowsQ = [
-    ['σ_e_eff (S/cm)', sA.sigma_e_eff_S_cm, sB.sigma_e_eff_S_cm,
-     '유효 through-plane 전자전도도.\n복셀 Kirchhoff: ∇·(σ∇φ)=0, 플레이트 ΔV=1V, 측면 Neumann → σ_eff = I·L/(A·ΔV).\n전도상: AM + VGCF/SuperP + SDCP(250 S/cm 앵커).\n논문: "effective through-plane electronic conductivity".\n⚠ 여기 Δ% 는 **불러온 payload 의 침대·격자·스탬프 규약**에서 나온 값이다 — 헤드라인이 아니다.  옛 "+52 %" 는 vox 0.4 점-스탬프 산물로 2026-08-13 철회됐다 (claims.json CL-24).'],
+    ['σ_e_eff (S/cm)' + _armTag(sA, sB), sA.sigma_e_eff_S_cm, sB.sigma_e_eff_S_cm,
+     '유효 through-plane 전자전도도.\n복셀 Kirchhoff: ∇·(σ∇φ)=0, 플레이트 ΔV=1V, 측면 Neumann → σ_eff = I·L/(A·ΔV).\n전도상: AM + VGCF/SuperP + SDCP(250 S/cm 앵커).\n논문: "effective through-plane electronic conductivity".\n⚠ 여기 Δ% 는 **불러온 payload 의 침대·격자·스탬프 규약**에서 나온 값이다 — 헤드라인이 아니다.  옛 "+52 %" 는 vox 0.4 점-스탬프 산물로 2026-08-13 철회됐다 (claims.json CL-24).\n⚠⚠ **이 값은 불러온 payload 한 팔(single origin)의 값이다.**  origin factorial 코호트의 8팔 평균이 아니다 — 논문·표에는 **코호트 평균**을 쓴다 (원장 table_s3_data).  제목 옆 origin 태그로 어느 팔인지 확인할 것.'],
     ['σ_ion_eff (S/cm)', sA.sigma_ion_eff_S_cm, sB.sigma_ion_eff_S_cm,
      '유효 through-plane 이온전도도 (같은 솔브, 전도상 = SE + SDCP).\nSE는 t⁺≈1 단일이온 전도체 → 정상상태 이온망은 순수 옴 저항망.\n논문: Bazzoun 2026 RNM/EIS 축과 직접 비교 가능 — "effective ionic conductivity".'],
     ['⟨J_e⟩ 평균 (A/cm²@1V)', (sA.field_scale_e || {}).j_mean_z_A_cm2_per_V, (sB.field_scale_e || {}).j_mean_z_A_cm2_per_V,
