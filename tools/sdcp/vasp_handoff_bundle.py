@@ -4532,8 +4532,34 @@ def _closure_estimand(man, results, E, emol, jobs, merge_info=None):
         out["verdict"] = "NO_VALUE — 조각 한쪽에 게이트 통과 자세가 없다"
         return out
 
-    primary = a_s["min"][0] - a_c["min"][0]
-    secondary = a_c["min"][0] - a_s["max"][0]
+    # ⛔⛔ 2026-08-31 (회신 AN P0-1) — `estimand_job_keys` 가 있으면 **그 네 잡만** 쓴다.
+    #   초판은 조각별 min 을 뺐다. 그러면 SDCP 와 PTFE 가 **서로 다른 seed** 에서
+    #   뽑힐 수 있어, 사전 고정한 "pm1 조건부 D" 와 다른 양이 된다.
+    #   AN §4 가 네 경로를 문서로 못박았는데 판정기는 여전히 min 을 골랐다 —
+    #   문서와 코드가 갈린 채로 발송될 뻔했다.
+    _ejk = (man.get("estimand_job_keys") or {})
+    if _ejk:
+        out["estimand_job_keys"] = dict(_ejk)
+        _need = ("E_C_sdcp", "E_C_control", "E_G_sdcp", "E_G_control")
+        _miss = [k for k in _need if not _ejk.get(k)]
+        _ev = {k: E(_ejk[k]) for k in _need if _ejk.get(k)}
+        _none = [k for k, v in _ev.items() if v is None]
+        _gated = [k for k in _need if _ejk.get(k) and (jobs.get(_ejk[k]) or {}).get("gates")]
+        if _miss or _none or _gated:
+            out["blocks"].append(
+                "ESTIMAND_KEY_UNUSABLE(누락 %s · 에너지 없음 %s · 게이트됨 %s) — "
+                "사전 고정한 네 잡으로만 D 를 만든다. 대체하지 않는다"
+                % (_miss, _none, _gated))
+            out["verdict"] = "NO_VALUE — 사전 고정 job key 를 쓸 수 없다"
+            return out
+        primary = ((_ev["E_C_sdcp"] - _ev["E_G_sdcp"])
+                   - (_ev["E_C_control"] - _ev["E_G_control"]))
+        out["estimand_mode"] = "exact_keys (사전 고정 네 잡 직접 대입)"
+        secondary = a_c["min"][0] - a_s["max"][0]
+    else:
+        out["estimand_mode"] = "fragment_min (⚠ 조각마다 다른 seed 가 뽑힐 수 있다)"
+        primary = a_s["min"][0] - a_c["min"][0]
+        secondary = a_c["min"][0] - a_s["max"][0]
     out["primary_ddE_lowE_eV"] = round(primary, 4)
     out["secondary_G_eV"] = round(secondary, 4)
     out["reported_X_eV"] = round(round(primary / PREREG_ROUND_EV) * PREREG_ROUND_EV, 2)
@@ -5093,7 +5119,11 @@ def main():
     #   ⚠ Wave 1(기준계 미포함)은 기준계가 **의도적으로** 없다 — 실패가 아니다.
     #     그걸 "상자 게이트 실패" 로 찍으면 정상 실행을 고장으로 읽게 된다.
     emol, mol_ok = {}, {}
-    has_refs = bool(man.get("refs", {}).get("clean_slab"))
+    # ⛔ 2026-08-31 (회신 AN P0-2) — C-12 는 clean slab 없이 **기체 기준만** 있다.
+    #   clean 유무로 has_refs 를 정하면 그 구성이 "기준계 없음(Wave 1)" 으로 오독된다.
+    _refs = man.get("refs", {}) or {}
+    _has_mol = any(k.startswith("mol__") for k in _refs)
+    has_refs = bool(_refs.get("clean_slab")) or _has_mol
     if not has_refs:
         results["e_ads_status"] = ("NOT_APPLICABLE — Wave 1 은 기준계를 안 돌린다. "
                                   "자리 대비 ΔE 는 기준계 없이 성립하지만 절대 E_ads 는 "
@@ -5108,6 +5138,27 @@ def main():
         #   "계산 완료, E_ads 만 없음" 으로 조용히 끝나는 최악의 모양이었다.
         e20 = E(f"refs/mol__{f}__box20")
         e24 = E(f"refs/mol__{f}__box24")
+        # ⛔⛔ 2026-08-31 (회신 AN P0-2·P1) — `--refs_minimal` 은 box20 을 **일부러** 뺀다.
+        #   초판은 "상자 2종 중 하나가 없다 → E_ads 불가" 로 막아, 그 구성에서 분석이
+        #   아예 안 됐다. 그렇다고 조용히 통과시키면 안 된다 — 최종 D 에는
+        #   `E_G^SDCP − E_G^PTFE` 가 남아 **기체 상자 오차가 소거되지 않기** 때문이다.
+        #   ⇒ box20 이 없으면 manifest 의 **선행 근거**(`gas_box_prior`)를 요구한다.
+        #     그것도 없으면 막는다. 있으면 그 값을 게이트에 그대로 싣고 출처를 남긴다.
+        _prior = ((man.get("gas_box_prior") or {}).get(f) or {}) if e20 is None else {}
+        if e20 is None and e24 is not None and _prior.get("dE_meV") is not None:
+            d0 = float(_prior["dE_meV"]) / 1000.0
+            ok = d0 <= BOX_TOL
+            results["numerical_gates"][f"box_{f}"] = {
+                "dE_meV": round(d0 * 1000, 2), "pass": ok, "source": "prior",
+                "prior_ref": _prior.get("ref"),
+                "⚠": ("이번 묶음에 box20 이 없다 — **선행 대조**를 인용했다. "
+                      "같은 conformer·같은 Hamiltonian 이라는 것은 그 출처가 보증해야 한다")}
+            if not ok:
+                results["warnings"].append(
+                    f"mol__{f}: 선행 상자 대조 {d0*1000:.2f} meV > {BOX_TOL*1000:.0f} — E_ads 불가")
+            mol_ok[f] = ok
+            emol[f] = e24 if ok else None
+            continue
         ok = e20 is not None and e24 is not None and abs(e20 - e24) <= BOX_TOL
         mol_ok[f] = ok
         emol[f] = e24 if ok else None          # 실패하면 E_ads 를 만들지 않는다
@@ -6886,11 +6937,59 @@ def build_bundle(a, ledger: Optional[Dict[str, Any]] = None) -> Path:
             n_jobs += 1
     # ⚠ refs 가 아닌 대조군을 man["refs"] 에 넣으면 has_refs 가 참이 되어 분석기가
     #   E_ads 를 만들려 든다 (기체 분자가 없는데). 별도 키로 등록한다.
-    man["refs"]["clean_slab"] = ([f"refs/clean_slab__{s}" for s in SEEDS_FULL]
-                                 if a.refs else [])
+    # ⛔⛔ 2026-08-31 (회신 AN P0-2) — `--refs_minimal` 이면 clean slab **잡을 안 만드는데**
+    #   선언만 남겼다. 분석기는 그 선언으로 `has_refs=True` 가 되어 box20·box24 를 다
+    #   요구하고, 없는 clean 잡 때문에 모든 복합체를 MAGNETIC_REFERENCE_INVALID 로 막았다.
+    #   **없는 것을 선언하지 않는다.**
+    man["refs"]["clean_slab"] = ([] if _skip_clean else
+                                 ([f"refs/clean_slab__{s}" for s in SEEDS_FULL]
+                                  if a.refs else []))
     man["magnetic_controls"] = ([f"controls/clean_slab__{s}" for s in SEEDS_FULL]
                                 if mag_ctl else
                                 (man["refs"]["clean_slab"] if a.refs else []))
+    # ⛔ 2026-08-31 (회신 AN P1) — box20 을 뺀 구성에서는 **선행 상자 대조**를 실어 보낸다.
+    #   최종 D 에는 `E_G^SDCP − E_G^PTFE` 가 남아 기체 상자 오차가 소거되지 않는다.
+    #   출처: 2026-08-12 wave1 (db/properties/sdcp_wave1_results.json).
+    #   ⚠ 같은 conformer·같은 Hamiltonian 이라는 보증은 **그 출처가 진다** — 여기서
+    #     증명하지 않는다. 그래서 `ref` 와 한계를 같이 싣는다.
+    if _skip_clean:
+        man["gas_box_prior"] = {
+            "ptfe_c10": {"dE_meV": 0.07, "box20_eV": -177.970705, "box24_eV": -177.970639},
+            "sdcp_neutral": {"dE_meV": 0.32, "box20_eV": -205.448886, "box24_eV": -205.448564},
+        }
+        for _f in man["gas_box_prior"]:
+            man["gas_box_prior"][_f].update({
+                "ref": "db/properties/sdcp_wave1_results.json (2026-08-12 wave1)",
+                "⚠": ("이번 묶음의 기체 conformer 가 그때와 **같은 구조인지 좌표 해시로 "
+                      "대조하지 못했다** — wave1 반송물이 남아 있지 않다")})
+        man["gas_box_prior"] = {k: v for k, v in man["gas_box_prior"].items()
+                                if k in (man.get("fragments") or [])}
+
+    # ⛔⛔ 2026-08-31 (회신 AN P0-1) — D 에 들어가는 **정확한 네 잡**을 기계 필드로 봉인한다.
+    #   문서(§4)에만 적어 두면 판정기는 여전히 조각별 min 을 골라, SDCP 와 PTFE 가
+    #   서로 다른 seed 에서 뽑힐 수 있다. 분석기는 이 필드가 있으면 **그 네 에너지만**
+    #   직접 대입한다. net4·대안 자세는 sensitivity 로만 나간다.
+    if _skip_clean and getattr(a, "single_point", False):
+        _sd = next((f for f in (man.get("fragments") or []) if "sdcp" in f), None)
+        _ct = next((f for f in (man.get("fragments") or []) if f != _sd), None)
+        _pri = {}
+        for _jn, _pm in (man.get("planned") or {}).items():
+            _m = _pm.get("meta") or _pm
+            if (_m.get("kind") == "prospective_pose"
+                    and (_m.get("role") or "primary") == "primary"
+                    and _m.get("seed") == SEED_MAIN and not _m.get("vacconv")):
+                _pri[_m.get("fragment")] = _jn
+        if _sd and _ct and _pri.get(_sd) and _pri.get(_ct):
+            man["estimand_job_keys"] = {
+                "E_C_sdcp": _pri[_sd], "E_C_control": _pri[_ct],
+                "E_G_sdcp": f"refs/mol__{_sd}__box24",
+                "E_G_control": f"refs/mol__{_ct}__box24",
+                "formula": "D = (E_C_sdcp - E_G_sdcp) - (E_C_control - E_G_control)",
+                "branch": SEED_MAIN,
+                "⛔": ("net4 와 대안 자세(sensitivity·stress_sensitivity)는 **D 에 안 들어간다** "
+                       "— 자기 분기·자세 민감도 병기용이다. 조각별 최솟값을 다시 쓰지 않는다"),
+            }
+
     man["wave"] = 1 if not a.refs else "1+refs"
     # ★ 조각마다 주장 범위가 다르다 (2026-08-12 설계 변경). 공통 mode 문장 하나로
     #   두면 PTFE 에도 "2×2 완성" 이 적혀 오독된다.
