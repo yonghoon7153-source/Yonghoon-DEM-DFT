@@ -94,6 +94,40 @@ def read_extxyz(path):
     return cell, labels, np.array(pos)
 
 
+def read_mol_xyz(path, pad):
+    """셀이 **없는** 순수 xyz (ORCA 등 비주기 분자) → 보기용 상자를 씌워 읽는다.
+
+    ⚠⚠ 여기서 만드는 셀은 **VIEWING BOX 이지 계산 셀이 아니다.** ORCA 는 비주기라
+      계산에 셀이 존재하지 않는다. .vesta 는 CRYSTAL 형식이라 격자를 요구하므로
+      상자를 만들어 주는 것뿐이고, 그 사실을 comment/title 에 **매번 적는다** —
+      안 적으면 나중에 이 .vasp 를 보고 "이 셀로 돌렸구나" 로 읽는다
+      (SI Table S1 의 gas-phase box 20/24 A 와 **다른 것**이다).
+
+    ⛔ Lattice= 가 **있는** xyz 는 거부한다. 진짜 셀을 가짜 상자로 덮으면
+      출처가 사라진다 — 그건 이 도구가 하면 안 되는 유일한 일이다.
+    """
+    if pad is None or pad < 0:
+        raise SystemExit(f"⛔ {path}: --box_pad 가 필요하다 (음수 불가)")
+    with open(path, errors="ignore") as f:
+        lines = f.read().splitlines()
+    nat = int(lines[0].split()[0])
+    if re.search(r'Lattice="([^"]+)"', lines[1]):
+        raise SystemExit(
+            f"⛔ {path} 는 Lattice= 를 이미 들고 있다 — 진짜 셀을 보기용 상자로 "
+            "덮지 않는다. --scf_in 으로 읽어라")
+    labels, pos = [], []
+    for ln in lines[2:2 + nat]:
+        v = ln.split()
+        labels.append(v[0]); pos.append([float(x) for x in v[1:4]])
+    if len(pos) != nat:
+        raise SystemExit(f"⛔ {path}: 선언 원자수 {nat} != 좌표줄 {len(pos)}")
+    pos = np.array(pos)
+    ext = pos.max(axis=0) - pos.min(axis=0)
+    cell = np.diag(ext + 2.0 * pad)
+    pos = pos - pos.min(axis=0) + pad          # 상자 안에 가운데로
+    return cell, labels, pos, lines[1].strip()
+
+
 def is_outcar(path):
     return os.path.basename(path).upper().startswith("OUTCAR")
 
@@ -615,11 +649,21 @@ def default_tag(path):
     return os.path.basename(os.path.dirname(os.path.abspath(path)))
 
 
-def emit_struct(path, out, tag=None, scale=RAD_SCALE_DEFAULT, quiet=False, recenter=True):
-    """한 계산 → xyz + .vasp + .vesta + 거리 세 층 감사. → meta(dict)"""
+def emit_struct(path, out, tag=None, scale=RAD_SCALE_DEFAULT, quiet=False, recenter=True,
+                box_pad=None):
+    """한 계산 → xyz + .vasp + .vesta + 거리 세 층 감사. → meta(dict)
+
+    box_pad 를 주면 셀 없는 분자 xyz 를 **보기용 상자**에 담아 읽는다 (read_mol_xyz).
+    """
     tag = tag or default_tag(path)
     meta = {}
-    if is_outcar(path):
+    if box_pad is not None:
+        cell, labels0, pos0, src_comment = read_mol_xyz(path, box_pad)
+        prov = (f"NON-PERIODIC molecule from {os.path.abspath(path)} | "
+                f"cell below is a VIEWING BOX (pad {box_pad:.2f} A per side), "
+                f"NOT a calculation cell - the source calculation has no lattice | "
+                f"source comment: {src_comment}")
+    elif is_outcar(path):
         cell, labels0, pos0, meta = read_outcar(path)
         prov = (f"as-run geometry read back from {meta['source']} "
                 f"(VASP static single point, NSW=0) | "
@@ -655,8 +699,12 @@ def emit_struct(path, out, tag=None, scale=RAD_SCALE_DEFAULT, quiet=False, recen
     write_xyz(os.path.join(out, f"{tag}.xyz"), elems, pos, comment)
     write_poscar(os.path.join(out, f"{tag}.vasp"), cell, order, counts, pos, comment)
     # ⚠ .vesta 제목은 ASCII 만 (CLAUDE.md). basin 라벨은 영숫자라 안전하다.
-    vt = (f"{tag} (nat {len(elems)}) - as-run geometry, NiO6 polyhedra + "
-          f"AFM sublattice colors (NiA blue / NiB purple)")
+    if box_pad is not None:
+        vt = (f"{tag} (nat {len(elems)}) - non-periodic molecule in a VIEWING BOX "
+              f"(pad {box_pad:.2f} A) - the box is NOT a calculation cell")
+    else:
+        vt = (f"{tag} (nat {len(elems)}) - as-run geometry, NiO6 polyhedra + "
+              f"AFM sublattice colors (NiA blue / NiB purple)")
     if meta:
         vt += f" - basin {meta['basin']}, E0 {meta['E0']:.4f} eV"
     write_vesta(os.path.join(out, f"{tag}.vesta"), cell, labels, elems, pos, vt, scale=scale)
@@ -1115,6 +1163,70 @@ def selftest():
         chk(raw.decode("ascii", "ignore").encode() == raw and b"\r\n" in raw,
             ".vesta 는 ASCII 전용 + CRLF")
 
+        # ══ --mol_xyz (비주기 분자 → 보기용 상자) ══════════════════════════
+        mp = os.path.join(td, "mol.xyz")
+        open(mp, "w").write("3\nCoordinates from ORCA-job foo E -1.5\n"
+                            "C 0.0 0.0 0.0\nO 0.0 0.0 1.2\nH 1.0 0.0 0.0\n")
+        cell_m, lab_m, pos_m, cmt = read_mol_xyz(mp, 8.0)
+        chk(lab_m == ["C", "O", "H"] and len(pos_m) == 3, "mol_xyz → 원소·좌표")
+        # 상자가 실제로 여백만큼 크고, 원자가 전부 안에 들어간다
+        ext = pos_m.max(axis=0) - pos_m.min(axis=0)
+        chk(all(abs(cell_m[i][i] - (ext[i] + 16.0)) < 1e-9 for i in range(3)),
+            f"상자 = 분자 span + 2*pad (측: {[round(cell_m[i][i], 3) for i in range(3)]})")
+        chk(pos_m.min() >= 8.0 - 1e-9
+            and all(pos_m[:, i].max() <= cell_m[i][i] - 8.0 + 1e-9 for i in range(3)),
+            "원자가 전부 상자 안 (여백 8 A 확보)")
+
+        # ⛔ 음성 8 — **진짜 셀을 가짜 상자로 덮지 않는다.** Lattice= 가 있으면 거부.
+        ep = os.path.join(td, "has_cell.xyz")
+        open(ep, "w").write('1\nLattice="10 0 0 0 10 0 0 0 10"\nC 0.0 0.0 0.0\n')
+        try:
+            read_mol_xyz(ep, 8.0); ok8 = False
+        except SystemExit:
+            ok8 = True
+        chk(ok8, "음성: Lattice= 가 있는 xyz 는 --mol_xyz 가 **거부**한다 "
+                 "(진짜 셀을 보기용 상자로 덮으면 출처가 사라진다)")
+
+        # ⛔ 음성 9 — 선언 원자수와 좌표줄 수가 다르면 멈춘다
+        bp = os.path.join(td, "short.xyz")
+        open(bp, "w").write("5\ncomment\nC 0 0 0\nO 0 0 1.2\n")
+        try:
+            read_mol_xyz(bp, 8.0); ok9 = False
+        except SystemExit:
+            ok9 = True
+        chk(ok9, "음성: 선언 원자수 != 좌표줄 수면 멈춘다")
+
+        # ⛔ 음성 10 — pad 음수 거부
+        try:
+            read_mol_xyz(mp, -1.0); ok10 = False
+        except SystemExit:
+            ok10 = True
+        chk(ok10, "음성: --box_pad 음수 거부")
+
+        # ⛔ 음성 11 — **상자가 계산 셀로 오독되면 안 된다.** 세 파일 다 그렇게 적는가
+        mo = os.path.join(td, "mo")
+        emit_struct(mp, mo, box_pad=8.0, quiet=True)
+        names = sorted(os.listdir(mo))
+        chk(len(names) == 3 and any(n.endswith(".vesta") for n in names)
+            and any(n.endswith(".vasp") for n in names), f"mol_xyz → 3종 산출 {names}")
+        txt_xyz = open(os.path.join(mo, "mol.xyz")).read()
+        txt_vasp = open(os.path.join(mo, "mol.vasp")).read()
+        txt_ves = open(os.path.join(mo, "mol.vesta"), "rb").read().decode("ascii")
+        chk(all("VIEWING BOX" in t for t in (txt_xyz, txt_vasp, txt_ves)),
+            "음성: xyz/vasp/vesta **셋 다** 'VIEWING BOX' 라고 적는다 "
+            "(안 적으면 이 상자를 계산 셀로 읽는다)")
+        chk("NOT a calculation cell" in txt_ves,
+            ".vesta 제목이 '계산 셀 아님' 을 명시한다")
+        rawm = open(os.path.join(mo, "mol.vesta"), "rb").read()
+        chk(rawm.decode("ascii", "ignore").encode() == rawm and b"\r\n" in rawm,
+            "mol .vesta 도 ASCII 전용 + CRLF")
+        # xyz 와 vasp 가 같은 원자 순서 (2026-08-03 교훈)
+        ex = [l.split()[0] for l in txt_xyz.splitlines()[2:]]
+        vl = txt_vasp.splitlines()
+        order, counts = vl[5].split(), [int(x) for x in vl[6].split()]
+        ev = [e for e, c in zip(order, counts) for _ in range(c)]
+        chk(ex == ev, f"xyz 와 vasp 의 원자 순서가 같다 ({ex} vs {ev})")
+
     print(f"── {'PASS' if not fails else 'FAIL ' + str(len(fails))} ──")
     return 1 if fails else 0
 
@@ -1139,16 +1251,26 @@ def main():
                     help="--outcar 전용. 잡별 INCAR 되울림 표 + 갈린 키 요약")
     ap.add_argument("--no_recenter", action="store_true",
                     help="분자 재중심(뷰어에서 안 잘리게) 끄기 — OUTCAR 원문 좌표 그대로")
+    ap.add_argument("--mol_xyz", nargs="+", default=[],
+                    help="셀 없는 순수 xyz (ORCA 등 비주기 분자). --box_pad 와 함께 쓴다")
+    ap.add_argument("--box_pad", type=float, default=8.0,
+                    help="--mol_xyz 의 보기용 상자 여백 (A/면, 기본 8.0). "
+                         "⚠ 계산 셀이 아니다 — 뷰어가 격자를 요구해서 씌우는 것뿐")
     ap.add_argument("--selftest", action="store_true")
     a = ap.parse_args()
     if a.selftest:
         return selftest()
-    if not (a.scf_in or a.outcar):
-        ap.error("--scf_in 또는 --outcar 중 하나는 필요하다")
+    if not (a.scf_in or a.outcar or a.mol_xyz):
+        ap.error("--scf_in / --outcar / --mol_xyz 중 하나는 필요하다")
+    if a.mol_xyz and not a.out:
+        ap.error("--mol_xyz 는 --out 이 필요하다 (구조를 쓰는 것이 이 모드의 전부다)")
     if a.energy_csv and not a.refs:
         ap.error("--energy_csv 는 --refs 가 있어야 한다 (기준 없이 E_ads 를 만들지 않는다)")
 
     metas = []
+    for path in list(a.mol_xyz):
+        metas.append(emit_struct(path, a.out, tag=a.tag, scale=a.vesta_scale,
+                                 recenter=False, box_pad=a.box_pad))
     for path in list(a.scf_in) + list(a.outcar):
         if a.out:
             metas.append(emit_struct(path, a.out, tag=a.tag, scale=a.vesta_scale,
