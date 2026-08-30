@@ -100,6 +100,15 @@ run 'check_method_discipline (규칙 A~M + claims 원장)' python3 scripts/check
 #    그것은 08-29 에 손으로 한 번 돌린 결과였고 **아무것도 다시 확인하지 않았다**.
 #    비·산포를 팔의 σ_e 에서 재계산해 원장 산문과 대조한다 (저장된 판정 필드를 읽지 않는다).
 run 'check_cohort_packages  (커밋된 패키지 ↔ 원장)' python3 scripts/check_cohort_packages.py
+#  ★★ 2026-08-30 — 봉인된 설계를 **매번** 다시 검증한다 (R14 조건 6·7).
+#    상자는 기존 130 런에서 유도되고 CSV 는 해시로 사전등록에 묶여 있는데, 08-29~30 에는
+#    사람이 한 번 돌려 보고 끝이었다.  손으로만 도는 검사는 없는 것과 같다 (규칙 K).
+#    ⚠ 해시를 여기 박아 두는 것이 요점이다 — CSV 가 바뀌면 이 줄이 **빨간불**이 되고,
+#      그때 사전등록의 봉인도 같이 고쳐야 한다는 것이 강제된다.
+run 'lhs_ext_design (봉인 CSV ↔ 상자 ↔ 해시)' \
+  python3 scripts/lhs_ext_design.py --verify docs/data/lhs_ext_design_v2_20260829.csv \
+    --box docs/data/lhs_ext_box_v2_20260829.json \
+    --expect-sha256 bc72b8bf274842b7c54e319ceac70f5cb2804aa3635f329dfed34697bd52ea19
 
 echo
 if [ "$FAIL" = 0 ]; then
