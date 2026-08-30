@@ -5868,6 +5868,19 @@ def _readme_sp(man: Dict[str, Any], a, zcut: float, n_jobs: int,
     있지도 않은 relax/CONTCAR 를 찾다가 멈춘다. 이 도구가 못 하는 것: 실행 시간 보장
     (SUBMIT_CONTRACT.md 의 추정은 ±2배 불확실성을 가진 모델값이다).
     """
+    # ⛔ 2026-08-31 — relax 반송 문구는 **조건부**여야 한다. 무조건 넣으면 relax 가
+    #   하나도 없는 묶음에서 검사기의 반대편 게이트("이완판 문구인데 실물엔 relax 가
+    #   없다")에 걸린다. 실제 계획에서 세어서 있을 때만 넣는다.
+    _n_rel = sum(1 for _p in (man.get("planned") or {}).values()
+                 if "relax" in (_p.get("phases") or []))
+    relax_return = ("""⚠ **`relax/` 폴더가 있는 잡은 `relax/OUTCAR` 와 `relax/CONTCAR` 도 같이**
+  보내 주세요 (이 묶음에 **%d잡**). 단일점 묶음에서도 **기체 기준(`refs/mol__*`)에는
+  relax 상이 있습니다** — 분자는 상자 안에서 이완해야 하기 때문입니다. 어느 잡인지는:
+  ```bash
+  find . -maxdepth 3 -type d -name relax
+  ```
+""" % _n_rel) if _n_rel else ""
+
     # 🔴 `dense_calibrators` 는 **선언 필드**라 비어 있어도 실제 dense 상이 있을 수 있다.
     #   실물 v13 이 그 사례였다 — 필드가 null 인데 refs/clean_slab__afm2424_pm1/dense 가
     #   있어서 README 가 "1개 잡에만 있습니다: (없음)" 을 냈다. planned 에서 센다.
@@ -6008,13 +6021,7 @@ DFT-relaxed adsorption energy · 평형 결합에너지 · 자유에너지로 �
 각 잡의 **`static/OUTCAR`** — 이것 하나면 판정이 됩니다. `.gz` 그대로 좋습니다.
 그리고 각 잡의 **`POTCAR_PROVENANCE.json`** (조립기가 자동 생성합니다).
 
-⚠ **`relax/` 폴더가 있는 잡은 `relax/OUTCAR` 와 `relax/CONTCAR` 도 같이** 보내 주세요.
-  단일점 묶음에서도 **기체 기준(`refs/mol__*`)에는 relax 상이 있습니다** — 분자는
-  상자 안에서 이완해야 하기 때문입니다. 어느 잡에 있는지는 이 명령으로 보입니다:
-  ```bash
-  find . -maxdepth 3 -type d -name relax
-  ```
-
+{relax_return}
 - `static/vasprun.xml` — 선택
 - **CHGCAR / WAVECAR 반송 불필요** (용량)
 - 발산·미수렴 잡도 **지우지 말고 그대로** 보내 주세요. 어느 잡이 왜 실패했는지가
