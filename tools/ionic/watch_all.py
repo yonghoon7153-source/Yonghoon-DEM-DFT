@@ -42,8 +42,53 @@ _p = _ap.ArgumentParser(add_help=False)
 _p.add_argument("--full", action="store_true", help="끝난 항목까지 전부 펼친다")
 _p.add_argument("--only", default="",
                 help="disorder|sdcp|committee|elf|bader|prereq 중 하나만")
+_p.add_argument("--selftest", action="store_true",
+                help="타입 계약·진리값 회귀시험 (화면을 죽인 적 있는 것만)")
 ARGS, _ = _p.parse_known_args()
 FULL, ONLY = ARGS.full, ARGS.only.lower()
+
+
+def _selftest() -> int:
+    """`--selftest` — 화면을 죽인 적 있는 것만 친다 (2026-08-30).
+
+    ⚠ 이 시험이 존재하는 이유: 08-30 에 두 번 연달아 같은 병을 맞았다.
+      ① `alive()` 가 문자열 `"-"` 를 내는데 `if run:` 이 그걸 참으로 읽어
+         **죽은 체인을 이틀 동안 '진행 중'** 으로 찍었다.
+      ② 내가 그걸 고치며 `mtime()` 이 float 인 줄 알고 `fromtimestamp` 를 씌워
+         **화면 전체가 TypeError 로 죽었다.**
+      ②는 내 시험 하네스가 `mtime` 을 `lambda: os.path.getmtime` 으로 **재정의**해서
+      못 잡았다 — 실물과 타입이 달랐다. 그래서 이 시험은 **모듈의 진짜 함수**를 쓴다.
+
+    이 시험이 **못 하는 것**: 화면 내용의 정확성. 타입 계약과 진리값만 본다.
+    """
+    import tempfile
+    ok = [0, 0]
+
+    def chk(c, m):
+        ok[0] += 1; ok[1] += bool(c)
+        print(("  ✔ " if c else "  ✘ ") + m)
+
+    chk(bool(Alive("ALIVE")) and not bool(Alive("-")) and not bool(Alive("?")),
+        "alive(): 'ALIVE' 만 참 — \"-\"·\"?\" 는 거짓 (죽은 작업을 진행 중으로 못 읽는다)")
+    chk(str(Alive("-")) == "-" and Alive("ALIVE") == "ALIVE",
+        "alive(): 표시·비교 용법은 그대로 (호출부를 안 고쳤다)")
+    chk(not (Alive("-") or Alive("-")),
+        'alive(): "-" or "-" 도 거짓 (두 프로세스 OR 자리)')
+
+    with tempfile.NamedTemporaryFile(suffix=".log") as t:
+        m = mtime(t.name)
+        chk(isinstance(m, datetime),
+            f"mtime(): **datetime 을 낸다** (실측 {type(m).__name__}) — float 로 알고 "
+            f"fromtimestamp 를 씌우면 화면이 죽는다")
+        chk(isinstance((NOW - m).total_seconds(), float),
+            "mtime(): NOW 와 바로 빼진다 (로그 나이 계산 경로)")
+    chk(mtime("/nonexistent/zzz") is None, "mtime(): 없는 파일은 None")
+
+    print(f"  watch_all selftest {ok[1]}/{ok[0]}")
+    return 0 if ok[0] == ok[1] else 1
+
+
+
 
 
 def want(key):
@@ -109,6 +154,12 @@ def mtime(p):
         return datetime.fromtimestamp(os.path.getmtime(p))
     except OSError:
         return None
+
+
+# ⚠ 호출은 **Alive·mtime 정의 뒤**라야 한다 — 함수 본문은 지연 평가여도
+#   모듈 최상단에서 부르면 아직 없는 이름을 만난다 (두 번 NameError 로 죽었다).
+if ARGS.selftest:
+    sys.exit(_selftest())
 
 
 def elf_stage(d):
@@ -1013,8 +1064,11 @@ if want("prereq"):
         #   이 파일 머리말이 경고한 그 오탐(재부팅 인지)과 같은 종류다.
         #   실측: 08-28 01:15 이후 58시간 무로그인데 화면은 "🔄 진행 중" 이었다.
         #   ⇒ **로그 나이와 GPU 게이트를 같이 찍는다** (ELF 절은 이미 그렇게 한다).
+        # ⚠ `mtime()` 은 **datetime 을 낸다** (float 아님, 107행). 여기에
+        #   `datetime.fromtimestamp()` 를 또 씌워 TypeError 로 화면이 통째로 죽었다
+        #   (2026-08-30 실측). 아래 542행이 쓰는 방식과 같게 맞춘다.
         _plm = mtime(f)
-        _page = (NOW - datetime.fromtimestamp(_plm)).total_seconds() / 60 if _plm else 1e9
+        _page = (NOW - _plm).total_seconds() / 60 if _plm else 1e9
         _stall = run and _page > 90        # 정상 SCF 점 간격보다 넉넉히 크게
         print(f"  로그 {os.path.basename(f)} · SCF 시작 {npt}점 · "
               f"로그 {_page:.0f}분 전 · "
