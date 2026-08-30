@@ -2489,7 +2489,19 @@ def selftest_k() -> int:
         "[음성] vacconv 잡이 없는 번들에는 없는 계약을 요구하지 않는다")
 
     # ── clean slab 없이 자기 topology 판정 (회신 AJ ②) ──────────────────────
+    # ⛔⛔ 2026-08-31 (회신 AN P0-2) — 픽스처가 **내가 지어낸 필드 이름**(`ni_moments`)을
+    #   써서, 함수가 production 스키마(`realized_basin.ni_moments_muB`)를 못 읽는데도
+    #   selftest 가 통과했다. 이제 픽스처는 `realized_basin()` 이 **실제로 내는 모양**을 쓴다.
     def _J3(mom):
+        # ⚠ `_J3(None)` 로 "표가 없다" 를 시험하는 호출이 있다 — 그걸 깨지 말 것.
+        if mom is None:
+            return {"geom": {"magnetic": {"realized_basin": {}}}}
+        return {"geom": {"magnetic": {"realized_basin": {
+            "ni_moments_muB": list(mom),
+            "ni_sign_vector": [1 if x > 0 else -1 for x in mom],
+            "ni_index_poscar": list(range(len(mom))), "global_sign": 1.0}}}}
+
+    def _J3_legacy(mom):                     # 하위호환 경로 (옛 기록)
         return {"geom": {"magnetic": {"ni_moments": mom}}}
     _up = [1.2, -1.2] * 24
     _dn = [-1.2, 1.2] * 24                     # 전역 반전 — 같은 상태여야 한다
@@ -2498,6 +2510,16 @@ def selftest_k() -> int:
     chk(magnetic_topology_direct(_J3(_up))[0]
         != magnetic_topology_direct(_J3([1.2] * 48))[0],
         "직접 topology: 배열이 다르면 fingerprint 도 다르다")
+    # ⛔음성 — production 스키마와 하위호환 경로가 **같은 답**을 내야 한다.
+    #   (초판은 하위호환 쪽만 읽어서 실물에서 항상 MISSING 이었다)
+    chk(magnetic_topology_direct(_J3(_up))[0]
+        == magnetic_topology_direct(_J3_legacy(_up))[0],
+        "⛔음성 AN P0-2: **production 스키마**(realized_basin.ni_moments_muB)를 읽는다 "
+        "— 옛 픽스처 이름만 읽으면 실물에서 항상 MISSING 이 된다")
+    chk(magnetic_topology_direct(
+            {"geom": {"magnetic": {"realized_basin": {"ni_sign_vector": [1] * 48}}}})[0] is None,
+        "⛔음성: realized_basin 은 있는데 모멘트 표가 없으면 판정하지 않는다 "
+        "(부호벡터만으로 접지 않는다)")
     chk(magnetic_topology_direct(_J3(_up[:40]))[0] is None
         and "INCOMPLETE" in magnetic_topology_direct(_J3(_up[:40]))[1][0],
         "⛔음성 AJ: Ni 모멘트 표가 40/48 이면 **판정하지 않는다**")
@@ -3601,9 +3623,18 @@ def magnetic_topology_direct(jr, n_ni_expected=48):
        상태인지만 본다.
     """
     g = []
-    mom = ((jr.get("geom") or {}).get("magnetic") or {}).get("ni_moments")
-    if mom is None:
-        mom = (jr.get("static") or {}).get("ni_moments")
+    # ⛔⛔ 2026-08-31 (회신 AN P0-2) — 초판은 `ni_moments` 를 읽었다. **그런 필드는 없다.**
+    #   실제 저장 스키마는 `geom.magnetic.realized_basin.ni_moments_muB` 다
+    #   (`realized_basin()` 이 그 키로 쓴다). ⇒ production 결과에서는 이 게이트가
+    #   **항상 MAGNETIC_MOMENTS_MISSING 으로 막혔을** 것이다 — clean slab 을 뺀 자리를
+    #   메우라고 만든 게이트가 정작 실물에서 안 돈다.
+    #   더 나쁜 것: selftest 픽스처가 **내가 지어낸 그 이름**을 써서 통과했다.
+    #   ⇒ 아래 selftest 는 `realized_basin()` 이 실제로 내는 dict 를 그대로 쓴다.
+    _mag = (jr.get("geom") or {}).get("magnetic") or {}
+    _rb = _mag.get("realized_basin") or {}
+    mom = _rb.get("ni_moments_muB")
+    if mom is None:                       # 하위호환 — 옛 기록/픽스처
+        mom = _mag.get("ni_moments") or (jr.get("static") or {}).get("ni_moments")
     if not mom:
         return None, ["MAGNETIC_MOMENTS_MISSING(Ni 모멘트 표가 없다 — "
                       "LORBIT 출력을 회수하지 못했다)"]
