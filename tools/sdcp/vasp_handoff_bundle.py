@@ -2441,6 +2441,29 @@ def selftest_k() -> int:
                         ["sdcp_neutral", "ptfe_c10"])["applicable"] is False,
         "[음성] vacconv 잡이 없는 번들에는 없는 계약을 요구하지 않는다")
 
+    # ── clean slab 없이 자기 topology 판정 (회신 AJ ②) ──────────────────────
+    def _J3(mom):
+        return {"geom": {"magnetic": {"ni_moments": mom}}}
+    _up = [1.2, -1.2] * 24
+    _dn = [-1.2, 1.2] * 24                     # 전역 반전 — 같은 상태여야 한다
+    chk(magnetic_topology_direct(_J3(_up))[0] == magnetic_topology_direct(_J3(_dn))[0],
+        "직접 topology: 전역 반전을 **동치로 접는다** (AFM 은 전체를 뒤집어도 같다)")
+    chk(magnetic_topology_direct(_J3(_up))[0]
+        != magnetic_topology_direct(_J3([1.2] * 48))[0],
+        "직접 topology: 배열이 다르면 fingerprint 도 다르다")
+    chk(magnetic_topology_direct(_J3(_up[:40]))[0] is None
+        and "INCOMPLETE" in magnetic_topology_direct(_J3(_up[:40]))[1][0],
+        "⛔음성 AJ: Ni 모멘트 표가 40/48 이면 **판정하지 않는다**")
+    _col = list(_up); _col[7] = 0.05
+    chk(magnetic_topology_direct(_J3(_col))[0] is None
+        and "COLLAPSE_DIRECT" in magnetic_topology_direct(_J3(_col))[1][0],
+        "⛔음성 AJ: near-zero 모멘트가 있으면 부호를 못 읽으므로 막는다")
+    chk(magnetic_topology_direct(_J3(None))[0] is None,
+        "⛔음성 AJ: 모멘트 표가 없으면 조용히 통과하지 않는다")
+    chk(same_topology_direct(_J3(_up), _J3(_dn))[0]
+        and not same_topology_direct(_J3(_up), _J3([1.2] * 48))[0],
+        "직접 topology: 두 잡 비교가 전역 반전에는 관대하고 배열 차이엔 엄격하다")
+
     # ⛔ 회신 AF P0-6 — 정확히 ±δ 는 **둘 다 미해결**이다 (부동소수점으로 뒤집혔었다)
     for _sgn, _lbl in ((+1, "+30 meV"), (-1, "−30 meV")):
         _Ab = {"sdcp_neutral": ([-1.20, -1.10, -1.05, -1.00], [-1.15] + [-0.9] * 7),
@@ -3513,6 +3536,49 @@ VACCONV_TOL_EV = 0.005          # 보고 최소단위(0.01 eV)의 **절반** —
 VACCONV_REPORT_DIGITS = 2       # 0.01 eV 로 보고한다 (사전 고정)
 
 
+NI_MOMENT_MIN_MUB = 0.30        # 이보다 작으면 "붕괴" — 부호를 읽을 수 없다
+
+
+def magnetic_topology_direct(jr, n_ni_expected=48):
+    """clean slab **없이** 실현된 Ni 자기 topology 를 직접 판정한다 (회신 AJ ②).
+
+    C-12 는 clean slab 을 만들지 않으므로 `Q/Q_clean` 기준이 없다. 대신 잡 자체에서:
+      ① Ni 모멘트 표가 **완전**해야 한다 (48개)
+      ② near-zero 모멘트가 있으면 **막는다** — 부호를 읽을 수 없다
+      ③ 부호 fingerprint 를 만들되 **전역 반전을 동치로 접는다**
+         (AFM 은 전체를 뒤집어도 같은 상태다)
+
+    반환 (fingerprint | None, gates[])
+
+    ⛔ 못 하는 것: 그 topology 가 **바닥상태인지** 말하지 못한다. 두 계산이 같은
+       상태인지만 본다.
+    """
+    g = []
+    mom = ((jr.get("geom") or {}).get("magnetic") or {}).get("ni_moments")
+    if mom is None:
+        mom = (jr.get("static") or {}).get("ni_moments")
+    if not mom:
+        return None, ["MAGNETIC_MOMENTS_MISSING(Ni 모멘트 표가 없다 — "
+                      "LORBIT 출력을 회수하지 못했다)"]
+    if len(mom) != n_ni_expected:
+        return None, ["MAGNETIC_MOMENTS_INCOMPLETE(%d/%d)" % (len(mom), n_ni_expected)]
+    small = [i for i, m in enumerate(mom) if abs(float(m)) < NI_MOMENT_MIN_MUB]
+    if small:
+        return None, ["MAGNETIC_COLLAPSE_DIRECT(%d/%d Ni 가 |m| < %.2f μB — 부호를 "
+                      "읽을 수 없다)" % (len(small), n_ni_expected, NI_MOMENT_MIN_MUB)]
+    sig = "".join("+" if float(m) > 0 else "-" for m in mom)
+    inv = sig.translate(str.maketrans("+-", "-+"))
+    return min(sig, inv), g          # 전역 반전을 동치로 접는다
+
+
+def same_topology_direct(ja, jb, n_ni_expected=48):
+    """두 잡이 같은 실현 topology 인가 — clean slab 없이."""
+    fa, ga = magnetic_topology_direct(ja, n_ni_expected)
+    fb, gb = magnetic_topology_direct(jb, n_ni_expected)
+    if fa is None or fb is None:
+        return False, "판정 불가: " + "; ".join(ga + gb)
+    return (fa == fb), ("같음" if fa == fb else "부호 fingerprint 가 다르다")
+
 def closure_vacconv(man, jobs, E, emol, frags):
     """진공 두께 수렴 시험 — **두 조각의 대비 변화**로 판정한다 (회신 AJ).
 
@@ -3574,8 +3640,15 @@ def closure_vacconv(man, jobs, E, emol, frags):
             A[(frag, cell)] = e - emol[frag]
 
     # 자기 topology 가 네 잡에서 같아야 한다 — 다르면 셀 효과가 아니라 상태 차이를 잰다
-    _rb = {k: ((jobs[v].get("geom") or {}).get("magnetic") or {}).get("realized_basin_id")
-           for k, v in picks.items()}
+    #   clean slab 이 없을 수 있으므로 **직접 topology** 를 먼저 쓰고, 없으면 legacy
+    #   realized_basin_id 로 떨어진다 (회신 AJ ②).
+    _rb = {}
+    for k, v in picks.items():
+        f, _g = magnetic_topology_direct(jobs[v])
+        if f is None:
+            f = ((jobs[v].get("geom") or {}).get("magnetic") or {}).get(
+                "realized_basin_id")
+        _rb[k] = f
     if len(picks) == 4:
         if any(v is None for v in _rb.values()):
             res["blocks"].append(
@@ -4116,10 +4189,20 @@ def _closure_estimand(man, results, E, emol, jobs, merge_info=None):
                 "seed": m.get("seed"), "basin": m.get("basin_id"),
                 "d3": m.get("d3"), "role": m.get("role")}
 
+    #: primary 와 **같은 풀에 넣으면 안 되는** 역할 (회신 AJ ④).
+    #   sensitivity·stress_sensitivity 는 '다른 앵커에서도 방향이 유지되나' 만 본다.
+    #   min·평균·순위에 섞으면 그 시험이 사라지고 표본만 늘어난다.
+    ALT_ROLES = ("sensitivity", "stress_sensitivity")
+
     def _is(jn, f):
-        """조각 f 의 **복합체**인가 — 구조화 필드로만 판단한다."""
+        """조각 f 의 **primary 복합체**인가 — 구조화 필드로만 판단한다.
+
+        ⛔ 회신 AJ ④ — 종전엔 role 을 안 봐서 대안 자세가 primary min 풀에 섞였다.
+        """
         c = _cohort(jn, jobs.get(jn) or {})
-        return c["kind"] == "prospective_pose" and c["fragment"] == f
+        if c["kind"] != "prospective_pose" or c["fragment"] != f:
+            return False
+        return (c.get("role") or "primary") not in ALT_ROLES
     out = {
         "schema": "prereg_closure/v1",
         "prereg_doc": "db/properties/prereg_sdcp_neutral_contrast_2026_08_29.json",
@@ -6237,7 +6320,8 @@ def build_bundle(a, ledger: Optional[Dict[str, Any]] = None) -> Path:
             # 층화 홀드아웃 — **primary 후보집합이 아니다.** 이것으로 primary 를
             # 내면 사전등록된 집합이 사라지고 min 이 표본크기를 따라 움직인다.
             _name = "holdout_stratified"
-        elif set(_actual) <= {"primary", "sensitivity"} and _actual:
+        elif set(_actual) <= {"primary", "sensitivity",
+                              "stress_sensitivity"} and _actual:
             # C-12 경로 (회신 AI §A-Q4 = C). 홀드아웃·merge 가 없는 단일 묶음이다
             _name = "c12"
         elif len(_rl) > 1:
@@ -6575,7 +6659,11 @@ def build_bundle(a, ledger: Optional[Dict[str, Any]] = None) -> Path:
     #      분석기의 q_ref 가 None 이 되어 전 잡이 "판정 보류" 로 **통과**한다.
     #   ②는 Wave 1 에 남긴다. dense 없이 coarse static 2 seed = 약 29 h.
     mag_ctl = a.mag_controls and not a.refs
-    for sd in (SEEDS_FULL if (a.refs or mag_ctl) else ()):
+    # ⛔ 회신 AJ ② — C-12 에서는 clean slab 을 만들지 않는다. 승인된 estimand 에서
+    #   두 조각이 같은 슬랩이라 대비에서 정확히 소거되고, 절대 E_ads 는 새 연구목표다.
+    #   ⚠ 대신 자기 판정이 clean 기준에 의존하지 않아야 한다 (아래 direct topology).
+    _skip_clean = bool(getattr(a, "refs_minimal", False))
+    for sd in (() if _skip_clean else (SEEDS_FULL if (a.refs or mag_ctl) else ())):
         rel = (f"refs/clean_slab__{sd}" if a.refs else f"controls/clean_slab__{sd}")
         m = _emit_slab_job(out / rel, clean, len(clean), a.freeze, man["fragments"][0],
                            f"clean slab {sd}", sd,
@@ -6653,14 +6741,16 @@ def build_bundle(a, ledger: Optional[Dict[str, Any]] = None) -> Path:
             bad(f"{frag}: 분자 파일 {info.get('status', 'MISSING')} — E_ads 기준계 없음")
             continue
         used_els |= set(mol.get_chemical_symbols())
-        for margin, tag in ((20.0, "box20"), (24.0, "box24")):
+        _boxes = (((24.0, "box24"),) if getattr(a, "refs_minimal", False)
+                  else ((20.0, "box20"), (24.0, "box24")))
+        for margin, tag in _boxes:
             rel = f"refs/mol__{frag}__{tag}"
             m = _emit_mol_job(out / rel, frag, mol, margin,
                               free_spin=getattr(a, "free_spin_refs", False), closure=a.closure)
             plan(rel, m["phases"], True)
             man["refs"][f"mol__{frag}__{tag}"] = rel
             n_jobs += 1
-            if a.closure and tag == "box24":
+            if a.closure and tag == "box24" and not getattr(a, "refs_minimal", False):
                 relz = f"refs/mol__{frag}__{tag}__nzmag"
                 mz = _emit_mol_job(out / relz, frag, mol, margin,
                                    free_spin=getattr(a, "free_spin_refs", False),
@@ -9763,6 +9853,10 @@ def main():
     ap.add_argument("--cores", type=int, default=48,
                     help="잡당 코어 수 — MANIFEST·SUBMIT_CONTRACT 에 기록된다 "
                          "(비용 모형 기준선과 같아야 추정이 맞는다)")
+    ap.add_argument("--refs_minimal", action="store_true",
+                    help="기준계를 **기체 box24 하나씩**으로 줄인다 — clean slab · box20 · "
+                         "nzmag 대조를 만들지 않는다 (회신 AJ 의 C-12 구성). "
+                         "⚠ clean slab 이 없으므로 자기 판정이 직접 topology 로 가야 한다")
     ap.add_argument("--allow_no_pin", action="store_true",
                     help="POTCAR 신원 고정 없이 번들을 만든다 — **제출용이 아니다**. "
                          "시험·초안 전용")
@@ -9800,7 +9894,7 @@ def main():
                          "(champion/cross 자동탐색을 쓰지 않는다). 회신 W 5단계")
     ap.add_argument("--roles", nargs="+", default=None,
                     choices=["calibration", "sealed_audit", "holdout",
-                             "primary", "sensitivity"],
+                             "primary", "sensitivity", "stress_sensitivity"],
                     help="--from_basins 에서 **이 역할만** 낸다. 회신 X P0-2 — Stage A 는 "
                          "`--roles calibration` 으로 audit 을 봉인한 채 던진다. "
                          "`holdout` 은 층화 홀드아웃 tranche (2026-08-30 옵션 A) — "

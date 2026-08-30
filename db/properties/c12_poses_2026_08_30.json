@@ -1,10 +1,12 @@
 {
  "schema": "prospective_basins/v1",
  "date": "2026-08-30",
- "⚠": "C-12 경로 전용. 회신 AI §A-Q4=C. 자세는 sdcp_c12_protocol 에서 유도했고 MLIP 출처만 썼다 — DFT 결과 0잡 시점",
+ "⚠": "C-12 경로 전용 (회신 AI=C · AJ 반영). MLIP 출처만 — DFT 결과 0잡 시점",
  "params": {
-  "source": "db/properties/prospective_basins_2026_08_29.json"
+  "source": "db/properties/prospective_basins_2026_08_29.json",
+  "W0_eV": 0.15
  },
+ "역할_규칙": "primary = MLIP 전역 최소. 대안 자세는 ΔE_pose ≤ W0 이면 `sensitivity`, 넘으면 **`stress_sensitivity`** — 저에너지 대안이 아니라 **응력 시험**이라는 뜻이다. 둘 다 primary 와 **min·평균·순위에 섞지 않는다**. 오직 '다른 앵커에서도 방향이 유지되는가' 만 본다 (회신 AJ ④)",
  "fragments": {
   "sdcp_neutral": {
    "primary": [
@@ -50,7 +52,7 @@
      "why": "MLIP 전역 최소 basin"
     }
    ],
-   "sensitivity": [
+   "stress_sensitivity": [
     {
      "basin_id": "b12",
      "rep_label": "sdcp_neutral__LiNi_bridge__fib11__r270",
@@ -89,8 +91,8 @@
      ],
      "height_A": 5.137,
      "tilt_deg": 58.0,
-     "role": "sensitivity",
-     "why": "앵커 원소 다름(O) 규칙: anchor_element_differs"
+     "role": "stress_sensitivity",
+     "why": "앵커 원소 다름(O) · ΔE_pose +0.278 eV > W0=0.15 ⇒ stress_sensitivity"
     }
    ]
   },
@@ -148,10 +150,10 @@
      "height_A": 5.46,
      "tilt_deg": 75.9,
      "role": "sensitivity",
-     "why": "앵커 원소 다름(F) 규칙: max_contact_jaccard"
+     "why": "앵커 원소 다름(F) · ΔE_pose +0.106 eV ≤ W0=0.15 ⇒ sensitivity"
     }
    ]
   }
  },
- "freeze_sha256": "0ac106d152b96458f8d0105f24be76335b27942a92e0fbf9a906caf5c41d7b87"
+ "freeze_sha256": "cc87f6eeae5f9c3a0114a3851e13cd975cb2cd6b45caa4cfc4e82baa069cff70"
 }
