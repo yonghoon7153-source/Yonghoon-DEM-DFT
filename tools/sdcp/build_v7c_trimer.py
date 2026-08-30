@@ -2169,6 +2169,27 @@ def selftest():
     chk(pil_parse_mopop("LOEWDIN REDUCED ORBITAL CHARGES\n 0 C  s  99.8\n", 10) is None,
         "⛔음성 실측: `LOEWDIN REDUCED ORBITAL CHARGES` 는 **다른 블록**이다 "
         "(원자별 전하이지 MO 별 인구가 아니다 — 이름이 비슷해 헷갈린다)")
+    # ⛔음성 2026-08-31 실측 — 실제 행은 인덱스와 원소가 **붙어 있다** (`36S`·`102S`).
+    #   종전 정규식은 사이 공백을 요구해 **한 행도 안 맞았고** pops 가 비었다.
+    _real = ("LOEWDIN ORBITAL POPULATIONS PER MO\n"
+             "----------------------------------\n"
+             "THRESHOLD FOR PRINTING IS 0.1%\n"
+             "                      0         1         2\n"
+             "                 -88.75703 -88.74156  -0.31000\n"
+             "                   2.00000   2.00000   2.00000\n"
+             "                  --------  --------  --------\n"
+             "  2S   1s             97.0       0.0       0.0\n"
+             " 36S   1s              0.0       0.0      55.0\n"
+             "102S   1s              0.0      97.0       0.0\n")
+    _pr = pil_parse_mopop(_real, 200)
+    chk(_pr is not None and _pr[0][0].get(2) and _pr[0][2].get(36) == 55.0,
+        "⛔음성 실측: `  2S   1s` 처럼 **인덱스+원소가 붙은** 실제 형식을 읽는다")
+    chk(_pr is not None and abs(_pr[2][0] + 88.75703) < 1e-6 and _pr[1][0] == 2.0,
+        "실측: MO 에너지·점유수도 같이 읽는다 (코어 배제에 필요하다)")
+    # ⛔음성 — 그 실측 형식에서도 코어(−88.8 Eh)는 seed 로 안 뽑힌다
+    _m4, _ = pil_pick_seed_mo(_pr[0], _pr[1], [36], ener=_pr[2])
+    chk(_m4 == 2,
+        f"⛔음성 실측: 코어 MO(−88.8 Eh)를 건너뛰고 원자가 MO 를 고른다 (실제 {_m4})")
     print("── 폴라론 pilot 끝 ──")
     return 1 if fails else 0
 
@@ -2395,14 +2416,16 @@ def _pil_cpcm(eps):
 
 
 def _pil_inp(path, xyz, charge, mult, wf, eps, functional,
-             loc=False, moread=None, rotate=None, stab=False, nprocs=1):
+             loc=False, moread=None, rotate=None, stab=False, nprocs=1,
+             noiter=False, mopop=False):
     """pilot 용 ORCA 입력. 관측량 계약(Hirshfeld · open-shell 에 UNO UCO)을 강제한다.
 
     ⚠ `NoAutoStart` 는 **항상** 켠다 — 같은 basename 의 GBW 를 우연히 물지 않게.
       의도한 lineage 는 `MOInp`/`MORead` 로만 들어온다 (회신 S Q8 게이트: 둘을 구분).
     """
     obs = " Hirshfeld" + ("" if wf == "RKS" else " UNO UCO")
-    kw = "! %s %s TightSCF NoAutoStart%s" % (wf, functional, obs)
+    kw = "! %s %s TightSCF NoAutoStart%s%s" % (
+        wf, functional, " NoIter" if noiter else "", obs)
     body = [kw, "%maxcore 6000"]
     # ⛔ 2026-08-31 — `%pal` 이 없으면 ORCA 는 **직렬**로 돈다. 200원자 r2SCAN-3c SP 를
     #   1코어로 돌리면 pilot 이 끝나지 않는다. (병렬 실행은 ORCA 를 **절대경로**로
@@ -2422,7 +2445,11 @@ def _pil_inp(path, xyz, charge, mult, wf, eps, functional,
         body.append("%scf " + " ".join(scf) + " end")
     txt = "\n".join(body) + "\n"
     if loc:
-        txt += PIL_LOC_KW + PIL_MOPOP_KW
+        txt += PIL_LOC_KW
+    # ⛔ MO 별 인구는 **L2**(국재 궤도)에서 쓰지만, L 에서도 찍어 두면 정준/국재를
+    #   대조할 수 있다 — 둘 다 켠다. 없으면 seed 선택이 통째로 불가능하다.
+    if loc or mopop:
+        txt += PIL_MOPOP_KW
     txt += _pil_cpcm(eps)
     txt += "* xyzfile %d %d %s\n" % (charge, mult, xyz)
     with open(path, "w") as f:
@@ -2520,6 +2547,33 @@ def pilot_generate(a):
                 "inp_sha256": _sha(jd / (tag + ".inp")),
                 "xyz_sha256": _sha(jd / (tag + ".xyz")),
             }
+    # ⛔⛔ 2026-08-31 실측 — phase L 의 `LOEWDIN ORBITAL POPULATIONS PER MO` 는
+    #   **정준(canonical) 궤도**의 인구다 (출력 5883줄 vs 국재화 340994줄).
+    #   정준 궤도는 비편재라 "이 링에 걸린 MO" 를 거기서 고르는 것은 뜻이 없다.
+    #   국재 궤도는 `<tag>.loc` 에 따로 저장된다.
+    #   ⇒ phase L2: `.loc` 를 MORead 하고 **SCF 없이(NoIter)** 인구만 다시 찍는다.
+    #     seed 선택은 이 출력에서만 하고, seed 입력도 `.loc` 를 읽는다.
+    for jk in [k for k in man["jobs"] if man["jobs"][k]["phase"] == "L"]:
+        jm = man["jobs"][jk]
+        tag = jk.rsplit("/", 1)[-1]
+        en = jm["env"]
+        jd = out / jk
+        j2 = out / "L2" / en / tag
+        j2.mkdir(parents=True, exist_ok=True)
+        (j2 / (tag + ".xyz")).write_text((jd / (tag + ".xyz")).read_text())
+        _pil_inp(j2 / (tag + ".inp"), tag + ".xyz", jm["charge"], jm["mult"],
+                 jm["wf"], jm["epsilon"], a.functional,
+                 moread=os.path.relpath(jd / (tag + ".loc"), j2),
+                 noiter=True, mopop=True, nprocs=a.nprocs)
+        man["jobs"]["L2/%s/%s" % (en, tag)] = {
+            "phase": "L2", "env": en, "epsilon": jm["epsilon"],
+            "charge": jm["charge"], "mult": jm["mult"], "wf": jm["wf"],
+            "reads_localized_from": jk,
+            "roles": ["localized_mo_populations"],
+            "why": ("phase L 의 인구는 **정준** 궤도다. seed 선택은 **국재** 궤도의 "
+                    "인구로만 한다 (2026-08-31 실측)"),
+            "inp_sha256": _sha(j2 / (tag + ".inp")),
+        }
     man["seed_plan"] = {
         "Dradical": {"charge": 0, "mult": 2, "wf": "UKS",
                      "seeds": ["A_sulfonate"] + ["B_ring%d" % i for i in range(len(rings))]
@@ -2545,8 +2599,10 @@ def pilot_generate(a):
     (out / "MANIFEST_PILOT.json").write_text(
         json.dumps(man, indent=1, ensure_ascii=False))
     (out / "run_pilot.sh").write_text(PIL_RUNNER)
-    print("→ %s · phase L %d잡 (환경 %d) · 측정 SP 예정 %d"
-          % (out, len(man["jobs"]), len(envs), n_meas))
+    _nL = sum(1 for v in man["jobs"].values() if v["phase"] == "L")
+    _nL2 = sum(1 for v in man["jobs"].values() if v["phase"] == "L2")
+    print("→ %s · phase L %d잡 + L2 %d잡 (환경 %d) · 측정 SP 예정 %d"
+          % (out, _nL, _nL2, len(envs), n_meas))
     print("   제거 H = 1-based %d (%s) · 산성 H 후보 %s"
           % (sH + 1, why_site, man["acidic_H_1based_all"]))
     print("   집합 hash %s · backbone %d · sulfonate %d · other %d"
@@ -2606,10 +2662,13 @@ def pil_parse_mopop(text, nat):
                     ener[m] = ee; occ[m] = oo; pops.setdefault(m, {})
                 i += 4                      # 머리 3줄 + 구분선
                 continue
-        m2 = re.match(r"\s*(\d+)\s+[A-Za-z]{1,2}\s+\S+\s+(.*)$", ln)
+        # ⛔⛔ 2026-08-31 실측 — 실제 행은 `  2S   1s   97.0` 처럼 **인덱스와 원소가
+        #   붙어 있다** (`36S`·`102S`). 종전 정규식은 사이 공백을 요구해 **한 행도
+        #   안 맞았고**, 그래서 pops 가 비어 항상 None 이었다.
+        m2 = re.match(r"\s*(\d+)([A-Za-z]{1,2})\s+(\S+)\s+(.*)$", ln)
         if m2 and cur:
             ai = int(m2.group(1))
-            vals = m2.group(2).split()
+            vals = m2.group(4).split()
             if len(vals) == len(cur):
                 for mo, v in zip(cur, vals):
                     try:
@@ -2666,8 +2725,10 @@ def pilot_seeds(d):
     nat = man["n_atoms"]
     made, report = 0, {}
     for jk, jm in sorted(man["jobs"].items()):
-        if jm["phase"] != "L":
-            continue
+        if jm["phase"] != "L2":
+            continue                     # ⛔ 인구는 **L2**(국재 궤도)에서만 읽는다
+        src_jk = jm["reads_localized_from"]
+        src = d / src_jk                 # `.loc` 와 xyz 는 L 잡에 있다
         jd = d / jk
         tag = jk.rsplit("/", 1)[-1]
         outp = jd / (tag + ".out")
@@ -2676,6 +2737,14 @@ def pilot_seeds(d):
         txt = outp.read_text(errors="replace")
         if "ORCA TERMINATED NORMALLY" not in txt:
             raise SystemExit("⛔ %s 가 정상 종료하지 않았다" % outp)
+        # ⛔ 국재화가 무작위 seed 로 돌아(`Localizations seeded randomly ... on`)
+        #   재실행하면 순서가 달라진다. 결정론을 만들 수 없으므로 **실현된 .loc 에
+        #   결박**한다 — 그 해시를 기록해 seed 가 어느 국재화에서 나왔는지 남긴다.
+        locf = src / (tag + ".loc")
+        if not locf.is_file():
+            raise SystemExit("⛔ %s 가 없다 — phase L 의 국재 궤도가 없으면 seed 를 "
+                             "만들 수 없다" % locf)
+        loc_sha = _sha(locf)
         is_dm = tag == "L_dminus"
         nat_j = nat - (1 if is_dm else 0)
         pr = pil_parse_mopop(txt, nat_j)
@@ -2694,7 +2763,7 @@ def pilot_seeds(d):
         for sd in spec["seeds"]:
             sdir = d / "S" / env / ("Dradical" if is_dm else "Pcation") / sd
             sdir.mkdir(parents=True, exist_ok=True)
-            src_xyz = jd / (tag + ".xyz")
+            src_xyz = src / (tag + ".xyz")
             xyzn = "%s.xyz" % sd
             (sdir / xyzn).write_text(src_xyz.read_text())
             rot, w = None, None
@@ -2710,7 +2779,9 @@ def pilot_seeds(d):
                         "국재화가 실패했다는 뜻이다 (MODEL_NONDIAGNOSTIC 후보)"
                         % (env, sd, w, PIL_SEED_MIN_WEIGHT))
                 rot = (mo, homo)
-            gbw = os.path.relpath(jd / (tag + ".gbw"), sdir)
+            # ⛔ **`.loc`** 를 읽는다. `.gbw`(정준)를 읽으면 국재 인구로 고른
+            #   인덱스가 다른 궤도를 가리킨다 (2026-08-31 실측).
+            gbw = os.path.relpath(locf, sdir)
             _pil_inp(sdir / (sd + ".inp"), xyzn, spec["charge"], spec["mult"],
                      spec["wf"], jm["epsilon"], man["functional"],
                      moread=(None if sd == "default" else gbw),
@@ -2719,6 +2790,11 @@ def pilot_seeds(d):
                 "phase": "S", "env": env, "epsilon": jm["epsilon"],
                 "charge": spec["charge"], "mult": spec["mult"], "wf": spec["wf"],
                 "seed": sd, "seed_source": jk,
+                "orbitals_from": os.path.relpath(locf, d).replace(os.sep, "/"),
+                "loc_sha256": loc_sha,
+                "⚠_국재화_비결정성": ("ORCA 가 국재화를 무작위 seed 로 돌린다. "
+                                       "재실행하면 MO 순서가 달라지므로 이 seed 는 "
+                                       "**위 loc_sha256 의 국재화에 조건부**다"),
                 "seed_mo": (None if rot is None else rot[0]),
                 "seed_mo_weight_pct": (None if w is None else round(w, 2)),
                 "homo_index": homo,
@@ -2921,18 +2997,23 @@ def pilot_analyze(d):
 
 
 PIL_RUNNER = r"""#!/usr/bin/env bash
-# 폴라론 pilot 러너 — 단계를 **끊어서** 돈다 (회신 S · 회신 AO 교훈).
+# 폴라론 pilot 러너 — 단계를 **끊어서** 돈다 (회신 S · 2026-08-31 실측 반영).
 #
-#   bash run_pilot.sh L       phase L (seed 생성원) 2잡 — 여기서 멈춘다
-#   bash run_pilot.sh seeds   L 출력 판독 → phase S 입력 생성 (계산 없음)
-#   bash run_pilot.sh S       phase S (측정) — **리뷰 통과 뒤에만**
-#   bash run_pilot.sh analyze 판정
+#   bash run_pilot.sh L        phase L  (SCF + Pipek-Mezey 국재화) — 여기서 멈춘다
+#   bash run_pilot.sh L2       phase L2 (`.loc` 를 MORead, NoIter, 국재 궤도 인구)
+#   bash run_pilot.sh seeds    L2 출력 판독 → phase S 입력 생성 (계산 없음)
+#   bash run_pilot.sh S        phase S  (측정) — **리뷰 통과 뒤에만**
+#   bash run_pilot.sh analyze  판정
 #
-# ⛔ 자동 연결(all)을 두지 않는다. phase S 가 estimand 를 재는 단계이고, 그 앞에
-#    사람의 판단(리뷰·smoke test)이 들어가야 한다. L 은 아무 값도 보고하지 않는다.
-# ⛔ seed 는 phase L **결과**에 의존한다 — 순서를 건너뛰면 임의 MO 를 고르는 것이다.
+# ⛔ L2 가 왜 따로 있나 (2026-08-31 실측): phase L 이 찍는
+#    `LOEWDIN ORBITAL POPULATIONS PER MO` 는 **정준 궤도**의 인구다
+#    (출력 5883줄 · 국재화는 340994줄). 정준 궤도는 비편재라 "이 링에 걸린 MO" 를
+#    거기서 고를 수 없다. 국재 궤도는 `<tag>.loc` 에 있고, L2 가 그것을 읽어
+#    SCF 없이 인구만 다시 찍는다. seed 선택도 seed 입력도 그 `.loc` 를 쓴다.
+# ⛔ 자동 연결(all)을 두지 않는다 — phase S 앞에 사람의 판단이 들어가야 한다.
 set -u
-stage=${1:?단계를 주세요: L | seeds | S | analyze}
+stage=${1:?단계를 주세요: L | L2 | seeds | S | analyze}
+case "$stage" in L|L2|seeds|S|analyze) ;; *) echo "모르는 단계: $stage"; exit 2;; esac
 ORCA=${ORCA:?ORCA 절대경로를 주세요 (병렬은 full pathname 이 필요합니다)}
 BUILDER=${BUILDER:?build_v7c_trimer.py 경로를 주세요}
 D=$(cd "$(dirname "$0")" && pwd)
@@ -2942,21 +3023,6 @@ if head -c 64 "$ORCA" | grep -qa "python"; then
   echo "양자화학 ORCA 경로를 주세요."; exit 2
 fi
 
-run() {
-  local j=$1 tag=$2
-  if [ -f "$j/$tag.out" ] && grep -aq "ORCA TERMINATED NORMALLY" "$j/$tag.out"; then
-    echo "  이미 완료 — ${j#$D/}"; return 0; fi
-  echo "  [$(date +%H:%M:%S)] ${j#$D/}"
-  ( cd "$j" && "$ORCA" "$tag.inp" > "$tag.out" 2>&1 )
-  if grep -aq "ORCA TERMINATED NORMALLY" "$j/$tag.out"; then
-    echo "  [$(date +%H:%M:%S)] 정상 종료 — ${j#$D/}"; return 0
-  fi
-  echo "  중단: ${j#$D/}  (마지막 줄: $(tail -1 "$j/$tag.out" 2>/dev/null))"; return 1
-}
-
-# ⛔ 중복 실행 가드 (CLAUDE.md 규약 — 2026-08-31 실측 사고: 같은 단계를 두 번
-#    띄워 두 러너가 같은 .out/.gbw/스크래치에 동시에 썼다). 락은 디렉터리로 잡는다
-#    — mkdir 은 원자적이라 경쟁 조건이 없다.
 LOCK="$D/.lock_$stage"
 if ! mkdir "$LOCK" 2>/dev/null; then
   owner=$(cat "$LOCK/pid" 2>/dev/null || echo "?")
@@ -2971,22 +3037,43 @@ fi
 echo $$ > "$LOCK/pid"
 trap 'rm -rf "$LOCK"' EXIT INT TERM
 
+run() {
+  local j=$1 tag=$2
+  if [ -f "$j/$tag.out" ] && grep -aq "ORCA TERMINATED NORMALLY" "$j/$tag.out"; then
+    echo "  이미 완료 — ${j#$D/}"; return 0; fi
+  echo "  [$(date +%H:%M:%S)] ${j#$D/}"
+  ( cd "$j" && "$ORCA" "$tag.inp" > "$tag.out" 2>&1 )
+  if grep -aq "ORCA TERMINATED NORMALLY" "$j/$tag.out"; then
+    echo "  [$(date +%H:%M:%S)] 정상 종료 — ${j#$D/}"; return 0; fi
+  echo "  중단: ${j#$D/}  (마지막: $(tail -1 "$j/$tag.out" 2>/dev/null))"; return 1
+}
+
+pop_count() {   # 국재 궤도 인구 블록이 실제로 찍혔나 (헤더는 REDUCED 유무 둘 다)
+  grep -acE "LOEWDIN (REDUCED )?ORBITAL POPULATIONS PER MO" "$1" 2>/dev/null || echo 0
+}
+
 fail=0
 case "$stage" in
   L)
-    echo "== phase L (seed 생성원) =="
+    echo "== phase L (SCF + 국재화) =="
+    for j in "$D"/L/*/*; do [ -d "$j" ] || continue; run "$j" "$(basename "$j")" || fail=1; done
+    echo "== 국재화가 돌았나 =="
     for j in "$D"/L/*/*; do
-      [ -d "$j" ] || continue
-      run "$j" "$(basename "$j")" || fail=1
+      [ -d "$j" ] || continue; n=$(basename "$j")
+      if [ -f "$j/$n.loc" ]; then echo "  ✔ $n.loc ($(stat -c%s "$j/$n.loc") B)"
+      else echo "  ⛔ $n.loc 없음 — 국재화가 안 됐습니다"; fail=1; fi
     done
-    echo "== smoke test — MO 별 Löwdin 인구가 실제로 찍혔나 =="
-    n=$(grep -lc "LOEWDIN REDUCED ORBITAL POPULATIONS PER MO" "$D"/L/*/*/*.out 2>/dev/null | wc -l)
-    echo "  인구 블록이 있는 .out: $n"
-    if [ "$n" = 0 ]; then
-      echo "  0 입니다 — %output Print[P_OrbPopMO_L] 1 이 안 먹었습니다."
-      echo "  seed 를 만들 수 없으니 출력 형식을 보고 파서를 고쳐야 합니다."
-      fail=1
-    fi
+    echo "다음: bash run_pilot.sh L2"
+    ;;
+  L2)
+    echo "== phase L2 (국재 궤도 인구 · NoIter) =="
+    for j in "$D"/L2/*/*; do [ -d "$j" ] || continue; run "$j" "$(basename "$j")" || fail=1; done
+    echo "== smoke test — 국재 궤도의 MO 인구가 찍혔나 =="
+    for j in "$D"/L2/*/*; do
+      [ -d "$j" ] || continue; n=$(basename "$j"); c=$(pop_count "$j/$n.out")
+      echo "  $n: 인구 블록 $c"
+      [ "$c" != 0 ] || { echo "    0 입니다 — NoIter 에서 인구가 안 찍혔습니다."; fail=1; }
+    done
     echo "다음: bash run_pilot.sh seeds  (계산 없음)"
     ;;
   seeds)
@@ -2995,19 +3082,16 @@ case "$stage" in
     ;;
   S)
     echo "== phase S (측정) =="
-    for j in "$D"/S/*/*/*; do
-      [ -d "$j" ] || continue
-      run "$j" "$(basename "$j")" || fail=1
-    done
+    for j in "$D"/S/*/*/*; do [ -d "$j" ] || continue; run "$j" "$(basename "$j")" || fail=1; done
     echo "다음: bash run_pilot.sh analyze"
     ;;
   analyze)
     python3 "$BUILDER" --polaron_analyze "$D" || fail=1
     ;;
-  *) echo "모르는 단계: $stage (L | seeds | S | analyze)"; exit 2;;
 esac
 exit $fail
 """
+
 
 
 
