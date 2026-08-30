@@ -112,11 +112,6 @@ if [ -n "${SIGMA_ION_SE:-}" ]; then
   SION_FLAG="$SION_FLAG --sigma-ion-se $SIGMA_ION_SE"; SION_TAG="${SION_TAG}_ise${SIGMA_ION_SE//./}"
 fi
 #  ⚠ 이온 축을 건드리면서 이온을 안 푸는 것은 **모순**이다 — 조용히 넘기지 않는다.
-if [ -n "$SION_FLAG" ] && { [ "${LEAN:-0}" = "1" ] || [ "${LEAN:-0}" = "2" ]; }; then
-  echo "ABORT — SIGMA_ION_* 를 줬는데 LEAN=${LEAN} 는 이온을 풀지 않는다 (--no-ion)."
-  echo "  이온 σ 를 바꾸면서 이온을 안 푸는 런은 아무것도 재지 않는다.  LEAN=3 또는 4 로."
-  exit 2
-fi
 #  ★ σ-치환 진단 팔 (2026-08-18, CL-43/44 · prereg v3 §4b) — SDCP 가 VGCF 셀에 양보한다.
 #    **생산 규약이 아니다.**  디렉터리·태그를 갈라 SKIP 캐시가 생산 팔과 섞이지 않게 한다
 #    (판정기 게이트가 잡긴 하지만, 애초에 안 섞이는 것이 낫다 — H4 와 같은 이유).
@@ -291,6 +286,17 @@ LEAN_TAG=""; [ "${LEAN:-0}" = "1" ] && LEAN_TAG="_lean"; [ "${LEAN:-0}" = "2" ] 
 #  ⚠ 새 접미사 — LEAN=2 산출물과 **섞이면 안 된다** (이온 유무가 다른 런이다)
 [ "${LEAN:-0}" = "3" ] && LEAN_TAG="_lean3"
 [ "${LEAN:-0}" = "4" ] && LEAN_TAG="_lean4"   # ⚠ 필드 유무가 달라 lean3 과 섞이면 안 된다
+
+#  ⚠⚠ **이 가드는 `LEAN_FLAGS` 가 조립된 *뒤*에 있어야 한다** (R14 D-1 수정 중 실사고):
+#    초판을 파일 앞쪽(SION 파싱 직후)에 뒀는데 거기서는 `LEAN_FLAGS` 가 아직 빈 문자열이라
+#    **조용히 아무것도 안 막았다** — 과잉차단보다 나쁘다 (있는 줄 알고 믿게 된다).
+#    레벨 번호를 다시 적지 않고 **조립된 flags** 를 보는 이유도 같다: 레벨이 늘면 갈라진다.
+if [ -n "$SION_FLAG" ] && case "$LEAN_FLAGS" in *--no-ion*) true;; *) false;; esac; then
+  echo "ABORT — SIGMA_ION_* 를 줬는데 LEAN=${LEAN:-0} 의 조립 flags 에 --no-ion 이 있다."
+  echo "  이온 σ 를 바꾸면서 이온을 안 푸는 런은 아무것도 재지 않는다.  LEAN=3 또는 4 로."
+  echo "  (조립 결과: ${LEAN_FLAGS})"
+  exit 2
+fi
 #  ★★★ 2026-08-25 (R5-CX-03, Codex 5차) — **런 영수증**.  러너가 무엇으로 돌라고 했는지
 #    한 곳에 적고, cache/fresh/final 이 전부 이 값을 요구한다.
 #    ⚠ 왜: Codex 실측에서 HEAD·vox·구경·code SHA·input digest 가 전부 달라도 캐시된 팔이

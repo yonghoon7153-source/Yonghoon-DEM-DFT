@@ -122,9 +122,15 @@ def reduce_one(path, max_list=MAX_LIST):
             continue
         _b = len(json.dumps(v, ensure_ascii=False, default=str))
         if _b > TOP_LEVEL_KEEP_MAX_BYTES:
-            dropped.append({'path': k, 'why': f'허용목록이지만 {_b} B > 상한 '
-                                              f'{TOP_LEVEL_KEEP_MAX_BYTES} B'})
-            continue
+            #  ★★★ 2026-08-30 (Codex R14 D-6) — **`continue` 가 아니라 실패다.**
+            #    초판은 사유만 적고 넘어가서 `econn_summary` 가 **없는 축소본을 정상 반환**했다
+            #    (내 커밋 메시지의 "거부한다" 도 그래서 거짓이었다).  그 패키지는 아래
+            #    검사들을 전부 통과한다 — `check_cohort_packages` 는 `step3` 만 읽기 때문이다.
+            #    ⇒ 조용히 불완전한 패키지를 만드느니 **축소 자체를 멈춘다.**
+            raise ValueError(
+                f'{os.path.basename(path)}: `{k}` 가 {_b} B 로 상한 {TOP_LEVEL_KEEP_MAX_BYTES} B '
+                f'를 넘는다.  그것을 빼고 축소하면 **그 행이 없는 패키지**가 조용히 만들어져 '
+                f'검사를 통과한다 (R14 D-6).  상한을 올리거나 그 키를 요약해서 줄일 것.')
         _kept[k] = v
     top_dropped = [x for x in top_dropped if x['key'] not in _kept]
     out['_reduced'] = {'source': os.path.basename(path),

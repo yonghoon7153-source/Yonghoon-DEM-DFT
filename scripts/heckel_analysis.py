@@ -38,6 +38,12 @@ def read_atoms(atom, with_ids=False):
     **실제 반지름**으로 되돌리는 데 쓴다 (복합 베드에서 필수, lens_from_contacts 참조).
     """
     xyz, rad, by_id = [], [], {}
+    #  ★★★ 2026-08-30 (Codex R14 D-7) — **읽지 못한 것을 0 으로 돌려주지 않는다.**
+    #    이 reader 는 LIGGGHTS 헤더 9줄 + `id type x y z radius` 6열을 가정한다.
+    #    scaffold CSV(`type,x,y,z,r` 5열)를 넣으면 헤더 9줄이 데이터를 먹고 나머지가
+    #    `len(p) < 6` 으로 전부 걸러져 **V_sphere = 0.0** 이 나온다 ⇒ `vol_and_lens` 가
+    #    조용히 **ε_sphere = 100 %** 를 만든다 (실측: real14 CSV → (0.0, 0.0, …)).
+    #    ⇒ 한 줄도 못 읽으면 **거부**한다.  "빈 침대" 와 "형식이 다른 파일" 은 다르다.
     with open(atom) as f:
         for _ in range(9): next(f)
         for line in f:
@@ -47,6 +53,13 @@ def read_atoms(atom, with_ids=False):
             rad.append(float(p[5]))
             if with_ids:
                 by_id[int(float(p[0]))] = float(p[5])
+    if not xyz:
+        raise SystemExit(
+            f'ABORT — `{atom}` 에서 원자를 한 줄도 못 읽었다.  이 reader 는 LIGGGHTS 덤프\n'
+            f'  (헤더 9줄 + `id type x y z radius` 6열)만 읽는다.  scaffold CSV\n'
+            f'  (`type,x,y,z,r` 5열)를 주면 헤더 9줄이 데이터를 먹고 나머지가 6열 미만으로\n'
+            f'  걸러져 **V_sphere = 0 → ε_sphere = 100 %%** 가 조용히 나온다 (R14 D-7).\n'
+            f'  ⇒ CSV 는 전용 adapter 로 읽을 것.  "빈 침대" 와 "형식이 다른 파일" 은 다르다.')
     xyz, rad = np.asarray(xyz, float), np.asarray(rad, float)
     return (xyz, rad, by_id) if with_ids else (xyz, rad)
 

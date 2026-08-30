@@ -900,7 +900,13 @@ L_MARKER = 'RUNNER_CONFIG_END'
 #:   이라 처음에 한쪽만 고쳤다가 같은 오탐이 남았다.  그래서 헬퍼로 뽑았다.
 _RUNNER_AXES = ('LEAN', 'VOX', 'ARMS', 'SIGMA_PTFE', 'PTFE_STAMP', 'FIBRE_STAMP',
                 'SDCP_SPHERE_D', 'SDCP_YIELD_VGCF', 'SDCP_BRIDGE', 'SIGMA_VGCF_OVERRIDE',
-                'P2_EXTRA', 'EXPECT_PROTOCOL', 'EXPECT_BACKEND', 'OUTDIR', 'BRIDGE_UM')
+                'P2_EXTRA', 'EXPECT_PROTOCOL', 'EXPECT_BACKEND', 'OUTDIR', 'BRIDGE_UM',
+                #  ★ 2026-08-30 (Codex R14 D-1) — 새 축을 여기 안 넣으면 **생산이 막힌다**.
+                #    호출 환경의 값이 격리를 뚫고 내부 LEAN=2 probe 로 새면 러너의
+                #    `SIGMA_ION_* + LEAN=2` 가드가 발동해 `runner_config` 가 abort 를
+                #    돌려주고, `LEAN_FLAGS` 가 None 이 돼 `L_LEAN2` 오류가 난다.
+                #    ⇒ 러너 축을 늘리면 **이 목록도 같이** 늘린다 (검사 대상과 같은 축).
+                'SIGMA_ION_SDCP', 'SIGMA_ION_SE')
 
 
 def _hermetic_env(env):
