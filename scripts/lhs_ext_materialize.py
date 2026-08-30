@@ -144,18 +144,43 @@ def _sub_all(text: str, pat: str, repl: str, what: str) -> str:
     return new
 
 
+def deck_weights(row: dict) -> tuple[float, ...]:
+    """덱에 적을 질량분율.  **소수 6자리에서 합이 정확히 1** 이 되게 만든다.
+
+    ★ 왜 (2026-08-30 실측): CSV 의 가중은 이미 6자리로 반올림돼 있어 그대로 적으면
+      합이 `0.999999` / `1.000001` 로 나온다 — 64건 중 **6건**이 그랬다.  기존 130 덱은
+      `0.510000 0.340000 0.150000` 처럼 **정확히 1** 이고, LIGGGHTS 가 합이 어긋난
+      분포를 어떻게 받는지는 확인된 바 없다.  08-18 에 비소수 seed 로 25건이 즉시
+      abort 한 전례가 있는 이상 "아마 괜찮다" 로 넘기지 않는다.
+    ⚠ 검사 허용치를 늘리는 것은 **오답**이다 — 그러면 검사만 조용해지고 덱은 여전히
+      0.999999 다.  고칠 자리는 덱이다.
+    ⇒ 마이크로 단위 정수로 배분하고 **SE 에 잔차를 몰아준다**.  잔차가 반올림 규모를
+      넘으면 (설계가 애초에 합 1이 아니라는 뜻) 거부한다.
+    """
+    nt = int(row['ntype'])
+    WP = round(float(row['w_AM_P']) * 1e6)
+    WS = round(float(row['w_AM_S']) * 1e6) if nt == 3 else 0
+    WSE = 1_000_000 - WP - WS
+    drift = abs(WSE / 1e6 - float(row['pdd_SE']))
+    if drift > 2e-6:            # 6자리 셋의 반올림 한계(1.5e-6)를 넘으면 설계 문제다
+        raise SystemExit(f'⛔ {row["id"]}: 가중 합이 1에서 {drift:.2e} 벗어난다 — '
+                         '반올림으로 설명되지 않는다 (덱을 내지 않는다)')
+    return ((WP / 1e6, WS / 1e6, WSE / 1e6) if nt == 3 else (WP / 1e6, WSE / 1e6))
+
+
 def render(template: str, row: dict, tmpl_case: str) -> str:
     """템플릿 덱의 값만 갈아끼운다.  구조는 건드리지 않는다."""
     nt = int(row['ntype'])
     case = row['id']
     rP = float(row['rP_um']) / UM_PER_DECK_UNIT
     rSE = float(row['rSE_um']) / UM_PER_DECK_UNIT
-    wP, wSE = float(row['w_AM_P']), float(row['pdd_SE'])
+    _w = deck_weights(row)
+    wP, wSE = _w[0], _w[-1]
     t = template
 
     if nt == 3:
         rS = float(row['rS_um']) / UM_PER_DECK_UNIT
-        wS = float(row['w_AM_S'])
+        wS = _w[1]
         t = _sub1(t, r'^(variable\s+r_AM_P\s+equal\s+)\S+', rf'\g<1>{rP:.6g}', 'r_AM_P')
         t = _sub1(t, r'^(variable\s+r_AM_S\s+equal\s+)\S+', rf'\g<1>{rS:.6g}', 'r_AM_S')
         t = _sub1(t, r'(particledistribution/discrete\s+\d+\s+3\s+pts1\s+)[\d.]+(\s+pts2\s+)'
@@ -379,6 +404,22 @@ shell mkdir post_lhs00_000
     chk('② 2-type 왕복 일치', roundtrip(r2, out2) == [], str(roundtrip(r2, out2)[:2]))
     chk('★② mono 의 AM 이 `rP_um` 열에서 온다 (P 열 = 일반 AM 자리)',
         'variable r_AM   equal 0.0023' in out2, out2.split('\n')[5])
+
+    #  ②-b 가중 합이 **덱 문자열에서** 정확히 1 인가 (2026-08-30 실사고)
+    #     CSV 값을 그대로 적으면 6자리 반올림으로 0.999999 가 나온다 — 64건 중 6건.
+    r3b = dict(r3, w_AM_P='0.409999', w_AM_S='0.200000', pdd_SE='0.390000')
+    o3b = render(T3, r3b, 'lhs00_000')
+    import re as _re
+    _m = _re.search(r'discrete\s+\d+\s+3\s+pts1\s+([\d.]+)\s+pts2\s+([\d.]+)'
+                    r'\s+pts3\s+([\d.]+)', o3b)
+    chk('★②-b 덱 가중 문자열의 합이 정확히 1',
+        _m is not None and sum(map(float, _m.groups())) == 1.0,
+        _m.groups() if _m else 'no match')
+    chk('★②-b 잔차는 SE 로 간다 (AM 은 설계값 그대로)',
+        _m is not None and _m.group(1) == '0.409999' and _m.group(2) == '0.200000',
+        _m.groups() if _m else '')
+    chk('②-b 그래도 왕복은 통과한다', roundtrip(r3b, o3b) == [],
+        str(roundtrip(r3b, o3b)[:2]))
 
     #  ③ 음성 대조 — 왕복검사가 **정말** 잡는가
     swapped = out3.replace('pts1 0.400000', 'pts1 0.200000').replace(
