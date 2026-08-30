@@ -131,10 +131,28 @@
    "why": "rank1 의 E_VRH 가 18.7 → 42.082 로 정정돼 **순위 자체가 무효**",
    "fix": "완료 — 40 챔피언 전체 재정렬. 새 1~3위 Li2O_x005 32.4 / MnO_x005 32.6 / NiO_x010 33.9. Sc2O3_x002 18위(42.082), Al2O3_x005 28위(47.018). 옛 순위표는 doping_cascade_verified.json `_superseded_ranking_2026_08_12` 에 보존.",
    "resolved": "2026-08-13"
+  },
+  {
+   "file": "db/properties/lpsocl_md_arrhenius.json",
+   "level": "BLOCKED",
+   "what": "계간 Ea 직접 비교 (`vs_modelc` +90 meV 2.3σ · `vs_modelc_SUPERSEDED_mixed` · `anchors_same_window_singleseed` 의 계간 대조) — citable:no",
+   "why": "세 계(LPSOCl·modelc·b2o3)가 각자 다른 셀·다른 수렴상태다. 회신 AK(2026-08-30) Q2=C 판정: 세 계 Ea 직접 비교는 철회·보류",
+   "fix": "계별 셀·VRAM·finite-size 감사를 포함한 **별도 캠페인**으로 재설계. 계 내부 값(62원자 4시드×3T Ea 0.287±0.024)은 cell-specific estimand 로는 유효",
+   "added": "2026-08-30",
+   "근거": "db/properties/lpsocl_box331_estimand_2026_08_30.json"
+  },
+  {
+   "file": "tools/ionic/msd_diffusive_check.py (규약)",
+   "level": "SUPERSEDED",
+   "what": "β ≥ 0.80 하드게이트 — **판정으로 인용 금지**. β 는 경보로만",
+   "why": "kb/concepts/beta-gate.md §7-5(2026-08-26)·§7-8b(회신 F, 2026-08-27)에서 폐기. 우리 운영점에서 고정문턱 0.8 은 거짓탈락률 50 %",
+   "fix": "판정축은 D_inc plateau · 창 안정성 · 홉 수. 도구는 2026-08-30 에 맞췄다 (그 전 나흘간 도구가 폐기된 문턱을 강제했고 회신 AK 가 그걸 근거로 인용했다)",
+   "added": "2026-08-30"
   }
  ],
  "_history": [
   "2026-08-13: E_VRH 순위표 재계산 완료 — HOLD 해소. 최연질이 Sc2O3 → Li2O_x005 로 바뀌었고, Sc2O3 는 형성에너지 1위 · 연질 18위로 두 축이 분리됐다.",
-  "2026-08-12: doping_cascade 값 충돌 해소 (BLOCKED→RESOLVED). 순위표 재계산이 새 HOLD 로 승계."
+  "2026-08-12: doping_cascade 값 충돌 해소 (BLOCKED→RESOLVED). 순위표 재계산이 새 HOLD 로 승계.",
+  "2026-08-30 — 회신 AK 반영: 계간 Ea 비교 citable:no 잠금 + β=0.80 하드게이트 폐기를 레지스트리에 명시"
  ]
 }

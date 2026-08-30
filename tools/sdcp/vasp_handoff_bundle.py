@@ -6169,6 +6169,27 @@ def load_ledger(a) -> Dict[str, Any]:
     return led
 
 
+def guard_refs_minimal(a):
+    """`--refs_minimal`(C-12 구성)은 **자세 동결 없이 쓸 수 없다.** 위반이면 SystemExit.
+
+    ⛔⛔ 2026-08-30 실측 fail-open — `--from_basins` 를 빼면 자세 동결을 **안 읽고**
+      champion/cross 자동탐색으로 떨어진다. 조각 2개로 좁혔는데도 **잡 40개**가 나왔다
+      (C-12 는 12잡). 그런데 `claim_scope` 는 C-12 문구를 그대로 달아서,
+      **동결 안 된 후보집합에 사전등록된 범위 주장이 붙는다.**
+      범위 문구와 후보집합이 갈리는 것은 회신 AJ 가 반복해 잡은 유형이다.
+
+    ⛔ 이 함수가 못 하는 것: 준 동결 파일이 **맞는 것인지**는 안 본다 (그건 from_basins
+      repo 경로 검사와 freeze_sha256 대조의 몫이다).
+    """
+    if getattr(a, "refs_minimal", False) and not getattr(a, "from_basins", None):
+        sys.exit(
+            "⛔ --refs_minimal 은 --from_basins 없이 쓸 수 없다 (2026-08-30).\n"
+            "   그것 없이는 자세 동결을 안 읽고 champion/cross 자동탐색으로 떨어지는데,\n"
+            "   범위 문구(claim_scope)는 C-12 그대로라 **동결 안 된 집합에 사전등록\n"
+            "   범위가 붙는다.** 자세 동결을 같이 준다:\n"
+            "     --from_basins db/properties/c12_poses_2026_08_30.json")
+
+
 def build_bundle(a, ledger: Optional[Dict[str, Any]] = None) -> Path:
     if ledger is None:
         ledger = load_ledger(a)
@@ -6287,6 +6308,8 @@ def build_bundle(a, ledger: Optional[Dict[str, Any]] = None) -> Path:
     # ⚠ 선별 모드는 **기대값 자체를 바꾼다**. 검사에만 반영하고 MANIFEST 에는 원래 수를
     #   적으면, 나중에 읽는 사람이 "계약 5인데 1개뿐" 으로 오해한다 (분석기의
     #   CONTRACT_SHORT 도 오작동한다). 유효 계약을 기록한다.
+    guard_refs_minimal(a)
+
     if a.champion:
         expect = {k: 1 for k in expect}
         man["contract_mode"] = "champion — 조각당 Li 위 최선·Ni 위 최선 1쌍"
@@ -9737,6 +9760,23 @@ def _selftest_verify() -> int:
         chk(verify_bundle(r) == 1,
             "⛔음성: from_basins 가 repo(db/)에 없으면 차단 — candidate set 을 "
             "재현·감사할 수 없다")
+
+        # ⛔ 2026-08-30 — `--refs_minimal` 을 자세 동결 없이 쓰면 **거부**한다.
+        #   실측 사고: 조각 2개로 좁혔는데 잡 40개가 나왔고(C-12 는 12), 그런데도
+        #   범위 문구는 C-12 그대로였다 — 후보집합과 범위 주장이 갈리는 fail-open.
+        def _grc(minimal, freeze):
+            ns = type("NS", (), {"refs_minimal": minimal, "from_basins": freeze})()
+            try:
+                guard_refs_minimal(ns)
+            except SystemExit as e:
+                return str(e)
+            return None
+
+        chk("--from_basins" in (_grc(True, None) or ""),
+            "⛔음성: --refs_minimal 을 --from_basins 없이 주면 생성 자체를 거부한다")
+        chk(_grc(True, "x.json") is None, "[양성] 자세 동결을 같이 주면 통과한다")
+        chk(_grc(False, None) is None,
+            "[양성] --refs_minimal 이 아니면 이 검사는 걸리지 않는다")
 
         r = build(d / "n11b")
         _m = json.loads((r / "MANIFEST.json").read_text())

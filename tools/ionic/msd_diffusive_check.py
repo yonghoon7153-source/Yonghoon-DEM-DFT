@@ -9,14 +9,24 @@
     · comp1 seed3 — D(600) 1.36e-06 ≈ D(800) 1.37e-06 (비 1.007). 물리적으로 불가능.
   둘 다 "Ea 를 냈다"까지는 갔지만 **그 Ea 를 인용하면 안 되는** 상태였다.
 
-판정
-  log-log 기울기 β = d(log MSD)/d(log t) 를 창 안에서 잰다.
-    β ≈ 1.0        확산 (Fickian) — 인용 가능
-    β < 0.8        아직 케이지/천이 — **인용 금지**, 창을 늦추거나 prod 를 늘려라
-    β > 1.2        드리프트/탄도 — 질량중심 표류 의심
+판정 (2026-08-30 개정, 회신 AK)
+  판정축은 **`D_inc` plateau · 창 안정성 · 실제 독립 hop 수** 세 가지다.
+    `D_inc(t1,t2) = [MSD(t2)−MSD(t1)] / [6(t2−t1)]`
+  상수 절편은 여기서 **대수적으로 소거**되므로, 케이지 절편이면 창을 옮겨도 평평하고
+  진짜 `t^α` 면 계속 움직인다. 실패는 **두 층으로** 나눠 낸다:
+    `no-value`  값이 **정의되지 않음** (궤적 무결성 실패 · plateau 부재)
+    `HOLD`      값은 있으나 **정밀도 부족** (홉 부족 등)
+  ⇒ 처방이 갈린다: 앞은 프로토콜을 고치고, 뒤는 시드·길이를 늘린다.
 
-⚠ β 만으로는 부족하다. **MSD 절대 크기**도 본다: 창 끝의 MSD 가 이웃 Li–Li 거리²
-  (~3 Å² 정도) 보다 작으면 이온이 자기 자리를 못 벗어난 것이라 β 가 1 이어도 통계가 없다.
+⛔⛔ **β = 0.80 하드게이트는 폐기됐다** (kb/concepts/beta-gate.md §7-5 2026-08-26 ·
+  §7-8b 회신 F 2026-08-27): *"β=1 은 물리, 0.8 은 폐기 수순. β 는 이제 **경보**지
+  판정이 아니다."* 우리 운영점에서 고정문턱 0.8 은 **50 % 거짓탈락률**을 보였다.
+  β 는 표에 남기고 경보로만 쓴다.
+  ⚠ 이 도구는 카드가 폐기된 뒤에도 **나흘간 옛 문턱을 강제**했고, 그 사이 회신 AK 가
+    그걸 착수 근거로 다시 인용했다. **판정을 바꿀 때 그 판정을 구현한 도구를 같이 고친다.**
+
+⚠ **MSD 절대 크기**도 본다: 창 끝의 MSD 가 이웃 Li–Li 거리² (~3 Å² 정도) 보다 작으면
+  이온이 자기 자리를 못 벗어난 것이라 통계가 없다.
 
   python3 tools/ionic/msd_diffusive_check.py --glob '~/work/runs/comp2_disorder_relaxed/d*_cfg*/T*/msd.json'
   python3 tools/ionic/msd_diffusive_check.py --glob '~/work/runs/comp1_seeds/s*/d*_cfg*/T*/msd.json'
@@ -133,6 +143,104 @@ def d_incremental(t, y, lo, hi):
         return None
     return (pts[-1][1] - pts[0][1]) / (6.0 * (pts[-1][0] - pts[0][0]))
 
+
+
+# ── D_inc plateau 판정 (2026-08-30, 회신 AK) ─────────────────────────────────
+#: ⛔⛔ **β=0.80 은 판정이 아니다.** kb/concepts/beta-gate.md §7-5(2026-08-26)·
+#:   §7-8b(회신 F, 2026-08-27)에서 폐기됐다 — *"β=1 은 물리, 0.8 은 폐기 수순.
+#:   β 는 이제 **경보**지 판정이 아니다."*
+#:   그런데 **이 도구는 안 고쳐졌다.** 그래서 2026-08-30 회신 AK 를 쓸 때 폐기된 문턱을
+#:   착수 근거로 다시 인용했다 (kb/methodology/selftest_blind_spots_2026_08_28.md 사각 D
+#:   의 변형 — 판정은 읽었는데 **도구에 안 내려왔다**).
+#:   ⇒ 판정축은 `D_inc` plateau · 창 안정성 · 실제 독립 hop 수다. 아래가 그 구현이다.
+
+#: plateau 로 볼 D_inc 상대 산포 상한. 회신 F 의 "상수 절편이면 창과 무관하게 참값" 에서
+#: 온 것이고, 실측 보정값이 아니다 — **문턱을 바꾸면 여기 사유를 적는다.**
+DINC_PLATEAU_TOL = 0.10
+#: plateau 판정에 최소 몇 개의 창이 필요한가. 두 개로는 '추세' 와 '평평' 을 못 가른다.
+DINC_MIN_WINDOWS = 3
+#: 이온당 실제 독립 hop 수 하한 — 이보다 적으면 값은 있어도 **정밀도 부족(HOLD)** 이다.
+HOPS_MIN_PER_ION = 3.0
+
+#: 사전 고정 보조 창 [ps] — 결과를 보고 고르지 않는다 (회신 AK Q4).
+#:   200 ps 생산런의 MTO 최대 lag 는 100 ps 라 100 을 넘는 창은 `_covers` 가 알아서 뺀다.
+DINC_WINDOWS = ((2, 50), (10, 50), (25, 100), (50, 100))
+
+#: 실패 코드 — **두 층을 합치지 않는다** (회신 AK Q5).
+#:   no_value = 값이 **정의되지 않음** · hold = 값은 있으나 **정밀도 부족**
+NO_VALUE = "no_value"
+HOLD = "hold"
+CITABLE = "citable"
+
+
+def dinc_plateau(t, y, windows=DINC_WINDOWS, tol=DINC_PLATEAU_TOL):
+    """`D_inc` 가 창을 옮겨도 평평한가. → dict
+
+    돌려주는 것: `{"per_window": {(lo,hi): D_inc}, "n": 잰 창 수, "spread": 상대산포,
+                  "status": "plateau"|"drifting"|"insufficient", "trend": 부호}`
+    상대산포 = (max−min)/|median| — 상수 절편이면 창을 옮겨도 소거되므로 0 에 가깝다.
+
+    ⛔ 이 함수가 못 하는 것
+      · **느린 전이 vs 진짜 멱함수를 못 가른다** (`d_incremental` 의 한계 그대로).
+      · 오차막대가 없다 — 끝점 두 개만 쓰므로 잡음에 노출된다. `spread` 를
+        오차막대로 쓰면 안 된다.
+      · 창 목록을 자기가 고르지 않는다. 결과를 보고 창을 고르면 판정이 아니다.
+    """
+    per = {}
+    for lo, hi in windows:
+        v = d_incremental(t, y, lo, hi)
+        if v is not None and v > 0:
+            per[(lo, hi)] = v
+    if len(per) < DINC_MIN_WINDOWS:
+        return {"per_window": per, "n": len(per), "spread": None,
+                "status": "insufficient", "trend": None}
+    vals = [per[k] for k in sorted(per)]
+    med = sorted(vals)[len(vals) // 2]
+    spread = (max(vals) - min(vals)) / abs(med) if med else None
+    trend = (vals[-1] - vals[0]) / abs(med) if med else None
+    return {"per_window": per, "n": len(per), "spread": spread,
+            "status": ("plateau" if spread is not None and spread <= tol else "drifting"),
+            "trend": trend}
+
+
+def hops_per_ion_msd(y, d_hop=D_HOP_A):
+    """MSD 최댓값에서 읽는 **이온당 홉 수 상한**. `MSD_max / d²`.
+
+    ⛔ 상한이다 — 되돌아오는 홉(correlated back-hop)을 못 빼므로 실제 독립 홉은 이보다 적다.
+       `tools/ionic/hops_per_ion.py` 의 궤적 기반 계수가 있으면 그쪽이 낫다.
+    """
+    return (max(y) / d_hop ** 2) if y else None
+
+
+def run_verdict(t, y, beta=None, windows=DINC_WINDOWS):
+    """한 런의 판정. → (code, 사유들)  code ∈ {no_value, hold, citable}
+
+    판정축 (회신 AK Q4·Q5):
+      no_value — 궤적 무결성 실패 · 안정된 `D_inc` plateau 부재
+      hold     — 실제 독립 hop 부족
+      citable  — 위 둘 다 아님
+
+    ⛔ **β 는 판정에 안 들어간다.** 경보로 기록만 한다 (kb/concepts/beta-gate.md §7-5).
+    ⛔ 이 함수가 못 하는 것: 상·확산기전이 온도마다 섞였는지는 **한 런만 봐서 못 본다**
+       (그건 Arrhenius 단계의 판정이다) · 프로토콜 일치도 여기서 안 본다.
+    """
+    why = []
+    if not t or not y:
+        return NO_VALUE, ["궤적 없음 — MSD 배열이 비었다"]
+    pl = dinc_plateau(t, y, windows)
+    if pl["status"] == "insufficient":
+        return NO_VALUE, [f"D_inc 를 잰 창이 {pl['n']}개 — plateau 판정 불가 "
+                          f"(최소 {DINC_MIN_WINDOWS}개)"]
+    if pl["status"] == "drifting":
+        why.append(f"D_inc 가 창 따라 움직인다 (상대산포 {pl['spread']:.0%} "
+                   f"> {DINC_PLATEAU_TOL:.0%}, 추세 {pl['trend']:+.0%})")
+        return NO_VALUE, why
+    n_hop = hops_per_ion_msd(y)
+    if n_hop is not None and n_hop < HOPS_MIN_PER_ION:
+        return HOLD, [f"홉 {n_hop:.1f}/이온 < {HOPS_MIN_PER_ION} (상한 추정) — "
+                      f"값은 있으나 정밀도 부족"]
+    return CITABLE, [f"D_inc plateau (산포 {pl['spread']:.0%}) · 홉 "
+                     + (f"{n_hop:.1f}/이온" if n_hop is not None else "—")]
 
 def loglog_slope(t, y, lo, hi):
     """[lo,hi] ps 구간의 log-log 기울기. 점이 3개 미만이면 None."""
@@ -1054,13 +1162,17 @@ def selftest():
     # 이상적인 확산 곡선 MSD = 6Dt (β = 1)
     t = [round(0.5 * k, 2) for k in range(1, 201)]          # 0.5 … 100 ps
     lin = {"times_ps": t, "msd_Li_A2": [0.7 * u for u in t], "D_Li_cm2_s": 1.2e-5}
-    # 케이지: MSD = c + m t 로 절편이 큰 것 (β < 1)
+    # 상수 절편: MSD = c + m t (β < 1 이지만 **D 는 무사하다** — 절편이 D_inc 에서 소거된다)
     cage = {"times_ps": t, "msd_Li_A2": [12.0 + 0.7 * u for u in t], "D_Li_cm2_s": 1.2e-5}
+    # 진짜 sub-diffusion: MSD = A t^0.6 — D_inc 가 창 따라 **계속 떨어진다**
+    subdiff = {"times_ps": t, "msd_Li_A2": [5.0 * u ** 0.6 for u in t], "D_Li_cm2_s": 1.2e-5}
+    # plateau 는 오는데 **홉이 모자란** 곡선 — 값은 정의되지만 정밀도가 부족(HOLD)
+    thin = {"times_ps": t, "msd_Li_A2": [0.1 * u for u in t], "D_Li_cm2_s": 1.2e-6}
     # ⛔ 문제의 모양: D 는 있는데 MSD 배열이 없다
     nomsd = {"D_Li_cm2_s": 7.4e-6}
 
     out = run([lin, lin])
-    chk("✅ 2개 전부 확산 영역" in out, "[양성] 확산 곡선 2개 → ✅")
+    chk("✅ 2개 전부 D_inc plateau" in out, "[양성] 확산 곡선 2개 → ✅")
 
     # STO 는 있는데 MTO 만 없는 것 — 처방이 정반대라 문구가 갈려야 한다
     stoonly = {"times_ps": t, "msd_Li_A2": [0.7 * u for u in t], "D_Li_cm2_s": 7.4e-6}
@@ -1083,12 +1195,28 @@ def selftest():
         "[음성] 다음에 뭘 하면 되는지 알려준다")
     chk("✅" not in out, "[음성] MTO 못 재고 ✅ 로 넘어가지 않는다")
     out = run([stoonly, stoonly])
-    chk("✅ 2개 전부 확산 영역" in out,
+    chk("✅ 2개 전부 D_inc plateau" in out,
         "[양성] 같은 파일을 --mto 없이 주면 **바로 잰다** (재계산 불필요 확인)")
 
+    # ── ⛔ 회신 AK (2026-08-30) — **β 는 판정이 아니다.** 아래 세 건이 그 회귀시험이다.
+    #    kb/concepts/beta-gate.md §7-5 가 2026-08-26 에 β=0.8 을 폐기했는데 이 도구는
+    #    나흘간 그대로였고, 그래서 회신 AK 가 폐기된 문턱을 착수 근거로 다시 인용했다.
     out = run([cage, cage])
-    chk("입증하지 못했다" in out, "[양성] 절편 큰 곡선은 케이지로 잡는다")
-    chk("✅" not in out, "[음성] 케이지인데 ✅ 가 같이 찍히지 않는다")
+    chk("✅ 2개 전부 D_inc plateau" in out,
+        "[양성·핵심회귀] **상수 절편은 인용 가능하다** — β<1 이어도 D_inc 에서 절편이 "
+        "소거된다 (옛 판은 여기서 '인용 금지' 를 찍었다)")
+    chk("no-value" not in out,
+        "[음성·핵심회귀] 상수 절편을 no-value 로 부르지 않는다")
+    out = run([subdiff, subdiff])
+    chk("no-value" in out and "D_inc 가 창 따라 움직인다" in out,
+        "[음성] 진짜 t^0.6 은 D_inc 가 움직여 **no-value** 다 (β 가 아니라 이게 판정축)")
+    chk("✅" not in out, "[음성] sub-diffusion 인데 ✅ 가 같이 찍히지 않는다")
+    out = run([thin, thin])
+    chk("HOLD" in out and "홉" in out,
+        "[음성] plateau 는 왔는데 홉이 모자라면 **HOLD** (정의 실패가 아니다)")
+    chk("no-value" not in out,
+        "[음성·핵심] HOLD 를 no-value 와 **같은 코드로 합치지 않는다** (처방이 갈린다)")
+    chk("✅" not in out, "[음성] HOLD 인데 ✅ 로 넘어가지 않는다")
 
     # ── 골격(비-Li) 검사 ───────────────────────────────────────────────
     tt = [i * 0.5 for i in range(1, 121)]                       # 0.5 … 60 ps
@@ -1422,6 +1550,33 @@ def selftest():
     chk(_drift(10.0, 1.0) == "drift_dominated",
         "[골격COM·양성] COM 을 빼서 대부분 사라지면 흐름 지배다")
     chk(_drift(10.0, 5.0) == "mixed", "[골격COM] 중간은 중간이라 말한다")
+    # ── D_inc plateau · 실패 두 층 (2026-08-30, 회신 AK) ─────────────────────
+    _tt = [round(0.5 * k, 2) for k in range(1, 201)]              # 0.5 … 100 ps
+    _flat = [12.0 + 0.7 * u for u in _tt]                          # 상수 절편
+    _pow = [5.0 * u ** 0.6 for u in _tt]                           # 진짜 t^0.6
+    _pl = dinc_plateau(_tt, _flat)
+    chk(_pl["status"] == "plateau" and _pl["spread"] < 1e-9,
+        f"[plateau·양성] 상수 절편이면 D_inc 산포 0 ({_pl['spread']:.1e})")
+    _ps = dinc_plateau(_tt, _pow)
+    chk(_ps["status"] == "drifting" and _ps["trend"] < 0,
+        f"[plateau·음성] t^0.6 은 D_inc 가 **떨어진다** (추세 {_ps['trend']:+.0%})")
+    chk(dinc_plateau([1.0, 2.0, 3.0], [1.0, 2.0, 3.0])["status"] == "insufficient",
+        "[plateau·음성] 창을 못 채우면 'insufficient' — 평평하다고 하지 않는다")
+    chk(dinc_plateau(_tt, [0.0] * len(_tt))["status"] == "insufficient",
+        "[plateau·음성] 기울기 0 (D_inc≤0) 은 세지 않는다 — 0 으로 '평평' 을 만들지 않는다")
+    chk(run_verdict(_tt, _flat)[0] == CITABLE,
+        "[판정·핵심회귀] 상수 절편 = **인용 가능** (β<1 이어도)")
+    chk(run_verdict(_tt, _pow)[0] == NO_VALUE,
+        "[판정·음성] 진짜 sub-diffusion = no_value")
+    chk(run_verdict(_tt, [0.1 * u for u in _tt])[0] == HOLD,
+        "[판정·음성] plateau 인데 홉 부족 = **HOLD** (no_value 아님)")
+    chk(run_verdict([], [])[0] == NO_VALUE,
+        "[판정·음성] 궤적이 없으면 no_value")
+    chk(NO_VALUE != HOLD,
+        "[판정·음성] '정의되지 않음' 과 '정밀도 부족' 은 **다른 코드**다 (회신 AK Q5)")
+    chk(run_verdict(_tt, _flat, beta=0.55)[0] == CITABLE,
+        "[판정·핵심회귀] **β 를 낮게 줘도 판정이 안 바뀐다** — β 는 판정에 안 들어간다")
+
     print(f"selftest {'PASS' if not n_bad else 'FAIL'} — {n_ok} ok, {n_bad} bad")
     return 1 if n_bad else 0
 
@@ -1559,7 +1714,8 @@ def main():
         print()
 
     print(("**MTO 곡선**" if a.mto else "STO 곡선") + " · "
-          + f"창 {lo}–{hi} ps · β=1 확산 · β<{BETA_OK[0]} 케이지 · "
+          + f"창 {lo}–{hi} ps · 판정 = D_inc plateau(창 {len(DINC_WINDOWS)}개, "
+          f"산포 ≤ {DINC_PLATEAU_TOL:.0%}) · 홉 ≥ {HOPS_MIN_PER_ION}/이온 · "
           f"창끝 MSD < {MSD_MIN_A2} Å² 면 통계 부족")
     print(f"  D 계열 = **{'MTO' if a.mto else 'STO'}** — β·c·D_inc 와 같은 곡선에서 낸다 "
           "(회신 S P0: 종전엔 --mto 여도 D 만 STO 를 읽어 한 표에 두 추정량이 섞였다)")
@@ -1569,8 +1725,14 @@ def main():
     #   0.8 미만이 **1.0%** 뿐이다. 즉 이 창의 β<0.8 은 표본 부족이 아니라 진짜다.
     #   반면 늦은 창(50–200)에서는 이상 계도 10%가 0.8 아래로 떨어진다 — 그 창의
     #   β 로 '구제' 판정을 하면 안 된다. 창마다 게이트의 신뢰도가 다르다.
-    print(f"{'case':34s} {'D(cm2/s)':>10s} {'beta':>6s} {'MSD@hi':>8s}  판정")
+    print(f"{'case':34s} {'D(cm2/s)':>10s} {'beta*':>6s} {'MSD@hi':>8s}  판정")
+    print("  * β 는 **경보**다 — 판정에 안 들어간다 (kb/concepts/beta-gate.md §7-5, "
+          "2026-08-26 폐기). 판정축: D_inc plateau · 창 안정성 · 홉 수")
     bad = []
+    #: ⏸ HOLD — 값은 있으나 정밀도가 부족한 런. **no-value 와 합치지 않는다** (회신 AK Q5):
+    #:   '정의되지 않음' 과 '정밀도 부족' 을 한 코드로 뭉개면 처방이 갈린다
+    #:   (전자는 프로토콜을 고치고, 후자는 시드·길이를 늘린다).
+    held = []
     #: ⛔⛔ 2026-08-17 fail-open — MSD 배열이 없는 런은 `continue` 로 건너뛰고 bad 에도
     #:   안 들어가서, **아무것도 못 쟀는데** 마지막 줄이 "✅ 전부 확산 영역 — D/Ea
     #:   인용 가능" 으로 찍혔다 (lpsocl 작은 셀 3런이 그랬다: β 세 칸이 전부 '—' 인데 ✅).
@@ -1616,6 +1778,11 @@ def main():
             continue
         b = loglog_slope(t, y, lo, hi)
         msd_hi = max((v for u, v in zip(t, y) if u <= hi), default=float("nan"))
+        # ⛔⛔ 2026-08-30 (회신 AK) — **판정은 D_inc plateau 가 낸다. β 는 경보다.**
+        #   kb/concepts/beta-gate.md §7-5·§7-8b 가 2026-08-26/27 에 β=0.8 하드게이트를
+        #   폐기했는데 이 도구는 나흘간 안 고쳐졌고, 그 사이 회신 AK 가 폐기된 문턱을
+        #   착수 근거로 다시 인용했다. 판정을 바꿀 때 **그 판정을 구현한 도구**를 같이 고친다.
+        code, why = run_verdict(t, y, beta=b)
         marks = []
         if b is None:
             marks.append("β 못 잼")
@@ -1648,9 +1815,14 @@ def main():
             marks.append(f"⚠ 드리프트(β={b:.2f})")
         if msd_hi < MSD_MIN_A2:
             marks.append(f"⛔ 통계부족(MSD {msd_hi:.1f} Å²)")
-        verdict = " · ".join(marks) if marks else "✓ 확산"
-        if marks:
+        # β 경보는 **표시만** 한다 — 판정은 code 가 낸다.
+        alarm = (" ⚠[" + " · ".join(m.lstrip("⛔⚠ ") for m in marks) + "]") if marks else ""
+        verdict = {CITABLE: "✓ " + why[0], HOLD: "⏸ HOLD — " + why[0],
+                   NO_VALUE: "⛔ no-value — " + why[0]}[code] + alarm
+        if code == NO_VALUE:
             bad.append((tag, verdict))
+        elif code == HOLD:
+            held.append((tag, verdict))
         print(f"{tag:34s} {_f(D, '{:10.3e}')} {_f(b, '{:6.2f}')} "
               f"{_f(msd_hi, '{:8.1f}')}  {verdict}")
 
@@ -1866,11 +2038,21 @@ def main():
         print("     ⚠ R² 로는 둘을 못 가른다 — 두 모형 다 0.99 를 넘는다. c 를 볼 것.")
 
     print()
+    if held:
+        # ⛔ 회신 AK Q5 — **'정의되지 않음'과 '정밀도 부족'을 한 줄로 합치지 않는다.**
+        #   처방이 갈린다: 전자는 프로토콜을 고치고, 후자는 시드·길이를 늘린다.
+        print(f"⏸ **HOLD {len(held)}/{len(files)}** — 값은 정의되지만 **정밀도가 부족**하다.")
+        for tag, v in held:
+            print(f"   {tag}: {v}")
+        print("   처방: 시드 추가 또는 생산길이 연장 (프로토콜은 그대로).")
+        print("   ⚠ 시드 추가 규칙: kb/methodology/beta_gate_seed_policy.md "
+              "— '통과할 때까지 다시' 금지.")
+        print()
     if bad:
         # ⚠⚠ 2026-08-11 문구 정정 — "확산 영역이 아니다" 는 **β 가 말할 수 있는 것보다 세다**.
         #   β<0.8 은 (a) 진짜 sub-diffusion 이거나 (b) MSD 절편이 창끝의 ~6% 를 넘은 것이다.
         #   둘을 가르는 건 --scan 의 **c 행**이지 β 값이 아니다.
-        print(f"⚠ **{len(bad)}/{len(files)} 개가 선언한 창에서 Fickian scaling 을 입증하지 못했다.**")
+        print(f"⛔ **no-value {len(bad)}/{len(files)}** — 선언한 창에서 값이 **정의되지 않는다.**")
         for tag, v in bad:
             print(f"   {tag}: {v}")
         print("   ⛔ 여기서 곧바로 'D 인용 금지' 로 가지 말 것 — **--scan 의 c 행을 먼저 본다**:")
@@ -1879,8 +2061,9 @@ def main():
         print("   처방: ① --scan 으로 c 판별 ② 표본(이온 수·시간원점)을 늘린다 "
               "③ 그래도 c 가 크면 그 온도를 Arrhenius 에서 뺀다")
         print("   ⚠ ③ 은 캠페인 규약(600/800/1000 3점)의 예외다 — 근거를 db 에 남길 것.")
-    elif not unmeasured:
-        print(f"✅ {len(files)}개 전부 확산 영역 — D/Ea 인용 가능.")
+    elif not unmeasured and not held:
+        print(f"✅ {len(files)}개 전부 D_inc plateau — D 인용 가능 "
+              f"(⚠ Ea 는 별개다: 온도별 상·기전 일치와 구간 Ea 양립을 Arrhenius 단계에서 본다).")
 
     if unmeasured:
         # ⛔ 못 잰 것과 통과한 것을 **한 줄로 합치지 않는다**. 합치면 "3개 중 3개 확산"

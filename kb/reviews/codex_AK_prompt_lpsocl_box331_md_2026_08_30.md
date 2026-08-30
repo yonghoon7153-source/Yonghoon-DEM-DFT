@@ -8,6 +8,13 @@ tags: [ionic, md, lpsocl, box331, arrhenius, estimand, finite-size]
 
 # 회신 AK — 던지기 전에 묻는다
 
+> **⛔ 정정 (2026-08-30, 회신 AK 접수 후).** 이 요청서에는 오류 세 개가 있다 —
+> ① 착수 근거 ①(β 게이트 미달)은 **이미 폐기된 문턱**이다 (kb/concepts/beta-gate.md §7-5)
+> ② §3 의 "1 : 1 : 5 종횡비가 |Daa−Dbb| 를 설명한다" 는 **철회** (a≈b 라 긴 c 는 a·b 를 구별 못 한다)
+> ③ B 안 비용표의 b2o3 는 **128원자**라 3×3×1 이 1,152원자다 — "19일" 은 과소추정.
+> 접수·정정 전문: `kb/reviews/codex_AK_reply_lpsocl_box331_md_2026_08_30.md`
+
+
 **던지지 않았다.** GPU 는 비어 있고 명령도 준비돼 있지만, 우리 규율(`kb/templates/estimand_card.md`)
 이 *"새 물리량을 계산하기 전에 카드를 채우고 §1–3 을 리뷰에 보낸다"* 라서 먼저 묻는다.
 
