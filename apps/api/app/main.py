@@ -28,6 +28,7 @@ from fastapi.responses import (  # noqa: E402
     StreamingResponse,
 )
 from fastapi.staticfiles import StaticFiles  # noqa: E402
+from sqlalchemy.exc import OperationalError  # noqa: E402
 
 from wrdkit import __version__ as wrdkit_version  # noqa: E402
 from wrdkit.composition import Role  # noqa: E402
@@ -100,6 +101,42 @@ async def _validation_error(request, exc: RequestValidationError):
 
     return JSONResponse(status_code=422,
                         content={"detail": clean(jsonable_encoder(exc.errors()))})
+
+
+#: 저장 장치가 사라진 것을 **저장 장치가 사라졌다고** 말한다.
+#:
+#: 실측 2026-08-30: 데이터 폴더를 둔 외장하드를 뽑았다 끼웠더니 돌던 서버가
+#: 죽은 마운트를 계속 쥐고 있었고, 화면에는 `500 Internal Server Error` 만
+#: 떴다.  그 한 줄로는 무엇이 잘못됐는지도, 데이터가 남아 있는지도 알 수 없다 —
+#: 실제로 "초기화된 건가" 를 먼저 물었다.  §0.4 위반이다: 우리는 이유를 안다.
+#:
+#: **원인을 아는 것만 원인이라고 적는다.**  sqlite 가 장치·파일 이야기를 하면
+#: 데이터 폴더를 짚고, 아니면(잠김·스키마 등) 그냥 sqlite 가 한 말을 그대로
+#: 옮긴다.  추측한 처방을 지어내지 않는다.
+_STORAGE_GONE = re.compile(
+    r"disk i/o error|unable to open database file|input/output error"
+    r"|no such file or directory|stale file handle|attempt to write a readonly",
+    re.IGNORECASE,
+)
+
+
+@app.exception_handler(OperationalError)
+async def _storage_unreadable(request, exc: OperationalError):
+    """503 with a sentence, instead of a bare 500."""
+    said = str(getattr(exc, "orig", None) or exc).strip().splitlines()[0][:200]
+    if _STORAGE_GONE.search(said):
+        detail = (
+            f"데이터 폴더를 읽지 못했습니다 — {settings.data_dir} "
+            f"(외장하드가 빠졌거나 마운트가 죽었을 수 있습니다). "
+            f"터미널에서 `bml data` 로 확인한 뒤 `bml` 로 다시 띄우세요. "
+            f"데이터는 지워지지 않았습니다. [{said}]"
+        )
+    else:
+        detail = f"저장소를 읽지 못했습니다 — {said}"
+    # 로그에도 남긴다.  화면에 한 줄이 떠도 `bml logs` 에 아무것도 없으면
+    # 뒤늦게 원인을 찾을 근거가 사라진다.
+    print(f"storage error on {request.url.path}: {said}", file=sys.stderr, flush=True)
+    return JSONResponse(status_code=503, content={"detail": detail})
 
 
 @app.middleware("http")

@@ -1346,6 +1346,17 @@ path_is_mounted() {
     /proc/mounts 2>/dev/null
 }
 
+#: 이 드라이브를 **지금 쓸 수 있는가.**
+#:
+#: `/proc/mounts` 에 줄이 있는 것과 그 마운트가 살아 있는 것은 다르다.
+#: 외장하드를 뽑으면 줄은 그대로 남고 그 경로는 stat 조차 안 된다 —
+#: 실측 2026-08-30: `/mnt/d` 줄이 셋 남아 있는데 `[ -d /mnt/d ]` 는 거짓이었다.
+#: 그때 예전 코드는 `path_is_mounted` 만 보고 "붙어 있다" 로 세었고, 그래서
+#: "D: 를 붙이세요" 대신 **"경로를 다시 보세요"** 라고 했다 — 경로는 멀쩡한데.
+drive_is_live() {
+  path_is_mounted "$1" && [ -d "$1" ]
+}
+
 #: 지금 붙어 있는 Windows 드라이브들 (`/mnt/c /mnt/d` 꼴).
 #:
 #: 예전에는 `/mnt` 아래 폴더를 전부 찍었다.  그러면 `/mnt/wslg /mnt/wsl` 이 섞여
@@ -1390,15 +1401,43 @@ data_dir_help() {
   #: 통과하고, 워크벤치는 셀 0개로 멀쩡히 뜨고, 거기 올린 `.wrd` 는 드라이브를
   #: 꽂아도 안 보이는 곳에 쌓인다 — 이 가드가 막으려던 사고를, 가드의 안내문이
   #: 시키고 있었다.
-  if is_wsl && mount="$(wsl_drive_mount_of "$want")" && ! path_is_mounted "$mount"; then
+  if is_wsl && mount="$(wsl_drive_mount_of "$want")" && ! drive_is_live "$mount"; then
     letter="$(printf '%s' "${mount#/mnt/}" | tr '[:lower:]' '[:upper:]')"
+
+    #: **죽은 마운트가 남아 있는 경우를 또 한 번 가른다.**  뽑았다 다시 꽂으면
+    #: 흔한 모양이다: 줄은 `/proc/mounts` 에 남았는데 그 경로는 읽히지 않는다.
+    #: 여기서 `mount` 만 다시 하면 죽은 것 **위에 얹힌다** (실측: 그렇게 세 겹이
+    #: 쌓였고, 맨 위 것에는 uid/gid 가 없어 DB 가 root 소유로 보였다).
+    #: 그래서 이때는 떼는 것이 먼저다.
+    if path_is_mounted "$mount"; then
+      say ""
+      say "  ${B}${letter}: 마운트가 죽어 있습니다.${OFF} ${DIM}(/proc/mounts 에 줄은 남았는데 그 경로를 못 읽습니다)${OFF}"
+      say "  ${DIM}외장하드를 뽑으면 이렇게 됩니다.  다시 꽂아도 그 마운트는 안 살아납니다.${OFF}"
+      say ""
+      say "  ${B}떼고 다시 붙이기${OFF}"
+      say "    ${GREEN}bml stop${OFF}"
+      say "    ${GREEN}sudo umount ${mount}${OFF}   ${DIM}— '없다' 고 할 때까지 (여러 겹일 수 있습니다)${OFF}"
+      say "    ${GREEN}grep ${mount} /proc/mounts${OFF}   ${DIM}— 아무것도 안 나와야 합니다${OFF}"
+      say "    ${GREEN}sudo mount -t drvfs ${letter}: ${mount} -o uid=$(id -u),gid=$(id -g)${OFF}"
+      say "    ${GREEN}bml${OFF}"
+      say ""
+      say "  ${DIM}떼지 않고 mount 만 하면 죽은 것 위에 얹힙니다 — 그러면 소유자가 root 로 보여${OFF}"
+      say "  ${DIM}DB 를 못 쓸 수 있습니다.  안 떨어지면${OFF} ${GREEN}sudo umount -l ${mount}${OFF}${DIM}.${OFF}"
+      say "  ${DIM}서버도 반드시 다시 띄워야 합니다 — 돌던 서버는 죽은 손잡이를 계속 쥡니다.${OFF}"
+      say "  ${DIM}DB 는 그대로 있습니다. 지우지 마세요.${OFF}"
+      return 0
+    fi
+
     say ""
     say "  ${B}${letter}: 가 WSL 에 안 붙어 있습니다.${OFF} ${DIM}(폴더가 없는 것이 아니라, 드라이브가 없습니다)${OFF}"
     say "  ${DIM}WSL2 는 VM 이 뜰 때 붙어 있던 드라이브만 자동으로 붙입니다.  외장 SSD 를${OFF}"
     say "  ${DIM}나중에 꽂으면 Windows 탐색기에는 보이는데 여기서는 안 보입니다.${OFF}"
     say ""
-    say "  ${B}지금 붙이기${OFF}   ${GREEN}sudo mkdir -p ${mount} && sudo mount -t drvfs ${letter}: ${mount}${OFF}"
-    say "  ${B}재부팅해도${OFF}     ${GREEN}echo '${letter}: ${mount} drvfs defaults,nofail 0 0' | sudo tee -a /etc/fstab${OFF}"
+    #: `-o uid=,gid=` 를 빼면 안 된다.  WSL 이 스스로 붙일 때는 이것을 넣지만
+    #: 손으로 붙이면 기본이 root 라, 그 위의 DB 가 root 소유로 보이고 워크벤치가
+    #: 쓰지 못한다 (실측 2026-08-30).
+    say "  ${B}지금 붙이기${OFF}   ${GREEN}sudo mkdir -p ${mount} && sudo mount -t drvfs ${letter}: ${mount} -o uid=$(id -u),gid=$(id -g)${OFF}"
+    say "  ${B}재부팅해도${OFF}     ${GREEN}echo '${letter}: ${mount} drvfs defaults,nofail,uid=$(id -u),gid=$(id -g) 0 0' | sudo tee -a /etc/fstab${OFF}"
     say ""
     say "  ${RED}mkdir -p \"$want\" 는 하지 마세요${OFF} ${DIM}— ${mount} 가 마운트가 아니라, 그 명령은${OFF}"
     say "  ${DIM}리눅스 쪽에 같은 이름의 빈 폴더를 만듭니다.  그 뒤로는 이 검사가 통과하고,${OFF}"

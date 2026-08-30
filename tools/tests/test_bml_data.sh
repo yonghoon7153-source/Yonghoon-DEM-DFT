@@ -72,6 +72,8 @@ wsl_mounted_drives() { printf '/mnt/c'; }
 out="$(data_dir_help /mnt/d/bml-data 2>&1)"
 check "드라이브가 없다고 말한다"        "$(has 'D: 가 WSL 에 안 붙어' "$out")"  "yes"
 check "붙이는 명령을 준다"              "$(has 'mount -t drvfs D: /mnt/d' "$out")" "yes"
+# uid/gid 를 빼면 root 소유로 붙어서 DB 를 못 쓴다 (실측 2026-08-30).
+check "소유자 옵션까지 준다"            "$(has "uid=$(id -u),gid=$(id -g)" "$out")" "yes"
 check "재부팅 후에도 유지하는 줄을 준다" "$(has '/etc/fstab' "$out")"           "yes"
 # 이 시험이 이 파일의 이유다.  `mkdir` 라는 글자는 나온다 — "하지 마세요" 로.
 # 못 박는 것은 **그것을 하라고 내놓는 줄**이 없다는 것이다.
@@ -79,6 +81,34 @@ check "만들라는 줄이 없다"              "$(has '이 자리가 맞다면'
 check "오히려 하지 말라고 말한다"       "$(has '는 하지 마세요' "$out")"        "yes"
 check "왜 안 되는지도 말한다"           "$(has '빈 폴더를 만듭니다' "$out")"    "yes"
 check "지금 붙어 있는 것을 보여 준다"   "$(has '/mnt/c' "$out")"                "yes"
+
+echo
+echo "마운트 줄은 남았는데 그 마운트가 죽었을 때"
+# 실측 2026-08-30 (DESKTOP-IK8J81H): 외장하드를 뽑았다 끼우니 /proc/mounts 에
+# `/mnt/d` 줄이 셋 남아 있는데 `[ -d /mnt/d ]` 는 거짓이었다.  `path_is_mounted`
+# 만 보던 예전 코드는 그것을 "붙어 있다" 로 세고 **"경로를 다시 보세요"** 라고
+# 했다 — 경로는 멀쩡한데.  그 자리를 여기서 못 박는다.
+is_wsl() { return 0; }
+path_is_mounted() { return 0; }   # 줄은 남아 있다
+wsl_mounted_drives() { printf '/mnt/c'; }
+# /mnt/d 는 이 컨테이너에 없다 → [ -d ] 가 거짓 = 죽은 마운트.
+check "죽은 마운트는 살아 있는 것이 아니다" \
+      "$(drive_is_live /mnt/d && printf yes || printf no)" "no"
+out="$(data_dir_help /mnt/d/bml-data 2>&1)"
+check "죽었다고 말한다"                 "$(has '마운트가 죽어 있습니다' "$out")"   "yes"
+check "경로를 의심하라고 하지 않는다"   "$(has '경로를 다시 보세요' "$out")"       "no"
+# 떼는 것이 먼저다.  mount 만 다시 하면 죽은 것 위에 얹히고, 그러면 소유자가
+# root 로 보여 DB 를 못 쓴다 (실측: 그렇게 세 겹이 쌓였다).
+check "umount 를 먼저 시킨다"           "$(has 'sudo umount /mnt/d' "$out")"       "yes"
+check "떨어졌는지 확인까지 시킨다"      "$(has 'grep /mnt/d /proc/mounts' "$out")" "yes"
+check "여러 겹일 수 있다고 말한다"      "$(has '여러 겹' "$out")"                  "yes"
+check "그 다음에 붙인다"                "$(has 'mount -t drvfs D: /mnt/d' "$out")" "yes"
+check "소유자 옵션을 빠뜨리지 않는다"   "$(has "uid=$(id -u),gid=$(id -g)" "$out")" "yes"
+# 돌던 서버는 죽은 손잡이를 계속 쥔다 — 이 말이 없으면 드라이브만 고치고
+# 화면은 그대로 500 이라 "안 고쳐졌다" 가 된다.
+check "서버도 다시 띄우라고 한다"       "$(has '다시 띄워야' "$out")"              "yes"
+check "DB 를 지우라고 하지 않는다"      "$(has 'rm ' "$out")"                      "no"
+check "만들라는 줄이 없다"              "$(has '이 자리가 맞다면' "$out")"         "no"
 
 echo
 echo "드라이브는 붙어 있고 폴더만 없을 때"
