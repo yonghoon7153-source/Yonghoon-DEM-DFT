@@ -19,7 +19,13 @@
 
     python3 tools/doping/axis_corr_csv.py
     python3 tools/doping/axis_corr_csv.py --csv <경로> --min_n 50
+    python3 tools/doping/axis_corr_csv.py --pareto
+    python3 tools/doping/axis_corr_csv.py --stability      # 축이 자기 자신을 재현하나
     python3 tools/doping/axis_corr_csv.py --selftest
+
+⭐ `--stability` (2026-08-30) — front·사전등록이 서 있는 축들이 **같은 구조를 다시 쟀을 때
+   같은 순위를 주는지** 본다. 새 계산 0. 이걸 안 재고 사전등록 `|ρ| ≥ 0.35` 를 시험하면
+   실패 가지가 물리가 아니라 재평가 잡음으로 켜질 수 있다.
 """
 from __future__ import annotations
 
@@ -553,6 +559,73 @@ def _selftest():
     say(pr.get("frozen_at") and pr.get("predictor") == "li_mobility_score",
         "[사전등록] 언제·무엇으로 얼렸는지 남는다")
 
+    # ── 재평가 안정성 (2026-08-30) — **음성 경로가 핵심**이다 ──────────────────
+    say(replicate_label("Ag2O_x050_cLi24gaS4a_s03") == "x050", "[안정성] x 라벨을 뽑는다")
+    say(seed_label("Ag2O_x050_cLi24gaS4a_s03") == "s03", "[안정성] 시드 조각을 뽑는다")
+    say(replicate_label("LaF3_s00") is None,
+        "[안정성·음성] x 라벨이 없으면 None (아무 조각이나 x 로 읽지 않는다)")
+    say(seed_label("Ag2O_x050_cLi24ga") is None,
+        "[안정성·음성] 끝이 sNN 이 아니면 None")
+
+    def _mk(i, x, s, bvs, g, pu, mvf, de="-1.0"):
+        return {"name": f"D{i}_{x}_site_{s}", "composition_A": str(i),
+                "cation_site": "c", "anion_site": "a", "charge_compensation": "cc",
+                "bvs_li_proxy_score": str(bvs), "elastic_G_hill_GPa": str(g),
+                "elastic_pugh_GoverB": str(pu), "migration_volume_fraction": str(mvf),
+                "screen_de_per_atom": de}
+    SAX = [("bvs_li_proxy_score", "BVS", True), ("elastic_G_hill_GPa", "G", True),
+           ("elastic_pugh_GoverB", "Pugh", False),
+           ("migration_volume_fraction", "MVF", True)]
+    # ⓐ [양성] 세 재평가가 **완전히 같으면** ρ=1 · front Jaccard=1
+    R = []
+    for i in range(40):
+        for x in X_LABELS:
+            R.append(_mk(i, x, "s00", 0.5 + i / 100, 10 + i, 0.6 + i / 200, 0.1 + i / 500))
+    st1 = stability(R, axes=SAX)
+    say(st1["info"]["n_triplets"] == 40, f"[안정성] 삼중쌍 40개 ({st1['info']['n_triplets']})")
+    say(all(abs(v["mean"] - 1.0) < 1e-9 for v in st1["retest"].values()),
+        "ⓐ 재평가가 같으면 모든 축 ρ=1")
+    say(all(j == 1.0 for j in st1["jaccard"].values()), "ⓐ front 도 완전히 같다 (Jaccard 1)")
+    # ⓑ [음성] 재평가가 **뒤집히면** ρ<0 이어야 한다 — '안정' 으로 읽으면 안 된다
+    R2 = []
+    for i in range(40):
+        R2.append(_mk(i, "x020", "s00", 0.5 + i / 100, 10 + i, 0.6, 0.1))
+        R2.append(_mk(i, "x050", "s00", 0.5 + i / 100, 10 + i, 0.6, 0.1))
+        R2.append(_mk(i, "x100", "s00", 0.5 + (39 - i) / 100, 10 + i, 0.6, 0.1))
+    st2 = stability(R2, axes=SAX)
+    say(st2["retest"]["bvs_li_proxy_score"]["mean"] < 0.4,
+        f"ⓑ [음성] 한 재평가가 역순이면 평균 ρ 가 내려간다 "
+        f"({st2['retest']['bvs_li_proxy_score']['mean']:+.3f})")
+    say(any(r < -0.9 for r in st2["retest"]["bvs_li_proxy_score"]["pairs"]),
+        "ⓑ [음성] 역순 쌍이 ρ≈−1 로 **그대로 보인다** (평균에 숨지 않는다)")
+    # ⓒ [음성] 시드가 섞인 삼중쌍은 '재측정' 이 아니다 → 세지 않는다
+    R3 = []
+    for i in range(40):
+        R3.append(_mk(i, "x020", "s00", 0.5, 10, 0.6, 0.1))
+        R3.append(_mk(i, "x050", "s00", 0.5, 10, 0.6, 0.1))
+        R3.append(_mk(i, "x100", "s01", 0.5, 10, 0.6, 0.1))   # ← 다른 시드
+    st3 = stability(R3, axes=SAX)
+    say(st3["info"]["n_triplets"] == 0 and st3["info"]["n_mixed_seed"] == 40,
+        f"ⓒ [음성] 시드가 섞이면 삼중쌍이 아니다 "
+        f"(삼중쌍 {st3['info']['n_triplets']} · 시드섞임 {st3['info']['n_mixed_seed']})")
+    # ⓓ [음성] 에너지가 다르면 '같은 구조' 전제가 깨진다 → strict 에서 제외
+    R4 = []
+    for i in range(40):
+        R4.append(_mk(i, "x020", "s00", 0.5, 10, 0.6, 0.1, de="-1.000000"))
+        R4.append(_mk(i, "x050", "s00", 0.5, 10, 0.6, 0.1, de="-1.000001"))
+        R4.append(_mk(i, "x100", "s00", 0.5, 10, 0.6, 0.1, de="-1.500000"))  # ← 딴 구조
+    say(stability(R4, axes=SAX)["info"]["n_triplets"] == 0,
+        "ⓓ [음성] 에너지가 어긋난 삼중쌍은 strict 에서 빠진다")
+    say(stability(R4, axes=SAX, strict=False)["info"]["n_triplets"] == 40,
+        "ⓓ --loose_identity 로는 들어온다 (진단용 — 구조 동일 물증 없음)")
+    # ⓔ [음성] 삼중쌍이 MIN_N 미만이면 **판정하지 않는다** (없는 판정력을 쓰지 않는다)
+    say(stability(R[:3 * (MIN_N - 1)], axes=SAX)["retest"] == {},
+        f"ⓔ [음성] 삼중쌍 {MIN_N} 미만이면 축별 ρ 를 내지 않는다")
+    # ⓕ [음성] **빈 축을 need 에 넣으면 삼중쌍이 0** — 실제로 2026-08-30 에 그렇게 됐다
+    SAX_EMPTY = SAX + [("D_rel_vs_host", "D비", True)]
+    say(stability(R, axes=SAX_EMPTY)["info"]["n_triplets"] == 40,
+        "ⓕ [음성] 한 줄도 없는 축은 자동으로 빠진다 (안 빼면 삼중쌍이 0 이 된다)")
+
     print("  " + ("✅ selftest 통과" if ok else "⛔ selftest 실패"))
     return 0 if ok else 1
 
@@ -617,6 +690,174 @@ def print_pareto(front, scored, ax, total):
     print("   ⛔ 이건 **집합이지 순위가 아니다.** front 안의 선택은 사람이 한다.")
 
 
+# ── 재평가 안정성 (2026-08-30) ────────────────────────────────────────────────
+#: 같은 설계 안에서 **동일 구조를 다시 잰** 복제본을 가르는 이름 조각.
+#:   2026-08-28 판정: `n_units = max(1, round(n_fu×x)) = 1` 이라 x020/x050/x100 은
+#:   **같은 조성의 다른 이름**이다 (concentration 열이 3,615행 전부 0.25).
+#:   시드 s00–s04 는 도판트 **배치**가 달라지지만 x 라벨은 그렇지 않다.
+#:   ⇒ 한 시드 안의 x 세 개는 다른 설계가 아니라 **같은 구조의 재측정**이고,
+#:      그 셋이 얼마나 갈리는지가 곧 그 축의 **재평가 잡음**이다.
+X_LABELS = ("x020", "x050", "x100")
+
+#: 구조 동일성의 물증으로 쓰는 축 — 같은 구조면 에너지는 같은 값이 나와야 한다.
+#:   ⚠ 이 축은 `INVALID_AXES` 다 (2026-08-19: 기준이 미수렴이라 **절대값 인용 금지**).
+#:     여기서는 값을 인용하지 않고 **같은 구조가 같은 숫자를 주는지**만 본다 — 자기일치
+#:     검사라서 기준의 수렴 여부와 무관하다. 채점 축으로는 절대 쓰지 않는다.
+IDENTITY_PROBE = "screen_de_per_atom"
+#: 이 상대편차 안이면 '같은 구조' 로 본다 (실측 중앙값은 1e-4 급).
+IDENTITY_TOL = 1e-4
+
+
+def replicate_label(name):
+    """이름에서 가짜 x 라벨을 뽑는다 (`Ag2O_x050_cLi24gaS4a_s03` → `x050`). 없으면 None."""
+    for p in str(name).split("_"):
+        if p.startswith("x") and p[1:].isdigit():
+            return p
+    return None
+
+
+def seed_label(name):
+    """이름 끝의 시드 조각 (`..._s03` → `s03`). 없으면 None."""
+    tail = str(name).rsplit("_", 1)[-1]
+    return tail if tail[:1] == "s" and tail[1:].isdigit() else None
+
+
+def retest_triplets(rows, need, strict=True):
+    """**같은 구조를 세 번 잰** 삼중쌍만 고른다. → (triplets, info)
+
+    triplets 는 [{x라벨: 행}] 이고, 각 삼중쌍은 세 조건을 다 만족한다:
+      ① 같은 설계 (design_key — 조성 + 자리 + 전하보상)
+      ② **같은 시드** — 시드가 섞이면 배치가 달라져 '재측정' 이 아니다
+      ③ `need` 축이 세 행 모두 차 있다
+    `strict` 면 ④ `IDENTITY_PROBE` 가 세 행에서 `IDENTITY_TOL` 안 — 즉 에너지가
+    같은 값이라 **정말 같은 이완 구조**라는 물증이 있는 것만 남긴다.
+
+    ⛔ 이 함수가 못 하는 것
+      · 원자 매핑 해시를 보지 않는다. 구조 동일성은 **에너지 일치라는 정황**이지 증명이 아니다.
+      · 시드끼리는 비교하지 않는다 (s00 vs s01 은 배치가 달라 재측정이 아니다).
+      · 삼중쌍이 안 되는 설계를 '일치' 로 세지 않는다 — 그냥 뺀다 (분모에서도 뺀다).
+    """
+    comp_cols = [c for c in (rows[0] if rows else {}) if c.startswith("composition_")]
+    g = {}
+    for r in rows:
+        g.setdefault(design_key(r, comp_cols), []).append(r)
+    trip, n_mixed_seed, n_partial, n_not_identical = [], 0, 0, 0
+    for _k, rs in g.items():
+        got = [r for r in rs if all(_f(r.get(c)) is not None for c in need)]
+        by = {}
+        for r in got:
+            x, s = replicate_label(r.get("name", "")), seed_label(r.get("name", ""))
+            by.setdefault(s, {})[x] = r
+        full = [d for d in by.values() if set(d) == set(X_LABELS)]
+        if not full:
+            if got:
+                if len(got) >= len(X_LABELS):
+                    n_mixed_seed += 1
+                else:
+                    n_partial += 1
+            continue
+        d = full[0]
+        if strict:
+            v = [_f(d[x].get(IDENTITY_PROBE)) for x in X_LABELS]
+            if any(t is None for t in v) or _mean(v) == 0 or \
+               (max(v) - min(v)) / abs(_mean(v)) > IDENTITY_TOL:
+                n_not_identical += 1
+                continue
+        trip.append(d)
+    return trip, {"n_designs": len(g), "n_triplets": len(trip),
+                  "n_mixed_seed": n_mixed_seed, "n_partial": n_partial,
+                  "n_not_identical": n_not_identical, "strict": strict}
+
+
+def _mean(xs):
+    return sum(xs) / len(xs) if xs else 0.0
+
+
+def stability(rows, axes=None, strict=True):
+    """재평가 안정성 — **같은 구조를 세 번 잰 값이 같은 순위를 주는가.** → dict
+
+    왜 (2026-08-30): Pareto front 39설계와 사전등록 순위가 이 축들 위에 서 있는데,
+    그 축들이 자기 자신을 재현하는지는 **한 번도 안 쟀다.** 재현 못 하는 예측기로
+    사전등록 `|ρ| ≥ 0.35` 를 시험하면 실패 가지(|ρ| < 0.2 ⇒ '이동도 축 근거 소멸')가
+    물리가 아니라 잡음으로 켜진다.
+
+    ⛔ 못 하는 것
+      · **어느 축이 옳은지 말하지 않는다.** 재현성이 낮다 ≠ 값이 틀렸다.
+      · 잡음의 **원인**을 말하지 않는다 (후처리 RNG · 이완 경로 · 파싱 — 못 가른다).
+      · 시드 간(배치) 변동은 안 본다 — 그건 다른 질문이다.
+    """
+    ax = axes or [(k, lab, hi) for k, lab, hi in AXES
+                  if k not in DERIVED and k != "li_mobility_score"]
+    ax, _dropped = valid_axes(ax, False)
+    # ⛔ 2026-08-30 — **빈 축을 남기면 삼중쌍이 0 이 된다.** `D_rel_vs_host` 는 아직
+    #   한 줄도 없어서(측정 전이다) `need` 에 넣으면 모든 설계가 탈락한다.
+    #   main() 의 Pareto 경로가 이미 같은 함정을 막고 있었는데 여기서 또 갈릴 뻔했다.
+    fill = axis_fill(rows, ax)
+    ax = [a for a in ax if fill[a[0]] > 0]
+    need = [k for k, _l, _h in ax]
+    trip, info = retest_triplets(rows, need, strict=strict)
+    info["dropped_empty"] = [k for k, _l, _h in (axes or []) or [] if fill.get(k) == 0]
+    out = {"info": info, "axes": [(k, l) for k, l, _h in ax], "retest": {}, "front": {}}
+    if len(trip) < MIN_N:
+        return out
+    for k, lab, _hi in ax + [("li_mobility_score", "Li 이동도(합성)", True)]:
+        vals = {x: [_f(d[x].get(k)) for d in trip] for x in X_LABELS}
+        if any(v is None for xs in vals.values() for v in xs):
+            continue
+        rr = [spearman(vals[a], vals[b]) for a, b in
+              (("x020", "x050"), ("x020", "x100"), ("x050", "x100"))]
+        rr = [r for r in rr if r is not None]
+        out["retest"][k] = {"label": lab, "pairs": rr,
+                            "mean": (sum(rr) / len(rr)) if rr else None}
+    fronts = {}
+    for x in X_LABELS:
+        fr, sc, _a = pareto([d[x] for d in trip], axes=ax)
+        fronts[x] = {i for i, d in enumerate(trip) if d[x] in fr}
+        out["front"][x] = len(fronts[x])
+    med = []
+    for i, d in enumerate(trip):
+        base = dict(d["x020"])
+        for k, _l, _h in ax:
+            base[k] = _median([_f(d[x].get(k)) for x in X_LABELS])
+        med.append(base)
+    fr, _sc, _a = pareto(med, axes=ax)
+    fronts["median"] = {i for i, r in enumerate(med) if r in fr}
+    out["front"]["median"] = len(fronts["median"])
+    out["jaccard"] = {}
+    for a, b in (("x020", "x050"), ("x020", "x100"), ("x050", "x100"),
+                 ("median", "x020"), ("median", "x050"), ("median", "x100")):
+        u = fronts[a] | fronts[b]
+        out["jaccard"][f"{a}|{b}"] = (len(fronts[a] & fronts[b]) / len(u)) if u else None
+    return out
+
+
+def print_stability(s):
+    i = s["info"]
+    print("\n" + "=" * 78)
+    print("■ 재평가 안정성 — **같은 구조를 세 번 잰 값이 같은 순위를 주나**")
+    print(f"   삼중쌍 **{i['n_triplets']}개** / {i['n_designs']}설계 "
+          f"(같은 시드 안의 x020·x050·x100"
+          + (f" · {IDENTITY_PROBE} 일치 {IDENTITY_TOL:g} 이내" if i["strict"] else "") + ")")
+    print(f"   제외: 시드 섞임 {i['n_mixed_seed']} · 축 결측 {i['n_partial']} · "
+          f"에너지 불일치 {i['n_not_identical']}")
+    if not s["retest"]:
+        print(f"   ⛔ 삼중쌍이 {MIN_N}개 미만이거나 축이 비어 판정하지 않는다.")
+        return
+    print("\n   축별 재검사 상관 (ρ=1 이면 완전 재현):")
+    for k, v in s["retest"].items():
+        mark = "🔴" if v["mean"] is not None and abs(v["mean"]) < 0.5 else "  "
+        print(f"     {mark} {v['label'][:14]:14} ρ = "
+              + " / ".join(f"{r:+.3f}" for r in v["pairs"])
+              + f"   평균 **{v['mean']:+.3f}**")
+    print("\n   같은 설계 집합에서 **재평가마다 다시 뽑은 Pareto front**:")
+    print("     크기: " + " · ".join(f"{k} {v}" for k, v in s["front"].items()))
+    print("     겹침(Jaccard): " + " · ".join(
+        f"{k} {v:.2f}" for k, v in s["jaccard"].items() if v is not None))
+    print("\n   ⛔ 이 표는 **어느 값이 옳은지 말하지 않는다.** 축이 자기 자신을 얼마나"
+          "\n      재현하는지만 잰다 — 그게 낮으면 그 축으로 세운 순위·front·사전등록의"
+          "\n      판정력이 그만큼 깎인다 (감쇠 상한 = √(재검사 신뢰도)).")
+
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__,
                                  formatter_class=argparse.RawDescriptionHelpFormatter)
@@ -629,6 +870,12 @@ def main():
     ap.add_argument("--no_group", action="store_true",
                     help="⛔ 행을 **설계로 묶지 않고** 그대로 쓴다. 표본이 15배 부풀려진다 "
                          "— 진단 목적일 때만")
+    ap.add_argument("--stability", action="store_true",
+                    help="**같은 구조를 세 번 잰** 값이 같은 순위를 주는지 본다 "
+                         "(재검사 상관 + front 재추출). 새 계산 0 — 있는 CSV 만 읽는다")
+    ap.add_argument("--loose_identity", action="store_true",
+                    help="--stability 에서 에너지 일치 조건을 끈다 "
+                         "(구조 동일 물증 없이 삼중쌍을 쓴다 — 진단용)")
     ap.add_argument("--allow_invalid_axes", action="store_true",
                     help="⛔ 무효 판정된 축을 강제로 넣는다 (2026-08-19 판정을 무시)")
     ap.add_argument("--preregister", default=None, metavar="TARGETS_JSON",
@@ -642,6 +889,14 @@ def main():
         print(f"⛔ 없다: {a.csv}")
         return 2
     rows = load(a.csv)
+    if a.stability:
+        print_stability(stability(rows, strict=not a.loose_identity))
+        import hashlib
+        with open(a.csv, "rb") as f:
+            print(f"\n[provenance] csv={os.path.basename(a.csv)} "
+                  f"sha256:{hashlib.sha256(f.read()).hexdigest()[:16]} "
+                  f"strict_identity={not a.loose_identity}")
+        return 0
     if a.preregister:
         import hashlib
         import json as _json

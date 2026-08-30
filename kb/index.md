@@ -1,6 +1,6 @@
 # kb 카탈로그 (생성물 — 손으로 고치지 말 것)
 
-> `python3 tools/kb_wiki.py index` 가 만든다 · 2026-08-30 · managed-files: 303
+> `python3 tools/kb_wiki.py index` 가 만든다 · 2026-08-30 · managed-files: 304
 
 규칙: kb/SCHEMA.md · 열린 질문: kb/questions/ · 논지 카드: kb/syntheses/ · 원장: kb/open_items.md · 문헌: litdb/INDEX.md
 
@@ -170,7 +170,7 @@
 - `kb/results/vgcf_hbn_figure_plan.md` — VGCF/h-BN 원고 — 층수 연구를 어디에 둘 것인가 (2026-07-31 결정)
 - `kb/results/vgcf_hbn_gallery_mechanism_2026_07_30.md` — h-BN@VGCF — 209 meV 층수효과의 정체: confinement 확정 (2026-07-30)
 
-## reviews/ (59)
+## reviews/ (60)
 - `kb/reviews/ECERD2600097_review_notes.md` — 📝 리뷰 노트 — ECER-D-26-00097 (Fan 외, *Stability Issues in Sulfide-Based ASSB*)
 - `kb/reviews/codex_AA_prompt_stageA_v5_regate_2026_08_29.md` — Codex 재검토 요청 AA — 회신 Z 의 P0 8건 처리 후 Stage A v5 재게이트 ○미열람
 - `kb/reviews/codex_AB_prompt_stageA_v9_regate_2026_08_29.md` — Codex 재검토 요청 AB — 회신 AA 의 P0 5건 + Q2 처리, 그리고 자체검토에서 나온 넷 ○미열람
@@ -182,6 +182,7 @@
 - `kb/reviews/codex_AI_prompt_current_head_2026_08_30.md` — 회신 AI — 현재 HEAD 기준 재검토 + 비례성 판정 (AH 미회신 병합)
 - `kb/reviews/codex_AJ_prompt_c12_submit_2026_08_30.md` — 회신 AJ — C-12 구현 완료 + 선언된 이탈 하나(clean slab) + 발송 승인 요청
 - `kb/reviews/codex_AK_prompt_lpsocl_box331_md_2026_08_30.md` — 회신 AK — LPSOCl 3×3×1 MD 를 던지기 전에: estimand 와 범위
+- `kb/reviews/codex_AL_prompt_cascade_d_rel_2026_08_30.md` — 회신 AL — cascade 39설계 D_rel 을 던지기 전에: 예측기가 자기 자신을 재현 못 한다
 - `kb/reviews/codex_A_cascade_ml_2026_08_20.md` — 교차리뷰 A — cascade 파이프라인 + 머신러닝 (codex 작업지시서) ○미열람
 - `kb/reviews/codex_B_neb_md_tools_2026_08_20.md` — 교차리뷰 B — NEB · MD · 도구 (codex 작업지시서) ○미열람
 - `kb/reviews/codex_C_funnel_2026_08_20.md` — 교차리뷰 C v2.1 — cascade 깔때기는 잘 작동했나 (codex 2라운드 종료) ○미열람
