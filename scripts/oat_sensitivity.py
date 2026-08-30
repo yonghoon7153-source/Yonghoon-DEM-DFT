@@ -268,6 +268,60 @@ def _selftest():
     chk('★⑤ ε 를 4자리로 찍는다 (2자리 아님)', s == '10.0812' and len(s.split('.')[1]) == 4)
     chk('★⑤ plate_z 를 8자리로 찍는다', f'{0.00823721234:.8g}' == '0.0082372123')
 
+    # ── ⑥ collect() 를 **실제로** 돌린다 (규칙 J) ─────────────────────
+    #   ★ 이 절이 있는 이유: ①~⑤ 가 전부 통과하는데 프로덕션이 첫 줄에서 죽었다.
+    #     `heckel_analysis` import 가 collect() 안에 있어 selftest 가 한 번도 그 경로를
+    #     밟지 않았기 때문이다.  --help 생존(규칙 H)도 못 잡는다 — argparse 는 통과하고
+    #     import 는 그 뒤에 온다.  그래서 여기서 **엔트리포인트를 초소형 픽스처로 돌려**
+    #     지연 import·호출 규약(vol_and_lens 시그니처)까지 실행으로 확인한다.
+    td2 = tempfile.mkdtemp(prefix='oat_e2e_')
+
+    def mk_run(nm, step=10000, plate_z=0.02):
+        d = os.path.join(td2, nm)
+        os.makedirs(d, exist_ok=True)
+        ra, rb = 0.003, 0.0005
+        dist = ra + rb - 0.4 * rb                       # 겹치게 둔다 → V_lens > 0
+        with open(os.path.join(d, f'atom_{step}.liggghts'), 'w') as f:
+            f.write('ITEM: TIMESTEP\n0\nITEM: NUMBER OF ATOMS\n2\n'
+                    'ITEM: BOX BOUNDS pp pp ff\n0 0.05\n0 0.05\n-0.01 1\n'
+                    'ITEM: ATOMS id type x y z radius\n'
+                    f'1 1 0.02 0.02 0.01 {ra}\n'
+                    f'2 3 {0.02 + dist} 0.02 0.01 {rb}\n')
+        stl(os.path.join(d, f'mesh_{step}.stl'), plate_z)
+        cols = ['0'] * 26
+        cols[0:6] = ['0.02', '0.02', '0.01', str(0.02 + dist), '0.02', '0.01']
+        cols[6:9] = ['1', '2', '0']
+        cols[22] = str(0.4 * rb)
+        with open(os.path.join(d, f'contact_{step}.liggghts'), 'w') as f:
+            f.write('ITEM: TIMESTEP\n0\nITEM: ENTRIES c\n' + ' '.join(cols) + '\n')
+
+    mk_run('post_oat_cor0p2', plate_z=0.02)
+    mk_run('post_oat_cor0p4', plate_z=0.021)
+    mk_run('post_oat_base', plate_z=0.02)
+    try:
+        e2e, e2e_skip = collect(td2, 'post_*')
+        e2e_err = None
+    except Exception as _e:                              # noqa: BLE001 — 무엇이든 결함
+        e2e, e2e_skip, e2e_err = [], [], f'{type(_e).__name__}: {_e}'
+    chk(f'★⑥ collect() 가 끝까지 돈다 ({e2e_err})', e2e_err is None)
+    chk('★⑥ 3런을 다 읽는다 (조용히 건너뛰지 않는다)',
+        len(e2e) == 3 and not e2e_skip)
+    byn = {r['name']: r for r in e2e}
+    chk('⑥ 파라미터·값이 붙는다',
+        byn.get('post_oat_cor0p4', {}).get('param') == 'cor'
+        and byn.get('post_oat_cor0p4', {}).get('value') == 0.4)
+    chk('⑥ ε 가 유한하다',
+        all(math.isfinite(r['eps_union']) and math.isfinite(r['eps_sphere'])
+            for r in e2e))
+    chk('★⑥ V_lens > 0 (겹침을 실제로 잰다)',
+        all(r['V_lens'] > 0 for r in e2e))
+    chk('⑥ plate_z 가 런마다 다르게 실린다',
+        byn.get('post_oat_cor0p2', {}).get('plate_z') == 0.02
+        and byn.get('post_oat_cor0p4', {}).get('plate_z') == 0.021)
+    ax2 = axes(e2e)
+    chk('⑥ 축 집계까지 이어진다', 'cor' in ax2 and ax2['cor']['n'] == 2
+        and ax2['cor']['d_plate_z'] is not None)
+
     print(f'oat_sensitivity selftest: {ok}/{ok+len(fail)} PASS')
     for f_ in fail:
         print('  ✗', f_)
