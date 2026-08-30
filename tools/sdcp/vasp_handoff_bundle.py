@@ -4801,7 +4801,10 @@ def _readme_sp(man: Dict[str, Any], a, zcut: float, n_jobs: int,
     mc = man.get("magnetic_controls") or []
     ks = (man.get("kmesh_override") or {}).get("static") or KMESH["static"]
     kd = (man.get("kmesh_override") or {}).get("dense") or KMESH["dense"]
-    longest = 56          # h — C10 static→dense 사슬 (비용 모형 중앙 추정, ±2배)
+    # 🔴 종전엔 `longest = 56` 하드코딩이었다. `--cores` 를 바꿔도 이 수는 안 바뀌어서
+    #   README 가 "56시간 (256코어 기준)" 같은 **라벨과 숫자가 어긋난 문장**을 냈다.
+    #   MANIFEST 의 cost_frozen (같은 추정기·같은 코어 수)에서 가져온다.
+    longest = round((man.get("cost_frozen") or {}).get("longest_job_h") or 56)
     groups = "` · `".join(sorted({k.split("/")[0] for k in man["planned"]}))
     ph_line = " · ".join(f"{k} {v}" for k, v in sorted((by_ph or {}).items()))
     ncore_hint = "4"
@@ -5825,6 +5828,57 @@ def build_bundle(a, ledger: Optional[Dict[str, Any]] = None) -> Path:
     #   82 systems · 259 phase runs · relax 반송 · tier/pair 표. 이 함수의 주석이
     #   스스로 "문구 문제가 아니라 반송 계약 위반" 이라고 적어 둔 그 사고다.
     #   (2026-08-29 sdcp_stageA_v2·motifprobe_v2 가 그 상태로 만들어졌다.)
+    # ⚠ 비용 동결을 **README 보다 먼저** 한다 — README 의 '가장 긴 잡' 이
+    #   cost_frozen 에서 오기 때문이다. 순서가 뒤면 하드코딩 56h 로 되돌아가고,
+    #   그러면 --cores 를 바꿔도 라벨만 바뀐다 (외주 견적이 틀어진 원인).
+    # ── 비용을 MANIFEST 에 **동결**한다 (ZIP 만으로 재현되게) ────────────────
+    try:
+        sys.path.insert(0, str(Path(__file__).resolve().parent))
+        import vasp_cost_estimate as CE   # noqa: E402
+        _repo = Path(__file__).resolve().parents[2]
+        _base = CE.outcar_baseline(
+            str(_repo / "runs/sdcp_phaseB_vasp_v1_2026_08_08/slab/OUTCAR.gz")) \
+            or dict(CE.BASE)
+        _jh = []
+        for _jp in sorted(out.rglob("job.json")):
+            _m = json.loads(_jp.read_text())
+            _n = len(_m.get("magmom_poscar") or []) or sum(_m.get("counts") or [0]) or 222
+            _ni = CE.N_IONIC if _n > 60 else 25
+            _jh.append(sum(
+                CE.phase_hours(ph if ph in CE.ESTEP else "static", _n,
+                               (_m.get("kmesh") or {}).get(ph, "3 4 1"), _base,
+                               str(((_m.get("incar_expected") or {}).get(ph) or {})
+                                   .get("LREAL", ".TRUE.")).upper().startswith(".F"), _ni)
+                for ph in (_m.get("phases") or [])))
+        # 🔴 회신 AB/AE — `--cores` 가 **라벨만 바꾸고 숫자는 안 바꿨다.** _jh 는
+        #   추정기 기준선(48코어)의 시간이라, `--cores 256` 을 줘도 README·계약이
+        #   48코어 시간을 "256코어 기준" 이라고 적었다. 외주 견적이 여기서 틀어진다
+        #   (리뷰어가 14.7일로 읽은 이유). 실제 속도향상으로 나눈다.
+        _sp = CE.par_speedup(a.cores, _base.get("cores", 48), 7.2)
+        _jh = [h / _sp for h in _jh]
+        man["cost_frozen"] = {
+            "total_wall_h": round(sum(_jh), 1),
+            "core_h": round(sum(_jh) * a.cores),
+            "longest_job_h": round(max(_jh), 1) if _jh else None,
+            "cores_per_job": a.cores,
+            "par_speedup_vs_baseline": round(_sp, 2),
+            "⚠_속도향상": ("par_speedup 은 벤치마크가 아니라 두 구간 어림이다 (±50 %). "
+                        "잡 시간 자체도 모형이라 ±2배 — 곱하면 넓다"),
+            "makespan_d": {str(m): round(CE.schedule_makespan(_jh, m) / 24, 2)
+                           for m in (4, 8, 12, 20)},
+            "estimator": "tools/sdcp/vasp_cost_estimate.py",
+            # ⚠ 이건 hash 가 아니라 **경로**다. 이름을 그렇게 부르면 안 된다.
+            "estimator_baseline_source": _base.get("source"),
+            "estimator_baseline_sha256": (
+                hashlib.sha256(open(_base["source"], "rb").read()).hexdigest()
+                if isinstance(_base.get("source"), str)
+                and os.path.isfile(_base["source"]) else None),
+            "estimator_baseline_sec_per_estep": round(_base.get("sec_per_estep", 0), 4),
+            "repo_commit": man.get("repo_commit"),
+            "uncertainty": "±2배 (모형이지 벤치마크가 아니다)"}
+    except Exception as _e:
+        man["cost_frozen"] = {"error": f"{type(_e).__name__}: {_e}"}
+
     if a.single_point or a.closure:
         n_st = sum(1 for p in man["planned"].values()
                    if "static" in (p.get("phases") or []))
@@ -5889,43 +5943,6 @@ def build_bundle(a, ledger: Optional[Dict[str, Any]] = None) -> Path:
     if _noasm:
         sys.exit(f"⛔ POTCAR 조립기가 없는 잡 {len(_noasm)}개 — 제출 본문이 "
                  f"exit 127 로 죽는다: {_noasm[:5]}")
-    # ── 비용을 MANIFEST 에 **동결**한다 (ZIP 만으로 재현되게) ────────────────
-    try:
-        sys.path.insert(0, str(Path(__file__).resolve().parent))
-        import vasp_cost_estimate as CE   # noqa: E402
-        _repo = Path(__file__).resolve().parents[2]
-        _base = CE.outcar_baseline(
-            str(_repo / "runs/sdcp_phaseB_vasp_v1_2026_08_08/slab/OUTCAR.gz")) \
-            or dict(CE.BASE)
-        _jh = []
-        for _jp in sorted(out.rglob("job.json")):
-            _m = json.loads(_jp.read_text())
-            _n = len(_m.get("magmom_poscar") or []) or sum(_m.get("counts") or [0]) or 222
-            _ni = CE.N_IONIC if _n > 60 else 25
-            _jh.append(sum(
-                CE.phase_hours(ph if ph in CE.ESTEP else "static", _n,
-                               (_m.get("kmesh") or {}).get(ph, "3 4 1"), _base,
-                               str(((_m.get("incar_expected") or {}).get(ph) or {})
-                                   .get("LREAL", ".TRUE.")).upper().startswith(".F"), _ni)
-                for ph in (_m.get("phases") or [])))
-        man["cost_frozen"] = {
-            "total_wall_h": round(sum(_jh), 1),
-            "core_h": round(sum(_jh) * a.cores),
-            "longest_job_h": round(max(_jh), 1) if _jh else None,
-            "makespan_d": {str(m): round(CE.schedule_makespan(_jh, m) / 24, 2)
-                           for m in (4, 8, 12, 20)},
-            "estimator": "tools/sdcp/vasp_cost_estimate.py",
-            # ⚠ 이건 hash 가 아니라 **경로**다. 이름을 그렇게 부르면 안 된다.
-            "estimator_baseline_source": _base.get("source"),
-            "estimator_baseline_sha256": (
-                hashlib.sha256(open(_base["source"], "rb").read()).hexdigest()
-                if isinstance(_base.get("source"), str)
-                and os.path.isfile(_base["source"]) else None),
-            "estimator_baseline_sec_per_estep": round(_base.get("sec_per_estep", 0), 4),
-            "repo_commit": man.get("repo_commit"),
-            "uncertainty": "±2배 (모형이지 벤치마크가 아니다)"}
-    except Exception as _e:
-        man["cost_frozen"] = {"error": f"{type(_e).__name__}: {_e}"}
     man["files_sha256"] = files
 
     # 번들이 **자기가 어떻게 만들어졌는지**를 담는다. wave1 은 이게 없어서
@@ -6685,6 +6702,26 @@ def selftest() -> int:
             % (_mfh.get("job_census") or {}).get("총잡수"))
         chk("Edisp" in str(_mfh.get("d3_off_note", "")),
             "⛔음성: 쌍둥이가 없으면 manifest 가 **C3 를 Edisp 로 낸다**고 적는다")
+        # ⛔ 음성 (회신 AE): `--cores` 가 **숫자를 실제로 바꾸는가**. 종전엔 라벨만
+        #   바뀌어 48코어 시간을 "256코어 기준" 이라 적었고, 외주 견적이 3.8일이
+        #   아니라 15일로 읽혔다.
+        a_c48 = argparse.Namespace(**{**vars(a_fh), "out": str(td / "b_c48"),
+                                      "cores": 48})
+        a_c256 = argparse.Namespace(**{**vars(a_fh), "out": str(td / "b_c256"),
+                                       "cores": 256})
+        build_bundle(a_c48, ledger=led); build_bundle(a_c256, ledger=led)
+        _m48 = json.load(open(Path(str(td)) / "b_c48" / "MANIFEST.json"))["cost_frozen"]
+        _m256 = json.load(open(Path(str(td)) / "b_c256" / "MANIFEST.json"))["cost_frozen"]
+        chk(_m256.get("longest_job_h") is not None
+            and _m48.get("longest_job_h") is not None
+            and _m256["longest_job_h"] < _m48["longest_job_h"],
+            "⛔음성: --cores 256 이 --cores 48 보다 **잡 시간이 짧다** "
+            "(라벨만 바뀌면 같다) · 48→%s h · 256→%s h"
+            % (_m48.get("longest_job_h"), _m256.get("longest_job_h")))
+        _r256 = (Path(str(td)) / "b_c256" / "README_REQUEST.md").read_text()
+        chk(str(round(_m256["longest_job_h"])) in _r256 and "256코어" in _r256,
+            "⛔음성: README 의 '가장 긴 잡' 이 그 코어 수의 추정과 **같은 수**다 "
+            "(종전엔 하드코딩 56h 이 어느 코어 수에서든 찍혔다)")
         # ★ 회신 AB P0-1 — **생산 생성기가 만든 실물**에 입력 preflight 를 건다.
         #   v9 는 해시·census·selftest 를 다 통과하고도 40잡 중 36잡이
         #   OUTCAR 오기 전에 막혔다. 그 결함은 해시로 못 잡는다.
