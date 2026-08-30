@@ -58,6 +58,25 @@ def sh(cmd):
         return ""
 
 
+class Alive(str):
+    """`alive()` 의 반환형 — **찍으면 'ALIVE'/'-' 이고, 조건에 쓰면 옳게 동작한다.**
+
+    🔴 2026-08-30 실측 사고: `alive()` 가 평범한 `str` 을 냈다. 그래서
+        run = alive("run_prereq_chain")     # → "-"  (프로세스 없음)
+        '🔄 진행 중' if run else '⏹ 안 돌고 있다'
+    가 **항상 진행 중**을 골랐다 — 파이썬에서 `"-"` 는 참이다. 이 절은
+    구조적으로 "안 돌고 있다" 를 낼 수 없었고, `elif not run` 가지들(완주 판정·
+    재기동 안내)은 **죽은 코드**였다. li3nd 선행검사가 08-28 02:20 에 죽었는데
+    이틀 동안 화면이 "🔄 진행 중" 으로 보여줬다.
+
+    문자열을 그대로 두고 `__bool__` 만 고친다 — 표시용 호출부(`f"pw.x {alive(...)}"`)와
+    비교용 호출부(`alive(...) == "ALIVE"`)를 둘 다 안 건드리면서 조건문만 바로잡는다.
+    """
+
+    def __bool__(self):
+        return str(self) == "ALIVE"
+
+
 def alive(pat, exact=False):
     """⚠ shell=True 로 pgrep -f 를 돌리면 **자기 자신을 문다**.
     `sh -c "pgrep -f 'aimd_mlip|...'"` 의 명령줄에 패턴이 그대로 들어 있어서 pgrep 이
@@ -67,8 +86,8 @@ def alive(pat, exact=False):
         r = subprocess.run(["pgrep", "-x" if exact else "-f", pat],
                            capture_output=True, text=True, timeout=15).stdout
     except Exception:
-        return "?"
-    return "ALIVE" if r.strip() else "-"
+        return Alive("?")          # 못 쟀다 — 참도 거짓도 아니게 두면 안 되므로 거짓
+    return Alive("ALIVE" if r.strip() else "-")
 
 
 def boot_time():
