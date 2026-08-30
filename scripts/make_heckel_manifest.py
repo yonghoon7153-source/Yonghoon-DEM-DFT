@@ -57,16 +57,31 @@ def plate_z_from_stl(path):
     return min(zs)
 
 
-def scan(root, pattern='post_SE_heckel_*'):
+def pressure_key(name):
+    """기본 색인: 폴더 이름 끝의 정수 = 압력(MPa).  → (색인값, 정렬키) 또는 None(건너뜀)."""
+    m = re.search(r'_(\d+)\s*$', name)
+    return None if not m else (int(m.group(1)), float(m.group(1)))
+
+
+def scan(root, pattern='post_SE_heckel_*', key_fn=None, key_name='P_MPa',
+         key_err='폴더 이름에서 압력을 못 읽음'):
+    """덤프 폴더들 → 기점이 잡힌 레코드 목록.
+
+    `key_fn`: 폴더 이름 → (색인값, 정렬키) 또는 None(=그 폴더는 건너뛴다).  기본 = 압력.
+    ★ **색인만** 갈아끼우게 한 이유: 기점 선택·plate_z·건너뜀 사유는 축과 무관하게
+      공유돼야 한다.  압력이 아닌 축(OAT 파라미터 등)을 재는 도구가 이 함수를 다시 짜면
+      아래 contact-기점 규약이 조용히 갈라진다 — 이 파일이 이미 한 번 당한 실수다.
+    """
+    key_fn = key_fn or pressure_key
     pts, skipped = [], []
     for d in sorted(glob.glob(os.path.join(root, pattern))):
         if not os.path.isdir(d):
             continue
-        m = re.search(r'_(\d+)\s*$', os.path.basename(d))
-        if not m:
-            skipped.append((os.path.basename(d), '폴더 이름에서 압력을 못 읽음'))
+        kv = key_fn(os.path.basename(d))
+        if kv is None:
+            skipped.append((os.path.basename(d), key_err))
             continue
-        p_mpa = int(m.group(1))
+        keyval, sortkey = kv
         atoms = sorted(glob.glob(os.path.join(d, 'atom_*.liggghts')), key=_step)
         meshes = sorted(glob.glob(os.path.join(d, 'mesh_*.stl')), key=_step)
         cons = sorted(glob.glob(os.path.join(d, 'contact_*.liggghts')), key=_step)
@@ -102,11 +117,14 @@ def scan(root, pattern='post_SE_heckel_*'):
             skipped.append((os.path.basename(d), f'STL 파싱 실패 ({type(e).__name__})'))
             continue
         cc = [c for c in cons if _step(c) == st]
-        pts.append(dict(P_MPa=p_mpa, plate_z=pz, atom=os.path.abspath(atom),
-                        contacts=[os.path.abspath(c) for c in cc], step=st, anchor=anchor,
-                        last_atom_step=(max(a_steps) if a_steps else None),
-                        n_contact_files=len(cons), mesh=os.path.abspath(mesh)))
-    return sorted(pts, key=lambda r: r['P_MPa']), skipped
+        rec = dict(plate_z=pz, atom=os.path.abspath(atom),
+                   contacts=[os.path.abspath(c) for c in cc], step=st, anchor=anchor,
+                   name=os.path.basename(d),
+                   last_atom_step=(max(a_steps) if a_steps else None),
+                   n_contact_files=len(cons), mesh=os.path.abspath(mesh))
+        rec[key_name] = keyval
+        pts.append((sortkey, rec))
+    return [r for _, r in sorted(pts, key=lambda t: t[0])], skipped
 
 
 def main(argv=None):
