@@ -84,6 +84,16 @@ def _selftest() -> int:
             "mtime(): NOW 와 바로 빼진다 (로그 나이 계산 경로)")
     chk(mtime("/nonexistent/zzz") is None, "mtime(): 없는 파일은 None")
 
+    # ⑦ ORCA — **완주와 중단을 가르는 자리.** 여기가 틀리면 죽은 러너를
+    #   "진행 중" 으로 보여주거나(gs0 사례), 다 끝난 것을 "죽었다" 로 오탐한다.
+    chk(orca_runner_state(8, 1, False) == "dead",
+        '⛔음성 ORCA: 1/8 인데 프로세스 없음 → **dead** (gs0 실측 사례)')
+    chk(orca_runner_state(8, 1, True) == "running",
+        'ORCA: 1/8 이고 프로세스 있음 → running')
+    chk(orca_runner_state(8, 8, False) == "done",
+        '⛔음성 ORCA: 8/8 이면 프로세스가 없는 게 **정상** — 완주를 죽음으로 오탐 안 함')
+    chk(orca_runner_state(8, 0, False) == "dead",
+        '⛔음성 ORCA: 0/8 · 프로세스 없음 → dead (한 번도 안 돈 것도 중단이다)')
     print(f"  watch_all selftest {ok[1]}/{ok[0]}")
     return 0 if ok[0] == ok[1] else 1
 
@@ -120,6 +130,21 @@ class Alive(str):
 
     def __bool__(self):
         return str(self) == "ALIVE"
+
+
+def orca_runner_state(n_seeds, n_done, runner_alive):
+    """ORCA Stage A 러너의 상태 판정 — **패널의 존재 이유가 이 한 줄이다.**
+
+    끝난 seed 가 있어도 **남은 게 있는데 프로세스가 없으면 중단**이다.
+    gs0 이 정확히 그랬다: rc 0 정상종료인데 gs1 이 시작을 안 했고, 화면에
+    패널이 없어서 하루를 놓쳤다.
+
+    → "dead" · "running" · "done"
+    ⛔ 못 하는 것: 왜 죽었는지는 모른다. 남은 수와 프로세스 유무만 본다.
+    """
+    if n_done >= n_seeds:
+        return "done"                      # 완주면 러너가 없는 게 정상이다
+    return "running" if runner_alive else "dead"
 
 
 def alive(pat, exact=False):
@@ -1010,6 +1035,74 @@ if os.path.isfile(blog):
             print("  (summary 파싱 실패)")
 else:
     print("  (미가동)")
+
+# ═══ ⑦ ORCA Stage A (SDCP n=6 올리고머) ══════════════════════════════════
+#   2026-08-30 신설. 왜 뒤늦게 붙나 — **이게 화면에 없어서 죽은 것을 하루 놓쳤다.**
+#   gs0 이 08-30 10:29 에 정상종료(rc 0)했는데 러너가 다음 seed 로 안 넘어갔고,
+#   대시보드에 패널이 없으니 11:58 까지 아무도 몰랐다. 같은 계열이 이번이 두 번째다
+#   (li3nd 체인은 `alive()` 진리값 때문에 이틀).
+#
+# ⛔ 이 패널이 **못 하는 것**: ORCA 결과의 물리적 타당성을 판정하지 않는다.
+#   수렴 표식·사이클 수·에너지를 읽어 **어디까지 갔나**만 본다. 스핀 상태가
+#   옳은지, 기하가 말이 되는지는 분석기 몫이다.
+print(BAR)
+print("⑦ ORCA Stage A — SDCP n=6 올리고머 (CPU 전용 · GPU 안 건드림)")
+_OA, _OW = "/data/work/runs/sdcp_stageA", "/data/work/runs/sdcp_stageA_run"
+_oman = os.path.join(_OA, "manifest_stage_a.json")
+_oseeds = []
+if os.path.isfile(_oman):
+    try:
+        _oseeds = [(x["dir"], x["tag"])
+                   for x in json.load(open(_oman)).get("geometry_seeds", [])]
+    except Exception:
+        print("  ⛔ manifest_stage_a.json 파싱 실패")
+if not _oseeds:
+    print("  (미가동 — manifest_stage_a.json 없음)")
+else:
+    _orun = alive("run_orca_stage_a") or alive("orca ")
+    _odone, _opend, _onewest = 0, [], None
+    for _d, _t in _oseeds:
+        _o = os.path.join(_OW, _d, _t + ".out")
+        if not os.path.isfile(_o):
+            _opend.append(_d)
+            continue
+        _tx = open(_o, errors="ignore").read()
+        _cy = _tx.count("GEOMETRY OPTIMIZATION CYCLE")
+        _e = re.findall(r"FINAL SINGLE POINT ENERGY\s+(-?[\d.]+)", _tx)
+        _ok = "ORCA TERMINATED NORMALLY" in _tx
+        _cv = "THE OPTIMIZATION HAS CONVERGED" in _tx
+        _ag = mtime(_o)
+        _ag = (NOW - _ag).total_seconds() / 60 if _ag else None
+        if _onewest is None or (_ag is not None and _ag < _onewest):
+            _onewest = _ag
+        _odone += 1 if (_ok and _cv) else 0
+        print("  %-5s %s cyc=%-4s %s %s" % (
+            _d,
+            "✓" if (_ok and _cv) else ("⛔종료·미수렴" if _ok else "▶"),
+            _cy,
+            ("E=%s" % _e[-1]) if _e else "E=?",
+            ("· %.0f분 전" % _ag) if _ag is not None else ""))
+    _left = len(_oseeds) - _odone
+    print("  진행 %d/%d · 남은 %d · 러너 %s"
+          % (_odone, len(_oseeds), _left, "🔄 돈다" if _orun else "⏹ 안 돈다"))
+    # ★ 이 한 줄이 이 패널의 존재 이유다 — **끝난 seed 가 있는데 러너가 없고
+    #   남은 seed 가 있으면** 그건 완주가 아니라 중단이다. gs0 이 정확히 그랬다.
+    _ostate = orca_runner_state(len(_oseeds), _odone, bool(_orun))
+    if _ostate == "dead":
+        print("  ⛔ **러너가 죽었다** — %d개 남았는데 프로세스가 없다 (%s)"
+              % (_left, ", ".join(_opend[:4]) + (" …" if len(_opend) > 4 else "")))
+        print("     ⚠ nohup 없이 띄우면 터미널이 닫힐 때 같이 죽는다 — gs0 뒤가 그랬다")
+        print("     ORCA=/data/apps/orca-6.1.1/orca NPROCS=8 nohup bash "
+              "tools/sdcp/run_orca_stage_a.sh \\")
+        print("       %s %s > /data/work/runs/orca_stageA.log 2>&1 &" % (_OA, _OW))
+    elif _ostate == "running":
+        live()
+        if _onewest is not None and _onewest > 180:
+            print("  ⚠ 러너는 살아 있는데 최신 로그가 %.0f분 전이다 — 한 seed 가 "
+                  "오래 걸리는 중이거나 멈춰 있다 (gs0 실측 18.5시간)" % _onewest)
+    else:
+        print("  ✅ 전 seed 완주")
+        print("  ⛔ **이 결과로 Stage B 를 열지 않는다** (receipt 조건 6 · 회신 R4)")
 
 # ═══ 재기동 안내 ═════════════════════════════════════════════════════════
 # ⚠ 예전 판은 JOBS 목록만 보고 "재기동 필요 없음" 을 찍었다. SDCP 섹션이 바로 위에서
