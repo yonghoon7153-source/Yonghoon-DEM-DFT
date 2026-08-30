@@ -1,0 +1,157 @@
+{
+ "schema": "prospective_basins/v1",
+ "date": "2026-08-30",
+ "⚠": "C-12 경로 전용. 회신 AI §A-Q4=C. 자세는 sdcp_c12_protocol 에서 유도했고 MLIP 출처만 썼다 — DFT 결과 0잡 시점",
+ "params": {
+  "source": "db/properties/prospective_basins_2026_08_29.json"
+ },
+ "fragments": {
+  "sdcp_neutral": {
+   "primary": [
+    {
+     "basin_id": "b00",
+     "rep_label": "sdcp_neutral__O_top__fib08__r000",
+     "E_pose_eV": 0.019954,
+     "fingerprint": [
+      [
+       "H",
+       "Li",
+       1
+      ],
+      [
+       "H",
+       "Ni",
+       2
+      ],
+      [
+       "H",
+       "O",
+       2
+      ],
+      [
+       "O",
+       "Ni",
+       1
+      ],
+      [
+       "O",
+       "O",
+       1
+      ]
+     ],
+     "anchor": [
+      "H",
+      "O",
+      1.827
+     ],
+     "height_A": 5.072,
+     "tilt_deg": 85.5,
+     "role": "primary",
+     "why": "MLIP 전역 최소 basin"
+    }
+   ],
+   "sensitivity": [
+    {
+     "basin_id": "b12",
+     "rep_label": "sdcp_neutral__LiNi_bridge__fib11__r270",
+     "E_pose_eV": 0.297624,
+     "fingerprint": [
+      [
+       "H",
+       "Li",
+       1
+      ],
+      [
+       "H",
+       "Ni",
+       2
+      ],
+      [
+       "H",
+       "O",
+       2
+      ],
+      [
+       "O",
+       "Li",
+       1
+      ],
+      [
+       "O",
+       "O",
+       2
+      ]
+     ],
+     "anchor": [
+      "O",
+      "Li",
+      2.407
+     ],
+     "height_A": 5.137,
+     "tilt_deg": 58.0,
+     "role": "sensitivity",
+     "why": "앵커 원소 다름(O) 규칙: anchor_element_differs"
+    }
+   ]
+  },
+  "ptfe_c10": {
+   "primary": [
+    {
+     "basin_id": "b00",
+     "rep_label": "ptfe_c10__Ni_top__fib05__r270",
+     "E_pose_eV": -0.265953,
+     "fingerprint": [
+      [
+       "F",
+       "Li",
+       2
+      ],
+      [
+       "F",
+       "Ni",
+       1
+      ],
+      [
+       "F",
+       "O",
+       4
+      ]
+     ],
+     "anchor": [
+      "F",
+      "Ni",
+      2.538
+     ],
+     "height_A": 4.208,
+     "tilt_deg": 86.1,
+     "role": "primary",
+     "why": "MLIP 전역 최소 basin"
+    }
+   ],
+   "sensitivity": [
+    {
+     "basin_id": "b52",
+     "rep_label": "ptfe_c10__O_top__fib04__r090",
+     "E_pose_eV": -0.160238,
+     "fingerprint": [
+      [
+       "F",
+       "O",
+       1
+      ]
+     ],
+     "anchor": [
+      "F",
+      "O",
+      2.676
+     ],
+     "height_A": 5.46,
+     "tilt_deg": 75.9,
+     "role": "sensitivity",
+     "why": "앵커 원소 다름(F) 규칙: max_contact_jaccard"
+    }
+   ]
+  }
+ },
+ "freeze_sha256": "0ac106d152b96458f8d0105f24be76335b27942a92e0fbf9a906caf5c41d7b87"
+}

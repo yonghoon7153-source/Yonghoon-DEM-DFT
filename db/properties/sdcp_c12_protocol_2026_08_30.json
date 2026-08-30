@@ -10,18 +10,19 @@
  ],
  "0_한_줄": "조각 2종 × (primary 1 + sensitivity 1) 자세 · 고정기하 D3-on 단일점 · 총 12잡",
  "1_보고하는_양": {
-  "이름": "reference-state-dependent fixed-geometry adsorption electronic-energy contrast",
+  "이름": "adsorption energy contrast (ΔE_ads between the two fragment models)",
   "⛔_부르면_안_되는_이름": [
-   "binding energy",
-   "adsorption energy(단독)",
-   "결합에너지",
-   "자유에너지"
+   "binding energy (XPS 충돌 · 부호규약 불일치)",
+   "자유에너지",
+   "결합 세기",
+   "adhesion energy"
   ],
   "왜": "기체 conformer 하나를 모든 자세에 공통으로 쓰므로 변형에너지와 reference-conformer 선택이 값에 포함된다",
   "식": "D = [E_complex(SDCP) − E_mol(SDCP)] − [E_complex(c10) − E_mol(c10)]",
   "🔑_clean_slab_불필요": "두 조각이 같은 슬랩이므로 대비에서 대수적으로 소거된다. 그래서 clean slab 을 계산하지 않고, **개별 절대 흡착에너지도 보고하지 않는다**",
   "허용_서술": "사전 선택된 MLIP 유래 고정기하와 일치하는 자기 branch 에서, 중성 SDCP 단량체 모델은 perfluorodecane 모델보다 기준상태 보정 흡착 전자에너지가 X eV 낮았다",
-  "보고_단위": "0.01 eV (사전 고정)"
+  "보고_단위": "0.01 eV (사전 고정)",
+  "⚠_이름_정정": "회신 AI 가 제안한 'reference-state-dependent fixed-geometry adsorption electronic-energy contrast' 는 litdb 202편에 **0회**다. 문헌은 binding energy 37 · adsorption energy 16 회이고, 같은 계 논문(han2025 바인더/NCM811 표면 DFT)은 '결합에너지' 로 쓴다. 이름은 평범하게 쓰고 단서를 Methods 에 적는 것이 관례다. adsorption energy 를 고른 이유: 우리 값에 **변형에너지가 포함**돼 있는데 그것이 adsorption energy 의 표준 정의이고, binding energy 는 ⓐ부호규약 ⓑXPS 내각준위 ⓒ변형 제외 상호작용에너지 로 뜻이 셋이다."
  },
  "2_자세_동결": {
   "⚠": "DFT 결과를 **하나도 보기 전에** 고정한다. 출처는 MLIP 스크린뿐이다",
@@ -174,36 +175,36 @@
   "총": 12,
   "목록": [
    {
-    "job": "canary/sdcp_neutral__primary__pm1__c1",
+    "job": "vacconv/sdcp_neutral__primary__pm1__c1",
     "frag": "sdcp_neutral",
     "pose": "primary",
     "seed": "afm2424_pm1",
     "cell_c_A": 36.6551,
-    "stage": "canary"
+    "stage": "vacuum_convergence"
    },
    {
-    "job": "canary/sdcp_neutral__primary__pm1__c2",
+    "job": "vacconv/sdcp_neutral__primary__pm1__c2",
     "frag": "sdcp_neutral",
     "pose": "primary",
     "seed": "afm2424_pm1",
     "cell_c_A": 40.6551,
-    "stage": "canary"
+    "stage": "vacuum_convergence"
    },
    {
-    "job": "canary/ptfe_c10__primary__pm1__c1",
+    "job": "vacconv/ptfe_c10__primary__pm1__c1",
     "frag": "ptfe_c10",
     "pose": "primary",
     "seed": "afm2424_pm1",
     "cell_c_A": 36.6551,
-    "stage": "canary"
+    "stage": "vacuum_convergence"
    },
    {
-    "job": "canary/ptfe_c10__primary__pm1__c2",
+    "job": "vacconv/ptfe_c10__primary__pm1__c2",
     "frag": "ptfe_c10",
     "pose": "primary",
     "seed": "afm2424_pm1",
     "cell_c_A": 40.6551,
-    "stage": "canary"
+    "stage": "vacuum_convergence"
    },
    {
     "job": "main/sdcp_neutral__primary__net4__c1",
@@ -271,17 +272,8 @@
    }
   ],
   "⚠_clean_slab": "없다 (대비에서 소거)",
-  "⚠_D3": "D3-on 만. D3-off 쌍둥이 없음"
- },
- "4_카나리_먼저": {
-  "무엇": "primary SDCP·PTFE 를 **같은 seed(pm1)** 로 c1·c2 두 셀에서 — 4잡",
-  "c1_A": 36.6551,
-  "c2_A": 40.6551,
-  "판정식": "D(c) = [E_C^SDCP(c) − E_mol^SDCP] − [E_C^PTFE(c) − E_mol^PTFE] 의 **대비 변화**에 적용. 조각별 변화가 아니다 — 기체 항은 c 에 무관하므로 ΔD = ΔE_C^SDCP − ΔE_C^PTFE 로 소거된다",
-  "통과_조건": "|D(c2) − D(c1)| ≤ 0.005 eV **그리고** 두 값의 0.01 eV 반올림이 같다",
-  "5_meV_의_출처": "물리 상수가 아니라 **보고 최소단위(0.01 eV)의 절반**이다",
-  "실패시": "추가 셀 탐색 없이 **Figure 2e 를 제거**한다",
-  "자기_topology_변화": "셀 사이에서 실현된 Ni 자기 topology 가 달라지면 그것도 실패다"
+  "⚠_D3": "D3-on 만. D3-off 쌍둥이 없음",
+  "⚠_용어": "`canary` → `vacconv` (vacuum convergence)"
  },
  "5_유지하는_검사_여섯": [
   "estimand · 기체 기준 conformer 고정",
@@ -313,5 +305,17 @@
   "최종 대비를 0.05 eV 이상 움직이는 재현 가능한 결함",
   "결과 판독 불가"
  ],
- "10_그_밖": "risk log 에만 남긴다. 새 blocker 로 실행을 멈추지 않는다"
+ "10_그_밖": "risk log 에만 남긴다. 새 blocker 로 실행을 멈추지 않는다",
+ "4_진공_두께_수렴_시험": {
+  "무엇": "primary SDCP·PTFE 를 **같은 seed(pm1)** 로 c1·c2 두 셀에서 — 4잡",
+  "c1_A": 36.6551,
+  "c2_A": 40.6551,
+  "판정식": "D(c) = [E_C^SDCP(c) − E_mol^SDCP] − [E_C^PTFE(c) − E_mol^PTFE] 의 **대비 변화**에 적용. 조각별 변화가 아니다 — 기체 항은 c 에 무관하므로 ΔD = ΔE_C^SDCP − ΔE_C^PTFE 로 소거된다",
+  "통과_조건": "|D(c2) − D(c1)| ≤ 0.005 eV **그리고** 두 값의 0.01 eV 반올림이 같다",
+  "5_meV_의_출처": "물리 상수가 아니라 **보고 최소단위(0.01 eV)의 절반**이다",
+  "실패시": "추가 셀 탐색 없이 **Figure 2e 를 제거**한다",
+  "자기_topology_변화": "셀 사이에서 실현된 Ni 자기 topology 가 달라지면 그것도 실패다",
+  "영문_명칭": "vacuum-thickness convergence test",
+  "⚠_용어": "종전 초안이 '카나리(canary)' 라고 적었다 — 소프트웨어 용어이고 이 분야 문헌 표현이 아니다. VASP 튜토리얼도 'converge the vacuum thickness' 로 쓴다. Methods 문장: 'The vacuum thickness was converged such that the contrast changed by less than 5 meV between c = 36.66 and 40.66 Å.'"
+ }
 }
