@@ -335,7 +335,13 @@ if _sbrg:
 if _isd:
     rec['sigma_ion_sdcp_S_cm'] = float(_isd)
 if _ise:
-    rec['sigma_ion_se_S_cm'] = float(_ise)
+    #  ★★★ 2026-08-30 (Codex R14 D-1 온도 계약) — **기준값을 적용값 키에 쓰지 않는다.**
+    #    payload 는 `--sigma-ion-se` 를 **T_ref 선언값**으로 받아 Arrhenius 로 보정한 뒤
+    #    매니페스트에 `sigma_ion_se_S_cm`(적용 후) 와 `sigma_ion_se_ref_S_cm`(기준) 을
+    #    **나눠** 적는다 (mpm_webapp_payload.py:2625-2626).  러너가 준 것은 **기준값**이다.
+    #    옛 판은 그것을 적용값 키에 써서, 25 °C 가 아니면 대조가 거짓 불일치를 냈다
+    #    (60 °C: 0.003 → 0.0143553 ⇒ SDCP/SE 비 0.1737 → 0.04319).
+    rec['sigma_ion_se_ref_S_cm'] = float(_ise)
 #  ★★★ 2026-08-30 (코드리뷰 지적 1) — **LEAN=4 일 때만** 필드 유무를 선언한다.
 #    `field_requested` 는 `RECEIPT_AXES_NODIGEST` 라 **digest 를 안 바꾼다** (기존 팔 전부 보존).
 #    ⚠ 왜 LEAN=4 에만: 이 레벨은 오늘 만든 것이라 **혼동될 기존 팔이 없다** ⇒ 거짓 경보 0.

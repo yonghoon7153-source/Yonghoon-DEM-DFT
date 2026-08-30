@@ -224,7 +224,11 @@ RECEIPT_AXES = ('vox_um', 'bridge_um', 'fibre_stamp', 'sdcp_stamp', 'sdcp_sphere
                 'sigma_vgcf_S_cm', 'periodic_xy',
                 #  ★ 2026-08-30 (R13 C-7 ⓒ/ⓑ) — 두 이온 σ.  물리 축이므로 digest 에 들어간다
                 #    (다른 σ = 다른 실험 = 다른 디렉터리).  매니페스트가 이미 같은 이름으로 적는다.
-                'sigma_ion_sdcp_S_cm', 'sigma_ion_se_S_cm')
+                #  ⚠ SE 는 **기준(T_ref) 키**로 대조한다 — 러너가 선언하는 것이 기준값이고
+                #    적용값은 payload 가 온도로 만든다.  적용값 키로 대조하면 25 °C 밖에서
+                #    거짓 불일치가 난다 (R14 D-1).  SDCP 는 온도 스케일링을 안 받으므로
+                #    (§F1: SDCP Eₐ 앵커 없음) 적용값 = 기준값이라 키가 하나다.
+                'sigma_ion_sdcp_S_cm', 'sigma_ion_se_ref_S_cm')
 #: 영수증이 담지만 **매니페스트 축이 아닌** 것 (따로 대조한다).
 RECEIPT_META = ('code_sha', 'origins', 'arms', 'expect_backend')
 
