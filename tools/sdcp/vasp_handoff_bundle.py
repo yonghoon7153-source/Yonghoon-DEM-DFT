@@ -154,6 +154,13 @@ LDAUU     = {ldauu}
 LDAUJ     = {ldauj}
 LDAUPRINT = 2
 LMAXMIX   = 4
+# ⛔ 회신 AM P0-5 (2026-08-31) — `NUPDOWN` 을 **명시한다.** 종전엔 줄이 아예 없어서
+#   VASP 기본값(-1)에 기대고 있었고, 분석기는 "기대값 미등록" 으로만 남기고 차단하지
+#   않았다. 기체 기준은 `NUPDOWN=0`(닫힌 껍질 일중항)로 **제약**돼 있으므로, 복합체가
+#   무엇인지 적히지 않으면 `E_ads` 가 어떤 상태끼리의 차인지 문서에 없다.
+#   -1 = 자유(무제약). 사전 고정된 pm1/net4 초기자화에서 출발한 unconstrained-spin SCF 이고,
+#   **자기 바닥상태가 아니라 seed-conditioned realized basin** 으로 보고한다.
+NUPDOWN   = -1
 MAGMOM   = {magmom}
 LWAVE    = .TRUE.
 LCHARG   = .TRUE.
@@ -180,6 +187,13 @@ LDAUU     = {ldauu}
 LDAUJ     = {ldauj}
 LDAUPRINT = 2
 LMAXMIX   = 4
+# ⛔ 회신 AM P0-5 (2026-08-31) — `NUPDOWN` 을 **명시한다.** 종전엔 줄이 아예 없어서
+#   VASP 기본값(-1)에 기대고 있었고, 분석기는 "기대값 미등록" 으로만 남기고 차단하지
+#   않았다. 기체 기준은 `NUPDOWN=0`(닫힌 껍질 일중항)로 **제약**돼 있으므로, 복합체가
+#   무엇인지 적히지 않으면 `E_ads` 가 어떤 상태끼리의 차인지 문서에 없다.
+#   -1 = 자유(무제약). 사전 고정된 pm1/net4 초기자화에서 출발한 unconstrained-spin SCF 이고,
+#   **자기 바닥상태가 아니라 seed-conditioned realized basin** 으로 보고한다.
+NUPDOWN   = -1
 MAGMOM   = {magmom}
 LWAVE    = .FALSE.
 LCHARG   = .TRUE.
@@ -202,6 +216,13 @@ LDAUU     = {ldauu}
 LDAUJ     = {ldauj}
 LDAUPRINT = 2
 LMAXMIX   = 4
+# ⛔ 회신 AM P0-5 (2026-08-31) — `NUPDOWN` 을 **명시한다.** 종전엔 줄이 아예 없어서
+#   VASP 기본값(-1)에 기대고 있었고, 분석기는 "기대값 미등록" 으로만 남기고 차단하지
+#   않았다. 기체 기준은 `NUPDOWN=0`(닫힌 껍질 일중항)로 **제약**돼 있으므로, 복합체가
+#   무엇인지 적히지 않으면 `E_ads` 가 어떤 상태끼리의 차인지 문서에 없다.
+#   -1 = 자유(무제약). 사전 고정된 pm1/net4 초기자화에서 출발한 unconstrained-spin SCF 이고,
+#   **자기 바닥상태가 아니라 seed-conditioned realized basin** 으로 보고한다.
+NUPDOWN   = -1
 MAGMOM   = {magmom}
 ISTART   = 0
 ICHARG   = 2
@@ -225,6 +246,13 @@ LDAUU     = {ldauu}
 LDAUJ     = {ldauj}
 LDAUPRINT = 2
 LMAXMIX   = 4
+# ⛔ 회신 AM P0-5 (2026-08-31) — `NUPDOWN` 을 **명시한다.** 종전엔 줄이 아예 없어서
+#   VASP 기본값(-1)에 기대고 있었고, 분석기는 "기대값 미등록" 으로만 남기고 차단하지
+#   않았다. 기체 기준은 `NUPDOWN=0`(닫힌 껍질 일중항)로 **제약**돼 있으므로, 복합체가
+#   무엇인지 적히지 않으면 `E_ads` 가 어떤 상태끼리의 차인지 문서에 없다.
+#   -1 = 자유(무제약). 사전 고정된 pm1/net4 초기자화에서 출발한 unconstrained-spin SCF 이고,
+#   **자기 바닥상태가 아니라 seed-conditioned realized basin** 으로 보고한다.
+NUPDOWN   = -1
 MAGMOM   = {magmom}
 ISTART   = 0
 ICHARG   = 1
