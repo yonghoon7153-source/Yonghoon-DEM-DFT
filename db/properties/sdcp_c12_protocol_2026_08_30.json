@@ -1,0 +1,317 @@
+{
+ "schema": "sdcp_c12_protocol/v1",
+ "date": "2026-08-30",
+ "지위": "⚠ proposed — 사람이 ratify 해야 active. **DFT 결과 0잡** 시점에 등록",
+ "출처": "회신 AI 2026-08-30 §A-Q4 = C. 이 문서가 새 정본이다",
+ "대체하는_것": [
+  "db/properties/sdcp_stageA_closure_conditions_2026_08_29.json",
+  "db/properties/prospective_holdout_2026_08_30.json",
+  "회신 AI 이전의 42잡·10잡 카나리·추적 ZIP 전부"
+ ],
+ "0_한_줄": "조각 2종 × (primary 1 + sensitivity 1) 자세 · 고정기하 D3-on 단일점 · 총 12잡",
+ "1_보고하는_양": {
+  "이름": "reference-state-dependent fixed-geometry adsorption electronic-energy contrast",
+  "⛔_부르면_안_되는_이름": [
+   "binding energy",
+   "adsorption energy(단독)",
+   "결합에너지",
+   "자유에너지"
+  ],
+  "왜": "기체 conformer 하나를 모든 자세에 공통으로 쓰므로 변형에너지와 reference-conformer 선택이 값에 포함된다",
+  "식": "D = [E_complex(SDCP) − E_mol(SDCP)] − [E_complex(c10) − E_mol(c10)]",
+  "🔑_clean_slab_불필요": "두 조각이 같은 슬랩이므로 대비에서 대수적으로 소거된다. 그래서 clean slab 을 계산하지 않고, **개별 절대 흡착에너지도 보고하지 않는다**",
+  "허용_서술": "사전 선택된 MLIP 유래 고정기하와 일치하는 자기 branch 에서, 중성 SDCP 단량체 모델은 perfluorodecane 모델보다 기준상태 보정 흡착 전자에너지가 X eV 낮았다",
+  "보고_단위": "0.01 eV (사전 고정)"
+ },
+ "2_자세_동결": {
+  "⚠": "DFT 결과를 **하나도 보기 전에** 고정한다. 출처는 MLIP 스크린뿐이다",
+  "선정_규칙": {
+   "primary": "E_pose 최저 basin (MLIP 전역 최소)",
+   "sensitivity": "① 분자쪽 **앵커 원소**가 primary 와 다른 basin 중 E_pose 최저. ② 그런 basin 이 없으면 접촉집합 Jaccard 거리 최대 중 E_pose 최저",
+   "왜_에너지_창을_안_쓰나": "창(W0=0.15 eV) 안에서는 sdcp_neutral 후보가 **전부 산성 H 앵커**라 sensitivity 가 primary 와 같은 모티프가 된다(J=0.333) — 방향 재현을 시험하지 못한다. 창을 **없애는** 쪽이라 새 문턱을 만들지 않는다",
+   "결정론적": "동률은 (E_pose, basin_id) 사전순으로 깬다. 난수 없음"
+  },
+  "source": "db/properties/prospective_basins_2026_08_29.json",
+  "source_freeze_sha256": "94675e66e02c855aa16dcc4a0fd8d11c966bff909287c96fbd81b990d923735b",
+  "fragments": {
+   "sdcp_neutral": {
+    "primary": {
+     "basin_id": "b00",
+     "rep_label": "sdcp_neutral__O_top__fib08__r000",
+     "E_pose_eV": 0.019954,
+     "fingerprint": [
+      [
+       "H",
+       "Li",
+       1
+      ],
+      [
+       "H",
+       "Ni",
+       2
+      ],
+      [
+       "H",
+       "O",
+       2
+      ],
+      [
+       "O",
+       "Ni",
+       1
+      ],
+      [
+       "O",
+       "O",
+       1
+      ]
+     ],
+     "anchor": [
+      "H",
+      "O",
+      1.827
+     ],
+     "height_A": 5.072,
+     "tilt_deg": 85.5
+    },
+    "sensitivity": {
+     "basin_id": "b12",
+     "rep_label": "sdcp_neutral__LiNi_bridge__fib11__r270",
+     "E_pose_eV": 0.297624,
+     "fingerprint": [
+      [
+       "H",
+       "Li",
+       1
+      ],
+      [
+       "H",
+       "Ni",
+       2
+      ],
+      [
+       "H",
+       "O",
+       2
+      ],
+      [
+       "O",
+       "Li",
+       1
+      ],
+      [
+       "O",
+       "O",
+       2
+      ]
+     ],
+     "anchor": [
+      "O",
+      "Li",
+      2.407
+     ],
+     "height_A": 5.137,
+     "tilt_deg": 58.0
+    },
+    "sensitivity_rule": "anchor_element_differs",
+    "dE_pose_eV": 0.27767
+   },
+   "ptfe_c10": {
+    "primary": {
+     "basin_id": "b00",
+     "rep_label": "ptfe_c10__Ni_top__fib05__r270",
+     "E_pose_eV": -0.265953,
+     "fingerprint": [
+      [
+       "F",
+       "Li",
+       2
+      ],
+      [
+       "F",
+       "Ni",
+       1
+      ],
+      [
+       "F",
+       "O",
+       4
+      ]
+     ],
+     "anchor": [
+      "F",
+      "Ni",
+      2.538
+     ],
+     "height_A": 4.208,
+     "tilt_deg": 86.1
+    },
+    "sensitivity": {
+     "basin_id": "b52",
+     "rep_label": "ptfe_c10__O_top__fib04__r090",
+     "E_pose_eV": -0.160238,
+     "fingerprint": [
+      [
+       "F",
+       "O",
+       1
+      ]
+     ],
+     "anchor": [
+      "F",
+      "O",
+      2.676
+     ],
+     "height_A": 5.46,
+     "tilt_deg": 75.9
+    },
+    "sensitivity_rule": "max_contact_jaccard",
+    "dE_pose_eV": 0.105715
+   }
+  }
+ },
+ "3_잡_12개": {
+  "총": 12,
+  "목록": [
+   {
+    "job": "canary/sdcp_neutral__primary__pm1__c1",
+    "frag": "sdcp_neutral",
+    "pose": "primary",
+    "seed": "afm2424_pm1",
+    "cell_c_A": 36.6551,
+    "stage": "canary"
+   },
+   {
+    "job": "canary/sdcp_neutral__primary__pm1__c2",
+    "frag": "sdcp_neutral",
+    "pose": "primary",
+    "seed": "afm2424_pm1",
+    "cell_c_A": 40.6551,
+    "stage": "canary"
+   },
+   {
+    "job": "canary/ptfe_c10__primary__pm1__c1",
+    "frag": "ptfe_c10",
+    "pose": "primary",
+    "seed": "afm2424_pm1",
+    "cell_c_A": 36.6551,
+    "stage": "canary"
+   },
+   {
+    "job": "canary/ptfe_c10__primary__pm1__c2",
+    "frag": "ptfe_c10",
+    "pose": "primary",
+    "seed": "afm2424_pm1",
+    "cell_c_A": 40.6551,
+    "stage": "canary"
+   },
+   {
+    "job": "main/sdcp_neutral__primary__net4__c1",
+    "frag": "sdcp_neutral",
+    "pose": "primary",
+    "seed": "afm2424_net4",
+    "cell_c_A": 36.6551,
+    "stage": "main"
+   },
+   {
+    "job": "main/ptfe_c10__primary__net4__c1",
+    "frag": "ptfe_c10",
+    "pose": "primary",
+    "seed": "afm2424_net4",
+    "cell_c_A": 36.6551,
+    "stage": "main"
+   },
+   {
+    "job": "main/sdcp_neutral__sensitivity__pm1__c1",
+    "frag": "sdcp_neutral",
+    "pose": "sensitivity",
+    "seed": "afm2424_pm1",
+    "cell_c_A": 36.6551,
+    "stage": "main"
+   },
+   {
+    "job": "main/sdcp_neutral__sensitivity__net4__c1",
+    "frag": "sdcp_neutral",
+    "pose": "sensitivity",
+    "seed": "afm2424_net4",
+    "cell_c_A": 36.6551,
+    "stage": "main"
+   },
+   {
+    "job": "main/ptfe_c10__sensitivity__pm1__c1",
+    "frag": "ptfe_c10",
+    "pose": "sensitivity",
+    "seed": "afm2424_pm1",
+    "cell_c_A": 36.6551,
+    "stage": "main"
+   },
+   {
+    "job": "main/ptfe_c10__sensitivity__net4__c1",
+    "frag": "ptfe_c10",
+    "pose": "sensitivity",
+    "seed": "afm2424_net4",
+    "cell_c_A": 36.6551,
+    "stage": "main"
+   },
+   {
+    "job": "refs/mol__sdcp_neutral",
+    "frag": "sdcp_neutral",
+    "pose": "gas_reference",
+    "seed": null,
+    "cell_c_A": null,
+    "stage": "main"
+   },
+   {
+    "job": "refs/mol__ptfe_c10",
+    "frag": "ptfe_c10",
+    "pose": "gas_reference",
+    "seed": null,
+    "cell_c_A": null,
+    "stage": "main"
+   }
+  ],
+  "⚠_clean_slab": "없다 (대비에서 소거)",
+  "⚠_D3": "D3-on 만. D3-off 쌍둥이 없음"
+ },
+ "4_카나리_먼저": {
+  "무엇": "primary SDCP·PTFE 를 **같은 seed(pm1)** 로 c1·c2 두 셀에서 — 4잡",
+  "c1_A": 36.6551,
+  "c2_A": 40.6551,
+  "판정식": "D(c) = [E_C^SDCP(c) − E_mol^SDCP] − [E_C^PTFE(c) − E_mol^PTFE] 의 **대비 변화**에 적용. 조각별 변화가 아니다 — 기체 항은 c 에 무관하므로 ΔD = ΔE_C^SDCP − ΔE_C^PTFE 로 소거된다",
+  "통과_조건": "|D(c2) − D(c1)| ≤ 0.005 eV **그리고** 두 값의 0.01 eV 반올림이 같다",
+  "5_meV_의_출처": "물리 상수가 아니라 **보고 최소단위(0.01 eV)의 절반**이다",
+  "실패시": "추가 셀 탐색 없이 **Figure 2e 를 제거**한다",
+  "자기_topology_변화": "셀 사이에서 실현된 Ni 자기 topology 가 달라지면 그것도 실패다"
+ },
+ "5_유지하는_검사_여섯": [
+  "estimand · 기체 기준 conformer 고정",
+  "진공 민감도 (카나리)",
+  "실제 INCAR·구조 해시",
+  "사전 고정된 POTCAR 해시와 VASP 버전",
+  "SCF 수렴",
+  "실현된 Ni 자기 topology"
+ ],
+ "6_실행_경로에서_제거한_것": [
+  "H1 · holdout",
+  "C1 의 S_f",
+  "calibration/holdout merge",
+  "adaptive δ",
+  "후보집합 완전성",
+  "D3-off pair",
+  "비용모형을 과학적 게이트로 쓰는 규칙"
+ ],
+ "7_미해결로_끝내는_조건": [
+  "같은 자기 topology 에서 두 자세(primary·sensitivity)가 **같은 우열을 주지 않는다**",
+  "최종 대비 |D| < 0.05 eV",
+  "카나리 실패"
+ ],
+ "8_미해결이면": "계산을 확장하지 않고 **Figure 2e 패널을 뺀다**",
+ "9_재개_조건": [
+  "estimand 변경",
+  "입력·PP·VASP 동일성 파괴",
+  "자기 branch/우열 변경",
+  "최종 대비를 0.05 eV 이상 움직이는 재현 가능한 결함",
+  "결과 판독 불가"
+ ],
+ "10_그_밖": "risk log 에만 남긴다. 새 blocker 로 실행을 멈추지 않는다"
+}

@@ -6497,5 +6497,11 @@
    ]
   }
  },
- "freeze_sha256": "94675e66e02c855aa16dcc4a0fd8d11c966bff909287c96fbd81b990d923735b"
+ "freeze_sha256": "94675e66e02c855aa16dcc4a0fd8d11c966bff909287c96fbd81b990d923735b",
+ "_SUPERSEDED_2026_08_30": {
+  "지위": "⛔ SUPERSEDED — 2026-08-30 회신 AI(§A-Q4 = C)",
+  "무엇이_대체하나": "db/properties/sdcp_c12_protocol_2026_08_30.json (12잡 경로)",
+  "왜": "보조 패널 하나에 비해 검증 체계가 과도해졌다는 판정. H1·holdout · C1 의 S_f · calibration/holdout merge · adaptive δ · 후보집합 완전성 · D3-off pair · 비용모형을 과학적 게이트로 쓰는 규칙을 **실행 경로에서 제거**한다.",
+  "⛔": "새 실행의 정본으로 읽지 않는다. 기록으로만 남긴다."
+ }
 }

@@ -430,5 +430,11 @@
   "근거_레퍼런스": "litdb/papers/han2025_icep_binder_ultrahigh_loading_ncm811.md Fig. S12 — 'The bottom two layers are constrained. The vacuum spacing is over 15 Å.' 같은 계(바인더/NCM811 표면 DFT)의 관례다.",
   "교정": "셀 c 30.2609 → 36.6551 Å (전 잡 동일, 기준 슬랩 포함). 최소 8.629 → 15.001 Å.",
   "부수효과": "셀 부피 +21.1 %. 비용 모형이 원자수·k 만 봐서 이 증가를 **못 보고 있었다** — phase_hours 에 부피비를 넣어 고쳤다."
+ },
+ "_SUPERSEDED_2026_08_30": {
+  "지위": "⛔ SUPERSEDED — 2026-08-30 회신 AI(§A-Q4 = C)",
+  "무엇이_대체하나": "db/properties/sdcp_c12_protocol_2026_08_30.json (12잡 경로)",
+  "왜": "보조 패널 하나에 비해 검증 체계가 과도해졌다는 판정. H1·holdout · C1 의 S_f · calibration/holdout merge · adaptive δ · 후보집합 완전성 · D3-off pair · 비용모형을 과학적 게이트로 쓰는 규칙을 **실행 경로에서 제거**한다.",
+  "⛔": "새 실행의 정본으로 읽지 않는다. 기록으로만 남긴다."
  }
 }

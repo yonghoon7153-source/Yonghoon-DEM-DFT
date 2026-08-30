@@ -628,7 +628,9 @@
    "reopen_criteria": [
     "회신 N 승인조건 5 항목 완료 후 ratify 검토"
    ],
-   "enforcement": "webapp/tests/test_webapp.py::test_sdcp_closure_consistency 가 첫 사례를 봉인"
+   "enforcement": "webapp/tests/test_webapp.py::test_sdcp_closure_consistency 가 첫 사례를 봉인",
+   "status": "superseded",
+   "superseded_by": "회신 AI 2026-08-30 §A-Q4 = C (12잡 경로)"
   },
   {
    "id": "D-2026-08-28-sdcp-doped-scope-closure",
@@ -692,7 +694,7 @@
    "kind": "estimand",
    "scope": "sdcp.neutral_vs_ptfe.adsorption",
    "slot": "fragment_contrast_estimand",
-   "status": "proposed",
+   "status": "superseded",
    "applies_to": {
     "systems": [
      "sdcp_neutral",
@@ -729,7 +731,8 @@
    "registered_at": "2026-08-30",
    "registered_by": "agent",
    "ratified_by": null,
-   "note": "⚠ proposed — 사람이 ratify 해야 active. DFT 결과 0잡 시점 등록."
+   "note": "⚠ proposed — 사람이 ratify 해야 active. DFT 결과 0잡 시점 등록.",
+   "superseded_by": "회신 AI 2026-08-30 §A-Q4 = C (12잡 경로)"
   }
  ]
 }
