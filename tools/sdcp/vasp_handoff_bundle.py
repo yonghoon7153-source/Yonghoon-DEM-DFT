@@ -451,50 +451,44 @@ exit $?
 """
 
 RUN_STAGED = r'''#!/usr/bin/env bash
-# 2단계 러너 — 정지 규칙을 **실제로 적용**하려면 순서가 있어야 한다 (회신 AJ·AO).
+# 2단계 러너 — 정지 규칙을 **실제로 적용**하려면 순서가 있어야 한다 (회신 AJ·AO·AP).
 #
-#   0단계(자동): POTCAR 조립 + provenance + **묶음 root 봉인** (회신 AO P0-2·Q1)
+#   0단계(자동): POTCAR 조립 + provenance + **묶음 root 봉인** (AO P0-2·Q1)
 #   1단계: primary 두 조각 x 셀 두 높이 + 기체 기준 + 기체 canary
-#          -> 진공 두께 수렴 시험을 여기서 판정한다. |D(c2)-D(c1)| <= 5 meV.
-#          기체 기준이 1단계에 있는 이유 — 대비에 공통 기체 offset 이 필요하다.
+#          -> 진공 수렴 + **1단계 선결조건**(canary 기하·분자 스핀·POTCAR 신원)
 #   2단계: primary 다른 seed + 대안 자세 두 seed
+#          -> 시작 **직전에** 1단계 게이트를 다시 돌린다 (AP #6)
+#          -> 끝나면 최종 분석기를 돌린다 (AP #9)
 #
-# 실패하면 2단계를 돌리지 않는다. 추가 셀 탐색도 하지 않는다 (Figure 2e 제거).
-#
-# ⛔ 이 스크립트가 **유일한 실행 경로**다. run_job.sh 를 손으로 부르지 않는다 —
-#    POTCAR 조립과 root 봉인이 건너뛰어지고, 2단계 정지 규칙이 적용되지 않는다.
+# ⛔ 이 스크립트가 **유일한 실행 경로**다. run_job.sh 를 손으로 부르지 않는다.
 set -u
+usage() { echo "사용법: bash run_staged.sh {1|2}"; exit 2; }
+[ $# -ge 1 ] || usage
+stage=$1
+case "$stage" in 1|2) ;; *) echo "모르는 단계: $stage"; usage;; esac
 VASP_CMD=${VASP_CMD:?VASP_CMD 를 지정하세요 (예: 'mpirun -np 256 vasp_std')}
-PP=${PP:?PP 를 지정하세요 (POTCAR 원본 트리, 예: /opt/vasp/potpaw_PBE.54)}
+PP=${PP:?PP 를 지정하세요 (POTCAR 원본 트리)}
 POTCAR_ALLOWLIST=${POTCAR_ALLOWLIST:?POTCAR_ALLOWLIST 를 지정하세요 (절대경로)}
-stage=${1:-1}
 
-# ── 0단계 — POTCAR 조립 + root 봉인. 첫 VASP 실행 **전에** 끝난다 ────────
-# ⛔ 회신 AO P0-2 — 종전엔 run_staged 가 run_job.sh 를 바로 불렀는데, run_job 은
-#   POTCAR/POTCAR_PROVENANCE.json 이 없으면 즉시 중단한다. fresh ZIP 에서
-#   문서대로 실행하면 **반드시 실패**했다. 조립을 이 경로 안으로 넣는다.
+# ⛔ 회신 AP #9 — 중복 실행 가드. mkdir 은 원자적이라 경쟁 조건이 없다.
+LOCK=".lock_stage$stage"
+if ! mkdir "$LOCK" 2>/dev/null; then
+  own=$(cat "$LOCK/pid" 2>/dev/null || echo "?")
+  if [ "$own" != "?" ] && kill -0 "$own" 2>/dev/null; then
+    echo "이미 단계 $stage 가 돌고 있습니다 (pid $own)"; exit 3; fi
+  rm -rf "$LOCK"; mkdir "$LOCK" || exit 3
+fi
+echo $$ > "$LOCK/pid"
+trap 'rm -rf "$LOCK"' EXIT INT TERM
+
 bash SEAL_POTCAR_ROOT.sh || { echo "POTCAR 조립·봉인 실패 — 중단"; exit 1; }
 
-# ⛔ 회신 AO P0-3 — 2단계는 **해시에 결박된 1단계 PASS receipt** 없이 열리지 않는다.
+# ⛔ 회신 AP #6 — receipt 존재만으로 2단계를 열지 않는다. **지금 결과로 재판정**한다.
+#    (해시 결박보다 단순하고, 위조 receipt 로 우회할 수 없다)
 if [ "$stage" = 2 ]; then
-  [ -f STAGE1_PASS.json ] || {
-    echo "STAGE1_PASS.json 이 없다 — 1단계를 먼저 통과시킬 것:"
-    echo "  bash run_staged.sh 1"
-    exit 2; }
-  python3 - <<'PYGATE' || exit 2
-import hashlib, json, sys
-try:
-    r = json.load(open("STAGE1_PASS.json"))
-except Exception as e:
-    sys.exit("STAGE1_PASS.json 파싱 실패: %s" % e)
-h = hashlib.sha256(open("MANIFEST.json", "rb").read()).hexdigest()
-if r.get("manifest_sha256") != h:
-    sys.exit("STAGE1_PASS.json 이 지금 MANIFEST 와 다른 묶음의 것이다 "
-             "(기록 %s / 지금 %s)" % (str(r.get("manifest_sha256"))[:16], h[:16]))
-if r.get("gate") != "vacconv" or not r.get("stage1_jobs"):
-    sys.exit("STAGE1_PASS.json 이 vacconv 통과 receipt 가 아니다")
-print("  1단계 PASS receipt 확인 (%d잡 · %s)" % (len(r["stage1_jobs"]), r.get("verdict")))
-PYGATE
+  echo "== 2단계 시작 전 1단계 재판정 =="
+  python3 analyze_results.py . --gate vacconv || {
+    echo "1단계 게이트가 지금 결과로 통과하지 않는다 — 2단계를 열지 않는다."; exit 2; }
 fi
 
 # 잡 분류는 job.json 의 **구조화 필드**로 한다 — 이름 파싱 금지
@@ -504,6 +498,8 @@ want = sys.argv[1]
 for jp in sorted(glob.glob("*/*/job.json")):
     m = json.load(open(jp)); d = os.path.dirname(jp)
     kind, role, vac = m.get("kind"), m.get("role"), m.get("vacconv")
+    if kind is None:
+        sys.exit("job.json 에 kind 가 없다: " + jp)
     if kind == "mol_ref":
         s = "1"
     elif kind == "prospective_pose" and role == "primary":
@@ -512,12 +508,25 @@ for jp in sorted(glob.glob("*/*/job.json")):
         s = "2"
     if s == want:
         print(d)
-' "$stage" > _stage_jobs.txt
+' "$stage" > _stage_jobs.txt || { echo "잡 분류 실패 — 중단"; exit 2; }
 
-echo "== 단계 $stage · $(wc -l < _stage_jobs.txt) 잡 =="
+# ⛔ 회신 AP #9 — 분류가 조용히 0개/일부만 내고 성공하는 것을 막는다.
+n_stage=$(grep -c . _stage_jobs.txt || true)
+n_total=$(ls -d */*/ 2>/dev/null | wc -l)
+n_expect=$(python3 -c '
+import json,sys
+m=json.load(open("MANIFEST.json"))
+print(sum(1 for k,v in (m.get("planned") or {}).items()))' 2>/dev/null || echo 0)
+echo "== 단계 $stage · $n_stage 잡 (묶음 전체 $n_total · 계획 $n_expect) =="
+if [ "$n_stage" -eq 0 ]; then
+  echo "이 단계의 잡이 0개다 — 분류 규칙과 job.json 을 확인하세요. 중단."; exit 2; fi
+if [ "$n_total" != "$n_expect" ]; then
+  echo "잡 폴더 $n_total ≠ 계획 $n_expect — 묶음이 온전하지 않다. 중단."; exit 2; fi
 cat _stage_jobs.txt
+
 fail=0
 while read -r j; do
+  [ -n "$j" ] || continue
   [ -f "$j/run_job.sh" ] || { echo "없음: $j"; fail=1; continue; }
   echo "=== $j ==="
   ( cd "$j" && bash run_job.sh ) || { echo "$j 실패"; fail=1; }
@@ -529,6 +538,10 @@ if [ "$stage" = 1 ]; then
   python3 analyze_results.py . --gate vacconv || {
     echo "1단계 판정이 막혔다 — 2단계를 돌리지 않는다."; exit 2; }
   echo "1단계 통과 — 2단계는 'bash run_staged.sh 2'"
+else
+  # ⛔ 회신 AP #9 — 2단계 뒤 **최종 분석**까지가 러너의 일이다.
+  echo "== 최종 판정 =="
+  python3 analyze_results.py . || { echo "최종 판정 미통과"; exit 2; }
 fi
 exit $fail
 '''
@@ -6471,6 +6484,39 @@ def main():
                 print(f"   · {b}")
             return 2
         print(f"■ stage gate = vacconv · {_vc.get('verdict')}")
+        # ⛔⛔ 회신 AP #5 (2026-08-31) — stage gate 가 사실상 `closure_vacconv` 만 봤다.
+        #   그래서 nzmag 가 부모보다 낮거나 · canary 기하가 어긋나거나 ·
+        #   ROOT_SEAL 이 불일치하거나 · POTCAR source/VASP 버전이 갈려도
+        #   **2단계가 열렸다.** canary 와 POTCAR 검사를 1단계에 넣은 목적과 모순이다.
+        #   ⇒ stage1_prerequisites 를 따로 만들고 **전부** 통과해야 연다.
+        _pi = (_cl.get("potcar_identity") or {})
+        _cg_all = (results.get("gas_canary_geom") or {})
+        _mol_blk = [b for b in (_cl.get("blocks") or [])
+                    if b.startswith(("MOLECULAR_STATE_UNRESOLVED",
+                                     "MOLECULAR_SPIN_CONTROL"))]
+        _cg_bad = {f: v for f, v in _cg_all.items() if (v or {}).get("same") is not True}
+        _pre = {
+            "vacuum": {"pass": bool(_vc.get("pass")),
+                       "why": _vc.get("verdict")},
+            "molecular_state": {"pass": not _mol_blk,
+                                "why": (_mol_blk[:2] if _mol_blk else
+                                        "비영 시작이 부모보다 낮지 않다")},
+            "canary_geometry": {"pass": bool(_cg_all) and not _cg_bad,
+                                "why": (_cg_bad if _cg_bad else
+                                        "부모/canary static 기하 동일 (%d조각)"
+                                        % len(_cg_all))},
+            "potcar_identity": {"pass": not (_pi.get("blocking") or []),
+                                "why": (_pi.get("blocking") or [])[:2]
+                                       or _pi.get("identity_scope")},
+        }
+        _pre_bad = [k for k, v in _pre.items() if not v["pass"]]
+        print("■ stage-1 prerequisites:")
+        for _k, _v in _pre.items():
+            print(f"   {'✓' if _v['pass'] else '⛔'} {_k}: {str(_v['why'])[:70]}")
+        if _pre_bad:
+            print("⛔ **2단계를 열지 않는다** — 1단계 선결조건 미통과: %s" % _pre_bad)
+            print("   (canary·POTCAR 검사를 1단계에 넣은 이유가 바로 이것이다)")
+            return 2
         if not _vc.get("pass"):
             print("⛔ **2단계를 제출하지 않는다.** 추가 셀 탐색 없이 Figure 2e 를 제거한다.")
             return 2
@@ -6491,6 +6537,10 @@ def main():
             "stage1_energies_eV": {j: E(j) for j in _s1},
             "integrity_checked": integrity.get("checked"),
             "n_planned_required": sum(1 for pl in planned.values() if pl.get("required")),
+            "stage1_prerequisites": _pre,
+            "⚠_receipt_는_증거가_아니다": ("회신 AP #4 — 이 파일이 있다는 것만으로 "
+                "2단계를 열지 않는다. 러너가 2단계 **직전에** `--gate vacconv` 를 "
+                "다시 실행해 현재 결과로 재판정한다"),
             "⛔": ("1단계 통과 증거. run_staged.sh 2 는 이것 없이 열리지 않는다. "
                    "MANIFEST.json 이 바뀌면 manifest_sha256 이 달라져 무효다."),
         }
@@ -9008,8 +9058,34 @@ def selftest() -> int:
         chk("SEAL_POTCAR_ROOT.sh" in _rs,
             "⛔음성 AO P0-2: run_staged.sh 가 POTCAR 조립을 **실제로 부른다** "
             "(종전엔 run_job.sh 를 바로 불러 POTCAR 부재로 즉시 중단됐다)")
-        chk("STAGE1_PASS.json" in _rs and "manifest_sha256" in _rs,
-            "⛔음성 AO P0-3: run_staged.sh 2 가 **해시에 결박된** 1단계 receipt 를 요구한다")
+        # ⛔ 회신 AP #6 — receipt 존재를 믿지 않고 **지금 결과로 재판정**한다.
+        #   (위조 receipt(verdict:"FAIL")로 우회되던 경로를 아예 없앤다)
+        _s2 = _rs.split('if [ "$stage" = 2 ]')[-1].split("# 잡 분류")[0]
+        chk("--gate vacconv" in _s2,
+            "⛔음성 AP #6: run_staged.sh 2 가 **시작 직전에 게이트를 다시 돌린다** "
+            "(receipt 존재만으로 열지 않는다)")
+        chk("analyze_results.py ." in _rs.split('else')[-1],
+            "⛔음성 AP #9: 2단계 뒤 **최종 분석**까지 러너가 돌린다")
+        chk("n_stage" in _rs and "n_expect" in _rs and "0개다" in _rs,
+            "⛔음성 AP #9: 분류가 0개/일부만 내고 조용히 성공하는 것을 막는다 "
+            "(잡 수 census 검증)")
+        chk('case "$stage" in 1|2)' in _rs,
+            "⛔음성 AP #9: stage 값을 검증한다 (모르는 값이면 중단)")
+        chk(".lock_stage" in _rs,
+            "⛔음성 AP #9: 중복 실행 가드가 있다")
+        # ── 회신 AP #5 — stage gate 가 vacconv **만** 보지 않는다 ─────────
+        #   ⚠ 이 픽스처는 vacconv 잡이 없어 게이트가 그 전에 끝난다. 그래서
+        #     여기서는 **배포 분석기 소스**에 네 선결조건이 실제로 있고
+        #     _vc["pass"] 검사보다 **먼저** 평가되는지를 확인한다.
+        _azs = (_st / "analyze_results.py").read_text()
+        for _need in ("stage1_prerequisites", "canary_geometry",
+                      "molecular_state", "potcar_identity", "vacuum"):
+            chk(_need in _azs, f"AP #5: 선결조건 `{_need}` 이 분석기에 있다")
+        _i_pre = _azs.find("_pre_bad = [k for k")
+        _i_vac = _azs.find('if not _vc.get("pass"):\n            print("⛔ **2단계를 제출하지 않는다.')
+        chk(_i_pre > 0 and _i_vac > 0 and _i_pre < _i_vac,
+            "⛔음성 AP #5: 선결조건을 **vacuum 판정보다 먼저** 본다 "
+            "(canary·POTCAR 를 1단계에 넣은 목적)")
         # canary 가 부모 기하를 승계하는가 (AO P0-4)
         _cz = sorted(_st.rglob("*__nzmag/PARENT_GEOM"))
         chk(bool(_cz), "AO P0-4: canary 마다 PARENT_GEOM 이 있다 "
