@@ -2,7 +2,7 @@
 title: "회신 AM — C-12 INCAR 실물 감사: 진공 시험이 진공만 재지 않는다"
 date: 2026-08-31
 kind: review_request
-status: draft
+status: sent
 tags: [sdcp, vasp, incar, c12, vacuum-convergence, estimand, review/codex]
 ---
 
