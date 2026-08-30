@@ -4652,6 +4652,41 @@ def closure_C3(man, jobs, E, frags):
     return res
 
 
+def _estimand_topology_check(keys, jobs, label):
+    """회신 AP #2 — D 에 들어가는 **두 complex** 가 같은 자기 topology 인가.
+
+    → {"blocks": [...], "by_job": {...}, "same": bool|None}
+
+    ⛔ 존재 확인이 아니라 **비교**다. 종전엔 각 잡에 realized_basin_id 가 있는지만
+      보고 서로 같은지는 안 봤다 — 다른 basin 을 섞은 D 가 통과했다.
+    ⚠ 전역 스핀 반전은 같은 상태로 본다 (same_topology_direct 규약).
+    """
+    out = {"blocks": [], "by_job": {}, "same": None, "branch": label}
+    ks = [k for k in ("E_C_sdcp", "E_C_control") if keys.get(k)]
+    if len(ks) < 2:
+        out["blocks"].append(
+            "ESTIMAND_TOPOLOGY_KEYS_MISSING(%s: complex key 가 둘이 아니다)" % label)
+        return out
+    ja, jb = jobs.get(keys[ks[0]]), jobs.get(keys[ks[1]])
+    for k in ks:
+        fp, why = magnetic_topology_direct(jobs.get(keys[k]) or {})
+        out["by_job"][keys[k]] = {"fingerprint": fp, "why": why}
+        if fp is None:
+            out["blocks"].append(
+                "ESTIMAND_TOPOLOGY_UNRESOLVED(%s %s=%s: %s — 어떤 자기 상태에서 "
+                "잰 값인지 모른 채로 D 를 만들지 않는다)"
+                % (label, k, keys[k], (why or ["사유 없음"])[0]))
+    if out["blocks"]:
+        return out
+    same, why = same_topology_direct(ja, jb)
+    out["same"], out["why"] = bool(same), why
+    if not same:
+        out["blocks"].append(
+            "ESTIMAND_TOPOLOGY_MISMATCH(%s: 두 complex 가 **다른 자기 basin** 이다 "
+            "(%s) — 상태를 가로질러 뺀 차는 조건부 D 가 아니다)" % (label, why))
+    return out
+
+
 def _closure_estimand(man, results, E, emol, jobs, merge_info=None):
     """사전등록한 조각 간 대비를 **코드로** 계산한다 (회신 V P0-4).
 
@@ -4724,7 +4759,7 @@ def _closure_estimand(man, results, E, emol, jobs, merge_info=None):
         "schema": "prereg_closure/v1",
         "prereg_doc": "db/properties/prereg_sdcp_neutral_contrast_2026_08_29.json",
         "candidate_set": man.get("candidate_set") or "legacy_champion/cross (미동결)",
-        "blocks": [], "A_by_frag": {},
+        "blocks": [], "block_records": [], "A_by_frag": {},
     }
 
     # ── 경로 ↔ 필드 정합성. 어긋나면 값을 만들지 않는다 ──────────────────────
@@ -4759,6 +4794,18 @@ def _closure_estimand(man, results, E, emol, jobs, merge_info=None):
             "CALIBRATION_ONLY_TRANCHE — 이 잡들은 창 W 를 정하려고 돌린 것이고 "
             "후보집합이 아니다. primary 는 창 확정 → 창 안 전 자세 계산 → audit "
             "봉인해제 → regret 판정 순서를 마친 뒤에만 낸다 (회신 X Q6).")
+    # ⛔⛔ 회신 AP #3 (2026-08-31) — block 을 **구조화**한다. 종전엔 문자열뿐이라
+    #   "이 block 이 D 에 들어가는 네 잡을 언급하는가" 를 **문자열 매칭**으로 판단했다.
+    #   그런데 `BASIN_HETEROGENEOUS` 문자열에는 job 경로가 없다 ⇒ 그 조건이 **항상
+    #   참**이 되어 그 block 이 언제나 강등됐다. 막으려던 것을 못 막고 있었다.
+    #   ⇒ code · job_keys · scope · affects_estimand 를 기록하고, 강등 판정은
+    #     **문자열이 아니라 그 필드**로 한다.
+    def _blk(code, msg, job_keys=None, scope="global", affects_estimand=True):
+        out["blocks"].append(msg)
+        out["block_records"].append({
+            "code": code, "msg": msg, "job_keys": sorted(job_keys or []),
+            "scope": scope, "affects_estimand": bool(affects_estimand)})
+
     # (0b) 층화 홀드아웃도 **primary 를 내지 않는다** (2026-08-30, 옵션 A).
     #   홀드아웃은 선택기 가정을 시험하는 별도 질문이다. 홀드아웃이 더 낮게 나오면
     #   그것은 primary 의 min 후보가 아니라 **재개 조건 발동**이다 — 넣으면
@@ -4821,7 +4868,8 @@ def _closure_estimand(man, results, E, emol, jobs, merge_info=None):
             if e is None:
                 continue
             if g:
-                out["blocks"].append("GATED_POSE(%s: %s)" % (jn, g[0]))
+                _blk("GATED_POSE", "GATED_POSE(%s: %s)" % (jn, g[0]),
+                     job_keys=[jn], scope="pooled_diagnostic")
                 continue
             rb = (((jr.get("geom") or {}).get("magnetic") or {})
                   .get("realized_basin_id"))
@@ -4837,16 +4885,19 @@ def _closure_estimand(man, results, E, emol, jobs, merge_info=None):
     # (2c) 🔴 동종 basin 강제 — 여러 basin 이 섞인 집합에서 min 을 뽑지 않는다
     for f, b in basins.items():
         if None in b:
-            out["blocks"].append(
-                "BASIN_UNRESOLVED_IN_SET(%s: %d잡이 realized basin 없음 — %s)"
-                % (f, len(b[None]), b[None][:3]))
+            _blk("BASIN_UNRESOLVED_IN_SET",
+                 "BASIN_UNRESOLVED_IN_SET(%s: %d잡이 realized basin 없음 — %s)"
+                 % (f, len(b[None]), b[None][:3]),
+                 job_keys=b[None], scope="pooled_diagnostic")
         real = {k: v for k, v in b.items() if k is not None}
         if len(real) > 1:
-            out["blocks"].append(
-                "BASIN_HETEROGENEOUS(%s: 서로 다른 realized basin %d개가 한 집합에 "
-                "있다 %s — 상태를 가로질러 min 을 뽑지 않는다. seed 이름이 아니라 "
-                "수렴 결과가 갈렸다는 뜻이다)"
-                % (f, len(real), {k: len(v) for k, v in real.items()}))
+            _blk("BASIN_HETEROGENEOUS",
+                 "BASIN_HETEROGENEOUS(%s: 서로 다른 realized basin %d개가 한 집합에 "
+                 "있다 %s — 상태를 가로질러 min 을 뽑지 않는다. seed 이름이 아니라 "
+                 "수렴 결과가 갈렸다는 뜻이다)"
+                 % (f, len(real), {k: len(v) for k, v in real.items()}),
+                 job_keys=[j for v in real.values() for j in v],
+                 scope="pooled_diagnostic")
 
     # (2d) clean slab 과의 동종성 — E_ads 를 만들 때 필요하다 (회신 Z P0-4)
     _slab_rb = set()
@@ -4941,34 +4992,61 @@ def _closure_estimand(man, results, E, emol, jobs, merge_info=None):
     #     전역 블록(후보집합·기체 canary·spin control·POTCAR)은 그대로 둔다.
     #   ⚠ 이 강등은 **조기 return 앞에서** 해야 한다 — 뒤에 두면 이미 return 된 뒤다.
     _ejk0 = (man.get("estimand_job_keys") or {})
-    if _ejk0 and out["blocks"]:
+    if _ejk0:
+        # ⛔⛔ 회신 AP #2 — **네 잡 자신**의 자기 상태 검사는 다른 block 유무와
+        #   무관하게 **항상** 돌아야 한다. 종전엔 이것이 강등 블록 안에 있어서
+        #   `blocks` 가 비면 아예 실행되지 않았다 (원래 basin 요구도 같은 자리였다).
+        _tp = _estimand_topology_check(_ejk0, jobs, "pm1")
+        for _m in _tp["blocks"]:
+            _blk("ESTIMAND_TOPOLOGY", _m,
+                 job_keys=[v for k, v in _ejk0.items() if k.startswith("E_C_")],
+                 scope="estimand")
+        out.setdefault("estimand_topology", {})["pm1"] = _tp
+        _n4k0 = (man.get("estimand_job_keys_net4") or {})
+        if _n4k0:
+            _tp4 = _estimand_topology_check(_n4k0, jobs, "net4")
+            # net4 는 민감도라 **차단하지 않는다** — 대신 민감도 자격을 잃는다
+            _tp4["usable_as_sensitivity"] = not _tp4["blocks"]
+            out["estimand_topology"]["net4"] = _tp4
+    if _ejk0 and out["block_records"]:
         _need0 = ("E_C_sdcp", "E_C_control", "E_G_sdcp", "E_G_control")
         _exact = {_ejk0[k] for k in _need0 if _ejk0.get(k)}
-        _DEMOTE = ("BASIN_HETEROGENEOUS", "BASIN_UNRESOLVED_IN_SET", "GATED_POSE")
-        _keep, _demoted = [], []
-        for _b in out["blocks"]:
-            if _b.startswith(_DEMOTE) and not any(x in _b for x in _exact):
-                _demoted.append(_b)
-            else:
-                _keep.append(_b)
-        if _demoted:
-            out["blocks"] = _keep
-            out["nonprimary_notes"] = _demoted
+        # ⛔⛔ 회신 AP #3 — 종전엔 **문자열 매칭**으로 강등을 판단했다.
+        #   `BASIN_HETEROGENEOUS` 문자열에는 job 경로가 없어서 "네 잡을 언급하지
+        #   않는다" 가 **항상 참**이 되고, 그 block 이 언제나 강등됐다.
+        #   ⇒ 구조화 필드(scope · job_keys)로만 판단한다. job_keys 가 비어 있으면
+        #     **강등하지 않는다** (모르는 것을 안전한 쪽으로 읽지 않는다).
+        # ⛔⛔ 회신 AP #3 판정 — **pooled block 을 필터링하는 방식 자체가 취약하다.**
+        #   job_keys 교집합으로 걸러도, pooled 집합에는 exact key 가 거의 항상
+        #   섞여 있어서 결국 D 를 죽인다(실측: BASIN_HETEROGENEOUS 의 job_keys 가
+        #   그 조각의 **전 잡**이라 b00 pm1 을 포함한다).
+        #   ⇒ exact-key 경로에서는 pooled 진단이 estimand 를 **막지 않는다.**
+        #     그 진단의 목적은 "pooled 집합에서 min 을 뽑지 마라" 인데, 이 경로는
+        #     min 을 쓰지 않고 **사전 고정한 네 잡**을 직접 대입하기 때문이다.
+        #     네 잡의 안전은 따로 보장된다:
+        #       · 게이트 걸린 잡 → ESTIMAND_KEY_UNUSABLE (아래 _gated)
+        #       · 에너지 없음   → ESTIMAND_KEY_UNUSABLE (_none)
+        #       · 자기 상태 불일치/판독불가 → _estimand_topology_check (scope=estimand)
+        #   `_exact` 는 강등 판단에 쓰지 않고 기록용으로만 남긴다.
+        _keep_r, _dem_r = [], []
+        for _r in out["block_records"]:
+            (_dem_r if _r["scope"] == "pooled_diagnostic" else _keep_r).append(_r)
+        out["pooled_demote_policy"] = {
+            "rule": "exact-key 경로에서는 scope=pooled_diagnostic 을 전부 강등한다",
+            "why": "pooled min 을 쓰지 않으므로 그 진단이 estimand 에 적용되지 않는다",
+            "estimand_keys": sorted(_exact),
+            "estimand_safety": ["ESTIMAND_KEY_UNUSABLE(게이트·에너지)",
+                                "ESTIMAND_TOPOLOGY_*(자기 상태 직접 비교)"]}
+        if _dem_r:
+            out["block_records"] = _keep_r
+            out["blocks"] = [r["msg"] for r in _keep_r]
+            out["nonprimary_notes"] = [r["msg"] for r in _dem_r]
+            out["nonprimary_note_records"] = _dem_r
             out["nonprimary_notes_why"] = (
                 "이 블록들은 **D 에 들어가지 않는 잡**(net4·대안 자세)에 대한 것이다. "
                 "pm1 조건부 D 는 사전 고정한 네 잡으로 정의되므로 지우지 않는다 "
-                "(회신 AO P0-7). 자기 분기 민감도로만 읽는다")
-        # 그 대신 **네 잡 자신의** basin 은 여기서 직접 요구한다 (fail-closed)
-        for _k in ("E_C_sdcp", "E_C_control"):
-            if not _ejk0.get(_k):
-                continue
-            _rb = (((jobs.get(_ejk0[_k]) or {}).get("geom") or {})
-                   .get("magnetic") or {}).get("realized_basin_id")
-            if not _rb:
-                out["blocks"].append(
-                    "ESTIMAND_BASIN_UNRESOLVED(%s=%s: realized basin 이 없다 — "
-                    "어떤 자기 상태에서 잰 값인지 모른 채로 D 를 만들지 않는다)"
-                    % (_k, _ejk0[_k]))
+                "(회신 AO P0-7). 강등 판정은 **job_keys 교집합**으로 하지 문자열로 "
+                "하지 않는다 (회신 AP #3). 자기 분기 민감도로만 읽는다")
 
     if out["blocks"]:
         out["verdict"] = "NO_VALUE — blocks 를 해소하기 전에는 단일 X 를 보고하지 않는다"
@@ -9017,8 +9095,15 @@ def selftest() -> int:
              "seed": "afm2424_" + base.split("afm2424_")[1].replace("__d3off", ""),
              "d3": "off" if base.endswith("__d3off") else "on"}
         m.update(kw)
-        return {"ok": True, "gates": [], "meta": m,
-                "geom": {"magnetic": {"realized_basin_id": b}}}
+        # ⛔ 회신 AP #2 — estimand 검사가 **Ni 모멘트 표**를 요구한다. basin id 만
+        #   있는 픽스처는 실물이 아니다 (실물은 LORBIT 로 항상 표가 있다).
+        mg = {"realized_basin_id": b}
+        if b is not None:
+            mg["realized_basin"] = {"ni_moments_muB":
+                                    list(kw.pop("_mom", [1.2] * 24 + [-1.2] * 24))}
+        else:
+            kw.pop("_mom", None)
+        return {"ok": True, "gates": [], "meta": m, "geom": {"magnetic": mg}}
 
     _jobs = {k: _BAS("aaaa1111", k) for k in _en if k.startswith("prospective/")}
     _E = lambda j: _en.get(j)
@@ -9117,10 +9202,72 @@ def selftest() -> int:
     _jb7b = dict(_jb7)
     _jb7b["prospective/sdcp_neutral__b00__afm2424_pm1"] = _BAS(
         None, "prospective/sdcp_neutral__b00__afm2424_pm1")
-    chk(any("ESTIMAND_BASIN_UNRESOLVED" in b or "BASIN_UNRESOLVED_IN_SET" in b
+    # ⛔ 회신 AP #2 이후 코드명이 바뀌었다: ESTIMAND_BASIN_UNRESOLVED(존재 확인) →
+    #   ESTIMAND_TOPOLOGY_UNRESOLVED(모멘트 표를 읽어 topology 를 판정). pooled
+    #   BASIN_UNRESOLVED_IN_SET 은 exact-key 경로에서 강등되므로 여기에 기대지 않는다.
+    chk(any("ESTIMAND_TOPOLOGY_UNRESOLVED" in b
             for b in _closure_estimand(_man7, _RES(), lambda j: _en7.get(j),
                                        _emol, _jb7b)["blocks"]),
-        "⛔음성 AO P0-7: **D 에 들어가는 네 잡** 의 basin 이 없으면 여전히 막는다")
+        "⛔음성 AO P0-7 / AP #2: **D 에 들어가는 네 잡** 의 자기 상태를 못 읽으면 "
+        "여전히 막는다 (pooled 강등이 이걸 덮지 않는다)")
+    # ── 회신 AP #2 — exact complex 쌍의 자기 topology 를 **직접 비교** ──
+    def _J8(fp, jn):
+        r = _BAS("aaaa1111", jn)
+        r["geom"]["magnetic"] = {"realized_basin_id": "aaaa1111",
+                                 "realized_basin": {"ni_moments_muB": list(fp)}}
+        return r
+    _up8 = [1.2] * 24 + [-1.2] * 24
+    _dn8 = [-1.2] * 24 + [1.2] * 24                    # 전역 반전 — 같은 상태
+    _mix8 = [1.2] * 23 + [-1.2] + [-1.2] * 23 + [1.2]  # 배열이 다르다 — 다른 상태
+    _KA = "prospective/sdcp_neutral__b00__afm2424_pm1"
+    _KB = "prospective/ptfe_c10__b00__afm2424_pm1"
+    _man8 = dict(_man, estimand_job_keys={
+        "E_C_sdcp": _KA, "E_C_control": _KB,
+        "E_G_sdcp": "mol__sdcp_neutral__box24__nzmag",
+        "E_G_control": "mol__ptfe_c10__box24__nzmag"})
+    _en8 = {_KA: -201.0, _KB: -100.5,
+            "mol__sdcp_neutral__box24__nzmag": -200.0,
+            "mol__ptfe_c10__box24__nzmag": -100.0}
+    _ok8 = {_KA: _J8(_up8, _KA), _KB: _J8(_dn8, _KB)}
+    _r8 = _closure_estimand(_man8, _RES(), lambda j: _en8.get(j), _emol, _ok8)
+    chk(not any("TOPOLOGY" in b for b in _r8["blocks"])
+        and (_r8.get("estimand_topology") or {}).get("pm1", {}).get("same") is True,
+        f"AP #2 양성: 전역 스핀 반전은 **같은 상태**로 본다 · blocks {_r8['blocks'][:1]}")
+    _bad8 = {_KA: _J8(_up8, _KA), _KB: _J8(_mix8, _KB)}
+    _r8b = _closure_estimand(_man8, _RES(), lambda j: _en8.get(j), _emol, _bad8)
+    chk(any("ESTIMAND_TOPOLOGY_MISMATCH" in b for b in _r8b["blocks"]),
+        "⛔음성 AP #2: 두 complex 가 **다른 자기 basin** 이면 막는다 "
+        "(종전엔 각각 basin id 가 있는지만 보고 서로 같은지는 안 봤다)")
+    _nofp = {}
+    for _k in (_KA, _KB):                       # 모멘트 표를 **명시적으로** 없앤다
+        _j = _BAS("aaaa1111", _k)
+        _j["geom"]["magnetic"] = {"realized_basin_id": "aaaa1111"}
+        _nofp[_k] = _j
+    chk(any("ESTIMAND_TOPOLOGY_UNRESOLVED" in b for b in
+            _closure_estimand(_man8, _RES(), lambda j: _en8.get(j),
+                              _emol, _nofp)["blocks"]),
+        "⛔음성 AP #2: 모멘트 표가 없어 topology 를 못 읽으면 **막는다**")
+
+    # ── 회신 AP #3 — 강등은 문자열이 아니라 job_keys 로 ──────────────────
+    _r3 = _closure_estimand(_man7, _RES(), lambda j: _en7.get(j), _emol, _jb7)
+    _recs = (_r3.get("nonprimary_note_records") or [])
+    chk(all(r.get("job_keys") for r in _recs) and _recs,
+        f"AP #3: 강등된 record 가 **구조화**돼 있고 job_keys 를 갖는다 ({len(_recs)}건)")
+    chk(all(r["scope"] == "pooled_diagnostic" for r in _recs),
+        "AP #3: 강등 판정은 **scope 필드**로 한다 (문자열 매칭 아님)")
+    chk((_r3.get("pooled_demote_policy") or {}).get("estimand_safety"),
+        "AP #3: pooled 를 강등한 대신 **네 잡의 안전 근거**를 결과에 명시한다")
+    # ⛔음성 — pooled 를 강등해도 **네 잡 자신**의 결함은 여전히 막는다
+    _jb3c = dict(_jb7)
+    _jb3c["prospective/sdcp_neutral__b00__afm2424_pm1"] = dict(
+        _jb3c["prospective/sdcp_neutral__b00__afm2424_pm1"],
+        gates=["MAGNETIC_COLLAPSE(합성)"])
+    chk(any("ESTIMAND_KEY_UNUSABLE" in b for b in
+            _closure_estimand(_man7, _RES(), lambda j: _en7.get(j),
+                              _emol, _jb3c)["blocks"]),
+        "⛔음성 AP #3: pooled 강등이 **네 잡의 게이트를 덮지 않는다** "
+        "(exact key 가 게이트되면 여전히 NO_VALUE)")
+
     # net4 직접식이 봉인돼 있으면 D_net4 − D_pm1 을 **실제로 계산한다**
     _man7n = dict(_man7, estimand_job_keys_net4={
         "E_C_sdcp": "prospective/sdcp_neutral__b09__afm2424_net4",
