@@ -5180,6 +5180,9 @@ def _closure_estimand(man, results, E, emol, jobs, merge_info=None):
             rb = (((jr.get("geom") or {}).get("magnetic") or {})
                   .get("realized_basin_id"))
             basins.setdefault(f, {}).setdefault(rb, []).append(jn)
+            if emol.get(f) is None:
+                continue          # ⛔ 회신 AR P0-3 — `float − None` 예외 대신 건너뛴다
+                                  #   (기체 기준 부재는 위에서 이미 block 이다)
             rows.append([round(e - emol[f], 6), jn, rb])
         rows.sort()
         out["A_by_frag"][f] = {"n": len(rows),
@@ -5308,6 +5311,7 @@ def _closure_estimand(man, results, E, emol, jobs, merge_info=None):
         _g = {}
         for _f in (_sdf, _ctf):
             _g[_f] = (E("refs/mol__%s__box24" % _f), E("refs/mol__%s__box20" % _f))
+        # ⛔ 회신 AR P0-3 — 결측을 **예외가 아니라 구조화 block** 으로 처리한다
         _miss_g = [f for f, (a24, a20) in _g.items() if a24 is None or a20 is None]
         if _miss_g:
             _blk("GAS_BOX_NOT_MEASURED",
@@ -5374,6 +5378,13 @@ def _closure_estimand(man, results, E, emol, jobs, merge_info=None):
         #       · 에너지 없음   → ESTIMAND_KEY_UNUSABLE (_none)
         #       · 자기 상태 불일치/판독불가 → _estimand_topology_check (scope=estimand)
         #   `_exact` 는 강등 판단에 쓰지 않고 기록용으로만 남긴다.
+        # ⛔⛔ 회신 AR Q1/P0-2 (2026-08-31) — 종전엔 강등 시 `out["blocks"]` 를
+        #   `block_records` 에서 **다시 만들었다.** 그런데 `_blk()` 를 거치지 않고
+        #   `out["blocks"].append(...)` 로 직접 들어온 **구조화 안 된 전역 차단**
+        #   (MOLECULAR_STATE_UNRESOLVED · CANARY_GEOM_* · POTCAR · closure 등)은
+        #   record 가 없어서 **통째로 사라졌다.** 리뷰가 재현했다:
+        #   MOLECULAR_STATE_UNRESOLVED + BASIN_HETEROGENEOUS → blocks 가 빈 배열.
+        #   ⇒ **canonical `blocks` 는 절대 수정하지 않는다.** 강등은 별도 view 로만.
         _keep_r, _dem_r = [], []
         for _r in out["block_records"]:
             (_dem_r if _r["scope"] == "pooled_diagnostic" else _keep_r).append(_r)
@@ -5383,9 +5394,12 @@ def _closure_estimand(man, results, E, emol, jobs, merge_info=None):
             "estimand_keys": sorted(_exact),
             "estimand_safety": ["ESTIMAND_KEY_UNUSABLE(게이트·에너지)",
                                 "ESTIMAND_TOPOLOGY_*(자기 상태 직접 비교)"]}
+        # canonical 목록(blocks · block_records)은 **손대지 않는다**.
+        #   primary D 판정에만 쓰는 view 를 따로 만든다.
+        _dem_msgs = {r["msg"] for r in _dem_r}
+        out["primary_estimand_blocks"] = [b for b in out["blocks"]
+                                          if b not in _dem_msgs]
         if _dem_r:
-            out["block_records"] = _keep_r
-            out["blocks"] = [r["msg"] for r in _keep_r]
             out["nonprimary_notes"] = [r["msg"] for r in _dem_r]
             out["nonprimary_note_records"] = _dem_r
             out["nonprimary_notes_why"] = (
@@ -5394,7 +5408,18 @@ def _closure_estimand(man, results, E, emol, jobs, merge_info=None):
                 "(회신 AO P0-7). 강등 판정은 **job_keys 교집합**으로 하지 문자열로 "
                 "하지 않는다 (회신 AP #3). 자기 분기 민감도로만 읽는다")
 
-    if out["blocks"]:
+    # ⛔ 회신 AR Q1 — primary D 판정은 **primary view** 로 하되, pooled 진단은
+    #   `secondary_G`·pooled min·일반화 주장을 **계속 차단**한다 (아래 §pooled_effect).
+    _pv = out.get("primary_estimand_blocks")
+    if _pv is None:
+        _pv = list(out["blocks"])          # 강등이 없었으면 canonical 그대로
+        out["primary_estimand_blocks"] = _pv
+    out["pooled_effect"] = {
+        "secondary_G_citable": not bool(out.get("nonprimary_notes")),
+        "pooled_min_citable": not bool(out.get("nonprimary_notes")),
+        "why": ("pooled heterogeneity 는 primary(봉인 네 잡)에는 적용되지 않지만 "
+                "pooled 최솟값·secondary_G·일반화 주장은 **계속 막는다** (회신 AR Q1)")}
+    if _pv:
         out["verdict"] = "NO_VALUE — blocks 를 해소하기 전에는 단일 X 를 보고하지 않는다"
         return out
 
@@ -5461,7 +5486,13 @@ def _closure_estimand(man, results, E, emol, jobs, merge_info=None):
         primary = a_s["min"][0] - a_c["min"][0]
         secondary = a_c["min"][0] - a_s["max"][0]
     out["primary_ddE_lowE_eV"] = round(primary, 4)
-    out["secondary_G_eV"] = round(secondary, 4)
+    if (out.get("pooled_effect") or {}).get("secondary_G_citable"):
+        out["secondary_G_eV"] = round(secondary, 4)
+    else:
+        out["secondary_G_eV"] = None
+        out["secondary_G_⛔"] = (
+            "pooled 집합에 heterogeneity 가 있다 — secondary_G 는 pooled 최솟값/최댓값에서 "
+            "나오므로 **막는다** (primary 는 봉인 네 잡이라 영향받지 않는다 · 회신 AR Q1)")
     out["reported_X_eV"] = round(round(primary / PREREG_ROUND_EV) * PREREG_ROUND_EV, 2)
     out["fragments"] = {"sdcp": sd, "control": ct}
     if primary <= PREREG_GUARD_EV:
@@ -5980,8 +6011,23 @@ def main():
         mg["Q_clean_ref"] = q_ref
         mg["Q_clean_ref_seed"] = sd
         if q_ref is None:
-            mg["verdict"] = "clean 기준 없음/무효 — 자기 붕괴 판정 보류"
-            if "clean_slab" not in j:
+            # ⛔⛔ 회신 AR P0-1 (2026-08-31) — **clean-free 설계에서는 이 게이트가
+            #   전 complex 를 막는다.** C-12 는 clean slab 을 일부러 계산하지 않는다
+            #   (D 에서 대수적으로 소거되므로). 그런데 여기서 clean Q 기준이 없다고
+            #   모든 magnetic complex 를 MAGNETIC_REFERENCE_INVALID 로 막아,
+            #   exact pm1/net4 가 전부 게이트돼 **primary D 가 아예 안 나왔다.**
+            #   ⇒ clean 을 **선언조차 하지 않은** 판(clean-free)에서는 이 게이트를
+            #     적용하지 않는다. 그 역할은 `_estimand_topology_check` 의
+            #     **직접 topology 비교**가 대신한다 (회신 AP #2 로 이미 넣었다).
+            #   ⚠ clean 을 선언해 놓고 결과가 없는 것은 여전히 차단이다 — 그건
+            #     "계산했어야 하는데 안 온 것" 이고 clean-free 와 다르다.
+            _clean_declared = bool(((man.get("refs") or {}).get("clean_slab") or [])
+                                   or (man.get("magnetic_controls") or []))
+            mg["verdict"] = ("clean-free 설계 — 이 판정은 직접 topology 비교가 대신한다"
+                             if not _clean_declared else
+                             "clean 기준 없음/무효 — 자기 붕괴 판정 보류")
+            mg["clean_free"] = not _clean_declared
+            if "clean_slab" not in j and _clean_declared:
                 r["gates"].append(
                     f"MAGNETIC_REFERENCE_INVALID({sd}: "
                     f"{ref_bad.get(sd, '기준 없음')} — 자기 붕괴를 판정할 수 없다)")
@@ -6147,20 +6193,31 @@ def main():
             mol_ok[f] = None
             emol[f] = e24
             continue
-        ok = e20 is not None and e24 is not None and abs(e20 - e24) <= BOX_TOL
-        mol_ok[f] = ok
-        emol[f] = e24 if ok else None          # 실패하면 E_ads 를 만들지 않는다
-        if e20 is not None and e24 is not None:
-            d = abs(e20 - e24)
+        # ⛔⛔ 회신 AR P0-3 / Q2 (2026-08-31) — **옛 조각별 10 meV 게이트를 없앤다.**
+        #   판정은 `δ_gas`(두 기체의 **차**) 하나로 한다. 조각별 게이트가 남아 있으면
+        #   두 가지가 깨진다:
+        #     ① SDCP/PTFE 가 +20/+19 meV 면 δ_gas = 1 meV 로 통과해야 하는데
+        #        조각별 게이트가 두 `emol` 을 **None 으로 만들고**, 그 뒤 A(f,p)
+        #        계산에서 `float − None` 으로 **예외로 죽는다** (리뷰가 재현).
+        #     ② box20 누락도 GAS_BOX_NOT_MEASURED 가 아니라 예외로 끝난다.
+        #   ⇒ `emol` 은 box24 를 그대로 쓰고(정본), 진단만 기록한다.
+        #     결측·불일치는 `_blk(...)` 로 **구조화된 hard block** 이 된다 (아래 δ_gas).
+        mol_ok[f] = True
+        emol[f] = e24
+        if e24 is None:
+            emol[f] = None
             results["numerical_gates"][f"box_{f}"] = {
-                "dE_meV": round(d * 1000, 1), "pass": d <= BOX_TOL}
-            if not ok:
-                results["warnings"].append(
-                    f"mol__{f}: 상자 20↔24 Å 차 {d * 1000:.1f} meV > 10 — "
-                    f"이 조각의 E_ads 를 만들지 않는다")
+                "dE_meV": None, "pass": False,
+                "why": "box24(정본)가 없다 — 이 조각의 기체 기준이 없다"}
+            results["warnings"].append(f"mol__{f}: box24 없음 — 기체 기준 부재")
         else:
-            results["numerical_gates"][f"box_{f}"] = {"dE_meV": None, "pass": False}
-            results["warnings"].append(f"mol__{f}: 상자 2종 중 하나가 없다 — E_ads 불가")
+            _d = (abs(e20 - e24) if e20 is not None else None)
+            results["numerical_gates"][f"box_{f}"] = {
+                "dE_meV": (None if _d is None else round(_d * 1000, 1)),
+                "pass": None,                         # ⛔ 판정하지 않는다 — 진단이다
+                "role": "diagnostic_only",
+                "why": ("판정은 δ_gas(두 기체의 차) 하나로 한다 (회신 AR P0-3). "
+                        "조각별 값은 진단으로만 남긴다")}
 
     eclean = {s: E(f"refs/clean_slab__{s}")
               for s in man.get("seeds_full", ["afm2424_pm1", "afm2424_net4"])}
@@ -8371,8 +8428,18 @@ def build_bundle(a, ledger: Optional[Dict[str, Any]] = None) -> Path:
         _boxes = ((20.0, "box20"), (24.0, "box24"))
         for margin, tag in _boxes:
             rel = f"refs/mol__{frag}__{tag}"
+            # ⛔⛔ 회신 AR Q2 (2026-08-31) — 실물 v15 의 기체 부모 네 잡이 전부
+            #   `relax → static` 이었다. 각 상자에서 **독립으로 이완**하므로
+            #   δ_gas 가 "셀 효과" 가 아니라 "셀 효과 + 독립 이완 차이" 를 잰다.
+            #   ⇒ 단일점 판에서는 기체도 **고정기하 static** 이어야 한다.
+            #     box20/box24 는 같은 원본 분자를 각 상자 중심으로 **강체 평행이동**만
+            #     한 것이라 내부좌표가 동일하고, DIPOL 은 각 상자의 COM 으로 갱신된다.
+            #   ⚠ AQ 프롬프트에 "두 잡 다 --single_point 라 독립 재이완이 없다" 고
+            #     썼는데 **그것이 틀렸다** — `closure` 가 아니면 relax 가 붙는다.
+            _gas_fixed = bool(a.closure or getattr(a, "single_point", False))
             m = _emit_mol_job(out / rel, frag, mol, margin,
-                              free_spin=getattr(a, "free_spin_refs", False), closure=a.closure)
+                              free_spin=getattr(a, "free_spin_refs", False),
+                              closure=_gas_fixed)
             plan(rel, m["phases"], True, m)
             man["refs"][f"mol__{frag}__{tag}"] = rel
             n_jobs += 1
@@ -8564,6 +8631,13 @@ def build_bundle(a, ledger: Optional[Dict[str, Any]] = None) -> Path:
                  "   영구히 열리지 않는다. 생성기에서 멈춘다 (schema error).\n"
                  "   %s" % (len(_nometa), _nometa[:5]))
 
+    man["gas_geometry_policy"] = {
+        "fixed_geometry_static": bool(getattr(a, "single_point", False) or a.closure),
+        "why": ("box20/box24 가 각각 독립 이완하면 δ_gas 가 셀 효과와 이완 차이를 "
+                "함께 잰다 (회신 AR Q2). 단일점 판에서는 둘 다 고정기하 static 이고, "
+                "같은 원본 분자를 각 상자 중심으로 **강체 평행이동**만 한다"),
+        "dipol": "각 상자의 COM 으로 갱신 (VASP 권고)",
+    }
     man["potcar_spec"] = {e: POTCAR_SPEC.get(e, e) for e in sorted(used_els)}
     (out / "analyze_results.py").write_text(ANALYZER)
     if getattr(a, "refs_minimal", False):
@@ -9793,10 +9867,17 @@ def selftest() -> int:
                "prospective/ptfe_c10__b09__afm2424_net4"):
         _jb7[_k] = _BAS("bbbb2222", _k)
     _r7 = _closure_estimand(_man7, _RES(), lambda j: _en7.get(j), _emol, _jb7)
-    chk(not any(b.startswith("BASIN_HETEROGENEOUS") for b in _r7["blocks"])
+    # ⛔ 회신 AR Q1 이후: 정본 blocks 는 **다시 쓰지 않는다** (BASIN_HETEROGENEOUS 가 남는다).
+    #   강등은 primary_estimand_blocks 뷰에서만 일어난다 — 그래서 둘 다 확인한다.
+    chk(any(b.startswith("BASIN_HETEROGENEOUS") for b in _r7["blocks"]),
+        "⛔음성 AR Q1: 정본 blocks 에는 BASIN_HETEROGENEOUS 가 **그대로 남는다** "
+        f"(강등이 정본을 지우지 않는다) · blocks {_r7.get('blocks')}")
+    chk(not any(b.startswith("BASIN_HETEROGENEOUS")
+                for b in _r7.get("primary_estimand_blocks", _r7["blocks"]))
         and any("BASIN_HETEROGENEOUS" in n for n in (_r7.get("nonprimary_notes") or [])),
         "⛔음성 AO P0-7: net4 가 다른 basin 이어도 **pm1 조건부 D 를 지우지 않는다** "
-        f"(민감도 주석으로 내린다) · blocks {_r7.get('blocks')}")
+        "(primary 뷰에서만 민감도 주석으로 내린다) · primary "
+        f"{_r7.get('primary_estimand_blocks')}")
     chk(_r7.get("primary_ddE_lowE_eV") is not None,
         f"AO P0-7: 그 상태에서도 D_pm1 이 나온다 (실제 {_r7.get('primary_ddE_lowE_eV')})")
     # ⛔음성 — 그런데 **네 잡 자신**의 basin 이 없으면 여전히 막는다
