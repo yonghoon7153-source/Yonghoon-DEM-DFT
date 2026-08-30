@@ -1,6 +1,6 @@
 # kb 카탈로그 (생성물 — 손으로 고치지 말 것)
 
-> `python3 tools/kb_wiki.py index` 가 만든다 · 2026-08-30 · managed-files: 308
+> `python3 tools/kb_wiki.py index` 가 만든다 · 2026-08-30 · managed-files: 309
 
 규칙: kb/SCHEMA.md · 열린 질문: kb/questions/ · 논지 카드: kb/syntheses/ · 원장: kb/open_items.md · 문헌: litdb/INDEX.md
 
@@ -170,7 +170,7 @@
 - `kb/results/vgcf_hbn_figure_plan.md` — VGCF/h-BN 원고 — 층수 연구를 어디에 둘 것인가 (2026-07-31 결정)
 - `kb/results/vgcf_hbn_gallery_mechanism_2026_07_30.md` — h-BN@VGCF — 209 meV 층수효과의 정체: confinement 확정 (2026-07-30)
 
-## reviews/ (64)
+## reviews/ (65)
 - `kb/reviews/ECERD2600097_review_notes.md` — 📝 리뷰 노트 — ECER-D-26-00097 (Fan 외, *Stability Issues in Sulfide-Based ASSB*)
 - `kb/reviews/codex_AA_prompt_stageA_v5_regate_2026_08_29.md` — Codex 재검토 요청 AA — 회신 Z 의 P0 8건 처리 후 Stage A v5 재게이트 ○미열람
 - `kb/reviews/codex_AB_prompt_stageA_v9_regate_2026_08_29.md` — Codex 재검토 요청 AB — 회신 AA 의 P0 5건 + Q2 처리, 그리고 자체검토에서 나온 넷 ○미열람
@@ -187,6 +187,7 @@
 - `kb/reviews/codex_AL_reply_cascade_d_rel_2026_08_30.md` — 회신 AL 접수 — NO-GO. 내 '같은 구조' 전제가 틀렸다
 - `kb/reviews/codex_AM_prompt_c12_incar_2026_08_31.md` — 회신 AM — C-12 INCAR 실물 감사: 진공 시험이 진공만 재지 않는다
 - `kb/reviews/codex_AM_reply_c12_incar_2026_08_31.md` — 회신 AM 접수 — NO-GO. 분석기가 자기 번들을 못 읽는다
+- `kb/reviews/codex_AN_prompt_c12_v7_2026_08_31.md` — 회신 AN — C-12 v7 재심: estimand 를 고정기하 단일점으로 되돌렸다
 - `kb/reviews/codex_A_cascade_ml_2026_08_20.md` — 교차리뷰 A — cascade 파이프라인 + 머신러닝 (codex 작업지시서) ○미열람
 - `kb/reviews/codex_B_neb_md_tools_2026_08_20.md` — 교차리뷰 B — NEB · MD · 도구 (codex 작업지시서) ○미열람
 - `kb/reviews/codex_C_funnel_2026_08_20.md` — 교차리뷰 C v2.1 — cascade 깔때기는 잘 작동했나 (codex 2라운드 종료) ○미열람
