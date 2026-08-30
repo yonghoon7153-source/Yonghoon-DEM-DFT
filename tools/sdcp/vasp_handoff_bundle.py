@@ -281,9 +281,11 @@ V=${VASP_CMD:-"mpirun -np ${NP:-48} vasp_std"}   # 계약·비용모형과 같�
 #   VASP 가 돌았다 — allowlist 실패가 계산 중단으로 이어지지 않았다.
 #   셋을 요구한다: ① provenance 존재 ② 면제 아님 ③ 지금 POTCAR 의 sha 가 일치.
 #   ③이 핵심 — 조립 뒤 POTCAR 를 바꿔치기하면 여기서 걸린다.
-#   ⚠ SKIP_POTCAR_PROVENANCE=1 은 **시험 장치 전용**이다. 반송물에 그대로 남으므로
-#     production 에서 쓰면 분석기가 본다.
-if [ "${SKIP_POTCAR_PROVENANCE:-0}" != "1" ]; then
+# ⛔ 회신 AF P0-7 — 종전엔 SKIP_POTCAR_PROVENANCE=1 **환경변수**로 우회됐다.
+#   환경변수는 반송물에 흔적이 안 남아 분석기가 볼 수 없다. 시험 장치는 파일로 표시하고
+#   (`.SELFTEST_FIXTURE`), 배포 번들에는 그 파일이 없다 — files_sha256 이 전 파일을
+#   덮으므로 나중에 만들어 넣으면 무결성 검사에서 걸린다.
+if [ ! -f .SELFTEST_FIXTURE ]; then
   [ -f POTCAR_PROVENANCE.json ] || {
     echo "⛔ POTCAR_PROVENANCE.json 이 없습니다 — POTCAR 를 손으로 놓지 말고"
     echo "   PP=... POTCAR_ALLOWLIST=/abs/site_allow.txt bash POTCAR_ASSEMBLE.sh"; exit 1; }
@@ -297,6 +299,9 @@ if d.get("allowlist_waived"):
     sys.exit("\u26d4 allowlist 면제로 조립된 POTCAR 입니다 — 이 계약에서 폐지됐습니다")
 if not d.get("allowlist"):
     sys.exit("\u26d4 provenance 에 allowlist 경로가 없습니다 — 대조 없이 조립됐습니다")
+if not d.get("allowlist_sha256"):
+    sys.exit("\u26d4 provenance 에 allowlist 내용 SHA 가 없습니다 — 경로만으로는 "
+             "어느 allowlist 였는지 확인할 수 없습니다")
 h = hashlib.sha256(open("POTCAR", "rb").read()).hexdigest()
 if h != d.get("assembled_sha256"):
     sys.exit("\u26d4 POTCAR 가 조립 이후 바뀌었습니다 (지금 %s / 기록 %s)"
@@ -901,6 +906,10 @@ def _write_potcar_asm(jd: Path, species_order: List[str]) -> None:
         '                  "expected_variants": "' + " ".join(pv) + '".split(),\n'
         '                  "titel_lines": titel, "source_sha256": src,\n'
         '                  "allowlist": _os.environ.get("POTCAR_ALLOWLIST"),\n'
+        '                  "allowlist_sha256": (hashlib.sha256(open(\n'
+        '                      _os.environ["POTCAR_ALLOWLIST"],"rb").read()).hexdigest()\n'
+        '                      if _os.environ.get("POTCAR_ALLOWLIST") and\n'
+        '                      _os.path.isfile(_os.environ["POTCAR_ALLOWLIST"]) else None),\n'
         '                  "allowlist_waived": False,\n'
         '                  "assembled_sha256": hashlib.sha256(\n'
         '                      open("POTCAR.tmp","rb").read()).hexdigest()},\n'
@@ -2420,6 +2429,47 @@ def selftest_k() -> int:
         "⛔음성 AF: cal 11 + holdout 1 은 합이 12 여도 거부한다")
     chk("전역 최소" in str(_c5.get("⛔_금지_서술")),
         "C5 가 금지 서술을 결과에 함께 싣는다")
+
+    # ── 분석기 쪽 게이트 (러너가 아니라 **반송물**을 우리가 직접 본다) ──────
+    _M = {"files_sha256": {"j/POTCAR_ASSEMBLE.sh": "x"}}
+    _meta_ok = {"species_order": ["Li", "Ni"], "potcar_spec": {"Li": "Li_sv",
+                                                               "Ni": "Ni_pv"}}
+    import tempfile as _tfx
+    _jp = pathlib.Path(_tfx.mkdtemp()) / "pg"
+    _jp.mkdir(parents=True, exist_ok=True)
+
+    def _pg(payload, meta=None, marker=False):
+        for q in _jp.iterdir():
+            q.unlink()
+        if payload is not None:
+            (_jp / "POTCAR_PROVENANCE.json").write_text(json.dumps(payload))
+        if marker:
+            (_jp / ".SELFTEST_FIXTURE").write_text("x")
+        return potcar_provenance_gates(str(_jp), meta or _meta_ok, "j", _M)
+
+    _good = {"schema": "potcar_provenance/v1", "species_order": ["Li", "Ni"],
+             "expected_variants": ["Li_sv", "Ni_pv"],
+             "titel_lines": [" TITEL  = PAW_PBE Li_sv", " TITEL  = PAW_PBE Ni_pv"],
+             "allowlist": "/a", "allowlist_sha256": "0" * 64,
+             "allowlist_waived": False, "assembled_sha256": "1" * 64}
+    chk(_pg(_good) == [], "분석기 양성: 정상 provenance 는 게이트 0건")
+    chk(any("MISSING" in g for g in _pg(None)),
+        "⛔음성 P0-7: 반송물에 provenance 가 없으면 막는다")
+    chk(any("WAIVED" in g for g in _pg({**_good, "allowlist_waived": True})),
+        "⛔음성 P0-7: 면제본은 막는다")
+    chk(any("UNPINNED" in g for g in
+            _pg({k: v for k, v in _good.items() if k != "allowlist_sha256"})),
+        "⛔음성 P0-7: allowlist 내용 SHA 가 없으면 막는다")
+    chk(any("SPECIES_ORDER_MISMATCH" in g for g in
+            _pg({**_good, "species_order": ["Ni", "Li"]})),
+        "⛔음성 P0-7: 종 순서가 잡과 다르면 막는다 (다른 계를 계산한 것이다)")
+    chk(any("VARIANT_NOT_IN_TITEL" in g for g in
+            _pg({**_good, "titel_lines": [" TITEL  = PAW_PBE Li", " TITEL  = PAW_PBE Ni"]})),
+        "⛔음성 P0-7: 선언한 variant 가 TITEL 에 없으면 막는다 (Ni vs Ni_pv)")
+    chk(any("FIXTURE_MARKER" in g for g in _pg(_good, marker=True)),
+        "⛔음성 P0-7: 시험 표시 파일이 반송물에 섞이면 막는다")
+    chk(potcar_provenance_gates(str(_jp), _meta_ok, "other", _M) == [],
+        "[음성] 조립기를 안 실어 보낸 잡에는 계약을 요구하지 않는다")
     # ⛔ 음성 C5-a — 홀드아웃이 더 낮으면 **SELECTOR_FAIL**, 값을 안 만든다
     _A5b = dict(_A5, sdcp_neutral=([-1.20, -1.10, -1.05, -1.00],
                                    [-1.40] + [-0.9] * 7))   # 홀드아웃이 200 meV 더 낮다
@@ -3132,6 +3182,56 @@ def same_basin(ja, jb):
                                             d.get("moment_rms_muB"), MOM_RMS_TOL))
     return True, "ok"
 
+
+def potcar_provenance_gates(job_dir, meta, rel=None, man=None):
+    """반송된 `POTCAR_PROVENANCE.json` 을 **분석기가 직접 읽고** 게이트한다.
+
+    ⛔ 회신 AF P0-7 — 종전엔 러너만 봤다. 러너는 외주처 기계에서 돌고 우리는 그 결과를
+    믿을 근거가 없다. 반송물에 provenance 가 있어야 하고, 그 내용이 이 잡의 종 순서·
+    variant 와 맞아야 한다.
+
+    ⛔ 이 함수가 못 하는 것: POTCAR **원본 파일**을 우리가 갖고 있지 않으므로
+       `source_sha256` 이 진짜 그 배포판인지는 확인 못 한다. 사이트가 사전 승인된
+       allowlist 를 썼다는 것과, 조립 뒤 바꿔치기가 없었다는 것만 본다.
+    """
+    g = []
+    # 계약은 **우리가 조립기를 실어 보낸 잡**에만 적용한다. 그 사실은 files_sha256 에
+    # 박혀 있어 지울 수 없다 (지우면 무결성 검사가 따로 잡는다). 합성 픽스처처럼
+    # 조립기가 없는 잡에는 요구하지 않는다 — 없는 계약을 만들지 않기 위해서다.
+    _fh = (man or {}).get("files_sha256") or {}
+    if rel is not None and _fh and ("%s/POTCAR_ASSEMBLE.sh" % rel) not in _fh:
+        return []
+    if rel is not None and not _fh and not os.path.isfile(
+            os.path.join(job_dir, "POTCAR_ASSEMBLE.sh")):
+        return []
+    pp = os.path.join(job_dir, "POTCAR_PROVENANCE.json")
+    if os.path.isfile(os.path.join(job_dir, ".SELFTEST_FIXTURE")):
+        return ["PROVENANCE_FIXTURE_MARKER(.SELFTEST_FIXTURE 가 반송물에 있다 — "
+                "시험 장치 표시가 production 결과에 섞였다)"]
+    if not os.path.isfile(pp):
+        return ["POTCAR_PROVENANCE_MISSING(반송물에 없다 — 어떤 POTCAR 로 돌았는지 "
+                "확인할 방법이 없다)"]
+    try:
+        d = json.load(open(pp))
+    except Exception as e:                                   # noqa: BLE001
+        return ["POTCAR_PROVENANCE_UNPARSEABLE(%s)" % e]
+    if d.get("allowlist_waived"):
+        g.append("POTCAR_ALLOWLIST_WAIVED(면제본 — 이 계약에서 폐지됐다)")
+    if not d.get("allowlist_sha256"):
+        g.append("POTCAR_ALLOWLIST_UNPINNED(allowlist 내용 SHA 가 없다 — 경로만으로는 "
+                 "어느 목록이었는지 모른다)")
+    if not d.get("assembled_sha256"):
+        g.append("POTCAR_ASSEMBLED_SHA_MISSING")
+    want_sp = list((meta or {}).get("species_order") or [])
+    got_sp = list(d.get("species_order") or [])
+    if want_sp and got_sp and want_sp != got_sp:
+        g.append("POTCAR_SPECIES_ORDER_MISMATCH(잡 %s vs provenance %s — 종 순서가 "
+                 "다르면 다른 계를 계산한 것이다)" % (want_sp, got_sp))
+    tit = d.get("titel_lines") or []
+    for v in (d.get("expected_variants") or []):
+        if not any(v in str(x) for x in tit):
+            g.append("POTCAR_VARIANT_NOT_IN_TITEL(%s 가 TITEL 줄에 없다)" % v)
+    return g
 
 def merge_compat(bundles):
     """두 묶음을 합쳐도 되는가 — **해시 결속 + 프로토콜 동일성** (회신 AF P0-3).
@@ -4011,6 +4111,7 @@ def main():
                 rec["gates"].append(
                     f"KMESH_NOT_DENSER({y} NKPTS {ocs[y]['nkpts']} ≤ {x} {ocs[x]['nkpts']} "
                     f"인데 격자는 {km[x]}→{km[y]} — 다른 상의 산출을 복사했나)")
+        rec["gates"] += potcar_provenance_gates(jd, meta, rel, _man_i)
         g2, info = geometry_audit(jd, meta)
         rec["gates"] += g2
         rec["geom"] = {k: v for k, v in info.items() if not k.startswith("_")}
@@ -6464,6 +6565,17 @@ def _fake_phase(jd: Path, meta: Dict[str, Any], e_static: float,
     els = meta.get("species_order", [])
     titels = "\n".join(f" TITEL  = PAW_PBE {(titel_override or spec).get(e, e)} 01Jan2000"
                        for e in els)
+    # ★ 회신 AF P0-7 — 분석기가 POTCAR provenance 를 요구하므로, 가짜 산출도
+    #   "외주처가 조립기를 제대로 돌린" 상태를 흉내내야 한다. 조립기가 실린 잡에만.
+    if (jd / "POTCAR_ASSEMBLE.sh").is_file():
+        _pvv = [(titel_override or spec).get(e, e) for e in els]
+        (jd / "POTCAR_PROVENANCE.json").write_text(json.dumps({
+            "schema": "potcar_provenance/v1", "species_order": list(els),
+            "expected_variants": _pvv,
+            "titel_lines": [f" TITEL  = PAW_PBE {v} 01Jan2000" for v in _pvv],
+            "source_sha256": {}, "allowlist": "/abs/site_allow.txt",
+            "allowlist_sha256": "0" * 64, "allowlist_waived": False,
+            "assembled_sha256": "1" * 64}, ensure_ascii=False))
     n = sum(meta.get("counts", [0])) or 1
     frc = "\n".join("     0.0 0.0 0.0   0.001 0.001 0.001" for _ in range(n))
     sign = meta.get("ni_sign_poscar_idx") or {}
@@ -6585,6 +6697,9 @@ def _runner_regression(out: Path, chk) -> None:
         shutil.rmtree(jd, ignore_errors=True)
         shutil.copytree(src, jd)
         (jd / "POTCAR").write_text("stub POTCAR\n")
+        # ⛔ 회신 AF P0-7 — provenance 우회는 **파일 표시**로만 된다 (환경변수 폐지).
+        #   배포 번들에는 이 파일이 없고, 나중에 만들어 넣으면 files_sha256 이 잡는다.
+        (jd / ".SELFTEST_FIXTURE").write_text("runner regression fixture\n")
         log = jd / "_phases.log"
         if prep:
             prep(jd)
@@ -6593,7 +6708,7 @@ def _runner_regression(out: Path, chk) -> None:
                # 상 사슬 시험은 POTCAR provenance 와 무관하다 — 그 축은 아래
                # R14~R16 이 **전용으로** 친다 (한 시험이 두 가지를 재면 왜 실패했는지
                # 모른다).
-               "SKIP_POTCAR_PROVENANCE": "1"}
+               }
         if fail:
             env["STUB_FAIL"] = fail
         r = subprocess.run(["bash", "run_job.sh"], cwd=jd, env=env,
@@ -6636,7 +6751,7 @@ def _runner_regression(out: Path, chk) -> None:
     r2 = subprocess.run(["bash", "run_job.sh"], cwd=jd, capture_output=True, text=True,
                         env={**os.environ, "PATH": f"{stub_dir}:{os.environ.get('PATH','')}",
                              "VASP_CMD": "vasp_std", "STUB_LOG": str(log2),
-                             "SKIP_POTCAR_PROVENANCE": "1"})
+                             })
     ran2 = log2.read_text().split() if log2.is_file() else []
     chk(r2.returncode != 0 and ran2 == [] and "1회용" in (r2.stdout + r2.stderr),
         f"⛔음성 R7: 산출물이 있는 잡을 그냥 재실행하면 **거부** "
@@ -6647,7 +6762,7 @@ def _runner_regression(out: Path, chk) -> None:
     r2b = subprocess.run(["bash", "run_job.sh"], cwd=jd, capture_output=True, text=True,
                          env={**os.environ, "PATH": f"{stub_dir}:{os.environ.get('PATH','')}",
                               "VASP_CMD": "vasp_std", "STUB_LOG": str(log2),
-                              "SKIP_POTCAR_PROVENANCE": "1", "ALLOW_RESUME": "1"})
+                              "ALLOW_RESUME": "1"})
     ran2b = log2.read_text().split() if log2.is_file() else []
     chk(r2b.returncode == 0 and ran2b == [],
         f"R7b ALLOW_RESUME=1 이면 전 상 건너뜀 rc={r2b.returncode} 실행 {ran2b}")
@@ -6659,7 +6774,7 @@ def _runner_regression(out: Path, chk) -> None:
                         env={**os.environ, "PATH": f"{stub_dir}:{os.environ.get('PATH','')}",
                              "VASP_CMD": "vasp_std", "STUB_LOG": str(log2),
                              "ALLOW_RESUME": "1",
-                             "SKIP_POTCAR_PROVENANCE": "1"})
+                             })
     ran3 = log2.read_text().split() if log2.is_file() else []
     chk(r3.returncode == 0 and ran3 == ["dense"],
         f"R8 ALLOW_RESUME 부분 재개 rc={r3.returncode} 실행 {ran3}")
@@ -6671,7 +6786,7 @@ def _runner_regression(out: Path, chk) -> None:
     r3b = subprocess.run(["bash", "run_job.sh"], cwd=jd, capture_output=True, text=True,
                          env={**os.environ, "PATH": f"{stub_dir}:{os.environ.get('PATH','')}",
                               "VASP_CMD": "vasp_std", "STUB_LOG": str(log2),
-                              "SKIP_POTCAR_PROVENANCE": "1"})
+                              })
     chk(r3b.returncode != 0,
         f"⛔음성 R8b: 일부만 지우고 재실행해도 선언 없이는 거부 rc={r3b.returncode}")
 
@@ -6703,18 +6818,23 @@ def _runner_regression(out: Path, chk) -> None:
     shutil.copytree(src, jd12)
     r12 = subprocess.run(["bash", "run_job.sh"], cwd=jd12, capture_output=True, text=True,
                          env={**os.environ, "PATH": f"{stub_dir}:{os.environ.get('PATH','')}",
-                              "VASP_CMD": "vasp_std", "SKIP_POTCAR_PROVENANCE": "1"})
+                              "VASP_CMD": "vasp_std"})
     chk(r12.returncode != 0 and not (jd12 / "static" / "OUTCAR").is_file(),
         f"R12 POTCAR 없음 → 시작 거부 rc={r12.returncode}")
 
     # ── R14~R16 (회신 AB P0-8): POTCAR provenance 계약 ─────────────────────
-    def _pv(jd, waived=False, swap=False):
+    def _pv(jd, waived=False, swap=False, no_alsha=False):
         (jd / "POTCAR").write_text("stub POTCAR\n")
         (jd / "POTCAR_PROVENANCE.json").write_text(json.dumps({
             "schema": "potcar_provenance/v1",
             "allowlist": None if waived else "/abs/site_allow.txt",
+            "allowlist_sha256": None if waived else ("0" * 64),
             "allowlist_waived": waived,
             "assembled_sha256": hashlib.sha256((jd / "POTCAR").read_bytes()).hexdigest()}))
+        if no_alsha:
+            _d = json.loads((jd / "POTCAR_PROVENANCE.json").read_text())
+            _d.pop("allowlist_sha256", None)
+            (jd / "POTCAR_PROVENANCE.json").write_text(json.dumps(_d))
         if swap:
             (jd / "POTCAR").write_text("SWAPPED POTCAR\n")     # 조립 뒤 교체
 
@@ -6741,6 +6861,34 @@ def _runner_regression(out: Path, chk) -> None:
     chk(_r.returncode == 0 and "provenance 확인" in _r.stdout,
         f"R17 양성: 정상 provenance 면 통과한다 rc={_r.returncode}")
 
+    # ⛔ 회신 AF P0-7 — allowlist 는 **경로만** 있고 내용 SHA 가 없었다.
+    #   경로만으로는 그 사이트가 어떤 allowlist 를 썼는지 확인할 수 없다.
+    jd18 = out.parent / "_run_r18"
+    shutil.rmtree(jd18, ignore_errors=True)
+    shutil.copytree(src, jd18)
+    _pv(jd18, no_alsha=True)
+    r18 = subprocess.run(["bash", "run_job.sh"], cwd=jd18, capture_output=True, text=True,
+                         env={**os.environ,
+                              "PATH": f"{stub_dir}:{os.environ.get('PATH','')}",
+                              "VASP_CMD": "vasp_std"})
+    chk(r18.returncode != 0 and "allowlist 내용 SHA" in (r18.stdout + r18.stderr),
+        f"⛔음성 R18: allowlist 경로만 있고 내용 SHA 가 없으면 거부 rc={r18.returncode}")
+
+    # ⛔ 배포 러너는 환경변수로 우회되지 않는다 (파일 표시만 인정)
+    jd19 = out.parent / "_run_r19"
+    shutil.rmtree(jd19, ignore_errors=True)
+    shutil.copytree(src, jd19)
+    (jd19 / "POTCAR").write_text("stub POTCAR\n")
+    r19 = subprocess.run(["bash", "run_job.sh"], cwd=jd19, capture_output=True, text=True,
+                         env={**os.environ,
+                              "PATH": f"{stub_dir}:{os.environ.get('PATH','')}",
+                              "VASP_CMD": "vasp_std",
+                              "SKIP_POTCAR_PROVENANCE": "1"})
+    chk(r19.returncode != 0,
+        f"⛔음성 R19: SKIP_POTCAR_PROVENANCE=1 환경변수로는 **우회 안 된다** "
+        f"rc={r19.returncode} (파일 표시만 인정 — 반송물에 흔적이 남게)")
+
+
     # ── R13 러너 자체 sanity: stub 이 없으면 시험이 통과해선 안 된다 ─────────
     #   (양성만 있는 selftest 의 재발 방지 — 시험 장치 자체를 시험한다)
     jd13 = out.parent / "_run_nostub"
@@ -6749,7 +6897,7 @@ def _runner_regression(out: Path, chk) -> None:
     (jd13 / "POTCAR").write_text("stub POTCAR\n")
     r13 = subprocess.run(["bash", "run_job.sh"], cwd=jd13, capture_output=True, text=True,
                          env={**os.environ, "VASP_CMD": "definitely_not_a_real_binary_xyz",
-                              "SKIP_POTCAR_PROVENANCE": "1"})
+                              })
     chk(r13.returncode != 0,
         f"R13 실행파일이 없으면 러너가 실패한다 (시험 장치 검증) rc={r13.returncode}")
 
