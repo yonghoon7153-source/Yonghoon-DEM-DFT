@@ -1409,10 +1409,28 @@ def _emit_mol_job(jd: Path, frag: str, mol, margin: float,
     from ase import Atoms
     jd.mkdir(parents=True, exist_ok=True)
     p = mol.get_positions()
-    p = p - p.min(axis=0)
-    box = p.max(axis=0) + margin
-    at = Atoms(symbols=mol.get_chemical_symbols(), positions=p + margin / 2.0,
+    span = p.max(axis=0) - p.min(axis=0)
+    box = span + margin
+    # ⛔⛔ 회신 AR Q2/해제조건 3 (2026-08-31) — box20/box24 를 **공통 내부기하의
+    #   static pair** 로 만든다. 종전엔 경계상자(bounding box) 기준으로 놓아서
+    #   두 상자 사이 관계가 "강체 평행이동" 이긴 했지만 그 사실이 산출물에서
+    #   직접 검증되지 않았다. **질량중심을 각 셀 중앙에** 놓으면
+    #     · 두 상자의 내부좌표가 정의상 동일하고 (평행이동만 남는다)
+    #     · 분수 DIPOL 이 두 상자에서 **똑같이 (0.5, 0.5, 0.5)** 가 되며
+    #       (VASP 는 분자 dipole correction 에서 COM 부근을 권고한다)
+    #     · 분석기가 `internal_geometry_sha` 하나로 교차검증할 수 있다.
+    #   ⚠ COM 은 질량가중이라 경계상자 중심과 다르다 — 여백이 축마다 비대칭이
+    #     될 수 있으나 `margin` 이 20/24 Å 이라 최소 진공은 충분히 남는다.
+    _mass = np.asarray(mol.get_masses(), dtype=float)
+    _com0 = (p * _mass[:, None]).sum(axis=0) / _mass.sum()
+    at = Atoms(symbols=mol.get_chemical_symbols(), positions=p - _com0 + box / 2.0,
                cell=np.diag(box), pbc=True)
+    # 최소 진공 자기검증 — COM 중심 배치가 어느 축에서든 여백을 다 먹으면 멈춘다
+    _gap = np.minimum(at.positions.min(axis=0), box - at.positions.max(axis=0))
+    if float(_gap.min()) < 4.0:
+        raise SystemExit("⛔ 기체 상자 여백이 %.2f Å 밖에 안 된다 (frag=%s margin=%.0f) — "
+                         "COM 중심 배치가 비대칭 분자에서 진공을 먹었다. margin 을 키운다."
+                         % (float(_gap.min()), frag, margin))
     open_shell = "DOUBLET" in str(SS.FRAGMENTS.get(frag, {}).get("electrons", "")).upper()
     mags = [0.0] * len(at)
     if nonzero_start and not open_shell:
@@ -1477,9 +1495,27 @@ def _emit_mol_job(jd: Path, frag: str, mol, margin: float,
                          for m in [re.search(rf"^{k}\s*=\s*(\S+)", txt, re.M)] if m}
     _write_potcar_asm(jd, seen)
     (jd / "run_job.sh").write_text(RUN_JOB)
+    # ⛔ 회신 AR 해제조건 3 — **cross-job geometry/state gate 의 근거**.
+    #   box20/box24 가 같은 내부기하인지 분석기가 직접 확인할 수 있게, 방출 순서
+    #   `idx` 그대로의 (원소, COM 기준 상대좌표) 를 해시로 박는다. 셀 크기·절대좌표는
+    #   일부러 **안 넣는다** — 상자가 다른 것은 정상이고, 내부좌표만 같아야 한다.
+    _rel = at.positions - np.asarray(box, dtype=float) / 2.0
+    _gsig = "|".join("%s:%.6f,%.6f,%.6f" % (sym[i], _rel[i, 0], _rel[i, 1], _rel[i, 2])
+                     for i in idx)
+    # 전자상태 지문 — 상자만 다르고 상태가 같아야 δ_gas 가 셀 효과다
+    _ssig = json.dumps({"nupdown": fmt["nupdown"], "magmom": fmt["magmom"],
+                        "open_shell": open_shell,
+                        "phases": [ph for ph, _ in _phases],
+                        "incar": {ph: incar_exp[ph] for ph in incar_exp}},
+                       sort_keys=True, ensure_ascii=False)
     meta = {"kind": "mol_ref", "fragment": frag, "species_order": seen, "counts": counts,
             "kmesh": kmesh, "incar_expected": incar_exp,
             "open_shell": open_shell, "box_margin_A": margin,
+            "gas_placement": "com_at_cell_center",
+            "internal_geometry_sha": hashlib.sha256(_gsig.encode()).hexdigest(),
+            "electronic_state_sha": hashlib.sha256(_ssig.encode()).hexdigest(),
+            "fixed_geometry_static": bool(closure),
+            "com_frac": [round(float(c), 6) for c in _com_frac(at)],
             # ⛔ 회신 V P0-2 — 종전엔 closure 여도 ["relax","static"] 을 박아
             #   분석기가 **없는 relax 를 필수 phase 로 읽고** static 이 정상 완료돼도
             #   기체 잡을 차단했다. 실제 생성한 phase 에서 만든다.
@@ -5308,6 +5344,53 @@ def _closure_estimand(man, results, E, emol, jobs, merge_info=None):
     _sdf = next((f for f in frags if "sdcp" in f), None)
     _ctf = next((f for f in frags if f != _sdf), None)
     if _sdf and _ctf:
+        # ⛔⛔ 회신 AR 해제조건 3 (2026-08-31) — **cross-job geometry/state gate.**
+        #   δ_gas 가 "셀 효과" 이려면 두 상자가 (i) 같은 내부기하에서 출발하고
+        #   (ii) 같은 전자상태 정책이며 (iii) **각자 독립으로 이완하지 않아야** 한다.
+        #   v15 실물은 네 기체 부모가 전부 relax→static 이라 (iii) 이 깨져 있었고,
+        #   δ_gas 는 셀 효과 + 독립 이완 차이를 함께 쟀다. 이제 산출물에서 직접 본다.
+        _gp = (man.get("gas_geometry_policy") or {})
+        _gasjr = {}
+        for _f in (_sdf, _ctf):
+            for _b in ("20", "24"):
+                _k = "refs/mol__%s__box%s" % (_f, _b)
+                _gasjr[(_f, _b)] = ((jobs.get(_k) or {}).get("meta") or {})
+        _gx = []
+        for _f in (_sdf, _ctf):
+            _m20, _m24 = _gasjr[(_f, "20")], _gasjr[(_f, "24")]
+            if not _m20 or not _m24:
+                _gx.append("%s: box20/box24 잡 메타가 없다" % _f)
+                continue
+            for _fld, _why in (("internal_geometry_sha", "내부기하가 다르다"),
+                               ("electronic_state_sha", "전자상태 정책이 다르다"),
+                               ("species_order", "원소 순서가 다르다"),
+                               ("counts", "원자 수가 다르다")):
+                _a, _b2 = _m20.get(_fld), _m24.get(_fld)
+                if _a is None or _b2 is None:
+                    _gx.append("%s: %s 를 확인 못 했다 (구판 번들)" % (_f, _fld))
+                elif _a != _b2:
+                    _gx.append("%s: %s (%s)" % (_f, _why, _fld))
+            for _b, _mm in (("20", _m20), ("24", _m24)):
+                if _mm.get("fixed_geometry_static") is not True:
+                    _gx.append("%s box%s: 고정기하 static 이 아니다 "
+                               "(phases=%s) — 독립 이완이 δ_gas 에 섞인다"
+                               % (_f, _b, _mm.get("phases")))
+        if _gp.get("fixed_geometry_static") is not True:
+            _gx.append("manifest.gas_geometry_policy.fixed_geometry_static 이 true 가 "
+                       "아니다 (%r)" % (_gp.get("fixed_geometry_static"),))
+        out["gas_pair_contract"] = {
+            "ok": not _gx, "violations": _gx,
+            "요구": ["box20/box24 내부기하 동일 (internal_geometry_sha)",
+                     "전자상태 정책 동일 (electronic_state_sha)",
+                     "둘 다 고정기하 static — 상자별 독립 이완 금지"],
+            "⚠": ("이 계약이 깨지면 δ_gas 는 셀 수렴이 아니라 "
+                  "'셀 + 이완 경로' 를 잰 값이라 문턱을 걸 대상이 아니다")}
+        if _gx:
+            _blk("GAS_PAIR_CONTRACT",
+                 "GAS_PAIR_CONTRACT(δ_gas 쌍이 계약을 어겼다 — %s)" % "; ".join(_gx[:4]),
+                 job_keys=["refs/mol__%s__box%s" % (f, b)
+                           for f in (_sdf, _ctf) for b in ("20", "24")],
+                 scope="estimand")
         _g = {}
         for _f in (_sdf, _ctf):
             _g[_f] = (E("refs/mol__%s__box24" % _f), E("refs/mol__%s__box20" % _f))
@@ -5328,7 +5411,10 @@ def _closure_estimand(man, results, E, emol, jobs, merge_info=None):
                 "delta_gas_meV": round(_dgas * 1000, 3),
                 "by_fragment_meV": {f: round(v * 1000, 3) for f, v in _d24_20.items()},
                 "tol_meV": round(GAS_BOX_DELTA_TOL * 1000, 1),
-                "pass": bool(abs(_dgas) <= GAS_BOX_DELTA_TOL),
+                # ⛔ 회신 AR 해제조건 3 — 쌍 계약이 깨지면 이 값은 셀 효과가
+                #   아니므로 문턱 통과로 **셀 수 없다**. 수치는 남기되 pass=False.
+                "pass": bool(abs(_dgas) <= GAS_BOX_DELTA_TOL) and not _gx,
+                "pair_contract_ok": not _gx,
                 "식": "δ_gas = [E_G^sdcp(24)−E_G^sdcp(20)] − [E_G^ctl(24)−E_G^ctl(20)]",
                 "⚠": ("조각별 값이 각각 작아도 **부호가 반대면 차에서 커진다** — "
                       "그래서 조각별이 아니라 이 차에 문턱을 건다 (회신 AP #11)")}
@@ -9738,6 +9824,8 @@ def selftest() -> int:
     exec(compile(ANALYZER, "<analyzer-template>", "exec"), _ns)
     _closure_estimand = _ns["_closure_estimand"]
     _man = {"fragments": ["sdcp_neutral", "ptfe_c10"],
+            # ⛔ 회신 AR 해제조건 3 — 실물 생성기가 박는 기체 쌍 정책
+            "gas_geometry_policy": {"fixed_geometry_static": True},
             "molecular_spin_controls": {
                 "mol__sdcp_neutral__box24": "refs/mol__sdcp_neutral__box24__nzmag",
                 "mol__ptfe_c10__box24": "refs/mol__ptfe_c10__box24__nzmag"}}
@@ -9780,7 +9868,25 @@ def selftest() -> int:
             kw.pop("_mom", None)
         return {"ok": True, "gates": [], "meta": m, "geom": {"magnetic": mg}}
 
+    # ⛔ 회신 AR 해제조건 3 — 기체 쌍 cross-job gate 는 **잡 메타**를 읽는다.
+    #   실물 `_emit_mol_job` 이 내는 필드 그대로 픽스처를 만든다.
+    #   (energies 만 주던 옛 픽스처는 계약을 검증할 수 없다 = 통과가 아니다.)
+    def _GASJ(frag, tag, geo="g-%s" % "x", **kw):
+        m = {"kind": "mol_ref", "fragment": frag, "box_margin_A": 20.0 if tag == "box20" else 24.0,
+             "species_order": ["O", "S", "C", "F", "H"], "counts": [3, 1, 10, 20, 4],
+             "gas_placement": "com_at_cell_center",
+             "internal_geometry_sha": "geo-" + frag,
+             "electronic_state_sha": "st-" + frag,
+             # 생성기가 모든 job.json 에 사후로 박는 필드 (없으면 COHORT_INCOHERENT)
+             "d3": "on", "ivdw_expected": 11,
+             "fixed_geometry_static": True, "phases": ["static"]}
+        m.update(kw)
+        return {"ok": True, "gates": [], "meta": m, "geom": {}}
+
+    _GASJOBS = {"refs/mol__%s__%s" % (f, t): _GASJ(f, t)
+                for f in ("sdcp_neutral", "ptfe_c10") for t in ("box20", "box24")}
     _jobs = {k: _BAS("aaaa1111", k) for k in _en if k.startswith("prospective/")}
+    _jobs.update(_GASJOBS)
     _E = lambda j: _en.get(j)
     # ⛔ 회신 AO P0-4 — canary/부모 static 기하 대조 결과. 실물에서는 main() 이
     #   두 static/POSCAR 를 읽어 채운다. 없으면 fail-closed 로 막히므로 픽스처에도
@@ -9795,6 +9901,49 @@ def selftest() -> int:
 
     r = _closure_estimand(_man, _RES(), _E, _emol, _jobs)
     chk(not r["blocks"], f"[V P0-4] 정상 입력에 blocks 없음 · {r.get('blocks')}")
+    chk((r.get("gas_pair_contract") or {}).get("ok") is True
+        and (r.get("gas_box_delta") or {}).get("pair_contract_ok") is True,
+        "회신 AR 3 양성: 고정기하·동일 내부기하 쌍은 계약을 통과한다")
+
+    # ══ 회신 AR 해제조건 3 — 기체 쌍 cross-job gate (⛔음성 셋) ═════════════
+    #   AR 이 실물 v15 에서 잡은 것: 네 기체 부모가 전부 relax→static 이라
+    #   각 상자가 **독립으로 이완**했다. 그러면 δ_gas 는 셀 효과가 아니다.
+    def _gasneg(mut, why):
+        _jg = dict(_jobs)
+        _mm = dict(_GASJOBS)
+        for k, patch in mut.items():
+            _mm[k] = {"ok": True, "gates": [],
+                      "meta": dict(_GASJOBS[k]["meta"], **patch), "geom": {}}
+        _jg.update(_mm)
+        _rg = _closure_estimand(_man, _RES(), _E, _emol, _jg)
+        chk(any(b.startswith("GAS_PAIR_CONTRACT") for b in _rg["blocks"])
+            and (_rg.get("gas_box_delta") or {}).get("pass") is not True,
+            "⛔음성 AR 3: %s → GAS_PAIR_CONTRACT 로 막고 δ_gas 를 통과로 세지 않는다 "
+            "· blocks %s" % (why, [b[:60] for b in _rg["blocks"]][:2]))
+
+    _gasneg({"refs/mol__sdcp_neutral__box20":
+             {"fixed_geometry_static": False, "phases": ["relax", "static"]}},
+            "한 상자가 relax→static (AR 이 v15 에서 실제로 잡은 결함)")
+    _gasneg({"refs/mol__ptfe_c10__box20": {"internal_geometry_sha": "geo-DIFFERENT"}},
+            "두 상자의 내부기하가 다르다")
+    _gasneg({"refs/mol__sdcp_neutral__box24": {"electronic_state_sha": "st-OTHER"}},
+            "두 상자의 전자상태 정책이 다르다")
+    _gasneg({"refs/mol__ptfe_c10__box24": {"counts": [3, 1, 10, 20, 5]}},
+            "두 상자의 원자 수가 다르다")
+    # manifest 정책이 false 면 잡 메타가 다 맞아도 막는다 (선언과 실물 둘 다 봐야 한다)
+    _rgp = _closure_estimand(dict(_man, gas_geometry_policy={"fixed_geometry_static": False}),
+                             _RES(), _E, _emol, _jobs)
+    chk(any(b.startswith("GAS_PAIR_CONTRACT") for b in _rgp["blocks"]),
+        "⛔음성 AR 3: manifest 가 고정기하를 선언하지 않으면 막는다")
+    # 구판 번들(메타에 새 필드가 없다) — 확인 못 한 것은 통과가 아니다
+    _jold = dict(_jobs)
+    for _k in _GASJOBS:
+        _jold[_k] = {"ok": True, "gates": [],
+                     "meta": {"kind": "mol_ref", "fragment": _GASJOBS[_k]["meta"]["fragment"],
+                              "species_order": ["O"], "counts": [3]}, "geom": {}}
+    chk(any(b.startswith("GAS_PAIR_CONTRACT")
+            for b in _closure_estimand(_man, _RES(), _E, _emol, _jold)["blocks"]),
+        "⛔음성 AR 3: 구판 번들(지문 필드 없음)은 **통과가 아니라 차단**이다")
 
     # ⛔음성 (회신 Z P0-4) — seed 이름이 같아도 **수렴 결과**가 갈리면 막는다
     _jb_het = dict(_jobs)
@@ -9862,6 +10011,7 @@ def selftest() -> int:
     _en7 = dict(_en, **{"prospective/sdcp_neutral__b09__afm2424_net4": -201.2,
                         "prospective/ptfe_c10__b09__afm2424_net4": -100.6})
     _jb7 = {k: _BAS("aaaa1111", k) for k in _en7 if k.startswith("prospective/")}
+    _jb7.update(_GASJOBS)          # 기체 쌍 계약은 이 시나리오의 시험 대상이 아니다
     # net4 두 잡만 **다른 basin** 으로 수렴 → 종전엔 BASIN_HETEROGENEOUS 로 D 가 죽었다
     for _k in ("prospective/sdcp_neutral__b09__afm2424_net4",
                "prospective/ptfe_c10__b09__afm2424_net4"):
@@ -9910,17 +10060,17 @@ def selftest() -> int:
     _en8 = {_KA: -201.0, _KB: -100.5,
             "mol__sdcp_neutral__box24__nzmag": -200.0,
             "mol__ptfe_c10__box24__nzmag": -100.0, **_GASE}
-    _ok8 = {_KA: _J8(_up8, _KA), _KB: _J8(_dn8, _KB)}
+    _ok8 = dict(_GASJOBS, **{_KA: _J8(_up8, _KA), _KB: _J8(_dn8, _KB)})
     _r8 = _closure_estimand(_man8, _RES(), lambda j: _en8.get(j), _emol, _ok8)
     chk(not any("TOPOLOGY" in b for b in _r8["blocks"])
         and (_r8.get("estimand_topology") or {}).get("pm1", {}).get("same") is True,
         f"AP #2 양성: 전역 스핀 반전은 **같은 상태**로 본다 · blocks {_r8['blocks'][:1]}")
-    _bad8 = {_KA: _J8(_up8, _KA), _KB: _J8(_mix8, _KB)}
+    _bad8 = dict(_GASJOBS, **{_KA: _J8(_up8, _KA), _KB: _J8(_mix8, _KB)})
     _r8b = _closure_estimand(_man8, _RES(), lambda j: _en8.get(j), _emol, _bad8)
     chk(any("ESTIMAND_TOPOLOGY_MISMATCH" in b for b in _r8b["blocks"]),
         "⛔음성 AP #2: 두 complex 가 **다른 자기 basin** 이면 막는다 "
         "(종전엔 각각 basin id 가 있는지만 보고 서로 같은지는 안 봤다)")
-    _nofp = {}
+    _nofp = dict(_GASJOBS)
     for _k in (_KA, _KB):                       # 모멘트 표를 **명시적으로** 없앤다
         _j = _BAS("aaaa1111", _k)
         _j["geom"]["magnetic"] = {"realized_basin_id": "aaaa1111"}
@@ -9979,6 +10129,20 @@ def selftest() -> int:
         and all(abs(v) <= 5.0 for v in (_gd.get("by_fragment_meV") or {}).values()),
         "⛔음성 AP #11 요점: **조각별 문턱이었으면 통과했을** 경우다 "
         "(그래서 조각별이 아니라 차에 건다)")
+    # ⛔ 회신 AR P0-3 재현 — **조각별로는 크고 차는 작은** 경우. 옛 조각별 10 meV
+    #   게이트가 살아 있으면 두 emol 이 None 이 되고 A(f,p) 에서 `float − None` 으로
+    #   **예외로 죽었다** (리뷰가 재현한 그 모양이다). 지금은 δ_gas 1 meV 로 통과한다.
+    _en2019 = dict(_en, **{"refs/mol__sdcp_neutral__box20": -205.4486 - 0.020,
+                           "refs/mol__ptfe_c10__box20": -177.9706 - 0.019})
+    _r2019 = _closure_estimand(_man, _RES(), lambda j: _en2019.get(j), _emol, _jobs)
+    _g19 = _r2019.get("gas_box_delta") or {}
+    chk(_g19.get("pass") is True and abs(_g19.get("delta_gas_meV") or 0) <= 5.0
+        and all(abs(v) >= 15.0 for v in (_g19.get("by_fragment_meV") or {}).values())
+        and not any("GAS_BOX" in b for b in _r2019["blocks"])
+        and _r2019.get("primary_ddE_lowE_eV") is not None,
+        "회신 AR P0-3 재현: 조각별 %s meV 인데 δ_gas %s meV → **통과하고 예외로 "
+        "죽지 않는다** (옛 조각별 게이트가 죽이던 경우)"
+        % (_g19.get("by_fragment_meV"), _g19.get("delta_gas_meV")))
     # ⛔음성 — box20 이 아예 없으면 "측정 안 함" 으로 막는다 (선행값으로 때우지 않는다)
     _enno = {k: v for k, v in _en.items() if not k.endswith("box20")}
     chk(any("GAS_BOX_NOT_MEASURED" in b for b in
