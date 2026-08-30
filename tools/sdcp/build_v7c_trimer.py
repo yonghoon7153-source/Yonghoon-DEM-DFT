@@ -2159,6 +2159,16 @@ def selftest():
         "임의로 고르지 않는다")
     chk(pil_parse_mopop("아무 관계 없는 출력", 10) is None,
         "⛔음성: MO 인구 블록이 없으면 None (임의로 고르지 않는다)")
+    # ⛔음성 2026-08-31 실측 — ORCA 6.1.1 의 실제 헤더에 **REDUCED 가 없다**.
+    #   종전 파서는 REDUCED 붙은 것만 찾아 실물에서 **항상 None** 이었다
+    #   (phase L 이 정상 종료했는데 seed 를 하나도 못 만들었다).
+    chk(all(h in PIL_MOPOP_HDRS for h in
+            ("LOEWDIN ORBITAL POPULATIONS PER MO",
+             "LOEWDIN REDUCED ORBITAL POPULATIONS PER MO")),
+        "⛔음성 실측: 헤더를 **REDUCED 유무 둘 다** 받는다 (판본차)")
+    chk(pil_parse_mopop("LOEWDIN REDUCED ORBITAL CHARGES\n 0 C  s  99.8\n", 10) is None,
+        "⛔음성 실측: `LOEWDIN REDUCED ORBITAL CHARGES` 는 **다른 블록**이다 "
+        "(원자별 전하이지 MO 별 인구가 아니다 — 이름이 비슷해 헷갈린다)")
     print("── 폴라론 pilot 끝 ──")
     return 1 if fails else 0
 
@@ -2547,7 +2557,14 @@ def pilot_generate(a):
 
 # ── 폴라론 pilot · phase L 판독 + seed 생성 ────────────────────────────────
 
-PIL_MOPOP_HDR = "LOEWDIN REDUCED ORBITAL POPULATIONS PER MO"
+#: ⛔ 2026-08-31 실측 — ORCA 6.1.1 의 실제 헤더는 **REDUCED 가 없다**:
+#:     LOEWDIN ORBITAL POPULATIONS PER MO
+#:   (`LOEWDIN REDUCED ORBITAL CHARGES` 는 **다른 블록**이다 — 원자별 전하이지
+#:    MO 별 인구가 아니다. 이름이 비슷해 헷갈리기 쉽다.)
+#:   판본에 따라 REDUCED 가 붙는 경우도 있으므로 **둘 다** 받는다.
+PIL_MOPOP_HDRS = ("LOEWDIN ORBITAL POPULATIONS PER MO",
+                  "LOEWDIN REDUCED ORBITAL POPULATIONS PER MO")
+PIL_MOPOP_HDR = PIL_MOPOP_HDRS[0]
 PIL_SEED_MIN_WEIGHT = 40.0   # % — 목표 집합에 이만큼도 안 걸린 MO 는 국재 seed 가 아니다
 #: 코어 궤도 배제선 (Eh). C 1s ≈ −10 · O 1s ≈ −19 · S 1s ≈ −89 이고 원자가는 −1 위쪽이다.
 #: ⛔ 이게 없으면 링 탄소의 C 1s 가 "그 링에 100% 국재" 라서 seed 로 뽑힌다 —
@@ -2564,9 +2581,10 @@ def pil_parse_mopop(text, nat):
       있다. 그래서 절대 백분율이 아니라 **집합 간 상대 크기**로만 쓴다.
     ⚠ ORCA 실제 출력으로 검증하지 않았다 (smoke test 필요).
     """
-    if PIL_MOPOP_HDR not in text:
+    hdr = next((h for h in PIL_MOPOP_HDRS if h in text), None)
+    if hdr is None:
         return None
-    seg = text.split(PIL_MOPOP_HDR)[-1]
+    seg = text.split(hdr)[-1]
     pops, occ, ener = {}, {}, {}
     lines = seg.splitlines()
     i, cur = 0, None
