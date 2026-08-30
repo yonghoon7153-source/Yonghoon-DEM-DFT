@@ -114,10 +114,32 @@ def parse_deck(text: str) -> dict:
 
 
 def _sub1(text: str, pat: str, repl: str, what: str, count: int = 1) -> str:
-    """정확히 `count` 번 치환한다.  아니면 거부 — 반쯤 바뀐 덱이 가장 나쁘다."""
+    """정확히 `count` 번 치환한다.  아니면 거부 — 반쯤 바뀐 덱이 가장 나쁘다.
+
+    **구조적인 자리**에 쓴다 (변수 정의 · 분포 줄 · insert/pack) — 거기서 개수가 어긋나면
+    템플릿 형식이 바뀐 것이고, 그때는 덱을 내지 않는 것이 맞다.
+    """
     new, n = re.subn(pat, repl, text, flags=re.M)
     if n != count:
         raise SystemExit(f'⛔ 치환 실패: {what} — {count}번 기대했는데 {n}번 맞았다.  '
+                         '템플릿 형식이 바뀌었을 수 있다 (덱을 내지 않는다)')
+    return new
+
+
+def _sub_all(text: str, pat: str, repl: str, what: str) -> str:
+    """같은 설계값을 담은 **모든** 자리를 바꾼다.  하나도 못 맞히면 거부.
+
+    ★ 왜 나누는가 (2026-08-30 실사고): 실물 덱은 `seed=` 를 **두 번** 적는다 — 헤더
+      주석과 `print "…(case, kind, seed=N)…"` 줄.  둘 다 같은 런 seed 이므로 **둘 다**
+      바꾸는 것이 맞는데, 내 축소 픽스처에는 `print` 줄이 없어 `_sub1` 로 짰고 실물에서
+      바로 거부됐다.  *"템플릿은 실물이 정답지"* 라고 적어 놓고 픽스처를 실물과 다르게
+      만든 것이 원인이다 — 그래서 아래 selftest 픽스처에 그 줄을 넣었다.
+    ⇒ 여기서 지키는 불변식은 "정확히 1번" 이 아니라 **"남는 자리가 없다"** 이다.
+      개수는 `--verbose` 로 볼 수 있고, 0 이면 여전히 거부한다.
+    """
+    new, n = re.subn(pat, repl, text, flags=re.M)
+    if n == 0:
+        raise SystemExit(f'⛔ 치환 실패: {what} — 한 자리도 못 맞혔다.  '
                          '템플릿 형식이 바뀌었을 수 있다 (덱을 내지 않는다)')
     return new
 
@@ -139,27 +161,27 @@ def render(template: str, row: dict, tmpl_case: str) -> str:
         t = _sub1(t, r'(particledistribution/discrete\s+\d+\s+3\s+pts1\s+)[\d.]+(\s+pts2\s+)'
                      r'[\d.]+(\s+pts3\s+)[\d.]+',
                   rf'\g<1>{wP:.6f}\g<2>{wS:.6f}\g<3>{wSE:.6f}', 'pdd 가중(3)')
-        t = _sub1(t, r'rP=[\d.eE+-]+', f'rP={rP:.6g}', '헤더 rP')
-        t = _sub1(t, r'rS=[\d.eE+-]+', f'rS={rS:.6g}', '헤더 rS')
-        t = _sub1(t, r'AM_P=[\d.]+(\s+)AM_S=[\d.]+(\s+)SE=[\d.]+',
+        t = _sub_all(t, r'rP=[\d.eE+-]+', f'rP={rP:.6g}', '헤더 rP')
+        t = _sub_all(t, r'rS=[\d.eE+-]+', f'rS={rS:.6g}', '헤더 rS')
+        t = _sub_all(t, r'AM_P=[\d.]+(\s+)AM_S=[\d.]+(\s+)SE=[\d.]+',
                   rf'AM_P={wP:.4f}\g<1>AM_S={wS:.4f}\g<2>SE={wSE:.4f}', '헤더 pdd(3)')
     else:
         t = _sub1(t, r'^(variable\s+r_AM\s+equal\s+)\S+', rf'\g<1>{rP:.6g}', 'r_AM')
         t = _sub1(t, r'(particledistribution/discrete\s+\d+\s+2\s+pts1\s+)[\d.]+'
                      r'(\s+pts2\s+)[\d.]+',
                   rf'\g<1>{wP:.6f}\g<2>{wSE:.6f}', 'pdd 가중(2)')
-        t = _sub1(t, r'rAM=[\d.eE+-]+', f'rAM={rP:.6g}', '헤더 rAM')
-        t = _sub1(t, r'pdd AM=[\d.]+(\s+)SE=[\d.]+',
+        t = _sub_all(t, r'rAM=[\d.eE+-]+', f'rAM={rP:.6g}', '헤더 rAM')
+        t = _sub_all(t, r'pdd AM=[\d.]+(\s+)SE=[\d.]+',
                   rf'pdd AM={wP:.4f}\g<1>SE={wSE:.4f}', '헤더 pdd(2)')
 
     t = _sub1(t, r'^(variable\s+r_SE\s+equal\s+)\S+', rf'\g<1>{rSE:.6g}', 'r_SE')
-    t = _sub1(t, r'rSE=[\d.eE+-]+', f'rSE={rSE:.6g}', '헤더 rSE')
-    t = _sub1(t, r'volfrac=[\d.eE+-]+', f'volfrac={float(row["volfrac"]):.6f}', '헤더 volfrac')
+    t = _sub_all(t, r'rSE=[\d.eE+-]+', f'rSE={rSE:.6g}', '헤더 rSE')
+    t = _sub_all(t, r'volfrac=[\d.eE+-]+', f'volfrac={float(row["volfrac"]):.6f}', '헤더 volfrac')
     t = _sub1(t, r'volumefraction_region\s+[\d.eE+-]+',
               f'volumefraction_region {float(row["volfrac"]):.6f}', 'volumefraction_region')
     t = _sub1(t, r'insert/pack\s+seed\s+\d+', f'insert/pack seed {int(row["seed"])}',
               'insert/pack seed')
-    t = _sub1(t, r'seed=\d+', f'seed={int(row["seed"])}', '헤더 seed')
+    t = _sub_all(t, r'seed=\d+', f'seed={int(row["seed"])}', '헤더 seed')
     #  라벨과 케이스명 — 남은 템플릿 케이스명은 dump/restart/post 경로까지 전부 바꾼다
     t = _sub1(t, rf'^(#\s*){re.escape(tmpl_case)}(:\s*)\S+',
               rf'\g<1>{case}\g<2>{row["kind"]}', '헤더 케이스·kind')
@@ -301,6 +323,7 @@ variable r_SE    equal 0.001
 fix pts1 all particletemplate/sphere 15485863 atom_type 1 density constant 4800 radius constant ${r_AM}
 fix pts2 all particletemplate/sphere 32452843 atom_type 2 density constant 2000 radius constant ${r_SE}
 fix pdd_mix all particledistribution/discrete 49979687 2 pts1 0.800000 pts2 0.200000
+print "====== INSERTING (lhs00_110, mono_AM_S, seed=11059) ======"
 fix ins_mix all insert/pack seed 11059 distributiontemplate pdd_mix &
     volumefraction_region 0.250627
 shell mkdir post_lhs00_110
@@ -317,6 +340,7 @@ fix pts1 all particletemplate/sphere 15485863 atom_type 1 density constant 4800 
 fix pts2 all particletemplate/sphere 15485867 atom_type 2 density constant 4800 radius constant ${r_AM_S}
 fix pts3 all particletemplate/sphere 32452843 atom_type 3 density constant 2000 radius constant ${r_SE}
 fix pdd_mix all particledistribution/discrete 49979687 3 pts1 0.510000 pts2 0.340000 pts3 0.150000
+print "====== INSERTING (lhs00_000, bimodal, seed=10007) ======"
 fix ins_mix all insert/pack seed 10007 distributiontemplate pdd_mix &
     volumefraction_region 0.222984
 shell mkdir post_lhs00_000
@@ -345,6 +369,9 @@ shell mkdir post_lhs00_000
     chk('② 3-type 왕복 일치', roundtrip(r3, out3) == [], str(roundtrip(r3, out3)[:2]))
     chk('② 템플릿 케이스명이 안 남는다', 'lhs00_000' not in out3)
     chk('② post_ 경로도 바뀐다', 'post_lhsx_001' in out3)
+    chk('★② `print INSERTING` 줄의 seed 도 갱신된다 (실물은 seed= 를 두 번 적는다)',
+        'seed=20011' in out3 and 'seed=10007' not in out3,
+        [l for l in out3.split(chr(10)) if 'INSERTING' in l][:1])
     r2 = dict(id='lhsx_002', kind='mono_AM_S', ntype='2', rP_um='2.3', rS_um='',
               rSE_um='0.7', w_AM_P='0.65', w_AM_S='0', pdd_SE='0.35',
               volfrac='0.2400', seed='20021')
