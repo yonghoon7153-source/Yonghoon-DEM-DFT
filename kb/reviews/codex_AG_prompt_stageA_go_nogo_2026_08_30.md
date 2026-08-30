@@ -3,6 +3,7 @@ title: "회신 AG — Stage A 최종 GO/NO-GO: 회신 AF P0 넷을 닫았다"
 date: 2026-08-30
 kind: review_request
 status: sent
+tags: [sdcp, stage-a, dft, review, go-nogo, vacuum, holdout, threshold]
 ---
 
 # 회신 AG — GO/NO-GO 요청
