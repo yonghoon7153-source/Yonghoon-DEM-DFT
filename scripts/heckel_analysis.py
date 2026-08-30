@@ -64,6 +64,86 @@ def read_atoms(atom, with_ids=False):
     return (xyz, rad, by_id) if with_ids else (xyz, rad)
 
 
+
+def read_scaffold_csv(path):
+    """scaffold CSV → `(xyz[N,3], rad[N], typ[N])`.  **box units 그대로** 돌려준다.
+
+    ★★★ 2026-08-30 (Codex R14 D-7) — `read_atoms` 는 LIGGGHTS 덤프 전용이라 이 파일을
+      **조용히 0 행**으로 읽는다 (헤더 9줄이 데이터를 먹고 나머지가 6열 미만).  그래서
+      전용 reader 를 둔다.  형식:
+
+        `# type,x,y,z,r  # LIGGGHTS box units (lateral 0..0.05 = 50um); …`
+        `1,0.025033,0.040912,0.007308,0.006000`
+
+    ⚠ **단위 함정** — 값은 **box unit** 이다 (lateral 0..0.05 = 50 µm ⇒ ×1000 = µm).
+      두께를 µm 로 그대로 넣으면 부피가 10⁹ 배 틀린다.  그래서 이 함수는 변환하지 않고,
+      `eps_sphere_from_scaffolds` 가 **한 곳에서만** 변환한다.
+    ⚠ 한 행도 못 읽으면 **거부**한다 (빈 침대와 형식 불일치는 다르다).
+    """
+    xyz, rad, typ = [], [], []
+    with open(path, encoding='utf-8') as f:
+        for ln, line in enumerate(f, 1):
+            line = line.strip()
+            if not line or line.startswith('#'):
+                continue                                   # 헤더·주석
+            p_ = line.split(',')
+            if len(p_) != 5:
+                raise SystemExit(f'ABORT — {path}:{ln} 열이 {len(p_)} 개다 (5 여야 한다: '
+                                 f'type,x,y,z,r).  다른 형식의 파일을 주지 않았는지 볼 것.')
+            try:
+                t = int(float(p_[0])); x, y, z, r = (float(v) for v in p_[1:])
+            except ValueError as e:
+                raise SystemExit(f'ABORT — {path}:{ln} 수치가 아니다 ({e})')
+            if not (math.isfinite(x) and math.isfinite(y) and math.isfinite(z)
+                    and math.isfinite(r)):
+                raise SystemExit(f'ABORT — {path}:{ln} 비유한 값이 있다')
+            if r <= 0:
+                raise SystemExit(f'ABORT — {path}:{ln} 반지름이 {r} 이다 (> 0 이어야 한다)')
+            xyz.append((x, y, z)); rad.append(r); typ.append(t)
+    if not xyz:
+        raise SystemExit(f'ABORT — {path} 에서 구를 한 줄도 못 읽었다.  주석·헤더만 있거나 '
+                         f'형식이 다르다.  "빈 침대" 와 "형식 불일치" 는 다르다.')
+    return np.asarray(xyz, float), np.asarray(rad, float), np.asarray(typ, int)
+
+
+def eps_sphere_from_scaffolds(am_csv, se_csv, height_um, box_um=50.0):
+    """scaffold CSV 두 개 + 정지 두께 → `ε_sphere` 원장 (dict).
+
+        ε_sphere = 1 − Σ_i (4/3)π r_i³ / (L_x · L_y · H)
+
+    ★ **lens 가 필요 없다** (R14 D-7) — 겹침 차감은 `ε_union` 의 것이고, ε_sphere 는
+      **구 부피의 단순 합**이다 (소성 압밀에서 재료 보존 규약: 접촉에서 밀려난 재료가
+      bulge 로 다시 나오므로 solid = 원래 구 부피의 합).  CLAUDE.md 의 porosity 규약 참조.
+    ★ **벽 밖 clip 도 하지 않는다** — 기존 D_sphere 규약을 재현하는 것이 목적이다.
+
+    ⚠⚠ **행 이름은 `AM+SE seed-sphere void` 다.**  첨가제(VGCF·PTFE·SDCP) 고체부피가
+      빠져 있으므로 무한정한 *"electrode porosity"* 로 쓰면 추정량 오류다 (R14 D-7).
+    ⚠ `height_um` 은 **µm**, 내부에서 box unit 으로 바꾼다 (파일이 box unit 이므로).
+    """
+    import hashlib
+    out = {'convention': 'eps_sphere = 1 - sum(4/3 pi r^3) / (Lx*Ly*H)',
+           'row_name': 'AM+SE seed-sphere void (첨가제 고체부피 제외)',
+           'lens_subtracted': False, 'wall_clipped': False,
+           'height_um': float(height_um), 'box_um': float(box_um)}
+    L = float(box_um) / 1000.0                             # µm → box unit
+    H = float(height_um) / 1000.0
+    if not (L > 0 and H > 0):
+        raise SystemExit(f'ABORT — box_um={box_um} · height_um={height_um} 는 양수여야 한다')
+    tot = 0.0
+    for tag, path in (('AM', am_csv), ('SE', se_csv)):
+        if path is None:
+            out[f'V_{tag}'] = 0.0; out[f'n_{tag}'] = 0; continue
+        _, rad, _t = read_scaffold_csv(path)
+        v = float(((4.0 / 3.0) * math.pi * rad ** 3).sum())
+        out[f'V_{tag}'] = v; out[f'n_{tag}'] = int(len(rad))
+        out[f'sha_{tag}'] = hashlib.sha256(open(path, 'rb').read()).hexdigest()[:16]
+        tot += v
+    out['V_box'] = L * L * H
+    out['V_sphere'] = tot
+    out['eps_sphere_pct'] = 100.0 * (1.0 - tot / out['V_box'])
+    return out
+
+
 def _lens_volume(dist, ra, rb):
     """두 구가 dist 만큼 떨어져 있을 때 겹침(렌즈) 부피.  벡터화."""
     dist = np.asarray(dist, float)
@@ -334,6 +414,39 @@ def _selftest():
             ok += 1
         else:
             fail.append(name)
+
+    #  ★★★ 2026-08-30 (R14 D-7) — scaffold CSV adapter 규약 고정.
+    #    ⓐ 해석해 정확 일치 · ⓑ 실물 real14 가 원장 ε_sphere 재현 · ⓒ 음성 4종 fail-closed.
+    import tempfile as _tf, os as _os
+    _d = _tf.mkdtemp()
+    _am = _os.path.join(_d, 'am.csv'); _se = _os.path.join(_d, 'se.csv')
+    open(_am, 'w').write('# type,x,y,z,r\n1,0.01,0.01,0.01,0.006\n2,0.02,0.02,0.01,0.002\n')
+    open(_se, 'w').write('# type,x,y,z,r\n6,0.03,0.03,0.01,0.0005\n')
+    _r = eps_sphere_from_scaffolds(_am, _se, height_um=72.534)
+    _V = (4.0 / 3.0) * math.pi * (0.006 ** 3 + 0.002 ** 3 + 0.0005 ** 3)
+    chk('scaffold ⓐ 해석해 V_sphere', abs(_r['V_sphere'] - _V) < 1e-18)
+    chk('scaffold ⓐ V_box 단위(µm→box)', abs(_r['V_box'] - 0.05 * 0.05 * 0.072534) < 1e-15)
+    chk('scaffold ⓐ lens/clip 안 함', _r['lens_subtracted'] is False and _r['wall_clipped'] is False)
+    _p = _os.path.join(_os.path.dirname(_os.path.dirname(_os.path.abspath(__file__))),
+                       'docs', 'data')
+    _real = _os.path.join(_p, 'real14_am_scaffold.csv')
+    if _os.path.exists(_real):
+        _rr = eps_sphere_from_scaffolds(_real, _os.path.join(_p, 'real14_se_scaffold.csv'),
+                                        height_um=30.28)
+        chk('scaffold ⓑ real14 개수 457/32832',
+            _rr['n_AM'] == 457 and _rr['n_SE'] == 32832)
+        #  ⚠ 이 한 줄이 규약 고정이다 — lens 를 빼거나 단위를 틀리면 여기서 깨진다.
+        chk(f"scaffold ⓑ real14 ε_sphere {_rr['eps_sphere_pct']:.3f}% ≈ 원장 15.626%",
+            abs(_rr['eps_sphere_pct'] - 15.626) < 0.01)
+    _neg = 0
+    for _txt in ('# h\n1,0.01,0.01,0.01,0.006,9\n', '# h\n1,nan,0.01,0.01,0.006\n',
+                 '# h\n1,0.01,0.01,0.01,0\n', '# h\n# nothing\n'):
+        _x = _os.path.join(_d, 'x.csv'); open(_x, 'w').write(_txt)
+        try:
+            read_scaffold_csv(_x)
+        except SystemExit:
+            _neg += 1
+    chk('scaffold ⓒ 음성 4종 (6열·비유한·r=0·주석만)', _neg == 4)
 
     R = R_SE
     # 같은 반지름 두 구, 겹침 δ → 렌즈 부피 πδ²(6R−δ)/12 (contact 경로가 쓰는 바로 그 식)
