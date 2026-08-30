@@ -2572,7 +2572,21 @@ def main():
             #    (`plan_ok` 이 모르는 키를 거부 → 기존 매니페스트가 전부 `PLAN|extra` 로 깨진다).
             #    그렇다고 기록을 안 하면 `--no-field` 만 다른 두 런이 **매니페스트상 구별 불가**다
             #    = 필드 없는 팔이 필드 요청에 SKIP 으로 통과한다.  ⇒ 최상위 키로 따로 적는다.
-            'field_written': not bool(a.no_field),
+            #  ⚠ **이것은 요청 플래그다** (`--no-field` 의 반대), 실물 증거가 아니다.
+            #    Codex R13 C-3 이 정확히 그 이름을 깼다 — `--field-max-points 0` 이면 빈 필드가
+            #    정상 반환되는데 옛 이름 `field_written` 은 계속 True 였다.  이름을 정직하게
+            #    바꾸고, **실물 증거는 아래 두 개수**로 따로 낸다 (검사기가 그것을 본다).
+            'field_requested': not bool(a.no_field),
+            #  ★★★ 2026-08-30 (Codex R13 C-5) — **선분 도장과 실제를 가른다.**
+            #    `fibre_stamp='segment'` 는 `add_fid` 가 있었다는 뜻일 뿐이다.  실물 seeder 가
+            #    clipping 후 남긴 **한 점짜리 fibril** 은 선분 경로 안에서도 점으로 찍히는데
+            #    (step3_sigma._fibre_segment_ijk), 다른 첨가제가 하나라도 선분이면 도장은
+            #    전체를 `segment` 로 적는다.  ⇒ phase 별 실제 내역을 같이 싣는다.
+            #  ⚠ 키는 **phase** 다 (sid 아님).
+            'fibre_segment_ledger': {str(k): v for k, v in
+                                     (getattr(_s3, 'LAST_SEGSTAMP', {}) or {}).items()},
+            'electronic_field_pts': (len(elec_field) if elec_field else 0),
+            'ionic_field_pts': (len(ion_field) if ion_field else 0),
             #  ★ **관측 sid7 수** — PTFE 가 격자에 **실제로 몇 셀** 찍혔는가.
             #    `ptfe_stamp='centerline'` 이라고 적혀 있어도 0 셀이면 아무 일도 안 났다
             #    (스탬프 도장과 실제 효과를 가르는 유일한 증거).

@@ -40,6 +40,13 @@ import subprocess
 import sys
 
 MAX_LIST = 64            # 이보다 긴 리스트 = 배열로 보고 버린다 (origin 3원소 등은 남는다)
+
+#: ★ 축소본이 **살려 두는** 최상위 키 (작은 요약만).  큰 배열은 계속 버린다.
+#    `econn_summary` = 집전체까지 전자 퍼콜 % · 고립 AM · **탄소 클러스터 수** —
+#    웹앱 뷰어가 payload 에서 바로 읽는 값이고 원고 표의 두 행이 여기서 나온다.
+TOP_LEVEL_KEEP = ('econn_summary',)
+TOP_LEVEL_KEEP_MAX_BYTES = 8192
+
 SCHEMA = 'reduced-arm/2'  # ⚠ 초판(1)은 위 일곱 검사가 없었다 — 버전으로 구분한다
 EXPECT_ARMS = 16
 _SCR = os.path.dirname(os.path.abspath(__file__))
@@ -100,6 +107,26 @@ def reduce_one(path, max_list=MAX_LIST):
         {'key': k, 'bytes': len(json.dumps(v, ensure_ascii=False, default=str))}
         for k, v in d.items() if k != 'step3']
     top_dropped.sort(key=lambda x: -x['bytes'])
+    #  ★★★ 2026-08-30 — **작은 요약 키는 버리지 않는다.**
+    #    `econn_summary` (집전체까지의 전자 퍼콜 % · 고립 AM 수 · **탄소 클러스터 수**)는
+    #    생산 payload 가 계산해 싣고(`mpm_webapp_payload.py:1345,2867`) 웹앱 뷰어가 그대로
+    #    읽는다(`viewer3d.js:2926`).  그런데 축소본은 그것을 **이름만 남기고 버렸다**
+    #    ⇒ 리포만으로는 그 행을 재계산·감사할 수 없고, 적대 리뷰가 "어느 팔에도 없다" 며
+    #      **원고에서 빼라고 권고**하는 사태가 났다 (R12).  없는 게 아니라 **축소기가 버렸다.**
+    #  ⚠ 허용목록이다 — 큰 배열(점군·필드·삼각형)은 계속 버린다.  여기 키를 더할 때는
+    #    **크기 상한**을 같이 본다 (축소본이 다시 무거워지면 커밋 못 한다).
+    _kept = {}
+    for k in TOP_LEVEL_KEEP:
+        v = d.get(k)
+        if v is None:
+            continue
+        _b = len(json.dumps(v, ensure_ascii=False, default=str))
+        if _b > TOP_LEVEL_KEEP_MAX_BYTES:
+            dropped.append({'path': k, 'why': f'허용목록이지만 {_b} B > 상한 '
+                                              f'{TOP_LEVEL_KEEP_MAX_BYTES} B'})
+            continue
+        _kept[k] = v
+    top_dropped = [x for x in top_dropped if x['key'] not in _kept]
     out['_reduced'] = {'source': os.path.basename(path),
                        'top_level_dropped': top_dropped[:40],
                        'top_level_dropped_bytes': sum(x['bytes'] for x in top_dropped),
@@ -107,8 +134,9 @@ def reduce_one(path, max_list=MAX_LIST):
                        'source_sha256': _sha256(path),
                        'dropped': dropped, 'schema': SCHEMA,
                        'tool': 'scripts/reduce_arm_payloads.py',
-                       'tool_commit': _tool_sha(), 'max_list': max_list}
-    return {'step3': out}
+                       'tool_commit': _tool_sha(), 'max_list': max_list,
+                       'top_level_kept': sorted(_kept)}
+    return {'step3': out, **_kept}
 
 
 def _bits(shift, vox):

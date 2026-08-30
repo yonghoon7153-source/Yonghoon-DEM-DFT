@@ -221,7 +221,10 @@ EVIDENCE_SINCE_SCHEMA = 3
 #    갈렸는지까지 말할 수 있다 (해시 하나만 비교하면 "다르다" 밖에 못 말한다).
 RECEIPT_AXES = ('vox_um', 'bridge_um', 'fibre_stamp', 'sdcp_stamp', 'sdcp_sphere_d_um',
                 'sdcp_yield_to_vgcf', 'sdcp_bridge_um', 'ptfe_stamp', 'sigma_ptfe_S_cm',
-                'sigma_vgcf_S_cm', 'periodic_xy')
+                'sigma_vgcf_S_cm', 'periodic_xy',
+                #  ★ 2026-08-30 (R13 C-7 ⓒ/ⓑ) — 두 이온 σ.  물리 축이므로 digest 에 들어간다
+                #    (다른 σ = 다른 실험 = 다른 디렉터리).  매니페스트가 이미 같은 이름으로 적는다.
+                'sigma_ion_sdcp_S_cm', 'sigma_ion_se_S_cm')
 #: 영수증이 담지만 **매니페스트 축이 아닌** 것 (따로 대조한다).
 RECEIPT_META = ('code_sha', 'origins', 'arms', 'expect_backend')
 
@@ -230,13 +233,13 @@ RECEIPT_META = ('code_sha', 'origins', 'arms', 'expect_backend')
 #    거기에 키를 하나만 더해도 **모든 기존 설정의 digest 가 바뀐다** → OUTDIR 이름이 바뀌고
 #    → 이미 완주한 팔을 못 찾아 **전부 재실행**된다 (이 리포가 `_lean` 접미사를 못 바꾼 이유와
 #    같은 제약).  그런데 대조는 필요하다 ⇒ **해시 밖 + 검사 안**.
-#  ⚠ `field_written` 이 첫 사례다.  `--no-field` 는 `component_plan` 에 **없고**
+#  ⚠ `field_requested` 가 첫 사례다.  `--no-field` 는 `component_plan` 에 **없고**
 #    (`plan_ok` 이 모르는 키를 거부하므로 거기에 못 넣는다 — 기존 매니페스트가 다 깨진다)
 #    러너 접미사 `_lean3`/`_lean4` 로만 갈렸다.  즉 `OUTDIR=` 을 명시하면 **필드 없는
 #    lean3 팔이 lean4 요청에 SKIP 으로 통과**한다 (코드리뷰 2026-08-30 지적 1).
 #  ⚠ **선언한 축만 검사한다** — 러너가 안 적으면 건너뛴다 (`RECEIPT_AXES` 와 같은 규약).
 #    그래야 이 키를 모르는 옛 팔이 통째로 무효가 되지 않는다.
-RECEIPT_AXES_NODIGEST = ('field_written',)
+RECEIPT_AXES_NODIGEST = ('field_requested',)
 
 
 def expected_origins_for(vox):
@@ -276,6 +279,16 @@ def receipt_match(rec, man, origin=None):
         if _canon_num(man[k]) != _canon_num(rec[k]):
             return False, (f'RCPT|{k}|differ| 러너 선언 `{rec[k]!r}` ≠ 결과 `{man[k]!r}` — '
                            f'이 팔은 러너가 의도한 규약으로 돌지 않았다')
+    #  ★★★ 2026-08-30 (Codex R13 C-3) — **요청 플래그는 증거가 아니다.**
+    #    `field_requested` 는 `--no-field` 의 반대일 뿐이라, `--field-max-points 0` 이면
+    #    빈 필드를 정상 반환하면서도 True 다.  ⇒ 러너가 필드를 요구했으면 **실물 점 수**를
+    #    본다.  ⚠ 매니페스트에 그 키가 없으면 통과가 아니라 **거부**다 (옛 팔은 증명 불가).
+    if rec.get('field_requested') is True:
+        _n = man.get('electronic_field_pts')
+        if not isinstance(_n, int) or isinstance(_n, bool) or _n <= 0:
+            return False, (f'RCPT|electronic_field_pts|{"missing" if _n is None else "empty"}| '
+                           f'러너가 필드를 요구했는데 전자 필드 점이 `{_n!r}` 이다 — '
+                           f'요청 플래그만으로는 필드가 있다고 말할 수 없다 (R13 C-3)')
     _rs, _ms = rec.get('code_sha'), man.get('code_sha')
     if _rs and _ms and not (str(_ms).startswith(str(_rs)) or str(_rs).startswith(str(_ms))):
         return False, (f'RCPT|code_sha|differ| 러너 `{_rs}` ≠ 결과 `{_ms}` — '
@@ -950,7 +963,9 @@ def _selftest():
              'sigma_vgcf_S_cm': 78.54, 'periodic_xy': False,
              'code_sha': 'edec17a2', 'arms': 8, 'expect_backend': 'gpu',
              'origins': _h8}
-    _hman = {k: _hrec[k] for k in RECEIPT_AXES}
+    #  ⚠ 영수증은 **러너가 정한 축만** 담는다 — 전 축을 강제로 미러링하면
+    #    새 축이 생길 때마다 픽스처가 KeyError 로 죽는다 (2026-08-30 실사고).
+    _hman = {k: _hrec[k] for k in RECEIPT_AXES if k in _hrec}
     _hman['code_sha'] = 'edec17a2'
     chk(receipt_match(_hrec, _hman, origin=_h8[3])[0],
         'H1 정상 증인 — 러너 선언과 결과가 같으면 통과')

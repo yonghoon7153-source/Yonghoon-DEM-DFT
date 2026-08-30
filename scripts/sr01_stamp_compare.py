@@ -81,6 +81,24 @@ def extract_payload_cmd(text, out_name, stamp, extra_flags='', tag=None):
     if '--out mpm_payload.json' not in tail:
         raise SystemExit(f'ABORT — 예상과 다른 --out 줄: {tail.strip()[:120]}')
     _ex = (' ' + extra_flags.strip()) if extra_flags and extra_flags.strip() else ''
+    #  ★★★ 2026-08-30 (Codex R13 C-2) — **덧붙이기로는 못 지운다.**
+    #    러너는 킷의 base 명령을 보존하고 LEAN 플래그를 **뒤에 붙일** 뿐이다.  base 에
+    #    이미 `--no-ion` 이 있으면 LEAN=3/4 가 "이온 ON" 을 뜻해도 최종 argv 에 그대로
+    #    남는다 — 요청과 실행이 갈리는데 아무도 안 본다 (Codex 실측: `check_arm = None`).
+    #    ⇒ **모순을 여기서 fail-closed 로 잡는다.**  base 를 몰래 고치지 않는다 —
+    #      어느 쪽이 맞는지는 호출자가 정할 일이고, 조용한 승자를 두지 않는 것이 요점이다.
+    _lean_on = {'--no-ion': 'ionic', '--no-field': 'field'}
+    _base_tokens = set(tail.split())
+    _ex_tokens = set(_ex.split())
+    _conflict = [f for f in _lean_on
+                 if f in _base_tokens and f not in _ex_tokens and extra_flags]
+    if _conflict:
+        raise SystemExit(
+            f'ABORT — 킷 base 명령에 {_conflict} 가 있는데 러너가 준 LEAN 플래그에는 없다.\n'
+            f'  덧붙이기로는 지울 수 없으므로 최종 argv 에 그대로 남는다 = 요청한 모드와\n'
+            f'  다른 것이 돌면서 성공으로 끝난다 (R13 C-2).\n'
+            f'  ⇒ 킷 base 에서 그 플래그를 빼거나, 그 축을 끄는 LEAN 레벨을 쓸 것.\n'
+            f'  base tail: {tail.strip()[:160]}')
     tail = tail.replace('--out mpm_payload.json',
                         f'--step3-fibre-stamp {stamp}{_ex} --out {out_name}')
     body[-1] = tail.rstrip().rstrip('\\').rstrip()      # 끝의 줄이음 제거 (EOF 에서 매달리지 않게)

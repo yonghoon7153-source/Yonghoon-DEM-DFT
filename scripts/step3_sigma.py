@@ -108,6 +108,16 @@ def ionic_sigma_table(sigma_ion_sdcp, sigma_ion_se, swcnt_ion_block=False):
                      0.0 if swcnt_ion_block else sigma_ion_se, 0.0], float)
 
 
+#: ★★★ 2026-08-30 (Codex R13 C-5) — **선분 스탬프 원장.**  `fibre_stamp='segment'` 는
+#    "`add_fid` 가 있었다" 는 뜻일 뿐, **모든 fid 가 선분으로 구워졌다는 뜻이 아니다.**
+#    실물 seeder 는 box clipping·AM 내부점 제거 후 **한 점만 남은 fibril** 을 보존하고,
+#    그것은 아래에서 명시적으로 **점 스탬프**된다.  다른 첨가제가 하나라도 선분이면
+#    매니페스트는 전체를 `segment` 로 적는다 = 도장과 실제가 갈린다.
+#    ⇒ **phase 별로** 몇 fid 가 선분이고 몇이 점이었는지 여기 남긴다.
+#  ⚠ 키는 **phase** 다 (sid 아님) — 둘은 다른 번호계다 (phase 4 = PTFE → sid 7).
+#    `SID_NAME` 으로 찍으면 라벨이 틀린다.
+LAST_SEGSTAMP = {}
+
 SID_NAME = {1: 'AM_S', 2: 'AM_P', 3: 'VGCF', 4: 'SuperP', 5: 'SDCP', 6: 'SE', 7: 'PTFE',
             8: 'SWCNT', 9: 'SE_blk'}                       # voxel σ-id → name
 #   sid 7 (PTFE) = SENSITIVITY-ONLY: production은 PTFE를 전도 격자에 아예 안 넣음(절연 = void와
@@ -574,6 +584,7 @@ def _fibre_segment_ijk(add_pts, add_phase, add_fid, lo, vox, n, gap_tol=2.0,
     ★ `polyline_phases` 밖의 상은 **점 스탬프로 남긴다** — 그 fid 는 경로가 아니다
       (위 POLYLINE_PHASES 주석 참조).
     """
+    LAST_SEGSTAMP.clear()          # ★ 팔마다 새로 센다 (누적하면 원장이 거짓말한다)
     from fibre_segment_raster import segment_cells          # 같은 scripts/ 안
     P = np.asarray(add_pts, np.float64)
     F = np.asarray(add_fid)
@@ -589,17 +600,26 @@ def _fibre_segment_ijk(add_pts, add_phase, add_fid, lo, vox, n, gap_tol=2.0,
         if len(Q) == 0:
             continue
         ph_f = PH[m][0]
+        _lg = LAST_SEGSTAMP.setdefault(int(ph_f), {'fid_total': 0, 'fid_segment': 0,
+                                                   'fid_point_nonpath': 0,
+                                                   'fid_point_singleton': 0,
+                                                   'split_singleton_pieces': 0})
+        _lg['fid_total'] += 1
         is_path = (int(K[m][0]) == 1) if K is not None else (int(ph_f) in poly)
         if not is_path:                                     # ★ 경로가 아닌 fid → 점 스탬프
+            _lg['fid_point_nonpath'] += 1
             cc = np.floor((Q - lo) / vox).astype(int)
             out_ijk.append(cc); out_ph.append(np.full(len(cc), ph_f)); continue
         if len(Q) == 1:
+            _lg['fid_point_singleton'] += 1                 # ★ R13 C-5: 한 점만 남은 fibril
             out_ijk.append(np.floor((Q - lo) / vox).astype(int)); out_ph.append([ph_f]); continue
+        _lg['fid_segment'] += 1
         d = np.linalg.norm(np.diff(Q, axis=0), axis=1)
         med = float(np.median(d)) if len(d) else 0.0
         brk = (np.nonzero(d > gap_tol * med)[0] + 1) if med > 0 else np.array([], int)
         for R in (np.split(Q, brk) if len(brk) else [Q]):
             if len(R) == 1:
+                _lg['split_singleton_pieces'] += 1          # ★ gap 분할 뒤 한 점만 남은 조각
                 cc = np.floor((R - lo) / vox).astype(int)
             else:
                 seg = [segment_cells(R[i] - lo, R[i + 1] - lo, vox) for i in range(len(R) - 1)]
@@ -643,7 +663,8 @@ def solve_sigma_z(sid, sigma_of_sid, vox, return_field=False, z_top_um=None, pla
     cond = sig > 0
     if not cond.any():
         return {'sigma_eff': 0.0, 'n_dof': 0, 'n_floating_dropped': 0, 'cg_info': 0, 'resid': 0.0,
-                'unconverged': False, 'reason': 'no_conductive_voxels'}
+                'unconverged': False, 'reason': 'no_conductive_voxels',
+                'periodic_xy': bool(periodic_xy)}
     occ = np.where(cond.any((0, 1)))[0]
     k_bot = int(occ[0])
     am_occ = np.where((((sid == 1) | (sid == 2)) & cond).any((0, 1)))[0]
@@ -656,7 +677,8 @@ def solve_sigma_z(sid, sigma_of_sid, vox, return_field=False, z_top_um=None, pla
     z_plate = min(z_plate, nz * vox)
     if z_plate - z_b <= 1.5 * vox:                         # degenerate (≈1-layer bed) → no through-path
         return {'sigma_eff': 0.0, 'n_dof': int(cond.sum()), 'n_floating_dropped': 0, 'cg_info': 0,
-                'resid': 0.0, 'unconverged': False, 'reason': 'degenerate_thin_bed'}
+                'resid': 0.0, 'unconverged': False, 'reason': 'degenerate_thin_bed',
+                'periodic_xy': bool(periodic_xy)}
     band = plate_band_um if plate_band_um is not None else (vox + 0.10)
     # BOTTOM band override (collector GEOMETRY axis): 'wetted/primer' = default band (vox+0.1 —
     # a conformal conductive film reaches ~0.2µm gaps, + quantization half-voxel); 'bare' passes a
@@ -704,7 +726,8 @@ def solve_sigma_z(sid, sigma_of_sid, vox, return_field=False, z_top_um=None, pla
         return {'sigma_eff': 0.0, 'n_dof': int(cond.sum()), 'n_floating_dropped': 0, 'cg_info': 0,
                 'resid': 0.0, 'unconverged': False,
                 'reason': f'no_plate_contact(bot={int(bot_m.sum())},top={int(top_m.sum())},'
-                          f'z_b={z_b:.2f},z_plate={z_plate:.2f},band={band:.2f})'}
+                          f'z_b={z_b:.2f},z_plate={z_plate:.2f},band={band:.2f})',
+                'periodic_xy': bool(periodic_xy)}
     # FLOATING ISLANDS (components touching NEITHER plate contact) = singular blocks, zero current
     # by physics → dropped (their je reads 0).
     # ★ 리뷰 B#1 caveat: 이 label 은 6-connectivity(비주기)라 periodic_xy=True 의 x/y wrap 커플링을
@@ -732,7 +755,25 @@ def solve_sigma_z(sid, sigma_of_sid, vox, return_field=False, z_top_um=None, pla
     n_plate_reachable_dof = n_dof                          # = 합집합 (이름을 정직하게)
     if n_dof == 0:
         return {'sigma_eff': 0.0, 'n_dof': 0, 'n_floating_dropped': n_float, 'cg_info': 0,
-                'resid': 0.0, 'unconverged': False, 'reason': 'all_floating_dropped'}
+                'resid': 0.0, 'unconverged': False, 'reason': 'all_floating_dropped',
+                'periodic_xy': bool(periodic_xy)}
+    #  ★★★ 2026-08-30 (Codex R13 C-4) — **관통 성분이 없으면 조기반환한다.**
+    #    `plate` 는 위 주석대로 **합집합**("한쪽에라도 닿음")이라, 양쪽 판에 각각 닿지만
+    #    서로 이어지지 않은 두 성분이 있으면 `n_dof > 0` 인 채 정상 솔브 경로를 탄다.
+    #    그 해는 `sigma_eff = 0.0 · cg_info = 0 · unconverged = False · reason = None` 이고,
+    #    payload 가 그것을 **`complete`** 로 찍는다 = **0 이 측정값으로 원장에 들어간다**
+    #    (Codex 실측 재현: sid[0,0,0]=6 · sid[1,0,4]=6 → n_dof 2 · n_through_dof 0 · complete).
+    #    `reason` 가드(mpm_webapp_payload)는 이것을 못 잡는다 — 여기엔 reason 이 **없기** 때문이다.
+    #  ⚠ **`periodic_xy` 에서는 발동하지 않는다** — 위 :710 이 이미 적었듯 이 label 은
+    #    6-connectivity **비주기**라, x/y wrap 으로 실제 이어진 두 성분을 "안 이어짐" 으로
+    #    오판한다.  거기서 fail-closed 하면 **정상 펠릿 RVE 런을 죽인다.**  주기 라벨링이
+    #    생기기 전까지 그 축은 열어 둔다 (모르는 것을 아는 척하지 않는다).
+    if n_through_dof == 0 and not periodic_xy:
+        return {'sigma_eff': 0.0, 'n_dof': n_dof, 'n_through_dof': 0,
+                'n_plate_reachable_dof': n_plate_reachable_dof,
+                'n_floating_dropped': n_float, 'cg_info': 0, 'resid': 0.0,
+                'unconverged': False, 'reason': 'no_through_component',
+                'periodic_xy': bool(periodic_xy)}
     sig = np.where(cond, sig, 0.0)
     idx = -np.ones(sid.shape, np.int64)
     idx[cond] = np.arange(n_dof)
@@ -1679,6 +1720,22 @@ def _selftest():
     r = solve_sigma_z(sid, sig_tab, 0.5)
     e = abs(r['sigma_eff'] - 1.6) < 1e-3
     ok &= e; print(f"series:   σ_eff={r['sigma_eff']:.6f}  (expect 1.6 harmonic)  {'OK' if e else 'FAIL'}")
+    # 2b) ★★ 2026-08-30 (Codex R13 C-4) — **관통 성분이 없으면 reason 을 돌려준다.**
+    #     양쪽 판에 각각 닿지만 서로 안 이어진 두 성분: 옛 판은 `reason=None · n_dof=2` 로
+    #     정상 솔브를 타 σ=0 을 냈고 payload 가 그것을 `complete` 로 찍었다 (0 이 측정값이 된다).
+    #     ⚠ 음성 대조 둘을 같이 건다 — `periodic_xy` 에서는 **발동하면 안 되고**(비주기 라벨,
+    #       :710 caveat), 정상 관통 침대는 **영향이 없어야** 한다.
+    _d = np.zeros((2, 1, 5), np.int8); _d[0, 0, 0] = 1; _d[1, 0, 4] = 1
+    _rd = solve_sigma_z(_d, sig_tab, 1.0, z_bot_um=0, z_top_um=5)
+    _rp = solve_sigma_z(_d, sig_tab, 1.0, z_bot_um=0, z_top_um=5, periodic_xy=True)
+    _ru = solve_sigma_z(np.ones((4, 4, 6), np.int8), sig_tab, 0.5)
+    e = (_rd.get('reason') == 'no_through_component' and _rd['n_dof'] == 2
+         and _rd['n_through_dof'] == 0
+         and _rp.get('reason') is None                      # 주기: 발동 금지
+         and _ru.get('reason') is None and abs(_ru['sigma_eff'] - 1.0) < 1e-6)
+    ok &= e
+    print(f"no-through: reason={_rd.get('reason')} · periodic={_rp.get('reason')} · "
+          f"uniform σ={_ru['sigma_eff']:.6f}  {'OK' if e else 'FAIL'}")
     # 3) parallel laminate (x-split) → arithmetic mean 2.5
     sid = np.ones((6, 6, 10), np.int8); sid[3:, :, :] = 2
     r = solve_sigma_z(sid, sig_tab, 0.5)

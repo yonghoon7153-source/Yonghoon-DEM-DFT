@@ -94,6 +94,29 @@ fi
 BR_TAG="_b${BRIDGE_UM/./}"
 #  σ_VGCF 를 명시로 고정한 런은 **다른 실험**이다 — 디렉터리를 갈라 SKIP 이 섞이지 않게.
 SG_TAG=""; [ -n "${SIGMA_VGCF_OVERRIDE:-}" ] && SG_TAG="_sg${SIGMA_VGCF_OVERRIDE//./}"
+
+#  ★★★ 2026-08-30 (Codex R13 C-7 ⓒ) — **두 이온 σ 를 정식 축으로 올린다.**
+#    여태 배선이 없었다: `P2_EXTRA="--sigma-ion-sdcp 0.00062"` 는 허용목록(수치 전용)에서
+#    **exit 2** 였다.  그래서 D13 펠릿 보정이 낸 값을 전극에서 시험할 **수단 자체가 없었다.**
+#  ⚠ **둘을 함께** 노브로 둔다 (C-7 ⓑ).  SDCP 만 바꾸면 상대비가 안 옮겨간다 —
+#    동결값은 `0.62/3.57 = 0.1737` 인데 SE 를 생산 `0.003` 에 두고 SDCP 만 `0.00062` 로
+#    하면 `0.2067` 이다.  어느 쪽을 의도했는지 **런이 스스로 선언**해야 한다.
+#  ⚠ 기본은 빈 값 = 기존 거동 그대로 (payload 기본값 SE 0.003 · SDCP 0.001).
+SION_FLAG=""; SION_TAG=""
+if [ -n "${SIGMA_ION_SDCP:-}" ]; then
+  case "$SIGMA_ION_SDCP" in ''|*[!0-9.eE+-]*) echo "ABORT — SIGMA_ION_SDCP 는 수치여야 한다 (받은 값: $SIGMA_ION_SDCP)"; exit 2;; esac
+  SION_FLAG="$SION_FLAG --sigma-ion-sdcp $SIGMA_ION_SDCP"; SION_TAG="${SION_TAG}_isd${SIGMA_ION_SDCP//./}"
+fi
+if [ -n "${SIGMA_ION_SE:-}" ]; then
+  case "$SIGMA_ION_SE" in ''|*[!0-9.eE+-]*) echo "ABORT — SIGMA_ION_SE 는 수치여야 한다 (받은 값: $SIGMA_ION_SE)"; exit 2;; esac
+  SION_FLAG="$SION_FLAG --sigma-ion-se $SIGMA_ION_SE"; SION_TAG="${SION_TAG}_ise${SIGMA_ION_SE//./}"
+fi
+#  ⚠ 이온 축을 건드리면서 이온을 안 푸는 것은 **모순**이다 — 조용히 넘기지 않는다.
+if [ -n "$SION_FLAG" ] && { [ "${LEAN:-0}" = "1" ] || [ "${LEAN:-0}" = "2" ]; }; then
+  echo "ABORT — SIGMA_ION_* 를 줬는데 LEAN=${LEAN} 는 이온을 풀지 않는다 (--no-ion)."
+  echo "  이온 σ 를 바꾸면서 이온을 안 푸는 런은 아무것도 재지 않는다.  LEAN=3 또는 4 로."
+  exit 2
+fi
 #  ★ σ-치환 진단 팔 (2026-08-18, CL-43/44 · prereg v3 §4b) — SDCP 가 VGCF 셀에 양보한다.
 #    **생산 규약이 아니다.**  디렉터리·태그를 갈라 SKIP 캐시가 생산 팔과 섞이지 않게 한다
 #    (판정기 게이트가 잡긴 하지만, 애초에 안 섞이는 것이 낫다 — H4 와 같은 이유).
@@ -282,13 +305,15 @@ _RCPT_JSON="$(python3 - "$SCR" "$VOX" "$BRIDGE_UM" "$FIBRE_STAMP" "${SDCP_SPHERE
                   "${SDCP_YIELD_VGCF:-0}" "${PTFE_STAMP:-off}" "${SIGMA_PTFE:-}" \
                   "${SIGMA_VGCF_OVERRIDE:-}" \
                   "$PERIODIC_ON" "$ARMS" "${EXPECT_BACKEND:-gpu}" "${SDCP_BRIDGE:-}" \
-                  "${LEAN:-0}" <<'PYRCPT'
+                  "${LEAN:-0}" "${SIGMA_ION_SDCP:-}" "${SIGMA_ION_SE:-}" <<'PYRCPT'
 import json, os, sys
 sys.path.insert(0, sys.argv[1])
 import run_contract as RC
 _scr, _vox, _br, _fs, _sd, _yv, _ps, _pt, _sg, _per, _arms, _bk = sys.argv[1:13]
 _sbrg = sys.argv[13] if len(sys.argv) > 13 else ''
 _lean = sys.argv[14] if len(sys.argv) > 14 else '0'
+_isd  = sys.argv[15] if len(sys.argv) > 15 else ''
+_ise  = sys.argv[16] if len(sys.argv) > 16 else ''
 vox = float(_vox)
 rec = {'vox_um': vox, 'bridge_um': float(_br), 'fibre_stamp': _fs,
        'sdcp_stamp': ('sphere' if _sd else 'point'),
@@ -299,15 +324,21 @@ rec = {'vox_um': vox, 'bridge_um': float(_br), 'fibre_stamp': _fs,
        'origins': [list(o) for o in RC.expected_origins_for(vox)]}
 if _sbrg:
     rec['sdcp_bridge_um'] = float(_sbrg)   # 판별 축 — 러너가 정한 것만 선언
+#  ★ 두 이온 σ — **러너가 정했을 때만** 선언한다 (RECEIPT_AXES 규약).  기본값으로 돌면
+#    선언하지 않아 기존 팔이 그대로 산다.
+if _isd:
+    rec['sigma_ion_sdcp_S_cm'] = float(_isd)
+if _ise:
+    rec['sigma_ion_se_S_cm'] = float(_ise)
 #  ★★★ 2026-08-30 (코드리뷰 지적 1) — **LEAN=4 일 때만** 필드 유무를 선언한다.
-#    `field_written` 은 `RECEIPT_AXES_NODIGEST` 라 **digest 를 안 바꾼다** (기존 팔 전부 보존).
+#    `field_requested` 는 `RECEIPT_AXES_NODIGEST` 라 **digest 를 안 바꾼다** (기존 팔 전부 보존).
 #    ⚠ 왜 LEAN=4 에만: 이 레벨은 오늘 만든 것이라 **혼동될 기존 팔이 없다** ⇒ 거짓 경보 0.
 #      LEAN 미지정(전체 파이프라인)도 필드를 쓰지만, 거기서 선언하면 이 키를 모르는
 #      **오늘 이전 팔이 전부 `missing` = HOLD** 가 된다 (돌고 있는 진단 런 포함).
 #    ⚠ 남는 구멍: LEAN 미지정 팔은 여전히 매니페스트로 필드 유무를 증명하지 못한다.
 #      그 팔을 쓰려면 JSON 안의 필드 배열을 직접 확인해야 한다 (자동 검사 밖).
 if _lean == '4':
-    rec['field_written'] = True
+    rec['field_requested'] = True
 if _pt:
     rec['sigma_ptfe_S_cm'] = float(_pt)
 if _sg:
@@ -323,7 +354,7 @@ print(json.dumps(rec, ensure_ascii=False, sort_keys=True))
 PYRCPT
 )" || { echo "[p2] ABORT — 런 영수증을 못 만들었다"; exit 2; }
 _RCPT_TAG="_r$(printf '%s' "$_RCPT_JSON" | python3 -c 'import json,sys; print(json.load(sys.stdin)["receipt_digest"])')"
-OUTDIR="${OUTDIR:-$PWD/prereg_v2_vox${VOX/./}${SD_TAG}${BR_TAG}${SG_TAG}${YV_TAG}${PT_TAG}${PS_TAG}${SBRG_TAG}${FS_TAG}${AR_TAG}${LEAN_TAG}${_RCPT_TAG}}"
+OUTDIR="${OUTDIR:-$PWD/prereg_v2_vox${VOX/./}${SD_TAG}${BR_TAG}${SG_TAG}${YV_TAG}${PT_TAG}${PS_TAG}${SBRG_TAG}${FS_TAG}${SION_TAG}${AR_TAG}${LEAN_TAG}${_RCPT_TAG}}"
 #  ★★★ R3-CX-09 — 진단 런(ARMS≠8)은 **사용자가 준 OUTDIR 에도** 접미사를 강제한다.
 #    안 그러면 `ARMS=2 OUTDIR=<생산경로>` 로 2팔 산출물이 8팔 디렉터리에 섞인다.
 if [ "$ARMS" -ne 8 ] && [ "${OUTDIR%_arm$ARMS}" = "$OUTDIR" ]; then
@@ -334,7 +365,7 @@ fi
 #    production 디렉터리로 가리키는 junction/symlink 를 만들면 문자열 검사는 통과하고
 #    **resolved path 는 production** 이 된다 (Codex 실측).  ⇒ 실경로로 충돌을 본다.
 if [ "$ARMS" -ne 8 ]; then
-  _PROD="$PWD/prereg_v2_vox${VOX/./}${SD_TAG}${BR_TAG}${SG_TAG}${YV_TAG}${PT_TAG}${PS_TAG}${SBRG_TAG}${FS_TAG}${LEAN_TAG}"
+  _PROD="$PWD/prereg_v2_vox${VOX/./}${SD_TAG}${BR_TAG}${SG_TAG}${YV_TAG}${PT_TAG}${PS_TAG}${SBRG_TAG}${FS_TAG}${SION_TAG}${LEAN_TAG}"
   mkdir -p "$OUTDIR" 2>/dev/null || true
   _R_OUT="$(cd "$OUTDIR" 2>/dev/null && pwd -P || echo "$OUTDIR")"
   _R_PROD="$([ -d "$_PROD" ] && cd "$_PROD" && pwd -P || echo "$_PROD")"
@@ -518,7 +549,7 @@ PY
   local SHF="$RUN/${TAG}.$$.sh"
   ( cd "$RUN" && P2_SCR="$SCR" python3 "$SCR/sr01_stamp_compare.py" \
       --extract-payload "$KIT/run_mpm.sh" --stamp "$FIBRE_STAMP" \
-      --extra-flags "--sigma-vgcf $SIGMA --step3-vox $VOX --step3-bridge-um $BRIDGE_UM --step3-origin-shift $SH$SD_FLAG$YV_FLAG$PT_FLAG$PS_FLAG$SBRG_FLAG$RQG_FLAG$EP_FLAG$XP_FLAG$FS_FLAG$LEAN_FLAGS${P2_EXTRA:+ $P2_EXTRA}" \
+      --extra-flags "--sigma-vgcf $SIGMA --step3-vox $VOX --step3-bridge-um $BRIDGE_UM --step3-origin-shift $SH$SD_FLAG$YV_FLAG$PT_FLAG$PS_FLAG$SBRG_FLAG$RQG_FLAG$EP_FLAG$XP_FLAG$FS_FLAG$SION_FLAG$LEAN_FLAGS${P2_EXTRA:+ $P2_EXTRA}" \
       --tag "$TAG" --out-name "$(basename "$OUT")" > "$SHF.body" ) || return 1
   { echo 'set -uo pipefail'; echo "KIT=\"$KIT\""; echo "SCR=\"$SCR\"";
     #  ★ R4-CX-03 — `:+` 는 값 `0` 도 nonempty 라 켰다.  `= 1` 만 켠다.
@@ -637,8 +668,17 @@ if [ "$ARMS" -eq "$PREREG_ARMS" ]; then
   #  ★ LEAN=3 (2026-08-29) 은 이온을 **푼다**.  그래도 여기서 `--require-ionic` 을 자동으로
   #    켜지 않는다 — 이 봉인은 σ_e 축의 계약이고, 이온이 결론인 트랙은 여전히 그 옵션을
   #    **명시적으로** 붙여 따로 봉인해야 한다 (자동으로 켜면 어느 축이 결론인지가 흐려진다).
+  #  ★★★ 2026-08-30 (Codex R13 C-2) — **LEAN=3/4 는 이온 증거를 요구한다.**
+  #    위 문단은 "어느 축이 결론인지 흐려진다" 며 자동 부착을 거부했는데, 그 논리는
+  #    LEAN=2(σ_e 전용)에서만 맞다.  LEAN=3/4 는 **이온을 풀려고 켠 모드**이고, 지금
+  #    영수증은 이온 계획을 선언하지 않는다 ⇒ producer 가 `component_plan.ionic=False`
+  #    로 자기신고하면 `required_components()` 가 그것을 정본으로 받아 이온을 요구하지
+  #    않는다 (Codex 실측: `--no-ion` 이 최종 argv 에 남아도 `check_arm = None`).
+  #    ⇒ 그 모드에서는 봉인이 **양의 σ_ion 존재**를 직접 요구한다.
+  _RQI=""; case "${LEAN:-0}" in 3|4) _RQI="--require-ionic"; \
+    echo "[p2] ★ LEAN=${LEAN} — 봉인에 --require-ionic 부착 (이온이 이 모드의 존재 이유다)";; esac
   if ! python3 "$SCR/sdcp_gain_verdict.py" --dir "$OUTDIR" --seal-only \
-       --require-arms "$PREREG_ARMS" --require-digest; then
+       --require-arms "$PREREG_ARMS" --require-digest $_RQI; then
     echo "[p2] ✗ 계약 봉인이 깨졌다 — 위 근거를 고치고 다시 돌 것"
     #  ★★★ 2026-08-25 (R3-CX-02, Codex 3차) — **실패해도 원값을 자동으로 찍지 않는다.**
     #    옛 판은 여기서 `--collect-only` 를 돌렸다.  "이미 기각됐으니 안전" 이라고 봤지만

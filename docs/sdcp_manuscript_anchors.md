@@ -162,7 +162,17 @@ Li⁺ tridentate)를 정정 구조(ether-O + methyl-분지 2차 술폰산)에 �
   작동 (= 우리 particle+anchoring 시딩의 배치와 자기일관). (b) 역할② 정량 한 칸 — pellet ×0.80은
   '덜 차단' 증거; **재계산 패키지에 Li⁺ 결합(SO₃⁻ vs ether-O) + 사이트간 NEB 장벽 추가** 권고.
 - STEP3 설계 노트: SDCP = 스택 최초의 **이중-전도 상** (PTFE 0/0 · VGCF e · SuperP e · **SDCP e+Li⁺**)
-  → network solver에서 σ_e·σ_ion 동시 배정 (pellet 앵커 ×5.1/×0.80).
+  → network solver에서 σ_e·σ_ion 동시 배정 ~~(pellet 앵커 ×5.1/×0.80)~~.
+  ⛔⛔ **정정 2026-08-30 (Codex R13 C-7)** — 괄호 안 문장이 **범주 오류**다.  `×5.1 / ×0.80` 은
+  **펠릿 복합체 비**(LPSCl+바인더 덩어리의 유효 전도도 비)이지 **상(phase) σ 가 아니다.**
+  그것을 solver 의 상별 σ 에 직접 배정하면 안 된다 — `coating_presets.py:70` 이 정확히
+  *"σ 비는 manuscript pellet-COMPOSITE — phase σ 아님"* 이라고 경고하고 있었다.
+  실제 상 σ 비는 펠릿 캘리브(`pellet_calib_freeze_20260825.md`)가 역산한 **0.62/3.57 = ×0.174**
+  이고, 그것조차 **그 RVE 규약 안에서만** 유효해 전극으로 이식이 금지돼 있다
+  (`table_s3_data_20260827.md` §14).
+  ⇒ **이 문서의 `×5.1/×0.80` 은 "복합 펠릿 실측" 으로만 읽을 것.**  상 σ 배정 근거로 인용 금지.
+  (같은 오류를 2026-08-30 에 §12-1 에서도 냈다 — 복합 비 ×0.80 과 상 비 ×0.33 을 한 열에
+  놓았다.  같은 뿌리이고 그때 §14 로 정정했다.)
   ★ 사용자 확정 원칙 (2026-07-10): ① SDCP는 Li-hopping을 도와 σ_ion **증가는 아니어도 절연이 아님**
   → SDCP 접촉 σ_ion > 0 (PTFE=0과 명확히 구분) ② 자체 전자전도 → **SDCP 경유 전자 percolation이
   끊기면 안 됨** (econn 도체 유지 ✓; Kirchhoff STEP3에서도 σ_e > 0 배정).

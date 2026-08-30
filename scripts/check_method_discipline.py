@@ -2385,11 +2385,11 @@ def _selftest():
     #  ⚠ 2026-08-25: 진단 분리는 이제 **두 겹**이다 — 조립 태그(`AR_TAG`) 와 R3-CX-09 의
     #    강제 접미사.  한 겹만 지우면 다른 겹이 막으므로(정상), 돌연변이는 **둘 다** 지운다.
     #    그래야 "분리가 실제로 사라진 상태" 를 시험한다.
-    _m4 = _rmut('${FS_TAG}${AR_TAG}${LEAN_TAG}', '${FS_TAG}${LEAN_TAG}')
+    _m4 = _rmut('${FS_TAG}${SION_TAG}${AR_TAG}${LEAN_TAG}', '${FS_TAG}${SION_TAG}${LEAN_TAG}')
     _m4b = [x for x in _m4 if x.startswith(('L_ARMTAG', 'L_ARMNS'))]
     chk(f'L-5a ★ 조립 태그만 지우면 **강제 접미사가 막는다** (과잉차단 아님, {len(_m4)}건)',
         not _m4b)
-    _both = _RSRC.replace('${FS_TAG}${AR_TAG}${LEAN_TAG}', '${FS_TAG}${LEAN_TAG}')
+    _both = _RSRC.replace('${FS_TAG}${SION_TAG}${AR_TAG}${LEAN_TAG}', '${FS_TAG}${SION_TAG}${LEAN_TAG}')
     _m4c = _rmut_src(_both.replace(
         'if [ "$ARMS" -ne 8 ] && [ "${OUTDIR%_arm$ARMS}" = "$OUTDIR" ]; then', 'if false; then'))
     chk(f'L-5: ★★ 두 겹을 **다** 지우면 잡는다 — 진단 런이 생산 OUTDIR 에 쓴다 '
@@ -2405,7 +2405,7 @@ def _selftest():
     #  ★ R3-CX-08 — `echo` 안내문이 순서 증거가 되면 안 된다 (옛 판은 됐다).
     #  실제 봉인 호출을 **안내문으로 바꾼다** — 옛 판은 그 echo 를 순서 증거로 셌다.
     _m14 = _rmut('''  if ! python3 "$SCR/sdcp_gain_verdict.py" --dir "$OUTDIR" --seal-only \\
-       --require-arms "$PREREG_ARMS" --require-digest; then''',
+       --require-arms "$PREREG_ARMS" --require-digest $_RQI; then''',
                  '''  echo "먼저 돌릴 것: python3 $SCR/sdcp_gain_verdict.py --seal-only"
   if false; then''')
     chk(f'L-14: ★★ `echo "… --seal-only"` 안내문은 순서 증거가 아니다 (live 호출만 센다) '
