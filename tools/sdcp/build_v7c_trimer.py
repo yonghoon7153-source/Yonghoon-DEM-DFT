@@ -2141,6 +2141,22 @@ def selftest():
     _mo3, _ = pil_pick_seed_mo({10: {i: 99.0 for i in _am["rings"]["ring0"]}},
                                {10: 0.0}, _am["rings"]["ring0"])
     chk(_mo3 is None, "⛔음성: **비점유** MO 는 seed 후보가 아니다")
+    # ⛔음성 — 코어 1s 는 링에 ~100% 국재돼 있어서 거르지 않으면 **항상** 뽑힌다
+    _r0 = _am["rings"]["ring0"]
+    _pc = {3: {i: 100.0 / len(_r0) for i in _r0},        # C 1s — 링에 100%
+           40: {i: 70.0 / len(_r0) for i in _r0}}        # 원자가 π — 70%
+    _oc = {3: 2.0, 40: 2.0}
+    _en = {3: -10.2, 40: -0.31}
+    chk(pil_pick_seed_mo(_pc, _oc, _r0, ener=_en)[0] == 40,
+        "⛔음성: 링에 100% 걸린 **코어 1s(−10.2 Eh)** 대신 원자가 MO 를 고른다 "
+        "(코어 홀은 폴라론이 아니다)")
+    chk(pil_pick_seed_mo(_pc, _oc, _r0, ener=None)[0] == 3,
+        "⛔음성 전제: 에너지를 안 주면 **코어가 뽑힌다** — 그래서 상위가 ener 를 "
+        "못 읽으면 멈춘다")
+    chk(pil_pick_seed_mo({3: {i: 100.0 / len(_r0) for i in _r0}}, {3: 2.0}, _r0,
+                         ener={3: -10.2})[0] is None,
+        "⛔음성: 코어를 거르고 나면 후보가 **하나도 없을** 수 있다 — 그때도 "
+        "임의로 고르지 않는다")
     chk(pil_parse_mopop("아무 관계 없는 출력", 10) is None,
         "⛔음성: MO 인구 블록이 없으면 None (임의로 고르지 않는다)")
     print("── 폴라론 pilot 끝 ──")
@@ -2350,7 +2366,13 @@ def pilot_acidic_h(csym, cnb, csulf):
 
 # ── 폴라론 pilot · 생성 ─────────────────────────────────────────────────────
 
-PIL_LOC_KW = "%loc\n  LocMet PipekMezey\n  T_Core -1e6\nend\n"
+#: ⛔⛔ 2026-08-31 — 처음엔 `T_Core -1e6` 으로 **코어까지** 국재화했다. 그런데
+#:   링 탄소의 C 1s 는 그 자체로 그 링에 ~100% 국재돼 있어서, "목표 집합에 가장
+#:   크게 걸린 MO" 를 찾으면 폴라론 궤도가 아니라 **코어 1s 를 고른다.**
+#:   그걸 HOMO 로 rotate 하면 코어 홀이지 폴라론이 아니다.
+#:   ⇒ 국재화는 **원자가만** (T_Core 는 ORCA 기본값에 맡긴다).
+#:   ⚠ 그래도 파서 쪽에서 한 번 더 막는다 — %loc 설정에 의존하지 않기 위해.
+PIL_LOC_KW = "%loc\n  LocMet PipekMezey\nend\n"
 #: MO 별 Löwdin 인구를 찍게 한다 — seed 선택의 **유일한** 근거다.
 PIL_MOPOP_KW = "%output\n  Print[P_OrbPopMO_L] 1\nend\n"
 
@@ -2527,6 +2549,10 @@ def pilot_generate(a):
 
 PIL_MOPOP_HDR = "LOEWDIN REDUCED ORBITAL POPULATIONS PER MO"
 PIL_SEED_MIN_WEIGHT = 40.0   # % — 목표 집합에 이만큼도 안 걸린 MO 는 국재 seed 가 아니다
+#: 코어 궤도 배제선 (Eh). C 1s ≈ −10 · O 1s ≈ −19 · S 1s ≈ −89 이고 원자가는 −1 위쪽이다.
+#: ⛔ 이게 없으면 링 탄소의 C 1s 가 "그 링에 100% 국재" 라서 seed 로 뽑힌다 —
+#:   코어 홀을 만들게 되고 폴라론이 아니다. `%loc` 설정과 **무관하게** 여기서 막는다.
+PIL_CORE_CUTOFF_EH = -3.0
 
 
 def pil_parse_mopop(text, nat):
@@ -2580,8 +2606,15 @@ def pil_parse_mopop(text, nat):
     return pops, occ, ener
 
 
-def pil_pick_seed_mo(pops, occ, group_idx, kill=None):
-    """목표 집합에 가장 크게 걸린 **점유** MO. → (mo, weight_pct) 또는 (None, best)."""
+def pil_pick_seed_mo(pops, occ, group_idx, kill=None, ener=None,
+                     core_cut=PIL_CORE_CUTOFF_EH):
+    """목표 집합에 가장 크게 걸린 **점유 원자가** MO. → (mo, weight_pct) 또는 (None, best).
+
+    ⛔ 코어 궤도를 반드시 뺀다 — 링 탄소의 C 1s 는 그 링에 ~100% 걸려 있어서
+      배제하지 않으면 **항상** 그게 뽑힌다 (2026-08-31 실측 전 발견).
+    ⚠ `ener` 가 없으면 코어를 못 거른다 — 그때는 거르지 않았다는 사실을 상위가 알아야
+      하므로 조용히 통과시키지 않고 `ener_missing` 을 같이 돌려준다.
+    """
     kill = set(kill or [])
 
     def remap(i):                            # 중성 프레임 → H 제거 프레임
@@ -2589,13 +2622,18 @@ def pil_pick_seed_mo(pops, occ, group_idx, kill=None):
 
     tgt = {remap(i) for i in group_idx}
     tgt.discard(None)
-    best, bw = None, -1.0
+    best, bw, n_core = None, -1.0, 0
     for mo, d in pops.items():
         if occ.get(mo, 0.0) < 1.0:
             continue                         # 점유 MO 만
+        if ener is not None and ener.get(mo) is not None and ener[mo] < core_cut:
+            n_core += 1
+            continue                         # 코어 궤도 — 폴라론 seed 가 아니다
         w = sum(v for a, v in d.items() if a in tgt)
         if w > bw:
             best, bw = mo, w
+    if best is None:
+        return None, -1.0
     if bw < PIL_SEED_MIN_WEIGHT:
         return None, bw
     return best, bw
@@ -2627,7 +2665,10 @@ def pilot_seeds(d):
             raise SystemExit(
                 "⛔ %s 에서 MO 별 Löwdin 인구를 못 읽었다 — `%%output Print[P_OrbPopMO_L] 1` "
                 "이 실제로 찍혔는지 확인할 것 (seed 를 임의로 고르지 않는다)" % outp)
-        pops, occ, _ = pr
+        pops, occ, ener = pr
+        if not any(v is not None for v in ener.values()):
+            raise SystemExit("⛔ %s 에서 MO 에너지를 못 읽었다 — 코어 궤도를 거를 수 없다. "
+                             "코어 1s 는 링에 100%% 국재돼 있어 반드시 seed 로 뽑힌다" % outp)
         nel = jm["n_electrons"]
         homo = nel // 2 - 1
         spec = man["seed_plan"]["Dradical" if is_dm else "Pcation"]
@@ -2642,7 +2683,8 @@ def pilot_seeds(d):
             if sd != "default":
                 gi = (amap["sets"]["sulfonate"] if sd == "A_sulfonate"
                       else amap["rings"][sd.replace("B_", "")])
-                mo, w = pil_pick_seed_mo(pops, occ, gi, kill if is_dm else None)
+                mo, w = pil_pick_seed_mo(pops, occ, gi, kill if is_dm else None,
+                                         ener=ener)
                 if mo is None:
                     raise SystemExit(
                         "⛔ %s/%s: 목표 집합에 %.1f%% 밖에 안 걸린 MO 가 최대다 "
@@ -2861,39 +2903,77 @@ def pilot_analyze(d):
 
 
 PIL_RUNNER = r"""#!/usr/bin/env bash
-# 폴라론 pilot 러너 — 순서를 강제한다 (회신 S).
-#   phase L(seed 생성원) → seed 선택 → phase S(측정) → 분석
-# ⛔ seed 는 phase L **결과**에 의존한다. 순서를 건너뛰면 임의 MO 를 고르는 것이다.
+# 폴라론 pilot 러너 — 단계를 **끊어서** 돈다 (회신 S · 회신 AO 교훈).
+#
+#   bash run_pilot.sh L       phase L (seed 생성원) 2잡 — 여기서 멈춘다
+#   bash run_pilot.sh seeds   L 출력 판독 → phase S 입력 생성 (계산 없음)
+#   bash run_pilot.sh S       phase S (측정) — **리뷰 통과 뒤에만**
+#   bash run_pilot.sh analyze 판정
+#
+# ⛔ 자동 연결(all)을 두지 않는다. phase S 가 estimand 를 재는 단계이고, 그 앞에
+#    사람의 판단(리뷰·smoke test)이 들어가야 한다. L 은 아무 값도 보고하지 않는다.
+# ⛔ seed 는 phase L **결과**에 의존한다 — 순서를 건너뛰면 임의 MO 를 고르는 것이다.
 set -u
-ORCA=${ORCA:?ORCA 절대경로를 주세요 (병렬 실행은 full pathname 이 필요합니다)}
+stage=${1:?단계를 주세요: L | seeds | S | analyze}
+ORCA=${ORCA:?ORCA 절대경로를 주세요 (병렬은 full pathname 이 필요합니다)}
 BUILDER=${BUILDER:?build_v7c_trimer.py 경로를 주세요}
 D=$(cd "$(dirname "$0")" && pwd)
+case "$ORCA" in /*) ;; *) echo "ORCA 는 절대경로여야 합니다: $ORCA"; exit 2;; esac
+if head -c 64 "$ORCA" | grep -qa "python"; then
+  echo "$ORCA 가 Python 스크립트입니다 — GNOME 스크린리더(orca)일 수 있습니다."
+  echo "양자화학 ORCA 경로를 주세요."; exit 2
+fi
+
 run() {
   local j=$1 tag=$2
   if [ -f "$j/$tag.out" ] && grep -aq "ORCA TERMINATED NORMALLY" "$j/$tag.out"; then
-    echo "  이미 완료 — $j"; return 0; fi
-  echo "  ▶ $j"
+    echo "  이미 완료 — ${j#$D/}"; return 0; fi
+  echo "  [$(date +%H:%M:%S)] ${j#$D/}"
   ( cd "$j" && "$ORCA" "$tag.inp" > "$tag.out" 2>&1 )
-  grep -aq "ORCA TERMINATED NORMALLY" "$j/$tag.out" || { echo "  중단: $j"; return 1; }
+  if grep -aq "ORCA TERMINATED NORMALLY" "$j/$tag.out"; then
+    echo "  [$(date +%H:%M:%S)] 정상 종료 — ${j#$D/}"; return 0
+  fi
+  echo "  중단: ${j#$D/}  (마지막 줄: $(tail -1 "$j/$tag.out" 2>/dev/null))"; return 1
 }
-echo "== phase L =="
+
 fail=0
-for j in "$D"/L/*/*; do
-  [ -d "$j" ] || continue
-  run "$j" "$(basename "$j")" || fail=1
-done
-[ "$fail" = 0 ] || { echo "phase L 실패 — seed 를 만들지 않는다"; exit 2; }
-echo "== seed 선택 =="
-python3 "$BUILDER" --polaron_seeds "$D" || { echo "seed 생성 실패"; exit 2; }
-echo "== phase S =="
-for j in "$D"/S/*/*/*; do
-  [ -d "$j" ] || continue
-  run "$j" "$(basename "$j")" || fail=1
-done
-echo "== 분석 =="
-python3 "$BUILDER" --polaron_analyze "$D"
+case "$stage" in
+  L)
+    echo "== phase L (seed 생성원) =="
+    for j in "$D"/L/*/*; do
+      [ -d "$j" ] || continue
+      run "$j" "$(basename "$j")" || fail=1
+    done
+    echo "== smoke test — MO 별 Löwdin 인구가 실제로 찍혔나 =="
+    n=$(grep -lc "LOEWDIN REDUCED ORBITAL POPULATIONS PER MO" "$D"/L/*/*/*.out 2>/dev/null | wc -l)
+    echo "  인구 블록이 있는 .out: $n"
+    if [ "$n" = 0 ]; then
+      echo "  0 입니다 — %output Print[P_OrbPopMO_L] 1 이 안 먹었습니다."
+      echo "  seed 를 만들 수 없으니 출력 형식을 보고 파서를 고쳐야 합니다."
+      fail=1
+    fi
+    echo "다음: bash run_pilot.sh seeds  (계산 없음)"
+    ;;
+  seeds)
+    python3 "$BUILDER" --polaron_seeds "$D" || fail=1
+    echo "다음: **리뷰 통과 뒤** bash run_pilot.sh S"
+    ;;
+  S)
+    echo "== phase S (측정) =="
+    for j in "$D"/S/*/*/*; do
+      [ -d "$j" ] || continue
+      run "$j" "$(basename "$j")" || fail=1
+    done
+    echo "다음: bash run_pilot.sh analyze"
+    ;;
+  analyze)
+    python3 "$BUILDER" --polaron_analyze "$D" || fail=1
+    ;;
+  *) echo "모르는 단계: $stage (L | seeds | S | analyze)"; exit 2;;
+esac
 exit $fail
 """
+
 
 
 def main():
