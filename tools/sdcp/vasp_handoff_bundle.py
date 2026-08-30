@@ -4789,6 +4789,144 @@ if __name__ == "__main__":
 '''
 
 
+# ═══════════════════════════════════════════════════════════════════════════
+#  주기영상 진공 — **재는 것이 아니라 게이트다** (2026-08-30, 회신 AF P0-1)
+#
+#  발송 후보 v13/holdout_v4 의 24 pm1 자세 중 **9개가 15 Å 미만**이었고 PTFE
+#  b71/b74/b75/b79 는 8.56~8.79 Å 였다. 그런데 README·Methods·Table S1 은 전부
+#  ">15 Å" 라고 적고 있었다. 생성기에 진공을 보는 코드가 **한 줄도 없었기** 때문이다.
+#  D3(IVDW=11)는 pairwise 라 dipole correction 이 이 상호작용을 지우지 못한다.
+#
+#  ⛔ 이 코드가 못 하는 것: 얼마나 큰 오차인지 말하지 못한다. 분리거리만 보장한다.
+#     실제 크기는 셀 높이 수렴 시험(같은 자세를 두 c 로)으로만 안다.
+MIN_VACUUM_A_DEFAULT = 15.0
+
+
+def _poscar_read(path: Path):
+    """POSCAR → (lattice 3×3, elements, cart coords, 원본 줄). Direct/Cartesian 모두."""
+    L = Path(path).read_text().splitlines()
+    sc = float(L[1].split()[0])
+    A = [[float(x) * sc for x in L[i].split()[:3]] for i in (2, 3, 4)]
+    sp = L[5].split()
+    cnt = [int(x) for x in L[6].split()]
+    i = 7
+    sel = L[i].strip()[:1] in "sS"
+    if sel:
+        i += 1
+    mode = L[i].strip()[:1].lower()
+    i += 1
+    n = sum(cnt)
+    raw = [L[i + k] for k in range(n)]
+    frac = [[float(x) for x in r.split()[:3]] for r in raw]
+    if mode == "d":
+        cart = [[sum(f[j] * A[j][d] for j in range(3)) for d in range(3)] for f in frac]
+    else:
+        cart = [[f[d] * sc for d in range(3)] for f in frac]
+    el = []
+    for s, c in zip(sp, cnt):
+        el += [s] * c
+    return dict(lines=L, A=A, el=el, cart=cart, mode=mode, sel=sel,
+                coord_start=i, n=n, raw=raw)
+
+
+def _split_slab_mol(el, cart):
+    """Ni 최상단 + 1.6 Å 아래의 Li/Ni/O 를 슬랩으로, 나머지를 흡착종으로."""
+    zni = [cart[i][2] for i, e in enumerate(el) if e == "Ni"]
+    if not zni:
+        return None, None
+    ztop = max(zni) + 1.6
+    slab = [i for i, e in enumerate(el) if cart[i][2] <= ztop and e in ("Li", "Ni", "O")]
+    mol = [i for i in range(len(el)) if i not in set(slab)]
+    return slab, mol
+
+
+def image_separation_A(path) -> Optional[float]:
+    """흡착종 ↔ **다음 주기 슬랩(+c)** 실제 최단거리. 흡착종이 없으면 None."""
+    d = _poscar_read(path)
+    slab, mol = _split_slab_mol(d["el"], d["cart"])
+    if not mol or not slab:
+        return None
+    A, X = d["A"], d["cart"]
+    ax, ay, cz = A[0][0], A[1][1], A[2][2]
+    best = float("inf")
+    for i in mol:
+        for j in slab:
+            dx = X[i][0] - X[j][0]
+            dy = X[i][1] - X[j][1]
+            dz = X[i][2] - (X[j][2] + cz)
+            dx -= round(dx / ax) * ax
+            dy -= round(dy / ay) * ay
+            best = min(best, (dx * dx + dy * dy + dz * dz) ** 0.5)
+    return best
+
+
+def poscar_set_c(path, new_c: float) -> None:
+    """c 축만 늘린다 — **원자의 Cartesian 좌표는 그대로**.
+
+    Direct 좌표면 z 분율을 old_c/new_c 로 되scale 해야 원자가 안 움직인다.
+    이걸 빠뜨리면 셀을 늘리는 순간 슬랩이 늘어난다 (조용한 사고).
+    """
+    path = Path(path)
+    d = _poscar_read(path)
+    A = d["A"]
+    old_c = A[2][2]
+    if new_c <= old_c:
+        return
+    if abs(A[2][0]) > 1e-9 or abs(A[2][1]) > 1e-9:
+        raise ValueError("c 축이 z 와 나란하지 않다 — 자동 확장 거부: %s" % path)
+    L = list(d["lines"])
+    sc = float(L[1].split()[0])
+    L[4] = "  %.16f %.16f %.16f" % (A[2][0] / sc, A[2][1] / sc, new_c / sc)
+    if d["mode"] == "d":
+        k = old_c / new_c
+        for idx, r in enumerate(d["raw"]):
+            tok = r.split()
+            f = [float(x) for x in tok[:3]]
+            tail = " ".join(tok[3:])
+            L[d["coord_start"] + idx] = ("  %.16f %.16f %.16f %s"
+                                         % (f[0], f[1], f[2] * k, tail)).rstrip()
+    path.write_text("\n".join(L) + "\n")
+
+
+def fit_bundle_vacuum(out: Path, planned: dict, min_vac: float) -> dict:
+    """번들 전체를 **한 c** 로 맞춘다 (기준 슬랩 포함 — 안 그러면 E_ads 가 안 소거된다).
+
+    반환: {"declared_A", "c_before", "c_after", "min_before", "min_after", "per_job"}
+    """
+    jobs = [k for k in planned if (out / k / "POSCAR").is_file()]
+    meas = {}
+    for k in jobs:
+        s = image_separation_A(out / k / "POSCAR")
+        if s is not None:
+            meas[k] = s
+    if not meas:
+        return {"declared_A": min_vac, "per_job": {}, "note": "흡착종이 있는 잡이 없다"}
+    c0 = _poscar_read(out / jobs[0] / "POSCAR")["A"][2][2]
+    worst = min(meas.values())
+    n_below = sum(1 for v in meas.values() if v < min_vac)
+    # ⚠ c 를 Δ 늘려도 최단거리는 Δ 만큼 안 는다 — 최단 쌍에 xy 성분이 있으면
+    #   sqrt(dxy²+dz²) 라 증가분이 Δ 보다 작다. 한 번만 늘리면 미달로 끝난다
+    #   (실측: 15.0 목표에 14.978 에서 멈췄다). 수렴할 때까지 반복한다.
+    c1, cur = c0, worst
+    for _ in range(12):
+        if cur >= min_vac - 1e-9:
+            break
+        c1 += (min_vac - cur) + 1e-3
+        for k in jobs:                      # ★ 복합체·clean slab 을 **전부** 같은 c 로
+            poscar_set_c(out / k / "POSCAR", c1)
+        cur = min(v for v in (image_separation_A(out / k / "POSCAR") for k in meas)
+                  if v is not None)
+    after = {k: image_separation_A(out / k / "POSCAR") for k in meas}
+    return {"declared_A": min_vac, "c_before_A": round(c0, 4), "c_after_A": round(c1, 4),
+            "min_before_A": round(worst, 3),
+            "min_after_A": round(min(v for v in after.values() if v is not None), 3),
+            "n_below_before": n_below,
+            "per_job_A": {k: round(v, 3) for k, v in sorted(after.items())
+                          if v is not None},
+            "⚠": ("분리거리만 보장한다 — 남은 영상 오차의 **크기**는 "
+                  "같은 자세를 두 c 로 돌리는 수렴 시험으로만 안다")}
+
+
 def _readme_sp(man: Dict[str, Any], a, zcut: float, n_jobs: int,
                n_st: int, n_dn: int, n_all: int = 0, by_ph: Optional[dict] = None) -> str:
     """단일점 Wave 1 전용 README — **실제 계획에서 숫자를 뽑는다** (Codex 6차 §8).
@@ -5928,6 +6066,25 @@ def build_bundle(a, ledger: Optional[Dict[str, Any]] = None) -> Path:
         "# 원소 → POTCAR 변형 (PBE PAW 5.4). 각 잡 POSCAR 의 종 순서대로 이어붙일 것.\n"
         "# Ni_pv 는 2026-08-08 납품과 동일 계보다 — 바꾸지 말 것.\n"
         + "\n".join(f"{e:3s} {v}" for e, v in man["potcar_spec"].items()) + "\n")
+
+    # ── 주기영상 진공 (회신 AF P0-1) — **해시 전에** 셀을 맞춘다 ────────────
+    #   v13 은 24 pm1 자세 중 9개가 15 Å 미만(최소 8.56 Å)인데 문서가 ">15 Å" 라고
+    #   적었다. 생성기에 진공을 보는 코드가 없어서다. 이제 맞추고, 못 맞추면 막는다.
+    _minvac = float(getattr(a, "min_vacuum", MIN_VACUUM_A_DEFAULT) or 0.0)
+    if _minvac > 0:
+        man["vacuum"] = fit_bundle_vacuum(out, man["planned"], _minvac)
+        _ma = man["vacuum"].get("min_after_A")
+        if _ma is not None and _ma < _minvac - 1e-6:
+            sys.exit(f"⛔ 주기영상 진공 {_ma:.2f} Å < 선언 {_minvac:.2f} Å — "
+                     f"셀 확장 뒤에도 미달이다. 번들을 내보내지 않는다.")
+        if man["vacuum"].get("n_below_before"):
+            print(f"  ↑ 셀 c {man['vacuum']['c_before_A']} → "
+                  f"{man['vacuum']['c_after_A']} Å — 진공 미달 "
+                  f"{man['vacuum']['n_below_before']}자세 (최소 "
+                  f"{man['vacuum']['min_before_A']} → {_ma} Å)")
+    else:
+        man["vacuum"] = {"declared_A": None,
+                         "⚠": "--min_vacuum 0 — 진공 게이트를 껐다. 인용 시 병기할 것"}
 
     files = {}
     for p in sorted(out.rglob("*")):
@@ -7141,6 +7298,50 @@ def selftest() -> int:
         "[음성] relax 상이 없는데 README 가 이완을 요구하지 않는다")
     chk(bool(_rx_jobs) or "폴더가 하나도 없습니다" in _rd,
         "relax 가 없으면 README 가 그렇게 적는다")
+
+    # ★ 주기영상 진공 (회신 AF P0-1) — 실물 v13 이 9자세 미달인데 문서는 ">15 Å" 였다
+    _vac = m_sp.get("vacuum") or {}
+    _pj = _vac.get("per_job_A") or {}
+    chk(_vac.get("declared_A") is not None, "MANIFEST 에 진공 선언이 있다")
+    chk(bool(_pj), f"자세별 진공이 기록된다 ({len(_pj)}개)")
+    chk(all(v >= _vac["declared_A"] - 1e-6 for v in _pj.values()),
+        f"배포 전 자세가 **전부** 선언치 이상 (최소 {_vac.get('min_after_A')} Å)")
+
+    # ── 진공 유닛시험: 짧은 셀 → 늘림 → 원자가 안 움직였는가 ────────────────
+    _vd = td / "vactest"
+    _vd.mkdir(parents=True, exist_ok=True)
+    #   슬랩 2원자(Ni,O) + 흡착종 1원자(H). c=20, 분자 z=12 → 이미지까지 8 Å
+    (_vd / "POSCAR").write_text(
+        "t\n1.0\n 10.0 0 0\n 0 10.0 0\n 0 0 20.0\nNi O H\n1 1 1\nDirect\n"
+        "0.0 0.0 0.10\n0.5 0.5 0.10\n0.0 0.0 0.60\n")
+    #   슬랩 z=2.0 · 흡착종 z=12.0 · c=20 ⇒ 이미지까지 20-10 = 10.0 Å
+    _s0 = image_separation_A(_vd / "POSCAR")
+    chk(abs(_s0 - 10.0) < 1e-6, f"진공 측정 = 10.00 Å (실제 {_s0:.3f})")
+    _c0 = _poscar_read(_vd / "POSCAR")
+    poscar_set_c(_vd / "POSCAR", 25.0)
+    _c1 = _poscar_read(_vd / "POSCAR")
+    chk(abs(_c1["A"][2][2] - 25.0) < 1e-9, "c 가 25.0 Å 로 바뀌었다")
+    chk(max(abs(a[2] - b[2]) for a, b in zip(_c0["cart"], _c1["cart"])) < 1e-9,
+        "[음성] c 를 늘려도 원자 Cartesian z 가 **안 움직인다** "
+        "(Direct 되scale 을 빠뜨리면 슬랩이 늘어난다)")
+    chk(abs(image_separation_A(_vd / "POSCAR") - 15.0) < 1e-6,
+        "확장 뒤 분리 = 15.00 Å")
+    # [음성] 미달 번들은 fit 이 c 를 실제로 늘려서만 통과한다
+    _fit = fit_bundle_vacuum(_vd.parent, {"vactest": {}}, 18.0)
+    chk(_fit["n_below_before"] == 1 and _fit["min_after_A"] >= 18.0
+        and _fit["c_after_A"] > _fit["c_before_A"],
+        f"[음성] 15 Å 짜리를 18 Å 선언으로 fit → c {_fit.get('c_before_A')}"
+        f"→{_fit.get('c_after_A')} Å, 최소 {_fit.get('min_after_A')} Å")
+    # [음성] c 축이 기울면 자동확장을 거부한다 (조용히 잘못 늘리지 않는다)
+    (_vd / "tilt").mkdir(exist_ok=True)
+    (_vd / "tilt" / "POSCAR").write_text(
+        "t\n1.0\n 10 0 0\n 0 10 0\n 1.0 0 20.0\nNi H\n1 1\nDirect\n"
+        "0.0 0.0 0.10\n0.0 0.0 0.60\n")
+    try:
+        poscar_set_c(_vd / "tilt" / "POSCAR", 30.0)
+        chk(False, "[음성] 기운 c 축을 거부한다")
+    except ValueError:
+        chk(True, "[음성] 기운 c 축을 거부한다 (조용히 잘못 늘리지 않는다)")
     chk(isinstance(m_sp.get("claim_policy"), dict)
         and all(f in m_sp["claim_policy"] for f in m_sp["fragments"]),
         f"조각별 claim_policy 가 있다 ({list((m_sp.get('claim_policy') or {}))})")
@@ -8584,6 +8785,9 @@ def main():
     ap.add_argument("--cores", type=int, default=48,
                     help="잡당 코어 수 — MANIFEST·SUBMIT_CONTRACT 에 기록된다 "
                          "(비용 모형 기준선과 같아야 추정이 맞는다)")
+    ap.add_argument("--min_vacuum", type=float, default=MIN_VACUUM_A_DEFAULT,
+                    help="흡착종↔다음 주기 슬랩 최소 분리(Å). 미달이면 c 를 늘린다. "
+                         "0 이면 게이트를 끈다 (권장하지 않음)")
     ap.add_argument("--concurrency", type=int, default=8,
                     help="외주처가 동시에 돌릴 잡 수 — MANIFEST 에 기록. "
                          "⚠ 한 잡의 static→dense 사슬보다 짧아질 수 없다")
