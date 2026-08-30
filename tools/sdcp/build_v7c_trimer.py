@@ -51,6 +51,8 @@ import json
 import math
 import os
 import re
+import time
+from pathlib import Path
 
 RCOV = {"H": 0.31, "C": 0.76, "N": 0.71, "O": 0.66, "S": 1.05}
 ZNUM = {"H": 1, "C": 6, "N": 7, "O": 8, "S": 16}
@@ -2044,7 +2046,847 @@ def selftest():
             "레거시 트라이머 경로 하위호환 (--legacy 로만 진입)")
 
     print(f"── {'PASS' if not fails else 'FAIL ' + str(len(fails))} ──")
+    # ══ 폴라론 pilot (회신 S) — 음성 경로 포함 ═══════════════════════════
+    print("── 폴라론 pilot ──")
+    # 합성 계: ring 2개(각 S+4C) · 에테르 O 2개/ring · sulfonate 2개 · 나머지
+    _sym = (["S"] + ["C"] * 4 + ["O"] * 2) * 2 + ["S", "O", "O", "O", "H"] * 2 + ["C", "H"]
+    _n = len(_sym)
+    _nb = {i: [] for i in range(_n)}
+    _rings = [{"ring": [0, 1, 2, 3, 4], "rS": 0, "alphas": []},
+              {"ring": [7, 8, 9, 10, 11], "rS": 7, "alphas": []}]
+    for r, o0 in ((0, 5), (7, 12)):
+        for c, o in ((r + 1, o0), (r + 2, o0 + 1)):
+            _nb[c].append(o); _nb[o].append(c)
+    _sulf = [{"sS": 14, "sO": [15, 16, 17], "aH": 18, "ring": 0},
+             {"sS": 19, "sO": [20, 21, 22], "aH": 23, "ring": 1}]
+    _am = pilot_atom_sets(_sym, _nb, _rings, _sulf, ether_in_backbone=True)
+    chk(sum(len(v) for v in _am["sets"].values()) == _n,
+        "pilot: 세 집합이 **완전**하다 (합 = 전체 원자수)")
+    chk(not (set(_am["sets"]["backbone"]) & set(_am["sets"]["sulfonate"])),
+        "pilot: backbone 과 sulfonate 가 **상호배타**다")
+    chk(len(_am["sets"]["backbone"]) == 14,
+        f"pilot: 에테르 O 가 backbone 에 들어간다 (실제 {len(_am['sets']['backbone'])}, 기대 14)")
+    _am0 = pilot_atom_sets(_sym, _nb, _rings, _sulf, ether_in_backbone=False)
+    chk(len(_am0["sets"]["backbone"]) == 10 and _am0["hash"] != _am["hash"],
+        "⛔음성: 에테르 O 를 빼면 backbone 이 줄고 **hash 가 달라진다** (분할 선택이 기록된다)")
+    # ⛔음성 — 집합이 겹치면 멈춘다
+    raises(lambda: pilot_atom_sets(
+        _sym, _nb, _rings,
+        [{"sS": 14, "sO": [15, 16, 1], "aH": None, "ring": 0}],
+        ether_in_backbone=True),
+        "⛔음성 pilot: backbone 과 sulfonate 가 겹치면 **멈춘다** (조용히 한쪽에 안 넣는다)")
+
+    # ⛔음성 — **v1 식(분자 signed)이면 틀리는** 경우를 만든다 (회신 S Q1)
+    _m = [0.0] * _n
+    _m[1], _m[2] = +0.5, -0.5          # 백본 안에서 부호가 반대인 두 lobe
+    _m[15] = 0.2                        # sulfonate 에 약간
+    _sh = pilot_shares(_m, _am)
+    _signed = sum(_m[i] for i in _am["sets"]["backbone"]) / sum(abs(x) for x in _m)
+    chk(abs(_sh["F"]["backbone"] - (1.0 / 1.2)) < 1e-9 and abs(_signed) < 1e-9,
+        f"⛔음성 AO/S Q1: 백본 내부 양·음 lobe 가 **signed 식에서는 0 으로 상쇄**되지만"
+        f" 절대값 식은 {_sh['F']['backbone']:.3f} 를 준다 (signed {_signed:.3f})")
+    chk(abs(_sh["M"]["backbone"]) < 1e-9,
+        "pilot: signed net spin(M_bb)은 **버리지 않고 따로** 보존한다")
+    chk(abs(sum(_sh["F"].values()) - 1.0) < 1e-9, "pilot: F 합이 1 이다")
+
+    # class 규칙 — 문턱과 **여유** 둘 다
+    chk(pilot_class({"backbone": 0.70, "sulfonate": 0.20, "other": 0.10})[0] == "BACKBONE",
+        "pilot: 유일 집합이 0.5 이상이고 여유가 있으면 class 부여")
+    chk(pilot_class({"backbone": 0.52, "sulfonate": 0.46, "other": 0.02})[0]
+        == "MIXED_UNRESOLVED",
+        "⛔음성 S Q1: 0.52 vs 0.46 은 **여유 0.10 미달** → MIXED_UNRESOLVED "
+        "(문턱만 넘으면 통과시키지 않는다)")
+    chk(pilot_class({"backbone": 0.30, "sulfonate": 0.10, "other": 0.60})[0]
+        == "OTHER_DOMINANT",
+        "⛔음성 S Q1: other 가 크면 backbone−sulfonate 만으로 판정하지 않는다")
+    chk(pilot_threshold_sensitivity(
+            {"backbone": 0.55, "sulfonate": 0.44, "other": 0.01})["threshold_dependent"],
+        "⛔음성 S: 0.4/0.5/0.6 경계에서 class 가 바뀌면 THRESHOLD_DEPENDENT")
+    chk(pilot_partition_check({"backbone": 0.70, "sulfonate": 0.2, "other": 0.1},
+                              {"backbone": 0.40, "sulfonate": 0.5, "other": 0.1}
+                              )["partition_dependent"],
+        "⛔음성 S Q1: 두 분할의 class 가 갈리면 PARTITION_DEPENDENT")
+    chk(not pilot_partition_check({"backbone": 0.70, "sulfonate": 0.2, "other": 0.1},
+                                  {"backbone": 0.72, "sulfonate": 0.18, "other": 0.1}
+                                  )["partition_dependent"],
+        "pilot: 두 분할이 같은 class·비슷한 F_bb 면 통과")
+    chk(pilot_partition_check(None, {"backbone": 0.7})["ok"] is False,
+        "⛔음성 S Q1: 한쪽 분할이 **없으면** 통과가 아니다 (둘 다 계산해야 한다)")
+
+    # N_eff · span80
+    _m2 = [0.0] * _n
+    for i in _am["rings"]["ring0"]:
+        _m2[i] = 1.0
+    _s2 = pilot_shares(_m2, _am)
+    chk(abs(_s2["N_eff"] - 1.0) < 1e-6 and _s2["span80"] == 1,
+        f"pilot: 한 링에 몰리면 N_eff=1 · span80=1 (실제 {_s2['N_eff']:.3f}/{_s2['span80']})")
+    _m3 = [0.0] * _n
+    for k in ("ring0", "ring1"):
+        for i in _am["rings"][k]:
+            _m3[i] = 1.0
+    _s3 = pilot_shares(_m3, _am)
+    chk(abs(_s3["N_eff"] - 2.0) < 1e-6 and _s3["span80"] == 2,
+        f"pilot: 두 링에 고르면 N_eff=2 · span80=2 (실제 {_s3['N_eff']:.3f}/{_s3['span80']})")
+
+    # seed 선택 — 문턱 미달이면 **고르지 않는다**
+    _pops = {10: {i: 90.0 / len(_am["rings"]["ring0"]) for i in _am["rings"]["ring0"]},
+             11: {0: 5.0}}
+    _occ = {10: 2.0, 11: 2.0}
+    _mo, _w = pil_pick_seed_mo(_pops, _occ, _am["rings"]["ring0"])
+    chk(_mo == 10 and _w > 80.0, f"pilot: 목표 집합에 크게 걸린 MO 를 고른다 (mo {_mo}, {_w:.0f}%)")
+    _mo2, _w2 = pil_pick_seed_mo({11: {0: 5.0}}, {11: 2.0}, _am["rings"]["ring0"])
+    chk(_mo2 is None,
+        "⛔음성 S Q2: 목표 집합에 문턱(40%) 미만인 MO 밖에 없으면 **seed 를 만들지 않는다** "
+        "(국재화 실패를 임의 선택으로 덮지 않는다)")
+    _mo3, _ = pil_pick_seed_mo({10: {i: 99.0 for i in _am["rings"]["ring0"]}},
+                               {10: 0.0}, _am["rings"]["ring0"])
+    chk(_mo3 is None, "⛔음성: **비점유** MO 는 seed 후보가 아니다")
+    chk(pil_parse_mopop("아무 관계 없는 출력", 10) is None,
+        "⛔음성: MO 인구 블록이 없으면 None (임의로 고르지 않는다)")
+    print("── 폴라론 pilot 끝 ──")
     return 1 if fails else 0
+
+
+# ═══════════════════════════════════════════════════════════════════════════
+#  폴라론 pilot — H-제거 n=6 라디칼 상태지도 (회신 S, 2026-08-31)
+#
+#  사전등록: db/properties/sdcp_polaron_pilot_prereg_2026_08_31.json
+#  카드:     kb/questions/sdcp_backbone_polaron_estimand_2026_08_31.md
+#  결정:     D-2026-08-31-sdcp-polaron-Fbb (proposed)
+#
+#  ⛔ 이것은 **흡착 doped(Stage 0/B/hybrid)와 다른 캠페인**이다. 슬랩이 없다.
+#     회신 R4 가 NO-GO 한 것은 그쪽이고, 여기서는 그 receipt 사슬을 쓰지 않는다.
+#
+#  2단계인 이유 — seed 를 **실제로 국재화**시켜야 한다 (회신 S Q2):
+#    phase L : D⁻ (charge −1, mult 1) SP + Pipek-Mezey 국재화 + MO 별 Löwdin 인구
+#              → 각 목표 집합에 가장 크게 걸린 점유 MO 를 찾는다
+#    phase S : 그 GBW 를 MORead 하고 선택한 MO 를 HOMO 자리로 Rotate 한 뒤
+#              D•(charge 0, mult 2) 를 **비제약**으로 푼다
+#  제약은 seed 생성에만 쓰고 최종 에너지는 완전 비제약이다 (회신 S Q2 규율 1·2).
+#
+#  이 도구가 **못 하는 것**
+#    · 상태를 전수 탐색하지 않는다. 사전등록한 8 seed 에서 **찾은 최저해**만 안다.
+#    · StabPerform 은 열거가 아니다 — 수렴한 determinant 의 국소최소 여부만 본다.
+#    · 고체·사슬간 hopping·이동도·전도도를 말하지 못한다 (단일 사슬 기체/CPCM).
+#    · Opt 를 몇 개 돌아야 하는지 미리 모른다 — 발견된 basin 수가 정한다.
+#    · ⚠ **ORCA 구문 미검증**: `%loc` 출력 형식과 `Rotate` 의 정확한 동작을 실제
+#      ORCA 로 확인하지 않았다. phase L 파서와 seed 입력은 smoke test 가 필요하다.
+# ═══════════════════════════════════════════════════════════════════════════
+
+#: 회신 S Q1 — **분자도 절대값**이다. v1 식(분자 signed)은 백본 내부에서 다시
+#:   상쇄돼 절대값 분모를 넣은 목적과 모순이었다.
+#:      F_G = Σ_{i∈G} |m_i| / Σ_i |m_i|          (세 집합, 상호배타·완전, 합 = 1)
+#:   signed net spin 은 버리지 않고 M_G 로 따로 보존한다.
+PIL_CLASS_MIN = 0.50        # 유일 집합이 이 이상이고
+PIL_CLASS_MARGIN = 0.10     # 다음 집합과 이만큼 차이날 때만 class 부여
+PIL_PARTITION_TOL = 0.10    # 두 분할의 F_bb 차가 이보다 크면 PARTITION_DEPENDENT
+PIL_SENS_THR = (0.40, 0.50, 0.60)   # 경계 민감도
+PIL_RING_SPAN_FRAC = 0.80   # 최소 연속 ring span 이 포함해야 할 spin 비율
+PIL_SHARE_FLOOR = 0.01      # 보고 해상도 (무차원 — 에너지 eV 와 **다른 단위**)
+
+
+def pilot_atom_sets(csym, cnb, crings, csulf, ether_in_backbone=True):
+    """회신 S 계약 — **상호배타·완전**한 세 집합 + ring profile.
+
+    → {"sets": {backbone, sulfonate, other}, "rings": {ringN: [...]}, "hash": ...}
+
+    ⛔ 기존 `atom_sets_of()` 와 **다르다**. 그쪽은 backbone 이 ring 들의 합집합이라
+      ring 집합과 겹치고 share 합이 1 을 넘는다 (하위호환 목적). 여기서는 회신 S 의
+      `F_bb + F_SO3 + F_other = 1` 을 만족해야 하므로 겹침을 허용하지 않는다.
+    """
+    n = len(csym)
+    # ⛔⛔ 2026-08-31 실측 — `analyze()` 의 `ring` 은 **티오펜 5원환만**(S+4C) 이다.
+    #   EDOT 의 3,4-위치 에테르 산소는 고리 탄소에 직결돼 π 에 전자를 밀어넣는 자리이고,
+    #   PEDOT 폴라론 밀도의 상당부분이 거기 있다. 그걸 `other` 로 밀면 F_bb 가
+    #   **체계적으로 과소평가**된다 (실측: 그 O 12개가 other 로 갔다).
+    #   ⇒ 기본은 **고리 C 에 직결된 O 를 backbone 에 포함**한다. sp³ 인 -CH2CH2- 다리는
+    #     공액이 아니므로 other 로 둔다.
+    #   ⚠ 이것은 **분할 선택**이라 estimand 를 움직인다. 사전등록에 선언하고,
+    #     분석기가 ether 포함/제외 두 값을 **둘 다** 보고한다 (억지 선택 금지).
+    ring_atoms = set()
+    for r in crings:
+        ring_atoms |= set(r["ring"])
+    ether_O = set()
+    if ether_in_backbone:
+        for i in ring_atoms:
+            if csym[i] != "C":
+                continue
+            for j in cnb[i]:
+                if csym[j] == "O" and j not in ring_atoms:
+                    ether_O.add(j)
+    core = ring_atoms | ether_O
+    ring_H = {h for i in core for h in cnb[i] if csym[h] == "H"}
+    backbone = core | ring_H
+    sulf = set()
+    for su in csulf:
+        sulf |= {su["sS"]} | set(su["sO"])
+        if su.get("aH") is not None:
+            sulf.add(su["aH"])
+    # ⚠ 겹치면 조용히 한쪽에 넣지 않는다 — 집합 정의가 틀렸다는 뜻이므로 멈춘다
+    if backbone & sulf:
+        raise SystemExit("⛔ backbone 과 sulfonate 가 겹친다 %s — 집합 정의 오류"
+                         % sorted(backbone & sulf)[:5])
+    other = set(range(n)) - backbone - sulf
+    sets = {"backbone": sorted(backbone), "sulfonate": sorted(sulf),
+            "other": sorted(other)}
+    # 완전성·상호배타성 (회신 S Q8 게이트)
+    tot = sum(len(v) for v in sets.values())
+    if tot != n:
+        raise SystemExit("⛔ 원자 집합이 완전하지 않다 (%d ≠ %d)" % (tot, n))
+    rings = {}
+    for ri, r in enumerate(crings):
+        ra = set(r["ring"])
+        if ether_in_backbone:
+            ra |= {j for i in ra if csym[i] == "C" for j in cnb[i]
+                   if csym[j] == "O" and j not in set(r["ring"])}
+        rh = {h for i in ra for h in cnb[i] if csym[h] == "H"}
+        g = sorted(ra | rh)
+        if not set(g) <= backbone:
+            raise SystemExit("⛔ ring%d 이 backbone 부분집합이 아니다" % ri)
+        rings["ring%d" % ri] = g
+    # ring 끼리 겹치면(공유 원자) N_eff 가 왜곡된다 — 조용히 넘기지 않는다
+    seen = {}
+    for k, g in rings.items():
+        for i in g:
+            if i in seen:
+                raise SystemExit("⛔ ring 집합이 겹친다: 원자 %d 이 %s 와 %s 에 동시에"
+                                 % (i, seen[i], k))
+            seen[i] = k
+    h = hashlib.sha256(json.dumps({"sets": sets, "rings": rings},
+                                  sort_keys=True).encode()).hexdigest()
+    return {"sets": sets, "rings": rings, "hash": h, "n_atoms": n,
+            "ether_in_backbone": bool(ether_in_backbone),
+            "⚠_분할선택": ("고리 C 에 직결된 에테르 O 를 backbone 에 넣었는지 여부다. "
+                            "이것이 F_bb 를 움직인다 — 분석기가 두 값을 다 보고한다")}
+
+
+def pilot_shares(mvals, amap):
+    """회신 S Q1 식. → {"F": {...}, "M": {...}, "abs_total": ..., "ring_p": {...},
+                        "N_eff": ..., "span80": ...}
+
+    ⛔ 못 하는 것: 실공간 적분이 아니라 **원자 population 근사**다 (회신 S 가 허용한
+      근사 경로). 같은 정의를 두 분할에 똑같이 적용하는 것이 조건이다.
+    """
+    tot = sum(abs(x) for x in mvals)
+    if tot <= 0:
+        return {"F": None, "M": None, "abs_total": tot,
+                "why": "총 |스핀| 이 0 — 분모가 없다 (닫힌 껍질류)"}
+    F = {g: sum(abs(mvals[i]) for i in idx) / tot for g, idx in amap["sets"].items()}
+    M = {g: sum(mvals[i] for i in idx) for g, idx in amap["sets"].items()}
+    # ring profile — **backbone 안에서** 정규화 (N_eff 는 링 사이 분포다)
+    rw = {k: sum(abs(mvals[i]) for i in idx) for k, idx in amap["rings"].items()}
+    rt = sum(rw.values())
+    ring_p = {k: (v / rt if rt > 0 else 0.0) for k, v in rw.items()}
+    neff = (1.0 / sum(p * p for p in ring_p.values())) if rt > 0 else None
+    # 80% spin 을 포함하는 **최소 연속 ring span** (회신 S Q1)
+    span = None
+    if rt > 0:
+        order = sorted(ring_p, key=lambda k: int(k[4:]))
+        vals = [ring_p[k] for k in order]
+        best = None
+        for i in range(len(vals)):
+            acc = 0.0
+            for j in range(i, len(vals)):
+                acc += vals[j]
+                if acc >= PIL_RING_SPAN_FRAC:
+                    if best is None or (j - i + 1) < best:
+                        best = j - i + 1
+                    break
+        span = best
+    return {"F": F, "M": M, "abs_total": tot, "ring_p": ring_p,
+            "N_eff": neff, "span80": span}
+
+
+def pilot_class(F, thr=PIL_CLASS_MIN, margin=PIL_CLASS_MARGIN):
+    """회신 S Q1 — 유일 집합이 F ≥ thr **이고** 다음 집합과 차 ≥ margin 일 때만 class.
+
+    → (class, why). `other` 가 크면 backbone−sulfonate 만으로 판정하지 않는다.
+    """
+    if not F:
+        return None, "F 가 없다 (스핀 없음)"
+    top = sorted(F.items(), key=lambda kv: -kv[1])
+    if F.get("other", 0.0) >= thr:
+        return "OTHER_DOMINANT", ("other 집합이 %.3f — 링커/스페이서에 실렸다. "
+                                  "backbone−sulfonate 만으로 판정하지 않는다" % F["other"])
+    if top[0][1] < thr:
+        return "MIXED_UNRESOLVED", "최대 집합 %s %.3f < %.2f" % (top[0][0], top[0][1], thr)
+    if len(top) > 1 and (top[0][1] - top[1][1]) < margin:
+        return "MIXED_UNRESOLVED", ("%s %.3f 과 %s %.3f 의 차가 %.3f < %.2f"
+                                    % (top[0][0], top[0][1], top[1][0], top[1][1],
+                                       top[0][1] - top[1][1], margin))
+    return top[0][0].upper(), "%s %.3f (2위와 차 %.3f)" % (
+        top[0][0], top[0][1], top[0][1] - (top[1][1] if len(top) > 1 else 0.0))
+
+
+def pilot_threshold_sensitivity(F, thrs=PIL_SENS_THR):
+    """0.4/0.5/0.6 경계에서 class 가 바뀌면 THRESHOLD_DEPENDENT (회신 S)."""
+    cs = {t: pilot_class(F, thr=t)[0] for t in thrs}
+    return {"by_threshold": {str(t): c for t, c in cs.items()},
+            "threshold_dependent": len(set(cs.values())) > 1}
+
+
+def pilot_partition_check(F_low, F_hir, tol=PIL_PARTITION_TOL):
+    """Löwdin/Hirshfeld 두 분할 병기 — 억지 선택 금지 (회신 R4 보완 5 · 회신 S Q1)."""
+    if not F_low or not F_hir:
+        return {"ok": False, "why": "한쪽 분할의 F 가 없다 — 두 분할을 **둘 다** 계산해야 한다"}
+    d = {g: abs(F_low.get(g, 0.0) - F_hir.get(g, 0.0)) for g in F_low}
+    cl, ch = pilot_class(F_low)[0], pilot_class(F_hir)[0]
+    dep = (cl != ch) or (d.get("backbone", 0.0) > tol)
+    return {"ok": not dep, "delta": d, "class_lowdin": cl, "class_hirshfeld": ch,
+            "partition_dependent": dep,
+            "why": ("class 가 다르거나 |ΔF_bb| > %.2f — 억지로 하나를 고르지 않는다" % tol)
+                   if dep else "두 분할이 같은 class 와 F_bb 를 준다"}
+
+
+def pilot_acidic_h(csym, cnb, csulf):
+    """산성 H (SO₃H 의 H) 를 0-based 로. → [(sulf_idx, S, O, H), ...]"""
+    out = []
+    for k, su in enumerate(csulf):
+        if su.get("aH") is not None:
+            o = next((o for o in su["sO"] if su["aH"] in cnb[o]), None)
+            out.append((k, su["sS"], o, su["aH"]))
+    return out
+
+
+# ── 폴라론 pilot · 생성 ─────────────────────────────────────────────────────
+
+PIL_LOC_KW = "%loc\n  LocMet PipekMezey\n  T_Core -1e6\nend\n"
+#: MO 별 Löwdin 인구를 찍게 한다 — seed 선택의 **유일한** 근거다.
+PIL_MOPOP_KW = "%output\n  Print[P_OrbPopMO_L] 1\nend\n"
+
+
+def _pil_cpcm(eps):
+    """ε=1 이면 진공(블록 없음), 아니면 CPCM. cavity 규약을 manifest 에 기록한다."""
+    if eps is None or abs(eps - 1.0) < 1e-9:
+        return ""
+    return "%%cpcm\n  epsilon %.4f\n  refrac 1.4000\nend\n" % eps
+
+
+def _pil_inp(path, xyz, charge, mult, wf, eps, functional,
+             loc=False, moread=None, rotate=None, stab=False):
+    """pilot 용 ORCA 입력. 관측량 계약(Hirshfeld · open-shell 에 UNO UCO)을 강제한다.
+
+    ⚠ `NoAutoStart` 는 **항상** 켠다 — 같은 basename 의 GBW 를 우연히 물지 않게.
+      의도한 lineage 는 `MOInp`/`MORead` 로만 들어온다 (회신 S Q8 게이트: 둘을 구분).
+    """
+    obs = " Hirshfeld" + ("" if wf == "RKS" else " UNO UCO")
+    kw = "! %s %s TightSCF NoAutoStart%s" % (wf, functional, obs)
+    body = [kw, "%maxcore 6000"]
+    scf = []
+    if moread:
+        body.append('%%moinp "%s"' % moread)
+        scf.append("Guess MORead")
+    if rotate:
+        # {from, to, angle, spin_from, spin_to} — 선택한 국재 MO 를 HOMO 자리로
+        scf.append("Rotate {%d, %d, 90, 0, 0} end" % (rotate[0], rotate[1]))
+    if stab:
+        scf.append("StabPerform true")
+    if scf:
+        body.append("%scf " + " ".join(scf) + " end")
+    txt = "\n".join(body) + "\n"
+    if loc:
+        txt += PIL_LOC_KW + PIL_MOPOP_KW
+    txt += _pil_cpcm(eps)
+    txt += "* xyzfile %d %d %s\n" % (charge, mult, xyz)
+    with open(path, "w") as f:
+        f.write(txt)
+    return txt
+
+
+def pilot_generate(a):
+    """phase L(seed 생성원) 만 만든다. phase S 는 L 출력을 읽고 `--polaron_seeds` 가 낸다.
+
+    ⛔ 여기서 phase S 를 미리 만들지 않는 이유: seed 는 **실행 결과(국재 MO 인덱스)에
+      의존**한다. 미리 만들면 임의의 MO 를 고르는 것이고, 그건 국재화가 아니다.
+    """
+    out = Path(a.out)
+    if out.exists() and any(out.iterdir()):
+        raise SystemExit("⛔ %s 가 비어 있지 않다 — 새 디렉터리를 주세요 (덮어쓰지 않는다)" % out)
+    out.mkdir(parents=True, exist_ok=True)
+    sym, pos = read_xyz(a.neutral_xyz)
+    nb, rings, sulf = analyze(sym, pos)
+    amap = pilot_atom_sets(sym, nb, rings, sulf, ether_in_backbone=True)
+    amap_alt = pilot_atom_sets(sym, nb, rings, sulf, ether_in_backbone=False)
+    acid = pilot_acidic_h(sym, nb, sulf)
+    if not acid:
+        raise SystemExit("⛔ 산성 H(SO₃H)를 하나도 못 찾았다 — 입력 구조를 확인하세요")
+    # H 제거 위치 — 1-based 로 받고 0-based 로 바꾼다. 못 찾으면 **멈춘다**.
+    if a.site is None:
+        k, sS, sO, sH = acid[len(acid) // 2]          # 중간 위치 (사전 규칙)
+        why_site = "사전 규칙: 산성 H 목록의 중간 위치 (%d/%d)" % (len(acid) // 2 + 1, len(acid))
+    else:
+        want = int(a.site) - 1
+        hit = [t for t in acid if t[3] == want]
+        if not hit:
+            raise SystemExit("⛔ --site %s (1-based) 는 산성 H 가 아니다. 후보(1-based): %s"
+                             % (a.site, [t[3] + 1 for t in acid]))
+        k, sS, sO, sH = hit[0]
+        why_site = "--site %s 로 명시" % a.site
+    n_e_neutral = electrons_of(sym)
+    envs = [("eps%g" % e, e) for e in (a.eps or [1.0])]
+    man = {
+        "schema": "polaron_pilot/v1",
+        "date": time.strftime("%Y-%m-%d"),
+        "prereg": "db/properties/sdcp_polaron_pilot_prereg_2026_08_31.json",
+        "decision": "D-2026-08-31-sdcp-polaron-Fbb (proposed)",
+        "estimand": "F_bb / F_SO3 / F_other — H-제거 n=6 라디칼의 spin share (조건부)",
+        "⛔_아닌것": ("실제 자가도핑 SDCP 에서 캐리어가 백본에 있는가 — 그것은 물질 수준 "
+                     "주장이고 이 계산이 시험하지 않는다 (회신 S §1)"),
+        "parent_xyz": os.path.abspath(a.neutral_xyz),
+        "parent_sha256": _sha(a.neutral_xyz),
+        "formula_neutral": formula_of(sym),
+        "n_atoms": len(sym), "n_electrons_neutral": n_e_neutral,
+        "removed_H_0based": sH, "removed_H_1based": sH + 1,
+        "removed_H_site_why": why_site,
+        "removed_H_bonded_O_0based": sO, "sulfonate_S_0based": sS,
+        "acidic_H_1based_all": [t[3] + 1 for t in acid],
+        "atom_map": amap,
+        "atom_map_no_ether": amap_alt,
+        "backbone_정의": ("primary = 티오펜 고리 + **고리 C 에 직결된 에테르 O** + 고리 H. "
+                          "EDOT 의 3,4-O 는 π 에 전자를 밀어넣는 자리라 폴라론 밀도를 갖는다. "
+                          "sp³ -CH2CH2- 다리는 공액이 아니므로 other. "
+                          "⚠ 분석기가 ether 제외 값도 **같이** 보고한다 — class 가 갈리면 "
+                          "BACKBONE_DEFINITION_DEPENDENT (억지 선택 금지)"),
+        "functional": a.functional,
+        "environments": {n: {"epsilon": e,
+                             "cpcm": ("vacuum (블록 없음)" if abs(e - 1.0) < 1e-9
+                                      else "CPCM epsilon=%.4f refrac=1.4000" % e)}
+                         for n, e in envs},
+        "builder_sha256": _sha(__file__),
+        "builder_commit": _git_commit(),
+        "phase_L_역할": ("seed 생성원. D⁻ 국재화는 D• seed 를, 중성 국재화는 P⁺ seed 를 "
+                         "만든다. **D⁻ 잡은 same-nuclei 홀밀도 기준을 겸한다**"),
+        "⚠_미검증": ("`%loc` 출력 형식과 `Rotate` 동작을 실제 ORCA 로 확인하지 않았다 — "
+                     "phase L 파서와 seed 입력은 smoke test 가 필요하다"),
+        "jobs": {},
+    }
+    # ── phase L ────────────────────────────────────────────────────────────
+    kill = [sH]
+    dsym, dpos, _ = remove_atoms(sym, pos, kill)
+    for en, ev in envs:
+        for tag, (csym2, cpos2, ch, mult, roles) in {
+            "L_dminus": (dsym, dpos, -1, 1, ["seed_source_for_Dradical", "d_minus_reference"]),
+            "L_neutral": (sym, pos, 0, 1, ["seed_source_for_Pcation"]),
+        }.items():
+            jd = out / "L" / en / tag
+            jd.mkdir(parents=True, exist_ok=True)
+            write_xyz(jd / (tag + ".xyz"), csym2, cpos2,
+                      "%s %s eps=%g" % (tag, man["formula_neutral"], ev))
+            _pil_inp(jd / (tag + ".inp"), tag + ".xyz", ch, mult, "RKS", ev,
+                     a.functional, loc=True)
+            man["jobs"]["L/%s/%s" % (en, tag)] = {
+                "phase": "L", "env": en, "epsilon": ev, "charge": ch, "mult": mult,
+                "wf": "RKS", "roles": roles,
+                "n_electrons": electrons_of(csym2) - ch,
+                "inp_sha256": _sha(jd / (tag + ".inp")),
+                "xyz_sha256": _sha(jd / (tag + ".xyz")),
+            }
+    man["seed_plan"] = {
+        "Dradical": {"charge": 0, "mult": 2, "wf": "UKS",
+                     "seeds": ["A_sulfonate"] + ["B_ring%d" % i for i in range(len(rings))]
+                              + ["default"],
+                     "from": "L_dminus"},
+        "Pcation": {"charge": 1, "mult": 2, "wf": "UKS",
+                    "seeds": ["B_ring%d" % i for i in range(len(rings))] + ["default"],
+                    "from": "L_neutral",
+                    "why": ("positive control — 에너지 기준이 아니라 '이 방법이 알려진 "
+                            "형태의 backbone radical cation 을 표현할 수 있는가' (회신 S Q4)")},
+        "⛔": "seed 는 phase L 실행 뒤에만 만든다 — 미리 만들면 임의 MO 를 고르는 것이다",
+    }
+    n_meas = (len(man["seed_plan"]["Dradical"]["seeds"])
+              + len(man["seed_plan"]["Pcation"]["seeds"]) + 1) * len(envs)
+    man["census"] = {
+        "seed_generation_SP": len(envs) * 2,
+        "measured_SP_예정": n_meas,
+        "note": ("측정 SP = D• %d + P⁺ %d + D⁻ 기준 1, 환경 %d개. D⁻ 기준은 L_dminus 와 "
+                 "**같은 계산**이라 따로 돌지 않는다"
+                 % (len(man["seed_plan"]["Dradical"]["seeds"]),
+                    len(man["seed_plan"]["Pcation"]["seeds"]), len(envs))),
+    }
+    (out / "MANIFEST_PILOT.json").write_text(
+        json.dumps(man, indent=1, ensure_ascii=False))
+    (out / "run_pilot.sh").write_text(PIL_RUNNER)
+    print("→ %s · phase L %d잡 (환경 %d) · 측정 SP 예정 %d"
+          % (out, len(man["jobs"]), len(envs), n_meas))
+    print("   제거 H = 1-based %d (%s) · 산성 H 후보 %s"
+          % (sH + 1, why_site, man["acidic_H_1based_all"]))
+    print("   집합 hash %s · backbone %d · sulfonate %d · other %d"
+          % (amap["hash"][:16], len(amap["sets"]["backbone"]),
+             len(amap["sets"]["sulfonate"]), len(amap["sets"]["other"])))
+    return out
+
+
+# ── 폴라론 pilot · phase L 판독 + seed 생성 ────────────────────────────────
+
+PIL_MOPOP_HDR = "LOEWDIN REDUCED ORBITAL POPULATIONS PER MO"
+PIL_SEED_MIN_WEIGHT = 40.0   # % — 목표 집합에 이만큼도 안 걸린 MO 는 국재 seed 가 아니다
+
+
+def pil_parse_mopop(text, nat):
+    """`LOEWDIN REDUCED ORBITAL POPULATIONS PER MO` → (pops, occ, ener) 또는 None.
+
+    pops[mo][atom] = 백분율 합. ORCA 는 MO 를 **열**로 청크 인쇄한다.
+
+    ⛔ 못 하는 것: 인쇄 threshold(기본 0.1%) 아래는 안 찍히므로 합이 100 이 안 될 수
+      있다. 그래서 절대 백분율이 아니라 **집합 간 상대 크기**로만 쓴다.
+    ⚠ ORCA 실제 출력으로 검증하지 않았다 (smoke test 필요).
+    """
+    if PIL_MOPOP_HDR not in text:
+        return None
+    seg = text.split(PIL_MOPOP_HDR)[-1]
+    pops, occ, ener = {}, {}, {}
+    lines = seg.splitlines()
+    i, cur = 0, None
+    while i < len(lines):
+        ln = lines[i]
+        t = ln.split()
+        # MO index 머리줄 — 전부 정수이고 2개 이상
+        if t and all(x.isdigit() for x in t) and len(t) >= 1 and not ln.startswith(" 0 "):
+            nxt = lines[i + 1].split() if i + 1 < len(lines) else []
+            nx2 = lines[i + 2].split() if i + 2 < len(lines) else []
+            if len(nxt) == len(t) and len(nx2) == len(t):
+                try:
+                    e = [float(x) for x in nxt]
+                    o = [float(x) for x in nx2]
+                except ValueError:
+                    i += 1; continue
+                cur = [int(x) for x in t]
+                for m, ee, oo in zip(cur, e, o):
+                    ener[m] = ee; occ[m] = oo; pops.setdefault(m, {})
+                i += 4                      # 머리 3줄 + 구분선
+                continue
+        m2 = re.match(r"\s*(\d+)\s+[A-Za-z]{1,2}\s+\S+\s+(.*)$", ln)
+        if m2 and cur:
+            ai = int(m2.group(1))
+            vals = m2.group(2).split()
+            if len(vals) == len(cur):
+                for mo, v in zip(cur, vals):
+                    try:
+                        pops[mo][ai] = pops[mo].get(ai, 0.0) + float(v)
+                    except ValueError:
+                        pass
+        i += 1
+    if not pops:
+        return None
+    if max(max(d) for d in pops.values() if d) >= nat:
+        return None                          # 원자 index 가 범위를 넘었다 — 판독 실패
+    return pops, occ, ener
+
+
+def pil_pick_seed_mo(pops, occ, group_idx, kill=None):
+    """목표 집합에 가장 크게 걸린 **점유** MO. → (mo, weight_pct) 또는 (None, best)."""
+    kill = set(kill or [])
+
+    def remap(i):                            # 중성 프레임 → H 제거 프레임
+        return None if i in kill else i - sum(1 for k in kill if k < i)
+
+    tgt = {remap(i) for i in group_idx}
+    tgt.discard(None)
+    best, bw = None, -1.0
+    for mo, d in pops.items():
+        if occ.get(mo, 0.0) < 1.0:
+            continue                         # 점유 MO 만
+        w = sum(v for a, v in d.items() if a in tgt)
+        if w > bw:
+            best, bw = mo, w
+    if bw < PIL_SEED_MIN_WEIGHT:
+        return None, bw
+    return best, bw
+
+
+def pilot_seeds(d):
+    """phase L 출력을 읽고 phase S 입력을 만든다. 하나라도 못 만들면 **멈춘다**."""
+    d = Path(d)
+    man = json.loads((d / "MANIFEST_PILOT.json").read_text())
+    amap = man["atom_map"]
+    kill = [man["removed_H_0based"]]
+    nat = man["n_atoms"]
+    made, report = 0, {}
+    for jk, jm in sorted(man["jobs"].items()):
+        if jm["phase"] != "L":
+            continue
+        jd = d / jk
+        tag = jk.rsplit("/", 1)[-1]
+        outp = jd / (tag + ".out")
+        if not outp.is_file():
+            raise SystemExit("⛔ %s 가 없다 — phase L 을 먼저 완주시킬 것" % outp)
+        txt = outp.read_text(errors="replace")
+        if "ORCA TERMINATED NORMALLY" not in txt:
+            raise SystemExit("⛔ %s 가 정상 종료하지 않았다" % outp)
+        is_dm = tag == "L_dminus"
+        nat_j = nat - (1 if is_dm else 0)
+        pr = pil_parse_mopop(txt, nat_j)
+        if pr is None:
+            raise SystemExit(
+                "⛔ %s 에서 MO 별 Löwdin 인구를 못 읽었다 — `%%output Print[P_OrbPopMO_L] 1` "
+                "이 실제로 찍혔는지 확인할 것 (seed 를 임의로 고르지 않는다)" % outp)
+        pops, occ, _ = pr
+        nel = jm["n_electrons"]
+        homo = nel // 2 - 1
+        spec = man["seed_plan"]["Dradical" if is_dm else "Pcation"]
+        env = jm["env"]
+        for sd in spec["seeds"]:
+            sdir = d / "S" / env / ("Dradical" if is_dm else "Pcation") / sd
+            sdir.mkdir(parents=True, exist_ok=True)
+            src_xyz = jd / (tag + ".xyz")
+            xyzn = "%s.xyz" % sd
+            (sdir / xyzn).write_text(src_xyz.read_text())
+            rot, w = None, None
+            if sd != "default":
+                gi = (amap["sets"]["sulfonate"] if sd == "A_sulfonate"
+                      else amap["rings"][sd.replace("B_", "")])
+                mo, w = pil_pick_seed_mo(pops, occ, gi, kill if is_dm else None)
+                if mo is None:
+                    raise SystemExit(
+                        "⛔ %s/%s: 목표 집합에 %.1f%% 밖에 안 걸린 MO 가 최대다 "
+                        "(문턱 %.0f%%). **국재 seed 가 아니므로 만들지 않는다** — "
+                        "국재화가 실패했다는 뜻이다 (MODEL_NONDIAGNOSTIC 후보)"
+                        % (env, sd, w, PIL_SEED_MIN_WEIGHT))
+                rot = (mo, homo)
+            gbw = os.path.relpath(jd / (tag + ".gbw"), sdir)
+            _pil_inp(sdir / (sd + ".inp"), xyzn, spec["charge"], spec["mult"],
+                     spec["wf"], jm["epsilon"], man["functional"],
+                     moread=(None if sd == "default" else gbw),
+                     rotate=rot, stab=True)
+            man["jobs"]["S/%s/%s/%s" % (env, "Dradical" if is_dm else "Pcation", sd)] = {
+                "phase": "S", "env": env, "epsilon": jm["epsilon"],
+                "charge": spec["charge"], "mult": spec["mult"], "wf": spec["wf"],
+                "seed": sd, "seed_source": jk,
+                "seed_mo": (None if rot is None else rot[0]),
+                "seed_mo_weight_pct": (None if w is None else round(w, 2)),
+                "homo_index": homo,
+                "roles": ["measured"],
+                "inp_sha256": _sha(sdir / (sd + ".inp")),
+                "xyz_sha256": _sha(sdir / (xyzn)),
+            }
+            report.setdefault(env, []).append(
+                "%s/%s mo=%s w=%s" % ("D•" if is_dm else "P⁺", sd,
+                                      rot[0] if rot else "-",
+                                      ("%.1f%%" % w) if w is not None else "-"))
+            made += 1
+    man["seeds_made"] = made
+    man["seeds_made_at"] = time.strftime("%Y-%m-%dT%H:%M:%S")
+    (d / "MANIFEST_PILOT.json").write_text(json.dumps(man, indent=1, ensure_ascii=False))
+    print("→ phase S 입력 %d개" % made)
+    for env, rows in sorted(report.items()):
+        print("  [%s] %s" % (env, " · ".join(rows)))
+    return made
+
+
+# ── 폴라론 pilot · 분석 ─────────────────────────────────────────────────────
+
+def pilot_analyze(d):
+    """phase S 결과 → F 집합 · class · 민감도 · 종료 규칙. 전부 fail-closed."""
+    d = Path(d)
+    man = json.loads((d / "MANIFEST_PILOT.json").read_text())
+    amap = man["atom_map"]
+    kill = [man["removed_H_0based"]]
+    res = {"schema": "polaron_pilot_result/v1",
+           "prereg": man["prereg"], "decision": man["decision"],
+           "atom_map_hash": amap["hash"], "blocks": [], "jobs": {}, "verdict": None}
+
+    amap_alt = man.get("atom_map_no_ether")
+
+    def remap_sets(is_dm, mp=None):
+        """중성 프레임 집합 → 그 계의 프레임. D•/D⁻ 만 H 하나가 빠진다."""
+        mp = mp or amap
+        if not is_dm:
+            return {"sets": mp["sets"], "rings": mp["rings"]}
+        k = set(kill)
+
+        def rm(i):
+            return None if i in k else i - sum(1 for x in k if x < i)
+        f = lambda L: sorted(x for x in (rm(i) for i in L) if x is not None)
+        return {"sets": {g: f(v) for g, v in mp["sets"].items()},
+                "rings": {g: f(v) for g, v in mp["rings"].items()}}
+
+    for jk, jm in sorted(man["jobs"].items()):
+        if jm["phase"] != "S":
+            continue
+        jd = d / jk
+        tag = jk.rsplit("/", 1)[-1]
+        outp = jd / (tag + ".out")
+        r = {"env": jm["env"], "seed": jm["seed"], "seed_mo": jm.get("seed_mo"),
+             "gates": []}
+        if not outp.is_file():
+            r["gates"].append("NOT_RUN"); res["jobs"][jk] = r; continue
+        txt = outp.read_text(errors="replace")
+        seg = _last_segment(txt)
+        if "ORCA TERMINATED NORMALLY" not in txt:
+            r["gates"].append("NOT_TERMINATED")
+        # charge/mult/전자수 echo — 선언이 아니라 **출력 확인** (회신 S Q8)
+        mch = re.search(r"Total Charge\s+Charge\s+\.+\s+(-?\d+)", seg)
+        mmu = re.search(r"Multiplicity\s+Mult\s+\.+\s+(\d+)", seg)
+        mne = re.search(r"Number of Electrons\s+NEL\s+\.+\s+(\d+)", seg)
+        if not (mch and mmu and mne):
+            r["gates"].append("ECHO_MISSING(charge/mult/NEL 되울림 없음)")
+        else:
+            got = (int(mch.group(1)), int(mmu.group(1)), int(mne.group(1)))
+            want = (jm["charge"], jm["mult"], None)
+            r["echo"] = {"charge": got[0], "mult": got[1], "nel": got[2]}
+            if got[0] != want[0] or got[1] != want[1]:
+                r["gates"].append("ECHO_MISMATCH(선언 %s ≠ 출력 %s)"
+                                  % (want[:2], got[:2]))
+        m_s2 = re.findall(r"<S\*\*2>\s*(?:=|\.+)\s*(-?\d+\.\d+)", seg)
+        if m_s2:
+            r["S2_raw"] = float(m_s2[-1])          # ⚠ raw 보존 (회신 S Q8)
+            if jm["mult"] == 2 and not (0.75 <= r["S2_raw"] <= 0.80):
+                r["gates"].append("S2_OUT_OF_WINDOW(%.4f — doublet quality gate)"
+                                  % r["S2_raw"])
+        else:
+            r["gates"].append("S2_MISSING")
+        if "StabPerform" in (jd / (tag + ".inp")).read_text():
+            if re.search(r"(?i)wavefunction is unstable|instabilit", seg):
+                r["gates"].append("SCF_UNSTABLE(따라 내려간 해로 재계산 필요)")
+            elif not re.search(r"(?i)stability analysis", seg):
+                r["gates"].append("STABILITY_NOT_RUN(요청했는데 수행 흔적이 없다)")
+        is_dm = "/Dradical/" in jk
+        sm = remap_sets(is_dm)
+        nat = man["n_atoms"] - (1 if is_dm else 0)
+        low = _lowdin_spins(seg, nat)
+        hir = _hirshfeld_spins(seg, nat)
+        if low is None:
+            r["gates"].append("LOWDIN_SPIN_MISSING(또는 행 재배열)")
+        if hir is None:
+            r["gates"].append("HIRSHFELD_SPIN_MISSING(두 분할을 둘 다 계산해야 한다)")
+        if low is not None and hir is not None:
+            sl = pilot_shares(low, sm)
+            sh = pilot_shares(hir, sm)
+            r["lowdin"], r["hirshfeld"] = sl, sh
+            r["partition"] = pilot_partition_check(sl.get("F"), sh.get("F"))
+            if sh.get("F"):
+                r["class"] = pilot_class(sh["F"])          # Hirshfeld primary
+                r["threshold_sensitivity"] = pilot_threshold_sensitivity(sh["F"])
+                if r["threshold_sensitivity"]["threshold_dependent"]:
+                    r["gates"].append("THRESHOLD_DEPENDENT")
+            if r["partition"].get("partition_dependent"):
+                r["gates"].append("PARTITION_DEPENDENT")
+            # ⛔ backbone 정의(에테르 O 포함 여부)도 estimand 를 움직인다 — 둘 다 낸다
+            if amap_alt:
+                sm2 = remap_sets(is_dm, amap_alt)
+                sh2 = pilot_shares(hir, sm2)
+                r["hirshfeld_no_ether"] = {"F": sh2.get("F"),
+                                           "class": pilot_class(sh2.get("F"))
+                                           if sh2.get("F") else None}
+                c1 = (r.get("class") or (None,))[0]
+                c2 = (r["hirshfeld_no_ether"]["class"] or (None,))[0]
+                if c1 != c2:
+                    r["gates"].append(
+                        "BACKBONE_DEFINITION_DEPENDENT(에테르 O 포함 %s / 제외 %s — "
+                        "억지로 하나를 고르지 않는다)" % (c1, c2))
+        m_e = re.findall(r"FINAL SINGLE POINT ENERGY\s+(-?\d+\.\d+)", seg)
+        r["E_Eh"] = float(m_e[-1]) if m_e else None
+        if r["E_Eh"] is None:
+            r["gates"].append("NO_ENERGY")
+        res["jobs"][jk] = r
+
+    # ── 사전등록 seed 전건 receipt (회신 S Q8) ────────────────────────────
+    want = set()
+    for env in man["environments"]:
+        for sp, spec in (("Dradical", man["seed_plan"]["Dradical"]),
+                         ("Pcation", man["seed_plan"]["Pcation"])):
+            for sd in spec["seeds"]:
+                want.add("S/%s/%s/%s" % (env, sp, sd))
+    miss = sorted(want - set(res["jobs"]))
+    bad = sorted(k for k, v in res["jobs"].items() if v["gates"])
+    if miss:
+        res["blocks"].append("SEED_RECEIPT_MISSING(%d건 %s) — 하나라도 빠지면 "
+                             "lowest-found 판정 금지" % (len(miss), miss[:3]))
+    if bad:
+        res["blocks"].append("GATED_JOBS(%d건 %s)" % (len(bad), bad[:3]))
+
+    # ── positive control adequacy (회신 S Q4) ─────────────────────────────
+    pc = {k: v for k, v in res["jobs"].items()
+          if "/Pcation/" in k and not v["gates"] and v.get("class")}
+    pc_bb = [k for k, v in pc.items() if str(v["class"][0]).startswith("BACKBONE")]
+    res["positive_control"] = {
+        "n_ok": len(pc), "n_backbone": len(pc_bb),
+        "adequate": bool(pc) and bool(pc_bb),
+        "why": ("에너지 기준이 아니다 — 알려진 형태의 backbone radical cation 을 이 방법이 "
+                "표현할 수 있는지만 본다 (회신 S Q4)")}
+    if not res["positive_control"]["adequate"]:
+        res["verdict"] = "MODEL_NONDIAGNOSTIC"
+        res["why"] = ("positive control(fully protonated cation)이 backbone 상태를 "
+                      "하나도 회수하지 못했다 — H-제거계 결과를 해석하지 않는다")
+        return res
+    if res["blocks"]:
+        res["verdict"] = "NO_VALUE"
+        res["why"] = "blocks 를 해소하기 전에는 판정하지 않는다"
+        return res
+
+    # ── A/B 분기와 환경 의존 (회신 S Q3) ──────────────────────────────────
+    dm = {k: v for k, v in res["jobs"].items() if "/Dradical/" in k}
+    by_env = {}
+    for k, v in dm.items():
+        by_env.setdefault(v["env"], []).append((v["E_Eh"], k, v))
+    order = {}
+    for env, rows in by_env.items():
+        rows = [r for r in rows if r[0] is not None]
+        if not rows:
+            continue
+        rows.sort()
+        lo = rows[0]
+        order[env] = {"lowest": lo[1], "class": lo[2].get("class"),
+                      "F": (lo[2].get("hirshfeld") or {}).get("F"),
+                      "N_eff": (lo[2].get("hirshfeld") or {}).get("N_eff"),
+                      "span80": (lo[2].get("hirshfeld") or {}).get("span80"),
+                      "n_states": len(rows),
+                      "E_spread_eV": round((rows[-1][0] - rows[0][0]) * 27.2114, 4)}
+    res["by_env"] = order
+    cls = {e: (v["class"][0] if v.get("class") else None) for e, v in order.items()}
+    res["class_by_env"] = cls
+    if len(set(c for c in cls.values() if c)) > 1:
+        res["verdict"] = "ENVIRONMENT_DEPENDENT"
+        res["why"] = "plausible ε 범위에서 최저해의 class 가 갈린다 %s" % cls
+        return res
+    c0 = next((c for c in cls.values() if c), None)
+    res["verdict"] = ("BACKBONE_SUPPORTED" if c0 == "BACKBONE" else
+                      "SO3_CENTERED_WITHIN_MODEL" if c0 == "SULFONATE" else
+                      "MIXED_UNRESOLVED" if c0 else "NO_VALUE")
+    res["허용_서술"] = (
+        "검사한 n=6 H-제거 분자모형에서는 **탐색된 최저상태**가 %s 였다"
+        % {"BACKBONE_SUPPORTED": "백본 중심",
+           "SO3_CENTERED_WITHIN_MODEL": "SO₃ 중심"}.get(res["verdict"], "판정 불가"))
+    res["⛔"] = ("이 판정은 **한 범함수·한 conformer·한 H 위치**에 조건부다. "
+                 "다른 범함수가 순서나 class 를 달리하면 FUNCTIONAL_DEPENDENT 로 닫는다. "
+                 "고체·전도도·이동도를 말하지 않는다")
+    return res
+
+
+PIL_RUNNER = r"""#!/usr/bin/env bash
+# 폴라론 pilot 러너 — 순서를 강제한다 (회신 S).
+#   phase L(seed 생성원) → seed 선택 → phase S(측정) → 분석
+# ⛔ seed 는 phase L **결과**에 의존한다. 순서를 건너뛰면 임의 MO 를 고르는 것이다.
+set -u
+ORCA=${ORCA:?ORCA 절대경로를 주세요 (병렬 실행은 full pathname 이 필요합니다)}
+BUILDER=${BUILDER:?build_v7c_trimer.py 경로를 주세요}
+D=$(cd "$(dirname "$0")" && pwd)
+run() {
+  local j=$1 tag=$2
+  if [ -f "$j/$tag.out" ] && grep -aq "ORCA TERMINATED NORMALLY" "$j/$tag.out"; then
+    echo "  이미 완료 — $j"; return 0; fi
+  echo "  ▶ $j"
+  ( cd "$j" && "$ORCA" "$tag.inp" > "$tag.out" 2>&1 )
+  grep -aq "ORCA TERMINATED NORMALLY" "$j/$tag.out" || { echo "  중단: $j"; return 1; }
+}
+echo "== phase L =="
+fail=0
+for j in "$D"/L/*/*; do
+  [ -d "$j" ] || continue
+  run "$j" "$(basename "$j")" || fail=1
+done
+[ "$fail" = 0 ] || { echo "phase L 실패 — seed 를 만들지 않는다"; exit 2; }
+echo "== seed 선택 =="
+python3 "$BUILDER" --polaron_seeds "$D" || { echo "seed 생성 실패"; exit 2; }
+echo "== phase S =="
+for j in "$D"/S/*/*/*; do
+  [ -d "$j" ] || continue
+  run "$j" "$(basename "$j")" || fail=1
+done
+echo "== 분석 =="
+python3 "$BUILDER" --polaron_analyze "$D"
+exit $fail
+"""
 
 
 def main():
@@ -2074,9 +2916,35 @@ def main():
     ap.add_argument("--legacy", action="store_true",
                     help="레거시 트라이머 패키지 (명시 필수 — R3 P1)")
     ap.add_argument("--selftest", action="store_true")
+    # ── 폴라론 pilot (회신 S) — 흡착 doped 와 **다른 캠페인**이다 ──────────
+    ap.add_argument("--polaron_pilot", action="store_true",
+                    help="H-제거 라디칼 상태지도 pilot 생성 (+ --neutral_xyz/--out)")
+    ap.add_argument("--polaron_seeds", help="phase L 완주 디렉터리 — seed 선택 + phase S 생성")
+    ap.add_argument("--polaron_analyze", help="phase S 완주 디렉터리 — F 집합·class·판정")
+    ap.add_argument("--site", help="H 제거 위치 (1-based 산성 H). 생략하면 사전 규칙(중간)")
+    ap.add_argument("--eps", nargs="+", type=float, default=None,
+                    help="유전상수 목록 (예: 1.0 4.0). 사전등록에 근거를 적을 것")
+    ap.add_argument("--functional", default="r2SCAN-3c")
     a = ap.parse_args()
     if a.selftest:
         return selftest()
+    if a.polaron_pilot:
+        if not (a.neutral_xyz and a.out):
+            ap.error("--polaron_pilot 은 --neutral_xyz/--out 필요")
+        if not a.eps:
+            ap.error("--eps 를 명시하세요 (예: --eps 1.0 4.0). "
+                     "환경은 사전등록 항목이라 기본값을 두지 않습니다")
+        pilot_generate(a)
+        return 0
+    if a.polaron_seeds:
+        return 0 if pilot_seeds(a.polaron_seeds) else 2
+    if a.polaron_analyze:
+        r = pilot_analyze(a.polaron_analyze)
+        print(json.dumps(r, indent=1, ensure_ascii=False))
+        out = Path(a.polaron_analyze) / "PILOT_RESULT.json"
+        out.write_text(json.dumps(r, indent=1, ensure_ascii=False))
+        print("→ %s" % out)
+        return 0 if r.get("verdict") not in (None, "NO_VALUE") else 2
     if a.analyze:
         return analyze_dir(a)
     if a.hybrid:
@@ -2101,7 +2969,8 @@ def main():
         sym, pos = read_xyz(a.dimer)
         build_legacy_trimer(a, sym, pos)
         return 0
-    ap.error("--stage a|b · --analyze · --hybrid · --compare · --legacy · --selftest 중 하나")
+    ap.error("--stage a|b · --analyze · --hybrid · --compare · --legacy · "
+             "--polaron_pilot/--polaron_seeds/--polaron_analyze · --selftest 중 하나")
 
 
 if __name__ == "__main__":
