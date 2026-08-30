@@ -550,54 +550,109 @@ exit $fail
 SEAL_POTCAR_ROOT = r'''#!/usr/bin/env bash
 # POTCAR 를 전 잡에 조립하고, variant 별 **원본 SHA256** 을 묶음 root 에 봉인한다.
 #
-# ⛔ 회신 AO Q1 (2026-08-31) — "왕복이 문제라면 **계산 시작 전에** vendor 가 제공한
-#    원소별 source SHA256 을 자동 봉인해 새 v13 root 로 승인하면 된다. 계산 후 각 job 이
-#    신고한 provenance 끼리만 비교하는 방식은 독립적인 사전 승인과 같지 않다."
-#    이 스크립트가 그 사전 승인이다 — 첫 VASP 실행 전에 돌고, 한 번 봉인하면 바뀌지 않는다.
+# ⛔ 회신 AO Q1 / AP #7 — 봉인은 "생산 전" 이라는 **자기선언이 아니라 검사**여야 한다.
+#    최초 봉인 전에 기존 VASP 산출물이 하나라도 있으면 **거부**한다. 계산 뒤에
+#    만든 봉인과 구별되지 않으면 사전 승인이 아니기 때문이다.
 #
 # 이 스크립트가 **못 하는 것**: 봉인한 트리가 공식 배포판인지는 확인하지 못한다
 #   (라이선스로 정본 SHA 를 우리가 못 싣는다). 봉인은 "이 계산들이 하나의 트리에서
-#   나왔다" 를 보증할 뿐이고, 그 트리의 신원은 site 의 allowlist 가 진다.
+#   나왔고 그 트리가 생산 전에 고정됐다" 까지만 보증한다. 공식 release 를 주장하려면
+#   계산 전에 받은 attestation(POTCAR_ATTESTATION.json)이 따로 있어야 한다 (AP #12).
 set -e
 : "${PP:?PP=/path/to/potpaw_PBE.54 를 주세요}"
 : "${POTCAR_ALLOWLIST:?POTCAR_ALLOWLIST=/abs/site_allow.txt 를 주세요}"
-n=0
+SEAL=POTCAR_ROOT_SEAL.json
+
+# ── AP #7 ① 최초 봉인 전에 **생산 산출물이 있으면 거부** ────────────────
+if [ ! -f "$SEAL" ]; then
+  prod=$(find . \( -name OUTCAR -o -name "OUTCAR.gz" -o -name vasprun.xml \
+                   -o -name OSZICAR -o -name CONTCAR -o -name WAVECAR \
+                   -o -name CHGCAR \) -print -quit 2>/dev/null || true)
+  if [ -n "$prod" ]; then
+    echo "생산 산출물이 이미 있습니다: $prod"
+    echo "  최초 root 봉인은 **첫 VASP 실행 전에만** 만들 수 있습니다."
+    echo "  계산 뒤에 만든 봉인은 사전 승인과 구별되지 않습니다 (회신 AP #7)."
+    exit 1
+  fi
+fi
+
+# ── AP #7 ② 기존 POTCAR/provenance 를 **현재 allowlist 로 재대조** ──────
+#    종전엔 둘 다 있으면 조용히 건너뛰었다 — 다른 allowlist 로 조립된 것을 못 잡는다.
+AL_SHA=$(sha256sum "$POTCAR_ALLOWLIST" | cut -d" " -f1)
+n_new=0; n_re=0
 for d in */*/; do
   [ -f "$d/POTCAR_ASSEMBLE.sh" ] || continue
-  if [ -f "$d/POTCAR" ] && [ -f "$d/POTCAR_PROVENANCE.json" ]; then continue; fi
+  if [ -f "$d/POTCAR" ] && [ -f "$d/POTCAR_PROVENANCE.json" ]; then
+    got=$(python3 -c '
+import json,sys
+d=json.load(open(sys.argv[1]))
+print(d.get("allowlist_sha256") or "")' "$d/POTCAR_PROVENANCE.json")
+    if [ "$got" = "$AL_SHA" ]; then n_re=$((n_re+1)); continue; fi
+    echo "  재조립: $d (다른 allowlist 로 조립돼 있었습니다)"
+    rm -f "$d/POTCAR" "$d/POTCAR_PROVENANCE.json"
+  fi
   ( cd "$d" && PP="$PP" POTCAR_ALLOWLIST="$POTCAR_ALLOWLIST" bash POTCAR_ASSEMBLE.sh ) \
     || { echo "POTCAR 조립 실패: $d"; exit 1; }
-  n=$((n+1))
+  n_new=$((n_new+1))
 done
-echo "  POTCAR 조립 $n 잡 (이미 있던 것은 건너뜀)"
+echo "  POTCAR 조립 $n_new 잡 (allowlist 일치로 유지 $n_re)"
+
+# ── AP #7 ③ 봉인에 무엇을 담는가 ────────────────────────────────────────
+VASP_BIN=$(command -v "${VASP_EXE:-vasp_std}" 2>/dev/null || true)
+VASP_SHA=""; VASP_VER=""
+if [ -n "$VASP_BIN" ]; then
+  VASP_SHA=$(sha256sum "$VASP_BIN" | cut -d" " -f1)
+  VASP_VER=$("$VASP_BIN" --version 2>&1 | head -1 || true)
+fi
+export AL_SHA VASP_BIN VASP_SHA VASP_VER
 python3 - <<'PYSEAL'
-import json, glob, os, sys
-seal, conflict = {}, []
+import json, glob, os, sys, hashlib, time
+seal, asm, conflict = {}, {}, []
 for pp in sorted(glob.glob("*/*/POTCAR_PROVENANCE.json")):
     d = json.load(open(pp))
     for v, sha in (d.get("source_sha256") or {}).items():
         if v in seal and seal[v] != sha:
             conflict.append((v, pp))
         seal[v] = sha
+    asm[os.path.dirname(pp)] = d.get("assembled_sha256")
 if conflict:
     sys.exit("variant 원본 SHA 가 잡마다 다르다 — 한 트리가 아니다: %s" % conflict[:3])
 if not seal:
     sys.exit("조립된 POTCAR provenance 가 하나도 없다")
+rec = {
+    "schema": "potcar_root_seal/v2",
+    "source_sha256": seal,
+    "assembled_sha256_by_job": asm,
+    "allowlist_sha256": os.environ.get("AL_SHA") or None,
+    "manifest_sha256": hashlib.sha256(open("MANIFEST.json", "rb").read()).hexdigest(),
+    "vasp_executable": os.environ.get("VASP_BIN") or None,
+    "vasp_executable_sha256": os.environ.get("VASP_SHA") or None,
+    "vasp_version_banner": os.environ.get("VASP_VER") or None,
+    "sealed_at_utc": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
+    "sealed_before_production": True,
+    "sealed_before_production_evidence":
+        "봉인 시점에 OUTCAR/vasprun/OSZICAR/CONTCAR/WAVECAR/CHGCAR 가 하나도 없었다 "
+        "(SEAL_POTCAR_ROOT.sh 가 검사하고 있으면 거부한다)",
+    "note": ("v13/v14 Hamiltonian root. 전 잡의 provenance 가 이것과 같아야 한다. "
+             "이전 wave 와의 수치적 동등성은 주장하지 않는다. 공식 release 여부는 "
+             "이 봉인이 보증하지 않는다 — POTCAR_ATTESTATION.json 이 그 몫이다."),
+}
 out = "POTCAR_ROOT_SEAL.json"
 if os.path.exists(out):
-    old = (json.load(open(out)) or {}).get("source_sha256") or {}
-    diff = sorted(k for k in set(old) | set(seal) if old.get(k) != seal.get(k))
+    old = json.load(open(out))
+    diff = sorted(k for k in set(old.get("source_sha256") or {}) | set(seal)
+                  if (old.get("source_sha256") or {}).get(k) != seal.get(k))
     if diff:
         sys.exit("이미 봉인된 root 와 다르다 (봉인은 바꾸지 않는다): %s" % diff)
+    if old.get("allowlist_sha256") and old["allowlist_sha256"] != rec["allowlist_sha256"]:
+        sys.exit("봉인 때와 **다른 allowlist** 다 (봉인 %s / 지금 %s)"
+                 % (str(old["allowlist_sha256"])[:12], str(rec["allowlist_sha256"])[:12]))
     print("  POTCAR root 봉인 대조 통과 (%d variant)" % len(seal))
 else:
-    json.dump({"schema": "potcar_root_seal/v1",
-               "source_sha256": seal,
-               "sealed_before_production": True,
-               "note": ("v13 Hamiltonian root. 생산 전에 봉인했고 전 잡의 provenance 가 "
-                        "이것과 같아야 한다. 이전 wave 와의 수치적 동등성은 주장하지 않는다.")},
-              open(out, "w"), indent=1, ensure_ascii=False)
-    print("  POTCAR root 봉인 생성 (%d variant)" % len(seal))
+    json.dump(rec, open(out, "w"), indent=1, ensure_ascii=False)
+    print("  POTCAR root 봉인 생성 (%d variant · allowlist %s · vasp %s)"
+          % (len(seal), str(rec["allowlist_sha256"])[:12],
+             str(rec["vasp_version_banner"])[:24]))
 PYSEAL
 '''
 
@@ -2896,12 +2951,36 @@ def selftest_k() -> int:
             )["blocking"]),
         "⛔음성 AO Q1: 봉인에 없는 variant 가 관측되면 막는다")
     # 양성 — 봉인과 관측이 일치하면 라벨이 sealed_root_v13 로 올라간다
+    # ⛔ 회신 AP #7 — 봉인 픽스처도 **실물 v2 스키마**여야 한다
+    _SEALOK = {"source_sha256": {"Ni": _H64("aa")}, "schema": "potcar_root_seal/v2",
+               "sealed_before_production": True}
     _sealed = potcar_identity_gates(
-        _one, {"files_sha256": {"x": "y"},
-               "_potcar_root_seal": {"source_sha256": {"Ni": _H64("aa")}}})
+        _one, {"files_sha256": {"x": "y"}, "_potcar_root_seal": _SEALOK})
     chk(str(_sealed.get("identity_scope", "")).startswith("sealed_root_v13"),
         "양성 AO Q1: 봉인 일치 + 완전성 통과면 라벨이 **sealed_root_v13** 다 "
         f"(실제 {str(_sealed.get('identity_scope'))[:40]})")
+    # ⛔음성 AP #7 — 생산 전 봉인이라는 근거가 없으면 sealed 라벨을 안 준다
+    _nopre = potcar_identity_gates(
+        _one, {"files_sha256": {"x": "y"},
+               "_potcar_root_seal": {"source_sha256": {"Ni": _H64("aa")}}})
+    chk(any("NOT_PREPRODUCTION" in g for g in _nopre["blocking"])
+        and not str(_nopre.get("identity_scope", "")).startswith("sealed_root"),
+        "⛔음성 AP #7: `sealed_before_production` 근거가 없으면 막고 sealed 라벨도 "
+        "안 준다 (계산 뒤에 만든 봉인과 구별되지 않는다)")
+    # ⛔음성 AP #7 — 봉인이 **다른 묶음**의 MANIFEST 에 대한 것이면 막는다
+    _wrong = potcar_identity_gates(
+        _one, {"files_sha256": {"x": "y"}, "_manifest_sha256_actual": _H64("cc"),
+               "_potcar_root_seal": dict(_SEALOK, manifest_sha256=_H64("dd"))})
+    chk(any("WRONG_BUNDLE" in g for g in _wrong["blocking"]),
+        "⛔음성 AP #7: 봉인이 다른 MANIFEST 에 대한 것이면 막는다")
+    # ⛔음성 AP #7 — blocking 이 있으면 **절대** sealed 라벨이 안 나온다
+    _mm = potcar_identity_gates(
+        _one, {"files_sha256": {"x": "y"},
+               "_potcar_root_seal": dict(_SEALOK, source_sha256={"Ni": _H64("bb")})})
+    chk(any("ROOT_SEAL_MISMATCH" in g for g in _mm["blocking"])
+        and not str(_mm.get("identity_scope", "")).startswith("sealed_root"),
+        "⛔음성 AP #7: ROOT_SEAL_MISMATCH 와 sealed 라벨이 **동시에** 나오지 않는다 "
+        f"(실제 {str(_mm.get('identity_scope'))[:24]})")
     # ⛔음성 — 완전성이 깨지면 라벨이 'unverified' 로 내려간다 (있는 척하지 않는다)
     _unv = potcar_identity_gates(_short, {"files_sha256": {"x": "y"}})
     chk(str(_unv.get("identity_scope", "")).startswith("unverified"),
@@ -3874,8 +3953,22 @@ def potcar_identity_gates(jobs, man):
     # ⛔ 회신 AO Q1 — **생산 전에 봉인한** variant 별 원본 fingerprint(root seal)와
     #   대조한다. 사후 provenance 끼리만 비교하는 것은 사전 승인과 같지 않다.
     _seal = ((man or {}).get("_potcar_root_seal") or {}).get("source_sha256") or {}
+    _seal_rec = ((man or {}).get("_potcar_root_seal") or {})
     if _seal:
         res["root_seal_variants"] = sorted(_seal)
+        res["root_seal_meta"] = {
+            k: _seal_rec.get(k) for k in
+            ("schema", "allowlist_sha256", "manifest_sha256", "vasp_executable_sha256",
+             "vasp_version_banner", "sealed_at_utc", "sealed_before_production")}
+        # ⛔ 회신 AP #7 — 봉인이 **이 묶음의** MANIFEST 에 대한 것인지 확인한다
+        _mh = (man or {}).get("_manifest_sha256_actual")
+        if _seal_rec.get("manifest_sha256") and _mh and _seal_rec["manifest_sha256"] != _mh:
+            res["blocking"].append(
+                "ROOT_SEAL_WRONG_BUNDLE(봉인이 다른 MANIFEST 에 대한 것이다: "
+                "봉인 %s ≠ 지금 %s)" % (_seal_rec["manifest_sha256"][:12], _mh[:12]))
+        if _seal_rec.get("sealed_before_production") is not True:
+            res["blocking"].append(
+                "ROOT_SEAL_NOT_PREPRODUCTION(봉인이 생산 전이라는 근거가 없다)")
         for _v, _sh in sorted(_seal.items()):
             _got = sorted(src.get(_v, {}))
             if _ran and not _got:
@@ -3919,15 +4012,20 @@ def potcar_identity_gates(jobs, man):
             _complete = bool(_c.get("n_completed")) and not (
                 _c.get("n_no_prov") or _c.get("n_incomplete_variants")
                 or _c.get("n_without_vasp_version"))
+            # ⛔⛔ 회신 AP #7 — 종전엔 `ROOT_SEAL_MISMATCH` 가 있어도 동시에
+            #   `sealed_root_v13` 라벨이 나올 수 있었다. **identity blocking 이
+            #   하나라도 있으면 sealed 라벨을 발행하지 않는다.**
+            _no_block = not (res.get("blocking") or [])
             res["identity_scope"] = (
                 ("sealed_root_v13 — variant 별 원본 SHA256 을 **생산 전에 봉인**하고 "
                  "완주 전 잡이 그 봉인과 일치함을 확인했다. 이전 wave 와의 수치적 "
-                 "동등성은 가정하지 않는다"
-                 if res.get("root_seal_variants") and _complete else
+                 "동등성은 가정하지 않는다. ⚠ 공식 release 여부는 이 라벨이 "
+                 "보증하지 않는다 (POTCAR_ATTESTATION.json 이 그 몫이다)"
+                 if res.get("root_seal_variants") and _complete and _no_block else
                  "self_consistent_only — 완주 잡들의 POTCAR 신원이 서로 일치한다. "
                  "**사전 승인된 트리와 대조하지 않았다** (생산 전 root seal 없음). "
                  "따라서 '이전 wave 와 같은 PP' 는 주장하지 않는다"
-                 if _complete else
+                 if _complete and _no_block else
                  "unverified — 원본 fingerprint 또는 VASP 버전 관측이 불완전하다. "
                  "'신원 일치 확인' 이라고 쓰지 말 것"))
             res["⚠"] = ("pin 없음 — 사후 provenance 로 잡 사이 일치만 본다. "
@@ -5172,6 +5270,8 @@ def main():
             open(os.path.join(root, "POTCAR_ROOT_SEAL.json")))
     except Exception:
         man["_potcar_root_seal"] = None
+    man["_manifest_sha256_actual"] = hashlib.sha256(
+        open(os.path.join(root, "MANIFEST.json"), "rb").read()).hexdigest()
     spec = man.get("potcar_spec", {})
     planned = man.get("planned", {})
 
@@ -9058,6 +9158,17 @@ def selftest() -> int:
         chk("SEAL_POTCAR_ROOT.sh" in _rs,
             "⛔음성 AO P0-2: run_staged.sh 가 POTCAR 조립을 **실제로 부른다** "
             "(종전엔 run_job.sh 를 바로 불러 POTCAR 부재로 즉시 중단됐다)")
+        # ── 회신 AP #7 — 봉인이 "생산 전" 을 **검사**하는가 ─────────────
+        _sl = (_st / "SEAL_POTCAR_ROOT.sh").read_text()
+        chk("OUTCAR" in _sl and "vasprun.xml" in _sl and "print -quit" in _sl,
+            "⛔음성 AP #7: 최초 봉인 전에 **생산 산출물이 있으면 거부**한다 "
+            "(자기선언이 아니라 검사)")
+        chk("allowlist_sha256" in _sl and "재조립" in _sl,
+            "⛔음성 AP #7: 기존 POTCAR/provenance 를 **현재 allowlist 로 재대조**한다 "
+            "(종전엔 둘 다 있으면 조용히 건너뛰었다)")
+        for _f in ("manifest_sha256", "vasp_executable_sha256", "vasp_version_banner",
+                   "assembled_sha256_by_job", "sealed_at_utc"):
+            chk(_f in _sl, f"AP #7: 봉인이 `{_f}` 를 기록한다")
         # ⛔ 회신 AP #6 — receipt 존재를 믿지 않고 **지금 결과로 재판정**한다.
         #   (위조 receipt(verdict:"FAIL")로 우회되던 경로를 아예 없앤다)
         _s2 = _rs.split('if [ "$stage" = 2 ]')[-1].split("# 잡 분류")[0]
