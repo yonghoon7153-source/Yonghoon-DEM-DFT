@@ -9310,6 +9310,16 @@ def verify_bundle(root, expect_jobs=None, check_sibling_zip=True,
     print(f"  clean_slab    : sha256 {_cs.get('sha256', '(없음)')}")
     print(f"  generated_utc : {man.get('generated_utc', '(없음)')}")
     print(f"  generated_argv: {' '.join(man.get('generated_argv') or []) or '(없음)'}")
+    # ⛔⛔ 2026-08-30 fail-open — **검사기가 pin 을 안 봤다.**
+    #   `--allow_no_pin` 으로 만든 번들은 manifest 에 "이 번들은 제출용이 아니다" 가
+    #   박혀 있는데, **제출 직전 마지막 검사기**가 `✅ 제출 가능` 을 찍었다.
+    #   그 줄을 보고 보내면 외부 기준 대조 없는 번들이 그대로 나간다.
+    #   회신 AJ 의 요구는 "pin 이 없으면 제출용 bundle 을 만들지 않는다" 였고,
+    #   생성기는 막고 있었지만 검사기는 안 막고 있었다 — 같은 규칙이 두 곳에서 갈렸다.
+    if not (man.get("potcar_pin") or {}):
+        bad.append("POTCAR pin 이 없다 (`--allow_no_pin`) — 회신 해시를 대조할 "
+                   "**외부 기준**이 없다. 시험·초안용이고 제출용이 아니다. "
+                   "제출본은 승인된 {source_sha256, vasp_version} 을 박아 재발행한다")
     sub = man.get("submission") or {}
     print(f"  submission    : {sub.get('cores_per_job', '?')} 코어/잡 · "
           f"동시 {sub.get('max_concurrency', '?')} · VASP 실행 "
@@ -9544,7 +9554,16 @@ def _selftest_e2e() -> int:
     bp = td / "basins.json"
     bp.write_text(json.dumps(basins, ensure_ascii=False))
 
+    # ⛔ 2026-08-30 — e2e 픽스처도 **pin 을 박는다.** 검사기가 pin 없는 번들을
+    #   `✅ 제출 가능` 으로 통과시키던 fail-open 을 고치면서, 이 픽스처가 pin 없이
+    #   통과를 주장하고 있었다는 게 드러났다. 여기서 주장하는 것은 "제출 가능한
+    #   번들을 verifier 가 통과시킨다" 이므로 픽스처가 제출 가능해야 맞다.
+    pinp = td / "potcar_pin.json"
+    pinp.write_text(json.dumps({"source_sha256": {"Li_sv": "a" * 64},
+                                "vasp_version": "6.4.1(selftest)"}))
+
     a = _ap.Namespace(
+        potcar_pin=str(pinp), allow_no_pin=False,
         runs=str(td / "runs"), out=str(td / "bundle"), freeze=0.85, nslab=nslab,
         frags=["ptfe_dimer"],
         qe=str(Path(SS.REPO) / "db" / "inputs" / "sdcp_v2" / "slab_relax" / "relax.in"),
@@ -9670,7 +9689,7 @@ def _selftest_verify() -> int:
     DOC_OK = "이 묶음은 static 단일점만 돕니다. static/OUTCAR 를 보내 주세요.\n"
     SC_OK = "| 총 VASP 실행 | **2** |\n"
 
-    def build(d: Path, readme: str = DOC_OK, contract: str = SC_OK) -> Path:
+    def build(d: Path, readme: str = DOC_OK, contract: str = SC_OK, pin=True) -> Path:
         """최소 번들 — verify 는 물리를 안 보므로 파일 구조만 있으면 된다.
 
         ★ **잡 둘 중 하나는 D3-off 쌍둥이**로 만든다: `files_sha256` 에는 있지만
@@ -9698,6 +9717,13 @@ def _selftest_verify() -> int:
                "candidate_set": "selftest", "fragments": ["none"],
                "generated_argv": ["--selftest"], "generated_utc": "1970-01-01T00:00:00Z",
                "submission": {"cores_per_job": 48, "max_concurrency": 8}}
+        # ⛔ 2026-08-30 — 제출 가능 판정에는 **POTCAR pin** 이 있어야 한다.
+        #   양성 픽스처가 pin 없이 통과하면, 검사기가 pin 을 안 본다는 사실이
+        #   시험에서 안 드러난다 (실제로 그래서 `--allow_no_pin` 번들에
+        #   `✅ 제출 가능` 이 찍혔다). pin=False 픽스처가 그 음성 경로다.
+        if pin:
+            man["potcar_pin"] = {"source_sha256": {"Li_sv": "a" * 64},
+                                 "vasp_version": "6.4.1"}
         man["files_sha256"] = {
             str(p.relative_to(root)): hashlib.sha256(p.read_bytes()).hexdigest()
             for p in sorted(root.rglob("*")) if p.is_file()}
@@ -9719,6 +9745,13 @@ def _selftest_verify() -> int:
         r = build(d / "p")
         chk(verify_bundle(r) == 0,
             "양성: planned(1) ⊂ 실물 잡(2, D3-off 쌍둥이 포함) 은 정상 — 자기모순 아님")
+
+        # ⛔음성 2026-08-30 — pin 이 없으면 **제출 가능이라고 말하면 안 된다**.
+        #   실측: --allow_no_pin 으로 만든 C-12 번들에 검사기가 ✅ 제출 가능 을 찍었다.
+        #   manifest 안에는 "이 번들은 제출용이 아니다" 가 박혀 있었는데도.
+        rnp = build(d / "nopin", pin=False)
+        chk(verify_bundle(rnp) == 1,
+            "⛔음성: POTCAR pin 이 없으면 제출 차단 — 회신 해시를 댈 외부 기준이 없다")
         chk(verify_bundle(r, expect_jobs=2) == 0,
             "양성: --expect_jobs 는 **실물 잡 수**와 맞춘다 (planned 가 아니라)")
         chk(verify_bundle(r, expect_jobs=40) == 1,
