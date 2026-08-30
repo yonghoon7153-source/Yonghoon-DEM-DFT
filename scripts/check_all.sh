@@ -86,6 +86,7 @@ run 'oat_sensitivity        --selftest' python3 scripts/oat_sensitivity.py --sel
 #  ★ 2026-08-30 — 이 selftest 는 draft 파일을 **실제로 열어** docx 상수와 대조한다
 #    (옛 docstring 이 "draft 가 정본" 이라 적으면서 한 번도 안 읽어 두 산출물이 갈라졌다).
 run 'build_methods_docx     --selftest' python3 scripts/build_methods_docx.py --selftest
+run 'check_cohort_packages  --selftest' python3 scripts/check_cohort_packages.py --selftest
 
 echo "── 리포 실물 (리포가 맞나 — selftest 가 **대신해 주지 않는다**) ──"
 #  ★★ 2026-08-25 — 배터리는 느려서 여기 없지만(~20분), **문법이라도** 본다.
@@ -95,6 +96,10 @@ run 'mutation_sweep (문법 — 배터리 자신이 도는가)' \
   python3 -c "import ast,sys; ast.parse(open('scripts/mutation_sweep_20260825.py',encoding='utf-8').read())"
 run 'check_review_findings   (원장 + 철회값 스윕)' python3 scripts/check_review_findings.py
 run 'check_method_discipline (규칙 A~M + claims 원장)' python3 scripts/check_method_discipline.py
+#  ★★ 2026-08-30 — 원장이 "제3자가 리포만으로 재도출한 값이 이 문서와 일치한다" 고 적는데
+#    그것은 08-29 에 손으로 한 번 돌린 결과였고 **아무것도 다시 확인하지 않았다**.
+#    비·산포를 팔의 σ_e 에서 재계산해 원장 산문과 대조한다 (저장된 판정 필드를 읽지 않는다).
+run 'check_cohort_packages  (커밋된 패키지 ↔ 원장)' python3 scripts/check_cohort_packages.py
 
 echo
 if [ "$FAIL" = 0 ]; then
