@@ -229,6 +229,33 @@ def derive_box(rows: list[dict]) -> dict:
     return box
 
 
+def source_manifest(root: str, rows: list[dict], unread: list[str]) -> dict:
+    """상자를 **무엇에서** 유도했는지 봉인한다 (R14 조건 7).
+
+    ⚠ 상자 없이는 절대 LHS cell 을 복원할 수 없고(범위를 모른다), 상자는 기존 130 런의
+      헤더에서 나온다.  그 130 건이 **어느 파일의 어느 내용**이었는지 남기지 않으면
+      나중에 같은 설계를 재현·감사할 수 없다.  파일별 sha256 을 함께 적는다.
+    """
+    import hashlib
+    src = []
+    for f in sorted(glob.glob(os.path.join(root, 'lhs*_*', 'input_lhs*_*.liggghts'))):
+        h = hashlib.sha256(open(f, 'rb').read()).hexdigest()
+        src.append(dict(file=os.path.relpath(f, root), sha256=h))
+    ids = sorted(r['case'] for r in rows)
+    return dict(root=os.path.abspath(root), n_files=len(src), n_parsed=len(rows),
+                n_unread=len(unread),
+                unread=[os.path.relpath(u, root) for u in unread],
+                case_ids=ids, files=src)
+
+
+def _cell_of(value: float, lo: float, hi: float, n: int = PER_STRATUM) -> int:
+    """affine 사상을 되돌려 **절대 LHS 칸**을 낸다.  `_scale` 의 역이다."""
+    if hi <= lo:
+        return -1
+    u = (value - lo) / (hi - lo)
+    return min(n - 1, max(0, int(u * n)))
+
+
 def kind_for_radius(b: dict, r_um: float) -> str:
     """관측된 종류별 반지름 범위로 라벨을 정한다 — 라벨이 반지름을 따르지, 그 반대가 아니다."""
     pk = b['per_kind']
@@ -645,7 +672,8 @@ def selftest() -> int:
     return 1 if fails else 0
 
 
-def verify_csv(path: str, expect_sha256: str | None = None) -> int:
+def verify_csv(path: str, expect_sha256: str | None = None,
+               box_json: str | None = None) -> int:
     """★ F④ — 생성 **후** CSV 를 다시 읽어 계약을 fail-closed 로 검사한다.
 
     생성기가 맞다는 것과 **디스크에 있는 파일이 맞다는 것**은 다르다.  손으로 편집되거나
@@ -785,6 +813,48 @@ def verify_csv(path: str, expect_sha256: str | None = None) -> int:
         if abs(wsum - (1.0 - float(r['pdd_SE']))) > _W_TOL:
             w_bad.append(f'{r["id"]}: w합 {wsum:.6f} vs 1−pdd {1-float(r["pdd_SE"]):.6f}')
     chk(f'★ w_AM_P + w_AM_S = 1 − pdd_SE (±{_W_TOL:g})', not w_bad, '; '.join(w_bad[:3]))
+
+    #  ── 절대 LHS cell (R14 P1-05 의 핵심) ──────────────────────────────────
+    #  ⚠⚠ 위의 "좌표에서 재계산한 cell" 은 층 안의 **순위**다.  순위는 8점을 한 칸에
+    #     몰아넣어도 0..7 이 되므로, R14 가 만든 "각 층의 pdd 8점을 한 절대 cell 로
+    #     붕괴시킨" 변이체를 **통과시킨다**.  절대 칸은 축의 **범위**를 알아야 나오고,
+    #     범위(=상자)는 기존 130 런에서 유도된다 ⇒ 봉인된 상자를 받아야 검사할 수 있다.
+    #  ⇒ 상자가 없으면 **초록을 주지 않는다** — 검사를 건너뛰었다고 명시한다.
+    if not box_json:
+        print('  ⚠ 절대 LHS cell 미검사 — `--box <sealed.json>` 이 없다.  '
+              '순위 검사만으로는 한 칸 붕괴를 못 잡는다 (R14 P1-05)')
+    else:
+        import json as _json
+        _bx = _json.load(open(box_json, encoding='utf-8'))
+        _box = {int(k): v for k, v in _bx.get('box', _bx).items()}
+        _w = (PDD_SE_HI - PDD_SE_LO) / N_STRATA
+        abs_bad, perm_bad = [], []
+        for st, rs in sorted(by_st.items()):
+            got = {ax: [] for ax in ('pdd_SE', 'volfrac', 'rP_um', 'rSE_um')}
+            for r in rs:
+                nt = int(r['ntype'])
+                b = _box.get(nt)
+                if not b:
+                    abs_bad.append(f'{r["id"]}: 상자에 ntype {nt} 이 없다')
+                    continue
+                rng_rp = (b['rP_um'] if nt == 3
+                          else b['per_kind'][r['kind']]['rP_um'])
+                axes = (('pdd_SE', PDD_SE_LO + st * _w, PDD_SE_LO + (st + 1) * _w),
+                        ('volfrac', *b['volfrac']),
+                        ('rP_um', *rng_rp),
+                        ('rSE_um', *b['rSE_um']))
+                for j, (ax, alo, ahi) in enumerate(axes):
+                    c = _cell_of(float(r[ax]), alo, ahi)
+                    got[ax].append(c)
+                    claimed = int(r['lhs_cell'].split(',')[j])
+                    if c != claimed and r['rSE_truncated'] != '1':
+                        abs_bad.append(f'{r["id"]} {ax}: 신고 {claimed} vs 절대칸 {c}')
+            for ax, cs in got.items():
+                if len(cs) == PER_STRATUM and sorted(cs) != list(range(PER_STRATUM)):
+                    perm_bad.append(f'stratum {st} {ax}: {sorted(cs)}')
+        chk('★★ 절대 LHS 칸이 신고와 일치', not abs_bad, '; '.join(abs_bad[:3]))
+        chk('★★ 층×축마다 절대 칸이 0..7 순열 (한 칸 붕괴를 잡는다)',
+            not perm_bad, '; '.join(perm_bad[:3]))
     kc = Counter(r['kind'] for r in rows)
     chk('mono 두 종류가 같은 수', kc.get('mono_AM_P', 0) == kc.get('mono_AM_S', 0),
         str(dict(kc)))
@@ -811,6 +881,8 @@ def main(argv=None):
     ap.add_argument('--out', help='설계 CSV 출력 경로')
     ap.add_argument('--seed', type=int, default=DESIGN_SEED)
     ap.add_argument('--expect-sha256', help='봉인 해시 강제 대조 (R14 P1-05)')
+    ap.add_argument('--box', help='봉인된 상자 JSON — 절대 LHS 칸 검사에 필요')
+    ap.add_argument('--box-out', help='--scan 시 상자 + source manifest 를 여기 봉인')
     ap.add_argument('--verify', help='생성된 CSV 를 다시 읽어 계약 검사 (F④)')
     ap.add_argument('--selftest', action='store_true')
     a = ap.parse_args(argv)
@@ -818,7 +890,7 @@ def main(argv=None):
     if a.selftest:
         return selftest()
     if a.verify:
-        return verify_csv(a.verify, a.expect_sha256)
+        return verify_csv(a.verify, a.expect_sha256, a.box)
     if not a.scan:
         ap.error('--scan 또는 --selftest 가 필요하다')
 
@@ -860,6 +932,26 @@ def main(argv=None):
             w.writeheader()
             w.writerows(pts)
         print(f'\nwrote {a.out}  ({len(pts)} rows, seed={a.seed})')
+
+    #  ★ 상자와 그 출처를 **함께** 봉인한다 (R14 조건 6·7).
+    #    설계 CSV 만으로는 절대 LHS 칸을 복원할 수 없다 — 칸은 축의 **범위**에서 나오고
+    #    범위는 기존 130 런에서 유도되기 때문이다.  상자를 안 남기면 제3자는 물론 우리도
+    #    나중에 그 검사를 못 돌린다.  파일별 sha256 을 붙여 출처까지 고정한다.
+    if a.box_out:
+        import json as _json
+        man = source_manifest(a.scan, rows, unread)
+        payload = dict(
+            design_seed=a.seed,
+            note=('LHS 확장 v2 의 상자와 그 출처.  `--verify --box <이 파일>` 로 '
+                  '절대 LHS 칸을 검사한다 (R14 P1-05).  상자는 아래 소스 헤더에서 유도됐다.'),
+            box={str(k): v for k, v in box.items()},
+            source=man)
+        with open(a.box_out, 'w', encoding='utf-8') as fh:
+            _json.dump(payload, fh, ensure_ascii=False, indent=2, sort_keys=True)
+            fh.write('\n')
+        import hashlib as _hl
+        print(f'wrote {a.box_out}  (source {man["n_parsed"]}/{man["n_files"]} 건, '
+              f'sha256 {_hl.sha256(open(a.box_out, "rb").read()).hexdigest()[:12]}…)')
     return 0
 
 
