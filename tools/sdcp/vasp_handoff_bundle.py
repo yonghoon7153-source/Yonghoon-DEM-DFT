@@ -6632,8 +6632,12 @@ def build_bundle(a, ledger: Optional[Dict[str, Any]] = None) -> Path:
             if not _k.startswith("vacconv/"):
                 continue
             _vc[_k] = set_job_cell(out / _k, float(_c2))
-            _vc[_k]["image_separation_A"] = round(
-                image_separation_A(out / _k / "POSCAR") or -1, 3)
+            # ⚠ clean slab 은 흡착종이 없어 분리거리가 정의되지 않는다. -1 같은
+            #   sentinel 을 넣으면 **의미 없는 숫자가 조용히 최소값 자리에 앉는다**.
+            _sep = image_separation_A(out / _k / "POSCAR")
+            _vc[_k]["image_separation_A"] = (round(_sep, 3) if _sep is not None
+                                             else None)
+            _vc[_k]["⚠"] = None if _sep is not None else "흡착종 없음 — 분리거리 미정의"
         man["vacuum_convergence"] = {
             "schema": "vacuum_convergence/v1",
             "c1_A": (man.get("vacuum") or {}).get("c_after_A"),
@@ -6645,9 +6649,11 @@ def build_bundle(a, ledger: Optional[Dict[str, Any]] = None) -> Path:
             "5_meV_출처": "물리 상수가 아니라 **보고 최소단위(0.01 eV)의 절반**",
             "실패시": "추가 셀 탐색 없이 Figure 2e 를 제거한다"}
         if _vc:
-            print("  ↑ 진공 두께 수렴 시험 %d잡 → c %.4f Å (최소 분리 %s)"
-                  % (len(_vc), float(_c2),
-                     min(v["image_separation_A"] for v in _vc.values())))
+            _seps = [v["image_separation_A"] for v in _vc.values()
+                     if v["image_separation_A"] is not None]
+            print("  ↑ 진공 두께 수렴 시험 %d잡 → c %.4f Å (흡착 %d잡 최소 분리 %s)"
+                  % (len(_vc), float(_c2), len(_seps),
+                     ("%.2f Å" % min(_seps)) if _seps else "n/a"))
 
     try:
         sys.path.insert(0, str(Path(__file__).resolve().parent))
