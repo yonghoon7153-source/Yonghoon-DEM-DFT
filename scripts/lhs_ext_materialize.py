@@ -62,17 +62,30 @@ _RE_VF = re.compile(r'volumefraction_region\s+([\d.eE+-]+)')
 _RE_CASE = re.compile(r'^#\s*(\S+):\s*(\S+)', re.M)
 
 
+def _strip_comments(text: str) -> str:
+    """주석(`#` 로 시작하는 줄)을 지운 **명령만** 남긴다.
+
+    ⚠⚠ R15 §5: 옛 파서는 `re.search` 를 원문에 걸어서, 헤더 주석에 올바른 seed 를 적고
+      실제 `fix insert/pack` 에는 옛 seed 를 둬도 **주석을 먼저 읽어** 왕복검사가 통과했다.
+      왕복검사의 목적은 *"헤더가 본문과 갈리는가"* 이므로, 본문 파싱이 주석을 보면
+      검사가 자기 목적을 배반한다.  헤더는 `_RE_CASE` 로 **따로** 읽어 대조한다.
+    """
+    return '\n'.join('' if ln.lstrip().startswith('#') else ln
+                      for ln in text.split('\n'))
+
+
 def parse_deck(text: str) -> dict:
     """덱 본문에서 설계량을 되읽는다.  **헤더 주석을 믿지 않는다.**
 
     헤더는 사람이 읽는 라벨이라 본문과 갈릴 수 있다 — 갈리는지 보는 것이 왕복검사의
     목적이므로, 본문에서 읽고 헤더는 따로 읽어 **대조**한다.
     """
-    var = {m.group(1): m.group(2) for m in _RE_VAR.finditer(text)}
+    body = _strip_comments(text)          # ★ 본문 파싱은 **주석 없는** 사본에서
+    var = {m.group(1): m.group(2) for m in _RE_VAR.finditer(body)}
     pts = [dict(fix=m.group(1), seed=int(m.group(2)), atom_type=int(m.group(3)),
                 density=float(m.group(4)), rvar=m.group(5))
-           for m in _RE_PTS.finditer(text)]
-    mp = _RE_PDD.search(text)
+           for m in _RE_PTS.finditer(body)]
+    mp = _RE_PDD.search(body)
     if not mp:
         raise ValueError('particledistribution/discrete 줄을 못 읽었다')
     n_decl = int(mp.group(2))
@@ -80,7 +93,7 @@ def parse_deck(text: str) -> dict:
     weights = {}
     for i in range(0, len(toks) - 1, 2):
         weights[toks[i]] = float(toks[i + 1])
-    mi, mv = _RE_INS.search(text), _RE_VF.search(text)
+    mi, mv = _RE_INS.search(body), _RE_VF.search(body)
     if not (mi and mv):
         raise ValueError('insert/pack seed 또는 volumefraction_region 을 못 읽었다')
     mc = _RE_CASE.search(text)
@@ -286,7 +299,8 @@ def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__,
                                  formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument('--design')
-    ap.add_argument('--expect-sha256')
+    ap.add_argument('--expect-sha256', help='봉인 해시 — **필수**')
+    ap.add_argument('--box', help='봉인 상자 JSON — **필수** (템플릿 해시·설계 재검증)')
     ap.add_argument('--template-3t', help='bimodal 템플릿 덱 (실물)')
     ap.add_argument('--template-2t', help='mono 템플릿 덱 (실물)')
     ap.add_argument('--outdir', help='덱을 쓸 디렉터리 (없으면 dry-run: 검사만)')
@@ -294,9 +308,12 @@ def main(argv=None):
     a = ap.parse_args(argv)
     if a.selftest:
         return _selftest()
-    for need in ('design', 'template_3t', 'template_2t'):
+    #  ★★ 전부 **필수**다 (R15 §4).  옛 판은 `--expect-sha256` 이 없으면 64 ID·소수
+    #     seed·절대 칸을 아예 검사하지 않았고, 첫 seed 를 합성수 `4` 로 바꿔도
+    #     "불일치 0건 · rc=0" 을 냈다 — 08-18 의 25건 abort 를 그대로 재현할 수 있었다.
+    for need in ('design', 'expect_sha256', 'box', 'template_3t', 'template_2t'):
         if not getattr(a, need):
-            ap.error(f'--{need.replace("_", "-")} 가 필요하다')
+            ap.error(f'--{need.replace("_", "-")} 가 필요하다 (봉인 없이 덱을 만들지 않는다)')
 
     rows, sha = load_design(a.design, a.expect_sha256)
     t3 = open(a.template_3t, encoding='utf-8').read()
@@ -305,26 +322,80 @@ def main(argv=None):
     print(f'설계 {len(rows)}행 · sha256 {sha[:12]}…')
     print(f'템플릿 3-type {c3} · 2-type {c2}')
 
-    bad, made = [], 0
+    #  ── 봉인 재검증: 설계 자체를 verifier 로 다시 돌린다 (조건 1·6 우회 차단) ──
+    import subprocess as _sp
+    _vf = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'lhs_ext_design.py')
+    _vr = _sp.run([sys.executable, _vf, '--verify', a.design,
+                   '--box', a.box, '--expect-sha256', a.expect_sha256],
+                  capture_output=True, text=True, stdin=_sp.DEVNULL)
+    if _vr.returncode != 0:
+        print(_vr.stdout[-2000:])
+        raise SystemExit('⛔ 봉인 설계가 verifier 를 통과하지 못했다 — 덱을 만들지 않는다')
+    print('봉인 재검증 ✓ (ID·소수 seed·절대 칸·해시)')
+
+    #  ── 템플릿 해시를 상자 원장과 대조 ──────────────────────────────────
+    import json as _json
+    _bx = _json.load(open(a.box, encoding='utf-8'))
+    _files = {os.path.basename(f['file']): f['sha256']
+              for f in ((_bx.get('source') or {}).get('files') or [])}
+    for _lbl, _path in (('3-type', a.template_3t), ('2-type', a.template_2t)):
+        _bn = os.path.basename(_path)
+        _h = hashlib.sha256(open(_path, 'rb').read()).hexdigest()
+        _want = _files.get(_bn)
+        if _want is None:
+            raise SystemExit(f'⛔ 템플릿 {_bn} 이 상자 원장에 없다 — 어떤 파일로 만들었는지 '
+                             '증명할 수 없으면 덱을 내지 않는다')
+        if _h != _want:
+            raise SystemExit(f'⛔ 템플릿 {_bn} 해시 불일치 — 원장 {_want[:12]}… '
+                             f'실제 {_h[:12]}…  (템플릿이 변조됐다)')
+        print(f'템플릿 {_lbl} {_bn} sha256 ✓ {_h[:12]}…')
+
+    #  ── 전수 렌더 → 전수 검증 → **그 뒤에만** 공개 (R15 §5) ────────────────
+    #  ⚠⚠ 옛 판은 한 건씩 검사하고 **곧바로 썼다**.  강제 실패 재현에서 "불일치 64건 ·
+    #     wrote 64 decks · rc=1" 이 나왔고, 이전 세대 파일도 살아남았다.
+    #     ⇒ 메모리에 다 만들고, 전부 통과했을 때만, **빈 디렉터리**에 쓴다.
+    made = {}
+    bad = []
     for r in rows:
         nt = int(r['ntype'])
         text = render(t3 if nt == 3 else t2, r, c3 if nt == 3 else c2)
         bad += roundtrip(r, text)
-        if a.outdir:
-            d = os.path.join(a.outdir, r['id'])
-            os.makedirs(d, exist_ok=True)
-            with open(os.path.join(d, f'input_{r["id"]}.liggghts'), 'w',
-                      encoding='utf-8', newline='\n') as fh:
-                fh.write(text)
-            made += 1
+        made[r['id']] = text
     print(f'\n왕복검사 {len(rows)}건 — 불일치 {len(bad)}건')
     for b in bad[:12]:
         print('  ⛔', b)
-    if a.outdir:
-        print(f'{"wrote" if made else "—"} {made} decks → {a.outdir}')
-    else:
+    if bad:
+        print('⛔ 불일치가 있어 **한 건도 쓰지 않는다**')
+        return 1
+    if not a.outdir:
         print('(dry-run — --outdir 를 주면 덱을 쓴다)')
-    return 1 if bad else 0
+        return 0
+    if os.path.exists(a.outdir) and os.listdir(a.outdir):
+        raise SystemExit(f'⛔ {a.outdir} 이 비어 있지 않다 — 세대가 섞인다.  '
+                         '새 디렉터리를 주거나 비우고 다시 실행할 것')
+    os.makedirs(a.outdir, exist_ok=True)
+    man = []
+    for cid, text in made.items():
+        d = os.path.join(a.outdir, cid)
+        os.makedirs(d, exist_ok=True)
+        fp = os.path.join(d, f'input_{cid}.liggghts')
+        with open(fp, 'w', encoding='utf-8', newline='\n') as fh:
+            fh.write(text)
+        man.append(dict(id=cid, file=os.path.relpath(fp, a.outdir),
+                        sha256=hashlib.sha256(text.encode('utf-8')).hexdigest()))
+    mp = os.path.join(a.outdir, 'deck_manifest.json')
+    with open(mp, 'w', encoding='utf-8') as fh:
+        _json.dump(dict(design_sha256=sha, n=len(man),
+                        template_3t=dict(file=os.path.basename(a.template_3t),
+                                         sha256=_files[os.path.basename(a.template_3t)]),
+                        template_2t=dict(file=os.path.basename(a.template_2t),
+                                         sha256=_files[os.path.basename(a.template_2t)]),
+                        ids=sorted(made), decks=man),
+                   fh, ensure_ascii=False, indent=2, sort_keys=True)
+        fh.write('\n')
+    print(f'wrote {len(man)} decks → {a.outdir}')
+    print(f'wrote {mp}  (ID census + 파일별 sha256)')
+    return 0
 
 
 def _selftest():
@@ -420,6 +491,18 @@ shell mkdir post_lhs00_000
         _m.groups() if _m else '')
     chk('②-b 그래도 왕복은 통과한다', roundtrip(r3b, o3b) == [],
         str(roundtrip(r3b, o3b)[:2]))
+
+    #  ②-c 주석은 본문이 아니다 (R15 §5) — 헤더에 옳은 seed, 본문에 옛 seed
+    spoof = out2.replace('insert/pack seed 20021', 'insert/pack seed 19991')
+    chk('★②-c 주석의 올바른 seed 로 본문을 가릴 수 없다',
+        roundtrip(r2, spoof) != [], str(roundtrip(r2, spoof)[:1]))
+    chk('★②-c 파서가 본문 seed 를 읽는다 (주석 아님)',
+        parse_deck(spoof)['seed'] == 19991, str(parse_deck(spoof)['seed']))
+    #  주석에 가짜 변수 정의를 심어도 본문 값이 이긴다
+    spoof2 = out2.replace('# rAM=0.0023', '# rAM=0.0023\n# variable r_SE    equal 0.999')
+    chk('★②-c 주석 속 변수 정의를 무시한다',
+        abs(parse_deck(spoof2)['r_SE_um'] - 0.7) < 1e-9,
+        str(parse_deck(spoof2)['r_SE_um']))
 
     #  ③ 음성 대조 — 왕복검사가 **정말** 잡는가
     swapped = out3.replace('pts1 0.400000', 'pts1 0.200000').replace(

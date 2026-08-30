@@ -634,7 +634,15 @@ def selftest() -> int:
                 w.writeheader()
                 for r in m:
                     w.writerow(r)
-            rc = _sp.run([sys.executable, os.path.abspath(__file__), '--verify', p],
+            #  ★ 상자·해시가 이제 **필수**라 변이체도 그 게이트를 지나야 한다.
+            #    변이체마다 자기 해시를 계산해 넘긴다 — 그래야 검사가 통과하는 이유가
+            #    "해시가 없어서" 가 아니라 **불변식 자체**임이 드러난다.
+            import hashlib as _hl2
+            _sh = _hl2.sha256(open(p, 'rb').read()).hexdigest()
+            _bx = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
+                               'docs', 'data', 'lhs_ext_box_v2_20260829.json')
+            rc = _sp.run([sys.executable, os.path.abspath(__file__), '--verify', p,
+                          '--box', _bx, '--expect-sha256', _sh],
                          capture_output=True, text=True).returncode
             os.unlink(p)
             return rc
@@ -821,12 +829,30 @@ def verify_csv(path: str, expect_sha256: str | None = None,
     #     범위(=상자)는 기존 130 런에서 유도된다 ⇒ 봉인된 상자를 받아야 검사할 수 있다.
     #  ⇒ 상자가 없으면 **초록을 주지 않는다** — 검사를 건너뛰었다고 명시한다.
     if not box_json:
-        print('  ⚠ 절대 LHS cell 미검사 — `--box <sealed.json>` 이 없다.  '
-              '순위 검사만으로는 한 칸 붕괴를 못 잡는다 (R14 P1-05)')
+        #  ⚠⚠ 옛 판은 여기서 **경고만 하고 rc=0** 을 냈다 (R15 §3).  게이트가 선택
+        #     사항이면 게이트가 아니다 — 축소 corpus 로 만든 원장으로도 초록이 났다.
+        #     ⇒ 상자 없이는 **실패**한다.  진단이 필요하면 호출자가 그렇게 말해야 한다.
+        chk('★★ 봉인 상자로 절대 LHS 칸 검사 (`--box` 필수)', False,
+            '`--box <sealed.json>` 이 없다 — 순위 검사만으로는 한 칸 붕괴를 못 잡는다')
     else:
         import json as _json
         _bx = _json.load(open(box_json, encoding='utf-8'))
         _box = {int(k): v for k, v in _bx.get('box', _bx).items()}
+        #  ★ 원장 자신의 자기일관성을 **강제**한다 (R15 §3, 조건 7).
+        #    옛 판은 JSON 을 읽기만 하고 그 안의 source 를 다시 보지 않았다 —
+        #    3개짜리 축소 corpus 로 만든 원장으로도 초록이 났다.
+        _src = _bx.get('source') or {}
+        chk('★★ 상자 원장: source 130건 전부 파싱',
+            _src.get('n_parsed') == 130 and _src.get('n_files') == 130,
+            f'parsed {_src.get("n_parsed")} / files {_src.get("n_files")}')
+        chk('★★ 상자 원장: 못 읽은 파일 0',
+            _src.get('n_unread') == 0, str(_src.get('n_unread')))
+        chk('★★ 상자 원장: 파일별 sha256 130건 · 케이스 ID 130건',
+            len(_src.get('files') or []) == 130 and len(_src.get('case_ids') or []) == 130,
+            f'files {len(_src.get("files") or [])} · ids {len(_src.get("case_ids") or [])}')
+        chk('★ 상자 원장: 파일 해시가 전부 64자리 hex',
+            all(isinstance(f.get('sha256'), str) and len(f['sha256']) == 64
+                for f in (_src.get('files') or [])))
         _w = (PDD_SE_HI - PDD_SE_LO) / N_STRATA
         abs_bad, perm_bad = [], []
         for st, rs in sorted(by_st.items()):
@@ -867,9 +893,12 @@ def verify_csv(path: str, expect_sha256: str | None = None,
     print(f'  sha256 {h}')
     #  ★ 기대 해시를 주면 **강제 대조**한다.  옛 판은 계산해서 출력만 했고, 그러면
     #    문서의 봉인값과 다른 파일을 검증해도 초록이 난다 (R14 P1-05).
-    if expect_sha256:
-        chk('★ 봉인 sha256 일치', h == expect_sha256.strip().lower(),
-            f'기대 {expect_sha256[:12]}… vs 실제 {h[:12]}…')
+    #  ★ 기대 해시도 **필수**다 (R15 §3).  "봉인했다" 는 주장은 해시를 대조해야
+    #    검증된다 — 옵션으로 두면 검증 없이 통과하는 경로가 늘 남는다.
+    chk('★ 봉인 sha256 대조 (`--expect-sha256` 필수)',
+        bool(expect_sha256) and h == expect_sha256.strip().lower(),
+        (f'기대 {expect_sha256[:12]}… vs 실제 {h[:12]}…' if expect_sha256
+         else '`--expect-sha256` 이 없다'))
     print(f'\n{len(fails)} failure(s)')
     return 1 if fails else 0
 
