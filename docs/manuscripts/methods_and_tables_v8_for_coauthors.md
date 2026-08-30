@@ -337,3 +337,191 @@ Limitations 에 명기해야 한다.
 
 ⚠ **두 축의 정본이 서로 다른 브랜치에 있다.** DEM 은 `manuscript-track`, DFT 는
 `claude/friendly-meitner-lldvar`. 이 문서는 둘을 옮겨 적은 것이고, **어긋나면 정본이 이긴다.**
+
+---
+
+# 10. 붙여넣기용 최종문 (2026-08-30 추가)
+
+> 여기부터는 **설명이 아니라 원고에 그대로 들어갈 글**이다. 위 §1–9 는 왜 그렇게 쓰는지의
+> 근거이고, 아래가 산출물이다. 둘이 어긋나면 **정본(§9 표)** 이 이긴다.
+
+## 10-0. ⚠ 먼저 — DFT 트랙 질문의 답
+
+§4 가 *"Figure 2e 가 QE 트랙인가 VASP 트랙인가"* 를 물었다. 답은 **둘이 경쟁 관계가 아니다**:
+
+| 트랙 | 무엇을 묻나 | 원고 어디 |
+|---|---|---|
+| **VASP Stage A** | SDCP 조각 vs PTFE 조각의 **표면 흡착 대비** | **Figure 2e · Table S1 · 본문 34** |
+| QE Phase-B (지금 도는 것) | **중성 vs 자가도핑** 상태의 Δ (5잡 스킴) | 이 원고에 없다 — 별건 |
+
+본문 34 가 묻는 것은 *"SDCP 와 PTFE 중 어느 쪽이 표면과 더 상호작용하나"* 이므로 **Stage A** 다.
+⇒ **Table S1 은 VASP 로 다시 쓴다.** 아래 10-2 가 그 표이고, 값은 실제 배포 INCAR 에서 왔다.
+
+⚠ Stage A 는 2026-08-30 현재 **제출 전**이다 (42잡 구성 확정, 리뷰 P0 정리 중).
+아래 본문·캡션은 숫자 한 자리만 대괄호로 남기고 나머지를 완성해 둔다 — 값이 오면
+**그 한 자리만** 채우면 되고 다른 문장은 안 건드린다.
+
+---
+
+## 10-1. Methods — DFT (영문, 그대로 붙여넣기)
+
+> **DFT calculations.** Spin-polarised DFT calculations were performed with VASP using
+> projector augmented-wave potentials and the Perdew–Burke–Ernzerhof functional, with
+> Grimme's D3 dispersion correction in the zero-damping form (IVDW = 11) and a rotationally
+> invariant Dudarev +U correction of U − J = 6.2 eV applied to the Ni 3d states
+> (LMAXMIX = 4). The plane-wave cut-off was 520 eV with an electronic convergence
+> threshold of 1 × 10⁻⁶ eV, Gaussian smearing of 0.05 eV, aspherical gradient corrections
+> within the PAW spheres, and real-space projection disabled. The NCM811 surface was
+> represented by a LiNiO₂(104) slab (1 × 4, four layers, 192 atoms, 18.27 × 11.51 Å in
+> plane) with more than 15 Å of vacuum, a Γ-centred 3 × 4 × 1 k-mesh, and a dipole
+> correction along the surface normal. SDCP was represented by its sulfonate-functionalised
+> EDOT repeat unit (C₁₁H₁₆O₆S₂) and PTFE by a C₁₀F₂₂ segment; gas-phase references were
+> computed in cubic boxes with 20 and 24 Å of padding, the reference energy changing by
+> 0.3 meV between them.
+>
+> Adsorption configurations were pre-screened over seven surface sites and 48 molecular
+> orientations with the UMA-s-1p1 machine-learned interatomic potential, relaxing the
+> adsorbate together with the outermost 15 % of the slab. **The DFT energies reported here
+> are static single points on those machine-learned geometries (NSW = 0) and are not DFT
+> local minima**; identical fixed geometries and an identical computational protocol were
+> used for every species so that the comparison is made at matched geometry rather than at
+> matched relaxation.
+>
+> The magnetic state of the slab was **declared rather than optimised**. Each calculation
+> started from a collinear antiferromagnetic configuration of the 48 Ni sites (24 up,
+> 24 down, ±1 μB initial moments) with the total moment left free (NUPDOWN = −1) in the
+> complexes, the clean slab and the gas-phase references alike, so that no species was
+> constrained relative to another. The realised site-projected moments were recorded for
+> every calculation, and energies were differenced only between calculations that realised
+> the same magnetic configuration.
+>
+> Adsorption energies were obtained as
+>
+>     E_ads = E_slab+adsorbate − E_slab − E_adsorbate                (1)
+>
+> **Limitations.** These are vacuum, 0 K, single-molecule quantities evaluated on fixed,
+> machine-learned geometries. They are not adhesion energies, interfacial resistances, or
+> coverage-dependent quantities, and the two adsorbates are molecular segments rather than
+> polymers — a real polymer chain contacts the surface at many points simultaneously.
+> Total energies are code- and pseudopotential-specific and are meaningful only as
+> internal differences within this study. The spectroscopic evidence indicates that the
+> as-synthesised SDCP is self-doped, whereas the adsorption model is the neutral repeat
+> unit; the spin distribution of the doped state is moreover chain-length dependent, being
+> side-group dominated in the monomer and backbone dominated for interior doping at n = 3.
+
+## 10-2. Table S1 — 전면 교체 (값은 배포 INCAR 실물)
+
+| Category | Parameter | Value | Unit |
+|---|---|---|---|
+| Method | Code / functional | VASP (PAW); PBE | – |
+| | Dispersion | Grimme D3, **zero damping** (IVDW = 11) | – |
+| | Hubbard correction | Dudarev, U − J = 6.2 eV on Ni 3d; LMAXMIX = 4 | eV |
+| | Plane-wave cut-off | 520 | eV |
+| | Electronic convergence | 1 × 10⁻⁶ | eV |
+| | Smearing (Gaussian) | 0.05 | eV |
+| | Aspherical PAW gradients | on | – |
+| | **Real-space projection** | **off** | – |
+| | k-point mesh (slab / molecule) | 3 × 4 × 1 / Γ | – |
+| Surface model | Slab | LiNiO₂(104), 1 × 4, four layers, 192 atoms (Li₄₈Ni₄₈O₉₆) | – |
+| | Cell (in-plane) | 18.27 × 11.51 | Å |
+| | Adsorbate–image separation | > 15 | Å |
+| | Dipole correction | along surface normal | – |
+| Magnetic state | Starting configuration | collinear AFM, 24 ↑ / 24 ↓ Ni, ±1 μB | – |
+| | Total-moment constraint | **none (NUPDOWN = −1) for complexes, slab and gas references alike** | – |
+| | Reported | realised site-projected moments per calculation | μB |
+| Geometry | Source | UMA-s-1p1 relaxation, outer 15 % of slab free | – |
+| | **DFT treatment** | **static single point, NSW = 0 — not a DFT minimum** | – |
+| Adsorbate | SDCP repeat unit (neutral) | C₁₁H₁₆O₆S₂ | – |
+| | PTFE segment | C₁₀F₂₂ | – |
+| | Gas-phase box padding | 20 and 24 (ΔE = 0.3 meV) | Å |
+| Configuration search | Potential; sites / orientations | UMA-s-1p1; 7 / 48 | – |
+| Adsorption energy | Definition | Equation (1) | eV |
+
+**⚠ 표에서 빠지면 안 되는 세 줄** — 심사에서 반드시 걸린다: 기하가 **DFT 최소점이 아니라는 것**,
+자기상태가 **선언이라는 것**, 그리고 기준계와 복합체가 **같은 구속 정책**을 쓴다는 것.
+마지막 항목이 이 캠페인이 실제로 물렸던 자리다.
+
+## 10-3. 본문 34 — 교체안 (영문)
+
+> Density functional theory calculations were used to compare how the two binder chemistries
+> interact with the active material surface (Figure 2e), with the computational model and
+> parameters given in Figure S3 and Table S1. Representative segments of SDCP and of PTFE
+> were placed on a LiNiO₂(104) surface, the adsorption geometry of each being selected by a
+> machine-learned potential over seven surface sites and 48 orientations and then evaluated
+> by DFT at fixed geometry, so that both species are compared under an identical protocol.
+> **[NUMBER SENTENCE — Stage A]**
+> The calculations describe an isolated repeat unit on a clean, vacuum-terminated surface at
+> 0 K and are therefore a statement about local chemical affinity rather than about adhesion
+> of the processed electrode.
+
+⛔ **삭제할 문장** (v6 원문): *"The stronger interaction expected for SDCP originates from its
+polar sulfonate moieties, which can interact more effectively with exposed surface sites of
+NCM811 than non-polar PTFE."* — 우리 마감 문서의 **금지 서술**이다. 평가된 기하의 실제
+최근접 접촉은 **C–H ··· 표면 O/Ni 2.44 Å** 이고, 종전 근거였던 `O···Li 2.09 Å` 는
+2026-08-29 철회됐다(실측 4.88–5.39 Å).
+⛔ **자리표시자 삭제**: *"Additional text related to DFT."*
+
+**`[NUMBER SENTENCE]` 에 들어갈 문장 (Stage A 회수 후, 이대로만)**:
+> *"Across the four pre-registered poses of each segment, the lowest adsorption energy of the
+> SDCP repeat unit was [X] eV lower than that of the C₁₀F₂₂ segment."*
+
+⛔ 그 문장에 **붙이면 안 되는 것**: "전역 최소" · "적어도 X eV" · "PTFE 보다 항상" ·
+자리 선호(Li vs Ni — 판정바닥 30 meV 아래라 미해결) · 술포네이트 기전.
+
+## 10-4. 본문 39 — 교체안 (영문, 값 확정)
+
+> To evaluate how SDCP alters charge-transport pathways within the composite cathode,
+> three-dimensional SBE and DBE microstructures were generated by DEM packing and MPM
+> compaction, with the model geometries and material parameters summarised in Figure S16 and
+> Table S2. Both electrodes maintain fully percolated electronic networks because of their
+> identical VGCF contents; however, the DBE develops a denser distribution of conductive
+> contacts around the active material particles (Figure 4a). The median number of contacts
+> between an active material particle and a conductive additive increases from 74 for the
+> SBE to 86 for the DBE (+16 %); including the insulating binder in the contact count gives
+> 80 and 88 (+10 %), so the convention is stated with the value (Table S3). Consistently,
+> the simulated effective electronic conductivity increases from 54.0 to 70.6 mS cm⁻¹ with
+> the binder's centerline voxels excluded from conduction, and from 72.3 to 81.3 mS cm⁻¹
+> with the binder omitted from the electronic grid — paired ratios of 1.308 and 1.124 over
+> the eight prescribed grid-origin phases (Figure 4b). The direction of the change is common
+> to both conventions; its magnitude is not. The corresponding current-density maps show a
+> more spatially distributed electronic current pathway in the DBE (Figure S18).
+
+⛔ **삭제할 문장**: *"whereas the effective σ_ion remains nearly unchanged at 0.203 and
+0.215 mS cm⁻¹"* — 그 cohort 는 입력 규약 때문에 **부호가 뒤집혀** 못 쓴다 (§8-2).
+같은 이유로 Figure S17(이온 전류밀도) 인용 문장도 이번 판에서는 빼야 한다.
+
+## 10-5. 캡션 — 교체안 (영문)
+
+| 위치 | 교체안 |
+|---|---|
+| Figure 2(e) | *"Adsorption of representative SDCP and PTFE segments on a LiNiO₂(104) surface, evaluated by DFT at machine-learned geometries."* |
+| Figure S3 | *"Computational models used for the DFT calculations: the LiNiO₂(104) slab, the SDCP repeat unit (C₁₁H₁₆O₆S₂) and the C₁₀F₂₂ segment, with the adsorption geometry of each species."* |
+| Figure 4(a) | *"DEM-packed and MPM-compacted electronic conduction networks of the SBE and DBE."* |
+| Figure 4(b) | *"Effective electronic conductivities of the SBE and DBE under the two binder conventions, each averaged over the eight prescribed grid-origin phases."* |
+| Figure S16 | *"SBE and DBE geometries generated by DEM packing and MPM compaction."* |
+| Figure S17 | *"Simulated ionic current-density distributions."* ⚠ **이번 판에서는 본문이 인용하지 않는다** (§8-2) |
+| Figure S18 | *"Simulated electronic current-density distributions in the SBE and DBE."* |
+
+## 10-6. Methods — DEM 절의 세 곳 (교체 문장만)
+
+**① 복셀 문장 중복 제거** — v6 의 두 문장 중 뒤엣것을 지우고 앞 문장을 이렇게 쓴다:
+> *"Effective conductivities were obtained by rasterising each microstructure onto a cubic
+> grid with a voxel edge of 0.15 μm."*
+
+**② 첨가제 투입 시점** (v6 의 *"were then seeded into the pore space"* 를 교체):
+> *"VGCF fibres, PTFE fibrils and SDCP particles were present in the material-point cloud
+> throughout the compaction stage at the experimental weight fractions, so that their
+> stiffness enters the compaction rather than being added to the finished bed."*
+
+**③ 접촉강성의 출처** (v6 의 *"which reproduces the ~10 % porosity and 11–12 % contact
+overlap reported for cold-pressed LPSCl at 300 MPa"* 를 교체):
+> *"…was selected against a densification target for sulfide cold pressing rather than taken
+> from the dense material. The ~10 % target is derived from composite and glass literature
+> rather than measured on pure LPSCl at 300 MPa, and the 11–12 % contact overlap is a
+> pure-electrolyte simulation consistency result rather than a measured calibration target."*
+
+**④ 통계 표기** (v6 의 *"reported as the paired mean with its standard error"* 를 교체):
+> *"…reported as the mean over the eight prescribed grid-origin phases together with the
+> spread across them and the observed range; because these eight phases are a complete
+> factorial of a single bed rather than independent replicates, no standard error and no
+> confidence interval are implied."*
