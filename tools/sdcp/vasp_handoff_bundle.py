@@ -2394,8 +2394,12 @@ def selftest_k() -> int:
         jb, en = {}, {}
         for f, (a1, a2) in (("sdcp_neutral", (d_sdcp_c1, d_sdcp_c2)),
                             ("ptfe_c10", (d_ptfe_c1, d_ptfe_c2))):
+            # ⛔ 2026-08-31 (회신 AM P0-2) — 픽스처가 옛 규약(kind="vacuum_convergence")을
+            #   쓰고 있었다. **실물 번들은 c2 도 kind="prospective_pose" + vacconv="c2"** 다.
+            #   픽스처가 실물과 다르면 이 시험은 아무것도 보증하지 못한다 (실제로 그래서
+            #   분석기가 c2 를 못 찾는 걸 selftest 가 못 잡았다).
             for cell, kind, a in (("c1", "prospective_pose", a1),
-                                  ("c2", "vacuum_convergence", a2)):
+                                  ("c2", "prospective_pose", a2)):
                 k = "%s/%s__%s" % (cell, f, cell)
                 jb[k] = {"meta": {"kind": kind, "fragment": f, "seed": SEED_MAIN,
                                   "role": "primary",
@@ -2427,7 +2431,9 @@ def selftest_k() -> int:
     _jv3, _ev3 = _vjobs(-1.2048, -1.2052, -0.80, -0.80)
     _rv3 = closure_vacconv(_VM, _jv3, lambda j: _ev3.get(j), _emv,
                            ["sdcp_neutral", "ptfe_c10"])
-    chk(_rv3["within_tol"] and not _rv3["same_rounded"] and _rv3["pass"] is False,
+    # ⛔ 2026-08-31 (회신 AM Q1) — 반올림 불일치는 이제 **통과**다 (표시 정보일 뿐).
+    #   0.2 meV 차이가 0.00/0.01 로 갈리고, 기체 offset 만 더해도 판정이 뒤집혔다.
+    chk(_rv3["within_tol"] and not _rv3["same_rounded"] and _rv3["pass"] is True,
         "⛔음성 AJ: 4 meV 로 문턱 안이어도 −0.40/−0.40 이 아니면 실패 "
         "(보고 자릿수에서 값이 달라진다) · %s" % _rv3["D_reported"])
 
@@ -2435,7 +2441,9 @@ def selftest_k() -> int:
     _jv4, _ev4 = _vjobs(-1.20, -1.20, -0.80, -0.80, rb="r1", rb_c2="r2")
     _rv4 = closure_vacconv(_VM, _jv4, lambda j: _ev4.get(j), _emv,
                            ["sdcp_neutral", "ptfe_c10"])
-    chk(any("BASIN_MISMATCH" in b for b in _rv4["blocks"]) and "pass" not in _rv4,
+    # ⛔ 2026-08-31 — `pass` 는 이제 **항상 있다**(기본 False). "키가 없다" 를 판정
+    #   근거로 쓰면 안 된다 — 호출자가 KeyError 를 맞았다. 값으로 본다.
+    chk(any("BASIN_MISMATCH" in b for b in _rv4["blocks"]) and _rv4["pass"] is False,
         "⛔음성 AJ: c1↔c2 realized topology 가 다르면 값을 안 만든다")
 
     # [음성] 옛 번들에는 적용하지 않는다
@@ -3597,25 +3605,40 @@ def closure_vacconv(man, jobs, E, emol, frags):
         들어오지 않는다. 절대값을 인용하려면 별도 시험이 필요하다.
       · c2 보다 큰 셀에서 무슨 일이 나는지 모른다. 두 점 시험이다.
     """
+    # ⛔ 2026-08-31 — `pass` 를 **처음부터** 넣는다. 초판은 마지막에만 넣어서, 조기
+    #   반환 경로(적용 불가·blocks)에서 호출자가 `res["pass"]` 로 **KeyError** 를 맞았다.
+    #   판정 키가 없는 것은 "통과 아님" 이지 예외가 아니다.
     res = {"schema": "closure_vacconv/v1", "tol_eV": VACCONV_TOL_EV,
            "report_digits": VACCONV_REPORT_DIGITS,
            "⚠_5meV_출처": "물리 상수가 아니라 보고 최소단위(0.01 eV)의 절반",
-           "by_cell": {}, "blocks": []}
+           "pass": False, "by_cell": {}, "blocks": []}
     # 이 시험은 **둘째 셀을 실은 판(C-12)** 에만 있다. 옛 번들에는 vacconv 잡이 없고,
     # 없는 계약을 요구하면 legacy 결과가 통째로 막힌다.
-    if not (man or {}).get("vacuum_convergence") and not _pick(
-            jobs, kind="vacuum_convergence"):
+    if not (man or {}).get("vacuum_convergence") and not any(
+            (jr.get("meta") or {}).get("vacconv") for jr in (jobs or {}).values()):
         res["verdict"] = "n/a — 이 번들에 진공 수렴 시험 잡이 없다"
         res["applicable"] = False
         return res
     res["applicable"] = True
 
-    def _one(frag, kind):
-        js = [j for j in _pick(jobs, kind=kind, fragment=frag, seed=SEED_MAIN)
-              if (jobs[j].get("meta") or {}).get("role") in (None, "primary")]
+    def _one(frag, cell):
+        """`cell` ∈ {"c1","c2"} 인 그 조각의 primary 잡 하나.
+
+        ⛔⛔ 2026-08-31 (회신 AM P0-2) — 초판은 c1 을 `kind="prospective_pose"`,
+          c2 를 `kind="vacuum_convergence"` 로 골랐다. **둘 다 틀렸다.**
+          실물 `job.json` 은 c2 도 `kind="prospective_pose"` 이고 구분은 `vacconv="c2"`
+          필드에 있다. ⇒ c1 후보가 **둘(ambiguous)**, c2 후보가 **0** 이 되어
+          결과가 다 있어도 진공 판정이 안 나왔다.
+          이제 **생성기가 실제로 쓰는 필드**(`vacconv`)로 고른다.
+        """
+        js = [j for j in _pick(jobs, kind="prospective_pose",
+                               fragment=frag, seed=SEED_MAIN)
+              if (jobs[j].get("meta") or {}).get("role") in (None, "primary")
+              and ((jobs[j].get("meta") or {}).get("vacconv")
+                   or "c1") == cell]
         if len(js) != 1:
             res["blocks"].append("VACCONV_JOB_AMBIGUOUS(%s/%s: %d개)"
-                                 % (frag, kind, len(js)))
+                                 % (frag, cell, len(js)))
             return None
         jr = jobs[js[0]]
         if jr.get("gates"):
@@ -3628,18 +3651,27 @@ def closure_vacconv(man, jobs, E, emol, frags):
             return None
         return js[0], e, jr
 
+    # ⛔⛔ 2026-08-31 (회신 AM P0-3) — **Δ_vac 에는 기체 기준이 필요 없다.**
+    #     Δ_vac = [E_C^S(c₂)−E_C^S(c₁)] − [E_C^P(c₂)−E_C^P(c₁)]
+    #   에서 두 조각의 기체 에너지가 **정확히 소거된다** (셀 높이와 무관한 상수라서).
+    #   초판은 `emol` 이 없으면 `VACCONV_NO_GAS_REF` 로 막았는데, 그건 `--refs_minimal`
+    #   번들에서 진공 판정 자체를 불가능하게 만들었다 (분석기가 box20 도 요구했다).
+    #   ⇒ 기체가 있으면 쓰고(A 가 그대로 E_ads), 없으면 **복합체 에너지만으로** 낸다.
+    #     Δ_vac 값은 어느 쪽이든 같다 — 그게 소거의 뜻이다.
     picks, A = {}, {}
+    _gas_used = {f: (emol.get(f) is not None) for f in frags}
+    res["gas_reference_used"] = _gas_used
+    res["⚠_기체_불필요"] = ("Δ_vac 에서 기체 에너지는 대수적으로 소거된다 — "
+                            "기체가 없어도 판정은 유효하다 (회신 AM P0-3). "
+                            "단 **최종 D** 에는 기체가 필요하다.")
     for frag in frags:
-        if emol.get(frag) is None:
-            res["blocks"].append("VACCONV_NO_GAS_REF(%s)" % frag)
-            continue
-        for cell, kind in (("c1", "prospective_pose"), ("c2", "vacuum_convergence")):
-            got = _one(frag, kind)
+        for cell in ("c1", "c2"):
+            got = _one(frag, cell)
             if got is None:
                 continue
             jn, e, jr = got
             picks[(frag, cell)] = jn
-            A[(frag, cell)] = e - emol[frag]
+            A[(frag, cell)] = e - (emol.get(frag) or 0.0)
 
     # 자기 topology 가 네 잡에서 같아야 한다 — 다르면 셀 효과가 아니라 상태 차이를 잰다
     #   clean slab 이 없을 수 있으므로 **직접 topology** 를 먼저 쓰고, 없으면 legacy
@@ -3678,13 +3710,28 @@ def closure_vacconv(man, jobs, E, emol, frags):
     same_round = res["D_reported"]["c1"] == res["D_reported"]["c2"]
     res["within_tol"] = within
     res["same_rounded"] = same_round
-    res["pass"] = bool(within and same_round)
-    res["verdict"] = ("ok — Δ_vac %.1f meV, 0.01 eV 반올림 일치" % (1000 * d_vac)
-                      if res["pass"] else
-                      "⛔ FAIL — Δ_vac %.1f meV (문턱 %.0f) · 반올림 %s. "
-                      "추가 셀 탐색 없이 Figure 2e 를 제거한다"
+    # ⛔⛔ 2026-08-31 (회신 AM Q1) — **반올림 일치를 hard gate 에서 내린다.**
+    #   0.0049 vs 0.0051 eV 는 차이가 **0.2 meV** 인데 표시는 0.00 / 0.01 로 갈린다.
+    #   더 나쁜 것: c 에 무관한 기체 offset 을 더하면 Δ_vac 은 그대로인데 **반올림 판정만
+    #   바뀐다** — 물리와 무관한 양이 판정을 뒤집는다는 뜻이다.
+    #   ⇒ 물리 gate 는 `|Δ_vac| ≤ 5 meV` 하나. `same_rounded` 는 **표시 안정성 정보**다.
+    #     반올림만 불일치하면 Figure 삭제가 아니라 **불확도 병기 또는 한 자리 추가 보고**.
+    res["pass"] = bool(within)
+    res["gate"] = "|Δ_vac| ≤ %.0f meV (물리 gate)" % (1000 * VACCONV_TOL_EV)
+    res["rounding_note"] = (
+        "표시 안정성 정보 — 판정에 안 들어간다. 반올림만 불일치하면 "
+        "0.01 eV 대신 한 자리 더(0.001 eV) 보고하거나 불확도를 병기한다.")
+    # ⚠ 판정 범위를 좁힌다 — 두 점은 '+4 Å 증가에 대한 안정성' 이지 무한진공 수렴이 아니다.
+    res["claim_scope"] = (
+        "시험한 b00·%s branch 에서 c %+.0f Å 증가에 대한 안정성. "
+        "**무한진공 수렴의 증명이 아니다.**" % (SEED_MAIN, 4.0))
+    res["verdict"] = ("ok — Δ_vac %.1f meV (문턱 %.0f) · 반올림 %s"
                       % (1000 * d_vac, 1000 * VACCONV_TOL_EV,
-                         "일치" if same_round else "불일치"))
+                         "일치" if same_round else "불일치(정보용)")
+                      if res["pass"] else
+                      "⛔ FAIL — Δ_vac %.1f meV > 문턱 %.0f meV. "
+                      "추가 셀 탐색 없이 Figure 2e 를 제거한다"
+                      % (1000 * d_vac, 1000 * VACCONV_TOL_EV))
     return res
 
 def closure_C1(man, jobs, E, emol, frags):
@@ -4386,7 +4433,11 @@ def _closure_estimand(man, results, E, emol, jobs, merge_info=None):
         out["closure_C1"] = closure_C1(man, jobs, E, emol, frags)
         out["closure_C3"] = closure_C3(man, jobs, E, frags)
         out["closure_vacconv"] = closure_vacconv(man, jobs, E, emol, frags)
-        if out["closure_vacconv"].get("pass") is False:
+        # ⛔ 2026-08-31 — `pass` 가 이제 항상 있으므로(기본 False) **applicable 을 먼저 본다.**
+        #   안 그러면 진공 시험 잡이 없는 옛 번들이 "n/a" 인데 FAIL 로 막힌다.
+        #   적용 불가와 실패는 다른 상태다.
+        if (out["closure_vacconv"].get("applicable")
+                and out["closure_vacconv"].get("pass") is False):
             out["blocks"].append("VACCONV_FAIL:" + out["closure_vacconv"]["verdict"])
         for _b in (out["closure_vacconv"].get("blocks") or []):
             out["blocks"].append("VACCONV:" + _b)
