@@ -36,7 +36,12 @@ E_ads  =  E(표면 + 분자)  −  E(표면)  −  E(분자)
 - `E(표면)` — 분자 없이 표면만
 - `E(분자)` — 표면 없이 분자만, 넓은 빈 상자 안에 (기체 상태)
 
-**세 계산이 다 있어야 한 숫자가 나온다.** 값이 음수면 붙는 쪽이 유리하다는 뜻이고, 더 음수일수록 더 세게 붙는다.
+**세 계산이 다 있어야 한 숫자가 나온다.**
+
+⚠ 한 가지 더 — `E(분자)` 는 자세마다 다시 재지 않고 **하나만** 쓴다. 그런데 표면에 붙은 분자는
+자세마다 조금씩 비틀려 있다(내부 거리로 최대 0.26 Å). 그 비틀림 에너지가 결과에 **포함된 채로**
+나온다. 결함이 아니라 관례다 — 그래서 이 값을 '상호작용에너지' 가 아니라 '흡착에너지' 라 부른다.
+다만 기준 구조 자체가 DFT 최소점이 아니라는 것은 적어야 한다. 값이 음수면 붙는 쪽이 유리하다는 뜻이고, 더 음수일수록 더 세게 붙는다.
 
 우리가 답하려는 건 이거다 — **SDCP 조각과 PTFE 조각 중 어느 쪽이 더 음수인가.**
 
@@ -193,9 +198,11 @@ UMA가 336자세 중 좋아 보이는 것을 골라 주고, 우리는 그것만 
 > constructed so that the shortest distance between the adsorbate and the periodic image of
 > the slab was at least 15 Å. The binder chemistries were represented by a neutral
 > sulfonic-acid-bearing repeat-unit model of SDCP (C₁₁H₁₆O₆S₂) and by a perfluorodecane
-> fragment, CF₃–(CF₂)₈–CF₃ (C₁₀F₂₂). Gas-phase references were single-point calculations on
-> the same fragment conformers used to build the adsorbate configurations, in orthorhombic
-> cells obtained by padding the molecular bounding box (IDIPOL = 4).
+> fragment, CF₃–(CF₂)₈–CF₃ (C₁₀F₂₂). For each species one gas-phase reference was used: a
+> machine-learned-relaxed isolated-molecule conformer evaluated as a static single point in an
+> orthorhombic cell obtained by padding the molecular bounding box (IDIPOL = 4). This reference
+> conformer differs from the adsorbed conformer of every pose, so the reported energies include
+> the deformation of the adsorbate relative to a reference that is itself not a DFT minimum.
 >
 > Adsorption configurations were pre-screened over seven surface sites and 48 molecular
 > orientations with the UMA-s-1p1 machine-learned interatomic potential, relaxing the
@@ -298,7 +305,7 @@ of NCM811 than non-polar PTFE."* — 근거였던 `O···Li 2.09 Å`는 2026-08
 | | DFT treatment | static single point, NSW = 0 — **not a DFT minimum** | – |
 | Adsorbate | Neutral repeat-unit model (SDCP) | C₁₁H₁₆O₆S₂ | – |
 | | Perfluorodecane fragment | C₁₀F₂₂, CF₃–(CF₂)₈–CF₃ | – |
-| | Conformer source | same geometry as the adsorbate in the complexes | – |
+| | Conformer source | one UMA-relaxed isolated-molecule conformer, shared by all poses; it differs from every adsorbed conformer (internal distances by up to 0.26 Å) | – |
 | | Gas cell — repeat-unit model | orthorhombic, 32.64 × 29.29 × 29.70 | Å |
 | | Gas cell — perfluorodecane | orthorhombic, 27.26 × 27.25 × 37.87 | Å |
 | | 20 Å vs 24 Å padding — repeat unit | `[___]` | meV |
