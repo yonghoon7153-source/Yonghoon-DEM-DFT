@@ -82,6 +82,22 @@ def scan(root, pattern='post_SE_heckel_*', key_fn=None, key_name='P_MPa',
     #       착시가 다시 생기고, 이번엔 "왜 폴더가 하나 줄었지" 로도 안 보인다.
     #     ⚠ 실체 디렉터리를 남기고 **링크를 버린다** — 이름이 거짓말하는 쪽이 링크다.
     _dirs = [d for d in sorted(glob.glob(os.path.join(root, pattern))) if os.path.isdir(d)]
+    #  ★★★ 심볼릭 링크는 **무조건 거부**한다 (2026-08-30, Codex R12 §1).
+    #  ⚠⚠ 초판(같은 날 오전)은 realpath 로 **묶어서** 중복을 걸렀는데, **실제 사고 형태를
+    #    못 잡았다**: `post_SE_heckel_300 -> post_oat_esweep_E24p0` 에서 **대상 이름이 glob
+    #    밖**이라 그룹에 링크 하나만 남고 그것이 승자가 된다 ⇒ 독립 300 MPa 런으로 통과한다.
+    #    내가 붙인 회귀는 대상도 glob 안인 **다른 상황**을 시험했다 — 구현과 시험의 경계가
+    #    실제 사고와 어긋나 있었다.  (`pts=[(300, 2000)] · skipped=[]` 로 재현했다.)
+    #  ⇒ 묶는 것이 아니라 **거부**가 기본이다.  링크는 이름이 실체를 속이는 장치이고,
+    #    이 스캐너는 이름에서 색인(압력·축)을 읽으므로 링크를 신뢰할 근거가 없다.
+    #    서술적인 별칭이 필요하면 metadata 로 남기지 스캔 대상에 두지 않는다.
+    for _d in list(_dirs):
+        if os.path.islink(_d):
+            skipped.append((os.path.basename(_d),
+                            f'심볼릭 링크다 → `{os.path.basename(os.path.realpath(_d))}` '
+                            f'(realpath {os.path.realpath(_d)}).  이름이 실체를 속일 수 있고 '
+                            f'이 스캐너는 이름에서 색인을 읽으므로 **거부**한다'))
+            _dirs.remove(_d)
     _groups = {}
     for _d in _dirs:
         _groups.setdefault(os.path.realpath(_d), []).append(_d)
@@ -281,15 +297,32 @@ def _selftest():
             stl(os.path.join(d, f'mesh_{s}.stl'), z)
         return d
 
+    #  ★★ 실제 사고 형태 — **대상 이름이 pattern 밖**이다 (`post_oat_esweep_E24p0`).
+    #     초판은 이것을 못 잡았다: 그룹에 링크 하나뿐이라 그것이 승자가 됐다.
+    _out = os.path.join(td9, 'post_oat_esweep_E24p0')
+    os.makedirs(_out, exist_ok=True)
+    for s in (1000,):
+        open(os.path.join(_out, f'atom_{s}.liggghts'), 'w').write('x\n')
+        open(os.path.join(_out, f'contact_{s}.liggghts'), 'w').write('x\n')
+        stl(os.path.join(_out, f'mesh_{s}.stl'), 0.02)
+    os.symlink(_out, os.path.join(td9, 'post_SE_heckel_600'))
+    p_out, s_out = scan(td9)
+    chk('★★★ 실제 사고 형태 — 대상이 pattern 밖인 링크도 거부한다',
+        not any(x['P_MPa'] == 600 for x in p_out)
+        and any('심볼릭 링크다' in r for n, r in s_out if n.endswith('_600')))
+    os.remove(os.path.join(td9, 'post_SE_heckel_600'))
+
     _r9 = mkcase9(100, (1000,), 0.041)
     os.symlink(_r9, os.path.join(td9, 'post_SE_heckel_300'))   # 이름은 300, 실체는 100
+    #  ⚠ 기본 pattern 으로 센다 — `post_oat_esweep_E24p0`(위 사고 재현용 실체)는 그 밖이다
     chk('★ 음성 대조 — glob 은 둘로 본다 (중복이 실재한다)',
-        len([x for x in glob.glob(os.path.join(td9, 'post_*')) if os.path.isdir(x)]) == 2)
+        len([x for x in glob.glob(os.path.join(td9, 'post_SE_heckel_*'))
+             if os.path.isdir(x)]) == 2)
     p9, s9 = scan(td9)
     chk('★★ 링크 중복을 접는다 — 같은 실체는 한 번만 센다', len(p9) == 1)
     chk('★ 실체를 남기고 링크를 버린다 (이름이 거짓말하는 쪽이 링크)',
         bool(p9) and p9[0]['P_MPa'] == 100)
-    _s9 = [r for (_n, r) in s9 if '같은 실체' in r]
+    _s9 = [r for (_n, r) in s9 if '심볼릭 링크다' in r or '같은 실체' in r]
     chk('★ 접었다는 사실을 skipped 에 남긴다 (조용히 지우지 않는다)', len(_s9) == 1)
     chk('★ 사유가 realpath 를 지목한다 (무엇과 같은지 추적 가능)',
         bool(_s9) and 'realpath' in _s9[0] and 'post_SE_heckel_100' in _s9[0])
