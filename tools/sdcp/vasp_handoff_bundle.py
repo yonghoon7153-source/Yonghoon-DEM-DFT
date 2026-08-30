@@ -4797,7 +4797,13 @@ def _readme_sp(man: Dict[str, Any], a, zcut: float, n_jobs: int,
     있지도 않은 relax/CONTCAR 를 찾다가 멈춘다. 이 도구가 못 하는 것: 실행 시간 보장
     (SUBMIT_CONTRACT.md 의 추정은 ±2배 불확실성을 가진 모델값이다).
     """
-    dc = man.get("dense_calibrators") or []
+    # 🔴 `dense_calibrators` 는 **선언 필드**라 비어 있어도 실제 dense 상이 있을 수 있다.
+    #   실물 v13 이 그 사례였다 — 필드가 null 인데 refs/clean_slab__afm2424_pm1/dense 가
+    #   있어서 README 가 "1개 잡에만 있습니다: (없음)" 을 냈다. planned 에서 센다.
+    _pl = man.get("planned") or {}
+    _dense_jobs = sorted(k for k, v in _pl.items() if "dense" in (v.get("phases") or []))
+    _relax_jobs = sorted(k for k, v in _pl.items() if "relax" in (v.get("phases") or []))
+    dc = _dense_jobs or (man.get("dense_calibrators") or [])
     mc = man.get("magnetic_controls") or []
     ks = (man.get("kmesh_override") or {}).get("static") or KMESH["static"]
     kd = (man.get("kmesh_override") or {}).get("dense") or KMESH["dense"]
@@ -4822,12 +4828,43 @@ def _readme_sp(man: Dict[str, Any], a, zcut: float, n_jobs: int,
             f"audit pose **{cs['audit_pose']}개**. pose 당: {cs['pose당']}\n")
     else:
         census_md = ""
+
+    # ★ 머리말·pose 산문을 **실물에서** 만든다. 하드코딩이 census 표와 어긋났었다:
+    #   실물 v13 은 D3-off 0개인데 산문이 "pose 당 세 계산" 이라고 적었고,
+    #   전 잡이 static 인데 머리말이 "기체 기준계만 DFT 이완" 이라고 적었다.
+    if _relax_jobs:
+        intro_line = ("슬랩 쪽은 구조 최적화를 저희가 MLIP 으로 끝내서 단일점만 돌리면 되고,\n"
+                      f"이완이 필요한 잡은 {len(_relax_jobs)}개입니다: `"
+                      + "` · `".join(_relax_jobs) + "`.")
+    else:
+        intro_line = ("슬랩·분자 **전 잡이 단일점**입니다 — 구조 최적화는 저희가 MLIP 으로\n"
+                      "끝냈고, 이 묶음에는 `relax/` 폴더가 하나도 없습니다 (기체 기준계 포함).")
+
+    _tw = ((cs.get("complexes") or {}).get("d3_off_twins") or 0) if cs else None
+    if _tw == 0:
+        pose_para = (
+            "각 calibration pose 는 `pm1/D3-on` · `net4/D3-on` **두 계산**입니다.\n"
+            "**D3-off 쌍둥이는 만들지 않습니다** — 고정기하 static(NSW=0)에서 D3(zero)는\n"
+            "SCF 밖의 additive 항이라 `E_on − E_off` 가 항등적으로 OUTCAR 의 `Edisp` 와\n"
+            "같습니다. 그래서 그 항을 D3-on 결과에서 직접 읽습니다.\n"
+            "같은 POSCAR 가 자기 seed 둘로 두 번 보이는 것은 **정상이고 설계**입니다.\n"
+            "중복으로 보고 하나만 돌리시면 그 짝이 통째로 무의미해집니다.")
+    elif _tw:
+        pose_para = (
+            f"각 calibration pose 는 `pm1/D3-on` · `pm1/D3-off` · `net4/D3-on` 세 계산으로\n"
+            "구성됩니다. **`net4/D3-off` 는 의도적으로 만들지 않습니다** — 고정기하 D3(zero)는\n"
+            "구조 기반 additive correction 이라 자기상태에 무관하므로 반복이 불필요합니다.\n"
+            "따라서 같은 POSCAR 가 여러 번 보이는 것은 **정상이고 설계**입니다.\n"
+            "중복으로 보고 하나만 돌리시면 그 짝이 통째로 무의미해집니다.")
+    else:
+        pose_para = ("같은 POSCAR 가 여러 번 보이는 것은 **정상이고 설계**입니다 "
+                     "(자기 seed · D3 축). 중복으로 보고 하나만 돌리시면 그 짝이 무의미해집니다.")
+
     return f"""# VASP 계산 요청 — LiNiO₂(104) 위 분자 조각 단일점
 
 바쁘신 중에 부탁드려 죄송합니다. **VASP 실행 {n_all or (n_st + n_dn)}회**입니다
 ({ph_line}).
-슬랩 쪽은 구조 최적화를 저희가 MLIP 으로 끝내서 단일점만 돌리면 되고,
-기체 분자 기준계만 DFT 이완이 필요합니다 (잡당 몇 분).
+{intro_line}
 
 ## 하실 일
 
@@ -4852,11 +4889,7 @@ VASP_CMD="mpirun -np {a.cores} vasp_std" bash run_job.sh
 이 요청은 **최종 흡착 결론이 아니라 Stage A calibration tranche** 입니다.
 포함된 복합체는 사전 지정된 calibration pose 뿐이고 **audit pose 는 없습니다.**
 
-각 calibration pose 는 `pm1/D3-on` · `pm1/D3-off` · `net4/D3-on` 세 계산으로
-구성됩니다. **`net4/D3-off` 는 의도적으로 만들지 않습니다** — 고정기하 D3(zero)는
-구조 기반 additive correction 이라 자기상태에 무관하므로 반복이 불필요합니다.
-따라서 같은 POSCAR 가 여러 번 보이는 것은 **정상이고 설계**입니다.
-중복으로 보고 하나만 돌리시면 그 짝이 통째로 무의미해집니다.
+{pose_para}
 
 Stage A 회수 **후에만** 상대오차 경계 (B)와 최종 선택창 (W)를 확정하고, 창 안의
 전체 candidate 와 창 밖 sealed audit 로 Stage B 를 새로 생성합니다.
@@ -7086,6 +7119,28 @@ def selftest() -> int:
     _nreal = sum(len(p.get("phases") or []) for p in m_sp["planned"].values())
     chk(_nall == _nreal, f"실행 횟수가 **모든 상**을 센다 ({_nall} == {_nreal})")
     chk(f"VASP 실행 {_nall}회" in _rd, f"README 도 같은 수를 쓴다 ({_nall})")
+    # ★ README 산문 ↔ 실물 일치 — 실물 v13 에서 **셋이 갈라져 있었다** (2026-08-30).
+    #   census 표는 옳은데 산문이 옛 설계를 말하고 있었고, 외주처가 읽는 것은 산문이다.
+    _dn_jobs = sorted(k for k, v in m_sp["planned"].items()
+                      if "dense" in (v.get("phases") or []))
+    _rx_jobs = [k for k, v in m_sp["planned"].items()
+                if "relax" in (v.get("phases") or [])]
+    _tw_sp = (m_sp.get("job_census") or {}).get("complexes", {}).get("d3_off_twins")
+    chk(all(j in _rd for j in _dn_jobs),
+        f"README 가 dense 잡을 **이름으로** 적는다 ({len(_dn_jobs)}개)")
+    # [음성] dense 가 있는데 "(없음)" 이라고 적으면 잡는다
+    chk(not (_dn_jobs and "(없음)" in _rd),
+        "[음성] dense 상이 있는데 README 가 '(없음)' 이라고 적지 않는다")
+    # [음성] D3-off 쌍둥이가 0인데 산문이 D3-off 를 요구하면 잡는다
+    chk(not (_tw_sp == 0 and "D3-off`" in _rd.replace("`pm1/D3-off`", "D3-off`")),
+        "[음성] 쌍둥이 0 인데 산문이 pm1/D3-off 를 요구하지 않는다")
+    chk(_tw_sp != 0 or "두 계산" in _rd,
+        "쌍둥이 0 이면 README 가 'pose 당 두 계산' 이라고 적는다")
+    # [음성] relax 상이 없는데 "이완이 필요합니다" 라고 적으면 잡는다
+    chk(not (not _rx_jobs and "DFT 이완이 필요합니다" in _rd),
+        "[음성] relax 상이 없는데 README 가 이완을 요구하지 않는다")
+    chk(bool(_rx_jobs) or "폴더가 하나도 없습니다" in _rd,
+        "relax 가 없으면 README 가 그렇게 적는다")
     chk(isinstance(m_sp.get("claim_policy"), dict)
         and all(f in m_sp["claim_policy"] for f in m_sp["fragments"]),
         f"조각별 claim_policy 가 있다 ({list((m_sp.get('claim_policy') or {}))})")
