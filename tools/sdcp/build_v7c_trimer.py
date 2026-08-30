@@ -2190,6 +2190,20 @@ def selftest():
     _m4, _ = pil_pick_seed_mo(_pr[0], _pr[1], [36], ener=_pr[2])
     chk(_m4 == 2,
         f"⛔음성 실측: 코어 MO(−88.8 Eh)를 건너뛰고 원자가 MO 를 고른다 (실제 {_m4})")
+    # ⛔음성 2026-08-31 실측 — 고른 MO 가 **HOMO 자체**면 회전이 없어야 한다
+    #   (ring5 → mo 480 = HOMO 480). Rotate{480,480} 은 자기 자신과 회전이다.
+    _td = tempfile.mkdtemp()
+    _txt_h = _pil_inp(os.path.join(_td, "h.inp"),
+                      "x.xyz", 0, 2, "UKS", 1.0, "r2SCAN-3c",
+                      moread="p.loc", rotate=None, stab=True)
+    chk("Rotate" not in _txt_h,
+        "⛔음성 실측: 고른 MO 가 HOMO 자체면 **Rotate 를 쓰지 않는다** "
+        "(자기 자신과 회전은 무의미하다)")
+    _txt_r = _pil_inp(os.path.join(_td, "r.inp"),
+                      "x.xyz", 0, 2, "UKS", 1.0, "r2SCAN-3c",
+                      moread="p.loc", rotate=(237, 480), stab=True)
+    chk("Rotate {237, 480, 90, 0, 0}" in _txt_r and 'moinp "p.loc"' in _txt_r,
+        "실측: HOMO 가 아니면 Rotate 를 쓰고, **.loc** 를 MORead 한다")
     print("── 폴라론 pilot 끝 ──")
     return 1 if fails else 0
 
@@ -2766,7 +2780,7 @@ def pilot_seeds(d):
             src_xyz = src / (tag + ".xyz")
             xyzn = "%s.xyz" % sd
             (sdir / xyzn).write_text(src_xyz.read_text())
-            rot, w = None, None
+            rot, w, mo = None, None, None
             if sd != "default":
                 gi = (amap["sets"]["sulfonate"] if sd == "A_sulfonate"
                       else amap["rings"][sd.replace("B_", "")])
@@ -2778,7 +2792,11 @@ def pilot_seeds(d):
                         "(문턱 %.0f%%). **국재 seed 가 아니므로 만들지 않는다** — "
                         "국재화가 실패했다는 뜻이다 (MODEL_NONDIAGNOSTIC 후보)"
                         % (env, sd, w, PIL_SEED_MIN_WEIGHT))
-                rot = (mo, homo)
+                # ⛔⛔ 2026-08-31 실측 — 고른 MO 가 **HOMO 자체**일 수 있다
+                #   (ring5 → mo 480 = HOMO). 그러면 `Rotate {480,480,...}` 이 되어
+                #   자기 자신과 회전한다 — 무의미하거나 ORCA 가 거부한다.
+                #   그 경우 회전이 **필요 없다**: 홀이 이미 그 자리에 생긴다.
+                rot = None if mo == homo else (mo, homo)
             # ⛔ **`.loc`** 를 읽는다. `.gbw`(정준)를 읽으면 국재 인구로 고른
             #   인덱스가 다른 궤도를 가리킨다 (2026-08-31 실측).
             gbw = os.path.relpath(locf, sdir)
@@ -2795,17 +2813,22 @@ def pilot_seeds(d):
                 "⚠_국재화_비결정성": ("ORCA 가 국재화를 무작위 seed 로 돌린다. "
                                        "재실행하면 MO 순서가 달라지므로 이 seed 는 "
                                        "**위 loc_sha256 의 국재화에 조건부**다"),
-                "seed_mo": (None if rot is None else rot[0]),
+                "seed_mo": (mo if sd != "default" else None),
                 "seed_mo_weight_pct": (None if w is None else round(w, 2)),
                 "homo_index": homo,
+                "rotate": (None if rot is None else list(rot)),
+                "rotate_skipped_why": (None if rot is not None or sd == "default"
+                                       else "고른 MO 가 HOMO 자체다 — 회전 불필요"),
                 "roles": ["measured"],
                 "inp_sha256": _sha(sdir / (sd + ".inp")),
                 "xyz_sha256": _sha(sdir / (xyzn)),
             }
             report.setdefault(env, []).append(
-                "%s/%s mo=%s w=%s" % ("D•" if is_dm else "P⁺", sd,
-                                      rot[0] if rot else "-",
-                                      ("%.1f%%" % w) if w is not None else "-"))
+                "%s/%s mo=%s%s w=%s" % ("D•" if is_dm else "P⁺", sd,
+                                        mo if mo is not None else "-",
+                                        "(=HOMO,회전없음)" if (mo is not None
+                                                              and rot is None) else "",
+                                        ("%.1f%%" % w) if w is not None else "-"))
             made += 1
     man["seeds_made"] = made
     man["seeds_made_at"] = time.strftime("%Y-%m-%dT%H:%M:%S")
