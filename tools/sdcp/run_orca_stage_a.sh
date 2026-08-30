@@ -89,6 +89,39 @@ EOS
       "[음성 ①] 정본 INP 가 바뀌면 **동결 위반으로 멈춘다** (조용히 재실행 안 한다)"
   chk "$(grep -q "동결" "$T/log2" && echo 1 || echo 0)" "그 사유를 로그에 남긴다"
 
+  # ── ⛔ 2026-08-30 실측 두 건 (gs2~gs7 여섯 잡이 rc=126 즉사) ────────────────
+  # ⓐ 죽은 잡의 receipt 에 relaxed:true 가 찍혔다. ORCA 는 basis set 을 읽는 동안
+  #    입력 xyz 를 다시 쓰므로, 즉사해도 start != final 이 된다.
+  cat > "$T/failorca" <<'EOS'
+#!/usr/bin/env bash
+d=$(dirname "$1"); b=$(basename "$1" .inp)
+printf '2\ncomment rewritten-by-orca\nH 0.0 0.0 0.0\nH 0.0 0.0 0.90000\n' > "$d/$b.xyz"
+echo "Program Version 6.1.1 - RELEASE"
+echo "ERROR (ORCA_MAIN): For parallel runs ORCA has to be called with full pathname"
+exit 126
+EOS
+  chmod +x "$T/failorca"
+  mkdir -p "$T/a2/gs0"; cp "$T/a/gs0/"* "$T/a2/gs0/"; cp "$T/a/manifest_stage_a.json" "$T/a2/"
+  ORCA="$T/failorca" NPROCS=2 bash "$0" "$T/a2" "$T/w3" >"$T/log3" 2>&1 || true
+  chk "$(grep -q '"relaxed": false' "$T/w3/gs0/receipt.json" && echo 1 || echo 0)" \
+      "[음성] **죽은 잡은 relaxed:false** — start≠final 이어도 이완이 아니다 (rc=126 즉사)"
+  chk "$(grep -q '"orca_terminated_normally": false' "$T/w3/gs0/receipt.json" && echo 1 || echo 0)" \
+      "[음성] 정상종료 여부를 receipt 에 **따로** 남긴다"
+  chk "$(grep -q '"returncode": 126' "$T/w3/gs0/receipt.json" && echo 1 || echo 0)" \
+      "[음성] rc 를 그대로 기록한다"
+  chk "$(grep -q '비정상' "$T/log3" && echo 1 || echo 0)" \
+      "[음성] 로그가 비정상이라고 말한다"
+
+  # ⓑ 병렬 ORCA 는 **절대경로**로 불러야 한다. 이름으로 주면 러너가 절대경로로 바꾼다.
+  mkdir -p "$T/bin"; cp "$T/fakeorca" "$T/bin/orca_selftest"; chmod +x "$T/bin/orca_selftest"
+  mkdir -p "$T/a3/gs0"; cp "$T/a/gs0/"* "$T/a3/gs0/"; cp "$T/a/manifest_stage_a.json" "$T/a3/"
+  PATH="$T/bin:$PATH" ORCA=orca_selftest NPROCS=2 bash "$0" "$T/a3" "$T/w4" >"$T/log4" 2>&1 || true
+  chk "$(grep -q "$T/bin/orca_selftest" "$T/w4/gs0/receipt.json" && echo 1 || echo 0)" \
+      "[음성] 이름으로 준 ORCA 가 **절대경로로 바뀌어** 기록된다 (%pal 은 full pathname 요구)"
+  ORCA=orca_no_such_binary_xyz NPROCS=2 bash "$0" "$T/a3" "$T/w5" >"$T/log5" 2>&1
+  chk "$([ $? -ne 0 ] && echo 1 || echo 0)" \
+      "[음성] 절대경로로 못 만들면 **돌리지 않고 멈춘다**"
+
   # 음성: ORCA 가 없으면 깨끗하게 거부
   ORCA="$T/nonexistent_orca" bash "$0" "$T/a" "$T/w2" >"$T/log3" 2>&1
   chk "$([ $? -ne 0 ] && echo 1 || echo 0)" "[음성] ORCA 실행파일이 없으면 거부"
@@ -104,6 +137,24 @@ A=${1:?"stage A 디렉터리가 필요하다 (manifest_stage_a.json 이 있는 �
 W=${2:?"작업 디렉터리가 필요하다 (정본과 분리된 scratch 루트)"}
 MAN="$A/manifest_stage_a.json"
 [ -f "$MAN" ] || { ts "⛔ $MAN 이 없다"; exit 1; }
+# ⛔⛔ 2026-08-30 실측 — **병렬 ORCA 는 절대경로로 불러야 한다.**
+#   `%pal nprocs N` 을 붙인 실행에서 ORCA 가 이름(PATH 해석)으로 불리면
+#     ERROR (ORCA_MAIN): For parallel runs — ORCA has to be called with full pathname
+#   으로 **rc=126** 에 즉사한다. 그런데 아래 존재 검사(`command -v`)는 이름도 통과시킨다.
+#   실측: gs2~gs7 여섯 잡이 각 0.2 초 만에 죽었다 (gs0·gs1 은 절대경로로 돌아 멀쩡했다).
+#   ⇒ 검사만 하지 말고 **여기서 절대경로로 바꾼다.** 못 바꾸면 그때 멈춘다.
+case "$ORCA" in
+  /*) : ;;
+  *)  _abs=$(command -v "$ORCA" 2>/dev/null || true)
+      if [ -n "$_abs" ]; then
+        ORCA=$_abs
+      else
+        echo "⛔ ORCA 를 절대경로로 못 만든다: '$ORCA'"
+        echo "   %pal 병렬 실행은 full pathname 을 요구한다 (rc=126 즉사)."
+        echo "   ORCA=/절대/경로/orca 로 주거나 PATH 에 올려라."
+        exit 1
+      fi ;;
+esac
 command -v "$ORCA" >/dev/null 2>&1 || [ -x "$ORCA" ] || {
   ts "⛔ ORCA 를 찾을 수 없다: $ORCA  (ORCA=/full/path 로 지정)"; exit 1; }
 
@@ -190,8 +241,25 @@ r = {
  "⛔_조건6": "이 결과로 Stage B 를 열지 않는다 — P0-2~5 수정 후 실제 Stage A 산출물로 재심사 (회신 R4)",
  "⚠": "이 8개는 서로 다른 시작 conformer 이지 통계적으로 독립인 8개 반복측정이 아니다 (회신 R4)",
 }
-r["relaxed"] = bool(r["start_xyz_sha256"] and r["final_xyz_sha256"]
+# ⛔⛔ 2026-08-30 실측 fail-open — 죽은 잡의 receipt 에 `relaxed: true` 가 찍혔다.
+#   ORCA 는 basis set 을 읽는 동안 입력 xyz 를 **다시 쓴다**. 그래서 rc=126 으로
+#   즉사해도 start != final 이 되어 "이완됐다" 로 기록됐다 (gs2~gs7 여섯 건 전부).
+#   receipt 은 provenance 원본이라, 여기서 거짓말하면 아래 모든 판독이 오염된다.
+#   ⇒ **정상종료(rc==0 + ORCA TERMINATED NORMALLY)를 같이 요구한다.**
+_out = f"{sd}/{t}.out"
+_norm = False
+try:
+    with open(_out, "rb") as _f:
+        _norm = b"ORCA TERMINATED NORMALLY" in _f.read()
+except OSError:
+    pass
+r["orca_terminated_normally"] = _norm
+r["relaxed"] = bool(_norm and int(rc) == 0
+                    and r["start_xyz_sha256"] and r["final_xyz_sha256"]
                     and r["start_xyz_sha256"] != r["final_xyz_sha256"])
+if not _norm:
+    r["⛔"] = ("정상종료 문구가 없다 — 이 잡은 실패다. start/final 이 달라도 "
+               "**이완이 아니다** (ORCA 가 읽는 중 입력 xyz 를 다시 쓴다)")
 json.dump(r, open(f"{sd}/receipt.json","w"), ensure_ascii=False, indent=1)
 print(f"  receipt: relaxed={r['relaxed']} · rc={rc}")
 PY
