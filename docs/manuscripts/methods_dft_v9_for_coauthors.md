@@ -74,15 +74,17 @@ v8(`Methods_simulation_v8_for_coauthors.docx`)은 재검토에서 **NO-GO** 를 
 
 3일 뒤 분석기가 `NO_VALUE` 를 내면 **그것이 정상 동작이다.** 우회하지 않는다.
 
-### 2-2. 그렇다면 Figure 2e 에 들어갈 숫자는 무엇인가 — `ΔΔE_obs`
+### 2-2. 그렇다면 Figure 2e 에 들어갈 숫자는 무엇인가
 
-primary 가 안 나온다고 해서 인용 가능한 양이 없는 것은 아니다. 다만 **다른 이름의 다른 양**이다.
+primary 가 안 나온다고 해서 인용 가능한 양이 없는 것은 아니다. 다만 **다른 양**이다.
+
+> ⚠ **원고에는 새 기호를 만들지 않는다.** 흡착에너지를 쌓아 올린 그리스 문자 약어를 쓰는 관행은 없다 — 논문은 값 둘(각 모델의 최저 E_ads)을 적고 차이를 문장으로 말한다. 아래의 식·게이트는 **리포 내부 장부**이지 원고 어휘가 아니다.
 `db/properties/sdcp_stageA_closure_conditions_2026_08_29.json` §13 에 닫힘 조건 **C5** 로 등록했다.
 
 | | |
 |---|---|
-| 이름 | **ΔΔE_obs** (`ΔΔE_lowE` · `primary` · `prospective_lowE` 로 부르지 않는다 — 그 셋은 금지 이름이다) |
-| 식 | `A(f,p) = E_complex(f,p) − E_mol(f, box24)` · `ΔΔE_obs = min_{p∈12} A(SDCP,p) − min_{q∈12} A(c10,q)` |
+| 무엇 | **두 모델의 최저 흡착에너지 차** — 원고에는 값 둘로 적고 기호를 만들지 않는다. 리포 내부 장부 이름은 `stageA_min_contrast` (C5) 이고 **문서·원고에 쓰지 않는다** |
+| 식 | 조각 f, 자세 p 에 대해 `A(f,p) = E_complex(f,p) − E_mol(f, box24)`; 보고값은 `min_p A(SDCP,p)` 와 `min_q A(c10,q)` **두 숫자**이고, 본문에는 그 둘과 차이를 말로 적는다 |
 | 자세집합 | 조각당 **12자세** = 사전등록 calibration 4 (frozen `94675e66e02c855a`) + 층화 홀드아웃 8 (frozen `3e3ce4820c4df3ec`) |
 | branch | **pm1 · D3-on 만** (net4 는 seed 민감도 전용, D3-off 는 만들지 않는다) |
 | 성격 | **표본 조건부** — 전역 최소가 아니다 |
@@ -320,7 +322,7 @@ interact more effectively with exposed surface sites of NCM811 than non-polar PT
 | **C** | 게이트 하나라도 실패 (특히 H1) | 숫자 문장을 **넣지 않는다.** 대신: *"Under the pre-registered acceptance criteria the pose-selection assumption was not satisfied, and no pose-resolved energy comparison is quoted (Supporting Information)."* |
 
 ⛔ 그 문장에 **붙이면 안 되는 것**: "전역 최소" · "가장 안정한 자세" · "적어도 X eV" · "항상" ·
-자리 선호(Li vs Ni — 판정 바닥 30 meV 아래라 미해결) · 술포네이트 기전 · `ΔΔE_lowE`/`primary` 라는 이름 ·
+자리 선호(Li vs Ni — 판정 바닥 30 meV 아래라 미해결) · 술포네이트 기전 · 새로 만든 기호나 약어 ·
 `binder chemistry` · `affinity` · `binding strength`.
 
 ---
@@ -345,12 +347,12 @@ interact more effectively with exposed surface sites of NCM811 than non-polar PT
 | # | 무엇 | 왜 |
 |---|---|---|
 | 1 | 사전등록 primary `ΔΔE_lowE` | Stage B(창 W 전수 + audit 개봉) 없이는 정의되지 않는다 |
-| 2 | "어느 조각이 더 강하게 붙는다" 종결형 | audit pose 0개 · 표본 조건부. `ΔΔE_obs` 는 조사한 12자세 안의 진술이다 |
+| 2 | "어느 조각이 더 강하게 붙는다" 종결형 | audit pose 0개 · 표본 조건부. 보고값은 조사한 12자세 안의 진술이다 |
 | 3 | 자리 선호(Li vs Ni) 방향 | matched pose n ≥ 3 미충족 |
 | 4 | legacy(wave1) 값과 혼합 | clean slab 이 다르다 (`daf71160` vs `d5f18feb`) — 평균·혼합·좋은 쪽 선택 전부 금지 |
 | 5 | "재현 가능한 동결 기하" | `d5f18feb` 가 `daf71160` 과 달라진 원인을 아직 확인 못 했다 (P0-5, 미해결인 채로 던진다). 조각 간 대비는 **두 조각이 같은 슬랩**이므로 대수적으로 성립한다 |
 | 6 | UMA 절대값 인용 · UMA 로 조각 간 비교 | rigid·relax 둘 다 DFT 와 부호가 반대다 |
-| 7 | `sealed_audit` 2자세 | 열지 않는다. `ΔΔE_obs` 는 그것 없이 성립한다 |
+| 7 | `sealed_audit` 2자세 | 열지 않는다. 이 보고값은 그것 없이 성립한다 |
 
 ---
 
@@ -364,7 +366,7 @@ v8 은 `[A]` 라고 설명해 놓고 실제 표기는 `[___]` 였다. **`[___]` 
 | §5 Table S1 | PAW dataset release | 외주처 POTCAR 세트 (`POTCAR_PROVENANCE.json`) | 회수 시 |
 | §5 Table S1 | Site | 외주처 지정 | 제출 시 |
 | §5 Table S1 | box20/box24 대조 ΔE | 이번 번들 기체 기준계 4잡 | 회수 시 |
-| §6 NUMBER SENTENCE | `[___]` eV | `ΔΔE_obs` (C5, 게이트 5 통과 시) | 회수 + 게이트 |
+| §6 NUMBER SENTENCE | `[___]` eV | 두 최저 흡착에너지의 차 (C5, 게이트 5 통과 시) | 회수 + 게이트 |
 | §6 NUMBER SENTENCE | `[___]` 조각 이름 | 같은 계산의 부호 | 회수 + 게이트 |
 
 **조판**: 이 판의 표는 한 행이 페이지를 넘지 않도록 §5 를 두 덩이(Method/Pseudopotentials/Surface,
@@ -388,4 +390,4 @@ Magnetic/Geometry/Adsorbate/Search/Execution)로 나눠 조판한다. 한국어 
 | 파라미터 실측 출처 | 두 zip 안의 `MANIFEST.json` · `static/INCAR` · `POSCAR` (문서의 모든 수치는 여기서 읽었다) |
 
 **v8 → v9 변경 요지 한 줄**: 범위를 DFT 로 좁히고, Stage A 를 calibration 으로 되돌리고,
-인용 가능한 양을 `ΔΔE_obs` 로 따로 정의하고, 방향을 빈칸으로 만들었다.
+인용 가능한 양을 사전등록 primary 와 분리해 정의하고, 방향을 빈칸으로 만들었다.
