@@ -53,6 +53,9 @@ if [ "${1:-}" = "--selftest" ]; then
   # 가짜 orca: 최종 xyz 를 **덮어쓰고** out 을 낸다 (실제 ORCA 동작 재현)
   cat > "$T/fakeorca" <<'EOS'
 #!/usr/bin/env bash
+# ⚠ 러너는 버전을 뽑으려고 **인자 없이** 한 번 부른다. 그때 파일을 쓰면
+#   CWD(= repo 루트)에 `.xyz` 쓰레기가 생긴다 (2026-08-30 실측: 커밋까지 됐다).
+[ -n "${1:-}" ] || { echo "Program Version 6.1.0 - RELEASE"; exit 0; }
 d=$(dirname "$1"); b=$(basename "$1" .inp)
 printf '2\ncomment relaxed\nH 0.0 0.0 0.0\nH 0.0 0.0 0.74\n' > "$d/$b.xyz"
 echo "Program Version 6.1.0 - RELEASE"
@@ -94,6 +97,7 @@ EOS
   #    입력 xyz 를 다시 쓰므로, 즉사해도 start != final 이 된다.
   cat > "$T/failorca" <<'EOS'
 #!/usr/bin/env bash
+[ -n "${1:-}" ] || { echo "Program Version 6.1.1 - RELEASE"; exit 0; }
 d=$(dirname "$1"); b=$(basename "$1" .inp)
 printf '2\ncomment rewritten-by-orca\nH 0.0 0.0 0.0\nH 0.0 0.0 0.90000\n' > "$d/$b.xyz"
 echo "Program Version 6.1.1 - RELEASE"
@@ -121,6 +125,9 @@ EOS
   ORCA=orca_no_such_binary_xyz NPROCS=2 bash "$0" "$T/a3" "$T/w5" >"$T/log5" 2>&1
   chk "$([ $? -ne 0 ] && echo 1 || echo 0)" \
       "[음성] 절대경로로 못 만들면 **돌리지 않고 멈춘다**"
+  chk "$([ ! -e "$PWD/.xyz" ] && echo 1 || echo 0)" \
+      "[음성] selftest 가 CWD 에 쓰레기 파일을 안 남긴다 (러너는 버전 확인차 ORCA 를 \
+인자 없이 한 번 부른다 — 2026-08-30 에 그래서 repo 에 .xyz 가 커밋됐다)"
 
   # 음성: ORCA 가 없으면 깨끗하게 거부
   ORCA="$T/nonexistent_orca" bash "$0" "$T/a" "$T/w2" >"$T/log3" 2>&1
