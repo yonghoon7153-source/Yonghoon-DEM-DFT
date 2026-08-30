@@ -2358,6 +2358,30 @@ def selftest_k() -> int:
         "C5: 홀드아웃이 calibration 최저를 30 meV 넘게 웃돌면 H1 = holds")
 
     # ── 회신 AF P0-3/P0-4 게이트 ────────────────────────────────────────────
+    # ── 판정바닥 δ = max(30 meV 하한, 실측 S_f) ─────────────────────────────
+    #   30 meV 는 MLIP(UMA) 실무 해상도라 DFT 값에 옮겨 쓸 근거가 없다. 하한으로만 쓴다.
+    _t_small = h1_tolerance({"by_frag": {"a": {"S_f_eV": 0.004}}})
+    chk(_t_small["a"]["tol_eV"] == C5_H1_FLOOR_EV
+        and _t_small["a"]["binding"].startswith("floor"),
+        "δ: S_f 4 meV 면 하한 30 meV 가 이긴다")
+    _t_big = h1_tolerance({"by_frag": {"a": {"S_f_eV": 0.047}}})
+    chk(abs(_t_big["a"]["tol_eV"] - 0.047) < 1e-9 and _t_big["a"]["binding"] == "S_f",
+        "δ: S_f 47 meV 면 그쪽이 이긴다 (**더 엄격해진다**)")
+    chk(h1_tolerance({"by_frag": {"a": {}}})["a"]["tol_eV"] == C5_H1_FLOOR_EV,
+        "[음성] S_f 미측정이면 하한으로 떨어진다 (조용히 0 이 되지 않는다)")
+    # [음성] δ 가 커지면 종전에 통과하던 여유가 미해결로 바뀐다
+    _A5t = {"sdcp_neutral": _A5["sdcp_neutral"],
+            "ptfe_c10": ([-0.80, -0.75, -0.70, -0.65], [-0.74] + [-0.6] * 7)}
+    _jb5t, _en5t = _mk12(_A5t)
+    _man5t = {"planned": {k: {} for k in _jb5t if k.startswith("prospective/")}}
+    _c5t = closure_C5(_man5t, _jb5t, lambda j: _en5t.get(j), _em5, _F5, _MG,
+                      {"ptfe_c10": {"tol_eV": 0.080, "binding": "S_f"},
+                       "sdcp_neutral": {"tol_eV": 0.030, "binding": "floor"}})
+    chk(_c5t["by_frag"]["ptfe_c10"]["H1_class"] == "unresolved"
+        and _c5t["by_frag"]["ptfe_c10"]["H1_tol_binding"] == "S_f",
+        "⛔음성 δ: 여유 60 meV 도 S_f 80 meV 앞에서는 **미해결**이다 "
+        "(고정 30 meV 였다면 통과했다)")
+
     chk(closure_C5(_man5, _jb5, _E5, _em5, _F5).get("verdict", "").startswith("⛔ NOT_MERGED"),
         "⛔음성 AF: 묶음 하나만 주면 **값을 만들지 않는다** (12자세는 두 묶음에 걸쳐 있다)")
     chk(closure_C5(_man5, _jb5, _E5, _em5, _F5,
@@ -3236,10 +3260,37 @@ def closure_C1(man, jobs, E, emol, frags):
 C5_N_CAL = 4                   # 사전등록 calibration 자세 (조각당)
 C5_N_HOLDOUT = 8               # 층화 홀드아웃 자세 (조각당) — 선택기 시험용
 C5_N_POSE = C5_N_CAL + C5_N_HOLDOUT   # = 12. ⚠ 합만 맞으면 안 된다 — 구성도 맞아야
-C5_H1_TOL_EV = 0.030           # 홀드아웃이 calibration 최저를 이만큼 밑돌면 선택기 실패
+C5_H1_FLOOR_EV = 0.030         # ⚠ **MLIP 유래 하한** — site_screen.py GATE["decision_floor_eV"]
+#   (2026-08-11 UMA 실무 해상도). DFT 값에 옮겨 쓸 근거는 문서에 없다
+#   (kb/questions/sdcp_site_preference.md 2026-08-28). 옮길 만하다고 볼 이유는
+#   기하가 UMA 이완 결과라 UMA 오차가 모든 DFT 단일점에 실린다는 것이지만 추론이다.
+#   ⇒ 상수로 쓰지 않고 **하한**으로만 쓰고, 실측 S_f 가 크면 그쪽이 이긴다.
+C5_H1_TOL_EV = C5_H1_FLOOR_EV  # 하위호환 별칭 (판정은 h1_tolerance() 로 한다)
 
 
-def closure_C5(man, jobs, E, emol, frags, merge_info=None):
+def h1_tolerance(c1_result):
+    """홀드아웃 판정바닥 δ = max(30 meV 하한, 조각별 실측 S_f).
+
+    `S_f` = C1 이 재는 **(UMA − DFT) 오프셋의 조각내 폭**. 그것이 곧
+    *"UMA 순위를 믿었을 때 DFT 순서가 얼마나 흔들리는가"* 를 **DFT 단위**로 잰 값이라,
+    홀드아웃 시험이 실제로 요구하는 해상도다. 30 meV 는 MLIP 유래라 하한으로만 남긴다.
+
+    ⛔ 이 함수가 못 하는 것: UMA **기하** 오차가 DFT 에너지차에 싣는 몫을 직접 재지
+       못한다. 그건 자세를 DFT 로 다시 이완해야 나온다(Stage B). S_f 는 그 몫의
+       **대리값**이지 그 자체가 아니다.
+    """
+    out = {}
+    for f, r in ((c1_result or {}).get("by_frag") or {}).items():
+        s = r.get("S_f_eV") if isinstance(r, dict) else None
+        out[f] = {"tol_eV": round(max(C5_H1_FLOOR_EV, float(s)), 6) if s is not None
+                  else C5_H1_FLOOR_EV,
+                  "S_f_eV": s, "floor_eV": C5_H1_FLOOR_EV,
+                  "binding": ("S_f" if (s is not None and float(s) > C5_H1_FLOOR_EV)
+                              else "floor(MLIP 유래)")}
+    return out
+
+
+def closure_C5(man, jobs, E, emol, frags, merge_info=None, h1_tol=None):
     """C5 — ΔΔE_obs. **선언된 12자세에서의 조각 간 대비** (표본 조건부).
 
       A(f,p)   = E_complex(f,p) − E_mol(f, box24)
@@ -3263,7 +3314,8 @@ def closure_C5(man, jobs, E, emol, frags, merge_info=None):
     """
     res = {"schema": "closure_C5/v2", "name": "ddE_obs",
            "merge": merge_info,
-           "n_pose_required": C5_N_POSE, "h1_tol_eV": C5_H1_TOL_EV,
+           "n_pose_required": C5_N_POSE, "h1_tol": h1_tol or {},
+           "h1_floor_eV": C5_H1_FLOOR_EV,
            "decision": "D-2026-08-30-sdcp-neutral-ptfe-ddE-obs (proposed)",
            "⚠": "표본 조건부 — 전역 최소가 아니다", "by_frag": {}}
     # ⛔ 12자세는 두 묶음(calibration 4 + holdout 8)에 걸쳐 있다. 한 묶음만 주면
@@ -3323,9 +3375,10 @@ def closure_C5(man, jobs, E, emol, frags, merge_info=None):
         # ③ H1 — **세 갈래**다 (회신 AF P0-4). 종전 두 갈래는 판정 해상도 안의
         #    미해결 구간(±30 meV)을 통과로 승격시켰다.
         _m = a_hld - a_cal
-        if _m > C5_H1_TOL_EV:
+        _tol = float(((h1_tol or {}).get(f) or {}).get("tol_eV", C5_H1_FLOOR_EV))
+        if _m > _tol:
             h1 = "holds"          # 홀드아웃이 확실히 높다 — 선택기가 버텼다
-        elif _m < -C5_H1_TOL_EV:
+        elif _m < -_tol:
             h1 = "fail"           # 홀드아웃이 더 낮다 — 선택기 실패
         else:
             h1 = "unresolved"     # 판정 해상도 안 — 어느 쪽도 말하지 않는다
@@ -3335,7 +3388,8 @@ def closure_C5(man, jobs, E, emol, frags, merge_info=None):
             "A_min_calibration_eV": round(a_cal, 6),
             "A_min_holdout_eV": round(a_hld, 6),
             "H1_margin_eV": round(_m, 6), "H1_class": h1, "H1_pass": h1_ok,
-            "H1_tol_eV": C5_H1_TOL_EV,
+            "H1_tol_eV": round(_tol, 6),
+            "H1_tol_binding": ((h1_tol or {}).get(f) or {}).get("binding", "floor"),
             "A_min_eV": round(min(a_cal, a_hld), 6),
             "rows": sorted(rows, key=lambda r: r["A_eV"]),
             "verdict": ("ok" if h1 == "holds" else
@@ -3345,7 +3399,7 @@ def closure_C5(man, jobs, E, emol, frags, merge_info=None):
                         if h1 == "fail" else
                         "unresolved — 홀드아웃과 calibration 최저의 차 %.1f meV 가 "
                         "판정 해상도 %.0f meV 안이다. 선택기가 버텼다고도, 실패했다고도 "
-                        "말하지 않는다" % (1000 * _m, 1000 * C5_H1_TOL_EV))}
+                        "말하지 않는다" % (1000 * _m, 1000 * _tol))}
         if h1_ok:
             mins[f] = min(a_cal, a_hld)
     # ⛔ 회신 AF P0-3 — 조각 **안**에서만 배열을 맞추면 SDCP 와 PTFE 가 서로 다른
@@ -3775,7 +3829,9 @@ def _closure_estimand(man, results, E, emol, jobs, merge_info=None):
     try:
         out["closure_C1"] = closure_C1(man, jobs, E, emol, frags)
         out["closure_C3"] = closure_C3(man, jobs, E, frags)
-        out["closure_C5"] = closure_C5(man, jobs, E, emol, frags, merge_info)
+        out["h1_tolerance"] = h1_tolerance(out["closure_C1"])
+        out["closure_C5"] = closure_C5(man, jobs, E, emol, frags, merge_info,
+                                       out["h1_tolerance"])
     except Exception as _e:                                  # noqa: BLE001
         out["blocks"].append(f"CLOSURE_COND_ERROR({_e!r})")
 

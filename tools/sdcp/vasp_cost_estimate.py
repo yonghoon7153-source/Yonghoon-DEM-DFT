@@ -41,6 +41,7 @@ import sys
 
 # ── 실측 기준선 (납품 Phase-B) ──────────────────────────────────────────────
 BASE = {"atoms": 192, "nkpts": 4, "cores": 48, "sec_per_estep": 525.0,
+        "volume_A3": 6365.6,          # 18.272 × 11.512 × 30.261 (납품 슬랩 셀)
         "source": "runs/sdcp_phaseB_vasp_v1_2026_08_08/slab/OUTCAR.gz "
                   "(30438 s / 58 전자스텝)"}
 
@@ -72,8 +73,10 @@ def outcar_baseline(path):
     n_est = len(re.findall(r"Iteration\s+\d+\(", t))
     if not (nat and nk and el and n_est):
         return None
+    vol = g(r"volume of cell\s*:\s*([\d.]+)")
     return {"atoms": int(nat), "nkpts": int(nk),
             "cores": int(cores) if cores else BASE["cores"],
+            "volume_A3": float(vol) if vol else BASE["volume_A3"],
             "sec_per_estep": float(el) / n_est, "source": path}
 
 
@@ -118,9 +121,18 @@ def nk_eff(mesh):
     return max(1.0, n * TR_REDUCE)
 
 
-def phase_hours(ph, atoms, mesh, base, lreal_false, n_ionic=N_IONIC):
-    """상 하나의 벽시계 시간 [h] (기준선과 같은 코어 수 가정)."""
+def phase_hours(ph, atoms, mesh, base, lreal_false, n_ionic=N_IONIC,
+                vol_ratio=1.0):
+    """상 하나의 벽시계 시간 [h] (기준선과 같은 코어 수 가정).
+
+    `vol_ratio` — 기준선 대비 **셀 부피 비**. 진공을 늘리면 원자수·k격자가 그대로여도
+    평면파 수와 FFT 격자가 부피에 비례해 커진다. 종전 모형은 원자수와 k 만 봐서
+    **셀을 21 % 키워도 추정이 안 움직였다** (2026-08-30 진공 15 Å 교정 때 발견).
+    밴드 수는 전자수가 정하므로 그대로라, 1차로 **선형**을 쓴다.
+    ⛔ 이 인자가 못 하는 것: 실측이 아니라 어림이다. 진공만 늘린 실측 벤치가 없다.
+    """
     f = (atoms / base["atoms"]) ** F_ATOMS_EXP
+    f *= max(0.1, float(vol_ratio))
     f *= nk_eff(mesh) / max(1.0, base["nkpts"])
     f *= F_LASPH * F_ADDGRID
     if lreal_false:
@@ -181,6 +193,19 @@ def schedule_makespan(job_hours, m):
     return max(free) if free else 0.0
 
 
+def poscar_volume_A3(path):
+    """POSCAR 셀 부피 [Å³]. 못 읽으면 None (조용히 1.0 으로 가정하지 않는다)."""
+    try:
+        L = open(path).read().splitlines()
+        sc = float(L[1].split()[0])
+        a = [[float(x) * sc for x in L[i].split()[:3]] for i in (2, 3, 4)]
+    except (OSError, IndexError, ValueError):
+        return None
+    return abs(a[0][0] * (a[1][1] * a[2][2] - a[1][2] * a[2][1])
+               - a[0][1] * (a[1][0] * a[2][2] - a[1][2] * a[2][0])
+               + a[0][2] * (a[1][0] * a[2][1] - a[1][1] * a[2][0]))
+
+
 def manifest_jobs(path, base, atoms_fallback, drop=(), mesh_over=None, cores=None):
     """MANIFEST.json(+같은 폴더의 job.json)에서 **실제 계획**을 회수한다.
 
@@ -220,9 +245,13 @@ def manifest_jobs(path, base, atoms_fallback, drop=(), mesh_over=None, cores=Non
                 #   슬랩과 같은 60 스텝으로 잡으면 과대계상된다.
                 _ni = N_IONIC if n_at > 60 else 25
                 _mesh = (mesh_over or {}).get(ph, km.get(ph, "3 4 1"))
+                # ★ 셀 부피가 커지면 평면파·FFT 가 늘어난다. 종전엔 원자수와 k 만
+                #   봐서 진공 확장이 추정에 **전혀 안 나타났다** (2026-08-30).
+                _vol = poscar_volume_A3(os.path.join(os.path.dirname(jp), "POSCAR"))
+                _vr = (_vol / base.get("volume_A3", BASE["volume_A3"])) if _vol else 1.0
                 _h = phase_hours(
                     ph if ph in ESTEP else "static", n_at,
-                    _mesh, base, lr.startswith(".F"), _ni)
+                    _mesh, base, lr.startswith(".F"), _ni, _vr)
                 if cores:
                     _h /= par_speedup(cores, base["cores"], nk_eff(_mesh))
                 ph_h[ph] = _h
@@ -438,6 +467,17 @@ def selftest() -> int:
     # 단조성: 원자·k·이온스텝이 늘면 비용도 는다
     chk(phase_hours("static", 300, "2 3 1", b, False) > h, "원자 늘면 비용 증가")
     chk(phase_hours("static", 192, "4 6 1", b, False) > h, "k 늘면 비용 증가")
+    chk(abs(phase_hours("static", 192, "2 3 1", b, False, N_IONIC, 1.211)
+            / h - 1.211) < 1e-9, "셀 부피 21 % 증가 → 비용 21 % 증가 (선형)")
+    chk(phase_hours("static", 192, "2 3 1", b, False, N_IONIC, 1.0) == h,
+        "[음성] 부피비 1.0 은 종전과 같은 값 (기본 동작 불변)")
+    import tempfile as _tf
+    with _tf.TemporaryDirectory() as _td:
+        _pp = os.path.join(_td, "POSCAR")
+        open(_pp, "w").write("t\n1.0\n 10 0 0\n 0 10 0\n 0 0 20\nH\n1\nDirect\n0 0 0\n")
+        chk(abs(poscar_volume_A3(_pp) - 2000.0) < 1e-6, "POSCAR 부피 = 2000 Å³")
+        chk(poscar_volume_A3(os.path.join(_td, "nope")) is None,
+            "[음성] POSCAR 가 없으면 None (1.0 으로 조용히 가정하지 않는다)")
     chk(phase_hours("static", 192, "2 3 1", b, True) > h, "LREAL=F 면 비용 증가")
     chk(phase_hours("relax", 192, "2 3 1", b, False, 100)
         > phase_hours("relax", 192, "2 3 1", b, False, 20), "이온스텝 늘면 비용 증가")
