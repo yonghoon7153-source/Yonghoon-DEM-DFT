@@ -79,8 +79,12 @@ def _runs(text, size=20, color=INK, bold=False, mono=False):
 
 
 def _p(text, size=20, color=INK, bold=False, after=120, indent=0,
-       left_bar=None, bottom_rule=False, outline=None, mono=False, keep=False):
-    ppr = ['<w:spacing w:after="%d" w:line="276" w:lineRule="auto"/>' % after]
+       left_bar=None, bottom_rule=False, outline=None, mono=False, keep=False,
+       style=None):
+    ppr = []
+    if style:
+        ppr.append('<w:pStyle w:val="%s"/>' % style)
+    ppr.append('<w:spacing w:after="%d" w:line="276" w:lineRule="auto"/>' % after)
     if indent:
         ppr.append('<w:ind w:left="%d"/>' % indent)
     if left_bar:
@@ -143,7 +147,9 @@ def _table(rows):
                          '<w:tcMar><w:top w:w="60" w:type="dxa"/><w:bottom w:w="60" w:type="dxa"/>'
                          '<w:left w:w="100" w:type="dxa"/><w:right w:w="100" w:type="dxa"/></w:tcMar>'
                          '</w:tcPr>%s</w:tc>' % (w[j], shd, body))
-        hdr = '<w:trPr><w:tblHeader/></w:trPr>' if i == 0 else ""
+        # 행이 페이지 경계에서 쪼개지면 읽는 사람이 값을 잃는다 (회신 AF 조판)
+        hdr = ('<w:trPr><w:cantSplit/><w:tblHeader/></w:trPr>' if i == 0
+               else '<w:trPr><w:cantSplit/></w:trPr>')
         out.append("<w:tr>%s%s</w:tr>" % (hdr, "".join(cells)))
     out.append("</w:tbl>")
     out.append(_p("", after=60))          # Word 는 표 뒤에 문단을 요구한다
@@ -174,7 +180,7 @@ def md_to_body(md):
             lvl = len(m.group(1))
             size = {1: 34, 2: 27, 3: 23, 4: 21}[lvl]
             out.append(_p(m.group(2), size=size, bold=True, after=140,
-                          outline=lvl - 1))
+                          outline=lvl - 1, style="Heading%d" % lvl))
             i += 1
             continue
 
@@ -239,6 +245,22 @@ def md_to_body(md):
     return "".join(out)
 
 
+STYLES = ('<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'
+          '<w:styles xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main">'
+          '<w:docDefaults><w:rPrDefault><w:rPr>' + FONTS +
+          '<w:sz w:val="20"/></w:rPr></w:rPrDefault></w:docDefaults>'
+          '<w:style w:type="paragraph" w:default="1" w:styleId="Normal">'
+          '<w:name w:val="Normal"/></w:style>' +
+          "".join(
+              '<w:style w:type="paragraph" w:styleId="Heading%d">'
+              '<w:name w:val="heading %d"/><w:basedOn w:val="Normal"/>'
+              '<w:qFormat/><w:pPr><w:keepNext/><w:outlineLvl w:val="%d"/>'
+              '<w:spacing w:before="%d" w:after="140"/></w:pPr>'
+              '<w:rPr><w:b/><w:sz w:val="%d"/><w:color w:val="%s"/></w:rPr></w:style>'
+              % (i, i, i - 1, 320 - 40 * i, sz, INK)
+              for i, sz in ((1, 34), (2, 27), (3, 23), (4, 21))) +
+          '</w:styles>')
+
 DOC_TPL = ('<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'
            '<w:document xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main">'
            '<w:body>%s'
@@ -252,12 +274,19 @@ CT = ('<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'
       '<Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/>'
       '<Default Extension="xml" ContentType="application/xml"/>'
       '<Override PartName="/word/document.xml" ContentType="application/vnd.openxmlformats-'
-      'officedocument.wordprocessingml.document.main+xml"/></Types>')
+      'officedocument.wordprocessingml.document.main+xml"/>'
+      '<Override PartName="/word/styles.xml" ContentType="application/vnd.openxmlformats-'
+      'officedocument.wordprocessingml.styles+xml"/></Types>')
 
 RELS = ('<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'
         '<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">'
         '<Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/'
         'relationships/officeDocument" Target="word/document.xml"/></Relationships>')
+
+DOC_RELS = ('<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'
+            '<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">'
+            '<Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/'
+            '2006/relationships/styles" Target="styles.xml"/></Relationships>')
 
 
 def build(md, out_path):
@@ -265,6 +294,8 @@ def build(md, out_path):
     with zipfile.ZipFile(out_path, "w", zipfile.ZIP_DEFLATED) as z:
         z.writestr("[Content_Types].xml", CT)
         z.writestr("_rels/.rels", RELS)
+        z.writestr("word/_rels/document.xml.rels", DOC_RELS)
+        z.writestr("word/styles.xml", STYLES)
         z.writestr("word/document.xml", DOC_TPL % body)
     return out_path
 
@@ -301,6 +332,8 @@ def selftest():
 
     # ── 양성
     b = md_to_body("# 제목\n\n본문 하나.\n")
+    chk("H1 이 Heading1 스타일을 쓴다 (탐색창·목차)", '<w:pStyle w:val="Heading1"/>' in b)
+    chk("H2 는 Heading2", '<w:pStyle w:val="Heading2"/>' in md_to_body("## 둘\n"))
     chk("H1 이 굵고 크게", '<w:sz w:val="34"/>' in b and "<w:b/>" in b)
     chk("H1 이 탐색창에 뜬다", '<w:outlineLvl w:val="0"/>' in b)
     chk("본문 텍스트", "본문 하나." in b)
@@ -309,6 +342,8 @@ def selftest():
     chk("표 생성", "<w:tbl>" in b and b.count("<w:tr>") == 2)
     chk("머리행 음영", HDR in b)
     chk("머리행 반복", "<w:tblHeader/>" in b)
+    chk("행이 페이지 사이에서 안 쪼개진다", b.count("<w:cantSplit/>") == 2)
+    chk("[음성] 본문 행에는 tblHeader 가 안 붙는다", b.count("<w:tblHeader/>") == 1)
     chk("표 뒤 문단", b.rstrip().endswith("</w:p>"))
 
     b = md_to_body("> English block here.\n> second line.\n")
@@ -343,8 +378,10 @@ def selftest():
         build("# T\n\n| a |\n|---|\n| 1 |\n", p)
         with zipfile.ZipFile(p) as z:
             names = set(z.namelist())
-            chk("docx 3부 구성", names == {"[Content_Types].xml", "_rels/.rels",
-                                           "word/document.xml"})
+            chk("docx 5부 구성", names == {"[Content_Types].xml", "_rels/.rels",
+                                           "word/_rels/document.xml.rels",
+                                           "word/styles.xml", "word/document.xml"})
+            chk("styles.xml 이 XML 로 파싱된다", _parses(z.read("word/styles.xml").decode()))
             chk("zip 무결성", z.testzip() is None)
             doc = z.read("word/document.xml").decode()
             chk("document.xml 이 XML 로 파싱된다", _parses(doc))
