@@ -1075,6 +1075,104 @@ def _bond_types(atoms, idx: List[int]) -> Dict[str, int]:
     return c
 
 
+
+#: ⛔ 회신 AP #12 (2026-08-31) — 원고에서 `potpaw_PBE.54` 와 variant 를 주장하려면
+#:   **계산 전에** 받은 attestation 이 있어야 한다. POTCAR 원문은 받지 않는다.
+POTCAR_ATTESTATION_REQUEST = """# POTCAR / VASP attestation 요청 (계산 **전**)
+
+원고 Methods 에 PAW release 를 적으려면 아래를 **첫 계산 전에** 확인해 주셔야 합니다.
+POTCAR 파일 자체는 주고받지 않습니다 — 지문과 버전 문자열만입니다.
+
+아래 스크립트를 묶음 루트에서 실행하시면 `POTCAR_ATTESTATION.json` 이 만들어집니다.
+그 파일만 반송해 주시면 됩니다.
+
+```bash
+PP=/path/to/potpaw_PBE.54 \
+POTCAR_ALLOWLIST=/abs/site_allow.txt \
+RELEASE_LABEL="potpaw_PBE.54" \
+SITE="기관/담당자" \
+bash MAKE_POTCAR_ATTESTATION.sh
+```
+
+담기는 것 (회신 AP #12 목록 그대로):
+- 이 묶음 ZIP / MANIFEST.json 의 SHA256
+- release label 과 variant 목록
+- variant 별 **원본 파일 전체** SHA256
+- POTCAR 내부 `TITEL` 줄과 embedded hash
+- site allowlist 의 SHA256
+- 생성 UTC 시각 · 사이트/담당자
+- `vasp_std --version` 원문
+- VASP 실행파일의 SHA256 과 resolved path
+
+⚠ 이것이 없으면 원고는 `PBE PAW 5.4` 를 **단정하지 않고**, D 를 "이 묶음의
+PAW dataset 에 조건부" 로만 보고합니다.
+"""
+
+MAKE_ATTESTATION = r'''#!/usr/bin/env bash
+# 회신 AP #12 — 계산 **전에** release attestation 을 만든다. POTCAR 원문은 담지 않는다.
+set -e
+: "${PP:?PP=/path/to/potpaw_PBE.54}"
+: "${POTCAR_ALLOWLIST:?POTCAR_ALLOWLIST=/abs/site_allow.txt}"
+: "${RELEASE_LABEL:?RELEASE_LABEL='potpaw_PBE.54' 처럼 배포판 이름}"
+: "${SITE:?SITE='기관/담당자'}"
+VASP_BIN=$(command -v "${VASP_EXE:-vasp_std}")
+export VASP_BIN
+python3 - <<'PYA'
+import json, os, hashlib, time, subprocess, glob
+man = json.load(open("MANIFEST.json"))
+spec = man.get("potcar_spec") or {}
+def sha(p):
+    h = hashlib.sha256()
+    with open(p, "rb") as f:
+        for b in iter(lambda: f.read(1 << 20), b""):
+            h.update(b)
+    return h.hexdigest()
+pp = os.environ["PP"]
+variants = {}
+for el, var in sorted(spec.items()):
+    f = os.path.join(pp, var, "POTCAR")
+    if not os.path.isfile(f):
+        raise SystemExit("원본 POTCAR 가 없다: %s" % f)
+    titel, emb = [], []
+    for ln in open(f, errors="replace"):
+        t = ln.strip()
+        if t.startswith("TITEL"):
+            titel.append(t)
+        if "SHA256" in t or t.startswith("COPYR") and "hash" in t.lower():
+            emb.append(t)
+        if len(titel) and ln.startswith("   END of PSCTR"):
+            break
+    variants[var] = {"element": el, "source_sha256": sha(f),
+                     "titel": titel[:2], "embedded_hash_lines": emb[:2]}
+vb = os.environ["VASP_BIN"]
+try:
+    ver = subprocess.run([vb, "--version"], capture_output=True, text=True,
+                         timeout=60).stdout.strip()
+except Exception as e:
+    ver = "실행 실패: %r" % e
+zips = sorted(glob.glob("../*.zip")) + sorted(glob.glob("*.zip"))
+rec = {
+    "schema": "potcar_attestation/v1",
+    "made_before_production": True,
+    "release_label": os.environ["RELEASE_LABEL"],
+    "site": os.environ["SITE"],
+    "created_utc": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
+    "manifest_sha256": sha("MANIFEST.json"),
+    "bundle_zip_sha256": {os.path.basename(z): sha(z) for z in zips[:2]},
+    "allowlist_path": os.environ["POTCAR_ALLOWLIST"],
+    "allowlist_sha256": sha(os.environ["POTCAR_ALLOWLIST"]),
+    "pp_root": pp,
+    "variants": variants,
+    "vasp_executable": vb,
+    "vasp_executable_sha256": sha(vb),
+    "vasp_version_raw": ver,
+}
+json.dump(rec, open("POTCAR_ATTESTATION.json", "w"), indent=1, ensure_ascii=False)
+print("→ POTCAR_ATTESTATION.json (variant %d · release %s)"
+      % (len(variants), rec["release_label"]))
+PYA
+'''
+
 def _write_potcar_asm(jd: Path, species_order: List[str]) -> None:
     """그 잡 전용 POTCAR 조립기. **슬랩·기체 공통**이다.
 
@@ -2976,6 +3074,39 @@ def selftest_k() -> int:
                "_potcar_root_seal": dict(_SEALOK, manifest_sha256=_H64("dd"))})
     chk(any("WRONG_BUNDLE" in g for g in _wrong["blocking"]),
         "⛔음성 AP #7: 봉인이 다른 MANIFEST 에 대한 것이면 막는다")
+    # ── 회신 AP #12 — release attestation 이 Methods 문구를 정한다 ────────
+    _ATT = {"schema": "potcar_attestation/v1", "made_before_production": True,
+            "release_label": "potpaw_PBE.54", "site": "테스트",
+            "manifest_sha256": _H64("mm"), "allowlist_sha256": _H64("al"),
+            "vasp_version_raw": "vasp.6.4.1", "vasp_executable_sha256": _H64("vx"),
+            "variants": {"Ni": {"element": "Ni", "source_sha256": _H64("aa"),
+                                "titel": ["TITEL  = PAW_PBE Ni_pv 01Jan2000"]}}}
+    _MB2 = {"files_sha256": {"x": "y"}, "_manifest_sha256_actual": _H64("mm"),
+            "_potcar_root_seal": _SEALOK}
+    _ra = potcar_identity_gates(_one, dict(_MB2, _potcar_attestation=_ATT))
+    chk(_ra["attestation"]["usable"] and "PAW-PBE datasets from the" in
+        _ra["methods_sentence"],
+        "양성 AP #12: attestation 이 있으면 **release 를 적는 Methods 문구**가 나온다")
+    _rn = potcar_identity_gates(_one, _MB2)
+    chk(not _rn["attestation"]["present"]
+        and "단정하지 않는다" in _rn["methods_sentence"]
+        and "원고 Methods 로는 약하다" in str(_rn.get("methods_sentence_⛔")),
+        "⛔음성 AP #12: attestation 이 없으면 release 를 **단정하지 않고**, "
+        "그 문구가 원고엔 약하다고 명시한다 (AP Q3)")
+    chk(any("ATTESTATION_WRONG_BUNDLE" in g for g in potcar_identity_gates(
+            _one, dict(_MB2, _potcar_attestation=dict(_ATT,
+                                                      manifest_sha256=_H64("zz"))))
+            ["blocking"]),
+        "⛔음성 AP #12: 다른 묶음의 attestation 이면 막는다")
+    chk(any("ATTESTATION_SEAL_MISMATCH" in g for g in potcar_identity_gates(
+            _one, dict(_MB2, _potcar_attestation=dict(
+                _ATT, variants={"Ni": {"source_sha256": _H64("bb")}})))["blocking"]),
+        "⛔음성 AP #12: attestation 과 root seal 의 원본 sha 가 다르면 막는다")
+    chk(any("ATTESTATION_NOT_PREPRODUCTION" in g for g in potcar_identity_gates(
+            _one, dict(_MB2, _potcar_attestation=dict(
+                _ATT, made_before_production=False)))["blocking"]),
+        "⛔음성 AP #12: 계산 전에 만든 근거가 없는 attestation 은 막는다")
+
     # ⛔음성 AP #7 — blocking 이 있으면 **절대** sealed 라벨이 안 나온다
     _mm = potcar_identity_gates(
         _one, {"files_sha256": {"x": "y"},
@@ -3987,6 +4118,67 @@ def potcar_identity_gates(jobs, man):
                 "ROOT_SEAL_INCOMPLETE(봉인에 없는 variant 가 관측됐다 %s)" % _unsealed)
     elif _ran and (man or {}).get("files_sha256"):
         res["root_seal_absent"] = True
+    # ⛔⛔ 회신 AP #12 — 원고 Methods 문구를 **여기서 하나로** 만든다. 사람이
+    #   고르게 두면 강한 쪽을 고르게 된다. attestation 유무가 문구를 정한다.
+    _att = (man or {}).get("_potcar_attestation") or {}
+    _att_ok = False
+    if _att:
+        _need_att = ("release_label", "variants", "vasp_version_raw",
+                     "vasp_executable_sha256", "allowlist_sha256", "manifest_sha256")
+        _att_miss = [k for k in _need_att if not _att.get(k)]
+        _att_wrong = (_att.get("manifest_sha256")
+                      and (man or {}).get("_manifest_sha256_actual")
+                      and _att["manifest_sha256"]
+                      != man["_manifest_sha256_actual"])
+        _att_var_bad = [v for v, d in (_att.get("variants") or {}).items()
+                        if not _is_hex64((d or {}).get("source_sha256"))]
+        if _att_miss:
+            res["blocking"].append(
+                "ATTESTATION_INCOMPLETE(필드 누락 %s)" % _att_miss)
+        elif _att_wrong:
+            res["blocking"].append(
+                "ATTESTATION_WRONG_BUNDLE(다른 MANIFEST 에 대한 attestation 이다)")
+        elif _att_var_bad:
+            res["blocking"].append(
+                "ATTESTATION_VARIANT_SHA_BAD(%s)" % _att_var_bad[:3])
+        elif _att.get("made_before_production") is not True:
+            res["blocking"].append(
+                "ATTESTATION_NOT_PREPRODUCTION(계산 전에 만든 근거가 없다)")
+        else:
+            # 봉인과 attestation 이 **같은 원본 지문**을 말하는가
+            _mis = sorted(v for v, d in (_att.get("variants") or {}).items()
+                          if _seal.get(v) and _seal[v] != d.get("source_sha256"))
+            if _mis:
+                res["blocking"].append(
+                    "ATTESTATION_SEAL_MISMATCH(%s: attestation 과 root seal 의 "
+                    "원본 sha 가 다르다)" % _mis[:3])
+            else:
+                _att_ok = True
+    res["attestation"] = {
+        "present": bool(_att), "usable": _att_ok,
+        "release_label": _att.get("release_label"),
+        "site": _att.get("site"), "created_utc": _att.get("created_utc")}
+    _vv = sorted(ver) or [_att.get("vasp_version_raw")]
+    if _att_ok and not (res.get("blocking") or []):
+        res["methods_sentence"] = (
+            "Calculations were performed using VASP %s with PAW-PBE datasets from the "
+            "%s release (%s). Each source dataset was identified by its embedded VASP "
+            "hash and a full-file SHA-256 fingerprint fixed before production; the "
+            "fingerprints were identical across all energy-bearing calculations. "
+            "No numerical equivalence to earlier calculation waves was assumed."
+            % (_vv[0], _att.get("release_label"),
+               ", ".join(sorted(_att.get("variants") or {}))))
+    else:
+        res["methods_sentence"] = (
+            "⚠ 공식 release 를 단정하지 않는다 — 계산 전 attestation 이 %s. "
+            "허용 문구: 'the reported D is conditional on this bundle's PAW dataset; "
+            "the fingerprints were not independently matched to an archived POTCAR "
+            "release.' (회신 AP #12·Q3)"
+            % ("없다" if not _att else "있으나 사용 불가"))
+        res["methods_sentence_⛔"] = (
+            "이 문구는 내부 기록용으로는 되지만 **원고 Methods 로는 약하다**(AP Q3). "
+            "원고에 PAW release 를 적으려면 POTCAR_ATTESTATION_REQUEST.md 를 "
+            "외주처에 보내 계산 전에 받아야 한다")
     # ⛔ 회신 AJ — 종전 pin 대조는 **세 군데가 fail-open** 이었다:
     #   ① 관측이 비면 `if got and ...` 이 참이 안 돼 조용히 건너뛰었다
     #   ② VASP 버전이 하나도 관측 안 되면 `sorted(ver) in ([], ...)` 이 통과시켰다
@@ -5315,6 +5507,12 @@ def main():
         man["_potcar_root_seal"] = None
     man["_manifest_sha256_actual"] = hashlib.sha256(
         open(os.path.join(root, "MANIFEST.json"), "rb").read()).hexdigest()
+    # ⛔ 회신 AP #12 — 공식 release 주장은 **계산 전 attestation** 이 있을 때만.
+    try:
+        man["_potcar_attestation"] = json.load(
+            open(os.path.join(root, "POTCAR_ATTESTATION.json")))
+    except Exception:
+        man["_potcar_attestation"] = None
     spec = man.get("potcar_spec", {})
     planned = man.get("planned", {})
 
@@ -8371,6 +8569,9 @@ def build_bundle(a, ledger: Optional[Dict[str, Any]] = None) -> Path:
     if getattr(a, "refs_minimal", False):
         (out / "run_staged.sh").write_text(RUN_STAGED)
         (out / "SEAL_POTCAR_ROOT.sh").write_text(SEAL_POTCAR_ROOT)
+        # ⛔ 회신 AP #12 — 원고에서 PAW release 를 주장하려면 **계산 전** attestation
+        (out / "POTCAR_ATTESTATION_REQUEST.md").write_text(POTCAR_ATTESTATION_REQUEST)
+        (out / "MAKE_POTCAR_ATTESTATION.sh").write_text(MAKE_ATTESTATION)
         # ⛔ 2026-08-31 (회신 AN P0-3) — README 가 이 값을 읽어 "staged 로만 실행" 을 찍는다.
         #   기록이 없으면 README 와 러너가 서로 반대를 말하게 된다.
         man["staged_runner"] = "run_staged.sh"
@@ -8565,7 +8766,11 @@ def build_bundle(a, ledger: Optional[Dict[str, Any]] = None) -> Path:
             k_relax=KMESH["relax"], k_static=KMESH["static"]))
     (out / "SUBMIT_CONTRACT.md").write_text(_submit_contract(man, a, n_by_ph))
     (out / "POTCAR_SPEC.txt").write_text(
-        "# 원소 → POTCAR 변형 (PBE PAW 5.4). 각 잡 POSCAR 의 종 순서대로 이어붙일 것.\n"
+        # ⛔ 회신 AP Q3 — "PBE PAW 5.4" 단정은 우리가 확인하지 않은 범위를 넘는다.
+        #   release 는 attestation 으로만 확정된다.
+        "# 원소 → POTCAR 변형. 각 잡 POSCAR 의 종 순서대로 이어붙일 것.\n"
+        "# ⚠ 배포판(release)은 여기서 단정하지 않는다 — site allowlist 가 정하고,\n"
+        "#   원고에 적으려면 POTCAR_ATTESTATION_REQUEST.md 로 계산 전에 확인받는다.\n"
         # ⛔ 회신 AO P1 — "2026-08-08 납품과 동일 계보" 는 **우리가 검증하지 않은
         #   주장**이고, v13 을 새 provenance root 로 선언한 것과 충돌한다.
         "# ⚠ 계보 주장 없음: 이 번들은 이전 wave 와의 PP 동등성을 주장하지 않는다.\n"
@@ -9258,6 +9463,13 @@ def selftest() -> int:
         chk("OUTCAR" in _sl and "vasprun.xml" in _sl and "print -quit" in _sl,
             "⛔음성 AP #7: 최초 봉인 전에 **생산 산출물이 있으면 거부**한다 "
             "(자기선언이 아니라 검사)")
+        chk((_st / "POTCAR_ATTESTATION_REQUEST.md").is_file()
+            and (_st / "MAKE_POTCAR_ATTESTATION.sh").is_file(),
+            "AP #12: 번들에 **계산 전 attestation 요청서와 생성 스크립트**가 있다")
+        _atr = (_st / "POTCAR_ATTESTATION_REQUEST.md").read_text()
+        for _f in ("release label", "SHA256", "TITEL", "vasp_std --version",
+                   "allowlist"):
+            chk(_f in _atr, f"AP #12: 요청서가 `{_f}` 를 요구한다")
         chk("allowlist_sha256" in _sl and "재조립" in _sl,
             "⛔음성 AP #7: 기존 POTCAR/provenance 를 **현재 allowlist 로 재대조**한다 "
             "(종전엔 둘 다 있으면 조용히 건너뛰었다)")
@@ -9335,6 +9547,9 @@ def selftest() -> int:
         _spec_txt = (_st / "POTCAR_SPEC.txt").read_text()
         chk("2026-08-08" not in _spec_txt and "동일 계보" not in _spec_txt,
             "⛔음성 AO P1: POTCAR_SPEC.txt 에 **검증하지 않은 계보 동일성 주장**이 없다")
+        chk("PBE PAW 5.4" not in _spec_txt and "ATTESTATION" in _spec_txt,
+            "⛔음성 AP Q3: POTCAR_SPEC.txt 가 **release 를 단정하지 않는다** "
+            "(확인 전에 `PBE PAW 5.4` 를 적는 것은 범위를 넘는다)")
         chk("제출본은" not in str(m_st.get("potcar_pin_note") or "")
             and "POTCAR_ROOT_SEAL" in str(m_st.get("potcar_pin_note") or ""),
             "⛔음성 AO P1: manifest 의 pin 설명이 **새 provenance-root 방식과 일치**한다 "
