@@ -2360,27 +2360,37 @@ def selftest_k() -> int:
     # ── 회신 AF P0-3/P0-4 게이트 ────────────────────────────────────────────
     # ── 판정바닥 δ = max(30 meV 하한, 실측 S_f) ─────────────────────────────
     #   30 meV 는 MLIP(UMA) 실무 해상도라 DFT 값에 옮겨 쓸 근거가 없다. 하한으로만 쓴다.
-    _t_small = h1_tolerance({"by_frag": {"a": {"S_f_eV": 0.004}}})
-    chk(_t_small["a"]["tol_eV"] == C5_H1_FLOOR_EV
-        and _t_small["a"]["binding"].startswith("floor"),
-        "δ: S_f 4 meV 면 하한 30 meV 가 이긴다")
-    _t_big = h1_tolerance({"by_frag": {"a": {"S_f_eV": 0.047}}})
-    chk(abs(_t_big["a"]["tol_eV"] - 0.047) < 1e-9 and _t_big["a"]["binding"] == "S_f",
-        "δ: S_f 47 meV 면 그쪽이 이긴다 (**더 엄격해진다**)")
+    chk(h1_tolerance({"by_frag": {"a": {"S_f_eV": 0.004}}})["a"]["tol_eV"]
+        == C5_H1_FLOOR_EV, "δ 는 S_f 와 무관하다 (작을 때)")
+    chk(h1_tolerance({"by_frag": {"a": {"S_f_eV": 0.470}}})["a"]["tol_eV"]
+        == C5_H1_FLOOR_EV,
+        "⛔음성 AF P0-5: S_f 470 meV 여도 δ 가 **안 커진다** — 커지면 미해결 띠만 "
+        "넓어져 나쁜 selector 가 자기 실패를 가린다 (그 설계는 철회됐다)")
     chk(h1_tolerance({"by_frag": {"a": {}}})["a"]["tol_eV"] == C5_H1_FLOOR_EV,
-        "[음성] S_f 미측정이면 하한으로 떨어진다 (조용히 0 이 되지 않는다)")
+        "[음성] S_f 미측정이어도 δ 는 정의된다 (조용히 0 이 되지 않는다)")
+
+    # ⛔ 회신 AF P0-6 — 정확히 ±δ 는 **둘 다 미해결**이다 (부동소수점으로 뒤집혔었다)
+    for _sgn, _lbl in ((+1, "+30 meV"), (-1, "−30 meV")):
+        _Ab = {"sdcp_neutral": ([-1.20, -1.10, -1.05, -1.00], [-1.15] + [-0.9] * 7),
+               "ptfe_c10": ([-0.80, -0.75, -0.70, -0.65],
+                            [round(-0.80 + _sgn * C5_H1_FLOOR_EV, 12)] + [-0.6] * 7)}
+        _jbb, _enb = _mk12(_Ab)
+        _cb = closure_C5({"planned": {k: {} for k in _jbb
+                                      if k.startswith("prospective/")}},
+                         _jbb, lambda j: _enb.get(j), _em5, _F5, _MG)
+        chk(_cb["by_frag"]["ptfe_c10"]["H1_class"] == "unresolved",
+            f"⛔음성 AF P0-6: 정확히 {_lbl} 는 **미해결** "
+            f"(실제 {_cb['by_frag']['ptfe_c10']['H1_class']})")
     # [음성] δ 가 커지면 종전에 통과하던 여유가 미해결로 바뀐다
     _A5t = {"sdcp_neutral": _A5["sdcp_neutral"],
             "ptfe_c10": ([-0.80, -0.75, -0.70, -0.65], [-0.74] + [-0.6] * 7)}
     _jb5t, _en5t = _mk12(_A5t)
     _man5t = {"planned": {k: {} for k in _jb5t if k.startswith("prospective/")}}
     _c5t = closure_C5(_man5t, _jb5t, lambda j: _en5t.get(j), _em5, _F5, _MG,
-                      {"ptfe_c10": {"tol_eV": 0.080, "binding": "S_f"},
-                       "sdcp_neutral": {"tol_eV": 0.030, "binding": "floor"}})
-    chk(_c5t["by_frag"]["ptfe_c10"]["H1_class"] == "unresolved"
-        and _c5t["by_frag"]["ptfe_c10"]["H1_tol_binding"] == "S_f",
-        "⛔음성 δ: 여유 60 meV 도 S_f 80 meV 앞에서는 **미해결**이다 "
-        "(고정 30 meV 였다면 통과했다)")
+                      h1_tolerance({"by_frag": {f: {"S_f_eV": 0.080} for f in _F5}}))
+    chk(_c5t["by_frag"]["ptfe_c10"]["H1_class"] == "holds",
+        "⛔음성 AF P0-5: S_f 80 meV 가 있어도 여유 60 meV 는 **holds** 다 — "
+        "S_f 가 판정을 삼키지 않는다")
 
     chk(closure_C5(_man5, _jb5, _E5, _em5, _F5).get("verdict", "").startswith("⛔ NOT_MERGED"),
         "⛔음성 AF: 묶음 하나만 주면 **값을 만들지 않는다** (12자세는 두 묶음에 걸쳐 있다)")
@@ -3269,24 +3279,27 @@ C5_H1_TOL_EV = C5_H1_FLOOR_EV  # 하위호환 별칭 (판정은 h1_tolerance() �
 
 
 def h1_tolerance(c1_result):
-    """홀드아웃 판정바닥 δ = max(30 meV 하한, 조각별 실측 S_f).
+    """홀드아웃 판정바닥 δ.
 
-    `S_f` = C1 이 재는 **(UMA − DFT) 오프셋의 조각내 폭**. 그것이 곧
-    *"UMA 순위를 믿었을 때 DFT 순서가 얼마나 흔들리는가"* 를 **DFT 단위**로 잰 값이라,
-    홀드아웃 시험이 실제로 요구하는 해상도다. 30 meV 는 MLIP 유래라 하한으로만 남긴다.
+    ⛔ **2026-08-30 철회** — 한때 `δ = max(30 meV, S_f)` 로 두려 했다. 회신 AF P0-5 가
+    기각했고 그 논거가 옳다: `S_f` 가 커질수록 holds 도 fail 도 어려워져 **미해결 띠만
+    넓어진다.** 즉 '엄격해진다' 가 아니라 **판정력이 줄어든다** 이고, 나쁜 selector 가
+    큰 `S_f` 로 자기 실패를 가리는 구조가 된다. 그래서 `S_f` 는 H1 문턱에 **넣지 않는다**.
 
-    ⛔ 이 함수가 못 하는 것: UMA **기하** 오차가 DFT 에너지차에 싣는 몫을 직접 재지
-       못한다. 그건 자세를 DFT 로 다시 이완해야 나온다(Stage B). S_f 는 그 몫의
-       **대리값**이지 그 자체가 아니다.
+    `S_f` 는 C1 의 독립 게이트(≤ 50 meV)로 **그대로 남는다** — 거기서는 '선택기가
+    조각 안에서 일관적인가' 를 묻는 것이라 방향이 맞다.
+
+    현재 δ 는 `C5_H1_FLOOR_EV` **한 값**이고, 그 값은 MLIP(UMA) 실무 해상도에서 왔다.
+    ⚠ 그 이식 근거는 아직 등재돼 있지 않다 (kb/questions/sdcp_site_preference.md
+    2026-08-28). 수치 허용폭은 dense-k · box · SCF 같은 **독립 수치검사**에서 따로
+    정해야 하고, 그것이 나오기 전까지 이 값은 잠정이다.
     """
     out = {}
     for f, r in ((c1_result or {}).get("by_frag") or {}).items():
         s = r.get("S_f_eV") if isinstance(r, dict) else None
-        out[f] = {"tol_eV": round(max(C5_H1_FLOOR_EV, float(s)), 6) if s is not None
-                  else C5_H1_FLOOR_EV,
-                  "S_f_eV": s, "floor_eV": C5_H1_FLOOR_EV,
-                  "binding": ("S_f" if (s is not None and float(s) > C5_H1_FLOOR_EV)
-                              else "floor(MLIP 유래)")}
+        out[f] = {"tol_eV": C5_H1_FLOOR_EV, "floor_eV": C5_H1_FLOOR_EV,
+                  "S_f_eV": s, "binding": "floor(MLIP 유래 · 잠정)",
+                  "⛔": "S_f 는 H1 문턱에 쓰지 않는다 (회신 AF P0-5). C1 게이트 전용"}
     return out
 
 
@@ -3374,11 +3387,15 @@ def closure_C5(man, jobs, E, emol, frags, merge_info=None, h1_tol=None):
         a_cal, a_hld = min(r["A_eV"] for r in cal), min(r["A_eV"] for r in hld)
         # ③ H1 — **세 갈래**다 (회신 AF P0-4). 종전 두 갈래는 판정 해상도 안의
         #    미해결 구간(±30 meV)을 통과로 승격시켰다.
-        _m = a_hld - a_cal
+        # ⛔ 회신 AF P0-6 — 정확히 ±δ 인 경우가 부동소수점 때문에 뒤집혔다.
+        #   계약상 ±δ 는 **둘 다 미해결**이다. μeV 정수로 양자화해 비교한다.
         _tol = float(((h1_tol or {}).get(f) or {}).get("tol_eV", C5_H1_FLOOR_EV))
-        if _m > _tol:
+        _m = a_hld - a_cal
+        _mq = int(round((a_hld - a_cal) * 1e6))     # μeV
+        _tq = int(round(_tol * 1e6))
+        if _mq > _tq:
             h1 = "holds"          # 홀드아웃이 확실히 높다 — 선택기가 버텼다
-        elif _m < -_tol:
+        elif _mq < -_tq:
             h1 = "fail"           # 홀드아웃이 더 낮다 — 선택기 실패
         else:
             h1 = "unresolved"     # 판정 해상도 안 — 어느 쪽도 말하지 않는다
@@ -5093,12 +5110,56 @@ def poscar_set_c(path, new_c: float) -> None:
     path.write_text("\n".join(L) + "\n")
 
 
-def fit_bundle_vacuum(out: Path, planned: dict, min_vac: float) -> dict:
-    """번들 전체를 **한 c** 로 맞춘다 (기준 슬랩 포함 — 안 그러면 E_ads 가 안 소거된다).
+def _dipol_rescale(job_dir: Path, k: float) -> int:
+    """c 를 늘렸으면 **분율 DIPOL 의 z 성분도 같은 비율로** 줄여야 한다.
 
-    반환: {"declared_A", "c_before", "c_after", "min_before", "min_after", "per_job"}
+    Cartesian 좌표를 보존한 채 c 만 키우면 질량중심의 분율 z 는 old_c/new_c 배가 된다.
+    이걸 안 고치면 쌍극자 보정면이 실제 COM 에서 몇 Å 떨어진 자리에 박힌다
+    (회신 AF P0-1 실측: b74 가 3.47 Å 어긋났다).
     """
-    jobs = [k for k in planned if (out / k / "POSCAR").is_file()]
+    n = 0
+    for inc in sorted(job_dir.rglob("INCAR")):
+        s = inc.read_text()
+        m = re.search(r"^(DIPOL\s*=\s*)([\d.]+)\s+([\d.]+)\s+([\d.]+)\s*$", s, re.M)
+        if not m:
+            continue
+        z = float(m.group(4)) * k
+        inc.write_text(s[:m.start()] + "%s%s %s %.4f" % (m.group(1), m.group(2),
+                                                         m.group(3), z) + s[m.end():])
+        n += 1
+    return n
+
+
+def _slab_jobs(out: Path, planned: dict):
+    """흡착종이 **슬랩 위에 있는** 잡만. 기체 기준계는 제외한다.
+
+    ⛔ 회신 AF P0-1 — 종전엔 planned 전부를 늘려서 **기체 상자까지 커졌다.**
+       box20/box24 가 둘 다 36.6551 Å 이 되어 상자크기 대조가 통째로 사라졌다.
+    """
+    ks = []
+    for k in planned:
+        pp = out / k / "POSCAR"
+        if not pp.is_file():
+            continue
+        try:
+            d = _poscar_read(pp)
+        except Exception:                                    # noqa: BLE001
+            continue
+        if "Ni" in d["el"]:                 # 슬랩이 있는 계만 (복합체 · clean slab)
+            ks.append(k)
+    return ks
+
+
+def fit_bundle_vacuum(out: Path, planned: dict, min_vac: float,
+                      target_c: Optional[float] = None) -> dict:
+    """슬랩이 든 잡을 **한 c** 로 맞춘다 (clean slab 포함 — 안 그러면 E_ads 가 안 소거된다).
+
+    · 기체 기준계는 **건드리지 않는다** (box20/box24 대조가 살아 있어야 한다).
+    · c 를 바꾸면 분율 DIPOL 의 z 를 같이 되scale 한다.
+    · `target_c` 를 주면 그 값으로 맞춘다 — **두 묶음이 같은 셀을 쓰게** 하는 유일한 방법이다
+      (회신 AF P0-2: calibration 36.6551 · holdout 36.5829 로 갈렸었다).
+    """
+    jobs = _slab_jobs(out, planned)
     meas = {}
     for k in jobs:
         s = image_separation_A(out / k / "POSCAR")
@@ -5112,20 +5173,35 @@ def fit_bundle_vacuum(out: Path, planned: dict, min_vac: float) -> dict:
     # ⚠ c 를 Δ 늘려도 최단거리는 Δ 만큼 안 는다 — 최단 쌍에 xy 성분이 있으면
     #   sqrt(dxy²+dz²) 라 증가분이 Δ 보다 작다. 한 번만 늘리면 미달로 끝난다
     #   (실측: 15.0 목표에 14.978 에서 멈췄다). 수렴할 때까지 반복한다.
-    c1, cur = c0, worst
-    for _ in range(12):
-        if cur >= min_vac - 1e-9:
-            break
-        c1 += (min_vac - cur) + 1e-3
-        for k in jobs:                      # ★ 복합체·clean slab 을 **전부** 같은 c 로
+    c1, cur, n_dip = c0, worst, 0
+    if target_c:                            # 두 묶음 공통 c — 요청값이 이긴다
+        if target_c < c0 - 1e-9:
+            raise ValueError("target_c %.4f < 현재 c %.4f — 셀을 줄이지 않는다"
+                             % (target_c, c0))
+        c1 = float(target_c)
+        for k in jobs:
+            n_dip += _dipol_rescale(out / k, c0 / c1)
             poscar_set_c(out / k / "POSCAR", c1)
-        cur = min(v for v in (image_separation_A(out / k / "POSCAR") for k in meas)
-                  if v is not None)
+        cur = min([v for v in (image_separation_A(out / k / "POSCAR") for k in meas)
+                   if v is not None] or [worst])
+    else:
+        for _ in range(12):
+            if cur >= min_vac - 1e-9:
+                break
+            _prev = c1
+            c1 += (min_vac - cur) + 1e-3
+            for k in jobs:                  # ★ 복합체·clean slab 만 (기체 제외)
+                n_dip += _dipol_rescale(out / k, _prev / c1)
+                poscar_set_c(out / k / "POSCAR", c1)
+            cur = min(v for v in (image_separation_A(out / k / "POSCAR") for k in meas)
+                      if v is not None)
     after = {k: image_separation_A(out / k / "POSCAR") for k in meas}
     return {"declared_A": min_vac, "c_before_A": round(c0, 4), "c_after_A": round(c1, 4),
             "min_before_A": round(worst, 3),
             "min_after_A": round(min(v for v in after.values() if v is not None), 3),
-            "n_below_before": n_below,
+            "n_below_before": n_below, "n_dipol_rescaled": n_dip,
+            "target_c_A": target_c,
+            "gas_refs_untouched": True,
             "per_job_A": {k: round(v, 3) for k, v in sorted(after.items())
                           if v is not None},
             "⚠": ("분리거리만 보장한다 — 남은 영상 오차의 **크기**는 "
@@ -6208,6 +6284,26 @@ def build_bundle(a, ledger: Optional[Dict[str, Any]] = None) -> Path:
     #   cost_frozen 에서 오기 때문이다. 순서가 뒤면 하드코딩 56h 로 되돌아가고,
     #   그러면 --cores 를 바꿔도 라벨만 바뀐다 (외주 견적이 틀어진 원인).
     # ── 비용을 MANIFEST 에 **동결**한다 (ZIP 만으로 재현되게) ────────────────
+    # ── 주기영상 진공 (회신 AF P0-1) — **비용·해시 전에** 셀을 맞춘다 ────────────
+    #   v13 은 24 pm1 자세 중 9개가 15 Å 미만(최소 8.56 Å)인데 문서가 ">15 Å" 라고
+    #   적었다. 생성기에 진공을 보는 코드가 없어서다. 이제 맞추고, 못 맞추면 막는다.
+    _minvac = float(getattr(a, "min_vacuum", MIN_VACUUM_A_DEFAULT) or 0.0)
+    if _minvac > 0:
+        man["vacuum"] = fit_bundle_vacuum(out, man["planned"], _minvac,
+                                          getattr(a, "cell_c", None))
+        _ma = man["vacuum"].get("min_after_A")
+        if _ma is not None and _ma < _minvac - 1e-6:
+            sys.exit(f"⛔ 주기영상 진공 {_ma:.2f} Å < 선언 {_minvac:.2f} Å — "
+                     f"셀 확장 뒤에도 미달이다. 번들을 내보내지 않는다.")
+        if man["vacuum"].get("n_below_before"):
+            print(f"  ↑ 셀 c {man['vacuum']['c_before_A']} → "
+                  f"{man['vacuum']['c_after_A']} Å — 진공 미달 "
+                  f"{man['vacuum']['n_below_before']}자세 (최소 "
+                  f"{man['vacuum']['min_before_A']} → {_ma} Å)")
+    else:
+        man["vacuum"] = {"declared_A": None,
+                         "⚠": "--min_vacuum 0 — 진공 게이트를 껐다. 인용 시 병기할 것"}
+
     try:
         sys.path.insert(0, str(Path(__file__).resolve().parent))
         import vasp_cost_estimate as CE   # noqa: E402
@@ -6220,11 +6316,16 @@ def build_bundle(a, ledger: Optional[Dict[str, Any]] = None) -> Path:
             _m = json.loads(_jp.read_text())
             _n = len(_m.get("magmom_poscar") or []) or sum(_m.get("counts") or [0]) or 222
             _ni = CE.N_IONIC if _n > 60 else 25
+            # ★ 회신 AF P0-8 — 진공을 늘리면 평면파·FFT 가 부피에 비례해 커진다.
+            #   종전엔 이 인자가 없어서 셀을 21 % 키워도 견적이 안 움직였다.
+            _vol = CE.poscar_volume_A3(str(_jp.parent / "POSCAR"))
+            _vr = (_vol / _base.get("volume_A3", CE.BASE["volume_A3"])) if _vol else 1.0
             _jh.append(sum(
                 CE.phase_hours(ph if ph in CE.ESTEP else "static", _n,
                                (_m.get("kmesh") or {}).get(ph, "3 4 1"), _base,
                                str(((_m.get("incar_expected") or {}).get(ph) or {})
-                                   .get("LREAL", ".TRUE.")).upper().startswith(".F"), _ni)
+                                   .get("LREAL", ".TRUE.")).upper().startswith(".F"), _ni,
+                               _vr)
                 for ph in (_m.get("phases") or [])))
         # 🔴 회신 AB/AE — `--cores` 가 **라벨만 바꾸고 숫자는 안 바꿨다.** _jh 는
         #   추정기 기준선(48코어)의 시간이라, `--cores 256` 을 줘도 README·계약이
@@ -6271,25 +6372,6 @@ def build_bundle(a, ledger: Optional[Dict[str, Any]] = None) -> Path:
         "# 원소 → POTCAR 변형 (PBE PAW 5.4). 각 잡 POSCAR 의 종 순서대로 이어붙일 것.\n"
         "# Ni_pv 는 2026-08-08 납품과 동일 계보다 — 바꾸지 말 것.\n"
         + "\n".join(f"{e:3s} {v}" for e, v in man["potcar_spec"].items()) + "\n")
-
-    # ── 주기영상 진공 (회신 AF P0-1) — **해시 전에** 셀을 맞춘다 ────────────
-    #   v13 은 24 pm1 자세 중 9개가 15 Å 미만(최소 8.56 Å)인데 문서가 ">15 Å" 라고
-    #   적었다. 생성기에 진공을 보는 코드가 없어서다. 이제 맞추고, 못 맞추면 막는다.
-    _minvac = float(getattr(a, "min_vacuum", MIN_VACUUM_A_DEFAULT) or 0.0)
-    if _minvac > 0:
-        man["vacuum"] = fit_bundle_vacuum(out, man["planned"], _minvac)
-        _ma = man["vacuum"].get("min_after_A")
-        if _ma is not None and _ma < _minvac - 1e-6:
-            sys.exit(f"⛔ 주기영상 진공 {_ma:.2f} Å < 선언 {_minvac:.2f} Å — "
-                     f"셀 확장 뒤에도 미달이다. 번들을 내보내지 않는다.")
-        if man["vacuum"].get("n_below_before"):
-            print(f"  ↑ 셀 c {man['vacuum']['c_before_A']} → "
-                  f"{man['vacuum']['c_after_A']} Å — 진공 미달 "
-                  f"{man['vacuum']['n_below_before']}자세 (최소 "
-                  f"{man['vacuum']['min_before_A']} → {_ma} Å)")
-    else:
-        man["vacuum"] = {"declared_A": None,
-                         "⚠": "--min_vacuum 0 — 진공 게이트를 껐다. 인용 시 병기할 것"}
 
     files = {}
     for p in sorted(out.rglob("*")):
@@ -8990,6 +9072,10 @@ def main():
     ap.add_argument("--cores", type=int, default=48,
                     help="잡당 코어 수 — MANIFEST·SUBMIT_CONTRACT 에 기록된다 "
                          "(비용 모형 기준선과 같아야 추정이 맞는다)")
+    ap.add_argument("--cell_c", type=float, default=None,
+                    help="슬랩 잡의 셀 높이 c [Å] 를 이 값으로 **못 박는다**. "
+                         "두 묶음(calibration·holdout)이 같은 셀을 쓰게 하는 유일한 방법이다 "
+                         "— 각자 맞추면 c 가 갈리고 merge 가 다른 주기셀을 비교한다")
     ap.add_argument("--min_vacuum", type=float, default=MIN_VACUUM_A_DEFAULT,
                     help="흡착종↔다음 주기 슬랩 최소 분리(Å). 미달이면 c 를 늘린다. "
                          "0 이면 게이트를 끈다 (권장하지 않음)")
