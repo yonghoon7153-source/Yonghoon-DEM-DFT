@@ -1022,7 +1022,7 @@ def check_runner_integration(verbose=True, runner=None):
     _p = os.path.join(ROOT, runner or L_RUNNER)
     if not os.path.exists(_p):
         return [f'L_MISSING| 러너가 없다 ({_p})'], warns
-    _bn = _sp.run(['bash', '-n', _p], capture_output=True, text=True, timeout=60)
+    _bn = _sp.run(['bash', '-n', _p], capture_output=True, text=True, timeout=60, stdin=_sp.DEVNULL)
     if _bn.returncode != 0:
         return [f'L_SYNTAX| 러너가 문법 오류다 — {(_bn.stderr or "").strip()[-200:]}'], warns
     try:
@@ -1165,7 +1165,7 @@ def check_runner_integration(verbose=True, runner=None):
                    f'set -e; sed -n "1,/{L_MARKER}/p" {_p!r} > "$0"; '
                    f'P2_EXTRA="--periodic" bash "$0"',
                    os.path.join(_tf.gettempdir(), 'l_p2extra_probe.sh')],
-                  capture_output=True, text=True, timeout=120)
+                  capture_output=True, text=True, timeout=120, stdin=_sp.DEVNULL)
     if 'P2_EXTRA' not in (_pb.stdout or '') + (_pb.stderr or ''):
         problems.append('L_P2EXTRA| `P2_EXTRA="--periodic"` 가 **거부되지 않는다** — '
                         'P2_EXTRA 는 조립 문자열 맨 뒤라 러너의 `--expect-physics` 선언을 '
@@ -1229,7 +1229,7 @@ def _payload_options(payload):
     _mod = os.path.splitext(os.path.basename(payload))[0]
     _out = _sp.run([sys.executable, '-c', _M_PROBE % _mod],
                           cwd=os.path.dirname(payload), capture_output=True,
-                          text=True, timeout=180)
+                          text=True, timeout=180, stdin=_sp.DEVNULL)
     if _out.returncode != 0:
         return [], (f'M_INTROSPECT| 파서를 못 잡았다 (rc={_out.returncode}) '
                     f'{(_out.stderr or "").strip().splitlines()[-1:] or ""}')
@@ -1657,6 +1657,7 @@ def check_entrypoint_smoke(verbose=True, timeout=900, payload=None):
     errs, warns = [], []
     import json as _json
     import subprocess as _sp
+    import time as _tm
     import tempfile as _tf
     pay = payload or os.path.join(ROOT, 'scripts', 'mpm_webapp_payload.py')
     if not os.path.exists(pay):
@@ -1703,11 +1704,22 @@ def check_entrypoint_smoke(verbose=True, timeout=900, payload=None):
             out = os.path.join(d, 'p_%d.json' % len(errs))
             cmd = [sys.executable, pay, *extra, '--n-vox', _SMOKE_NVOX,
                    '--step3-vox', _SMOKE_VOX, '--no-ion', '--no-pore', '--out', out]
+            #  ★ 어느 팔을 도는지 **먼저** 찍는다.  규칙 J 는 실물 엔트리포인트를 돌리고
+            #    팔당 상한이 timeout 초라, 느린 기계에서는 아무 출력 없이 수십 분이 간다.
+            #    2026-08-30 에 ibb 로그인 노드(부하 15.7 · SLURM 40잡)에서 실제로 20분을
+            #    **매달림으로 오진**했다 — 사용자도 나도.  원인은 침묵이었지 결함이 아니었다.
+            #  ⚠ `verbose` 로 감싸지 **않는다** — 두 호출자가 모두 verbose=False 이고,
+            #    사용자가 20분을 기다린 것이 정확히 그 경로다.  진행 표시는 보고가 아니라
+            #    **살아 있다는 신호**라 침묵시킬 대상이 아니다.
+            print(f'      · J 스모크 [{label}] 실행 중 … '
+                  f'(상한 {timeout}s — 느린 기계에서는 수 분 걸린다)', flush=True)
+            _t0 = _tm.time()
             try:
-                r = _sp.run(cmd, capture_output=True, text=True, timeout=timeout, cwd=d)
+                r = _sp.run(cmd, capture_output=True, text=True, timeout=timeout, cwd=d, stdin=_sp.DEVNULL)
             except Exception as e:                              # noqa: BLE001
                 errs.append(f'J_RUN| {label}: 실행 자체가 실패 ({type(e).__name__}: {e})')
                 continue
+            print(f'        완료 {_tm.time() - _t0:.0f}s', flush=True)
             log = (r.stdout or '') + (r.stderr or '')
             if r.returncode != 0:
                 errs.append(f'J_EXIT| {label}: exit {r.returncode} — {log.strip()[-200:]}')
@@ -1736,7 +1748,7 @@ def check_entrypoint_smoke(verbose=True, timeout=900, payload=None):
         if os.path.exists(_arm):
             _chk = os.path.join(ROOT, 'scripts', 'sr01_stamp_compare.py')
             _cr = _sp.run([sys.executable, _chk, '--check-arm', _arm, '--stamp', 'point'],
-                          capture_output=True, text=True, timeout=300, cwd=d)
+                          capture_output=True, text=True, timeout=300, cwd=d, stdin=_sp.DEVNULL)
             if _cr.returncode != 0:
                 errs.append(f'J_ARMCHK| **실제 producer 산출물을 `check_arm` 이 거부한다** '
                             f'(exit {_cr.returncode}: '
@@ -1748,7 +1760,7 @@ def check_entrypoint_smoke(verbose=True, timeout=900, payload=None):
             #  ★ 판별력 자기증명 — 스탬프를 **틀리게** 주면 거부해야 한다 (관대해서 통과가
             #    아니라 정말 읽고 있다는 증거).
             _cw = _sp.run([sys.executable, _chk, '--check-arm', _arm, '--stamp', 'segment'],
-                          capture_output=True, text=True, timeout=300, cwd=d)
+                          capture_output=True, text=True, timeout=300, cwd=d, stdin=_sp.DEVNULL)
             if _cw.returncode == 0:
                 errs.append('J_ARMCHK_BLIND| `check_arm` 이 **틀린 스탬프**(segment vs 실제 '
                             'point)도 통과시킨다 — 자리를 못 찾아 조용히 넘어가는 것과 '
@@ -1767,9 +1779,9 @@ def check_entrypoint_smoke(verbose=True, timeout=900, payload=None):
                '--n-vox', _SMOKE_NVOX, '--step3-vox', _SMOKE_VOX,
                '--no-ion', '--no-pore', '--out', _blind_out]
         try:
-            _rb = _sp.run(_bc, capture_output=True, text=True, timeout=timeout, cwd=d)
+            _rb = _sp.run(_bc, capture_output=True, text=True, timeout=timeout, cwd=d, stdin=_sp.DEVNULL)
             _rs = _sp.run(_bc[:-2] + ['--show-results', '--out', _blind_out + '.s'],
-                          capture_output=True, text=True, timeout=timeout, cwd=d)
+                          capture_output=True, text=True, timeout=timeout, cwd=d, stdin=_sp.DEVNULL)
         except Exception as e:                              # noqa: BLE001
             errs.append(f'J_BLINDRUN| 봉인 팔 실행 실패 ({type(e).__name__}: {e})')
         else:
@@ -1846,7 +1858,7 @@ def check_entrypoint_smoke(verbose=True, timeout=900, payload=None):
                    '--n-vox', _SMOKE_NVOX, '--step3-vox', _SMOKE_VOX,
                    '--no-ion', '--no-pore', *extra, '--out', out]
             try:
-                r = _sp.run(cmd, capture_output=True, text=True, timeout=timeout, cwd=d)
+                r = _sp.run(cmd, capture_output=True, text=True, timeout=timeout, cwd=d, stdin=_sp.DEVNULL)
             except Exception as e:                          # noqa: BLE001
                 errs.append(f'J_FAILRUN| {label}: 실행 자체가 실패 ({type(e).__name__}: {e})')
                 continue
