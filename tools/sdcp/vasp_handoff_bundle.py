@@ -412,10 +412,16 @@ RUN_ALL = """#!/usr/bin/env bash
 #   이대로 돌리면 잡을 하나씩 순서대로 돈다 (Wave 1 기준 20일 규모).
 #   실제 제출은 SUBMIT_CONTRACT.md 의 배열 잡/스케줄러로 할 것.
 #   여기서는 계약(상 의존성·종료코드 전파)을 보여 주고, 소수 잡을 손으로 돌릴 때 쓴다.
-# 전체 실행 순서: controls → tier1 → refs → tier2.  VASP_CMD 로 실행 명령 지정.
+# ⛔ 2026-08-30 (회신 AJ) — 종전엔 `controls tier1 refs tier2` 를 **하드코딩**했다.
+#   생성기가 새 그룹(prospective · vacconv)을 만들자 **19잡 중 11잡을 조용히 건너뛰었다.**
+#   그룹 목록을 박지 않고 run_job.sh 가 있는 폴더를 **전부** 찾는다.
+# 순서: 기준계(refs) 를 먼저 — 나머지는 서로 독립이다.  VASP_CMD 로 실행 명령 지정.
 set -u
 fail=0
-for grp in controls tier1 refs tier2; do
+groups=$(for j in */*/run_job.sh; do [ -f "$j" ] && dirname "$(dirname "$j")"; done | sort -u)
+groups="refs $(echo "$groups" | grep -v '^refs$' | tr '\n' ' ')"
+echo "그룹: $groups"
+for grp in $groups; do
   [ -d "$grp" ] || continue
   for j in "$grp"/*/; do
     [ -f "$j/run_job.sh" ] || continue
@@ -2512,6 +2518,32 @@ def selftest_k() -> int:
     chk(any("PIN_MISMATCH" in g for g in potcar_identity_gates(
             _one, {"potcar_pin": {"source_sha256": {"Ni": "zz"}}})["blocking"]),
         "⛔음성 AI: 사전 고정값과 다르면 막는다 (외부 기준 대조)")
+
+    # ⛔ 회신 AJ — pin 대조의 fail-open 세 갈래를 막았는지
+    _MB = {"files_sha256": {"x": "y"}, "potcar_spec": {"Ni": "Ni_pv"}}
+    chk(any("PIN_ABSENT" in g for g in
+            potcar_identity_gates(_one, _MB)["blocking"]),
+        "⛔음성 AJ: 배포 번들인데 pin 이 없으면 막는다")
+    chk(any("SOURCE_UNOBSERVED" in g for g in potcar_identity_gates(
+            {"a": {"static": {"vasp_version": "6.4.1"}}},
+            {**_MB, "potcar_pin": {"source_sha256": {"Ni_pv": "aa"},
+                                   "vasp_version": "6.4.1"}})["blocking"]),
+        "⛔음성 AJ: pin 은 있는데 회신에 원본 sha 가 **하나도 없으면** 막는다 "
+        "(빈 관측을 통과로 읽지 않는다)")
+    chk(any("VASP_VERSION_UNOBSERVED" in g for g in potcar_identity_gates(
+            {"a": {"_prov": {"source_sha256": {"Ni_pv": "aa"}}, "static": {}}},
+            {**_MB, "potcar_pin": {"source_sha256": {"Ni_pv": "aa"},
+                                   "vasp_version": "6.4.1"}})["blocking"]),
+        "⛔음성 AJ: VASP 버전이 하나도 안 읽히면 막는다")
+    # variant 키 정규화 — 조립기는 Ni_pv 로 쓰고 pin 예시는 Ni 였다
+    _norm = potcar_identity_gates(
+        {"a": {"_prov": {"source_sha256": {"Ni_pv": "aa"}},
+               "static": {"vasp_version": "6.4.1"}}},
+        {**_MB, "potcar_pin": {"source_sha256": {"Ni": "aa"},
+                               "vasp_version": "6.4.1"}})
+    chk(_norm["ok"] and _norm["pin_normalized_variants"] == ["Ni_pv"],
+        "⛔음성 AJ: 원소 키 pin(Ni)을 potcar_spec 으로 **variant(Ni_pv)로 정규화**해 "
+        "대조한다 (종전엔 관측 없음으로 처리돼 조용히 우회됐다)")
     chk("⚠" in potcar_identity_gates(_one, {}),
         "[음성] 사전 고정이 없으면 '잡 사이 일치만 봤다' 를 결과에 적는다")
     # ⛔ 음성 C5-a — 홀드아웃이 더 낮으면 **SELECTOR_FAIL**, 값을 안 만든다
@@ -3324,20 +3356,51 @@ def potcar_identity_gates(jobs, man):
             % sorted(ver))
     res["observed"] = {"source_sha256": {e: sorted(d) for e, d in src.items()},
                        "vasp_version": sorted(ver)}
+    # ⛔ 회신 AJ — 종전 pin 대조는 **세 군데가 fail-open** 이었다:
+    #   ① 관측이 비면 `if got and ...` 이 참이 안 돼 조용히 건너뛰었다
+    #   ② VASP 버전이 하나도 관측 안 되면 `sorted(ver) in ([], ...)` 이 통과시켰다
+    #   ③ 조립기는 **variant 키**(Li_sv·Ni_pv)로 기록하는데 pin 예시는 **원소 키**(Li·Ni)라
+    #      관측이 안 잡혀 ①로 빠졌다. ⇒ pin 을 variant 키로 정규화해 대조한다.
     pin = res["pin"] or {}
-    if pin:
-        for e, s in (pin.get("source_sha256") or {}).items():
+    if not pin:
+        # 거부의 **1차 위치는 생성기**다 (--potcar_pin 없으면 번들을 안 만든다).
+        # 분석기는 실물 번들(배포 해시를 가진 manifest)에서만 부재를 막는다 —
+        # 합성 픽스처에 없는 계약을 요구하지 않기 위해서다.
+        if (man or {}).get("files_sha256"):
+            res["blocking"].append(
+                "POTCAR_PIN_ABSENT(배포 번들인데 사전 고정값이 없다 — 회신끼리의 일치는 "
+                "외부 기준 대조가 아니다)")
+        else:
+            res["⚠"] = "pin 없음 (합성 입력 — 배포 번들이 아니다)"
+    else:
+        spec = (man or {}).get("potcar_spec") or {}
+        want = {}
+        for k, s in (pin.get("source_sha256") or {}).items():
+            v = s.get("sha256") if isinstance(s, dict) else s
+            key = (s.get("variant") if isinstance(s, dict) else None) or spec.get(k, k)
+            want[str(key)] = str(v)
+        res["pin_normalized_variants"] = sorted(want)
+        if not want:
+            res["blocking"].append("POTCAR_PIN_EMPTY(pin 에 source_sha256 이 없다)")
+        for e, s in want.items():
             got = sorted(src.get(e, {}))
-            if got and got != [str(s)]:
+            if not got:
+                res["blocking"].append(
+                    "POTCAR_SOURCE_UNOBSERVED(%s: 사전 고정돼 있는데 회신에 원본 sha 가 "
+                    "**하나도 없다** — 빈 관측을 통과로 읽지 않는다)" % e)
+            elif got != [s]:
                 res["blocking"].append(
                     "POTCAR_PIN_MISMATCH(%s: 사전 고정 %s ≠ 회신 %s)" % (e, s, got))
-        if pin.get("vasp_version") and sorted(ver) not in ([], [str(pin["vasp_version"])]):
+        _pv = pin.get("vasp_version")
+        if not _pv:
+            res["blocking"].append("VASP_PIN_ABSENT(pin 에 vasp_version 이 없다)")
+        elif not ver:
             res["blocking"].append(
-                "VASP_PIN_MISMATCH(사전 고정 %s ≠ 회신 %s)"
-                % (pin["vasp_version"], sorted(ver)))
-    else:
-        res["⚠"] = ("사전 고정값(potcar_pin)이 없다 — 잡 사이 **일치**만 확인했다. "
-                    "외부 기준과의 대조가 아니다")
+                "VASP_VERSION_UNOBSERVED(에너지를 내는 OUTCAR 에서 VASP 버전이 **하나도** "
+                "안 읽혔다 — 무엇으로 돌았는지 모른다)")
+        elif sorted(ver) != [str(_pv)]:
+            res["blocking"].append(
+                "VASP_PIN_MISMATCH(사전 고정 %s ≠ 회신 %s)" % (_pv, sorted(ver)))
     res["ok"] = not res["blocking"]
     return res
 
@@ -3867,9 +3930,28 @@ def _closure_estimand(man, results, E, emol, jobs, merge_info=None):
     def _meta(jr):
         return (jr.get("meta") or {})
 
+    def _is_vacconv(jr):
+        """진공 수렴 시험용 둘째 셀 잡인가.
+
+        ⛔ 회신 AJ — 종전엔 이 잡들이 `kind=prospective_pose` 라 **일반 자세와 똑같이**
+           취급됐다. 그러면 ① min 후보 풀에 다른 셀의 에너지가 섞이고 ② 같은
+           (basin, seed) 키라 c1 값을 c2 가 **덮어쓴다**. 셀이 다른 에너지를 한
+           seed-pair 로 조립하게 된다. 코호트에서 뺀다.
+        """
+        return bool((jr.get("meta") or {}).get("vacconv"))
+
     def _cohort(jn, jr):
-        """이 잡의 (kind, fragment, seed, basin, d3) — 전부 구조화 필드에서."""
+        """이 잡의 (kind, fragment, seed, basin, d3) — 전부 구조화 필드에서.
+
+        ⛔ 회신 AJ — 진공 수렴 시험(둘째 셀) 잡은 `kind` 를 **바꿔서** 낸다.
+           그대로 두면 일반 자세와 같은 (basin, seed) 키를 가져 ① min 후보 풀에
+           다른 셀 에너지가 섞이고 ② c1 값을 c2 가 덮어쓴다.
+        """
         m = _meta(jr)
+        if _is_vacconv(jr):
+            return {"kind": "vacuum_convergence", "fragment": m.get("fragment"),
+                    "seed": m.get("seed"), "basin": m.get("basin_id"),
+                    "d3": "on", "cell": m.get("vacconv")}
         return {"kind": m.get("kind"), "fragment": m.get("fragment"),
                 "seed": m.get("seed"), "basin": m.get("basin_id"),
                 "d3": m.get("d3"), "role": m.get("role")}
@@ -3935,7 +4017,11 @@ def _closure_estimand(man, results, E, emol, jobs, merge_info=None):
         if not rel:
             out["blocks"].append("MOLECULAR_SPIN_CONTROL_MISSING(%s)" % f)
             continue
-        e1 = E(str(rel).split("/")[-1])
+        # ⛔ 회신 AJ — 종전엔 `refs/` 를 떼고 basename 을 넘겼다. E() 는 잡 상대경로로
+        #   찾으므로 실제 잡이 있어도 **항상 PENDING** 이 됐다. 둘 다 시도한다.
+        e1 = E(str(rel))
+        if e1 is None:
+            e1 = E(str(rel).split("/")[-1])
         e0 = emol.get(f)
         if e1 is None:
             out["blocks"].append("MOLECULAR_SPIN_CONTROL_PENDING(%s)" % f)
@@ -4055,6 +4141,10 @@ def _closure_estimand(man, results, E, emol, jobs, merge_info=None):
         out["closure_C1"] = closure_C1(man, jobs, E, emol, frags)
         out["closure_C3"] = closure_C3(man, jobs, E, frags)
         out["potcar_identity"] = potcar_identity_gates(jobs, man)
+        # ⛔ 회신 AJ — 종전엔 **기록만** 하고 blocks 에 안 합쳤다. split·pin 불일치를
+        #   탐지해도 값 보고를 못 막았다. 게이트가 아니라 로그였던 것이다.
+        for _b in (out["potcar_identity"].get("blocking") or []):
+            out["blocks"].append("POTCAR_IDENTITY:" + _b)
         out["h1_tolerance"] = h1_tolerance(out["closure_C1"])
         out["closure_C5"] = closure_C5(man, jobs, E, emol, frags, merge_info,
                                        out["h1_tolerance"])
@@ -5207,7 +5297,12 @@ def main():
         return 2
     # ⚠ 기준계를 선언해 놓고 E_ads 가 하나도 안 나오면 **조용한 실패**다.
     #   경로 키가 안 맞아도 gas job 자체는 ok 라 exit 0 이 났다 (Codex 4차 P0-2).
-    if has_refs and not results["e_ads"]:
+    # ⛔ 회신 AJ — `pairs` 는 **Li/Ni 대조쌍** 경로의 산물이다. C-12 · from_basins 는
+    #   basin 단위로 생성하므로 pairs 가 비어 있고, 그러면 e_ads 루프가 0회 돈다.
+    #   그 상태로 이 검사를 걸면 **완주해도 무조건 exit 2** 다 (실측: C-12 v3).
+    #   pairs 가 애초에 없는 판에서는 이 검사가 적용되지 않는다.
+    _pairs_expected = bool(man.get("pairs"))
+    if has_refs and _pairs_expected and not results["e_ads"]:
         print("\n⛔ **기준계를 선언했는데 E_ads 가 0개다** — refs 조회가 안 맞거나 "
               "상자 게이트가 전부 실패했다. exit 2")
         for k2, v2 in results["numerical_gates"].items():
@@ -6600,12 +6695,23 @@ def build_bundle(a, ledger: Optional[Dict[str, Any]] = None) -> Path:
         man["potcar_pin"]["source_file"] = _pin
         man["potcar_pin"]["sha256"] = hashlib.sha256(
             Path(_pin).read_bytes()).hexdigest()
-    else:
+    elif not hasattr(a, "allow_no_pin") or a.allow_no_pin:
+        # ⚠ argparse 는 --allow_no_pin 을 **항상** 넣는다(기본 False). 그래서 CLI 에서는
+        #   이 가지가 명시적으로 줬을 때만 열린다. 속성 자체가 없는 것은 합성 픽스처뿐이다.
         man["potcar_pin"] = None
         man["potcar_pin_note"] = (
-            "⚠ 미고정. `--potcar_pin <json>` 으로 사전 승인된 "
-            "{source_sha256:{원소:sha}, vasp_version:'...'} 를 박아야 외부 기준 대조가 "
-            "된다. 없으면 분석기는 잡 사이 일치만 확인한다")
+            "⚠ 미고정 (--allow_no_pin). 이 번들은 **제출용이 아니다** — 외부 기준 "
+            "대조가 없다. 제출본은 `--potcar_pin <json>` 으로 승인된 "
+            "{source_sha256:{variant:sha}, vasp_version} 를 박아야 한다")
+    else:
+        sys.exit(
+            "⛔ --potcar_pin 이 없다 — 제출용 번들을 만들지 않는다 (회신 AJ).\n"
+            "   사전 승인된 신원 JSON 이 있어야 회신 해시를 **외부 기준**과 대조할 수 있다:\n"
+            '     {"source_sha256": {"Li_sv": "<sha>", "Ni_pv": "<sha>", ...},\n'
+            '      "vasp_version": "6.4.1"}\n'
+            "   외주처 시스템 관리자에게 원본 POTCAR SHA256 · VASP 버전 문자열 ·\n"
+            "   그 트리가 승인된 potpaw_PBE.54 라는 확인을 받아 채운다.\n"
+            "   시험·초안용이면 --allow_no_pin (그 번들은 제출용이 아니다).")
 
     _c2 = getattr(a, "cell_c2", None)
     _minvac = float(getattr(a, "min_vacuum", MIN_VACUUM_A_DEFAULT) or 0.0)
@@ -7261,7 +7367,7 @@ def selftest() -> int:
     a0 = argparse.Namespace(runs=str(td / "runs"), out=str(td / "bundle_short"),
                             freeze=0.85, nslab=nslab, frags=["ptfe_dimer"],
                             qe="(none)", expect=None, allow_partial=False,
-                            no_prescf=False, allow_stale_gate=False, top_n=None, roles=None, d3_seed_main_only=False, no_refs_dense=False, from_basins=None, both_seeds=False, d3_pairs=False, closure=False, single_point=False, champion=False, kmesh_static=None, kmesh_dense=None, refs=True, cross_endpoints=None, mag_controls=False, dense_frags=None, cores=48, concurrency=8, no_cross=False, global_champion_meV=20.0, adaptive_dense=False)
+                            allow_no_pin=True, no_prescf=False, allow_stale_gate=False, top_n=None, roles=None, d3_seed_main_only=False, no_refs_dense=False, from_basins=None, both_seeds=False, d3_pairs=False, closure=False, single_point=False, champion=False, kmesh_static=None, kmesh_dense=None, refs=True, cross_endpoints=None, mag_controls=False, dense_frags=None, cores=48, concurrency=8, no_cross=False, global_champion_meV=20.0, adaptive_dense=False)
     try:
         build_bundle(a0, ledger=led)
         chk(False, "N0 xyz 누락 → **번들이 만들어졌다** (축소 정본 = fail-open)")
@@ -7277,7 +7383,7 @@ def selftest() -> int:
     ab = argparse.Namespace(runs=str(td / "runs"), out=str(td / "bundle_nofp"),
                             freeze=0.85, nslab=nslab, frags=["ptfe_dimer"],
                             qe="(none)", expect=None, allow_partial=False,
-                            no_prescf=False, allow_stale_gate=False, top_n=None, roles=None, d3_seed_main_only=False, no_refs_dense=False, from_basins=None, both_seeds=False, d3_pairs=False, closure=False, single_point=False, champion=False, kmesh_static=None, kmesh_dense=None, refs=True, cross_endpoints=None, mag_controls=False, dense_frags=None, cores=48, concurrency=8, no_cross=False, global_champion_meV=20.0, adaptive_dense=False)
+                            allow_no_pin=True, no_prescf=False, allow_stale_gate=False, top_n=None, roles=None, d3_seed_main_only=False, no_refs_dense=False, from_basins=None, both_seeds=False, d3_pairs=False, closure=False, single_point=False, champion=False, kmesh_static=None, kmesh_dense=None, refs=True, cross_endpoints=None, mag_controls=False, dense_frags=None, cores=48, concurrency=8, no_cross=False, global_champion_meV=20.0, adaptive_dense=False)
     try:
         build_bundle(ab, ledger=led)
         chk(False, "N0b 지문 없는 소스 → **번들이 만들어졌다**")
@@ -7301,7 +7407,7 @@ def selftest() -> int:
     at3 = argparse.Namespace(runs=str(td / "runs"), out=str(td / "bundle_top3"),
                              freeze=0.85, nslab=nslab, frags=["ptfe_dimer"],
                              qe="(none)", expect=None, allow_partial=False,
-                             no_prescf=False, allow_stale_gate=False, top_n=3, roles=None, d3_seed_main_only=False, no_refs_dense=False, from_basins=None, both_seeds=False, d3_pairs=False, closure=False, single_point=False, champion=False, kmesh_static=None, kmesh_dense=None, refs=True, cross_endpoints=None, mag_controls=False, dense_frags=None, cores=48, concurrency=8, no_cross=False, global_champion_meV=20.0, adaptive_dense=False)
+                             allow_no_pin=True, no_prescf=False, allow_stale_gate=False, top_n=3, roles=None, d3_seed_main_only=False, no_refs_dense=False, from_basins=None, both_seeds=False, d3_pairs=False, closure=False, single_point=False, champion=False, kmesh_static=None, kmesh_dense=None, refs=True, cross_endpoints=None, mag_controls=False, dense_frags=None, cores=48, concurrency=8, no_cross=False, global_champion_meV=20.0, adaptive_dense=False)
     o3 = build_bundle(at3, ledger=led)
     m3 = json.loads((o3 / "MANIFEST.json").read_text())
     kept = sorted({v["dir"] for v in m3["pairs"].values()})
@@ -7318,7 +7424,7 @@ def selftest() -> int:
     a = argparse.Namespace(runs=str(td / "runs"), out=str(td / "bundle"),
                            freeze=0.85, nslab=nslab, frags=["ptfe_dimer"],
                            qe="(none)", expect=None, allow_partial=False,
-                           no_prescf=False, allow_stale_gate=False, top_n=None, roles=None, d3_seed_main_only=False, no_refs_dense=False, from_basins=None, both_seeds=False, d3_pairs=False, closure=False, single_point=False, champion=False, kmesh_static=None, kmesh_dense=None, refs=True, cross_endpoints=None, mag_controls=False, dense_frags=None, cores=48, concurrency=8, no_cross=False, global_champion_meV=20.0, adaptive_dense=False)
+                           allow_no_pin=True, no_prescf=False, allow_stale_gate=False, top_n=None, roles=None, d3_seed_main_only=False, no_refs_dense=False, from_basins=None, both_seeds=False, d3_pairs=False, closure=False, single_point=False, champion=False, kmesh_static=None, kmesh_dense=None, refs=True, cross_endpoints=None, mag_controls=False, dense_frags=None, cores=48, concurrency=8, no_cross=False, global_champion_meV=20.0, adaptive_dense=False)
     out = build_bundle(a, ledger=led)
     man = json.loads((out / "MANIFEST.json").read_text())
     n_pre = sum(1 for p in man["planned"].values() if "pre" in (p.get("phases") or []))
@@ -7329,7 +7435,7 @@ def selftest() -> int:
     a_sp = argparse.Namespace(
         runs=str(td / "runs"), out=str(td / "bundle_sp"), freeze=0.85, nslab=nslab,
         frags=["ptfe_dimer"], qe="(none)", expect=None, allow_partial=False,
-        no_prescf=False, allow_stale_gate=False, top_n=None, roles=None, d3_seed_main_only=False, no_refs_dense=False, from_basins=None, both_seeds=False, d3_pairs=False, closure=False, single_point=True,
+        allow_no_pin=True, no_prescf=False, allow_stale_gate=False, top_n=None, roles=None, d3_seed_main_only=False, no_refs_dense=False, from_basins=None, both_seeds=False, d3_pairs=False, closure=False, single_point=True,
         champion=True, kmesh_static=None, kmesh_dense=None, refs=False,
         cross_endpoints=["ptfe_dimer"], mag_controls=True, dense_frags=["ptfe_dimer"], cores=48, concurrency=8, no_cross=False, global_champion_meV=20.0, adaptive_dense=False)
     out_sp = build_bundle(a_sp, ledger=led)
@@ -9492,6 +9598,9 @@ def main():
     ap.add_argument("--cores", type=int, default=48,
                     help="잡당 코어 수 — MANIFEST·SUBMIT_CONTRACT 에 기록된다 "
                          "(비용 모형 기준선과 같아야 추정이 맞는다)")
+    ap.add_argument("--allow_no_pin", action="store_true",
+                    help="POTCAR 신원 고정 없이 번들을 만든다 — **제출용이 아니다**. "
+                         "시험·초안 전용")
     ap.add_argument("--potcar_pin", default=None,
                     help="사전 승인된 POTCAR/VASP 신원 JSON 경로 "
                          "({source_sha256:{원소:sha}, vasp_version:'...'}). "
