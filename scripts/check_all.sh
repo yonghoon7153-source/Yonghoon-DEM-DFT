@@ -83,6 +83,9 @@ run 'lhs_perc_fit           --selftest' python3 scripts/lhs_perc_fit.py --selfte
 #    자동 규율이 아니다" — 위 §57 과 같은 규칙).
 run 'make_heckel_manifest   --selftest' python3 scripts/make_heckel_manifest.py --selftest
 run 'oat_sensitivity        --selftest' python3 scripts/oat_sensitivity.py --selftest
+#  ★ 2026-08-30 — 이 selftest 는 draft 파일을 **실제로 열어** docx 상수와 대조한다
+#    (옛 docstring 이 "draft 가 정본" 이라 적으면서 한 번도 안 읽어 두 산출물이 갈라졌다).
+run 'build_methods_docx     --selftest' python3 scripts/build_methods_docx.py --selftest
 
 echo "── 리포 실물 (리포가 맞나 — selftest 가 **대신해 주지 않는다**) ──"
 #  ★★ 2026-08-25 — 배터리는 느려서 여기 없지만(~20분), **문법이라도** 본다.
