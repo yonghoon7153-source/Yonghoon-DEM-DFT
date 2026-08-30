@@ -6008,6 +6008,13 @@ DFT-relaxed adsorption energy · 평형 결합에너지 · 자유에너지로 �
 각 잡의 **`static/OUTCAR`** — 이것 하나면 판정이 됩니다. `.gz` 그대로 좋습니다.
 그리고 각 잡의 **`POTCAR_PROVENANCE.json`** (조립기가 자동 생성합니다).
 
+⚠ **`relax/` 폴더가 있는 잡은 `relax/OUTCAR` 와 `relax/CONTCAR` 도 같이** 보내 주세요.
+  단일점 묶음에서도 **기체 기준(`refs/mol__*`)에는 relax 상이 있습니다** — 분자는
+  상자 안에서 이완해야 하기 때문입니다. 어느 잡에 있는지는 이 명령으로 보입니다:
+  ```bash
+  find . -maxdepth 3 -type d -name relax
+  ```
+
 - `static/vasprun.xml` — 선택
 - **CHGCAR / WAVECAR 반송 불필요** (용량)
 - 발산·미수렴 잡도 **지우지 말고 그대로** 보내 주세요. 어느 잡이 왜 실패했는지가
