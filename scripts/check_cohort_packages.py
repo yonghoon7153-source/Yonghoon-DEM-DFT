@@ -38,6 +38,29 @@ LEDGER = os.path.join(REPO, 'docs', 'reviews', 'table_s3_data_20260827.md')
 DATA = os.path.join(REPO, 'docs', 'data')
 EXPECT_ARMS = 16
 
+#  ★★ 침대 registry (2026-08-30, Codex R12 §0 P1 대응).
+#  ⚠⚠ **패키지는 자기가 어느 침대인지 말하지 못한다.**  `run_receipt` 에 침대가 없고
+#    `input_files` 는 해시뿐이라 경로도 없다.  초판은 `input_digest` 로 묶은 뒤 **어느
+#    digest 가 SBE 인지를 파일 이름으로** 정했다 — 그래서 16팔의 `_SBE_`/`_DBE_` 를 **전부
+#    맞바꾸면** 내부 일관성이 유지된 채 비가 1.123672 → **0.889944** 로 뒤집히고 오류가
+#    나지 않았다 (Codex 가 독립 재현했고 나도 재현했다).
+#    ⇒ *"digest 가 근거이고 이름은 검사 대상"* 이라는 초판의 설명은 **성립하지 않았다.**
+#
+#  대응: digest → 침대를 **밖에서** 못 박고, 이름이 그것과 어긋나면 실패시킨다.
+#  ⚠ 이 표는 **런 provenance** 에서 온다 (러너가 어느 kit 을 읽었는지).  비에서 역산한 것이
+#    아니므로 순환이 아니다.  ⚠ **등록되지 않은 digest 는 통과가 아니라 HOLD** 다 — 새
+#    침대는 의도적으로 등재해야 한다 (fail-closed).
+#  ⚠ 근본 해법은 **러너가 receipt 에 침대를 적는 것**이다.  그때까지 이 표가 유일한 앵커다.
+BED_DIGESTS = {
+    #  2026-08-27 재압밀 침대 (원장 §9 가 적는 쌍) — 구 스탬프 cohort 가 쓴다
+    '04b5a565ff4069f4': 'SBE',
+    'd1022e090ab625a9': 'DBE',
+    #  그 이전 세대 침대 — 점 스탬프 cohort 4개가 쓴다 (§11).  ⚠ 위와 **다른 침대**이므로
+    #  두 계열의 값을 나란히 놓을 때 스탬프 차이와 침대 차이가 교락된다.
+    '78a8b79baa97dfdb': 'SBE',
+    '71221aeec9086da1': 'DBE',
+}
+
 
 def _arms(d):
     """팔 파일 → [(basename, step3 dict)].  `step3` 없는 파일은 실패 사유로 올린다."""
@@ -54,8 +77,13 @@ def _arms(d):
     return out, bad
 
 
-def audit(d):
-    """한 패키지 → (ratio 또는 None, 문제 목록, 부가 정보).  ratio 는 **재계산**이다."""
+def audit(d, beds=None):
+    """한 패키지 → (ratio 또는 None, 문제 목록, 부가 정보).  ratio 는 **재계산**이다.
+
+    `beds`: digest → 침대 registry (기본 `BED_DIGESTS`).  회귀가 자기 표를 주입한다 —
+    그래야 시험이 생산 상수에 매이지 않는다.
+    """
+    beds = BED_DIGESTS if beds is None else beds
     problems, info = [], {}
     arms, bad = _arms(d)
     problems += [f'{n}: {w}' for n, w in bad]
@@ -82,6 +110,19 @@ def audit(d):
     if len(by_digest) != 2:
         problems.append(f'침대가 {len(by_digest)}개 — 2개(SBE·DBE)여야 한다')
         return None, problems, info
+
+    #  ★★ 이름이 아니라 registry 로 침대를 정한다 (Codex R12 §0).  이름은 **대조 대상**이다.
+    for dg in by_digest:
+        want = beds.get(dg)
+        if want is None:
+            problems.append(f'digest {dg} 가 침대 registry 에 없다 — 새 침대는 '
+                            f'`BED_DIGESTS` 에 의도적으로 등재해야 한다 (fail-closed)')
+        else:
+            got = name_of.get(dg)
+            if got and got != {want}:
+                problems.append(f'★ digest {dg} 는 registry 상 **{want}** 인데 파일 이름이 '
+                                f'{sorted(got)} 다 — 침대 역할이 뒤바뀌었다')
+    info['bed_generation'] = sorted(by_digest)
     for dg, names in name_of.items():
         if len(names) != 1:
             problems.append(f'digest {dg[:8]} 에 이름이 섞여 있다: {sorted(names)} '
@@ -89,8 +130,8 @@ def audit(d):
     if len(problems):
         pass  # 계속 진행해 나머지도 보고한다
 
-    sbe = next((dg for dg, s in name_of.items() if s == {'SBE'}), None)
-    dbe = next((dg for dg, s in name_of.items() if s == {'DBE'}), None)
+    sbe = next((dg for dg in by_digest if beds.get(dg) == 'SBE'), None)
+    dbe = next((dg for dg in by_digest if beds.get(dg) == 'DBE'), None)
     if sbe is None or dbe is None:
         return None, problems + ['SBE/DBE 를 갈라내지 못했다'], info
     info['digest_SBE'], info['digest_DBE'] = sbe, dbe
@@ -175,7 +216,7 @@ def find_packages(root):
     return sorted(out)
 
 
-def run(root=DATA, ledger=LEDGER, quiet=False):
+def run(root=DATA, ledger=LEDGER, quiet=False, beds=None):
     pkgs = find_packages(root)
     fails = []
     if not quiet:
@@ -185,7 +226,7 @@ def run(root=DATA, ledger=LEDGER, quiet=False):
         fails.append(f'원장을 못 읽는다: {ledger}')
     for d in pkgs:
         name = os.path.basename(d)
-        ratio, problems, info = audit(d)
+        ratio, problems, info = audit(d, beds)
         for w in problems:
             fails.append(f'{name}: {w}')
         if ratio is None:
@@ -263,6 +304,7 @@ def selftest():
         else:
             fail.append(name)
 
+    TB = {'aaaa1111': 'SBE', 'bbbb2222': 'DBE'}      # 회귀 전용 registry
     with tempfile.TemporaryDirectory() as td:
         root = os.path.join(td, 'data'); os.makedirs(root)
         _fixture(root, 'good')
@@ -270,46 +312,67 @@ def selftest():
         #  전 팔이 같은 값이라 산포는 정확히 0
         open(led, 'w').write('비는 1.200000 이고 산포는 0.000000 이다.\n')
 
-        chk('① 정상 패키지는 통과', run(root, led, quiet=True) == 0)
+        chk('① 정상 패키지는 통과', run(root, led, quiet=True, beds=TB) == 0)
 
         #  ★ 중첩 배치 — 한 층 아래 두어도 찾아야 한다 (초판은 조용히 0개였다)
         nested = os.path.join(root, 'cohorts')
         _fixture(nested, 'deep')
         chk('①b ★ 하위 디렉터리의 패키지도 찾는다',
             len(find_packages(root)) == 2)
-        chk('①c ★ 중첩된 것도 검사를 통과한다', run(root, led, quiet=True) == 0)
+        chk('①c ★ 중첩된 것도 검사를 통과한다', run(root, led, quiet=True, beds=TB) == 0)
         import shutil as _sh; _sh.rmtree(nested)
 
-        r, p, info = audit(os.path.join(root, 'good'))
+        r, p, info = audit(os.path.join(root, 'good'), TB)
         chk('② 비를 원자료에서 재계산한다', abs(r - 1.2) < 1e-12)
         chk('③ 위상 8쌍을 잡는다', info['n_paired'] == 8)
         chk('④ 침대를 digest 로 가른다', info['digest_SBE'] != info['digest_DBE'])
 
         #  ★ 음성 대조 — 검사가 정말 무는가
         open(led, 'w').write('비는 1.111111 이고 산포는 0.000000 이다.\n')
-        chk('⑤ ★ 원장과 값이 갈리면 실패', run(root, led, quiet=True) == 1)
+        chk('⑤ ★ 원장과 값이 갈리면 실패', run(root, led, quiet=True, beds=TB) == 1)
         open(led, 'w').write('비는 1.200000 이고 산포는 0.000000 이다.\n')
 
         _fixture(root, 'drop', drop=2)
-        chk('⑥ ★ 팔이 모자라면 실패', run(root, led, quiet=True) == 1)
+        chk('⑥ ★ 팔이 모자라면 실패', run(root, led, quiet=True, beds=TB) == 1)
         import shutil; shutil.rmtree(os.path.join(root, 'drop'))
 
         _fixture(root, 'dup', dup_origin=True)
-        _, p2, _ = audit(os.path.join(root, 'dup'))
+        _, p2, _ = audit(os.path.join(root, 'dup'), TB)
         chk('⑦ ★ 중복 origin 을 잡는다 (같은 위상을 여러 번 셈)',
             any('중복 origin' in x for x in p2))
         shutil.rmtree(os.path.join(root, 'dup'))
 
         _fixture(root, 'swap', swap_name=True)
-        _, p3, _ = audit(os.path.join(root, 'swap'))
+        _, p3, _ = audit(os.path.join(root, 'swap'), TB)
         chk('⑧ ★ 이름과 digest 가 어긋나면 잡는다 (이름을 믿지 않는다)',
             any('어긋난다' in x for x in p3))
         shutil.rmtree(os.path.join(root, 'swap'))
 
         _fixture(root, 'cg', break_cg=True)
-        _, p4, _ = audit(os.path.join(root, 'cg'))
+        _, p4, _ = audit(os.path.join(root, 'cg'), TB)
         chk('⑨ ★ 미수렴 팔을 잡는다', any('수렴하지 않았다' in x for x in p4))
         shutil.rmtree(os.path.join(root, 'cg'))
+
+        #  ★★ 역할 뒤바꿈 (Codex R12 §0 P1) — 16팔 이름을 **전부** 맞바꾸면 초판은
+        #     내부 일관성이 유지된 채 비가 뒤집히고 **오류를 안 냈다**.
+        d6 = _fixture(root, 'swap6')
+        for f in sorted(glob.glob(os.path.join(d6, 'p2_*.json'))):
+            bn = os.path.basename(f)
+            os.rename(f, os.path.join(d6, 'T_' + bn.replace('_SBE_', '_X_')
+                                      .replace('_DBE_', '_SBE_').replace('_X_', '_DBE_')))
+        for f in sorted(glob.glob(os.path.join(d6, 'T_*'))):
+            os.rename(f, os.path.join(d6, os.path.basename(f)[2:]))
+        _, p6, _ = audit(d6, TB)
+        chk('⑫ ★★ 침대 역할을 전부 맞바꾸면 잡는다 (이름이 근거가 아니다)',
+            any('역할이 뒤바뀌었다' in x for x in p6))
+        shutil.rmtree(d6)
+
+        #  ★ 등록 안 된 digest 는 통과가 아니라 실패다 (fail-closed)
+        d7 = _fixture(root, 'unreg')
+        _, p7, _ = audit(d7, {'zzzz9999': 'SBE'})
+        chk('⑬ ★ 등록 안 된 digest 는 fail-closed',
+            any('registry 에 없다' in x for x in p7))
+        shutil.rmtree(d7)
 
         #  estimator 가 정본인지 — mean/mean 과 갈리는 값을 만든다.
         #  ⚠ 분모(SBE)가 **상수면 두 estimator 가 수학적으로 같아** 구분이 안 된다
@@ -322,7 +385,7 @@ def selftest():
                 f = os.path.join(d5, f'p2_{bed}_sph_a{i}.json')
                 j = json.load(open(f)); j['step3']['sigma_e_eff_S_cm'] = vals[i]
                 json.dump(j, open(f, 'w'))
-        r5, _, _ = audit(d5)
+        r5, _, _ = audit(d5, TB)
         paired = sum(Dv[i] / Sv[i] for i in range(8)) / 8
         unpaired = (sum(Dv) / 8) / (sum(Sv) / 8)
         chk('⑩ ★ 두 estimator 가 실제로 갈리는 픽스처인가 (시험이 헛돌지 않는가)',
