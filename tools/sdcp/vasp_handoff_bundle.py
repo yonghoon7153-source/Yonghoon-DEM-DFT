@@ -2345,43 +2345,72 @@ def selftest_k() -> int:
     _F5 = ["sdcp_neutral", "ptfe_c10"]
     _em5 = {"sdcp_neutral": -100.0, "ptfe_c10": -100.0}
     _A5 = {"sdcp_neutral": ([-1.20, -1.10, -1.05, -1.00], [-1.15] + [-0.9] * 7),
-           "ptfe_c10":     ([-0.80, -0.75, -0.70, -0.65], [-0.78] + [-0.6] * 7)}
+           "ptfe_c10":     ([-0.80, -0.75, -0.70, -0.65], [-0.74] + [-0.6] * 7)}
     _jb5, _en5 = _mk12(_A5)
     _man5 = {"planned": {k: {} for k in _jb5 if k.startswith("prospective/")}}
     _E5 = lambda j: _en5.get(j)                          # noqa: E731
-    _c5 = closure_C5(_man5, _jb5, _E5, _em5, _F5)
+    _MG = {'ok': True, 'schema': 'merge_compat/v1', 'n_bundles': 2}
+    _c5 = closure_C5(_man5, _jb5, _E5, _em5, _F5, _MG)
     chk(abs(_c5.get("ddE_obs_eV", 0) - (-0.40)) < 1e-6,
         "C5 양성: ΔΔE_obs = min(SDCP) − min(c10) = −1.20 − (−0.80) = −0.40 (실제 %s)"
         % _c5.get("ddE_obs_eV"))
-    chk(all(_c5["by_frag"][f]["H1_pass"] for f in _F5),
-        "C5: 홀드아웃이 calibration 최저를 안 밑돌면 H1 통과")
+    chk(all(_c5["by_frag"][f]["H1_class"] == "holds" for f in _F5),
+        "C5: 홀드아웃이 calibration 최저를 30 meV 넘게 웃돌면 H1 = holds")
+
+    # ── 회신 AF P0-3/P0-4 게이트 ────────────────────────────────────────────
+    chk(closure_C5(_man5, _jb5, _E5, _em5, _F5).get("verdict", "").startswith("⛔ NOT_MERGED"),
+        "⛔음성 AF: 묶음 하나만 주면 **값을 만들지 않는다** (12자세는 두 묶음에 걸쳐 있다)")
+    chk(closure_C5(_man5, _jb5, _E5, _em5, _F5,
+                   {"ok": False, "blocking": ["clean_slab 가 다르다"]}
+                   ).get("verdict", "").startswith("⛔ MERGE_INCOMPATIBLE"),
+        "⛔음성 AF: 두 묶음의 프로토콜이 갈리면 합치지 않는다")
+
+    # [음성] H1 미해결 구간(±30 meV)을 통과로 승격하지 않는다
+    _A5u = {"sdcp_neutral": _A5["sdcp_neutral"],
+            "ptfe_c10": ([-0.80, -0.75, -0.70, -0.65], [-0.78] + [-0.6] * 7)}
+    _jb5u, _en5u = _mk12(_A5u)
+    _c5u = closure_C5({"planned": {k: {} for k in _jb5u if k.startswith("prospective/")}},
+                      _jb5u, lambda j: _en5u.get(j), _em5, _F5, _MG)
+    chk(_c5u["by_frag"]["ptfe_c10"]["H1_class"] == "unresolved"
+        and "ddE_obs_eV" not in _c5u,
+        "⛔음성 AF: 여유 20 meV 는 판정 해상도 안 → **미해결**이고 값을 안 만든다 "
+        "(종전 두 갈래는 이걸 통과로 승격시켰다)")
+
+    # [음성] 합이 12 라도 구성이 4+8 이 아니면 홀드아웃 시험이 성립하지 않는다
+    _A5c = {"sdcp_neutral": ([-1.20] * 11, [-0.9]), "ptfe_c10": _A5["ptfe_c10"]}
+    _jb5c2, _en5c2 = _mk12(_A5c)
+    _c5c = closure_C5({"planned": {k: {} for k in _jb5c2 if k.startswith("prospective/")}},
+                      _jb5c2, lambda j: _en5c2.get(j), _em5, _F5, _MG)
+    chk(_c5c["by_frag"]["sdcp_neutral"]["verdict"].startswith("unresolved")
+        and "ddE_obs_eV" not in _c5c,
+        "⛔음성 AF: cal 11 + holdout 1 은 합이 12 여도 거부한다")
     chk("전역 최소" in str(_c5.get("⛔_금지_서술")),
         "C5 가 금지 서술을 결과에 함께 싣는다")
     # ⛔ 음성 C5-a — 홀드아웃이 더 낮으면 **SELECTOR_FAIL**, 값을 안 만든다
     _A5b = dict(_A5, sdcp_neutral=([-1.20, -1.10, -1.05, -1.00],
                                    [-1.40] + [-0.9] * 7))   # 홀드아웃이 200 meV 더 낮다
     _jb5b, _en5b = _mk12(_A5b)
-    _c5b = closure_C5(_man5, _jb5b, lambda j: _en5b.get(j), _em5, _F5)
+    _c5b = closure_C5(_man5, _jb5b, lambda j: _en5b.get(j), _em5, _F5, _MG)
     chk("ddE_obs_eV" not in _c5b
         and "SELECTOR_FAIL" in _c5b["by_frag"]["sdcp_neutral"]["verdict"],
         "⛔음성 C5: 홀드아웃이 calibration 최저를 30 meV 이상 밑돌면 **값을 안 만든다** "
         "— '더 낮은 자세를 찾았다' 로 흡수하면 선택기 실패가 사라진다")
     # ⛔ 음성 C5-b — 자세가 하나라도 빠지면 unresolved
     _jb5c = dict(_jb5); _jb5c.pop("prospective/sdcp_neutral__b11__" + SEED_MAIN)
-    chk(closure_C5(_man5, _jb5c, _E5, _em5, _F5)["by_frag"]["sdcp_neutral"]["verdict"]
+    chk(closure_C5(_man5, _jb5c, _E5, _em5, _F5, _MG)["by_frag"]["sdcp_neutral"]["verdict"]
         == "unresolved",
         "⛔음성 C5: 12자세 중 하나라도 빠지면 unresolved (표본이 줄면 min 이 올라간다)")
     # ⛔ 음성 C5-c — 홀드아웃 역할이 아예 없으면(= calibration 전용 tranche) 값 없음
     _jb5d = {k: (dict(v, meta=dict(v["meta"], role="calibration"))
                  if k.startswith("prospective/") else v) for k, v in _jb5.items()}
-    _c5d = closure_C5(_man5, _jb5d, _E5, _em5, _F5)
+    _c5d = closure_C5(_man5, _jb5d, _E5, _em5, _F5, _MG)
     chk("ddE_obs_eV" not in _c5d,
         "⛔음성 C5: 홀드아웃이 없으면 값을 만들지 않는다 — 그 시험이 이 양의 **전제**다")
     # ⛔ 음성 C5-d — basin 이 갈리면 unresolved
     _kx5 = "prospective/ptfe_c10__b03__" + SEED_MAIN
     _jb5e = dict(_jb5)
     _jb5e[_kx5] = dict(_jb5[_kx5], geom={"magnetic": {"realized_basin_id": "Z"}})
-    chk(closure_C5(_man5, _jb5e, _E5, _em5, _F5)["by_frag"]["ptfe_c10"]["verdict"]
+    chk(closure_C5(_man5, _jb5e, _E5, _em5, _F5, _MG)["by_frag"]["ptfe_c10"]["verdict"]
         == "unresolved",
         "⛔음성 C5: 12자세가 서로 다른 basin 이면 unresolved")
 
@@ -3070,6 +3099,54 @@ def same_basin(ja, jb):
     return True, "ok"
 
 
+def merge_compat(bundles):
+    """두 묶음을 합쳐도 되는가 — **해시 결속 + 프로토콜 동일성** (회신 AF P0-3).
+
+    왜 합치나: 12자세는 calibration(4) + holdout(8) 이고, 기체 기준계는
+    calibration 묶음에만 있다. 어느 한쪽만으로는 조각 간 대비가 정의되지 않는다.
+
+    막는 것 (하나라도 걸리면 blocking 에 들어가고 값을 만들지 않는다):
+      · clean slab 파일이 다르다        → E_ads 에서 슬랩이 소거되지 않는다
+      · POTCAR 사양이 다르다            → 다른 유사퍼텐셜의 총에너지를 뺀다
+      · k 격자가 다르다                 → 다른 적분 격자의 값을 뺀다
+      · 게이트 판(gate_version)이 다르다 → 다른 판정 규칙으로 거른 값을 합친다
+      · freeze 비율 · 슬랩 원자수가 다르다
+
+    ⛔ 이 함수가 못 하는 것: VASP 실행 바이너리·PAW 배포판이 같은지는 **여기서**
+       못 본다 (MANIFEST 에 없다). 그것은 회수된 OUTCAR 의 되울림으로 따로 본다.
+    """
+    keys = [("clean_slab", lambda m: ((m.get("clean_slab") or {}).get("sha256"))),
+            ("potcar_spec", lambda m: m.get("potcar_spec")),
+            ("kmesh_effective", lambda m: m.get("kmesh_effective") or m.get("kmesh")),
+            ("gate_version", lambda m: m.get("gate_version")),
+            ("freeze_frac_dft", lambda m: m.get("freeze_frac_dft")),
+            ("nslab", lambda m: m.get("nslab"))]
+    info = {"schema": "merge_compat/v1", "n_bundles": len(bundles),
+            "roots": [b[0] for b in bundles], "blocking": [], "bound": []}
+    for r, m in bundles:
+        mp = os.path.join(r, "MANIFEST.json")
+        info["bound"].append({
+            "root": r,
+            "candidate_set": m.get("candidate_set"),
+            "n_jobs": m.get("n_jobs"),
+            "manifest_sha256": (hashlib.sha256(open(mp, "rb").read()).hexdigest()
+                                if os.path.isfile(mp) else None)})
+    ref = bundles[0][1]
+    for name, get in keys:
+        want = get(ref)
+        for r, m in bundles[1:]:
+            if get(m) != want:
+                info["blocking"].append(
+                    "%s 가 묶음마다 다르다 (%r vs %r) — 합치면 다른 계의 에너지를 뺀다"
+                    % (name, want, get(m)))
+    if want is None and not info["blocking"]:
+        pass
+    if (ref.get("clean_slab") or {}).get("sha256") is None:
+        info["blocking"].append(
+            "clean_slab sha 가 없다 — 두 묶음이 같은 슬랩을 썼는지 확인할 수 없다")
+    info["ok"] = not info["blocking"]
+    return info
+
 def closure_C1(man, jobs, E, emol, frags):
     """C1 — **선택된 네 자세에서의 국소 calibration 일관성**.
 
@@ -3156,11 +3233,13 @@ def closure_C1(man, jobs, E, emol, frags):
 
 
 #: C5 게이트 — 결과 보기 전 고정 (D-2026-08-30-sdcp-neutral-ptfe-ddE-obs)
-C5_N_POSE = 12                 # 조각당 선언 자세 = calibration 4 + holdout 8
+C5_N_CAL = 4                   # 사전등록 calibration 자세 (조각당)
+C5_N_HOLDOUT = 8               # 층화 홀드아웃 자세 (조각당) — 선택기 시험용
+C5_N_POSE = C5_N_CAL + C5_N_HOLDOUT   # = 12. ⚠ 합만 맞으면 안 된다 — 구성도 맞아야
 C5_H1_TOL_EV = 0.030           # 홀드아웃이 calibration 최저를 이만큼 밑돌면 선택기 실패
 
 
-def closure_C5(man, jobs, E, emol, frags):
+def closure_C5(man, jobs, E, emol, frags, merge_info=None):
     """C5 — ΔΔE_obs. **선언된 12자세에서의 조각 간 대비** (표본 조건부).
 
       A(f,p)   = E_complex(f,p) − E_mol(f, box24)
@@ -3182,10 +3261,21 @@ def closure_C5(man, jobs, E, emol, frags):
       · `ΔΔE_lowE` / primary 가 아니다 — 그것은 창 W 전수 + audit 개봉을 전제한다.
       · H1 실패를 "더 낮은 자세를 찾았다" 로 흡수하지 않는다. **재개 사유**다.
     """
-    res = {"schema": "closure_C5/v1", "name": "ddE_obs",
+    res = {"schema": "closure_C5/v2", "name": "ddE_obs",
+           "merge": merge_info,
            "n_pose_required": C5_N_POSE, "h1_tol_eV": C5_H1_TOL_EV,
            "decision": "D-2026-08-30-sdcp-neutral-ptfe-ddE-obs (proposed)",
            "⚠": "표본 조건부 — 전역 최소가 아니다", "by_frag": {}}
+    # ⛔ 12자세는 두 묶음(calibration 4 + holdout 8)에 걸쳐 있다. 한 묶음만 주면
+    #    부분집합에서 min 을 뽑게 되므로 **값을 만들지 않는다** (회신 AF P0-3).
+    if not merge_info:
+        res["verdict"] = ("⛔ NOT_MERGED — 12자세는 calibration 묶음과 holdout 묶음에 "
+                          "걸쳐 있다. `analyze_results.py <calib> --merge <holdout>` 로 "
+                          "두 묶음을 함께 줘야 한다. 한 묶음만으로는 정의되지 않는다")
+        return res
+    if not merge_info.get("ok"):
+        res["verdict"] = "⛔ MERGE_INCOMPATIBLE — " + "; ".join(merge_info["blocking"][:3])
+        return res
     mins = {}
     for f in frags:
         if emol.get(f) is None:
@@ -3220,27 +3310,59 @@ def closure_C5(man, jobs, E, emol, frags):
             continue
         cal = [r for r in rows if r["role"] == "calibration"]
         hld = [r for r in rows if r["role"] == "holdout"]
-        if not cal or not hld:
-            res["by_frag"][f] = {"verdict": "unresolved",
-                                 "why": "calibration %d · holdout %d — 두 역할이 다 "
-                                        "있어야 H1 을 시험할 수 있다" % (len(cal), len(hld))}
+        # ⛔ 회신 AF P0-4 — 12개면 되는 게 아니라 **정확히 4 + 8** 이어야 한다.
+        #    11+1 도 12 라서 종전 검사를 통과했다. 그러면 홀드아웃 시험이 사라진다.
+        if (len(cal), len(hld)) != (C5_N_CAL, C5_N_HOLDOUT):
+            res["by_frag"][f] = {
+                "verdict": "unresolved", "n_cal": len(cal), "n_holdout": len(hld),
+                "why": "calibration %d · holdout %d — 정확히 %d + %d 이어야 한다 "
+                       "(합이 12 라도 구성이 다르면 홀드아웃 시험이 성립하지 않는다)"
+                       % (len(cal), len(hld), C5_N_CAL, C5_N_HOLDOUT)}
             continue
         a_cal, a_hld = min(r["A_eV"] for r in cal), min(r["A_eV"] for r in hld)
-        # ③ H1 — 홀드아웃이 calibration 최저를 30 meV 이상 밑돌면 선택기 실패
-        h1_ok = (a_hld - a_cal) > -C5_H1_TOL_EV
+        # ③ H1 — **세 갈래**다 (회신 AF P0-4). 종전 두 갈래는 판정 해상도 안의
+        #    미해결 구간(±30 meV)을 통과로 승격시켰다.
+        _m = a_hld - a_cal
+        if _m > C5_H1_TOL_EV:
+            h1 = "holds"          # 홀드아웃이 확실히 높다 — 선택기가 버텼다
+        elif _m < -C5_H1_TOL_EV:
+            h1 = "fail"           # 홀드아웃이 더 낮다 — 선택기 실패
+        else:
+            h1 = "unresolved"     # 판정 해상도 안 — 어느 쪽도 말하지 않는다
+        h1_ok = (h1 == "holds")
         res["by_frag"][f] = {
             "n_pose": len(rows), "n_cal": len(cal), "n_holdout": len(hld),
             "A_min_calibration_eV": round(a_cal, 6),
             "A_min_holdout_eV": round(a_hld, 6),
-            "H1_margin_eV": round(a_hld - a_cal, 6), "H1_pass": h1_ok,
+            "H1_margin_eV": round(_m, 6), "H1_class": h1, "H1_pass": h1_ok,
+            "H1_tol_eV": C5_H1_TOL_EV,
             "A_min_eV": round(min(a_cal, a_hld), 6),
             "rows": sorted(rows, key=lambda r: r["A_eV"]),
-            "verdict": ("ok" if h1_ok else
-                        "⛔ SELECTOR_FAIL — 홀드아웃 최저가 calibration 최저를 "
-                        "%.1f meV 밑돈다. 이 값을 min 으로 흡수하지 않는다; "
-                        "사전등록 재개조건이 발동한다" % (1000 * (a_cal - a_hld)))}
+            "verdict": ("ok" if h1 == "holds" else
+                        ("⛔ SELECTOR_FAIL — 홀드아웃 최저가 calibration 최저를 "
+                         "%.1f meV 밑돈다. 이 값을 min 으로 흡수하지 않는다; "
+                         "사전등록 재개조건이 발동한다" % (1000 * -_m))
+                        if h1 == "fail" else
+                        "unresolved — 홀드아웃과 calibration 최저의 차 %.1f meV 가 "
+                        "판정 해상도 %.0f meV 안이다. 선택기가 버텼다고도, 실패했다고도 "
+                        "말하지 않는다" % (1000 * _m, 1000 * C5_H1_TOL_EV))}
         if h1_ok:
             mins[f] = min(a_cal, a_hld)
+    # ⛔ 회신 AF P0-3 — 조각 **안**에서만 배열을 맞추면 SDCP 와 PTFE 가 서로 다른
+    #    자기 배열이어도 통과한다. 두 최저 자세끼리도 같은 배열이어야 뺄셈이 성립한다.
+    _best_job = {}
+    for f, _ in mins.items():
+        _rows = res["by_frag"][f]["rows"]
+        _best_job[f] = min(_rows, key=lambda r: r["A_eV"])["job"]
+    if len(_best_job) == 2:
+        _a, _b = list(_best_job.values())
+        _ok, _why = same_basin(jobs[_a], jobs[_b])
+        res["cross_fragment_basin"] = {"jobs": [_a, _b], "same": _ok, "why": _why}
+        if not _ok:
+            res["verdict"] = ("⛔ CROSS_FRAGMENT_BASIN — 두 조각의 최저 자세가 서로 "
+                              "다른 자기 배열이다 (%s). 그 차에는 흡착이 아닌 것이 "
+                              "섞인다" % _why)
+            return res
     sd = next((f for f in mins if "sdcp" in f), None)
     ct = next((f for f in mins if f != sd), None)
     if not (sd and ct):
@@ -3438,7 +3560,7 @@ def closure_C3(man, jobs, E, frags):
     return res
 
 
-def _closure_estimand(man, results, E, emol, jobs):
+def _closure_estimand(man, results, E, emol, jobs, merge_info=None):
     """사전등록한 조각 간 대비를 **코드로** 계산한다 (회신 V P0-4).
 
       A(f,p) = E_complex(f,p) - E_mol(f)      <- 공통 슬랩이 소거되는 양
@@ -3653,7 +3775,7 @@ def _closure_estimand(man, results, E, emol, jobs):
     try:
         out["closure_C1"] = closure_C1(man, jobs, E, emol, frags)
         out["closure_C3"] = closure_C3(man, jobs, E, frags)
-        out["closure_C5"] = closure_C5(man, jobs, E, emol, frags)
+        out["closure_C5"] = closure_C5(man, jobs, E, emol, frags, merge_info)
     except Exception as _e:                                  # noqa: BLE001
         out["blocks"].append(f"CLOSURE_COND_ERROR({_e!r})")
 
@@ -3701,6 +3823,22 @@ def main():
     man = json.load(open(os.path.join(root, "MANIFEST.json")))
     spec = man.get("potcar_spec", {})
     planned = man.get("planned", {})
+
+    # ══ 두 묶음 결합 (회신 AF P0-3) ═══════════════════════════════════════
+    #   왜 필요한가 — 12자세는 calibration(4) + holdout(8) 이고 기체 기준계는
+    #   calibration 묶음에만 있다. **어느 한쪽만으로는 조각 간 대비를 만들 수 없다.**
+    #   합치되 **해시로 결속**한다: 두 MANIFEST 를 기록하고, 프로토콜이 갈리면 막는다.
+    merge_roots = []
+    if "--merge" in sys.argv:
+        _i = sys.argv.index("--merge")
+        for _v in sys.argv[_i + 1:]:
+            if _v.startswith("-"):
+                break
+            merge_roots.append(_v)
+    bundles = [(root, man)]
+    for _mr in merge_roots:
+        bundles.append((_mr, json.load(open(os.path.join(_mr, "MANIFEST.json")))))
+    merge_info = merge_compat(bundles) if len(bundles) > 1 else None
 
     # ── 입력 무결성 (Codex P0-H) — INCAR 이 바뀌었는지부터 본다 ──────────────
     integrity = {"checked": 0, "changed": [], "missing": []}
@@ -3758,13 +3896,24 @@ def main():
 
     jobs = {}
     results_ldau_missing = []
-    for jd in sorted(glob(os.path.join(root, "*", "*", ""))):
+    _jobdirs = []
+    for _ri, _mi in bundles:
+        for _jd in sorted(glob(os.path.join(_ri, "*", "*", ""))):
+            _jobdirs.append((_jd, _ri, _mi))
+    for jd, _root_i, _man_i in _jobdirs:
         jp = os.path.join(jd, "job.json")
         if not os.path.isfile(jp):
             continue
         meta = json.load(open(jp))
-        rel = _pk(jd, root)
-        phases = (planned.get(rel) or {}).get("phases") or meta.get("phases") or \
+        rel = _pk(jd, _root_i)
+        _planned_i = _man_i.get("planned", {})
+        _spec_i = _man_i.get("potcar_spec", {})
+        if rel in jobs:                       # ⛔ 이름이 겹치면 조용히 덮지 않는다
+            jobs[rel]["gates"].append(
+                "MERGE_NAME_COLLISION(같은 잡 이름이 두 묶음에 있다 — 어느 쪽 값인지 "
+                "알 수 없으므로 이 잡을 쓰지 않는다)")
+            continue
+        phases = (_planned_i.get(rel) or {}).get("phases") or meta.get("phases") or \
             ["relax", "static"]
         ocs = {ph: read_outcar(os.path.join(jd, ph, "OUTCAR")) for ph in phases}
         # ⛔ 2026-08-25 (codex E-2차 필수5) — static/dense 만 남기면 static_pin 등
@@ -3774,7 +3923,7 @@ def main():
         for _ph in phases:
             rec[_ph] = ocs.get(_ph)
         for ph in phases:
-            rec["gates"] += phase_gates(ocs[ph], ph, meta, spec,
+            rec["gates"] += phase_gates(ocs[ph], ph, meta, _spec_i,
                                         want_ionic=(ph == "relax"))
         # ★ 격자가 커지는 상 사이로 NKPTS 가 안 늘면 **같은 계산을 복사한 것**이다.
         km = meta.get("kmesh") or {}
@@ -4584,7 +4733,7 @@ def main():
     # ══ 사전등록 closure estimand (회신 V P0-3 · P0-4) ══════════════════════
     #   `prereg_sdcp_neutral_contrast_2026_08_29.json` 을 코드로 옮긴 것.
     #   ⛔ 종전엔 사전등록이 **문서로만** 있었다 — 잡이 다 끝나도 판정이 재현되지 않았다.
-    _pc = _closure_estimand(man, results, E, emol, jobs)
+    _pc = _closure_estimand(man, results, E, emol, jobs, merge_info)
     if _pc:
         results["prereg_closure"] = _pc
 
