@@ -7970,9 +7970,12 @@ def main():
                     help="동결된 prospective_basins manifest 에서 **그 자세만** 생성한다 "
                          "(champion/cross 자동탐색을 쓰지 않는다). 회신 W 5단계")
     ap.add_argument("--roles", nargs="+", default=None,
-                    choices=["calibration", "sealed_audit"],
+                    choices=["calibration", "sealed_audit", "holdout"],
                     help="--from_basins 에서 **이 역할만** 낸다. 회신 X P0-2 — Stage A 는 "
-                         "`--roles calibration` 으로 audit 을 봉인한 채 던진다")
+                         "`--roles calibration` 으로 audit 을 봉인한 채 던진다. "
+                         "`holdout` 은 층화 홀드아웃 tranche (2026-08-30 옵션 A) — "
+                         "**단독으로만** 쓴다. candidate_set 이 holdout_stratified 가 되고 "
+                         "분석기가 primary 를 막는다")
     ap.add_argument("--d3_seed_main_only", action="store_true",
                     help="복합체의 D3-off 쌍둥이를 " + SEED_MAIN + " 에만 만든다 "
                          "(고정기하 D3 는 자기상태 무관 · 회신 X Q1)")
@@ -8002,6 +8005,12 @@ def main():
                     help="dipole-off pre-SCF 상을 빼고 relax 부터 (권장하지 않음)")
     ap.add_argument("--selftest", action="store_true")
     a = ap.parse_args()
+    # ⛔ 홀드아웃은 **단독 tranche** 다. calibration 과 섞어 내면 사전등록된
+    #   primary 후보집합이 오염되고, 홀드아웃이 더 낮게 나온 것이 "더 좋은 자세를
+    #   찾았다" 로 흡수돼 **선택기 실패가 사라진다** (회신 X Q6 와 같은 구조).
+    if a.roles and "holdout" in a.roles and len(set(a.roles)) > 1:
+        ap.error("--roles holdout 은 단독으로만 쓴다 (지금 %s) — 다른 역할과 섞으면 "
+                 "primary 후보집합이 오염된다" % a.roles)
     if a.selftest:
         # ⚠ verify 는 생성기 selftest 와 독립이다 — 표준 명령 하나가
         #   전건을 덮지 않으면 아무도 안 돌린다 (음성 경로가 특히).
