@@ -54,6 +54,49 @@ PER_STRATUM = 8
 THREE_TYPE_PER_STRATUM = 6             # 나머지는 2-type
 N_MAX_PARTICLES = 150_000
 DESIGN_SEED = 20260829                 # 등록된 난수 씨앗 — 바꾸면 다른 설계다
+SEED_LO, SEED_HI = 20000, 29999        # per-run seed 범위
+
+
+# --- per-run seed 는 **소수여야 한다** (2026-08-30, Codex R14 P1-01) ----------
+#  ⚠⚠ 이 리포는 이 사고를 **이미 겪었다**: 08-18 의 130점 배치 v2 에서 `insert/pack`
+#     seed 가 비소수라 **25 케이스가 1분 만에 abort** 했고, `afterany` chain 이 실패를
+#     안 막아 **조용히 지나갔다** (`docs/lhs_design_dataset_20260818.md` §P-1).
+#     그 문서가 남긴 교훈이 *"검사 목록에 없는 항목은 안 잡힌다 — v3 검사부터 넣었다"*
+#     인데, **이 확장 생성기가 그 검사를 물려받지 않아** 64개 중 61개가 합성수로 나왔다.
+#     교훈을 문서에만 두면 새 생성기로 전달되지 않는다는 실증이다.
+#  ★ 좌표를 흔들지 않는 방법: `rng.randint` 호출은 **그대로 두고**(난수 스트림이 바뀌면
+#    좌표가 전부 달라진다) 뽑힌 값을 사후에 소수로 올린다.  결정론적이다.
+def is_prime(n):
+    if n < 2:
+        return False
+    if n % 2 == 0:
+        return n == 2
+    i = 3
+    while i * i <= n:
+        if n % i == 0:
+            return False
+        i += 2
+    return True
+
+
+def next_free_prime(v, used, lo=SEED_LO, hi=SEED_HI):
+    """`v` 이상에서 미사용 소수.  상한을 넘으면 `lo` 부터 다시 올라간다."""
+    for c in list(range(v, hi + 1)) + list(range(lo, v)):
+        if c not in used and is_prime(c):
+            return c
+    raise SystemExit(f'[{lo}, {hi}] 안에 미사용 소수가 없다 (요청 {len(used)+1}개)')
+
+
+def assign_prime_seeds(pts):
+    """뽑힌 seed 를 순서대로 미사용 소수로 올린다 (제자리 수정).  → 배정된 목록."""
+    used, out = set(), []
+    for p in pts:
+        s = next_free_prime(int(p['seed']), used)
+        used.add(s)
+        p['seed'] = s
+        out.append(s)
+    return out
+
 
 # --- 실측 대조 (selftest 전용) -------------------------------------------
 #   ibb `lhs00_000` / `lhs00_110` 의 마지막 덤프에서 센 값
@@ -315,6 +358,7 @@ def generate(box: dict, seed: int = DESIGN_SEED) -> tuple[list[dict], list[str]]
                 raise SystemExit(
                     f'불변식 위반: {kd_assigned} 로 배정했는데 r={rP:.4f} µm 는 '
                     f'{kind_for_radius(b, rP)} 범위다 — 범위 배선이 틀렸다')
+    assign_prime_seeds(pts)          # ★ 좌표 확정 후에만 — 난수 스트림 불변
     return pts, notes
 
 
@@ -570,6 +614,16 @@ def verify_csv(path: str) -> int:
     seeds = [r['seed'] for r in rows]
     chk('seed 전부 다름', len(set(seeds)) == len(seeds),
         f'{len(seeds)-len(set(seeds))} 중복')
+    #  ★★ 08-18 배치 v2 가 여기서 통과했다 — "서로 다른가" 만 보고 **소수인지는 안 봤다**.
+    #     그 결과 25 케이스가 abort 했고 chain 이 조용히 지나갔다.  그 검사를 여기 넣는다.
+    _si = [int(v) for v in seeds]
+    _bad = [(r['id'], v) for r, v in zip(rows, _si) if not is_prime(v)]
+    chk('seed 전부 소수 (LIGGGHTS insert/pack 요구)', not _bad,
+        'OK' if not _bad else f'합성수 {len(_bad)}개 — 예: '
+        + ', '.join(f'{i}={v}' for i, v in _bad[:3]))
+    chk(f'seed 범위 [{SEED_LO}, {SEED_HI}]',
+        all(SEED_LO <= v <= SEED_HI for v in _si),
+        f'{min(_si)}–{max(_si)}')
     chk('phi_AM 이 pdd_SE 와 정합', all(
         abs(float(r['phi_AM']) - phi_am_of_pdd_se(float(r['pdd_SE']))) < 1e-5
         for r in rows))
