@@ -2200,13 +2200,21 @@ def selftest_k() -> int:
         f"(RMS {_dd3['moment_rms_muB']} > {MOM_RMS_TOL})")
 
     # ── 닫힘 조건 C1 · C3 (회신 AA P0-4 — 코드로 낸다) ────────────────────
-    def _J(kind, _edisp=None, **kw):
+    def _J(kind, _edisp=None, _mom=(1.2, -1.2, 1.2, -1.2), **kw):
         m = {"kind": kind, "d3": "on"}; m.update(kw)
         return {"ok": True, "gates": [], "meta": m,
                 # C3 v2 는 OUTCAR 의 Edisp 를 읽는다 — 픽스처도 실물과 같은 자리에 둔다
                 "static": {"edisp_eV": _edisp, "edisp_n": 0 if _edisp is None else 1,
                            "incar_echo": {"NSW": "0"}},
-                "geom": {"magnetic": {"realized_basin_id": "B"}}}
+                # ★ P0-4 — 해시만이 아니라 **상세 지문**도 실물과 같은 자리에 둔다.
+                #   없으면 same_basin() 이 (옳게) 통과시키지 않는다.
+                "geom": {"magnetic": {
+                    "realized_basin_id": "B",
+                    "realized_basin": {
+                        "ni_sign_vector": [1 if x > 0 else -1 for x in _mom],
+                        "ni_index_poscar": [0, 1, 2, 3],
+                        "collapsed_ni_positions": [],
+                        "ni_moments_muB": list(_mom), "global_sign": 1.0}}}}
 
     _en3, _jb3 = {}, {}
     _CS = "refs/clean_slab__" + SEED_MAIN
@@ -2249,7 +2257,26 @@ def selftest_k() -> int:
     _jb_b[_kb] = dict(_jb3[_kb], geom={"magnetic": {"realized_basin_id": "OTHER"}})
     chk(closure_C1(_man3, _jb_b, _E3, _emol3, _F3)["by_frag"]["ptfe_c10"]["verdict"]
         == "unresolved",
-        "⛔음성 C1: clean slab 과 basin 이 다른 자세가 있으면 unresolved")
+        "⛔음성 C1: 네 자세 중 basin 이 다른 것이 있으면 unresolved")
+    # ⛔ 음성 P0-4 — **해시는 같은데 크기가 벌어진** 경우. 종전엔 해시만 봐서
+    #   1.2 μB 와 2.0 μB 가 같은 basin 으로 통과했다. basin_distance 의 RMS 규칙은
+    #   selftest 밖에서 한 번도 안 불렸다 (살아 있는 척하는 죽은 코드).
+    _jb_m = dict(_jb3)
+    _jb_m[_kb] = _J("prospective_pose", fragment="ptfe_c10", seed=SEED_MAIN,
+                    basin_id="b01", role="calibration", uma_E_pose_eV=0.11,
+                    _edisp=-1.0, _mom=(2.0, -2.0, 2.0, -2.0))    # 부호 같음, 크기 다름
+    _r_m = closure_C1(_man3, _jb_m, _E3, _emol3, _F3)["by_frag"]["ptfe_c10"]
+    chk(_r_m["verdict"] == "unresolved"
+        and any("RMS" in str(x) for x in (_r_m.get("missing") or [])),
+        "⛔음성 P0-4: 부호가 같아도 **모멘트 크기**가 벌어지면 unresolved — "
+        "해시만 보면 통과했다 (%s)" % (_r_m.get("missing") or [])[:1])
+    # ⛔ 음성 P0-4b — 상세 지문이 아예 없으면 **통과가 아니다**
+    _jb_n4 = dict(_jb3)
+    _jb_n4[_kb] = dict(_jb3[_kb],
+                       geom={"magnetic": {"realized_basin_id": "B"}})   # 상세 없음
+    _r_n4 = closure_C1(_man3, _jb_n4, _E3, _emol3, _F3)["by_frag"]["ptfe_c10"]
+    chk(_r_n4["verdict"] == "unresolved",
+        "⛔음성 P0-4b: 상세 지문이 없으면 해시가 같아도 통과시키지 않는다")
 
     # ── P0-5 회귀: **production 이 실제로 쓰는 경로**로 친다 ─────────────────
     #   read_outcar 는 `{k: _echo_val(t, k) for k in AUDIT_KEYS_RUNTIME}` 로
@@ -2923,6 +2950,38 @@ def _twin_of(jobs, parent_key):
     return None
 
 
+def _basin_of(jr):
+    """잡 → (id, detail). 없으면 (None, None) — 호출부가 fail-closed 로 처리한다."""
+    m = ((jr or {}).get("geom") or {}).get("magnetic") or {}
+    return m.get("realized_basin_id"), m.get("realized_basin")
+
+
+def same_basin(ja, jb):
+    """두 잡이 **같은 자기 basin 인가** → (bool, 사유).
+
+    🔴 회신 AB P0-4 — 종전엔 `realized_basin_id` **해시만** 비교했다. 그 해시는
+      부호 벡터·붕괴 위치·유기물 상대 스핀만 담고 **크기를 안 담는다**. 그래서
+      1.2 μB 와 2.0 μB 처럼 부호는 같고 크기가 크게 다른 상태가 같은 basin 으로
+      통과했다. `basin_distance()` 의 RMS ≤ MOM_RMS_TOL 규칙은 selftest 밖에서
+      **한 번도 호출되지 않았다** — 살아 있는 척하는 죽은 코드였다.
+      ⇒ 해시가 같아도 상세 지문으로 한 번 더 본다. 지문이 없으면 통과가 아니다.
+    """
+    ia, da = _basin_of(ja)
+    ib, db = _basin_of(jb)
+    if ia is None or ib is None:
+        return False, "realized_basin_id 없음 (미판정) — 통과로 읽지 않는다"
+    if ia != ib:
+        return False, f"basin 해시 불일치 {str(ia)[:8]} vs {str(ib)[:8]}"
+    d = basin_distance(da, db)
+    if d is None:
+        return False, "상세 지문 없음 — 크기 비교 불가 (해시만으로 통과시키지 않는다)"
+    if not d.get("same"):
+        return False, ("해시는 같지만 상세가 다르다 (hamming %s · collapse %s · "
+                       "RMS %s μB > %s)" % (d.get("hamming"), d.get("collapse_symdiff"),
+                                            d.get("moment_rms_muB"), MOM_RMS_TOL))
+    return True, "ok"
+
+
 def closure_C1(man, jobs, E, emol, frags):
     """C1 — **선택된 네 자세에서의 국소 calibration 일관성**.
 
@@ -2945,8 +3004,14 @@ def closure_C1(man, jobs, E, emol, frags):
         res["verdict"] = f"unresolved — clean slab(pm1·D3-on)이 {len(slabs)}개"
         return res
     e_slab = E(slabs[0])
-    slab_rb = (((jobs[slabs[0]].get("geom") or {}).get("magnetic") or {})
-               .get("realized_basin_id"))
+    # 🔴 회신 AB P0-4 후단 — `S_f = max_p e − min_p e` 에서는 같은 조각의 슬랩·분자
+    #   항이 **정확히 소거된다**. 그러므로 필요한 것은 네 complex 자세가 서로 같은
+    #   basin 인가이지, 각 자세가 clean slab 과 같은 basin인가가 **아니다**.
+    #   clean slab 일치는 **절대 E_ads** 를 주장할 때 따로 요구한다(그 게이트는
+    #   BASIN_MISMATCH_SLAB 로 이미 별도로 있다). 종전 구현은 여기서 슬랩 일치를
+    #   요구해 과잉차단이었다.
+    res["⚠_basin_규칙"] = ("네 자세가 **서로** 같은 basin 이면 된다 — S_f 에서 슬랩·분자가 "
+                          "소거되기 때문. clean slab 일치는 절대 E_ads 쪽 요구조건이다")
     for f in frags:
         poses = _pick(jobs, kind="prospective_pose", fragment=f,
                       seed=SEED_MAIN, d3="on")
@@ -2958,8 +3023,8 @@ def closure_C1(man, jobs, E, emol, frags):
             ec, um = E(jn), m.get("uma_E_pose_eV")
             if jr.get("gates") or ec is None or um is None or e_slab is None:
                 miss.append(f"{jn}(게이트/에너지 결측)"); continue
-            if rb is None or (slab_rb is not None and rb != slab_rb):
-                miss.append(f"{jn}(basin 불일치/미판정)"); continue
+            if rb is None:
+                miss.append(f"{jn}(basin 미판정)"); continue
             rows.append({"job": jn, "basin": m.get("basin_id"),
                          "E_ads_DFT_eV": round(ec - e_slab - emol[f], 6),
                          "E_ads_UMA_eV": round(float(um), 6),
@@ -2975,11 +3040,22 @@ def closure_C1(man, jobs, E, emol, frags):
                                  "why": "MANIFEST.planned 에 이 조각의 pm1 자세가 없다 "
                                         "— 기대 자세 수를 회수분에서 세지 않는다"}
             continue
+        # ★ 네 자세가 **서로** 같은 basin 인지 — 해시가 아니라 상세 지문으로 (P0-4)
+        _het = []
+        if len(rows) > 1:
+            _ref = rows[0]["job"]
+            for _r in rows[1:]:
+                _ok, _why = same_basin(jobs[_ref], jobs[_r["job"]])
+                if not _ok:
+                    _het.append(f"{_r['job']}: {_why}")
+        if _het:
+            miss.extend(_het)
         if miss or len(rows) != n_want or not rows:
             res["by_frag"][f] = {"verdict": "unresolved", "missing": miss,
                                  "n_used": len(rows), "n_required": n_want,
-                                 "why": "4자세 전부가 있어야 한다 — 부분집합은 range 를 "
-                                        "작게 만들어 통과 쪽으로 편향된다"}
+                                 "why": "4자세 전부가 있고 **서로 같은 basin** 이어야 한다 "
+                                        "— 부분집합은 range 를 작게 만들어 통과 쪽으로 "
+                                        "편향되고, 상태를 가로지르면 e 가 다른 양이 된다"}
             continue
         r = [x["residual_eV"] for x in rows]
         S = max(r) - min(r)
