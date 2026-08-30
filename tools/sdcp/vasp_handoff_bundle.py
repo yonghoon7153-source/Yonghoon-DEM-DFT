@@ -2384,6 +2384,63 @@ def selftest_k() -> int:
     chk(h1_tolerance({"by_frag": {"a": {}}})["a"]["tol_eV"] == C5_H1_FLOOR_EV,
         "[음성] S_f 미측정이어도 δ 는 정의된다 (조용히 0 이 되지 않는다)")
 
+    # ── 진공 두께 수렴 시험 (회신 AJ) ───────────────────────────────────────
+    _VM = {"vacuum_convergence": {"c1_A": 36.6551, "c2_A": 40.6551}}
+    _emv = {"sdcp_neutral": -100.0, "ptfe_c10": -50.0}
+
+    def _vjobs(d_sdcp_c1, d_sdcp_c2, d_ptfe_c1, d_ptfe_c2, rb="r1", rb_c2=None):
+        jb, en = {}, {}
+        for f, (a1, a2) in (("sdcp_neutral", (d_sdcp_c1, d_sdcp_c2)),
+                            ("ptfe_c10", (d_ptfe_c1, d_ptfe_c2))):
+            for cell, kind, a in (("c1", "prospective_pose", a1),
+                                  ("c2", "vacuum_convergence", a2)):
+                k = "%s/%s__%s" % (cell, f, cell)
+                jb[k] = {"meta": {"kind": kind, "fragment": f, "seed": SEED_MAIN,
+                                  "role": "primary",
+                                  **({"vacconv": "c2"} if cell == "c2" else {})},
+                         "gates": [],
+                         "geom": {"magnetic": {"realized_basin_id":
+                                               (rb_c2 or rb) if cell == "c2" else rb}}}
+                en[k] = _emv[f] + a
+        return jb, en
+
+    # 양성: A 가 네 값 모두 같은 만큼 움직이면 대비는 안 변한다
+    _jv, _ev = _vjobs(-1.20, -1.19, -0.80, -0.79)
+    _rv = closure_vacconv(_VM, _jv, lambda j: _ev.get(j), _emv,
+                          ["sdcp_neutral", "ptfe_c10"])
+    chk(_rv["pass"] and abs(_rv["delta_vac_eV"]) < 1e-9,
+        "진공 양성: 두 조각이 같이 움직이면 Δ_vac = 0 (조각별 변화 10 meV 여도 통과)")
+    chk(abs(_rv["D_eV"]["c1"] - (-0.40)) < 1e-9,
+        "D(c1) = A_SDCP − A_PTFE = −0.40 (실제 %s)" % _rv["D_eV"]["c1"])
+
+    # ⛔음성 ①: 대비가 6 meV 움직이면 막는다
+    _jv2, _ev2 = _vjobs(-1.20, -1.206, -0.80, -0.80)
+    _rv2 = closure_vacconv(_VM, _jv2, lambda j: _ev2.get(j), _emv,
+                           ["sdcp_neutral", "ptfe_c10"])
+    chk(_rv2["pass"] is False and "FAIL" in _rv2["verdict"],
+        "⛔음성 AJ: Δ_vac 6 meV → 실패 (문턱 5 meV · 조각별로 보면 안 보인다)")
+
+    # ⛔음성 ②: 5 meV 안이어도 0.01 eV 반올림이 갈리면 막는다
+    #   경계를 **걸치게** 한다: −0.4048 → −0.40 · −0.4052 → −0.41 (차 0.4 meV)
+    _jv3, _ev3 = _vjobs(-1.2048, -1.2052, -0.80, -0.80)
+    _rv3 = closure_vacconv(_VM, _jv3, lambda j: _ev3.get(j), _emv,
+                           ["sdcp_neutral", "ptfe_c10"])
+    chk(_rv3["within_tol"] and not _rv3["same_rounded"] and _rv3["pass"] is False,
+        "⛔음성 AJ: 4 meV 로 문턱 안이어도 −0.40/−0.40 이 아니면 실패 "
+        "(보고 자릿수에서 값이 달라진다) · %s" % _rv3["D_reported"])
+
+    # ⛔음성 ③: 자기 topology 가 셀 사이에서 갈리면 셀 효과가 아니다
+    _jv4, _ev4 = _vjobs(-1.20, -1.20, -0.80, -0.80, rb="r1", rb_c2="r2")
+    _rv4 = closure_vacconv(_VM, _jv4, lambda j: _ev4.get(j), _emv,
+                           ["sdcp_neutral", "ptfe_c10"])
+    chk(any("BASIN_MISMATCH" in b for b in _rv4["blocks"]) and "pass" not in _rv4,
+        "⛔음성 AJ: c1↔c2 realized topology 가 다르면 값을 안 만든다")
+
+    # [음성] 옛 번들에는 적용하지 않는다
+    chk(closure_vacconv({}, {}, lambda j: None, _emv,
+                        ["sdcp_neutral", "ptfe_c10"])["applicable"] is False,
+        "[음성] vacconv 잡이 없는 번들에는 없는 계약을 요구하지 않는다")
+
     # ⛔ 회신 AF P0-6 — 정확히 ±δ 는 **둘 다 미해결**이다 (부동소수점으로 뒤집혔었다)
     for _sgn, _lbl in ((+1, "+30 meV"), (-1, "−30 meV")):
         _Ab = {"sdcp_neutral": ([-1.20, -1.10, -1.05, -1.00], [-1.15] + [-0.9] * 7),
@@ -3452,6 +3509,109 @@ def merge_compat(bundles):
     info["ok"] = not info["blocking"]
     return info
 
+VACCONV_TOL_EV = 0.005          # 보고 최소단위(0.01 eV)의 **절반** — 물리 상수가 아니다
+VACCONV_REPORT_DIGITS = 2       # 0.01 eV 로 보고한다 (사전 고정)
+
+
+def closure_vacconv(man, jobs, E, emol, frags):
+    """진공 두께 수렴 시험 — **두 조각의 대비 변화**로 판정한다 (회신 AJ).
+
+        D(c) = [E_C^SDCP(c) − E_G^SDCP] − [E_C^PTFE(c) − E_G^PTFE]
+        Δ_vac = D_primary,pm1(c2) − D_primary,pm1(c1)
+
+    통과: |Δ_vac| ≤ 5 meV **그리고** D(c1)·D(c2) 의 0.01 eV 반올림이 같다.
+
+    🔑 왜 조각별 변화가 아니라 대비인가 — 기체 항은 c 에 무관하고 슬랩 항은 두 조각에
+       공통이라, 대비를 취하면 둘 다 소거된다. 조각별로 보면 소거되지 않는 항이 남는다.
+
+    ⛔ 이 함수가 못 하는 것
+      · 절대 E_ads 의 수렴을 말하지 못한다 — clean slab 이 대비에서 소거되므로 여기
+        들어오지 않는다. 절대값을 인용하려면 별도 시험이 필요하다.
+      · c2 보다 큰 셀에서 무슨 일이 나는지 모른다. 두 점 시험이다.
+    """
+    res = {"schema": "closure_vacconv/v1", "tol_eV": VACCONV_TOL_EV,
+           "report_digits": VACCONV_REPORT_DIGITS,
+           "⚠_5meV_출처": "물리 상수가 아니라 보고 최소단위(0.01 eV)의 절반",
+           "by_cell": {}, "blocks": []}
+    # 이 시험은 **둘째 셀을 실은 판(C-12)** 에만 있다. 옛 번들에는 vacconv 잡이 없고,
+    # 없는 계약을 요구하면 legacy 결과가 통째로 막힌다.
+    if not (man or {}).get("vacuum_convergence") and not _pick(
+            jobs, kind="vacuum_convergence"):
+        res["verdict"] = "n/a — 이 번들에 진공 수렴 시험 잡이 없다"
+        res["applicable"] = False
+        return res
+    res["applicable"] = True
+
+    def _one(frag, kind):
+        js = [j for j in _pick(jobs, kind=kind, fragment=frag, seed=SEED_MAIN)
+              if (jobs[j].get("meta") or {}).get("role") in (None, "primary")]
+        if len(js) != 1:
+            res["blocks"].append("VACCONV_JOB_AMBIGUOUS(%s/%s: %d개)"
+                                 % (frag, kind, len(js)))
+            return None
+        jr = jobs[js[0]]
+        if jr.get("gates"):
+            res["blocks"].append("VACCONV_JOB_GATED(%s: %s)"
+                                 % (js[0], jr["gates"][:1]))
+            return None
+        e = E(js[0])
+        if e is None:
+            res["blocks"].append("VACCONV_JOB_MISSING(%s)" % js[0])
+            return None
+        return js[0], e, jr
+
+    picks, A = {}, {}
+    for frag in frags:
+        if emol.get(frag) is None:
+            res["blocks"].append("VACCONV_NO_GAS_REF(%s)" % frag)
+            continue
+        for cell, kind in (("c1", "prospective_pose"), ("c2", "vacuum_convergence")):
+            got = _one(frag, kind)
+            if got is None:
+                continue
+            jn, e, jr = got
+            picks[(frag, cell)] = jn
+            A[(frag, cell)] = e - emol[frag]
+
+    # 자기 topology 가 네 잡에서 같아야 한다 — 다르면 셀 효과가 아니라 상태 차이를 잰다
+    _rb = {k: ((jobs[v].get("geom") or {}).get("magnetic") or {}).get("realized_basin_id")
+           for k, v in picks.items()}
+    if len(picks) == 4:
+        if any(v is None for v in _rb.values()):
+            res["blocks"].append(
+                "VACCONV_BASIN_UNRESOLVED(네 잡 중 realized topology 미판정이 있다)")
+        elif len(set(_rb.values())) > 1:
+            res["blocks"].append(
+                "VACCONV_BASIN_MISMATCH(%s — 셀 효과가 아니라 자기 상태 차이를 재게 된다)"
+                % _rb)
+    res["jobs"] = {"%s/%s" % k: v for k, v in sorted(picks.items())}
+    res["A_eV"] = {"%s/%s" % k: round(v, 6) for k, v in sorted(A.items())}
+
+    sd = next((f for f in frags if "sdcp" in f), None)
+    ct = next((f for f in frags if f != sd), None)
+    if not (sd and ct) or len(A) != 4 or res["blocks"]:
+        res["verdict"] = "unresolved — 네 잡이 전부 회수·통과해야 판정한다"
+        return res
+
+    D = {c: A[(sd, c)] - A[(ct, c)] for c in ("c1", "c2")}
+    res["D_eV"] = {c: round(v, 6) for c, v in D.items()}
+    res["D_reported"] = {c: round(v, VACCONV_REPORT_DIGITS) for c, v in D.items()}
+    d_vac = D["c2"] - D["c1"]
+    res["delta_vac_eV"] = round(d_vac, 6)
+    # ⛔ 정확한 경계가 부동소수점으로 뒤집히지 않게 μeV 정수로 비교 (회신 AF P0-6 과 같은 이유)
+    within = abs(int(round(d_vac * 1e6))) <= int(round(VACCONV_TOL_EV * 1e6))
+    same_round = res["D_reported"]["c1"] == res["D_reported"]["c2"]
+    res["within_tol"] = within
+    res["same_rounded"] = same_round
+    res["pass"] = bool(within and same_round)
+    res["verdict"] = ("ok — Δ_vac %.1f meV, 0.01 eV 반올림 일치" % (1000 * d_vac)
+                      if res["pass"] else
+                      "⛔ FAIL — Δ_vac %.1f meV (문턱 %.0f) · 반올림 %s. "
+                      "추가 셀 탐색 없이 Figure 2e 를 제거한다"
+                      % (1000 * d_vac, 1000 * VACCONV_TOL_EV,
+                         "일치" if same_round else "불일치"))
+    return res
+
 def closure_C1(man, jobs, E, emol, frags):
     """C1 — **선택된 네 자세에서의 국소 calibration 일관성**.
 
@@ -4140,6 +4300,11 @@ def _closure_estimand(man, results, E, emol, jobs, merge_info=None):
     try:
         out["closure_C1"] = closure_C1(man, jobs, E, emol, frags)
         out["closure_C3"] = closure_C3(man, jobs, E, frags)
+        out["closure_vacconv"] = closure_vacconv(man, jobs, E, emol, frags)
+        if out["closure_vacconv"].get("pass") is False:
+            out["blocks"].append("VACCONV_FAIL:" + out["closure_vacconv"]["verdict"])
+        for _b in (out["closure_vacconv"].get("blocks") or []):
+            out["blocks"].append("VACCONV:" + _b)
         out["potcar_identity"] = potcar_identity_gates(jobs, man)
         # ⛔ 회신 AJ — 종전엔 **기록만** 하고 blocks 에 안 합쳤다. split·pin 불일치를
         #   탐지해도 값 보고를 못 막았다. 게이트가 아니라 로그였던 것이다.
