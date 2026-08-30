@@ -77,6 +77,13 @@ run 'bridge_grid_verdict    --selftest' python3 scripts/bridge_grid_verdict.py -
 run 'lhs_perc_extract       --selftest' python3 scripts/lhs_perc_extract.py --selftest
 run 'lhs_perc_fit           --selftest' python3 scripts/lhs_perc_fit.py --selftest
 
+#  ★ 2026-08-30 — 이 둘은 selftest 가 **있었는데 배선이 없었다**.  `make_heckel_manifest.scan()`
+#    이 심볼릭 링크 중복을 독립 대조로 세어 인계 문서에 가짜 확인이 적혔고, 그 회귀가
+#    여기 안 걸려 있으면 다음에 또 조용히 풀린다 ("존재하고 수동 실행이 녹색인 것만으로는
+#    자동 규율이 아니다" — 위 §57 과 같은 규칙).
+run 'make_heckel_manifest   --selftest' python3 scripts/make_heckel_manifest.py --selftest
+run 'oat_sensitivity        --selftest' python3 scripts/oat_sensitivity.py --selftest
+
 echo "── 리포 실물 (리포가 맞나 — selftest 가 **대신해 주지 않는다**) ──"
 #  ★★ 2026-08-25 — 배터리는 느려서 여기 없지만(~20분), **문법이라도** 본다.
 #    실사고: mutant 문자열 인용이 깨져 배터리가 시작하자마자 SyntaxError 로 죽었는데

@@ -74,8 +74,29 @@ def scan(root, pattern='post_SE_heckel_*', key_fn=None, key_name='P_MPa',
     """
     key_fn = key_fn or pressure_key
     pts, skipped = [], []
-    for d in sorted(glob.glob(os.path.join(root, pattern))):
-        if not os.path.isdir(d):
+    #  ★★ 심볼릭 링크 중복 제거 (2026-08-30).  실사고: `post_SE_heckel_300 -> post_oat_esweep_E24p0`
+    #     이 실재했고 glob 이 **같은 런을 두 번** 냈다.  OAT 집계에서 한 번은 `(대조)`, 한 번은
+    #     `E=24` 로 나와 두 행의 값이 자리 끝까지 같았고, 그것이 인계 문서에 *"세 번째 대조가
+    #     통과한 셈"* 이라는 **가짜 확인**으로 적혔다.  중복은 독립 대조가 아니다.
+    #     ⇒ realpath 로 접되 **접었다는 사실을 `skipped` 에 남긴다** — 조용히 지우면 같은
+    #       착시가 다시 생기고, 이번엔 "왜 폴더가 하나 줄었지" 로도 안 보인다.
+    #     ⚠ 실체 디렉터리를 남기고 **링크를 버린다** — 이름이 거짓말하는 쪽이 링크다.
+    _dirs = [d for d in sorted(glob.glob(os.path.join(root, pattern))) if os.path.isdir(d)]
+    _groups = {}
+    for _d in _dirs:
+        _groups.setdefault(os.path.realpath(_d), []).append(_d)
+    _keep = set()
+    for _rp, _g in _groups.items():
+        _real = [x for x in _g if not os.path.islink(x)]
+        _win = (_real or _g)[0]
+        _keep.add(_win)
+        for _x in _g:
+            if _x != _win:
+                skipped.append((os.path.basename(_x),
+                                f'같은 실체를 가리킨다 — `{os.path.basename(_win)}` 와 동일 '
+                                f'(realpath {_rp}).  링크는 독립 런이 아니다'))
+    for d in _dirs:
+        if d not in _keep:
             continue
         kv = key_fn(os.path.basename(d))
         if kv is None:
@@ -245,6 +266,33 @@ def _selftest():
     # 실제 heckel_analysis 가 읽는 스키마인지 (키 이름 오타 회귀 방지)
     need = {'P_MPa', 'plate_z', 'atom', 'contacts'}
     chk('manifest 스키마가 heckel_analysis 요구와 일치', need <= set(pts[0]))
+
+    # ── ★★ 심볼릭 링크 중복 (2026-08-30 실사고 회귀) ────────────────────────────────
+    #    `post_SE_heckel_300 -> post_oat_esweep_E24p0` 이 실재했고, 중복이 **독립 대조**로
+    #    읽혀 인계 문서에 가짜 확인이 적혔다.  여기서 잡는다.
+    td9 = tempfile.mkdtemp(prefix='hm_link_')
+
+    def mkcase9(p, steps, z):
+        d = os.path.join(td9, f'post_SE_heckel_{p}')
+        os.makedirs(d, exist_ok=True)
+        for s in steps:
+            open(os.path.join(d, f'atom_{s}.liggghts'), 'w').write('x\n')
+            open(os.path.join(d, f'contact_{s}.liggghts'), 'w').write('x\n')
+            stl(os.path.join(d, f'mesh_{s}.stl'), z)
+        return d
+
+    _r9 = mkcase9(100, (1000,), 0.041)
+    os.symlink(_r9, os.path.join(td9, 'post_SE_heckel_300'))   # 이름은 300, 실체는 100
+    chk('★ 음성 대조 — glob 은 둘로 본다 (중복이 실재한다)',
+        len([x for x in glob.glob(os.path.join(td9, 'post_*')) if os.path.isdir(x)]) == 2)
+    p9, s9 = scan(td9)
+    chk('★★ 링크 중복을 접는다 — 같은 실체는 한 번만 센다', len(p9) == 1)
+    chk('★ 실체를 남기고 링크를 버린다 (이름이 거짓말하는 쪽이 링크)',
+        bool(p9) and p9[0]['P_MPa'] == 100)
+    _s9 = [r for (_n, r) in s9 if '같은 실체' in r]
+    chk('★ 접었다는 사실을 skipped 에 남긴다 (조용히 지우지 않는다)', len(_s9) == 1)
+    chk('★ 사유가 realpath 를 지목한다 (무엇과 같은지 추적 가능)',
+        bool(_s9) and 'realpath' in _s9[0] and 'post_SE_heckel_100' in _s9[0])
 
     print(f'selftest: {ok}/{ok + len(fail)} PASS' + (f'   FAILED: {fail}' if fail else ''))
     return 0 if not fail else 1
