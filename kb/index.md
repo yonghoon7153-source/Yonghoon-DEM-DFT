@@ -270,7 +270,7 @@
 - `kb/questions/doped_declared_state_feasibility_2026_08_29.md` — doped E_ads 를 '상태 선언' 으로 살릴 수 있나 — NUPDOWN 은 홀 위치를 안 묶는다 ○미열람 [open]
 - `kb/questions/esw_reduction_limit_field_2026_08_28.md` — `reduction_limit_V` 는 환원한계가 아닌 것 같다 — breakpoint 하나 아래를 가리킨다 ○미열람 [open]
 - `kb/questions/lpsocl_low_beta_mechanism.md` — 저β 런의 정체 — 케이지 절편인가, 진짜 sub-diffusion인가, 느린 전이인가 ⚠disputed ○미열람 [active]
-- `kb/questions/sdcp_backbone_polaron_estimand_2026_08_31.md` — SDCP 백본 폴라론 — 자가도핑 상태에서 캐리어가 백본에 있는가 (estimand 카드) ○미열람 [open]
+- `kb/questions/sdcp_backbone_polaron_estimand_2026_08_31.md` — H-제거 n=6 라디칼 상태지도 — estimand 카드 v2 (회신 S 반영) ○미열람 [open]
 - `kb/questions/sdcp_doped_estimand_2026_08_28.md` — SDCP doped 흡착 — estimand 카드 (계산 전에 리뷰로 보내는 §1–3) ○미열람 [active]
 - `kb/questions/sdcp_doped_reopen_v2_2026_08_28.md` — sdcp_doped 재개 설계 v2 — 회신 O 재승인 조건 7 을 실제로 채우는 카드 ○미열람 [answered]
 - `kb/questions/sdcp_doped_reopen_v3_2026_08_28.md` — sdcp_doped 재개 설계 v3 — 회신 R 재심사 조건 8 반영 (Stage 0 재심사용) ○미열람 [active]

@@ -1,0 +1,187 @@
+{
+  "schema": "estimand_prereg/v1",
+  "date": "2026-08-31",
+  "status": "proposed",
+  "⚠_비준": "proposed 다 — 사람이 ratify 해야 active (db/governance/decisions.json 규율)",
+  "제목": "H-제거 n=6 라디칼 상태지도 — adequacy pilot 사전등록 (회신 S 착수전 P0 5건 봉인)",
+  "카드": "kb/questions/sdcp_backbone_polaron_estimand_2026_08_31.md",
+  "리뷰": "회신 S (2026-08-31) — 전체 생산 NO-GO / 32건 r2SCAN-3c adequacy pilot 조건부 GO",
+
+  "0_시각_증거": "이 파일의 최초 커밋 시점에 doped 잡은 **0개**다. git log 가 그 순서의 증거다 — 결과를 보고 규칙을 고치지 않는다.",
+
+  "P0_1_대상_수정": {
+    "정본_명칭": "neutral H-atom-removed n=6 radical model",
+    "무엇을_시험하지_않는가": [
+      "실제 시료에서 자가도핑이 자발적으로 일어나는가",
+      "H+ 와 전자의 reservoir 가 무엇인가",
+      "실제 산형·염형·수화도·산화도가 무엇인가"
+    ],
+    "모델_조건": "P-SO3H -> P-SO3^- + H+ ; P-SO3^- -> [P•+ -SO3^-] + e- 의 **최종 생성물을 조건으로 둔** 모델",
+    "⛔": "H 원자 제거가 자가도핑 과정 자체를 재현했다고 쓰지 않는다"
+  },
+
+  "P0_2_관측량_계약": {
+    "primary": {
+      "식": "F_G^(P) = ∫ W_G^(P)(r) |rho_a - rho_b| dr / ∫ |rho_a - rho_b| dr",
+      "집합": "backbone(EDOT ring C·S·O, ring 별 분리) / sulfonate(S + 3 O) / other",
+      "제약": "상호배타·완전. F_bb + F_SO3 + F_other = 1",
+      "분할": "Hirshfeld primary · Löwdin sensitivity — **같은 정의를 두 분할에 똑같이**",
+      "근사경로": "실공간 적분이 어려우면 Σ|atomic spin|",
+      "signed": "net spin 은 M_bb 로 **따로 보존** (버리지 않는다)",
+      "⛔_폐기": "v1 식 Σ_bb s_i / Σ|s_i| — 분자가 signed 라 백본 내부에서 다시 상쇄됐다"
+    },
+    "hole_density": {
+      "식": "Δρ_hole = ρ(D-) − ρ(D•), **같은 기하**에서",
+      "D-": "H 제거 조성, charge -1, mult 1",
+      "D•": "같은 H 제거 조성, charge 0, mult 2",
+      "검증": "적분값이 정확히 한 전자",
+      "분해": "positive detachment 성분과 signed relaxation 성분을 분리하거나 natural difference orbital 병기",
+      "⛔": "중성 산 ↔ H-제거 라디칼의 Δq 는 **핵 조성이 달라** 홀 밀도가 아니다. 그 값의 명칭은 'H-abstraction-induced charge redistribution'"
+    },
+    "비편재": {
+      "N_eff": "1 / Σ_j p_j^2 (p_j = ring j 의 spin share)",
+      "span": "80% spin 을 포함하는 최소 연속 ring span 병기",
+      "⛔_폐기": "v1 의 L_deloc('최대링의 10%') — 수치 잡음도 최소 한 링을 반환한다"
+    },
+    "구조이완": {
+      "식": "E_relax = E_D•(R_start) − E_D•(R_•)",
+      "⛔": "Marcus 재조직에너지가 **아니다** — radical 표면 한쪽의 relaxation energy",
+      "hard_gate": "A→B 로 state 가 바뀌면 구조이완과 basin 전환이 섞인다 — branch identity 를 게이트",
+      "4점_λ_in": "[E_•(R_-) − E_•(R_•)] + [E_-(R_•) − E_-(R_-)]  (same-nuclei inner-sphere)"
+    },
+    "BLA": "같은 조성의 D- 와 D• **기하** 비교. acid parent 비교는 H 제거 구조효과가 섞인다고 표시. ⚠ partition 위험은 줄이되 functional 위험은 우회 못 함"
+  },
+
+  "P0_3_seed_집합_봉인": {
+    "한_conformer당": 8,
+    "구성": {"A_SO3_radical": 1, "B_backbone_polaron_ring별": 6, "default_fresh_start": 1},
+    "⚠_왜_6인가": "비틀린 유한 n=6 사슬에 엄밀한 좌우 대칭이 없다. 실제 automorphism 을 증명하지 못하면 3개가 아니라 6개다",
+    "준비법": "MORead + Rotate / charged-fragment orbital transplant / cDFT 후 제약 해제",
+    "규율": [
+      "제약은 seed 생성에만 사용",
+      "최종 에너지와 최적화는 완전 비제약",
+      "각 seed 는 NoAutoStart 로 분리",
+      "최적화 후 별도 stability SP",
+      "unstable 이면 생성된 orbital 로 재최적화 후 다시 검사",
+      "energy·geometry·ring-spin profile 로 basin dedup"
+    ],
+    "표현": "사전등록 seed 집합에서 찾은 최저해 (전역 최소 아님)",
+    "positive_control": {
+      "계": "같은 n=6 fully protonated cation, charge +1, mult 2",
+      "목적": "에너지 기준이 아니라 '이 방법이 알려진 형태의 backbone radical cation 을 표현할 수 있는가'",
+      "seed": "ring 별 B 6 + default 1 = 7"
+    },
+    "⛔_StabPerform": "상태 열거 규칙이 아니다 — 수렴한 determinant 의 국소최소 여부만 본다. black-box 금지, orbital·에너지 차 직접 확인, single-point 형에서 수행",
+    "⛔_W_state": "보편값 없음. **전자에너지를 모두 보고**한다. 열적 공존은 같은 온도 ΔG 필요. 범함수로 순서가 바뀌면 FUNCTIONAL_DEPENDENT 이지 넓은 창으로 합치지 않는다"
+  },
+
+  "P0_4_환경_규약": {
+    "eps_1": "vacuum control",
+    "eps_dry_polymer": "⏳ **값 미정** — litdb 근거로 확정 후 primary sensitivity",
+    "eps_20": "stress test",
+    "branch_following": "매번 최저해를 다시 고르지 않는다. ΔE_(B−A)(ε) · F_bb^A(ε) · F_bb^B(ε) 를 연속 추적",
+    "교차": "plausible 범위에서 A/B 순서가 교차하면 ENVIRONMENT_DEPENDENT",
+    "cavity": "CPCM cavity 정의를 기록·고정 (게이트 항목)",
+    "⚠_CPCM": "material prediction 이 아니라 model-response curve. 수소결합·proton 위치·interchain packing 을 담지 않는다",
+    "⛔_외부이온": "tethered SO3- 가 이미 내부 counterion 이다. 임의의 외부 양이온을 더하면 다른 화학계",
+    "⛔_v1_철회": "'ε=1 에서는 전하분리 대가가 무조건 커진다' — 진공은 SO3−–backbone+ 인력을 **강화**하고 연속체는 screening 하면서 이온성 분포를 안정화한다. 순효과·단조성은 미리 정할 수 없다"
+  },
+
+  "P0_5_종료_규칙": {
+    "BACKBONE_SUPPORTED": "B 가 비제약 안정해로 남고 물리 환경 범위에서 최저 또는 에너지 근접",
+    "SO3_CENTERED_WITHIN_MODEL": "positive control 통과, 그러나 H-제거계에서 A 가 환경·범함수·conformer 에 걸쳐 일관되게 낮음",
+    "ENVIRONMENT_DEPENDENT": "plausible ε 범위에서 A/B 순서 교차",
+    "FUNCTIONAL_DEPENDENT": "범함수가 순서 또는 class 를 달리함",
+    "MODEL_NONDIAGNOSTIC": "positive control 실패 · 의도한 basin 회수 실패 · 상태 정체성 붕괴",
+    "PARTITION_DEPENDENT": "분할법 사이 class 가 다르거나 |ΔF_bb| > 0.10",
+    "THRESHOLD_DEPENDENT": "0.4/0.5/0.6 경계에서 class 가 바뀜",
+    "TUNING_DEPENDENT": "OT-RSH tuning minimum 이 평평하거나 n·conformer 에 민감",
+    "class_부여": "유일한 집합이 F ≥ 0.5 이고 **다음 집합과 차이 ≥ 0.10** 일 때만. F_other 가 크면 F_bb − F_SO3 만으로 판정하지 않는다",
+    "A가_나올때_최강_문구": "검사한 n=6 H-제거 분자모형에서는 탐색된 최저상태가 SO3 중심이었다"
+  },
+
+  "pilot_규모": {
+    "범위": "한 conformer · 한 H-removal site · 환경 2개(ε=1 + 근거 있는 low-ε) · 범함수당",
+    "D•_vertical": "A 1 + B 6 + default 1 = 8 × 2환경 = 16 SP",
+    "D-_reference": "1 × 2환경 = 2 SP",
+    "P+_positive_control": "7 × 2환경 = 14 SP",
+    "범함수당_합": 32,
+    "순서": [
+      "r2SCAN-3c 32건",
+      "adequacy gate 통과 시 wB97X-D3 가 **독립 seed 로** 같은 32건",
+      "총 fixed-geometry pilot 상한 64건",
+      "발견된 서로 다른 stable basin 마다 Opt 1건",
+      "각 Opt 뒤 final stability SP 1건"
+    ],
+    "⛔": "Opt 수를 미리 1 로 고정하지 않는다 — 결과에 따라 달라진다",
+    "판정_범위": "이 pilot 은 **상태탐색과 관측량의 유효성만** 판정한다"
+  },
+
+  "conformer_선택_규칙": {
+    "⚠_pilot_은_8개를_기다리지_않는다": "pilot 은 방법 적합성 시험이라 conformer 하나면 성립한다. 이미 완료된 gs0 을 쓴다.",
+    "pilot_conformer": "gs0 (dp6_gs0_neutral_final.xyz, E −10051.686813573808 Ha, SHA256 036fbf55…f40ba, 65 cycles, rc=0)",
+    "왜_gs0_인가": "**결과를 보고 고른 것이 아니다** — 8개 중 처음 완료된 것이고, pilot 의 판정 대상은 conformer 가 아니라 방법이다. gs1 이 11 meV 위라는 것은 이미 봤고 숨기지 않는다.",
+    "확장_규칙_사전등록": {
+      "언제": "중성 8개(gs0..gs7)가 전부 끝난 뒤",
+      "무엇": "저에너지이면서 **torsion-diverse** 한 conformer 최소 2개를 사전 규칙으로 선택",
+      "torsion_diverse_정의": "⏳ 미정 — 8개 torsion 벡터가 다 나온 뒤 **결과 에너지를 보기 전에** 거리 척도를 확정한다",
+      "H_위치": "엄밀한 대칭을 증명하지 못하면 **여섯 위치 전부** (1-based ORCA 인덱스 24·58·91·124·157·190)",
+      "⛔": "'가장 낮은 conformer 하나' 로 줄이지 않는다 — gs0/gs1 이 이미 11 meV 안의 축퇴 집합이다 (db/properties/sdcp_stageA_conformer_rule_2026_08_31.json)"
+    }
+  },
+
+  "게이트": [
+    "H 제거 인덱스·원소 · 전자수(961) · charge(0) · multiplicity(2) 출력 echo",
+    "ORCA version · 범함수 · basis · grid · CPCM cavity · geometry hash",
+    "NoAutoStart 와 의도한 MORead lineage 구분",
+    "모든 사전등록 seed 의 실행 receipt — 하나라도 빠지면 lowest-found 판정 금지",
+    "최종 geometry 에서 별도 stability SP",
+    "제약·level shift·frozen orbital 완전 해제 확인",
+    "A/B branch identity 가 vertical→relaxed 동안 유지되는지",
+    "최적화 중 proton 이동·결합절단 시 새 state 로 재분류",
+    "spin-density 적분값과 signed-spin 합 검증",
+    "backbone/SO3/other atom map 의 완전성·상호배타성·hash",
+    "Hirshfeld/Löwdin class 불일치 · 범함수별 state-order 불일치",
+    "GBW · spin-density cube · difference-density cube 보존",
+    "동일 에너지식 비교는 같은 조성·범함수·basis·환경 안에서만",
+    "판정바닥 단위 분리: share 0.01 (무차원) · 에너지 eV"
+  ],
+  "S2_창": {
+    "⚠": "0.75–0.80 은 k=1 doublet quality gate 로만. 보편 물리 경계가 아니다. **raw 값 보존**",
+    "restricted_singlet": "약 0",
+    "BS_singlet": "일반적으로 0이 아니며 두 spin-1/2 한계에서 약 1",
+    "triplet": "약 2"
+  },
+
+  "⛔_금지_서술": [
+    "SDCP 는 전자를 전도한다 / 안 한다",
+    "sigma_SDCP = 250 S/cm 를 뒷받침한다 (출처 미봉인 — 실험 검증으로 사용 금지)",
+    "전역 최소 (탐색한 해 중 최저로만)",
+    "단량체 65/35 와 n=6 값을 한 수치열에 · 65/35 를 n=6 이나 전도도와 반대되는 증거로 표현",
+    "Figure 4 sigma_ele,eff (54.0/70.6 mS/cm) 와 한 표에",
+    "펠릿 sigma_e (0.30→1.53e-7 S/cm) 와 한 표에",
+    "E_relax 로 hopping 속도·이동도·sigma 를 계산해 인용",
+    "H 원자 제거가 자가도핑 과정 자체를 재현했다",
+    "spin density 가 곧 hole charge density 다",
+    "기체/CPCM 최저해가 고체의 우세상태다",
+    "k=1 과 k=2 가 실제 시료의 17%·33% 도핑률이다",
+    "B basin 을 못 찾았으므로 고체에는 backbone polaron 이 없다",
+    "BLA 가 일치하므로 범함수 의존성이 해결됐다"
+  ],
+
+  "Figure4_층위": "excluded from conduction 은 SDCP 를 절연체로 본다는 뜻이 아니라 병렬 배선으로 모델하지 않았다는 뜻이다 (역할 = VGCF–활물질 접촉 확장). 이 계산은 Figure 4 를 지지·반박하지 않는다 — 회신 S 동의",
+
+  "미결": [
+    "dry-polymer ε 값 — litdb 근거 필요",
+    "torsion-diverse 거리 척도 — 8개 완료 후, 에너지 보기 전에 확정",
+    "OT-RSH 를 200원자·961전자에서 돌릴 수 있는지 (회신 S: 불가하면 FUNCTIONAL_DEPENDENT 에서 멈춤)",
+    "hybrid basis 의 diffuse-function sensitivity 확인 (내부 SO3- 성격 때문)"
+  ],
+
+  "연결": [
+    "kb/questions/sdcp_backbone_polaron_estimand_2026_08_31.md",
+    "kb/reviews/codex_S_prompt_backbone_polaron_estimand_2026_08_31.md",
+    "db/properties/sdcp_stageA_conformer_rule_2026_08_31.json",
+    "runs/sdcp_orca_stageA_2026_08_30/gs0/receipt.json"
+  ]
+}
