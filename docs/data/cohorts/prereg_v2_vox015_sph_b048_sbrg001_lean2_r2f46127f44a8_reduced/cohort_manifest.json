@@ -1,0 +1,146 @@
+{
+ "arms": 16,
+ "equivalence_checked": true,
+ "equivalence_modes": [
+  "--seal-only",
+  "--collect-only",
+  "full"
+ ],
+ "files": [
+  {
+   "dropped": [],
+   "name": "p2_DBE_sph_a0.json",
+   "out_bytes": 5751,
+   "out_sha256": "cf6b3f35ae8db9c3b828a27bfa36d6e2d28a7bf2fc3e73bd41b0c2effcf0e6ca",
+   "src_bytes": 130859658,
+   "src_sha256": "3de4cfb2b6726f2f713e63e7aa8f04aeef784ce7d0e64a0ea81d6fbcd179ecfb"
+  },
+  {
+   "dropped": [],
+   "name": "p2_DBE_sph_a1.json",
+   "out_bytes": 5766,
+   "out_sha256": "8be4b03468e67cddf411e13a88d678f64a979c3a1c2766a6d639d1199f3c1d12",
+   "src_bytes": 130856064,
+   "src_sha256": "6880a2823498107ec31123efcfde434dcd38c1013f36f76191b0515174ac0b7a"
+  },
+  {
+   "dropped": [],
+   "name": "p2_DBE_sph_a2.json",
+   "out_bytes": 5750,
+   "out_sha256": "370cbfb071ad6ac403ae8018749f00a199d7f3ac0a2e044f580c9c488450fbd5",
+   "src_bytes": 130858038,
+   "src_sha256": "4cb9c65ba341822b3b93bf1671594f8ee5b5b16fbba5045938665da885be6020"
+  },
+  {
+   "dropped": [],
+   "name": "p2_DBE_sph_a3.json",
+   "out_bytes": 5767,
+   "out_sha256": "6cf44af980b007275cd67751d9784006c6df3bf75b05fde1d3e50603b6afa0f5",
+   "src_bytes": 130856677,
+   "src_sha256": "5cd9740fa9ea9f7f8ba465cefe04c60dc5303e459234d6a6d49d3d79316867da"
+  },
+  {
+   "dropped": [],
+   "name": "p2_DBE_sph_a4.json",
+   "out_bytes": 5748,
+   "out_sha256": "9f14c68bbafeea3623121fb1b7f68d1e0f087a41fcb9eea044d717f6b1077a3d",
+   "src_bytes": 130860322,
+   "src_sha256": "c3d6f995ac64134e3abfd4b9bb70ec13a9b243402edc3764eb8739a9756b2956"
+  },
+  {
+   "dropped": [],
+   "name": "p2_DBE_sph_a5.json",
+   "out_bytes": 5767,
+   "out_sha256": "717c467c456766b9286cc992b4c4bc455eacdf76efb1c232b35a9e33c39f69c0",
+   "src_bytes": 130857014,
+   "src_sha256": "6e126a1e5205638016c99295f27227f99e6d988ba6bf8255ecf5cdaaf0784bbb"
+  },
+  {
+   "dropped": [],
+   "name": "p2_DBE_sph_a6.json",
+   "out_bytes": 5753,
+   "out_sha256": "18ae7800a2cb968e0c6ce6edcf633aac0f1df0829f0c0f8a015ace32ddbe89dd",
+   "src_bytes": 130860258,
+   "src_sha256": "ca55ab8cb68d022e979ac93d538812b89c160d9906eb8c2c8b5255a8a8c43f83"
+  },
+  {
+   "dropped": [],
+   "name": "p2_DBE_sph_a7.json",
+   "out_bytes": 5769,
+   "out_sha256": "967fd237d63edb76c2e198de810df44f5786ca34ec3860b4c25f876b7677a24b",
+   "src_bytes": 130857442,
+   "src_sha256": "f57484654d742e4681bb611de1322a9d3ab9efafe5025ad6bb7fcf2c07df5808"
+  },
+  {
+   "dropped": [],
+   "name": "p2_SBE_sph_a0.json",
+   "out_bytes": 5725,
+   "out_sha256": "746d7a7905eb07badae7b21c3cfd87d5c4db9450fd2d329ec5fe01b3545bd89b",
+   "src_bytes": 132228669,
+   "src_sha256": "ca9f76716b7e88ee13650c141fe11af3b1e2107a9e28a844c652e78ec35c53be"
+  },
+  {
+   "dropped": [],
+   "name": "p2_SBE_sph_a1.json",
+   "out_bytes": 5740,
+   "out_sha256": "c384617371522fb01df903314635e647c7fc107be76e37c4b60e6867248f0669",
+   "src_bytes": 132227926,
+   "src_sha256": "55df95b07062abdd91315cd28071e48a50bdef18ff008c0bfa1b8532e2cddf46"
+  },
+  {
+   "dropped": [],
+   "name": "p2_SBE_sph_a2.json",
+   "out_bytes": 5724,
+   "out_sha256": "9542f32ce6b474890007aa41d59d40b393fdf774cb4f00df2e9e1b9444f23a02",
+   "src_bytes": 132230807,
+   "src_sha256": "a9591e7603182882a328eed6046b449a0c2c4650aa4b98b85775e859cd36b61d"
+  },
+  {
+   "dropped": [],
+   "name": "p2_SBE_sph_a3.json",
+   "out_bytes": 5739,
+   "out_sha256": "257dc15b0466bc3d3021388966804e07b015bec5228b79772584ee4f43bf5142",
+   "src_bytes": 132228698,
+   "src_sha256": "cc521a733bf9dcda7117eebdcd0b535e0f24bc91ac03ef4ab6cfe045c0b1b41e"
+  },
+  {
+   "dropped": [],
+   "name": "p2_SBE_sph_a4.json",
+   "out_bytes": 5725,
+   "out_sha256": "ba49b906b18df9b8fad33c1480e7d3b1c3c5cc5f6fe7b6ede2d96a8acc73bf1c",
+   "src_bytes": 132229346,
+   "src_sha256": "52b1ad2dcb7024e9dca138371c24f0c648fe34107addab085d4e5a8887adc4aa"
+  },
+  {
+   "dropped": [],
+   "name": "p2_SBE_sph_a5.json",
+   "out_bytes": 5742,
+   "out_sha256": "baca2ec517b640c8b9610a445fd77c034553e23f74e6bd4bd692cd1cec174a5d",
+   "src_bytes": 132226677,
+   "src_sha256": "988db2ccc5fae11fa592d914c753d09d0f465e17debd6f5aa6402d25606176b2"
+  },
+  {
+   "dropped": [],
+   "name": "p2_SBE_sph_a6.json",
+   "out_bytes": 5727,
+   "out_sha256": "a4e92d5768845582083240a4d640b22d7308b25f591aefcbd5d6c110eab1393f",
+   "src_bytes": 132229621,
+   "src_sha256": "fbdee1e4199fc6c4664737d249e1bbc64c3459cc3cbb01c4c5c39e47d0dfeb2c"
+  },
+  {
+   "dropped": [],
+   "name": "p2_SBE_sph_a7.json",
+   "out_bytes": 5735,
+   "out_sha256": "9825a646e8eb24f67bac10fde9caae57335b2eef7ecbc539190a9ca855e05480",
+   "src_bytes": 132226125,
+   "src_sha256": "3cd8c365a76795943613acb17b197a778ae092d4cea63c9cf4f6fbaf0d967795"
+  }
+ ],
+ "max_list": 64,
+ "note": "scalar decision-audit package — solver/viz 재생용 원자료가 아니다 (R9 Q5)",
+ "receipt_sha256": "424d85a6b977fc3f3903b7e2282f334f3d15bafcb61f0a98ee709ddf72005078",
+ "schema": "reduced-arm/2",
+ "source_dir": "prereg_v2_vox015_sph_b048_sbrg001_lean2_r2f46127f44a8",
+ "tool": "scripts/reduce_arm_payloads.py",
+ "tool_commit": "d45576e2a5261d722cd9e83a2a74920b90e36f74"
+}
