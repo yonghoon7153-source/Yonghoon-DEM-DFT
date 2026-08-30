@@ -2583,6 +2583,7 @@ def pilot_generate(a):
             "phase": "L2", "env": en, "epsilon": jm["epsilon"],
             "charge": jm["charge"], "mult": jm["mult"], "wf": jm["wf"],
             "reads_localized_from": jk,
+            "n_electrons": jm["n_electrons"],
             "roles": ["localized_mo_populations"],
             "why": ("phase L 의 인구는 **정준** 궤도다. seed 선택은 **국재** 궤도의 "
                     "인구로만 한다 (2026-08-31 실측)"),
@@ -2770,7 +2771,14 @@ def pilot_seeds(d):
         if not any(v is not None for v in ener.values()):
             raise SystemExit("⛔ %s 에서 MO 에너지를 못 읽었다 — 코어 궤도를 거를 수 없다. "
                              "코어 1s 는 링에 100%% 국재돼 있어 반드시 seed 로 뽑힌다" % outp)
-        nel = jm["n_electrons"]
+        # ⛔ 2026-08-31 — L2 를 순회하도록 바꾸면서 `n_electrons` 를 놓쳤다.
+        #   그 값은 원본 **L 잡**에 있다 (L2 는 같은 계를 다시 읽을 뿐이다).
+        nel = jm.get("n_electrons")
+        if nel is None:
+            nel = (man["jobs"].get(src_jk) or {}).get("n_electrons")
+        if nel is None:
+            raise SystemExit("⛔ %s 의 전자수를 모른다 (L 잡 %s 에도 없다) — "
+                             "HOMO 인덱스를 계산할 수 없다" % (jk, src_jk))
         homo = nel // 2 - 1
         spec = man["seed_plan"]["Dradical" if is_dm else "Pcation"]
         env = jm["env"]
@@ -3086,7 +3094,8 @@ case "$stage" in
       if [ -f "$j/$n.loc" ]; then echo "  ✔ $n.loc ($(stat -c%s "$j/$n.loc") B)"
       else echo "  ⛔ $n.loc 없음 — 국재화가 안 됐습니다"; fail=1; fi
     done
-    echo "다음: bash run_pilot.sh L2"
+    [ "$fail" = 0 ] && echo "다음: bash run_pilot.sh L2" \
+                   || echo "phase L 에 실패가 있습니다 — 다음 단계로 가지 않습니다."
     ;;
   L2)
     echo "== phase L2 (국재 궤도 인구 · NoIter) =="
@@ -3097,16 +3106,21 @@ case "$stage" in
       echo "  $n: 인구 블록 $c"
       [ "$c" != 0 ] || { echo "    0 입니다 — NoIter 에서 인구가 안 찍혔습니다."; fail=1; }
     done
-    echo "다음: bash run_pilot.sh seeds  (계산 없음)"
+    [ "$fail" = 0 ] && echo "다음: bash run_pilot.sh seeds  (계산 없음)" \
+                   || echo "phase L2 에 실패가 있습니다 — 다음 단계로 가지 않습니다."
     ;;
   seeds)
-    python3 "$BUILDER" --polaron_seeds "$D" || fail=1
-    echo "다음: **리뷰 통과 뒤** bash run_pilot.sh S"
+    if python3 "$BUILDER" --polaron_seeds "$D"; then
+      echo "다음: **리뷰 통과 뒤** bash run_pilot.sh S"
+    else
+      echo "seed 생성 실패 — 다음 단계로 가지 않습니다."; fail=1
+    fi
     ;;
   S)
     echo "== phase S (측정) =="
     for j in "$D"/S/*/*/*; do [ -d "$j" ] || continue; run "$j" "$(basename "$j")" || fail=1; done
-    echo "다음: bash run_pilot.sh analyze"
+    [ "$fail" = 0 ] && echo "다음: bash run_pilot.sh analyze" \
+                   || echo "phase S 에 실패가 있습니다 — 판정하지 않습니다."
     ;;
   analyze)
     python3 "$BUILDER" --polaron_analyze "$D" || fail=1
