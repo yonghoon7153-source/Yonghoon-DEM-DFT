@@ -6771,7 +6771,7 @@ def build_bundle(a, ledger: Optional[Dict[str, Any]] = None) -> Path:
                             prescf=not a.no_prescf, single_point=a.single_point,
                             closure=a.closure, kmesh_over=kover)
                         slab_metas.append(m2)
-                        plan(rel2, m2["phases"], True)
+                        plan(rel2, m2["phases"], True, m2)
                         n_jobs += 1
                         print(f"   {b['basin_id']} {'vacconv c2':14s} {sd:14s} "
                               f"→ {rel2}")
@@ -7043,7 +7043,7 @@ def build_bundle(a, ledger: Optional[Dict[str, Any]] = None) -> Path:
                                 single_point=a.single_point, closure=a.closure,
                                 kmesh_over=kover)
             slab_metas.append(m2)
-            plan(rel2, m2["phases"], True)
+            plan(rel2, m2["phases"], True, m2)
             n_jobs += 1
     # ⚠ refs 가 아닌 대조군을 man["refs"] 에 넣으면 has_refs 가 참이 되어 분석기가
     #   E_ads 를 만들려 든다 (기체 분자가 없는데). 별도 키로 등록한다.
@@ -7174,7 +7174,7 @@ def build_bundle(a, ledger: Optional[Dict[str, Any]] = None) -> Path:
                 mz = _emit_mol_job(out / relz, frag, mol, margin,
                                    free_spin=True,
                                    closure=True, nonzero_start=True)
-                plan(relz, mz["phases"], True)
+                plan(relz, mz["phases"], True, mz)
                 man.setdefault("molecular_spin_controls", {})[
                     f"mol__{frag}__{tag}"] = relz
                 n_jobs += 1
