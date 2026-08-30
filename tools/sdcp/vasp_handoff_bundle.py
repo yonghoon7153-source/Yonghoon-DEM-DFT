@@ -379,6 +379,21 @@ for ph in pre relax static dense; do
               need relax/CHGCAR  "ICHARG=1 인데 승계할 전하밀도가 없다 (relax LCHARG=.TRUE. 확인)"
               cp relax/CONTCAR static/POSCAR
               cp relax/CHGCAR  static/CHGCAR
+            elif [ -f PARENT_GEOM ]; then
+              # 회신 AO P0-4 (2026-08-31) — nzmag canary 는 부모 기체 기준과 **같은
+              #   기하**여야 한다. 종전엔 부모가 relax/CONTCAR 로 static 을 돌고
+              #   canary 는 자기 루트 POSCAR 를 써서 두 에너지 차에 **구조 이완
+              #   에너지가 섞였다** — 스핀 검사가 오염됐다. 부모 기하를 그대로 받는다.
+              _pg=$(tr -d " \\t\\r\\n" < PARENT_GEOM)
+              [ -d "$_pg" ] || { echo "PARENT_GEOM 이 가리키는 부모가 없다: $_pg"; exit 1; }
+              if [ -d "$_pg/relax" ]; then
+                need "$_pg/relax/CONTCAR" "부모 기체 relax 를 먼저 완주시킬 것 (canary 는 같은 기하)"
+                cp "$_pg/relax/CONTCAR" static/POSCAR
+              else
+                need "$_pg/POSCAR" "부모 루트 POSCAR 없음"
+                cp "$_pg/POSCAR" static/POSCAR
+              fi
+              echo "  canary 기하 = 부모($_pg) 와 동일"
             else
               # 단일점 모드 — relax 가 애초에 없다. 루트 POSCAR 를 그대로 쓰고
               # ISTART=0/ICHARG=2 (원자중첩)로 시작한다. CHGCAR 입력 없음.
@@ -435,7 +450,143 @@ python3 analyze_results.py .
 exit $?
 """
 
-RUN_STAGED = '#!/usr/bin/env bash\n# 2단계 러너 — 정지 규칙을 **실제로 적용**하려면 순서가 있어야 한다 (회신 AJ).\n#\n#   1단계: primary 두 조각 x 셀 두 높이 (4잡) + 기체 기준 (2잡) = 6잡\n#          -> 진공 두께 수렴 시험을 여기서 판정한다.\n#          |D(c2) - D(c1)| <= 5 meV **그리고** 0.01 eV 반올림 일치여야 다음으로 간다.\n#          기체 기준이 1단계에 있는 이유 — 반올림 비교에 공통 기체 offset 이 필요하다.\n#   2단계: primary 다른 seed (2잡) + 대안 자세 두 seed (4잡) = 6잡\n#\n# 실패하면 2단계를 돌리지 않는다. 추가 셀 탐색도 하지 않는다 (Figure 2e 제거).\nset -u\nVASP_CMD=${VASP_CMD:?VASP_CMD 를 지정하세요 (예: \'mpirun -np 256 vasp_std\')}\nstage=${1:-1}\n\n# 잡 분류는 job.json 의 **구조화 필드**로 한다 — 이름 파싱 금지\npython3 -c \'\nimport json, sys, glob, os\nwant = sys.argv[1]\nfor jp in sorted(glob.glob("*/*/job.json")):\n    m = json.load(open(jp)); d = os.path.dirname(jp)\n    kind, role, vac = m.get("kind"), m.get("role"), m.get("vacconv")\n    if kind == "mol_ref":\n        s = "1"\n    elif kind == "prospective_pose" and role == "primary":\n        s = "1" if (vac or m.get("seed") == "afm2424_pm1") else "2"\n    else:\n        s = "2"\n    if s == want:\n        print(d)\n\' "$stage" > _stage_jobs.txt\n\necho "== 단계 $stage · $(wc -l < _stage_jobs.txt) 잡 =="\ncat _stage_jobs.txt\nfail=0\nwhile read -r j; do\n  [ -f "$j/run_job.sh" ] || { echo "없음: $j"; fail=1; continue; }\n  echo "=== $j ==="\n  ( cd "$j" && bash run_job.sh ) || { echo "$j 실패"; fail=1; }\ndone < _stage_jobs.txt\n\nif [ "$stage" = 1 ]; then\n  echo "== 1단계 판정 =="\n  python3 analyze_results.py . --gate vacconv || {\n    echo "1단계 판정이 막혔다 — 2단계를 돌리지 않는다."; exit 2; }\n  echo "1단계 통과 — 2단계는 \'bash run_staged.sh 2\'"\nfi\nexit $fail\n'
+RUN_STAGED = r'''#!/usr/bin/env bash
+# 2단계 러너 — 정지 규칙을 **실제로 적용**하려면 순서가 있어야 한다 (회신 AJ·AO).
+#
+#   0단계(자동): POTCAR 조립 + provenance + **묶음 root 봉인** (회신 AO P0-2·Q1)
+#   1단계: primary 두 조각 x 셀 두 높이 + 기체 기준 + 기체 canary
+#          -> 진공 두께 수렴 시험을 여기서 판정한다. |D(c2)-D(c1)| <= 5 meV.
+#          기체 기준이 1단계에 있는 이유 — 대비에 공통 기체 offset 이 필요하다.
+#   2단계: primary 다른 seed + 대안 자세 두 seed
+#
+# 실패하면 2단계를 돌리지 않는다. 추가 셀 탐색도 하지 않는다 (Figure 2e 제거).
+#
+# ⛔ 이 스크립트가 **유일한 실행 경로**다. run_job.sh 를 손으로 부르지 않는다 —
+#    POTCAR 조립과 root 봉인이 건너뛰어지고, 2단계 정지 규칙이 적용되지 않는다.
+set -u
+VASP_CMD=${VASP_CMD:?VASP_CMD 를 지정하세요 (예: 'mpirun -np 256 vasp_std')}
+PP=${PP:?PP 를 지정하세요 (POTCAR 원본 트리, 예: /opt/vasp/potpaw_PBE.54)}
+POTCAR_ALLOWLIST=${POTCAR_ALLOWLIST:?POTCAR_ALLOWLIST 를 지정하세요 (절대경로)}
+stage=${1:-1}
+
+# ── 0단계 — POTCAR 조립 + root 봉인. 첫 VASP 실행 **전에** 끝난다 ────────
+# ⛔ 회신 AO P0-2 — 종전엔 run_staged 가 run_job.sh 를 바로 불렀는데, run_job 은
+#   POTCAR/POTCAR_PROVENANCE.json 이 없으면 즉시 중단한다. fresh ZIP 에서
+#   문서대로 실행하면 **반드시 실패**했다. 조립을 이 경로 안으로 넣는다.
+bash SEAL_POTCAR_ROOT.sh || { echo "POTCAR 조립·봉인 실패 — 중단"; exit 1; }
+
+# ⛔ 회신 AO P0-3 — 2단계는 **해시에 결박된 1단계 PASS receipt** 없이 열리지 않는다.
+if [ "$stage" = 2 ]; then
+  [ -f STAGE1_PASS.json ] || {
+    echo "STAGE1_PASS.json 이 없다 — 1단계를 먼저 통과시킬 것:"
+    echo "  bash run_staged.sh 1"
+    exit 2; }
+  python3 - <<'PYGATE' || exit 2
+import hashlib, json, sys
+try:
+    r = json.load(open("STAGE1_PASS.json"))
+except Exception as e:
+    sys.exit("STAGE1_PASS.json 파싱 실패: %s" % e)
+h = hashlib.sha256(open("MANIFEST.json", "rb").read()).hexdigest()
+if r.get("manifest_sha256") != h:
+    sys.exit("STAGE1_PASS.json 이 지금 MANIFEST 와 다른 묶음의 것이다 "
+             "(기록 %s / 지금 %s)" % (str(r.get("manifest_sha256"))[:16], h[:16]))
+if r.get("gate") != "vacconv" or not r.get("stage1_jobs"):
+    sys.exit("STAGE1_PASS.json 이 vacconv 통과 receipt 가 아니다")
+print("  1단계 PASS receipt 확인 (%d잡 · %s)" % (len(r["stage1_jobs"]), r.get("verdict")))
+PYGATE
+fi
+
+# 잡 분류는 job.json 의 **구조화 필드**로 한다 — 이름 파싱 금지
+python3 -c '
+import json, sys, glob, os
+want = sys.argv[1]
+for jp in sorted(glob.glob("*/*/job.json")):
+    m = json.load(open(jp)); d = os.path.dirname(jp)
+    kind, role, vac = m.get("kind"), m.get("role"), m.get("vacconv")
+    if kind == "mol_ref":
+        s = "1"
+    elif kind == "prospective_pose" and role == "primary":
+        s = "1" if (vac or m.get("seed") == "afm2424_pm1") else "2"
+    else:
+        s = "2"
+    if s == want:
+        print(d)
+' "$stage" > _stage_jobs.txt
+
+echo "== 단계 $stage · $(wc -l < _stage_jobs.txt) 잡 =="
+cat _stage_jobs.txt
+fail=0
+while read -r j; do
+  [ -f "$j/run_job.sh" ] || { echo "없음: $j"; fail=1; continue; }
+  echo "=== $j ==="
+  ( cd "$j" && bash run_job.sh ) || { echo "$j 실패"; fail=1; }
+done < _stage_jobs.txt
+
+if [ "$stage" = 1 ]; then
+  [ "$fail" = 0 ] || { echo "1단계에 실패한 잡이 있다 — 판정하지 않는다."; exit 2; }
+  echo "== 1단계 판정 =="
+  python3 analyze_results.py . --gate vacconv || {
+    echo "1단계 판정이 막혔다 — 2단계를 돌리지 않는다."; exit 2; }
+  echo "1단계 통과 — 2단계는 'bash run_staged.sh 2'"
+fi
+exit $fail
+'''
+
+
+SEAL_POTCAR_ROOT = r'''#!/usr/bin/env bash
+# POTCAR 를 전 잡에 조립하고, variant 별 **원본 SHA256** 을 묶음 root 에 봉인한다.
+#
+# ⛔ 회신 AO Q1 (2026-08-31) — "왕복이 문제라면 **계산 시작 전에** vendor 가 제공한
+#    원소별 source SHA256 을 자동 봉인해 새 v13 root 로 승인하면 된다. 계산 후 각 job 이
+#    신고한 provenance 끼리만 비교하는 방식은 독립적인 사전 승인과 같지 않다."
+#    이 스크립트가 그 사전 승인이다 — 첫 VASP 실행 전에 돌고, 한 번 봉인하면 바뀌지 않는다.
+#
+# 이 스크립트가 **못 하는 것**: 봉인한 트리가 공식 배포판인지는 확인하지 못한다
+#   (라이선스로 정본 SHA 를 우리가 못 싣는다). 봉인은 "이 계산들이 하나의 트리에서
+#   나왔다" 를 보증할 뿐이고, 그 트리의 신원은 site 의 allowlist 가 진다.
+set -e
+: "${PP:?PP=/path/to/potpaw_PBE.54 를 주세요}"
+: "${POTCAR_ALLOWLIST:?POTCAR_ALLOWLIST=/abs/site_allow.txt 를 주세요}"
+n=0
+for d in */*/; do
+  [ -f "$d/POTCAR_ASSEMBLE.sh" ] || continue
+  if [ -f "$d/POTCAR" ] && [ -f "$d/POTCAR_PROVENANCE.json" ]; then continue; fi
+  ( cd "$d" && PP="$PP" POTCAR_ALLOWLIST="$POTCAR_ALLOWLIST" bash POTCAR_ASSEMBLE.sh ) \
+    || { echo "POTCAR 조립 실패: $d"; exit 1; }
+  n=$((n+1))
+done
+echo "  POTCAR 조립 $n 잡 (이미 있던 것은 건너뜀)"
+python3 - <<'PYSEAL'
+import json, glob, os, sys
+seal, conflict = {}, []
+for pp in sorted(glob.glob("*/*/POTCAR_PROVENANCE.json")):
+    d = json.load(open(pp))
+    for v, sha in (d.get("source_sha256") or {}).items():
+        if v in seal and seal[v] != sha:
+            conflict.append((v, pp))
+        seal[v] = sha
+if conflict:
+    sys.exit("variant 원본 SHA 가 잡마다 다르다 — 한 트리가 아니다: %s" % conflict[:3])
+if not seal:
+    sys.exit("조립된 POTCAR provenance 가 하나도 없다")
+out = "POTCAR_ROOT_SEAL.json"
+if os.path.exists(out):
+    old = (json.load(open(out)) or {}).get("source_sha256") or {}
+    diff = sorted(k for k in set(old) | set(seal) if old.get(k) != seal.get(k))
+    if diff:
+        sys.exit("이미 봉인된 root 와 다르다 (봉인은 바꾸지 않는다): %s" % diff)
+    print("  POTCAR root 봉인 대조 통과 (%d variant)" % len(seal))
+else:
+    json.dump({"schema": "potcar_root_seal/v1",
+               "source_sha256": seal,
+               "sealed_before_production": True,
+               "note": ("v13 Hamiltonian root. 생산 전에 봉인했고 전 잡의 provenance 가 "
+                        "이것과 같아야 한다. 이전 wave 와의 수치적 동등성은 주장하지 않는다.")},
+              open(out, "w"), indent=1, ensure_ascii=False)
+    print("  POTCAR root 봉인 생성 (%d variant)" % len(seal))
+PYSEAL
+'''
 
 RUN_ALL = """#!/usr/bin/env bash
 # ⚠⚠ 이건 **직렬 디버그 러너**다 — 병렬 제출기가 아니다.
@@ -2652,9 +2803,71 @@ def selftest_k() -> int:
         "(회신끼리만 맞춰 보는 것은 검증이 아니다)")
 
     # ── 묶음 전체 신원 (잡 하나씩으로는 못 잡는 것) ─────────────────────────
-    def _J2(sha, ver):
-        return {"_prov": {"source_sha256": {"Ni": sha}}, "static": {"vasp_version": ver}}
+    # ⛔ 회신 AO P0-8 — 픽스처의 sha 를 **64자리 실물 모양**으로 만든다. 종전엔
+    #   "aa" 같은 짧은 문자열이라, "원본 sha 가 64자리인가" 를 아무도 안 봤다.
+    #   (그 결과 실물에서 sha 가 잘리거나 비어도 split 만 없으면 통과했다)
+    def _H64(tag):
+        return (tag * 32)[:64]
+
+    def _J2(sha, ver, els=("Ni",), ran=True):
+        d = {"_prov": {"source_sha256": {e: _H64(sha) for e in els}},
+             "meta": {"species_order": list(els)}}
+        if ran:
+            d["static"] = {"vasp_version": ver}
+        return d
     _one = {"a": _J2("aa", "6.4.1"), "b": _J2("aa", "6.4.1")}
+    # ⛔음성 AO P0-8 — 완주했는데 원본 sha 가 **64자리가 아니면** 막는다
+    _short = {"a": {"_prov": {"source_sha256": {"Ni": "aa"}},
+                    "meta": {"species_order": ["Ni"]},
+                    "static": {"vasp_version": "6.4.1"}}}
+    chk(any("SOURCE_INCOMPLETE" in g for g in
+            potcar_identity_gates(_short, {})["blocking"]),
+        "⛔음성 AO P0-8: 원본 sha 가 64자리가 아니면 막는다 (누락을 '갈리지 않음' 으로 읽지 않는다)")
+    # ⛔음성 AO P0-8 — 기대 variant 하나가 **아예 빠져도** 막는다
+    _miss = {"a": {"_prov": {"source_sha256": {"Ni": _H64("aa")}},
+                   "meta": {"species_order": ["Ni", "O"]},
+                   "static": {"vasp_version": "6.4.1"}}}
+    chk(any("SOURCE_INCOMPLETE" in g for g in
+            potcar_identity_gates(_miss, {})["blocking"]),
+        "⛔음성 AO P0-8: 기대 variant 중 하나라도 sha 가 없으면 막는다")
+    # ⛔음성 AO P0-8 — VASP 버전 관측이 0개면 막는다 (0개 관측은 일치가 아니다)
+    _nov = {"a": {"_prov": {"source_sha256": {"Ni": _H64("aa")}},
+                  "meta": {"species_order": ["Ni"]}, "static": {}}}
+    chk(any("VASP_VERSION_UNOBSERVED" in g for g in
+            potcar_identity_gates(_nov, {})["blocking"]),
+        "⛔음성 AO P0-8: 완주잡에 VASP 버전 관측이 없으면 막는다")
+    # ⛔음성 AO P0-8 — 완주했는데 provenance 자체가 없으면 막는다
+    chk(any("PROVENANCE_MISSING" in g for g in
+            potcar_identity_gates({"a": {"static": {"vasp_version": "6.4.1"}}},
+                                  {})["blocking"]),
+        "⛔음성 AO P0-8: 완주잡에 provenance 가 없으면 막는다")
+    # 양성 — **아직 안 돈 잡**은 완전성 대상이 아니다 (단계별 실행에서 정상)
+    chk(potcar_identity_gates({"a": _J2("aa", "6.4.1"),
+                               "b": _J2("aa", "6.4.1", ran=False)}, {})["ok"],
+        "양성 AO P0-8: 아직 안 돈 잡은 완전성 대상이 아니다 (2단계 미실행이 정상)")
+    # ⛔음성 AO Q1 — 생산 전 봉인(root seal)과 관측이 다르면 막는다
+    chk(any("ROOT_SEAL_MISMATCH" in g for g in potcar_identity_gates(
+            _one, {"_potcar_root_seal": {"source_sha256": {"Ni": _H64("bb")}}}
+            )["blocking"]),
+        "⛔음성 AO Q1: 생산 전 봉인한 root 와 관측 fingerprint 가 다르면 막는다")
+    # ⛔음성 AO Q1 — 봉인에 없는 variant 가 관측되면 막는다
+    chk(any("ROOT_SEAL_INCOMPLETE" in g for g in potcar_identity_gates(
+            {"a": _J2("aa", "6.4.1", els=("Ni", "O"))},
+            {"_potcar_root_seal": {"source_sha256": {"Ni": _H64("aa")}}}
+            )["blocking"]),
+        "⛔음성 AO Q1: 봉인에 없는 variant 가 관측되면 막는다")
+    # 양성 — 봉인과 관측이 일치하면 라벨이 sealed_root_v13 로 올라간다
+    _sealed = potcar_identity_gates(
+        _one, {"files_sha256": {"x": "y"},
+               "_potcar_root_seal": {"source_sha256": {"Ni": _H64("aa")}}})
+    chk(str(_sealed.get("identity_scope", "")).startswith("sealed_root_v13"),
+        "양성 AO Q1: 봉인 일치 + 완전성 통과면 라벨이 **sealed_root_v13** 다 "
+        f"(실제 {str(_sealed.get('identity_scope'))[:40]})")
+    # ⛔음성 — 완전성이 깨지면 라벨이 'unverified' 로 내려간다 (있는 척하지 않는다)
+    _unv = potcar_identity_gates(_short, {"files_sha256": {"x": "y"}})
+    chk(str(_unv.get("identity_scope", "")).startswith("unverified"),
+        "⛔음성 AO P0-8: 원본 fingerprint 가 불완전하면 라벨이 **unverified** 다 "
+        "('신원 일치 확인' 이라고 쓰지 않는다)")
     chk(potcar_identity_gates(_one, {})["ok"], "양성: 전 잡이 같은 원본·같은 VASP")
     chk(any("SOURCE_SPLIT" in g for g in
             potcar_identity_gates({"a": _J2("aa", "6.4.1"), "b": _J2("bb", "6.4.1")},
@@ -2691,9 +2904,10 @@ def selftest_k() -> int:
         "⛔음성 AJ: VASP 버전이 하나도 안 읽히면 막는다")
     # variant 키 정규화 — 조립기는 Ni_pv 로 쓰고 pin 예시는 Ni 였다
     _norm = potcar_identity_gates(
-        {"a": {"_prov": {"source_sha256": {"Ni_pv": "aa"}},
+        {"a": {"_prov": {"source_sha256": {"Ni_pv": _H64("aa")}},
+               "meta": {"species_order": ["Ni"]},
                "static": {"vasp_version": "6.4.1"}}},
-        {**_MB, "potcar_pin": {"source_sha256": {"Ni": "aa"},
+        {**_MB, "potcar_pin": {"source_sha256": {"Ni": _H64("aa")},
                                "vasp_version": "6.4.1"}})
     chk(_norm["ok"] and _norm["pin_normalized_variants"] == ["Ni_pv"],
         "⛔음성 AJ: 원소 키 pin(Ni)을 potcar_spec 으로 **variant(Ni_pv)로 정규화**해 "
@@ -3136,6 +3350,11 @@ def phase_gates(oc, ph, meta, spec, want_ionic=False):
         else:
             audit["verified_exact"].append(k2)
     oc["incar_audit"] = audit                  # RESULTS.json 에 그대로 실린다
+    # ⛔⛔ 회신 AO P0-5 (2026-08-31) — 이 게이트가 **정의만 되고 호출되지 않았다.**
+    #   `ICHARG=1`, `chgcar_from_file=False` 인 재현 입력도 게이트 결과가 빈 목록이라
+    #   fail-open 이었다. C-12 에서 `ICHARG=1` 상은 기체 기준 static 둘이고
+    #   그 둘은 D 에 직접 들어간다. 여기서 실제로 연결한다.
+    g += _icharg1_chgcar_gate(oc, ph)
     return g
 
 
@@ -3531,6 +3750,85 @@ def potcar_identity_gates(jobs, man):
             % sorted(ver))
     res["observed"] = {"source_sha256": {e: sorted(d) for e, d in src.items()},
                        "vasp_version": sorted(ver)}
+    # ⛔⛔ 회신 AO P0-8 (2026-08-31) — 종전 검사는 **관측된 것끼리 갈리지 않으면 통과**
+    #   였다. source sha 가 일부·전부 없어도, VASP 버전이 0개 관측이어도 막지 않았다.
+    #   그래서 `identity_scope = self_consistent_only`("14잡 신원 일치 확인") 라벨이
+    #   사실보다 강했다. ⇒ **에너지를 낸 모든 잡**에 대해 기대되는 **모든 variant** 의
+    #   원본 SHA256(64자리)과 정확한 VASP 버전을 필수로 한다.
+    #   ⚠ 아직 안 돈 잡은 세지 않는다 (단계별 실행에서 2단계가 비어 있는 것은 정상).
+    _spec_map = (man or {}).get("potcar_spec") or {}
+
+    def _is_hex64(x):
+        x = str(x or "")
+        return len(x) == 64 and all(c in "0123456789abcdefABCDEF" for c in x)
+
+    _ran, _noprov, _incomplete, _nover = [], [], [], []
+    for jn, jr in sorted((jobs or {}).items()):
+        if "static" not in jr:
+            continue                       # 아직 안 돈 잡 — 완전성 대상이 아니다
+                                           # (⚠ `or {}` 로 falsy 검사를 하면 static 이
+                                           #  **빈 dict** 인 잡, 즉 완주했는데 버전을
+                                           #  못 읽은 잡이 조용히 빠진다 — AO P0-8 이
+                                           #  잡으라고 한 바로 그 경우다)
+        _ran.append(jn)
+        pv = (jr.get("geom") or {}).get("potcar_provenance") or jr.get("_prov")
+        if not pv:
+            _noprov.append(jn)
+            continue
+        _els = list((jr.get("meta") or {}).get("species_order") or [])
+        _want_v = ([str(_spec_map.get(e, e)) for e in _els]
+                   or sorted((pv.get("source_sha256") or {})))
+        _have = {str(k): v for k, v in (pv.get("source_sha256") or {}).items()}
+        # ⚠ 조립기는 **variant 키**(Ni_pv)로 기록하고 옛 기록은 **원소 키**(Ni)다.
+        #   pin 대조와 **같은 정규화**를 쓴다 — 요구하는 것은 "그 fingerprint 가
+        #   있고 64자리인가" 이지 키 철자가 아니다.
+        _alias = {str(_spec_map.get(e, e)): e for e in _els}
+        _miss = [v for v in _want_v
+                 if not (_is_hex64(_have.get(v))
+                         or _is_hex64(_have.get(_alias.get(v, v))))]
+        if _miss:
+            _incomplete.append("%s:%s" % (jn, _miss))
+        if not ((jr.get("static") or {}).get("vasp_version")):
+            _nover.append(jn)
+    if _ran:
+        if _noprov:
+            res["blocking"].append(
+                "POTCAR_PROVENANCE_MISSING(%d/%d 완주잡에 provenance 가 없다 %s — "
+                "없는 것을 '갈리지 않음' 으로 읽지 않는다)"
+                % (len(_noprov), len(_ran), _noprov[:3]))
+        if _incomplete:
+            res["blocking"].append(
+                "POTCAR_SOURCE_INCOMPLETE(%d잡에서 기대 variant 의 원본 SHA256 이 "
+                "빠졌거나 64자리가 아니다 %s)" % (len(_incomplete), _incomplete[:3]))
+        if _nover:
+            res["blocking"].append(
+                "VASP_VERSION_UNOBSERVED(%d/%d 완주잡에 VASP 버전 관측이 없다 %s — "
+                "0개 관측은 일치가 아니다)" % (len(_nover), len(_ran), _nover[:3]))
+    res["completeness"] = {"n_jobs": len(jobs or {}), "n_ran": len(_ran),
+                           "n_with_prov": res["n_with_prov"],
+                           "n_no_prov": len(_noprov),
+                           "n_incomplete_variants": len(_incomplete),
+                           "n_without_vasp_version": len(_nover)}
+    # ⛔ 회신 AO Q1 — **생산 전에 봉인한** variant 별 원본 fingerprint(root seal)와
+    #   대조한다. 사후 provenance 끼리만 비교하는 것은 사전 승인과 같지 않다.
+    _seal = ((man or {}).get("_potcar_root_seal") or {}).get("source_sha256") or {}
+    if _seal:
+        res["root_seal_variants"] = sorted(_seal)
+        for _v, _sh in sorted(_seal.items()):
+            _got = sorted(src.get(_v, {}))
+            if _ran and not _got:
+                res["blocking"].append(
+                    "ROOT_SEAL_UNOBSERVED(%s: 봉인돼 있는데 회신에 원본 sha 가 없다)" % _v)
+            elif _got and _got != [str(_sh)]:
+                res["blocking"].append(
+                    "ROOT_SEAL_MISMATCH(%s: 봉인 %s ≠ 관측 %s — 생산 전에 승인한 "
+                    "Hamiltonian root 가 아니다)" % (_v, str(_sh)[:12], [g[:12] for g in _got]))
+        _unsealed = sorted(set(src) - set(_seal))
+        if _unsealed:
+            res["blocking"].append(
+                "ROOT_SEAL_INCOMPLETE(봉인에 없는 variant 가 관측됐다 %s)" % _unsealed)
+    elif _ran and (man or {}).get("files_sha256"):
+        res["root_seal_absent"] = True
     # ⛔ 회신 AJ — 종전 pin 대조는 **세 군데가 fail-open** 이었다:
     #   ① 관측이 비면 `if got and ...` 이 참이 안 돼 조용히 건너뛰었다
     #   ② VASP 버전이 하나도 관측 안 되면 `sorted(ver) in ([], ...)` 이 통과시켰다
@@ -3552,10 +3850,24 @@ def potcar_identity_gates(jobs, man):
             #     결과에 박는다.** 없는 검증을 있는 척하지 않는 것이 요점이다.
             #   ⛔ 잡 사이 일치조차 깨지면 그건 여전히 blocking 이다 (아래 다른 게이트들).
             res["pin_absent"] = True
+            # ⛔ 회신 AO P0-8/Q1 — 종전 문구("14잡의 POTCAR 신원이 서로 일치")는
+            #   실측보다 강했다. 위 완전성 게이트가 통과했을 때만 그렇게 말할 수 있고,
+            #   root seal 이 있을 때만 "생산 전에 고정한 root" 라고 말할 수 있다.
+            _c = res.get("completeness") or {}
+            _complete = bool(_c.get("n_ran")) and not (
+                _c.get("n_no_prov") or _c.get("n_incomplete_variants")
+                or _c.get("n_without_vasp_version"))
             res["identity_scope"] = (
-                "self_consistent_only — 14잡의 POTCAR 신원이 서로 일치함을 확인했다. "
-                "**사전 승인된 트리와 대조하지 않았다** (pin 없음). "
-                "따라서 '이전 wave 와 같은 PP' 는 주장하지 않는다")
+                ("sealed_root_v13 — variant 별 원본 SHA256 을 **생산 전에 봉인**하고 "
+                 "완주 전 잡이 그 봉인과 일치함을 확인했다. 이전 wave 와의 수치적 "
+                 "동등성은 가정하지 않는다"
+                 if res.get("root_seal_variants") and _complete else
+                 "self_consistent_only — 완주 잡들의 POTCAR 신원이 서로 일치한다. "
+                 "**사전 승인된 트리와 대조하지 않았다** (생산 전 root seal 없음). "
+                 "따라서 '이전 wave 와 같은 PP' 는 주장하지 않는다"
+                 if _complete else
+                 "unverified — 원본 fingerprint 또는 VASP 버전 관측이 불완전하다. "
+                 "'신원 일치 확인' 이라고 쓰지 말 것"))
             res["⚠"] = ("pin 없음 — 사후 provenance 로 잡 사이 일치만 본다. "
                         "미리 고정하려면 생성 시 `--potcar_pin`")
         else:
@@ -4431,6 +4743,19 @@ def _closure_estimand(man, results, E, emol, jobs, merge_info=None):
                 % (f, e0 - e1))
         else:
             out.setdefault("spin_control_delta_eV", {})[f] = round(e1 - e0, 5)
+        # ⛔⛔ 회신 AO P0-4 — 두 static 이 **같은 기하**일 때만 이 차가 스핀 검사다.
+        #   다르면 구조 이완 에너지가 섞여 δ_m 이 아니다. 검사를 못 했으면 그것도 차단
+        #   (fail-closed — 확인 못 한 것은 통과가 아니다).
+        _gg = ((results or {}).get("gas_canary_geom") or {}).get(f)
+        if _gg is None:
+            out["blocks"].append(
+                "CANARY_GEOM_UNCHECKED(%s: 부모/ canary static 기하 대조 결과가 없다)" % f)
+        elif _gg.get("same") is not True:
+            out["blocks"].append(
+                "CANARY_GEOM_MISMATCH(%s: %s — 스핀 대조에 구조 이완 에너지가 섞인다)"
+                % (f, _gg.get("why") or ("최대 Cartesian 차 %.3g Å · 셀 차 %.3g Å"
+                                         % (_gg.get("max_cart_diff_A", float("nan")),
+                                            _gg.get("max_cell_diff_A", float("nan"))))))
 
     # (2) A(f,p) — 게이트 통과한 복합체만. 게이트된 것은 **버리되 기록한다**
     #   ★ 회신 Z P0-4 — realized basin 을 같이 모은다. seed 이름(pm1/net4)으로
@@ -4559,6 +4884,43 @@ def _closure_estimand(man, results, E, emol, jobs, merge_info=None):
     except Exception as _e:                                  # noqa: BLE001
         out["blocks"].append(f"CLOSURE_COND_ERROR({_e!r})")
 
+    # ⛔⛔ 회신 AO P0-7 (2026-08-31) — pm1 조건부 D 는 **사전 고정한 네 잡**으로
+    #   정의됐는데, 앞의 집합 검사(2c)가 pm1 과 net4 를 한 조각 집합으로 묶었다.
+    #   그래서 net4 가 다른 basin 에 가면 pm1 네 값이 전부 정상이어도 통째로
+    #   NO_VALUE 가 됐고, 정작 요구했던 `D_net4 − D_pm1` 은 계산되지 않았다.
+    #   ⇒ **그 네 잡을 언급하지 않는 집합-블록은 차단이 아니라 민감도 주석**으로 내린다.
+    #     전역 블록(후보집합·기체 canary·spin control·POTCAR)은 그대로 둔다.
+    #   ⚠ 이 강등은 **조기 return 앞에서** 해야 한다 — 뒤에 두면 이미 return 된 뒤다.
+    _ejk0 = (man.get("estimand_job_keys") or {})
+    if _ejk0 and out["blocks"]:
+        _need0 = ("E_C_sdcp", "E_C_control", "E_G_sdcp", "E_G_control")
+        _exact = {_ejk0[k] for k in _need0 if _ejk0.get(k)}
+        _DEMOTE = ("BASIN_HETEROGENEOUS", "BASIN_UNRESOLVED_IN_SET", "GATED_POSE")
+        _keep, _demoted = [], []
+        for _b in out["blocks"]:
+            if _b.startswith(_DEMOTE) and not any(x in _b for x in _exact):
+                _demoted.append(_b)
+            else:
+                _keep.append(_b)
+        if _demoted:
+            out["blocks"] = _keep
+            out["nonprimary_notes"] = _demoted
+            out["nonprimary_notes_why"] = (
+                "이 블록들은 **D 에 들어가지 않는 잡**(net4·대안 자세)에 대한 것이다. "
+                "pm1 조건부 D 는 사전 고정한 네 잡으로 정의되므로 지우지 않는다 "
+                "(회신 AO P0-7). 자기 분기 민감도로만 읽는다")
+        # 그 대신 **네 잡 자신의** basin 은 여기서 직접 요구한다 (fail-closed)
+        for _k in ("E_C_sdcp", "E_C_control"):
+            if not _ejk0.get(_k):
+                continue
+            _rb = (((jobs.get(_ejk0[_k]) or {}).get("geom") or {})
+                   .get("magnetic") or {}).get("realized_basin_id")
+            if not _rb:
+                out["blocks"].append(
+                    "ESTIMAND_BASIN_UNRESOLVED(%s=%s: realized basin 이 없다 — "
+                    "어떤 자기 상태에서 잰 값인지 모른 채로 D 를 만들지 않는다)"
+                    % (_k, _ejk0[_k]))
+
     if out["blocks"]:
         out["verdict"] = "NO_VALUE — blocks 를 해소하기 전에는 단일 X 를 보고하지 않는다"
         return out
@@ -4595,6 +4957,32 @@ def _closure_estimand(man, results, E, emol, jobs, merge_info=None):
                    - (_ev["E_C_control"] - _ev["E_G_control"]))
         out["estimand_mode"] = "exact_keys (사전 고정 네 잡 직접 대입)"
         secondary = a_c["min"][0] - a_s["max"][0]
+        # ⛔ 회신 AO P0-7 — 요구했던 `D_net4 − D_pm1` 을 **실제로 계산한다**.
+        #   net4 는 별도 직접식이다. 못 내면 그 사실을 적고, D_pm1 은 살린다.
+        _n4k = (man.get("estimand_job_keys_net4") or {})
+        if _n4k:
+            _n4v = {k: E(_n4k[k]) for k in _need if _n4k.get(k)}
+            _n4_bad = ([k for k in _need if not _n4k.get(k)]
+                       + [k for k, v in _n4v.items() if v is None]
+                       + [k for k in _need if _n4k.get(k)
+                          and (jobs.get(_n4k[k]) or {}).get("gates")])
+            if _n4_bad:
+                out["branch_sensitivity"] = {
+                    "status": "unavailable", "why": "net4 키 사용 불가: %s" % sorted(set(_n4_bad)),
+                    "⚠": "D_pm1 은 영향받지 않는다 — net4 는 민감도다"}
+            else:
+                _dn4 = ((_n4v["E_C_sdcp"] - _n4v["E_G_sdcp"])
+                        - (_n4v["E_C_control"] - _n4v["E_G_control"]))
+                out["branch_sensitivity"] = {
+                    "status": "computed",
+                    "D_net4_eV": round(_dn4, 4),
+                    "D_net4_minus_D_pm1_eV": round(_dn4 - primary, 4),
+                    "⛔": ("민감도다 — 보고값은 pm1 조건부 D 이고 이 값을 대신 쓰거나 "
+                           "둘을 평균하지 않는다")}
+        else:
+            out["branch_sensitivity"] = {
+                "status": "not_sealed",
+                "why": "manifest 에 estimand_job_keys_net4 가 없다 (net4 잡이 계획에 없음)"}
     else:
         out["estimand_mode"] = "fragment_min (⚠ 조각마다 다른 seed 가 뽑힐 수 있다)"
         primary = a_s["min"][0] - a_c["min"][0]
@@ -4610,6 +4998,16 @@ def _closure_estimand(man, results, E, emol, jobs, merge_info=None):
         out["guard"] = ("⛔ primary %+.4f > %.2f — guard band 미달"
                         % (primary, PREREG_GUARD_EV))
         out["verdict"] = "NO_DIRECTIONAL_CLAIM"
+    # ⛔ 회신 AO P0-6 — 기체 상자 수렴을 **이 묶음에서 검증하지 않았으면** 그 사실이
+    #   D 에 라벨로 붙어야 한다. prior 를 비차단으로 내린 대가는 침묵이 아니다.
+    _bx = [k for k, v in ((results or {}).get("numerical_gates") or {}).items()
+           if k.startswith("box_") and v.get("verified_in_this_bundle") is False]
+    if _bx:
+        out.setdefault("caveats", []).append(
+            "GAS_BOX_UNVERIFIED(%s: 이 묶음에 box20 이 없어 기체 상자 수렴을 "
+            "검증하지 않았다. 최종 D 에는 E_G^SDCP − E_G^control 이 남으므로 상자 "
+            "오차가 대수적으로 소거되지 않는다. '기체 상자 수렴 확인' 을 쓰지 말 것)"
+            % sorted(_bx))
     out["⚠_후보집합"] = ("candidate_set 이 동결된 prospective_lowE 가 아니면 이 값은 "
                          "primary 가 아니라 **legacy 교정 tranche** 다 (회신 V P0-5). "
                          "'primary'·'low-energy'·'pose-insensitive'·'전역 최소' 로 쓰지 말 것")
@@ -4627,6 +5025,13 @@ def main():
     if "--delta" in sys.argv:
         delta = float(sys.argv[sys.argv.index("--delta") + 1])
     man = json.load(open(os.path.join(root, "MANIFEST.json")))
+    # ⛔ 회신 AO Q1 — 생산 전에 봉인한 variant 별 원본 fingerprint. 러너
+    #   (SEAL_POTCAR_ROOT.sh)가 **첫 VASP 실행 전에** 만든다. 없으면 없다고 적는다.
+    try:
+        man["_potcar_root_seal"] = json.load(
+            open(os.path.join(root, "POTCAR_ROOT_SEAL.json")))
+    except Exception:
+        man["_potcar_root_seal"] = None
     spec = man.get("potcar_spec", {})
     planned = man.get("planned", {})
 
@@ -5185,18 +5590,29 @@ def main():
         #     그것도 없으면 막는다. 있으면 그 값을 게이트에 그대로 싣고 출처를 남긴다.
         _prior = ((man.get("gas_box_prior") or {}).get(f) or {}) if e20 is None else {}
         if e20 is None and e24 is not None and _prior.get("dE_meV") is not None:
-            d0 = float(_prior["dE_meV"]) / 1000.0
-            ok = d0 <= BOX_TOL
+            # ⛔⛔ 회신 AO P0-6 (2026-08-31) — 두 가지가 틀렸다.
+            #   ① `ok = d0 <= BOX_TOL` 이 **부호 있는** 값을 비교해 큰 음수도 통과했다.
+            #   ② 더 근본적으로, 이 prior 는 **이번 conformer·이번 Hamiltonian 과의
+            #      정합을 확인하지 못했다** (manifest 가 스스로 인정한다). 확인 못 한
+            #      근거로 게이트를 통과시키는 것은 검증이 아니다.
+            #   ⇒ prior 는 **비차단 참고정보**로 내린다. 통과/실패를 만들지 않는다.
+            #     대신 "이 묶음에서 상자 수렴을 검증하지 않았다" 를 라벨로 남긴다.
+            d0 = abs(float(_prior["dE_meV"])) / 1000.0        # ① 절대값
             results["numerical_gates"][f"box_{f}"] = {
-                "dE_meV": round(d0 * 1000, 2), "pass": ok, "source": "prior",
+                "dE_meV": round(d0 * 1000, 2),
+                "pass": None,                                  # ② 판정하지 않는다
+                "source": "prior_informational_only",
                 "prior_ref": _prior.get("ref"),
-                "⚠": ("이번 묶음에 box20 이 없다 — **선행 대조**를 인용했다. "
-                      "같은 conformer·같은 Hamiltonian 이라는 것은 그 출처가 보증해야 한다")}
-            if not ok:
-                results["warnings"].append(
-                    f"mol__{f}: 선행 상자 대조 {d0*1000:.2f} meV > {BOX_TOL*1000:.0f} — E_ads 불가")
-            mol_ok[f] = ok
-            emol[f] = e24 if ok else None
+                "verified_in_this_bundle": False,
+                "⚠": ("이번 묶음에 box20 이 없다. 선행 대조를 **참고로만** 싣는다 — "
+                      "좌표·state policy·POTCAR fingerprint 정합을 확인하지 못했으므로 "
+                      "게이트로 쓰지 않는다 (회신 AO P0-6)")}
+            results["warnings"].append(
+                f"mol__{f}: 기체 상자 수렴을 **이 묶음에서 검증하지 않았다** — "
+                f"선행값 {d0*1000:.2f} meV 는 참고정보다. D 서술에 "
+                f"'기체 상자 수렴 확인' 을 쓰지 말 것")
+            mol_ok[f] = None
+            emol[f] = e24
             continue
         ok = e20 is not None and e24 is not None and abs(e20 - e24) <= BOX_TOL
         mol_ok[f] = ok
@@ -5571,6 +5987,32 @@ def main():
     # ══ 사전등록 closure estimand (회신 V P0-3 · P0-4) ══════════════════════
     #   `prereg_sdcp_neutral_contrast_2026_08_29.json` 을 코드로 옮긴 것.
     #   ⛔ 종전엔 사전등록이 **문서로만** 있었다 — 잡이 다 끝나도 판정이 재현되지 않았다.
+    # ⛔⛔ 회신 AO P0-4 (2026-08-31) — nzmag canary 와 부모 기체 기준의 **static 이
+    #   실제로 같은 기하였는지** 실측한다. 종전엔 부모가 relax/CONTCAR 로, canary 가
+    #   루트 POSCAR 로 돌아 두 에너지 차에 구조 이완 에너지가 섞였다.
+    #   ⚠ 이 검사는 **실행된 입력**(static/POSCAR)을 본다 — 선언이 아니다.
+    _cg = {}
+    for _mk, _cz in (man.get("molecular_spin_controls") or {}).items():
+        _f = _mk.replace("mol__", "").rsplit("__box", 1)[0]
+        _pp = read_poscar(os.path.join(root, "refs", _mk, "static", "POSCAR")) \
+            or read_poscar(os.path.join(root, _mk, "static", "POSCAR"))
+        _cp = read_poscar(os.path.join(root, str(_cz), "static", "POSCAR"))
+        if _pp is None or _cp is None:
+            _cg[_f] = {"same": None, "why": "static/POSCAR 를 못 읽었다 (미실행이거나 경로 불일치)"}
+            continue
+        if len(_pp["pos"]) != len(_cp["pos"]):
+            _cg[_f] = {"same": False, "why": "원자수가 다르다 (%d vs %d)"
+                       % (len(_pp["pos"]), len(_cp["pos"]))}
+            continue
+        _dmax = max(max(abs(a[k] - b[k]) for k in range(3))
+                    for a, b in zip(_pp["pos"], _cp["pos"]))
+        _cmax = max(max(abs(a[k] - b[k]) for k in range(3))
+                    for a, b in zip(_pp["cell"], _cp["cell"]))
+        _cg[_f] = {"same": bool(_dmax <= 1e-6 and _cmax <= 1e-6),
+                   "max_cart_diff_A": _dmax, "max_cell_diff_A": _cmax,
+                   "tol_A": 1e-6}
+    results["gas_canary_geom"] = _cg
+
     _pc = _closure_estimand(man, results, E, emol, jobs, merge_info)
     if _pc:
         results["prereg_closure"] = _pc
@@ -5695,10 +6137,35 @@ def main():
                 f"(CAP_ARTIFACT 는 조각 모델의 한계지 데이터 부족이 아니다)")
 
     # ── 필수 완결성 — static + **계획된 dense** 까지 (Codex P0-D) ────────────
+    # ⛔⛔ 회신 AO P0-1 (2026-08-31) — 종전엔 **14잡 전체**의 누락을 먼저 세고
+    #   exit 2 로 끝낸 뒤에야 `--gate vacconv` 분기로 들어갔다. 그래서 1단계 8잡만
+    #   정상 완료한 상태도 **미실행 2단계 6잡 때문에 반드시 실패**했다.
+    #   ⇒ completeness 를 **단계별로** 나눈다. 단계 분류는 run_staged.sh 와
+    #     **같은 규칙**(job.json 구조화 필드)이어야 한다 — 이름 파싱 금지.
+    def _stage_of(pl):
+        # 계획 항목 -> "1" | "2". run_staged.sh 의 분류와 1:1 이어야 한다.
+        m = (pl.get("meta") or {})
+        kind, role, vac = m.get("kind"), m.get("role"), m.get("vacconv")
+        if kind == "mol_ref":
+            return "1"
+        if kind == "prospective_pose" and role == "primary":
+            return "1" if (vac or m.get("seed") == "afm2424_pm1") else "2"
+        return "2"
+
+    _gate_arg = ""
+    if "--gate" in sys.argv:
+        _gi = sys.argv.index("--gate")
+        _gate_arg = sys.argv[_gi + 1] if len(sys.argv) > _gi + 1 else ""
+    # ⚠ meta 가 없는 계획 항목은 단계를 **모른다**. 모르는 것을 1단계에서 빼면
+    #   거짓 통과가 되므로 '2' 로 두지 않고 **양쪽 다 필수**로 센다.
+    _no_meta = [j for j, pl in planned.items()
+                if pl.get("required") and not (pl.get("meta") or {})]
     missing = []
     for j, pl in planned.items():
         if not pl.get("required"):
             continue
+        if _gate_arg == "vacconv" and (pl.get("meta") or {}) and _stage_of(pl) != "1":
+            continue                      # 1단계 판정에서는 2단계 잡을 안 센다
         if E(j) is None:
             missing.append(j + " [static]")
         elif "dense" in (pl.get("phases") or []) and E_dense(j) is None:
@@ -5738,7 +6205,10 @@ def main():
         for pid, e in sorted(results["e_ads"].items()):
             print(f"  {pid:34s} Li_top {e['Li_top']:+.3f} · Ni_top {e['Ni_top']:+.3f} eV")
     for k, v in results["numerical_gates"].items():
-        print(f"  {'✓' if v['pass'] else '⛔'} 수치게이트 {k}: {v['dE_meV']} meV"
+        # ⛔ 회신 AO P0-6 — pass 가 None 이면 **판정하지 않은 것**이다. ⛔(실패)로
+        #   찍으면 실패한 것처럼 보이고, ✓ 로 찍으면 검증한 것처럼 보인다.
+        _mk = "✓" if v["pass"] else ("ℹ" if v["pass"] is None else "⛔")
+        print(f"  {_mk} 수치게이트 {k}: {v['dE_meV']} meV"
               + (f" · E_ads {v['dEads_meV']} meV" if "dEads_meV" in v else ""))
     for w in results["warnings"]:
         print(f"  ⚠ {w}")
@@ -5754,6 +6224,57 @@ def main():
               f"{len(integrity.get('geometry_unverified') or [])} — exit 2 "
               f"(삭제도 변조이고, **검증 못 한 것도 통과가 아니다**)")
         return 2
+
+    # ⛔⛔ 회신 AO P0-1 (2026-08-31) — stage gate 를 **다른 종료 검사보다 먼저**
+    #   판정한다. 종전엔 e_ads·전체 completeness 검사 뒤에 있어서, 1단계 8잡만
+    #   정상 완료한 상태가 여기까지 오지도 못하고 exit 2 로 끝났다.
+    _cl = (results.get("prereg_closure") or {})
+    _vc = (results.get("closure_vacconv") or _cl.get("closure_vacconv") or {})
+    if _gate_arg:
+        if _gate_arg != "vacconv":
+            print(f"⛔ 모르는 --gate: {_gate_arg!r} (지원: vacconv)")
+            return 2
+        if missing:            # 위에서 **1단계 cohort 로 좁혀** 센 값이다
+            print(f"⛔ **1단계 cohort 미완 {len(missing)}건** — exit 2:")
+            for j in missing[:20]:
+                print(f"   · {j}")
+            return 2
+        if not _vc or _vc.get("applicable") is False:
+            print("⛔ 진공 수렴 판정을 낼 수 없다 (vacconv 잡이 없거나 결과가 없다)")
+            return 2
+        if _vc.get("blocks"):
+            print("⛔ 진공 판정이 막혔다:")
+            for b in _vc["blocks"][:5]:
+                print(f"   · {b}")
+            return 2
+        print(f"■ stage gate = vacconv · {_vc.get('verdict')}")
+        if not _vc.get("pass"):
+            print("⛔ **2단계를 제출하지 않는다.** 추가 셀 탐색 없이 Figure 2e 를 제거한다.")
+            return 2
+        # ⛔ 회신 AO P0-3 — 통과를 **해시에 결박된 receipt** 로 남긴다.
+        #   자유문구는 증거가 아니다. run_staged.sh 2 는 이 파일 없이 열리지 않고,
+        #   MANIFEST 가 바뀌면 해시가 달라져 자동으로 무효가 된다.
+        _s1 = sorted(j for j, pl in planned.items()
+                     if pl.get("required")
+                     and (not (pl.get("meta") or {}) or _stage_of(pl) == "1"))
+        _rc = {
+            "schema": "stage1_pass/v1",
+            "gate": "vacconv",
+            "verdict": _vc.get("verdict"),
+            "delta_vac_meV": _vc.get("delta_vac_meV"),
+            "manifest_sha256": hashlib.sha256(
+                open(os.path.join(root, "MANIFEST.json"), "rb").read()).hexdigest(),
+            "stage1_jobs": _s1,
+            "stage1_energies_eV": {j: E(j) for j in _s1},
+            "integrity_checked": integrity.get("checked"),
+            "n_planned_required": sum(1 for pl in planned.values() if pl.get("required")),
+            "⛔": ("1단계 통과 증거. run_staged.sh 2 는 이것 없이 열리지 않는다. "
+                   "MANIFEST.json 이 바뀌면 manifest_sha256 이 달라져 무효다."),
+        }
+        json.dump(_rc, open(os.path.join(root, "STAGE1_PASS.json"), "w"),
+                  indent=1, ensure_ascii=False)
+        print(f"✅ 1단계 통과 ({len(_s1)}잡) — STAGE1_PASS.json 기록 · 2단계 제출 가능")
+        return 0
     # ⚠ 기준계를 선언해 놓고 E_ads 가 하나도 안 나오면 **조용한 실패**다.
     #   경로 키가 안 맞아도 gas job 자체는 ok 라 exit 0 이 났다 (Codex 4차 P0-2).
     # ⛔ 회신 AJ — `pairs` 는 **Li/Ni 대조쌍** 경로의 산물이다. C-12 · from_basins 는
@@ -5769,9 +6290,13 @@ def main():
                 print(f"   {k2}: {v2}")
         return 2
     if missing:
-        print(f"\n⛔ **필수 산출 미완 {len(missing)}건** (tier1/refs) — fail-closed, exit 2:")
+        _scope = "1단계 cohort" if _gate_arg == "vacconv" else "전체(tier1/refs)"
+        print(f"\n⛔ **필수 산출 미완 {len(missing)}건** ({_scope}) — fail-closed, exit 2:")
         for j in missing[:20]:
             print(f"   · {j}")
+        if _no_meta:
+            print(f"   ⚠ 계획 meta 가 없어 단계를 모르는 항목 {len(_no_meta)}건은 "
+                  f"**양쪽 단계 모두에서 필수**로 셌다 (모르는 것을 빼면 거짓 통과다)")
         return 2
 
     # ⛔⛔ 2026-08-31 (회신 AN P0-3·P0-4) — **두 가지가 종료코드에 안 걸려 있었다.**
@@ -5780,28 +6305,6 @@ def main():
     #      1단계 cohort 만 보고, 그 판정으로만 끝낸다.
     #   ② 최종 판정: prereg_closure 가 NO_VALUE 여도, 진공이 실패해도 `return 0` 이
     #      될 수 있었다. **비인용 상태면 반드시 nonzero** 여야 한다.
-    _cl = (results.get("prereg_closure") or {})
-    _vc = (results.get("closure_vacconv") or _cl.get("closure_vacconv") or {})
-    if "--gate" in sys.argv:
-        _g = sys.argv[sys.argv.index("--gate") + 1] if len(sys.argv) > sys.argv.index("--gate") + 1 else ""
-        if _g != "vacconv":
-            print(f"⛔ 모르는 --gate: {_g!r} (지원: vacconv)")
-            return 2
-        if not _vc or _vc.get("applicable") is False:
-            print("⛔ 진공 수렴 판정을 낼 수 없다 (vacconv 잡이 없거나 결과가 없다)")
-            return 2
-        if _vc.get("blocks"):
-            print("⛔ 진공 판정이 막혔다:")
-            for b in _vc["blocks"][:5]:
-                print(f"   · {b}")
-            return 2
-        print(f"■ stage gate = vacconv · {_vc.get('verdict')}")
-        if not _vc.get("pass"):
-            print("⛔ **2단계를 제출하지 않는다.** 추가 셀 탐색 없이 Figure 2e 를 제거한다.")
-            return 2
-        print("✅ 1단계 통과 — 2단계 제출 가능")
-        return 0
-
     _bad_final = []
     if _vc and _vc.get("applicable") and not _vc.get("pass"):
         _bad_final.append("closure_vacconv.pass != true")
@@ -6090,16 +6593,29 @@ def _readme_sp(man: Dict[str, Any], a, zcut: float, n_jobs: int,
                 _mm.get("vacconv") or _mm.get("seed") == SEED_MAIN):
             _n1 += 1
     _n1 = _n1 or 6
+    # ⛔⛔ 회신 AO P0-2·P0-3 (2026-08-31) — 종전 README 는 staged 안내 **뒤에**
+    #   단일 잡 quickstart 를 그대로 붙였고, `run_all.sh` 는 14잡 전체 제출을
+    #   안내했다. 실행 경로가 셋이면 1단계 정지 규칙이 강제되지 않는다.
+    #   staged 구성에서는 **경로를 하나로** 줄이고, POTCAR 조립을 그 안에 넣는다.
     staged_block = ("""⛔ **`run_staged.sh` 로만 실행해 주세요. %d잡을 한꺼번에 던지지 마십시오.**
 1단계(%d잡)가 진공 두께 수렴 시험을 통과해야 2단계를 돌립니다 — 통과 못 하면
 2단계는 **돌리지 않는 것이 맞습니다**(추가 계산으로 메우지 않습니다).
 
 ```
-VASP_CMD="mpirun -np %d vasp_std" bash run_staged.sh 1     # 1단계 + 자동 판정
-VASP_CMD="mpirun -np %d vasp_std" bash run_staged.sh 2     # 1단계 통과 뒤에만
+cd <이 묶음을 푼 디렉터리>            # 묶음 **루트**에서 실행합니다 (잡 폴더 아님)
+export PP=/path/to/potpaw_PBE.54
+export POTCAR_ALLOWLIST=/abs/site_allow.txt
+VASP_CMD="mpirun -np %d vasp_std" bash run_staged.sh 1     # POTCAR 조립+봉인 → 1단계 → 자동 판정
+VASP_CMD="mpirun -np %d vasp_std" bash run_staged.sh 2     # 1단계 통과(STAGE1_PASS.json) 뒤에만
 ```
 
-아래 단일 잡 실행은 **한 잡을 다시 돌릴 때만** 쓰십시오:
+**POTCAR 를 따로 조립하지 마십시오** — `run_staged.sh` 가 첫 VASP 실행 전에
+`SEAL_POTCAR_ROOT.sh` 로 전 잡 조립 + 원본 fingerprint 봉인까지 합니다.
+`run_all.sh` 는 이 묶음에 **넣지 않았습니다** (전체 제출 경로가 있으면 1단계
+정지 규칙이 무력화됩니다).
+
+⚠ 아래 단일 잡 실행은 **한 잡을 다시 돌릴 때만** 쓰십시오. 그때도 묶음 루트에서
+`bash SEAL_POTCAR_ROOT.sh` 를 먼저 돌리셔야 POTCAR 가 준비됩니다:
 
 """ % (n_jobs, _n1, getattr(a, "cores", 48), getattr(a, "cores", 48))) if _staged else ""
 
@@ -7112,6 +7628,26 @@ def build_bundle(a, ledger: Optional[Dict[str, Any]] = None) -> Path:
                        "— 자기 분기·자세 민감도 병기용이다. 조각별 최솟값을 다시 쓰지 않는다"),
             }
 
+            # ⛔⛔ 회신 AO P0-7 (2026-08-31) — net4 를 **별도 직접식**으로 봉인한다.
+            #   종전엔 net4 가 같은 조각 집합에 섞여 basin 동종성 검사에 걸렸고,
+            #   그 한 건이 pm1 네 값이 전부 정상인데도 D 를 통째로 지웠다
+            #   (BASIN_HETEROGENEOUS → NO_VALUE). 요구했던 `D_net4 − D_pm1` 은
+            #   정작 계산되지 않았다. ⇒ 두 D 를 따로 만들고 차는 민감도로만 쓴다.
+            _alt = next((x for x in SEEDS_FULL if x != SEED_MAIN), None)
+            if _alt:
+                _n4 = {k: v.replace("__" + SEED_MAIN, "__" + _alt)
+                       for k, v in (("E_C_sdcp", _pri[_sd]), ("E_C_control", _pri[_ct]))}
+                if all(v in man["planned"] for v in _n4.values()):
+                    man["estimand_job_keys_net4"] = dict(
+                        _n4,
+                        E_G_sdcp=f"refs/mol__{_sd}__box24",
+                        E_G_control=f"refs/mol__{_ct}__box24",
+                        formula="D_net4 = (E_C_sdcp - E_G_sdcp) - (E_C_control - E_G_control)",
+                        branch=_alt,
+                        **{"⛔": ("이것은 **민감도**다. 사전등록 보고값은 pm1 조건부 D 이고, "
+                                 "D_net4 − D_pm1 은 자기 분기 민감도로만 병기한다. "
+                                 "net4 가 다른 basin 이어도 pm1 조건부 D 를 지우지 않는다")})
+
     man.pop("_primary_by_frag", None)
     man["wave"] = 1 if not a.refs else "1+refs"
     # ★ 조각마다 주장 범위가 다르다 (2026-08-12 설계 변경). 공통 mode 문장 하나로
@@ -7192,6 +7728,14 @@ def build_bundle(a, ledger: Optional[Dict[str, Any]] = None) -> Path:
                 mz = _emit_mol_job(out / relz, frag, mol, margin,
                                    free_spin=True,
                                    closure=True, nonzero_start=True)
+                # ⛔⛔ 회신 AO P0-4 — canary 는 static-only 인데 부모는 `--closure` 가
+                #   아니면 relax→static 이다. 그러면 canary 만 루트 POSCAR 를 써서
+                #   **다른 기하끼리 뺀다** (구조 이완 에너지가 스핀 검사를 오염시킨다).
+                #   부모 잡을 가리켜 런타임에 같은 기하를 받게 한다.
+                (out / relz / "PARENT_GEOM").write_text("../mol__%s__%s\n" % (frag, tag))
+                mz["parent_geom"] = rel
+                (out / relz / "job.json").write_text(
+                    json.dumps(mz, indent=1, ensure_ascii=False))
                 plan(relz, mz["phases"], True, mz)
                 man.setdefault("molecular_spin_controls", {})[
                     f"mol__{frag}__{tag}"] = relz
@@ -7341,12 +7885,19 @@ def build_bundle(a, ledger: Optional[Dict[str, Any]] = None) -> Path:
 
     man["potcar_spec"] = {e: POTCAR_SPEC.get(e, e) for e in sorted(used_els)}
     (out / "analyze_results.py").write_text(ANALYZER)
-    (out / "run_all.sh").write_text(RUN_ALL)
     if getattr(a, "refs_minimal", False):
         (out / "run_staged.sh").write_text(RUN_STAGED)
+        (out / "SEAL_POTCAR_ROOT.sh").write_text(SEAL_POTCAR_ROOT)
         # ⛔ 2026-08-31 (회신 AN P0-3) — README 가 이 값을 읽어 "staged 로만 실행" 을 찍는다.
         #   기록이 없으면 README 와 러너가 서로 반대를 말하게 된다.
         man["staged_runner"] = "run_staged.sh"
+        # ⛔⛔ 회신 AO P0-3 (2026-08-31) — `run_all.sh` 는 **14잡 전체 제출**을 안내해
+        #   README 의 staged 지침과 정면으로 충돌했다. 실행 경로가 둘이면 정지 규칙이
+        #   강제되지 않는다. staged 구성에서는 아예 내지 않는다.
+        man["run_all_omitted"] = ("staged 구성이라 run_all.sh 를 넣지 않는다 — "
+                                  "전체 제출 경로가 있으면 1단계 정지 규칙이 무력화된다")
+    else:
+        (out / "run_all.sh").write_text(RUN_ALL)
     if a.adaptive_dense:
         (out / "run_dense_selected.sh").write_text(RUN_DENSE_SEL)
     # ⚠ 문서가 잡 수를 읽으므로 **문서보다 먼저** 확정한다 (Codex 7차 §11 —
@@ -7396,10 +7947,18 @@ def build_bundle(a, ledger: Optional[Dict[str, Any]] = None) -> Path:
         # ⚠ argparse 는 --allow_no_pin 을 **항상** 넣는다(기본 False). 그래서 CLI 에서는
         #   이 가지가 명시적으로 줬을 때만 열린다. 속성 자체가 없는 것은 합성 픽스처뿐이다.
         man["potcar_pin"] = None
+        # ⛔⛔ 회신 AO P1 (2026-08-31) — 종전 문구가 "제출본이 아니다" 라고 적어
+        #   **AO 가 승인한 새 provenance-root 방식과 정면으로 충돌**했다.
+        #   AO Q1: "이전 wave 와 같은 PP 를 주장하지 않는다면 이전 pin 을 요구할 필요는
+        #   없다. 다만 계산 시작 **전에** vendor 원본 fingerprint 를 자동 봉인해 새 v13
+        #   root 로 승인하면 된다." ⇒ 사전 봉인은 `SEAL_POTCAR_ROOT.sh` 가 한다.
         man["potcar_pin_note"] = (
-            "⚠ 미고정 (--allow_no_pin). 이 번들은 **제출용이 아니다** — 외부 기준 "
-            "대조가 없다. 제출본은 `--potcar_pin <json>` 으로 승인된 "
-            "{source_sha256:{variant:sha}, vasp_version} 를 박아야 한다")
+            "pin 미고정. 이 번들은 **이전 wave 와의 PP 동등성을 주장하지 않는다** — "
+            "대신 `SEAL_POTCAR_ROOT.sh` 가 첫 VASP 실행 **전에** variant 별 원본 "
+            "SHA256 을 `POTCAR_ROOT_SEAL.json` 에 봉인하고, 분석기가 전 잡의 "
+            "provenance 를 그 봉인과 대조한다 (회신 AO Q1). "
+            "⚠ 봉인한 트리가 공식 배포판인지는 확인하지 못한다 — site allowlist 가 "
+            "그 신원을 진다. 외부 기준과 대조하려면 `--potcar_pin <json>`")
     else:
         sys.exit(
             "⛔ --potcar_pin 이 없다 — 제출용 번들을 만들지 않는다 (회신 AJ).\n"
@@ -7524,7 +8083,11 @@ def build_bundle(a, ledger: Optional[Dict[str, Any]] = None) -> Path:
     (out / "SUBMIT_CONTRACT.md").write_text(_submit_contract(man, a, n_by_ph))
     (out / "POTCAR_SPEC.txt").write_text(
         "# 원소 → POTCAR 변형 (PBE PAW 5.4). 각 잡 POSCAR 의 종 순서대로 이어붙일 것.\n"
-        "# Ni_pv 는 2026-08-08 납품과 동일 계보다 — 바꾸지 말 것.\n"
+        # ⛔ 회신 AO P1 — "2026-08-08 납품과 동일 계보" 는 **우리가 검증하지 않은
+        #   주장**이고, v13 을 새 provenance root 로 선언한 것과 충돌한다.
+        "# ⚠ 계보 주장 없음: 이 번들은 이전 wave 와의 PP 동등성을 주장하지 않는다.\n"
+        "#   variant 는 아래 목록 그대로 쓰고, 원본 fingerprint 는 첫 실행 전에\n"
+        "#   SEAL_POTCAR_ROOT.sh 가 POTCAR_ROOT_SEAL.json 에 봉인한다 (회신 AO Q1).\n"
         + "\n".join(f"{e:3s} {v}" for e, v in man["potcar_spec"].items()) + "\n")
 
     files = {}
@@ -7676,6 +8239,18 @@ def _fake_phase(jd: Path, meta: Dict[str, Any], e_static: float,
             nk *= int(v)
         head = (f" vasp.6.4.2\n{titels}\n   NIONS = {n}\n   NKPTS = {nk}\n{echo}\n"
                 f"   NELM   =    200;   NELMIN=  6;\n")
+        # ⛔ 회신 AO P0-5 (2026-08-31) — `_icharg1_chgcar_gate` 를 `phase_gates()` 에
+        #   실제로 연결하고 나니, 이 픽스처의 OUTCAR 에 **CHGCAR 승계 마커가 없어서**
+        #   ICHARG=1 인 상이 전부 CHGCAR_NOT_READ 로 막혔다. 실물 VASP 는 파일을
+        #   읽으면 `initial charge density was supplied:` 만 찍고, 새로 만들면 그 밑에
+        #   `charge density of overlapping atoms calculated` 를 덧붙인다.
+        #   픽스처를 **실물 모양**으로 만든다 (음성 경로는 아래 STUB/N-케이스가 만든다).
+        _ic = str((meta.get("incar_expected") or {}).get(ph, {}).get("ICHARG", "")).strip()
+        if _ic == "1":
+            head += " initial charge density was supplied:\n"
+        elif _ic == "2":
+            head += (" initial charge density was supplied:\n"
+                     " charge density of overlapping atoms calculated\n")
         body = head + "Iteration      1(  33)\n"
         if ph == "relax":
             body += (f" POSITION      TOTAL-FORCE (eV/Angst)\n ---\n{frc}\n"
@@ -8137,6 +8712,146 @@ def selftest() -> int:
         cross_endpoints=["ptfe_dimer"], mag_controls=True, dense_frags=["ptfe_dimer"], cores=48, concurrency=8, no_cross=False, global_champion_meV=20.0, adaptive_dense=False)
     out_sp = build_bundle(a_sp, ledger=led)
 
+    # ══ 회신 AO — **staged(refs_minimal) 번들 e2e**. 종전엔 이 구성을 selftest 가
+    #   한 번도 만들지 않아서, 문서가 안내한 실행 경로가 fresh ZIP 에서 동작하는지
+    #   아무도 안 봤다 (AO P1: "실제 stage 경로와 번들 e2e 를 검증하지 않았다").
+    #   자세 동결 파일을 **실물 xyz 에서** 만든다 (guard 가 --from_basins 를 요구한다)
+    _pose_xyz = sorted((Path(a_sp.runs) / "ptfe_dimer" /
+                        f"relax_f{a_sp.freeze:.2f}").glob("*_r*.xyz"))
+    _pose_xyz = [q for q in _pose_xyz if not q.name.startswith("_")]
+    _fbp = td / "c12_poses_fixture.json"
+    if len(_pose_xyz) >= 2:
+        _fb = {"schema": "prospective_basins/v1", "freeze_sha256": "f" * 64,
+               "params": {"W0_eV": 0.15},
+               "fragments": {"ptfe_dimer": {
+                   "primary": [{"basin_id": "b00", "rep_label": _pose_xyz[0].stem,
+                                "E_pose_eV": 0.0, "role": "primary",
+                                "why": "fixture 전역 최소"}],
+                   "stress_sensitivity": [
+                       {"basin_id": "b01", "rep_label": _pose_xyz[1].stem,
+                        "E_pose_eV": 0.30, "role": "stress_sensitivity",
+                        "why": "fixture 응력 시험"}]}}}
+        _fbp.write_text(json.dumps(_fb, ensure_ascii=False, indent=1))
+    a_st = argparse.Namespace(**{**vars(a_sp), "out": str(td / "bundle_staged"),
+                                 "refs": True, "refs_minimal": True,
+                                 "both_seeds": True, "single_point": True,
+                                 "from_basins": str(_fbp),
+                                 "roles": ["primary", "stress_sensitivity"],
+                                 "cell_c": None, "cell_c2": None,
+                                 "min_vacuum": 0.0,
+                                 "dense_frags": None})
+    _st = None
+    try:
+        build_bundle(a_st, ledger=led)
+        _st = Path(str(td / "bundle_staged"))
+    except SystemExit as _e:                     # 가드가 막으면 그 자체가 정보다
+        chk(False, f"staged 번들 생성 실패: {_e}")
+    # ⛔음성 — 가드가 **여전히 살아 있는지**. staged 구성은 세 플래그가 다 있어야 한다.
+    for _drop, _why in (("from_basins", "자세 동결 없이"), ("refs", "기체 기준 없이"),
+                        ("both_seeds", "net4 가지 없이")):
+        _bad_ns = argparse.Namespace(**{**vars(a_st), _drop:
+                                        None if _drop == "from_basins" else False})
+        try:
+            guard_refs_minimal(_bad_ns); _ok = False
+        except SystemExit:
+            _ok = True
+        chk(_ok, f"⛔음성: --refs_minimal 을 {_why} 쓰면 막는다 (--{_drop})")
+    if _st is not None:
+        m_st = json.loads((_st / "MANIFEST.json").read_text())
+        chk((_st / "run_staged.sh").is_file(),
+            "AO P0-2: staged 번들에 run_staged.sh 가 있다")
+        chk((_st / "SEAL_POTCAR_ROOT.sh").is_file(),
+            "AO P0-2: staged 번들에 **SEAL_POTCAR_ROOT.sh** 가 있다 "
+            "(POTCAR 조립이 실행 경로 안에 있어야 fresh ZIP 이 동작한다)")
+        chk(not (_st / "run_all.sh").is_file(),
+            "⛔음성 AO P0-3: staged 번들에는 run_all.sh 를 **넣지 않는다** "
+            "(전체 제출 경로가 있으면 1단계 정지 규칙이 무력화된다)")
+        _rs = (_st / "run_staged.sh").read_text()
+        chk("SEAL_POTCAR_ROOT.sh" in _rs,
+            "⛔음성 AO P0-2: run_staged.sh 가 POTCAR 조립을 **실제로 부른다** "
+            "(종전엔 run_job.sh 를 바로 불러 POTCAR 부재로 즉시 중단됐다)")
+        chk("STAGE1_PASS.json" in _rs and "manifest_sha256" in _rs,
+            "⛔음성 AO P0-3: run_staged.sh 2 가 **해시에 결박된** 1단계 receipt 를 요구한다")
+        # canary 가 부모 기하를 승계하는가 (AO P0-4)
+        _cz = sorted(_st.rglob("*__nzmag/PARENT_GEOM"))
+        chk(bool(_cz), "AO P0-4: canary 마다 PARENT_GEOM 이 있다 "
+                       f"(찾음 {len(_cz)}개)")
+        for _f in _cz:
+            _tgt = (_f.parent / _f.read_text().strip()).resolve()
+            chk(_tgt.is_dir() and _tgt.name == _f.parent.name.replace("__nzmag", ""),
+                f"AO P0-4: PARENT_GEOM 이 **부모 잡**을 가리킨다 ({_f.parent.name} → {_tgt.name})")
+        _rj = (_cz[0].parent / "run_job.sh").read_text() if _cz else ""
+        chk("PARENT_GEOM" in _rj and "relax/CONTCAR" in _rj,
+            "⛔음성 AO P0-4: canary 의 run_job.sh 가 부모 relax/CONTCAR 를 받는다 "
+            "(종전엔 자기 루트 POSCAR 로 돌아 구조 이완 에너지가 섞였다)")
+        # README 가 staged 단일 경로를 말하는가 (AO P0-2·P1)
+        _rd_st = (_st / "README_REQUEST.md").read_text()
+        chk("run_staged.sh 1" in _rd_st and "SEAL_POTCAR_ROOT.sh" in _rd_st,
+            "AO P0-2: README 가 staged 경로와 조립 자동화를 같이 적는다")
+        chk("run_all.sh` 는 이 묶음에 **넣지 않았습니다**" in _rd_st,
+            "⛔음성 AO P0-3: README 가 run_all.sh 부재를 **명시**한다 "
+            "(종전엔 SUBMIT/run_all 이 전체 제출을 안내해 staged 지침과 충돌했다)")
+        # 계보 동일성 문구가 남아 있지 않은가 (AO P1)
+        _spec_txt = (_st / "POTCAR_SPEC.txt").read_text()
+        chk("2026-08-08" not in _spec_txt and "동일 계보" not in _spec_txt,
+            "⛔음성 AO P1: POTCAR_SPEC.txt 에 **검증하지 않은 계보 동일성 주장**이 없다")
+        chk("제출본은" not in str(m_st.get("potcar_pin_note") or "")
+            and "POTCAR_ROOT_SEAL" in str(m_st.get("potcar_pin_note") or ""),
+            "⛔음성 AO P1: manifest 의 pin 설명이 **새 provenance-root 방식과 일치**한다 "
+            f"(종전엔 '제출본이 아니다' 라고 적어 충돌했다) · {str(m_st.get('potcar_pin_note'))[:60]}")
+        # estimand net4 직접식이 봉인됐는가 (AO P0-7)
+        # ⚠ 이 픽스처는 조각이 **하나**(ptfe_dimer)라 D 자체가 정의되지 않는다
+        #   (D 는 두 조각의 대비다). 그래서 여기서 시험하는 것은 값이 아니라
+        #   **불변식**이다: pm1 직접식이 봉인되면 net4 직접식도 반드시 같이 봉인된다.
+        #   종전엔 pm1 만 봉인하고 net4 는 안 냈다 (AO P0-7: 요구해 놓고 계산 안 함).
+        chk(bool(m_st.get("estimand_job_keys"))
+            == bool(m_st.get("estimand_job_keys_net4")),
+            "AO P0-7 불변식: pm1 직접식이 봉인되면 **net4 직접식도 같이** 봉인된다 "
+            f"(pm1 {bool(m_st.get('estimand_job_keys'))} · "
+            f"net4 {bool(m_st.get('estimand_job_keys_net4'))})")
+        chk(len(m_st.get("fragments") or []) >= 2
+            or not m_st.get("estimand_job_keys"),
+            "AO: 조각이 하나면 D 가 정의되지 않으므로 직접식을 봉인하지 않는다 "
+            f"(조각 {m_st.get('fragments')})")
+
+    # ⛔⛔ 회신 AO P0-1 e2e — **1단계만 완주한 상태**에서 completeness 가 단계별로
+    #   좁혀지는가. 종전엔 14잡 전체를 세고 exit 2 로 끝나, 진공 시험을 통과해도
+    #   2단계를 열 수 없었다 (staged 러너가 문서대로 동작하지 않았다).
+    if _st is not None:
+        def _stage1_of(_m):
+            k, r, v = _m.get("kind"), _m.get("role"), _m.get("vacconv")
+            if k == "mol_ref":
+                return True
+            if k == "prospective_pose" and r == "primary":
+                return bool(v) or _m.get("seed") == "afm2424_pm1"
+            return False
+        _s1n, _s2n = [], []
+        for _jp in sorted(_st.rglob("job.json")):
+            _m = json.loads(_jp.read_text())
+            (_s1n if _stage1_of(_m) else _s2n).append(
+                str(_jp.parent.relative_to(_st)))
+            if _stage1_of(_m):
+                _fake_phase(_jp.parent, _m, -500.0, POTCAR_SPEC)
+        chk(bool(_s1n) and bool(_s2n),
+            f"AO P0-1 전제: 단계가 실제로 갈린다 (1단계 {len(_s1n)} · 2단계 {len(_s2n)})")
+        _az = str(_st / "analyze_results.py")
+        _r_no = subprocess.run([sys.executable, _az, "."], cwd=_st,
+                               capture_output=True, text=True)
+        _r_gate = subprocess.run([sys.executable, _az, ".", "--gate", "vacconv"],
+                                 cwd=_st, capture_output=True, text=True)
+        _hit_no = [j for j in _s2n if j in _r_no.stdout]
+        _hit_gate = [j for j in _s2n if j in (_r_gate.stdout.split("미완")[-1]
+                                              if "미완" in _r_gate.stdout else "")]
+        chk(bool(_hit_no),
+            "AO P0-1 전제: --gate 없이 돌리면 2단계 미완이 실제로 잡힌다 "
+            f"({len(_hit_no)}건)")
+        chk(not _hit_gate,
+            "⛔음성 AO P0-1: `--gate vacconv` 는 **1단계 cohort 만** 센다 "
+            f"(2단계 잡을 미완으로 세면 안 된다) · 샜음 {_hit_gate[:2]}")
+        chk("필수 산출 미완" not in _r_gate.stdout
+            or "1단계 cohort" in _r_gate.stdout,
+            "AO P0-1: 미완 메시지가 **어느 범위**를 셌는지 밝힌다")
+
     # ══ 회신 U P0-5 — closure 모드 e2e. "계획대로 생성되는가" 를 파일로 확인한다 ══
     a_cl = argparse.Namespace(**{**vars(a_sp), "out": str(td / "bundle_closure"),
                                  "closure": True, "refs": True, "dense_frags": None})
@@ -8206,21 +8921,32 @@ def selftest() -> int:
 
     _jobs = {k: _BAS("aaaa1111", k) for k in _en if k.startswith("prospective/")}
     _E = lambda j: _en.get(j)
-    r = _closure_estimand(_man, {"pairs": {}}, _E, _emol, _jobs)
+    # ⛔ 회신 AO P0-4 — canary/부모 static 기하 대조 결과. 실물에서는 main() 이
+    #   두 static/POSCAR 를 읽어 채운다. 없으면 fail-closed 로 막히므로 픽스처에도
+    #   **명시적으로** 넣는다 (없는 것을 통과로 읽지 않는 것이 이 게이트의 요점이다).
+    def _RES(same=True, **kw):
+        g = {f: ({"same": True, "max_cart_diff_A": 0.0, "max_cell_diff_A": 0.0}
+                 if same else
+                 {"same": False, "max_cart_diff_A": 0.031, "max_cell_diff_A": 0.0})
+             for f in ("sdcp_neutral", "ptfe_c10")}
+        g.update(kw)
+        return {"pairs": {}, "gas_canary_geom": g}
+
+    r = _closure_estimand(_man, _RES(), _E, _emol, _jobs)
     chk(not r["blocks"], f"[V P0-4] 정상 입력에 blocks 없음 · {r.get('blocks')}")
 
     # ⛔음성 (회신 Z P0-4) — seed 이름이 같아도 **수렴 결과**가 갈리면 막는다
     _jb_het = dict(_jobs)
     _jb_het["prospective/sdcp_neutral__b01__afm2424_pm1"] = _BAS(
         "bbbb2222", "prospective/sdcp_neutral__b01__afm2424_pm1")
-    _rh = _closure_estimand(_man, {"pairs": {}}, _E, _emol, _jb_het)
+    _rh = _closure_estimand(_man, _RES(), _E, _emol, _jb_het)
     chk(any("BASIN_HETEROGENEOUS" in b for b in _rh["blocks"])
         and "primary_ddE_lowE_eV" not in _rh,
         "⛔음성: 한 조각 안에 서로 다른 realized basin 이 섞이면 min 을 안 뽑는다")
     _jb_none = dict(_jobs)
     _jb_none["prospective/ptfe_c10__b00__afm2424_pm1"] = _BAS(
         None, "prospective/ptfe_c10__b00__afm2424_pm1")
-    _rn = _closure_estimand(_man, {"pairs": {}}, _E, _emol, _jb_none)
+    _rn = _closure_estimand(_man, _RES(), _E, _emol, _jb_none)
     chk(any("BASIN_UNRESOLVED_IN_SET" in b for b in _rn["blocks"]),
         "⛔음성: realized basin 을 못 만든 잡이 있으면 그 집합으로 뺄셈하지 않는다")
     # ⛔음성 (회신 AA P0-3) — 경로와 구조화 필드가 어긋나면 값을 만들지 않는다
@@ -8228,7 +8954,7 @@ def selftest() -> int:
     _k1 = "prospective/sdcp_neutral__b00__afm2424_pm1"
     _jb_x1[_k1] = {**_BAS("aaaa1111", _k1)}
     _jb_x1[_k1]["meta"] = {**_jb_x1[_k1]["meta"], "fragment": "ptfe_c10"}
-    _rx1 = _closure_estimand(_man, {"pairs": {}}, _E, _emol, _jb_x1)
+    _rx1 = _closure_estimand(_man, _RES(), _E, _emol, _jb_x1)
     chk(any("COHORT_INCOHERENT" in b for b in _rx1["blocks"]),
         "⛔음성: job.json 의 fragment 가 경로와 다르면 차단 (어느 쪽이 맞는지 우리가 못 정한다)")
 
@@ -8238,29 +8964,79 @@ def selftest() -> int:
     _jb_x2 = dict(_jobs)
     _jb_x2[_k1] = {**_BAS("aaaa1111", _k1)}
     _jb_x2[_k1]["meta"] = {k: v for k, v in _jb_x2[_k1]["meta"].items() if k != "d3"}
-    _rx2 = _closure_estimand(_man, {"pairs": {}}, _E, _emol, _jb_x2)
+    _rx2 = _closure_estimand(_man, _RES(), _E, _emol, _jb_x2)
     chk(any("COHORT_INCOHERENT" in b for b in _rx2["blocks"]),
         "⛔음성: d3 필드가 비면 경로가 정상이어도 차단 (v7 의 net4 8잡이 그 모양이었다)")
 
     _jb_x3 = dict(_jobs)
     _k3 = "prospective/sdcp_neutral__b00__afm2424_pm1__d3off"
     _jb_x3[_k3] = {**_BAS("aaaa1111", _k1)}          # 경로는 d3off, 필드는 on
-    _rx3 = _closure_estimand(_man, {"pairs": {}}, _E, _emol, _jb_x3)
+    _rx3 = _closure_estimand(_man, _RES(), _E, _emol, _jb_x3)
     chk(any("COHORT_INCOHERENT" in b for b in _rx3["blocks"]),
         "⛔음성: 경로는 __d3off 인데 job.json 이 d3=on 이면 차단 "
         "(D3 분해가 통째로 뒤집힌다)")
 
     _jb_x4 = dict(_jobs)
     _jb_x4[_k1] = {"ok": True, "gates": [], "geom": {"magnetic": {"realized_basin_id": "a"}}}
-    _rx4 = _closure_estimand(_man, {"pairs": {}}, _E, _emol, _jb_x4)
+    _rx4 = _closure_estimand(_man, _RES(), _E, _emol, _jb_x4)
     chk(any("COHORT_INCOHERENT" in b for b in _rx4["blocks"]),
         "⛔음성: job.json(meta) 이 아예 없으면 차단 — 이름으로 추측하지 않는다")
+
+    # ⛔음성 AO P0-4 — canary 와 부모 static 기하가 다르면 막는다 (스핀 검사 오염)
+    chk(any("CANARY_GEOM_MISMATCH" in b for b in
+            _closure_estimand(_man, _RES(same=False), _E, _emol, _jobs)["blocks"]),
+        "⛔음성 AO P0-4: canary 가 부모와 **다른 기하**면 막는다 "
+        "(두 에너지 차에 구조 이완 에너지가 섞인다)")
+    # ⛔음성 AO P0-4 — 기하 대조를 **못 했으면** 그것도 차단이다 (확인 못 한 것 ≠ 통과)
+    chk(any("CANARY_GEOM_UNCHECKED" in b for b in
+            _closure_estimand(_man, {"pairs": {}}, _E, _emol, _jobs)["blocks"]),
+        "⛔음성 AO P0-4: 기하 대조 결과가 **없으면** 통과가 아니라 차단이다")
+
+    # ── 회신 AO P0-7 — pm1 조건부 D 를 net4 의 basin 차이가 지우지 않는다 ──
+    _man7 = dict(_man, estimand_job_keys={
+        "E_C_sdcp": "prospective/sdcp_neutral__b00__afm2424_pm1",
+        "E_C_control": "prospective/ptfe_c10__b00__afm2424_pm1",
+        "E_G_sdcp": "mol__sdcp_neutral__box24__nzmag",
+        "E_G_control": "mol__ptfe_c10__box24__nzmag"})
+    _en7 = dict(_en, **{"prospective/sdcp_neutral__b09__afm2424_net4": -201.2,
+                        "prospective/ptfe_c10__b09__afm2424_net4": -100.6})
+    _jb7 = {k: _BAS("aaaa1111", k) for k in _en7 if k.startswith("prospective/")}
+    # net4 두 잡만 **다른 basin** 으로 수렴 → 종전엔 BASIN_HETEROGENEOUS 로 D 가 죽었다
+    for _k in ("prospective/sdcp_neutral__b09__afm2424_net4",
+               "prospective/ptfe_c10__b09__afm2424_net4"):
+        _jb7[_k] = _BAS("bbbb2222", _k)
+    _r7 = _closure_estimand(_man7, _RES(), lambda j: _en7.get(j), _emol, _jb7)
+    chk(not any(b.startswith("BASIN_HETEROGENEOUS") for b in _r7["blocks"])
+        and any("BASIN_HETEROGENEOUS" in n for n in (_r7.get("nonprimary_notes") or [])),
+        "⛔음성 AO P0-7: net4 가 다른 basin 이어도 **pm1 조건부 D 를 지우지 않는다** "
+        f"(민감도 주석으로 내린다) · blocks {_r7.get('blocks')}")
+    chk(_r7.get("primary_ddE_lowE_eV") is not None,
+        f"AO P0-7: 그 상태에서도 D_pm1 이 나온다 (실제 {_r7.get('primary_ddE_lowE_eV')})")
+    # ⛔음성 — 그런데 **네 잡 자신**의 basin 이 없으면 여전히 막는다
+    _jb7b = dict(_jb7)
+    _jb7b["prospective/sdcp_neutral__b00__afm2424_pm1"] = _BAS(
+        None, "prospective/sdcp_neutral__b00__afm2424_pm1")
+    chk(any("ESTIMAND_BASIN_UNRESOLVED" in b or "BASIN_UNRESOLVED_IN_SET" in b
+            for b in _closure_estimand(_man7, _RES(), lambda j: _en7.get(j),
+                                       _emol, _jb7b)["blocks"]),
+        "⛔음성 AO P0-7: **D 에 들어가는 네 잡** 의 basin 이 없으면 여전히 막는다")
+    # net4 직접식이 봉인돼 있으면 D_net4 − D_pm1 을 **실제로 계산한다**
+    _man7n = dict(_man7, estimand_job_keys_net4={
+        "E_C_sdcp": "prospective/sdcp_neutral__b09__afm2424_net4",
+        "E_C_control": "prospective/ptfe_c10__b09__afm2424_net4",
+        "E_G_sdcp": "mol__sdcp_neutral__box24__nzmag",
+        "E_G_control": "mol__ptfe_c10__box24__nzmag"})
+    _r7n = _closure_estimand(_man7n, _RES(), lambda j: _en7.get(j), _emol, _jb7)
+    chk((_r7n.get("branch_sensitivity") or {}).get("status") == "computed"
+        and "D_net4_minus_D_pm1_eV" in (_r7n.get("branch_sensitivity") or {}),
+        "AO P0-7: net4 가 봉인돼 있으면 **D_net4 − D_pm1 을 계산한다** "
+        f"(종전엔 요구해 놓고 안 냈다) · {_r7n.get('branch_sensitivity')}")
 
     _jb_slab = dict(_jobs)
     _jb_slab["refs/clean_slab__afm2424_pm1"] = _BAS(
         "cccc3333", "prospective/sdcp_neutral__b00__afm2424_pm1",
         kind="clean_ref", fragment=None, basin_id=None)
-    _rs = _closure_estimand(_man, {"pairs": {}}, _E, _emol, _jb_slab)
+    _rs = _closure_estimand(_man, _RES(), _E, _emol, _jb_slab)
     chk(any("BASIN_MISMATCH_SLAB" in b for b in _rs["blocks"]),
         "⛔음성: clean slab 이 복합체와 다른 basin 이면 흡착에너지를 만들지 않는다")
     chk(abs(r["primary_ddE_lowE_eV"] - (-0.5)) < 1e-6,
@@ -8276,12 +9052,12 @@ def selftest() -> int:
     _en2 = dict(_en)
     _en2["prospective/sdcp_neutral__b00__afm2424_pm1"] = -200.55
     _en2["prospective/sdcp_neutral__b01__afm2424_pm1"] = -200.55
-    r2 = _closure_estimand(_man, {"pairs": {}}, lambda j: _en2.get(j), _emol, _jobs)
+    r2 = _closure_estimand(_man, _RES(), lambda j: _en2.get(j), _emol, _jobs)
     chk(r2["verdict"] == "NO_DIRECTIONAL_CLAIM",
         f"[음성 V P0-4] primary {r2.get('primary_ddE_lowE_eV')} > -0.10 → 방향성 주장 금지")
     # 음성: 비영 시작이 더 낮으면 값을 내지 않는다
     _en3 = dict(_en); _en3["mol__sdcp_neutral__box24__nzmag"] = -200.3
-    r3 = _closure_estimand(_man, {"pairs": {}}, lambda j: _en3.get(j), _emol, _jobs)
+    r3 = _closure_estimand(_man, _RES(), lambda j: _en3.get(j), _emol, _jobs)
     chk(any("MOLECULAR_STATE_UNRESOLVED" in b for b in r3["blocks"])
         and "primary_ddE_lowE_eV" not in r3,
         "[음성 V P0-3] 비영 MAGMOM 대조가 더 낮으면 **MOLECULAR_STATE_UNRESOLVED 로 막고 "
@@ -8291,7 +9067,7 @@ def selftest() -> int:
     _j4["prospective/sdcp_neutral__b00__afm2424_pm1"] = {
         **_BAS("aaaa1111", "prospective/sdcp_neutral__b00__afm2424_pm1"),
         "gates": ["MAGNETIC_PARTIAL_FLIP(3/48 Ni)"]}
-    r4 = _closure_estimand(_man, {"pairs": {}}, _E, _emol, _j4)
+    r4 = _closure_estimand(_man, _RES(), _E, _emol, _j4)
     chk(any("GATED_POSE" in b for b in r4["blocks"]) and "primary_ddE_lowE_eV" not in r4,
         "[음성 V P0-4] 자기 topology 게이트된 자세는 **다음 순위로 조용히 대체하지 않는다**")
     # 음성: 대조가 아예 없으면
