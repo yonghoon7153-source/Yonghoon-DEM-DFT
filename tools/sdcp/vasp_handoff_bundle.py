@@ -5387,6 +5387,22 @@ def _slab_jobs(out: Path, planned: dict):
     return ks
 
 
+def set_job_cell(job_dir: Path, new_c: float) -> dict:
+    """잡 하나의 셀 높이를 `new_c` 로. POSCAR·DIPOL·job.json 을 **함께** 고친다.
+
+    셋을 따로 고치면 하나를 빠뜨린다 — 실제로 그렇게 물렸다 (회신 AF P0-1).
+    """
+    cur = _poscar_read(job_dir / "POSCAR")["A"][2][2]
+    if new_c <= cur + 1e-9:
+        return {"changed": False, "c_before_A": round(cur, 4)}
+    k = cur / new_c
+    nd = _dipol_rescale(job_dir, k)
+    nj = _jobjson_rescale(job_dir, k)
+    poscar_set_c(job_dir / "POSCAR", new_c)
+    return {"changed": True, "c_before_A": round(cur, 4), "c_after_A": round(new_c, 4),
+            "n_dipol": nd, "n_jobjson": nj}
+
+
 def fit_bundle_vacuum(out: Path, planned: dict, min_vac: float,
                       target_c: Optional[float] = None) -> dict:
     """슬랩이 든 잡을 **한 c** 로 맞춘다 (clean slab 포함 — 안 그러면 E_ads 가 안 소거된다).
@@ -5961,6 +5977,9 @@ def build_bundle(a, ledger: Optional[Dict[str, Any]] = None) -> Path:
             # 층화 홀드아웃 — **primary 후보집합이 아니다.** 이것으로 primary 를
             # 내면 사전등록된 집합이 사라지고 min 이 표본크기를 따라 움직인다.
             _name = "holdout_stratified"
+        elif set(_actual) <= {"primary", "sensitivity"} and _actual:
+            # C-12 경로 (회신 AI §A-Q4 = C). 홀드아웃·merge 가 없는 단일 묶음이다
+            _name = "c12"
         elif len(_rl) > 1:
             _name = "prospective_lowE"
         else:
@@ -6031,6 +6050,33 @@ def build_bundle(a, ledger: Optional[Dict[str, Any]] = None) -> Path:
                     n_jobs += 1
                     print(f"   {b['basin_id']} {b['role']:14s} {sd:14s} "
                           f"UMA {b.get('E_pose_eV'):+8.4f}  {lab[:40]}")
+                    # ★ 진공 두께 수렴 시험 (회신 AI §D) — **primary · 주 seed 만**
+                    #   같은 자세를 더 높은 셀로 한 번 더 낸다. 판정은 두 조각의
+                    #   대비 변화에 적용하므로 기체·슬랩 항은 소거된다.
+                    _c2 = getattr(a, "cell_c2", None)
+                    if _c2 and b.get("role") == "primary" and sd == SEED_MAIN:
+                        rel2 = f"vacconv/{frag}__{b['basin_id']}__{sd}__c2"
+                        m2 = _emit_slab_job(
+                            out / rel2, cx, nslab, a.freeze, frag,
+                            f"{frag} {b['basin_id']} (vacuum-convergence c2) {sd}", sd,
+                            {"kind": "prospective_pose", "fragment": frag,
+                             "basin_id": b["basin_id"], "role": b["role"],
+                             "registry_role": None, "vacconv": "c2",
+                             "why": "vacuum-thickness convergence test (second cell)",
+                             "source_pose": lab,
+                             "uma_E_pose_eV": b.get("E_pose_eV"),
+                             "contact_fingerprint": b.get("fingerprint"),
+                             "anchor": b.get("anchor"), "height_A": b.get("height_A"),
+                             "source_xyz_sha256": hashlib.sha256(
+                                 xp.read_bytes()).hexdigest()},
+                            ledger, zcut=zcut, dense=False,
+                            prescf=not a.no_prescf, single_point=a.single_point,
+                            closure=a.closure, kmesh_over=kover)
+                        slab_metas.append(m2)
+                        plan(rel2, m2["phases"], True)
+                        n_jobs += 1
+                        print(f"   {b['basin_id']} {'vacconv c2':14s} {sd:14s} "
+                              f"→ {rel2}")
     else:
         pass  # 아래 champion/cross 경로
 
@@ -6282,6 +6328,21 @@ def build_bundle(a, ledger: Optional[Dict[str, Any]] = None) -> Path:
         slab_metas.append(m)
         plan(rel, m["phases"], True)
         n_jobs += 1
+        # ★ 둘째 셀의 clean slab — **절대 E_ads 를 보고하려면** 필요하다.
+        #   대비만 볼 거면 소거되지만, 절대값의 수렴은 따로 봐야 한다. 주 seed 만.
+        if getattr(a, "cell_c2", None) and a.refs and sd == SEED_MAIN:
+            rel2 = f"vacconv/clean_slab__{sd}__c2"
+            m2 = _emit_slab_job(out / rel2, clean, len(clean), a.freeze,
+                                man["fragments"][0],
+                                f"clean slab {sd} (vacuum-convergence c2)", sd,
+                                {"kind": "clean_ref", "vacconv": "c2"},
+                                ledger, zcut=zcut, dense=False,
+                                prescf=not a.no_prescf,
+                                single_point=a.single_point, closure=a.closure,
+                                kmesh_over=kover)
+            slab_metas.append(m2)
+            plan(rel2, m2["phases"], True)
+            n_jobs += 1
     # ⚠ refs 가 아닌 대조군을 man["refs"] 에 넣으면 has_refs 가 참이 되어 분석기가
     #   E_ads 를 만들려 든다 (기체 분자가 없는데). 별도 키로 등록한다.
     man["refs"]["clean_slab"] = ([f"refs/clean_slab__{s}" for s in SEEDS_FULL]
@@ -6546,6 +6607,7 @@ def build_bundle(a, ledger: Optional[Dict[str, Any]] = None) -> Path:
             "{source_sha256:{원소:sha}, vasp_version:'...'} 를 박아야 외부 기준 대조가 "
             "된다. 없으면 분석기는 잡 사이 일치만 확인한다")
 
+    _c2 = getattr(a, "cell_c2", None)
     _minvac = float(getattr(a, "min_vacuum", MIN_VACUUM_A_DEFAULT) or 0.0)
     if _minvac > 0:
         man["vacuum"] = fit_bundle_vacuum(out, man["planned"], _minvac,
@@ -6562,6 +6624,30 @@ def build_bundle(a, ledger: Optional[Dict[str, Any]] = None) -> Path:
     else:
         man["vacuum"] = {"declared_A": None,
                          "⚠": "--min_vacuum 0 — 진공 게이트를 껐다. 인용 시 병기할 것"}
+
+    # ── 진공 두께 수렴 시험: vacconv/ 잡만 둘째 셀로 올린다 ────────────────
+    if _c2:
+        _vc = {}
+        for _k in sorted(man["planned"]):
+            if not _k.startswith("vacconv/"):
+                continue
+            _vc[_k] = set_job_cell(out / _k, float(_c2))
+            _vc[_k]["image_separation_A"] = round(
+                image_separation_A(out / _k / "POSCAR") or -1, 3)
+        man["vacuum_convergence"] = {
+            "schema": "vacuum_convergence/v1",
+            "c1_A": (man.get("vacuum") or {}).get("c_after_A"),
+            "c2_A": float(_c2), "jobs": _vc,
+            "판정": "두 조각의 **대비 변화** |D(c2) − D(c1)| ≤ 0.005 eV 이고, "
+                    "두 값의 0.01 eV 반올림이 같아야 통과",
+            "왜_대비인가": "기체 기준과 슬랩 항은 c 에 무관하거나 두 조각에 공통이라 "
+                           "대비를 취하면 소거된다. 조각별 변화가 아니라 대비 변화가 판정 대상",
+            "5_meV_출처": "물리 상수가 아니라 **보고 최소단위(0.01 eV)의 절반**",
+            "실패시": "추가 셀 탐색 없이 Figure 2e 를 제거한다"}
+        if _vc:
+            print("  ↑ 진공 두께 수렴 시험 %d잡 → c %.4f Å (최소 분리 %s)"
+                  % (len(_vc), float(_c2),
+                     min(v["image_separation_A"] for v in _vc.values())))
 
     try:
         sys.path.insert(0, str(Path(__file__).resolve().parent))
@@ -9404,6 +9490,10 @@ def main():
                     help="사전 승인된 POTCAR/VASP 신원 JSON 경로 "
                          "({source_sha256:{원소:sha}, vasp_version:'...'}). "
                          "이것이 **외부 기준**이다 — 없으면 회신끼리의 일치만 본다")
+    ap.add_argument("--cell_c2", type=float, default=None,
+                    help="진공 두께 수렴 시험용 **둘째** 셀 높이 [Å]. 주면 primary 자세를 "
+                         "주 seed 로 이 높이에서도 낸다 (vacconv/). 판정은 두 조각의 "
+                         "대비 변화에 적용하므로 기체·슬랩 항이 소거된다")
     ap.add_argument("--cell_c", type=float, default=None,
                     help="슬랩 잡의 셀 높이 c [Å] 를 이 값으로 **못 박는다**. "
                          "두 묶음(calibration·holdout)이 같은 셀을 쓰게 하는 유일한 방법이다 "
@@ -9429,7 +9519,8 @@ def main():
                     help="동결된 prospective_basins manifest 에서 **그 자세만** 생성한다 "
                          "(champion/cross 자동탐색을 쓰지 않는다). 회신 W 5단계")
     ap.add_argument("--roles", nargs="+", default=None,
-                    choices=["calibration", "sealed_audit", "holdout"],
+                    choices=["calibration", "sealed_audit", "holdout",
+                             "primary", "sensitivity"],
                     help="--from_basins 에서 **이 역할만** 낸다. 회신 X P0-2 — Stage A 는 "
                          "`--roles calibration` 으로 audit 을 봉인한 채 던진다. "
                          "`holdout` 은 층화 홀드아웃 tranche (2026-08-30 옵션 A) — "
