@@ -2325,6 +2325,66 @@ def selftest_k() -> int:
     chk(_spin_setup_ok(_echo("  I_CONSTRAINED_M =      1\n"))[0] is False,
         "⛔음성 P0-5: 스핀 제약이 켜져 있으면 같은 경로에서 잡힌다")
 
+    # ══ C5 — ΔΔE_obs (12자세 · 홀드아웃 게이트) ═══════════════════════════
+    #   이것이 Figure 2e 의 숫자를 내는 조건이다. 게이트가 하나라도 새면 값을
+    #   만들면 안 되므로 음성을 촘촘히 친다.
+    def _mk12(a_by_role):
+        """조각별 12자세 픽스처 — cal 4 + holdout 8, A 값을 지정한다."""
+        jb, en = {}, {}
+        for f, (cal, hld) in a_by_role.items():
+            mk = "refs/mol__%s__box24" % f
+            jb[mk] = _J("mol_ref", fragment=f); en[mk] = -100.0
+            for i, (role, a) in enumerate([("calibration", x) for x in cal]
+                                          + [("holdout", x) for x in hld]):
+                k = "prospective/%s__b%02d__%s" % (f, i, SEED_MAIN)
+                jb[k] = _J("prospective_pose", fragment=f, seed=SEED_MAIN,
+                           basin_id="b%02d" % i, role=role, _edisp=-1.0)
+                en[k] = -100.0 + a                       # A = E_cx − E_mol = a
+        return jb, en
+
+    _F5 = ["sdcp_neutral", "ptfe_c10"]
+    _em5 = {"sdcp_neutral": -100.0, "ptfe_c10": -100.0}
+    _A5 = {"sdcp_neutral": ([-1.20, -1.10, -1.05, -1.00], [-1.15] + [-0.9] * 7),
+           "ptfe_c10":     ([-0.80, -0.75, -0.70, -0.65], [-0.78] + [-0.6] * 7)}
+    _jb5, _en5 = _mk12(_A5)
+    _man5 = {"planned": {k: {} for k in _jb5 if k.startswith("prospective/")}}
+    _E5 = lambda j: _en5.get(j)                          # noqa: E731
+    _c5 = closure_C5(_man5, _jb5, _E5, _em5, _F5)
+    chk(abs(_c5.get("ddE_obs_eV", 0) - (-0.40)) < 1e-6,
+        "C5 양성: ΔΔE_obs = min(SDCP) − min(c10) = −1.20 − (−0.80) = −0.40 (실제 %s)"
+        % _c5.get("ddE_obs_eV"))
+    chk(all(_c5["by_frag"][f]["H1_pass"] for f in _F5),
+        "C5: 홀드아웃이 calibration 최저를 안 밑돌면 H1 통과")
+    chk("전역 최소" in str(_c5.get("⛔_금지_서술")),
+        "C5 가 금지 서술을 결과에 함께 싣는다")
+    # ⛔ 음성 C5-a — 홀드아웃이 더 낮으면 **SELECTOR_FAIL**, 값을 안 만든다
+    _A5b = dict(_A5, sdcp_neutral=([-1.20, -1.10, -1.05, -1.00],
+                                   [-1.40] + [-0.9] * 7))   # 홀드아웃이 200 meV 더 낮다
+    _jb5b, _en5b = _mk12(_A5b)
+    _c5b = closure_C5(_man5, _jb5b, lambda j: _en5b.get(j), _em5, _F5)
+    chk("ddE_obs_eV" not in _c5b
+        and "SELECTOR_FAIL" in _c5b["by_frag"]["sdcp_neutral"]["verdict"],
+        "⛔음성 C5: 홀드아웃이 calibration 최저를 30 meV 이상 밑돌면 **값을 안 만든다** "
+        "— '더 낮은 자세를 찾았다' 로 흡수하면 선택기 실패가 사라진다")
+    # ⛔ 음성 C5-b — 자세가 하나라도 빠지면 unresolved
+    _jb5c = dict(_jb5); _jb5c.pop("prospective/sdcp_neutral__b11__" + SEED_MAIN)
+    chk(closure_C5(_man5, _jb5c, _E5, _em5, _F5)["by_frag"]["sdcp_neutral"]["verdict"]
+        == "unresolved",
+        "⛔음성 C5: 12자세 중 하나라도 빠지면 unresolved (표본이 줄면 min 이 올라간다)")
+    # ⛔ 음성 C5-c — 홀드아웃 역할이 아예 없으면(= calibration 전용 tranche) 값 없음
+    _jb5d = {k: (dict(v, meta=dict(v["meta"], role="calibration"))
+                 if k.startswith("prospective/") else v) for k, v in _jb5.items()}
+    _c5d = closure_C5(_man5, _jb5d, _E5, _em5, _F5)
+    chk("ddE_obs_eV" not in _c5d,
+        "⛔음성 C5: 홀드아웃이 없으면 값을 만들지 않는다 — 그 시험이 이 양의 **전제**다")
+    # ⛔ 음성 C5-d — basin 이 갈리면 unresolved
+    _kx5 = "prospective/ptfe_c10__b03__" + SEED_MAIN
+    _jb5e = dict(_jb5)
+    _jb5e[_kx5] = dict(_jb5[_kx5], geom={"magnetic": {"realized_basin_id": "Z"}})
+    chk(closure_C5(_man5, _jb5e, _E5, _em5, _F5)["by_frag"]["ptfe_c10"]["verdict"]
+        == "unresolved",
+        "⛔음성 C5: 12자세가 서로 다른 basin 이면 unresolved")
+
     _c3 = closure_C3(_man3, _jb3, _E3, _F3)
     chk(abs(_c3["D_eV"] - (-0.7)) < 1e-6,
         "C3: D = mean(δ_SDCP) − mean(δ_c10) = −0.7 (실제 %s)" % _c3.get("D_eV"))
@@ -3095,6 +3155,109 @@ def closure_C1(man, jobs, E, emol, frags):
     return res
 
 
+#: C5 게이트 — 결과 보기 전 고정 (D-2026-08-30-sdcp-neutral-ptfe-ddE-obs)
+C5_N_POSE = 12                 # 조각당 선언 자세 = calibration 4 + holdout 8
+C5_H1_TOL_EV = 0.030           # 홀드아웃이 calibration 최저를 이만큼 밑돌면 선택기 실패
+
+
+def closure_C5(man, jobs, E, emol, frags):
+    """C5 — ΔΔE_obs. **선언된 12자세에서의 조각 간 대비** (표본 조건부).
+
+      A(f,p)   = E_complex(f,p) − E_mol(f, box24)
+      ΔΔE_obs  = min_{p∈12} A(SDCP,p) − min_{q∈12} A(c10,q)      [pm1 · D3-on]
+
+    왜 이 양이 별도로 있나 — 마감조건 §9 는 *"Stage A 결과로 어느 조각이 더 강하게
+    붙는다를 종결형으로 쓰기"* 를 금지하고, 그 근거로 **"audit pose 가 없다"** 를 든다.
+    즉 반대 이유는 *min 이 UMA 선택기의 산물일 수 있다* 이다. 층화 홀드아웃 8자세가
+    UMA 점수 전 구간을 가로질러 **그 반대 이유를 직접 시험**하므로, 그 시험을 통과할
+    때에 한해 **표본 조건부** 대비를 낸다.
+
+    게이트 (하나라도 깨지면 값을 만들지 않는다):
+      ① 조각당 12자세 전부 회수·게이트 통과   ② 12자세가 서로 같은 realized basin
+      ③ H1 — 홀드아웃 최저가 calibration 최저를 30 meV 이상 **밑돌지 않는다**
+      ④ 두 조각 기체 기준이 존재            ⑤ (슬랩은 A 에서 소거되므로 여기선 불필요)
+
+    ⛔ 이 함수가 **못 하는 것**
+      · 전역 최소를 주장하지 않는다. 후보풀 밖은 안 봤다.
+      · `ΔΔE_lowE` / primary 가 아니다 — 그것은 창 W 전수 + audit 개봉을 전제한다.
+      · H1 실패를 "더 낮은 자세를 찾았다" 로 흡수하지 않는다. **재개 사유**다.
+    """
+    res = {"schema": "closure_C5/v1", "name": "ddE_obs",
+           "n_pose_required": C5_N_POSE, "h1_tol_eV": C5_H1_TOL_EV,
+           "decision": "D-2026-08-30-sdcp-neutral-ptfe-ddE-obs (proposed)",
+           "⚠": "표본 조건부 — 전역 최소가 아니다", "by_frag": {}}
+    mins = {}
+    for f in frags:
+        if emol.get(f) is None:
+            res["by_frag"][f] = {"verdict": "unresolved", "why": "기체 기준(box24) 없음"}
+            continue
+        rows, miss = [], []
+        for jn in _pick(jobs, kind="prospective_pose", fragment=f,
+                        seed=SEED_MAIN, d3="on"):
+            jr = jobs[jn]
+            ec = E(jn)
+            if jr.get("gates") or ec is None:
+                miss.append(f"{jn}(게이트/에너지 결측)"); continue
+            rows.append({"job": jn, "role": (jr.get("meta") or {}).get("role"),
+                         "basin_id": (jr.get("meta") or {}).get("basin_id"),
+                         "A_eV": round(ec - emol[f], 6)})
+        if len(rows) != C5_N_POSE or miss:
+            res["by_frag"][f] = {
+                "verdict": "unresolved", "n_used": len(rows),
+                "n_required": C5_N_POSE, "missing": miss[:4],
+                "why": ("선언된 12자세 전부가 있어야 한다 — 부분집합에서 min 을 뽑으면 "
+                        "표본이 줄수록 min 이 올라가 대비가 흔들린다")}
+            continue
+        # ② 12자세 상호 동질성 (크기 포함) — 상태를 가로질러 min 을 뽑지 않는다
+        _het = []
+        for r in rows[1:]:
+            ok, why = same_basin(jobs[rows[0]["job"]], jobs[r["job"]])
+            if not ok:
+                _het.append(f"{r['job']}: {why}")
+        if _het:
+            res["by_frag"][f] = {"verdict": "unresolved", "basin_mismatch": _het[:3],
+                                 "why": "12자세가 서로 같은 realized basin 이어야 한다"}
+            continue
+        cal = [r for r in rows if r["role"] == "calibration"]
+        hld = [r for r in rows if r["role"] == "holdout"]
+        if not cal or not hld:
+            res["by_frag"][f] = {"verdict": "unresolved",
+                                 "why": "calibration %d · holdout %d — 두 역할이 다 "
+                                        "있어야 H1 을 시험할 수 있다" % (len(cal), len(hld))}
+            continue
+        a_cal, a_hld = min(r["A_eV"] for r in cal), min(r["A_eV"] for r in hld)
+        # ③ H1 — 홀드아웃이 calibration 최저를 30 meV 이상 밑돌면 선택기 실패
+        h1_ok = (a_hld - a_cal) > -C5_H1_TOL_EV
+        res["by_frag"][f] = {
+            "n_pose": len(rows), "n_cal": len(cal), "n_holdout": len(hld),
+            "A_min_calibration_eV": round(a_cal, 6),
+            "A_min_holdout_eV": round(a_hld, 6),
+            "H1_margin_eV": round(a_hld - a_cal, 6), "H1_pass": h1_ok,
+            "A_min_eV": round(min(a_cal, a_hld), 6),
+            "rows": sorted(rows, key=lambda r: r["A_eV"]),
+            "verdict": ("ok" if h1_ok else
+                        "⛔ SELECTOR_FAIL — 홀드아웃 최저가 calibration 최저를 "
+                        "%.1f meV 밑돈다. 이 값을 min 으로 흡수하지 않는다; "
+                        "사전등록 재개조건이 발동한다" % (1000 * (a_cal - a_hld)))}
+        if h1_ok:
+            mins[f] = min(a_cal, a_hld)
+    sd = next((f for f in mins if "sdcp" in f), None)
+    ct = next((f for f in mins if f != sd), None)
+    if not (sd and ct):
+        res["verdict"] = ("unresolved — 두 조각 모두 게이트를 통과해야 한다 "
+                          "(통과 %s)" % sorted(mins))
+        return res
+    res["ddE_obs_eV"] = round(mins[sd] - mins[ct], 6)
+    res["verdict"] = (
+        "조사한 %d자세(사전등록 %d + 층화 홀드아웃 %d)에서, 고정기하 단일점 규약 아래 "
+        "중성 SDCP 반복단위 모델의 최저 흡착 전자에너지가 perfluorodecane 조각보다 "
+        "%.4f eV %s았다" % (C5_N_POSE, 4, 8, abs(res["ddE_obs_eV"]),
+                            "낮" if res["ddE_obs_eV"] < 0 else "높"))
+    res["⛔_금지_서술"] = ["전역 최소", "가장 안정한 자세", "종결형",
+                        "ΔΔE_lowE · primary 로 부르기"]
+    return res
+
+
 def closure_C3(man, jobs, E, frags):
     """C3 — D3 분해. **부호를 먼저 본다.**
 
@@ -3490,6 +3653,7 @@ def _closure_estimand(man, results, E, emol, jobs):
     try:
         out["closure_C1"] = closure_C1(man, jobs, E, emol, frags)
         out["closure_C3"] = closure_C3(man, jobs, E, frags)
+        out["closure_C5"] = closure_C5(man, jobs, E, emol, frags)
     except Exception as _e:                                  # noqa: BLE001
         out["blocks"].append(f"CLOSURE_COND_ERROR({_e!r})")
 

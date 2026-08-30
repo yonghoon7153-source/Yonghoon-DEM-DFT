@@ -685,6 +685,51 @@
     "_note": "1저자 재승인 2026-08-28 (세션 지시 '재ratify 권장하면 해' — agent 권장 후 위임 실행). 회신 P 1·2번 반영판: 허용문장 4건 완화 + 추출부호 철회. 닫는 범위·재개조건 불변.",
     "decision_digest": "sha256:534864b45e6f23aeb432d6a68969fbe440288c65f76ae8f3b8de383e4ef25968"
    }
+  },
+  {
+   "id": "D-2026-08-30-sdcp-neutral-ptfe-ddE-obs",
+   "schema_version": 2,
+   "kind": "estimand",
+   "scope": "sdcp.neutral_vs_ptfe.adsorption",
+   "slot": "fragment_contrast_estimand",
+   "status": "proposed",
+   "applies_to": {
+    "systems": [
+     "sdcp_neutral",
+     "ptfe_c10"
+    ],
+    "tasks": [
+     "adsorption",
+     "fragment_contrast"
+    ],
+    "methods": [
+     "vasp-544__pbe-u62__mlip-geom-sp"
+    ],
+    "use_cases": [
+     "manuscript",
+     "closure"
+    ]
+   },
+   "title": "ΔΔE_obs — 선언된 12자세에서의 조각 간 대비 (표본 조건부, 홀드아웃 게이트)",
+   "statement": "ΔΔE_obs = min_{p∈S_f} A(SDCP,p) − min_{q∈S_f} A(c10,q), A(f,p) = E_complex(f,p) − E_mol(f, box24), pm1 · D3-on. S_f = 조각당 **선언된 12자세** = 동결 calibration 4 + 층화 holdout 8. **표본 조건부 양이며 전역 최소가 아니다.**",
+   "rationale": "기존 금지(D-… stageA 마감조건 §9)의 근거는 'audit pose 가 없어 min 이 UMA 선택기의 산물일 수 있다' 였다. 2026-08-30 에 UMA 점수 사분위 전 구간에 걸친 층화 홀드아웃 8자세/조각이 추가돼 **그 반대 이유를 직접 시험**하게 됐다. 홀드아웃이 calibration 최저를 30 meV 이상 밑돌지 않으면 선택기 가정이 그 표본에서 버틴 것이고, 그때에 한해 표본 조건부 대비를 인용한다.",
+   "supersedes": [],
+   "does_not_supersede": [
+    "primary ΔΔE_lowE 의 Stage B 의존성 — 그대로 유지한다",
+    "'어느 조각이 더 강하게 붙는다' 의 **종결형** 금지 — 그대로 유지한다",
+    "sealed_audit 봉인 — 이 조건은 개봉 없이 성립한다"
+   ],
+   "method_ref": "tools/sdcp/vasp_handoff_bundle.py :: closure_C5",
+   "enforcement": "분석기가 게이트 5개(12자세 완비 · 상호 same_basin · H1 통과 · 기체 프로토콜 동일 · clean slab 동일)를 전부 통과할 때만 값을 낸다. 하나라도 깨지면 unresolved 이고 값을 만들지 않는다.",
+   "gates": {
+    "pose_completeness": 12,
+    "holdout_h1_meV": 30.0,
+    "basin": "same_basin (크기 포함)"
+   },
+   "registered_at": "2026-08-30",
+   "registered_by": "agent",
+   "ratified_by": null,
+   "note": "⚠ proposed — 사람이 ratify 해야 active. DFT 결과 0잡 시점 등록."
   }
  ]
 }
