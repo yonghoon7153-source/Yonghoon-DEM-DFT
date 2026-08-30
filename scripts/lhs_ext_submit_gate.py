@@ -40,12 +40,15 @@ def parse_sacct(text: str) -> dict:
     """`sacct -n -P -o JobName,State[,ExitCode]` → {job_name: state}.
 
     ⚠ `-X` 로 **잡 단계(step)를 빼야** 한다 — 안 그러면 `batch`·`extern` 단계가 같은
-      이름으로 섞여 상태가 둘이 된다.  여기서는 이름이 중복되면 **가장 나쁜 상태**를
-      남긴다 (낙관적으로 고르면 게이트가 무의미해진다).
+      이름으로 섞여 상태가 둘이 된다.
+
+    ⚠⚠ 같은 이름이 여러 번 나오면 **마지막 것**을 남긴다 — 재제출이 앞 세대를 대체한다.
+      초판은 "가장 나쁜 상태" 를 남겼는데, 그러면 08-27 처럼 일괄 취소 뒤 다시 돌려
+      완주한 런이 **영원히 HOLD** 가 된다.  실제로 130점 배치가 그 상태였다: 취소 기록이
+      완주와 **같은 이름으로** 남아 있어 "실패 111건" 으로 집계됐다.  step 이 섞이는
+      문제는 `-X` 가 막으므로, 중복은 세대 차이로 보는 것이 맞다.
+      ⇒ 호출자는 `sacct -S <이 배치 제출일>` 로 **창을 좁혀** 옛 세대를 애초에 안 본다.
     """
-    rank = {s: 0 for s in BUSY_STATES}
-    rank.update({s: 1 for s in FAIL_STATES})
-    rank[OK_STATE] = 2                       # 낮을수록 나쁘다 → min 을 남긴다
     out = {}
     for ln in text.splitlines():
         ln = ln.strip()
@@ -56,9 +59,7 @@ def parse_sacct(text: str) -> dict:
             continue
         name, state = parts[0].strip(), parts[1].strip().split()[0]
         state = state.rstrip('+')            # `CANCELLED+` → `CANCELLED`
-        prev = out.get(name)
-        if prev is None or rank.get(state, 0) < rank.get(prev, 0):
-            out[name] = state
+        out[name] = state                    # 마지막이 이긴다
     return out
 
 
@@ -205,7 +206,11 @@ def _selftest():
     chk('★④ 매니페스트에 없는 잡이 섞이면 HOLD', b != [] and any('없는 잡' in x for x in b))
     #  ⑤ 중복 이름은 **나쁜 쪽**을 남긴다 (step 이 섞였을 때 낙관하지 않는다)
     dup = parse_sacct(sacct([('lhsx_001', 'COMPLETED'), ('lhsx_001', 'FAILED')]))
-    chk('★⑤ 같은 이름이 두 상태면 나쁜 쪽을 남긴다', dup['lhsx_001'] == 'FAILED', str(dup))
+    chk('★⑤ 같은 이름이면 **마지막** 을 남긴다 (재제출이 앞 세대를 대체)',
+        dup['lhsx_001'] == 'FAILED', str(dup))
+    dup2 = parse_sacct(sacct([('lhsx_001', 'CANCELLED'), ('lhsx_001', 'COMPLETED')]))
+    chk('★⑤ 취소 뒤 다시 돌려 완주하면 COMPLETED — 초판은 여기서 영원히 HOLD 였다',
+        dup2['lhsx_001'] == 'COMPLETED', str(dup2))
     chk('⑤ `CANCELLED+` 를 CANCELLED 로 읽는다',
         parse_sacct('lhsx_001|CANCELLED by 9248|0:0')['lhsx_001'] == 'CANCELLED')
 
