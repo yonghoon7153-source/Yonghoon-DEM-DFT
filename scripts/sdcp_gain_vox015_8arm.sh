@@ -281,12 +281,14 @@ LEAN_TAG=""; [ "${LEAN:-0}" = "1" ] && LEAN_TAG="_lean"; [ "${LEAN:-0}" = "2" ] 
 _RCPT_JSON="$(python3 - "$SCR" "$VOX" "$BRIDGE_UM" "$FIBRE_STAMP" "${SDCP_SPHERE_D:-}" \
                   "${SDCP_YIELD_VGCF:-0}" "${PTFE_STAMP:-off}" "${SIGMA_PTFE:-}" \
                   "${SIGMA_VGCF_OVERRIDE:-}" \
-                  "$PERIODIC_ON" "$ARMS" "${EXPECT_BACKEND:-gpu}" "${SDCP_BRIDGE:-}" <<'PYRCPT'
+                  "$PERIODIC_ON" "$ARMS" "${EXPECT_BACKEND:-gpu}" "${SDCP_BRIDGE:-}" \
+                  "${LEAN:-0}" <<'PYRCPT'
 import json, os, sys
 sys.path.insert(0, sys.argv[1])
 import run_contract as RC
 _scr, _vox, _br, _fs, _sd, _yv, _ps, _pt, _sg, _per, _arms, _bk = sys.argv[1:13]
 _sbrg = sys.argv[13] if len(sys.argv) > 13 else ''
+_lean = sys.argv[14] if len(sys.argv) > 14 else '0'
 vox = float(_vox)
 rec = {'vox_um': vox, 'bridge_um': float(_br), 'fibre_stamp': _fs,
        'sdcp_stamp': ('sphere' if _sd else 'point'),
@@ -297,6 +299,15 @@ rec = {'vox_um': vox, 'bridge_um': float(_br), 'fibre_stamp': _fs,
        'origins': [list(o) for o in RC.expected_origins_for(vox)]}
 if _sbrg:
     rec['sdcp_bridge_um'] = float(_sbrg)   # 판별 축 — 러너가 정한 것만 선언
+#  ★★★ 2026-08-30 (코드리뷰 지적 1) — **LEAN=4 일 때만** 필드 유무를 선언한다.
+#    `field_written` 은 `RECEIPT_AXES_NODIGEST` 라 **digest 를 안 바꾼다** (기존 팔 전부 보존).
+#    ⚠ 왜 LEAN=4 에만: 이 레벨은 오늘 만든 것이라 **혼동될 기존 팔이 없다** ⇒ 거짓 경보 0.
+#      LEAN 미지정(전체 파이프라인)도 필드를 쓰지만, 거기서 선언하면 이 키를 모르는
+#      **오늘 이전 팔이 전부 `missing` = HOLD** 가 된다 (돌고 있는 진단 런 포함).
+#    ⚠ 남는 구멍: LEAN 미지정 팔은 여전히 매니페스트로 필드 유무를 증명하지 못한다.
+#      그 팔을 쓰려면 JSON 안의 필드 배열을 직접 확인해야 한다 (자동 검사 밖).
+if _lean == '4':
+    rec['field_written'] = True
 if _pt:
     rec['sigma_ptfe_S_cm'] = float(_pt)
 if _sg:

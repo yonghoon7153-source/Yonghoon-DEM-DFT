@@ -1099,6 +1099,21 @@ def main():
             '--fibre-dia 는 뷰어 전용이고 로드가 solve 뒤다).\n'
             '  ⇒ D-1 source census 를 먼저 돌려 표현법을 정한 뒤 구현한다.  '
             '지금은 `--ptfe-stamp {off,centerline}` 만 쓸 것.')
+    #  ★★★ 2026-08-30 (코드리뷰 지적 3) — **centerline 은 선분 경로에서만 성립한다.**
+    #    `--step3-fibre-stamp point` 면 `_afid = None` 이 되고(:1512) raster 가 `np.floor`
+    #    점 경로를 타므로(step3_sigma.py:350) PTFE 는 **조각난 점**으로 찍힌다.  그런데
+    #    매니페스트의 `ptfe_stamp` 는 여전히 `'centerline'` 이라 요청과 실행이 갈린 채
+    #    **성공한 것처럼** 끝난다 — 2026-08-12 `--fibre` 실사고와 **같은 부류**이고,
+    #    바로 아래 :1513 이 그 사고를 막으려고 세운 가드의 짝이 여기 없었다.
+    #  ⚠ `--step3-fibre-stamp` 의 **기본값이 `point`** 라 이 조합은 기본 설정으로 도달한다.
+    if a._ptfe_stamp != 'off' and getattr(a, 'step3_fibre_stamp', 'point') != 'segment':
+        raise SystemExit(
+            f'ABORT — --ptfe-stamp {a._ptfe_stamp} 는 **선분 스탬프에서만** 1-셀 중심선이 '
+            f'된다.  지금 --step3-fibre-stamp 는 `{getattr(a, "step3_fibre_stamp", "point")}` '
+            f'(기본값)이라 PTFE 가 조각난 점으로 찍히는데 매니페스트에는 '
+            f'`ptfe_stamp={a._ptfe_stamp}` 로 적힌다 = 요청과 실행이 다른데 성공으로 끝난다.\n'
+            f'  ⇒ `--step3-fibre-stamp segment` 를 (--fibre npy 와 함께) 주거나, '
+            f'`--ptfe-stamp off` 로 명시할 것.')
     if a.selftest_temperature:
         _sys.exit(_selftest_temperature())
     # ── σ_ion(T) ────────────────────────────────────────────────────────────────
@@ -2018,6 +2033,21 @@ def main():
                 else:
                     _res3i = _s3.solve_sigma_z(sid3, _sig3i, a.step3_vox, return_field=True,
                                                z_top_um=_zt3, z_bot_um=_zb3, periodic_xy=a.periodic)
+                #  ★★★ 2026-08-30 (코드리뷰) — **`reason` 가드**.  전자 분기(:1660)에는 있고
+                #    이온 분기에는 **없었다**.  `solve_sigma_z` 의 조기반환 중 `no_plate_contact`
+                #    는 `n_dof = cond.sum()` = **양수**를 그대로 돌려주면서 `sigma_eff = 0.0`,
+                #    `unconverged = False`, `cg_info = 0` 을 낸다 (step3_sigma.py:706).
+                #    ⇒ 옛 판은 `if _res3i['n_dof']:` 가 참이 되어 **σ_ion = 0 을 `complete` 로**
+                #      찍었다.  이온축이 결론인 트랙에서 0 이 측정값으로 원장에 들어간다.
+                #    ⚠ 아래 먼 `elif` (n_dof=0 → 'SE 미퍼콜')가 이 마크를 덮어쓰면 **거짓 진단**이
+                #      된다 (플레이트 접촉 문제를 퍼콜레이션 문제로 적는 것) ⇒ 센티널로 막는다.
+                _ion_reason_marked = False
+                if not a.no_ion and _res3i.get('reason'):
+                    print(f"  ⚠ STEP3 σ_ion not solvable: {_res3i['reason']}")
+                    _s3mark('ionic', 'not_solvable', _res3i['reason'])
+                    step3['ion_reason'] = _res3i['reason']
+                    _ion_reason_marked = True
+                    _res3i = {'n_dof': 0, 'reason': _res3i['reason']}
                 if _res3i['n_dof']:
                     _sharei = _s3.phase_current_share(_res3i, sid3, _sig3i)
                     if not a.no_field:                      # IONIC field (SE+SDCP {5,6}) — Li⁺ |J| cloud,
@@ -2196,8 +2226,11 @@ def main():
                             step3['trackb'] = {**_tb, 'error': f'{type(_e_tb).__name__}: {_e_tb}'}
                             print(f'  ⚠ Track-B failed ({type(_e_tb).__name__}: {_e_tb}) — '
                                   'step3.trackb.error 기록, STEP3 결과는 유지')
-                elif not a.no_trackb and not a.no_ion:
+                elif not a.no_trackb and not a.no_ion and not _ion_reason_marked:
                     #  ⚠ `and not a.no_ion` — 끈 것을 "SE 미퍼콜" 로 적으면 거짓 진단이 원장에 남는다.
+                    #  ⚠ `and not _ion_reason_marked` (2026-08-30) — 위에서 `reason` 으로 이미
+                    #    not_solvable 을 적었으면 여기서 덮지 않는다.  `no_plate_contact` 를
+                    #    "SE 미퍼콜" 로 다시 적으면 원인이 바뀐 채 원장에 남는다.
                     # 심화리뷰 minor: 이온 n_dof=0 (SE 미퍼콜 퇴화) — trackb 키가 아예 없으면
                     # exporter 가 "구세대 trackb 부재 → 재실행" 으로 오진한다.  재실행해도 같으니
                     # 원인을 스텁으로 명시 (§F1 정직 null 관례)
@@ -2535,6 +2568,11 @@ def main():
                                'thermal': not bool(a.no_thermal),
                                'pore': not bool(a.no_pore),
                                'collector': not bool(a.no_collector)},
+            #  ★★★ 2026-08-30 (코드리뷰 지적 1) — **필드 유무는 `component_plan` 에 못 넣는다**
+            #    (`plan_ok` 이 모르는 키를 거부 → 기존 매니페스트가 전부 `PLAN|extra` 로 깨진다).
+            #    그렇다고 기록을 안 하면 `--no-field` 만 다른 두 런이 **매니페스트상 구별 불가**다
+            #    = 필드 없는 팔이 필드 요청에 SKIP 으로 통과한다.  ⇒ 최상위 키로 따로 적는다.
+            'field_written': not bool(a.no_field),
             #  ★ **관측 sid7 수** — PTFE 가 격자에 **실제로 몇 셀** 찍혔는가.
             #    `ptfe_stamp='centerline'` 이라고 적혀 있어도 0 셀이면 아무 일도 안 났다
             #    (스탬프 도장과 실제 효과를 가르는 유일한 증거).

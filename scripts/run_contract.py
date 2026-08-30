@@ -225,6 +225,19 @@ RECEIPT_AXES = ('vox_um', 'bridge_um', 'fibre_stamp', 'sdcp_stamp', 'sdcp_sphere
 #: 영수증이 담지만 **매니페스트 축이 아닌** 것 (따로 대조한다).
 RECEIPT_META = ('code_sha', 'origins', 'arms', 'expect_backend')
 
+#: ★★★ 2026-08-30 — **대조는 하되 digest 에는 안 넣는 축.**
+#    왜 따로 두나: `receipt_digest` 는 `RECEIPT_AXES | RECEIPT_META` 를 통째로 해시하므로
+#    거기에 키를 하나만 더해도 **모든 기존 설정의 digest 가 바뀐다** → OUTDIR 이름이 바뀌고
+#    → 이미 완주한 팔을 못 찾아 **전부 재실행**된다 (이 리포가 `_lean` 접미사를 못 바꾼 이유와
+#    같은 제약).  그런데 대조는 필요하다 ⇒ **해시 밖 + 검사 안**.
+#  ⚠ `field_written` 이 첫 사례다.  `--no-field` 는 `component_plan` 에 **없고**
+#    (`plan_ok` 이 모르는 키를 거부하므로 거기에 못 넣는다 — 기존 매니페스트가 다 깨진다)
+#    러너 접미사 `_lean3`/`_lean4` 로만 갈렸다.  즉 `OUTDIR=` 을 명시하면 **필드 없는
+#    lean3 팔이 lean4 요청에 SKIP 으로 통과**한다 (코드리뷰 2026-08-30 지적 1).
+#  ⚠ **선언한 축만 검사한다** — 러너가 안 적으면 건너뛴다 (`RECEIPT_AXES` 와 같은 규약).
+#    그래야 이 키를 모르는 옛 팔이 통째로 무효가 되지 않는다.
+RECEIPT_AXES_NODIGEST = ('field_written',)
+
 
 def expected_origins_for(vox):
     """`vox` → 사전등록 origin factorial `{0, vox/2}³` (정렬된 8튜플).
@@ -254,7 +267,7 @@ def receipt_match(rec, man, origin=None):
     """
     if not isinstance(rec, dict) or not isinstance(man, dict):
         return False, 'RCPT|shape| 영수증이나 매니페스트가 dict 가 아니다'
-    for k in RECEIPT_AXES:
+    for k in tuple(RECEIPT_AXES) + RECEIPT_AXES_NODIGEST:
         if k not in rec:
             continue                       # 러너가 그 축을 안 정했다 (킷 기본값을 쓴다)
         if k not in man:

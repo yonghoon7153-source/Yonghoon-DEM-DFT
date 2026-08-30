@@ -929,7 +929,7 @@ def runner_config(env, runner=None):
     if L_MARKER not in src:
         raise RuntimeError(f'{L_MARKER} 표지가 러너에 없다 — 어디까지가 설정인지 알 수 없다')
     head = src[:src.index(L_MARKER)].rsplit('\n', 1)[0]
-    _keys = ('LEAN_FLAGS', 'PREREG_ARMS', 'ARMS', 'OUTDIR', 'FIBRE_STAMP')
+    _keys = ('LEAN_FLAGS', 'LEAN_TAG', 'PREREG_ARMS', 'ARMS', 'OUTDIR', 'FIBRE_STAMP')
     #  ⚠ `${V-…}` 는 **콜론 없이** — `${V:-…}` 는 빈 문자열도 미설정으로 읽어
     #    "기본에서 LEAN_FLAGS 가 비었는가" 를 물을 수 없게 만든다 (초판이 그랬다).
     probe = head + '\n' + '\n'.join(
@@ -1022,6 +1022,8 @@ def check_runner_integration(verbose=True, runner=None):
     try:
         _std = runner_config({}, runner)
         _l2 = runner_config({'LEAN': '2'}, runner)
+        _l3 = runner_config({'LEAN': '3'}, runner)
+        _l4 = runner_config({'LEAN': '4'}, runner)
         _ep = runner_config({'EXPECT_PROTOCOL': 'p1-deadbeefdeadbeef'}, runner)
     except Exception as e:                                  # noqa: BLE001
         return [f'L_PROBE| 러너 설정 조립부를 실행할 수 없다 ({type(e).__name__}: {e}) — '
@@ -1036,6 +1038,45 @@ def check_runner_integration(verbose=True, runner=None):
     if _std.get('LEAN_FLAGS', '<UNSET>').strip():
         problems.append(f'L_LEANDEFAULT| LEAN 미지정인데 LEAN_FLAGS 가 비어 있지 않다 '
                         f'(`{_std.get("LEAN_FLAGS")}`) — 기본이 조용히 LEAN 이 된다')
+    #  ⓐ-2 (2026-08-30, 코드리뷰 지적 4) — LEAN=3·4 도 단언한다.  여태 LEAN=2 와 미지정만
+    #    봤고, 그래서 새 레벨의 **한 토큰 회귀가 초록으로 나간다**.  두 레벨의 정의는
+    #    "LEAN=2 에서 무엇을 빼느냐" 이므로 **차집합으로** 적어 오타가 드러나게 한다.
+    #      LEAN=3 = LEAN=2 − {--no-ion}                (σ_e + σ_ion)
+    #      LEAN=4 = LEAN=3 − {--no-field}              (σ_e + σ_ion + 필드)
+    #    ⚠ **있어야 할 것**과 **없어야 할 것**을 둘 다 본다 — 있어야 할 것만 보면
+    #      `--no-field` 가 되살아나도 통과한다 (그러면 Figure 4a 가 다시 사라진다).
+    for _lv, _cfg, _want, _forbid in (
+            ('3', _l3, ('--no-step4', '--no-thermal', '--no-trackb',
+                        '--no-field', '--no-pore', '--no-collector'), ('--no-ion',)),
+            ('4', _l4, ('--no-step4', '--no-thermal', '--no-trackb',
+                        '--no-pore', '--no-collector'), ('--no-ion', '--no-field'))):
+        _fl = _cfg.get('LEAN_FLAGS', '')
+        _tok = _fl.split()
+        _m = [f for f in _want if f not in _tok]
+        _x = [f for f in _forbid if f in _tok]
+        if _m:
+            problems.append(f'L_LEAN{_lv}| LEAN={_lv} 가 {_m} 를 켜지 않는다 '
+                            f'(조립 결과 `{_fl}`)')
+        if _x:
+            problems.append(f'L_LEAN{_lv}| LEAN={_lv} 가 {_x} 를 켠다 — 그 레벨의 정의는 '
+                            f'그것을 **끄지 않는 것**이다 (조립 결과 `{_fl}`)')
+        if _cfg.get('LEAN_TAG', '') != f'_lean{_lv}':
+            problems.append(f'L_LEAN{_lv}TAG| LEAN={_lv} 의 OUTDIR 접미사가 '
+                            f'`{_cfg.get("LEAN_TAG")}` — `_lean{_lv}` 여야 산출물이 안 섞인다')
+    #  ⓐ-3 — **잘못된 LEAN 값은 멈춰야 한다.**  검증이 없으면 `LEAN=9` 가 LEAN 미지정과
+    #    같은 OUTDIR 을 쓰면서 전체 파이프라인을 돈다 (요청과 실행이 다른데 이름이 같다).
+    #  ⚠ `runner_config` 는 의도된 abort 를 **예외가 아니라 `_aborted` 키**로 돌려준다
+    #    (R4-CX-08).  초판이 `try/except` 로 썼다가 네 값이 전부 "거부 안 됨" 으로 나왔다.
+    for _bad in ('9', '04', 'abc', '3.0'):
+        try:
+            _bc = runner_config({'LEAN': _bad}, runner)
+        except Exception:                                   # noqa: BLE001
+            continue                                        # 조립 자체가 실패 = 거부됨
+        if not _bc.get('_aborted'):
+            problems.append(f'L_LEANGATE| LEAN={_bad!r} 이 거부되지 않는다 — '
+                            f'모르는 값이 조용히 LEAN 미지정처럼 돈다 '
+                            f'(LEAN_FLAGS=`{_bc.get("LEAN_FLAGS")}` '
+                            f'TAG=`{_bc.get("LEAN_TAG")}`)')
     #  ⓑ EXPECT_PROTOCOL 통과 — 요청↔적용 봉인의 **유일한** 배선점이다 (CDXR3-3).
     #    `EP_FLAG` 은 함수 안 `local` 이라 설정 프리픽스에 없다 ⇒ 러너에서 그 조립 줄과
     #    `--extra-flags` 문자열을 **그대로 떼어 셸에 전개**시킨다 (진짜 확장이라
