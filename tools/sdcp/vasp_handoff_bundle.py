@@ -2809,42 +2809,68 @@ def selftest_k() -> int:
     def _H64(tag):
         return (tag * 32)[:64]
 
-    def _J2(sha, ver, els=("Ni",), ran=True):
+    # ⛔⛔ 회신 AP #8 — 픽스처를 **실물 record 모양**으로 만든다. 생성부는 미실행
+    #   잡에도 `static: None` 키를 넣는데, 종전 픽스처는 키 자체를 빼서
+    #   `"static" in jr` 버그를 **재현하지 못했다** (회신 AL P0-3 과 같은 방식).
+    #   ran=False 는 이제 `static: None` 이고, 이 모양으로도 통과해야 맞다.
+    def _J2(sha, ver, els=("Ni",), ran=True, normal=True, e0=-1.0):
         d = {"_prov": {"source_sha256": {e: _H64(sha) for e in els}},
-             "meta": {"species_order": list(els)}}
+             "meta": {"species_order": list(els)},
+             "static": None}
         if ran:
-            d["static"] = {"vasp_version": ver}
+            d["static"] = {"vasp_version": ver, "normal_end": normal,
+                           "E0": (e0 if normal else None)}
         return d
     _one = {"a": _J2("aa", "6.4.1"), "b": _J2("aa", "6.4.1")}
     # ⛔음성 AO P0-8 — 완주했는데 원본 sha 가 **64자리가 아니면** 막는다
     _short = {"a": {"_prov": {"source_sha256": {"Ni": "aa"}},
                     "meta": {"species_order": ["Ni"]},
-                    "static": {"vasp_version": "6.4.1"}}}
+                    "static": {"vasp_version": "6.4.1", "normal_end": True, "E0": -1.0}}}
     chk(any("SOURCE_INCOMPLETE" in g for g in
             potcar_identity_gates(_short, {})["blocking"]),
         "⛔음성 AO P0-8: 원본 sha 가 64자리가 아니면 막는다 (누락을 '갈리지 않음' 으로 읽지 않는다)")
     # ⛔음성 AO P0-8 — 기대 variant 하나가 **아예 빠져도** 막는다
     _miss = {"a": {"_prov": {"source_sha256": {"Ni": _H64("aa")}},
                    "meta": {"species_order": ["Ni", "O"]},
-                   "static": {"vasp_version": "6.4.1"}}}
+                   "static": {"vasp_version": "6.4.1", "normal_end": True, "E0": -1.0}}}
     chk(any("SOURCE_INCOMPLETE" in g for g in
             potcar_identity_gates(_miss, {})["blocking"]),
         "⛔음성 AO P0-8: 기대 variant 중 하나라도 sha 가 없으면 막는다")
     # ⛔음성 AO P0-8 — VASP 버전 관측이 0개면 막는다 (0개 관측은 일치가 아니다)
     _nov = {"a": {"_prov": {"source_sha256": {"Ni": _H64("aa")}},
-                  "meta": {"species_order": ["Ni"]}, "static": {}}}
+                  "meta": {"species_order": ["Ni"]},
+                  "static": {"normal_end": True, "E0": -1.0}}}
     chk(any("VASP_VERSION_UNOBSERVED" in g for g in
             potcar_identity_gates(_nov, {})["blocking"]),
         "⛔음성 AO P0-8: 완주잡에 VASP 버전 관측이 없으면 막는다")
     # ⛔음성 AO P0-8 — 완주했는데 provenance 자체가 없으면 막는다
     chk(any("PROVENANCE_MISSING" in g for g in
-            potcar_identity_gates({"a": {"static": {"vasp_version": "6.4.1"}}},
-                                  {})["blocking"]),
+            potcar_identity_gates(
+                {"a": {"static": {"vasp_version": "6.4.1", "normal_end": True,
+                                  "E0": -1.0}}}, {})["blocking"]),
         "⛔음성 AO P0-8: 완주잡에 provenance 가 없으면 막는다")
     # 양성 — **아직 안 돈 잡**은 완전성 대상이 아니다 (단계별 실행에서 정상)
-    chk(potcar_identity_gates({"a": _J2("aa", "6.4.1"),
-                               "b": _J2("aa", "6.4.1", ran=False)}, {})["ok"],
-        "양성 AO P0-8: 아직 안 돈 잡은 완전성 대상이 아니다 (2단계 미실행이 정상)")
+    #   ⚠ ran=False 는 이제 실물처럼 `static: None` 이다 (AP #8)
+    _mix = {"a": _J2("aa", "6.4.1"), "b": _J2("aa", "6.4.1", ran=False)}
+    _rm = potcar_identity_gates(_mix, {})
+    chk(_rm["ok"] and _rm["completeness"]["n_completed"] == 1,
+        "양성 AP #8: `static: None` 인 미실행 잡은 완전성 대상이 아니다 "
+        f"(completed {_rm['completeness']['n_completed']}/2 · "
+        f"census {_rm['completeness']['stage_census']})")
+    # ⛔음성 AP #8 — 종전 판정(`"static" in jr`)이면 미실행 잡도 완주로 세서
+    #   provenance 를 요구했다. 그 잡에 provenance 를 빼도 통과해야 맞다.
+    _mix2 = {"a": _J2("aa", "6.4.1"),
+             "b": {"meta": {"species_order": ["Ni"]}, "static": None}}
+    chk(potcar_identity_gates(_mix2, {})["ok"],
+        "⛔음성 AP #8: 미실행 잡에 provenance 가 없어도 막지 않는다 "
+        "(종전엔 `\"static\" in jr` 이라 **항상 참**이라 막았다)")
+    # ⛔음성 AP #8 — OUTCAR 는 있는데 **완주가 아닌** 잡도 완전성 대상이 아니다
+    _att = {"a": _J2("aa", "6.4.1"),
+            "b": _J2("aa", "6.4.1", normal=False)}
+    _ra = potcar_identity_gates(_att, {})
+    chk(_ra["ok"] and _ra["completeness"]["stage_census"].get("attempted") == 1,
+        "⛔음성 AP #8: 정상 종료 못 한 잡은 **attempted** 이지 completed 가 아니다 "
+        f"({_ra['completeness']['stage_census']})")
     # ⛔음성 AO Q1 — 생산 전 봉인(root seal)과 관측이 다르면 막는다
     chk(any("ROOT_SEAL_MISMATCH" in g for g in potcar_identity_gates(
             _one, {"_potcar_root_seal": {"source_sha256": {"Ni": _H64("bb")}}}
@@ -3762,14 +3788,32 @@ def potcar_identity_gates(jobs, man):
         x = str(x or "")
         return len(x) == 64 and all(c in "0123456789abcdefABCDEF" for c in x)
 
+    # ⛔⛔ 회신 AP #8/Q7 (2026-08-31) — 완주 판정이 **실제 record 모양과 달랐다.**
+    #   생성부는 `rec = {..., "static": ocs.get("static"), ...}` 로 **미실행 잡에도
+    #   `static: None` 키를 넣는다.** 그런데 여기서는 `"static" in jr` 로 완주를 셌다
+    #   ⇒ 안 돈 잡까지 전부 "완주" 로 세고 provenance 를 요구했다.
+    #   내 selftest 픽스처는 키 자체를 빼서 이 버그를 **재현하지 못했다** —
+    #   회신 AL P0-3 과 같은 실패 방식이다(픽스처가 내 오해를 그대로 옮겼다).
+    #   ⇒ AP 가 지정한 세 단계로 나눈다:
+    #     attempted  : OUTCAR 를 읽었다 (static 레코드가 있다)
+    #     completed  : 정상 종료 + 최종 에너지가 있다
+    #     usable     : completed + 그 상의 게이트를 통과했다
+    #   완전성(provenance·fingerprint·버전)은 **completed** 에만 건다.
+    def _job_stage(jr):
+        st = jr.get("static")
+        if not isinstance(st, dict):
+            return "not_attempted"          # None 이거나 키가 없다 = 안 돌았다
+        if not st.get("normal_end") or st.get("E0") is None:
+            return "attempted"              # OUTCAR 는 있는데 완주가 아니다
+        return "completed" if not jr.get("gates") else "completed_gated"
+
     _ran, _noprov, _incomplete, _nover = [], [], [], []
+    _stage_census = {}
     for jn, jr in sorted((jobs or {}).items()):
-        if "static" not in jr:
-            continue                       # 아직 안 돈 잡 — 완전성 대상이 아니다
-                                           # (⚠ `or {}` 로 falsy 검사를 하면 static 이
-                                           #  **빈 dict** 인 잡, 즉 완주했는데 버전을
-                                           #  못 읽은 잡이 조용히 빠진다 — AO P0-8 이
-                                           #  잡으라고 한 바로 그 경우다)
+        _sg = _job_stage(jr)
+        _stage_census[_sg] = _stage_census.get(_sg, 0) + 1
+        if not _sg.startswith("completed"):
+            continue                       # 안 돌았거나 완주 못 한 잡 — 완전성 대상 아님
         _ran.append(jn)
         pv = (jr.get("geom") or {}).get("potcar_provenance") or jr.get("_prov")
         if not pv:
@@ -3804,11 +3848,16 @@ def potcar_identity_gates(jobs, man):
             res["blocking"].append(
                 "VASP_VERSION_UNOBSERVED(%d/%d 완주잡에 VASP 버전 관측이 없다 %s — "
                 "0개 관측은 일치가 아니다)" % (len(_nover), len(_ran), _nover[:3]))
-    res["completeness"] = {"n_jobs": len(jobs or {}), "n_ran": len(_ran),
+    res["completeness"] = {"n_jobs": len(jobs or {}),
+                           "n_completed": len(_ran),
+                           "stage_census": _stage_census,
                            "n_with_prov": res["n_with_prov"],
                            "n_no_prov": len(_noprov),
                            "n_incomplete_variants": len(_incomplete),
-                           "n_without_vasp_version": len(_nover)}
+                           "n_without_vasp_version": len(_nover),
+                           "판정": ("완전성은 **completed**(정상 종료 + 최종 에너지) "
+                                    "잡에만 건다. 미실행·중단 잡은 대상이 아니다 — "
+                                    "단계별 실행에서 2단계가 비어 있는 것은 정상이다")}
     # ⛔ 회신 AO Q1 — **생산 전에 봉인한** variant 별 원본 fingerprint(root seal)와
     #   대조한다. 사후 provenance 끼리만 비교하는 것은 사전 승인과 같지 않다.
     _seal = ((man or {}).get("_potcar_root_seal") or {}).get("source_sha256") or {}
@@ -3854,7 +3903,7 @@ def potcar_identity_gates(jobs, man):
             #   실측보다 강했다. 위 완전성 게이트가 통과했을 때만 그렇게 말할 수 있고,
             #   root seal 이 있을 때만 "생산 전에 고정한 root" 라고 말할 수 있다.
             _c = res.get("completeness") or {}
-            _complete = bool(_c.get("n_ran")) and not (
+            _complete = bool(_c.get("n_completed")) and not (
                 _c.get("n_no_prov") or _c.get("n_incomplete_variants")
                 or _c.get("n_without_vasp_version"))
             res["identity_scope"] = (
