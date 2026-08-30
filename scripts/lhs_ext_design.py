@@ -585,11 +585,67 @@ def selftest() -> int:
         abs(ph[0] - 0.4930) < 5e-4 and abs(ph[-1] - 0.1515) < 5e-4,
         f'{ph[0]:.4f} .. {ph[-1]:.4f}')
 
+    # ⑦ **검사기가 실제로 잡는가** — R14 P1-05 가 `0 failure` 로 통과시킨 변이체들.
+    #    ⚠ 검사를 추가하는 것과 그 검사가 **작동하는 것**은 다르다.  P1-05 의 논지가
+    #      정확히 그것이었으므로 변이체를 여기 상주시켜 회귀로 못박는다.
+    _csv_path = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
+                             'docs', 'data', 'lhs_ext_design_v2_20260829.csv')
+    if not os.path.exists(_csv_path):
+        fails.append('⑦ 정본 CSV 가 없다 — 변이체 회귀를 건너뛸 수 없다')
+        print('  FAIL ⑦ 정본 CSV 없음')
+    else:
+        import copy as _cp, io as _io, subprocess as _sp, tempfile as _tf
+        _base = list(csv.DictReader(_io.StringIO(open(_csv_path, newline='').read())))
+        _cols = list(_base[0])
+
+        def _mutate_rc(fn):
+            m = _cp.deepcopy(_base)
+            fn(m)
+            p = _tf.mktemp(suffix='.csv')
+            with open(p, 'w', newline='') as fh:
+                w = csv.DictWriter(fh, fieldnames=_cols)
+                w.writeheader()
+                for r in m:
+                    w.writerow(r)
+            rc = _sp.run([sys.executable, os.path.abspath(__file__), '--verify', p],
+                         capture_output=True, text=True).returncode
+            os.unlink(p)
+            return rc
+
+        def _scale_w(m):
+            for r in m:
+                r['w_AM_P'] = f"{float(r['w_AM_P']) * 0.1:.6f}"
+                r['w_AM_S'] = f"{float(r['w_AM_S']) * 0.1:.6f}"
+
+        def _dup_id(m):
+            m[1]['id'] = m[0]['id']
+
+        def _bump_nam(m):
+            for r in m:
+                if r['id'] in ('lhsx_054', 'lhsx_025'):
+                    r['n_AM_est'] = str(int(r['n_AM_est']) + 9000)
+
+        def _swap_kind(m):
+            st0 = [r for r in m if r['stratum'] == '0']
+            b = next(r for r in st0 if r['kind'] == 'bimodal')
+            o = next(r for r in st0 if r['kind'] == 'mono_AM_P')
+            b['kind'], o['kind'] = o['kind'], b['kind']
+
+        def _composite_seed(m):
+            m[0]['seed'] = '27158'
+
+        for _nm, _fn in (('w_AM_* 0.1배', _scale_w), ('ID 중복', _dup_id),
+                         ('n_AM_est 변조', _bump_nam),
+                         ('bimodal↔mono 라벨 교환', _swap_kind),
+                         ('합성수 seed', _composite_seed)):
+            chk(f'★⑦ 변이체를 잡는다 — {_nm}', _mutate_rc(_fn) == 1)
+        chk('★⑦ 정본 자신은 통과한다 (거짓 양성 없음)', _mutate_rc(lambda m: None) == 0)
+
     print(f'\n{len(fails)} failure(s)')
     return 1 if fails else 0
 
 
-def verify_csv(path: str) -> int:
+def verify_csv(path: str, expect_sha256: str | None = None) -> int:
     """★ F④ — 생성 **후** CSV 를 다시 읽어 계약을 fail-closed 로 검사한다.
 
     생성기가 맞다는 것과 **디스크에 있는 파일이 맞다는 것**은 다르다.  손으로 편집되거나
@@ -683,10 +739,52 @@ def verify_csv(path: str) -> int:
             n_am = n_spheres(phi_am, float(r['rP_um']), vf)
         n_se = n_spheres(1.0 - phi_am, float(r['rSE_um']), vf)
         tot = n_am + n_se
-        if abs(tot - float(r['n_total_est'])) > max(2.0, 0.005 * tot):
-            n_bad.append(f'{r["id"]}: 신고 {r["n_total_est"]} vs 재산술 {tot:.0f}')
-    chk('★ 입자수를 좌표에서 재산술해 대조', not n_bad, '; '.join(n_bad[:3]))
+        #  ★ 셋을 **각각** 대조한다.  옛 판은 `n_total_est` 만 봤고, R14 P1-05 가
+        #    `w_AM_P`·`w_AM_S` 를 0.1배 한 변이체를 0 failure 로 통과시켰다 —
+        #    합만 맞으면 상별 개수가 틀려도 안 보였다.
+        for key, want in (('n_AM_est', n_am), ('n_SE_est', n_se), ('n_total_est', tot)):
+            if key not in r:
+                n_bad.append(f'{r["id"]}: `{key}` 열이 없다')
+                continue
+            if abs(want - float(r[key])) > max(2.0, 0.005 * max(want, 1.0)):
+                n_bad.append(f'{r["id"]}.{key}: 신고 {r[key]} vs 재산술 {want:.0f}')
     from collections import Counter
+    chk('★ 입자수를 좌표에서 재산술해 대조 (AM·SE·합 각각)', not n_bad, '; '.join(n_bad[:3]))
+
+    #  ── ID·층·라벨·조성 불변식 (R14 P1-05) ────────────────────────────────
+    want_ids = [f'lhsx_{i:03d}' for i in range(1, N_STRATA * PER_STRATUM + 1)]
+    got_ids = [r['id'] for r in rows]
+    chk('★ ID 집합이 정확히 lhsx_001..064', sorted(got_ids) == want_ids,
+        f'{len(set(got_ids))} unique / 결손 '
+        + ', '.join(sorted(set(want_ids) - set(got_ids))[:3])
+        + ' / 잉여 ' + ', '.join(sorted(set(got_ids) - set(want_ids))[:3]))
+    st_ct = Counter(int(r['stratum']) for r in rows)
+    chk(f'★ stratum 0..{N_STRATA-1} 이 각각 {PER_STRATUM}행',
+        sorted(st_ct) == list(range(N_STRATA))
+        and all(v == PER_STRATUM for v in st_ct.values()), str(dict(sorted(st_ct.items()))))
+    kind_bad, nt_bad = [], []
+    for st, rs in sorted(by_st.items()):
+        c = Counter(r['kind'] for r in rs)
+        if (c.get('bimodal', 0) != THREE_TYPE_PER_STRATUM
+                or c.get('mono_AM_P', 0) != 1 or c.get('mono_AM_S', 0) != 1):
+            kind_bad.append(f'stratum {st}: {dict(c)}')
+    chk(f'★ 층마다 bimodal {THREE_TYPE_PER_STRATUM} + mono 1 + mono 1',
+        not kind_bad, '; '.join(kind_bad[:3]))
+    for r in rows:
+        want_nt = '3' if r['kind'] == 'bimodal' else '2'
+        if str(r['ntype']) != want_nt:
+            nt_bad.append(f'{r["id"]}: kind={r["kind"]} 인데 ntype={r["ntype"]}')
+    chk('★ ntype ↔ kind 대응', not nt_bad, '; '.join(nt_bad[:3]))
+    #  허용치는 **저장 정밀도**에서 온다: 세 값이 각각 소수 6자리로 반올림되므로
+    #  합의 오차가 3 × 0.5e-6 = 1.5e-6 까지 정상이다.  1e-6 로 조이면 반올림을
+    #  결함으로 오진한다 (실제로 그렇게 나왔다).  0.1배 변조는 이 허용치를 5자릿수 넘는다.
+    _W_TOL = 3e-6
+    w_bad = []
+    for r in rows:
+        wsum = float(r['w_AM_P']) + float(r['w_AM_S'])
+        if abs(wsum - (1.0 - float(r['pdd_SE']))) > _W_TOL:
+            w_bad.append(f'{r["id"]}: w합 {wsum:.6f} vs 1−pdd {1-float(r["pdd_SE"]):.6f}')
+    chk(f'★ w_AM_P + w_AM_S = 1 − pdd_SE (±{_W_TOL:g})', not w_bad, '; '.join(w_bad[:3]))
     kc = Counter(r['kind'] for r in rows)
     chk('mono 두 종류가 같은 수', kc.get('mono_AM_P', 0) == kc.get('mono_AM_S', 0),
         str(dict(kc)))
@@ -697,6 +795,11 @@ def verify_csv(path: str) -> int:
         f'{p["id"]}({p["n_AM_est"]:,})' for p in lo))
     h = hashlib.sha256(open(path, 'rb').read()).hexdigest()
     print(f'  sha256 {h}')
+    #  ★ 기대 해시를 주면 **강제 대조**한다.  옛 판은 계산해서 출력만 했고, 그러면
+    #    문서의 봉인값과 다른 파일을 검증해도 초록이 난다 (R14 P1-05).
+    if expect_sha256:
+        chk('★ 봉인 sha256 일치', h == expect_sha256.strip().lower(),
+            f'기대 {expect_sha256[:12]}… vs 실제 {h[:12]}…')
     print(f'\n{len(fails)} failure(s)')
     return 1 if fails else 0
 
@@ -707,6 +810,7 @@ def main(argv=None):
     ap.add_argument('--scan', help='LHS 루트 (lhs00_* 가 있는 디렉터리)')
     ap.add_argument('--out', help='설계 CSV 출력 경로')
     ap.add_argument('--seed', type=int, default=DESIGN_SEED)
+    ap.add_argument('--expect-sha256', help='봉인 해시 강제 대조 (R14 P1-05)')
     ap.add_argument('--verify', help='생성된 CSV 를 다시 읽어 계약 검사 (F④)')
     ap.add_argument('--selftest', action='store_true')
     a = ap.parse_args(argv)
@@ -714,7 +818,7 @@ def main(argv=None):
     if a.selftest:
         return selftest()
     if a.verify:
-        return verify_csv(a.verify)
+        return verify_csv(a.verify, a.expect_sha256)
     if not a.scan:
         ap.error('--scan 또는 --selftest 가 필요하다')
 
