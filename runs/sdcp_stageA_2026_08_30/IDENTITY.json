@@ -1,0 +1,101 @@
+{
+ "sdcp_stageA_v13": {
+  "zip_sha256": "3184de59706eddbb9d02a1143dae3df6e0912c81dcce931caf3413637bcc3147",
+  "zip_bytes": 357686,
+  "n_jobs": 24,
+  "manifest_sha256": "c5517f9e00604498ec5cb6586202ef3b9c4abad82b41a8a08c8b9295cd8be4b8",
+  "candidate_set": "calibration_pilot (frozen 94675e66e02c855a)",
+  "generated_argv": [
+   "--runs",
+   "/data/work/runs/sdcp_v4_sitescreen",
+   "--freeze",
+   "0.85",
+   "--from_basins",
+   "db/properties/prospective_basins_2026_08_29.json",
+   "--frags",
+   "sdcp_neutral",
+   "ptfe_c10",
+   "--roles",
+   "calibration",
+   "--both_seeds",
+   "--closure",
+   "--free_spin_refs",
+   "--refs",
+   "--cores",
+   "256",
+   "--concurrency",
+   "8",
+   "--out",
+   "/data/work/runs/sdcp_stageA_v13"
+  ],
+  "cost_frozen": {
+   "total_wall_h": 365.1,
+   "core_h": 93477,
+   "longest_job_h": 44.8,
+   "cores_per_job": 256,
+   "par_speedup_vs_baseline": 4.91,
+   "⚠_속도향상": "par_speedup 은 벤치마크가 아니라 두 구간 어림이다 (±50 %). 잡 시간 자체도 모형이라 ±2배 — 곱하면 넓다",
+   "makespan_d": {
+    "4": 3.97,
+    "8": 2.37,
+    "12": 1.87,
+    "20": 1.87
+   },
+   "estimator": "tools/sdcp/vasp_cost_estimate.py",
+   "estimator_baseline_source": "/data/work/repo/runs/sdcp_phaseB_vasp_v1_2026_08_08/slab/OUTCAR.gz",
+   "estimator_baseline_sha256": "30a81b51c96326a9468fc1b7424676b67fd6e70c48e93a12112dbe9e7a284e06",
+   "estimator_baseline_sec_per_estep": 524.7854,
+   "repo_commit": "27d968c70ddc180b562da1bb19b8423dde443860",
+   "uncertainty": "±2배 (모형이지 벤치마크가 아니다)"
+  },
+  "clean_slab": "d5f18feb15701f3fc932a1c8f64a09ed48c39ca270d8d8a8f5339658b6c43676"
+ },
+ "sdcp_stageA_holdout_v4": {
+  "zip_sha256": "892dc8699d9eb82540ace4535f2d61b1d7d3bc8ffc1d7141514aa467a19c5b74",
+  "zip_bytes": 311918,
+  "n_jobs": 18,
+  "manifest_sha256": "3daf5410c05bc5083af10233b9812a9bf52cb504f6e09af4a33c9da4da8f2e0b",
+  "candidate_set": "holdout_stratified (frozen 3e3ce4820c4df3ec)",
+  "generated_argv": [
+   "--runs",
+   "/data/work/runs/sdcp_v4_sitescreen",
+   "--freeze",
+   "0.85",
+   "--from_basins",
+   "db/properties/prospective_holdout_2026_08_30.json",
+   "--frags",
+   "sdcp_neutral",
+   "ptfe_c10",
+   "--roles",
+   "holdout",
+   "--closure",
+   "--cores",
+   "256",
+   "--concurrency",
+   "8",
+   "--out",
+   "/data/work/runs/sdcp_stageA_holdout_v4"
+  ],
+  "cost_frozen": {
+   "total_wall_h": 334.3,
+   "core_h": 85591,
+   "longest_job_h": 19.2,
+   "cores_per_job": 256,
+   "par_speedup_vs_baseline": 4.91,
+   "⚠_속도향상": "par_speedup 은 벤치마크가 아니라 두 구간 어림이다 (±50 %). 잡 시간 자체도 모형이라 ±2배 — 곱하면 넓다",
+   "makespan_d": {
+    "4": 3.79,
+    "8": 2.21,
+    "12": 1.57,
+    "20": 0.8
+   },
+   "estimator": "tools/sdcp/vasp_cost_estimate.py",
+   "estimator_baseline_source": "/data/work/repo/runs/sdcp_phaseB_vasp_v1_2026_08_08/slab/OUTCAR.gz",
+   "estimator_baseline_sha256": "30a81b51c96326a9468fc1b7424676b67fd6e70c48e93a12112dbe9e7a284e06",
+   "estimator_baseline_sec_per_estep": 524.7854,
+   "repo_commit": "27d968c70ddc180b562da1bb19b8423dde443860",
+   "uncertainty": "±2배 (모형이지 벤치마크가 아니다)"
+  },
+  "clean_slab": "d5f18feb15701f3fc932a1c8f64a09ed48c39ca270d8d8a8f5339658b6c43676"
+ }
+}
