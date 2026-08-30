@@ -6101,15 +6101,26 @@ export async function showLabCompareModal(pidA, pidB, nameA, nameB) {
   //    인용하면 표와 어긋난다.  ⇒ origin 을 보여 **팔 값임을 자명하게** 만든다.
   //    ⚠ 8팔 평균을 여기 표시하지 않는다 — 로드한 파일에 없는 숫자를 그리는 것은
   //      이 리포가 반복해서 맞은 실패 유형이다.  평균이 필요하면 코호트 요약을 따로 싣는다.
+  //  ⚠ 2026-08-30 (R15 J) — **fail-closed 로 고친다.**  초판은 ⓐ 결손을 조용히 숨기고
+  //    (둘 다 없으면 태그가 사라졌다) ⓑ 0 이 아닌 값을 **검증 없이 ½ 로** 찍었다.
+  //    ⇒ 결손은 `없음` 으로 **드러내고**, {0, vox/2} 가 아닌 값은 원값을 그대로 보인다.
   const _armTag = (a, b) => {
     const o = (s) => {
-      const v = ((s || {}).manifest || {}).origin_shift_um;
-      return (Array.isArray(v) && v.length === 3)
-        ? '(' + v.map((x) => (+x === 0 ? '0' : '½')).join(',') + ')' : null;
+      const m = (s || {}).manifest || {};
+      const v = m.origin_shift_um, vox = +m.vox_um;
+      if (!Array.isArray(v) || v.length !== 3) return '없음';
+      const half = (vox > 0) ? vox / 2 : null;
+      return '(' + v.map((x) => {
+        const n = +x;
+        if (n === 0) return '0';
+        if (half !== null && Math.abs(n - half) < 1e-9) return '½';
+        return String(x);                      // ⚠ 등록 밖 값 — 숨기지 않고 그대로 보인다
+      }).join(',') + ')';
     };
     const oa = o(a), ob = o(b);
-    if (!oa && !ob) return '';
-    return '  ⟨팔 ' + (oa || '?') + (ob && ob !== oa ? ' / ' + ob : '') + ' · 코호트 평균 아님⟩';
+    const bad = (oa === '없음' || ob === '없음');
+    return '  ⟨팔 ' + oa + (ob !== oa ? ' / ' + ob : '')
+         + (bad ? ' · ⚠ origin 기록 없음' : '') + ' · 코호트 평균 아님⟩';
   };
   // 운전(1C) 평균 전류밀도 = 면적용량[mAh/cm²]×1C = j_1C [mA/cm²] (payload field_scale_e.j_1C_mA_cm2).
   //   초표면(σ_eff/L) 평균 → 전류보존으로 전자·이온 동일값.  국소 피크는 ×focus(아래 집중 행).
@@ -6118,7 +6129,7 @@ export async function showLabCompareModal(pidA, pidB, nameA, nameB) {
   const rowsQ = [
     ['σ_e_eff (S/cm)' + _armTag(sA, sB), sA.sigma_e_eff_S_cm, sB.sigma_e_eff_S_cm,
      '유효 through-plane 전자전도도.\n복셀 Kirchhoff: ∇·(σ∇φ)=0, 플레이트 ΔV=1V, 측면 Neumann → σ_eff = I·L/(A·ΔV).\n전도상: AM + VGCF/SuperP + SDCP(250 S/cm 앵커).\n논문: "effective through-plane electronic conductivity".\n⚠ 여기 Δ% 는 **불러온 payload 의 침대·격자·스탬프 규약**에서 나온 값이다 — 헤드라인이 아니다.  옛 "+52 %" 는 vox 0.4 점-스탬프 산물로 2026-08-13 철회됐다 (claims.json CL-24).\n⚠⚠ **이 값은 불러온 payload 한 팔(single origin)의 값이다.**  origin factorial 코호트의 8팔 평균이 아니다 — 논문·표에는 **코호트 평균**을 쓴다 (원장 table_s3_data).  제목 옆 origin 태그로 어느 팔인지 확인할 것.'],
-    ['σ_ion_eff (S/cm)', sA.sigma_ion_eff_S_cm, sB.sigma_ion_eff_S_cm,
+    ['σ_ion_eff (S/cm)' + _armTag(sA, sB), sA.sigma_ion_eff_S_cm, sB.sigma_ion_eff_S_cm,
      '유효 through-plane 이온전도도 (같은 솔브, 전도상 = SE + SDCP).\nSE는 t⁺≈1 단일이온 전도체 → 정상상태 이온망은 순수 옴 저항망.\n논문: Bazzoun 2026 RNM/EIS 축과 직접 비교 가능 — "effective ionic conductivity".'],
     ['⟨J_e⟩ 평균 (A/cm²@1V)', (sA.field_scale_e || {}).j_mean_z_A_cm2_per_V, (sB.field_scale_e || {}).j_mean_z_A_cm2_per_V,
      '평균 관통 전류밀도 ⟨J_z⟩ = σ_eff·ΔV/L (옴 항등식 — σ 행과 Δ% 동일해야 정상 = 자기검산 행).\n⚠ @1V = 수송능 프로브(선형, 운전점 아님) — 1V 물리 ≠ 1C 물리.  실운전 전류는 아래 @1C 행.\n논문: "mean through-plane current density @1V bias".'],
@@ -6148,8 +6159,20 @@ export async function showLabCompareModal(pidA, pidB, nameA, nameB) {
      '집전체까지 전자 경로가 이어진 AM 비율 (percolation 판정).\n100% = 고립 AM 없음 — dead-AM 반론 차단 축 (두 전극 모두 완전 연결이라 이득이 "연결 회복"이 아님을 증명).'],
     ['carbon clusters', ecA.n_carbon_clusters, ecB.n_carbon_clusters,
      '전도상(carbon+SDCP) 연결 성분 수.\n×2.7 (3,175→8,643) = 랜덤 분산 SDCP가 만든 새 브리지 단위들 — §3-② 기하 증거.\n논문: "the number of conductive clusters increases 2.7-fold".'],
-    ['환산접점 중앙값 /AM', wireA.median, wireB.median,
-     '입자별 탄소 배선수 N_C의 중앙값 — AM 표면 0.3µm 밴드 내 전도성 탄소(서브샘플 가중 환산, PTFE 제외).\n+19% = §3-②의 "carbon contacts per AM rise by 19%" 그 숫자.\n메인-2(배선 지도)의 스칼라 요약 — Methods 정의문(N_C) 참조.'],
+    ['⚠ AM 근접 점유량 (접점 아님)', wireA.median, wireB.median,
+     '⛔⛔ **이것은 접점 수가 아니다.**  2026-08-30 (Codex R15 A) 로 그 해석이 철회됐다.\n'
+     + '실제로 세는 것: AM 중심에서 `d ≤ r+0.3µm` 안의 **가중 물질점 점유량** '
+     + '(weighted near-AM material-point occupancy).\n'
+     + '왜 접점이 아닌가 — ① `d ≥ r` **하한이 없어** AM 구 **안쪽 점까지 센다** '
+     + '② **개체가 아니라 점**을 센다 (굵은 섬유 하나가 점 여럿 = 여럿으로 셈) '
+     + '③ payload 는 상별 무작위 **120,000 점(약 6.3 %)** 만 담고 `total/shown` 으로 부풀린다 — '
+     + '중앙값은 비선형이라 그 가중에 불편성이 없다.\n'
+     + '★ 결정적 반례: 점 목록을 **좌표 그대로 2배 복제**하면 물리 접촉망은 그대로인데 '
+     + '값이 정확히 2배가 된다 (876.650 → 1043.926).  접점 수라면 불변이어야 한다.\n'
+     + '⛔ 이 값을 `contact` · `coordination number` 로 읽지 말 것.  원고 인용 금지.\n'
+     + '✅ 원고용 접점 값은 **전수 침대**를 읽는 `scripts/cbd_contacts_per_am.py` 가 낸다 '
+     + '(개체 단위 · AM 표면 **바깥** 껍질만): band 0.15 µm 에서 **74 → 86 (+16.2 %)**, '
+     + 'band 0.30 µm 에서 89 → 112 (+25.8 %).  원장 table_s3_data §18.'],
     ['pore-τ (구조·확산)', (sA.pore || {}).tau, (sB.pore || {}).tau,
      '공극상 유효확산 tortuosity (TauFactor 규약: void σ=1 Laplace → D_eff/D0, τ=ε/D_rel).\n치밀 전극(ε~7%)은 공극이 비관통이라 τ 정의 불가(—)가 정상 — 액체전해질 침투 불가 = 전고체 서사 강화 축.\n⚠ ASSB Li⁺ 수송은 SE 접촉망(σ_ion)이 담당 — 이 τ를 수송식에 대입 금지.'],
     ['첨가제→SE nn_med (µm)', ((mmA.additive_dispersion || {}).conductive_all || {}).nn_med_um,
