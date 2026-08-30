@@ -210,6 +210,13 @@ if [ -n "${MPM_PERIODIC_SIGMA:-}" ] && [ "${MPM_PERIODIC_SIGMA}" != "1" ] \
   exit 2
 fi
 PERIODIC_ON=0; [ "${MPM_PERIODIC_SIGMA:-0}" = "1" ] && PERIODIC_ON=1
+#  ★★★ 2026-08-30 — **LEAN 값 검증**.  여태 없었다: `LEAN=9` 를 주면 `LEAN_FLAGS` 도
+#    `LEAN_TAG` 도 빈 값이라 **LEAN 미지정과 같은 OUTDIR** 을 쓰면서 전체 파이프라인을 돈다
+#    = 요청한 것과 도는 것이 다른데 이름이 같다 (FIBRE_STAMP 가 이미 막은 것과 같은 부류).
+case "${LEAN:-0}" in
+  0|1|2|3|4) ;;
+  *) echo "ABORT — LEAN 은 0(미지정)·1·2·3·4 중 하나여야 한다 (받은 값: ${LEAN})"; exit 2;;
+esac
 LEAN_FLAGS=""
 [ "${LEAN:-0}" = "1" ] && LEAN_FLAGS=" --no-step4 --no-thermal --no-trackb --no-field"
 #     ★ 2026-08-18 2차: `--no-collector` 도 넣는다.  1차 LEAN=2 시도가 **집전체 기하 솔브**
@@ -226,6 +233,20 @@ LEAN_FLAGS=""
 #    비용: 팔당 솔브 1 → 2회.
 [ "${LEAN:-0}" = "3" ] && { LEAN_FLAGS=" --no-step4 --no-thermal --no-trackb --no-field --no-pore --no-collector"; \
   echo "[p2] ★ LEAN=3 (σ_e + σ_ion) — pore-τ·집전체기하만 끈다 (팔당 솔브 2회)"; }
+#  ★★ LEAN=4 (2026-08-30) — **σ_e + σ_ion + 필드**.  LEAN=3 에서 `--no-field` 만 뺀다.
+#    왜 필요한가: 3D 뷰어 그림(Figure 4a)은 **필드 점군**으로 그리는데, LEAN 1·2·3 이
+#    **전부** `--no-field` 를 붙인다 ⇒ 필드를 남기는 레벨이 하나도 없었다.  그렇다고
+#    `LEAN` 을 안 주면 **pore-τ 가 required** 가 되고(`run_contract.required_components()`),
+#    이 침대는 pore-τ 가 `None` 을 내서 `STEP3_EVIDENCE` 로 **payload 전체가 게시 거부**된다
+#    (2026-08-27 kit_SBE 실측: `EVID|pore|result| tau=None` → `mpm_payload.json.failed`).
+#    DR3-07/08 이 그 이유를 이미 적었다 — 격자를 조일수록 `closed-from-top` 28.5 → 99.2 %.
+#    ⇒ "필드는 남기고 pore 는 끄는" 조합이 **원리적으로 없었다**.  이것이 그 조합이다.
+#    ⚠ `P2_EXTRA="--no-pore"` 로는 못 한다 — 허용목록(`_P2_ALLOWED`)이 수치 전용이라 거부된다.
+#      물리를 바꾸는 축은 러너 노브여야 매니페스트·OUTDIR·영수증에 같이 기록된다.
+#    ⚠ `--no-step4` 는 켠 채로 둔다 (STEP4 가 이 침대의 OOM 원인, prereg v3 STEP 4).
+#      뷰어가 step4 격자를 요구하면 그때 LEAN=5 로 따로 만든다 — 지금 짐작으로 켜지 않는다.
+[ "${LEAN:-0}" = "4" ] && { LEAN_FLAGS=" --no-step4 --no-thermal --no-trackb --no-pore --no-collector"; \
+  echo "[p2] ★ LEAN=4 (σ_e + σ_ion + 필드) — pore-τ·집전체·STEP4 만 끈다 (뷰어 그림용)"; }
 #  ⚠ LEAN=1 은 **옛 접미사 `_lean` 그대로** 둔다 — 이미 끝난 팔(STEP 2/3/5)이 살아 있는
 #    디렉터리라 이름을 바꾸면 전부 다시 돈다.  LEAN=2 만 새 접미사를 받는다.
 #  ★★ 2026-08-20 (게이트 ⑤ factorial) — **섬유 스탬프 축**.  CL-19 가 retired 된 이유가
@@ -246,6 +267,7 @@ FS_FLAG=""; [ "$FIBRE_STAMP" = "point" ] && FS_FLAG=" --step3-fibre-stamp point"
 LEAN_TAG=""; [ "${LEAN:-0}" = "1" ] && LEAN_TAG="_lean"; [ "${LEAN:-0}" = "2" ] && LEAN_TAG="_lean2"
 #  ⚠ 새 접미사 — LEAN=2 산출물과 **섞이면 안 된다** (이온 유무가 다른 런이다)
 [ "${LEAN:-0}" = "3" ] && LEAN_TAG="_lean3"
+[ "${LEAN:-0}" = "4" ] && LEAN_TAG="_lean4"   # ⚠ 필드 유무가 달라 lean3 과 섞이면 안 된다
 #  ★★★ 2026-08-25 (R5-CX-03, Codex 5차) — **런 영수증**.  러너가 무엇으로 돌라고 했는지
 #    한 곳에 적고, cache/fresh/final 이 전부 이 값을 요구한다.
 #    ⚠ 왜: Codex 실측에서 HEAD·vox·구경·code SHA·input digest 가 전부 달라도 캐시된 팔이
