@@ -19,7 +19,8 @@
   "2026-08-28-doped-closure": "D-2026-08-28-sdcp-doped-scope-closure proposed 등록 (agent)",
   "2026-08-28-doped-closure-ratify": "D-2026-08-28-sdcp-doped-scope-closure → active (1저자 ratify)",
   "2026-08-28-doped-closure-rev": "회신 P 반영 수정으로 active → proposed (재승인 대기). 추출 부호 철회",
-  "2026-08-28-doped-closure-reratify": "회신 P 반영판 재승인 → active (1저자 위임, agent 권장)"
+  "2026-08-28-doped-closure-reratify": "회신 P 반영판 재승인 → active (1저자 위임, agent 권장)",
+  "2026-08-31": "D-2026-08-31-sdcp-polaron-Fbb 등록 (proposed). 회신 S 의 착수전 P0 5건을 db/properties/sdcp_polaron_pilot_prereg_2026_08_31.json 에 봉인했다. v1 의 f_bb 식(분자 signed)은 폐기 — 백본 내부에서 다시 상쇄됐다."
  },
  "decisions": [
   {
@@ -733,6 +734,41 @@
    "ratified_by": null,
    "note": "⚠ proposed — 사람이 ratify 해야 active. DFT 결과 0잡 시점 등록.",
    "superseded_by": "회신 AI 2026-08-30 §A-Q4 = C (12잡 경로)"
+  },
+  {
+   "id": "D-2026-08-31-sdcp-polaron-Fbb",
+   "schema_version": 2,
+   "kind": "estimand",
+   "scope": "sdcp.h_removed_radical.spin_localization",
+   "slot": "carrier_localization_estimand",
+   "status": "proposed",
+   "applies_to": {
+    "systems": [
+     "sdcp_dp6_neutral_radical"
+    ],
+    "tasks": [
+     "spin_localization",
+     "state_map"
+    ],
+    "methods": [
+     "orca-611__r2scan-3c__uks-sp",
+     "orca-611__wb97x-d3__uks-sp"
+    ],
+    "use_cases": [
+     "exploratory",
+     "referee_response"
+    ]
+   },
+   "title": "F_bb / F_SO3 / F_other — H-제거 n=6 라디칼의 spin share (조건부 상태지도)",
+   "statement": "F_G^(P) = ∫ W_G^(P)(r)|ρα−ρβ|dr / ∫|ρα−ρβ|dr, 세 집합은 상호배타·완전이고 F_bb+F_SO3+F_other=1. Hirshfeld primary · Löwdin sensitivity. 보고값은 **사전등록 seed 집합(A 1 + B 6 + default 1)에서 찾은 최저해**의 F 이며, conformer·H 제거 위치·유전환경·범함수에 **조건부**다. class 는 유일 집합이 F≥0.5 이고 다음 집합과 차 ≥0.10 일 때만 부여한다. 전역 최소가 아니고, 물질 수준 '자가도핑 SDCP 의 캐리어 위치' 가 아니다.",
+   "rationale": "회신 S(2026-08-31): 물질 수준 단일값은 NO-GO, 조건부 상태지도는 조건부 GO. v1 식은 분모만 절대값이고 분자가 signed 라 백본 내부에서 다시 상쇄됐다 — 절대값 분모를 넣은 목적과 모순. 실공간 |ρα−ρβ| 기반 세 집합으로 바꾼다. 단량체 65/35 는 링이 하나라 다중링 폴라론을 구조적으로 담지 못하는 계였으므로 '반대 증거' 가 아니다.",
+   "supersedes": [],
+   "record": "db/properties/sdcp_polaron_pilot_prereg_2026_08_31.json",
+   "card": "kb/questions/sdcp_backbone_polaron_estimand_2026_08_31.md",
+   "review": "kb/reviews/codex_S_prompt_backbone_polaron_estimand_2026_08_31.md",
+   "citable": "no",
+   "citable_why": "adequacy pilot 미실행. 종료 규칙 5개(BACKBONE_SUPPORTED / SO3_CENTERED_WITHIN_MODEL / ENVIRONMENT_DEPENDENT / FUNCTIONAL_DEPENDENT / MODEL_NONDIAGNOSTIC) 중 하나로 닫히기 전에는 인용 금지.",
+   "date": "2026-08-31"
   }
  ]
 }
