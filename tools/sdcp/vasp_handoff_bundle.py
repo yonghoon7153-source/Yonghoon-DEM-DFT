@@ -54,6 +54,7 @@ import argparse
 import hashlib
 import json
 import os
+import platform
 import re
 import shutil
 import subprocess
@@ -470,18 +471,120 @@ VASP_CMD=${VASP_CMD:?VASP_CMD 를 지정하세요 (예: 'mpirun -np 256 vasp_std
 PP=${PP:?PP 를 지정하세요 (POTCAR 원본 트리)}
 POTCAR_ALLOWLIST=${POTCAR_ALLOWLIST:?POTCAR_ALLOWLIST 를 지정하세요 (절대경로)}
 
-# ⛔ 회신 AP #9 — 중복 실행 가드. mkdir 은 원자적이라 경쟁 조건이 없다.
+# ⛔⛔ 회신 AR P0-8 · 해제조건 8 — **경쟁조건 없는 host/run-id 잠금**.
+#   종전 구현: `mkdir $LOCK` 뒤에 pid 를 썼다. 그 사이(디렉터리는 있고 pid 는
+#   아직 없는 창)에 다른 프로세스가 이를 stale 로 보고 `rm -rf` 했다.
+#   게다가 다른 HPC 노드의 pid 에는 `kill -0` 이 유효한 생존검사가 아니다.
+#   ⇒ ① 내용을 **먼저** 쓴 임시 파일을 `ln` 으로 원자적으로 링크한다
+#       (하드링크 생성은 대상이 있으면 실패한다 — 내용이 없는 창이 존재하지 않는다)
+#     ② **모르는 lock 은 절대 지우지 않는다.** 같은 호스트의 죽은 pid 일 때만
+#       안내하고, 그래도 자동 삭제하지 않는다 (사람이 지운다).
 LOCK=".lock_stage$stage"
-if ! mkdir "$LOCK" 2>/dev/null; then
-  own=$(cat "$LOCK/pid" 2>/dev/null || echo "?")
-  if [ "$own" != "?" ] && kill -0 "$own" 2>/dev/null; then
-    echo "이미 단계 $stage 가 돌고 있습니다 (pid $own)"; exit 3; fi
-  rm -rf "$LOCK"; mkdir "$LOCK" || exit 3
+RUNID="$(hostname)|$$|$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+LOCKTMP="$LOCK.tmp.$$"
+printf '%s\n' "$RUNID" > "$LOCKTMP" || exit 3
+if ! ln "$LOCKTMP" "$LOCK" 2>/dev/null; then
+  rm -f "$LOCKTMP"
+  own=$(cat "$LOCK" 2>/dev/null || echo "?")
+  own_host=${own%%|*}
+  rest=${own#*|}; own_pid=${rest%%|*}
+  echo "⛔ 단계 $stage 의 lock 이 이미 있습니다: $own"
+  if [ "$own_host" = "$(hostname)" ] && ! kill -0 "$own_pid" 2>/dev/null; then
+    echo "   같은 호스트의 pid $own_pid 는 살아 있지 않습니다."
+    echo "   그래도 **자동으로 지우지 않습니다** — 다른 노드의 실행일 수 있습니다."
+    echo "   확실하면 손으로: rm -f $LOCK"
+  else
+    echo "   다른 호스트/살아 있는 프로세스입니다. 끝날 때까지 기다리세요."
+  fi
+  exit 3
 fi
-echo $$ > "$LOCK/pid"
-trap 'rm -rf "$LOCK"' EXIT INT TERM
+rm -f "$LOCKTMP"
+# 우리 것일 때만 지운다 (남의 lock 을 치우지 않는다)
+trap '[ "$(cat "$LOCK" 2>/dev/null)" = "$RUNID" ] && rm -f "$LOCK"' EXIT INT TERM
 
 bash SEAL_POTCAR_ROOT.sh || { echo "POTCAR 조립·봉인 실패 — 중단"; exit 1; }
+
+# ⛔⛔ 회신 AR P0-7 · 해제조건 8 — **실행 전 census.** 종전엔 존재하는 job.json
+#   만 분류하고 디렉터리 수만 비교해서, job.json 하나를 지워도 통과했다.
+#   ⇒ ① MANIFEST 해시(봉인/EXPECT 와 결박) ② 계획 잡 **집합** 완전일치
+#     ③ 단계 분류가 manifest 선언과 **정확히** 같은지 — 셋 다 확인한다.
+python3 - "$stage" <<'PYPRE' || { echo "⛔ 실행 전 census 실패 — 중단"; exit 2; }
+import json, os, sys, glob, hashlib
+stage = sys.argv[1]
+man = json.load(open("MANIFEST.json"))
+mh = hashlib.sha256(open("MANIFEST.json", "rb").read()).hexdigest()
+bad = []
+exp = os.environ.get("EXPECT_MANIFEST_SHA256", "").strip().lower()
+if exp and exp != mh:
+    bad.append("MANIFEST sha256 %s ≠ EXPECT_MANIFEST_SHA256 %s" % (mh[:12], exp[:12]))
+# ⛔ 회신 AR 해제조건 7 — 봉인을 **모든 실행에서 필수화**한다
+try:
+    seal = json.load(open("POTCAR_ROOT_SEAL.json"))
+except Exception as e:
+    seal = {}
+    bad.append("POTCAR_ROOT_SEAL.json 을 읽을 수 없다 (%r) — 봉인 없이 돌리지 않는다" % e)
+_need_seal = ("schema", "source_sha256", "allowlist_sha256", "manifest_sha256",
+              "bundle_zip_sha256", "vasp_executable", "vasp_executable_sha256",
+              "vasp_version_banner", "sealed_at_utc", "assembled_sha256_by_job",
+              "sealed_before_production", "sealed_before_production_evidence")
+if seal:
+    _sm = [k for k in _need_seal if not seal.get(k)]
+    if _sm:
+        bad.append("봉인에 %s 가 없다 — 반쪽 봉인으로 돌리지 않는다" % _sm)
+    if seal.get("manifest_sha256") and seal["manifest_sha256"] != mh:
+        bad.append("봉인이 다른 MANIFEST 에 대한 것이다 (%s ≠ %s)"
+                   % (seal["manifest_sha256"][:12], mh[:12]))
+    _zt = ""
+    try:
+        _zt = open("ZIP_SHA256.txt").read().split()[0].strip().lower()
+    except Exception:
+        bad.append("ZIP_SHA256.txt 가 없다 — 받은 ZIP 과의 결박을 확인할 수 없다")
+    if _zt and seal.get("bundle_zip_sha256") and seal["bundle_zip_sha256"] != _zt:
+        bad.append("봉인의 ZIP 해시가 ZIP_SHA256.txt 와 다르다")
+cen = man.get("run_census") or {}
+if not cen.get("job_keys") or not cen.get("stage_of"):
+    bad.append("MANIFEST 에 run_census 가 없다 — 이 번들로는 census 를 확인할 수 "
+               "없다 (구판 번들이면 재생성하십시오)")
+else:
+    want = set(cen["job_keys"])
+    have = {os.path.dirname(p).replace(os.sep, "/") for p in glob.glob("*/*/job.json")}
+    dirs = {d.rstrip("/").replace(os.sep, "/") for d in glob.glob("*/*/")}
+    if have != want:
+        bad.append("job.json 집합이 계획과 다르다 — 없음 %s · 계획 밖 %s"
+                   % (sorted(want - have)[:4], sorted(have - want)[:4]))
+    if dirs != want:
+        bad.append("잡 폴더 집합이 계획과 다르다 — 없음 %s · 계획 밖 %s"
+                   % (sorted(want - dirs)[:4], sorted(dirs - want)[:4]))
+    # 단계 분류를 **디스크의 job.json 으로 다시 계산**해 선언과 대조한다
+    got = {}
+    for jp in sorted(glob.glob("*/*/job.json")):
+        m = json.load(open(jp))
+        d = os.path.dirname(jp).replace(os.sep, "/")
+        kind, role, vac = m.get("kind"), m.get("role"), m.get("vacconv")
+        if kind is None:
+            bad.append("job.json 에 kind 가 없다: " + jp); continue
+        if kind == "mol_ref":
+            got[d] = "1"
+        elif kind == "prospective_pose" and role == "primary":
+            got[d] = "1" if (vac or m.get("seed") == "afm2424_pm1") else "2"
+        else:
+            got[d] = "2"
+    diff = sorted(k for k in set(got) | set(cen["stage_of"])
+                  if got.get(k) != cen["stage_of"].get(k))
+    if diff:
+        bad.append("단계 분류가 선언과 다르다: %s" % diff[:4])
+    cnt = {st: sum(1 for v in got.values() if v == st) for st in ("1", "2")}
+    if cnt != cen.get("stage_counts"):
+        bad.append("단계 개수가 선언과 다르다: 실물 %s ≠ 선언 %s"
+                   % (cnt, cen.get("stage_counts")))
+if bad:
+    print("⛔ 실행 전 census:")
+    for b in bad:
+        print("   · " + b)
+    sys.exit(1)
+print("✓ census: MANIFEST %s · 잡 %d · 단계 %s"
+      % (mh[:12], len(cen["job_keys"]), cen["stage_counts"]))
+PYPRE
 
 # ⛔ 회신 AP #6 — receipt 존재만으로 2단계를 열지 않는다. **지금 결과로 재판정**한다.
 #    (해시 결박보다 단순하고, 위조 receipt 로 우회할 수 없다)
@@ -9236,6 +9339,30 @@ def build_bundle(a, ledger: Optional[Dict[str, Any]] = None) -> Path:
     # ⚠ 문서가 잡 수를 읽으므로 **문서보다 먼저** 확정한다 (Codex 7차 §11 —
     #   지금은 SUBMIT_CONTRACT 가 '?' 를 찍고 있었다).
     man["n_jobs"] = n_jobs
+    # ⛔⛔ 회신 AR P0-7 · 해제조건 8 (2026-08-31) — 러너가 **실행 전에** 계획 census
+    #   를 확인하려면 계획이 기계 필드로 있어야 한다. 종전엔 러너가 존재하는
+    #   job.json 만 분류하고 디렉터리 수만 비교해서, job.json 하나를 지워도
+    #   `classified=15`, 디렉터리 16 으로 검사를 통과했다.
+    #   ⇒ 정확한 **잡 키 집합**과 **단계 분류**를 manifest 에 박는다.
+    #     분류 규칙은 analyze_results.py 의 `_stage_of` · run_staged.sh 와 1:1 이다.
+    def _gen_stage_of(pl):
+        m = (pl.get("meta") or {})
+        kind, role, vac = m.get("kind"), m.get("role"), m.get("vacconv")
+        if kind == "mol_ref":
+            return "1"
+        if kind == "prospective_pose" and role == "primary":
+            return "1" if (vac or m.get("seed") == SEED_MAIN) else "2"
+        return "2"
+    _stage_map = {k: _gen_stage_of(v) for k, v in man["planned"].items()}
+    man["run_census"] = {
+        "job_keys": sorted(man["planned"]),
+        "stage_of": _stage_map,
+        "stage_counts": {st: sum(1 for v in _stage_map.values() if v == st)
+                         for st in ("1", "2")},
+        "n_jobs": n_jobs,
+        "⛔": ("러너는 실행 전에 이 **집합**과 **분류**를 디스크와 대조한다. "
+               "개수만 맞고 구성이 다른 것을 통과시키지 않는다 (회신 AR P0-7)"),
+    }
     n_by_ph = {}
     for _p in man["planned"].values():
         for _ph in (_p.get("phases") or []):
@@ -10140,6 +10267,30 @@ def selftest() -> int:
             "⛔음성 AP #9: stage 값을 검증한다 (모르는 값이면 중단)")
         chk(".lock_stage" in _rs,
             "⛔음성 AP #9: 중복 실행 가드가 있다")
+        # ── 회신 AR P0-8 — lock 이 **원자적**이고 모르는 lock 을 안 지우는가 ──
+        chk("ln \"$LOCKTMP\" \"$LOCK\"" in _rs and "rm -rf \"$LOCK\"" not in _rs,
+            "⛔음성 AR P0-8: lock 이 `ln`(원자적, 내용 선기록)이고 **모르는 lock 을 "
+            "rm -rf 하지 않는다** (mkdir 뒤 pid 를 쓰던 창에 경쟁조건이 있었다)")
+        chk("hostname" in _rs and "own_host" in _rs,
+            "⛔음성 AR P0-8: host 를 기록하고 **같은 호스트일 때만** kill -0 을 쓴다 "
+            "(다른 HPC 노드의 pid 에는 유효한 생존검사가 아니다)")
+        chk("run_census" in _rs and "stage_counts" in _rs and "EXPECT_MANIFEST_SHA256" in _rs,
+            "⛔음성 AR P0-7: 러너가 실행 전에 manifest 해시·exact 잡 집합·단계 분류를 "
+            "확인한다 (종전엔 존재하는 job.json 만 세어 하나를 지워도 통과했다)")
+        _cen = m_st.get("run_census") or {}
+        chk(sorted(_cen.get("job_keys") or []) == sorted(m_st.get("planned") or {})
+            and _cen.get("stage_counts", {}).get("1", 0) > 0
+            and sum(_cen.get("stage_counts", {}).values()) == len(m_st["planned"]),
+            "AR P0-7: MANIFEST 가 exact 잡 집합과 단계 분류를 기계 필드로 담는다 "
+            f"· {_cen.get('stage_counts')}")
+
+        # ══ 회신 AR 해제조건 8·10 — **러너를 실제로 돌린다** (production path) ══
+        #   AR: "번들 selftest 는 production `_closure_estimand`, staged runner,
+        #   seal·attestation 스크립트를 실제로 관통하지 않는다."
+        #   ⇒ 가짜 PP 트리·allowlist·stub vasp 를 만들어 run_staged.sh 를 진짜로
+        #     돌리고, 리뷰가 재현한 결함(job.json 하나 삭제)이 **막히는지** 본다.
+        _rc_run = _runner_e2e(_st, chk)
+        chk(_rc_run is not False, "AR 해제조건 10: 러너 production-path e2e 를 돌렸다")
         # ── 회신 AP #5 — stage gate 가 vacconv **만** 보지 않는다 ─────────
         #   ⚠ 이 픽스처는 vacconv 잡이 없어 게이트가 그 전에 끝난다. 그래서
         #     여기서는 **배포 분석기 소스**에 네 선결조건이 실제로 있고
@@ -12345,6 +12496,175 @@ def verify_zip(zip_path, expect_jobs=None, attest_out=None,
     ok = rc == 0 and not haz
     print("  " + ("✅ ZIP 검증 통과" if ok else "❌ ZIP 검증 실패"))
     return 0 if ok else 1
+
+
+def _runner_e2e(bundle: Path, chk) -> bool:
+    """**run_staged.sh 를 실제로 돌린다** — 회신 AR 해제조건 8·10.
+
+    왜 필요한가: AR 이 러너에서 잡은 두 결함(census 가 존재하는 job.json 만
+    세어 하나를 지워도 통과 · lock 경쟁조건)은 **셸을 돌려야만** 잡힌다.
+    문자열 grep 은 "그 코드가 있다" 만 말하고 "그 코드가 막는다" 는 말하지 못한다.
+
+    가짜 PP 트리 · site allowlist · stub `vasp_std` 를 만들어 실제 경로를 탄다:
+      SEAL_POTCAR_ROOT.sh (조립 + 봉인) → 실행 전 census → 단계 분류
+
+    이 시험이 **못 하는 것**
+      · 진짜 VASP 를 돌리지 않는다 (stub 이라 잡 실행은 실패해도 된다 —
+        우리가 보는 것은 census·lock 이 그 **전에** 판정하는가다).
+      · Windows 에서는 bash 가 없으면 건너뛴다 (건너뛴 것을 통과로 세지 않는다).
+    """
+    import shutil as _sh2
+    import subprocess as _sp
+    if not _sh2.which("bash"):
+        print("  ⚠ bash 가 없어 러너 e2e 를 건너뛴다 (통과로 세지 않는다)")
+        return False
+    man = json.loads((bundle / "MANIFEST.json").read_text(encoding="utf-8"))
+    spec = man.get("potcar_spec") or {}
+    if not spec:
+        chk(False, "AR 10: 번들에 potcar_spec 이 없다 — 러너 e2e 를 만들 수 없다")
+        return False
+    base = bundle.parent / "_runner_e2e"
+    _sh2.rmtree(base, ignore_errors=True)
+    base.mkdir(parents=True)
+    # ── 가짜 PP 트리 + allowlist ────────────────────────────────────────
+    pp = base / "pp"
+    lines = []
+    for _el, _var in sorted(spec.items()):
+        (pp / _var).mkdir(parents=True, exist_ok=True)
+        _f = pp / _var / "POTCAR"
+        _f.write_text("  PAW_PBE %s 01Jan2000\n"
+                      "   TITEL  = PAW_PBE %s 01Jan2000\n"
+                      "   SHA256 = deadbeef %s\n"
+                      "   END of PSCTR\n" % (_var, _var, _var), encoding="utf-8")
+        lines.append("%s  %s" % (hashlib.sha256(_f.read_bytes()).hexdigest(), _f))
+    allow = base / "site_allow.txt"
+    allow.write_text("\n".join(lines) + "\n", encoding="utf-8")
+    # ── stub vasp_std (SEAL 이 --version 을 부른다) ─────────────────────
+    binp = base / "bin"; binp.mkdir()
+    vb = binp / "vasp_std"
+    vb.write_text("#!/bin/sh\necho 'vasp.6.4.1 24Jul23 (build selftest)'\n",
+                  encoding="utf-8")
+    vb.chmod(0o755)
+    env = dict(os.environ)
+    env["PATH"] = str(binp) + os.pathsep + env.get("PATH", "")
+    env["PP"] = str(pp)
+    env["POTCAR_ALLOWLIST"] = str(allow)
+    env["VASP_CMD"] = "true"
+    env["BUNDLE_ZIP_SHA256"] = "0" * 64
+    env["PYTHONIOENCODING"] = "utf-8"
+
+    def _run(root, extra_env=None):
+        e = dict(env, **(extra_env or {}))
+        r = _sp.run(["bash", "run_staged.sh", "1"], cwd=str(root), env=e,
+                    capture_output=True, text=True, timeout=600)
+        return r.returncode, (r.stdout or "") + (r.stderr or "")
+
+    def _copy(tag):
+        dst = base / tag
+        _sh2.copytree(bundle, dst)
+        return dst
+
+    # ① 양성 — 온전한 번들은 census 를 통과한다
+    _ok_root = _copy("intact")
+    _rc, _o = _run(_ok_root)
+    chk("✓ census" in _o,
+        "AR 10 양성: 온전한 번들에서 SEAL→census 가 실제로 통과한다 "
+        "(production path) · %s" % _o.strip().splitlines()[-1][:60])
+    chk((_ok_root / "POTCAR_ROOT_SEAL.json").is_file()
+        and (_ok_root / "ZIP_SHA256.txt").is_file(),
+        "AR 해제조건 7: 러너가 봉인과 ZIP_SHA256.txt 를 실제로 만든다")
+    _seal = json.loads((_ok_root / "POTCAR_ROOT_SEAL.json").read_text(encoding="utf-8"))
+    chk(_seal.get("bundle_zip_sha256") == "0" * 64
+        and _seal.get("manifest_sha256") == hashlib.sha256(
+            (_ok_root / "MANIFEST.json").read_bytes()).hexdigest()
+        and _seal.get("vasp_version_banner", "").startswith("vasp.6.4.1"),
+        "AR 해제조건 7: 봉인이 ZIP·MANIFEST·VASP 배너를 실제로 담는다")
+
+    # ② ⛔음성 — **job.json 하나를 지우면** 막는다 (AR P0-7 이 재현한 그 경우)
+    _r2 = _copy("drop_jobjson")
+    _victim = sorted(_r2.glob("*/*/job.json"))[0]
+    _victim.unlink()
+    _rc2, _o2 = _run(_r2)
+    chk(_rc2 != 0 and "census" in _o2 and "job.json 집합이 계획과 다르다" in _o2,
+        "⛔음성 AR P0-7: job.json 하나를 지우면 **실행 전에** 막는다 "
+        "(종전엔 classified=15·디렉터리 16 으로 통과했다) · rc=%s" % _rc2)
+
+    # ③ ⛔음성 — 계획에 없는 잡 폴더를 끼우면 막는다
+    _r3 = _copy("extra_job")
+    _ej = _r3 / "prospective" / "__intruder__"
+    _ej.mkdir(parents=True)
+    (_ej / "job.json").write_text(json.dumps({"kind": "prospective_pose",
+                                              "role": "primary", "d3": "on"}),
+                                  encoding="utf-8")
+    _rc3, _o3 = _run(_r3)
+    chk(_rc3 != 0 and "계획 밖" in _o3,
+        "⛔음성 AR P0-7: 계획에 없는 잡을 끼우면 막는다 · rc=%s" % _rc3)
+
+    # ④ ⛔음성 — 단계 분류를 바꾸면(job.json 의 seed) 선언과 어긋나 막는다
+    #   ⚠ **1단계로 선언된** 잡을 골라야 한다. net4 primary 는 이미 2단계라
+    #     role 을 바꿔도 분류가 안 움직인다 (첫 픽스처가 그랬다).
+    _r4 = _copy("stage_shift")
+    _cen4 = (json.loads((_r4 / "MANIFEST.json").read_text(encoding="utf-8"))
+             .get("run_census") or {}).get("stage_of") or {}
+    _tgt4 = next((k for k, v in sorted(_cen4.items())
+                  if v == "1" and k.startswith("prospective/")), None)
+    chk(_tgt4 is not None, "AR 10: 1단계로 선언된 복합체 잡이 픽스처에 있다")
+    if _tgt4:
+        _q4 = _r4 / _tgt4 / "job.json"
+        _m4 = json.loads(_q4.read_text(encoding="utf-8"))
+        _m4["role"] = "sensitivity"                 # 1단계 → 2단계로 어긋나게
+        _q4.write_text(json.dumps(_m4, ensure_ascii=False), encoding="utf-8")
+        _rc4, _o4 = _run(_r4)
+        chk(_rc4 != 0 and "단계 분류가 선언과 다르다" in _o4 and "단계 개수" in _o4,
+            "⛔음성 AR P0-7: 단계 분류가 선언과 어긋나면 막는다 (분류·개수 둘 다) "
+            "· rc=%s" % _rc4)
+
+    # ⑤ ⛔음성 — MANIFEST 를 건드리면 EXPECT 해시와 어긋나 막는다
+    _r5 = _copy("man_tamper")
+    _exp = hashlib.sha256((_r5 / "MANIFEST.json").read_bytes()).hexdigest()
+    _mm = json.loads((_r5 / "MANIFEST.json").read_text(encoding="utf-8"))
+    _mm["note_injected"] = "x"
+    (_r5 / "MANIFEST.json").write_text(json.dumps(_mm, ensure_ascii=False),
+                                       encoding="utf-8")
+    _rc5, _o5 = _run(_r5, {"EXPECT_MANIFEST_SHA256": _exp})
+    chk(_rc5 != 0 and "EXPECT_MANIFEST_SHA256" in _o5,
+        "⛔음성 AR P0-7: MANIFEST 가 바뀌면 EXPECT 해시와 어긋나 막는다 · rc=%s" % _rc5)
+
+    # ⑥ ⛔음성 — **모르는 lock 은 지우지 않는다** (AR P0-8)
+    _r6 = _copy("lock_foreign")
+    (_r6 / ".lock_stage1").write_text("other-host|999999|2026-08-31T00:00:00Z\n",
+                                      encoding="utf-8")
+    _rc6, _o6 = _run(_r6)
+    chk(_rc6 == 3 and (_r6 / ".lock_stage1").is_file()
+        and "다른 호스트" in _o6,
+        "⛔음성 AR P0-8: 다른 호스트의 lock 을 보면 **지우지 않고** 멈춘다 · rc=%s" % _rc6)
+    # 같은 호스트의 죽은 pid 여도 자동 삭제하지 않는다
+    _r7 = _copy("lock_dead_local")
+    (_r7 / ".lock_stage1").write_text("%s|999999|2026-08-31T00:00:00Z\n"
+                                      % platform.node(), encoding="utf-8")
+    _rc7, _o7 = _run(_r7)
+    chk(_rc7 == 3 and (_r7 / ".lock_stage1").is_file()
+        and "자동으로 지우지 않습니다" in _o7,
+        "⛔음성 AR P0-8: 같은 호스트의 죽은 pid 여도 **자동 삭제하지 않는다** "
+        "(다른 노드의 실행일 수 있다) · rc=%s" % _rc7)
+    # 정상 종료하면 **자기 lock 은** 치운다
+    chk(not (_ok_root / ".lock_stage1").exists(),
+        "AR P0-8: 자기 lock 은 종료 시 치운다 (남의 것만 안 건드린다)")
+
+    # ⑦ ⛔음성 — 봉인이 반쪽이면 러너가 실행 전에 막는다 (해제조건 7 '모든 실행')
+    _r8 = _copy("half_seal")
+    _rc8a, _ = _run(_r8)                       # 먼저 정상 봉인을 만든다
+    _hs = json.loads((_r8 / "POTCAR_ROOT_SEAL.json").read_text(encoding="utf-8"))
+    for _k in ("vasp_executable_sha256", "assembled_sha256_by_job"):
+        _hs.pop(_k, None)
+    (_r8 / "POTCAR_ROOT_SEAL.json").write_text(json.dumps(_hs, ensure_ascii=False),
+                                               encoding="utf-8")
+    _rc8, _o8 = _run(_r8)
+    chk(_rc8 != 0 and "반쪽 봉인" in _o8,
+        "⛔음성 AR 해제조건 7: 반쪽 봉인이면 러너가 **매 실행마다** 막는다 · rc=%s" % _rc8)
+
+    _sh2.rmtree(base, ignore_errors=True)
+    return True
 
 
 def _selftest_e2e() -> int:
