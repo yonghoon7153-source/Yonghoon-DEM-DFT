@@ -330,6 +330,49 @@
    "at": "2026-08-30",
    "state": "conditions_fixed_C3_v3_sign_and_within",
    "note": "회신 AB P0-3 수용. 부호 규약 정정(−D 를 비교) + 0.90 원자료 봉인 + 조각내 일관성 필수화. **DFT 결과 여전히 0잡** — 결과를 보고 고친 것이 아니다. 문턱 수치(0.90 · 70/30)는 손대지 않았다."
+  },
+  {
+   "at": "2026-08-30",
+   "state": "submission_composition_42_registered",
+   "note": "옵션 A 제출 구성 42잡 등록 (v10 24 + holdout 18). planned=disk 를 두 번들에서 실측 확인. 홀드아웃 controls 2잡의 reference-equivalence 문턱을 **결과 전** 고정."
   }
- ]
+ ],
+ "12_제출_구성_2026_08_30_옵션A": {
+  "지위": "확정 — **DFT 결과 0잡** 시점에 등록",
+  "총잡수": 42,
+  "왜_40_이_아닌가": "40 은 규약이 아니라 옛 구성(24 D3-on + 16 D3-off)의 산술이었다. 그 16 을 지운 것이 옵션 A 이므로 40 이라는 수도 함께 사라졌다. 리뷰 AB 게이트 ③은 숫자가 아니라 **등식**(required inventory = 디스크 job = census)이고, 두 번들 모두 실측으로 만족한다.",
+  "구성": {
+   "sdcp_stageA_v10": {
+    "총": 24,
+    "prospective": "2조각 × 4자세 × {pm1, net4} = 16",
+    "refs": "clean_slab {pm1,net4} 2 + mol {box20,box24,box24_nzmag} × 2조각 6 = 8",
+    "candidate_set": "calibration_pilot (frozen 94675e66e02c855a)",
+    "planned_vs_disk": "24 = 24 (실측, 차집합 공집합)"
+   },
+   "sdcp_stageA_holdout_v1": {
+    "총": 18,
+    "prospective": "2조각 × 8자세 × pm1 = 16",
+    "controls": "clean_slab {pm1,net4} 2 — **자기 대조군**",
+    "candidate_set": "holdout_stratified (frozen 3e3ce4820c4df3ec)",
+    "planned_vs_disk": "18 = 18 (실측, 차집합 공집합)"
+   }
+  },
+  "왜_홀드아웃에_clean_slab_2개가_필요한가": "여분이 아니다. 분석기의 자기 붕괴·basin 판정이 clean slab 자기 대조군(Q 기준)을 쓰므로, 빼면 판정이 사라지는 것이 아니라 **전 잡에서 '보류' 로 조용히 통과**한다 (생성기 `--no_mag_controls` 도움말이 그렇게 적는다 — fail-open). holdout estimand 카드의 'realized basin 이 다른 자세는 ρ 에서 제외' 도 이 기준 없이는 못 돈다. ⇒ 16 자세 tranche 의 **최소 완성형이 18** 이다.",
+  "왜_두_tranche_로_나누나": "합치면 clean slab 하나로 족하지만, 합치는 순간 홀드아웃이 사전등록된 primary 후보집합에 섞인다. 분석기의 HOLDOUT_TRANCHE 차단이 존재하는 이유가 그것이다. 분리 유지의 대가가 2잡이다.",
+  "부수_소득_reference_equivalence": {
+   "무엇": "홀드아웃의 controls/clean_slab 는 v10 의 refs/clean_slab 와 **같은 입력**을 독립 제출로 다시 도는 것이다. 두 값의 차가 곧 제출·조립·스테이징 재현성이다 — 이 캠페인이 실제로 물린 결함 축.",
+   "문턱_결과_보기_전_고정": {
+    "선결": "두 잡의 static POSCAR·INCAR·KPOINTS 가 **바이트 동일**해야 한다. 아니면 이 대조는 성립하지 않고 '미측정' 으로 남긴다",
+    "|ΔE0| ≤ 1 meV": "재현됨",
+    "|ΔE0| > 1 meV": "⛔ **재현 실패** — 같은 입력이 다른 값을 냈다. 원인 규명 전까지 두 번들의 값을 섞지 않는다",
+    "realized_basin_id": "두 잡이 같아야 한다. 다르면 재현 실패"
+   },
+   "⛔_이것이_licence_하지_않는_것": [
+    "수치 재현성 일반 — 같은 기계·같은 VASP build 다. 환경 간 재현성이 아니다",
+    "wave1 의 reference-equivalence 보류 해제 — 그건 NUPDOWN·LREAL 비대칭 문제이고 이 대조는 **같은 입력의 재제출**만 잰다",
+    "이 값을 원고에 인용하는 것"
+   ],
+   "⚠": "이것은 42 를 유지하는 **이유가 아니라 부수 소득**이다. 이유는 위 `왜_홀드아웃에_clean_slab_2개가_필요한가` 다."
+  }
+ }
 }
