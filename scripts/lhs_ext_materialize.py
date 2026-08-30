@@ -278,6 +278,64 @@ def roundtrip(row: dict, deck_text: str) -> list[str]:
     return bad
 
 
+_RE_RUN_JOB = re.compile(r'^#SBATCH\s+--job-name=(\S+)', re.M)
+_RE_RUN_OUT = re.compile(r'^#SBATCH\s+--output=(\S+)', re.M)
+_RE_RUN_TIME = re.compile(r'^#SBATCH\s+--time=(\S+)', re.M)
+_RE_RUN_IN = re.compile(r'-in\s+(\S+\.liggghts)')
+_RE_RUN_CD = re.compile(r'^\s*cd\s+(\S+)', re.M)
+
+
+def _runner_case(text: str) -> str:
+    m = _RE_RUN_JOB.search(text)
+    if not m:
+        raise SystemExit('⛔ 러너 템플릿에 `#SBATCH --job-name=` 이 없다')
+    return m.group(1)
+
+
+def render_runner(template: str, case: str, tmpl_case: str) -> str:
+    """러너의 케이스명만 갈아끼운다.  구조·자원 요청은 건드리지 않는다.
+
+    ★ 러너에서 케이스명이 나오는 자리는 넷이다 — job-name · output 로그 · `cd` 경로 ·
+      `-in` 덱 파일.  하나라도 옛 이름이 남으면 **다른 케이스의 덱을 돌리거나 로그를
+      덮어쓴다**.  그래서 치환 후 옛 이름이 남았는지 확인하고, 넷을 각각 되읽어 대조한다.
+    """
+    if tmpl_case not in template:
+        raise SystemExit(f'⛔ 러너 템플릿에서 케이스명 {tmpl_case} 을 못 찾았다')
+    t = template.replace(tmpl_case, case)
+    if tmpl_case in t:                                    # pragma: no cover
+        raise SystemExit('⛔ 러너에 템플릿 케이스명이 남았다')
+    return t
+
+
+def roundtrip_runner(case: str, text: str) -> list[str]:
+    """생성한 러너를 되읽어 케이스명 네 자리를 확인한다.  → 불일치 목록."""
+    bad = []
+    body = _strip_comments_keep_sbatch(text)
+    for what, rx, want in (('job-name', _RE_RUN_JOB, case),
+                           ('output', _RE_RUN_OUT, case),
+                           ('-in 덱', _RE_RUN_IN, f'input_{case}.liggghts'),
+                           ('cd 경로', _RE_RUN_CD, case)):
+        m = rx.search(text if rx is not _RE_RUN_IN else body)
+        if not m:
+            bad.append(f'{case} 러너: `{what}` 을 못 읽었다')
+        elif want not in m.group(1):
+            bad.append(f'{case} 러너 {what}: {m.group(1)} 에 {want} 가 없다')
+    mt = _RE_RUN_TIME.search(text)
+    if not mt:
+        bad.append(f'{case} 러너: `--time` 이 없다 — 벽시간 없이 제출하지 않는다')
+    return bad
+
+
+def _strip_comments_keep_sbatch(text: str) -> str:
+    """`#SBATCH` 는 지시자이므로 남기고, 나머지 주석만 지운다."""
+    out = []
+    for ln in text.split('\n'):
+        st = ln.lstrip()
+        out.append(ln if (not st.startswith('#') or st.startswith('#SBATCH')
+                          or st.startswith('#!')) else '')
+    return '\n'.join(out)
+
+
 def load_design(path: str, expect_sha: str | None):
     raw = open(path, 'rb').read()
     sha = hashlib.sha256(raw).hexdigest()
@@ -303,6 +361,7 @@ def main(argv=None):
     ap.add_argument('--box', help='봉인 상자 JSON — **필수** (템플릿 해시·설계 재검증)')
     ap.add_argument('--template-3t', help='bimodal 템플릿 덱 (실물)')
     ap.add_argument('--template-2t', help='mono 템플릿 덱 (실물)')
+    ap.add_argument('--template-run', help='러너 템플릿 (실물 run_*.sh) — **필수**')
     ap.add_argument('--outdir', help='덱을 쓸 디렉터리 (없으면 dry-run: 검사만)')
     ap.add_argument('--selftest', action='store_true')
     a = ap.parse_args(argv)
@@ -311,7 +370,8 @@ def main(argv=None):
     #  ★★ 전부 **필수**다 (R15 §4).  옛 판은 `--expect-sha256` 이 없으면 64 ID·소수
     #     seed·절대 칸을 아예 검사하지 않았고, 첫 seed 를 합성수 `4` 로 바꿔도
     #     "불일치 0건 · rc=0" 을 냈다 — 08-18 의 25건 abort 를 그대로 재현할 수 있었다.
-    for need in ('design', 'expect_sha256', 'box', 'template_3t', 'template_2t'):
+    for need in ('design', 'expect_sha256', 'box', 'template_3t', 'template_2t',
+                 'template_run'):
         if not getattr(a, need):
             ap.error(f'--{need.replace("_", "-")} 가 필요하다 (봉인 없이 덱을 만들지 않는다)')
 
@@ -354,13 +414,19 @@ def main(argv=None):
     #  ⚠⚠ 옛 판은 한 건씩 검사하고 **곧바로 썼다**.  강제 실패 재현에서 "불일치 64건 ·
     #     wrote 64 decks · rc=1" 이 나왔고, 이전 세대 파일도 살아남았다.
     #     ⇒ 메모리에 다 만들고, 전부 통과했을 때만, **빈 디렉터리**에 쓴다.
-    made = {}
+    trun = open(a.template_run, encoding='utf-8').read()
+    crun = _runner_case(trun)
+    print(f'러너 템플릿 {crun}')
+    made, runs = {}, {}
     bad = []
     for r in rows:
         nt = int(r['ntype'])
         text = render(t3 if nt == 3 else t2, r, c3 if nt == 3 else c2)
         bad += roundtrip(r, text)
         made[r['id']] = text
+        rtext = render_runner(trun, r['id'], crun)
+        bad += roundtrip_runner(r['id'], rtext)
+        runs[r['id']] = rtext
     print(f'\n왕복검사 {len(rows)}건 — 불일치 {len(bad)}건')
     for b in bad[:12]:
         print('  ⛔', b)
@@ -381,8 +447,15 @@ def main(argv=None):
         fp = os.path.join(d, f'input_{cid}.liggghts')
         with open(fp, 'w', encoding='utf-8', newline='\n') as fh:
             fh.write(text)
+        rp = os.path.join(d, f'run_{cid}.sh')
+        with open(rp, 'w', encoding='utf-8', newline='\n') as fh:
+            fh.write(runs[cid])
+        os.chmod(rp, 0o755)
         man.append(dict(id=cid, file=os.path.relpath(fp, a.outdir),
-                        sha256=hashlib.sha256(text.encode('utf-8')).hexdigest()))
+                        sha256=hashlib.sha256(text.encode('utf-8')).hexdigest(),
+                        runner=os.path.relpath(rp, a.outdir),
+                        runner_sha256=hashlib.sha256(
+                            runs[cid].encode('utf-8')).hexdigest()))
     mp = os.path.join(a.outdir, 'deck_manifest.json')
     with open(mp, 'w', encoding='utf-8') as fh:
         _json.dump(dict(design_sha256=sha, n=len(man),
@@ -503,6 +576,37 @@ shell mkdir post_lhs00_000
     chk('★②-c 주석 속 변수 정의를 무시한다',
         abs(parse_deck(spoof2)['r_SE_um'] - 0.7) < 1e-9,
         str(parse_deck(spoof2)['r_SE_um']))
+
+    #  ②-d 러너 (실물 형식 축소, R15 §6) ──────────────────────────────────
+    TRUN = """#!/bin/bash
+#SBATCH --job-name=lhs00_000
+#SBATCH --output=logs/output_lhs00_000_%j.out
+#SBATCH --qos=cpu-60
+#SBATCH --partition=cpu
+#SBATCH -n 1
+#SBATCH --time=5-00:00:00
+
+source ~/.bashrc
+conda activate myenv
+cd ~/dem_test/lhs/lhs00_000
+mpirun -np 1 lmp_mpi -in input_lhs00_000.liggghts
+"""
+    chk('②-d 러너 템플릿 케이스명', _runner_case(TRUN) == 'lhs00_000')
+    rr = render_runner(TRUN, 'lhsx_007', 'lhs00_000')
+    chk('②-d 러너 왕복 일치', roundtrip_runner('lhsx_007', rr) == [],
+        str(roundtrip_runner('lhsx_007', rr)[:2]))
+    chk('★②-d 네 자리가 다 바뀐다 (job·log·cd·-in)',
+        'job-name=lhsx_007' in rr and 'output_lhsx_007_' in rr
+        and 'lhs/lhsx_007' in rr and '-in input_lhsx_007.liggghts' in rr)
+    chk('★②-d 옛 케이스명이 한 자도 안 남는다', 'lhs00_000' not in rr)
+    chk('②-d 자원 요청은 안 건드린다',
+        '--time=5-00:00:00' in rr and '--qos=cpu-60' in rr and '-n 1' in rr)
+    #  ★ 덱 이름만 옛것으로 남으면 **다른 케이스를 돌린다** — 잡아야 한다
+    wrong_in = rr.replace('-in input_lhsx_007.liggghts', '-in input_lhsx_006.liggghts')
+    chk('★②-d 러너가 다른 덱을 가리키면 잡는다',
+        roundtrip_runner('lhsx_007', wrong_in) != [])
+    no_time = '\n'.join(l for l in rr.split('\n') if '--time' not in l)
+    chk('★②-d 벽시간이 없으면 잡는다', roundtrip_runner('lhsx_007', no_time) != [])
 
     #  ③ 음성 대조 — 왕복검사가 **정말** 잡는가
     swapped = out3.replace('pts1 0.400000', 'pts1 0.200000').replace(
