@@ -1,27 +1,48 @@
 {
- "schema": "c12_shipping_identity/v1",
+ "schema": "c12_shipping_identity/v2",
  "date": "2026-08-30",
- "bundle": "sdcp_c12_v3",
- "zip": "sdcp_c12_v3.zip",
- "zip_bytes": 309777,
- "zip_sha256": "9476938f1b6500a18bb9e84c2336d5d0ed57c7f126ec4bb58265445d93bbad1b",
- "manifest_sha256": "bae583208868f1e426d41fe9c3882370e4d2889bc78a9075da35bdd003d3f07f",
- "generated_utc": "2026-08-30T12:58:24Z",
- "candidate_set": "c12 (frozen 0ac106d152b96458)",
- "poses_freeze": "db/properties/c12_poses_2026_08_30.json",
- "clean_slab_sha256": "d5f18feb15701f3fc932a1c8f64a09ed48c39ca270d8d8a8f5339658b6c43676",
- "n_jobs": 19,
- "n_vasp_executions": 19,
- "files_hashed": 119,
- "input_preflight_blocked": 0,
- "cell_c1_A": 36.6551,
- "cell_c2_A": 40.6551,
- "min_image_separation_before_A": 15.38,
- "min_image_separation_after_A": 21.773,
- "vacconv_jobs": 3,
- "potcar_pin": null,
- "⚠_potcar_pin": "미고정 — 외주처가 조립기를 한 번 돌려 보낸 source/assembled SHA 를 박고 재발행해야 외부 기준 대조가 된다",
- "⚠_zip_은_도구가_만든_것_하나": "v2 에서 수동 재압축으로 sha 가 둘이 됐다. v3 은 도구 zip 하나뿐이고 verify 보고값과 sha256sum 이 일치한다",
- "선언된_이탈": ["clean slab 3잡 복원 (절대값 + 자기 대조군 fail-open 방지)",
-                 "기체 기준 6잡 (원안 2) — box20/24 상자수렴 · box24_nzmag 자기 시작상태 대조"]
+ "상태": "🟡 구조 확정 · **제출 불가 (POTCAR pin 없음)**",
+ "⛔_이전판_폐기": {
+  "bundle": "sdcp_c12_v3",
+  "zip_sha256": "9476938f1b6500a18bb9e84c2336d5d0ed57c7f126ec4bb58265445d93bbad1b",
+  "판정": "회신 AJ NO-GO. clean slab 3잡·기체 6잡을 포함한 19잡 구성이었다",
+  "무엇이_바뀌었나": "clean slab 제거(대수적으로 상쇄) · 기체 box24 하나씩 · 대안 자세를 primary 풀에서 제외 · 진공 두께 수렴 판정 구현 · 2단 러너"
+ },
+ "현행_구조확정본": {
+  "bundle": "sdcp_c12_dryrun3",
+  "생성": "gabia 2026-08-30T15:02:53Z",
+  "zip_sha256": "fbfa6b3ad9ede83f69d4993b079640b40b1a28a8b43dbe253eaae4af375a0a36",
+  "zip_bytes": 276141,
+  "manifest_sha256": "dec14ea178dcaeee004e348ad107862277974567ca54aa554805ff06fa421547",
+  "candidate_set": "c12 (frozen cc87f6eeae5f9c3a)",
+  "poses_freeze": "db/properties/c12_poses_2026_08_30.json",
+  "clean_slab_sha256": "d5f18feb15701f3fc932a1c8f64a09ed48c39ca270d8d8a8f5339658b6c43676",
+  "n_jobs": 12,
+  "n_vasp_executions": 34,
+  "files_hashed": "122 / 122",
+  "input_preflight_blocked": 0,
+  "cell_c1_A": 36.6551,
+  "cell_c2_A": 40.6551,
+  "프로토콜_대조": "db/properties/sdcp_c12_protocol_2026_08_30.json §3 의 12잡과 **1:1 일치** (vacconv 4 · main net4 4 · main sensitivity pm1 2 · refs/mol 2)",
+  "⛔_제출_불가": "`--allow_no_pin` 으로 만들었다. 이 zip 은 제출본이 아니다 — pin 을 받아 재발행한다"
+ },
+ "🔴_유일한_블로커": {
+  "무엇": "POTCAR pin — 계산을 실제로 수행할 기계 기준의 원본 SHA256",
+  "왜": "회수된 계산의 POTCAR 해시를 대조할 **외부 기준**이 없으면, 잡끼리 서로 같은지만 확인하는 자기일관성 검사가 된다 (회신 AJ)",
+  "필요한_것": {
+   "1_source_sha256": ["Li_sv", "Ni_pv", "O", "S", "C", "H", "F"],
+   "2_vasp_version": "정확한 버전 문자열 (예: vasp.6.4.1)",
+   "3_트리_확인": "승인된 potpaw_PBE.54 인지"
+  },
+  "왜_우리가_못_만드나": "gabia·kgy 어디에도 POTCAR 트리와 VASP 바이너리가 없다 (2026-08-30 실측 — VASP 자체가 외주다)",
+  "⚠_라이선스": "POTCAR 파일을 주고받는 게 아니다. **해시만** 받는다",
+  "받은_뒤": "runs/potcar_pin.json 에 넣고 `--potcar_pin` 으로 재발행 (`--allow_no_pin` 제거) → verify_zip 이 `✅ 제출 가능`"
+ },
+ "게이트_이력_2026_08_30": [
+  "생성기: --refs_minimal 을 --from_basins 없이 쓰면 거부 (없으면 자동탐색으로 떨어져 40잡)",
+  "생성기: --refs_minimal 을 --refs 없이 쓰면 거부 (기체 기준 0개 ⇒ E_G 없이 D 를 주장)",
+  "생성기: --refs_minimal 을 --both_seeds 없이 쓰면 거부 (net4 4잡 누락)",
+  "검사기: potcar_pin 이 없으면 **제출 차단** (그 전엔 `✅ 제출 가능` 을 찍었다)"
+ ],
+ "남은_일": ["pin 수령 → v4 재발행 · 검증", "비용 표기 통일 (README 23 h / contract 56 h / manifest cost_frozen)", "원고 v11 (v10 은 아직 42잡·holdout)"]
 }
