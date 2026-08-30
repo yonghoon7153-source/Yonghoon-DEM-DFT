@@ -2470,6 +2470,50 @@ def selftest_k() -> int:
         "⛔음성 P0-7: 시험 표시 파일이 반송물에 섞이면 막는다")
     chk(potcar_provenance_gates(str(_jp), _meta_ok, "other", _M) == [],
         "[음성] 조립기를 안 실어 보낸 잡에는 계약을 요구하지 않는다")
+
+    # ⛔ 회신 AI §B — 자기일관적 허위. 회신 JSON 안에서 expected_variants 와
+    #    titel_lines 가 서로 맞으면 종전 코드는 통과시켰다. 우리 규격이 기준이어야 한다.
+    _M2 = {"files_sha256": {"j/POTCAR_ASSEMBLE.sh": "x"},
+           "potcar_spec": {"Li": "Li_sv", "Ni": "Ni_pv"}}
+
+    def _pg2(payload):
+        for q in _jp.iterdir():
+            q.unlink()
+        (_jp / "POTCAR_PROVENANCE.json").write_text(json.dumps(payload))
+        return potcar_provenance_gates(str(_jp), _meta_ok, "j", _M2)
+
+    _liar = {**_good, "expected_variants": ["Li", "Ni"],
+             "titel_lines": [" TITEL  = PAW_PBE Li", " TITEL  = PAW_PBE Ni"]}
+    _gl = _pg2(_liar)
+    chk(any("VARIANT_NOT_IN_TITEL" in g for g in _gl)
+        and any("SPEC_DISAGREES" in g for g in _gl),
+        "⛔음성 AI: 회신 안에서 앞뒤가 맞는 **허위**(Li/Ni 로 통일)도 우리 규격과 "
+        "대조해 잡는다")
+    chk(_pg2(_good) == [], "양성: 우리 규격(Li_sv·Ni_pv)과 맞으면 통과")
+    chk(any("SPEC_UNAVAILABLE" in g for g in potcar_provenance_gates(
+            str(_jp), {"species_order": ["Li", "Ni"]}, "j",
+            {"files_sha256": {"j/POTCAR_ASSEMBLE.sh": "x"}})),
+        "⛔음성 AI: 우리 쪽 규격이 없으면 **통과시키지 않는다** "
+        "(회신끼리만 맞춰 보는 것은 검증이 아니다)")
+
+    # ── 묶음 전체 신원 (잡 하나씩으로는 못 잡는 것) ─────────────────────────
+    def _J2(sha, ver):
+        return {"_prov": {"source_sha256": {"Ni": sha}}, "static": {"vasp_version": ver}}
+    _one = {"a": _J2("aa", "6.4.1"), "b": _J2("aa", "6.4.1")}
+    chk(potcar_identity_gates(_one, {})["ok"], "양성: 전 잡이 같은 원본·같은 VASP")
+    chk(any("SOURCE_SPLIT" in g for g in
+            potcar_identity_gates({"a": _J2("aa", "6.4.1"), "b": _J2("bb", "6.4.1")},
+                                  {})["blocking"]),
+        "⛔음성 AI: 잡마다 PAW 원본이 다르면 막는다 (잡 하나씩은 다 자기일관적이다)")
+    chk(any("VASP_VERSION_SPLIT" in g for g in
+            potcar_identity_gates({"a": _J2("aa", "6.4.1"), "b": _J2("aa", "5.4.4")},
+                                  {})["blocking"]),
+        "⛔음성 AI: VASP 세대가 갈리면 막는다")
+    chk(any("PIN_MISMATCH" in g for g in potcar_identity_gates(
+            _one, {"potcar_pin": {"source_sha256": {"Ni": "zz"}}})["blocking"]),
+        "⛔음성 AI: 사전 고정값과 다르면 막는다 (외부 기준 대조)")
+    chk("⚠" in potcar_identity_gates(_one, {}),
+        "[음성] 사전 고정이 없으면 '잡 사이 일치만 봤다' 를 결과에 적는다")
     # ⛔ 음성 C5-a — 홀드아웃이 더 낮으면 **SELECTOR_FAIL**, 값을 안 만든다
     _A5b = dict(_A5, sdcp_neutral=([-1.20, -1.10, -1.05, -1.00],
                                    [-1.40] + [-0.9] * 7))   # 홀드아웃이 200 meV 더 낮다
@@ -3227,11 +3271,75 @@ def potcar_provenance_gates(job_dir, meta, rel=None, man=None):
     if want_sp and got_sp and want_sp != got_sp:
         g.append("POTCAR_SPECIES_ORDER_MISMATCH(잡 %s vs provenance %s — 종 순서가 "
                  "다르면 다른 계를 계산한 것이다)" % (want_sp, got_sp))
+    # ⛔ 회신 AI §B — 종전엔 `expected_variants` 와 `titel_lines` 를 **둘 다 회신 JSON**
+    #    에서 읽어 대조했다. 자기일관적인 허위 기록이 그대로 통과한다.
+    #    대조 기준은 **우리가 만든** manifest 의 potcar_spec 이어야 한다.
+    spec = (man or {}).get("potcar_spec") or (meta or {}).get("potcar_spec") or {}
+    ours = [spec.get(e, e) for e in want_sp] if (spec and want_sp) else []
     tit = d.get("titel_lines") or []
-    for v in (d.get("expected_variants") or []):
-        if not any(v in str(x) for x in tit):
-            g.append("POTCAR_VARIANT_NOT_IN_TITEL(%s 가 TITEL 줄에 없다)" % v)
+    if ours:
+        for v in ours:
+            if not any(v in str(x) for x in tit):
+                g.append("POTCAR_VARIANT_NOT_IN_TITEL(우리 규격 %s 가 회신 TITEL 에 "
+                         "없다)" % v)
+        if list(d.get("expected_variants") or []) != ours:
+            g.append("POTCAR_SPEC_DISAGREES(회신 expected_variants %s ≠ 우리 규격 %s)"
+                     % (d.get("expected_variants"), ours))
+    else:
+        g.append("POTCAR_SPEC_UNAVAILABLE(우리 쪽 규격이 없어 회신을 대조할 기준이 "
+                 "없다 — 회신끼리만 맞춰 보는 것은 검증이 아니다)")
     return g
+
+
+def potcar_identity_gates(jobs, man):
+    """묶음 **전체**에서 POTCAR 원본과 VASP 가 하나인가 (회신 AI §B).
+
+    잡 하나씩 봐서는 못 잡는 것을 본다: 잡마다 다른 PAW 배포판이나 다른 VASP 로
+    돌았으면, 각 잡은 자기일관적이어도 **에너지를 뺄 수 없다**.
+
+    `man["potcar_pin"]` 이 있으면 그것과도 대조한다 — 그것이 유일한 **외부 기준**이다.
+    없으면 잡 사이 일치만 본다(자기일관성). 그 한계를 결과에 적는다.
+    """
+    res = {"schema": "potcar_identity/v1", "blocking": [], "n_with_prov": 0,
+           "pin": (man or {}).get("potcar_pin"), "observed": {}}
+    src, ver = {}, {}
+    for jn, jr in sorted((jobs or {}).items()):
+        pv = (jr.get("geom") or {}).get("potcar_provenance") or jr.get("_prov")
+        if not pv:
+            continue
+        res["n_with_prov"] += 1
+        for e, s in (pv.get("source_sha256") or {}).items():
+            src.setdefault(e, {}).setdefault(str(s), []).append(jn)
+        v = ((jr.get("static") or {}) or {}).get("vasp_version")
+        if v:
+            ver.setdefault(str(v), []).append(jn)
+    for e, d in src.items():
+        if len(d) > 1:
+            res["blocking"].append(
+                "POTCAR_SOURCE_SPLIT(%s 의 원본 sha 가 묶음 안에서 %d 종 — 다른 PAW "
+                "배포판의 에너지를 뺄 수 없다)" % (e, len(d)))
+    if len(ver) > 1:
+        res["blocking"].append(
+            "VASP_VERSION_SPLIT(묶음 안에서 %s — 다른 코드 세대의 에너지를 뺄 수 없다)"
+            % sorted(ver))
+    res["observed"] = {"source_sha256": {e: sorted(d) for e, d in src.items()},
+                       "vasp_version": sorted(ver)}
+    pin = res["pin"] or {}
+    if pin:
+        for e, s in (pin.get("source_sha256") or {}).items():
+            got = sorted(src.get(e, {}))
+            if got and got != [str(s)]:
+                res["blocking"].append(
+                    "POTCAR_PIN_MISMATCH(%s: 사전 고정 %s ≠ 회신 %s)" % (e, s, got))
+        if pin.get("vasp_version") and sorted(ver) not in ([], [str(pin["vasp_version"])]):
+            res["blocking"].append(
+                "VASP_PIN_MISMATCH(사전 고정 %s ≠ 회신 %s)"
+                % (pin["vasp_version"], sorted(ver)))
+    else:
+        res["⚠"] = ("사전 고정값(potcar_pin)이 없다 — 잡 사이 **일치**만 확인했다. "
+                    "외부 기준과의 대조가 아니다")
+    res["ok"] = not res["blocking"]
+    return res
 
 def merge_compat(bundles):
     """두 묶음을 합쳐도 되는가 — **해시 결속 + 프로토콜 동일성** (회신 AF P0-3).
@@ -3946,6 +4054,7 @@ def _closure_estimand(man, results, E, emol, jobs, merge_info=None):
     try:
         out["closure_C1"] = closure_C1(man, jobs, E, emol, frags)
         out["closure_C3"] = closure_C3(man, jobs, E, frags)
+        out["potcar_identity"] = potcar_identity_gates(jobs, man)
         out["h1_tolerance"] = h1_tolerance(out["closure_C1"])
         out["closure_C5"] = closure_C5(man, jobs, E, emol, frags, merge_info,
                                        out["h1_tolerance"])
@@ -4112,6 +4221,12 @@ def main():
                     f"KMESH_NOT_DENSER({y} NKPTS {ocs[y]['nkpts']} ≤ {x} {ocs[x]['nkpts']} "
                     f"인데 격자는 {km[x]}→{km[y]} — 다른 상의 산출을 복사했나)")
         rec["gates"] += potcar_provenance_gates(jd, meta, rel, _man_i)
+        _ppf = os.path.join(jd, "POTCAR_PROVENANCE.json")
+        if os.path.isfile(_ppf):
+            try:
+                rec["_prov"] = json.load(open(_ppf))
+            except Exception:                                # noqa: BLE001
+                rec["_prov"] = None
         g2, info = geometry_audit(jd, meta)
         rec["gates"] += g2
         rec["geom"] = {k: v for k, v in info.items() if not k.startswith("_")}
@@ -6412,6 +6527,25 @@ def build_bundle(a, ledger: Optional[Dict[str, Any]] = None) -> Path:
     # ── 주기영상 진공 (회신 AF P0-1) — **비용·해시 전에** 셀을 맞춘다 ────────────
     #   v13 은 24 pm1 자세 중 9개가 15 Å 미만(최소 8.56 Å)인데 문서가 ">15 Å" 라고
     #   적었다. 생성기에 진공을 보는 코드가 없어서다. 이제 맞추고, 못 맞추면 막는다.
+    # ── POTCAR·VASP 사전 고정 (회신 AI §B) ─────────────────────────────────
+    #   회신값끼리만 맞춰 보는 것은 검증이 아니다. **외부 기준**이 있어야 한다.
+    #   생성 시점엔 우리가 POTCAR 원본을 갖고 있지 않으므로 자리를 비워 두고,
+    #   외주처가 조립기를 한 번 돌려 보낸 SHA 를 여기 박은 뒤 재발행한다.
+    #   비어 있으면 분석기가 '잡 사이 일치만 확인했다' 를 결과에 적는다 (fail-open 아님 —
+    #   불일치는 여전히 막고, 한계를 명시한다).
+    _pin = getattr(a, "potcar_pin", None)
+    if _pin and os.path.isfile(_pin):
+        man["potcar_pin"] = json.loads(Path(_pin).read_text())
+        man["potcar_pin"]["source_file"] = _pin
+        man["potcar_pin"]["sha256"] = hashlib.sha256(
+            Path(_pin).read_bytes()).hexdigest()
+    else:
+        man["potcar_pin"] = None
+        man["potcar_pin_note"] = (
+            "⚠ 미고정. `--potcar_pin <json>` 으로 사전 승인된 "
+            "{source_sha256:{원소:sha}, vasp_version:'...'} 를 박아야 외부 기준 대조가 "
+            "된다. 없으면 분석기는 잡 사이 일치만 확인한다")
+
     _minvac = float(getattr(a, "min_vacuum", MIN_VACUUM_A_DEFAULT) or 0.0)
     if _minvac > 0:
         man["vacuum"] = fit_bundle_vacuum(out, man["planned"], _minvac,
@@ -9266,6 +9400,10 @@ def main():
     ap.add_argument("--cores", type=int, default=48,
                     help="잡당 코어 수 — MANIFEST·SUBMIT_CONTRACT 에 기록된다 "
                          "(비용 모형 기준선과 같아야 추정이 맞는다)")
+    ap.add_argument("--potcar_pin", default=None,
+                    help="사전 승인된 POTCAR/VASP 신원 JSON 경로 "
+                         "({source_sha256:{원소:sha}, vasp_version:'...'}). "
+                         "이것이 **외부 기준**이다 — 없으면 회신끼리의 일치만 본다")
     ap.add_argument("--cell_c", type=float, default=None,
                     help="슬랩 잡의 셀 높이 c [Å] 를 이 값으로 **못 박는다**. "
                          "두 묶음(calibration·holdout)이 같은 셀을 쓰게 하는 유일한 방법이다 "
