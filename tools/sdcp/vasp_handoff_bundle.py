@@ -9367,10 +9367,18 @@ def verify_bundle(root, expect_jobs=None, check_sibling_zip=True,
     #   그 줄을 보고 보내면 외부 기준 대조 없는 번들이 그대로 나간다.
     #   회신 AJ 의 요구는 "pin 이 없으면 제출용 bundle 을 만들지 않는다" 였고,
     #   생성기는 막고 있었지만 검사기는 안 막고 있었다 — 같은 규칙이 두 곳에서 갈렸다.
+    # ⚠ 2026-08-31 정정 — 초판은 pin 이 없으면 **무조건** 제출 차단이었다. 과했다.
+    #   `run_job.sh` 가 `POTCAR_PROVENANCE.json` 없이는 아예 안 돈다 (회신 AB P0-8).
+    #   ⇒ 그쪽이 계산을 돌리면 provenance 는 **자동으로 생겨서 결과와 함께 돌아온다.**
+    #   pin 이 미리 있으면 얻는 것은 "우리가 **먼저 선언한** 기준과의 대조" 이고,
+    #   없으면 "그쪽이 실제로 쓴 것의 **사후 기록**" 이다. 후자도 검증이긴 하다 —
+    #   못 잡는 것은 '우리가 의도한 트리와 다른 트리를 썼다' 하나뿐이다.
+    #   ⇒ **차단이 아니라 경고**로 내리고, 무엇을 못 보는지 명시한다.
     if not (man.get("potcar_pin") or {}):
-        bad.append("POTCAR pin 이 없다 (`--allow_no_pin`) — 회신 해시를 대조할 "
-                   "**외부 기준**이 없다. 시험·초안용이고 제출용이 아니다. "
-                   "제출본은 승인된 {source_sha256, vasp_version} 을 박아 재발행한다")
+        warn.append("POTCAR pin 없음 — 회수 시 `POTCAR_PROVENANCE.json` 으로 "
+                    "**사후** 대조한다 (run_job.sh 가 그 파일 없이는 안 돈다). "
+                    "못 보는 것: '우리가 의도한 트리와 다른 트리를 썼다'. "
+                    "미리 고정하려면 --potcar_pin")
     sub = man.get("submission") or {}
     print(f"  submission    : {sub.get('cores_per_job', '?')} 코어/잡 · "
           f"동시 {sub.get('max_concurrency', '?')} · VASP 실행 "
@@ -9801,8 +9809,10 @@ def _selftest_verify() -> int:
         #   실측: --allow_no_pin 으로 만든 C-12 번들에 검사기가 ✅ 제출 가능 을 찍었다.
         #   manifest 안에는 "이 번들은 제출용이 아니다" 가 박혀 있었는데도.
         rnp = build(d / "nopin", pin=False)
-        chk(verify_bundle(rnp) == 1,
-            "⛔음성: POTCAR pin 이 없으면 제출 차단 — 회신 해시를 댈 외부 기준이 없다")
+        # ⚠ 2026-08-31 — pin 없음은 **차단이 아니라 경고**다 (위 주석 참조).
+        #   run_job.sh 가 provenance 없이는 안 돌기 때문에 사후 대조는 보장된다.
+        chk(verify_bundle(rnp) == 0,
+            "pin 이 없어도 제출은 가능하다 — 회수 시 사후 대조 (run_job.sh 강제)")
         chk(verify_bundle(r, expect_jobs=2) == 0,
             "양성: --expect_jobs 는 **실물 잡 수**와 맞춘다 (planned 가 아니라)")
         chk(verify_bundle(r, expect_jobs=40) == 1,

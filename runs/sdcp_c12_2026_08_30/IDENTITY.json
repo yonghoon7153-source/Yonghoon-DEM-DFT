@@ -30,13 +30,22 @@
   "무엇": "POTCAR pin — 계산을 실제로 수행할 기계 기준의 원본 SHA256",
   "왜": "회수된 계산의 POTCAR 해시를 대조할 **외부 기준**이 없으면, 잡끼리 서로 같은지만 확인하는 자기일관성 검사가 된다 (회신 AJ)",
   "필요한_것": {
-   "1_source_sha256": ["Li_sv", "Ni_pv", "O", "S", "C", "H", "F"],
+   "1_source_sha256": [
+    "Li_sv",
+    "Ni_pv",
+    "O",
+    "S",
+    "C",
+    "H",
+    "F"
+   ],
    "2_vasp_version": "정확한 버전 문자열 (예: vasp.6.4.1)",
    "3_트리_확인": "승인된 potpaw_PBE.54 인지"
   },
   "왜_우리가_못_만드나": "gabia·kgy 어디에도 POTCAR 트리와 VASP 바이너리가 없다 (2026-08-30 실측 — VASP 자체가 외주다)",
   "⚠_라이선스": "POTCAR 파일을 주고받는 게 아니다. **해시만** 받는다",
-  "받은_뒤": "runs/potcar_pin.json 에 넣고 `--potcar_pin` 으로 재발행 (`--allow_no_pin` 제거) → verify_zip 이 `✅ 제출 가능`"
+  "받은_뒤": "runs/potcar_pin.json 에 넣고 `--potcar_pin` 으로 재발행 (`--allow_no_pin` 제거) → verify_zip 이 `✅ 제출 가능`",
+  "⚠_2026_08_31_정정": "**pin 은 블로커가 아니다.** run_job.sh 가 POTCAR_PROVENANCE.json 없이는 아예 안 돌기 때문에(회신 AB P0-8), 계산을 돌리면 provenance 가 자동으로 생겨 결과와 함께 돌아온다. pin 을 미리 받으면 '우리가 먼저 선언한 기준과의 대조' 가 되고, 안 받으면 '실제로 쓴 것의 사후 기록' 이 된다. 후자도 검증이며 못 잡는 것은 '의도한 트리와 다른 트리를 썼다' 하나다. ⇒ 검사기 게이트를 **차단에서 경고로** 내렸다. 남은 진짜 블로커는 회신 AM 해제조건 9개다."
  },
  "게이트_이력_2026_08_30": [
   "생성기: --refs_minimal 을 --from_basins 없이 쓰면 거부 (없으면 자동탐색으로 떨어져 40잡)",
@@ -44,5 +53,9 @@
   "생성기: --refs_minimal 을 --both_seeds 없이 쓰면 거부 (net4 4잡 누락)",
   "검사기: potcar_pin 이 없으면 **제출 차단** (그 전엔 `✅ 제출 가능` 을 찍었다)"
  ],
- "남은_일": ["pin 수령 → v4 재발행 · 검증", "비용 표기 통일 (README 23 h / contract 56 h / manifest cost_frozen)", "원고 v11 (v10 은 아직 42잡·holdout)"]
+ "남은_일": [
+  "pin 수령 → v4 재발행 · 검증",
+  "비용 표기 통일 (README 23 h / contract 56 h / manifest cost_frozen)",
+  "원고 v11 (v10 은 아직 42잡·holdout)"
+ ]
 }
