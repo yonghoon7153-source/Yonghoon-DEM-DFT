@@ -44,6 +44,11 @@ _p.add_argument("--only", default="",
                 help="disorder|sdcp|committee|elf|bader|prereq|orca 중 하나만")
 _p.add_argument("--selftest", action="store_true",
                 help="타입 계약·진리값 회귀시험 (화면을 죽인 적 있는 것만)")
+# ⚠ parse_known_args 는 -h 를 **삼킨다** — 도움말이 안 뜨고 본문이 끝까지 돌다가
+#   죽는다 (2026-08-30 실측: --help 가 line 976 AttributeError). 먼저 가로챈다.
+if any(a in ("-h", "--help") for a in sys.argv[1:]):
+    _p.print_help()
+    sys.exit(0)
 ARGS, _ = _p.parse_known_args()
 FULL, ONLY = ARGS.full, ARGS.only.lower()
 
