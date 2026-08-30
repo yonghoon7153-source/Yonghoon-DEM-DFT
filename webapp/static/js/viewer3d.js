@@ -2946,7 +2946,9 @@ function applyViewMode(state, mode) {
     const carbonPts = ((state.data && state.data.additive_points) || []).filter(p => p[3] === 2 || p[3] === 3 || p[3] === 5 || p[3] === 6);
     const BAND = 0.3;
     // 서브샘플 가중 보정 — additive_points는 phase별 서브샘플이라 raw count는 payload마다 밀도가
-    // 다름.  metrics.additive_counts(전체 seeded)로 w=total/shown을 곱해 "환산 접점수"를 만들면
+    // 다름.  metrics.additive_counts(전체 seeded)로 w=total/shown을 곱해 부표본을 보정한다.
+    // ⚠ 이 양을 "환산 접점수" 라고 부르면 안 된다 (철회, 원장 §18) — d ≥ r 하한이 없고
+    //   개체가 아니라 점을 세므로 접점 수가 아니다.  이름 = **AM 근접 탄소 점밀도**.
     // SBE↔DBE 케이스 간 수치·색 비교가 유효해짐 (uniform random subsample → unbiased estimate).
     const _PHN = { 2: 'VGCF', 3: 'SuperP', 5: 'SDCP', 6: 'SWCNT' };
     const _shown = { 2: 0, 3: 0, 5: 0, 6: 0 };   // ★6=SWCNT (σ_e 100 S/cm 도체) — 2026-07-27
@@ -2966,7 +2968,7 @@ function applyViewMode(state, mode) {
         const k = keyOf(p[0], p[1], p[2]);
         let a = hash.get(k); if (!a) { a = []; hash.set(k, a); } a.push(p);
       });
-      touch = new Map();                                     // particle-object → 환산 접점수
+      touch = new Map();                          // particle-object → AM 근접 탄소 점밀도 (⚠접점 아님)
       contactsOf = new Map();                                // particle-object → 닿은 카본 점들 (패치 overlay)
       ['AM_P', 'AM_S'].forEach(t => {
         const m = state.meshes[t]; if (!m) return;
@@ -3122,11 +3124,12 @@ function applyViewMode(state, mode) {
     const jstops = [0, 0.25, 0.5, 0.75, 1].map(v => '#' + jetColor(v).toString(16).padStart(6, '0'));
     const wireBar = touch
       ? `<div style="margin:5px 0 2px 0;height:10px;border-radius:3px;background:linear-gradient(90deg,${jstops.join(',')})"></div>
-         <div style="display:flex;justify-content:space-between;font-size:10px;color:#9ca3af"><span>약함 ${Math.round(lo5)}</span><span>환산 접점/AM</span><span>강함 ${Math.round(hi95)}</span></div>
-         <div style="margin-top:2px;color:#9ca3af;font-size:10.5px">중앙값 <b>${Math.round(medTouch).toLocaleString()}</b> 환산접점/AM · 도메인 캡=접점 28° 클러스터(패치×1)+✨glow 깊이누적 · ⚖ 팝업과 동일 문법(거긴 공동 스케일) · 감마톤=전류밀도와 동일</div>`
+         <div style="display:flex;justify-content:space-between;font-size:10px;color:#9ca3af"><span>약함 ${Math.round(lo5)}</span><span>AM 근접 탄소 점밀도 (임의단위)</span><span>강함 ${Math.round(hi95)}</span></div>
+         <div style="margin-top:2px;color:#f59e0b;font-size:10.5px">⚠ <b>접점 수가 아니다</b> — AM 중심에서 r+0.3&nbsp;µm 안의 <b>탄소 점</b>을 세고 부표본 가중을 곱한 값이다.  d&nbsp;≥&nbsp;r 하한이 없어 내부 점도 들어가고, 개체가 아니라 점을 세므로 점 목록을 복제하면 값이 2배가 된다.  <b>이 숫자를 인용하지 말 것</b> — 정량값은 <code>cbd_contacts_per_am.py</code> (전수·개체·외피).</div>
+         <div style="margin-top:2px;color:#9ca3af;font-size:10.5px">중앙값 <b>${Math.round(medTouch).toLocaleString()}</b> (임의단위) · 도메인 캡=28° 클러스터(패치×1)+✨glow 깊이누적 · ⚖ 팝업과 동일 문법(거긴 공동 스케일) · 감마톤=전류밀도와 동일</div>`
       : '';
     state.cbarSpec = touch ? { map: 'jet', gamma: 1.6,
-      title: 'Carbon wiring \u2014 weighted contacts per AM (p5\u2013p95)',
+      title: 'Carbon wiring \u2014 carbon-point density near AM, arb. units (p5\u2013p95) \u2014 NOT a contact count',
       left: '\uc57d\ud568 ' + Math.round(lo5), right: '\uac15\ud568 ' + Math.round(hi95) } : null;
     setLegend(state,
       `<b>전기 연결성 — 탄소 배선 강도</b>
@@ -5403,14 +5406,14 @@ function _wiringCounts(particles, addPts, addCounts, boxLx, boxLy) {
   const hits = new Array((particles || []).length);         // per-AM touching carbon pts (패치 렌더용)
   if (!carbon.length || !counts.length) return { counts, median: 0, hits };
   // 가중치는 반드시 ghost 복제 BEFORE 계산 — shown에 ghost가 들어가면 w=total/shown이 희석돼
-  // 환산 접점이 축소됨 (버그였음: 중앙값 348→290 하락의 원인).
+  // 점밀도가 축소됨 (버그였음: 중앙값 348→290 하락의 원인).
   const PHN = { 2: 'VGCF', 3: 'SuperP', 5: 'SDCP', 6: 'SWCNT' };
   const shown = { 2: 0, 3: 0, 5: 0, 6: 0 };   // ★6=SWCNT 포함 (미포함 시 shown[6] undefined → NaN)
   carbon.forEach(p => { shown[p[3]]++; });
   const w = {};
   [2, 3, 5, 6].forEach(ph => {
     const tot = Number((addCounts || {})[PHN[ph]] || 0);
-    w[ph] = (tot > 0 && shown[ph] > 0) ? tot / shown[ph] : 1;   // 서브샘플 가중 → 환산 접점
+    w[ph] = (tot > 0 && shown[ph] > 0) ? tot / shown[ph] : 1;   // 서브샘플 가중 (⚠접점 아님)
   });
   // PERIODIC (x,y) — RVE 경계 너머로 닿는 접점을 ghost 복제로 포함 (경계 입자의 배선이
   // 잘려 보이던 문제).  margin = max(r)+band 안에 드는 이미지 점만 복제 (z는 비주기).
@@ -6649,7 +6652,7 @@ export async function showLabCompareModal(pidA, pidB, nameA, nameB) {
     S.scene.add(grp); S.grp = grp;
   }
   function buildWiringDelta(S, payload, d, R, thr) {
-    // 입자별 Δ(A−B 환산접점) coolwarm 맵 — thr>0이면 |Δ|<thr 입자는 고스트(핫스팟 뷰).
+    // 입자별 Δ(A−B 탄소 점밀도, ⚠접점 아님) coolwarm 맵 — thr>0이면 |Δ|<thr 입자는 고스트.
     const parts = payload.particles || [];
     const grp = new THREE.Group();
     const mesh = createInstancedSpheres(parts, 16, 0xffffff, 1.0, false);
@@ -6709,11 +6712,17 @@ export async function showLabCompareModal(pidA, pidB, nameA, nameB) {
       const hi = joint.length ? Math.max(joint[Math.floor(0.95 * (joint.length - 1))], lo + 1) : 1;
       buildWiring(SA, A, wireA, lo, hi, patchF, glowOn);
       buildWiring(SB, B, wireB, lo, hi, patchF, glowOn);
-      const leg = (w) => `중앙값 <b>${Math.round(w.median)}</b> 환산접점/AM · 공동 스케일 ${Math.round(lo)}–${Math.round(hi)} (색 비교 유효 ★, 접촉 도메인=클러스터 융합 캡, periodic 이미지 접점 포함)`
-        + barHtml([`약함 ${Math.round(lo)}`, '환산 접점/AM', `강함 ${Math.round(hi)}`]);
+      const leg = (w) => `중앙값 <b>${Math.round(w.median)}</b> (임의단위) · 공동 스케일 ${Math.round(lo)}–${Math.round(hi)} · <b>패턴 비교용</b> (도메인=클러스터 융합 캡, periodic 이미지 포함)`
+        + `<div style="margin-top:2px;color:#f59e0b;font-size:10px">⚠ <b>접점 수가 아니다</b> — r+0.3&nbsp;µm 안의 탄소 <b>점</b> 개수 × 부표본 가중.  두 패널 차이에는 “탄소가 더 많다”와 “다르게 표본됐다”가 섞인다 (SDCP 는 DBE 에만 있다).  <b>숫자 인용 금지</b> — 정량은 <code>cbd_contacts_per_am.py</code>.</div>`
+        + barHtml([`약함 ${Math.round(lo)}`, 'AM 근접 탄소 점밀도 (임의단위)', `강함 ${Math.round(hi)}`]);
       $('cmp-leg-a').innerHTML = leg(wireA);
       $('cmp-leg-b').innerHTML = leg(wireB);
-      cbarSpec = { map: 'jet', gamma: 1.6, title: 'Carbon wiring — weighted contacts per AM (joint scale)',
+      //  ★ 2026-08-31 — 이 컬러바는 **논문 그림에 그대로 들어간다** (PNG export).  옛 제목
+      //    'weighted contacts per AM' 은 철회된 해석이라(§18) 그림 안에서 살아남으면 안 된다:
+      //    평문·pptx 스윕은 PNG 속 글자를 못 읽으므로 여기가 유일한 방어선이다.
+      cbarSpec = { map: 'jet', gamma: 1.6,
+                   title: 'Carbon wiring — carbon-point density near AM, arb. units (joint scale) — NOT a contact count',
+                   sub: 'weighted point count within r + 0.3 µm of the AM centre; pattern comparison only',
                    left: '약함 ' + Math.round(lo), right: '강함 ' + Math.round(hi) };
     } else if (mode === 'wiring_delta') {
       // Δ 배선 — 같은 AM 골격(같은 케이스 파생) 두 payload의 입자별 접점 차이 (user: "차이 자체를 색칠")
@@ -6740,7 +6749,7 @@ export async function showLabCompareModal(pidA, pidB, nameA, nameB) {
         const nUp = fin.filter(v => v > 0).length;
         buildWiringDelta(SA, A, d, R, 0);
         buildWiringDelta(SB, A, d, R, thr);                  // 같은 골격 → A 좌표로 렌더
-        $('cmp-leg-a').innerHTML = 'Δ = A−B 환산접점 전체맵 · 평균 ' + (mean >= 0 ? '+' : '') + mean.toFixed(1)
+        $('cmp-leg-a').innerHTML = 'Δ = A−B 탄소 점밀도(임의단위) 전체맵 ⚠접점 아님 · 평균 ' + (mean >= 0 ? '+' : '') + mean.toFixed(1)
           + ' · Δ>0 입자 ' + Math.round(100 * nUp / Math.max(fin.length, 1)) + '% · 범위 ±' + Math.round(R)
           + ' (빨강 = A쪽 배선 보강)';
         $('cmp-leg-b').innerHTML = '|Δ| 상위 20% 핫스팟만 (임계 ' + Math.round(thr) + ') — 보강/약화가 어디 몰렸나';
