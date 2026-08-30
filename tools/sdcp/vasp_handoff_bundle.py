@@ -6189,6 +6189,28 @@ def guard_refs_minimal(a):
             "   범위가 붙는다.** 자세 동결을 같이 준다:\n"
             "     --from_basins db/properties/c12_poses_2026_08_30.json")
 
+    # ⛔⛔ 2026-08-30 실측 두 번째 — `--refs_minimal` 은 **기체 기준을 켜지 않는다.**
+    #   이름과 달리 "기준을 낸다면 box24 하나로 좁힌다" 라서, `--refs` 없이 주면
+    #   기체 기준이 **0개**로 나온다. 그런데 C-12 의 추정량은
+    #     D = [E_C^SDCP − E_G^SDCP] − [E_C^PTFE − E_G^PTFE]
+    #   라 `E_G` 없이는 **정의 자체가 안 된다.** 실측: 12잡이어야 할 번들이 6잡으로 나왔고
+    #   (기체 2 + net4 4 누락) claim_scope 는 흡착에너지 차 문구를 그대로 달고 있었다.
+    if getattr(a, "refs_minimal", False) and not getattr(a, "refs", False):
+        sys.exit(
+            "⛔ --refs_minimal 은 --refs 없이 쓸 수 없다 (2026-08-30).\n"
+            "   --refs_minimal 은 기준을 **켜는** 플래그가 아니라 **좁히는** 플래그다.\n"
+            "   그것만 주면 기체 기준이 0개로 나오고, E_G 가 없으면\n"
+            "   D = [E_C−E_G]^SDCP − [E_C−E_G]^PTFE 가 **정의되지 않는다.**\n"
+            "     --refs --refs_minimal 로 같이 준다.")
+
+    # ⛔ 같은 실측 — 자기 대조군(net4 가지)이 빠지면 C-12 의 자성 위상 검사가 없어진다.
+    if getattr(a, "refs_minimal", False) and not getattr(a, "both_seeds", False):
+        sys.exit(
+            "⛔ --refs_minimal 은 --both_seeds 없이 쓸 수 없다 (2026-08-30).\n"
+            "   없으면 SEED_MAIN(pm1) 가지만 나와 **net4 4잡이 통째로 빠진다**\n"
+            "   (실측: 12잡이어야 할 번들이 6잡). 자성 위상 대조가 사라진다.\n"
+            "     --both_seeds 를 같이 준다.")
+
 
 def build_bundle(a, ledger: Optional[Dict[str, Any]] = None) -> Path:
     if ledger is None:
@@ -9764,8 +9786,9 @@ def _selftest_verify() -> int:
         # ⛔ 2026-08-30 — `--refs_minimal` 을 자세 동결 없이 쓰면 **거부**한다.
         #   실측 사고: 조각 2개로 좁혔는데 잡 40개가 나왔고(C-12 는 12), 그런데도
         #   범위 문구는 C-12 그대로였다 — 후보집합과 범위 주장이 갈리는 fail-open.
-        def _grc(minimal, freeze):
-            ns = type("NS", (), {"refs_minimal": minimal, "from_basins": freeze})()
+        def _grc(minimal, freeze, refs=True, both=True):
+            ns = type("NS", (), {"refs_minimal": minimal, "from_basins": freeze,
+                                 "refs": refs, "both_seeds": both})()
             try:
                 guard_refs_minimal(ns)
             except SystemExit as e:
@@ -9774,9 +9797,17 @@ def _selftest_verify() -> int:
 
         chk("--from_basins" in (_grc(True, None) or ""),
             "⛔음성: --refs_minimal 을 --from_basins 없이 주면 생성 자체를 거부한다")
-        chk(_grc(True, "x.json") is None, "[양성] 자세 동결을 같이 주면 통과한다")
-        chk(_grc(False, None) is None,
-            "[양성] --refs_minimal 이 아니면 이 검사는 걸리지 않는다")
+        chk(_grc(True, "x.json") is None, "[양성] 세 플래그가 다 있으면 통과한다")
+        chk(_grc(False, None, refs=False, both=False) is None,
+            "[양성] --refs_minimal 이 아니면 이 검사들은 걸리지 않는다")
+        # ⛔ 2026-08-30 실측 — 12잡이어야 할 번들이 **6잡**으로 나왔다.
+        #   기체 기준 2 + net4 4 가 빠졌는데 claim_scope 는 흡착에너지 차 문구 그대로였다.
+        chk("--refs" in (_grc(True, "x.json", refs=False) or ""),
+            "⛔음성: --refs 없이는 거부 — 기체 기준이 0개면 E_G 가 없어 D 가 "
+            "**정의되지 않는다** (--refs_minimal 은 켜는 게 아니라 좁히는 플래그다)")
+        chk("both_seeds" in (_grc(True, "x.json", both=False) or ""),
+            "⛔음성: --both_seeds 없이는 거부 — net4 가지 4잡이 통째로 빠져 "
+            "자성 위상 대조가 사라진다")
 
         r = build(d / "n11b")
         _m = json.loads((r / "MANIFEST.json").read_text())
