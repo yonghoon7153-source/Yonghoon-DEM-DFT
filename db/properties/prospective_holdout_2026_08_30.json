@@ -1,0 +1,563 @@
+{
+ "schema": "prospective_holdout/v1",
+ "date": "2026-08-30",
+ "parent": {
+  "path": "db/properties/prospective_basins_2026_08_29.json",
+  "sha256": "20fdde06760b36e15a9bd544925c71e4b1a52f430348ff64a2224f1bf61f6d6e",
+  "declared_freeze": "94675e66e02c855aa16dcc4a0fd8d11c966bff909287c96fbd81b990d923735b"
+ },
+ "estimand_card": "kb/questions/sdcp_stageA_holdout_selector_2026_08_30.md",
+ "⚠": "이 문서는 **DFT 를 보기 전에** 만든다. 홀드아웃을 보고 primary 를 고치면 그것은 더 이상 홀드아웃이 아니다 — 홀드아웃이 이기면 primary 를 고치는 것이 아니라 **재개 조건이 발동**한다.",
+ "선정_규칙": "calibration·sealed_audit 제외 → E_pose 오름차순 4등분 → 사분위마다 표면 anchor 가 서로 다른 2개 (결정론, 난수 없음)",
+ "fragments": {
+  "ptfe_c10": {
+   "holdout": [
+    {
+     "basin_id": "b09",
+     "rep_label": "ptfe_c10__Ni_top__fib06__r180",
+     "E_pose_eV": -0.219794,
+     "fingerprint": [
+      [
+       "F",
+       "Li",
+       2
+      ],
+      [
+       "F",
+       "Ni",
+       1
+      ],
+      [
+       "F",
+       "O",
+       3
+      ]
+     ],
+     "anchor": [
+      "F",
+      "Ni",
+      2.542
+     ],
+     "height_A": 4.306,
+     "tilt_deg": 86.0,
+     "n_members": 1,
+     "role": "holdout",
+     "quartile": "Q1",
+     "anchor_surface": "Ni",
+     "why": "UMA 사분위 Q1 × 표면 anchor 층화 (결정론)"
+    },
+    {
+     "basin_id": "b02",
+     "rep_label": "ptfe_c10__NiO_bridge__fib05__r090",
+     "E_pose_eV": -0.253866,
+     "fingerprint": [
+      [
+       "F",
+       "Li",
+       2
+      ],
+      [
+       "F",
+       "Ni",
+       2
+      ],
+      [
+       "F",
+       "O",
+       2
+      ]
+     ],
+     "anchor": [
+      "F",
+      "Li",
+      2.589
+     ],
+     "height_A": 4.214,
+     "tilt_deg": 86.0,
+     "n_members": 1,
+     "role": "holdout",
+     "quartile": "Q1",
+     "anchor_surface": "Li",
+     "why": "UMA 사분위 Q1 × 표면 anchor 층화 (결정론)"
+    },
+    {
+     "basin_id": "b26",
+     "rep_label": "ptfe_c10__LiNi_bridge__fib04__r270",
+     "E_pose_eV": -0.189744,
+     "fingerprint": [
+      [
+       "F",
+       "Li",
+       1
+      ],
+      [
+       "F",
+       "Ni",
+       1
+      ],
+      [
+       "F",
+       "O",
+       2
+      ]
+     ],
+     "anchor": [
+      "F",
+      "Li",
+      2.829
+     ],
+     "height_A": 5.396,
+     "tilt_deg": 75.6,
+     "n_members": 2,
+     "role": "holdout",
+     "quartile": "Q2",
+     "anchor_surface": "Li",
+     "why": "UMA 사분위 Q2 × 표면 anchor 층화 (결정론)"
+    },
+    {
+     "basin_id": "b32",
+     "rep_label": "ptfe_c10__Ni_top__fib04__r270",
+     "E_pose_eV": -0.185883,
+     "fingerprint": [
+      [
+       "F",
+       "Ni",
+       1
+      ],
+      [
+       "F",
+       "O",
+       3
+      ]
+     ],
+     "anchor": [
+      "F",
+      "Ni",
+      2.47
+     ],
+     "height_A": 5.386,
+     "tilt_deg": 75.1,
+     "n_members": 1,
+     "role": "holdout",
+     "quartile": "Q2",
+     "anchor_surface": "Ni",
+     "why": "UMA 사분위 Q2 × 표면 anchor 층화 (결정론)"
+    },
+    {
+     "basin_id": "b50",
+     "rep_label": "ptfe_c10__Ni_top__fib09__r270",
+     "E_pose_eV": -0.169102,
+     "fingerprint": [
+      [
+       "F",
+       "Li",
+       1
+      ],
+      [
+       "F",
+       "Ni",
+       1
+      ],
+      [
+       "F",
+       "O",
+       3
+      ]
+     ],
+     "anchor": [
+      "F",
+      "Ni",
+      2.549
+     ],
+     "height_A": 6.669,
+     "tilt_deg": 55.2,
+     "n_members": 1,
+     "role": "holdout",
+     "quartile": "Q3",
+     "anchor_surface": "Ni",
+     "why": "UMA 사분위 Q3 × 표면 anchor 층화 (결정론)"
+    },
+    {
+     "basin_id": "b49",
+     "rep_label": "ptfe_c10__O_top__fib07__r000",
+     "E_pose_eV": -0.171029,
+     "fingerprint": [
+      [
+       "F",
+       "Ni",
+       1
+      ],
+      [
+       "F",
+       "O",
+       1
+      ]
+     ],
+     "anchor": [
+      "F",
+      "O",
+      2.673
+     ],
+     "height_A": 5.46,
+     "tilt_deg": 76.8,
+     "n_members": 1,
+     "role": "holdout",
+     "quartile": "Q3",
+     "anchor_surface": "O",
+     "why": "UMA 사분위 Q3 × 표면 anchor 층화 (결정론)"
+    },
+    {
+     "basin_id": "b71",
+     "rep_label": "ptfe_c10__hollow__fib00__r090",
+     "E_pose_eV": -0.124271,
+     "fingerprint": [
+      [
+       "F",
+       "Li",
+       1
+      ],
+      [
+       "F",
+       "Ni",
+       1
+      ],
+      [
+       "F",
+       "O",
+       2
+      ]
+     ],
+     "anchor": [
+      "F",
+      "O",
+      2.813
+     ],
+     "height_A": 8.889,
+     "tilt_deg": 24.4,
+     "n_members": 2,
+     "role": "holdout",
+     "quartile": "Q4",
+     "anchor_surface": "O",
+     "why": "UMA 사분위 Q4 × 표면 anchor 층화 (결정론)"
+    },
+    {
+     "basin_id": "b79",
+     "rep_label": "ptfe_c10__NiO_bridge__fib11__r180",
+     "E_pose_eV": -0.105889,
+     "fingerprint": [
+      [
+       "F",
+       "Ni",
+       1
+      ],
+      [
+       "F",
+       "O",
+       2
+      ]
+     ],
+     "anchor": [
+      "F",
+      "Ni",
+      2.646
+     ],
+     "height_A": 8.884,
+     "tilt_deg": 23.4,
+     "n_members": 1,
+     "role": "holdout",
+     "quartile": "Q4",
+     "anchor_surface": "Ni",
+     "why": "UMA 사분위 Q4 × 표면 anchor 층화 (결정론)"
+    }
+   ],
+   "strata_note": "층화 성립 — 사분위마다 서로 다른 anchor",
+   "n_pool": 96,
+   "n_excluded": 6
+  },
+  "sdcp_neutral": {
+   "holdout": [
+    {
+     "basin_id": "b02",
+     "rep_label": "sdcp_neutral__O_top__fib08__r180",
+     "E_pose_eV": 0.076453,
+     "fingerprint": [
+      [
+       "H",
+       "Li",
+       2
+      ],
+      [
+       "H",
+       "Ni",
+       2
+      ],
+      [
+       "H",
+       "O",
+       1
+      ],
+      [
+       "O",
+       "Li",
+       1
+      ],
+      [
+       "O",
+       "O",
+       1
+      ]
+     ],
+     "anchor": [
+      "H",
+      "O",
+      1.871
+     ],
+     "height_A": 5.106,
+     "tilt_deg": 85.4,
+     "n_members": 1,
+     "role": "holdout",
+     "quartile": "Q1",
+     "anchor_surface": "O",
+     "why": "UMA 사분위 Q1 × 표면 anchor 층화 (결정론)"
+    },
+    {
+     "basin_id": "b13",
+     "rep_label": "sdcp_neutral__Ni_top__fib04__r000",
+     "E_pose_eV": 0.300563,
+     "fingerprint": [
+      [
+       "H",
+       "Li",
+       3
+      ],
+      [
+       "H",
+       "Ni",
+       1
+      ],
+      [
+       "H",
+       "O",
+       4
+      ]
+     ],
+     "anchor": [
+      "H",
+      "Ni",
+      2.444
+     ],
+     "height_A": 4.545,
+     "tilt_deg": 82.0,
+     "n_members": 1,
+     "role": "holdout",
+     "quartile": "Q1",
+     "anchor_surface": "Ni",
+     "why": "UMA 사분위 Q1 × 표면 anchor 층화 (결정론)"
+    },
+    {
+     "basin_id": "b29",
+     "rep_label": "sdcp_neutral__NiO_bridge__fib04__r000",
+     "E_pose_eV": 0.325438,
+     "fingerprint": [
+      [
+       "H",
+       "Li",
+       1
+      ],
+      [
+       "H",
+       "Ni",
+       2
+      ],
+      [
+       "H",
+       "O",
+       3
+      ]
+     ],
+     "anchor": [
+      "H",
+      "O",
+      2.461
+     ],
+     "height_A": 4.566,
+     "tilt_deg": 82.2,
+     "n_members": 1,
+     "role": "holdout",
+     "quartile": "Q2",
+     "anchor_surface": "O",
+     "why": "UMA 사분위 Q2 × 표면 anchor 층화 (결정론)"
+    },
+    {
+     "basin_id": "b31",
+     "rep_label": "sdcp_neutral__LiNi_bridge__fib11__r090",
+     "E_pose_eV": 0.336064,
+     "fingerprint": [
+      [
+       "H",
+       "Li",
+       2
+      ],
+      [
+       "H",
+       "Ni",
+       1
+      ],
+      [
+       "H",
+       "O",
+       2
+      ],
+      [
+       "O",
+       "Ni",
+       1
+      ],
+      [
+       "O",
+       "O",
+       2
+      ]
+     ],
+     "anchor": [
+      "O",
+      "Ni",
+      2.539
+     ],
+     "height_A": 5.177,
+     "tilt_deg": 58.0,
+     "n_members": 1,
+     "role": "holdout",
+     "quartile": "Q2",
+     "anchor_surface": "Ni",
+     "why": "UMA 사분위 Q2 × 표면 anchor 층화 (결정론)"
+    },
+    {
+     "basin_id": "b53",
+     "rep_label": "sdcp_neutral__hollow__fib10__r270",
+     "E_pose_eV": 0.372056,
+     "fingerprint": [
+      [
+       "H",
+       "Li",
+       1
+      ],
+      [
+       "H",
+       "Ni",
+       1
+      ],
+      [
+       "H",
+       "O",
+       2
+      ]
+     ],
+     "anchor": [
+      "H",
+      "O",
+      2.529
+     ],
+     "height_A": 5.949,
+     "tilt_deg": 64.0,
+     "n_members": 2,
+     "role": "holdout",
+     "quartile": "Q3",
+     "anchor_surface": "O",
+     "why": "UMA 사분위 Q3 × 표면 anchor 층화 (결정론)"
+    },
+    {
+     "basin_id": "b55",
+     "rep_label": "sdcp_neutral__Ni_top__fib09__r090",
+     "E_pose_eV": 0.377407,
+     "fingerprint": [
+      [
+       "H",
+       "Ni",
+       1
+      ],
+      [
+       "H",
+       "O",
+       3
+      ]
+     ],
+     "anchor": [
+      "H",
+      "Ni",
+      2.443
+     ],
+     "height_A": 5.839,
+     "tilt_deg": 45.0,
+     "n_members": 1,
+     "role": "holdout",
+     "quartile": "Q3",
+     "anchor_surface": "Ni",
+     "why": "UMA 사분위 Q3 × 표면 anchor 층화 (결정론)"
+    },
+    {
+     "basin_id": "b78",
+     "rep_label": "sdcp_neutral__LiO_bridge__fib09__r180",
+     "E_pose_eV": 0.411719,
+     "fingerprint": [
+      [
+       "H",
+       "Li",
+       2
+      ],
+      [
+       "H",
+       "O",
+       1
+      ]
+     ],
+     "anchor": [
+      "H",
+      "O",
+      2.575
+     ],
+     "height_A": 5.828,
+     "tilt_deg": 44.7,
+     "n_members": 1,
+     "role": "holdout",
+     "quartile": "Q4",
+     "anchor_surface": "O",
+     "why": "UMA 사분위 Q4 × 표면 anchor 층화 (결정론)"
+    },
+    {
+     "basin_id": "b79",
+     "rep_label": "sdcp_neutral__Li_top__fib10__r270",
+     "E_pose_eV": 0.412463,
+     "fingerprint": [
+      [
+       "H",
+       "Li",
+       1
+      ],
+      [
+       "H",
+       "O",
+       2
+      ]
+     ],
+     "anchor": [
+      "H",
+      "Li",
+      2.494
+     ],
+     "height_A": 5.904,
+     "tilt_deg": 64.1,
+     "n_members": 1,
+     "role": "holdout",
+     "quartile": "Q4",
+     "anchor_surface": "Li",
+     "why": "UMA 사분위 Q4 × 표면 anchor 층화 (결정론)"
+    }
+   ],
+   "strata_note": "층화 성립 — 사분위마다 서로 다른 anchor",
+   "n_pool": 101,
+   "n_excluded": 6
+  }
+ },
+ "freeze_sha256": "3e3ce4820c4df3ec09815df0dd4c3a2fa7f478862f3f38cea519dff0bca737bc"
+}

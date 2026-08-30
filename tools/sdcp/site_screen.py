@@ -1888,6 +1888,174 @@ def cmd_basins(a):
     return 0
 
 
+# ══ prospective holdout 선정 (2026-08-30, 회신 AB Q6 옵션 A) ═══════════════
+#: D3-off 쌍둥이 16잡을 버려서 난 예산으로 **선택기 유효성**을 시험한다.
+#: estimand 카드: kb/questions/sdcp_stageA_holdout_selector_2026_08_30.md
+#:
+#: ⚠ 이 선정은 **동결 manifest 만** 읽는다 — 자세 파일도, DFT 결과도 안 본다.
+#:   그래서 repo 안에서 결정론적으로 재현된다.
+HOLDOUT_N_DEFAULT = 8
+
+
+def _quartiles(xs, k=4):
+    """오름차순 리스트를 k 등분. 나머지는 **앞쪽 조각부터** 한 개씩 준다 (결정론)."""
+    n, base, rem = len(xs), len(xs) // k, len(xs) % k
+    out, i = [], 0
+    for q in range(k):
+        m = base + (1 if q < rem else 0)
+        out.append(xs[i:i + m]); i += m
+    return out
+
+
+def select_holdout(fr, n=HOLDOUT_N_DEFAULT, k=4):
+    """한 조각의 홀드아웃 basin 을 고른다 → (picks, note).
+
+    규칙 (estimand 카드 §3-1):
+      1. calibration · sealed_audit 을 제외한다 — **sealed 는 열지 않는다**
+      2. 남은 basin 을 E_pose_eV 오름차순 정렬 → k 등분
+      3. 각 사분위에서 **표면쪽 anchor 원소가 서로 다른** n/k 개
+         정렬키 = (그 사분위 내 anchor 빈도 내림차순, E_pose 오름차순, basin_id)
+
+    ⛔ 이 함수가 **못 하는 것**
+      · 술폰산 O 와 에터 O 를 못 가른다 — manifest 가 원소기호까지만 들고 있다.
+        그래서 motif 축은 **표면쪽** anchor 다 (분자쪽은 c10 이 전부 F 라 축이 안 된다).
+      · UMA 점수의 물리적 타당성을 판정하지 않는다. 순위만 쓴다.
+      · 후보풀 **밖**은 안 본다 — 전역 최소를 주장할 수 없다.
+    """
+    taken = {b["basin_id"] for role in ("calibration", "sealed_audit")
+             for b in (fr.get(role) or [])}
+    pool = sorted((b for b in fr["basins"] if b["basin_id"] not in taken),
+                  key=lambda b: (b["E_pose_eV"], b["basin_id"]))
+    if len(pool) < n:
+        return [], "후보 부족 (%d < %d)" % (len(pool), n)
+    per = n // k
+    picks, notes = [], []
+    for qi, chunk in enumerate(_quartiles(pool, k), start=1):
+        freq = {}
+        for b in chunk:
+            freq[b["anchor"][1]] = freq.get(b["anchor"][1], 0) + 1
+        ordered = sorted(chunk, key=lambda b: (-freq[b["anchor"][1]],
+                                               b["E_pose_eV"], b["basin_id"]))
+        got, used = [], set()
+        for b in ordered:                      # 1차 — anchor 가 서로 다른 것부터
+            if len(got) >= per:
+                break
+            if b["anchor"][1] not in used:
+                got.append(b); used.add(b["anchor"][1])
+        if len(got) < per:                     # 2차 — 모자라면 같은 anchor 로 채운다
+            for b in ordered:
+                if len(got) >= per:
+                    break
+                if b not in got:
+                    got.append(b)
+            notes.append("Q%d: anchor 다양성 부족 (서로 다른 anchor %d종)"
+                         % (qi, len(set(x["anchor"][1] for x in chunk))))
+        for b in got:
+            picks.append({**b, "role": "holdout", "quartile": "Q%d" % qi,
+                          "anchor_surface": b["anchor"][1],
+                          "why": "UMA 사분위 Q%d × 표면 anchor 층화 (결정론)" % qi})
+    note = "; ".join(notes) if notes else "층화 성립 — 사분위마다 서로 다른 anchor"
+    if len(notes) >= 2:
+        note = "⛔ 층화 실패 (사분위 %d곳에서 anchor 다양성 부족) — H1 만 쓰고 " \
+               "ρ 는 층화 주장 없이 적는다. " % len(notes) + note
+    return picks, note
+
+
+def cmd_holdout(a) -> int:
+    """동결 후보 manifest → **홀드아웃 manifest**. DFT 결과를 보기 전에 돌린다."""
+    import hashlib
+    import json
+    src = json.load(open(a.basins))
+    parent_sha = hashlib.sha256(open(a.basins, "rb").read()).hexdigest()
+    out = {"schema": "prospective_holdout/v1", "date": a.date,
+           "parent": {"path": a.basins, "sha256": parent_sha,
+                      "declared_freeze": src.get("freeze_sha256")},
+           "estimand_card": "kb/questions/sdcp_stageA_holdout_selector_2026_08_30.md",
+           "⚠": ("이 문서는 **DFT 를 보기 전에** 만든다. 홀드아웃을 보고 primary 를 "
+                 "고치면 그것은 더 이상 홀드아웃이 아니다 — 홀드아웃이 이기면 "
+                 "primary 를 고치는 것이 아니라 **재개 조건이 발동**한다."),
+           "선정_규칙": ("calibration·sealed_audit 제외 → E_pose 오름차순 4등분 → "
+                        "사분위마다 표면 anchor 가 서로 다른 %d개 (결정론, 난수 없음)"
+                        % (a.n // 4)),
+           "fragments": {}}
+    for frag, fr in sorted((src.get("fragments") or {}).items()):
+        picks, note = select_holdout(fr, n=a.n)
+        out["fragments"][frag] = {"holdout": picks, "strata_note": note,
+                                  "n_pool": len(fr["basins"]),
+                                  "n_excluded": len(fr.get("calibration") or [])
+                                  + len(fr.get("sealed_audit") or [])}
+        print("■ %s: 풀 %d → 홀드아웃 %d   [%s]"
+              % (frag, len(fr["basins"]), len(picks), note))
+        for b in picks:
+            print("   %s %s %+.4f  anchor=%-3s %-46s"
+                  % (b["quartile"], b["basin_id"], b["E_pose_eV"],
+                     b["anchor_surface"], b["rep_label"][:46]))
+    body = json.dumps(out, ensure_ascii=False, sort_keys=True, default=str)
+    out["freeze_sha256"] = hashlib.sha256(body.encode()).hexdigest()
+    json.dump(out, open(a.save, "w"), ensure_ascii=False, indent=1, default=str)
+    print("\n→ %s  (freeze %s)" % (a.save, out["freeze_sha256"][:16]))
+    print("⛔ DFT 전에 커밋해 동결하라 — 결과를 보고 고치면 홀드아웃이 아니다")
+    return 0
+
+
+def cmd_holdout_selftest(a) -> int:
+    """홀드아웃 선정기 회귀시험 — **음성 경로 포함**."""
+    ok = [0, 0]
+
+    def chk(c, m):
+        ok[0] += 1; ok[1] += 1 if c else 0
+        print(("  \u2713 " if c else "  \u2717 ") + m)
+
+    def B(i, e, anc):
+        return {"basin_id": "b%02d" % i, "E_pose_eV": e, "rep_label": "x%02d" % i,
+                "anchor": ["H", anc, 2.5], "fingerprint": [], "height_A": 5.0,
+                "tilt_deg": 45.0, "n_members": 1}
+
+    anchors = ["O", "Ni", "Li"]
+    fr = {"basins": [B(i, 0.01 * i, anchors[i % 3]) for i in range(24)],
+          "calibration": [{"basin_id": "b00"}, {"basin_id": "b01"},
+                          {"basin_id": "b02"}, {"basin_id": "b03"}],
+          "sealed_audit": [{"basin_id": "b04"}, {"basin_id": "b05"}]}
+    picks, note = select_holdout(fr, n=8)
+    ids = [b["basin_id"] for b in picks]
+    chk(len(picks) == 8, "홀드아웃 8개 (실제 %d)" % len(picks))
+    # ⛔ 음성 1 — **sealed audit 을 절대 안 집는다** (열면 holdout 이 아니다)
+    chk(not ({"b04", "b05"} & set(ids)),
+        "\u26d4음성: sealed_audit(b04·b05)을 안 집는다 — 열면 holdout 이 아니다")
+    # ⛔ 음성 2 — calibration 도 안 집는다 (집으면 같은 자세를 두 번 돈다)
+    chk(not ({"b00", "b01", "b02", "b03"} & set(ids)),
+        "\u26d4음성: calibration 4개를 안 집는다")
+    # 사분위가 실제로 넷 다 나온다 — 상위만 집으면 선택기 시험이 안 된다
+    chk(sorted({b["quartile"] for b in picks}) == ["Q1", "Q2", "Q3", "Q4"],
+        "\u26d4음성: 네 사분위 전부에서 뽑는다 (상위만 뽑으면 시험이 성립 안 함)")
+    # 사분위 안에서 anchor 가 서로 다르다
+    byq = {}
+    for b in picks:
+        byq.setdefault(b["quartile"], []).append(b["anchor_surface"])
+    chk(all(len(set(v)) == len(v) for v in byq.values()),
+        "사분위 안 anchor 가 서로 다르다 %s" % byq)
+    chk("층화 성립" in note, "층화 성립 기록: %s" % note)
+    # ⛔ 음성 3 — anchor 가 한 종류뿐이면 **층화 실패로 기록**한다 (조용히 통과 금지)
+    fr1 = dict(fr, basins=[B(i, 0.01 * i, "O") for i in range(24)])
+    _, note1 = select_holdout(fr1, n=8)
+    chk("층화 실패" in note1,
+        "\u26d4음성: anchor 가 한 종류면 **층화 실패**로 적는다 (조용히 통과 안 함)")
+    # ⛔ 음성 4 — 결정론: 입력 순서를 섞어도 같은 결과
+    import random as _r
+    fr2 = dict(fr); _sh = list(fr["basins"]); _r.Random(7).shuffle(_sh)
+    fr2["basins"] = _sh
+    chk([b["basin_id"] for b in select_holdout(fr2, n=8)[0]] == ids,
+        "\u26d4음성: 입력 순서를 섞어도 같은 8개 (난수 없음)")
+    # ⛔ 음성 5 — 후보가 모자라면 빈 손으로 돌려주고 사유를 적는다
+    fr3 = {"basins": [B(i, 0.01 * i, "O") for i in range(9)],
+           "calibration": [{"basin_id": "b0%d" % i} for i in range(4)],
+           "sealed_audit": [{"basin_id": "b04"}]}
+    p3, n3 = select_holdout(fr3, n=8)
+    chk(p3 == [] and "부족" in n3, "\u26d4음성: 후보 부족이면 빈 손 + 사유 (%s)" % n3)
+    print("  holdout selftest %d/%d" % (ok[1], ok[0]))
+    return 0 if ok[1] == ok[0] else 1
+
+
 def cmd_verdict(a) -> int:
     """자리 선호 판정 — 검열 회계 · 대조쌍 · 판정 바닥을 한 표에."""
     rows: List[Dict[str, Any]] = []
@@ -2935,6 +3103,15 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("--date", default="2026-08-29")
     p.add_argument("--save", required=True, help="동결할 manifest 경로")
 
+    p = sub.add_parser("holdout",
+                       help="동결 후보 manifest → prospective holdout (선택기 시험용)")
+    p.add_argument("--basins", required=True, help="동결된 prospective_basins json")
+    p.add_argument("--n", type=int, default=HOLDOUT_N_DEFAULT,
+                   help="조각당 홀드아웃 자세 수 (기본 8 = 4사분위 × 2)")
+    p.add_argument("--date", default="2026-08-30")
+    p.add_argument("--save", required=True)
+    sub.add_parser("holdout-selftest", help="홀드아웃 선정기 회귀시험 (음성 포함)")
+
     p = sub.add_parser("verdict", help="자리 선호 판정표")
     p.add_argument("rows", nargs="+", help="atlas_rows.json 또는 점수가 붙은 rows json")
 
@@ -2972,6 +3149,7 @@ def main() -> int:
         "inputs": cmd_inputs, "sites": cmd_sites, "atlas": cmd_atlas,
         "gate": cmd_gate, "verdict": cmd_verdict, "crosscheck": cmd_crosscheck,
         "bond-limits": cmd_bond_limits, "selftest": cmd_selftest, "score": cmd_score,
+        "holdout": cmd_holdout, "holdout-selftest": cmd_holdout_selftest,
         "clean-probe-selftest": cmd_clean_probe_selftest,
         "bundle": cmd_bundle, "regate": cmd_regate, "dft-handoff": cmd_dft_handoff,
         "basins": cmd_basins,

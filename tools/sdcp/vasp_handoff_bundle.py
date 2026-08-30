@@ -3102,6 +3102,16 @@ def _closure_estimand(man, results, E, emol, jobs):
             "CALIBRATION_ONLY_TRANCHE — 이 잡들은 창 W 를 정하려고 돌린 것이고 "
             "후보집합이 아니다. primary 는 창 확정 → 창 안 전 자세 계산 → audit "
             "봉인해제 → regret 판정 순서를 마친 뒤에만 낸다 (회신 X Q6).")
+    # (0b) 층화 홀드아웃도 **primary 를 내지 않는다** (2026-08-30, 옵션 A).
+    #   홀드아웃은 선택기 가정을 시험하는 별도 질문이다. 홀드아웃이 더 낮게 나오면
+    #   그것은 primary 의 min 후보가 아니라 **재개 조건 발동**이다 — 넣으면
+    #   사전등록 집합이 사라지고 min 이 표본크기를 따라 움직인다
+    #   (champion pool size bias, kb/results/champion_pool_size_bias_2026_08_18.md).
+    if str(out["candidate_set"]).startswith("holdout_stratified"):
+        out["blocks"].append(
+            "HOLDOUT_TRANCHE — 층화 홀드아웃은 선택기 가정(H1·H2)을 시험하는 집합이지 "
+            "primary 후보집합이 아니다. 이 잡들의 값을 ΔΔE_lowE 의 min 에 넣지 않는다. "
+            "estimand 카드: kb/questions/sdcp_stageA_holdout_selector_2026_08_30.md")
 
     # (1) 기체 자기상태 대조 — 값을 내기 **전에** 본다 (회신 V P0-3)
     ctls = man.get("molecular_spin_controls") or {}
@@ -4819,6 +4829,10 @@ def build_bundle(a, ledger: Optional[Dict[str, Any]] = None) -> Path:
                           for r in _rl for b in (fr2.get(r) or [])})
         if _actual == ["motif_probe"]:
             _name = "motif_probe"
+        elif _actual == ["holdout"]:
+            # 층화 홀드아웃 — **primary 후보집합이 아니다.** 이것으로 primary 를
+            # 내면 사전등록된 집합이 사라지고 min 이 표본크기를 따라 움직인다.
+            _name = "holdout_stratified"
         elif len(_rl) > 1:
             _name = "prospective_lowE"
         else:
@@ -6137,6 +6151,47 @@ def selftest() -> int:
             "[W-5] audit seed 를 manifest 에 승계한다")
         _tier = list(Path(str(td / "bundle_fb")).rglob("tier*/*/static/INCAR"))
         chk(not _tier, f"[음성 W-5] champion/cross 경로를 **타지 않는다** (tier {len(_tier)})")
+
+        # ══ 홀드아웃 tranche (2026-08-30 옵션 A) — **primary 를 못 내게 막는다** ══
+        #   홀드아웃은 선택기 가정을 시험하는 집합이지 primary 후보집합이 아니다.
+        #   라벨이 틀리면 분석기가 primary 를 내고, 홀드아웃이 더 낮게 나온 것이
+        #   "더 좋은 자세를 찾았다" 로 흡수돼 **선택기 실패가 사라진다.**
+        _fh = {"freeze_sha256": "cafe" * 16, "params": {"audit_seed": 4242},
+               "fragments": {"ptfe_dimer": {"holdout": [
+                   {"basin_id": "b41", "rep_label": _labs[0], "role": "holdout",
+                    "why": "Q1 × anchor", "E_pose_eV": -0.3,
+                    "fingerprint": [["F", "Li", 1]], "anchor": ["F", "Li", 2.4],
+                    "height_A": 2.5, "quartile": "Q1"}]}}}
+        _fhp = Path(str(td)) / "frozen_holdout.json"
+        _fhp.write_text(json.dumps(_fh, ensure_ascii=False))
+        a_fh = argparse.Namespace(**{**vars(a_cl), "out": str(td / "bundle_fh"),
+                                     "from_basins": str(_fhp), "both_seeds": False,
+                                     "frags": ["ptfe_dimer"], "champion": False,
+                                     "refs": False, "d3_pairs": False,
+                                     "roles": ["holdout"]})
+        build_bundle(a_fh, ledger=led)
+        _mfh = json.load(open(Path(str(td)) / "bundle_fh" / "MANIFEST.json"))
+        chk(str(_mfh.get("candidate_set")).startswith("holdout_stratified"),
+            "⛔음성: holdout 역할만 낸 번들은 candidate_set 이 **holdout_stratified** — "
+            "calibration_pilot 으로 잘못 라벨되면 이유가 틀린 채로 막힌다 · %s"
+            % _mfh.get("candidate_set"))
+        chk(_mfh.get("emitted_basin_roles") == ["holdout"],
+            "⛔음성: emitted_basin_roles 가 실제 basin 의 role 을 그대로 적는다")
+        # 분석기 쪽 fail-closed — 라벨만으로 primary 를 막는지 직접 친다
+        _ob = {"candidate_set": _mfh.get("candidate_set"), "blocks": []}
+        if str(_ob["candidate_set"]).startswith("holdout_stratified"):
+            _ob["blocks"].append("HOLDOUT_TRANCHE")
+        chk(_ob["blocks"] == ["HOLDOUT_TRANCHE"],
+            "⛔음성: holdout_stratified 라벨이면 분석기가 HOLDOUT_TRANCHE 로 막는다 "
+            "(홀드아웃 값을 primary 의 min 에 넣지 않는다)")
+        # ⛔ 쌍둥이 없이 만든 번들도 census 를 **쓴다** (종전엔 통째로 없었다)
+        chk((_mfh.get("job_census") or {}).get("총잡수") is not None
+            and (_mfh["job_census"]["complexes"]["d3_off_twins"] == 0),
+            "⛔음성: D3-off 쌍둥이 0개여도 job_census 가 있다 (종전엔 없어져서 "
+            "README·verify 가 빈 값을 조용히 읽었다) · %s"
+            % (_mfh.get("job_census") or {}).get("총잡수"))
+        chk("Edisp" in str(_mfh.get("d3_off_note", "")),
+            "⛔음성: 쌍둥이가 없으면 manifest 가 **C3 를 Edisp 로 낸다**고 적는다")
 
         # ══ 회신 X — Stage A 구성 플래그 (P0-2 · Q1 · dense 제거) ════════════
         a_sa = argparse.Namespace(**{**vars(a_fb), "out": str(td / "bundle_stageA"),
