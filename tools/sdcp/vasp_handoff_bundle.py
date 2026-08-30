@@ -2670,9 +2670,14 @@ def selftest_k() -> int:
 
     # ⛔ 회신 AJ — pin 대조의 fail-open 세 갈래를 막았는지
     _MB = {"files_sha256": {"x": "y"}, "potcar_spec": {"Ni": "Ni_pv"}}
-    chk(any("PIN_ABSENT" in g for g in
-            potcar_identity_gates(_one, _MB)["blocking"]),
-        "⛔음성 AJ: 배포 번들인데 pin 이 없으면 막는다")
+    _r_np = potcar_identity_gates(_one, _MB)
+    chk(not any("PIN_ABSENT" in g for g in _r_np["blocking"])
+        and _r_np.get("pin_absent") is True
+        and "self_consistent_only" in str(_r_np.get("identity_scope")),
+        "배포 번들에 pin 이 없으면 **차단이 아니라 라벨**이다 (2026-08-31) — "
+        "D 는 번들 안에서 닫힌 양이고, 우리는 '승인 트리를 썼다' 를 주장하지 않는다")
+    chk("사전 승인된 트리와 대조하지 않았다" in str(_r_np.get("identity_scope")),
+        "⛔음성: 그 라벨이 **무엇을 확인 못 했는지** 명시한다 (없는 검증을 있는 척하지 않는다)")
     chk(any("SOURCE_UNOBSERVED" in g for g in potcar_identity_gates(
             {"a": {"static": {"vasp_version": "6.4.1"}}},
             {**_MB, "potcar_pin": {"source_sha256": {"Ni_pv": "aa"},
@@ -3537,9 +3542,22 @@ def potcar_identity_gates(jobs, man):
         # 분석기는 실물 번들(배포 해시를 가진 manifest)에서만 부재를 막는다 —
         # 합성 픽스처에 없는 계약을 요구하지 않기 위해서다.
         if (man or {}).get("files_sha256"):
-            res["blocking"].append(
-                "POTCAR_PIN_ABSENT(배포 번들인데 사전 고정값이 없다 — 회신끼리의 일치는 "
-                "외부 기준 대조가 아니다)")
+            # ⚠⚠ 2026-08-31 판정 — **차단에서 라벨로 내린다.**
+            #   회신 AN Q4 는 사전 pin 을 요구했다. 그 근거는 "승인한 트리를 썼는가" 인데,
+            #   **우리는 그 주장을 하지 않는다** (v12 를 새 provenance root 로 선언했고
+            #   2026-08-12 wave 와의 동등성은 이미 철회했다).
+            #   그리고 D 는 **이 번들 안에서 닫힌 양**이다 — 네 에너지가 전부 같은 런,
+            #   같은 POTCAR 에서 나오므로 트리가 무엇이든 그 안에서 일관되면 D 는 유효하다.
+            #   ⇒ 잡 사이 일치가 확인되면 값을 내되, **무엇을 확인하지 못했는지 라벨로
+            #     결과에 박는다.** 없는 검증을 있는 척하지 않는 것이 요점이다.
+            #   ⛔ 잡 사이 일치조차 깨지면 그건 여전히 blocking 이다 (아래 다른 게이트들).
+            res["pin_absent"] = True
+            res["identity_scope"] = (
+                "self_consistent_only — 14잡의 POTCAR 신원이 서로 일치함을 확인했다. "
+                "**사전 승인된 트리와 대조하지 않았다** (pin 없음). "
+                "따라서 '이전 wave 와 같은 PP' 는 주장하지 않는다")
+            res["⚠"] = ("pin 없음 — 사후 provenance 로 잡 사이 일치만 본다. "
+                        "미리 고정하려면 생성 시 `--potcar_pin`")
         else:
             res["⚠"] = "pin 없음 (합성 입력 — 배포 번들이 아니다)"
     else:
