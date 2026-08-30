@@ -276,6 +276,34 @@ RUN_JOB = """#!/usr/bin/env bash
 set -e
 V=${VASP_CMD:-"mpirun -np ${NP:-48} vasp_std"}   # 계약·비용모형과 같은 48
 [ -f POTCAR ] || { echo "⛔ POTCAR 를 이 폴더에 놓으세요 (POTCAR_SPEC.txt 의 변형)"; exit 1; }
+# 🔴 회신 AB P0-8 — POTCAR **provenance 를 실행 전에 강제**한다. 종전엔 파일
+#   존재만 봤다. 그래서 조립기가 allowlist 로 거부해도 그때 남아 있던 POTCAR 로
+#   VASP 가 돌았다 — allowlist 실패가 계산 중단으로 이어지지 않았다.
+#   셋을 요구한다: ① provenance 존재 ② 면제 아님 ③ 지금 POTCAR 의 sha 가 일치.
+#   ③이 핵심 — 조립 뒤 POTCAR 를 바꿔치기하면 여기서 걸린다.
+#   ⚠ SKIP_POTCAR_PROVENANCE=1 은 **시험 장치 전용**이다. 반송물에 그대로 남으므로
+#     production 에서 쓰면 분석기가 본다.
+if [ "${SKIP_POTCAR_PROVENANCE:-0}" != "1" ]; then
+  [ -f POTCAR_PROVENANCE.json ] || {
+    echo "⛔ POTCAR_PROVENANCE.json 이 없습니다 — POTCAR 를 손으로 놓지 말고"
+    echo "   PP=... POTCAR_ALLOWLIST=/abs/site_allow.txt bash POTCAR_ASSEMBLE.sh"; exit 1; }
+  python3 - <<'PYCHK' || exit 1
+import hashlib, json, sys
+try:
+    d = json.load(open("POTCAR_PROVENANCE.json"))
+except Exception as e:
+    sys.exit("\u26d4 POTCAR_PROVENANCE.json 파싱 실패: %s" % e)
+if d.get("allowlist_waived"):
+    sys.exit("\u26d4 allowlist 면제로 조립된 POTCAR 입니다 — 이 계약에서 폐지됐습니다")
+if not d.get("allowlist"):
+    sys.exit("\u26d4 provenance 에 allowlist 경로가 없습니다 — 대조 없이 조립됐습니다")
+h = hashlib.sha256(open("POTCAR", "rb").read()).hexdigest()
+if h != d.get("assembled_sha256"):
+    sys.exit("\u26d4 POTCAR 가 조립 이후 바뀌었습니다 (지금 %s / 기록 %s)"
+             % (h[:16], str(d.get("assembled_sha256"))[:16]))
+print("  \u2714 POTCAR provenance 확인 (allowlist 대조본 · sha 일치)")
+PYCHK
+fi
 need() { [ -s "$1" ] || { echo "⛔ $1 없음/빈 파일 — $2"; exit 1; }; }
 
 # ★ 회신 AA P0-5 / Q8 — **1회용(one-shot) 실행이다.** 시작 전에 산출물이 있으면
@@ -5903,7 +5931,11 @@ def _runner_regression(out: Path, chk) -> None:
         if prep:
             prep(jd)
         env = {**os.environ, "PATH": f"{stub_dir}:{os.environ.get('PATH', '')}",
-               "VASP_CMD": "vasp_std", "STUB_LOG": str(log)}
+               "VASP_CMD": "vasp_std", "STUB_LOG": str(log),
+               # 상 사슬 시험은 POTCAR provenance 와 무관하다 — 그 축은 아래
+               # R14~R16 이 **전용으로** 친다 (한 시험이 두 가지를 재면 왜 실패했는지
+               # 모른다).
+               "SKIP_POTCAR_PROVENANCE": "1"}
         if fail:
             env["STUB_FAIL"] = fail
         r = subprocess.run(["bash", "run_job.sh"], cwd=jd, env=env,
@@ -5945,7 +5977,8 @@ def _runner_regression(out: Path, chk) -> None:
     log2.unlink()
     r2 = subprocess.run(["bash", "run_job.sh"], cwd=jd, capture_output=True, text=True,
                         env={**os.environ, "PATH": f"{stub_dir}:{os.environ.get('PATH','')}",
-                             "VASP_CMD": "vasp_std", "STUB_LOG": str(log2)})
+                             "VASP_CMD": "vasp_std", "STUB_LOG": str(log2),
+                             "SKIP_POTCAR_PROVENANCE": "1"})
     ran2 = log2.read_text().split() if log2.is_file() else []
     chk(r2.returncode != 0 and ran2 == [] and "1회용" in (r2.stdout + r2.stderr),
         f"⛔음성 R7: 산출물이 있는 잡을 그냥 재실행하면 **거부** "
@@ -5956,7 +5989,7 @@ def _runner_regression(out: Path, chk) -> None:
     r2b = subprocess.run(["bash", "run_job.sh"], cwd=jd, capture_output=True, text=True,
                          env={**os.environ, "PATH": f"{stub_dir}:{os.environ.get('PATH','')}",
                               "VASP_CMD": "vasp_std", "STUB_LOG": str(log2),
-                              "ALLOW_RESUME": "1"})
+                              "SKIP_POTCAR_PROVENANCE": "1", "ALLOW_RESUME": "1"})
     ran2b = log2.read_text().split() if log2.is_file() else []
     chk(r2b.returncode == 0 and ran2b == [],
         f"R7b ALLOW_RESUME=1 이면 전 상 건너뜀 rc={r2b.returncode} 실행 {ran2b}")
@@ -5967,7 +6000,8 @@ def _runner_regression(out: Path, chk) -> None:
     r3 = subprocess.run(["bash", "run_job.sh"], cwd=jd, capture_output=True, text=True,
                         env={**os.environ, "PATH": f"{stub_dir}:{os.environ.get('PATH','')}",
                              "VASP_CMD": "vasp_std", "STUB_LOG": str(log2),
-                             "ALLOW_RESUME": "1"})
+                             "ALLOW_RESUME": "1",
+                             "SKIP_POTCAR_PROVENANCE": "1"})
     ran3 = log2.read_text().split() if log2.is_file() else []
     chk(r3.returncode == 0 and ran3 == ["dense"],
         f"R8 ALLOW_RESUME 부분 재개 rc={r3.returncode} 실행 {ran3}")
@@ -5978,7 +6012,8 @@ def _runner_regression(out: Path, chk) -> None:
     log2.unlink(missing_ok=True)
     r3b = subprocess.run(["bash", "run_job.sh"], cwd=jd, capture_output=True, text=True,
                          env={**os.environ, "PATH": f"{stub_dir}:{os.environ.get('PATH','')}",
-                              "VASP_CMD": "vasp_std", "STUB_LOG": str(log2)})
+                              "VASP_CMD": "vasp_std", "STUB_LOG": str(log2),
+                              "SKIP_POTCAR_PROVENANCE": "1"})
     chk(r3b.returncode != 0,
         f"⛔음성 R8b: 일부만 지우고 재실행해도 선언 없이는 거부 rc={r3b.returncode}")
 
@@ -6010,9 +6045,43 @@ def _runner_regression(out: Path, chk) -> None:
     shutil.copytree(src, jd12)
     r12 = subprocess.run(["bash", "run_job.sh"], cwd=jd12, capture_output=True, text=True,
                          env={**os.environ, "PATH": f"{stub_dir}:{os.environ.get('PATH','')}",
-                              "VASP_CMD": "vasp_std"})
+                              "VASP_CMD": "vasp_std", "SKIP_POTCAR_PROVENANCE": "1"})
     chk(r12.returncode != 0 and not (jd12 / "static" / "OUTCAR").is_file(),
         f"R12 POTCAR 없음 → 시작 거부 rc={r12.returncode}")
+
+    # ── R14~R16 (회신 AB P0-8): POTCAR provenance 계약 ─────────────────────
+    def _pv(jd, waived=False, swap=False):
+        (jd / "POTCAR").write_text("stub POTCAR\n")
+        (jd / "POTCAR_PROVENANCE.json").write_text(json.dumps({
+            "schema": "potcar_provenance/v1",
+            "allowlist": None if waived else "/abs/site_allow.txt",
+            "allowlist_waived": waived,
+            "assembled_sha256": hashlib.sha256((jd / "POTCAR").read_bytes()).hexdigest()}))
+        if swap:
+            (jd / "POTCAR").write_text("SWAPPED POTCAR\n")     # 조립 뒤 교체
+
+    def _pcase(tag, prep):
+        jd = out.parent / f"_run_{tag}"
+        shutil.rmtree(jd, ignore_errors=True); shutil.copytree(src, jd)
+        prep(jd)
+        r = subprocess.run(["bash", "run_job.sh"], cwd=jd, capture_output=True, text=True,
+                           env={**os.environ,
+                                "PATH": f"{stub_dir}:{os.environ.get('PATH', '')}",
+                                "VASP_CMD": "vasp_std"})
+        return jd, r
+
+    _j, _r = _pcase("noprov", lambda d: (d / "POTCAR").write_text("stub POTCAR\n"))
+    chk(_r.returncode != 0 and not (_j / "static" / "OUTCAR").is_file(),
+        f"⛔음성 R14: POTCAR 는 있는데 provenance 가 없으면 거부 rc={_r.returncode}")
+    _j, _r = _pcase("swapped", lambda d: _pv(d, swap=True))
+    chk(_r.returncode != 0 and not (_j / "static" / "OUTCAR").is_file(),
+        f"⛔음성 R15: 조립 뒤 POTCAR 교체 → sha 불일치로 거부 rc={_r.returncode}")
+    _j, _r = _pcase("waived", lambda d: _pv(d, waived=True))
+    chk(_r.returncode != 0 and not (_j / "static" / "OUTCAR").is_file(),
+        f"⛔음성 R16: allowlist 면제본은 거부 (면제 폐지) rc={_r.returncode}")
+    _j, _r = _pcase("goodprov", _pv)
+    chk(_r.returncode == 0 and "provenance 확인" in _r.stdout,
+        f"R17 양성: 정상 provenance 면 통과한다 rc={_r.returncode}")
 
     # ── R13 러너 자체 sanity: stub 이 없으면 시험이 통과해선 안 된다 ─────────
     #   (양성만 있는 selftest 의 재발 방지 — 시험 장치 자체를 시험한다)
@@ -6021,7 +6090,8 @@ def _runner_regression(out: Path, chk) -> None:
     shutil.copytree(src, jd13)
     (jd13 / "POTCAR").write_text("stub POTCAR\n")
     r13 = subprocess.run(["bash", "run_job.sh"], cwd=jd13, capture_output=True, text=True,
-                         env={**os.environ, "VASP_CMD": "definitely_not_a_real_binary_xyz"})
+                         env={**os.environ, "VASP_CMD": "definitely_not_a_real_binary_xyz",
+                              "SKIP_POTCAR_PROVENANCE": "1"})
     chk(r13.returncode != 0,
         f"R13 실행파일이 없으면 러너가 실패한다 (시험 장치 검증) rc={r13.returncode}")
 
