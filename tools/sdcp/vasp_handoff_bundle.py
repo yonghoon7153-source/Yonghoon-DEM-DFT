@@ -435,7 +435,7 @@ python3 analyze_results.py .
 exit $?
 """
 
-RUN_STAGED = '#!/usr/bin/env bash\n# 2단계 러너 — 정지 규칙을 **실제로 적용**하려면 순서가 있어야 한다 (회신 AJ).\n#\n#   1단계: primary 두 조각 x 셀 두 높이 (4잡) + 기체 기준 (2잡) = 6잡\n#          -> 진공 두께 수렴 시험을 여기서 판정한다.\n#          |D(c2) - D(c1)| <= 5 meV **그리고** 0.01 eV 반올림 일치여야 다음으로 간다.\n#          기체 기준이 1단계에 있는 이유 — 반올림 비교에 공통 기체 offset 이 필요하다.\n#   2단계: primary 다른 seed (2잡) + 대안 자세 두 seed (4잡) = 6잡\n#\n# 실패하면 2단계를 돌리지 않는다. 추가 셀 탐색도 하지 않는다 (Figure 2e 제거).\nset -u\nVASP_CMD=${VASP_CMD:?VASP_CMD 를 지정하세요 (예: \'mpirun -np 256 vasp_std\')}\nstage=${1:-1}\n\n# 잡 분류는 job.json 의 **구조화 필드**로 한다 — 이름 파싱 금지\npython3 -c \'\nimport json, sys, glob, os\nwant = sys.argv[1]\nfor jp in sorted(glob.glob("*/*/job.json")):\n    m = json.load(open(jp)); d = os.path.dirname(jp)\n    kind, role, vac = m.get("kind"), m.get("role"), m.get("vacconv")\n    if kind == "mol_ref":\n        s = "1"\n    elif kind == "prospective_pose" and role == "primary":\n        s = "1" if (vac or m.get("seed") == "afm2424_pm1") else "2"\n    else:\n        s = "2"\n    if s == want:\n        print(d)\n\' "$stage" > _stage_jobs.txt\n\necho "== 단계 $stage · $(wc -l < _stage_jobs.txt) 잡 =="\ncat _stage_jobs.txt\nfail=0\nwhile read -r j; do\n  [ -f "$j/run_job.sh" ] || { echo "없음: $j"; fail=1; continue; }\n  echo "=== $j ==="\n  ( cd "$j" && bash run_job.sh ) || { echo "$j 실패"; fail=1; }\ndone < _stage_jobs.txt\n\nif [ "$stage" = 1 ]; then\n  echo "== 1단계 판정 =="\n  python3 analyze_results.py . || {\n    echo "1단계 판정이 막혔다 — 2단계를 돌리지 않는다."; exit 2; }\n  echo "1단계 통과 — 2단계는 \'bash run_staged.sh 2\'"\nfi\nexit $fail\n'
+RUN_STAGED = '#!/usr/bin/env bash\n# 2단계 러너 — 정지 규칙을 **실제로 적용**하려면 순서가 있어야 한다 (회신 AJ).\n#\n#   1단계: primary 두 조각 x 셀 두 높이 (4잡) + 기체 기준 (2잡) = 6잡\n#          -> 진공 두께 수렴 시험을 여기서 판정한다.\n#          |D(c2) - D(c1)| <= 5 meV **그리고** 0.01 eV 반올림 일치여야 다음으로 간다.\n#          기체 기준이 1단계에 있는 이유 — 반올림 비교에 공통 기체 offset 이 필요하다.\n#   2단계: primary 다른 seed (2잡) + 대안 자세 두 seed (4잡) = 6잡\n#\n# 실패하면 2단계를 돌리지 않는다. 추가 셀 탐색도 하지 않는다 (Figure 2e 제거).\nset -u\nVASP_CMD=${VASP_CMD:?VASP_CMD 를 지정하세요 (예: \'mpirun -np 256 vasp_std\')}\nstage=${1:-1}\n\n# 잡 분류는 job.json 의 **구조화 필드**로 한다 — 이름 파싱 금지\npython3 -c \'\nimport json, sys, glob, os\nwant = sys.argv[1]\nfor jp in sorted(glob.glob("*/*/job.json")):\n    m = json.load(open(jp)); d = os.path.dirname(jp)\n    kind, role, vac = m.get("kind"), m.get("role"), m.get("vacconv")\n    if kind == "mol_ref":\n        s = "1"\n    elif kind == "prospective_pose" and role == "primary":\n        s = "1" if (vac or m.get("seed") == "afm2424_pm1") else "2"\n    else:\n        s = "2"\n    if s == want:\n        print(d)\n\' "$stage" > _stage_jobs.txt\n\necho "== 단계 $stage · $(wc -l < _stage_jobs.txt) 잡 =="\ncat _stage_jobs.txt\nfail=0\nwhile read -r j; do\n  [ -f "$j/run_job.sh" ] || { echo "없음: $j"; fail=1; continue; }\n  echo "=== $j ==="\n  ( cd "$j" && bash run_job.sh ) || { echo "$j 실패"; fail=1; }\ndone < _stage_jobs.txt\n\nif [ "$stage" = 1 ]; then\n  echo "== 1단계 판정 =="\n  python3 analyze_results.py . --gate vacconv || {\n    echo "1단계 판정이 막혔다 — 2단계를 돌리지 않는다."; exit 2; }\n  echo "1단계 통과 — 2단계는 \'bash run_staged.sh 2\'"\nfi\nexit $fail\n'
 
 RUN_ALL = """#!/usr/bin/env bash
 # ⚠⚠ 이건 **직렬 디버그 러너**다 — 병렬 제출기가 아니다.
@@ -5734,6 +5734,47 @@ def main():
         for j in missing[:20]:
             print(f"   · {j}")
         return 2
+
+    # ⛔⛔ 2026-08-31 (회신 AN P0-3·P0-4) — **두 가지가 종료코드에 안 걸려 있었다.**
+    #   ① stage 판정: 1단계만 돌고 나면 2단계 6잡이 required_missing 이라 **무조건 exit 2**.
+    #      그래서 진공 시험을 통과해도 2단계를 열 수 없었다. `--gate vacconv` 는
+    #      1단계 cohort 만 보고, 그 판정으로만 끝낸다.
+    #   ② 최종 판정: prereg_closure 가 NO_VALUE 여도, 진공이 실패해도 `return 0` 이
+    #      될 수 있었다. **비인용 상태면 반드시 nonzero** 여야 한다.
+    _cl = (results.get("prereg_closure") or {})
+    _vc = (results.get("closure_vacconv") or _cl.get("closure_vacconv") or {})
+    if "--gate" in sys.argv:
+        _g = sys.argv[sys.argv.index("--gate") + 1] if len(sys.argv) > sys.argv.index("--gate") + 1 else ""
+        if _g != "vacconv":
+            print(f"⛔ 모르는 --gate: {_g!r} (지원: vacconv)")
+            return 2
+        if not _vc or _vc.get("applicable") is False:
+            print("⛔ 진공 수렴 판정을 낼 수 없다 (vacconv 잡이 없거나 결과가 없다)")
+            return 2
+        if _vc.get("blocks"):
+            print("⛔ 진공 판정이 막혔다:")
+            for b in _vc["blocks"][:5]:
+                print(f"   · {b}")
+            return 2
+        print(f"■ stage gate = vacconv · {_vc.get('verdict')}")
+        if not _vc.get("pass"):
+            print("⛔ **2단계를 제출하지 않는다.** 추가 셀 탐색 없이 Figure 2e 를 제거한다.")
+            return 2
+        print("✅ 1단계 통과 — 2단계 제출 가능")
+        return 0
+
+    _bad_final = []
+    if _vc and _vc.get("applicable") and not _vc.get("pass"):
+        _bad_final.append("closure_vacconv.pass != true")
+    if str(_cl.get("verdict", "")).startswith("NO_VALUE"):
+        _bad_final.append("prereg_closure = NO_VALUE")
+    if _cl.get("blocks"):
+        _bad_final.append("prereg_closure.blocks %s" % _cl["blocks"][:2])
+    if _bad_final:
+        print("⛔ **비인용 상태로 끝났다** — 종료코드를 0 으로 두지 않는다:")
+        for b in _bad_final:
+            print(f"   · {b}")
+        return 2
     return 0
 
 
@@ -5992,6 +6033,24 @@ def _readme_sp(man: Dict[str, Any], a, zcut: float, n_jobs: int,
     #   없다")에 걸린다. 실제 계획에서 세어서 있을 때만 넣는다.
     _n_rel = sum(1 for _p in (man.get("planned") or {}).values()
                  if "relax" in (_p.get("phases") or []))
+    # ⛔⛔ 2026-08-31 (회신 AN P0-3) — README 와 러너가 **서로 반대를 말하고 있었다.**
+    #   run_staged.sh 는 순서를 강제하는데(1단계 판정 실패 시 2단계 금지) README 는
+    #   "잡은 독립이니 동시에 제출" 로 읽혀 stop rule 을 우회시켰다.
+    #   ⇒ staged 러너가 있으면 **그것이 유일한 실행 지침**이라고 못박는다.
+    _staged = bool(man.get("staged_runner"))
+    staged_block = ("""⛔ **`run_staged.sh` 로만 실행해 주세요. 12잡을 한꺼번에 던지지 마십시오.**
+1단계(6잡)가 진공 두께 수렴 시험을 통과해야 2단계를 돌립니다 — 통과 못 하면
+2단계는 **돌리지 않는 것이 맞습니다**(추가 계산으로 메우지 않습니다).
+
+```
+VASP_CMD="mpirun -np %d vasp_std" bash run_staged.sh 1     # 1단계 + 자동 판정
+VASP_CMD="mpirun -np %d vasp_std" bash run_staged.sh 2     # 1단계 통과 뒤에만
+```
+
+아래 단일 잡 실행은 **한 잡을 다시 돌릴 때만** 쓰십시오:
+
+""" % (getattr(a, "cores", 48), getattr(a, "cores", 48))) if _staged else ""
+
     relax_return = ("""⚠ **`relax/` 폴더가 있는 잡은 `relax/OUTCAR` 와 `relax/CONTCAR` 도 같이**
   보내 주세요 (이 묶음에 **%d잡**). 단일점 묶음에서도 **기체 기준(`refs/mol__*`)에는
   relax 상이 있습니다** — 분자는 상자 안에서 이완해야 하기 때문입니다. 어느 잡인지는:
@@ -6071,7 +6130,7 @@ def _readme_sp(man: Dict[str, Any], a, zcut: float, n_jobs: int,
 
 ## 하실 일
 
-```
+{staged_block}```
 mkdir -p <이 묶음 전용 빈 디렉터리> && cd <그 디렉터리>
 unzip <이 묶음>.zip
 cd <잡폴더>
@@ -7207,6 +7266,9 @@ def build_bundle(a, ledger: Optional[Dict[str, Any]] = None) -> Path:
     (out / "run_all.sh").write_text(RUN_ALL)
     if getattr(a, "refs_minimal", False):
         (out / "run_staged.sh").write_text(RUN_STAGED)
+        # ⛔ 2026-08-31 (회신 AN P0-3) — README 가 이 값을 읽어 "staged 로만 실행" 을 찍는다.
+        #   기록이 없으면 README 와 러너가 서로 반대를 말하게 된다.
+        man["staged_runner"] = "run_staged.sh"
     if a.adaptive_dense:
         (out / "run_dense_selected.sh").write_text(RUN_DENSE_SEL)
     # ⚠ 문서가 잡 수를 읽으므로 **문서보다 먼저** 확정한다 (Codex 7차 §11 —
