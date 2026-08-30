@@ -1,0 +1,765 @@
+{
+  "box": {
+    "2": {
+      "kinds": [
+        "mono_AM_P",
+        "mono_AM_S"
+      ],
+      "n": 30,
+      "pdd_SE": [
+        0.05,
+        0.3
+      ],
+      "per_kind": {
+        "mono_AM_P": {
+          "n": 15,
+          "rP_um": [
+            2.5,
+            7.5
+          ],
+          "rSE_um": [
+            0.5,
+            1.0
+          ]
+        },
+        "mono_AM_S": {
+          "n": 15,
+          "rP_um": [
+            1.0,
+            2.5
+          ],
+          "rSE_um": [
+            0.5,
+            1.0
+          ]
+        }
+      },
+      "phi_AM": [
+        0.49295774647887325,
+        0.8878504672897196
+      ],
+      "rP_um": [
+        1.0,
+        7.5
+      ],
+      "rSE_um": [
+        0.5,
+        1.0
+      ],
+      "volfrac": [
+        0.176428,
+        0.317759
+      ]
+    },
+    "3": {
+      "kinds": [
+        "bimodal"
+      ],
+      "n": 100,
+      "pdd_SE": [
+        0.05,
+        0.3
+      ],
+      "per_kind": {
+        "bimodal": {
+          "n": 100,
+          "rP_um": [
+            2.5,
+            7.5
+          ],
+          "rSE_um": [
+            0.5,
+            1.0
+          ]
+        }
+      },
+      "phi_AM": [
+        0.49295774647887325,
+        0.8878504672897196
+      ],
+      "rP_um": [
+        2.5,
+        7.5
+      ],
+      "rSE_um": [
+        0.5,
+        1.0
+      ],
+      "rS_um": [
+        0.5,
+        2.5
+      ],
+      "s_AM_P": [
+        0.09999999999999999,
+        0.9
+      ],
+      "volfrac": [
+        0.176428,
+        0.317759
+      ]
+    }
+  },
+  "design_seed": 20260829,
+  "note": "LHS 확장 v2 의 상자와 그 출처.  `--verify --box <이 파일>` 로 절대 LHS 칸을 검사한다 (R14 P1-05).  상자는 아래 소스 헤더에서 유도됐다.",
+  "source": {
+    "case_ids": [
+      "lhs00_000",
+      "lhs00_001",
+      "lhs00_002",
+      "lhs00_003",
+      "lhs00_004",
+      "lhs00_005",
+      "lhs00_006",
+      "lhs00_007",
+      "lhs00_008",
+      "lhs00_009",
+      "lhs00_010",
+      "lhs00_011",
+      "lhs00_012",
+      "lhs00_013",
+      "lhs00_014",
+      "lhs00_015",
+      "lhs00_016",
+      "lhs00_017",
+      "lhs00_018",
+      "lhs00_019",
+      "lhs00_020",
+      "lhs00_021",
+      "lhs00_022",
+      "lhs00_023",
+      "lhs00_024",
+      "lhs00_025",
+      "lhs00_026",
+      "lhs00_027",
+      "lhs00_028",
+      "lhs00_029",
+      "lhs00_030",
+      "lhs00_031",
+      "lhs00_032",
+      "lhs00_033",
+      "lhs00_034",
+      "lhs00_035",
+      "lhs00_036",
+      "lhs00_037",
+      "lhs00_038",
+      "lhs00_039",
+      "lhs00_040",
+      "lhs00_041",
+      "lhs00_042",
+      "lhs00_043",
+      "lhs00_044",
+      "lhs00_045",
+      "lhs00_046",
+      "lhs00_047",
+      "lhs00_048",
+      "lhs00_049",
+      "lhs00_050",
+      "lhs00_051",
+      "lhs00_052",
+      "lhs00_053",
+      "lhs00_054",
+      "lhs00_055",
+      "lhs00_056",
+      "lhs00_057",
+      "lhs00_058",
+      "lhs00_059",
+      "lhs00_060",
+      "lhs00_061",
+      "lhs00_062",
+      "lhs00_063",
+      "lhs00_064",
+      "lhs00_065",
+      "lhs00_066",
+      "lhs00_067",
+      "lhs00_068",
+      "lhs00_069",
+      "lhs00_070",
+      "lhs00_071",
+      "lhs00_072",
+      "lhs00_073",
+      "lhs00_074",
+      "lhs00_075",
+      "lhs00_076",
+      "lhs00_077",
+      "lhs00_078",
+      "lhs00_079",
+      "lhs00_080",
+      "lhs00_081",
+      "lhs00_082",
+      "lhs00_083",
+      "lhs00_084",
+      "lhs00_085",
+      "lhs00_086",
+      "lhs00_087",
+      "lhs00_088",
+      "lhs00_089",
+      "lhs00_090",
+      "lhs00_091",
+      "lhs00_092",
+      "lhs00_093",
+      "lhs00_094",
+      "lhs00_095",
+      "lhs00_096",
+      "lhs00_097",
+      "lhs00_098",
+      "lhs00_099",
+      "lhs00_100",
+      "lhs00_101",
+      "lhs00_102",
+      "lhs00_103",
+      "lhs00_104",
+      "lhs00_105",
+      "lhs00_106",
+      "lhs00_107",
+      "lhs00_108",
+      "lhs00_109",
+      "lhs00_110",
+      "lhs00_111",
+      "lhs00_112",
+      "lhs00_113",
+      "lhs00_114",
+      "lhs00_115",
+      "lhs00_116",
+      "lhs00_117",
+      "lhs00_118",
+      "lhs00_119",
+      "lhs00_120",
+      "lhs00_121",
+      "lhs00_122",
+      "lhs00_123",
+      "lhs00_124",
+      "lhs00_125",
+      "lhs00_126",
+      "lhs00_127",
+      "lhs00_128",
+      "lhs00_129"
+    ],
+    "files": [
+      {
+        "file": "lhs00_000/input_lhs00_000.liggghts",
+        "sha256": "f4a29f22973bed061fc4c6cb0fee4809f21b1176be49e4e442a6e96462b14e8f"
+      },
+      {
+        "file": "lhs00_001/input_lhs00_001.liggghts",
+        "sha256": "50e083962b55b293e70a8a6e77b00792c2ceb746b3f3b1a28063f3502c7f1615"
+      },
+      {
+        "file": "lhs00_002/input_lhs00_002.liggghts",
+        "sha256": "c607df896bee5debeb46817de30b75d540e1adf1f992345da3452ef31ff11410"
+      },
+      {
+        "file": "lhs00_003/input_lhs00_003.liggghts",
+        "sha256": "a77232c809f4ab3680002a0fe4bc545e4816db147ecb6150757f5bbcb2d94c2f"
+      },
+      {
+        "file": "lhs00_004/input_lhs00_004.liggghts",
+        "sha256": "028b31def2f2bdd34d4b3b6693a3bd2a5e03442b2c2c528bad247c274c43de00"
+      },
+      {
+        "file": "lhs00_005/input_lhs00_005.liggghts",
+        "sha256": "cb0f3c2918627b6f9a4649e54544db5f5ba4ab9b2087c8f1461375c6cb47e358"
+      },
+      {
+        "file": "lhs00_006/input_lhs00_006.liggghts",
+        "sha256": "8070dcca21360203e25241a9e8928519e2baf8aeaa2fdfecb145bc11624f45bb"
+      },
+      {
+        "file": "lhs00_007/input_lhs00_007.liggghts",
+        "sha256": "cf6df5aaadb058b954994fd582dcaf5d7d7a02bf86e82fe0c9883f3a4cdc66dd"
+      },
+      {
+        "file": "lhs00_008/input_lhs00_008.liggghts",
+        "sha256": "9fd6a617d4a117778b14c9e116a3f8abcb2f3ea38f75352d2f083e6e95c2b42a"
+      },
+      {
+        "file": "lhs00_009/input_lhs00_009.liggghts",
+        "sha256": "40a1c65ca440f9e27878ad06ab5d8d63299e90496d6a4a498c99c9b4686bf46c"
+      },
+      {
+        "file": "lhs00_010/input_lhs00_010.liggghts",
+        "sha256": "3e44859f5f42813e153b2f23a52b6bf72510f4fcd53c71eadf474e3027fa969e"
+      },
+      {
+        "file": "lhs00_011/input_lhs00_011.liggghts",
+        "sha256": "349ba8345e3e93f089063cddc30ac248e70eb7f13483721f3418b114be4c96f4"
+      },
+      {
+        "file": "lhs00_012/input_lhs00_012.liggghts",
+        "sha256": "4c76758d404572ba2810ee06d1bff102c3dda09eab3ce9af6cdd3aa20a57ea98"
+      },
+      {
+        "file": "lhs00_013/input_lhs00_013.liggghts",
+        "sha256": "25225446acf8b7fee28aaa32680de91ce6b20348947bb76d53e50cb050848b39"
+      },
+      {
+        "file": "lhs00_014/input_lhs00_014.liggghts",
+        "sha256": "380767ba9b5785ed66abba2140b2ae39f174838501b8b2bd86c478f471a2779b"
+      },
+      {
+        "file": "lhs00_015/input_lhs00_015.liggghts",
+        "sha256": "1cdaf29ad31842288ec7d8aeb1df2cd3db4c7c69f9a7854d74df06e4a9eefa67"
+      },
+      {
+        "file": "lhs00_016/input_lhs00_016.liggghts",
+        "sha256": "998f722fa1b79f32849825075728d606a66c490b64738151f5ff62ad8d88abc2"
+      },
+      {
+        "file": "lhs00_017/input_lhs00_017.liggghts",
+        "sha256": "efd281851edf7a4c329a54d6eab0feb5080a712243a999a0392913dd3d607d8f"
+      },
+      {
+        "file": "lhs00_018/input_lhs00_018.liggghts",
+        "sha256": "795c5c3c9b3418592a9356c2e8a93084d231495dedfec1eed6db17619bd30d63"
+      },
+      {
+        "file": "lhs00_019/input_lhs00_019.liggghts",
+        "sha256": "73b32303a8176ce17f5bbdc526985e053476b6d8d0c57b0db837fc82d7dca70d"
+      },
+      {
+        "file": "lhs00_020/input_lhs00_020.liggghts",
+        "sha256": "0cde6edfb7dc08f46cc111935224a1caf90e071e7bd6ba4cace4131cf751b584"
+      },
+      {
+        "file": "lhs00_021/input_lhs00_021.liggghts",
+        "sha256": "9685ec0a75d912ab542c846e357cf5609b44e27dadf7df3d20fcf4a2590713b7"
+      },
+      {
+        "file": "lhs00_022/input_lhs00_022.liggghts",
+        "sha256": "b948d0fef3b79123581d8316418dbc1f15526f5ab3ff331d97c935d9c3f5708d"
+      },
+      {
+        "file": "lhs00_023/input_lhs00_023.liggghts",
+        "sha256": "3858c1c56ca4a59b2b2d448b8e713bdd52f3339f3b8af5e60a4bf27663a0619b"
+      },
+      {
+        "file": "lhs00_024/input_lhs00_024.liggghts",
+        "sha256": "0ecd6f2210f281cdacc7f467d360e557c98bc2a4d454be1c740d063d2dc35098"
+      },
+      {
+        "file": "lhs00_025/input_lhs00_025.liggghts",
+        "sha256": "8c1edef6e614cf662e9aa6a0c03ba17caf8de80380f2fbd8247fc9f1d134a606"
+      },
+      {
+        "file": "lhs00_026/input_lhs00_026.liggghts",
+        "sha256": "d2a8ed8f6ff95c3271d893c75162b3d15f4a52cdf112e03ee27c13096406573e"
+      },
+      {
+        "file": "lhs00_027/input_lhs00_027.liggghts",
+        "sha256": "7aa40b6ccc3a885f9fa2857ae566daf88b4d2eab8b517d162457f7bf493ebd13"
+      },
+      {
+        "file": "lhs00_028/input_lhs00_028.liggghts",
+        "sha256": "028ef5130188f391e757f9209bf7f9e6d98ba0362b69253af510834c8e580d71"
+      },
+      {
+        "file": "lhs00_029/input_lhs00_029.liggghts",
+        "sha256": "8ee081e05ae521187a1cf132492ad57debf79a4f3f13160c4eb77501ae7a85d0"
+      },
+      {
+        "file": "lhs00_030/input_lhs00_030.liggghts",
+        "sha256": "8b0b8c35052211fcc9adbb97ec4afae74938d7a7a4c9e8695d9445fe9f384166"
+      },
+      {
+        "file": "lhs00_031/input_lhs00_031.liggghts",
+        "sha256": "ef5f0a61be552aacc1d3e417ae0e73b2de3da1cd5b10a8c2f1b481b798c8dca5"
+      },
+      {
+        "file": "lhs00_032/input_lhs00_032.liggghts",
+        "sha256": "4347f21f83024887b77464614d4e2e65a8404a9c32b07f8dbf4e712a54e02dcf"
+      },
+      {
+        "file": "lhs00_033/input_lhs00_033.liggghts",
+        "sha256": "1fa86cf264dcf655bf50a0b581ce228a5035af6ddd94f3bba12a5a3d992647a6"
+      },
+      {
+        "file": "lhs00_034/input_lhs00_034.liggghts",
+        "sha256": "93dcfca7f70c43b005afa24ae585c718a11b7ee3cfe201e6f9fc508b0514fd16"
+      },
+      {
+        "file": "lhs00_035/input_lhs00_035.liggghts",
+        "sha256": "346c7684a2344d186c5a587ab85410d119158bdef8aaf7571b10078e82d7803f"
+      },
+      {
+        "file": "lhs00_036/input_lhs00_036.liggghts",
+        "sha256": "836190dc92acae62dde0cf1b24e31baab0f59c6b83539a198cff55b4f68138dc"
+      },
+      {
+        "file": "lhs00_037/input_lhs00_037.liggghts",
+        "sha256": "1249321517ea14985c53c67bcfc9effb5c0898eb21335f6d1360d8654169d6e2"
+      },
+      {
+        "file": "lhs00_038/input_lhs00_038.liggghts",
+        "sha256": "57a54719a7033539f08e2fe54c40b4e51078f3552033908d18d7bcf14193142d"
+      },
+      {
+        "file": "lhs00_039/input_lhs00_039.liggghts",
+        "sha256": "cc01743402c7068b47f86b6c95edb280b9a825cc6d60613b74c2cc73ae15d7a4"
+      },
+      {
+        "file": "lhs00_040/input_lhs00_040.liggghts",
+        "sha256": "cde3496994191555b4be5e754748ab723209f3dd508d2cda5796f672ed023754"
+      },
+      {
+        "file": "lhs00_041/input_lhs00_041.liggghts",
+        "sha256": "47cdd07bdb7828e2c3b254e2d7845fa9af958618b1b57cd2dd67c7139a151d38"
+      },
+      {
+        "file": "lhs00_042/input_lhs00_042.liggghts",
+        "sha256": "41220b04678d98606f254eedf8dd065d330f2e4dc3a9c580e968974bbdeeb566"
+      },
+      {
+        "file": "lhs00_043/input_lhs00_043.liggghts",
+        "sha256": "861a408db149f270117bcbdf9c9d033ef55781ecad9c2a747f35db33ff54fcdc"
+      },
+      {
+        "file": "lhs00_044/input_lhs00_044.liggghts",
+        "sha256": "24909efc3fff08bb76f28cfd142970424cc7c1f2e9ec1637f70fdb7e088e9e5f"
+      },
+      {
+        "file": "lhs00_045/input_lhs00_045.liggghts",
+        "sha256": "81cadd6dc209d6b47db765f1de5b4faaa4a5144bd1915574bf1257193e4b0857"
+      },
+      {
+        "file": "lhs00_046/input_lhs00_046.liggghts",
+        "sha256": "68e91dec4b828f18e7a042c0209141d7c4bb20111245e244134fcb3bd6a20ebf"
+      },
+      {
+        "file": "lhs00_047/input_lhs00_047.liggghts",
+        "sha256": "2e1ea64ce5e729fb1fde3bcecfff4f9100d9fb5321db5b65c7daf75a9a82b3c2"
+      },
+      {
+        "file": "lhs00_048/input_lhs00_048.liggghts",
+        "sha256": "8fe05dbacfdaaac089909a28fd8334a3645918d31771b4c6ce36befd7e48c96e"
+      },
+      {
+        "file": "lhs00_049/input_lhs00_049.liggghts",
+        "sha256": "064f5c9cefe4b3c0097a92576968620c98db74b05c97a4e956da5265224f8189"
+      },
+      {
+        "file": "lhs00_050/input_lhs00_050.liggghts",
+        "sha256": "5d2e919eb6959ce04b629fa1c6bfe7ef9e1e6a5583e08a90619819b1450b91f3"
+      },
+      {
+        "file": "lhs00_051/input_lhs00_051.liggghts",
+        "sha256": "9dd3f9cd3f3952cfc66c8ae8c7b2162339c1af1130b09ff9d588d9a8158839b8"
+      },
+      {
+        "file": "lhs00_052/input_lhs00_052.liggghts",
+        "sha256": "ff45ce912dfc321ffbe8ad35aa6238967ab5171d82de70ffc2aa46d058d3b229"
+      },
+      {
+        "file": "lhs00_053/input_lhs00_053.liggghts",
+        "sha256": "0dcf82a084f1992b871e954a45ee916f90401a1fd422c762cf1bfd21338f1796"
+      },
+      {
+        "file": "lhs00_054/input_lhs00_054.liggghts",
+        "sha256": "8be38706c5b0b7e3747a78c461b50e59798ac78d99f2ce9060c0220f4835081f"
+      },
+      {
+        "file": "lhs00_055/input_lhs00_055.liggghts",
+        "sha256": "29c515402359df42d599bc1df2919026641c9cae3a6a50628baa02c260cb5d05"
+      },
+      {
+        "file": "lhs00_056/input_lhs00_056.liggghts",
+        "sha256": "ccb169e6833fa9ce5386c5a427e84238c0e64e71dc2578c5ad5baf16971514ec"
+      },
+      {
+        "file": "lhs00_057/input_lhs00_057.liggghts",
+        "sha256": "60d191e1be6aec9103e959f576920a791b7c143a1cf49bdb79e21657023bc8d3"
+      },
+      {
+        "file": "lhs00_058/input_lhs00_058.liggghts",
+        "sha256": "134c8cdc7b2953486be17a4f7514b8ae3ce22879984e3f5dd03511f3606a127b"
+      },
+      {
+        "file": "lhs00_059/input_lhs00_059.liggghts",
+        "sha256": "08c090f77c585c5a2a8296bf06948d98bd8ed6937f8f4c34f1512b068413f8f8"
+      },
+      {
+        "file": "lhs00_060/input_lhs00_060.liggghts",
+        "sha256": "251ca1a97d300d0c7b4f9d2de8dcc904928168a778eea96d5c3adf6dbbd021ee"
+      },
+      {
+        "file": "lhs00_061/input_lhs00_061.liggghts",
+        "sha256": "70fea7530993ad1a4d613abaf516277b0caffa336ebb432f7e54f23ba2885634"
+      },
+      {
+        "file": "lhs00_062/input_lhs00_062.liggghts",
+        "sha256": "69d39ce46931081881722137e244b44d26e2d93ecd636b076d7634635532248b"
+      },
+      {
+        "file": "lhs00_063/input_lhs00_063.liggghts",
+        "sha256": "c2cbdf3600bedaa48543888abe1d0560b16f0cdd755ab4d7bebb7b3975037417"
+      },
+      {
+        "file": "lhs00_064/input_lhs00_064.liggghts",
+        "sha256": "e75ea0076246c55abb173a0943d3d53f3d1af58b3bb63f905a6287f7b974b9b9"
+      },
+      {
+        "file": "lhs00_065/input_lhs00_065.liggghts",
+        "sha256": "b14afa0139d5802272cecfb7d5d0b3078b5188a7004fe96e22ed05b4ee313ef2"
+      },
+      {
+        "file": "lhs00_066/input_lhs00_066.liggghts",
+        "sha256": "d73e56b556a90cf89a8c854d2efc18d0595670b239ee5a2929e2039acf995b2c"
+      },
+      {
+        "file": "lhs00_067/input_lhs00_067.liggghts",
+        "sha256": "ec2bc641d22645087c369a466a220b678458a02f72b6a36c8c791ef052de9c45"
+      },
+      {
+        "file": "lhs00_068/input_lhs00_068.liggghts",
+        "sha256": "e937dac306aa5db74bf7a6be2e85c4f0f0e363c5a60f4e7f2452260a95fa5ef7"
+      },
+      {
+        "file": "lhs00_069/input_lhs00_069.liggghts",
+        "sha256": "273d80349c2d9f4447ecb0ad4313f09186970854c38dc5892491ff68f7a3f820"
+      },
+      {
+        "file": "lhs00_070/input_lhs00_070.liggghts",
+        "sha256": "916dfe666e9619d971b452b5448faf74498ad0fccd9e4e94a9bcb69b56939786"
+      },
+      {
+        "file": "lhs00_071/input_lhs00_071.liggghts",
+        "sha256": "8c97073b1bb84df9fba9567eac3094366c3146a832a052d7266ca51d76916f80"
+      },
+      {
+        "file": "lhs00_072/input_lhs00_072.liggghts",
+        "sha256": "1319599033bbb9a3f1054638cc6257dda83f0d668a59360f05fb80f8138f797c"
+      },
+      {
+        "file": "lhs00_073/input_lhs00_073.liggghts",
+        "sha256": "bf02ab406bbcba7631ce3c24659fa62d0a150daa2376a4d43e17b9262f9a012d"
+      },
+      {
+        "file": "lhs00_074/input_lhs00_074.liggghts",
+        "sha256": "e7b17bfa9b73a26c852ae03e3c5ddff14f0be80ce01749b44ee307975ead3b28"
+      },
+      {
+        "file": "lhs00_075/input_lhs00_075.liggghts",
+        "sha256": "40f8f8839c92dffe5cf5ea50b90b9e76456228d508bc7e9e7ea4e06c360e7909"
+      },
+      {
+        "file": "lhs00_076/input_lhs00_076.liggghts",
+        "sha256": "aa86111197b592ab15c1101a23fe5eda66bae1eede5b80be1bff7d3fc6f595fd"
+      },
+      {
+        "file": "lhs00_077/input_lhs00_077.liggghts",
+        "sha256": "d23bd2d2273238febcb7f1678f580cdaebe8893c1ecac3d1eaba6a53edc193a3"
+      },
+      {
+        "file": "lhs00_078/input_lhs00_078.liggghts",
+        "sha256": "8199aa4395b213c0efa9ca0c237ab85478f5df631bdd4d878065269cd88c9fc5"
+      },
+      {
+        "file": "lhs00_079/input_lhs00_079.liggghts",
+        "sha256": "cbeb350ec19ce4a163ceeb246e1c4b091ae0e3bb19bef4e2aa6ae94bb924d3d8"
+      },
+      {
+        "file": "lhs00_080/input_lhs00_080.liggghts",
+        "sha256": "1f217b9598c6dd09443d09cd7507adc73536914743e360e97a68c67064d6b829"
+      },
+      {
+        "file": "lhs00_081/input_lhs00_081.liggghts",
+        "sha256": "0d4c8e8095803e34f9804e9900c0a39ee1c7fb9b7170bc9c09711cb54bdfde5a"
+      },
+      {
+        "file": "lhs00_082/input_lhs00_082.liggghts",
+        "sha256": "66930d0f72550520f1a44ad54900b904aa238b5d93d4fb6a0c3b1bf1b890f008"
+      },
+      {
+        "file": "lhs00_083/input_lhs00_083.liggghts",
+        "sha256": "9ad2a384372baab7179ca0a5c45481534cb437850b80add9d36138cb7ed54e56"
+      },
+      {
+        "file": "lhs00_084/input_lhs00_084.liggghts",
+        "sha256": "b34797fef6e30e88b9abf0f41f48b12bf556081568f21e7e26d0605e853c46d6"
+      },
+      {
+        "file": "lhs00_085/input_lhs00_085.liggghts",
+        "sha256": "56b3a78fd70526ed03d99b6188d33bdbad78c0912d74a501338b95ba9fcaed29"
+      },
+      {
+        "file": "lhs00_086/input_lhs00_086.liggghts",
+        "sha256": "b4ade981acd30fc368a1d020dd915722f516e1c536bd25eef91a13f5dde5c2b9"
+      },
+      {
+        "file": "lhs00_087/input_lhs00_087.liggghts",
+        "sha256": "d16b4bf9a2f2e9cb78a3be230743c9eaa5bbe9c398c350bbf5aa57e950d62d99"
+      },
+      {
+        "file": "lhs00_088/input_lhs00_088.liggghts",
+        "sha256": "bfc1763af8f47d2cb07751737b25014d01fda9229e697d2c35787e9f9dd22af6"
+      },
+      {
+        "file": "lhs00_089/input_lhs00_089.liggghts",
+        "sha256": "141a581d0fccfe248c77135f3dc377f61290811631301ed71678fca947bee829"
+      },
+      {
+        "file": "lhs00_090/input_lhs00_090.liggghts",
+        "sha256": "a4355fb421e0009405c76e1654fb7cc651b08dfd744183c87a997800b3ea0f3f"
+      },
+      {
+        "file": "lhs00_091/input_lhs00_091.liggghts",
+        "sha256": "0feebe0adabf1b205e6d6e44897a7a55230202591a3cee22264a8c643fbcd361"
+      },
+      {
+        "file": "lhs00_092/input_lhs00_092.liggghts",
+        "sha256": "eb103d7e0562f7705f6935e023ae5c90fc91594d030da45b0ef79d7c64a8a178"
+      },
+      {
+        "file": "lhs00_093/input_lhs00_093.liggghts",
+        "sha256": "932910358a5b6b56dfab7fcf478e933ec34da792351803ace4122eab587020f5"
+      },
+      {
+        "file": "lhs00_094/input_lhs00_094.liggghts",
+        "sha256": "b12e92aa250a72797cdc0c4a28493a0ff2bdc5e83b6494a9e77444dc1d04ed44"
+      },
+      {
+        "file": "lhs00_095/input_lhs00_095.liggghts",
+        "sha256": "dafb83a2842588ca68cd4973af492fa69a6673c236c2bb2b875afbf44a995024"
+      },
+      {
+        "file": "lhs00_096/input_lhs00_096.liggghts",
+        "sha256": "29fd49c449c1002c1bb5a1a2dd98ecf1572c12376be005c9f22ea2c72eb9a7e8"
+      },
+      {
+        "file": "lhs00_097/input_lhs00_097.liggghts",
+        "sha256": "3468a5e61ac5ce1117d834d69456eb786d34b49362add6ddd03b853479893910"
+      },
+      {
+        "file": "lhs00_098/input_lhs00_098.liggghts",
+        "sha256": "9bec571805db1903e5f071a64c006a59814027ebed7750481384461d91428ee5"
+      },
+      {
+        "file": "lhs00_099/input_lhs00_099.liggghts",
+        "sha256": "376c88a6ba0f9eb9ae234d096c00f5cdb09e035719000a58eadaad06a2f75a52"
+      },
+      {
+        "file": "lhs00_100/input_lhs00_100.liggghts",
+        "sha256": "48e480f14adb78ffc1006db1e8fd58eca62e454bc1b07fcd939995b728a30de6"
+      },
+      {
+        "file": "lhs00_101/input_lhs00_101.liggghts",
+        "sha256": "cd47ca453837893e2069120b80a96ed39017931a364fe7d769998212e27bce4b"
+      },
+      {
+        "file": "lhs00_102/input_lhs00_102.liggghts",
+        "sha256": "7d295a3b6b64d78f7de94a2b40bb7bd731492a7e7d7d2a143d0abfe6fdf2be65"
+      },
+      {
+        "file": "lhs00_103/input_lhs00_103.liggghts",
+        "sha256": "9f16a146c7a186a15c2ff75666da98914ca3928562f9b4de406dc950e6962bb1"
+      },
+      {
+        "file": "lhs00_104/input_lhs00_104.liggghts",
+        "sha256": "f447ba6c4970658a0c66e4f593e0108cb22dfaadd34dfc96a6a82d5b396f60e4"
+      },
+      {
+        "file": "lhs00_105/input_lhs00_105.liggghts",
+        "sha256": "c99803be0cf6a3445cdb61c263312d342fd2c7c41b04c0a5f23f10a5f8a39562"
+      },
+      {
+        "file": "lhs00_106/input_lhs00_106.liggghts",
+        "sha256": "baf3826bf9ceec3004d4358519f9deb4ce1c3417e37bdd35c5cc98a9ba98cd77"
+      },
+      {
+        "file": "lhs00_107/input_lhs00_107.liggghts",
+        "sha256": "33a5baa10595c85e557670e052cce3d6b6422507dbdb0a3d3dcd9c037d960685"
+      },
+      {
+        "file": "lhs00_108/input_lhs00_108.liggghts",
+        "sha256": "1be9760586627f362a762cbd12b02a661b63ae59f07e74c7092bddaa97d78ccb"
+      },
+      {
+        "file": "lhs00_109/input_lhs00_109.liggghts",
+        "sha256": "3669f7b3a2b9289f7ca36f0e3ab26d9bc3be84973eb4d2f394c53367e3226031"
+      },
+      {
+        "file": "lhs00_110/input_lhs00_110.liggghts",
+        "sha256": "aca27397e569374283876c428e4c16dd5174f0e99a5048b13d1cd82f45ee2ccf"
+      },
+      {
+        "file": "lhs00_111/input_lhs00_111.liggghts",
+        "sha256": "6aed58192f3b1ad41c26f1213f39866d8d10761d74bc1fd49dab385458783df9"
+      },
+      {
+        "file": "lhs00_112/input_lhs00_112.liggghts",
+        "sha256": "bd4dac3d618563c00834ddddf2ed66450a727d038554623e52cc140b95db9591"
+      },
+      {
+        "file": "lhs00_113/input_lhs00_113.liggghts",
+        "sha256": "1aecd6e889d0fb71afa2a943ebd40f296aec2705f03b568e76d57c0e8f418f23"
+      },
+      {
+        "file": "lhs00_114/input_lhs00_114.liggghts",
+        "sha256": "8b574f1ebd71eda5ed1c75e5d3f64d3f4418fc63b447ace89031103e9b484e2d"
+      },
+      {
+        "file": "lhs00_115/input_lhs00_115.liggghts",
+        "sha256": "3c4d808feb030942c63409794fed8b1d1ecbfd9636ff682fe954a38b325f8720"
+      },
+      {
+        "file": "lhs00_116/input_lhs00_116.liggghts",
+        "sha256": "16acee773a885857b9cda9c0b4e5651f98998d20e09871206b15bcaab1d6f66b"
+      },
+      {
+        "file": "lhs00_117/input_lhs00_117.liggghts",
+        "sha256": "7a8ba5b91403cbba495c1a0940bc3897de18a5b42d2991686e8c244696c6154b"
+      },
+      {
+        "file": "lhs00_118/input_lhs00_118.liggghts",
+        "sha256": "6aeb8198a19566ba9a7b0aa66feca1cd1996000b1c4757bd1931388604d191d2"
+      },
+      {
+        "file": "lhs00_119/input_lhs00_119.liggghts",
+        "sha256": "62cdbe932129e94fadf63086a1b25997c69e9fc26caa869d22e794c03a5160e7"
+      },
+      {
+        "file": "lhs00_120/input_lhs00_120.liggghts",
+        "sha256": "1c6b110d5922fd079caf5d6ac4d9f288381cbbad913d1798d06454da79a4c633"
+      },
+      {
+        "file": "lhs00_121/input_lhs00_121.liggghts",
+        "sha256": "9ab4fc54ec8a08a0bdf283e8ee374abcd2b055f7ecf21cf7c79d0be59ae7434b"
+      },
+      {
+        "file": "lhs00_122/input_lhs00_122.liggghts",
+        "sha256": "63891eb480a35f75872febee7f59202c0298d5c6d8a3ec490140a3e4962bd0ea"
+      },
+      {
+        "file": "lhs00_123/input_lhs00_123.liggghts",
+        "sha256": "42b946370ad850cb8992e6af569060e173b342148ad54c6a7b8b8718c8c6263d"
+      },
+      {
+        "file": "lhs00_124/input_lhs00_124.liggghts",
+        "sha256": "fceaf300578541312956e1629dc79599afb899e0b331666a75d4ee7bbfdf7516"
+      },
+      {
+        "file": "lhs00_125/input_lhs00_125.liggghts",
+        "sha256": "0925278cc2d5866949562cbba72cc2463b9626b7a759832a8eb44f1918f56049"
+      },
+      {
+        "file": "lhs00_126/input_lhs00_126.liggghts",
+        "sha256": "0627bb5f421a38bab3547cfe3a65cfc543152dd4016b627ef728d84d918ccc41"
+      },
+      {
+        "file": "lhs00_127/input_lhs00_127.liggghts",
+        "sha256": "b92f9e16aa69891873432011dd52893d075ec5a8e224ace03c05b570a20a0e79"
+      },
+      {
+        "file": "lhs00_128/input_lhs00_128.liggghts",
+        "sha256": "00ddd41898fb93164895eb46ad635ffcd95a535f5e1a282a6e4be116886e9d14"
+      },
+      {
+        "file": "lhs00_129/input_lhs00_129.liggghts",
+        "sha256": "7655bfec1e019bfbe2cf39697e18cfd27bfde090b641030258562c4b6e395d64"
+      }
+    ],
+    "n_files": 130,
+    "n_parsed": 130,
+    "n_unread": 0,
+    "root": "/home/yonghoon/dem_test/lhs",
+    "unread": []
+  }
+}
