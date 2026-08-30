@@ -5115,29 +5115,81 @@ def main():
     #   단일점 판의 주장은 "UMA 가 고른 **그 기하** 위의 DFT 에너지" 다. 외주처가
     #   다른 기하를 넣었으면 무결성 해시(배포 파일)는 통과해도 계산은 다른 계다.
     #   상 폴더의 POSCAR 는 배포물이 아니라 **러너가 만든 것**이라 files_sha256 에 없다.
+    # ⛔⛔ 회신 AP #1 (2026-08-31) — 이 검사가 **정상 canary 를 반드시 막았다.**
+    #   canary 는 `PARENT_GEOM` 을 따라 부모의 `relax/CONTCAR` 를 static/POSCAR 로
+    #   받는데, 여기서는 relax 가 없는 잡의 static/POSCAR 를 **그 잡 자신의 루트
+    #   POSCAR 와 바이트 해시로** 비교했다. 좌표가 같아도 CONTCAR 서식(Direct/scale/
+    #   선택동역학 유무)만 달라도 불일치가 된다.
+    #   ⇒ `PARENT_GEOM` 이 있으면 **선언된 부모의 최종 기하**를 기대값으로 삼고,
+    #     바이트가 아니라 원소·순서·셀·Cartesian 좌표·고정플래그를 비교한다.
+    def _expected_geom_src(jd):
+        """(기대 기하 파일, 출처 라벨). PARENT_GEOM 이 있으면 부모의 최종 기하."""
+        pg = os.path.join(jd, "PARENT_GEOM")
+        if os.path.isfile(pg):
+            tgt = os.path.normpath(os.path.join(jd, open(pg).read().strip()))
+            cc = os.path.join(tgt, "relax", "CONTCAR")
+            if os.path.isfile(cc):
+                return cc, "부모 relax/CONTCAR"
+            rp2 = os.path.join(tgt, "POSCAR")
+            if os.path.isfile(rp2):
+                return rp2, "부모 루트 POSCAR (부모가 단일점)"
+            return None, "부모 기하 없음 (%s)" % _pk(tgt, root)
+        rp2 = os.path.join(jd, "POSCAR")
+        return (rp2 if os.path.isfile(rp2) else None), "자기 루트 POSCAR"
+
+    def _geom_equal(a, b, tol=1e-4):
+        """원소·순서·셀·Cartesian·고정플래그 비교. → (bool, why)"""
+        if a is None or b is None:
+            return False, "한쪽을 못 읽었다"
+        if len(a["pos"]) != len(b["pos"]):
+            return False, "원자수 %d ≠ %d" % (len(a["pos"]), len(b["pos"]))
+        if a.get("species") and b.get("species") and a["species"] != b["species"]:
+            return False, "원소 순서 %s ≠ %s" % (a["species"], b["species"])
+        if a.get("counts") != b.get("counts"):
+            return False, "원소 개수 %s ≠ %s" % (a.get("counts"), b.get("counts"))
+        dc = max(abs(a["cell"][i][k] - b["cell"][i][k])
+                 for i in range(3) for k in range(3))
+        if dc > tol:
+            return False, "셀 최대차 %.3g Å" % dc
+        dp = max(max(abs(x - y) for x, y in zip(p1, p2))
+                 for p1, p2 in zip(a["pos"], b["pos"]))
+        if dp > tol:
+            return False, "Cartesian 최대차 %.3g Å" % dp
+        if a.get("fixed") != b.get("fixed"):
+            return False, "고정 플래그가 다르다"
+        return True, "일치 (셀 %.3g · 좌표 %.3g Å)" % (dc, dp)
+
     integrity["runtime_poscar_mismatch"] = []
+    integrity["parent_geom_checked"] = []
     for jd in sorted(glob(os.path.join(root, "*", "*", ""))):
-        rp = os.path.join(jd, "POSCAR")
-        if not os.path.isfile(rp):
+        if os.path.isdir(os.path.join(jd, "relax")):
+            continue              # 이완판은 CONTCAR 승계가 정상 — 달라야 맞다
+        src, lbl = _expected_geom_src(jd)
+        if src is None:
             continue
-        rh = hashlib.sha256(open(rp, "rb").read()).hexdigest()
+        want_g = read_poscar(src)
         for ph in ("static", "dense"):
             pp = os.path.join(jd, ph, "POSCAR")
             if not os.path.isfile(pp):
                 continue
-            if os.path.isdir(os.path.join(jd, "relax")):
-                continue          # 이완판은 CONTCAR 승계가 정상 — 달라야 맞다
-            if hashlib.sha256(open(pp, "rb").read()).hexdigest() != rh:
+            ok, why = _geom_equal(want_g, read_poscar(pp))
+            if os.path.isfile(os.path.join(jd, "PARENT_GEOM")):
+                integrity["parent_geom_checked"].append(
+                    "%s ← %s: %s" % (_pk(pp, root), lbl, why))
+            if not ok:
                 integrity["runtime_poscar_mismatch"].append(
-                    _pk(pp, root))
+                    "%s (기대=%s · %s)" % (_pk(pp, root), lbl, why))
     # ★ phase POSCAR 를 반송받지 못하면 위 검사는 **조용히 건너뛴다** = fail-open.
     #   OUTCAR 가 있는데 POSCAR 가 없으면 OUTCAR 좌표로 대조한다 (Codex P0-6).
     integrity["geometry_unverified"] = []
     for jd in sorted(glob(os.path.join(root, "*", "*", ""))):
-        rp = os.path.join(jd, "POSCAR")
-        if not os.path.isfile(rp) or os.path.isdir(os.path.join(jd, "relax")):
+        if os.path.isdir(os.path.join(jd, "relax")):
             continue
-        want = read_poscar(rp)
+        # ⛔ 회신 AP #1 — 여기서도 기대 기하는 **PARENT_GEOM 을 따른다**
+        _src2, _lbl2 = _expected_geom_src(jd)
+        if _src2 is None:
+            continue
+        want = read_poscar(_src2)
         for ph in ("static", "dense"):
             has_oc = any(os.path.isfile(os.path.join(jd, ph, "OUTCAR" + e))
                          for e in ("", ".gz"))

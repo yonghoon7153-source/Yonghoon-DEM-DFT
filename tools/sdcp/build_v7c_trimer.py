@@ -2936,6 +2936,23 @@ run() {
   echo "  중단: ${j#$D/}  (마지막 줄: $(tail -1 "$j/$tag.out" 2>/dev/null))"; return 1
 }
 
+# ⛔ 중복 실행 가드 (CLAUDE.md 규약 — 2026-08-31 실측 사고: 같은 단계를 두 번
+#    띄워 두 러너가 같은 .out/.gbw/스크래치에 동시에 썼다). 락은 디렉터리로 잡는다
+#    — mkdir 은 원자적이라 경쟁 조건이 없다.
+LOCK="$D/.lock_$stage"
+if ! mkdir "$LOCK" 2>/dev/null; then
+  owner=$(cat "$LOCK/pid" 2>/dev/null || echo "?")
+  if [ "$owner" != "?" ] && kill -0 "$owner" 2>/dev/null; then
+    echo "이미 단계 '$stage' 가 돌고 있습니다 (pid $owner). 중복 실행을 막습니다."
+    echo "  정말 다시 돌리려면: pkill -f run_pilot.sh; rm -rf $LOCK"
+    exit 3
+  fi
+  echo "죽은 락을 치웁니다 (pid $owner 없음): $LOCK"
+  rm -rf "$LOCK"; mkdir "$LOCK" || exit 3
+fi
+echo $$ > "$LOCK/pid"
+trap 'rm -rf "$LOCK"' EXIT INT TERM
+
 fail=0
 case "$stage" in
   L)
