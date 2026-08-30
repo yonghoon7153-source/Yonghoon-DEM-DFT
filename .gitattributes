@@ -1,0 +1,10 @@
+#  ★ CSV 는 **LF 로 고정**한다 (2026-08-30, Codex R14 P2).
+#  ⚠ 사전등록이 설계 CSV 를 **sha256 으로** 참조하는데, `core.autocrlf` 가 켜진 클론에서는
+#    작업트리 바이트가 CRLF 로 바뀌어 같은 커밋인데도 해시가 달라진다 — 실제로 ibb 산출
+#    `37fa2db0…` 과 리포 `7923b61f…` 가 개행만으로 갈렸다.  봉인이 플랫폼에 의존하면
+#    "제3자가 클론해서 확인한다" 는 전제가 깨진다.
+*.csv text eol=lf
+*.json text eol=lf
+*.md text eol=lf
+*.py text eol=lf
+*.sh text eol=lf
