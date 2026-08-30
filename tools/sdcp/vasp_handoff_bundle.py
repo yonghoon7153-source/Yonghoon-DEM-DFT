@@ -6339,16 +6339,60 @@ def main():
     #   거짓 통과가 되므로 '2' 로 두지 않고 **양쪽 다 필수**로 센다.
     _no_meta = [j for j, pl in planned.items()
                 if pl.get("required") and not (pl.get("meta") or {})]
-    missing = []
+    # ⛔⛔ 회신 AP #4 (2026-08-31) — 14잡이 **전부 required** 라, net4 나 대안 자세
+    #   하나가 게이트되면 최종 completeness 가 exit 2 를 냈다. 그런데 우리는
+    #   "net4 unavailable 은 D_pm1 에 영향 없음" 이라고 선언해 놓았다 — 모순이다.
+    #   또 대안 자세 4잡은 어떤 봉인된 식에도 안 들어가면서 필수잡으로 남아 있었다.
+    #   ⇒ tier 를 나눈다. estimand = 봉인된 네 잡 + 진공쌍(1단계 판정에 쓴다) +
+    #     기체 기준. 나머지(net4·대안 자세)는 sensitivity 다.
+    #     종료코드는 **estimand tier 만** 본다. sensitivity 결측은 상태로 보고한다.
+    _ejk_all = set()
+    for _kk in ("estimand_job_keys", "estimand_job_keys_net4"):
+        for _k2, _v2 in (man.get(_kk) or {}).items():
+            if _k2.startswith("E_") and isinstance(_v2, str):
+                _ejk_all.add(_v2)
+    _ejk_pm1 = {v for k, v in (man.get("estimand_job_keys") or {}).items()
+                if k.startswith("E_") and isinstance(v, str)}
+
+    def _tier_of(j, pl):
+        # ⚠ tier 분리는 **exact-key 경로에서만** 뜻이 있다. 봉인된 식이 없으면
+        #   어느 잡이 D 에 들어가는지 알 수 없으므로 전부 estimand 로 둔다
+        #   (레거시 Li/Ni 쌍 경로에서 그 잡들이 sensitivity 로 강등되면
+        #    누락이 종료코드에 안 잡히는 **회귀**가 된다 — 실측으로 잡았다).
+        if not _ejk_pm1:
+            return "estimand"
+        m = (pl.get("meta") or {})
+        if j in _ejk_pm1:
+            return "estimand"
+        if m.get("kind") == "mol_ref":
+            return "estimand"          # 기체 기준은 D 에 직접 들어간다
+        if m.get("vacconv"):
+            return "estimand"          # 진공 수렴 판정이 1단계 게이트다
+        return "sensitivity"
+    missing, missing_sens = [], []
     for j, pl in planned.items():
         if not pl.get("required"):
             continue
         if _gate_arg == "vacconv" and (pl.get("meta") or {}) and _stage_of(pl) != "1":
             continue                      # 1단계 판정에서는 2단계 잡을 안 센다
+        _bucket = missing if _tier_of(j, pl) == "estimand" else missing_sens
         if E(j) is None:
-            missing.append(j + " [static]")
+            _bucket.append(j + " [static]")
         elif "dense" in (pl.get("phases") or []) and E_dense(j) is None:
-            missing.append(j + " [dense]")
+            _bucket.append(j + " [dense]")
+    results["required_missing_sensitivity"] = missing_sens
+    results["tier_census"] = {}
+    for j, pl in planned.items():
+        if pl.get("required"):
+            _t = _tier_of(j, pl)
+            results["tier_census"][_t] = results["tier_census"].get(_t, 0) + 1
+    if missing_sens:
+        results["warnings"].append(
+            "sensitivity tier %d건 미완 %s — **D_pm1 에는 영향이 없다**. "
+            "다만 자기 분기·자세 민감도를 보고할 수 없다 (회신 AP #4)"
+            % (len(missing_sens), missing_sens[:3]))
+    results["sensitivity_status"] = ("complete" if not missing_sens
+                                     else "incomplete (%d건)" % len(missing_sens))
     out = os.path.join(root, "RESULTS.json")
     results["required_missing"] = missing
     for r in jobs.values():
@@ -6469,7 +6513,8 @@ def main():
                 print(f"   {k2}: {v2}")
         return 2
     if missing:
-        _scope = "1단계 cohort" if _gate_arg == "vacconv" else "전체(tier1/refs)"
+        _scope = ("1단계 cohort" if _gate_arg == "vacconv"
+                  else "estimand tier (sensitivity 결측은 종료코드에 안 넣는다)")
         print(f"\n⛔ **필수 산출 미완 {len(missing)}건** ({_scope}) — fail-closed, exit 2:")
         for j in missing[:20]:
             print(f"   · {j}")
@@ -8062,6 +8107,20 @@ def build_bundle(a, ledger: Optional[Dict[str, Any]] = None) -> Path:
     if _chk:
         sys.exit(f"⛔ d3 필드가 없는 잡 {len(_chk)}개: {_chk[:5]}")
 
+    # ⛔⛔ 회신 AP Q4 (2026-08-31) — 분석기는 meta 결측 항목을 **양쪽 stage 에서
+    #   필수**로 셌지만 러너는 그것을 **stage 2 로만** 보낸다. 안전장치가 아니라
+    #   영구 deadlock 이다. 정책은 "양쪽 필수" 가 아니라 **첫 VASP 전에 중단**이다.
+    #   ⚠ deadlock 은 **staged 구성에서만** 생긴다 (단계를 meta 로 나누는 러너가
+    #     거기에만 있다). 레거시 tier1 경로는 단계 개념이 없으므로 대상이 아니다.
+    _nometa = sorted(k for k, v in man["planned"].items()
+                     if not (v.get("meta") or {})) if getattr(
+                         a, "refs_minimal", False) else []
+    if _nometa:
+        sys.exit("⛔ 계획 항목 %d건에 meta 가 없다 — 단계를 결정할 수 없다.\n"
+                 "   러너는 meta 로 단계를 나누므로 이대로 내보내면 그 잡들이\n"
+                 "   영구히 열리지 않는다. 생성기에서 멈춘다 (schema error).\n"
+                 "   %s" % (len(_nometa), _nometa[:5]))
+
     man["potcar_spec"] = {e: POTCAR_SPEC.get(e, e) for e in sorted(used_els)}
     (out / "analyze_results.py").write_text(ANALYZER)
     if getattr(a, "refs_minimal", False):
@@ -9030,6 +9089,20 @@ def selftest() -> int:
         chk("필수 산출 미완" not in _r_gate.stdout
             or "1단계 cohort" in _r_gate.stdout,
             "AO P0-1: 미완 메시지가 **어느 범위**를 셌는지 밝힌다")
+        # ── 회신 AP #4 — estimand / sensitivity tier ────────────────────
+        #   ⚠ 이 픽스처는 조각이 하나라 estimand_job_keys 가 봉인되지 않는다
+        #     (D 는 두 조각의 대비다). 그래서 여기서 시험하는 것은 분리 자체가
+        #     아니라 **불변식**: 봉인된 식이 없으면 tier 를 나누지 않는다.
+        #     나누면 레거시 잡이 sensitivity 로 강등돼 누락이 종료코드에서 사라진다.
+        _rj = json.loads((_st / "RESULTS.json").read_text())
+        _tc = _rj.get("tier_census") or {}
+        chk(bool(_tc), f"AP #4: tier_census 를 낸다 ({_tc})")
+        chk(bool(m_st.get("estimand_job_keys")) or not _tc.get("sensitivity"),
+            "⛔음성 AP #4 불변식: 봉인된 식이 없으면 **전부 estimand tier** 다 "
+            f"(census {_tc})")
+        chk("sensitivity_status" in _rj,
+            f"AP #4: sensitivity 상태를 항상 보고한다 ({_rj.get('sensitivity_status')})")
+
 
     # ══ 회신 U P0-5 — closure 모드 e2e. "계획대로 생성되는가" 를 파일로 확인한다 ══
     a_cl = argparse.Namespace(**{**vars(a_sp), "out": str(td / "bundle_closure"),
