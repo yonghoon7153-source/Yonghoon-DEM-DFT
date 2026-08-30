@@ -7087,6 +7087,17 @@ VASP_CMD="mpirun -np %d vasp_std" bash run_staged.sh 2     # 1단계 통과(STAG
         intro_line = ("슬랩·분자 **전 잡이 단일점**입니다 — 구조 최적화는 저희가 MLIP 으로\n"
                       "끝냈고, 이 묶음에는 `relax/` 폴더가 하나도 없습니다 (기체 기준계 포함).")
 
+    # ⛔⛔ 회신 AP #10 (2026-08-31) — "서로 완전히 독립" 은 **staged 구성에서 거짓**이다.
+    #   canary 는 PARENT_GEOM 으로 부모 기체 기준의 최종 기하를 받으므로 부모가
+    #   먼저 완주해야 하고, 2단계는 1단계 게이트를 통과해야 열린다. 문서가 독립이라고
+    #   적으면 외주가 전부 동시에 던져 정지 규칙이 무력화된다.
+    indep_line = (
+        "⛔ **서로 독립이 아닙니다.** canary(`*__nzmag`)는 부모 기체 기준의 최종\n"
+        "기하를 받으므로 부모가 **먼저** 끝나야 하고, 2단계는 1단계 게이트를\n"
+        "통과해야 열립니다. 순서는 `run_staged.sh` 가 강제합니다 — 전부 동시에\n"
+        "던지지 마십시오."
+        if _staged else
+        "서로 **완전히 독립**이라 원하시는 만큼 동시에 돌리셔도 됩니다.")
     _tw = ((cs.get("complexes") or {}).get("d3_off_twins") or 0) if cs else None
     if _tw == 0:
         pose_para = (
@@ -7139,7 +7150,7 @@ VASP_CMD="mpirun -np {a.cores} vasp_std" bash run_job.sh
 - POTCAR 파일 자체는 주고받지 않습니다 — 해시와 TITEL 줄만 기록됩니다.
 
 잡 폴더 {n_jobs}개가 `{groups}` 에 있습니다.
-서로 **완전히 독립**이라 원하시는 만큼 동시에 돌리셔도 됩니다.
+{indep_line}
 
 {census_md}
 
@@ -7255,14 +7266,62 @@ def _submit_contract(man: Dict[str, Any], a, by_ph: Optional[dict] = None) -> st
                      f"{_cs['complexes']['d3_off_twins']})\n"
                      f"- audit pose {_cs['audit_pose']}\n"
                      f"- pose 당: {_cs['pose당']}\n") if _cs else ""
+    # ⛔⛔ 회신 AP #10 — staged 구성에서는 **잡 사이 의존성이 있다**. 종전 문구
+    #   ("잡 사이에는 의존성이 없습니다" + 전체 array 제출 예시)는 정지 규칙을
+    #   정면으로 우회시켰다. 구성에 따라 문서를 갈라 쓴다.
+    _staged_sub = bool(man.get("staged_runner"))
+    _dep_block = ("""⛔ **잡 사이에 의존성이 있습니다** (이 묶음은 staged 구성입니다).
+- canary(`*__nzmag`)는 `PARENT_GEOM` 이 가리키는 **부모 기체 기준의 최종 기하**를
+  받습니다 — 부모가 먼저 완주해야 합니다.
+- 2단계는 1단계 게이트(진공 수렴 + canary 기하 + 분자 스핀 + POTCAR 신원)를
+  통과해야 열립니다.
+순서는 `run_staged.sh` 가 강제합니다."""
+        if _staged_sub else
+        "잡 사이에는 의존성이 없습니다. 한 잡의 `run_job.sh` 가 그 잡의 상 순서를 강제합니다.")
+    _submit_block = ("""## 실행 (이 경로 하나뿐입니다)
+```bash
+cd <이 묶음을 푼 디렉터리>              # 묶음 **루트**
+export PP=/path/to/potpaw_PBE.54
+export POTCAR_ALLOWLIST=/abs/site_allow.txt
+VASP_CMD="mpirun -np %d vasp_std" bash run_staged.sh 1     # 조립+봉인 → 1단계 → 판정
+VASP_CMD="mpirun -np %d vasp_std" bash run_staged.sh 2     # 1단계 통과 뒤에만
+```
+⛔ **전체를 배열로 한꺼번에 던지지 마십시오.** 위 의존성 때문에 결과가 무의미해집니다.
+`run_all.sh` 는 이 묶음에 **넣지 않았습니다**.
+
+## 반드시 같이 반송해 주실 것
+- `POTCAR_ROOT_SEAL.json` (첫 실행 전 봉인)
+- `STAGE1_PASS.json` (1단계 통과 receipt)
+- 각 잡의 `POTCAR_PROVENANCE.json`
+- **부모·canary 의 `static/POSCAR`** (두 기하가 같은지 저희가 대조합니다)
+- 각 상의 `OUTCAR`(또는 `.gz`)·`OSZICAR`
+""" % (a.cores, a.cores)) if _staged_sub else ("""## 병렬 제출 (권장)
+`run_all.sh` 는 **직렬 디버그용**입니다. 실제로는 잡 목록을 배열로 던지세요:
+```bash
+# ⚠ 폴더 이름을 손으로 적지 않는다 — refs/ 냐 controls/ 냐가 모드에 따라 다르다.
+#   2026-08-12: controls/ 로 적어 두는 바람에 기준계 10잡이 통째로 빠질 뻔했다.
+find . -mindepth 2 -maxdepth 2 -type d -name '*__*' -o \\
+     -mindepth 2 -maxdepth 2 -type d -path './refs/*' | sed 's|^\\./||' | sort > JOBS.txt
+n=$(wc -l < JOBS.txt)
+[ "$n" = %d ] || { echo "잡 %d개여야 하는데 $n 개"; exit 1; }
+# Slurm 예시 — 동시 %d개
+sbatch --array=1-$(wc -l < JOBS.txt)%%%d \\
+  --ntasks=%d --time=120:00:00 --wrap='
+  j=$(sed -n "${SLURM_ARRAY_TASK_ID}p" JOBS.txt)
+  cd "$j"
+  PP=/path/to/potpaw_PBE.54 POTCAR_ALLOWLIST=/abs/site_allow.txt bash POTCAR_ASSEMBLE.sh
+  VASP_CMD="srun -n %d vasp_std" bash run_job.sh'
+```""" % (man.get("n_jobs", 0), man.get("n_jobs", 0), a.concurrency,
+          a.concurrency, a.cores, a.cores))
+
     return f"""# 제출 계약 (SUBMIT_CONTRACT)
 
 ## 상 의존성
 ```
-static  (독립 — 잡끼리 완전 병렬)
+static  (같은 단계 안에서는 병렬 가능)
    └─ dense   (같은 잡의 static/CHGCAR 필요 → **그 잡 안에서는 직렬**)
 ```
-잡 사이에는 의존성이 없습니다. 한 잡의 `run_job.sh` 가 그 잡의 상 순서를 강제합니다.
+{_dep_block}
 
 ## 규모
 | | |
@@ -7278,23 +7337,8 @@ static  (독립 — 잡끼리 완전 병렬)
 
 {_census_block}
 
-## 병렬 제출 (권장)
-`run_all.sh` 는 **직렬 디버그용**입니다. 실제로는 잡 목록을 배열로 던지세요:
-```bash
-# ⚠ 폴더 이름을 손으로 적지 않는다 — refs/ 냐 controls/ 냐가 모드에 따라 다르다.
-#   2026-08-12: controls/ 로 적어 두는 바람에 기준계 10잡이 통째로 빠질 뻔했다.
-find . -mindepth 2 -maxdepth 2 -type d -name '*__*' -o \
-     -mindepth 2 -maxdepth 2 -type d -path './refs/*' | sed 's|^\\./||' | sort > JOBS.txt
-n=$(wc -l < JOBS.txt)
-[ "$n" = {man.get("n_jobs", 0)} ] || {{ echo "⛔ 잡 {man.get("n_jobs", 0)}개여야 하는데 $n 개"; exit 1; }}
-# Slurm 예시 — 동시 8개
-sbatch --array=1-$(wc -l < JOBS.txt)%{a.concurrency} \
-  --ntasks={a.cores} --time=120:00:00 --wrap='
-  j=$(sed -n "${{SLURM_ARRAY_TASK_ID}}p" JOBS.txt)
-  cd "$j"
-  PP=/path/to/potpaw_PBE.54 POTCAR_ALLOWLIST=/abs/site_allow.txt bash POTCAR_ASSEMBLE.sh    # ★ 잡마다 종 순서가 다르다
-  VASP_CMD="srun -n {a.cores} vasp_std" bash run_job.sh'
-```
+{_submit_block}
+
 ⚠ **공통 POTCAR 를 전 잡에 복사하면 안 됩니다.** 조각마다 POSCAR 종 순서가 달라
 (`Li Ni O` · `Li Ni O C F` · `Li Ni O C F H` · `Li Ni O S C H`) 하나를 돌려 쓰면
 그 잡은 조용히 **다른 계**를 계산합니다. `POTCAR_ASSEMBLE.sh` 가 잡마다 조립하고
@@ -9267,6 +9311,26 @@ def selftest() -> int:
         chk("run_all.sh` 는 이 묶음에 **넣지 않았습니다**" in _rd_st,
             "⛔음성 AO P0-3: README 가 run_all.sh 부재를 **명시**한다 "
             "(종전엔 SUBMIT/run_all 이 전체 제출을 안내해 staged 지침과 충돌했다)")
+        # ── 회신 AP #10 — 문서가 **의존성과 반송물**을 정확히 말하는가 ────
+        _sub_st = (_st / "SUBMIT_CONTRACT.md").read_text()
+        chk("잡 사이에 의존성이 있습니다" in _sub_st,
+            "⛔음성 AP #10: SUBMIT 이 **의존성이 있다**고 적는다 "
+            "(종전엔 '잡 사이에는 의존성이 없습니다')")
+        chk("JOBS.txt" not in _sub_st and "sbatch --array" not in _sub_st,
+            "⛔음성 AP #10: staged 번들 SUBMIT 에 **전체 array 제출 예시가 없다** "
+            "(있으면 정지 규칙이 우회된다)")
+        chk("독립이 아닙니다" in _rd_st,
+            "⛔음성 AP #10: README 도 **독립이 아니다**라고 적는다 "
+            "(canary 가 부모 기하에 의존한다)")
+        for _r in ("POTCAR_ROOT_SEAL.json", "STAGE1_PASS.json",
+                   "POTCAR_PROVENANCE.json", "static/POSCAR"):
+            chk(_r in _sub_st, f"AP #10: 필수 반송물에 `{_r}` 이 적혀 있다")
+        # 비-staged 번들은 종전 안내를 유지한다 (회귀 방지)
+        _sub_sp = (out_sp / "SUBMIT_CONTRACT.md").read_text()
+        chk("JOBS.txt" in _sub_sp and "find " in _sub_sp
+            and "의존성이 없습니다" in _sub_sp,
+            "⛔음성 AP #10: **비-staged** 번들은 배열 제출 안내를 유지한다 "
+            "(staged 만 고치고 나머지를 망가뜨리지 않는다)")
         # 계보 동일성 문구가 남아 있지 않은가 (AO P1)
         _spec_txt = (_st / "POTCAR_SPEC.txt").read_text()
         chk("2026-08-08" not in _spec_txt and "동일 계보" not in _spec_txt,
