@@ -3022,6 +3022,27 @@ def selftest_k() -> int:
     return 0 if ok else 1
 
 
+def _icharg1_chgcar_gate(oc, ph):
+    """`ICHARG=1` 상은 **실제로 CHGCAR 를 읽었다는 증거**가 있어야 한다. → [gate] | []
+
+    ⛔⛔ 2026-08-31 (회신 AN P0-6) — 종전엔 `read_outcar()` 가 `chgcar_from_file` 을
+      읽어 두고도 일반 `phase_gates()` 가 **그것을 안 썼다.** 파일 존재만 보고 넘어갔다.
+      C-12 에서 `ICHARG=1` 인 상은 **기체 기준 static 둘**이고, 그 둘은 D 에 직접 들어간다.
+      VASP 는 CHGCAR 가 없거나 못 읽으면 **조용히 원자중첩으로 시작**한다 —
+      그러면 "승계했다" 는 기록만 남고 실제로는 다른 시작점이다.
+
+    ⛔ 못 하는 것: 읽은 CHGCAR 가 **맞는 것**인지는 모른다 (읽었다는 사실만 본다).
+    """
+    if str(oc.get("incar_echo", {}).get("ICHARG", "")).strip() != "1":
+        return []
+    cff = oc.get("chgcar_from_file")
+    if cff is True:
+        return []
+    return ["CHGCAR_NOT_READ(%s — ICHARG=1 인데 %s. VASP 는 못 읽으면 조용히 "
+            "원자중첩으로 시작한다)"
+            % (ph, "overlapping atoms 로 새로 만듦" if cff is False else "마커 부재")]
+
+
 def phase_gates(oc, ph, meta, spec, want_ionic=False):
     """상 하나의 fail-closed 검사. oc 가 None 이면 NOT_RUN.
 
@@ -6694,6 +6715,11 @@ def build_bundle(a, ledger: Optional[Dict[str, Any]] = None) -> Path:
                         closure=a.closure, kmesh_over=kover)
                     slab_metas.append(m)
                     plan(rel, m["phases"], True)
+                    # ⛔ 2026-08-31 (회신 AN P0-1) — D 에 들어갈 **primary·주 seed** 잡을
+                    #   여기서 바로 기록한다. `planned` 는 phases/required 만 담아서
+                    #   나중에 되짚을 수 없다 (v9 에서 estimand_job_keys 가 비었던 이유).
+                    if b["role"] == "primary" and sd == SEED_MAIN:
+                        man.setdefault("_primary_by_frag", {})[frag] = rel
                     n_jobs += 1
                     print(f"   {b['basin_id']} {b['role']:14s} {sd:14s} "
                           f"UMA {b.get('E_pose_eV'):+8.4f}  {lab[:40]}")
@@ -7031,13 +7057,7 @@ def build_bundle(a, ledger: Optional[Dict[str, Any]] = None) -> Path:
     if _skip_clean and getattr(a, "single_point", False):
         _sd = next((f for f in (man.get("fragments") or []) if "sdcp" in f), None)
         _ct = next((f for f in (man.get("fragments") or []) if f != _sd), None)
-        _pri = {}
-        for _jn, _pm in (man.get("planned") or {}).items():
-            _m = _pm.get("meta") or _pm
-            if (_m.get("kind") == "prospective_pose"
-                    and (_m.get("role") or "primary") == "primary"
-                    and _m.get("seed") == SEED_MAIN and not _m.get("vacconv")):
-                _pri[_m.get("fragment")] = _jn
+        _pri = dict(man.get("_primary_by_frag") or {})
         if _sd and _ct and _pri.get(_sd) and _pri.get(_ct):
             man["estimand_job_keys"] = {
                 "E_C_sdcp": _pri[_sd], "E_C_control": _pri[_ct],
@@ -7049,6 +7069,7 @@ def build_bundle(a, ledger: Optional[Dict[str, Any]] = None) -> Path:
                        "— 자기 분기·자세 민감도 병기용이다. 조각별 최솟값을 다시 쓰지 않는다"),
             }
 
+    man.pop("_primary_by_frag", None)
     man["wave"] = 1 if not a.refs else "1+refs"
     # ★ 조각마다 주장 범위가 다르다 (2026-08-12 설계 변경). 공통 mode 문장 하나로
     #   두면 PTFE 에도 "2×2 완성" 이 적혀 오독된다.
@@ -7109,7 +7130,16 @@ def build_bundle(a, ledger: Optional[Dict[str, Any]] = None) -> Path:
             plan(rel, m["phases"], True)
             man["refs"][f"mol__{frag}__{tag}"] = rel
             n_jobs += 1
-            if a.closure and tag == "box24" and not getattr(a, "refs_minimal", False):
+            # ⛔⛔ 2026-08-31 (회신 AN Q3) — canary 를 **C-12 에서도 낸다.**
+            #   초판 조건은 `closure and not refs_minimal` 이라 C-12 에서는 절대 안 나왔다.
+            #   그런데 분석기는 `molecular_spin_controls` 를 **필수**로 요구한다 —
+            #   그 상태로 회수하면 두 조각 다 차단된다.
+            #   리뷰 판정: `open_shell:false` 는 **선언이지 검증이 아니다.** D 를 본 뒤
+            #   필요성을 판단하면 결과 의존적 선택이 된다. ⇒ 지금 넣는다.
+            #   canary = 같은 최종 기하 · fresh ICHARG=2 · NUPDOWN=-1 · 비영 MAGMOM · static only.
+            #   (CHGCAR 를 승계한 ICHARG=1 canary 는 부적절하다 — 재시작에서는 MAGMOM 이
+            #    초기 국소모멘트를 새로 설정하지 않는다.)
+            if tag == "box24" and (a.closure or getattr(a, "refs_minimal", False)):
                 relz = f"refs/mol__{frag}__{tag}__nzmag"
                 mz = _emit_mol_job(out / relz, frag, mol, margin,
                                    free_spin=getattr(a, "free_spin_refs", False),
