@@ -26,6 +26,7 @@ Usage:
 """
 import argparse
 import json
+import zlib
 import sys
 import time
 from pathlib import Path
@@ -55,6 +56,23 @@ def load_uma_calc(device: str = 'cuda', task: str = 'omat'):
     return FAIRChemCalculator(predictor, task_name=task)
 
 
+def _struct_hash(atoms) -> str:
+    """구조의 **종 인식** 해시 — 원소 순서·좌표·셀을 다 담는다. 앞 16자만 쓴다.
+
+    ⛔ 못 하는 것: 대칭 등가 구조를 같다고 하지 않는다 (좌표 그대로 본다) ·
+       부동소수 표현에 민감하므로 **1e-6 Å 로 반올림**해서 잰다.
+    """
+    import hashlib
+    import numpy as _np
+    parts = [",".join(atoms.get_chemical_symbols()),
+             _np.round(_np.asarray(atoms.get_positions()), 6).tobytes(),
+             _np.round(_np.asarray(atoms.cell.array), 6).tobytes()]
+    h = hashlib.sha256()
+    for x in parts:
+        h.update(x.encode() if isinstance(x, str) else x)
+    return h.hexdigest()[:16]
+
+
 def winner_name(xyz_path):
     """v4.5.18 NEW-D defensive fix: cascade outputs share stem
     'post_relax' or 'post_md' across winners. Use parent dir name in
@@ -72,10 +90,26 @@ def anneal_one(xyz_path: Path, calc, out_dir: Path,
               temperature_K: float = 500, time_ps: float = 50,
               dt_fs: float = 2.0, friction: float = 0.01,
               relax_steps: int = 1500, relax_fmax: float = 0.05,
-              cell_relax: bool = True, log_every: int = 500) -> dict:
+              cell_relax: bool = True, log_every: int = 500,
+              seed: int = 0) -> dict:
     """Run Langevin NVT MD at ``temperature_K`` for ``time_ps``, then a final
     cell+positions relax. Records pre-anneal, post-MD, and post-relax energies
-    so you can see how much extra binding the thermal sampling found."""
+    so you can see how much extra binding the thermal sampling found.
+
+    ⛔⛔ 2026-08-30 (회신 AL P0-3) — **이 함수는 seed 를 안 받았다.**
+      `MaxwellBoltzmannDistribution` 과 `Langevin` 이 전역 numpy 상태를 쓰는데
+      그걸 고정하지도 기록하지도 않아서, **같은 입력을 다시 돌리면 다른 endpoint** 로 갔다.
+      정본 CSV 실측: 같은 설계의 복제본 삼중쌍 227개 중 anneal **후** 에너지가
+      1e-4 안에서 일치하는 것이 **0개** (상대산포 중앙 6.0e-3 · 최대 2.8e-2).
+      예 Ag2O: E_post = −4.1964 / −4.1888 / −4.1113 eV/atom, ΔV = −7.97 / −3.69 / −2.85 %.
+      그 위에서 계산된 BVS·탄성 G 가 Pareto front 와 사전등록 순위를 정하고 있었다.
+      ⇒ 이제 `seed` 를 **받아서 두 곳에 다 주입하고 결과에 기록한다.**
+
+    ⛔ 이 함수가 못 하는 것
+      · seed 를 고정해도 **비트 단위 재현을 보장하지 못한다** — GPU 커널 비결정성·
+        ASE/torch 버전·장치가 바뀌면 달라진다. seed 는 재현의 **필요조건**이지 충분조건이 아니다.
+      · 결과 구조가 물리적으로 옳은지 판정하지 않는다 (수렴 플래그만 낸다).
+    """
     name = winner_name(xyz_path)
     work = out_dir / name
     work.mkdir(parents=True, exist_ok=True)
@@ -85,8 +119,11 @@ def anneal_one(xyz_path: Path, calc, out_dir: Path,
     E_pre = float(atoms.get_potential_energy())
     n_atoms = len(atoms)
 
-    # Initialize Maxwell-Boltzmann velocities
-    MaxwellBoltzmannDistribution(atoms, temperature_K=temperature_K)
+    # ⛔ seed 를 **두 곳 다** 준다 — 초기속도와 Langevin 잡음은 서로 다른 난수원이다.
+    #   하나만 고정하면 여전히 비결정적이다 (회신 AL P0-3).
+    rng_v = np.random.default_rng(seed)
+    rng_md = np.random.default_rng(seed + 1_000_003)      # 서로 다른 스트림
+    MaxwellBoltzmannDistribution(atoms, temperature_K=temperature_K, rng=rng_v)
 
     n_steps = int(time_ps * 1000 / dt_fs)
     print(f"  [{name}] MD: T={temperature_K}K, dt={dt_fs}fs, "
@@ -99,6 +136,7 @@ def anneal_one(xyz_path: Path, calc, out_dir: Path,
                    friction=friction,
                    logfile=str(md_log),
                    trajectory=str(md_traj),
+                   rng=rng_md,
                    loginterval=log_every)
 
     t0 = time.time()
@@ -130,6 +168,16 @@ def anneal_one(xyz_path: Path, calc, out_dir: Path,
 
     return {
         'name': name,
+        # ⛔ 계보 3종 — 이게 없으면 "같은 구조인가" 를 나중에 되물을 수 없다 (회신 AL P0-3)
+        'seed': int(seed),
+        'rng_streams': {'velocities': int(seed), 'langevin': int(seed) + 1_000_003},
+        'struct_sha256': {
+            'input': _struct_hash(read(str(xyz_path))),
+            'post_md': _struct_hash(read(str(work / 'post_md.xyz'))),
+            'post_relax': _struct_hash(atoms),
+        },
+        '⚠_재현': ('seed 고정은 재현의 **필요조건**이지 충분조건이 아니다 — GPU 커널 '
+                   '비결정성·ASE/torch 버전·장치가 바뀌면 달라진다'),
         'xyz_input': str(xyz_path),
         'n_atoms': n_atoms,
         'temperature_K': temperature_K,
@@ -152,7 +200,62 @@ def anneal_one(xyz_path: Path, calc, out_dir: Path,
     }
 
 
+
+def _selftest() -> int:
+    """seed 배관 검사 — **음성 경로가 핵심**이다 (양성만 있으면 아무것도 보증 못 한다)."""
+    ok = [0, 0]
+
+    def chk(c, m):
+        ok[0] += 1; ok[1] += bool(c)
+        print(("  ✔ " if c else "  ✘ ") + m)
+
+    import inspect
+    src = inspect.getsource(anneal_one)
+    chk("rng=rng_v" in src,
+        "① 초기속도(MaxwellBoltzmann)에 rng 를 준다")
+    chk("rng=rng_md" in src,
+        "① Langevin 에도 rng 를 준다 (하나만 고정하면 여전히 비결정적)")
+    chk(src.count("default_rng") == 2,
+        "① 두 난수원이 **서로 다른 스트림**이다")
+    chk("'seed': int(seed)" in src and "struct_sha256" in src,
+        "② seed 와 구조 해시 3종(input·post_md·post_relax)을 결과에 남긴다")
+    # ⛔음성 — seed 는 required 다. 안 주면 argparse 가 거부해야 한다.
+    import subprocess
+    r = subprocess.run([sys.executable, __file__, "--help"],
+                       capture_output=True, text=True)
+    chk("--seed" in r.stdout and "필수" in r.stdout,
+        "⛔음성: --seed 가 **필수**로 노출된다 (기본값을 두면 안 준 것과 구분이 안 된다)")
+
+    # ③ 구조 해시 — 좌표가 1e-6 넘게 다르면 갈라져야 하고, 그 아래면 같아야 한다
+    class _A:
+        def __init__(self, pos, sym=("Li", "Ni")):
+            self._p, self._s = pos, list(sym)
+            self.cell = type("C", (), {"array": [[5, 0, 0], [0, 5, 0], [0, 0, 5]]})()
+
+        def get_chemical_symbols(self): return self._s
+        def get_positions(self): return self._p
+
+    a = _A([[0.0, 0.0, 0.0], [1.0, 0.0, 0.0]])
+    b = _A([[0.0, 0.0, 0.0], [1.0 + 1e-9, 0.0, 0.0]])
+    c = _A([[0.0, 0.0, 0.0], [1.001, 0.0, 0.0]])
+    d = _A([[0.0, 0.0, 0.0], [1.0, 0.0, 0.0]], sym=("Ni", "Li"))
+    chk(_struct_hash(a) == _struct_hash(b),
+        "③ 1e-6 Å 아래 차이는 같은 구조로 본다 (부동소수 잡음에 안 흔들린다)")
+    chk(_struct_hash(a) != _struct_hash(c),
+        "③ [음성] 0.001 Å 차이는 다른 구조다")
+    chk(_struct_hash(a) != _struct_hash(d),
+        "③ [음성] **종 순서가 다르면 다른 구조다** (좌표만 보면 놓친다)")
+    print("  " + ("✅ selftest 통과" if ok[1] == ok[0] else
+                  f"⛔ selftest 실패 {ok[0]-ok[1]}/{ok[0]}"))
+    return 0 if ok[1] == ok[0] else 1
+
+
 def main():
+    # ⚠ `--selftest` 는 parse_args() **앞에서** 가로챈다 — `--out`/`--seed` 가 required 라
+    #   그대로 두면 selftest 를 돌릴 수 없다 (watch_all.py 가 `-h` 로 똑같이 걸렸다).
+    if "--selftest" in sys.argv[1:]:
+        return _selftest()
+
     parser = argparse.ArgumentParser(description=__doc__,
                                     formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument('--xyz', nargs='+',
@@ -211,6 +314,13 @@ def main():
     parser.add_argument('--task', default='omat')
     parser.add_argument('--log_every', type=int, default=500,
                        help='MD log interval (steps)')
+    # ⛔ 회신 AL P0-3 — seed 는 **필수**다. 기본값을 두면 안 준 것과 준 것이 구분 안 되고,
+    #   정본 CSV 가 정확히 그 상태(seed 미기록)라 복제본이 서로 다른 endpoint 로 갔다.
+    parser.add_argument('--seed', type=int, required=True,
+                       help='Langevin·초기속도 RNG seed. **필수** — 이게 없으면 '
+                            'anneal 이 비결정적이라 같은 입력이 다른 endpoint 로 간다 '
+                            '(2026-08-30 회신 AL P0-3). 결과 json 에 기록된다.')
+    parser.add_argument('--selftest', action='store_true')
     args = parser.parse_args()
 
     if not args.xyz and not args.top_candidates and not args.summary_json and not args.xyz_dir:
@@ -323,6 +433,10 @@ def main():
                 relax_fmax=args.relax_fmax,
                 cell_relax=not args.no_cell_relax,
                 log_every=args.log_every,
+                # ⛔ 구조마다 **다른** seed 를 쓰되 이름에서 결정론적으로 유도한다
+                #   (같은 구조를 다시 돌리면 같은 seed → 같은 궤적).
+                #   전부 같은 seed 를 쓰면 서로 다른 계가 같은 잡음을 공유한다.
+                seed=args.seed + (zlib.crc32(winner_name(p).encode()) & 0xFFFF),
             )
             results.append(rec)
         except Exception as e:
