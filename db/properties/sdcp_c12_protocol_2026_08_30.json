@@ -224,17 +224,17 @@
     "stage": "main"
    },
    {
-    "job": "main/sdcp_neutral__sensitivity__pm1__c1",
+    "job": "main/sdcp_neutral__stress_sensitivity__pm1__c1",
     "frag": "sdcp_neutral",
-    "pose": "sensitivity",
+    "pose": "stress_sensitivity",
     "seed": "afm2424_pm1",
     "cell_c_A": 36.6551,
     "stage": "main"
    },
    {
-    "job": "main/sdcp_neutral__sensitivity__net4__c1",
+    "job": "main/sdcp_neutral__stress_sensitivity__net4__c1",
     "frag": "sdcp_neutral",
-    "pose": "sensitivity",
+    "pose": "stress_sensitivity",
     "seed": "afm2424_net4",
     "cell_c_A": 36.6551,
     "stage": "main"
@@ -275,7 +275,8 @@
   "⚠_clean_slab": "없다 (대비에서 소거)",
   "⚠_D3": "D3-on 만. D3-off 쌍둥이 없음",
   "⚠_용어": "`canary` → `vacconv` (vacuum convergence)",
-  "⚠_갱신_2026_08_30": "clean slab 3잡(§11) + 기체 기준 6잡(§12, 원안 2) ⇒ **총 19잡**. 둘 다 선언된 이탈이고 둘 다 통제를 더한다"
+  "⚠_갱신_2026_08_30": "clean slab 3잡(§11) + 기체 기준 6잡(§12, 원안 2) ⇒ **총 19잡**. 둘 다 선언된 이탈이고 둘 다 통제를 더한다",
+  "⚠_역할명_정정_2026_08_30": "sdcp_neutral 의 대안 자세 b12 는 ΔE_pose=+0.278 eV > W0(0.15) 이라 **stress_sensitivity** 다 (동결 db/properties/c12_poses_2026_08_30.json 이 정본). §3 목록이 `sensitivity` 로 적혀 있어 실물 번들과 이름이 갈렸다 — 문서를 동결에 맞췄다. ptfe_c10 b52 는 ΔE=+0.106 ≤ W0 이라 sensitivity 가 맞다."
  },
  "5_유지하는_검사_여섯": [
   "estimand · 기체 기준 conformer 고정",
