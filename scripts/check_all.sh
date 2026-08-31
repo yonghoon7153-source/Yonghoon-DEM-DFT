@@ -73,6 +73,10 @@ run 'bridge_grid_verdict    --selftest' python3 scripts/bridge_grid_verdict.py -
 #  ★ 2026-08-31 — STEP B 판정기.  사전등록 문턱(0.10/0.30)이 **파일 안에서 동결**돼
 #    있고 selftest 첫 줄이 그 값을 대조한다 ⇒ 결과를 보고 문턱을 옮기면 여기서 터진다.
 run 'ion_r_verdict          --selftest' python3 scripts/ion_r_verdict.py --selftest
+#  ★ 2026-08-31 — 접점 분포 그림.  라벨이 `CBD` 로 되돌아가면(= 바인더 포함 함의) 정의와
+#    어긋나고, 규약이 다른 두 침대를 한 그림에 섞으면 74→86 과 89→112 가 합쳐진다.
+#    selftest 가 그 둘을 문다.
+run 'plot_cbd_contacts       --selftest' python3 scripts/plot_cbd_contacts.py --selftest
 #  ★ 2026-08-31 — 컬러바 PNG 는 **논문 그림에 그대로 들어가는데** 평문·pptx 스윕이
 #    PNG 속 글자를 못 읽는다.  제목이 폭을 넘어 잘리면 하필 경고 문구가 사라지고
 #    그림은 여전히 그럴듯해 보인다 = 조용한 실패.  여기가 유일한 방어선이다.
