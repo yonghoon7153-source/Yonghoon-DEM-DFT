@@ -77,6 +77,60 @@ def _arms(d):
     return out, bad
 
 
+def diagnostic_marks(d):
+    """이 디렉터리가 **진단 패키지**인지 — 표지 ①(트리 파일) · ②(payload 내부).
+
+    ★ 왜 필요한가: `find_packages` 는 `p2_*.json` 을 가진 디렉터리를 전부 잡는다.  진단
+      패키지(`reduce_arm_payloads.py --diagnostic`)도 그 이름을 쓰므로 여기 잡히는데,
+      그것을 **cohort 계약**(16팔 · 원장 비 대조)으로 재면 당연히 실패한다.  그렇다고
+      `continue` 로 건너뛰면 CLAUDE.md 작업 규율 ⑤ 의 false-green 이다 — 검사를 안 하는
+      것과 통과가 구분되지 않는다.  ⇒ **분류하고 각자의 계약으로 잰다.**
+    """
+    tree = sorted(os.path.basename(x) for x in glob.glob(os.path.join(d, '.diagnostic_*')))
+    pay = []
+    for f in sorted(glob.glob(os.path.join(d, 'p2_*.json'))):
+        try:
+            j = json.load(open(f, encoding='utf-8'))
+        except Exception:                                        # noqa: BLE001
+            continue
+        if ((j.get('step3') or {}).get('_reduced') or {}).get('diagnostic'):
+            pay.append(os.path.basename(f))
+    return tree, pay
+
+
+def audit_diagnostic(d):
+    """진단 패키지의 **자기 계약**을 검사한다 → 문제 목록.
+
+    cohort 계약(팔 수·원장 비)은 묻지 않는다.  묻는 것은 *"이 패키지가 cohort 판정기에
+    실제로 거부되는가"* 하나다 — 그것이 이 패키지가 리포에 들어올 수 있는 유일한 근거다.
+    """
+    probs = []
+    tree, pay = diagnostic_marks(d)
+    n_arm = len(glob.glob(os.path.join(d, 'p2_*.json')))
+    if not tree:
+        probs.append('표지 ①(.diagnostic_*) 이 없다 — 트리에서 유실됐다')
+    if len(pay) != n_arm:
+        probs.append(f'표지 ②(payload 내부)가 {len(pay)}/{n_arm} 팔에만 있다 — '
+                     '표지 없는 팔은 부분 cohort 로 판정될 수 있다')
+    if not os.path.exists(os.path.join(d, 'run_receipt.json')):
+        probs.append('run_receipt.json 이 없다 (러너 의도가 봉인되지 않았다)')
+    #  ★★ 핵심 — 판정기를 **실제로 돌려** 거부되는지 본다 (자기 신고를 읽지 않는다).
+    import subprocess
+    _v = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'sdcp_gain_verdict.py')
+    if not os.path.exists(_v):
+        probs.append(f'판정기가 없어 격리를 확인할 수 없다: {_v}')
+    else:
+        try:
+            r = subprocess.run([sys.executable, _v, '--dir', d],
+                               capture_output=True, text=True, timeout=600)
+            if 'DIAGNOSTIC_TREE' not in (r.stdout or '') + (r.stderr or ''):
+                probs.append('cohort 판정기가 이 tree 를 DIAGNOSTIC_TREE 로 거부하지 '
+                             '않는다 — 표지가 작동하지 않는다')
+        except Exception as e:                                   # noqa: BLE001
+            probs.append(f'판정기 실행 실패: {e}')
+    return probs
+
+
 def audit(d, beds=None):
     """한 패키지 → (ratio 또는 None, 문제 목록, 부가 정보).  ratio 는 **재계산**이다.
 
@@ -220,12 +274,23 @@ def run(root=DATA, ledger=LEDGER, quiet=False, beds=None):
     pkgs = find_packages(root)
     fails = []
     if not quiet:
-        print(f'cohort 감사 패키지 {len(pkgs)}개 — {os.path.relpath(root, REPO)}')
+        print(f'감사 패키지 {len(pkgs)}개 — {os.path.relpath(root, REPO)}')
     led = open(ledger, encoding='utf-8').read() if os.path.exists(ledger) else ''
     if not led:
         fails.append(f'원장을 못 읽는다: {ledger}')
+    n_diag = 0
     for d in pkgs:
         name = os.path.basename(d)
+        #  ★ 2026-08-31 — 진단 패키지는 **분류해서 자기 계약으로** 잰다 (건너뛰지 않는다).
+        _tree, _pay = diagnostic_marks(d)
+        if _tree or _pay:
+            n_diag += 1
+            for w in audit_diagnostic(d):
+                fails.append(f'{name} [진단]: {w}')
+            if not quiet:
+                print(f'  ◇ {name}  — 진단 패키지 '
+                      f'(표지 ① {len(_tree)} · ② {len(_pay)}팔) · cohort 판정 격리 확인')
+            continue
         ratio, problems, info = audit(d, beds)
         for w in problems:
             fails.append(f'{name}: {w}')
@@ -259,7 +324,8 @@ def run(root=DATA, ledger=LEDGER, quiet=False, beds=None):
             for f in fails:
                 print(f'  · {f}')
         else:
-            print('✓ 커밋된 패키지가 전부 원장과 일치한다 '
+            print(f'✓ 커밋된 패키지가 전부 계약을 만족한다 '
+                  f'(cohort {len(pkgs) - n_diag} · 진단 {n_diag}) '
                   '(⚠ "값이 옳다" 가 아니라 "리포와 원장이 같다" 이다)')
     return 1 if fails else 0
 
@@ -393,6 +459,51 @@ def selftest():
         chk('⑪ ★ 쌍대응 산술평균이 정본이다 (mean/mean 아님)',
             abs(r5 - paired) < 1e-12 and abs(r5 - unpaired) > 1e-6)
         shutil.rmtree(d5)
+
+    #  ══ 진단 패키지 분류 (2026-08-31) ═══════════════════════════════════════
+    #  계약: cohort 계약으로 재지 않는다.  대신 **판정기가 실제로 거부하는지**를 본다.
+    #  ⚠ 건너뛰기(continue)로 처리하면 "검사 안 함" 과 "통과" 가 구분되지 않는다.
+    with tempfile.TemporaryDirectory() as td:
+        def _mkdiag(nm, mark_arms=2, sentinel=True, receipt=True):
+            d = _fixture(td, nm)
+            keep = sorted(glob.glob(os.path.join(d, 'p2_*.json')))[:2]
+            for f in sorted(glob.glob(os.path.join(d, 'p2_*.json'))):
+                if f not in keep:
+                    os.remove(f)
+            for f in keep[:mark_arms]:
+                j = json.load(open(f, encoding='utf-8'))
+                j['step3']['_reduced']['diagnostic'] = {'arms': 2, 'consumer': 'ion_r_verdict'}
+                json.dump(j, open(f, 'w'))
+            if sentinel:
+                open(os.path.join(d, '.diagnostic_arms2'), 'w').write('{"arms": 2}')
+            if receipt:
+                open(os.path.join(d, 'run_receipt.json'), 'w').write('{}')
+            return d
+
+        d6 = _mkdiag('diag_ok')
+        _t6, _p6 = diagnostic_marks(d6)
+        chk('⑫ 진단 패키지를 cohort 로 오인하지 않는다 (표지 ①② 인식)',
+            len(_t6) == 1 and len(_p6) == 2)
+        chk('⑬ ★★ 정상 진단 패키지는 자기 계약을 통과한다 (판정기가 실제로 거부)',
+            audit_diagnostic(d6) == [])
+        #  ⚠ 원장은 **진짜 원장**을 준다 — `/dev/null` 을 주면 run() 이 (정당하게)
+        #    "원장을 못 읽는다" 로 실패해서, 진단 경로가 아니라 그 가드를 시험하게 된다.
+        chk('⑭ run() 이 진단 패키지에 원장 비를 요구하지 않는다',
+            run(root=td, ledger=LEDGER, quiet=True) == 0)
+        shutil.rmtree(d6)
+
+        #  음성 대조 ⓐ — payload 표지가 일부만 남은 패키지 (복사로 유실되는 경로)
+        d7 = _mkdiag('diag_partial', mark_arms=1)
+        _pb = audit_diagnostic(d7)
+        chk('⑮ ★ payload 표지가 일부 팔에만 있으면 실패',
+            any('표지 ②' in x for x in _pb))
+        shutil.rmtree(d7)
+
+        #  음성 대조 ⓑ — receipt 가 없는 진단 패키지
+        d8 = _mkdiag('diag_norcpt', receipt=False)
+        chk('⑯ receipt 없는 진단 패키지는 실패',
+            any('run_receipt' in x for x in audit_diagnostic(d8)))
+        shutil.rmtree(d8)
 
     print(f'selftest: {ok}/{ok + len(fail)} PASS' + (f'   FAILED: {fail}' if fail else ''))
     return 1 if fail else 0

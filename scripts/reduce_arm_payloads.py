@@ -51,6 +51,30 @@ SCHEMA = 'reduced-arm/2'  # ⚠ 초판(1)은 위 일곱 검사가 없었다 — 
 EXPECT_ARMS = 16
 _SCR = os.path.dirname(os.path.abspath(__file__))
 
+#  ★★★ 2026-08-31 — **진단 모드** (`--diagnostic`).
+#  왜: STEP B 류의 민감도 프로브는 `ARMS=1` 이라 침대당 origin 이 1점이다.  전량 cohort 의
+#  게이트 ②③(정확히 16팔 · 침대별 완전 factorial)을 원리적으로 통과할 수 없으므로 축소기가
+#  거부해 왔고, 그러면 그 런의 원자료가 **리포에 못 들어온다** = provenance 가 한 기계에만
+#  남는다.  그렇다고 `--expect-arms 2` 로 숫자만 낮춰 내보내면 더 나쁘다: 축소본 파일명이
+#  `p2_*.json` 이라 **cohort 판정기(`sdcp_gain_verdict.py`)가 그대로 읽고**, 그 판정기는
+#  스스로 적어 둔 대로 *"팔 수를 줄인 진단 런은 막지 않는다"* — 즉 부분 cohort 에 대해
+#  판정이 난다.  ⇒ 낮추는 것 자체를 **선언**으로 만들고, 산출물에 표지를 박아 cohort
+#  판정기가 `DIAGNOSTIC_TREE` 로 격리하게 한다.  표지는 **둘**이다 (아래 참조).
+SCHEMA_DIAG = 'reduced-arm/2-diagnostic'
+DIAG_CONSUMER = 'scripts/ion_r_verdict.py'
+DIAG_SENTINEL = '.diagnostic_arms'          # + <N>  (트리 표지)
+
+#: 진단 축소본이 **비트 동일하게** 옮겨야 하는 step3 필드.
+#  = `ion_r_verdict.read_arm` 이 실제로 소비하는 목록 (σ · 이온 수렴 3종).
+#  ⚠ 여기에 없는 필드를 그 판정기가 읽기 시작하면 이 검사가 **조용히 약해진다** —
+#    `ion_r_verdict.py` 를 고칠 때 이 튜플을 같이 볼 것 (selftest 가 목록을 대조한다).
+DIAG_EQUIV_KEYS = ('sigma_ion_eff_S_cm', 'sigma_e_eff_S_cm',
+                   'ion_cg_info', 'ion_unconverged', 'ion_resid')
+
+
+def _step3_of(d):
+    return d.get('step3') or (d.get('mpm_metrics') or {}).get('step3') or {}
+
 
 def _sha256(path):
     h = hashlib.sha256()
@@ -86,8 +110,14 @@ def _prune(obj, path, dropped, max_list):
     return obj
 
 
-def reduce_one(path, max_list=MAX_LIST):
-    """payload 하나 → 축소 dict.  ⚠ `step3` 가 없으면 **예외** (③ — SKIP 하지 않는다)."""
+def reduce_one(path, max_list=MAX_LIST, diagnostic=None):
+    """payload 하나 → 축소 dict.  ⚠ `step3` 가 없으면 **예외** (③ — SKIP 하지 않는다).
+
+    `diagnostic` 이 dict 면 **표지 ②** 를 payload 안에 박는다
+    (`step3._reduced.diagnostic`).  트리의 `.diagnostic_arms<N>` 파일이 표지 ① 인데,
+    그것만 두면 `p2_*.json` 만 복사해 간 순간 표지가 사라진다 — `.rejected_*` 가 실제로
+    그렇게 유실돼 false-green 을 냈던 것과 **같은 형태**다 (R9 Q5).  그래서 둘 다 박는다.
+    """
     with open(path, encoding='utf-8') as fh:
         d = json.load(fh)
     s = d.get('step3') or (d.get('mpm_metrics') or {}).get('step3')
@@ -138,10 +168,13 @@ def reduce_one(path, max_list=MAX_LIST):
                        'top_level_dropped_bytes': sum(x['bytes'] for x in top_dropped),
                        'source_bytes': os.path.getsize(path),
                        'source_sha256': _sha256(path),
-                       'dropped': dropped, 'schema': SCHEMA,
+                       'dropped': dropped,
+                       'schema': SCHEMA if diagnostic is None else SCHEMA_DIAG,
                        'tool': 'scripts/reduce_arm_payloads.py',
                        'tool_commit': _tool_sha(), 'max_list': max_list,
                        'top_level_kept': sorted(_kept)}
+    if diagnostic is not None:
+        out['_reduced']['diagnostic'] = dict(diagnostic)       # 표지 ② (payload 내부)
     return {'step3': out, **_kept}
 
 
@@ -162,8 +195,13 @@ def _bits(shift, vox):
     return tuple(out)
 
 
-def preflight(src_dir, expect_arms):
-    """축소 **전에** 원본이 판정 대상인지 본다.  실패하면 축소하지 않는다."""
+def preflight(src_dir, expect_arms, diagnostic=False):
+    """축소 **전에** 원본이 판정 대상인지 본다.  실패하면 축소하지 않는다.
+
+    `diagnostic=True` 면 게이트 ③(침대별 완전 8팔 factorial)만 **선언된 대로** 완화한다:
+    origin 이 `{0, vox/2}³` 격자 **위**에 있을 것과 침대 안에서 **중복이 없을 것**은
+    그대로 요구한다.  ①(기각 표지)·②(정확한 팔 수)·④(receipt)는 건드리지 않는다.
+    """
     #  ① 기각 receipt — 표지를 옮기는 대신 **거부**한다.
     rej = sorted(glob.glob(os.path.join(src_dir, '.rejected_*')))
     if rej:
@@ -177,7 +215,7 @@ def preflight(src_dir, expect_arms):
         raise SystemExit(f'축소 거부 — 팔 {len(paths)}개 (기대 {expect_arms}).  '
                          '불완전한 cohort 는 감사 패키지가 아니다')
     #  ② 완전 factorial origin (침대별로 8개 {0,½}³)
-    seen = {}
+    seen, cnt = {}, {}
     for p in paths:
         j = json.load(open(p, encoding='utf-8'))
         s = j.get('step3') or (j.get('mpm_metrics') or {}).get('step3') or {}
@@ -188,7 +226,16 @@ def preflight(src_dir, expect_arms):
             raise SystemExit(f'축소 거부 — {os.path.basename(p)} origin 이 {{0,½}}³ 밖이다')
         bed = 'SBE' if '_SBE_' in os.path.basename(p) else 'DBE'
         seen.setdefault(bed, set()).add(b)
+        cnt[bed] = cnt.get(bed, 0) + 1
     for bed, bits in sorted(seen.items()):
+        if diagnostic:
+            #  ⚠ set 은 중복을 **조용히 접는다** — 팔 수와 유일 origin 수를 따로 센다.
+            #    (같은 origin 을 두 번 넣어 "팔이 많다" 로 보이게 하는 것을 막는다.)
+            if len(bits) != cnt[bed]:
+                raise SystemExit(
+                    f'축소 거부 — {bed} 의 origin 이 중복이다 (팔 {cnt[bed]} · 유일 '
+                    f'{len(bits)}).  진단 모드도 origin 중복은 받지 않는다')
+            continue
         if len(bits) != 8:
             raise SystemExit(f'축소 거부 — {bed} origin {len(bits)}/8 (완전 factorial 아님)')
     #  ④ run_receipt.json
@@ -243,6 +290,35 @@ def equivalence(src, dst):
     return diffs
 
 
+def diag_equivalence(paths, out_dir):
+    """진단 모드 동등성 — **cohort 판정기를 기준으로 쓰지 않는다.**
+
+    cohort 판정기는 8팔 factorial 을 전제로 하고 이 tree 는 그 전제 밖이다 (그것이 애초에
+    `--diagnostic` 인 이유다).  그렇다고 검사를 **생략**하면 그것이 바로 `--skip-equivalence`
+    로 가는 길이고, 그 길이 R9 Q5 의 false-green 이었다.  ⇒ 판정기 대신 **소비자
+    (`ion_r_verdict.py`)가 실제로 읽는 필드**가 원본↔축소본에서 같은지 직접 본다.
+    """
+    diffs = []
+    for p in paths:
+        q = os.path.join(out_dir, os.path.basename(p))
+        if not os.path.exists(q):
+            diffs.append(f'{os.path.basename(p)}: 축소본이 없다')
+            continue
+        a = _step3_of(json.load(open(p, encoding='utf-8')))
+        b = _step3_of(json.load(open(q, encoding='utf-8')))
+        for k in DIAG_EQUIV_KEYS:
+            va, vb = a.get(k), b.get(k)
+            if (json.dumps(va, sort_keys=True, default=str)
+                    != json.dumps(vb, sort_keys=True, default=str)):
+                diffs.append(f'{os.path.basename(p)}: {k} {va!r} → {vb!r}')
+        ma, mb = a.get('manifest') or {}, b.get('manifest') or {}
+        if (json.dumps(ma, sort_keys=True, default=str)
+                != json.dumps(mb, sort_keys=True, default=str)):
+            diffs.append(f'{os.path.basename(p)}: manifest 불일치 '
+                         f'(키 차 {sorted(set(ma) ^ set(mb))[:6]})')
+    return diffs
+
+
 def main(argv=None):
     ap = argparse.ArgumentParser(
         description='팔 payload 를 step3+manifest 만 남겨 축소한다 '
@@ -255,18 +331,40 @@ def main(argv=None):
                     help=f'이보다 긴 리스트는 버린다 (기본 {MAX_LIST})')
     ap.add_argument('--skip-equivalence', action='store_true',
                     help='⑤ 판정기 동등성 비교를 건너뛴다 (진단 전용 — 커밋용에는 쓰지 말 것)')
+    ap.add_argument('--diagnostic', action='store_true',
+                    help='진단(팔 수를 줄인) 패키지로 만든다 — 표지를 박아 cohort '
+                         '판정기가 DIAGNOSTIC_TREE 로 거부하게 한다')
     ap.add_argument('--selftest', action='store_true')
     a = ap.parse_args(argv)
     if a.selftest:
         return _selftest()
     if not a.dir or not a.out:
         ap.error('--dir 과 --out 이 필요하다 (또는 --selftest)')
+    #  ★★ 상호 요구 — 둘 중 하나만 주는 길을 **양쪽 다** 막는다.
+    #    · 표지 없이 팔 수만 낮추면 부분 cohort 가 `p2_*.json` 이름으로 리포에 들어간다.
+    #    · 전량 cohort 에 표지를 박으면 진짜 cohort 가 판정 불가가 된다.
+    #  ⚠ `ap.error()` 가 아니라 `SystemExit(메시지)` 다 — argparse 는 SystemExit(2) 를
+    #    올리고 사유를 stderr 로만 내보내서, 호출자가 `str(ex)` 로 **사유를 못 읽는다**
+    #    (실측: 이 두 계약의 회귀 시험이 그것 때문에 통과하지 못했다).
+    if a.diagnostic and a.expect_arms == EXPECT_ARMS:
+        raise SystemExit(f'--diagnostic 은 팔 수를 줄인 런 전용이다 — --expect-arms 가 '
+                         f'{EXPECT_ARMS}(전량 cohort)면 쓰지 않는다')
+    if not a.diagnostic and a.expect_arms != EXPECT_ARMS:
+        raise SystemExit(
+            f'--expect-arms {a.expect_arms} 는 전량 cohort({EXPECT_ARMS})가 아니다 — '
+            f'--diagnostic 을 함께 주어야 한다.  그래야 축소본에 표지가 박혀 '
+            f'cohort 판정기가 그 tree 를 거부한다 (표지 없는 부분 cohort 가 '
+            f'`p2_*.json` 이름으로 리포에 들어가면 나중에 판정이 난다)')
 
-    paths, rcpt = preflight(a.dir, a.expect_arms)
+    paths, rcpt = preflight(a.dir, a.expect_arms, diagnostic=a.diagnostic)
+    _diag = ({'arms': a.expect_arms, 'consumer': DIAG_CONSUMER, 'schema': SCHEMA_DIAG,
+              'not_a_cohort': f'cohort 판정({EXPECT_ARMS}팔 factorial)의 전제 밖이다',
+              'source_dir': os.path.basename(os.path.abspath(a.dir))}
+             if a.diagnostic else None)
     os.makedirs(a.out, exist_ok=True)
     files, tot_in, tot_out = [], 0, 0
     for p in paths:
-        red = reduce_one(p, a.max_list)                            # ③ 없으면 예외
+        red = reduce_one(p, a.max_list, diagnostic=_diag)          # ③ 없으면 예외
         q = os.path.join(a.out, os.path.basename(p))
         with open(q, 'w', encoding='utf-8') as fh:
             json.dump(red, fh, ensure_ascii=False, sort_keys=True)
@@ -289,30 +387,60 @@ def main(argv=None):
     if _ro:
         raise SystemExit('축소 실패 — 출력 디렉터리에 기각 표지가 있다: '
                          + ', '.join(os.path.basename(x) for x in _ro))
-    diffs = [] if a.skip_equivalence else equivalence(a.dir, a.out)
+    if a.skip_equivalence:
+        diffs = []
+    elif a.diagnostic:
+        diffs = diag_equivalence(paths, a.out)
+    else:
+        diffs = equivalence(a.dir, a.out)
     if diffs:
-        raise SystemExit('축소 실패 — 판정기가 원본과 축소본을 **다르게** 읽는다:\n  '
+        raise SystemExit('축소 실패 — 원본과 축소본이 **다르게 읽힌다**:\n  '
                          + '\n  '.join(diffs))
 
+    #  표지 ① — 트리 파일.  ⚠ 표지 ②(payload 내부)는 `reduce_one` 이 이미 박았다.
+    if a.diagnostic:
+        with open(os.path.join(a.out, f'{DIAG_SENTINEL}{a.expect_arms}'),
+                  'w', encoding='utf-8') as fh:
+            json.dump(_diag, fh, ensure_ascii=False, indent=1, sort_keys=True)
+
     #  ⑥⑦ cohort manifest + 기계 판독 판정 receipt
-    rc_v, out_v = _verdict_out(a.dir, None)
-    man = {'schema': SCHEMA, 'tool': 'scripts/reduce_arm_payloads.py',
+    rc_v, out_v = _verdict_out(a.out if a.diagnostic else a.dir, None)
+    man = {'schema': SCHEMA_DIAG if a.diagnostic else SCHEMA,
+           'diagnostic': _diag,
+           'tool': 'scripts/reduce_arm_payloads.py',
            'tool_commit': _tool_sha(), 'source_dir': os.path.basename(os.path.abspath(a.dir)),
            'arms': len(paths), 'max_list': a.max_list,
            'equivalence_checked': not a.skip_equivalence,
-           'equivalence_modes': ['--seal-only', '--collect-only', 'full'],
+           'equivalence_modes': (['ion_r_verdict 소비 필드 + manifest'] if a.diagnostic
+                                 else ['--seal-only', '--collect-only', 'full']),
            'receipt_sha256': _sha256(rcpt), 'files': files,
            'note': 'scalar decision-audit package — solver/viz 재생용 원자료가 아니다 (R9 Q5)'}
     with open(os.path.join(a.out, 'cohort_manifest.json'), 'w', encoding='utf-8') as fh:
         json.dump(man, fh, ensure_ascii=False, indent=1, sort_keys=True)
     with open(os.path.join(a.out, 'verdict_receipt.txt'), 'w', encoding='utf-8') as fh:
-        fh.write(f'# sdcp_gain_verdict.py --dir <원본>   rc={rc_v}\n' + out_v)
+        #  ★ 진단 패키지의 receipt 는 **축소본에 대고 돌린 cohort 판정기의 거부**를 담는다.
+        #    "이 tree 로는 cohort 판정이 안 난다" 는 것이 이 패키지의 계약이므로, 그 계약이
+        #    지켜지는지를 패키지 자신이 증거로 들고 다니게 한다.
+        fh.write(f'# sdcp_gain_verdict.py --dir '
+                 f'<{"축소본" if a.diagnostic else "원본"}>   rc={rc_v}\n' + out_v)
+    if a.diagnostic and 'DIAGNOSTIC_TREE' not in out_v:
+        raise SystemExit(
+            '축소 실패 — 축소본에 cohort 판정기를 돌렸는데 **DIAGNOSTIC_TREE 로 거부되지 '
+            '않았다**.  표지가 안 박혔거나 판정기가 표지를 안 읽는다는 뜻이고, 그러면 이 '
+            f'패키지는 부분 cohort 로 판정될 수 있다.  판정기 출력: {" ".join(out_v.split())[:200]}')
 
     print(f'\n  {len(paths)} 팔: {tot_in/1e6:.0f} MB → {tot_out/1e3:.0f} kB '
           f'({tot_in/max(tot_out,1):.0f}배)')
-    print('  ✓ 기각표지 없음 · 팔 수·factorial 완비 · receipt 보존 · 판정기 동등 (3 모드)')
-    print(f'  ★ 확인: python3 scripts/sdcp_gain_verdict.py --dir {a.out} --collect-only')
-    print('  ⚠ 이것은 scalar decision-audit package 다 — 원자료가 아니다')
+    if a.diagnostic:
+        print('  ✓ 기각표지 없음 · 팔 수 선언 일치 · origin 격자 위·중복 없음 · '
+              'receipt 보존 · 소비 필드 동등')
+        print('  ✓ cohort 판정기가 이 tree 를 DIAGNOSTIC_TREE 로 거부한다 (표지 ①②)')
+        print(f'  ★ 확인: python3 {DIAG_CONSUMER} {a.out} …')
+        print('  ⚠ 진단 패키지다 — cohort 판정(8팔 factorial)의 근거가 아니다')
+    else:
+        print('  ✓ 기각표지 없음 · 팔 수·factorial 완비 · receipt 보존 · 판정기 동등 (3 모드)')
+        print(f'  ★ 확인: python3 scripts/sdcp_gain_verdict.py --dir {a.out} --collect-only')
+        print('  ⚠ 이것은 scalar decision-audit package 다 — 원자료가 아니다')
     return 0
 
 
@@ -362,15 +490,21 @@ def _selftest():
             'viz_points': list(range(200000)),  # 실제 팔은 배열이 지배한다 (131 MB → 5.8 kB)
             'manifest': man}}
 
-    def build(td, arms=16, receipt=True, rejected=False, drop_step3=False):
-        d = os.path.join(td, 'src')
+    def build(td, arms=16, receipt=True, rejected=False, drop_step3=False,
+              per_bed=None, dup_origin=False, sub='src'):
+        """`per_bed=k` 면 **침대마다** k 팔 (진단 픽스처용).  기본은 옛 거동 (SBE 부터 채움)."""
+        d = os.path.join(td, sub)
         os.makedirs(d, exist_ok=True)
         n = 0
         for bed, base in (('SBE', 0.0727), ('DBE', 0.0819)):
+            if per_bed is not None:
+                n = 0
             for i in range(8):
-                if n >= arms:
+                if n >= (per_bed if per_bed is not None else arms):
                     break
                 b = ((i >> 2) & 1, (i >> 1) & 1, i & 1)
+                if dup_origin:
+                    b = (0, 0, 0)                                  # 전부 같은 origin
                 j = arm(bed, b, base + i * 1e-5)
                 if drop_step3 and n == 0:
                     j = {'nothing': 1}
@@ -453,6 +587,93 @@ def _selftest():
         json.dump(j, open(q, 'w'))
         chk('음성 대조: σ 하나를 흔들면 동등성이 깨진다 (검사가 무는다)',
             equivalence(d, out) != [])
+
+    #  ══════ 진단 모드 (2026-08-31) ══════════════════════════════════════════
+    #  계약: 팔 수를 낮추는 것은 **선언**이어야 하고, 그 산출물은 cohort 판정기가 거부한다.
+    with tempfile.TemporaryDirectory() as td:                      # 상호 요구 ①
+        d = build(td, per_bed=1)
+        try:
+            main(['--dir', d, '--out', os.path.join(td, 'r'), '--expect-arms', '2'])
+            chk('★ 표지 없이 팔 수만 낮추면 거부 (--diagnostic 강제)', False)
+        except SystemExit as ex:
+            chk('★ 표지 없이 팔 수만 낮추면 거부 (--diagnostic 강제)',
+                '--diagnostic' in str(ex))
+
+    with tempfile.TemporaryDirectory() as td:                      # 상호 요구 ②
+        d = build(td)
+        try:
+            main(['--dir', d, '--out', os.path.join(td, 'r'), '--diagnostic'])
+            chk('전량 cohort 에 --diagnostic 을 박으면 거부', False)
+        except SystemExit as ex:
+            chk('전량 cohort 에 --diagnostic 을 박으면 거부', '전량 cohort' in str(ex))
+
+    with tempfile.TemporaryDirectory() as td:                      # origin 중복
+        d = build(td, per_bed=2, dup_origin=True)
+        try:
+            preflight(d, 4, diagnostic=True)
+            chk('진단 모드도 origin 중복은 거부', False)
+        except SystemExit as ex:
+            chk('진단 모드도 origin 중복은 거부', 'origin 이 중복' in str(ex))
+
+    with tempfile.TemporaryDirectory() as td:                      # 기각 표지는 그대로 문다
+        d = build(td, per_bed=1, rejected=True)
+        try:
+            preflight(d, 2, diagnostic=True)
+            chk('진단 모드에서도 `.rejected_*` 는 거부', False)
+        except SystemExit as ex:
+            chk('진단 모드에서도 `.rejected_*` 는 거부', '기각 receipt' in str(ex))
+
+    with tempfile.TemporaryDirectory() as td:                      # 정상 경로
+        d = build(td, per_bed=1)
+        out = os.path.join(td, 'red')
+        rc = main(['--dir', d, '--out', out, '--expect-arms', '2', '--diagnostic'])
+        chk('진단 패키지 정상 경로 (rc 0)', rc == 0)
+        chk('표지 ① 트리 파일', os.path.exists(os.path.join(out, f'{DIAG_SENTINEL}2')))
+        _r = json.load(open(os.path.join(out, 'p2_DBE_sph_a0.json'), encoding='utf-8'))
+        chk('표지 ② payload 내부',
+            (_r['step3']['_reduced'].get('diagnostic') or {}).get('consumer') == DIAG_CONSUMER
+            and _r['step3']['_reduced']['schema'] == SCHEMA_DIAG)
+        _m = json.load(open(os.path.join(out, 'cohort_manifest.json'), encoding='utf-8'))
+        chk('manifest 가 진단 스키마', _m['schema'] == SCHEMA_DIAG and _m['arms'] == 2)
+        #  ★★★ 이 패키지의 존재 이유 — cohort 판정기가 **실제로** 거부한다
+        _rcv, _outv = _verdict_out(out, None)
+        chk('★★ cohort 판정기가 축소본을 DIAGNOSTIC_TREE 로 거부', 'DIAGNOSTIC_TREE' in _outv)
+        chk('⑦ 그 거부가 verdict_receipt 에 봉인된다',
+            'DIAGNOSTIC_TREE' in open(os.path.join(out, 'verdict_receipt.txt'),
+                                      encoding='utf-8').read())
+        #  ★ 표지 ① 을 지워도 ② 가 남아 여전히 거부된다 (복사로 표지가 새는 경로)
+        os.remove(os.path.join(out, f'{DIAG_SENTINEL}2'))
+        _rc2, _out2 = _verdict_out(out, None)
+        chk('★★ 트리 표지를 지워도 payload 표지로 거부된다',
+            'DIAGNOSTIC_TREE' in _out2)
+        #  ★ 소비자가 읽는 필드가 실제로 살아 있다
+        chk('소비 필드 보존', all(_r['step3'].get(k) is not None
+                              for k in ('sigma_e_eff_S_cm',)))
+
+    with tempfile.TemporaryDirectory() as td:                      # 음성 대조 (진단판)
+        d = build(td, per_bed=1)
+        out = os.path.join(td, 'red')
+        main(['--dir', d, '--out', out, '--expect-arms', '2', '--diagnostic'])
+        q = os.path.join(out, 'p2_DBE_sph_a0.json')
+        j = json.load(open(q, encoding='utf-8'))
+        j['step3']['sigma_e_eff_S_cm'] += 1e-6
+        json.dump(j, open(q, 'w'))
+        _paths = sorted(glob.glob(os.path.join(d, 'p2_*.json')))
+        chk('음성 대조: 진단 동등성도 값 하나에 문다', diag_equivalence(_paths, out) != [])
+
+    #  ★ DIAG_EQUIV_KEYS 가 소비자의 실제 목록을 **덮는지** — 조용히 약해지는 것을 막는다.
+    #    ⚠ 방향은 한쪽이다: 소비자가 읽는 step3 키 ⊆ DIAG_EQUIV_KEYS.
+    #      역방향은 아니다 — `sigma_e_eff_S_cm` 은 ion 판정기가 안 읽지만 **전자·이온
+    #      독립성 서술의 근거**라 일부러 함께 고정한다 (여분은 검사를 약화시키지 않는다).
+    _ION_CONSUMED = ('sigma_ion_eff_S_cm', 'ion_cg_info', 'ion_unconverged', 'ion_resid')
+    try:
+        _iv = open(os.path.join(_SCR, 'ion_r_verdict.py'), encoding='utf-8').read()
+        _live = [k for k in _ION_CONSUMED if k in _iv]           # 소비자에 실제로 있는 것만
+        chk(f'DIAG_EQUIV_KEYS 가 ion_r_verdict 의 소비 필드를 덮는다 ({len(_live)}개)',
+            len(_live) == len(_ION_CONSUMED)
+            and set(_live) <= set(DIAG_EQUIV_KEYS))
+    except OSError:
+        chk('DIAG_EQUIV_KEYS 가 ion_r_verdict 의 소비 필드를 덮는다', False)
 
     print('\n✓ reduce_arm_payloads selftest PASS' if ok
           else '\n✗ reduce_arm_payloads selftest FAIL')

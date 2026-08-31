@@ -435,6 +435,23 @@ def collect(d):
     if _rej:
         rows = [dict(r, _rejected=[os.path.basename(x) for x in _rej]) for r in rows] or [
             {'file': '<none>', '_rejected': [os.path.basename(x) for x in _rej]}]
+    #  ★★★ 2026-08-31 — **진단 tree 는 이 판정기의 대상이 아니다.**
+    #    `reduce_arm_payloads.py --diagnostic` 이 만든 패키지는 팔 수를 줄인 단일-origin
+    #    런이고 소비자는 `ion_r_verdict.py` 다.  그런데 축소본 파일명이 `p2_*.json` 이고
+    #    이 판정기는 아래 factorial 게이트 주석대로 *"팔 수를 줄인 진단 런은 막지 않는다"*
+    #    ⇒ 표지가 없으면 부분 cohort 에 **판정이 난다**.  표지를 읽고 격리한다.
+    #    ⚠ 표지가 **둘**인 이유: 트리 파일만 보면 `p2_*.json` 만 복사해 간 순간 표지가
+    #      사라진다 — `.rejected_*` 가 정확히 그렇게 유실됐다 (R5-CX-08 위 주석).
+    _dgf = sorted(os.path.basename(x) for x in glob.glob(os.path.join(d, '.diagnostic_*')))
+    _rows = []
+    for r in rows:
+        _marks = list(_dgf)
+        if ((r.get('_step3') or {}).get('_reduced') or {}).get('diagnostic'):
+            _marks.append(f'payload:{r["file"]}')
+        _rows.append(dict(r, _diagnostic=sorted(set(_marks))) if _marks else r)
+    rows = _rows
+    if _dgf and not rows:
+        rows = [{'file': '<none>', '_diagnostic': _dgf}]
     #  ★ 2026-08-18 (리뷰 ① M1) — 옛 판은 `_SBE_`/`_DBE_` 로만 갈랐다.  구 팔 파일명
     #    `p2_DBE_sph_a0` 도 `_DBE_` 를 포함하므로 점 팔과 구 팔이 **한 디렉터리에 섞이면
     #    조용히 합쳐진다**.  매니페스트의 `sdcp_stamp` 가 정본이므로 그것도 고정 인자에
@@ -518,6 +535,21 @@ def _validate_contract_raw(arms, seed_ensemble=False, require_arms=None,
     ⚠ 순서는 prereg §5 의 전제 집행 순서 그대로다 — **바꾸지 말 것**.
     ⚠ `where` 는 사유 문자열의 접두사다 (어느 디렉터리가 깼는지 말해 준다).
     """
+    #  ★★★★ 2026-08-31 — **진단 패키지는 이 판정기의 대상이 아니다 (가장 먼저 본다).**
+    #    이것은 데이터 결함이 아니라 **범주 오류**다 — "이 tree 로는 cohort 판정을 내지
+    #    않는다".  그래서 다른 어떤 게이트보다 먼저 답한다.  뒤에 두면 최소 픽스처처럼
+    #    다른 사유가 먼저 물어 **표지가 가려지고**, 그러면 "표지를 박았다" 는 주장 자체가
+    #    검증되지 않는다 (실측: selftest 에서 그 상태가 났다).
+    #    표지 ① `.diagnostic_*` 트리 파일 · ② payload 의 `step3._reduced.diagnostic`
+    #    — 둘 중 하나만 남아도 문다 (`p2_*.json` 만 복사해 가면 ① 이 사라진다).
+    _dg = sorted({x for k in arms for r in arms[k] for x in (r.get('_diagnostic') or ())})
+    if _dg:
+        return dict(decision='HOLD', hold_code='DIAGNOSTIC_TREE',
+                    reason=f'이 디렉터리는 **진단 패키지** 다 ({_dg[:2]}) — '
+                           f'`reduce_arm_payloads.py --diagnostic` 이 팔 수를 줄여 만든 '
+                           f'단일-origin tree 이고, 소비자는 `ion_r_verdict.py` 다.  '
+                           f'cohort 판정은 8팔 factorial 을 전제하므로 여기서 내지 않는다'), {}
+
     info = {}
     # ① 미수렴 — 하나라도 있으면 보류.  ★ **fail-closed**: 수렴 정보가 **없어도** 보류한다.
     #   실사고 2026-08-16: `cg_info` 를 안 싣는 payload 를 None 으로 읽고 통과시켰다 =
@@ -1247,6 +1279,8 @@ def _selftest():
     #     (6필드 중 4개만 실제로 닫혀 있었다).  ⇒ 이제 **실제 JSON 파일을 쓰고 collect() 를 거쳐**
     #     한 키씩 지운다 = 생산과 같은 경로.  ("실제 경로를 안 타는 테스트" 부류의 재발 차단.)
     import tempfile as _tf22
+    import glob as _gl22
+    import json as _js22
     #  ★ 2026-08-20 (Codex 재검증) — 픽스처가 **실제 payload 모양**이어야 한다.
     #    정본 backend 는 `components[c]['backend']` 이고, 이것이 없는 픽스처로는 그 게이트가
     #    검증되지 않는다 (앞선 두 사고와 같은 뿌리 = 실제 경로를 안 타는 픽스처).
@@ -2083,6 +2117,32 @@ def _selftest():
         chk(f'㊻b ★★ 기각 receipt 가 있으면 **판정하지 않는다** '
             f'({_v1["decision"]}/{_v1.get("hold_code")})',
             _v1['decision'] == 'HOLD' and _v1.get('hold_code') == 'REJECTED_TREE')
+
+    #  ── ㊼ 2026-08-31 — **진단 패키지는 판정 대상이 아니다** ────────────────────────────
+    #    `reduce_arm_payloads.py --diagnostic` 산출물은 팔 수를 줄인 단일-origin tree 이고
+    #    소비자는 `ion_r_verdict.py` 다.  그런데 축소본 파일명이 `p2_*.json` 이라 이 판정기가
+    #    **그대로 읽는다** (㊺f 대로 ARMS<8 은 막지 않는다) ⇒ 표지 없이는 부분 cohort 에
+    #    판정이 난다.  표지 **둘**을 각각 단독으로 시험한다 — 하나만 남아도 물어야 한다.
+    with _tf22.TemporaryDirectory() as _D:
+        _mk2(_D, yvgcf=False, dbe_mul=1.12, n=8)
+        _rd0, _ad0 = collect(_D)
+        chk(f'㊼a 정상 증인 — 표지가 없으면 판정이 난다',
+            verdict(_ad0).get('hold_code') != 'DIAGNOSTIC_TREE')
+        #  ⓐ 표지 ① 트리 파일만
+        with open(os.path.join(_D, '.diagnostic_arms2'), 'w', encoding='utf-8') as _df:
+            _df.write('{"arms": 2}\n')
+        _vd1 = verdict(collect(_D)[1])
+        chk(f'㊼b ★★ 트리 표지만 있어도 거부 ({_vd1.get("hold_code")})',
+            _vd1['decision'] == 'HOLD' and _vd1.get('hold_code') == 'DIAGNOSTIC_TREE')
+        os.remove(os.path.join(_D, '.diagnostic_arms2'))
+        #  ⓑ 표지 ② payload 내부만 (`p2_*.json` 만 복사해 간 경로 = 트리 표지 유실)
+        _pq = sorted(_gl22.glob(os.path.join(_D, 'p2_*.json')))[0]
+        _pj = _js22.load(open(_pq, encoding='utf-8'))
+        _pj.setdefault('step3', {}).setdefault('_reduced', {})['diagnostic'] = {'arms': 2}
+        _js22.dump(_pj, open(_pq, 'w'))
+        _vd2 = verdict(collect(_D)[1])
+        chk(f'㊼c ★★ 트리 표지가 없어도 payload 표지로 거부 ({_vd2.get("hold_code")})',
+            _vd2['decision'] == 'HOLD' and _vd2.get('hold_code') == 'DIAGNOSTIC_TREE')
     #  ⚠ 행의 값과 매니페스트를 **둘 다** 합성으로 둔다 — 실제 `_read` 는 매니페스트에서
     #    행 필드를 채우므로, 하나만 바꾸면 픽스처가 실제 경로와 어긋난다.
     _vpx = verdict(mk(base, [v * 1.12 for v in base], se_source='proxy:0.27@192',
@@ -2691,7 +2751,13 @@ if __name__ == '__main__':
     v = verdict(arms, seed_ensemble=a.seed_ensemble,
                 require_arms=a.require_arms, require_ionic=a.require_ionic,
                 require_digest=a.require_digest)
-    print(f'\n══ 판정 (prereg §5) ══\n  결정: **{v["decision"]}**\n  근거: {v["reason"]}')
+    #  ★ 2026-08-31 — `hold_code` 를 **출력에 싣는다.**  이전에는 사람이 읽는 `reason` 만
+    #    나가서, 기계(축약기·패키지 검사기)가 "어느 사유로 막혔는지" 를 stdout 에서
+    #    **읽을 수 없었다** — 실측: 진단 tree 격리를 확인하려는 두 검사가 사유 문자열을
+    #    못 찾아 둘 다 거짓 실패를 냈다.  코드가 계약이면 코드가 나가야 한다.
+    print(f'\n══ 판정 (prereg §5) ══\n  결정: **{v["decision"]}**'
+          + (f'  [{v["hold_code"]}]' if v.get('hold_code') else '')
+          + f'\n  근거: {v["reason"]}')
     if 'ratio' in v:
         print(f'  σ_e 비 = {v["ratio"]}   (h0 ≥ {H0_MIN_RATIO} · h1 = {H1_RATIO})')
     _rel = v.get('se_ratio_rel_pct', v.get('se_ratio_pct'))     # 옛 payload 호환
