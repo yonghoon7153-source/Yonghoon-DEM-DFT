@@ -9635,6 +9635,92 @@ def fit_bundle_vacuum(out: Path, planned: dict, min_vac: float,
                   "같은 자세를 두 c 로 돌리는 수렴 시험으로만 안다")}
 
 
+def _return_contract(man: Dict[str, Any]) -> Dict[str, Any]:
+    """반송 계약의 **단일 정본** (회신 AV P0-4).
+
+    v18 에서 README·MANIFEST·SUBMIT_CONTRACT 세 문서가 서로 다른 반송 목록을
+    들고 있었다 — README 는 static/OUTCAR 만, SUBMIT 은 부모/canary POSCAR 까지,
+    MANIFEST 는 그 중간. 그대로 반송하면 KCONV_NOT_MEASURED 또는
+    CANARY_GEOM_UNCHECKED 로 재분석이 막힌다. 목록을 **여기 한 곳**에서 계산하고
+    세 문서는 전부 이 출력을 렌더한다 — 문서마다 목록을 들고 있으면 반드시 어긋난다.
+
+    ⛔ 이 함수가 못 하는 것: 계약이 분석기 게이트와 같은 집합인지 스스로 증명하지
+      못한다 — 그 결박은 selftest 가 문서-게이트 대조로 잡는다.
+    """
+    pl = man.get("planned") or {}
+    staged = bool(man.get("staged_runner"))
+    dense_jobs = sorted(k for k, v in pl.items() if "dense" in (v.get("phases") or []))
+    relax_jobs = sorted(k for k, v in pl.items() if "relax" in (v.get("phases") or []))
+    per_job = ["static/OUTCAR (또는 .gz)", "static/OSZICAR",
+               "static/POSCAR — **실행된 기하** (부모↔canary 기하 대조·기하 감사. "
+               "없으면 CANARY_GEOM_UNCHECKED 로 막힙니다)",
+               "POTCAR_PROVENANCE.json (조립기가 자동 생성)"]
+    if staged:
+        per_job.append("EXECUTABLE_RECEIPT.tsv — 상별 실행파일 해시 "
+                       "(run_staged 경로가 자동 생성 · 분석기가 root seal 과 대조합니다)")
+    root = ["POTCAR_ROOT_SEAL.json (첫 실행 전 봉인)", "ZIP_SHA256.txt"]
+    if staged:
+        root.append("STAGE1_PASS.json (1단계 통과 receipt)")
+    root.append("POTCAR_ATTESTATION.json — 원고에 PAW release 를 적으려면 **첫 계산 "
+                "전에** 생성 (없으면 release 를 단정하지 않고 조건부로만 보고)")
+    return {
+        "⚠_정본": "이 구조가 반송 계약의 정본이다 — README·SUBMIT 은 이것의 렌더다 "
+                  "(회신 AV P0-4)",
+        "per_job": per_job,
+        "dense_extra": {"jobs": dense_jobs,
+                        "files": ["dense/OUTCAR (또는 .gz)", "dense/OSZICAR"],
+                        "why": "없으면 k 수렴을 못 재서 KCONV_NOT_MEASURED"},
+        "relax_extra": {"jobs": relax_jobs,
+                        "files": ["relax/OUTCAR", "relax/CONTCAR"],
+                        "why": "canary 가 부모 relax 최종 기하를 승계한다"},
+        "root": root,
+        "not_required": ["CHGCAR·WAVECAR (용량)", "vasprun.xml (선택)"],
+        "failed_jobs": "발산·미수렴 잡도 지우지 말고 그대로 — 실패가 판정의 일부다",
+    }
+
+
+def _return_contract_flat(man: Dict[str, Any]) -> list:
+    """required_returns 하위호환 — 정본 구조의 평탄화. 목록을 따로 들지 않는다."""
+    rc = _return_contract(man)
+    out = ["각 잡: " + x for x in rc["per_job"]]
+    if rc["dense_extra"]["jobs"]:
+        out.append("dense 상이 있는 잡 %d개: %s"
+                   % (len(rc["dense_extra"]["jobs"]),
+                      " · ".join(rc["dense_extra"]["files"])))
+    if rc["relax_extra"]["jobs"]:
+        out.append("relax 상이 있는 잡 %d개: %s"
+                   % (len(rc["relax_extra"]["jobs"]),
+                      " · ".join(rc["relax_extra"]["files"])))
+    out += ["묶음 루트: " + x for x in rc["root"]]
+    return out
+
+
+def _render_return_contract(man: Dict[str, Any]) -> str:
+    """정본 → 마크다운. README 와 SUBMIT_CONTRACT 가 **글자 그대로 같은** 블록을 싣는다."""
+    rc = _return_contract(man)
+    L = ["**정본은 `MANIFEST.json` 의 `return_contract`** 이며 이 목록은 그 렌더입니다",
+         "(README 와 SUBMIT_CONTRACT 어디를 보셔도 같습니다 — 회신 AV P0-4).", "",
+         "각 잡 폴더에서:"]
+    L += ["- " + x for x in rc["per_job"]]
+    de = rc["dense_extra"]
+    if de["jobs"]:
+        L += ["", "dense 상이 있는 잡 **%d개** (`%s`) 에서 추가로:"
+              % (len(de["jobs"]), "` · `".join(de["jobs"]))]
+        L += ["- " + x for x in de["files"]]
+        L += ["  (%s)" % de["why"]]
+    rx = rc["relax_extra"]
+    if rx["jobs"]:
+        L += ["", "relax 상이 있는 잡 **%d개** (`%s`) 에서 추가로:"
+              % (len(rx["jobs"]), "` · `".join(rx["jobs"]))]
+        L += ["- " + x for x in rx["files"]]
+        L += ["  (%s)" % rx["why"]]
+    L += ["", "묶음 루트에서:"]
+    L += ["- " + x for x in rc["root"]]
+    L += ["", "보내지 않으셔도 되는 것: " + " · ".join(rc["not_required"]),
+          "⚠ " + rc["failed_jobs"]]
+    return "\n".join(L)
+
+
 def _readme_sp(man: Dict[str, Any], a, zcut: float, n_jobs: int,
                n_st: int, n_dn: int, n_all: int = 0, by_ph: Optional[dict] = None) -> str:
     """단일점 Wave 1 전용 README — **실제 계획에서 숫자를 뽑는다** (Codex 6차 §8).
@@ -9710,14 +9796,6 @@ bash run_staged.sh 2     # 1단계 통과(STAGE1_PASS.json) 뒤에만
 
 """ % (n_jobs, _n1, "<메일 본문의 MANIFEST SHA256>",
        getattr(a, "cores", 48))) if _staged else ""
-
-    relax_return = ("""⚠ **`relax/` 폴더가 있는 잡은 `relax/OUTCAR` 와 `relax/CONTCAR` 도 같이**
-  보내 주세요 (이 묶음에 **%d잡**). 단일점 묶음에서도 **기체 기준(`refs/mol__*`)에는
-  relax 상이 있습니다** — 분자는 상자 안에서 이완해야 하기 때문입니다. 어느 잡인지는:
-  ```bash
-  find . -maxdepth 3 -type d -name relax
-  ```
-""" % _n_rel) if _n_rel else ""
 
     # 🔴 `dense_calibrators` 는 **선언 필드**라 비어 있어도 실제 dense 상이 있을 수 있다.
     #   실물 v13 이 그 사례였다 — 필드가 null 인데 refs/clean_slab__afm2424_pm1/dense 가
@@ -9819,15 +9897,8 @@ basin 으로 수렴하면 저희가 계산을 중단하고 별도 절차를 요�
         sp_line = ("- **전 잡이 단일점입니다.** `relax/` 폴더가 아예 없습니다. 확인하실 수 있습니다:\n"
                    "  `find . -maxdepth 3 -type d -name relax | wc -l` → **0**\n"
                    "  잡 수는 `find . -name run_job.sh | wc -l` 이 정답입니다.")
-    _rr = ["- 묶음 루트의 **`POTCAR_ROOT_SEAL.json`** (첫 실행 전에 `SEAL_POTCAR_ROOT.sh` "
-           "가 만듭니다) 과 **`ZIP_SHA256.txt`**",
-           "- 묶음 루트의 **`POTCAR_ATTESTATION.json`** — 원고에 PAW release 를 적으려면 "
-           "**첫 계산 전에** `MAKE_POTCAR_ATTESTATION.sh` 로 만들어 주셔야 합니다 "
-           "(`POTCAR_ATTESTATION_REQUEST.md` 참조). 없으면 저희는 release 를 단정하지 "
-           "않고 '이 묶음의 PAW dataset 에 조건부' 로만 보고합니다."]
-    if _staged:
-        _rr.append("- 1단계를 마치면 생기는 **`STAGE1_PASS.json`**")
-    root_returns = "\n".join(_rr) + "\n\n"
+    # 🔴 회신 AV P0-4 — 반송 목록을 여기서 따로 조립하지 않는다. 정본 렌더 하나.
+    return_contract_md = _render_return_contract(man)
     # 자세 구성도 **계획에서 센다** (하드코딩한 "대안 1자세" 가 실물과 달랐다)
     _roles_ct = {}
     for _pm in (man.get("planned") or {}).values():
@@ -9926,14 +9997,7 @@ DFT-relaxed adsorption energy · 평형 결합에너지 · 자유에너지로 �
 
 ## 보내 주실 것
 
-각 잡의 **`static/OUTCAR`** — 이것 하나면 판정이 됩니다. `.gz` 그대로 좋습니다.
-그리고 각 잡의 **`POTCAR_PROVENANCE.json`** (조립기가 자동 생성합니다).
-
-{root_returns}{relax_return}
-- `static/vasprun.xml` — 선택
-- **CHGCAR / WAVECAR 반송 불필요** (용량)
-- 발산·미수렴 잡도 **지우지 말고 그대로** 보내 주세요. 어느 잡이 왜 실패했는지가
-  판정의 일부입니다.
+{return_contract_md}
 
 ## 부탁 — 입력을 고치지 말아 주세요
 
@@ -10009,12 +10073,7 @@ def _submit_contract(man: Dict[str, Any], a, by_ph: Optional[dict] = None) -> st
     # ⛔ 회신 AR P1-11 — 분석에 **실제로 필요한** 반송물을 실물에서 센다.
     #   AR: "SUBMIT_CONTRACT.md 는 분석에 필요한 gas relax/CONTCAR 와 attestation 을
     #   누락한다." relax 가 있으면 그 CONTCAR 가 canary 기하의 출처이므로 필수다.
-    _rel_jobs_sub = sorted(k for k, v in (man.get("planned") or {}).items()
-                           if "relax" in (v.get("phases") or []))
-    _relax_ret_sub = (
-        "- **`relax/` 가 있는 잡 %d개의 `relax/OUTCAR` 와 `relax/CONTCAR`** — canary 가\n"
-        "  그 최종 기하를 승계하므로 분석에 **반드시** 필요합니다: `%s`\n"
-        % (len(_rel_jobs_sub), "` · `".join(_rel_jobs_sub))) if _rel_jobs_sub else ""
+    # 🔴 회신 AV P0-4 — 반송 목록은 _render_return_contract() 하나에서 온다.
     _dep_block = ("""⛔ **잡 사이에 의존성이 있습니다** (이 묶음은 staged 구성입니다).
 - canary(`*__nzmag`)는 `PARENT_GEOM` 이 가리키는 **부모 기체 기준의 최종 기하**를
   받습니다 — 부모가 먼저 완주해야 합니다.
@@ -10046,8 +10105,9 @@ export POTCAR_ALLOWLIST=/abs/site_allow.txt
 export BUNDLE_ZIP_SHA256=$(sha256sum /경로/받은번들.zip | cut -d" " -f1)   # 필수
 export EXPECT_MANIFEST_SHA256=<메일 본문의 MANIFEST SHA256>                # **필수**
 export EXPECT_ZIP_SHA256=<메일 본문의 ZIP SHA256>                          # **필수**
-# ⛔ VASP_CMD 는 더 쓰지 않습니다 (러너가 거부합니다) — 런처와 실행파일을 나눕니다
-export VASP_LAUNCHER="mpirun -np %d"        # 런처와 플래그만 (실행파일 넣지 마세요)
+# ⛔ 자유형 launcher 문자열(VASP_CMD·VASP_LAUNCHER)은 폐지됐습니다 (회신 AV P0-2)
+export VASP_LAUNCHER_KIND=mpirun            # mpirun|mpiexec|srun|none|wrapper
+export VASP_NPROC=%d                        # 랭크 수
 export VASP_EXE=/abs/path/to/vasp_std       # 봉인 대상 실행파일
 bash run_staged.sh 1     # 조립+봉인 → census → 1단계 → 판정
 bash run_staged.sh 2     # 1단계 통과 뒤에만
@@ -10069,16 +10129,9 @@ bash run_staged.sh 2     # 1단계 통과 뒤에만
 ⚠ 셋 다 **조각별이 아니라 두 조각의 차**에 겁니다. 조각별로 각각 작아도
 부호가 반대면 차에서 두 배가 되기 때문입니다.
 
-## 반드시 같이 반송해 주실 것
-- `POTCAR_ROOT_SEAL.json` (첫 실행 전 봉인) 과 `ZIP_SHA256.txt`
-- `POTCAR_ATTESTATION.json` — 원고에 PAW release 를 적으려면 **첫 계산 전에**
-  `MAKE_POTCAR_ATTESTATION.sh` 로 만들어 주셔야 합니다 (없으면 release 를 단정하지
-  않고 '이 묶음의 PAW dataset 에 조건부' 로만 보고합니다)
-- `STAGE1_PASS.json` (1단계 통과 receipt)
-- 각 잡의 `POTCAR_PROVENANCE.json`
-- **부모·canary 의 `static/POSCAR`** (두 기하가 같은지 저희가 대조합니다)
-- 각 상의 `OUTCAR`(또는 `.gz`)·`OSZICAR`
-%s""" % (a.cores, _relax_ret_sub)) if _staged_sub else ("""## 병렬 제출 (권장)
+## 반송 목록
+
+%s""" % (a.cores, _render_return_contract(man))) if _staged_sub else ("""## 병렬 제출 (권장)
 `run_all.sh` 는 **직렬 디버그용**입니다. 실제로는 잡 목록을 배열로 던지세요:
 ```bash
 # ⚠ 폴더 이름을 손으로 적지 않는다 — refs/ 냐 controls/ 냐가 모드에 따라 다르다.
@@ -11747,16 +11800,13 @@ def build_bundle(a, ledger: Optional[Dict[str, Any]] = None) -> Path:
             if man.get("staged_runner") else
             ("run_all.sh 는 **직렬 디버그용**이다. 실제 제출은 "
              "SUBMIT_CONTRACT.md 의 배열 잡으로.")),
-        "required_returns": (
-            ["각 잡 static/OUTCAR(또는 .gz)·OSZICAR", "각 잡 POTCAR_PROVENANCE.json",
-             "POTCAR_ROOT_SEAL.json", "ZIP_SHA256.txt",
-             "POTCAR_ATTESTATION.json (release 를 원고에 적으려면 필수)"]
-            + (["STAGE1_PASS.json"] if man.get("staged_runner") else [])
-            + ([f"{k}/relax/OUTCAR·CONTCAR" for k in sorted(man["planned"])
-                if "relax" in (man["planned"][k].get("phases") or [])])),
+        # 🔴 회신 AV P0-4 — 목록을 여기서 따로 들지 않는다. 정본 구조의 평탄화.
+        "required_returns": _return_contract_flat(man),
         "⚠_실행수": ("n_vasp_executions_total 은 **상(phase) 수**다. 잡 수와 다르다 — "
                      "relax 가 있는 잡은 잡 하나에 실행 둘이다 (회신 AR Q6)"),
     }
+    # 🔴 회신 AV P0-4 — 반송 계약 정본을 MANIFEST 에 그대로 싣는다
+    man["return_contract"] = _return_contract(man)
     # ── release assertion: 계획된 **모든** 잡에 조립기가 있는가 ─────────────
     #   제출 본문이 30잡 전부에서 POTCAR_ASSEMBLE.sh 를 부른다. 하나라도 없으면
     #   그 잡은 exit 127 로 죽는다 (2026-08-12: 기체 8잡이 그 상태로 나갔다).
@@ -12495,6 +12545,30 @@ def selftest() -> int:
                     "ZIP_SHA256.txt", "STAGE1_PASS.json"):
             chk(_f9 in _sb9 and _f9 in str(_sm9.get("required_returns")),
                 f"AR P1-11: 반송물에 `{_f9}` 가 있다 (SUBMIT·MANIFEST 둘 다)")
+        # ── 🔴 회신 AV P0-4 — 반송 계약이 **한 정본**에서 렌더되는가 ─────────
+        _rcm9 = _render_return_contract(m_st)
+        chk(_rcm9 in _rd9 and _rcm9 in _sb9,
+            "AV P0-4: README·SUBMIT 이 같은 반송 블록을 **글자 그대로** 싣는다 "
+            "(정본 = MANIFEST.return_contract)")
+        chk(m_st.get("return_contract") == _return_contract(m_st),
+            "AV P0-4: MANIFEST 에 return_contract 정본이 실려 있다")
+        _rr9 = str(_sm9.get("required_returns"))
+        for _need9, _why9 in (("static/POSCAR", "canary 기하 대조"),
+                              ("POTCAR_PROVENANCE.json", "POTCAR 신원")):
+            chk(_need9 in _rr9,
+                f"⛔음성 AV P0-4: required_returns 에 {_need9} 가 있다 ({_why9}) — "
+                "빠지면 그대로 반송해도 재분석이 막힌다")
+        if any("dense" in (v.get("phases") or [])
+               for v in (m_st.get("planned") or {}).values()):
+            chk("dense/OUTCAR" in _rr9 and "dense/OUTCAR" in _rd9,
+                "⛔음성 AV P0-4: dense 상이 계획된 번들의 계약에 dense/OUTCAR 가 있다 "
+                "— 없으면 KCONV_NOT_MEASURED")
+        if m_st.get("staged_runner"):
+            chk("EXECUTABLE_RECEIPT.tsv" in _rr9
+                and "EXECUTABLE_RECEIPT.tsv" in _rd9
+                and "EXECUTABLE_RECEIPT.tsv" in _sb9,
+                "⛔음성 AV P0-4·P0-2: staged 계약 세 문서 전부에 receipt 가 있다 — "
+                "분석기가 요구하는데 목록에 없으면 계약대로 보내도 막힌다")
         chk("PBE PAW 5.4." not in _rd9 and "2026-08-08 납품과 동일 계보" not in _rd9
             and "2026-08-12 묶음과 다른 POTCAR 트리" not in _rd9,
             "⛔음성 AR P1-11: README 가 이전 wave 계보와 `PBE PAW 5.4` 를 **단정하지 "
