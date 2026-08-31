@@ -2205,6 +2205,55 @@ def selftest():
     chk("Rotate {237, 480, 90, 1, 1}" in _txt_r and 'moinp "p.loc"' in _txt_r,
         "실측: 회전이 필요하면 Rotate 를 쓰고 **.loc** 를 MORead 한다")
 
+    # ══ 회신 T P0-1 · Q3 — P(200)/D(199) 프레임을 **각각** 봉인한다 ═══════════
+    #   실물 구조로 친다 — 합성 픽스처는 인덱스 이동을 재현하지 못한다.
+    _gs0 = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(
+        os.path.abspath(__file__)))), "db", "structures", "sdcp_orca_gs0",
+        "dp6_gs0_neutral_final.xyz")
+    if os.path.isfile(_gs0):
+        _sy, _po = read_xyz(_gs0)
+        _nb2, _rg2, _su2 = analyze(_sy, _po)
+        _ac2 = pilot_acidic_h(_sy, _nb2, _su2)
+        _sH2 = _ac2[len(_ac2) // 2][3]
+        _amf2 = pilot_atom_manifest(_sy, _nb2, _rg2, _su2, [_sH2])
+        chk(_amf2["P"]["n_atoms"] == len(_sy)
+            and _amf2["D"]["n_atoms"] == len(_sy) - 1,
+            "회신 T P0-1: P(%d)/D(%d) 원자수가 다르다 — 한 해시로 둘을 못 가리킨다"
+            % (_amf2["P"]["n_atoms"], _amf2["D"]["n_atoms"]))
+        chk(_amf2["P"]["hash"] != _amf2["D"]["hash"],
+            "⛔음성 T P0-1: 두 프레임의 해시가 **다르다** (같으면 구분이 없는 것)")
+        _cP, _cD = _amf2["P"]["counts"], _amf2["D"]["counts"]
+        chk(_cP["sulfonate"] - _cD["sulfonate"] == 1
+            and _cP["bb_core"] == _cD["bb_core"]
+            and _cP["ether_O"] == _cD["ether_O"]
+            and _cP["other"] == _cD["other"],
+            "회신 T P0-1: 빠지는 원자는 **sulfonate 의 산성 H 하나뿐**이다 "
+            "(P %s → D %s)" % (_cP, _cD))
+        for _fr in ("P", "D"):
+            _d = _amf2[_fr]
+            chk(sum(_d["counts"].values()) == _d["n_atoms"],
+                "회신 T Q3: %s 프레임의 네 성분이 상호배타·완전하다 (%s = %d)"
+                % (_fr, _d["counts"], _d["n_atoms"]))
+            chk(len(_d["derived"]["backbone_extended"])
+                == len(_d["derived"]["backbone_strict"]) + _d["counts"]["ether_O"],
+                "회신 T Q3: %s 의 extended = strict + ether_O (%d = %d + %d)"
+                % (_fr, len(_d["derived"]["backbone_extended"]),
+                   len(_d["derived"]["backbone_strict"]), _d["counts"]["ether_O"]))
+        # ⛔음성 — D 프레임의 어떤 인덱스도 원자수를 넘지 않는다
+        _bad = [i for g in _amf2["D"]["components"].values() for i in g
+                if i >= _amf2["D"]["n_atoms"]]
+        chk(not _bad,
+            "⛔음성 T P0-1: D 프레임 인덱스가 원자수를 넘지 않는다 (넘으면 200원자 "
+            "집합을 199원자 계에 쓴 것이다) · 위반 %s" % _bad[:3])
+        # remap 이 실제로 한 칸씩 당기는가
+        _rmp = _amf2["remap"]["explicit_P_to_D"]
+        chk(_rmp[str(_sH2)] is None and _rmp[str(_sH2 - 1)] == _sH2 - 1
+            and _rmp[str(_sH2 + 1)] == _sH2,
+            "회신 T P0-1: remap 이 제거 H(%d) 를 없애고 그 뒤를 한 칸 당긴다" % _sH2)
+    else:
+        chk(False, "회신 T P0-1: gs0 구조를 못 찾아 프레임 시험을 건너뛰었다 "
+                   "(건너뛴 것을 통과로 세지 않는다)")
+
     # ══ 회신 T P0-3 — `.loc` reader 3종 세트와 결정론 국재화 ═══════════════
     for _t, _why in ((_txt_r, "회전 있는 seed"), (_txt_h, "회전 없는 seed")):
         chk("Guess MORead" in _t and "GuessMode CMatrix" in _t
@@ -2353,6 +2402,132 @@ def pilot_atom_sets(csym, cnb, crings, csulf, ether_in_backbone=True):
             "ether_in_backbone": bool(ether_in_backbone),
             "⚠_분할선택": ("고리 C 에 직결된 에테르 O 를 backbone 에 넣었는지 여부다. "
                             "이것이 F_bb 를 움직인다 — 분석기가 두 값을 다 보고한다")}
+
+
+def pilot_components(csym, cnb, crings, csulf):
+    """회신 T Q3 — **네 성분**을 따로 낸다 (상호배타·완전).
+
+    → {"bb_core", "ether_O", "sulfonate", "other"} + rings
+
+    왜 넷인가 (회신 T Q3): ether O 를 backbone 에 넣는 것은 화학적으로 방어
+    가능하지만 그것을 "strict backbone" 이라 부르면 안 된다. 네 성분을 보존하면
+    strict(=bb_core) 와 extended(=bb_core+ether_O)를 **파생**시킬 수 있고,
+    둘이 갈릴 때 `BACKBONE_DEFINITION_DEPENDENT` 를 정직하게 낼 수 있다.
+
+    ⛔ 이 함수가 못 하는 것: 원자가 π 인지 σ 인지 말하지 않는다 — 그것은 결합
+      그래프가 아니라 궤도 성격이고 `pil_orbital_character()` 의 몫이다 (T P0-2).
+    """
+    n = len(csym)
+    ring_atoms = set()
+    for r in crings:
+        ring_atoms |= set(r["ring"])
+    ether_O = set()
+    for i in ring_atoms:
+        if csym[i] != "C":
+            continue
+        for j in cnb[i]:
+            if csym[j] == "O" and j not in ring_atoms:
+                ether_O.add(j)
+    ring_H = {h for i in ring_atoms for h in cnb[i] if csym[h] == "H"}
+    bb_core = ring_atoms | ring_H
+    sulf = set()
+    for su in csulf:
+        sulf |= {su["sS"]} | set(su["sO"])
+        if su.get("aH") is not None:
+            sulf.add(su["aH"])
+    comp = {"bb_core": bb_core, "ether_O": ether_O, "sulfonate": sulf}
+    # 상호배타 — 겹치면 조용히 한쪽에 넣지 않는다
+    _ks = sorted(comp)
+    for _i in range(len(_ks)):
+        for _j in range(_i + 1, len(_ks)):
+            _ov = comp[_ks[_i]] & comp[_ks[_j]]
+            if _ov:
+                raise SystemExit("⛔ %s 와 %s 가 겹친다 %s — 성분 정의 오류"
+                                 % (_ks[_i], _ks[_j], sorted(_ov)[:5]))
+    comp["other"] = set(range(n)) - bb_core - ether_O - sulf
+    if sum(len(v) for v in comp.values()) != n:
+        raise SystemExit("⛔ 네 성분이 완전하지 않다")
+    rings = {}
+    for ri, r in enumerate(crings):
+        ra = set(r["ring"])
+        eo = {j for i in ra if csym[i] == "C" for j in cnb[i]
+              if csym[j] == "O" and j not in ra}
+        rh = {h for i in ra for h in cnb[i] if csym[h] == "H"}
+        rings["ring%d" % ri] = {"core": sorted(ra | rh), "ether_O": sorted(eo)}
+    return {k: sorted(v) for k, v in comp.items()}, rings
+
+
+def pilot_atom_manifest(csym, cnb, crings, csulf, kill):
+    """⛔⛔ 회신 T P0-1 (2026-08-31) — **P(200)/D(199) 를 각각 봉인한다.**
+
+    종전엔 중성 200원자 집합 하나와 해시 하나만 실었다. D⁻/D• 는 H 하나가 빠져
+    199원자이고 그 뒤 인덱스가 한 칸씩 밀린다. 코드는 `pil_pick_seed_mo` 와
+    `remap_sets` 에서 remap 을 **하고 있었지만**, 산출물에는 그 사실이 없었다 —
+    "확인 못 한 것은 통과가 아니다" 와 같은 층위의 결함이다.
+
+    → {"P": {...}, "D": {...}, "remap": {...}, "derived": {...}, "hash": ...}
+
+    ⛔ 이 함수가 못 하는 것: 어느 분할이 옳은지 정하지 않는다. strict/extended
+      둘 다 봉인하고, 분석기가 둘 다 보고한다.
+    """
+    comp, rings = pilot_components(csym, cnb, crings, csulf)
+    n = len(csym)
+    k = sorted(set(kill))
+
+    def rm(i):
+        return None if i in k else i - sum(1 for x in k if x < i)
+
+    f = lambda L: sorted(x for x in (rm(i) for i in L) if x is not None)
+
+    def frame(cmp_, rg, nat):
+        d = {"n_atoms": nat, "components": cmp_,
+             "counts": {g: len(v) for g, v in cmp_.items()},
+             "rings": rg,
+             "derived": {
+                 "backbone_strict": sorted(cmp_["bb_core"]),
+                 "backbone_extended": sorted(set(cmp_["bb_core"]) | set(cmp_["ether_O"])),
+             }}
+        tot = sum(d["counts"].values())
+        if tot != nat:
+            raise SystemExit("⛔ 프레임 합 %d ≠ 원자수 %d" % (tot, nat))
+        d["hash"] = hashlib.sha256(
+            json.dumps({"components": cmp_, "rings": rg, "n": nat},
+                       sort_keys=True).encode()).hexdigest()
+        return d
+
+    P = frame(comp, rings, n)
+    Dc = {g: f(v) for g, v in comp.items()}
+    Dr = {g: {"core": f(v["core"]), "ether_O": f(v["ether_O"])}
+          for g, v in rings.items()}
+    D = frame(Dc, Dr, n - len(k))
+    remap = {
+        "removed_0based": k, "removed_1based": [i + 1 for i in k],
+        "rule": " · ".join(["i < %d → i" % k[0], "%d → absent" % k[0],
+                            "i > %d → i − 1" % k[0]]) if len(k) == 1 else
+                "kill 집합보다 작은 인덱스는 그대로, 큰 것은 그만큼 당긴다",
+        "explicit_P_to_D": {str(i): rm(i) for i in range(n)},
+    }
+    remap["hash"] = hashlib.sha256(
+        json.dumps(remap, sort_keys=True).encode()).hexdigest()
+    out = {
+        "schema": "polaron_atom_manifest/v2",
+        "P": P, "D": D, "remap": remap,
+        "derived_정의": {
+            "backbone_strict": "bb_core = 티오펜 고리 원자 + 그 고리 H",
+            "backbone_extended": "bb_core + ether_O (고리 C 에 직결된 3,4-O)",
+            "⚠": ("두 정의가 갈리면 BACKBONE_DEFINITION_DEPENDENT. P⁺(양성대조)가 "
+                  "**ether O 포함 때만** backbone 으로 분류되면 대조 자체가 정의 "
+                  "의존이므로 D• 의 backbone 판정을 열지 않고 ETHER_O_CENTERED 로 "
+                  "따로 보고한다 (회신 T Q3)"),
+        },
+        "⛔_단일해시_금지": ("P 와 D 는 원자수가 다르다 (%d vs %d). 하나의 atom-set "
+                            "해시로 두 계를 가리킬 수 없다 (회신 T P0-1)"
+                            % (P["n_atoms"], D["n_atoms"])),
+    }
+    out["hash"] = hashlib.sha256(
+        json.dumps({"P": P["hash"], "D": D["hash"], "remap": remap["hash"]},
+                   sort_keys=True).encode()).hexdigest()
+    return out
 
 
 def pilot_shares(mvals, amap):
@@ -2562,6 +2737,7 @@ def pilot_generate(a):
         k, sS, sO, sH = hit[0]
         why_site = "--site %s 로 명시" % a.site
     n_e_neutral = electrons_of(sym)
+    _amf = pilot_atom_manifest(sym, nb, rings, sulf, [sH])
     envs = [("eps%g" % e, e) for e in (a.eps or [1.0])]
     man = {
         "schema": "polaron_pilot/v1",
@@ -2579,8 +2755,17 @@ def pilot_generate(a):
         "removed_H_site_why": why_site,
         "removed_H_bonded_O_0based": sO, "sulfonate_S_0based": sS,
         "acidic_H_1based_all": [t[3] + 1 for t in acid],
+        # ⛔⛔ 회신 T P0-1 — **P(200)/D(199) 를 각각 봉인한다.** 종전엔 중성
+        #   200원자 집합 하나와 해시 하나만 실어, D 프레임을 런타임에 파생시켰다.
+        #   계산은 맞게 하고 있었지만 산출물에 그 사실이 없었다.
+        "atom_manifest": _amf,
+        "atom_manifest_hash": _amf["hash"],
+        # 하위호환(구판 독자) — **판정에 쓰지 않는다**. 새 코드는 atom_manifest 만 본다.
         "atom_map": amap,
         "atom_map_no_ether": amap_alt,
+        "⛔_atom_map_사용금지": ("`atom_map` 은 중성 200원자 프레임 하나뿐이라 "
+                                 "D 계(199원자)를 가리킬 수 없다. 판정은 "
+                                 "`atom_manifest.P` / `.D` 를 쓴다 (회신 T P0-1)"),
         "backbone_정의": ("primary = 티오펜 고리 + **고리 C 에 직결된 에테르 O** + 고리 H. "
                           "EDOT 의 3,4-O 는 π 에 전자를 밀어넣는 자리라 폴라론 밀도를 갖는다. "
                           "sp³ -CH2CH2- 다리는 공액이 아니므로 other. "
@@ -2805,9 +2990,17 @@ def pilot_seeds(d):
     """phase L 출력을 읽고 phase S 입력을 만든다. 하나라도 못 만들면 **멈춘다**."""
     d = Path(d)
     man = json.loads((d / "MANIFEST_PILOT.json").read_text())
-    amap = man["atom_map"]
+    _amf = man.get("atom_manifest")
+    if not _amf:
+        raise SystemExit("⛔ MANIFEST_PILOT.json 에 `atom_manifest` 가 없다 — 구판 "
+                         "번들이다. P(200)/D(199) 프레임이 봉인돼 있지 않으면 seed 를 "
+                         "만들지 않는다 (회신 T P0-1). 생성기를 다시 돌릴 것.")
     kill = [man["removed_H_0based"]]
     nat = man["n_atoms"]
+    if _amf["P"]["n_atoms"] != nat or _amf["D"]["n_atoms"] != nat - len(kill):
+        raise SystemExit("⛔ atom_manifest 의 원자수가 manifest 와 어긋난다 "
+                         "(P %d · D %d · n_atoms %d · kill %d)"
+                         % (_amf["P"]["n_atoms"], _amf["D"]["n_atoms"], nat, len(kill)))
     made, report = 0, {}
     for jk, jm in sorted(man["jobs"].items()):
         if jm["phase"] != "L2":
@@ -2893,10 +3086,20 @@ def pilot_seeds(d):
             _nbeta = (_nel_s - (spec["mult"] - 1)) // 2   # 베타 점유 수 = 첫 빈자리 index
             rot, w, mo = None, None, None
             if sd != "default":
-                gi = (amap["sets"]["sulfonate"] if sd == "A_sulfonate"
-                      else amap["rings"][sd.replace("B_", "")])
-                mo, w = pil_pick_seed_mo(pops, occ, gi, kill if is_dm else None,
-                                         ener=ener)
+                # ⛔⛔ 회신 T P0-1 — 목표 집합을 **그 계의 프레임에서 직접** 꺼낸다.
+                #   종전엔 중성(200) 집합을 넘기고 `pil_pick_seed_mo` 안에서
+                #   remap 했다 — 계산은 맞았지만 어느 프레임인지 산출물에 없었다.
+                _fr = _amf["D" if is_dm else "P"]
+                if sd == "A_sulfonate":
+                    gi = _fr["components"]["sulfonate"]
+                else:
+                    _rg = _fr["rings"][sd.replace("B_", "")]
+                    gi = sorted(set(_rg["core"]) | set(_rg["ether_O"]))
+                if max(gi) >= nat_j:
+                    raise SystemExit(
+                        "⛔ %s/%s: 목표 인덱스 %d 가 이 계의 원자수 %d 를 넘는다 — "
+                        "프레임이 어긋났다 (회신 T P0-1)" % (env, sd, max(gi), nat_j))
+                mo, w = pil_pick_seed_mo(pops, occ, gi, None, ener=ener)
                 if mo is None:
                     raise SystemExit(
                         "⛔ %s/%s: 목표 집합에 %.1f%% 밖에 안 걸린 MO 가 최대다 "
@@ -2920,11 +3123,34 @@ def pilot_seeds(d):
                 "phase": "S", "env": env, "epsilon": jm["epsilon"],
                 "charge": spec["charge"], "mult": spec["mult"], "wf": spec["wf"],
                 "seed": sd, "seed_source": jk,
-                "orbitals_from": os.path.relpath(locf, d).replace(os.sep, "/"),
-                "loc_sha256": loc_sha,
-                "⚠_국재화_비결정성": ("ORCA 가 국재화를 무작위 seed 로 돌린다. "
-                                       "재실행하면 MO 순서가 달라지므로 이 seed 는 "
-                                       "**위 loc_sha256 의 국재화에 조건부**다"),
+                # ⛔⛔ 회신 T P0-4 (2026-08-31) — 종전엔 **default 에도** 이 두
+                #   필드를 찍었다. default 는 `moread=None` 이라 `.loc` 를 읽지
+                #   않는 fresh guess 인데, 읽지도 않는 파일을 출처로 기록한 셈이다.
+                #   리뷰가 "ring5 와 default 가 같은 seed" 로 읽은 것도 이 때문이다.
+                "orbitals_from": (None if sd == "default"
+                                  else os.path.relpath(locf, d).replace(os.sep, "/")),
+                "loc_sha256": (None if sd == "default" else loc_sha),
+                "initial_guess": ("fresh_default (ORCA 기본 guess — `.loc` 를 읽지 "
+                                  "않는다. 국재 seed 들과 **다른 초기 density** 다)"
+                                  if sd == "default" else
+                                  "localized_MORead (%s · GuessMode CMatrix)"
+                                  % os.path.basename(str(locf))),
+                "seed_equivalence_class": (
+                    "fresh_guess" if sd == "default" else
+                    ("localized_no_rotation" if rot is None else "localized_rotated")),
+                "loc_realization": man.get("loc_realization", "R0_deterministic"),
+                "⚠_국재화_조건부": (
+                    "이 seed 는 `loc_sha256` 의 국재화 realization 에 **조건부**다. "
+                    "R0(결정론, `%loc Randomize 0`)이 primary 이고 R1(무작위)은 "
+                    "민감도다. 두 realization 이 다른 최종 basin 집합을 주면 "
+                    "LOCALIZATION_DEPENDENT — `.loc` 해시 결박은 정확한 재실행에 "
+                    "필요하지만 robustness 를 대체하지 않는다 (회신 T Q2)"),
+                # ⛔ 회신 T P0-1 — 어느 프레임의 어느 집합으로 골랐는지 남긴다
+                "atom_frame": ("D" if is_dm else "P"),
+                "atom_frame_hash": _amf["D" if is_dm else "P"]["hash"],
+                "atom_manifest_hash": _amf["hash"],
+                "target_group": (None if sd == "default" else sd),
+                "n_atoms_this_system": nat_j,
                 "seed_mo": (mo if sd != "default" else None),
                 "seed_mo_weight_pct": (None if w is None else round(w, 2)),
                 "homo_index_parent": homo,
@@ -2960,26 +3186,45 @@ def pilot_analyze(d):
     """phase S 결과 → F 집합 · class · 민감도 · 종료 규칙. 전부 fail-closed."""
     d = Path(d)
     man = json.loads((d / "MANIFEST_PILOT.json").read_text())
-    amap = man["atom_map"]
     kill = [man["removed_H_0based"]]
-    res = {"schema": "polaron_pilot_result/v1",
+    # ⛔⛔ 회신 T P0-1 — **봉인된 프레임**을 쓴다. 런타임에 remap 을 다시 하지
+    #   않는다 (계산은 같아도 산출물이 어느 프레임을 썼는지 말하지 못했다).
+    _amf = man.get("atom_manifest")
+    if not _amf:
+        raise SystemExit("⛔ MANIFEST_PILOT.json 에 `atom_manifest` 가 없다 — 구판 "
+                         "번들이다. P(200)/D(199) 프레임 봉인 없이 판정하지 않는다 "
+                         "(회신 T P0-1).")
+    res = {"schema": "polaron_pilot_result/v2",
            "prereg": man["prereg"], "decision": man["decision"],
-           "atom_map_hash": amap["hash"], "blocks": [], "jobs": {}, "verdict": None}
+           "atom_manifest_hash": _amf["hash"],
+           "atom_frame_hash": {"P": _amf["P"]["hash"], "D": _amf["D"]["hash"]},
+           "remap_hash": _amf["remap"]["hash"],
+           "loc_realization": man.get("loc_realization", "R0_deterministic"),
+           "blocks": [], "jobs": {}, "verdict": None}
 
-    amap_alt = man.get("atom_map_no_ether")
+    def frame_sets(is_dm, ether):
+        """⛔ 회신 T Q3 — 네 성분에서 strict/extended 를 **파생**한다.
+
+        strict   = bb_core
+        extended = bb_core + ether_O
+        sulfonate·other 는 그대로. 합은 항상 그 계의 원자수다.
+        """
+        fr = _amf["D" if is_dm else "P"]
+        c = fr["components"]
+        bb = (sorted(set(c["bb_core"]) | set(c["ether_O"])) if ether
+              else sorted(c["bb_core"]))
+        other = (sorted(c["other"]) if ether
+                 else sorted(set(c["other"]) | set(c["ether_O"])))
+        sets = {"backbone": bb, "sulfonate": sorted(c["sulfonate"]), "other": other}
+        if sum(len(v) for v in sets.values()) != fr["n_atoms"]:
+            raise SystemExit("⛔ 파생 집합 합이 원자수와 다르다 (%s)" % fr["n_atoms"])
+        rings = {g: (sorted(set(v["core"]) | set(v["ether_O"])) if ether
+                     else sorted(v["core"])) for g, v in fr["rings"].items()}
+        return {"sets": sets, "rings": rings}
 
     def remap_sets(is_dm, mp=None):
-        """중성 프레임 집합 → 그 계의 프레임. D•/D⁻ 만 H 하나가 빠진다."""
-        mp = mp or amap
-        if not is_dm:
-            return {"sets": mp["sets"], "rings": mp["rings"]}
-        k = set(kill)
-
-        def rm(i):
-            return None if i in k else i - sum(1 for x in k if x < i)
-        f = lambda L: sorted(x for x in (rm(i) for i in L) if x is not None)
-        return {"sets": {g: f(v) for g, v in mp["sets"].items()},
-                "rings": {g: f(v) for g, v in mp["rings"].items()}}
+        """하위호환 shim — `mp` 는 무시하고 봉인 프레임을 돌려준다."""
+        return frame_sets(is_dm, ether=True)
 
     for jk, jm in sorted(man["jobs"].items()):
         if jm["phase"] != "S":
@@ -3022,7 +3267,11 @@ def pilot_analyze(d):
             elif not re.search(r"(?i)stability analysis", seg):
                 r["gates"].append("STABILITY_NOT_RUN(요청했는데 수행 흔적이 없다)")
         is_dm = "/Dradical/" in jk
-        sm = remap_sets(is_dm)
+        # ⛔ 회신 T Q3 — strict(bb_core) / extended(bb_core+ether_O) **둘 다** 낸다
+        sm = frame_sets(is_dm, ether=True)
+        sm_strict = frame_sets(is_dm, ether=False)
+        r["atom_frame"] = "D" if is_dm else "P"
+        r["atom_frame_hash"] = _amf["D" if is_dm else "P"]["hash"]
         nat = man["n_atoms"] - (1 if is_dm else 0)
         low = _lowdin_spins(seg, nat)
         hir = _hirshfeld_spins(seg, nat)
@@ -3042,19 +3291,34 @@ def pilot_analyze(d):
                     r["gates"].append("THRESHOLD_DEPENDENT")
             if r["partition"].get("partition_dependent"):
                 r["gates"].append("PARTITION_DEPENDENT")
-            # ⛔ backbone 정의(에테르 O 포함 여부)도 estimand 를 움직인다 — 둘 다 낸다
-            if amap_alt:
-                sm2 = remap_sets(is_dm, amap_alt)
-                sh2 = pilot_shares(hir, sm2)
-                r["hirshfeld_no_ether"] = {"F": sh2.get("F"),
-                                           "class": pilot_class(sh2.get("F"))
-                                           if sh2.get("F") else None}
-                c1 = (r.get("class") or (None,))[0]
-                c2 = (r["hirshfeld_no_ether"]["class"] or (None,))[0]
-                if c1 != c2:
+            # ⛔⛔ 회신 T Q3 — backbone 정의가 estimand 를 움직인다. **둘 다** 낸다.
+            #   extended = bb_core + ether_O · strict = bb_core.
+            #   갈리면 BACKBONE_DEFINITION_DEPENDENT 이고, 억지로 하나를 고르지 않는다.
+            sh2 = pilot_shares(hir, sm_strict)
+            r["hirshfeld_strict"] = {"F": sh2.get("F"),
+                                     "class": pilot_class(sh2.get("F"))
+                                     if sh2.get("F") else None}
+            # ether O 에 얼마나 있는지 **따로** 본다 — 그것이 갈림의 원인이면
+            #   "backbone 폴라론" 이 아니라 ETHER_O_CENTERED 라고 말해야 한다.
+            _fr_c = _amf["D" if is_dm else "P"]["components"]
+            _abs_tot = sum(abs(v) for v in hir.values()) or 1.0
+            r["F_ether_O"] = round(
+                sum(abs(hir.get(i, 0.0)) for i in _fr_c["ether_O"]) / _abs_tot, 4)
+            r["F_components"] = {
+                g: round(sum(abs(hir.get(i, 0.0)) for i in _fr_c[g]) / _abs_tot, 4)
+                for g in ("bb_core", "ether_O", "sulfonate", "other")}
+            c1 = (r.get("class") or (None,))[0]
+            c2 = (r["hirshfeld_strict"]["class"] or (None,))[0]
+            if c1 != c2:
+                r["gates"].append(
+                    "BACKBONE_DEFINITION_DEPENDENT(extended %s / strict %s — "
+                    "억지로 하나를 고르지 않는다. ether O 몫 %.3f)"
+                    % (c1, c2, r["F_ether_O"]))
+                if r["F_ether_O"] >= max(r["F_components"]["bb_core"],
+                                         r["F_components"]["sulfonate"]):
                     r["gates"].append(
-                        "BACKBONE_DEFINITION_DEPENDENT(에테르 O 포함 %s / 제외 %s — "
-                        "억지로 하나를 고르지 않는다)" % (c1, c2))
+                        "ETHER_O_CENTERED(스핀이 고리 π 가 아니라 3,4-에테르 O 에 "
+                        "가장 많다 — 'backbone 폴라론' 이라고 부르지 않는다)")
         m_e = re.findall(r"FINAL SINGLE POINT ENERGY\s+(-?\d+\.\d+)", seg)
         r["E_Eh"] = float(m_e[-1]) if m_e else None
         if r["E_Eh"] is None:
