@@ -2205,6 +2205,49 @@ def selftest():
     chk("Rotate {237, 480, 90, 1, 1}" in _txt_r and 'moinp "p.loc"' in _txt_r,
         "실측: 회전이 필요하면 Rotate 를 쓰고 **.loc** 를 MORead 한다")
 
+    # ══ 회신 T P0-2 — 고른 MO 가 **π / O-nonbonding 인가** ═══════════════════
+    #   "그 링에 99%" 는 공간 위치일 뿐이다. σ 결합이나 lone pair 도 그만큼 국재된다.
+    #   xy 평면에 놓인 5원환 → 법선은 z. π 면 p 밀도가 z 에 몰린다.
+    import math as _mth
+    _rp = [[_mth.cos(2 * _mth.pi * k / 5), _mth.sin(2 * _mth.pi * k / 5), 0.0]
+           for k in range(5)]
+    _rsym = ["S", "C", "C", "C", "C"]
+    _rid = [0, 1, 2, 3, 4]
+    _pi_ao = {i: {"2s": 2.0, "2px": 1.0, "2py": 1.0, "2pz": 90.0} for i in _rid}
+    _sg_ao = {i: {"2s": 2.0, "2px": 45.0, "2py": 45.0, "2pz": 1.0} for i in _rid}
+    _s_ao = {i: {"2s": 90.0, "2px": 2.0, "2py": 2.0, "2pz": 2.0} for i in _rid}
+    _chpi = pil_mo_character(_pi_ao, _rid, _rsym, _rp, _rid)
+    chk(pil_character_verdict(_chpi, "pi")[0] and _chpi["pi_share"] > 0.9,
+        "회신 T P0-2 양성: 고리 법선(p_z) 에 몰린 p 밀도는 **π 로 통과**한다 "
+        "(π %.2f · p %.2f)" % (_chpi["pi_share"], _chpi["p_frac"]))
+    _chsg = pil_mo_character(_sg_ao, _rid, _rsym, _rp, _rid)
+    _ok_sg, _w_sg = pil_character_verdict(_chsg, "pi")
+    chk(not _ok_sg and "SEED_NOT_PI" in _w_sg and _chsg["pi_share"] < 0.1,
+        "⛔음성 T P0-2: **면내 p(σ)** 는 그 링에 100%% 국재돼도 막는다 "
+        "(π %.2f) — 공간 국재가 π 를 보증하지 않는다" % _chsg["pi_share"])
+    _chs = pil_mo_character(_s_ao, _rid, _rsym, _rp, _rid)
+    chk(not pil_character_verdict(_chs, "pi")[0],
+        "⛔음성 T P0-2: **s 지배** MO 도 막는다 (p 성분 %.2f)" % _chs["p_frac"])
+    # 축 없이 찍힌 판본 — 확인 못 함은 통과가 아니다
+    _chna = pil_mo_character({i: {"s": 2.0, "p": 90.0} for i in _rid},
+                             _rid, _rsym, _rp, _rid)
+    _ok_na, _w_na = pil_character_verdict(_chna, "pi")
+    chk(not _ok_na and "UNRESOLVED" in _w_na and _chna["axis_resolved"] is False,
+        "⛔음성 T P0-2: ORCA 가 p 를 **축 없이** 찍으면 π 를 확인할 수 없다 — "
+        "확인 못 한 것은 통과가 아니다")
+    # sulfonate seed — O 위 nonbonding 인가
+    _so_sym = ["S", "O", "O", "O"]
+    _so_pos = [[0, 0, 0], [1, 0, 0], [0, 1, 0], [0, 0, 1]]
+    _onb = {1: {"2px": 30.0, "2py": 30.0}, 2: {"2pz": 30.0}, 3: {"2s": 2.0}}
+    chk(pil_character_verdict(
+        pil_mo_character(_onb, [0, 1, 2, 3], _so_sym, _so_pos), "onb")[0],
+        "회신 T P0-2 양성: sulfonate seed 가 **O 위 p(lone pair)** 면 통과")
+    _sonb = {0: {"3s": 80.0}, 1: {"2s": 10.0}}      # S 위 s 지배 — nonbonding 아님
+    _ok_so, _w_so = pil_character_verdict(
+        pil_mo_character(_sonb, [0, 1, 2, 3], _so_sym, _so_pos), "onb")
+    chk(not _ok_so and "NOT_O_NONBONDING" in _w_so,
+        "⛔음성 T P0-2: S 위 s 지배 MO 는 sulfonate seed 로 안 받는다")
+
     # ══ 회신 T P0-1 · Q3 — P(200)/D(199) 프레임을 **각각** 봉인한다 ═══════════
     #   실물 구조로 친다 — 합성 픽스처는 인덱스 이동을 재현하지 못한다.
     _gs0 = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(
@@ -2911,6 +2954,7 @@ def pil_parse_mopop(text, nat):
     if hdr is None:
         return None
     seg = text.split(hdr)[-1]
+    aos = {}                                 # aos[mo][atom][ao라벨] = 인구
     pops, occ, ener = {}, {}, {}
     lines = seg.splitlines()
     i, cur = 0, None
@@ -2938,10 +2982,15 @@ def pil_parse_mopop(text, nat):
         m2 = re.match(r"\s*(\d+)([A-Za-z]{1,2})\s+(\S+)\s+(.*)$", ln)
         if m2 and cur:
             ai = int(m2.group(1))
+            _ao = m2.group(3)
             vals = m2.group(4).split()
             if len(vals) == len(cur):
                 for mo, v in zip(cur, vals):
                     try:
+                        # ⛔ 회신 T P0-2 — AO 라벨별 인구도 남긴다. 원자 합만으로는
+                        #   "그 링에 99%" 밖에 못 말하고 **π 인지**는 못 말한다.
+                        _slot = aos.setdefault(mo, {}).setdefault(ai, {})
+                        _slot[_ao] = _slot.get(_ao, 0.0) + float(v)
                         pops[mo][ai] = pops[mo].get(ai, 0.0) + float(v)
                     except ValueError:
                         pass
@@ -2950,7 +2999,130 @@ def pil_parse_mopop(text, nat):
         return None
     if max(max(d) for d in pops.values() if d) >= nat:
         return None                          # 원자 index 가 범위를 넘었다 — 판독 실패
-    return pops, occ, ener
+    return pops, occ, ener, aos
+
+
+#: 회신 T P0-2 문턱 — 실행 전에 봉인한다 (결과 보고 고르지 않는다)
+PIL_PI_MIN = 0.60          # 목표 링 원자의 p 밀도 중 **고리 법선 방향** 최소 비율
+PIL_PFRAC_MIN = 0.60       # 목표 집합 인구 중 p 성분 최소 비율 (s 지배면 σ 다)
+PIL_ONB_MIN = 0.70         # sulfonate seed: 그 집합 인구 중 **O** 위 최소 비율
+
+
+def _pil_ao_axis(label):
+    """AO 라벨 → ('s'|'p'|'d'|기타, 축 0/1/2 또는 None). `1s`·`2pz`·`pz`·`dz2` 다 받는다."""
+    t = str(label).strip().lower().lstrip("0123456789")
+    if not t:
+        return None, None
+    l = t[0]
+    if l != "p":
+        return l, None
+    ax = {"x": 0, "y": 1, "z": 2}.get(t[1:2])
+    return "p", ax
+
+
+def pil_mo_character(ao_mo, group_idx, sym, pos, ring_idx=None):
+    """⛔ 회신 T P0-2 — 고른 MO 가 **π(고리 법선 p)** 인가 · **O-nonbonding** 인가.
+
+    → {"p_frac", "pi_share", "O_frac", "axis_resolved", "why"}
+
+    왜 필요한가: 전 원자가 공간에서 가장 국재된 MO 를 고르면 C–H/C–C/C–O σ 나
+    O/S lone pair 가 뽑힐 수 있다. "그 링에 99%" 는 **공간 위치**만 말하고
+    폴라론과 관련된 π 성격을 보증하지 않는다 (회신 T P0-2).
+
+    측정:
+      p_frac   = 목표 집합 인구 중 p 성분 비율 (s 지배면 σ)
+      pi_share = 그 p 밀도 중 **고리 법선 n̂** 방향 비율.
+                 Löwdin 인구는 |c|² 꼴이라 성분별 대각 근사를 쓴다:
+                     Σ_k n̂_k² p_k  /  Σ_k p_k
+      O_frac   = 목표 집합 인구 중 산소 위 비율 (sulfonate seed 용)
+
+    ⛔ 이 함수가 **못 하는 것**
+      · 실제 궤도 위상·마디를 보지 않는다. 인구의 **각운동량 분해**일 뿐이다.
+      · ORCA 가 p 를 축 없이(`p`) 찍으면 `pi_share` 를 낼 수 없다 —
+        그때는 `axis_resolved=False` 이고 **통과로 세면 안 된다**.
+      · 축은 **분자 좌표계**다. 고리 법선을 우리가 기하에서 만들어 투영한다.
+    """
+    tgt = set(group_idx)
+    tot = p_tot = o_tot = 0.0
+    pvec = [0.0, 0.0, 0.0]
+    axis_seen = False
+    for ai, d in (ao_mo or {}).items():
+        if ai not in tgt:
+            continue
+        for lab, v in d.items():
+            l, ax = _pil_ao_axis(lab)
+            tot += v
+            if str(sym[ai]).upper() == "O":
+                o_tot += v
+            if l == "p":
+                p_tot += v
+                if ax is not None:
+                    axis_seen = True
+                    pvec[ax] += v
+    if tot <= 0:
+        return {"p_frac": None, "pi_share": None, "O_frac": None,
+                "axis_resolved": False, "why": "목표 집합에 인구가 없다"}
+    out = {"p_frac": round(p_tot / tot, 4),
+           "O_frac": round(o_tot / tot, 4),
+           "axis_resolved": bool(axis_seen), "pi_share": None, "why": None}
+    if ring_idx is None:
+        out["why"] = "고리를 지정하지 않았다 — π 판정 대상이 아니다 (예: sulfonate)"
+        return out
+    if not axis_seen:
+        out["why"] = ("ORCA 가 p 를 축 없이 찍었다 — 고리 법선 투영을 할 수 없다. "
+                      "**확인 못 함이지 통과가 아니다**")
+        return out
+    ring_pos = [pos[i] for i in ring_idx if str(sym[i]).upper() in ("C", "S")]
+    if len(ring_pos) < 3:
+        out["why"] = "고리 원자가 3개 미만 — 법선을 만들 수 없다"
+        return out
+    cx = [sum(q[k] for q in ring_pos) / len(ring_pos) for k in range(3)]
+    # 최소제곱 평면의 법선 = 공분산 행렬의 최소 고유벡터
+    cov = [[sum((q[a] - cx[a]) * (q[b] - cx[b]) for q in ring_pos)
+            for b in range(3)] for a in range(3)]
+    try:
+        import numpy as _np
+        w, v = _np.linalg.eigh(_np.array(cov))
+        n = [float(x) for x in v[:, 0]]
+    except Exception:                                        # noqa: BLE001
+        out["why"] = "법선 계산 실패 (numpy 없음) — 확인 못 함"
+        return out
+    nn = sum(x * x for x in n) ** 0.5 or 1.0
+    n = [x / nn for x in n]
+    if p_tot <= 0:
+        out["pi_share"] = 0.0
+        out["why"] = "목표 집합에 p 인구가 없다 — π 가 아니다"
+        return out
+    out["pi_share"] = round(sum(n[k] ** 2 * pvec[k] for k in range(3))
+                            / sum(pvec) if sum(pvec) > 0 else 0.0, 4)
+    out["ring_normal"] = [round(x, 4) for x in n]
+    return out
+
+
+def pil_character_verdict(ch, kind):
+    """성격 판정 → (ok, 사유). `kind` = "pi" | "onb". **확인 못 함은 통과가 아니다.**"""
+    if ch.get("p_frac") is None:
+        return False, "MO_CHARACTER_UNREADABLE(%s)" % ch.get("why")
+    if kind == "onb":
+        if (ch["O_frac"] or 0) < PIL_ONB_MIN:
+            return False, ("SEED_NOT_O_NONBONDING(O 위 인구 %.2f < %.2f — "
+                           "sulfonate seed 가 O lone pair 가 아니다)"
+                           % (ch["O_frac"], PIL_ONB_MIN))
+        if (ch["p_frac"] or 0) < PIL_PFRAC_MIN:
+            return False, ("SEED_NOT_O_NONBONDING(p 성분 %.2f < %.2f — s 지배면 "
+                           "nonbonding lone pair 가 아니다)"
+                           % (ch["p_frac"], PIL_PFRAC_MIN))
+        return True, "O-nonbonding (O %.2f · p %.2f)" % (ch["O_frac"], ch["p_frac"])
+    if not ch.get("axis_resolved") or ch.get("pi_share") is None:
+        return False, ("MO_CHARACTER_UNRESOLVED(π 를 확인할 수 없다: %s) — "
+                       "확인 못 한 것은 통과가 아니다" % ch.get("why"))
+    if ch["p_frac"] < PIL_PFRAC_MIN:
+        return False, ("SEED_NOT_PI(p 성분 %.2f < %.2f — σ 결합 궤도다)"
+                       % (ch["p_frac"], PIL_PFRAC_MIN))
+    if ch["pi_share"] < PIL_PI_MIN:
+        return False, ("SEED_NOT_PI(p 밀도의 고리법선 성분 %.2f < %.2f — "
+                       "면내 p(σ) 다)" % (ch["pi_share"], PIL_PI_MIN))
+    return True, "ring-normal π (p %.2f · π %.2f)" % (ch["p_frac"], ch["pi_share"])
 
 
 def pil_pick_seed_mo(pops, occ, group_idx, kill=None, ener=None,
@@ -3106,6 +3278,20 @@ def pilot_seeds(d):
                         "(문턱 %.0f%%). **국재 seed 가 아니므로 만들지 않는다** — "
                         "국재화가 실패했다는 뜻이다 (MODEL_NONDIAGNOSTIC 후보)"
                         % (env, sd, w, PIL_SEED_MIN_WEIGHT))
+                # ⛔⛔ 회신 T P0-2 — **97–99% 국재는 π 의 증거가 아니다.**
+                #   전 원자가 공간에서 가장 국재된 MO 를 고르면 C–H/C–C/C–O σ 나
+                #   O/S lone pair 가 뽑힐 수 있다. 성격을 확인하고, 못 하면 막는다.
+                _kind = "onb" if sd == "A_sulfonate" else "pi"
+                _ring_pi = None if _kind == "onb" else list(_rg["core"])
+                _ch = pil_mo_character(aos.get(mo), gi, _sy_j, _po_j, _ring_pi)
+                _ok_ch, _why_ch = pil_character_verdict(_ch, _kind)
+                if not _ok_ch:
+                    raise SystemExit(
+                        "⛔ %s/%s: 고른 MO %d 가 목표 집합에 %.1f%% 걸리지만 "
+                        "**성격이 아니다** — %s\n"
+                        "   회신 T P0-2: 공간 국재는 π 를 보증하지 않는다. "
+                        "frontier-π subspace 안에서 다시 국재화하거나 이 seed 를 "
+                        "MODEL_NONDIAGNOSTIC 으로 선언할 것." % (env, sd, mo, w, _why_ch))
                 # ⛔⛔ 2026-08-31 실측 — 고른 MO 가 **HOMO 자체**일 수 있다
                 #   (ring5 → mo 480 = HOMO). 그러면 `Rotate {480,480,...}` 이 되어
                 #   자기 자신과 회전한다 — 무의미하거나 ORCA 가 거부한다.
@@ -3153,6 +3339,14 @@ def pilot_seeds(d):
                 "n_atoms_this_system": nat_j,
                 "seed_mo": (mo if sd != "default" else None),
                 "seed_mo_weight_pct": (None if w is None else round(w, 2)),
+                # ⛔ 회신 T P0-2 — **왜 그 MO 가 seed 로 적격인지**를 남긴다
+                "seed_mo_character": (None if sd == "default" else _ch),
+                "seed_mo_character_verdict": (None if sd == "default" else _why_ch),
+                "seed_character_thresholds": (None if sd == "default" else
+                                              {"p_frac_min": PIL_PFRAC_MIN,
+                                               "pi_share_min": PIL_PI_MIN,
+                                               "O_frac_min": PIL_ONB_MIN,
+                                               "⚠": "결과 보기 전에 봉인한 문턱이다"}),
                 "homo_index_parent": homo,
                 "n_electrons": _nel_s,
                 "beta_first_empty": _nbeta,
