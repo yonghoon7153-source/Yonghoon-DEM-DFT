@@ -2913,8 +2913,14 @@ def _selftest_closure(chk):
                 ("prospective/sdcp_neutral__b00__afm2424_pm1",
                  "prospective/sdcp_neutral__b01__afm2424_pm1",
                  "prospective/ptfe_c10__b00__afm2424_pm1")}
+    # ⛔ 회신 AS 9 — 실물 manifest 는 kconv_pair 를 담는다. 픽스처도 실물 모양으로.
+    _KJ = ("prospective/sdcp_neutral__b00__afm2424_pm1",
+           "prospective/ptfe_c10__b00__afm2424_pm1")
+    _KCONV = {"jobs": list(_KJ), "coarse_kmesh": "3 4 1", "dense_kmesh": "4 6 1",
+              "formula": "δ_k = (E_sdcp,dense−coarse) − (E_ctl,dense−coarse)",
+              "tol_eV": 0.005}
     _man = {"fragments": ["sdcp_neutral", "ptfe_c10"],
-            "planned": _PLANNED,
+            "planned": _PLANNED, "kconv_pair": _KCONV,
             # ⛔ 회신 AR 해제조건 3 — 실물 생성기가 박는 기체 쌍 정책
             "gas_geometry_policy": {"fixed_geometry_static": True},
             "molecular_spin_controls": {
@@ -2957,7 +2963,12 @@ def _selftest_closure(chk):
                                     list(kw.pop("_mom", [1.2] * 24 + [-1.2] * 24))}
         else:
             kw.pop("_mom", None)
-        return {"ok": True, "gates": [], "meta": m, "geom": {"magnetic": mg}}
+        r = {"ok": True, "gates": [], "meta": m, "geom": {"magnetic": mg}}
+        # ⛔ 회신 AS 9 — dense 상. `_en` 에 coarse 가 있고 dense 는 그 + 오프셋이다.
+        #   기본 오프셋은 두 조각이 같아 δ_k = 0 (통과). 시험이 덮어쓴다.
+        if kw.get("_dense") is not None:
+            r["dense"] = {"normal_end": True, "E0": kw["_dense"]}
+        return r
 
     # ⛔ 회신 AR 해제조건 3 — 기체 쌍 cross-job gate 는 **잡 메타**를 읽는다.
     #   실물 `_emit_mol_job` 이 내는 필드 그대로 픽스처를 만든다.
@@ -2976,7 +2987,9 @@ def _selftest_closure(chk):
 
     _GASJOBS = {"refs/mol__%s__%s" % (f, t): _GASJ(f, t)
                 for f in ("sdcp_neutral", "ptfe_c10") for t in ("box20", "box24")}
-    _jobs = {k: _BAS("aaaa1111", k) for k in _en if k.startswith("prospective/")}
+    _jobs = {k: _BAS("aaaa1111", k,
+                     **({"_dense": _en[k] + 0.010} if k in _KJ else {}))
+             for k in _en if k.startswith("prospective/")}
     _jobs.update(_GASJOBS)
     _E = lambda j: _en.get(j)
     # ⛔ 회신 AO P0-4 — canary/부모 static 기하 대조 결과. 실물에서는 main() 이
@@ -3105,7 +3118,9 @@ def _selftest_closure(chk):
         "E_G_control": "mol__ptfe_c10__box24__nzmag"})
     _en7 = dict(_en, **{"prospective/sdcp_neutral__b09__afm2424_net4": -201.2,
                         "prospective/ptfe_c10__b09__afm2424_net4": -100.6})
-    _jb7 = {k: _BAS("aaaa1111", k) for k in _en7 if k.startswith("prospective/")}
+    _jb7 = {k: _BAS("aaaa1111", k,
+                    **({"_dense": _en7[k] + 0.010} if k in _KJ else {}))
+            for k in _en7 if k.startswith("prospective/")}
     _jb7.update(_GASJOBS)          # 기체 쌍 계약은 이 시나리오의 시험 대상이 아니다
     # net4 두 잡만 **다른 basin** 으로 수렴 → 종전엔 BASIN_HETEROGENEOUS 로 D 가 죽었다
     for _k in ("prospective/sdcp_neutral__b09__afm2424_net4",
@@ -3139,7 +3154,8 @@ def _selftest_closure(chk):
         "여전히 막는다 (pooled 강등이 이걸 덮지 않는다)")
     # ── 회신 AP #2 — exact complex 쌍의 자기 topology 를 **직접 비교** ──
     def _J8(fp, jn):
-        r = _BAS("aaaa1111", jn)
+        r = _BAS("aaaa1111", jn,
+                 **({"_dense": _en8.get(jn, 0.0) + 0.010} if jn in _KJ else {}))
         r["geom"]["magnetic"] = {"realized_basin_id": "aaaa1111",
                                  "realized_basin": {"ni_moments_muB": list(fp)}}
         return r
@@ -3416,7 +3432,9 @@ def _selftest_closure(chk):
     _en2 = dict(_en)
     _en2["prospective/sdcp_neutral__b00__afm2424_pm1"] = -200.55
     _en2["prospective/sdcp_neutral__b01__afm2424_pm1"] = -200.55
-    r2 = _closure_estimand(_man, _RES(), lambda j: _en2.get(j), _emol, _jobs)
+    _jb2 = {k: (dict(v, dense={"normal_end": True, "E0": _en2[k] + 0.010})
+                if k in _KJ else v) for k, v in _jobs.items()}
+    r2 = _closure_estimand(_man, _RES(), lambda j: _en2.get(j), _emol, _jb2)
     chk(r2["verdict"] == "NO_DIRECTIONAL_CLAIM",
         f"[음성 V P0-4] primary {r2.get('primary_ddE_lowE_eV')} > -0.10 → 방향성 주장 금지")
     # 음성: 비영 시작이 더 낮으면 값을 내지 않는다
@@ -6804,6 +6822,59 @@ def _closure_estimand(man, results, E, emol, jobs, merge_info=None):
                                for f in (_sdf, _ctf) for b in ("20", "24")],
                      scope="estimand")
 
+    # ⛔⛔ 회신 AS 해제조건 9 (2026-08-31) — **k 수렴을 최종 대비에 직접 건다.**
+    #   0.01 eV 로 보고하려면 static k → dense k 로 갈 때 두 조각의 차가
+    #   얼마나 움직이는지 알아야 한다. δ_gas 와 같은 논리다 (조각별이 아니라 차).
+    _kp = (man.get("kconv_pair") or {})
+    if _kp.get("jobs") and len(_kp["jobs"]) == 2:
+        _kv = {}
+        for _kj in _kp["jobs"]:
+            _f = ((jobs.get(_kj) or {}).get("meta") or {}).get("fragment")
+            # dense 는 같은 잡의 phase 라 job record 에서 직접 읽는다
+            #   (`E_dense()` 는 main() 스코프라 여기서 못 쓴다)
+            _dr = ((jobs.get(_kj) or {}).get("dense") or {})
+            _kv[_f] = (E(_kj), (_dr.get("E0") if _dr.get("normal_end") else None))
+        _kmiss = [f for f, (c, d) in _kv.items() if c is None or d is None]
+        _dk = None
+        if _kmiss:
+            _blk("KCONV_NOT_MEASURED",
+                 "KCONV_NOT_MEASURED(%s: coarse/dense 중 하나가 없다 — "
+                 "0.01 eV 보고의 k 근거가 없다)" % _kmiss,
+                 job_keys=list(_kp["jobs"]), scope="estimand")
+        else:
+            _fs = next((f for f in _kv if "sdcp" in str(f)), None)
+            _fc = next((f for f in _kv if f != _fs and f is not None), None)
+            _d = {f: (v[1] - v[0]) for f, v in _kv.items()}
+            if _fs is None or _fc is None:
+                # ⛔ 조각을 못 가른다 — 확인 못 한 것은 통과가 아니다
+                _blk("KCONV_FRAGMENT_UNRESOLVED",
+                     "KCONV_FRAGMENT_UNRESOLVED(k 수렴 쌍의 조각을 못 가렸다 %s)"
+                     % sorted(str(f) for f in _kv),
+                     job_keys=list(_kp["jobs"]), scope="estimand")
+            else:
+                _dk = _d[_fs] - _d[_fc]
+        if _kp.get("jobs") and len(_kp["jobs"]) == 2 and not _kmiss and _dk is not None:
+            _tol = float(_kp.get("tol_eV") or 0.005)
+            out["kconv_delta"] = {
+                "delta_k_meV": round(_dk * 1000, 3),
+                "by_fragment_meV": {f: round(v * 1000, 3) for f, v in _d.items()},
+                "tol_meV": round(_tol * 1000, 1),
+                "pass": bool(abs(_dk) <= _tol),
+                "식": _kp.get("formula"),
+                "kmesh": {"coarse": _kp.get("coarse_kmesh"),
+                          "dense": _kp.get("dense_kmesh")}}
+            if abs(_dk) > _tol:
+                _blk("KCONV_DELTA",
+                     "KCONV_DELTA(δ_k %.2f meV > %.0f — 0.01 eV 로 보고할 수 "
+                     "없다. dense 로 다시 내거나 보고 해상도를 낮춘다)"
+                     % (_dk * 1000, _tol * 1000),
+                     job_keys=list(_kp["jobs"]), scope="estimand")
+    elif (man.get("estimand_job_keys") and
+          str(_kp.get("status")) != "not_applicable"):
+        _blk("KCONV_ABSENT",
+             "KCONV_ABSENT(k 수렴 쌍이 봉인돼 있지 않다 — 0.01 eV 보고의 "
+             "근거가 없다)", scope="estimand")
+
     _ejk0 = (man.get("estimand_job_keys") or {})
     if _ejk0:
         # ⛔⛔ 회신 AP #2 — **네 잡 자신**의 자기 상태 검사는 다른 block 유무와
@@ -10066,6 +10137,67 @@ def build_bundle(a, ledger: Optional[Dict[str, Any]] = None) -> Path:
                     "완료 여부만 보고하고 sensitivity claim 에 쓰지 않는다 "
                     "(회신 AR P1-10)")
 
+    # ⛔⛔ 회신 AS 해제조건 9 (2026-08-31) — **k 수렴 근거가 없다.**
+    #   0.01 eV 로 보고하는데 static k(3 4 1) 에서 dense k(4 6 1) 로 갈 때
+    #   두 조각의 차가 얼마나 움직이는지 잰 적이 없다. AR 의 box20 과 같은 종류의
+    #   판단이라 **결과를 보기 전에** 넣는다.
+    #     δ_k = (E_sdcp,dense − E_sdcp,coarse) − (E_ptfe,dense − E_ptfe,coarse)
+    #   ⚠ 같은 잡에 dense 상을 **추가**한다 (새 폴더가 아니라 phase 추가) —
+    #     같은 POSCAR·같은 CHGCAR 승계라 k 외에 달라지는 것이 없다.
+    #   ⚠ δ_k 는 **두 조각의 차**라 조각이 둘일 때만 뜻이 있다. 하나짜리 구성에서는
+    #     dense 를 붙이지 않는다 (붙여 봐야 뺄 상대가 없다).
+    _pri_k = dict(man.get("_primary_by_frag") or {})
+    if len(_pri_k) != 2:
+        _pri_k = {}
+        if getattr(a, "refs_minimal", False) and man.get("estimand_job_keys"):
+            man["kconv_pair"] = {
+                "status": "not_applicable",
+                "why": "primary 조각이 둘이 아니다 (%d) — δ_k 는 두 조각의 차다"
+                       % len(man.get("_primary_by_frag") or {})}
+    if _pri_k and getattr(a, "refs_minimal", False):
+        _kadd = []
+        for _f, _rel in sorted(_pri_k.items()):
+            _pl = (man["planned"].get(_rel) or {})
+            _phs = list(_pl.get("phases") or [])
+            if "dense" in _phs:
+                continue
+            _jd = out / _rel
+            _inc = _jd / "static" / "INCAR"
+            if not _inc.is_file():
+                continue
+            (_jd / "dense").mkdir(exist_ok=True)
+            # dense 는 static 의 CHGCAR 를 승계한다 (ICHARG=1) — 그 한 줄만 다르다
+            (_jd / "dense" / "INCAR").write_text(
+                _inc.read_text().replace("ICHARG   = 2", "ICHARG   = 1")
+                                .replace("[static]", "[dense k · static CHGCAR 승계]"))
+            (_jd / "dense" / "KPOINTS").write_text(
+                "dense k (회신 AS 9)\n0\nGamma\n%s\n0 0 0\n" % KMESH["dense"])
+            _phs.append("dense")
+            _pl["phases"] = _phs
+            (_pl.setdefault("meta", {}).setdefault("kmesh", {}))["dense"] = KMESH["dense"]
+            _mj = _jd / "job.json"
+            if _mj.is_file():
+                _m = json.loads(_mj.read_text())
+                _m.setdefault("kmesh", {})["dense"] = KMESH["dense"]
+                _m["phases"] = _phs
+                _mj.write_text(json.dumps(_m, indent=1, ensure_ascii=False))
+            _kadd.append(_rel)
+        if len(_kadd) == 2:
+            man["kconv_pair"] = {
+                "jobs": sorted(_kadd),
+                "coarse_kmesh": KMESH["static"], "dense_kmesh": KMESH["dense"],
+                "formula": ("δ_k = (E_sdcp,dense − E_sdcp,coarse) "
+                            "− (E_ctl,dense − E_ctl,coarse)"),
+                "tol_eV": 0.005,
+                "gate": ("|δ_k| ≤ 5 meV 여야 0.01 eV 로 보고한다. 넘으면 보고 "
+                         "해상도를 낮추거나 dense 로 다시 낸다"),
+                "⚠": ("조각별 값이 각각 작아도 **부호가 반대면 차에서 커진다** — "
+                       "그래서 조각별이 아니라 이 차에 문턱을 건다 (δ_gas 와 같은 논리)"),
+                "⛔": "회신 AS 해제조건 9 — 결과를 보기 전에 넣었다"}
+        elif _kadd:
+            sys.exit("⛔ dense k 쌍이 %d개만 만들어졌다 (%s) — 두 조각 다 있어야 "
+                     "δ_k 를 만들 수 있다" % (len(_kadd), _kadd))
+
     man.pop("_primary_by_frag", None)
     man.pop("_altpose_by_frag", None)
     man["wave"] = 1 if not a.refs else "1+refs"
@@ -10084,11 +10216,65 @@ def build_bundle(a, ledger: Optional[Dict[str, Any]] = None) -> Path:
                              if f == "sdcp_doped" else []),
              "note": "자리 선호 중심"})
         for f in man.get("fragments", [])}
+    # ⛔⛔ 회신 AS 해제조건 8·9 (2026-08-31) — 보고량의 **이름과 범위**를 못 박는다.
+    #   AS Q2 가 준 문구를 그대로 쓴다: 각 항을 adsorption energy 라고 부르면 안 된다.
+    #   AS Q7 lateral: 옵션 (a) — **셀 조건으로 한정**한다 (lateral 대조를 넣지 않는다).
+    man["reported_quantity"] = {
+        "name": "fixed-geometry differential complex–gas reference energy",
+        "korean": "고정기하 복합체−기체기준 차등에너지 (두 조각의 차)",
+        "formula": "D = (E_C_sdcp − E_G_sdcp) − (E_C_control − E_G_control)",
+        "⛔_부르면_안_되는_이름": [
+            "adsorption energy — 각 항을 그렇게 부르면 안 된다 (AS Q2)",
+            "binding energy · free energy — 평형·고립계 양이 아니다",
+            "E_ads · dE_site — 이 묶음의 산출물이 아니다 (옛 wave 용어)"],
+        "포함되는_것": ["조각 변형에너지", "표면 변형에너지",
+                        "고정된 gas conformer 선택 효과"],
+        "제외되는_것": ["기하 이완", "영점·열적 기여", "용매·계면 전기장"],
+        "gas_conformer_provenance": {
+            "출처": "MLIP(UMA) 로 고른 조각 conformer 하나를 **모든 자세에 공통**으로 쓴다",
+            "선택_규칙": "사전 동결한 자세 파일(--from_basins)의 조각 기하 그대로",
+            "⚠": "평형 분자가 아니다 — 그래서 D 는 '고정 conformer 조건부' 다"},
+        # ── AS Q7 lateral (옵션 a) — 결과 보기 전에 봉인한다 ──────────────
+        "coverage_scope": {
+            "정책": "이 셀 조건으로 **한정**한다 (lateral-size 대조를 넣지 않는다)",
+            "왜": ("보고하는 것이 두 조각의 **차**이고 둘이 같은 셀·같은 피복률에 "
+                   "있으므로 공통 주기영상 항이 상당 부분 소거된다. lateral 확장은 "
+                   "잡당 원자수 2배(비용 ~4배·9일)라 이 단계의 질문에 비해 과하다"),
+            "⛔_금지": ("고립 분자 흡착·실제 전극 피복률로 확장 금지. 원고 문장에 "
+                        "셀 조건(면적·분자 밀도·최소 이미지 거리)을 **반드시 병기**한다"),
+            "재개_조건": "피복률 의존성을 물으면 별도 wave 로 lateral 대조를 연다",
+            "⚠_D3": ("D3 는 pairwise 라 서로 다른 조각의 주기영상 항이 정확히 "
+                     "소거된다는 보장이 없다 — 위 한정이 그 답이다 (AS Q7)")},
+        "⚠_사람이_읽을_것": ("이 필드가 원고 문장의 상한이다. 더 강한 이름으로 "
+                              "바꿔 쓰지 말 것 (회신 AS Q2)")}
+    # ⛔ 회신 AS Q7 — 한정하려면 **무엇으로 한정하는지 수치가 있어야 한다.**
+    #   슬랩 셀에서 직접 계산한다 (설명문이 아니라 실물).
+    try:
+        _cv = slab.cell.array
+        _ax, _ay = _cv[0][:2], _cv[1][:2]
+        _area = abs(_ax[0] * _ay[1] - _ax[1] * _ay[0])           # Å²
+        _la = float(np.linalg.norm(_cv[0])), float(np.linalg.norm(_cv[1]))
+        man["reported_quantity"]["coverage_scope"].update({
+            "lateral_cell_A": [round(_la[0], 3), round(_la[1], 3)],
+            "lateral_area_A2": round(_area, 3),
+            "molecules_per_cell": 1,
+            "coverage_per_nm2": round(100.0 / _area, 4) if _area else None,
+            "min_image_distance_A": round(min(_la), 3),
+            "⚠_수치_출처": "슬랩 셀 벡터에서 직접 계산 (문서가 아니라 실물)"})
+    except Exception as _e:                                      # noqa: BLE001
+        man["reported_quantity"]["coverage_scope"]["⛔_셀_수치_없음"] = (
+            "셀에서 면적을 못 구했다 (%r) — 한정 문구를 수치로 뒷받침하지 못한다"
+            % (_e,))
     man["claim_scope"] = (
-        "두 조각 모델의 **흡착에너지 차** 하나 (adsorption-energy difference). "
+        "두 조각 모델의 **고정기하 복합체−기체기준 차등에너지** 하나 "
+        "(fixed-geometry differential complex–gas reference energy). "
+        "⛔ 각 항을 adsorption energy 라고 부르지 않는다 — 평형·고립계 양이 아니고 "
+        "조각·표면 변형을 포함한다 (회신 AS Q2). "
         "⚠ 고정 기하(MLIP 이완) 단일점이고, 기체 기준은 조각당 conformer 하나를 모든 "
-        "자세에 공통으로 쓰므로 **변형에너지가 포함**된다. 값은 pm1 자기 branch 조건부이고 "
+        "자세에 공통으로 쓴다. 값은 pm1 자기 branch 조건부이고 "
         "비교하는 잡들이 같은 realized topology 여야 한다. "
+        "⚠ **이 셀 조건에 한정**한다 — 사전등록한 lateral 셀에서의 대비이고 "
+        "고립 분자 흡착이나 실제 전극 피복률로 일반화하지 않는다 (회신 AS Q7, 옵션 a). "
         "⛔ 개별 절대 흡착에너지·자리 선호(Li vs Ni)·평형 결합에너지·자유에너지·고분자 "
         "전체의 결합력으로 확장 금지."
         if getattr(a, "refs_minimal", False) else
@@ -11413,6 +11599,22 @@ def selftest() -> int:
                 and _pk1.get("formula") and _pk1.get("gate"),
                 "AR P1-10: 봉인된 자세식이 **실재하는 잡 키 + 식 + gate** 를 갖는다 "
                 f"({_pa_keys})")
+        # ⛔ 회신 AS Q7 — 셀 한정을 **수치로** 뒷받침하는가
+        _cs9 = ((m_st.get("reported_quantity") or {}).get("coverage_scope") or {})
+        chk(_cs9.get("lateral_area_A2") and _cs9.get("coverage_per_nm2")
+            and _cs9.get("min_image_distance_A"),
+            "회신 AS 9: 셀 한정이 **수치**를 갖는다 (면적 %s Å² · %s 분자/nm² · "
+            "최소 이미지 %s Å)" % (_cs9.get("lateral_area_A2"),
+                                   _cs9.get("coverage_per_nm2"),
+                                   _cs9.get("min_image_distance_A")))
+        _rq9 = m_st.get("reported_quantity") or {}
+        chk("adsorption energy" not in str(_rq9.get("name"))
+            and any("adsorption energy" in x for x in _rq9.get("⛔_부르면_안_되는_이름", []))
+            and _rq9.get("gas_conformer_provenance"),
+            "회신 AS 8: 보고량 이름이 adsorption energy 가 **아니고**, 그 이름을 "
+            "금지 목록에 두며, gas conformer 출처를 기록한다")
+        chk("이 셀 조건에 한정" in str(m_st.get("claim_scope")),
+            "회신 AS 9: claim_scope 가 **셀 한정**을 명시한다 (옵션 a)")
         _rc_run = _runner_e2e(_st, chk)
         chk(_rc_run is not False, "AR 해제조건 10: 러너 production-path e2e 를 돌렸다")
         # ── 회신 AP #5 — stage gate 가 vacconv **만** 보지 않는다 ─────────
