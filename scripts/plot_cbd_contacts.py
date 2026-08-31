@@ -88,7 +88,7 @@ def write_origin_csv(path, data, conv=None):
             fh.write(','.join(str(c[i]) if i < len(c) else '' for c in cols) + '\n')
 
 
-def plot(data, conv, out_base, horizontal=False):
+def plot(data, conv, out_base, horizontal=False, violin=True):
     import matplotlib
     matplotlib.use('Agg')
     import matplotlib.pyplot as plt
@@ -103,15 +103,27 @@ def plot(data, conv, out_base, horizontal=False):
     vert = not horizontal
     COLS = ('#d97b7b', '#7b93d9')   # SBE 붉은 · DBE 푸른 (기존 그림 배색)
 
-    parts = ax.violinplot(vals, positions=pos, widths=0.62, vert=vert,
-                          showmeans=False, showmedians=False, showextrema=False)
-    for pc, c in zip(parts['bodies'], COLS):
-        pc.set_facecolor(c); pc.set_alpha(0.42); pc.set_edgecolor('none')
-    bp = ax.boxplot(vals, positions=pos, widths=0.15, showfliers=False, vert=vert,
-                    patch_artist=True, medianprops=dict(color='#11161c', lw=1.4),
+    #  ⚠ `violin=False` 는 **Origin 대응판**이다 — 사용자 Origin 버전의 Box Chart 에는
+    #    바이올린 Type 이 없다 (Box / Data / Bar 계열뿐).  두 그림이 같은 형식이어야 하므로
+    #    상자만 그리는 판을 함께 낸다.  상자·수염 규약은 그대로다:
+    #    상자 = 사분위(25–75) · 수염 = 1.5×IQR · 그 밖의 점은 **그리지 않는다**
+    #    (Origin 에서는 Whisker Range `Outlier`/Coef 1.5 + Outliers 체크 해제와 같다).
+    if violin:
+        parts = ax.violinplot(vals, positions=pos, widths=0.62, vert=vert,
+                              showmeans=False, showmedians=False, showextrema=False)
+        for pc, c in zip(parts['bodies'], COLS):
+            pc.set_facecolor(c); pc.set_alpha(0.42); pc.set_edgecolor('none')
+    bp = ax.boxplot(vals, positions=pos, widths=0.15 if violin else 0.42,
+                    showfliers=False, vert=vert, patch_artist=True,
+                    medianprops=dict(color='#11161c', lw=1.4),
                     whiskerprops=dict(color='#4a5766'), capprops=dict(color='#4a5766'),
-                    boxprops=dict(facecolor='white', edgecolor='#4a5766'))
-    del bp
+                    boxprops=dict(edgecolor='#4a5766'))
+    if not violin:
+        for patch, c in zip(bp['boxes'], COLS):
+            patch.set_facecolor(c); patch.set_alpha(0.55)
+    else:
+        for patch in bp['boxes']:
+            patch.set_facecolor('white')
     for x, b in zip(pos, beds):
         m = stats(data[b])['median']
         xy = (max(data[b]), x) if horizontal else (x, m)
@@ -148,6 +160,8 @@ def main(argv=None):
                     help='PTFE 를 도전 도메인에 넣는다 (대조 규약 — 기본은 도전상만)')
     ap.add_argument('--horizontal', action='store_true',
                     help='가로 방향 (원고 Fig 4b 형식 — SBE 위 · 값은 끝에)')
+    ap.add_argument('--no-violin', action='store_true',
+                    help='상자만 (Origin Box Chart 대응 — 그쪽엔 바이올린 Type 이 없다)')
     ap.add_argument('--selftest', action='store_true')
     a = ap.parse_args(argv)
     if a.selftest:
@@ -157,7 +171,7 @@ def main(argv=None):
     os.makedirs(os.path.dirname(a.out) or '.', exist_ok=True)
     write_csv(a.out + '.csv', data, conv)
     write_origin_csv(a.out + '_origin.csv', data, conv)
-    plot(data, conv, a.out, horizontal=a.horizontal)
+    plot(data, conv, a.out, horizontal=a.horizontal, violin=not a.no_violin)
     for b in ('SBE', 'DBE'):
         s = stats(data[b])
         print(f'  {b}  median {s["median"]}  mean {s["mean"]}  p10–p90 {s["p10"]}–{s["p90"]}'
@@ -225,9 +239,10 @@ def selftest():
         try:
             plot(d, c, os.path.join(td, 'fig'))
             plot(d, c, os.path.join(td, 'figh'), horizontal=True)
+            plot(d, c, os.path.join(td, 'figb'), horizontal=True, violin=False)
             chk('SVG·PNG 를 낸다 (세로·가로 둘 다)',
                 all(os.path.exists(os.path.join(td, n + '.' + e))
-                    for n in ('fig', 'figh') for e in ('svg', 'png')))
+                    for n in ('fig', 'figh', 'figb') for e in ('svg', 'png')))
         except Exception as ex:                                    # noqa: BLE001
             chk(f'SVG·PNG 를 낸다 ({ex})', False)
 
