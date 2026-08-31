@@ -3,6 +3,8 @@ title: "회신 AR — c12 v15 NO-GO (해제조건 10건)"
 date: 2026-08-31
 kind: review-reply
 system: sdcp
+tags: [review, codex, sdcp, c12, vasp, bundle, estimand, no-go]
+status: 이행 완료 (해제조건 10건 · v16 재생성 대기)
 confidence: high
 explored: false
 ---
