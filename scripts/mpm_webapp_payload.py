@@ -1614,6 +1614,7 @@ def main():
                                        sdcp_yield_to_vgcf=_yv3,
                                        sdcp_bridge_um=_sbr3, ptfe_block_um=_pbl3,
                                        ptfe_block_targets=_pbt3,
+                                       ptfe_block_periodic=bool(a.periodic),
                                        # ⚠ 도메인은 `se` 다 — `_m` 은 se 위의 마스크라
                                        #   `_kind_all[_m]` 이 성립하려면 len(_kind_all)==len(se).
                                        #   옛 코드는 `len(_fid_all)` 과 비교해 ⓐ 길이 불일치로
@@ -1648,6 +1649,7 @@ def main():
                         add_fid=_afid, bridge_um=_bru, sdcp_sphere_d_um=0.0,
                         sdcp_yield_to_vgcf=_yv3, sdcp_bridge_um=_sbr3,   # 양쪽 같은 규약 (like-for-like)
                         ptfe_block_um=_pbl3, ptfe_block_targets=_pbt3,
+                        ptfe_block_periodic=bool(a.periodic),
                         add_kind=(_kind_all[_m] if _kind_all is not None
                                   and len(_kind_all) == len(se) else None))   # 도메인 = se (위 주석)
                     #  결함판 재현: 구 셀을 **나중에** 덮어쓴다 (SDCP 가 PTFE/SWCNT 를 먹는다)

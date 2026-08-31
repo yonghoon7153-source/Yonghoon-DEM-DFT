@@ -274,7 +274,7 @@ def _solve_cg(L, b):
 def rasterize(am_c, am_r, am_t, add_pts, add_phase, box_lo, box_hi, vox, tol_am_um=0.10, se_pts=None,
               sdcp_sphere_d_um=0.0, sdcp_yield_to_vgcf=False, sdcp_bridge_um=0.0,
               add_fid=None, fid_gap_tol=2.0, add_kind=None, bridge_um=None,
-              ptfe_block_um=0.0, ptfe_block_targets=(6,)):
+              ptfe_block_um=0.0, ptfe_block_targets=(6,), ptfe_block_periodic=False):
     """Voxel σ-id grid: 0 = non-conductive, 1 = AM_S, 2 = AM_P, 3.. = additives (2,3,5 → 3,4,5).
     Also returns per-voxel AM particle index (-1 = not AM) for per-particle currents.
     am_t: 1 = AM_P, 2 = AM_S (LIGGGHTS type convention).  All coords in one frame (µm).
@@ -515,7 +515,11 @@ def rasterize(am_c, am_r, am_t, add_pts, add_phase, box_lo, box_hi, vox, tol_am_
                     sid[q[:, 0], q[:, 1], q[:, 2]] = s
     #  ★ G2 (D13 원장 ②) — 맨 마지막: 차단은 **완성된** PTFE 배치를 봐야 한다 (브리지·상
     #    루프가 끝난 뒤).  기본 0.0 = 바이트 동일 (함수 자체가 no-op 계약을 진다).
-    apply_ptfe_blocking(sid, vox, ptfe_block_um, targets=ptfe_block_targets)
+    #  ⚠⚠ 2026-08-31 (Codex R17 P2) — `periodic_xy` 를 **안 넘기고 있었다**.  현행 STEP B 는
+    #    비주기라 무영향이지만 `periodic=True ∧ ptfe_block_um>0` 생산 팔에서는 x/y 경계
+    #    너머의 PTFE 가 차단에서 빠진다 (D13 은 공유 함수를 직접 부르며 True 를 줘서 무사했다).
+    apply_ptfe_blocking(sid, vox, ptfe_block_um, periodic_xy=ptfe_block_periodic,
+                        targets=ptfe_block_targets)
     return sid, pid
 
 

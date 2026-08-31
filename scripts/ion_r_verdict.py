@@ -27,8 +27,12 @@
 import argparse
 import glob
 import json
+import math
 import os
 import sys
+
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import run_contract as _RC                                        # noqa: E402
 
 #  ── 사전등록 §4 문턱 — **동결**.  이 파일은 이것을 바꾸지 않는다. ──
 H1_W_MAX = 0.10
@@ -39,7 +43,31 @@ H0_W_MIN = 0.30
 SHARED_AXES = ('vox_um', 'bridge_um', 'sdcp_bridge_um', 'ptfe_block_um',
                'sdcp_stamp', 'sdcp_sphere_d_um', 'sdcp_yield_to_vgcf',
                'ptfe_stamp', 'fibre_stamp', 'periodic_xy', 'plate_rule',
-               'sigma_vgcf_S_cm', 'sigma_sdcp_S_cm')
+               'sigma_vgcf_S_cm', 'sigma_sdcp_S_cm',
+               #  ★ 2026-08-31 (Codex R17 P1-2) — **결론을 바꾸는데 빠져 있던 다섯.**
+               #    이들을 시나리오 사이에서 흔들어도 판정이 통과했다 (실측).
+               'swcnt_ion_block', 'ptfe_block_scope', 'dilate_z', 'se_source', 'temp_c')
+
+#  ★★ 2026-08-31 (Codex R17 P1-2) — **"서로 같다" 로는 부족하다.**
+#    초판은 축이 시나리오 사이에서 일치하는지만 봤다.  그래서 전 시나리오에서 vox 0.125 ·
+#    bridge 0.01 · origin (0.0625)³ · ptfe_stamp off · σ_SE 0.003 을 **함께** 바꾼 mutant 가
+#    h1 로 통과했다 — "등록한 그 실험" 이라는 전제가 자동으로 증명되지 않았다.
+#    ⇒ 사전등록이 고정한 값을 여기 박고 **정확히 그 값인지** 대조한다.
+#  ⚠ 이 표를 고치는 것은 사전등록을 고치는 것이다.
+PINNED_AXES = {
+    'vox_um': 0.15,
+    'bridge_um': 0.48,
+    'sdcp_stamp': 'sphere',
+    'sdcp_sphere_d_um': 0.30,
+    'sdcp_yield_to_vgcf': False,
+    'ptfe_stamp': 'centerline',
+    'fibre_stamp': 'segment',
+    'periodic_xy': False,
+    'sigma_vgcf_S_cm': 78.5398,
+    'sigma_sdcp_S_cm': 250.0,
+    'origin_shift_um': (0.0, 0.0, 0.0),          # arm 0 (prereg §3)
+}
+PINNED_RTOL = 1e-9
 #  ② **같은 침대끼리** 시나리오 사이에서 같아야 하는 축 (침대가 안 바뀌었다는 증거).
 #     ⚠ 두 침대 사이에서는 당연히 다르다 — 그래서 ① 과 분리한다.
 PER_BED_AXES = ('input_digest',)
@@ -83,13 +111,25 @@ def read_arm(path):
     if sig is None:
         raise SystemExit(f'HOLD — {name} 에 sigma_ion_eff_S_cm 이 없다 '
                          '(LEAN=2 는 이온을 안 푼다 — LEAN=3 으로 다시 돌릴 것)')
-    #  ① 이온 수렴.  `None` 은 통과시키지 않는다 — 그 세대 payload 가 안 실은 것이고,
-    #     안 실은 것을 "수렴했다" 로 읽는 것이 정확히 CDX-IJ-01 의 실패다.
-    ci, un = s.get('ion_cg_info'), s.get('ion_unconverged')
-    if ci is None and un is None:
-        raise SystemExit(f'HOLD — {name} 이 이온 수렴 기록을 안 싣는다 (fail-closed)')
-    if un is True or (ci is not None and int(ci) != 0):
-        raise SystemExit(f'HOLD — {name} 이온 미수렴 (ion_cg_info={ci}, unconverged={un})')
+    #  ①-a σ 값 자체가 물리적으로 유효한가.  ⚠ 2026-08-31 (Codex R17 P1-1) — 초판은
+    #     `float(sig)` 만 하고 **음수·NaN·inf 를 그대로 통과**시켰다 (실측: 음수 σ 로
+    #     verdict 가 나왔다).  판정기가 물리 검사를 안 하면 아무 숫자나 판정이 된다.
+    sig = float(sig)
+    if not math.isfinite(sig) or sig <= 0.0:
+        raise SystemExit(f'HOLD — {name} 의 sigma_ion_eff_S_cm 이 유한 양수가 아니다: {sig!r}')
+
+    #  ①-b 이온 수렴.  ⚠⚠ 2026-08-31 (Codex R17 P1-1) — 초판은 **자기 검사**를 썼고
+    #     그것이 공용 계약보다 약했다: `cg_info = 0.5` 는 `int()` 절삭으로, `resid` 부재와
+    #     `1e100` 은 아예 안 봐서, `unconverged = "False"`(문자열)는 `is True` 가 아니라
+    #     전부 통과했다.  ⇒ **공용 계약 `run_contract.conv_ok` 를 그대로 부른다.**
+    #     같은 계약을 두 곳에 따로 구현한 것 자체가 결함이었다 (작업규율 ① — 이미 있는가).
+    ok_conv, why = _RC.conv_ok(s.get('ion_cg_info'), s.get('ion_unconverged'),
+                               s.get('ion_resid'))
+    if not ok_conv:
+        raise SystemExit(
+            f'HOLD — {name} 이온 수렴 계약 실패 ({why}) — '
+            f'ion_cg_info={s.get("ion_cg_info")!r} · unconverged={s.get("ion_unconverged")!r} · '
+            f'resid={s.get("ion_resid")!r}.  (run_contract.conv_ok 와 같은 계약을 쓴다)')
 
     axes = {k: m.get(k) for k in SHARED_AXES}
     axes['origin_shift_um'] = tuple(m.get('origin_shift_um') or ())
@@ -151,6 +191,23 @@ def judge(scen, accept_code_drift=None):
                              f'{v} vs {want}')
     if len(scen) < 2:
         raise SystemExit('HOLD — 시나리오가 2개 미만이면 폭을 정의할 수 없다')
+
+    #  ③-0 ★ 고정축이 **등록값 그대로**인가 (서로 같은 것으로는 부족하다).
+    for nm, bd in scen:
+        for bed in ('SBE', 'DBE'):
+            ax = dict(bd[bed]['axes'])
+            for k, want in PINNED_AXES.items():
+                got = ax.get(k)
+                if isinstance(want, float):
+                    bad = (got is None or isinstance(got, bool)
+                           or not isinstance(got, (int, float))
+                           or abs(float(got) - want) > PINNED_RTOL * max(abs(want), 1e-30))
+                else:
+                    bad = (got != want)
+                if bad:
+                    raise SystemExit(
+                        f'HOLD — {nm}/{bed} 의 `{k}` 가 사전등록값과 다르다: {got!r} vs {want!r}.\n'
+                        '  ⚠ 시나리오끼리 일치하는 것만으로는 "등록한 그 실험" 이 증명되지 않는다.')
 
     #  ③-1 규약 축은 **모든 시나리오·양 침대**에서 같아야 한다.
     base = scen[0][1]['SBE']['axes']
@@ -248,6 +305,8 @@ def _man(sdcp, se, bed, **over):
          'sdcp_yield_to_vgcf': False, 'ptfe_stamp': 'centerline',
          'fibre_stamp': 'segment', 'periodic_xy': False, 'plate_rule': 'p1',
          'sigma_vgcf_S_cm': 78.5398, 'sigma_sdcp_S_cm': 250.0,
+         'swcnt_ion_block': False, 'ptfe_block_scope': 'se', 'dilate_z': 1.0719,
+         'se_source': 'se_dump', 'temp_c': 25.0,
          'origin_shift_um': [0, 0, 0],
          'input_digest': f'digest-{bed}', 'code_sha': 'abc123',
          SWEPT_AXIS: sdcp, SE_AXIS: se, SE_APPLIED_AXIS: se}
@@ -365,14 +424,14 @@ def selftest():
     ok, why = raises(lambda: read_dir(_mk(tmp, 'unconv', MG, SE, 1.0, 1.1,
                                           step3={'ion_cg_info': 30000,
                                                  'ion_unconverged': True})),
-                     '이온 미수렴')
-    chk('음성 — 이온 미수렴은 HOLD', ok, why)
+                     '이온 수렴 계약 실패')
+    chk('음성 — 이온 미수렴은 HOLD (공용 계약)', ok, why)
 
     ok, why = raises(lambda: read_dir(_mk(tmp, 'silent', MG, SE, 1.0, 1.1,
                                           step3={'ion_cg_info': None,
                                                  'ion_unconverged': None})),
-                     '수렴 기록을 안 싣는다')
-    chk('음성 — 수렴 기록 부재는 통과가 아니라 HOLD', ok, why)
+                     '이온 수렴 계약 실패')
+    chk('음성 — 수렴 기록 부재는 통과가 아니라 HOLD (blind)', ok, why)
 
     #  ★ 규약 축 전수 — 하나씩 흔들어 **전부** 잡히는지 (규율 ⑤).
     probe = {'vox_um': 0.125, 'bridge_um': 0.36, 'sdcp_bridge_um': 0.01,
@@ -384,8 +443,9 @@ def selftest():
     missed = []
     for k, v in probe.items():
         d = _mk(tmp, f'ax_{k}', PROD, SE, 1.0, 1.1, man={k: v})
-        got, _ = raises(lambda d=d: judge(full(a, b, d)), '등록 밖 축이 움직였다')
-        if not got:
+        g1, _ = raises(lambda d=d: judge(full(a, b, d)), '등록 밖 축이 움직였다')
+        g2, _ = raises(lambda d=d: judge(full(a, b, d)), '사전등록값과 다르다')
+        if not (g1 or g2):           # 둘 중 어느 게이트가 잡아도 정답
             missed.append(k)
     chk(f'음성 — 규약 축 {len(probe)}개가 **전부** 잡힌다', not missed, f'놓친 축: {missed}')
 
@@ -408,7 +468,7 @@ def selftest():
     chk('음성 — 한 침대만 σ 가 바뀌면 HOLD', ok, why)
 
     d_two = _mk(tmp, 'two', MG, SE, 1.0, 1.1)
-    json.dump({'step3': {'sigma_ion_eff_S_cm': 1.0, 'ion_cg_info': 0,
+    json.dump({'step3': {'sigma_ion_eff_S_cm': 1.0, 'ion_cg_info': 0, 'ion_resid': 1e-9,
                          'ion_unconverged': False, 'manifest': _man(MG, SE, 'SBE')}},
               open(os.path.join(d_two, 'p2_SBE_sph_a1.json'), 'w', encoding='utf-8'))
     ok, why = raises(lambda: read_dir(d_two), 'SBE 가 둘 이상이다')
@@ -416,7 +476,7 @@ def selftest():
 
     d_one = os.path.join(tmp, 'onebed')
     os.makedirs(d_one, exist_ok=True)
-    json.dump({'step3': {'sigma_ion_eff_S_cm': 1.0, 'ion_cg_info': 0,
+    json.dump({'step3': {'sigma_ion_eff_S_cm': 1.0, 'ion_cg_info': 0, 'ion_resid': 1e-9,
                          'ion_unconverged': False, 'manifest': _man(MG, SE, 'SBE')}},
               open(os.path.join(d_one, 'p2_SBE_sph_a0.json'), 'w', encoding='utf-8'))
     ok, why = raises(lambda: read_dir(d_one), '침대 한 쪽이 없다')
@@ -438,6 +498,34 @@ def selftest():
     jd = judge(full(a, b, drift), accept_code_drift='도움말 문자열만 바뀜')
     chk('사유를 주면 통과한다 (조용한 통과 경로는 없다)',
         jd['verdict'] in ('h1', 'h0', 'INDETERMINATE'))
+
+    # ── ★★ Codex R17 P1-1/P1-2 회귀 — 전부 실측으로 통과했던 mutant 들이다 ──
+    #    (초판은 아래 여섯을 **전부** 판정으로 통과시켰고 selftest 는 26/26 초록이었다)
+    import math as _m
+    for nm, sb, db, st in (
+            ('음수 σ_ion',            1.0, -1.1, None),
+            ('NaN σ_ion',             1.0, _m.nan, None),
+            ('inf σ_ion',             1.0, _m.inf, None),
+            ('cg_info = 0.5 (절삭)',   1.0, 1.1, {'ion_cg_info': 0.5}),
+            ('resid = 1e100',         1.0, 1.1, {'ion_resid': 1e100}),
+            ('unconverged = "False"', 1.0, 1.1, {'ion_unconverged': 'False'}),
+            ('resid 부재',             1.0, 1.1, {'ion_resid': None}),
+            ('cg_info = True (bool)', 1.0, 1.1, {'ion_cg_info': True}),
+    ):
+        d = _mk(tmp, f'r17_{abs(hash(nm))%10**6}', PROD, SE, sb, db, step3=st)
+        ok, why = raises(lambda d=d: read_dir(d), 'HOLD')
+        chk(f'★ 음성(R17) — {nm}', ok, why)
+
+    #  ★ 고정축이 **등록값 그대로**인가 — 시나리오끼리 일치해도 거부해야 한다.
+    for k, v in (('vox_um', 0.125), ('bridge_um', 0.01), ('ptfe_stamp', 'off'),
+                 ('sdcp_stamp', 'point'), ('origin_shift_um', [0.075, 0.075, 0.075]),
+                 ('sigma_vgcf_S_cm', 113.097), ('periodic_xy', True)):
+        dd = {kk: _mk(tmp, f'pin{k}{kk}', REGISTERED_SCENARIOS[kk], SE, 1.0, 1.1, man={k: v})
+              for kk in REGISTERED_SCENARIOS}
+        ok, why = raises(lambda dd=dd: judge([(kk, read_dir(dd[kk]))
+                                              for kk in ('MG', 'RSA', 'PROD')]),
+                         '사전등록값과 다르다')
+        chk(f'★ 음성(R17) — 전 시나리오에서 `{k}` 를 함께 바꿔도 HOLD', ok, why)
 
     print(f'\n{len(fails)} failure(s)')
     return 1 if fails else 0
