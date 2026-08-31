@@ -9256,24 +9256,34 @@ export POTCAR_ALLOWLIST=/abs/site_allow.txt
 # 받으신 ZIP 의 SHA256 — 봉인이 **정확히 이 배포본**에 대한 것임을 남깁니다
 export BUNDLE_ZIP_SHA256=$(sha256sum /경로/받은번들.zip | cut -d" " -f1)
 export EXPECT_MANIFEST_SHA256=%s   # 저희가 보낸 값 (러너가 실행 전에 대조합니다)
-VASP_CMD="mpirun -np %d vasp_std" bash run_staged.sh 1     # POTCAR 조립+봉인 → 1단계 → 자동 판정
-VASP_CMD="mpirun -np %d vasp_std" bash run_staged.sh 2     # 1단계 통과(STAGE1_PASS.json) 뒤에만
+export EXPECT_ZIP_SHA256=<메일 본문의 ZIP SHA256>   # **필수** — 없으면 러너가 멈춥니다
+# ⛔ VASP_CMD 는 더 쓰지 않습니다. 런처와 실행파일을 **나눠** 주세요 —
+#    실행파일만 봉인 대상이고, 런처에 실행파일을 넣으면 봉인이 무의미해집니다.
+export VASP_LAUNCHER="mpirun -np %d"        # 런처와 그 플래그만
+export VASP_EXE=/abs/path/to/vasp_std       # 실행파일 절대경로 (봉인 대상)
+bash run_staged.sh 1     # POTCAR 조립+봉인 → census → 1단계 → 자동 판정
+bash run_staged.sh 2     # 1단계 통과(STAGE1_PASS.json) 뒤에만
 ```
 
 ⚠ `BUNDLE_ZIP_SHA256` 이 없으면 봉인 스크립트가 **거부합니다** — 번들 안에는 자기
 해시를 넣을 수 없어서, 받으신 파일에서 직접 구해 주셔야 결박이 성립합니다.
-`EXPECT_MANIFEST_SHA256` 은 저희가 메일로 함께 보내드립니다 (선택이지만 권장).
+`EXPECT_MANIFEST_SHA256` 과 `EXPECT_ZIP_SHA256` 은 메일 본문에 적어 보내드립니다 —
+**둘 다 필수**입니다. 없으면 러너가 시작하지 않습니다 (번들 안의 해시는 자기 자신을
+증명하지 못하므로, ZIP 밖의 값이 유일한 앵커입니다).
 
 **POTCAR 를 따로 조립하지 마십시오** — `run_staged.sh` 가 첫 VASP 실행 전에
 `SEAL_POTCAR_ROOT.sh` 로 전 잡 조립 + 원본 fingerprint 봉인까지 합니다.
 `run_all.sh` 는 이 묶음에 **넣지 않았습니다** (전체 제출 경로가 있으면 1단계
 정지 규칙이 무력화됩니다).
 
-⚠ 아래 단일 잡 실행은 **한 잡을 다시 돌릴 때만** 쓰십시오. 그때도 묶음 루트에서
-`bash SEAL_POTCAR_ROOT.sh` 를 먼저 돌리셔야 POTCAR 가 준비됩니다:
+⛔ **단일 잡을 손으로 돌리는 경로는 이 묶음에서 삭제했습니다** (회신 AT P0-5).
+`run_job.sh` 를 직접 부르면 봉인된 실행파일 검사와 번들 전역 lock 을 **둘 다 우회**해,
+봉인이 무의미해지고 같은 번들에 두 실행이 들어올 수 있습니다.
+한 잡을 다시 돌리셔야 하면 그 잡의 산출물을 지우고 `bash run_staged.sh <단계>` 를
+다시 부르십시오 — 러너가 완료된 잡은 건너뜁니다.
 
-""" % (n_jobs, _n1, "<메일로 보내드립니다>",
-       getattr(a, "cores", 48), getattr(a, "cores", 48))) if _staged else ""
+""" % (n_jobs, _n1, "<메일 본문의 MANIFEST SHA256>",
+       getattr(a, "cores", 48))) if _staged else ""
 
     relax_return = ("""⚠ **`relax/` 폴더가 있는 잡은 `relax/OUTCAR` 와 `relax/CONTCAR` 도 같이**
   보내 주세요 (이 묶음에 **%d잡**). 단일점 묶음에서도 **기체 기준(`refs/mol__*`)에는
@@ -9410,6 +9420,18 @@ basin 으로 수렴하면 저희가 계산을 중단하고 별도 절차를 요�
                     (". primary 는 셀 두 높이에서 한 번 더 잽니다(진공 두께 수렴 시험, %d잡)"
                      % _nvac) if _nvac else ""))
 
+    # 🔴 회신 AT P0-5 — staged 묶음에서는 **수동 단일 잡 경로를 적지 않는다.**
+    #   `run_job.sh` 를 직접 부르면 봉인된 실행파일 검사와 번들 전역 lock 을
+    #   둘 다 우회한다. 문서에 적어 두면 그게 곧 우회 경로가 된다.
+    manual_block = ("""⛔ 이 묶음은 `run_staged.sh` **하나로만** 돌립니다. 위 블록의
+명령을 그대로 쓰십시오. `run_job.sh` 를 직접 부르지 마세요 — 봉인된 실행파일 검사와
+번들 전역 lock 을 우회합니다 (회신 AT P0-5).
+""" if _staged else ("""```
+cd <잡폴더>
+PP=/path/to/potpaw_PBE.54 POTCAR_ALLOWLIST=/abs/site_allow.txt bash POTCAR_ASSEMBLE.sh
+VASP_CMD="mpirun -np %d vasp_std" bash run_job.sh
+```""" % a.cores))
+
     return f"""# VASP 계산 요청 — LiNiO₂(104) 위 분자 조각 단일점
 
 바쁘신 중에 부탁드려 죄송합니다. **VASP 실행 {n_all or (n_st + n_dn)}회**입니다
@@ -9421,10 +9443,8 @@ basin 으로 수렴하면 저희가 계산을 중단하고 별도 절차를 요�
 {staged_block}```
 mkdir -p <이 묶음 전용 빈 디렉터리> && cd <그 디렉터리>
 unzip <이 묶음>.zip
-cd <잡폴더>
-PP=/path/to/potpaw_PBE.54 POTCAR_ALLOWLIST=/abs/site_allow.txt bash POTCAR_ASSEMBLE.sh     # 그 잡 전용 POTCAR 조립
-VASP_CMD="mpirun -np {a.cores} vasp_std" bash run_job.sh
 ```
+{manual_block}
 
 ⚠ **묶음이 둘 이상이면 반드시 서로 다른 빈 디렉터리에 풀고 따로 반송해 주세요.**
 같은 자리에 겹쳐 풀면 어느 결과가 어느 묶음 것인지 저희가 되살릴 수 없습니다.
@@ -9578,15 +9598,33 @@ def _submit_contract(man: Dict[str, Any], a, by_ph: Optional[dict] = None) -> st
 순서는 `run_staged.sh` 가 강제합니다."""
         if _staged_sub else
         "잡 사이에는 의존성이 없습니다. 한 잡의 `run_job.sh` 가 그 잡의 상 순서를 강제합니다.")
+    # 🔴 회신 AT P0-5 — staged 묶음에 배열 제출 예시를 적으면 그것이 곧 우회다
+    #   (봉인·전역 lock·단계 정지 규칙을 통째로 건너뛴다).
+    slurm_block = ("""⛔ **배열(sbatch --array) 제출 예시는 이 묶음에 적지 않습니다.**
+잡을 각자 던지면 봉인된 실행파일 검사·번들 전역 lock·1단계 정지 규칙을 모두
+우회합니다. `run_staged.sh` 안에서 병렬도를 조절하세요 (`NPAR` 환경변수).
+""" if _staged_sub else ("""# Slurm 예시 — 동시 %d개
+sbatch --array=1-$(wc -l < JOBS.txt)%%%%%d \\
+  --ntasks=%d --time=120:00:00 --wrap='
+  j=$(sed -n "${SLURM_ARRAY_TASK_ID}p" JOBS.txt)
+  cd "$j"
+  PP=/path/to/potpaw_PBE.54 POTCAR_ALLOWLIST=/abs/site_allow.txt bash POTCAR_ASSEMBLE.sh
+  VASP_CMD="srun -n %d vasp_std" bash run_job.sh'""" % (a.concurrency, a.concurrency,
+                                                        a.cores, a.cores)))
+
     _submit_block = ("""## 실행 (이 경로 하나뿐입니다)
 ```bash
 cd <이 묶음을 푼 디렉터리>              # 묶음 **루트**
 export PP=/path/to/potpaw_PBE.54
 export POTCAR_ALLOWLIST=/abs/site_allow.txt
 export BUNDLE_ZIP_SHA256=$(sha256sum /경로/받은번들.zip | cut -d" " -f1)   # 필수
-export EXPECT_MANIFEST_SHA256=<메일로 보내드립니다>                        # 권장
-VASP_CMD="mpirun -np %d vasp_std" bash run_staged.sh 1     # 조립+봉인 → census → 1단계 → 판정
-VASP_CMD="mpirun -np %d vasp_std" bash run_staged.sh 2     # 1단계 통과 뒤에만
+export EXPECT_MANIFEST_SHA256=<메일 본문의 MANIFEST SHA256>                # **필수**
+export EXPECT_ZIP_SHA256=<메일 본문의 ZIP SHA256>                          # **필수**
+# ⛔ VASP_CMD 는 더 쓰지 않습니다 (러너가 거부합니다) — 런처와 실행파일을 나눕니다
+export VASP_LAUNCHER="mpirun -np %d"        # 런처와 플래그만 (실행파일 넣지 마세요)
+export VASP_EXE=/abs/path/to/vasp_std       # 봉인 대상 실행파일
+bash run_staged.sh 1     # 조립+봉인 → census → 1단계 → 판정
+bash run_staged.sh 2     # 1단계 통과 뒤에만
 ```
 ⛔ **전체를 배열로 한꺼번에 던지지 마십시오.** 위 의존성 때문에 결과가 무의미해집니다.
 `run_all.sh` 는 이 묶음에 **넣지 않았습니다**.
@@ -9614,7 +9652,7 @@ VASP_CMD="mpirun -np %d vasp_std" bash run_staged.sh 2     # 1단계 통과 뒤�
 - 각 잡의 `POTCAR_PROVENANCE.json`
 - **부모·canary 의 `static/POSCAR`** (두 기하가 같은지 저희가 대조합니다)
 - 각 상의 `OUTCAR`(또는 `.gz`)·`OSZICAR`
-%s""" % (a.cores, a.cores, _relax_ret_sub)) if _staged_sub else ("""## 병렬 제출 (권장)
+%s""" % (a.cores, _relax_ret_sub)) if _staged_sub else ("""## 병렬 제출 (권장)
 `run_all.sh` 는 **직렬 디버그용**입니다. 실제로는 잡 목록을 배열로 던지세요:
 ```bash
 # ⚠ 폴더 이름을 손으로 적지 않는다 — refs/ 냐 controls/ 냐가 모드에 따라 다르다.
@@ -9623,15 +9661,8 @@ find . -mindepth 2 -maxdepth 2 -type d -name '*__*' -o \\
      -mindepth 2 -maxdepth 2 -type d -path './refs/*' | sed 's|^\\./||' | sort > JOBS.txt
 n=$(wc -l < JOBS.txt)
 [ "$n" = %d ] || { echo "잡 %d개여야 하는데 $n 개"; exit 1; }
-# Slurm 예시 — 동시 %d개
-sbatch --array=1-$(wc -l < JOBS.txt)%%%d \\
-  --ntasks=%d --time=120:00:00 --wrap='
-  j=$(sed -n "${SLURM_ARRAY_TASK_ID}p" JOBS.txt)
-  cd "$j"
-  PP=/path/to/potpaw_PBE.54 POTCAR_ALLOWLIST=/abs/site_allow.txt bash POTCAR_ASSEMBLE.sh
-  VASP_CMD="srun -n %d vasp_std" bash run_job.sh'
-```""" % (man.get("n_jobs", 0), man.get("n_jobs", 0), a.concurrency,
-          a.concurrency, a.cores, a.cores))
+{slurm_block}
+```""" % (man.get("n_jobs", 0), man.get("n_jobs", 0)))
 
     # ⛔ 회신 AR P1-11 — walltime 도 하드코딩(56 h)이었다. cost_frozen 에서 가져온다.
     _long_h = round((man.get("cost_frozen") or {}).get("longest_job_h") or 56)
@@ -12116,6 +12147,29 @@ def selftest() -> int:
         chk("run_all.sh` 는 이 묶음에 **넣지 않았습니다**" in _rd_st,
             "⛔음성 AO P0-3: README 가 run_all.sh 부재를 **명시**한다 "
             "(종전엔 SUBMIT/run_all 이 전체 제출을 안내해 staged 지침과 충돌했다)")
+        # 🔴 회신 AT P0-5 — 문서가 **실제 러너 계약과 같은 말**을 하는가
+        _sub_st0 = (_st / "SUBMIT_CONTRACT.md").read_text()
+        # ⚠ 이 검사는 **staged 러너를 실제로 실은 묶음**에만 뜻이 있다. 아니면
+        #   `run_job.sh` 가 정상 경로이고 VASP_CMD 도 정상이다.
+        _is_staged = (_st / "run_staged.sh").is_file()
+        chk(_is_staged, "AT P0-5 전제: 이 묶음이 staged 러너를 싣고 있다")
+        for _nm, _txt in ((("README", _rd_st), ("SUBMIT", _sub_st0)) if _is_staged else ()):
+            # ⚠ "VASP_CMD 는 쓰지 마세요" 라는 **경고 문장**은 있어야 한다.
+            #   금지할 것은 붙여넣으면 도는 **대입문**이다.
+            chk('VASP_CMD="' not in _txt,
+                "🔴 AT P0-5: staged %s 에 `VASP_CMD=\"…\"` **대입문**이 없다 — "
+                "러너가 그것을 거부하므로 문서에 남아 있으면 붙여넣기가 즉시 실패한다"
+                % _nm)
+            chk("VASP_CMD" in _txt,
+                "AT P0-5: staged %s 가 `VASP_CMD` 를 **쓰지 말라고 말한다** "
+                "(옛 지침을 기억하는 사람이 있다)" % _nm)
+            chk("VASP_LAUNCHER" in _txt and "VASP_EXE" in _txt,
+                "AT P0-5: staged %s 가 런처와 실행파일을 **나눠** 적는다" % _nm)
+            chk("EXPECT_ZIP_SHA256" in _txt and "EXPECT_MANIFEST_SHA256" in _txt,
+                "AT P0-5: staged %s 에 **필수** 외부 앵커 둘이 다 적혀 있다" % _nm)
+        chk((not _is_staged) or "run_job.sh` 를 직접 부르지 마세요" in _rd_st,
+            "🔴 AT P0-5: staged README 가 **수동 단일잡 우회를 금지**한다 "
+            "(적어 두면 그게 곧 우회 경로가 된다)")
         # ── 회신 AP #10 — 문서가 **의존성과 반송물**을 정확히 말하는가 ────
         _sub_st = (_st / "SUBMIT_CONTRACT.md").read_text()
         chk("잡 사이에 의존성이 있습니다" in _sub_st,
