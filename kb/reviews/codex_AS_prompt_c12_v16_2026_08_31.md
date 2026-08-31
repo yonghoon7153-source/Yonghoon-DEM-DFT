@@ -20,7 +20,8 @@ evidenceScope: multi-source-primary
 계산 전에 막히는 경로**와 **치명적 실패가 지워지거나 stage 2 가 열리는 경로** 였다.
 
 - 번들: `sdcp_c12_v16.zip`
-- 브랜치: `claude/friendly-meitner-lldvar`
+- **ZIP SHA256: `796ac6566e79395c2ec89168bc3eecae8e26d3f02007d6f2fcf4ffda583f518f`**
+- 생성 커밋: `779463c3` (`claude/friendly-meitner-lldvar`)
 - 생성 인자: v15 와 **동일** —
   `--from_basins db/properties/c12_poses_2026_08_30.json
    --frags sdcp_neutral ptfe_c10 --refs --refs_minimal --both_seeds --single_point
@@ -30,6 +31,42 @@ evidenceScope: multi-source-primary
   고정기하 static 으로 (relax 제거) ② 기체 분자를 셀 **질량중심**에 배치 —
   이 둘이 POSCAR 바이트를 바꾼다. 나머지는 게이트·러너·문서다.
 - ⚠ **VASP 를 한 잡도 돌리지 않았다.** 결과를 보기 전 창이 아직 열려 있다.
+
+### ⚠ 실물 생성이 결함 둘을 더 드러냈다 (v16 확정 전에 고침)
+
+첫 v16 을 실제로 만들어 보고서야 잡힌 것 둘이다. **둘 다 selftest 는 통과하고
+있었다** — 그 사실 자체가 보고 대상이라 적는다.
+
+**(a) 비 UTF-8 표준출력.** 해제조건 10 에서 분석기의 **파일 IO** 를 전부
+`encoding="utf-8"` 로 박고 `LC_ALL=C` 시험을 추가했는데, 그 시험 환경에
+`PYTHONIOENCODING=utf-8` 을 **같이 넣어** stdout 만 살려 놓고 통과시켰다.
+실제 실행(`LC_ALL=C`, 그 변수 없음)은
+`UnicodeEncodeError: 'ascii' codec can't encode character '\u2713'` 로 죽었다.
+⇒ 분석기 시작 시 stdout/stderr 를 `utf-8(errors="replace")` 로 재설정하고,
+시험 환경에서 `PYTHONIOENCODING` 을 **제거**했다. 이제 실제로 재현·차단된다.
+⚠ 이것은 "양성만 있는 selftest" 의 전형이고, 우리 코드 규율이 금지하는 모양이다.
+
+**(b) 대안 자세 봉인이 통째로 비었다.** 해제조건 6 의 자세 봉인을 "같은 역할끼리
+짝짓기" 로 짰는데, 실물 c12 는 두 조각의 대안 자세가 **다른 역할 이름**을 달고 있다:
+
+| 조각 | primary | 대안 |
+|---|---|---|
+| `sdcp_neutral` | b00 | **b12 `stress_sensitivity`** |
+| `ptfe_c10` | b00 | **b52 `sensitivity`** |
+
+그래서 어느 쪽도 짝이 없어 봉인이 비고 `altpose_purpose`(탐색용)로 떨어졌다 —
+**스테이지 2 의 네 잡(실행 4회)이 정의된 양을 하나도 못 내는 상태**였다.
+⇒ 같은 역할이 양쪽에 있으면 그 역할로, 없으면 조각당 하나뿐인 대안 자세를
+`role_pair` 로 봉인한다. 실물 v16 이 낸 봉인:
+
+```
+role_pair: E_C_sdcp    = prospective/sdcp_neutral__b12__afm2424_pm1
+           E_C_control = prospective/ptfe_c10__b52__afm2424_pm1
+           roles       = {sdcp_neutral: [stress_sensitivity], ptfe_c10: [sensitivity]}
+```
+
+봉인 안에 **역할이 비대칭이라는 사실**과 **해석이 아직 미정이라는 것**을 같이
+적었다 — 식은 결과 보기 전에 박고, 뜻은 Q4 로 열어 둔다.
 
 ## 1. 조건별 이행
 
@@ -187,8 +224,9 @@ lock — 내용을 **먼저 쓴** 임시 파일을 `ln` 으로 원자적으로 �
 | **VASP 실행** | **20** | **16** |
 | 기체 부모 phases | relax+static | **static** |
 | stage-1 선결조건 | 4 | **8** |
-| 배포본 selftest | 179 | **244** |
-| 생성기 selftest | 524(주장) | **402**(실측·재현 가능) |
+| 배포본 selftest | 179 | **245** |
+| 생성기 selftest | 524(주장) | **404**(실측·재현 가능) |
+| 대안 자세 | tier 만 | **`role_pair` 봉인**(역할 비대칭 명시) |
 
 ⚠ 생성기 selftest 의 "524" 는 철회한다 — 지금 실물이 찍는 수는 402 이고,
 그중 배포본 안에서 재현되는 것이 244 다. 두 수 다 실행 출력에서 센 값이다.
@@ -210,9 +248,16 @@ UMA 고정기하 단일점이므로 state-selection policy 를 맞춘 것인데,
 1단계 산출이 아니라 **계획**에 대한 조건이라 성격이 다르다. 여기 두는 것이
 맞는가, 아니면 0단계(봉인) 실패로 분리해야 하나?
 
-**Q4.** 대안 자세 봉인식 `D_pose[role] − D_pm1`. 이 값이 크게 나오면 무엇을
-말할 수 있나 — "자세 민감도가 크다" 인가, 아니면 **사전등록 자세 선택이
-틀렸다**는 신호인가? 후자라면 재개 조건에 넣어야 한다.
+**Q4.** 대안 자세 봉인식 `D_pose[role_pair] − D_pm1`. **두 조각의 대안 자세가
+다른 이유로 골렸다** — SDCP 는 `stress_sensitivity`(b12), PTFE 는
+`sensitivity`(b52). 그래서 이 값은 "같은 종류의 자세 변화" 가 아니라 "두 조각을
+각자의 사전등록 대안 자세로 옮겼을 때의 대비" 다. 두 가지를 여쭙는다:
+
+(i) 이 비대칭 짝짓기가 **정의된 양**이긴 한가? 아니면 `D_pose` 를 조각별
+    `A(f, alt) − A(f, primary)` 두 개로 따로 보고하는 편이 나은가?
+(ii) 값이 크게 나오면 무엇을 말할 수 있나 — "자세 민감도가 크다" 인가,
+    **"사전등록 자세 선택이 틀렸다"** 는 신호인가? 후자라면 재개 조건에
+    넣어야 한다. 지금은 봉인에 "해석 미정" 이라고만 적어 두었다.
 
 **Q5.** ZIP 결박을 **현장이 계산한 해시**에 의존한다. 현장이 잘못된 파일에서
 해시를 뜨면 봉인·attestation·`ZIP_SHA256.txt` 가 **일관되게 틀린다**. 우리가
@@ -228,10 +273,10 @@ UMA 고정기하 단일점이므로 state-selection policy 를 맞춘 것인데,
 ## 4. 확인 방법
 
 ```bash
-python3 tools/sdcp/vasp_handoff_bundle.py --selftest          # 402건
+python3 tools/sdcp/vasp_handoff_bundle.py --selftest          # 404건
 python3 tools/sdcp/vasp_handoff_bundle.py --verify_zip sdcp_c12_v16.zip --expect_jobs 16
-cd <풀린 번들> && python3 analyze_results.py --selftest        # 244/244 · PASS
-LC_ALL=C PYTHONUTF8=0 python3 analyze_results.py --selftest    # 비 UTF-8 에서도 통과
+cd <풀린 번들> && python3 analyze_results.py --selftest        # 245/245 · PASS
+env -u PYTHONIOENCODING LC_ALL=C PYTHONUTF8=0 python3 analyze_results.py --selftest
 ```
 
 파일은 수정하지 않으셔도 됩니다 — 판정만 주십시오.
