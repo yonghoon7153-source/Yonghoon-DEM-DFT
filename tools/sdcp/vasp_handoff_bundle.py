@@ -3453,21 +3453,65 @@ def _selftest_closure(chk):
     chk("RSS" in str(_nb.get("⛔_RSS_금지", "")),
         "AT Q2: 왜 RSS 를 안 쓰는지 산출물에 적힌다 (독립 확률오차가 아니다)")
 
-    def _budget(vac_meV, gas_meV, k_meV):
-        """세 축 값을 손으로 넣어 합산 판정만 본다."""
-        _rr = _closure_estimand(_man, _RES(), _E, _emol, _jobs)
-        _b = {"vac": abs(vac_meV), "gas": abs(gas_meV), "k": abs(k_meV)}
-        return sum(_b.values()), _b
-
-    # 축별로는 전부 통과(각 2 meV ≤ 5)인데 **합은 6 meV** — 넘어야 한다
-    _sum6, _b6 = _budget(2.0, 2.0, 2.0)
-    chk(_sum6 > 5.0 and all(v <= 5.0 for v in _b6.values()),
-        "🔴 AT Q2: 축별 2 meV 는 각각 통과하지만 **합 %.1f meV 는 문턱 5 를 넘는다** "
-        "— 이것이 RSS 를 쓰면 놓치는 경우다 (RSS 로는 %.2f meV 라 통과해 버린다)"
-        % (_sum6, (2.0**2 * 3) ** 0.5))
     chk(_nb.get("tol_meV") == 5.0 and "미달이면" in _nb,
         "AT Q2: 문턱과 **미달 시 처방**이 결과에 같이 봉인된다 (값을 버리지 않고 "
         "보고 해상도를 낮춘다)")
+    chk("sensitivity envelope" in str(_nb.get("성격"))
+        and "총 오차 상한이" in str(_nb.get("성격")),
+        "AV P1-5: B_num 을 '총 오차 상한' 이 아니라 **시험한 축의 envelope** 로 "
+        "명명한다 (ENCUT·교차축 미포함)")
+    chk(_nb.get("axes_not_designed") is not None,
+        "AV P1-5: 설계에 없는 축이 침묵하지 않고 axes_not_designed 에 명시된다 "
+        "(%s)" % _nb.get("axes_not_designed"))
+
+    # ── 🔴 회신 AV P1-5 — **행동 시험**: envelope 초과가 D 를 죽이지 않는다 ──
+    #   δ_k 를 10 meV 로 심는다 (dense 를 sdcp 쪽만 +10 meV): B_num > 5.
+    _jb_ex = {k: (dict(v, dense={"normal_end": True,
+                                 "E0": _en[k] + (0.010 if "sdcp" in k else 0.0)})
+                  if k in _KJ else v) for k, v in _jobs.items()}
+    _rex = _closure_estimand(_man, _RES(), _E, _emol, _jb_ex)
+    chk(not any("NUMERIC_BUDGET_EXCEEDED" in b for b in _rex["blocks"])
+        and any("NUMERIC_BUDGET_EXCEEDED" in a for a in (_rex.get("advisories") or [])),
+        "🔴 AV P1-5: envelope 초과는 **estimand block 이 아니다** — advisory 로 "
+        "남는다 (종전엔 D 계산 전에 NO_VALUE 였다)")
+    chk(_rex.get("D_raw_eV") is not None
+        and abs(_rex["D_raw_eV"] - (-0.5)) < 1e-6,
+        "🔴 AV P1-5: 초과여도 **D_raw 는 보존**된다 (%s)" % _rex.get("D_raw_eV"))
+    chk(_rex.get("reported_X_eV") is None
+        and _rex.get("citable_at_0.01eV") is False
+        and "0.01 eV 인용 자격 없음" in str(_rex.get("reported_X_⛔")),
+        "🔴 AV P1-5: 초과 시 **0.01 eV 반올림 보고만** 철회된다 "
+        "(citable_at_0.01eV=false)")
+    chk(_rex.get("verdict") == "보고 가능"
+        and (_rex.get("D_interval_eV") or {}).get("hi", 0) <= -0.10,
+        "AV P1-5: 구간 [D−B, D+B] 전체가 guard 이하면 방향 결론은 유지된다 "
+        "(인용 해상도와 방향 결론은 서로 다른 판정이다) · %s"
+        % _rex.get("D_interval_eV"))
+    # 구간이 guard 를 **가로지르면** 방향 결론이 NO_CLAIM 으로 내려간다
+    _en_g = dict(_en)
+    _en_g["prospective/sdcp_neutral__b00__afm2424_pm1"] = -200.605
+    _en_g["prospective/sdcp_neutral__b01__afm2424_pm1"] = -200.604
+    _jb_g = {k: (dict(v, dense={"normal_end": True,
+                                "E0": _en_g[k] + (0.010 if "sdcp" in k else 0.0)})
+                 if k in _KJ else v) for k, v in _jobs.items()}
+    _rg2 = _closure_estimand(_man, _RES(), lambda j: _en_g.get(j), _emol, _jb_g)
+    chk(str(_rg2.get("verdict", "")).startswith("NO_CLAIM")
+        and _rg2.get("D_raw_eV") is not None,
+        "⛔음성 AV P1-5: 구간이 guard(−0.10)를 가로지르면 **NO_CLAIM** — 점추정이 "
+        "guard 아래여도 방향을 말하지 않는다 (D_raw 는 남는다) · D=%s 구간=%s"
+        % (_rg2.get("D_raw_eV"), _rg2.get("D_interval_eV")))
+    # 결과 객체가 없는 축은 **miss 로** 들어간다 (종전엔 조용히 빠졌다)
+    _man_k0 = {k: v for k, v in _man.items() if k != "kconv_pair"}
+    _man_k0["estimand_job_keys"] = None
+    _rk0 = _closure_estimand(dict(_man_k0), _RES(), _E, _emol,
+                             {k: {kk: vv for kk, vv in v.items() if kk != "dense"}
+                              if k in _KJ else v for k, v in _jobs.items()})
+    _nb0 = _rk0.get("numeric_budget") or {}
+    chk("δ_k(k 수렴 쌍이 이 번들 설계에 없음)" in (_nb0.get("axes_not_designed") or []),
+        "⛔음성 AV P1-5: 결과 객체가 없는 축이 **침묵하지 않는다** — 설계에 없으면 "
+        "axes_not_designed 로 명시된다 (%s). 인용 자격은 실측 축으로 계산하되 "
+        "빠진 축이 산출물에 남아 독자가 envelope 범위를 안다"
+        % _nb0.get("axes_not_designed"))
 
     # ══ 회신 AR 해제조건 3 — 기체 쌍 cross-job gate (⛔음성 셋) ═════════════
     #   AR 이 실물 v15 에서 잡은 것: 네 기체 부모가 전부 relax→static 이라
@@ -3843,8 +3887,16 @@ def _selftest_closure(chk):
                           "refs/mol__ptfe_c10__box20": -177.9706 + 0.004})
     _rgb = _closure_estimand(_man, _RES(), lambda j: _enbad.get(j), _emol, _jobs)
     _gd = _rgb.get("gas_box_delta") or {}
-    chk(any("GAS_BOX_DELTA" in b for b in _rgb["blocks"]),
-        "⛔음성 AP #11: 조각별 4 meV 씩이어도 **부호가 반대면** δ_gas 8 meV → 차단 "
+    # 🔴 회신 AV P1-5 — AP #11 의 요점(조각별이 아니라 차에 문턱)은 유지하되,
+    #   측정된 초과는 이제 **차단이 아니라 0.01 eV 인용 자격 상실**이다.
+    chk(not any("GAS_BOX_DELTA" in b for b in _rgb["blocks"])
+        and any("GAS_BOX_DELTA" in a for a in (_rgb.get("advisories") or []))
+        and _gd.get("pass") is False
+        and _rgb.get("citable_at_0.01eV") is False
+        and _rgb.get("reported_X_eV") is None
+        and _rgb.get("D_raw_eV") is not None,
+        "⛔음성 AP #11·AV P1-5: 조각별 4 meV 씩이어도 부호가 반대면 δ_gas 8 meV → "
+        "**0.01 eV 인용 자격 상실 (D_raw 는 보존)** "
         f"(실제 {_gd.get('delta_gas_meV')} meV · 조각별 {_gd.get('by_fragment_meV')})")
     chk(abs((_gd.get("delta_gas_meV") or 0)) > 5.0
         and all(abs(v) <= 5.0 for v in (_gd.get("by_fragment_meV") or {}).values()),
@@ -7513,13 +7565,13 @@ def _closure_estimand(man, results, E, emol, jobs, merge_info=None):
                 "⚠": ("조각별 값이 각각 작아도 **부호가 반대면 차에서 커진다** — "
                       "그래서 조각별이 아니라 이 차에 문턱을 건다 (회신 AP #11)")}
             if abs(_dgas) > GAS_BOX_DELTA_TOL:
-                _blk("GAS_BOX_DELTA",
-                     "GAS_BOX_DELTA(δ_gas %.2f meV > %.0f — 0.01 eV 로 보고할 수 없다. "
-                     "상자를 키우거나 보고 해상도를 낮춘다)"
-                     % (_dgas * 1000, GAS_BOX_DELTA_TOL * 1000),
-                     job_keys=["refs/mol__%s__box%s" % (f, b)
-                               for f in (_sdf, _ctf) for b in ("20", "24")],
-                     scope="estimand")
+                # 🔴 회신 AV P1-5 — 측정이 **유효한데 문턱을 넘은** 것은 입력 무효가
+                #   아니라 해상도 문제다. 자기 문구부터 "보고 해상도를 낮춘다" 였다.
+                #   D 를 막지 않고 0.01 eV 인용 자격만 잃는다 (B_num 합산이 잡는다).
+                out.setdefault("advisories", []).append(
+                    "GAS_BOX_DELTA(δ_gas %.2f meV > %.0f — 0.01 eV 로 보고할 수 없다. "
+                    "상자를 키우거나 보고 해상도를 낮춘다 · D_raw 는 보존)"
+                    % (_dgas * 1000, GAS_BOX_DELTA_TOL * 1000))
 
     # ⛔⛔ 회신 AS 해제조건 9 (2026-08-31) — **k 수렴을 최종 대비에 직접 건다.**
     #   0.01 eV 로 보고하려면 static k → dense k 로 갈 때 두 조각의 차가
@@ -7563,11 +7615,12 @@ def _closure_estimand(man, results, E, emol, jobs, merge_info=None):
                 "kmesh": {"coarse": _kp.get("coarse_kmesh"),
                           "dense": _kp.get("dense_kmesh")}}
             if abs(_dk) > _tol:
-                _blk("KCONV_DELTA",
-                     "KCONV_DELTA(δ_k %.2f meV > %.0f — 0.01 eV 로 보고할 수 "
-                     "없다. dense 로 다시 내거나 보고 해상도를 낮춘다)"
-                     % (_dk * 1000, _tol * 1000),
-                     job_keys=list(_kp["jobs"]), scope="estimand")
+                # 🔴 회신 AV P1-5 — 위 GAS_BOX_DELTA 와 같은 강등. 결측(NOT_MEASURED)
+                #   은 계속 막고, **측정된 초과**는 인용 해상도만 잃는다.
+                out.setdefault("advisories", []).append(
+                    "KCONV_DELTA(δ_k %.2f meV > %.0f — 0.01 eV 로 보고할 수 없다. "
+                    "dense 로 다시 내거나 보고 해상도를 낮춘다 · D_raw 는 보존)"
+                    % (_dk * 1000, _tol * 1000))
     elif (man.get("estimand_job_keys") and
           str(_kp.get("status")) != "not_applicable"):
         _blk("KCONV_ABSENT",
@@ -7582,7 +7635,13 @@ def _closure_estimand(man, results, E, emol, jobs, merge_info=None):
     #        B_num = |Δ_vac| + |δ_gas| + |δ_k| ≤ 5 meV
     #   넘으면 값을 버리는 것이 아니라 **보고 해상도를 낮추거나** 축별 민감도만
     #   보고한다 (어느 축이 얼마나 기여했는지는 아래 by_axis 가 말한다).
-    _bax, _bmiss = {}, []
+    # 🔴 회신 AV P1-5 — 종전엔 **결과 객체 자체가 없는 축**이 miss 에도 안 들어가
+    #   한두 축만으로 B_num 이 "pass" 를 찍을 수 있었다. 축마다 상태를 강제한다:
+    #     실측(bax) · 설계됐는데 결측(miss → estimand NO_VALUE) ·
+    #     이 번들 설계에 없음(skip → 차단하지 않되 0.01 eV envelope 에서 그 축이
+    #     빠졌음을 명시). 판정은 block_records 의 **code** 로 한다 (문자열 아님).
+    _bax, _bmiss, _bskip = {}, [], []
+    _bcodes = {r0.get("code") for r0 in out.get("block_records") or []}
     _vc0 = out.get("closure_vacconv") or {}
     if _vc0.get("applicable"):
         _v = _vc0.get("delta_vac_eV")
@@ -7591,6 +7650,8 @@ def _closure_estimand(man, results, E, emol, jobs, merge_info=None):
             _bmiss.append("Δ_vac")
         else:
             _bax["vac"] = abs(float(_v))
+    else:
+        _bskip.append("Δ_vac(진공 시험이 이 번들 설계에 없음)")
     _gb0 = out.get("gas_box_delta") or {}
     if _gb0:
         _v = _gb0.get("delta_gas_meV")
@@ -7598,6 +7659,10 @@ def _closure_estimand(man, results, E, emol, jobs, merge_info=None):
             _bmiss.append("δ_gas")
         else:
             _bax["gas"] = abs(float(_v))
+    elif "GAS_BOX_NOT_MEASURED" in _bcodes or "GAS_PAIR_CONTRACT" in _bcodes:
+        _bmiss.append("δ_gas")
+    else:
+        _bskip.append("δ_gas(기체 상자 쌍이 이 번들 설계에 없음)")
     _kd0 = out.get("kconv_delta") or {}
     if _kd0:
         _v = _kd0.get("delta_k_meV")
@@ -7605,18 +7670,29 @@ def _closure_estimand(man, results, E, emol, jobs, merge_info=None):
             _bmiss.append("δ_k")
         else:
             _bax["k"] = abs(float(_v))
+    elif _bcodes & {"KCONV_NOT_MEASURED", "KCONV_FRAGMENT_UNRESOLVED", "KCONV_ABSENT"}:
+        _bmiss.append("δ_k")
+    else:
+        _bskip.append("δ_k(k 수렴 쌍이 이 번들 설계에 없음)")
     _BTOL = 5.0
     out["numeric_budget"] = {
         "정의": "B_num = |Δ_vac| + |δ_gas| + |δ_k|  (meV)",
+        # 🔴 회신 AV P1-5·Q6 — 이름을 정확히 한다. **총 오차 상한이 아니다** —
+        #   ENCUT·교차축 검사가 빠져 있어 "전체 0.01 eV 수렴성" 을 말할 수 없다.
+        "성격": ("**시험한 세 축의 보수적 sensitivity envelope** — 총 오차 상한이 "
+                 "아니다 (ENCUT·교차축 미포함, 회신 AV Q6)"),
         "⛔_RSS_금지": ("세 축은 독립 확률오차가 아니다 — 같은 계·같은 프로토콜의 "
                         "체계오차다. RSS(제곱합근)로 합치면 상관을 0 으로 가정하는 "
                         "것이고, "
                         "셋이 같은 방향이면 실제 편차는 단순합에 가깝다 (회신 AT Q2)"),
         "by_axis_meV": {k: round(v, 3) for k, v in sorted(_bax.items())},
         "missing_axes": _bmiss,
+        "axes_not_designed": _bskip,
         "B_num_meV": (round(sum(_bax.values()), 3) if _bax and not _bmiss else None),
         "tol_meV": _BTOL,
         "pass": (bool(_bax) and not _bmiss and sum(_bax.values()) <= _BTOL),
+        "citable_at_0.01eV": (bool(_bax) and not _bmiss
+                              and sum(_bax.values()) <= _BTOL),
         "⚠_문턱_봉인": "결과를 보기 전에 정한 값이다 (회신 AT Q2 · 코드 상수)",
         "미달이면": ("값을 버리지 않는다 — **0.01 eV 안정성 주장을 하지 않고** 보고 "
                      "해상도를 낮추거나 축별 민감도만 낸다"),
@@ -7627,11 +7703,16 @@ def _closure_estimand(man, results, E, emol, jobs, merge_info=None):
              "없으므로 0.01 eV 안정성을 주장하지 않는다)" % _bmiss,
              scope="estimand")
     elif _bax and sum(_bax.values()) > _BTOL:
-        _blk("NUMERIC_BUDGET_EXCEEDED",
-             "NUMERIC_BUDGET_EXCEEDED(B_num %.2f meV > %.0f — 축별로는 통과해도 "
-             "합이 넘는다 %s. 0.01 eV 로 보고하지 않는다)"
-             % (sum(_bax.values()), _BTOL, {k: round(v, 2) for k, v in _bax.items()}),
-             scope="estimand")
+        # 🔴 회신 AV P1-5 — 종전엔 이것이 estimand block 이라 **D 계산 전에**
+        #   NO_VALUE 가 됐다. 문구("넘어도 raw D 는 보존, 0.01 eV 주장만 철회")와
+        #   코드가 반대였다. envelope 초과는 입력이 무효라는 뜻이 아니다 —
+        #   D_raw 와 축별 변화는 보존하고 **0.01 eV 인용 자격만** 없앤다.
+        out["numeric_budget"]["citable_at_0.01eV"] = False
+        out.setdefault("advisories", []).append(
+            "NUMERIC_BUDGET_EXCEEDED(B_num %.2f meV > %.0f — 축별로는 통과해도 "
+            "합이 넘는다 %s. D_raw 는 보존하고 0.01 eV 인용 자격만 철회한다 · "
+            "회신 AV P1-5)"
+            % (sum(_bax.values()), _BTOL, {k: round(v, 2) for k, v in _bax.items()}))
 
     _ejk0 = (man.get("estimand_job_keys") or {})
     if _ejk0:
@@ -7894,10 +7975,49 @@ def _closure_estimand(man, results, E, emol, jobs, merge_info=None):
         % ("" if _pe.get("would_pass_dynamic_gates")
            else " (지금은 동적 게이트도 통과하지 못한다 — pooled heterogeneity 또는 "
                 "pool 불완전)"))
-    out["reported_X_eV"] = round(round(primary / PREREG_ROUND_EV) * PREREG_ROUND_EV, 2)
+    # 🔴 회신 AV P1-5 — **D_raw 와 인용 자격을 분리한다.**
+    #   입력·상태·provenance 가 유효하면(여기 도달) D_raw 는 항상 보존한다.
+    #   0.01 eV 반올림 보고는 numeric_budget 의 인용 자격이 있을 때만 낸다.
+    out["D_raw_eV"] = round(primary, 6)
     out["fragments"] = {"sdcp": sd, "control": ct}
-    if primary <= PREREG_GUARD_EV:
-        out["guard"] = "통과 (primary %.4f <= %.2f)" % (primary, PREREG_GUARD_EV)
+    _nbF = out.get("numeric_budget") or {}
+    _cit01 = bool(_nbF.get("citable_at_0.01eV"))
+    out["citable_at_0.01eV"] = _cit01
+    if _cit01:
+        out["reported_X_eV"] = round(
+            round(primary / PREREG_ROUND_EV) * PREREG_ROUND_EV, 2)
+    else:
+        out["reported_X_eV"] = None
+        out["reported_X_⛔"] = (
+            "0.01 eV 인용 자격 없음 (B_num envelope %s · missing %s · 미설계 %s) — "
+            "D_raw 와 축별 민감도만 보고한다 (회신 AV P1-5)"
+            % (_nbF.get("B_num_meV"), _nbF.get("missing_axes"),
+               _nbF.get("axes_not_designed")))
+    # 방향 결론 — envelope 구간 [D−B, D+B] 가 0 이나 guard 를 **가로지르면** 방향을
+    #   말하지 않는다 (회신 AV P1-5). B 가 없으면(축 결측) 이미 위에서 NO_VALUE 다.
+    _bev = (float(_nbF["B_num_meV"]) / 1000.0
+            if _nbF.get("B_num_meV") is not None else None)
+    if _bev is not None:
+        _lo, _hi = primary - _bev, primary + _bev
+        out["D_interval_eV"] = {
+            "lo": round(_lo, 4), "hi": round(_hi, 4),
+            "성격": ("D_raw ± B_num — 시험한 축의 sensitivity envelope 이지 "
+                     "통계 신뢰구간이 아니다")}
+        if _hi <= PREREG_GUARD_EV:
+            out["guard"] = ("통과 (구간 [%.4f, %.4f] 전체가 guard %.2f 이하)"
+                            % (_lo, _hi, PREREG_GUARD_EV))
+            out["verdict"] = "보고 가능"
+        elif (_lo <= PREREG_GUARD_EV < _hi) or (_lo < 0.0 <= _hi):
+            out["guard"] = ("⛔ 구간 [%.4f, %.4f] 가 guard(%.2f) 또는 0 을 "
+                            "가로지른다" % (_lo, _hi, PREREG_GUARD_EV))
+            out["verdict"] = ("NO_CLAIM — 방향 결론 없음 (D_raw 는 보존 · "
+                              "회신 AV P1-5)")
+        else:
+            out["guard"] = ("⛔ 구간 [%.4f, %.4f] 전체가 guard %.2f 위 — 방향성 "
+                            "주장 금지" % (_lo, _hi, PREREG_GUARD_EV))
+            out["verdict"] = "NO_DIRECTIONAL_CLAIM"
+    elif primary <= PREREG_GUARD_EV:
+        out["guard"] = "통과 (primary %.4f <= %.2f · envelope 미상)" % (primary, PREREG_GUARD_EV)
         out["verdict"] = "보고 가능"
     else:
         out["guard"] = ("⛔ primary %+.4f > %.2f — guard band 미달"
@@ -11147,9 +11267,13 @@ def build_bundle(a, ledger: Optional[Dict[str, Any]] = None) -> Path:
         # ── AS Q7 lateral (옵션 a) — 결과 보기 전에 봉인한다 ──────────────
         "coverage_scope": {
             "정책": "이 셀 조건으로 **한정**한다 (lateral-size 대조를 넣지 않는다)",
-            "왜": ("보고하는 것이 두 조각의 **차**이고 둘이 같은 셀·같은 피복률에 "
-                   "있으므로 공통 주기영상 항이 상당 부분 소거된다. lateral 확장은 "
-                   "잡당 원자수 2배(비용 ~4배·9일)라 이 단계의 질문에 비해 과하다"),
+            # 🔴 회신 AV 해제조건 ⑦ — "공통 주기영상 항이 상당 부분 소거" 는 AT Q1
+            #   에서 철회한 근거인데 이 필드에 살아 있었다. 철회와 같은 산출물에서
+            #   그 문구가 다시 나가면 철회가 무효가 된다. 소거를 주장하지 않는다.
+            "왜": ("주기영상 항의 소거를 **주장하지 않는다** (회신 AT Q1 철회 — 두 "
+                   "복합체의 슬랩 조성이 달라 공통항 보장이 없다). 그래서 값을 이 셀 "
+                   "조건으로 **한정**해 보고한다. lateral 확장은 잡당 원자수 2배"
+                   "(비용 ~4배·9일)라 이 단계의 질문에 비해 과하다"),
             "⛔_금지": ("고립 분자 흡착·실제 전극 피복률로 확장 금지. 원고 문장에 "
                         "셀 조건(면적·분자 밀도·최소 이미지 거리)을 **반드시 병기**한다"),
             "재개_조건": "피복률 의존성을 물으면 별도 wave 로 lateral 대조를 연다",
@@ -12649,6 +12773,12 @@ def selftest() -> int:
         chk("⛔_철회한_근거" in _cs9 and "소거된다" in str(_cs9["⛔_철회한_근거"]),
             "🔴 AT Q1: '공통 주기영상 항 소거' 근거를 **철회했다고 산출물에 적는다** "
             "(슬랩 원자 48/192 · 최대 변위 0.296 Å 이라 공통항 보장이 없다)")
+        # 🔴 회신 AV 해제조건 ⑦ — 철회한 문구가 **다른 필드에 살아 있으면** 철회가
+        #   무효다. v18 실물: 철회 기록 옆 coverage_scope.왜 에 그대로 남아 있었다.
+        _rq9pre = m_st.get("reported_quantity") or {}
+        chk("상당 부분 소거" not in json.dumps(_rq9pre, ensure_ascii=False),
+            "⛔음성 AV ⑦: 철회한 '공통 주기영상 항이 상당 부분 소거' 문구가 "
+            "reported_quantity 어디에도 없다 (철회와 재사용이 공존하지 않는다)")
         _rq9 = m_st.get("reported_quantity") or {}
         chk("adsorption energy" not in str(_rq9.get("name"))
             and any("adsorption energy" in x for x in _rq9.get("⛔_부르면_안_되는_이름", []))
