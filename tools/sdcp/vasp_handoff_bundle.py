@@ -12776,9 +12776,20 @@ def selftest() -> int:
         # 🔴 회신 AV 해제조건 ⑦ — 철회한 문구가 **다른 필드에 살아 있으면** 철회가
         #   무효다. v18 실물: 철회 기록 옆 coverage_scope.왜 에 그대로 남아 있었다.
         _rq9pre = m_st.get("reported_quantity") or {}
-        chk("상당 부분 소거" not in json.dumps(_rq9pre, ensure_ascii=False),
-            "⛔음성 AV ⑦: 철회한 '공통 주기영상 항이 상당 부분 소거' 문구가 "
-            "reported_quantity 어디에도 없다 (철회와 재사용이 공존하지 않는다)")
+
+        def _strip_retract9(o):
+            # 철회 **기록**은 그 문구를 인용하는 것이 정당하다 — 그 필드만 빼고
+            # 나머지 어디에도 근거로 살아 있지 않은지를 본다.
+            if isinstance(o, dict):
+                return {k: _strip_retract9(v) for k, v in o.items()
+                        if k != "⛔_철회한_근거"}
+            if isinstance(o, list):
+                return [_strip_retract9(x) for x in o]
+            return o
+        chk("상당 부분 소거" not in json.dumps(_strip_retract9(_rq9pre),
+                                               ensure_ascii=False),
+            "⛔음성 AV ⑦: 철회한 '공통 주기영상 항이 상당 부분 소거' 문구가 철회 "
+            "기록 밖 어디에도 없다 (철회와 재사용이 공존하지 않는다)")
         _rq9 = m_st.get("reported_quantity") or {}
         chk("adsorption energy" not in str(_rq9.get("name"))
             and any("adsorption energy" in x for x in _rq9.get("⛔_부르면_안_되는_이름", []))
