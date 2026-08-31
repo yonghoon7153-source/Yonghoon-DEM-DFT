@@ -2757,6 +2757,31 @@ def _stage1_prereqs(_cl, _vc, results):
     return _pre
 
 
+def _final_verdict(_cl, _vc):
+    """최종 종료 판정 — 비인용 상태면 사유 목록을 낸다 (빈 목록 = exit 0).
+
+    ⛔⛔ 회신 AS 해제조건 1 (2026-08-31) — 종전엔 정본 `blocks` 를 읽었다.
+      회신 AR Q1 이후 정본은 **강등하지 않으므로** `BASIN_HETEROGENEOUS` 가 남고,
+      pm1 과 net4 는 **의도적으로 다른 magnetic topology** 라 둘 다 정상 수렴해도
+      그것이 뜬다. 즉 이 번들은 **성공할 수 없었다** — 외주가 16잡을 다 돌린 뒤에야
+      알았을 결함이다. 성공/실패 판정의 정본을 `primary_estimand_blocks` 하나로
+      통일한다 (정본 blocks 는 기록으로 남고, 강등분은 nonprimary_notes 에 있다).
+
+    ⛔ 이 함수가 못 하는 것: 왜 막혔는지 진단하지 않는다. 사유 문자열만 모은다.
+    """
+    bad = []
+    if _vc and _vc.get("applicable") and not _vc.get("pass"):
+        bad.append("closure_vacconv.pass != true")
+    if str((_cl or {}).get("verdict", "")).startswith("NO_VALUE"):
+        bad.append("prereg_closure = NO_VALUE")
+    fin = (_cl or {}).get("primary_estimand_blocks")
+    if fin is None:                              # 구판 결과 — 강등 뷰가 없다
+        fin = (_cl or {}).get("blocks")
+    if fin:
+        bad.append("prereg_closure.primary_estimand_blocks %s" % fin[:2])
+    return bad
+
+
 def _selftest_closure(chk):
     """사전등록 estimand 의 ⛔음성 묶음 — **배포본 안에서** 돌아야 한다.
 
@@ -2770,7 +2795,19 @@ def _selftest_closure(chk):
     이 함수가 **못 하는 것**: 실제 VASP·POTCAR·스케줄러를 대신하지 않는다.
       합성 job 레코드로 판정 논리만 친다.
     """
+    # ⛔ 회신 AS 해제조건 3 — pool 완전성 검사가 `planned` 를 읽는다. 실물 manifest
+    #   에는 항상 있으므로 픽스처도 실물 모양이어야 한다 (회신 AP #8 과 같은 교훈).
+    def _PL(jn, role="primary", frag=None, seed="afm2424_pm1"):
+        return {"phases": ["static"], "required": True,
+                "meta": {"kind": "prospective_pose", "d3": "on",
+                         "fragment": frag or jn.split("/")[-1].split("__")[0],
+                         "basin_id": jn.split("__")[1], "role": role, "seed": seed}}
+    _PLANNED = {k: _PL(k) for k in
+                ("prospective/sdcp_neutral__b00__afm2424_pm1",
+                 "prospective/sdcp_neutral__b01__afm2424_pm1",
+                 "prospective/ptfe_c10__b00__afm2424_pm1")}
     _man = {"fragments": ["sdcp_neutral", "ptfe_c10"],
+            "planned": _PLANNED,
             # ⛔ 회신 AR 해제조건 3 — 실물 생성기가 박는 기체 쌍 정책
             "gas_geometry_policy": {"fixed_geometry_static": True},
             "molecular_spin_controls": {
@@ -2950,7 +2987,11 @@ def _selftest_closure(chk):
         "⛔음성 AO P0-4: 기하 대조 결과가 **없으면** 통과가 아니라 차단이다")
 
     # ── 회신 AO P0-7 — pm1 조건부 D 를 net4 의 basin 차이가 지우지 않는다 ──
-    _man7 = dict(_man, estimand_job_keys={
+    _man7 = dict(_man, planned=dict(
+        _PLANNED,
+        **{k: _PL(k, seed="afm2424_net4")
+           for k in ("prospective/sdcp_neutral__b09__afm2424_net4",
+                     "prospective/ptfe_c10__b09__afm2424_net4")}), estimand_job_keys={
         "E_C_sdcp": "prospective/sdcp_neutral__b00__afm2424_pm1",
         "E_C_control": "prospective/ptfe_c10__b00__afm2424_pm1",
         "E_G_sdcp": "mol__sdcp_neutral__box24__nzmag",
@@ -3059,6 +3100,65 @@ def _selftest_closure(chk):
         and _r7n.get("sensitivity_complete") is True,
         "AO P0-7: net4 가 봉인돼 있으면 **D_net4 − D_pm1 을 계산한다** "
         f"(종전엔 요구해 놓고 안 냈다) · {_r7n.get('branch_sensitivity')}")
+
+    # ══ 회신 AS 해제조건 1 — **정상 pm1/net4 가 exit 0 인가** ═════════════════
+    #   AR Q1 이후 정본 blocks 는 BASIN_HETEROGENEOUS 를 그대로 갖는다. pm1 과 net4 는
+    #   **의도적으로 다른 topology** 라 정상 수렴해도 그것이 뜬다. 최종 종료 판정이
+    #   정본을 읽으면 이 번들은 **성공할 수 없다** — 외주가 16잡 다 돌린 뒤에야 안다.
+    _r_ok = _closure_estimand(_man7, _RES(), lambda j: _en7.get(j), _emol, _jb7)
+    chk(any(b.startswith("BASIN_HETEROGENEOUS") for b in _r_ok["blocks"])
+        and not _r_ok.get("primary_estimand_blocks")
+        and _r_ok.get("primary_ddE_lowE_eV") is not None,
+        "회신 AS 1: 정상 pm1/net4 는 정본에 BASIN_HETEROGENEOUS 가 있어도 "
+        "**primary 뷰가 비어 있고 D 가 나온다** · primary %s"
+        % _r_ok.get("primary_estimand_blocks"))
+    # 그리고 **최종 종료 판정이 실제로 exit 0 을 내는지** 직접 친다
+    _VCOK = {"applicable": True, "pass": True}
+    chk(_final_verdict(_r_ok, _VCOK) == [],
+        "⛔음성 AS 1: 정상 pm1/net4 에서 최종 판정이 **exit 0** 이다 "
+        "(정본 blocks 를 읽던 종전 코드는 여기서 무조건 exit 2 였다)")
+    chk(_final_verdict(dict(_r_ok, primary_estimand_blocks=["X(합성)"]), _VCOK),
+        "⛔음성 AS 1: primary 뷰에 차단이 있으면 **exit 2** 다")
+    chk(_final_verdict(dict(_r_ok, verdict="NO_VALUE — 합성"), _VCOK),
+        "⛔음성 AS 1: NO_VALUE 면 exit 2 다")
+    chk(_final_verdict(_r_ok, {"applicable": True, "pass": False}),
+        "⛔음성 AS 1: 진공 판정이 실패하면 exit 2 다")
+    # 구판 결과(강등 뷰 없음)는 정본으로 되돌아간다 — 조용히 통과시키지 않는다
+    chk(_final_verdict({"blocks": ["OLD(합성)"]}, _VCOK),
+        "⛔음성 AS 1: primary 뷰가 아예 없는 구판 결과는 **정본으로 막는다**")
+
+    # ══ 회신 AS 해제조건 2 — canary 만 성공하면 **예외로 죽지 않는다** ══════════
+    _en_np = {k: v for k, v in _en.items()
+              if k != "refs/mol__sdcp_neutral__box24"}      # 부모만 없앤다
+    _emol_np = {"sdcp_neutral": None, "ptfe_c10": -100.0}
+    _r_np = _closure_estimand(_man, _RES(), lambda j: _en_np.get(j), _emol_np, _jobs)
+    chk(any("MOLECULAR_SPIN_CONTROL_PARENT_MISSING" in b for b in _r_np["blocks"]),
+        "⛔음성 AS 2: box24 부모가 없고 canary 만 있으면 **구조화 차단**이다 "
+        "(종전엔 `e1 - None` 으로 예외 사망)")
+
+    # ══ 회신 AS 해제조건 3 — pooled 가 **살아남은 부분집합**으로 계산되지 않는다 ══
+    _jb_gate = dict(_jobs)
+    _jb_gate["prospective/sdcp_neutral__b01__afm2424_pm1"] = dict(
+        _jb_gate["prospective/sdcp_neutral__b01__afm2424_pm1"],
+        ok=False, gates=["MAGNETIC_COLLAPSE(합성)"])
+    _r_gate = _closure_estimand(_man, _RES(), _E, _emol, _jb_gate)
+    _pc = _r_gate.get("pool_completeness") or {}
+    chk(_pc.get("ok") is False
+        and any("GATED_POSE" in r["msg"] for r in _r_gate["block_records"])
+        and (_r_gate.get("pooled_effect") or {}).get("secondary_G_citable") is False
+        and _r_gate.get("secondary_G_eV") is None,
+        "⛔음성 AS 3: 계획된 자세 하나가 게이트되면 **GATED_POSE 가 실제로 기록되고** "
+        "pooled 값이 비인용이 된다 (종전엔 ok=false 를 먼저 건너뛰어 도달조차 못 했다)")
+    # 결과가 아예 없는 경우도 같다 (계획엔 있는데 안 돌아왔다)
+    _jb_miss = {k: v for k, v in _jobs.items()
+                if k != "prospective/sdcp_neutral__b01__afm2424_pm1"}
+    _r_miss = _closure_estimand(_man, _RES(), _E, _emol, _jb_miss)
+    chk((_r_miss.get("pool_completeness") or {}).get("ok") is False
+        and (_r_miss.get("pooled_effect") or {}).get("pooled_min_citable") is False,
+        "⛔음성 AS 3: 계획된 자세가 **회수되지 않아도** pooled 를 비인용으로 한다")
+    chk((r.get("pool_completeness") or {}).get("ok") is True,
+        "회신 AS 3 양성: 계획된 자세가 전건 사용가능하면 pool 이 완전하다 · %s"
+        % (r.get("pool_completeness") or {}).get("expected"))
 
     # ══ 회신 AR P1-9 · 해제조건 6 — net4 topology 실패가 **실제로** 막는가 ═════
     #   `usable_as_sensitivity` 를 저장만 하고 안 읽어서, 두 complex 가 다른
@@ -6236,10 +6336,19 @@ def _closure_estimand(man, results, E, emol, jobs, merge_info=None):
         e0 = emol.get(f)
         if e1 is None:
             out["blocks"].append("MOLECULAR_SPIN_CONTROL_PENDING(%s)" % f)
-        elif e0 is not None and e1 < e0 - 1e-4:
+        elif e0 is None:
+            # ⛔⛔ 회신 AS 해제조건 2 (2026-08-31) — box24 **부모가 실패하고**
+            #   nzmag canary 만 성공하면 아래 `else` 에서 `e1 - None` 으로
+            #   **예외로 죽었다**. 결측은 예외가 아니라 구조화 차단이고,
+            #   차 계산은 건너뛴다 (확인 못 한 것은 통과가 아니다).
+            out["blocks"].append(
+                "MOLECULAR_SPIN_CONTROL_PARENT_MISSING(%s: canary 는 회수됐는데 "
+                "부모 box24 에너지가 없다 — 뺄 기준이 없으므로 스핀 대조를 "
+                "만들지 않는다)" % f)
+        elif e1 < e0 - 1e-4:
             out["blocks"].append(
                 "MOLECULAR_STATE_UNRESOLVED(%s: 비영 시작이 %.4f eV 더 낮다 — "
-                "자동 채택하지 않는다. 전자상태 estimand 와 box 수렴을 다시 심사할 것)"
+                "자동 채택하지 않는다. 전자상태 정의와 box 수렴을 다시 심사할 것)"
                 % (f, e0 - e1))
         else:
             out.setdefault("spin_control_delta_eV", {})[f] = round(e1 - e0, 5)
@@ -6260,20 +6369,52 @@ def _closure_estimand(man, results, E, emol, jobs, merge_info=None):
     # (2) A(f,p) — 게이트 통과한 복합체만. 게이트된 것은 **버리되 기록한다**
     #   ★ 회신 Z P0-4 — realized basin 을 같이 모은다. seed 이름(pm1/net4)으로
     #     짝지어 빼면 다른 상태를 가로질러 뺀 것이 된다.
+    # ⛔⛔ 회신 AS 해제조건 3 (2026-08-31) — 종전엔 `not jr.get("ok")` 로 **먼저**
+    #   건너뛰어서, 실제로 게이트된 잡은 아래 `GATED_POSE` 에 **도달하지 못했다**.
+    #   그러면 pooled 값이 **살아남은 부분집합**으로 조용히 계산된다 — net4 가 전부
+    #   게이트돼도 pm1 만으로 secondary_G 가 인용가능이 될 수 있었다.
+    #   ⇒ 계획된 pool 전체를 세고, 하나라도 결측·게이트·미해결이면 pooled 를 막는다.
+    _pool_expect, _pool_bad = {}, {}
+    for _pj, _pl in ((man.get("planned") or {}).items()):
+        _pm = (_pl.get("meta") or {})
+        if _pm.get("kind") != "prospective_pose" or _pm.get("vacconv"):
+            continue
+        _pf = _pm.get("fragment")
+        if _pf in frags:
+            _pool_expect.setdefault(_pf, []).append(_pj)
     basins = {}
     for f in frags:
         rows = []
-        for jn, jr in jobs.items():
-            if not _is(jn, f) or not jr.get("ok"):
+        for jn in sorted(_pool_expect.get(f, [])):
+            jr = jobs.get(jn)
+            if jr is None:
+                # ⛔ 회신 AS 3 — 계획엔 있는데 **회수되지 않았다**. `_is()` 는
+                #   jobs 를 보므로 여기서 False 가 되어 조용히 pool 밖으로 샌다.
+                #   결측을 먼저 잡는다 (계획의 role 로 pool 대상인지 판단).
+                _rl = ((( man.get("planned") or {}).get(jn) or {})
+                       .get("meta") or {}).get("role") or "primary"
+                if _rl not in ALT_ROLES:
+                    _pool_bad.setdefault(f, []).append("%s: 결과 없음" % jn)
                 continue
+            if not _is(jn, f):
+                continue                      # 대안 자세 역할 — pool 밖 (ALT_ROLES)
             g = [x for x in (jr.get("gates") or [])
                  if x.startswith(("MAGNETIC", "RADICAL", "PAIR_", "SOURCE_", "BASIN_"))]
             e = E(jn)
-            if e is None:
-                continue
             if g:
                 _blk("GATED_POSE", "GATED_POSE(%s: %s)" % (jn, g[0]),
                      job_keys=[jn], scope="pooled_diagnostic")
+                _pool_bad.setdefault(f, []).append("%s: %s" % (jn, g[0][:40]))
+                continue
+            if not jr.get("ok"):
+                _blk("POOL_JOB_NOT_OK",
+                     "POOL_JOB_NOT_OK(%s: 게이트 목록에 없는 사유로 사용 불가 — %s)"
+                     % (jn, (jr.get("gates") or ["사유 미기록"])[0][:40]),
+                     job_keys=[jn], scope="pooled_diagnostic")
+                _pool_bad.setdefault(f, []).append("%s: not ok" % jn)
+                continue
+            if e is None:
+                _pool_bad.setdefault(f, []).append("%s: 에너지 없음" % jn)
                 continue
             rb = (((jr.get("geom") or {}).get("magnetic") or {})
                   .get("realized_basin_id"))
@@ -6288,6 +6429,22 @@ def _closure_estimand(man, results, E, emol, jobs, merge_info=None):
                                "max": rows[-1] if rows else None}
     out["realized_basins"] = {f: {str(k): v for k, v in (b or {}).items()}
                               for f, b in basins.items()}
+    # ⛔ 회신 AS 해제조건 3 — 계획된 pool 이 **전건 사용가능**한지 한 곳에서 판정한다
+    out["pool_completeness"] = {
+        "expected": {f: len([j for j in v if _is(j, f)])
+                     for f, v in _pool_expect.items()},
+        "usable": {f: (out["A_by_frag"].get(f) or {}).get("n", 0) for f in frags},
+        "unusable": {f: v[:4] for f, v in _pool_bad.items()},
+        "ok": not _pool_bad,
+        "⛔": ("계획된 자세 하나라도 결측·게이트·미해결이면 pooled 값(secondary_G · "
+               "pooled min · 일반화 주장)을 **전부 비인용**으로 한다. 살아남은 "
+               "부분집합으로 min 을 뽑으면 표본이 통과 쪽으로 편향된다")}
+    if _pool_bad:
+        _blk("POOL_INCOMPLETE",
+             "POOL_INCOMPLETE(계획된 자세 중 사용 불가 %s — pooled 값을 내지 않는다)"
+             % {f: len(v) for f, v in _pool_bad.items()},
+             job_keys=[j.split(":")[0] for v in _pool_bad.values() for j in v],
+             scope="pooled_diagnostic")
 
     # (2c) 🔴 동종 basin 강제 — 여러 basin 이 섞인 집합에서 min 을 뽑지 않는다
     for f, b in basins.items():
@@ -6562,9 +6719,12 @@ def _closure_estimand(man, results, E, emol, jobs, merge_info=None):
     if _pv is None:
         _pv = list(out["blocks"])          # 강등이 없었으면 canonical 그대로
         out["primary_estimand_blocks"] = _pv
+    # ⛔ 회신 AS 해제조건 3 — pool 완전성도 인용 조건에 넣는다
+    _pool_ok = bool((out.get("pool_completeness") or {}).get("ok"))
     out["pooled_effect"] = {
-        "secondary_G_citable": not bool(out.get("nonprimary_notes")),
-        "pooled_min_citable": not bool(out.get("nonprimary_notes")),
+        "secondary_G_citable": (not bool(out.get("nonprimary_notes"))) and _pool_ok,
+        "pooled_min_citable": (not bool(out.get("nonprimary_notes"))) and _pool_ok,
+        "pool_complete": _pool_ok,
         "why": ("pooled heterogeneity 는 primary(봉인 네 잡)에는 적용되지 않지만 "
                 "pooled 최솟값·secondary_G·일반화 주장은 **계속 막는다** (회신 AR Q1)")}
     if _pv:
@@ -8203,22 +8363,7 @@ def main():
     #      1단계 cohort 만 보고, 그 판정으로만 끝낸다.
     #   ② 최종 판정: prereg_closure 가 NO_VALUE 여도, 진공이 실패해도 `return 0` 이
     #      될 수 있었다. **비인용 상태면 반드시 nonzero** 여야 한다.
-    _bad_final = []
-    if _vc and _vc.get("applicable") and not _vc.get("pass"):
-        _bad_final.append("closure_vacconv.pass != true")
-    if str(_cl.get("verdict", "")).startswith("NO_VALUE"):
-        _bad_final.append("prereg_closure = NO_VALUE")
-    # ⛔⛔ 회신 AS 해제조건 1 (2026-08-31) — **정본 blocks 를 읽으면 정상 결과가
-    #   무조건 exit 2 로 끝난다.** 회신 AR Q1 이후 정본은 강등하지 않으므로
-    #   `BASIN_HETEROGENEOUS` 가 남아 있고, pm1 과 net4 는 **의도적으로 다른
-    #   topology** 라 정상 수렴해도 그것이 뜬다. 즉 이 번들은 성공할 수 없었다.
-    #   ⇒ 성공/실패 판정의 정본은 `primary_estimand_blocks` **하나**로 통일한다.
-    #     (정본 blocks 는 기록으로 남고, 강등된 것은 nonprimary_notes 에 있다)
-    _fin_blocks = _cl.get("primary_estimand_blocks")
-    if _fin_blocks is None:                      # 구판 결과 — 강등 뷰가 없다
-        _fin_blocks = _cl.get("blocks")
-    if _fin_blocks:
-        _bad_final.append("prereg_closure.primary_estimand_blocks %s" % _fin_blocks[:2])
+    _bad_final = _final_verdict(_cl, _vc)
     if _bad_final:
         print("⛔ **비인용 상태로 끝났다** — 종료코드를 0 으로 두지 않는다:")
         for b in _bad_final:
