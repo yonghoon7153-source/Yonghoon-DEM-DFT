@@ -2979,6 +2979,43 @@ def _selftest_closure(chk):
     이 함수가 **못 하는 것**: 실제 VASP·POTCAR·스케줄러를 대신하지 않는다.
       합성 job 레코드로 판정 논리만 친다.
     """
+    # ── 🔴 회신 AT P0-2 — dense 상의 INCAR·k 감사 fail-open (배포본에서 돈다) ──
+    #   ⚠ 이 시험은 **여기 있어야** 한다. `phase_gates` 는 배포본 분석기의 함수라
+    #     생성기 selftest 스코프에는 없다 (2026-08-31 NameError 로 확인).
+    def _at_pg(ph, meta_over=None, oc_over=None):
+        _oc = {"nions": 4, "nkpts": 12, "normal_end": True, "nelm_hit": False,
+               "ionic_conv": True, "titels": [], "E0": -1.0, "toten": -1.0,
+               "mag_tot": None, "nelect": None, "n_iter": 5,
+               "kpoints_title": "phase=dense k=4 6 1 shift=0 0 0",
+               "incar_echo": {}, "run_segments": {"n": 1}}
+        _oc.update(oc_over or {})
+        _mt = {"species_order": [], "kmesh": {"dense": "4 6 1"},
+               "incar_expected": {"dense": {"ENCUT": "520"}},
+               "kpoints_expected": {"dense": {
+                   "title": "phase=dense k=4 6 1 shift=0 0 0", "mode": "Gamma",
+                   "mesh": "4 6 1", "shift": "0 0 0"}}}
+        _mt.update(meta_over or {})
+        return {x.split("(")[0] for x in phase_gates(_oc, ph, _mt, {})}
+
+    chk("KPOINTS_MISMATCH" not in _at_pg("dense")
+        and "INCAR_EXPECTED_MISSING" not in _at_pg("dense"),
+        "AT P0-2 양성: 제목·기대 INCAR 이 맞으면 k/INCAR 게이트가 안 뜬다")
+    chk("KPOINTS_MISMATCH" in _at_pg(
+            "dense", oc_over={"kpoints_title": "phase=static k=3 4 1 shift=0 0 0"}),
+        "⛔음성 AT P0-2: **coarse(3 4 1) OUTCAR 를 dense 폴더에** 넣으면 잡힌다 "
+        "— 종전엔 NKPTS 12 ≤ 24 라 통과했다")
+    chk("KPOINTS_TITLE_UNVERIFIED" in _at_pg("dense", oc_over={"kpoints_title": None}),
+        "⛔음성 AT P0-2: ` KPOINTS:` 되울림이 없으면 **확인 못 함**이지 통과가 아니다")
+    chk("KPOINTS_EXPECTED_MISSING" in _at_pg("dense", meta_over={"kpoints_expected": {}}),
+        "⛔음성 AT P0-2: 구판 번들(kpoints_expected 없음)의 dense 는 막는다")
+    chk("INCAR_EXPECTED_MISSING" in _at_pg("dense", meta_over={"incar_expected": {}}),
+        "⛔음성 AT P0-2: dense 의 기대 INCAR 이 없으면 막는다 — 없으면 그 상의 "
+        "감사가 통째로 비어 ENCUT 400·IVDW 0·ISPIN 1 도 통과한다")
+    chk("KPOINTS_EXPECTED_MISSING" not in _at_pg(
+            "static", meta_over={"kpoints_expected": {}, "kmesh": {}}),
+        "AT P0-2 경계: static 은 기대값이 없어도 **이 게이트로는** 막지 않는다 "
+        "(δ_k 에 직접 들어가는 상만 강제)")
+
     # ⛔ 회신 AS 해제조건 3 — pool 완전성 검사가 `planned` 를 읽는다. 실물 manifest
     #   에는 항상 있으므로 픽스처도 실물 모양이어야 한다 (회신 AP #8 과 같은 교훈).
     def _PL(jn, role="primary", frag=None, seed="afm2424_pm1"):
@@ -4784,10 +4821,15 @@ def phase_gates(oc, ph, meta, spec, want_ionic=False):
     ⚠ **게이트 통과가 보증하는 것** (codex E-2, 과대해석 금지):
       "제공된 단일 완결 실행 세그먼트에서, incar_expected 에 등록된 유한한 키
        집합이 되울림과 일치했다" — 딱 여기까지다.
-    보증하지 못하는 것: 등록되지 않은 키 전부 · 정확한 k-grid shift · POTCAR 원문
-    해시 · WAVECAR/CHGCAR 실제 내용과 승계 계보 · 기본값/명시값 구분 · LREAL 의
-    정확한 모드(등가류까지만). ISTART/ICHARG 되울림은 재시작 파일이 **실제로
-    쓰였다는 증거가 아니다.** 각 상의 incar_audit(4분류)가 이 경계의 기계 기록이다.
+    보증하지 못하는 것: 등록되지 않은 키 전부 · POTCAR 원문 해시 · WAVECAR/CHGCAR
+    실제 내용과 승계 계보 · 기본값/명시값 구분 · LREAL 의 정확한 모드(등가류까지만).
+    ISTART/ICHARG 되울림은 재시작 파일이 **실제로 쓰였다는 증거가 아니다.**
+    각 상의 incar_audit(4분류)가 이 경계의 기계 기록이다.
+
+    ✅ 2026-08-31 (회신 AT P0-2) — **k 격자·시프트는 이제 보증한다.** KPOINTS 제목에
+      `phase=… k=… shift=…` 를 실어 OUTCAR ` KPOINTS:` 되울림과 정확히 대조한다.
+      종전에는 `NKPTS ≤ 격자곱` 상한뿐이라 coarse OUTCAR 를 dense 폴더에 넣어도
+      통과했다. 단 **되울림이 없으면 통과가 아니라 UNVERIFIED** 다.
     """
     g = []
     if oc is None:
@@ -11109,8 +11151,14 @@ def _fake_phase(jd: Path, meta: Dict[str, Any], e_static: float,
         nk = 1
         for v in str((meta.get("kmesh") or {}).get(ph, "1 1 1")).split():
             nk *= int(v)
+        # ⛔ 회신 AT P0-2 (2026-08-31) — 실물 VASP 는 KPOINTS 첫 줄을 ` KPOINTS: …`
+        #   으로 되울린다. 픽스처에 그 줄이 없으면 새 게이트가 **전 잡을** 막아
+        #   (KPOINTS_TITLE_UNVERIFIED) 이 selftest 가 통째로 NO_DATA 가 된다.
+        #   픽스처는 **실물 모양**이어야 한다 — 음성 경로는 따로 만든다.
+        _kt = ((meta.get("kpoints_expected") or {}).get(ph) or {}).get("title")
         head = (f" vasp.6.4.2\n{titels}\n   NIONS = {n}\n   NKPTS = {nk}\n{echo}\n"
-                f"   NELM   =    200;   NELMIN=  6;\n")
+                + (f" KPOINTS: {_kt}\n" if _kt else "")
+                + f"   NELM   =    200;   NELMIN=  6;\n")
         # ⛔ 회신 AO P0-5 (2026-08-31) — `_icharg1_chgcar_gate` 를 `phase_gates()` 에
         #   실제로 연결하고 나니, 이 픽스처의 OUTCAR 에 **CHGCAR 승계 마커가 없어서**
         #   ICHARG=1 인 상이 전부 CHGCAR_NOT_READ 로 막혔다. 실물 VASP 는 파일을
@@ -12702,6 +12750,13 @@ def selftest() -> int:
         for v in str((meta.get("kmesh") or {}).get("dense", "1 1 1")).split():
             nk *= int(v)
         t = _re.sub(r"NKPTS = \d+", f"NKPTS = {nk}", t)      # 진짜 dense 는 k 가 늘어난다
+        # ⛔ 회신 AT P0-2 — static OUTCAR 를 베껴 dense 를 만드는 픽스처라 ` KPOINTS:`
+        #   되울림이 **static 제목 그대로** 남는다. 실물 dense 는 제 제목을 되울리므로
+        #   여기서도 갈아끼운다. (갈아끼우지 않으면 새 정확대조 게이트가 정상 잡까지
+        #   막아 이 selftest 가 NO_DATA 가 된다 — 2026-08-31 실측.)
+        _dkt = ((meta.get("kpoints_expected") or {}).get("dense") or {}).get("title")
+        if _dkt:
+            t = _re.sub(r"(?m)^ KPOINTS: .*$", f" KPOINTS: {_dkt}", t)
         t = t.replace("LREAL = Auto", "LREAL = .FALSE.")
         (dj / "OUTCAR").write_text(t.replace(f"{e0:.6f}", f"{e0 + shift:.6f}"))
     # ★ 음성 N13 (Codex 7차 §8) — dense 에서 **모멘트 표만** 지운다. 에너지·NKPTS 는
