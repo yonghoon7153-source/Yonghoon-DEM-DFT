@@ -78,6 +78,12 @@ def temperature_provenance(T_C=None, ea_ev=None):
 # (DBE +45.4% 등) were solved at 150 — re-run needed for the 250-anchored numbers.
 SIGMA_DEFAULT = {'AM_S': 0.010, 'AM_P': 0.005, 'VGCF': 100.0, 'SuperP': 10.0, 'SDCP': 250.0,
                  'SWCNT': 100.0}
+#: ★ 마지막 `apply_ptfe_blocking` 의 **상별 차단 셀 수** (키 = 원래 sid, 문자열).
+#    총수만으로는 "SE 를 막았나 SDCP 도 막았나" 가 안 보이고, 그 구분이 Codex R16 Q6 의
+#    쟁점이다.  매니페스트가 이것을 실어야 사후에 갈린다.
+LAST_PTFE_BLOCK = {}
+
+
 def electronic_sigma_table(sigma_am_s, sigma_am_p, sigma_vgcf, sigma_superp,
                            sigma_sdcp, sigma_ptfe=0.0, sigma_swcnt=0.0, sigma_se=0.0):
     """sid → 전자 σ 표 (**생산 규약**).  SE(6) 는 전자 절연, PTFE(7) 는 감도 훅.
@@ -268,7 +274,7 @@ def _solve_cg(L, b):
 def rasterize(am_c, am_r, am_t, add_pts, add_phase, box_lo, box_hi, vox, tol_am_um=0.10, se_pts=None,
               sdcp_sphere_d_um=0.0, sdcp_yield_to_vgcf=False, sdcp_bridge_um=0.0,
               add_fid=None, fid_gap_tol=2.0, add_kind=None, bridge_um=None,
-              ptfe_block_um=0.0):
+              ptfe_block_um=0.0, ptfe_block_targets=(6,)):
     """Voxel σ-id grid: 0 = non-conductive, 1 = AM_S, 2 = AM_P, 3.. = additives (2,3,5 → 3,4,5).
     Also returns per-voxel AM particle index (-1 = not AM) for per-particle currents.
     am_t: 1 = AM_P, 2 = AM_S (LIGGGHTS type convention).  All coords in one frame (µm).
@@ -509,11 +515,11 @@ def rasterize(am_c, am_r, am_t, add_pts, add_phase, box_lo, box_hi, vox, tol_am_
                     sid[q[:, 0], q[:, 1], q[:, 2]] = s
     #  ★ G2 (D13 원장 ②) — 맨 마지막: 차단은 **완성된** PTFE 배치를 봐야 한다 (브리지·상
     #    루프가 끝난 뒤).  기본 0.0 = 바이트 동일 (함수 자체가 no-op 계약을 진다).
-    apply_ptfe_blocking(sid, vox, ptfe_block_um)
+    apply_ptfe_blocking(sid, vox, ptfe_block_um, targets=ptfe_block_targets)
     return sid, pid
 
 
-def apply_ptfe_blocking(sid, vox, block_um, periodic_xy=False):
+def apply_ptfe_blocking(sid, vox, block_um, periodic_xy=False, targets=(6,)):
     """★ G2 (2026-08-25, D13 원장 ② — `sdcp_ion_calib_prereg_20260825.md`) — PTFE 표면
     피복의 이온 차단을 **스칼라 노브 1개**로 표현한다: PTFE(sid 7) 셀에서 유클리드 거리
     `block_um` 안의 **SE(sid 6) 셀만** sid 9(SE_blk) 로 바꾼다.  σ 표가 sid 9 를 이온·전자
@@ -535,7 +541,22 @@ def apply_ptfe_blocking(sid, vox, block_um, periodic_xy=False):
         한계를 목-면적 규약과 같은 방식으로 문서화한다 (보정이 vox 를 알고 이뤄져야 한다).
     `periodic_xy=True` (펠릿 RVE 전용): EDT 를 x/y wrap 패딩 위에서 계산해 경계 너머의
     PTFE 도 차단 반경에 넣는다.  기본 False = 전극 경로 비트 동일.
-    반환: 바뀐 셀 수 (매니페스트 원장용)."""
+
+    ★★★ 2026-08-31 (Codex R16 Q6 반례 2) — `targets` 신설.  **기본은 `(6,)` = 옛 거동과
+      비트 동일**이다.  왜 필요한가: 옛 판은 SE 만 죽이고 **SDCP(sid 5)를 면제**했는데,
+      SBE 는 PTFE 1.0 / SDCP 0 이고 DBE 는 0.5 / 0.5 라 *"PTFE 가 많은 SBE 가 더 깎인다"* 가
+      **연산자에 내장**돼 있었다.  그러면 R↑ 가 나와도 표면 물리인지 연산자 선택인지
+      갈리지 않는다.  ⇒ 경쟁 모델 `targets=(5, 6)` 을 **런 전에 함께 등록**해 둘 다 돌린다.
+      ⚠⚠ `5` 를 넣으면 **전자 no-op 이 깨진다** — SDCP 는 σ_e = 250 인데 sid 9 는 전자도 0 이다.
+        그것이 이 규약의 선언된 내용이다 (*"표면 피복은 양쪽 계면을 다 막는다"*, 위 σ 표 주석).
+        숨기지 않는다 — `LAST_PTFE_BLOCK` 이 상별 셀 수를 남기고 매니페스트가 그것을 싣는다.
+
+    반환: 바뀐 셀 **총수** (기존 계약 유지).  상별 내역은 `LAST_PTFE_BLOCK`."""
+    global LAST_PTFE_BLOCK
+    LAST_PTFE_BLOCK = {}
+    tg = tuple(sorted({int(t) for t in targets}))
+    if not tg or not set(tg) <= {5, 6}:
+        raise ValueError(f'targets 는 {{5,6}} 의 부분집합이어야 한다 (받음 {targets})')
     if float(block_um) <= 0.0:
         return 0
     pt = sid == 7
@@ -548,7 +569,12 @@ def apply_ptfe_blocking(sid, vox, block_um, periodic_xy=False):
         d = distance_transform_edt(~ptp, sampling=float(vox))[w:-w, w:-w, :]
     else:
         d = distance_transform_edt(~pt, sampling=float(vox))
-    blk = (d <= float(block_um)) & (sid == 6)
+    near = d <= float(block_um)
+    blk = np.zeros_like(near)
+    for t in tg:
+        m = near & (sid == t)
+        LAST_PTFE_BLOCK[str(t)] = int(m.sum())
+        blk |= m
     n = int(blk.sum())
     if n:
         sid[blk] = 9

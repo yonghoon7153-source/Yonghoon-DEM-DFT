@@ -91,6 +91,17 @@ CLI_ACCOUNTING = {
     '--step3-sdcp-bridge': ('protocol', ('sdcp_bridge_um',)),
     #  ★ 2026-08-25 (G2, D13 원장 ②) — PTFE 이온 차단.  σ 침대(sid 6→9)를 바꾸므로 규약 축.
     '--step3-ptfe-block-um': ('protocol', ('ptfe_block_um',)),
+    #  ★★ 2026-08-31 (Codex R16 Q6) — 차단이 **무엇을** 끊는가.  기본 'se' = 옛 거동 비트 동일,
+    #    'ion' 은 SDCP(sid 5)도 끊는다 (⇒ 전자 no-op 이 아니다).
+    #  ⚠⚠ **물리적으로는 protocol 축인데 `record` 로 둔다 — 그 이유를 여기 남긴다.**
+    #    `PROTOCOL_FIELDS` 에 넣으면 위 주석의 규칙대로 `PROTOCOL_SCHEMA` 를 p2 → p3 로
+    #    올려야 하고, 그러면 **봉인된 p2 코호트 32팔**(`docs/data/w4_ptfe_centerline_20260827`
+    #    · `w4b_ptfe_off_20260827`, Fig 4b 전자값의 감사 근거)이 전부 다른 규약 id 가 된다.
+    #    이 축은 `ptfe_block_um = 0`(생산 기본)에서 **무의미**하므로 생산 규약을 바꾸지 않는다.
+    #  ⇒ 대신 두 겹으로 막는다: ⓐ `RECEIPT_AXES` 가 코호트 안에서 값이 갈리면 거부하고
+    #    ⓑ 매니페스트가 `ptfe_block_cells` 로 **상별 실제 차단 셀 수**를 싣는다 (도장≠실물).
+    #  ⛔ **이 축을 생산 규약으로 채택하려면 그때 p3 로 올린다** — 그것이 이 항목의 청구서다.
+    '--step3-ptfe-block-scope': ('record', ('ptfe_block_scope',)),
     #  ★ `ptfe_zero_dof` = (스탬프 ON) ∧ (σ_PTFE == 0) — 두 옵션이 함께 정한다.
     '--ptfe-stamp': ('protocol', ('ptfe_stamp', 'ptfe_zero_dof')),
     '--sigma-ptfe': ('protocol', ('sigma_ptfe_S_cm', 'ptfe_zero_dof')),
@@ -228,7 +239,8 @@ RECEIPT_AXES = ('vox_um', 'bridge_um', 'fibre_stamp', 'sdcp_stamp', 'sdcp_sphere
                 #    적용값은 payload 가 온도로 만든다.  적용값 키로 대조하면 25 °C 밖에서
                 #    거짓 불일치가 난다 (R14 D-1).  SDCP 는 온도 스케일링을 안 받으므로
                 #    (§F1: SDCP Eₐ 앵커 없음) 적용값 = 기준값이라 키가 하나다.
-                'sigma_ion_sdcp_S_cm', 'sigma_ion_se_ref_S_cm')
+                'sigma_ion_sdcp_S_cm', 'sigma_ion_se_ref_S_cm',
+                'ptfe_block_um', 'ptfe_block_scope')
 #: 영수증이 담지만 **매니페스트 축이 아닌** 것 (따로 대조한다).
 RECEIPT_META = ('code_sha', 'origins', 'arms', 'expect_backend')
 

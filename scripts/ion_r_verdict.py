@@ -51,6 +51,18 @@ PER_BED_AXES = ('input_digest',)
 CODE_AXES = ('code_sha',)
 #  ③ 시나리오 사이에서 **달라야** 하는 축 (등록된 유일한 자유축).
 SWEPT_AXIS = 'sigma_ion_sdcp_S_cm'
+#  ★★ 2026-08-31 (Codex R16 P1-1) — **등록된 시나리오 집합을 정확히 요구한다.**
+#    초판은 `len(scen) >= 2` 만 봤다.  같은 원자료에서 ['MG','RSA'] 두 팔만 넘기면
+#    W = 0.01712 · 부호 같음 → **h1 로 뒤집힌다** (실측 재현).  즉 판정이 **호출자가 무엇을
+#    넘기느냐**에 달려 있었다 = 규율 ⑤("후보를 고르는 코드가 곧 사각지대다")의 정확한 사례를
+#    그 규율을 아는 채로 다시 저질렀다.  ⇒ σ_ion(SDCP) 값 집합을 여기 못 박고, 하나라도
+#    빠지거나 더 들어오면 HOLD.  ⚠ 이 집합을 바꾸는 것은 사전등록을 바꾸는 것이다.
+REGISTERED_SCENARIOS = {          # 이름 → σ_ion(SDCP) S/cm  (prereg §3, σ_ion(SE)=0.00357)
+    'MG':   6.5688e-05,           # r = 0.018400  Maxwell–Garnett 역산
+    'RSA':  6.20109e-04,          # r = 0.173700  RSA-RVE 역산
+    'PROD': 1.19e-03,             # r = 0.333333  생산 규약
+}
+SCENARIO_RTOL = 1e-9
 #  ④ σ_SE 는 전 시나리오 동일해야 한다 (prereg §3).  ref = 등록값, applied = T-스케일 후.
 SE_AXIS = 'sigma_ion_se_ref_S_cm'
 SE_APPLIED_AXIS = 'sigma_ion_se_S_cm'
@@ -124,6 +136,19 @@ def judge(scen, accept_code_drift=None):
     `beds` = `read_dir()` 의 반환 (`{'SBE': arm, 'DBE': arm}`).  **비는 여기서 나눈다** —
     호출자가 계산해 넘긴 비를 받지 않는다 (자기 신고 금지의 코드 수준 강제).
     """
+    #  ⓪ 등록된 시나리오 집합을 **정확히** 받았는가 (부분집합·초과 둘 다 거부).
+    got = {nm: bd['SBE']['swept'] for nm, bd in scen}
+    if set(got) != set(REGISTERED_SCENARIOS):
+        raise SystemExit(
+            f'HOLD — 등록된 시나리오 집합이 아니다.  받음 {sorted(got)} · '
+            f'등록 {sorted(REGISTERED_SCENARIOS)}\n'
+            '  ⚠ 부분집합으로 부르면 같은 원자료가 다른 판정을 낸다 '
+            '(MG+RSA 두 팔이면 h1 이 된다).  사전등록 §3 의 셋을 모두 넘길 것.')
+    for nm, v in got.items():
+        want = REGISTERED_SCENARIOS[nm]
+        if v is None or abs(float(v) - want) > SCENARIO_RTOL * max(abs(want), 1e-30):
+            raise SystemExit(f'HOLD — 시나리오 {nm} 의 σ_ion(SDCP) 가 등록값과 다르다: '
+                             f'{v} vs {want}')
     if len(scen) < 2:
         raise SystemExit('HOLD — 시나리오가 2개 미만이면 폭을 정의할 수 없다')
 
@@ -265,45 +290,71 @@ def selftest():
 
     tmp = tempfile.mkdtemp()
     SE = 0.00357
-    MG, RSA, PROD = 6.5688e-05, 6.20109e-04, 1.19e-03
+    MG, RSA, PROD = (REGISTERED_SCENARIOS['MG'], REGISTERED_SCENARIOS['RSA'],
+                     REGISTERED_SCENARIOS['PROD'])
 
     def scen_of(*pairs):
         return [(n, read_dir(d)) for n, d in pairs]
 
+    def full(mg, rsa, prod):
+        """등록된 셋을 항상 갖춰 넘긴다 — 이제 judge() 가 그것을 요구한다."""
+        return scen_of(('MG', mg), ('RSA', rsa), ('PROD', prod))
+
     # ① 문턱이 동결값 그대로인가 (사전등록 §4).
     chk('h1 문턱 0.10 · h0 문턱 0.30 동결', (H1_W_MAX, H0_W_MIN) == (0.10, 0.30))
+    chk('등록 시나리오 셋이 동결값 그대로',
+        REGISTERED_SCENARIOS == {'MG': 6.5688e-05, 'RSA': 6.20109e-04, 'PROD': 1.19e-03})
 
-    # ② h1 — 세 R 이 전부 >1 이고 폭이 좁다.
+    #  기준 팔 셋 (h1 형태: 전부 >1, 좁은 폭)
     a = _mk(tmp, 'mg', MG, SE, 1.000, 1.100)
     b = _mk(tmp, 'rsa', RSA, SE, 1.000, 1.120)
     c = _mk(tmp, 'prod', PROD, SE, 1.000, 1.140)
-    r = judge(scen_of(('MG', a), ('RSA', b), ('PROD', c)))
+
+    # ② h1 경로
+    r = judge(full(a, b, c))
     chk('h1 — 같은 부호 ∧ 좁은 폭', r['verdict'] == 'h1', f"W={r['W']:.4f}")
 
     # ③ h0 (a) — 폭이 크다.
     cw = _mk(tmp, 'prod_wide', PROD, SE, 1.000, 1.600)
-    jw = judge(scen_of(('MG', a), ('RSA', b), ('PROD', cw)))
+    jw = judge(full(a, b, cw))
     chk('h0 — 폭이 0.30 이상', jw['verdict'] == 'h0', f"W={jw['W']:.4f}")
 
-    # ④ h0 (b) — **부호가 갈리면 폭이 좁아도 h0** (이 갈래가 없으면 h1 이 샌다).
-    a2 = _mk(tmp, 'mg_flip', MG, SE, 1.000, 1.010)
-    b2 = _mk(tmp, 'rsa_flip', RSA, SE, 1.000, 1.005)
-    c2 = _mk(tmp, 'prod_flip', PROD, SE, 1.000, 0.990)
-    jf = judge(scen_of(('MG', a2), ('RSA', b2), ('PROD', c2)))
-    chk('h0 — 부호가 갈리면 폭이 좁아도 h0',
-        jf['verdict'] == 'h0' and jf['W'] < H0_W_MIN, f"W={jf['W']:.4f}")
+    # ④ h0 (b) — **부호가 갈리면 폭이 좁아도 h0** (실제 STEP B 가 이 갈래였다).
+    a2 = _mk(tmp, 'mg_flip', MG, SE, 6.585636e-04, 6.455487e-04)
+    b2 = _mk(tmp, 'rsa_flip', RSA, SE, 6.585636e-04, 6.566943e-04)
+    c2 = _mk(tmp, 'prod_flip', PROD, SE, 6.585636e-04, 6.640011e-04)
+    jf = judge(full(a2, b2, c2))
+    chk('h0 — 부호가 갈리면 폭이 좁아도 h0 (STEP B 실측 재현)',
+        jf['verdict'] == 'h0' and jf['W'] < H0_W_MIN
+        and abs(jf['W'] - 0.0281538) < 1e-6, f"W={jf['W']:.7f}")
 
     # ⑤ INDETERMINATE — 두 문턱 사이.
     cm = _mk(tmp, 'mid', PROD, SE, 1.000, 1.250)
-    jm = judge(scen_of(('MG', a), ('RSA', b), ('PROD', cm)))
+    jm = judge(full(a, b, cm))
     chk('INDETERMINATE — 두 문턱 사이', jm['verdict'] == 'INDETERMINATE', f"W={jm['W']:.4f}")
 
-    # ⑥ 자기 신고를 안 읽는다 — payload 가 거짓 비를 실어도 무시한다.
+    # ⑥ 자기 신고를 안 읽는다.
     lie = _mk(tmp, 'lie', MG, SE, 1.0, 1.1,
               step3={'sigma_ion_ratio': 99.0, 'gain_pct': 9900.0})
     bd = read_dir(lie)
     chk('자기 신고 무시 — 원자료에서 다시 나눈다',
         abs(bd['DBE']['sigma_ion'] / bd['SBE']['sigma_ion'] - 1.1) < 1e-12)
+
+    # ── ★★ Codex R16 P1-1 회귀 — **부분집합으로 부르면 판정이 뒤집혔다** ──
+    ok, why = raises(lambda: judge(scen_of(('MG', a2), ('RSA', b2))),
+                     '등록된 시나리오 집합이 아니다')
+    chk('★ 음성 — 부분집합(MG+RSA)은 HOLD (초판은 여기서 h1 을 냈다)', ok, why)
+    ok, why = raises(lambda: judge(scen_of(('RSA', b2), ('PROD', c2))),
+                     '등록된 시나리오 집합이 아니다')
+    chk('★ 음성 — 다른 부분집합(RSA+PROD)도 HOLD', ok, why)
+    x4 = _mk(tmp, 'extra', 5.0e-4, SE, 1.0, 1.1)
+    ok, why = raises(lambda: judge(scen_of(('MG', a), ('RSA', b), ('PROD', c), ('X', x4))),
+                     '등록된 시나리오 집합이 아니다')
+    chk('★ 음성 — 등록 밖 시나리오를 더해도 HOLD', ok, why)
+    wrong = _mk(tmp, 'wrongval', 7.0e-4, SE, 1.0, 1.1)
+    ok, why = raises(lambda: judge(scen_of(('MG', a), ('RSA', b), ('PROD', wrong))),
+                     '등록값과 다르다')
+    chk('★ 음성 — 이름은 맞는데 σ 값이 등록과 다르면 HOLD', ok, why)
 
     # ── 음성 경로 (fail-closed) ──
     ok, why = raises(lambda: read_dir(_mk(tmp, 'noion', MG, SE, 1.0, 1.1,
@@ -323,7 +374,7 @@ def selftest():
                      '수렴 기록을 안 싣는다')
     chk('음성 — 수렴 기록 부재는 통과가 아니라 HOLD', ok, why)
 
-    #  ★ 규약 축 전수 — 하나씩 흔들어 **전부** 잡히는지 본다 (필터가 사각지대다, 규율 ⑤).
+    #  ★ 규약 축 전수 — 하나씩 흔들어 **전부** 잡히는지 (규율 ⑤).
     probe = {'vox_um': 0.125, 'bridge_um': 0.36, 'sdcp_bridge_um': 0.01,
              'ptfe_block_um': 0.12, 'sdcp_stamp': 'point', 'sdcp_sphere_d_um': 0.0,
              'sdcp_yield_to_vgcf': True, 'ptfe_stamp': 'off',
@@ -333,8 +384,7 @@ def selftest():
     missed = []
     for k, v in probe.items():
         d = _mk(tmp, f'ax_{k}', PROD, SE, 1.0, 1.1, man={k: v})
-        got, _ = raises(lambda d=d: judge(scen_of(('MG', a), ('X', d))),
-                        '등록 밖 축이 움직였다')
+        got, _ = raises(lambda d=d: judge(full(a, b, d)), '등록 밖 축이 움직였다')
         if not got:
             missed.append(k)
     chk(f'음성 — 규약 축 {len(probe)}개가 **전부** 잡힌다', not missed, f'놓친 축: {missed}')
@@ -342,25 +392,19 @@ def selftest():
     #  ★ 침대 교체 — input_digest 는 **같은 침대끼리** 비교해야 잡힌다.
     swapped = _mk(tmp, 'bedswap', PROD, SE, 1.0, 1.1,
                   per_bed={'DBE': {'input_digest': 'digest-OTHER'}})
-    ok, why = raises(lambda: judge(scen_of(('MG', a), ('X', swapped))),
+    ok, why = raises(lambda: judge(full(a, b, swapped)),
                      'DBE 침대가 시나리오 사이에서 바뀌었다')
     chk('음성 — 침대가 바뀌면 HOLD', ok, why)
-    #    ⚠ 회귀 — 두 침대의 digest 가 원래 다른 것을 오탐하면 안 된다.
     chk('회귀 — 두 침대 digest 가 다른 것 자체는 통과',
-        judge(scen_of(('MG', a), ('RSA', b)))['verdict'] in ('h1', 'h0', 'INDETERMINATE'))
+        judge(full(a, b, c))['verdict'] in ('h1', 'h0', 'INDETERMINATE'))
 
     for key, frag in ((SE_AXIS, 'σ_ion(SE) 등록값'), (SE_APPLIED_AXIS, 'σ_ion(SE) 적용값')):
         d = _mk(tmp, f'se_{key}', PROD, SE, 1.0, 1.1, man={key: 0.003})
-        ok, why = raises(lambda d=d: judge(scen_of(('MG', a), ('X', d))), frag)
+        ok, why = raises(lambda d=d: judge(full(a, b, d)), frag)
         chk(f'음성 — {frag} 이 갈리면 HOLD', ok, why)
 
-    ok, why = raises(lambda: judge(scen_of(('MG', a), ('MG2', _mk(tmp, 'same', MG, SE, 1.0, 1.2)))),
-                     '안 갈렸다')
-    chk('음성 — 자유축이 실제로 안 갈리면 HOLD', ok, why)
-
     half = _mk(tmp, 'half', PROD, SE, 1.0, 1.1, per_bed={'DBE': {SWEPT_AXIS: MG}})
-    ok, why = raises(lambda: judge(scen_of(('MG', a), ('X', half))),
-                     '서로 다른 σ_ion(SDCP)')
+    ok, why = raises(lambda: judge(full(a, b, half)), '서로 다른 σ_ion(SDCP)')
     chk('음성 — 한 침대만 σ 가 바뀌면 HOLD', ok, why)
 
     d_two = _mk(tmp, 'two', MG, SE, 1.0, 1.1)
@@ -383,23 +427,17 @@ def selftest():
     ok, why = raises(lambda: read_dir(d_rej), '기각 receipt')
     chk('음성 — 기각 receipt 있으면 HOLD', ok, why)
 
-    ok, why = raises(lambda: judge(scen_of(('MG', a))), '2개 미만')
-    chk('음성 — 시나리오 하나면 폭이 정의되지 않는다', ok, why)
-
     #  ★ 2026-08-31 실사고 회귀 — 런 도중 워크트리 체크아웃으로 code_sha 가 갈렸다.
     drift = _mk(tmp, 'codedrift', PROD, SE, 1.0, 1.1, man={'code_sha': 'def456'})
-    ok, why = raises(lambda: judge(scen_of(('MG', a), ('X', drift))), '코드가 바뀌었다')
+    ok, why = raises(lambda: judge(full(a, b, drift)), '코드가 바뀌었다')
     chk('음성 — 시나리오 사이 code_sha 가 갈리면 HOLD', ok, why)
-    #    한 시나리오 **안에서** 두 침대가 다른 코드로 돌아도 잡아야 한다 (쌍대응 무효).
     half_code = _mk(tmp, 'codehalf', PROD, SE, 1.0, 1.1,
                     per_bed={'DBE': {'code_sha': 'def456'}})
-    ok, why = raises(lambda: judge(scen_of(('MG', a), ('X', half_code))), '코드가 바뀌었다')
+    ok, why = raises(lambda: judge(full(a, b, half_code)), '코드가 바뀌었다')
     chk('음성 — 한 시나리오 안에서 침대끼리 코드가 갈려도 HOLD', ok, why)
-    #    사유를 주면 통과하되, 사유 없이 조용히 통과하는 길은 없다.
-    jd = judge(scen_of(('MG', a), ('X', drift)), accept_code_drift='도움말 문자열만 바뀜')
-    chk('사유를 주면 통과한다 (조용한 통과 경로는 없다)', jd['verdict'] in ('h1', 'h0', 'INDETERMINATE'))
-    chk('회귀 — 코드가 같으면 사유 없이 통과',
-        judge(scen_of(('MG', a), ('RSA', b)))['verdict'] in ('h1', 'h0', 'INDETERMINATE'))
+    jd = judge(full(a, b, drift), accept_code_drift='도움말 문자열만 바뀜')
+    chk('사유를 주면 통과한다 (조용한 통과 경로는 없다)',
+        jd['verdict'] in ('h1', 'h0', 'INDETERMINATE'))
 
     print(f'\n{len(fails)} failure(s)')
     return 1 if fails else 0
