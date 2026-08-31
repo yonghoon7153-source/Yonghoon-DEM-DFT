@@ -456,7 +456,9 @@ RUN_STAGED = r'''#!/usr/bin/env bash
 #
 #   0단계(자동): POTCAR 조립 + provenance + **묶음 root 봉인** (AO P0-2·Q1)
 #   1단계: primary 두 조각 x 셀 두 높이 + 기체 기준 + 기체 canary
-#          -> 진공 수렴 + **1단계 선결조건**(canary 기하·분자 스핀·POTCAR 신원)
+#          -> **1단계 선결조건 8축** 전부 통과해야 2단계가 열린다:
+#             진공 수렴 · 분자 스핀 · canary 기하 · POTCAR 신원 ·
+#             δ_gas(기체 상자) · pm1 자기 topology · 잔여 차단 0 · 봉인 포괄
 #   2단계: primary 다른 seed + 대안 자세 두 seed
 #          -> 시작 **직전에** 1단계 게이트를 다시 돌린다 (AP #6)
 #          -> 끝나면 최종 분석기를 돌린다 (AP #9)
@@ -713,13 +715,45 @@ if bad:
 print("✓ 실행파일 = 봉인한 그 파일 (%s · %s)" % (exe, h[:12]))
 PYEXE
 
-fail=0
+# ⛔⛔ 회신 AS 해제조건 10 (2026-08-31) — 러너는 **직렬**인데 MANIFEST 는
+#   `max_concurrency: 8` 이라고 적고 있었다. 비용 추정이 그 병렬도 가정 위에
+#   서 있으므로 둘이 어긋나면 외주가 일정을 잘못 잡는다.
+#   ⇒ 러너가 실제로 병렬로 돈다. 단 **의존성이 있는 잡은 나중 물결**로 민다:
+#     canary(`*__nzmag`)는 `PARENT_GEOM` 이 가리키는 부모의 최종 기하를 받으므로
+#     부모가 먼저 끝나야 한다.
+#   `JOBS_PARALLEL` 로 조절한다 (기본 = MANIFEST 의 max_concurrency).
+NPAR=${JOBS_PARALLEL:-$(python3 -c '
+import json
+print((json.load(open("MANIFEST.json")).get("submission") or {}).get("max_concurrency") or 1)'
+)}
+case "$NPAR" in ''|*[!0-9]*) NPAR=1 ;; esac
+[ "$NPAR" -ge 1 ] || NPAR=1
+
+: > _wave1.txt; : > _wave2.txt
 while read -r j; do
   [ -n "$j" ] || continue
-  [ -f "$j/run_job.sh" ] || { echo "없음: $j"; fail=1; continue; }
-  echo "=== $j ==="
-  ( cd "$j" && bash run_job.sh ) || { echo "$j 실패"; fail=1; }
+  if [ -f "$j/PARENT_GEOM" ]; then echo "$j" >> _wave2.txt; else echo "$j" >> _wave1.txt; fi
 done < _stage_jobs.txt
+n1=$(grep -c . _wave1.txt || true); n2=$(grep -c . _wave2.txt || true)
+echo "== 병렬도 $NPAR · 1물결 $n1 잡 · 2물결(부모 의존) $n2 잡 =="
+
+run_wave() {   # $1 = 목록 파일
+  [ -s "$1" ] || return 0
+  xargs -a "$1" -I{} -P "$NPAR" sh -c '
+    j="$1"
+    [ -f "$j/run_job.sh" ] || { echo "없음: $j"; exit 1; }
+    echo "=== $j 시작 ==="
+    ( cd "$j" && bash run_job.sh ) || { echo "⛔ $j 실패"; exit 1; }
+    echo "=== $j 완료 ==="
+  ' _ {}
+}
+fail=0
+run_wave _wave1.txt || fail=1
+if [ "$fail" = 0 ]; then
+  run_wave _wave2.txt || fail=1
+else
+  echo "⛔ 1물결에 실패가 있어 2물결(부모 의존 잡)을 시작하지 않습니다"
+fi
 
 if [ "$stage" = 1 ]; then
   [ "$fail" = 0 ] || { echo "1단계에 실패한 잡이 있다 — 판정하지 않는다."; exit 2; }
@@ -9205,8 +9239,9 @@ def _submit_contract(man: Dict[str, Any], a, by_ph: Optional[dict] = None) -> st
     _dep_block = ("""⛔ **잡 사이에 의존성이 있습니다** (이 묶음은 staged 구성입니다).
 - canary(`*__nzmag`)는 `PARENT_GEOM` 이 가리키는 **부모 기체 기준의 최종 기하**를
   받습니다 — 부모가 먼저 완주해야 합니다.
-- 2단계는 1단계 게이트(진공 수렴 + canary 기하 + 분자 스핀 + POTCAR 신원)를
-  통과해야 열립니다.
+- 2단계는 1단계 게이트 **8축**을 전부 통과해야 열립니다 (진공 수렴 · 분자 스핀 ·
+  canary 기하 · POTCAR 신원 · 기체 상자 수렴 δ_gas · pm1 자기 topology ·
+  잔여 차단 0 · 봉인이 계획 전체를 포괄).
 순서는 `run_staged.sh` 가 강제합니다."""
         if _staged_sub else
         "잡 사이에는 의존성이 없습니다. 한 잡의 `run_job.sh` 가 그 잡의 상 순서를 강제합니다.")
@@ -9224,6 +9259,18 @@ VASP_CMD="mpirun -np %d vasp_std" bash run_staged.sh 2     # 1단계 통과 뒤�
 `run_all.sh` 는 이 묶음에 **넣지 않았습니다**.
 ⛔ `BUNDLE_ZIP_SHA256` 이 없으면 봉인 스크립트가 거부합니다 (번들 안에는 자기 해시를
 넣을 수 없어 받으신 파일에서 직접 구해 주셔야 합니다).
+
+## 수치 게이트 (이 값들이 결과 판정을 정합니다)
+
+| 게이트 | 문턱 | 뜻 |
+|---|---:|---|
+| 진공 두께 수렴 Δ_vac | 5 meV | 셀 두 높이의 대비 차 |
+| 기체 상자 수렴 δ_gas | 5 meV | box20↔box24 **두 조각의 차** |
+| k 격자 수렴 δ_k | 5 meV | static k↔dense k **두 조각의 차** |
+| 자기 basin 일치 | 정확 일치 | 비교하는 두 복합체의 Ni 부호 배열 (전역 반전은 동치) |
+
+⚠ 셋 다 **조각별이 아니라 두 조각의 차**에 겁니다. 조각별로 각각 작아도
+부호가 반대면 차에서 두 배가 되기 때문입니다.
 
 ## 반드시 같이 반송해 주실 것
 - `POTCAR_ROOT_SEAL.json` (첫 실행 전 봉인) 과 `ZIP_SHA256.txt`
@@ -11519,6 +11566,10 @@ def selftest() -> int:
             and "반쪽 봉인이다" in _sl,
             "⛔음성 AS 4: 기존 봉인 재대조가 allowlist 뿐 아니라 MANIFEST·ZIP·"
             "VASP 신원·조립본 해시를 **전부** 다시 본다")
+        # ── 회신 AS 해제조건 10 — 문서·러너·MANIFEST 의 숫자가 서로 맞는가 ──
+        chk("JOBS_PARALLEL" in _rs and "xargs" in _rs and "_wave2" in _rs,
+            "⛔음성 AS 10: 러너가 **실제로 병렬**로 돌고(직렬인데 MANIFEST 는 "
+            "동시 8이라고 적고 있었다) 부모 의존 잡을 뒤 물결로 민다")
         chk("run_census" in _rs and "stage_counts" in _rs and "EXPECT_MANIFEST_SHA256" in _rs,
             "⛔음성 AR P0-7: 러너가 실행 전에 manifest 해시·exact 잡 집합·단계 분류를 "
             "확인한다 (종전엔 존재하는 job.json 만 세어 하나를 지워도 통과했다)")
@@ -11554,6 +11605,11 @@ def selftest() -> int:
             and "2026-08-12 묶음과 다른 POTCAR 트리" not in _rd9,
             "⛔음성 AR P1-11: README 가 이전 wave 계보와 `PBE PAW 5.4` 를 **단정하지 "
             "않는다** (attestation 정책과 충돌하던 문장)")
+        # ── 회신 AS 해제조건 10 — 문서 숫자가 실물과 맞는가 ──────────────
+        chk("8축" in _sb9,
+            "AS 10: SUBMIT 이 stage-1 게이트를 **8축**으로 적는다 (4축이 아니다)")
+        for _g10 in ("δ_gas", "δ_k", "5 meV"):
+            chk(_g10 in _sb9, "AS 10: SUBMIT 의 수치 게이트 표에 `%s` 가 있다" % _g10)
         chk("중앙 추정 56 h" not in _sb9,
             "⛔음성 AR P1-11: walltime 이 하드코딩 56 h 가 아니라 cost_frozen 에서 온다")
         chk("잡 사이에 의존성이 있다" in str(_sm9.get("phase_dependencies"))
