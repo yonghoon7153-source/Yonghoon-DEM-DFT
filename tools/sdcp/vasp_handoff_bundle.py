@@ -8208,8 +8208,17 @@ def main():
         _bad_final.append("closure_vacconv.pass != true")
     if str(_cl.get("verdict", "")).startswith("NO_VALUE"):
         _bad_final.append("prereg_closure = NO_VALUE")
-    if _cl.get("blocks"):
-        _bad_final.append("prereg_closure.blocks %s" % _cl["blocks"][:2])
+    # ⛔⛔ 회신 AS 해제조건 1 (2026-08-31) — **정본 blocks 를 읽으면 정상 결과가
+    #   무조건 exit 2 로 끝난다.** 회신 AR Q1 이후 정본은 강등하지 않으므로
+    #   `BASIN_HETEROGENEOUS` 가 남아 있고, pm1 과 net4 는 **의도적으로 다른
+    #   topology** 라 정상 수렴해도 그것이 뜬다. 즉 이 번들은 성공할 수 없었다.
+    #   ⇒ 성공/실패 판정의 정본은 `primary_estimand_blocks` **하나**로 통일한다.
+    #     (정본 blocks 는 기록으로 남고, 강등된 것은 nonprimary_notes 에 있다)
+    _fin_blocks = _cl.get("primary_estimand_blocks")
+    if _fin_blocks is None:                      # 구판 결과 — 강등 뷰가 없다
+        _fin_blocks = _cl.get("blocks")
+    if _fin_blocks:
+        _bad_final.append("prereg_closure.primary_estimand_blocks %s" % _fin_blocks[:2])
     if _bad_final:
         print("⛔ **비인용 상태로 끝났다** — 종료코드를 0 으로 두지 않는다:")
         for b in _bad_final:
