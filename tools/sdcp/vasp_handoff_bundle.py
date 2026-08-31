@@ -2667,6 +2667,84 @@ def apply_k_guard(cls, med, lbl, delta):
     return cls
 
 
+def _stage1_prereqs(_cl, _vc, results):
+    """1단계 선결조건 — **전부 통과해야** 2단계가 열린다.
+
+    → {이름: {"pass": bool, "why": ...}}
+
+    ⛔⛔ 회신 AP #5 → AR 해제조건 5 (2026-08-31). 종전 네 조건
+      (vacuum/molecular_state/canary_geometry/potcar_identity)만으로는
+      **이미 primary estimand 가 실패한 뒤에도** STAGE1_PASS.json 을 쓰고
+      2단계를 열 수 있었다 — δ_gas 도 pm1 topology 도 잔여 exact/global
+      block 도 보지 않았기 때문이다. 여덟으로 늘렸다.
+
+    ⛔ 이 함수가 **못 하는 것**: 2단계 잡의 미실행을 요구하지 않는다
+      (단계별 실행에서 2단계가 비어 있는 것은 정상이다). 여기서 보는 것은
+      **1단계 산출만으로 판정 가능한 것들**뿐이다.
+    """
+    _pi = (_cl.get("potcar_identity") or {})
+    _cg_all = (results.get("gas_canary_geom") or {})
+    _mol_blk = [b for b in (_cl.get("blocks") or [])
+                if b.startswith(("MOLECULAR_STATE_UNRESOLVED",
+                                 "MOLECULAR_SPIN_CONTROL"))]
+    _cg_bad = {f: v for f, v in _cg_all.items() if (v or {}).get("same") is not True}
+    _pre = {
+        "vacuum": {"pass": bool(_vc.get("pass")),
+                   "why": _vc.get("verdict")},
+        "molecular_state": {"pass": not _mol_blk,
+                            "why": (_mol_blk[:2] if _mol_blk else
+                                    "비영 시작이 부모보다 낮지 않다")},
+        "canary_geometry": {"pass": bool(_cg_all) and not _cg_bad,
+                            "why": (_cg_bad if _cg_bad else
+                                    "부모/canary static 기하 동일 (%d조각)"
+                                    % len(_cg_all))},
+        "potcar_identity": {"pass": not (_pi.get("blocking") or []),
+                            "why": (_pi.get("blocking") or [])[:2]
+                                   or _pi.get("identity_scope")},
+    }
+    # ⛔⛔ 회신 AR 해제조건 5 (2026-08-31) — 위 네 조건만으로는
+    #   **이미 primary estimand 가 실패한 뒤에도** STAGE1_PASS 를 쓰고 2단계를
+    #   열 수 있었다. δ_gas 도 pm1 topology 도 잔여 exact/global block 도
+    #   보지 않았기 때문이다. 네 개를 더 결박한다.
+    #   ⚠ 이 네 조건은 **1단계 산출만으로 판정 가능한 것들**이다 —
+    #     2단계(대안자세·net4)의 미실행을 요구하지 않는다.
+    _gbd = (_cl.get("gas_box_delta") or {})
+    _gpc = (_cl.get("gas_pair_contract") or {})
+    _gas_why = ([b for b in (_cl.get("blocks") or [])
+                 if b.startswith(("GAS_BOX", "GAS_PAIR"))][:2]
+                or {"delta_gas_meV": _gbd.get("delta_gas_meV"),
+                    "tol_meV": _gbd.get("tol_meV")})
+    _pre["gas_box_delta"] = {
+        "pass": bool(_gbd.get("pass") is True and _gpc.get("ok") is True),
+        "why": _gas_why}
+    _tp1 = ((_cl.get("estimand_topology") or {}).get("pm1") or {})
+    _pre["estimand_topology_pm1"] = {
+        "pass": bool(_tp1 and _tp1.get("same") is True and not _tp1.get("blocks")),
+        "why": (_tp1.get("blocks") or [])[:2]
+               or ("두 complex 가 같은 자기 branch (%s)" % _tp1.get("why")
+                   if _tp1 else "pm1 topology 판정이 없다")}
+    # 잔여 exact-estimand / 전역 차단 — pooled_diagnostic 만 제외한다
+    #   (그 강등은 회신 AP #3 에서 근거를 남기고 한 것이고, 정본 blocks 는
+    #    회신 AR Q1 이후 그대로 남아 있으므로 여기서 scope 로 걸러야 한다)
+    _recs = (_cl.get("block_records") or [])
+    _res_blk = [r["msg"] for r in _recs
+                if r.get("scope") in ("estimand", "global")
+                and r.get("affects_estimand") is not False]
+    # 구조화되지 않은 옛 문자열 block 도 남아 있으면 통과가 아니다
+    _unstruct = [b for b in (_cl.get("blocks") or [])
+                 if b not in {r["msg"] for r in _recs}]
+    _pre["closure_blocks_clear"] = {
+        "pass": not _res_blk and not _unstruct,
+        "why": ([b[:70] for b in (_res_blk + _unstruct)][:3]
+                or "exact/global closure block 0건")}
+    # 생산 전 root seal 이 **이 manifest 와 예정 잡 전체**를 포괄하는가
+    _sealcov = (_cl.get("root_seal_coverage") or _pi.get("root_seal_coverage") or {})
+    _pre["root_seal_covers_plan"] = {
+        "pass": bool(_sealcov.get("ok") is True),
+        "why": (_sealcov.get("why") or "root seal 포괄 검사 결과가 없다")}
+    return _pre
+
+
 def _selftest_closure(chk):
     """사전등록 estimand 의 ⛔음성 묶음 — **배포본 안에서** 돌아야 한다.
 
@@ -3124,6 +3202,73 @@ def _selftest_closure(chk):
                            {"pairs": {}}, _E, _emol, _jobs)
     chk(any("MOLECULAR_SPIN_CONTROL_MISSING" in b for b in r5["blocks"]),
         "[음성 V P0-3] 자기상태 대조가 없으면 그것도 block")
+
+    # ══ 회신 AR 해제조건 5 — 1단계 선결조건이 **여덟 개를 다 본다** ═══════════
+    #   AR: "analyze_results.py 는 GAS_BOX_DELTA 와 ESTIMAND_TOPOLOGY_MISMATCH 를
+    #   보지 않으므로, 이미 primary estimand 가 실패한 뒤에도 STAGE1_PASS.json 을
+    #   쓰고 stage 2 를 열 수 있다."
+    _VC_OK = {"pass": True, "verdict": "VACUUM_CONVERGED", "applicable": True}
+    _RES_OK = {"gas_canary_geom": {f: {"same": True} for f in
+                                   ("sdcp_neutral", "ptfe_c10")}}
+    _CL_OK = {
+        "blocks": [], "block_records": [],
+        "potcar_identity": {"blocking": [], "identity_scope": "sealed_root_v13 …",
+                            "root_seal_coverage": {"ok": True, "why": "포괄"}},
+        "gas_box_delta": {"pass": True, "delta_gas_meV": 0.1, "tol_meV": 5.0},
+        "gas_pair_contract": {"ok": True},
+        "estimand_topology": {"pm1": {"same": True, "blocks": [], "why": "동일"}},
+    }
+    _p0 = _stage1_prereqs(_CL_OK, _VC_OK, _RES_OK)
+    chk(len(_p0) == 8 and all(v["pass"] for v in _p0.values()),
+        "회신 AR 5 양성: 선결조건 **8개**가 다 통과할 때만 2단계가 열린다 (%s)"
+        % sorted(_p0))
+    for _need5 in ("vacuum", "molecular_state", "canary_geometry", "potcar_identity",
+                   "gas_box_delta", "estimand_topology_pm1", "closure_blocks_clear",
+                   "root_seal_covers_plan"):
+        chk(_need5 in _p0, "AR 5: 선결조건에 `%s` 가 있다" % _need5)
+    # ⛔음성 — 여덟 축을 하나씩 깨뜨리면 그 축이 실패한다
+    def _p5(mut, vc=None, res=None):
+        return _stage1_prereqs(dict(_CL_OK, **mut), vc or _VC_OK, res or _RES_OK)
+    _cases5 = [
+        ("gas_box_delta", {"gas_box_delta": {"pass": False, "delta_gas_meV": 9.0},
+                           "blocks": ["GAS_BOX_DELTA(δ_gas 9.0 meV > 5)"]},
+         "δ_gas 가 문턱을 넘으면"),
+        ("gas_box_delta", {"gas_pair_contract": {"ok": False}},
+         "기체 쌍 계약이 깨지면 (δ_gas 수치가 작아도)"),
+        ("estimand_topology_pm1",
+         {"estimand_topology": {"pm1": {"same": False,
+                                        "blocks": ["ESTIMAND_TOPOLOGY_MISMATCH(pm1)"]}}},
+         "pm1 두 complex 가 다른 자기 basin 이면"),
+        ("estimand_topology_pm1", {"estimand_topology": {}},
+         "pm1 topology 판정이 **아예 없으면** (확인 못 함 = 통과 아님)"),
+        ("closure_blocks_clear",
+         {"block_records": [{"code": "X", "msg": "X(합성)", "scope": "estimand",
+                             "affects_estimand": True}],
+          "blocks": ["X(합성)"]},
+         "잔여 exact-estimand block 이 있으면"),
+        ("closure_blocks_clear",
+         {"blocks": ["POTCAR_IDENTITY:합성(구조화 안 된 전역 차단)"]},
+         "구조화되지 않은 전역 차단이 남아 있으면"),
+        ("root_seal_covers_plan",
+         {"potcar_identity": {"blocking": [], "identity_scope": "x",
+                              "root_seal_coverage": {"ok": False, "why": "반쪽 봉인"}}},
+         "root seal 이 계획을 포괄하지 못하면"),
+        ("root_seal_covers_plan",
+         {"potcar_identity": {"blocking": [], "identity_scope": "x"}},
+         "root seal 포괄 검사 결과가 **없으면**"),
+    ]
+    for _ax, _mut, _why in _cases5:
+        _pp = _p5(_mut)
+        chk(_pp[_ax]["pass"] is False,
+            "⛔음성 AR 5: %s `%s` 가 실패한다 → 2단계를 열지 않는다" % (_why, _ax))
+    # pooled_diagnostic 강등은 1단계를 막지 않는다 (그 강등의 근거는 AP #3 에 있다)
+    _pp_pooled = _p5({"block_records": [
+        {"code": "BASIN_HETEROGENEOUS", "msg": "BASIN_HETEROGENEOUS(합성)",
+         "scope": "pooled_diagnostic", "affects_estimand": False}],
+        "blocks": ["BASIN_HETEROGENEOUS(합성)"]})
+    chk(_pp_pooled["closure_blocks_clear"]["pass"] is True,
+        "AR 5: pooled_diagnostic 로 강등된 block 은 1단계를 막지 않는다 "
+        "(정본 blocks 에는 남아 있어도 scope 로 거른다)")
 
 
 
@@ -7956,65 +8101,7 @@ def main():
         #   **2단계가 열렸다.** canary 와 POTCAR 검사를 1단계에 넣은 목적과 모순이다.
         #   ⇒ stage1_prerequisites 를 따로 만들고 **전부** 통과해야 연다.
         _pi = (_cl.get("potcar_identity") or {})
-        _cg_all = (results.get("gas_canary_geom") or {})
-        _mol_blk = [b for b in (_cl.get("blocks") or [])
-                    if b.startswith(("MOLECULAR_STATE_UNRESOLVED",
-                                     "MOLECULAR_SPIN_CONTROL"))]
-        _cg_bad = {f: v for f, v in _cg_all.items() if (v or {}).get("same") is not True}
-        _pre = {
-            "vacuum": {"pass": bool(_vc.get("pass")),
-                       "why": _vc.get("verdict")},
-            "molecular_state": {"pass": not _mol_blk,
-                                "why": (_mol_blk[:2] if _mol_blk else
-                                        "비영 시작이 부모보다 낮지 않다")},
-            "canary_geometry": {"pass": bool(_cg_all) and not _cg_bad,
-                                "why": (_cg_bad if _cg_bad else
-                                        "부모/canary static 기하 동일 (%d조각)"
-                                        % len(_cg_all))},
-            "potcar_identity": {"pass": not (_pi.get("blocking") or []),
-                                "why": (_pi.get("blocking") or [])[:2]
-                                       or _pi.get("identity_scope")},
-        }
-        # ⛔⛔ 회신 AR 해제조건 5 (2026-08-31) — 위 네 조건만으로는
-        #   **이미 primary estimand 가 실패한 뒤에도** STAGE1_PASS 를 쓰고 2단계를
-        #   열 수 있었다. δ_gas 도 pm1 topology 도 잔여 exact/global block 도
-        #   보지 않았기 때문이다. 네 개를 더 결박한다.
-        #   ⚠ 이 네 조건은 **1단계 산출만으로 판정 가능한 것들**이다 —
-        #     2단계(대안자세·net4)의 미실행을 요구하지 않는다.
-        _gbd = (_cl.get("gas_box_delta") or {})
-        _gpc = (_cl.get("gas_pair_contract") or {})
-        _gas_why = ([b for b in (_cl.get("blocks") or [])
-                     if b.startswith(("GAS_BOX", "GAS_PAIR"))][:2]
-                    or {"delta_gas_meV": _gbd.get("delta_gas_meV"),
-                        "tol_meV": _gbd.get("tol_meV")})
-        _pre["gas_box_delta"] = {
-            "pass": bool(_gbd.get("pass") is True and _gpc.get("ok") is True),
-            "why": _gas_why}
-        _tp1 = ((_cl.get("estimand_topology") or {}).get("pm1") or {})
-        _pre["estimand_topology_pm1"] = {
-            "pass": bool(_tp1 and _tp1.get("same") is True and not _tp1.get("blocks")),
-            "why": (_tp1.get("blocks") or [])[:2]
-                   or ("두 complex 가 같은 자기 branch (%s)" % _tp1.get("why")
-                       if _tp1 else "pm1 topology 판정이 없다")}
-        # 잔여 exact-estimand / 전역 차단 — pooled_diagnostic 만 제외한다
-        #   (그 강등은 회신 AP #3 에서 근거를 남기고 한 것이고, 정본 blocks 는
-        #    회신 AR Q1 이후 그대로 남아 있으므로 여기서 scope 로 걸러야 한다)
-        _recs = (_cl.get("block_records") or [])
-        _res_blk = [r["msg"] for r in _recs
-                    if r.get("scope") in ("estimand", "global")
-                    and r.get("affects_estimand") is not False]
-        # 구조화되지 않은 옛 문자열 block 도 남아 있으면 통과가 아니다
-        _unstruct = [b for b in (_cl.get("blocks") or [])
-                     if b not in {r["msg"] for r in _recs}]
-        _pre["closure_blocks_clear"] = {
-            "pass": not _res_blk and not _unstruct,
-            "why": ([b[:70] for b in (_res_blk + _unstruct)][:3]
-                    or "exact/global closure block 0건")}
-        # 생산 전 root seal 이 **이 manifest 와 예정 잡 전체**를 포괄하는가
-        _sealcov = (_cl.get("root_seal_coverage") or _pi.get("root_seal_coverage") or {})
-        _pre["root_seal_covers_plan"] = {
-            "pass": bool(_sealcov.get("ok") is True),
-            "why": (_sealcov.get("why") or "root seal 포괄 검사 결과가 없다")}
+        _pre = _stage1_prereqs(_cl, _vc, results)
         _pre_bad = [k for k, v in _pre.items() if not v["pass"]]
         print("■ stage-1 prerequisites:")
         for _k, _v in _pre.items():
