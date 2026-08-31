@@ -81,3 +81,6 @@ db/external/kim2026_argyrodite_hydrolysis/mtp/
 db/external/kim2026_argyrodite_hydrolysis/scripts/
 db/external/omat24/*.csv
 db/note_images/
+
+# 리뷰용 번들 zip — 생성물이라 커밋하지 않는다 (해시는 kb/reviews 프롬프트에 있다)
+bundles/
