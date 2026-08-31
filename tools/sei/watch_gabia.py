@@ -181,6 +181,70 @@ def relax_progress(p):
     return (n or None), mx
 
 
+def relax_force_history(p, tail_kb=None):
+    """relax .out → [(스텝, max|F| 성분 Ry/au), ...] 전체 이력.
+
+    ⚠⚠ `relax_progress()` 는 **마지막 한 점**만 준다. "얼마나 남았나" 를 물으면
+      한 점으로는 답이 안 나온다 — 감쇠 추세가 있어야 한다. 그래서 이력을 뽑는다.
+    ⛔ 이 함수가 **못 하는 것**
+      · 남은 스텝 수를 예측하지 않는다. BFGS 는 후반이 느려지고 되돌아가기도 한다 —
+        추세는 하한(낙관)으로만 읽어야 한다.
+      · 화면의 'Total force' 는 전 원자 **노름**이라 여기 값과 다르다. 문턱
+        (`forc_conv_thr`, 성분 기준)과 비교할 수 있는 것은 **성분 최대값**뿐이다.
+        107원자면 모든 성분이 문턱일 때 노름이 sqrt(3*107)*1e-3 = 0.018 이다 —
+        그걸 1e-3 과 비교해 "18배 위" 라고 읽은 것이 2026-08-16 의 오독이다.
+    """
+    try:
+        t = open(p, errors="ignore").read()
+    except OSError:
+        return []
+    if tail_kb:
+        t = t[-int(tail_kb) * 1024:]
+    out = []
+    for m in re.finditer(r"Forces acting on atoms[\s\S]{0,200000}?"
+                         r"(?=Forces acting on atoms|$)", t):
+        blk = m.group(0)
+        mx = None
+        for f in re.finditer(r"atom\s+\d+\s+type\s+\d+\s+force\s*=\s*"
+                             r"([-\d.]+)\s+([-\d.]+)\s+([-\d.]+)", blk):
+            c = max(abs(float(x)) for x in f.groups())
+            mx = c if mx is None else max(mx, c)
+        if mx is not None:
+            out.append((len(out) + 1, mx))
+    return out
+
+
+def report_relax(path, thr=FORC_CONV_THR):
+    """`--relax <out>` — 힘 감쇠 이력을 찍는다. **남은 시간을 단정하지 않는다.**"""
+    hist = relax_force_history(path)
+    if not hist:
+        print(f"⛔ {path}: 'Forces acting on atoms' 블록을 못 읽었다 "
+              f"(아직 첫 힘 계산 전이거나 다른 종류의 실행이다)")
+        return 2
+    print(f"── {path} · 힘 블록 {len(hist)}개 (문턱 {thr:g} Ry/au · **성분 기준**) ──")
+    for st, mx in hist[-12:]:
+        bar = "#" * min(40, int(40 * min(1.0, mx / (thr * 20))))
+        print(f"  step {st:3d}  max|F| 성분 {mx:.6f}  {'✅' if mx <= thr else '  '} {bar}")
+    last = hist[-1][1]
+    print(f"  마지막 {last:.6f} · 문턱 대비 {last / thr:.1f}배")
+    if last <= thr:
+        print("  ✅ 성분 문턱 충족 — 남은 것은 에너지 문턱(etot_conv_thr)일 수 있다")
+        return 0
+    if len(hist) >= 4:
+        import math
+        a, b = hist[-4][1], hist[-1][1]
+        if b > 0 and a > b:
+            r = (b / a) ** (1.0 / 3.0)                 # 스텝당 감쇠비
+            n = math.log(thr / b) / math.log(r)
+            print(f"  최근 3스텝 감쇠비 {r:.3f}/스텝 → 산술 외삽 **{n:.0f}스텝** 남음")
+            print("  ⚠ 외삽은 **낙관 하한**이다 — BFGS 는 후반이 느려지고 힘이 "
+                  "되돌아가기도 한다. 단정하지 말 것")
+        else:
+            print("  ⚠ 최근 3스텝에서 힘이 줄지 않았다 — 외삽하지 않는다 "
+                  "(정체·진동 구간일 수 있다)")
+    return 1
+
+
 def read_gap(path):
     """gap.json 하나 → (레코드, None) 또는 (None, 손상 사유).
 
@@ -681,12 +745,36 @@ def selftest():
     chk(relax_end(os.path.join(td, "nope", "relax.out")) == (None, "·"),
         "음성: 파일 없음은 여전히 · (미착수)")
 
+    # ── relax 힘 이력 (2026-08-31) — 노름/성분 혼동 회귀 ─────────────────
+    _rt = os.path.join(tempfile.mkdtemp(), "r.out")
+    _blk = ("     Forces acting on atoms (cartesian axes, Ry/au):\n\n"
+            "     atom    1 type  1   force =     %.8f  0.00000000  0.00000000\n"
+            "     atom    2 type  2   force =     0.00000000  %.8f  0.00000000\n\n")
+    open(_rt, "w").write("".join(_blk % (v, v / 2) for v in (0.05, 0.02, 0.008, 0.0009)))
+    _h = relax_force_history(_rt)
+    chk(len(_h) == 4 and abs(_h[-1][1] - 0.0009) < 1e-9,
+        f"relax 힘 이력: 블록 4개 · 마지막 성분 최대 {_h[-1][1] if _h else None}")
+    chk(all(abs(_h[i][1] - v) < 1e-9
+            for i, v in enumerate((0.05, 0.02, 0.008, 0.0009))),
+        "relax 힘 이력: **성분 최대값**을 뽑는다 (노름이 아니다 — 2026-08-16 오독 회귀)")
+    chk(relax_force_history(_rt + ".nope") == [],
+        "[음성] 없는 파일 → 빈 이력 (없는 것을 '수렴' 으로 읽지 않는다)")
+    open(_rt, "w").write("no forces here at all\n")
+    chk(relax_force_history(_rt) == [],
+        "[음성] 힘 블록이 없는 출력 → 빈 이력")
+
     print("selftest PASS" if ok else "selftest FAIL")
     return 0 if ok else 1
 
 
 if "--selftest" in sys.argv:
     sys.exit(selftest())
+
+if "--relax" in sys.argv:
+    _i = sys.argv.index("--relax")
+    if _i + 1 >= len(sys.argv):
+        sys.exit("⛔ --relax 뒤에 relax .out 경로를 주세요")
+    sys.exit(report_relax(sys.argv[_i + 1]))
 
 print("=" * 76)
 gpu = sh("nvidia-smi --query-gpu=utilization.gpu,memory.used,memory.total "
