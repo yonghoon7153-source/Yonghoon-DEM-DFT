@@ -1812,9 +1812,15 @@ def _emit_mol_job(jd: Path, frag: str, mol, margin: float,
             "mol_poscar_idx": list(range(len(at))),
             # 🔴 회신 AB P0-1 — 바로 위 주석이 "없으면 그 검사가 꺼진다" 고 적어
             #   놓고 **정작 안 썼다.** 그래서 기체 기준계 전 잡이 OUTCAR 오기 전에
-            #   SOURCE_TOPOLOGY_UNVERIFIED 로 막혔다. 슬랩이 없으니 nslab=0 이고
-            #   POSCAR 순서가 곧 원자 순서다.
-            "mol_graph_canonical": _mol_graph_canon(at, 0, list(range(len(at)))),
+            #   SOURCE_TOPOLOGY_UNVERIFIED 로 막혔다.
+            # 🔴🔴 회신 AT P0-1 (2026-08-31) — 그 고침이 **틀린 순서**를 박았다.
+            #   "슬랩이 없으니 POSCAR 순서가 곧 원자 순서다" 라고 적었지만, 바로 위에서
+            #   POSCAR 를 `idx`(원소별로 묶은 순서)로 쓴다. 그래서 항등 순서로 만든
+            #   그래프가 POSCAR 인덱스와 어긋났고, 리뷰어가 배포본에서 직접 돌린
+            #   geometry_audit 이 **canonical 36 · broken 28 · formed 28** 을 냈다 —
+            #   즉 SDCP 기체 기준 3잡이 VASP 를 한 번도 돌리기 전에 영구 게이트였다.
+            #   `idx` 를 그대로 넘긴다 (복합체 잡이 `pos["order"]` 를 넘기는 것과 같다).
+            "mol_graph_canonical": _mol_graph_canon(at, 0, idx),
             # 기체에는 표면이 없다 — Li/Ni 등록 기대가 **존재하지 않는다**.
             "registry_role": None,
             "slab_li_poscar_idx": [], "slab_ni_poscar_idx": [],
@@ -12329,6 +12335,38 @@ def selftest() -> int:
     chk(m_o and int(m_o.group(1)) == MAX_OPTIONAL_DENSE_B,
         f"조건부 dense 상한 사본 일치 ({m_o.group(1) if m_o else '없음'})")
 
+    # ── 🔴 회신 AT P0-1 회귀 — **배포 POSCAR 를 되읽어** 정본 그래프와 대조 ──
+    #   종전 검사(`set(e) <= set(mol_poscar_idx)`)는 **어떤 순열이든 통과**한다.
+    #   그래서 기체 잡이 항등 순서로 만든 그래프를 싣고 나갔고, 리뷰어가 배포본에서
+    #   geometry_audit 을 돌려 broken 28 · formed 28 을 냈다 — VASP 전에 영구 게이트.
+    #   원소가 섞인 분자를 쓴다: POSCAR 는 원소별로 묶여 나가므로 순서가 **반드시** 바뀐다.
+    from ase import Atoms as _AtomsT
+    from ase.io import read as _rdT
+    _mt = _AtomsT(symbols=["C", "O", "H", "C", "O", "H", "S", "C", "H", "O"],
+                  positions=[[0, 0, 0], [1.43, 0, 0], [-1.09, 0, 0],
+                             [0, 1.52, 0], [1.43, 1.52, 0], [-1.09, 1.52, 0],
+                             [0, 3.3, 0], [0, 4.9, 0], [1.09, 4.9, 0], [1.43, 3.3, 0]])
+    _mtd = td / "molgraph_rt"
+    _mtd.mkdir(parents=True, exist_ok=True)
+    _mm = _emit_mol_job(_mtd, "rt_probe", _mt, 12.0, closure=True)
+    _rt = _rdT(str(_mtd / "POSCAR"), format="vasp")
+    chk("".join(_rt.get_chemical_symbols()) != "".join(_mt.get_chemical_symbols()),
+        "AT P0-1 전제: POSCAR 가 원소별로 묶여 원자 순서가 **실제로 바뀐다** (%s → %s)"
+        % ("".join(_mt.get_chemical_symbols()), "".join(_rt.get_chemical_symbols())))
+    _gg = {tuple(sorted(e)) for e in _bonds_in(_rt, list(range(len(_rt))))}
+    _ww = {tuple(sorted(e)) for e in _mm["mol_graph_canonical"]}
+    chk(_ww and not (_ww - _gg) and not (_gg - _ww),
+        "🔴 AT P0-1: 배포 POSCAR 재판독 그래프 == 정본 그래프 "
+        "(정본 %d · 끊김 %d · 생성 %d) — 기체 기준계가 계산 전에 게이트되지 않는다"
+        % (len(_ww), len(_ww - _gg), len(_gg - _ww)))
+    # ★ 음성: 항등 순서로 만들면 **반드시 어긋나야** 한다 (안 어긋나면 이 검사가 헛돈다)
+    _bad_graph = {tuple(sorted(e))
+                  for e in _mol_graph_canon(_mt, 0, list(range(len(_mt))))}
+    chk(bool((_bad_graph - _gg) or (_gg - _bad_graph)),
+        "⛔음성 AT P0-1: 항등 순서로 만든 그래프는 POSCAR 와 어긋난다 "
+        "(끊김 %d · 생성 %d) — 이게 v17 이 나간 상태였다"
+        % (len(_bad_graph - _gg), len(_gg - _bad_graph)))
+
     # ── 정본 분자 위상: 양성 + 음성 ────────────────────────────────────────
     # ⚠ 알파벳순 첫 잡은 controls/clean_slab — 분자가 없다. 분자 있는 잡을 고른다.
     j0 = next(j for j in (json.loads(q.read_text())
@@ -13201,6 +13239,32 @@ def verify_bundle(root, expect_jobs=None, check_sibling_zip=True,
         #     위상 검사가 통째로 꺼지고 분석기가 그 잡을 막는다.
         if jm.get("mol_poscar_idx") and not jm.get("mol_graph_canonical"):
             _pf.append(f"{rel}: mol_graph_canonical 없음 → SOURCE_TOPOLOGY_UNVERIFIED")
+        # 🔴🔴 회신 AT P0-1 (2026-08-31) — (1) 은 **있기만** 하면 통과시킨다.
+        #   그래서 기체 잡의 그래프가 POSCAR 순서와 어긋난 채(항등 순서로 만들어져)
+        #   나갔고, 리뷰어가 배포본에서 geometry_audit 을 돌려 broken 28 · formed 28
+        #   을 냈다 — VASP 를 한 잡도 돌리기 전에 영구 게이트였다.
+        #   ⇒ **배포한 POSCAR 를 되읽어** 같은 규약으로 그래프를 다시 만들고 대조한다.
+        #     이것이 분석기가 실제로 하는 일이고, 여기서 통과해야 거기서도 통과한다.
+        elif jm.get("mol_poscar_idx"):
+            _pp = jd.parent / "POSCAR"
+            if not _pp.is_file():
+                _pf.append(f"{rel}: POSCAR 가 없다 (그래프를 대조할 수 없다)")
+            else:
+                try:
+                    from ase.io import read as _rdp
+                    _atp = _rdp(str(_pp), format="vasp")
+                    _mi = [int(i) for i in jm["mol_poscar_idx"]]
+                    _got = {tuple(sorted(e)) for e in _bonds_in(_atp, _mi)}
+                    _want = {tuple(sorted(e)) for e in jm["mol_graph_canonical"]}
+                    _br, _fo = _want - _got, _got - _want
+                    if _br or _fo:
+                        _pf.append(
+                            f"{rel}: 배포 POSCAR 재판독 그래프가 정본과 다르다 "
+                            f"(정본 {len(_want)} · 끊김 {len(_br)} · 생성 {len(_fo)}) "
+                            f"→ SOURCE_TOPOLOGY_CHANGED 확정. 인덱스 순서가 어긋났을 "
+                            f"가능성이 가장 크다 (회신 AT P0-1)")
+                except Exception as e:                           # noqa: BLE001
+                    _pf.append(f"{rel}: POSCAR 재판독 실패 ({e})")
         # (2) 등록 역할은 **Li/Ni 이거나 명시적 None** 이어야 한다. 분석 역할
         #     (calibration/holdout)이 그 자리에 오면 항상 불일치한다.
         _rr = jm.get("registry_role", "\x00MISSING")
