@@ -10296,9 +10296,55 @@ def build_bundle(a, ledger: Optional[Dict[str, Any]] = None) -> Path:
                               "바꿔 쓰지 말 것 (회신 AS Q2)")}
     # ⛔ 회신 AS Q7 — 한정하려면 **무엇으로 한정하는지 수치가 있어야 한다.**
     #   슬랩 셀에서 직접 계산한다 (설명문이 아니라 실물).
+    def _mol_image_min(out_dir, planned, nslab_):
+        """복합체 POSCAR 에서 **분자 원자와 그 횡방향 주기이미지** 사이 최단거리.
+
+        ⛔ 못 하는 것: 슬랩-분자 거리는 안 본다 (그건 흡착 높이다). 분자끼리만.
+        """
+        best = {}
+        for _k, _pl in sorted((planned or {}).items()):
+            _m = (_pl.get("meta") or {})
+            if _m.get("kind") != "prospective_pose" or _m.get("vacconv"):
+                continue
+            _f = _m.get("fragment")
+            _pf = out_dir / _k / "POSCAR"
+            if not _pf.is_file():
+                continue
+            try:
+                _ls = _pf.read_text().splitlines()
+                _sc = float(_ls[1].split()[0])
+                _cell = np.array([[float(x) for x in _ls[2 + i].split()[:3]]
+                                  for i in range(3)]) * _sc
+                _cnt = [int(x) for x in _ls[6].split()]
+                _n = sum(_cnt)
+                _st = 8 if _ls[7].strip()[:1] in "SsCcDd" and \
+                    _ls[7].strip()[:1] in "Ss" else 8
+                # Selective dynamics 유무를 보고 좌표 시작줄을 정한다
+                _i = 7
+                if _ls[_i].strip()[:1] in "Ss":
+                    _i += 1
+                _dirmode = _ls[_i].strip()[:1] in "Dd"
+                _i += 1
+                _pos = np.array([[float(x) for x in _ls[_i + j].split()[:3]]
+                                 for j in range(_n)])
+                if _dirmode:
+                    _pos = _pos @ _cell
+                _mol = _pos[nslab_:]
+                if len(_mol) < 1:
+                    continue
+                _sh = [i * _cell[0] + j * _cell[1]
+                       for i in (-1, 0, 1) for j in (-1, 0, 1) if (i, j) != (0, 0)]
+                _d = min(float(np.linalg.norm(a - (b + t)))
+                         for t in _sh for a in _mol for b in _mol)
+                best[_f] = round(min(best.get(_f, 1e9), _d), 3)
+            except Exception:                                # noqa: BLE001
+                continue
+        return best or None
+
     try:
         _cv = slab.cell.array
         _ax, _ay = _cv[0][:2], _cv[1][:2]
+        _mol_img_min = _mol_image_min(out, man.get("planned"), nslab)
         _area = abs(_ax[0] * _ay[1] - _ax[1] * _ay[0])           # Å²
         _la = float(np.linalg.norm(_cv[0])), float(np.linalg.norm(_cv[1]))
         man["reported_quantity"]["coverage_scope"].update({
@@ -10306,8 +10352,16 @@ def build_bundle(a, ledger: Optional[Dict[str, Any]] = None) -> Path:
             "lateral_area_A2": round(_area, 3),
             "molecules_per_cell": 1,
             "coverage_per_nm2": round(100.0 / _area, 4) if _area else None,
-            "min_image_distance_A": round(min(_la), 3),
-            "⚠_수치_출처": "슬랩 셀 벡터에서 직접 계산 (문서가 아니라 실물)"})
+            # ⛔⛔ 2026-08-31 실측 정정 — 종전엔 **격자벡터 길이**를
+            #   `min_image_distance_A` 라고 찍었다(11.5 Å). 회신 AS 가 준 4.89/5.65 Å
+            #   는 **분자와 그 주기이미지 사이 실제 최단 거리**다. 이름은 같은데
+            #   다른 양이라, 그대로 실으면 리뷰 수치를 반박하는 것처럼 보인다.
+            "min_lateral_cell_vector_A": round(min(_la), 3),
+            "molecule_image_min_distance_A": _mol_img_min,
+            "⚠_수치_출처": ("셀 벡터와 **실제 복합체 좌표**에서 직접 계산. "
+                             "격자벡터 길이(min_lateral_cell_vector_A)와 분자-이미지 "
+                             "최단거리(molecule_image_min_distance_A)는 **다른 양**이다 "
+                             "— 후자가 피복률 논의의 대상이다")})
     except Exception as _e:                                      # noqa: BLE001
         man["reported_quantity"]["coverage_scope"]["⛔_셀_수치_없음"] = (
             "셀에서 면적을 못 구했다 (%r) — 한정 문구를 수치로 뒷받침하지 못한다"
@@ -11658,11 +11712,21 @@ def selftest() -> int:
         # ⛔ 회신 AS Q7 — 셀 한정을 **수치로** 뒷받침하는가
         _cs9 = ((m_st.get("reported_quantity") or {}).get("coverage_scope") or {})
         chk(_cs9.get("lateral_area_A2") and _cs9.get("coverage_per_nm2")
-            and _cs9.get("min_image_distance_A"),
+            and _cs9.get("min_lateral_cell_vector_A")
+            and _cs9.get("molecule_image_min_distance_A"),
             "회신 AS 9: 셀 한정이 **수치**를 갖는다 (면적 %s Å² · %s 분자/nm² · "
-            "최소 이미지 %s Å)" % (_cs9.get("lateral_area_A2"),
-                                   _cs9.get("coverage_per_nm2"),
-                                   _cs9.get("min_image_distance_A")))
+            "격자벡터 %s Å · **분자-이미지 최단 %s Å**)"
+            % (_cs9.get("lateral_area_A2"), _cs9.get("coverage_per_nm2"),
+               _cs9.get("min_lateral_cell_vector_A"),
+               _cs9.get("molecule_image_min_distance_A")))
+        # ⛔음성 — 두 거리를 **같은 이름으로 섞지 않는다** (2026-08-31 실측 정정)
+        _mim = _cs9.get("molecule_image_min_distance_A") or {}
+        chk(isinstance(_mim, dict) and _mim
+            and all(v < _cs9["min_lateral_cell_vector_A"] for v in _mim.values()),
+            "⛔음성 AS 9: 분자-이미지 최단거리가 격자벡터 길이보다 **작다** — "
+            "둘은 다른 양이고, 격자벡터를 최소이미지라고 찍으면 실제보다 "
+            "여유가 있어 보인다 (%s vs %s)"
+            % (_mim, _cs9.get("min_lateral_cell_vector_A")))
         _rq9 = m_st.get("reported_quantity") or {}
         chk("adsorption energy" not in str(_rq9.get("name"))
             and any("adsorption energy" in x for x in _rq9.get("⛔_부르면_안_되는_이름", []))
