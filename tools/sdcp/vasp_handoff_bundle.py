@@ -1872,10 +1872,12 @@ def _read_text(path):
             #   보여 원인이 안 드러난다. 매직바이트로 판별한다 (확장자 말고).
             with open(path, "rb") as fh:
                 if fh.read(2) == b"\x1f\x8b":
-                    return gzip.open(path, "rt", errors="ignore").read()
-            return open(path, errors="ignore").read()
+                    return gzip.open(path, "rt", errors="ignore",
+                                 encoding="utf-8").read()
+            return open(path, errors="ignore", encoding="utf-8").read()
         if os.path.isfile(path + ".gz"):
-            return gzip.open(path + ".gz", "rt", errors="ignore").read()
+            return gzip.open(path + ".gz", "rt", errors="ignore",
+                             encoding="utf-8").read()
     except OSError:
         pass
     return None
@@ -2587,7 +2589,7 @@ def plan_dense(root, man, jobs, E, E_dense):
             f"주장하지 않는다 (예산을 늘리든지 주장 범위를 줄이든지 골라야 한다)")
     plan["estimated_extra_dense_runs"] = len(plan["promote"])
     op = os.path.join(root, "DENSE_PLAN.json")
-    with open(op, "w") as fh:
+    with open(op, "w", encoding="utf-8") as fh:
         json.dump(plan, fh, indent=1, ensure_ascii=False)
     print(f"=== dense 계획 ===  보정자 {cal} · 끝점 {len(plan['endpoints'])}")
     for k, v in plan["endpoints"].items():
@@ -2665,15 +2667,480 @@ def apply_k_guard(cls, med, lbl, delta):
     return cls
 
 
+def _selftest_closure(chk):
+    """사전등록 estimand 의 ⛔음성 묶음 — **배포본 안에서** 돌아야 한다.
+
+    ⛔⛔ 회신 AR P1-12 · 해제조건 10 (2026-08-31) — 이 시험들이 종전엔
+      **생성기 selftest 에만** 있었다. 배포된 번들에서
+      `python3 analyze_results.py --selftest` 를 돌리면 179건만 나오고
+      production `_closure_estimand` 는 하나도 안 탔다. 외주처·리뷰어가
+      재현할 수 없는 검사는 "있다" 고 말할 수 없다 ⇒ 여기로 옮긴다.
+      생성기 selftest 는 이 함수를 **그대로 호출**한다 (출처는 하나다).
+
+    이 함수가 **못 하는 것**: 실제 VASP·POTCAR·스케줄러를 대신하지 않는다.
+      합성 job 레코드로 판정 논리만 친다.
+    """
+    _man = {"fragments": ["sdcp_neutral", "ptfe_c10"],
+            # ⛔ 회신 AR 해제조건 3 — 실물 생성기가 박는 기체 쌍 정책
+            "gas_geometry_policy": {"fixed_geometry_static": True},
+            "molecular_spin_controls": {
+                "mol__sdcp_neutral__box24": "refs/mol__sdcp_neutral__box24__nzmag",
+                "mol__ptfe_c10__box24": "refs/mol__ptfe_c10__box24__nzmag"}}
+    _emol = {"sdcp_neutral": -200.0, "ptfe_c10": -100.0}
+    # 🔴 키를 **실물 모양**으로 쓴다 (2026-08-29 자체 적대검토). 생성기는
+    #   `prospective/<frag>__<basin>__<seed>` 로 낸다(_pk 가 상대경로 그대로).
+    #   접두어 없는 옛 fixture 때문에 `startswith(f+"__")` 버그가 안 보였고,
+    #   실물에서는 조각 매칭이 **하나도 안 걸려** J_f 가 조용히 비었다.
+    # ⛔ 회신 AP #11 — δ_gas 게이트가 box20/box24 를 요구한다. 픽스처를 실물화한다.
+    #   sdcp: 24−20 = +0.3 meV · ptfe: 24−20 = +0.2 meV ⇒ δ_gas = +0.1 meV (통과)
+    _GASE = {"refs/mol__sdcp_neutral__box24": -205.4486,
+             "refs/mol__sdcp_neutral__box20": -205.4489,
+             "refs/mol__ptfe_c10__box24": -177.9706,
+             "refs/mol__ptfe_c10__box20": -177.9708}
+    _en = {"mol__sdcp_neutral__box24__nzmag": -200.0,
+           "mol__ptfe_c10__box24__nzmag": -100.0,
+           **_GASE,
+           "prospective/sdcp_neutral__b00__afm2424_pm1": -201.0,
+           "prospective/sdcp_neutral__b01__afm2424_pm1": -200.9,
+           "prospective/ptfe_c10__b00__afm2424_pm1": -100.5}
+    # ★ 회신 Z P0-4 — 모든 잡이 realized basin 을 달고 있어야 뺄셈이 허용된다.
+    #   합성 레코드였던 옛 fixture 는 basin 이 없어 새 게이트에 걸렸다 —
+    #   **게이트가 맞고 fixture 가 낡았다** (실물은 LORBIT 로 항상 표가 있다).
+    def _BAS(b, jn="prospective/sdcp_neutral__b00__afm2424_pm1", **kw):
+        """실물 스키마의 job 레코드. **meta 없이 만들면 cohort 조립이 막힌다** —
+        회신 AA P0-3 이후 조각·seed·d3 판정이 전부 구조화 필드에서 나온다."""
+        base = jn.rsplit("/", 1)[-1]
+        m = {"kind": "prospective_pose", "role": "calibration",
+             "fragment": base.split("__")[0], "basin_id": base.split("__")[1],
+             "seed": "afm2424_" + base.split("afm2424_")[1].replace("__d3off", ""),
+             "d3": "off" if base.endswith("__d3off") else "on"}
+        m.update(kw)
+        # ⛔ 회신 AP #2 — estimand 검사가 **Ni 모멘트 표**를 요구한다. basin id 만
+        #   있는 픽스처는 실물이 아니다 (실물은 LORBIT 로 항상 표가 있다).
+        mg = {"realized_basin_id": b}
+        if b is not None:
+            mg["realized_basin"] = {"ni_moments_muB":
+                                    list(kw.pop("_mom", [1.2] * 24 + [-1.2] * 24))}
+        else:
+            kw.pop("_mom", None)
+        return {"ok": True, "gates": [], "meta": m, "geom": {"magnetic": mg}}
+
+    # ⛔ 회신 AR 해제조건 3 — 기체 쌍 cross-job gate 는 **잡 메타**를 읽는다.
+    #   실물 `_emit_mol_job` 이 내는 필드 그대로 픽스처를 만든다.
+    #   (energies 만 주던 옛 픽스처는 계약을 검증할 수 없다 = 통과가 아니다.)
+    def _GASJ(frag, tag, geo="g-%s" % "x", **kw):
+        m = {"kind": "mol_ref", "fragment": frag, "box_margin_A": 20.0 if tag == "box20" else 24.0,
+             "species_order": ["O", "S", "C", "F", "H"], "counts": [3, 1, 10, 20, 4],
+             "gas_placement": "com_at_cell_center",
+             "internal_geometry_sha": "geo-" + frag,
+             "electronic_state_sha": "st-" + frag,
+             # 생성기가 모든 job.json 에 사후로 박는 필드 (없으면 COHORT_INCOHERENT)
+             "d3": "on", "ivdw_expected": 11,
+             "fixed_geometry_static": True, "phases": ["static"]}
+        m.update(kw)
+        return {"ok": True, "gates": [], "meta": m, "geom": {}}
+
+    _GASJOBS = {"refs/mol__%s__%s" % (f, t): _GASJ(f, t)
+                for f in ("sdcp_neutral", "ptfe_c10") for t in ("box20", "box24")}
+    _jobs = {k: _BAS("aaaa1111", k) for k in _en if k.startswith("prospective/")}
+    _jobs.update(_GASJOBS)
+    _E = lambda j: _en.get(j)
+    # ⛔ 회신 AO P0-4 — canary/부모 static 기하 대조 결과. 실물에서는 main() 이
+    #   두 static/POSCAR 를 읽어 채운다. 없으면 fail-closed 로 막히므로 픽스처에도
+    #   **명시적으로** 넣는다 (없는 것을 통과로 읽지 않는 것이 이 게이트의 요점이다).
+    def _RES(same=True, **kw):
+        g = {f: ({"same": True, "max_cart_diff_A": 0.0, "max_cell_diff_A": 0.0}
+                 if same else
+                 {"same": False, "max_cart_diff_A": 0.031, "max_cell_diff_A": 0.0})
+             for f in ("sdcp_neutral", "ptfe_c10")}
+        g.update(kw)
+        return {"pairs": {}, "gas_canary_geom": g}
+
+    r = _closure_estimand(_man, _RES(), _E, _emol, _jobs)
+    chk(not r["blocks"], f"[V P0-4] 정상 입력에 blocks 없음 · {r.get('blocks')}")
+    chk((r.get("gas_pair_contract") or {}).get("ok") is True
+        and (r.get("gas_box_delta") or {}).get("pair_contract_ok") is True,
+        "회신 AR 3 양성: 고정기하·동일 내부기하 쌍은 계약을 통과한다")
+
+    # ══ 회신 AR 해제조건 3 — 기체 쌍 cross-job gate (⛔음성 셋) ═════════════
+    #   AR 이 실물 v15 에서 잡은 것: 네 기체 부모가 전부 relax→static 이라
+    #   각 상자가 **독립으로 이완**했다. 그러면 δ_gas 는 셀 효과가 아니다.
+    def _gasneg(mut, why):
+        _jg = dict(_jobs)
+        _mm = dict(_GASJOBS)
+        for k, patch in mut.items():
+            _mm[k] = {"ok": True, "gates": [],
+                      "meta": dict(_GASJOBS[k]["meta"], **patch), "geom": {}}
+        _jg.update(_mm)
+        _rg = _closure_estimand(_man, _RES(), _E, _emol, _jg)
+        chk(any(b.startswith("GAS_PAIR_CONTRACT") for b in _rg["blocks"])
+            and (_rg.get("gas_box_delta") or {}).get("pass") is not True,
+            "⛔음성 AR 3: %s → GAS_PAIR_CONTRACT 로 막고 δ_gas 를 통과로 세지 않는다 "
+            "· blocks %s" % (why, [b[:60] for b in _rg["blocks"]][:2]))
+
+    _gasneg({"refs/mol__sdcp_neutral__box20":
+             {"fixed_geometry_static": False, "phases": ["relax", "static"]}},
+            "한 상자가 relax→static (AR 이 v15 에서 실제로 잡은 결함)")
+    _gasneg({"refs/mol__ptfe_c10__box20": {"internal_geometry_sha": "geo-DIFFERENT"}},
+            "두 상자의 내부기하가 다르다")
+    _gasneg({"refs/mol__sdcp_neutral__box24": {"electronic_state_sha": "st-OTHER"}},
+            "두 상자의 전자상태 정책이 다르다")
+    _gasneg({"refs/mol__ptfe_c10__box24": {"counts": [3, 1, 10, 20, 5]}},
+            "두 상자의 원자 수가 다르다")
+    # manifest 정책이 false 면 잡 메타가 다 맞아도 막는다 (선언과 실물 둘 다 봐야 한다)
+    _rgp = _closure_estimand(dict(_man, gas_geometry_policy={"fixed_geometry_static": False}),
+                             _RES(), _E, _emol, _jobs)
+    chk(any(b.startswith("GAS_PAIR_CONTRACT") for b in _rgp["blocks"]),
+        "⛔음성 AR 3: manifest 가 고정기하를 선언하지 않으면 막는다")
+    # 구판 번들(메타에 새 필드가 없다) — 확인 못 한 것은 통과가 아니다
+    _jold = dict(_jobs)
+    for _k in _GASJOBS:
+        _jold[_k] = {"ok": True, "gates": [],
+                     "meta": {"kind": "mol_ref", "fragment": _GASJOBS[_k]["meta"]["fragment"],
+                              "species_order": ["O"], "counts": [3]}, "geom": {}}
+    chk(any(b.startswith("GAS_PAIR_CONTRACT")
+            for b in _closure_estimand(_man, _RES(), _E, _emol, _jold)["blocks"]),
+        "⛔음성 AR 3: 구판 번들(지문 필드 없음)은 **통과가 아니라 차단**이다")
+
+    # ⛔음성 (회신 Z P0-4) — seed 이름이 같아도 **수렴 결과**가 갈리면 막는다
+    _jb_het = dict(_jobs)
+    _jb_het["prospective/sdcp_neutral__b01__afm2424_pm1"] = _BAS(
+        "bbbb2222", "prospective/sdcp_neutral__b01__afm2424_pm1")
+    _rh = _closure_estimand(_man, _RES(), _E, _emol, _jb_het)
+    chk(any("BASIN_HETEROGENEOUS" in b for b in _rh["blocks"])
+        and "primary_ddE_lowE_eV" not in _rh,
+        "⛔음성: 한 조각 안에 서로 다른 realized basin 이 섞이면 min 을 안 뽑는다")
+    _jb_none = dict(_jobs)
+    _jb_none["prospective/ptfe_c10__b00__afm2424_pm1"] = _BAS(
+        None, "prospective/ptfe_c10__b00__afm2424_pm1")
+    _rn = _closure_estimand(_man, _RES(), _E, _emol, _jb_none)
+    chk(any("BASIN_UNRESOLVED_IN_SET" in b for b in _rn["blocks"]),
+        "⛔음성: realized basin 을 못 만든 잡이 있으면 그 집합으로 뺄셈하지 않는다")
+    # ⛔음성 (회신 AA P0-3) — 경로와 구조화 필드가 어긋나면 값을 만들지 않는다
+    _jb_x1 = dict(_jobs)
+    _k1 = "prospective/sdcp_neutral__b00__afm2424_pm1"
+    _jb_x1[_k1] = {**_BAS("aaaa1111", _k1)}
+    _jb_x1[_k1]["meta"] = {**_jb_x1[_k1]["meta"], "fragment": "ptfe_c10"}
+    _rx1 = _closure_estimand(_man, _RES(), _E, _emol, _jb_x1)
+    chk(any("COHORT_INCOHERENT" in b for b in _rx1["blocks"]),
+        "⛔음성: job.json 의 fragment 가 경로와 다르면 차단 (어느 쪽이 맞는지 우리가 못 정한다)")
+
+    # ⛔음성 ★ v7 실측 — d3 가 **하나라도** 비면 막는다. 종전엔 "경로가 d3off 가
+    #   아니면 정합" 으로 봐줬는데, 그 관용 때문에 net4 복합체 8잡이 필드 없이
+    #   나갔다. 우연히 동작하는 것과 보증되는 것은 다르다.
+    _jb_x2 = dict(_jobs)
+    _jb_x2[_k1] = {**_BAS("aaaa1111", _k1)}
+    _jb_x2[_k1]["meta"] = {k: v for k, v in _jb_x2[_k1]["meta"].items() if k != "d3"}
+    _rx2 = _closure_estimand(_man, _RES(), _E, _emol, _jb_x2)
+    chk(any("COHORT_INCOHERENT" in b for b in _rx2["blocks"]),
+        "⛔음성: d3 필드가 비면 경로가 정상이어도 차단 (v7 의 net4 8잡이 그 모양이었다)")
+
+    _jb_x3 = dict(_jobs)
+    _k3 = "prospective/sdcp_neutral__b00__afm2424_pm1__d3off"
+    _jb_x3[_k3] = {**_BAS("aaaa1111", _k1)}          # 경로는 d3off, 필드는 on
+    _rx3 = _closure_estimand(_man, _RES(), _E, _emol, _jb_x3)
+    chk(any("COHORT_INCOHERENT" in b for b in _rx3["blocks"]),
+        "⛔음성: 경로는 __d3off 인데 job.json 이 d3=on 이면 차단 "
+        "(D3 분해가 통째로 뒤집힌다)")
+
+    _jb_x4 = dict(_jobs)
+    _jb_x4[_k1] = {"ok": True, "gates": [], "geom": {"magnetic": {"realized_basin_id": "a"}}}
+    _rx4 = _closure_estimand(_man, _RES(), _E, _emol, _jb_x4)
+    chk(any("COHORT_INCOHERENT" in b for b in _rx4["blocks"]),
+        "⛔음성: job.json(meta) 이 아예 없으면 차단 — 이름으로 추측하지 않는다")
+
+    # ⛔음성 AO P0-4 — canary 와 부모 static 기하가 다르면 막는다 (스핀 검사 오염)
+    chk(any("CANARY_GEOM_MISMATCH" in b for b in
+            _closure_estimand(_man, _RES(same=False), _E, _emol, _jobs)["blocks"]),
+        "⛔음성 AO P0-4: canary 가 부모와 **다른 기하**면 막는다 "
+        "(두 에너지 차에 구조 이완 에너지가 섞인다)")
+    # ⛔음성 AO P0-4 — 기하 대조를 **못 했으면** 그것도 차단이다 (확인 못 한 것 ≠ 통과)
+    chk(any("CANARY_GEOM_UNCHECKED" in b for b in
+            _closure_estimand(_man, {"pairs": {}}, _E, _emol, _jobs)["blocks"]),
+        "⛔음성 AO P0-4: 기하 대조 결과가 **없으면** 통과가 아니라 차단이다")
+
+    # ── 회신 AO P0-7 — pm1 조건부 D 를 net4 의 basin 차이가 지우지 않는다 ──
+    _man7 = dict(_man, estimand_job_keys={
+        "E_C_sdcp": "prospective/sdcp_neutral__b00__afm2424_pm1",
+        "E_C_control": "prospective/ptfe_c10__b00__afm2424_pm1",
+        "E_G_sdcp": "mol__sdcp_neutral__box24__nzmag",
+        "E_G_control": "mol__ptfe_c10__box24__nzmag"})
+    _en7 = dict(_en, **{"prospective/sdcp_neutral__b09__afm2424_net4": -201.2,
+                        "prospective/ptfe_c10__b09__afm2424_net4": -100.6})
+    _jb7 = {k: _BAS("aaaa1111", k) for k in _en7 if k.startswith("prospective/")}
+    _jb7.update(_GASJOBS)          # 기체 쌍 계약은 이 시나리오의 시험 대상이 아니다
+    # net4 두 잡만 **다른 basin** 으로 수렴 → 종전엔 BASIN_HETEROGENEOUS 로 D 가 죽었다
+    for _k in ("prospective/sdcp_neutral__b09__afm2424_net4",
+               "prospective/ptfe_c10__b09__afm2424_net4"):
+        _jb7[_k] = _BAS("bbbb2222", _k)
+    _r7 = _closure_estimand(_man7, _RES(), lambda j: _en7.get(j), _emol, _jb7)
+    # ⛔ 회신 AR Q1 이후: 정본 blocks 는 **다시 쓰지 않는다** (BASIN_HETEROGENEOUS 가 남는다).
+    #   강등은 primary_estimand_blocks 뷰에서만 일어난다 — 그래서 둘 다 확인한다.
+    chk(any(b.startswith("BASIN_HETEROGENEOUS") for b in _r7["blocks"]),
+        "⛔음성 AR Q1: 정본 blocks 에는 BASIN_HETEROGENEOUS 가 **그대로 남는다** "
+        f"(강등이 정본을 지우지 않는다) · blocks {_r7.get('blocks')}")
+    chk(not any(b.startswith("BASIN_HETEROGENEOUS")
+                for b in _r7.get("primary_estimand_blocks", _r7["blocks"]))
+        and any("BASIN_HETEROGENEOUS" in n for n in (_r7.get("nonprimary_notes") or [])),
+        "⛔음성 AO P0-7: net4 가 다른 basin 이어도 **pm1 조건부 D 를 지우지 않는다** "
+        "(primary 뷰에서만 민감도 주석으로 내린다) · primary "
+        f"{_r7.get('primary_estimand_blocks')}")
+    chk(_r7.get("primary_ddE_lowE_eV") is not None,
+        f"AO P0-7: 그 상태에서도 D_pm1 이 나온다 (실제 {_r7.get('primary_ddE_lowE_eV')})")
+    # ⛔음성 — 그런데 **네 잡 자신**의 basin 이 없으면 여전히 막는다
+    _jb7b = dict(_jb7)
+    _jb7b["prospective/sdcp_neutral__b00__afm2424_pm1"] = _BAS(
+        None, "prospective/sdcp_neutral__b00__afm2424_pm1")
+    # ⛔ 회신 AP #2 이후 코드명이 바뀌었다: ESTIMAND_BASIN_UNRESOLVED(존재 확인) →
+    #   ESTIMAND_TOPOLOGY_UNRESOLVED(모멘트 표를 읽어 topology 를 판정). pooled
+    #   BASIN_UNRESOLVED_IN_SET 은 exact-key 경로에서 강등되므로 여기에 기대지 않는다.
+    chk(any("ESTIMAND_TOPOLOGY_UNRESOLVED" in b
+            for b in _closure_estimand(_man7, _RES(), lambda j: _en7.get(j),
+                                       _emol, _jb7b)["blocks"]),
+        "⛔음성 AO P0-7 / AP #2: **D 에 들어가는 네 잡** 의 자기 상태를 못 읽으면 "
+        "여전히 막는다 (pooled 강등이 이걸 덮지 않는다)")
+    # ── 회신 AP #2 — exact complex 쌍의 자기 topology 를 **직접 비교** ──
+    def _J8(fp, jn):
+        r = _BAS("aaaa1111", jn)
+        r["geom"]["magnetic"] = {"realized_basin_id": "aaaa1111",
+                                 "realized_basin": {"ni_moments_muB": list(fp)}}
+        return r
+    _up8 = [1.2] * 24 + [-1.2] * 24
+    _dn8 = [-1.2] * 24 + [1.2] * 24                    # 전역 반전 — 같은 상태
+    _mix8 = [1.2] * 23 + [-1.2] + [-1.2] * 23 + [1.2]  # 배열이 다르다 — 다른 상태
+    _KA = "prospective/sdcp_neutral__b00__afm2424_pm1"
+    _KB = "prospective/ptfe_c10__b00__afm2424_pm1"
+    _man8 = dict(_man, estimand_job_keys={
+        "E_C_sdcp": _KA, "E_C_control": _KB,
+        "E_G_sdcp": "mol__sdcp_neutral__box24__nzmag",
+        "E_G_control": "mol__ptfe_c10__box24__nzmag"})
+    _en8 = {_KA: -201.0, _KB: -100.5,
+            "mol__sdcp_neutral__box24__nzmag": -200.0,
+            "mol__ptfe_c10__box24__nzmag": -100.0, **_GASE}
+    _ok8 = dict(_GASJOBS, **{_KA: _J8(_up8, _KA), _KB: _J8(_dn8, _KB)})
+    _r8 = _closure_estimand(_man8, _RES(), lambda j: _en8.get(j), _emol, _ok8)
+    chk(not any("TOPOLOGY" in b for b in _r8["blocks"])
+        and (_r8.get("estimand_topology") or {}).get("pm1", {}).get("same") is True,
+        f"AP #2 양성: 전역 스핀 반전은 **같은 상태**로 본다 · blocks {_r8['blocks'][:1]}")
+    _bad8 = dict(_GASJOBS, **{_KA: _J8(_up8, _KA), _KB: _J8(_mix8, _KB)})
+    _r8b = _closure_estimand(_man8, _RES(), lambda j: _en8.get(j), _emol, _bad8)
+    chk(any("ESTIMAND_TOPOLOGY_MISMATCH" in b for b in _r8b["blocks"]),
+        "⛔음성 AP #2: 두 complex 가 **다른 자기 basin** 이면 막는다 "
+        "(종전엔 각각 basin id 가 있는지만 보고 서로 같은지는 안 봤다)")
+    _nofp = dict(_GASJOBS)
+    for _k in (_KA, _KB):                       # 모멘트 표를 **명시적으로** 없앤다
+        _j = _BAS("aaaa1111", _k)
+        _j["geom"]["magnetic"] = {"realized_basin_id": "aaaa1111"}
+        _nofp[_k] = _j
+    chk(any("ESTIMAND_TOPOLOGY_UNRESOLVED" in b for b in
+            _closure_estimand(_man8, _RES(), lambda j: _en8.get(j),
+                              _emol, _nofp)["blocks"]),
+        "⛔음성 AP #2: 모멘트 표가 없어 topology 를 못 읽으면 **막는다**")
+
+    # ── 회신 AP #3 — 강등은 문자열이 아니라 job_keys 로 ──────────────────
+    _r3 = _closure_estimand(_man7, _RES(), lambda j: _en7.get(j), _emol, _jb7)
+    _recs = (_r3.get("nonprimary_note_records") or [])
+    chk(all(r.get("job_keys") for r in _recs) and _recs,
+        f"AP #3: 강등된 record 가 **구조화**돼 있고 job_keys 를 갖는다 ({len(_recs)}건)")
+    chk(all(r["scope"] == "pooled_diagnostic" for r in _recs),
+        "AP #3: 강등 판정은 **scope 필드**로 한다 (문자열 매칭 아님)")
+    chk((_r3.get("pooled_demote_policy") or {}).get("estimand_safety"),
+        "AP #3: pooled 를 강등한 대신 **네 잡의 안전 근거**를 결과에 명시한다")
+    # ⛔음성 — pooled 를 강등해도 **네 잡 자신**의 결함은 여전히 막는다
+    _jb3c = dict(_jb7)
+    _jb3c["prospective/sdcp_neutral__b00__afm2424_pm1"] = dict(
+        _jb3c["prospective/sdcp_neutral__b00__afm2424_pm1"],
+        gates=["MAGNETIC_COLLAPSE(합성)"])
+    chk(any("ESTIMAND_KEY_UNUSABLE" in b for b in
+            _closure_estimand(_man7, _RES(), lambda j: _en7.get(j),
+                              _emol, _jb3c)["blocks"]),
+        "⛔음성 AP #3: pooled 강등이 **네 잡의 게이트를 덮지 않는다** "
+        "(exact key 가 게이트되면 여전히 NO_VALUE)")
+
+    # net4 직접식이 봉인돼 있으면 D_net4 − D_pm1 을 **실제로 계산한다**
+    _man7n = dict(_man7, estimand_job_keys_net4={
+        "E_C_sdcp": "prospective/sdcp_neutral__b09__afm2424_net4",
+        "E_C_control": "prospective/ptfe_c10__b09__afm2424_net4",
+        "E_G_sdcp": "mol__sdcp_neutral__box24__nzmag",
+        "E_G_control": "mol__ptfe_c10__box24__nzmag"})
+    _r7n = _closure_estimand(_man7n, _RES(), lambda j: _en7.get(j), _emol, _jb7)
+    chk((_r7n.get("branch_sensitivity") or {}).get("status") == "computed"
+        and "D_net4_minus_D_pm1_eV" in (_r7n.get("branch_sensitivity") or {})
+        and _r7n.get("sensitivity_complete") is True,
+        "AO P0-7: net4 가 봉인돼 있으면 **D_net4 − D_pm1 을 계산한다** "
+        f"(종전엔 요구해 놓고 안 냈다) · {_r7n.get('branch_sensitivity')}")
+
+    # ══ 회신 AR P1-9 · 해제조건 6 — net4 topology 실패가 **실제로** 막는가 ═════
+    #   `usable_as_sensitivity` 를 저장만 하고 안 읽어서, 두 complex 가 다른
+    #   basin 이어도 D_net4 가 계산되고 complete 로 보고됐다.
+    _KN4A = "prospective/sdcp_neutral__b09__afm2424_net4"
+    _KN4B = "prospective/ptfe_c10__b09__afm2424_net4"
+    _mixfp = [1.2] * 23 + [-1.2] + [-1.2] * 23 + [1.2]     # 배열이 다르다
+    _jb7t = dict(_jb7)
+    _jb7t[_KN4A] = _J8([1.2] * 24 + [-1.2] * 24, _KN4A)
+    _jb7t[_KN4B] = _J8(_mixfp, _KN4B)
+    _r7t = _closure_estimand(_man7n, _RES(), lambda j: _en7.get(j), _emol, _jb7t)
+    _bs7 = _r7t.get("branch_sensitivity") or {}
+    chk(_bs7.get("status") == "suppressed_topology"
+        and _bs7.get("D_net4_eV") is None
+        and _bs7.get("D_net4_minus_D_pm1_eV") is None
+        and _r7t.get("sensitivity_complete") is False
+        and _r7t.get("primary_ddE_lowE_eV") is not None,
+        "⛔음성 AR P1-9: net4 두 complex 가 다른 basin 이면 **D_net4 값과 status 를 "
+        f"같이 막는다** (D_pm1 은 산다) · {_bs7.get('status')}")
+    # 모멘트 표를 못 읽어도 마찬가지다 — 확인 못 한 것은 통과가 아니다
+    _jb7u = dict(_jb7)
+    for _k in (_KN4A, _KN4B):
+        _ju = _BAS("aaaa1111", _k)
+        _ju["geom"]["magnetic"] = {"realized_basin_id": "aaaa1111"}
+        _jb7u[_k] = _ju
+    _r7u = _closure_estimand(_man7n, _RES(), lambda j: _en7.get(j), _emol, _jb7u)
+    chk((_r7u.get("branch_sensitivity") or {}).get("status") == "suppressed_topology"
+        and _r7u.get("sensitivity_complete") is False,
+        "⛔음성 AR P1-9: net4 topology 를 **못 읽어도** 민감도를 완료로 보고하지 않는다")
+
+    # ══ 회신 AR P1-10 · 해제조건 6 — 대안 자세를 **봉인식**으로 낸다 ══════════
+    _KPA = "prospective/sdcp_neutral__b04__afm2424_pm1"
+    _KPB = "prospective/ptfe_c10__b04__afm2424_pm1"
+    _enp = dict(_en7, **{_KPA: -201.15, _KPB: -100.52})
+    _manp = dict(_man7n, estimand_job_keys_pose_alt={
+        "sensitivity": {"E_C_sdcp": _KPA, "E_C_control": _KPB,
+                        "E_G_sdcp": "mol__sdcp_neutral__box24__nzmag",
+                        "E_G_control": "mol__ptfe_c10__box24__nzmag",
+                        "formula": "D_pose[sensitivity] = ..."},
+        "⛔": "주석 키 — 순회에서 건너뛰어야 한다"})
+    _up = [1.2] * 24 + [-1.2] * 24
+    _jbp = dict(_jb7, **{_KPA: _J8(_up, _KPA), _KPB: _J8(_up, _KPB)})
+    _rp = _closure_estimand(_manp, _RES(), lambda j: _enp.get(j), _emol, _jbp)
+    _ps = (_rp.get("pose_sensitivity") or {}).get("sensitivity") or {}
+    chk(_ps.get("status") == "computed" and _ps.get("D_pose_eV") is not None
+        and _ps.get("D_pose_minus_D_pm1_eV") is not None
+        and _rp.get("sensitivity_complete") is True,
+        "회신 AR P1-10 양성: 대안 자세가 봉인돼 있으면 **D_pose − D_pm1 을 낸다** "
+        f"· {_ps.get('D_pose_minus_D_pm1_eV')} eV")
+    # ⛔음성 — 두 자세 complex 가 다른 basin 이면 값도 status 도 막는다
+    _jbp2 = dict(_jbp, **{_KPB: _J8(_mixfp, _KPB)})
+    _rp2 = _closure_estimand(_manp, _RES(), lambda j: _enp.get(j), _emol, _jbp2)
+    _ps2 = (_rp2.get("pose_sensitivity") or {}).get("sensitivity") or {}
+    chk(_ps2.get("status") == "suppressed_topology" and _ps2.get("D_pose_eV") is None
+        and _rp2.get("sensitivity_complete") is False
+        and any("POSE_SENSITIVITY_INCOMPLETE" in n
+                for n in (_rp2.get("nonprimary_notes") or []))
+        and _rp2.get("primary_ddE_lowE_eV") is not None,
+        "⛔음성 AR P1-10: 자세 두 complex 가 다른 basin 이면 D_pose 를 막고 "
+        "'자세에 강건' 서술을 금지한다 (D_pm1 은 산다)")
+    # ⛔음성 — 잡이 게이트돼 있으면 unavailable
+    _jbp3 = dict(_jbp)
+    _jbp3[_KPA] = dict(_jbp3[_KPA], gates=["MAGNETIC_COLLAPSE(합성)"])
+    _rp3 = _closure_estimand(_manp, _RES(), lambda j: _enp.get(j), _emol, _jbp3)
+    chk(((_rp3.get("pose_sensitivity") or {}).get("sensitivity") or {}).get("status")
+        == "unavailable" and _rp3.get("sensitivity_complete") is False,
+        "⛔음성 AR P1-10: 자세 잡이 게이트되면 unavailable 이고 완료가 아니다")
+    # 봉인이 아예 없으면 **탐색용**임을 명시한다 (완료 여부만 보고하지 않는다)
+    _rp4 = _closure_estimand(dict(_man7n, altpose_purpose="탐색용"),
+                             _RES(), lambda j: _en7.get(j), _emol, _jb7)
+    chk((_rp4.get("pose_sensitivity") or {}).get("status") == "exploratory_only",
+        "회신 AR P1-10: 봉인식이 없으면 **탐색용**이라고 결과에 박는다")
+
+    # ── 회신 AP #11 — δ_gas 를 **최종 estimand 에 직접** 건다 ────────────
+    _rg = _closure_estimand(_man, _RES(), _E, _emol, _jobs)
+    chk((_rg.get("gas_box_delta") or {}).get("pass") is True,
+        f"AP #11 양성: δ_gas {_rg.get('gas_box_delta', {}).get('delta_gas_meV')} meV "
+        f"≤ {_rg.get('gas_box_delta', {}).get('tol_meV')} — 0.01 eV 보고 가능")
+    # ⛔음성 — 조각별로는 각각 작아도 **부호가 반대면 차에서 커진다**
+    _enbad = dict(_en, **{"refs/mol__sdcp_neutral__box20": -205.4486 - 0.004,
+                          "refs/mol__ptfe_c10__box20": -177.9706 + 0.004})
+    _rgb = _closure_estimand(_man, _RES(), lambda j: _enbad.get(j), _emol, _jobs)
+    _gd = _rgb.get("gas_box_delta") or {}
+    chk(any("GAS_BOX_DELTA" in b for b in _rgb["blocks"]),
+        "⛔음성 AP #11: 조각별 4 meV 씩이어도 **부호가 반대면** δ_gas 8 meV → 차단 "
+        f"(실제 {_gd.get('delta_gas_meV')} meV · 조각별 {_gd.get('by_fragment_meV')})")
+    chk(abs((_gd.get("delta_gas_meV") or 0)) > 5.0
+        and all(abs(v) <= 5.0 for v in (_gd.get("by_fragment_meV") or {}).values()),
+        "⛔음성 AP #11 요점: **조각별 문턱이었으면 통과했을** 경우다 "
+        "(그래서 조각별이 아니라 차에 건다)")
+    # ⛔ 회신 AR P0-3 재현 — **조각별로는 크고 차는 작은** 경우. 옛 조각별 10 meV
+    #   게이트가 살아 있으면 두 emol 이 None 이 되고 A(f,p) 에서 `float − None` 으로
+    #   **예외로 죽었다** (리뷰가 재현한 그 모양이다). 지금은 δ_gas 1 meV 로 통과한다.
+    _en2019 = dict(_en, **{"refs/mol__sdcp_neutral__box20": -205.4486 - 0.020,
+                           "refs/mol__ptfe_c10__box20": -177.9706 - 0.019})
+    _r2019 = _closure_estimand(_man, _RES(), lambda j: _en2019.get(j), _emol, _jobs)
+    _g19 = _r2019.get("gas_box_delta") or {}
+    chk(_g19.get("pass") is True and abs(_g19.get("delta_gas_meV") or 0) <= 5.0
+        and all(abs(v) >= 15.0 for v in (_g19.get("by_fragment_meV") or {}).values())
+        and not any("GAS_BOX" in b for b in _r2019["blocks"])
+        and _r2019.get("primary_ddE_lowE_eV") is not None,
+        "회신 AR P0-3 재현: 조각별 %s meV 인데 δ_gas %s meV → **통과하고 예외로 "
+        "죽지 않는다** (옛 조각별 게이트가 죽이던 경우)"
+        % (_g19.get("by_fragment_meV"), _g19.get("delta_gas_meV")))
+    # ⛔음성 — box20 이 아예 없으면 "측정 안 함" 으로 막는다 (선행값으로 때우지 않는다)
+    _enno = {k: v for k, v in _en.items() if not k.endswith("box20")}
+    chk(any("GAS_BOX_NOT_MEASURED" in b for b in
+            _closure_estimand(_man, _RES(), lambda j: _enno.get(j),
+                              _emol, _jobs)["blocks"]),
+        "⛔음성 AP #11: box20 이 없으면 **이 묶음에서 재지 못했다**고 막는다 "
+        "(선행 대조로 때우지 않는다)")
+
+    _jb_slab = dict(_jobs)
+    _jb_slab["refs/clean_slab__afm2424_pm1"] = _BAS(
+        "cccc3333", "prospective/sdcp_neutral__b00__afm2424_pm1",
+        kind="clean_ref", fragment=None, basin_id=None)
+    _rs = _closure_estimand(_man, _RES(), _E, _emol, _jb_slab)
+    chk(any("BASIN_MISMATCH_SLAB" in b for b in _rs["blocks"]),
+        "⛔음성: clean slab 이 복합체와 다른 basin 이면 흡착에너지를 만들지 않는다")
+    chk(abs(r["primary_ddE_lowE_eV"] - (-0.5)) < 1e-6,
+        f"[V P0-4] primary = min-min = -0.5 · 실제 {r.get('primary_ddE_lowE_eV')}")
+    # G = min(A_c10) - max(A_sdcp) = -0.5 - (-0.9) = +0.4.
+    #   G>0 = 가장 약한 SDCP 도 가장 센 c10 보다 더 음수 (사전등록 정의와 일치).
+    chk(abs(r["secondary_G_eV"] - 0.4) < 1e-6,
+        f"[V P0-4] secondary G = +0.4 (>0 = 최약 SDCP 도 최강 c10 보다 음수) · "
+        f"실제 {r.get('secondary_G_eV')}")
+    chk(r["verdict"] == "보고 가능" and r["reported_X_eV"] == -0.5,
+        "[V P0-4] guard(-0.10) 통과 + 0.01 eV 반올림")
+    # 음성: guard band 미달
+    _en2 = dict(_en)
+    _en2["prospective/sdcp_neutral__b00__afm2424_pm1"] = -200.55
+    _en2["prospective/sdcp_neutral__b01__afm2424_pm1"] = -200.55
+    r2 = _closure_estimand(_man, _RES(), lambda j: _en2.get(j), _emol, _jobs)
+    chk(r2["verdict"] == "NO_DIRECTIONAL_CLAIM",
+        f"[음성 V P0-4] primary {r2.get('primary_ddE_lowE_eV')} > -0.10 → 방향성 주장 금지")
+    # 음성: 비영 시작이 더 낮으면 값을 내지 않는다
+    _en3 = dict(_en); _en3["mol__sdcp_neutral__box24__nzmag"] = -200.3
+    r3 = _closure_estimand(_man, _RES(), lambda j: _en3.get(j), _emol, _jobs)
+    chk(any("MOLECULAR_STATE_UNRESOLVED" in b for b in r3["blocks"])
+        and "primary_ddE_lowE_eV" not in r3,
+        "[음성 V P0-3] 비영 MAGMOM 대조가 더 낮으면 **MOLECULAR_STATE_UNRESOLVED 로 막고 "
+        "값을 안 낸다** (자동 채택 금지)")
+    # 음성: 자기 topology 게이트된 자세는 버리고 값도 안 낸다
+    _j4 = dict(_jobs)
+    _j4["prospective/sdcp_neutral__b00__afm2424_pm1"] = {
+        **_BAS("aaaa1111", "prospective/sdcp_neutral__b00__afm2424_pm1"),
+        "gates": ["MAGNETIC_PARTIAL_FLIP(3/48 Ni)"]}
+    r4 = _closure_estimand(_man, _RES(), _E, _emol, _j4)
+    chk(any("GATED_POSE" in b for b in r4["blocks"]) and "primary_ddE_lowE_eV" not in r4,
+        "[음성 V P0-4] 자기 topology 게이트된 자세는 **다음 순위로 조용히 대체하지 않는다**")
+    # 음성: 대조가 아예 없으면
+    r5 = _closure_estimand({"fragments": ["sdcp_neutral", "ptfe_c10"]},
+                           {"pairs": {}}, _E, _emol, _jobs)
+    chk(any("MOLECULAR_SPIN_CONTROL_MISSING" in b for b in r5["blocks"]),
+        "[음성 V P0-3] 자기상태 대조가 없으면 그것도 block")
+
+
+
 def selftest_k() -> int:
     """k 라벨·guard band 의 **순수 산술**을 시험한다 (음성 포함).
 
     이 시험이 못 하는 것: OUTCAR 회수·게이트 연동. 그건 번들 selftest 몫이다.
     """
     ok = True
+    # ⛔ 회신 AR P1-12 — **개수를 재현 가능하게** 센다 (문서에 적은 수와 실행 결과가
+    #   갈라지지 않게). 리스트인 이유는 _selftest_closure 와 공유하기 위해서다.
+    _CHKN = [0, 0]
 
     def chk(c, m):
         nonlocal ok
+        _CHKN[0] += 1
+        _CHKN[1] += bool(c)
         print(("  ✓ " if c else "  ✗ ") + m)
         ok = ok and bool(c)
 
@@ -3098,9 +3565,9 @@ def selftest_k() -> int:
         for q in _jp.iterdir():
             q.unlink()
         if payload is not None:
-            (_jp / "POTCAR_PROVENANCE.json").write_text(json.dumps(payload))
+            (_jp / "POTCAR_PROVENANCE.json").write_text(json.dumps(payload), encoding="utf-8")
         if marker:
-            (_jp / ".SELFTEST_FIXTURE").write_text("x")
+            (_jp / ".SELFTEST_FIXTURE").write_text("x", encoding="utf-8")
         return potcar_provenance_gates(str(_jp), meta or _meta_ok, "j", _M)
 
     _good = {"schema": "potcar_provenance/v1", "species_order": ["Li", "Ni"],
@@ -3135,7 +3602,7 @@ def selftest_k() -> int:
     def _pg2(payload):
         for q in _jp.iterdir():
             q.unlink()
-        (_jp / "POTCAR_PROVENANCE.json").write_text(json.dumps(payload))
+        (_jp / "POTCAR_PROVENANCE.json").write_text(json.dumps(payload), encoding="utf-8")
         return potcar_provenance_gates(str(_jp), _meta_ok, "j", _M2)
 
     _liar = {**_good, "expected_variants": ["Li", "Ni"],
@@ -3648,13 +4115,13 @@ def selftest_k() -> int:
                                                    "LDAUU": "0.0 6.2 0.0"}}}
         if kmesh:
             _meta["kmesh"] = {"static_pin": "1 1 1"}
-        (jd / "job.json").write_text(json.dumps(_meta))
-        (jd / "static_pin" / "INCAR").write_text("NUPDOWN = 4\n")
+        (jd / "job.json").write_text(json.dumps(_meta), encoding="utf-8")
+        (jd / "static_pin" / "INCAR").write_text("NUPDOWN = 4\n", encoding="utf-8")
         _isha = hashlib.sha256((jd / "static_pin" / "INCAR").read_bytes()).hexdigest()
         (jd / "MANIFEST_RESCUE.json").write_text(json.dumps(
-            {"sha256": {"static_pin/INCAR": _isha}}))
+            {"sha256": {"static_pin/INCAR": _isha}}), encoding="utf-8")
         if incar_tamper:
-            (jd / "static_pin" / "INCAR").write_text("NUPDOWN = 4\nENCUT = 400\n")
+            (jd / "static_pin" / "INCAR").write_text("NUPDOWN = 4\nENCUT = 400\n", encoding="utf-8")
         mom = [1.2, -1.2, 1.2, 1.2]
         if flip_one:
             mom[1] = 1.2
@@ -3669,8 +4136,8 @@ def selftest_k() -> int:
                 "\n----\n General timing and accounting\n")
         if double_run:
             body = body + body
-        (jd / "static_pin" / "OUTCAR").write_text(body)
-        (jd / "static_pin" / "CHGCAR").write_text("density " * 10)
+        (jd / "static_pin" / "OUTCAR").write_text(body, encoding="utf-8")
+        (jd / "static_pin" / "CHGCAR").write_text("density " * 10, encoding="utf-8")
         return jd
     with tempfile.TemporaryDirectory() as _d:
         _D = pathlib.Path(_d)
@@ -3705,20 +4172,20 @@ def selftest_k() -> int:
         man = {}
         for f, body in base.items():
             if f not in skip_disk:
-                (jd / f).write_text(body)
+                (jd / f).write_text(body, encoding="utf-8")
             man[f] = hashlib.sha256(body.encode()).hexdigest()
         # job.json 은 부모 해시를 담아야 하므로 마지막에 (자기 해시는 그 뒤 계산)
         par = {"POSCAR": ("deadbeef" if parent_break else man["POSCAR"]),
                "KPOINTS": man["KPOINTS"]}
         jj = json.dumps({"rescue": {"parent_sha256": par}})
         if "job.json" not in skip_disk:
-            (jd / "job.json").write_text(jj)
+            (jd / "job.json").write_text(jj, encoding="utf-8")
         man["job.json"] = hashlib.sha256(jj.encode()).hexdigest()
         for f in man_drop:
             man.pop(f, None)
-        (jd / "MANIFEST_RESCUE.json").write_text(json.dumps({"sha256": man}))
+        (jd / "MANIFEST_RESCUE.json").write_text(json.dumps({"sha256": man}), encoding="utf-8")
         if static_outcar is not None:
-            (jd / "static" / "OUTCAR").write_text(static_outcar)
+            (jd / "static" / "OUTCAR").write_text(static_outcar, encoding="utf-8")
         rec = {f: man.get(f, "x") for f in ("POSCAR", "KPOINTS",
                                             "static_pin/INCAR", "static/INCAR")}
         rec["POTCAR"] = "pt"
@@ -3732,12 +4199,12 @@ def selftest_k() -> int:
               "chgcar_sha256": {"pin": "aa", "static_copy": "aa", "identical": True},
               "chgcar_read_evidence": ["grid : charge from CHGCAR file"]}
         pv.update(pv_patch or {})
-        (jd / "RUN_PROVENANCE.json").write_text(json.dumps(pv))
+        (jd / "RUN_PROVENANCE.json").write_text(json.dumps(pv), encoding="utf-8")
         pc = {"pass": True, "chgcar": {"sha256": "aa"}}
         pc.update(pc_patch or {})
-        (jd / "static_pin" / "PIN_CHECK.json").write_text(json.dumps(pc))
+        (jd / "static_pin" / "PIN_CHECK.json").write_text(json.dumps(pc), encoding="utf-8")
         if tamper_incar:
-            (jd / "static_pin" / "INCAR").write_text("i1-modified")
+            (jd / "static_pin" / "INCAR").write_text("i1-modified", encoding="utf-8")
         return jd
     with tempfile.TemporaryDirectory() as _d:
         _D = pathlib.Path(_d)
@@ -3779,6 +4246,16 @@ def selftest_k() -> int:
             _r = rescue_provenance_ok(_prov_job(_D / nm, **kw))
             chk(_r[0] is False, f"{why} ({_r[1][:38]})")
 
+    # ⛔⛔ 회신 AR P1-12 · 해제조건 10 (2026-08-31) — 사전등록 estimand 판정
+    #   (`_closure_estimand`)을 **배포본 안에서** 친다. 종전엔 생성기 selftest 에만
+    #   있어서, 이 파일만 받은 쪽은 production 판정 경로를 하나도 검증할 수 없었다.
+    _n0 = _CHKN[0]
+    _selftest_closure(chk)
+    print("  ── estimand 판정 검사 %d건 (배포본 안에서 실행) ──"
+          % (_CHKN[0] - _n0))
+    print("selftest %d/%d · %s"
+          % (_CHKN[1], _CHKN[0], "PASS" if ok else "FAIL"))
+    print("  재현: python3 analyze_results.py --selftest")
     print("k-selftest PASS" if ok else "k-selftest FAIL")
     return 0 if ok else 1
 
@@ -3913,7 +4390,7 @@ def check_pin(jobdir):
     와의 일치까지만 본다.
     """
     jd = pathlib.Path(jobdir)
-    meta = json.load(open(jd / "job.json"))
+    meta = json.load(open(jd / "job.json", encoding="utf-8"))
     spec = meta.get("potcar_spec") or {}
     bad = []
     if not spec:
@@ -3928,7 +4405,7 @@ def check_pin(jobdir):
         bad.append("MANIFEST_RESCUE.json 없음 — 배포 기준 해시 부재 (fail-closed)")
     else:
         try:
-            _man = (json.load(open(_mr)) or {}).get("sha256") or {}
+            _man = (json.load(open(_mr, encoding="utf-8")) or {}).get("sha256") or {}
             _inc = jd / "static_pin" / "INCAR"
             if _inc.is_file() and _man.get("static_pin/INCAR"):
                 _h = hashlib.sha256(open(_inc, "rb").read()).hexdigest()
@@ -3975,7 +4452,7 @@ def check_pin(jobdir):
            "checked": "static_pin"}
     (jd / "static_pin").mkdir(exist_ok=True)
     (jd / "static_pin" / "PIN_CHECK.json").write_text(
-        json.dumps(out, indent=1, ensure_ascii=False))
+        json.dumps(out, indent=1, ensure_ascii=False), encoding="utf-8")
     print(("✅ pin 수용 — release 진행 가능" if not bad else
            "⛔ pin 거부 — release 를 돌리지 말 것") + f"  ({jd})")
     for x in bad:
@@ -4007,7 +4484,7 @@ def rescue_provenance_ok(jd):
         if not f.is_file():
             return False, w
     try:
-        pc, pv, mr = (json.load(open(x)) for x in (pc_p, pv_p, mr_p))
+        pc, pv, mr = (json.load(open(x, encoding="utf-8")) for x in (pc_p, pv_p, mr_p))
     except ValueError as e:
         return False, f"provenance 파싱 실패: {e}"
     if not pc.get("pass"):
@@ -4049,7 +4526,7 @@ def rescue_provenance_ok(jd):
     #   재계산 사슬로 검증한다: 디스크==배포해시(위에서 확인) 이고, 배포해시==부모해시
     #   (job.json 은 자체가 해시 앵커됨) 이면 부모 대조가 독립적으로 선다.
     try:
-        _meta = json.load(open(jd / "job.json"))
+        _meta = json.load(open(jd / "job.json", encoding="utf-8"))
     except ValueError as e:
         return False, f"job.json 파싱 실패: {e}"
     _par = ((_meta.get("rescue") or {}).get("parent_sha256") or {})
@@ -4224,7 +4701,7 @@ def potcar_provenance_gates(job_dir, meta, rel=None, man=None):
         return ["POTCAR_PROVENANCE_MISSING(반송물에 없다 — 어떤 POTCAR 로 돌았는지 "
                 "확인할 방법이 없다)"]
     try:
-        d = json.load(open(pp))
+        d = json.load(open(pp, encoding="utf-8"))
     except Exception as e:                                   # noqa: BLE001
         return ["POTCAR_PROVENANCE_UNPARSEABLE(%s)" % e]
     if d.get("allowlist_waived"):
@@ -6102,12 +6579,12 @@ def main():
     delta = DELTA
     if "--delta" in sys.argv:
         delta = float(sys.argv[sys.argv.index("--delta") + 1])
-    man = json.load(open(os.path.join(root, "MANIFEST.json")))
+    man = json.load(open(os.path.join(root, "MANIFEST.json"), encoding="utf-8"))
     # ⛔ 회신 AO Q1 — 생산 전에 봉인한 variant 별 원본 fingerprint. 러너
     #   (SEAL_POTCAR_ROOT.sh)가 **첫 VASP 실행 전에** 만든다. 없으면 없다고 적는다.
     try:
         man["_potcar_root_seal"] = json.load(
-            open(os.path.join(root, "POTCAR_ROOT_SEAL.json")))
+            open(os.path.join(root, "POTCAR_ROOT_SEAL.json"), encoding="utf-8"))
     except Exception:
         man["_potcar_root_seal"] = None
     man["_manifest_sha256_actual"] = hashlib.sha256(
@@ -6115,7 +6592,7 @@ def main():
     # ⛔ 회신 AP #12 — 공식 release 주장은 **계산 전 attestation** 이 있을 때만.
     try:
         man["_potcar_attestation"] = json.load(
-            open(os.path.join(root, "POTCAR_ATTESTATION.json")))
+            open(os.path.join(root, "POTCAR_ATTESTATION.json"), encoding="utf-8"))
     except Exception:
         man["_potcar_attestation"] = None
     # ⛔ 회신 AR P0-6 — attestation 은 **정확한 ZIP** 과도 결박돼야 한다.
@@ -6128,7 +6605,8 @@ def main():
         _zsha = sys.argv[_zi + 1] if len(sys.argv) > _zi + 1 else None
     if not _zsha:
         try:
-            _zsha = open(os.path.join(root, "ZIP_SHA256.txt")).read().split()[0]
+            _zsha = open(os.path.join(root, "ZIP_SHA256.txt"),
+                        encoding="utf-8").read().split()[0]
         except Exception:
             _zsha = None
     man["_zip_sha256_observed"] = (_zsha or "").strip().lower() or None
@@ -6148,7 +6626,7 @@ def main():
             merge_roots.append(_v)
     bundles = [(root, man)]
     for _mr in merge_roots:
-        bundles.append((_mr, json.load(open(os.path.join(_mr, "MANIFEST.json")))))
+        bundles.append((_mr, json.load(open(os.path.join(_mr, "MANIFEST.json"), encoding="utf-8"))))
     merge_info = merge_compat(bundles) if len(bundles) > 1 else None
 
     # ── 입력 무결성 (Codex P0-H) — INCAR 이 바뀌었는지부터 본다 ──────────────
@@ -6177,7 +6655,8 @@ def main():
         """(기대 기하 파일, 출처 라벨). PARENT_GEOM 이 있으면 부모의 최종 기하."""
         pg = os.path.join(jd, "PARENT_GEOM")
         if os.path.isfile(pg):
-            tgt = os.path.normpath(os.path.join(jd, open(pg).read().strip()))
+            tgt = os.path.normpath(os.path.join(
+                jd, open(pg, encoding="utf-8").read().strip()))
             cc = os.path.join(tgt, "relax", "CONTCAR")
             if os.path.isfile(cc):
                 return cc, "부모 relax/CONTCAR"
@@ -6267,7 +6746,7 @@ def main():
         jp = os.path.join(jd, "job.json")
         if not os.path.isfile(jp):
             continue
-        meta = json.load(open(jp))
+        meta = json.load(open(jp, encoding="utf-8"))
         rel = _pk(jd, _root_i)
         _planned_i = _man_i.get("planned", {})
         _spec_i = _man_i.get("potcar_spec", {})
@@ -6305,7 +6784,7 @@ def main():
         _ppf = os.path.join(jd, "POTCAR_PROVENANCE.json")
         if os.path.isfile(_ppf):
             try:
-                rec["_prov"] = json.load(open(_ppf))
+                rec["_prov"] = json.load(open(_ppf, encoding="utf-8"))
             except Exception:                                # noqa: BLE001
                 rec["_prov"] = None
         g2, info = geometry_audit(jd, meta)
@@ -7396,7 +7875,8 @@ def main():
     results["required_missing"] = missing
     for r in jobs.values():
         r.pop("_fin", None); r.pop("_contact_fp", None)
-    json.dump(results, open(out, "w"), indent=1, ensure_ascii=False)
+    json.dump(results, open(out, "w", encoding="utf-8"),
+              indent=1, ensure_ascii=False)
 
     bad = {j: r for j, r in jobs.items() if not r["ok"]}
     print(f"=== 무결성 ===  검사 {integrity['checked']}개 · 변경 "
@@ -7570,7 +8050,8 @@ def main():
             "⛔": ("1단계 통과 증거. run_staged.sh 2 는 이것 없이 열리지 않는다. "
                    "MANIFEST.json 이 바뀌면 manifest_sha256 이 달라져 무효다."),
         }
-        json.dump(_rc, open(os.path.join(root, "STAGE1_PASS.json"), "w"),
+        json.dump(_rc, open(os.path.join(root, "STAGE1_PASS.json"), "w",
+                                    encoding="utf-8"),
                   indent=1, ensure_ascii=False)
         print(f"✅ 1단계 통과 ({len(_s1)}잡) — STAGE1_PASS.json 기록 · 2단계 제출 가능")
         return 0
@@ -10612,451 +11093,9 @@ def selftest() -> int:
     _ns = {}
     exec(compile(ANALYZER, "<analyzer-template>", "exec"), _ns)
     _closure_estimand = _ns["_closure_estimand"]
-    _man = {"fragments": ["sdcp_neutral", "ptfe_c10"],
-            # ⛔ 회신 AR 해제조건 3 — 실물 생성기가 박는 기체 쌍 정책
-            "gas_geometry_policy": {"fixed_geometry_static": True},
-            "molecular_spin_controls": {
-                "mol__sdcp_neutral__box24": "refs/mol__sdcp_neutral__box24__nzmag",
-                "mol__ptfe_c10__box24": "refs/mol__ptfe_c10__box24__nzmag"}}
-    _emol = {"sdcp_neutral": -200.0, "ptfe_c10": -100.0}
-    # 🔴 키를 **실물 모양**으로 쓴다 (2026-08-29 자체 적대검토). 생성기는
-    #   `prospective/<frag>__<basin>__<seed>` 로 낸다(_pk 가 상대경로 그대로).
-    #   접두어 없는 옛 fixture 때문에 `startswith(f+"__")` 버그가 안 보였고,
-    #   실물에서는 조각 매칭이 **하나도 안 걸려** J_f 가 조용히 비었다.
-    # ⛔ 회신 AP #11 — δ_gas 게이트가 box20/box24 를 요구한다. 픽스처를 실물화한다.
-    #   sdcp: 24−20 = +0.3 meV · ptfe: 24−20 = +0.2 meV ⇒ δ_gas = +0.1 meV (통과)
-    _GASE = {"refs/mol__sdcp_neutral__box24": -205.4486,
-             "refs/mol__sdcp_neutral__box20": -205.4489,
-             "refs/mol__ptfe_c10__box24": -177.9706,
-             "refs/mol__ptfe_c10__box20": -177.9708}
-    _en = {"mol__sdcp_neutral__box24__nzmag": -200.0,
-           "mol__ptfe_c10__box24__nzmag": -100.0,
-           **_GASE,
-           "prospective/sdcp_neutral__b00__afm2424_pm1": -201.0,
-           "prospective/sdcp_neutral__b01__afm2424_pm1": -200.9,
-           "prospective/ptfe_c10__b00__afm2424_pm1": -100.5}
-    # ★ 회신 Z P0-4 — 모든 잡이 realized basin 을 달고 있어야 뺄셈이 허용된다.
-    #   합성 레코드였던 옛 fixture 는 basin 이 없어 새 게이트에 걸렸다 —
-    #   **게이트가 맞고 fixture 가 낡았다** (실물은 LORBIT 로 항상 표가 있다).
-    def _BAS(b, jn="prospective/sdcp_neutral__b00__afm2424_pm1", **kw):
-        """실물 스키마의 job 레코드. **meta 없이 만들면 cohort 조립이 막힌다** —
-        회신 AA P0-3 이후 조각·seed·d3 판정이 전부 구조화 필드에서 나온다."""
-        base = jn.rsplit("/", 1)[-1]
-        m = {"kind": "prospective_pose", "role": "calibration",
-             "fragment": base.split("__")[0], "basin_id": base.split("__")[1],
-             "seed": "afm2424_" + base.split("afm2424_")[1].replace("__d3off", ""),
-             "d3": "off" if base.endswith("__d3off") else "on"}
-        m.update(kw)
-        # ⛔ 회신 AP #2 — estimand 검사가 **Ni 모멘트 표**를 요구한다. basin id 만
-        #   있는 픽스처는 실물이 아니다 (실물은 LORBIT 로 항상 표가 있다).
-        mg = {"realized_basin_id": b}
-        if b is not None:
-            mg["realized_basin"] = {"ni_moments_muB":
-                                    list(kw.pop("_mom", [1.2] * 24 + [-1.2] * 24))}
-        else:
-            kw.pop("_mom", None)
-        return {"ok": True, "gates": [], "meta": m, "geom": {"magnetic": mg}}
-
-    # ⛔ 회신 AR 해제조건 3 — 기체 쌍 cross-job gate 는 **잡 메타**를 읽는다.
-    #   실물 `_emit_mol_job` 이 내는 필드 그대로 픽스처를 만든다.
-    #   (energies 만 주던 옛 픽스처는 계약을 검증할 수 없다 = 통과가 아니다.)
-    def _GASJ(frag, tag, geo="g-%s" % "x", **kw):
-        m = {"kind": "mol_ref", "fragment": frag, "box_margin_A": 20.0 if tag == "box20" else 24.0,
-             "species_order": ["O", "S", "C", "F", "H"], "counts": [3, 1, 10, 20, 4],
-             "gas_placement": "com_at_cell_center",
-             "internal_geometry_sha": "geo-" + frag,
-             "electronic_state_sha": "st-" + frag,
-             # 생성기가 모든 job.json 에 사후로 박는 필드 (없으면 COHORT_INCOHERENT)
-             "d3": "on", "ivdw_expected": 11,
-             "fixed_geometry_static": True, "phases": ["static"]}
-        m.update(kw)
-        return {"ok": True, "gates": [], "meta": m, "geom": {}}
-
-    _GASJOBS = {"refs/mol__%s__%s" % (f, t): _GASJ(f, t)
-                for f in ("sdcp_neutral", "ptfe_c10") for t in ("box20", "box24")}
-    _jobs = {k: _BAS("aaaa1111", k) for k in _en if k.startswith("prospective/")}
-    _jobs.update(_GASJOBS)
-    _E = lambda j: _en.get(j)
-    # ⛔ 회신 AO P0-4 — canary/부모 static 기하 대조 결과. 실물에서는 main() 이
-    #   두 static/POSCAR 를 읽어 채운다. 없으면 fail-closed 로 막히므로 픽스처에도
-    #   **명시적으로** 넣는다 (없는 것을 통과로 읽지 않는 것이 이 게이트의 요점이다).
-    def _RES(same=True, **kw):
-        g = {f: ({"same": True, "max_cart_diff_A": 0.0, "max_cell_diff_A": 0.0}
-                 if same else
-                 {"same": False, "max_cart_diff_A": 0.031, "max_cell_diff_A": 0.0})
-             for f in ("sdcp_neutral", "ptfe_c10")}
-        g.update(kw)
-        return {"pairs": {}, "gas_canary_geom": g}
-
-    r = _closure_estimand(_man, _RES(), _E, _emol, _jobs)
-    chk(not r["blocks"], f"[V P0-4] 정상 입력에 blocks 없음 · {r.get('blocks')}")
-    chk((r.get("gas_pair_contract") or {}).get("ok") is True
-        and (r.get("gas_box_delta") or {}).get("pair_contract_ok") is True,
-        "회신 AR 3 양성: 고정기하·동일 내부기하 쌍은 계약을 통과한다")
-
-    # ══ 회신 AR 해제조건 3 — 기체 쌍 cross-job gate (⛔음성 셋) ═════════════
-    #   AR 이 실물 v15 에서 잡은 것: 네 기체 부모가 전부 relax→static 이라
-    #   각 상자가 **독립으로 이완**했다. 그러면 δ_gas 는 셀 효과가 아니다.
-    def _gasneg(mut, why):
-        _jg = dict(_jobs)
-        _mm = dict(_GASJOBS)
-        for k, patch in mut.items():
-            _mm[k] = {"ok": True, "gates": [],
-                      "meta": dict(_GASJOBS[k]["meta"], **patch), "geom": {}}
-        _jg.update(_mm)
-        _rg = _closure_estimand(_man, _RES(), _E, _emol, _jg)
-        chk(any(b.startswith("GAS_PAIR_CONTRACT") for b in _rg["blocks"])
-            and (_rg.get("gas_box_delta") or {}).get("pass") is not True,
-            "⛔음성 AR 3: %s → GAS_PAIR_CONTRACT 로 막고 δ_gas 를 통과로 세지 않는다 "
-            "· blocks %s" % (why, [b[:60] for b in _rg["blocks"]][:2]))
-
-    _gasneg({"refs/mol__sdcp_neutral__box20":
-             {"fixed_geometry_static": False, "phases": ["relax", "static"]}},
-            "한 상자가 relax→static (AR 이 v15 에서 실제로 잡은 결함)")
-    _gasneg({"refs/mol__ptfe_c10__box20": {"internal_geometry_sha": "geo-DIFFERENT"}},
-            "두 상자의 내부기하가 다르다")
-    _gasneg({"refs/mol__sdcp_neutral__box24": {"electronic_state_sha": "st-OTHER"}},
-            "두 상자의 전자상태 정책이 다르다")
-    _gasneg({"refs/mol__ptfe_c10__box24": {"counts": [3, 1, 10, 20, 5]}},
-            "두 상자의 원자 수가 다르다")
-    # manifest 정책이 false 면 잡 메타가 다 맞아도 막는다 (선언과 실물 둘 다 봐야 한다)
-    _rgp = _closure_estimand(dict(_man, gas_geometry_policy={"fixed_geometry_static": False}),
-                             _RES(), _E, _emol, _jobs)
-    chk(any(b.startswith("GAS_PAIR_CONTRACT") for b in _rgp["blocks"]),
-        "⛔음성 AR 3: manifest 가 고정기하를 선언하지 않으면 막는다")
-    # 구판 번들(메타에 새 필드가 없다) — 확인 못 한 것은 통과가 아니다
-    _jold = dict(_jobs)
-    for _k in _GASJOBS:
-        _jold[_k] = {"ok": True, "gates": [],
-                     "meta": {"kind": "mol_ref", "fragment": _GASJOBS[_k]["meta"]["fragment"],
-                              "species_order": ["O"], "counts": [3]}, "geom": {}}
-    chk(any(b.startswith("GAS_PAIR_CONTRACT")
-            for b in _closure_estimand(_man, _RES(), _E, _emol, _jold)["blocks"]),
-        "⛔음성 AR 3: 구판 번들(지문 필드 없음)은 **통과가 아니라 차단**이다")
-
-    # ⛔음성 (회신 Z P0-4) — seed 이름이 같아도 **수렴 결과**가 갈리면 막는다
-    _jb_het = dict(_jobs)
-    _jb_het["prospective/sdcp_neutral__b01__afm2424_pm1"] = _BAS(
-        "bbbb2222", "prospective/sdcp_neutral__b01__afm2424_pm1")
-    _rh = _closure_estimand(_man, _RES(), _E, _emol, _jb_het)
-    chk(any("BASIN_HETEROGENEOUS" in b for b in _rh["blocks"])
-        and "primary_ddE_lowE_eV" not in _rh,
-        "⛔음성: 한 조각 안에 서로 다른 realized basin 이 섞이면 min 을 안 뽑는다")
-    _jb_none = dict(_jobs)
-    _jb_none["prospective/ptfe_c10__b00__afm2424_pm1"] = _BAS(
-        None, "prospective/ptfe_c10__b00__afm2424_pm1")
-    _rn = _closure_estimand(_man, _RES(), _E, _emol, _jb_none)
-    chk(any("BASIN_UNRESOLVED_IN_SET" in b for b in _rn["blocks"]),
-        "⛔음성: realized basin 을 못 만든 잡이 있으면 그 집합으로 뺄셈하지 않는다")
-    # ⛔음성 (회신 AA P0-3) — 경로와 구조화 필드가 어긋나면 값을 만들지 않는다
-    _jb_x1 = dict(_jobs)
-    _k1 = "prospective/sdcp_neutral__b00__afm2424_pm1"
-    _jb_x1[_k1] = {**_BAS("aaaa1111", _k1)}
-    _jb_x1[_k1]["meta"] = {**_jb_x1[_k1]["meta"], "fragment": "ptfe_c10"}
-    _rx1 = _closure_estimand(_man, _RES(), _E, _emol, _jb_x1)
-    chk(any("COHORT_INCOHERENT" in b for b in _rx1["blocks"]),
-        "⛔음성: job.json 의 fragment 가 경로와 다르면 차단 (어느 쪽이 맞는지 우리가 못 정한다)")
-
-    # ⛔음성 ★ v7 실측 — d3 가 **하나라도** 비면 막는다. 종전엔 "경로가 d3off 가
-    #   아니면 정합" 으로 봐줬는데, 그 관용 때문에 net4 복합체 8잡이 필드 없이
-    #   나갔다. 우연히 동작하는 것과 보증되는 것은 다르다.
-    _jb_x2 = dict(_jobs)
-    _jb_x2[_k1] = {**_BAS("aaaa1111", _k1)}
-    _jb_x2[_k1]["meta"] = {k: v for k, v in _jb_x2[_k1]["meta"].items() if k != "d3"}
-    _rx2 = _closure_estimand(_man, _RES(), _E, _emol, _jb_x2)
-    chk(any("COHORT_INCOHERENT" in b for b in _rx2["blocks"]),
-        "⛔음성: d3 필드가 비면 경로가 정상이어도 차단 (v7 의 net4 8잡이 그 모양이었다)")
-
-    _jb_x3 = dict(_jobs)
-    _k3 = "prospective/sdcp_neutral__b00__afm2424_pm1__d3off"
-    _jb_x3[_k3] = {**_BAS("aaaa1111", _k1)}          # 경로는 d3off, 필드는 on
-    _rx3 = _closure_estimand(_man, _RES(), _E, _emol, _jb_x3)
-    chk(any("COHORT_INCOHERENT" in b for b in _rx3["blocks"]),
-        "⛔음성: 경로는 __d3off 인데 job.json 이 d3=on 이면 차단 "
-        "(D3 분해가 통째로 뒤집힌다)")
-
-    _jb_x4 = dict(_jobs)
-    _jb_x4[_k1] = {"ok": True, "gates": [], "geom": {"magnetic": {"realized_basin_id": "a"}}}
-    _rx4 = _closure_estimand(_man, _RES(), _E, _emol, _jb_x4)
-    chk(any("COHORT_INCOHERENT" in b for b in _rx4["blocks"]),
-        "⛔음성: job.json(meta) 이 아예 없으면 차단 — 이름으로 추측하지 않는다")
-
-    # ⛔음성 AO P0-4 — canary 와 부모 static 기하가 다르면 막는다 (스핀 검사 오염)
-    chk(any("CANARY_GEOM_MISMATCH" in b for b in
-            _closure_estimand(_man, _RES(same=False), _E, _emol, _jobs)["blocks"]),
-        "⛔음성 AO P0-4: canary 가 부모와 **다른 기하**면 막는다 "
-        "(두 에너지 차에 구조 이완 에너지가 섞인다)")
-    # ⛔음성 AO P0-4 — 기하 대조를 **못 했으면** 그것도 차단이다 (확인 못 한 것 ≠ 통과)
-    chk(any("CANARY_GEOM_UNCHECKED" in b for b in
-            _closure_estimand(_man, {"pairs": {}}, _E, _emol, _jobs)["blocks"]),
-        "⛔음성 AO P0-4: 기하 대조 결과가 **없으면** 통과가 아니라 차단이다")
-
-    # ── 회신 AO P0-7 — pm1 조건부 D 를 net4 의 basin 차이가 지우지 않는다 ──
-    _man7 = dict(_man, estimand_job_keys={
-        "E_C_sdcp": "prospective/sdcp_neutral__b00__afm2424_pm1",
-        "E_C_control": "prospective/ptfe_c10__b00__afm2424_pm1",
-        "E_G_sdcp": "mol__sdcp_neutral__box24__nzmag",
-        "E_G_control": "mol__ptfe_c10__box24__nzmag"})
-    _en7 = dict(_en, **{"prospective/sdcp_neutral__b09__afm2424_net4": -201.2,
-                        "prospective/ptfe_c10__b09__afm2424_net4": -100.6})
-    _jb7 = {k: _BAS("aaaa1111", k) for k in _en7 if k.startswith("prospective/")}
-    _jb7.update(_GASJOBS)          # 기체 쌍 계약은 이 시나리오의 시험 대상이 아니다
-    # net4 두 잡만 **다른 basin** 으로 수렴 → 종전엔 BASIN_HETEROGENEOUS 로 D 가 죽었다
-    for _k in ("prospective/sdcp_neutral__b09__afm2424_net4",
-               "prospective/ptfe_c10__b09__afm2424_net4"):
-        _jb7[_k] = _BAS("bbbb2222", _k)
-    _r7 = _closure_estimand(_man7, _RES(), lambda j: _en7.get(j), _emol, _jb7)
-    # ⛔ 회신 AR Q1 이후: 정본 blocks 는 **다시 쓰지 않는다** (BASIN_HETEROGENEOUS 가 남는다).
-    #   강등은 primary_estimand_blocks 뷰에서만 일어난다 — 그래서 둘 다 확인한다.
-    chk(any(b.startswith("BASIN_HETEROGENEOUS") for b in _r7["blocks"]),
-        "⛔음성 AR Q1: 정본 blocks 에는 BASIN_HETEROGENEOUS 가 **그대로 남는다** "
-        f"(강등이 정본을 지우지 않는다) · blocks {_r7.get('blocks')}")
-    chk(not any(b.startswith("BASIN_HETEROGENEOUS")
-                for b in _r7.get("primary_estimand_blocks", _r7["blocks"]))
-        and any("BASIN_HETEROGENEOUS" in n for n in (_r7.get("nonprimary_notes") or [])),
-        "⛔음성 AO P0-7: net4 가 다른 basin 이어도 **pm1 조건부 D 를 지우지 않는다** "
-        "(primary 뷰에서만 민감도 주석으로 내린다) · primary "
-        f"{_r7.get('primary_estimand_blocks')}")
-    chk(_r7.get("primary_ddE_lowE_eV") is not None,
-        f"AO P0-7: 그 상태에서도 D_pm1 이 나온다 (실제 {_r7.get('primary_ddE_lowE_eV')})")
-    # ⛔음성 — 그런데 **네 잡 자신**의 basin 이 없으면 여전히 막는다
-    _jb7b = dict(_jb7)
-    _jb7b["prospective/sdcp_neutral__b00__afm2424_pm1"] = _BAS(
-        None, "prospective/sdcp_neutral__b00__afm2424_pm1")
-    # ⛔ 회신 AP #2 이후 코드명이 바뀌었다: ESTIMAND_BASIN_UNRESOLVED(존재 확인) →
-    #   ESTIMAND_TOPOLOGY_UNRESOLVED(모멘트 표를 읽어 topology 를 판정). pooled
-    #   BASIN_UNRESOLVED_IN_SET 은 exact-key 경로에서 강등되므로 여기에 기대지 않는다.
-    chk(any("ESTIMAND_TOPOLOGY_UNRESOLVED" in b
-            for b in _closure_estimand(_man7, _RES(), lambda j: _en7.get(j),
-                                       _emol, _jb7b)["blocks"]),
-        "⛔음성 AO P0-7 / AP #2: **D 에 들어가는 네 잡** 의 자기 상태를 못 읽으면 "
-        "여전히 막는다 (pooled 강등이 이걸 덮지 않는다)")
-    # ── 회신 AP #2 — exact complex 쌍의 자기 topology 를 **직접 비교** ──
-    def _J8(fp, jn):
-        r = _BAS("aaaa1111", jn)
-        r["geom"]["magnetic"] = {"realized_basin_id": "aaaa1111",
-                                 "realized_basin": {"ni_moments_muB": list(fp)}}
-        return r
-    _up8 = [1.2] * 24 + [-1.2] * 24
-    _dn8 = [-1.2] * 24 + [1.2] * 24                    # 전역 반전 — 같은 상태
-    _mix8 = [1.2] * 23 + [-1.2] + [-1.2] * 23 + [1.2]  # 배열이 다르다 — 다른 상태
-    _KA = "prospective/sdcp_neutral__b00__afm2424_pm1"
-    _KB = "prospective/ptfe_c10__b00__afm2424_pm1"
-    _man8 = dict(_man, estimand_job_keys={
-        "E_C_sdcp": _KA, "E_C_control": _KB,
-        "E_G_sdcp": "mol__sdcp_neutral__box24__nzmag",
-        "E_G_control": "mol__ptfe_c10__box24__nzmag"})
-    _en8 = {_KA: -201.0, _KB: -100.5,
-            "mol__sdcp_neutral__box24__nzmag": -200.0,
-            "mol__ptfe_c10__box24__nzmag": -100.0, **_GASE}
-    _ok8 = dict(_GASJOBS, **{_KA: _J8(_up8, _KA), _KB: _J8(_dn8, _KB)})
-    _r8 = _closure_estimand(_man8, _RES(), lambda j: _en8.get(j), _emol, _ok8)
-    chk(not any("TOPOLOGY" in b for b in _r8["blocks"])
-        and (_r8.get("estimand_topology") or {}).get("pm1", {}).get("same") is True,
-        f"AP #2 양성: 전역 스핀 반전은 **같은 상태**로 본다 · blocks {_r8['blocks'][:1]}")
-    _bad8 = dict(_GASJOBS, **{_KA: _J8(_up8, _KA), _KB: _J8(_mix8, _KB)})
-    _r8b = _closure_estimand(_man8, _RES(), lambda j: _en8.get(j), _emol, _bad8)
-    chk(any("ESTIMAND_TOPOLOGY_MISMATCH" in b for b in _r8b["blocks"]),
-        "⛔음성 AP #2: 두 complex 가 **다른 자기 basin** 이면 막는다 "
-        "(종전엔 각각 basin id 가 있는지만 보고 서로 같은지는 안 봤다)")
-    _nofp = dict(_GASJOBS)
-    for _k in (_KA, _KB):                       # 모멘트 표를 **명시적으로** 없앤다
-        _j = _BAS("aaaa1111", _k)
-        _j["geom"]["magnetic"] = {"realized_basin_id": "aaaa1111"}
-        _nofp[_k] = _j
-    chk(any("ESTIMAND_TOPOLOGY_UNRESOLVED" in b for b in
-            _closure_estimand(_man8, _RES(), lambda j: _en8.get(j),
-                              _emol, _nofp)["blocks"]),
-        "⛔음성 AP #2: 모멘트 표가 없어 topology 를 못 읽으면 **막는다**")
-
-    # ── 회신 AP #3 — 강등은 문자열이 아니라 job_keys 로 ──────────────────
-    _r3 = _closure_estimand(_man7, _RES(), lambda j: _en7.get(j), _emol, _jb7)
-    _recs = (_r3.get("nonprimary_note_records") or [])
-    chk(all(r.get("job_keys") for r in _recs) and _recs,
-        f"AP #3: 강등된 record 가 **구조화**돼 있고 job_keys 를 갖는다 ({len(_recs)}건)")
-    chk(all(r["scope"] == "pooled_diagnostic" for r in _recs),
-        "AP #3: 강등 판정은 **scope 필드**로 한다 (문자열 매칭 아님)")
-    chk((_r3.get("pooled_demote_policy") or {}).get("estimand_safety"),
-        "AP #3: pooled 를 강등한 대신 **네 잡의 안전 근거**를 결과에 명시한다")
-    # ⛔음성 — pooled 를 강등해도 **네 잡 자신**의 결함은 여전히 막는다
-    _jb3c = dict(_jb7)
-    _jb3c["prospective/sdcp_neutral__b00__afm2424_pm1"] = dict(
-        _jb3c["prospective/sdcp_neutral__b00__afm2424_pm1"],
-        gates=["MAGNETIC_COLLAPSE(합성)"])
-    chk(any("ESTIMAND_KEY_UNUSABLE" in b for b in
-            _closure_estimand(_man7, _RES(), lambda j: _en7.get(j),
-                              _emol, _jb3c)["blocks"]),
-        "⛔음성 AP #3: pooled 강등이 **네 잡의 게이트를 덮지 않는다** "
-        "(exact key 가 게이트되면 여전히 NO_VALUE)")
-
-    # net4 직접식이 봉인돼 있으면 D_net4 − D_pm1 을 **실제로 계산한다**
-    _man7n = dict(_man7, estimand_job_keys_net4={
-        "E_C_sdcp": "prospective/sdcp_neutral__b09__afm2424_net4",
-        "E_C_control": "prospective/ptfe_c10__b09__afm2424_net4",
-        "E_G_sdcp": "mol__sdcp_neutral__box24__nzmag",
-        "E_G_control": "mol__ptfe_c10__box24__nzmag"})
-    _r7n = _closure_estimand(_man7n, _RES(), lambda j: _en7.get(j), _emol, _jb7)
-    chk((_r7n.get("branch_sensitivity") or {}).get("status") == "computed"
-        and "D_net4_minus_D_pm1_eV" in (_r7n.get("branch_sensitivity") or {})
-        and _r7n.get("sensitivity_complete") is True,
-        "AO P0-7: net4 가 봉인돼 있으면 **D_net4 − D_pm1 을 계산한다** "
-        f"(종전엔 요구해 놓고 안 냈다) · {_r7n.get('branch_sensitivity')}")
-
-    # ══ 회신 AR P1-9 · 해제조건 6 — net4 topology 실패가 **실제로** 막는가 ═════
-    #   `usable_as_sensitivity` 를 저장만 하고 안 읽어서, 두 complex 가 다른
-    #   basin 이어도 D_net4 가 계산되고 complete 로 보고됐다.
-    _KN4A = "prospective/sdcp_neutral__b09__afm2424_net4"
-    _KN4B = "prospective/ptfe_c10__b09__afm2424_net4"
-    _mixfp = [1.2] * 23 + [-1.2] + [-1.2] * 23 + [1.2]     # 배열이 다르다
-    _jb7t = dict(_jb7)
-    _jb7t[_KN4A] = _J8([1.2] * 24 + [-1.2] * 24, _KN4A)
-    _jb7t[_KN4B] = _J8(_mixfp, _KN4B)
-    _r7t = _closure_estimand(_man7n, _RES(), lambda j: _en7.get(j), _emol, _jb7t)
-    _bs7 = _r7t.get("branch_sensitivity") or {}
-    chk(_bs7.get("status") == "suppressed_topology"
-        and _bs7.get("D_net4_eV") is None
-        and _bs7.get("D_net4_minus_D_pm1_eV") is None
-        and _r7t.get("sensitivity_complete") is False
-        and _r7t.get("primary_ddE_lowE_eV") is not None,
-        "⛔음성 AR P1-9: net4 두 complex 가 다른 basin 이면 **D_net4 값과 status 를 "
-        f"같이 막는다** (D_pm1 은 산다) · {_bs7.get('status')}")
-    # 모멘트 표를 못 읽어도 마찬가지다 — 확인 못 한 것은 통과가 아니다
-    _jb7u = dict(_jb7)
-    for _k in (_KN4A, _KN4B):
-        _ju = _BAS("aaaa1111", _k)
-        _ju["geom"]["magnetic"] = {"realized_basin_id": "aaaa1111"}
-        _jb7u[_k] = _ju
-    _r7u = _closure_estimand(_man7n, _RES(), lambda j: _en7.get(j), _emol, _jb7u)
-    chk((_r7u.get("branch_sensitivity") or {}).get("status") == "suppressed_topology"
-        and _r7u.get("sensitivity_complete") is False,
-        "⛔음성 AR P1-9: net4 topology 를 **못 읽어도** 민감도를 완료로 보고하지 않는다")
-
-    # ══ 회신 AR P1-10 · 해제조건 6 — 대안 자세를 **봉인식**으로 낸다 ══════════
-    _KPA = "prospective/sdcp_neutral__b04__afm2424_pm1"
-    _KPB = "prospective/ptfe_c10__b04__afm2424_pm1"
-    _enp = dict(_en7, **{_KPA: -201.15, _KPB: -100.52})
-    _manp = dict(_man7n, estimand_job_keys_pose_alt={
-        "sensitivity": {"E_C_sdcp": _KPA, "E_C_control": _KPB,
-                        "E_G_sdcp": "mol__sdcp_neutral__box24__nzmag",
-                        "E_G_control": "mol__ptfe_c10__box24__nzmag",
-                        "formula": "D_pose[sensitivity] = ..."},
-        "⛔": "주석 키 — 순회에서 건너뛰어야 한다"})
-    _up = [1.2] * 24 + [-1.2] * 24
-    _jbp = dict(_jb7, **{_KPA: _J8(_up, _KPA), _KPB: _J8(_up, _KPB)})
-    _rp = _closure_estimand(_manp, _RES(), lambda j: _enp.get(j), _emol, _jbp)
-    _ps = (_rp.get("pose_sensitivity") or {}).get("sensitivity") or {}
-    chk(_ps.get("status") == "computed" and _ps.get("D_pose_eV") is not None
-        and _ps.get("D_pose_minus_D_pm1_eV") is not None
-        and _rp.get("sensitivity_complete") is True,
-        "회신 AR P1-10 양성: 대안 자세가 봉인돼 있으면 **D_pose − D_pm1 을 낸다** "
-        f"· {_ps.get('D_pose_minus_D_pm1_eV')} eV")
-    # ⛔음성 — 두 자세 complex 가 다른 basin 이면 값도 status 도 막는다
-    _jbp2 = dict(_jbp, **{_KPB: _J8(_mixfp, _KPB)})
-    _rp2 = _closure_estimand(_manp, _RES(), lambda j: _enp.get(j), _emol, _jbp2)
-    _ps2 = (_rp2.get("pose_sensitivity") or {}).get("sensitivity") or {}
-    chk(_ps2.get("status") == "suppressed_topology" and _ps2.get("D_pose_eV") is None
-        and _rp2.get("sensitivity_complete") is False
-        and any("POSE_SENSITIVITY_INCOMPLETE" in n
-                for n in (_rp2.get("nonprimary_notes") or []))
-        and _rp2.get("primary_ddE_lowE_eV") is not None,
-        "⛔음성 AR P1-10: 자세 두 complex 가 다른 basin 이면 D_pose 를 막고 "
-        "'자세에 강건' 서술을 금지한다 (D_pm1 은 산다)")
-    # ⛔음성 — 잡이 게이트돼 있으면 unavailable
-    _jbp3 = dict(_jbp)
-    _jbp3[_KPA] = dict(_jbp3[_KPA], gates=["MAGNETIC_COLLAPSE(합성)"])
-    _rp3 = _closure_estimand(_manp, _RES(), lambda j: _enp.get(j), _emol, _jbp3)
-    chk(((_rp3.get("pose_sensitivity") or {}).get("sensitivity") or {}).get("status")
-        == "unavailable" and _rp3.get("sensitivity_complete") is False,
-        "⛔음성 AR P1-10: 자세 잡이 게이트되면 unavailable 이고 완료가 아니다")
-    # 봉인이 아예 없으면 **탐색용**임을 명시한다 (완료 여부만 보고하지 않는다)
-    _rp4 = _closure_estimand(dict(_man7n, altpose_purpose="탐색용"),
-                             _RES(), lambda j: _en7.get(j), _emol, _jb7)
-    chk((_rp4.get("pose_sensitivity") or {}).get("status") == "exploratory_only",
-        "회신 AR P1-10: 봉인식이 없으면 **탐색용**이라고 결과에 박는다")
-
-    # ── 회신 AP #11 — δ_gas 를 **최종 estimand 에 직접** 건다 ────────────
-    _rg = _closure_estimand(_man, _RES(), _E, _emol, _jobs)
-    chk((_rg.get("gas_box_delta") or {}).get("pass") is True,
-        f"AP #11 양성: δ_gas {_rg.get('gas_box_delta', {}).get('delta_gas_meV')} meV "
-        f"≤ {_rg.get('gas_box_delta', {}).get('tol_meV')} — 0.01 eV 보고 가능")
-    # ⛔음성 — 조각별로는 각각 작아도 **부호가 반대면 차에서 커진다**
-    _enbad = dict(_en, **{"refs/mol__sdcp_neutral__box20": -205.4486 - 0.004,
-                          "refs/mol__ptfe_c10__box20": -177.9706 + 0.004})
-    _rgb = _closure_estimand(_man, _RES(), lambda j: _enbad.get(j), _emol, _jobs)
-    _gd = _rgb.get("gas_box_delta") or {}
-    chk(any("GAS_BOX_DELTA" in b for b in _rgb["blocks"]),
-        "⛔음성 AP #11: 조각별 4 meV 씩이어도 **부호가 반대면** δ_gas 8 meV → 차단 "
-        f"(실제 {_gd.get('delta_gas_meV')} meV · 조각별 {_gd.get('by_fragment_meV')})")
-    chk(abs((_gd.get("delta_gas_meV") or 0)) > 5.0
-        and all(abs(v) <= 5.0 for v in (_gd.get("by_fragment_meV") or {}).values()),
-        "⛔음성 AP #11 요점: **조각별 문턱이었으면 통과했을** 경우다 "
-        "(그래서 조각별이 아니라 차에 건다)")
-    # ⛔ 회신 AR P0-3 재현 — **조각별로는 크고 차는 작은** 경우. 옛 조각별 10 meV
-    #   게이트가 살아 있으면 두 emol 이 None 이 되고 A(f,p) 에서 `float − None` 으로
-    #   **예외로 죽었다** (리뷰가 재현한 그 모양이다). 지금은 δ_gas 1 meV 로 통과한다.
-    _en2019 = dict(_en, **{"refs/mol__sdcp_neutral__box20": -205.4486 - 0.020,
-                           "refs/mol__ptfe_c10__box20": -177.9706 - 0.019})
-    _r2019 = _closure_estimand(_man, _RES(), lambda j: _en2019.get(j), _emol, _jobs)
-    _g19 = _r2019.get("gas_box_delta") or {}
-    chk(_g19.get("pass") is True and abs(_g19.get("delta_gas_meV") or 0) <= 5.0
-        and all(abs(v) >= 15.0 for v in (_g19.get("by_fragment_meV") or {}).values())
-        and not any("GAS_BOX" in b for b in _r2019["blocks"])
-        and _r2019.get("primary_ddE_lowE_eV") is not None,
-        "회신 AR P0-3 재현: 조각별 %s meV 인데 δ_gas %s meV → **통과하고 예외로 "
-        "죽지 않는다** (옛 조각별 게이트가 죽이던 경우)"
-        % (_g19.get("by_fragment_meV"), _g19.get("delta_gas_meV")))
-    # ⛔음성 — box20 이 아예 없으면 "측정 안 함" 으로 막는다 (선행값으로 때우지 않는다)
-    _enno = {k: v for k, v in _en.items() if not k.endswith("box20")}
-    chk(any("GAS_BOX_NOT_MEASURED" in b for b in
-            _closure_estimand(_man, _RES(), lambda j: _enno.get(j),
-                              _emol, _jobs)["blocks"]),
-        "⛔음성 AP #11: box20 이 없으면 **이 묶음에서 재지 못했다**고 막는다 "
-        "(선행 대조로 때우지 않는다)")
-
-    _jb_slab = dict(_jobs)
-    _jb_slab["refs/clean_slab__afm2424_pm1"] = _BAS(
-        "cccc3333", "prospective/sdcp_neutral__b00__afm2424_pm1",
-        kind="clean_ref", fragment=None, basin_id=None)
-    _rs = _closure_estimand(_man, _RES(), _E, _emol, _jb_slab)
-    chk(any("BASIN_MISMATCH_SLAB" in b for b in _rs["blocks"]),
-        "⛔음성: clean slab 이 복합체와 다른 basin 이면 흡착에너지를 만들지 않는다")
-    chk(abs(r["primary_ddE_lowE_eV"] - (-0.5)) < 1e-6,
-        f"[V P0-4] primary = min-min = -0.5 · 실제 {r.get('primary_ddE_lowE_eV')}")
-    # G = min(A_c10) - max(A_sdcp) = -0.5 - (-0.9) = +0.4.
-    #   G>0 = 가장 약한 SDCP 도 가장 센 c10 보다 더 음수 (사전등록 정의와 일치).
-    chk(abs(r["secondary_G_eV"] - 0.4) < 1e-6,
-        f"[V P0-4] secondary G = +0.4 (>0 = 최약 SDCP 도 최강 c10 보다 음수) · "
-        f"실제 {r.get('secondary_G_eV')}")
-    chk(r["verdict"] == "보고 가능" and r["reported_X_eV"] == -0.5,
-        "[V P0-4] guard(-0.10) 통과 + 0.01 eV 반올림")
-    # 음성: guard band 미달
-    _en2 = dict(_en)
-    _en2["prospective/sdcp_neutral__b00__afm2424_pm1"] = -200.55
-    _en2["prospective/sdcp_neutral__b01__afm2424_pm1"] = -200.55
-    r2 = _closure_estimand(_man, _RES(), lambda j: _en2.get(j), _emol, _jobs)
-    chk(r2["verdict"] == "NO_DIRECTIONAL_CLAIM",
-        f"[음성 V P0-4] primary {r2.get('primary_ddE_lowE_eV')} > -0.10 → 방향성 주장 금지")
-    # 음성: 비영 시작이 더 낮으면 값을 내지 않는다
-    _en3 = dict(_en); _en3["mol__sdcp_neutral__box24__nzmag"] = -200.3
-    r3 = _closure_estimand(_man, _RES(), lambda j: _en3.get(j), _emol, _jobs)
-    chk(any("MOLECULAR_STATE_UNRESOLVED" in b for b in r3["blocks"])
-        and "primary_ddE_lowE_eV" not in r3,
-        "[음성 V P0-3] 비영 MAGMOM 대조가 더 낮으면 **MOLECULAR_STATE_UNRESOLVED 로 막고 "
-        "값을 안 낸다** (자동 채택 금지)")
-    # 음성: 자기 topology 게이트된 자세는 버리고 값도 안 낸다
-    _j4 = dict(_jobs)
-    _j4["prospective/sdcp_neutral__b00__afm2424_pm1"] = {
-        **_BAS("aaaa1111", "prospective/sdcp_neutral__b00__afm2424_pm1"),
-        "gates": ["MAGNETIC_PARTIAL_FLIP(3/48 Ni)"]}
-    r4 = _closure_estimand(_man, _RES(), _E, _emol, _j4)
-    chk(any("GATED_POSE" in b for b in r4["blocks"]) and "primary_ddE_lowE_eV" not in r4,
-        "[음성 V P0-4] 자기 topology 게이트된 자세는 **다음 순위로 조용히 대체하지 않는다**")
-    # 음성: 대조가 아예 없으면
-    r5 = _closure_estimand({"fragments": ["sdcp_neutral", "ptfe_c10"]},
-                           {"pairs": {}}, _E, _emol, _jobs)
-    chk(any("MOLECULAR_SPIN_CONTROL_MISSING" in b for b in r5["blocks"]),
-        "[음성 V P0-3] 자기상태 대조가 없으면 그것도 block")
-
+    # ⛔ 회신 AR 해제조건 10 — 이 묶음은 **배포본 안**으로 옮겼다. 여기서는 그
+    #   함수를 그대로 부른다 (검사 출처가 둘로 갈리지 않게).
+    _ns["_selftest_closure"](chk)
     # ══ 회신 W 5단계 — --from_basins 가 **동결본에 적힌 자세만** 내는지 e2e ══
     _labs = sorted(x.stem for x in
                    (Path(str(td)) / "runs" / "ptfe_dimer" / "relax_f0.85").glob("*.xyz")
@@ -11253,6 +11292,33 @@ def selftest() -> int:
     for ln in rk.stdout.splitlines():
         print("   " + ln)
     chk(rk.returncode == 0, f"배포 분석기 k-selftest (rc={rk.returncode})")
+    # ⛔⛔ 회신 AR P1-12 · 해제조건 10 (2026-08-31) — 배포본 selftest 가
+    #   ① production `_closure_estimand` 를 **실제로 관통**하고
+    #   ② **개수와 실행 명령이 재현 가능**하며
+    #   ③ **비 UTF-8 기본 인코딩**(Windows cp949 등)에서도 도는가.
+    _m_cnt = re.search(r"(?m)^selftest (\d+)/(\d+) · (PASS|FAIL)$", rk.stdout)
+    _m_est = re.search(r"(?m)^  ── estimand 판정 검사 (\d+)건", rk.stdout)
+    chk(bool(_m_cnt) and _m_cnt.group(1) == _m_cnt.group(2)
+        and _m_cnt.group(3) == "PASS" and int(_m_cnt.group(1)) >= 200,
+        "AR P1-12: 배포본 selftest 가 **개수를 찍는다** (%s) — 문서의 수와 실행 "
+        "결과가 갈라지지 않게" % (_m_cnt.group(0) if _m_cnt else "없음"))
+    chk(bool(_m_est) and int(_m_est.group(1)) >= 40,
+        "AR P1-12: 배포본이 production `_closure_estimand` 판정을 **직접 친다** "
+        "(%s건) — 종전엔 생성기 selftest 에만 있어 배포본에서 재현 불가였다"
+        % (_m_est.group(1) if _m_est else "0"))
+    chk("재현: python3 analyze_results.py --selftest" in rk.stdout,
+        "AR P1-12: 배포본이 **실행 명령**을 같이 찍는다")
+    # ⛔음성 — 비 UTF-8 로케일 (Windows cp949 대역). 종전엔 Unicode fixture 기록
+    #   중 UnicodeEncodeError 로 죽었다 (리뷰가 실제로 재현).
+    _envc = dict(os.environ, LC_ALL="C", LANG="C", PYTHONUTF8="0",
+                 PYTHONIOENCODING="utf-8")
+    rkc = subprocess.run([sys.executable, "analyze_results.py", "--selftest"],
+                         cwd=out_sp, capture_output=True, text=True, env=_envc)
+    chk(rkc.returncode == 0 and "UnicodeEncodeError" not in (rkc.stderr or ""),
+        "⛔음성 AR P1-12: **비 UTF-8 기본 인코딩**에서도 배포본 selftest 가 돈다 "
+        "(rc=%s · %s)" % (rkc.returncode,
+                          (rkc.stderr or "").strip().splitlines()[-1][:50]
+                          if rkc.stderr else "stderr 없음"))
     # ★ dense 모멘트 hard gate (Codex 7차 §8) — dense 는 **에너지를 내는 상**이므로
     #   모멘트 표가 없으면 조용히 빠지면 안 된다. 옛 판은 그랬다.
     az0 = (out_sp / "analyze_results.py").read_text()
