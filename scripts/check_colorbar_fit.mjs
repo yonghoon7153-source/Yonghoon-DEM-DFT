@@ -77,7 +77,10 @@ chk('부제도 맞춤 결과로 그린다', !/cx\.fillText\(String\(sp\.sub\),/.
 //    탄소가 아니다.  'Carbon …' 으로 되돌아가면 라벨이 정의와 어긋난다.
 //    ⚠ 그림 속 글자는 ban-sweep 도 pptx 스윕도 못 읽는다 — 여기가 유일한 방어선이다.
 {
-  const titles = [...src.matchAll(/title:\s*'([^']*)'/g)].map(m => m[1]);
+  //  ⚠ 작은따옴표와 **템플릿 리터럴** 둘 다 잡는다 — 제목이 `${…}` 로 바뀌자
+  //    작은따옴표만 보던 초판이 하나를 놓쳤고, 아래 '검사가 헛돌지 않는다' 가 그것을 물었다.
+  const titles = [...src.matchAll(/title:\s*(?:'([^']*)'|`([^`]*)`)/g)]
+                   .map(m => m[1] ?? m[2]);
   const exportTitles = titles.filter(t => /near AM/.test(t));
   chk('export 제목을 찾았다 (검사가 헛돌지 않는다)', exportTitles.length >= 2,
       `found=${exportTitles.length}`);

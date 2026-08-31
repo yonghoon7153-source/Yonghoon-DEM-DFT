@@ -6775,11 +6775,22 @@ export async function showLabCompareModal(pidA, pidB, nameA, nameB) {
       //    ⚠ 철자는 미국식 — 'centre' 가 그림에 그대로 찍혀 나가던 것을 고쳤다.
       //    ⚠⚠ 'Carbon' 이 아니라 'Conductive-additive' 다 — 세는 상이 VGCF·SuperP·**SDCP**·
       //      SWCNT 인데 SDCP 는 전도성 **고분자**이지 탄소가 아니다 (2026-08-31 사용자 지적).
-      const _ref = (wireA && wireA.median > 0) ? wireA.median : 1;
+      //  ★ 기준은 **중앙값이 낮은 쪽 패널**이다 — 이 뷰어는 임의의 두 payload 를 비교하므로
+      //    'SBE' 같은 우리 원고 이름을 코드에 박으면 안 된다.  낮은 쪽을 1.0 으로 두면
+      //    기준이 결정론적이고(적재 순서에 안 딸림) 다른 쪽이 항상 1 위로 온다.
+      //    ⚠ 이름에서 ` arm<N>` 은 뗀다 — 내부 표기이지 그림에 나갈 이름이 아니다.
+      const _mA = (wireA && wireA.median > 0) ? wireA.median : 0;
+      const _mB = (wireB && wireB.median > 0) ? wireB.median : 0;
+      const _refIsA = !(_mB > 0 && _mA > 0 && _mB < _mA);
+      const _ref = (_refIsA ? _mA : _mB) || 1;
+      const _refNm = String((_refIsA ? nameA : nameB) || (_refIsA ? 'A' : 'B'))
+                       .replace(/\s*arm\s*\d+\s*$/i, '').trim() || (_refIsA ? 'A' : 'B');
+      //  ⚠ `sub` 를 일부러 넣지 않는다 — 정의(0.3 µm · center · 공동 스케일)는 **원고
+      //    캡션**이 들고 간다 (저자 결정 2026-08-31).  그림 안에 같은 문장을 또 두면
+      //    캡션과 어긋날 때 어느 쪽이 정본인지 갈리지 않는다.  `exportColorbarPNG` 는
+      //    `sp.sub ?` 로 가드돼 있어 없어도 안전하다.
       cbarSpec = { map: 'jet', gamma: 1.6,
-                   title: 'Conductive-additive density near AM (normalized to SBE median)',
-                   sub: 'conductive-additive material points within 0.3 µm of the AM particle '
-                        + 'center; scale common to both panels',
+                   title: `Conductive-additive density near AM (normalized to ${_refNm} median)`,
                    left: (lo / _ref).toFixed(2), right: (hi / _ref).toFixed(2) };
     } else if (mode === 'wiring_delta') {
       // Δ 배선 — 같은 AM 골격(같은 케이스 파생) 두 payload의 입자별 접점 차이 (user: "차이 자체를 색칠")
