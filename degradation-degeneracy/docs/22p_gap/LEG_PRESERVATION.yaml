@@ -138,15 +138,50 @@ cohorts:
     yaml: 6.0.3
   legs:
   - paired_fixed5_v4
-  frozen_reason: '50차 게이트 리뷰(49차 조건)가 producer 닫힘의 남은 구멍 셋을 짚었다: (1) `A, B = 1, 2`
-    로 정의한 module 상수가 닫힘 밖이었다 — `_module_defs()` 가 `ast.Name` target 만 담았고, 게다가 같은
-    walk 의 사본이 `_compute_closure()` 안에 하나 더 있어 한쪽만 고치면 약한 쪽이 실효 규칙이 됐다 (authority
-    를 하나로 합쳤다). (2) 정규형이 docstring 을 버리는데 계산이 `__doc__` 을 읽으면 그 산문이 의미가 된다 — 버린 것을
-    쓰는 코드는 fail-closed 다. (3) `SUPPORTED_PYTHON` 이 3.12 를 선언하는데 정규형이 3.12 에서 실제로 달랐다
-    (PEP 701 파서가 중첩 format spec 끝에 빈 `Constant('''')` 를 붙인다). 셋을 다 막으면서 `producer_semantic_sha256`
-    이 `b4701aa33264a753` → `c8250a5ceb5a3ef5` 로 움직였다. 계약 §13.3.2 대로 pin 은 cohort lifetime
+  frozen_reason: '50차 게이트 리뷰(49차 조건)가 producer 닫힘의 남은 구멍 셋과 게시 경로의 순서 결함 하나를 짚었다:
+    (1) `A, B = 1, 2` 로 정의한 module 상수가 닫힘 밖이었다 — `_module_defs()` 가 `ast.Name` target
+    만 담았고, 게다가 같은 walk 의 사본이 `_compute_closure()` 안에 하나 더 있어 한쪽만 고치면 약한 쪽이 실효 규칙이
+    됐다 (authority 를 하나로 합쳤다). (2) 정규형이 docstring 을 버리는데 계산이 `__doc__` 을 읽으면 그 산문이
+    의미가 된다 — 버린 것을 쓰는 코드는 fail-closed 다. (3) `SUPPORTED_PYTHON` 이 3.12 를 선언하는데 정규형이
+    3.12 에서 실제로 달랐다 (PEP 701 파서가 중첩 format spec 끝에 빈 `Constant('''')` 를 붙인다) — 정규형이
+    그 빈 조각을 흡수하게 했고 이제 3.11·3.12·3.13 이 같은 값을 낸다. (4) `build()` 의 frozen 목적지 판정이 원자료
+    존재 검사 뒤에 있었다 — 거절은 아무 일도 하기 전에 나야 하므로 맨 앞으로 옮겼다. 넷을 다 고치면서 `producer_semantic_sha256`
+    이 `b4701aa33264a753` → `0217b906f6b8bf42` 로 움직였다. 계약 §13.3.2 대로 pin 은 cohort lifetime
     동안 고정이므로 g4 를 얼리고 `g5_2026_08_29` 로 간다. **행 바이트는 안 움직였다** — 움직인 것은 identity 의
     정의다.'
+- cohort_id: g5_2026_08_29
+  dir: docs/22p_gap/proj_g5
+  status: active
+  prospective_legs: []
+  cross_leg_comparison: not_applicable_single_leg
+  무엇이_달라졌나: '50차 게이트 리뷰(49차 조건)가 producer 닫힘의 남은 구멍 셋과 게시 경로의 순서 결함 하나를 짚었다: (1) `A,
+    B = 1, 2` 로 정의한 module 상수가 닫힘 밖이었다 — `_module_defs()` 가 `ast.Name` target 만 담았고,
+    게다가 같은 walk 의 사본이 `_compute_closure()` 안에 하나 더 있어 한쪽만 고치면 약한 쪽이 실효 규칙이 됐다 (authority
+    를 하나로 합쳤다). (2) 정규형이 docstring 을 버리는데 계산이 `__doc__` 을 읽으면 그 산문이 의미가 된다 — 버린 것을
+    쓰는 코드는 fail-closed 다. (3) `SUPPORTED_PYTHON` 이 3.12 를 선언하는데 정규형이 3.12 에서 실제로 달랐다
+    (PEP 701 파서가 중첩 format spec 끝에 빈 `Constant('''')` 를 붙인다) — 정규형이 그 빈 조각을 흡수하게 했고
+    이제 3.11·3.12·3.13 이 같은 값을 낸다. (4) `build()` 의 frozen 목적지 판정이 원자료 존재 검사 뒤에 있었다
+    — 거절은 아무 일도 하기 전에 나야 하므로 맨 앞으로 옮겼다. 넷을 다 고치면서 `producer_semantic_sha256` 이 `b4701aa33264a753`
+    → `0217b906f6b8bf42` 로 움직였다. 계약 §13.3.2 대로 pin 은 cohort lifetime 동안 고정이므로 g4 를
+    얼리고 `g5_2026_08_29` 로 간다. **행 바이트는 안 움직였다** — 움직인 것은 identity 의 정의다.'
+  행_바이트가_같은가: 같다. `projection_sha256` · `restart_projection_sha256` · `fits_sha256`
+    이 g4 와 바이트 동일하다 (50차 변경은 전부 identity 정의·자격 검사·결속·순서이고 계산식이 아니다). 그래도 **cross-cohort
+    비교는 금지**다 — 같은 바이트라는 사실은 회귀가 확인하는 것이지 인용의 근거가 아니다.
+  pin:
+    schema_version: 3
+    compute_sha256: ac6ff10f3f1aaab9
+    row_projection_py_sha256: 0ee9b706436236c3
+    src_scoring_py_sha256: 69e69cb046f4b4ae
+    analysis_spec_sha256: 43d74dd385b1f66d28cc371dd7ebbd00fc0289323e0a515114eb2b8d45d56271
+    producer_semantic_sha256: 0217b906f6b8bf42
+  runtime:
+    python: 3.11.15
+    pandas: 3.0.5
+    pyarrow: 25.0.1
+    numpy: 2.4.6
+    yaml: 6.0.3
+  legs:
+  - paired_fixed5_v4
 planned:
 - leg_id: paired_fixed5_v4
   cohort_id: g2_2026_08_25
@@ -238,7 +273,7 @@ legs:
     payload_index_sha256: eeb8ae8911083c992710ace2c8f255682b64930a03929f12ae72796ade174716
     member_rehash_by: tools.archive_bundle.check
     verification_receipt: docs/22p_gap/receipts/paired_fixed5_v4.validate.yaml
-    verification_receipt_core_sha256: ff5390d984a7acb7b06bdc95e81c5d919f2e7ce824e630d7c868a4b4d4397bd4
+    verification_receipt_core_sha256: b691dd8f9e4664319489599d5ad6c2f7e533a09e37e1c50a9a3f6a3de26fab67
     verification_receipt_generator: docs/22p_gap/make_receipt.py
     empty_root_restore: true
     rescored_from_restored_fits: true
@@ -254,6 +289,7 @@ legs:
     - g2_2026_08_25
     - g3_2026_08_28
     - g4_2026_08_28
+    - g5_2026_08_29
     regeneration_capability: available_raw_present
   claim_roles:
   - claim_id: LEGACY_PAIRED_FIXED5
