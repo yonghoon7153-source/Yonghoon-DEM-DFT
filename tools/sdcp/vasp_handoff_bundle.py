@@ -321,7 +321,12 @@ LCHARG   = .FALSE.
 
 RUN_JOB = """#!/usr/bin/env bash
 # 이 잡의 상(phase)들을 순서대로 돈다. POTCAR 를 이 폴더에 놓고 실행.
-#   VASP_CMD="mpirun -np 48 vasp_std" bash run_job.sh
+#
+# 🔴 회신 AV P0-2 (2026-08-31) — **VASP_CMD 는 폐지됐다.** 자유형 명령 문자열은
+#   staged lock·봉인·receipt 를 전부 우회하는 뒷문이었다. 실행 명령은
+#   VASP_LAUNCHER_KIND(mpirun|mpiexec|srun|none|wrapper) + VASP_NPROC + VASP_EXE
+#   에서 **이 스크립트가 조립**한다. staged 번들에서는 run_staged.sh 가 유일한
+#   진입로이고, 여기 직접 오면 lock-owner 토큰이 없어 거부된다.
 #
 # 상 사슬 (하나라도 끊기면 **멈춘다** — 조용히 건너뛰면 다른 계를 계산하게 된다):
 #   pre    dipole off, LWAVE=T          → WAVECAR·CHGCAR
@@ -329,7 +334,78 @@ RUN_JOB = """#!/usr/bin/env bash
 #   static ICHARG=1 (relax 의 CHGCAR)    → 판정 에너지
 #   dense  ICHARG=1 (**static** 의 CHGCAR) → k 수렴 확인
 set -e
-V=${VASP_CMD:-"mpirun -np ${NP:-48} vasp_std"}   # 계약·비용모형과 같은 48
+if [ -n "${VASP_CMD:-}" ] || [ -n "${VASP_LAUNCHER:-}" ]; then
+  echo "⛔ VASP_CMD/VASP_LAUNCHER 는 폐지됐습니다 (회신 AV P0-2)."
+  echo "   VASP_LAUNCHER_KIND / VASP_NPROC / VASP_EXE 를 쓰세요 — README 참조"; exit 1
+fi
+_ROOT=../..
+# ⛔ 회신 AV 해제조건 ③ — 시험 표시 **파일만으로는** 아무것도 못 끈다. MANIFEST 가
+#   스스로 selftest_fixture=true 를 선언한 픽스처 번들에서만 유효하다. production
+#   MANIFEST 에 그 필드를 심으면 해시가 바뀌어 EXPECT·봉인·분석기 대조가 전부 깨지고,
+#   반송물에 마커가 섞이면 분석기가 PROVENANCE_FIXTURE_MARKER 로 영구 게이트한다.
+_FIXTURE=0
+if [ -f .SELFTEST_FIXTURE ]; then
+  if [ ! -f "$_ROOT/MANIFEST.json" ]; then
+    # 번들 **밖** 낱개 잡(회귀 하네스·임시 복사)이다 — 마커를 존중한다. 이 경로의
+    # 산출물은 어차피 분석기가 PROVENANCE_FIXTURE_MARKER 로 영구 게이트한다.
+    _FIXTURE=1
+  elif python3 -c 'import json,sys;sys.exit(0 if json.load(open("../../MANIFEST.json")).get("selftest_fixture") else 1)' 2>/dev/null; then
+    _FIXTURE=1
+  fi
+fi
+_STAGED=""
+if [ -f "$_ROOT/MANIFEST.json" ]; then
+  _STAGED=$(python3 -c \
+    'import json;print(json.load(open("../../MANIFEST.json")).get("staged_runner") or "")' \
+    2>/dev/null || true)
+fi
+if [ "$_FIXTURE" != 1 ] && [ -n "$_STAGED" ]; then
+  # 🔴 회신 AV P0-2 — staged 번들: **lock 소유자만** 실행할 수 있다. 토큰은
+  #   run_staged.sh(또는 run_dense_selected.sh)가 lock 을 잡으며 발급한 값이고,
+  #   lock 파일 내용과 같아야 한다 — 값을 아는 것이 곧 소유 증명이다.
+  #   ⚠ 이 게이트가 못 막는 것: 잡 폴더를 번들 **밖으로 복사**해 돌리는 것.
+  #     그 경우 봉인 대조를 여기서 못 하므로, 분석기가 반송 receipt 의 해시를
+  #     root seal 과 대조해 잡는다 (다른 바이너리면 그쪽에서 걸린다).
+  [ -n "${RUNNER_TOKEN:-}" ] || {
+    echo "⛔ run_job.sh 를 직접 부르지 마세요 — 'bash $_STAGED {1|2}' 가 유일한 실행 경로입니다"
+    echo "   (lock-owner 토큰이 없습니다 — 회신 AV P0-2)"; exit 1; }
+  _lk=$(cat "$_ROOT/.lock_bundle" 2>/dev/null || true)
+  if [ -z "$_lk" ] || [ "$_lk" != "$RUNNER_TOKEN" ]; then
+    echo "⛔ RUNNER_TOKEN 이 번들 lock 과 다릅니다 — run_staged.sh 가 발급한 실행만 유효합니다"; exit 1
+  fi
+fi
+# ── 실행 argv 조립 (자유형 문자열 없음 — 회신 AV P0-2) ─────────────────────
+VASP_LAUNCHER_KIND=${VASP_LAUNCHER_KIND:?VASP_LAUNCHER_KIND 를 지정하세요 (mpirun|mpiexec|srun|none|wrapper)}
+VASP_EXE=${VASP_EXE:?VASP_EXE 를 지정하세요 (실행파일 절대경로)}
+[ -x "$VASP_EXE" ] || { echo "⛔ VASP_EXE 가 실행파일이 아닙니다: $VASP_EXE"; exit 1; }
+_np_flag="-np"
+case "$VASP_LAUNCHER_KIND" in
+  mpirun|mpiexec|srun)
+    [ "$VASP_LAUNCHER_KIND" = srun ] && _np_flag="-n"
+    case "${VASP_NPROC:-}" in
+      ''|*[!0-9]*|0) echo "⛔ VASP_NPROC 가 양의 정수가 아닙니다"; exit 1 ;;
+    esac
+    if [ -z "${LAUNCHER_BIN:-}" ]; then
+      LAUNCHER_BIN=$(command -v "$VASP_LAUNCHER_KIND" 2>/dev/null || true)
+    fi
+    [ -n "$LAUNCHER_BIN" ] && [ -x "$LAUNCHER_BIN" ] || {
+      echo "⛔ $VASP_LAUNCHER_KIND 를 찾을 수 없습니다"; exit 1; } ;;
+  none) : ;;
+  wrapper)
+    [ -n "${VASP_WRAPPER:-}" ] && [ -x "${VASP_WRAPPER:-}" ] || {
+      echo "⛔ KIND=wrapper 면 실행 가능한 VASP_WRAPPER 절대경로가 필요합니다"; exit 1; }
+    case "${VASP_NPROC:-}" in
+      ''|*[!0-9]*|0) echo "⛔ VASP_NPROC 가 양의 정수가 아닙니다"; exit 1 ;;
+    esac ;;
+  *) echo "⛔ 모르는 VASP_LAUNCHER_KIND: $VASP_LAUNCHER_KIND"; exit 1 ;;
+esac
+_launch() {
+  case "$VASP_LAUNCHER_KIND" in
+    mpirun|mpiexec|srun) "$LAUNCHER_BIN" "$_np_flag" "$VASP_NPROC" "$VASP_EXE" ;;
+    none)                "$VASP_EXE" ;;
+    wrapper)             "$VASP_WRAPPER" "$VASP_EXE" "$VASP_NPROC" ;;
+  esac
+}
 [ -f POTCAR ] || { echo "⛔ POTCAR 를 이 폴더에 놓으세요 (POTCAR_SPEC.txt 의 변형)"; exit 1; }
 # 🔴 회신 AB P0-8 — POTCAR **provenance 를 실행 전에 강제**한다. 종전엔 파일
 #   존재만 봤다. 그래서 조립기가 allowlist 로 거부해도 그때 남아 있던 POTCAR 로
@@ -340,7 +416,7 @@ V=${VASP_CMD:-"mpirun -np ${NP:-48} vasp_std"}   # 계약·비용모형과 같�
 #   환경변수는 반송물에 흔적이 안 남아 분석기가 볼 수 없다. 시험 장치는 파일로 표시하고
 #   (`.SELFTEST_FIXTURE`), 배포 번들에는 그 파일이 없다 — files_sha256 이 전 파일을
 #   덮으므로 나중에 만들어 넣으면 무결성 검사에서 걸린다.
-if [ ! -f .SELFTEST_FIXTURE ]; then
+if [ "$_FIXTURE" != 1 ]; then
   [ -f POTCAR_PROVENANCE.json ] || {
     echo "⛔ POTCAR_PROVENANCE.json 이 없습니다 — POTCAR 를 손으로 놓지 말고"
     echo "   PP=... POTCAR_ALLOWLIST=/abs/site_allow.txt bash POTCAR_ASSEMBLE.sh"; exit 1; }
@@ -435,8 +511,32 @@ for ph in pre relax static dense; do
             need static/CHGCAR "dense 는 **static** 의 전하밀도를 승계한다 — static 먼저"
             cp static/CHGCAR dense/CHGCAR ;;
   esac
+  # 🔴 회신 AV P0-2 — **상 직전마다** 실행파일을 봉인과 재대조하고 receipt 에
+  #   append 한다. 러너 시작 때 한 번 보는 것으로는 긴 실행 중 교체를 못 잡고,
+  #   receipt 는 분석기가 읽는 **필수 반송물**이다 (열: ts phase sha exe kind nproc).
+  _exe_h=$(sha256sum "$VASP_EXE" | cut -d" " -f1)
+  if [ "$_FIXTURE" != 1 ] && [ -f "$_ROOT/POTCAR_ROOT_SEAL.json" ]; then
+    _sealed=$(python3 -c \
+      'import json;print(json.load(open("../../POTCAR_ROOT_SEAL.json")).get("vasp_executable_sha256") or "")' \
+      2>/dev/null || true)
+    if [ -z "$_sealed" ] || [ "$_exe_h" != "$_sealed" ]; then
+      echo "⛔ $ph 직전: 실행파일이 root 봉인과 다릅니다 (지금 $_exe_h / 봉인 $_sealed)"; exit 1
+    fi
+    if [ "$VASP_LAUNCHER_KIND" = wrapper ]; then
+      _wr_h=$(sha256sum "$VASP_WRAPPER" | cut -d" " -f1)
+      _wsealed=$(python3 -c \
+        'import json;print(json.load(open("../../POTCAR_ROOT_SEAL.json")).get("launcher_wrapper_sha256") or "")' \
+        2>/dev/null || true)
+      if [ -z "$_wsealed" ] || [ "$_wr_h" != "$_wsealed" ]; then
+        echo "⛔ $ph 직전: wrapper 가 봉인과 다릅니다"; exit 1
+      fi
+    fi
+  fi
+  printf '%s\t%s\t%s\t%s\t%s\t%s\n' \
+    "$(date -u +%Y-%m-%dT%H:%M:%SZ)" "$ph" "$_exe_h" \
+    "$VASP_EXE" "$VASP_LAUNCHER_KIND" "${VASP_NPROC:-1}" >> EXECUTABLE_RECEIPT.tsv
   echo "  ▶ $ph"
-  ( cd "$ph" && $V > vasp.out 2>&1 )
+  ( cd "$ph" && _launch > vasp.out 2>&1 )
   grep -aq "General timing" "$ph/OUTCAR" || {
     echo "⛔ $ph 가 정상종료하지 않았다 (General timing 없음) — 다음 상으로 안 넘어간다"; exit 1; }
   # WAVECAR 는 크다. relax 가 끝나면 pre 것은 필요 없다.
@@ -456,6 +556,24 @@ RUN_DENSE_SEL = """#!/usr/bin/env bash
 #   DENSE_PLAN.json 에만 남는다 (그게 근거다).
 set -u
 [ -f DENSE_PLAN.json ] || { echo "⛔ DENSE_PLAN.json 없음 — 먼저 --plan_dense"; exit 1; }
+# 🔴 회신 AV P0-2 — 이 스크립트도 **번들 전역 lock** 을 잡고 토큰을 발급한다.
+#   run_job.sh 가 토큰 없는 실행을 거부하므로, 여기서 안 잡으면 승격 dense 를
+#   못 돌린다 — 그것이 맞다. lock 프로토콜은 run_staged.sh 와 동일(원자적 ln).
+LOCK=".lock_bundle"
+RUNID="$(hostname)|$$|dense|$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+LOCKTMP="$LOCK.tmp.$$"
+printf '%s\n' "$RUNID" > "$LOCKTMP" || exit 3
+if ! ln "$LOCKTMP" "$LOCK" 2>/dev/null; then
+  rm -f "$LOCKTMP"
+  echo "⛔ 번들 lock 이 이미 있습니다: $(cat "$LOCK" 2>/dev/null || echo '?')"
+  echo "   다른 실행이 끝날 때까지 기다리세요 (모르는 lock 은 지우지 않습니다)"; exit 3
+fi
+rm -f "$LOCKTMP"
+trap '[ "$(cat "$LOCK" 2>/dev/null)" = "$RUNID" ] && rm -f "$LOCK"' EXIT
+export RUNNER_TOKEN="$RUNID"
+# 승격 dense 는 완료된 잡 위에서 도는 **계획된 이어달리기**다 — 어느 잡을 왜 잇는지가
+# DENSE_PLAN.json 에 남는다. one-shot 가드에는 그 사실을 명시적으로 알린다.
+export ALLOW_RESUME=1
 jobs=$(python3 - <<'PY'
 import json
 p = json.load(open("DENSE_PLAN.json"))
@@ -495,56 +613,56 @@ usage() { echo "사용법: bash run_staged.sh {1|2}"; exit 2; }
 [ $# -ge 1 ] || usage
 stage=$1
 case "$stage" in 1|2) ;; *) echo "모르는 단계: $stage"; usage;; esac
-# ⛔⛔ 회신 AS 해제조건 5 (2026-08-31) — 봉인은 `VASP_EXE` 를 해시하는데 러너는
-#   **임의의 `VASP_CMD`** 를 실행했다. 같은 버전 문자열을 내는 다른 바이너리도
-#   통과한다. ⇒ **launcher 와 executable 을 분리**한다:
-#     VASP_LAUNCHER : mpirun/srun 과 그 인자 (실행파일 이름을 넣지 않는다)
-#     VASP_EXE      : 실행파일 (봉인 대상). 절대경로로 해석해 봉인 해시와 대조한다.
-#   실행 직전에 그 절대경로를 **다시 해시**하고, 봉인과 다르면 멈춘다.
-#   ⚠ 하위호환: VASP_CMD 만 주면 거부한다 — 조용히 옛 경로로 돌지 않는다.
-if [ -n "${VASP_CMD:-}" ] && [ -z "${VASP_LAUNCHER:-}" ]; then
-  echo "⛔ VASP_CMD 는 더 쓰지 않습니다 (회신 AS 해제조건 5)."
-  echo "   launcher 와 실행파일을 나눠 주세요 — 봉인한 그 파일로 돌았는지 확인합니다:"
-  echo "     export VASP_LAUNCHER='mpirun -np 48'"
+# 🔴🔴 회신 AV P0-2 (2026-08-31) — **자유형 launcher 문자열을 폐지한다.**
+#   회신 AT 해제 뒤에도 세 형태가 뚫렸다:
+#     `mpirun -np 48 other_vasp`  — PATH 이름은 파일이 아니라 -x 검사에 안 걸린다
+#     `/tmp/evil/mpirun -np 48`   — basename 만 봐서 아무 경로나 mpirun 행세를 했다
+#     `env --split-string=...`    — env 는 인자 문법 자체가 실행이다
+#   교훈: 문자열을 **검사**하는 한 진다. ⇒ 사용자는 종류와 수만 주고,
+#   **argv 는 러너가 조립한다** (회신 AV Q5 — 이름 목록은 좁게, env 는 제거):
+#     VASP_LAUNCHER_KIND : mpirun | mpiexec | srun | none | wrapper
+#     VASP_NPROC         : 랭크 수 (양의 정수 · none 이면 생략 가능)
+#     VASP_EXE           : 실행파일 절대경로 (봉인 대상)
+#     VASP_WRAPPER       : KIND=wrapper 일 때 현장 wrapper 절대경로 —
+#                          SEAL 이 해시를 봉인하고 실행 직전 재대조한다
+if [ -n "${VASP_CMD:-}" ] || [ -n "${VASP_LAUNCHER:-}" ]; then
+  echo "⛔ VASP_CMD / VASP_LAUNCHER 는 폐지됐습니다 (회신 AV P0-2)."
+  echo "   자유형 문자열은 봉인된 실행파일을 우회할 수 있어 종류+수만 받습니다:"
+  echo "     export VASP_LAUNCHER_KIND=mpirun   # mpirun|mpiexec|srun|none|wrapper"
+  echo "     export VASP_NPROC=48"
   echo "     export VASP_EXE=/abs/path/to/vasp_std"
   exit 2
 fi
-VASP_LAUNCHER=${VASP_LAUNCHER:?VASP_LAUNCHER 를 지정하세요 (예: 'mpirun -np 48' — 실행파일 이름은 넣지 마세요)}
+VASP_LAUNCHER_KIND=${VASP_LAUNCHER_KIND:?VASP_LAUNCHER_KIND 를 지정하세요 (mpirun|mpiexec|srun|none|wrapper)}
 VASP_EXE=${VASP_EXE:?VASP_EXE 를 지정하세요 (실행파일 절대경로 — 이것이 봉인 대상입니다)}
 case "$VASP_EXE" in /*) ;; *) VASP_EXE=$(command -v "$VASP_EXE" 2>/dev/null || true) ;; esac
 [ -n "$VASP_EXE" ] && [ -x "$VASP_EXE" ] || { echo "⛔ VASP_EXE 를 실행파일로 찾을 수 없습니다"; exit 2; }
-# 🔴🔴 회신 AT P0-5 (2026-08-31) — **launcher 가 봉인된 실행파일을 무시할 수 있었다.**
-#   `VASP_LAUNCHER='mpirun -np 48 /other/vasp'` 로 주면 최종 명령이
-#   `mpirun -np 48 /other/vasp /sealed/vasp_std` 가 되어 mpirun 은 **앞의 것**을 돈다.
-#   봉인은 뒤의 것을 해시했으므로 아무 의미가 없어진다. 셸 메타문자도 같은 문제다.
-case "$VASP_LAUNCHER" in
-  *[\;\&\|\<\>\`\$\(\)\{\}\'\"]*|*"
-"*)
-    echo "⛔ VASP_LAUNCHER 에 셸 메타문자가 있습니다 — 봉인된 실행파일을 우회할 수 있습니다"
-    echo "   허용: 런처 이름과 플래그·숫자만 (예: 'mpirun -np 48')"; exit 2 ;;
-esac
-_lt=0
-for _tok in $VASP_LAUNCHER; do
-  _lt=$((_lt+1))
-  if [ "$_lt" = 1 ]; then
-    case "$(basename "$_tok")" in
-      mpirun|mpiexec|srun|aprun|jsrun|env|ibrun) ;;
-      *) echo "⛔ VASP_LAUNCHER 의 첫 토큰이 알 수 없는 launcher 입니다: $_tok"
-         echo "   허용: mpirun mpiexec srun aprun jsrun ibrun env"
-         echo "   (다른 런처가 필요하면 알려주세요 — 목록에 넣고 다시 봉인합니다)"; exit 2 ;;
+LAUNCHER_BIN=""
+VASP_WRAPPER=${VASP_WRAPPER:-}
+case "$VASP_LAUNCHER_KIND" in
+  mpirun|mpiexec|srun)
+    case "${VASP_NPROC:-}" in
+      ''|*[!0-9]*|0) echo "⛔ VASP_NPROC 가 양의 정수가 아닙니다: '${VASP_NPROC:-}'"; exit 2 ;;
     esac
-    continue
-  fi
-  # 첫 토큰 뒤에 **실행 가능한 파일**이 오면 그것이 진짜 실행 대상이 될 수 있다
-  if [ -x "$_tok" ] && [ ! -d "$_tok" ]; then
-    echo "⛔ VASP_LAUNCHER 의 인자 '$_tok' 이 실행 가능한 파일입니다."
-    echo "   launcher 에 실행파일을 넣으면 봉인된 VASP_EXE 가 무시됩니다 (회신 AT P0-5)."
-    echo "   실행파일은 VASP_EXE 로만 주세요."; exit 2
-  fi
-done
-export VASP_EXE VASP_LAUNCHER
-VASP_CMD="$VASP_LAUNCHER $VASP_EXE"
-export VASP_CMD
+    # launcher 는 이름으로만 받고 **러너가** PATH 에서 해석한다 — 경로/인자 밀반입 불가
+    LAUNCHER_BIN=$(command -v "$VASP_LAUNCHER_KIND" 2>/dev/null || true)
+    [ -n "$LAUNCHER_BIN" ] || { echo "⛔ $VASP_LAUNCHER_KIND 를 PATH 에서 찾을 수 없습니다"; exit 2; }
+    ;;
+  none)
+    VASP_NPROC=${VASP_NPROC:-1} ;;
+  wrapper)
+    # 목록 밖 launcher 는 **해시로 봉인한 wrapper** 로만 (회신 AV Q5).
+    #   wrapper 계약: $1=VASP_EXE $2=VASP_NPROC 을 받아 현장 방식으로 돌린다.
+    [ -n "$VASP_WRAPPER" ] || { echo "⛔ KIND=wrapper 면 VASP_WRAPPER=/abs/wrapper.sh 를 주세요"; exit 2; }
+    case "$VASP_WRAPPER" in /*) ;; *) echo "⛔ VASP_WRAPPER 는 절대경로여야 합니다"; exit 2 ;; esac
+    [ -f "$VASP_WRAPPER" ] && [ -x "$VASP_WRAPPER" ] || { echo "⛔ VASP_WRAPPER 가 실행파일이 아닙니다"; exit 2; }
+    case "${VASP_NPROC:-}" in
+      ''|*[!0-9]*|0) echo "⛔ VASP_NPROC 가 양의 정수가 아닙니다: '${VASP_NPROC:-}'"; exit 2 ;;
+    esac
+    ;;
+  *) echo "⛔ 모르는 VASP_LAUNCHER_KIND: $VASP_LAUNCHER_KIND (mpirun|mpiexec|srun|none|wrapper)"; exit 2 ;;
+esac
+export VASP_EXE VASP_LAUNCHER_KIND VASP_NPROC LAUNCHER_BIN VASP_WRAPPER
 PP=${PP:?PP 를 지정하세요 (POTCAR 원본 트리)}
 POTCAR_ALLOWLIST=${POTCAR_ALLOWLIST:?POTCAR_ALLOWLIST 를 지정하세요 (절대경로)}
 
@@ -597,6 +715,9 @@ _bail() {
 trap '_unlock' EXIT
 trap '_bail INT 130' INT
 trap '_bail TERM 143' TERM
+# 🔴 회신 AV P0-2 — run_job.sh 는 이 토큰 없이는 거부한다 (직접 호출 차단).
+#   토큰 = lock 파일 내용. lock 을 쥔 실행만이 값을 알고, 값이 곧 소유 증명이다.
+export RUNNER_TOKEN="$RUNID"
 
 # ⛔ 회신 AT P0-6 — SEAL 은 러너가 **이미 lock 을 쥔 채** 부른다. 중복 획득으로
 #   교착하지 않도록 알려 준다 (단독 실행이면 SEAL 이 스스로 잡는다).
@@ -766,9 +887,9 @@ cat _stage_jobs.txt
 
 # ⛔⛔ 회신 AS 해제조건 5 — **실행 직전에** 봉인한 절대경로를 다시 해시한다.
 #   봉인 시점과 실행 시점 사이에 바이너리가 바뀌었을 수 있다.
-python3 - "$VASP_EXE" <<'PYEXE' || { echo "⛔ 실행파일이 봉인과 다릅니다 — 중단"; exit 2; }
+python3 - "$VASP_EXE" "$VASP_LAUNCHER_KIND" "$VASP_WRAPPER" <<'PYEXE' || { echo "⛔ 실행파일이 봉인과 다릅니다 — 중단"; exit 2; }
 import hashlib, json, os, sys
-exe = sys.argv[1]
+exe, kind, wrap = sys.argv[1], sys.argv[2], sys.argv[3]
 h = hashlib.sha256(open(exe, "rb").read()).hexdigest()
 try:
     seal = json.load(open("POTCAR_ROOT_SEAL.json", encoding="utf-8"))
@@ -779,6 +900,19 @@ if seal.get("vasp_executable") and os.path.realpath(seal["vasp_executable"]) != 
     bad.append("봉인 경로 %s ≠ 실행 경로 %s" % (seal["vasp_executable"], exe))
 if seal.get("vasp_executable_sha256") != h:
     bad.append("봉인 해시 %s ≠ 지금 %s" % (str(seal.get("vasp_executable_sha256"))[:12], h[:12]))
+# 🔴 회신 AV P0-2/Q5 — wrapper 도 봉인과 같은 파일이어야 한다. 봉인에 wrapper 가
+#   없는데 KIND=wrapper 로 돌리는 것도 거부한다 (봉인 밖 실행 경로).
+if kind == "wrapper":
+    if not wrap:
+        bad.append("KIND=wrapper 인데 VASP_WRAPPER 가 비었다")
+    elif not seal.get("launcher_wrapper_sha256"):
+        bad.append("봉인에 launcher_wrapper_sha256 가 없다 — wrapper 는 SEAL 때 "
+                   "봉인된 것만 쓸 수 있다 (VASP_WRAPPER 를 주고 다시 봉인)")
+    else:
+        wh = hashlib.sha256(open(wrap, "rb").read()).hexdigest()
+        if wh != seal["launcher_wrapper_sha256"]:
+            bad.append("wrapper 해시 %s ≠ 봉인 %s"
+                       % (wh[:12], seal["launcher_wrapper_sha256"][:12]))
 if bad:
     print("⛔ 실행 직전 대조 실패:")
     for b in bad:
@@ -814,13 +948,14 @@ run_wave() {   # $1 = 목록 파일
   xargs -a "$1" -I{} -P "$NPAR" sh -c '
     j="$1"
     [ -f "$j/run_job.sh" ] || { echo "없음: $j"; exit 1; }
-    # 🔴 회신 AT P0-5 — **잡 실행 직전에** 실행파일 receipt 를 남긴다. 봉인 검사는
-    #   러너 시작 때 한 번뿐이라, 긴 실행 중에 바이너리가 바뀌면 알 길이 없었다.
-    #   잡마다 그 순간의 sha·mtime·launcher 를 적어 두면 반송물에서 대조된다.
-    printf "%s\t%s\t%s\t%s\n" \
+    # 🔴 회신 AT P0-5 · AV P0-2 — receipt 는 **헤더행(러너) + 상별 행(run_job.sh)**.
+    #   종전엔 러너가 잡당 한 행만 썼고 분석기가 읽지 않았다. 이제 run_job.sh 가
+    #   상 직전마다 해시를 재서 append 하고, 분석기가 **필수 반송물**로 읽는다.
+    #   열: ts  phase  exe_sha256  exe  kind  nproc
+    printf "%s\t_runner_start\t%s\t%s\t%s\t%s\n" \
       "$(date -u +%Y-%m-%dT%H:%M:%SZ)" \
       "$(sha256sum "$VASP_EXE" | cut -d" " -f1)" \
-      "$VASP_EXE" "$VASP_LAUNCHER" > "$j/EXECUTABLE_RECEIPT.tsv"
+      "$VASP_EXE" "$VASP_LAUNCHER_KIND" "$VASP_NPROC" > "$j/EXECUTABLE_RECEIPT.tsv"
     echo "=== $j 시작 ==="
     ( cd "$j" && bash run_job.sh ) || { echo "⛔ $j 실패"; exit 1; }
     echo "=== $j 완료 ==="
@@ -994,7 +1129,13 @@ if [ -n "$VASP_BIN" ]; then
   VASP_SHA=$(sha256sum "$VASP_BIN" | cut -d" " -f1)
   VASP_VER=$("$VASP_BIN" --version 2>&1 | head -1 || true)
 fi
-export AL_SHA VASP_BIN VASP_SHA VASP_VER BUNDLE_ZIP_SHA256
+# 🔴 회신 AV Q5 — 목록 밖 launcher 는 해시로 봉인한 wrapper 로만. 봉인 시점에
+#   wrapper 를 받았으면 해시를 함께 박는다 (실행 직전 재대조는 run_staged 가 한다).
+WRAP_SHA=""
+if [ -n "${VASP_WRAPPER:-}" ] && [ -f "${VASP_WRAPPER:-}" ]; then
+  WRAP_SHA=$(sha256sum "$VASP_WRAPPER" | cut -d" " -f1)
+fi
+export AL_SHA VASP_BIN VASP_SHA VASP_VER BUNDLE_ZIP_SHA256 VASP_WRAPPER WRAP_SHA
 python3 - <<'PYSEAL'
 import json, glob, os, re, sys, hashlib, time
 seal, asm, conflict = {}, {}, []
@@ -1018,6 +1159,8 @@ rec = {
     "vasp_executable": os.environ.get("VASP_BIN") or None,
     "vasp_executable_sha256": os.environ.get("VASP_SHA") or None,
     "vasp_version_banner": os.environ.get("VASP_VER") or None,
+    "launcher_wrapper": os.environ.get("VASP_WRAPPER") or None,
+    "launcher_wrapper_sha256": os.environ.get("WRAP_SHA") or None,
     "bundle_zip_sha256": os.environ.get("BUNDLE_ZIP_SHA256") or None,
     "sealed_at_utc": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
     "sealed_before_production": True,
@@ -4315,6 +4458,47 @@ def selftest_k() -> int:
     chk(potcar_provenance_gates(str(_jp), _meta_ok, "other", _M) == [],
         "[음성] 조립기를 안 실어 보낸 잡에는 계약을 요구하지 않는다")
 
+    # ── 🔴 회신 AV P0-2 — 실행파일 receipt 를 분석기가 **직접** 게이트한다 ──
+    _rjp = pathlib.Path(_tfx.mkdtemp()) / "rj"
+    _rjp.mkdir(parents=True, exist_ok=True)
+    _SEAL_SHA = "a" * 64
+    _MRC = {"staged_runner": "run_staged.sh",
+            "files_sha256": {"j/run_job.sh": "x"},
+            "_potcar_root_seal": {"vasp_executable_sha256": _SEAL_SHA}}
+
+    def _erg(text, man=None, executed=("static",), rel="j"):
+        f = _rjp / "EXECUTABLE_RECEIPT.tsv"
+        if text is None:
+            f.unlink(missing_ok=True)
+        else:
+            f.write_text(text, encoding="utf-8")
+        return executable_receipt_gates(str(_rjp), rel, man or _MRC, list(executed))
+
+    _ROW = "2026-08-31T00:00:00Z\t%s\t%s\t/x/vasp_std\t%s\t48\n"
+    _ok_rcpt = (_ROW % ("_runner_start", _SEAL_SHA, "mpirun")
+                + _ROW % ("static", _SEAL_SHA, "mpirun"))
+    chk(_erg(_ok_rcpt) == [], "AV P0-2 양성: 봉인과 같은 해시의 receipt 는 게이트 0건")
+    chk(any("RECEIPT_MISSING" in g for g in _erg(None)),
+        "⛔음성 AV P0-2: receipt 가 없으면 막는다 (분석기가 실제로 **읽는다**)")
+    chk(any("RECEIPT_EXE_MISMATCH" in g for g in
+            _erg(_ROW % ("static", "b" * 64, "mpirun"))),
+        "⛔음성 AV P0-2: 봉인 밖 바이너리 해시면 막는다")
+    chk(any("RECEIPT_PHASE_MISSING" in g for g in
+            _erg(_ROW % ("_runner_start", _SEAL_SHA, "mpirun"))),
+        "⛔음성 AV P0-2: OUTCAR 가 있는 상의 receipt 행이 없으면 막는다 "
+        "(run_job.sh 밖 실행)")
+    chk(any("RECEIPT_LAUNCHER_KIND" in g for g in
+            _erg(_ROW % ("static", _SEAL_SHA, "env"))),
+        "⛔음성 AV P0-2: 허용 밖 launcher(env)가 receipt 에 있으면 막는다")
+    chk(any("RECEIPT_UNVERIFIABLE" in g for g in
+            _erg(_ROW % ("static", _SEAL_SHA, "mpirun"),
+                 man={**_MRC, "_potcar_root_seal": {}})),
+        "⛔음성 AV P0-2: 봉인에 실행파일 해시가 없으면 '확인 못 함 = 통과 아님'")
+    chk(_erg(_ok_rcpt, man={"files_sha256": {"j/run_job.sh": "x"}}) == [],
+        "[음성] 비-staged 구판 번들에는 receipt 계약을 소급 요구하지 않는다")
+    chk(_erg(None, man=_MRC, rel="other") == [],
+        "[음성] 러너를 안 실어 보낸 잡에는 요구하지 않는다")
+
     # ⛔ 회신 AI §B — 자기일관적 허위. 회신 JSON 안에서 expected_variants 와
     #    titel_lines 가 서로 맞으면 종전 코드는 통과시켰다. 우리 규격이 기준이어야 한다.
     _M2 = {"files_sha256": {"j/POTCAR_ASSEMBLE.sh": "x"},
@@ -5462,6 +5646,60 @@ def same_basin(ja, jb):
                        "RMS %s μB > %s)" % (d.get("hamming"), d.get("collapse_symdiff"),
                                             d.get("moment_rms_muB"), MOM_RMS_TOL))
     return True, "ok"
+
+
+def executable_receipt_gates(job_dir, rel, man, executed_phases):
+    """반송된 `EXECUTABLE_RECEIPT.tsv` 를 **분석기가 직접 읽고** 게이트한다.
+
+    🔴 회신 AV P0-2 — 종전엔 러너가 receipt 를 만들기만 하고 아무도 읽지 않았다.
+    "봉인된 그 바이너리로 돌았다" 는 주장은 receipt 의 상별 해시가 root seal 과
+    같을 때만 성립한다. staged 번들(run_staged.sh 경로)에만 적용한다 —
+    비-staged 구판 번들에는 이 계약이 없었으므로 소급 요구하지 않는다.
+
+    행 형식: ts  phase  exe_sha256  exe  kind  nproc  (러너 헤더행은 phase=_runner_start)
+
+    ⛔ 이 함수가 못 하는 것: receipt 는 외주처 기계가 쓴 텍스트다 — **위조 자체**는
+      막지 못한다. 이 게이트의 몫은 "위조하지 않은 정직한 우회"(다른 바이너리로
+      그냥 돌림)를 잡는 것이고, 위조는 형사가 아니라 계약 문제다.
+    """
+    g = []
+    if not (man or {}).get("staged_runner"):
+        return g
+    _fh = (man or {}).get("files_sha256") or {}
+    if rel is not None and _fh and ("%s/run_job.sh" % rel) not in _fh:
+        return g                       # 우리가 러너를 실어 보낸 잡에만 요구한다
+    seal = (man or {}).get("_potcar_root_seal") or {}
+    want = seal.get("vasp_executable_sha256")
+    rp = os.path.join(job_dir, "EXECUTABLE_RECEIPT.tsv")
+    if not os.path.isfile(rp):
+        return ["RECEIPT_MISSING(EXECUTABLE_RECEIPT.tsv 가 반송물에 없다 — 어떤 "
+                "바이너리로 돌았는지 확인할 수 없다. run_staged.sh 경로로 돌았다면 "
+                "잡마다 남는다)"]
+    rows = []
+    for ln in open(rp, encoding="utf-8", errors="replace").read().splitlines():
+        c = ln.split("\t")
+        if len(c) < 6:
+            g.append("RECEIPT_MALFORMED(%r — 열 6개 미만)" % ln[:60])
+            continue
+        rows.append(c)
+    ph_rows = {c[1] for c in rows if c[1] != "_runner_start"}
+    for c in rows:
+        if c[1] == "_runner_start":
+            continue
+        if not want:
+            g.append("RECEIPT_UNVERIFIABLE(root seal 에 실행파일 해시가 없어 receipt "
+                     "를 대조할 수 없다 — 확인 못 함은 통과가 아니다)")
+            break
+        if c[2] != want:
+            g.append("RECEIPT_EXE_MISMATCH(%s 상의 실행파일 %s ≠ 봉인 %s — 봉인 밖 "
+                     "바이너리로 돌았다)" % (c[1], c[2][:12], want[:12]))
+        if c[4] not in ("mpirun", "mpiexec", "srun", "none", "wrapper"):
+            g.append("RECEIPT_LAUNCHER_KIND(%s — 허용 밖 launcher)" % c[4])
+    for ph in executed_phases or []:
+        if ph not in ph_rows:
+            g.append("RECEIPT_PHASE_MISSING(%s 상의 OUTCAR 는 있는데 receipt 행이 "
+                     "없다 — run_job.sh 밖에서 돌았다)" % ph)
+    return g
 
 
 def potcar_provenance_gates(job_dir, meta, rel=None, man=None):
@@ -7839,6 +8077,9 @@ def main():
                     f"KMESH_NOT_DENSER({y} NKPTS {ocs[y]['nkpts']} ≤ {x} {ocs[x]['nkpts']} "
                     f"인데 격자는 {km[x]}→{km[y]} — 다른 상의 산출을 복사했나)")
         rec["gates"] += potcar_provenance_gates(jd, meta, rel, _man_i)
+        # 🔴 회신 AV P0-2 — receipt 는 이제 분석기가 읽는 **필수 반송물**이다
+        rec["gates"] += executable_receipt_gates(
+            jd, rel, _man_i, [ph for ph in phases if ocs.get(ph)])
         _ppf = os.path.join(jd, "POTCAR_PROVENANCE.json")
         if os.path.isfile(_ppf):
             try:
@@ -9384,9 +9625,10 @@ export POTCAR_ALLOWLIST=/abs/site_allow.txt
 export BUNDLE_ZIP_SHA256=$(sha256sum /경로/받은번들.zip | cut -d" " -f1)
 export EXPECT_MANIFEST_SHA256=%s   # 저희가 보낸 값 (러너가 실행 전에 대조합니다)
 export EXPECT_ZIP_SHA256=<메일 본문의 ZIP SHA256>   # **필수** — 없으면 러너가 멈춥니다
-# ⛔ VASP_CMD 는 더 쓰지 않습니다. 런처와 실행파일을 **나눠** 주세요 —
-#    실행파일만 봉인 대상이고, 런처에 실행파일을 넣으면 봉인이 무의미해집니다.
-export VASP_LAUNCHER="mpirun -np %d"        # 런처와 그 플래그만
+# ⛔ 자유형 launcher 문자열(VASP_CMD·VASP_LAUNCHER)은 폐지됐습니다 (회신 AV P0-2) —
+#    문자열 검사는 우회가 가능해, 종류와 수만 받고 실행 명령은 러너가 조립합니다.
+export VASP_LAUNCHER_KIND=mpirun            # mpirun|mpiexec|srun|none|wrapper
+export VASP_NPROC=%d                        # 랭크 수
 export VASP_EXE=/abs/path/to/vasp_std       # 실행파일 절대경로 (봉인 대상)
 bash run_staged.sh 1     # POTCAR 조립+봉인 → census → 1단계 → 자동 판정
 bash run_staged.sh 2     # 1단계 통과(STAGE1_PASS.json) 뒤에만
@@ -9556,7 +9798,7 @@ basin 으로 수렴하면 저희가 계산을 중단하고 별도 절차를 요�
 """ if _staged else ("""```
 cd <잡폴더>
 PP=/path/to/potpaw_PBE.54 POTCAR_ALLOWLIST=/abs/site_allow.txt bash POTCAR_ASSEMBLE.sh
-VASP_CMD="mpirun -np %d vasp_std" bash run_job.sh
+VASP_LAUNCHER_KIND=mpirun VASP_NPROC=%d VASP_EXE=/abs/path/vasp_std bash run_job.sh
 ```""" % a.cores))
 
     return f"""# VASP 계산 요청 — LiNiO₂(104) 위 분자 조각 단일점
@@ -9736,7 +9978,7 @@ sbatch --array=1-$(wc -l < JOBS.txt)%%%%%d \\
   j=$(sed -n "${SLURM_ARRAY_TASK_ID}p" JOBS.txt)
   cd "$j"
   PP=/path/to/potpaw_PBE.54 POTCAR_ALLOWLIST=/abs/site_allow.txt bash POTCAR_ASSEMBLE.sh
-  VASP_CMD="srun -n %d vasp_std" bash run_job.sh'""" % (a.concurrency, a.concurrency,
+  VASP_LAUNCHER_KIND=srun VASP_NPROC=%d VASP_EXE=/abs/path/vasp_std bash run_job.sh'""" % (a.concurrency, a.concurrency,
                                                         a.cores, a.cores)))
 
     _submit_block = ("""## 실행 (이 경로 하나뿐입니다)
@@ -9855,7 +10097,8 @@ MLIP 스크리닝은 경향까지만 냈고, 이 DFT+U 가 최종 판정입니�
 `pre/` 는 dipole 을 끈 사전 SCF 입니다 (자기상태가 엉뚱한 basin 으로 무너지는 것을 막습니다).
 `run_job.sh` 가 상 사이 CHGCAR/WAVECAR 승계를 **강제**합니다 — 파일이 없으면 멈춥니다.
 ```
-cd <잡폴더> && cp <POTCAR> POTCAR && VASP_CMD="mpirun -np 48 vasp_std" bash run_job.sh
+cd <잡폴더> && cp <POTCAR> POTCAR && \\
+VASP_LAUNCHER_KIND=mpirun VASP_NPROC=48 VASP_EXE=/abs/path/vasp_std bash run_job.sh
 ```
 전체는 번들 루트에서 `bash run_all.sh` (tier1 → refs → tier2 순).
 
@@ -11666,7 +11909,7 @@ def _runner_regression(out: Path, chk) -> None:
         if prep:
             prep(jd)
         env = {**os.environ, "PATH": f"{stub_dir}:{os.environ.get('PATH', '')}",
-               "VASP_CMD": "vasp_std", "STUB_LOG": str(log),
+               "VASP_LAUNCHER_KIND": "none", "VASP_EXE": str(stub_dir / "vasp_std"), "STUB_LOG": str(log),
                # 상 사슬 시험은 POTCAR provenance 와 무관하다 — 그 축은 아래
                # R14~R16 이 **전용으로** 친다 (한 시험이 두 가지를 재면 왜 실패했는지
                # 모른다).
@@ -11712,7 +11955,7 @@ def _runner_regression(out: Path, chk) -> None:
     log2.unlink()
     r2 = subprocess.run(["bash", "run_job.sh"], cwd=jd, capture_output=True, text=True,
                         env={**os.environ, "PATH": f"{stub_dir}:{os.environ.get('PATH','')}",
-                             "VASP_CMD": "vasp_std", "STUB_LOG": str(log2),
+                             "VASP_LAUNCHER_KIND": "none", "VASP_EXE": str(stub_dir / "vasp_std"), "STUB_LOG": str(log2),
                              })
     ran2 = log2.read_text().split() if log2.is_file() else []
     chk(r2.returncode != 0 and ran2 == [] and "1회용" in (r2.stdout + r2.stderr),
@@ -11723,7 +11966,7 @@ def _runner_regression(out: Path, chk) -> None:
     log2.unlink(missing_ok=True)
     r2b = subprocess.run(["bash", "run_job.sh"], cwd=jd, capture_output=True, text=True,
                          env={**os.environ, "PATH": f"{stub_dir}:{os.environ.get('PATH','')}",
-                              "VASP_CMD": "vasp_std", "STUB_LOG": str(log2),
+                              "VASP_LAUNCHER_KIND": "none", "VASP_EXE": str(stub_dir / "vasp_std"), "STUB_LOG": str(log2),
                               "ALLOW_RESUME": "1"})
     ran2b = log2.read_text().split() if log2.is_file() else []
     chk(r2b.returncode == 0 and ran2b == [],
@@ -11734,7 +11977,7 @@ def _runner_regression(out: Path, chk) -> None:
     log2.unlink(missing_ok=True)
     r3 = subprocess.run(["bash", "run_job.sh"], cwd=jd, capture_output=True, text=True,
                         env={**os.environ, "PATH": f"{stub_dir}:{os.environ.get('PATH','')}",
-                             "VASP_CMD": "vasp_std", "STUB_LOG": str(log2),
+                             "VASP_LAUNCHER_KIND": "none", "VASP_EXE": str(stub_dir / "vasp_std"), "STUB_LOG": str(log2),
                              "ALLOW_RESUME": "1",
                              })
     ran3 = log2.read_text().split() if log2.is_file() else []
@@ -11747,7 +11990,7 @@ def _runner_regression(out: Path, chk) -> None:
     log2.unlink(missing_ok=True)
     r3b = subprocess.run(["bash", "run_job.sh"], cwd=jd, capture_output=True, text=True,
                          env={**os.environ, "PATH": f"{stub_dir}:{os.environ.get('PATH','')}",
-                              "VASP_CMD": "vasp_std", "STUB_LOG": str(log2),
+                              "VASP_LAUNCHER_KIND": "none", "VASP_EXE": str(stub_dir / "vasp_std"), "STUB_LOG": str(log2),
                               })
     chk(r3b.returncode != 0,
         f"⛔음성 R8b: 일부만 지우고 재실행해도 선언 없이는 거부 rc={r3b.returncode}")
@@ -11780,7 +12023,7 @@ def _runner_regression(out: Path, chk) -> None:
     shutil.copytree(src, jd12)
     r12 = subprocess.run(["bash", "run_job.sh"], cwd=jd12, capture_output=True, text=True,
                          env={**os.environ, "PATH": f"{stub_dir}:{os.environ.get('PATH','')}",
-                              "VASP_CMD": "vasp_std"})
+                              "VASP_LAUNCHER_KIND": "none", "VASP_EXE": str(stub_dir / "vasp_std")})
     chk(r12.returncode != 0 and not (jd12 / "static" / "OUTCAR").is_file(),
         f"R12 POTCAR 없음 → 시작 거부 rc={r12.returncode}")
 
@@ -11807,7 +12050,7 @@ def _runner_regression(out: Path, chk) -> None:
         r = subprocess.run(["bash", "run_job.sh"], cwd=jd, capture_output=True, text=True,
                            env={**os.environ,
                                 "PATH": f"{stub_dir}:{os.environ.get('PATH', '')}",
-                                "VASP_CMD": "vasp_std"})
+                                "VASP_LAUNCHER_KIND": "none", "VASP_EXE": str(stub_dir / "vasp_std")})
         return jd, r
 
     _j, _r = _pcase("noprov", lambda d: (d / "POTCAR").write_text("stub POTCAR\n"))
@@ -11832,7 +12075,7 @@ def _runner_regression(out: Path, chk) -> None:
     r18 = subprocess.run(["bash", "run_job.sh"], cwd=jd18, capture_output=True, text=True,
                          env={**os.environ,
                               "PATH": f"{stub_dir}:{os.environ.get('PATH','')}",
-                              "VASP_CMD": "vasp_std"})
+                              "VASP_LAUNCHER_KIND": "none", "VASP_EXE": str(stub_dir / "vasp_std")})
     chk(r18.returncode != 0 and "allowlist 내용 SHA" in (r18.stdout + r18.stderr),
         f"⛔음성 R18: allowlist 경로만 있고 내용 SHA 가 없으면 거부 rc={r18.returncode}")
 
@@ -11844,7 +12087,7 @@ def _runner_regression(out: Path, chk) -> None:
     r19 = subprocess.run(["bash", "run_job.sh"], cwd=jd19, capture_output=True, text=True,
                          env={**os.environ,
                               "PATH": f"{stub_dir}:{os.environ.get('PATH','')}",
-                              "VASP_CMD": "vasp_std",
+                              "VASP_LAUNCHER_KIND": "none", "VASP_EXE": str(stub_dir / "vasp_std"),
                               "SKIP_POTCAR_PROVENANCE": "1"})
     chk(r19.returncode != 0,
         f"⛔음성 R19: SKIP_POTCAR_PROVENANCE=1 환경변수로는 **우회 안 된다** "
@@ -12145,10 +12388,14 @@ def selftest() -> int:
             "⛔음성 AR P0-8: host 를 기록하고 **같은 호스트일 때만** kill -0 을 쓴다 "
             "(다른 HPC 노드의 pid 에는 유효한 생존검사가 아니다)")
         # ── 회신 AS 해제조건 5 — launcher/executable 분리 · 실행 직전 재해시 ──
-        chk("VASP_LAUNCHER" in _rs and "VASP_EXE" in _rs
-            and "VASP_CMD 는 더 쓰지 않습니다" in _rs,
-            "⛔음성 AS 5: 러너가 **임의 VASP_CMD 를 거부**하고 launcher/실행파일을 "
-            "나눠 받는다 (봉인은 실행파일을 해시하는데 종전엔 다른 걸 실행할 수 있었다)")
+        # 🔴 회신 AV P0-2 — AS 5 의 "분리" 는 자유형 문자열이 남아 또 뚫렸다.
+        #   이제 KIND+NPROC 만 받고 argv 는 러너가 조립한다. env 는 허용 밖이다.
+        chk("VASP_LAUNCHER_KIND" in _rs and "VASP_EXE" in _rs
+            and "폐지됐습니다" in _rs and "VASP_NPROC" in _rs,
+            "⛔음성 AV P0-2: 러너가 **자유형 launcher 문자열을 거부**하고 "
+            "KIND+NPROC 에서 argv 를 스스로 조립한다")
+        chk("|env|" not in _rs and '"$VASP_LAUNCHER $VASP_EXE"' not in _rs,
+            "⛔음성 AV P0-2: env 허용·자유형 조립이 러너에 남아 있지 않다")
         chk("실행 직전 대조 실패" in _rs and "vasp_executable_sha256" in _rs,
             "⛔음성 AS 5: **실행 직전에** 봉인한 절대경로를 다시 해시해 대조한다")
         # ── 회신 AS 해제조건 4 — 봉인 재대조가 모든 불변량을 본다 ──────────
@@ -14254,10 +14501,12 @@ def _runner_e2e(bundle: Path, chk) -> bool:
     env["PATH"] = str(binp) + os.pathsep + env.get("PATH", "")
     env["PP"] = str(pp)
     env["POTCAR_ALLOWLIST"] = str(allow)
-    # ⛔ 회신 AS 해제조건 5 — launcher 와 실행파일을 나눠 준다 (VASP_CMD 는 거부된다)
-    env["VASP_LAUNCHER"] = "env"          # 아무것도 안 하는 launcher
+    # 🔴 회신 AV P0-2 — 자유형 launcher 문자열이 폐지됐다. 종전 이 시험이
+    #   `VASP_LAUNCHER="env"` 를 썼는데, env 야말로 AV 가 잡은 우회 통로였다.
+    env["VASP_LAUNCHER_KIND"] = "none"    # stub 직접 실행 (launcher 없음)
     env["VASP_EXE"] = str(vb)
     env.pop("VASP_CMD", None)
+    env.pop("VASP_LAUNCHER", None)
     env["BUNDLE_ZIP_SHA256"] = "0" * 64
     # ⛔ 회신 AS 7 — 외부 anchor 는 이제 **필수**다
     env["EXPECT_ZIP_SHA256"] = "0" * 64
@@ -14352,21 +14601,63 @@ def _runner_e2e(bundle: Path, chk) -> bool:
         chk(_rcS != 0 and _key in _oS,
             "⛔음성 AT P0-4: 기존 봉인의 %s → 거부 (rc=%s)" % (_why, _rcS))
 
-    # ①-f 🔴 회신 AT P0-5/6 — launcher 우회 · 신호 · lock 참여
-    for _tag, _lau, _why in (
-            ("lau_exe", "mpirun -np 4 " + str(vb),
-             "launcher 인자에 **실행파일**을 넣어 봉인된 VASP_EXE 를 무시하기"),
-            ("lau_meta", "mpirun -np 4; touch /tmp/pwned",
-             "셸 메타문자(`;`)로 다른 명령 끼워넣기"),
-            ("lau_unknown", "bash -c",
-             "알 수 없는 launcher (허용목록 밖)")):
-        _rcL, _oL = _run(_copy(_tag), {"VASP_LAUNCHER": _lau})
-        chk(_rcL != 0 and "VASP_LAUNCHER" in _oL,
-            "⛔음성 AT P0-5: %s → 거부 (rc=%s)" % (_why, _rcL))
+    # ①-f 🔴 회신 AV P0-2 — 자유형 launcher 는 이제 **문법적으로 표현 불가**다.
+    #   AT 때의 세 우회(`mpirun -np 48 other_vasp` · `/tmp/evil/mpirun` · `env`)는
+    #   검사를 뚫는 문자열이었다 — 이제 문자열 입력 자체가 없다. 남은 표면을 시험한다.
+    for _tag, _extra, _key, _why in (
+            ("lau_legacy_l", {"VASP_LAUNCHER": "mpirun -np 4 " + str(vb)},
+             "폐지", "구 VASP_LAUNCHER 문자열 (실행파일 밀반입 시도)"),
+            ("lau_legacy_c", {"VASP_CMD": "mpirun -np 4 vasp_std"},
+             "폐지", "구 VASP_CMD 문자열"),
+            ("lau_env_kind", {"VASP_LAUNCHER_KIND": "env"},
+             "모르는 VASP_LAUNCHER_KIND", "env 를 KIND 로 (AV 가 잡은 그 통로)"),
+            ("lau_bad_np", {"VASP_LAUNCHER_KIND": "mpirun", "VASP_NPROC": "4; ls"},
+             "양의 정수", "NPROC 에 명령 끼워넣기"),
+            ("lau_wrap_none", {"VASP_LAUNCHER_KIND": "wrapper"},
+             "VASP_WRAPPER", "wrapper 선언만 하고 경로 없음")):
+        _rcL, _oL = _run(_copy(_tag), _extra)
+        chk(_rcL != 0 and _key in _oL,
+            "⛔음성 AV P0-2: %s → 거부 (rc=%s)" % (_why, _rcL))
+    # 소스 수준 잠금 — 옛 통로의 문자열이 남아 있으면 재발이다
+    chk("aprun|jsrun|env|ibrun" not in RUN_STAGED
+        and '"$VASP_LAUNCHER $VASP_EXE"' not in RUN_STAGED,
+        "AV P0-2: RUN_STAGED 에 자유형 launcher 조립·env 허용이 남아 있지 않다")
+    chk("V=${VASP_CMD:-" not in RUN_JOB and "$V > vasp.out" not in RUN_JOB,
+        "AV P0-2: RUN_JOB 에 VASP_CMD 기본값 실행 경로가 남아 있지 않다")
+
+    # ①-g 🔴 회신 AV P0-2 — run_job.sh **직접 호출** 차단 (staged 번들)
+    _dj = _copy("direct_runjob")
+    _jd1 = sorted(_dj.glob("*/*/run_job.sh"))[0].parent
+    _envj = dict(env)
+    _rcD = _sp.run(["bash", "run_job.sh"], cwd=str(_jd1), env=_envj,
+                   capture_output=True, text=True, timeout=120)
+    chk(_rcD.returncode != 0 and "직접 부르지" in (_rcD.stdout + _rcD.stderr),
+        "⛔음성 AV P0-2: 토큰 없는 run_job.sh 직접 호출 → 거부 (rc=%s)"
+        % _rcD.returncode)
+    (_dj / ".lock_bundle").write_text("host|1|stage1|t\n", encoding="utf-8")
+    _rcD2 = _sp.run(["bash", "run_job.sh"], cwd=str(_jd1),
+                    env=dict(_envj, RUNNER_TOKEN="wrong|token"),
+                    capture_output=True, text=True, timeout=120)
+    chk(_rcD2.returncode != 0 and "lock 과 다릅니다" in (_rcD2.stdout + _rcD2.stderr),
+        "⛔음성 AV P0-2: 틀린 토큰 → 거부")
+    # 시험 마커 **파일만으로는** production 에서 아무것도 못 끈다 (해제조건 ③)
+    (_jd1 / ".SELFTEST_FIXTURE").write_text("x", encoding="utf-8")
+    (_jd1 / "POTCAR").write_text("dummy\n", encoding="utf-8")
+    _rcD3 = _sp.run(["bash", "run_job.sh"], cwd=str(_jd1),
+                    env=dict(_envj, RUNNER_TOKEN="host|1|stage1|t"),
+                    capture_output=True, text=True, timeout=120)
+    _oD3 = _rcD3.stdout + _rcD3.stderr
+    chk(_rcD3.returncode != 0 and "POTCAR_PROVENANCE.json" in _oD3,
+        "⛔음성 AV 해제조건③: production 번들에서 .SELFTEST_FIXTURE 파일은 "
+        "provenance 강제를 **못 끈다** (MANIFEST 가 fixture 를 선언해야만)")
     # 실행파일 receipt 가 잡마다 남는가 (긴 실행 중 바이너리 교체를 반송물에서 본다)
     _rcpt = sorted(_ok_root.rglob("EXECUTABLE_RECEIPT.tsv"))
-    chk(len(_rcpt) > 0 and str(vb) in _rcpt[0].read_text(),
-        "AT P0-5: 잡마다 **실행 직전** 실행파일 receipt 를 남긴다 (%d건)" % len(_rcpt))
+    chk(len(_rcpt) > 0 and str(vb) in _rcpt[0].read_text()
+        and "_runner_start" in _rcpt[0].read_text(),
+        "AT P0-5·AV P0-2: 잡마다 receipt 헤더행을 남긴다 (%d건)" % len(_rcpt))
+    chk(any("\tpre\t" in f.read_text() or "\tstatic\t" in f.read_text()
+            for f in _rcpt),
+        "AV P0-2: run_job.sh 가 **상별 행**을 append 한다 (분석기가 읽는 형식)")
     # attestation 생성기·봉인기가 같은 lock 에 참여하는가
     _lk = _copy("lock_share")
     (_lk / ".lock_bundle").write_text("otherhost|99999|someone|2026-01-01T00:00:00Z\n",
