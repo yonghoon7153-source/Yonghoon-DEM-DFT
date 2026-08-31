@@ -499,8 +499,12 @@ POTCAR_ALLOWLIST=${POTCAR_ALLOWLIST:?POTCAR_ALLOWLIST 를 지정하세요 (절�
 #       (하드링크 생성은 대상이 있으면 실패한다 — 내용이 없는 창이 존재하지 않는다)
 #     ② **모르는 lock 은 절대 지우지 않는다.** 같은 호스트의 죽은 pid 일 때만
 #       안내하고, 그래도 자동 삭제하지 않는다 (사람이 지운다).
-LOCK=".lock_stage$stage"
-RUNID="$(hostname)|$$|$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+# ⛔⛔ 회신 AS 해제조건 6 (2026-08-31) — lock 을 **단계별이 아니라 번들 전역**으로
+#   바꾼다. 종전엔 `.lock_bundle` 과 `.lock_stage2` 가 따로라 1단계와 2단계를
+#   동시에 던지면 둘 다 lock 을 잡았다. 같은 번들 디렉터리에서 동시에 도는 것은
+#   단계가 달라도 안 된다 — POTCAR·봉인·산출물을 공유하기 때문이다.
+LOCK=".lock_bundle"
+RUNID="$(hostname)|$$|stage$stage|$(date -u +%Y-%m-%dT%H:%M:%SZ)"
 LOCKTMP="$LOCK.tmp.$$"
 printf '%s\n' "$RUNID" > "$LOCKTMP" || exit 3
 if ! ln "$LOCKTMP" "$LOCK" 2>/dev/null; then
@@ -534,9 +538,28 @@ stage = sys.argv[1]
 man = json.load(open("MANIFEST.json"))
 mh = hashlib.sha256(open("MANIFEST.json", "rb").read()).hexdigest()
 bad = []
-exp = os.environ.get("EXPECT_MANIFEST_SHA256", "").strip().lower()
+# ⛔⛔ 회신 AS 해제조건 7 (2026-08-31) — ZIP 안의 해시는 **자기 자신을 증명하지
+#   못한다**. 우리가 ZIP 밖(메일 본문)에 고정한 digest 를 현장이 붙여넣어야
+#   비로소 "우리가 보낸 그 물건" 이 확인된다. **선택이 아니라 필수**로 만든다.
+_HEX = "0123456789abcdef"
+def _need_hex(name):
+    v = os.environ.get(name, "").strip().lower()
+    if not v:
+        bad.append("%s 가 없다 — 우리가 보낸 정본 메시지의 digest 를 넣어야 "
+                   "이 번들이 그 배포본인지 확인할 수 있다" % name)
+        return None
+    if len(v) != 64 or any(c not in _HEX for c in v):
+        bad.append("%s 가 64자리 hex 가 아니다" % name)
+        return None
+    return v
+exp = _need_hex("EXPECT_MANIFEST_SHA256")
 if exp and exp != mh:
     bad.append("MANIFEST sha256 %s ≠ EXPECT_MANIFEST_SHA256 %s" % (mh[:12], exp[:12]))
+expz = _need_hex("EXPECT_ZIP_SHA256")
+_zt_env = os.environ.get("BUNDLE_ZIP_SHA256", "").strip().lower()
+if expz and _zt_env and expz != _zt_env:
+    bad.append("받은 ZIP 해시 %s ≠ EXPECT_ZIP_SHA256 %s — 우리가 보낸 배포본이 "
+               "아니다" % (_zt_env[:12], expz[:12]))
 # ⛔ 회신 AR 해제조건 7 — 봉인을 **모든 실행에서 필수화**한다
 try:
     seal = json.load(open("POTCAR_ROOT_SEAL.json"))
@@ -561,6 +584,26 @@ if seal:
         bad.append("ZIP_SHA256.txt 가 없다 — 받은 ZIP 과의 결박을 확인할 수 없다")
     if _zt and seal.get("bundle_zip_sha256") and seal["bundle_zip_sha256"] != _zt:
         bad.append("봉인의 ZIP 해시가 ZIP_SHA256.txt 와 다르다")
+# ⛔⛔ 회신 AS 해제조건 6 — 실행 전에 **배포 파일 전수**를 해시 대조한다.
+#   종전엔 잡 집합만 셌다. INCAR 한 줄이 바뀌어도 census 는 통과했다.
+_fh = man.get("files_sha256") or {}
+if not _fh:
+    bad.append("MANIFEST 에 files_sha256 이 없다 — 입력 무결성을 확인할 수 없다")
+else:
+    _chg, _mis = [], []
+    for _rel, _want in sorted(_fh.items()):
+        _pth = os.path.join(*_rel.split("/"))
+        if not os.path.isfile(_pth):
+            _mis.append(_rel); continue
+        _h = hashlib.sha256(open(_pth, "rb").read()).hexdigest()
+        if _h != _want:
+            _chg.append(_rel)
+    if _mis:
+        bad.append("배포 파일이 없다 %d건: %s" % (len(_mis), _mis[:3]))
+    if _chg:
+        bad.append("배포 파일이 바뀌었다 %d건: %s (입력을 고치면 그 잡은 "
+                   "거부됩니다)" % (len(_chg), _chg[:3]))
+    print("  ✓ 입력 무결성 %d 파일" % len(_fh))
 cen = man.get("run_census") or {}
 if not cen.get("job_keys") or not cen.get("stage_of"):
     bad.append("MANIFEST 에 run_census 가 없다 — 이 번들로는 census 를 확인할 수 "
@@ -13224,6 +13267,10 @@ def _runner_e2e(bundle: Path, chk) -> bool:
     env["VASP_EXE"] = str(vb)
     env.pop("VASP_CMD", None)
     env["BUNDLE_ZIP_SHA256"] = "0" * 64
+    # ⛔ 회신 AS 7 — 외부 anchor 는 이제 **필수**다
+    env["EXPECT_ZIP_SHA256"] = "0" * 64
+    env["EXPECT_MANIFEST_SHA256"] = hashlib.sha256(
+        (bundle / "MANIFEST.json").read_bytes()).hexdigest()
     env["PYTHONIOENCODING"] = "utf-8"
 
     def _run(root, extra_env=None):
@@ -13305,24 +13352,57 @@ def _runner_e2e(bundle: Path, chk) -> bool:
 
     # ⑥ ⛔음성 — **모르는 lock 은 지우지 않는다** (AR P0-8)
     _r6 = _copy("lock_foreign")
-    (_r6 / ".lock_stage1").write_text("other-host|999999|2026-08-31T00:00:00Z\n",
+    (_r6 / ".lock_bundle").write_text("other-host|999999|2026-08-31T00:00:00Z\n",
                                       encoding="utf-8")
     _rc6, _o6 = _run(_r6)
-    chk(_rc6 == 3 and (_r6 / ".lock_stage1").is_file()
+    chk(_rc6 == 3 and (_r6 / ".lock_bundle").is_file()
         and "다른 호스트" in _o6,
         "⛔음성 AR P0-8: 다른 호스트의 lock 을 보면 **지우지 않고** 멈춘다 · rc=%s" % _rc6)
     # 같은 호스트의 죽은 pid 여도 자동 삭제하지 않는다
     _r7 = _copy("lock_dead_local")
-    (_r7 / ".lock_stage1").write_text("%s|999999|2026-08-31T00:00:00Z\n"
+    (_r7 / ".lock_bundle").write_text("%s|999999|2026-08-31T00:00:00Z\n"
                                       % platform.node(), encoding="utf-8")
     _rc7, _o7 = _run(_r7)
-    chk(_rc7 == 3 and (_r7 / ".lock_stage1").is_file()
+    chk(_rc7 == 3 and (_r7 / ".lock_bundle").is_file()
         and "자동으로 지우지 않습니다" in _o7,
         "⛔음성 AR P0-8: 같은 호스트의 죽은 pid 여도 **자동 삭제하지 않는다** "
         "(다른 노드의 실행일 수 있다) · rc=%s" % _rc7)
     # 정상 종료하면 **자기 lock 은** 치운다
-    chk(not (_ok_root / ".lock_stage1").exists(),
+    chk(not (_ok_root / ".lock_bundle").exists(),
         "AR P0-8: 자기 lock 은 종료 시 치운다 (남의 것만 안 건드린다)")
+
+    # ══ 회신 AS 해제조건 6·7 — 전수 해시 · 외부 anchor · 번들 전역 lock ═══════
+    # ⛔음성 — 배포 파일 **한 줄**을 고치면 실행 전에 막는다
+    _r9 = _copy("file_tamper")
+    _vic = sorted(_r9.glob("*/*/static/INCAR"))[0]
+    _vic.write_text(_vic.read_text(encoding="utf-8") + "\n! tampered\n", encoding="utf-8")
+    _rc9, _o9 = _run(_r9)
+    chk(_rc9 != 0 and "배포 파일이 바뀌었다" in _o9,
+        "⛔음성 AS 6: INCAR 한 줄을 고치면 **실행 전 전수 해시**가 막는다 "
+        "(종전엔 잡 집합만 세어 통과했다) · rc=%s" % _rc9)
+    # ⛔음성 — 외부 anchor 가 없으면 돌지 않는다 (선택이 아니라 필수)
+    for _drop in ("EXPECT_MANIFEST_SHA256", "EXPECT_ZIP_SHA256"):
+        _rA = _copy("no_anchor_" + _drop[7:11])
+        _envA = dict(env); _envA.pop(_drop, None)
+        _rcA = _sp.run(["bash", "run_staged.sh", "1"], cwd=str(_rA), env=_envA,
+                       capture_output=True, text=True, timeout=600)
+        _oA = (_rcA.stdout or "") + (_rcA.stderr or "")
+        chk(_rcA.returncode != 0 and _drop in _oA and "정본 메시지" in _oA,
+            "⛔음성 AS 7: `%s` 없이는 돌지 않는다 — ZIP 안의 해시는 자기 자신을 "
+            "증명하지 못한다" % _drop)
+    # ⛔음성 — anchor 가 **다른 배포본**을 가리키면 막는다
+    _rB = _copy("wrong_anchor")
+    _rcB, _oB = _run(_rB, {"EXPECT_ZIP_SHA256": "1" * 64})
+    chk(_rcB != 0 and "우리가 보낸 배포본이" in _oB,
+        "⛔음성 AS 7: 받은 ZIP 해시가 anchor 와 다르면 막는다 · rc=%s" % _rcB)
+    # lock 이 **번들 전역**인가 — 2단계 lock 이 1단계를 막는다
+    _rC = _copy("lock_global")
+    (_rC / ".lock_bundle").write_text("other-host|999|stage2|2026-08-31T00:00:00Z\n",
+                                      encoding="utf-8")
+    _rcC, _oC = _run(_rC)
+    chk(_rcC == 3 and (_rC / ".lock_bundle").is_file(),
+        "⛔음성 AS 6: lock 이 **번들 전역**이라 다른 단계가 돌고 있어도 막는다 "
+        "(종전엔 단계별이라 1·2 를 동시에 던질 수 있었다) · rc=%s" % _rcC)
 
     # ⑦ ⛔음성 — 봉인이 반쪽이면 러너가 실행 전에 막는다 (해제조건 7 '모든 실행')
     _r8 = _copy("half_seal")
