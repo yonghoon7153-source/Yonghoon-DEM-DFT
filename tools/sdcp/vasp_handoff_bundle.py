@@ -513,6 +513,35 @@ VASP_LAUNCHER=${VASP_LAUNCHER:?VASP_LAUNCHER 를 지정하세요 (예: 'mpirun -
 VASP_EXE=${VASP_EXE:?VASP_EXE 를 지정하세요 (실행파일 절대경로 — 이것이 봉인 대상입니다)}
 case "$VASP_EXE" in /*) ;; *) VASP_EXE=$(command -v "$VASP_EXE" 2>/dev/null || true) ;; esac
 [ -n "$VASP_EXE" ] && [ -x "$VASP_EXE" ] || { echo "⛔ VASP_EXE 를 실행파일로 찾을 수 없습니다"; exit 2; }
+# 🔴🔴 회신 AT P0-5 (2026-08-31) — **launcher 가 봉인된 실행파일을 무시할 수 있었다.**
+#   `VASP_LAUNCHER='mpirun -np 48 /other/vasp'` 로 주면 최종 명령이
+#   `mpirun -np 48 /other/vasp /sealed/vasp_std` 가 되어 mpirun 은 **앞의 것**을 돈다.
+#   봉인은 뒤의 것을 해시했으므로 아무 의미가 없어진다. 셸 메타문자도 같은 문제다.
+case "$VASP_LAUNCHER" in
+  *[\;\&\|\<\>\`\$\(\)\{\}\'\"]*|*"
+"*)
+    echo "⛔ VASP_LAUNCHER 에 셸 메타문자가 있습니다 — 봉인된 실행파일을 우회할 수 있습니다"
+    echo "   허용: 런처 이름과 플래그·숫자만 (예: 'mpirun -np 48')"; exit 2 ;;
+esac
+_lt=0
+for _tok in $VASP_LAUNCHER; do
+  _lt=$((_lt+1))
+  if [ "$_lt" = 1 ]; then
+    case "$(basename "$_tok")" in
+      mpirun|mpiexec|srun|aprun|jsrun|env|ibrun) ;;
+      *) echo "⛔ VASP_LAUNCHER 의 첫 토큰이 알 수 없는 launcher 입니다: $_tok"
+         echo "   허용: mpirun mpiexec srun aprun jsrun ibrun env"
+         echo "   (다른 런처가 필요하면 알려주세요 — 목록에 넣고 다시 봉인합니다)"; exit 2 ;;
+    esac
+    continue
+  fi
+  # 첫 토큰 뒤에 **실행 가능한 파일**이 오면 그것이 진짜 실행 대상이 될 수 있다
+  if [ -x "$_tok" ] && [ ! -d "$_tok" ]; then
+    echo "⛔ VASP_LAUNCHER 의 인자 '$_tok' 이 실행 가능한 파일입니다."
+    echo "   launcher 에 실행파일을 넣으면 봉인된 VASP_EXE 가 무시됩니다 (회신 AT P0-5)."
+    echo "   실행파일은 VASP_EXE 로만 주세요."; exit 2
+  fi
+done
 export VASP_EXE VASP_LAUNCHER
 VASP_CMD="$VASP_LAUNCHER $VASP_EXE"
 export VASP_CMD
@@ -552,9 +581,26 @@ if ! ln "$LOCKTMP" "$LOCK" 2>/dev/null; then
 fi
 rm -f "$LOCKTMP"
 # 우리 것일 때만 지운다 (남의 lock 을 치우지 않는다)
-trap '[ "$(cat "$LOCK" 2>/dev/null)" = "$RUNID" ] && rm -f "$LOCK"' EXIT INT TERM
+_unlock() { [ "$(cat "$LOCK" 2>/dev/null)" = "$RUNID" ] && rm -f "$LOCK"; return 0; }
+# 🔴🔴 회신 AT P0-5 — 종전 trap 은 INT/TERM 에서 **lock 만 지우고 러너는 계속
+#   돌았다.** bash 는 핸들러를 돌린 뒤 하던 일을 이어간다. 그 사이 lock 이 비므로
+#   다른 실행이 같은 번들에 들어올 수 있었다 — 잠금이 있으나 마나였다.
+#   ⇒ 신호를 받으면 **자식을 죽이고 정말로 나간다.**
+_bail() {
+  echo ""
+  echo "⛔ 신호를 받았습니다 ($1) — 자식 프로세스를 정리하고 중단합니다."
+  trap - EXIT INT TERM
+  kill -TERM 0 2>/dev/null || true      # 이 프로세스 그룹 전체
+  _unlock
+  exit "$2"
+}
+trap '_unlock' EXIT
+trap '_bail INT 130' INT
+trap '_bail TERM 143' TERM
 
-bash SEAL_POTCAR_ROOT.sh || { echo "POTCAR 조립·봉인 실패 — 중단"; exit 1; }
+# ⛔ 회신 AT P0-6 — SEAL 은 러너가 **이미 lock 을 쥔 채** 부른다. 중복 획득으로
+#   교착하지 않도록 알려 준다 (단독 실행이면 SEAL 이 스스로 잡는다).
+BUNDLE_LOCK_HELD=1 bash SEAL_POTCAR_ROOT.sh || { echo "POTCAR 조립·봉인 실패 — 중단"; exit 1; }
 
 # ⛔⛔ 회신 AR P0-7 · 해제조건 8 — **실행 전 census.** 종전엔 존재하는 job.json
 #   만 분류하고 디렉터리 수만 비교해서, job.json 하나를 지워도 통과했다.
@@ -768,6 +814,13 @@ run_wave() {   # $1 = 목록 파일
   xargs -a "$1" -I{} -P "$NPAR" sh -c '
     j="$1"
     [ -f "$j/run_job.sh" ] || { echo "없음: $j"; exit 1; }
+    # 🔴 회신 AT P0-5 — **잡 실행 직전에** 실행파일 receipt 를 남긴다. 봉인 검사는
+    #   러너 시작 때 한 번뿐이라, 긴 실행 중에 바이너리가 바뀌면 알 길이 없었다.
+    #   잡마다 그 순간의 sha·mtime·launcher 를 적어 두면 반송물에서 대조된다.
+    printf "%s\t%s\t%s\t%s\n" \
+      "$(date -u +%Y-%m-%dT%H:%M:%SZ)" \
+      "$(sha256sum "$VASP_EXE" | cut -d" " -f1)" \
+      "$VASP_EXE" "$VASP_LAUNCHER" > "$j/EXECUTABLE_RECEIPT.tsv"
     echo "=== $j 시작 ==="
     ( cd "$j" && bash run_job.sh ) || { echo "⛔ $j 실패"; exit 1; }
     echo "=== $j 완료 ==="
@@ -810,6 +863,33 @@ SEAL_POTCAR_ROOT = r'''#!/usr/bin/env bash
 set -e
 : "${PP:?PP=/path/to/potpaw_PBE.54 를 주세요}"
 : "${POTCAR_ALLOWLIST:?POTCAR_ALLOWLIST=/abs/site_allow.txt 를 주세요}"
+
+# ⛔⛔ 회신 AT P0-6 (2026-08-31) — 이 스크립트도 **번들 전역 lock** 에 참여한다.
+#   종전엔 러너만 잠갔고 봉인기·attestation 생성기는 그냥 들어왔다. 같은 번들의
+#   POTCAR·봉인 파일을 동시에 만지면 서로를 덮는다.
+#   러너가 이미 쥐고 부르는 경우(BUNDLE_LOCK_HELD=1)는 다시 잡지 않는다 (교착 방지).
+_LOCK=".lock_bundle"
+_LOCK_MINE=""
+if [ "${BUNDLE_LOCK_HELD:-0}" != "1" ]; then
+  _RUNID="$(hostname)|$$|$(basename "$0")|$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+  _T="$_LOCK.tmp.$$"
+  printf '%s\n' "$_RUNID" > "$_T" || exit 3
+  if ! ln "$_T" "$_LOCK" 2>/dev/null; then
+    rm -f "$_T"
+    echo "⛔ 이 번들에 다른 실행이 있습니다: $(cat "$_LOCK" 2>/dev/null)"
+    echo "   같은 번들에서 동시에 돌리지 마세요 (POTCAR·봉인을 공유합니다)."
+    exit 3
+  fi
+  rm -f "$_T"; _LOCK_MINE="$_RUNID"
+fi
+_unlock_self() { [ -n "$_LOCK_MINE" ] && [ "$(cat "$_LOCK" 2>/dev/null)" = "$_LOCK_MINE" ] \
+                   && rm -f "$_LOCK"; return 0; }
+_bail_self() { echo ""; echo "⛔ 신호($1) — 중단합니다."; trap - EXIT INT TERM
+               kill -TERM 0 2>/dev/null || true; _unlock_self; exit "$2"; }
+trap '_unlock_self' EXIT
+trap '_bail_self INT 130' INT
+trap '_bail_self TERM 143' TERM
+
 # ⛔ 회신 AR P0-6 — 받은 **정확한 ZIP** 과 결박한다. 번들 안에는 자기 해시를 넣을
 #   수 없으므로 현장이 받은 ZIP 에서 직접 계산해 여기서 박는다:
 #     BUNDLE_ZIP_SHA256=$(sha256sum sdcp_c12_vNN.zip | cut -d" " -f1)
@@ -1483,6 +1563,31 @@ set -e
 #   종전엔 스크립트가 근처 *.zip 을 스스로 찾아 {파일명: sha} 사전을 만들었다 —
 #   무엇에 대한 attestation 인지 모호하고 분석기와 형이 달랐다.
 : "${BUNDLE_ZIP_SHA256:?BUNDLE_ZIP_SHA256=\$(sha256sum <받은 zip> | cut -d' ' -f1)}"
+
+# ⛔⛔ 회신 AT P0-6 (2026-08-31) — attestation 생성기도 **번들 전역 lock** 에
+#   참여한다. 종전엔 러너만 잠갔고 이 스크립트는 그냥 들어와 같은 번들의 파일을
+#   동시에 만질 수 있었다.
+_LOCK=".lock_bundle"
+_LOCK_MINE=""
+if [ "${BUNDLE_LOCK_HELD:-0}" != "1" ]; then
+  _RUNID="$(hostname)|$$|make_attestation|$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+  _T="$_LOCK.tmp.$$"
+  printf '%s\n' "$_RUNID" > "$_T" || exit 3
+  if ! ln "$_T" "$_LOCK" 2>/dev/null; then
+    rm -f "$_T"
+    echo "⛔ 이 번들에 다른 실행이 있습니다: $(cat "$_LOCK" 2>/dev/null)"
+    exit 3
+  fi
+  rm -f "$_T"; _LOCK_MINE="$_RUNID"
+fi
+_unlock_self() { [ -n "$_LOCK_MINE" ] && [ "$(cat "$_LOCK" 2>/dev/null)" = "$_LOCK_MINE" ] \
+                   && rm -f "$_LOCK"; return 0; }
+_bail_self() { echo ""; echo "⛔ 신호($1) — 중단합니다."; trap - EXIT INT TERM
+               kill -TERM 0 2>/dev/null || true; _unlock_self; exit "$2"; }
+trap '_unlock_self' EXIT
+trap '_bail_self INT 130' INT
+trap '_bail_self TERM 143' TERM
+
 # ⛔ 회신 AR P0-6 — `made_before_production` 을 **자기선언이 아니라 산출물 부재로**
 #   입증한다. 하나라도 있으면 계산 전이 아니므로 거부한다.
 PROD=$(find . \( -name OUTCAR -o -name "OUTCAR.gz" -o -name vasprun.xml \
@@ -13988,6 +14093,35 @@ def _runner_e2e(bundle: Path, chk) -> bool:
         _rcS, _oS = _tamper_seal(_tag, _mut)
         chk(_rcS != 0 and _key in _oS,
             "⛔음성 AT P0-4: 기존 봉인의 %s → 거부 (rc=%s)" % (_why, _rcS))
+
+    # ①-f 🔴 회신 AT P0-5/6 — launcher 우회 · 신호 · lock 참여
+    for _tag, _lau, _why in (
+            ("lau_exe", "mpirun -np 4 " + str(vb),
+             "launcher 인자에 **실행파일**을 넣어 봉인된 VASP_EXE 를 무시하기"),
+            ("lau_meta", "mpirun -np 4; touch /tmp/pwned",
+             "셸 메타문자(`;`)로 다른 명령 끼워넣기"),
+            ("lau_unknown", "bash -c",
+             "알 수 없는 launcher (허용목록 밖)")):
+        _rcL, _oL = _run(_copy(_tag), {"VASP_LAUNCHER": _lau})
+        chk(_rcL != 0 and "VASP_LAUNCHER" in _oL,
+            "⛔음성 AT P0-5: %s → 거부 (rc=%s)" % (_why, _rcL))
+    # 실행파일 receipt 가 잡마다 남는가 (긴 실행 중 바이너리 교체를 반송물에서 본다)
+    _rcpt = sorted(_ok_root.rglob("EXECUTABLE_RECEIPT.tsv"))
+    chk(len(_rcpt) > 0 and str(vb) in _rcpt[0].read_text(),
+        "AT P0-5: 잡마다 **실행 직전** 실행파일 receipt 를 남긴다 (%d건)" % len(_rcpt))
+    # attestation 생성기·봉인기가 같은 lock 에 참여하는가
+    _lk = _copy("lock_share")
+    (_lk / ".lock_bundle").write_text("otherhost|99999|someone|2026-01-01T00:00:00Z\n",
+                                      encoding="utf-8")
+    _rcK, _oK = _sp.run(["bash", "SEAL_POTCAR_ROOT.sh"], cwd=str(_lk), env=env,
+                        capture_output=True, text=True, timeout=300), None
+    chk(_rcK.returncode != 0 and "다른 실행이 있습니다" in (_rcK.stdout + _rcK.stderr),
+        "⛔음성 AT P0-6: 남의 lock 이 있으면 **봉인기도** 들어가지 않는다")
+    _rcM = _sp.run(["bash", "MAKE_POTCAR_ATTESTATION.sh"], cwd=str(_lk),
+                   env=dict(env, RELEASE_LABEL="x", SITE="y"),
+                   capture_output=True, text=True, timeout=300)
+    chk(_rcM.returncode != 0 and "다른 실행이 있습니다" in (_rcM.stdout + _rcM.stderr),
+        "⛔음성 AT P0-6: 남의 lock 이 있으면 **attestation 생성기도** 들어가지 않는다")
 
     # ② ⛔음성 — **job.json 하나를 지우면** 막는다 (AR P0-7 이 재현한 그 경우)
     _r2 = _copy("drop_jobjson")
