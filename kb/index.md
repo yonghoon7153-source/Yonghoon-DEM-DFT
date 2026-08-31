@@ -1,6 +1,6 @@
 # kb 카탈로그 (생성물 — 손으로 고치지 말 것)
 
-> `python3 tools/kb_wiki.py index` 가 만든다 · 2026-08-31 · managed-files: 320
+> `python3 tools/kb_wiki.py index` 가 만든다 · 2026-08-31 · managed-files: 321
 
 규칙: kb/SCHEMA.md · 열린 질문: kb/questions/ · 논지 카드: kb/syntheses/ · 원장: kb/open_items.md · 문헌: litdb/INDEX.md
 
@@ -252,7 +252,8 @@
 - `kb/reports/sdcp_preliminary_final_2026_08_03.md` — SDCP 예비 최종 보고서 (2026-08-03)
 - `kb/reports/sdcp_review_action_plan_2026_08_03.md` — SDCP 파이프라인 — 리뷰 2건 통합 실행계획 (2026-08-03)
 
-## projects/ (20)
+## projects/ (21)
+- `kb/projects/HANDOFF_2026_08_31_session.md` — 인수인계 — 2026-08-31 세션 (외주 C-12 AR→AV · 폴라론 S0 · nscf 사고) ○미열람
 - `kb/projects/MULTI_CATEGORY_BATCH_PLAN_v22.md` — Multi-Category Multi-Compound Batch Plan — Paper #2 (v4.5.18)
 - `kb/projects/MUST_READ_digital_twin_north_star.md` — 🚨🚨🚨 MUST READ — AI 계산 스크리닝 플랫폼 North Star (구: Digital Twin)
 - `kb/projects/PRESENTATION_digital_twin_overview.md` — AI 계산 기반 스크리닝 플랫폼 — 발표용 종합 정리 (구: Digital Twin)
