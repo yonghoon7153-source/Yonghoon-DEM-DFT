@@ -204,7 +204,7 @@ lock — 내용을 **먼저 쓴** 임시 파일을 `ln` 으로 원자적으로 �
 - 사전등록 estimand ⛔음성 묶음을 **분석기 템플릿 안으로** 옮겨
   `_selftest_closure(chk)` 로 만들었다. 생성기 selftest 는 그 함수를 호출한다
   (검사 출처가 하나다). `python3 analyze_results.py --selftest` 가
-  179 → **244건**(estimand 판정 65건 포함)이고, `selftest N/N · PASS` 와
+  179 → **245건**(estimand 판정 66건 포함)이고, `selftest N/N · PASS` 와
   `재현: python3 analyze_results.py --selftest` 를 스스로 찍는다.
 - **러너를 실제로 돌리는** e2e 를 넣었다(`_runner_e2e`). 가짜 PP 트리·site
   allowlist·stub `vasp_std` 로 `SEAL_POTCAR_ROOT.sh → census` 경로를 관통하고,
@@ -228,8 +228,8 @@ lock — 내용을 **먼저 쓴** 임시 파일을 `ln` 으로 원자적으로 �
 | 생성기 selftest | 524(주장) | **404**(실측·재현 가능) |
 | 대안 자세 | tier 만 | **`role_pair` 봉인**(역할 비대칭 명시) |
 
-⚠ 생성기 selftest 의 "524" 는 철회한다 — 지금 실물이 찍는 수는 402 이고,
-그중 배포본 안에서 재현되는 것이 244 다. 두 수 다 실행 출력에서 센 값이다.
+⚠ 생성기 selftest 의 "524" 는 철회한다 — 지금 실물이 찍는 수는 **404** 이고,
+그중 배포본 안에서 재현되는 것이 **245** 다. 두 수 다 실행 출력에서 센 값이다.
 
 ## 3. 여쭙고 싶은 것
 
