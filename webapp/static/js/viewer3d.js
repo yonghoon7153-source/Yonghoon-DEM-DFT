@@ -6767,10 +6767,18 @@ export async function showLabCompareModal(pidA, pidB, nameA, nameB) {
       //  ★ 2026-08-31 — 이 컬러바는 **논문 그림에 그대로 들어간다** (PNG export).  옛 제목
       //    'weighted contacts per AM' 은 철회된 해석이라(§18) 그림 안에서 살아남으면 안 된다:
       //    평문·pptx 스윕은 PNG 속 글자를 못 읽으므로 여기가 유일한 방어선이다.
+      //  ★★ 2026-08-31 — 논문 export 용 눈금을 **SBE 중앙값으로 정규화**한다.
+      //    옛 판은 원시 점밀도(arb. units)를 찍었는데, 그 절대값은 표본 밀도에 딸린 값이라
+      //    뜻이 없고 독자가 본문의 접점 수(개체 단위)와 연결하려다 어긋난다.  1.0 = SBE
+      //    중앙값으로 두면 눈금이 **정량이면서** 접점 수와 자릿수가 달라 혼동이 없다.
+      //    ⚠ 기준은 `wireA.median` = **패널 A** 의 중앙값이다 (A 에 SBE 를 올리는 규약).
+      //    ⚠ 철자는 미국식 — 'centre' 가 그림에 그대로 찍혀 나가던 것을 고쳤다.
+      const _ref = (wireA && wireA.median > 0) ? wireA.median : 1;
       cbarSpec = { map: 'jet', gamma: 1.6,
-                   title: 'Carbon wiring — carbon-point density near AM, arb. units (joint scale) — NOT a contact count',
-                   sub: 'weighted point count within r + 0.3 µm of the AM centre; pattern comparison only',
-                   left: '약함 ' + Math.round(lo), right: '강함 ' + Math.round(hi) };
+                   title: 'Carbon density near AM (normalized to SBE median)',
+                   sub: 'conductive-additive material points within 0.3 µm of the AM particle '
+                        + 'center; scale common to both panels',
+                   left: (lo / _ref).toFixed(2), right: (hi / _ref).toFixed(2) };
     } else if (mode === 'wiring_delta') {
       // Δ 배선 — 같은 AM 골격(같은 케이스 파생) 두 payload의 입자별 접점 차이 (user: "차이 자체를 색칠")
       const partsA = A.particles || [], partsB = B.particles || [];
