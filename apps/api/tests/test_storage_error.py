@@ -82,6 +82,20 @@ def test_스키마_오류도_장치_탓이_아니다(broken):
     assert "no such column" in detail
 
 
+def test_health_는_저장소가_죽어도_200(broken):
+    """**`bml` 의 진단이 여기에 달려 있다.**
+
+    `bml` 의 도달 검사는 전부 `/api/health` 의 상태 코드 하나로 판정한다
+    (`http_code_of` · `server_alive` · `instance_of`).  그리고 터널 너머의
+    503 을 "터널이 죽었다" 로 읽고 **터널을 닫는다** (`share_stale`).
+
+    그래서 health 가 DB 를 보게 되는 순간, 외장하드가 빠진 것이 "터널이
+    죽었다" 로 읽히고 멀쩡한 터널이 닫힌다 — 남들이 쓰고 있는 주소가.
+    health 는 문 밖이고(ADR 0014) DB 밖이어야 한다.
+    """
+    assert broken("disk I/O error").get("/api/health").status_code == 200
+
+
 def test_멀쩡한_길은_그대로다(client):
     """핸들러가 정상 응답을 건드리지 않는다."""
     assert client.get("/api/samples").status_code == 200
