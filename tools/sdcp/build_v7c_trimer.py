@@ -3280,9 +3280,18 @@ def pilot_generate(a):
     }
     n_meas = (len(man["seed_plan"]["Dradical"]["seeds"])
               + len(man["seed_plan"]["Pcation"]["seeds"]) + 1) * len(envs)
+    _n_probe = (len([x for x in man["seed_plan"]["Dradical"]["seeds"] if x != "default"])
+                + len([x for x in man["seed_plan"]["Pcation"]["seeds"]
+                       if x != "default"])) * len(envs)
     man["census"] = {
         "seed_generation_SP": len(envs) * 2,
         "measured_SP_예정": n_meas,
+        # ⛔ 회신 T Q4 1층 — 개입 확인 probe. `NoIter` 라 싸고, phase S **앞**에 돈다
+        "probe_SP_예정": _n_probe,
+        "probe_note": ("회신 T Q4 1층 개입 확인 (`NoIter`) — `default` 는 개입이 "
+                       "없으므로 없다. 이것은 측정이 아니다 (에너지·class 판정에 "
+                       "쓰지 않는다)"),
+        "총_ORCA_실행": len(envs) * 2 * 2 + n_meas - len(envs) + _n_probe,
         "note": ("측정 SP = D• %d + P⁺ %d + D⁻ 기준 1, 환경 %d개. D⁻ 기준은 L_dminus 와 "
                  "**같은 계산**이라 따로 돌지 않는다"
                  % (len(man["seed_plan"]["Dradical"]["seeds"]),
