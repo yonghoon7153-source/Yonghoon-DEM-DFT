@@ -70,35 +70,68 @@ def write_csv(path, data, conv=None):
                 fh.write(f'{bed},{i},{v}\n')
 
 
-def plot(data, conv, out_base):
+def write_origin_csv(path, data, conv=None):
+    """Origin 용 **wide** CSV — 열 하나가 침대 하나 (박스/바이올린 그룹 플롯의 표준 입력).
+
+    ⚠ 주석줄(`#`)을 넣지 않는다 — Origin 이 데이터로 읽는다.  대신 규약을 **열 이름**에
+    실어 보낸다.  Origin 은 첫 행을 Long Name 으로 가져가므로 규약이 워크시트에 그대로
+    남고, CSV 가 혼자 떠돌아도 band 를 잃지 않는다.
+    """
+    band = (conv or {}).get('band_um')
+    tag = f' ({band} um band)' if band is not None else ''
+    beds = ('SBE', 'DBE')
+    cols = [data[b] for b in beds]
+    n = max(len(c) for c in cols)
+    with open(path, 'w', encoding='utf-8') as fh:
+        fh.write(','.join(f'{b} contacts per AM{tag}' for b in beds) + '\n')
+        for i in range(n):
+            fh.write(','.join(str(c[i]) if i < len(c) else '' for c in cols) + '\n')
+
+
+def plot(data, conv, out_base, horizontal=False):
     import matplotlib
     matplotlib.use('Agg')
     import matplotlib.pyplot as plt
 
+    #  ★ `horizontal` 은 원고 Fig 4b 의 기존 형식(가로 · SBE 위 · 값은 끝에)에 맞춘 판이다.
+    #    랩 규약: 그림 요청 시 **기존 figure format 을 재현**한다.
     beds = ('SBE', 'DBE')
     vals = [data[b] for b in beds]
-    fig, ax = plt.subplots(figsize=(3.4, 3.2), dpi=300)
+    #  가로판은 위에서부터 SBE·DBE 로 읽히도록 y 를 뒤집는다 (matplotlib 은 아래가 1).
+    pos = [2, 1] if horizontal else [1, 2]
+    fig, ax = plt.subplots(figsize=(4.0, 2.2) if horizontal else (3.4, 3.2), dpi=300)
+    vert = not horizontal
+    COLS = ('#d97b7b', '#7b93d9')   # SBE 붉은 · DBE 푸른 (기존 그림 배색)
 
-    parts = ax.violinplot(vals, positions=[1, 2], widths=0.7,
+    parts = ax.violinplot(vals, positions=pos, widths=0.62, vert=vert,
                           showmeans=False, showmedians=False, showextrema=False)
-    for pc, c in zip(parts['bodies'], ('#8aa0b8', '#c9784f')):
-        pc.set_facecolor(c); pc.set_alpha(0.45); pc.set_edgecolor('none')
-    bp = ax.boxplot(vals, positions=[1, 2], widths=0.16, showfliers=False,
+    for pc, c in zip(parts['bodies'], COLS):
+        pc.set_facecolor(c); pc.set_alpha(0.42); pc.set_edgecolor('none')
+    bp = ax.boxplot(vals, positions=pos, widths=0.15, showfliers=False, vert=vert,
                     patch_artist=True, medianprops=dict(color='#11161c', lw=1.4),
                     whiskerprops=dict(color='#4a5766'), capprops=dict(color='#4a5766'),
                     boxprops=dict(facecolor='white', edgecolor='#4a5766'))
     del bp
-    for x, b in zip((1, 2), beds):
+    for x, b in zip(pos, beds):
         m = stats(data[b])['median']
-        ax.annotate(f'{m:g}', (x, m), textcoords='offset points', xytext=(16, -3),
-                    fontsize=9, color='#11161c')
+        xy = (max(data[b]), x) if horizontal else (x, m)
+        off = (8, -3) if horizontal else (16, -3)
+        ax.annotate(f'{m:g}', xy, textcoords='offset points', xytext=off,
+                    fontsize=9, color='#11161c',
+                    va='center', ha='left')
 
-    ax.set_xticks([1, 2]); ax.set_xticklabels(beds)
-    ax.set_ylabel(YLABEL, fontsize=8.5)
+    if horizontal:
+        ax.set_yticks(pos); ax.set_yticklabels(beds)
+        ax.set_xlabel(YLABEL, fontsize=8.5)
+        ax.set_xlim(0, max(max(v) for v in vals) * 1.14)
+        ax.grid(axis='x', color='#e3e8ee', lw=0.7)
+    else:
+        ax.set_xticks(pos); ax.set_xticklabels(beds)
+        ax.set_ylabel(YLABEL, fontsize=8.5)
+        ax.grid(axis='y', color='#e3e8ee', lw=0.7)
     ax.tick_params(labelsize=9)
     for sp in ('top', 'right'):
         ax.spines[sp].set_visible(False)
-    ax.grid(axis='y', color='#e3e8ee', lw=0.7)
     ax.set_axisbelow(True)
     fig.tight_layout()
     for ext in ('svg', 'png'):
@@ -113,6 +146,8 @@ def main(argv=None):
     ap.add_argument('--out', default=os.path.join('docs', 'figures', 'cbd_contacts'))
     ap.add_argument('--include-ptfe', action='store_true',
                     help='PTFE 를 도전 도메인에 넣는다 (대조 규약 — 기본은 도전상만)')
+    ap.add_argument('--horizontal', action='store_true',
+                    help='가로 방향 (원고 Fig 4b 형식 — SBE 위 · 값은 끝에)')
     ap.add_argument('--selftest', action='store_true')
     a = ap.parse_args(argv)
     if a.selftest:
@@ -121,14 +156,15 @@ def main(argv=None):
     data, conv = load(a.data, WITH_PTFE if a.include_ptfe else COND)
     os.makedirs(os.path.dirname(a.out) or '.', exist_ok=True)
     write_csv(a.out + '.csv', data, conv)
-    plot(data, conv, a.out)
+    write_origin_csv(a.out + '_origin.csv', data, conv)
+    plot(data, conv, a.out, horizontal=a.horizontal)
     for b in ('SBE', 'DBE'):
         s = stats(data[b])
         print(f'  {b}  median {s["median"]}  mean {s["mean"]}  p10–p90 {s["p10"]}–{s["p90"]}'
               f'  min–max {s["min"]}–{s["max"]}  접촉 0 인 AM {s["zero"]}/{s["n"]}')
     print(f'\n규약: band {conv["band_um"]} µm · include_ptfe={conv["include_ptfe"]} · '
           f'{conv["representation"]}')
-    print(f'산출: {a.out}.svg · .png · .csv')
+    print(f'산출: {a.out}.svg · .png · .csv · _origin.csv (wide, Origin 용)')
     print('⚠ 이 값은 규약 의존이다 — band 폭·개체 정의·PTFE 포함 여부가 각각 값을 바꾼다.')
     return 0
 
@@ -179,10 +215,19 @@ def selftest():
             and rows[1] == 'bed,am_index,contacts')
         chk('★ CSV 주석이 band 를 들고 다닌다', 'band_um=0.15' in rows[0])
 
+        q = os.path.join(td, 'o_origin.csv'); write_origin_csv(q, d, c)
+        orows = open(q, encoding='utf-8').read().strip().split('\n')
+        chk('Origin CSV = wide (헤더 + 5행, 두 열)',
+            len(orows) == 6 and orows[1].count(',') == 1)
+        chk('★ Origin CSV 열 이름이 band 를 들고 다닌다 (주석줄 없이)',
+            '0.15 um band' in orows[0] and not orows[0].startswith('#'))
+
         try:
             plot(d, c, os.path.join(td, 'fig'))
-            chk('SVG·PNG 를 낸다', all(os.path.exists(os.path.join(td, 'fig.' + e))
-                                     for e in ('svg', 'png')))
+            plot(d, c, os.path.join(td, 'figh'), horizontal=True)
+            chk('SVG·PNG 를 낸다 (세로·가로 둘 다)',
+                all(os.path.exists(os.path.join(td, n + '.' + e))
+                    for n in ('fig', 'figh') for e in ('svg', 'png')))
         except Exception as ex:                                    # noqa: BLE001
             chk(f'SVG·PNG 를 낸다 ({ex})', False)
 

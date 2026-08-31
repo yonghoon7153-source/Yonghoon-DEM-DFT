@@ -72,6 +72,9 @@ jobs:
       - name: 접점 분포 그림 — 라벨·규약 계약 (selftest)
         run: python scripts/plot_cbd_contacts.py --selftest
 
+      - name: σ_e 막대 그림 — 단위·팔 대응 계약 (selftest)
+        run: python scripts/plot_sigma_e_bars.py --selftest
+
       - name: A 트랙 판정식 (절댓값 · 부호반전 회귀) (selftest)
         run: python scripts/bridge_grid_verdict.py --selftest
 
