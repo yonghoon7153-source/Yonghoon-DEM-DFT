@@ -7905,9 +7905,16 @@ def _readme_sp(man: Dict[str, Any], a, zcut: float, n_jobs: int,
 cd <이 묶음을 푼 디렉터리>            # 묶음 **루트**에서 실행합니다 (잡 폴더 아님)
 export PP=/path/to/potpaw_PBE.54
 export POTCAR_ALLOWLIST=/abs/site_allow.txt
+# 받으신 ZIP 의 SHA256 — 봉인이 **정확히 이 배포본**에 대한 것임을 남깁니다
+export BUNDLE_ZIP_SHA256=$(sha256sum /경로/받은번들.zip | cut -d" " -f1)
+export EXPECT_MANIFEST_SHA256=%s   # 저희가 보낸 값 (러너가 실행 전에 대조합니다)
 VASP_CMD="mpirun -np %d vasp_std" bash run_staged.sh 1     # POTCAR 조립+봉인 → 1단계 → 자동 판정
 VASP_CMD="mpirun -np %d vasp_std" bash run_staged.sh 2     # 1단계 통과(STAGE1_PASS.json) 뒤에만
 ```
+
+⚠ `BUNDLE_ZIP_SHA256` 이 없으면 봉인 스크립트가 **거부합니다** — 번들 안에는 자기
+해시를 넣을 수 없어서, 받으신 파일에서 직접 구해 주셔야 결박이 성립합니다.
+`EXPECT_MANIFEST_SHA256` 은 저희가 메일로 함께 보내드립니다 (선택이지만 권장).
 
 **POTCAR 를 따로 조립하지 마십시오** — `run_staged.sh` 가 첫 VASP 실행 전에
 `SEAL_POTCAR_ROOT.sh` 로 전 잡 조립 + 원본 fingerprint 봉인까지 합니다.
@@ -7917,7 +7924,8 @@ VASP_CMD="mpirun -np %d vasp_std" bash run_staged.sh 2     # 1단계 통과(STAG
 ⚠ 아래 단일 잡 실행은 **한 잡을 다시 돌릴 때만** 쓰십시오. 그때도 묶음 루트에서
 `bash SEAL_POTCAR_ROOT.sh` 를 먼저 돌리셔야 POTCAR 가 준비됩니다:
 
-""" % (n_jobs, _n1, getattr(a, "cores", 48), getattr(a, "cores", 48))) if _staged else ""
+""" % (n_jobs, _n1, "<메일로 보내드립니다>",
+       getattr(a, "cores", 48), getattr(a, "cores", 48))) if _staged else ""
 
     relax_return = ("""⚠ **`relax/` 폴더가 있는 잡은 `relax/OUTCAR` 와 `relax/CONTCAR` 도 같이**
   보내 주세요 (이 묶음에 **%d잡**). 단일점 묶음에서도 **기체 기준(`refs/mol__*`)에는
@@ -8001,6 +8009,59 @@ VASP_CMD="mpirun -np %d vasp_std" bash run_staged.sh 2     # 1단계 통과(STAG
         pose_para = ("같은 POSCAR 가 여러 번 보이는 것은 **정상이고 설계**입니다 "
                      "(자기 seed · D3 축). 중복으로 보고 하나만 돌리시면 그 짝이 무의미해집니다.")
 
+    # ⛔⛔ 회신 AR P1-11 · 해제조건 9 (2026-08-31) — 문서가 실물과 충돌했다.
+    #   ① 존재하지 않는 clean-slab 반송물을 요구했고 ② 전 잡이 static 이라고 단정했는데
+    #   실제로는 기체 relax 가 넷 있었으며 ③ 봉인·attestation·ZIP 해시는 반송물에
+    #   아예 없었다. 셋 다 **실물에서 유도**한다.
+    _has_clean = bool((man.get("refs") or {}).get("clean_slab")
+                      or [k for k in (man.get("planned") or {})
+                          if k.startswith("refs/clean_slab")])
+    clean_line = ("""가능하시면 **`refs/clean_slab__*` 잡을 먼저** 돌려 보내 주세요. 그것으로 자기
+topology gate 를 통과시킨 뒤 complex 결과를 씁니다. raw `net4` 가 pose 마다 다른
+basin 으로 수렴하면 저희가 계산을 중단하고 별도 절차를 요청드립니다.
+""" if _has_clean else
+        """⚠ 이 묶음에는 **깨끗한 슬랩(clean slab) 잡이 없습니다.** 보고하는 양이 두 조각의
+**차**라 공통 슬랩 항이 소거되기 때문입니다 — `refs/clean_slab__*` 을 찾지 마십시오.
+자기 basin 판정은 두 complex 의 Ni 국소모멘트 배열을 **서로** 비교해서 합니다
+(그래서 `LORBIT` 를 켜 두었습니다).
+""")
+    if _relax_jobs:
+        sp_line = ("- **이 묶음에는 `relax/` 상이 %d개 있습니다** (나머지는 단일점):\n"
+                   "  `%s`\n"
+                   "  확인: `find . -maxdepth 3 -type d -name relax | wc -l` → **%d**\n"
+                   "  잡 수는 `find . -name run_job.sh | wc -l` 이 정답입니다."
+                   % (len(_relax_jobs), "` · `".join(_relax_jobs), len(_relax_jobs)))
+    else:
+        sp_line = ("- **전 잡이 단일점입니다.** `relax/` 폴더가 아예 없습니다. 확인하실 수 있습니다:\n"
+                   "  `find . -maxdepth 3 -type d -name relax | wc -l` → **0**\n"
+                   "  잡 수는 `find . -name run_job.sh | wc -l` 이 정답입니다.")
+    _rr = ["- 묶음 루트의 **`POTCAR_ROOT_SEAL.json`** (첫 실행 전에 `SEAL_POTCAR_ROOT.sh` "
+           "가 만듭니다) 과 **`ZIP_SHA256.txt`**",
+           "- 묶음 루트의 **`POTCAR_ATTESTATION.json`** — 원고에 PAW release 를 적으려면 "
+           "**첫 계산 전에** `MAKE_POTCAR_ATTESTATION.sh` 로 만들어 주셔야 합니다 "
+           "(`POTCAR_ATTESTATION_REQUEST.md` 참조). 없으면 저희는 release 를 단정하지 "
+           "않고 '이 묶음의 PAW dataset 에 조건부' 로만 보고합니다."]
+    if _staged:
+        _rr.append("- 1단계를 마치면 생기는 **`STAGE1_PASS.json`**")
+    root_returns = "\n".join(_rr) + "\n\n"
+    # 자세 구성도 **계획에서 센다** (하드코딩한 "대안 1자세" 가 실물과 달랐다)
+    _roles_ct = {}
+    for _pm in (man.get("planned") or {}).values():
+        _mm = _pm.get("meta") or {}
+        if _mm.get("kind") == "prospective_pose" and not _mm.get("vacconv"):
+            _roles_ct[_mm.get("role") or "primary"] = \
+                _roles_ct.get(_mm.get("role") or "primary", 0) + 1
+    _nseed = len(man.get("seeds_full") or []) or 1
+    _nfrag = len(man.get("fragments") or []) or 1
+    _alt_n = sum(v for k, v in _roles_ct.items() if k != "primary")
+    _nvac = sum(1 for _pm in (man.get("planned") or {}).values()
+                if ((_pm.get("meta") or {}).get("vacconv")))
+    role_line = ("조각당 primary %d자세 + 대안 %d자세를 자기 시드 %d종으로 잽니다%s."
+                 % (max(1, _roles_ct.get("primary", 0) // max(1, _nfrag * _nseed)),
+                    max(0, _alt_n // max(1, _nfrag * _nseed)), _nseed,
+                    (". primary 는 셀 두 높이에서 한 번 더 잽니다(진공 두께 수렴 시험, %d잡)"
+                     % _nvac) if _nvac else ""))
+
     return f"""# VASP 계산 요청 — LiNiO₂(104) 위 분자 조각 단일점
 
 바쁘신 중에 부탁드려 죄송합니다. **VASP 실행 {n_all or (n_st + n_dn)}회**입니다
@@ -8028,8 +8089,9 @@ VASP_CMD="mpirun -np {a.cores} vasp_std" bash run_job.sh
 반송물에 자동으로 포함됩니다. 저희가 그 값으로 대조합니다.
 
 - **따로 메일로 해시를 보내실 필요 없습니다.**
-- 다만 **2026-08-12 묶음과 다른 POTCAR 트리**를 쓰시게 되면 그때만 알려 주세요
-  (판본이 다르면 이전 결과와 비교가 끊깁니다).
+- ⚠ 이 묶음은 **이전 wave 와의 PP 동등성을 주장하지 않습니다** — 어느 트리를
+  쓰셨는지는 봉인이 기록하고, 저희는 "이 묶음 안에서 하나의 트리였는가" 만
+  확인합니다 (회신 AO P1 · AR P1-11).
 - POTCAR 파일 자체는 주고받지 않습니다 — 해시와 TITEL 줄만 기록됩니다.
 
 잡 폴더 {n_jobs}개가 `{groups}` 에 있습니다.
@@ -8040,8 +8102,7 @@ VASP_CMD="mpirun -np {a.cores} vasp_std" bash run_job.sh
 ## 실행 단계와 결과 범위 (읽어 주세요)
 
 이 요청은 **이것으로 끝나는 계산**입니다 — 뒤에 이어지는 단계가 없습니다.
-조각당 primary 1자세 + 대안 1자세를 자기 시드 둘로 재고, primary 는 셀 두 높이에서
-한 번 더 잽니다(진공 두께 수렴 시험). 보고하는 것은 **두 조각의 흡착에너지 차 하나**이고,
+{role_line} 보고하는 것은 **두 조각의 흡착에너지 차 하나**이고,
 개별 절대값은 보고하지 않습니다(깨끗한 슬랩을 계산하지 않으므로 대비에서 소거됩니다).
 
 대안 자세는 최저값 후보가 **아닙니다** — "다른 접촉 방식에서도 방향이 유지되는가" 만
@@ -8052,21 +8113,17 @@ VASP_CMD="mpirun -np {a.cores} vasp_std" bash run_job.sh
 `pm1` 과 `net4` 는 **초기 MAGMOM seed 이름**입니다. 최종 자기상태가 아닙니다.
 저희 분석기가 최종 Ni 국소모멘트 부호벡터 · moment collapse · 유기종 상대스핀으로
 realized magnetic basin 을 판정하고, **같은 realized basin 으로 매칭되지 않은**
-complex 와 clean slab 에너지로는 흡착에너지를 만들지 않습니다.
-그래서 `LORBIT` 를 켜 두었습니다 — OUTCAR 의 국소모멘트 표가 판정 근거입니다.
+에너지끼리는 빼지 않습니다. 그래서 `LORBIT` 를 켜 두었습니다 — OUTCAR 의
+국소모멘트 표가 판정 근거입니다.
 
-가능하시면 **`refs/clean_slab__*` 두 잡을 먼저** 돌려 보내 주세요. 그것으로 자기
-topology gate 를 통과시킨 뒤 complex 결과를 씁니다. raw `net4` 가 pose 마다 다른
-basin 으로 수렴하면 저희가 계산을 중단하고 별도 절차를 요청드립니다.
+{clean_line}
 
 모든 결과는 MLIP 이 고른 **고정기하에서의 PBE+U+D3 단일점 전자에너지**입니다.
 DFT-relaxed adsorption energy · 평형 결합에너지 · 자유에너지로 표현하지 않습니다.
 
 ## 미리 아셔야 할 것
 
-- **전 잡이 단일점입니다.** `relax/` 폴더가 아예 없습니다. 확인하실 수 있습니다:
-  `find . -maxdepth 3 -type d -name relax | wc -l` → **0**
-  잡 수는 `find . -name run_job.sh | wc -l` 이 정답입니다.
+{sp_line}
 - **가장 긴 잡이 약 {longest} 시간**입니다 ({a.cores}코어 기준 추정, ±2배).
   walltime 상한이 이보다 짧으면 그 잡만 알려 주세요 — 나눠서 다시 만들어 드립니다.
 - **POTCAR 는 잡마다 종 순서가 다릅니다.** `POTCAR_ASSEMBLE.sh` 가 그 잡에 맞게
@@ -8078,7 +8135,7 @@ DFT-relaxed adsorption energy · 평형 결합에너지 · 자유에너지로 �
 각 잡의 **`static/OUTCAR`** — 이것 하나면 판정이 됩니다. `.gz` 그대로 좋습니다.
 그리고 각 잡의 **`POTCAR_PROVENANCE.json`** (조립기가 자동 생성합니다).
 
-{relax_return}
+{root_returns}{relax_return}
 - `static/vasprun.xml` — 선택
 - **CHGCAR / WAVECAR 반송 불필요** (용량)
 - 발산·미수렴 잡도 **지우지 말고 그대로** 보내 주세요. 어느 잡이 왜 실패했는지가
@@ -8113,7 +8170,9 @@ python3 analyze_results.py .       # 필수 산출이 빠지면 exit 2 로 알�
 PBE+U(Ni d 6.2 Dudarev) · D3 zero damping(IVDW=11) · ENCUT 520 · ISMEAR 0/0.05 ·
 ISYM=0 · LASPH · ADDGRID · LDIPOL/IDIPOL=3 · static k {ks} · dense k {kd} ·
 고정 평면 z ≤ {zcut:.3f} Å · 자기 seed 2종(각 끝점마다 둘 다 필요합니다) ·
-Ni 는 **Ni_pv** (2026-08-08 납품과 동일 계보) · VASP 5.4.4 또는 6.x + PBE PAW 5.4.
+Ni 는 **Ni_pv**. ⚠ 이전 wave 와의 PP 동등성은 **주장하지 않습니다**, 배포판(release)도
+여기서 단정하지 않습니다 — variant 는 `POTCAR_SPEC.txt` 그대로 쓰시고, 원본
+fingerprint 는 첫 실행 전에 `SEAL_POTCAR_ROOT.sh` 가 봉인합니다 (회신 AO P1 · AR P1-11).
 dense 는 k 검증용이라 {n_dn}개 잡에만 있습니다: {dc or '(없음)'}.
 </details>
 """
@@ -8153,6 +8212,15 @@ def _submit_contract(man: Dict[str, Any], a, by_ph: Optional[dict] = None) -> st
     #   ("잡 사이에는 의존성이 없습니다" + 전체 array 제출 예시)는 정지 규칙을
     #   정면으로 우회시켰다. 구성에 따라 문서를 갈라 쓴다.
     _staged_sub = bool(man.get("staged_runner"))
+    # ⛔ 회신 AR P1-11 — 분석에 **실제로 필요한** 반송물을 실물에서 센다.
+    #   AR: "SUBMIT_CONTRACT.md 는 분석에 필요한 gas relax/CONTCAR 와 attestation 을
+    #   누락한다." relax 가 있으면 그 CONTCAR 가 canary 기하의 출처이므로 필수다.
+    _rel_jobs_sub = sorted(k for k, v in (man.get("planned") or {}).items()
+                           if "relax" in (v.get("phases") or []))
+    _relax_ret_sub = (
+        "- **`relax/` 가 있는 잡 %d개의 `relax/OUTCAR` 와 `relax/CONTCAR`** — canary 가\n"
+        "  그 최종 기하를 승계하므로 분석에 **반드시** 필요합니다: `%s`\n"
+        % (len(_rel_jobs_sub), "` · `".join(_rel_jobs_sub))) if _rel_jobs_sub else ""
     _dep_block = ("""⛔ **잡 사이에 의존성이 있습니다** (이 묶음은 staged 구성입니다).
 - canary(`*__nzmag`)는 `PARENT_GEOM` 이 가리키는 **부모 기체 기준의 최종 기하**를
   받습니다 — 부모가 먼저 완주해야 합니다.
@@ -8166,19 +8234,26 @@ def _submit_contract(man: Dict[str, Any], a, by_ph: Optional[dict] = None) -> st
 cd <이 묶음을 푼 디렉터리>              # 묶음 **루트**
 export PP=/path/to/potpaw_PBE.54
 export POTCAR_ALLOWLIST=/abs/site_allow.txt
-VASP_CMD="mpirun -np %d vasp_std" bash run_staged.sh 1     # 조립+봉인 → 1단계 → 판정
+export BUNDLE_ZIP_SHA256=$(sha256sum /경로/받은번들.zip | cut -d" " -f1)   # 필수
+export EXPECT_MANIFEST_SHA256=<메일로 보내드립니다>                        # 권장
+VASP_CMD="mpirun -np %d vasp_std" bash run_staged.sh 1     # 조립+봉인 → census → 1단계 → 판정
 VASP_CMD="mpirun -np %d vasp_std" bash run_staged.sh 2     # 1단계 통과 뒤에만
 ```
 ⛔ **전체를 배열로 한꺼번에 던지지 마십시오.** 위 의존성 때문에 결과가 무의미해집니다.
 `run_all.sh` 는 이 묶음에 **넣지 않았습니다**.
+⛔ `BUNDLE_ZIP_SHA256` 이 없으면 봉인 스크립트가 거부합니다 (번들 안에는 자기 해시를
+넣을 수 없어 받으신 파일에서 직접 구해 주셔야 합니다).
 
 ## 반드시 같이 반송해 주실 것
-- `POTCAR_ROOT_SEAL.json` (첫 실행 전 봉인)
+- `POTCAR_ROOT_SEAL.json` (첫 실행 전 봉인) 과 `ZIP_SHA256.txt`
+- `POTCAR_ATTESTATION.json` — 원고에 PAW release 를 적으려면 **첫 계산 전에**
+  `MAKE_POTCAR_ATTESTATION.sh` 로 만들어 주셔야 합니다 (없으면 release 를 단정하지
+  않고 '이 묶음의 PAW dataset 에 조건부' 로만 보고합니다)
 - `STAGE1_PASS.json` (1단계 통과 receipt)
 - 각 잡의 `POTCAR_PROVENANCE.json`
 - **부모·canary 의 `static/POSCAR`** (두 기하가 같은지 저희가 대조합니다)
 - 각 상의 `OUTCAR`(또는 `.gz`)·`OSZICAR`
-""" % (a.cores, a.cores)) if _staged_sub else ("""## 병렬 제출 (권장)
+%s""" % (a.cores, a.cores, _relax_ret_sub)) if _staged_sub else ("""## 병렬 제출 (권장)
 `run_all.sh` 는 **직렬 디버그용**입니다. 실제로는 잡 목록을 배열로 던지세요:
 ```bash
 # ⚠ 폴더 이름을 손으로 적지 않는다 — refs/ 냐 controls/ 냐가 모드에 따라 다르다.
@@ -8197,6 +8272,10 @@ sbatch --array=1-$(wc -l < JOBS.txt)%%%d \\
 ```""" % (man.get("n_jobs", 0), man.get("n_jobs", 0), a.concurrency,
           a.concurrency, a.cores, a.cores))
 
+    # ⛔ 회신 AR P1-11 — walltime 도 하드코딩(56 h)이었다. cost_frozen 에서 가져온다.
+    _long_h = round((man.get("cost_frozen") or {}).get("longest_job_h") or 56)
+    _long_h2 = _long_h * 2
+    _long_rec = max(24, int(_long_h2 * 1.1 // 12 + 1) * 12)
     return f"""# 제출 계약 (SUBMIT_CONTRACT)
 
 ## 상 의존성
@@ -8226,8 +8305,8 @@ static  (같은 단계 안에서는 병렬 가능)
 (`Li Ni O` · `Li Ni O C F` · `Li Ni O C F H` · `Li Ni O S C H`) 하나를 돌려 쓰면
 그 잡은 조용히 **다른 계**를 계산합니다. `POTCAR_ASSEMBLE.sh` 가 잡마다 조립하고
 TITEL 수까지 검증합니다.
-⚠ walltime — 가장 긴 잡이 중앙 추정 56 h 이고 모형 불확실성이 ±2배입니다.
-   ±2배 외피가 112 h 이므로 **120 h** 를 권합니다 (24–48 h 면 그 잡이 잘립니다).
+⚠ walltime — 가장 긴 잡이 중앙 추정 {_long_h} h 이고 모형 불확실성이 ±2배입니다.
+   ±2배 외피가 {_long_h2} h 이므로 **{_long_rec} h** 를 권합니다 (그보다 짧으면 잘립니다).
 
 ## 비용 추정의 출처
 - 모델: `tools/sdcp/vasp_cost_estimate.py` — 2026-08-08 납품 `slab/OUTCAR.gz`
@@ -9568,9 +9647,18 @@ def build_bundle(a, ledger: Optional[Dict[str, Any]] = None) -> Path:
     man["submission"] = {
         "cores_per_job": a.cores,
         "max_concurrency": a.concurrency,
-        "phase_dependencies": ("잡 사이 의존 없음. 한 잡 안에서 dense 는 static 의 "
-                               "CHGCAR 를 승계하므로 **직렬** — 잡 하나가 분할 불가 "
-                               "작업 하나다 (P||Cmax)."),
+        # ⛔⛔ 회신 AR P1-11 · 해제조건 9 (2026-08-31) — MANIFEST 는 "의존성 없음 +
+        #   배열 제출" 을 말하고 다른 문서는 staged 실행을 요구해 **정면으로 충돌**했다.
+        #   실행 경로가 둘이면 1단계 정지 규칙이 강제되지 않는다. 구성에서 유도한다.
+        "phase_dependencies": (
+            ("⛔ **잡 사이에 의존성이 있다** (staged 구성). canary(*__nzmag)는 "
+             "PARENT_GEOM 이 가리키는 부모의 최종 기하를 받고, 2단계는 1단계 게이트를 "
+             "통과해야 열린다. 한 잡 안에서 dense 는 static 의 CHGCAR 를 승계한다. "
+             "순서는 run_staged.sh 가 강제한다 — 배열로 한꺼번에 던지면 안 된다.")
+            if man.get("staged_runner") else
+            ("잡 사이 의존 없음. 한 잡 안에서 dense 는 static 의 "
+             "CHGCAR 를 승계하므로 **직렬** — 잡 하나가 분할 불가 "
+             "작업 하나다 (P||Cmax).")),
         "n_static": n_st, "n_dense_mandatory": n_dn,
         "n_vasp_executions_total": n_ph_all,
         "n_by_phase": n_by_ph,
@@ -9590,8 +9678,23 @@ def build_bundle(a, ledger: Optional[Dict[str, Any]] = None) -> Path:
         "estimator_baseline": ("runs/sdcp_phaseB_vasp_v1_2026_08_08/slab/OUTCAR.gz "
                                "— 192원자·NKPTS 4·48코어·525 s/전자스텝"),
         "estimator_uncertainty": "±2배 (모형이지 벤치마크가 아니다)",
-        "runner_note": ("run_all.sh 는 **직렬 디버그용**이다. 실제 제출은 "
-                        "SUBMIT_CONTRACT.md 의 배열 잡으로."),
+        "runner_note": (
+            ("⛔ 실행 경로는 `bash run_staged.sh {1|2}` **하나뿐**이다. run_all.sh 는 "
+             "이 묶음에 넣지 않았고, 배열 제출도 쓰지 않는다 (1단계 정지 규칙이 "
+             "무력화된다). 러너는 실행 전에 MANIFEST 해시·exact 잡 집합·단계 분류를 "
+             "확인하고(run_census), POTCAR_ROOT_SEAL.json 을 매번 요구한다.")
+            if man.get("staged_runner") else
+            ("run_all.sh 는 **직렬 디버그용**이다. 실제 제출은 "
+             "SUBMIT_CONTRACT.md 의 배열 잡으로.")),
+        "required_returns": (
+            ["각 잡 static/OUTCAR(또는 .gz)·OSZICAR", "각 잡 POTCAR_PROVENANCE.json",
+             "POTCAR_ROOT_SEAL.json", "ZIP_SHA256.txt",
+             "POTCAR_ATTESTATION.json (release 를 원고에 적으려면 필수)"]
+            + (["STAGE1_PASS.json"] if man.get("staged_runner") else [])
+            + ([f"{k}/relax/OUTCAR·CONTCAR" for k in sorted(man["planned"])
+                if "relax" in (man["planned"][k].get("phases") or [])])),
+        "⚠_실행수": ("n_vasp_executions_total 은 **상(phase) 수**다. 잡 수와 다르다 — "
+                     "relax 가 있는 잡은 잡 하나에 실행 둘이다 (회신 AR Q6)"),
     }
     # ── release assertion: 계획된 **모든** 잡에 조립기가 있는가 ─────────────
     #   제출 본문이 30잡 전부에서 POTCAR_ASSEMBLE.sh 를 부른다. 하나라도 없으면
@@ -10289,6 +10392,52 @@ def selftest() -> int:
         #   seal·attestation 스크립트를 실제로 관통하지 않는다."
         #   ⇒ 가짜 PP 트리·allowlist·stub vasp 를 만들어 run_staged.sh 를 진짜로
         #     돌리고, 리뷰가 재현한 결함(job.json 하나 삭제)이 **막히는지** 본다.
+        # ══ 회신 AR P1-11 · 해제조건 9 — 문서가 **실물과 일치**하는가 ══════════
+        _rd9 = (_st / "README_REQUEST.md").read_text(encoding="utf-8")
+        _sb9 = (_st / "SUBMIT_CONTRACT.md").read_text(encoding="utf-8")
+        _sm9 = m_st.get("submission") or {}
+        _has_clean9 = bool((m_st.get("refs") or {}).get("clean_slab"))
+        chk(_has_clean9 or ("clean slab) 잡이 없습니다" in _rd9
+                            and "refs/clean_slab__*` 잡을 먼저" not in _rd9),
+            "⛔음성 AR P1-11: clean slab 이 없으면 README 가 **없는 반송물을 요구하지 "
+            "않는다** (없다고 명시한다)")
+        chk("BUNDLE_ZIP_SHA256" in _rd9 and "BUNDLE_ZIP_SHA256" in _sb9,
+            "AR P1-11: README·SUBMIT 이 봉인에 **필수인** BUNDLE_ZIP_SHA256 을 안내한다 "
+            "(없으면 SEAL 이 거부하는데 문서에 없었다)")
+        for _f9 in ("POTCAR_ROOT_SEAL.json", "POTCAR_ATTESTATION.json",
+                    "ZIP_SHA256.txt", "STAGE1_PASS.json"):
+            chk(_f9 in _sb9 and _f9 in str(_sm9.get("required_returns")),
+                f"AR P1-11: 반송물에 `{_f9}` 가 있다 (SUBMIT·MANIFEST 둘 다)")
+        chk("PBE PAW 5.4." not in _rd9 and "2026-08-08 납품과 동일 계보" not in _rd9
+            and "2026-08-12 묶음과 다른 POTCAR 트리" not in _rd9,
+            "⛔음성 AR P1-11: README 가 이전 wave 계보와 `PBE PAW 5.4` 를 **단정하지 "
+            "않는다** (attestation 정책과 충돌하던 문장)")
+        chk("중앙 추정 56 h" not in _sb9,
+            "⛔음성 AR P1-11: walltime 이 하드코딩 56 h 가 아니라 cost_frozen 에서 온다")
+        chk("잡 사이에 의존성이 있다" in str(_sm9.get("phase_dependencies"))
+            and "배열 제출도 쓰지 않는다" in str(_sm9.get("runner_note")),
+            "⛔음성 AR P1-11: MANIFEST 가 staged 에서 **의존성 있음 + 단일 경로**를 "
+            "말한다 (종전엔 '의존성 없음 + 배열 제출' 로 다른 문서와 충돌했다)")
+        chk(_sm9.get("n_vasp_executions_total") == sum(
+                len(v.get("phases") or []) for v in m_st["planned"].values())
+            + len(m_st.get("d3_off_twins") or {}),
+            "AR Q6: MANIFEST 의 VASP 실행 수 = **상 수** (잡 수가 아니다) · %s"
+            % _sm9.get("n_vasp_executions_total"))
+        # ⛔음성 — relax 상이 있는 구성이면 README 가 "전 잡이 단일점" 이라고 하지 않는다
+        _man_rel = dict(m_st)
+        _man_rel["planned"] = {k: dict(v, phases=["relax", "static"])
+                               if (v.get("meta") or {}).get("kind") == "mol_ref" else v
+                               for k, v in m_st["planned"].items()}
+        _rd_rel = _readme_sp(_man_rel, a_st, 0.0, len(_man_rel["planned"]), 0, 0, 0, {})
+        chk("전 잡이 단일점입니다" not in _rd_rel and "relax/` 상이" in _rd_rel
+            and "relax/OUTCAR" in _rd_rel,
+            "⛔음성 AR P1-11: relax 상이 있으면 README 가 '전 잡이 단일점' 이라고 "
+            "**쓰지 않고** relax 반송을 요구한다 (v15 가 정확히 그 모양이었다)")
+        _sb_rel = _submit_contract(_man_rel, a_st, {"relax": 4, "static": 7})
+        chk("relax/CONTCAR" in _sb_rel,
+            "⛔음성 AR P1-11: relax 가 있으면 SUBMIT 이 **relax/CONTCAR** 를 요구한다 "
+            "(canary 기하의 출처인데 누락돼 있었다)")
+
         _rc_run = _runner_e2e(_st, chk)
         chk(_rc_run is not False, "AR 해제조건 10: 러너 production-path e2e 를 돌렸다")
         # ── 회신 AP #5 — stage gate 가 vacconv **만** 보지 않는다 ─────────
