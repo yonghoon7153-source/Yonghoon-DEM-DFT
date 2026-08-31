@@ -111,6 +111,34 @@ if [ -n "${SIGMA_ION_SE:-}" ]; then
   case "$SIGMA_ION_SE" in ''|*[!0-9.eE+-]*) echo "ABORT — SIGMA_ION_SE 는 수치여야 한다 (받은 값: $SIGMA_ION_SE)"; exit 2;; esac
   SION_FLAG="$SION_FLAG --sigma-ion-se $SIGMA_ION_SE"; SION_TAG="${SION_TAG}_ise${SIGMA_ION_SE//./}"
 fi
+#  ★★★ 2026-08-31 (Codex R16 P1-5) — **PTFE 이온 차단을 정식 축으로 배선한다.**
+#    `run_contract.py` 는 `--step3-ptfe-block-um` 을 이미 규약 축으로 알고 있는데
+#    **러너에 env·tag·receipt 배선이 없었다.**  `P2_EXTRA` 로 주면 허용목록(수치 전용)이
+#    거부하고, 억지로 우회하면 OUTDIR 이름이 안 갈려 **SKIP 캐시가 옛 팔을 재활용**한다.
+#    ⇒ SION 과 같은 모양으로 축을 만든다.  기본 빈 값 = 기존 거동 그대로.
+#  ⚠ `PTFE_BLOCK_SCOPE` 는 `se`(기본, 옛 거동 비트 동일) 또는 `ion`(SDCP 도 차단).
+#    ⚠⚠ `ion` 은 **전자 no-op 이 아니다** (SDCP σ_e 250 → 차단 셀 0) — 그 팔의 σ_e 를
+#    centerline 팔과 나란히 놓지 말 것.  왜 두 규약이 필요한가: `se` 만 쓰면 SBE(PTFE 1.0/
+#    SDCP 0) 가 DBE(0.5/0.5) 보다 더 깎이는 방향이 **연산자에 내장**된다 (Codex R16 Q6 반례 2).
+PB_FLAG=""; PB_TAG=""
+if [ -n "${PTFE_BLOCK_UM:-}" ]; then
+  case "$PTFE_BLOCK_UM" in ''|*[!0-9.eE+-]*) echo "ABORT — PTFE_BLOCK_UM 는 수치여야 한다 (받은 값: $PTFE_BLOCK_UM)"; exit 2;; esac
+  PB_FLAG="$PB_FLAG --step3-ptfe-block-um $PTFE_BLOCK_UM"; PB_TAG="${PB_TAG}_pb${PTFE_BLOCK_UM//./}"
+fi
+if [ -n "${PTFE_BLOCK_SCOPE:-}" ]; then
+  case "$PTFE_BLOCK_SCOPE" in
+    se|ion) ;;
+    *) echo "ABORT — PTFE_BLOCK_SCOPE 는 se 또는 ion 이어야 한다 (받은 값: $PTFE_BLOCK_SCOPE)"; exit 2;;
+  esac
+  #  ⚠ scope 만 주고 두께를 안 주면 **아무 일도 안 일어난다** — 조용한 no-op 을 막는다.
+  if [ -z "${PTFE_BLOCK_UM:-}" ]; then
+    echo "ABORT — PTFE_BLOCK_SCOPE 를 주려면 PTFE_BLOCK_UM 도 줘야 한다 (두께 0 이면 scope 는 무의미)."
+    exit 2
+  fi
+  PB_FLAG="$PB_FLAG --step3-ptfe-block-scope $PTFE_BLOCK_SCOPE"; PB_TAG="${PB_TAG}_${PTFE_BLOCK_SCOPE}"
+fi
+#  ⚠ 차단은 **이온 축**이다 — 이온을 안 푸는 LEAN 과 함께 주면 모순이다 (아래 게이트가 잡는다).
+
 #  ⚠ 이온 축을 건드리면서 이온을 안 푸는 것은 **모순**이다 — 조용히 넘기지 않는다.
 #  ★ σ-치환 진단 팔 (2026-08-18, CL-43/44 · prereg v3 §4b) — SDCP 가 VGCF 셀에 양보한다.
 #    **생산 규약이 아니다.**  디렉터리·태그를 갈라 SKIP 캐시가 생산 팔과 섞이지 않게 한다
@@ -291,8 +319,8 @@ LEAN_TAG=""; [ "${LEAN:-0}" = "1" ] && LEAN_TAG="_lean"; [ "${LEAN:-0}" = "2" ] 
 #    초판을 파일 앞쪽(SION 파싱 직후)에 뒀는데 거기서는 `LEAN_FLAGS` 가 아직 빈 문자열이라
 #    **조용히 아무것도 안 막았다** — 과잉차단보다 나쁘다 (있는 줄 알고 믿게 된다).
 #    레벨 번호를 다시 적지 않고 **조립된 flags** 를 보는 이유도 같다: 레벨이 늘면 갈라진다.
-if [ -n "$SION_FLAG" ] && case "$LEAN_FLAGS" in *--no-ion*) true;; *) false;; esac; then
-  echo "ABORT — SIGMA_ION_* 를 줬는데 LEAN=${LEAN:-0} 의 조립 flags 에 --no-ion 이 있다."
+if [ -n "$SION_FLAG$PB_FLAG" ] && case "$LEAN_FLAGS" in *--no-ion*) true;; *) false;; esac; then
+  echo "ABORT — 이온 축(SIGMA_ION_* 또는 PTFE_BLOCK_*)을 줬는데 LEAN=${LEAN:-0} 의 조립 flags 에 --no-ion 이 있다."
   echo "  이온 σ 를 바꾸면서 이온을 안 푸는 런은 아무것도 재지 않는다.  LEAN=3 또는 4 로."
   echo "  (조립 결과: ${LEAN_FLAGS})"
   exit 2
@@ -311,7 +339,8 @@ _RCPT_JSON="$(python3 - "$SCR" "$VOX" "$BRIDGE_UM" "$FIBRE_STAMP" "${SDCP_SPHERE
                   "${SDCP_YIELD_VGCF:-0}" "${PTFE_STAMP:-off}" "${SIGMA_PTFE:-}" \
                   "${SIGMA_VGCF_OVERRIDE:-}" \
                   "$PERIODIC_ON" "$ARMS" "${EXPECT_BACKEND:-gpu}" "${SDCP_BRIDGE:-}" \
-                  "${LEAN:-0}" "${SIGMA_ION_SDCP:-}" "${SIGMA_ION_SE:-}" <<'PYRCPT'
+                  "${LEAN:-0}" "${SIGMA_ION_SDCP:-}" "${SIGMA_ION_SE:-}" \
+                  "${PTFE_BLOCK_UM:-}" "${PTFE_BLOCK_SCOPE:-}" <<'PYRCPT'
 import json, os, sys
 sys.path.insert(0, sys.argv[1])
 import run_contract as RC
@@ -320,6 +349,8 @@ _sbrg = sys.argv[13] if len(sys.argv) > 13 else ''
 _lean = sys.argv[14] if len(sys.argv) > 14 else '0'
 _isd  = sys.argv[15] if len(sys.argv) > 15 else ''
 _ise  = sys.argv[16] if len(sys.argv) > 16 else ''
+_pbu  = sys.argv[17] if len(sys.argv) > 17 else ''
+_pbs  = sys.argv[18] if len(sys.argv) > 18 else ''
 vox = float(_vox)
 rec = {'vox_um': vox, 'bridge_um': float(_br), 'fibre_stamp': _fs,
        'sdcp_stamp': ('sphere' if _sd else 'point'),
@@ -342,6 +373,14 @@ if _ise:
     #    옛 판은 그것을 적용값 키에 써서, 25 °C 가 아니면 대조가 거짓 불일치를 냈다
     #    (60 °C: 0.003 → 0.0143553 ⇒ SDCP/SE 비 0.1737 → 0.04319).
     rec['sigma_ion_se_ref_S_cm'] = float(_ise)
+#  ★ 2026-08-31 (Codex R16 P1-5) — PTFE 차단 축을 영수증에 싣는다.
+#    `ptfe_block_um` 은 규약 축이고 `ptfe_block_scope` 는 `record` 축이다 (p2 보존 —
+#    `run_contract.CLI_ACCOUNTING` 의 주석 참조).  둘 다 `RECEIPT_AXES` 에 있어
+#    코호트 안에서 값이 갈리면 거부된다.
+if _pbu:
+    rec['ptfe_block_um'] = float(_pbu)
+if _pbs:
+    rec['ptfe_block_scope'] = str(_pbs)
 #  ★★★ 2026-08-30 (코드리뷰 지적 1) — **LEAN=4 일 때만** 필드 유무를 선언한다.
 #    `field_requested` 는 `RECEIPT_AXES_NODIGEST` 라 **digest 를 안 바꾼다** (기존 팔 전부 보존).
 #    ⚠ 왜 LEAN=4 에만: 이 레벨은 오늘 만든 것이라 **혼동될 기존 팔이 없다** ⇒ 거짓 경보 0.
@@ -366,7 +405,7 @@ print(json.dumps(rec, ensure_ascii=False, sort_keys=True))
 PYRCPT
 )" || { echo "[p2] ABORT — 런 영수증을 못 만들었다"; exit 2; }
 _RCPT_TAG="_r$(printf '%s' "$_RCPT_JSON" | python3 -c 'import json,sys; print(json.load(sys.stdin)["receipt_digest"])')"
-OUTDIR="${OUTDIR:-$PWD/prereg_v2_vox${VOX/./}${SD_TAG}${BR_TAG}${SG_TAG}${YV_TAG}${PT_TAG}${PS_TAG}${SBRG_TAG}${FS_TAG}${SION_TAG}${AR_TAG}${LEAN_TAG}${_RCPT_TAG}}"
+OUTDIR="${OUTDIR:-$PWD/prereg_v2_vox${VOX/./}${SD_TAG}${BR_TAG}${SG_TAG}${YV_TAG}${PT_TAG}${PS_TAG}${SBRG_TAG}${FS_TAG}${SION_TAG}${PB_TAG}${AR_TAG}${LEAN_TAG}${_RCPT_TAG}}"
 #  ★★★ R3-CX-09 — 진단 런(ARMS≠8)은 **사용자가 준 OUTDIR 에도** 접미사를 강제한다.
 #    안 그러면 `ARMS=2 OUTDIR=<생산경로>` 로 2팔 산출물이 8팔 디렉터리에 섞인다.
 if [ "$ARMS" -ne 8 ] && [ "${OUTDIR%_arm$ARMS}" = "$OUTDIR" ]; then
@@ -377,7 +416,7 @@ fi
 #    production 디렉터리로 가리키는 junction/symlink 를 만들면 문자열 검사는 통과하고
 #    **resolved path 는 production** 이 된다 (Codex 실측).  ⇒ 실경로로 충돌을 본다.
 if [ "$ARMS" -ne 8 ]; then
-  _PROD="$PWD/prereg_v2_vox${VOX/./}${SD_TAG}${BR_TAG}${SG_TAG}${YV_TAG}${PT_TAG}${PS_TAG}${SBRG_TAG}${FS_TAG}${SION_TAG}${LEAN_TAG}"
+  _PROD="$PWD/prereg_v2_vox${VOX/./}${SD_TAG}${BR_TAG}${SG_TAG}${YV_TAG}${PT_TAG}${PS_TAG}${SBRG_TAG}${FS_TAG}${SION_TAG}${PB_TAG}${LEAN_TAG}"
   mkdir -p "$OUTDIR" 2>/dev/null || true
   _R_OUT="$(cd "$OUTDIR" 2>/dev/null && pwd -P || echo "$OUTDIR")"
   _R_PROD="$([ -d "$_PROD" ] && cd "$_PROD" && pwd -P || echo "$_PROD")"
@@ -561,7 +600,7 @@ PY
   local SHF="$RUN/${TAG}.$$.sh"
   ( cd "$RUN" && P2_SCR="$SCR" python3 "$SCR/sr01_stamp_compare.py" \
       --extract-payload "$KIT/run_mpm.sh" --stamp "$FIBRE_STAMP" \
-      --extra-flags "--sigma-vgcf $SIGMA --step3-vox $VOX --step3-bridge-um $BRIDGE_UM --step3-origin-shift $SH$SD_FLAG$YV_FLAG$PT_FLAG$PS_FLAG$SBRG_FLAG$RQG_FLAG$EP_FLAG$XP_FLAG$FS_FLAG$SION_FLAG$LEAN_FLAGS${P2_EXTRA:+ $P2_EXTRA}" \
+      --extra-flags "--sigma-vgcf $SIGMA --step3-vox $VOX --step3-bridge-um $BRIDGE_UM --step3-origin-shift $SH$SD_FLAG$YV_FLAG$PT_FLAG$PS_FLAG$SBRG_FLAG$RQG_FLAG$EP_FLAG$XP_FLAG$FS_FLAG$SION_FLAG$PB_FLAG$LEAN_FLAGS${P2_EXTRA:+ $P2_EXTRA}" \
       --tag "$TAG" --out-name "$(basename "$OUT")" > "$SHF.body" ) || return 1
   { echo 'set -uo pipefail'; echo "KIT=\"$KIT\""; echo "SCR=\"$SCR\"";
     #  ★ R4-CX-03 — `:+` 는 값 `0` 도 nonempty 라 켰다.  `= 1` 만 켠다.
