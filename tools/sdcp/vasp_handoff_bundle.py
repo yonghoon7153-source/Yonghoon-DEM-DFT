@@ -467,7 +467,27 @@ usage() { echo "사용법: bash run_staged.sh {1|2}"; exit 2; }
 [ $# -ge 1 ] || usage
 stage=$1
 case "$stage" in 1|2) ;; *) echo "모르는 단계: $stage"; usage;; esac
-VASP_CMD=${VASP_CMD:?VASP_CMD 를 지정하세요 (예: 'mpirun -np 256 vasp_std')}
+# ⛔⛔ 회신 AS 해제조건 5 (2026-08-31) — 봉인은 `VASP_EXE` 를 해시하는데 러너는
+#   **임의의 `VASP_CMD`** 를 실행했다. 같은 버전 문자열을 내는 다른 바이너리도
+#   통과한다. ⇒ **launcher 와 executable 을 분리**한다:
+#     VASP_LAUNCHER : mpirun/srun 과 그 인자 (실행파일 이름을 넣지 않는다)
+#     VASP_EXE      : 실행파일 (봉인 대상). 절대경로로 해석해 봉인 해시와 대조한다.
+#   실행 직전에 그 절대경로를 **다시 해시**하고, 봉인과 다르면 멈춘다.
+#   ⚠ 하위호환: VASP_CMD 만 주면 거부한다 — 조용히 옛 경로로 돌지 않는다.
+if [ -n "${VASP_CMD:-}" ] && [ -z "${VASP_LAUNCHER:-}" ]; then
+  echo "⛔ VASP_CMD 는 더 쓰지 않습니다 (회신 AS 해제조건 5)."
+  echo "   launcher 와 실행파일을 나눠 주세요 — 봉인한 그 파일로 돌았는지 확인합니다:"
+  echo "     export VASP_LAUNCHER='mpirun -np 48'"
+  echo "     export VASP_EXE=/abs/path/to/vasp_std"
+  exit 2
+fi
+VASP_LAUNCHER=${VASP_LAUNCHER:?VASP_LAUNCHER 를 지정하세요 (예: 'mpirun -np 48' — 실행파일 이름은 넣지 마세요)}
+VASP_EXE=${VASP_EXE:?VASP_EXE 를 지정하세요 (실행파일 절대경로 — 이것이 봉인 대상입니다)}
+case "$VASP_EXE" in /*) ;; *) VASP_EXE=$(command -v "$VASP_EXE" 2>/dev/null || true) ;; esac
+[ -n "$VASP_EXE" ] && [ -x "$VASP_EXE" ] || { echo "⛔ VASP_EXE 를 실행파일로 찾을 수 없습니다"; exit 2; }
+export VASP_EXE VASP_LAUNCHER
+VASP_CMD="$VASP_LAUNCHER $VASP_EXE"
+export VASP_CMD
 PP=${PP:?PP 를 지정하세요 (POTCAR 원본 트리)}
 POTCAR_ALLOWLIST=${POTCAR_ALLOWLIST:?POTCAR_ALLOWLIST 를 지정하세요 (절대경로)}
 
@@ -627,6 +647,29 @@ if [ "$n_total" != "$n_expect" ]; then
   echo "잡 폴더 $n_total ≠ 계획 $n_expect — 묶음이 온전하지 않다. 중단."; exit 2; fi
 cat _stage_jobs.txt
 
+# ⛔⛔ 회신 AS 해제조건 5 — **실행 직전에** 봉인한 절대경로를 다시 해시한다.
+#   봉인 시점과 실행 시점 사이에 바이너리가 바뀌었을 수 있다.
+python3 - "$VASP_EXE" <<'PYEXE' || { echo "⛔ 실행파일이 봉인과 다릅니다 — 중단"; exit 2; }
+import hashlib, json, os, sys
+exe = sys.argv[1]
+h = hashlib.sha256(open(exe, "rb").read()).hexdigest()
+try:
+    seal = json.load(open("POTCAR_ROOT_SEAL.json", encoding="utf-8"))
+except Exception as e:
+    sys.exit("⛔ 봉인을 읽을 수 없다: %r" % e)
+bad = []
+if seal.get("vasp_executable") and os.path.realpath(seal["vasp_executable"]) != os.path.realpath(exe):
+    bad.append("봉인 경로 %s ≠ 실행 경로 %s" % (seal["vasp_executable"], exe))
+if seal.get("vasp_executable_sha256") != h:
+    bad.append("봉인 해시 %s ≠ 지금 %s" % (str(seal.get("vasp_executable_sha256"))[:12], h[:12]))
+if bad:
+    print("⛔ 실행 직전 대조 실패:")
+    for b in bad:
+        print("   · " + b)
+    sys.exit(1)
+print("✓ 실행파일 = 봉인한 그 파일 (%s · %s)" % (exe, h[:12]))
+PYEXE
+
 fail=0
 while read -r j; do
   [ -n "$j" ] || continue
@@ -758,10 +801,31 @@ if os.path.exists(out):
                   if (old.get("source_sha256") or {}).get(k) != seal.get(k))
     if diff:
         sys.exit("이미 봉인된 root 와 다르다 (봉인은 바꾸지 않는다): %s" % diff)
-    if old.get("allowlist_sha256") and old["allowlist_sha256"] != rec["allowlist_sha256"]:
-        sys.exit("봉인 때와 **다른 allowlist** 다 (봉인 %s / 지금 %s)"
-                 % (str(old["allowlist_sha256"])[:12], str(rec["allowlist_sha256"])[:12]))
-    print("  POTCAR root 봉인 대조 통과 (%d variant)" % len(seal))
+    # ⛔⛔ 회신 AS 해제조건 4 (2026-08-31) — 종전 재대조는 **source 집합과
+    #   allowlist 만** 봤다. 조립본 해시·MANIFEST·ZIP·VASP 신원이 바뀌어도
+    #   "대조 통과" 가 찍혔다. 봉인의 **모든 불변량**을 다시 확인한다.
+    bad = []
+    for k in ("allowlist_sha256", "manifest_sha256", "bundle_zip_sha256",
+              "vasp_executable", "vasp_executable_sha256", "vasp_version_banner"):
+        if old.get(k) and old[k] != rec.get(k):
+            bad.append("%s: 봉인 %s ≠ 지금 %s"
+                       % (k, str(old[k])[:16], str(rec.get(k))[:16]))
+        if not old.get(k):
+            bad.append("%s: 기존 봉인에 없다 — 반쪽 봉인이다" % k)
+    oa, na = (old.get("assembled_sha256_by_job") or {}), (rec.get("assembled_sha256_by_job") or {})
+    if not oa:
+        bad.append("assembled_sha256_by_job: 기존 봉인에 없다")
+    else:
+        adiff = sorted(k for k in set(oa) | set(na) if oa.get(k) != na.get(k))
+        if adiff:
+            bad.append("조립본 해시가 바뀐 잡 %d개: %s" % (len(adiff), adiff[:3]))
+    if bad:
+        print("⛔ 기존 봉인과 지금 상태가 다릅니다 — 봉인은 바꾸지 않습니다:")
+        for b in bad:
+            print("   · " + b)
+        sys.exit(1)
+    print("  POTCAR root 봉인 대조 통과 (%d variant · 조립본 %d잡 · allowlist·MANIFEST·"
+          "ZIP·VASP 신원 전건 일치)" % (len(seal), len(na)))
 else:
     json.dump(rec, open(out, "w"), indent=1, ensure_ascii=False)
     print("  POTCAR root 봉인 생성 (%d variant · allowlist %s · vasp %s)"
@@ -3905,15 +3969,20 @@ def selftest_k() -> int:
     #   잡에도 `static: None` 키를 넣는데, 종전 픽스처는 키 자체를 빼서
     #   `"static" in jr` 버그를 **재현하지 못했다** (회신 AL P0-3 과 같은 방식).
     #   ran=False 는 이제 `static: None` 이고, 이 모양으로도 통과해야 맞다.
-    def _J2(sha, ver, els=("Ni",), ran=True, normal=True, e0=-1.0):
-        d = {"_prov": {"source_sha256": {e: _H64(sha) for e in els}},
+    def _J2(sha, ver, els=("Ni",), ran=True, normal=True, e0=-1.0, asm=None):
+        # ⛔ 회신 AS 4 — 반송 provenance 의 **조립본 해시**를 봉인과 대조한다.
+        #   픽스처도 실물처럼 그 값을 담아야 한다.
+        d = {"_prov": {"source_sha256": {e: _H64(sha) for e in els},
+                       "assembled_sha256": asm},
              "meta": {"species_order": list(els)},
              "static": None}
         if ran:
             d["static"] = {"vasp_version": ver, "normal_end": normal,
                            "E0": (e0 if normal else None)}
         return d
-    _one = {"a": _J2("aa", "6.4.1"), "b": _J2("aa", "6.4.1")}
+    #   잡 키를 계획(`p/a`·`p/b`)과 맞추고 조립본 해시를 봉인과 일치시킨다
+    _one = {"p/a": _J2("aa", "6.4.1", asm=_H64("1a")),
+            "p/b": _J2("aa", "6.4.1", asm=_H64("1b"))}
     # ⛔음성 AO P0-8 — 완주했는데 원본 sha 가 **64자리가 아니면** 막는다
     _short = {"a": {"_prov": {"source_sha256": {"Ni": "aa"}},
                     "meta": {"species_order": ["Ni"]},
@@ -4047,6 +4116,21 @@ def selftest_k() -> int:
                        _potcar_root_seal=_SEALOK))["blocking"]),
         "⛔음성 AR P0-5: 계획 잡에 species_order 가 없어 필요한 variant 를 못 세면 "
         "**통과가 아니라 차단**이다")
+    # ══ 회신 AS 해제조건 4 — 봉인한 POTCAR 와 **실제로 쓴 POTCAR** 대조 ═══════
+    #   종전엔 assembled_sha256_by_job 의 **키만** 봤다. 봉인 뒤에 POTCAR 를
+    #   갈아끼워도 잡히지 않았다.
+    _swap = {"p/a": _J2("aa", "6.4.1", asm=_H64("de")),      # 조립본이 바뀌었다
+             "p/b": _J2("aa", "6.4.1", asm=_H64("1b"))}
+    _rsw = potcar_identity_gates(_swap, dict(_MBASE, _potcar_root_seal=_SEALOK))
+    chk(any("ROOT_SEAL_ASSEMBLED_MISMATCH" in g for g in _rsw["blocking"])
+        and _rsw["assembled_crosscheck"]["mismatch"] == 1,
+        "⛔음성 AS 4: 봉인한 조립본 해시와 **반송 값**이 다르면 막는다 "
+        "(종전엔 키만 봐서 POTCAR 를 갈아끼워도 통과)")
+    _noasm = {"p/a": _J2("aa", "6.4.1"), "p/b": _J2("aa", "6.4.1")}   # asm=None
+    chk(any("ROOT_SEAL_ASSEMBLED_UNVERIFIED" in g for g in potcar_identity_gates(
+            _noasm, dict(_MBASE, _potcar_root_seal=_SEALOK))["blocking"]),
+        "⛔음성 AS 4: 반송에 조립본 해시가 없으면 **확인 못 함 = 통과 아님**")
+
     # ── 회신 AP #12 — release attestation 이 Methods 문구를 정한다 ────────
     # ⛔ 회신 AR P0-6 — attestation 도 **전 필드 + 3자 집합 일치 + 교차 결박**이다
     _ATT = {"schema": "potcar_attestation/v1", "made_before_production": True,
@@ -5213,6 +5297,37 @@ def potcar_identity_gates(jobs, man):
             res["blocking"].append(
                 "ROOT_SEAL_JOB_COVERAGE(봉인의 assembled 해시에 계획 잡 %d개가 "
                 "없다: %s)" % (len(_asm_miss), _asm_miss[:3]))
+        # ⛔⛔ 회신 AS 해제조건 4 (2026-08-31) — 종전엔 **키만** 봤다. 봉인이
+        #   기록한 조립본 해시를 **반송된 provenance 의 실제 값**과 대조하지
+        #   않으면, 봉인 뒤에 POTCAR 를 갈아끼워도 잡히지 않는다.
+        _asm_bad, _asm_unver = [], []
+        for _jn, _jr in sorted((jobs or {}).items()):
+            _pv = (_jr.get("geom") or {}).get("potcar_provenance") or _jr.get("_prov")
+            if not _pv:
+                continue                      # 완전성 게이트가 따로 본다
+            _got = _pv.get("assembled_sha256")
+            _want = _asm.get(_jn)
+            if _want is None:
+                _asm_unver.append(_jn)
+            elif not _got:
+                _asm_unver.append("%s(반송에 assembled 없음)" % _jn)
+            elif str(_got) != str(_want):
+                _asm_bad.append("%s: 봉인 %s ≠ 반송 %s"
+                                % (_jn, str(_want)[:12], str(_got)[:12]))
+        if _asm_bad:
+            res["blocking"].append(
+                "ROOT_SEAL_ASSEMBLED_MISMATCH(봉인한 POTCAR 와 실제로 쓴 POTCAR 가 "
+                "다르다 %d건: %s)" % (len(_asm_bad), _asm_bad[:3]))
+        if _asm_unver and _ran:
+            res["blocking"].append(
+                "ROOT_SEAL_ASSEMBLED_UNVERIFIED(조립본 해시를 대조하지 못한 잡 "
+                "%d건: %s — 확인 못 한 것은 통과가 아니다)"
+                % (len(_asm_unver), _asm_unver[:3]))
+        res["assembled_crosscheck"] = {
+            "compared": len([1 for j, r in (jobs or {}).items()
+                             if ((r.get("geom") or {}).get("potcar_provenance")
+                                 or r.get("_prov"))]),
+            "mismatch": len(_asm_bad), "unverified": len(_asm_unver)}
         # ── ③ 이 묶음의 MANIFEST 인가 (해시가 없으면 그것도 실패다) ────────
         if not _seal_rec.get("manifest_sha256") or not _mh:
             res["blocking"].append(
@@ -11163,6 +11278,18 @@ def selftest() -> int:
         chk("hostname" in _rs and "own_host" in _rs,
             "⛔음성 AR P0-8: host 를 기록하고 **같은 호스트일 때만** kill -0 을 쓴다 "
             "(다른 HPC 노드의 pid 에는 유효한 생존검사가 아니다)")
+        # ── 회신 AS 해제조건 5 — launcher/executable 분리 · 실행 직전 재해시 ──
+        chk("VASP_LAUNCHER" in _rs and "VASP_EXE" in _rs
+            and "VASP_CMD 는 더 쓰지 않습니다" in _rs,
+            "⛔음성 AS 5: 러너가 **임의 VASP_CMD 를 거부**하고 launcher/실행파일을 "
+            "나눠 받는다 (봉인은 실행파일을 해시하는데 종전엔 다른 걸 실행할 수 있었다)")
+        chk("실행 직전 대조 실패" in _rs and "vasp_executable_sha256" in _rs,
+            "⛔음성 AS 5: **실행 직전에** 봉인한 절대경로를 다시 해시해 대조한다")
+        # ── 회신 AS 해제조건 4 — 봉인 재대조가 모든 불변량을 본다 ──────────
+        chk("조립본 해시가 바뀐 잡" in _sl and "bundle_zip_sha256" in _sl
+            and "반쪽 봉인이다" in _sl,
+            "⛔음성 AS 4: 기존 봉인 재대조가 allowlist 뿐 아니라 MANIFEST·ZIP·"
+            "VASP 신원·조립본 해시를 **전부** 다시 본다")
         chk("run_census" in _rs and "stage_counts" in _rs and "EXPECT_MANIFEST_SHA256" in _rs,
             "⛔음성 AR P0-7: 러너가 실행 전에 manifest 해시·exact 잡 집합·단계 분류를 "
             "확인한다 (종전엔 존재하는 job.json 만 세어 하나를 지워도 통과했다)")
@@ -13085,14 +13212,17 @@ def _runner_e2e(bundle: Path, chk) -> bool:
     # ── stub vasp_std (SEAL 이 --version 을 부른다) ─────────────────────
     binp = base / "bin"; binp.mkdir()
     vb = binp / "vasp_std"
-    vb.write_text("#!/bin/sh\necho 'vasp.6.4.1 24Jul23 (build selftest)'\n",
+    vb.write_text("#!/bin/sh\necho 'vasp.6.4.1 24Jul23 (build selftest)'\nexit 0\n",
                   encoding="utf-8")
     vb.chmod(0o755)
     env = dict(os.environ)
     env["PATH"] = str(binp) + os.pathsep + env.get("PATH", "")
     env["PP"] = str(pp)
     env["POTCAR_ALLOWLIST"] = str(allow)
-    env["VASP_CMD"] = "true"
+    # ⛔ 회신 AS 해제조건 5 — launcher 와 실행파일을 나눠 준다 (VASP_CMD 는 거부된다)
+    env["VASP_LAUNCHER"] = "env"          # 아무것도 안 하는 launcher
+    env["VASP_EXE"] = str(vb)
+    env.pop("VASP_CMD", None)
     env["BUNDLE_ZIP_SHA256"] = "0" * 64
     env["PYTHONIOENCODING"] = "utf-8"
 
