@@ -916,7 +916,7 @@ if [ -n "$VASP_BIN" ]; then
 fi
 export AL_SHA VASP_BIN VASP_SHA VASP_VER BUNDLE_ZIP_SHA256
 python3 - <<'PYSEAL'
-import json, glob, os, sys, hashlib, time
+import json, glob, os, re, sys, hashlib, time
 seal, asm, conflict = {}, {}, []
 for pp in sorted(glob.glob("*/*/POTCAR_PROVENANCE.json")):
     d = json.load(open(pp))
@@ -959,6 +959,30 @@ if os.path.exists(out):
     #   allowlist 만** 봤다. 조립본 해시·MANIFEST·ZIP·VASP 신원이 바뀌어도
     #   "대조 통과" 가 찍혔다. 봉인의 **모든 불변량**을 다시 확인한다.
     bad = []
+    # 🔴🔴 회신 AT P0-4 (2026-08-31) — 위 재대조가 **타입과 정체 필드를 안 봤다.**
+    #   위조 schema · 문자열형 `sealed_before_production` ("true"/"yes" 는 파이썬에서
+    #   참이다) · evidence/시각 변조가 전부 통과했다. 셋을 **정확히** 본다.
+    if old.get("schema") != rec["schema"]:
+        bad.append("schema: 봉인 %r ≠ 이 도구 %r (다른 스키마의 봉인을 이어쓰지 않는다)"
+                   % (old.get("schema"), rec["schema"]))
+    if old.get("sealed_before_production") is not True:
+        bad.append("sealed_before_production 이 **불리언 True 가 아니다** (%r) — "
+                   "문자열은 참으로 읽히지만 봉인이 아니다"
+                   % (old.get("sealed_before_production"),))
+    _ev = old.get("sealed_before_production_evidence")
+    if not isinstance(_ev, str) or not _ev.strip():
+        bad.append("sealed_before_production_evidence 가 비어 있거나 문자열이 아니다 (%r)"
+                   % (_ev,))
+    elif _ev.strip() != rec["sealed_before_production_evidence"].strip():
+        bad.append("sealed_before_production_evidence 가 이 도구의 문구와 다르다 — "
+                   "손으로 쓴 근거는 근거가 아니다")
+    _at = old.get("sealed_at_utc")
+    if not isinstance(_at, str) or not re.match(
+            r"^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z$", _at or ""):
+        bad.append("sealed_at_utc 가 `YYYY-MM-DDTHH:MM:SSZ` 형식이 아니다 (%r)" % (_at,))
+    elif _at > rec["sealed_at_utc"]:
+        bad.append("sealed_at_utc 가 **미래**다 (봉인 %s > 지금 %s)"
+                   % (_at, rec["sealed_at_utc"]))
     for k in ("allowlist_sha256", "manifest_sha256", "bundle_zip_sha256",
               "vasp_executable", "vasp_executable_sha256", "vasp_version_banner"):
         if old.get(k) and old[k] != rec.get(k):
@@ -4429,6 +4453,29 @@ def selftest_k() -> int:
         _rr = potcar_identity_gates(_one, dict(_MB2, _potcar_attestation=dict(_ATT, **_mut)))
         chk(any(_code in g for g in _rr["blocking"]) and not _rr["attestation"]["usable"],
             "⛔음성 AR P0-6: %s → %s" % (_why, _code))
+    # 🔴 회신 AT P0-4 음성 — 스키마·불리언·시각·root seal 결박
+    for _mut, _code, _why in (
+            ({"schema": None}, "ATTESTATION_INCOMPLETE", "schema 필드가 없다"),
+            ({"schema": "totally_made_up/v9"}, "ATTESTATION_SCHEMA_UNKNOWN",
+             "위조 schema 값"),
+            ({"made_before_production": "true"}, "ATTESTATION_NOT_PREPRODUCTION",
+             "**문자열** 'true' — 파이썬에서 참이지만 증서가 아니다"),
+            ({"made_before_production": 1}, "ATTESTATION_NOT_PREPRODUCTION",
+             "정수 1 — 역시 참이지만 불리언이 아니다"),
+            ({"created_utc": "어제쯤"}, "ATTESTATION_TIME_MALFORMED",
+             "시각이 ISO Z 형식이 아니다")):
+        _rr = potcar_identity_gates(_one, dict(_MB2, _potcar_attestation=dict(_ATT, **_mut)))
+        chk(any(_code in g for g in _rr["blocking"]) and not _rr["attestation"]["usable"],
+            "⛔음성 AT P0-4: %s → %s" % (_why, _code))
+    # root seal 이 **없으면** attestation 만으로 release 를 주장하지 않는다
+    _nos = potcar_identity_gates(
+        _one, {k: v for k, v in dict(_MB2, _potcar_attestation=_ATT).items()
+               if k != "_potcar_root_seal"})
+    chk(any("ATTESTATION_WITHOUT_ROOT_SEAL" in g for g in _nos["blocking"])
+        and not _nos["attestation"]["usable"],
+        "⛔음성 AT P0-4: **root seal 이 없으면** 임의 release label 의 attestation 이 "
+        "usable 로 가지 않는다 (종전엔 집합 대조가 통째로 건너뛰어졌다)")
+
     # ZIP 관측이 아예 없으면 "결박 확인 못 함" 이고 그것은 통과가 아니다
     _nz = potcar_identity_gates(_one, dict(_MB2, _zip_sha256_observed=None,
                                            _potcar_attestation=_ATT))
@@ -5627,7 +5674,9 @@ def potcar_identity_gates(jobs, man):
         #   종전엔 `FAKE_RELEASE` + 실제 쓰지 않는 `UNRELATED` variant 하나짜리
         #   합성 attestation 도 usable:true 였다. 다음 셋의 **완전일치**를 본다:
         #     attestation variants = root-seal source variants = 계획 잡 POTCAR variants
-        _need_att = ("release_label", "variants", "vasp_version_raw",
+        # 🔴 회신 AT P0-4 — 필수 목록에 `schema` 가 없었다. 스키마가 무엇이든
+        #   나머지가 채워져 있으면 통과했다.
+        _need_att = ("schema", "release_label", "variants", "vasp_version_raw",
                      "vasp_executable", "vasp_executable_sha256", "allowlist_sha256",
                      "manifest_sha256", "bundle_zip_sha256", "site", "created_utc",
                      "made_before_production_evidence")
@@ -5635,6 +5684,26 @@ def potcar_identity_gates(jobs, man):
         _av = set(_att.get("variants") or {})
         if _att_miss:
             _att_why.append("ATTESTATION_INCOMPLETE(필드 누락 %s)" % _att_miss)
+        if _att.get("schema") and _att["schema"] != "potcar_attestation/v1":
+            _att_why.append("ATTESTATION_SCHEMA_UNKNOWN(%r — 이 도구가 아는 스키마가 "
+                            "아니다)" % (_att["schema"],))
+        # 🔴 회신 AT P0-4 — `made_before_production` 을 **불리언으로** 본다
+        #   (문자열 "true" 는 파이썬에서 참이지만 증서가 아니다)
+        if _att.get("made_before_production") is not True:
+            _att_why.append("ATTESTATION_NOT_PREPRODUCTION(made_before_production 이 "
+                            "불리언 True 가 아니다: %r)"
+                            % (_att.get("made_before_production"),))
+        if not re.match(r"^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z$",
+                        str(_att.get("created_utc") or "")):
+            _att_why.append("ATTESTATION_TIME_MALFORMED(created_utc %r)"
+                            % (_att.get("created_utc"),))
+        # 🔴🔴 회신 AT P0-4 — **root seal 이 없으면 attestation 을 쓸 수 없다.**
+        #   종전엔 집합 대조가 `if _seal and …` 이라 봉인이 없으면 통째로 건너뛰었고,
+        #   임의 release label + 비정상 hash 의 attestation 이 usable:true 로 갔다.
+        if not _seal:
+            _att_why.append("ATTESTATION_WITHOUT_ROOT_SEAL(root seal 이 없다 — "
+                            "attestation 만으로 release 를 주장하지 않는다. 봉인이 "
+                            "'이 계산들이 한 트리에서 나왔다' 를 대는 쪽이다)")
         if (_att.get("manifest_sha256") and _mh
                 and _att["manifest_sha256"] != _mh):
             _att_why.append("ATTESTATION_WRONG_BUNDLE(다른 MANIFEST 에 대한 "
@@ -13897,6 +13966,28 @@ def _runner_e2e(bundle: Path, chk) -> bool:
     _rc3, _o3 = _run(_atk3, {"PP": str(_pp2)})
     chk(_rc3 != 0 and ("PP 원본이 없습니다" in _o3 or "조립 실패" in _o3),
         "⛔음성 AT P0-3: variant 하나만 없어도 막는다 (rc=%s)" % _rc3)
+
+    # ①-e 🔴 회신 AT P0-4 — **기존 봉인 재검사**가 위조를 놓치던 세 경로
+    def _tamper_seal(tag, mut):
+        d = base / tag
+        _sh2.copytree(_ok_root, d)
+        _s = json.loads((d / "POTCAR_ROOT_SEAL.json").read_text(encoding="utf-8"))
+        _s.update(mut)
+        (d / "POTCAR_ROOT_SEAL.json").write_text(
+            json.dumps(_s, indent=1, ensure_ascii=False), encoding="utf-8")
+        return _run(d)
+
+    for _tag, _mut, _key, _why in (
+            ("seal_schema", {"schema": "made_up/v9"}, "schema", "위조 schema"),
+            ("seal_boolstr", {"sealed_before_production": "true"},
+             "불리언", "**문자열** 'true' (파이썬에서 참이지만 봉인이 아니다)"),
+            ("seal_evidence", {"sealed_before_production_evidence": "그냥 믿어주세요"},
+             "evidence", "손으로 쓴 근거"),
+            ("seal_future", {"sealed_at_utc": "2099-01-01T00:00:00Z"},
+             "미래", "미래 시각")):
+        _rcS, _oS = _tamper_seal(_tag, _mut)
+        chk(_rcS != 0 and _key in _oS,
+            "⛔음성 AT P0-4: 기존 봉인의 %s → 거부 (rc=%s)" % (_why, _rcS))
 
     # ② ⛔음성 — **job.json 하나를 지우면** 막는다 (AR P0-7 이 재현한 그 경우)
     _r2 = _copy("drop_jobjson")
