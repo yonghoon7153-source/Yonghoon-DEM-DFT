@@ -1622,6 +1622,7 @@ def _fake_orca_out(terminated=True, energies=(-100.0,), hf="UHF", s2=None, s2_li
 
 def selftest():
     import tempfile
+    import shutil as _copy2
     fails = []
 
     def chk(ok, msg):
@@ -2045,7 +2046,9 @@ def selftest():
         chk(os.path.exists(os.path.join(aL.out, "trimer_neutral.xyz")),
             "레거시 트라이머 경로 하위호환 (--legacy 로만 진입)")
 
-    print(f"── {'PASS' if not fails else 'FAIL ' + str(len(fails))} ──")
+    # ⚠ 2026-08-31 — 종전엔 여기서 PASS 를 찍고 **그 뒤로 폴라론 시험을 더 돌았다**.
+    #   실패해도 화면에는 PASS 가 먼저 남아 오해를 부른다. 인쇄는 맨 끝으로 옮겼다.
+    print("── 조립·stage 절 끝 (누적 실패 %d) ──" % len(fails))
     # ══ 폴라론 pilot (회신 S) — 음성 경로 포함 ═══════════════════════════
     print("── 폴라론 pilot ──")
     # 합성 계: ring 2개(각 S+4C) · 에테르 O 2개/ring · sulfonate 2개 · 나머지
@@ -2330,7 +2333,112 @@ def selftest():
     chk(_txt_r.count("end") >= 2 and "\n" in _txt_r.split("%scf")[1][:40],
         "⛔음성: `%scf` 를 여러 줄로 쓴다 (Rotate 의 end 와 %scf 의 end 가 "
         "한 줄에 붙으면 모호하다)")
+    # ══ 폴라론 pilot e2e — **실제로 생성기와 seed 생성기를 돌린다** ═══════
+    #  ⛔ 왜 필요한가 (2026-08-31): 위의 순수-헬퍼 시험 40건은 전부 통과하는데
+    #     `--polaron_pilot` 은 UnboundLocalError, `--polaron_seeds` 는 4-튜플
+    #     언팩 ValueError 로 **둘 다 첫 줄에서 죽어 있었다.** 함수를 부르지 않는
+    #     시험은 그 함수가 죽었는지 모른다 (CLAUDE.md: 양성만 있는 selftest 금지).
+    print("── 폴라론 pilot e2e ──")
+    with tempfile.TemporaryDirectory() as ptd:
+        _dsym, _dpos = _synthetic_dimer()
+        _dx = os.path.join(ptd, "dimer.xyz")
+        write_xyz(_dx, _dsym, _dpos, "synthetic dimer for polaron e2e")
+
+        def _gen(sub, **kw):
+            a = argparse.Namespace(neutral_xyz=_dx, out=os.path.join(ptd, sub),
+                                   eps=[1.0], nprocs=4, functional="r2SCAN-3c",
+                                   eps_why="selftest", site=None,
+                                   loc_realization="deterministic")
+            for k, v in kw.items():
+                setattr(a, k, v)
+            return pilot_generate(a)
+
+        _po = _gen("base")
+        _pm = json.loads((_po / "MANIFEST_PILOT.json").read_text())
+        chk(sum(1 for v in _pm["jobs"].values() if v["phase"] == "L") == 2
+            and sum(1 for v in _pm["jobs"].values() if v["phase"] == "L2") == 2,
+            "e2e: `--polaron_pilot` 가 **실제로 돈다** (phase L 2 + L2 2) — "
+            "종전 UnboundLocalError 회귀시험")
+        chk(_pm["atom_manifest"]["P"]["n_atoms"]
+            == _pm["atom_manifest"]["D"]["n_atoms"] + 1,
+            "e2e: 생성물의 P/D 프레임이 원자 하나 차이다 (%d/%d)"
+            % (_pm["atom_manifest"]["P"]["n_atoms"],
+               _pm["atom_manifest"]["D"]["n_atoms"]))
+
+        def _run(sub, **kw):
+            """base 를 복사해 phase L 산출물을 만들고 pilot_seeds 를 돌린다."""
+            d = os.path.join(ptd, sub)
+            _copy2.copytree(str(_po), d)
+            mm = json.loads(open(os.path.join(d, "MANIFEST_PILOT.json")).read())
+            _post = kw.pop("_post", None)
+            _pil_fake_phaseL(d, mm, **kw)
+            if _post:
+                _post(Path(d))
+            return pilot_seeds(d)
+
+        _n = _run("ok")
+        _mk = json.loads(open(os.path.join(ptd, "ok", "MANIFEST_PILOT.json")).read())
+        _S = {k: v for k, v in _mk["jobs"].items() if v["phase"] == "S"}
+        chk(_n == 7 and len(_S) == 7,
+            "e2e: `--polaron_seeds` 가 **실제로 돈다** — D• 4 + P⁺ 3 = 7 잡 "
+            "(종전 4-튜플 언팩 ValueError 회귀시험)")
+        _pi = [v for k, v in _S.items() if v["seed"].startswith("B_ring")]
+        chk(len(_pi) == 4 and all(v["seed_mo_character"]["pi_share"] >= PIL_PI_MIN
+                                  and v["seed_mo_character"]["p_frac"] >= PIL_PFRAC_MIN
+                                  for v in _pi),
+            "e2e: 링 seed 4개가 **고리법선 π** 로 판정됐다 (π %.2f · p %.2f)"
+            % (_pi[0]["seed_mo_character"]["pi_share"],
+               _pi[0]["seed_mo_character"]["p_frac"]))
+        _sul = [v for v in _S.values() if v["seed"] == "A_sulfonate"]
+        chk(len(_sul) == 1 and _sul[0]["seed_mo_character"]["O_frac"] >= PIL_ONB_MIN,
+            "e2e: sulfonate seed 가 **O-nonbonding** 으로 판정됐다 (O %.2f)"
+            % _sul[0]["seed_mo_character"]["O_frac"])
+        chk(all(v["seed_mo"] != 0 and v["seed_mo"] != 40
+                for v in _S.values() if v["seed_mo"] is not None),
+            "⛔음성 e2e: **코어 MO(−20 Eh)도 가상 MO(점유 0)도 seed 로 안 뽑힌다** "
+            "— 둘 다 목표 링에 100/99% 걸어 뒀는데 걸러졌다")
+        _df = [v for v in _S.values() if v["seed"] == "default"]
+        chk(len(_df) == 2 and all(v["orbitals_from"] is None
+                                  and v["loc_sha256"] is None
+                                  and v["seed_equivalence_class"] == "fresh_guess"
+                                  for v in _df),
+            "e2e: `default` 는 `.loc` 를 읽지 않으므로 출처를 안 찍는다 (회신 T P0-4)")
+        _inp = open(os.path.join(ptd, "ok", "S", "eps1", "Dradical", "B_ring0",
+                                 "B_ring0.inp")).read()
+        chk("GuessMode CMatrix" in _inp and "%moinp" in _inp.lower()
+            and "Rotate" in _inp,
+            "e2e: 생성된 seed 입력에 MORead·CMatrix·Rotate 가 실제로 들어갔다")
+
+        for _sub, _kw, _why in (
+            ("neg_rand", {"rand_mark": True},
+             "국재화가 **무작위 seed** 로 돌았는데 R0 로 선언돼 있다"),
+            ("neg_gm", {"kill_guessmode": True},
+             "L2 입력에 `GuessMode CMatrix` 가 없다 (MO 재정렬 → 엉뚱한 Rotate)"),
+            ("neg_nomopop", {"no_mopop": True},
+             "MO 별 Löwdin 인구 블록이 없다"),
+            ("neg_sigma", {"sigma_ring": True},
+             "링에 96% 걸렸지만 **면내 p(σ)** 다 — 공간 국재는 π 가 아니다"),
+            ("neg_term", {"bad_term": True},
+             "phase L2 가 정상 종료하지 않았다"),
+            ("neg_noout", {"_post": lambda d: os.remove(
+                d / "L2" / "eps1" / "L_dminus" / "L_dminus.out")},
+             "phase L2 출력이 아예 없다"),
+            ("neg_noloc", {"_post": lambda d: os.remove(
+                d / "L" / "eps1" / "L_dminus" / "L_dminus.loc")},
+             "국재 궤도 `.loc` 가 없다"),
+            ("neg_frame", {"_post": lambda d: _copy2.copy(
+                d / "L" / "eps1" / "L_neutral" / "L_neutral.xyz",
+                d / "L" / "eps1" / "L_dminus" / "L_dminus.xyz")},
+             "D 잡에 P 프레임(원자 하나 많음) xyz 가 들어갔다 — 프레임 어긋남"),
+            ("neg_oldman", {"_post": lambda d: (d / "MANIFEST_PILOT.json").write_text(
+                json.dumps({k: v for k, v in json.loads(
+                    (d / "MANIFEST_PILOT.json").read_text()).items()
+                    if k != "atom_manifest"}, ensure_ascii=False))},
+             "구판 manifest — P/D 프레임 봉인이 없다"),
+        ):
+            raises(lambda _s=_sub, _k=_kw: _run(_s, **_k), "⛔음성 e2e: " + _why)
     print("── 폴라론 pilot 끝 ──")
+    print("── %s ──" % ("PASS" if not fails else "FAIL " + str(len(fails))))
     return 1 if fails else 0
 
 
@@ -2782,6 +2890,12 @@ def pilot_generate(a):
     n_e_neutral = electrons_of(sym)
     _amf = pilot_atom_manifest(sym, nb, rings, sulf, [sH])
     envs = [("eps%g" % e, e) for e in (a.eps or [1.0])]
+    # ⛔ 회신 T P0-3 — primary 는 **결정론 국재화**(`%loc Randomize 0`). 무작위
+    #   realization(R1)은 민감도로만 쓰고, 그때는 명시해야 한다.
+    #   ⚠ 2026-08-31: 이 두 줄이 `man` 딕셔너리 **뒤**에 있어 `--polaron_pilot` 이
+    #     UnboundLocalError 로 죽었다. 선언은 첫 사용보다 앞이어야 한다.
+    _loc_rand = str(getattr(a, "loc_realization", "deterministic")) == "random"
+    _loc_mode = "random" if _loc_rand else True
     man = {
         "schema": "polaron_pilot/v1",
         "date": time.strftime("%Y-%m-%d"),
@@ -2835,10 +2949,6 @@ def pilot_generate(a):
         "jobs": {},
     }
     # ── phase L ────────────────────────────────────────────────────────────
-    # ⛔ 회신 T P0-3 — primary 는 **결정론 국재화**(`%loc Randomize 0`). 무작위
-    #   realization(R1)은 민감도로만 쓰고, 그때는 명시해야 한다.
-    _loc_rand = str(getattr(a, "loc_realization", "deterministic")) == "random"
-    _loc_mode = "random" if _loc_rand else True
     kill = [sH]
     dsym, dpos, _ = remove_atoms(sym, pos, kill)
     for en, ev in envs:
@@ -3226,10 +3336,18 @@ def pilot_seeds(d):
             raise SystemExit(
                 "⛔ %s 에서 MO 별 Löwdin 인구를 못 읽었다 — `%%output Print[P_OrbPopMO_L] 1` "
                 "이 실제로 찍혔는지 확인할 것 (seed 를 임의로 고르지 않는다)" % outp)
-        pops, occ, ener = pr
+        pops, occ, ener, aos = pr
         if not any(v is not None for v in ener.values()):
             raise SystemExit("⛔ %s 에서 MO 에너지를 못 읽었다 — 코어 궤도를 거를 수 없다. "
                              "코어 1s 는 링에 100%% 국재돼 있어 반드시 seed 로 뽑힌다" % outp)
+        # ⛔ 회신 T P0-2 — π/lone-pair 성격 판정에는 **이 계 프레임의** 원소·좌표가
+        #   필요하다 (D 는 199, P 는 200). L 잡의 xyz 가 그 프레임 자체다.
+        _sy_j, _po_j = read_xyz(src / (tag + ".xyz"))
+        if len(_sy_j) != nat_j:
+            raise SystemExit(
+                "⛔ %s 의 원자수 %d 가 이 계의 %d 와 다르다 — 프레임이 어긋난 채로 "
+                "성격 판정을 하면 엉뚱한 원자의 p 밀도를 본다 (회신 T P0-1)"
+                % (src / (tag + ".xyz"), len(_sy_j), nat_j))
         # ⛔ 2026-08-31 — L2 를 순회하도록 바꾸면서 `n_electrons` 를 놓쳤다.
         #   그 값은 원본 **L 잡**에 있다 (L2 는 같은 계를 다시 읽을 뿐이다).
         nel = jm.get("n_electrons")
@@ -3373,6 +3491,75 @@ def pilot_seeds(d):
         print("  [%s] %s" % (env, " · ".join(rows)))
     return made
 
+
+# ── 폴라론 pilot · selftest 픽스처 (⚠ 생산 경로 아님) ──────────────────────
+#  ⛔ 2026-08-31 채택 이유: `pilot_generate` 는 `_loc_rand` 선언순서 때문에
+#     UnboundLocalError 로, `pilot_seeds` 는 4-튜플을 3개로 풀면서 ValueError 로
+#     **둘 다 첫 줄에서 죽어 있었다.** 그런데 selftest 40건은 전부 통과했다 —
+#     순수 헬퍼만 부르고 두 함수를 **한 번도 실행하지 않았기 때문**이다.
+#     그래서 여기서는 합성 다이머로 phase L/L2 산출물을 만들어 **실제로 돌린다**.
+
+def _pil_fake_mopop(mos, ener, occ, rows):
+    """selftest 용 ORCA `LOEWDIN ORBITAL POPULATIONS PER MO` 블록.
+
+    rows = [(원자 0-based, 원소, AO라벨, {mo: 인구}), ...]
+
+    ⛔ 못 하는 것: 실제 ORCA 출력이 아니라 **우리 파서가 받는 형식**의 재현이다.
+      형식이 판본에 따라 다르면 이 픽스처는 그것을 잡지 못한다 (그건 실물 smoke test 몫).
+    """
+    t = "LOEWDIN ORBITAL POPULATIONS PER MO\n" + "-" * 34 + "\n"
+    t += "      " + "".join("%10d" % x for x in mos) + "\n"
+    t += "      " + "".join("%10.4f" % ener[x] for x in mos) + "\n"
+    t += "      " + "".join("%10.4f" % occ[x] for x in mos) + "\n"
+    t += "      " + "-" * (10 * len(mos)) + "\n"
+    for ai, sy, ao, d in rows:
+        t += ("%4d%-2s%6s" % (ai, sy, ao)
+              + "".join("%10.4f" % d.get(x, 0.0) for x in mos) + "\n")
+    return t + "\n"
+
+
+def _pil_fake_phaseL(out, man, rand_mark=False, kill_guessmode=False, no_mopop=False,
+                     sigma_ring=False, bad_term=False):
+    """selftest 용 phase L/L2 산출물(.loc/.out) 생성. 인자들이 **음성 경로**다."""
+    out = Path(out)
+    amf = man["atom_manifest"]
+    for jk, jm in man["jobs"].items():
+        if jm["phase"] != "L2":
+            continue
+        tag = jk.rsplit("/", 1)[-1]
+        src = out / jm["reads_localized_from"]
+        (src / (tag + ".loc")).write_text("fake localized orbitals\n")
+        fr = amf["D" if tag == "L_dminus" else "P"]
+        sy, _ = read_xyz(src / (tag + ".xyz"))
+        rg = {k: sorted(set(v["core"]) | set(v["ether_O"]))
+              for k, v in fr["rings"].items()}
+        su = fr["components"]["sulfonate"]
+        # MO 0 = 코어(에너지 −20 Eh, 링에 100%) · 40 = 가상(점유 0, 링에 99%)
+        #   → 둘 다 뽑히면 안 된다. 뽑히면 성격 검사에서 죽으므로 **강한 음성**이다.
+        mos = [0, 5, 6, 7, 40]
+        ener = {0: -20.0, 5: -0.50, 6: -0.45, 7: -0.40, 40: 0.10}
+        occ = {0: 2.0, 5: 2.0, 6: 2.0, 7: 2.0, 40: 0.0}
+        pz = "2px" if sigma_ring else "2pz"      # 합성 다이머의 고리 법선은 ẑ 다
+        rows = []
+        for gk, mo in zip(sorted(rg), (5, 6)):
+            per = 96.0 / len(rg[gk])
+            rows += [(ai, sy[ai], pz, {mo: per}) for ai in rg[gk]]
+        _o = [i for i in su if str(sy[i]).upper() == "O"]
+        _s = [i for i in su if str(sy[i]).upper() == "S"]
+        rows += [(ai, sy[ai], "2py", {7: 90.0 / len(_o)}) for ai in _o]
+        rows += [(ai, sy[ai], "3px", {7: 8.0 / len(_s)}) for ai in _s]
+        _r0 = rg[sorted(rg)[0]]
+        rows += [(ai, sy[ai], "1s", {0: 100.0 / len(_r0)}) for ai in _r0]
+        rows += [(ai, sy[ai], "2pz", {40: 99.0 / len(_r0)}) for ai in _r0]
+        txt = "no populations here\n" if no_mopop else _pil_fake_mopop(mos, ener, occ, rows)
+        if rand_mark:
+            txt += "Localizations seeded randomly\n"
+        txt += "" if bad_term else "ORCA TERMINATED NORMALLY\n"
+        (out / jk / (tag + ".out")).write_text(txt)
+        if kill_guessmode:
+            f = out / jk / (tag + ".inp")
+            f.write_text(f.read_text().replace("GuessMode CMatrix", "GuessMode FMatrix"))
+    return out
 
 # ── 폴라론 pilot · 분석 ─────────────────────────────────────────────────────
 
