@@ -233,10 +233,24 @@ def report_relax(path, thr=FORC_CONV_THR):
     if len(hist) >= 4:
         import math
         a, b = hist[-4][1], hist[-1][1]
+        # ⛔⛔ 2026-08-31 실측 — 3스텝 비만 보면 **마지막에 되올라간 것**을 놓친다.
+        #   li3nd r1: 0.001144 → 0.001384 → 0.001420 으로 두 스텝 연속 올랐는데
+        #   16→19 비(0.933)로는 "5스텝 남음" 이 나왔다. 문턱 근처 진동이면 남은
+        #   스텝이 5가 아니라 **수렴하지 않을 수도** 있다. 되올라감을 먼저 말한다.
+        rises = sum(1 for i in range(max(1, len(hist) - 3), len(hist))
+                    if hist[i][1] > hist[i - 1][1])
+        lo = min(v for _, v in hist)
+        if rises:
+            print(f"  🔴 최근 3스텝 중 {rises}번 **힘이 올라갔다** "
+                  f"(최저 {lo:.6f} → 현재 {b:.6f}). 문턱 {b / thr:.1f}배에서 진동 중이면 "
+                  f"스텝을 더 준다고 내려가지 않는다")
+            print("     의심 순서: ① SCF conv_thr 가 느슨해 힘이 잡음투성이인가 "
+                  "② BFGS trust radius 재설정 ③ 이미 최저점 근처이고 문턱이 빡센가")
         if b > 0 and a > b:
             r = (b / a) ** (1.0 / 3.0)                 # 스텝당 감쇠비
             n = math.log(thr / b) / math.log(r)
-            print(f"  최근 3스텝 감쇠비 {r:.3f}/스텝 → 산술 외삽 **{n:.0f}스텝** 남음")
+            print(f"  최근 3스텝 감쇠비 {r:.3f}/스텝 → 산술 외삽 **{n:.0f}스텝** 남음"
+                  + ("  ⚠ 위 되올라감 때문에 이 수는 믿지 말 것" if rises else ""))
             print("  ⚠ 외삽은 **낙관 하한**이다 — BFGS 는 후반이 느려지고 힘이 "
                   "되돌아가기도 한다. 단정하지 말 것")
         else:
@@ -762,6 +776,15 @@ def selftest():
     open(_rt, "w").write("no forces here at all\n")
     chk(relax_force_history(_rt) == [],
         "[음성] 힘 블록이 없는 출력 → 빈 이력")
+    # ⛔ 2026-08-31 실측(li3nd r1) — 마지막에 **되올라간** 이력을 진동으로 읽는가
+    open(_rt, "w").write("".join(_blk % (v, v / 2) for v in
+                                 (0.00500, 0.00175, 0.001144, 0.001384, 0.001420)))
+    _h2 = relax_force_history(_rt)
+    _rises = sum(1 for i in range(max(1, len(_h2) - 3), len(_h2))
+                 if _h2[i][1] > _h2[i - 1][1])
+    chk(len(_h2) == 5 and _rises == 2,
+        f"relax 이력: 마지막 3스텝 중 되올라감 {_rises}회를 센다 "
+        f"(3스텝 비만 보면 '5스텝 남음' 으로 오독한다 — li3nd r1 실측)")
 
     print("selftest PASS" if ok else "selftest FAIL")
     return 0 if ok else 1
