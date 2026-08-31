@@ -5259,3 +5259,113 @@ namespace 안으로 묶는 것(`results/_smoke/arch/…`)과 자기 보고서를
 | power-loss ordering fault model | **미착수** (별도 acceptance) |
 | publisher 전용 OS principal | **미착수** |
 | 외적타당도 #48/#49/#50 | **미착수** |
+
+## §58 — 50차 게이트 리뷰 대응 (묶음 9)
+
+49차 판정은 **NO-GO** 였다: "정상 grid → fit → finalize 전달 자체는 닫혔지만,
+권한·원자성·입력 결속·동결·producer identity 가 우회됩니다." 실행 가능한 반례
+여덟이 붙어 있었고 **전부 이 기계에서 재현한 뒤** 고쳤다.
+
+이번 라운드의 형태는 하나로 요약된다: **검사가 있는 자리와 쓰는 자리가
+달랐다.** 49차는 자격을 `resume_claim()` 에, 결속을 파일 하나에, 순서를 나중에
+두었다. 그 사이의 틈이 전부 반례가 됐다.
+
+### 50-1 조건 P0 — 임의 token 으로 만든 claim 이 phase 를 기록했다
+
+claim 파일에서 공개 `attempt_id` 를 읽어 `LegClaim(..., token="0"*32)` 를 직접
+만들면 `phase_done()` 이 그대로 기록했다. 생성자는 언제든 부를 수 있으므로
+**읽기 함수에 둔 검사는 검사가 아니다.** 쓰기 지점이 verifier 를 대조한다.
+
+### 50-2 조건 P0 — 발급 순서가 뒤집혀 있었다
+
+`open_leg_run()` 이 claim 을 먼저 굳히고 token 을 나중에 썼다. 그 사이에 죽으면
+아무도 갖고 있지 않은 verifier 만 남고 계획은 `running` 이다 — 이어받을 수도
+되돌릴 수도 닫을 수도 없다. crash 창이 **정상 경로 안**에 있으므로 운영 사고
+하나에 다리 하나를 잃는 설계였다.
+
+순서를 뒤집으면 그 상태가 표현 불가능해진다: claim 이 있는 모든 시점에 그
+소유 증명도 디스크에 있다. token 만 남는 것은 무해하다 (가리키는 claim 이
+없으므로 아무 권한도 아니고 다음 발급이 덮는다). 실패 시 되돌림도 같은
+불변식을 지킨다 — **claim 이 남았으면 token 도 남긴다.**
+
+### 50-3 조건 P0 — 닫힌 실행이 부활했다
+
+`finalize_leg()`·`_abandon_claim()` 이 claim 파일을 임계 구역 **밖**에서
+지웠다. 삭제를 lock 안으로 옮기고, 쓰기 지점이 claim 의 존재도 확인한다.
+
+### 50-4 조건 P0 — 승인이 결과를 바꾸는 축 셋을 빠뜨렸다
+
+`row_selection` 이 mode/limit 만 담아 **어느 조건을 골랐는지**가 빠졌고,
+`base_config`(재고 분배 상수)는 축 자체가 없었으며, half-cell 기준 캐시는
+recipe 만 담겨 **같은 recipe 로 만든 다른 캐시**를 놓으면 승인 digest 가
+그대로였다. 셋 다 "경로·이름은 같은데 계산이 달라진다" 형태다.
+
+### 50-5 조건 P0 — 입력 결속이 파일 하나만 봤다
+
+fit 이 읽는 것은 `curves.parquet` 하나가 아니다 — producer 기록
+(`curves_manifest*.yaml`)도 봉인해 읽고 서명에 넣는다. `PHASE_INPUT_KEYS` 셋
+전부를 결속한다. e2e 가 세 파일을 하나씩 갈아 끼워 각각 거부되는 것을 본다.
+
+### 50-6 조건 P0 — journal 을 지우면 동결 기록이 사라졌다
+
+`read_lifecycle()` 이 `if not p.is_file(): return []` 로 **끝 anchor 대조
+전에** 빠져나갔다. anchor 를 둔 이유가 "사슬의 끝을 고정한다" 인데 사슬 자체가
+없을 때를 안 봤다. **없는 것과 지워진 것은 다르다.**
+
+### 50-7 조건 P0 — 닫힘·정규형의 남은 셋
+
+- `A, B = 1, 2` 로 정의한 module 상수가 닫힘 밖이었다. 게다가 **같은 walk 의
+  사본이 `_compute_closure()` 안에 하나 더** 있어 한쪽만 고치면 약한 쪽이
+  실효 규칙이 된다 (실측했다). authority 를 하나로 합쳤다.
+- 정규형은 docstring 을 **버린다**. 그러면 계산이 `__doc__` 을 읽어서도 안
+  된다 — 버린 것을 쓰는 코드가 있으면 digest 는 거짓이다. 둘 중 하나만 참일
+  수 있다.
+- `SUPPORTED_PYTHON` 이 3.12 를 선언하는데 golden 이 3.12 에서 **실제로**
+  달랐다. 원인은 PEP 701 파서가 중첩 format spec 끝에 붙이는 빈
+  `Constant('')` 다. 정규형이 그것을 흡수하게 했고, 이제 3.11·3.12·3.13 이
+  정규형 digest `ae7a48bde6eb8f9d` 로 일치한다. 회귀가 **실제로 세 인터프리터를
+  띄워** 대조한다 (선언만 하고 확인하지 않는 자리를 없앴다).
+
+### 50-8 조건 P1 — 변이 checker 가 no-op 을 인증했다
+
+`old == new` 인 변이, 빈 기대 실패 집합, **실패한 조각의 coverage 기록**을
+전부 거부한다. `--check-coverage` 는 세기 전에 등록부 자체의 위생을 본다.
+실측: slice 7 이 낡은 증인으로 실패했을 때 coverage 가 안 써졌고, 합집합
+검사가 그 조각의 scenario 넷을 "어느 조각에도 나타나지 않았다" 로 잡았다.
+
+### 50-9 clean checkout 실패는 시험 문제가 아니라 **순서 결함**이었다
+
+리뷰어는 "clean checkout 에서 frozen guard 보다 gitignored 원자료 누락에 먼저
+걸림" 을 환경 한계로 보고했다. `results/` 를 통째로 감춰 재현해 보니, 원자료가
+**있는** 기계에서는 frozen 목적지를 향해 읽기·계산을 먼저 하게 되는 것이
+드러났다. 거절은 아무 일도 하기 전에 나야 한다 — `_assert_writable()` 을
+`build()` 맨 앞으로 옮겼고, 회귀는 존재하지 않는 다리로도 물어 순서를 고정한다.
+
+### 50-10 이번에도 fixture 가 진실을 가렸다
+
+`test_the_grid_receipt_binds_every_curve_input...` 이 기대값을
+`PHASE_INPUT_KEYS` **에서 유도**했다. 그래서 그 상수를 좁히는 변이에 시험이
+함께 좁아져 초록으로 남았다 (변이가 안 물었다 — 실측). 시험이 대상 상수를
+읽으면 그 상수를 고정하지 못한다. 이름을 글자로 적었다.
+
+### 실측
+
+| 무엇 | 값 |
+|---|---|
+| 전체 회귀 | **1326 passed · 1 xfailed · 0 failed** |
+| strict smoke | **rc 0 · 52 ✅ · 0 ❌** |
+| 변이 전수 | 99 scenario (executable 93 · declared 6) · 9 조각 합집합이 등록부를 정확히 덮었다 |
+| clean checkout 흉내 | 49차에 보고된 frozen-guard 실패가 사라졌다 |
+| 인터프리터 일치 | 3.11 · 3.12 · 3.13 정규형 digest `ae7a48bde6eb8f9d` |
+
+### 아직 아닌 것
+
+| 항 | 상태 |
+|---|---|
+| 조건 P0-1 producer 결속 — 닫힌 typed manifest 파싱 · 두 payload 압축해제 재해시 · producer 발행 영수증 | **미착수** (49차에 이어) |
+| 조건 P0-8 — 경로 무관 typed·sealed 실행 class marker | **미착수.** 판정은 여전히 `is_inside_namespace()` 의 정규 격리다 |
+| 조건 P0-4 — typed CAS/archive/restore/validation/retention 영수증 소비 | **부분** |
+| `run_transaction` · `finalize_only` 의 production 호출자 | **여전히 없다** |
+| baseline·sweep1d·wsweep 의 계획 gate | **미착수** |
+| 실물 object-lock adapter · power-loss 모델 · publisher 전용 OS principal | **미구현** |
+| 외적타당도 #48/#49/#50 | **미착수** |
