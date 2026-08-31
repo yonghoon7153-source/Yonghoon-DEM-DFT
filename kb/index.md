@@ -1,6 +1,6 @@
 # kb 카탈로그 (생성물 — 손으로 고치지 말 것)
 
-> `python3 tools/kb_wiki.py index` 가 만든다 · 2026-08-31 · managed-files: 316
+> `python3 tools/kb_wiki.py index` 가 만든다 · 2026-08-31 · managed-files: 317
 
 규칙: kb/SCHEMA.md · 열린 질문: kb/questions/ · 논지 카드: kb/syntheses/ · 원장: kb/open_items.md · 문헌: litdb/INDEX.md
 
@@ -170,7 +170,7 @@
 - `kb/results/vgcf_hbn_figure_plan.md` — VGCF/h-BN 원고 — 층수 연구를 어디에 둘 것인가 (2026-07-31 결정)
 - `kb/results/vgcf_hbn_gallery_mechanism_2026_07_30.md` — h-BN@VGCF — 209 meV 층수효과의 정체: confinement 확정 (2026-07-30)
 
-## reviews/ (71)
+## reviews/ (72)
 - `kb/reviews/ECERD2600097_review_notes.md` — 📝 리뷰 노트 — ECER-D-26-00097 (Fan 외, *Stability Issues in Sulfide-Based ASSB*)
 - `kb/reviews/codex_AA_prompt_stageA_v5_regate_2026_08_29.md` — Codex 재검토 요청 AA — 회신 Z 의 P0 8건 처리 후 Stage A v5 재게이트 ○미열람
 - `kb/reviews/codex_AB_prompt_stageA_v9_regate_2026_08_29.md` — Codex 재검토 요청 AB — 회신 AA 의 P0 5건 + Q2 처리, 그리고 자체검토에서 나온 넷 ○미열람
@@ -225,6 +225,7 @@
 - `kb/reviews/codex_S_prompt_t13_msd_length_2026_08_29.md` — Codex 회신 S 요청 프롬프트 — T13 (MSD 생산길이 200 ps 타당성) 판정 + ⏭-2 착수 가부 ○미열람
 - `kb/reviews/codex_T_prompt_polaron_pilot_seeds_2026_08_31.md` — 리뷰 요청 T — 폴라론 pilot, phase S 착수 전 (seed 생성 완료) ○미열람
 - `kb/reviews/codex_T_prompt_sdcp_binding_energy_path_2026_08_29.md` — Codex 회신 T 요청 — 중성 SO₃H 흡착에너지를 원고에 넣는 최단 경로 ○미열람
+- `kb/reviews/codex_T_reply_polaron_pilot_2026_08_31.md` — 회신 T — 폴라론 pilot phase S 착수 NO-GO (P0 4건 · 해제조건 6건) ○미열람
 - `kb/reviews/codex_U_prompt_neutral_close_plan_2026_08_29.md` — Codex 회신 U 요청 — 중성 SDCP 흡착 **닫힘 조건 사전등록** + 자세·기준 동시 교정 계획 ○미열람
 - `kb/reviews/codex_V_prompt_closure_incar_audit_2026_08_29.md` — Codex 회신 V 요청 — closure 번들 INCAR 실물 감사 (던지기 전 마지막 관문) ○미열람
 - `kb/reviews/codex_W_prompt_mlip_selector_validity_2026_08_29.md` — Codex 회신 W 요청 — MLIP 를 후보 선택기로 쓰는 것이 이 계에서 성립하나 (실측 오프셋 첨부) ○미열람
