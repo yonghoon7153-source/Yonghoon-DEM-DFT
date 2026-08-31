@@ -3,7 +3,7 @@ title: "회신 AV — C-12 v18 NO-GO (P0 4건 · P1 1건 · 해제조건 8)"
 date: 2026-08-31
 updated: 2026-08-31
 tags: [review, codex, sdcp, c12, vasp, verdict, no-go]
-status: 이행 중 — P0-1 완료 (895af2ed), P0-2~5 미이행
+status: 이행 완료 — P0-1 (895af2ed) · P0-2 (1b3fbefc) · P0-3 (d29c322e) · P0-4 (4aed52ff) · P1-5+⑦ (290513d3, ddc6d7ca). 해제조건 ⑧(v19 실물 e2e)만 잔여
 kind: review-reply
 system: sdcp
 confidence: high
@@ -31,6 +31,7 @@ evidenceScope: multi-source-primary
    해결: planned 에 `species_order` 를 넣거나 analyzer 가 계획된 모든 `job.json` 에서
    읽도록 하고 **실제 v18 manifest 형태로 e2e 시험**.
    → ✅ `895af2ed` 에서 **둘 다** 이행 (+ 실물 manifest e2e)
+   → P0-2 ✅ `1b3fbefc` · P0-3 ✅ `d29c322e` · P0-4 ✅ `4aed52ff` · P1-5 ✅ `290513d3`(+`ddc6d7ca`) — 2026-08-31 후속 세션
 2. **P0 — 봉인된 VASP 실행파일을 여전히 우회 가능.** `run_staged.sh:41–65` 는 PATH 에서
    찾는 실행파일을 잡지 못한다. 통과하는 형태: `mpirun -np 48 other_vasp` ·
    `/tmp/evil/mpirun -np 48` · `env --split-string=/usr/bin/false`.

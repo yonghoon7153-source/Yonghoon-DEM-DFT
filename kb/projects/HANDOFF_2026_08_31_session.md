@@ -121,15 +121,15 @@ watch 가 이제 생사를 **판정**한다 — 로그의 MPI 오류 줄 수 + `
 
 ### 2-A. 🔴 AV 회신 (외주) — P0 4건 중 1건만 이행
 
-원문은 대화에 있고 요지는 이렇다. **`895af2ed` 로 P0-1 만 닫혔다.**
+원문은 `kb/reviews/codex_AV_reply_c12_v18_2026_08_31.md`. **2026-08-31 후속 세션에서 P0-2~P1-5 전건 이행** (해제조건 ①~⑦ 닫힘). 잔여는 ⑧ — v19 재생성과 실물형 e2e 뿐이다.
 
 | | 내용 | 상태 |
 |---|---|---|
 | **P0-1** | `planned[*].meta.species_order` 부재 → root seal 영구 실패 | ✅ `895af2ed` |
-| **P0-2** | launcher 우회가 **여전히** 뚫린다: `mpirun -np 48 other_vasp`(PATH) · `/tmp/evil/mpirun -np 48`(basename 만 봄) · `env --split-string=...`. `run_job.sh` 를 직접 부르면 lock·봉인·receipt 를 전부 우회. receipt 를 analyzer 가 **한 번도 안 읽음** | ⏳ |
+| **P0-2** ✅ `1b3fbefc` | launcher 우회가 **여전히** 뚫린다: `mpirun -np 48 other_vasp`(PATH) · `/tmp/evil/mpirun -np 48`(basename 만 봄) · `env --split-string=...`. `run_job.sh` 를 직접 부르면 lock·봉인·receipt 를 전부 우회. receipt 를 analyzer 가 **한 번도 안 읽음** | ✅ |
 | **P0-3** | `closure_C3()` 가 clean slab 0개 번들에서 clean slab 을 요구. 빼도 `vacconv` c2 를 일반 pose 로 세어 조각당 3행 vs 기대 2행 → `unresolved`. **C3 는 slab Edisp 가 소거되므로 잡 추가 불필요** — `vacconv` 제외하고 `(Edisp_C,sdcp − Edisp_G,sdcp) − (Edisp_C,ptfe − Edisp_G,ptfe)` 를 직접 계산. `closure_C1()` 도 같은 문제 → 필요 없으면 명시적 `n/a` | ⏳ |
-| **P0-4** | 반송 계약이 셋(README·MANIFEST·SUBMIT)이 서로 다름. 실제 필요: dense 두 상의 `dense/OUTCAR` · 부모/canary 의 실행된 `static/POSCAR` · 수정 후 `EXECUTABLE_RECEIPT.tsv`. 그대로 반송하면 `KCONV_NOT_MEASURED` 또는 `CANARY_GEOM_UNCHECKED` | ⏳ |
-| **P1-5** | `B_num` 문구와 코드가 **반대**. 문구는 "넘어도 raw D 보존, 0.01 eV 주장만 철회" 인데 코드는 estimand block 으로 넣어 D 계산 전에 `NO_VALUE`. 결과 객체가 없는 축이 `missing_axes` 에 안 들어가는 경로도 있음 | ⏳ |
+| **P0-4** | 반송 계약이 셋(README·MANIFEST·SUBMIT)이 서로 다름. 실제 필요: dense 두 상의 `dense/OUTCAR` · 부모/canary 의 실행된 `static/POSCAR` · 수정 후 `EXECUTABLE_RECEIPT.tsv`. 그대로 반송하면 `KCONV_NOT_MEASURED` 또는 `CANARY_GEOM_UNCHECKED` | ✅ `4aed52ff` |
+| **P1-5** | `B_num` 문구와 코드가 **반대**. 문구는 "넘어도 raw D 보존, 0.01 eV 주장만 철회" 인데 코드는 estimand block 으로 넣어 D 계산 전에 `NO_VALUE`. 결과 객체가 없는 축이 `missing_axes` 에 안 들어가는 경로도 있음 | ✅ `290513d3`+`ddc6d7ca` |
 
 **P1-5 처방** (리뷰어 문구):
 - 입력·상태·provenance 가 유효하면 `D_raw` 와 축별 변화 **보존**
