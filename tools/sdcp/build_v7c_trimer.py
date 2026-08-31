@@ -2359,6 +2359,17 @@ def selftest():
             and sum(1 for v in _pm["jobs"].values() if v["phase"] == "L2") == 2,
             "e2e: `--polaron_pilot` 가 **실제로 돈다** (phase L 2 + L2 2) — "
             "종전 UnboundLocalError 회귀시험")
+        chk("%maxcore 6000" in open(os.path.join(
+                str(_po), "L", "eps1", "L_dminus", "L_dminus.inp")).read(),
+            "e2e: `%maxcore` 기본값 6000 MB/proc")
+        _pl = _gen("mem", maxcore=1500, nprocs=4)
+        _pmm = json.loads((_pl / "MANIFEST_PILOT.json").read_text())
+        chk("%maxcore 1500" in open(os.path.join(
+                str(_pl), "L", "eps1", "L_dminus", "L_dminus.inp")).read()
+            and _pmm["memory_request_GB_total"] == round(4 * 1500 / 1024.0, 1),
+            "e2e: `--maxcore` 가 입력에 실제로 반영되고 총 요청(%.1f GB)이 "
+            "manifest 에 남는다 — proc 당 MB 라 nprocs 를 곱해야 총량이다"
+            % _pmm["memory_request_GB_total"])
         chk(_pm["atom_manifest"]["P"]["n_atoms"]
             == _pm["atom_manifest"]["D"]["n_atoms"] + 1,
             "e2e: 생성물의 P/D 프레임이 원자 하나 차이다 (%d/%d)"
@@ -2880,6 +2891,7 @@ def pilot_partition_check(F_low, F_hir, tol=PIL_PARTITION_TOL):
 #                      (⛔ seed 개수는 반복수가 아니다)
 #
 #  ⛔ 이 문턱들은 **결과를 보기 전에** 봉인한다.
+PIL_MAXCORE_MB = 6000       # ORCA `%maxcore` — **proc 당** MB (총량 아니다)
 PIL_PROBE_MIN = 0.50        # 1층: 회전 직후 초기밀도의 목표집합 |스핀| 몫
 PIL_HIT_MARGIN = 0.10       # 2층: 최대 링과 차순위 링의 최소 차 (링 몫 단위)
 PIL_BASIN_DE_EH = 1.0e-4    # 4층: 같은 basin 으로 볼 에너지 차 (≈2.7 meV)
@@ -3065,7 +3077,7 @@ def _pil_cpcm(eps):
 
 def _pil_inp(path, xyz, charge, mult, wf, eps, functional,
              loc=False, moread=None, rotate=None, stab=False, nprocs=1,
-             noiter=False, mopop=False):
+             noiter=False, mopop=False, maxcore=PIL_MAXCORE_MB):
     """pilot 용 ORCA 입력. 관측량 계약(Hirshfeld · open-shell 에 UNO UCO)을 강제한다.
 
     ⚠ `NoAutoStart` 는 **항상** 켠다 — 같은 basename 의 GBW 를 우연히 물지 않게.
@@ -3078,7 +3090,11 @@ def _pil_inp(path, xyz, charge, mult, wf, eps, functional,
     obs = " Hirshfeld" + ("" if wf == "RKS" or noiter else " UNO UCO")
     kw = "! %s %s TightSCF NoAutoStart%s%s" % (
         wf, functional, " NoIter" if noiter else "", obs)
-    body = [kw, "%maxcore 6000"]
+    # ⛔ 2026-08-31 실측 — `%maxcore` 는 **proc 당** MB 다. 6000 을 박아 두면
+    #   `nprocs 6` 이 36 GB 를 요구한다. gabia 는 62 GB 인데 Stage A 가 34 GB 를
+    #   쓰고 있어 가용이 28 GB 였다 — 그대로 던졌으면 스왑/OOM 이고, 남의 잡을
+    #   같이 죽일 수 있었다. 기계마다 다르므로 **인자로 받는다**.
+    body = [kw, "%%maxcore %d" % int(maxcore)]
     # ⛔ 2026-08-31 — `%pal` 이 없으면 ORCA 는 **직렬**로 돈다. 200원자 r2SCAN-3c SP 를
     #   1코어로 돌리면 pilot 이 끝나지 않는다. (병렬 실행은 ORCA 를 **절대경로**로
     #   불러야 한다 — 2026-08-31 stage A 에서 rc=126 으로 실측한 사고다.)
@@ -3165,6 +3181,7 @@ def pilot_generate(a):
     #     UnboundLocalError 로 죽었다. 선언은 첫 사용보다 앞이어야 한다.
     _loc_rand = str(getattr(a, "loc_realization", "deterministic")) == "random"
     _loc_mode = "random" if _loc_rand else True
+    _mc = int(getattr(a, "maxcore", PIL_MAXCORE_MB) or PIL_MAXCORE_MB)
     man = {
         "schema": "polaron_pilot/v1",
         "date": time.strftime("%Y-%m-%d"),
@@ -3199,6 +3216,10 @@ def pilot_generate(a):
                           "BACKBONE_DEFINITION_DEPENDENT (억지 선택 금지)"),
         "functional": a.functional,
         "nprocs": int(a.nprocs),
+        # ⛔ proc 당 MB 다. 총 요청 = nprocs × maxcore — 실행 기계의 **가용** 메모리를
+        #   넘으면 스왑/OOM 이고, 같은 기계의 남의 잡까지 죽인다.
+        "maxcore_mb_per_proc": _mc,
+        "memory_request_GB_total": round(int(a.nprocs) * _mc / 1024.0, 1),
         "eps_basis": a.eps_why,
         "environments": {n: {"epsilon": e,
                              "cpcm": ("vacuum (블록 없음)" if abs(e - 1.0) < 1e-9
@@ -3230,7 +3251,7 @@ def pilot_generate(a):
             write_xyz(jd / (tag + ".xyz"), csym2, cpos2,
                       "%s %s eps=%g" % (tag, man["formula_neutral"], ev))
             _pil_inp(jd / (tag + ".inp"), tag + ".xyz", ch, mult, "RKS", ev,
-                     a.functional, loc=_loc_mode, nprocs=a.nprocs)
+                     a.functional, loc=_loc_mode, nprocs=a.nprocs, maxcore=_mc)
             man["jobs"]["L/%s/%s" % (en, tag)] = {
                 "phase": "L", "env": en, "epsilon": ev, "charge": ch, "mult": mult,
                 "wf": "RKS", "roles": roles,
@@ -3255,7 +3276,7 @@ def pilot_generate(a):
         _pil_inp(j2 / (tag + ".inp"), tag + ".xyz", jm["charge"], jm["mult"],
                  jm["wf"], jm["epsilon"], a.functional,
                  moread=os.path.relpath(jd / (tag + ".loc"), j2),
-                 noiter=True, mopop=True, nprocs=a.nprocs)
+                 noiter=True, mopop=True, nprocs=a.nprocs, maxcore=_mc)
         man["jobs"]["L2/%s/%s" % (en, tag)] = {
             "phase": "L2", "env": en, "epsilon": jm["epsilon"],
             "charge": jm["charge"], "mult": jm["mult"], "wf": jm["wf"],
@@ -3304,6 +3325,9 @@ def pilot_generate(a):
     _nL2 = sum(1 for v in man["jobs"].values() if v["phase"] == "L2")
     print("→ %s · phase L %d잡 + L2 %d잡 (환경 %d) · 측정 SP 예정 %d"
           % (out, _nL, _nL2, len(envs), n_meas))
+    print("   메모리 요청 = %d proc × %d MB = **%.1f GB** — 실행 기계의 `free -g` "
+          "가용치보다 작아야 한다 (넘으면 남의 잡까지 죽는다)"
+          % (int(a.nprocs), _mc, int(a.nprocs) * _mc / 1024.0))
     print("   제거 H = 1-based %d (%s) · 산성 H 후보 %s"
           % (sH + 1, why_site, man["acidic_H_1based_all"]))
     print("   집합 hash %s · backbone %d · sulfonate %d · other %d"
@@ -3700,7 +3724,8 @@ def pilot_seeds(d):
             _pil_inp(sdir / (sd + ".inp"), xyzn, spec["charge"], spec["mult"],
                      spec["wf"], jm["epsilon"], man["functional"],
                      moread=(None if sd == "default" else gbw),
-                     rotate=rot, stab=True, nprocs=man.get("nprocs", 1))
+                     rotate=rot, stab=True, nprocs=man.get("nprocs", 1),
+                     maxcore=man.get("maxcore_mb_per_proc", PIL_MAXCORE_MB))
             # ⛔⛔ 회신 T Q4 1층 — **초기 개입 확인 probe**. 회전을 걸었다는 사실은
             #   그 자리에 스핀이 놓였다는 증거가 아니다. `NoIter` 로 SCF 전 밀도의
             #   스핀 분포를 계의 **실제** charge/mult 에서 찍는다.
@@ -3714,7 +3739,8 @@ def pilot_seeds(d):
                 _pil_inp(pdir / (sd + "_probe.inp"), xyzn, spec["charge"], spec["mult"],
                          spec["wf"], jm["epsilon"], man["functional"],
                          moread=os.path.relpath(locf, pdir), rotate=rot,
-                         stab=False, noiter=True, nprocs=man.get("nprocs", 1))
+                         stab=False, noiter=True, nprocs=man.get("nprocs", 1),
+                         maxcore=man.get("maxcore_mb_per_proc", PIL_MAXCORE_MB))
                 _pk = "S0P/%s/%s/%s" % (env, _grp, sd)
                 man["jobs"][_pk] = {
                     "phase": "S0P", "env": env, "epsilon": jm["epsilon"],
@@ -3997,7 +4023,8 @@ def pilot_restart(d):
         _pil_inp(rd / (sd + ".inp"), xyzn, jm["charge"], jm["mult"], jm["wf"],
                  jm["epsilon"], man["functional"],
                  moread=os.path.relpath(gbw, rd), rotate=None, stab=True,
-                 nprocs=man.get("nprocs", 1))
+                 nprocs=man.get("nprocs", 1),
+                 maxcore=man.get("maxcore_mb_per_proc", PIL_MAXCORE_MB))
         man["jobs"][rk] = {
             "phase": "SR", "env": env, "epsilon": jm["epsilon"],
             "charge": jm["charge"], "mult": jm["mult"], "wf": jm["wf"],
@@ -4547,6 +4574,8 @@ def main():
     ap.add_argument("--eps", nargs="+", type=float, default=None,
                     help="유전상수 목록 (예: 1.0 4.0). 사전등록에 근거를 적을 것")
     ap.add_argument("--functional", default="r2SCAN-3c")
+    ap.add_argument("--maxcore", type=int, default=PIL_MAXCORE_MB,
+                    help="ORCA %%maxcore — **proc 당** MB (총 요청 = nprocs × 이 값)")
     ap.add_argument("--nprocs", type=int, default=1,
                     help="ORCA %pal nprocs. 1 이면 직렬 — 200원자 SP 는 사실상 안 끝난다")
     ap.add_argument("--eps_why",
