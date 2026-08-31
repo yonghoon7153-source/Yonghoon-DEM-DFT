@@ -56,14 +56,26 @@ mpi_dead_lines() {   # $1 = .out  → 최근 200줄 중 MPI 전송 실패 줄 �
     echo "${n:-0}"
 }
 
+# ⛔ 2026-08-31 실측 — `pgrep -f '…/pw\.x'` 는 **mpirun 런처까지** 잡는다
+#   (런처의 명령줄에 pw.x 경로가 들어 있으니까). 런처는 자식을 기다리는 게 일이라
+#   CPU 를 안 먹는다 ⇒ "10 랭크 + 런처 1 = 11 중 1개 정지" 라는 **오경보**가 났다.
+#   늑대 안 왔는데 외치는 탐지기는 이번 사고(31시간 무지)의 원인 그 자체다.
+#   ⇒ 프로세스 **이름**(`/proc/<pid>/comm`)이 실제로 pw.x 인 것만 랭크로 센다.
+rank_pids() {        # $1 = pgrep -f 패턴 → 진짜 pw.x 랭크 pid 만
+    local q
+    for q in $(pgrep -f "${1:-qe-.*-cpu/bin/pw\.x}" 2>/dev/null); do
+        [ "$(cat /proc/$q/comm 2>/dev/null)" = "pw.x" ] && echo "$q"
+    done
+}
+
 cpu_advancing() {    # → "늘어난랭크수/전체랭크수" (표본 ${CPU_SAMPLE_S:-5}초)
     local pat=${1:-'qe-.*-cpu/bin/pw\.x'} n=${CPU_SAMPLE_S:-5}
     local a b adv=0 tot=0
-    a=$(pgrep -f "$pat" 2>/dev/null | while read -r q; do
+    a=$(rank_pids "$pat" | while read -r q; do
             printf '%s %s\n' "$q" "$(awk '{print $14+$15}' /proc/$q/stat 2>/dev/null)"; done)
     [ -z "$a" ] && { echo "0/0"; return; }
     sleep "$n"
-    b=$(pgrep -f "$pat" 2>/dev/null | while read -r q; do
+    b=$(rank_pids "$pat" | while read -r q; do
             printf '%s %s\n' "$q" "$(awk '{print $14+$15}' /proc/$q/stat 2>/dev/null)"; done)
     while read -r pid t0; do
         t1=$(echo "$b" | awk -v p="$pid" '$1==p{print $2}')
@@ -156,6 +168,11 @@ EOF2
     [ "$(mpi_dead_lines "$T/lost.out")" -ge 1 ] \
         && say "✓" "daemon 통신 상실도 잡아낸다" || say "✗" "daemon 상실 미검출"
     # CPU 전진 표본: 있을 리 없는 패턴이면 0/0 이어야 한다 (없는 것을 돈다고 하지 않기)
+    # ⛔ 이 selftest 프로세스(bash)는 명령줄에 스크립트 경로가 들어 있어 패턴에
+    #   걸리지만 comm 이 pw.x 가 아니다 — 랭크로 세면 안 된다 (런처 오경보 회귀)
+    [ -z "$(rank_pids 'watch_gap_nscf')" ] \
+        && say "✓" "[음성] pw.x 가 아닌 프로세스(런처·셸)를 랭크로 세지 않는다" \
+        || say "✗" "런처/셸을 랭크로 셌다 — 2026-08-31 오경보 회귀"
     CPU_SAMPLE_S=1
     [ "$(cpu_advancing 'zzz_no_such_process_zzz')" = "0/0" ] \
         && say "✓" "[음성] 없는 프로세스를 '돌고 있다' 고 하지 않는다" \
@@ -171,7 +188,8 @@ echo "════════ $(hhmm)  gabia — comp1·modelc fixed-occ gap ns
 # ① 프로세스
 PIDS=$(pgrep -f 'run_gap_nscf_gabia|qe-.*-cpu/bin/pw\.x' 2>/dev/null | tr '\n' ' ')
 if [ -n "${PIDS// /}" ]; then
-    NR=$(pgrep -fc 'qe-.*-cpu/bin/pw\.x' 2>/dev/null | tail -1); NR=${NR:-0}
+    # ⛔ 런처를 랭크로 세지 않는다 (2026-08-31 오경보) — comm 이 pw.x 인 것만
+    NR=$(rank_pids 'qe-.*-cpu/bin/pw\.x' | wc -l); NR=${NR:-0}
     echo "■ 프로세스 ✅ 살아있음  (CPU pw.x rank ${NR}개)"
 else
     echo "■ 프로세스 ⛔ 없음 — 끝났거나 죽었다"
