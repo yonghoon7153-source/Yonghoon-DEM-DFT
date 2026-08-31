@@ -5671,9 +5671,19 @@ def potcar_identity_gates(jobs, man):
     #     variant 집합을 **완전일치**로 ③ manifest/ZIP/allowlist/VASP 신원까지 결박.
     #   ⚠ 여기서 "계획 잡" 은 미실행 2단계를 포함한다 — 봉인은 앞으로 돌 잡의
     #     기대 POTCAR 까지 포괄해야 사전 승인이다 (AR Q4).
+    # 🔴 회신 AV P0-1 — planned 에 없으면 **그 잡의 job.json** 에서 읽는다.
+    #   manifest 한 곳에만 의존하면 구판 번들에서 통째로 막힌다.
     _plan_var, _plan_nospec = set(), []
     for _pj, _pl in sorted(((man or {}).get("planned") or {}).items()):
         _els = list(((_pl or {}).get("meta") or {}).get("species_order") or [])
+        if not _els:
+            try:
+                _jf = os.path.join(str((man or {}).get("_root") or "."), _pj, "job.json")
+                if os.path.isfile(_jf):
+                    _els = list((json.load(open(_jf, encoding="utf-8"))
+                                 .get("species_order")) or [])
+            except Exception:                                # noqa: BLE001
+                _els = []
         if not _els:
             _plan_nospec.append(_pj)
             continue
@@ -7634,6 +7644,9 @@ def main():
         man["_potcar_root_seal"] = None
     man["_manifest_sha256_actual"] = hashlib.sha256(
         open(os.path.join(root, "MANIFEST.json"), "rb").read()).hexdigest()
+    # 🔴 회신 AV P0-1 — planned 에 species_order 가 없으면 그 잡의 job.json 을 읽어야
+    #   한다. 어디서 읽을지 알려면 루트를 실어야 한다.
+    man["_root"] = root
     # ⛔ 회신 AP #12 — 공식 release 주장은 **계산 전 attestation** 이 있을 때만.
     try:
         man["_potcar_attestation"] = json.load(
@@ -10076,9 +10089,17 @@ def build_bundle(a, ledger: Optional[Dict[str, Any]] = None) -> Path:
         """
         man["planned"][relpath] = {"phases": phases, "required": required}
         if meta:
+            # 🔴🔴 회신 AV P0-1 (2026-08-31) — 화이트리스트에 `species_order` 가
+            #   **없었다.** 분석기는 `planned[*].meta.species_order` 로 계획 잡의
+            #   POTCAR variant 를 세는데, 실물 v18 은 16/16 잡에서 그 필드가 없어
+            #   `ROOT_SEAL_PLAN_UNREADABLE` 이 뜨고 `root_seal_coverage.ok=false` 가
+            #   된다 ⇒ **1단계 10잡을 다 돌려도 2단계가 열리지 않는다.**
+            #   내 e2e 는 손으로 만든 `{"meta": {"species_order": …}}` 를 넣어서
+            #   실물이 만들지 않는 모양을 시험하고 있었다 (또 픽스처≠실물).
             man["planned"][relpath]["meta"] = {
                 k: meta.get(k) for k in
-                ("kind", "fragment", "role", "seed", "basin_id", "vacconv")
+                ("kind", "fragment", "role", "seed", "basin_id", "vacconv",
+                 "species_order")
                 if meta.get(k) is not None}
 
     # ── 계약 (Codex P0-A) ────────────────────────────────────────────────────
@@ -12458,6 +12479,44 @@ def selftest() -> int:
     # ⛔ 회신 AR 해제조건 10 — 이 묶음은 **배포본 안**으로 옮겼다. 여기서는 그
     #   함수를 그대로 부른다 (검사 출처가 둘로 갈리지 않게).
     _ns["_selftest_closure"](chk)
+    # ══ 🔴 회신 AV P0-1 — **실물 manifest 로** root seal 포괄 검사 ══════════
+    #   ⛔ 이 시험이 없어서 v18 이 나갔다. 종전 시험은 손으로 만든
+    #     `{"meta": {"species_order": [...]}}` 를 넣었는데 **실물 빌더는 그 필드를
+    #     planned 에 넣지 않았다.** 픽스처만 통과하고 배포본은 16/16 잡이
+    #     ROOT_SEAL_PLAN_UNREADABLE 이었다 (1단계를 다 돌려도 2단계가 안 열린다).
+    #   ⇒ 이제 **빌더가 실제로 만든 MANIFEST** 를 그대로 넣어 시험한다.
+    def _H64(tag):      # 이 스코프에는 위 헬퍼가 없다 (다른 함수 안이다)
+        return hashlib.sha256(str(tag).encode()).hexdigest()
+    _real_spec = m_st.get("potcar_spec") or {}
+    _real_var = sorted({_real_spec.get(e, e)
+                        for _pl in (m_st.get("planned") or {}).values()
+                        for e in ((_pl.get("meta") or {}).get("species_order") or [])})
+    chk(bool(_real_var),
+        "🔴 AV P0-1: **실물 MANIFEST 의 planned 에 species_order 가 있다** "
+        "(variant %s) — 없으면 배포본이 2단계를 영원히 못 연다" % _real_var)
+    _seal_real = {"schema": "potcar_root_seal/v2",
+                  "source_sha256": {v: _H64(v) for v in _real_var},
+                  "assembled_sha256_by_job": {k: _H64("asm")
+                                              for k in (m_st.get("planned") or {})},
+                  "allowlist_sha256": _H64("al"),
+                  "manifest_sha256": _H64("mf"),
+                  "vasp_executable": "/x/vasp_std",
+                  "vasp_executable_sha256": _H64("vx"),
+                  "vasp_version_banner": "vasp.6.4.1",
+                  "bundle_zip_sha256": _H64("zp"),
+                  "sealed_at_utc": "2026-08-31T00:00:00Z",
+                  "sealed_before_production": True,
+                  "sealed_before_production_evidence": "합성"}
+    # ⛔ `potcar_identity_gates` 는 **배포본 분석기**의 함수다 — 생성기
+    #   스코프에 없다 (2026-08-31 NameError. 이번이 세 번째다).
+    _rid = _ns["potcar_identity_gates"]({}, dict(m_st, _potcar_root_seal=_seal_real))
+    chk(not any("ROOT_SEAL_PLAN_UNREADABLE" in g for g in _rid["blocking"]),
+        "🔴 AV P0-1: 실물 manifest 에서 `ROOT_SEAL_PLAN_UNREADABLE` 이 **안 뜬다** "
+        "(v18 은 16/16 잡에서 떴다) · blocking %s" % _rid["blocking"][:2])
+    chk(not any("ROOT_SEAL_PLAN_COVERAGE" in g for g in _rid["blocking"]),
+        "🔴 AV P0-1: 실물 계획 variant 와 봉인 variant 가 맞는다 "
+        "(봉인이 **앞으로 돌 잡**까지 포괄한다)")
+
     # ══ 회신 W 5단계 — --from_basins 가 **동결본에 적힌 자세만** 내는지 e2e ══
     _labs = sorted(x.stem for x in
                    (Path(str(td)) / "runs" / "ptfe_dimer" / "relax_f0.85").glob("*.xyz")
