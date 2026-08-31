@@ -4192,6 +4192,24 @@ def selftest_k() -> int:
     chk(_r_n4["verdict"] == "unresolved",
         "⛔음성 P0-4b: 상세 지문이 없으면 해시가 같아도 통과시키지 않는다")
 
+    # ── 🔴 회신 AV P0-3 — clean slab 0개 · vacconv 혼입 ─────────────────────
+    _jb_ns = {k: v for k, v in _jb3.items() if "clean_slab" not in k}
+    _c1_ns = closure_C1(_man3, _jb_ns, _E3, _emol3, _F3)
+    chk(str(_c1_ns.get("verdict", "")).startswith("n/a"),
+        "AV P0-3: clean slab 0개 번들에서 C1 은 **명시적 n/a** 다 (unresolved 아님) "
+        "— 미해결은 약속하고 못 지킨 상태고, 이 번들은 절대 E_ads 를 약속하지 않았다")
+    _kv = "prospective/sdcp_neutral__vacconv_c2__" + SEED_MAIN
+    _jb_vc = dict(_jb3)
+    _jb_vc[_kv] = _J("prospective_pose", fragment="sdcp_neutral", seed=SEED_MAIN,
+                     basin_id="b00", vacconv="c2", _edisp=-99.0)
+    _c1_vc = closure_C1(_man3, _jb_vc, _E3, _emol3, _F3)
+    chk(_c1_vc["by_frag"]["sdcp_neutral"].get("n") == 4,
+        "⛔음성 AV P0-3: vacconv 잡이 섞여도 C1 이 자세로 세지 않는다 (4행 유지)")
+    _man3v = {"planned": {**_man3["planned"], _kv: {"meta": {"vacconv": "c2"}}}}
+    chk(closure_C1(_man3v, _jb_vc, _E3, _emol3, _F3)["by_frag"]["sdcp_neutral"]
+        .get("n") == 4,
+        "⛔음성 AV P0-3: planned 에 vacconv 가 있어도 기대 자세 수(n_want)에 안 센다")
+
     # ── P0-5 회귀: **production 이 실제로 쓰는 경로**로 친다 ─────────────────
     #   read_outcar 는 `{k: _echo_val(t, k) for k in AUDIT_KEYS_RUNTIME}` 로
     #   되울림을 만든다. 손으로 만든 dict 를 넣으면 그 키가 목록에 없어도 통과한다 —
@@ -4900,6 +4918,20 @@ def selftest_k() -> int:
         "⛔음성 C5: 12자세가 서로 다른 basin 이면 unresolved")
 
     _c3 = closure_C3(_man3, _jb3, _E3, _F3)
+    # ── 🔴 회신 AV P0-3 — slab 소거의 **대수적 확인**: 슬랩을 빼고 계산한 D 가
+    #   슬랩을 넣고 계산한 D 와 정확히 같아야 한다 (같은 픽스처, 잡만 제거)
+    _c3_ns = closure_C3(_man3, {k: v for k, v in _jb3.items()
+                                if "clean_slab" not in k}, _E3, _F3)
+    chk(_c3_ns.get("D_eV") is not None
+        and abs(_c3_ns["D_eV"] - _c3["D_eV"]) < 1e-9
+        and "n/a" in str(_c3_ns.get("clean_slab")),
+        "AV P0-3: clean slab 0개 번들에서 C3 가 **그대로 판정한다** — slab Edisp 는 "
+        "D 에서 소거된다 (D %s = %s)" % (_c3_ns.get("D_eV"), _c3.get("D_eV")))
+    _c3_vc = closure_C3(_man3, _jb_vc, _E3, _F3)
+    chk(_c3_vc["by_frag"]["sdcp_neutral"].get("n") == 4
+        and abs(_c3_vc["D_eV"] - _c3["D_eV"]) < 1e-9,
+        "⛔음성 AV P0-3: 오염된 Edisp(-99)를 단 vacconv 잡이 섞여도 C3 의 D 가 "
+        "안 움직인다 (자세로 세지 않는다)")
     chk(abs(_c3["D_eV"] - (-0.7)) < 1e-6,
         "C3: D = mean(δ_SDCP) − mean(δ_c10) = −0.7 (실제 %s)" % _c3.get("D_eV"))
     # ★★ 부호 규약 (회신 AB P0-3). 봉인된 0.90 eV 는 **(UMA − DFT)** 규약이고
@@ -6542,6 +6574,15 @@ def closure_C1(man, jobs, E, emol, frags):
            "⚠": "선택된 네 자세의 국소 일관성. selector 일반 검증이 아니다",
            "by_frag": {}}
     slabs = _pick(jobs, kind="clean_ref", seed=SEED_MAIN, d3="on")
+    # 🔴 회신 AV P0-3 — clean slab **0개는 번들 설계**지 결함이 아니다 (C-12 exact-cell
+    #   번들은 절대 E_ads 를 약속하지 않아 슬랩을 싣지 않는다). 그 경우 이 조건은
+    #   "미해결" 이 아니라 **명시적 n/a** 다 — 미해결은 약속하고 못 지킨 상태다.
+    #   S_f 자체는 슬랩이 소거되는 양이지만, C1 의 행이 절대 E_ads 로 정의돼 있으므로
+    #   슬랩 없는 번들에서 조용히 다른 양으로 바꿔 계산하지 않는다.
+    if not slabs:
+        res["verdict"] = ("n/a — 이 번들에는 clean slab 이 없다 (절대 E_ads 기반 "
+                          "C1 을 정의하지 않는다 · 회신 AV P0-3)")
+        return res
     if len(slabs) != 1:
         res["verdict"] = f"unresolved — clean slab(pm1·D3-on)이 {len(slabs)}개"
         return res
@@ -6555,8 +6596,10 @@ def closure_C1(man, jobs, E, emol, frags):
     res["⚠_basin_규칙"] = ("네 자세가 **서로** 같은 basin 이면 된다 — S_f 에서 슬랩·분자가 "
                           "소거되기 때문. clean slab 일치는 절대 E_ads 쪽 요구조건이다")
     for f in frags:
+        # 🔴 회신 AV P0-3 — vacconv(c2 셀) 잡은 진공 수렴 시험이지 자세가 아니다.
+        #   섞이면 조각당 행수가 기대와 어긋나 영구 unresolved 가 된다.
         poses = _pick(jobs, kind="prospective_pose", fragment=f,
-                      seed=SEED_MAIN, d3="on")
+                      seed=SEED_MAIN, d3="on", vacconv=None)
         rows, miss = [], []
         for jn in poses:
             jr = jobs[jn]
@@ -6576,7 +6619,9 @@ def closure_C1(man, jobs, E, emol, frags):
         n_want = len([k for k in (man.get("planned") or {})
                       if k.startswith("prospective/")
                       and k.rsplit("/", 1)[-1].startswith(f + "__")
-                      and k.endswith(SEED_MAIN)])
+                      and k.endswith(SEED_MAIN)
+                      and not (((man["planned"][k] or {}).get("meta") or {})
+                               .get("vacconv"))])
         if not n_want:
             res["by_frag"][f] = {"verdict": "unresolved",
                                  "why": "MANIFEST.planned 에 이 조각의 pm1 자세가 없다 "
@@ -6691,7 +6736,7 @@ def closure_C5(man, jobs, E, emol, frags, merge_info=None, h1_tol=None):
             continue
         rows, miss = [], []
         for jn in _pick(jobs, kind="prospective_pose", fragment=f,
-                        seed=SEED_MAIN, d3="on"):
+                        seed=SEED_MAIN, d3="on", vacconv=None):
             jr = jobs[jn]
             ec = E(jn)
             if jr.get("gates") or ec is None:
@@ -6866,12 +6911,21 @@ def closure_C3(man, jobs, E, frags):
                     return None, f"{jn}: on/off 가 다른 realized basin"
         return ed, None
 
-    d_slab, why = pair_delta((_pick(jobs, kind="clean_ref", seed=SEED_MAIN,
-                                    d3="on") or [None])[0]) \
-        if _pick(jobs, kind="clean_ref", seed=SEED_MAIN, d3="on") else (None, "clean slab 없음")
-    if d_slab is None:
-        res["verdict"] = f"unresolved — clean slab D3 짝: {why}"
-        return res
+    _slabs = _pick(jobs, kind="clean_ref", seed=SEED_MAIN, d3="on")
+    if _slabs:
+        d_slab, why = pair_delta(_slabs[0])
+        if d_slab is None:
+            # 슬랩이 **있는데** Edisp 가 안 나오는 것은 번들 문제다 — 그대로 막는다
+            res["verdict"] = f"unresolved — clean slab D3 짝: {why}"
+            return res
+    else:
+        # 🔴 회신 AV P0-3 — D = mean(δ_SDCP) − mean(δ_c10) 에서 slab Edisp 는 조각
+        #   공통 상수라 **대수적으로 소거된다.** clean slab 0개 번들에서는 그 항을
+        #   0 으로 두고 (Edisp_C,f − Edisp_G,f) 의 조각 간 차를 직접 계산한다 —
+        #   잡을 추가할 필요가 없다. row 의 delta 는 slab 항이 빠진 값임을 명시한다.
+        d_slab = 0.0
+        res["clean_slab"] = ("n/a — 이 번들에 없다. slab Edisp 는 D 에서 소거되므로 "
+                             "row delta 는 Edisp_C − Edisp_G 로 읽는다 (회신 AV P0-3)")
     means = {}
     for f in frags:
         mol = [j for j in _pick(jobs, kind="mol_ref", fragment=f, d3="on")
@@ -6885,8 +6939,9 @@ def closure_C3(man, jobs, E, frags):
             res["by_frag"][f] = {"verdict": "unresolved", "why": why_m}
             continue
         rows, miss = [], []
+        # 🔴 회신 AV P0-3 — vacconv 잡을 자세로 세지 않는다 (C1 과 같은 규율)
         for jn in _pick(jobs, kind="prospective_pose", fragment=f,
-                        seed=SEED_MAIN, d3="on"):
+                        seed=SEED_MAIN, d3="on", vacconv=None):
             d_cx, why_c = pair_delta(jn)
             if d_cx is None:
                 miss.append(why_c); continue
@@ -6896,7 +6951,9 @@ def closure_C3(man, jobs, E, frags):
         n_want = len([k for k in (man.get("planned") or {})
                       if k.startswith("prospective/")
                       and k.rsplit("/", 1)[-1].startswith(f + "__")
-                      and k.endswith(SEED_MAIN)])
+                      and k.endswith(SEED_MAIN)
+                      and not (((man["planned"][k] or {}).get("meta") or {})
+                               .get("vacconv"))])
         if not n_want:
             res["by_frag"][f] = {"verdict": "unresolved",
                                  "why": "MANIFEST.planned 에 이 조각의 pm1 자세가 없다"}
