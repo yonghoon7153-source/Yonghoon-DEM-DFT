@@ -346,3 +346,16 @@ SDCP 를 "자가도핑 전도성 고분자" 라고 부르는 근거는 지금 **
 
 - 2026-08-31: v1 생성 → 회신 S 접수(전체 생산 NO-GO / 32건 pilot 조건부 GO) → v2 로 재작성.
   착수 전 P0 5건은 `db/properties/sdcp_polaron_pilot_prereg_2026_08_31.json` 에 봉인.
+- 2026-08-31b: 회신 T 접수 → **S0(ε=1 기술적 적합성 pilot)으로 격하**. P0 4건 이행
+  (P/D 프레임 분리 · MO 성격 확인 · `%loc Randomize 0` + `GuessMode CMatrix` ·
+  seed 중복 판정) + Q3(네 성분 분할) + Q4(4층 실현 판정) 구현.
+  격하판 사전등록: `db/properties/sdcp_polaron_pilot_prereg_S0_2026_08_31.json`
+  (원본은 보존 — 무엇을 하려 했는지가 격하의 근거다).
+  결정 등록: `D-2026-08-31-sdcp-polaron-S0-four-layer` (proposed).
+  ⛔ **이행 중 발견**: 생성기·seed 생성기·분석기가 각각 예외로 죽어 있었다
+  (`UnboundLocalError` · 4-튜플 언팩 · 리스트를 dict 로 접근). selftest 40건은
+  전부 통과했는데 **그 함수들을 한 번도 실행하지 않았기 때문**이다.
+  이제 합성 다이머로 phase L/L2/S/probe 산출물을 만들어 세 경로를 실제로 돌린다
+  (selftest 150건, 음성 경로 포함). 아직 **실물 ORCA 로는 확인 못 했다** —
+  `%loc` 출력 형식·`Rotate` 동작·`NoIter` probe 의 스핀 인구가 미검증이고,
+  phase L 첫 실행이 그 smoke test 다.

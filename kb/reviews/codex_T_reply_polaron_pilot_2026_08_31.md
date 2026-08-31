@@ -82,3 +82,47 @@ evidenceScope: multi-source-primary
 그러면 ORCA 가 읽으면서 MO 를 재정렬할 수 있고, 우리 seed 는 `.loc` 인구표의
 **인덱스**로 목표를 지정하므로 `Rotate {j, 480}` 이 **엉뚱한 궤도를 돈다.**
 리뷰가 든 셋 중 이것이 결과를 조용히 틀리게 만드는 유일한 항목이다.
+
+## 이행 결과 (2026-08-31)
+
+| 항목 | 상태 | 어디에 |
+|---|---|---|
+| P0-1 P(200)/D(199) 프레임 분리 + remap 봉인 | 완료 | `pilot_atom_manifest` |
+| P0-2 선택 MO 의 π / O-nonbonding 성격 확인 | 완료 | `pil_mo_character` · `pil_character_verdict` |
+| P0-3 `%loc Randomize 0` + `GuessMode CMatrix` | 완료 | `PIL_LOC_KW` · `_pil_inp` |
+| P0-4 seed 중복 판정 + job census 재봉인 | 완료 | `seed_equivalence_class` |
+| Q3 네 성분 분할 (bb_core / ether_O / sulfonate / other) | 완료 | `pilot_components` · `F_components` |
+| Q4 4층 실현 판정 | 완료 | `pil_target_hit` · `pil_stability_layer` · `pil_basin_cluster` · `pilot_restart` |
+| Q1 S0 격하판 사전등록 | 완료 | `db/properties/sdcp_polaron_pilot_prereg_S0_2026_08_31.json` |
+| Q2 `LOCALIZATION_DEPENDENT` 판정어 | 완료 | S0 사전등록 §판정어 |
+
+### ⛔ 이행하면서 드러난 것 — 세 경로가 전부 죽어 있었다
+
+리뷰가 "23 PASS 는 문자열 selftest 이지 e2e 증명이 아니다"(회신 R2)라고 한 것이
+**이 캠페인에서 그대로 재현**됐다. 회신 T P0 1~3 을 고치면서 들어간 회귀 셋:
+
+1. `pilot_generate` — `_loc_rand` 를 선언 **전에** 써서 `UnboundLocalError`.
+   `--polaron_pilot` 이 아무것도 만들지 못하고 죽었다.
+2. `pilot_seeds` — `pil_parse_mopop` 의 4-튜플을 3개로 언팩해 `ValueError`,
+   그리고 `_sy_j`·`_po_j`(성격 판정용 원소·좌표)가 아예 정의되지 않았다.
+3. `pilot_analyze` — `_spin_block` 은 **리스트**를 돌려주는데 Q3 네 성분 코드가
+   `hir.values()`·`hir.get(i)` 로 dict 처럼 써서 `AttributeError`.
+   그리고 목표 링 이름을 `"ring" + "B_ring0"[2:]` = `"ringring0"` 으로 조립해
+   2층 명중이 **영원히 False** 였다.
+
+그런데 selftest 40건은 전부 통과했다 — **순수 헬퍼만 부르고 세 함수를 한 번도
+실행하지 않았기 때문**이다. CLAUDE.md 의 "양성만 있는 selftest" 그 자체다.
+
+이제 합성 다이머(26원자·링 2·SO₃ 2)로 phase L/L2/S/probe 산출물을 만들어
+세 경로를 **실제로 돌린다**. selftest 150건 — 음성 경로에 무작위 국재화 표지·
+`GuessMode` 누락·MOPOP 부재·면내 σ MO·비정상 종료·출력 삭제·`.loc` 삭제·
+프레임 바꿔치기·구판 manifest·개입 실패·probe 결측·링 미분해·불안정 미재판정·
+`StabPerform` 미수행·`.gbw` 없는 재계산 요청이 들어 있다.
+
+### ⚠ 아직 못 한 것
+
+- **실물 ORCA 검증이 없다.** `%loc` 출력 형식, `Rotate {j,nbeta,90,1,1}` 의 실제
+  동작, `NoIter` probe 가 스핀 인구를 찍는지 — 전부 미검증이다. selftest 픽스처는
+  *우리 판독기가 받는 형식*의 재현이지 ORCA 출력이 아니다. phase L 첫 실행이
+  곧 smoke test 다.
+- ε_dry_polymer 값 미정 (litdb 근거 필요) · torsion-diverse 거리 척도 미정.

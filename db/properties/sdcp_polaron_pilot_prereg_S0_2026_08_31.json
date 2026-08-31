@@ -1,0 +1,173 @@
+{
+ "schema": "estimand_prereg/v2",
+ "date": "2026-08-31",
+ "status": "proposed",
+ "⚠_비준": "proposed 다 — 사람이 ratify 해야 active (db/governance/decisions.json 규율)",
+ "제목": "S0 — ε=1 기술적 적합성 pilot 사전등록 (회신 T 로 격하된 판, P0 4건 이행 반영)",
+ "이_문서의_성격": {
+  "무엇인가": "회신 T 가 '전체 pilot NO-GO / ε=1 기술적 적합성 pilot(S0) 한정 조건부 GO' 로 격하한 것을 받아 **범위를 줄여 다시 등록**한 판이다.",
+  "원본은_어떻게_되나": "db/properties/sdcp_polaron_pilot_prereg_2026_08_31.json 은 **손대지 않는다**. 그 문서가 무엇을 하려 했는지가 이 격하의 근거이기 때문이다. 두 문서는 대체가 아니라 부모-자식이다.",
+  "무엇이_줄었나": [
+   "환경 3개(ε=1 · dry polymer · 20) → **ε=1 하나**. dry polymer 의 ε 값이 아직 litdb 근거로 확정되지 않았다.",
+   "범함수 2개(r2SCAN-3c + wB97X-D3) → **r2SCAN-3c 하나**. 두 번째 범함수는 S0 통과 뒤 별건.",
+   "Opt·branch following·λ_in·BLA 전부 **범위 밖**. S0 은 fixed-geometry SP 만이다.",
+   "'상태지도' 라는 산출물 → **'이 방법이 상태를 구분해 낼 수 있는가' 하나**"
+  ],
+  "왜_지금_격하하나": "회신 T 의 P0 넷(원자 프레임 · MO 성격 · 국재화 결정론 · seed 중복)이 전부 **판정을 조용히 틀리게 만드는** 것들이었다. 그것들을 고친 코드가 실제로 도는지부터 확인하지 않고 생산을 돌리면 아홉 번째 반려다."
+ },
+ "0_시각_증거": {
+  "봉인_시점": "2026-08-31",
+  "builder_commit": "f58b8e5fec6b4780b0b0fc9772fb504e605031ba",
+  "builder_sha256": "d89acdedf0d4158b93466dc24ded8caf0ac5d5ee0e938f1b4b1c1f21ed15f83b",
+  "⚠_원본과_다른_해시인_이유": "회신 T P0 1~4 와 Q3/Q4 이행으로 빌더가 바뀌었다. 원본 사전등록의 해시로 이 실행을 설명할 수 없으므로 **새 해시·새 시각**으로 다시 봉인한다 (회신 T Q1).",
+  "이_시점의_doped_잡": "0개 — git log 가 그 순서의 증거다. 결과를 보고 규칙을 고치지 않는다."
+ },
+ "대상": {
+  "정본_명칭": "neutral H-atom-removed n=6 radical model (D•)",
+  "⛔_이렇게_쓰지_않는다": "'자가도핑된 SDCP' · '탈양성자화' — H 원자 제거는 핵과 전자를 함께 뺀 것이고 자가도핑 과정 자체를 재현하지 않는다 (회신 S P0-1)",
+  "부모_구조": "db/structures/sdcp_orca_gs0/dp6_gs0_neutral_final.xyz",
+  "parent_sha256": "b49076980623185cdde983dba64acc11a73021293b0886e263aee618a8de5085",
+  "조성": "C66H86O36S12 · 200원자 · 중성 962전자",
+  "제거_H": "1-based 162 (사전 규칙: 산성 H 여섯 후보 [119,134,148,162,176,190] 의 중간 위치)",
+  "프레임": "P 200원자 / D 199원자 — **따로** 봉인한다 (회신 T P0-1)",
+  "atom_manifest_hash": "accf5f2c41cdb456bcd152e578c15e9487e7546516682a35b292cb30cd3159b5",
+  "conformer": "gs0 하나 — pilot 의 판정 대상은 conformer 가 아니라 방법이다 (원본 §conformer_선택_규칙 그대로 승계)"
+ },
+ "S0_이_시험하는_것": {
+  "질문": "이 계산 프로토콜이 **서로 다른 전자상태를 구분해서 회수할 수 있는가**",
+  "질문이_아닌_것": [
+   "어느 상태가 진짜 바닥상태인가 (환경·범함수가 하나뿐이라 못 묻는다)",
+   "실제 SDCP 에서 캐리어가 어디 있는가 (물질 수준 주장 — 이 계산이 시험하지 않는다)",
+   "전도도·이동도·전하수송 (분자 하나에는 정의되지 않는다)"
+  ],
+  "합격_= 무엇이_되면_통과인가": [
+   "positive control(P⁺, 완전 양성자화 양이온)에서 backbone 중심 상태를 **적어도 하나** 회수한다",
+   "4층 게이트를 통과한 D• 실행이 **둘 이상의 서로 다른 basin** 을 준다 (하나뿐이면 방법이 상태를 구분하지 못한 것이거나 진짜로 하나인 것인데, S0 은 그 둘을 못 가른다 → MODEL_NONDIAGNOSTIC 후보)",
+   "Hirshfeld 와 Löwdin 의 F_bb 차가 0.10 이내다",
+   "extended(bb_core+ether_O) 와 strict(bb_core) 의 class 가 같다"
+  ],
+  "⛔_통과해도_말할_수_없는_것": "어느 상태가 낮은가. S0 은 **에너지 순서를 판정하지 않는다** — 환경 하나·범함수 하나·conformer 하나다."
+ },
+ "4층_판정_게이트": {
+  "출처": "회신 T Q4 — 초기 국재는 최종 basin 이 아니다",
+  "구현": "tools/sdcp/build_v7c_trimer.py (pil_target_hit · pil_basin_cluster · pil_stability_layer · pilot_analyze)",
+  "1층_초기_개입": {
+   "무엇": "회전 직후 **SCF 전** 밀도의 스핀이 목표 집합에 있나",
+   "어떻게": "`NoIter` probe 를 계의 **실제** charge/mult 로 따로 돈다 (D• 961전자 doublet → Nα/Nβ = 481/480)",
+   "문턱": "목표집합 |스핀| 몫 ≥ 0.50",
+   "미달": "SEED_INTERVENTION_FAILED — 그 seed 는 다른 출발점이 아니다",
+   "probe_없음": "SEED_INTERVENTION_UNVERIFIED — 확인 못 한 것은 통과가 아니다",
+   "면제": "`default`(fresh guess)는 개입이 없으므로 요구하지 않는다",
+   "관측량_면제": "probe 에는 UNO/UCO 를 넣지 않는다 — 수렴하지 않은 밀도에 정의되지 않는다. 그래서 probe 는 **에너지·class 판정에 쓰지 않는다**"
+  },
+  "2층_최종_명중": {
+   "무엇": "수렴 뒤 링 몫에 **유일 최대**가 서 있나",
+   "문턱": "최대 − 차순위 ≥ 0.10",
+   "⛔_명중을_요구하지_않는다": "심은 자리로 갔는지를 합격 조건으로 걸면 순환논증이다. 옮겨간 것은 결과이고 MOVED_FROM_SEED 로 남긴다",
+   "미달": "TARGET_UNRESOLVED — 어느 링의 상태인지 분해되지 않는다",
+   "면제": "backbone 몫 < 0.50 이면 링 분해 질문이 성립하지 않는다 (SO₃ 중심 해). class 가 본다"
+  },
+  "3층_최종_안정성": {
+   "무엇": "수렴한 determinant 가 국소최소인가",
+   "불안정이면": "따라 내려간 `.gbw` 로 **재계산하고 다시** 판정한다 (`--polaron_restart`)",
+   "재판정_없음": "UNSTABLE_NOT_REJUDGED — 그 에너지·스핀분포는 basin 대표가 아니다",
+   "⛔": "StabPerform 을 요청했는데 수행 흔적이 없으면 NOT_RUN 이다. 문자열 하나로 안정을 인정하지 않는다",
+   "⛔_안정성은_상태_열거가_아니다": "ORCA 의 안정성 분석은 수렴한 해의 국소최소 여부만 본다"
+  },
+  "4층_basin_군집": {
+   "무엇": "서로 다른 seed 가 **같은 해**로 갔으면 상태는 1개다",
+   "재료": "전자수 · 에너지 · ⟨S²⟩ · 원자별 **부호 있는** 스핀 벡터 · 링 몫 벡터",
+   "문턱": {"dE_Eh": 0.0001, "spin_L1": 0.30, "ring_L1": 0.10, "dS2": 0.02},
+   "⛔_seed_개수는_반복수가_아니다": "같은 basin 에 모인 seed 들을 지지 증거의 개수로 세지 않는다. 'seed 8개가 backbone 을 지지' 는 같은 해를 여덟 번 센 문장일 수 있다",
+   "경계": "임계 근처 쌍은 borderline 으로 남긴다 — 조용히 붙이지 않는다",
+   "⛔_전역_스핀_뒤집힘": "모든 부호가 반대인 해를 같은 상태로 **자동 흡수하지 않는다**. 필요하면 선언해서 따로 처리한다"
+  },
+  "⚠_문턱_봉인": "위 숫자는 전부 코드 상수(PIL_PROBE_MIN · PIL_HIT_MARGIN · PIL_BASIN_*)이고 **결과를 보기 전에** 정했다"
+ },
+ "판정어": {
+  "ADEQUATE": "positive control 회수 + 4층 통과 실행이 둘 이상의 basin 을 준다 → 확장(범함수·환경) 단계로",
+  "MODEL_NONDIAGNOSTIC": "positive control 이 backbone 상태를 하나도 회수하지 못했다 → H-제거계 결과를 해석하지 않는다",
+  "NO_VALUE": "게이트가 남아 있다 → 해소 전에는 판정하지 않는다",
+  "PARTITION_DEPENDENT": "Hirshfeld/Löwdin 의 class 가 다르거나 |ΔF_bb| > 0.10 → 억지로 하나를 고르지 않는다",
+  "THRESHOLD_DEPENDENT": "0.4/0.5/0.6 경계에서 class 가 바뀐다",
+  "BACKBONE_DEFINITION_DEPENDENT": "extended(+ether O) 와 strict 의 class 가 갈린다",
+  "ETHER_O_CENTERED": "스핀이 고리 π 가 아니라 3,4-에테르 O 에 가장 많다 → 'backbone 폴라론' 이라고 부르지 않는다",
+  "LOCALIZATION_DEPENDENT": {
+   "언제": "R0(결정론 `%loc Randomize 0`) 과 R1(무작위 realization) 이 **다른 최종 basin 집합**을 줄 때",
+   "왜_필요한가": "`.loc` 해시를 결박하면 정확한 재실행은 되지만 robustness 는 안 된다 (회신 T Q2). 같은 계에 국재화 realization 이 여럿이면 그중 하나를 골라 낸 상태지도는 그 realization 에 조건부다",
+   "무엇을_말할_수_없게_되나": "'이 계의 상태는 N 개다' — 국재화 realization 을 바꾸면 달라지는 수라서"
+  },
+  "SEARCH_PROTOCOL_DEPENDENT": {
+   "언제": "사전등록한 seed 집합(A 1 + ring별 B 6 + default 1)을 바꿨을 때 결론이 바뀔 때, 또는 4층 군집이 seed 수보다 훨씬 적어 **탐색이 좁았는지 상태가 적은지 구분되지 않을** 때",
+   "왜_필요한가": "'탐색된 최저해' 는 탐색 프로토콜의 함수다. 전역 최소가 아니다 — 그 사실을 판정어로 들고 있어야 원고에서 미끄러지지 않는다",
+   "무엇을_말할_수_없게_되나": "'바닥상태는 …' · '가장 안정한 상태는 …' — S0 에서는 어느 경우에도 쓰지 않는다"
+  }
+ },
+ "허용_서술_이대로만": [
+  "이 프로토콜은 ε=1·r2SCAN-3c·gs0·H162 조건에서 서로 다른 전자상태를 구분해 회수했다 / 못 했다",
+  "탐색된 상태 중 …가 …였다 (탐색 프로토콜에 조건부)",
+  "positive control(P⁺)에서 backbone 중심 상태가 회수됐다 / 안 됐다"
+ ],
+ "⛔_금지_서술": [
+  "바닥상태 · 가장 안정한 상태 · 전역 최소 (S0 은 환경 1·범함수 1·conformer 1 이다)",
+  "SDCP 의 캐리어가 백본에 있다 / SO₃ 에 있다 (물질 수준 주장)",
+  "자가도핑을 재현했다 (H 원자 제거는 그 과정이 아니다)",
+  "SDCP 는 전자를 전도한다 / 안 한다",
+  "σ_SDCP = 250 S/cm 를 뒷받침한다",
+  "seed 개수를 지지 증거의 개수로 쓰는 문장",
+  "S0 결과를 고분자·실물·고체로 외삽하는 문장"
+ ],
+ "중단_규칙": {
+  "즉시_중단": [
+   "1층에서 seed 의 절반 이상이 SEED_INTERVENTION_FAILED — 회전이 작동하지 않는 것이므로 더 돌리지 않고 seed 생성 방식을 고친다",
+   "positive control 이 전부 게이트 — 방법이 알려진 형태조차 표현하지 못한다",
+   "L2 에서 국재 궤도 인구가 안 찍힘 — seed 선택 자체가 불가능하다"
+  ],
+  "돌려놓고_판정만_보류": [
+   "PARTITION_DEPENDENT · THRESHOLD_DEPENDENT · BACKBONE_DEFINITION_DEPENDENT — 값은 남기고 판정어로 닫는다"
+  ],
+  "⛔_하지_않는_것": "문턱을 옮겨 통과시키는 것. 문턱은 코드 상수이고 바꾸면 커밋에 남는다"
+ },
+ "재사용_규칙": {
+  "S0_산출물을_뒤에서_다시_쓸_수_있나": "쓸 수 있다 — 단 **같은 조건 안에서만**. ε=1·r2SCAN-3c·gs0·H162 라는 네 조건이 같은 비교에만 넣는다.",
+  "⛔_섞지_않는다": "다른 범함수·다른 ε·다른 conformer·다른 H 위치의 값과 같은 표에 넣어 차를 만들지 않는다",
+  "L_잡_재사용": "phase L/L2 는 seed 생성원이다. 빌더가 바뀌면 `builder_sha256` 이 달라지므로 **다시 만든다** — 옛 `.loc` 로 새 seed 를 고르지 않는다",
+  "D⁻_기준": "L_dminus 는 seed 생성원이면서 same-nuclei 홀밀도 기준을 겸한다. 그 두 역할을 같은 계산으로 쓰는 것은 의도된 것이고 job 레코드의 roles 에 적혀 있다"
+ },
+ "규모_실측": {
+  "환경": "ε=1 하나",
+  "phase_L": 2,
+  "phase_L2": 2,
+  "측정_SP": 16,
+  "1층_probe": 13,
+  "총_ORCA_실행": 32,
+  "⚠": "probe 13건은 `NoIter` 라 싸고 **측정이 아니다**. phase S 앞에 돈다 — 개입이 실패한 seed 로 200원자 r2SCAN-3c 를 돌리지 않기 위해서다",
+  "Opt": "**없다** — S0 은 fixed-geometry SP 만이다",
+  "재판정_SR": "불안정이 나온 만큼만 (미리 세지 않는다)"
+ },
+ "실행_순서": [
+  "bash run_pilot.sh L        (SCF + Pipek-Mezey 국재화)",
+  "bash run_pilot.sh L2       (`.loc` MORead · NoIter · 국재 궤도 인구)",
+  "bash run_pilot.sh seeds    (판독 → phase S + 1층 probe 입력 생성, 계산 없음)",
+  "bash run_pilot.sh probe    (1층 개입 확인 — 여기서 막히면 S 로 안 간다)",
+  "bash run_pilot.sh S        (측정 — **리뷰 통과 뒤에만**)",
+  "bash run_pilot.sh analyze  (4층 판정)",
+  "bash run_pilot.sh restart  (3층 재판정 — 불안정 잡이 있을 때만)"
+ ],
+ "미결": {
+  "eps_dry_polymer": "⏳ 값 미정 — litdb 근거로 확정해야 환경 확장이 가능하다",
+  "torsion_diverse_정의": "⏳ 미정 — 중성 8개(gs0..gs7) 완주 뒤 **에너지를 보기 전에** 거리 척도를 확정",
+  "ORCA_실물_검증": "⚠ `%loc` 출력 형식 · `Rotate` 동작 · `NoIter` probe 가 스핀 인구를 찍는지 — **실제 ORCA 로 확인하지 않았다.** selftest 의 픽스처는 우리 판독기가 받는 형식의 재현이지 ORCA 출력이 아니다. phase L 첫 실행이 곧 smoke test 다"
+ },
+ "연결": {
+  "원본_사전등록": "db/properties/sdcp_polaron_pilot_prereg_2026_08_31.json",
+  "카드": "kb/questions/sdcp_backbone_polaron_estimand_2026_08_31.md",
+  "리뷰": ["kb/reviews/codex_T_reply_polaron_pilot_2026_08_31.md"],
+  "결정": "D-2026-08-31-sdcp-polaron-Fbb (proposed)",
+  "⛔_다른_캠페인": "sdcp_doped 흡착(슬랩)과 **다른 캠페인**이다. db/properties/sdcp_doped_closed_2026_08_28.json 의 잠금은 그쪽이고 여기에 적용되지 않는다"
+ },
+ "status_history": [
+  {"at": "2026-08-31", "state": "proposed",
+   "note": "회신 T 의 S0 격하를 받아 범위를 줄여 재등록. 원본은 보존. P0 1~4 이행 + Q3/Q4 구현 반영. ratify 대기"}
+ ]
+}

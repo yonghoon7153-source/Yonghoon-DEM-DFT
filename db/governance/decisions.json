@@ -20,7 +20,7 @@
   "2026-08-28-doped-closure-ratify": "D-2026-08-28-sdcp-doped-scope-closure → active (1저자 ratify)",
   "2026-08-28-doped-closure-rev": "회신 P 반영 수정으로 active → proposed (재승인 대기). 추출 부호 철회",
   "2026-08-28-doped-closure-reratify": "회신 P 반영판 재승인 → active (1저자 위임, agent 권장)",
-  "2026-08-31": "D-2026-08-31-sdcp-polaron-Fbb 등록 (proposed). 회신 S 의 착수전 P0 5건을 db/properties/sdcp_polaron_pilot_prereg_2026_08_31.json 에 봉인했다. v1 의 f_bb 식(분자 signed)은 폐기 — 백본 내부에서 다시 상쇄됐다."
+  "2026-08-31": "D-2026-08-31-sdcp-polaron-S0-four-layer 신설 (proposed). 회신 T 의 S0 격하를 결정으로 등록 — 4층 실현 판정과 그 문턱. estimand 정의(D-2026-08-31-sdcp-polaron-Fbb)는 그대로 두고 게이트만 별개 slot 으로 붙인다 (_rules: 경험적 문턱은 별개 gate 결정)."
  },
  "decisions": [
   {
@@ -768,6 +768,45 @@
    "review": "kb/reviews/codex_S_prompt_backbone_polaron_estimand_2026_08_31.md",
    "citable": "no",
    "citable_why": "adequacy pilot 미실행. 종료 규칙 5개(BACKBONE_SUPPORTED / SO3_CENTERED_WITHIN_MODEL / ENVIRONMENT_DEPENDENT / FUNCTIONAL_DEPENDENT / MODEL_NONDIAGNOSTIC) 중 하나로 닫히기 전에는 인용 금지.",
+   "date": "2026-08-31"
+  },
+  {
+   "id": "D-2026-08-31-sdcp-polaron-S0-four-layer",
+   "schema_version": 2,
+   "kind": "gate",
+   "scope": "sdcp.h_removed_radical.state_realization",
+   "slot": "polaron_state_realization_gate",
+   "status": "proposed",
+   "applies_to": {
+    "systems": [
+     "sdcp_dp6_neutral_radical"
+    ],
+    "tasks": [
+     "spin_localization",
+     "state_map"
+    ],
+    "methods": [
+     "orca-611__r2scan-3c__uks-sp"
+    ],
+    "use_cases": [
+     "exploratory",
+     "referee_response"
+    ]
+   },
+   "title": "S0 — 초기 국재는 최종 basin 이 아니다: 4층 실현 판정 게이트 (ε=1 적합성 pilot 한정)",
+   "statement": "seed 를 국재 궤도로 심었다는 사실은 그 상태가 실현됐다는 증거가 아니다. 실현 판정은 네 층을 **따로** 통과해야 성립한다. ① 초기 개입: 회전 직후 SCF 전 밀도의 목표집합 |스핀| 몫 ≥ 0.50 을 계의 실제 charge/mult NoIter probe 로 확인한다 (미확인은 통과가 아니다; fresh guess 는 면제). ② 최종 분해: 링 몫의 최대−차순위 ≥ 0.10. 심은 자리로의 명중은 요구하지 않는다 (요구하면 순환논증) — 이동은 MOVED_FROM_SEED 로 기록한다. backbone 몫 < 0.50 이면 링 분해 질문이 성립하지 않으므로 면제한다. ③ 최종 안정성: 불안정하면 따라 내려간 궤도로 재계산하고 **다시** 판정해야 한다; 재판정 없는 불안정해는 basin 대표가 아니다. ④ basin 군집: 전자수·에너지·⟨S²⟩·원자별 부호 있는 스핀 벡터·링 몫 벡터로 묶고, **seed 개수를 반복수로 세지 않는다** — 상태 수는 구분되는 basin 수다. S0 은 이 프로토콜이 상태를 구분해 회수할 수 있는지만 판정하며 에너지 순서·바닥상태를 판정하지 않는다.",
+   "rationale": "회신 T(2026-08-31)가 전체 pilot 을 NO-GO 하고 ε=1 기술적 적합성 pilot 로 격하했다. P0 넷(원자 프레임·MO 성격·국재화 결정론·seed 중복)이 모두 판정을 조용히 틀리게 만드는 종류였고, 실제로 구현 확인 과정에서 생성기·seed 생성기·분석기가 각각 예외로 죽어 있던 것이 드러났다 — 함수를 실행하지 않는 selftest 는 그 함수가 죽었는지 모른다. 그래서 문턱과 층을 결정으로 등록하고 실물 e2e 로 결박한다.",
+   "supersedes": [],
+   "depends_on": [
+    "D-2026-08-31-sdcp-polaron-Fbb"
+   ],
+   "method_ref": "tools/sdcp/build_v7c_trimer.py (pil_target_hit · pil_stability_layer · pil_basin_cluster · pilot_restart · pilot_analyze)",
+   "enforcement": "코드 상수 PIL_PROBE_MIN 0.50 · PIL_HIT_MARGIN 0.10 · PIL_BASIN_DE_EH 1e-4 · PIL_BASIN_SPIN_L1 0.30 · PIL_BASIN_RING_L1 0.10 · PIL_BASIN_S2 0.02 — 결과를 보기 전에 봉인했고 바꾸면 커밋에 남는다. 러너가 probe 단계를 phase S **앞**에 강제한다.",
+   "record": "db/properties/sdcp_polaron_pilot_prereg_S0_2026_08_31.json",
+   "card": "kb/questions/sdcp_backbone_polaron_estimand_2026_08_31.md",
+   "review": "kb/reviews/codex_T_reply_polaron_pilot_2026_08_31.md",
+   "citable": "no",
+   "citable_why": "S0 미실행. 실행해도 ADEQUATE / MODEL_NONDIAGNOSTIC / NO_VALUE / PARTITION_DEPENDENT / THRESHOLD_DEPENDENT / BACKBONE_DEFINITION_DEPENDENT / ETHER_O_CENTERED / LOCALIZATION_DEPENDENT / SEARCH_PROTOCOL_DEPENDENT 중 하나로만 닫히며, 어느 경우에도 에너지 순서·바닥상태·물질 수준 캐리어 위치를 인용하지 않는다.",
    "date": "2026-08-31"
   }
  ]
