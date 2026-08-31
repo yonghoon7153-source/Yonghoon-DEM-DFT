@@ -1711,6 +1711,18 @@ exit 0 = 필수(tier1+refs) 완결 · exit 2 = 필수 산출 누락/무결성 �
 import gzip, hashlib, json, math, os, pathlib, re, sys
 from glob import glob
 
+# ⛔⛔ 회신 AR P1-12 / 2026-08-31 실측 — **표준출력 인코딩**도 실패 지점이다.
+#   파일 IO 를 전부 utf-8 로 박았는데도 gabia 에서 `LC_ALL=C` 로 돌리자
+#   `UnicodeEncodeError: 'ascii' codec can't encode character '\u2713'` 로 죽었다.
+#   ✓/⛔/한글이 **print 될 때** 죽는 것이고, Windows cp949 기본값이 같은 모양이다.
+#   ⚠ 내 selftest 가 이걸 놓친 이유: 환경에 `PYTHONIOENCODING=utf-8` 을 같이
+#     넣어서 stdout 만 살려 놓고 통과시켰다 — 양성만 있는 시험의 전형이다.
+for _std in (sys.stdout, sys.stderr):
+    try:
+        _std.reconfigure(encoding="utf-8", errors="replace")
+    except Exception:                                    # noqa: BLE001
+        pass                                             # 3.6 이하 · 리다이렉트된 스트림
+
 DELTA = 0.030
 SEED_TOL = 0.010          # eV — seed-매칭 ΔE 게이트
 BOX_TOL = 0.010           # eV — 기체상 **조각별** 상자 수렴 (진단용)
@@ -3096,6 +3108,24 @@ def _selftest_closure(chk):
         and _rp.get("sensitivity_complete") is True,
         "회신 AR P1-10 양성: 대안 자세가 봉인돼 있으면 **D_pose − D_pm1 을 낸다** "
         f"· {_ps.get('D_pose_minus_D_pm1_eV')} eV")
+    # ⛔음성 2026-08-31 실측 — 실물 c12 는 두 조각의 대안 자세 **역할 이름이 다르다**
+    #   (sdcp=stress_sensitivity · ptfe=sensitivity). 같은 역할끼리만 짝지으면
+    #   봉인이 통째로 비어 스테이지 2 의 네 잡이 아무 정의된 양도 못 낸다.
+    _manrp = dict(_man7n, estimand_job_keys_pose_alt={
+        "role_pair": {"E_C_sdcp": _KPA, "E_C_control": _KPB,
+                      "E_G_sdcp": "mol__sdcp_neutral__box24__nzmag",
+                      "E_G_control": "mol__ptfe_c10__box24__nzmag",
+                      "formula": "D_pose[role_pair] = ...",
+                      "roles": {"sdcp_neutral": ["stress_sensitivity"],
+                                "ptfe_c10": ["sensitivity"]},
+                      "⚠_역할_비대칭": "두 조각의 대안 자세를 다른 이유로 골랐다"}})
+    _rrp = _closure_estimand(_manrp, _RES(), lambda j: _enp.get(j), _emol, _jbp)
+    _prp = (_rrp.get("pose_sensitivity") or {}).get("role_pair") or {}
+    chk(_prp.get("status") == "computed"
+        and _prp.get("D_pose_minus_D_pm1_eV") is not None
+        and _rrp.get("sensitivity_complete") is True,
+        "회신 AR P1-10 (실측 보정): 두 조각의 대안 자세 **역할이 달라도** "
+        f"role_pair 로 봉인하면 값이 나온다 · {_prp.get('D_pose_minus_D_pm1_eV')} eV")
     # ⛔음성 — 두 자세 complex 가 다른 basin 이면 값도 status 도 막는다
     _jbp2 = dict(_jbp, **{_KPB: _J8(_mixfp, _KPB)})
     _rp2 = _closure_estimand(_manp, _RES(), lambda j: _enp.get(j), _emol, _jbp2)
@@ -9659,24 +9689,58 @@ def build_bundle(a, ledger: Optional[Dict[str, Any]] = None) -> Path:
             #      게이트된 잡이 있으면 값을 내지 않는다.
             _alt_by_role = (man.get("_altpose_by_frag") or {})
             _sealed_alt = {}
-            for _role in sorted(_alt_by_role):
-                _rr = _alt_by_role[_role]
-                if not (_rr.get(_sd) and _rr.get(_ct)):
-                    continue
-                if not all(v in man["planned"] for v in (_rr[_sd], _rr[_ct])):
-                    continue
-                _sealed_alt[_role] = {
-                    "E_C_sdcp": _rr[_sd], "E_C_control": _rr[_ct],
+            # ⛔⛔ 2026-08-31 실측 (v16 첫 생성) — 두 조각의 대안 자세가 **다른 역할
+            #   이름**을 달고 있다: sdcp_neutral=stress_sensitivity(b12),
+            #   ptfe_c10=sensitivity(b52). 같은 역할끼리만 짝지으면 어느 쪽도 짝이
+            #   없어 봉인이 통째로 비고, 스테이지 2 의 네 잡이 아무 정의된 양도
+            #   내지 못한다. ⇒ ① 같은 역할이 양쪽에 다 있으면 그 역할로 봉인하고
+            #   ② 없으면 **조각당 하나뿐인 대안 자세**를 짝지어 `role_pair` 로
+            #   봉인하되 **역할이 비대칭이라는 사실을 봉인 안에 적는다**.
+            #   ⚠ 이 봉인은 계산식·게이트·status 만 정의한다 — **무엇을 뜻하는지는
+            #     주장하지 않는다** (리뷰 AS Q4 로 열어 둔다). 결과를 본 뒤에
+            #     정하면 결과 의존적 선택이 되므로 지금 박는다.
+            def _seal_pair(_key, _ja, _jb, _extra=None):
+                if not (_ja and _jb):
+                    return
+                if not all(v in man["planned"] for v in (_ja, _jb)):
+                    return
+                _sealed_alt[_key] = dict({
+                    "E_C_sdcp": _ja, "E_C_control": _jb,
                     "E_G_sdcp": f"refs/mol__{_sd}__box24",
                     "E_G_control": f"refs/mol__{_ct}__box24",
                     "formula": ("D_pose[%s] = (E_C_sdcp - E_G_sdcp) "
-                                "- (E_C_control - E_G_control)" % _role),
-                    "reported": "D_pose[%s] - D_pm1 (자세 민감도)" % _role,
+                                "- (E_C_control - E_G_control)" % _key),
+                    "reported": "D_pose[%s] - D_pm1 (자세 민감도)" % _key,
                     "branch": SEED_MAIN,
                     "gate": ("두 complex 가 같은 자기 branch (전역 반전 동치) · "
                              "두 잡 모두 게이트 없음 · 두 에너지 모두 회수 — "
                              "하나라도 어긋나면 값과 status 를 함께 막는다"),
-                }
+                }, **(_extra or {}))
+
+            for _role in sorted(_alt_by_role):
+                _rr = _alt_by_role[_role]
+                _seal_pair(_role, _rr.get(_sd), _rr.get(_ct))
+            if not _sealed_alt:
+                _one_sd = sorted({v[_sd] for v in _alt_by_role.values() if v.get(_sd)})
+                _one_ct = sorted({v[_ct] for v in _alt_by_role.values() if v.get(_ct)})
+                _rl_sd = sorted(r for r, v in _alt_by_role.items() if v.get(_sd))
+                _rl_ct = sorted(r for r, v in _alt_by_role.items() if v.get(_ct))
+                if len(_one_sd) == 1 and len(_one_ct) == 1:
+                    _seal_pair("role_pair", _one_sd[0], _one_ct[0], {
+                        "⚠_역할_비대칭": (
+                            "두 조각의 대안 자세가 **다른 이유로** 골렸다 — "
+                            "%s=%s · %s=%s. 따라서 이 값은 '같은 종류의 자세 변화' "
+                            "가 아니라 '두 조각을 각자의 사전등록 대안 자세로 "
+                            "옮겼을 때' 의 대비다."
+                            % (_sd, _rl_sd, _ct, _rl_ct)),
+                        "roles": {_sd: _rl_sd, _ct: _rl_ct},
+                        "⛔_해석_미정": (
+                            "이 봉인은 **계산식·게이트·status 만** 정의한다. "
+                            "값이 크게 나왔을 때 그것이 '자세 민감도가 크다' 인지 "
+                            "'사전등록 자세 선택이 틀렸다' 인지는 아직 정하지 "
+                            "않았다 (리뷰 AS Q4). 결과를 본 뒤 고르면 결과 의존적 "
+                            "선택이 되므로, 식만 먼저 박고 해석은 열어 둔다."),
+                    })
             if _sealed_alt:
                 man["estimand_job_keys_pose_alt"] = dict(
                     _sealed_alt,
@@ -11006,6 +11070,25 @@ def selftest() -> int:
             "⛔음성 AR P1-11: relax 가 있으면 SUBMIT 이 **relax/CONTCAR** 를 요구한다 "
             "(canary 기하의 출처인데 누락돼 있었다)")
 
+        # ⛔음성 2026-08-31 실측 — 생성기가 **역할 비대칭** 대안 자세를 봉인하는가.
+        #   v16 첫 생성에서 sdcp=stress_sensitivity · ptfe=sensitivity 라
+        #   같은 역할끼리 짝지으려던 코드가 아무것도 못 봉인하고 "탐색용" 으로
+        #   떨어졌다 (스테이지 2 네 잡이 정의된 양을 못 냄).
+        #   ⚠ 이 픽스처는 조각이 **하나**라 대비 자체가 없다 — pose_alt 도 없는 것이
+        #     맞다. 두 조각짜리(실물 c12)에서만 이 계약을 요구한다.
+        _pa = m_st.get("estimand_job_keys_pose_alt") or {}
+        _pa_keys = sorted(k for k in _pa if not k.startswith("⛔"))
+        _n_frag_st = len(m_st.get("fragments") or [])
+        chk(_n_frag_st < 2 or _pa_keys or m_st.get("altpose_purpose"),
+            "AR P1-10: 두 조각 판이면 대안 자세는 **봉인되거나 탐색용이라고 "
+            f"명시되거나** 둘 중 하나다 (조각 {_n_frag_st})")
+        if _pa_keys:
+            _pk1 = _pa[_pa_keys[0]]
+            chk(all(_pk1.get(k) in m_st["planned"] or "mol__" in str(_pk1.get(k))
+                    for k in ("E_C_sdcp", "E_C_control"))
+                and _pk1.get("formula") and _pk1.get("gate"),
+                "AR P1-10: 봉인된 자세식이 **실재하는 잡 키 + 식 + gate** 를 갖는다 "
+                f"({_pa_keys})")
         _rc_run = _runner_e2e(_st, chk)
         chk(_rc_run is not False, "AR 해제조건 10: 러너 production-path e2e 를 돌렸다")
         # ── 회신 AP #5 — stage gate 가 vacconv **만** 보지 않는다 ─────────
@@ -11397,8 +11480,12 @@ def selftest() -> int:
         "AR P1-12: 배포본이 **실행 명령**을 같이 찍는다")
     # ⛔음성 — 비 UTF-8 로케일 (Windows cp949 대역). 종전엔 Unicode fixture 기록
     #   중 UnicodeEncodeError 로 죽었다 (리뷰가 실제로 재현).
-    _envc = dict(os.environ, LC_ALL="C", LANG="C", PYTHONUTF8="0",
-                 PYTHONIOENCODING="utf-8")
+    # ⛔ 2026-08-31 실측 — 종전엔 여기에 `PYTHONIOENCODING="utf-8"` 을 같이 넣어
+    #   **stdout 만 살려 놓고** 통과시켰다. 그래서 gabia 의 `LC_ALL=C` 실행이
+    #   `UnicodeEncodeError: '\u2713'` 로 죽는 것을 못 잡았다. 그 변수를 뺀다 —
+    #   이제 파일 IO 와 **표준출력** 둘 다 시험한다.
+    _envc = dict(os.environ, LC_ALL="C", LANG="C", PYTHONUTF8="0")
+    _envc.pop("PYTHONIOENCODING", None)
     rkc = subprocess.run([sys.executable, "analyze_results.py", "--selftest"],
                          cwd=out_sp, capture_output=True, text=True, env=_envc)
     chk(rkc.returncode == 0 and "UnicodeEncodeError" not in (rkc.stderr or ""),
