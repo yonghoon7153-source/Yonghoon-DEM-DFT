@@ -12,7 +12,7 @@ verifiedAt: 2026-08-31
 verifiedBy: agent
 explored: false
 authoredBy: agent
-claimType: descriptive
+claimType: mixed
 evidenceScope: multi-source-primary
 ---
 

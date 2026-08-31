@@ -1,6 +1,6 @@
 # kb 카탈로그 (생성물 — 손으로 고치지 말 것)
 
-> `python3 tools/kb_wiki.py index` 가 만든다 · 2026-08-31 · managed-files: 321
+> `python3 tools/kb_wiki.py index` 가 만든다 · 2026-08-31 · managed-files: 323
 
 규칙: kb/SCHEMA.md · 열린 질문: kb/questions/ · 논지 카드: kb/syntheses/ · 원장: kb/open_items.md · 문헌: litdb/INDEX.md
 
@@ -170,7 +170,7 @@
 - `kb/results/vgcf_hbn_figure_plan.md` — VGCF/h-BN 원고 — 층수 연구를 어디에 둘 것인가 (2026-07-31 결정)
 - `kb/results/vgcf_hbn_gallery_mechanism_2026_07_30.md` — h-BN@VGCF — 209 meV 층수효과의 정체: confinement 확정 (2026-07-30)
 
-## reviews/ (75)
+## reviews/ (77)
 - `kb/reviews/ECERD2600097_review_notes.md` — 📝 리뷰 노트 — ECER-D-26-00097 (Fan 외, *Stability Issues in Sulfide-Based ASSB*)
 - `kb/reviews/codex_AA_prompt_stageA_v5_regate_2026_08_29.md` — Codex 재검토 요청 AA — 회신 Z 의 P0 8건 처리 후 Stage A v5 재게이트 ○미열람
 - `kb/reviews/codex_AB_prompt_stageA_v9_regate_2026_08_29.md` — Codex 재검토 요청 AB — 회신 AA 의 P0 5건 + Q2 처리, 그리고 자체검토에서 나온 넷 ○미열람
@@ -193,7 +193,9 @@
 - `kb/reviews/codex_AR_reply_c12_v15_2026_08_31.md` — 회신 AR — c12 v15 NO-GO (해제조건 10건) ○미열람
 - `kb/reviews/codex_AS_prompt_c12_v16_2026_08_31.md` — 리뷰 요청 AS — C-12 v16 (회신 AR 해제조건 10건 이행) ○미열람
 - `kb/reviews/codex_AT_prompt_c12_v17_2026_08_31.md` — 리뷰 요청 AT — C-12 v17 (회신 AS 해제조건 10건 이행) ○미열람
+- `kb/reviews/codex_AT_reply_c12_v17_2026_08_31.md` — 회신 AT — C-12 v17 NO-GO (P0 5건 · 해제조건 9) ○미열람
 - `kb/reviews/codex_AU_prompt_c12_v18_2026_08_31.md` — 리뷰 요청 AU — C-12 v18 (회신 AT P0 5건 + 해제조건 9 이행) ○미열람
+- `kb/reviews/codex_AV_reply_c12_v18_2026_08_31.md` — 회신 AV — C-12 v18 NO-GO (P0 4건 · P1 1건 · 해제조건 8) ○미열람
 - `kb/reviews/codex_A_cascade_ml_2026_08_20.md` — 교차리뷰 A — cascade 파이프라인 + 머신러닝 (codex 작업지시서) ○미열람
 - `kb/reviews/codex_B_neb_md_tools_2026_08_20.md` — 교차리뷰 B — NEB · MD · 도구 (codex 작업지시서) ○미열람
 - `kb/reviews/codex_C_funnel_2026_08_20.md` — 교차리뷰 C v2.1 — cascade 깔때기는 잘 작동했나 (codex 2라운드 종료) ○미열람
