@@ -3129,7 +3129,7 @@ function applyViewMode(state, mode) {
          <div style="margin-top:2px;color:#9ca3af;font-size:10.5px">중앙값 <b>${Math.round(medTouch).toLocaleString()}</b> (임의단위) · 도메인 캡=28° 클러스터(패치×1)+✨glow 깊이누적 · ⚖ 팝업과 동일 문법(거긴 공동 스케일) · 감마톤=전류밀도와 동일</div>`
       : '';
     state.cbarSpec = touch ? { map: 'jet', gamma: 1.6,
-      title: 'Carbon wiring \u2014 carbon-point density near AM, arb. units (p5\u2013p95) \u2014 NOT a contact count',
+      title: 'Conductive-additive density near AM, arb. units (p5\u2013p95) \u2014 NOT a contact count',
       left: '\uc57d\ud568 ' + Math.round(lo5), right: '\uac15\ud568 ' + Math.round(hi95) } : null;
     setLegend(state,
       `<b>전기 연결성 — 탄소 배선 강도</b>
@@ -6773,9 +6773,11 @@ export async function showLabCompareModal(pidA, pidB, nameA, nameB) {
       //    중앙값으로 두면 눈금이 **정량이면서** 접점 수와 자릿수가 달라 혼동이 없다.
       //    ⚠ 기준은 `wireA.median` = **패널 A** 의 중앙값이다 (A 에 SBE 를 올리는 규약).
       //    ⚠ 철자는 미국식 — 'centre' 가 그림에 그대로 찍혀 나가던 것을 고쳤다.
+      //    ⚠⚠ 'Carbon' 이 아니라 'Conductive-additive' 다 — 세는 상이 VGCF·SuperP·**SDCP**·
+      //      SWCNT 인데 SDCP 는 전도성 **고분자**이지 탄소가 아니다 (2026-08-31 사용자 지적).
       const _ref = (wireA && wireA.median > 0) ? wireA.median : 1;
       cbarSpec = { map: 'jet', gamma: 1.6,
-                   title: 'Carbon density near AM (normalized to SBE median)',
+                   title: 'Conductive-additive density near AM (normalized to SBE median)',
                    sub: 'conductive-additive material points within 0.3 µm of the AM particle '
                         + 'center; scale common to both panels',
                    left: (lo / _ref).toFixed(2), right: (hi / _ref).toFixed(2) };

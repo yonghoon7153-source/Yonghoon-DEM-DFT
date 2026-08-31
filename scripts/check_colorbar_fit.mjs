@@ -72,5 +72,24 @@ chk('exportColorbarPNG 가 fitTextLines 를 쓴다',
 chk('제목을 고정폭으로 다시 그리지 않는다', !/cx\.fillText\(sp\.title,/.test(src));
 chk('부제도 맞춤 결과로 그린다', !/cx\.fillText\(String\(sp\.sub\),/.test(src));
 
+//  ⑧ ★★ 2026-08-31 — export 제목이 상을 **틀리게 부르지 않는가**.
+//    세는 상은 VGCF · SuperP · **SDCP** · SWCNT 인데 SDCP 는 전도성 **고분자**이지
+//    탄소가 아니다.  'Carbon …' 으로 되돌아가면 라벨이 정의와 어긋난다.
+//    ⚠ 그림 속 글자는 ban-sweep 도 pptx 스윕도 못 읽는다 — 여기가 유일한 방어선이다.
+{
+  const titles = [...src.matchAll(/title:\s*'([^']*)'/g)].map(m => m[1]);
+  const exportTitles = titles.filter(t => /near AM/.test(t));
+  chk('export 제목을 찾았다 (검사가 헛돌지 않는다)', exportTitles.length >= 2,
+      `found=${exportTitles.length}`);
+  chk('★★ export 제목이 상을 Carbon 으로 부르지 않는다 (SDCP 는 고분자다)',
+      exportTitles.every(t => !/carbon/i.test(t)),
+      exportTitles.filter(t => /carbon/i.test(t)).join(' | '));
+  chk('export 제목이 conductive-additive 로 부른다',
+      exportTitles.every(t => /conductive-additive/i.test(t)));
+  chk('영국식 철자가 export 문구에 없다',
+      !/'[^']*\b(centre|colour|behaviour)\b[^']*'/i.test(
+        src.match(/cbarSpec = \{[\s\S]{0,600}?\};/)?.[0] || ''));
+}
+
 console.log(`\n${fails} failure(s)`);
 process.exit(fails ? 1 : 0);
