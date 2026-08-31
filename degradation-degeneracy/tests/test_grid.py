@@ -140,11 +140,13 @@ def _plan_for_live_grid(led, leg, out_dir, cfg, src_digest):
     fit_axis = {"config_digest": "0" * 16, "objective_order": ["pocv_dvdq"],
                 "reference": "grid",
                 "halfcell_recipe": {"method": "ocp", "kw": {}},
+                "halfcell_cache_sha256": None, "base_config_digest": "0" * 16,
                 "bounds_preset": "expanded", "bounds_digest": "0" * 16,
                 "optimizer": {"method": "Nelder-Mead", "n_restarts": 5,
                               "adaptive": True, "warm_start": True},
                 "use_noisy": True,
-                "row_selection": {"mode": "full", "limit": None},
+                "row_selection": {"mode": "full", "limit": None,
+                                  "subset_sha256": None},
                 "in": G.leg_out_key(out_dir), "in_digest": None,
                 "out": G.leg_out_key(out_dir)}
     spec = leg_run_spec(leg, grid_axis, fit_axis)

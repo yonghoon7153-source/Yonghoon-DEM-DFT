@@ -1,5 +1,5 @@
 {
-  "at": "2026-08-28T17:52:48Z",
+  "at": "2026-08-31T17:53:22Z",
   "scenarios": {
     "authority-frozen": {
       "bit": true,
@@ -29,12 +29,12 @@
       "ran": true,
       "sites": 1
     },
-    "ledger-dir-contained": {
+    "ledger-seal-record": {
       "bit": true,
       "class": "executable",
-      "kexpr": "dir_that_is_not_contained",
+      "kexpr": "same_roster_ledger_change",
       "ran": true,
-      "sites": 1
+      "sites": 2
     },
     "pending-closed-schema": {
       "bit": true,
@@ -43,17 +43,17 @@
       "ran": true,
       "sites": 1
     },
-    "planned-status-is-not-standing": {
+    "planned-binds-the-code-identity": {
       "bit": true,
       "class": "executable",
-      "kexpr": "standing_authorization",
+      "kexpr": "plan_to_the_code_identity",
       "ran": true,
       "sites": 1
     },
-    "prelock-version-id-is-a-string": {
+    "prelock-readback-check": {
       "bit": true,
       "class": "executable",
-      "kexpr": "falsy_version_id",
+      "kexpr": "returns_the_wrong_version",
       "ran": true,
       "sites": 1
     },
@@ -64,26 +64,19 @@
       "ran": true,
       "sites": 1
     },
-    "repair-source-uses-the-snapshot": {
+    "resume-compares-the-verifier": {
       "bit": true,
       "class": "executable",
-      "kexpr": "repair_lookups_go_through_the_validated_version_snapshot or no_version_enumeration_bypasses_the_helper",
+      "kexpr": "phase_cannot_be_recorded_without_the_owner_token or crash_after_grid_resumes_and_finalizes",
       "ran": true,
       "sites": 1
     },
-    "staging-nlink-one": {
+    "staging-regular-only": {
       "bit": true,
       "class": "executable",
       "kexpr": "staging_aliases_never_become_an_immutable_generation",
       "ran": true,
-      "sites": 1
-    },
-    "warm-edges-are-declared": {
-      "bit": true,
-      "class": "executable",
-      "kexpr": "warm_consumers_go_through_the_accessors",
-      "ran": true,
-      "sites": 1
+      "sites": 2
     }
   },
   "schema": "mutation-coverage/v1",

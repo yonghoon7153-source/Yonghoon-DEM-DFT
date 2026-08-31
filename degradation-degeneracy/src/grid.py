@@ -693,17 +693,25 @@ def run_grid(cfg: dict, conditions: list[Condition], nproc: int,
         #   가리키는 아무 것이나 읽었다.
         import hashlib as _h49
 
-        _curves = Path(out_dir) / "curves.parquet"
-        if not _curves.is_file():
-            raise SystemExit(
-                f"✗ grid 가 끝났는데 {_curves} 가 없다 — 다음 phase 가 결속할 "
-                "입력이 없으므로 phase 를 닫지 않는다")
-        _claim.phase_done("grid", {
+        # ★ 50차 P0 — fit 이 읽는 것은 parquet 하나가 아니다. producer 기록
+        #   (`curves_manifest*.yaml`)도 fit 이 봉인해 읽고 서명에 넣는다.
+        #   49차는 parquet 만 결속해 나머지를 갈아 끼울 수 있었다.
+        _bind = {}
+        for _key, _name in (("curves_sha256", "curves.parquet"),
+                            ("curves_manifest_sha256", "curves_manifest.yaml"),
+                            ("curves_manifest_start_sha256",
+                             "curves_manifest_start.yaml")):
+            _f = Path(out_dir) / _name
+            if not _f.is_file():
+                raise SystemExit(
+                    f"✗ grid 가 끝났는데 {_f} 가 없다 — 다음 phase 가 결속할 "
+                    "입력이 없으므로 phase 를 닫지 않는다")
+            _bind[_key] = _h49.sha256(_f.read_bytes()).hexdigest()
+        _claim.phase_done("grid", dict(_bind, **{
             "out": str(out_dir),
             "n_curves_total": summary["n_curves_total"],
             "grid_run_sig": g_sig,
-            "curves_sha256": _h49.sha256(_curves.read_bytes()).hexdigest(),
-            "finished_at": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())})
+            "finished_at": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())}))
     return summary
 
 

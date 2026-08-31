@@ -1,17 +1,17 @@
 {
-  "at": "2026-08-28T18:05:15Z",
+  "at": "2026-08-31T18:01:00Z",
   "scenarios": {
-    "children-read-through-dirfd": {
+    "canon-absorbs-the-pep701-empty-piece": {
       "bit": true,
       "class": "executable",
-      "kexpr": "holds_a_directory_fd_for_its_children",
+      "kexpr": "canonical_form_agrees_on_every_supported_interpreter",
       "ran": true,
-      "sites": 2
+      "sites": 1
     },
-    "complete-current-supersedes-pending": {
+    "closure-unresolved-attr-is-fail-closed": {
       "bit": true,
       "class": "executable",
-      "kexpr": "complete_current_supersedes_a_leftover_pending",
+      "kexpr": "unresolved_producer_module_reference_is_fail_closed",
       "ran": true,
       "sites": 1
     },
@@ -29,31 +29,31 @@
       "ran": true,
       "sites": 1
     },
-    "module-gate-before-side-effects": {
+    "module-defs-see-tuple-targets": {
       "bit": true,
       "class": "executable",
-      "kexpr": "run_grid_calls_the_gate_before_its_first_side_effect",
+      "kexpr": "producer_closure_sees_tuple_targets or producer_closure_follows_a_tuple_defined_constant",
       "ran": true,
       "sites": 1
     },
-    "plan-parser-dir-hygiene": {
+    "phase-write-refuses-a-closed-claim": {
       "bit": true,
       "class": "executable",
-      "kexpr": "plan_parser_requires_a_canonical_relative_dir or plan_parser_refuses_a_cohort_dir_outside_the_repository",
+      "kexpr": "closed_run_cannot_be_resurrected_by_a_late_phase or released_run_cannot_be_resurrected_by_a_late_phase",
       "ran": true,
       "sites": 1
     },
-    "precheck-tells-new-from-resume": {
+    "policy-binds-the-roster": {
       "bit": true,
       "class": "executable",
-      "kexpr": "precheck_tells_a_new_run_from_an_owned_resume",
+      "kexpr": "single_leg_policy_must_match_the_roster_cardinality",
       "ran": true,
       "sites": 1
     },
-    "producer-cut-is-declared": {
+    "producer-crossing-is-fail-closed": {
       "bit": true,
       "class": "executable",
-      "kexpr": "producer_semantic_digest_excludes_the_publication_path",
+      "kexpr": "breaking_the_crossing_into_src_scoring_is_fail_closed",
       "ran": true,
       "sites": 1
     },

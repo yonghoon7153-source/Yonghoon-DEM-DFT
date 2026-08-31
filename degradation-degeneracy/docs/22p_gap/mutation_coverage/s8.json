@@ -1,26 +1,26 @@
 {
-  "at": "2026-08-28T18:09:13Z",
+  "at": "2026-08-31T18:04:06Z",
   "scenarios": {
-    "claim-is-atomic": {
+    "claim-checks-the-whole-index": {
       "bit": true,
       "class": "executable",
-      "kexpr": "exactly_one_attempt_enters_compute",
-      "ran": true,
-      "sites": 2
-    },
-    "crash-recovery-needs-the-credential": {
-      "bit": true,
-      "class": "executable",
-      "kexpr": "the_crash_recovery_needs_the_owner_credential",
+      "kexpr": "whole_index_must_be_consistent_before_any_leg_is_claimed",
       "ran": true,
       "sites": 1
     },
-    "flock-two-publisher": {
+    "crash-recovery-is-idempotent": {
       "bit": true,
       "class": "executable",
-      "kexpr": "two_independent_publishers",
+      "kexpr": "finalize_is_idempotent_after_a_crash_before_cleanup",
       "ran": true,
-      "sites": 2
+      "sites": 1
+    },
+    "fit-axis-seals-the-input-content": {
+      "bit": true,
+      "class": "executable",
+      "kexpr": "fit_axis_seals_the_input_content_axes",
+      "ran": true,
+      "sites": 1
     },
     "interpreter-set-is-pinned": {
       "bit": null,
@@ -29,33 +29,33 @@
       "ran": false,
       "sites": 1
     },
-    "pending-base-generation": {
+    "namespace-check-rejects-symlinks": {
       "bit": true,
       "class": "executable",
-      "kexpr": "stale_bootstrap_pending",
+      "kexpr": "symlinked_path_is_not_inside_the_smoke_namespace or namespace_check_is_fail_closed_on_a_symlinked_component",
       "ran": true,
       "sites": 1
     },
-    "planned-binds-the-execution-record": {
+    "plan-index-exact-equality": {
       "bit": true,
       "class": "executable",
-      "kexpr": "planned_index_is_bound_to_the_real",
+      "kexpr": "phantom_executed_plan_without_an_execution_record",
       "ran": true,
       "sites": 1
     },
-    "prelock-readback-check": {
+    "precheck-tells-new-from-resume": {
       "bit": true,
       "class": "executable",
-      "kexpr": "returns_the_wrong_version",
+      "kexpr": "precheck_tells_a_new_run_from_an_owned_resume",
       "ran": true,
       "sites": 1
     },
-    "producer-normalizes-the-node": {
+    "producer-cut-is-sealed": {
       "bit": true,
       "class": "executable",
-      "kexpr": "producer_digest_sees_decorators",
+      "kexpr": "widening_the_producer_cut_moves_the_digest",
       "ran": true,
-      "sites": 2
+      "sites": 1
     },
     "release-returns-the-plan": {
       "bit": true,

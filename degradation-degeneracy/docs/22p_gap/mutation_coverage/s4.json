@@ -1,5 +1,5 @@
 {
-  "at": "2026-08-28T17:58:40Z",
+  "at": "2026-08-31T17:57:56Z",
   "scenarios": {
     "both-pointers-checked": {
       "bit": true,
@@ -29,31 +29,31 @@
       "ran": true,
       "sites": 1
     },
-    "lifecycle-chain-is-verified": {
+    "lifecycle-head-anchors-the-tip": {
       "bit": true,
       "class": "executable",
       "kexpr": "the_lifecycle_journal_is_a_hash_chain",
       "ran": true,
       "sites": 1
     },
-    "pin-is-publication-authority": {
+    "phase-input-binding-needs-a-receipt": {
       "bit": true,
       "class": "executable",
-      "kexpr": "producer_pin_is_part",
+      "kexpr": "fit_refuses_when_its_grid_phase_is_missing",
       "ran": true,
       "sites": 1
     },
-    "policy-binds-the-roster": {
+    "pointer-binds-the-ledger": {
       "bit": true,
       "class": "executable",
-      "kexpr": "single_leg_policy_must_match_the_roster_cardinality",
+      "kexpr": "expanding_a_roster_over_an_active_cohort_requires_a_new_cohort",
       "ran": true,
       "sites": 1
     },
-    "producer-crosses-into-scoring": {
+    "producer-canon-drops-empty-fields": {
       "bit": true,
       "class": "executable",
-      "kexpr": "producer_digest_crosses_into_src_scoring",
+      "kexpr": "producer_digest_is_the_same_on_every_python_here",
       "ran": true,
       "sites": 1
     },
@@ -71,10 +71,10 @@
       "ran": true,
       "sites": 1
     },
-    "thaw-transition-is-unrepresentable": {
+    "token-is-written-before-the-claim": {
       "bit": true,
       "class": "executable",
-      "kexpr": "frozen_cohort_cannot_be_thawed_and_published",
+      "kexpr": "crash_between_the_claim_and_the_token_leaves_nothing_stranded",
       "ran": true,
       "sites": 1
     }

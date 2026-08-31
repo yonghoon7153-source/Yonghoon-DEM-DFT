@@ -1,5 +1,5 @@
 {
-  "at": "2026-08-28T18:01:18Z",
+  "at": "2026-08-31T17:56:18Z",
   "scenarios": {
     "authority-registry": {
       "bit": true,
@@ -29,31 +29,31 @@
       "ran": true,
       "sites": 1
     },
-    "ledger-status-enum": {
+    "lifecycle-chain-is-verified": {
       "bit": true,
       "class": "executable",
-      "kexpr": "status_is_an_exact_enum",
+      "kexpr": "the_lifecycle_journal_is_a_hash_chain",
       "ran": true,
       "sites": 1
     },
-    "phase-input-binding-needs-a-receipt": {
+    "phase-input-binding-covers-the-package": {
       "bit": true,
       "class": "executable",
-      "kexpr": "fit_refuses_when_its_grid_phase_is_missing",
+      "kexpr": "grid_receipt_binds_every_curve_input_not_just_the_parquet",
       "ran": true,
       "sites": 1
     },
-    "pointer-loss-is-terminal": {
+    "planned-status-is-not-standing": {
       "bit": true,
       "class": "executable",
-      "kexpr": "losing_the_pointer_of_a_cohort",
+      "kexpr": "standing_authorization",
       "ran": true,
       "sites": 1
     },
-    "producer-canon-drops-empty-fields": {
+    "preservation-status-inside-the-contract": {
       "bit": true,
       "class": "executable",
-      "kexpr": "producer_digest_is_the_same_on_every_python_here",
+      "kexpr": "the_runtime_preservation_enum_is_inside_the_contract",
       "ran": true,
       "sites": 1
     },
@@ -64,17 +64,17 @@
       "ran": false,
       "sites": 1
     },
-    "roster-is-a-set": {
+    "row-selection-seals-its-content": {
       "bit": true,
       "class": "executable",
-      "kexpr": "ledger_roster_is_a_set_not_a_multiset",
+      "kexpr": "fit_axis_seals_the_row_selection_content",
       "ran": true,
       "sites": 1
     },
-    "thaw-is-refused-before-the-first-write": {
+    "thaw-transition-is-unrepresentable": {
       "bit": true,
       "class": "executable",
-      "kexpr": "publisher_refuses_a_thawed_cohort_before_the_first_write",
+      "kexpr": "frozen_cohort_cannot_be_thawed_and_published",
       "ran": true,
       "sites": 1
     }

@@ -329,17 +329,11 @@ def _compute_closure(src: str) -> dict[str, str]:
     """
     import ast
 
-    tree = ast.parse(src)
-    defs: dict[str, ast.AST] = {}
-    for node in tree.body:
-        if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef, ast.ClassDef)):
-            defs[node.name] = node
-        elif isinstance(node, ast.Assign):
-            for t in node.targets:
-                if isinstance(t, ast.Name):
-                    defs[t.id] = node
-        elif isinstance(node, ast.AnnAssign) and isinstance(node.target, ast.Name):
-            defs[node.target.id] = node
+    # ★ 50차 — "module-level 정의란 무엇인가" 의 authority 는 **하나**다.
+    #   49차까지 이 함수가 같은 walk 의 사본을 들고 있었고, 그래서 tuple
+    #   대입을 담게 고칠 때 한쪽만 고치면 약한 쪽이 실효 규칙이 된다
+    #   (실측: 여기만 고쳤더니 `_module_defs()` 는 그대로였다).
+    defs: dict[str, ast.AST] = _module_defs(src)
 
     missing = [n for n in _COMPUTE_NAMES if n not in defs]
     if missing:
@@ -502,6 +496,12 @@ def _ast_canon(node) -> str:
 
     `Constant` 만 `value` 를 무조건 적는다 (`None` 리터럴이 빈 노드로 접히면
     서로 다른 코드가 같은 문자열이 된다).
+
+    ★ 50차 P0 — 규칙 3: `JoinedStr.values` 안의 **빈 문자열 조각**을 버린다.
+      PEP 701(3.12) 파서가 중첩 format spec 끝에 `Constant(value='')` 를 붙인다
+      — 같은 AST 의미인데 3.11 과 3.13 에는 없다. 49차 golden 이 3.12 에서
+      실제로 어긋난 원인이 이것이다 (리뷰어 실측, 이 기계에서 재현했다).
+      빈 조각은 렌더링 결과를 바꾸지 않으므로 뜻을 잃지 않고 지울 수 있다.
     """
     import ast
 
@@ -509,6 +509,12 @@ def _ast_canon(node) -> str:
         parts = []
         for f in node._fields:
             v = getattr(node, f, None)
+            # ★ 50차 P0 — PEP 701(3.12) 이 중첩 format spec 끝에 붙이는 빈
+            #   조각을 버린다. 같은 뜻인데 3.11·3.13 에는 없다.
+            if isinstance(node, ast.JoinedStr) and f == "values" \
+                    and isinstance(v, list):
+                v = [x for x in v
+                     if not (isinstance(x, ast.Constant) and x.value == "")]
             if not isinstance(node, ast.Constant):
                 if v is None or (isinstance(v, list) and not v):
                     continue
@@ -528,6 +534,22 @@ def _ast_canon(node) -> str:
 _PRODUCER_MODULES = ("src.scoring",)
 
 
+def _target_names(node):
+    """대입 target 이 묶는 **모든** 이름 (tuple·list·starred 를 편다)."""
+    import ast
+
+    if isinstance(node, ast.Name):
+        return [node.id]
+    if isinstance(node, ast.Starred):
+        return _target_names(node.value)
+    if isinstance(node, (ast.Tuple, ast.List)):
+        out = []
+        for el in node.elts:
+            out += _target_names(el)
+        return out
+    return []                       # Attribute·Subscript 는 module 이름이 아니다
+
+
 def _module_defs(src: str) -> dict:
     """module-level 정의 이름 → node."""
     import ast
@@ -537,11 +559,16 @@ def _module_defs(src: str) -> dict:
         if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef, ast.ClassDef)):
             defs[node.name] = node
         elif isinstance(node, ast.Assign):
+            # ★ 50차 P0 — `A, B = 1, 2` · `(D,) = (4,)` · `[E, *F] = …` 도
+            #   module 정의다. 49차는 `ast.Name` target 만 담았으므로 계산
+            #   상수를 tuple 대입으로 바꾸면 producer identity 에서 통째로
+            #   빠졌다 (문법 하나로 identity 밖으로 나가는, P0-2 와 같은 형태).
             for t in node.targets:
-                if isinstance(t, ast.Name):
-                    defs[t.id] = node
-        elif isinstance(node, ast.AnnAssign) and isinstance(node.target, ast.Name):
-            defs[node.target.id] = node
+                for name in _target_names(t):
+                    defs[name] = node
+        elif isinstance(node, ast.AnnAssign):
+            for name in _target_names(node.target):
+                defs[name] = node
     return defs
 
 
@@ -617,10 +644,12 @@ def _assert_no_dynamic_resolution(node, where: str, mods: set) -> None:
     for sub in ast.walk(node):
         if not isinstance(sub, ast.Call) or not isinstance(sub.func, ast.Name):
             if isinstance(sub, ast.Attribute) and sub.attr in (
-                    "__dict__", "__globals__", "__code__"):
+                    "__dict__", "__globals__", "__code__", "__doc__"):
                 raise SystemExit(
-                    f"✗ producer 닫힘 안에서 이름 공간을 직접 연다: "
-                    f"{where} 의 `.{sub.attr}` — 정적 닫힘이 볼 수 없다")
+                    f"✗ producer 닫힘 안에서 정규형이 **버리는 것**을 읽는다: "
+                    f"{where} 의 `.{sub.attr}` — `_ast_canon()`·"
+                    "`_strip_docstrings()` 가 떼어 낸 값을 계산이 쓰면 digest 가 "
+                    "거짓이 된다 (둘 중 하나만 참일 수 있다)")
             continue
         fn = sub.func.id
         if fn in _DYNAMIC_ALWAYS:
@@ -813,6 +842,15 @@ def build(leg: str, out: Path | None = None) -> dict:
 
     from src.scoring import (DEFAULT_TOL, add_error_columns, apply_bias_correction,
                              classify_recoverability, clean_bias, summarize)
+
+    # ★ 50차 P0 — **목적지 판정이 맨 앞이다.** 49차는 원자료 존재 검사가 먼저라,
+    #   frozen cohort 로 쓰라는 호출이 원자료가 없는 기계에서는 다른 이유로
+    #   죽었다 (리뷰어 실측: clean checkout 에서 그 회귀가 빨개졌다). 그것은
+    #   시험의 이식성 문제이기 전에 **순서 결함**이다 — 원자료가 있는 기계에서는
+    #   frozen 목적지를 향해 읽기·계산을 먼저 하게 된다. 거절은 아무 일도 하기
+    #   전에 나야 한다.
+    _dest_check = out or WARM
+    _assert_writable(_dest_check)
 
     d = RESULTS / leg
     fits = d / "fits.parquet"
@@ -2675,6 +2713,15 @@ def read_lifecycle() -> list:
     """
     p = _lifecycle_path()
     if not p.is_file():
+        # ★ 50차 P0 — **anchor 가 있으면 journal 도 있어야 한다.** 49차는 여기서
+        #   끝 대조 전에 빠져나갔고, 그래서 파일 하나를 지우는 것만으로 frozen
+        #   기록이 사라져 public 재게시가 통과했다 (리뷰어 실측). anchor 를 둔
+        #   이유가 "사슬의 끝을 고정한다" 인데 사슬 자체가 없을 때를 안 봤다.
+        if _lifecycle_head_path().is_file():
+            raise SystemExit(
+                f"✗ cohort lifecycle journal 이 없는데 끝 anchor 는 남아 있다 "
+                f"({_lifecycle_head_path()}) — 사슬이 지워졌다. 없는 것과 "
+                "지워진 것은 다르다")
         return []
     out, prev = [], ""
     for i, raw in enumerate(p.read_text(encoding="utf-8").splitlines()):

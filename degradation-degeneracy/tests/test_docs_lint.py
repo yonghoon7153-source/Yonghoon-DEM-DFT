@@ -3641,9 +3641,15 @@ def test_the_frozen_guard_lives_at_the_write_primitive_not_the_cli():
     **가장 낮은 공통 지점**에 두지 않으면 우회된다.
     """
     rp = _row_projection_module()
-    with pytest.raises(SystemExit) as e:
-        rp.build("paired_fixed5_v4", rp.WARM)
-    assert "frozen" in str(e.value)
+    # ★ 50차 — **원자료가 없는 기계에서도** 이 거절이 나야 한다. 49차는 원자료
+    #   존재 검사가 먼저라 clean checkout 에서 다른 이유로 죽었다 (리뷰어
+    #   실측). 그것은 시험 이식성 문제이기 전에 순서 결함이다 — 원자료가 있는
+    #   기계에서는 frozen 목적지를 향해 읽기·계산을 먼저 하게 된다.
+    #   존재하지 **않는** 다리로 물어 그 순서를 고정한다.
+    for leg in ("paired_fixed5_v4", "이런_다리는_없다"):
+        with pytest.raises(SystemExit) as e:
+            rp.build(leg, rp.WARM)
+        assert "frozen" in str(e.value), f"{leg}: {e.value}"
 
     src = (_REPO / "docs" / "22p_gap" / "row_projection.py").read_text(encoding="utf-8")
     assert "_assert_writable(_out)" in src, (
@@ -9192,6 +9198,139 @@ def test_freezing_a_cohort_does_not_invalidate_what_it_published(tmp_path):
 
     assert after["generation_id"] == before["generation_id"], (
         "cohort 를 얼렸더니 게시된 generation 이 달라 보인다")
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# 50차 — 49차 게이트 리뷰가 journal·닫힘·정규형에서 찾은 넷
+# ─────────────────────────────────────────────────────────────────────────────
+
+def test_deleting_the_journal_does_not_erase_the_freeze(tmp_path):
+    """★ 50차 P0 — journal 을 지우고 `.head` 만 남기면 해동이 통과했다.
+
+    49차 반례(리뷰어 실측): `read_lifecycle()` 이 `if not p.is_file(): return []`
+    로 **끝 anchor 대조 전에** 빠져나갔다. 그래서 파일 하나를 지우는 것만으로
+    frozen 기록이 사라지고 public 재게시가 성공했다. anchor 를 둔 이유가
+    "사슬의 끝을 고정한다" 인데 사슬 자체가 없을 때를 안 본 것이다.
+
+    없는 것과 지워진 것은 다르다. anchor 가 있으면 journal 도 있어야 한다.
+    """
+    rp = _fresh_rp()
+    rp.REPO = _ledger_repo(tmp_path, "cohorts: []\n")
+    rp._append_lifecycle("gX", None, "frozen", "종료")
+    assert rp.cohort_lifecycle_state("gX") == "frozen"
+
+    rp._lifecycle_path().unlink()                    # journal 만 지운다
+    assert rp._lifecycle_head_path().is_file()       # anchor 는 남았다
+    with pytest.raises(SystemExit) as ei:
+        rp.read_lifecycle()
+    assert "사슬" in str(ei.value) or "anchor" in str(ei.value), str(ei.value)
+    with pytest.raises(SystemExit):
+        rp.assert_not_thawed("gX")
+
+    rp._lifecycle_path().write_text("", encoding="utf-8")   # 비운 것도 같다
+    with pytest.raises(SystemExit):
+        rp.assert_not_thawed("gX")
+
+
+def test_the_producer_closure_sees_tuple_targets():
+    """★ 50차 P0 — `A, B = ...` 로 정의한 module 상수가 닫힘 밖이었다.
+
+    49차 반례: `_module_defs()` 가 `ast.Assign` 의 target 이 `ast.Name` 일
+    때만 담았다. 계산 상수를 tuple 대입으로 바꾸면 그 값이 producer identity
+    에서 통째로 빠진다 — 문법 하나로 identity 밖으로 나가는, 49차 P0-2 와
+    **같은 형태**의 구멍이 하나 더 있었다.
+    """
+    rp = _rp()
+    defs = rp._module_defs("A, B = 1, 2\nC = 3\n(D,) = (4,)\n"
+                           "[E, *F] = [5, 6]\nG: int = 7\n")
+    assert set(defs) == {"A", "B", "C", "D", "E", "F", "G"}, sorted(defs)
+
+
+def _mini_producer(rp, body: str, extra: str = "") -> str:
+    """계산 이름 일곱과 절단면만 갖춘 최소 producer 소스."""
+    return (extra
+            + "def _cell(x):\n    return x\n"
+            + "def _restart_list(x):\n    return x\n"
+            + "def _restart_facts(x):\n    return x\n"
+            + "def _add_multistart_blocks(x):\n    return x\n"
+            + "def _analyzer_provenance(x):\n    return x\n"
+            + body
+            + "def build(x):\n    return x\n"
+            + "".join(f"def {n}(*a, **k):\n    return None\n"
+                      for n in rp._PRODUCER_CUT))
+
+
+def test_the_producer_closure_follows_a_tuple_defined_constant():
+    """그 이름을 계산 경로가 읽으면 값이 digest 를 움직여야 한다."""
+    rp = _rp()
+    sc = (_REPO / "src" / "scoring.py").read_text(encoding="utf-8")
+    src = _mini_producer(rp, "def score_canonical(df):\n    return TOL_HI\n",
+                         extra="TOL_LO, TOL_HI = 0.01, 0.02\n")
+    base = rp._producer_semantic_over(src, sc)
+    moved = rp._producer_semantic_over(
+        src.replace("TOL_LO, TOL_HI = 0.01, 0.02",
+                    "TOL_LO, TOL_HI = 0.01, 0.05", 1), sc)
+    assert moved != base, (
+        "tuple 로 정의한 계산 상수를 바꿨는데 producer digest 가 그대로다")
+
+
+def test_reading_a_docstring_inside_the_closure_is_fail_closed():
+    """★ 50차 P0 — 정규형은 docstring 을 **버린다**. 그러면 읽어서도 안 된다.
+
+    `_strip_docstrings()` 는 산문 변경이 identity 를 흔들지 않게 떼어 낸다.
+    그런데 계산 경로가 `f.__doc__` 을 읽으면 그 산문이 **의미**가 된다 — 버린
+    것을 쓰는 코드가 있으면 digest 는 거짓이다. 둘 중 하나만 참일 수 있다.
+    """
+    rp = _rp()
+    sc = (_REPO / "src" / "scoring.py").read_text(encoding="utf-8")
+    src = _mini_producer(
+        rp,
+        "def score_canonical(df):\n"
+        '    ' + chr(34) * 3 + 'tol=0.02' + chr(34) * 3 + '\n'
+        "    return float(score_canonical.__doc__.split('=')[1])\n")
+    with pytest.raises(SystemExit) as ei:
+        rp._producer_semantic_over(src, sc)
+    assert "__doc__" in str(ei.value), str(ei.value)
+
+
+def test_the_canonical_form_agrees_on_every_supported_interpreter():
+    """★ 50차 P0 — golden 이 **선언한 모든** 인터프리터에서 같아야 한다.
+
+    49차 반례: `SUPPORTED_PYTHON` 이 3.12 를 선언하는데 golden 이 3.12 에서
+    실제로 달랐다 (PEP 701 파서가 중첩 format spec 끝에 빈
+    `Constant(value='')` 를 붙인다). 선언과 증거가 어긋나면 선언 쪽이 거짓이다.
+    """
+    import shutil as _sh
+    import subprocess as _sp
+    import textwrap as _tw
+
+    rp = _rp()
+    probe = _tw.dedent('''
+        import importlib.util, json, sys
+        spec = importlib.util.spec_from_file_location("_p", sys.argv[1])
+        m = importlib.util.module_from_spec(spec); spec.loader.exec_module(m)
+        print(json.dumps({k: m._ast_canon_of(k) for k in m.AST_CANON_GOLDEN}))
+    ''')
+    target = str(_REPO / "docs" / "22p_gap" / "row_projection.py")
+    seen = {}
+    for major, minor in rp.SUPPORTED_PYTHON:
+        exe = _sh.which(f"python{major}.{minor}")
+        if not exe:
+            continue
+        r = _sp.run([exe, "-c", probe, target], capture_output=True, text=True)
+        assert r.returncode == 0, f"python{major}.{minor}: {r.stderr[-800:]}"
+        seen[f"{major}.{minor}"] = json.loads(r.stdout)
+    assert len(seen) >= 2, (
+        f"지원 선언 {rp.SUPPORTED_PYTHON} 중 이 기계에 둘 이상이 없다 — "
+        "버전 독립 주장을 확인할 수 없다")
+    bad = []
+    for ver, got in sorted(seen.items()):
+        for snippet, want in rp.AST_CANON_GOLDEN.items():
+            if got[snippet] != want:
+                bad.append(f"python{ver} · {snippet!r}\n      golden {want}\n"
+                           f"      실제   {got[snippet]}")
+    assert not bad, ("정규형이 지원 선언한 인터프리터에서 golden 과 다르다:\n  "
+                     + "\n  ".join(bad))
 
 
 def test_freezing_works_for_a_cohort_with_no_recorded_state(tmp_path):

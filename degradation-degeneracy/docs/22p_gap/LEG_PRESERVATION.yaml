@@ -110,7 +110,7 @@ cohorts:
     로 간다. **행 바이트는 안 움직였다** — 움직인 것은 identity 의 정의다. g3 의 바이트와 pin 은 그대로 둔다.'
 - cohort_id: g4_2026_08_28
   dir: docs/22p_gap/proj_g4
-  status: active
+  status: frozen
   prospective_legs: []
   cross_leg_comparison: not_applicable_single_leg
   무엇이_달라졌나: '49차 게이트 리뷰(48차 조건 P0-2)가 producer 닫힘의 남은 구멍을 짚었다: 닫힘이 `from ... import`
@@ -138,6 +138,15 @@ cohorts:
     yaml: 6.0.3
   legs:
   - paired_fixed5_v4
+  frozen_reason: '50차 게이트 리뷰(49차 조건)가 producer 닫힘의 남은 구멍 셋을 짚었다: (1) `A, B = 1, 2`
+    로 정의한 module 상수가 닫힘 밖이었다 — `_module_defs()` 가 `ast.Name` target 만 담았고, 게다가 같은
+    walk 의 사본이 `_compute_closure()` 안에 하나 더 있어 한쪽만 고치면 약한 쪽이 실효 규칙이 됐다 (authority
+    를 하나로 합쳤다). (2) 정규형이 docstring 을 버리는데 계산이 `__doc__` 을 읽으면 그 산문이 의미가 된다 — 버린 것을
+    쓰는 코드는 fail-closed 다. (3) `SUPPORTED_PYTHON` 이 3.12 를 선언하는데 정규형이 3.12 에서 실제로 달랐다
+    (PEP 701 파서가 중첩 format spec 끝에 빈 `Constant('''')` 를 붙인다). 셋을 다 막으면서 `producer_semantic_sha256`
+    이 `b4701aa33264a753` → `c8250a5ceb5a3ef5` 로 움직였다. 계약 §13.3.2 대로 pin 은 cohort lifetime
+    동안 고정이므로 g4 를 얼리고 `g5_2026_08_29` 로 간다. **행 바이트는 안 움직였다** — 움직인 것은 identity 의
+    정의다.'
 planned:
 - leg_id: paired_fixed5_v4
   cohort_id: g2_2026_08_25
@@ -229,12 +238,12 @@ legs:
     payload_index_sha256: eeb8ae8911083c992710ace2c8f255682b64930a03929f12ae72796ade174716
     member_rehash_by: tools.archive_bundle.check
     verification_receipt: docs/22p_gap/receipts/paired_fixed5_v4.validate.yaml
-    verification_receipt_core_sha256: 04048de301732ef505ed9d5814d5415d872fe1f9a7d84cf7d95922985d628a67
+    verification_receipt_core_sha256: ff5390d984a7acb7b06bdc95e81c5d919f2e7ce824e630d7c868a4b4d4397bd4
     verification_receipt_generator: docs/22p_gap/make_receipt.py
     empty_root_restore: true
     rescored_from_restored_fits: true
     validator_identity:
-      source_digest: 0a3095ec77da2920
+      source_digest: c2abd52735ca73d6
       n_checks: 34
       ok: true
     leg_source_digest: d50295f980ccaa81

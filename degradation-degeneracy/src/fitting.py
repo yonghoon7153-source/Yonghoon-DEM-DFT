@@ -508,11 +508,44 @@ def _record_phase(claim, phase: str, summary: dict, out_dir) -> None:
                                                   __import__("time").gmtime())})
 
 
+def _file_digest16(path) -> str:
+    """파일 내용의 16자리 digest. 없으면 fail-closed (승인 축은 비울 수 없다)."""
+    import hashlib as _h
+
+    from pathlib import Path as _P
+
+    p = _P(path)
+    if not p.is_file():
+        from tools.preserve import PreserveError
+        raise PreserveError("plan", f"승인 축이 가리키는 입력이 없다: {p}")
+    return _h.sha256(p.read_bytes()).hexdigest()[:16]
+
+
+def _halfcell_cache_sha(base_config, reference: str, method: str, kw):
+    """기준 캐시의 **바이트** (grid 기준이면 `None` — 캐시를 안 읽는다)."""
+    import hashlib as _h
+
+    from src.config import load_config
+
+    if str(reference) != "halfcell":
+        return None
+    cache = halfcell_path_for(load_config(base_config or "configs/base.yaml"),
+                              method, kw)
+    if not cache.is_file():
+        from tools.preserve import PreserveError
+        raise PreserveError(
+            "plan",
+            f"half-cell 기준 캐시가 없다: {cache} — 승인은 그 캐시의 바이트를 "
+            "담아야 하므로 먼저 `python -m src.halfcell` 로 만들어라")
+    return _h.sha256(cache.read_bytes()).hexdigest()
+
+
 def live_fit_axis(objectives: dict, obj_cfg: dict, bounds: dict,
                   bounds_preset: str, n_restarts: int, use_noisy: bool,
                   limit, subset, reference: str, warm_start: bool,
                   adaptive: bool, method: str, halfcell_method: str,
-                  halfcell_kw: dict | None, in_dir, out_dir) -> dict:
+                  halfcell_kw: dict | None, in_dir, out_dir,
+                  base_config=None) -> dict:
     """이 실행이 **실제로 하려는 것** 을 승인 축으로 편다 (49차 P0-5).
 
     48차 fit 축은 `{config_digest, objectives, out}` 셋뿐이었다. 그런데
@@ -543,6 +576,13 @@ def live_fit_axis(objectives: dict, obj_cfg: dict, bounds: dict,
         "reference": str(reference),
         "halfcell_recipe": {"method": str(halfcell_method),
                             "kw": dict(halfcell_kw or {})},
+        # ★ 50차 P0 — recipe 만으로는 부족하다. 같은 recipe 로 만든 **다른
+        #   캐시**를 놓으면 계산이 달라지는데 승인 digest 는 그대로였다
+        #   (49차 반례: 승인한 A 대신 유효한 B 가 계산·게시됐다).
+        "halfcell_cache_sha256": _halfcell_cache_sha(
+            base_config, reference, halfcell_method, halfcell_kw),
+        # 재고 분배 상수 — 축 자체가 없었다
+        "base_config_digest": _file_digest16(base_config or "configs/base.yaml"),
         "bounds_preset": str(bounds_preset),
         "bounds_digest": _dg(bounds),
         "optimizer": {"method": str(method), "n_restarts": int(n_restarts),
@@ -552,7 +592,12 @@ def live_fit_axis(objectives: dict, obj_cfg: dict, bounds: dict,
         "row_selection": {
             "mode": ("subset" if subset is not None
                      else "limit" if limit else "full"),
-            "limit": (int(limit) if limit else None)},
+            "limit": (int(limit) if limit else None),
+            # **어느 조건을 골랐는가** — 개수·모드만으로는 다른 표본이 같은
+            # 승인으로 접힌다
+            "subset_sha256": (None if subset is None else _h.sha256(
+                "\n".join(sorted(str(x) for x in subset)).encode("utf-8")
+            ).hexdigest()[:16])},
         # `in_digest` 는 여기서 만들지 않는다 — 계획이 정하는 축이고
         # `_assert_fit_authorized()` 가 선언에서 읽어 채운다.
         "in": leg_out_key(in_dir),
@@ -578,14 +623,19 @@ def _assert_fit_input_is_authorized(claim, live_fit: dict, in_dir) -> None:
 
     if claim is None:
         return                                   # smoke namespace — 계획 밖이다
-    curves = _P(in_dir) / "curves.parquet"
-    if not curves.is_file():
-        raise PreserveError(
-            "plan", f"fit 이 읽을 곡선이 없다: {curves}")
-    got = _h.sha256(curves.read_bytes()).hexdigest()
+    from tools.preserve import PHASE_INPUT_KEYS
+
+    got_map, names = {}, ("curves.parquet", "curves_manifest.yaml",
+                          "curves_manifest_start.yaml")
+    for key, name in zip(PHASE_INPUT_KEYS, names):
+        f = _P(in_dir) / name
+        if not f.is_file():
+            raise PreserveError("plan", f"fit 이 읽을 입력이 없다: {f}")
+        got_map[key] = _h.sha256(f.read_bytes()).hexdigest()
+    got = got_map["curves_sha256"]
     declared = live_fit["in_digest"]
     if declared is None:
-        assert_phase_input_binding(claim, got)
+        assert_phase_input_binding(claim, got_map)
         return
     if declared != got:
         raise PreserveError(
@@ -676,7 +726,8 @@ def run_fit(in_dir, out_dir, obj_cfg: dict, objectives: dict, bounds: dict,
     _live = live_fit_axis(objectives, obj_cfg, bounds, bounds_preset,
                           n_restarts, use_noisy, limit, subset, reference,
                           warm_start, adaptive, method, halfcell_method,
-                          halfcell_kw, in_dir, out_dir)
+                          halfcell_kw, in_dir, out_dir,
+                          base_config=base_config)
     claim, _fit_axis = _assert_fit_authorized(_live, out_dir, leg=leg,
                                               token_file=token_file)
     _assert_fit_input_is_authorized(claim, _fit_axis, in_dir)

@@ -94,7 +94,7 @@ fit_axis = live_fit_axis(
     objectives, ocfg, fcfg["bounds_presets"]["expanded"], "expanded",
     int(fcfg.get("n_restarts", 5)), True, None, None, "grid", True, True,
     str(fcfg.get("method", "Nelder-Mead")), "ocp", None,
-    root / out_rel, root / out_rel)
+    root / out_rel, root / out_rel, base_config="configs/base.yaml")
 fit_axis["in_digest"] = None      # 이 다리의 grid 가 입력을 만든다 (49차 P0-5)
 
 spec = leg_run_spec(leg, grid_axis, fit_axis)
@@ -248,14 +248,22 @@ def test_grid_then_fit_then_finalize_completes_across_processes(tree):
     #   ②-d ★ 49차 P0-5 — grid 가 만든 것이 **아닌** 곡선은 읽지 못한다.
     #        경로만 승인하면 같은 이름 아래 다른 바이트가 들어와도 fit 이
     #        끝까지 성공한다 — 그 결과는 계획이 승인한 실행의 산물이 아니다.
-    curves = root / _OUT_REL / "curves.parquet"
-    keep = curves.read_bytes()
-    curves.write_bytes(keep + b"\x00")
-    swapped = _run(root, "--mode", "fit", "--leg", _LEG, "--in", _OUT_REL,
-                   "--objective", "pocv", "--nproc", "2", expect_rc=1)
-    assert "grid 가 만든 것이 아니다" in (swapped.stdout + swapped.stderr), (
-        swapped.stdout[-2000:] + swapped.stderr[-2000:])
-    curves.write_bytes(keep)
+    #        ★ 50차 — parquet 만이 아니라 **입력 묶음 전체**가 결속된다.
+    #        49차는 `curves.parquet` 하나만 봤으므로 producer 기록을 갈아 끼울
+    #        수 있었다 (리뷰어 반례: 승인한 A 대신 유효한 package B 가
+    #        계산·게시됐다).
+    for name in ("curves.parquet", "curves_manifest.yaml",
+                 "curves_manifest_start.yaml"):
+        f = root / _OUT_REL / name
+        keep = f.read_bytes()
+        f.write_bytes(keep + (b"\x00" if name.endswith(".parquet")
+                              else "\n# 다른 바이트\n".encode("utf-8")))
+        swapped = _run(root, "--mode", "fit", "--leg", _LEG, "--in", _OUT_REL,
+                       "--objective", "pocv", "--nproc", "2", expect_rc=1)
+        assert "grid 가 만든 것이 아니다" in (swapped.stdout + swapped.stderr), (
+            f"{name} 을 갈아 끼웠는데 fit 이 그대로 돌았다\n"
+            + (swapped.stdout[-1500:] + swapped.stderr[-1500:]))
+        f.write_bytes(keep)
 
     # ── ③ fit process — 넘겨받은 증명으로 **같은 실행**에 붙는다
     f = _run(root, "--mode", "fit", "--leg", _LEG, "--in", _OUT_REL,

@@ -4047,8 +4047,16 @@ def assert_planned_leg(leg_id: str, source_digest: str, ledger=None,
 #:   않는다. 승인은 **사람이 고른 것**을 담고, 런타임 값은 실행 서명이 담는다.
 LEG_SPEC_GRID_KEYS = ("config_digest", "condition_ids_sha256",
                       "n_conditions", "out")
+#: ★ 50차 P0 — 49차 축이 셋을 빠뜨렸다 (리뷰어 반례):
+#:   `base_config_digest`      재고 분배 상수. 축 자체가 없었다.
+#:   `halfcell_cache_sha256`   기준 캐시의 **바이트**. recipe(method+kw)만
+#:                             담겨 있어서, 같은 recipe 로 만든 다른 캐시를
+#:                             놓으면 승인 digest 가 그대로였다 — 승인한 A 대신
+#:                             유효한 B 가 계산·게시됐다.
+#:   `row_selection.subset_sha256`  **어느 조건을 골랐는가** (개수·모드가 아니라).
 LEG_SPEC_FIT_KEYS = ("config_digest", "objective_order", "reference",
-                     "halfcell_recipe", "bounds_preset", "bounds_digest",
+                     "halfcell_recipe", "halfcell_cache_sha256",
+                     "base_config_digest", "bounds_preset", "bounds_digest",
                      "optimizer", "use_noisy", "row_selection",
                      "in", "in_digest", "out")
 
@@ -4056,7 +4064,7 @@ LEG_SPEC_FIT_KEYS = ("config_digest", "objective_order", "reference",
 #: 승인 밖으로 나간다 (`n_restarts` 를 지우면 그 축이 사라지는 것과 같다).
 LEG_SPEC_OPTIMIZER_KEYS = ("method", "n_restarts", "adaptive", "warm_start")
 LEG_SPEC_HALFCELL_KEYS = ("method", "kw")
-LEG_SPEC_SELECTION_KEYS = ("mode", "limit")
+LEG_SPEC_SELECTION_KEYS = ("mode", "limit", "subset_sha256")
 LEG_SPEC_SELECTION_MODES = ("full", "limit", "subset")
 
 
@@ -4117,7 +4125,14 @@ def leg_run_spec(leg_id: str, grid: dict, fit: dict) -> dict:
     return spec
 
 
-def assert_phase_input_binding(claim, curves_sha256: str) -> None:
+#: grid 가 만들어 fit 이 읽는 **모든** 입력. 49차는 `curves_sha256` 하나만
+#: 결속했으므로 producer 기록(`curves_manifest*.yaml`)을 갈아 끼울 수 있었다 —
+#: fit 은 그것도 봉인해 읽고 서명에 넣는다.
+PHASE_INPUT_KEYS = ("curves_sha256", "curves_manifest_sha256",
+                    "curves_manifest_start_sha256")
+
+
+def assert_phase_input_binding(claim, inputs: dict) -> None:
     """fit 이 읽는 곡선이 **이 claim 의 grid 가 만든 것**인가 (49차 P0-5).
 
     계획이 `fit.in_digest: null` 이라고 적었다는 것은 "이 다리의 grid 가 그
@@ -4137,18 +4152,25 @@ def assert_phase_input_binding(claim, curves_sha256: str) -> None:
             "계획이 `fit.in_digest: null` 이라 이 다리의 grid 가 입력을 만든다고 "
             "선언했는데, 그 claim 에 grid phase receipt 가 없다 — 대조할 정본이 "
             "없으므로 fit 을 시작할 수 없다 (grid 를 먼저 돌리라)")
-    sealed = rec.get("curves_sha256")
-    if not _is_hex64(sealed):
+    bad = []
+    for key in PHASE_INPUT_KEYS:
+        sealed, got = rec.get(key), inputs.get(key)
+        if not _is_hex64(sealed):
+            raise PreserveError(
+                "plan",
+                f"grid phase receipt 의 `{key}` 가 hex64 가 아니다: {sealed!r} "
+                "— 입력을 결속할 수 없다")
+        if not _is_hex64(got):
+            raise PreserveError(
+                "plan", f"지금 읽는 입력의 `{key}` 가 hex64 가 아니다: {got!r}")
+        if not secrets.compare_digest(str(sealed), str(got)):
+            bad.append(f"{key}: grid {str(sealed)[:16]} ≠ 지금 {str(got)[:16]}")
+    if bad:
         raise PreserveError(
             "plan",
-            f"grid phase receipt 의 `curves_sha256` 이 hex64 가 아니다: "
-            f"{sealed!r} — 입력을 결속할 수 없다")
-    if not secrets.compare_digest(str(sealed), str(curves_sha256)):
-        raise PreserveError(
-            "plan",
-            f"fit 이 읽는 곡선이 이 claim 의 grid 가 만든 것이 아니다 "
-            f"(grid {str(sealed)[:16]} ≠ 지금 {str(curves_sha256)[:16]}) — "
-            "그러면 이 fit 의 결과는 계획이 승인한 실행의 산물이 아니다")
+            "fit 이 읽는 입력이 이 claim 의 grid 가 만든 것이 아니다 — 그러면 이 "
+            "fit 의 결과는 계획이 승인한 실행의 산물이 아니다:\n  "
+            + "\n  ".join(bad))
 
 
 def declared_leg_run_spec(leg_id: str, ledger=None) -> dict:
@@ -4274,7 +4296,23 @@ class LegClaim:
         #   `finalize_leg()` 이 "phase 가 남았다" 며 거부하고, 이미 끝난 10시간
         #   계산을 다시 돌리게 된다.
         with _ledger_lock(self.path):
+            # ★ 50차 P0 — **쓰는 지점**이 소유 증명을 확인한다. 49차는 자격
+            #   검사가 `resume_claim()` 에만 있었고, 생성자는 언제든 부를 수
+            #   있으므로 공개 `attempt_id` 만 읽어 만든 claim 객체가 그대로
+            #   phase 를 기록했다 (리뷰어 실측). 읽기 함수에 둔 검사는 검사가
+            #   아니다 — 검사는 쓰기 옆에 있어야 한다.
+            if not self.path.is_file():
+                raise PreserveError(
+                    "plan",
+                    f"{self.leg_id!r} 의 claim 이 이미 닫혔다 ({self.path}) — "
+                    "닫힌 실행에는 phase 를 쓸 수 없다 (부활 금지)")
             rec = self._read()
+            if not secrets.compare_digest(_token_verifier(self._token),
+                                          str(rec["attempt_verifier"])):
+                raise PreserveError(
+                    "plan",
+                    f"{self.leg_id!r} 의 claim 소유 증명이 맞지 않는다 — 이 "
+                    "실행은 phase 를 기록할 권한이 없다")
             if rec["attempt_id"] != self.attempt_id:
                 raise PreserveError(
                     "plan", f"claim 이 다른 attempt 로 바뀌었다 "
@@ -4404,7 +4442,8 @@ def _mark_plan_running(leg_id: str, ledger=None) -> None:
 
 
 def claim_planned_leg(leg_id: str, run_spec: dict, source_digest: str,
-                      ledger=None, claims_root=None) -> LegClaim:
+                      ledger=None, claims_root=None,
+                      token: str | None = None) -> LegClaim:
     """실행 권한을 **원자적으로 하나만** 발급한다 (47차 P0-1 · P0-2).
 
     46차 `assert_planned_leg()` 는 read-only predicate 였다. 같은 row 로 몇
@@ -4434,7 +4473,9 @@ def claim_planned_leg(leg_id: str, run_spec: dict, source_digest: str,
     path = _claim_path(leg_id, claims_root)
     path.parent.mkdir(parents=True, exist_ok=True)
     attempt_id = uuid.uuid4().hex
-    token = _new_token()
+    # ★ 50차 P0 — token 을 **밖에서** 받을 수 있다. `open_leg_run()` 이 소유
+    #   증명 파일을 먼저 굳히고 그 token 으로 claim 을 만들기 위해서다 (아래).
+    token = token or _new_token()
     rec = {"leg_id": leg_id, "cohort_id": e["cohort_id"],
            "attempt_id": attempt_id, "attempt_verifier": _token_verifier(token),
            "run_spec_digest": want, "source_digest": source_digest,
@@ -4601,16 +4642,27 @@ def open_leg_run(leg_id: str, run_spec: dict, source_digest: str, token_file,
     발급 자체는 `claim_planned_leg()` 이다 — 계획 대조·원자적 `O_EXCL`·원장
     `running` 전이가 전부 거기 있다. 여기서 더하는 것은 **전달 경로** 하나다.
     """
-    claim = claim_planned_leg(leg_id, run_spec, source_digest, ledger=ledger,
-                              claims_root=claims_root)
+    # ★ 50차 P0 — **순서가 뒤집혀 있었다.** 49차는 claim 을 먼저 굳히고 token 을
+    #   나중에 썼다. 그 사이에 죽으면 아무도 갖고 있지 않은 verifier 만 남고
+    #   계획은 `running` 이다 — 이어받을 수도 되돌릴 수도 닫을 수도 없다
+    #   (리뷰어 실측). crash 창이 "정상 경로" 안에 있으므로 운영 사고 하나에
+    #   다리 하나를 잃는 설계였다.
+    #
+    #   token 을 먼저 굳히면 그 상태가 **표현 불가능**해진다: claim 이 있는
+    #   모든 시점에 그 claim 의 소유 증명도 디스크에 있다. 반대로 token 만
+    #   남는 것은 무해하다 — 가리키는 claim 이 없으므로 아무 권한도 아니고,
+    #   다음 발급이 덮어쓴다.
+    token = _new_token()
+    write_token_file(token_file, token)
     try:
-        write_token_file(token_file, claim.token)
+        return claim_planned_leg(leg_id, run_spec, source_digest, ledger=ledger,
+                                 claims_root=claims_root, token=token)
     except BaseException:
-        # 넘길 수 없는 실행권은 잡아 둘 이유가 없다 — 되돌린다. 그러지 않으면
-        # 계획이 `running` 인 채 아무도 못 이어받는 상태로 굳는다.
-        _abandon_claim(claim, ledger=ledger)
+        # 되돌릴 때도 같은 불변식을 지킨다: **claim 이 남았으면 token 도
+        # 남긴다.** 실패했다고 소유 증명부터 지우면 그것이 곧 갇힌 다리다.
+        if not _claim_path(leg_id, claims_root).is_file():
+            Path(token_file).unlink(missing_ok=True)
         raise
-    return claim
 
 
 def attach_leg_run(leg_id: str, token_file, ledger=None,
@@ -4673,10 +4725,16 @@ def release_leg_run(leg_id: str, token=None, token_file=None, ledger=None,
 
 
 def _abandon_claim(claim: LegClaim, ledger=None) -> None:
-    """발급을 되돌린다 — claim 파일을 지우고 계획을 `planned` 로 돌린다."""
+    """발급을 되돌린다 — claim 파일을 지우고 계획을 `planned` 로 돌린다.
+
+    ★ 50차 P0 — 삭제를 claim 임계 구역 **안**에서 한다 (정본 순서 claim →
+      원장). 49차는 lock 밖에서 지웠으므로 늦은 `phase_done()` 이 파일을
+      되살릴 수 있었다.
+    """
     import yaml
 
-    claim.path.unlink(missing_ok=True)
+    with _ledger_lock(claim.path):
+        claim.path.unlink(missing_ok=True)
     path = Path(ledger or DEFAULT_LEDGER)
     with _ledger_lock(path):
         doc = yaml.safe_load(path.read_text(encoding="utf-8")) or {}
@@ -4984,7 +5042,11 @@ def finalize_leg(leg_id: str, evidence: dict, ledger=None,
             # `_already_finalized()` 가 **원장에서** 그 사실을 알아낸다.
             _atomic_write_text(path, yaml.safe_dump(doc, allow_unicode=True,
                                                     sort_keys=False))
-    claim.path.unlink(missing_ok=True)
+        # ★ 50차 P0 — claim 삭제도 **임계 구역 안**이다. 49차는 lock 을 놓은
+        #   뒤에 지웠고, 그래서 그 사이에 들어온 늦은 `phase_done()` 이 파일을
+        #   되살렸다 — 계획은 executed 인데 실행 중인 claim 이 있는, 어느
+        #   검사도 예상하지 않는 상태가 만들어진다 (리뷰어 실측).
+        claim.path.unlink(missing_ok=True)
     # 실행권이 닫혔으므로 소유 증명도 남길 이유가 없다 — 쓸모를 잃은
     # credential 을 디스크에 두는 것은 그 자체가 노출면이다.
     if token_file is not None:

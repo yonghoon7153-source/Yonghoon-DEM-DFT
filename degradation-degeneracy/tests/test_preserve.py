@@ -6952,12 +6952,15 @@ _F49 = {"config_digest": "c" * 16,
         "objective_order": ["pocv", "pocv_dvdq"],
         "reference": "grid",
         "halfcell_recipe": {"method": "ocp", "kw": {}},
+        "halfcell_cache_sha256": None,
+        "base_config_digest": "e" * 16,
         "bounds_preset": "expanded",
         "bounds_digest": "d" * 16,
         "optimizer": {"method": "Nelder-Mead", "n_restarts": 5,
                       "adaptive": True, "warm_start": True},
         "use_noisy": True,
-        "row_selection": {"mode": "full", "limit": None},
+        "row_selection": {"mode": "full", "limit": None,
+                          "subset_sha256": None},
         "in": "results/v4",
         "in_digest": None,
         "out": "results/v4"}
@@ -6982,7 +6985,10 @@ def test_the_fit_axis_seals_every_intent_that_changes_the_answer():
             ("warm start", dict(_F49, optimizer=dict(
                 _F49["optimizer"], warm_start=False))),
             ("noise 사용", dict(_F49, use_noisy=False)),
-            ("행 선택", dict(_F49, row_selection={"mode": "limit", "limit": 8})),
+            ("행 선택", dict(_F49, row_selection={"mode": "limit", "limit": 8,
+                                                "subset_sha256": None})),
+            ("기준 캐시 바이트", dict(_F49, halfcell_cache_sha256="a" * 64)),
+            ("base config", dict(_F49, base_config_digest="0" * 16)),
             ("입력 위치", dict(_F49, **{"in": "results/elsewhere"})),
             ("산출 위치", dict(_F49, out="results/elsewhere"))):
         assert run_spec_digest(leg_run_spec("L", _G49, ff)) != base, (
@@ -7044,13 +7050,16 @@ def test_fit_refuses_curves_that_its_grid_phase_did_not_produce(tmp_path):
     open_leg_run("L", _RUN_SPEC_L, "0123456789abcdef", tok,
                  ledger=led, claims_root=claims)
     c = attach_leg_run("L", tok, ledger=led, claims_root=claims)
-    c.phase_done("grid", {"out": "results/x", "curves_sha256": "a" * 64})
+    sealed = {"curves_sha256": "a" * 64,
+              "curves_manifest_sha256": "b" * 64,
+              "curves_manifest_start_sha256": "c" * 64}
+    c.phase_done("grid", dict(sealed, out="results/x"))
 
     assert c.phase_receipt("grid")["curves_sha256"] == "a" * 64
-    assert_phase_input_binding(c, "a" * 64)          # 같은 바이트 — 통과
+    assert_phase_input_binding(c, dict(sealed))      # 같은 바이트 — 통과
 
     with pytest.raises(PreserveError) as ei:
-        assert_phase_input_binding(c, "b" * 64)
+        assert_phase_input_binding(c, dict(sealed, curves_sha256="f" * 64))
     assert "grid" in str(ei.value), str(ei.value)
 
 
@@ -7066,7 +7075,7 @@ def test_fit_refuses_when_its_grid_phase_is_missing(tmp_path):
                  ledger=led, claims_root=claims)
     c = attach_leg_run("L", tok, ledger=led, claims_root=claims)
     with pytest.raises(PreserveError):
-        assert_phase_input_binding(c, "a" * 64)
+        assert_phase_input_binding(c, {"curves_sha256": "a" * 64})
 
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -7286,3 +7295,207 @@ def test_a_report_written_inside_the_smoke_namespace_is_not_promotion(tmp_path):
     with pytest.raises(PreserveError) as ei:
         assert_not_smoke_provenance([src], "보고서", dest="docs/RESULTS.md")
     assert SMOKE_REFUSAL in str(ei.value)
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# 50차 — 49차 게이트 리뷰가 실행권 lifecycle 에서 찾은 셋
+#
+# 49차는 "소유 증명 없이는 이어받지 못한다" 를 `resume_claim()` 에 넣었다. 그런데
+# **쓰는 지점**은 그 검사를 하지 않았다. 자격을 읽기 함수에만 두면, 그 함수를
+# 지나지 않고 객체를 만드는 것만으로 우회된다 — 이 저장소가 반복해서 고쳐 온
+# "검사와 사용이 다른 자리에 있다" 의 또 다른 판이다.
+# ─────────────────────────────────────────────────────────────────────────────
+
+def _live_ledger(tmp_path):
+    """계획 하나짜리 살아 있는 원장 + claims root."""
+    return _lifecycle_ledger(tmp_path), tmp_path / "claims", tmp_path / "L.token"
+
+
+def test_a_forged_claim_object_cannot_write_a_phase(tmp_path):
+    """★ 50차 P0 — phase 를 **쓰는 지점**이 소유 증명을 확인한다.
+
+    49차 반례(리뷰어 실측): claim 파일에서 공개 `attempt_id` 를 읽어
+    `LegClaim(..., token="0"*32)` 를 직접 만들면 `phase_done()` 이 그대로
+    기록했다. 자격 검사가 `resume_claim()` 에만 있었기 때문이다 — 생성자는
+    언제든 부를 수 있으므로 읽기 함수에 둔 검사는 검사가 아니다.
+    """
+    import json as _j
+
+    from tools import preserve as P
+
+    led, claims, tok = _live_ledger(tmp_path)
+    P.open_leg_run("L", _RUN_SPEC_L, "0123456789abcdef", tok,
+                   ledger=led, claims_root=claims)
+    rec = _j.loads((claims / "L.claim").read_text(encoding="utf-8"))
+    assert "attempt_verifier" in rec and rec.get("attempt_id")
+
+    forged = P.LegClaim("L", rec["cohort_id"], rec["attempt_id"],
+                        rec["run_spec_digest"], rec["source_digest"],
+                        claims / "L.claim", token="0" * 32)
+    with pytest.raises(P.PreserveError, match="소유 증명"):
+        forged.phase_done("grid", {"공격자가": "썼다"})
+    assert not (_j.loads((claims / "L.claim").read_text(encoding="utf-8"))
+                .get("phases")), "거부하면서 phase 를 남겼다"
+
+
+def test_a_crash_between_the_claim_and_the_token_leaves_nothing_stranded(tmp_path):
+    """★ 50차 P0 — 발급 순서가 뒤집혀 있었다.
+
+    49차 반례: `open_leg_run()` 이 claim 을 먼저 굳히고 token 을 나중에 썼다.
+    그 사이에 죽으면 **아무도 갖고 있지 않은** verifier 만 남고 계획은
+    `running` 이다 — 이어받을 수도, 되돌릴 수도, 닫을 수도 없다. crash 창은
+    "정상 경로" 안에 있으므로 이것은 운영 사고 하나에 다리 하나를 잃는 설계다.
+
+    순서를 뒤집으면 그 상태가 **표현 불가능**해진다: token 이 먼저 있으므로,
+    claim 이 있는 모든 시점에 그 claim 의 소유 증명도 디스크에 있다.
+    """
+    from tools import preserve as P
+
+    led, claims, tok = _live_ledger(tmp_path)
+    boom = RuntimeError("claim 을 굳힌 직후 죽었다")
+    real = P.claim_planned_leg
+
+    def _die(*a, **k):
+        real(*a, **k)                      # claim 파일을 실제로 굳히고
+        raise boom                         # 그 다음 죽는다
+
+    P.claim_planned_leg = _die
+    try:
+        with pytest.raises(RuntimeError):
+            P.open_leg_run("L", _RUN_SPEC_L, "0123456789abcdef", tok,
+                           ledger=led, claims_root=claims)
+    finally:
+        P.claim_planned_leg = real
+
+    # 남은 상태가 무엇이든 **회수 가능**해야 한다: claim 이 남았다면 그 소유
+    # 증명도 남아 있어야 하고, 그러면 되돌릴 수 있다.
+    if (claims / "L.claim").is_file():
+        assert tok.is_file(), (
+            "claim 은 남았는데 소유 증명이 없다 — 이어받을 수도 되돌릴 수도 "
+            "닫을 수도 없는 다리가 생겼다")
+        P.release_leg_run("L", token_file=tok, ledger=led, claims_root=claims)
+    assert P.planned_index(ledger=led)["L"]["status"] == "planned"
+    P.open_leg_run("L", _RUN_SPEC_L, "0123456789abcdef", tok,
+                   ledger=led, claims_root=claims)     # 다시 시작된다
+
+
+def test_a_closed_run_cannot_be_resurrected_by_a_late_phase(tmp_path):
+    """★ 50차 P0 — 닫힌 실행에는 아무 것도 쓸 수 없다.
+
+    49차 반례: `finalize_leg()` 이 claim 파일을 **임계 구역 밖에서** 지웠다.
+    그래서 이미 닫힌 뒤에 살아 있던 `LegClaim` 이 `phase_done()` 을 부르면
+    파일이 되살아났다 — 계획은 `executed` 인데 실행 중인 claim 이 있는,
+    어느 검사도 예상하지 않는 상태가 만들어진다. `release_leg_run()` 도 같다.
+    """
+    from tools import preserve as P
+
+    led, claims, tok = _live_ledger(tmp_path)
+    P.open_leg_run("L", _RUN_SPEC_L, "0123456789abcdef", tok,
+                   ledger=led, claims_root=claims)
+    live = P.attach_leg_run("L", tok, ledger=led, claims_root=claims)
+    for ph in ("grid", "fit"):
+        live.phase_done(ph, {"ok": True})
+    P.finalize_leg("L", {"leg_source_digest": "0123456789abcdef",
+                         "cohorts": ["gA"]},
+                   ledger=led, claims_root=claims, token_file=tok)
+    assert not (claims / "L.claim").exists()
+
+    with pytest.raises(P.PreserveError):
+        live.phase_done("grid", {"늦게": "왔다"})
+    assert not (claims / "L.claim").exists(), "닫힌 실행의 claim 이 부활했다"
+
+
+def test_a_released_run_cannot_be_resurrected_by_a_late_phase(tmp_path):
+    """되돌린 실행도 같다 — 계획은 `planned` 인데 claim 이 살아나면 안 된다."""
+    from tools import preserve as P
+
+    led, claims, tok = _live_ledger(tmp_path)
+    P.open_leg_run("L", _RUN_SPEC_L, "0123456789abcdef", tok,
+                   ledger=led, claims_root=claims)
+    live = P.attach_leg_run("L", tok, ledger=led, claims_root=claims)
+    live.phase_done("grid", {"ok": True})
+    P.release_leg_run("L", token_file=tok, ledger=led, claims_root=claims)
+
+    with pytest.raises(P.PreserveError):
+        live.phase_done("fit", {"늦게": "왔다"})
+    assert not (claims / "L.claim").exists(), "되돌린 실행의 claim 이 부활했다"
+    assert P.planned_index(ledger=led)["L"]["status"] == "planned"
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# 50차 P0 — 승인 축이 결과를 바꾸는 축 셋을 빠뜨렸다 (49차 반례)
+#
+#   · `row_selection` 이 mode/limit 만 담아 **어느 조건을 골랐는지**가 빠졌다
+#   · `base_config`(재고 분배 상수)는 축 자체가 없었다
+#   · half-cell 기준 캐시의 **바이트**가 빠졌다 — recipe(method+kw)만 담겼으므로
+#     같은 recipe 로 만든 다른 캐시를 놓으면 승인 digest 가 그대로다
+#
+# 셋 다 "경로·이름은 같은데 계산이 달라진다" 형태다. 승인이 그것을 못 보면
+# 승인한 A 대신 유효한 B 가 돌아도 gate 는 통과한다.
+# ─────────────────────────────────────────────────────────────────────────────
+
+def test_the_fit_axis_seals_the_row_selection_content(tmp_path):
+    """어느 조건을 골랐는지가 digest 를 움직인다 (개수·모드만이 아니라)."""
+    from tools.preserve import leg_run_spec, run_spec_digest, LEG_SPEC_SELECTION_KEYS
+
+    assert "subset_sha256" in LEG_SPEC_SELECTION_KEYS, (
+        "행 선택의 **내용**이 승인 밖이다 — 다른 표본으로 돌려도 같은 digest 다")
+    a = dict(_F49, row_selection={"mode": "subset", "limit": None,
+                                  "subset_sha256": "a" * 16})
+    b = dict(_F49, row_selection={"mode": "subset", "limit": None,
+                                  "subset_sha256": "b" * 16})
+    assert run_spec_digest(leg_run_spec("L", _G49, a)) \
+        != run_spec_digest(leg_run_spec("L", _G49, b))
+
+
+@pytest.mark.parametrize("axis,alt", [
+    ("base_config_digest", "0" * 16),
+    ("halfcell_cache_sha256", "0" * 64),
+])
+def test_the_fit_axis_seals_the_input_content_axes(axis, alt):
+    """★ 50차 P0 — 입력 **내용**이 승인에 들어간다.
+
+    49차 반례: production fit 이 승인한 A 대신 교체된 유효 package B 를
+    계산·게시했다. recipe·경로만 봉인하면 같은 이름 아래 다른 바이트가 들어와도
+    승인이 그대로이기 때문이다.
+    """
+    from tools.preserve import (leg_run_spec, run_spec_digest,
+                                LEG_SPEC_FIT_KEYS)
+
+    assert axis in LEG_SPEC_FIT_KEYS, f"{axis} 가 승인 축에 없다"
+    base = run_spec_digest(leg_run_spec("L", _G49, _F49))
+    moved = run_spec_digest(leg_run_spec("L", _G49, dict(_F49, **{axis: alt})))
+    assert moved != base, f"{axis} 를 바꿨는데 승인 digest 가 그대로다"
+
+
+def test_the_grid_receipt_binds_every_curve_input_not_just_the_parquet(tmp_path):
+    """★ 50차 P0 — fit 이 읽는 것은 `curves.parquet` 하나가 아니다.
+
+    producer 기록(`curves_manifest.yaml`·`curves_manifest_start.yaml`)도 fit 이
+    봉인해 읽는다. 결속이 parquet 하나만 덮으면 나머지를 갈아 끼울 수 있다.
+    """
+    from tools.preserve import (open_leg_run, attach_leg_run,
+                                assert_phase_input_binding, PHASE_INPUT_KEYS,
+                                PreserveError)
+
+    # ★ 50차 — 이름을 **글자로** 적는다. `PHASE_INPUT_KEYS` 에서 유도하면
+    #   그 상수를 좁히는 변이에 시험이 함께 좁아져 초록으로 남는다 (실측:
+    #   `PHASE_INPUT_KEYS = ("curves_sha256",)` 변이가 안 물었다). 시험이
+    #   대상 상수를 읽으면 그 상수를 고정하지 못한다.
+    want = ("curves_sha256", "curves_manifest_sha256",
+            "curves_manifest_start_sha256")
+    assert set(PHASE_INPUT_KEYS) == set(want), (
+        f"결속 대상이 바뀌었다: {sorted(PHASE_INPUT_KEYS)} — fit 이 읽는 입력이 "
+        "늘거나 줄었다면 그 사실이 여기 보여야 한다")
+
+    led, claims, tok = _live_ledger(tmp_path)
+    open_leg_run("L", _RUN_SPEC_L, "0123456789abcdef", tok,
+                 ledger=led, claims_root=claims)
+    c = attach_leg_run("L", tok, ledger=led, claims_root=claims)
+    sealed = {k: f"{i}" * 64 for i, k in enumerate(want)}
+    c.phase_done("grid", dict(sealed, out="results/x"))
+
+    assert_phase_input_binding(c, dict(sealed))            # 같은 바이트 — 통과
+    for k in want:
+        with pytest.raises(PreserveError):
+            assert_phase_input_binding(c, dict(sealed, **{k: "f" * 64}))

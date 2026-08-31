@@ -1,5 +1,5 @@
 {
-  "at": "2026-08-28T18:03:12Z",
+  "at": "2026-08-31T17:59:23Z",
   "scenarios": {
     "caller-stage-safe-read": {
       "bit": true,
@@ -8,10 +8,10 @@
       "ran": true,
       "sites": 1
     },
-    "closure-unresolved-attr-is-fail-closed": {
+    "closure-refuses-reading-a-docstring": {
       "bit": true,
       "class": "executable",
-      "kexpr": "unresolved_producer_module_reference_is_fail_closed",
+      "kexpr": "reading_a_docstring_inside_the_closure_is_fail_closed",
       "ran": true,
       "sites": 1
     },
@@ -29,31 +29,31 @@
       "ran": false,
       "sites": 1
     },
-    "lifecycle-head-anchors-the-tip": {
+    "missing-journal-with-a-live-anchor": {
       "bit": true,
       "class": "executable",
-      "kexpr": "the_lifecycle_journal_is_a_hash_chain",
+      "kexpr": "deleting_the_journal_does_not_erase_the_freeze",
       "ran": true,
       "sites": 1
     },
-    "plan-index-exact-equality": {
+    "phase-write-checks-the-credential": {
       "bit": true,
       "class": "executable",
-      "kexpr": "phantom_executed_plan_without_an_execution_record",
+      "kexpr": "forged_claim_object_cannot_write_a_phase",
       "ran": true,
       "sites": 1
     },
-    "pre-write-authority": {
+    "pointer-loss-is-terminal": {
       "bit": true,
       "class": "executable",
-      "kexpr": "frozen_cohort_publish_writes_nothing_before_it_refuses",
+      "kexpr": "losing_the_pointer_of_a_cohort",
       "ran": true,
       "sites": 1
     },
-    "producer-crossing-is-fail-closed": {
+    "producer-crosses-into-scoring": {
       "bit": true,
       "class": "executable",
-      "kexpr": "breaking_the_crossing_into_src_scoring_is_fail_closed",
+      "kexpr": "producer_digest_crosses_into_src_scoring",
       "ran": true,
       "sites": 1
     },

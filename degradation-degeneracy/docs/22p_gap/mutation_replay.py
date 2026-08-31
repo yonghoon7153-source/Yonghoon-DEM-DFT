@@ -416,14 +416,15 @@ MUTANTS = [
      "finalize_writes_a_complete_contract_status_tuple"),
     ("fit-axis-is-the-real-policy", PRESERVE,
      'LEG_SPEC_FIT_KEYS = ("config_digest", "objective_order", "reference",\n'
-     '                     "halfcell_recipe", "bounds_preset", "bounds_digest",\n'
+     '                     "halfcell_recipe", "halfcell_cache_sha256",\n'
+     '                     "base_config_digest", "bounds_preset", "bounds_digest",\n'
      '                     "optimizer", "use_noisy", "row_selection",\n'
      '                     "in", "in_digest", "out")',
      'LEG_SPEC_FIT_KEYS = ("config_digest", "objective_order", "out")',
      "fit_axis_seals_every_intent_that_changes_the_answer"),
     ("phase-input-binding", PRESERVE,
-     "    if not secrets.compare_digest(str(sealed), str(curves_sha256)):",
-     "    if False:",
+     "        if not secrets.compare_digest(str(sealed), str(got)):",
+     "        if False:",
      "fit_refuses_curves_that_its_grid_phase_did_not_produce"),
     ("phase-input-binding-needs-a-receipt", PRESERVE,
      "    rec = claim.phase_receipt(\"grid\")\n"
@@ -483,6 +484,72 @@ MUTANTS = [
      "    if sys.version_info[:2] not in SUPPORTED_PYTHON:",
      "    if False:",
      None),          # 아래 주석 참조
+    # ── 50차 (게이트 49차 반증 조건) ──────────────────────────────────────
+    ("phase-write-checks-the-credential", PRESERVE,
+     "            if not secrets.compare_digest(_token_verifier(self._token),\n"
+     '                                          str(rec["attempt_verifier"])):',
+     "            if False:",
+     "forged_claim_object_cannot_write_a_phase"),
+    ("phase-write-refuses-a-closed-claim", PRESERVE,
+     "            if not self.path.is_file():\n"
+     "                raise PreserveError(",
+     "            if False:\n"
+     "                raise PreserveError(",
+     "closed_run_cannot_be_resurrected_by_a_late_phase or "
+     "released_run_cannot_be_resurrected_by_a_late_phase"),
+    ("token-is-written-before-the-claim", PRESERVE,
+     "    token = _new_token()\n"
+     "    write_token_file(token_file, token)\n"
+     "    try:\n"
+     "        return claim_planned_leg(leg_id, run_spec, source_digest, ledger=ledger,\n"
+     "                                 claims_root=claims_root, token=token)",
+     "    token = _new_token()\n"
+     "    try:\n"
+     "        claim = claim_planned_leg(leg_id, run_spec, source_digest, ledger=ledger,\n"
+     "                                 claims_root=claims_root, token=token)\n"
+     "        write_token_file(token_file, token)\n"
+     "        return claim",
+     "crash_between_the_claim_and_the_token_leaves_nothing_stranded"),
+    ("fit-axis-seals-the-input-content", PRESERVE,
+     '                     "halfcell_recipe", "halfcell_cache_sha256",\n'
+     '                     "base_config_digest", "bounds_preset", "bounds_digest",',
+     '                     "halfcell_recipe", "bounds_preset", "bounds_digest",',
+     "fit_axis_seals_the_input_content_axes"),
+    ("row-selection-seals-its-content", PRESERVE,
+     'LEG_SPEC_SELECTION_KEYS = ("mode", "limit", "subset_sha256")',
+     'LEG_SPEC_SELECTION_KEYS = ("mode", "limit")',
+     "fit_axis_seals_the_row_selection_content"),
+    ("phase-input-binding-covers-the-package", PRESERVE,
+     'PHASE_INPUT_KEYS = ("curves_sha256", "curves_manifest_sha256",\n'
+     '                    "curves_manifest_start_sha256")',
+     'PHASE_INPUT_KEYS = ("curves_sha256",)',
+     "grid_receipt_binds_every_curve_input_not_just_the_parquet"),
+    ("missing-journal-with-a-live-anchor", RP,
+     "        if _lifecycle_head_path().is_file():\n"
+     "            raise SystemExit(",
+     "        if False:\n"
+     "            raise SystemExit(",
+     "deleting_the_journal_does_not_erase_the_freeze"),
+    ("module-defs-see-tuple-targets", RP,
+     "            for t in node.targets:\n"
+     "                for name in _target_names(t):\n"
+     "                    defs[name] = node",
+     "            for t in node.targets:\n"
+     "                if isinstance(t, ast.Name):\n"
+     "                    defs[t.id] = node",
+     "producer_closure_sees_tuple_targets or "
+     "producer_closure_follows_a_tuple_defined_constant"),
+    ("closure-refuses-reading-a-docstring", RP,
+     '                    "__dict__", "__globals__", "__code__", "__doc__"):',
+     '                    "__dict__", "__globals__", "__code__"):',
+     "reading_a_docstring_inside_the_closure_is_fail_closed"),
+    ("canon-absorbs-the-pep701-empty-piece", RP,
+     "            if isinstance(node, ast.JoinedStr) and f == \"values\" \\\n"
+     "                    and isinstance(v, list):\n"
+     "                v = [x for x in v\n"
+     "                     if not (isinstance(x, ast.Constant) and x.value == \"\")]",
+     "            pass",
+     "canonical_form_agrees_on_every_supported_interpreter"),
 ]
 
 #: 여러 지점을 **함께** 되돌려야 관측되는 변이 (심층 방어라 하나만 지우면
@@ -729,6 +796,13 @@ def _check(name: str, kexpr: str, before: dict, after: dict,
         bad.append(f"{name}: 기대 실패 집합이 선언되지 않았다 "
                    "(`--emit-expect` 로 관측한 값을 EXPECT 에 적어라)")
         return bad, observed
+    # ★ 50차 P1 — **빈 기대 집합**은 "아무 시험도 안 물어야 한다" 는 선언이고,
+    #   그것은 곧 "안 물었다" 다. 실행 가능 변이로 등록해 놓고 그렇게 적으면
+    #   전수 인증이 거짓이 된다 — 관측이 안 되면 `DECLARED_MASKED` 로 신고하라.
+    if not exp["fail"]:
+        bad.append(f"{name}: 기대 실패 집합이 비었다 — 실행 가능 변이는 반드시 "
+                   "무언가를 물어야 한다 (관측 안 되면 신고로 옮겨라)")
+        return bad, observed
     if sorted(failed) != sorted(exp["fail"]):
         bad.append(
             f"{name}: 실패 집합이 선언과 다르다 — 더 빨개짐 "
@@ -876,6 +950,14 @@ EXPECT: dict = {
             "tests/test_docs_lint.py::test_a_dangling_symlink_in_the_caller_stage_never_creates_an_outside_file": "Failed: DID NOT RAISE SystemExit"
         }
     },
+    "canon-absorbs-the-pep701-empty-piece": {
+        "fail": [
+            "tests/test_docs_lint.py::test_the_canonical_form_agrees_on_every_supported_interpreter"
+        ],
+        "witness": {
+            "tests/test_docs_lint.py::test_the_canonical_form_agrees_on_every_supported_interpreter": "AssertionError: 정규형이 지원 선언한 인터프리터에서 golden 과 다르다:"
+        }
+    },
     "children-read-through-dirfd": {
         "fail": [
             "tests/test_docs_lint.py::test_the_generation_reader_holds_a_directory_fd_for_its_children"
@@ -940,6 +1022,14 @@ EXPECT: dict = {
             "tests/test_docs_lint.py::test_dynamic_name_resolution_inside_the_closure_is_fail_closed[getattr(sc, 'add_error_columns')(df)]": "Failed: DID NOT RAISE SystemExit",
             "tests/test_docs_lint.py::test_dynamic_name_resolution_inside_the_closure_is_fail_closed[globals()['add_error_columns'](df)]": "Failed: DID NOT RAISE SystemExit",
             "tests/test_docs_lint.py::test_dynamic_name_resolution_inside_the_closure_is_fail_closed[vars(sc)['add_error_columns'](df)]": "Failed: DID NOT RAISE SystemExit"
+        }
+    },
+    "closure-refuses-reading-a-docstring": {
+        "fail": [
+            "tests/test_docs_lint.py::test_reading_a_docstring_inside_the_closure_is_fail_closed"
+        ],
+        "witness": {
+            "tests/test_docs_lint.py::test_reading_a_docstring_inside_the_closure_is_fail_closed": "Failed: DID NOT RAISE SystemExit"
         }
     },
     "closure-unresolved-attr-is-fail-closed": {
@@ -1027,7 +1117,17 @@ EXPECT: dict = {
             "tests/test_preserve.py::test_the_fit_axis_seals_every_intent_that_changes_the_answer"
         ],
         "witness": {
-            "tests/test_preserve.py::test_the_fit_axis_seals_every_intent_that_changes_the_answer": "tools.preserve.PreserveError: [plan] leg run spec 의 fit 축이 계약과 다르다 — 있어야 ['config_digest', 'objective_order', 'out'], 받은 것 ['bounds_digest', 'bounds_preset', 'config_digest', 'half"
+            "tests/test_preserve.py::test_the_fit_axis_seals_every_intent_that_changes_the_answer": "tools.preserve.PreserveError: [plan] leg run spec 의 fit 축이 계약과 다르다"
+        }
+    },
+    "fit-axis-seals-the-input-content": {
+        "fail": [
+            "tests/test_preserve.py::test_the_fit_axis_seals_the_input_content_axes[base_config_digest-0000000000000000]",
+            "tests/test_preserve.py::test_the_fit_axis_seals_the_input_content_axes[halfcell_cache_sha256-0000000000000000000000000000000000000000000000000000000000000000]"
+        ],
+        "witness": {
+            "tests/test_preserve.py::test_the_fit_axis_seals_the_input_content_axes[base_config_digest-0000000000000000]": "AssertionError: base_config_digest 가 승인 축에 없다",
+            "tests/test_preserve.py::test_the_fit_axis_seals_the_input_content_axes[halfcell_cache_sha256-0000000000000000000000000000000000000000000000000000000000000000]": "AssertionError: halfcell_cache_sha256 가 승인 축에 없다"
         }
     },
     "flock-two-publisher": {
@@ -1138,6 +1238,24 @@ EXPECT: dict = {
             "tests/test_docs_lint.py::test_the_lifecycle_journal_is_a_hash_chain": "Failed: DID NOT RAISE SystemExit"
         }
     },
+    "missing-journal-with-a-live-anchor": {
+        "fail": [
+            "tests/test_docs_lint.py::test_deleting_the_journal_does_not_erase_the_freeze"
+        ],
+        "witness": {
+            "tests/test_docs_lint.py::test_deleting_the_journal_does_not_erase_the_freeze": "Failed: DID NOT RAISE SystemExit"
+        }
+    },
+    "module-defs-see-tuple-targets": {
+        "fail": [
+            "tests/test_docs_lint.py::test_the_producer_closure_follows_a_tuple_defined_constant",
+            "tests/test_docs_lint.py::test_the_producer_closure_sees_tuple_targets"
+        ],
+        "witness": {
+            "tests/test_docs_lint.py::test_the_producer_closure_follows_a_tuple_defined_constant": "AssertionError: tuple 로 정의한 계산 상수를 바꿨는데 producer digest 가 그대로다",
+            "tests/test_docs_lint.py::test_the_producer_closure_sees_tuple_targets": "AssertionError: ['C', 'G']"
+        }
+    },
     "module-gate-before-side-effects": {
         "fail": [
             "tests/test_preserve.py::test_run_grid_calls_the_gate_before_its_first_side_effect"
@@ -1180,12 +1298,38 @@ EXPECT: dict = {
             "tests/test_preserve.py::test_fit_refuses_curves_that_its_grid_phase_did_not_produce": "Failed: DID NOT RAISE PreserveError"
         }
     },
+    "phase-input-binding-covers-the-package": {
+        "fail": [
+            "tests/test_preserve.py::test_the_grid_receipt_binds_every_curve_input_not_just_the_parquet"
+        ],
+        "witness": {
+            "tests/test_preserve.py::test_the_grid_receipt_binds_every_curve_input_not_just_the_parquet": "AssertionError: 결속 대상이 바뀌었다: ['curves_sha256'] — fit 이 읽는 입력이 늘거나 줄었다면 그 사실이 여기 보여야 한다"
+        }
+    },
     "phase-input-binding-needs-a-receipt": {
         "fail": [
             "tests/test_preserve.py::test_fit_refuses_when_its_grid_phase_is_missing"
         ],
         "witness": {
             "tests/test_preserve.py::test_fit_refuses_when_its_grid_phase_is_missing": "AttributeError: 'NoneType' object has no attribute 'get'"
+        }
+    },
+    "phase-write-checks-the-credential": {
+        "fail": [
+            "tests/test_preserve.py::test_a_forged_claim_object_cannot_write_a_phase"
+        ],
+        "witness": {
+            "tests/test_preserve.py::test_a_forged_claim_object_cannot_write_a_phase": "Failed: DID NOT RAISE PreserveError"
+        }
+    },
+    "phase-write-refuses-a-closed-claim": {
+        "fail": [
+            "tests/test_preserve.py::test_a_closed_run_cannot_be_resurrected_by_a_late_phase",
+            "tests/test_preserve.py::test_a_released_run_cannot_be_resurrected_by_a_late_phase"
+        ],
+        "witness": {
+            "tests/test_preserve.py::test_a_closed_run_cannot_be_resurrected_by_a_late_phase": "FileNotFoundError: [Errno 2] No such file or directory: '",
+            "tests/test_preserve.py::test_a_released_run_cannot_be_resurrected_by_a_late_phase": "FileNotFoundError: [Errno 2] No such file or directory: '"
         }
     },
     "pin-is-publication-authority": {
@@ -1438,6 +1582,14 @@ EXPECT: dict = {
             "tests/test_docs_lint.py::test_the_ledger_roster_is_a_set_not_a_multiset": "Failed: DID NOT RAISE SystemExit"
         }
     },
+    "row-selection-seals-its-content": {
+        "fail": [
+            "tests/test_preserve.py::test_the_fit_axis_seals_the_row_selection_content"
+        ],
+        "witness": {
+            "tests/test_preserve.py::test_the_fit_axis_seals_the_row_selection_content": "AssertionError: 행 선택의 **내용**이 승인 밖이다 — 다른 표본으로 돌려도 같은 digest 다"
+        }
+    },
     "seal-exact-types": {
         "fail": [
             "tests/test_docs_lint.py::test_an_omap_and_a_list_of_lists_do_not_share_a_seal"
@@ -1510,6 +1662,14 @@ EXPECT: dict = {
         ],
         "witness": {
             "tests/test_docs_lint.py::test_a_frozen_cohort_cannot_be_thawed_and_published": "Failed: DID NOT RAISE SystemExit"
+        }
+    },
+    "token-is-written-before-the-claim": {
+        "fail": [
+            "tests/test_preserve.py::test_a_crash_between_the_claim_and_the_token_leaves_nothing_stranded"
+        ],
+        "witness": {
+            "tests/test_preserve.py::test_a_crash_between_the_claim_and_the_token_leaves_nothing_stranded": "AssertionError: claim 은 남았는데 소유 증명이 없다 — 이어받을 수도 되돌릴 수도 닫을 수도 없는 다리가 생겼다"
         }
     },
     "trust-boundary-declared": {
@@ -1633,11 +1793,16 @@ def check_preimages(k: str = "") -> int:
     "지점불량" 이 된다. 전수 재생은 비싸므로 그 전에 싸게 훑는다.
     """
     bad = []
-    for name, path, old, _new, kexpr in MUTANTS:
+    for name, path, old, new, kexpr in MUTANTS:
         if k not in name:
             continue
         if kexpr is None:
             continue                       # 신고 — 지점을 요구하지 않는다
+        # ★ 50차 P1 — **아무 것도 안 바꾸는 변이**를 거부한다. `old == new` 면
+        #   시험은 당연히 초록이고, 그것을 "물었다" 로 세면 전수 인증이 거짓이
+        #   된다 (49차 리뷰어 지적). 변이가 아닌 것을 변이로 셀 수 없다.
+        if old == new:
+            bad.append(f"{name:34s} {path.name:20s} 변이가 아무 것도 안 바꾼다")
         c = path.read_text(encoding="utf-8").count(old)
         if c != 1:
             bad.append(f"{name:34s} {path.name:20s} preimage {c}회")
@@ -1645,7 +1810,10 @@ def check_preimages(k: str = "") -> int:
         if k not in name or kexpr is None:
             continue
         src = path.read_text(encoding="utf-8")
-        for i, (old, _new) in enumerate(pairs):
+        for i, (old, new) in enumerate(pairs):
+            if old == new:
+                bad.append(f"{name:34s} {path.name:20s} site {i} 변이가 아무 "
+                           "것도 안 바꾼다")
             c = src.count(old)
             if c != 1:
                 bad.append(f"{name:34s} {path.name:20s} site {i} preimage {c}회")
@@ -1725,7 +1893,10 @@ def _replay(plan, bad, observed_all, a, sel=None) -> int:
     _print_counts(items, multi, executed, declared, ran=ran)
 
     n_exec = len(executed) + len([m for m in multi if m[3] is not None])
-    if a.emit_coverage:
+    # ★ 50차 P1 — **성공한 조각만** coverage 를 남긴다. 49차는 실패해도 파일을
+    #   썼으므로, rc 를 안 보는 사람에게는 "덮었다" 로 읽혔다. 증거 파일은
+    #   그 자체로 참이어야 한다.
+    if a.emit_coverage and not bad and ran == n_exec:
         _write_coverage(a.emit_coverage, a.k, items, multi, declared, bit)
 
     if bad:
@@ -1782,6 +1953,18 @@ def check_coverage(paths) -> int:
     전부 한 번 이상 **돌았고 물었어야** 하고, 신고는 전부 신고로 나타나야 한다.
     """
     reg = _registry()
+    # ★ 50차 P1 — 합집합을 세기 전에 **등록부 자체**가 성립하는지 본다.
+    #   no-op 변이·죽은 지점·빈 기대 집합이 있으면 그 위에서 센 수는 뜻이 없다.
+    if check_preimages() != 0:
+        print("✗ 등록부의 변이 지점이 성립하지 않는다 — 합집합을 셀 수 없다")
+        return 1
+    empty = sorted(n for n, m in reg.items()
+                   if m["class"] == "executable"
+                   and not (EXPECT.get(n) or {}).get("fail"))
+    if empty:
+        print("✗ 실행 가능 변이인데 기대 실패 집합이 비었거나 없다: "
+              + ", ".join(empty))
+        return 1
     seen: dict = {}
     for path in paths:
         rec = json.loads(pathlib.Path(path).read_text(encoding="utf-8"))
