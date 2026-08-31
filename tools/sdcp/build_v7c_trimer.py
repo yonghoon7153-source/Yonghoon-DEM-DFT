@@ -2204,6 +2204,30 @@ def selftest():
                       moread="p.loc", rotate=(237, 480), stab=True)
     chk("Rotate {237, 480, 90, 1, 1}" in _txt_r and 'moinp "p.loc"' in _txt_r,
         "실측: 회전이 필요하면 Rotate 를 쓰고 **.loc** 를 MORead 한다")
+
+    # ══ 회신 T P0-3 — `.loc` reader 3종 세트와 결정론 국재화 ═══════════════
+    for _t, _why in ((_txt_r, "회전 있는 seed"), (_txt_h, "회전 없는 seed")):
+        chk("Guess MORead" in _t and "GuessMode CMatrix" in _t
+            and "%moinp" in _t and "NoAutoStart" in _t,
+            "회신 T P0-3: %s 입력에 `Guess MORead + MOInp + GuessMode CMatrix` 가 "
+            "**셋 다** 있다" % _why)
+    # ⛔음성 — CMatrix 가 없으면 국재 MO 가 에너지 기준으로 재정렬될 수 있고,
+    #   그러면 인덱스로 지정한 Rotate 가 엉뚱한 궤도를 돈다 (조용한 오답).
+    chk("GuessMode" not in _pil_inp(os.path.join(_td, "n.inp"), "x.xyz", 0, 1,
+                                    "RKS", 1.0, "r2SCAN-3c"),
+        "⛔음성 T P0-3: `.loc` 를 안 읽는 입력에는 GuessMode 를 넣지 않는다 "
+        "(의미 없는 키워드를 흩뿌리지 않는다)")
+    # 결정론/무작위 국재화 키워드
+    _txt_L0 = _pil_inp(os.path.join(_td, "L0.inp"), "x.xyz", 0, 1, "RKS", 1.0,
+                       "r2SCAN-3c", loc=True)
+    _txt_L1 = _pil_inp(os.path.join(_td, "L1.inp"), "x.xyz", 0, 1, "RKS", 1.0,
+                       "r2SCAN-3c", loc="random")
+    chk("Randomize 0" in _txt_L0 and "LocMet PipekMezey" in _txt_L0,
+        "회신 T P0-3: primary 국재화가 **결정론**이다 (`%loc Randomize 0`) — "
+        "'ORCA 에 결정론 옵션이 없다' 던 내 전제가 틀렸다")
+    chk("Randomize 0" not in _txt_L1 and "LocMet PipekMezey" in _txt_L1,
+        "회신 T P0-3: `--loc_realization random` 은 R1(민감도) 로만 쓰고 "
+        "그때만 무작위 seed 가 된다")
     # ⛔음성 2026-08-31 실측 — 연산자가 **베타(1,1)** 여야 한다. 알파(0,0)는 no-op:
     #   D•(961전자 doublet)는 알파 0..480 이 **전부 점유**라 알파끼리 돌려도
     #   밀도가 안 변한다. 그러면 seed 전부가 같은 기본 해로 수렴하고
@@ -2427,7 +2451,16 @@ def pilot_acidic_h(csym, cnb, csulf):
 #:   그걸 HOMO 로 rotate 하면 코어 홀이지 폴라론이 아니다.
 #:   ⇒ 국재화는 **원자가만** (T_Core 는 ORCA 기본값에 맡긴다).
 #:   ⚠ 그래도 파서 쪽에서 한 번 더 막는다 — %loc 설정에 의존하지 않기 위해.
-PIL_LOC_KW = "%loc\n  LocMet PipekMezey\nend\n"
+# ⛔⛔ 회신 T P0-3 (2026-08-31) — **결정론 국재화 옵션이 실제로 있다.**
+#   내가 "ORCA 에 결정론 키워드가 없다" 고 쓴 것이 틀렸다. `%loc Randomize 0`
+#   (orca_loc 의 randomize flag 0)이 무작위 seed 를 끈다. 그래서 `.loc` 해시에만
+#   결박하는 것은 재현성·robustness 를 대체하지 못한다 (회신 T Q2).
+#   ⇒ primary 는 `Randomize 0`(R0, 결정론), 기존 무작위 국재화는 realization R1 로
+#     **민감도로 보존**한다. 두 realization 이 다른 최종 basin 집합을 주면
+#     `LOCALIZATION_DEPENDENT` 다.
+PIL_LOC_KW = "%loc\n  LocMet PipekMezey\n  Randomize 0\nend\n"
+#: 민감도 realization — 무작위 seed 국재화 (R1). 사전등록 문구에 그렇게 적는다.
+PIL_LOC_KW_RANDOM = "%loc\n  LocMet PipekMezey\nend\n"
 #: MO 별 Löwdin 인구를 찍게 한다 — seed 선택의 **유일한** 근거다.
 PIL_MOPOP_KW = "%output\n  Print[P_OrbPopMO_L] 1\nend\n"
 
@@ -2460,6 +2493,14 @@ def _pil_inp(path, xyz, charge, mult, wf, eps, functional,
     if moread:
         body.append('%%moinp "%s"' % moread)
         scf.append("Guess MORead")
+        # ⛔⛔ 회신 T P0-3 (2026-08-31) — **이것이 없으면 결과가 조용히 틀린다.**
+        #   국재 궤도에는 물리적 에너지 순서가 없다. 그런데 기본 `GuessMode` 는
+        #   에너지 기준 정렬(FMatrix)을 전제하므로 ORCA 가 `.loc` 를 읽으면서
+        #   MO 를 **재정렬할 수 있다.** 우리 seed 는 `.loc` 인구표의 **인덱스**로
+        #   목표를 지정하므로, 재정렬되면 `Rotate {j, nbeta}` 가 **엉뚱한 궤도**를
+        #   돈다 — 실패가 아니라 조용한 오답이 된다.
+        #   ORCA 는 국재 MO 재사용에 `CMatrix` 를 명시적으로 권고한다.
+        scf.append("GuessMode CMatrix")
     if rotate:
         # ⛔⛔ 2026-08-31 실측 — `{from, to, angle, op_from, op_to}` 의 마지막 둘은
         #   **스핀 채널**이다 (0 = 알파, 1 = 베타). 처음엔 `0,0`(알파)로 냈는데
@@ -2479,7 +2520,7 @@ def _pil_inp(path, xyz, charge, mult, wf, eps, functional,
         body.append("%scf\n  " + "\n  ".join(scf) + "\nend")
     txt = "\n".join(body) + "\n"
     if loc:
-        txt += PIL_LOC_KW
+        txt += (PIL_LOC_KW_RANDOM if loc == "random" else PIL_LOC_KW)
     # ⛔ MO 별 인구는 **L2**(국재 궤도)에서 쓰지만, L 에서도 찍어 두면 정준/국재를
     #   대조할 수 있다 — 둘 다 켠다. 없으면 seed 선택이 통째로 불가능하다.
     if loc or mopop:
@@ -2552,6 +2593,11 @@ def pilot_generate(a):
                              "cpcm": ("vacuum (블록 없음)" if abs(e - 1.0) < 1e-9
                                       else "CPCM epsilon=%.4f refrac=1.4000" % e)}
                          for n, e in envs},
+        "loc_realization": ("R1_random" if _loc_rand else "R0_deterministic"),
+        "loc_realization_why": (
+            "회신 T P0-3 — ORCA 6.1 의 `%loc Randomize 0` 이 무작위 seed 를 끈다. "
+            "primary 는 R0(결정론)이고, R1(무작위)은 **민감도 realization** 이다. "
+            "두 realization 이 다른 최종 basin 집합을 주면 LOCALIZATION_DEPENDENT."),
         "builder_sha256": _sha(__file__),
         "builder_commit": _git_commit(),
         "phase_L_역할": ("seed 생성원. D⁻ 국재화는 D• seed 를, 중성 국재화는 P⁺ seed 를 "
@@ -2561,6 +2607,10 @@ def pilot_generate(a):
         "jobs": {},
     }
     # ── phase L ────────────────────────────────────────────────────────────
+    # ⛔ 회신 T P0-3 — primary 는 **결정론 국재화**(`%loc Randomize 0`). 무작위
+    #   realization(R1)은 민감도로만 쓰고, 그때는 명시해야 한다.
+    _loc_rand = str(getattr(a, "loc_realization", "deterministic")) == "random"
+    _loc_mode = "random" if _loc_rand else True
     kill = [sH]
     dsym, dpos, _ = remove_atoms(sym, pos, kill)
     for en, ev in envs:
@@ -2573,7 +2623,7 @@ def pilot_generate(a):
             write_xyz(jd / (tag + ".xyz"), csym2, cpos2,
                       "%s %s eps=%g" % (tag, man["formula_neutral"], ev))
             _pil_inp(jd / (tag + ".inp"), tag + ".xyz", ch, mult, "RKS", ev,
-                     a.functional, loc=True, nprocs=a.nprocs)
+                     a.functional, loc=_loc_mode, nprocs=a.nprocs)
             man["jobs"]["L/%s/%s" % (en, tag)] = {
                 "phase": "L", "env": en, "epsilon": ev, "charge": ch, "mult": mult,
                 "wf": "RKS", "roles": roles,
@@ -2772,9 +2822,33 @@ def pilot_seeds(d):
         txt = outp.read_text(errors="replace")
         if "ORCA TERMINATED NORMALLY" not in txt:
             raise SystemExit("⛔ %s 가 정상 종료하지 않았다" % outp)
-        # ⛔ 국재화가 무작위 seed 로 돌아(`Localizations seeded randomly ... on`)
-        #   재실행하면 순서가 달라진다. 결정론을 만들 수 없으므로 **실현된 .loc 에
-        #   결박**한다 — 그 해시를 기록해 seed 가 어느 국재화에서 나왔는지 남긴다.
+        # ⛔⛔ 회신 T P0-3 (2026-08-31) — 종전 주석은 "결정론을 만들 수 없으므로
+        #   실현된 .loc 에 결박한다" 였다. **그 전제가 틀렸다** — `%loc Randomize 0`
+        #   이 있다. 이제 primary 는 결정론 국재화를 **요구**하고, 무작위 국재화는
+        #   `--loc_realization random` 으로 명시했을 때만 R1(민감도)로 허용한다.
+        #   ⚠ 확인 못 한 것을 통과시키지 않는다: 출력에서 무작위 표지를 찾으면 막는다.
+        _rand_marks = ("seeded randomly", "Localizations seeded randomly")
+        _is_rand = any(x in txt for x in _rand_marks)
+        _want = man.get("loc_realization", "R0_deterministic")
+        if _is_rand and _want != "R1_random":
+            raise SystemExit(
+                "⛔ %s 의 국재화가 **무작위 seed** 로 돌았다 (출력에 %r). primary 는 "
+                "`%%loc Randomize 0` 으로 결정론이어야 한다 (회신 T P0-3). 무작위 "
+                "realization 을 민감도로 쓰려면 생성 시 `--loc_realization random` 을 "
+                "명시하고 그 사실이 manifest 에 봉인돼야 한다." % (outp, _rand_marks[0]))
+        if (not _is_rand) and _want == "R1_random":
+            raise SystemExit(
+                "⛔ %s 를 R1(무작위 realization)로 선언했는데 출력에 무작위 표지가 "
+                "없다 — 선언과 실물이 다르다" % outp)
+        # ⛔ 회신 T P0-3 — `.loc` 를 읽는 입력에는 `GuessMode CMatrix` 가 **반드시**
+        #   있어야 한다. 없으면 ORCA 가 국재 MO 를 에너지 기준으로 재정렬할 수 있고,
+        #   그러면 인덱스로 지정한 Rotate 가 엉뚱한 궤도를 돈다 (조용한 오답).
+        _l2inp = jd / (tag + ".inp")
+        if _l2inp.is_file() and "GuessMode CMatrix" not in _l2inp.read_text():
+            raise SystemExit(
+                "⛔ %s 에 `GuessMode CMatrix` 가 없다 — 이 L2 는 국재 MO 를 재정렬된 "
+                "순서로 읽었을 수 있다. 그 인구표로 고른 인덱스는 신뢰할 수 없다 "
+                "(회신 T P0-3). 입력을 다시 만들고 phase L2 를 다시 돌릴 것." % _l2inp)
         locf = src / (tag + ".loc")
         if not locf.is_file():
             raise SystemExit("⛔ %s 가 없다 — phase L 의 국재 궤도가 없으면 seed 를 "
@@ -3198,6 +3272,11 @@ def main():
     ap.add_argument("--polaron_seeds", help="phase L 완주 디렉터리 — seed 선택 + phase S 생성")
     ap.add_argument("--polaron_analyze", help="phase S 완주 디렉터리 — F 집합·class·판정")
     ap.add_argument("--site", help="H 제거 위치 (1-based 산성 H). 생략하면 사전 규칙(중간)")
+    # ⛔ 회신 T P0-3 — 국재화 realization. primary 는 결정론이 기본이다.
+    ap.add_argument("--loc_realization", choices=("deterministic", "random"),
+                    default="deterministic",
+                    help="국재화 realization. deterministic=%%loc Randomize 0 (primary·기본) · "
+                         "random=무작위 seed (민감도 R1 — 명시했을 때만 허용)")
     ap.add_argument("--eps", nargs="+", type=float, default=None,
                     help="유전상수 목록 (예: 1.0 4.0). 사전등록에 근거를 적을 것")
     ap.add_argument("--functional", default="r2SCAN-3c")
