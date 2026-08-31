@@ -19,6 +19,8 @@
 #   · gap 이 맞는지 판정하지 않는다. 재현 목표와의 거리만 보인다.
 #   · ETA 는 지난 반복 속도의 산술 외삽이다. QE 는 후반 반복이 대개 빨라져 비관적이다.
 #   · nscf 는 반복이 없어(밴드 대각화) 진행률을 못 준다 — 경과 시간과 로그 갱신만 본다.
+#   · 생사는 **판정**하지만 원인은 못 짚는다 (MPI 전송 실패인지 OOM 인지는 사람이).
+#   · CPU 전진 표본은 기본 5초다 — 그 순간 I/O 대기 중인 랭크는 정지로 보일 수 있다.
 #
 # 사용
 #   watch -n 60 bash tools/electronic/watch_gap_nscf.sh
@@ -35,6 +37,41 @@ declare -A TGAP=( [comp1]=2.066   [modelc]=2.099 )
 declare -A TVBM=( [comp1]=2.128   [modelc]=2.445 )
 declare -A TCBM=( [comp1]=4.194   [modelc]=4.544 )
 INIT_GRACE_MIN=${INIT_GRACE_MIN:-15}   # 이 시간까지 반복 0 은 정상(초기화)
+
+# ⛔⛔ 2026-08-31 사고 — modelc nscf 가 **31시간 죽어 있었는데 이 도구는
+#   "확인 필요" 라고만 찍었다.** 무갱신 문턱이 pool0 기준이라 pool0 이 끝난 뒤에는
+#   의미가 없고, 로그의 MPI 오류를 아예 안 읽었기 때문이다.
+#   죽음은 추정하지 말고 **두 가지 실물**로 판정한다:
+#     ⓐ 로그에 MPI 전송 실패가 있나 (OpenMPI TCP BTL 이 끊기면 랭크가 죽은 소켓의
+#        블로킹 recv 에 걸려 CPU 0 인 채 영원히 산다 — 죽지도 끝나지도 않는다)
+#     ⓑ 누적 CPU 가 지금 늘고 있나 (`ps -o pcpu` 는 **생애 평균**이라 못 쓴다.
+#        두 번 재서 차를 봐야 한다)
+MPI_DEAD_RE='mca_btl_tcp_recv_blocking|Connection reset by peer|MPI_ABORT|ORTE has lost communication'
+
+mpi_dead_lines() {   # $1 = .out  → 최근 200줄 중 MPI 전송 실패 줄 수
+    # ⚠ `grep -c` 는 0건이어도 "0" 을 찍고 **exit 1** 이다. `|| echo 0` 을 붙이면
+    #   "0\n0" 이 나와 숫자 비교가 깨진다 (2026-08-31 selftest 가 잡았다).
+    local n
+    n=$(tail -200 "$1" 2>/dev/null | grep -acE "$MPI_DEAD_RE")
+    echo "${n:-0}"
+}
+
+cpu_advancing() {    # → "늘어난랭크수/전체랭크수" (표본 ${CPU_SAMPLE_S:-5}초)
+    local pat=${1:-'qe-.*-cpu/bin/pw\.x'} n=${CPU_SAMPLE_S:-5}
+    local a b adv=0 tot=0
+    a=$(pgrep -f "$pat" 2>/dev/null | while read -r q; do
+            printf '%s %s\n' "$q" "$(awk '{print $14+$15}' /proc/$q/stat 2>/dev/null)"; done)
+    [ -z "$a" ] && { echo "0/0"; return; }
+    sleep "$n"
+    b=$(pgrep -f "$pat" 2>/dev/null | while read -r q; do
+            printf '%s %s\n' "$q" "$(awk '{print $14+$15}' /proc/$q/stat 2>/dev/null)"; done)
+    while read -r pid t0; do
+        t1=$(echo "$b" | awk -v p="$pid" '$1==p{print $2}')
+        [ -n "$t1" ] || continue
+        tot=$((tot+1)); [ "$t1" -gt "$t0" ] 2>/dev/null && adv=$((adv+1))
+    done <<< "$a"
+    echo "$adv/$tot"
+}
 
 # ── 셀프테스트 (음성 경로 포함) ─────────────────────────────────────────────
 if [ "${1:-}" = "--selftest" ]; then
@@ -103,6 +140,26 @@ EOF
     x=$(printf '0.005\n0.005\n' | tail -2 | head -1); y=0.005
     awk -v a="$x" -v b="$y" 'BEGIN{exit !(a<=b)}' \
         && say "✓" "[음성] accuracy 정체를 검출한다" || say "✗" "정체 미검출"
+
+    # ⛔ 2026-08-31 사고 회귀시험 — MPI 전송 실패를 **죽음으로** 읽는가
+    printf 'Computing kpt #  1\n     total cpu time  100.0 secs\n' > "$T/live.out"
+    [ "$(mpi_dead_lines "$T/live.out")" = "0" ] \
+        && say "✓" "[음성] 정상 로그를 죽음으로 오판하지 않는다" \
+        || say "✗" "정상 로그를 죽음으로 오판했다"
+    cat >> "$T/live.out" <<'EOF2'
+[kserver][[51384,1],7][../../opal/mca/btl/tcp/btl_tcp.c:559:mca_btl_tcp_recv_blocking] recv(25) failed: Connection reset by peer (104)
+EOF2
+    [ "$(mpi_dead_lines "$T/live.out")" -ge 1 ] \
+        && say "✓" "MPI 전송 실패 줄을 잡아낸다 (2026-08-31 사고 회귀)" \
+        || say "✗" "MPI 전송 실패를 못 잡는다"
+    printf 'ORTE has lost communication with a remote daemon\n' > "$T/lost.out"
+    [ "$(mpi_dead_lines "$T/lost.out")" -ge 1 ] \
+        && say "✓" "daemon 통신 상실도 잡아낸다" || say "✗" "daemon 상실 미검출"
+    # CPU 전진 표본: 있을 리 없는 패턴이면 0/0 이어야 한다 (없는 것을 돈다고 하지 않기)
+    CPU_SAMPLE_S=1
+    [ "$(cpu_advancing 'zzz_no_such_process_zzz')" = "0/0" ] \
+        && say "✓" "[음성] 없는 프로세스를 '돌고 있다' 고 하지 않는다" \
+        || say "✗" "없는 프로세스를 돈다고 했다"
 
     rm -rf "$T"
     [ "$ok" = 1 ] && { echo "selftest PASS"; exit 0; } || { echo "selftest FAIL"; exit 1; }
@@ -236,11 +293,34 @@ for S in comp1 modelc; do
             if [ "${KD:-0}" -gt 0 ] && [ -n "$CPUT" ]; then
                 awk -v age="$AGE" -v k="$KD" -v t="$CPUT" 'BEGIN{
                     per = t/k/60                       # pool0 kpt 하나당 분
-                    if (age > 1.5*per) printf "  ⚠ 정상 주기(%.0f분/kpt)의 1.5배 초과 — 확인 필요", per
+                    if (age > 1.5*per) printf "  (pool0 기준 정상 주기 %.0f분/kpt 초과 — 아래 생사 판정을 본다)", per
                     else                printf "  (정상 — kpt 하나에 %.0f분 걸린다)", per
                 }'
             fi
             echo
+            # ── 생사 판정 (추정 아님) ──────────────────────────────────────
+            DEADL=$(mpi_dead_lines "$F")
+            if [ "${DEADL:-0}" -gt 0 ]; then
+                echo "        ⛔⛔ MPI 전송 실패 ${DEADL}줄 — **이 잡은 죽었다**"
+                echo "           OpenMPI 가 단일 노드인데 TCP BTL 을 골랐고 소켓이 끊겼다."
+                echo "           랭크는 죽은 소켓의 블로킹 recv 에 걸려 CPU 0 인 채 살아 있다."
+                echo "           조치: 죽이고 \`MPI_MCA='--mca btl self,vader'\` 로 재실행"
+                echo "           (run_gap_nscf_gabia.sh 는 2026-08-31 부터 그게 기본값)"
+            fi
+            if [ -n "${PIDS// /}" ]; then
+                ADV=$(cpu_advancing)
+                printf "        CPU 전진 %s 랭크 (%s초 표본)" "$ADV" "${CPU_SAMPLE_S:-5}"
+                case "$ADV" in
+                    0/0) printf "  — 랭크 없음" ;;
+                    */0) ;;
+                    *) awk -v a="${ADV%%/*}" -v t="${ADV##*/}" 'BEGIN{
+                           if (t>0 && a==0) printf "  ⛔ 아무도 안 돈다 — 죽었다"
+                           else if (t>0 && a < t/2) printf "  ⛔ 과반이 멈췄다 — 죽었거나 갈라졌다"
+                           else if (t>0 && a < t)   printf "  ⚠ 일부만 돈다 (%d개 정지)", t-a
+                           else printf "  ✅ 전부 돈다" }' ;;
+                esac
+                echo
+            fi
             continue
         fi
         NIT=$(grep -ac 'iteration #' "$F")

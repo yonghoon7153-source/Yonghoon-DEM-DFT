@@ -206,10 +206,23 @@ exec 9>"$OUT/.lock"
 flock -n 9 || { echo "이미 도는 중이다 ($OUT/.lock) — 중복 실행 안 한다"; exit 0; }
 
 MPIRUN=${MPIRUN:-/usr/bin/mpirun}; [ -x "$MPIRUN" ] || MPIRUN=mpirun
+# ⛔⛔ 2026-08-31 실측 사고 — **BTL 을 안 정하면 OpenMPI 가 단일 노드인데도 TCP 를
+#   고른다.** modelc nscf 가 6.5일 돌다가 08-30 09:14 에 로컬 TCP 소켓이 끊겨
+#   (`mca_btl_tcp_recv_blocking recv(25) failed: Connection reset by peer`)
+#   31시간을 좀비로 서 있었다: 10 랭크 중 9개가 죽은 소켓의 블로킹 recv 에 걸려
+#   CPU 0, 남은 1개가 코어 하나를 태우고 12 GB 를 문 채. **로그도 안 남고 죽지도
+#   않는다** — 이 조합이 제일 나쁘다.
+#   단일 노드에서는 공유메모리 BTL 만 쓴다. `self` = 자기 자신, `vader` = 공유메모리.
+#   (판본이 vader 를 sm 으로 부르면 MPI_MCA 를 env 로 덮어라.)
+MPI_MCA=${MPI_MCA:---mca btl self,vader}
 PHYS=$(lscpu -p=Core,Socket 2>/dev/null | grep -v '^#' | sort -u | wc -l)
 [ "${PHYS:-0}" -ge 1 ] || PHYS=$(nproc 2>/dev/null || echo 4)
 NP=${NP:-$(( PHYS < 16 ? PHYS : 16 ))}
 # ⚠ OMP 를 안 걸면 랭크마다 코어 수만큼 스레드를 띄운다 (2026-07-29 gabia: load 154).
+# ⚠ `--oversubscribe` 는 코어보다 랭크를 많이 띄우는 것을 **허용**할 뿐 성능을 주지
+#   않는다. 같은 기계에 남의 잡이 있으면 서로 굶는다 — 그때는 `MPI_OVERSUB=` 로 끄고
+#   NP 를 실제 여유 코어에 맞춘다.
+MPI_OVERSUB=${MPI_OVERSUB---oversubscribe}
 export OMP_NUM_THREADS=${OMP_NUM_THREADS:-1}
 export MKL_NUM_THREADS=$OMP_NUM_THREADS OPENBLAS_NUM_THREADS=$OMP_NUM_THREADS
 # ⛔ 2026-08-21 실측 — 첫 판의 기본값이 재앙이었다.
@@ -229,6 +242,7 @@ if [ -z "${NPOOL:-}" ]; then
 fi
 ts() { date '+%m-%d %H:%M:%S'; }
 echo "[$(ts)] repo=$REPO  out=$OUT  np=$NP -nk $NPOOL  OMP=$OMP_NUM_THREADS"
+echo "[$(ts)] mpi: ${MPI_OVERSUB:-(no-oversubscribe)} $MPI_MCA  ← 단일 노드는 TCP 를 쓰지 않는다 (2026-08-31 사고)"
 
 # ── pseudo 4종 (USPP) — KISTI 표기 / gabia 표기 둘 다 뒤진다 ────────────────
 #
@@ -331,7 +345,7 @@ for S in ${SYSTEMS:-comp1 modelc}; do
         echo "[$(ts)] $S scf: 이미 완료 — 건너뜀"
     else
         echo "[$(ts)] $S scf 시작 (k $(grep -A1 K_POINTS "$D/scf.in" | tail -1))"
-        ( cd "$D" && "$MPIRUN" --oversubscribe -np "$NP" "$CPU/pw.x" -nk "$NPOOL" -in scf.in > scf.out 2>&1 )
+        ( cd "$D" && "$MPIRUN" $MPI_OVERSUB $MPI_MCA -np "$NP" "$CPU/pw.x" -nk "$NPOOL" -in scf.in > scf.out 2>&1 )
         grep -aq "JOB DONE" "$D/scf.out" || { fail "$S" "scf 실패 — 마지막 20줄:"; grep -a . "$D/scf.out" | tail -20; continue; }
         echo "[$(ts)] $S scf 완료  E=$(grep -a '^!' "$D/scf.out" | tail -1 | awk '{print $5}') Ry"
     fi
@@ -350,7 +364,7 @@ for S in ${SYSTEMS:-comp1 modelc}; do
     grep -q "smearing\|degauss" "$D/nscf_gap.in" && { fail "$S" "smearing 잔존 — fixed 와 충돌한다"; continue; }
 
     echo "[$(ts)] $S nscf(fixed, nbnd ${NBND[$S]}, k ${KMESH[$S]}) 시작 — 몇 시간 간다"
-    ( cd "$D" && "$MPIRUN" --oversubscribe -np "$NP" "$CPU/pw.x" -nk "$NPOOL" -in nscf_gap.in > nscf_gap.out 2>&1 )
+    ( cd "$D" && "$MPIRUN" $MPI_OVERSUB $MPI_MCA -np "$NP" "$CPU/pw.x" -nk "$NPOOL" -in nscf_gap.in > nscf_gap.out 2>&1 )
 
     # ---- ③ 계보 확인: irreducible k-point 수 ----
     NK=$(grep -a 'number of k points' "$D/nscf_gap.out" | head -1 | sed 's/.*number of k points=\s*//' | awk '{print $1}')
