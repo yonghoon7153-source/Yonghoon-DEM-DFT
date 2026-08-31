@@ -504,3 +504,47 @@ D13 §3 이 그 셋을 나란히 적어 뒀는데 내가 하나를 고르고 **�
 | J-b | Table S2 의 LPSCl σ_ion 3.0 → 3.57 (또는 런을 3.0 으로) | 저자 |
 | J-c | σ_e(SDCP) 250 을 VGCF 형식으로 병기 + `Calculated` 근거 확인 | 저자 |
 | J-d | σ_ion(SDCP) 칸은 **비워 둔다** (채우지 않는 것이 옳다) | — |
+
+---
+
+## K. PTFE 차단 보정 — **쓸 수 있는 최대 문안이 고정됐다** (2026-08-31, R18)
+
+`codex_r18_verdict_20260831.md` 로 D13 의 PTFE 차단 축이 닫혔다.  두 연산자(부분부피 ·
+브릿지 역이용)로 브래킷을 메우려던 시도가 **둘 다 기각**됐고 (원장 R18-1~3),
+`UNREACHABLE` 이 그대로 유지된다.
+
+### K-1. 이 축을 원고에서 **언급할 경우**의 최대 문안
+
+⚠ 언급하지 않는 것도 선택지다 (저자 결정).  **언급한다면** 이 이상 주장하지 않는다:
+
+> Within the preregistered 0.12-µm voxel binary EDT-shell representation, the PTFE-pellet
+> target (0.97 mS cm⁻¹) fell between the two adjacent representable shell states
+> (1.518 and 0.717 mS cm⁻¹, normalized to σ_SE = 3.57 mS cm⁻¹).  We therefore selected no
+> blocking thickness and did not treat the PTFE correction as calibrated.  This deterministic
+> bracket reflects operator resolution and model form; it is neither a confidence interval nor
+> a bound on physical fibril size or conductivity.
+
+### K-2. ⛔ 이 축에서 **쓰면 안 되는 표현**
+
+| 쓰면 안 되는 것 | 왜 |
+|---|---|
+| 브래킷을 *"불확실 구간"* · *"상·하한"* 으로 부르기 | 물리량의 구간이 아니라 **인접한 두 표현 상태**다 (R18 Q7) |
+| `b` 를 **피브릴 두께·직경**으로 해석 | `b` 는 이미 스탬프된 PTFE **바깥**의 유효 계면 거리다 (R18-1) |
+| *"가까운 쪽(b=0.17)을 골랐다"* | 사전등록이 근접 선택을 금지했고 실제로 안 골랐다 |
+| PTFE 보정을 **calibrated** 로 서술 | 표적에 도달하지 못했다 |
+
+### K-3. 후속 (원고 밖)
+
+**Q6 — 보존형 cut-cell / capsule face 연산자**가 유일하게 살아남은 경로다: 피브릴
+**중심선 + 직경**에서 각 FV face 의 **열린 면적분율 α** 를 계산해 `G_face = α·G₀`.
+국소적 · 방향 보존 · KCL 정합이고 **격자 원점을 바꿔 수렴을 직접 시험**할 수 있다.
+코드에 `capsule` 예약 경로가 있다 (`scripts/mpm_webapp_payload.py:596`).
+⚠ 셀을 찍는 규약이 아니라 **face 개구율**이라 피브릴이 복셀보다 얇아도 성립한다 —
+`ptfe_convention_prereg` 의 `capsule`(참 직경 셀 스탬프)과 **다른 물건**이다.
+⚠ 직경이나 `R_int` 를 다시 표적에 맞추면 그것도 calibration 이지 validation 이 아니다.
+**이 논문 일정 밖.  새 사전등록 필요.**
+
+| # | 항목 | 소유 |
+|---|---|---|
+| K-a | 이 축을 원고에서 언급할지 결정 (언급 시 K-1 문안 고정) | 저자 |
+| K-b | Q6 연산자 사전등록 — 이 논문 밖 | 다음 라운드 |

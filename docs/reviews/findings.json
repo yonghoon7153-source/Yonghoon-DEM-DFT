@@ -1379,6 +1379,36 @@
     "docs/reviews/sdcp_bridge_prereg_20260825.md"
    ],
    "note": "생산 격자(vox 0.15, d/vox 2.00)에서 Ø0.30 SDCP 쌍은 **참 접촉의 35 % 를 놓치고**(연결확률 0.650) **10 % 물리적 틈의 32.5 % 를 가짜로 연결한다**.  두 오차는 σ 에 **반대 방향**이고 h 수렴 속도가 다르다 ⇒ `R = R∞ − C·h^p` 는 지배 오차가 하나라고 가정하므로 **원리적으로 안 맞는다**.  CL-41 의 '어떤 p > 0 도 안 맞는다'(증분비 1.773 < 최소 2.187) 는 이상 현상이 아니라 이 구조의 **예측**이다.\n★ 왜 하필 **비**가 움직이나 — 전자 격자에서 SBE↔DBE 의 유일한 차이가 SDCP 다 (CL-33 의 SBE 음성 대조 8/8 **셀 단위 완전 동일**이 증인).  ⇒ 이 오차는 **DBE 전용**이라 침대 간 공통모드 상쇄가 원리적으로 없다.  `step3_sigma.py` 의 'relative trust preserved' 는 **vox 가 같은 런들 사이**에서만 참인데, 격자 사다리는 정확히 그 전제를 깬다.\n★★ 코드는 이 문제를 **이미 알고 다른 상에는 고쳐 두었다** (`step3_sigma.py:232`: 'plain rasterization randomly DROPS touching contacts'): AM–AM 은 접촉 브리지, 섬유는 `_fibre_segment_ijk` 로 6-면 연결 보장.  **SDCP 구만 무처리**다.\n★ 해상도 기준 자기모순: 게이트는 `d/vox ≥ 2.0` 인데 리포가 확립한 실용 규칙은 `≳ 3.5` 다. Ø0.30 에서 3.5 는 vox ≤ 0.0857 = 투영 ≈ 86 GB, vox 0.10 조차 3.00 (≈54 GB) 로 미달 ⇒ **격자를 조여서 도달할 수 없다.**\n⇒ 판별 실험 = **`--step3-sdcp-bridge`** (AM–AM 브리지 기계 재사용, vox 를 안 바꾸고 접촉 검출만 고침).  h0=격자 의존 그대로 / h1=무너진다 / 음성대조=SBE 셀 단위 동일.  **미실행.**\n⚠ **상관은 인과가 아니다** — CV·누락률·R 이 전부 vox 에 단조라 CL-43 과 같은 함정이다. 노브를 vox 에서 브리지로 바꿔야 갈린다.  ⚠ §2 는 진공 속 **고립 쌍**이고 실침대의 지배 커플링은 SDCP–VGCF 일 수 있다 (SDCP 44.4 % AM-anchored) — 기전의 종류는 같지만 크기는 미측정.\n★★ **구현 완료 (같은 날) — 그리고 런 전 CPU 측정이 설계를 바꿨다.**\n`--step3-sdcp-bridge` 신설 (기본 0 = off = 바이트 동일).  초판은 **판정 반경과 목 반경을 하나로** 썼는데 재 보니 둘 다 틀렸다: 목이 0.08 µm 면 vox 0.15 에서 **0.53 복셀**이라 셀을 못 만들어 참 접촉 복원이 0.717 에 그쳤고, 동시에 판정 tol 0.08 이 0.03 µm 틈보다 커서 **가짜 연결을 오히려 키웠다**.  ⇒ AM–AM 과 같은 구조로 분리: **판정 = 물리 간극**(노브) · **목 반경 = `1.2·vox`**.\n★ 분리 후 실측 (tol 0.01 µm, 120 회): **참 접촉** 연결확률의 격자 폭이 **0.300 → 0.000** (전 격자 1.000) = 채널 A 완전 제거.  **10 % 틈 가짜 연결**은 0.333 → 0.283 = 채널 B **거의 안 바뀜** (브리지가 만드는 것이 아니라 스탬프 해상도 자체의 산물이라 연결 검출로는 못 고친다).\n⇒ **이 노브는 보장된 해결책이 아니라 판별기다.**  사전등록 `docs/reviews/sdcp_bridge_prereg_20260825.md` 의 h0/h1 은 '고쳐지나' 가 아니라 **'어느 채널이 지배하나'** 를 묻는다 (h1 = ΔR_grid 70 % 이상 축소 = 채널 A 지배 / h0 = 30 % 미만 = 채널 B 지배 / 사이 = BOTH_REJECTED).\n★ 규약 배선 완료 — `PROTOCOL_FIELDS`·`RECEIPT_AXES`·`CLI_ACCOUNTING`·`FIELD_CONTRACT`(across_dir)·매니페스트.  등재를 빠뜨렸으면 SELF-04 와 같은 결함이 된다.\n★ 회귀 4종 상주: off=바이트동일 · 끊긴 접촉을 잇는다(성분 2→1) · 배정된 셀 강등 안 함 · SBE no-op.  배터리 mutant 2종.\n⚠ **미실행** — 실침대 8팔 × 2격자 × {off, on} = GPU 필요."
+  },
+  {
+   "id": "R18-1",
+   "severity": "P1",
+   "status": "wontfix",
+   "owner": "codex",
+   "opened_in": "docs/reviews/codex_r18_verdict_20260831.md",
+   "found_by": "codex",
+   "title": "제안 A 는 **부분부피 복원이 아니라** 없던 계면층을 새로 얹는 것이다",
+   "decision_note": "제안 A 를 등록하지 않기로 했으므로 고칠 코드가 없다 (R18 = A DROP).  확인한 사실은 남긴다: `pellet_rve_sigma.build_rve` 는 **스탬프된 부피분율 자체를 표적**으로 RSA 를 돈다(`scripts/pellet_rve_sigma.py:76`) — 실측 vol_stamped 0.091792 vs vol_target 0.09174311926605504 = **+0.053 %**(`docs/data/pellet_calib_20260825/ptfe_ion_blk0.12.json`).  ⇒ PTFE 부피에는 복원할 반올림 손실이 없고, 계단은 PTFE 가 아니라 **차단 껍질**에 있다.  그 껍질은 물리적 부피가 아니라 우리가 새로 얹는 계면층이므로 (a) `b` 를 피브릴 두께로 해석 금지 (b) '연속화하면 격자 무관해진다' 주장 불가 — EDT 가 이미 복셀화된 `sid==7` 에서 출발한다(`scripts/step3_sigma.py:566`).  재도전 시 이름은 effective interphase attenuation."
+  },
+  {
+   "id": "R18-2",
+   "severity": "P1",
+   "status": "wontfix",
+   "owner": "codex",
+   "opened_in": "docs/reviews/codex_r18_verdict_20260831.md",
+   "found_by": "codex",
+   "title": "제안 B 의 **전역 순위 f** 는 PTFE 양·거리에 단조 대응하지 않는다",
+   "decision_note": "제안 B 를 등록하지 않기로 했다 (R18 = B DROP).  결함의 내용: 'PTFE 근접 순으로 정렬해 상위 f 비율의 브릿지를 스킵' 은 **전역 규칙에 고정 개수**라 ① PTFE 가 절반이든 두 배든 같은 fN 개를 지우고 ② 전부 멀어도 지우며(no-op 불가) ③ PTFE 를 더하면 순위가 바뀌어 지웠던 간선이 복구되고(비단조) ④ 이미 face-connected 인 접촉에는 효과가 0 이다.  ⇒ f 는 'PTFE 가 막은 접점 비율' 이 아니라 **수치 repair 생략률**이고, 담으려던 의미론을 원리적으로 못 담는다.  재도전 시 **국소 연산자**로 재정의하고 R18 Q4 의 대조 5종을 함께 등록할 것."
+  },
+  {
+   "id": "R18-3",
+   "severity": "P1",
+   "status": "wontfix",
+   "owner": "codex",
+   "opened_in": "docs/reviews/codex_r18_verdict_20260831.md",
+   "found_by": "codex",
+   "title": "AM-AM 브릿지는 SE 를 덮어쓴다 — 브릿지를 건드리는 연산자는 **전자 전용이 아니다**",
+   "decision_note": "제안 B 를 등록하지 않으므로 지금 고칠 것은 없다.  다만 이것은 제안이 아니라 **생산 코드의 지속적 성질**이라 남긴다: SE(sid 6)는 가장 낮은 우선순위로 먼저 찍히고(`scripts/step3_sigma.py:293`), AM-AM 브릿지는 `_ball` 로 **무조건 덮어쓴다**(`:303-314`, 호출 `:345`; 빈 셀 전용 `_ball_empty` 는 SDCP 브릿지용 `:507`).  전자·이온이 같은 sid 격자를 공유하므로 브릿지를 빼면 그 셀이 SE 로 되돌아가 **이온망이 늘어난다**.  ⇒ 앞으로 브릿지를 건드리는 어떤 연산자도 이온축과 직교하지 않는다.  이온 전용이 필요하면 shared sid 대신 별도 conductivity field 를 쓸 것 (`scripts/step3_sigma.py:1119` `sigma_field`)."
   }
  ]
 }
