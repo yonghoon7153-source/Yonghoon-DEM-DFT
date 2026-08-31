@@ -835,26 +835,77 @@ if [ ! -f "$SEAL" ]; then
   fi
 fi
 
-# ── AP #7 ② 기존 POTCAR/provenance 를 **현재 allowlist 로 재대조** ──────
-#    종전엔 둘 다 있으면 조용히 건너뛰었다 — 다른 allowlist 로 조립된 것을 못 잡는다.
+# ── AP #7 ② / 🔴🔴 회신 AT P0-3 — POTCAR 를 **매번 PP 원본에서 다시 조립**한다 ──
+#    종전엔 기존 provenance 의 `allowlist_sha256` 만 맞으면 `continue` 로 건너뛰었다.
+#    그래서 **가짜 POTCAR + 자기일관적인 가짜 provenance** 를 미리 놔두면 PP 원본이
+#    아예 없어도 봉인이 성공했다 (리뷰어가 재현). 기존 산출물을 신뢰하는 검사는
+#    검사가 아니다 — 봉인은 매번 **원본에서** 다시 만들어 대조한다.
 AL_SHA=$(sha256sum "$POTCAR_ALLOWLIST" | cut -d" " -f1)
-n_new=0; n_re=0
+[ -d "$PP" ] || { echo "⛔ PP 트리가 없습니다: $PP — 원본 없이 봉인하지 않습니다"; exit 1; }
+n_new=0; n_same=0; n_fix=0
 for d in */*/; do
   [ -f "$d/POTCAR_ASSEMBLE.sh" ] || continue
-  if [ -f "$d/POTCAR" ] && [ -f "$d/POTCAR_PROVENANCE.json" ]; then
-    got=$(python3 -c '
-import json,sys
-d=json.load(open(sys.argv[1]))
-print(d.get("allowlist_sha256") or "")' "$d/POTCAR_PROVENANCE.json")
-    if [ "$got" = "$AL_SHA" ]; then n_re=$((n_re+1)); continue; fi
-    echo "  재조립: $d (다른 allowlist 로 조립돼 있었습니다)"
-    rm -f "$d/POTCAR" "$d/POTCAR_PROVENANCE.json"
-  fi
+  prev=""
+  if [ -f "$d/POTCAR" ]; then prev=$(sha256sum "$d/POTCAR" | cut -d" " -f1); fi
+  # 기존 산출물을 **치우고** 원본에서 다시 만든다 (있으면 믿는 경로를 없앤다)
+  rm -f "$d/POTCAR" "$d/POTCAR_PROVENANCE.json"
   ( cd "$d" && PP="$PP" POTCAR_ALLOWLIST="$POTCAR_ALLOWLIST" bash POTCAR_ASSEMBLE.sh ) \
-    || { echo "POTCAR 조립 실패: $d"; exit 1; }
+    || { echo "⛔ POTCAR 조립 실패: $d (PP 원본·allowlist 를 확인하세요)"; exit 1; }
+  now=$(sha256sum "$d/POTCAR" | cut -d" " -f1)
   n_new=$((n_new+1))
+  if [ -n "$prev" ]; then
+    if [ "$prev" = "$now" ]; then n_same=$((n_same+1))
+    else
+      n_fix=$((n_fix+1))
+      echo "  🔴 $d: 있던 POTCAR 가 원본 재조립본과 **다릅니다**"
+      echo "     이전 ${prev:0:16}… → 재조립 ${now:0:16}…  (재조립본으로 대체했습니다)"
+    fi
+  fi
+  # ③ PP **원본 파일 자체**를 독립 검증한다 — provenance 를 되읽어 확인하지 않고,
+  #    거기 적힌 source 경로를 PP 아래에서 직접 열어 SHA·TITEL·allowlist 를 다시 잰다.
+  ( cd "$d" && PP="$PP" AL="$POTCAR_ALLOWLIST" python3 - <<'PYSRC'
+# 🔴 회신 AT P0-3 — provenance 를 **되읽어 확인하지 않는다.** 거기 적힌 variant 로
+#   PP 원본을 직접 열어 SHA·TITEL·allowlist 결박을 **다시 계산**한다.
+import hashlib, json, os, re, sys
+d = json.load(open("POTCAR_PROVENANCE.json"))
+pp, al = os.environ["PP"], os.environ["AL"]
+if d.get("allowlist_waived"):
+    sys.exit("\u26d4 allowlist 면제 provenance 입니다 — 이 계약에서 폐지됐습니다")
+vs = d.get("expected_variants") or []
+src = d.get("source_sha256") or {}
+if not vs:
+    sys.exit("\u26d4 provenance 에 expected_variants 가 없습니다 — 원본을 대조할 수 없습니다")
+alines = [ln.strip() for ln in open(al) if ln.strip() and not ln.startswith("#")]
+tit = d.get("titel_lines") or []
+for i, v in enumerate(vs):
+    f = os.path.join(pp, v, "POTCAR")
+    if not os.path.isfile(f):
+        sys.exit("\u26d4 PP 원본이 없습니다: %s — 원본 없이 봉인하지 않습니다" % f)
+    raw = open(f, "rb").read()
+    h = hashlib.sha256(raw).hexdigest()
+    if v in src and h != src[v]:
+        sys.exit("\u26d4 %s 원본 SHA 불일치 (지금 %s / provenance %s)"
+                 % (v, h[:16], str(src[v])[:16]))
+    # allowlist 는 `sha256  <경로>/<variant>/POTCAR` 형식 — **해시와 variant 가
+    # 한 줄에 묶여** 있어야 한다 (해시만 맞고 이름이 다르면 다른 PP 다)
+    pat = re.compile(r"^%s\s+.*(?:^|[/\s])%s(?:[/\s]|$)" % (re.escape(h), re.escape(v)))
+    if not any(pat.search(ln) for ln in alines):
+        sys.exit("\u26d4 %s(%s…) 가 allowlist 에 그 해시로 묶여 있지 않습니다"
+                 % (v, h[:16]))
+    t = re.search(rb"TITEL\s*=\s*(.+)", raw[:4000])
+    if t is None:
+        sys.exit("\u26d4 %s 원본에 TITEL 이 없습니다" % v)
+    tt = t.group(1).decode("utf-8", "replace").strip()
+    if v not in tt.split():
+        sys.exit("\u26d4 %s 원본 TITEL 에 그 variant 토큰이 없습니다: %r" % (v, tt))
+    if i < len(tit) and tt not in tit[i]:
+        sys.exit("\u26d4 %s TITEL 이 provenance 기록과 다릅니다 (원본 %r / 기록 %r)"
+                 % (v, tt, tit[i]))
+PYSRC
+  ) || { echo "⛔ PP 원본 독립검증 실패: $d"; exit 1; }
 done
-echo "  POTCAR 조립 $n_new 잡 (allowlist 일치로 유지 $n_re)"
+echo "  POTCAR 재조립 $n_new 잡 (이전과 동일 $n_same · 달라서 교체 $n_fix)"
+echo "  ✔ PP 원본 SHA·TITEL·allowlist 를 잡마다 **독립 재계산**했습니다 (회신 AT P0-3)"
 
 # ── AP #7 ③ 봉인에 무엇을 담는가 ────────────────────────────────────────
 VASP_BIN=$(command -v "${VASP_EXE:-vasp_std}" 2>/dev/null || true)
@@ -13808,6 +13859,44 @@ def _runner_e2e(bundle: Path, chk) -> bool:
             (_ok_root / "MANIFEST.json").read_bytes()).hexdigest()
         and _seal.get("vasp_version_banner", "").startswith("vasp.6.4.1"),
         "AR 해제조건 7: 봉인이 ZIP·MANIFEST·VASP 배너를 실제로 담는다")
+
+    # ①-b 🔴 회신 AT P0-3 — **가짜 POTCAR + 자기일관 provenance** 공격 (리뷰어 재현)
+    #   종전엔 provenance 의 allowlist_sha 만 맞으면 재조립을 건너뛰어, PP 원본이
+    #   없어도 봉인이 성공했다. 이제 매번 원본에서 다시 만들고 독립 검증한다.
+    _atk = _copy("at3_fake_potcar")
+    _jd0 = next(d for d in sorted(_atk.rglob("POTCAR_ASSEMBLE.sh"))).parent
+    _al_sha = hashlib.sha256(allow.read_bytes()).hexdigest()
+    (_jd0 / "POTCAR").write_text("FAKE POTCAR — not from PP\n", encoding="utf-8")
+    (_jd0 / "POTCAR_PROVENANCE.json").write_text(json.dumps({
+        "schema": "potcar_provenance/v1", "allowlist": str(allow),
+        "allowlist_sha256": _al_sha, "allowlist_waived": False,
+        "expected_variants": [], "source_sha256": {},
+        "assembled_sha256": hashlib.sha256(
+            (_jd0 / "POTCAR").read_bytes()).hexdigest()}, indent=1), encoding="utf-8")
+    _fake_sha = hashlib.sha256((_jd0 / "POTCAR").read_bytes()).hexdigest()
+    _rc, _o = _run(_atk)
+    _now = (hashlib.sha256((_jd0 / "POTCAR").read_bytes()).hexdigest()
+            if (_jd0 / "POTCAR").is_file() else None)
+    chk(_now != _fake_sha,
+        "🔴 AT P0-3: **가짜 POTCAR + 자기일관 provenance** 를 심어도 원본에서 "
+        "재조립해 덮는다 (종전엔 allowlist_sha 만 맞으면 건너뛰었다)")
+    chk("다릅니다" in _o or "재조립" in _o,
+        "AT P0-3: 있던 POTCAR 가 재조립본과 다르면 **화면에 말한다** (조용히 고치지 않는다)")
+
+    # ①-c ⛔음성 — PP 트리가 없으면 봉인 자체를 거부한다
+    _atk2 = _copy("at3_no_pp")
+    _rc2, _o2 = _run(_atk2, {"PP": str(base / "no_such_pp_tree")})
+    chk(_rc2 != 0 and "PP 트리가 없습니다" in _o2,
+        "⛔음성 AT P0-3: PP 원본 트리가 없으면 봉인하지 않는다 (rc=%s)" % _rc2)
+
+    # ①-d ⛔음성 — variant 하나만 지워도 그 잡에서 막힌다 (전체 부재보다 교묘하다)
+    _atk3 = _copy("at3_missing_variant")
+    _pp2 = base / "pp_missing"
+    _sh2.copytree(pp, _pp2)
+    _sh2.rmtree(_pp2 / sorted(spec.values())[0])
+    _rc3, _o3 = _run(_atk3, {"PP": str(_pp2)})
+    chk(_rc3 != 0 and ("PP 원본이 없습니다" in _o3 or "조립 실패" in _o3),
+        "⛔음성 AT P0-3: variant 하나만 없어도 막는다 (rc=%s)" % _rc3)
 
     # ② ⛔음성 — **job.json 하나를 지우면** 막는다 (AR P0-7 이 재현한 그 경우)
     _r2 = _copy("drop_jobjson")
