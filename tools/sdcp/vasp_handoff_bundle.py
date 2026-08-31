@@ -111,6 +111,32 @@ AUDIT_KEYS = ("ENCUT", "ISMEAR", "IVDW", "LREAL", "ISTART", "ICHARG", "LDIPOL",
               "LDAU", "LMAXMIX")
 
 
+#: 🔴 회신 AT P0-2 (2026-08-31) — dense 상의 k 감사가 fail-open 이었다.
+#:   `KMESH_MISMATCH` 는 `NKPTS > 격자곱` 만 봤다. coarse(3 4 1 = 12) OUTCAR 를
+#:   dense(4 6 1 = 24) 폴더에 넣어도 12 ≤ 24 라 **통과**한다.
+#:   ⇒ KPOINTS **제목 줄**에 상·격자·시프트를 실어 둔다. VASP 는 그 줄을 OUTCAR 에
+#:     ` KPOINTS: <제목>` 으로 그대로 되울리므로, 되울린 제목을 정확히 대조하면
+#:     격자와 시프트가 **정확히** 검증된다 (개수 상한이 아니라 동일성).
+def _kpoints_title(ph: str, mesh: str, shift: str = "0 0 0") -> str:
+    return "phase=%s k=%s shift=%s" % (ph, " ".join(str(mesh).split()),
+                                       " ".join(str(shift).split()))
+
+
+def _kpoints_text(ph: str, mesh: str, shift: str = "0 0 0", mode: str = "Gamma") -> str:
+    return "%s\n0\n%s\n%s\n%s\n" % (_kpoints_title(ph, mesh, shift), mode,
+                                       " ".join(str(mesh).split()),
+                                       " ".join(str(shift).split()))
+
+
+def _kpoints_expected(ph: str, mesh: str, shift: str = "0 0 0",
+                      mode: str = "Gamma") -> Dict[str, Any]:
+    return {"title": _kpoints_title(ph, mesh, shift), "mode": mode,
+            "mesh": " ".join(str(mesh).split()), "shift": " ".join(str(shift).split()),
+            "⛔": ("OUTCAR 의 ` KPOINTS:` 되울림과 **정확히** 같아야 한다. "
+                   "NKPTS 상한만 보면 coarse OUTCAR 를 dense 에 넣어도 통과한다 "
+                   "(회신 AT P0-2)")}
+
+
 def _incar_expected_from(txt):
     """INCAR 원문 → {key: 정규화값}. **줄 끝까지** 캡처한다 (한 토큰이면
     `LDAUU = 0.0 6.2 0.0` 이 `0.0` 으로 잘린다 — codex E-1). 주석(#/!)은 버린다."""
@@ -1626,13 +1652,14 @@ def _emit_slab_job(jd: Path, atoms, nslab: int, freeze: float, frag: str,
     phases = (["static"] if (single_point or closure)
               else (["pre"] if prescf else []) + ["relax", "static"]) \
         + (["dense"] if dense else [])
-    kmesh, incar_exp = {}, {}
+    kmesh, incar_exp, kp_exp = {}, {}, {}
     for ph in phases:
         (jd / ph).mkdir(exist_ok=True)
         txt = tpls[ph].format(**fmt)
         (jd / ph / "INCAR").write_text(txt)
         km = KMESH["relax"] if ph == "pre" else kmesh_over.get(ph, KMESH[ph])
-        (jd / ph / "KPOINTS").write_text(f"auto\n0\nGamma\n{km}\n0 0 0\n")
+        (jd / ph / "KPOINTS").write_text(_kpoints_text(ph, km))
+        kp_exp[ph] = _kpoints_expected(ph, km)
         kmesh[ph] = km
         # ⚠ 기대값을 손으로 적지 않고 **배포한 INCAR 을 되읽는다** — 손으로 적으면
         #   템플릿을 고쳤을 때 조용히 어긋난다 (Codex P0-5).
@@ -1645,7 +1672,8 @@ def _emit_slab_job(jd: Path, atoms, nslab: int, freeze: float, frag: str,
         txt = tpls["dense"].format(**fmt)
         (jd / "dense_cand" / "INCAR").write_text(txt)
         km = kmesh_over.get("dense", KMESH["dense"])
-        (jd / "dense_cand" / "KPOINTS").write_text(f"auto\n0\nGamma\n{km}\n0 0 0\n")
+        (jd / "dense_cand" / "KPOINTS").write_text(_kpoints_text("dense_cand", km))
+        kp_exp["dense_cand"] = _kpoints_expected("dense_cand", km)
         kmesh["dense_cand"] = km
         incar_exp["dense_cand"] = _incar_expected_from(txt)
     _write_potcar_asm(jd, pos["species_order"])
@@ -1657,6 +1685,8 @@ def _emit_slab_job(jd: Path, atoms, nslab: int, freeze: float, frag: str,
     meta = {**pos, **extra_meta, "seed": seed_name, "nslab": nslab,
             "phases": phases, "zcom_frac": round(zcom, 4),
             "kmesh": kmesh, "incar_expected": incar_exp,
+            # 🔴 회신 AT P0-2 — 상마다 **정확한** 격자·시프트를 제목으로 결박한다
+            "kpoints_expected": kp_exp,
             "magmom_poscar": [round(m, 3) for m in mag_poscar],
             "ni_sign_poscar_idx": {str(rev[i]): mag_orig[i] for i in range(nslab)
                                    if sym[i] == "Ni"},
@@ -1759,7 +1789,7 @@ def _emit_mol_job(jd: Path, frag: str, mol, margin: float,
            "com0": float(com[0]), "com1": float(com[1]), "com2": float(com[2]),
            "nupdown": 1 if open_shell else (-1 if free_spin else 0),
            "magmom": " ".join(f"{mags[i]:.3f}" for i in idx)}
-    kmesh, incar_exp = {}, {}
+    kmesh, incar_exp, kp_exp = {}, {}, {}
     # ⛔⛔ 회신 U P0-5 — 기체 기준이 **항상 relax → static** 이었다. 그러면 얻는 차이가
     #   "스핀 제약 해제 + 재이완/구조경로 변화" 라 순수 δ_m 이 아니다. closure 모드는
     #   **고정 기하 static 단독**으로 간다 (MOL_STATIC 은 이미 LREAL=.FALSE. 다).
@@ -1775,7 +1805,8 @@ def _emit_mol_job(jd: Path, frag: str, mol, margin: float,
         (jd / ph).mkdir(exist_ok=True)
         txt = tpl.format(**fmt)
         (jd / ph / "INCAR").write_text(txt)
-        (jd / ph / "KPOINTS").write_text("gamma-only\n0\nGamma\n1 1 1\n0 0 0\n")
+        (jd / ph / "KPOINTS").write_text(_kpoints_text(ph, "1 1 1"))
+        kp_exp[ph] = _kpoints_expected(ph, "1 1 1")
         kmesh[ph] = "1 1 1"
         incar_exp[ph] = {k: m.group(1) for k in AUDIT_KEYS
                          for m in [re.search(rf"^{k}\s*=\s*(\S+)", txt, re.M)] if m}
@@ -1796,6 +1827,8 @@ def _emit_mol_job(jd: Path, frag: str, mol, margin: float,
                        sort_keys=True, ensure_ascii=False)
     meta = {"kind": "mol_ref", "fragment": frag, "species_order": seen, "counts": counts,
             "kmesh": kmesh, "incar_expected": incar_exp,
+            # 🔴 회신 AT P0-2 — 상마다 **정확한** 격자·시프트를 제목으로 결박한다
+            "kpoints_expected": kp_exp,
             "open_shell": open_shell, "box_margin_A": margin,
             "gas_placement": "com_at_cell_center",
             "internal_geometry_sha": hashlib.sha256(_gsig.encode()).hexdigest(),
@@ -2349,6 +2382,9 @@ def read_outcar(p):
     _ed = re.findall(r"Edisp\s*\(eV\)\s*:?\s*(-?[\d.]+)", t)
     nions = re.search(r"NIONS\s*=\s*(\d+)", t)
     nk = re.search(r"NKPTS\s*=\s*(\d+)", t)
+    # 🔴 회신 AT P0-2 — VASP 는 KPOINTS 첫 줄(제목)을 ` KPOINTS: <제목>` 으로
+    #   되울린다. 그 제목에 상·격자·시프트를 실어 두면 **정확한** 대조가 된다.
+    _kt = re.search(r"^\s*KPOINTS:\s*(.+?)\s*$", t, re.M)
     nelm = re.search(r"NELM\s*=\s*(\d+)", t)
     iters = re.findall(r"Iteration\s+\d+\(\s*(\d+)\)", t)
     ver = re.search(r"vasp\.([\w.]+)", t)
@@ -2405,6 +2441,7 @@ def read_outcar(p):
                              and any(int(x) >= int(nelm.group(1)) for x in iters)),
             "nions": int(nions.group(1)) if nions else None,
             "nkpts": int(nk.group(1)) if nk else None,
+            "kpoints_title": _kt.group(1) if _kt else None,
             "read_wavecar": read_wav, "restart_fell_back": fell_back,
             "titels": [x.strip() for x in titels],
             "vasp_version": ver.group(1) if ver else None,
@@ -4801,6 +4838,29 @@ def phase_gates(oc, ph, meta, spec, want_ionic=False):
             g.append(f"KMESH_UNVERIFIED({ph} — OUTCAR 에 NKPTS 없음)")
         elif oc["nkpts"] > prod:
             g.append(f"KMESH_MISMATCH({ph}: NKPTS {oc['nkpts']} > 격자 {want_k} 의 {prod})")
+    # 🔴🔴 회신 AT P0-2 — 위 상한 검사는 **coarse OUTCAR 를 dense 폴더에 넣어도
+    #   통과한다** (3 4 1 = 12 ≤ 4 6 1 = 24). 격자·시프트를 **정확히** 대조한다:
+    #   KPOINTS 제목에 실어 둔 `phase=…  k=…  shift=…` 가 OUTCAR 되울림과 같아야 한다.
+    _kpe = (meta.get("kpoints_expected") or {}).get(ph)
+    if _kpe:
+        _gott = oc.get("kpoints_title")
+        if not _gott:
+            g.append(f"KPOINTS_TITLE_UNVERIFIED({ph} — OUTCAR 에 ` KPOINTS:` 되울림이 "
+                     f"없다. 확인 못 한 것은 통과가 아니다)")
+        elif _gott.strip() != str(_kpe.get("title", "")).strip():
+            g.append(f"KPOINTS_MISMATCH({ph}: 되울림 {_gott!r} ≠ 기대 "
+                     f"{_kpe.get('title')!r} — 다른 상의 OUTCAR 이거나 격자·시프트가 "
+                     f"다르다)")
+    elif ph in ("dense", "dense_cand"):
+        # dense 는 δ_k 로 **판정에 직접 들어가는** 상이다 — 기대값이 없으면 막는다
+        g.append(f"KPOINTS_EXPECTED_MISSING({ph} — job.json 에 kpoints_expected 가 "
+                 f"없다. 구판 번들이다 (회신 AT P0-2))")
+    # 🔴 회신 AT P0-2 — dense 의 INCAR 기대값이 없으면 그 상의 INCAR 감사가 통째로
+    #   비어 fail-open 이 된다. 판정에 들어가는 상에서는 그것을 막는다.
+    if ph in ("dense", "dense_cand") and not (meta.get("incar_expected") or {}).get(ph):
+        g.append(f"INCAR_EXPECTED_MISSING({ph} — 기대 INCAR 이 없어 이 상의 감사가 "
+                 f"통째로 비어 있다. ENCUT·IVDW·ISPIN·LDAU·ICHARG 가 무엇이든 "
+                 f"통과한다 (회신 AT P0-2))")
     audit = {"verified_exact": [], "verified_equivalence_class": [],
              "unverified": [], "mismatch": []}
     expected = (meta.get("incar_expected") or {}).get(ph, {})
@@ -10220,11 +10280,11 @@ def build_bundle(a, ledger: Optional[Dict[str, Any]] = None) -> Path:
                 continue
             (_jd / "dense").mkdir(exist_ok=True)
             # dense 는 static 의 CHGCAR 를 승계한다 (ICHARG=1) — 그 한 줄만 다르다
-            (_jd / "dense" / "INCAR").write_text(
-                _inc.read_text().replace("ICHARG   = 2", "ICHARG   = 1")
-                                .replace("[static]", "[dense k · static CHGCAR 승계]"))
+            _dtxt = (_inc.read_text().replace("ICHARG   = 2", "ICHARG   = 1")
+                                     .replace("[static]", "[dense k · static CHGCAR 승계]"))
+            (_jd / "dense" / "INCAR").write_text(_dtxt)
             (_jd / "dense" / "KPOINTS").write_text(
-                "dense k (회신 AS 9)\n0\nGamma\n%s\n0 0 0\n" % KMESH["dense"])
+                _kpoints_text("dense", KMESH["dense"]))
             _phs.append("dense")
             _pl["phases"] = _phs
             (_pl.setdefault("meta", {}).setdefault("kmesh", {}))["dense"] = KMESH["dense"]
@@ -10232,6 +10292,14 @@ def build_bundle(a, ledger: Optional[Dict[str, Any]] = None) -> Path:
             if _mj.is_file():
                 _m = json.loads(_mj.read_text())
                 _m.setdefault("kmesh", {})["dense"] = KMESH["dense"]
+                # 🔴🔴 회신 AT P0-2 (2026-08-31) — 종전엔 dense 상을 **만들기만** 하고
+                #   `incar_expected.dense` 를 안 실었다. 분석기는
+                #   `(meta["incar_expected"] or {}).get(ph, {})` 로 읽으므로 dense 는
+                #   기대값이 **빈 dict** 였고, ENCUT 400 · IVDW 0 · ISPIN 1 · LDAU F ·
+                #   ICHARG 2 인 OUTCAR 가 그대로 통과해 그 E0 가 δ_k 에 들어갔다.
+                _m.setdefault("incar_expected", {})["dense"] = _incar_expected_from(_dtxt)
+                _m.setdefault("kpoints_expected", {})["dense"] = _kpoints_expected(
+                    "dense", KMESH["dense"])
                 _m["phases"] = _phs
                 _mj.write_text(json.dumps(_m, indent=1, ensure_ascii=False))
             _kadd.append(_rel)
