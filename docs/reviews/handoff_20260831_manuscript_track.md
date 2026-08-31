@@ -180,7 +180,12 @@ PTFE 235,046 → 115,555 · SDCP 0 → 138,988 · 전극 두께 L = 72.534 µm.
    `quotation_ban`.  **어떤 파생 문서에도 그 목록을 베껴 적지 않는다** (이 문서 포함).
    `bash scripts/check_all.sh` 가 잡는다.
 4. **검사기가 대상의 자기 신고를 읽게 하지 않는다** — 반드시 원자료에서 재계산.
-5. **LHS 확장을 `ibb` 에 제출하지 않는다.**
+5. ⚠⚠ **정정 (2026-08-31 저녁) — LHS 확장은 이미 제출됐다.**  이 금지는 R14/R15 해제조건이
+   남아 있던 시점의 것이고, 여섯 건을 닫은 뒤 **사용자 승인으로 64런을 넣었다**.
+   ⇒ 지금 할 일은 *제출 금지* 가 아니라 **회수·판정**이다:
+   `scripts/lhs_ext_submit_gate.py --manifest ~/dem_test/lhs/deck_manifest.json --sacct <파일>`
+   — **64/64 `COMPLETED`** 만 성공이고 나머지 상태는 HOLD 다.
+   경위·제출 방식·게이트 사용법은 `docs/reviews/lhs_ext_r14_closure_20260830.md` §제출 실적.
 6. **litdb 를 이 브랜치에서 검색하지 않는다** — 여기는 65장 동결본.  정본은 202장,
    `origin/claude/friendly-meitner-lldvar`.
 7. **kgy 에서 `git pull` 하지 않는다** — `git fetch` + 일회용 `/tmp` 클론.
