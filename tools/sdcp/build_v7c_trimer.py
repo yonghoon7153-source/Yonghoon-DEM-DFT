@@ -2437,6 +2437,113 @@ def selftest():
              "구판 manifest — P/D 프레임 봉인이 없다"),
         ):
             raises(lambda _s=_sub, _k=_kw: _run(_s, **_k), "⛔음성 e2e: " + _why)
+        # ══ 회신 T Q4 — 4층 판정 e2e (분석기도 한 번도 안 돌려 봤다) ══════
+        import contextlib, io as _io
+
+        def _ana(sub, **kw):
+            d = os.path.join(ptd, sub)
+            if not os.path.isdir(d):
+                _copy2.copytree(str(_po), d)
+                mm = json.loads(open(os.path.join(d, "MANIFEST_PILOT.json")).read())
+                _pil_fake_phaseL(d, mm)
+                with contextlib.redirect_stdout(_io.StringIO()):   # 픽스처 소음 제거
+                    pilot_seeds(d)
+            mm = json.loads(open(os.path.join(d, "MANIFEST_PILOT.json")).read())
+            _pil_fake_phaseS(d, mm, **kw)
+            return pilot_analyze(d)
+
+        _r = _ana("q4_ok")
+        _dj = {k: v for k, v in _r["jobs"].items() if "/Dradical/" in k}
+        chk(len(_r["jobs"]) == 7 and not _r["blocks"],
+            "Q4 e2e: `--polaron_analyze` 가 **실제로 돈다** — S 잡 7건 게이트 0")
+        chk(all(v["intervention"]["status"] == "INTERVENED"
+                for k, v in _dj.items() if v["seed"] != "default"),
+            "Q4 1층: 회전 직후 초기밀도의 스핀이 목표 집합에 있다 (probe 몫 %.2f ≥ %.2f)"
+            % (_dj["S/eps1/Dradical/B_ring0"]["intervention"]["share"], PIL_PROBE_MIN))
+        chk(_dj["S/eps1/Dradical/default"]["intervention"]["status"]
+            == "NO_INTERVENTION",
+            "Q4 1층: `default` 는 개입이 없으므로 probe 를 요구하지 않는다")
+        _th = _dj["S/eps1/Dradical/B_ring0"]["target_hit"]
+        chk(_th["applicable"] and _th["resolved"] and _th["hit"] is True
+            and _th["margin"] >= PIL_HIT_MARGIN,
+            "Q4 2층: 링 분포에 유일 최대가 margin %.2f 로 서 있고 심은 자리와 같다"
+            % _th["margin"])
+        chk(_dj["S/eps1/Dradical/A_sulfonate"]["target_hit"]["applicable"] is False,
+            "Q4 2층: SO₃ 중심 해에는 **링 분해를 요구하지 않는다** "
+            "(backbone 에 스핀이 없으면 성립 안 하는 질문이다)")
+        chk(all(v["stability"]["status"] == "STABLE" for v in _dj.values()),
+            "Q4 3층: 최종 파동함수 안정성이 **수행 흔적과 함께** 확인됐다")
+        _b = _r["seed_vs_basin"]["eps1/Dradical"]
+        chk(_b["n_seeds"] == 4 and _b["n_distinct_basins"] == 4,
+            "Q4 4층: 서로 다른 해 4개가 basin 4개로 갈렸다 (seed %d → basin %d)"
+            % (_b["n_seeds"], _b["n_distinct_basins"]))
+
+        _r2 = _ana("q4_deg", degenerate=True)
+        _b2 = _r2["seed_vs_basin"]["eps1/Dradical"]
+        chk(_b2["n_seeds"] == 4 and _b2["n_distinct_basins"] < 4,
+            "⛔음성 Q4 4층: **같은 에너지·같은 스핀벡터**로 수렴한 seed 들을 "
+            "하나의 basin 으로 센다 (seed %d → basin %d) — seed 개수는 반복수가 아니다"
+            % (_b2["n_seeds"], _b2["n_distinct_basins"]))
+        chk(_r2["by_env"]["eps1"]["n_states"] == _b2["n_distinct_basins"]
+            if _r2.get("by_env") else True,
+            "Q4 4층: `n_states` 가 잡 개수가 아니라 **구분되는 basin 수**다")
+
+        _r3 = _ana("q4_probe", probe_wrong=("B_ring0",))
+        chk(any(g.startswith("SEED_INTERVENTION_FAILED")
+                for g in _r3["jobs"]["S/eps1/Dradical/B_ring0"]["gates"]),
+            "⛔음성 Q4 1층: 회전이 **다른 집합**에 스핀을 놓았다 — 이 seed 는 "
+            "다른 출발점이 아니다")
+        _r4 = _ana("q4_noprobe", drop_probe=("B_ring0",))
+        chk(any(g.startswith("SEED_INTERVENTION_UNVERIFIED")
+                for g in _r4["jobs"]["S/eps1/Dradical/B_ring0"]["gates"]),
+            "⛔음성 Q4 1층: probe 가 안 돌았으면 **확인 못 한 것**이지 통과가 아니다")
+        _r5 = _ana("q4_flat", flat_ring=("B_ring0",))
+        chk(any(g.startswith("TARGET_UNRESOLVED")
+                for g in _r5["jobs"]["S/eps1/Dradical/B_ring0"]["gates"]),
+            "⛔음성 Q4 2층: 두 링에 반씩 걸린 해는 **어느 링인지 분해되지 않는다**")
+        _r6 = _ana("q4_unstable", unstable=("B_ring0",))
+        chk(_r6["jobs"]["S/eps1/Dradical/B_ring0"]["stability"]["status"]
+            == "UNSTABLE_NOT_REJUDGED",
+            "⛔음성 Q4 3층: 불안정한데 **재계산·재판정한 잡이 없다** — "
+            "이 에너지는 basin 대표가 아니다")
+        _r7 = _ana("q4_nostab", no_stab=("B_ring0",))
+        chk(_r7["jobs"]["S/eps1/Dradical/B_ring0"]["stability"]["status"] == "NOT_RUN",
+            "⛔음성 Q4 3층: StabPerform 을 요청했는데 수행 흔적이 없으면 NOT_RUN "
+            "(문자열 하나로 안정을 인정하지 않는다)")
+        # 3층 구제 경로 — 게이트가 **막다른 길이 아니어야** 한다
+        # ⛔음성 먼저: `.gbw` 없이 재계산 입력을 만들려 하면 거부해야 한다
+        _ana("q4_unst2", unstable=("B_ring0",))
+        raises(lambda: pilot_restart(os.path.join(ptd, "q4_unst2")),
+               "⛔음성 Q4 3층: `.gbw` 가 없으면 재계산 입력을 **만들지 않는다** "
+               "(그냥 다시 돌리면 같은 해로 간다)")
+        _du = os.path.join(ptd, "q4_unstable")
+        for _g in ("Dradical", "Pcation"):
+            open(os.path.join(_du, "S", "eps1", _g, "B_ring0",
+                              "B_ring0.gbw"), "w").write("followed orbitals")
+        with contextlib.redirect_stdout(_io.StringIO()):
+            _nr = pilot_restart(_du)
+        _mu = json.loads(open(os.path.join(_du, "MANIFEST_PILOT.json")).read())
+        _rk = "SR/eps1/Dradical/B_ring0"
+        chk(_nr == 2 and _mu["jobs"][_rk]["restart_of"] == "S/eps1/Dradical/B_ring0"
+            and "StabPerform" in open(os.path.join(
+                _du, "SR", "eps1", "Dradical", "B_ring0", "B_ring0.inp")).read(),
+            "Q4 3층 구제: `--polaron_restart` 가 따라 내려간 `.gbw` 로 재판정 입력을 "
+            "만든다 (게이트가 막다른 길이 아니다)")
+        for _g, _nat in (("Dradical", 25), ("Pcation", 26)):
+            _k = "SR/eps1/%s/B_ring0" % _g
+            open(os.path.join(_du, _k, "B_ring0.out"), "w").write(_pil_fake_sout(
+                _mu["jobs"][_k]["charge"], 2, _mu["jobs"][_k]["n_electrons"],
+                [0.0] * _nat, -100.5))
+        _r8 = pilot_analyze(_du)
+        chk(_r8["jobs"]["S/eps1/Dradical/B_ring0"]["stability"]["status"]
+            == "UNSTABLE_REJUDGED_STABLE",
+            "Q4 3층 구제: 재계산이 안정하면 3층이 풀린다 (그 잡이 basin 대표)")
+        chk(all(v["verdict"] in (None, "NO_VALUE", "MODEL_NONDIAGNOSTIC",
+                                 "BACKBONE_SUPPORTED", "SO3_CENTERED_WITHIN_MODEL",
+                                 "MIXED_UNRESOLVED", "ENVIRONMENT_DEPENDENT")
+                for v in (_r3, _r4, _r5, _r6, _r7)),
+            "Q4: 게이트가 걸린 실행은 값이 아니라 판정어를 낸다 (%s)"
+            % [v["verdict"] for v in (_r3, _r4, _r5, _r6, _r7)])
     print("── 폴라론 pilot 끝 ──")
     print("── %s ──" % ("PASS" if not fails else "FAIL " + str(len(fails))))
     return 1 if fails else 0
@@ -2759,6 +2866,164 @@ def pilot_partition_check(F_low, F_hir, tol=PIL_PARTITION_TOL):
                    if dep else "두 분할이 같은 class 와 F_bb 를 준다"}
 
 
+# ══ 회신 T Q4 — **초기 국재 ≠ 최종 basin**: 4층 판정 ═══════════════════════
+#
+#  리뷰 지적: seed 를 국재 궤도로 심었다는 사실은 **그 상태가 실현됐다는 증거가
+#  아니다.** SCF 는 굴러떨어지고, 여러 seed 가 같은 해로 모일 수 있다.
+#  그래서 네 층을 **따로** 확인하고, 층마다 실패어를 다르게 낸다:
+#
+#    1층 초기 개입   — 회전 뒤 **SCF 전** 밀도의 스핀이 목표 집합에 있나
+#                      (`NoIter` probe, 계의 **실제** charge/mult 로)
+#    2층 최종 명중   — 수렴 뒤 링 분포에 **유일 최대**가 margin 이상으로 있나
+#    3층 최종 안정성 — 불안정하면 **따라 내려간 해로 재계산하고 다시** 판정했나
+#    4층 basin 군집  — 서로 다른 seed 가 **같은 해**로 갔으면 상태 1개다
+#                      (⛔ seed 개수는 반복수가 아니다)
+#
+#  ⛔ 이 문턱들은 **결과를 보기 전에** 봉인한다.
+PIL_PROBE_MIN = 0.50        # 1층: 회전 직후 초기밀도의 목표집합 |스핀| 몫
+PIL_HIT_MARGIN = 0.10       # 2층: 최대 링과 차순위 링의 최소 차 (링 몫 단위)
+PIL_BASIN_DE_EH = 1.0e-4    # 4층: 같은 basin 으로 볼 에너지 차 (≈2.7 meV)
+PIL_BASIN_SPIN_L1 = 0.30    # 4층: 원자별 **부호 있는** 스핀 벡터의 L1 거리
+PIL_BASIN_RING_L1 = 0.10    # 4층: 링 몫 벡터의 L1 거리
+PIL_BASIN_S2 = 0.02         # 4층: ⟨S²⟩ 차
+
+
+def pil_target_hit(ring_p, target, margin=PIL_HIT_MARGIN):
+    """2층 — 링 분포에 **유일 최대**가 있나, 그것이 심은 자리인가.
+
+    → {"resolved", "top", "runner_up", "margin", "hit", "why"}
+
+    ⛔ 못 하는 것 / 일부러 안 하는 것
+      · **명중(hit)을 요구하지 않는다.** 요구하면 "심은 데로 갔다" 만 남기는
+        순환논증이 된다. 우리가 요구하는 것은 **분해 가능(resolved)** 이다.
+        옮겨간 것은 결과이지 실패가 아니다 (`MOVED_FROM_SEED` 로 남긴다).
+      · 링 몫은 backbone 안에서 정규화된 값이다 — sulfonate 로 간 스핀은
+        여기 안 보인다. 그건 `F` 와 class 가 본다.
+    """
+    if not ring_p:
+        return {"resolved": False, "top": None, "runner_up": None, "margin": None,
+                "hit": None, "why": "링 몫이 없다 (스핀 없음 또는 판독 실패)"}
+    order = sorted(ring_p.items(), key=lambda kv: -kv[1])
+    top, tv = order[0]
+    rv = order[1][1] if len(order) > 1 else 0.0
+    mg = round(tv - rv, 4)
+    out = {"resolved": mg >= margin, "top": top, "runner_up":
+           (order[1][0] if len(order) > 1 else None), "margin": mg,
+           "top_share": round(tv, 4), "hit": None}
+    if not out["resolved"]:
+        out["why"] = ("최대 링 %s(%.3f)와 차순위 %.3f 의 차 %.3f < %.2f — "
+                      "어느 링의 상태인지 **분해되지 않는다**"
+                      % (top, tv, rv, mg, margin))
+        return out
+    if target:
+        out["hit"] = (top == target)
+        out["why"] = ("심은 자리 %s 에 그대로" % target if out["hit"] else
+                      "MOVED_FROM_SEED(%s 에 심었는데 %s 로 갔다 — 실패가 아니라 결과다)"
+                      % (target, top))
+    else:
+        out["why"] = "심은 자리가 없다 (fresh guess) — 명중 여부는 정의되지 않는다"
+    return out
+
+
+def pil_basin_key(row):
+    """4층 군집의 비교 대상. 하나라도 없으면 **군집하지 않는다** (None 반환)."""
+    if row.get("E_Eh") is None or row.get("ring_p") is None:
+        return None
+    if row.get("spin_vec") is None or row.get("nel") is None:
+        return None
+    return True
+
+
+def pil_basin_cluster(rows, de=PIL_BASIN_DE_EH, dl1=PIL_BASIN_SPIN_L1,
+                      dring=PIL_BASIN_RING_L1, ds2=PIL_BASIN_S2):
+    """4층 — 실현된 해를 basin 으로 묶는다. **seed 개수는 반복수가 아니다.**
+
+    rows = {job_key: {"E_Eh", "ring_p", "spin_vec", "S2", "nel"}}
+    → {"clusters": [[job_key, ...], ...], "n_distinct", "unclustered", "why"}
+
+    비교: 전자수 일치 · |ΔE| ≤ de · ⟨S²⟩ 차 ≤ ds2 ·
+          원자별 **부호 있는** 스핀 벡터 L1 ≤ dl1 · 링 몫 벡터 L1 ≤ dring.
+
+    ⛔ 못 하는 것
+      · 전역 스핀 뒤집힘(모든 부호 반전)을 같은 상태로 보지 **않는다**. 이 계는
+        분자 doublet 이라 슬랩 AFM 처럼 뒤집기 동등성이 자명하지 않다 — 필요하면
+        선언해서 따로 처리할 것이지 여기서 몰래 흡수하지 않는다.
+      · 군집은 **판정이 아니라 계수**다. 두 해가 진짜 다른 물리인지는 말하지 못한다.
+      · 임계 근처(경계에 걸친 쌍)는 `borderline` 으로 남긴다 — 조용히 붙이지 않는다.
+    """
+    ok = {k: v for k, v in rows.items() if pil_basin_key(v)}
+    bad = sorted(set(rows) - set(ok))
+    keys = sorted(ok)
+    seen, clusters, border = {}, [], []
+
+    def same(a, b):
+        A, B = ok[a], ok[b]
+        if A["nel"] != B["nel"]:
+            return False, None
+        dE = abs(A["E_Eh"] - B["E_Eh"])
+        s2 = abs((A.get("S2") or 0.0) - (B.get("S2") or 0.0))
+        n = min(len(A["spin_vec"]), len(B["spin_vec"]))
+        if n == 0 or len(A["spin_vec"]) != len(B["spin_vec"]):
+            return False, None
+        l1 = sum(abs(A["spin_vec"][i] - B["spin_vec"][i]) for i in range(n))
+        rk = sorted(set(A["ring_p"]) | set(B["ring_p"]))
+        rl1 = sum(abs(A["ring_p"].get(k, 0.0) - B["ring_p"].get(k, 0.0)) for k in rk)
+        hit = (dE <= de and s2 <= ds2 and l1 <= dl1 and rl1 <= dring)
+        near = (dE <= de * 3 and s2 <= ds2 * 3 and l1 <= dl1 * 3 and rl1 <= dring * 3)
+        return hit, (None if hit or not near else
+                     {"pair": [a, b], "dE_Eh": round(dE, 8), "spin_L1": round(l1, 4),
+                      "ring_L1": round(rl1, 4), "dS2": round(s2, 4)})
+
+    for a in keys:
+        if a in seen:
+            continue
+        grp = [a]
+        seen[a] = True
+        for b in keys:
+            if b in seen:
+                continue
+            hit, nb = same(a, b)
+            if hit:
+                grp.append(b)
+                seen[b] = True
+            elif nb:
+                border.append(nb)
+        clusters.append(sorted(grp))
+    return {"clusters": clusters, "n_distinct": len(clusters),
+            "n_jobs": len(ok), "unclustered": bad, "borderline": border,
+            "why": ("서로 다른 seed 가 같은 해로 갔으면 상태 1개다 — "
+                    "seed %d개 → 구분되는 basin %d개 (⛔ seed 개수는 반복수가 아니다)"
+                    % (len(ok), len(clusters)))}
+
+
+def pil_stability_layer(inp_txt, seg, rejudge_seg=None):
+    """3층 — 최종 파동함수 안정성. **불안정하면 재계산 후 다시** 판정해야 한다.
+
+    → (status, why). status ∈ NOT_REQUESTED · NOT_RUN · STABLE ·
+                              UNSTABLE_NOT_REJUDGED · UNSTABLE_REJUDGED_STABLE ·
+                              UNSTABLE_REJUDGED_UNSTABLE
+
+    ⛔ 못 하는 것: ORCA 의 안정성 분석은 **수렴한 determinant 의 국소최소 여부**만
+      본다. 상태를 열거하지 않는다 (회신 S). 그리고 문자열을 읽는 것이므로 판본이
+      문구를 바꾸면 `NOT_RUN` 으로 떨어진다 — 조용히 통과시키지 않는 쪽이 맞다.
+    """
+    if "StabPerform" not in (inp_txt or ""):
+        return "NOT_REQUESTED", "입력에 StabPerform 이 없다 — 안정성을 주장하지 않는다"
+    if not re.search(r"(?i)stability analysis", seg or ""):
+        return "NOT_RUN", "요청했는데 수행 흔적이 없다"
+    if not re.search(r"(?i)wavefunction is unstable|instabilit", seg or ""):
+        return "STABLE", "안정 (수행 흔적 있음 · 불안정 문구 없음)"
+    if not rejudge_seg:
+        return ("UNSTABLE_NOT_REJUDGED",
+                "불안정한데 따라 내려간 해로 **재계산·재판정한 잡이 없다** — "
+                "이 에너지와 스핀분포는 basin 대표가 아니다")
+    if re.search(r"(?i)wavefunction is unstable|instabilit", rejudge_seg):
+        return "UNSTABLE_REJUDGED_UNSTABLE", "재계산해도 여전히 불안정하다"
+    if not re.search(r"(?i)stability analysis", rejudge_seg):
+        return "UNSTABLE_REJUDGED_UNSTABLE", "재계산 출력에 안정성 분석이 없다"
+    return "UNSTABLE_REJUDGED_STABLE", "불안정 → 재계산 후 안정 (그 잡을 대표로 쓴다)"
+
+
 def pilot_acidic_h(csym, cnb, csulf):
     """산성 H (SO₃H 의 H) 를 0-based 로. → [(sulf_idx, S, O, H), ...]"""
     out = []
@@ -2806,7 +3071,11 @@ def _pil_inp(path, xyz, charge, mult, wf, eps, functional,
     ⚠ `NoAutoStart` 는 **항상** 켠다 — 같은 basename 의 GBW 를 우연히 물지 않게.
       의도한 lineage 는 `MOInp`/`MORead` 로만 들어온다 (회신 S Q8 게이트: 둘을 구분).
     """
-    obs = " Hirshfeld" + ("" if wf == "RKS" else " UNO UCO")
+    # ⛔ 회신 T Q4 1층 — `NoIter` probe 는 **수렴하지 않은 초기밀도**를 본다.
+    #   UNO/UCO 는 수렴한 파동함수의 자연궤도·대응궤도 분석이라 여기서는 정의되지
+    #   않는다. 그래서 probe 에서만 뺀다 — 대신 probe 결과는 **판정에 쓰지 않고**
+    #   "회전이 실제로 목표 자리에 스핀을 놓았나" 하나만 확인한다 (면제 사유 명시).
+    obs = " Hirshfeld" + ("" if wf == "RKS" or noiter else " UNO UCO")
     kw = "! %s %s TightSCF NoAutoStart%s%s" % (
         wf, functional, " NoIter" if noiter else "", obs)
     body = [kw, "%maxcore 6000"]
@@ -3283,7 +3552,7 @@ def pilot_seeds(d):
         raise SystemExit("⛔ atom_manifest 의 원자수가 manifest 와 어긋난다 "
                          "(P %d · D %d · n_atoms %d · kill %d)"
                          % (_amf["P"]["n_atoms"], _amf["D"]["n_atoms"], nat, len(kill)))
-    made, report = 0, {}
+    made, probed, report = 0, 0, {}
     for jk, jm in sorted(man["jobs"].items()):
         if jm["phase"] != "L2":
             continue                     # ⛔ 인구는 **L2**(국재 궤도)에서만 읽는다
@@ -3423,6 +3692,39 @@ def pilot_seeds(d):
                      spec["wf"], jm["epsilon"], man["functional"],
                      moread=(None if sd == "default" else gbw),
                      rotate=rot, stab=True, nprocs=man.get("nprocs", 1))
+            # ⛔⛔ 회신 T Q4 1층 — **초기 개입 확인 probe**. 회전을 걸었다는 사실은
+            #   그 자리에 스핀이 놓였다는 증거가 아니다. `NoIter` 로 SCF 전 밀도의
+            #   스핀 분포를 계의 **실제** charge/mult 에서 찍는다.
+            #   (예: D• 961전자 doublet → Nα/Nβ = 481/480. 부모의 닫힌껍질이 아니다.)
+            _grp = "Dradical" if is_dm else "Pcation"
+            _pk = None
+            if sd != "default":
+                pdir = d / "S0P" / env / _grp / sd
+                pdir.mkdir(parents=True, exist_ok=True)
+                (pdir / xyzn).write_text(src_xyz.read_text())
+                _pil_inp(pdir / (sd + "_probe.inp"), xyzn, spec["charge"], spec["mult"],
+                         spec["wf"], jm["epsilon"], man["functional"],
+                         moread=os.path.relpath(locf, pdir), rotate=rot,
+                         stab=False, noiter=True, nprocs=man.get("nprocs", 1))
+                _pk = "S0P/%s/%s/%s" % (env, _grp, sd)
+                man["jobs"][_pk] = {
+                    "phase": "S0P", "env": env, "epsilon": jm["epsilon"],
+                    "charge": spec["charge"], "mult": spec["mult"], "wf": spec["wf"],
+                    "seed": sd, "probe_of": "S/%s/%s/%s" % (env, _grp, sd),
+                    "target_group": sd,
+                    "atom_frame": ("D" if is_dm else "P"),
+                    "n_electrons": _nel_s,
+                    "rotate": (None if rot is None else list(rot)),
+                    "roles": ["initial_intervention_probe"],
+                    "why": ("회신 T Q4 1층 — 회전 직후 **SCF 전** 밀도의 스핀이 목표 "
+                            "집합에 있나. 없으면 이 seed 는 다른 출발점이 아니다"),
+                    "observable_exemption": (
+                        "UNO/UCO 없음 — 수렴한 파동함수의 자연궤도 분석이라 NoIter "
+                        "밀도에는 정의되지 않는다. 그래서 probe 는 **에너지·class "
+                        "판정에 쓰지 않는다** (개입 확인 전용)"),
+                    "inp_sha256": _sha(pdir / (sd + "_probe.inp")),
+                }
+                probed += 1
             man["jobs"]["S/%s/%s/%s" % (env, "Dradical" if is_dm else "Pcation", sd)] = {
                 "phase": "S", "env": env, "epsilon": jm["epsilon"],
                 "charge": spec["charge"], "mult": spec["mult"], "wf": spec["wf"],
@@ -3473,6 +3775,8 @@ def pilot_seeds(d):
                 "rotate_skipped_why": (None if rot is not None or sd == "default"
                                        else "고른 MO 가 HOMO 자체다 — 회전 불필요"),
                 "roles": ["measured"],
+                # ⛔ 회신 T Q4 1층 — `default` 는 개입이 없으므로 probe 도 없다
+                "intervention_probe": _pk,
                 "inp_sha256": _sha(sdir / (sd + ".inp")),
                 "xyz_sha256": _sha(sdir / (xyzn)),
             }
@@ -3484,9 +3788,10 @@ def pilot_seeds(d):
                                         ("%.1f%%" % w) if w is not None else "-"))
             made += 1
     man["seeds_made"] = made
+    man["probes_made"] = probed          # 회신 T Q4 1층 — 개입 확인 probe
     man["seeds_made_at"] = time.strftime("%Y-%m-%dT%H:%M:%S")
     (d / "MANIFEST_PILOT.json").write_text(json.dumps(man, indent=1, ensure_ascii=False))
-    print("→ phase S 입력 %d개" % made)
+    print("→ phase S 입력 %d개 + 1층 개입 probe %d개 (회신 T Q4)" % (made, probed))
     for env, rows in sorted(report.items()):
         print("  [%s] %s" % (env, " · ".join(rows)))
     return made
@@ -3561,6 +3866,147 @@ def _pil_fake_phaseL(out, man, rand_mark=False, kill_guessmode=False, no_mopop=F
             f.write_text(f.read_text().replace("GuessMode CMatrix", "GuessMode FMatrix"))
     return out
 
+def _pil_fake_sout(charge, mult, nel, spins, E, S2=0.7530, stable=True,
+                   stability=True, echo=True):
+    """selftest 용 phase S/probe ORCA 출력. `spins` = 원자별 스핀 리스트.
+
+    ⛔ 못 하는 것: 실제 ORCA 출력이 아니다 — **우리 판독기가 받는 최소 형식**이다.
+    """
+    t = "* O   R   C   A *\n"
+    if echo:
+        t += ("Total Charge           Charge          ....    %d\n"
+              "Multiplicity           Mult            ....    %d\n"
+              "Number of Electrons    NEL             ....    %d\n"
+              % (charge, mult, nel))
+    if stability:
+        t += "Stability Analysis of the SCF solution\n"
+        t += ("The wavefunction is unstable\n" if not stable
+              else "The wavefunction is stable\n")
+    for hdr in ("LOEWDIN ATOMIC CHARGES AND SPIN POPULATIONS", "HIRSHFELD ANALYSIS"):
+        t += hdr + "\n" + "-" * 40 + "\n"
+        for i, m in enumerate(spins):
+            t += "%4d %-2s:  %10.6f %10.6f\n" % (i, "C", 0.0, m)
+        t += "\n"
+    t += "<S**2>     =    %.4f\n" % S2
+    t += "FINAL SINGLE POINT ENERGY   %.8f\n" % E
+    t += "ORCA TERMINATED NORMALLY\n"
+    return t
+
+
+def _pil_fake_phaseS(out, man, probe_wrong=(), flat_ring=(), unstable=(),
+                     no_stab=(), degenerate=False, drop_probe=()):
+    """selftest 용 phase S + 1층 probe 산출물. 인자들이 **음성 경로**다."""
+    out = Path(out)
+    amf = man["atom_manifest"]
+
+    def tgt_idx(fr, sd):
+        c = amf[fr]["components"]
+        if sd == "A_sulfonate":
+            return sorted(c["sulfonate"])
+        if str(sd).startswith("B_ring"):
+            rg = amf[fr]["rings"][str(sd)[2:]]
+            return sorted(set(rg["core"]) | set(rg["ether_O"]))
+        return sorted(amf[fr]["rings"]["ring0"]["core"])       # default → ring0
+
+    def vec(fr, idx, flat=False):
+        n = amf[fr]["n_atoms"]
+        v = [0.0] * n
+        if flat:                       # 두 링에 반씩 — 어느 링인지 분해 안 된다
+            rs = [sorted(set(r["core"]) | set(r["ether_O"]))
+                  for r in amf[fr]["rings"].values()]
+            for r in rs:
+                for i in r:
+                    v[i] = 0.5 / len(r)
+        else:
+            for i in idx:
+                v[i] = 1.0 / len(idx)
+        return v
+
+    _ord = {k: i for i, k in enumerate(sorted(k for k, v in man["jobs"].items()
+                                                if v["phase"] == "S"))}
+    for jk, jm in sorted(man["jobs"].items()):
+        if jm["phase"] not in ("S", "S0P"):
+            continue                                   # L/L2 는 이미 만들어져 있다
+        fr = jm.get("atom_frame") or ("D" if "/Dradical/" in jk else "P")
+        sd = jm["seed"]
+        if jm["phase"] == "S0P":
+            if sd in drop_probe:
+                continue
+            # 잘못된 개입: 목표가 아닌 **다른** 집합에 스핀을 놓는다
+            _i = tgt_idx(fr, "B_ring1" if sd != "B_ring1" else "B_ring0") \
+                if sd in probe_wrong else tgt_idx(fr, sd)
+            (out / jk / (sd + "_probe.out")).write_text(_pil_fake_sout(
+                jm["charge"], jm["mult"], jm["n_electrons"], vec(fr, _i),
+                -1.0, stability=False))
+            continue
+        if jm["phase"] != "S":
+            continue
+        # ⛔ `hash()` 는 프로세스마다 값이 달라 시험이 흔들린다 — 정렬 순번을 쓴다
+        _E = -100.0 if degenerate else -100.0 - 0.01 * _ord[jk]
+        (out / jk / (sd + ".out")).write_text(_pil_fake_sout(
+            jm["charge"], jm["mult"], jm["n_electrons"],
+            vec(fr, tgt_idx(fr, sd), flat=(sd in flat_ring)), _E,
+            stable=(sd not in unstable), stability=(sd not in no_stab)))
+    return out
+
+def pilot_restart(d):
+    """3층 구제 — 불안정으로 게이트된 잡을 **따라 내려간 해**로 재계산할 입력을 만든다.
+
+    ORCA 는 안정성 분석에서 불안정을 찾으면 그 방향을 따라간 궤도를 `.gbw` 에 남긴다.
+    그것을 `MORead` 해서 같은 기하·같은 설정으로 다시 돌리고 **안정성을 다시** 본다.
+    새 잡은 manifest 에 `restart_of` 로 연결되고, 분석기가 그것을 3층 재판정에 쓴다.
+
+    ⛔ 못 하는 것
+      · 재계산이 **안정해진다는 보장은 없다.** 여전히 불안정하면 3층은
+        `UNSTABLE_REJUDGED_UNSTABLE` 이고 그 잡은 basin 대표가 아니다.
+      · 이것은 상태 탐색이 아니다 — 같은 basin 안에서 더 낮은 determinant 로
+        내려가는 것뿐이다. 새 seed 를 만드는 것과 혼동하지 않는다.
+      · 이미 `restart_of` 가 있는 잡은 다시 만들지 않는다 (무한 사슬 방지).
+    """
+    d = Path(d)
+    man = json.loads((d / "MANIFEST_PILOT.json").read_text())
+    res = pilot_analyze(d)
+    made = []
+    for jk, r in sorted(res["jobs"].items()):
+        if (r.get("stability") or {}).get("status") != "UNSTABLE_NOT_REJUDGED":
+            continue
+        jm = man["jobs"][jk]
+        if jm.get("restart_of"):
+            continue
+        tag = jk.rsplit("/", 1)[-1]
+        gbw = d / jk / (tag + ".gbw")
+        if not gbw.is_file():
+            raise SystemExit("⛔ %s 가 없다 — 불안정을 따라 내려간 궤도가 없으면 "
+                             "재계산의 출발점이 없다 (그냥 다시 돌리면 같은 해로 "
+                             "간다)" % gbw)
+        _, env, grp, sd = jk.split("/")
+        rd = d / "SR" / env / grp / sd
+        rd.mkdir(parents=True, exist_ok=True)
+        xyzn = "%s.xyz" % sd
+        (rd / xyzn).write_text((d / jk / xyzn).read_text())
+        rk = "SR/%s/%s/%s" % (env, grp, sd)
+        _pil_inp(rd / (sd + ".inp"), xyzn, jm["charge"], jm["mult"], jm["wf"],
+                 jm["epsilon"], man["functional"],
+                 moread=os.path.relpath(gbw, rd), rotate=None, stab=True,
+                 nprocs=man.get("nprocs", 1))
+        man["jobs"][rk] = {
+            "phase": "SR", "env": env, "epsilon": jm["epsilon"],
+            "charge": jm["charge"], "mult": jm["mult"], "wf": jm["wf"],
+            "seed": sd, "restart_of": jk,
+            "atom_frame": jm.get("atom_frame"), "n_electrons": jm.get("n_electrons"),
+            "orbitals_from": os.path.relpath(gbw, d).replace(os.sep, "/"),
+            "gbw_sha256": _sha(gbw),
+            "roles": ["stability_rejudge"],
+            "why": ("회신 T Q4 3층 — 불안정한 해를 따라 내려간 궤도로 재계산하고 "
+                    "**안정성을 다시** 본다. 이 잡이 basin 대표가 된다"),
+            "inp_sha256": _sha(rd / (sd + ".inp")),
+        }
+        made.append(rk)
+    (d / "MANIFEST_PILOT.json").write_text(
+        json.dumps(man, indent=1, ensure_ascii=False))
+    print("→ 3층 재판정 입력 %d개%s" % (len(made), (" · " + " · ".join(made)) if made else ""))
+    return len(made)
+
 # ── 폴라론 pilot · 분석 ─────────────────────────────────────────────────────
 
 def pilot_analyze(d):
@@ -3607,6 +4053,54 @@ def pilot_analyze(d):
         """하위호환 shim — `mp` 는 무시하고 봉인 프레임을 돌려준다."""
         return frame_sets(is_dm, ether=True)
 
+    def _grp_idx(frame, tgt):
+        """seed 이름 → 그 프레임의 목표 원자 index. 모르면 None."""
+        fr = _amf[frame]
+        if tgt == "A_sulfonate":
+            return sorted(fr["components"]["sulfonate"])
+        if str(tgt).startswith("B_"):
+            rg = fr["rings"].get(str(tgt)[2:])
+            if rg:
+                return sorted(set(rg["core"]) | set(rg["ether_O"]))
+        return None
+
+    # ── 1층: 초기 개입 probe 판독 (회신 T Q4) ─────────────────────────────
+    #  ⛔ probe 는 `NoIter` 라 **에너지·class 판정에 쓰지 않는다.** 오직
+    #    "회전이 목표 자리에 스핀을 놓았나" 만 본다.
+    probes = {}
+    for pk, pm in sorted(man["jobs"].items()):
+        if pm.get("phase") != "S0P":
+            continue
+        pd = d / pk
+        pout = pd / (pm["seed"] + "_probe.out")
+        pv = {"probe_job": pk, "share": None, "status": None}
+        if not pout.is_file():
+            pv["status"] = "PROBE_NOT_RUN"
+        else:
+            pseg = _last_segment(pout.read_text(errors="replace"))
+            if "ORCA TERMINATED NORMALLY" not in pout.read_text(errors="replace"):
+                pv["status"] = "PROBE_NOT_TERMINATED"
+            else:
+                _natp = man["n_atoms"] - (1 if pm.get("atom_frame") == "D" else 0)
+                _hp = _hirshfeld_spins(pseg, _natp)
+                _gi = _grp_idx(pm.get("atom_frame") or "P", pm.get("target_group"))
+                if _hp is None:
+                    pv["status"] = "PROBE_SPIN_MISSING"
+                elif not _gi:
+                    pv["status"] = "PROBE_TARGET_UNKNOWN"
+                else:
+                    _tt = sum(abs(v) for v in _hp)      # _spin_block 은 **리스트**
+                    if _tt <= 0:
+                        pv["status"] = "PROBE_NO_SPIN(초기밀도에 스핀이 없다 — "
+                        pv["status"] += "회전이 알파 채널이거나 no-op 이었을 수 있다)"
+                    else:
+                        pv["share"] = round(
+                            sum(abs(_hp[i]) for i in _gi if i < len(_hp)) / _tt, 4)
+                        pv["status"] = ("INTERVENED" if pv["share"] >= PIL_PROBE_MIN
+                                        else "SEED_INTERVENTION_FAILED")
+        pv["threshold"] = PIL_PROBE_MIN
+        probes[pm["probe_of"]] = pv
+
     for jk, jm in sorted(man["jobs"].items()):
         if jm["phase"] != "S":
             continue
@@ -3642,11 +4136,20 @@ def pilot_analyze(d):
                                   % r["S2_raw"])
         else:
             r["gates"].append("S2_MISSING")
-        if "StabPerform" in (jd / (tag + ".inp")).read_text():
-            if re.search(r"(?i)wavefunction is unstable|instabilit", seg):
-                r["gates"].append("SCF_UNSTABLE(따라 내려간 해로 재계산 필요)")
-            elif not re.search(r"(?i)stability analysis", seg):
-                r["gates"].append("STABILITY_NOT_RUN(요청했는데 수행 흔적이 없다)")
+        # ── 3층: 최종 전자 안정성 (회신 T Q4) ─────────────────────────────
+        #  불안정하면 **따라 내려간 해로 재계산하고 다시 판정**해야 한다.
+        #  재판정 잡은 manifest 의 `restart_of` 로 연결된다.
+        _rej = None
+        for _rk, _rm in man["jobs"].items():
+            if _rm.get("restart_of") == jk:
+                _ro = d / _rk / (_rk.rsplit("/", 1)[-1] + ".out")
+                if _ro.is_file():
+                    _rej = _last_segment(_ro.read_text(errors="replace"))
+                    r["restart_job"] = _rk
+        _st, _sw = pil_stability_layer((jd / (tag + ".inp")).read_text(), seg, _rej)
+        r["stability"] = {"status": _st, "why": _sw}
+        if _st in ("NOT_RUN", "UNSTABLE_NOT_REJUDGED", "UNSTABLE_REJUDGED_UNSTABLE"):
+            r["gates"].append("STABILITY_%s(%s)" % (_st, _sw))
         is_dm = "/Dradical/" in jk
         # ⛔ 회신 T Q3 — strict(bb_core) / extended(bb_core+ether_O) **둘 다** 낸다
         sm = frame_sets(is_dm, ether=True)
@@ -3682,11 +4185,16 @@ def pilot_analyze(d):
             # ether O 에 얼마나 있는지 **따로** 본다 — 그것이 갈림의 원인이면
             #   "backbone 폴라론" 이 아니라 ETHER_O_CENTERED 라고 말해야 한다.
             _fr_c = _amf["D" if is_dm else "P"]["components"]
-            _abs_tot = sum(abs(v) for v in hir.values()) or 1.0
+            # ⛔ `_spin_block` 은 **리스트**를 돌려준다 (dict 가 아니다). 종전
+            #   `hir.values()`·`hir.get(i)` 는 AttributeError 로 죽었다 — 분석기를
+            #   한 번도 실행하지 않아 몰랐던 것이다 (2026-08-31 e2e 로 발견).
+            _abs_tot = sum(abs(v) for v in hir) or 1.0
             r["F_ether_O"] = round(
-                sum(abs(hir.get(i, 0.0)) for i in _fr_c["ether_O"]) / _abs_tot, 4)
+                sum(abs(hir[i]) for i in _fr_c["ether_O"] if i < len(hir))
+                / _abs_tot, 4)
             r["F_components"] = {
-                g: round(sum(abs(hir.get(i, 0.0)) for i in _fr_c[g]) / _abs_tot, 4)
+                g: round(sum(abs(hir[i]) for i in _fr_c[g] if i < len(hir))
+                         / _abs_tot, 4)
                 for g in ("bb_core", "ether_O", "sulfonate", "other")}
             c1 = (r.get("class") or (None,))[0]
             c2 = (r["hirshfeld_strict"]["class"] or (None,))[0]
@@ -3704,7 +4212,86 @@ def pilot_analyze(d):
         r["E_Eh"] = float(m_e[-1]) if m_e else None
         if r["E_Eh"] is None:
             r["gates"].append("NO_ENERGY")
+
+        # ── 1층: 초기 개입 (회신 T Q4) ────────────────────────────────────
+        _pv = probes.get(jk)
+        if jm.get("seed") == "default":
+            r["intervention"] = {"status": "NO_INTERVENTION",
+                                 "why": ("fresh guess — 개입이 없으므로 확인할 것도 "
+                                         "없다. 국재 seed 들과 **다른 출발점**이다")}
+        elif _pv is None:
+            r["intervention"] = {"status": "PROBE_ABSENT",
+                                 "why": ("이 seed 에 개입 probe 가 없다 — 회전이 목표 "
+                                         "자리에 스핀을 놓았는지 확인할 수 없다")}
+            r["gates"].append("SEED_INTERVENTION_UNVERIFIED(probe 없음)")
+        else:
+            r["intervention"] = _pv
+            if _pv["status"] != "INTERVENED":
+                r["gates"].append(
+                    "SEED_INTERVENTION_%s(초기밀도 목표몫 %s < %.2f — 이 seed 는 "
+                    "다른 출발점이 아니다)"
+                    % ("FAILED" if _pv["status"] == "SEED_INTERVENTION_FAILED"
+                       else "UNVERIFIED", _pv["share"], PIL_PROBE_MIN))
+
+        # ── 2층: 최종 명중 / 분해 가능성 (회신 T Q4) ──────────────────────
+        _rp = (r.get("hirshfeld") or {}).get("ring_p")
+        r["ring_p"] = _rp
+        _tg = jm.get("target_group")
+        # ⛔ `"B_ring0"[2:]` 이 이미 `"ring0"` 이다 — 앞에 "ring" 을 또 붙이면
+        #   `"ringring0"` 이 되어 **명중이 영원히 False** 다 (2026-08-31 e2e 로 발견).
+        _tgr = _tg[2:] if str(_tg).startswith("B_ring") else None
+        # ⛔ "어느 링인가" 는 **backbone 에 스핀이 있을 때만** 성립하는 질문이다.
+        #   SO₃ 중심 해에 링 분해를 요구하면 정상 결과를 오답 처리한다.
+        _fbb = ((r.get("hirshfeld") or {}).get("F") or {}).get("backbone")
+        if _fbb is None or _fbb < PIL_CLASS_MIN:
+            r["target_hit"] = {"applicable": False, "resolved": None,
+                               "why": ("backbone 몫 %s < %.2f — 링 분해 질문이 "
+                                       "성립하지 않는다 (class 가 본다)"
+                                       % (None if _fbb is None else round(_fbb, 3),
+                                          PIL_CLASS_MIN))}
+        else:
+            r["target_hit"] = pil_target_hit(_rp, _tgr)
+            r["target_hit"]["applicable"] = True
+            if not r["target_hit"]["resolved"]:
+                r["gates"].append("TARGET_UNRESOLVED(%s)" % r["target_hit"]["why"])
+
+        # ── 4층 재료 — 군집은 루프 뒤에서 한 번에 (회신 T Q4) ─────────────
+        r["_basin"] = {
+            "E_Eh": r["E_Eh"], "ring_p": _rp, "S2": r.get("S2_raw"),
+            "nel": (r.get("echo") or {}).get("nel") or jm.get("n_electrons"),
+            "spin_vec": ([round(hir[i], 6) for i in range(min(nat, len(hir)))]
+                         if hir is not None else None)}
+        if r["_basin"]["spin_vec"]:
+            r["spin_vector_sha256"] = hashlib.sha256(
+                json.dumps(r["_basin"]["spin_vec"]).encode()).hexdigest()
         res["jobs"][jk] = r
+
+    # ── 4층: 실현 basin 군집 (회신 T Q4) ─────────────────────────────────
+    #  ⛔⛔ **seed 개수는 반복수가 아니다.** 서로 다른 seed 가 같은 해로 갔으면
+    #     상태는 1개다. 이 계수를 안 하면 "8개 seed 가 backbone 을 지지" 처럼
+    #     같은 해를 여덟 번 센 문장이 나온다.
+    res["basins"] = {}
+    for _sc in sorted({(v["env"], ("Dradical" if "/Dradical/" in k else "Pcation"))
+                       for k, v in res["jobs"].items()}):
+        _rows = {k: v["_basin"] for k, v in res["jobs"].items()
+                 if v["env"] == _sc[0] and ("/%s/" % _sc[1]) in k}
+        res["basins"]["%s/%s" % _sc] = pil_basin_cluster(_rows)
+    for v in res["jobs"].values():
+        v.pop("_basin", None)
+    res["seed_vs_basin"] = {
+        g: {"n_seeds": b["n_jobs"], "n_distinct_basins": b["n_distinct"],
+            "clusters": b["clusters"], "borderline": b["borderline"],
+            "unclustered": b["unclustered"]}
+        for g, b in res["basins"].items()}
+    res["⛔_seed는_반복수가_아니다"] = (
+        "같은 basin 에 모인 seed 들은 **하나의 실현 상태**다. 지지 증거의 개수로 "
+        "세지 않는다 (회신 T Q4 4층). 군집 재료: 전자수·에너지·⟨S²⟩·원자별 부호 "
+        "있는 스핀 벡터·링 몫 벡터. 임계 근처 쌍은 `borderline` 으로 남긴다")
+    res["four_layer_thresholds"] = {
+        "layer1_probe_min": PIL_PROBE_MIN, "layer2_hit_margin": PIL_HIT_MARGIN,
+        "layer4_dE_Eh": PIL_BASIN_DE_EH, "layer4_spin_L1": PIL_BASIN_SPIN_L1,
+        "layer4_ring_L1": PIL_BASIN_RING_L1, "layer4_dS2": PIL_BASIN_S2,
+        "⚠": "결과를 보기 전에 봉인한 값이다 (코드 상수)"}
 
     # ── 사전등록 seed 전건 receipt (회신 S Q8) ────────────────────────────
     want = set()
@@ -3752,11 +4339,17 @@ def pilot_analyze(d):
             continue
         rows.sort()
         lo = rows[0]
+        _bs = res["basins"].get("%s/Dradical" % env, {})
         order[env] = {"lowest": lo[1], "class": lo[2].get("class"),
                       "F": (lo[2].get("hirshfeld") or {}).get("F"),
                       "N_eff": (lo[2].get("hirshfeld") or {}).get("N_eff"),
                       "span80": (lo[2].get("hirshfeld") or {}).get("span80"),
-                      "n_states": len(rows),
+                      # ⛔ 회신 T Q4 4층 — 잡 개수가 아니라 **구분되는 basin 수**다
+                      "n_jobs": len(rows),
+                      "n_states": _bs.get("n_distinct"),
+                      "n_states_note": ("서로 다른 seed 가 같은 해로 가면 상태 1개다 "
+                                        "— 잡 %d개 → basin %s개"
+                                        % (len(rows), _bs.get("n_distinct"))),
                       "E_spread_eV": round((rows[-1][0] - rows[0][0]) * 27.2114, 4)}
     res["by_env"] = order
     cls = {e: (v["class"][0] if v.get("class") else None) for e, v in order.items()}
@@ -3784,9 +4377,14 @@ PIL_RUNNER = r"""#!/usr/bin/env bash
 #
 #   bash run_pilot.sh L        phase L  (SCF + Pipek-Mezey 국재화) — 여기서 멈춘다
 #   bash run_pilot.sh L2       phase L2 (`.loc` 를 MORead, NoIter, 국재 궤도 인구)
-#   bash run_pilot.sh seeds    L2 출력 판독 → phase S 입력 생성 (계산 없음)
+#   bash run_pilot.sh seeds    L2 출력 판독 → phase S + 1층 probe 입력 생성 (계산 없음)
+#   bash run_pilot.sh probe    1층 개입 확인 (`NoIter`, 싸다) — **phase S 앞에**
 #   bash run_pilot.sh S        phase S  (측정) — **리뷰 통과 뒤에만**
-#   bash run_pilot.sh analyze  판정
+#   bash run_pilot.sh analyze  판정 (4층)
+#   bash run_pilot.sh restart  3층 재판정 — 불안정 잡을 따라 내려간 해로 다시
+#
+# ⛔ 회신 T Q4 — probe 를 S 앞에 두는 이유: 회전이 목표 자리에 스핀을 **안** 놓았으면
+#    그 seed 는 다른 출발점이 아니다. 200원자 r2SCAN-3c 를 돌리기 전에 알아야 한다.
 #
 # ⛔ L2 가 왜 따로 있나 (2026-08-31 실측): phase L 이 찍는
 #    `LOEWDIN ORBITAL POPULATIONS PER MO` 는 **정준 궤도**의 인구다
@@ -3795,8 +4393,9 @@ PIL_RUNNER = r"""#!/usr/bin/env bash
 #    SCF 없이 인구만 다시 찍는다. seed 선택도 seed 입력도 그 `.loc` 를 쓴다.
 # ⛔ 자동 연결(all)을 두지 않는다 — phase S 앞에 사람의 판단이 들어가야 한다.
 set -u
-stage=${1:?단계를 주세요: L | L2 | seeds | S | analyze}
-case "$stage" in L|L2|seeds|S|analyze) ;; *) echo "모르는 단계: $stage"; exit 2;; esac
+stage=${1:?단계를 주세요: L | L2 | seeds | probe | S | analyze | restart}
+case "$stage" in L|L2|seeds|probe|S|analyze|restart) ;;
+  *) echo "모르는 단계: $stage"; exit 2;; esac
 ORCA=${ORCA:?ORCA 절대경로를 주세요 (병렬은 full pathname 이 필요합니다)}
 BUILDER=${BUILDER:?build_v7c_trimer.py 경로를 주세요}
 D=$(cd "$(dirname "$0")" && pwd)
@@ -3863,10 +4462,17 @@ case "$stage" in
     ;;
   seeds)
     if python3 "$BUILDER" --polaron_seeds "$D"; then
-      echo "다음: **리뷰 통과 뒤** bash run_pilot.sh S"
+      echo "다음: bash run_pilot.sh probe  (1층 개입 확인 · 싸다)"
     else
       echo "seed 생성 실패 — 다음 단계로 가지 않습니다."; fail=1
     fi
+    ;;
+  probe)
+    echo "== 1층 개입 확인 probe (NoIter · 회신 T Q4) =="
+    for j in "$D"/S0P/*/*/*; do
+      [ -d "$j" ] || continue; run "$j" "$(basename "$j")_probe" || fail=1; done
+    [ "$fail" = 0 ] && echo "다음: **리뷰 통과 뒤** bash run_pilot.sh S" \
+                   || echo "probe 에 실패가 있습니다 — phase S 로 가지 않습니다."
     ;;
   S)
     echo "== phase S (측정) =="
@@ -3876,6 +4482,12 @@ case "$stage" in
     ;;
   analyze)
     python3 "$BUILDER" --polaron_analyze "$D" || fail=1
+    ;;
+  restart)
+    # 3층 — 불안정 잡을 따라 내려간 `.gbw` 로 재계산하고 안정성을 다시 본다
+    python3 "$BUILDER" --polaron_restart "$D" || { fail=1; echo "재판정 입력 생성 실패"; }
+    for j in "$D"/SR/*/*/*; do [ -d "$j" ] || continue; run "$j" "$(basename "$j")" || fail=1; done
+    [ "$fail" = 0 ] && echo "다음: bash run_pilot.sh analyze (3층 재판정 반영)"
     ;;
 esac
 exit $fail
@@ -3915,6 +4527,7 @@ def main():
     ap.add_argument("--polaron_pilot", action="store_true",
                     help="H-제거 라디칼 상태지도 pilot 생성 (+ --neutral_xyz/--out)")
     ap.add_argument("--polaron_seeds", help="phase L 완주 디렉터리 — seed 선택 + phase S 생성")
+    ap.add_argument("--polaron_restart", help="3층 재판정 입력 생성 (불안정 잡)")
     ap.add_argument("--polaron_analyze", help="phase S 완주 디렉터리 — F 집합·class·판정")
     ap.add_argument("--site", help="H 제거 위치 (1-based 산성 H). 생략하면 사전 규칙(중간)")
     # ⛔ 회신 T P0-3 — 국재화 realization. primary 는 결정론이 기본이다.
@@ -3954,6 +4567,9 @@ def main():
         return 0
     if a.polaron_seeds:
         return 0 if pilot_seeds(a.polaron_seeds) else 2
+    if a.polaron_restart:
+        pilot_restart(a.polaron_restart)
+        return 0
     if a.polaron_analyze:
         r = pilot_analyze(a.polaron_analyze)
         print(json.dumps(r, indent=1, ensure_ascii=False))
@@ -3986,7 +4602,8 @@ def main():
         build_legacy_trimer(a, sym, pos)
         return 0
     ap.error("--stage a|b · --analyze · --hybrid · --compare · --legacy · "
-             "--polaron_pilot/--polaron_seeds/--polaron_analyze · --selftest 중 하나")
+             "--polaron_pilot/--polaron_seeds/--polaron_restart/--polaron_analyze · "
+             "--selftest 중 하나")
 
 
 if __name__ == "__main__":
