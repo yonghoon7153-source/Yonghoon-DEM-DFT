@@ -3303,6 +3303,29 @@ def _selftest_closure(chk):
         and (r.get("gas_box_delta") or {}).get("pair_contract_ok") is True,
         "회신 AR 3 양성: 고정기하·동일 내부기하 쌍은 계약을 통과한다")
 
+    # ══ 🔴 회신 AT Q2 — 합산 오차예산 B_num (양성 + ⛔음성) ═════════════════
+    _nb = r.get("numeric_budget") or {}
+    chk(_nb.get("정의", "").startswith("B_num"),
+        "AT Q2: 결과에 **합산 오차예산**이 나온다 (%s)" % _nb.get("B_num_meV"))
+    chk("RSS" in str(_nb.get("⛔_RSS_금지", "")),
+        "AT Q2: 왜 RSS 를 안 쓰는지 산출물에 적힌다 (독립 확률오차가 아니다)")
+
+    def _budget(vac_meV, gas_meV, k_meV):
+        """세 축 값을 손으로 넣어 합산 판정만 본다."""
+        _rr = _closure_estimand(_man, _RES(), _E, _emol, _jobs)
+        _b = {"vac": abs(vac_meV), "gas": abs(gas_meV), "k": abs(k_meV)}
+        return sum(_b.values()), _b
+
+    # 축별로는 전부 통과(각 2 meV ≤ 5)인데 **합은 6 meV** — 넘어야 한다
+    _sum6, _b6 = _budget(2.0, 2.0, 2.0)
+    chk(_sum6 > 5.0 and all(v <= 5.0 for v in _b6.values()),
+        "🔴 AT Q2: 축별 2 meV 는 각각 통과하지만 **합 %.1f meV 는 문턱 5 를 넘는다** "
+        "— 이것이 RSS 를 쓰면 놓치는 경우다 (RSS 로는 %.2f meV 라 통과해 버린다)"
+        % (_sum6, (2.0**2 * 3) ** 0.5))
+    chk(_nb.get("tol_meV") == 5.0 and "미달이면" in _nb,
+        "AT Q2: 문턱과 **미달 시 처방**이 결과에 같이 봉인된다 (값을 버리지 않고 "
+        "보고 해상도를 낮춘다)")
+
     # ══ 회신 AR 해제조건 3 — 기체 쌍 cross-job gate (⛔음성 셋) ═════════════
     #   AR 이 실물 v15 에서 잡은 것: 네 기체 부모가 전부 relax→static 이라
     #   각 상자가 **독립으로 이완**했다. 그러면 δ_gas 는 셀 효과가 아니다.
@@ -3717,7 +3740,11 @@ def _selftest_closure(chk):
         f"[V P0-4] primary = min-min = -0.5 · 실제 {r.get('primary_ddE_lowE_eV')}")
     # G = min(A_c10) - max(A_sdcp) = -0.5 - (-0.9) = +0.4.
     #   G>0 = 가장 약한 SDCP 도 가장 센 c10 보다 더 음수 (사전등록 정의와 일치).
-    chk(abs(r["secondary_G_eV"] - 0.4) < 1e-6,
+    chk(r["secondary_G_eV"] is None and "영구 비인용" in str(r.get("secondary_G_⛔"))
+        and (r.get("pooled_effect") or {}).get("citable", "").startswith("no"),
+        "🔴 AT Q5(a): secondary_G 와 pooled min 이 **영구 비인용**이다 "
+        "(추가 잡 0 · 자세 탐색의 폭은 MLIP 가 진다)")
+    chk(abs(r["secondary_G_eV_diagnostic"] - 0.4) < 1e-6,
         f"[V P0-4] secondary G = +0.4 (>0 = 최약 SDCP 도 최강 c10 보다 음수) · "
         f"실제 {r.get('secondary_G_eV')}")
     chk(r["verdict"] == "보고 가능" and r["reported_X_eV"] == -0.5,
@@ -7242,6 +7269,65 @@ def _closure_estimand(man, results, E, emol, jobs, merge_info=None):
              "KCONV_ABSENT(k 수렴 쌍이 봉인돼 있지 않다 — 0.01 eV 보고의 "
              "근거가 없다)", scope="estimand")
 
+    # ══ 🔴 회신 AT Q2 — 세 수치축의 **합산 오차예산** (2026-08-31) ═══════════
+    #   세 축(Δ_vac · δ_gas · δ_k)은 **독립 확률오차가 아니다.** 같은 계·같은
+    #   프로토콜의 체계오차라 RSS 로 합치면 안 된다. 셋이 같은 방향이면 최대
+    #   15 meV 가 된다 — 각각 5 meV 를 통과해도 합이 15 meV 면 0.01 eV 보고가
+    #   성립하지 않는다.  ⇒ **결과를 보기 전에** 합산 예산을 고정한다:
+    #        B_num = |Δ_vac| + |δ_gas| + |δ_k| ≤ 5 meV
+    #   넘으면 값을 버리는 것이 아니라 **보고 해상도를 낮추거나** 축별 민감도만
+    #   보고한다 (어느 축이 얼마나 기여했는지는 아래 by_axis 가 말한다).
+    _bax, _bmiss = {}, []
+    _vc0 = out.get("closure_vacconv") or {}
+    if _vc0.get("applicable"):
+        _v = _vc0.get("delta_vac_eV")
+        _v = None if _v is None else float(_v) * 1000.0
+        if _v is None:
+            _bmiss.append("Δ_vac")
+        else:
+            _bax["vac"] = abs(float(_v))
+    _gb0 = out.get("gas_box_delta") or {}
+    if _gb0:
+        _v = _gb0.get("delta_gas_meV")
+        if _v is None:
+            _bmiss.append("δ_gas")
+        else:
+            _bax["gas"] = abs(float(_v))
+    _kd0 = out.get("kconv_delta") or {}
+    if _kd0:
+        _v = _kd0.get("delta_k_meV")
+        if _v is None:
+            _bmiss.append("δ_k")
+        else:
+            _bax["k"] = abs(float(_v))
+    _BTOL = 5.0
+    out["numeric_budget"] = {
+        "정의": "B_num = |Δ_vac| + |δ_gas| + |δ_k|  (meV)",
+        "⛔_RSS_금지": ("세 축은 독립 확률오차가 아니다 — 같은 계·같은 프로토콜의 "
+                        "체계오차다. RSS(제곱합근)로 합치면 상관을 0 으로 가정하는 "
+                        "것이고, "
+                        "셋이 같은 방향이면 실제 편차는 단순합에 가깝다 (회신 AT Q2)"),
+        "by_axis_meV": {k: round(v, 3) for k, v in sorted(_bax.items())},
+        "missing_axes": _bmiss,
+        "B_num_meV": (round(sum(_bax.values()), 3) if _bax and not _bmiss else None),
+        "tol_meV": _BTOL,
+        "pass": (bool(_bax) and not _bmiss and sum(_bax.values()) <= _BTOL),
+        "⚠_문턱_봉인": "결과를 보기 전에 정한 값이다 (회신 AT Q2 · 코드 상수)",
+        "미달이면": ("값을 버리지 않는다 — **0.01 eV 안정성 주장을 하지 않고** 보고 "
+                     "해상도를 낮추거나 축별 민감도만 낸다"),
+    }
+    if _bmiss:
+        _blk("NUMERIC_BUDGET_INCOMPLETE",
+             "NUMERIC_BUDGET_INCOMPLETE(축 %s 의 값이 없다 — 합산 예산을 만들 수 "
+             "없으므로 0.01 eV 안정성을 주장하지 않는다)" % _bmiss,
+             scope="estimand")
+    elif _bax and sum(_bax.values()) > _BTOL:
+        _blk("NUMERIC_BUDGET_EXCEEDED",
+             "NUMERIC_BUDGET_EXCEEDED(B_num %.2f meV > %.0f — 축별로는 통과해도 "
+             "합이 넘는다 %s. 0.01 eV 로 보고하지 않는다)"
+             % (sum(_bax.values()), _BTOL, {k: round(v, 2) for k, v in _bax.items()}),
+             scope="estimand")
+
     _ejk0 = (man.get("estimand_job_keys") or {})
     if _ejk0:
         # ⛔⛔ 회신 AP #2 — **네 잡 자신**의 자기 상태 검사는 다른 block 유무와
@@ -7317,10 +7403,31 @@ def _closure_estimand(man, results, E, emol, jobs, merge_info=None):
         out["primary_estimand_blocks"] = _pv
     # ⛔ 회신 AS 해제조건 3 — pool 완전성도 인용 조건에 넣는다
     _pool_ok = bool((out.get("pool_completeness") or {}).get("ok"))
+    # 🔴🔴 회신 AT Q5 (2026-08-31) — 1저자 결정: **선택지 (a).**
+    #   pooled 최솟값과 secondary_G 를 **영구 진단값(비인용)** 으로 고정한다. 추가 잡 0.
+    #   이유 둘:
+    #     ① dense k 검증이 primary pm1 b00 두 복합체뿐인데 pool 에는 net4 도 든다 —
+    #        검증 깊이가 다른 값을 섞어 min 을 뽑는 것이다.
+    #     ② net4 dense 를 +2 잡 넣어도 **basin 이 섞인 문제는 그대로다.** pm1/net4 는
+    #        애초에 서로 다른 자기상태로 수렴하라고 넣은 seed 라 BASIN_HETEROGENEOUS
+    #        가 사실상 상시 뜬다. 인용가능 pool 을 만들려면 basin 별로 pool 을 쪼개고
+    #        "pooled min" 의 정의를 다시 짜야 한다 — 잡 두 개가 아니라 설계 변경이다.
+    #   ⇒ 계산은 계속 하고 출력에도 남기되, **인용 자격은 주지 않는다.**
+    _pooled_dyn = (not bool(out.get("nonprimary_notes"))) and _pool_ok
     out["pooled_effect"] = {
-        "secondary_G_citable": (not bool(out.get("nonprimary_notes"))) and _pool_ok,
-        "pooled_min_citable": (not bool(out.get("nonprimary_notes"))) and _pool_ok,
+        "secondary_G_citable": False,
+        "pooled_min_citable": False,
+        "citable": "no — 영구 (회신 AT Q5 선택지 (a) · 1저자 결정 2026-08-31)",
+        "would_pass_dynamic_gates": _pooled_dyn,
         "pool_complete": _pool_ok,
+        "⛔_영구_비인용_사유": [
+            "dense k 검증이 primary pm1 b00 두 복합체뿐 — pool 의 net4 는 미검증이다",
+            "pm1/net4 는 다른 자기상태를 보려고 넣은 seed 라 basin 이 섞인다. "
+            "상태를 가로질러 min 을 뽑지 않는다",
+            "잡 +2 로는 ①만 닫히고 ②는 안 닫힌다 — 설계 변경이 필요한 일이다"],
+        "대신_무엇을_쓰나": (
+            "자세 탐색의 폭은 **MLIP 스크린**이 진다 (탐색 범위·자세 선정 규칙만, "
+            "에너지는 인용 금지). DFT 는 사전등록한 한 조건의 D 하나를 낸다"),
         "why": ("pooled heterogeneity 는 primary(봉인 네 잡)에는 적용되지 않지만 "
                 "pooled 최솟값·secondary_G·일반화 주장은 **계속 막는다** (회신 AR Q1)")}
     if _pv:
@@ -7468,13 +7575,20 @@ def _closure_estimand(man, results, E, emol, jobs, merge_info=None):
         primary = a_s["min"][0] - a_c["min"][0]
         secondary = a_c["min"][0] - a_s["max"][0]
     out["primary_ddE_lowE_eV"] = round(primary, 4)
-    if (out.get("pooled_effect") or {}).get("secondary_G_citable"):
-        out["secondary_G_eV"] = round(secondary, 4)
-    else:
-        out["secondary_G_eV"] = None
-        out["secondary_G_⛔"] = (
-            "pooled 집합에 heterogeneity 가 있다 — secondary_G 는 pooled 최솟값/최댓값에서 "
-            "나오므로 **막는다** (primary 는 봉인 네 잡이라 영향받지 않는다 · 회신 AR Q1)")
+    # 🔴 회신 AT Q5 (a) — 값은 **계속 낸다** (내부 진단). 인용 자격만 영구히 없다.
+    #   숫자를 지우면 나중에 왜 못 쓰는지도 같이 사라져 재논증이 반복된다.
+    _pe = out.get("pooled_effect") or {}
+    out["secondary_G_eV_diagnostic"] = (
+        round(secondary, 4) if _pe.get("would_pass_dynamic_gates") else None)
+    out["secondary_G_eV"] = None
+    out["secondary_G_⛔"] = (
+        "**영구 비인용** (회신 AT Q5 선택지 (a) · 1저자 결정 2026-08-31). "
+        "secondary_G 는 pooled 최솟값/최댓값에서 나오는데, pool 은 dense k 미검증 "
+        "잡과 서로 다른 자기 basin 을 함께 담는다. 진단값은 "
+        "`secondary_G_eV_diagnostic` 에 남는다%s"
+        % ("" if _pe.get("would_pass_dynamic_gates")
+           else " (지금은 동적 게이트도 통과하지 못한다 — pooled heterogeneity 또는 "
+                "pool 불완전)"))
     out["reported_X_eV"] = round(round(primary / PREREG_ROUND_EV) * PREREG_ROUND_EV, 2)
     out["fragments"] = {"sdcp": sd, "control": ct}
     if primary <= PREREG_GUARD_EV:
@@ -10622,18 +10736,21 @@ def build_bundle(a, ledger: Optional[Dict[str, Any]] = None) -> Path:
     man["wave"] = 1 if not a.refs else "1+refs"
     # ★ 조각마다 주장 범위가 다르다 (2026-08-12 설계 변경). 공통 mode 문장 하나로
     #   두면 PTFE 에도 "2×2 완성" 이 적혀 오독된다.
+    # 🔴🔴 회신 AT 해제조건 8 (2026-08-31) — **낡은 claim policy 를 삭제한다.**
+    #   종전엔 조각마다 `quantities: ["E_ads", "dE_site"]` 를 실었다. 그 둘은
+    #   이 묶음의 산출물이 **아니고**(옛 wave 용어), 바로 아래 `reported_quantity`
+    #   가 "각 항을 adsorption energy 라고 부르지 말라" 고 하는 것과 정면으로
+    #   충돌했다. 산출물이 서로 반대를 말하면 강한 쪽이 인용된다.
     man["claim_policy"] = {
-        f: ({"quantities": ["E_ads", "dE_site"],
-             "not_claimed": ["배향 분해(2×2 없음)", "전역 자리 선호"],
-             "note": ("cap 인공물이 있는 짧은 모델 — C10 의 대조군으로만, 단독 인용 금지"
-                      if f == "ptfe_dimer" else "결합에너지 중심")}
-            if f.startswith("ptfe") else
-            {"quantities": ["E_ads", "dE_site"]
-             + (["2x2 배향 분해"] if any(p.get("cross") for p in man["pairs"].values()
-                                       if p["fragment"] == f) else []),
-             "not_claimed": (["open-shell 바닥상태 일반화 — 시드 basin 조건부"]
-                             if f == "sdcp_doped" else []),
-             "note": "자리 선호 중심"})
+        f: {"quantities": ["D (fixed-geometry differential complex–gas "
+                           "reference energy) — 조각 하나만으로는 만들어지지 않는다"],
+            "not_claimed": (["E_ads · dE_site — 이 묶음의 산출물이 아니다",
+                             "배향 분해(2×2 없음)", "전역 자리 선호",
+                             "고립 흡착·평형 결합·실제 전극 피복률로의 일반화"]
+                            + (["cap 인공물이 있는 짧은 모델 — C10 의 대조군으로만"]
+                               if f == "ptfe_dimer" else [])),
+            "note": ("이 조각은 D 의 **한 항**이다. 조각별 값을 단독으로 인용하지 "
+                     "않는다 (회신 AT 해제조건 8)")}
         for f in man.get("fragments", [])}
     # ⛔⛔ 회신 AS 해제조건 8·9 (2026-08-31) — 보고량의 **이름과 범위**를 못 박는다.
     #   AS Q2 가 준 문구를 그대로 쓴다: 각 항을 adsorption energy 라고 부르면 안 된다.
@@ -10708,7 +10825,13 @@ def build_bundle(a, ledger: Optional[Dict[str, Any]] = None) -> Path:
                        for i in (-1, 0, 1) for j in (-1, 0, 1) if (i, j) != (0, 0)]
                 _d = min(float(np.linalg.norm(a - (b + t)))
                          for t in _sh for a in _mol for b in _mol)
-                best[_f] = round(min(best.get(_f, 1e9), _d), 3)
+                # 🔴 회신 AT Q1 (2026-08-31) — **자세를 뭉개지 않는다.** 종전엔
+                #   조각별 최솟값 하나만 남겨서, sdcp 의 4.613 Å(대안 자세 b12 의
+                #   worst case)이 primary 값처럼 보고됐다. primary b00 은 4.894 Å 다.
+                #   보고량은 primary 조건의 값이므로 role 별로 나눠 싣는다.
+                _role = _m.get("role") or "primary"
+                _b = best.setdefault(_f, {})
+                _b[_role] = round(min(_b.get(_role, 1e9), _d), 3)
             except Exception:                                # noqa: BLE001
                 continue
         return best or None
@@ -10729,7 +10852,21 @@ def build_bundle(a, ledger: Optional[Dict[str, Any]] = None) -> Path:
             #   는 **분자와 그 주기이미지 사이 실제 최단 거리**다. 이름은 같은데
             #   다른 양이라, 그대로 실으면 리뷰 수치를 반박하는 것처럼 보인다.
             "min_lateral_cell_vector_A": round(min(_la), 3),
+            # 🔴 회신 AT Q1 — 자세(role)별로 나눠 싣는다. 보고량은 **primary** 조건이다
             "molecule_image_min_distance_A": _mol_img_min,
+            "molecule_image_min_primary_A": (
+                {f: d.get("primary") for f, d in (_mol_img_min or {}).items()
+                 if d.get("primary") is not None} or None),
+            "⚠_자세를_뭉개지_않는다": (
+                "종전엔 조각별 **최솟값 하나**만 실어, 대안 자세의 worst case 가 "
+                "primary 값처럼 보였다. 보고량은 primary 자세의 조건이므로 "
+                "`molecule_image_min_primary_A` 가 그 값이고, 대안 자세는 별개다 "
+                "(회신 AT Q1)"),
+            "⛔_철회한_근거": (
+                "'공통 주기영상 항이 상당 부분 소거된다' 는 **삭제한다.** 두 primary "
+                "복합체의 슬랩 원자 수가 48/192 로 다르고 최대 변위가 약 0.296 Å 이라 "
+                "공통항이라는 보장이 없다 (회신 AT Q1). 잔여 lateral-size 의존은 "
+                "**추정하지 않는다** — 한정 문구로만 다룬다"),
             "⚠_수치_출처": ("셀 벡터와 **실제 복합체 좌표**에서 직접 계산. "
                              "격자벡터 길이(min_lateral_cell_vector_A)와 분자-이미지 "
                              "최단거리(molecule_image_min_distance_A)는 **다른 양**이다 "
@@ -12099,12 +12236,20 @@ def selftest() -> int:
                _cs9.get("molecule_image_min_distance_A")))
         # ⛔음성 — 두 거리를 **같은 이름으로 섞지 않는다** (2026-08-31 실측 정정)
         _mim = _cs9.get("molecule_image_min_distance_A") or {}
-        chk(isinstance(_mim, dict) and _mim
-            and all(v < _cs9["min_lateral_cell_vector_A"] for v in _mim.values()),
+        _mvals = [v for d in _mim.values() for v in (d or {}).values()]
+        chk(isinstance(_mim, dict) and _mvals
+            and all(v < _cs9["min_lateral_cell_vector_A"] for v in _mvals),
             "⛔음성 AS 9: 분자-이미지 최단거리가 격자벡터 길이보다 **작다** — "
             "둘은 다른 양이고, 격자벡터를 최소이미지라고 찍으면 실제보다 "
             "여유가 있어 보인다 (%s vs %s)"
             % (_mim, _cs9.get("min_lateral_cell_vector_A")))
+        # 🔴 회신 AT Q1 — 자세를 뭉개지 않는다 (대안 자세의 worst case 를 primary
+        #   값처럼 싣지 않는다)
+        chk(all(isinstance(d, dict) for d in _mim.values()),
+            "🔴 AT Q1: 분자-이미지 최단거리가 **자세(role)별로** 나뉘어 있다 (%s)" % _mim)
+        chk("⛔_철회한_근거" in _cs9 and "소거된다" in str(_cs9["⛔_철회한_근거"]),
+            "🔴 AT Q1: '공통 주기영상 항 소거' 근거를 **철회했다고 산출물에 적는다** "
+            "(슬랩 원자 48/192 · 최대 변위 0.296 Å 이라 공통항 보장이 없다)")
         _rq9 = m_st.get("reported_quantity") or {}
         chk("adsorption energy" not in str(_rq9.get("name"))
             and any("adsorption energy" in x for x in _rq9.get("⛔_부르면_안_되는_이름", []))
