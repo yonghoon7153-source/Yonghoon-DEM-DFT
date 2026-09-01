@@ -5809,6 +5809,36 @@ node 를 찾는다. 남은 한계는 그대로다 — report 자체를 손으로
   자체가 빨갛다 → **declared** 로 등록하고 `DECLARED_MASKED` 에 경계와 대체
   회귀(`..._the_recorded_head_must_exist_in_this_repository`)를 적었다.
 
+### 54-5 증인 규칙이 **둘**이었다 — 이번 라운드의 형태가 증거 쪽에서 한 번 더
+
+전수 재생 12조각이 전부 초록으로 끝난 뒤, 합집합 검사(`--check-coverage`)가
+`module-gate-before-side-effects` 를 거부했다. 같은 report, 같은 실행인데 판정이
+갈렸다 — **규칙이 둘이었기 때문이다.**
+
+| 소비자 | 규칙 |
+|---|---|
+| 실시간 재생 `_check()` | `want in longrepr` — 본문 **전체** |
+| 영수증 검사 `_report_identity_rc()` | `want in _last_line(longrepr)` — 의미 줄 |
+
+pytest 는 실패 재현에 **시험 소스를 함께 찍는다.** 그래서 본문 매칭은 주석과
+docstring 에 남은 문자열에도 걸린다. 실제로 걸려 있었다: 이 scenario 의 증인
+`KeyError: 'discharged_state'` 는 **47차** 시험이 gate 호출을 지웠을 때 한참 뒤
+엉뚱하게 죽은 예외였고, **48차**가 "순서를 먼저 본다" 로 시험을 고치면서 실패
+이유가 아니게 됐다. 그런데 48차가 그 사연을 **주석으로 남겼고**, 그 주석에 옛
+문자열이 그대로 있어서 증인이 여섯 라운드를 살아남았다. 즉 48차가 고친 바로 그
+결함("나중에 뭔가 터졌다는 뜻일 뿐")이 증거 층에 화석으로 남아 있었다.
+
+고친 방식은 이 라운드 내내 쓴 것과 같다 — **규칙을 한 함수에 두고 두 쪽이
+그것을 부른다**(`_witness_holds()`), 그리고 둘 중 **더 엄격한 쪽**을 고른다.
+회귀(`..._a_witness_found_only_in_the_traceback_body_is_not_a_witness`)를 먼저
+쓰고 옛 규칙에서 빨간 것을 확인한 뒤 고쳤으며, 변이 지점으로도 등록했다
+(`witness-must-be-in-the-meaning-line`).
+
+저장된 176개 증인을 새 규칙으로 전수 감사했다 — **어긋난 것은 이 하나뿐**이다.
+
+이것이 12조각을 다시 돌린 이유다. 조각은 `expect_digest`·`runner_digest` 에
+결속돼 있으므로, 등록부와 규칙이 움직이면 앞선 조각은 그 코드의 증거가 아니다.
+
 ### 실측
 
 | 무엇 | 값 |

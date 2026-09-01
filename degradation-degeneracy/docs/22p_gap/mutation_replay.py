@@ -919,6 +919,15 @@ MUTANTS = [
      "        ids = {t.get(\"nodeid\") or \"\" for t in data.get(\"tests\", [])}\n"
      "        if False:",
      "genuine_report_from_another_mutant_is_refused"),
+    # ★ 54차 자체 발견 — 증인은 **의미 줄**에 있어야 한다. 본문 매칭이면
+    #   pytest 가 함께 찍는 시험 소스(주석·docstring)에 남은 옛 문자열이
+    #   증인으로 통과한다 — 실제로 여섯 라운드를 그렇게 살아남은 것이 있었다.
+    #   (등록부는 이 파일 자신이므로 preimage 를 **escape 한 채** 적는다 —
+    #    안 그러면 같은 바이트가 두 번 나타나 지점이 죽는다.)
+    ("witness-must-be-in-the-meaning-line", MR,
+     "    return str(want) in _last_line(longrepr or \"\")",
+     "    return str(want) in (longrepr or \"\")",
+     "witness_found_only_in_the_traceback_body_is_not_a_witness"),
     # ★ 54차 P1 — **declared.** 이 검사는 git 역사가 있어야 물을 수 있는데
     #   변이 sandbox 는 저장소 복사본이라 `.git` 이 없다. 그래서 sandbox 안에서
     #   이 변이를 재생하면 baseline 자체가 빨갛다 (검사가 아니라 환경이 다르다).
@@ -1364,7 +1373,7 @@ def _check(name: str, kexpr: str, before: dict, after: dict,
         if want is None:
             bad.append(f"{name}: {k} 의 증인이 선언되지 않았다")
             continue
-        if want not in (after["nodes"][k]["longrepr"] or ""):
+        if not _witness_holds(after["nodes"][k]["longrepr"], want):
             bad.append(
                 f"{name}: {k} 이 빨개졌지만 **선언한 이유**가 아니다 — "
                 f"증인 {want!r} 이 실패 메시지에 없다 "
@@ -1425,6 +1434,22 @@ def _print_counts(items, multi, executed, declared, ran=None) -> None:
     if ran is not None:
         line += f" · ran {ran}"
     print(line)
+
+
+def _witness_holds(longrepr: str, want: str) -> bool:
+    """선언한 증인이 이 실패의 **의미 줄**에 있는가 (54차 자체 발견).
+
+    규칙이 둘이면 그 사이가 구멍이다 — 이 라운드가 여섯 번 만난 형태다.
+    실시간 재생(`_check`)은 `want in longrepr` 로 **본문 전체**를 봤고,
+    영수증 검사(`_report_identity_rc`)는 `_last_line()` 만 봤다. 그래서
+    `module-gate-before-side-effects` 의 증인 `KeyError: 'discharged_state'`
+    가 48차에 시험이 고쳐진 뒤로도 여섯 라운드를 살아남았다 — 그 문자열이
+    시험 **자신의 주석**에 남아 있고 pytest 가 실패 재현에 소스를 함께
+    찍기 때문이다. 본문 매칭은 우연한 텍스트에 걸린다.
+
+    그러므로 규칙은 하나이고, 그것은 더 엄격한 쪽(`_last_line`)이다.
+    """
+    return str(want) in _last_line(longrepr or "")
 
 
 def _last_line(text: str) -> str:
@@ -2263,12 +2288,25 @@ EXPECT: dict = {
             "tests/test_docs_lint.py::test_the_producer_closure_sees_tuple_targets": "AssertionError: ['C', 'G']"
         }
     },
+    "witness-must-be-in-the-meaning-line": {
+        "fail": [
+            "tests/test_docs_lint.py::test_a_witness_found_only_in_the_traceback_body_is_not_a_witness"
+        ],
+        "witness": {
+            "tests/test_docs_lint.py::test_a_witness_found_only_in_the_traceback_body_is_not_a_witness": "주석에만 있는 문자열이 증인으로 인정됐다"
+        }
+    },
     "module-gate-before-side-effects": {
         "fail": [
             "tests/test_preserve.py::test_run_grid_calls_the_gate_before_its_first_side_effect"
         ],
+        # 54차 자체 발견 — 증인이 **48차부터** 낡아 있었다. 47차의 시험은 gate
+        # 호출을 지우면 한참 뒤 `KeyError: 'discharged_state'` 로 죽었고 그것이
+        # 증인이 됐다. 48차가 "순서를 먼저 본다" 로 시험을 고치면서 실제 실패는
+        # 순서 assert 가 됐는데, 옛 증인은 시험 **주석에 남은 그 문자열** 덕에
+        # 계속 통과했다 (본문 매칭의 대가다 — `_witness_holds` 참조).
         "witness": {
-            "tests/test_preserve.py::test_run_grid_calls_the_gate_before_its_first_side_effect": "KeyError: 'discharged_state'"
+            "tests/test_preserve.py::test_run_grid_calls_the_gate_before_its_first_side_effect": "gate 가 거부하기 전에 출력 디렉터리를 만들었다"
         }
     },
     "namespace-check-rejects-symlinks": {
@@ -3207,16 +3245,16 @@ def _report_identity_rc(path, name: str, rep_dir) -> int:
         data = json.loads(f.read_text(encoding="utf-8"))
     except (OSError, json.JSONDecodeError) as exc:
         return _refuse(f"✗ {path}: {name} 의 after report 를 읽을 수 없다: {exc}")
-    seen = {t.get("nodeid"): _last_line(((t.get("call") or {}).get("longrepr")) or "")
+    seen = {t.get("nodeid"): ((t.get("call") or {}).get("longrepr")) or ""
             for t in data.get("tests", [])}
     for node, want in sorted(wit.items()):
         got = seen.get(node)
-        if got is None or str(want) not in got:
+        if got is None or not _witness_holds(got, want):
             return _refuse(
                 f"✗ {path}: {name} 의 report 가 이 변이의 증인을 담고 있지 "
                 f"않다 ({node}) — 기대 {str(want)[:60]!r} · 실제 "
-                f"{str(got)[:60]!r}. 다른 변이의 report 를 이름만 바꿔 붙인 "
-                "것이 아닌지 본다")
+                f"{_last_line(got or '')[:60]!r}. 다른 변이의 report 를 이름만 "
+                "바꿔 붙인 것이 아닌지 본다")
     return 0
 
 

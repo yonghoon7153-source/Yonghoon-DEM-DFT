@@ -10997,3 +10997,43 @@ def test_the_recorded_head_must_exist_in_this_repository(tmp_path):
                     encoding="utf-8")
     assert mr.check_coverage([str(good)]) == 1, (
         "이 저장소에 없는 HEAD 를 적은 조각이 통과했다")
+
+
+def test_a_witness_found_only_in_the_traceback_body_is_not_a_witness():
+    """★ 54차 자체 발견 — 증인 규칙이 **둘**이었고 그 사이가 구멍이었다.
+
+    실시간 재생(`_check`)은 `want in longrepr` 로 본문 전체를 봤고, 영수증
+    검사(`_report_identity_rc`)는 `_last_line()` 만 봤다. pytest 는 실패
+    재현에 **시험 소스를 함께 찍으므로** 본문 매칭은 주석·docstring 에 남은
+    옛 문자열에도 걸린다.
+
+    실제로 걸렸다: `module-gate-before-side-effects` 의 증인
+    `KeyError: 'discharged_state'` 는 48차에 시험이 "순서를 먼저 본다" 로
+    고쳐지면서 실패 이유가 아니게 됐는데, 그 문자열이 시험 주석에 설명으로
+    남아 있어 여섯 라운드를 통과했다. 합집합 검사가 다른 규칙을 쓴 덕에
+    54차에 드러났다.
+
+    규칙은 하나이고 더 엄격한 쪽이다 — 의미 줄에 있어야 증인이다.
+    """
+    mr = _mr()
+
+    body_only = (
+        "    def test_x():\n"
+        "        # 옛날에는 KeyError: 'discharged_state' 로 죽었다\n"
+        ">       assert not out.exists(), \"순서가 틀렸다\"\n"
+        "E       AssertionError: 순서가 틀렸다\n"
+        "\n"
+        "tests/test_preserve.py:1: AssertionError\n"
+    )
+    assert not mr._witness_holds(body_only, "KeyError: 'discharged_state'"), (
+        "주석에만 있는 문자열이 증인으로 인정됐다 — pytest 가 소스를 함께 "
+        "찍으므로 본문 매칭은 옛 증인을 영원히 살려 둔다")
+    assert mr._witness_holds(body_only, "AssertionError: 순서가 틀렸다"), (
+        "의미 줄에 있는 증인이 거부됐다")
+
+    # 두 소비자가 **같은** 규칙을 쓴다: 하나만 고치면 다시 갈라진다.
+    for name, exp in sorted(mr.EXPECT.items()):
+        for node, want in (exp.get("witness") or {}).items():
+            assert mr._witness_holds(f"E       {want}", want), (
+                f"{name}/{node}: 선언한 증인이 자기 자신의 의미 줄에서조차 "
+                "성립하지 않는다")
