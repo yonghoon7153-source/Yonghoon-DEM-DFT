@@ -12865,10 +12865,26 @@ def build_bundle(a, ledger: Optional[Dict[str, Any]] = None) -> Path:
     #   있어서, 쌍둥이를 안 만드는 판(옵션 A)에서는 census 가 통째로 없어지고
     #   README·verify_bundle 이 조용히 빈 값을 읽었다.
     if True:
-        _cx_on = [k for k in man["planned"] if k.startswith("prospective/")]
-        _rf_on = [k for k in man["planned"] if not k.startswith("prospective/")]
-        _cx_tw = [v for v in twins.values() if v.startswith("prospective/")]
-        _rf_tw = [v for v in twins.values() if not v.startswith("prospective/")]
+        # ⛔⛔ 회신 BB P1 (2026-09-02) — census 가 **잡 키 접두어**로 분류했다.
+        #   그래서 진공 수렴(vacconv) 잡이 `prospective/` 가 아니라는 이유로
+        #   references 로 세어졌고, 실물 **refs 6 + vacconv 2 + 자세 8** 이
+        #   `references 8 + complexes 8` 로 보고됐다. 진공 시험 잡은 기준계가
+        #   아니다 — 셋을 갈라 센다. (이 파일에서 "이름 파싱" 사고의 네 번째다.)
+        def _kind_of(k):
+            _m = ((man["planned"].get(k) or {}).get("meta") or {})
+            if _m.get("vacconv"):
+                return "vacconv"
+            return ("complex" if _m.get("kind") == "prospective_pose"
+                    else "reference" if _m.get("kind") else
+                    # meta 가 없는 구판 항목은 **모른다** — 키로 추측하지 않는다
+                    "unknown")
+        _cx_on = [k for k in man["planned"] if _kind_of(k) == "complex"]
+        _rf_on = [k for k in man["planned"] if _kind_of(k) == "reference"]
+        _vc_on = [k for k in man["planned"] if _kind_of(k) == "vacconv"]
+        _uk_on = [k for k in man["planned"] if _kind_of(k) == "unknown"]
+        _cx_tw = [v for v in twins.values() if _kind_of(v) == "complex"]
+        _rf_tw = [v for v in twins.values() if _kind_of(v) == "reference"]
+        _vc_tw = [v for v in twins.values() if _kind_of(v) == "vacconv"]
         # ★ **어떻게 만들었는지를 산출물이 답하게 한다.** v9 까지 MANIFEST 에 호출
         #   인자가 없어서 재생성 명령을 번들 내용에서 **역추론**해야 했다 (플래그
         #   하나만 틀려도 다른 번들이 나온다). 설명이 아니라 실물이 답해야 한다.
@@ -12884,7 +12900,19 @@ def build_bundle(a, ledger: Optional[Dict[str, Any]] = None) -> Path:
                            "총": len(_rf_on) + len(_rf_tw)},
             "complexes": {"pose×seed": len(_cx_on), "d3_off_twins": len(_cx_tw),
                           "총": len(_cx_on) + len(_cx_tw)},
-            "총잡수": len(_rf_on) + len(_rf_tw) + len(_cx_on) + len(_cx_tw),
+            # ⛔ 회신 BB P1 — 진공 수렴은 **기준계가 아니다**. 따로 센다.
+            "vacuum_convergence": {"cells": len(_vc_on), "d3_off_twins": len(_vc_tw),
+                                   "총": len(_vc_on) + len(_vc_tw),
+                                   "⚠": "c2 셀 잡이다 — 자세도 기준계도 아니다"},
+            "meta_없어_분류불가": len(_uk_on),
+            "⛔_분류_근거": ("`meta.kind`·`meta.vacconv` 로 나눈다 — **잡 키 접두어로 "
+                             "추측하지 않는다.** 종전엔 `startswith(\"prospective/\")` "
+                             "라서 vacconv 잡이 references 로 세어졌다 (실물 refs 6 + "
+                             "vacconv 2 + 자세 8 이 references 8 + complexes 8 로 "
+                             "보고됐다 · 회신 BB P1). meta 가 없으면 **모른다**로 "
+                             "세지 references 로 넣지 않는다."),
+            "총잡수": (len(_rf_on) + len(_rf_tw) + len(_cx_on) + len(_cx_tw)
+                       + len(_vc_on) + len(_vc_tw) + len(_uk_on)),
             "pose당": ("pm1/D3-on · net4/D3-on — **D3-off 쌍둥이를 만들지 않는다** "
                        "(C3 는 D3-on OUTCAR 의 Edisp 로 낸다)") if not twins else
                       ("pm1/D3-on · pm1/D3-off · net4/D3-on — **net4/D3-off 는 만들지 "
@@ -14835,6 +14863,23 @@ def selftest() -> int:
             "⛔음성: holdout_stratified 라벨이면 분석기가 HOLDOUT_TRANCHE 로 막는다 "
             "(홀드아웃 값을 primary 의 min 에 넣지 않는다)")
         # ⛔ 쌍둥이 없이 만든 번들도 census 를 **쓴다** (종전엔 통째로 없었다)
+        # ⛔ 회신 BB P1 — 실물 구성이 census 와 맞는가 (refs/vacconv/자세)
+        _jc = _mfh.get("job_census") or {}
+        # ⚠ 이 픽스처(3잡)에는 vacconv 가 없다 — 있음을 요구하면 헛경보다.
+        #   여기서 보는 것은 **칸이 있고 합이 맞는가**이고, 실물 구성 대조는
+        #   생산 E2E 쪽에서 한다.
+        chk("vacuum_convergence" in _jc
+            and _jc["references"]["총"] + _jc["complexes"]["총"]
+                + _jc["vacuum_convergence"]["총"] + _jc.get("meta_없어_분류불가", 0)
+                == _jc["총잡수"]
+            and _jc.get("meta_없어_분류불가") == 0,
+            "BB P1: census 가 **refs / vacconv / 자세**를 갈라 세고 합이 총잡수와 "
+            "맞다 (refs %d · vacconv %d · 자세 %d = %d) — 종전엔 vacconv 가 "
+            "references 로 세어졌다"
+            % (_jc["references"]["총"], _jc["vacuum_convergence"]["총"],
+               _jc["complexes"]["총"], _jc["총잡수"]))
+        chk("잡 키 접두어로" in str(_jc.get("⛔_분류_근거")),
+            "BB P1: 분류 근거를 산출물에 적는다 (무엇으로 나눴는가)")
         chk((_mfh.get("job_census") or {}).get("총잡수") is not None
             and (_mfh["job_census"]["complexes"]["d3_off_twins"] == 0),
             "⛔음성: D3-off 쌍둥이 0개여도 job_census 가 있다 (종전엔 없어져서 "
