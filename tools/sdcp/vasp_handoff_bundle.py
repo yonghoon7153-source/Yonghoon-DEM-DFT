@@ -477,7 +477,19 @@ need() { [ -s "$1" ] || { echo "⛔ $1 없음/빈 파일 — $2"; exit 1; }; }
 #   돌려 둔 결과를 우리 것으로 반송하게 된다 (회수 후에는 구별할 방법이 없다).
 #   진짜로 이어서 돌려야 하면 ALLOW_RESUME=1 을 **명시적으로** 주고, 그 사실을
 #   NOTES.txt 에 남겨 주세요.
-if [ "${ALLOW_RESUME:-0}" != "1" ]; then
+# ⛔⛔ 회신 BA 해제조건 7 — `ALLOW_RESUME` 은 **폐지됐다.** 영수증 게이트가
+#   재개를 언제나 막았으므로 있으나 마나가 아니라 함정이었다. 주면 거부한다.
+if [ "${ALLOW_RESUME:-0}" = "1" ]; then
+  echo "⛔ ALLOW_RESUME 은 폐지됐습니다 (회신 BA 해제조건 7) — 폴더를 새로 풀고"
+  echo "   처음부터 돌려 주십시오."; exit 2
+fi
+# 계획된 이어달리기(dense 승격)만 완료 상을 건너뛴다. DENSE_PLAN.json 이 증거다.
+_PLANCONT=0
+if [ "${PLANNED_CONTINUATION:-0}" = "1" ]; then
+  if [ -s "$_ROOT/DENSE_PLAN.json" ]; then _PLANCONT=1
+  else echo "⛔ PLANNED_CONTINUATION=1 인데 $_ROOT/DENSE_PLAN.json 이 없습니다"; exit 2; fi
+fi
+if [ "$_PLANCONT" != 1 ]; then
   _stale=""
   for ph in pre relax static dense; do
     [ -d "$ph" ] || continue
@@ -488,7 +500,7 @@ if [ "${ALLOW_RESUME:-0}" != "1" ]; then
   if [ -n "$_stale" ]; then
     echo "⛔ 실행 전 산출물이 이미 있습니다:$_stale"
     echo "   이 잡은 **1회용**입니다. 이어 돌리면 다른 설정의 결과가 섞입니다."
-    echo "   폴더를 새로 풀고 다시 시작하거나, 의도한 재개면 ALLOW_RESUME=1 로 주세요."
+    echo "   폴더를 새로 풀고 처음부터 돌려 주세요 (재개는 폐지됐습니다 — BA 해제조건 7)."
     exit 1
   fi
 fi
@@ -496,7 +508,7 @@ fi
 for ph in pre relax static dense; do
   [ -d "$ph" ] || continue
   if [ -f "$ph/OUTCAR" ] && grep -aq "General timing" "$ph/OUTCAR"; then
-    echo "  ✓ $ph 이미 완료 — 건너뜀 (ALLOW_RESUME)"; continue
+    echo "  ✓ $ph 이미 완료 — 건너뜀 (계획된 이어달리기 · DENSE_PLAN.json)"; continue
   fi
   cp POTCAR "$ph/"
   case "$ph" in
@@ -617,7 +629,10 @@ trap '[ "$(cat "$LOCK" 2>/dev/null)" = "$RUNID" ] && rm -f "$LOCK"' EXIT
 export RUNNER_TOKEN="$RUNID"
 # 승격 dense 는 완료된 잡 위에서 도는 **계획된 이어달리기**다 — 어느 잡을 왜 잇는지가
 # DENSE_PLAN.json 에 남는다. one-shot 가드에는 그 사실을 명시적으로 알린다.
-export ALLOW_RESUME=1
+# ⛔ 회신 BA 해제조건 7 — 이름을 `ALLOW_RESUME` 에서 갈랐다. 그것은 **중단 복구**용이라
+#   폐지됐고(영수증 게이트가 언제나 막았다), 이쪽은 **계획된 새 상**이라 성격이 다르다.
+#   DENSE_PLAN.json 이 있어야만 유효하다.
+export PLANNED_CONTINUATION=1
 jobs=$(python3 - <<'PY'
 import json
 p = json.load(open("DENSE_PLAN.json"))
@@ -768,8 +783,10 @@ _bail() {
   echo ""
   echo "⛔ 신호를 받았습니다 ($1) — 자식 프로세스를 정리하고 중단합니다."
   trap - EXIT INT TERM
-  kill -TERM 0 2>/dev/null || true      # 이 프로세스 그룹 전체
+  # ⛔ 회신 BA P1 — **unlock 을 먼저** 한다. 종전엔 `kill -TERM 0` 이 앞서서
+  #   호출자 process group 까지 종료시키고 lock 을 남길 수 있었다 (stale lock).
   _unlock
+  kill -TERM 0 2>/dev/null || true      # 이 프로세스 그룹 전체
   exit "$2"
 }
 trap '_unlock' EXIT
@@ -778,48 +795,6 @@ trap '_bail TERM 143' TERM
 # 🔴 회신 AV P0-2 — run_job.sh 는 이 토큰 없이는 거부한다 (직접 호출 차단).
 #   토큰 = lock 파일 내용. lock 을 쥔 실행만이 값을 알고, 값이 곧 소유 증명이다.
 export RUNNER_TOKEN="$RUNID"
-
-# ⛔ 회신 AT P0-6 — SEAL 은 러너가 **이미 lock 을 쥔 채** 부른다. 중복 획득으로
-#   교착하지 않도록 알려 준다 (단독 실행이면 SEAL 이 스스로 잡는다).
-BUNDLE_LOCK_HELD=1 bash SEAL_POTCAR_ROOT.sh || { echo "POTCAR 조립·봉인 실패 — 중단"; exit 1; }
-
-# ⛔⛔ 회신 AZ P0-7 (2026-09-01) — **attestation 을 생산 전에 강제**한다.
-#   봉인은 "이 계산들이 하나의 트리에서 나왔고 그 트리가 생산 전에 고정됐다" 까지만
-#   보증한다. **그 트리가 승인된 PAW dataset 인지**는 보증하지 않는다. VASP 는 여러
-#   PAW 세트와 suffix variant 를 배포하므로 dataset 신원은 계산 조건의 일부다.
-#   ⇒ 사후 provenance 만으로는 원고 인용 자격이 안 선다 (회신 AZ Q4).
-#   이 게이트는 MANIFEST 의 `potcar_identity_policy` 가 정한다:
-#     require_attestation  → attestation 이 없으면 **한 잡도 안 돈다** (원고용)
-#     post_hoc             → 경고만 하고 진행 (탐색용 — 원고 인용 불가)
-_AP=$(python3 -c 'import json;print((json.load(open("MANIFEST.json")).get("potcar_identity_policy") or {}).get("mode") or "post_hoc")' 2>/dev/null || echo post_hoc)
-if [ "$_AP" = "require_attestation" ]; then
-  if [ ! -s POTCAR_ATTESTATION.json ]; then
-    echo "⛔ POTCAR_ATTESTATION.json 이 없습니다 — 이 묶음은 **원고용 정책**"
-    echo "   (potcar_identity_policy.mode=require_attestation)이라 attestation 없이는"
-    echo "   한 잡도 돌리지 않습니다 (회신 AZ P0-7)."
-    echo "   첫 VASP 실행 **전에** 만드십시오:  bash MAKE_POTCAR_ATTESTATION.sh"
-    exit 2
-  fi
-  python3 - <<'PYATT' || exit 2
-import json, sys
-try:
-    a = json.load(open("POTCAR_ATTESTATION.json"))
-    s = json.load(open("POTCAR_ROOT_SEAL.json"))
-except Exception as e:
-    sys.exit("⛔ attestation/봉인 파싱 실패: %r" % (e,))
-if not a.get("sealed_before_production"):
-    sys.exit("⛔ attestation 이 생산 전에 만들어졌다는 표시가 없습니다")
-_as, _ss = a.get("source_sha256") or {}, s.get("source_sha256") or {}
-_d = sorted(k for k in set(_as) | set(_ss) if _as.get(k) != _ss.get(k))
-if _d:
-    sys.exit("⛔ attestation 과 root 봉인의 원본 SHA 가 다릅니다: %s" % _d[:4])
-print("  ✔ POTCAR attestation 확인 (생산 전 · 봉인과 일치)")
-PYATT
-else
-  echo "  ⚠ POTCAR 신원 정책 = post_hoc — attestation 없이 진행합니다."
-  echo "     이 묶음의 결과는 **탐색용**이고 원고 인용 자격이 서지 않습니다"
-  echo "     (승인된 PAW dataset 인지 확인 못 함 · 회신 AZ P0-7·Q4)."
-fi
 
 # ⛔⛔ 회신 AR P0-7 · 해제조건 8 — **실행 전 census.** 종전엔 존재하는 job.json
 #   만 분류하고 디렉터리 수만 비교해서, job.json 하나를 지워도 통과했다.
@@ -854,11 +829,19 @@ if expz and _zt_env and expz != _zt_env:
     bad.append("받은 ZIP 해시 %s ≠ EXPECT_ZIP_SHA256 %s — 우리가 보낸 배포본이 "
                "아니다" % (_zt_env[:12], expz[:12]))
 # ⛔ 회신 AR 해제조건 7 — 봉인을 **모든 실행에서 필수화**한다
+# ⛔⛔ 회신 BA P0-1 (2026-09-02) — 이 census 는 이제 **SEAL 보다 먼저** 돈다.
+#   그래서 첫 실행에는 봉인이 아직 없다 — 그때는 봉인 검사를 **건너뛰고**,
+#   SEAL 직후 두 번째 census(`RECHECK_SEAL=1`)가 그 몫을 진다.
+#   ⚠ 건너뛰는 것은 봉인 검사뿐이다. 파일 무결성·EXPECT·잡 집합은 **여기서** 끝난다.
+_seal_required = os.environ.get("RECHECK_SEAL") == "1"
 try:
     seal = json.load(open("POTCAR_ROOT_SEAL.json"))
 except Exception as e:
     seal = {}
-    bad.append("POTCAR_ROOT_SEAL.json 을 읽을 수 없다 (%r) — 봉인 없이 돌리지 않는다" % e)
+    if _seal_required:
+        bad.append("POTCAR_ROOT_SEAL.json 을 읽을 수 없다 (%r) — 봉인 없이 돌리지 않는다" % e)
+    else:
+        print("  (봉인 검사는 SEAL 뒤 두 번째 census 로 미룬다 — 회신 BA P0-1)")
 _need_seal = ("schema", "source_sha256", "allowlist_sha256", "manifest_sha256",
               "bundle_zip_sha256", "vasp_executable", "vasp_executable_sha256",
               "vasp_version_banner", "sealed_at_utc", "assembled_sha256_by_job",
@@ -941,6 +924,184 @@ if bad:
 print("✓ census: MANIFEST %s · 잡 %d · 단계 %s"
       % (mh[:12], len(cen["job_keys"]), cen["stage_counts"]))
 PYPRE
+
+# ⛔⛔ 회신 BA P0-1 (2026-09-02) — **SEAL 을 preflight 뒤로 옮긴다.**
+#   종전엔 러너가 SEAL 을 **먼저** 불렀고, SEAL 은 16개 `POTCAR_ASSEMBLE.sh` 를
+#   실행한다. `EXPECT_*`·`files_sha256` 검사는 그 **뒤**였다. 즉 변조된 assembler 가
+#   무결성 검사 **전에** 실행됐다 — 리뷰어가 흔적을 만든 뒤 자기 바이트를 원본으로
+#   복구하는 재현으로 잡았다.
+#   ⇒ 추출 파일 전수검사(census + files_sha256 + EXPECT)를 **먼저** 끝내고,
+#     그것이 통과한 뒤에만 배포 스크립트를 실행한다.
+#   ⚠ ZIP SHA 자체는 ZIP 밖에서 대조해야 한다 — README 의 첫 단계가 그것이다.
+
+# ⛔ 회신 AT P0-6 — SEAL 은 러너가 **이미 lock 을 쥔 채** 부른다. 중복 획득으로
+#   교착하지 않도록 알려 준다 (단독 실행이면 SEAL 이 스스로 잡는다).
+BUNDLE_LOCK_HELD=1 bash SEAL_POTCAR_ROOT.sh || { echo "POTCAR 조립·봉인 실패 — 중단"; exit 1; }
+
+# ⛔ 회신 BA P0-1 — SEAL 이 만든 봉인을 **여기서** 검사한다 (앞 census 는 파일
+#   무결성만 봤다). 같은 코드를 두 번 돌리므로 검사 로직이 갈라지지 않는다.
+RECHECK_SEAL=1 python3 - "$stage" <<'PYSEALCHK' || { echo "⛔ 봉인 census 실패 — 중단"; exit 2; }
+import json, os, sys, glob, hashlib
+stage = sys.argv[1]
+man = json.load(open("MANIFEST.json"))
+mh = hashlib.sha256(open("MANIFEST.json", "rb").read()).hexdigest()
+bad = []
+# ⛔⛔ 회신 AS 해제조건 7 (2026-08-31) — ZIP 안의 해시는 **자기 자신을 증명하지
+#   못한다**. 우리가 ZIP 밖(메일 본문)에 고정한 digest 를 현장이 붙여넣어야
+#   비로소 "우리가 보낸 그 물건" 이 확인된다. **선택이 아니라 필수**로 만든다.
+_HEX = "0123456789abcdef"
+def _need_hex(name):
+    v = os.environ.get(name, "").strip().lower()
+    if not v:
+        bad.append("%s 가 없다 — 우리가 보낸 정본 메시지의 digest 를 넣어야 "
+                   "이 번들이 그 배포본인지 확인할 수 있다" % name)
+        return None
+    if len(v) != 64 or any(c not in _HEX for c in v):
+        bad.append("%s 가 64자리 hex 가 아니다" % name)
+        return None
+    return v
+exp = _need_hex("EXPECT_MANIFEST_SHA256")
+if exp and exp != mh:
+    bad.append("MANIFEST sha256 %s ≠ EXPECT_MANIFEST_SHA256 %s" % (mh[:12], exp[:12]))
+expz = _need_hex("EXPECT_ZIP_SHA256")
+_zt_env = os.environ.get("BUNDLE_ZIP_SHA256", "").strip().lower()
+if expz and _zt_env and expz != _zt_env:
+    bad.append("받은 ZIP 해시 %s ≠ EXPECT_ZIP_SHA256 %s — 우리가 보낸 배포본이 "
+               "아니다" % (_zt_env[:12], expz[:12]))
+# ⛔ 회신 AR 해제조건 7 — 봉인을 **모든 실행에서 필수화**한다
+# ⛔⛔ 회신 BA P0-1 (2026-09-02) — 이 census 는 이제 **SEAL 보다 먼저** 돈다.
+#   그래서 첫 실행에는 봉인이 아직 없다 — 그때는 봉인 검사를 **건너뛰고**,
+#   SEAL 직후 두 번째 census(`RECHECK_SEAL=1`)가 그 몫을 진다.
+#   ⚠ 건너뛰는 것은 봉인 검사뿐이다. 파일 무결성·EXPECT·잡 집합은 **여기서** 끝난다.
+_seal_required = os.environ.get("RECHECK_SEAL") == "1"
+try:
+    seal = json.load(open("POTCAR_ROOT_SEAL.json"))
+except Exception as e:
+    seal = {}
+    if _seal_required:
+        bad.append("POTCAR_ROOT_SEAL.json 을 읽을 수 없다 (%r) — 봉인 없이 돌리지 않는다" % e)
+    else:
+        print("  (봉인 검사는 SEAL 뒤 두 번째 census 로 미룬다 — 회신 BA P0-1)")
+_need_seal = ("schema", "source_sha256", "allowlist_sha256", "manifest_sha256",
+              "bundle_zip_sha256", "vasp_executable", "vasp_executable_sha256",
+              "vasp_version_banner", "sealed_at_utc", "assembled_sha256_by_job",
+              "sealed_before_production", "sealed_before_production_evidence")
+if seal:
+    _sm = [k for k in _need_seal if not seal.get(k)]
+    if _sm:
+        bad.append("봉인에 %s 가 없다 — 반쪽 봉인으로 돌리지 않는다" % _sm)
+    if seal.get("manifest_sha256") and seal["manifest_sha256"] != mh:
+        bad.append("봉인이 다른 MANIFEST 에 대한 것이다 (%s ≠ %s)"
+                   % (seal["manifest_sha256"][:12], mh[:12]))
+    _zt = ""
+    try:
+        _zt = open("ZIP_SHA256.txt").read().split()[0].strip().lower()
+    except Exception:
+        bad.append("ZIP_SHA256.txt 가 없다 — 받은 ZIP 과의 결박을 확인할 수 없다")
+    if _zt and seal.get("bundle_zip_sha256") and seal["bundle_zip_sha256"] != _zt:
+        bad.append("봉인의 ZIP 해시가 ZIP_SHA256.txt 와 다르다")
+# ⛔⛔ 회신 AS 해제조건 6 — 실행 전에 **배포 파일 전수**를 해시 대조한다.
+#   종전엔 잡 집합만 셌다. INCAR 한 줄이 바뀌어도 census 는 통과했다.
+_fh = man.get("files_sha256") or {}
+if not _fh:
+    bad.append("MANIFEST 에 files_sha256 이 없다 — 입력 무결성을 확인할 수 없다")
+else:
+    _chg, _mis = [], []
+    for _rel, _want in sorted(_fh.items()):
+        _pth = os.path.join(*_rel.split("/"))
+        if not os.path.isfile(_pth):
+            _mis.append(_rel); continue
+        _h = hashlib.sha256(open(_pth, "rb").read()).hexdigest()
+        if _h != _want:
+            _chg.append(_rel)
+    if _mis:
+        bad.append("배포 파일이 없다 %d건: %s" % (len(_mis), _mis[:3]))
+    if _chg:
+        bad.append("배포 파일이 바뀌었다 %d건: %s (입력을 고치면 그 잡은 "
+                   "거부됩니다)" % (len(_chg), _chg[:3]))
+    print("  ✓ 입력 무결성 %d 파일" % len(_fh))
+cen = man.get("run_census") or {}
+if not cen.get("job_keys") or not cen.get("stage_of"):
+    bad.append("MANIFEST 에 run_census 가 없다 — 이 번들로는 census 를 확인할 수 "
+               "없다 (구판 번들이면 재생성하십시오)")
+else:
+    want = set(cen["job_keys"])
+    have = {os.path.dirname(p).replace(os.sep, "/") for p in glob.glob("*/*/job.json")}
+    dirs = {d.rstrip("/").replace(os.sep, "/") for d in glob.glob("*/*/")}
+    if have != want:
+        bad.append("job.json 집합이 계획과 다르다 — 없음 %s · 계획 밖 %s"
+                   % (sorted(want - have)[:4], sorted(have - want)[:4]))
+    if dirs != want:
+        bad.append("잡 폴더 집합이 계획과 다르다 — 없음 %s · 계획 밖 %s"
+                   % (sorted(want - dirs)[:4], sorted(dirs - want)[:4]))
+    # 단계 분류를 **디스크의 job.json 으로 다시 계산**해 선언과 대조한다
+    got = {}
+    for jp in sorted(glob.glob("*/*/job.json")):
+        m = json.load(open(jp))
+        d = os.path.dirname(jp).replace(os.sep, "/")
+        kind, role, vac = m.get("kind"), m.get("role"), m.get("vacconv")
+        if kind is None:
+            bad.append("job.json 에 kind 가 없다: " + jp); continue
+        if kind == "mol_ref":
+            got[d] = "1"
+        elif kind == "prospective_pose" and role == "primary":
+            got[d] = "1" if (vac or m.get("seed") == "afm2424_pm1") else "2"
+        else:
+            got[d] = "2"
+    diff = sorted(k for k in set(got) | set(cen["stage_of"])
+                  if got.get(k) != cen["stage_of"].get(k))
+    if diff:
+        bad.append("단계 분류가 선언과 다르다: %s" % diff[:4])
+    cnt = {st: sum(1 for v in got.values() if v == st) for st in ("1", "2")}
+    if cnt != cen.get("stage_counts"):
+        bad.append("단계 개수가 선언과 다르다: 실물 %s ≠ 선언 %s"
+                   % (cnt, cen.get("stage_counts")))
+if bad:
+    print("⛔ 실행 전 census:")
+    for b in bad:
+        print("   · " + b)
+    sys.exit(1)
+print("✓ census: MANIFEST %s · 잡 %d · 단계 %s"
+      % (mh[:12], len(cen["job_keys"]), cen["stage_counts"]))
+PYSEALCHK
+
+# ⛔⛔ 회신 AZ P0-7 (2026-09-01) — **attestation 을 생산 전에 강제**한다.
+#   봉인은 "이 계산들이 하나의 트리에서 나왔고 그 트리가 생산 전에 고정됐다" 까지만
+#   보증한다. **그 트리가 승인된 PAW dataset 인지**는 보증하지 않는다. VASP 는 여러
+#   PAW 세트와 suffix variant 를 배포하므로 dataset 신원은 계산 조건의 일부다.
+#   ⇒ 사후 provenance 만으로는 원고 인용 자격이 안 선다 (회신 AZ Q4).
+#   이 게이트는 MANIFEST 의 `potcar_identity_policy` 가 정한다:
+#     require_attestation  → attestation 이 없으면 **한 잡도 안 돈다** (원고용)
+#     post_hoc             → 경고만 하고 진행 (탐색용 — 원고 인용 불가)
+_AP=$(python3 -c 'import json;print((json.load(open("MANIFEST.json")).get("potcar_identity_policy") or {}).get("mode") or "post_hoc")' 2>/dev/null || echo post_hoc)
+if [ "$_AP" = "require_attestation" ]; then
+  if [ ! -s POTCAR_ATTESTATION.json ]; then
+    echo "⛔ POTCAR_ATTESTATION.json 이 없습니다 — 이 묶음은 **원고용 정책**"
+    echo "   (potcar_identity_policy.mode=require_attestation)이라 attestation 없이는"
+    echo "   한 잡도 돌리지 않습니다 (회신 AZ P0-7)."
+    echo "   첫 VASP 실행 **전에** 만드십시오:  bash MAKE_POTCAR_ATTESTATION.sh"
+    exit 2
+  fi
+  python3 - <<'PYATT' || exit 2
+import json, sys
+try:
+    a = json.load(open("POTCAR_ATTESTATION.json"))
+    s = json.load(open("POTCAR_ROOT_SEAL.json"))
+except Exception as e:
+    sys.exit("⛔ attestation/봉인 파싱 실패: %r" % (e,))
+if not a.get("sealed_before_production"):
+    sys.exit("⛔ attestation 이 생산 전에 만들어졌다는 표시가 없습니다")
+_as, _ss = a.get("source_sha256") or {}, s.get("source_sha256") or {}
+_d = sorted(k for k in set(_as) | set(_ss) if _as.get(k) != _ss.get(k))
+if _d:
+    sys.exit("⛔ attestation 과 root 봉인의 원본 SHA 가 다릅니다: %s" % _d[:4])
+print("  ✔ POTCAR attestation 확인 (생산 전 · 봉인과 일치)")
+PYATT
+else
+  echo "  ⚠ POTCAR 신원 정책 = post_hoc — attestation 없이 진행합니다."
+  echo "     이 묶음의 결과는 **탐색용**이고 원고 인용 자격이 서지 않습니다"
+  echo "     (승인된 PAW dataset 인지 확인 못 함 · 회신 AZ P0-7·Q4)."
+fi
 
 # ⛔ 회신 AP #6 — receipt 존재만으로 2단계를 열지 않는다. **지금 결과로 재판정**한다.
 #    (해시 결박보다 단순하고, 위조 receipt 로 우회할 수 없다)
@@ -1063,8 +1224,22 @@ run_wave() {   # $1 = 목록 파일
     #   "러너 밖에서 돌렸다" 는 판정을 받았다.
     #   ⇒ 재개는 **이어 쓰고** 표지를 `_runner_resume` 으로 구분한다.
     #     `_runner_start` 는 여전히 정확히 하나다 (첫 실행에만 찍힌다).
-    if [ -s "$j/EXECUTABLE_RECEIPT.tsv" ] && [ "${ALLOW_RESUME:-0}" = "1" ]; then
-      _rtag=_runner_resume; _rop=append
+    # ⛔⛔ 회신 BA 해제조건 7 (2026-09-02) — **재개를 폐지한다.**
+    #   AZ P1 에서 재개를 '이어 쓰기' 로 고쳤는데, 그 계약이 실제로는 **항상 막혔다**:
+    #   `_runner_resume` 자체가 `RECEIPT_RESUMED` 게이트가 되고, 중단된 상을 다시
+    #   돌리면 같은 phase 행이 둘이라 `RECEIPT_PHASE_DUPLICATE` 도 난다.
+    #   제대로 지원하려면 attempt ID·성공상태·supersedes 가 필요한데, 이 묶음의
+    #   질문에 비해 과하다. ⇒ **한 번에 완주하거나, 새 번들로 다시 시작한다.**
+    if [ "${ALLOW_RESUME:-0}" = "1" ]; then
+      echo "⛔ ALLOW_RESUME 은 폐지됐습니다 (회신 BA 해제조건 7)."
+      echo "   종전 재개 계약은 영수증 게이트(RECEIPT_RESUMED · PHASE_DUPLICATE)에"
+      echo "   **언제나 걸려** 통과할 수 없었습니다 — 있으나 마나가 아니라 함정이었습니다."
+      echo "   중단된 실행은 폴더를 새로 풀고 처음부터 돌려 주십시오."
+      exit 2
+    fi
+    # 계획된 이어달리기(dense 승격)는 **새 상**을 여는 것이라 성격이 다르다.
+    if [ "${PLANNED_CONTINUATION:-0}" = "1" ] && [ -s "$j/EXECUTABLE_RECEIPT.tsv" ]; then
+      _rtag=_runner_continue; _rop=append
     else
       _rtag=_runner_start;  _rop=truncate
     fi
@@ -1159,8 +1334,9 @@ if [ "${BUNDLE_LOCK_HELD:-0}" != "1" ]; then
 fi
 _unlock_self() { [ -n "$_LOCK_MINE" ] && [ "$(cat "$_LOCK" 2>/dev/null)" = "$_LOCK_MINE" ] \
                    && rm -f "$_LOCK"; return 0; }
+# ⛔ 회신 BA P1 — unlock 을 kill 보다 **먼저** (stale lock 방지)
 _bail_self() { echo ""; echo "⛔ 신호($1) — 중단합니다."; trap - EXIT INT TERM
-               kill -TERM 0 2>/dev/null || true; _unlock_self; exit "$2"; }
+               _unlock_self; kill -TERM 0 2>/dev/null || true; exit "$2"; }
 trap '_unlock_self' EXIT
 trap '_bail_self INT 130' INT
 trap '_bail_self TERM 143' TERM
@@ -3425,6 +3601,40 @@ def _stage1_prereqs(_cl, _vc, results):
     return _pre
 
 
+def citation_status(man, cl):
+    """계산 성공과 **원고 인용 자격**을 분리해 낸다 (회신 BA P0-3 · 해제조건 4).
+
+    → {"manuscript_citable", "why", "blockers"}
+
+    ⛔⛔ 왜 분리하나 (2026-09-02)
+      종전엔 분석기가 `potcar_identity_policy.manuscript_citable` 를 **읽지 않았고**,
+      `_final_verdict()` 가 post-hoc·overall=None 이어도 성공을 반환했다. 즉
+      "계산이 잘 돌았다" 와 "원고에 쓸 수 있다" 가 한 값에 뭉개져 있었다.
+      ⇒ 성공은 성공대로 내고, 인용 자격은 **별도 상태**로 기계가 집행한다.
+
+    ⛔ 못 하는 것: 원고 문장이 실제로 그 조건을 지키는지 보지 않는다 (사람 몫).
+    """
+    b = []
+    pol = (man or {}).get("potcar_identity_policy") or {}
+    if pol.get("manuscript_citable") is not True:
+        b.append("potcar_identity_policy.manuscript_citable != true (mode=%r) — "
+                 "승인된 PAW dataset 인지 확인되지 않았다" % pol.get("mode"))
+    if (cl or {}).get("overall_citable_at_0.01eV") is not True:
+        b.append("overall_citable_at_0.01eV != true — ENCUT·축간 상호작용을 안 쟀다")
+    _pi = (cl or {}).get("potcar_identity") or {}
+    if _pi and _pi.get("allowed_claim") not in ("paw_release_attested",):
+        b.append("potcar_identity.allowed_claim=%r — 외부 앵커가 없다"
+                 % _pi.get("allowed_claim"))
+    return {"manuscript_citable": not b,
+            "blockers": b,
+            "why": ("원고 인용 가능" if not b else
+                    "⛔ **탐색용**이다. 이 결과로 원고 문장을 쓰지 않는다 — " +
+                    " · ".join(b)),
+            "⛔_계산_성공과_다른_상태다": (
+                "계산이 정상 종료하고 게이트를 통과해도 이 값이 false 면 인용 불가다. "
+                "둘을 한 값으로 뭉개지 않는다 (회신 BA P0-3)")}
+
+
 def _final_verdict(_cl, _vc):
     """최종 종료 판정 — 비인용 상태면 사유 목록을 낸다 (빈 목록 = exit 0).
 
@@ -3644,9 +3854,15 @@ def _selftest_closure(chk):
         "🔴 AV P1-5: 초과 시 **0.01 eV 반올림 보고만** 철회된다 "
         "(tested_axes_stable_at_0.01eV=false)")
     # ⛔음성 회신 AZ P0-5 — `reported_X_eV` 는 overall 자격이 설 때만 존재한다
-    chk(_rex.get("reported_X_eV") is None and _rex.get("overall_citable_at_0.01eV") is None,
-        "⛔음성 AZ P0-5: `overall_citable_at_0.01eV=None` 이면 무조건적 "
-        "`reported_X_eV` 를 내지 않는다 (종전엔 시험한 축만 통과하면 냈다)")
+    chk("reported_X_eV" not in _rex and _rex.get("overall_citable_at_0.01eV") is None
+        and "primary_ddE_lowE_eV" not in _rex,
+        "⛔음성 AZ P0-5 · BA P0-2·Q4: 최상위에 **범위 없는 숫자 필드가 없다** — "
+        "죽은 `reported_X_eV` 와 맨숫자 `primary_ddE_lowE_eV` 를 둘 다 걷었다 "
+        "(남은 키 %s)" % sorted(k for k in _rex if k.endswith("_eV"))[:4])
+    chk((_rex.get("diagnostic_only") or {}).get("primary_ddE_lowE_eV") is not None
+        and "인용 대상이 아니다" in str((_rex.get("diagnostic_only") or {}).get("⛔")),
+        "회신 BA P0-2: 값 자체는 **진단 절 안에** 보존한다 (지우면 왜 못 쓰는지도 "
+        "사라져 재논증이 반복된다 — 회신 AT Q5 a)")
     chk(_rex.get("verdict") == "보고 가능 (시험한 축 조건부)"
         and (_rex.get("D_interval_eV") or {}).get("hi", 0) <= -0.10,
         "AV P1-5 + AZ P0-5: 구간 [D−B, D+B] 전체가 guard 이하면 방향 결론은 유지되되 "
@@ -3723,7 +3939,7 @@ def _selftest_closure(chk):
         "bbbb2222", "prospective/sdcp_neutral__b01__afm2424_pm1")
     _rh = _closure_estimand(_man, _RES(), _E, _emol, _jb_het)
     chk(any("BASIN_HETEROGENEOUS" in b for b in _rh["blocks"])
-        and "primary_ddE_lowE_eV" not in _rh,
+        and "primary_ddE_lowE_eV" not in (_rh.get("diagnostic_only") or {}),
         "⛔음성: 한 조각 안에 서로 다른 realized basin 이 섞이면 min 을 안 뽑는다")
     _jb_none = dict(_jobs)
     _jb_none["prospective/ptfe_c10__b00__afm2424_pm1"] = _BAS(
@@ -3806,7 +4022,7 @@ def _selftest_closure(chk):
         "⛔음성 AO P0-7: net4 가 다른 basin 이어도 **pm1 조건부 D 를 지우지 않는다** "
         "(primary 뷰에서만 민감도 주석으로 내린다) · primary "
         f"{_r7.get('primary_estimand_blocks')}")
-    chk(_r7.get("primary_ddE_lowE_eV") is not None,
+    chk((_r7.get("diagnostic_only") or {}).get("primary_ddE_lowE_eV") is not None,
         f"AO P0-7: 그 상태에서도 D_pm1 이 나온다 (실제 {_r7.get('primary_ddE_lowE_eV')})")
     # ⛔음성 — 그런데 **네 잡 자신**의 basin 이 없으면 여전히 막는다
     _jb7b = dict(_jb7)
@@ -3899,12 +4115,34 @@ def _selftest_closure(chk):
     _r_ok = _closure_estimand(_man7, _RES(), lambda j: _en7.get(j), _emol, _jb7)
     chk(any(b.startswith("BASIN_HETEROGENEOUS") for b in _r_ok["blocks"])
         and not _r_ok.get("primary_estimand_blocks")
-        and _r_ok.get("primary_ddE_lowE_eV") is not None,
+        and (_r_ok.get("diagnostic_only") or {}).get("primary_ddE_lowE_eV") is not None,
         "회신 AS 1: 정상 pm1/net4 는 정본에 BASIN_HETEROGENEOUS 가 있어도 "
         "**primary 뷰가 비어 있고 D 가 나온다** · primary %s"
         % _r_ok.get("primary_estimand_blocks"))
     # 그리고 **최종 종료 판정이 실제로 exit 0 을 내는지** 직접 친다
     _VCOK = {"applicable": True, "pass": True}
+    # ⛔음성 회신 BA P0-3 · 해제조건 4 — 인용 자격은 계산 성공과 **다른 상태**다
+    _cs_post = citation_status({"potcar_identity_policy": {"mode": "post_hoc",
+                                                          "manuscript_citable": False}},
+                               {"overall_citable_at_0.01eV": None})
+    chk(_cs_post["manuscript_citable"] is False and len(_cs_post["blockers"]) >= 2
+        and "탐색용" in _cs_post["why"],
+        "⛔음성 BA P0-3: post_hoc + overall=None 이면 `manuscript_citable=false` 를 "
+        "**기계가 집행**한다 (종전엔 분석기가 그 필드를 읽지도 않았다)")
+    _cs_ok = citation_status(
+        {"potcar_identity_policy": {"mode": "require_attestation",
+                                    "manuscript_citable": True}},
+        {"overall_citable_at_0.01eV": True,
+         "potcar_identity": {"allowed_claim": "paw_release_attested"}})
+    chk(_cs_ok["manuscript_citable"] is True and not _cs_ok["blockers"],
+        "회신 BA P0-3 양성: 세 조건(정책·overall·외부앵커)이 다 서면 인용 가능이다")
+    _cs_anchor = citation_status(
+        {"potcar_identity_policy": {"mode": "require_attestation",
+                                    "manuscript_citable": True}},
+        {"overall_citable_at_0.01eV": True,
+         "potcar_identity": {"allowed_claim": "self_declared_label_only"}})
+    chk(_cs_anchor["manuscript_citable"] is False,
+        "⛔음성 BA P0-3: 자기선언 label 만 있으면 인용 불가다 (외부 앵커가 없다)")
     chk(_final_verdict(_r_ok, _VCOK) == [],
         "⛔음성 AS 1: 정상 pm1/net4 에서 최종 판정이 **exit 0** 이다 "
         "(정본 blocks 를 읽던 종전 코드는 여기서 무조건 exit 2 였다)")
@@ -3966,7 +4204,7 @@ def _selftest_closure(chk):
         and _bs7.get("D_net4_eV") is None
         and _bs7.get("D_net4_minus_D_pm1_eV") is None
         and _r7t.get("sensitivity_complete") is False
-        and _r7t.get("primary_ddE_lowE_eV") is not None,
+        and (_r7t.get("diagnostic_only") or {}).get("primary_ddE_lowE_eV") is not None,
         "⛔음성 AR P1-9: net4 두 complex 가 다른 basin 이면 **D_net4 값과 status 를 "
         f"같이 막는다** (D_pm1 은 산다) · {_bs7.get('status')}")
     # 모멘트 표를 못 읽어도 마찬가지다 — 확인 못 한 것은 통과가 아니다
@@ -4025,7 +4263,7 @@ def _selftest_closure(chk):
         and _rp2.get("sensitivity_complete") is False
         and any("POSE_SENSITIVITY_INCOMPLETE" in n
                 for n in (_rp2.get("nonprimary_notes") or []))
-        and _rp2.get("primary_ddE_lowE_eV") is not None,
+        and (_rp2.get("diagnostic_only") or {}).get("primary_ddE_lowE_eV") is not None,
         "⛔음성 AR P1-10: 자세 두 complex 가 다른 basin 이면 D_pose 를 막고 "
         "'자세에 강건' 서술을 금지한다 (D_pm1 은 산다)")
     # ⛔음성 — 잡이 게이트돼 있으면 unavailable
@@ -4076,7 +4314,7 @@ def _selftest_closure(chk):
     chk(_g19.get("pass") is True and abs(_g19.get("delta_gas_meV") or 0) <= 5.0
         and all(abs(v) >= 15.0 for v in (_g19.get("by_fragment_meV") or {}).values())
         and not any("GAS_BOX" in b for b in _r2019["blocks"])
-        and _r2019.get("primary_ddE_lowE_eV") is not None,
+        and (_r2019.get("diagnostic_only") or {}).get("primary_ddE_lowE_eV") is not None,
         "회신 AR P0-3 재현: 조각별 %s meV 인데 δ_gas %s meV → **통과하고 예외로 "
         "죽지 않는다** (옛 조각별 게이트가 죽이던 경우)"
         % (_g19.get("by_fragment_meV"), _g19.get("delta_gas_meV")))
@@ -4095,7 +4333,7 @@ def _selftest_closure(chk):
     _rs = _closure_estimand(_man, _RES(), _E, _emol, _jb_slab)
     chk(any("BASIN_MISMATCH_SLAB" in b for b in _rs["blocks"]),
         "⛔음성: clean slab 이 복합체와 다른 basin 이면 흡착에너지를 만들지 않는다")
-    chk(abs(r["primary_ddE_lowE_eV"] - (-0.5)) < 1e-6,
+    chk(abs(r["diagnostic_only"]["primary_ddE_lowE_eV"] - (-0.5)) < 1e-6,
         f"[V P0-4] primary = min-min = -0.5 · 실제 {r.get('primary_ddE_lowE_eV')}")
     # G = min(A_c10) - max(A_sdcp) = -0.5 - (-0.9) = +0.4.
     #   G>0 = 가장 약한 SDCP 도 가장 센 c10 보다 더 음수 (사전등록 정의와 일치).
@@ -4108,7 +4346,7 @@ def _selftest_closure(chk):
         f"실제 {r.get('secondary_G_eV')}")
     chk(r["verdict"] == "보고 가능 (시험한 축 조건부)"
         and r["rounded_value_under_tested_axes_eV"] == -0.5
-        and r["reported_X_eV"] is None,
+        and "reported_X_eV" not in r,
         "[V P0-4 + AZ P0-5] guard(-0.10) 통과 + 0.01 eV 반올림은 "
         "**시험한 축 조건부 필드**로만 나온다")
     # 음성: guard band 미달
@@ -4986,9 +5224,15 @@ def selftest_k() -> int:
                                 "embedded_hash": "SHA256 = abc"}}}
     _MB2 = dict(_MBASE, _potcar_root_seal=_SEALOK)
     _ra = potcar_identity_gates(_one, dict(_MB2, _potcar_attestation=_ATT))
-    chk(_ra["attestation"]["usable"] and "PAW-PBE datasets from the" in
-        _ra["methods_candidate"],
-        "양성 AP #12: attestation 이 있으면 **release 를 적는 Methods 문구**가 나온다")
+    # ⛔ 회신 BA P0-3 — **외부 앵커(potcar_pin)가 있어야** attested 로 올린다.
+    _PINOK = {"source_sha256": {k: v.get("source_sha256")
+                                for k, v in (_ATT.get("variants") or {}).items()}}
+    _ra_anch = potcar_identity_gates(
+        _one, dict(_MB2, _potcar_attestation=_ATT, potcar_pin=_PINOK))
+    chk(_ra_anch["attestation"]["usable"] and "PAW-PBE datasets from the" in
+        _ra_anch["methods_candidate"],
+        "양성 AP #12 + BA P0-3: attestation **과 외부 앵커**가 둘 다 있어야 release 를 "
+        "적는 Methods 문구가 나온다")
     _rn = potcar_identity_gates(_one, _MB2)
     chk(not _rn["attestation"]["present"]
         and "단정하지 않는다" in _rn["methods_candidate"]
@@ -5079,11 +5323,25 @@ def selftest_k() -> int:
             _jt, dict(_MB2, _potcar_attestation=_ATT))["blocking"]),
         "⛔음성 AR P0-6: 관측 TITEL 에 없는 TITEL 을 attestation 이 주장하면 막는다")
     # 양성 — allowed_claim 이 두 상태를 구분한다 (필드명 AR Q5)
-    chk(_ra.get("allowed_claim") == "paw_release_attested"
+    chk(_ra_anch.get("allowed_claim") == "paw_release_attested"
         and _rn.get("allowed_claim") == "bundle_conditional_only"
-        and "후보 문구" in str(_ra.get("methods_candidate_⚠")),
+        and "후보 문구" in str(_ra_anch.get("methods_candidate_⚠")),
         "회신 AR Q5: 필드명이 methods_candidate/allowed_claim 이고 **후보**임을 "
         "명시한다 (도구가 원고를 채택하지 않는다)")
+    # ⛔⛔ 회신 BA P0-3 재현 — 자기선언 label 은 독립 증거가 아니다
+    chk(_ra.get("allowed_claim") == "self_declared_label_only"
+        and _ra.get("release_label_anchor") is None
+        and "자기선언" in str(_ra.get("release_label_⛔")),
+        "⛔음성 BA P0-3: attestation 이 통과해도 **외부 앵커가 없으면** "
+        "`paw_release_attested` 로 올리지 않는다 (실제 %r)" % _ra.get("allowed_claim"))
+    _ra_fake = potcar_identity_gates(
+        _one, dict(_MB2, _potcar_attestation=dict(_ATT, release_label="FAKE_RELEASE"),
+                   potcar_pin=_PINOK))
+    chk(_ra_fake.get("allowed_claim") == "paw_release_attested"
+        and "FAKE_RELEASE" in str(_ra_fake.get("methods_candidate")),
+        "⚠ BA P0-3 한계 명시: 앵커가 있어도 **label 문자열 자체**는 우리가 검증하지 "
+        "못한다 — 앵커는 *바이트*를 결박하지 *이름*을 결박하지 않는다. 이 사실을 "
+        "시험으로 박아 둔다 (숨기지 않는다)")
 
     # ⛔음성 AP #7 — blocking 이 있으면 **절대** sealed 라벨이 안 나온다
     _mm = potcar_identity_gates(
@@ -5986,7 +6244,7 @@ def executable_receipt_gates(job_dir, rel, man, executed_phases):
         if c[1] == "_runner_start":
             n_start += 1
             start_rows.append(c)
-        if c[1] == "_runner_resume":
+        if c[1] in ("_runner_resume", "_runner_continue"):
             n_resume += 1
             resume_rows.append(c)
         rows.append(c)
@@ -6011,8 +6269,13 @@ def executable_receipt_gates(job_dir, rel, man, executed_phases):
     #   같은지 본다. 재개 자체는 계약이 허용하지만(NOTES.txt 선언 필요) 다른
     #   바이너리로 이어 돌린 것은 아니어야 한다.
     if n_resume:
-        g.append("RECEIPT_RESUMED(%d회 — `ALLOW_RESUME=1` 로 이어 돌렸다. NOTES.txt 에 "
-                 "선언돼 있어야 한다)" % n_resume)
+        # 계획된 이어달리기(dense 승격)는 허용된다 — DENSE_PLAN.json 이 증거다.
+        _planned = all(c[1] == "_runner_continue" for c in resume_rows) and \
+            os.path.isfile(os.path.join(job_dir, "..", "..", "DENSE_PLAN.json"))
+        if not _planned:
+            g.append("RECEIPT_RESUMED(%d회 — 중단 복구 재개는 **폐지됐다**(회신 BA "
+                     "해제조건 7). 계획된 이어달리기라면 `_runner_continue` 행과 "
+                     "DENSE_PLAN.json 이 있어야 한다)" % n_resume)
         for c in resume_rows:
             if want and c[2] != want:
                 g.append("RECEIPT_RESUME_IDENTITY(재개 시 실행파일 %s ≠ 봉인 %s)"
@@ -6020,7 +6283,7 @@ def executable_receipt_gates(job_dir, rel, man, executed_phases):
             if want_k and c[4] != want_k:
                 g.append("RECEIPT_RESUME_IDENTITY(재개 시 kind %r ≠ 봉인 %r)"
                          % (c[4][:16], want_k))
-    _HDR = ("_runner_start", "_runner_resume")
+    _HDR = ("_runner_start", "_runner_resume", "_runner_continue")
     ph_rows = {c[1] for c in rows if c[1] not in _HDR}
     # ⛔ 회신 AZ P1 — 같은 상이 **두 번** 찍히면 막는다 (ALLOW_RESUME 로 이어붙인
     #   receipt 가 이 형태다). 상 하나에 실행 하나가 계약이다.
@@ -6557,8 +6820,17 @@ def potcar_identity_gates(jobs, man):
     _vv = sorted(ver) or [_att.get("vasp_version_raw")]
     # ⛔ 회신 AR Q5 — 필드명을 `methods_sentence` 에서 바꾼다. 도구는 **후보 문구**를
     #   고를 뿐 원고 채택 권한이 없다. 최종 채택은 사람의 검토를 거친다.
-    if _att_ok and not (res.get("blocking") or []):
+    # ⛔⛔ 회신 BA P0-3 (2026-09-02) — **자기선언 label 은 공식 release 의 독립
+    #   증거가 아니다.** 리뷰어 재현: `release_label` 만 `FAKE_RELEASE` 로 바꾸고
+    #   나머지 봉인·variant 를 맞추니 `blocking=[]` · `paw_release_attested` 가 나왔다.
+    #   attestation 은 "현장이 이 트리를 이렇게 부른다" 를 기록할 뿐, 그 이름이
+    #   아카이브된 배포판과 같은지는 **우리가 확인한 적이 없다.**
+    #   ⇒ 외부 앵커(사전 승인 해시 또는 서명)가 없으면 `attested` 로 올리지 않는다.
+    _anchor = (man or {}).get("potcar_pin") or {}
+    _anchored = bool(_anchor.get("source_sha256"))
+    if _att_ok and not (res.get("blocking") or []) and _anchored:
         res["allowed_claim"] = "paw_release_attested"
+        res["release_label_anchor"] = "potcar_pin (외부 기준)"
         res["methods_candidate"] = (
             "Calculations were performed using VASP %s with PAW-PBE datasets from the "
             "%s release (%s). Each source dataset was identified by its embedded VASP "
@@ -6567,6 +6839,23 @@ def potcar_identity_gates(jobs, man):
             "No numerical equivalence to earlier calculation waves was assumed."
             % (_vv[0], _att.get("release_label"),
                ", ".join(sorted(_att.get("variants") or {}))))
+    elif _att_ok and not (res.get("blocking") or []) and not _anchored:
+        # attestation 은 통과했지만 **외부 앵커가 없다** — 이름은 자기선언이다.
+        res["allowed_claim"] = "self_declared_label_only"
+        res["release_label_anchor"] = None
+        res["release_label_⛔"] = (
+            "attestation 의 `release_label`(%r)은 **현장 자기선언**이다. 아카이브된 "
+            "배포판과 같은지 확인한 적이 없다 — 리뷰어가 `FAKE_RELEASE` 로 바꿔도 "
+            "통과하는 것을 재현했다 (회신 BA P0-3). 외부 앵커(`--potcar_pin` 또는 "
+            "서명)가 있어야 `paw_release_attested` 로 올린다."
+            % _att.get("release_label"))
+        res["methods_candidate"] = (
+            "⚠ 공식 release 를 단정하지 않는다 — attestation 은 있으나 그 label 이 "
+            "**자기선언**이라 외부 배포판과 결박되지 않았다. 허용 문구: 'the reported "
+            "value is conditional on this bundle's PAW dataset; the dataset label was "
+            "reported by the computing site and not independently anchored.'")
+        res["methods_candidate_⛔"] = (
+            "이 문구는 **탐색용**이다. 원고 인용에는 외부 앵커가 필요하다 (BA P0-3·Q5).")
     else:
         res["allowed_claim"] = "bundle_conditional_only"
         res["methods_candidate"] = (
@@ -8310,7 +8599,21 @@ def _closure_estimand(man, results, E, emol, jobs, merge_info=None):
         out["estimand_mode"] = "fragment_min (⚠ 조각마다 다른 seed 가 뽑힐 수 있다)"
         primary = a_s["min"][0] - a_c["min"][0]
         secondary = a_c["min"][0] - a_s["max"][0]
-    out["primary_ddE_lowE_eV"] = round(primary, 4)
+    # ⛔⛔ 회신 BA P0-2 (2026-09-02) — **범위 없는 숫자를 최상위에서 없앤다.**
+    #   `primary_ddE_lowE_eV` 는 `reported_X_eV=None` · `overall_citable=None` 인데도
+    #   최상위에 맨숫자로 나왔다. 읽는 사람에게 그것이 결과값으로 읽힌다 —
+    #   인용 차단을 우회하는 마지막 구멍이었다.
+    #   ⇒ 최상위에서 빼고 **진단 절 안**으로 옮긴다. 정본 숫자는 두 개뿐이다:
+    #     `D_raw_eV`(범위 명시) · `rounded_value_under_tested_axes_eV`(시험축 조건부).
+    #   ⚠ 값을 **지우지는 않는다** (회신 AT Q5 a) — 왜 못 쓰는지가 같이 사라지면
+    #     재논증이 반복된다. 다만 이름과 자리로 범위를 강제한다.
+    out["diagnostic_only"] = {
+        "⛔": ("이 절의 수는 **인용 대상이 아니다.** 최상위 정본은 `D_raw_eV` 와 "
+               "`rounded_value_under_tested_axes_eV` 둘뿐이다 (회신 BA P0-2)."),
+        "primary_ddE_lowE_eV": round(primary, 4),
+        "⚠_왜_최상위가_아닌가": ("범위 없는 맨숫자가 최상위에 있으면 "
+                                  "`overall_citable=None` 이어도 결과값으로 읽힌다"),
+    }
     # 🔴 회신 AT Q5 (a) — 값은 **계속 낸다** (내부 진단). 인용 자격만 영구히 없다.
     #   숫자를 지우면 나중에 왜 못 쓰는지도 같이 사라져 재논증이 반복된다.
     _pe = out.get("pooled_effect") or {}
@@ -8354,9 +8657,9 @@ def _closure_estimand(man, results, E, emol, jobs, merge_info=None):
             "D_raw 와 축별 민감도만 보고한다 (회신 AV P1-5)"
             % (_nbF.get("B_num_meV"), _nbF.get("missing_axes"),
                _nbF.get("axes_not_designed")))
-    # `reported_X_eV` 는 overall 자격이 섰을 때만 존재한다 (지금은 언제나 None).
-    out["reported_X_eV"] = (out["rounded_value_under_tested_axes_eV"]
-                            if out["overall_citable_at_0.01eV"] is True else None)
+    # ⛔ 회신 BA Q4 — `reported_X_eV` 를 **제거한다.** overall 이 영영 None 이라
+    #   그 필드는 죽어 있고, 죽은 필드는 되살아날 자리로 남는다.
+    out.pop("reported_X_eV", None)
     out["reported_X_⛔"] = (
         "overall_citable_at_0.01eV=%r — ENCUT·축간 상호작용을 안 쟀으므로 무조건적 "
         "인용값을 내지 않는다. 시험한 축 조건부 값은 "
@@ -9830,7 +10133,11 @@ def main():
             "schema": "stage1_pass/v1",
             "gate": "vacconv",
             "verdict": _vc.get("verdict"),
-            "delta_vac_meV": _vc.get("delta_vac_meV"),
+            # ⛔ 회신 BA P1 — 종전엔 존재하지 않는 `delta_vac_meV` 를 읽어 **언제나
+            #   null** 이었다. closure 가 만드는 키는 `delta_vac_eV` 다.
+            "delta_vac_meV": (None if _vc.get("delta_vac_eV") is None
+                              else round(float(_vc["delta_vac_eV"]) * 1000.0, 3)),
+            "delta_vac_eV": _vc.get("delta_vac_eV"),
             "manifest_sha256": hashlib.sha256(
                 open(os.path.join(root, "MANIFEST.json"), "rb").read()).hexdigest(),
             "stage1_jobs": _s1,
@@ -9880,6 +10187,22 @@ def main():
     #      1단계 cohort 만 보고, 그 판정으로만 끝낸다.
     #   ② 최종 판정: prereg_closure 가 NO_VALUE 여도, 진공이 실패해도 `return 0` 이
     #      될 수 있었다. **비인용 상태면 반드시 nonzero** 여야 한다.
+    # ⛔⛔ 회신 BA P0-3 · 해제조건 4 — **계산 성공과 원고 인용 자격을 분리한다.**
+    #   종전엔 분석기가 `manuscript_citable` 을 읽지도 않았고, post-hoc·overall=None
+    #   이어도 `_final_verdict` 가 성공을 반환했다.
+    _cit = citation_status(man, _cl)
+    res["citation_status"] = _cit
+    _cl["manuscript_citable"] = _cit["manuscript_citable"]
+    _cl["⛔_인용"] = _cit["why"]
+    print("")
+    print("── 인용 자격 ──")
+    print("  manuscript_citable = %s" % _cit["manuscript_citable"])
+    for b in _cit["blockers"]:
+        print("   ⛔ %s" % b)
+    if not _cit["manuscript_citable"]:
+        print("  ⚠ 계산은 성공했을 수 있다 — 그것과 **다른 상태**다. 이 결과로 원고")
+        print("     문장을 쓰지 않는다 (회신 BA P0-3).")
+
     _bad_final = _final_verdict(_cl, _vc)
     if _bad_final:
         print("⛔ **비인용 상태로 끝났다** — 종료코드를 0 으로 두지 않는다:")
@@ -10272,6 +10595,15 @@ def _readme_sp(man: Dict[str, Any], a, zcut: float, n_jobs: int,
 
 ```
 cd <이 묶음을 푼 디렉터리>            # 묶음 **루트**에서 실행합니다 (잡 폴더 아님)
+# ⛔⛔ 0단계 — **ZIP 을 풀기 전에**, ZIP 밖에서 SHA 를 대조하십시오 (회신 BA P0-1).
+#    아래 값은 메일 본문에 있습니다. 이 대조는 번들 안의 어떤 스크립트도 쓰지 않습니다
+#    — ZIP 안의 해시는 자기 자신을 증명하지 못하기 때문입니다.
+#      sha256sum /경로/받은번들.zip     # ← 메일 본문의 값과 눈으로 대조
+#    다르면 **풀지 마시고** 저희에게 알려 주십시오.
+#
+# ⚠ 러너는 배포 스크립트를 실행하기 **전에** 추출 파일 전수검사(census + files_sha256
+#    + EXPECT)를 끝냅니다. v21 까지는 POTCAR 조립(SEAL)이 그 검사보다 **먼저** 돌아,
+#    변조된 assembler 가 무결성 검사 전에 실행될 수 있었습니다 (회신 BA P0-1).
 export PP=/path/to/potpaw_PBE.54
 export POTCAR_ALLOWLIST=/abs/site_allow.txt
 # 받으신 ZIP 의 SHA256 — 봉인이 **정확히 이 배포본**에 대한 것임을 남깁니다
@@ -10312,9 +10644,16 @@ bash MAKE_POTCAR_ATTESTATION.sh     # ← 첫 VASP 실행 **전에만** 가능�
 달라지므로 dataset 신원은 범함수 선택과 같은 급의 **계산 조건**입니다.
 해시는 "바뀌지 않았다"만 말하고 "이것이 무엇이다"는 말해 주지 않습니다.
 
-- **돌려 주시면**: 원고에 PAW dataset 을 그대로 적을 수 있습니다.
-- **안 돌리셔도**: 계산은 그대로 진행되고 결과도 유효합니다. 저희가 원고에서
-  **"PAW dataset 조건부"** 라는 단서를 달고 인용합니다.
+- **돌려 주시면**: dataset 신원 기록이 남습니다. (⚠ 그것만으로 원고 인용 자격이
+  서지는 않습니다 — 아래 참조.)
+- **안 돌리셔도**: 계산은 그대로 진행되고 결과도 유효합니다.
+
+⛔ **이 묶음의 결과는 원고 인용용이 아닙니다.** MANIFEST 의
+`potcar_identity_policy.manuscript_citable = false` 이고, 분석기가 그것을 결과 최상위
+(`citation_status`)에서 기계로 집행합니다. attestation 을 **사후에** 받아도 원고용으로
+승격되지 않습니다 — 그러려면 계산 **전에** 외부 앵커(사전 승인 해시 `--potcar_pin`
+또는 서명)가 있어야 합니다 (회신 BA P0-3·Q5).
+따라서 "조건부로 원고 인용" 이라는 표현은 이 묶음에 **쓰지 않습니다**.
 
 시간은 몇 초입니다. 첫 VASP 실행 뒤에는 만들 수 없습니다(생산 전이라는 사실 자체가
 근거이기 때문입니다 — 회신 AR P0-6).
@@ -11820,10 +12159,13 @@ def build_bundle(a, ledger: Optional[Dict[str, Any]] = None) -> Path:
                 "`molecule_image_min_primary_A` 가 그 값이고, 대안 자세는 별개다 "
                 "(회신 AT Q1)"),
             "⛔_철회한_근거": (
-                "'공통 주기영상 항이 상당 부분 소거된다' 는 **삭제한다.** 두 primary "
-                "복합체의 슬랩 원자 수가 48/192 로 다르고 최대 변위가 약 0.296 Å 이라 "
-                "공통항이라는 보장이 없다 (회신 AT Q1). 잔여 lateral-size 의존은 "
-                "**추정하지 않는다** — 한정 문구로만 다룬다"),
+                "'공통 주기영상 항이 상당 부분 소거된다' 는 **삭제한다.** "
+                "⚠ 회신 BA P1 정정: 종전에 적은 이유('슬랩 원자 수가 48/192 로 "
+                "다르다')는 **거짓**이었다 — 공통 슬랩은 두 복합체가 같다 "
+                "(`Li48 Ni48 O96` · 192원자). 결론은 유지하고 이유를 고친다: "
+                "**복합체 전체의 조성·기하가 조각마다 다르고**(흡착 조각이 다르다) "
+                "최대 변위가 약 0.296 Å 이라 주기영상 항이 공통이라는 보장이 없다. "
+                "잔여 lateral-size 의존은 **추정하지 않는다** — 한정 문구로만 다룬다"),
             "⚠_수치_출처": ("셀 벡터와 **실제 복합체 좌표**에서 직접 계산. "
                              "격자벡터 길이(min_lateral_cell_vector_A)와 분자-이미지 "
                              "최단거리(molecule_image_min_distance_A)는 **다른 양**이다 "
@@ -12201,7 +12543,8 @@ def build_bundle(a, ledger: Optional[Dict[str, Any]] = None) -> Path:
             "근거": "POTCAR 트리 관리는 외주처 소관이다. 절차를 늘려 발송을 막는 것보다 "
                     "README 권고 + 인용 단서로 처리한다 (1저자 판단, 두 번 재확인)",
             "받아들인_대가": [
-                "이 묶음의 결과는 **PAW dataset 조건부**로만 인용한다 — Methods 에 "
+                "⛔ 이 묶음의 결과는 **원고 인용용이 아니다** (회신 BA P0-3·Q5: 사후 "
+                "attestation 으로 승격 불가). 탐색용으로만 쓰고, 쓸 때는 Methods 에 "
                 "그 단서를 반드시 적는다 (아래 Methods_필수문장)",
                 "외주처가 attestation 을 돌려주면 그 조건부가 풀린다 (README 권고)",
                 "'승인된 공식 PAW 세트를 썼다' 는 문장은 **쓰지 않는다** — 확인 안 됐다"],
@@ -12851,15 +13194,37 @@ def _runner_regression(out: Path, chk) -> None:
         f"⛔음성 R7: 산출물이 있는 잡을 그냥 재실행하면 **거부** "
         f"rc={r2.returncode} 실행 {ran2}")
 
-    # ── R7b 재개는 **명시적 선언**으로만 ───────────────────────────────────
+    # ── R7b ⛔ 회신 BA 해제조건 7 — **재개는 폐지됐다.** 주면 거부한다 ────────
     log2.unlink(missing_ok=True)
     r2b = subprocess.run(["bash", "run_job.sh"], cwd=jd, capture_output=True, text=True,
                          env={**os.environ, "PATH": f"{stub_dir}:{os.environ.get('PATH','')}",
                               "VASP_LAUNCHER_KIND": "none", "VASP_EXE": str(stub_dir / "vasp_std"), "STUB_LOG": str(log2),
                               "ALLOW_RESUME": "1"})
     ran2b = log2.read_text().split() if log2.is_file() else []
-    chk(r2b.returncode == 0 and ran2b == [],
-        f"R7b ALLOW_RESUME=1 이면 전 상 건너뜀 rc={r2b.returncode} 실행 {ran2b}")
+    chk(r2b.returncode != 0 and ran2b == []
+        and "폐지" in (r2b.stdout + r2b.stderr),
+        f"⛔음성 BA 해제조건 7: ALLOW_RESUME=1 은 **거부**된다 (영수증 게이트가 "
+        f"언제나 막던 함정) rc={r2b.returncode} 실행 {ran2b}")
+    # ── R7c 계획된 이어달리기(dense 승격)는 **DENSE_PLAN.json 이 있을 때만** ──
+    log2.unlink(missing_ok=True)
+    r7c = subprocess.run(["bash", "run_job.sh"], cwd=jd, capture_output=True, text=True,
+                         env={**os.environ, "PATH": f"{stub_dir}:{os.environ.get('PATH','')}",
+                              "VASP_LAUNCHER_KIND": "none", "VASP_EXE": str(stub_dir / "vasp_std"),
+                              "STUB_LOG": str(log2), "PLANNED_CONTINUATION": "1"})
+    chk(r7c.returncode != 0 and "DENSE_PLAN.json" in (r7c.stdout + r7c.stderr),
+        "⛔음성 BA 해제조건 7: `PLANNED_CONTINUATION=1` 인데 DENSE_PLAN.json 이 없으면 "
+        "거부한다 (계획의 증거 없이 완료 상을 건너뛰지 않는다)")
+    (jd.parent.parent / "DENSE_PLAN.json").write_text('{"planned": true}')
+    log2.unlink(missing_ok=True)
+    r7d = subprocess.run(["bash", "run_job.sh"], cwd=jd, capture_output=True, text=True,
+                         env={**os.environ, "PATH": f"{stub_dir}:{os.environ.get('PATH','')}",
+                              "VASP_LAUNCHER_KIND": "none", "VASP_EXE": str(stub_dir / "vasp_std"),
+                              "STUB_LOG": str(log2), "PLANNED_CONTINUATION": "1"})
+    ran7d = log2.read_text().split() if log2.is_file() else []
+    chk(r7d.returncode == 0 and ran7d == [],
+        f"BA 해제조건 7 양성: DENSE_PLAN.json 이 있으면 계획된 이어달리기가 완료 상을 "
+        f"건너뛴다 rc={r7d.returncode} 실행 {ran7d}")
+    (jd.parent.parent / "DENSE_PLAN.json").unlink(missing_ok=True)
 
     # ── R8 부분 재개도 ALLOW_RESUME 아래에서만 ─────────────────────────────
     (jd / "dense" / "OUTCAR").unlink()
@@ -13319,7 +13684,8 @@ def selftest() -> int:
         chk("MAKE_POTCAR_ATTESTATION.sh" in _rd9 and "막지는 않습니다" in _rd9,
             "회신 AZ P0-7: README 가 attestation 을 **권고**한다 (강제하지 않는다고 "
             "명시)")
-        chk("PAW dataset 조건부" in _rd9 and "승인된 PAW dataset" in _rd9,
+        chk("원고 인용용이 아닙니다" in _rd9 and "승인된 PAW dataset" in _rd9
+            and "조건부로 원고 인용" not in _rd9.split("쓰지 않습니다")[0].rsplit("⛔", 1)[0],
             "회신 AZ P0-7: README 가 **왜** 부탁하는지와 **안 하면 어떻게 되는지**를 "
             "같이 적는다 — 근거 없는 부탁은 무시된다")
         _sm9 = m_st.get("submission") or {}
