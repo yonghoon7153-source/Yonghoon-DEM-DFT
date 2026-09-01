@@ -2878,6 +2878,37 @@ def _runner_digest() -> str:
         pathlib.Path(__file__).read_bytes()).hexdigest()
 
 
+def _tested_tree_digest() -> str:
+    """**실제로 시험한 파일들**의 내용 digest (55차 P1-2).
+
+    54차의 결속은 `head` 뿐이었고 검사는 "그 commit 이 실재하는가" 만 물었다.
+    리뷰어는 12개 조각의 `binding.head` 를 저장소 **최초 commit** 으로 일괄
+    교체하고도 `rc 0 · 157/157 exact` 를 받았다 — 실재하기만 하면 무엇이든
+    통과하는 값은 결속이 아니라 장식이다 (54차에 죽은 head 를 되살렸는데,
+    되살린 것이 여전히 아무 것도 안 물었다).
+
+    물어야 하는 것은 "어느 commit 이냐" 가 아니라 **"이 증거가 가리키는 코드가
+    지금 이 트리의 코드와 같은가"** 다. 그래서 변이 대상 파일과 그 변이가
+    빨갛게 만든다고 선언한 시험 파일의 바이트를 직접 해시한다. 조각을 쓰는
+    쪽이 다시 계산할 수 있지만, 그러면 **그 시점의 트리**를 가리키게 되고
+    checker 가 지금 트리와 대조해 어긋남을 본다.
+    """
+    files = {PRESERVE, RP, MR}
+    for exp in EXPECT.values():
+        for node in (exp or {}).get("fail") or ():
+            files.add(ROOT / str(node).split("::", 1)[0])
+    h = hashlib.sha256()
+    for f in sorted(files, key=lambda x: str(x)):
+        rel = pathlib.Path(f)
+        try:
+            body = rel.read_bytes()
+        except OSError:
+            body = b"<missing>"
+        h.update(str(rel).encode("utf-8") + b"\0")
+        h.update(hashlib.sha256(body).digest())
+    return h.hexdigest()
+
+
 def _head() -> str:
     """이 증거가 어느 트리에서 나왔는가. git 이 없으면 빈 문자열."""
     import subprocess
@@ -3099,6 +3130,7 @@ def _write_coverage(path, selector, items, multi, declared, bit,
                "expect_digest": _expect_digest(),
                "runner_digest": _runner_digest(),
                "head": _head(),
+               "tree_digest": _tested_tree_digest(),      # 55차 P1-2
                "reports_dir": rep_dir.name if receipts is not None else "",
                "transcript_digest": _transcript_digest(scen)},
            "scenarios": scen}
@@ -3347,6 +3379,25 @@ def check_coverage(paths) -> int:
     #   값은 결속이 아니라 장식이다.
     if _assert_heads_are_real(paths) != 0:
         return 1
+    # ★ 55차 P1-2 — `head` 는 "실재하는가" 만 물으므로 어느 commit 이든 통과한다
+    #   (리뷰어 실측: 12조각의 head 를 최초 commit 으로 바꿔도 rc 0 · 157/157).
+    #   물어야 하는 것은 **이 증거가 가리키는 코드가 지금 트리의 코드인가** 다.
+    now = _tested_tree_digest()
+    for pth in paths:
+        try:
+            rec = json.loads(pathlib.Path(pth).read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError) as exc:
+            print(f"✗ {pth}: 조각을 읽을 수 없다: {exc}")
+            return 1
+        got = str((rec.get("binding") or {}).get("tree_digest") or "")
+        if not got:
+            print(f"✗ {pth}: 시험한 트리 digest 가 없다 — 어느 코드에 대한 "
+                  "증거인지 말하지 않는 조각은 증거가 아니다")
+            return 1
+        if got != now:
+            print(f"✗ {pth}: 증거가 가리키는 트리가 지금 트리와 다르다 "
+                  f"({got[:16]} ≠ {now[:16]}) — 그 코드는 다시 재생해야 한다")
+            return 1
     # ★ 50차 P1 — 합집합을 세기 전에 **등록부 자체**가 성립하는지 본다.
     #   no-op 변이·죽은 지점·빈 기대 집합이 있으면 그 위에서 센 수는 뜻이 없다.
     if check_preimages() != 0:

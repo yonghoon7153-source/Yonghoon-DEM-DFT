@@ -3256,6 +3256,21 @@ def cohort_lifecycle_state(cohort_id: str, entries=None):
     return last
 
 
+def _assert_dest_inside_repo(dest, cohort_id: str) -> None:
+    """목적지가 **저장소 안**인가 (55차 P1-1).
+
+    journal 이 이미 같은 규칙을 쓰고 있었지만(`_assert_journal_dir`) 그것은
+    첫 쓰기보다 **뒤**였다. 검사는 부작용 앞에 있어야 검사다.
+    """
+    d = Path(dest).resolve()
+    root = Path(REPO).resolve()
+    if d != root and root not in d.parents:
+        raise SystemExit(
+            f"✗ cohort {cohort_id!r} 의 목적지가 저장소 밖이다 ({dest} → {d}) — "
+            "저장소 밖을 봉인하는 기록은 기록이 아니라 쓰기 primitive 다. "
+            "아무 것도 쓰지 않고 멈춘다.")
+
+
 def _cohort_dir_key(cohort_id: str) -> str:
     """원장이 이 cohort 에 준 목적지를 **저장소 상대 canonical 경로**로.
 
@@ -3564,6 +3579,13 @@ def freeze_cohort(cohort_id: str, reason: str) -> dict:
 
     led = Path(REPO) / "docs" / "22p_gap" / "LEG_PRESERVATION.yaml"
     dest = REPO / str(_ledger_row(led, cohort_id).get("dir") or "")
+    # ★ 55차 P1-1 — **첫 부작용 앞에서** 목적지를 확인한다. 54차는 lock 을 먼저
+    #   잡았고(그 자체가 `.publish.lock` 을 만드는 쓰기다) 원장에 `freezing` 을
+    #   적은 **뒤**에야 journal 이 저장소 밖 목적지를 거부했다 (리뷰어 실측:
+    #   `외부 .publish.lock: true · ledger status: freezing · journal: 없음`).
+    #   거부하면서 남긴 기록은 그 자체가 오염이다 — 48차 P0-4 가 finalize 쪽에
+    #   세운 규칙이고 동결 쪽에 없었다. 규칙은 이미 한 함수에 있다.
+    _assert_dest_inside_repo(dest, cohort_id)
     # LOCK ORDER: publish → ledger. 게시자는 publish 만 잡고 원장을 읽으므로
     # 이 순서에 순환이 없다.
     with _PublishLock(dest), _preserve_ledger_lock(led):
@@ -3577,6 +3599,8 @@ def freeze_cohort(cohort_id: str, reason: str) -> dict:
                 f"✗ cohort {cohort_id!r} 의 목적지가 lock 을 잡는 사이에 바뀌었다 "
                 f"({dest} → {REPO / str(row.get('dir') or '')}) — 얼릴 대상이 "
                 "무엇인지 확정할 수 없으므로 멈춘다")
+        # lock 안에서 **다시** 본다 — 사전검사와 이 시점 사이가 창이다 (55차 P1-1)
+        _assert_dest_inside_repo(dest, cohort_id)
         # ★ 53차 P0-5 — **살아 있는 실행 검사가 맨 앞이다.** 52차는 이것을 crash
         #   복구 분기 뒤에 두었고, 그래서 복구 경로는 실행이 도는 중에도 완주했다.
         live = _live_claims_for(cohort_id)
@@ -3855,6 +3879,60 @@ def _frozen_cohort_dirs() -> dict[str, Path]:
     return out
 
 
+def _mount_roots() -> list:
+    """이 namespace 의 mount 목록 — `(mountpoint, root)` (55차 P0-4).
+
+    bind mount 는 **새 이름**을 만들지만 pathname 으로는 보이지 않는다. 이
+    기계에서 실측했다::
+
+        os.path.ismount(alias) = False   (같은 파일시스템 bind 는 안 잡힌다)
+        os.path.realpath(alias) = alias  (bind 는 안 풀린다)
+        alias 의 st_ino == 원본의 st_ino (같은 tree 다)
+
+    `/proc/self/mountinfo` 는 mountpoint 와 **그 mount 가 어느 경로를
+    담고 있는지**(root)를 함께 준다. 이름이 아니라 mount 관계를 읽는다.
+    """
+    out = []
+    try:
+        body = Path("/proc/self/mountinfo").read_text(encoding="utf-8")
+    except OSError:
+        return out
+    for ln in body.splitlines():
+        f = ln.split()
+        if len(f) >= 5:
+            out.append((f[4], f[3]))
+    return out
+
+
+def _through_bind_mounts(dest: Path) -> Path:
+    """목적지를 **mount 관계로** 푼 실제 경로 (55차 P0-4).
+
+    `dest` 나 그 조상이 bind mountpoint 이면 그 mount 의 root 로 갈아 끼운다.
+    풀 것이 없으면 그대로 돌려준다. 겹친 mount 도 풀리도록 더 안 바뀔 때까지
+    되풀이한다 (횟수는 제한한다 — 순환을 만들 수 있기 때문이다).
+    """
+    cur = Path(dest).resolve()
+    mounts = _mount_roots()
+    if not mounts:
+        return cur
+    for _ in range(16):
+        moved = False
+        for mp, root in mounts:
+            try:
+                mpp = Path(mp).resolve()
+            except OSError:                                # pragma: no cover
+                continue
+            if root in ("/", "") or mpp == cur and root == str(cur):
+                continue
+            if cur == mpp or mpp in cur.parents:
+                cur = Path(root) / cur.relative_to(mpp)
+                moved = True
+                break
+        if not moved:
+            break
+    return cur
+
+
 def _assert_writable(dest: Path) -> None:
     """frozen cohort 로는 쓸 수 없다. **쓰기 지점**에서 막는다 (27차 P1-8)."""
     # ★ 52차 P0-4 — **대상 자신에게 먼저 묻는다.** 이름 목록(원장·journal)은
@@ -3866,7 +3944,27 @@ def _assert_writable(dest: Path) -> None:
             f"봉인 marker 가 대상 안에 있다 ({FROZEN_MARKER}). 원장에서 이름을 "
             "바꿔도, 다른 경로로 같은 tree 를 가리켜도 쓸 수 없다.\n"
             "  새 세대는 **새 디렉터리**를 쓴다 (계약 v4 §13.3).")
-    d = Path(dest).resolve()
+    # ★ 55차 P0-4 — 목적지를 **mount 관계로** 푼다. 52차의 marker 는 tree 안에
+    #   있으므로 root 를 어떤 이름으로 열어도 보이지만, 리뷰어는 marker 가 없는
+    #   **자식**을 새 경로에 bind mount 했다 (실측: `marker at alias: false ·
+    #   writable guard: PASSED · CURRENT written inside frozen tree: true`).
+    #   이름을 몇 겹 만들든 mount 관계는 커널이 알고 있다 — 그것을 읽는다.
+    real = _through_bind_mounts(dest)
+    if real != Path(dest).resolve():
+        here = read_frozen_marker(real)
+        if here is not None:
+            raise SystemExit(
+                f"✗ 이 경로는 얼린 tree 를 가리키는 **mount 별칭**이다 "
+                f"({dest} → {real}) — `{here['cohort_id']}` 로 얼렸다. "
+                "이름을 새로 만들어도 같은 tree 다.")
+    for probe in (real, *real.parents):
+        marker = read_frozen_marker(probe)
+        if marker is not None and probe != Path(dest).resolve():
+            raise SystemExit(
+                f"✗ 목적지가 얼린 tree **안**이다 ({dest} → {real}) — "
+                f"`{marker['cohort_id']}` 의 봉인이 {probe} 에 있다. "
+                "새 세대는 **새 디렉터리**를 쓴다 (계약 v4 §13.3).")
+    d = real
     for cid, frozen in _frozen_cohort_dirs().items():
         # ★ 28차 P1-5 — exact equality 만 봤다. `frozen/child` 는 frozen tree
         #   **안**인데 통과했다. 자손까지 막는다.

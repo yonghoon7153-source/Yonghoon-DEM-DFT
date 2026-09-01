@@ -11182,3 +11182,149 @@ def test_a_dunder_named_indirectly_is_still_refused():
         # 없다 — **새 규칙**이 물었는지 못 박는다.
         assert "감싸서" in msg and "fail-closed" in msg, (
             f"{form} 를 거부한 것이 새 규칙이 아니다: {msg}")
+
+
+def test_a_bind_mounted_alias_of_a_frozen_child_is_not_writable(tmp_path):
+    """★ 55차 P0-4 — frozen tree 의 **자식**을 새 이름에 bind mount 하면 뚫린다.
+
+    52차는 봉인 marker 를 대상 **안**에 두어 "이름을 몇 개 만들든 같은 tree 를
+    열면 같은 marker 를 본다" 를 얻었다. 그런데 리뷰어는 marker 가 있는 root 가
+    아니라 그 **자식**을 새 active cohort 경로에 bind mount 했다:
+
+        root marker: true · marker at alias: false
+        writable guard: PASSED · lifecycle guard: PASSED
+        publication: true · CURRENT written inside frozen tree: true
+
+    이것은 §0 의 "authority 파일 넷을 모두 고치는 주체" 반례가 **아니다** —
+    정상 ledger row 하나와 mount alias 만으로 얼린 tree 에 실제로 게시한다.
+
+    이 기계에서 실측한 것 (그래서 pathname 으로는 못 잡는다):
+
+        os.path.ismount(alias) = False   (같은 파일시스템 bind 는 안 잡힌다)
+        os.path.realpath(alias) = alias  (bind 는 안 풀린다)
+        alias 의 st_ino == 원본의 st_ino (같은 tree 다)
+
+    그러므로 목적지는 **pathname 이 아니라 mount 관계**로 풀어야 한다.
+    """
+    import os.path
+    import subprocess
+
+    import yaml as _y
+
+    if not os.path.isfile("/proc/self/mountinfo"):
+        pytest.skip("mountinfo 가 없는 환경 — bind mount 반례를 재현할 수 없다")
+
+    rp = _fresh_rp()
+    two = _y.safe_load(_one_cohort_ledger("gF"))
+    two["cohorts"].append({**two["cohorts"][0], "cohort_id": "gA",
+                           "dir": "docs/22p_gap/coh2"})
+    rp.REPO = _ledger_repo(tmp_path, _y.safe_dump(two, allow_unicode=True,
+                                                  sort_keys=False))
+    frozen = rp.REPO / "docs" / "22p_gap" / "coh"
+    active = rp.REPO / "docs" / "22p_gap" / "coh2"
+    active.mkdir(parents=True, exist_ok=True)
+    child = frozen / "child"
+    child.mkdir(parents=True, exist_ok=True)
+    rp._append_lifecycle("gF", None, "active", "첫 게시")
+    rp.freeze_cohort("gF", "연구 종료")
+    assert (frozen / rp.FROZEN_MARKER).is_file(), "시험 전제가 깨졌다"
+
+    alias = active / "alias"
+    alias.mkdir(parents=True, exist_ok=True)
+    if subprocess.run(["mount", "--bind", str(child), str(alias)],
+                      capture_output=True).returncode != 0:
+        pytest.skip("이 환경에서는 bind mount 를 만들 수 없다")
+    try:
+        assert not (alias / rp.FROZEN_MARKER).exists(), (
+            "별칭에 marker 가 보인다 — 시험이 겨눈 상황이 아니다")
+        with pytest.raises(SystemExit) as ei:
+            rp._assert_writable(alias)
+        assert "frozen" in str(ei.value) or "얼" in str(ei.value), str(ei.value)
+    finally:
+        subprocess.run(["umount", str(alias)], capture_output=True)
+
+
+def test_freeze_validates_the_destination_before_its_first_side_effect(tmp_path):
+    """★ 55차 P1-1 — 동결이 **거부하기 전에** 부작용을 남긴다.
+
+    저장소 밖을 가리키는 symlink 목적지는 결국 거부되지만, 그 전에::
+
+        외부 .publish.lock 생성: true
+        ledger status: freezing
+        journal: 없음
+
+    거부하면서 기록을 남기는 것은 그 자체가 오염이다 (48차 P0-4 가 finalize
+    쪽에서 세운 규칙이고, 동결 쪽에 없었다). 목적지 containment 는 **첫 쓰기
+    앞**에서 확인한다.
+    """
+    import yaml as _y
+
+    rp = _fresh_rp()
+    outside = tmp_path / "outside"
+    outside.mkdir()
+    rp.REPO = _ledger_repo(tmp_path, _one_cohort_ledger("gX"))
+    # 원장이 가리키는 목적지를 저장소 **밖**을 향한 symlink 로 바꾼다
+    coh = rp.REPO / "docs" / "22p_gap" / "coh"
+    coh.rmdir()
+    coh.symlink_to(outside, target_is_directory=True)
+
+    with pytest.raises(SystemExit):
+        rp.freeze_cohort("gX", "연구 종료")
+
+    led = rp.REPO / "docs" / "22p_gap" / "LEG_PRESERVATION.yaml"
+    row = next(c for c in _y.safe_load(led.read_text(encoding="utf-8"))["cohorts"]
+               if c["cohort_id"] == "gX")
+    assert row.get("status") == "active", (
+        f"거부했는데 원장 상태가 {row.get('status')!r} 로 움직였다 — "
+        "거부하면서 남긴 기록은 오염이다")
+    assert not list(outside.glob("*")), (
+        f"거부했는데 저장소 밖에 파일을 만들었다: {list(outside.glob('*'))}")
+
+
+def test_coverage_is_bound_to_the_tree_it_actually_tested(tmp_path):
+    """★ 55차 P1-2 — `head` 결속은 "실재하는 commit" 이면 무엇이든 통과했다.
+
+    리뷰어 실측: 12개 coverage artifact 의 `binding.head` 를 저장소 **최초
+    commit** 으로 일괄 교체해도 checker 가 `rc 0 · 157/157 exact` 를 돌려줬다
+    (report 자체는 건드리지 않았다).
+
+    54차는 죽어 있던 head 결속을 되살렸는데, 되살린 것이 여전히 아무 것도
+    묻지 않았다 — "어느 commit 이냐" 는 물음이 아니다. 물어야 하는 것은
+    **이 증거가 가리키는 코드가 지금 트리의 코드인가** 다.
+    """
+    import json as _j
+
+    mr = _mr()
+    reg = mr._registry()
+    items, multi, _e, declared = mr._select("")
+    good = tmp_path / "s1.json"
+
+    def _report(name, phase):
+        fails = (mr.EXPECT.get(name) or {}).get("fail") or []
+        wit = (mr.EXPECT.get(name) or {}).get("witness") or {}
+        mid = mr._marker_id(name)
+        return _j.dumps({"tests": [
+            {"nodeid": f,
+             "call": {"outcome": "failed" if phase == "after" else "passed",
+                      "longrepr": f"E       {wit.get(f, '')}"}}
+            for f in fails] + [
+            {"nodeid": f"tests/test_mutation_marker_{mid}.py::test_mutant_{mid}",
+             "call": {"outcome": "passed", "longrepr": ""}}]}).encode("utf-8")
+
+    receipts = {n: {"kexpr": "", "before": _report(n, "before"),
+                    "after": _report(n, "after")} for n in reg}
+    mr._write_coverage(good, "", items, multi, declared,
+                       {n: True for n in reg}, receipts)
+    assert mr.check_coverage([str(good)]) == 0, "정상 조각이 거부됐다"
+
+    rec = _j.loads(good.read_text(encoding="utf-8"))
+    assert rec["binding"].get("tree_digest"), (
+        "조각이 시험한 트리를 적지 않는다 — 어느 코드에 대한 증거인지 "
+        "말하지 않으면 결속이 아니다")
+
+    # 다른 트리에서 나온 증거는 거부한다 (head 만 바꾸는 것으로는 부족했다)
+    rec["binding"]["tree_digest"] = "0" * 64
+    good.write_text(_j.dumps(rec, ensure_ascii=False, indent=2, sort_keys=True),
+                    encoding="utf-8")
+    assert mr.check_coverage([str(good)]) == 1, (
+        "지금 트리와 다른 코드에서 나온 증거가 통과했다")

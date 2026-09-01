@@ -10,10 +10,10 @@
 | P0-1 | 정상 finalize 가 공용 token 경로의 **새** 소유 증명을 삭제 | ○ | ○ | ○ | `preserve.py` `finalize_leg` — 정상 경로도 `_lifecycle_locks()` |
 | P0-2 | 같은 ledger 인자가 **자기 쓰기 뒤** 다른 claims root | ○ | ○ | ○ | `preserve.py` `canonical_ledger()` 신설 · 7자리 해석을 1자리로 |
 | P0-3 | stale anchor repair 가 `.head` 를 과거로 되돌림 | ○ | ○ | ○ | `row_projection.py` `_lifecycle_lock()` 신설 · repair 를 그 안으로 |
-| P0-4 | frozen root 의 **bind-mount 별칭**에 게시 가능 | — | — | — | `row_projection.py:3316·3738` — mount/inode identity 필요 |
+| P0-4 | frozen root 의 **bind-mount 별칭**에 게시 가능 | ○ | ○ | ○ | `row_projection.py` `_through_bind_mounts()` — mountinfo 로 목적지를 푼다 |
 | P0-5 | producer identity 가 두 문법을 놓침 (역방향 alias · 동적 dunder) | ○ | ○ | ○ | `row_projection.py` `MODULE_EFFECTS` 뿌리 · 동적 이름 풀기 fail-closed |
-| P1-1 | freeze 가 잘못된 목적지를 거부하기 **전에** 부작용 | — | — | — | `row_projection.py:3443` |
-| P1-2 | coverage HEAD 결속이 "실재하는 commit" 이면 통과 | — | — | — | `mutation_replay.py:3288` — tree digest 결속 필요 |
+| P1-1 | freeze 가 잘못된 목적지를 거부하기 **전에** 부작용 | ○ | ○ | ○ | `row_projection.py` `_assert_dest_inside_repo()` 를 첫 쓰기 앞 + lock 안 재확인 |
+| P1-2 | coverage HEAD 결속이 "실재하는 commit" 이면 통과 | ○ | ○ | ○ | `mutation_replay.py` `_tested_tree_digest()` — checker 가 지금 트리와 대조 |
 
 ## 닫은 것의 요지
 
@@ -43,14 +43,24 @@ RED 재현은 `Path.unlink` 를 hook 해야 한다 — 함수 자체를 hook 하
 (`*[...]` · `[...][0]` · 변수 전부). 시험은 **새 규칙이 물었는지**를 못 박는다
 — 옛 규칙이 대신 잡으면 증명하는 것이 없다 (한 번 그렇게 될 뻔했다).
 
+**P0-4** — 실측: `os.path.ismount(alias)=False` (같은 FS bind 는 안 잡힌다) ·
+`realpath` 도 안 푼다 · **st_ino 는 원본과 같다**. 그래서 이름으로는 못 잡고
+`/proc/self/mountinfo` 의 mount 관계를 읽어 목적지를 푼다. 리뷰어는 marker 가
+있는 root 가 아니라 **자식**을 bind 했으므로, 푼 경로의 **조상**까지 marker 를
+본다.
+
+**P1-1** — `_PublishLock(dest)` 자체가 쓰기다. 목적지 containment 검사를 그
+앞으로 옮기고 lock 안에서 한 번 더 본다.
+
+**P1-2** — `head` 는 "실재하는가" 만 물으므로 어느 commit 이든 통과했다.
+`_tested_tree_digest()` (변이 대상 3파일 + 기대 실패 시험 파일의 바이트)를
+조각에 적고 checker 가 **지금 트리**와 대조한다.
+
 ## 다음 단계
 
-1. P0-4 (bind mount) — 이 컨테이너는 root 이고 `mount --bind` 가 **된다**
-   (확인함). 실물 재현 가능.
-2. P1-1, P1-2.
-4. 산출물 재생성 (RUN_SCOPE 가 움직였다 — `preserve.py` 수정) → g10.
-5. 변이 등록부에 55차 방어 등록 → 12조각 전수 → 합집합.
-6. 전체 회귀 + strict smoke → 요청문.
+1. 산출물 재생성 (RUN_SCOPE 가 움직였다 — `preserve.py` 수정) → g10.
+2. 변이 등록부에 55차 방어 등록 → 12조각 전수 → 합집합.
+3. 전체 회귀 + strict smoke → 요청문.
 
 ## 주의
 
