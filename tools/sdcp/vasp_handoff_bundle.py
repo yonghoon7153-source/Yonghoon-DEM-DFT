@@ -7040,6 +7040,15 @@ def closure_C3(man, jobs, E, frags):
               = Edisp_C(f,p) − Edisp_S − Edisp_M(f)          ← **v2: 쌍둥이 없이**
       D       = mean_p(δ_SDCP) − mean_p(δ_c10)      ← 부호 있는 값, 산술평균
 
+    ⛔ **2026-09-01 (회신 AY Q2) — 우리가 리뷰에 적은 근거가 틀렸다.**
+      리뷰 요청 AY 는 소거 근거를 *"두 조각이 슬랩을 다르게 편극시키지 않는다"* 로
+      적었는데 그건 **아니다.** D3 계수는 원자종·배위 기하에 의존하므로 그런 전제는
+      성립하지 않는다. 실제 근거는 아래 v2 개정에 적힌 것 하나다 — **D3 가 SCF 에
+      안 들어가므로 고정기하에서 `E_on − E_off = Edisp` 가 항등식**이고, 그래서
+      독립 reference-slab 항이 차의 차에서 대수적으로 소거된다.
+      ⇒ C3 는 **exact-cell 차등량에 대한 전체 D3 기여**이지 조각–슬랩 쌍 분산만이
+        아니다. 결론(쌍둥이 잡 불필요)은 그대로고, 이유가 정정됐다.
+
     ★ **v2 개정 (2026-08-30, DFT 결과 0잡 시점)** — D3-off 쌍둥이 잡을 쓰지 않는다.
       D3(IVDW=11)는 SCF 에 안 들어간다: 핵좌표만 보고 총에너지·힘에 **더해지는** 항이라
       KS 해밀토니안을 안 건드린다. 그래서 고정기하 static(NSW=0)에서
@@ -9939,8 +9948,13 @@ def _return_contract(man: Dict[str, Any]) -> Dict[str, Any]:
     root = ["POTCAR_ROOT_SEAL.json (첫 실행 전 봉인)", "ZIP_SHA256.txt"]
     if staged:
         root.append("STAGE1_PASS.json (1단계 통과 receipt)")
-    root.append("POTCAR_ATTESTATION.json — 원고에 PAW release 를 적으려면 **첫 계산 "
-                "전에** 생성 (없으면 release 를 단정하지 않고 조건부로만 보고)")
+    # ⛔ 회신 AY P1 — attestation 이 반송 목록에는 있는데 주 실행 절차에 생성 단계가
+    #   없어 필수/선택이 갈렸다. **선택**으로 통일하고 그 대가를 명시한다 —
+    #   POTCAR 은 1저자 결정(2026-09-01)으로 외주처 소관이므로 pin 을 걸지 않는다.
+    root.append("POTCAR_ATTESTATION.json — **선택**. 주 실행 절차에 생성 단계가 "
+                "없으므로 만들지 않아도 됩니다. 다만 없으면 PAW release 를 단정하지 "
+                "못하고 **조건부**로만 보고합니다 (make_attestation.sh 로 만들려면 "
+                "**첫 VASP 실행 전에만** 가능합니다 — 회신 AR P0-6)")
     return {
         "⚠_정본": "이 구조가 반송 계약의 정본이다 — README·SUBMIT 은 이것의 렌더다 "
                   "(회신 AV P0-4)",
@@ -10069,8 +10083,13 @@ bash run_staged.sh 2     # 1단계 통과(STAGE1_PASS.json) 뒤에만
 ⛔ **단일 잡을 손으로 돌리는 경로는 이 묶음에서 삭제했습니다** (회신 AT P0-5).
 `run_job.sh` 를 직접 부르면 봉인된 실행파일 검사와 번들 전역 lock 을 **둘 다 우회**해,
 봉인이 무의미해지고 같은 번들에 두 실행이 들어올 수 있습니다.
-한 잡을 다시 돌리셔야 하면 그 잡의 산출물을 지우고 `bash run_staged.sh <단계>` 를
-다시 부르십시오 — 러너가 완료된 잡은 건너뜁니다.
+한 잡을 다시 돌리셔야 하면 그 잡의 산출물을 지우고 **`ALLOW_RESUME=1` 을 명시해서**
+`ALLOW_RESUME=1 bash run_staged.sh <단계>` 로 부르십시오. 그 선언이 없으면 러너가
+**거부합니다** — 건너뛰지 않습니다.
+⛔ 종전 안내는 *"그냥 다시 부르면 완료된 잡은 건너뜁니다"* 였는데 **코드와 반대**였고
+(회신 AY P1), 그대로 따르면 실행이 막혀 이유를 알 수 없었습니다. 거부가 맞는 동작입니다
+— 남이 다른 설정으로 돌려 둔 결과를 우리 것으로 반송하는 사고를 막는 게이트입니다
+(회신 AA P0-5). 재개 사실은 `NOTES.txt` 에 남겨 주십시오.
 
 """ % (n_jobs, _n1, "<메일 본문의 MANIFEST SHA256>",
        getattr(a, "cores", 48))) if _staged else ""
@@ -10443,8 +10462,11 @@ static  (같은 단계 안에서는 병렬 가능)
 | 총 VASP 실행 | **{n_all}** |
 | 상별 | {ph_line} |
 
-⚠ **잡 수의 정본은 `find . -name run_job.sh | wc -l`** 입니다 —
-`MANIFEST.planned` 에는 D3-off 쌍둥이가 들어 있지 않으므로 그것으로 세면 적게 나옵니다.
+⚠ **잡 수의 정본은 `find . -name run_job.sh | wc -l`** 입니다 (디스크에서 센 값).
+`MANIFEST.planned` 도 같은 수를 냅니다 — 아래 census 가 두 수를 나란히 보여 줍니다.
+⛔ 종전 문구는 *"planned 에는 D3-off 쌍둥이가 없으므로 적게 나온다"* 라고 적었는데
+**거짓이었습니다** (회신 AY P1): 이 묶음은 D3-off 쌍둥이를 **0개** 만들고
+(C3 는 D3-on OUTCAR 의 Edisp 로 냅니다 — 회신 AV P0-3), 실물·planned 둘 다 같습니다.
 
 {_census_block}
 
@@ -11394,7 +11416,7 @@ def build_bundle(a, ledger: Optional[Dict[str, Any]] = None) -> Path:
     #   가 "각 항을 adsorption energy 라고 부르지 말라" 고 하는 것과 정면으로
     #   충돌했다. 산출물이 서로 반대를 말하면 강한 쪽이 인용된다.
     man["claim_policy"] = {
-        f: {"quantities": ["D (fixed-geometry differential complex–gas "
+        f: {"quantities": ["D = ΔE_ads ("
                            "reference energy) — 조각 하나만으로는 만들어지지 않는다"],
             "not_claimed": (["E_ads · dE_site — 이 묶음의 산출물이 아니다",
                              "배향 분해(2×2 없음)", "전역 자리 선호",
@@ -11405,16 +11427,27 @@ def build_bundle(a, ledger: Optional[Dict[str, Any]] = None) -> Path:
                      "않는다 (회신 AT 해제조건 8)")}
         for f in man.get("fragments", [])}
     # ⛔⛔ 회신 AS 해제조건 8·9 (2026-08-31) — 보고량의 **이름과 범위**를 못 박는다.
-    #   AS Q2 가 준 문구를 그대로 쓴다: 각 항을 adsorption energy 라고 부르면 안 된다.
+    #   ⛔⛔ 2026-09-01 (1저자 · 회신 AY P0-4) — AS Q2 의 "adsorption energy 라 부르지
+    #     말 것" 은 **철회**한다. 그런 이름을 쓰는 논문이 없다는 지적이 옳다.
+    #     이름은 **E_ads** 로 쓰고, 단서(고정기하·단일점)는 **Methods 문장**이 진다.
     #   AS Q7 lateral: 옵션 (a) — **셀 조건으로 한정**한다 (lateral 대조를 넣지 않는다).
     man["reported_quantity"] = {
-        "name": "fixed-geometry differential complex–gas reference energy",
-        "korean": "고정기하 복합체−기체기준 차등에너지 (두 조각의 차)",
-        "formula": "D = (E_C_sdcp − E_G_sdcp) − (E_C_control − E_G_control)",
-        "⛔_부르면_안_되는_이름": [
-            "adsorption energy — 각 항을 그렇게 부르면 안 된다 (AS Q2)",
+        "name": "E_ads (adsorption energy) · 조각 간 차는 ΔE_ads",
+        "korean": "흡착에너지 E_ads · 두 조각의 차 ΔE_ads",
+        "formula": ("E_ads(f) = E_C(f) − E_G(f) ; "
+                    "ΔE_ads = E_ads(sdcp) − E_ads(control)"),
+        "⚠_반드시_함께_적는_단서": {
+            "ko": "MLIP(UMA-s-1p1) 이완 기하 위의 **단일점** 계산이며 DFT 이온 이완을 "
+                  "하지 않았다. 조각·표면 변형에너지와 고정 gas conformer 선택 효과가 "
+                  "값에 포함된다.",
+            "en": "Single-point calculations on MLIP-relaxed (UMA-s-1p1) geometries; "
+                  "no DFT-level ionic relaxation. Fragment and surface deformation "
+                  "energies and the fixed gas-conformer choice are included.",
+            "⛔": "이 단서가 빠지면 이름이 재는 것과 어긋난다 — 그때는 인용 불가다."},
+        "⛔_부르면_안_되는_이름_v19": [
             "binding energy · free energy — 평형·고립계 양이 아니다",
-            "E_ads · dE_site — 이 묶음의 산출물이 아니다 (옛 wave 용어)"],
+            "⚠ 이름이 아니라 **용법 금지**: 옛 wave1 의 E_ads 와 **같은 표에** 두지 "
+            "않는다 (프로토콜이 다르고 그쪽은 마감·보류 상태다)"],
         "포함되는_것": ["조각 변형에너지", "표면 변형에너지",
                         "고정된 gas conformer 선택 효과"],
         "제외되는_것": ["기하 이완", "영점·열적 기여", "용매·계면 전기장"],
@@ -11533,7 +11566,7 @@ def build_bundle(a, ledger: Optional[Dict[str, Any]] = None) -> Path:
             % (_e,))
     man["claim_scope"] = (
         "두 조각 모델의 **고정기하 복합체−기체기준 차등에너지** 하나 "
-        "(fixed-geometry differential complex–gas reference energy). "
+        "(adsorption energy difference (ΔE_ads)). "
         "⛔ 각 항을 adsorption energy 라고 부르지 않는다 — 평형·고립계 양이 아니고 "
         "조각·표면 변형을 포함한다 (회신 AS Q2). "
         "⚠ 고정 기하(MLIP 이완) 단일점이고, 기체 기준은 조각당 conformer 하나를 모든 "
@@ -12949,11 +12982,19 @@ def selftest() -> int:
             "⛔음성 AV ⑦: 철회한 '공통 주기영상 항이 상당 부분 소거' 문구가 철회 "
             "기록 밖 어디에도 없다 (철회와 재사용이 공존하지 않는다)")
         _rq9 = m_st.get("reported_quantity") or {}
-        chk("adsorption energy" not in str(_rq9.get("name"))
-            and any("adsorption energy" in x for x in _rq9.get("⛔_부르면_안_되는_이름", []))
+        # ⛔⛔ 2026-09-01 (1저자 결정 · 회신 AY P0-4) — 이 시험은 종전에 "이름이
+        #   adsorption energy 가 **아니어야** 한다" 를 강제했다(회신 AS 8). 그런데
+        #   1저자가 **E_ads 로 쓴다**고 결정했으므로 그 강제는 무효다.
+        #   ⇒ 이제 지키는 것은 **이름이 아니라 단서**다: 고정기하·단일점이라는 사실이
+        #     문서에 남아 있는가. 이름 금지는 걷고 그 조건만 시험한다.
+        _nm9 = str(_rq9.get("name", ""))
+        _cav9 = json.dumps(_rq9, ensure_ascii=False)
+        chk(("adsorption" in _nm9 or "E_ads" in _nm9)
+            and ("단일점" in _cav9 or "single-point" in _cav9 or "고정기하" in _cav9)
             and _rq9.get("gas_conformer_provenance"),
-            "회신 AS 8: 보고량 이름이 adsorption energy 가 **아니고**, 그 이름을 "
-            "금지 목록에 두며, gas conformer 출처를 기록한다")
+            "회신 AY P0-4 (1저자): 보고량 이름은 **E_ads/adsorption** 이고, 대신 "
+            "**고정기하·단일점 단서**가 문서에 남아 있으며, gas conformer 출처를 "
+            "기록한다 (이름 금지 → 단서 의무로 대체)  [옛 AS 8 은 무효]")
         chk("이 셀 조건에 한정" in str(m_st.get("claim_scope")),
             "회신 AS 9: claim_scope 가 **셀 한정**을 명시한다 (옵션 a)")
         _rc_run = _runner_e2e(_st, chk)

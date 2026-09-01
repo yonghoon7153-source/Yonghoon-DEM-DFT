@@ -217,12 +217,20 @@ LOCK=/tmp/sei_neb.lock; exec 9>"$LOCK"
 command -v flock >/dev/null && { flock -n 9 || { ts "⛔ 이미 돈다"; exit 0; }; }
 
 # ⚠ UMA 가 GPU 를 쥐고 있으면 pw.x 가 OOM 으로 죽는다. 먼저 본다.
+# ⚠ 2026-09-01 (1저자) — GPU 점유 가드를 **경고로 내린다**(종전엔 exit 1).
+#   근거: 이 계들은 작고(li_metal 54원자), CPU 빌드로도 돌며, 1저자가 "같이 돌려도
+#   된다, OOM 나면 끄면 된다" 고 판단했다. 실제로 kgy 에서 6.4 GB 점유(UMA)만으로
+#   Li 금속 끝점 이완이 막혔다.
+#   ⛔ 되살리려면 SEI_GPU_STRICT=1 — 큰 계(수백 원자)에는 그쪽이 맞다.
 if command -v nvidia-smi >/dev/null; then
   used=$(nvidia-smi --query-gpu=memory.used --format=csv,noheader,nounits | head -1)
   if [ "${used:-0}" -gt 2000 ]; then
-    ts "⛔ GPU 가 이미 ${used} MiB 쓰인다 (UMA?). 확인 후 다시 걸 것:"
-    nvidia-smi --query-compute-apps=pid,process_name,used_memory --format=csv
-    exit 1
+    ts "⚠ GPU 가 이미 ${used} MiB 쓰인다 (UMA?) — 같이 돌립니다. OOM 이면 멈추세요."
+    if [ "${SEI_GPU_STRICT:-0}" = "1" ]; then
+      ts "⛔ SEI_GPU_STRICT=1 이라 중단합니다"
+      nvidia-smi --query-compute-apps=pid,process_name,used_memory --format=csv
+      exit 1
+    fi
   fi
 fi
 
