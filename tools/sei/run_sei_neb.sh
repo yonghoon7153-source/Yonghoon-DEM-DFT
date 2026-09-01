@@ -207,7 +207,10 @@ if [ "$MODE" = neb ] && [ ! -x "$NEB" ]; then
   ts "   QE-GPU 빌드에 neb.x 가 안 들어간 경우가 흔하다(pw.x/dos.x/projwfc.x 만 빌드)."
   ts "   확인:"
   ts "     ls -la $(dirname "$NEB")/ | grep -iE 'neb|pw\.x|path'"
-  ts "     find /data/apps -name 'neb.x' -type f 2>/dev/null"
+  # ⚠ 2026-09-02 — 힌트가 `/data/apps`(gabia) 만 가리켜 kgy 에서 쓸모가 없었다.
+  #   qe_env.sh 는 kgy 의 빌드를 **찾아주지 않는다**(설계상 — 잘못된 빌드를 집는 것이
+  #   더 나쁘다). 그러니 힌트라도 이 기계에서 실제로 쓸 수 있어야 한다.
+  ts "     find /data/apps /opt \"$HOME\" -name 'neb.x' -type f 2>/dev/null | head"
   ts "   빌드가 필요하면 QE 소스에서:  make neb   (pw.x 가 이미 있으면 몇 분이면 된다)"
   ts "   다른 경로에 있으면:  NEB=/경로/neb.x bash tools/sei/run_sei_neb.sh li2s"
   exit 1
@@ -242,7 +245,9 @@ fi
 # ⚠ P1-5 — li3nd 가 빠져 있어 `run_sei_neb.sh` 도 `endpoints` 도 li3nd 를 안 건드렸다.
 #   ⛔ li3nd·lindo2 는 **Nd frozen-4f PP 가 있어야** 입력이 생긴다(todo #27) — 없으면
 #     build 단계에서 skip 되므로 여기 있어도 안전하다. 순서는 원자 수 오름차순.
-ORDER=(li2s li2o licl li3p li3nd li3po4g lindo2)
+# ⛔ 2026-09-02 — `li_metal` 이 빠져 있었다. li3nd 를 빠뜨렸던 P1-5 와 **같은 누락**
+#   이고, 인자로 직접 줘야만 돌았다. 순수 Li 금속(53원자)이 제일 싸므로 맨 앞이다.
+ORDER=(li_metal li2s li2o licl li3p li3nd li3po4g lindo2)
 TARGETS=("$@"); [ ${#TARGETS[@]} -eq 0 ] && TARGETS=("${ORDER[@]}")
 
 # ★ P0-2 (Codex) — vacancy 끝점을 먼저 이완한다. 미이완 끝점이 경로 최고점이 되면

@@ -70,6 +70,109 @@ HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE))
 import site_screen as SS                      # noqa: E402  (게이트·POSCAR·조각 레지스트리)
 
+# ══ 회신 BB P0-5 (2026-09-02) — **생성 계보를 번들 안에서 닫는다** ═══════════
+#
+#  ⛔⛔ 무엇이 문제였나. MANIFEST 는 생성기 자신의 SHA 조차 담지 않았다(검증
+#    attestation 에만 있었다). 그래서 "이 번들을 만든 코드가 커밋본과 같은가" 를
+#    번들만 보고 말할 수 없었고, **import 한 모듈**(site_screen.py)·입력 구조·AFM
+#    원장 같은 것은 아예 범위 밖이었다. 리뷰어 판정(BB P0-5 · Q5): 생성기든
+#    dependency 든 input 이든 커밋본과 다르면 그 번들은 폐기다. 범위를 사후에
+#    확정할 수 없으면 clean tree 에서 다시 만드는 것이 안전하다.
+#
+#  ⇒ 생성 시점에 **의존 폐포**를 스스로 모은다:
+#      ① 실행 중인 생성기 파일  ② repo 안에서 import 된 모든 모듈
+#      ③ 생성기가 실제로 읽은 입력 파일 (`_prov_note` 로 등록)
+#    각각의 sha256 과 **git 추적 상태**(clean/modified/untracked)를 남긴다.
+#    하나라도 dirty 면 `provenance.clean = false` 이고 분석기가 인용을 막는다.
+#
+#  ⛔ 못 하는 것: 우리가 등록하지 않은 입력은 못 잡는다. 그래서 "우리가 본
+#    범위" 를 `scope` 로 명시한다 — 범위를 숨기면 폐포라고 부를 수 없다.
+_PROV_INPUTS: "list[str]" = []
+
+
+def _prov_note(path):
+    """생성기가 **읽은** 입력을 계보에 등록한다. 경로를 그대로 돌려준다."""
+    try:
+        _p = str(Path(path).resolve())
+        if _p not in _PROV_INPUTS:
+            _PROV_INPUTS.append(_p)
+    except Exception:                                        # noqa: BLE001
+        pass
+    return path
+
+
+def _prov_git(root, rels):
+    """rel 경로들의 git 상태 → {rel: 'clean'|'modified'|'untracked'|'unknown'}."""
+    st = {}
+    try:
+        r = subprocess.run(["git", "-C", str(root), "status", "--porcelain", "--"]
+                           + list(rels), capture_output=True, text=True, timeout=60)
+        if r.returncode != 0:
+            return {x: "unknown" for x in rels}
+        dirty = {}
+        for ln in r.stdout.splitlines():
+            if not ln.strip():
+                continue
+            dirty[ln[3:].strip()] = ("untracked" if ln.startswith("??") else "modified")
+        for x in rels:
+            st[x] = dirty.get(x, "clean")
+    except Exception:                                        # noqa: BLE001
+        return {x: "unknown" for x in rels}
+    return st
+
+
+def provenance_closure(repo_root=None):
+    """생성 계보 폐포 → dict. 생성기·import 모듈·등록된 입력의 SHA 와 git 상태.
+
+    ⛔ 못 하는 것
+      · 등록되지 않은 입력은 못 잡는다 (`scope` 에 그 한계를 적는다).
+      · 위조는 막지 못한다 — 막는 것은 "dirty 인 줄 모르고 내보내는 것" 이다.
+    """
+    root = Path(repo_root or (HERE.parent.parent)).resolve()
+    files = {}
+
+    def _add(p, kind):
+        try:
+            q = Path(p).resolve()
+            if not q.is_file():
+                return
+            rel = str(q.relative_to(root)) if str(q).startswith(str(root)) else str(q)
+            files.setdefault(rel, {"kind": kind,
+                                   "sha256": hashlib.sha256(q.read_bytes()).hexdigest()})
+        except Exception:                                    # noqa: BLE001
+            pass
+
+    _add(__file__, "generator")
+    for _m in list(sys.modules.values()):                  # ② import 된 repo 모듈
+        _f = getattr(_m, "__file__", None)
+        if _f and str(Path(_f).resolve()).startswith(str(root)):
+            _add(_f, "imported_module")
+    for _i in _PROV_INPUTS:                                # ③ 읽은 입력
+        _add(_i, "input")
+    _rel_tracked = [k for k in files if not os.path.isabs(k)]
+    _st = _prov_git(root, _rel_tracked)
+    for k, v in files.items():
+        v["git"] = _st.get(k, "unknown")
+    _dirty = sorted(k for k, v in files.items() if v["git"] in ("modified", "untracked"))
+    _unk = sorted(k for k, v in files.items() if v["git"] == "unknown")
+    return {
+        "schema": "bundle_provenance/v1",
+        "repo_root": str(root),
+        "files": files,
+        "n_files": len(files),
+        "dirty": _dirty,
+        "unknown_git_state": _unk,
+        "clean": (not _dirty) and (not _unk),
+        "scope": ("실행 중인 생성기 + repo 안에서 import 된 모든 모듈 + 생성기가 "
+                  "`_prov_note` 로 등록한 입력. **등록하지 않은 입력은 여기 없다** — "
+                  "그래서 이것은 '우리가 본 범위' 이지 절대적 폐포가 아니다."),
+        "⛔_dirty_면": ("회신 BB P0-5 · Q5 — 생성기든 dependency 든 input 이든 "
+                        "커밋본과 다르면 그 번들은 **폐기**다. 범위를 사후에 확정할 수 "
+                        "없으면 clean tree 에서 다시 만든다. 분석기가 이 값을 읽고 "
+                        "인용을 막는다."),
+    }
+
+
 #: ⚠ selftest 가 `SS.load_slab` 를 몽키패치한다. 시험 간 **전역 오염**을 막으려고
 #:   적재 시점의 원본을 붙잡아 둔다 — E2E 는 이것을 쓴다 (2026-08-29 실측: 대형
 #:   selftest 뒤에 E2E 를 돌리면 장난감 슬랩을 받아 원장과 어긋났다).
@@ -3691,6 +3794,19 @@ def citation_status(man, cl):
                          "않았다 (BB P0-2)" % _bad_ref)
     else:
         b.append("governance_binding 이 없다 — 구판 번들이다 (BA 해제조건 3)")
+    # ⛔⛔ 회신 BB P0-5 (2026-09-02) — **생성 계보가 dirty 면 인용 자격이 없다.**
+    #   리뷰어 판정(Q5): 생성기든 dependency 든 input 이든 커밋본과 다르면 그 번들은
+    #   폐기다. 범위를 사후에 확정할 수 없으면 clean tree 재생성이 안전하다.
+    _pv = (man or {}).get("provenance")
+    if _pv is None:
+        b.append("provenance 가 없다 — 구판 번들이다 (BB P0-5). 어떤 코드·입력으로 "
+                 "만들어졌는지 번들 안에서 말하지 못한다")
+    elif not _pv.get("clean"):
+        b.append("생성 계보가 **dirty** 다 (수정 %d · git상태 미상 %d) %s — "
+                 "커밋본과 다른 코드·입력으로 만든 번들이다 (BB P0-5 · Q5)"
+                 % (len(_pv.get("dirty") or []),
+                    len(_pv.get("unknown_git_state") or []),
+                    (_pv.get("dirty") or _pv.get("unknown_git_state") or [])[:3]))
     return {"manuscript_citable": not b,
             "blockers": b,
             "why": ("원고 인용 가능" if not b else
@@ -4207,10 +4323,11 @@ def _selftest_closure(chk):
              "reference_files_sha256": {"a.json": "0" * 64},
              "reference_files_state": {"a.json": {"status": "ratified",
                                                   "ratified": True}}}
+    _PVOK = {"clean": True, "dirty": [], "unknown_git_state": [], "n_files": 12}
     _cs_ok = citation_status(
         {"potcar_identity_policy": {"mode": "require_attestation",
                                     "manuscript_citable": True},
-         "governance_binding": _GBOK},
+         "governance_binding": _GBOK, "provenance": _PVOK},
         {"overall_citable_at_0.01eV": True,
          "potcar_identity": {"allowed_claim": "paw_release_attested"}})
     chk(_cs_ok["manuscript_citable"] is True and not _cs_ok["blockers"],
@@ -4221,7 +4338,8 @@ def _selftest_closure(chk):
         {"potcar_identity_policy": {"mode": "require_attestation",
                                     "manuscript_citable": True},
          "governance_binding": dict(_GBOK, all_ratified=False,
-                                    decisions={"D-x": {"ratified": False}})},
+                                    decisions={"D-x": {"ratified": False}}),
+         "provenance": _PVOK},
         {"overall_citable_at_0.01eV": True,
          "potcar_identity": {"allowed_claim": "paw_release_attested"}})
     chk(_cs_gov["manuscript_citable"] is False
@@ -4231,7 +4349,8 @@ def _selftest_closure(chk):
     _cs_noref = citation_status(
         {"potcar_identity_policy": {"mode": "require_attestation",
                                     "manuscript_citable": True},
-         "governance_binding": dict(_GBOK, reference_files_sha256={"a.json": None})},
+         "governance_binding": dict(_GBOK, reference_files_sha256={"a.json": None}),
+         "provenance": _PVOK},
         {"overall_citable_at_0.01eV": True,
          "potcar_identity": {"allowed_claim": "paw_release_attested"}})
     chk(_cs_noref["manuscript_citable"] is False,
@@ -4242,7 +4361,7 @@ def _selftest_closure(chk):
         return citation_status(
             {"potcar_identity_policy": {"mode": "require_attestation",
                                         "manuscript_citable": True},
-             "governance_binding": gb},
+             "governance_binding": gb, "provenance": _PVOK},
             {"overall_citable_at_0.01eV": True,
              "potcar_identity": {"allowed_claim": "paw_release_attested"}})
 
@@ -4285,6 +4404,39 @@ def _selftest_closure(chk):
         and any("주장을 **정의하는** 문서" in x for x in _r["blockers"]),
         "⛔음성 BB P0-2 (실물 재현): decision 은 active 인데 **claim prereg 가 "
         "proposed** 면 인용 불가다 — 실제 C-12 정본이 이 상태였다")
+    # ══ 회신 BB P0-5 — 생성 계보 (dirty 면 폐기) ═══════════════════════════
+    def _csp(pv):
+        return citation_status(
+            {"potcar_identity_policy": {"mode": "require_attestation",
+                                        "manuscript_citable": True},
+             "governance_binding": _GBOK, "provenance": pv},
+            {"overall_citable_at_0.01eV": True,
+             "potcar_identity": {"allowed_claim": "paw_release_attested"}})
+    chk(_csp(_PVOK)["manuscript_citable"] is True,
+        "BB P0-5 양성: 계보가 clean 이면 인용 자격을 막지 않는다")
+    _r = _csp(dict(_PVOK, clean=False, dirty=["tools/sdcp/site_screen.py"]))
+    chk(_r["manuscript_citable"] is False
+        and any("dirty" in x for x in _r["blockers"]),
+        "⛔음성 BB P0-5: **import 한 모듈**이 dirty 면 인용 불가다 — 생성기만 "
+        "커밋본과 같아도 dependency 가 다르면 다른 코드로 만든 번들이다")
+    _r = _csp(dict(_PVOK, clean=False, unknown_git_state=["db/structures/x.vasp"]))
+    chk(_r["manuscript_citable"] is False,
+        "⛔음성 BB P0-5: git 상태를 **모르는** 파일이 있어도 불가다 — 모르는 것을 "
+        "clean 으로 세면 그게 fail-open 이다")
+    _r = _csp(None)
+    chk(_r["manuscript_citable"] is False
+        and any("provenance 가 없다" in x for x in _r["blockers"]),
+        "⛔음성 BB P0-5: provenance 없는 구판 번들은 인용 불가다 (v22 가 이 상태였다)")
+    _pv_live = provenance_closure()
+    chk(_pv_live["n_files"] >= 2
+        and any(v["kind"] == "generator" for v in _pv_live["files"].values())
+        and any(v["kind"] == "imported_module" for v in _pv_live["files"].values()),
+        "BB P0-5 실물: 계보 폐포가 생성기 + **import 된 repo 모듈**을 잡는다 "
+        "(파일 %d개)" % _pv_live["n_files"])
+    chk("등록하지 않은 입력은 여기 없다" in _pv_live["scope"],
+        "BB P0-5: 폐포의 **한계를 산출물에 적는다** — 우리가 본 범위이지 절대적 "
+        "폐포가 아니다 (한계 은폐가 제일 비싼 버그다)")
+
     _r = _cs(dict(_GBOK, reference_files_state={
         "old.json": {"status": None, "ratified": False, "superseded": True}}))
     chk(any("SUPERSEDED" in x for x in _r["blockers"]),
@@ -13145,6 +13297,28 @@ def build_bundle(a, ledger: Optional[Dict[str, Any]] = None) -> Path:
     man["generated_argv"] = list(sys.argv[1:])
 
     man["generated_utc"] = time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())
+    # ⛔⛔ 회신 BB P0-5 (2026-09-02) — **생성 계보를 번들 안에서 닫는다.**
+    #   종전 MANIFEST 에는 실제로 실행한 생성기의 SHA 조차 없었다(검증 attestation
+    #   에만 있었다). import 한 모듈(site_screen.py)·입력 구조·AFM 원장은 범위 밖
+    #   이었다. 그래서 "이 번들을 만든 코드·입력이 커밋본과 같은가" 를 번들만 보고
+    #   말할 수 없었다.
+    man["provenance"] = provenance_closure()
+    _pv = man["provenance"]
+    if not _pv["clean"]:
+        # ⚠ selftest·E2E 는 개발 트리에서 도니 언제나 dirty 다. 매번 열 줄을 찍으면
+        #   진짜 산출물의 경고가 묻힌다 (출력 규율) — 거기서는 한 줄로 접는다.
+        _quiet = ("--selftest" in sys.argv)
+        print("\n⛔⛔ **생성 계보가 dirty 다** — 이 번들은 폐기다 "
+              "(dirty %d · 미상 %d · 회신 BB P0-5 · Q5)%s"
+              % (len(_pv["dirty"]), len(_pv["unknown_git_state"]),
+                 "  [selftest 트리라 정상]" if _quiet else ""))
+        if not _quiet:
+            for _d in _pv["dirty"][:10]:
+                print("   · %s" % _d)
+            for _u in _pv["unknown_git_state"][:5]:
+                print("   ? %s (git 상태 미상)" % _u)
+            print("   커밋본과 다른 코드·입력으로 만들어졌다 — clean tree 에서 "
+                  "다시 만드십시오 (별도 clone 또는 git stash 후 재생성).")
     (out / "MANIFEST.json").write_text(json.dumps(man, indent=1, ensure_ascii=False))
 
     if out_final.exists():
