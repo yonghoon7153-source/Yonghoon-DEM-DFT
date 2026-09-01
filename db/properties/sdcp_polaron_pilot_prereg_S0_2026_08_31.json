@@ -1,8 +1,8 @@
 {
  "schema": "estimand_prereg/v2",
  "date": "2026-08-31",
- "status": "proposed",
- "⚠_비준": "⚠ **재비준 대기.** 회신 W P0-1/P0-3/P0-4/P0-5 이행으로 내용이 바뀌었다 — 2026-09-02 비준은 그 이전 내용에 대한 것이므로 무효다. digest 결박이 그것을 자동으로 잡는다.",
+ "status": "ratified",
+ "⚠_비준": "✔ **2026-09-02 1저자 비준 (scientific_owner).** 회신 W P0-4/P0-5 이행 내용에 대한 비준이다. 이후 내용이 바뀌면 digest 결박이 자동으로 재비준을 요구한다 — 그때 status 는 proposed 로 돌아간다.",
  "제목": "S0 — ε=1 기술적 적합성 pilot 사전등록 (회신 T 로 격하된 판, P0 4건 이행 반영)",
  "이_문서의_성격": {
   "무엇인가": "회신 T 가 '전체 pilot NO-GO / ε=1 기술적 적합성 pilot(S0) 한정 조건부 GO' 로 격하한 것을 받아 **범위를 줄여 다시 등록**한 판이다.",
@@ -224,6 +224,11 @@
    "at": "2026-09-02",
    "state": "proposed",
    "note": "회신 W P0-4/P0-5 이행으로 재봉인. loccheck 증서가 L→L2 사슬과 현재 ORCA 를 증명하게 했고, 계보 해시를 러너·분석기가 **소비**하게 했다(preflight + RUN_RECEIPTS.jsonl). 부수로 run_pilot.sh 가 bash 로 파싱조차 안 되던 것을 고치고 `bash -n` 시험을 넣었다. 범위·질문·판정어 불변. ⚠ 재비준 필요."
+  },
+  {
+   "at": "2026-09-02",
+   "state": "ratified",
+   "note": "1저자 비준 (scientific_owner). 회신 W P0-1/P0-3/P0-4/P0-5 이행분에 대한 비준이다. 봉인: builder ded52c96… · last_change 6f9e28b2… · 커밋 02ed6c84. phase L 의 사전등록 선행 조건이 다시 풀렸다 — loccheck 증서는 별개 게이트다."
   }
  ],
  "회신_U_이행": {
@@ -237,5 +242,12 @@
   "loccheck": "phase L 전에 `bash run_pilot.sh loccheck` 가 LOCCHECK_PASS.json 을 남겨야 한다. 증서는 **fresh 디렉터리에서 L → L2 를 둘 다** 돌려 만든 것이어야 하고 (l2_inp_sha256·l2_out_sha256·l2_moread_suffix), 파서 검증은 L2 출력으로 한다 — seed 의 원천이 거기다. 판독 시 증서가 기록한 ORCA 를 다시 해시해 같은지 본다. L·seeds 가 그 증서를 **강제**한다 — 순서가 문구가 아니라 게이트다 (회신 V P0-3 · W P0-4).",
   "계보_대조": "계산 단계(L·L2·probe·S·restart)는 실행 **전에** 입력·xyz 봉인 해시와 `%moinp` 대상 파일을 대조하고, 정상종료한 출력이 있는데 실행 receipt 가 없거나 낡았으면 STALE_OUTPUT 으로 막는다. 잡마다 RUN_RECEIPTS.jsonl 에 receipt 를 남기고, 분석기는 receipt 없는/낡은 S·SR 잡을 판정하지 않는다 (회신 W P0-5)."
  },
- "ratification": null
+ "ratification": {
+  "state": "ratified",
+  "role": "scientific_owner",
+  "at": "2026-09-02",
+  "by": "1저자",
+  "content_digest": "c7d9201e3d041a5872c5b5062f1f14e5ec4c0b944732e86181b5ac19ae49981c",
+  "⛔_무엇에_대한_비준인가": "이 문서에서 `ratification` 을 뺀 내용의 sha256 이다. 한 글자라도 바뀌면 지문이 달라지고 게이트가 재승인을 요구한다 — 비준을 받아 놓고 내용을 고치는 경로를 닫는다."
+ }
 }
