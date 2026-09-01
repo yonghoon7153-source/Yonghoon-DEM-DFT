@@ -51,6 +51,7 @@ import json
 import math
 import os
 import re
+import subprocess
 import time
 from pathlib import Path
 
@@ -2290,9 +2291,9 @@ def selftest():
     # ── 양성: 축 정렬 (종전 fixture 가 쓰던 유일한 경우) ───────────────────────
     _rp, _pi_ao, _pi_cf, _ = _ring_pi_case(_rot3(0.0, 0.0, 0.0))
     _chpi = pil_mo_character(_pi_ao, _rid, _rsym, _rp, _rid, coef_mo=_pi_cf)
-    chk(pil_character_verdict(_chpi, "pi")[0] and _chpi["pi_share"] > 0.99,
+    chk(pil_character_verdict(_chpi, "pi")[0] and _chpi["pi_orientation_score"] > 0.99,
         "회신 T P0-2 양성: 고리 법선에 몰린 p 밀도는 **π 로 통과**한다 "
-        "(π %.3f · p %.2f)" % (_chpi["pi_share"], _chpi["p_frac"]))
+        "(π %.3f · p %.2f)" % (_chpi["pi_orientation_score"], _chpi["p_frac"]))
 
     # ⛔⛔ 회신 U P0-2 — **회전 불변성.** 종전 식 Σn_k²p_k/Σp_k 는 축 정렬에서만
     #   1 이고 일반 방향에서 Σn_k⁴ 로 무너진다 (대각선 법선이면 1/3).
@@ -2304,7 +2305,7 @@ def selftest():
     for _a, _b, _c in _rot_cases:
         _p2, _ao2, _cf2, _n2 = _ring_pi_case(_rot3(_a, _b, _c))
         _ch2 = pil_mo_character(_ao2, _rid, _rsym, _p2, _rid, coef_mo=_cf2)
-        _pis.append(_ch2["pi_share"] if _ch2["pi_share"] is not None else -1.0)
+        _pis.append(_ch2["pi_orientation_score"] if _ch2["pi_orientation_score"] is not None else -1.0)
         # 종전 식을 그 자리에서 다시 계산해 **무너지는 것**을 기록한다
         _pv = [sum(_ao2[i]["2p" + ax] for i in _rid) for ax in "xyz"]
         _olds.append(sum(_n2[k] ** 2 * _pv[k] for k in range(3)) / sum(_pv))
@@ -2331,9 +2332,9 @@ def selftest():
     _sg_cf = {i: {"2s": 0.05, "2px": 0.7, "2py": 0.7, "2pz": 0.02} for i in _rid}
     _chsg = pil_mo_character(_sg_ao, _rid, _rsym, _rp, _rid, coef_mo=_sg_cf)
     _ok_sg, _w_sg = pil_character_verdict(_chsg, "pi")
-    chk(not _ok_sg and "SEED_NOT_PI" in _w_sg and _chsg["pi_share"] < 0.1,
+    chk(not _ok_sg and "SEED_NOT_PI" in _w_sg and _chsg["pi_orientation_score"] < 0.1,
         "⛔음성 T P0-2: **면내 p(σ)** 는 그 링에 100%% 국재돼도 막는다 "
-        "(π %.3f) — 공간 국재가 π 를 보증하지 않는다" % _chsg["pi_share"])
+        "(π %.3f) — 공간 국재가 π 를 보증하지 않는다" % _chsg["pi_orientation_score"])
     _s_ao = {i: {"2s": 90.0, "2px": 2.0, "2py": 2.0, "2pz": 2.0} for i in _rid}
     _chs = pil_mo_character(_s_ao, _rid, _rsym, _rp, _rid,
                             coef_mo={i: {"2s": 0.95} for i in _rid})
@@ -2354,7 +2355,7 @@ def selftest():
     chk(not _ok_ub and "UNRESOLVED" in _w_ub,
         "⛔음성 V Q2: 계수가 없으면 상한이 작아도 **UNRESOLVED** 다 — Cauchy–Schwarz "
         "상한은 인쇄 threshold 때문에 엄밀하지 않다 (상한 %s 는 진단용)"
-        % (_chub.get("pi_upper"),))
+        % (_chub.get("pi_upper_diagnostic_not_a_bound"),))
     chk("엄밀한 상한이 아니다" in (pil_mo_character.__doc__ or ""),
         "회신 V Q2: 상한이 왜 판정에 못 쓰이는지가 docstring 에 적혀 있다")
     # ── MO 계수 파서 (실물 형식) ──────────────────────────────────────────────
@@ -2501,6 +2502,9 @@ def selftest():
         _dx = os.path.join(ptd, "dimer.xyz")
         write_xyz(_dx, _dsym, _dpos, "synthetic dimer for polaron e2e")
 
+        global PIL_PREREG_S0
+        _prereg_real = PIL_PREREG_S0
+
         def _gen(sub, **kw):
             a = argparse.Namespace(neutral_xyz=_dx, out=os.path.join(ptd, sub),
                                    eps=[1.0], nprocs=4, functional="r2SCAN-3c",
@@ -2509,6 +2513,43 @@ def selftest():
             for k, v in kw.items():
                 setattr(a, k, v)
             return pilot_generate(a)
+
+        # ⛔⛔ 회신 W P0-2 — 생성 시점에도 사전등록을 검사하므로, **먼저 사전등록이
+        #   있어야 한다.** production 순서가 그렇다 (사전등록 → 생성). selftest 는
+        #   합성 다이머라 값을 모르니 **bootstrap 생성**으로 값을 얻고 그것으로
+        #   픽스처 사전등록을 쓴 뒤 본 생성을 한다. (검사 자체를 끄지 않는다.)
+        # ⚠ `atom_manifest_hash` 는 생성 **전에** 계산할 수 있다 — 부모 구조만으로
+        #   정해지기 때문이다 (production 에서도 사전등록 저자가 그렇게 채운다).
+        _bsy, _bpo = read_xyz(_dx)
+        _bnb, _brg, _bsu = analyze(_bsy, _bpo)
+        _bac = pilot_acidic_h(_bsy, _bnb, _bsu)
+        _bamf = pilot_atom_manifest(_bsy, _bnb, _brg, _bsu,
+                                    [_bac[len(_bac) // 2][3]])
+        _boot_pre = os.path.join(ptd, "prereg_bootstrap.json")
+
+        def _write_boot(**patch):
+            doc = {"schema": "prereg/v1", "status": "ratified",
+                   "0_시각_증거": {"builder_sha256": _sha(__file__),
+                                    "builder_last_change_commit":
+                                        _git_last_change_commit(__file__) or "0" * 40,
+                                    "봉인_시점": "2026-09-02"},
+                   "대상": {"parent_sha256": _sha(_dx),
+                            "atom_manifest_hash": _bamf["hash"],
+                            "functional": "r2SCAN-3c", "epsilon": [1.0],
+                            "loc_realization": "R0_deterministic"}}
+            doc.update(patch)
+            _cc = {k: v for k, v in doc.items() if k != "ratification"}
+            doc["ratification"] = {
+                "state": "ratified", "role": "scientific_owner",
+                "actor_id": "selftest", "timestamp": "2026-09-02T00:00:00Z",
+                "commit": "0" * 40,
+                "content_digest": hashlib.sha256(
+                    json.dumps(_cc, sort_keys=True, ensure_ascii=False)
+                    .encode("utf-8")).hexdigest()}
+            open(_boot_pre, "w").write(json.dumps(doc, ensure_ascii=False))
+
+        _write_boot()
+        PIL_PREREG_S0 = _boot_pre
 
         _po = _gen("base")
         _pm = json.loads((_po / "MANIFEST_PILOT.json").read_text())
@@ -2537,14 +2578,15 @@ def selftest():
         #   합성 다이머는 실물 부모(b490…)와 다르므로, 픽스처가 자기 조건을 적은
         #   사전등록을 쓰고 `PIL_PREREG_S0` 를 거기로 돌린다 (production 우회 아님 —
         #   `_repo_path` 가 절대경로를 그대로 받는 것뿐이다).
-        global PIL_PREREG_S0
-        _prereg_real = PIL_PREREG_S0
 
         def _fixture_prereg(mm, **patch):
             f = os.path.join(ptd, "prereg_fixture_%d.json" % (len(patch) + hash(str(patch)) % 97))
             doc = {"schema": "prereg/v1", "status": "ratified",
-                   "0_시각_증거": {"builder_sha256": mm.get("builder_sha256"),
-                                    "builder_commit": mm.get("builder_commit")},
+                   "0_시각_증거": {
+                       "builder_sha256": mm.get("builder_sha256"),
+                       "builder_last_change_commit":
+                           mm.get("builder_last_change_commit") or "0" * 40,
+                       "봉인_시점": "2026-09-02"},
                    "대상": {"parent_sha256": mm.get("parent_sha256"),
                             "atom_manifest_hash": mm.get("atom_manifest_hash"),
                             "functional": mm.get("functional"),
@@ -2554,7 +2596,8 @@ def selftest():
             for k, v in patch.items():
                 if k.startswith("_"):
                     continue
-                if k in ("builder_sha256", "builder_commit"):
+                if k in ("builder_sha256", "builder_last_change_commit",
+                         "봉인_시점"):
                     doc["0_시각_증거"][k] = v
                 elif k == "status":
                     doc["status"] = v
@@ -2615,11 +2658,11 @@ def selftest():
             "회신 V P0-3 양성: 국재 파일이 **`.loc.gbw`** 여도 seed 가 만들어지고 "
             "입력이 그 파일을 읽는다 (ORCA 6.1 문서 표기)")
         _pi = [v for k, v in _S.items() if v["seed"].startswith("B_ring")]
-        chk(len(_pi) == 4 and all(v["seed_mo_character"]["pi_share"] >= PIL_PI_MIN
+        chk(len(_pi) == 4 and all(v["seed_mo_character"]["pi_orientation_score"] >= PIL_PI_MIN
                                   and v["seed_mo_character"]["p_frac"] >= PIL_PFRAC_MIN
                                   for v in _pi),
             "e2e: 링 seed 4개가 **고리법선 π** 로 판정됐다 (π %.2f · p %.2f)"
-            % (_pi[0]["seed_mo_character"]["pi_share"],
+            % (_pi[0]["seed_mo_character"]["pi_orientation_score"],
                _pi[0]["seed_mo_character"]["p_frac"]))
         _sul = [v for v in _S.values() if v["seed"] == "A_sulfonate"]
         chk(len(_sul) == 1 and _sul[0]["seed_mo_character"]["O_frac"] >= PIL_ONB_MIN,
@@ -2699,8 +2742,24 @@ def selftest():
             ("neg_pre_builder", {"_prereg_patch": {"builder_sha256": "e" * 64}},
              "V P0-2: 사전등록이 봉인한 **빌더**가 실제와 다르다 — 봉인한 규칙과 "
              "적용된 규칙이 갈린다"),
-            ("neg_pre_commit", {"_prereg_patch": {"builder_commit": "f" * 40}},
-             "V P0-2: 사전등록의 빌더 **commit** 이 다르다"),
+            ("neg_pre_commit",
+             {"_prereg_patch": {"builder_last_change_commit": "f" * 40}},
+             "V P0-2: 사전등록의 **빌더를 마지막으로 바꾼 커밋**이 다르다"),
+            # ── 회신 W P0-2 — **필드를 지우면 검사가 건너뛰어지던 fail-open** ──
+            ("neg_pre_drop_bs", {"_prereg_patch": {"builder_sha256": None}},
+             "W P0-2: 사전등록에서 `builder_sha256` 을 **지우면** 통과했다 "
+             "(양쪽 값이 있을 때만 비교했다)"),
+            ("neg_pre_drop_func", {"_prereg_patch": {"functional": None}},
+             "W P0-2: `functional` 을 지우면 통과했다"),
+            ("neg_pre_drop_eps", {"_prereg_patch": {"epsilon": None}},
+             "W P0-2: `epsilon` 을 지우면 통과했다"),
+            ("neg_pre_drop_par", {"_prereg_patch": {"parent_sha256": None}},
+             "W P0-2: `parent_sha256` 을 지우면 통과했다 — **다른 부모 구조**로도 "
+             "번들을 만들 수 있었다"),
+            ("neg_pre_drop_amf", {"_prereg_patch": {"atom_manifest_hash": None}},
+             "W P0-2: `atom_manifest_hash` 를 지우면 통과했다"),
+            ("neg_pre_drop_real", {"_prereg_patch": {"loc_realization": None}},
+             "W P0-2: `loc_realization` 을 지우면 통과했다"),
             ("neg_pre_amf", {"_prereg_patch": {"atom_manifest_hash": "a" * 64}},
              "V P0-2: 사전등록의 **atom_manifest 해시**가 다르다 (P/D 프레임이 다르다)"),
             ("neg_pre_func", {"_prereg_patch": {"functional": "PBE0"}},
@@ -2787,7 +2846,24 @@ def selftest():
         chk(any(g.startswith("SEED_INTERVENTION_FAILED")
                 for g in _r3["jobs"]["S/eps1/Dradical/B_ring0"]["gates"]),
             "⛔음성 Q4 1층: 회전이 **다른 집합**에 스핀을 놓았다 — 이 seed 는 "
-            "다른 출발점이 아니다")
+            "다른 출발점이 아니다 (실제 %s)"
+            % _r3["jobs"]["S/eps1/Dradical/B_ring0"]["gates"][:1])
+        # ══ 회신 W P0-8 — 무회전 baseline 대비 **증가**를 요구한다 ═══════════
+        _r8a = _ana("q4_basehigh", baseline_high=True)
+        chk(any("SEED_INTERVENTION_FAILED" in g and "늘지" in g
+                for g in _r8a["jobs"]["S/eps1/Dradical/B_ring0"]["gates"]),
+            "⛔음성 W P0-8: 회전 후 목표 몫이 **무회전보다 안 늘면** 개입이 아니다 "
+            "— 절대 문턱만 보면 0.80→0.70 도 통과했다 (실제 %s)"
+            % _r8a["jobs"]["S/eps1/Dradical/B_ring0"]["gates"][:1])
+        _r8b = _ana("q4_nobase", drop_baseline=True)
+        chk(any("PROBE_BASELINE_MISSING" in g or "BASELINE" in g
+                for g in _r8b["jobs"]["S/eps1/Dradical/B_ring0"]["gates"]),
+            "⛔음성 W P0-8: 무회전 control 이 **없으면** 확인 못 함이지 통과가 아니다")
+        chk((_r["no_rotation_controls"] or {}) and all(
+                v["status"] == "NO_ROTATION_BASELINE"
+                for v in _r["no_rotation_controls"].values()),
+            "회신 U Q3 · W P0-8: 무회전 control 은 **개입이 아니다** — 별도 판정어로 "
+            "내고 seed 판정에 섞지 않는다 (%d건)" % len(_r.get("no_rotation_controls") or {}))
         _r4 = _ana("q4_noprobe", drop_probe=("B_ring0",))
         chk(any(g.startswith("SEED_INTERVENTION_UNVERIFIED")
                 for g in _r4["jobs"]["S/eps1/Dradical/B_ring0"]["gates"]),
@@ -2877,6 +2953,18 @@ def selftest():
             "종전 첫-job anchor greedy 는 1 또는 2 로 갈렸다"
             % (pil_basin_cluster(_A)["n_distinct"], pil_basin_cluster(_B)["n_distinct"]))
         # ⓐ 추이성이 깨지면 세지 않는다
+        # ⛔음성 회신 W P1 — **여섯 순열 전부** CLUSTER_AMBIGUOUS 여야 한다.
+        #   리뷰어가 실제로 돌린 시험인데 우리 selftest 에는 없었다 (clique 구현은
+        #   맞았지만 **순열 불변성**을 시험으로 박아 두지 않았다).
+        import itertools as _it
+        _E3v = {"a": 0.0, "b": 1.8e-4, "c": 0.9e-4}
+        _perm_v = []
+        for _names in _it.permutations("abc"):
+            _dd = {_n: _row(_E3v[_o], _sv, _rp0) for _n, _o in zip("xyz", _names)}
+            _perm_v.append(pil_basin_cluster(_dd)["verdict"])
+        chk(set(_perm_v) == {"CLUSTER_AMBIGUOUS"},
+            "⛔음성 W P1: 리뷰어 반례의 **여섯 순열 전부** CLUSTER_AMBIGUOUS 다 "
+            "(이름 순서에 불변) — %s" % sorted(set(_perm_v)))
         _T = {"a": _row(-100.0000, _sv, _rp0),
               "b": _row(-100.00008, _sv, _rp0),
               "c": _row(-100.00016, _sv, _rp0)}
@@ -3310,14 +3398,17 @@ def pilot_partition_check(F_low, F_hir, tol=PIL_PARTITION_TOL):
 #   판정 신호 (하나라도 걸리면 그 잡은 ε=1 음이온 기준계 부적합):
 #     ⓐ HOMO 에너지가 **양수** (ε=1 에서 여분 전자가 묶이지 않았다)
 #     ⓑ SCF 가 수렴하지 않았다 (ORCA 정상종료 + 수렴 문구 부재)
-#     ⓒ 여분 전자 밀도가 **분자 밖**으로 샌다 — 가장 큰 Löwdin/Hirshfeld
-#        스핀·전하 몫이 어떤 원자에도 PIL_EPS1_MIN_ONMOL 만큼 안 걸린다
-#   ⚠ 이 셋은 **필요조건이 아니라 신호**다. 걸리면 그 잡의 결과를 방법 실패로
+#   ⚠ 이 **둘은 필요조건이 아니라 신호**다. 걸리면 그 잡의 결과를 방법 실패로
 #     읽지 않고 별도 판정어로 닫는다.
+#   ⛔ 회신 W P0-7 — 셋째 기준("밀도가 분자 밖")은 **삭제했다.** 원자 population 에는
+#     '분자 밖' bucket 이 없어 원리적으로 관측 불가능하고, 종전 구현은 Σ|s|/Σ|s| 라
+#     항상 1 이었다 (한 번도 발화하지 않았다).
 PIL_EPS1_HOMO_MAX_EH = 0.0   # ⓐ HOMO > 0 이면 여분 전자가 안 묶였다
-PIL_EPS1_MIN_ONMOL = 0.60    # ⓒ 최대 원자 몫이 이보다 작으면 밀도가 분자 밖이다
 PIL_MAXCORE_MB = 6000       # ORCA `%maxcore` — **proc 당** MB (총량 아니다)
-PIL_PROBE_MIN = 0.50        # 1층: 회전 직후 초기밀도의 목표집합 |스핀| 몫
+PIL_PROBE_MIN = 0.50        # 1층: 회전 직후 초기밀도의 목표집합 |스핀| 몫 (보조)
+#: ⛔ 회신 W P0-8 — **주 기준은 no-rotation baseline 대비 증가분**이다. 절대 문턱만
+#:   보면 회전 전 0.80 → 후 0.70 도 통과한다 (몫이 줄었는데 개입 성공으로 센다).
+PIL_PROBE_GAIN_MIN = 0.05   # 무회전 대비 최소 증가 (결과 보기 전에 봉인)
 PIL_HIT_MARGIN = 0.10       # 2층: 최대 링과 차순위 링의 최소 차 (링 몫 단위)
 PIL_BASIN_DE_EH = 1.0e-4    # 4층: 같은 basin 으로 볼 에너지 차 (≈2.7 meV)
 PIL_BASIN_SPIN_L1 = 0.30    # 4층: 원자별 **부호 있는** 스핀 벡터의 L1 거리
@@ -3362,9 +3453,26 @@ def pil_target_hit(ring_p, target, margin=PIL_HIT_MARGIN):
     return out
 
 
+def pil_seg_terminated(txt):
+    """**마지막 실행 segment 자체**가 정상종료했는가. → (ok, seg, 사유).
+
+    ⛔⛔ 회신 W P0-6 (2026-09-02) — 종전 검사는 **파일 전체**에서 문구를 찾았다.
+      그래서 *"옛 완결 실행 + 새 잘린 실행"* 을 이어 붙이면 새 미완결 에너지가
+      채택된다 (앞 segment 의 종료 문구가 뒤를 덮어준다). restart 경로에는
+      회신 V P0-5 로 이 규칙을 넣었는데 **일반 경로에는 빠져 있었다**.
+      ⇒ 판정에 쓰는 것은 마지막 segment 이므로, 정상종료도 **거기서** 요구한다.
+
+    ⛔ 못 하는 것: 파일이 실제로 이어붙여진 것인지 판별하지 않는다 (segment 경계만 본다).
+    """
+    seg = _last_segment(txt or "")
+    if "ORCA TERMINATED NORMALLY" not in seg:
+        return False, seg, ("마지막 실행 segment 가 정상종료하지 않았다 — 파일 앞쪽의 "
+                            "종료 문구는 **이전 실행**의 것이다 (회신 W P0-6)")
+    return True, seg, "ok"
+
+
 def pil_eps1_anion_adequacy(seg, eps, charge, spins=None,
-                            homo_max=PIL_EPS1_HOMO_MAX_EH,
-                            min_onmol=PIL_EPS1_MIN_ONMOL):
+                            homo_max=PIL_EPS1_HOMO_MAX_EH):
     """ε=1 에서 음이온 기준계(D⁻)가 성립하는가. → (ok, code, why).
 
     ⛔⛔ 회신 U Q6 · V Q6-1 — 문턱을 **결과 보기 전에** 봉인한 판정이다.
@@ -3395,17 +3503,18 @@ def pil_eps1_anion_adequacy(seg, eps, charge, spins=None,
         homo = float(_o[-1][1]) if _o else None
     if homo is not None and homo > homo_max:
         why.append("HOMO %+.4f Eh > %.1f — 여분 전자가 묶이지 않았다" % (homo, homo_max))
-    # ⓒ 밀도가 분자 위에 있나
-    if spins:
-        t = sum(abs(v) for v in spins) or 0.0
-        if t > 0 and (max(abs(v) for v in spins) / t) < 0.0:
-            pass
-        if t <= 0:
-            why.append("스핀 밀도가 0 — 분자 위에 여분 전자가 없다")
-        else:
-            _frac = sum(abs(v) for v in spins) / t
-            if _frac < min_onmol:
-                why.append("분자 위 몫 %.2f < %.2f" % (_frac, min_onmol))
+    # ⛔⛔ 회신 W P0-7 (2026-09-02) — **ⓒ 기준을 삭제한다.**
+    #   종전 코드는 `_frac = Σ|s| / t` 인데 `t = Σ|s|` 였다 — **정의상 항상 1** 이라
+    #   문턱 0.60 을 넘을 수가 없었다. 즉 이 조건은 한 번도 발화하지 않는다.
+    #   더 근본적으로: 원자 population 에는 **"분자 밖" bucket 이 없다.** 여분 전자가
+    #   diffuse 하게 새는 것은 원자 몫의 합으로는 볼 수 없다 (합은 언제나 전체다).
+    #   그래서 이 기준은 고칠 수 있는 것이 아니라 **관측 불가능**하다 — 지운다.
+    #   ⇒ 남는 신호는 ⓐ HOMO 부호 · ⓑ SCF 수렴 둘이다. 그 둘로 못 가르면
+    #     `S0_EPS1_INCONCLUSIVE` 이지 통과가 아니다.
+    #   ⚠ diffuse/unbound 를 제대로 보려면 basis 확장·⟨r²⟩·가상궤도 성격이 필요하고,
+    #     그건 이 pilot 의 범위 밖이다. 못 하는 것을 하는 척하지 않는다.
+    if spins is not None and not any(abs(v) > 1e-9 for v in (spins or [])):
+        why.append("스핀 밀도가 0 — 홀전자가 없다 (D⁻ doublet 이 아니다)")
     if why:
         return (False, "S0_EPS1_ANION_REFERENCE_INADEQUATE",
                 "ε=1 D⁻ 기준계 부적합: " + " · ".join(why)
@@ -3829,7 +3938,14 @@ def pilot_generate(a):
                          "단계가 실측해 증서에 적고, L2 단계가 그 값으로 `%moinp` 를 "
                          "고친다 — 고치면 그 사실을 화면과 manifest 에 남긴다."),
         "builder_sha256": _sha(__file__),
-        "builder_commit": _git_commit(),
+        # ⛔ 회신 W P0-1 — 전체 커밋이 아니라 **빌더를 마지막으로 바꾼 커밋**을 싣는다.
+        #   그것만이 사전등록에 **미리** 넣을 수 있는 값이다 (자기 자신을 안 담는다).
+        "builder_last_change_commit": _git_last_change_commit(__file__),
+        "builder_commit_at_generation": _git_commit(),
+        "⚠_커밋_결박": ("`builder_commit_at_generation` 은 생성 시점의 HEAD 로 **기록**이지 "
+                        "사전등록이 봉인할 수 있는 값이 아니다. 사전등록은 blob SHA 와 "
+                        "`builder_last_change_commit` 을 봉인하고, 전체 커밋 결박은 "
+                        "`tools/review_manifest.py` 가 파일 밖에서 진다 (회신 W P0-1)."),
         "phase_L_역할": ("seed 생성원. D⁻ 국재화는 D• seed 를, 중성 국재화는 P⁺ seed 를 "
                          "만든다. **D⁻ 잡은 same-nuclei 홀밀도 기준을 겸한다**"),
         "⚠_미검증": ("`%loc` 출력 형식과 `Rotate` 동작을 실제 ORCA 로 확인하지 않았다 — "
@@ -3919,6 +4035,11 @@ def pilot_generate(a):
                  % (len(man["seed_plan"]["Dradical"]["seeds"]),
                     len(man["seed_plan"]["Pcation"]["seeds"]), len(envs))),
     }
+    # ⛔⛔ 회신 W P0-2 (2026-09-02) — **생성 시점에도 검사한다.**
+    #   종전엔 seeds/restart/analyze 에서만 불렀다. 그래서 **다른 부모 구조로도**
+    #   번들 생성과 L/L2 실행이 가능했고, 200원자 두 잡을 태운 뒤에야 막혔다.
+    #   ⇒ manifest 를 쓰기 직전에 같은 검사를 돌린다 (같은 함수 — 갈라지지 않는다).
+    _pil_check_prereg(man, "pilot_generate(%s)" % out)
     (out / "MANIFEST_PILOT.json").write_text(
         json.dumps(man, indent=1, ensure_ascii=False))
     (out / "run_pilot.sh").write_text(PIL_RUNNER)
@@ -3942,6 +4063,21 @@ def pilot_generate(a):
 #: ⛔⛔ 회신 U P0-5 — 사전등록 정본은 **S0 문서**다. 구판 전체-pilot prereg 는 폐기됐다.
 PIL_PREREG_S0 = "db/properties/sdcp_polaron_pilot_prereg_S0_2026_08_31.json"
 PIL_PREREG_LEGACY = "db/properties/sdcp_polaron_pilot_prereg_2026_08_31.json"
+
+
+def _git_last_change_commit(path):
+    """그 파일을 **마지막으로 바꾼** 커밋. 자기 자신을 담지 않으므로 미리 알 수 있다.
+
+    ⛔ 회신 W P0-1 — "이 파일이 들어간 커밋" 은 파일 안에 못 넣는다 (순환).
+      "이 파일을 마지막으로 바꾼 커밋" 은 넣을 수 있다.
+    """
+    try:
+        r = subprocess.run(["git", "log", "-1", "--format=%H", "--", str(path)],
+                           capture_output=True, text=True,
+                           cwd=str(Path(__file__).resolve().parent))
+        return (r.stdout or "").strip() or None
+    except Exception:                                        # noqa: BLE001
+        return None
 
 
 def _repo_path(rel):
@@ -4050,6 +4186,21 @@ def _pil_check_prereg(man, where):
     _ev = _pj.get("0_시각_증거") or {}
     _tg = _pj.get("대상") or {}
     bad = []
+    # ⛔⛔ 회신 W P0-2 (2026-09-02) — **필드를 지운 사전등록이 통과했다.**
+    #   의미 필드를 `if _wf and man.get(...)` 처럼 **양쪽 값이 있을 때만** 비교하니,
+    #   사전등록에서 그 필드를 삭제하면 검사가 통째로 건너뛰어졌다 (fail-open).
+    #   ⇒ **필수 스키마**를 먼저 요구한다. 없으면 그 자체가 위반이다.
+    _REQ_EV = ("builder_sha256", "builder_last_change_commit", "봉인_시점")
+    _REQ_TG = ("parent_sha256", "atom_manifest_hash", "functional", "epsilon",
+               "loc_realization")
+    for _k in _REQ_EV:
+        if not _ev.get(_k):
+            bad.append("사전등록 `0_시각_증거.%s` 가 없다 — 필드를 지우면 검사가 "
+                       "건너뛰어진다 (회신 W P0-2)" % _k)
+    for _k in _REQ_TG:
+        if _tg.get(_k) in (None, "", [], {}):
+            bad.append("사전등록 `대상.%s` 가 없다 — 필드를 지우면 검사가 "
+                       "건너뛰어진다 (회신 W P0-2)" % _k)
     # ⛔⛔ 회신 V Q5-1 (2026-09-02 비준 후) — phase L 을 열려면 사전등록이
     #   **비준**돼 있어야 한다. `proposed` 로는 seed 를 만들지 않는다.
     #   1저자 비준(2026-09-02)으로 이 조건이 충족됐고, 그래서 게이트를 올린다.
@@ -4070,10 +4221,25 @@ def _pil_check_prereg(man, where):
     if _wb and _gb and _wb != _gb:
         bad.append("빌더 SHA: 사전등록 %s… ≠ 생성물 %s… — 사전등록이 봉인한 규칙과 "
                    "실제 적용된 규칙이 다르다" % (str(_wb)[:12], str(_gb)[:12]))
-    _wc, _gc = _ev.get("builder_commit"), man.get("builder_commit")
-    if _wc and _gc and _wc != _gc:
-        bad.append("빌더 commit: 사전등록 %s… ≠ 생성물 %s…"
-                   % (str(_wc)[:12], str(_gc)[:12]))
+    # ⛔⛔ 회신 W P0-1 (2026-09-02) — **자기 자신을 담는 커밋 SHA 는 파일에 미리
+    #   넣을 수 없다.** 사전등록 안의 `builder_commit` 을 "그 파일이 들어간 커밋" 으로
+    #   두려 했는데, 그 커밋 해시는 파일 내용에 의존하므로 원리적으로 불가능하다
+    #   (그래서 placeholder 가 들어갔고, 검사가 그것을 실제 커밋과 비교해 seed 생성이
+    #   **반드시** 막혔다 — 리뷰어가 재현).
+    #   ⇒ 사전등록이 봉인하는 것은 두 가지다:
+    #     ⓐ 빌더 **blob SHA** (파일 내용 — 이미 있다)
+    #     ⓑ **빌더를 마지막으로 바꾼 커밋** (자기 자신을 안 담으므로 미리 알 수 있다)
+    #   전체 커밋 결박은 파일 밖 attestation(`tools/review_manifest.py`)의 몫이다.
+    _wc = _ev.get("builder_last_change_commit")
+    if _wc:
+        _gc = man.get("builder_last_change_commit")
+        if _gc and _wc != _gc:
+            bad.append("빌더를 마지막으로 바꾼 커밋: 사전등록 %s… ≠ 생성물 %s…"
+                       % (str(_wc)[:12], str(_gc)[:12]))
+    elif _ev.get("builder_commit"):
+        bad.append("사전등록이 `builder_commit`(자기 자신을 담는 커밋)을 봉인하려 한다 "
+                   "— 원리적으로 불가능하다 (회신 W P0-1). "
+                   "`builder_last_change_commit` 으로 재발행할 것.")
     _wp, _gp = _tg.get("parent_sha256"), man.get("parent_sha256")
     if _wp and _gp and _wp != _gp:
         bad.append("부모 구조 SHA: 사전등록 %s… ≠ 생성물 %s… — **다른 구조로 "
@@ -4314,7 +4480,7 @@ def _pil_ao_axis(label):
 def pil_mo_character(ao_mo, group_idx, sym, pos, ring_idx=None, coef_mo=None):
     """⛔ 회신 T P0-2 — 고른 MO 가 **π(고리 법선 p)** 인가 · **O-nonbonding** 인가.
 
-    → {"p_frac", "pi_share", "O_frac", "axis_resolved", "why"}
+    → {"p_frac", "pi_orientation_score", "O_frac", "axis_resolved", "why"}
 
     왜 필요한가: 전 원자가 공간에서 가장 국재된 MO 를 고르면 C–H/C–C/C–O σ 나
     O/S lone pair 가 뽑힐 수 있다. "그 링에 99%" 는 **공간 위치**만 말하고
@@ -4322,10 +4488,12 @@ def pil_mo_character(ao_mo, group_idx, sym, pos, ring_idx=None, coef_mo=None):
 
     측정:
       p_frac   = 목표 집합 인구 중 p 성분 비율 (s 지배면 σ). 대각합이라 **회전불변**.
-      pi_share = 그 p 밀도 중 **고리 법선 n̂** 방향 비율 — `coef_mo`(MO 계수)로만 낸다:
+      pi_orientation_score = 그 p 밀도 중 **고리 법선 n̂** 방향 비율 — `coef_mo` 로만 낸다:
                      n̂ᵀ P n̂ / tr P,   P = Σ_{원자,껍질} v vᵀ,  v = (c_x, c_y, c_z)
                  회전 R 에서 v→Rv, n̂→Rn̂ 이라 **불변**이고 이상적 p_n̂ 에서 정확히 1.
       pi_upper = 계수가 없을 때 인구 대각으로 낸 값 — **진단 전용, 판정에 안 쓴다.**
+                 ⚠ 회신 W P1: 이름에 "상한" 이 남아 오해를 부르므로 산출물 키는
+                 `pi_upper_diagnostic_not_a_bound` 다.
                  ⛔ 회신 V Q2: `n̂ᵀPn̂ ≤ (Σ_k |n̂_k| √P_kk)²` 는 *완전한* PSD 대각이라야
                  성립하는데, ORCA 는 인쇄 threshold(기본 0.1%) 아래를 **생략**하므로
                  우리 대각은 전체가 아니다 ⇒ **엄밀한 상한이 아니다.** 누락 질량을
@@ -4334,7 +4502,7 @@ def pil_mo_character(ao_mo, group_idx, sym, pos, ring_idx=None, coef_mo=None):
 
     ⛔ 이 함수가 **못 하는 것**
       · 실제 궤도 위상·마디를 보지 않는다. 인구/계수의 **각운동량 분해**일 뿐이다.
-      · MO 계수가 없으면 `pi_share` 를 내지 않는다 (`pi_basis=None`) — 대각 인구만으로는
+      · MO 계수가 없으면 점수를 내지 않는다 (`pi_basis=None`) — 대각 인구만으로는
         회전불변 판정이 **원리적으로 불가능**하다. 확인 못 함은 통과가 아니다.
       · ORCA 가 p 를 축 없이(`p`) 찍으면 상한조차 못 낸다.
       · 겹침 행렬을 쓰지 않는다 (원자 간·껍질 간 교차 겹침 무시).
@@ -4357,12 +4525,12 @@ def pil_mo_character(ao_mo, group_idx, sym, pos, ring_idx=None, coef_mo=None):
                     axis_seen = True
                     pvec[ax] += v
     if tot <= 0:
-        return {"p_frac": None, "pi_share": None, "O_frac": None,
+        return {"p_frac": None, "pi_orientation_score": None, "O_frac": None,
                 "axis_resolved": False, "why": "목표 집합에 인구가 없다"}
     out = {"p_frac": round(p_tot / tot, 4),
            "O_frac": round(o_tot / tot, 4),
-           "axis_resolved": bool(axis_seen), "pi_share": None,
-           "pi_upper": None, "pi_basis": None, "why": None}
+           "axis_resolved": bool(axis_seen), "pi_orientation_score": None,
+           "pi_upper_diagnostic_not_a_bound": None, "pi_basis": None, "why": None}
     if ring_idx is None:
         out["why"] = "고리를 지정하지 않았다 — π 판정 대상이 아니다 (예: sulfonate)"
         return out
@@ -4388,7 +4556,7 @@ def pil_mo_character(ao_mo, group_idx, sym, pos, ring_idx=None, coef_mo=None):
     nn = sum(x * x for x in n) ** 0.5 or 1.0
     n = [x / nn for x in n]
     if p_tot <= 0:
-        out["pi_share"] = 0.0
+        out["pi_orientation_score"] = 0.0
         out["pi_basis"] = "no_p_population"
         out["why"] = "목표 집합에 p 인구가 없다 — π 가 아니다"
         return out
@@ -4397,7 +4565,7 @@ def pil_mo_character(ao_mo, group_idx, sym, pos, ring_idx=None, coef_mo=None):
     # ── ① 엄밀한 **상한** (대각 인구만으로) — 통과는 못 주고 기각은 줄 수 있다 ──
     _sp = sum(pvec)
     if _sp > 0:
-        out["pi_upper"] = round(min(1.0, (sum(abs(n[k]) * (pvec[k] / _sp) ** 0.5
+        out["pi_upper_diagnostic_not_a_bound"] = round(min(1.0, (sum(abs(n[k]) * (pvec[k] / _sp) ** 0.5
                                              for k in range(3))) ** 2), 4)
 
     # ── ② 회전불변 본 판정 — MO 계수가 있을 때만 ────────────────────────────
@@ -4408,10 +4576,10 @@ def pil_mo_character(ao_mo, group_idx, sym, pos, ring_idx=None, coef_mo=None):
         out["why"] = ("MO 계수가 없어 **회전불변** π 판정을 할 수 없다 "
                       "(`%%output Print[P_MOs] 1 end` 필요). 대각 인구만으로는 "
                       "원리적으로 불가능하다 — 상한 %s 만 알 수 있다"
-                      % ("%.3f" % out["pi_upper"] if out["pi_upper"] is not None else "미상"))
+                      % ("%.3f" % out["pi_upper_diagnostic_not_a_bound"] if out["pi_upper_diagnostic_not_a_bound"] is not None else "미상"))
         return out
     num = sum(n[a] * P[a][b] * n[b] for a in range(3) for b in range(3))
-    out["pi_share"] = round(max(0.0, min(1.0, num / tr)), 4)
+    out["pi_orientation_score"] = round(max(0.0, min(1.0, num / tr)), 4)
     out["pi_basis"] = PIL_PI_BASIS_OK
     # ⛔⛔ 회신 V Q1 (2026-09-02) — **이름을 물리량으로 부르지 않는다.**
     #   `P = Σ v vᵀ` 는 직교 좌표회전에 대해 정확히 불변이다(그건 맞다). 그러나 raw AO
@@ -4419,7 +4587,8 @@ def pil_mo_character(ao_mo, group_idx, sym, pos, ring_idx=None, coef_mo=None):
     #   overlap 을 버린 값이므로 **물리적인 'π share' 가 아니다.**
     #   ⇒ 당분간 `pi_orientation_score` 로 부르고, 알려진 π/σ 실물 대조 또는
     #     `S^{1/2}C` 기반 Löwdin tensor 로 검증되기 전에는 그 이름을 쓴다.
-    out["pi_orientation_score"] = out["pi_share"]
+    # ⛔ 회신 W P1 — report-facing 키는 `pi_orientation_score` **하나**다.
+    #   `pi_share` 라는 이름은 물리량을 주장하는 것처럼 읽혀 산출물에서 없앴다.
     out["⚠_pi_이름"] = (
         "이 값은 **방향 점수**이지 물리적 π share 가 아니다. raw AO 계수는 CᵀSC=1 "
         "이라 overlap 을 버린 vvᵀ 는 Löwdin 인구가 아니다 (회신 V Q1). 회전불변성은 "
@@ -4456,15 +4625,15 @@ def pil_character_verdict(ch, kind):
     # ⛔⛔ **통과는 회전불변 근거(MO 계수)에서만 나온다.** 종전에는 대각 인구식이
     #   통과를 줬는데, 그 식은 축 정렬일 때만 맞고 대각 법선에서 1/3 로 무너져
     #   완전한 π 를 6개 중 5개 탈락시켰다 (회신 U P0-2 재현).
-    if not ch.get("axis_resolved") or ch.get("pi_share") is None \
+    if not ch.get("axis_resolved") or ch.get("pi_orientation_score") is None \
             or ch.get("pi_basis") != PIL_PI_BASIS_OK:
         return False, ("MO_CHARACTER_UNRESOLVED(π 를 **회전불변**하게 확인할 수 없다: "
                        "%s) — 확인 못 한 것은 통과가 아니다" % ch.get("why"))
-    if ch["pi_share"] < PIL_PI_MIN:
+    if ch["pi_orientation_score"] < PIL_PI_MIN:
         return False, ("SEED_NOT_PI(p 밀도의 고리법선 성분 %.2f < %.2f — "
-                       "면내 p(σ) 다)" % (ch["pi_share"], PIL_PI_MIN))
+                       "면내 p(σ) 다)" % (ch["pi_orientation_score"], PIL_PI_MIN))
     return True, "ring-normal π (p %.2f · π %.2f · %s)" % (
-        ch["p_frac"], ch["pi_share"], ch["pi_basis"])
+        ch["p_frac"], ch["pi_orientation_score"], ch["pi_basis"])
 
 
 #: ⛔⛔ 회신 U P0-4 (2026-09-01) — **국재 MO 에는 잘 정의된 궤도 에너지가 없다.**
@@ -4632,8 +4801,9 @@ def pilot_seeds(d):
         if not outp.is_file():
             raise SystemExit("⛔ %s 가 없다 — phase L 을 먼저 완주시킬 것" % outp)
         txt = outp.read_text(errors="replace")
-        if "ORCA TERMINATED NORMALLY" not in txt:
-            raise SystemExit("⛔ %s 가 정상 종료하지 않았다" % outp)
+        _t2, _seg2, _w2 = pil_seg_terminated(txt)       # 회신 W P0-6
+        if not _t2:
+            raise SystemExit("⛔ %s 가 정상 종료하지 않았다 — %s" % (outp, _w2))
         # ⛔⛔ 회신 T P0-3 (2026-08-31) — 종전 주석은 "결정론을 만들 수 없으므로
         #   실현된 .loc 에 결박한다" 였다. **그 전제가 틀렸다** — `%loc Random 0`
         #   이 있다. 이제 primary 는 결정론 국재화를 **요구**하고, 무작위 국재화는
@@ -4835,6 +5005,37 @@ def pilot_seeds(d):
                     "inp_sha256": _sha(pdir / (sd + "_probe.inp")),
                 }
                 probed += 1
+                # ⛔⛔ 회신 U Q3 · W P0-8 — **`localized_no_rotation` control.**
+                #   회전 **없이** 같은 `.loc` 를 읽은 NoIter 밀도. 회전 후 목표 몫이
+                #   이것보다 늘었는지를 봐야 개입을 확인할 수 있다. 절대 문턱만으로는
+                #   0.80 → 0.70 (몫이 **줄었는데**)도 통과한다.
+                #   ⚠ 종별 **하나**면 된다 — 목표 집합별 몫은 같은 출력에서 각각 읽는다.
+                _bk = "S0P/%s/%s/__no_rotation" % (env, _grp)
+                if _bk not in man["jobs"]:
+                    bdir = d / "S0P" / env / _grp / "__no_rotation"
+                    bdir.mkdir(parents=True, exist_ok=True)
+                    (bdir / xyzn).write_text(src_xyz.read_text())
+                    _pil_inp(bdir / "__no_rotation_probe.inp", xyzn, spec["charge"],
+                             spec["mult"], spec["wf"], jm["epsilon"], man["functional"],
+                             moread=os.path.relpath(locf, bdir), rotate=None,
+                             stab=False, noiter=True, nprocs=man.get("nprocs", 1),
+                             maxcore=man.get("maxcore_mb_per_proc", PIL_MAXCORE_MB))
+                    man["jobs"][_bk] = {
+                        "phase": "S0P", "env": env, "epsilon": jm["epsilon"],
+                        "charge": spec["charge"], "mult": spec["mult"], "wf": spec["wf"],
+                        "seed": "__no_rotation", "probe_of": None,
+                        "target_group": None,
+                        "atom_frame": ("D" if is_dm else "P"),
+                        "n_electrons": _nel_s, "rotate": None,
+                        "roles": ["localized_no_rotation_control"],
+                        "why": ("회신 U Q3 · W P0-8 — 회전 **없이** 같은 `.loc` 를 읽은 "
+                                "초기밀도. 회전 후 목표 몫이 이것보다 **늘었는지**가 "
+                                "개입의 증거다. 절대 문턱 0.50 은 보조 sanity gate 다."),
+                        "⛔": ("이 잡은 개입이 **아니다** — 판정어는 "
+                               "`NO_ROTATION_BASELINE` 이고 basin 계수에도 안 들어간다"),
+                        "inp_sha256": _sha(bdir / "__no_rotation_probe.inp"),
+                    }
+                    probed += 1
             man["jobs"]["S/%s/%s/%s" % (env, "Dradical" if is_dm else "Pcation", sd)] = {
                 "phase": "S", "env": env, "epsilon": jm["epsilon"],
                 "charge": spec["charge"], "mult": spec["mult"], "wf": spec["wf"],
@@ -4874,7 +5075,7 @@ def pilot_seeds(d):
                 "seed_mo_character_verdict": (None if sd == "default" else _why_ch),
                 "seed_character_thresholds": (None if sd == "default" else
                                               {"p_frac_min": PIL_PFRAC_MIN,
-                                               "pi_share_min": PIL_PI_MIN,
+                                               "pi_orientation_score_min": PIL_PI_MIN,
                                                "O_frac_min": PIL_ONB_MIN,
                                                "⚠": "결과 보기 전에 봉인한 문턱이다"}),
                 "homo_index_parent": homo,
@@ -5087,7 +5288,8 @@ def _pil_fake_sout(charge, mult, nel, spins, E, S2=0.7530, stable=True,
 
 def _pil_fake_phaseS(out, man, probe_wrong=(), flat_ring=(), unstable=(),
                      no_stab=(), degenerate=False, drop_probe=(),
-                     drop_pcation=False, flip_spin=()):
+                     drop_pcation=False, flip_spin=(), baseline_high=False,
+                     drop_baseline=False):
     """selftest 용 phase S + 1층 probe 산출물. 인자들이 **음성 경로**다.
 
     · `degenerate=True`  같은 에너지 (스핀 벡터는 seed 마다 다르다)
@@ -5129,6 +5331,21 @@ def _pil_fake_phaseS(out, man, probe_wrong=(), flat_ring=(), unstable=(),
         fr = jm.get("atom_frame") or ("D" if "/Dradical/" in jk else "P")
         sd = jm["seed"]
         if jm["phase"] == "S0P":
+            # ⛔ 회신 W P0-8 — 무회전 control 산출물. **회전 잡보다 목표 몫이 낮게**
+            #   만든다 (그래야 회전이 몫을 늘렸다는 것이 시험된다).
+            if sd == "__no_rotation":
+                if drop_baseline:
+                    continue
+                _bv = [0.0] * amf[fr]["n_atoms"]
+                _all = sorted(range(amf[fr]["n_atoms"]))
+                for _i in _all:                       # 고르게 퍼뜨린다 = 목표 몫 낮음
+                    _bv[_i] = 1.0 / len(_all)
+                if baseline_high:                     # ⛔음성: 회전이 몫을 안 늘린 경우
+                    _bv = vec(fr, tgt_idx(fr, "B_ring0"))
+                (out / jk / "__no_rotation_probe.out").write_text(_pil_fake_sout(
+                    jm["charge"], jm["mult"], jm["n_electrons"], _bv, -1.0,
+                    stability=False))
+                continue
             if sd in drop_probe:
                 continue
             # 잘못된 개입: 목표가 아닌 **다른** 집합에 스핀을 놓는다
@@ -5278,6 +5495,32 @@ def pilot_analyze(d):
     #  ⛔ probe 는 `NoIter` 라 **에너지·class 판정에 쓰지 않는다.** 오직
     #    "회전이 목표 자리에 스핀을 놓았나" 만 본다.
     probes = {}
+    # ⛔ 회신 W P0-8 — no-rotation baseline 을 **먼저** 모은다 (비교 대상이다).
+    _base_spins = {}                      # (env, frame) → 무회전 스핀 벡터
+    for pk, pm in sorted(man["jobs"].items()):
+        if pm.get("phase") != "S0P" or pm.get("seed") != "__no_rotation":
+            continue
+        _bo = d / pk / "__no_rotation_probe.out"
+        if not _bo.is_file():
+            continue
+        _bt, _bseg, _ = pil_seg_terminated(_bo.read_text(errors="replace"))
+        if not _bt:
+            continue
+        _bn = man["n_atoms"] - (1 if pm.get("atom_frame") == "D" else 0)
+        _bh = _hirshfeld_spins(_bseg, _bn)
+        if _bh is not None and sum(abs(v) for v in _bh) > 0:
+            _base_spins[(pm["env"], pm.get("atom_frame") or "P")] = _bh
+
+    def _baseline_share(env, frame, group):
+        """무회전 control 에서 **그 목표 집합**의 몫. 없으면 None."""
+        _bh = _base_spins.get((env, frame))
+        _gi2 = _grp_idx(frame or "P", group)
+        if _bh is None or not _gi2:
+            return None
+        _t2 = sum(abs(v) for v in _bh)
+        if _t2 <= 0:
+            return None
+        return round(sum(abs(_bh[i]) for i in _gi2 if i < len(_bh)) / _t2, 4)
     for pk, pm in sorted(man["jobs"].items()):
         if pm.get("phase") != "S0P":
             continue
@@ -5287,14 +5530,21 @@ def pilot_analyze(d):
         if not pout.is_file():
             pv["status"] = "PROBE_NOT_RUN"
         else:
-            pseg = _last_segment(pout.read_text(errors="replace"))
-            if "ORCA TERMINATED NORMALLY" not in pout.read_text(errors="replace"):
-                pv["status"] = "PROBE_NOT_TERMINATED"
+            _pt, pseg, _pwhy = pil_seg_terminated(pout.read_text(errors="replace"))
+            if not _pt:
+                pv["status"] = "PROBE_NOT_TERMINATED(%s)" % _pwhy
             else:
                 _natp = man["n_atoms"] - (1 if pm.get("atom_frame") == "D" else 0)
                 _hp = _hirshfeld_spins(pseg, _natp)
                 _gi = _grp_idx(pm.get("atom_frame") or "P", pm.get("target_group"))
-                if _hp is None:
+                if pm.get("seed") == "__no_rotation":
+                    # ⛔ 회신 U Q3 — control 은 목표 집합이 없다 (종별 하나이고
+                    #   목표별 몫은 분석기가 이 출력에서 각각 읽는다). 여기서 끝낸다.
+                    pv["is_baseline"] = True
+                    pv["status"] = "NO_ROTATION_BASELINE"
+                    pv["⛔"] = ("이 잡은 개입이 아니다 — 회전 잡의 비교 대상일 뿐이고 "
+                                "seed 판정·basin 계수에 안 들어간다")
+                elif _hp is None:
                     pv["status"] = "PROBE_SPIN_MISSING"
                 elif not _gi:
                     pv["status"] = "PROBE_TARGET_UNKNOWN"
@@ -5306,10 +5556,46 @@ def pilot_analyze(d):
                     else:
                         pv["share"] = round(
                             sum(abs(_hp[i]) for i in _gi if i < len(_hp)) / _tt, 4)
-                        pv["status"] = ("INTERVENED" if pv["share"] >= PIL_PROBE_MIN
-                                        else "SEED_INTERVENTION_FAILED")
+                        # ⛔⛔ 회신 W P0-8 (2026-09-02) — **절대 문턱만으로는
+                        #   개입을 못 본다.** 회전 **전** 0.80 → 회전 **후** 0.70 도
+                        #   0.50 을 넘으므로 `INTERVENED` 가 됐다. 실제로는 목표 몫이
+                        #   **줄었는데** 개입 성공으로 셌다. 그리고 `rot=None`
+                        #   baseline 잡 자체도 같은 이유로 성공처럼 처리됐다.
+                        #   ⇒ 회신 U Q3 이 요구한 **no-rotation control** 과 비교한다:
+                        #     ⓐ 회전 뒤 목표 몫이 baseline 보다 **증가**했는가
+                        #     ⓑ 절대 문턱 0.50 은 보조 sanity gate 로만 남는다
+                        #   baseline 이 없으면 **확인 못 함**이지 통과가 아니다.
+                        pv["is_baseline"] = pm.get("seed") == "__no_rotation"
+                        pv["baseline_share"] = (
+                            None if pv["is_baseline"] else
+                            _baseline_share(pm["env"], pm.get("atom_frame"),
+                                            pm.get("target_group")))
+                        if pv["is_baseline"]:
+                            pv["status"] = "NO_ROTATION_BASELINE"   # 개입이 아니다
+                            pv["⛔"] = ("이 잡은 개입이 아니다 — 회전 잡의 비교 대상일 "
+                                        "뿐이고 seed 판정·basin 계수에 안 들어간다")
+                        elif pv["baseline_share"] is None:
+                            pv["status"] = ("PROBE_BASELINE_MISSING(no-rotation "
+                                            "control 이 없다 — 회전이 몫을 **늘렸는지** "
+                                            "확인할 수 없다 · 회신 W P0-8)")
+                        elif pv["share"] <= pv["baseline_share"] + PIL_PROBE_GAIN_MIN:
+                            pv["status"] = ("SEED_INTERVENTION_FAILED(회전 후 %.3f ≤ "
+                                            "무회전 %.3f + %.2f — 목표 몫이 늘지 "
+                                            "않았다)"
+                                            % (pv["share"], pv["baseline_share"],
+                                               PIL_PROBE_GAIN_MIN))
+                        elif pv["share"] < PIL_PROBE_MIN:
+                            pv["status"] = ("SEED_INTERVENTION_FAILED(보조 sanity "
+                                            "gate: %.3f < %.2f)"
+                                            % (pv["share"], PIL_PROBE_MIN))
+                        else:
+                            pv["status"] = "INTERVENED"
         pv["threshold"] = PIL_PROBE_MIN
-        probes[pm["probe_of"]] = pv
+        pv["gain_min"] = PIL_PROBE_GAIN_MIN
+        if pm.get("probe_of"):
+            probes[pm["probe_of"]] = pv
+        else:
+            res.setdefault("no_rotation_controls", {})[pk] = pv
 
     for jk, jm in sorted(man["jobs"].items()):
         if jm["phase"] != "S":
@@ -5322,9 +5608,9 @@ def pilot_analyze(d):
         if not outp.is_file():
             r["gates"].append("NOT_RUN"); res["jobs"][jk] = r; continue
         txt = outp.read_text(errors="replace")
-        seg0 = _last_segment(txt)
-        if "ORCA TERMINATED NORMALLY" not in txt:
-            r["gates"].append("NOT_TERMINATED")
+        _term, seg0, _twhy = pil_seg_terminated(txt)   # 회신 W P0-6
+        if not _term:
+            r["gates"].append("NOT_TERMINATED(%s)" % _twhy)
 
         # ── 3층: 최종 전자 안정성 (회신 T Q4) — **판정 재료보다 먼저** ─────────
         #  ⛔⛔ 회신 U P0-7 (2026-09-01): 종전에는 안정성만 재계산 출력에서 보고
@@ -5452,10 +5738,15 @@ def pilot_analyze(d):
             r["intervention"] = _pv
             if _pv["status"] != "INTERVENED":
                 r["gates"].append(
-                    "SEED_INTERVENTION_%s(초기밀도 목표몫 %s < %.2f — 이 seed 는 "
-                    "다른 출발점이 아니다)"
-                    % ("FAILED" if _pv["status"] == "SEED_INTERVENTION_FAILED"
-                       else "UNVERIFIED", _pv["share"], PIL_PROBE_MIN))
+                    # ⛔ 회신 W P0-8 — probe 가 낸 **사유를 그대로** 싣는다.
+                    #   종전엔 status 를 FAILED/UNVERIFIED 로만 접고 "몫 < 0.50" 이라는
+                    #   **한 가지 이유**로 덮어써서, baseline 미달·baseline 부재 같은
+                    #   다른 사유가 화면에서 사라졌다.
+                    ("SEED_INTERVENTION_%s(%s · 몫 %s · 무회전 %s)"
+                     % ("FAILED" if str(_pv["status"]).startswith(
+                            "SEED_INTERVENTION_FAILED") else "UNVERIFIED",
+                        _pv["status"], _pv.get("share"),
+                        _pv.get("baseline_share"))))
 
         # ── 2층: 최종 명중 / 분해 가능성 (회신 T Q4) ──────────────────────
         _rp = (r.get("hirshfeld") or {}).get("ring_p")
@@ -5466,13 +5757,41 @@ def pilot_analyze(d):
         _tgr = _tg[2:] if str(_tg).startswith("B_ring") else None
         # ⛔ "어느 링인가" 는 **backbone 에 스핀이 있을 때만** 성립하는 질문이다.
         #   SO₃ 중심 해에 링 분해를 요구하면 정상 결과를 오답 처리한다.
+        # ⛔⛔ 회신 W P0-8 (2026-09-02) — **한 분할만 보고 면제하면 안 된다.**
+        #   종전엔 Hirshfeld F_bb 하나로 링 판정을 면제했다. 그래서
+        #   Hirshfeld 0.49 · Löwdin 0.54 처럼 **분할에 따라 갈리는** 경우
+        #   기존 dependency gate 를 거치지 않고 조용히 면제됐다.
+        #   ⇒ 두 분할을 **둘 다** 본다. 갈리면 면제가 아니라
+        #     `RING_ASSIGNMENT_UNRESOLVED` 다 (회신 U Q2-② · Q6-3).
         _fbb = ((r.get("hirshfeld") or {}).get("F") or {}).get("backbone")
-        if _fbb is None or _fbb < PIL_CLASS_MIN:
+        _fbl = ((r.get("lowdin") or {}).get("F") or {}).get("backbone")
+        _below = [x is not None and x < PIL_CLASS_MIN for x in (_fbb, _fbl)
+                  if x is not None]
+        if _fbb is None and _fbl is None:
             r["target_hit"] = {"applicable": False, "resolved": None,
-                               "why": ("backbone 몫 %s < %.2f — 링 분해 질문이 "
-                                       "성립하지 않는다 (class 가 본다)"
+                               "why": "두 분할 모두 backbone 몫이 없다 — 확인 못 함"}
+            r["gates"].append("RING_ASSIGNMENT_UNRESOLVED(backbone 몫 미상)")
+        elif len(set(_below)) > 1:
+            # 분할에 따라 면제 여부가 갈린다 — 조용히 면제하지 않는다
+            r["target_hit"] = {"applicable": False, "resolved": None,
+                               "why": ("분할에 따라 갈린다 (Hirshfeld %s · Löwdin %s · "
+                                       "문턱 %.2f) — 면제가 아니라 미해결이다"
                                        % (None if _fbb is None else round(_fbb, 3),
+                                          None if _fbl is None else round(_fbl, 3),
                                           PIL_CLASS_MIN))}
+            r["gates"].append(
+                "RING_ASSIGNMENT_UNRESOLVED(Hirshfeld %s / Löwdin %s 가 문턱 %.2f 를 "
+                "가로질러 갈린다 — 회신 U Q2-② · W P0-8)"
+                % (None if _fbb is None else round(_fbb, 3),
+                   None if _fbl is None else round(_fbl, 3), PIL_CLASS_MIN))
+        elif all(_below):
+            r["target_hit"] = {"applicable": False, "resolved": None,
+                               "why": ("backbone 몫이 **두 분할 모두** %.2f 미만 "
+                                       "(Hirshfeld %s · Löwdin %s) — 링 분해 질문이 "
+                                       "성립하지 않는다 (RING_NOT_APPLICABLE)"
+                                       % (PIL_CLASS_MIN,
+                                          None if _fbb is None else round(_fbb, 3),
+                                          None if _fbl is None else round(_fbl, 3)))}
         else:
             r["target_hit"] = pil_target_hit(_rp, _tgr)
             r["target_hit"]["applicable"] = True

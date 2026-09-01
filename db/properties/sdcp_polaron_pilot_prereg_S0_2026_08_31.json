@@ -1,8 +1,8 @@
 {
  "schema": "estimand_prereg/v2",
  "date": "2026-08-31",
- "status": "ratified",
- "⚠_비준": "2026-09-02 1저자 비준. 회신 V Q5-1 이 요구한 조건이다 — 이 문서가 ratified 여야 phase L 을 연다. ⚠ 비준은 **이 시점의 내용**에 묶인다: 아래 ratification.content_digest 가 어긋나면 재승인이 필요하다.",
+ "status": "proposed",
+ "⚠_비준": "⚠ **재비준 대기.** 회신 W P0-1/P0-3 이행으로 내용이 바뀌었다 — 2026-09-02 비준은 그 이전 내용에 대한 것이므로 무효다. digest 결박이 그것을 자동으로 잡는다.",
  "제목": "S0 — ε=1 기술적 적합성 pilot 사전등록 (회신 T 로 격하된 판, P0 4건 이행 반영)",
  "이_문서의_성격": {
   "무엇인가": "회신 T 가 '전체 pilot NO-GO / ε=1 기술적 적합성 pilot(S0) 한정 조건부 GO' 로 격하한 것을 받아 **범위를 줄여 다시 등록**한 판이다.",
@@ -17,8 +17,7 @@
  },
  "0_시각_증거": {
   "봉인_시점": "2026-09-02",
-  "builder_commit": "<이 파일이 들어간 커밋 — 아래 status_history 참조>",
-  "builder_sha256": "f07ef910f91a6dc1aa57f0c33fd51c01213f1faceb838e366e90240c281646b1",
+  "builder_sha256": "27a9cb08f015854e17c0448ed2366337e05d038150fa5b748e4274fa6d975cd9",
   "⚠_원본과_다른_해시인_이유": "회신 V P0 1~5 이행으로 빌더가 또 바뀌었다 (c3445652… → f07ef910…). 재발행이다 — 고친 것이 아니다. ⚠ 회신 V P0-1 이 지적한 대로 **직전 재발행(2026-09-01)은 커밋되지 않은 작업 트리에서 해시를 공표해** 리뷰어가 옛 파일을 받았다. 이번에는 커밋 후 `tools/review_manifest.py` 로 커밋된 트리에서만 해시를 뽑는다.",
   "이_시점의_doped_잡": "0개 — git log 가 그 순서의 증거다. 결과를 보고 규칙을 고치지 않는다.",
   "이_시점의_ORCA_잡": "0개 — phase L 도 아직 돌리지 않았다 (회신 U Q7 NO-GO)",
@@ -26,7 +25,9 @@
    "builder_commit": "f58b8e5fec6b4780b0b0fc9772fb504e605031ba",
    "builder_sha256": "d89acdedf0d4158b93466dc24ded8caf0ac5d5ee0e938f1b4b1c1f21ed15f83b",
    "봉인_시점": "2026-08-31"
-  }
+  },
+  "builder_last_change_commit": "97cb2d4d3bcd73b96d6168cc977c8ea8e624b761",
+  "⚠_왜_전체_커밋이_아닌가": "회신 W P0-1 — '이 파일이 들어간 커밋' 은 파일 안에 넣을 수 없다 (커밋 해시가 파일 내용에 의존하므로 순환이다). 종전 판은 그 자리에 placeholder 를 넣었고, 검사가 그것을 실제 커밋과 비교해 **seed 생성이 반드시 막혔다**. ⇒ 봉인하는 것은 ⓐ 빌더 blob SHA ⓑ **빌더를 마지막으로 바꾼 커밋** 둘이다. 전체 커밋 결박은 파일 밖 attestation(tools/review_manifest.py)이 진다."
  },
  "대상": {
   "정본_명칭": "neutral H-atom-removed n=6 radical model (D•)",
@@ -88,7 +89,7 @@
   },
   "4층_basin_군집": {
    "무엇": "서로 다른 seed 가 **같은 해**로 갔으면 상태는 1개다",
-   "재료": "전자수 · 에너지 · ⟨S²⟩ · 원자별 **부호 있는** 스핀 벡터 · 링 몫 벡터",
+   "재료": "전자수 · 에너지 · ⟨S²⟩ · **Σ|s| 로 정규화하고 전역 부호를 정준화한** 원자별 스핀 벡터 · 링 몫 벡터 (링 판정이 성립하는 해끼리만)",
    "문턱": {
     "dE_Eh": 0.0001,
     "spin_L1": 0.3,
@@ -97,9 +98,13 @@
    },
    "⛔_seed_개수는_반복수가_아니다": "같은 basin 에 모인 seed 들을 지지 증거의 개수로 세지 않는다. 'seed 8개가 backbone 을 지지' 는 같은 해를 여덟 번 센 문장일 수 있다",
    "경계": "임계 근처 쌍은 borderline 으로 남긴다 — 조용히 붙이지 않는다",
-   "⛔_전역_스핀_뒤집힘": "모든 부호가 반대인 해를 같은 상태로 **자동 흡수하지 않는다**. 필요하면 선언해서 따로 처리한다"
+   "전역_스핀_뒤집힘": "⚠ **2026-09-02 정정 (회신 U P0-8ⓓ · W P0-3).** 종전 조항은 '자동 흡수하지 않는다' 였으나 **코드는 흡수한다** — 문서와 코드가 반대였다. 리뷰어 U 의 판정을 따른다: collinear doublet 에서 전역 α↔β 반전은 **같은 상태의 반대 M_S** 이므로 따로 세면 `basin ≥2` 를 거짓 충족한다. ⇒ `d_spin = min(‖s_A−s_B‖₁, ‖s_A+s_B‖₁)` 로 정준화한다. ⛔ **부분 반전**(일부 원자만)은 정준화하지 않는다 — 그건 실제로 다른 해다.",
+   "링_축_제외": "backbone 몫이 낮아 링 판정을 면제한 해끼리는 `ring_p` 를 군집축에서 뺀다 (면제해 놓고 backbone 내부 정규화 링 몫으로 가르면 잡음이 basin 이 된다 — 회신 U P0-8ⓒ)",
+   "clique": "연결성분마다 **모든 쌍**이 related 인지 본다. 아니면 `CLUSTER_AMBIGUOUS` 로 닫고 상태 수를 세지 않는다 (회신 U P0-8ⓐ · V P0-4)"
   },
-  "⚠_문턱_봉인": "위 숫자는 전부 코드 상수(PIL_PROBE_MIN · PIL_HIT_MARGIN · PIL_BASIN_*)이고 **결과를 보기 전에** 정했다"
+  "⚠_문턱_봉인": "위 숫자는 전부 코드 상수(PIL_PROBE_MIN · PIL_HIT_MARGIN · PIL_BASIN_*)이고 **결과를 보기 전에** 정했다",
+  "2층_링_배정": "backbone 몫이 문턱 미만이면 링 분해 질문이 성립하지 않는다(RING_NOT_APPLICABLE). ⚠ 단 **Hirshfeld·Löwdin 두 분할 모두** 미만일 때만 면제한다. 분할에 따라 갈리면 면제가 아니라 `RING_ASSIGNMENT_UNRESOLVED` 다 (회신 U Q2-② · W P0-8).",
+  "1층_개입": "회전 후 목표 몫이 **무회전 control(`localized_no_rotation`)보다 증가**해야 한다 (최소 증가 0.05). 절대 문턱 0.50 은 **보조 sanity gate** 다 — 그것만 보면 0.80 → 0.70 도 통과한다 (회신 U Q3 · W P0-8). control 이 없으면 확인 못 함이지 통과가 아니다."
  },
  "판정어": {
   "ADEQUATE": "positive control 회수 + 4층 통과 실행이 둘 이상의 basin 을 준다 → 확장(범함수·환경) 단계로 ⚠ R0/R1 교차비교 전에는 R0-conditional 이다 (회신 U 해제순서 ⑤)",
@@ -166,10 +171,11 @@
   "재판정_SR": "불안정이 나온 만큼만 (미리 세지 않는다)"
  },
  "실행_순서": [
+  "bash run_pilot.sh loccheck  (H₂O 하나로 `%loc` 구문·`.loc` suffix·파서 둘 확인 — **첫 단계이고, L 이 이 증서를 강제한다**)",
   "bash run_pilot.sh L        (SCF + Pipek-Mezey 국재화)",
   "bash run_pilot.sh L2       (`.loc` MORead · NoIter · 국재 궤도 인구)",
-  "bash run_pilot.sh seeds    (판독 → phase S + 1층 probe 입력 생성, 계산 없음)",
-  "bash run_pilot.sh probe    (1층 개입 확인 — 여기서 막히면 S 로 안 간다)",
+  "bash run_pilot.sh seeds    (판독 → phase S + 1층 probe + 무회전 control 입력 생성, 계산 없음)",
+  "bash run_pilot.sh probe    (1층 개입 확인 — 무회전 control 대비 증가를 본다. 여기서 막히면 S 로 안 간다)",
   "bash run_pilot.sh S        (측정 — **리뷰 통과 뒤에만**)",
   "bash run_pilot.sh analyze  (4층 판정)",
   "bash run_pilot.sh restart  (3층 재판정 — 불안정 잡이 있을 때만)"
@@ -177,7 +183,7 @@
  "미결": {
   "eps_dry_polymer": "⏳ 값 미정 — litdb 근거로 확정해야 환경 확장이 가능하다",
   "torsion_diverse_정의": "⏳ 미정 — 중성 8개(gs0..gs7) 완주 뒤 **에너지를 보기 전에** 거리 척도를 확정",
-  "ORCA_실물_검증": "⚠ `%loc` 출력 형식 · `Rotate` 동작 · `NoIter` probe 가 스핀 인구를 찍는지 — **실제 ORCA 로 확인하지 않았다.** selftest 의 픽스처는 우리 판독기가 받는 형식의 재현이지 ORCA 출력이 아니다. phase L 첫 실행이 곧 smoke test 다"
+  "ORCA_실물_검증": "⚠ `%loc` 출력 형식 · `Rotate` 동작 · `NoIter` probe 가 스핀 인구를 찍는지 — **실제 ORCA 로 확인하지 않았다.** selftest 의 픽스처는 우리 판독기가 받는 형식의 재현이지 ORCA 출력이 아니다. **loccheck** 가 첫 smoke test 다 (H₂O · 30초). phase L 은 그 증서 없이 시작하지 않는다 (회신 V P0-3)"
  },
  "연결": {
   "원본_사전등록": "db/properties/sdcp_polaron_pilot_prereg_2026_08_31.json",
@@ -208,6 +214,11 @@
    "at": "2026-09-02",
    "state": "ratified",
    "note": "1저자 비준 (scientific_owner). 회신 V Q5-1 · BA 해제조건 3 이 요구한 '비용 발생 전에 닫기'. phase L 의 선행 조건 하나가 풀렸다."
+  },
+  {
+   "at": "2026-09-02",
+   "state": "proposed",
+   "note": "회신 W P0-1 — `builder_commit`(자기 자신을 담는 커밋) 봉인을 `builder_last_change_commit` 으로 교체. **내용이 바뀌었으므로 재비준이 필요하다** — 앞선 비준은 그 이전 내용에 대한 것이다."
   }
  ],
  "회신_U_이행": {
@@ -219,14 +230,5 @@
  },
  "실행_전_봉인": {
   "loccheck": "phase L 전에 `bash run_pilot.sh loccheck` 가 LOCCHECK_PASS.json 을 남겨야 한다 (ORCA 경로·버전·입출력 해시·국재 파일 suffix·파서 둘 다 PASS). L·seeds 가 그 증서를 **강제**한다 — 순서가 문구가 아니라 게이트다 (회신 V P0-3)."
- },
- "ratification": {
-  "state": "ratified",
-  "role": "scientific_owner",
-  "actor_id": "yonghoon7153@gmail.com",
-  "timestamp": "2026-09-01T21:29:55Z",
-  "commit": "2f96eeb4d41ccfb99e476097338dc389ca39996b",
-  "content_digest": "c87fddce88ac599a524e7eda30461d4f76e154c5d9ef70946cfb4482af62ea41",
-  "⚠": "`ratification` 을 뺀 이 문서 내용의 sha256. 비준 뒤 고치면 어긋난다."
  }
 }
