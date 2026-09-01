@@ -1,5 +1,5 @@
 ---
-title: "리뷰 요청 AW — DFT 웹앱 전수 감사 (실패 2건 수선 · 마감/철회 화면 반영 · 인용위험 원장 합류)"
+title: "리뷰 요청 AW — DFT 웹앱 전수 감사 (실패 2건 수선 · 마감/철회 화면 반영 · 인용위험 원장 합류 · 승인 게이트 fail-open 봉인)"
 date: 2026-09-01
 updated: 2026-09-01
 tags: [review, codex, webapp, governance, sdcp, prompt]
@@ -16,7 +16,8 @@ evidenceScope: multi-source-primary
 
 # 리뷰 요청 AW — DFT 웹앱 전수 감사
 
-> 대상 커밋 2개: `fa506bc3` (수선 1/2) · `7ba9fbe4` (수선 2/2), 브랜치
+> 대상 커밋 3개: `fa506bc3` (수선 1/2) · `7ba9fbe4` (수선 2/2) · `0b7c858c`
+> (증빙 스크립트 + 승인 게이트 봉인), 브랜치
 > `claude/friendly-meitner-lldvar`. C-12 리뷰 사슬(…AT→AU→AV)과는 **다른 스레드**입니다 —
 > 이쪽은 번들이 아니라 **열람 화면**입니다.
 > 배경 지도: `kb/results/branch_state_2026_08_31.md` (전수 조사) ·
@@ -87,13 +88,31 @@ CLAUDE.md 현행 마감 규율의 긴장 ③ 프로토콜 잡 수 불일치(12/1
 (BLOCKED 먼저) · 원장 부재 시 "0건" 이 아니라 **부재 경고**. 회귀 테스트 신설:
 화면 건수 = 원장 건수, 수준 어휘가 정렬 사전 밖이면 실패.
 
+### E. 승인 게이트의 fail-open 봉인 — 감사 **부산물**로 나온 것
+
+월간 증빙 스크립트(`tools/reports/gabia_august_evidence.sh`, 7월판과 같은 양식)를
+쓰던 중 판례 원장 출력에 상태가 `[?]` 로 찍혔습니다. 원인을 보니 **검사기 구멍**이었습니다:
+
+`validate_governance` 의 승인 검사가 `decision_state == "active"` 만 보는데, 원장의
+두 기록(polaron Fbb·S0)은 `status` 필드만 갖고 있었습니다. 즉 **그 둘은 `active` 로
+올려도 어떤 검사에도 걸리지 않습니다** — 사람 승인 없이 active 가 되는 경로입니다.
+(현재 값은 둘 다 `proposed` 라 실제 위반은 없었습니다. 열려 있던 것은 경로입니다.)
+
+수선: `_dstate()` 가 `decision_state`(정본)와 `status`(별칭)를 같이 읽고, ⓐ 두 필드가
+모두 없거나 ⓑ 둘이 어긋나면 그 자체를 위반으로 냅니다. 회귀시험 4건(음성 3 = 별칭
+우회·필드 부재·불일치, 양성 1 = 별칭만 쓴 정상 proposed 를 오탐하지 않음).
+
+⚠ 다만 **원장 기록 자체는 고치지 않았습니다** — 두 기록을 `decision_state` 로
+정규화하는 것은 판례 파일 수정이라 1저자 판단 영역으로 두었습니다.
+
 ## 2. 확인 방법
 
 ```bash
-cd webapp && python3 -m pytest tests/ -q          # 139 passed · 1 skipped
+cd webapp && python3 -m pytest tests/ -q          # 140 passed · 1 skipped
 python3 tools/kb_wiki.py lint                     # 0 errors
 python3 tools/convention_check.py                 # 0 위반
 python3 tools/db/validate_canonical.py            # 그래프 무결성 ✅ (결정 14)
+bash tools/reports/gabia_august_evidence.sh       # 증빙 217줄 · rc=0
 ```
 
 ## 3. 여쭙는 것
@@ -120,5 +139,11 @@ C-12 로" 서술이 (VASP 0잡 시점에) 과합니까?
 **Q6.** 이 감사가 못 본 표면이 있습니까? 본 것: 라우트 전수 200 스모크 · 대시보드
 카드 전수 판독 · /sdcp·/benchmarks·/governance·/todo·/ledger 내용 대조 · 템플릿
 stale-마커 grep (`0.346` · `O···Li` · `두 시드` · 구 버전 라벨).
+
+**Q7.** §E 의 별칭 허용(`status` 를 `decision_state` 의 별칭으로 읽는 것)이 옳은
+방향입니까 — 아니면 **별칭을 아예 거부**하고 원장 기록을 정규화하도록 강제하는 쪽이
+맞습니까? 지금 판단은 "읽기는 관대하게, 어긋남은 엄격하게" 인데, 관대한 읽기가 다음
+드리프트를 부를 여지가 있습니다. 그리고 이런 **필드명 단위 fail-open** 이 원장
+검사기의 다른 곳(assessments·artifacts·canonical entry)에도 남아 있습니까?
 
 파일은 수정하지 않으셔도 됩니다 — **GO/NO-GO 와 P0/P1** 판정만 주십시오.

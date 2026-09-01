@@ -198,7 +198,7 @@
 - `kb/reviews/codex_AT_reply_c12_v17_2026_08_31.md` — 회신 AT — C-12 v17 NO-GO (P0 5건 · 해제조건 9) ○미열람
 - `kb/reviews/codex_AU_prompt_c12_v18_2026_08_31.md` — 리뷰 요청 AU — C-12 v18 (회신 AT P0 5건 + 해제조건 9 이행) ○미열람
 - `kb/reviews/codex_AV_reply_c12_v18_2026_08_31.md` — 회신 AV — C-12 v18 NO-GO (P0 4건 · P1 1건 · 해제조건 8) ○미열람
-- `kb/reviews/codex_AW_prompt_webapp_audit_2026_09_01.md` — 리뷰 요청 AW — DFT 웹앱 전수 감사 (실패 2건 수선 · 마감/철회 화면 반영 · 인용위험 원장 합류) ○미열람
+- `kb/reviews/codex_AW_prompt_webapp_audit_2026_09_01.md` — 리뷰 요청 AW — DFT 웹앱 전수 감사 (실패 2건 수선 · 마감/철회 화면 반영 · 인용위험 원장 합류 · 승인 게이트 fail-open 봉인) ○미열람
 - `kb/reviews/codex_A_cascade_ml_2026_08_20.md` — 교차리뷰 A — cascade 파이프라인 + 머신러닝 (codex 작업지시서) ○미열람
 - `kb/reviews/codex_B_neb_md_tools_2026_08_20.md` — 교차리뷰 B — NEB · MD · 도구 (codex 작업지시서) ○미열람
 - `kb/reviews/codex_C_funnel_2026_08_20.md` — 교차리뷰 C v2.1 — cascade 깔때기는 잘 작동했나 (codex 2라운드 종료) ○미열람
