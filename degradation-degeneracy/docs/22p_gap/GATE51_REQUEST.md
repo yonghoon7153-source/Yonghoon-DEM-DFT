@@ -28,7 +28,7 @@
   `run.sh` 는 언제나 경로를 넘긴다).
 - lifecycle journal 의 schema 를 옮기면서 사슬을 **다시 계산했다**. 그 재계산이
   역사를 안 고쳤다는 것은 회귀가 재계산 전 파일의 digest 와 그때의 네 줄을
-  고정해 확인한다 (§3-6). 재계산 자체를 없앨 수는 없다.
+  고정해 확인한다 (§2-6). 재계산 자체를 없앨 수는 없다.
 
 ---
 
@@ -109,8 +109,8 @@ slice 1..11 (--slice I/11) : rc 0 · executable 108 · 신고 6 · ★ 0
 | `producer_semantic_sha256` | `0217b906f6b8bf42` | `632232332b015def` |
 | `compute_sha256` | `ac6ff10f3f1aaab9` | `730e673e74edb8ae` |
 | `row_projection_py_sha256` | `0ee9b706436236c3` | `06e8dcfe58946e9e` |
-| 영수증 core_sha | `b691dd8f9e466431…` | `a54c2b0af8905508…` (검사 34건) |
-| validator identity | `c2abd52735ca73d6` | `c9cd0b2955956e77` |
+| 영수증 core_sha | `b691dd8f9e466431…` | `646c88ce3050a3a6…` (검사 34건) |
+| validator identity | `c2abd52735ca73d6` | `c557ae9ef3f75fa7` |
 | 투영 | `proj_g5` | `proj_g6` (6138행 · restart 30690행) |
 
 **행 바이트는 안 움직였다** — `proj ad598fe77e75afec` 로 g4·g5 와 동일하다.
@@ -125,7 +125,22 @@ slice 1..11 (--slice I/11) : rc 0 · executable 108 · 신고 6 · ★ 0
 고정하고, 지금 journal 의 앞 네 줄이 그 값을 그대로 담고 `dir` 만 더해졌는지
 본다.
 
-### 2-7 이번에도 시험이 **쓰는 자리**를 안 봤다
+### 2-7 전수 재생이 **이 라운드의 수정 자체**를 잡았다
+
+11 조각을 돌리자 두 조각이 빨갰다.
+
+- `module-gate-before-side-effects` 가 **baseline 에서 이미** 빨갰다:
+  `live_grid_axis()` 가 `cfg["discharged_state"]` 를 읽는데 그것을
+  `declared_leg_run_spec()` 보다 먼저 불렀다. 계획에 없는 다리가 계획 gate 가
+  아니라 `KeyError` 로 죽는다 — P0-A4 를 고치면서 내가 만든 **순서 결함**이고,
+  리뷰어가 `build()` 에서 짚은 것과 같은 축이다.
+- `thaw-is-refused-before-the-first-write` 가 **안 물었다**: P0-F 가 목적지
+  봉인을 더하면서 같은 게시를 막는 자리가 둘이 됐다. 심층 방어의 정상 신호이고,
+  MULTI 로 옮겨 함께 되돌려야 관측되게 했다.
+
+전수 재생이 "고쳤다" 는 주장을 검사하는 자리라는 것이 이번에도 실측됐다.
+
+### 2-8 이번에도 시험이 **쓰는 자리**를 안 봤다
 
 `fit-stages-its-inputs-before-the-gate` 변이가 처음에 안 물었다 — 시험이
 `_stage_fit_inputs()` 를 직접 불러 사본의 성질만 봤기 때문이다. 그 함수가

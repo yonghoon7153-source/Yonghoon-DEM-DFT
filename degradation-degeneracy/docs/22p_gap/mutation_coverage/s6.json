@@ -1,89 +1,82 @@
 {
-  "at": "2026-09-01T04:58:35Z",
+  "at": "2026-09-01T05:03:31Z",
   "binding": {
     "expect_digest": "849931cfb6788222e6b48acca58db5c8deecc30fa0852fedf59fecd355c34377",
     "head": "d1275d76e3cec143b4c51f41617965e8e5f413aa",
     "registry_digest": "4ed8eb2856941c73d4666d8b94efa58f18dc517e2f17165d8445f93430881cf5",
     "runner_digest": "45d2bdd9d6905ec1a213cedb8d1a8d4388345fae8f2bf31fecd84426b6558719",
-    "transcript_digest": "70da4e34c857e08ffb48f564fad21c73714b89c944907af01907aefa116533c6"
+    "transcript_digest": "c5d7972e0bcc7e1b4b3394b2176e34f711662f282504c1e931cbcbe98f203d8d"
   },
   "scenarios": {
-    "authority-frozen": {
+    "caller-stage-safe-read": {
       "bit": true,
       "class": "executable",
-      "kexpr": "frozen_authority_cannot_be_edited",
+      "kexpr": "dangling_symlink_in_the_caller",
       "ran": true,
       "sites": 1
     },
-    "claim-stores-a-verifier-not-the-token": {
+    "complete-current-supersedes-pending": {
       "bit": true,
       "class": "executable",
-      "kexpr": "claim_file_never_stores_the_resume_credential",
+      "kexpr": "complete_current_supersedes_a_leftover_pending",
       "ran": true,
       "sites": 1
     },
-    "finalize-rechecks-in-the-ledger-lock": {
+    "fit-axis-seals-the-config-closure": {
       "bit": true,
       "class": "executable",
-      "kexpr": "finalize_rechecks_the_whole_authority_inside_the_ledger_lock",
+      "kexpr": "base_config_parent_is_inside_the_approval_digest",
       "ran": true,
       "sites": 1
     },
-    "generation-namespace-guard": {
+    "guard-before-commit": {
       "bit": true,
       "class": "executable",
-      "kexpr": "current_generation_cannot_be_used_as_its_own_staging",
+      "kexpr": "pathname_after_the_check or same_roster_ledger_change",
       "ran": true,
       "sites": 1
     },
-    "ledger-status-enum": {
+    "module-defs-enter-compound-statements": {
       "bit": true,
       "class": "executable",
-      "kexpr": "status_is_an_exact_enum",
+      "kexpr": "producer_closure_sees_every_module_binding_form",
       "ran": true,
       "sites": 1
     },
-    "pending-closed-schema": {
+    "phase-write-checks-the-credential": {
       "bit": true,
       "class": "executable",
-      "kexpr": "stale_bootstrap_pending",
+      "kexpr": "forged_claim_object_cannot_write_a_phase",
       "ran": true,
       "sites": 1
     },
-    "planned-status-is-not-standing": {
+    "pre-write-authority": {
       "bit": true,
       "class": "executable",
-      "kexpr": "standing_authorization",
+      "kexpr": "frozen_cohort_publish_writes_nothing_before_it_refuses",
       "ran": true,
       "sites": 1
     },
-    "producer-crosses-into-scoring": {
+    "producer-normalizes-the-node": {
       "bit": true,
       "class": "executable",
-      "kexpr": "producer_digest_crosses_into_src_scoring",
+      "kexpr": "producer_digest_sees_decorators",
+      "ran": true,
+      "sites": 2
+    },
+    "resume-compares-the-verifier": {
+      "bit": true,
+      "class": "executable",
+      "kexpr": "phase_cannot_be_recorded_without_the_owner_token or crash_after_grid_resumes_and_finalizes",
       "ran": true,
       "sites": 1
     },
-    "recheck-before-rename": {
+    "thaw-is-refused-before-the-first-write": {
       "bit": true,
       "class": "executable",
-      "kexpr": "rechecked_immediately_before_the_rename",
+      "kexpr": "publisher_refuses_a_thawed_cohort_before_the_first_write",
       "ran": true,
-      "sites": 1
-    },
-    "sink-subset-of-roster": {
-      "bit": true,
-      "class": "executable",
-      "kexpr": "complete_undeclared_leg_never_reaches_pending",
-      "ran": true,
-      "sites": 1
-    },
-    "warm-consumer-uses-accessor": {
-      "bit": true,
-      "class": "executable",
-      "kexpr": "warm_consumers_go_through_the_accessors",
-      "ran": true,
-      "sites": 1
+      "sites": 2
     }
   },
   "schema": "mutation-coverage/v2",

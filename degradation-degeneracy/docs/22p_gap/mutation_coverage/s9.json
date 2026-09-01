@@ -1,80 +1,80 @@
 {
-  "at": "2026-09-01T05:07:56Z",
+  "at": "2026-09-01T05:06:56Z",
   "binding": {
     "expect_digest": "849931cfb6788222e6b48acca58db5c8deecc30fa0852fedf59fecd355c34377",
     "head": "d1275d76e3cec143b4c51f41617965e8e5f413aa",
     "registry_digest": "4ed8eb2856941c73d4666d8b94efa58f18dc517e2f17165d8445f93430881cf5",
     "runner_digest": "45d2bdd9d6905ec1a213cedb8d1a8d4388345fae8f2bf31fecd84426b6558719",
-    "transcript_digest": "cfdf1a077b0b7a21b5bf4a8665b736b8d275bd2703d8b66a9e0f055d7d3255c9"
+    "transcript_digest": "8303a1034a2c204cc632709d20def11cb304fc7bb5a69553a91034eac728f5e1"
   },
   "scenarios": {
-    "claim-checks-the-whole-index": {
+    "children-read-through-dirfd": {
       "bit": true,
       "class": "executable",
-      "kexpr": "whole_index_must_be_consistent_before_any_leg_is_claimed",
-      "ran": true,
-      "sites": 1
-    },
-    "dry-run-releases-the-claim": {
-      "bit": true,
-      "class": "executable",
-      "kexpr": "dry_run_does_not_strand_the_plan_in_running",
-      "ran": true,
-      "sites": 1
-    },
-    "flock-two-publisher": {
-      "bit": true,
-      "class": "executable",
-      "kexpr": "two_independent_publishers",
+      "kexpr": "holds_a_directory_fd_for_its_children",
       "ran": true,
       "sites": 2
     },
-    "interpreter-set-is-pinned": {
+    "diagnostic-hides-the-credential": {
+      "bit": true,
+      "class": "executable",
+      "kexpr": "the_diagnostic_reader_never_hands_out_the_credential",
+      "ran": true,
+      "sites": 1
+    },
+    "fit-stages-its-inputs-before-the-gate": {
+      "bit": true,
+      "class": "executable",
+      "kexpr": "run_fit_hands_the_body_the_staged_copies_not_the_originals",
+      "ran": true,
+      "sites": 1
+    },
+    "inner-unbound-sentinel": {
+      "bit": true,
+      "class": "executable",
+      "kexpr": "blank_its_sentinel_check",
+      "ran": true,
+      "sites": 1
+    },
+    "module-gate-before-side-effects": {
+      "bit": true,
+      "class": "executable",
+      "kexpr": "run_grid_calls_the_gate_before_its_first_side_effect",
+      "ran": true,
+      "sites": 1
+    },
+    "plan-index-exact-equality": {
+      "bit": true,
+      "class": "executable",
+      "kexpr": "phantom_executed_plan_without_an_execution_record",
+      "ran": true,
+      "sites": 1
+    },
+    "prelock-readback-check": {
+      "bit": true,
+      "class": "executable",
+      "kexpr": "returns_the_wrong_version",
+      "ran": true,
+      "sites": 1
+    },
+    "proof-until-equals-lease": {
       "bit": null,
       "class": "declared",
       "kexpr": null,
       "ran": false,
       "sites": 1
     },
-    "namespace-check-rejects-symlinks": {
+    "row-selection-seals-its-content": {
       "bit": true,
       "class": "executable",
-      "kexpr": "symlinked_path_is_not_inside_the_smoke_namespace or namespace_check_is_fail_closed_on_a_symlinked_component",
+      "kexpr": "fit_axis_seals_the_row_selection_content",
       "ran": true,
       "sites": 1
     },
-    "plan-parser-dir-hygiene": {
+    "token-path-is-disjoint-from-authority": {
       "bit": true,
       "class": "executable",
-      "kexpr": "plan_parser_requires_a_canonical_relative_dir or plan_parser_refuses_a_cohort_dir_outside_the_repository",
-      "ran": true,
-      "sites": 1
-    },
-    "prelock-version-id-is-a-string": {
-      "bit": true,
-      "class": "executable",
-      "kexpr": "falsy_version_id",
-      "ran": true,
-      "sites": 1
-    },
-    "public-lifecycle-in-two-publisher-fixture": {
-      "bit": null,
-      "class": "declared",
-      "kexpr": null,
-      "ran": false,
-      "sites": 1
-    },
-    "seal-exact-types": {
-      "bit": true,
-      "class": "executable",
-      "kexpr": "an_omap_and_a_list_of_lists_do_not_share_a_seal",
-      "ran": true,
-      "sites": 1
-    },
-    "token-unlink-is-generation-scoped": {
-      "bit": true,
-      "class": "executable",
-      "kexpr": "late_release_cleanup_cannot_delete_the_next_attempts_token",
+      "kexpr": "token_path_cannot_alias_the_claim_authority",
       "ran": true,
       "sites": 1
     }

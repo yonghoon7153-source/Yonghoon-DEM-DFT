@@ -5479,6 +5479,22 @@ at)` 을 고정하고, 지금 journal 의 앞 네 줄이 그 값을 그대로 �
 | 변이 전수 | 114 scenario (executable 108 · declared 6) · 11 조각 합집합이 등록부를 정확히 덮었다 |
 | lifecycle e2e | 실제 `run.sh` 3회 · 난입 6종 차단 |
 | 산출물 | g5 를 얼리고 g6 로 · `proj ad598fe77e75afec` (행 바이트 불변) |
+| 영수증 | core_sha `646c88ce3050a3a6…` · validator identity `c557ae9ef3f75fa7` |
+
+### 51-7 전수 재생이 이 라운드의 수정 자체를 잡았다
+
+11 조각을 돌리자 두 조각이 빨갰다.
+
+- `module-gate-before-side-effects` 가 **baseline 에서 이미** 빨갰다.
+  `live_grid_axis()` 가 `cfg["discharged_state"]` 를 읽는데 그것을
+  `declared_leg_run_spec()` 보다 먼저 불렀으므로, 계획에 없는 다리가 계획
+  gate 가 아니라 `KeyError` 로 죽었다. P0-A4 를 고치면서 **내가 만든** 순서
+  결함이고, 리뷰어가 `build()` 에서 짚은 것과 같은 축이다.
+- `thaw-is-refused-before-the-first-write` 가 **안 물었다.** P0-F 가 목적지
+  봉인을 더하면서 같은 게시를 막는 자리가 둘이 됐기 때문이다 — 심층 방어의
+  정상 신호다. MULTI 로 옮겨 함께 되돌려야 관측되게 했다.
+
+전수 재생이 "고쳤다" 는 주장을 검사하는 자리라는 것이 이번에도 실측됐다.
 
 ### 아직 아닌 것
 

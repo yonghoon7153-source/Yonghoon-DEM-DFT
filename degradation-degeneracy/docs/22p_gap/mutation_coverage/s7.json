@@ -1,10 +1,10 @@
 {
-  "at": "2026-09-01T04:31:32Z",
+  "at": "2026-09-01T05:04:38Z",
   "binding": {
     "expect_digest": "849931cfb6788222e6b48acca58db5c8deecc30fa0852fedf59fecd355c34377",
-    "head": "1ca133ae673307c09cb97aa80f5a4d8601dfad53",
-    "registry_digest": "b4a63540eea93282ee16519d0de8c22f0c0ca9245cee1e512f24ee21f39867ae",
-    "runner_digest": "9a6c41b603bdf5989ea00b21e685f7168540fbd7742eae5a904280d4a540686e",
+    "head": "d1275d76e3cec143b4c51f41617965e8e5f413aa",
+    "registry_digest": "4ed8eb2856941c73d4666d8b94efa58f18dc517e2f17165d8445f93430881cf5",
+    "runner_digest": "45d2bdd9d6905ec1a213cedb8d1a8d4388345fae8f2bf31fecd84426b6558719",
     "transcript_digest": "d3fdfbbe4275edc054dc92f9a477fa73e77b45a22a06a58e5692a54dae816396"
   },
   "scenarios": {
