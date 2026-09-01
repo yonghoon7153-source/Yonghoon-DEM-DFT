@@ -87,11 +87,19 @@ def load():
     return out
 
 
-def draw(data, mono=False):
+def draw(data, mono=False, with_diag=False):
+    """with_diag=False (기본) 면 진단 홉을 **빼고** y축을 전도 장벽에 맞춘다.
+
+    ⚠ 왜 기본이 제외인가: c→b 는 끝점이 2.07 eV 높아 y축을 −0.5~2.1 로 벌려 놓는다.
+      그러면 정작 비교 대상인 0.305 vs 0.229 (차 76 meV)가 눌려서 안 보인다.
+      진단 홉은 전도 장벽이 아니므로 본 그림에서 빼는 것이 맞고, 전 구간 판은
+      `--with_diagnostic` 으로 따로 낸다 (이력·SI 용).
+    """
+    plot = data if with_diag else [c for c in data if c["bars"]]
     fig, (ax, bx) = plt.subplots(
         1, 2, figsize=(11.2, 4.3), gridspec_kw=dict(width_ratios=[2.15, 1]))
 
-    for i, c in enumerate(data):
+    for i, c in enumerate(plot):
         col = INK if mono else c["color"]
         ls = ["-", "--", ":"][i % 3] if mono else "-"
         ax.plot(c["mep"][:, 0], c["mep"][:, 1], color=col, lw=2.0, ls=ls, zorder=3,
@@ -104,6 +112,11 @@ def draw(data, mono=False):
                ylabel="Energy relative to initial state (eV)")
     ax.legend(frameon=False, fontsize=9.4, loc="upper left", labelcolor=INK)
     ax.set_xlim(-0.02, 1.02)
+    # y축은 **그린 곡선에만** 맞춘다 — 진단 홉을 빼면 자동으로 확대된다
+    lo = min(c["mep"][:, 1].min() for c in plot)
+    hi = max(c["mep"][:, 1].max() for c in plot)
+    pad = (hi - lo) * (0.28 if not with_diag else 0.10)
+    ax.set_ylim(lo - pad * 0.45, hi + pad)
 
     # ── 막대: 정방향/역방향 (진단 홉은 뺀다) ──────────────────────────────
     bar = [c for c in data if c["bars"]]
@@ -124,6 +137,14 @@ def draw(data, mono=False):
     bx.set_ylim(0, max(c["ef"] for c in bar) * 1.28)
     bx.text(0.98, 0.96, "forward / backward", transform=bx.transAxes,
             ha="right", va="top", fontsize=8.8, color=MUT)
+    if len(bar) == 2:                      # 두 계의 차를 명시 (눈대중 대신 숫자로)
+        d = abs(bar[0]["ef"] - bar[1]["ef"])
+        y = max(c["ef"] for c in bar) * 1.13
+        bx.annotate("", xy=(xb[0] - W / 2, y), xytext=(xb[1] - W / 2, y),
+                    arrowprops=dict(arrowstyle="<->", color=MUT, lw=1.0))
+        bx.text((xb[0] + xb[1]) / 2 - W / 2, y * 1.012,
+                f"{d*1000:.0f} meV", ha="center", va="bottom",
+                fontsize=9.2, color=MUT)
 
     fig.text(0.008, 0.038,
              "CI-NEB, 7 images - charged vacancy (V$_{Li}^{-}$ + jellium), same-cell protocol.  "
@@ -136,7 +157,8 @@ def draw(data, mono=False):
              fontsize=7.6, color=MUT, ha="left", va="bottom")
     fig.tight_layout(rect=(0, 0.085, 1, 1))
     os.makedirs(FIGD, exist_ok=True)
-    out = os.path.join(FIGD, "sei_neb_paths_mono.png" if mono else "sei_neb_paths.png")
+    stem = "sei_neb_paths" + ("_with_diagnostic" if with_diag else "")
+    out = os.path.join(FIGD, stem + ("_mono.png" if mono else ".png"))
     fig.savefig(out, dpi=300)
     plt.close(fig)
     return out
@@ -235,10 +257,11 @@ def main():
     if "--selftest" in sys.argv:
         return selftest()
     d = load()
-    a = draw(d, mono=False)
-    b = draw(d, mono=True)
+    made = [draw(d, mono=False), draw(d, mono=True)]
+    if "--with_diagnostic" in sys.argv:      # 전 구간 판 (이력·SI 용)
+        made += [draw(d, mono=False, with_diag=True), draw(d, mono=True, with_diag=True)]
     cs = write_csv(d)
-    for p in (a, b) + cs:
+    for p in tuple(made) + cs:
         print("→", os.path.relpath(p, ROOT))
     print("\n⚠ 세 값 전부 citable=false — 셀 수렴 미시험. 그림 각주에 박혀 있다.")
     return 0
