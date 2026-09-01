@@ -1,9 +1,9 @@
 ---
 title: "리뷰 요청 U — 폴라론 S0 재제출 (회신 T P0 4건 + 해제조건 6 이행)"
 date: 2026-08-31
-updated: 2026-08-31
+updated: 2026-09-01
 tags: [review, codex, sdcp, polaron, orca, pilot, prompt]
-status: 발송 대기 (⚠ 라벨 U 가 재사용됨 — 인용 횟수는 codex_U_prompt_neutral_close_plan 과 합산되므로 근거가 아니다)
+status: 회신 수령 — 후속 V (P0 9건 이행 완료)
 kind: review-request
 system: sdcp
 confidence: high

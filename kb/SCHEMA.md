@@ -34,8 +34,11 @@ verificationStatus: unverified | verified | disputed | retracted
 verifiedAt: YYYY-MM-DD    # verified 일 때만
 verifiedBy: codex | self | both | human   # verified 일 때만
 explored: false           # ⚠ 사람만 true 로 바꾼다 (사용자가 읽었는가)
-authoredBy: agent | human
-effort: low | medium | high | max         # agent 작성일 때
+authoredBy: agent | human | external      # external = 바깥 리뷰어가 쓴 **회신 원문**
+                                          #   (2026-09-01 추가. 우리 주장과 같은 무게로
+                                          #    읽지 않기 위한 표시 — 그 구분이 이 캠페인에서
+                                          #    제일 비싼 정보다. 회신 원문은 고쳐 쓰지 않는다)
+effort: low | medium | high | max         # agent 작성일 때 (external 에는 요구 안 함)
 claimType: definition | empirical | theoretical | prescriptive | interpretive | mixed
 evidenceScope: single-source | multi-source-primary | multi-source-mixed | synthesis-only | user-original
 ---

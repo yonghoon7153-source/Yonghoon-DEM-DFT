@@ -16,11 +16,17 @@
   "왜_지금_격하하나": "회신 T 의 P0 넷(원자 프레임 · MO 성격 · 국재화 결정론 · seed 중복)이 전부 **판정을 조용히 틀리게 만드는** 것들이었다. 그것들을 고친 코드가 실제로 도는지부터 확인하지 않고 생산을 돌리면 아홉 번째 반려다."
  },
  "0_시각_증거": {
-  "봉인_시점": "2026-08-31",
-  "builder_commit": "f58b8e5fec6b4780b0b0fc9772fb504e605031ba",
-  "builder_sha256": "d89acdedf0d4158b93466dc24ded8caf0ac5d5ee0e938f1b4b1c1f21ed15f83b",
-  "⚠_원본과_다른_해시인_이유": "회신 T P0 1~4 와 Q3/Q4 이행으로 빌더가 바뀌었다. 원본 사전등록의 해시로 이 실행을 설명할 수 없으므로 **새 해시·새 시각**으로 다시 봉인한다 (회신 T Q1).",
-  "이_시점의_doped_잡": "0개 — git log 가 그 순서의 증거다. 결과를 보고 규칙을 고치지 않는다."
+  "봉인_시점": "2026-09-01",
+  "builder_commit": "35eb8a9f55fb77cce79c95683362a371f113df9d",
+  "builder_sha256": "c3445652de9618bcbe46fcea31cddf800ec2b12aa3305b487278a06abfb49d10",
+  "⚠_원본과_다른_해시인_이유": "회신 U P0 1~9 이행으로 빌더가 다시 바뀌었다 (d89acded… → c3445652…). 옛 해시로 이 실행을 설명할 수 없으므로 **새 해시·새 시각**으로 다시 봉인한다. 사전등록을 고치는 것이 아니라 **재발행**이다 — 아래 status_history 가 순서의 증거다.",
+  "이_시점의_doped_잡": "0개 — git log 가 그 순서의 증거다. 결과를 보고 규칙을 고치지 않는다.",
+  "이_시점의_ORCA_잡": "0개 — phase L 도 아직 돌리지 않았다 (회신 U Q7 NO-GO)",
+  "이전_봉인": {
+   "builder_commit": "f58b8e5fec6b4780b0b0fc9772fb504e605031ba",
+   "builder_sha256": "d89acdedf0d4158b93466dc24ded8caf0ac5d5ee0e938f1b4b1c1f21ed15f83b",
+   "봉인_시점": "2026-08-31"
+  }
  },
  "대상": {
   "정본_명칭": "neutral H-atom-removed n=6 radical model (D•)",
@@ -77,7 +83,12 @@
   "4층_basin_군집": {
    "무엇": "서로 다른 seed 가 **같은 해**로 갔으면 상태는 1개다",
    "재료": "전자수 · 에너지 · ⟨S²⟩ · 원자별 **부호 있는** 스핀 벡터 · 링 몫 벡터",
-   "문턱": {"dE_Eh": 0.0001, "spin_L1": 0.30, "ring_L1": 0.10, "dS2": 0.02},
+   "문턱": {
+    "dE_Eh": 0.0001,
+    "spin_L1": 0.3,
+    "ring_L1": 0.1,
+    "dS2": 0.02
+   },
    "⛔_seed_개수는_반복수가_아니다": "같은 basin 에 모인 seed 들을 지지 증거의 개수로 세지 않는다. 'seed 8개가 backbone 을 지지' 는 같은 해를 여덟 번 센 문장일 수 있다",
    "경계": "임계 근처 쌍은 borderline 으로 남긴다 — 조용히 붙이지 않는다",
    "⛔_전역_스핀_뒤집힘": "모든 부호가 반대인 해를 같은 상태로 **자동 흡수하지 않는다**. 필요하면 선언해서 따로 처리한다"
@@ -85,7 +96,7 @@
   "⚠_문턱_봉인": "위 숫자는 전부 코드 상수(PIL_PROBE_MIN · PIL_HIT_MARGIN · PIL_BASIN_*)이고 **결과를 보기 전에** 정했다"
  },
  "판정어": {
-  "ADEQUATE": "positive control 회수 + 4층 통과 실행이 둘 이상의 basin 을 준다 → 확장(범함수·환경) 단계로",
+  "ADEQUATE": "positive control 회수 + 4층 통과 실행이 둘 이상의 basin 을 준다 → 확장(범함수·환경) 단계로 ⚠ R0/R1 교차비교 전에는 R0-conditional 이다 (회신 U 해제순서 ⑤)",
   "MODEL_NONDIAGNOSTIC": "positive control 이 backbone 상태를 하나도 회수하지 못했다 → H-제거계 결과를 해석하지 않는다",
   "NO_VALUE": "게이트가 남아 있다 → 해소 전에는 판정하지 않는다",
   "PARTITION_DEPENDENT": "Hirshfeld/Löwdin 의 class 가 다르거나 |ΔF_bb| > 0.10 → 억지로 하나를 고르지 않는다",
@@ -93,7 +104,7 @@
   "BACKBONE_DEFINITION_DEPENDENT": "extended(+ether O) 와 strict 의 class 가 갈린다",
   "ETHER_O_CENTERED": "스핀이 고리 π 가 아니라 3,4-에테르 O 에 가장 많다 → 'backbone 폴라론' 이라고 부르지 않는다",
   "LOCALIZATION_DEPENDENT": {
-   "언제": "R0(결정론 `%loc Randomize 0`) 과 R1(무작위 realization) 이 **다른 최종 basin 집합**을 줄 때",
+   "언제": "R0(결정론 `%loc Random 0`) 과 R1(무작위 realization) 이 **다른 최종 basin 집합**을 줄 때",
    "왜_필요한가": "`.loc` 해시를 결박하면 정확한 재실행은 되지만 robustness 는 안 된다 (회신 T Q2). 같은 계에 국재화 realization 이 여럿이면 그중 하나를 골라 낸 상태지도는 그 realization 에 조건부다",
    "무엇을_말할_수_없게_되나": "'이 계의 상태는 N 개다' — 국재화 realization 을 바꾸면 달라지는 수라서"
   },
@@ -101,7 +112,8 @@
    "언제": "사전등록한 seed 집합(A 1 + ring별 B 6 + default 1)을 바꿨을 때 결론이 바뀔 때, 또는 4층 군집이 seed 수보다 훨씬 적어 **탐색이 좁았는지 상태가 적은지 구분되지 않을** 때",
    "왜_필요한가": "'탐색된 최저해' 는 탐색 프로토콜의 함수다. 전역 최소가 아니다 — 그 사실을 판정어로 들고 있어야 원고에서 미끄러지지 않는다",
    "무엇을_말할_수_없게_되나": "'바닥상태는 …' · '가장 안정한 상태는 …' — S0 에서는 어느 경우에도 쓰지 않는다"
-  }
+  },
+  "CLUSTER_AMBIGUOUS": "basin 군집 관계가 추이적이지 않다 (a~b, b~c 인데 a≁c) → 상태 수를 세지 않는다. 문턱을 결과를 보고 고치지 않는다 (회신 U P0-8ⓐ)"
  },
  "허용_서술_이대로만": [
   "이 프로토콜은 ε=1·r2SCAN-3c·gs0·H162 조건에서 서로 다른 전자상태를 구분해 회수했다 / 못 했다",
@@ -162,12 +174,29 @@
  "연결": {
   "원본_사전등록": "db/properties/sdcp_polaron_pilot_prereg_2026_08_31.json",
   "카드": "kb/questions/sdcp_backbone_polaron_estimand_2026_08_31.md",
-  "리뷰": ["kb/reviews/codex_T_reply_polaron_pilot_2026_08_31.md"],
+  "리뷰": [
+   "kb/reviews/codex_T_reply_polaron_pilot_2026_08_31.md"
+  ],
   "결정": "D-2026-08-31-sdcp-polaron-Fbb (proposed)",
   "⛔_다른_캠페인": "sdcp_doped 흡착(슬랩)과 **다른 캠페인**이다. db/properties/sdcp_doped_closed_2026_08_28.json 의 잠금은 그쪽이고 여기에 적용되지 않는다"
  },
  "status_history": [
-  {"at": "2026-08-31", "state": "proposed",
-   "note": "회신 T 의 S0 격하를 받아 범위를 줄여 재등록. 원본은 보존. P0 1~4 이행 + Q3/Q4 구현 반영. ratify 대기"}
- ]
+  {
+   "at": "2026-08-31",
+   "state": "proposed",
+   "note": "회신 T 의 S0 격하를 받아 범위를 줄여 재등록. 원본은 보존. P0 1~4 이행 + Q3/Q4 구현 반영. ratify 대기"
+  },
+  {
+   "at": "2026-09-01",
+   "state": "proposed",
+   "note": "회신 U (NO-GO · P0 9건) 이행으로 빌더가 바뀌어 **재봉인**. 범위·질문·판정어는 그대로이고 결박만 새 해시로 옮겼다. ratify 대기. ⚠ 실행 승인은 여전히 없다."
+  }
+ ],
+ "회신_U_이행": {
+  "회신": "kb/reviews/codex_U_reply_polaron_S0_2026_09_01.md",
+  "P0_9건": "전건 이행 (커밋 35eb8a9f)",
+  "selftest": "152 → 195",
+  "⚠_여전히_미검증": "실물 ORCA 로 `%loc` 구문·suffix·인쇄 블록을 확인하지 않았다 — 러너의 `loccheck` 단계(H₂O)가 그것이고, 그것이 통과해야 phase L 이다",
+  "실행_승인": "없음 — 회신 U Q7 은 NO-GO 이고 phase L 도 금지다"
+ }
 }

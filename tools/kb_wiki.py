@@ -35,7 +35,12 @@ ENUMS = {
     "confidence": {"high", "medium", "low"},
     "verificationStatus": {"unverified", "verified", "disputed", "retracted"},
     "explored": {"true", "false"},
-    "authoredBy": {"agent", "human"},
+    # ⛔ 2026-09-01 — `external` 추가. 리뷰 **회신**은 우리 에이전트도 1저자도 아닌
+    #   **바깥 리뷰어**가 쓴 글이다. 그걸 `agent`/`human` 중 하나로 적으면 출처가
+    #   흐려지고, 회신 원문을 우리 주장과 같은 무게로 읽게 된다 (그 구분이 지금
+    #   캠페인에서 제일 비싼 정보다). `effort` 는 요구하지 않는다 — 우리가 들인
+    #   노력이 아니다.
+    "authoredBy": {"agent", "human", "external"},
     "effort": {"low", "medium", "high", "max"},
     "claimType": {"definition", "empirical", "theoretical", "prescriptive",
                   "interpretive", "mixed"},
@@ -518,13 +523,23 @@ def review_chain():
     _lab_n = {}
     for _r in prompts.values():
         _lab_n[_r["label"]] = _lab_n.get(_r["label"], 0) + 1
+    # ⛔⛔ 2026-09-01 — 회신을 **소비**한다. 종전에는 각 요청이 전체 회신 목록을
+    #   독립으로 훑어서, 이미 역링크로 임자가 정해진 회신을 **뒤 요청이 다시 물었다.**
+    #   실물: `U_reply_polaron_S0` 는 본문에 `U_prompt_polaron_S0` 역링크가 있는데,
+    #   같은 캠페인의 후속 요청 `V_prompt_polaron_S0` 가 3단계(슬러그 완전일치)에서
+    #   그것을 가져가 "발송 대기인데 회신이 있다" 는 거짓 ERROR 를 냈다.
+    #   같은 캠페인으로 리뷰를 여러 판 도는 우리 방식에서는 **매번** 터진다.
+    #   ⇒ 단계를 셋 다 돌되, 앞 단계에서 임자가 정해진 회신은 뒤 단계에서 뺀다.
+    _taken = set()
     for name, rec in prompts.items():
         rec["reply"], rec["answered_by"], rec["evidence"] = None, None, []
         for r in replies:
             if r["backlink"] and r["backlink"].endswith(name):
                 rec["reply"], rec["answered_by"] = r["name"], r["label"]
                 rec["evidence"].append("회신 본문의 `요청:` 역링크")
+                _taken.add(r["name"])
                 break
+    for name, rec in prompts.items():
         if not rec["reply"]:
             # 주제 slug 일치 (역링크 없는 판). ⚠ 완전일치만 보면 실물을 놓친다 —
             #   `X_bundle_reply` ↔ `X_prompt_prospective_bundle_ready`,
@@ -533,6 +548,8 @@ def review_chain():
             #   것이 안전장치다 (라벨이 다르면 겹쳐도 맺지 않는다).
             _pt = set(rec["slug"].split("_"))
             for r in replies:
+                if r["name"] in _taken:
+                    continue                    # 역링크로 임자가 정해진 회신
                 if r["label"] != rec["label"] or not r["slug"]:
                     continue
                 _rt = set(r["slug"].split("_"))
@@ -540,17 +557,21 @@ def review_chain():
                     rec["reply"], rec["answered_by"] = r["name"], r["label"]
                     rec["evidence"].append("같은 라벨 · 주제 토큰 일치 %s"
                                            % sorted(_rt & _pt))
+                    _taken.add(r["name"])
                     break
         if not rec["reply"]:
             # ⚠ 라벨이 **어긋난** 짝: `AR_reply_c12_v15` ← `AQ_prompt_c12_v15`.
             #   역링크도 같은 라벨도 없으므로 주제가 **정확히 같을 때만** 맺는다
             #   (토큰 겹침으로 느슨하게 맺으면 캠페인이 섞인다).
             for r in replies:
+                if r["name"] in _taken:
+                    continue                    # 앞 단계에서 임자가 정해졌다
                 if r["slug"] and r["slug"] == rec["slug"]:
                     rec["reply"], rec["answered_by"] = r["name"], r["label"]
                     rec["evidence"].append(
                         "⚠ 라벨 어긋남(%s→%s) · 주제 slug 완전일치"
                         % (rec["label"], r["label"]))
+                    _taken.add(r["name"])
                     break
         # ⚠ 라벨이 **재사용**되면(S·T·U 가 각 2개) 인용 횟수는 두 캠페인이 합산된다.
         #   2026-08-31 실물: U(polaron S0)는 미발송인데 U(neutral_close)의 인용 11회를
@@ -672,9 +693,22 @@ def selftest_reviews():
     chk(bool(_reused), "재사용된 라벨을 표시한다 (%s)" % _reused)
     _us0 = [r for n, r in prompts.items() if n.startswith("codex_U_prompt_polaron")]
     if _us0:
-        chk(not _us0[0]["reply"] and _us0[0]["cited"] == 0,
+        # ⚠ 2026-09-01 — 종전 시험은 `not reply` 도 같이 걸었다. 그건 그날의 **상태**이지
+        #   불변식이 아니었다 (U 회신이 실제로 오자 시험이 깨졌다). 지키려던 불변식은
+        #   *"재사용 라벨의 인용은 증거가 아니다"* 하나다 — 그것만 남긴다.
+        chk(_us0[0]["cited"] == 0,
             "⛔음성: 재사용 라벨(U)의 인용을 **증거로 쓰지 않는다** — 2026-08-31 에 "
             "미발송 U(polaron S0)가 다른 U 의 인용으로 '회신 수령' 오판됐다")
+    # ⛔음성 2026-09-01 — 회신은 **소비**된다. 역링크로 임자가 정해진 회신을 같은
+    #   캠페인의 후속 요청이 다시 물면 안 된다 (V_prompt_polaron_S0 가 U 의 회신을
+    #   가져가 거짓 ERROR 를 냈다).
+    _dup = {}
+    for n, r in prompts.items():
+        if r["reply"]:
+            _dup.setdefault(r["reply"], []).append(n)
+    _shared = {k: v for k, v in _dup.items() if len(v) > 1}
+    chk(not _shared,
+        "⛔음성: 한 회신이 **두 요청에 동시에** 붙지 않는다 (%s)" % (_shared or "없음"))
     print("reviews selftest %s" % ("PASS" if ok[0] else "FAIL"))
     return 0 if ok[0] else 1
 

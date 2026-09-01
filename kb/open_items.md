@@ -252,9 +252,24 @@ D_rel 이 들어오면 그 파일의 `성공기준_사전확정` **그대로** �
   1 또는 2 + 전역 α↔β 반전을 다른 상태로 세어 `basin ≥2` 를 **거짓 충족** 가능 ·
   restart 가 에너지를 원래 불안정 출력에서 계속 읽음 · 미관측 positive control 을
   `NO_VALUE` 가 아니라 방법 실패로 바꿈 · 생성물이 S0 사전등록이 아니라 **구판**을 가리킴.
-- ▶ **다음 한 수**: 회신의 해제 순서대로 — `%loc` 수정 → manifest 결박 → π·parser 수정
-  → S0 전용 verdict → R0-conditional 제한 → **작은 분자로 `%loc` 문법 확인** → 그 뒤에야
-  200원자 smoke. ⚠ phase L 에는 `Rotate` 가 없으므로 L 성공을 Rotate 검증으로 쓰지 않는다.
+- ✅ **P0 9건 전건 이행 (2026-09-01, `35eb8a9f`) — selftest 152 → 195.**
+  · π 는 **MO 계수**로 3×3 `P = Σ vvᵀ` → `n̂ᵀPn̂/tr P` (회전불변, 이상적 π 에서 정확히 1).
+    계수 없으면 통과 불가, Cauchy–Schwarz 상한으로 **기각만** 한다.
+    신설 시험이 **종전 식이 0.335 로 무너지는 것**을 같은 자리에서 재현해 기록한다.
+  · fixture 를 각 블록의 **공식 ORCA 형식**으로 (Loewdin `0 C :` · Hirshfeld 콜론 없음).
+  · `Random 0` + `OCC/VIRT/T_CORE` 명시 · 코어는 **국재화 전 canonical 창** + AO 성격.
+  · S0 전용 판정: `ADEQUATE` 신설, 최저 에너지 경로 **삭제**, basin 1개면 막는다.
+  · basin 군집: 완전연결 + 추이성 검사(`CLUSTER_AMBIGUOUS`) · 게이트 행 제외 ·
+    `Σ|s|` 정규화 · 전역 α↔β 정준화 · 링 면제 해는 링 축도 제외.
+  · 게이트/결측이 positive control **앞**에 온다 (결측 = `NO_VALUE`).
+  · manifest 가 S0 prereg + 그 해시를 봉인하고 러너가 `$BUILDER` 해시를 대조.
+    S0 사전등록을 **재발행**했다 (`status_history` 가 순서의 증거).
+  · 러너에 `loccheck` 단계 — H₂O 하나로 `%loc` 구문·`.loc` suffix·인쇄 블록 30초 확인.
+- 🔴 **아직 안 한 것**: 실물 ORCA 확인 0회 · Q3 `localized_no_rotation` control ·
+  `RING_ASSIGNMENT_UNRESOLVED` · `S0_EPS1_ANION_REFERENCE_INADEQUATE` · R0/R1 교차비교.
+- ▶ **다음 한 수**: 리뷰 V 발송 (`kb/reviews/codex_V_prompt_polaron_S0_2026_09_01.md`).
+  GO 가 나오면 `loccheck` 부터 — 그것이 통과해야 phase L 이다.
+  ⚠ phase L 에는 `Rotate` 가 없으므로 L 성공을 Rotate 검증으로 쓰지 않는다.
 
 ⚠ 이것도 장부에 없었다.
 
