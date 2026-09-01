@@ -195,15 +195,33 @@ try:
 except Exception: pass" 2>/dev/null)
   fi
   printf "  %-6s %-22s %7s %5s %-22s %s\n" "$d" "$st" "$age" "$cyc" "$ene" "$note"
+  # 사이클당 시간은 **자료에서 계산한다** (아래 각주용). 하드코딩 금지 — 2026-09-02 에
+  # 각주에 박아 둔 "실측" 이 한 시간 만에 거짓이 됐다 (경과 열의 뜻이 바뀌면서).
+  case "$st" in
+    DONE*|run*) [ "${cyc:-0}" -gt 0 ] 2>/dev/null && [ "$age" != "?" ] && [ "$age" != "-" ] \
+                && _pc="${_pc:-}$d $(awk -v a="$age" -v c="$cyc" 'BEGIN{printf "%.1f", a/c}') " ;;
+  esac
 done
 
 printf "\n  DONE %d · 도는중 %d · 대기/이전 %d" "$_ndone" "$_nrun" "$_nidle"
 [ "$_nstale" -gt 0 ] && printf " · ⚠ 죽은 lock %d" "$_nstale"
 echo
 # ⚠ 추정을 예측처럼 쓰지 않는다 — 사이클 시간이 계마다 2배 넘게 다르다 (실측).
-if [ "$_ndone" -gt 0 ] && [ "$_nidle" -gt 0 ]; then
-  echo "  ⚠ 남은 시간 추정은 싣지 않는다 — 사이클 시간이 seed 마다 크게 다르다"
-  echo "     (실측 2026-09-02: gs0 61분/cyc · gs2 117분/cyc — 2배 차이)"
+# ⚠ 남은 시간 추정을 싣지 않는 이유를 **지금 자료로** 보인다.
+#   ⛔ 2026-09-02 — 여기 "실측 gs0 61분/cyc · gs2 117분/cyc" 를 **하드코딩**했다가
+#     한 시간 만에 거짓이 됐다. 경과 열의 뜻을 고치자(= 실제 소요) 실제 값이
+#     gs0 17.0 · gs1 11.3 · gs2 138 으로 바뀌었다 — 2배가 아니라 8~12배였다.
+#     감시 도구에 박은 상수는 도구가 바뀌면 조용히 거짓말이 된다. 계산해서 낸다.
+if [ -n "${_pc:-}" ]; then
+  echo "  분/cyc: $(echo "$_pc" | tr ' ' '\n' | paste -d' ' - - 2>/dev/null | tr '\n' ' ')"
+  echo "$_pc" | awk '{
+      lo=1e9; hi=0
+      for (i=2; i<=NF; i+=2) { v=$i+0; if(v<lo) lo=v; if(v>hi) hi=v }
+      if (hi>0 && lo<1e9 && hi > 2*lo)
+        printf "  ⚠ 남은 시간 추정을 싣지 않는다 — seed 간 %.0f배 차이 (%.1f~%.1f 분/cyc)\n", hi/lo, lo, hi
+      else if (hi>0)
+        printf "  (seed 간 편차 %.1f~%.1f 분/cyc)\n", lo, hi
+    }'
 fi
 if [ "$_nrun" -gt 1 ]; then
   echo "  ✔ 병렬 $_nrun 개 (seed lock 이 중복 실행을 막는다 — run_orca_stage_a.sh ONLY)"
