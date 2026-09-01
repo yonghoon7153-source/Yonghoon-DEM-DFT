@@ -3958,6 +3958,14 @@ _SEMINAR_SLIDES = 'docs/seminar/seminar_deck.json'
 _SEMINAR_SRC_PREFIX = ('docs/', 'scripts/', 'webapp/')
 _SEMINAR_SRC_EXT = ('.md', '.py', '.csv', '.json', '.html', '.sh', '.txt')
 
+#: 철회 게이트가 **가리키는 근거**.  거부 사유가 산문으로만 있으면 그 주장을 확인할
+#: 자리가 없다 (R19 Q1b) — 응답이 리포 안의 등록부를 지목하고, 회귀가 그 파일의 실재와
+#: 이 SDCP 항목의 등재를 함께 본다.
+#: ⚠ 정본은 `claims.json` 이다.  `mpm_platen_kinematic_stop_defect.md` 는 스스로 rev6
+#:   에서 멈췄다고 적고 있어 **이 철회의 근거가 아니다** (다른 트랙의 문서다).
+_SEMINAR_EVIDENCE = 'docs/reviews/claims.json'
+_SEMINAR_EVIDENCE_CLAIM = 'CL-24'
+
 
 def _repo_path(rel):
     """리포 루트 기준 경로 (webapp/ 의 부모).  경로 탈출은 거부한다."""
@@ -4021,10 +4029,14 @@ def api_seminar_slides():
              '격자 수렴 미확인).  정본: CLAUDE.md SR-01 · docs/reviews/claims.json.')
     if (request.args.get('historical') or '') != '1':
         return jsonify({'ok': False, 'retracted': True, 'error': _RETR,
+                        'evidence_ref': _SEMINAR_EVIDENCE,
+                        'evidence_claim': _SEMINAR_EVIDENCE_CLAIM,
                         'hint': '이력으로 열람하려면 ?historical=1 (재발표 금지)'}), 200
     data['ok'] = True
     data['retracted'] = True
     data['retracted_banner'] = _RETR
+    data['evidence_ref'] = _SEMINAR_EVIDENCE
+    data['evidence_claim'] = _SEMINAR_EVIDENCE_CLAIM
     return jsonify(data)
 
 
@@ -4062,11 +4074,19 @@ def api_seminar_deck():
       (Codex 재검증 NEW-DEFECT).  ⇒ 같은 fail-closed 규약: `?historical=1` 없이는 안 준다.
     """
     if (request.args.get('historical') or '') != '1':
-        return Response(
-            '⛔ 이 덱(2026-08-06)의 SDCP 수치는 2026-08-13 적대 리뷰로 철회됐고, pptx 파일 '
-            '안에는 그 표지가 없습니다.  재발표 금지.  이력으로 받으려면 ?historical=1 를 '
-            '붙이세요.  정본: CLAUDE.md SR-01 · docs/reviews/claims.json (CL-24).',
-            mimetype='text/plain; charset=utf-8', status=403)
+        #  ⚠ 거부를 **JSON 으로** 준다 (2026-09-01).  평문 403 이면 화면의 내려받기
+        #    핸들러가 content-type 만 보고 `window.location` 으로 그 주소에 **이동**해
+        #    버려 사용자는 맥락 없는 403 본문을 보게 된다 — 거부가 안내가 아니라 사고로
+        #    보인다.  기계도 사람도 읽을 수 있는 형태로 준다.
+        return jsonify({
+            'ok': False, 'retracted': True,
+            'error': '⛔ 이 덱(2026-08-06)의 SDCP 수치는 2026-08-13 적대 리뷰로 철회됐고, '
+                     'pptx 파일 안에는 그 표지가 없습니다.  재발표 금지.',
+            'evidence_ref': _SEMINAR_EVIDENCE,
+            'evidence_claim': _SEMINAR_EVIDENCE_CLAIM,
+            'hint': '이력으로 받으려면 ?historical=1 를 붙이세요.  '
+                    '정본: CLAUDE.md SR-01 · docs/reviews/claims.json (CL-24).',
+        }), 403
     try:
         path = _repo_path(_SEMINAR_DECK)
     except ValueError as e:

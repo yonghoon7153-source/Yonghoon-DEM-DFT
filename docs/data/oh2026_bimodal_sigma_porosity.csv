@@ -1,8 +1,8 @@
 CAM_poly_single,poly_frac,porosity_2D_pct,porosity_He_pct,tap_density_composite_gcc,tortuosity_ion_factor,sigma_eff_ion_mScm,sigma_eff_e_mScm
 CAM10:0,1.0,16.80,12.78,3.28,13.08,0.042,4.09
 CAM8:2,0.8,10.18,10.28,3.45,12.13,0.049,2.99
-CAM7:3,0.7,7.55,8.83,3.59,11.13,0.055,2.16
-CAM6:4,0.6,10.93,10.57,3.43,12.84,0.046,2.37
+CAM7:3,0.7,7.55,8.83,3.59,11.13,0.055,2.37
+CAM6:4,0.6,10.93,10.57,3.43,12.84,0.046,2.16
 CAM0:10,0.0,17.96,11.58,3.26,16.08,0.034,0.95
 # Oh 2026, ACS Energy Lett. 11 (2026) 2103-2114. Bimodal ASSB cathode: large POLYcrystalline NCWA (LiNi0.88Co0.10W0.01Al0.01O2) + small SINGLE-crystalline NCM (LiNi0.82Co0.13Mn0.05O2), SSE Li5.5PS4.5Cl1.5 (Cl-rich, sigma_bulk 3.09), CAM:SSE:CC=90:9.5:0.5 wt%, cold-press 300 MPa. CAM ratio = poly:single = OUR P:S (poly=AM_P large, single=AM_S small).
 # ★ poly_frac column = directly comparable to our a9_50 P:S sweep p_frac. CAM7:3 = our P:S 7:3.
@@ -10,4 +10,7 @@ CAM0:10,0.0,17.96,11.58,3.26,16.08,0.034,0.95
 # sigma_eff_ion: peak at CAM7:3 (0.055) <-> our a9_50 peak p06 (0.0506); LPSCl+NCM envelope (Bazzoun 0.065-0.137 + Hong#271 0.042-0.087 + this 0.034-0.055) ~0.03-0.14, our DEM (~0.04-0.18) brackets.
 # tortuosity_ion_factor 11-16 = MacMullin-type eps/(sigma_eff/sigma_bulk), NOT our geodesic tau (~1.2-2) -> TREND only (min at CAM7:3 <-> our tau min p06).
 # ⚠ sigma_eff_e: HIGHEST at CAM10:0 (all poly, 4.09), LOWEST at CAM0:10 (all single, 0.95) -- because sigma_NCWA(poly) 13.7 >> sigma_NCM(single) 2.45. This is OPPOSITE to our model (our sigma_e is contact-network/particle-count driven + endpoint assumption sigma_S-single 10 > sigma_P-poly 5 -> sigma_e HIGHER for single-rich). Composition direction of sigma_e is MATERIAL(sigma_AM-endpoint)-dependent -> see audit sigma_e-direction caveat.
+# ⚠ 2026-09-01 정정: sigma_eff_e 의 CAM7:3 ↔ CAM6:4 가 **뒤바뀌어** 있었다 (2.16 / 2.37 → 2.37 / 2.16).
+#   원 논문 순서는 4.09 / 2.99 / 2.37 / 2.16 / 0.95 이고 digest 본문(lit_oh2026 §241, §607)은 처음부터 옳게
+#   적고 있었다 — 이 CSV 로 옮겨 적을 때만 두 칸이 전치됐다.  CAM7:3 은 우리 P:S 7:3 대응점이라 인용되는 자리다.
 # CAVEAT: SE is Li5.5PS4.5Cl1.5 (Cl-rich) vs our Li6PS5Cl; measurement pressures porosity/sigma/cathode = 370/100/300 MPa -> absolute sigma stays "same-decade envelope", not precise 1:1. E_SE 22 GPa (nu 0.30) = 3rd confirm of real-bulk ~24 (our E_eff 1.35/1.53 = softened proxy).

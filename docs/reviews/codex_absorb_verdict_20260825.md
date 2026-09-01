@@ -291,6 +291,14 @@ Codex 판정의 핵심 문장: *"이번 22-mutant 영수증은 '그 22개가 그
 | 08 | 진단 namespace 접미사가 **문자열** — junction/symlink 우회 | `c0ac0ad8` |
 | 09 | (=08 의 bundle 항목) 리뷰 bundle 이 base 를 안 실어 단독 재현 불가 | 다음 패키지 |
 
+> **편집자 주 (2026-09-01)** — 위 표의 `c0ac0ad8` 여덟 칸은 **이 브랜치에서 도달할 수
+> 없다**.  그날 세션 초반의 리베이스 **이전** SHA 이고, 같은 변경은 `8bcfbeff` 로
+> 들어가 있다 (patch-id 동일 확인).  판정문 본문은 **받은 그대로** 두고 정정만 여기
+> 병기한다.  경위는 원장 `findings.json` 의 `_commit_exists` 항목 — 그 검사가
+> `git cat-file -e` 로 **객체 존재**만 봐서, 리베이스로 버려져 로컬에만 떠 있는 커밋을
+> 8건 전부 초록으로 통과시켰다.  기계 쪽 등재는
+> `docs/reviews/doc_refs_sha_exceptions.tsv`.
+
 ## 이 라운드의 교훈
 
 ★★★ **이름을 바꾼 것은 가린 것이 아니다.**  `ideal_R0` 는 `L/(R_bulk+0)` 이고

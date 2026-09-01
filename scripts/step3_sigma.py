@@ -2767,9 +2767,28 @@ def _selftest_segstamp():
             'add_fid=_afid' in _src)
         chk('8) ★ payload CLI 에 --step3-fibre-stamp 가 있고 기본이 point 다',
             "'--step3-fibre-stamp'" in _src and "default='point'" in _src)
-        chk('9) ★ manifest 에 fibre_stamp 가 기록된다 (어느 방식으로 돌았는지 추적)',
-            "'fibre_stamp': a.step3_fibre_stamp" in _src
-            and "'fibre_stamp_applied'" in _src)
+        #  ★★ 2026-09-01 — 이 검사는 `'fibre_stamp': a.step3_fibre_stamp` 라는 **철자**를
+        #    찾고 있었다.  그 사이 payload 가 **더 좋아져서** 요청값과 적용값을 갈라 적게
+        #    됐고 (`fibre_stamp` = 실제 적용, `fibre_stamp_requested` = 요청), 검사만
+        #    빨간불이 됐다.  이 selftest 가 어느 레인에도 없어 그대로 남아 있었다 (R19 Q6).
+        #  ⇒ 철자가 아니라 **계약**을 본다: 세 칸이 다 있고, 적용값이 요청값의 **복사가
+        #    아닐 것** — 요청을 실제인 양 적는 것이 RC6-08 이 잡은 바로 그 결함이다.
+        import ast as _ast
+        _keys, _applied_is_copy = set(), False
+        for _n in _ast.walk(_ast.parse(_src)):
+            if not isinstance(_n, _ast.Dict):
+                continue
+            for _k, _v in zip(_n.keys, _n.values):
+                if not (isinstance(_k, _ast.Constant) and isinstance(_k.value, str)):
+                    continue
+                if _k.value.startswith('fibre_stamp'):
+                    _keys.add(_k.value)
+                    if (_k.value == 'fibre_stamp' and isinstance(_v, _ast.Attribute)
+                            and _v.attr == 'step3_fibre_stamp'):
+                        _applied_is_copy = True
+        chk('9) ★ manifest 가 요청·적용을 갈라 적는다 (어느 방식으로 **돌았는지** 추적)',
+            {'fibre_stamp', 'fibre_stamp_requested', 'fibre_stamp_applied'} <= _keys
+            and not _applied_is_copy)
     except OSError as _e:
         chk(f'7-9) ⚠ payload 배선 확인 생략 ({_e})', True)
 

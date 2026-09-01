@@ -1,35 +1,49 @@
-# 문서 참조 예외 등재 — `경로<TAB>이유`  (검사기 `scripts/check_doc_refs.py`)
+# 문서 참조 예외 등재 — `경로<TAB>종류<TAB>ref<TAB>이유`  (검사기 `scripts/check_doc_refs.py`)
 #
-# ⚠ 이유 없는 등재는 검사기가 거부한다.  그리고 그 파일이 **생기면** 검사기가 이 등재를
-#   "낡았다" 고 지적한다 — 예외가 조용히 영구화되지 않게 하려는 것이다.
+# ★ 왜 네 칸인가 (R19 Q5)
+#   초판은 `경로<TAB>이유` 였고 이유가 **산문**이라 아무도 확인할 수 없었다.  실제로 22건 중
+#   여섯 건이 사실과 달랐다 — 특히 "다른 저장소 소관" 이라 적은 두 건은 **이 리포의 다른
+#   브랜치에 실재**했다.  ⇒ 종류를 붙이고, 확인 가능한 종류는 **검사기가 확인한다**.
+#
+#   absent        약속했으나 실행/커밋되지 않았다.       ref = `-`
+#   cross_branch  다른 브랜치가 소유한다.                ref = 브랜치 → 거기서 실재 확인
+#   external      리포 밖 1차 증거.                     ref = sha256:<64hex> 또는 위치
+#   generated     생성물·캐시, 커밋 대상 아님.           ref = 만드는 명령
+#
+# ⚠ 파일이 **생기면** 검사기가 이 등재를 "낡았다" 고 지적한다 — 예외가 조용히 영구화되지
+#   않게 하려는 것이다.
 # ⚠ 여기 있다고 "문제 없음" 이 아니다.  "왜 없는지 알고 있다" 는 뜻이다.
-
-# ── ① 문서가 약속했지만 만들어지지 않은 산출물 (미실행 · 계획 단계) ──
-docs/data/xy_heatmap_summary.csv	PHASE_C 계획 산출물 — 실행되지 않았다
-docs/data/oh2026_sigma_ionic.csv	문헌 digitize 계획 — 미실행 (lit_oh2026 · literature_yonsei 둘 다 참조)
-docs/data/park2020_sigma_vs_ncm.csv	문헌 digitize 계획 — 미실행
-docs/data/park2020_step4_params.csv	문헌 digitize 계획 — 미실행
-docs/data/zhang2026_dry_cbd_percolation.csv	문헌 digitize 계획 — 미실행
-docs/data/sse_sigma_ion_population.csv	R_int 앵커 DB 계획 — 미실행
-docs/data/mpm_dem_match.csv	wallP 교차검증 원자료 — 커밋되지 않았다 (요약만 문서에)
-
-# ── ② 리포 밖 경로 (외부 저장소 · 일회성 작업공간) ──
-db/properties/sdcp_linio2_binding_phaseA.csv	DFT 저장소 소관 (gabia)
-webapp/data.py	배포 웹앱 저장소의 파일 — `webapp/` 은 이 브랜치에 있지만 `data.py` 는 그쪽 소관 (문서 본문이 "다른 저장소 대상" 이라고 적는다)
-scratchpad/SI_21.txt	일회성 작업공간 (커밋 대상 아님)
-litdb_cache/context__literature_yonsei_dtbl_2026.md	litdb 캐시 — 생성물, 커밋 대상 아님
-regress/make_grid.py	외부 회귀 하네스 — 이 브랜치에 없다
-origin_review/fixtures.py	일회성 리뷰 픽스처 — 커밋되지 않았다
-docs/db/.mtime_cache.json	캐시 파일 (gitignore 대상)
-post_lhs00_110/atom_2980000.liggghts	ibb 런 산출물 — 용량상 리포에 없다 (영수증만 커밋)
-post_lhs00_000/atom_2425000.liggghts	ibb 런 산출물 — 용량상 리포에 없다 (영수증만 커밋)
-
-# ── ③ Codex 리뷰 원문 (외부 산출, 우리 응답만 커밋됨) ──
-docs/codex_phase_ab_crosscheck_20260807.md	Codex 산출 원문 — 미커밋 (응답 문서만 있다)
-docs/codex_phase_ab_reverification_20260807.md	Codex 산출 원문 — 미커밋
-docs/codex_round3_crosscheck_20260807.md	Codex 산출 원문 — 미커밋
-docs/codex_round4_crosscheck_20260807.md	Codex 산출 원문 — 미커밋
-
-# ── ④ 표기 문제 ──
-docs/data/sdcp8_v04/v03/v025.json	`{v04,v03,v025}.json` 축약 표기 — 실제 경로가 아니다
-docs/sigma_electronic_stage21_close_out.md	개명됨 → `docs/sigma_e_stage21_history.md` (본문이 그 사실을 적고 있다)
+# ⚠ `absent` 는 *"실행 안 함"* 과 *"실행했는데 커밋 안 함"* 이 뜻이 다르다 — 어느 쪽인지
+#   이유에 적는다 (R19 Q5 지적).
+#
+# ── ① 문서가 약속했지만 리포에 없는 산출물 ──
+docs/data/xy_heatmap_summary.csv	absent	-	분석은 **실행됐다** — `docs/PHASE_C_SUMMARY.md` §생성물이 median 13/5/1 % 와 86개 per-case 그림을 보고한다.  커밋 안 된 것은 CSV 와 그림이다 (`docs/figures/xy_heatmap/` 도 비어 있다).  ⚠ 초판 이유 "실행되지 않았다" 는 틀렸다
+docs/data/oh2026_sigma_ionic.csv	absent	-	digest 가 제안만 한 파일 (`lit_oh2026` §600 "후보", `literature_yonsei` §156).  ⚠ **같은 값이 이미 `docs/data/oh2026_bimodal_sigma_porosity.csv` 에 있다** — 그쪽을 쓸 것.  이 등재가 그 사실을 가려, 그 CSV 의 σ_e 전치(CAM7:3↔6:4)가 오래 남았다 (2026-09-01 정정)
+docs/data/park2020_sigma_vs_ncm.csv	absent	-	문헌 digitize 계획 — 미실행 (제안만 문서에 있고 산출물 없음)
+docs/data/park2020_step4_params.csv	absent	-	문헌 digitize 계획 — 미실행
+docs/data/zhang2026_dry_cbd_percolation.csv	absent	-	문헌 digitize 계획 — 미실행
+docs/data/sse_sigma_ion_population.csv	absent	-	R_int 앵커 DB 계획 — 미실행
+origin_review/fixtures.py	absent	-	일회성 리뷰 픽스처 — 만들어 썼으나 커밋하지 않았다 (실행됨 ≠ 보존됨)
+#
+# ── ② 리포 밖 1차 증거 — ⚠ 인용하려면 sha256 이 있어야 한다 (R19 Q5) ──
+docs/data/mpm_dem_match.csv	external	사용자 WSL `~/work/mpm/` (sha256 미기록)	wallP 교차검증 **원자료**.  요약만 `docs/mpm_dem_wallP_crossvalidation.md` 로 들어왔다.  1차 증거인데 위치만 있고 해시가 없다
+post_lhs00_110/atom_2980000.liggghts	external	ibb `~/dem_test/post_lhs00_110/` (sha256 미기록)	ibb 런 산출물, 용량상 리포 밖 (영수증만 커밋).  1차 증거인데 해시 미기록
+post_lhs00_000/atom_2425000.liggghts	external	ibb `~/dem_test/post_lhs00_000/` (sha256 미기록)	ibb 런 산출물, 용량상 리포 밖 (영수증만 커밋).  1차 증거인데 해시 미기록
+#  ⚠ `regress/make_grid.py` 는 `external` 로 두려 했으나 **위치를 모른다** — 위치조차
+#     없는 것을 "외부 증거" 로 부르면 그 낱말이 거짓이 된다.  아는 대로 `absent` 로 둔다.
+regress/make_grid.py	absent	-	외부 회귀 하네스라고만 적혀 있고 **어디에 있는지 기록이 없다**.  이 브랜치에 없고, 재현하려면 먼저 위치를 찾아야 한다 (찾으면 `external` + 위치·sha256 으로 옮길 것)
+#
+# ── ③ 다른 브랜치 소관 — 검사기가 그 브랜치에서 실재를 확인한다 ──
+db/properties/sdcp_linio2_binding_phaseA.csv	cross_branch	origin/claude/friendly-meitner-lldvar	**DFT 쪽 브랜치**가 소유한다 (2026-09-01 그 브랜치에서 실재 확인).  초판 "DFT 저장소 소관 (gabia)" 은 **다른 저장소**인 것처럼 읽혔다
+webapp/data.py	cross_branch	origin/claude/friendly-meitner-lldvar	DFT 쪽 브랜치에 실재한다 (2026-09-01 확인).  ⚠ 초판 이유 "배포 웹앱 저장소의 파일" 은 **틀렸다** — 이 리포 안에 있고 브랜치만 다르다
+#
+# ── ④ 생성물·캐시 ──
+scratchpad/SI_21.txt	generated	(세션 작업공간)	일회성 스크래치 — 커밋 대상 아님
+litdb_cache/context__literature_yonsei_dtbl_2026.md	generated	litdb 캐시 생성	생성물 — 커밋 대상 아님
+docs/db/.mtime_cache.json	generated	(gitignore)	캐시 파일
+#
+# ── ⑤ 받았으나 커밋하지 않은 Codex 원문 ──
+docs/codex_phase_ab_crosscheck_20260807.md	absent	-	Codex 산출 원문 — 받았으나 커밋하지 않았다 (우리 응답 문서만 있다)
+docs/codex_phase_ab_reverification_20260807.md	absent	-	Codex 산출 원문 — 받았으나 커밋하지 않았다
+docs/codex_round3_crosscheck_20260807.md	absent	-	Codex 산출 원문 — 받았으나 커밋하지 않았다
+docs/codex_round4_crosscheck_20260807.md	absent	-	Codex 산출 원문 — 받았으나 커밋하지 않았다

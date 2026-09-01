@@ -1,10 +1,27 @@
 {
  "_RETRACTED": "⛔ HISTORICAL — 2026-08-06 에 발표된 덱의 기록이다.  안의 SDCP 수치(+52.0 % · +5.6 % · +18 % · σ_e 3.002 S/cm)는 2026-08-13 적대 리뷰로 **철회**됐다: 전부 vox 0.4 µm 점-스탬프 격자의 산물이고, 같은 규약을 조이면 σ_e 이득은 +42.15 → +8.49 % 로 내려가며 σ_ion 이득은 **부호가 뒤집힌다**(+7.42 → −0.92 %). 현재 말할 수 있는 것은 구-스탬프 규약의 측정 서술뿐이다 (vox 0.15 R=1.1232 · 0.125 R=1.1438, 미수렴).  정본 = CLAUDE.md SR-01 · docs/reviews/claims.json (CL-15/CL-24/CL-34/CL-41).  ⇒ 이 덱을 그대로 재발표하지 말 것.  (배너 2026-08-20, Codex CDX-IJ-04 — 웹앱 /api/seminar/slides 가 이 파일을 직접 서빙한다.)",
  "deck": "docs/seminar/seminar_20260806_DEM_MPM_SDCP_section.pptx",
- "n_slides": 14,
+ "n_slides": 15,
  "slides": [
   {
    "n": 1,
+   "kicker": "",
+   "title": "격자(vox)를 조이면 전자 헤드라인이 계속 내려가고 이온 이득은 부호가 뒤집힌다.",
+   "lead": [],
+   "tables": [],
+   "charts": [],
+   "figure_slots": [],
+   "extra": [
+    "⛔ HISTORICAL — 인용 금지",
+    "2026-08-06 발표본.  이 덱의 SDCP 전자·이온 이득 수치는 이후 **철회**됐다.",
+    "정본 = docs/reviews/claims.json  (CL-24 · CL-33 · CL-41)",
+    "이 파일은 발표 이력 보존용이며, 어떤 수치도 현행 결론으로 쓰지 말 것."
+   ],
+   "notes": "",
+   "sources": []
+  },
+  {
+   "n": 2,
    "kicker": "Part",
    "title": "",
    "lead": [],
@@ -23,7 +40,7 @@
    ]
   },
   {
-   "n": 2,
+   "n": 3,
    "kicker": "Motivation",
    "title": "The bottleneck is geometry, not a bulk property",
    "lead": [
@@ -72,7 +89,7 @@
    ]
   },
   {
-   "n": 3,
+   "n": 4,
    "kicker": "Workflow",
    "title": "Structure is created once; each solver adds a different observable",
    "lead": [
@@ -126,7 +143,7 @@
    ]
   },
   {
-   "n": 4,
+   "n": 5,
    "kicker": "STEP 1",
    "title": "DEM creates the load-bearing particle scaffold",
    "lead": [
@@ -182,7 +199,7 @@
    ]
   },
   {
-   "n": 5,
+   "n": 6,
    "kicker": "STEP 2",
    "title": "MPM adds plastic morphology to the DEM scaffold",
    "lead": [
@@ -226,7 +243,7 @@
    ]
   },
   {
-   "n": 6,
+   "n": 7,
    "kicker": "Validation",
    "title": "Independent equations do not imply independent predictions",
    "lead": [
@@ -267,7 +284,7 @@
    ]
   },
   {
-   "n": 7,
+   "n": 8,
    "kicker": "STEP 3",
    "title": "The deformed geometry becomes three transport networks",
    "lead": [
@@ -322,7 +339,7 @@
    ]
   },
   {
-   "n": 8,
+   "n": 9,
    "kicker": "STEP 4",
    "title": "Transport fields are converted into charge-discharge response",
    "lead": [
@@ -367,7 +384,7 @@
    ]
   },
   {
-   "n": 9,
+   "n": 10,
    "kicker": "STEP 5",
    "title": "Cycle degradation is an open decomposition, not repeated MPM",
    "lead": [
@@ -443,7 +460,7 @@
    ]
   },
   {
-   "n": 10,
+   "n": 11,
    "kicker": "Implementation",
    "title": "The webapp closes the hand-off loop",
    "lead": [
@@ -493,7 +510,7 @@
    ]
   },
   {
-   "n": 11,
+   "n": 12,
    "kicker": "SDCP",
    "title": "SDCP is explicit geometry, not an EMT correction",
    "lead": [
@@ -534,7 +551,7 @@
    ]
   },
   {
-   "n": 12,
+   "n": 13,
    "kicker": "SDCP",
    "title": "Replacing half of PTFE with SDCP opens both networks",
    "lead": [
@@ -581,7 +598,7 @@
    ]
   },
   {
-   "n": 13,
+   "n": 14,
    "kicker": "Mechanism",
    "title": "A small loss share can unlock a large conductivity gain",
    "lead": [
@@ -644,7 +661,7 @@
    ]
   },
   {
-   "n": 14,
+   "n": 15,
    "kicker": "Takeaways",
    "title": "What the current evidence supports",
    "lead": [
@@ -668,7 +685,9 @@
    ]
   }
  ],
- "unclassified": 15,
+ "unclassified": 19,
  "n_charts": 1,
- "no_notes": []
+ "no_notes": [
+  1
+ ]
 }

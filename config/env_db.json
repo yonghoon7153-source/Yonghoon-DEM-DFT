@@ -249,6 +249,19 @@
       "meaning": "v2 chaining: 이전 런이 newton_fail 로 끝난 오염 상태를 --init-state 로 강제 허용 (기본 = 명시 거부 + 체인 끊김 SKIP)",
       "solution_invariant": false,
       "on_when": "디버그 전용 — 오염 상태인 걸 알면서 이어야 할 때만 1 (결과 신뢰 라벨 필수; 정상 재개는 step4_only.sh 재실행)"
+    },
+    "MPM_S4_CG_BUDGET_S": {
+      "default": "0",
+      "meaning": "CG 전처리 비용-프로브 예산 [s] (0 = OFF).  >0 이면 사다리를 재 보고 승자를 고정한다",
+      "solution_invariant": false,
+      "cost": "⚠ 프로브가 궤적-중립이 아니다 — 프로브 직후 GPU 가 maxiter(20000)를 소진해 gpu_dead 가 걸린 실측이 있다 (그 인과는 미확정이나 배제할 수 없다).  프로덕션 런에 켜지 말 것",
+      "on_when": "전처리 승자를 A/B 로 다시 잴 때만"
+    },
+    "MPM_S4_CG_PROBE_MAX_DOF": {
+      "default": "1000000",
+      "meaning": "이 dof 를 넘으면 비용-프로브를 아예 건너뛴다 (승자 = gpu_jacobi 로 확정)",
+      "solution_invariant": true,
+      "note": "⚠ 측정된 교차점이 **아니다** — 가진 점은 '4.4M 에서 AMG 가 10.1× 진다 (43.5s vs 440.9s)' 하나뿐이고 AMG 가 이기기 시작하는 dof 는 미측정이다.  무지의 안전변이지 물리·수치 문턱이 아니므로, 필요하면 올려서 직접 재라"
     }
   },
   "anchors": {

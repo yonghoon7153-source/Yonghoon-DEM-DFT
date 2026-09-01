@@ -9,7 +9,8 @@
 Per-case accuracy actually TIGHTER than σ_ionic (median |err| 5.8% vs 7.7%,
 mean 7.1% vs 9.2%, 90pct 15.2% vs 20%); LOOCV slightly lower only because
 of smaller corpus + higher dim (14 vs 5).  Docs in
-`docs/sigma_electronic_stage21_close_out.md` (TBD); methodology scripts:
+**이 문서** (2026-09-01 정정: 예전에는 아직 없는 `sigma_electronic_stage21_close_out.md`
+를 가리켰는데, 그 파일은 끝내 만들어지지 않았고 그 기록은 여기로 들어왔다); methodology scripts:
 `scripts/electronic_push_to_ionic_grade.py` (Stage 21 candidate search),
 `scripts/electronic_shape_mismatch_diag.py` (within-panel inversion hunter
 + per-cluster MAE candidate test).

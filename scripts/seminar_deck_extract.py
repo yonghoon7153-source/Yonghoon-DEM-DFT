@@ -142,6 +142,19 @@ def main(argv=None):
     if not os.path.exists(a.deck):
         sys.exit(f'덱 없음: {a.deck}')
     data = extract(a.deck)
+    #  ★ 기존 산출물의 `_RETRACTED` 는 **이어받는다** (2026-09-01).  이 키는 덱에서
+    #    뽑히는 것이 아니라 사람이 붙인 철회 표지라, 추출기를 다시 돌리면 조용히
+    #    사라진다.  실사고: `56dcbca1` 이 pptx 1번 장에 배너를 끼웠는데 JSON 을 다시
+    #    안 뽑아 **화면은 배너 없는 14장짜리 옛 덱**을 계속 보여주고 있었다.
+    if os.path.exists(a.out):
+        try:
+            with open(a.out, encoding='utf-8') as f:
+                _old = json.load(f)
+            if _old.get('_RETRACTED') and not data.get('_RETRACTED'):
+                data = {'_RETRACTED': _old['_RETRACTED'], **data}
+                print('  ℹ 이전 산출물의 _RETRACTED 표지를 이어받았다')
+        except (OSError, ValueError) as _e:
+            print(f'  ⚠ 이전 산출물을 못 읽었다 ({type(_e).__name__}) — 표지 이어받기 생략')
     os.makedirs(os.path.dirname(a.out), exist_ok=True)
     with open(a.out, 'w', encoding='utf-8') as f:
         json.dump(data, f, ensure_ascii=False, indent=1)
@@ -186,8 +199,14 @@ def _selftest():
         try:
             d = extract(deck)
             ok('8) 실제 덱 추출 — 슬라이드 수 > 0', d['n_slides'] > 0)
-            ok('9) ★ 모든 슬라이드에 제목이 있다 (크기-분류가 통했다)',
-               all(s['title'] or s['n'] == 1 for s in d['slides']))
+            #  ★ 옛 판은 `s['n'] == 1` 로 표지를 면제했다.  그런데 `56dcbca1` 이 철회
+            #    배너를 **1번 장으로 앞에 끼우자** 표지가 2번이 되어 이 검사가 빨간불이
+            #    됐고, 아무 레인에도 없어 아무도 몰랐다.  ⇒ 면제 기준을 **위치가 아니라
+            #    내용**으로 바꾼다: 본문(lead·표·차트)이 없는 장 하나까지만 봐준다.
+            _untitled = [s for s in d['slides'] if not s['title']]
+            ok('9) ★ 제목 없는 장은 본문 없는 표지 하나뿐이다 (크기-분류가 통했다)',
+               len(_untitled) <= 1
+               and all(not (s['lead'] or s['tables'] or s['charts']) for s in _untitled))
             ok('10) ★ 노트가 있는 슬라이드가 대다수 (대본이 이 페이지의 핵심)',
                sum(1 for s in d['slides'] if s['notes']) >= d['n_slides'] - 1)
             ok('11) ★ 차트를 버리지 않는다 (σ_SDCP 민감도가 차트로만 들어 있다)',

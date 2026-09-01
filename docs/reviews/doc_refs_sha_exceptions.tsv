@@ -1,0 +1,20 @@
+# SHA 부재 예외 등재 — `문서<TAB>SHA<TAB>대체참조<TAB>이유`
+#   검사기 `scripts/check_doc_refs.py`
+#
+# ★ 왜 자연어 면제를 버렸나 (R19 P1-03)
+#   초판은 그 줄에 "없다"·"오기" 같은 낱말이 있으면 면제하고 그 면제를 **문서 단위**로
+#   넓혔다.  그러면 무관한 문장 하나가 문서 전체를 가려 준다 — 실측 반례:
+#   `codex_absorb_verdict_20260825.md` 07 행의 *"증인이 없다"* 때문에 같은 표의 정말
+#   없는 `c0ac0ad8` 여덟 건이 전부 면제됐다.  지금은 **문서와 SHA 가 둘 다 정확히**
+#   맞아야 면제된다.
+#
+# ⚠ 네 칸이 모두 있어야 한다.  그리고 등재는 **스스로 낡는다**:
+#   ⓐ 그 SHA 가 도달 가능해지면 검사기가 등재를 지적한다
+#   ⓑ 대체참조가 hex 인데 도달 불가면 그 주장이 거짓이라고 지적한다
+#      (다른 브랜치 이름처럼 hex 가 아닌 참조는 그 검사를 받지 않는다 — 여기서 확인할
+#       방법이 없다는 것을 숨기지 않고 이름 그대로 적는다)
+#
+docs/phase_b_pipeline_provenance_20260807.md	d9880b73	Codex/dem-mpm-crosscheck	리뷰가 기준으로 삼은 커밋이 origin 에 없다 — 그 문서 22행이 `git ls-remote` 로 부재를 실측해 적고 있다.  다른 브랜치 소관이라 여기서 도달 가능해질 일이 없다
+docs/reviews/codex_absorb_verdict_20260825.md	c0ac0ad8	8bcfbeff	리베이스 **이전** SHA (표 8행 전부).  같은 변경이 이 브랜치엔 `8bcfbeff` 로 들어가 있고 patch-id 동일이 확인돼 있다 — 원장 `findings.json` 의 `_commit_exists` 항목이 그 사고를 적고 있다.  판정문 본문은 받은 그대로 두고 정정은 문서 안 편집자 주로 병기한다
+docs/reviews/codex_r10_verdict_20260829.md	6ba54948	b84c955d	요청서 헤더의 오기.  그 문서 3행이 기준 커밋을 `b84c955d` 로 명시하고 오기임을 함께 적고 있다
+docs/reviews/codex_review_request_sulfide_doping_20260819.md	675d2a75	Codex/dem-mpm-crosscheck	Codex 쪽 브랜치의 검증 커밋 — 우리 리포에 없다 (같은 SHA 를 `codex_crosscheck_IJ_20260820.md` 233행이 "우리 리포에 없는" 것으로 이미 적고 있다)

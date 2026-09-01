@@ -145,6 +145,15 @@ run 'lhs_ext_design (봉인 CSV ↔ 상자 ↔ 해시)' \
     --box docs/data/lhs_ext_box_v2_20260829.json \
     --expect-sha256 bc72b8bf274842b7c54e319ceac70f5cb2804aa3635f329dfed34697bd52ea19
 
+#  ★★ 2026-09-01 (Codex R19 Q6) — **어디에서도 안 돌던 검사기 72개**를 여기서 돈다.
+#    규칙 K 는 이 파일 ↔ CI 를 손목록으로 대조하는데, *둘 다에 없는* 것은 원리적으로
+#    못 잡았다.  실측 101개 중 72개가 그 상태였고 그중 둘은 **실제로 빨간불**이었다
+#    (`env_db` 노브 누락 · `seminar_deck_extract` 표지 면제가 배너 삽입에 깨졌다).
+#    ⚠ 여기 이름을 72개 적지 않는 것이 요점이다 — 손목록은 또 낡는다.  드라이버가
+#      `docs/reviews/selftest_inventory.tsv` 를 읽고 돈다 (실측 합계 ~5 분).
+run 'selftest_inventory     (분류·레인·CI 의존)' python3 scripts/check_selftest_inventory.py --quiet
+run 'fast 자기검사 전수     (등재 기반 드라이버)' python3 scripts/check_selftest_inventory.py --run-fast
+
 echo
 if [ "$FAIL" = 0 ]; then
   echo "✓ 전부 통과 — 커밋해도 된다 (CI 가 같은 것을 다시 돈다)"
