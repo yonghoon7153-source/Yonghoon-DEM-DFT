@@ -5723,7 +5723,6 @@ function exportColorbarPNG(spec, fname) {
   a2.download = fname || 'colorbar.png'; document.body.appendChild(a2); a2.click(); a2.remove();
 }
 
-/* focus 컬러바 수치 눈금: 0 → step 간격 (1/2/5/10/20 자동) → 상단 ×top ⟨J⟩ */
 /* 컬러바 눈금.  ★ 눈금 **개수**를 먼저 묶고 그로부터 간격을 정한다.
    ⚠ 옛 판은 간격 사다리를 `top > 60 → 20` 에서 멈췄다.  focusing 이 10 급일 때를
      가정한 코드인데 실제 전자 필드는 10³ 급이 나온다 — `top ≈ 1190` 이면 20 간격으로
