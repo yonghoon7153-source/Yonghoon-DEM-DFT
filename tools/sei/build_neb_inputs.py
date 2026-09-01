@@ -66,7 +66,7 @@ TARGETS = {                       # tag → (구조 파일, 표시명)
     #     → 하전 결함의 1/L 이미지 항이 없어 유한크기에 훨씬 둔감하다.
     #   ⚠ 게이트 통과 최소단위는 **관용셀 3×3×3 (54원자 · λ₁ 10.53 Å)** 이다
     #     (primitive 3×3×3 은 9.12 Å 로 탈락 — 같은 "3×3×3" 이라도 기저가 다르면 갈린다).
-    "li_metal": ("db/structures/sei_li_metal_mp-135.vasp", "Li metal (bcc)"),
+    "li_metal": ("db/structures/sei_li_metal_bcc.vasp", "Li metal (bcc)"),
 }
 DFT_WORK = "/data/work/runs/sei_dft"      # run_sei_dft.sh 의 vc-relax 산출물 (이완본 출처)
 #: ⚠ Nd 계는 **frozen-4f PP** 로 따로 돌아서 이완본이 다른 뿌리에 있다
