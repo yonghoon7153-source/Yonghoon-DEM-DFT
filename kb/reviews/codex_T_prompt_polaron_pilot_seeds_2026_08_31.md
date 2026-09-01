@@ -3,7 +3,7 @@ title: "리뷰 요청 T — 폴라론 pilot, phase S 착수 전 (seed 생성 완
 date: 2026-08-31
 updated: 2026-08-31
 tags: [review, codex, sdcp, polaron, orca, pilot, prereg]
-status: 발송 대기
+status: 회신 수령 — `kb/reviews/codex_T_reply_polaron_pilot_2026_08_31.md`
 confidence: medium
 verificationStatus: unverified
 explored: false

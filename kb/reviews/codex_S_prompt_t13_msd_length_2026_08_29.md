@@ -3,7 +3,7 @@ title: "Codex 회신 S 요청 프롬프트 — T13 (MSD 생산길이 200 ps 타�
 date: 2026-08-29
 updated: 2026-08-29
 tags: [review, codex, md, msd, window, finite-size, prompt, t13]
-status: 발송 대기
+status: 회신 수령 (원문 파일 없음 — 근거: 판정 등재 db/properties/t13_msd_length_verdict_2026_08_29.json)
 confidence: medium
 verificationStatus: unverified
 explored: false

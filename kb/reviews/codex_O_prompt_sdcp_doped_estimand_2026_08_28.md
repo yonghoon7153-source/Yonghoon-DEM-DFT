@@ -3,7 +3,7 @@ title: "Codex 회신 O 요청 프롬프트 — SDCP doped estimand 카드 (계�
 date: 2026-08-28
 updated: 2026-08-28
 tags: [review, codex, sdcp, estimand, prompt]
-status: 발송 대기
+status: 회신 수령 — `kb/reviews/codex_O_sdcp_doped_estimand_reply_2026_08_28.md`
 confidence: medium
 verificationStatus: unverified
 explored: false

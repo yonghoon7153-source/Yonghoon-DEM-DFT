@@ -3,7 +3,7 @@ title: "Codex 회신 U 요청 — 중성 SDCP 흡착 **닫힘 조건 사전등�
 date: 2026-08-29
 updated: 2026-08-29
 tags: [review, codex, sdcp, adsorption, prereg, closure, pose-selection, vasp]
-status: 발송 대기
+status: 회신 수령 (원문 파일 없음 — 근거: U P0-2 가 회신 W 프롬프트에 인용)
 confidence: medium
 verificationStatus: unverified
 explored: false

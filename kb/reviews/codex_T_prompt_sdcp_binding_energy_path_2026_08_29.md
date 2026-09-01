@@ -3,7 +3,7 @@ title: "Codex 회신 T 요청 — 중성 SO₃H 흡착에너지를 원고에 넣
 date: 2026-08-29
 updated: 2026-08-29
 tags: [review, codex, sdcp, adsorption, estimand, vasp, spin, prompt]
-status: 발송 대기
+status: 회신 수령 (원문 파일 없음 — 근거: T P0-1 술포네이트 기전 철회가 db 에 등재)
 confidence: medium
 verificationStatus: unverified
 explored: false

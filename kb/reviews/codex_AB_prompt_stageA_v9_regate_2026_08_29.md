@@ -3,7 +3,7 @@ title: "Codex 재검토 요청 AB — 회신 AA 의 P0 5건 + Q2 처리, 그리�
 date: 2026-08-29
 updated: 2026-08-29
 tags: [review, codex, sdcp, vasp, bundle, stage-a, regate]
-status: 발송 대기
+status: 회신 수령 (원문 파일 없음 — 근거: AD (Stage A v10))
 confidence: medium
 verificationStatus: unverified
 explored: false

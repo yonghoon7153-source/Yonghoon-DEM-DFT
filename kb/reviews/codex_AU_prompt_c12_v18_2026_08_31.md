@@ -3,7 +3,7 @@ title: "리뷰 요청 AU — C-12 v18 (회신 AT P0 5건 + 해제조건 9 이행
 date: 2026-08-31
 updated: 2026-08-31
 tags: [review, codex, sdcp, c12, vasp, handoff, prompt]
-status: 발송 대기
+status: 회신 수령 — `kb/reviews/codex_AV_reply_c12_v18_2026_08_31.md`
 kind: review-request
 system: sdcp
 confidence: high

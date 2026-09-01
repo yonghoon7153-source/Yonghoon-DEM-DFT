@@ -3,7 +3,7 @@ title: "Codex 회신 P 요청 프롬프트 — wave1 INCAR 전수 감사 + doped
 date: 2026-08-28
 updated: 2026-08-28
 tags: [review, codex, sdcp, incar, closure, prompt]
-status: 발송 대기
+status: 회신 수령 — `kb/reviews/codex_P_wave1_incar_audit_reply_2026_08_28.md`
 confidence: medium
 verificationStatus: unverified
 explored: false

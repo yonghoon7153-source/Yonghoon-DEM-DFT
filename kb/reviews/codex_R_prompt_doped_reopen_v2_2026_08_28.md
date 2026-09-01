@@ -3,7 +3,7 @@ title: "Codex 회신 R 요청 프롬프트 — doped 재개 설계 v2 의 계산
 date: 2026-08-28
 updated: 2026-08-28
 tags: [review, codex, sdcp, reopen, estimand, prompt]
-status: 발송 대기
+status: 회신 수령 — `kb/reviews/codex_R_doped_reopen_v2_reply_2026_08_28.md`
 confidence: medium
 verificationStatus: unverified
 explored: false

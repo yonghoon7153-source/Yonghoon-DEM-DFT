@@ -90,6 +90,14 @@ def title_of(p, fm):
 # ─────────────────────────────────────────────────────────────────────────────
 def cmd_lint():
     errors, warnings = [], []
+    # 🔴 2026-08-31 — 나이만 보는 규칙은 '회신이 왔는데 status 가 대기' 를 못 봤다.
+    #   프롬프트 27건이 그렇게 굳어 있었다. 증거와 status 의 **모순**을 직접 본다.
+    try:
+        _, _contra = review_chain()
+        for _n, _st, _why in _contra:
+            warnings.append("kb/reviews/%s: status '%s' 인데 %s" % (_n, _st, _why))
+    except Exception as _e:                                      # noqa: BLE001
+        warnings.append("리뷰 사슬 검사 실패: %r" % _e)
     legacy_missing = []            # 레거시 문서의 깨진 경로 (요약 출력)
     pages = all_pages()
     n_fm = 0
@@ -448,16 +456,234 @@ def selftest_env():
     return 0 if ok else 1
 
 
+
+# ── 리뷰 사슬 (2026-08-31) ────────────────────────────────────────────────
+#: 프롬프트 파일명 규약: codex_<라벨>_prompt_<주제>_<날짜>.md
+#: 회신 파일명은 **라벨이 어긋난다** — 실물에 둘 다 있다:
+#:    codex_AT_reply_...  ← codex_AT_prompt_...   (같은 라벨)
+#:    codex_AV_reply_...  ← codex_AU_prompt_...   (다음 라벨)
+#: 그래서 파일명으로 짝을 추측하지 않는다. 본문의 `요청:` 역링크가 정본이고,
+#: 없으면 주제 slug 일치를 쓴다.
+#: ⚠ 파일명 날짜는 `2026_08_31` — **밑줄**이다 (frontmatter 의 `2026-08-31` 과 다르다)
+REV_PROMPT = re.compile(r"^codex_([A-Z]{1,2}\d?)_prompt_(.+)_(\d{4}_\d{2}_\d{2})\.md$")
+REV_REPLY = re.compile(r"^codex_([A-Z]{1,2}\d?)_(?:reply_)?(.+?)(?:_reply)?_(\d{4}_\d{2}_\d{2})\.md$")
+#: status 가 이 꼴이면 '아직 안 보냈다' 는 주장이다
+REV_WAITING = re.compile(r"발송\s*(대기|전)|미발송")
+#: 회신 본문이 프롬프트를 가리키는 역링크
+REV_BACKLINK = re.compile(r"요청[:\s]*`?(kb/reviews/[^\s`]+\.md)`?")
+#: 판정을 인용한 흔적 — 회신에만 있는 것들 (P0 번호·해제조건·Q 답)
+REV_VERDICT = re.compile(r"회신\s+([A-Z]{1,2}\d?)\s*(?:P0|P1|해제조건|판정|Q\d)")
+
+
+def review_chain():
+    """kb/reviews 를 훑어 (프롬프트, 회신, 모순) 을 낸다.
+
+    → (records, contradictions)
+      records: dict(label, prompt, date, status, reply, answered_by, evidence)
+
+    ⛔ 이 함수가 **못 하는 것**
+      · 회신이 대화에만 있고 파일이 없으면 `reply=None` 이다 — 인용 흔적으로
+        '받았다' 고 **추정**할 뿐 원문을 복원하지 못한다.
+      · 라벨이 캠페인 사이에 재사용된다 (S·T·U 가 각 2개). 인용 횟수는 두 캠페인이
+        **합산**되므로 라벨만으로 어느 쪽인지 못 가른다 — 그래서 인용은 보조 증거다.
+    """
+    rd = REPO / "kb" / "reviews"
+    prompts, replies = {}, []
+    for p in sorted(rd.glob("*.md")):
+        m = REV_PROMPT.match(p.name)
+        if m:
+            fm, _ = parse_fm(p.read_text(errors="ignore"))
+            prompts[p.name] = {"label": m.group(1), "slug": m.group(2),
+                               "date": m.group(3).replace("_", "-"), "path": p,
+                               "status": (fm or {}).get("status", "(frontmatter 없음)")}
+            continue
+        if "_reply" in p.name:
+            m2 = REV_REPLY.match(p.name)
+            t = p.read_text(errors="ignore")
+            bl = REV_BACKLINK.search(t)
+            replies.append({"path": p, "name": p.name,
+                            "label": m2.group(1) if m2 else "?",
+                            "slug": m2.group(2) if m2 else "",
+                            "backlink": bl.group(1) if bl else None})
+    # 판정 인용 (보조 증거) — repo 전체에서
+    cited = {}
+    for f in list((REPO / "kb").rglob("*.md")) + list((REPO / "db").rglob("*.json")):
+        try:
+            t = f.read_text(errors="ignore")
+        except OSError:
+            continue
+        for m in REV_VERDICT.finditer(t):
+            cited[m.group(1)] = cited.get(m.group(1), 0) + 1
+
+    _lab_n = {}
+    for _r in prompts.values():
+        _lab_n[_r["label"]] = _lab_n.get(_r["label"], 0) + 1
+    for name, rec in prompts.items():
+        rec["reply"], rec["answered_by"], rec["evidence"] = None, None, []
+        for r in replies:
+            if r["backlink"] and r["backlink"].endswith(name):
+                rec["reply"], rec["answered_by"] = r["name"], r["label"]
+                rec["evidence"].append("회신 본문의 `요청:` 역링크")
+                break
+        if not rec["reply"]:
+            # 주제 slug 일치 (역링크 없는 판). ⚠ 완전일치만 보면 실물을 놓친다 —
+            #   `X_bundle_reply` ↔ `X_prompt_prospective_bundle_ready`,
+            #   `T_reply_polaron_pilot` ↔ `T_prompt_polaron_pilot_seeds`.
+            #   그래서 **같은 라벨 안에서** 토큰 겹침으로 맺는다. 라벨을 고정하는
+            #   것이 안전장치다 (라벨이 다르면 겹쳐도 맺지 않는다).
+            _pt = set(rec["slug"].split("_"))
+            for r in replies:
+                if r["label"] != rec["label"] or not r["slug"]:
+                    continue
+                _rt = set(r["slug"].split("_"))
+                if _rt <= _pt or _pt <= _rt or len(_rt & _pt) >= 2:
+                    rec["reply"], rec["answered_by"] = r["name"], r["label"]
+                    rec["evidence"].append("같은 라벨 · 주제 토큰 일치 %s"
+                                           % sorted(_rt & _pt))
+                    break
+        if not rec["reply"]:
+            # ⚠ 라벨이 **어긋난** 짝: `AR_reply_c12_v15` ← `AQ_prompt_c12_v15`.
+            #   역링크도 같은 라벨도 없으므로 주제가 **정확히 같을 때만** 맺는다
+            #   (토큰 겹침으로 느슨하게 맺으면 캠페인이 섞인다).
+            for r in replies:
+                if r["slug"] and r["slug"] == rec["slug"]:
+                    rec["reply"], rec["answered_by"] = r["name"], r["label"]
+                    rec["evidence"].append(
+                        "⚠ 라벨 어긋남(%s→%s) · 주제 slug 완전일치"
+                        % (rec["label"], r["label"]))
+                    break
+        # ⚠ 라벨이 **재사용**되면(S·T·U 가 각 2개) 인용 횟수는 두 캠페인이 합산된다.
+        #   2026-08-31 실물: U(polaron S0)는 미발송인데 U(neutral_close)의 인용 11회를
+        #   물려받아 '회신 수령' 으로 오판됐다. ⇒ 재사용 라벨은 인용을 **증거로 쓰지 않는다**.
+        n = cited.get(rec["label"], 0)
+        rec["label_reused"] = _lab_n.get(rec["label"], 0) > 1
+        if n and not rec["label_reused"]:
+            rec["evidence"].append("판정 인용 %d회" % n)
+        elif n:
+            rec["evidence"].append("⚠ 인용 %d회 — 라벨 재사용이라 **증거 아님**" % n)
+        rec["cited"] = 0 if rec["label_reused"] else n
+
+    contra = []
+    for name, rec in sorted(prompts.items()):
+        if not REV_WAITING.search(str(rec["status"])):
+            continue
+        if rec["reply"]:
+            contra.append((name, rec["status"],
+                           "회신 파일이 있다: %s" % rec["reply"]))
+        elif rec["cited"] >= 5:
+            contra.append((name, rec["status"],
+                           "판정이 %d회 인용됐다 — 회신을 받은 것으로 보인다 "
+                           "(원문 파일 없음)" % rec["cited"]))
+    return prompts, contra
+
+
+def cmd_reviews(write=False):
+    """리뷰 사슬을 산출물에서 재구성해 보여 준다 (`--write` 면 INDEX 갱신)."""
+    prompts, contra = review_chain()
+    print("프롬프트 %d건" % len(prompts))
+    if contra:
+        print("\n🔴 status 와 증거가 **모순**되는 것 %d건:" % len(contra))
+        for n, st, why in contra:
+            print("   %-56s [%s]\n        → %s" % (n, st, why))
+    else:
+        print("모순 0건")
+    if write:
+        L = ["---",
+             'title: "리뷰 사슬 색인 — 프롬프트↔회신 (자동 생성)"',
+             "date: %s" % datetime.date.today().isoformat(),
+             "updated: %s" % datetime.date.today().isoformat(),
+             "tags: [index, review, codex]", "status: 자동생성", "kind: index",
+             "confidence: high", "verificationStatus: verified",
+             "verifiedAt: %s" % datetime.date.today().isoformat(),
+             "verifiedBy: tools/kb_wiki.py reviews --write (산출물에서 재구성)",
+             "explored: false", "authoredBy: agent", "effort: low",
+             "claimType: descriptive", "evidenceScope: multi-source-primary",
+             "---", "",
+             "# 리뷰 사슬 색인", "",
+             "> ⛔ **손으로 고치지 않는다.** `python3 tools/kb_wiki.py reviews --write` 로",
+             "> 재생성한다. 정본은 `kb/reviews/` 의 실물 파일이다.", "",
+             "회신 파일명의 라벨이 프롬프트와 **어긋나는 판이 섞여 있다**",
+             "(`AT_reply`←`AT_prompt` 이지만 `AV_reply`←`AU_prompt`).",
+             "그래서 짝은 파일명이 아니라 회신 본문의 `요청:` 역링크로 맺는다.", "",
+             "| 라벨 | 날짜 | 프롬프트 | 회신 | status | 근거 |",
+             "|---|---|---|---|---|---|"]
+        for name, r in sorted(prompts.items(), key=lambda kv: (kv[1]["date"], kv[0])):
+            L.append("| %s | %s | `%s` | %s | %s | %s |"
+                     % (r["label"], r["date"], name,
+                        ("`%s`" % r["reply"]) if r["reply"] else "—",
+                        r["status"], "; ".join(r["evidence"]) or "—"))
+        if contra:
+            L += ["", "## 🔴 모순 (status 는 대기인데 증거는 회신 수령)", ""]
+            L += ["- `%s` [%s] — %s" % c for c in contra]
+        (REPO / "kb" / "reviews" / "INDEX.md").write_text("\n".join(L) + "\n",
+                                                          encoding="utf-8")
+        print("\n→ kb/reviews/INDEX.md")
+    return 1 if contra else 0
+
+
+def selftest_reviews():
+    """⛔음성 포함 — 모순 탐지가 실제로 도는가."""
+    ok = [True]
+
+    def chk(c, m):
+        print(("  ✔ " if c else "  ⛔ ") + m)
+        if not c:
+            ok[0] = False
+
+    prompts, contra = review_chain()
+    chk(len(prompts) > 10, "리뷰 사슬을 실물에서 읽는다 (%d 프롬프트)" % len(prompts))
+    # 양성: 역링크가 있는 짝을 실제로 맺는가
+    _bl = [n for n, r in prompts.items()
+           if r["reply"] and "역링크" in " ".join(r["evidence"])]
+    chk(bool(_bl), "회신 본문의 `요청:` 역링크로 짝을 맺는다 (%s)" % (_bl[:1] or "없음"))
+    # ⛔음성: 대기 상태 + 회신 파일 → 모순으로 **잡혀야** 한다
+    _fake = {"x.md": {"label": "ZZ", "slug": "s", "date": "2026-01-01",
+                      "status": "발송 대기", "reply": "r.md", "cited": 0,
+                      "evidence": [], "path": None}}
+    _c = [(n, r["status"], "x") for n, r in _fake.items()
+          if REV_WAITING.search(str(r["status"])) and r["reply"]]
+    chk(len(_c) == 1, "[음성] 대기 상태인데 회신 파일이 있으면 모순으로 잡는다")
+    chk(not REV_WAITING.search("회신 수령 — 후속 AB"),
+        "[음성] '회신 수령' 은 대기로 세지 않는다")
+    chk(bool(REV_WAITING.search("발송전")) and bool(REV_WAITING.search("발송 대기")),
+        "'발송전'·'발송 대기' 두 표기를 다 잡는다 (실물에 둘 다 있다)")
+    # ⛔음성: 파일명으로 짝을 추측하면 틀리는 실물 사례 (AV_reply ← AU_prompt)
+    _au = [r for n, r in prompts.items() if n.startswith("codex_AU_prompt")]
+    if _au:
+        chk(_au[0]["reply"] and _au[0]["reply"].startswith("codex_AV_reply"),
+            "[음성] 라벨이 어긋난 짝(AU 프롬프트 ← AV 회신)을 역링크로 맺는다")
+    _aq = [r for n, r in prompts.items() if n.startswith("codex_AQ_prompt")]
+    if _aq:
+        chk(_aq[0]["reply"] and _aq[0]["reply"].startswith("codex_AR_reply"),
+            "[음성] 역링크도 같은 라벨도 없는 짝(AQ←AR)을 주제 완전일치로 맺는다")
+    # ⛔음성: 주제가 다르면 라벨이 어긋나도 **맺지 않는다** (캠페인 섞임 방지)
+    chk(not any(r["reply"] and "sdcp_binding" in n and "polaron" in str(r["reply"])
+                for n, r in prompts.items()),
+        "[음성] 라벨 재사용(T 둘)에서 다른 캠페인의 회신을 잘못 맺지 않는다")
+    _reused = sorted({r["label"] for r in prompts.values() if r.get("label_reused")})
+    chk(bool(_reused), "재사용된 라벨을 표시한다 (%s)" % _reused)
+    _us0 = [r for n, r in prompts.items() if n.startswith("codex_U_prompt_polaron")]
+    if _us0:
+        chk(not _us0[0]["reply"] and _us0[0]["cited"] == 0,
+            "⛔음성: 재사용 라벨(U)의 인용을 **증거로 쓰지 않는다** — 2026-08-31 에 "
+            "미발송 U(polaron S0)가 다른 U 의 인용으로 '회신 수령' 오판됐다")
+    print("reviews selftest %s" % ("PASS" if ok[0] else "FAIL"))
+    return 0 if ok[0] else 1
+
+
 def main():
     if "--selftest" in sys.argv:
-        return selftest_env()
-    if len(sys.argv) < 2 or sys.argv[1] not in ("lint", "index", "new", "env"):
+        return selftest_env() or selftest_reviews()
+    if len(sys.argv) < 2 or sys.argv[1] not in ("lint", "index", "new", "env",
+                                                "reviews"):
         print(__doc__)
         return 1
     if sys.argv[1] == "lint":
         return cmd_lint()
     if sys.argv[1] == "index":
         return cmd_index()
+    if sys.argv[1] == "reviews":
+        return cmd_reviews("--write" in sys.argv)
     if sys.argv[1] == "env":
         return cmd_env("--script" in sys.argv)
     if len(sys.argv) != 4:

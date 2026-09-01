@@ -3,7 +3,7 @@ title: "Codex 회신 X 요청 — prospective 번들 40잡, 던지기 전 최종
 date: 2026-08-29
 updated: 2026-08-29
 tags: [review, codex, sdcp, vasp, prereg, closure, bundle]
-status: 발송 대기
+status: 회신 수령 — `kb/reviews/codex_X_bundle_reply_2026_08_29.md`
 confidence: medium
 verificationStatus: unverified
 explored: false

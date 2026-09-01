@@ -3,7 +3,7 @@ title: "리뷰 요청 S — SDCP 백본 폴라론 estimand (계산 전, §1–3 
 date: 2026-08-31
 updated: 2026-08-31
 tags: [review, codex, sdcp, polaron, estimand, orca, prereg]
-status: 발송 대기
+status: 회신 수령 (원문 파일 없음 — 근거: 후속 T (폴라론 pilot seeds))
 confidence: medium
 verificationStatus: unverified
 explored: false

@@ -3,7 +3,7 @@ title: "리뷰 요청 AQ — C-12 v15 (회신 AP 해제조건 12건 이행)"
 date: 2026-08-31
 updated: 2026-08-31
 tags: [review, codex, sdcp, c12, vasp, bundle, staged, potcar, attestation]
-status: 발송 대기
+status: 회신 수령 — `kb/reviews/codex_AR_reply_c12_v15_2026_08_31.md`
 confidence: medium
 verificationStatus: unverified
 explored: false
