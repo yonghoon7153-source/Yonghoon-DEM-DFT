@@ -7,9 +7,9 @@
  "근거": "kb/reviews/codex_AT_reply_c12_v17_2026_08_31.md",
  "0_시각_증거": "VASP 결과를 **하나도 보기 전**이다. 이 시점의 계산 산출물은 0개다 — git log 가 그 순서의 증거다.",
  "1_보고량": {
-  "이름": "E_ads (adsorption energy) · 조각 간 차는 ΔE_ads",
-  "한국어": "흡착에너지 E_ads · 두 조각의 차 ΔE_ads",
-  "식": "D = (E_C_sdcp − E_G_sdcp) − (E_C_control − E_G_control)",
+  "이름": "ΔE_ads (두 조각의 흡착에너지 차) — 개별 E_ads 는 산출하지 않는다",
+  "한국어": "흡착에너지 차 ΔE_ads · 개별 E_ads 는 E_S 를 안 재서 미산출",
+  "식": "ΔE_ads = [E_C(sdcp) − E_G(sdcp)] − [E_C(ptfe_c10) − E_G(ptfe_c10)]   [**이것만 보고한다**]",
   "⛔_부르면_안_되는_이름": [
    "binding energy · free energy — 평형·고립계 양이 아니다",
    "⚠ 이름이 아니라 **용법 금지**: 이 E_ads 를 옛 wave1 값과 **같은 표에** 두지 않는다 (프로토콜이 다르다 — 그쪽은 별도 마감·보류 상태다)"
@@ -25,13 +25,16 @@
    "용매·계면 전기장"
   ],
   "⚠_개명_2026_09_01": "1저자 결정: 'adsorption' 을 쓴다. 종전 판은 그 단어 자체를 금지어로 뒀는데, README·MANIFEST·프로토콜이 서로 다른 이름을 쓰는 상태(회신 AY P0-4)를 만들었다. ⇒ **한정어 'fixed-geometry' 를 붙인 형태로 통일**한다 — 결정을 따르되 재는 것과 부르는 것이 어긋나지 않게. 한정어를 떼는 것은 별도 결정이 필요하다.",
-  "기호": "E_ads(f) = E_C(f) − E_G(f)   ·   ΔE_ads = E_ads(SDCP) − E_ads(control)",
+  "기호": "E_ads(f) = E_C(f) − E_S − E_G(f)   [정의 — 이 묶음은 **산출하지 않는다**]  ·  ΔE_ads = [E_C(sdcp) − E_G(sdcp)] − [E_C(ptfe_c10) − E_G(ptfe_c10)]",
   "⚠_이름에_단서를_넣지_않는다": "2026-09-01 1저자: **그냥 E_ads 로 쓴다.** 단서는 이름이 아니라 Methods 가 진다 (아래 `Methods_필수문장`). 종전 판이 이 이름을 금지어로 뒀던 것은 철회한다 — 금지의 취지(재는 것과 부르는 것을 어긋나게 하지 말 것)는 Methods 문장이 대신 진다.",
   "Methods_필수문장": {
    "ko": "흡착에너지는 MLIP(UMA-s-1p1)로 이완한 기하 위의 **단일점 계산**으로 얻었고, DFT 수준의 이온 이완은 수행하지 않았다. 따라서 조각 변형·표면 변형 에너지와 고정된 기체 conformer 선택 효과가 값에 포함된다.",
    "en": "Adsorption energies were obtained as single-point calculations on MLIP-relaxed (UMA-s-1p1) geometries; no further ionic relaxation was performed at the DFT level. Fragment and surface deformation energies and the choice of the fixed gas-phase conformer are therefore included in the reported values.",
-   "⛔": "이 문장이 빠지면 ΔΔE_ads 라는 이름이 재는 것과 어긋난다 — 그때는 인용 불가다."
-  }
+   "⛔": "이 문장이 빠지면 ΔE_ads 라는 이름이 재는 것과 어긋난다 — 그때는 인용 불가다."
+  },
+  "⛔_정정_2026_09_02": "회신 BA P0-4 — 종전 식 `E_ads(f) = E_C(f) − E_G(f)` 에는 **clean-slab 항 E_S 가 없었다.** 그건 흡착에너지가 아니라 '복합체 − 기체' 이고, 그 이름으로 부르면 정의가 틀린 채로 나간다. 게다가 같은 문서가 개별 E_ads 를 산출물이 아니라고 하면서 이름은 E_ads 로 썼다 (내부 모순). ⇒ 정의는 균형 잡힌 형태로 적고 **보고하는 것은 ΔE_ads 하나**임을 이름 자리에서부터 못 박는다.",
+  "E_S_는_왜_없나": "공통 clean slab E_S 는 ΔE_ads 의 두 대괄호에서 서로 빼지므로 **대수적으로 소거**된다. 그래서 ΔE_ads 만 보고하는 한 clean-slab 추가 잡이 필요 없다 (회신 BA 검증 항목 · Q3). 서로 다른 표면 변형은 E_C 에 남으므로 현재 단서와도 정합한다.",
+  "개별_E_ads_는": "E_S 를 재지 않았으므로 **산출 불가**다. 값을 만들지 않고, 만들 수 있는 것처럼 적지도 않는다."
  },
  "2_허용_서술_이대로만": {
   "문구": "사전등록한 18.272 × 11.512 Å² lateral cell, 1 fragment/cell (0.5009 nm⁻²), fixed geometry, pm1, PBE+U+D3 프로토콜에서의 differential complex–gas reference energy 이다. 잔여 lateral-size/coverage 의존은 추정하지 않았으며, 고립 흡착·평형 결합·실제 전극 피복률로 일반화하지 않는다.",
@@ -119,6 +122,11 @@
    "from": "fixed-geometry differential complex–gas reference energy",
    "to": "E_ads (adsorption energy) · 차는 ΔE_ads",
    "경위": "1차 'fixed-geometry adsorption energy difference' → 1저자 기각(그런 이름 쓰는 논문 없다, 옳다) → 2차 'ΔΔE_ads' → 1저자: **그냥 E_ads**. 단서는 Methods 로."
+  },
+  {
+   "at": "2026-09-02",
+   "state": "proposed",
+   "note": "회신 BA P0-4 — E_ads 식에서 누락됐던 clean-slab 항 E_S 를 정의에 넣고, 보고량을 **ΔE_ads 하나**로 못 박았다. 개별 E_ads 는 미산출로 명시. ⚠ 비준은 여전히 사람 몫이다."
   }
  ],
  "8_POTCAR_정책_2026_09_01": {

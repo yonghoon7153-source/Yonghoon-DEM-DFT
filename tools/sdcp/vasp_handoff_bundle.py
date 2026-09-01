@@ -1089,9 +1089,13 @@ try:
     s = json.load(open("POTCAR_ROOT_SEAL.json"))
 except Exception as e:
     sys.exit("⛔ attestation/봉인 파싱 실패: %r" % (e,))
-if not a.get("sealed_before_production"):
-    sys.exit("⛔ attestation 이 생산 전에 만들어졌다는 표시가 없습니다")
-_as, _ss = a.get("source_sha256") or {}, s.get("source_sha256") or {}
+# ⛔ 회신 BA 해제조건 8 — **스키마가 어긋나 정상 증서도 거부됐다.**
+#   생성기는 `made_before_production` / `variants` 를 쓰는데 이 게이트는
+#   `sealed_before_production` / `source_sha256` 을 요구했다. 실제 키를 쓴다.
+if not a.get("made_before_production"):
+    sys.exit("⛔ attestation 이 생산 전에 만들어졌다는 표시(made_before_production)가 없습니다")
+_as = {k: (v or {}).get("source_sha256") for k, v in (a.get("variants") or {}).items()}
+_ss = s.get("source_sha256") or {}
 _d = sorted(k for k in set(_as) | set(_ss) if _as.get(k) != _ss.get(k))
 if _d:
     sys.exit("⛔ attestation 과 root 봉인의 원본 SHA 가 다릅니다: %s" % _d[:4])
@@ -2078,7 +2082,12 @@ if [ -n "$PROD" ]; then
   echo "   attestation 은 **첫 VASP 실행 전에만** 만들 수 있습니다 (회신 AR P0-6)."
   exit 1
 fi
-VASP_BIN=$(command -v "${VASP_EXE:-vasp_std}")
+# ⛔ 회신 BA 해제조건 8 (2026-09-02) — **PATH 조회 폐기.** 봉인·러너는 이미 절대경로만
+#   받는데 이 스크립트만 PATH 에서 `vasp_std` 를 찾고 있었다 (같은 우회가 여기 남았다).
+: "${VASP_EXE:?VASP_EXE=/abs/path/to/vasp_std 를 주세요 (PATH 에서 찾지 않습니다)}"
+case "$VASP_EXE" in /*) : ;; *) echo "⛔ VASP_EXE 는 절대경로여야 합니다: $VASP_EXE"; exit 2 ;; esac
+[ -x "$VASP_EXE" ] || { echo "⛔ VASP_EXE 가 실행파일이 아닙니다: $VASP_EXE"; exit 2; }
+VASP_BIN="$VASP_EXE"
 export VASP_BIN BUNDLE_ZIP_SHA256
 python3 - <<'PYA'
 import json, os, hashlib, time, subprocess
@@ -3625,6 +3634,19 @@ def citation_status(man, cl):
     if _pi and _pi.get("allowed_claim") not in ("paw_release_attested",):
         b.append("potcar_identity.allowed_claim=%r — 외부 앵커가 없다"
                  % _pi.get("allowed_claim"))
+    # ⛔ 회신 BA 해제조건 3 — 거버넌스 비준이 없으면 인용 자격이 서지 않는다.
+    _gb = (man or {}).get("governance_binding") or {}
+    if _gb:
+        if not _gb.get("all_ratified"):
+            _un = sorted(k for k, v in (_gb.get("decisions") or {}).items()
+                         if not v.get("ratified"))
+            b.append("거버넌스 미비준 %s — 비용 발생 전에 닫아야 한다 (AZ P0-6)" % _un)
+        _rf = _gb.get("reference_files_sha256") or {}
+        if any(v is None for v in _rf.values()):
+            b.append("참조 문서 SHA 결박 누락 %s"
+                     % sorted(k for k, v in _rf.items() if v is None))
+    else:
+        b.append("governance_binding 이 없다 — 구판 번들이다 (BA 해제조건 3)")
     return {"manuscript_citable": not b,
             "blockers": b,
             "why": ("원고 인용 가능" if not b else
@@ -4129,13 +4151,45 @@ def _selftest_closure(chk):
         and "탐색용" in _cs_post["why"],
         "⛔음성 BA P0-3: post_hoc + overall=None 이면 `manuscript_citable=false` 를 "
         "**기계가 집행**한다 (종전엔 분석기가 그 필드를 읽지도 않았다)")
+    # ⛔ 회신 BA 해제조건 3 — 거버넌스 결박·비준이 있어야 인용 자격이 선다
+    _GBOK = {"all_ratified": True,
+             "decisions": {"D-x": {"ratified": True}},
+             "reference_files_sha256": {"a.json": "0" * 64}}
     _cs_ok = citation_status(
         {"potcar_identity_policy": {"mode": "require_attestation",
-                                    "manuscript_citable": True}},
+                                    "manuscript_citable": True},
+         "governance_binding": _GBOK},
         {"overall_citable_at_0.01eV": True,
          "potcar_identity": {"allowed_claim": "paw_release_attested"}})
     chk(_cs_ok["manuscript_citable"] is True and not _cs_ok["blockers"],
-        "회신 BA P0-3 양성: 세 조건(정책·overall·외부앵커)이 다 서면 인용 가능이다")
+        "회신 BA P0-3 양성: 네 조건(정책·overall·외부앵커·거버넌스 비준)이 다 서면 "
+        "인용 가능이다 (실제 %s)" % _cs_ok["blockers"][:2])
+    # ⛔음성 BA 해제조건 3 — 비준 없이는 인용 불가
+    _cs_gov = citation_status(
+        {"potcar_identity_policy": {"mode": "require_attestation",
+                                    "manuscript_citable": True},
+         "governance_binding": dict(_GBOK, all_ratified=False,
+                                    decisions={"D-x": {"ratified": False}})},
+        {"overall_citable_at_0.01eV": True,
+         "potcar_identity": {"allowed_claim": "paw_release_attested"}})
+    chk(_cs_gov["manuscript_citable"] is False
+        and any("미비준" in b for b in _cs_gov["blockers"]),
+        "⛔음성 BA 해제조건 3: 거버넌스가 **미비준**이면 인용 불가다 — 비용 발생 전에 "
+        "닫아야 한다")
+    _cs_noref = citation_status(
+        {"potcar_identity_policy": {"mode": "require_attestation",
+                                    "manuscript_citable": True},
+         "governance_binding": dict(_GBOK, reference_files_sha256={"a.json": None})},
+        {"overall_citable_at_0.01eV": True,
+         "potcar_identity": {"allowed_claim": "paw_release_attested"}})
+    chk(_cs_noref["manuscript_citable"] is False,
+        "⛔음성 BA 해제조건 3: 참조 문서 SHA 가 결박되지 않으면 인용 불가다")
+    chk(citation_status({"potcar_identity_policy": {"manuscript_citable": True}},
+                        {"overall_citable_at_0.01eV": True,
+                         "potcar_identity": {"allowed_claim": "paw_release_attested"}}
+                        )["manuscript_citable"] is False,
+        "⛔음성 BA 해제조건 3: `governance_binding` 이 아예 없는 **구판 번들**도 "
+        "인용 불가다 (없음을 통과로 세지 않는다)")
     _cs_anchor = citation_status(
         {"potcar_identity_policy": {"mode": "require_attestation",
                                     "manuscript_citable": True}},
@@ -12042,6 +12096,51 @@ def build_bundle(a, ledger: Optional[Dict[str, Any]] = None) -> Path:
     #     말 것" 은 **철회**한다. 그런 이름을 쓰는 논문이 없다는 지적이 옳다.
     #     이름은 **E_ads** 로 쓰고, 단서(고정기하·단일점)는 **Methods 문장**이 진다.
     #   AS Q7 lateral: 옵션 (a) — **셀 조건으로 한정**한다 (lateral 대조를 넣지 않는다).
+    # ⛔⛔ 회신 BA P0-4 · 해제조건 3 (2026-09-02) — **참조 문서와 거버넌스를 번들에
+    #   결박한다.** 종전 번들에는 관련 decision ID·digest·state 도, 참조 파일의 내용
+    #   SHA 도 없었다. 그래서 "이 결과가 어느 사전등록·어느 판례 아래 나왔는지" 가
+    #   산출물 안에서 이어지지 않았고, decision 두 건을 나중에 `active` 로 바꾸는
+    #   것만으로는 결박이 생기지 않는다.
+    def _ref_sha(rel):
+        _p = Path(__file__).resolve().parent.parent.parent / rel
+        return (hashlib.sha256(_p.read_bytes()).hexdigest()
+                if _p.is_file() else None)
+
+    _REFS = ["db/properties/sdcp_c12_claim_prereg_2026_08_31.json",
+             "db/properties/sdcp_c12_protocol_2026_08_30.json",
+             "db/properties/c12_poses_2026_08_30.json"]
+    _DEC_IDS = ["D-2026-08-30-sdcp-c12-path", "D-2026-08-28-closure-criteria-first"]
+    _dec_all = {}
+    try:
+        _dp = Path(__file__).resolve().parent.parent.parent / "db/governance/decisions.json"
+        _dec_all = {x["id"]: x for x in json.loads(_dp.read_text(encoding="utf-8"))
+                    .get("decisions", [])}
+    except Exception:                                        # noqa: BLE001
+        pass
+
+    def _dec_digest(x):
+        _c = {k: v for k, v in (x or {}).items() if k != "ratification"}
+        return hashlib.sha256(json.dumps(_c, sort_keys=True, ensure_ascii=False)
+                              .encode("utf-8")).hexdigest()
+
+    man["governance_binding"] = {
+        "⛔": ("이 결과를 해석하려면 아래 decision 이 **비준(active)** 이어야 한다. "
+               "`proposed` 상태로 계산을 돌리고 나중에 비준하면 결과가 정책 결정에 "
+               "압력을 준다 — 사전등록의 의미가 사라진다 (회신 AZ P0-6 · BA 해제조건 3)."),
+        "decisions": {
+            _i: {"state": (_dec_all.get(_i) or {}).get("decision_state"),
+                 "digest": _dec_digest(_dec_all.get(_i)) if _i in _dec_all else None,
+                 "ratified": bool(((_dec_all.get(_i) or {}).get("ratification") or {})
+                                  .get("state") == "ratified")}
+            for _i in _DEC_IDS},
+        "reference_files_sha256": {r: _ref_sha(r) for r in _REFS},
+        "all_ratified": all(
+            (((_dec_all.get(_i) or {}).get("ratification") or {}).get("state")
+             == "ratified") for _i in _DEC_IDS),
+        "⚠_비준_전_발송_금지": ("`all_ratified` 가 false 인 번들은 **탐색 목적으로도** "
+                                 "결과 해석을 시작하지 않는다. 분석기가 이 필드를 읽고 "
+                                 "citation_status 를 막는다."),
+    }
     man["reported_quantity"] = {
         # ⛔ 회신 AZ P0-4 — 보고하는 것은 **ΔE_ads 하나**다. 이름 자리에서부터
         #   그렇게 적는다 (종전엔 E_ads 를 앞에 세워 개별값이 산출물처럼 읽혔다).
