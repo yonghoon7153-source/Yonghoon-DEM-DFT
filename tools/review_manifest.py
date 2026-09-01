@@ -16,7 +16,9 @@
   않았다.** 그리고 손으로 하는 한 또 난다.
 
   ⇒ 이 도구는 `git show <commit>:<path>` 로만 해시를 계산한다. 작업 트리를 안 본다.
-    트리가 dirty 면 **거부**한다 (그 상태에서 만든 표는 재현되지 않는다).
+    **추적 파일이 수정돼 있으면 거부**한다 (그 표는 재현되지 않는다).
+    untracked 뿐이면 통과하되 목록을 남긴다 — 헛경보를 두면 다음번에 반사적으로
+    `--allow_dirty` 를 쓰게 되고 그러면 안전장치가 죽는다 (2026-09-02 실측).
 
 사용
   python3 tools/review_manifest.py <경로> [<경로> ...]          # HEAD 기준
@@ -56,20 +58,38 @@ def _blob_sha(commit: str, path: str):
 
 def review_manifest(paths, commit="HEAD", allow_dirty=False, require_pushed=False):
     """→ dict. 커밋된 트리의 해시만 담는다. dirty 면 (허용 안 하면) SystemExit."""
-    dirty = bool(_git("status", "--porcelain").strip())
-    if dirty and not allow_dirty:
+    # ⛔⛔ 2026-09-02 실측 — **추적 수정과 untracked 를 갈라야 한다.**
+    #   첫 판은 `git status --porcelain` 이 비지 않으면 무조건 거부했다. 그런데 실물에서
+    #   dirty 의 정체는 **untracked 산출물뿐**이었고(추적 파일 수정 0건), 커밋된 내용과
+    #   번들이 정확히 대응했다. 헛경보를 그대로 두면 다음번에 반사적으로
+    #   `--allow_dirty` 를 쓰게 되고, 그러면 안전장치가 통째로 죽는다.
+    #   ⇒ 추적 파일 수정은 **치명**(거부), untracked 는 **기록하고 통과**.
+    #     어느 쪽이든 무엇이 dirty 인지 산출물에 남긴다.
+    _st = [l for l in _git("status", "--porcelain").splitlines() if l.strip()]
+    untracked = sorted(l[3:] for l in _st if l.startswith("??"))
+    modified = sorted(l[3:] for l in _st if not l.startswith("??"))
+    dirty = bool(modified)
+    if modified and not allow_dirty:
         raise SystemExit(
-            "⛔ 작업 트리가 dirty 다 — 이 상태에서 만든 리뷰 표는 **재현되지 않는다**.\n"
-            "   커밋한 뒤에 다시 부르거나, 초안이면 --allow_dirty 를 주십시오\n"
-            "   (그러면 산출물에 `draft: true` 가 박혀 리뷰에 그대로 실립니다).\n"
+            "⛔ **추적 파일이 수정돼 있다** — 이 상태에서 만든 리뷰 표는 재현되지 않는다.\n"
+            "   %s\n"
+            "   커밋하거나 되돌린 뒤에 다시 부르십시오 (초안이면 --allow_dirty,\n"
+            "   그러면 산출물에 `draft: true` 가 박혀 리뷰에 그대로 실립니다).\n"
             "   ⚠ 2026-09-02 회신 V P0-1 이 정확히 이 실수였다: 작업 트리 파일의 해시를\n"
-            "     그 변경이 없는 커밋과 함께 공표해 리뷰어가 옛 파일을 받았다.")
+            "     그 변경이 없는 커밋과 함께 공표해 리뷰어가 옛 파일을 받았다."
+            % "\n   ".join(modified[:8]))
     sha = _git("rev-parse", commit).strip()
     out = {"schema": "review_manifest/v1",
            "commit": sha,
            "branch": _git("rev-parse", "--abbrev-ref", "HEAD").strip(),
            "git_dirty": dirty,
            "draft": bool(dirty),
+           "modified_tracked": modified,
+           "untracked": untracked[:20],
+           "⚠_untracked": (None if not untracked else
+                           "untracked %d개가 있다 — 커밋된 내용에는 영향이 없으므로 "
+                           "표는 유효하다. 다만 생성기가 그중 무엇을 **입력으로 읽었다면** "
+                           "그것은 여기 안 잡힌다 (이 도구가 못 하는 것)." % len(untracked)),
            "⛔_해시_출처": ("전부 `git show %s:<path>` 에서 계산했다. **작업 트리를 "
                             "보지 않는다** — 리뷰어가 이 커밋을 받으면 같은 수가 나온다."
                             % sha[:12]),
@@ -138,9 +158,21 @@ def selftest():
         open("a.txt", "w").write("two\n")
         try:
             review_manifest(["a.txt"])
-            chk(False, "dirty 트리를 거부해야 한다")
+            chk(False, "추적 파일 수정을 거부해야 한다")
         except SystemExit as e:
-            chk("dirty" in str(e), "⛔음성: dirty 트리는 **거부**한다 (재현 안 되는 표)")
+            chk("추적 파일이 수정" in str(e) and "a.txt" in str(e),
+                "⛔음성: **추적 파일 수정**은 거부하고 무엇인지 말한다")
+        # 2026-09-02 실측 — untracked 뿐이면 **통과**하되 기록한다 (헛경보 제거)
+        _git("checkout", "-q", "--", "a.txt")
+        open("scratch.tmp", "w").write("x")
+        _mu = review_manifest(["a.txt"])
+        chk(_mu["draft"] is False and _mu["untracked"] == ["scratch.tmp"]
+            and _mu["files"]["a.txt"] == want,
+            "untracked 뿐이면 **통과**하고 목록을 남긴다 (헛경보를 두면 다음번에 "
+            "반사적으로 --allow_dirty 를 쓰게 된다)")
+        import os as _os
+        _os.remove("scratch.tmp")
+        open("a.txt", "w").write("two\n")
         m2 = review_manifest(["a.txt"], allow_dirty=True)
         chk(m2["files"]["a.txt"] == want and m2["draft"] is True,
             "⛔음성 V P0-1 재현: --allow_dirty 라도 해시는 **커밋된 내용**이다 "

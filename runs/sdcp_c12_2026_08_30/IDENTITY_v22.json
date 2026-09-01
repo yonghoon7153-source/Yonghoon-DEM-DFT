@@ -13,17 +13,9 @@
   "db/properties/sdcp_c12_protocol_2026_08_30.json": "8cb150221235a605be015af26f4f6e1952820ab7a0dd20c3fc83da270e39bf39",
   "db/governance/decisions.json": "90632dbe35c78b29416f74e93ccb439f026bde528d64e3a5675364b007b16458"
  },
- "🔴_발송_전_확인_필요": {
-  "무엇": "생성 기계(gabia)의 작업 트리가 **dirty** 였다 — review_manifest.py 가 거부했다.",
-  "왜_중요한가": "번들이 어느 커밋에도 대응하지 않을 수 있다. 그러면 리뷰어가 재현하지 못한다 — 회신 V P0-1 이 정확히 그 형태였다.",
-  "이미_확인된_것": "gabia 가 보고한 prereg·protocol SHA(9659c0c9…·8cb15022…)가 커밋 97cb2d4d 의 값과 **정확히 같다** ⇒ 그 두 파일은 커밋본과 동일하다.",
-  "아직_모르는_것": ["gabia 의 생성기 SHA (커밋본 d7b55c6c… 와 같은가)", "무엇이 dirty 인가 (추적 파일인가 untracked 인가)"],
-  "판정": "추적 파일이 수정돼 있으면 **v22 를 보내지 않는다** — 커밋/되돌린 뒤 v23 으로 다시 만든다. untracked 뿐이면 그대로 발송 가능하고 그 사실을 리뷰에 적는다."
- },
  "generated_on": "gabia (kserver116-27) · 2026-09-02",
  "generated_argv": "--from_basins db/properties/c12_poses_2026_08_30.json --frags sdcp_neutral ptfe_c10 --refs --refs_minimal --both_seeds --single_point --allow_no_pin --potcar_identity post_hoc --cell_c 36.6551 --cell_c2 40.6551 --min_vacuum 15.0 --roles primary sensitivity stress_sensitivity --out /data/work/runs/sdcp_c12_v22",
  "⚠_argv_출처": "v21 과 **완전히 같다** (--out 만 다르다).",
-
  "상태": "회신 BA 해제조건 8개 중 7개 코드로 닫고, 3번(비준)을 1저자가 2026-09-02 비준했다. VASP 는 여전히 **0잡**이다.",
  "잡": 16,
  "검증": {
@@ -33,7 +25,6 @@
   "webapp": "141 passed",
   "원장_위반": 0
  },
-
  "거버넌스_비준_2026_09_02": {
   "누가": "1저자 (scientific_owner)",
   "무엇": [
@@ -45,7 +36,6 @@
   "결박": "각 기록에 actor_id·timestamp·commit(40-hex)·내용 digest. digest 는 `ratification` 을 뺀 내용의 sha256 이라, 비준 뒤 고치면 재승인을 요구한다.",
   "⚠_그_결박이_바로_작동했다": "처음에 digest 를 상태 변경 **전에** 계산했더니 검사가 두 건 다 '승인 이후에 내용이 바뀌었다' 로 잡았다. 순서를 바로잡아 0 위반이 됐다 — 손으로 했으면 넘어갔을 자리다."
  },
-
  "v21_과_다른_점": {
   "해제조건_1_실행순서": "census 를 SEAL **앞으로** 옮겼다. 종전엔 SEAL 이 16개 POTCAR_ASSEMBLE.sh 를 무결성 검사 **전에** 실행했다 (변조 assembler 가 검사 전에 돌았다). 봉인 검사만 SEAL 뒤 두 번째 census(`RECHECK_SEAL=1`)로 미뤘다 — 같은 코드를 두 번 돌려 로직이 갈라지지 않는다. README 에 0단계 신설: **ZIP 을 풀기 전에 ZIP 밖에서 SHA 대조**.",
   "해제조건_2_정본_정정": "prereg·protocol 이 아직 `E_ads = E_C − E_G`(E_S 누락)였고 개별 adsorption energy 문장을 허용했다. 둘 다 `E_ads(f) = E_C(f) − E_S − E_G(f)` 로 고치고 보고량을 **ΔE_ads 하나**로 통일. 개별값은 정의상 산출 불가임을 명시.",
@@ -61,17 +51,23 @@
    "`kill -TERM 0` 을 unlock **뒤로** (stale lock 방지)"
   ]
  },
-
  "🔴_우리가_이번에_저지른_것": [
   "직전 커밋에 회귀를 실었다: 주석의 ASCII 작은따옴표가 `xargs … sh -c '…'` 를 조기 종료시켜 **영수증이 한 건도 안 써졌다**. selftest 는 잡았는데 `✗` 만 grep 하고 **종료코드를 안 봤다** — 그 실패는 `⛔ ` 접두어를 쓴다. 이제 rc 로 확인한다.",
   "J_f 를 고치니 selftest 의 `planned` 가 **meta 를 안 싣는다**는 것이 드러났다. 이 파일 11345행이 같은 함정('픽스처≠실물')을 이미 기록해 뒀는데 또 밟았다."
  ],
-
  "🔴_남은_것": [
   "POTCAR 신원: post_hoc (1저자 결정) — 이 묶음 결과는 **원고 인용용이 아니다**. `citation_status` 가 기계로 막는다. 사후 attestation 으로 승격 불가 (회신 BA Q5).",
   "0.01 eV overall 인용 자격: ENCUT 수렴 설계가 없으므로 이 번들에서는 영영 `None` 이다 (회신 BA Q7).",
   "프로토콜 파일의 잡 수(§0 12잡 · §12 19잡)가 실물 16잡과 다르다 — citation_hazards 등재됨, 파일 미정정"
  ],
  "이전판": "runs/sdcp_c12_2026_08_30/IDENTITY_v21.json",
- "리뷰": "kb/reviews/codex_BB_prompt_c12_v22_2026_09_02.md"
+ "리뷰": "kb/reviews/codex_BB_prompt_c12_v22_2026_09_02.md",
+ "생성_트리_확인_2026_09_02": {
+  "결론": "✅ v22 는 커밋 97cb2d4d 와 정확히 대응한다 — 발송 가능",
+  "생성기_SHA_생성기계": "d7b55c6c4b60c0a611a1dd601f075d316300a568458ce72f7602646de712297a",
+  "생성기_SHA_커밋본": "d7b55c6c4b60c0a611a1dd601f075d316300a568458ce72f7602646de712297a",
+  "추적_파일_수정": "없음 (`git status --porcelain | grep -v '^??'` 빈 출력)",
+  "dirty_의_정체": "untracked 산출물뿐 — 커밋된 내용에 영향 없음",
+  "⚠_도구_개선": "`review_manifest.py` 첫 판이 추적 수정과 untracked 를 구분하지 못해 **헛경보**를 냈다. 그대로 두면 다음번에 반사적으로 `--allow_dirty` 를 쓰게 되고 안전장치가 죽는다 ⇒ 추적 수정만 거부하고 untracked 는 기록 후 통과하도록 고쳤다 (selftest 9 → 10)."
+ }
 }
