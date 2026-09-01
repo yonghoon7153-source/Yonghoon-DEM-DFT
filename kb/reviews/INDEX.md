@@ -50,7 +50,7 @@ evidenceScope: multi-source-primary
 | AH | 2026-08-30 | `codex_AH_prompt_am_i_lost_2026_08_30.md` | — | sent | — |
 | AI | 2026-08-30 | `codex_AI_prompt_current_head_2026_08_30.md` | — | sent | — |
 | AJ | 2026-08-30 | `codex_AJ_prompt_c12_submit_2026_08_30.md` | — | sent | — |
-| AK | 2026-08-30 | `codex_AK_prompt_lpsocl_box331_md_2026_08_30.md` | `codex_AK_reply_lpsocl_box331_md_2026_08_30.md` | sent | 같은 라벨 · 주제 토큰 일치 ['box331', 'lpsocl', 'md']; 판정 인용 2회 |
+| AK | 2026-08-30 | `codex_AK_prompt_lpsocl_box331_md_2026_08_30.md` | `codex_AK_reply_lpsocl_box331_md_2026_08_30.md` | sent | 같은 라벨 · 주제 토큰 일치 ['box331', 'lpsocl', 'md']; 판정 인용 4회 |
 | AL | 2026-08-30 | `codex_AL_prompt_cascade_d_rel_2026_08_30.md` | `codex_AL_reply_cascade_d_rel_2026_08_30.md` | sent | 같은 라벨 · 주제 토큰 일치 ['cascade', 'd', 'rel']; 판정 인용 1회 |
 | AM | 2026-08-31 | `codex_AM_prompt_c12_incar_2026_08_31.md` | `codex_AM_reply_c12_incar_2026_08_31.md` | sent | 같은 라벨 · 주제 토큰 일치 ['c12', 'incar']; 판정 인용 1회 |
 | AN | 2026-08-31 | `codex_AN_prompt_c12_v7_2026_08_31.md` | — | sent | — |
@@ -63,3 +63,4 @@ evidenceScope: multi-source-primary
 | T | 2026-08-31 | `codex_T_prompt_polaron_pilot_seeds_2026_08_31.md` | `codex_T_reply_polaron_pilot_2026_08_31.md` | 회신 수령 — `kb/reviews/codex_T_reply_polaron_pilot_2026_08_31.md` | 같은 라벨 · 주제 토큰 일치 ['pilot', 'polaron']; ⚠ 인용 18회 — 라벨 재사용이라 **증거 아님** |
 | U | 2026-08-31 | `codex_U_prompt_polaron_S0_2026_08_31.md` | — | 발송 대기 (⚠ 라벨 U 가 재사용됨 — 인용 횟수는 codex_U_prompt_neutral_close_plan 과 합산되므로 근거가 아니다) | ⚠ 인용 11회 — 라벨 재사용이라 **증거 아님** |
 | AW | 2026-09-01 | `codex_AW_prompt_webapp_audit_2026_09_01.md` | — | 발송 대기 | — |
+| AX | 2026-09-01 | `codex_AX_prompt_lpsocl_600K_amendment_2026_09_01.md` | — | 발송 대기 | — |

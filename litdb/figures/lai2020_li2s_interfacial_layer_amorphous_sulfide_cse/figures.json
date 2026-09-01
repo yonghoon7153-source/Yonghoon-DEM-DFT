@@ -1,0 +1,212 @@
+{
+ "slug": "lai2020_li2s_interfacial_layer_amorphous_sulfide_cse",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-09-01",
+ "sources": [
+  "85. Lai2020_Li2S_Interfacial_Layer_Amorphous_Sulfide_CSE.pdf",
+  "85. Sup) Lai2020_Li2S_Interfacial_Layer_Amorphous_Sulfide_CSE.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 2,
+   "file": "fig_1.png",
+   "caption": "Figure 1. Preparation and characterization of LCSE and SLCSE. (a) The preparation scheme of SLCSE; (b) the appearance of SLCSE; (c) the section of SLCSE; (d) the Nyquist plots of Li||LCSE||Li and Li||SLCSE||Li symmetrical cells before and after the polarization; and the chronoamperometry proﬁles under a polarization voltage of 10 mV, with (e) the spectra of P 2p (up) and S 2p (under) of pristine SLCSE. constructing such a SMIL on the surface of the Li metal anode, the decomposition of PVDF in SLCSE is signiﬁcantly mitigated. Moreover, the SMIL is beneﬁcial to improve the uniformity of Li deposition and the reversible capacity owing to the remarkable improvement of the wettability between lithium metal and SLCSE. Consequently, the formation of SMIL enables the Li||SLCSE||LiFePO4 cell to exhibit a high capacity of 153, 144, 131, and 101 mAh/g at 0.05, 0.10, 0.25, and 0.50 mA/cm2, respectiv",
+   "rotated_deg": 0,
+   "bbox": [
+    54.5,
+    63.2,
+    570.5,
+    294.0
+   ],
+   "w": 2151,
+   "h": 962,
+   "dpi": 300,
+   "src": "85. Lai2020_Li2S_Interfacial_Layer_Amorphous_Sulfide_CSE.pdf",
+   "blank": 0.766
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 3,
+   "file": "fig_2.png",
+   "caption": "Figure 2. Plating and striping performance of Li. (a) Cycling performances of Li||SLCSE/LCSE||Li symmetrical cells; (b) rate performances of Li|| SLCSE/LCSE||Li symmetric cells; surface morphologies of the (c) plating proﬁle of Li in Li||LCSE||Cu and Li||SLCSE||Cu semisymmetrical cells; and the SEM images of (d) pristine Li metal and the Li metal anode after 10 cycles in the (e) Li||LCSE||Cu semisymmetrical cell and (f) Li|| SLCSE||Cu semisymmetric cell. and SLCSE at room temperature were calculated to be 2.40 × 10−4 S/cm and 3.42 × 10−4 S/cm, respectively. It has been reported that the Li ion migration in CSE could proceed both at the ceramic|polymer interface and at the interior of the ceramic.37−39 Therefore, the LPS dispersed in SLCSE is essential to increase the Li ion conductivity and transference number. Since the LPS is amorphous, the chemical species in LPS were determined by th",
+   "rotated_deg": 0,
+   "bbox": [
+    54.5,
+    63.2,
+    570.5,
+    573.4
+   ],
+   "w": 2151,
+   "h": 2127,
+   "dpi": 300,
+   "src": "85. Lai2020_Li2S_Interfacial_Layer_Amorphous_Sulfide_CSE.pdf",
+   "blank": 0.74
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 4,
+   "file": "fig_3.png",
+   "caption": "Figure 3. Studies of the interfacial layer. (a) The XPS data of F 1s of Li-LCSE (a-1) and Li-SLCSE (a-2) in Li||LiFePO4 full cells after 20 cycles; (b) the XPS data of F 1s of pristine LCSE (b-1) and LCSE in the Li||LCSE||LiFePO4 cell after 20 cycles (b-2); (c) the XPS data of S 2p of Li-LCSE (c-1) and Li-SLCSE (c-2) in Li||LiFePO4 full cells after 20 cycles; (d) the 1st−4th cyclic voltammogram curves of the Li||LCSE||LiFePO4 cell (d-1) and Li||SLCSE||LiFePO4 cell (d-2); and the migration energy barrier of Li ions passing through the (e) LiF layer and (f) Li2S layer. for Li plating than that of LCSE but also exhibits a lower electrode polarization. The accumulated capacity loss plots of Li||LCSE||Cu and Li||SLCSE||Cu indicate that the wettability of SLCSE is higher than that of LCSE (Figure S5). Figure 2d shows the SEM image of pristine Li metal. Figure 2e and 2f display the microscopy i",
+   "rotated_deg": 0,
+   "bbox": [
+    54.5,
+    63.2,
+    570.5,
+    491.5
+   ],
+   "w": 2151,
+   "h": 1785,
+   "dpi": 300,
+   "src": "85. Lai2020_Li2S_Interfacial_Layer_Amorphous_Sulfide_CSE.pdf",
+   "blank": 0.903
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 5,
+   "file": "fig_4.png",
+   "caption": "Figure 4. Optimized structure of the interfaces: (a) Li(100)|LiF, (b) Li(110)|LiF, (c) Li(211)|LiF, (d) Li(100)|Li2S, (e) Li(110)|Li2S, and (f) Li(211)|Li2S. already reported XPS results of Li2S.38,39 It is noteworthy that no S 2p spectra of PS4 and stripping of Li during repeated charging−discharging, which is closely related to the interfacial layer.44,45 3−(LPS) presents on the surface of Li- SLCSE, which indicates that the performance of the interfacial layer is mainly tailored by the SMIL. The diﬀerence of sulﬁde- based species presented on Li-SLCSE and SLCSE after 20 cycles reveals that the chemical species on the Li-SLCSE belong to SEI rather than SLCSE (Figure S8). Except for the P 2p spectra of PS4 3−, no extra P 2p signal was observed on the surfaces of SLCSE after 20 cycles, indicating the stability of PS4 In order to understand the interfacial layers of Li|LCSE and Li|SLCSE, ",
+   "rotated_deg": 0,
+   "bbox": [
+    54.5,
+    63.2,
+    570.5,
+    253.2
+   ],
+   "w": 2151,
+   "h": 793,
+   "dpi": 300,
+   "src": "85. Lai2020_Li2S_Interfacial_Layer_Amorphous_Sulfide_CSE.pdf",
+   "blank": 0.807
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 7,
+   "file": "fig_5.png",
+   "caption": "Figure 5. Electrochemical performance of Li||LCSE||LiFePO4 and Li||SLCSE||LiFePO4 cells. (a) Cycling performance at the current density of 0.05 mA/cm2 at 25 °C; (b) rate performance at diﬀerent current densities; (c) the galvanostatic charge−discharge proﬁle of the 50th and 80th cycle at 0.05 mA/cm2; and (d) the galvanostatic charge−discharge proﬁle at diﬀerent charging−discharging current densities. Li2S layer is much lower than that of Li passing through LiF layer. Additionally, the formation energy of the Li|Li2S interface is much lower than that of the Li|LiF interface and the pristine Li metal surface, indicating the higher wettability to the Li metal and better suppression ability to Li dendrites. As expected, the Li||SLCSE||LiFePO4 cell shows an excellent rate capability with a capacity of 153, 144, 131, and 101 mAh/ g at 0.05, 0.10, 0.25, and 0.50 mA/cm2, respectively, and excell",
+   "rotated_deg": 0,
+   "bbox": [
+    54.5,
+    63.2,
+    570.5,
+    342.2
+   ],
+   "w": 2151,
+   "h": 1164,
+   "dpi": 300,
+   "src": "85. Lai2020_Li2S_Interfacial_Layer_Amorphous_Sulfide_CSE.pdf",
+   "blank": 0.905
+  },
+  {
+   "key": "fS1",
+   "kind": "figure",
+   "label": "S1",
+   "page": 6,
+   "file": "fig_S1.png",
+   "caption": "Figure S1 Micromorphologies of LPS compound (a) before and (b) after grinded",
+   "rotated_deg": 0,
+   "bbox": [
+    97.9,
+    118.1,
+    497.4,
+    259.9
+   ],
+   "w": 1666,
+   "h": 593,
+   "dpi": 300,
+   "src": "85. Sup) Lai2020_Li2S_Interfacial_Layer_Amorphous_Sulfide_CSE.pdf",
+   "blank": 0.29
+  },
+  {
+   "key": "fS2",
+   "kind": "figure",
+   "label": "S2",
+   "page": 7,
+   "file": "fig_S2.png",
+   "caption": "Figure S2 XRD data of 3Li2S⸱2P2S5 (LPS) and 3Li2S⸱2P2S5-based composite solid electrolyte (SLCSE).",
+   "rotated_deg": 0,
+   "bbox": [
+    88.0,
+    133.5,
+    510.3,
+    338.1
+   ],
+   "w": 1761,
+   "h": 853,
+   "dpi": 300,
+   "src": "85. Sup) Lai2020_Li2S_Interfacial_Layer_Amorphous_Sulfide_CSE.pdf",
+   "blank": 0.911
+  },
+  {
+   "key": "fS4",
+   "kind": "figure",
+   "label": "S4",
+   "page": 9,
+   "file": "fig_S4.png",
+   "caption": "Figure S4 Experimental and fitted EIS curves of the SS|CSE|SS cell (SS=stainless steel) using an equivalent circuit.",
+   "rotated_deg": 0,
+   "bbox": [
+    94.7,
+    128.4,
+    503.6,
+    324.9
+   ],
+   "w": 1705,
+   "h": 819,
+   "dpi": 300,
+   "src": "85. Sup) Lai2020_Li2S_Interfacial_Layer_Amorphous_Sulfide_CSE.pdf",
+   "blank": 0.925
+  },
+  {
+   "key": "t1",
+   "kind": "table",
+   "label": "1",
+   "page": 6,
+   "file": "tab_1.png",
+   "caption": "Table 1. Formation Energy of the Li Surface and Li|LiF and Li|Li2S Interfaces formation energy [J/m2] Li Li|LiF Li|Li2S Li(100) 0.47 −0.084 −0.39 Li(110) 0.50 −0.078 −0.29 Li(211) 0.55 −0.096 −0.44",
+   "rotated_deg": 0,
+   "bbox": [
+    55.5,
+    43.7,
+    602.7,
+    792.0
+   ],
+   "w": 2190,
+   "h": 2994,
+   "dpi": 288,
+   "src": "85. Lai2020_Li2S_Interfacial_Layer_Amorphous_Sulfide_CSE.pdf",
+   "blank": 0.844
+  },
+  {
+   "key": "tS1",
+   "kind": "table",
+   "label": "S1",
+   "page": 9,
+   "file": "tab_S1.png",
+   "caption": "Table S1 Simulation results of Figure S4. R0 (Ω) L (V·A-1·s) C (F) R1 (Ω) CPET (Ω-1⸱sζ) CPEP (n) LCSE 16.64 6.93×10-7 8.01×10-8 2.42 3.30×10-6 0.90 SLCSE 11.69 7.39×10-7 7.03×10-8 2.28 2.34×10-6 0.92",
+   "rotated_deg": 0,
+   "bbox": [
+    70.7,
+    232.6,
+    581.9,
+    627.2
+   ],
+   "w": 2131,
+   "h": 1645,
+   "dpi": 300,
+   "src": "85. Sup) Lai2020_Li2S_Interfacial_Layer_Amorphous_Sulfide_CSE.pdf",
+   "blank": 0.935
+  }
+ ]
+}

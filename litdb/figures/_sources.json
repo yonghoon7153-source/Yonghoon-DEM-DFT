@@ -493,6 +493,14 @@
    "DFT 먹인 논문/31. Sup) Influence of Lattice Polarizability on the Ionic Conductivity in the Lithium Superionic Argyrodites Li6PS5X (X = Cl, Br, I).pdf"
   ]
  },
+ "lai2020_li2s_interfacial_layer_amorphous_sulfide_cse": {
+  "figures": 10,
+  "generated": "2026-09-01",
+  "pdfs": [
+   "85. Lai2020_Li2S_Interfacial_Layer_Amorphous_Sulfide_CSE.pdf",
+   "85. Sup) Lai2020_Li2S_Interfacial_Layer_Amorphous_Sulfide_CSE.pdf"
+  ]
+ },
  "lai2025_haml_li_metal_lpscl_interface_doping_seFO": {
   "figures": 26,
   "generated": "2026-08-19",
@@ -598,10 +606,11 @@
   ]
  },
  "liu2024_pband_center_sbo_dual_interface": {
-  "figures": 7,
+  "figures": 10,
   "generated": "2026-09-01",
   "pdfs": [
-   "84. Liu2024_pBand_Center_Sulfur_Argyrodite_Dual_Interface.pdf"
+   "84. Liu2024_pBand_Center_Sulfur_Argyrodite_Dual_Interface.pdf",
+   "84. Sup) Liu2024_pBand_Center_Sulfur_Argyrodite_Dual_Interface.docx (word/media 수동 매핑: imageN ↔ Figure S(N-1))"
   ]
  },
  "liu2025_dry_processing_high_energy_li_batteries_review": {
