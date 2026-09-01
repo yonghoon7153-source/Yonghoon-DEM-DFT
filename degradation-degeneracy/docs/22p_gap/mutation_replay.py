@@ -3012,10 +3012,15 @@ def _tested_tree_digest() -> str:
     쪽이 다시 계산할 수 있지만, 그러면 **그 시점의 트리**를 가리키게 되고
     checker 가 지금 트리와 대조해 어긋남을 본다.
     """
+    # ★ 55차 자체 발견 — 처음 판은 변이 대상 3파일과 EXPECT 가 이름한 시험
+    #   파일만 봤다. 그런데 시험 결과를 정하는 코드는 그보다 넓다:
+    #   `src/scoring.py`(producer 닫힘이 건너가는 곳) · `conftest.py` ·
+    #   `tools/` 의 나머지가 바뀌어도 digest 는 안 움직였다. "실제로 시험한
+    #   코드" 라고 부르려면 그 전부여야 한다.
     files = {PRESERVE, RP, MR}
-    for exp in EXPECT.values():
-        for node in (exp or {}).get("fail") or ():
-            files.add(ROOT / str(node).split("::", 1)[0])
+    for sub in ("src", "tools", "tests"):
+        files.update((ROOT / sub).rglob("*.py"))
+    files = {f for f in files if "__pycache__" not in str(f)}
     h = hashlib.sha256()
     for f in sorted(files, key=lambda x: str(x)):
         rel = pathlib.Path(f)
