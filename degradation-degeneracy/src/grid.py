@@ -402,8 +402,14 @@ def _assert_grid_authorized(cfg: dict, out_dir, conditions=None,
     # 어느 쪽이 경계인지 정할 수 없다.
     if is_inside_namespace(out_dir, SMOKE_NAMESPACE):
         return None
-    live_grid = live_grid_axis(cfg, conditions, out_dir)
+    # ★ 51차 — **계획 소속을 먼저 묻는다.** 살아 있는 축을 만드는 것
+    #   (`live_grid_axis()`)이 `cfg["discharged_state"]` 를 읽으므로, 순서가
+    #   반대면 계획에 없는 다리가 `KeyError` 로 죽는다 — 거부한 것이 계획
+    #   gate 가 아니게 된다. 이 자리 회귀
+    #   (`..._gate_before_its_first_side_effect`)가 정확히 그것을 잡았고,
+    #   `run_fit()` 에서 고친 것과 같은 축이다: **어느 명제가 먼저 판정되는가.**
     declared = declared_leg_run_spec(leg)
+    live_grid = live_grid_axis(cfg, conditions, out_dir)
     spec = leg_run_spec(leg, live_grid, declared.get("fit") or {})
     return assert_run_is_authorized(leg, "grid", [out_dir], spec,
                                     source_digest(), token_file=token_file)

@@ -450,10 +450,6 @@ MUTANTS = [
      "            if dup:",
      "            dup = []\n            if dup:",
      "ledger_roster_is_a_set_not_a_multiset"),
-    ("thaw-is-refused-before-the-first-write", RP,
-     '    assert_not_thawed(_pre["cohort_id"])',
-     "    pass",
-     "publisher_refuses_a_thawed_cohort_before_the_first_write"),
     ("thaw-transition-is-unrepresentable", RP,
      "    if (frm, to) not in _LIFECYCLE_MOVES:",
      "    if False:",
@@ -718,6 +714,17 @@ MULTI = [
     # ★ 48차 P0-2 — decorator 축은 **정규형이 node 를 보는가**에 달렸다.
     #   47차처럼 source segment 로 되돌리면 `FunctionDef.lineno` 가 `def`
     #   줄이라 `decorator_list` 가 통째로 빠진다.
+    # ★ 51차 — 50차까지 이것은 단일 변이였다. P0-F 가 journal 의 목적지 봉인을
+    #   더하면서 같은 게시를 막는 자리가 둘이 됐다 (`assert_not_thawed()` 의 ID
+    #   조회 · `_frozen_cohort_dirs()` 의 journal 합집합). 하나만 지우면 다른
+    #   쪽이 여전히 거부하므로 단일 변이는 더 이상 안 문다 — 심층 방어의 정상
+    #   신호다. 함께 되돌려야 관측된다.
+    ("thaw-is-refused-before-the-first-write", RP, [
+        ('    assert_not_thawed(_pre["cohort_id"])', "    pass"),
+        ("    for d, cid in frozen_dirs_from_journal().items():\n"
+         "        out.setdefault(cid, (REPO / d).resolve())",
+         "    pass"),
+     ], "publisher_refuses_a_thawed_cohort_before_the_first_write"),
     ("producer-normalizes-the-node", RP, [
         ("def _ast_normal_node(node) -> str:",
          "def _ast_normal_node(node, _src=None) -> str:"),

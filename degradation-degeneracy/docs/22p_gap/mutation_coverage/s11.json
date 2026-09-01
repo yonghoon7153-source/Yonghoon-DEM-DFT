@@ -1,80 +1,80 @@
 {
-  "at": "2026-09-01T04:32:44Z",
+  "at": "2026-09-01T04:35:57Z",
   "binding": {
     "expect_digest": "849931cfb6788222e6b48acca58db5c8deecc30fa0852fedf59fecd355c34377",
     "head": "1ca133ae673307c09cb97aa80f5a4d8601dfad53",
     "registry_digest": "b4a63540eea93282ee16519d0de8c22f0c0ca9245cee1e512f24ee21f39867ae",
     "runner_digest": "9a6c41b603bdf5989ea00b21e685f7168540fbd7742eae5a904280d4a540686e",
-    "transcript_digest": "a529c12309ea31069b3c49fe2aebc7447995c4720648b69492c6d8bad2441708"
+    "transcript_digest": "6c26d62336e4bed91d1b8bcae49e1558afd1c9ea56e6c61aa08ec4428691cdc8"
   },
   "scenarios": {
-    "canon-keeps-docstrings": {
+    "claim-is-atomic": {
       "bit": true,
       "class": "executable",
-      "kexpr": "docstring_the_computation_reads_is_inside_the_identity",
+      "kexpr": "exactly_one_attempt_enters_compute",
+      "ran": true,
+      "sites": 2
+    },
+    "external-binding-covers-the-package": {
+      "bit": true,
+      "class": "executable",
+      "kexpr": "external_input_binding_covers_the_whole_package",
       "ran": true,
       "sites": 1
     },
-    "crash-recovery-needs-the-credential": {
+    "freeze-completes-a-half-written-transition": {
       "bit": true,
       "class": "executable",
-      "kexpr": "the_crash_recovery_needs_the_owner_credential",
+      "kexpr": "freeze_is_retryable_after_a_crash_between_its_two_writes",
       "ran": true,
       "sites": 1
     },
-    "fit-axis-seals-the-objective-payload": {
+    "ledger-dir-contained": {
       "bit": true,
       "class": "executable",
-      "kexpr": "objective_payload_is_inside_the_approval_digest",
+      "kexpr": "dir_that_is_not_contained",
       "ran": true,
       "sites": 1
     },
-    "inner-unbound-kernel": {
+    "open-checks-the-live-claim-first": {
       "bit": true,
       "class": "executable",
-      "kexpr": "blank_its_own_inner_check",
+      "kexpr": "second_open_never_touches_the_live_owners_token",
       "ran": true,
       "sites": 1
     },
-    "module-defs-see-tuple-targets": {
+    "planned-binds-the-code-identity": {
       "bit": true,
       "class": "executable",
-      "kexpr": "producer_closure_sees_tuple_targets or producer_closure_follows_a_tuple_defined_constant",
+      "kexpr": "plan_to_the_code_identity",
       "ran": true,
       "sites": 1
     },
-    "pin-is-publication-authority": {
+    "preservation-status-inside-the-contract": {
       "bit": true,
       "class": "executable",
-      "kexpr": "producer_pin_is_part",
+      "kexpr": "the_runtime_preservation_enum_is_inside_the_contract",
       "ran": true,
       "sites": 1
     },
-    "prelock-digest-check": {
+    "publisher-owns-the-merge-temp": {
       "bit": true,
       "class": "executable",
-      "kexpr": "wrong_bytes_are_never_locked",
+      "kexpr": "caller_stage_is_untouched",
       "ran": true,
       "sites": 1
     },
-    "proof-handoff-to-verify": {
+    "seal-finite-floats": {
       "bit": true,
       "class": "executable",
-      "kexpr": "repaired_proof_is_handed or pre_journal_finalize or journal_seals_the_content",
+      "kexpr": "seal_domain_is_exact_not_isinstance",
       "ran": true,
       "sites": 1
     },
-    "roster-is-a-set": {
+    "trust-boundary-declared": {
       "bit": true,
       "class": "executable",
-      "kexpr": "ledger_roster_is_a_set_not_a_multiset",
-      "ran": true,
-      "sites": 1
-    },
-    "token-is-written-before-the-claim": {
-      "bit": true,
-      "class": "executable",
-      "kexpr": "crash_between_the_claim_and_the_token_leaves_nothing_stranded",
+      "kexpr": "publisher_declares_its_trust_boundary",
       "ran": true,
       "sites": 1
     }

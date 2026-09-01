@@ -5369,3 +5369,125 @@ fit 이 읽는 것은 `curves.parquet` 하나가 아니다 — producer 기록
 | baseline·sweep1d·wsweep 의 계획 gate | **미착수** |
 | 실물 object-lock adapter · power-loss 모델 · publisher 전용 OS principal | **미구현** |
 | 외적타당도 #48/#49/#50 | **미착수** |
+
+---
+
+## §59 51차 게이트 리뷰 대응 — 순서는 CAS 가 아니었다 (묶음 9)
+
+50차 판정은 **NO-GO**. "이번 라운드는 49차의 입력 key 와 쓰기 지점 검사를
+늘렸지만, 그 검사가 lifecycle generation 또는 계산이 실제 소비한 immutable
+bytes 와 **구조적으로 묶이지 않았다**." 새 P0 9건 · P1 5건. 전부 이 기계에서
+재현해 RED 로 고정한 뒤 고쳤다.
+
+### 반례 대응표
+
+| # | 50차 반례 | 재현 | 고친 자리 |
+|---|---|---|---|
+| P0-L1 | 두 번째 정상 `open_leg_run()` 이 살아 있는 owner token 을 먼저 덮는다 | ○ | 발급 전체를 claim 임계 구역 안으로 — 살아 있는 claim 을 **먼저** 판정 |
+| P0-L2a | 옛 release 의 늦은 cleanup 이 새 attempt 의 token 을 지운다 | ○ | `_unlink_token_generation()` — 내가 쓴 token 일 때만 지운다 |
+| P0-L2b | stale `LegClaim(A)` 가 B 의 claim 을 지운다 | ○ | `_assert_live_attempt()` 를 `_abandon_claim()` 쓰기 지점에 |
+| P0-L2c | `LegClaim(..., token=None)` 로 owner 취소 | ○ | 같은 검사 (타입 이름이 아니라 verifier 대조가 authority) |
+| P0-L3a | release crash → 회수 불가능한 `running` orphan | ○ | 원장 전이를 **먼저**, claim 삭제를 나중에 |
+| P0-L3b | `os.replace` 뒤 fsync 오류를 미커밋으로 보고 claim·token 삭제 | ○ | `_plan_status()` 로 살아 있는 원장을 다시 읽고 rollback 을 결정 |
+| P0-A1 | objective weight payload 가 승인 밖 | ○ | `objectives_digest` 를 `LEG_SPEC_FIT_KEYS` 에 |
+| P0-A2 | `base_config` 의 `extends` 부모가 승인 밖 | ○ | `base_config_digest` 를 dependency **closure 전체**의 내용 주소로 |
+| P0-A3 | 세 파일 대조 뒤 snapshot 전에 package 전체 교체 | ○ | `_stage_fit_inputs()` — gate **앞에서** immutable 사본, 이후 전부 그 사본만 |
+| P0-A4 | grid 의 discharged-state cache 가 승인 밖 | ○ | `discharged_cache_sha256` + 본체가 **승인한 바이트만** 파싱 |
+| P0-F | 원장의 cohort ID 만 바꿔 frozen 디렉터리에 재게시 | ○ | lifecycle journal 이 **목적지(`dir`)** 를 봉인 |
+| P0-I a | module-level `for` binding 이 producer identity 밖 | ○ | `_module_defs()` 가 복합문 안으로 · 모르는 문에서 멈춘다 |
+| P0-I b | aliased `getattr` 로 stripped docstring 을 읽는다 | ○ | 정규형이 docstring 을 **버리지 않는다** |
+| P1-E1 | external `in_digest` 가 두 manifest digest 를 버린다 | ○ | `in_digest` 의 뜻을 **묶음 package digest** 로 |
+| P1-E2 | mutation coverage 가 semantic no-op·replay 0회를 인증 | ○ | 정규형 부등식 + artifact 를 등록부·EXPECT·runner·HEAD·transcript 에 결속 (v2) |
+| P1-O | freeze 가 fail-closed 인데 재시도 불가 | ○ | 남은 원장 전이를 완주 (idempotent 복구) |
+| P1-C | 계약 §13.4 와 executable schema 불일치 | ○ | 계약 갱신 + 두 곳의 일치를 강제하는 회귀 |
+| P1-P | caller token 경로가 claim authority 와 alias | ○ | `_assert_token_path_disjoint()` + 기본 자리를 `results/_attempts/` 로 |
+
+### 51-1 세 축이 또 같은 형태였다 — 이번에는 **generation**
+
+49차는 자격을 읽기 함수에 두었고, 50차는 그것을 쓰기 지점으로 옮겼다. 그런데
+옮긴 것이 `phase_done()` **하나뿐**이었다. `_abandon_claim()` 은 그대로였고,
+`open_leg_run()` 의 "token 을 먼저 쓴다" 는 순서일 뿐 `(attempt_id, verifier,
+generation)` 의 compare-and-swap 이 아니었다.
+
+읽고 나서 쓰는 모든 자리가 같은 질문을 해야 한다: **지금 디스크에 있는 것이
+내가 읽은 그것인가.** 51차는 그 질문을 네 자리에 넣었다 — 발급·phase 기록·
+되돌림·token 삭제.
+
+### 51-2 fail-closed 는 정지가 아니다
+
+freeze 는 journal·anchor 를 먼저 쓰고 원장을 나중에 쓴다. 그 사이 crash 면
+게시는 안전하게 막힌다 — 거기까지는 옳다. 그런데 같은 public API 로 다시 부르면
+`frozen → frozen` 이라 거부됐고, 원장은 영원히 `active` 로 남았다. 안전한
+중간 상태를 만드는 것과 **거기서 나갈 길을 두는 것**은 다른 일이다.
+
+같은 형태가 lifecycle 에도 있었다: 50차 release 는 claim 을 먼저 지웠고, 그
+중간 상태(claim 없음 + 계획 `running`)는 어떤 공개 API 로도 회수할 수 없었다.
+순서를 뒤집으면 중간 상태가 "claim 은 있고 계획은 `planned`" 가 되고, 그것은
+같은 소유 증명으로 그냥 다시 되돌리면 되는 상태다. **회수 가능성이 순서를
+정한다.**
+
+### 51-3 철자 목록은 종결 조건이 아니다
+
+producer 닫힘에서 두 번 같은 교훈을 얻었다.
+
+- 49차가 `import ... as` 를, 50차가 tuple target 을 더했다. 51차 반례는
+  module-level `for` 이었다. 형태를 하나씩 추가하는 한 다음 형태가 늘 있다 —
+  이제 복합문 안으로 들어가고, 이름을 안 묶는 문은 지나가고, **그 밖은
+  멈춘다.** Python 이 문법을 더하면 그때 의미를 정한다 (`ast.TypeAlias` 가
+  지금 그 상태이고, 회귀가 그것으로 fail-closed 를 확인한다).
+- 50차는 `.__doc__` 이라는 철자를 막았다. `read = getattr` 한 줄이 그것을
+  피해 갔다. alias 의 alias, 부분 적용, dict 에 담은 함수로 계속 이어지므로
+  blacklist 는 끝나지 않는다. **버리는 것을 없애면** 그 축 자체가 사라진다 —
+  정규형이 docstring 을 남긴다. 대가는 계산 경로 docstring 을 고치면 cohort 를
+  새로 만들어야 한다는 것이고, "digest 가 거짓일 수 있다" 를 남기는 것보다 싸다.
+
+### 51-4 증거가 실행에 안 묶여 있었다
+
+리뷰어가 `replay_calls=0` 으로 99/99 를 받았다. coverage artifact 는 HEAD·
+등록부·runner·EXPECT·실행 transcript 중 아무 것에도 안 묶여 있었으므로, 과거
+JSON 이 그대로 전수 인증이었다. `--check-preimages` 의 `old != new` 도 **바이트**
+부등식이라 주석 한 줄짜리 mutant 를 성립한 변이로 셌다.
+
+v2 artifact 는 다섯을 담고 checker 가 살아 있는 값과 대조한다. 부등식은 정규형
+(`ast.unparse`)에서 본다.
+
+### 51-5 이번에도 시험이 **쓰는 자리**를 안 봤다
+
+`fit-stages-its-inputs-before-the-gate` 변이가 처음에 **안 물었다.** 시험이
+`_stage_fit_inputs()` 를 직접 불러 사본의 성질만 봤기 때문이다 — 그 함수가
+아무리 옳아도 `run_fit()` 이 원본 경로를 넘기면 아무 것도 닫히지 않는다.
+`run_fit()` 이 본체에 무엇을 넘기는지 보는 시험으로 바꾸니 물었다.
+
+50차의 `PHASE_INPUT_KEYS` 자기참조와 같은 축이다: **시험은 helper 가 아니라
+production 이 그것을 쓰는 자리를 봐야 한다.**
+
+### 51-6 lifecycle journal schema 를 옮겼다 (그리고 그 이동을 증명한다)
+
+`dir` 을 더하려면 append-only journal 의 사슬을 다시 계산해야 한다. 그 쓰기는
+정확히 "조용한 되돌림" 과 같은 모양이므로, 무해했다는 것을 기계가 답할 수
+있어야 한다. `test_the_lifecycle_schema_migration_did_not_rewrite_history` 가
+재계산 **전** 파일의 digest(`a3b2dbed…`)와 그때의 네 줄 `(cohort_id, from, to,
+at)` 을 고정하고, 지금 journal 의 앞 네 줄이 그 값을 그대로 담고 `dir` 만
+더해졌는지 본다.
+
+### 실측
+
+| 무엇 | 값 |
+|---|---|
+| 전체 회귀 | **1348 passed · 1 xfailed · 0 failed** |
+| strict smoke | **rc 0 · 52 ✅ · 0 ❌** |
+| 변이 전수 | 114 scenario (executable 108 · declared 6) · 11 조각 합집합이 등록부를 정확히 덮었다 |
+| lifecycle e2e | 실제 `run.sh` 3회 · 난입 6종 차단 |
+| 산출물 | g5 를 얼리고 g6 로 · `proj ad598fe77e75afec` (행 바이트 불변) |
+
+### 아직 아닌 것
+
+| 항 | 상태 |
+|---|---|
+| 조건 P0-1 producer 결속 — 닫힌 typed manifest 파싱 · 두 payload 압축해제 재해시 · producer 발행 영수증 | **미착수** (49차부터 세 라운드째) |
+| 조건 P0-8 — 경로 무관 typed·sealed 실행 class marker | **미착수.** 판정은 여전히 `is_inside_namespace()` 의 정규 격리다 |
+| 조건 P0-4 — typed CAS/archive/restore/validation/retention 영수증 소비 | **부분** |
+| `run_transaction` · `finalize_only` 의 production 호출자 | **여전히 없다** |
+| baseline·sweep1d·wsweep 의 계획 gate | **미착수** |
+| 실물 object-lock adapter · power-loss 모델 · publisher 전용 OS principal | **미구현** |
+| 외적타당도 #48/#49/#50 | **미착수** |

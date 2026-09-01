@@ -1,10 +1,17 @@
 {
-  "at": "2026-08-31T17:57:56Z",
+  "at": "2026-09-01T04:28:03Z",
+  "binding": {
+    "expect_digest": "849931cfb6788222e6b48acca58db5c8deecc30fa0852fedf59fecd355c34377",
+    "head": "1ca133ae673307c09cb97aa80f5a4d8601dfad53",
+    "registry_digest": "b4a63540eea93282ee16519d0de8c22f0c0ca9245cee1e512f24ee21f39867ae",
+    "runner_digest": "9a6c41b603bdf5989ea00b21e685f7168540fbd7742eae5a904280d4a540686e",
+    "transcript_digest": "8aabcf58ff34837da093b789344c98f940b2becb32707ffa693226240b074d02"
+  },
   "scenarios": {
-    "both-pointers-checked": {
+    "authority-registry": {
       "bit": true,
       "class": "executable",
-      "kexpr": "pointer_moved_by_another",
+      "kexpr": "raw_publisher_takes_no",
       "ran": true,
       "sites": 1
     },
@@ -15,17 +22,17 @@
       "ran": true,
       "sites": 1
     },
-    "finalize-rechecks-in-the-ledger-lock": {
+    "finalize-writes-the-whole-tuple": {
       "bit": true,
       "class": "executable",
-      "kexpr": "finalize_rechecks_the_whole_authority_inside_the_ledger_lock",
+      "kexpr": "finalize_writes_a_complete_contract_status_tuple",
       "ran": true,
       "sites": 1
     },
-    "guard-before-commit": {
+    "generation-root-nofollow": {
       "bit": true,
       "class": "executable",
-      "kexpr": "pathname_after_the_check or same_roster_ledger_change",
+      "kexpr": "generation_root_symlink_is_never_read_as_a_generation or symlinked_gen_ancestor_never_holds_a_generation",
       "ran": true,
       "sites": 1
     },
@@ -36,49 +43,49 @@
       "ran": true,
       "sites": 1
     },
-    "phase-input-binding-needs-a-receipt": {
+    "phase-input-binding-covers-the-package": {
       "bit": true,
       "class": "executable",
-      "kexpr": "fit_refuses_when_its_grid_phase_is_missing",
+      "kexpr": "grid_receipt_binds_every_curve_input_not_just_the_parquet",
       "ran": true,
       "sites": 1
     },
-    "pointer-binds-the-ledger": {
+    "pointer-loss-is-terminal": {
       "bit": true,
       "class": "executable",
-      "kexpr": "expanding_a_roster_over_an_active_cohort_requires_a_new_cohort",
+      "kexpr": "losing_the_pointer_of_a_cohort",
       "ran": true,
       "sites": 1
     },
-    "producer-canon-drops-empty-fields": {
+    "producer-cut-is-declared": {
       "bit": true,
       "class": "executable",
-      "kexpr": "producer_digest_is_the_same_on_every_python_here",
+      "kexpr": "producer_semantic_digest_excludes_the_publication_path",
       "ran": true,
       "sites": 1
     },
-    "public-lifecycle-in-two-publisher-fixture": {
-      "bit": null,
-      "class": "declared",
-      "kexpr": null,
-      "ran": false,
-      "sites": 1
-    },
-    "seal-exact-types": {
+    "release-returns-the-plan": {
       "bit": true,
       "class": "executable",
-      "kexpr": "an_omap_and_a_list_of_lists_do_not_share_a_seal",
+      "kexpr": "released_run_returns_the_plan_to_planned",
       "ran": true,
       "sites": 1
     },
-    "token-is-written-before-the-claim": {
+    "staging-nlink-one": {
       "bit": true,
       "class": "executable",
-      "kexpr": "crash_between_the_claim_and_the_token_leaves_nothing_stranded",
+      "kexpr": "staging_aliases_never_become_an_immutable_generation",
+      "ran": true,
+      "sites": 1
+    },
+    "warm-edges-are-declared": {
+      "bit": true,
+      "class": "executable",
+      "kexpr": "warm_consumers_go_through_the_accessors",
       "ran": true,
       "sites": 1
     }
   },
-  "schema": "mutation-coverage/v1",
+  "schema": "mutation-coverage/v2",
   "selector": ""
 }

@@ -1,10 +1,17 @@
 {
-  "at": "2026-08-31T17:56:18Z",
+  "at": "2026-09-01T04:26:40Z",
+  "binding": {
+    "expect_digest": "849931cfb6788222e6b48acca58db5c8deecc30fa0852fedf59fecd355c34377",
+    "head": "1ca133ae673307c09cb97aa80f5a4d8601dfad53",
+    "registry_digest": "b4a63540eea93282ee16519d0de8c22f0c0ca9245cee1e512f24ee21f39867ae",
+    "runner_digest": "9a6c41b603bdf5989ea00b21e685f7168540fbd7742eae5a904280d4a540686e",
+    "transcript_digest": "c8f4988f5bd2aa881f5742acc325942b75fa18b34f39d7afe0bf0bfc295129d9"
+  },
   "scenarios": {
-    "authority-registry": {
+    "authority-frozenset": {
       "bit": true,
       "class": "executable",
-      "kexpr": "raw_publisher_takes_no",
+      "kexpr": "frozen_authority_holds_only_immutable",
       "ran": true,
       "sites": 1
     },
@@ -15,18 +22,18 @@
       "ran": true,
       "sites": 1
     },
-    "finalize-holds-the-claim-lock": {
+    "finalize-requires-the-credential": {
       "bit": true,
       "class": "executable",
-      "kexpr": "canonical_lock_order_is_declared_and_finalize_holds_the_claim",
+      "kexpr": "finalize_requires_the_owner_credential",
       "ran": true,
       "sites": 1
     },
-    "generation-root-nofollow": {
-      "bit": true,
-      "class": "executable",
-      "kexpr": "generation_root_symlink_is_never_read_as_a_generation or symlinked_gen_ancestor_never_holds_a_generation",
-      "ran": true,
+    "generation-owns-its-bytes": {
+      "bit": null,
+      "class": "declared",
+      "kexpr": null,
+      "ran": false,
       "sites": 1
     },
     "lifecycle-chain-is-verified": {
@@ -36,49 +43,49 @@
       "ran": true,
       "sites": 1
     },
-    "phase-input-binding-covers-the-package": {
+    "phase-input-binding": {
       "bit": true,
       "class": "executable",
-      "kexpr": "grid_receipt_binds_every_curve_input_not_just_the_parquet",
+      "kexpr": "fit_refuses_curves_that_its_grid_phase_did_not_produce",
       "ran": true,
       "sites": 1
     },
-    "planned-status-is-not-standing": {
+    "pointer-binds-the-ledger": {
       "bit": true,
       "class": "executable",
-      "kexpr": "standing_authorization",
+      "kexpr": "expanding_a_roster_over_an_active_cohort_requires_a_new_cohort",
       "ran": true,
       "sites": 1
     },
-    "preservation-status-inside-the-contract": {
+    "producer-crossing-is-fail-closed": {
       "bit": true,
       "class": "executable",
-      "kexpr": "the_runtime_preservation_enum_is_inside_the_contract",
+      "kexpr": "breaking_the_crossing_into_src_scoring_is_fail_closed",
       "ran": true,
       "sites": 1
     },
-    "proof-until-equals-lease": {
+    "release-moves-the-ledger-before-the-claim": {
+      "bit": true,
+      "class": "executable",
+      "kexpr": "crash_inside_release_leaves_a_recoverable_state",
+      "ran": true,
+      "sites": 1
+    },
+    "sink-validates-itself": {
+      "bit": true,
+      "class": "executable",
+      "kexpr": "sink_refuses_an_incomplete",
+      "ran": true,
+      "sites": 1
+    },
+    "warm-consumer-wiring": {
       "bit": null,
       "class": "declared",
       "kexpr": null,
       "ran": false,
       "sites": 1
-    },
-    "row-selection-seals-its-content": {
-      "bit": true,
-      "class": "executable",
-      "kexpr": "fit_axis_seals_the_row_selection_content",
-      "ran": true,
-      "sites": 1
-    },
-    "thaw-transition-is-unrepresentable": {
-      "bit": true,
-      "class": "executable",
-      "kexpr": "frozen_cohort_cannot_be_thawed_and_published",
-      "ran": true,
-      "sites": 1
     }
   },
-  "schema": "mutation-coverage/v1",
+  "schema": "mutation-coverage/v2",
   "selector": ""
 }

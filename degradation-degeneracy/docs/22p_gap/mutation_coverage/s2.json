@@ -1,10 +1,17 @@
 {
-  "at": "2026-08-31T17:54:50Z",
+  "at": "2026-09-01T04:25:34Z",
+  "binding": {
+    "expect_digest": "849931cfb6788222e6b48acca58db5c8deecc30fa0852fedf59fecd355c34377",
+    "head": "1ca133ae673307c09cb97aa80f5a4d8601dfad53",
+    "registry_digest": "b4a63540eea93282ee16519d0de8c22f0c0ca9245cee1e512f24ee21f39867ae",
+    "runner_digest": "9a6c41b603bdf5989ea00b21e685f7168540fbd7742eae5a904280d4a540686e",
+    "transcript_digest": "70da4e34c857e08ffb48f564fad21c73714b89c944907af01907aefa116533c6"
+  },
   "scenarios": {
-    "authority-frozenset": {
+    "authority-frozen": {
       "bit": true,
       "class": "executable",
-      "kexpr": "frozen_authority_holds_only_immutable",
+      "kexpr": "frozen_authority_cannot_be_edited",
       "ran": true,
       "sites": 1
     },
@@ -15,18 +22,18 @@
       "ran": true,
       "sites": 1
     },
-    "dry-run-releases-the-claim": {
+    "finalize-rechecks-in-the-ledger-lock": {
       "bit": true,
       "class": "executable",
-      "kexpr": "dry_run_does_not_strand_the_plan_in_running",
+      "kexpr": "finalize_rechecks_the_whole_authority_inside_the_ledger_lock",
       "ran": true,
       "sites": 1
     },
-    "generation-owns-its-bytes": {
-      "bit": null,
-      "class": "declared",
-      "kexpr": null,
-      "ran": false,
+    "generation-namespace-guard": {
+      "bit": true,
+      "class": "executable",
+      "kexpr": "current_generation_cannot_be_used_as_its_own_staging",
+      "ran": true,
       "sites": 1
     },
     "ledger-status-enum": {
@@ -36,49 +43,49 @@
       "ran": true,
       "sites": 1
     },
-    "phase-input-binding": {
+    "pending-closed-schema": {
       "bit": true,
       "class": "executable",
-      "kexpr": "fit_refuses_curves_that_its_grid_phase_did_not_produce",
+      "kexpr": "stale_bootstrap_pending",
       "ran": true,
       "sites": 1
     },
-    "planned-binds-the-execution-record": {
+    "planned-status-is-not-standing": {
       "bit": true,
       "class": "executable",
-      "kexpr": "planned_index_is_bound_to_the_real",
+      "kexpr": "standing_authorization",
       "ran": true,
       "sites": 1
     },
-    "prelock-version-id-is-a-string": {
+    "producer-crosses-into-scoring": {
       "bit": true,
       "class": "executable",
-      "kexpr": "falsy_version_id",
+      "kexpr": "producer_digest_crosses_into_src_scoring",
       "ran": true,
       "sites": 1
     },
-    "proof-handoff-to-verify": {
+    "recheck-before-rename": {
       "bit": true,
       "class": "executable",
-      "kexpr": "repaired_proof_is_handed or pre_journal_finalize or journal_seals_the_content",
+      "kexpr": "rechecked_immediately_before_the_rename",
       "ran": true,
       "sites": 1
     },
-    "roster-is-a-set": {
+    "sink-subset-of-roster": {
       "bit": true,
       "class": "executable",
-      "kexpr": "ledger_roster_is_a_set_not_a_multiset",
+      "kexpr": "complete_undeclared_leg_never_reaches_pending",
       "ran": true,
       "sites": 1
     },
-    "thaw-is-refused-before-the-first-write": {
+    "warm-consumer-uses-accessor": {
       "bit": true,
       "class": "executable",
-      "kexpr": "publisher_refuses_a_thawed_cohort_before_the_first_write",
+      "kexpr": "warm_consumers_go_through_the_accessors",
       "ran": true,
       "sites": 1
     }
   },
-  "schema": "mutation-coverage/v1",
+  "schema": "mutation-coverage/v2",
   "selector": ""
 }
