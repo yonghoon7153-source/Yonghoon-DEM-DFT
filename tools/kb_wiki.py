@@ -597,7 +597,7 @@ def cmd_reviews(write=False):
              "verifiedAt: %s" % datetime.date.today().isoformat(),
              "verifiedBy: tools/kb_wiki.py reviews --write (산출물에서 재구성)",
              "explored: false", "authoredBy: agent", "effort: low",
-             "claimType: descriptive", "evidenceScope: multi-source-primary",
+             "claimType: empirical", "evidenceScope: multi-source-primary",
              "---", "",
              "# 리뷰 사슬 색인", "",
              "> ⛔ **손으로 고치지 않는다.** `python3 tools/kb_wiki.py reviews --write` 로",
@@ -660,6 +660,14 @@ def selftest_reviews():
     chk(not any(r["reply"] and "sdcp_binding" in n and "polaron" in str(r["reply"])
                 for n, r in prompts.items()),
         "[음성] 라벨 재사용(T 둘)에서 다른 캠페인의 회신을 잘못 맺지 않는다")
+    # ⛔음성: 생성한 INDEX 가 **자기 lint 를 통과**해야 한다 (2026-08-31: claimType
+    #   descriptive 로 내보내 ERROR 1건을 스스로 만들었다)
+    _ix = REPO / "kb" / "reviews" / "INDEX.md"
+    if _ix.is_file():
+        _fm, _ = parse_fm(_ix.read_text(errors="ignore"))
+        _bad = [k for k, allowed in ENUMS.items()
+                if (_fm or {}).get(k) and _fm[k] not in allowed]
+        chk(not _bad, "생성한 INDEX 가 자기 lint enum 을 통과한다 (위반 %s)" % _bad)
     _reused = sorted({r["label"] for r in prompts.values() if r.get("label_reused")})
     chk(bool(_reused), "재사용된 라벨을 표시한다 (%s)" % _reused)
     _us0 = [r for n, r in prompts.items() if n.startswith("codex_U_prompt_polaron")]

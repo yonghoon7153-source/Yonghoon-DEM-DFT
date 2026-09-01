@@ -12,7 +12,7 @@ verifiedBy: tools/kb_wiki.py reviews --write (산출물에서 재구성)
 explored: false
 authoredBy: agent
 effort: low
-claimType: descriptive
+claimType: empirical
 evidenceScope: multi-source-primary
 ---
 
