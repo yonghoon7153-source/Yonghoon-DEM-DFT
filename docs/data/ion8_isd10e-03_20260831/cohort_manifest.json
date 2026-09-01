@@ -1,0 +1,419 @@
+{
+ "arms": 16,
+ "diagnostic": null,
+ "equivalence_checked": true,
+ "equivalence_modes": [
+  "--seal-only",
+  "--collect-only",
+  "full"
+ ],
+ "files": [
+  {
+   "dropped": [
+    {
+     "len": 486,
+     "path": "step3.phi_profile.electronic.z_um"
+    },
+    {
+     "len": 486,
+     "path": "step3.phi_profile.electronic.phi"
+    },
+    {
+     "len": 485,
+     "path": "step3.phi_profile.ionic.z_um"
+    },
+    {
+     "len": 485,
+     "path": "step3.phi_profile.ionic.phi"
+    }
+   ],
+   "name": "p2_DBE_sph_a0.json",
+   "out_bytes": 9275,
+   "out_sha256": "67cb3344276321e5e56c4df01a2d3ea54032eae3e004fa1ba0413ed31b88b68f",
+   "src_bytes": 130876128,
+   "src_sha256": "656ce09d4e1cb372ebfc56b8500f3ab10f1ee17e8dde5549bfced0a9f6803cbb"
+  },
+  {
+   "dropped": [
+    {
+     "len": 486,
+     "path": "step3.phi_profile.electronic.z_um"
+    },
+    {
+     "len": 486,
+     "path": "step3.phi_profile.electronic.phi"
+    },
+    {
+     "len": 485,
+     "path": "step3.phi_profile.ionic.z_um"
+    },
+    {
+     "len": 485,
+     "path": "step3.phi_profile.ionic.phi"
+    }
+   ],
+   "name": "p2_DBE_sph_a1.json",
+   "out_bytes": 9286,
+   "out_sha256": "f4e2383aaad43a3846d96eec0a314d073d38267327926f40c24c671602a291d6",
+   "src_bytes": 130876718,
+   "src_sha256": "b9e8a1e9837a3660ba12791f5c65ccf5973571e1650c16f4a38282fc9d22c218"
+  },
+  {
+   "dropped": [
+    {
+     "len": 486,
+     "path": "step3.phi_profile.electronic.z_um"
+    },
+    {
+     "len": 486,
+     "path": "step3.phi_profile.electronic.phi"
+    },
+    {
+     "len": 485,
+     "path": "step3.phi_profile.ionic.z_um"
+    },
+    {
+     "len": 485,
+     "path": "step3.phi_profile.ionic.phi"
+    }
+   ],
+   "name": "p2_DBE_sph_a2.json",
+   "out_bytes": 9273,
+   "out_sha256": "2619f4e891d20c00bd1e16af92508e27969edcb8d76adc3e72e9fab2306ac373",
+   "src_bytes": 130878633,
+   "src_sha256": "e53e47370a13a4f05683aecc228bf53deaeaa5ab1fa7a0a6e9695c7cc73365c3"
+  },
+  {
+   "dropped": [
+    {
+     "len": 486,
+     "path": "step3.phi_profile.electronic.z_um"
+    },
+    {
+     "len": 486,
+     "path": "step3.phi_profile.electronic.phi"
+    },
+    {
+     "len": 485,
+     "path": "step3.phi_profile.ionic.z_um"
+    },
+    {
+     "len": 485,
+     "path": "step3.phi_profile.ionic.phi"
+    }
+   ],
+   "name": "p2_DBE_sph_a3.json",
+   "out_bytes": 9293,
+   "out_sha256": "03252dc00df5e869299f9e8ffd8a640fa35936733b4a28386f5e2964bb0f2f55",
+   "src_bytes": 130876287,
+   "src_sha256": "3cb57e8688f59de84a1eef5adc213cbf6678971d8c34b038cacd9e378d7b2d7f"
+  },
+  {
+   "dropped": [
+    {
+     "len": 486,
+     "path": "step3.phi_profile.electronic.z_um"
+    },
+    {
+     "len": 486,
+     "path": "step3.phi_profile.electronic.phi"
+    },
+    {
+     "len": 485,
+     "path": "step3.phi_profile.ionic.z_um"
+    },
+    {
+     "len": 485,
+     "path": "step3.phi_profile.ionic.phi"
+    }
+   ],
+   "name": "p2_DBE_sph_a4.json",
+   "out_bytes": 9277,
+   "out_sha256": "6daf5dedf4409a51b6f09b443e2e487bedbdb7a9a50468943786625b2dbc0716",
+   "src_bytes": 130876384,
+   "src_sha256": "553760353cceec3d6206b35a1240a8cb34ff73245d1ea5bedef75297779b01cf"
+  },
+  {
+   "dropped": [
+    {
+     "len": 486,
+     "path": "step3.phi_profile.electronic.z_um"
+    },
+    {
+     "len": 486,
+     "path": "step3.phi_profile.electronic.phi"
+    },
+    {
+     "len": 485,
+     "path": "step3.phi_profile.ionic.z_um"
+    },
+    {
+     "len": 485,
+     "path": "step3.phi_profile.ionic.phi"
+    }
+   ],
+   "name": "p2_DBE_sph_a5.json",
+   "out_bytes": 9292,
+   "out_sha256": "4e7f1dfcd81e6464b73b09fcc0fc7daa56e60c052d16d3cc8b72206dd102acaa",
+   "src_bytes": 130874879,
+   "src_sha256": "75dcf5ab790731d4622f079e8320701f5d4fcfafb36df9ff1d8839f59088504f"
+  },
+  {
+   "dropped": [
+    {
+     "len": 486,
+     "path": "step3.phi_profile.electronic.z_um"
+    },
+    {
+     "len": 486,
+     "path": "step3.phi_profile.electronic.phi"
+    },
+    {
+     "len": 485,
+     "path": "step3.phi_profile.ionic.z_um"
+    },
+    {
+     "len": 485,
+     "path": "step3.phi_profile.ionic.phi"
+    }
+   ],
+   "name": "p2_DBE_sph_a6.json",
+   "out_bytes": 9281,
+   "out_sha256": "38f0cc251dc8f6913f3cbf62477511f83b81301593223cff6732b131d3b1ce24",
+   "src_bytes": 130876622,
+   "src_sha256": "ad70276a7f4e20e2e76152d90e623835795bd66b820d8ac7abddb7e44bcfbe14"
+  },
+  {
+   "dropped": [
+    {
+     "len": 486,
+     "path": "step3.phi_profile.electronic.z_um"
+    },
+    {
+     "len": 486,
+     "path": "step3.phi_profile.electronic.phi"
+    },
+    {
+     "len": 485,
+     "path": "step3.phi_profile.ionic.z_um"
+    },
+    {
+     "len": 485,
+     "path": "step3.phi_profile.ionic.phi"
+    }
+   ],
+   "name": "p2_DBE_sph_a7.json",
+   "out_bytes": 9295,
+   "out_sha256": "3955d3cbe7861ac26994089bd012abea8f79e8ed521fc80f835a71f9d7df2548",
+   "src_bytes": 130873799,
+   "src_sha256": "e71c9fd5111255158f1e48835f08b8d8105f04b72db6bf04b253c8e781bbd66d"
+  },
+  {
+   "dropped": [
+    {
+     "len": 486,
+     "path": "step3.phi_profile.electronic.z_um"
+    },
+    {
+     "len": 486,
+     "path": "step3.phi_profile.electronic.phi"
+    },
+    {
+     "len": 484,
+     "path": "step3.phi_profile.ionic.z_um"
+    },
+    {
+     "len": 484,
+     "path": "step3.phi_profile.ionic.phi"
+    }
+   ],
+   "name": "p2_SBE_sph_a0.json",
+   "out_bytes": 9101,
+   "out_sha256": "bf43d96791b730602928eb7e7880914f7e73e797784c3ace01f21e7eb029497a",
+   "src_bytes": 132245315,
+   "src_sha256": "4975c014071918827d1329dde288413cd0b18b1131edfd4d620f3533e211380c"
+  },
+  {
+   "dropped": [
+    {
+     "len": 486,
+     "path": "step3.phi_profile.electronic.z_um"
+    },
+    {
+     "len": 486,
+     "path": "step3.phi_profile.electronic.phi"
+    },
+    {
+     "len": 485,
+     "path": "step3.phi_profile.ionic.z_um"
+    },
+    {
+     "len": 485,
+     "path": "step3.phi_profile.ionic.phi"
+    }
+   ],
+   "name": "p2_SBE_sph_a1.json",
+   "out_bytes": 9114,
+   "out_sha256": "22afceb150f826ea6c2947308b3653f8dc93b2c2a0b4ad03447d026b5dd6181e",
+   "src_bytes": 132248259,
+   "src_sha256": "be7dd22b3fbc445b77fce8a863a612765fdc9af60a702dba5599164830df0783"
+  },
+  {
+   "dropped": [
+    {
+     "len": 486,
+     "path": "step3.phi_profile.electronic.z_um"
+    },
+    {
+     "len": 486,
+     "path": "step3.phi_profile.electronic.phi"
+    },
+    {
+     "len": 484,
+     "path": "step3.phi_profile.ionic.z_um"
+    },
+    {
+     "len": 484,
+     "path": "step3.phi_profile.ionic.phi"
+    }
+   ],
+   "name": "p2_SBE_sph_a2.json",
+   "out_bytes": 9102,
+   "out_sha256": "0724881ccd07f04788c2e84e6a94aec242ca4fa89aedd3de8d861e9d08554eeb",
+   "src_bytes": 132247310,
+   "src_sha256": "054d98373348ed76d36f61f9b09b487448b9f583eedd558ffaa0d23622f55051"
+  },
+  {
+   "dropped": [
+    {
+     "len": 486,
+     "path": "step3.phi_profile.electronic.z_um"
+    },
+    {
+     "len": 486,
+     "path": "step3.phi_profile.electronic.phi"
+    },
+    {
+     "len": 485,
+     "path": "step3.phi_profile.ionic.z_um"
+    },
+    {
+     "len": 485,
+     "path": "step3.phi_profile.ionic.phi"
+    }
+   ],
+   "name": "p2_SBE_sph_a3.json",
+   "out_bytes": 9116,
+   "out_sha256": "d0e05e3d576727351e7a3e2f66e1200bda2920782562b86ab9b4a8634a5a15f6",
+   "src_bytes": 132247435,
+   "src_sha256": "c7c888a2b98068486254c32f352ddd5a1cacb1b8f3c2ddf91d9ccb8445bc20d1"
+  },
+  {
+   "dropped": [
+    {
+     "len": 486,
+     "path": "step3.phi_profile.electronic.z_um"
+    },
+    {
+     "len": 486,
+     "path": "step3.phi_profile.electronic.phi"
+    },
+    {
+     "len": 484,
+     "path": "step3.phi_profile.ionic.z_um"
+    },
+    {
+     "len": 484,
+     "path": "step3.phi_profile.ionic.phi"
+    }
+   ],
+   "name": "p2_SBE_sph_a4.json",
+   "out_bytes": 9101,
+   "out_sha256": "74a50ec2a926aed195969acb8d16474f8b761f2f1e7aee47d17abb7a44bc188e",
+   "src_bytes": 132247197,
+   "src_sha256": "45d8bc9aa42ce00b71148243eacd1ccf87178e585876d21e92227882a6abec71"
+  },
+  {
+   "dropped": [
+    {
+     "len": 486,
+     "path": "step3.phi_profile.electronic.z_um"
+    },
+    {
+     "len": 486,
+     "path": "step3.phi_profile.electronic.phi"
+    },
+    {
+     "len": 485,
+     "path": "step3.phi_profile.ionic.z_um"
+    },
+    {
+     "len": 485,
+     "path": "step3.phi_profile.ionic.phi"
+    }
+   ],
+   "name": "p2_SBE_sph_a5.json",
+   "out_bytes": 9116,
+   "out_sha256": "12a02dd868680fece965a64c5f84b190827edd15cc0d815a4110fe64cec3e3ec",
+   "src_bytes": 132247866,
+   "src_sha256": "05b7bf3524c752f8fd4034075942f77d1eec1e7f46858677d18b9c47b9d75339"
+  },
+  {
+   "dropped": [
+    {
+     "len": 486,
+     "path": "step3.phi_profile.electronic.z_um"
+    },
+    {
+     "len": 486,
+     "path": "step3.phi_profile.electronic.phi"
+    },
+    {
+     "len": 484,
+     "path": "step3.phi_profile.ionic.z_um"
+    },
+    {
+     "len": 484,
+     "path": "step3.phi_profile.ionic.phi"
+    }
+   ],
+   "name": "p2_SBE_sph_a6.json",
+   "out_bytes": 9102,
+   "out_sha256": "60cd7180c0d4f5ddcf3dc95110dda8db8d3d9b0f85407dc9fc5ee0687fa2dc94",
+   "src_bytes": 132248561,
+   "src_sha256": "c185d3657a0483b836f8b81df79770f6e135a86cd682b78b867f2fa8f7dc33b6"
+  },
+  {
+   "dropped": [
+    {
+     "len": 486,
+     "path": "step3.phi_profile.electronic.z_um"
+    },
+    {
+     "len": 486,
+     "path": "step3.phi_profile.electronic.phi"
+    },
+    {
+     "len": 485,
+     "path": "step3.phi_profile.ionic.z_um"
+    },
+    {
+     "len": 485,
+     "path": "step3.phi_profile.ionic.phi"
+    }
+   ],
+   "name": "p2_SBE_sph_a7.json",
+   "out_bytes": 9117,
+   "out_sha256": "4fb8bb1d93243f2a926f81415840620995faa527437ed4cf67fe340aa3cbe353",
+   "src_bytes": 132245544,
+   "src_sha256": "661ac6913aeaad8e2c5c743b24ed23a5702f4b5aa67ea25de346dfd9c3cb3c65"
+  }
+ ],
+ "max_list": 64,
+ "note": "scalar decision-audit package — solver/viz 재생용 원자료가 아니다 (R9 Q5)",
+ "receipt_sha256": "e743876dd14315f26b4c147df168df4d528dee64184b826e8f9ff814a92189c1",
+ "schema": "reduced-arm/2",
+ "source_dir": "prereg_v2_vox015_sph_b048_ptscenterline_isd10e-03_ise0003_lean3_r3b12bc79cc60",
+ "tool": "scripts/reduce_arm_payloads.py",
+ "tool_commit": "4d399afc2143594ddffe999fe345b14a1aebb262+dirty"
+}
