@@ -4427,16 +4427,6 @@ def _selftest_closure(chk):
     chk(_r["manuscript_citable"] is False
         and any("provenance 가 없다" in x for x in _r["blockers"]),
         "⛔음성 BB P0-5: provenance 없는 구판 번들은 인용 불가다 (v22 가 이 상태였다)")
-    _pv_live = provenance_closure()
-    chk(_pv_live["n_files"] >= 2
-        and any(v["kind"] == "generator" for v in _pv_live["files"].values())
-        and any(v["kind"] == "imported_module" for v in _pv_live["files"].values()),
-        "BB P0-5 실물: 계보 폐포가 생성기 + **import 된 repo 모듈**을 잡는다 "
-        "(파일 %d개)" % _pv_live["n_files"])
-    chk("등록하지 않은 입력은 여기 없다" in _pv_live["scope"],
-        "BB P0-5: 폐포의 **한계를 산출물에 적는다** — 우리가 본 범위이지 절대적 "
-        "폐포가 아니다 (한계 은폐가 제일 비싼 버그다)")
-
     _r = _cs(dict(_GBOK, reference_files_state={
         "old.json": {"status": None, "ratified": False, "superseded": True}}))
     chk(any("SUPERSEDED" in x for x in _r["blockers"]),
@@ -14572,6 +14562,20 @@ def selftest() -> int:
     # ⛔ 회신 AR 해제조건 10 — 이 묶음은 **배포본 안**으로 옮겼다. 여기서는 그
     #   함수를 그대로 부른다 (검사 출처가 둘로 갈리지 않게).
     _ns["_selftest_closure"](chk)
+    # ⚠ 아래 둘은 **생성기 전용**이다 — `provenance_closure` 는 배포본 분석기에
+    #   없다(분석기는 MANIFEST 의 provenance 를 **읽기만** 한다). 그래서
+    #   `_selftest_closure`(배포본에서도 도는 묶음) 안에 두면 NameError 다.
+    #   건너뛰기로 덮지 않고 여기로 옮긴다 (2026-09-02 실측).
+    _pv_live = provenance_closure()
+    chk(_pv_live["n_files"] >= 2
+        and any(v["kind"] == "generator" for v in _pv_live["files"].values())
+        and any(v["kind"] == "imported_module" for v in _pv_live["files"].values()),
+        "BB P0-5 실물: 계보 폐포가 생성기 + **import 된 repo 모듈**을 잡는다 "
+        "(파일 %d개)" % _pv_live["n_files"])
+    chk("등록하지 않은 입력은 여기 없다" in _pv_live["scope"],
+        "BB P0-5: 폐포의 **한계를 산출물에 적는다** — 우리가 본 범위이지 절대적 "
+        "폐포가 아니다 (한계 은폐가 제일 비싼 버그다)")
+
     # ══ 🔴 회신 AV P0-1 — **실물 manifest 로** root seal 포괄 검사 ══════════
     #   ⛔ 이 시험이 없어서 v18 이 나갔다. 종전 시험은 손으로 만든
     #     `{"meta": {"species_order": [...]}}` 를 넣었는데 **실물 빌더는 그 필드를
