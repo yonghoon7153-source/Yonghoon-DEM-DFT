@@ -156,6 +156,9 @@ def main():
     out = {"property": "mlip_committee_temperature_sweep", "base_T": bT,
            "fixed_threshold_eV_per_A": brk, "verdict": verdict,
            "relative_drift_pct": drift,
+           # ⚠ 2026-09-01 이전엔 fit 을 콘솔에만 찍고 JSON 에 안 남겼다 —
+           #   /benchmarks 가 없는 키를 읽다 깨진 원인. 이제 지속한다.
+           "force_model": fit,
            "by_T": {str(T): {k: v for k, v in r.items() if k != "per_frame"}
                     for T, r in rows.items()},
            "honesty": [

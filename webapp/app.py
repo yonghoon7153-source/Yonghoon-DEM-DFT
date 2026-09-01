@@ -421,7 +421,9 @@ def sdcp_wave1():
         artifact="https://claude.ai/code/artifact/5b5d48c5-e23c-47a1-8493-b42dedb9a121",
         child={"url": "/sdcp/self-doping",
                "label": "⚗️ 자기도핑이란 무엇인가 (배경지식 0 기준)"},
-        subtitle="VASP 외주 30잡 · 두 자기 시드 교차확인 · "
+        # ⚠ "두 자기 시드 교차확인" 이라 쓰지 않는다 — seed 투입·독립재현은 미증명
+        #   (회신 P 5번). realized basin 이 일치한 잡끼리만 인용한다.
+        subtitle="VASP 외주 30잡 · realized-basin 일치분만 인용 · "
                  "db/properties/sdcp_wave1_results.json")
 
 

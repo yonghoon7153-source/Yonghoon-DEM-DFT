@@ -2642,8 +2642,56 @@ def mlip_committee() -> dict:
     sw = _load_json(DB / "properties" / "committee_temperature_sweep.json")
     if sw:
         d = dict(d)
-        d["_sweep"] = sw
+        d["_sweep"] = _sweep_view(sw)
     return d
+
+
+def _sweep_view(sw: dict) -> dict:
+    """온도 스윕 JSON 을 화면용으로 정규화한다.
+
+    ⚠ 도구(committee_sweep_verdict.py)가 2026-09-01 이전엔 D=a+b·F 적합(force_model)을
+      **콘솔에만 찍고 JSON 에 안 남겼다** — /benchmarks 템플릿이 그 없는 키를 읽다
+      깨진 회귀의 원인. 구판 JSON 이면 by_T 에 이미 있는 (힘크기, 중앙불일치) 5점에서
+      도구와 같은 최소제곱으로 재계산한다. **파생값이지 새 측정이 아니다** — 재생성한
+      JSON 에 force_model 이 있으면 그쪽이 이긴다.
+
+    이 함수가 못 하는 것: by_T 가 3점 미만이거나 로그가 정의 안 되면(비양수) fit 을
+    만들지 않는다 — 템플릿은 그 절을 통째로 접는다.
+    """
+    sw = dict(sw)
+    bt = sw.get("by_T") or {}
+    base = str(sw.get("base_T", ""))
+    if base in bt:
+        sw["_els_base"] = bt[base].get("by_element_relative")
+    if not sw.get("force_model") and len(bt) >= 3:
+        try:
+            import math
+            Ts = sorted(bt, key=int)
+            F = [float(bt[t]["force_scale_eV_per_A"]) for t in Ts]
+            D = [float(bt[t]["median"]) for t in Ts]
+            n = len(F)
+            mF, mD = sum(F) / n, sum(D) / n
+            sxx = sum((f - mF) ** 2 for f in F)
+            b = sum((f - mF) * (d_ - mD) for f, d_ in zip(F, D)) / sxx
+            a = mD - b * mF
+            sst = sum((d_ - mD) ** 2 for d_ in D)
+            r2 = 1 - sum((d_ - (a + b * f)) ** 2 for f, d_ in zip(F, D)) / sst
+            lF, lD = [math.log(f) for f in F], [math.log(d_) for d_ in D]
+            mlF, mlD = sum(lF) / n, sum(lD) / n
+            pn = sum((x - mlF) * (y - mlD) for x, y in zip(lF, lD)) \
+                / sum((x - mlF) ** 2 for x in lF)
+            pc = mlD - pn * mlF
+            pr2 = 1 - sum((y - (pc + pn * x)) ** 2 for x, y in zip(lF, lD)) \
+                / sum((y - mlD) ** 2 for y in lD)
+            sw["force_model"] = {
+                "linear_intercept_eV_per_A": a, "linear_slope": b, "linear_R2": r2,
+                "power_exponent": pn, "power_R2": pr2,
+                "floor_share_at_base_T": a / float(bt[base]["median"]),
+                "_derived": "webapp 파생 (구판 JSON — 도구가 fit 을 지속하지 않던 판)",
+            }
+        except (KeyError, ValueError, ZeroDivisionError, ArithmeticError):
+            pass
+    return sw
 
 
 def uma_force_benchmark() -> dict:
@@ -3567,42 +3615,30 @@ def dashboard_highlights() -> list:
                    "케이지 오염된 600 K 점을 포함한 3점 적합이라 게이트 통과 전엔 못 쓴다. "
                    "⚠ σ 절대값 인용 금지 (Nernst–Einstein, Haven=1). "
                    "출처: db/properties/canonical_registry.json"})
-    # SDCP (2026-08-06 저녁 갱신) — Phase-B 를 걸기 직전에 초기 자세를 실측해서 **보류**했다.
-    # 대시보드에 올리는 이유: 며칠짜리 DFT+U 를 멈춘 판단이고, 그 근거가 두 숫자(2.53 Å, 9 meV)로
-    # 끝나기 때문이다. ⚠ UMA 값이다. 절대 E_ads 인용 금지 — 순위·차이만.
-    # 상세: kb/projects/sdcp_phaseB_direction_2026_08_06.md
-    hi.append({"d": "2026-08-06", "t": "SDCP × LiNiO₂(104) — ★ **doped 는 Li 를 뽑고 neutral 은 안 뽑는다**",
-               "v": "Li 변위 2.37 Å vs 0.46 Å (층간격 2.09)",
-               "n": "표면 최상단 층을 풀어(freeze_frac 0.85) 216 자세를 재스캔한 결과, 질문 자체가 바뀌었다. "
-                    "**doped 상위 4개가 전부 Li 추출** — Li 가 2.37 Å(층간격 2.09 Å 를 넘어 표면 밖) "
-                    "움직여 술폰산 O 에 1.94–1.98 Å 로 배위한다. 상위 3개는 주기 이미지로 등가인 "
-                    "Li44/Li88/Li132 에서 일어난 **같은 사건**이라 재현성도 확인됐다. "
-                    "반면 **neutral 은 O↔Li 2.09–2.12 Å 로 진짜 배위하되 Li 가 격자에 남는다**(0.45–0.50 Å). "
-                    "★ 그리고 '탐색 실패가 아니라 상태 부재' 임을 강한 형태로 확인했다 — doped 의 추출 기하를 "
-                    "그대로 두고 **분자만 neutral 로 바꾸자**(배위 안 한 술폰산 O 에 양성자 복원) "
-                    "Li 가 격자 자리로 **복귀한다**: 변위 2.36→0.04 · 2.37→0.04 · 2.38→0.07 Å, "
-                    "Li–O 1.95–1.98 → 3.51–3.52 Å (추출 챔피언 3개 전부). 대조군(doped 그대로 이완)은 "
-                    "2.36 Å 를 유지하므로 프로토콜이 뭐든 무너뜨리는 것도 아니다. "
-                    "즉 중성 종에게 추출 상태는 **국소최소가 아니다**. "
-                    "⚠ 세 자세는 주기 이미지로 등가인 같은 사건이라 '독립 3계' 로 쓰면 틀린다. "
-                    "즉 흡착 세기 비교가 아니라 **Li 스캐빈징 열화 기구**가 본론이다. "
-                    "이것이 그동안의 이상현상을 전부 설명한다 — 얼린 스캔이 둘 다 물리흡착이었던 것(추출 경로 차단), "
-                    "freeze 0.6 의 −1.465 eV(같은 사건), Li vs Ni 9 meV(표면이 응답 못 하면 자리가 무의미), "
-                    "doped 가 O 는 더 먼데 E_bind 가 깊었던 것(애초에 흡착 곡선 위의 점이 아니었다). "
-                    "⚠ **UMA 는 이걸 판정할 수 없다** — Li⁺ 가 빠지면 Ni³⁺→Ni⁴⁺ 산화가 일어나야 하는데 "
-                    "UMA 는 산화상태를 안 봐서 그 대가를 안 문다. "
-                    "→ Phase-B 재정의: ΔE_extract = E(추출 기하) − E(물리흡착 기하). 같은 조성·셀·원자수라 "
-                    "**E_slab·E_mol 이 필요 없고 좌표일치 가드도 필요 없다** — 기준항이 전부 상쇄되는, "
-                    "훨씬 잘 정의된 계산이다. ΔE<0 이면 진짜 열화 기구, >0 이면 UMA 과대평가. "
-                    "◆ 계산 자원: **gabia(48 GB A6000) 한 장으로는 불가**가 7개 조합 실측으로 확정됐다 — "
-                    "크래시 자리가 newq→cegterg→becmod 로 계속 앞으로 옮겨갔고(계 전체가 카드보다 크다는 신호), "
-                    "방어 가능한 최저 설정(진공 11 Å·wfc 50·rho 360·ppcg)에서도 peak 47.6 GB 로 실패했다. "
-                    "필요량 55–60 GB 급. → **VASP 외주 패키지로 전환**(tools/sdcp/qe_to_vasp.py): "
-                    "QE scf.in 6개를 POSCAR/INCAR/KPOINTS 로 변환하고 표준 사양(진공 16 Å·k 2×2×1·ENCUT 520)을 "
-                    "복원했다. run.sh 하나로 순차 실행·resume·결과 산출까지 되고, README_외주.md 가 같이 간다. "
-                    "⚠ 변환 중 버그 2개를 보내기 전에 잡았다 — QE 의 '+0.300' 부호를 정규식이 놓쳐 AFM 시드가 "
-                    "절반 유실됐고, POSCAR 에 Ni 블록이 둘로 쪼개졌다. 지금은 Ni up/down 개수를 매번 검증한다. "
-                    "상세: kb/projects/sdcp_phaseB_direction_2026_08_06.md"})
+    # SDCP doped — ⛔ 2026-09-01 카드 교체. 옛 카드(2026-08-06)는 "doped 는 Li 를 뽑고
+    # neutral 은 안 뽑는다" 를 제목으로 걸고 ΔE_extract·'neutral O↔Li 2.09 Å 배위' 를
+    # 본론으로 서술했다 — 전자는 회신 P 로 부호 해석이 철회됐고(마감 문서 dE_endpoint_raw
+    # citable: no), 후자는 회신 T P0-1 로 철회된 접촉 기하다(실측 4.88–5.39 Å).
+    # 대시보드는 현재-facing 표면이라 철회·마감 이후 상태를 보여야 한다.
+    # 정본: db/properties/sdcp_doped_closed_2026_08_28.json · sdcp_neutral_closed_2026_08_28.json
+    hi.append({"d": "2026-08-28", "t": "SDCP doped × LiNiO₂(104) — **캠페인 마감** (인용 가능한 값 0건)",
+               "v": "doped E_ads·ΔE 부호 전부 비인용 · 본류는 중성 C-12 로",
+               "n": "08-06 UMA 재스캔이 doped 상위 자세에서 Li 2.37 Å 변위(겉보기 추출)를 관측해 "
+                    "Phase-B(DFT+U 추출 에너지)를 열었지만, 회신 P 가 두 endpoint 의 자기상태"
+                    "(총자화 2.378 vs 0.518 μB)·basin 동등성 미입증을 들어 **부호 해석을 철회**시켰고 "
+                    "(+0.34 eV 는 내부 기록 전용), 2026-08-28 캠페인을 **조건 명시로 마감**했다. "
+                    "⛔ 금지 서술 5종: doped E_ads 수치 일체 · '중성보다 강/약하게 붙는다' · "
+                    "홀 위치('슬랩으로 이동/분자에 남음') · 자리선호 방향('무선호' 포함) · n=1 외삽. "
+                    "허용은 회신 P 문구 4문장뿐 (마감 문서 이대로만). "
+                    "⚠ neutral 쪽도 'O···Li 2.09 Å 배위' 가 08-29 철회됐다 — 좌표 실측에서 술포네이트 O 는 "
+                    "표면 Li 에서 4.88–5.39 Å, wave1 실제 최단 접촉은 C–H···표면 O/Ni 2.44 Å. "
+                    "반대 방향('상호작용하지 않는다')도 못 쓴다 — 신규 동결 후보 최저 자세에선 산성 O–H 가 "
+                    "표면 O 와 1.83 Å 수소결합한다(MLIP 기하, DFT 미확인). "
+                    "이후 본류는 **중성 C-12 외주 VASP**(사전 고정 네 잡 직접 대입의 조각 대비 D, "
+                    "adsorption/binding energy 로 부르지 않는 고정기하 차등에너지)로 옮겨갔다 — "
+                    "VASP 0잡 · v19 재생성 대기. "
+                    "출처: db/properties/sdcp_doped_closed_2026_08_28.json · sdcp_neutral_closed_2026_08_28.json · "
+                    "sdcp_c12_claim_prereg_2026_08_31.json"})
     # SEI 분해상 갭 (2026-08-07 gabia) — 협업 요청 3종 중 "band gap" 축.
     # ⚠ 값은 **fixed-occ nscf 고유값**(CLAUDE.md 규율: DOS 문턱 판독 금지). PBE 라 절대값은
     #   넓은갭 절연체에서 30–50% 과소 — 실험값과 나란히 놓지 말고 **순위**로만 쓴다.
@@ -3690,8 +3726,9 @@ def dashboard_highlights() -> list:
             "v": "1×1×1 → 2×2×2 에서 **1.3–3.3배 하락**",
             "n": "6홉 / 4화합물, **예외 0**. li3p 0.287→**0.088** · li2o 0.648→**0.270** · "
                  "licl 0.686→**0.491** · li3po4g 0.666→**0.463**.\n"
-                 "⇒ `cc333` 은 **아직 미수렴**이다 — 2026-08-25 현재 23스텝에서 0.880 eV, "
-                 "오차 0.227 vs 문턱 0.05 (수렴하면 0.229 이하여야 정합). 이어달리기 중.\n"
+                 "⇒ `cc333`(li3nd 3×3×3)은 **08-27 중단 — 폐기 아님**: Fmax 가 0.20–0.33 "
+                 "정체 후 역주행(0.23→0.45), 마지막 7스텝이 GPU 50 h. restart 로 이어달리기 "
+                 "가능하나 재개 판단 전까지 멈춤 (neb_cc333_force_history_2026_08_27.json).\n"
                  "⇒ `MIN_WIDTH_A=10 Å` 는 **최소 요건이지 수렴 보증이 아니다**.\n"
                  "⚠ UMA 값 — **장벽 절대값 인용 금지**, 셀 의존성만."})
 

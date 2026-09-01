@@ -301,8 +301,8 @@
 {% if C._sweep %}{% set S = C._sweep %}
 <div class="card" style="margin-top:14px">
   <h3 style="font-size:.95rem">온도 스윕 판정 <span class="muted" style="font-weight:400;font-size:.8rem">— 고온이 외삽인가</span>
-    <span class="tbadge" style="background:#ecfdf5;color:#065f46;margin-left:6px">{{ S.date }}</span></h3>
-  <div class="callout" style="margin:8px 0;font-size:.82rem"><b>{{ S.verdict.headline|mdlite }}</b></div>
+    <span class="tbadge" style="background:#ecfdf5;color:#065f46;margin-left:6px">상대 표류 {{ '%+.1f'|format(S.relative_drift_pct) }}%</span></h3>
+  <div class="callout" style="margin:8px 0;font-size:.82rem">{{ S.verdict|mdlite }}</div>
   <div style="overflow-x:auto">
   <table class="data-table"><thead><tr>
     <th class="num">T (K)</th><th class="num">평균 힘 (eV/Å)</th><th class="num">불일치 중앙</th>
@@ -311,8 +311,8 @@
   <tr {% if T|int == S.base_T %}style="background:var(--bg-alt)"{% endif %}>
     <td class="num"><b>{{ T|mdlite }}</b>{% if T|int == S.base_T %} <span class="muted" style="font-size:.7rem">기준선</span>{% endif %}</td>
     <td class="num mono">{{ '%.4f'|format(r.force_scale_eV_per_A)|mdlite }}</td>
-    <td class="num mono">{{ '%.4f'|format(r.median_abs)|mdlite }}</td>
-    <td class="num mono">{{ '%.4f'|format(r.median_relative)|mdlite }}</td>
+    <td class="num mono">{{ '%.4f'|format(r.median)|mdlite }}</td>
+    <td class="num mono">{{ '%.4f'|format(r.relative_median)|mdlite }}</td>
     <td class="num mono" style="color:#b91c1c">{{ r.n_above_fixed|mdlite }}/{{ r.n_frames }}</td>
     <td class="num mono" style="font-weight:700">{{ r.n_above_scaled|mdlite }}/{{ r.n_frames }}</td></tr>
   {% endfor %}
@@ -322,18 +322,21 @@
     조화 고체의 RMS 힘은 √T 로 커진다 — 상대 오차가 똑같아도 초과는 는다.
     문턱을 힘 크기에 비례해 옮기면 고온 초과가 기준선보다 <b>적어진다</b>.
   </div>
+  {% if S.force_model %}
   <div class="callout cal-danger" style="margin-top:8px;font-size:.8rem">
     ⚠ 그렇다고 <b>'고온이 더 안전'으로 읽으면 또 틀린다.</b>
-    D = a + b·F 적합에서 온도무관 절편 <span class="mono">a = {{ S.force_model.linear.intercept_eV_per_A }} eV/Å</span>
-    (600 K 불일치의 <b>{{ (S.force_model.floor_share_at_600K*100)|round|int }}%</b>)이라, 바닥이 있으면
+    D = a + b·F 적합에서 온도무관 절편 <span class="mono">a = {{ '%+.4f'|format(S.force_model.linear_intercept_eV_per_A) }} eV/Å</span>
+    ({{ S.base_T }} K 불일치의 <b>{{ (S.force_model.floor_share_at_base_T*100)|round|int }}%</b>)이라, 바닥이 있으면
     D/F 는 F 가 커질수록 자동으로 준다. 옳은 문장은 <b>“어느 온도에서도 외삽 신호가 없다”</b>.
     그 바닥은 별개 발견 — 열운동이 0 이어도 남는 <b>평형 구조 PES 자체의 불일치</b>다.
-    (멱함수 지수 n = {{ S.force_model.power.exponent }} &lt; 1 = 힘보다 느리게 증가)
+    (멱함수 지수 n = {{ '%.3f'|format(S.force_model.power_exponent) }} &lt; 1 = 힘보다 느리게 증가)
   </div>
-  <div style="margin-top:8px;font-size:.8rem">{{ S.verdict.consequence|mdlite }}</div>
-  {% if S.by_element_relative %}
+  {% endif %}
+  {% if S.honesty %}<ul class="muted" style="margin-top:8px;font-size:.78rem">
+    {% for h in S.honesty %}<li>{{ h|mdlite }}</li>{% endfor %}</ul>{% endif %}
+  {% if S._els_base %}
   <div class="muted" style="font-size:.78rem;margin-top:8px">
-    원소별 상대 불일치(600 K): {% for el in ['P','S','Li','Cl'] %}{% if S.by_element_relative[el] %}<span class="mono">{{ el|mdlite }} {{ S.by_element_relative[el]['600K'] }}</span>{% if not loop.last %} · {% endif %}{% endif %}{% endfor %}
+    원소별 상대 불일치(기준선 {{ S.base_T }} K): {% for el in ['P','S','Li','Cl'] %}{% if S._els_base[el] %}<span class="mono">{{ el|mdlite }} {{ '%.4f'|format(S._els_base[el]) }}</span>{% if not loop.last %} · {% endif %}{% endif %}{% endfor %}
     — 순위 <b>P &gt; S &gt; Li &gt; Cl</b> 이 모든 온도에서 안정. PS₄ 중심에서 모델이 가장 안 맞고,
     운반체 Li 는 중간이다.
   </div>{% endif %}

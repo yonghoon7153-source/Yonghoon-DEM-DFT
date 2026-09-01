@@ -20,7 +20,8 @@
   "2026-08-28-doped-closure-ratify": "D-2026-08-28-sdcp-doped-scope-closure → active (1저자 ratify)",
   "2026-08-28-doped-closure-rev": "회신 P 반영 수정으로 active → proposed (재승인 대기). 추출 부호 철회",
   "2026-08-28-doped-closure-reratify": "회신 P 반영판 재승인 → active (1저자 위임, agent 권장)",
-  "2026-08-31": "D-2026-08-31-sdcp-polaron-S0-four-layer 신설 (proposed). 회신 T 의 S0 격하를 결정으로 등록 — 4층 실현 판정과 그 문턱. estimand 정의(D-2026-08-31-sdcp-polaron-Fbb)는 그대로 두고 게이트만 별개 slot 으로 붙인다 (_rules: 경험적 문턱은 별개 gate 결정)."
+  "2026-08-31": "D-2026-08-31-sdcp-polaron-S0-four-layer 신설 (proposed). 회신 T 의 S0 격하를 결정으로 등록 — 4층 실현 판정과 그 문턱. estimand 정의(D-2026-08-31-sdcp-polaron-Fbb)는 그대로 두고 게이트만 별개 slot 으로 붙인다 (_rules: 경험적 문턱은 별개 gate 결정).",
+  "2026-09-01": "sdcp-c12-path 소급 등록 (proposed). 08-30 커밋 390450ea 가 ddE-obs·closure-criteria-first 를 superseded 로 내리며 강등 사유를 자유 문자열로 적어 _rules('등록된 ID 여야 한다') 위반 + dangling 이었다. 두 superseded_by 를 새 노드로 연결. 명칭 충돌·범위 문제는 노드의 open_conflicts 에 기록 (결정 아님)."
  },
  "decisions": [
   {
@@ -619,7 +620,7 @@
    },
    "title": "마감은 조건 먼저 — upgrade 트리거와 invalidation 트리거를 분리한다",
    "statement": "캠페인 마감 기록은 확정값·허용/금지 서술·재개 조건을 담되, 재개 조건은 planned_upgrade_triggers(범위 확장 투자 결정)와 mandatory_invalidation_triggers(estimand/산술/프로토콜 결함·source 변경·게이트 실패·상충 증거·scope 확대) 로 분리한다. '이 목록 밖으로는 열지 않는다' 는 upgrade 쪽에만 적용된다 — 결론의 반증 가능성은 닫을 수 없다. 마감 기록은 값을 복사하지 않고 claim/result/source 참조로 쓴다.",
-   "decision_state": "proposed",
+   "decision_state": "superseded",
    "evidence": [
     "SDCP: 조건 없는 마감 2회가 2회 반려 (07-17 doped v1 · 08-28 회신 M)",
     "회신 N P0: 마감 도입 커밋 자체가 citable headline 충돌·혼합-basin 근거 재사용"
@@ -631,7 +632,7 @@
    ],
    "enforcement": "webapp/tests/test_webapp.py::test_sdcp_closure_consistency 가 첫 사례를 봉인",
    "status": "superseded",
-   "superseded_by": "회신 AI 2026-08-30 §A-Q4 = C (12잡 경로)"
+   "superseded_by": "D-2026-08-30-sdcp-c12-path"
   },
   {
    "id": "D-2026-08-28-sdcp-doped-scope-closure",
@@ -733,7 +734,55 @@
    "registered_by": "agent",
    "ratified_by": null,
    "note": "⚠ proposed — 사람이 ratify 해야 active. DFT 결과 0잡 시점 등록.",
-   "superseded_by": "회신 AI 2026-08-30 §A-Q4 = C (12잡 경로)"
+   "superseded_by": "D-2026-08-30-sdcp-c12-path",
+   "decision_state": "superseded"
+  },
+  {
+   "id": "D-2026-08-30-sdcp-c12-path",
+   "schema_version": 2,
+   "kind": "estimand",
+   "scope": "sdcp.c12.fragment_contrast",
+   "slot": "fragment_contrast_estimand",
+   "decision_state": "proposed",
+   "applies_to": {
+    "systems": [
+     "sdcp_neutral",
+     "ptfe_c10"
+    ],
+    "tasks": [
+     "fragment_contrast"
+    ],
+    "methods": [
+     "vasp-544__pbe-u62__mlip-geom-sp"
+    ],
+    "use_cases": [
+     "manuscript",
+     "closure"
+    ]
+   },
+   "title": "C-12 경로 채택 — 사전 고정 네 잡 직접 대입의 조각 대비 D (회신 AI §A-Q4 = C)",
+   "statement": "D = (E_C_sdcp − E_G_sdcp) − (E_C_control − E_G_control). 사전 고정 기하의 단일점 네 잡 직접 대입이며, 이름은 'fixed-geometry differential complex–gas reference energy' — adsorption energy·binding energy·E_ads 로 부르지 않는다 (claim_prereg §1). 포함: 조각·표면 변형에너지, 고정 gas conformer 선택 효과. 제외: 기하 이완, 영점·열적 기여, 용매·계면 전기장.",
+   "rationale": "회신 AI 2026-08-30 §A-Q4 판정 = C: 42잡·10잡 카나리·추적 ZIP 전부 NO-GO, POTCAR 해시를 외부 기준에 결속한 12잡 묶음이 GO. 이 채택으로 옛 체계(H1·holdout·C1 의 S_f·calibration/holdout merge·adaptive δ·후보집합 완전성·D3-off pair·비용모형을 과학적 게이트로 쓰는 규칙)가 실행 경로에서 제거됐다. 커밋 390450ea 가 그 채택이고, 이 노드는 그때 원장에 빠진 등록을 소급 보충한다 (branch_state_2026_08_31 §3-2).",
+   "supersedes": [
+    "D-2026-08-28-closure-criteria-first",
+    "D-2026-08-30-sdcp-neutral-ptfe-ddE-obs"
+   ],
+   "does_not_supersede": [
+    "doped 마감 (D-2026-08-28-sdcp-doped-scope-closure) — 그대로 유지",
+    "estimand-before-compute (D-2026-08-28) — 그대로 유지"
+   ],
+   "open_conflicts": [
+    "명칭: sdcp_c12_protocol_2026_08_30.json §1 은 같은 양을 'adsorption energy' 라 부르는데 sdcp_c12_claim_prereg_2026_08_31.json §1 은 그 이름을 금지한다 — 정본 판정은 비준 시 함께 (branch_state_2026_08_31 §3-1)",
+    "범위: D-2026-08-28-closure-criteria-first 는 systems=['*'] 인 일반 마감 정책인데, CLAUDE.md 마감 규율(2026-08-28 채택)은 여전히 현행이다. 강등이 전면 폐지인지 SDCP 집행부만인지 비준 시 판정 필요 — 커밋 390450ea 는 두 건 모두를 명시적으로 superseded 로 내렸다",
+    "프로토콜 잡 수 불일치 (§0 12잡·§12 19잡 vs 실물 16잡) — citation_hazards 등재됨, 파일 정정은 1저자 (branch_state_2026_08_31 §3-3)"
+   ],
+   "method_ref": "db/properties/sdcp_c12_claim_prereg_2026_08_31.json",
+   "protocol_ref": "db/properties/sdcp_c12_protocol_2026_08_30.json",
+   "card": "kb/reviews/codex_AI_prompt_current_head_2026_08_30.md",
+   "enforcement": "tools/sdcp/vasp_handoff_bundle.py 의 ANALYZER — 게이트 통과 시에만 D 를 내고, D_raw/구간/판정 사다리와 citable_at_0.01eV 를 분리한다 (회신 AV P1-5)",
+   "registered_at": "2026-09-01",
+   "registered_by": "agent (소급 등록 — 채택 자체는 2026-08-30 커밋 390450ea)",
+   "note": "⚠ proposed — 사람이 ratify 해야 active. VASP 0잡 시점 등록."
   },
   {
    "id": "D-2026-08-31-sdcp-polaron-Fbb",
