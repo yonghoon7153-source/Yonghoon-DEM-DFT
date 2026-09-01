@@ -5,6 +5,13 @@
  *   그림은 여전히 그럴듯해 보인다 = 조용한 실패.  라벨이 정직해질수록 길어지므로 사람
  *   눈에 기댈 수 없다.  ⇒ 폭 초과를 기계가 본다.
  *
+ * ★★ 2026-09-02 — **두 번째 텍스트 면이 있었다.**  위 검사는 *제목*만 봤고, 그 사이
+ *   **눈금 라벨**이 51개 겹쳐 찍혀 SI 그림이 통째로 읽을 수 없게 나왔다 (실측 export).
+ *   `_focusTicks` 의 간격 사다리가 `top > 60 → 20` 에서 멈춰, focusing 이 10³ 급인
+ *   전자 필드에서 개수에 상한이 없었다.  제목은 잘 맞았고 검사도 초록이었다.
+ *   ⇒ 같은 관심사(**컬러바가 읽히는가**)이므로 파일을 나누지 않고 여기 합친다.
+ *   ⚠ 이 부류는 **값이 맞고 읽을 수만 없다** — 숫자를 보는 어떤 검사기도 못 잡는다.
+ *
  * 실행: node scripts/check_colorbar_fit.mjs
  */
 import { readFileSync } from 'node:fs';
@@ -92,6 +99,47 @@ chk('부제도 맞춤 결과로 그린다', !/cx\.fillText\(String\(sp\.sub\),/.
   chk('영국식 철자가 export 문구에 없다',
       !/'[^']*\b(centre|colour|behaviour)\b[^']*'/i.test(
         src.match(/cbarSpec = \{[\s\S]{0,600}?\};/)?.[0] || ''));
+}
+
+//  ══ 눈금 라벨 — 개수가 묶여 있는가 (2026-09-02) ═══════════════════════
+{
+  const ci = src.indexOf('const FOCUS_MAX_TICKS');
+  const fi = src.indexOf('function _focusTicks');
+  if (ci < 0 || fi < 0) {
+    chk('★★ _focusTicks / FOCUS_MAX_TICKS 를 소스에서 찾는다', false, '이름이 바뀌었나');
+  } else {
+    const end = src.indexOf('\n}', fi);
+    const body = src.slice(ci, src.indexOf('\n', ci)) + '\n' + src.slice(fi, end + 2);
+    const { _focusTicks, FOCUS_MAX_TICKS } =
+      new Function(body + '\nreturn { _focusTicks, FOCUS_MAX_TICKS };')();
+    const CAP = FOCUS_MAX_TICKS + 2;                 // 0 과 상단 라벨은 언제나 붙는다
+
+    //  ★ 실제로 뭉갠 값 + 자릿수를 가로지르는 표본
+    for (const top of [1.5, 5, 11.7, 60, 120, 1190, 3.85e3, 2.8e4, 1e6]) {
+      const t = _focusTicks({ focus_top: top });
+      chk(`눈금 개수 상한: top=${top}`, t && t.length >= 3 && t.length <= CAP,
+          `${t ? t.length : 'null'}개 > ${CAP}`);
+    }
+    const q = _focusTicks({ focus_top: 3.85e3 });
+    chk('눈금 양 끝이 0 과 1', q[0].p === 0 && q[q.length - 1].p === 1);
+    chk('눈금 p 가 단조 증가', q.every((x, i) => i === 0 || x.p > q[i - 1].p));
+    chk('마지막 눈금이 기준량을 밝힌다 (⟨J⟩)', /⟨J⟩$/.test(q[q.length - 1].label));
+    chk('눈금 라벨에 부동소수 찌꺼기가 없다',
+        q.every(x => !/\d\.\d{6,}/.test(x.label)), JSON.stringify(q.map(x => x.label)));
+    chk('top 이 없거나 비정상이면 눈금을 안 그린다 (fail-closed)',
+        _focusTicks({}) === null && _focusTicks(null) === null &&
+        [0, -1, NaN, Infinity].every(v => _focusTicks({ focus_top: v }) === null));
+
+    //  ★ 자기 민감도 — 옛 사다리를 되돌리면 이 검사가 빨간불이어야 한다
+    const OLD = (top) => {
+      const step = top > 60 ? 20 : top > 30 ? 10 : top > 12 ? 5 : top > 6 ? 2 : 1;
+      let n = 2;
+      for (let v = step; v < top * 0.86; v += step) n++;
+      return n;
+    };
+    chk('★★ 옛 사다리는 top=1190 에서 상한을 넘긴다 = 이 검사가 민감하다',
+        OLD(1190) > CAP, `옛 개수 ${OLD(1190)}`);
+  }
 }
 
 console.log(`\n${fails} failure(s)`);

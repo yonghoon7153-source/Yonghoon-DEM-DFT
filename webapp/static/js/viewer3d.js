@@ -5724,12 +5724,26 @@ function exportColorbarPNG(spec, fname) {
 }
 
 /* focus 컬러바 수치 눈금: 0 → step 간격 (1/2/5/10/20 자동) → 상단 ×top ⟨J⟩ */
+/* 컬러바 눈금.  ★ 눈금 **개수**를 먼저 묶고 그로부터 간격을 정한다.
+   ⚠ 옛 판은 간격 사다리를 `top > 60 → 20` 에서 멈췄다.  focusing 이 10 급일 때를
+     가정한 코드인데 실제 전자 필드는 10³ 급이 나온다 — `top ≈ 1190` 이면 20 간격으로
+     **51개**를 한 바에 찍어 라벨이 통째로 뭉개졌다 (2026-09-02 실측, SI 그림 export).
+     그림은 조용히 망가진다: 값은 맞고 **읽을 수만 없다**.
+   ⇒ 1-2-5 십진 사다리로 `MAX_TICKS` 이하가 되게 간격을 고른다 (어느 자릿수에서도 성립). */
+const FOCUS_MAX_TICKS = 8;
 function _focusTicks(f) {
   const top = Number(f && f.focus_top);
-  if (!(top > 0)) return null;
-  const step = top > 60 ? 20 : top > 30 ? 10 : top > 12 ? 5 : top > 6 ? 2 : 1;
+  if (!(top > 0) || !isFinite(top)) return null;
+  const raw = top / FOCUS_MAX_TICKS;
+  const mag = Math.pow(10, Math.floor(Math.log10(raw)));
+  const n = raw / mag;
+  const step = (n <= 1 ? 1 : n <= 2 ? 2 : n <= 5 ? 5 : 10) * mag;
+  if (!(step > 0) || !isFinite(step)) return null;           // fail-closed
+  const dec = Math.max(0, -Math.floor(Math.log10(step)));    // 소수 간격이면 자릿수 유지
   const t = [{ p: 0, label: '0' }];
-  for (let v = step; v < top * 0.86; v += step) t.push({ p: v / top, label: '×' + v });
+  for (let v = step; v < top * 0.86; v += step) {
+    t.push({ p: v / top, label: '×' + Number(v.toFixed(dec)) });
+  }
   t.push({ p: 1, label: '×' + Number(top.toPrecision(3)) + ' ⟨J⟩' });
   return t;
 }

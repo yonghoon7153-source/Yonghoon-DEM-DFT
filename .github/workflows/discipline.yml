@@ -144,3 +144,13 @@ jobs:
 
       - name: 세미나 화면 DOM 회귀 (거부가 화면에 뜨는가)
         run: node webapp/test_seminar_dom.mjs
+
+      #  ★ 2026-09-02 — 이 검사는 `check_all` 에만 있고 **CI 에는 없었다** (규칙 K 의
+      #    손목록이 못 보는 자리).  그 사이 컬러바 **눈금**이 51개 겹쳐 찍혀 SI 그림이
+      #    읽을 수 없게 export 됐다 — 제목만 보던 검사에 눈금 축을 합쳤으니, 이제
+      #    양쪽 레인에서 돈다.  ⚠ 값이 맞고 읽을 수만 없는 부류라 숫자 검사로는 안 잡힌다.
+      - name: 컬러바 (제목 맞춤 + 눈금 개수)
+        run: node scripts/check_colorbar_fit.mjs
+
+      - name: 뷰어 JS 문법
+        run: node --check webapp/static/js/viewer3d.js
