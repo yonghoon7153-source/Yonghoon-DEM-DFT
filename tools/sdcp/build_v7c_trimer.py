@@ -2536,6 +2536,8 @@ def selftest():
                    "대상": {"parent_sha256": _sha(_dx),
                             "atom_manifest_hash": _bamf["hash"],
                             "functional": "r2SCAN-3c", "epsilon": [1.0],
+                            # ⛔ 회신 X P0-1 — 무엇을 재는지 문서가 선언한다
+                            "estimand_form": PIL_ESTIMAND_FORM,
                             "loc_realization": "R0_deterministic"}}
             doc.update(patch)
             _cc = {k: v for k, v in doc.items() if k != "ratification"}
@@ -2591,10 +2593,18 @@ def selftest():
                             "atom_manifest_hash": mm.get("atom_manifest_hash"),
                             "functional": mm.get("functional"),
                             "loc_realization": mm.get("loc_realization"),
+                            # ⛔ 회신 X P0-1 — 무엇을 재는지 문서가 선언한다
+                            "estimand_form": PIL_ESTIMAND_FORM,
                             "epsilon": sorted(float(v["epsilon"])
                                               for v in mm["environments"].values())}}
             for k, v in patch.items():
                 if k.startswith("_"):
+                    continue
+                if k == "estimand_form":
+                    if v is None:
+                        doc["대상"].pop("estimand_form", None)
+                    else:
+                        doc["대상"]["estimand_form"] = v
                     continue
                 if k in ("builder_sha256", "builder_last_change_commit",
                          "봉인_시점"):
@@ -2769,6 +2779,16 @@ def selftest():
              "V P0-2: 사전등록의 **빌더를 마지막으로 바꾼 커밋**이 다르다"),
             # ── 회신 W P0-2 — **필드를 지우면 검사가 건너뛰어지던 fail-open** ──
             # ── 회신 X P0-3 — **생성물(manifest) 쪽을 지우는 나머지 반쪽** ──
+            # ── 회신 X P0-1 — **비준한 양과 구현한 양이 같은가** ──────────
+            ("neg_form_missing", {"_prereg_patch": {"estimand_form": None}},
+             "X P0-1: 사전등록이 `estimand_form` 을 **선언하지 않으면** 무엇을 "
+             "재는지 대조할 수 없다 — 나머지 결박이 전부 맞아도 다른 관측량일 수 "
+             "있다"),
+            ("neg_form_integral",
+             {"_prereg_patch": {"estimand_form": "real_space_weighted_integral"}},
+             "X P0-1 (리뷰어 재현): 결정문이 **실공간 적분**을 정의하는데 구현은 "
+             "원자 population 합이다 — 원자 내부 α·β 상쇄가 복구되지 않으므로 "
+             "같은 수가 아니다. 문서·구현을 맞춘 뒤 재비준해야 한다"),
             ("neg_man_drop_bs", {"_man_patch": {"builder_sha256": None}},
              "X P0-3: **생성물 manifest** 에서 `builder_sha256` 을 지우면 통과했다 "
              "(비교식이 `if 사전등록 and 생성물` 이라 어느 쪽을 지워도 같다)"),
@@ -3497,12 +3517,46 @@ def pilot_atom_manifest(csym, cnb, crings, csulf, kill):
     return out
 
 
+#: ⛔⛔ 회신 X P0-1 (2026-09-02) — **비준한 양과 구현한 양이 다르다.**
+#:
+#:   비준 결정문 : F_G = ∫ W_G(r)|ρα−ρβ| dr / ∫ |ρα−ρβ| dr        [실공간 적분]
+#:   구현        : F_G = Σ_{A∈G}|s_A| / Σ_A |s_A|,  s_A = ∫ w_A (ρα−ρβ) dr
+#:
+#:   `s_A` 는 **부호 있는** 원자 population 이다. 절댓값을 원자 **밖에서** 취하므로
+#:   원자 내부에서 α·β 가 상쇄된 몫은 복구되지 않는다. 삼각부등식으로
+#:   `Σ_A |∫ w_A Δρ| ≤ ∫ |Δρ|` 이니 분자·분모 모두 하한이고, 비율은 어느 쪽으로도
+#:   갈 수 있다. **같은 관측량이 아니다.**
+#:
+#:   코드 docstring 은 "원자 population 근사" 라고 알고 적어 놨는데 결정문은 적분을
+#:   말했다 — 즉 우리가 아는 한계가 **비준 문서에 반영되지 않았다.**
+#:
+#:   ⇒ 구현이 무엇을 재는지 **기계가 선언**하고, 결정문이 말하는 형태와 다르면
+#:     판정을 막는다. 이름을 붙여야 혼동이 안 생긴다.
+PIL_ESTIMAND_FORM = "atom_partitioned_abs_population"
+PIL_ESTIMAND_FORM_DOC = {
+    "id": PIL_ESTIMAND_FORM,
+    "식": "F_G = Σ_{A∈G} |s_A| / Σ_A |s_A|   (s_A = 부호 있는 원자 스핀 population)",
+    "⛔_실공간_적분이_아니다": (
+        "정의된 다른 양은 `F_G = ∫W_G|ρα−ρβ|dr / ∫|ρα−ρβ|dr` 이고, 그것은 절댓값을 "
+        "**적분 안에서** 취한다. 원자 내부의 α·β 상쇄가 이 구현에서는 복구되지 "
+        "않는다 (Σ_A|∫w_AΔρ| ≤ ∫|Δρ|). 두 수는 다르며 비율의 대소도 보장되지 않는다."),
+    "왜_이것을_쓰나": (
+        "phase L2 가 내는 것은 궤도·원자 population 이고 실공간 스핀밀도 격자가 "
+        "아니다. 적분형을 계산하려면 스핀밀도 cube + 같은 격자의 Hirshfeld 가중치가 "
+        "필요하고, 그것은 이 pilot 의 산출물이 아니다."),
+    "언제_틀리나": (
+        "원자 하나 안에서 α 와 β 가 크게 겹칠 때 (예: 강한 spin polarization 이 "
+        "같은 원자의 다른 궤도에 반대 부호로 실릴 때) 이 값은 적분형보다 **작다**."),
+}
+
+
 def pilot_shares(mvals, amap):
     """회신 S Q1 식. → {"F": {...}, "M": {...}, "abs_total": ..., "ring_p": {...},
                         "N_eff": ..., "span80": ...}
 
-    ⛔ 못 하는 것: 실공간 적분이 아니라 **원자 population 근사**다 (회신 S 가 허용한
-      근사 경로). 같은 정의를 두 분할에 똑같이 적용하는 것이 조건이다.
+    ⛔ 못 하는 것: 실공간 적분이 **아니다** — `PIL_ESTIMAND_FORM` 을 보라.
+      원자 population 근사이고, 그 한계는 산출물이 스스로 말한다 (회신 X P0-1).
+      같은 정의를 두 분할에 똑같이 적용하는 것이 조건이다.
     """
     tot = sum(abs(x) for x in mvals)
     if tot <= 0:
@@ -4588,6 +4642,21 @@ def _pil_check_prereg(man, where):
     # ⛔⛔ 회신 V Q5-1 (2026-09-02 비준 후) — phase L 을 열려면 사전등록이
     #   **비준**돼 있어야 한다. `proposed` 로는 seed 를 만들지 않는다.
     #   1저자 비준(2026-09-02)으로 이 조건이 충족됐고, 그래서 게이트를 올린다.
+    # ⛔⛔ 회신 X P0-1 (2026-09-02) — **비준한 양과 구현한 양이 같은가.**
+    #   사전등록·결정문이 정의하는 형태와 이 빌더가 실제로 계산하는 형태가 다르면,
+    #   나머지 결박(해시·커밋·digest)이 전부 맞아도 **다른 관측량을 재는 것**이다.
+    #   이 캠페인이 여덟 번 반려된 형태가 정확히 이것이다.
+    _wform = _tg.get("estimand_form") or _pj.get("estimand_form")
+    if not _wform:
+        bad.append("사전등록이 `estimand_form` 을 선언하지 않는다 — 무엇을 재는지 "
+                   "문서가 말하지 않으면 구현과 대조할 수 없다 (회신 X P0-1). "
+                   "구현이 재는 것은 %r 다" % PIL_ESTIMAND_FORM)
+    elif _wform != PIL_ESTIMAND_FORM:
+        bad.append("보고량의 **형태가 다르다**: 사전등록 %r ≠ 구현 %r. "
+                   "실공간 적분형과 원자 population 형은 같은 수가 아니다 "
+                   "(원자 내부 α·β 상쇄가 복구되지 않는다 — 회신 X P0-1). "
+                   "문서를 구현에 맞추거나 구현을 바꾼 뒤 **재비준**할 것."
+                   % (_wform, PIL_ESTIMAND_FORM))
     if _pj.get("status") not in ("ratified", "active"):
         bad.append("사전등록 status 가 %r 다 — **비준(ratified/active)** 이어야 한다 "
                    "(회신 V Q5-1: 비용 발생 전에 닫는다)" % _pj.get("status"))

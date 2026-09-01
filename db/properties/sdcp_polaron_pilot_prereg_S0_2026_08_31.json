@@ -1,8 +1,8 @@
 {
  "schema": "estimand_prereg/v2",
  "date": "2026-08-31",
- "status": "ratified",
- "⚠_비준": "✔ **2026-09-02 1저자 비준 (scientific_owner).** 회신 W P0-4/P0-5 이행 내용에 대한 비준이다. 이후 내용이 바뀌면 digest 결박이 자동으로 재비준을 요구한다 — 그때 status 는 proposed 로 돌아간다.",
+ "status": "proposed",
+ "⚠_비준": "⚠ **재비준 대기.** 회신 X P0-1 — 비준한 결정문은 실공간 적분을, 구현은 원자 population 합을 말한다. 문서를 **구현이 실제로 재는 것**으로 정정했으므로 다시 비준받아야 한다. digest 결박이 그것을 자동으로 잡는다.",
  "제목": "S0 — ε=1 기술적 적합성 pilot 사전등록 (회신 T 로 격하된 판, P0 4건 이행 반영)",
  "이_문서의_성격": {
   "무엇인가": "회신 T 가 '전체 pilot NO-GO / ε=1 기술적 적합성 pilot(S0) 한정 조건부 GO' 로 격하한 것을 받아 **범위를 줄여 다시 등록**한 판이다.",
@@ -44,7 +44,15 @@
    1.0
   ],
   "loc_realization": "R0_deterministic",
-  "⚠_결박_필드": "functional·epsilon·loc_realization·parent_sha256·atom_manifest_hash 는 생성 시 `_pil_check_prereg` 가 생성물과 **교차검증**한다. 하나라도 어긋나면 생성기가 멈춘다 (회신 V P0-2). 파일 해시만 맞추는 것으로는 부족하다 — 미이완 start.xyz 가 통과하던 경로가 그것이었다."
+  "⚠_결박_필드": "functional·epsilon·loc_realization·parent_sha256·atom_manifest_hash 는 생성 시 `_pil_check_prereg` 가 생성물과 **교차검증**한다. 하나라도 어긋나면 생성기가 멈춘다 (회신 V P0-2). 파일 해시만 맞추는 것으로는 부족하다 — 미이완 start.xyz 가 통과하던 경로가 그것이었다.",
+  "estimand_form": "atom_partitioned_abs_population",
+  "⛔_estimand_form_이_무슨_뜻인가": {
+   "식": "F_G = Σ_{A∈G} |s_A| / Σ_A |s_A|   (s_A = 부호 있는 원자 스핀 population)",
+   "⛔_실공간_적분이_아니다": "결정 D-2026-08-31-sdcp-polaron-Fbb 는 `F_G = ∫W_G|ρα−ρβ|dr / ∫|ρα−ρβ|dr` 로 적혀 있다. 그것은 절댓값을 **적분 안에서** 취하므로 원자 내부의 α·β 상쇄까지 센다. 이 pilot 이 계산하는 것은 절댓값을 **원자 밖에서** 취한 값이고, 삼각부등식으로 Σ_A|∫w_AΔρ| ≤ ∫|Δρ| 이라 분자·분모 모두 하한이다. **두 수는 다르고 비율의 대소도 보장되지 않는다** (회신 X P0-1).",
+   "왜_이것을_쓰나": "phase L2 가 내는 것은 궤도·원자 population 이지 실공간 스핀밀도 격자가 아니다. 적분형을 계산하려면 스핀밀도 cube + 같은 격자의 Hirshfeld 가중치가 필요하고 그것은 이 pilot 의 산출물이 아니다.",
+   "언제_틀리나": "한 원자 안에서 α 와 β 가 크게 겹칠 때 이 값은 적분형보다 **작다**. 즉 국재화를 과소평가하는 방향이다.",
+   "판정어에_미치는_영향": "class 문턱(F≥0.5 · 다음 집합과 차 ≥0.10)은 적분형을 염두에 두고 정했다. 하한을 쓰면 통과가 **더 어려워지므로** 거짓 양성 쪽으로는 편향되지 않는다. 다만 '통과 못 함' 을 '국재화 안 됨' 으로 읽으면 안 된다 — 그것은 S0_UNDERESTIMATED_BY_PARTITION 로 남긴다."
+  }
  },
  "S0_이_시험하는_것": {
   "질문": "이 계산 프로토콜이 **서로 다른 전자상태를 구분해서 회수할 수 있는가**",
@@ -229,6 +237,11 @@
    "at": "2026-09-02",
    "state": "ratified",
    "note": "1저자 비준 (scientific_owner). 회신 W P0-1/P0-3/P0-4/P0-5 이행분에 대한 비준이다. 봉인: builder ded52c96… · last_change 6f9e28b2… · 커밋 02ed6c84. phase L 의 사전등록 선행 조건이 다시 풀렸다 — loccheck 증서는 별개 게이트다."
+  },
+  {
+   "at": "2026-09-02",
+   "state": "proposed",
+   "note": "회신 X P0-1 — **비준 대상과 구현 estimand 가 달랐다.** 결정문은 실공간 적분 `∫W_G|ρα−ρβ|dr` 을 정의하는데 구현은 부호 있는 원자 population 의 절댓값 합이다. 원자 내부 상쇄가 복구되지 않아 같은 관측량이 아니다. 문서에 `estimand_form: atom_partitioned_abs_population` 과 그 한계를 명시하고 재비준 대기로 되돌린다. ⚠ 1저자가 **적분형을 원하면** 구현을 바꿔야 하고(스핀밀도 cube + 격자 Hirshfeld 가중치) 그것은 이 pilot 의 산출물 밖이다 — 그 경우 phase L/L2 설계부터 다시 본다."
   }
  ],
  "회신_U_이행": {
@@ -242,12 +255,5 @@
   "loccheck": "phase L 전에 `bash run_pilot.sh loccheck` 가 LOCCHECK_PASS.json 을 남겨야 한다. 증서는 **fresh 디렉터리에서 L → L2 를 둘 다** 돌려 만든 것이어야 하고 (l2_inp_sha256·l2_out_sha256·l2_moread_suffix), 파서 검증은 L2 출력으로 한다 — seed 의 원천이 거기다. 판독 시 증서가 기록한 ORCA 를 다시 해시해 같은지 본다. L·seeds 가 그 증서를 **강제**한다 — 순서가 문구가 아니라 게이트다 (회신 V P0-3 · W P0-4).",
   "계보_대조": "계산 단계(L·L2·probe·S·restart)는 실행 **전에** 입력·xyz 봉인 해시와 `%moinp` 대상 파일을 대조하고, 정상종료한 출력이 있는데 실행 receipt 가 없거나 낡았으면 STALE_OUTPUT 으로 막는다. 잡마다 RUN_RECEIPTS.jsonl 에 receipt 를 남기고, 분석기는 receipt 없는/낡은 S·SR 잡을 판정하지 않는다 (회신 W P0-5)."
  },
- "ratification": {
-  "state": "ratified",
-  "role": "scientific_owner",
-  "at": "2026-09-02",
-  "by": "1저자",
-  "content_digest": "c7d9201e3d041a5872c5b5062f1f14e5ec4c0b944732e86181b5ac19ae49981c",
-  "⛔_무엇에_대한_비준인가": "이 문서에서 `ratification` 을 뺀 내용의 sha256 이다. 한 글자라도 바뀌면 지문이 달라지고 게이트가 재승인을 요구한다 — 비준을 받아 놓고 내용을 고치는 경로를 닫는다."
- }
+ "ratification": null
 }
