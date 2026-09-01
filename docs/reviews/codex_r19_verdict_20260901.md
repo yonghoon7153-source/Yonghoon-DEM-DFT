@@ -113,7 +113,7 @@ false-green 반례**에 근거한다.
 
 ## 우리 대응
 
-원장 `docs/reviews/findings.json` **R19-01 ~ R19-10** 이 정본 (커밋 `1c3f647e`).
+원장 `docs/reviews/findings.json` **R19-01 ~ R19-10** 이 정본 (커밋 `1d3d5ac3`).
 각 항목은 Codex 가 제시한 반례를 **실행해** 빨간불이 되는 것을 확인한 뒤 닫았다.
 
 ⚠ 아직 안 한 것:

@@ -1422,7 +1422,7 @@
    "evidence_tests": [
     "webapp/test_seminar_page.py"
    ],
-   "claimed_fixed_sha": "1c3f647e"
+   "claimed_fixed_sha": "1d3d5ac3"
   },
   {
    "id": "R19-02",
@@ -1436,7 +1436,7 @@
    "evidence_tests": [
     "webapp/test_seminar_page.py"
    ],
-   "claimed_fixed_sha": "1c3f647e"
+   "claimed_fixed_sha": "1d3d5ac3"
   },
   {
    "id": "R19-03",
@@ -1450,7 +1450,7 @@
    "evidence_tests": [
     "webapp/test_seminar_dom.mjs"
    ],
-   "claimed_fixed_sha": "1c3f647e"
+   "claimed_fixed_sha": "1d3d5ac3"
   },
   {
    "id": "R19-04",
@@ -1464,7 +1464,7 @@
    "evidence_tests": [
     "webapp/test_pipeline_provenance.py"
    ],
-   "claimed_fixed_sha": "1c3f647e"
+   "claimed_fixed_sha": "1d3d5ac3"
   },
   {
    "id": "R19-05",
@@ -1479,7 +1479,7 @@
     "scripts/check_doc_refs.py --selftest",
     "scripts/check_doc_refs.py"
    ],
-   "claimed_fixed_sha": "1c3f647e"
+   "claimed_fixed_sha": "1d3d5ac3"
   },
   {
    "id": "R19-06",
@@ -1493,7 +1493,7 @@
    "evidence_tests": [
     "scripts/check_doc_refs.py --selftest"
    ],
-   "claimed_fixed_sha": "1c3f647e"
+   "claimed_fixed_sha": "1d3d5ac3"
   },
   {
    "id": "R19-07",
@@ -1508,7 +1508,7 @@
     "scripts/check_doc_refs.py --selftest",
     "scripts/check_doc_refs.py"
    ],
-   "claimed_fixed_sha": "1c3f647e"
+   "claimed_fixed_sha": "1d3d5ac3"
   },
   {
    "id": "R19-08",
@@ -1524,7 +1524,7 @@
     "scripts/check_selftest_inventory.py",
     "scripts/check_selftest_inventory.py --run-fast"
    ],
-   "claimed_fixed_sha": "1c3f647e"
+   "claimed_fixed_sha": "1d3d5ac3"
   },
   {
    "id": "R19-09",
@@ -1538,7 +1538,7 @@
    "evidence_tests": [
     "scripts/check_selftest_inventory.py"
    ],
-   "claimed_fixed_sha": "1c3f647e"
+   "claimed_fixed_sha": "1d3d5ac3"
   },
   {
    "id": "R19-10",
@@ -1552,7 +1552,7 @@
    "evidence_tests": [
     "webapp/test_seminar_page.py"
    ],
-   "claimed_fixed_sha": "1c3f647e"
+   "claimed_fixed_sha": "1d3d5ac3"
   }
  ]
 }
