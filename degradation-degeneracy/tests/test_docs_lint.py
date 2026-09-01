@@ -11037,3 +11037,148 @@ def test_a_witness_found_only_in_the_traceback_body_is_not_a_witness():
             assert mr._witness_holds(f"E       {want}", want), (
                 f"{name}/{node}: 선언한 증인이 자기 자신의 의미 줄에서조차 "
                 "성립하지 않는다")
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# 55차 — 게이트 54 반례
+# ─────────────────────────────────────────────────────────────────────────────
+
+def test_a_stale_anchor_repair_cannot_rewind_the_head(tmp_path):
+    """★ 55차 P0-3 — anchor 수리가 `.head` 를 **과거로 되돌린다**.
+
+    `repair_lifecycle_anchor()` 는 lifecycle 을 읽고 `.head` 를 쓰는 동안
+    아무 lock 도 CAS 도 쓰지 않는다. 리뷰어 순서:
+
+        1. A freeze 가 journal 교체 뒤 head 쓰기 전에 죽는다
+        2. repair 가 A tip 을 읽고 대기한다
+        3. 정상 freeze B·C 가 journal/head 를 전진시킨다
+        4. stale repair 가 **A tip 을** head 에 적는다
+
+    그 뒤 `read_lifecycle()` 과 공개 repair 재시도가 모두 digest mismatch 로
+    막힌다 — 수리가 저장소를 수리 불가능하게 만든다.
+
+    불변식: 수리는 **자기가 읽은 tip 이 여전히 tip 일 때만** 쓴다.
+    """
+    import yaml as _y
+
+    rp = _fresh_rp()
+    three = _y.safe_load(_one_cohort_ledger("gA"))
+    for cid, sub in (("gB", "coh2"), ("gC", "coh3")):
+        three["cohorts"].append({**three["cohorts"][0], "cohort_id": cid,
+                                 "dir": f"docs/22p_gap/{sub}"})
+    rp.REPO = _ledger_repo(tmp_path, _y.safe_dump(three, allow_unicode=True,
+                                                  sort_keys=False))
+    for sub in ("coh2", "coh3"):
+        (rp.REPO / "docs" / "22p_gap" / sub).mkdir(parents=True, exist_ok=True)
+
+    # ① A 의 append 가 journal 은 남기고 head 는 못 쓴 상태를 만든다
+    rp._append_lifecycle("gA", None, "active", "첫 게시")
+    rp._lifecycle_head_path().unlink()
+
+    # ② 수리가 A tip 을 읽은 **직후** 정상 freeze B·C 가 전진한다
+    import threading
+
+    state = {"hit": False}
+    err = []
+
+    def advance():
+        try:
+            rp._append_lifecycle("gB", None, "active", "B 게시")
+            rp._append_lifecycle("gC", None, "active", "C 게시")
+        except BaseException as exc:                       # noqa: BLE001
+            err.append(exc)
+
+    t = threading.Thread(target=advance, daemon=True)
+    real_write = rp._write_head_anchor
+
+    def hooked(tip):
+        if not state["hit"]:
+            state["hit"] = True
+            t.start()
+            t.join(timeout=2.0)
+        return real_write(tip)
+
+    rp._write_head_anchor = hooked
+    try:
+        rp.repair_lifecycle_anchor()
+    except SystemExit:
+        pass                                   # 거부하는 것도 옳은 결말이다
+    finally:
+        rp._write_head_anchor = real_write
+    t.join(10)
+    assert not t.is_alive(), "정상 freeze 가 영원히 막혔다"
+    assert state["hit"], "시험이 겨눈 자리를 지나지 않았다"
+    assert not err, f"정상 freeze 가 실패했다 — 시험 전제가 깨졌다: {err}"
+
+    # ③ head 는 **진짜 tip** 이어야 한다 — 되감기면 저장소가 막힌다
+    entries = rp.read_lifecycle()
+    tip = hashlib.sha256(
+        rp._lifecycle_line(entries[-1]).encode("utf-8")).hexdigest()
+    head = rp._lifecycle_head_path().read_text(encoding="utf-8").strip()
+    assert head == tip, (
+        f"낡은 수리가 head 를 과거로 되돌렸다 (head={head[:12]} ≠ tip={tip[:12]}) "
+        "— 이후 모든 읽기와 수리가 digest mismatch 로 막힌다")
+
+
+def test_a_module_effect_through_an_alias_still_moves_the_producer_digest():
+    """★ 55차 P0-5① — `Expr` 가 **역방향 alias** 를 못 따라간다.
+
+    54차는 값을 버리는 표현식을 대상 뿌리 이름에 결속했다. 그런데 결속되는
+    것은 **쓰여 있는 이름**이다::
+
+        BOX = {}
+        ALIAS = BOX
+        ALIAS.update(tol=0.02)      # → `ALIAS` 에 결속
+
+    계산은 `BOX` 를 읽으므로 `BOX` 의 닫힘에 이 문이 안 들어간다 (리뷰어
+    실측: `Expr digest equal: true, result 0.02 → 0.09`).
+
+    alias 사슬을 따라가는 것은 별칭을 몇 겹으로 쌓든 이길 수 없다. 그러므로
+    방향을 뒤집는다 — docstring 이 아닌 module-level `Expr` 는 **무조건**
+    module 효과의 뿌리이고 producer digest 안에 있다. 이름에 결속하려 애쓰지
+    않는다.
+    """
+    rp = _rp()
+    sc = (_REPO / "src" / "scoring.py").read_text(encoding="utf-8")
+    body = "def score_canonical(df):\n    return BOX['tol']\n"
+    extra = "BOX = {}\nALIAS = BOX\nALIAS.update(tol=0.02)\n"
+    base = rp._producer_semantic_over(_mini_producer(rp, body, extra=extra), sc)
+    moved = rp._producer_semantic_over(
+        _mini_producer(rp, body, extra=extra.replace("0.02", "0.09", 1)), sc)
+    assert moved != base, (
+        "alias 를 거친 module 효과가 계산 값을 바꿨는데 producer digest 가 "
+        "그대로다 — 별칭은 몇 겹이든 쌓을 수 있으므로 이름 추적으로는 못 이긴다")
+
+
+def test_a_dunder_named_indirectly_is_still_refused():
+    """★ 55차 P0-5② — dunder 검사가 **직접 Constant 인자만** 봤다.
+
+    54차는 `getattr(f, "__globals__")` 를 막았다. 리뷰어는 같은 이름을 한
+    단계 감싸서 그대로 통과시켰다::
+
+        getattr(f, *["__globals__"])
+        getattr(f, ["__globals__"][0])
+        getattr(f, KEY)
+
+    실측: `dunder digest equal: true, result 1 → 9`.
+
+    한 겹씩 벗기는 것은 끝나지 않는다 (53차에 blacklist 로 같은 것을 배웠다).
+    그러므로 규칙을 뒤집는다 — 이름 공간을 푸는 호출의 이름 인자는 **직접
+    검증되는 문자열 상수**여야 하고, 아니면 볼 수 없으므로 거부한다.
+    """
+    rp = _rp()
+    sc = (_REPO / "src" / "scoring.py").read_text(encoding="utf-8")
+    for form in ('getattr(f, *["__globals__"])',
+                 'getattr(f, ["__globals__"][0])',
+                 "getattr(f, KEY)"):
+        body = ("def score_canonical(df):\n"
+                f"    return _pick(score_canonical)\n"
+                f"def _pick(f):\n    return {form}['SECRET']\n")
+        with pytest.raises(SystemExit) as ei:
+            rp._producer_semantic_over(
+                _mini_producer(rp, body, extra='KEY = "__globals__"\n'), sc)
+        msg = str(ei.value)
+        # 옛 규칙(직접 문자열 상수)이 대신 잡으면 이 시험은 증명하는 것이
+        # 없다 — **새 규칙**이 물었는지 못 박는다.
+        assert "감싸서" in msg and "fail-closed" in msg, (
+            f"{form} 를 거부한 것이 새 규칙이 아니다: {msg}")

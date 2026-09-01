@@ -345,6 +345,8 @@ def _compute_closure(src: str) -> dict[str, str]:
 
     out: dict[str, str] = {}
     todo = list(_COMPUTE_NAMES)
+    if MODULE_EFFECTS in defs:                            # 55차 P0-5①
+        todo.append(MODULE_EFFECTS)
     while todo:
         name = todo.pop()
         if name in out:
@@ -646,6 +648,11 @@ def _match_capture_names(pat) -> list:
     return out
 
 
+#: docstring 이 아닌 module-level 표현식이 묶이는 **예약 이름** (55차 P0-5①).
+#: Python 식별자가 될 수 없는 철자라 소스의 어떤 이름과도 충돌하지 않는다.
+MODULE_EFFECTS = "<module-effects>"
+
+
 def _expr_root_name(node):
     """값을 버리는 표현식이 **무엇의** 상태를 바꾸는가 (54차 P0-5).
 
@@ -727,14 +734,20 @@ def _module_defs(src: str) -> dict:
                 #   대입과 같은 규칙이다). 대상 이름을 정할 수 없으면 멈춘다.
                 if isinstance(node.value, ast.Constant):
                     continue
+                # ★ 55차 P0-5① — 54차는 이 문을 **쓰여 있는 이름**에 결속했다.
+                #   그래서 `BOX={}; ALIAS=BOX; ALIAS.update(tol=…)` 는 `ALIAS`
+                #   에만 묶이고, `BOX` 를 읽는 계산의 닫힘에서 빠졌다 (리뷰어
+                #   실측: digest 동일 · 0.02 → 0.09). 별칭은 몇 겹이든 쌓을 수
+                #   있으므로 이름 추적으로는 못 이긴다.
+                #
+                #   그래서 방향을 뒤집는다: docstring 이 아닌 module-level
+                #   표현식은 **무조건** module 효과의 뿌리이고 항상 닫힘 안에
+                #   있다. 뿌리 이름에도 함께 묶어 두면(알 수 있을 때) 그 이름을
+                #   읽는 쪽에서도 보인다.
+                _bind(MODULE_EFFECTS, top or node)
                 root = _expr_root_name(node.value)
-                if root is None:
-                    raise SystemExit(
-                        f"✗ producer 소스의 module scope 에 대상 이름을 알 수 "
-                        f"없는 표현식이 있다 ({getattr(node, 'lineno', '?')}행) "
-                        "— 무엇의 상태를 바꾸는지 정적으로 답할 수 없으면 "
-                        "identity 밖 계산이 된다 (fail-closed)")
-                _bind(root, top or node)
+                if root is not None:
+                    _bind(root, top or node)
             elif kind in _MODULE_NONBINDING:
                 continue
             elif kind in _MODULE_COMPOUND:
@@ -898,8 +911,41 @@ def _source_reflection_locals(node) -> set:
 _DYNAMIC_ON_NAMESPACE = ("globals", "locals", "vars", "getattr", "setattr")
 
 
+def _static_strings(node, consts: dict | None = None) -> list:
+    """식 안에서 **정적으로 읽히는** 문자열들 (55차 P0-5②).
+
+    중첩 리터럴(`*["x"]` · `["x"][0]`)과 module-level 상수 이름(`KEY`)을
+    따라간다. 루프 변수처럼 소스에 값이 없는 것은 담지 않는다 — 담을 것이
+    없으면 이 축으로는 열 수 있는 문이 없다.
+    """
+    import ast
+
+    out = []
+    for sub in ast.walk(node):
+        if isinstance(sub, ast.Constant) and isinstance(sub.value, str):
+            out.append(sub.value)
+        elif isinstance(sub, ast.Name) and consts and sub.id in consts:
+            out.append(consts[sub.id])
+    return out
+
+
+def _module_string_consts(src_tree) -> dict:
+    """module scope 에서 **문자열 상수 하나**에 묶인 이름들 (55차 P0-5②)."""
+    import ast
+
+    out = {}
+    for node in getattr(src_tree, "body", ()):
+        if isinstance(node, ast.Assign) and isinstance(node.value, ast.Constant) \
+                and isinstance(node.value.value, str):
+            for t in node.targets:
+                if isinstance(t, ast.Name):
+                    out[t.id] = node.value.value
+    return out
+
+
 def _assert_no_dynamic_resolution(node, where: str, mods: set,
-                                  reflect: set | None = None) -> None:
+                                  reflect: set | None = None,
+                                  consts: dict | None = None) -> None:
     """계산 경로 안에서 **module-level 이름**을 동적으로 푸는가 (49차 P0-2).
 
     `globals()[...]` · `getattr(sc, ...)` · `eval` 은 module-level 이름을 실행
@@ -922,6 +968,39 @@ def _assert_no_dynamic_resolution(node, where: str, mods: set,
         #   결과 1 → 9). 이름이 인자로 **건네지는** 자리에서만 본다 — 선언
         #   테이블 안의 같은 문자열은 데이터이지 접근이 아니다.
         if isinstance(sub, ast.Call):
+            # ★ 55차 P0-5② — 54차는 **직접 Constant 인자만** 봤다. 리뷰어는
+            #   같은 이름을 한 겹 감싸 그대로 통과시켰다 (실측: digest 동일 ·
+            #   1 → 9)::
+            #
+            #       getattr(f, *["__globals__"])
+            #       getattr(f, ["__globals__"][0])
+            #       getattr(f, KEY)          # KEY = "__globals__"
+            #
+            #   한 겹씩 벗기는 것은 끝나지 않는다 — 53차에 blacklist 로 이미
+            #   배웠다. 그래서 **인자 식 전체에서 정적으로 읽히는 문자열**을
+            #   모아 같은 규칙을 먹인다 (중첩 리터럴 · module 상수 경유 포함).
+            #
+            #   정적으로 **안 보이는** 이름(예: `_ast_canon` 의
+            #   `for f in node._fields: getattr(node, f, None)`)은 그대로 둔다.
+            #   거기엔 열 수 있는 dunder 가 소스에 없다 — 넓게 막으면 producer
+            #   자신의 정규형 코드가 먼저 걸리고, 그것은 54차에 이미 겪었다.
+            fname = (sub.func.id if isinstance(sub.func, ast.Name)
+                     else sub.func.attr if isinstance(sub.func, ast.Attribute)
+                     else None)
+            if fname in _DYNAMIC_ON_NAMESPACE:
+                for arg in list(sub.args) + [k.value for k in sub.keywords]:
+                    # 직접 문자열 상수는 **54차 규칙**이 아래에서 잡는다 —
+                    # 두 규칙이 같은 자리를 물면 어느 쪽이 사는지 알 수 없다.
+                    if isinstance(arg, ast.Constant):
+                        continue
+                    for nm in _static_strings(arg, consts):
+                        if (_is_dunder(nm) and nm not in _DUNDER_ALLOWED) \
+                                or nm in _SOURCE_REFLECTION:
+                            raise SystemExit(
+                                f"✗ producer 닫힘 안에서 이름을 **감싸서** "
+                                f"건넨다: {where} 의 `{fname}(...)` 안 {nm!r} — "
+                                "`*[...]`·`[...][0]`·module 상수는 한 겹일 뿐 "
+                                "같은 계산이고 같은 규칙을 받는다 (fail-closed)")
             for arg in list(sub.args) + [k.value for k in sub.keywords]:
                 if not (isinstance(arg, ast.Constant)
                         and isinstance(arg.value, str)):
@@ -1012,7 +1091,9 @@ def _producer_closure(src: str, scoring_src: str | None = None) -> dict[str, str
     mods = _crossed_modules(src)          # ★ 49차 P0-2 — `sc.foo` 형태
     # ★ 52차 P0-8 — module scope 에서 raw source 관찰자에 묶인 이름들.
     import ast as _ast
-    reflect = _source_reflection_locals(_ast.parse(src))
+    _tree = _ast.parse(src)
+    reflect = _source_reflection_locals(_tree)
+    consts = _module_string_consts(_tree)          # 55차 P0-5②
 
     missing = [x for x in _COMPUTE_NAMES if x not in defs]
     if missing:
@@ -1032,6 +1113,8 @@ def _producer_closure(src: str, scoring_src: str | None = None) -> dict[str, str
 
     out: dict[str, str] = {}
     todo = [("rp", x) for x in _COMPUTE_NAMES]
+    if MODULE_EFFECTS in defs:                            # 55차 P0-5①
+        todo.append(("rp", MODULE_EFFECTS))
     while todo:
         kind, name = todo.pop()
         key = name if kind == "rp" else f"src.scoring:{name}"
@@ -1045,7 +1128,7 @@ def _producer_closure(src: str, scoring_src: str | None = None) -> dict[str, str
         #   **모든** 노드에 대해 동적 이름 풀이를 거부한다.
         # ★ 52차 P0-7 — 한 이름에 묶인 문이 여럿이면 **전부** 본다.
         for node in nodes:
-            _assert_no_dynamic_resolution(node, key, mods, reflect)
+            _assert_no_dynamic_resolution(node, key, mods, reflect, consts)
         out[key] = "\n".join(_ast_normal_node(n) for n in nodes)
         for sub_node in [x for n in nodes for x in ast.walk(n)]:
             # ★ 49차 P0-2 — `sc.foo` (Import + Attribute). 48차는 이 문법을
@@ -3212,8 +3295,44 @@ def frozen_dirs_from_journal(entries=None) -> dict[str, str]:
     return out
 
 
+@contextlib.contextmanager
+def _lifecycle_lock():
+    """journal 과 `.head` 를 바꾸는 **모든** 경로가 공유하는 임계 구역 (55차 P0-3).
+
+    54차까지 이 둘에는 lock 이 **하나도** 없었다. journal 을 바꾸고 anchor 를
+    옮기는 것은 두 syscall 이고, 그 사이에 다른 전이가 끼어들면 나중 쓰기가
+    앞의 것을 지운다. 리뷰어는 수리 쪽으로 들어왔다:
+
+        A 가 journal 만 남기고 죽는다 → 수리가 A tip 을 읽고 대기 →
+        정상 freeze B·C 가 journal/head 를 전진 → 낡은 수리가 **A tip 을**
+        head 에 적는다 → 그 뒤 모든 읽기가 digest mismatch 로 막힌다.
+
+    수리가 저장소를 수리 불가능하게 만드는 것은 fail-open 보다 나쁘다.
+    읽기와 쓰기가 같은 임계 구역 안에 있으면 그 schedule 이 표현 불가능해진다.
+    """
+    import fcntl
+
+    lp = _lifecycle_path()
+    lp.parent.mkdir(parents=True, exist_ok=True)
+    lk = lp.with_name(lp.name + ".lock")
+    fd = os.open(lk, os.O_CREAT | os.O_RDWR, 0o644)
+    try:
+        fcntl.flock(fd, fcntl.LOCK_EX)
+        try:
+            yield
+        finally:
+            fcntl.flock(fd, fcntl.LOCK_UN)
+    finally:
+        os.close(fd)
+
+
 def _append_lifecycle(cohort_id: str, frm, to: str, note: str) -> dict:
     """전이 하나를 **덧붙인다.** 허용 전이가 아니면 만들지 않는다."""
+    with _lifecycle_lock():                              # 55차 P0-3
+        return _append_lifecycle_locked(cohort_id, frm, to, note)
+
+
+def _append_lifecycle_locked(cohort_id: str, frm, to: str, note: str) -> dict:
     entries = read_lifecycle()
     live = cohort_lifecycle_state(cohort_id, entries)
     if live != frm:
@@ -3290,17 +3409,20 @@ def repair_lifecycle_anchor() -> bool:
     모두 지난 뒤에만 anchor 를 옮긴다 — 그리고 이 함수를 부르는 것은 이미
     "쓰겠다" 고 선언한 경로뿐이다.
     """
-    entries = read_lifecycle()
-    if not entries:
-        return False
-    tip = hashlib.sha256(
-        _lifecycle_line(entries[-1]).encode("utf-8")).hexdigest()
-    hp = _lifecycle_head_path()
-    cur = hp.read_text(encoding="utf-8").strip() if hp.is_file() else ""
-    if cur == tip:
-        return False
-    _write_head_anchor(tip)
-    return True
+    # ★ 55차 P0-3 — 읽기와 쓰기가 **같은 임계 구역**이다. 54차는 lock 도 CAS 도
+    #   없이 읽고 썼고, 그래서 낡은 수리가 전진한 head 를 과거로 되돌렸다.
+    with _lifecycle_lock():
+        entries = read_lifecycle()
+        if not entries:
+            return False
+        tip = hashlib.sha256(
+            _lifecycle_line(entries[-1]).encode("utf-8")).hexdigest()
+        hp = _lifecycle_head_path()
+        cur = hp.read_text(encoding="utf-8").strip() if hp.is_file() else ""
+        if cur == tip:
+            return False
+        _write_head_anchor(tip)
+        return True
 
 
 #: 얼린 디렉터리 **안**에 두는 봉인 marker (52차 P0-4).

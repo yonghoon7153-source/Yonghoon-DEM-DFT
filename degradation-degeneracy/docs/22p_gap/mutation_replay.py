@@ -382,7 +382,7 @@ MUTANTS = [
      '            "finalize_leg() 는 `token` 또는 `token_file` 중 정확히 하나를 "',
      "finalize_requires_the_owner_credential"),
     ("finalize-holds-the-claim-lock", PRESERVE,
-     "    with _ledger_lock(_claim_path(leg_id, claims_root_for_ledger(ledger))):",
+     "    with _lifecycle_locks(leg_id, token_file, claims_root):",
      "    if True:",
      "canonical_lock_order_is_declared_and_finalize_holds_the_claim"),
     ("finalize-rechecks-in-the-ledger-lock", PRESERVE,
@@ -481,7 +481,7 @@ MUTANTS = [
      "unresolved_producer_module_reference_is_fail_closed"),
     ("closure-refuses-dynamic-resolution", RP,
      "        for node in nodes:\n"
-     "            _assert_no_dynamic_resolution(node, key, mods, reflect)",
+     "            _assert_no_dynamic_resolution(node, key, mods, reflect, consts)",
      "        pass",
      "dynamic_name_resolution_inside_the_closure_is_fail_closed"),
     ("interpreter-set-is-pinned", RP,
@@ -870,8 +870,8 @@ MUTANTS = [
      "issuer_refuses_while_a_freeze_is_half_committed"),
     # ★ P0-1 — claim 의 자리는 원장이 정한다 (caller 가 아니다).
     ("claims-root-comes-from-the-ledger", PRESERVE,
-     '    return Path(ledger or DEFAULT_LEDGER).resolve().parent / "_claims"',
-     '    return Path(DEFAULT_LEDGER).resolve().parent / "_claims"',
+     '    return canonical_ledger(ledger).parent / "_claims"',
+     '    return canonical_ledger(None).parent / "_claims"',
      "issuer_cannot_choose_where_its_claim_lives"),
     # ★ P0-2 — 정리 경로도 같은 lock 순서를 쓴다.
     ("release-cleanup-holds-the-attempt-path", PRESERVE,
@@ -907,10 +907,14 @@ MUTANTS = [
      "                root = None if True else _expr_root_name(node.value)",
      "module_scope_expression_statement_is_fail_closed"),
     ("dunder-as-a-string-is-still-a-dunder", RP,
-     "        if isinstance(sub, ast.Call):\n"
-     "            for arg in list(sub.args) + [k.value for k in sub.keywords]:",
-     "        if False:\n"
-     "            for arg in list(sub.args) + [k.value for k in sub.keywords]:",
+     "            for arg in list(sub.args) + [k.value for k in sub.keywords]:\n"
+     "                if not (isinstance(arg, ast.Constant)\n"
+     "                        and isinstance(arg.value, str)):\n"
+     "                    continue",
+     "            for arg in []:\n"
+     "                if not (isinstance(arg, ast.Constant)\n"
+     "                        and isinstance(arg.value, str)):\n"
+     "                    continue",
      "dunder_named_by_a_string_literal_is_still_a_dunder"),
     # ★ P1 — 영수증이 어느 변이의 것인지 report 가 말해야 한다.
     ("receipt-carries-the-mutant-marker", MR,

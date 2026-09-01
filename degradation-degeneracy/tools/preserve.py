@@ -3672,7 +3672,7 @@ DEFAULT_LEDGER = (Path(__file__).resolve().parents[1]
 def _load_ledger(ledger=None) -> dict:
     import yaml
 
-    path = Path(ledger or DEFAULT_LEDGER)
+    path = canonical_ledger(ledger)
     if not path.is_file():
         raise PreserveError(
             "plan", f"보존 원장이 없다: {path} — 계획 index 를 읽을 수 없으므로 "
@@ -3895,7 +3895,7 @@ def planned_index(ledger=None) -> dict:
     검사하면 어느 소비자를 부르냐에 따라 판정이 달라진다.
     """
     doc = _load_ledger(ledger)
-    path = Path(ledger or DEFAULT_LEDGER)
+    path = canonical_ledger(ledger)
     raw = doc.get("planned")
     if raw is None:
         raise PreserveError(
@@ -4475,6 +4475,23 @@ def _atomic_write_json(path: Path, rec: dict) -> None:
         os.close(dfd)
 
 
+def canonical_ledger(ledger=None) -> Path:
+    """원장 인자를 **한 번만** 해석한 정본 경로 (55차 P0-2).
+
+    54차는 "실행권의 자리는 원장이 정한다" 로 authority 를 하나로 모았다.
+    그런데 **그 원장을 무엇으로 해석하는가** 가 자리마다 달랐다:
+    `claims_root_for_ledger()` 는 `.resolve()` 한 경로를 봤고, 원장 쓰기는
+    해석하지 않은 경로에 `os.replace()` 했다. symlink 원장이면 그 한 번의
+    쓰기가 **symlink 자체를 일반 파일로 교체**하므로, 같은 인자가 발급
+    전후로 다른 claims root 를 가리킨다 (리뷰어 실측: `authority/_claims`
+    → `_claims`, `attach with same ledger: FAILED`).
+
+    해석은 여기 한 번뿐이고, 읽기·쓰기·lock·claims root 가 전부 이것을
+    부른다. 두 쪽이 같은 함수를 부르면 그 사이가 벌어질 수 없다.
+    """
+    return Path(ledger or DEFAULT_LEDGER).resolve()
+
+
 def claims_root_for_ledger(ledger=None) -> Path:
     """실행권이 사는 곳 — **원장이 정한다** (54차 P0-1).
 
@@ -4486,7 +4503,7 @@ def claims_root_for_ledger(ledger=None) -> Path:
     두 쪽이 **같은 authority** 에서 자리를 유도하면 그 schedule 이 표현
     불가능해진다. 그 authority 는 원장이다 — 계획·cohort·동결이 전부 거기 있다.
     """
-    return Path(ledger or DEFAULT_LEDGER).resolve().parent / "_claims"
+    return canonical_ledger(ledger).parent / "_claims"
 
 
 def claims_root_for(repo_root) -> Path:
@@ -4557,7 +4574,7 @@ def _mark_plan_running(leg_id: str, ledger=None) -> None:
     """
     import yaml
 
-    path = Path(ledger or DEFAULT_LEDGER)
+    path = canonical_ledger(ledger)
     attempted = False
     try:
         with _ledger_lock(path):
@@ -4958,7 +4975,7 @@ def _assert_token_path_disjoint(token_file, claims_root=None, ledger=None) -> Pa
     except OSError as exc:                                    # pragma: no cover
         raise PreserveError("plan", f"소유 증명 경로를 정규화할 수 없다: {p}") from exc
     root = Path(claims_root or DEFAULT_CLAIMS_ROOT)
-    led = Path(ledger or DEFAULT_LEDGER)
+    led = canonical_ledger(ledger)
     reserved = {led.resolve(strict=False),
                 Path(str(led) + ".lock").resolve(strict=False)}
     if cand in reserved:
@@ -5211,7 +5228,7 @@ def _abandon_claim(claim: LegClaim, ledger=None, token_file=None,
     """
     import yaml
 
-    path = Path(ledger or DEFAULT_LEDGER)
+    path = canonical_ledger(ledger)
     # ★ 54차 P0-2 — token 을 지우는 경로이므로 **attempt_path 부터** 잡는다.
     #   53차는 claim lock 만 잡았고, 비교와 `unlink` 사이에 다른 다리의 정상
     #   발급이 끼어들어 그 credential 이 지워졌다 (리뷰어 실측).
@@ -5450,12 +5467,18 @@ def finalize_leg(leg_id: str, evidence: dict, ledger=None, *,
             f"실행 기록의 code identity 가 claim 과 다르다 "
             f"({evidence['leg_source_digest']} ≠ {claim.source_digest})")
 
-    path = Path(ledger or DEFAULT_LEDGER)
+    path = canonical_ledger(ledger)
     # ★ 49차 P0-6 — 잠금은 **정본 순서**(`LOCK_ORDER`)로 claim → 원장이다.
     #   48차는 claim 을 잠그지 않고 두 번 읽었다: 한 번은 `phases_done()` 으로
     #   검사하고 한 번은 원장 lock 안에서 receipt 를 옮겨 적었다. 그 사이에
     #   phase 가 바뀌면 **검사한 것과 기록한 것이 다르다.**
-    with _ledger_lock(_claim_path(leg_id, claims_root_for_ledger(ledger))):
+    # ★ 55차 P0-1 — 그 순서의 **첫 칸이 빠져 있었다.** 54차는 복구 분기만
+    #   `_lifecycle_locks()` 로 옮겼고 정상 경로는 claim → ledger 만 잡은 채
+    #   token 을 지우는 중복 구현으로 남았다. 리뷰어는 L 이 generation 을
+    #   비교한 뒤 `unlink` 하기 전에 M 을 같은 경로로 정상 발급시켜 **L 이
+    #   M 의 token 을 지우게** 만들었다 (`attach_M: token missing`).
+    #   규칙이 한 자리에 있지 않으면 남은 중복 구현이 곧 반례다.
+    with _lifecycle_locks(leg_id, token_file, claims_root):
         # receipt 를 **한 번만** 읽는다 — 이 snapshot 이 검사와 기록 모두의 근거다
         snap = claim._read()
         if snap["attempt_id"] != claim.attempt_id:

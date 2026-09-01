@@ -8300,3 +8300,115 @@ def test_a_durable_claim_cannot_be_issued_without_a_token_file(tmp_path):
             "0123456789abcdef", ledger=led)
     assert "소유 증명" in str(ei.value) or "attempt" in str(ei.value), str(ei.value)
     assert not P._claim_path("L", claims).is_file()
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# 55차 — 게이트 54 반례
+# ─────────────────────────────────────────────────────────────────────────────
+
+def test_a_normal_finalize_cannot_delete_the_next_attempts_token(tmp_path):
+    """★ 55차 P0-1 — attempt-path lock 이 **정상 finalize 에는 없었다**.
+
+    54차는 finalize 의 **복구 분기**만 `_lifecycle_locks()` 로 옮겼다. 정상
+    경로는 claim → ledger 만 잡은 채 token 을 지우는 중복 구현으로 남았고,
+    리뷰어가 그대로 쳤다:
+
+        L 의 finalize 가 token 을 확인한 뒤 삭제 직전에 멈춘다. L claim 은
+        이미 지워졌으므로 M 이 같은 token 경로로 정상 발급되어 running 이
+        된다. 그 뒤 L 이 재개하며 **M 의 새 token 을 지운다.**
+
+        M_plan: running · M_claim_exists: true · shared token: false
+        attach_M: token missing · RESULT: VULNERABLE
+
+    불변식은 54차와 같다 — token 을 바꾸는 **모든** 경로가 같은 임계 구역을
+    지난다. 규칙이 한 자리에 있지 않으면 남은 중복 구현이 곧 반례다.
+    """
+    import threading
+
+    import tools.preserve as P
+
+    led = _lifecycle_ledger_two(tmp_path)
+    tok = tmp_path / "shared.token"
+    P.open_leg_run("L", _RUN_SPEC_L, "0123456789abcdef", tok, ledger=led)
+    c = P.attach_leg_run("L", tok, ledger=led)
+    for ph in ("grid", "fit"):
+        c.phase_done(ph, {"ok": True})
+
+    err = []
+
+    def open_m():
+        try:
+            P.open_leg_run("M", _RUN_SPEC_M, "0123456789abcdef", tok,
+                           ledger=led)
+        except BaseException as exc:                       # noqa: BLE001
+            err.append(exc)
+
+    t = threading.Thread(target=open_m, daemon=True)
+    state = {"hit": False}
+    real_unlink = P.Path.unlink
+
+    def hooked(self, *a, **k):
+        # 창은 `_unlink_token_generation()` **안**에 있다: generation 을
+        # 비교한 **뒤** `unlink` 하기 전. 그 사이에 M 이 정상 발급되면 L 은
+        # 이미 낡은 술어로 남의 파일을 지운다.
+        if str(self) == str(tok) and not state["hit"]:
+            state["hit"] = True
+            t.start()
+            t.join(timeout=2.0)
+        return real_unlink(self, *a, **k)
+
+    with mock.patch.object(P.Path, "unlink", hooked):
+        P.finalize_leg("L", {"leg_source_digest": "0123456789abcdef",
+                             "cohorts": ["gA"]},
+                       ledger=led, token_file=tok)
+    t.join(10)
+    assert not t.is_alive(), "M 이 영원히 막혔다"
+    assert state["hit"], "시험이 겨눈 자리를 지나지 않았다"
+
+    idx = P.planned_index(ledger=led)
+    assert idx["L"]["status"] == "executed"
+    assert not err, f"M 발급이 실패했다 — 시험 전제가 깨졌다: {err}"
+    assert idx["M"]["status"] == "running", (
+        f"M 이 발급되지 않았다 — 시험이 겨눈 상황이 아니다 ({idx['M']})")
+    # M 의 소유 증명은 **L 의 정리가 지우지 않아야** 한다
+    P.attach_leg_run("M", tok, ledger=led)
+
+
+def test_the_same_ledger_argument_always_names_the_same_claims_root(tmp_path):
+    """★ 55차 P0-2 — 원장이 **자기 쓰기로** claims root 를 옮긴다.
+
+    race 도 symlink 재지정도 필요 없다. symlink 원장으로 발급하면 claim 은
+    해석된 target 옆(`authority/_claims`)에 생기는데, 원장 쓰기의
+    `os.replace()` 가 **symlink 자체를 일반 파일로 교체**한다. 그 뒤 같은
+    `ledger` 인자를 다시 넘기면 `claims_root_for_ledger()` 가 다른 곳을
+    가리킨다.
+
+        claims root before: authority/_claims
+        claims root after:  _claims
+        old-root claim: true · new-root claim: false
+        attach with same ledger: FAILED
+
+    54차는 "authority 는 원장이 정한다" 로 자리를 하나로 모았는데, **그
+    원장을 무엇으로 해석하는가** 가 쓰기 전후로 달랐다. 해석은 공개 진입점에서
+    한 번만 하고 canonical 경로를 끝까지 쓴다.
+    """
+    import tools.preserve as P
+
+    real = tmp_path / "authority"
+    real.mkdir()
+    led_real = _lifecycle_ledger(real)
+    link = tmp_path / "ledger.yaml"
+    link.symlink_to(led_real)
+
+    before = P.claims_root_for_ledger(link)
+    tok = tmp_path / "L.token"
+    P.open_leg_run("L", _RUN_SPEC_L, "0123456789abcdef", tok, ledger=link)
+    after = P.claims_root_for_ledger(link)
+
+    assert before == after, (
+        f"같은 ledger 인자가 발급 전후로 다른 claims root 를 가리킨다 "
+        f"({before} → {after}) — 실행권의 자리가 원장 쓰기로 움직였다")
+    assert link.is_symlink(), (
+        "원장 쓰기가 symlink 를 일반 파일로 교체했다 — 해석 결과가 바뀐다")
+    # 같은 인자로 회수할 수 있어야 한다 ("회수 가능" 주장의 뜻이다)
+    P.attach_leg_run("L", tok, ledger=link)
