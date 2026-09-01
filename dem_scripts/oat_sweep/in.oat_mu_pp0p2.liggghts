@@ -1,0 +1,139 @@
+# ============================================================
+# oat_mu_pp0p2: 표A · mu_pp = 0.2
+#   mu_pp=0.2 · mu_pw=0.5 · COR=0.3 · roll=0.1 · E=1.35 GPa (scaled 1.35e+06)
+#
+# ⚠ 생성물이다 — 손으로 고치지 말고 scripts/gen_dem_oat_sweep.py 를 고칠 것.
+# ⚠ 원본 heckel/input_SE_heckel_300.liggghts 대비 **구조 변경 1건**:
+#    atom type 1 → 2 (벽을 type 2 로 분리해야 mu_pw 를 독립으로 흔든다).
+#    그래서 `base` 런은 **음성 대조**다 — 원본 porosity 를 재현해야 한다.
+# ============================================================
+atom_style      granular
+atom_modify     map array sort 0 0
+boundary        p p f
+newton          off
+soft_particles  yes
+communicate     single vel yes
+units           si
+
+variable target_press equal 0.300
+variable r_SE    equal 0.5e-3
+variable dt      equal 1.0e-6
+variable plate_margin equal 0.003
+timestep        ${dt}
+
+region reg_box block 0.0 0.05 0.0 0.05 -0.01 1.0 units box
+create_box      2 reg_box
+neighbor        0.002 bin
+neigh_modify    delay 0 check yes
+
+#  ⚠ type 1 = SE 입자 · type 2 = **벽 전용**(입자 없음).
+#     원본은 1-type 이라 벽 마찰이 입자 마찰에 묶여 있었다 → mu_pw 를 못 흔든다.
+#     벽 물성은 입자와 **같은 값**으로 둔다 (원본 거동 보존).  마찰만 mu_pw 로 분리.
+fix m1 all property/global youngsModulus peratomtype 1.35e+06 1.35e+06
+fix m2 all property/global poissonsRatio peratomtype 0.30 0.30
+fix m3 all property/global coefficientRestitution peratomtypepair 2 0.3 0.3 0.3 0.3
+fix m4 all property/global coefficientFriction peratomtypepair 2 0.2 0.5 0.5 0.2
+fix m5 all property/global coefficientRollingFriction peratomtypepair 2 0.1 0.1 0.1 0.1
+fix m6 all property/global coefficientMaxElasticStiffness peratomtypepair 2 5.0 5.0 5.0 5.0
+fix m7 all property/global coefficientAdhesionStiffness peratomtypepair 2 1.0e6 1.0e6 1.0e6 1.0e6
+fix m8 all property/global coefficientPlasticityDepth peratomtypepair 2 0.005 0.005 0.005 0.005
+fix m9 all property/global characteristicVelocity scalar 2.0
+
+pair_style      gran model hooke/hysteresis tangential history rolling_friction cdt
+pair_coeff      * *
+
+compute strs all stress/atom
+compute ke   all ke/atom
+compute cpl all pair/gran/local pos id force force_normal force_tangential torque contactArea delta contactPoint
+
+fix zwall_bot all wall/gran model hooke/hysteresis tangential history rolling_friction cdt primitive type 2 zplane 0.0
+
+fix pts1 all particletemplate/sphere 32452843 atom_type 1 density constant 2000 radius constant ${r_SE}
+fix pdd_mix all particledistribution/discrete 49979687 1 pts1 1.0
+
+region reg_mix block 0.0 0.05 0.0 0.05 0.005 0.035 units box
+print "====== INSERTING PARTICLES (oat_oat_mu_pp0p2, seed=78049) ======"
+fix ins_mix all insert/pack seed 78049 distributiontemplate pdd_mix &
+    maxattempt 15000 insert_every once overlapcheck yes all_in no &
+    vel constant 0.0 0.0 -0.5 &
+    region reg_mix &
+    volumefraction_region 0.281
+run 1
+unfix ins_mix
+
+shell mkdir post_oat_oat_mu_pp0p2
+thermo_style    custom step atoms ke cpu
+thermo          1000
+
+print "====== PHASE 1: SETTLING ======"
+fix integr all nve/sphere
+fix gravi all gravity 98.1 vector 0.0 0.0 -1.0
+fix damp all viscous 1.0e-5
+compute zmax all reduce max z
+shell mkdir restart_oat_oat_mu_pp0p2
+restart 50000 restart_oat_oat_mu_pp0p2/restart_settling_*.bin
+run 200000
+
+write_restart restart_oat_oat_mu_pp0p2/restart_after_settling.bin
+thermo_style    custom step atoms c_zmax
+thermo          1
+run 1
+variable z_max equal c_zmax
+variable plate_z equal ${z_max}+${r_SE}+${plate_margin}
+print "====== PLATE HEIGHT: ${plate_z} ======"
+
+print "solid plate" file plate_oat_oat_mu_pp0p2.stl screen no
+print "facet normal 0 0 -1" append plate_oat_oat_mu_pp0p2.stl screen no
+print "outer loop" append plate_oat_oat_mu_pp0p2.stl screen no
+print "vertex 0.0 0.0 ${plate_z}" append plate_oat_oat_mu_pp0p2.stl screen no
+print "vertex 0.05 0.05 ${plate_z}" append plate_oat_oat_mu_pp0p2.stl screen no
+print "vertex 0.05 0.0 ${plate_z}" append plate_oat_oat_mu_pp0p2.stl screen no
+print "endloop" append plate_oat_oat_mu_pp0p2.stl screen no
+print "endfacet" append plate_oat_oat_mu_pp0p2.stl screen no
+print "facet normal 0 0 -1" append plate_oat_oat_mu_pp0p2.stl screen no
+print "outer loop" append plate_oat_oat_mu_pp0p2.stl screen no
+print "vertex 0.0 0.0 ${plate_z}" append plate_oat_oat_mu_pp0p2.stl screen no
+print "vertex 0.0 0.05 ${plate_z}" append plate_oat_oat_mu_pp0p2.stl screen no
+print "vertex 0.05 0.05 ${plate_z}" append plate_oat_oat_mu_pp0p2.stl screen no
+print "endloop" append plate_oat_oat_mu_pp0p2.stl screen no
+print "endfacet" append plate_oat_oat_mu_pp0p2.stl screen no
+print "endsolid plate" append plate_oat_oat_mu_pp0p2.stl screen no
+
+fix top_mesh all mesh/surface/stress file plate_oat_oat_mu_pp0p2.stl type 2 scale 1.0 reference_point 0 0 0
+fix zwall_top all wall/gran model hooke/hysteresis tangential history rolling_friction cdt mesh n_meshes 1 meshes top_mesh
+dump dmp_mesh all mesh/stl 5000 post_oat_oat_mu_pp0p2/mesh_*.stl top_mesh
+
+print "====== PHASE 2: STABILIZE ======"
+fix gravi all gravity 9.81 vector 0.0 0.0 -1.0
+unfix damp
+fix damp all viscous 0.5
+variable pressMPa equal abs(f_top_mesh[3])/0.0025/1000000
+thermo_style    custom step atoms ke cpu v_pressMPa
+thermo 1000
+run 200000
+
+print "====== PHASE 3: COMPRESSION to 300 MPa ======"
+dump dmp_atom all custom 5000 post_oat_oat_mu_pp0p2/atom_*.liggghts id type x y z radius vx vy vz c_strs[1] c_strs[2] c_strs[3] c_ke
+fix_modify      zwall_top energy yes
+variable press_speed equal 0.01
+fix move_press all move/mesh mesh top_mesh linear 0.0 0.0 -${press_speed}
+restart 50000 restart_oat_oat_mu_pp0p2/restart_compress_*.bin
+
+label loop_press
+    run 5000
+    variable current_press equal "abs(f_top_mesh[3]) / 0.0025 / 1000000"
+    print "Current Pressure: ${current_press} MPa (Target: ${target_press})"
+    if "${current_press} < ${target_press}" then "jump SELF loop_press"
+
+unfix move_press
+
+print "====== PHASE 4: RELAXATION ======"
+unfix damp
+fix damp all viscous 1.0e-5
+dump dmp_contact all local 10000 post_oat_oat_mu_pp0p2/contact_*.liggghts &
+    c_cpl[1] c_cpl[2] c_cpl[3] c_cpl[4] c_cpl[5] c_cpl[6] c_cpl[7] c_cpl[8] &
+    c_cpl[9] c_cpl[10] c_cpl[11] c_cpl[12] c_cpl[13] c_cpl[14] c_cpl[15] c_cpl[16] &
+    c_cpl[17] c_cpl[18] c_cpl[19] c_cpl[20] c_cpl[21] c_cpl[22] c_cpl[23] c_cpl[24] &
+    c_cpl[25] c_cpl[26]
+run 100000
+print "====== oat_oat_mu_pp0p2 (300 MPa) Finished! ======"

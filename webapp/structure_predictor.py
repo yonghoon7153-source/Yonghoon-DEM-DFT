@@ -192,6 +192,40 @@ def predict_structure(d_se, d_am, am_pct, ps_frac, rve, loading, include_weak=Tr
                      '스케일링법칙(.975/.953/.90) 소관.')}
 
 
+def shap_importance(n_explain=48, n_bg=24, seed=0, include_weak=True):
+    """설계 노브의 **정확 Shapley** 중요도 (타깃별 100 % 정규화).
+
+    ★ 출처: 양수영 (BML) 세미나 2026-08-18 의 SHAP 중요도 히트맵.  구현은
+      `scripts/ml_shap_pareto.py` — 우리는 **근사가 아니라 전수 열거**(2⁶ = 64 연합)라
+      근사 오차가 0 이고, **유도 특징이 아니라 자유노브**에만 건다 (유도량은 노브의 함수라
+      거기 걸면 한 노브의 기여가 자기 유도량들로 쪼개진다).
+    ⚠ 도메인은 `dem_structure` 고정 — DFT 축은 아직 등록돼 있지 않다 (그쪽이 오면 그 모듈의
+      `DOMAINS` 에 **새 항목**으로 붙는다.  여기서 이름을 바꿔 재사용하면 두 축이 섞인다).
+    """
+    import ml_shap_pareto as SP
+    return SP.shap_importance('dem_structure', n_explain=int(n_explain), n_bg=int(n_bg),
+                              seed=int(seed), include_weak=bool(include_weak))
+
+
+def pareto(objectives=None, n=1200, seed=0, include_weak=True):
+    """다목적 Pareto front + 하이퍼볼륨 추이.
+
+    `objectives` = [['tau','min'], ['f_perc','max'], …].  REJECT/노출금지 타깃은 거부된다.
+    ⚠ 추천(균형점)은 **물리 경계 안**에서만 고른다 — 최적화기는 경계 밖 점을 *선호*한다
+      (f_perc 103 % 가 100 % 보다 좋아 보이므로).  경계 밖 점은 버리지 않고 세어 보고한다.
+    """
+    import ml_shap_pareto as SP
+    objs = [(o[0], o[1]) for o in (objectives or [['tau', 'min'], ['f_perc', 'max']])
+            if isinstance(o, (list, tuple)) and len(o) == 2]
+    if not objs:
+        return {'ready': False, 'error': '목적이 비었다 — [["tau","min"], …] 형식'}
+    if len(objs) > 4:
+        return {'ready': False, 'error': f'목적 {len(objs)}개 — 4개까지만 (그 이상은 Pareto front 가 '
+                                         f'표본 대부분을 차지해 front 라는 말이 뜻을 잃는다)'}
+    return SP.pareto_explore('dem_structure', objectives=objs, n=int(n), seed=int(seed),
+                             include_weak=bool(include_weak))
+
+
 def surface(target='tau', x_knob='am_pct', y_knob='d_am', n=25, fixed=None, csv_path=None):
     """2 인자 응답면 (주간보고 8 쪽 형식) + 실제 코퍼스 산점.  CSV 없으면 면만."""
     import numpy as np
