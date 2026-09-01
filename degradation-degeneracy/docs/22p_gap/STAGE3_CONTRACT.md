@@ -1107,7 +1107,12 @@ checkout 위치는 producer 의미가 아니고, `Path(__file__)` 은 닫힘 안
 
 | 규칙 | 무엇 |
 |---|---|
-| 증거의 위치는 발급자가 정한다 | `claims_root_for(REPO)` — `freeze_cohort()` 에 `claims_root` 인자가 **없다**. 물어볼 수 없으면 얼리지 않는다 (52차의 `except: return []` 는 fail-open 이었다) |
+| 증거의 위치는 **원장이** 정한다 | `claims_root_for_ledger()` — 동결도 발급도 같은 함수로 자리를 유도한다 (54차 P0-1). 물어볼 수 없으면 얼리지 않는다 |
+| 살아 있는 실행은 **이 cohort 의 것**만 센다 | 53차는 인자를 받고 쓰지 않아 claim 하나가 저장소의 모든 동결을 막았다 (54차 P1). 읽을 수 없는 claim 은 여전히 막는다 |
+| 동결의 시작을 먼저 선형화한다 | 원장 `status: freezing` (54차 P0-1) |
+| 원장 쓰기는 **원자적**이다 | 발급자와 같은 규칙 — temp + write-all + read-back + replace (54차 P0-3). 53차의 제자리 `write_text()` 는 ENOSPC 하나로 원장을 반쪽으로 남겼다 |
+| 목적지의 frozen 은 **단조**다 | 허용 전이 목록은 cohort **이름**의 상태 기계이고, 목적지는 이름을 바꿔 빠져나갈 수 있다 (54차 P0-4). 한 번 frozen 인 `dir` 을 다른 이름으로 다시 여는 줄은 **읽기가 거부**한다 |
+| journal 의 `dir` 은 저장소 상대 canonical | 저장소 밖을 봉인하는 기록은 기록이 아니라 쓰기 primitive 다 (54차 P1) |
 | 살아 있는 실행 검사가 **맨 앞** | 복구 분기보다 먼저. 자라고 있는 것을 두고 "더 자라지 않는다" 를 선언할 수 없다 |
 | 게시 lock 을 잡는다 | LOCK ORDER `publish → ledger`. 게시자가 authority 를 고정한 뒤 pointer 를 옮기기 **전에** 동결이 끼어들면 남은 검사는 이미 지났다 — 순서는 검사로 못 막고 상호배제로 막는다 |
 | 쓰기 직전에 다시 읽는다 | `_write_ledger_doc()` 이 cohort row 두 필드만 고친다. 시작 시점에 읽은 doc 을 되쓰면 그 사이에 굳은 실행 기록이 사라진다 |
@@ -1360,12 +1365,42 @@ fsync 가 오류를 보고하면 전이는 이미 커밋됐다. 50차 rollback �
 자기 보고이기 때문이다. 52차는 맨손 `os.write()` 였고 부분 쓰기가 성공으로
 통과해 이후 모든 reader 가 malformed JSON 을 만났다.
 
+**claim 의 자리는 원장이 정한다 (54차 P0-1).** 53차는 동결 쪽에서만
+`claims_root` 인자를 없앴고 발급 API 는 여전히 임의 root 를 받았다 — 리뷰어는
+alternate root 에 살아 있는 claim 을 두고 canonical root 는 비어 있다고 보게
+만들어 freeze 를 완주시켰다. 두 쪽이 **같은 authority** 에서 자리를 유도하면 그
+schedule 이 표현 불가능해진다. `claims_root_for_ledger(ledger)` 하나가 규칙이고,
+공개 durable API(`open_leg_run`·`attach_leg_run`·`finalize_leg`·
+`release_leg_run`·`assert_run_is_authorized`)에는 그 인자가 **없다**.
+
+**동결의 시작도 durable 하다 (54차 P0-1).** cohort status enum 이
+`("active", "freezing", "frozen")` 로 늘었다. 53차까지 freeze 는 journal·marker
+를 먼저 쓰고 원장을 나중에 썼고, 발급 gate 는 원장만 보므로 그 사이에 실행권을
+열었다. 이제 freeze 는 **원장에 `freezing` 을 먼저 굳히고** 시작하며, 발급은
+`active` 만 받는다. 그리고 승인 commit 은 사전검사 시점이 아니라 **그 시점의**
+cohort 를 다시 본다 (`_assert_cohort_admits()`, 원장 lock 안).
+
+**durable 발급은 소유 증명을 요구한다 (54차 P0-6).** `claim_planned_leg()` 은
+token 을 인자로 받고, 없으면 거부한다. 53차는 `token=None` 이면 지역변수로
+하나 만들었고 — 원장 commit 뒤 오류가 나면 claim 은 남고 소유 증명은 **어디에도
+없었다.** `assert_run_is_authorized()` 도 `--attempt-file` 없이는 발급하지
+않는다. 발급은 coordinator(`run.sh`)의 일이다.
+
 **전달 통로의 배타는 그 경로 위에 있다 (53차 P0-3).** claim lock 은 다리마다
 다르므로, 두 다리가 같은 `--attempt-file` 을 쓰면 빈 파일 위에서 두 발급이
 나란히 "비었다" 를 통과하고 뒤에 쓴 쪽이 앞의 credential 을 덮는다. 그래서
 `LOCK_ORDER = ("attempt_path", "claim", "ledger")` 이고, `open_leg_run()` 은
 `_attempt_path_lock()`(정규화한 소유 증명 경로 옆의 sentinel)을 **가장 먼저**
 잡는다.
+
+**같은 순서를 안 쓰는 경로가 곧 반례다 (54차 P0-2).** 53차는 발급만 그 순서를
+지켰고 **정리 경로**(release 의 token 삭제, finalize 의 복구 삭제)는 lock 없이
+지웠다. 리뷰어는 L 의 release 가 자기 token 을 확인한 뒤 멈춘 사이 M 이 같은
+경로로 발급하게 해서 **L 이 M 의 token 을 지우게** 만들었고, 또 finalize 복구가
+지운 claim 을 늦은 `phase_done()` 이 되살리게 했다. 이제 lifecycle 을 바꾸는
+**모든** 경로가 `_lifecycle_locks(leg_id, token_file, claims_root)` 라는 한
+context manager 를 지나며, 그것이 `LOCK_ORDER` 를 강제한다 — 확인과 삭제가 같은
+임계 구역 안에 있다.
 
 **전달 통로는 authority namespace 밖이다 (51차 P1-P).** `--attempt-file` 이
 `<claims_root>/<leg>.claim` 이면 token-first 쓰기가 claim authority 경로를

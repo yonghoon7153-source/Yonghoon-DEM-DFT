@@ -930,18 +930,28 @@ MUTANTS = [
      "    if False:\n"
      "        return 1",
      None),
-    # ★ P1 — "모르겠다" 는 "물었다" 가 아니다.
-    ("receipt-verdict-is-fail-closed", MR,
-     "        if bool(v.get(\"bit\")) != derived:\n"
-     "            print(f\"\u2717 {path}: {name} \uc758 \ud310\uc815\uc774 \uc601\uc218\uc99d\uacfc \ub2e4\ub974\ub2e4 \"",
-     "        if derived is not None and bool(v.get(\"bit\")) != derived:\n"
-     "            print(f\"\u2717 {path}: {name} \uc758 \ud310\uc815\uc774 \uc601\uc218\uc99d\uacfc \ub2e4\ub974\ub2e4 \"",
-     "unreadable_receipt_is_not_a_pass"),
 ]
 
 #: 여러 지점을 **함께** 되돌려야 관측되는 변이 (심층 방어라 하나만 지우면
 #: 다른 하나가 가린다). 41·42·43차에 실측했다.
 MULTI = [
+    # ★ P1 — "모르겠다" 는 "물었다" 가 아니다. 54차에 자리가 **둘로 늘었다**:
+    #   빈 report 는 이제 신원 검사(`_report_identity_rc`)가 먼저 거부하므로,
+    #   fail-closed 비교만 되돌리면 시험이 여전히 초록이다 (53차에는 단일
+    #   변이로 물었다 — 실측하고 MULTI 로 옮겼다). 둘을 함께 되돌려야
+    #   "유도할 수 없는 영수증이 통과한다" 는 옛 상태가 복원된다.
+    ("receipt-verdict-is-fail-closed", MR, [
+        ("        if _report_identity_rc(path, name, rep_dir) != 0:\n"
+         "            return 1",
+         "        if False:\n"
+         "            return 1"),
+        ("        if bool(v.get(\"bit\")) != derived:\n"
+         "            print(f\"✗ {path}: {name} 의 판정이 "
+         "영수증과 다르다 \"",
+         "        if derived is not None and bool(v.get(\"bit\")) != derived:\n"
+         "            print(f\"✗ {path}: {name} 의 판정이 "
+         "영수증과 다르다 \""),
+     ], "unreadable_receipt_is_not_a_pass"),
     # ★ 54차 P0-1 — 발급이 얼린 cohort 로 들어가는 것을 막는 자리가 둘이다:
     #   commit 시점의 cohort 재검사(발급 쪽)와 살아 있는 실행권 검사(동결 쪽).
     #   하나만 되돌리면 다른 하나가 여전히 막는다 — 함께 되돌려야 관측된다.
@@ -1152,6 +1162,16 @@ DECLARED_MASKED = {
         "(a) 지금 인터프리터가 선언 집합 안이고 (b) 대표 구문 넷의 정규형이 "
         "golden 과 같음을 매번 확인한다. 즉 '정규형이 버전에 안 묶인다' 는 "
         "주장이 깨지면 golden 이 먼저 빨개진다.",
+    "coverage-checks-the-recorded-head":
+        "이 변이는 **변이 sandbox 안에서 관측할 수 없다.** 검사(`git cat-file "
+        "-e <head>^{commit}`)는 git 역사가 있어야 물을 수 있는데, sandbox 는 "
+        "추적 파일만 복사한 사본이라 `.git` 이 없다. 그래서 sandbox 에서는 "
+        "변이 전 baseline 부터 이미 빨갛고(회귀가 '이 저장소에 없는 HEAD' 를 "
+        "만들 수 없다), 빨간 것은 검사가 지워져서가 아니라 **환경이 다르기** "
+        "때문이다 — 그런 빨강은 증거가 아니다. 대신 회귀"
+        "(`..._the_recorded_head_must_exist_in_this_repository`)가 실저장소에서 "
+        "매번 돌며, 모든 HEAD 를 40개의 `0` 으로 바꾼 조각이 `rc 1` 로 "
+        "거부되는지 확인한다 (리뷰어 반례를 그대로 고정한 것이다).",
     "warm-consumer-wiring":
         "positive wiring 회귀는 배선이 **끊길 때** 빨개진다. assert 를 지우는 "
         "변이는 그 시험 자신만 무력화하므로 다른 시험이 물지 않는다 — "
@@ -1527,8 +1547,12 @@ EXPECT: dict = {
         "fail": [
             "tests/test_preserve.py::test_a_lying_write_is_caught_by_reading_the_bytes_back"
         ],
+        # 54차 — 증인이 낡아 있었다. claim 의 read-back 을 지워도 **멈추기는**
+        # 한다 (그 뒤 원장 쓰기가 같은 규칙으로 잡는다). 달라지는 것은 거짓말한
+        # 쓰기가 `os.replace` 까지 가서 **깨진 claim 이 자리에 남는다**는 것이고,
+        # 그것이 이 자리가 실제로 사는 이유다. 증인을 그 assert 로 옮긴다.
         "witness": {
-            "tests/test_preserve.py::test_a_lying_write_is_caught_by_reading_the_bytes_back": "Failed: DID NOT RAISE PreserveError"
+            "tests/test_preserve.py::test_a_lying_write_is_caught_by_reading_the_bytes_back": "깨진 claim 이 남았다"
         }
     },
     "claim-write-is-all-or-nothing": {

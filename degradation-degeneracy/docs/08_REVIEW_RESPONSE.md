@@ -5735,3 +5735,98 @@ digest 에 넣는다. 그리고 "모르겠다" 는 "물었다" 가 아니다 —
 | 발급·finalize·freeze·publish 를 **하나의 generation transaction** 으로 | **부분** — 53차에 lock 을 공유하게 만들었지만 단일 원자 transaction 은 아니다 |
 | baseline·sweep1d·wsweep 계획 gate · 실물 object-lock adapter · power-loss 모델 · publisher 전용 OS principal | **미착수** |
 | 외적타당도 #48/#49/#50 | **미착수** |
+
+## §62 54차 게이트 리뷰 대응 — authority 를 하나로 (묶음 9)
+
+53차 판정은 **NO-GO**. P0 6묶음 · P1 4건. 리뷰어가 실행 가능한 재현 script 를
+붙여 왔고, 전부 그대로 재현됐다.
+
+### 반례 대응표
+
+| # | 53차 반례 | 재현 | 고친 자리 |
+|---|---|---|---|
+| P0-1① | 발급자가 사전검사를 지난 뒤 대기하는 동안 freeze 완주 → `cohort=frozen · plan=running · release 불가` | ○ | 승인 **commit 시점**에 cohort authority 재검사 (`_assert_cohort_admits`) |
+| P0-1② | freeze 가 journal·marker 만 쓰고 죽으면 발급 gate 가 원장만 보고 통과 | ○ | 원장에 durable **`freezing`** 을 먼저 선형화 |
+| P0-1③ | 발급 API 가 여전히 임의 `claims_root` 를 받는다 | ○ | `claims_root_for_ledger()` — 동결도 발급도 **원장에서** 유도. 공개 API 에서 인자 제거 |
+| P0-2① | L 의 release 가 자기 token 을 확인한 뒤 멈춘 사이 M 이 발급 → L 이 **M 의** token 을 지운다 | ○ | `_lifecycle_locks()` — `attempt_path → claim → ledger` 를 모든 mutator 가 공유 |
+| P0-2② | finalize 복구가 lock 없이 지운 뒤 늦은 `phase_done()` 이 claim 을 부활 | ○ | 복구도 같은 임계 구역 안 |
+| P0-3 | `_write_ledger_doc()` 의 제자리 `write_text()` → ENOSPC 하나로 원장이 반쪽 | ○ | 발급자와 같은 원자적 쓰기 (temp + write-all + read-back + replace) |
+| P0-4 | 같은 `dir` 에 새 이름의 허용 전이 `None → active` 를 넣으면 frozen 목적지가 사라진다 | ○ | 목적지 frozen 은 **단조** · 다른 이름의 재개방은 읽기가 거부 |
+| P0-5① | module scope `BOX.update(...)` 가 `Expr` 이라 통째로 무시 | ○ | 값을 버리는 표현식을 **대상 이름에 결속** (뿌리 없으면 fail-closed) |
+| P0-5② | `getattr(f, "__globals__")` 가 dunder allowlist 우회 | ○ | 인자로 건네는 **dunder 문자열 상수**도 같은 규칙 |
+| P0-5③ | 절단된 `_producer_source_files()` 가 decoy 를 줘도 두 identity 동일 | ○ | 그 함수를 절단면에서 뺀다 |
+| P0-6 | 직접 발급이 token 을 지역변수로만 만들어 `PlanWriteUncertain` 뒤 회수 불가 | ○ | 발급이 소유 증명을 **인자로** 요구 · gate 는 `--attempt-file` 없으면 거부 |
+| P1 | donor report 를 이름만 바꿔 붙이면 통과 (`new_pytest_runs=0`) | ○ | runner 가 **변이별 표식 node** 를 넣고 checker 가 report 에서 확인 |
+| P1 | `head` 결속이 죽어 있다 (40개의 `0` 으로도 rc 0) | ○ | 조각들이 한 HEAD 를 적었고 그것이 **이 저장소에 실재**하는지 본다 |
+| P1 | journal 의 절대 경로 `dir` 이 저장소 밖에 `.FROZEN` 을 만든다 | ○ | 저장소 상대 canonical 만 (쓰는 쪽·읽는 쪽 같은 규칙) |
+| P1 | `_live_claims_for(cohort_id)` 가 인자를 안 쓴다 | ○ | claim record 의 cohort 로 거른다 (읽을 수 없으면 여전히 막는다) |
+
+### 54-1 이번 라운드의 형태: **authority 가 둘이면 그 사이가 구멍이다**
+
+여섯 P0 중 넷이 같은 모양이었다.
+
+- 동결은 `claims_root` 인자를 없앴는데 **발급은 안 없앴다** → 두 쪽이 다른 곳을 본다.
+- 동결은 journal 을 먼저 쓰고 원장을 나중에 쓰는데 **발급은 원장만 본다** → 그
+  사이가 창이다.
+- 발급은 `attempt_path → claim → ledger` 를 잡는데 **정리 경로는 안 잡는다** →
+  같은 순서를 안 쓰는 경로가 곧 반례다.
+- 발급은 원자적으로 쓰는데 **동결은 제자리에서 자른다** → 약한 쪽이 실효 규칙이다.
+
+고친 방식도 하나다: **규칙을 한 함수에 두고 두 쪽이 그것을 부른다.**
+`claims_root_for_ledger()` · `_lifecycle_locks()` · `_atomic_write_text()` 가
+그것이고, 동결의 시작은 `freezing` 이라는 **원장 한 필드**로 발급자에게 보인다.
+
+### 54-2 "이름을 안 묶는 문" 과 "아무 것도 안 하는 문" 은 다르다
+
+`BOX.update(tol=0.02)` 는 이름을 묶지 않지만 `BOX` 의 상태를 정한다. 53차
+`_MODULE_NONBINDING` 은 `Expr` 을 통째로 지나쳤다 — 그것은 "그 문은 아무 것도
+안 한다" 는 **주장**이었고, 틀렸다. 53차에 컨테이너 **대입**을 뿌리 이름에
+결속한 것과 같은 규칙을 표현식에도 적용한다. 대상 이름을 정할 수 없으면 멈춘다.
+
+### 54-3 결속이 조각의 밖에 있어야 한다
+
+53차는 영수증 digest 를 exact mutant 에 결속했다. 그런데 `_receipt_digest()` 는
+**공개 함수**이므로 조각을 쓰는 쪽이 다시 계산할 수 있다 — 리뷰어는 다른
+mutant 의 진짜 report 를 옮기고 digest·transcript 만 재계산해 통과시켰다.
+
+결속은 조각이 만들 수 없는 것이어야 한다. runner 가 그 실행에만 있는 시험
+node(`test_mutant_<sha12>`)를 sandbox 에 놓고, checker 는 report 바이트에서 그
+node 를 찾는다. 남은 한계는 그대로다 — report 자체를 손으로 위조하면 통과한다.
+
+### 54-4 변이가 이번에도 약한 시험 다섯을 잡았다
+
+- `frozen-destination-is-monotonic` · `admission-rechecks-the-cohort-at-commit`
+  — 심층 방어라 단일 변이로 안 물었다 → MULTI 로 (후자는 시험이 끼어드는 지점을
+  claim 파일이 생기기 **전**으로 옮겨야 했다).
+- `freeze-ledger-write-is-atomic` — fixture 원장의 최상위 key 가 하나뿐이라 잘린
+  YAML 도 파싱됐다 → 구조가 여럿인 원장으로 바꾸고 "구조가 그대로인가" 를 본다.
+- `receipt-verdict-is-fail-closed` — **53차엔 단일 변이로 물었는데 54차에 안
+  물었다.** 이번에 넣은 표식 검사(`_report_identity_rc`)가 빈 report 를 **먼저**
+  거부하기 때문이다. 새 방어를 얹으면 옛 변이가 가려진다는 것이 이 등록부의
+  반복 패턴이고, 답은 방어를 지우는 것이 아니라 두 자리를 **함께** 되돌리는
+  MULTI 다 (표식 호출 + fail-closed 비교).
+- `coverage-checks-the-recorded-head` — 변이 sandbox 에 `.git` 이 없어 baseline
+  자체가 빨갛다 → **declared** 로 등록하고 `DECLARED_MASKED` 에 경계와 대체
+  회귀(`..._the_recorded_head_must_exist_in_this_repository`)를 적었다.
+
+### 실측
+
+| 무엇 | 값 |
+|---|---|
+| 전체 회귀 | **1390 passed · 1 xfailed · 0 failed** |
+| strict smoke | **rc 0 · 52 ✅ · 0 ❌** |
+| 변이 전수 | 등록부 **156** (executable 149 · declared 7) · 12 조각. 정본은 `mutation_coverage/s1..s12.json` 과 `reports/` |
+| 산출물 | g8 을 얼리고 g9 로 · `proj ad598fe77e75afec` (행 바이트 불변) |
+| 영수증 | core_sha `77235418c8f3e8e8…` · validator identity `7b968b9bf0965402` |
+
+### 아직 아닌 것
+
+| 항 | 상태 |
+|---|---|
+| 조건 5 — 실행되는 source bytes 를 **trusted launcher** 가 측정 | **미착수.** P0-5③ 의 decoy 반례는 절단면을 좁혀 닫았지만 경계 자체는 P0-8 과 같은 자리다 |
+| 조건 P0-1 producer 결속 — 닫힌 typed manifest 파싱 · 두 payload 압축해제 재해시 · producer 발행 영수증 | **미착수** (49차부터 여섯 라운드째) |
+| 조건 P0-8 — 경로 무관 typed·sealed 실행 class marker | **미착수** |
+| 조건 P0-4 — typed 보존 영수증 소비 | **부분** |
+| 변이 증거의 독립 replay | **미착수** — 표식은 donor relabel 을 막을 뿐, checker 가 스스로 재생하지는 않는다 |
+| baseline·sweep1d·wsweep 계획 gate · 실물 object-lock adapter · power-loss 모델 · publisher 전용 OS principal | **미착수** |
+| 외적타당도 #48/#49/#50 | **미착수** |
