@@ -5619,3 +5619,119 @@ P0-5 를 고치자 e2e 가 깨졌다. 그 tree 는 `configs/` 에 시험용 conf
 | 발급·게시·freeze 를 **하나의 generation transaction** 으로 | **부분** — 배타성은 공유하지만 단일 transaction 은 아니다 (§0) |
 | baseline·sweep1d·wsweep 계획 gate · 실물 object-lock adapter · power-loss 모델 · publisher 전용 OS principal | **미착수** |
 | 외적타당도 #48/#49/#50 | **미착수** |
+
+## §61 53차 게이트 리뷰 대응 — 경계·기본값·authority (묶음 9)
+
+52차 판정은 **NO-GO**. P0 7건 · P1 1건. 여덟 반례가 세 가지 형태로 모인다:
+**경계가 호출 하나였다**, **기본값이 "모르면 되돌린다" 였다**, **증거의 위치를
+묻는 쪽이 골랐다**.
+
+### 반례 대응표
+
+| # | 52차 반례 | 재현 | 고친 자리 |
+|---|---|---|---|
+| P0-1 | 커밋 뒤 lock 을 빠져나오다 실패하면 평범한 `OSError` 가 새고 rollback 이 "확정 미커밋" 으로 오판 (`ledger=running · claim=False · token=False`) | ○ | 불확실 구역을 **임계 구역 전체**로. `PlanNotCommitted` 를 새로 두고 **그때만** 되돌린다 |
+| P0-2 | `os.write()` 반환 길이를 버려 부분 쓰기가 성공으로 통과 (`public_attach=JSONDecodeError`) | ○ | `_write_all()` + `_assert_bytes_on_disk()` — claim·소유 증명 양쪽 |
+| P0-3 | L·M 이 서로 다른 claim lock 을 잡으므로 빈 공유 파일에서 둘 다 통과 (`stranded_running_legs=['L']`) | ○ | `LOCK_ORDER = ("attempt_path", "claim", "ledger")` |
+| P0-4 | `freeze_cohort(claims_root=…)` 에 빈 디렉터리를 주면 살아 있는 claim 이 있는데도 동결 완주 | ○ | 인자를 **없앴다**. 위치의 정본은 발급자 |
+| P0-5 | 동결이 lock 밖에서 읽은 원장을 되써 finalize 기록을 지운다 (`execution_record_survived=False`) · 복구 분기가 검사보다 먼저 · 게시가 동결 뒤에 CURRENT 를 옮긴다 | ○ | 게시 lock + 원장 lock · 쓰기 직전 재독 · 검사를 맨 앞으로 |
+| P0-6 | `read_lifecycle()` 이 금지된 `frozen→active` 를 스스로 anchor · g1..g5 에 `.FROZEN` 없음 | ○ | 허용 전이를 **읽을 때** 검사 · 읽기는 쓰지 않는다 · marker 소급 |
+| P0-7 | `BOX['value']=…` 가 닫힘 밖 · `__loader__.get_source(__name__)` 이 금지 모듈 넷 밖 | ○ | 컨테이너 변형을 뿌리 이름에 결속 · dunder 를 **allowlist 로** |
+| P1 | 영수증이 바이트만의 함수라 이름표만 바꿔 옮길 수 있고, 빈 report 는 건너뛴다 (`new_pytest_runs=0`) | ○ | `_receipt_digest()` 가 exact mutant 에 결속 · 유도 실패도 비교에 들어간다 |
+
+### 53-1 경계는 호출이 아니라 **임계 구역**이다
+
+52차는 커밋 불확실성을 타입으로 만들었다 — 그것은 옳았다. 틀린 것은 **어디까지가
+그 타입인가** 였다. `_atomic_write_text()` 호출 하나만 감쌌으므로, 값이 보이게 된
+뒤 `flock(LOCK_UN)`·`close` 가 실패하면 그 실패는 이름 없는 `OSError` 로 나갔고
+caller 의 `except BaseException` 이 그것을 확정 미커밋으로 읽었다.
+
+세 라운드 연속 같은 자리에서 같은 실패를 했다 (50차 fsync · 51차 재독 · 52차 lock
+exit). 공통점은 **경계를 좁게 잡고 그 밖을 기본값에 맡긴 것**이다.
+
+### 53-2 기본값을 뒤집었다
+
+52차 코드의 기본값은 "모르면 되돌린다" 였다 (`except BaseException: unlink`).
+그러면 예상 못 한 실패 **하나**가 곧바로 회수 불가능한 orphan 이다.
+
+53차의 기본값은 **보존**이다. 되돌림은 `PlanNotCommitted` — "원장 파일을 아직
+건드리지 않았다" 를 아는 쪽이 직접 말할 때만 일어난다. 최악의 대가는 사람이
+`release_leg_run()` 을 한 번 더 부르는 것이고, 반대 방향의 최악은 회수 통로가
+아예 없는 것이다. 대칭이 아니므로 기본값도 대칭이 아니어야 한다.
+
+### 53-3 증거의 위치를 묻는 쪽이 고를 수 없다
+
+`freeze_cohort(claims_root=…)` 는 "살아 있는 실행이 있는가" 를 물으면서 **어디를
+볼지도 함께 받았다.** 리뷰어는 빈 디렉터리를 넘겼고 동결이 완주했다.
+
+인자를 없앴다. 위치의 규칙은 발급자에게 있고(`claims_root_for()`), 동결은 그것을
+**물을** 수만 있다. 그리고 물을 수 없으면 얼리지 않는다 — 52차의
+`except: return []` 는 fail-open 이었다.
+
+같은 형태가 하나 더 있었다: `verify_receipts()` 가 조각에 적힌 `class` 로
+"이 scenario 는 실행 가능한가" 를 판단했다. 조각은 **검사 대상**이지 authority 가
+아니다. 이제 등록부가 답한다.
+
+### 53-4 blacklist 를 allowlist 로 뒤집었다
+
+49차부터 다섯 번, producer 닫힘은 같은 모양으로 뚫렸다. 그때마다 "철자를 하나 더
+막는다" 가 아니라 "능력을 닫는다" 로 답했는데, 52차의 답(`inspect`·`linecache`·
+`dis`·`traceback` 네 모듈)도 결국 **blacklist** 였다. 리뷰어는 그 밖으로 나갔다 —
+모든 module 은 자기 loader 를 dunder 로 들고 있고, `__loader__.get_source()` 에는
+import 가 필요 없다.
+
+blacklist 가 끝나지 않는 이유는 방향이다. 정규형이 볼 수 없는 것으로 가는 문은
+전부 dunder 이므로, dunder 를 **allowlist** 로 만들었다. 허용 근거는 둘뿐이다:
+① 정규형이 그 값을 볼 수 있다, ② 코드·바이트로 가는 손잡이가 아닌 scalar 이고 그
+축은 따로 기록된다.
+
+그 규칙이 `REPO = Path(__file__)…` 을 잡았다 — 그래서 `REPO` 와 provenance 파일
+위치를 **절단면 뒤로** 옮겼다. checkout 위치는 producer 의미가 아니다 (같은
+producer 가 어느 checkout 에서 돌아도 같은 바이트를 내야 하고, 세 기계에서
+실측했다). 규칙이 스스로 자기 코드를 잡을 때 코드를 고치는 것이 옳은 순서다.
+
+### 53-5 영수증은 **어느 변이의 것인지** 말해야 한다
+
+52차 v3 는 report 원본을 남기고 판정을 다시 유도했다. 남은 구멍은 둘이었다:
+digest 가 바이트만의 함수라 기대 node 가 같은 scenario 사이에서 report 를 이름만
+바꿔 옮길 수 있었고(등록부에 그런 쌍이 실측 4개 있다), 0바이트 report 는 유도
+실패(`None`)로 접혀 **건너뛰어졌다**.
+
+`_receipt_digest()` 는 그 scenario 의 정확한 preimage·치환·선택식·기대 node 를
+digest 에 넣는다. 그리고 "모르겠다" 는 "물었다" 가 아니다 — `derived` 가 `None`
+이면 그대로 비교에 들어가 어긋난다.
+
+### 53-6 변이가 **약한 시험**을 잡았다
+
+`producer-dunder-is-an-allowlist` 와 `receipt-verdict-is-fail-closed` 가 처음에는
+안 물었다. 둘 다 원인이 같았다 — 시험이 겨눈 축을 **다른 guard 가 가리고** 있었다.
+
+- dunder allowlist 를 지워도 loader protocol 이름이 세 반례를 다 잡았다 →
+  관찰자 이름이 아니라 dunder 문 자체가 막는 사례(`build.__globals__`)를 시험에
+  더했다.
+- `derived is None` 분기를 지워도 그 다음 비교가 잡았다 → 그 분기는 **중복**이라는
+  뜻이므로 지우고, 변이를 52차 상태(`derived is not None and`)의 복원으로 바꿨다.
+
+두 번째가 이 저장소의 규칙 그대로다: 안 무는 변이는 중복(코드를 지운다)이거나 약한
+시험(시험을 보강한다)이고, 어느 쪽인지 판정하기 전에는 초록을 믿지 않는다.
+
+### 실측
+
+| 무엇 | 값 |
+|---|---|
+| 전체 회귀 | **1375 passed · 1 xfailed · 0 failed** |
+| strict smoke | **rc 0 · 52 ✅ · 0 ❌** (clean 커밋 `c4c1a380`) |
+| 변이 전수 | 등록부 **145** scenario (executable 139 · declared 6) · 12 조각 · 합집합이 등록부를 **정확히** 덮었다. 정본은 `mutation_coverage/s1..s12.json` 과 `reports/` |
+| 산출물 | g7 을 얼리고 g8 로 · `proj ad598fe77e75afec` (행 바이트 불변) |
+| 영수증 | core_sha `c07fc3920fabb8b7…` · validator identity `123bcc2f6b7ea942` |
+
+### 아직 아닌 것
+
+| 항 | 상태 |
+|---|---|
+| 조건 P0-1 producer 결속 — 닫힌 typed manifest 파싱 · 두 payload 압축해제 재해시 · producer 발행 영수증 | **미착수** (49차부터 다섯 라운드째) |
+| 조건 P0-8 — 경로 무관 typed·sealed 실행 class marker | **미착수** |
+| 조건 P0-4 — typed 보존 영수증 소비 | **부분** |
+| 발급·finalize·freeze·publish 를 **하나의 generation transaction** 으로 | **부분** — 53차에 lock 을 공유하게 만들었지만 단일 원자 transaction 은 아니다 |
+| baseline·sweep1d·wsweep 계획 gate · 실물 object-lock adapter · power-loss 모델 · publisher 전용 OS principal | **미착수** |
+| 외적타당도 #48/#49/#50 | **미착수** |

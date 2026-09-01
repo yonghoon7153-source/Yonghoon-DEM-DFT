@@ -1,91 +1,107 @@
 {
-  "at": "2026-09-01T09:55:26Z",
+  "at": "2026-09-01T12:25:00Z",
   "binding": {
-    "expect_digest": "118328eb875379f975ccd92a9d1f496531cdc402139304c01f2c27ca5c338831",
-    "head": "1f1253c5858e200e08ba70048427dbc96217fb2d",
-    "registry_digest": "ae74d2634a63b696fbdf0e97d267abf94cd9d131437d51af68d4e4de09912bf0",
+    "expect_digest": "2f9b8f26b94cce8ba89349f7e0ef646e69e09a8001e515ca72cdf9946845b088",
+    "head": "c4c1a38059a0c8ce80fbc2adba0e385afa606d82",
+    "registry_digest": "9194713b611825304f44276e9641283e460abf418ff22d4df6a6b3dad2215ad9",
     "reports_dir": "s12",
-    "runner_digest": "7ba0cd54cf24af49cab78afab67302492b0a248e438dadadfbf746f5bab9f00a",
-    "transcript_digest": "b9ec11b71802304931be0a4899cdff50e829d4a06eb8be28dc169966cfb4e7fe"
+    "runner_digest": "2f5eb84c2be5af8603e99e5d83220e9c4d111a125ace2c1f856980a2d09d8b33",
+    "transcript_digest": "fc534f7244075cd3a289fcdcd0959bbb21f32c27f616e78f49f9b83ca8c0632a"
   },
   "scenarios": {
-    "claim-is-atomic": {
+    "claim-bytes-are-verified-on-disk": {
       "bit": true,
       "class": "executable",
-      "kexpr": "exactly_one_attempt_enters_compute",
+      "kexpr": "lying_write_is_caught_by_reading_the_bytes_back",
       "ran": true,
-      "report_sha256": "1101ed9da1225be962b9154ff4bd998130b3ecb6fbebd7765ff9672845092482",
-      "sites": 2
-    },
-    "dry-run-releases-the-claim": {
-      "bit": true,
-      "class": "executable",
-      "kexpr": "dry_run_does_not_strand_the_plan_in_running",
-      "ran": true,
-      "report_sha256": "10f6bcf027bdd832b445251f517a2f35aea1bcfb9ef07e6c6219383d5fd56c58",
+      "report_sha256": "a250131951fe54fa6550da776d033b4e9d34b8293e8674d79ee5b32d7144a72a",
       "sites": 1
     },
-    "fit-stages-its-inputs-before-the-gate": {
+    "crash-recovery-is-idempotent": {
       "bit": true,
       "class": "executable",
-      "kexpr": "run_fit_hands_the_body_the_staged_copies_not_the_originals",
+      "kexpr": "finalize_is_idempotent_after_a_crash_before_cleanup",
       "ran": true,
-      "report_sha256": "1c9399ea5749ffae8933751bb8ff3eaf8e32576ebf0865769cfa9954f62b6087",
+      "report_sha256": "f449d07a497cc493834af23d7f446173484b3d5adc1b07b6cd04ff79a7cfcefc",
       "sites": 1
     },
-    "inner-unbound-kernel": {
+    "fit-axis-seals-the-input-content": {
       "bit": true,
       "class": "executable",
-      "kexpr": "blank_its_own_inner_check",
+      "kexpr": "fit_axis_seals_the_input_content_axes",
       "ran": true,
-      "report_sha256": "78e799e89819e9c0f388ffe05ba0d035e6418b2610a2dbcfa035778b5df934d6",
+      "report_sha256": "283fa8a5f91a14e72b56469ea87ea38e29799ae3c686b2051ab86974ecae750c",
       "sites": 1
     },
-    "module-defs-see-tuple-targets": {
+    "frozen-target-carries-its-own-seal": {
       "bit": true,
       "class": "executable",
-      "kexpr": "producer_closure_sees_tuple_targets or producer_closure_follows_a_tuple_defined_constant",
+      "kexpr": "frozen_directory_carries_its_own_seal",
       "ran": true,
-      "report_sha256": "75ac80f82408a99b2fe62376c17048b2eaa4f6660db97f5200f826dd72f68a47",
+      "report_sha256": "f2118582b00b9cb7d5fdbd4f08b347cf57d59cbcbf462506c412d36f2748b9d7",
       "sites": 1
     },
-    "phase-write-refuses-a-closed-claim": {
+    "ledger-status-enum": {
       "bit": true,
       "class": "executable",
-      "kexpr": "closed_run_cannot_be_resurrected_by_a_late_phase or released_run_cannot_be_resurrected_by_a_late_phase",
+      "kexpr": "status_is_an_exact_enum",
       "ran": true,
-      "report_sha256": "b0dbfaf9a6ee3a59f77d4c99d9cb881895ee4472cee916025481d82f7a603cf2",
+      "report_sha256": "25729e644c3a954dfd01829e974afe7ae79b66a3d7cfe8655ceb7bf25195188e",
       "sites": 1
     },
-    "prelock-digest-check": {
+    "module-gate-before-side-effects": {
       "bit": true,
       "class": "executable",
-      "kexpr": "wrong_bytes_are_never_locked",
+      "kexpr": "run_grid_calls_the_gate_before_its_first_side_effect",
       "ran": true,
-      "report_sha256": "c1c6d46714fb5f9b3679d1af1e7c3f4f02a8349c9d333dac92119c4d7de998c3",
+      "report_sha256": "b87bcb660700168376464602d256041abadbdb0c8a640fd360254803daa32c6b",
       "sites": 1
     },
-    "proof-until-equals-lease": {
+    "plan-parser-dir-hygiene": {
+      "bit": true,
+      "class": "executable",
+      "kexpr": "plan_parser_requires_a_canonical_relative_dir or plan_parser_refuses_a_cohort_dir_outside_the_repository",
+      "ran": true,
+      "report_sha256": "be2345f826c1294a0cc6a0bd603ca8a3f719f07940714e2f8ce40c8d98abffc0",
+      "sites": 1
+    },
+    "prelock-version-id-is-a-string": {
+      "bit": true,
+      "class": "executable",
+      "kexpr": "falsy_version_id",
+      "ran": true,
+      "report_sha256": "204586fb0e5ea418f5413d5c1a3ca1d74fa98cb607432146835b8c4527fd4da1",
+      "sites": 1
+    },
+    "proof-handoff-to-verify": {
+      "bit": true,
+      "class": "executable",
+      "kexpr": "repaired_proof_is_handed or pre_journal_finalize or journal_seals_the_content",
+      "ran": true,
+      "report_sha256": "f4f3b757b243ddc180b956ce33810fc3d4afea83d6c80434cfd821735e56dd9d",
+      "sites": 1
+    },
+    "rollback-only-on-certain-non-commit": {
+      "bit": true,
+      "class": "executable",
+      "kexpr": "durability_error_after_the_ledger_commit_keeps_the_claim or uncertain_ledger_write_never_discards_the_claim or failure_while_leaving_the_ledger_lock_preserves_the_authority",
+      "ran": true,
+      "report_sha256": "3a51de78e8db3be3a9323bf9220a48f2416bec8ba439d4c86f6b5f2b2d24c83e",
+      "sites": 1
+    },
+    "thaw-transition-is-unrepresentable": {
+      "bit": true,
+      "class": "executable",
+      "kexpr": "frozen_cohort_cannot_be_thawed_and_published",
+      "ran": true,
+      "report_sha256": "22fc0fcae307de1453101dab217169cf9b3ad9e64617045dc0c9e883bffca461",
+      "sites": 1
+    },
+    "warm-consumer-wiring": {
       "bit": null,
       "class": "declared",
       "kexpr": null,
       "ran": false,
-      "sites": 1
-    },
-    "seal-exact-types": {
-      "bit": true,
-      "class": "executable",
-      "kexpr": "an_omap_and_a_list_of_lists_do_not_share_a_seal",
-      "ran": true,
-      "report_sha256": "30e84d3e6a4c833f63ef2326287cc33976f887955bce00c39598570e71db8401",
-      "sites": 1
-    },
-    "token-path-is-disjoint-from-authority": {
-      "bit": true,
-      "class": "executable",
-      "kexpr": "token_path_cannot_alias_the_claim_authority",
-      "ran": true,
-      "report_sha256": "a1641c3f8ffd98e13aa73cf051abc61fb95e4f69af8f41e455d9b598a61f7a0d",
       "sites": 1
     }
   },

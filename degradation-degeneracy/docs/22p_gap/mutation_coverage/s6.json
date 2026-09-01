@@ -1,99 +1,107 @@
 {
-  "at": "2026-09-01T09:44:44Z",
+  "at": "2026-09-01T12:10:47Z",
   "binding": {
-    "expect_digest": "118328eb875379f975ccd92a9d1f496531cdc402139304c01f2c27ca5c338831",
-    "head": "1f1253c5858e200e08ba70048427dbc96217fb2d",
-    "registry_digest": "ae74d2634a63b696fbdf0e97d267abf94cd9d131437d51af68d4e4de09912bf0",
+    "expect_digest": "2f9b8f26b94cce8ba89349f7e0ef646e69e09a8001e515ca72cdf9946845b088",
+    "head": "c4c1a38059a0c8ce80fbc2adba0e385afa606d82",
+    "registry_digest": "9194713b611825304f44276e9641283e460abf418ff22d4df6a6b3dad2215ad9",
     "reports_dir": "s6",
-    "runner_digest": "7ba0cd54cf24af49cab78afab67302492b0a248e438dadadfbf746f5bab9f00a",
-    "transcript_digest": "af7187d119f3c1396aa807f1098d6e0e98b175f35146ab22681fa83a35cccb06"
+    "runner_digest": "2f5eb84c2be5af8603e99e5d83220e9c4d111a125ace2c1f856980a2d09d8b33",
+    "transcript_digest": "b2fd683c923e33604f51f9ba427394c4b623ecbc392bd958eecee788a7523b68"
   },
   "scenarios": {
-    "both-pointers-checked": {
+    "authority-registry": {
       "bit": true,
       "class": "executable",
-      "kexpr": "pointer_moved_by_another",
+      "kexpr": "raw_publisher_takes_no",
       "ran": true,
-      "report_sha256": "63c32634f50bd62df1e41c12d49f28571b26f2e9ecfc33c2e1ee203ac7eb4bdf",
+      "report_sha256": "bf062e7f7bbf1862ea034b0519a1af5c97cf22e2cabbeaa38c8de639e952df90",
       "sites": 1
     },
-    "closure-unresolved-attr-is-fail-closed": {
+    "closure-follows-module-aliases": {
       "bit": true,
       "class": "executable",
-      "kexpr": "unresolved_producer_module_reference_is_fail_closed",
+      "kexpr": "closure_follows_a_module_alias_attribute",
       "ran": true,
-      "report_sha256": "140c2637fe96c5bb3a8fb3e41b9282f8cb717f84a97ab4dd6c97158117b96cc3",
+      "report_sha256": "1a393baa5fc92c9cc975f27ca99931d4e963757f1c687890f653563164764f25",
       "sites": 1
     },
-    "finalize-writes-the-whole-tuple": {
+    "finalize-holds-the-claim-lock": {
       "bit": true,
       "class": "executable",
-      "kexpr": "finalize_writes_a_complete_contract_status_tuple",
+      "kexpr": "canonical_lock_order_is_declared_and_finalize_holds_the_claim",
       "ran": true,
-      "report_sha256": "cdb59406cc47aaa71deb4114eec1a23721c313fbde7aa32c54f2a7fd981f2f96",
+      "report_sha256": "0c01aac62996927e90aa22b0246967e4e7a5bbe85b17505c457ccfdf448a99ee",
       "sites": 1
     },
-    "generation-namespace-guard": {
+    "freeze-checks-live-claims-before-recovery": {
       "bit": true,
       "class": "executable",
-      "kexpr": "current_generation_cannot_be_used_as_its_own_staging",
+      "kexpr": "freeze_recovery_branch_also_refuses_while_an_execution_is_live",
       "ran": true,
-      "report_sha256": "4a50a0c17bb55f11fdc2e3a60ebd9f1e7abd8a76bc1e092f1a7c0816414e7f23",
+      "report_sha256": "1b0fc71379588ad6da7e61a484cb3513c33309b8968b04b06bc7641f23d11477",
       "sites": 1
     },
-    "lifecycle-chain-is-verified": {
-      "bit": true,
-      "class": "executable",
-      "kexpr": "the_lifecycle_journal_is_a_hash_chain",
-      "ran": true,
-      "report_sha256": "0e7390c25d9d238803d2dda5c1d4078fc341501d9a0318c473e41a7f7d778778",
-      "sites": 1
-    },
-    "pending-base-generation": {
-      "bit": true,
-      "class": "executable",
-      "kexpr": "stale_bootstrap_pending",
-      "ran": true,
-      "report_sha256": "6aa0820c49da8958bfcad8960af71b0623faa25e20d43734abd0dde10956dcd7",
-      "sites": 1
-    },
-    "planned-status-is-not-standing": {
-      "bit": true,
-      "class": "executable",
-      "kexpr": "standing_authorization",
-      "ran": true,
-      "report_sha256": "b8985b7e2d9dd00f2222d9d32bbe1dd2db0b11c60710b60c31ccace93328df21",
-      "sites": 1
-    },
-    "producer-crossing-is-fail-closed": {
-      "bit": true,
-      "class": "executable",
-      "kexpr": "breaking_the_crossing_into_src_scoring_is_fail_closed",
-      "ran": true,
-      "report_sha256": "e6648938c23adb563ec1cc96ac1c207f04b880f22d76a050f14249f454228198",
-      "sites": 1
-    },
-    "release-returns-the-plan": {
-      "bit": true,
-      "class": "executable",
-      "kexpr": "released_run_returns_the_plan_to_planned",
-      "ran": true,
-      "report_sha256": "93df8bfe910abc5ecf279cab156dcf2cb2ca597d09f405a8bd13cf5ede679a64",
-      "sites": 1
-    },
-    "staging-regular-only": {
-      "bit": true,
-      "class": "executable",
-      "kexpr": "staging_aliases_never_become_an_immutable_generation",
-      "ran": true,
-      "report_sha256": "75a7746f3cf01698c942e6f8976c9daaf9a52f5009996a5ffc9d2d513c78bfbd",
-      "sites": 2
-    },
-    "warm-consumer-wiring": {
+    "idempotent-shares-the-validator": {
       "bit": null,
       "class": "declared",
       "kexpr": null,
       "ran": false,
+      "sites": 1
+    },
+    "missing-journal-with-a-live-anchor": {
+      "bit": true,
+      "class": "executable",
+      "kexpr": "deleting_the_journal_does_not_erase_the_freeze",
+      "ran": true,
+      "report_sha256": "8b1e65b483837ef808e6a853b70f0649a0009146e0fc6a795de04a623ae7cd7c",
+      "sites": 1
+    },
+    "phase-input-binding-covers-the-package": {
+      "bit": true,
+      "class": "executable",
+      "kexpr": "grid_receipt_binds_every_curve_input_not_just_the_parquet",
+      "ran": true,
+      "report_sha256": "9b93d5f66a98f03944a8e2c2c8041d0f5969ae11cc89908f92ee3432fadf7a4d",
+      "sites": 1
+    },
+    "pointer-loss-is-terminal": {
+      "bit": true,
+      "class": "executable",
+      "kexpr": "losing_the_pointer_of_a_cohort",
+      "ran": true,
+      "report_sha256": "acde58a58636f5dbd5f5e1a99d29df6f35cf760f923e01cde2c79ffbdc56f806",
+      "sites": 1
+    },
+    "producer-cut-is-declared": {
+      "bit": true,
+      "class": "executable",
+      "kexpr": "producer_semantic_digest_excludes_the_publication_path",
+      "ran": true,
+      "report_sha256": "56d2ecf7b8621309d2ae29efedcd00d97a2fe61a243fa00642d3d20b1427b720",
+      "sites": 1
+    },
+    "receipt-verdict-is-fail-closed": {
+      "bit": true,
+      "class": "executable",
+      "kexpr": "unreadable_receipt_is_not_a_pass",
+      "ran": true,
+      "report_sha256": "f9be6024309e839944abdb6d1d5ba97eaf8946347bae3f19e7ead51004ac5682",
+      "sites": 1
+    },
+    "sink-subset-of-roster": {
+      "bit": true,
+      "class": "executable",
+      "kexpr": "complete_undeclared_leg_never_reaches_pending",
+      "ran": true,
+      "report_sha256": "75b4f9d42ea838222ebe79cf9404a33814ad1391fcb6e1649379fd87c5aebf2b",
+      "sites": 1
+    },
+    "token-read-checks-the-leg": {
+      "bit": true,
+      "class": "executable",
+      "kexpr": "an_attempt_file_from_another_leg_is_refused",
+      "ran": true,
+      "report_sha256": "734441ff380363bfbdd155107f642b9392cfd1549fa456a73a38aa964579af34",
       "sites": 1
     }
   },

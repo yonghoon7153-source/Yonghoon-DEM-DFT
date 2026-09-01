@@ -1,12 +1,12 @@
 {
-  "at": "2026-09-01T09:34:48Z",
+  "at": "2026-09-01T11:58:38Z",
   "binding": {
-    "expect_digest": "118328eb875379f975ccd92a9d1f496531cdc402139304c01f2c27ca5c338831",
-    "head": "1f1253c5858e200e08ba70048427dbc96217fb2d",
-    "registry_digest": "ae74d2634a63b696fbdf0e97d267abf94cd9d131437d51af68d4e4de09912bf0",
+    "expect_digest": "2f9b8f26b94cce8ba89349f7e0ef646e69e09a8001e515ca72cdf9946845b088",
+    "head": "c4c1a38059a0c8ce80fbc2adba0e385afa606d82",
+    "registry_digest": "9194713b611825304f44276e9641283e460abf418ff22d4df6a6b3dad2215ad9",
     "reports_dir": "s1",
-    "runner_digest": "7ba0cd54cf24af49cab78afab67302492b0a248e438dadadfbf746f5bab9f00a",
-    "transcript_digest": "6d4ee8e1f86b4450ef370fb267394539e825be0023cc2d143e5bd5a0e85791de"
+    "runner_digest": "2f5eb84c2be5af8603e99e5d83220e9c4d111a125ace2c1f856980a2d09d8b33",
+    "transcript_digest": "cabc06c912570350d8680f250f6b006f36bb8261b131b1c82cde01409a3a5332"
   },
   "scenarios": {
     "abandon-rechecks-the-live-attempt": {
@@ -14,86 +14,102 @@
       "class": "executable",
       "kexpr": "stale_claim_handle_cannot_cancel_the_next_attempt or readonly_claim_cannot_abandon_the_live_owner",
       "ran": true,
-      "report_sha256": "761a23ac5eeafe06de9787dbd35fece8e8984e9aba30bcc813ee30e10f7a81f1",
+      "report_sha256": "62f2131067ffb274017c56aa657d2676c9765c227b5566c3cd7189f8da729ec7",
       "sites": 1
     },
-    "claim-seals-the-run-spec": {
+    "claim-checks-the-whole-index": {
       "bit": true,
       "class": "executable",
-      "kexpr": "claim_seals_the_exact_run_spec",
+      "kexpr": "whole_index_must_be_consistent_before_any_leg_is_claimed",
       "ran": true,
-      "report_sha256": "2bf6fe0869dd0c793a472cb3faaacad963a18005b29a1a8fd107e6279e8d9a84",
+      "report_sha256": "380955a1daa185c809f37be7d7f3cfbe9bd3f69b07ac271da4b843d79c7c7a23",
       "sites": 1
     },
-    "env-fingerprint-seals-the-smoothing-backend": {
+    "crash-recovery-needs-the-credential": {
       "bit": true,
       "class": "executable",
-      "kexpr": "effective_smoothing_backend_is_inside_the_approval",
+      "kexpr": "the_crash_recovery_needs_the_owner_credential",
       "ran": true,
-      "report_sha256": "ef2f7019e96dde276fc39803fb04f3c97933f13f5dfab92f4ab1bcaa9a361b7a",
+      "report_sha256": "9cdbfbb6d27c61788025cbaf2da004d586b42cc9926aea39fc9fd09fb2eebad8",
       "sites": 1
     },
-    "flock-two-publisher": {
+    "fit-axis-seals-the-objective-payload": {
       "bit": true,
       "class": "executable",
-      "kexpr": "two_independent_publishers",
+      "kexpr": "objective_payload_is_inside_the_approval_digest",
       "ran": true,
-      "report_sha256": "a0c9609d66c683676ff8b2723bf9c62e52f7fd0e51191ab31e60d3dd4668a910",
-      "sites": 2
-    },
-    "inner-unbound-sentinel": {
-      "bit": true,
-      "class": "executable",
-      "kexpr": "blank_its_sentinel_check",
-      "ran": true,
-      "report_sha256": "27f5876daef4049777d922557f08aa95ec88d78073374a20356747971e814281",
+      "report_sha256": "21ea4c44b9496c36b6cd3ec0a462f723bef3550eb7a86955cf5bddb7fb1211d2",
       "sites": 1
     },
-    "module-defs-track-import-bindings": {
+    "generation-namespace-guard": {
       "bit": true,
       "class": "executable",
-      "kexpr": "producer_closure_tracks_mutating_and_import_bindings",
+      "kexpr": "current_generation_cannot_be_used_as_its_own_staging",
       "ran": true,
-      "report_sha256": "d19af3c35adb01938c8a78f9d4db24838e495c0a0af2c8f6225cafb2becaf2a0",
+      "report_sha256": "921a2a55fd54390d97874e1c73bece3bbf4f360bbdbb1ecca1ea8e2007b8a0bc",
       "sites": 1
     },
-    "pin-is-publication-authority": {
+    "lifecycle-chain-is-verified": {
       "bit": true,
       "class": "executable",
-      "kexpr": "producer_pin_is_part",
+      "kexpr": "the_lifecycle_journal_is_a_hash_chain",
       "ran": true,
-      "report_sha256": "2bde76e031323ebe7643e44b6b27774c8e30b44f7d84ceab2ddd118fd084f9c9",
+      "report_sha256": "99a01e867fc1a91aec4cc9efe6f7f781773c02234a91abedbc59e26607614a08",
       "sites": 1
     },
-    "prelock-readback-check": {
+    "namespace-check-rejects-symlinks": {
       "bit": true,
       "class": "executable",
-      "kexpr": "returns_the_wrong_version",
+      "kexpr": "symlinked_path_is_not_inside_the_smoke_namespace or namespace_check_is_fail_closed_on_a_symlinked_component",
       "ran": true,
-      "report_sha256": "b755bef83689d91a7b3ffe4efbf6c7672546365c992b99fda95e97876ab5394e",
+      "report_sha256": "eb34141029b75abfe0e2ca824ed6b959b3a9d5efd38b484b3a59bbd844118fef",
       "sites": 1
     },
-    "public-lifecycle-in-two-publisher-fixture": {
+    "plan-uncertainty-covers-the-whole-critical-section": {
+      "bit": true,
+      "class": "executable",
+      "kexpr": "failure_while_leaving_the_ledger_lock_preserves_the_authority or uncertain_ledger_write_never_discards_the_claim",
+      "ran": true,
+      "report_sha256": "b9384d72a12b10b45393c638894030288a58e4c114acae5310b8c70901fb0ff0",
+      "sites": 1
+    },
+    "preservation-status-inside-the-contract": {
+      "bit": true,
+      "class": "executable",
+      "kexpr": "the_runtime_preservation_enum_is_inside_the_contract",
+      "ran": true,
+      "report_sha256": "83d8e252b7bbcaaceee74983798b84502a94277725011302c0911fe5fc8cab33",
+      "sites": 1
+    },
+    "proof-until-equals-lease": {
       "bit": null,
       "class": "declared",
       "kexpr": null,
       "ran": false,
       "sites": 1
     },
-    "seal-finite-floats": {
+    "roster-is-a-set": {
       "bit": true,
       "class": "executable",
-      "kexpr": "seal_domain_is_exact_not_isinstance",
+      "kexpr": "ledger_roster_is_a_set_not_a_multiset",
       "ran": true,
-      "report_sha256": "95f2375f7405b2643e44179c4309d8b9d43b6c43f99a050afc829904259afd75",
+      "report_sha256": "b82be4089665d397bddcf9e6822c84b14417260858888b7ecc7e676256358388",
       "sites": 1
     },
-    "token-read-checks-the-leg": {
+    "token-bytes-are-verified-on-disk": {
       "bit": true,
       "class": "executable",
-      "kexpr": "an_attempt_file_from_another_leg_is_refused",
+      "kexpr": "lying_write_is_caught_by_reading_the_bytes_back",
       "ran": true,
-      "report_sha256": "882527f50292eab34e7e8dbe91d2331e582454189cd788c53e7db5a615d6901e",
+      "report_sha256": "0b8f92c6e9402d49c70819783301be03dd4dc706f693380d5bca2b92c33e53f9",
+      "sites": 2
+    },
+    "warm-edges-are-declared": {
+      "bit": true,
+      "class": "executable",
+      "kexpr": "warm_consumers_go_through_the_accessors",
+      "ran": true,
+      "report_sha256": "b68e8c3194d437cd650bd3d2b97f598509887c29d09506f7346907097bd70b2f",
       "sites": 1
     }
   },

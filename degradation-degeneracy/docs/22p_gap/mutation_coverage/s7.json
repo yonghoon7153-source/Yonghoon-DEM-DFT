@@ -1,99 +1,108 @@
 {
-  "at": "2026-09-01T09:46:37Z",
+  "at": "2026-09-01T12:13:50Z",
   "binding": {
-    "expect_digest": "118328eb875379f975ccd92a9d1f496531cdc402139304c01f2c27ca5c338831",
-    "head": "1f1253c5858e200e08ba70048427dbc96217fb2d",
-    "registry_digest": "ae74d2634a63b696fbdf0e97d267abf94cd9d131437d51af68d4e4de09912bf0",
+    "expect_digest": "2f9b8f26b94cce8ba89349f7e0ef646e69e09a8001e515ca72cdf9946845b088",
+    "head": "c4c1a38059a0c8ce80fbc2adba0e385afa606d82",
+    "registry_digest": "9194713b611825304f44276e9641283e460abf418ff22d4df6a6b3dad2215ad9",
     "reports_dir": "s7",
-    "runner_digest": "7ba0cd54cf24af49cab78afab67302492b0a248e438dadadfbf746f5bab9f00a",
-    "transcript_digest": "c021cac60acbc53ccd95518a78be6a7c6ef135a642f6cdbee9855e3b2708676f"
+    "runner_digest": "2f5eb84c2be5af8603e99e5d83220e9c4d111a125ace2c1f856980a2d09d8b33",
+    "transcript_digest": "caef30187bcb5649a971731f570b5801e4ccd1af3f895e5e8b3bc44068cab58b"
   },
   "scenarios": {
-    "caller-stage-safe-read": {
+    "both-pointers-checked": {
       "bit": true,
       "class": "executable",
-      "kexpr": "dangling_symlink_in_the_caller",
+      "kexpr": "pointer_moved_by_another",
       "ran": true,
-      "report_sha256": "d2bdf2eacefc5c29c986e950fec891ab3a3ac0e69d0e5d99e520757e1693d913",
+      "report_sha256": "f6a52258bff0ba95947d781d35e57d8df9b6d73a24b4a50ba4aa663528527e86",
       "sites": 1
     },
-    "complete-current-supersedes-pending": {
+    "closure-refuses-dynamic-resolution": {
       "bit": true,
       "class": "executable",
-      "kexpr": "complete_current_supersedes_a_leftover_pending",
+      "kexpr": "dynamic_name_resolution_inside_the_closure_is_fail_closed",
       "ran": true,
-      "report_sha256": "47264411af29b5b57ea0641d43cdc308ebaf5061ab03d4df49f8e5bb220f9f93",
+      "report_sha256": "8241e7589f19cfe118926431dd73373942bd8dc9acd3b42a0253585a382dfeef",
       "sites": 1
     },
-    "fit-axis-is-the-real-policy": {
+    "finalize-rechecks-in-the-ledger-lock": {
       "bit": true,
       "class": "executable",
-      "kexpr": "fit_axis_seals_every_intent_that_changes_the_answer",
+      "kexpr": "finalize_rechecks_the_whole_authority_inside_the_ledger_lock",
       "ran": true,
-      "report_sha256": "389b8f37be8400d6dcdc7d970d8658f82ce7176837c0a5ac031370caba03dbc2",
+      "report_sha256": "22cfdd80d3a3a651dd176265fd6be17ca2379c6b0f5fa4102fd9a164c6f9a24d",
       "sites": 1
     },
-    "generation-owns-its-bytes": {
-      "bit": null,
-      "class": "declared",
-      "kexpr": null,
-      "ran": false,
+    "freeze-completes-a-half-written-transition": {
+      "bit": true,
+      "class": "executable",
+      "kexpr": "freeze_is_retryable_after_a_crash_between_its_two_writes",
+      "ran": true,
+      "report_sha256": "cbec638aa46d0457a3325c944e5ca39627cd301ff3c959150ba9f37d0e51781d",
       "sites": 1
     },
-    "lifecycle-completes-a-partial-append": {
+    "inner-unbound-kernel": {
       "bit": true,
       "class": "executable",
-      "kexpr": "freeze_crash_between_journal_and_anchor_is_recoverable",
+      "kexpr": "blank_its_own_inner_check",
       "ran": true,
-      "report_sha256": "1e575715675a0e3c79d21daee1e97a6a8eb91597ac3f2f10817ec5e80baddc2d",
+      "report_sha256": "93d6c61babcde2f83ccc5ace9c657eb67a5960aea800da6757d572c720347433",
       "sites": 1
     },
-    "pending-closed-schema": {
+    "module-defs-enter-compound-statements": {
       "bit": true,
       "class": "executable",
-      "kexpr": "stale_bootstrap_pending",
+      "kexpr": "producer_closure_sees_every_module_binding_form",
       "ran": true,
-      "report_sha256": "f58025016ca29f7644941a791d38e49caf251d517aefbeae3903200e9d75783c",
+      "report_sha256": "f3f2b9106da29b4bb7fa54c9018be4c96115517f3639e9ecb5cb4187ce5f78d9",
       "sites": 1
     },
-    "pointer-binds-the-ledger": {
+    "phase-input-binding-needs-a-receipt": {
       "bit": true,
       "class": "executable",
-      "kexpr": "expanding_a_roster_over_an_active_cohort_requires_a_new_cohort",
+      "kexpr": "fit_refuses_when_its_grid_phase_is_missing",
       "ran": true,
-      "report_sha256": "45a472dc0ad9867d4e223e3fc7f148a20a299bb61b2105e58fa7c0c2cd594653",
+      "report_sha256": "b576a6802cf075f0c04c62f7e6cf606fafb7225572e7212b8d37ce641bcb8476",
       "sites": 1
     },
-    "producer-cut-is-declared": {
+    "policy-binds-the-roster": {
       "bit": true,
       "class": "executable",
-      "kexpr": "producer_semantic_digest_excludes_the_publication_path",
+      "kexpr": "single_leg_policy_must_match_the_roster_cardinality",
       "ran": true,
-      "report_sha256": "d97c27b33b015db5dc5fac34ca16e99ecd3be04dbf73c20b0eae9410e4ee3b2f",
+      "report_sha256": "e26c83bab5a74f311e5e496ac78aa41543af5b17406feea3e67784ecf574807b",
       "sites": 1
     },
-    "repair-source-uses-the-snapshot": {
+    "producer-cut-is-sealed": {
       "bit": true,
       "class": "executable",
-      "kexpr": "repair_lookups_go_through_the_validated_version_snapshot or no_version_enumeration_bypasses_the_helper",
+      "kexpr": "widening_the_producer_cut_moves_the_digest",
       "ran": true,
-      "report_sha256": "91656f5b9a6ed0ba5602aacf91a81725de18a1cb79066d0001f78fa1f2733748",
+      "report_sha256": "8b736c4f7391ea815d9ff01d4d6554be2d0c63c20b4833f445607c4ce39cff58",
       "sites": 1
     },
-    "thaw-is-refused-before-the-first-write": {
+    "recheck-before-rename": {
       "bit": true,
       "class": "executable",
-      "kexpr": "publisher_refuses_a_thawed_cohort_before_the_first_write",
+      "kexpr": "rechecked_immediately_before_the_rename",
       "ran": true,
-      "report_sha256": "055c2fa8f3c6d2291f969675a735cd9902d5067835c1eec69b90cc8d8fcca1c0",
-      "sites": 2
+      "report_sha256": "97e4f7a44dd19fca7c037a9e841d6aa0ab69a5dbdb096a698f57f8245e68c9ea",
+      "sites": 1
     },
-    "warm-edges-are-declared": {
+    "sink-validates-itself": {
       "bit": true,
       "class": "executable",
-      "kexpr": "warm_consumers_go_through_the_accessors",
+      "kexpr": "sink_refuses_an_incomplete",
       "ran": true,
-      "report_sha256": "1d17a187cdf18ab8ae79bec2efa03215e7cb9900fe95d30dcae2954ab901199a",
+      "report_sha256": "0094c8bd656eb4261648eed2c6b405a6b5237f477fe0a161c332b20d2ca4d021",
+      "sites": 1
+    },
+    "token-unlink-is-generation-scoped": {
+      "bit": true,
+      "class": "executable",
+      "kexpr": "late_release_cleanup_cannot_delete_the_next_attempts_token",
+      "ran": true,
+      "report_sha256": "2fa3aa40eb09f071818649a72af0236bc3fe47029b5b669b54972448318e04a6",
       "sites": 1
     }
   },
