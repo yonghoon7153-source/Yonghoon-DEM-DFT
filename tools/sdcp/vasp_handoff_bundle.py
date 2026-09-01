@@ -1225,7 +1225,7 @@ run_wave() {   # $1 = 목록 파일
     #   ⇒ 재개는 **이어 쓰고** 표지를 `_runner_resume` 으로 구분한다.
     #     `_runner_start` 는 여전히 정확히 하나다 (첫 실행에만 찍힌다).
     # ⛔⛔ 회신 BA 해제조건 7 (2026-09-02) — **재개를 폐지한다.**
-    #   AZ P1 에서 재개를 '이어 쓰기' 로 고쳤는데, 그 계약이 실제로는 **항상 막혔다**:
+    #   AZ P1 에서 재개를 “이어 쓰기” 로 고쳤는데, 그 계약이 실제로는 **항상 막혔다**:
     #   `_runner_resume` 자체가 `RECEIPT_RESUMED` 게이트가 되고, 중단된 상을 다시
     #   돌리면 같은 phase 행이 둘이라 `RECEIPT_PHASE_DUPLICATE` 도 난다.
     #   제대로 지원하려면 attempt ID·성공상태·supersedes 가 필요한데, 이 묶음의
@@ -4612,7 +4612,15 @@ def selftest_k() -> int:
     _F3 = ["sdcp_neutral", "ptfe_c10"]
 
     #   ★ manifest 를 준다 — 기대 자세 수의 정본이다 (회수분에서 세지 않는다)
-    _man3 = {"planned": {k: {} for k in _jb3
+    # ⛔ 회신 BA P1 (2026-09-02) — 픽스처가 `planned` 에 **meta 를 안 실었다.**
+    #   실물 생성기는 kind·fragment·role·seed·basin_id·vacconv·species_order 를 넣는다.
+    #   meta 없는 픽스처로는 "고르는 술어 = 세는 술어" 를 시험할 수 없다
+    #   (이 파일 11345행이 이미 같은 함정을 기록해 뒀다 — 또 밟았다).
+    def _planned_meta(k):
+        _f = "sdcp_neutral" if "sdcp_neutral" in k else "ptfe_c10"
+        return {"meta": {"kind": "prospective_pose", "fragment": _f,
+                         "role": "primary", "seed": SEED_MAIN}}
+    _man3 = {"planned": {k: _planned_meta(k) for k in _jb3
                          if k.startswith("prospective/") and k.endswith(SEED_MAIN)}}
     _c1 = closure_C1(_man3, _jb3, _E3, _emol3, _F3)
     chk(all(abs(_c1["by_frag"][f]["S_f_eV"] - 0.06) < 1e-6 for f in _F3),
@@ -4662,7 +4670,9 @@ def selftest_k() -> int:
     _c1_vc = closure_C1(_man3, _jb_vc, _E3, _emol3, _F3)
     chk(_c1_vc["by_frag"]["sdcp_neutral"].get("n") == 4,
         "⛔음성 AV P0-3: vacconv 잡이 섞여도 C1 이 자세로 세지 않는다 (4행 유지)")
-    _man3v = {"planned": {**_man3["planned"], _kv: {"meta": {"vacconv": "c2"}}}}
+    _man3v = {"planned": {**_man3["planned"],
+                          _kv: {"meta": dict(_planned_meta(_kv)["meta"],
+                                             vacconv="c2")}}}
     chk(closure_C1(_man3v, _jb_vc, _E3, _emol3, _F3)["by_frag"]["sdcp_neutral"]
         .get("n") == 4,
         "⛔음성 AV P0-3: planned 에 vacconv 가 있어도 기대 자세 수(n_want)에 안 센다")
@@ -4708,7 +4718,8 @@ def selftest_k() -> int:
     _A5 = {"sdcp_neutral": ([-1.20, -1.10, -1.05, -1.00], [-1.15] + [-0.9] * 7),
            "ptfe_c10":     ([-0.80, -0.75, -0.70, -0.65], [-0.74] + [-0.6] * 7)}
     _jb5, _en5 = _mk12(_A5)
-    _man5 = {"planned": {k: {} for k in _jb5 if k.startswith("prospective/")}}
+    _man5 = {"planned": {k: _planned_meta(k) for k in _jb5
+                         if k.startswith("prospective/")}}
     _E5 = lambda j: _en5.get(j)                          # noqa: E731
     _MG = {'ok': True, 'schema': 'merge_compat/v1', 'n_bundles': 2}
     _c5 = closure_C5(_man5, _jb5, _E5, _em5, _F5, _MG)
@@ -4846,7 +4857,7 @@ def selftest_k() -> int:
                "ptfe_c10": ([-0.80, -0.75, -0.70, -0.65],
                             [round(-0.80 + _sgn * C5_H1_FLOOR_EV, 12)] + [-0.6] * 7)}
         _jbb, _enb = _mk12(_Ab)
-        _cb = closure_C5({"planned": {k: {} for k in _jbb
+        _cb = closure_C5({"planned": {k: _planned_meta(k) for k in _jbb
                                       if k.startswith("prospective/")}},
                          _jbb, lambda j: _enb.get(j), _em5, _F5, _MG)
         chk(_cb["by_frag"]["ptfe_c10"]["H1_class"] == "unresolved",
@@ -7266,12 +7277,24 @@ def closure_C1(man, jobs, E, emol, frags):
                          "residual_eV": round(ec - e_slab - emol[f] - float(um), 6)})
         # ★ 기대 자세 수는 **동결된 manifest** 에서 온다. 회수된 잡에서 세면
         #   빠진 자세를 영영 못 잡는다 (없으면 기대도 같이 줄어든다).
-        n_want = len([k for k in (man.get("planned") or {})
-                      if k.startswith("prospective/")
-                      and k.rsplit("/", 1)[-1].startswith(f + "__")
-                      and k.endswith(SEED_MAIN)
-                      and not (((man["planned"][k] or {}).get("meta") or {})
-                               .get("vacconv"))])
+        # ⛔⛔ 회신 BA P1 (2026-09-02) — **고르는 술어와 세는 술어가 달랐다.**
+        #   `_pick` 은 구조화 meta(`kind/fragment/seed/d3/vacconv`)로 고르는데
+        #   기대 수는 **잡 키 문자열**(`endswith`)로 셌다. 우리 코드가 스스로 금지한
+        #   "이름 파싱" 을 여기서 하고 있었고, 그 결과 실물에서 `n_used=1 ·
+        #   n_required=2 → 영구 unresolved` 가 됐다 (대안자세 net4 두 잡이 분석에
+        #   전혀 쓰이지 않는 상태).
+        #   ⇒ **같은 술어**로 센다. 그리고 어느 키를 세고 어느 키를 썼는지 남겨
+        #     다음번엔 왜 어긋났는지 바로 보이게 한다.
+        #   ⚠ `planned.meta` 는 `kind·fragment·role·seed·basin_id·vacconv·
+        #     species_order` 만 싣는다 (`d3` 는 없다). 그래서 d3-off 쌍둥이는
+        #     `d3_twin_of` 유무로 뺀다 — 있는 필드로만 맞춘다.
+        _PRED = (("kind", "prospective_pose"), ("fragment", f), ("seed", SEED_MAIN),
+                 ("vacconv", None))
+        _want_keys = sorted(
+            k for k, v in (man.get("planned") or {}).items()
+            if all((((v or {}).get("meta") or {}).get(_k) == _v) for _k, _v in _PRED)
+            and not (((v or {}).get("meta") or {}).get("d3_twin_of")))
+        n_want = len(_want_keys)
         if not n_want:
             res["by_frag"][f] = {"verdict": "unresolved",
                                  "why": "MANIFEST.planned 에 이 조각의 pm1 자세가 없다 "
@@ -7290,6 +7313,14 @@ def closure_C1(man, jobs, E, emol, frags):
         if miss or len(rows) != n_want or not rows:
             res["by_frag"][f] = {"verdict": "unresolved", "missing": miss,
                                  "n_used": len(rows), "n_required": n_want,
+                                 # ⛔ 회신 BA P1 — 어긋나면 **어느 키가** 어긋났는지
+                                 #   보여야 한다. 수만 보면 원인을 못 찾는다.
+                                 "required_keys": _want_keys[:6],
+                                 "used_keys": [x["job"] for x in rows][:6],
+                                 "예상밖": sorted(set(x["job"] for x in rows)
+                                                  - set(_want_keys))[:4],
+                                 "누락": sorted(set(_want_keys)
+                                                - set(x["job"] for x in rows))[:4],
                                  "why": "4자세 전부가 있고 **서로 같은 basin** 이어야 한다 "
                                         "— 부분집합은 range 를 작게 만들어 통과 쪽으로 "
                                         "편향되고, 상태를 가로지르면 e 가 다른 양이 된다"}
@@ -13226,7 +13257,10 @@ def _runner_regression(out: Path, chk) -> None:
         f"건너뛴다 rc={r7d.returncode} 실행 {ran7d}")
     (jd.parent.parent / "DENSE_PLAN.json").unlink(missing_ok=True)
 
-    # ── R8 부분 재개도 ALLOW_RESUME 아래에서만 ─────────────────────────────
+    # ── R8 ⛔ 회신 BA 해제조건 7 — **부분 재개도 폐지됐다.** 계획된 이어달리기만 ──
+    #   종전 R8 은 `ALLOW_RESUME=1` 로 dense 만 다시 도는 것을 양성으로 봤다.
+    #   그 경로는 분석기 영수증 게이트에서 언제나 막혔으므로 시험만 통과하고
+    #   실물에서는 못 쓰는 계약이었다 (픽스처가 분석기를 안 지났다).
     (jd / "dense" / "OUTCAR").unlink()
     log2.unlink(missing_ok=True)
     r3 = subprocess.run(["bash", "run_job.sh"], cwd=jd, capture_output=True, text=True,
@@ -13235,8 +13269,24 @@ def _runner_regression(out: Path, chk) -> None:
                              "ALLOW_RESUME": "1",
                              })
     ran3 = log2.read_text().split() if log2.is_file() else []
-    chk(r3.returncode == 0 and ran3 == ["dense"],
-        f"R8 ALLOW_RESUME 부분 재개 rc={r3.returncode} 실행 {ran3}")
+    chk(r3.returncode != 0 and ran3 == [],
+        f"⛔음성 BA 해제조건 7: 부분 재개(ALLOW_RESUME)도 **거부**된다 "
+        f"rc={r3.returncode} 실행 {ran3}")
+    # 같은 상황을 **계획된 이어달리기**로 하면 dense 만 돈다 (정상 경로)
+    (jd.parent.parent / "DENSE_PLAN.json").write_text('{"planned": true}')
+    log2.unlink(missing_ok=True)
+    r3b = subprocess.run(["bash", "run_job.sh"], cwd=jd, capture_output=True, text=True,
+                         env={**os.environ, "PATH": f"{stub_dir}:{os.environ.get('PATH','')}",
+                              "VASP_LAUNCHER_KIND": "none", "VASP_EXE": str(stub_dir / "vasp_std"),
+                              "STUB_LOG": str(log2), "PLANNED_CONTINUATION": "1"})
+    ran3b = log2.read_text().split() if log2.is_file() else []
+    chk(r3b.returncode == 0 and ran3b == ["dense"],
+        f"BA 해제조건 7 양성: 계획된 이어달리기는 **빠진 상만** 돈다 "
+        f"rc={r3b.returncode} 실행 {ran3b}")
+    _rc3 = (jd / "EXECUTABLE_RECEIPT.tsv").read_text() if (jd / "EXECUTABLE_RECEIPT.tsv").is_file() else ""
+    chk("_runner_continue" not in _rc3 or "_runner_start" in _rc3,
+        "BA 해제조건 7: 영수증에 `_runner_start` 는 그대로 하나다 (재개 표지와 구분)")
+    (jd.parent.parent / "DENSE_PLAN.json").unlink(missing_ok=True)
 
     # ── R8b ★ 그 부분 재개도 **선언 없이는** 막힌다 (dense OUTCAR 는 지웠지만
     #   static/CHGCAR 등 다른 산출물이 남아 있다) ──────────────────────────
@@ -15870,8 +15920,11 @@ def _runner_e2e(bundle: Path, chk) -> bool:
     _ok_root = _copy("intact")
     _rc, _o = _run(_ok_root)
     chk("✓ census" in _o,
-        "AR 10 양성: 온전한 번들에서 SEAL→census 가 실제로 통과한다 "
-        "(production path) · %s" % _o.strip().splitlines()[-1][:60])
+        "AR 10 양성 + BA P0-1: 온전한 번들에서 **census→SEAL→census** 가 실제로 "
+        "통과한다 (production path) · %s"
+        % (_o.strip().splitlines()[-1][:60] if _o.strip() else "출력없음"))
+    if "✓ census" not in _o:
+        print("     [진단] rc=%s\n%s" % (_rc, _o[-1500:]))
     chk((_ok_root / "POTCAR_ROOT_SEAL.json").is_file()
         and (_ok_root / "ZIP_SHA256.txt").is_file(),
         "AR 해제조건 7: 러너가 봉인과 ZIP_SHA256.txt 를 실제로 만든다")
@@ -15996,6 +16049,9 @@ def _runner_e2e(bundle: Path, chk) -> bool:
     chk(len(_rcpt) > 0 and str(vb) in _rcpt[0].read_text()
         and "_runner_start" in _rcpt[0].read_text(),
         "AT P0-5·AV P0-2: 잡마다 receipt 헤더행을 남긴다 (%d건)" % len(_rcpt))
+    if not _rcpt:
+        print("     [진단] 러너 출력 꼬리:\n" + "\n".join(
+            "       " + x for x in _o.strip().splitlines()[-25:]))
     chk(any("\tpre\t" in f.read_text() or "\tstatic\t" in f.read_text()
             for f in _rcpt),
         "AV P0-2: run_job.sh 가 **상별 행**을 append 한다 (분석기가 읽는 형식)")
