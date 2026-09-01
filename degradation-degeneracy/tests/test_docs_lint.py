@@ -8187,30 +8187,31 @@ def test_the_lifecycle_journal_is_a_hash_chain(tmp_path):
 
 def test_the_publisher_refuses_a_thawed_cohort_before_the_first_write(
         tmp_path):
-    """★ 49차 P0 — 판정은 **첫 write 전에** 난다 (frozen namespace 에 잔여 금지)."""
-    rp = _rp()
-    out = tmp_path / "out"
-    lp = tmp_path / "COHORT_LIFECYCLE.jsonl"
-    real = rp._lifecycle_path
-    rp._lifecycle_path = lambda: lp
-    try:
-        rp.promote_cohort_generation(_leg3(tmp_path / "s0", "a", b"1"), out, "a",
-                                     roster={"a"})
-        cid = rp._ledger_cohort(out)["cohort_id"]
-        # 게시는 lifecycle 을 움직이지 않는다 — 기록해야 할 전이는 freeze 하나다
-        assert rp.read_lifecycle() == []
-        rp._append_lifecycle(cid, None, "frozen", "종료")
-        before = sorted(p.name for p in out.rglob("*"))
-        with pytest.raises(SystemExit) as ei:
-            rp.promote_cohort_generation(_leg3(tmp_path / "s1", "a", b"2"), out,
-                                         "a", roster={"a"})
-        assert "frozen" in str(ei.value) or "얼" in str(ei.value), str(ei.value)
-        assert sorted(p.name for p in out.rglob("*")) == before, (
-            "거부하면서 무언가를 만들었다 — 판정이 첫 write 뒤에 있다")
-        # 읽기는 막지 않는다 — frozen cohort 의 CURRENT 는 계속 읽힌다
-        assert rp.read_current(out)["files"]
-    finally:
-        rp._lifecycle_path = real
+    """★ 49차 P0 — 판정은 **첫 write 전에** 난다 (frozen namespace 에 잔여 금지).
+
+    ★ 54차 P1 — journal 의 `dir` 이 **저장소 상대 canonical 경로**여야 하므로
+      (저장소 밖을 봉인하는 기록은 기록이 아니라 쓰기 primitive 다), 이 시험도
+      저장소 안의 cohort 를 쓴다. 보는 축은 그대로다.
+    """
+    rp = _fresh_rp()
+    coh = "docs/22p_gap/coh"
+    rp.REPO = _ledger_repo(tmp_path, _one_cohort_ledger("gX"))
+    out = rp.REPO / coh
+    rp.promote_cohort_generation(_leg3(tmp_path / "s0", "a", b"1"), out, "a",
+                                 roster={"a"})
+    cid = rp._ledger_cohort(out)["cohort_id"]
+    # 게시는 lifecycle 을 움직이지 않는다 — 기록해야 할 전이는 freeze 하나다
+    assert rp.read_lifecycle() == []
+    rp._append_lifecycle(cid, None, "frozen", "종료")
+    before = sorted(p.name for p in out.rglob("*"))
+    with pytest.raises(SystemExit) as ei:
+        rp.promote_cohort_generation(_leg3(tmp_path / "s1", "a", b"2"), out,
+                                     "a", roster={"a"})
+    assert "frozen" in str(ei.value) or "얼" in str(ei.value), str(ei.value)
+    assert sorted(p.name for p in out.rglob("*")) == before, (
+        "거부하면서 무언가를 만들었다 — 판정이 첫 write 뒤에 있다")
+    # 읽기는 막지 않는다 — frozen cohort 의 CURRENT 는 계속 읽힌다
+    assert rp.read_current(out)["files"]
 
 
 def test_the_ledger_roster_is_a_set_not_a_multiset(tmp_path):
@@ -9518,8 +9519,10 @@ def test_freeze_is_retryable_after_a_crash_between_its_two_writes(tmp_path):
         rp._write_ledger_doc = real
 
     assert rp.cohort_lifecycle_state("gZ") == "frozen"
+    # ★ 54차 P0-1 — crash 잔여는 `freezing` 이다. 동결의 **시작**이 durable
+    #   하므로 그 사이에 발급 gate 가 실행권을 열 수 없다.
     assert yaml.safe_load(led.read_text(encoding="utf-8"))[
-        "cohorts"][0]["status"] == "active"
+        "cohorts"][0]["status"] == "freezing"
 
     # 같은 public API 로 다시 부르면 원장 전이를 완주한다 (idempotent 복구)
     rp.freeze_cohort("gZ", "연구 종료")
@@ -9748,15 +9751,22 @@ def test_a_coverage_artifact_that_did_not_run_is_refused(tmp_path):
     # 정상 조각이 남기는 것과 같은 모양의 영수증 (변이 후 기대 node 가 빨갛다)
     receipts = {}
     for n in reg:
+        # ★ 54차 P1 — 정상 조각은 이제 **표식 node** 와 **의미 증인**을 담는다
+        #   (그것이 없으면 남의 report 를 이름만 바꿔 붙일 수 있다).
         fails = (mr.EXPECT.get(n) or {}).get("fail") or []
+        wit = (mr.EXPECT.get(n) or {}).get("witness") or {}
+        mid = mr._marker_id(n)
+        mark = {"nodeid": f"tests/test_mutation_marker_{mid}.py::test_mutant_{mid}",
+                "call": {"outcome": "passed", "longrepr": ""}}
         receipts[n] = {
             "kexpr": "",
             "before": _j.dumps({"tests": [
-                {"nodeid": f, "call": {"outcome": "passed"}} for f in fails]}
-            ).encode("utf-8"),
+                {"nodeid": f, "call": {"outcome": "passed"}} for f in fails]
+                + [mark]}).encode("utf-8"),
             "after": _j.dumps({"tests": [
-                {"nodeid": f, "call": {"outcome": "failed"}} for f in fails]}
-            ).encode("utf-8")}
+                {"nodeid": f, "call": {"outcome": "failed",
+                                       "longrepr": f"E       {wit.get(f, '')}"}}
+                for f in fails] + [mark]}).encode("utf-8")}
     mr._write_coverage(good, "", items, multi, declared,
                        {n: True for n in reg}, receipts)
     rec = _j.loads(good.read_text(encoding="utf-8"))
@@ -9800,14 +9810,20 @@ def test_coverage_receipts_are_verified_independently(tmp_path):
         out = {}
         for n in reg:
             fails = (mr.EXPECT.get(n) or {}).get("fail") or []
+            wit = (mr.EXPECT.get(n) or {}).get("witness") or {}
+            mid = mr._marker_id(n)
+            mark = {"nodeid":
+                    f"tests/test_mutation_marker_{mid}.py::test_mutant_{mid}",
+                    "call": {"outcome": "passed", "longrepr": ""}}
             out[n] = {"kexpr": "",
                       "before": _j.dumps({"tests": [
                           {"nodeid": f, "call": {"outcome": "passed"}}
-                          for f in fails]}).encode("utf-8"),
+                          for f in fails] + [mark]}).encode("utf-8"),
                       "after": _j.dumps({"tests": [
                           {"nodeid": f,
-                           "call": {"outcome": "failed" if bit_says else "passed"}}
-                          for f in fails]}).encode("utf-8")}
+                           "call": {"outcome": "failed" if bit_says else "passed",
+                                    "longrepr": f"E       {wit.get(f, '')}"}}
+                          for f in fails] + [mark]}).encode("utf-8")}
         return out
 
     mr._write_coverage(good, "", items, multi, declared,
@@ -10013,8 +10029,8 @@ def test_freeze_refuses_while_an_execution_holds_the_cohort(tmp_path):
     rp.REPO = led
     (rp.REPO / coh).mkdir(parents=True, exist_ok=True)
     # ★ 53차 P0-4 — 실행권의 위치는 **발급자가 정한다** (인자가 아니다)
-    from tools.preserve import claims_root_for
-    claims = claims_root_for(rp.REPO)
+    from tools.preserve import claims_root_for_ledger
+    claims = claims_root_for_ledger(rp._ledger_path())
     claims.mkdir(parents=True, exist_ok=True)
     (claims / "a.claim").write_text("{}", encoding="utf-8")
 
@@ -10061,8 +10077,10 @@ def test_a_freeze_crash_between_journal_and_anchor_is_recoverable(tmp_path):
         rp._write_head_anchor = real
 
     assert rp._lifecycle_path().is_file()
+    # ★ 54차 P0-1 — crash 잔여는 이제 `active` 가 아니라 **`freezing`** 이다.
+    #   그것이 이 라운드의 요점이다: 동결의 시작이 발급자에게 보인다.
     assert yaml.safe_load(ledp.read_text(encoding="utf-8"))[
-        "cohorts"][0]["status"] == "active"
+        "cohorts"][0]["status"] == "freezing"
 
     # 같은 public API 로 다시 부르면 완주한다
     rp.freeze_cohort("gZ", "연구 종료")
@@ -10099,8 +10117,8 @@ def test_freeze_cannot_be_pointed_at_an_empty_claims_directory(tmp_path):
     dest.mkdir(parents=True, exist_ok=True)
 
     # 진짜 실행권은 **정본 위치**에 있다
-    from tools.preserve import claims_root_for
-    real = claims_root_for(rp.REPO)
+    from tools.preserve import claims_root_for_ledger
+    real = claims_root_for_ledger(rp._ledger_path())
     real.mkdir(parents=True, exist_ok=True)
     (real / "a.claim").write_text("{}", encoding="utf-8")
 
@@ -10175,8 +10193,8 @@ def test_the_freeze_recovery_branch_also_refuses_while_an_execution_is_live(tmp_
     finally:
         rp._write_ledger_doc = real
 
-    from tools.preserve import claims_root_for
-    root = claims_root_for(rp.REPO)
+    from tools.preserve import claims_root_for_ledger
+    root = claims_root_for_ledger(rp._ledger_path())
     root.mkdir(parents=True, exist_ok=True)
     (root / "a.claim").write_text("{}", encoding="utf-8")
 
@@ -10437,3 +10455,536 @@ def test_an_unreadable_receipt_is_not_a_pass(tmp_path):
     rec = _j.loads(good.read_text(encoding="utf-8"))
     assert mr.verify_receipts(str(good), rec["scenarios"], rec["binding"]) == 1, (
         "빈 영수증이 '물었다' 로 인증됐다 — 유도할 수 없는 것은 통과가 아니다")
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# 54차 — 게이트 53 반례 (동결 쪽)
+# ─────────────────────────────────────────────────────────────────────────────
+
+def test_a_partial_write_during_freeze_leaves_the_ledger_readable(tmp_path):
+    """★ 54차 P0-3 — 동결의 원장 쓰기가 **원자적이 아니었다**.
+
+    `_write_ledger_doc()` 은 기존 원장을 `write_text()` 로 **제자리에서**
+    잘라 쓴다. 평범한 ENOSPC 형 부분 쓰기 하나면 원장이 반쪽으로 남고, 그 뒤
+    모든 재시도가 YAML ParserError 로 막힌다 (리뷰어 실측:
+    `ledger="schema_version: 4\\ncohorts: [\\n"`). power-loss 모델 문제가
+    아니라 **일반 I/O 실패**다.
+
+    불변식: 어떤 실패 뒤에도 원장은 **완전한 옛것 또는 완전한 새것**이다.
+    """
+    import yaml
+
+    rp = _fresh_rp()
+    coh = "docs/22p_gap/coh"
+    rp.REPO = _ledger_repo(tmp_path, _one_cohort_ledger("gX"))
+    (rp.REPO / coh).mkdir(parents=True, exist_ok=True)
+    led = rp.REPO / "docs" / "22p_gap" / "LEG_PRESERVATION.yaml"
+    before = led.read_text(encoding="utf-8")
+
+    import pathlib as _pl
+    from unittest import mock
+
+    real_write_text = _pl.Path.write_text
+    real_os_write = os.write
+    state = {"hit": False}
+
+    def _short_text(self, data, *a, **k):
+        # 옛 경로: 원장을 제자리에서 자른다
+        if str(self) == str(led) and not state["hit"]:
+            state["hit"] = True
+            real_write_text(self, data[:len(data) // 3], *a, **k)
+            raise OSError(28, "No space left on device")
+        return real_write_text(self, data, *a, **k)
+
+    def _short_bytes(fd, data):
+        # 새 경로: temp 에 쓰다가 같은 지점에서 실패한다
+        if not state["hit"] and len(data) > 64:
+            state["hit"] = True
+            real_os_write(fd, data[:len(data) // 3])
+            raise OSError(28, "No space left on device")
+        return real_os_write(fd, data)
+
+    with mock.patch.object(_pl.Path, "write_text", _short_text), \
+         mock.patch.object(os, "write", _short_bytes):
+        with pytest.raises(BaseException):
+            rp.freeze_cohort("gX", "연구 종료")
+
+    after = led.read_text(encoding="utf-8")
+    doc = yaml.safe_load(after)          # 여기서 ParserError 면 원장이 깨졌다
+    assert doc and doc.get("cohorts"), "원장이 반쪽으로 남았다"
+    assert after == before or doc["cohorts"][0]["status"] == "frozen", (
+        "완전한 옛것도 완전한 새것도 아니다")
+
+
+def test_a_later_active_record_cannot_thaw_a_frozen_destination(tmp_path):
+    """★ 54차 P0-4 — 동결은 **canonical 목적지에 대해 단조**여야 한다.
+
+    리뷰어 반례: journal·anchor 를 쓰고 marker 전에 죽인 뒤, 같은 `dir` 에
+    **새 cohort ID** 의 허용 전이 `None → active` 를 덧붙였다.
+    `frozen_dirs_from_journal()` 은 그 줄을 보고 frozen 목적지를 `pop()` 했다.
+
+        journal states=['frozen', 'active']   frozen_dirs={}
+        assert_not_thawed=PASSED   _assert_writable=PASSED
+
+    허용 전이 목록은 **cohort 이름**의 상태 기계다. 목적지는 그 이름을 바꿔서
+    빠져나갈 수 있으므로, 목적지 쪽 규칙이 따로 있어야 한다.
+    """
+    import json as _json
+
+    rp = _fresh_rp()
+    coh = "docs/22p_gap/coh"
+    rp.REPO = _ledger_repo(tmp_path, _one_cohort_ledger("gX"))
+    dest = rp.REPO / coh
+    dest.mkdir(parents=True, exist_ok=True)
+    rp.freeze_cohort("gX", "연구 종료")
+
+    entries = rp.read_lifecycle()
+    d = entries[-1]["dir"]
+    tip = hashlib.sha256(
+        rp._lifecycle_line(entries[-1]).encode("utf-8")).hexdigest()
+    alias = {"seq": len(entries), "cohort_id": "gX_reborn", "dir": d,
+             "from": None, "to": "active", "note": "같은 자리에 새 이름",
+             "at": "2026-09-01T00:00:00Z", "prev": tip}
+    with rp._lifecycle_path().open("a", encoding="utf-8") as fh:
+        fh.write(_json.dumps(alias, sort_keys=True, ensure_ascii=False,
+                             separators=(",", ":")) + "\n")
+
+    # 읽기가 거부하거나, 최소한 그 목적지는 여전히 frozen 이어야 한다
+    try:
+        frozen = rp.frozen_dirs_from_journal()
+    except SystemExit:
+        return                                  # 읽기가 거부했다 — 그것도 답이다
+    assert d in frozen, (
+        "허용 전이 한 줄로 frozen 목적지가 journal 에서 사라졌다")
+
+
+def test_the_lifecycle_journal_refuses_a_destination_outside_the_repo(tmp_path):
+    """★ 54차 P1 — journal 의 `dir` 은 **저장소 상대 canonical 경로**다.
+
+    리뷰어 반례: anchor 없는 한 줄에 절대 경로를 넣자 reader 가 그것을 받아
+    들였고, `backfill_frozen_markers()` 가 synthetic repo **밖에** `.FROZEN` 을
+    만들었다.
+    """
+    import json as _json
+
+    rp = _fresh_rp()
+    coh = "docs/22p_gap/coh"
+    rp.REPO = _ledger_repo(tmp_path, _one_cohort_ledger("gX"))
+    (rp.REPO / coh).mkdir(parents=True, exist_ok=True)
+    outside = tmp_path / "outside"
+    outside.mkdir()
+
+    rec = {"seq": 0, "cohort_id": "gX", "dir": str(outside),
+           "from": None, "to": "frozen", "note": "밖으로",
+           "at": "2026-09-01T00:00:00Z", "prev": ""}
+    rp._lifecycle_path().parent.mkdir(parents=True, exist_ok=True)
+    rp._lifecycle_path().write_text(
+        _json.dumps(rec, sort_keys=True, ensure_ascii=False,
+                    separators=(",", ":")) + "\n", encoding="utf-8")
+    rp._write_head_anchor(hashlib.sha256(
+        rp._lifecycle_line(rec).encode("utf-8")).hexdigest())
+
+    with pytest.raises(SystemExit) as ei:
+        rp.read_lifecycle()
+    assert "저장소" in str(ei.value) or "상대" in str(ei.value), str(ei.value)
+    assert not (outside / rp.FROZEN_MARKER).exists()
+
+
+def test_a_live_claim_in_another_cohort_does_not_block_this_freeze(tmp_path):
+    """★ 54차 P1 — `_live_claims_for(cohort_id)` 가 **인자를 안 썼다**.
+
+    claim 하나가 저장소의 **모든** cohort 동결을 막았다 (리뷰어 실측).
+    fail-closed 는 옳지만, 관계없는 것까지 막는 것은 fail-closed 가 아니라
+    그냥 틀린 술어다.
+    """
+    import json as _json
+
+    import yaml
+
+    rp = _fresh_rp()
+    two = yaml.safe_load(_one_cohort_ledger("gA"))
+    two["cohorts"].append({**two["cohorts"][0], "cohort_id": "gB",
+                           "dir": "docs/22p_gap/coh2"})
+    rp.REPO = _ledger_repo(tmp_path, yaml.safe_dump(two, allow_unicode=True,
+                                                    sort_keys=False))
+    (rp.REPO / "docs" / "22p_gap" / "coh").mkdir(parents=True, exist_ok=True)
+    (rp.REPO / "docs" / "22p_gap" / "coh2").mkdir(parents=True, exist_ok=True)
+
+    from tools.preserve import claims_root_for_ledger
+    root = claims_root_for_ledger(rp._ledger_path())
+    root.mkdir(parents=True, exist_ok=True)
+    (root / "a.claim").write_text(
+        _json.dumps({"leg_id": "a", "cohort_id": "gA"}), encoding="utf-8")
+
+    rp.freeze_cohort("gB", "다른 cohort 는 얼릴 수 있어야 한다")
+
+    with pytest.raises(SystemExit):
+        rp.freeze_cohort("gA", "이쪽은 막혀야 한다")
+
+
+
+#: ★ 54차 P0-1 — 동결과 발급이 **같은 원장**을 보는지 시험하려면 원장에
+#:   cohort 와 계획된 다리가 함께 있어야 한다.
+_RUN_SPEC_GX = {"leg_id": "L", "mode": "fit", "objective": "pocv_dvdq",
+                "n_restarts": 3, "reference": "grid"}
+
+
+def _spec_digest_gx(spec: dict) -> str:
+    import hashlib as _h
+    import json as _j
+
+    return _h.sha256(_j.dumps(spec, sort_keys=True, ensure_ascii=False,
+                              separators=(",", ":")).encode("utf-8")).hexdigest()
+
+
+def _lifecycle_ledger_body(cohort_id: str, subdir: str) -> str:
+    """cohort 와 **계획된 다리**가 함께 있는 원장 본문 (YAML 문자열).
+
+    다른 fixture 와 같이 YAML 원문으로 적는다 — Python dict 로 조립하면 상태
+    어휘장 lint(`..._status_axis_enums_have_exactly_one_authority`)가 key 이름을
+    상태 literal 로 본다.
+    """
+    import yaml as _y
+
+    pin = _y.safe_dump({"pin": dict(_DEFAULT_PIN)}, allow_unicode=True,
+                       sort_keys=False, default_flow_style=False)
+    pin = "".join("  " + ln + "\n" for ln in pin.splitlines())
+    return (
+        "schema_version: 4\n"
+        "cohorts:\n"
+        f"- cohort_id: {cohort_id}\n"
+        f"  dir: {subdir}\n"
+        "  status: active\n"
+        "  legs: []\n"
+        '  prospective_legs: ["L"]\n'
+        "  cross_leg_comparison: not_applicable_single_leg\n"
+        + pin +
+        "planned:\n"
+        "- leg_id: L\n"
+        f"  cohort_id: {cohort_id}\n"
+        "  status: planned\n"
+        "  authorization_kind: prospective\n"
+        '  authorized_source_digest: "0123456789abcdef"\n'
+        f'  run_spec_digest: "{_spec_digest_gx(_RUN_SPEC_GX)}"\n'
+        "  run_spec:\n"
+        "    leg_id: L\n"
+        "    mode: fit\n"
+        "    objective: pocv_dvdq\n"
+        "    n_restarts: 3\n"
+        "    reference: grid\n"
+        "  recorded_on: '2026-09-01'\n"
+        "  근거: 시험용 — 계획\n"
+        "legs: []\n")
+
+
+def _plan_ledger_in_repo(tmp_path):
+    """원장이 저장소 배치(`docs/22p_gap/`) 안에 있는 fixture."""
+    root = _ledger_repo(tmp_path, _lifecycle_ledger_body("gX", "docs/22p_gap/coh"))
+    return root / "docs" / "22p_gap" / "LEG_PRESERVATION.yaml"
+
+
+def test_an_issuer_cannot_admit_a_run_into_a_cohort_that_froze_meanwhile(tmp_path):
+    """★ 54차 P0-1 — 발급이 **사전검사 뒤**에 얼린 cohort 로 들어간다.
+
+    리뷰어 반례 ①: 발급자가 사전검사를 통과하고 대기하는 동안 freeze 가
+    완주한다. 그 뒤 `_mark_plan_running()` 은 plan status **만** 다시 보고
+    `running` 을 쓴다.
+
+        cohort_status=frozen · plan_status=running · claim_exists=true
+        release_result=cohort 가 active 가 아니라 실패
+
+    즉 얼린 cohort 안에 되돌릴 수도 닫을 수도 없는 실행이 생긴다. 승인 commit
+    은 plan 한 줄이 아니라 **그때의 authority 전체**를 다시 봐야 한다.
+    """
+    import threading
+    from unittest import mock
+
+    import yaml
+
+    rp = _fresh_rp()
+    coh = "docs/22p_gap/coh"
+    rp.REPO = _ledger_repo(tmp_path, _lifecycle_ledger_body("gX", coh))
+    (rp.REPO / coh).mkdir(parents=True, exist_ok=True)
+    led = rp.REPO / "docs" / "22p_gap" / "LEG_PRESERVATION.yaml"
+
+    import tools.preserve as P
+
+    tok = rp.REPO / "_attempts" / "L.token"
+    err = []
+
+    def do_freeze():
+        try:
+            rp.freeze_cohort("gX", "연구 종료")
+        except BaseException as exc:                       # noqa: BLE001
+            err.append(exc)
+
+    t = threading.Thread(target=do_freeze, daemon=True)
+    real_mark = P._mark_plan_running
+    state = {"hit": False}
+
+    def hooked(leg_id, ledger=None):
+        # 사전검사는 지났고, plan 전이를 쓰기 **직전**이다
+        if not state["hit"]:
+            state["hit"] = True
+            t.start()
+            t.join(timeout=2.0)
+        return real_mark(leg_id, ledger=ledger)
+
+    with mock.patch.object(P, "_mark_plan_running", hooked):
+        try:
+            P.open_leg_run("L", _RUN_SPEC_GX, "0123456789abcdef", tok,
+                           ledger=led)
+        except P.PreserveError:
+            pass                       # 거부도 정답이다 (그쪽이 더 낫다)
+    t.join(10)
+
+    doc = yaml.safe_load(led.read_text(encoding="utf-8"))
+    cohort = doc["cohorts"][0]["status"]
+    plan = next(e for e in doc["planned"] if e["leg_id"] == "L")["status"]
+    assert not (cohort in ("frozen", "freezing") and plan == "running"), (
+        f"얼린 cohort({cohort}) 안에서 실행이 시작됐다 (plan={plan}) — "
+        "되돌릴 수도 닫을 수도 없다")
+
+
+def test_an_issuer_refuses_while_a_freeze_is_half_committed(tmp_path):
+    """★ 54차 P0-1 — freeze 가 journal·marker 를 쓰고 원장 전에 죽은 상태.
+
+    리뷰어 반례 ②: 발급 gate 는 **원장만** 보므로 그 상태에서 실행권을 연다.
+
+        journal_state=frozen · marker_exists=true
+        ledger_cohort_status=active · issuance=success
+        freeze_retry=새 claim 때문에 차단
+
+    동결의 시작이 발급자에게 **보이지 않았다.** 보이게 만든다 —
+    원장에 `freezing` 을 먼저 굳히고, 발급은 `active` 만 받는다.
+    """
+    import yaml
+
+    rp = _fresh_rp()
+    coh = "docs/22p_gap/coh"
+    rp.REPO = _ledger_repo(tmp_path, _lifecycle_ledger_body("gX", coh))
+    (rp.REPO / coh).mkdir(parents=True, exist_ok=True)
+    led = rp.REPO / "docs" / "22p_gap" / "LEG_PRESERVATION.yaml"
+
+    import tools.preserve as P
+
+    class _Boom(BaseException):
+        pass
+
+    real = rp._write_ledger_doc
+    rp._write_ledger_doc = lambda *a, **k: (_ for _ in ()).throw(_Boom("crash"))
+    try:
+        with pytest.raises(_Boom):
+            rp.freeze_cohort("gX", "연구 종료")
+    finally:
+        rp._write_ledger_doc = real
+
+    assert rp.cohort_lifecycle_state("gX") == "frozen", "시험 전제가 깨졌다"
+
+    tok = rp.REPO / "_attempts" / "L.token"
+    with pytest.raises(P.PreserveError) as ei:
+        P.open_leg_run("L", _RUN_SPEC_GX, "0123456789abcdef", tok, ledger=led)
+    assert "active" in str(ei.value) or "동결" in str(ei.value), str(ei.value)
+    doc = yaml.safe_load(led.read_text(encoding="utf-8"))
+    plan = next(e for e in doc["planned"] if e["leg_id"] == "L")["status"]
+    assert plan == "planned", "반쯤 얼린 cohort 에서 실행권이 열렸다"
+
+
+def test_the_issuer_cannot_choose_where_its_claim_lives(tmp_path):
+    """★ 54차 P0-1 — 발급 API 가 여전히 **임의 claims_root** 를 받았다.
+
+    리뷰어 반례 ③: alternate root 에 살아 있는 claim 을 둔 채 canonical root 는
+    비어 있다고 보고 freeze 가 성공했다.
+
+        alternate_claim=true · canonical_claim_count=0
+        freeze_to=frozen · ledger_plan_status=running
+
+    53차는 freeze 쪽 인자만 없앴다. 두 쪽이 **같은 authority** 에서 자리를
+    유도해야 한다 — 그 authority 는 원장이다.
+    """
+    import inspect
+
+    import tools.preserve as P
+
+    for fn in (P.open_leg_run, P.attach_leg_run, P.finalize_leg,
+               P.release_leg_run, P.assert_run_is_authorized):
+        assert "claims_root" not in inspect.signature(fn).parameters, (
+            f"{fn.__name__} 이 claim 의 자리를 인자로 받는다 — 그러면 동결이 "
+            "보는 곳과 발급이 쓰는 곳이 갈린다")
+
+    led = _plan_ledger_in_repo(tmp_path)
+    assert P.claims_root_for_ledger(led) == led.parent / "_claims", (
+        "claim 의 자리가 원장에서 유도되지 않는다")
+
+
+def test_a_module_scope_expression_statement_is_fail_closed():
+    """★ 54차 P0-5 — module scope 의 `BOX.update(...)` 가 통째로 무시됐다.
+
+    리뷰어 실측: `Expr` 는 `_MODULE_NONBINDING` 이라 지나쳤고, 그 문이 정하는
+    계산 값이 바뀌어도 digest 가 같았다.
+
+        digest: 02f5cf1277257b4d == 02f5cf1277257b4d
+        result: 0.02 → 0.05
+
+    "이름을 안 묶는 문" 과 "아무 것도 안 하는 문" 은 다르다. 증명된 순수
+    표현(docstring)만 지나가고 나머지는 **멈춘다**.
+    """
+    rp = _rp()
+    sc = (_REPO / "src" / "scoring.py").read_text(encoding="utf-8")
+    body = "def score_canonical(df):\n    return BOX['tol']\n"
+    extra = "BOX = {}\nBOX.update(tol=0.02)\n"
+    base = rp._producer_semantic_over(_mini_producer(rp, body, extra=extra), sc)
+    moved = rp._producer_semantic_over(
+        _mini_producer(rp, body, extra=extra.replace("0.02", "0.05", 1)), sc)
+    assert moved != base, (
+        "값을 버리는 표현식이 계산 값을 바꿨는데 producer digest 가 그대로다")
+
+    # 대상 이름을 정할 수 없는 표현식은 **멈춘다** (빈 통과는 거짓말이다)
+    with pytest.raises(SystemExit) as ei:
+        rp._module_defs(_mini_producer(
+            rp, "def score_canonical(df):\n    return 1\n",
+            extra="def _f():\n    return {}\n_f()['tol'] = 1\n_f().update(x=1)\n"))
+    assert "fail-closed" in str(ei.value), str(ei.value)
+
+
+def test_a_dunder_named_by_a_string_literal_is_still_a_dunder():
+    """★ 54차 P0-5 — `getattr(f, "__globals__")` 가 allowlist 를 우회했다.
+
+    리뷰어 실측: dunder 검사가 `Attribute`/`Name` node 만 봤으므로 이름을
+    **문자열 상수**로 적으면 그대로 지나갔다.
+
+        digest: 91025d72c9682028 == 91025d72c9682028
+        result: 1 → 9
+
+    `getattr(x, "__globals__")` 와 `x.__globals__` 는 같은 계산이다. 같은
+    계산이면 같은 규칙을 받아야 한다 — 그러므로 닫힘 안의 **dunder 문자열
+    상수**를 금지한다.
+    """
+    rp = _rp()
+    sc = (_REPO / "src" / "scoring.py").read_text(encoding="utf-8")
+    body = ("def score_canonical(df):\n"
+            "    return getattr(score_canonical, \"__globals__\")['SECRET']\n")
+    with pytest.raises(SystemExit) as ei:
+        rp._producer_semantic_over(_mini_producer(rp, body), sc)
+    assert "dunder" in str(ei.value) or "정규형" in str(ei.value), str(ei.value)
+
+
+def test_the_measured_source_is_inside_producer_identity():
+    """★ 54차 P0-5 — **무엇을 측정할지 고르는 코드**가 identity 밖이었다.
+
+    리뷰어 실측: 절단된 `_producer_source_files()` 가 pristine decoy 를
+    돌려주도록 바꾸면 실제 실행 코드가 달라도 두 identity 가 그대로였다.
+
+        producer_semantic: 동일 · compute_sha256: 동일
+        실제 _cell 결과: "1.25" → "MUTATED:1.25"
+
+    절단면은 **바이트를 만들지 않는 코드**를 위한 것이다. 어느 파일을 재는지
+    정하는 것은 바이트를 만들지는 않지만 **무엇을 주장하는지**를 정한다 —
+    그것은 identity 안이다.
+    """
+    rp = _rp()
+    assert "_producer_source_files" not in rp._PRODUCER_CUT, (
+        "무엇을 측정할지 고르는 함수가 절단면 뒤에 있다 — 그러면 신고한 "
+        "source 와 실행된 source 가 달라도 digest 가 같다")
+
+
+def test_a_genuine_report_from_another_mutant_is_refused(tmp_path):
+    """★ 54차 P1 — **진짜** report 를 이름만 바꿔 옮기면 통과했다.
+
+    리뷰어 실측: 다른 mutant 의 커밋된 report 를 그대로 옮기고 공개
+    `_receipt_digest` 와 transcript 만 다시 계산하자 `new_pytest_runs=0`,
+    `check_coverage_rc=0`. digest 결속은 **공개 함수**이므로 조각을 쓰는 쪽이
+    다시 계산할 수 있다 — 결속만으로는 부족하다.
+
+    report **자체가** 어느 변이인지 말해야 한다. 등록부는 scenario 마다 실패의
+    **의미 증인**(`EXPECT[...]["witness"]`)을 이미 선언하고 있고, 그것은 기대
+    node 가 같은 쌍에서도 다르다. 저장된 report 에서 그 증인을 다시 확인한다.
+    """
+    import json as _j
+
+    mr = _mr()
+    reg = mr._registry()
+    _, _, _e, declared = mr._select("")
+    decl = {d[0] for d in declared}
+    by_fail: dict = {}
+    for n in reg:
+        if n in decl:
+            continue
+        by_fail.setdefault(
+            tuple(sorted((mr.EXPECT.get(n) or {}).get("fail") or ())), []).append(n)
+    pair = next((v for v in by_fail.values() if len(v) > 1), None)
+    assert pair, "기대 node 가 같은 scenario 쌍이 없다 (시험 전제)"
+    donor, victim = pair[0], pair[1]
+
+    def _report(name, phase):
+        fails = (mr.EXPECT.get(name) or {}).get("fail") or []
+        wit = (mr.EXPECT.get(name) or {}).get("witness") or {}
+        mid = mr._marker_id(name)
+        return _j.dumps({"tests": [
+            {"nodeid": f,
+             "call": {"outcome": "failed" if phase == "after" else "passed",
+                      "longrepr": f"E       {wit.get(f, '')}"}}
+            for f in fails] + [
+            {"nodeid": f"tests/test_mutation_marker_{mid}.py::test_mutant_{mid}",
+             "call": {"outcome": "passed", "longrepr": ""}}]}).encode("utf-8")
+
+    items, multi, _x, declared = mr._select("")
+    good = tmp_path / "s1.json"
+    receipts = {n: {"kexpr": "", "before": _report(n, "before"),
+                    "after": _report(n, "after")} for n in reg}
+    mr._write_coverage(good, "", items, multi, declared,
+                       {n: True for n in reg}, receipts)
+    rec = _j.loads(good.read_text(encoding="utf-8"))
+    assert mr.verify_receipts(str(good), rec["scenarios"], rec["binding"]) == 0, (
+        "정상 조각이 거부됐다")
+
+    # ── 공격: donor 의 진짜 report 를 victim 이름으로 옮기고 digest 재계산 ──
+    rep_dir = good.parent / "reports" / rec["binding"]["reports_dir"]
+    for phase in ("before", "after"):
+        (rep_dir / f"{victim}.{phase}.json").write_bytes(
+            (rep_dir / f"{donor}.{phase}.json").read_bytes())
+    rec["scenarios"][victim]["report_sha256"] = mr._receipt_digest(
+        victim, _report(donor, "before"), _report(donor, "after"))
+    rec["binding"]["transcript_digest"] = mr._transcript_digest(rec["scenarios"])
+    assert mr.verify_receipts(str(good), rec["scenarios"], rec["binding"]) == 1, (
+        f"{donor} 의 report 를 {victim} 이름으로 붙였는데 통과했다 — "
+        "새 pytest 실행 0회로 칸이 채워진다")
+
+
+def test_the_recorded_head_must_exist_in_this_repository(tmp_path):
+    """★ 54차 P1 — coverage 의 `head` 결속이 **죽어 있었다**.
+
+    리뷰어 실측: 모든 HEAD 를 40개의 `0` 으로 바꿔도 `rc 0`. 기록은 하는데
+    검사가 registry/EXPECT/runner 만 봤다. 적기만 하고 안 보는 값은 결속이
+    아니라 장식이다.
+    """
+    import json as _j
+
+    mr = _mr()
+    reg = mr._registry()
+    items, multi, _e, declared = mr._select("")
+    good = tmp_path / "s1.json"
+
+    def _report(name, phase):
+        fails = (mr.EXPECT.get(name) or {}).get("fail") or []
+        wit = (mr.EXPECT.get(name) or {}).get("witness") or {}
+        mid = mr._marker_id(name)
+        return _j.dumps({"tests": [
+            {"nodeid": f,
+             "call": {"outcome": "failed" if phase == "after" else "passed",
+                      "longrepr": f"E       {wit.get(f, '')}"}}
+            for f in fails] + [
+            {"nodeid": f"tests/test_mutation_marker_{mid}.py::test_mutant_{mid}",
+             "call": {"outcome": "passed", "longrepr": ""}}]}).encode("utf-8")
+
+    receipts = {n: {"kexpr": "", "before": _report(n, "before"),
+                    "after": _report(n, "after")} for n in reg}
+    mr._write_coverage(good, "", items, multi, declared,
+                       {n: True for n in reg}, receipts)
+    rec = _j.loads(good.read_text(encoding="utf-8"))
+    assert mr.check_coverage([str(good)]) == 0, "정상 조각이 거부됐다"
+    rec["binding"]["head"] = "0" * 40
+    good.write_text(_j.dumps(rec, ensure_ascii=False, indent=2, sort_keys=True),
+                    encoding="utf-8")
+    assert mr.check_coverage([str(good)]) == 1, (
+        "이 저장소에 없는 HEAD 를 적은 조각이 통과했다")

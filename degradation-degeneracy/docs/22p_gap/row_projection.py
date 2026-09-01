@@ -45,6 +45,7 @@ from __future__ import annotations
 import argparse
 import contextlib
 import os
+import ntpath
 import posixpath
 import shutil
 import stat
@@ -56,7 +57,7 @@ import math
 import hashlib
 import json
 import sys
-from pathlib import Path
+from pathlib import Path, PurePosixPath
 
 REPO = Path(__file__).resolve().parent.parent.parent
 sys.path.insert(0, str(REPO))
@@ -383,12 +384,18 @@ def _compute_closure(src: str) -> dict[str, str]:
 #: ★ 53차 P0-7 — `REPO` 가 절단면에 들어온다. 그것은 **checkout 위치**이지
 #:   producer 의미가 아니다 (같은 producer 가 어느 checkout 에서 돌아도 같은
 #:   바이트를 내야 하고, 세 기계에서 그것을 실측했다). 그리고 그 값은
-#:   `Path(__file__)` 에서 온다 — dunder allowlist 가 닫힘 안에서 거부하는
-#:   통로다. 계산 의미가 아닌 것이 그 통로를 열고 있으면 통로를 닫을 수 없다.
+#:   `Path(__file__)` 에서 온다.
+#:
+#: ★ 54차 P0-5 — `_producer_source_files()` 는 절단면에서 **빠진다.** 절단면은
+#:   바이트를 만들지 않는 코드를 위한 것인데, 어느 파일을 재는지 고르는 것은
+#:   바이트를 만들지는 않아도 **무엇을 주장하는지**를 정한다. 리뷰어는 그것을
+#:   pristine decoy 로 바꿔 "신고한 source ≠ 실행된 source" 를 만들었고 두
+#:   identity 는 그대로였다. 그 함수가 닫힘 안에 있으면 그 변경이 digest 를
+#:   움직인다.
 _PRODUCER_CUT = ("promote_cohort_generation",
                  "_ledger_roster", "_ledger_cohort", "_ledger_cohorts",
                  "_ledger_dir", "_frozen_cohort_dirs", "_cohort_dir",
-                 "_assert_writable", "REPO", "_producer_source_files")
+                 "_assert_writable", "REPO")
 
 
 def _keep_docstrings(tree):
@@ -608,7 +615,11 @@ def _target_names(node):
 #: 바꾼다. 리뷰어 실측: `TOL = 1` 뒤의 `TOL += 9` 를 바꿔도 digest 가 같았고
 #: (`result_a=2 · result_b=10`), `from math import floor as TOL` 을
 #: `ceil` 로 바꿔도 같았다.
-_MODULE_NONBINDING = ("Expr", "Pass", "Raise", "Assert", "Global", "Nonlocal",
+#: ★ 54차 P0-5 — `Expr` 이 빠졌다. `BOX.update(tol=0.02)` 는 이름을 묶지
+#: **않지만** module 상태를 정한다. 리뷰어 실측: 그 값을 바꿔도 digest 가 같았다.
+#: "이름을 안 묶는 문" 과 "아무 것도 안 하는 문" 은 다르다 — docstring 만
+#: 지나가고 나머지 `Expr` 은 `_module_defs()` 가 fail-closed 로 멈춘다.
+_MODULE_NONBINDING = ("Pass", "Raise", "Assert", "Global", "Nonlocal",
                       "Break", "Continue", "Return")
 
 #: **안으로 들어가야 하는** 복합문 — 그 안의 정의도 module scope 다.
@@ -633,6 +644,22 @@ def _match_capture_names(pat) -> list:
         if isinstance(sub, getattr(ast, "MatchMapping", ())) and rest:
             out.append(rest)
     return out
+
+
+def _expr_root_name(node):
+    """값을 버리는 표현식이 **무엇의** 상태를 바꾸는가 (54차 P0-5).
+
+    `sys.path.insert(...)` → `sys`, `BOX.update(...)` → `BOX`.
+    뿌리가 이름이 아니면 `None` — caller 가 fail-closed 로 멈춘다.
+    """
+    import ast
+
+    cur = node
+    while isinstance(cur, ast.Call):
+        cur = cur.func
+    while isinstance(cur, (ast.Attribute, ast.Subscript)):
+        cur = cur.value
+    return cur.id if isinstance(cur, ast.Name) else None
 
 
 def _module_defs(src: str) -> dict:
@@ -693,6 +720,21 @@ def _module_defs(src: str) -> dict:
                 #   질문이고, 여기는 "이 이름이 무엇에 묶였나" 다.)
                 for al in node.names:
                     _bind(al.asname or al.name.split(".")[0], top or node)
+            elif isinstance(node, ast.Expr):
+                # ★ 54차 P0-5 — docstring(순수 상수)은 지나가고, 값을 버리는
+                #   표현식은 **그 대상 이름에 결속**한다. `BOX.update(tol=…)` 는
+                #   이름을 묶지 않지만 `BOX` 의 상태를 정한다 (53차의 컨테이너
+                #   대입과 같은 규칙이다). 대상 이름을 정할 수 없으면 멈춘다.
+                if isinstance(node.value, ast.Constant):
+                    continue
+                root = _expr_root_name(node.value)
+                if root is None:
+                    raise SystemExit(
+                        f"✗ producer 소스의 module scope 에 대상 이름을 알 수 "
+                        f"없는 표현식이 있다 ({getattr(node, 'lineno', '?')}행) "
+                        "— 무엇의 상태를 바꾸는지 정적으로 답할 수 없으면 "
+                        "identity 밖 계산이 된다 (fail-closed)")
+                _bind(root, top or node)
             elif kind in _MODULE_NONBINDING:
                 continue
             elif kind in _MODULE_COMPOUND:
@@ -816,9 +858,15 @@ _SOURCE_REFLECTION_MODULES = ("inspect", "linecache", "dis", "traceback",
 #:      identity 에 넣지 않는 것은 25차부터의 명시적 결정이다 (투영이
 #:      py3.11/3.12·pandas 2/3 에서 바이트 동일하다는 성질을 잃기 때문).
 #:      대신 manifest 의 provenance 로 남는다.
+#: ★ 54차 P0-5 — `__file__` 이 돌아온다. `_producer_source_files()` 가 절단면
+#:   에서 빠지면서 그 표현이 닫힘 안으로 들어왔기 때문이다. 근거는 ②에 가깝다:
+#:   그것은 **경로 문자열**이지 code·bytes 로 가는 손잡이가 아니다. 남는 한계는
+#:   명시한다 — 그 경로로 파일을 열어 raw source 를 읽는 것은 아직 막지 못했고,
+#:   그 경계는 trusted launcher(§0 의 P0-8)와 같은 자리다.
 _DUNDER_ALLOWED = ("__name__", "__doc__", "__init__", "__post_init__",
                    "__enter__", "__exit__", "__slots__", "__setattr__",
-                   "__future__", "__main__", "__all__", "__version__")
+                   "__future__", "__main__", "__all__", "__version__",
+                   "__file__")
 
 
 def _is_dunder(name) -> bool:
@@ -868,6 +916,24 @@ def _assert_no_dynamic_resolution(node, where: str, mods: set,
     # ★ 52차 P0-8 — 이 node 안의 지역 import 도 능력을 들여온다.
     banned = set(reflect or ()) | _source_reflection_locals(node)
     for sub in ast.walk(node):
+        # ★ 54차 P0-5 — `getattr(f, "__globals__")` 는 `f.__globals__` 와 같은
+        #   계산이다. 53차 검사는 `Attribute`/`Name` node 만 봤으므로 이름을
+        #   **문자열 상수**로 적으면 그대로 지나갔다 (리뷰어 실측: digest 동일 ·
+        #   결과 1 → 9). 이름이 인자로 **건네지는** 자리에서만 본다 — 선언
+        #   테이블 안의 같은 문자열은 데이터이지 접근이 아니다.
+        if isinstance(sub, ast.Call):
+            for arg in list(sub.args) + [k.value for k in sub.keywords]:
+                if not (isinstance(arg, ast.Constant)
+                        and isinstance(arg.value, str)):
+                    continue
+                nm = arg.value
+                if (_is_dunder(nm) and nm not in _DUNDER_ALLOWED) \
+                        or nm in _SOURCE_REFLECTION:
+                    raise SystemExit(
+                        f"✗ producer 닫힘 안에서 이름을 **문자열로** 건네 "
+                        f"정규형이 볼 수 없는 것을 연다: {where} 의 {nm!r} — "
+                        "`getattr(x, \"__globals__\")` 는 `x.__globals__` 와 "
+                        "같은 계산이고 같은 규칙을 받는다")
         if isinstance(sub, ast.Name) and sub.id in banned:
             raise SystemExit(
                 f"✗ producer 닫힘 안에서 **raw source 관찰자**를 쓴다: {where} 의 "
@@ -2918,7 +2984,9 @@ _LEDGER_SEALED = tuple(k for k in _LEDGER_AUTHORITY if k not in _LEDGER_UNSEALED
 #: 문자열" 만 봤으므로 오타(`Active`)·새로 지어낸 값(`retired`)이 그대로
 #: 봉인됐고, `status == "active"` 를 보는 소비자에게는 frozen 도 active 도 아닌
 #: cohort 가 생겼다 (어느 검사도 안 걸린다).
-_LEDGER_STATUS = ("active", "frozen")
+#: ★ 54차 P0-1 — `freezing` 은 **동결의 시작**을 발급자에게 보이게 하는 durable
+#:   상태다. 게시도 발급도 `active` 만 받는다.
+_LEDGER_STATUS = ("active", "freezing", "frozen")
 
 #: cohort 간 비교 정책 — 소비자가 지켜야 하는 값이므로 자유 문자열이 아니다.
 _CROSS_LEG_POLICY = ("allowed_within_cohort", "not_applicable_single_leg")
@@ -3002,7 +3070,7 @@ def read_lifecycle() -> list:
                 f"({_lifecycle_head_path()}) — 사슬이 지워졌다. 없는 것과 "
                 "지워진 것은 다르다")
         return []
-    out, prev, states = [], "", {}
+    out, prev, states, frozen_dirs = [], "", {}, {}
     for i, raw in enumerate(p.read_text(encoding="utf-8").splitlines()):
         if not raw.strip():
             continue
@@ -3033,6 +3101,18 @@ def read_lifecycle() -> list:
                 f"✗ cohort lifecycle journal {i}번째 줄이 허용되지 않는 전이다: "
                 f"{rec['from']!r} → {rec['to']!r} ({rec['cohort_id']!r}) — 얼린 "
                 "cohort 는 되돌릴 수 없다. 이 줄은 손으로 덧붙여진 해동이다")
+        _assert_journal_dir(rec, i)
+        # ★ 54차 P0-4 — 목적지는 **단조**다. 한 번 frozen 인 `dir` 에 다른
+        #   이름으로 새 record 를 여는 것은 이름을 바꾼 해동이다.
+        d = str(rec.get("dir") or "")
+        if d in frozen_dirs and frozen_dirs[d] != rec["cohort_id"]:
+            raise SystemExit(
+                f"✗ cohort lifecycle journal {i}번째 줄이 이미 얼린 목적지를 "
+                f"다른 이름으로 다시 연다: {d} (얼린 것은 "
+                f"{frozen_dirs[d]!r}, 이 줄은 {rec['cohort_id']!r}) — 얼린 "
+                "것은 디렉터리이지 이름이 아니다")
+        if rec["to"] == "frozen":
+            frozen_dirs.setdefault(d, rec["cohort_id"])
         if rec["from"] != states.get(rec["cohort_id"]):
             raise SystemExit(
                 f"✗ cohort lifecycle journal {i}번째 줄의 출발 상태가 사슬과 "
@@ -3063,6 +3143,27 @@ def read_lifecycle() -> list:
     return out
 
 
+def _assert_journal_dir(rec: dict, i: int) -> None:
+    """journal 의 `dir` 은 **저장소 상대 canonical 경로**여야 한다 (54차 P1).
+
+    리뷰어 반례: anchor 없는 한 줄에 절대 경로를 넣자 reader 가 그것을 받아
+    들였고, `backfill_frozen_markers()` 가 저장소 **밖에** `.FROZEN` 을 만들었다.
+    journal 은 이 저장소 안의 목적지를 봉인하는 기록이므로, 그 밖을 가리키는
+    줄은 기록이 아니라 쓰기 primitive 다.
+    """
+    raw = str(rec.get("dir") or "")
+    if not raw:
+        raise SystemExit(
+            f"✗ cohort lifecycle journal {i}번째 줄에 목적지(`dir`)가 없다")
+    q = PurePosixPath(raw)
+    if q.is_absolute() or ntpath.isabs(raw) or ".." in q.parts \
+            or raw.startswith("~") or ":" in raw:
+        raise SystemExit(
+            f"✗ cohort lifecycle journal {i}번째 줄의 목적지가 저장소 상대 "
+            f"canonical 경로가 아니다: {raw!r} — journal 은 이 저장소 안의 "
+            "디렉터리만 봉인한다")
+
+
 def cohort_lifecycle_state(cohort_id: str, entries=None):
     """이 cohort 의 **마지막으로 기록된** 상태 (기록이 없으면 `None`)."""
     last = None
@@ -3083,6 +3184,8 @@ def _cohort_dir_key(cohort_id: str) -> str:
             try:
                 return d.relative_to(Path(REPO).resolve()).as_posix()
             except ValueError:
+                # 저장소 밖이면 **조회 key** 로만 쓴다. journal 에 적는 것은
+                # `_append_lifecycle()` 이 거부한다 (54차 P1 — 아래).
                 return d.as_posix()
     raise SystemExit(f"✗ 원장에 cohort {cohort_id!r} 이 없다")
 
@@ -3098,10 +3201,14 @@ def frozen_dirs_from_journal(entries=None) -> dict[str, str]:
         d = rec.get("dir")
         if not d:
             continue
+        # ★ 54차 P0-4 — **한 번 frozen 인 목적지는 journal 에서 사라지지
+        #   않는다.** 53차는 뒤따르는 `active` record 를 보고 `pop()` 했고,
+        #   리뷰어는 같은 `dir` 에 **새 cohort ID** 의 허용 전이
+        #   `None → active` 를 덧붙여 그 목적지를 지웠다. 허용 전이 목록은
+        #   cohort **이름**의 상태 기계이고, 목적지는 이름을 바꿔서 빠져나갈
+        #   수 있다. 목적지 쪽 규칙은 따로 있어야 한다: 단조.
         if rec["to"] == "frozen":
-            out[str(d)] = rec["cohort_id"]
-        else:
-            out.pop(str(d), None)
+            out.setdefault(str(d), rec["cohort_id"])
     return out
 
 
@@ -3118,6 +3225,11 @@ def _append_lifecycle(cohort_id: str, frm, to: str, note: str) -> dict:
             f"✗ 허용되지 않는 cohort 전이다: {frm!r} → {to!r} — 얼린 cohort 는 "
             "되돌릴 수 없다 (그것이 freeze 의 뜻이다). 다시 쓰려면 **새 "
             "cohort** 를 만들어라")
+    # ★ 54차 P1 — journal 에 **저장소 밖 목적지를 적지 않는다.** 53차는 절대
+    #   경로를 그대로 적었고, 그 줄을 읽은 `backfill_frozen_markers()` 가
+    #   저장소 밖에 `.FROZEN` 을 만들었다 (리뷰어 실측). 쓰는 쪽과 읽는 쪽이
+    #   같은 규칙을 쓴다 — 읽기는 `_assert_journal_dir()` 이 본다.
+    _assert_journal_dir({"dir": _cohort_dir_key(cohort_id)}, len(entries))
     prev = ""
     if entries:
         prev = hashlib.sha256(
@@ -3256,6 +3368,11 @@ def assert_not_thawed(cohort_id: str) -> None:
             "바꿔도 그 디렉터리는 얼려 있다. 새 세대는 **새 디렉터리**를 쓴다")
 
 
+def _ledger_path() -> Path:
+    """보존 원장의 자리 — 계획·cohort·동결의 **유일한 authority** (54차 P0-1)."""
+    return Path(REPO) / "docs" / "22p_gap" / "LEG_PRESERVATION.yaml"
+
+
 def _live_claims_for(cohort_id: str) -> list:
     """이 cohort 안에서 **아직 살아 있는 실행권** (52차 P0-3).
 
@@ -3271,15 +3388,32 @@ def _live_claims_for(cohort_id: str) -> list:
       것이므로 얼리지 않는다** — 52차의 `except: return []` 는 fail-open 이었다.
     """
     try:
-        from tools.preserve import claims_root_for
+        from tools.preserve import claims_root_for_ledger
     except Exception as exc:                              # pragma: no cover
         raise SystemExit(
             f"✗ 실행권의 정본 위치를 물을 수 없다 ({exc}) — 살아 있는 실행이 "
             "있는지 모르는 채로 얼릴 수 없다")
-    root = claims_root_for(REPO)
+    # ★ 54차 P0-1 — 발급과 **같은 원장**에서 유도한다. 53차는 이쪽만 인자를
+    #   없앴고 발급은 임의 root 를 받았다 — 두 authority 가 갈리면 그 사이로
+    #   빠지는 schedule 이 있다 (리뷰어 실측).
+    root = claims_root_for_ledger(_ledger_path())
     if not root.is_dir():
         return []
-    return sorted(p.name[:-len(".claim")] for p in root.glob("*.claim"))
+    # ★ 54차 P1 — 53차는 인자를 **받고 쓰지 않았다.** claim 하나가 저장소의
+    #   모든 cohort 동결을 막았다 (리뷰어 실측). fail-closed 는 옳지만 관계없는
+    #   것까지 막는 것은 fail-closed 가 아니라 틀린 술어다. 읽을 수 없는
+    #   claim 은 여전히 막는다 — 그것이 fail-closed 다.
+    live = []
+    for p in sorted(root.glob("*.claim")):
+        try:
+            rec = json.loads(p.read_text(encoding="utf-8"))
+            owner = str((rec or {}).get("cohort_id") or "")
+        except (OSError, json.JSONDecodeError, AttributeError):
+            owner = ""                       # 읽을 수 없다 → 모른다 → 막는다
+        if owner and owner != str(cohort_id):
+            continue
+        live.append(p.name[:-len(".claim")])
+    return live
 
 
 def _preserve_ledger_lock(led: Path):
@@ -3337,7 +3471,7 @@ def freeze_cohort(cohort_id: str, reason: str) -> dict:
         #   `frozen → frozen` 이라 거부됐다 — 원장은 영영 active 로 남았다.
         #   fail-closed 는 정지가 아니다. 남은 전이를 **완주**한다.
         if recorded == "frozen":
-            if row.get("status") == "active":
+            if row.get("status") in ("active", "freezing"):
                 prev = next((r for r in read_lifecycle()
                              if r["cohort_id"] == cohort_id and r["to"] == "frozen"),
                             None)
@@ -3351,10 +3485,17 @@ def freeze_cohort(cohort_id: str, reason: str) -> dict:
             raise SystemExit(
                 f"✗ cohort {cohort_id!r} 는 이미 frozen 으로 기록됐다 — 두 번 "
                 "얼릴 수 없다")
-        if row.get("status") != "active":
+        if row.get("status") not in ("active", "freezing"):
             raise SystemExit(
                 f"✗ cohort {cohort_id!r} 의 상태가 {row.get('status')!r} 이라 "
                 "얼릴 수 없다")
+        # ★ 54차 P0-1 — **동결의 시작을 먼저 선형화한다.** 53차는 journal 을
+        #   먼저 쓰고 원장을 나중에 썼고, 그 사이에 발급 gate 는 원장만 보고
+        #   실행권을 열었다 (리뷰어 실측: `journal=frozen · marker=true ·
+        #   ledger=active · issuance=success`). 발급자가 소비할 수 있는 durable
+        #   신호가 있어야 그 창이 닫힌다 — `status: freezing` 이 그것이다.
+        if row.get("status") == "active":
+            _write_ledger_status(led, cohort_id, "freezing")
         # 출발점은 **기록된** 상태다. journal 이 생기기 전부터 active 이던
         # cohort 는 기록이 없고(`None`), 그 경우도 얼릴 수 있어야 한다 — 게시는
         # lifecycle 을 움직이지 않으므로 "active 기록" 은 없는 것이 정상이다.
@@ -3384,6 +3525,27 @@ def _ledger_row(led: Path, cohort_id: str) -> dict:
     return row
 
 
+def _write_ledger_status(led: Path, cohort_id: str, status: str) -> None:
+    """cohort status 한 필드만 **원자적으로** 옮긴다 (54차 P0-1).
+
+    `freezing` 은 동결이 시작됐다는 durable 신호다. 발급자는 `active` 만 받으
+    므로, 이 한 줄이 굳는 순간부터 새 실행권은 열리지 않는다.
+    """
+    import yaml
+
+    from tools.preserve import _atomic_write_text
+
+    led = Path(led)
+    doc = yaml.safe_load(led.read_text(encoding="utf-8")) or {}
+    row = next((c for c in doc.get("cohorts") or []
+                if c.get("cohort_id") == cohort_id), None)
+    if row is None:
+        raise SystemExit(f"✗ 원장에 cohort {cohort_id!r} 이 없다")
+    row["status"] = str(status)
+    _atomic_write_text(led, yaml.safe_dump(doc, allow_unicode=True,
+                                           sort_keys=False))
+
+
 def _write_ledger_doc(led: Path, cohort_id: str, reason: str) -> None:
     """freeze 의 **두 번째** 쓰기 — 원장 전이. 재시도해도 같은 결과다.
 
@@ -3401,8 +3563,14 @@ def _write_ledger_doc(led: Path, cohort_id: str, reason: str) -> None:
         raise SystemExit(f"✗ 원장에 cohort {cohort_id!r} 이 없다")
     row["status"] = "frozen"
     row["frozen_reason"] = str(reason)
-    led.write_text(yaml.safe_dump(doc, allow_unicode=True, sort_keys=False),
-                   encoding="utf-8")
+    # ★ 54차 P0-3 — 제자리 `write_text()` 는 원자적이지 않다. 평범한 ENOSPC
+    #   하나면 원장이 반쪽으로 남고 이후 모든 재시도가 ParserError 로 막혔다
+    #   (리뷰어 실측). 발급자가 이미 쓰는 규칙을 **그대로** 쓴다 — 같은 규칙을
+    #   두 곳에서 다르게 정하면 약한 쪽이 실효 규칙이다.
+    from tools.preserve import _atomic_write_text
+
+    _atomic_write_text(led, yaml.safe_dump(doc, allow_unicode=True,
+                                           sort_keys=False))
 
 
 def backfill_frozen_markers() -> list:

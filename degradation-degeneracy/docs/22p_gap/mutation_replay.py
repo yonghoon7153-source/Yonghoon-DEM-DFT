@@ -24,6 +24,7 @@ import datetime as dt
 import hashlib
 import json
 import pathlib
+import re
 import shutil
 import subprocess
 import sys
@@ -345,10 +346,10 @@ MUTANTS = [
      None),          # 아래 주석 참조
     # ── 49차 (게이트 48차 반증 조건) ──────────────────────────────────────
     ("precheck-tells-new-from-resume", PRESERVE,
-     "    path = _claim_path(leg_id, claims_root)\n"
+     "    path = _claim_path(leg_id, claims_root_for_ledger(ledger))\n"
      "    if path.is_file():\n"
      "        if token_file is None:",
-     "    path = _claim_path(leg_id, claims_root)\n"
+     "    path = _claim_path(leg_id, claims_root_for_ledger(ledger))\n"
      "    if False:\n"
      "        if token_file is None:",
      "precheck_tells_a_new_run_from_an_owned_resume"),
@@ -381,7 +382,7 @@ MUTANTS = [
      '            "finalize_leg() 는 `token` 또는 `token_file` 중 정확히 하나를 "',
      "finalize_requires_the_owner_credential"),
     ("finalize-holds-the-claim-lock", PRESERVE,
-     "    with _ledger_lock(_claim_path(leg_id, claims_root)):",
+     "    with _ledger_lock(_claim_path(leg_id, claims_root_for_ledger(ledger))):",
      "    if True:",
      "canonical_lock_order_is_declared_and_finalize_holds_the_claim"),
     ("finalize-rechecks-in-the-ledger-lock", PRESERVE,
@@ -393,8 +394,7 @@ MUTANTS = [
      '                    "run_spec_digest": claim.run_spec_digest}',
      "finalize_rechecks_the_whole_authority_inside_the_ledger_lock"),
     ("crash-recovery-is-idempotent", PRESERVE,
-     "    done = _already_finalized(leg_id, token, ledger=ledger,\n"
-     "                              claims_root=claims_root)",
+     "    done = _already_finalized(leg_id, token, ledger=ledger)",
      "    done = None",
      "finalize_is_idempotent_after_a_crash_before_cleanup"),
     ("crash-recovery-needs-the-credential", PRESERVE,
@@ -670,7 +670,7 @@ MUTANTS = [
     # ★ P1-O — fail-closed 는 정지가 아니다. 남은 전이를 완주해야 한다.
     ("freeze-completes-a-half-written-transition", RP,
      "        if recorded == \"frozen\":\n"
-     "            if row.get(\"status\") == \"active\":",
+     "            if row.get(\"status\") in (\"active\", \"freezing\"):",
      "        if recorded == \"frozen\":\n"
      "            if False:",
      "freeze_is_retryable_after_a_crash_between_its_two_writes"),
@@ -766,7 +766,11 @@ MUTANTS = [
      "            os.write(fd, body)",
      "short_write_does_not_leave_a_truncated_claim"),
     ("token-write-is-all-or-nothing", PRESERVE,
+     "        fd = os.open(tmp, os.O_CREAT | os.O_EXCL | os.O_WRONLY | _O_BIN, 0o600)\n"
+     "        try:\n"
      "            _write_all(fd, body, tmp)",
+     "        fd = os.open(tmp, os.O_CREAT | os.O_EXCL | os.O_WRONLY | _O_BIN, 0o600)\n"
+     "        try:\n"
      "            os.write(fd, body)",
      "short_write_does_not_leave_a_truncated_claim"),
     # ★ P0-2 — 반환값도 자기 보고다. 권한 파일은 실물에서 다시 읽는다.
@@ -776,13 +780,14 @@ MUTANTS = [
      "lying_write_is_caught_by_reading_the_bytes_back"),
     # ★ P0-3 — 경로의 배타는 **경로 위**에 있어야 한다 (claim lock 은 다리마다 다르다).
     ("attempt-path-is-exclusive", PRESERVE,
-     "    with _ledger_lock(_attempt_path_lock(token_file)), \\\n"
-     "         _ledger_lock(cp):              # LOCK_ORDER: attempt_path \u2192 claim",
-     "    with _ledger_lock(cp):",
+     "    _assert_token_path_disjoint(token_file, claims_root, ledger)\n"
+     "    with _lifecycle_locks(leg_id, token_file, claims_root) as cp:",
+     "    _assert_token_path_disjoint(token_file, claims_root, ledger)\n"
+     "    with _lifecycle_locks(leg_id, None, claims_root) as cp:",
      "two_legs_that_share_one_attempt_file_cannot_interleave"),
     # ★ P0-4 — 증거의 위치를 caller 가 고를 수 없다.
     ("freeze-authority-is-not-caller-selected", RP,
-     "    root = claims_root_for(REPO)",
+     "    root = claims_root_for_ledger(_ledger_path())",
      '    root = REPO / "not-the-claims-root"',
      "freeze_cannot_be_pointed_at_an_empty_claims_directory"),
     # ★ P0-5 — 쓰기 직전에 다시 읽는다 (lock 밖에서 읽은 doc 을 되쓰면 증거가 사라진다).
@@ -853,6 +858,85 @@ MUTANTS = [
      "    h.update(b\"\\x00\")",
      "    pass",
      "receipt_is_bound_to_the_exact_mutant"),
+    # ─────────────────────────────────────────────────────────────────────
+    # 54차 방어 — 게이트 53 반례
+    # ─────────────────────────────────────────────────────────────────────
+    # ★ P0-1 — 승인 commit 은 plan 한 줄이 아니라 그때의 authority 를 본다.
+    ("admission-rechecks-the-cohort-at-commit", PRESERVE,
+     "            _assert_cohort_admits(doc, row, leg_id)",
+     "            pass",
+     "issuer_cannot_admit_a_run_into_a_cohort_that_froze_meanwhile"),
+    # ★ P0-1 — 동결의 **시작**이 발급자에게 보여야 한다.
+    ("freeze-linearizes-its-start", RP,
+     '        if row.get("status") == "active":\n'
+     '            _write_ledger_status(led, cohort_id, "freezing")',
+     "        pass",
+     "issuer_refuses_while_a_freeze_is_half_committed"),
+    # ★ P0-1 — claim 의 자리는 원장이 정한다 (caller 가 아니다).
+    ("claims-root-comes-from-the-ledger", PRESERVE,
+     '    return Path(ledger or DEFAULT_LEDGER).resolve().parent / "_claims"',
+     '    return Path(DEFAULT_LEDGER).resolve().parent / "_claims"',
+     "issuer_cannot_choose_where_its_claim_lives"),
+    # ★ P0-2 — 정리 경로도 같은 lock 순서를 쓴다.
+    ("release-cleanup-holds-the-attempt-path", PRESERVE,
+     "    with _lifecycle_locks(claim.leg_id, token_file, claim.path.parent):",
+     "    with _ledger_lock(claim.path):",
+     "release_cleanup_cannot_delete_another_legs_token"),
+    ("finalize-recovery-holds-the-claim-lock", PRESERVE,
+     "        with _lifecycle_locks(leg_id, token_file, claims_root) as cp:\n"
+     "            cp.unlink(missing_ok=True)",
+     "        if True:\n"
+     "            cp = _claim_path(leg_id, claims_root)\n"
+     "            cp.unlink(missing_ok=True)",
+     "finalize_recovery_branch_holds_the_claim_lock"),
+    # ★ P0-3 — 동결의 원장 쓰기도 원자적이어야 한다.
+    ("freeze-ledger-write-is-atomic", RP,
+     "    from tools.preserve import _atomic_write_text\n"
+     "\n"
+     "    _atomic_write_text(led, yaml.safe_dump(doc, allow_unicode=True,\n"
+     "                                           sort_keys=False))\n"
+     "\n"
+     "\n"
+     "def backfill_frozen_markers",
+     "    led.write_text(yaml.safe_dump(doc, allow_unicode=True,\n"
+     "                                  sort_keys=False), encoding=\"utf-8\")\n"
+     "\n"
+     "\n"
+     "def backfill_frozen_markers",
+     "partial_write_during_freeze_leaves_the_ledger_readable"),
+    # ★ P0-4 — 목적지의 frozen 은 단조다.
+    ("frozen-destination-is-monotonic", RP,
+     "        if rec[\"to\"] == \"frozen\":\n"
+     "            out.setdefault(str(d), rec[\"cohort_id\"])",
+     "        if rec[\"to\"] == \"frozen\":\n"
+     "            out[str(d)] = rec[\"cohort_id\"]\n"
+     "        else:\n"
+     "            out.pop(str(d), None)",
+     "later_active_record_cannot_thaw_a_frozen_destination"),
+    # ★ P0-5 — module scope 의 표현식도 상태를 정한다.
+    ("module-expr-binds-its-target", RP,
+     "                root = _expr_root_name(node.value)",
+     "                root = None if True else _expr_root_name(node.value)",
+     "module_scope_expression_statement_is_fail_closed"),
+    ("dunder-as-a-string-is-still-a-dunder", RP,
+     "        if isinstance(sub, ast.Call):\n"
+     "            for arg in list(sub.args) + [k.value for k in sub.keywords]:",
+     "        if False:\n"
+     "            for arg in list(sub.args) + [k.value for k in sub.keywords]:",
+     "dunder_named_by_a_string_literal_is_still_a_dunder"),
+    # ★ P1 — 영수증이 어느 변이의 것인지 report 가 말해야 한다.
+    ("receipt-carries-the-mutant-marker", MR,
+     "        ids = {t.get(\"nodeid\") or \"\" for t in data.get(\"tests\", [])}\n"
+     "        if not any(f\"test_mutant_{mid}\" in n for n in ids):",
+     "        ids = {t.get(\"nodeid\") or \"\" for t in data.get(\"tests\", [])}\n"
+     "        if False:",
+     "genuine_report_from_another_mutant_is_refused"),
+    ("coverage-checks-the-recorded-head", MR,
+     "    if _assert_heads_are_real(paths) != 0:\n"
+     "        return 1",
+     "    if False:\n"
+     "        return 1",
+     "recorded_head_must_exist_in_this_repository"),
     # ★ P1 — "모르겠다" 는 "물었다" 가 아니다.
     ("receipt-verdict-is-fail-closed", MR,
      "        if bool(v.get(\"bit\")) != derived:\n"
@@ -1075,7 +1159,27 @@ def _nodes(kexpr: str) -> list[str]:
                   if "::" in l and l.strip().startswith("tests/"))
 
 
-def _run(kexpr: str) -> dict:
+def _marker_id(name: str) -> str:
+    """이 변이만의 **표식 이름** (54차 P1).
+
+    report 바이트가 스스로 "나는 이 변이의 것" 이라고 말하게 만든다. 기대 node
+    도 증인도 같은 scenario 쌍이 실제로 있으므로(실측 9쌍), report 내용만으로는
+    구별할 수 없다 — 그래서 runner 가 그 실행에만 있는 node 를 하나 넣는다.
+    """
+    return "m" + hashlib.sha256(_scenario_binding(name)).hexdigest()[:16]
+
+
+def _write_marker(sandbox: pathlib.Path, name: str) -> str:
+    """sandbox 에 이 변이만의 시험 node 를 하나 놓는다 (54차 P1)."""
+    mid = _marker_id(name)
+    (sandbox / "tests" / f"test_mutation_marker_{mid}.py").write_text(
+        f'"""변이 표식 — 이 실행에만 있는 node (54차 P1)."""\n\n\n'
+        f"def test_mutant_{mid}():\n"
+        f"    assert True\n", encoding="utf-8")
+    return mid
+
+
+def _run(kexpr: str, marker: str = "") -> dict:
     """`-k` 를 실행하고 **node 별 결과**를 JSON report 로 돌려준다.
 
     ★ 45차 — 44차 runner 는 baseline 없이 `rc != 0` 이면 전부 "물었다" 로
@@ -1087,7 +1191,8 @@ def _run(kexpr: str) -> dict:
         rep = pathlib.Path(fh.name)
     try:
         r = subprocess.run(
-            [sys.executable, "-m", "pytest", "tests/", "-q", "-k", kexpr,
+            [sys.executable, "-m", "pytest", "tests/", "-q", "-k",
+             f"({kexpr}) or test_mutant_{marker}" if marker else kexpr,
              "-p", "no:randomly", "--no-header",
              "--json-report", f"--json-report-file={rep}"],
             cwd=_sandboxed(ROOT), capture_output=True, text=True, timeout=1800)
@@ -2687,9 +2792,12 @@ def _replay(plan, bad, observed_all, a, sel=None) -> int:
             nodes = _nodes(kexpr)
             if not nodes:
                 raise _ReplayError(f"`-k {kexpr}` 가 아무 시험도 안 고른다")
-            before = _run(kexpr)
+            # ★ 54차 P1 — 이 변이만의 표식 node 를 sandbox 에 놓는다.
+            #   report 바이트가 스스로 어느 변이의 것인지 말하게 된다.
+            mid = _write_marker(_sandboxed(ROOT), name)
+            before = _run(kexpr, mid)
             path.write_bytes(mutated)
-            after = _run(kexpr)
+            after = _run(kexpr, mid)
         except _ReplayError as e:
             print(f"{'★ 실행오류':10s} {name:30s} {e}")
             bad.append(f"{name}: {e}")
@@ -2906,6 +3014,8 @@ def verify_receipts(path, scen: dict, binding: dict) -> int:
             print(f"✗ {path}: {name} 의 report digest 가 다르다 — 결과를 "
                   "나중에 고쳤거나 **다른 변이의 영수증**을 붙였다")
             return 1
+        if _report_identity_rc(path, name, rep_dir) != 0:
+            return 1
         derived = _verdict_from_reports(name, rep_dir)
         # ★ 53차 P1 — **"모르겠다" 는 "물었다" 가 아니다.** 52차는 여기 앞에
         #   `derived is not None and` 를 두어 유도 실패를 건너뛰었고, 0바이트
@@ -2918,6 +3028,64 @@ def verify_receipts(path, scen: dict, binding: dict) -> int:
                   + (" — report 를 읽을 수 없거나 기대 node 가 없다"
                      if derived is None else ""))
             return 1
+    return 0
+
+
+def _refuse(msg: str) -> int:
+    print(msg)
+    return 1
+
+
+def _report_identity_rc(path, name: str, rep_dir) -> int:
+    """저장된 report 가 **이 변이의 증인**을 담고 있는가 (54차 P1).
+
+    53차는 영수증 digest 를 exact mutant 에 결속했다. 그런데 `_receipt_digest()`
+    는 공개 함수이므로 조각을 쓰는 쪽이 다시 계산할 수 있고, 리뷰어는 다른
+    mutant 의 **진짜** report 를 그대로 옮긴 뒤 digest 와 transcript 만 다시
+    계산해 통과시켰다 (`new_pytest_runs=0`).
+
+    결속이 조각의 **밖**에 있어야 한다. 등록부는 scenario 마다 실패의 의미
+    증인을 이미 선언하고 있고(`EXPECT[name]["witness"]`), 그것은 기대 node 가
+    같은 쌍에서도 서로 다르다. 그러므로 report 바이트에서 그 증인을 다시
+    확인하면, 남의 report 는 자기 증인을 담고 있지 않아 걸린다.
+    """
+    # ★ 54차 P1 — 먼저 **표식**을 본다. 기대 node 도 증인도 같은 scenario 쌍이
+    #   실제로 있으므로(실측 9쌍) 증인만으로는 남의 report 를 구별할 수 없다.
+    mid = _marker_id(name)
+    for phase in ("before", "after"):
+        f = pathlib.Path(rep_dir) / f"{name}.{phase}.json"
+        try:
+            data = json.loads(f.read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError) as exc:
+            return _refuse(f"✗ {path}: {name} 의 {phase} report 를 읽을 수 "
+                             f"없다: {exc}")
+        ids = {t.get("nodeid") or "" for t in data.get("tests", [])}
+        if not any(f"test_mutant_{mid}" in n for n in ids):
+            return _refuse(
+                f"✗ {path}: {name} 의 {phase} report 에 이 변이의 표식이 없다 "
+                f"(test_mutant_{mid}) — 다른 변이의 report 를 이름만 바꿔 붙인 "
+                "것이 아닌지 본다")
+    exp = EXPECT.get(name) or {}
+    wit = exp.get("witness") or {}
+    if not wit:
+        return _refuse(
+            f"✗ {path}: {name} 의 의미 증인이 선언되지 않았다 — 무엇으로 물었는지"
+            " 말하지 않는 영수증은 영수증이 아니다")
+    f = pathlib.Path(rep_dir) / f"{name}.after.json"
+    try:
+        data = json.loads(f.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError) as exc:
+        return _refuse(f"✗ {path}: {name} 의 after report 를 읽을 수 없다: {exc}")
+    seen = {t.get("nodeid"): _last_line(((t.get("call") or {}).get("longrepr")) or "")
+            for t in data.get("tests", [])}
+    for node, want in sorted(wit.items()):
+        got = seen.get(node)
+        if got is None or str(want) not in got:
+            return _refuse(
+                f"✗ {path}: {name} 의 report 가 이 변이의 증인을 담고 있지 "
+                f"않다 ({node}) — 기대 {str(want)[:60]!r} · 실제 "
+                f"{str(got)[:60]!r}. 다른 변이의 report 를 이름만 바꿔 붙인 "
+                "것이 아닌지 본다")
     return 0
 
 
@@ -2948,6 +3116,42 @@ def _verdict_from_reports(name: str, rep_dir) -> bool | None:
     return want.issubset(after) and not (want & before)
 
 
+def _assert_heads_are_real(paths) -> int:
+    """조각이 적은 `head` 가 **이 저장소에 실재하는 commit** 인가 (54차 P1).
+
+    조각들은 같은 HEAD 에서 나와야 하고, 그 HEAD 는 이 저장소 역사 안에 있어야
+    한다. (증거를 담은 commit 자체는 그 뒤에 오므로 "현재 HEAD 와 같은가" 는
+    물을 수 없다 — 물을 수 있는 것은 "실재하는가" 와 "하나인가" 다.)
+    """
+    heads = set()
+    for p in paths:
+        try:
+            rec = json.loads(pathlib.Path(p).read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError) as exc:
+            print(f"✗ {p}: 조각을 읽을 수 없다: {exc}")
+            return 1
+        heads.add(str((rec.get("binding") or {}).get("head") or ""))
+    if len(heads) != 1:
+        print(f"✗ 조각들이 서로 다른 HEAD 에서 나왔다: {sorted(heads)} — "
+              "합집합은 **한 코드 상태**에 대한 주장이어야 한다")
+        return 1
+    head = heads.pop()
+    if not re.fullmatch(r"[0-9a-f]{40}", head):
+        print(f"✗ 조각의 HEAD 가 commit 형식이 아니다: {head!r}")
+        return 1
+    try:
+        rc = subprocess.run(["git", "cat-file", "-e", head + "^{commit}"],
+                            cwd=str(ROOT), capture_output=True).returncode
+    except OSError as exc:                                # pragma: no cover
+        print(f"✗ HEAD 실재를 확인할 수 없다 ({exc})")
+        return 1
+    if rc != 0:
+        print(f"✗ 조각이 적은 HEAD 가 이 저장소에 없다: {head} — 기록만 하고 "
+              "검사하지 않는 값은 결속이 아니다")
+        return 1
+    return 0
+
+
 def check_coverage(paths) -> int:
     """조각 합집합이 **등록부 전체**를 덮었는가 (49차 P1).
 
@@ -2955,6 +3159,11 @@ def check_coverage(paths) -> int:
     전부 한 번 이상 **돌았고 물었어야** 하고, 신고는 전부 신고로 나타나야 한다.
     """
     reg = _registry()
+    # ★ 54차 P1 — 기록만 하고 안 보던 `head` 를 본다. 리뷰어는 모든 HEAD 를
+    #   40개의 `0` 으로 바꾸고도 rc 0 을 받았다 — 적기만 하고 검사하지 않는
+    #   값은 결속이 아니라 장식이다.
+    if _assert_heads_are_real(paths) != 0:
+        return 1
     # ★ 50차 P1 — 합집합을 세기 전에 **등록부 자체**가 성립하는지 본다.
     #   no-op 변이·죽은 지점·빈 기대 집합이 있으면 그 위에서 센 수는 뜻이 없다.
     if check_preimages() != 0:

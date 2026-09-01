@@ -3686,7 +3686,11 @@ def _load_ledger(ledger=None) -> dict:
 #: cohort 상태 enum — publisher(`row_projection._LEDGER_STATUS`)와 같은 값이다.
 #: 두 곳에 적혀 있으므로 `test_the_two_parsers_agree_on_the_cohort_contract` 가
 #: 둘이 갈라지지 않는지 본다.
-COHORT_STATUS = ("active", "frozen")
+#: ★ 54차 P0-1 — `freezing` 이 들어온다. 동결의 **시작**이 발급자에게 보이지
+#:   않으면, 사전검사를 지난 발급이 얼리는 중인 cohort 로 들어간다 (리뷰어가
+#:   두 schedule 로 실측했다: 대기 중 freeze 완주 · journal 만 쓰고 죽은 freeze).
+#:   동결을 원장에 먼저 선형화하면 그 창이 **표현 불가능**해진다.
+COHORT_STATUS = ("active", "freezing", "frozen")
 
 
 def _cohort_dir_of(cohort: dict, where) -> Path:
@@ -3725,8 +3729,7 @@ SMOKE_NAMESPACE = REPO_ROOT / "results" / "_smoke"
 
 def assert_run_is_authorized(leg_id: str, phase: str, paths, run_spec: dict,
                              source_digest: str, ledger=None,
-                             claims_root=None, token: str | None = None,
-                             token_file=None):
+                             token: str | None = None, token_file=None):
     """비싼 계산 **직전**에 부르는 단 하나의 gate (47차 P0-2 조건 11-c).
 
     46차 gate 는 `run.sh` **안에만** 있었다. `--leg` 는 shell 이 소비했고
@@ -3748,6 +3751,8 @@ def assert_run_is_authorized(leg_id: str, phase: str, paths, run_spec: dict,
     #   새어 나간다). 파일이 있으면 그것이 곧 "이미 발급된 실행에 붙어라" 다.
     if token_file is not None and Path(token_file).is_file():
         token = read_token_file(token_file)
+    # ★ 54차 P0-1 — claim 의 자리는 **원장이 정한다** (caller 가 아니다).
+    claims_root = claims_root_for_ledger(ledger)
     path = _claim_path(leg_id, claims_root)
     if path.is_file():
         # ★ 48차 P0-3 — **자동 재개하지 않는다.** 47차는 claim 이 보이면
@@ -3759,7 +3764,7 @@ def assert_run_is_authorized(leg_id: str, phase: str, paths, run_spec: dict,
                 f"{leg_id!r} 은 이미 실행 중이다 (claim: {path}) — 두 번째 "
                 "실행을 시작할 수 없다. 중단된 실행을 이으려면 그 실행의 "
                 "소유 증명(token 파일)을 주라")
-        claim = resume_claim(leg_id, claims_root, token=token, ledger=ledger)
+        claim = resume_claim(leg_id, token=token, ledger=ledger)
         want = run_spec_digest(run_spec)
         if claim.run_spec_digest != want:
             raise PreserveError(
@@ -3776,11 +3781,18 @@ def assert_run_is_authorized(leg_id: str, phase: str, paths, run_spec: dict,
         return claim
     # 아직 없다 — 지금 발급한다. `token_file` 을 준 실행은 **coordinator** 이므로
     # 그 자리에 소유 증명을 남겨 다음 phase 가 이어받게 한다.
-    if token_file is not None:
-        return open_leg_run(leg_id, run_spec, source_digest, token_file,
-                            ledger=ledger, claims_root=claims_root)
-    return claim_planned_leg(leg_id, run_spec, source_digest,
-                             ledger=ledger, claims_root=claims_root)
+    if token_file is None:
+        # ★ 54차 P0-6 — `--attempt-file` 없는 직접 호출은 **발급하지 않는다.**
+        #   53차까지 이 경로는 소유 증명을 아무 데도 남기지 않는 claim 을 만들
+        #   수 있었다 (§0 에 신고했고, 리뷰어가 그 위에서 회수 불가 상태를
+        #   실측했다). 발급은 coordinator 의 일이다.
+        raise PreserveError(
+            "plan",
+            f"{leg_id!r} 의 실행권을 발급하려면 소유 증명 파일 경로가 있어야 "
+            "한다 (`--attempt-file`) — 그 파일이 중단·재개·되돌림의 유일한 "
+            "통로다. `./run.sh` 가 coordinator 다")
+    return open_leg_run(leg_id, run_spec, source_digest, token_file,
+                        ledger=ledger)
 
 
 def is_inside_namespace(path, namespace) -> bool:
@@ -4414,15 +4426,30 @@ def _ledger_lock(path: Path):
 
 
 def _atomic_write_text(path: Path, text: str) -> None:
-    """원장을 **원자적으로** 굳힌다 — 부분 쓰기가 보이지 않게 (48차 P0-6)."""
+    """원장을 **원자적으로** 굳힌다 — 부분 쓰기가 보이지 않게 (48차 P0-6).
+
+    ★ 54차 P0-3 — 같은 규칙을 **동결의 원장 쓰기**도 쓴다. 53차까지 그쪽은
+      `led.write_text()` 로 제자리를 잘랐고, 평범한 ENOSPC 하나면 원장이
+      반쪽으로 남아 이후 모든 재시도가 ParserError 로 막혔다 (리뷰어 실측).
+      한 규칙을 두 곳에서 다르게 정하면 **약한 쪽이 실효 규칙**이다.
+
+      그리고 temp 도 `_write_all()` + read-back 으로 굳힌다 (53차 P0-2 와 같은
+      이유다 — 반환값은 자기 보고다). 실패하면 temp 만 남고 원본은 그대로다.
+    """
     path = Path(path)
+    body = text.encode("utf-8")
     tmp = path.with_name(f".{path.name}.{uuid.uuid4().hex}.tmp")
-    tmp.write_text(text, encoding="utf-8")
-    fd = os.open(tmp, os.O_RDONLY)
     try:
-        os.fsync(fd)
-    finally:
-        os.close(fd)
+        fd = os.open(tmp, os.O_CREAT | os.O_EXCL | os.O_WRONLY | _O_BIN, 0o644)
+        try:
+            _write_all(fd, body, tmp)
+            os.fsync(fd)
+        finally:
+            os.close(fd)
+        _assert_bytes_on_disk(tmp, body, "원장")
+    except BaseException:
+        tmp.unlink(missing_ok=True)
+        raise
     os.replace(tmp, path)
     dfd = os.open(path.parent, os.O_RDONLY)
     try:
@@ -4446,6 +4473,20 @@ def _atomic_write_json(path: Path, rec: dict) -> None:
         os.fsync(dfd)
     finally:
         os.close(dfd)
+
+
+def claims_root_for_ledger(ledger=None) -> Path:
+    """실행권이 사는 곳 — **원장이 정한다** (54차 P0-1).
+
+    53차는 동결에서만 인자를 없앴고 발급 API 는 여전히 임의 `claims_root` 를
+    받았다. 리뷰어는 alternate root 에 살아 있는 claim 을 두고 canonical root 는
+    비어 있다고 보게 만들어 freeze 를 완주시켰다 (`alternate_claim=true ·
+    canonical_claim_count=0 · ledger_plan_status=running`).
+
+    두 쪽이 **같은 authority** 에서 자리를 유도하면 그 schedule 이 표현
+    불가능해진다. 그 authority 는 원장이다 — 계획·cohort·동결이 전부 거기 있다.
+    """
+    return Path(ledger or DEFAULT_LEDGER).resolve().parent / "_claims"
 
 
 def claims_root_for(repo_root) -> Path:
@@ -4473,6 +4514,27 @@ def _claim_path(leg_id: str, claims_root=None) -> Path:
     """
     check_id(leg_id)
     return Path(claims_root or DEFAULT_CLAIMS_ROOT) / f"{leg_id}.claim"
+
+
+def _assert_cohort_admits(doc: dict, row: dict, leg_id: str) -> None:
+    """이 다리의 cohort 가 **지금** 새 실행을 받는가 (54차 P0-1).
+
+    `active` 하나만 받는다. `freezing` 은 동결이 시작됐다는 durable 신호이고,
+    `frozen` 은 끝났다는 신호다. 둘 다 "더 자라지 않는다" 의 표현이다.
+    """
+    cid = row.get("cohort_id")
+    coh = next((c for c in doc.get("cohorts") or []
+                if c.get("cohort_id") == cid), None)
+    if coh is None:
+        raise PreserveError(
+            "plan", f"{leg_id!r} 의 cohort {cid!r} 가 원장에 없다")
+    st = coh.get("status")
+    if st != "active" or coh.get("frozen_reason"):
+        raise PreserveError(
+            "plan",
+            f"{leg_id!r} 의 cohort {cid!r} 가 지금 active 가 아니다 ({st!r}) — "
+            "동결이 시작된(또는 끝난) cohort 에서는 실행권을 발급하지 않는다. "
+            "승인은 사전검사 시점이 아니라 **commit 시점**의 상태로 판정한다")
 
 
 def _mark_plan_running(leg_id: str, ledger=None) -> None:
@@ -4508,6 +4570,12 @@ def _mark_plan_running(leg_id: str, ledger=None) -> None:
                 raise PreserveError(
                     "plan", f"{leg_id!r} 의 계획 상태가 {row.get('status')!r} 이라 "
                             "running 으로 옮길 수 없다")
+            # ★ 54차 P0-1 — **승인 commit 은 plan 한 줄이 아니라 그때의
+            #   authority 를 본다.** 53차는 사전검사에서만 cohort 를 봤고,
+            #   그 뒤 freeze 가 완주해도 여기서는 plan status 만 다시 읽었다
+            #   (리뷰어 실측: `cohort=frozen · plan=running · release 불가`).
+            #   같은 lock 안에서 다시 묻는다 — `freezing` 도 거부한다.
+            _assert_cohort_admits(doc, row, leg_id)
             row["status"] = "running"
             # ↓ 이 줄부터 **커밋 여부가 불확실**하다. `_atomic_write_text()` 도,
             #   그 뒤 lock 을 놓는 것도, 어디서 실패했는지 caller 는 모른다.
@@ -4559,8 +4627,7 @@ class PlanWriteUncertain(PreserveError):
 
 
 def claim_planned_leg(leg_id: str, run_spec: dict, source_digest: str,
-                      ledger=None, claims_root=None,
-                      token: str | None = None) -> LegClaim:
+                      ledger=None, token: str | None = None) -> LegClaim:
     """실행 권한을 **원자적으로 하나만** 발급한다 (47차 P0-1 · P0-2).
 
     46차 `assert_planned_leg()` 는 read-only predicate 였다. 같은 row 로 몇
@@ -4587,12 +4654,26 @@ def claim_planned_leg(leg_id: str, run_spec: dict, source_digest: str,
             f"(계획 {e['run_spec_digest'][:16]} ≠ 지금 {want[:16]}) — 계획은 "
             "이름이 아니라 **무엇을 실행할지**를 승인한다")
 
+    # ★ 54차 P0-6 — 소유 증명은 **caller 가 준다.** 53차는 `token=None` 이면
+    #   지역변수로 하나 만들었고, 그래서 원장 commit 뒤 오류가 나면 claim 은
+    #   남고 소유 증명은 **어디에도 없는** 상태가 됐다 (리뷰어 실측:
+    #   `plan=running · claim=true · token_files=[]`). 그 다리는 재개도
+    #   되돌림도 불가능하다 — 53차가 주장한 "최악은 release 한 번" 이 거짓이었다.
+    #
+    #   durable 발급의 유일한 정상 경로는 `open_leg_run()` 이다 (token 을 먼저
+    #   디스크에 굳히고 그 값으로 claim 을 만든다). 여기서 암묵적으로 만들지
+    #   않으면 그 불변식이 타입 수준에서 강제된다.
+    if not _nonempty_str(token or ""):
+        raise PreserveError(
+            "plan",
+            f"{leg_id!r} 의 실행권을 소유 증명 없이 발급할 수 없다 — durable "
+            "발급은 `open_leg_run()`(token 을 먼저 파일로 굳힌다)만 한다. "
+            "메모리에만 있는 소유 증명은 실패 한 번에 사라지고, 그러면 그 "
+            "다리는 재개도 되돌림도 할 수 없다")
+    claims_root = claims_root_for_ledger(ledger)
     path = _claim_path(leg_id, claims_root)
     path.parent.mkdir(parents=True, exist_ok=True)
     attempt_id = uuid.uuid4().hex
-    # ★ 50차 P0 — token 을 **밖에서** 받을 수 있다. `open_leg_run()` 이 소유
-    #   증명 파일을 먼저 굳히고 그 token 으로 claim 을 만들기 위해서다 (아래).
-    token = token or _new_token()
     rec = {"leg_id": leg_id, "cohort_id": e["cohort_id"],
            "attempt_id": attempt_id, "attempt_verifier": _token_verifier(token),
            "run_spec_digest": want, "source_digest": source_digest,
@@ -4656,7 +4737,7 @@ def _read_claim_record(leg_id: str, claims_root=None) -> tuple[Path, dict]:
     return path, rec
 
 
-def resume_claim(leg_id: str, claims_root=None, token: str | None = None,
+def resume_claim(leg_id: str, token: str | None = None,
                  ledger=None) -> LegClaim:
     """중단된 실행을 **같은 attempt 로** 이어받는다 (재계산 없이 finalize).
 
@@ -4674,7 +4755,7 @@ def resume_claim(leg_id: str, claims_root=None, token: str | None = None,
       `token=None` 은 **진단용 읽기**이며 phase 를 쓸 수 없고 credential 도
       들고 있지 않은 claim 을 돌려준다.
     """
-    path, rec = _read_claim_record(leg_id, claims_root)
+    path, rec = _read_claim_record(leg_id, claims_root_for_ledger(ledger))
     if token is not None:
         if not secrets.compare_digest(_token_verifier(token),
                                       str(rec["attempt_verifier"])):
@@ -4918,8 +4999,34 @@ def _attempt_path_lock(token_file) -> Path:
     return p.with_name(p.name + ".attempt")
 
 
+@contextlib.contextmanager
+def _lifecycle_locks(leg_id: str, token_file=None, claims_root=None):
+    """claim·token 을 바꾸는 **모든** 경로가 공유하는 임계 구역 (54차 P0-2).
+
+    53차는 `LOCK_ORDER` 를 선언하고 **발급에만** 적용했다. release·finalize·
+    복구의 정리 경로는 claim lock 만 잡거나 아무 것도 안 잡았고, 리뷰어는 둘 다
+    쳤다:
+
+      · L 의 release 가 자기 token 을 확인한 뒤 멈춘 사이 M 이 같은 경로에
+        정상 발급하고, L 이 `unlink` 를 재개해 **M 의** token 을 지웠다.
+      · finalize 복구가 lock 없이 claim 을 지운 뒤, 이미 claim lock 안에 있던
+        늦은 `phase_done()` 이 그 claim 을 **다시 만들었다**.
+
+    술어와 행위가 같은 임계 구역에 있어야 한다는 규칙은 발급에만 적용되는 것이
+    아니다. 순서는 `LOCK_ORDER` 하나뿐이다: attempt_path → claim → ledger.
+    """
+    cp = _claim_path(leg_id, claims_root)
+    cp.parent.mkdir(parents=True, exist_ok=True)
+    if token_file is None:
+        with _ledger_lock(cp):                              # LOCK_ORDER: claim
+            yield cp
+    else:
+        with _ledger_lock(_attempt_path_lock(token_file)), _ledger_lock(cp):
+            yield cp                       # LOCK_ORDER: attempt_path → claim
+
+
 def open_leg_run(leg_id: str, run_spec: dict, source_digest: str, token_file,
-                 ledger=None, claims_root=None) -> LegClaim:
+                 ledger=None) -> LegClaim:
     """coordinator 가 실행권을 **한 번** 발급하고 소유 증명을 파일로 내놓는다.
 
     발급 자체는 `claim_planned_leg()` 이다 — 계획 대조·원자적 `O_EXCL`·원장
@@ -4950,11 +5057,9 @@ def open_leg_run(leg_id: str, run_spec: dict, source_digest: str, token_file,
     #   이므로 공유된 `--attempt-file` 위에서 두 발급이 나란히 통과했다. 경로의
     #   배타는 경로 위에 둔다 (`_attempt_path_lock`), 그리고 free-check 부터
     #   발급 확정까지 **그 안**에서 끝낸다.
+    claims_root = claims_root_for_ledger(ledger)
     _assert_token_path_disjoint(token_file, claims_root, ledger)
-    cp = _claim_path(leg_id, claims_root)
-    cp.parent.mkdir(parents=True, exist_ok=True)
-    with _ledger_lock(_attempt_path_lock(token_file)), \
-         _ledger_lock(cp):              # LOCK_ORDER: attempt_path → claim
+    with _lifecycle_locks(leg_id, token_file, claims_root) as cp:
         if cp.is_file():
             raise PreserveError(
                 "plan",
@@ -4971,8 +5076,7 @@ def open_leg_run(leg_id: str, run_spec: dict, source_digest: str, token_file,
         write_token_file(token_file, token, leg_id, attempt_hint)
         try:
             claim = claim_planned_leg(leg_id, run_spec, source_digest,
-                                      ledger=ledger, claims_root=claims_root,
-                                      token=token)
+                                      ledger=ledger, token=token)
             # 발급된 실제 attempt_id 로 결속을 굳힌다
             write_token_file(token_file, token, leg_id, claim.attempt_id)
             return claim
@@ -4984,21 +5088,20 @@ def open_leg_run(leg_id: str, run_spec: dict, source_digest: str, token_file,
             raise
 
 
-def attach_leg_run(leg_id: str, token_file, ledger=None,
-                   claims_root=None) -> LegClaim:
+def attach_leg_run(leg_id: str, token_file, ledger=None) -> LegClaim:
     """넘겨받은 소유 증명으로 **같은 실행**에 붙는다 (phase process 가 쓴다)."""
-    return resume_claim(leg_id, claims_root=claims_root,
-                        token=read_token_file(token_file, leg_id), ledger=ledger)
+    return resume_claim(leg_id, token=read_token_file(token_file, leg_id),
+                        ledger=ledger)
 
 
-def inspect_leg_run(leg_id: str, claims_root=None) -> dict:
+def inspect_leg_run(leg_id: str, ledger=None) -> dict:
     """살아 있는 실행을 **공개 필드만으로** 들여다본다 (진단용).
 
     ★ 49차 P0-3 — verifier 도 credential 도 내보내지 않는다. 48차 진단 경로는
       readonly claim 객체를 그대로 돌려줬고 그 객체의 `.attempt` 가 평문
       credential 이었다.
     """
-    _, rec = _read_claim_record(leg_id, claims_root)
+    _, rec = _read_claim_record(leg_id, claims_root_for_ledger(ledger))
     return {"leg_id": rec["leg_id"], "cohort_id": rec["cohort_id"],
             "attempt_id": rec["attempt_id"],
             "run_spec_digest": rec["run_spec_digest"],
@@ -5008,8 +5111,8 @@ def inspect_leg_run(leg_id: str, claims_root=None) -> dict:
                                   if p in (rec.get("phases") or {}))}
 
 
-def release_leg_run(leg_id: str, token=None, token_file=None, ledger=None,
-                    claims_root=None) -> dict:
+def release_leg_run(leg_id: str, token=None, token_file=None,
+                    ledger=None) -> dict:
     """실행권을 **되돌린다** — 계획을 `planned` 로 돌리고 claim 을 지운다.
 
     ★ 49차 P0-3 — 48차에는 이 방향이 없었다. `--dry-run` 은 claim 을 따고
@@ -5030,12 +5133,12 @@ def release_leg_run(leg_id: str, token=None, token_file=None, ledger=None,
     # ★ 49차 P0-6 — 이미 닫힌 다리는 되돌릴 수 없다. crash 로 남은 claim 이면
     #   그 정리는 `finalize_leg()` 이 한다 (원장이 이미 executed 이므로).
     if _already_finalized(leg_id, token, ledger=ledger,
-                          claims_root=claims_root) is not None:
+                          ) is not None:
         raise PreserveError(
             "plan",
             f"{leg_id!r} 은 이미 executed 로 닫혔다 — 되돌릴 수 없다. 남은 "
             "claim 정리는 `--mode finalize` 가 한다")
-    claim = resume_claim(leg_id, claims_root, token=token, ledger=ledger)
+    claim = resume_claim(leg_id, token=token, ledger=ledger)
     # ★ 52차 P0-1 — claim 폐기와 token 삭제가 **한 임계 구역** 안이다. 51차는
     #   `_abandon_claim()` 이 lock 을 놓은 뒤 token 을 지웠고, 그 사이에 정상
     #   발급이 들어오면 새 attempt 의 credential 이 지워졌다 (리뷰어 실측).
@@ -5109,7 +5212,10 @@ def _abandon_claim(claim: LegClaim, ledger=None, token_file=None,
     import yaml
 
     path = Path(ledger or DEFAULT_LEDGER)
-    with _ledger_lock(claim.path):                          # LOCK_ORDER: claim
+    # ★ 54차 P0-2 — token 을 지우는 경로이므로 **attempt_path 부터** 잡는다.
+    #   53차는 claim lock 만 잡았고, 비교와 `unlink` 사이에 다른 다리의 정상
+    #   발급이 끼어들어 그 credential 이 지워졌다 (리뷰어 실측).
+    with _lifecycle_locks(claim.leg_id, token_file, claim.path.parent):
         if not claim.path.is_file():
             raise PreserveError(
                 "plan",
@@ -5134,7 +5240,7 @@ def _abandon_claim(claim: LegClaim, ledger=None, token_file=None,
 
 
 def precheck_leg_run(leg_id: str, source_digest: str, token_file=None,
-                     ledger=None, claims_root=None) -> dict:
+                     ledger=None) -> dict:
     """실행 **전** 사전 점검 — 새 발급인가, 내가 가진 재개인가 (49차 P0-3).
 
     48차 `run.sh` 사전검사는 `assert_planned_leg()` 만 불렀고 그것은 `planned`
@@ -5145,7 +5251,7 @@ def precheck_leg_run(leg_id: str, source_digest: str, token_file=None,
     아무 것도 바꾸지 않는다 — 발급은 실제 계산 직전
     (`assert_run_is_authorized()`)에서만 일어난다.
     """
-    path = _claim_path(leg_id, claims_root)
+    path = _claim_path(leg_id, claims_root_for_ledger(ledger))
     if path.is_file():
         if token_file is None:
             raise PreserveError(
@@ -5153,7 +5259,7 @@ def precheck_leg_run(leg_id: str, source_digest: str, token_file=None,
                 f"{leg_id!r} 은 이미 실행 중이다 (claim: {path}) — 두 번째 "
                 "실행을 시작할 수 없다. 중단된 실행을 이으려면 그 실행의 "
                 "소유 증명 파일을 주라")
-        claim = resume_claim(leg_id, claims_root=claims_root,
+        claim = resume_claim(leg_id,
                              token=read_token_file(token_file), ledger=ledger)
         if claim.source_digest != source_digest:
             raise PreserveError(
@@ -5241,8 +5347,7 @@ def _verify_declared_bundle(evidence: dict, repo_root=None) -> list:
     return bad
 
 
-def _already_finalized(leg_id: str, token: str, ledger=None,
-                       claims_root=None) -> dict | None:
+def _already_finalized(leg_id: str, token: str, ledger=None) -> dict | None:
     """이미 닫힌 다리인가 — **소유 증명을 확인한 뒤에만** 그렇다고 답한다 (49차 P0-6).
 
     48차는 원장 write 와 claim 삭제 사이에 죽으면 그 다리가 갇혔다: 계획은
@@ -5260,7 +5365,7 @@ def _already_finalized(leg_id: str, token: str, ledger=None,
     치울 수 없다.
     """
     want = _token_verifier(token)
-    cp = _claim_path(leg_id, claims_root)
+    cp = _claim_path(leg_id, claims_root_for_ledger(ledger))
     if not cp.is_file():
         return None
     rec = json.loads(cp.read_text(encoding="utf-8"))
@@ -5283,9 +5388,8 @@ def _already_finalized(leg_id: str, token: str, ledger=None,
     return {"attempt_id": rec["attempt_id"]}
 
 
-def finalize_leg(leg_id: str, evidence: dict, ledger=None,
-                 claims_root=None, *, token: str | None = None,
-                 token_file=None) -> dict:
+def finalize_leg(leg_id: str, evidence: dict, ledger=None, *,
+                 token: str | None = None, token_file=None) -> dict:
     """모든 phase 가 끝난 claim 을 **executed 로 닫는다** (47차 P0-1).
 
     계획 roster 에서 빼고 실행 roster 와 실행 기록에 넣는다. 이 전이가 없으면
@@ -5310,16 +5414,22 @@ def finalize_leg(leg_id: str, evidence: dict, ledger=None,
     #   그 다리는 갇힌다 (계획은 executed 라 재개가 거부되고, claim 파일이
     #   남아 새 실행도 거부된다). 이미 닫힌 것을 다시 닫으라고 하면 남은
     #   정리만 하고 같은 답을 돌려준다 — idempotent.
-    done = _already_finalized(leg_id, token, ledger=ledger,
-                              claims_root=claims_root)
+    claims_root = claims_root_for_ledger(ledger)
+    done = _already_finalized(leg_id, token, ledger=ledger)
     if done is not None:
-        _claim_path(leg_id, claims_root).unlink(missing_ok=True)
-        if token_file is not None:
-            _unlink_token_generation(token_file, token)
+        # ★ 54차 P0-2 — 복구도 **같은 임계 구역 안**이다. 53차는 아무 lock 도
+        #   잡지 않았고, 이미 claim lock 안에서 검사를 통과한 늦은
+        #   `phase_done()` 이 지워진 claim 을 다시 만들었다 (리뷰어 실측).
+        #   `phase_done()` 의 "claim 이 아직 있는가" 가 답을 주려면 지우는 쪽도
+        #   같은 lock 안에 있어야 한다.
+        with _lifecycle_locks(leg_id, token_file, claims_root) as cp:
+            cp.unlink(missing_ok=True)
+            if token_file is not None:
+                _unlink_token_generation(token_file, token)
         return {"leg_id": leg_id, "attempt_id": done["attempt_id"],
                 "status": "executed"}
 
-    claim = resume_claim(leg_id, claims_root, token=token, ledger=ledger)
+    claim = resume_claim(leg_id, token=token, ledger=ledger)
     _assert_json_domain(evidence, "evidence")
     # ★ 48차 P0-4 — 묶음 주장을 **디스크에서** 확인한다. 확인 전에는 아무 것도
     #   쓰지 않는다 (거부하면서 기록을 남기면 그것이 곧 오염이다).
@@ -5345,7 +5455,7 @@ def finalize_leg(leg_id: str, evidence: dict, ledger=None,
     #   48차는 claim 을 잠그지 않고 두 번 읽었다: 한 번은 `phases_done()` 으로
     #   검사하고 한 번은 원장 lock 안에서 receipt 를 옮겨 적었다. 그 사이에
     #   phase 가 바뀌면 **검사한 것과 기록한 것이 다르다.**
-    with _ledger_lock(_claim_path(leg_id, claims_root)):
+    with _ledger_lock(_claim_path(leg_id, claims_root_for_ledger(ledger))):
         # receipt 를 **한 번만** 읽는다 — 이 snapshot 이 검사와 기록 모두의 근거다
         snap = claim._read()
         if snap["attempt_id"] != claim.attempt_id:

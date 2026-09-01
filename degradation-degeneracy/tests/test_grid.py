@@ -9,6 +9,19 @@ from src.grid import (Condition, axis_from_config, build_conditions,
                       conditions_from_config, parse_axis)
 
 
+
+def _tok() -> str:
+    """이 시험이 쓰는 소유 증명.
+
+    ★ 54차 P0-6 — 발급은 소유 증명을 **caller 에게서** 받는다. 암묵적 생성은
+      메모리에만 있는 credential 을 만들고, 실패 한 번이면 그 다리는 재개도
+      되돌림도 못 하는 상태로 굳는다 (리뷰어 실측).
+    """
+    from tools.preserve import _new_token
+
+    return _new_token()
+
+
 def test_parse_axis_range():
     np.testing.assert_allclose(parse_axis("0:0.2:0.05"), [0, 0.05, 0.1, 0.15, 0.2])
     np.testing.assert_allclose(parse_axis("0:0.2:0.02"),
@@ -218,7 +231,7 @@ def test_a_dry_run_does_not_strand_the_plan_in_running(monkeypatch, tmp_path):
 
     # 되돌렸으므로 **진짜 실행**이 바로 시작될 수 있다 — 되돌림의 유일한 증명
     P.claim_planned_leg("L49", P.declared_leg_run_spec("L49", ledger=led),
-                        source_digest(), ledger=led, claims_root=claims)
+                        source_digest(), ledger=led, token=_tok())
 
 
 # ─────────────────────────────────────────────────────────────────────────────
