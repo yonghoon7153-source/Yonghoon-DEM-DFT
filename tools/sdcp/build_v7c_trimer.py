@@ -2619,7 +2619,7 @@ def selftest():
             open(f, "w").write(json.dumps(doc, ensure_ascii=False))
             return f
 
-        def _run(sub, _prereg_patch=None, **kw):
+        def _run(sub, _prereg_patch=None, _man_patch=None, **kw):
             """base 를 복사해 phase L 산출물을 만들고 pilot_seeds 를 돌린다."""
             global PIL_PREREG_S0        # ⚠ 중첩 함수는 자기 선언이 필요하다
             d = os.path.join(ptd, sub)
@@ -2638,6 +2638,13 @@ def selftest():
             PIL_PREREG_S0 = _pf
             mm2["prereg"] = _pf
             mm2["prereg_sha256"] = _sha(_pf)
+            # ⛔ 회신 X P0-3 — **생성물 쪽**을 건드리는 음성 경로. 사전등록만
+            #   지우는 시험으로는 fail-open 의 반쪽밖에 못 본다.
+            for _k, _v in (_man_patch or {}).items():
+                if _v is None:
+                    mm2.pop(_k, None)
+                else:
+                    mm2[_k] = _v
             open(_mp, "w").write(json.dumps(mm2, ensure_ascii=False))
             return pilot_seeds(d)
 
@@ -2761,6 +2768,21 @@ def selftest():
              {"_prereg_patch": {"builder_last_change_commit": "f" * 40}},
              "V P0-2: 사전등록의 **빌더를 마지막으로 바꾼 커밋**이 다르다"),
             # ── 회신 W P0-2 — **필드를 지우면 검사가 건너뛰어지던 fail-open** ──
+            # ── 회신 X P0-3 — **생성물(manifest) 쪽을 지우는 나머지 반쪽** ──
+            ("neg_man_drop_bs", {"_man_patch": {"builder_sha256": None}},
+             "X P0-3: **생성물 manifest** 에서 `builder_sha256` 을 지우면 통과했다 "
+             "(비교식이 `if 사전등록 and 생성물` 이라 어느 쪽을 지워도 같다)"),
+            ("neg_man_drop_lc", {"_man_patch": {"builder_last_change_commit": None}},
+             "X P0-3: manifest 의 `builder_last_change_commit` 을 지우면 통과했다"),
+            ("neg_man_drop_par", {"_man_patch": {"parent_sha256": None}},
+             "X P0-3: manifest 의 `parent_sha256` 을 지우면 통과했다 — **다른 부모 "
+             "구조**로도 번들을 만들 수 있었다"),
+            ("neg_man_drop_amf", {"_man_patch": {"atom_manifest_hash": None}},
+             "X P0-3: manifest 의 `atom_manifest_hash` 를 지우면 통과했다"),
+            ("neg_man_drop_func", {"_man_patch": {"functional": None}},
+             "X P0-3: manifest 의 `functional` 을 지우면 통과했다"),
+            ("neg_man_drop_env", {"_man_patch": {"environments": {}}},
+             "X P0-3: manifest 의 `environments` 를 비우면 ε 대조가 건너뛰어졌다"),
             ("neg_pre_drop_bs", {"_prereg_patch": {"builder_sha256": None}},
              "W P0-2: 사전등록에서 `builder_sha256` 을 **지우면** 통과했다 "
              "(양쪽 값이 있을 때만 비교했다)"),
@@ -2937,6 +2959,39 @@ def selftest():
         chk(_mm3.get("loc_suffix_patched_inputs", 0) >= 1,
             "W P0-5: 가정과 다른 suffix 라 L2 입력 %d개의 `%%moinp` 를 고쳤다"
             % _mm3.get("loc_suffix_patched_inputs", 0))
+        # ⛔⛔ 회신 X P0-4 재현 — 입력을 **미리 고쳐 놓으면** 패치가 그것을 새
+        #   정본으로 세탁했다 (r2SCAN-3c → HF 가 보존된 채 preflight 통과).
+        _l2h = os.path.join(ptd, "w5_l2patch_launder")
+        _copy2.copytree(str(_po), _l2h)
+        _mmh = json.loads(open(os.path.join(_l2h, "MANIFEST_PILOT.json")).read())
+        _pil_fake_phaseL(_l2h, _mmh, loc_suffix=".loc.gbw")
+        _mmh["prereg"] = _pf2; _mmh["prereg_sha256"] = _sha(_pf2)
+        open(os.path.join(_l2h, "MANIFEST_PILOT.json"), "w").write(
+            json.dumps(_mmh, ensure_ascii=False))
+        _vic = [k for k, v in _mmh["jobs"].items() if v["phase"] == "L2"][0]
+        _vf = os.path.join(_l2h, _vic, _vic.rsplit("/", 1)[-1] + ".inp")
+        # ⚠ `open(w).write(open(r).read())` 는 **파일을 먼저 비운다** — 읽기가
+        #   빈 문자열을 받는다 (2026-09-02 실측: 시험이 엉뚱한 것을 쟀다).
+        _vt = open(_vf, encoding="utf-8").read().replace("r2SCAN-3c", "HF")
+        open(_vf, "w", encoding="utf-8").write(_vt)
+        _rh = subprocess.run([_sys.executable, _scr, _l2h, __file__],
+                             capture_output=True, text=True)
+        chk(_rh.returncode != 0
+            and "이미 바뀌어 있다" in (_rh.stdout + _rh.stderr),
+            "⛔음성 X P0-4 (리뷰어 재현): 입력을 **미리 고쳐 놓으면** suffix 패치가 "
+            "거부한다 — 종전엔 r2SCAN-3c→HF 가 보존된 채 새 봉인으로 세탁됐다")
+        chk("HF" in open(_vf, encoding="utf-8").read(),
+            "⛔음성 X P0-4: 거부했으므로 **고치지도 않았다** (반쯤 고쳐 놓고 죽지 "
+            "않는다)")
+        # 정상 경로에서는 transition receipt 가 남는다
+        _trp = os.path.join(_l2d, "L2_SUFFIX_TRANSITIONS.jsonl")
+        _trs = [json.loads(x) for x in open(_trp, encoding="utf-8").read().splitlines()
+                if x.strip()] if os.path.isfile(_trp) else []
+        chk(len(_trs) >= 1 and all(
+            t["inp_sha256_old"] != t["inp_sha256_new"] and "%moinp" in t["line_new"]
+            and t.get("loccheck_cert_sha256") for t in _trs),
+            "X P0-4: 정상 패치는 **transition receipt** 를 남긴다 (old/new SHA · "
+            "바뀐 줄 · 근거 증서 SHA · %d건)" % len(_trs))
         _p4, _n4 = pil_lineage_check(_l2d, "L2")
         chk(_n4 >= 1 and not [x for x in _p4 if x.startswith(("INP_CHANGED",
                                                              "MOINP_MISSING"))],
@@ -4546,6 +4601,26 @@ def _pil_check_prereg(man, where):
                         .encode("utf-8")).hexdigest()
         if _rt.get("content_digest") != _dg:
             bad.append("사전등록이 **비준 이후에 바뀌었다** (지문 불일치) — 재승인 필요")
+    # ⛔⛔ 회신 X P0-3 (2026-09-02) — **fail-open 의 나머지 반쪽.**
+    #   회신 W P0-2 는 *사전등록* 쪽 필드를 지우는 경로를 닫았는데, 비교식이
+    #   `if <사전등록> and <생성물>` 이라 **생성물(manifest) 쪽을 지우면** 여전히
+    #   검사가 통째로 건너뛰어졌다. 지운 쪽이 어디든 결과는 같다 — 결박이 없다.
+    #   ⇒ 사전등록이 그 값을 봉인했으면 생성물에도 **반드시 있어야** 한다.
+    _REQ_MAN = {"builder_sha256": _ev.get("builder_sha256"),
+                "builder_last_change_commit": _ev.get("builder_last_change_commit"),
+                "parent_sha256": _tg.get("parent_sha256"),
+                "atom_manifest_hash": _tg.get("atom_manifest_hash"),
+                "functional": _tg.get("functional") or _pj.get("functional"),
+                "loc_realization": (_tg.get("loc_realization")
+                                    or _pj.get("loc_realization"))}
+    for _k, _want in _REQ_MAN.items():
+        if _want and man.get(_k) in (None, "", [], {}):
+            bad.append("생성물 manifest 에 `%s` 가 없다 — 사전등록은 그 값을 "
+                       "봉인했다. 필드를 지우면 대조가 건너뛰어진다 (회신 X P0-3: "
+                       "W P0-2 가 닫은 것의 나머지 반쪽)" % _k)
+    if _tg.get("epsilon") is not None and not (man.get("environments") or {}):
+        bad.append("생성물 manifest 에 `environments` 가 없다 — 사전등록이 ε 를 "
+                   "봉인했다 (회신 X P0-3)")
     _wb, _gb = _ev.get("builder_sha256"), man.get("builder_sha256")
     if _wb and _gb and _wb != _gb:
         bad.append("빌더 SHA: 사전등록 %s… ≠ 생성물 %s… — 사전등록이 봉인한 규칙과 "
@@ -6709,6 +6784,10 @@ c, why = m.pil_read_loccheck(d)
 if c is None:
     sys.exit("⛔ loccheck 증서가 유효하지 않습니다 — %s" % why)
 suf = c["loc_suffix"]
+import time as _time
+# 증서 자체의 SHA — transition receipt 가 "어느 증서를 근거로 고쳤나" 를 담는다
+_cert_sha = m._sha(os.path.join(d, m.PIL_LOCCHECK_CERT))
+_tr = []
 man_p = os.path.join(d, "MANIFEST_PILOT.json")
 man = json.load(open(man_p))
 old = man.get("loc_suffix_assumed") or ".loc"
@@ -6721,10 +6800,44 @@ for jk, jm in man.get("jobs", {}).items():
     if not os.path.isfile(f):
         continue
     t = open(f, encoding="utf-8").read()
+    # ⛔⛔ 회신 X P0-4 (2026-09-02) — **이 패치가 임의의 사전 수정을 세탁했다.**
+    #   종전엔 원래 해시를 확인하지 않고 **지금 파일**을 읽어 새 `inp_sha256` 으로
+    #   봉인했다. 리뷰어 재현: 입력의 `r2SCAN-3c` 를 `HF` 로 바꿔 놓아도 그대로
+    #   보존된 채 preflight 를 통과했다. 즉 이 단계가 "무엇이든 지금 파일이 정본"
+    #   이라고 선언하는 문이었다.
+    #   ⇒ ① 손대기 **전에** 봉인 해시와 대조한다 ② 바꾼 것이 `%moinp` 한 줄뿐임을
+    #     증명한다 ③ old/new SHA 를 담은 **transition receipt** 를 덧붙인다.
+    _cur = m._sha(f)
+    _seal = jm.get("inp_sha256")
+    if not _seal:
+        sys.exit("⛔ %s 에 봉인 해시(`inp_sha256`)가 없다 — 구판 묶음이다. "
+                 "무엇을 고치는지 대조할 기준이 없다 (회신 X P0-4)." % jk)
+    if _cur != _seal:
+        sys.exit("⛔ %s 의 입력이 **생성 이후 이미 바뀌어 있다** (봉인 %s… ≠ 현재 "
+                 "%s…). suffix 패치는 그 위에 덮어쓰지 않는다 — 그러면 임의의 "
+                 "사전 수정이 새 정본으로 세탁된다 (회신 X P0-4 재현: r2SCAN-3c → "
+                 "HF 가 그대로 보존됐다). 묶음을 다시 만들 것."
+                 % (jk, _seal[:12], _cur[:12]))
     t2 = re.sub(r'(%moinp\s+")([^"]*?)' + re.escape(old) + r'(")',
                 lambda mo: mo.group(1) + mo.group(2) + suf + mo.group(3), t)
     if t2 != t:
+        # ② 바뀐 줄이 `%moinp` **하나**인지 — 다른 줄이 함께 바뀌면 거부한다
+        _ol, _nl = t.split("\n"), t2.split("\n")
+        _diff = [i for i in range(max(len(_ol), len(_nl)))
+                 if (_ol[i] if i < len(_ol) else None)
+                 != (_nl[i] if i < len(_nl) else None)]
+        if len(_diff) != 1 or "%moinp" not in _nl[_diff[0]]:
+            sys.exit("⛔ %s: suffix 패치가 `%%moinp` **한 줄 말고 다른 것**도 바꿨다 "
+                     "(바뀐 줄 %s) — 거부한다 (회신 X P0-4)" % (jk, _diff[:4]))
         open(f, "w", encoding="utf-8").write(t2); n += 1
+        # ③ append-only transition receipt — 무엇이 무엇으로 바뀌었나
+        _tr.append({"schema": "l2_suffix_transition/v1", "job": jk,
+                    "inp_sha256_old": _seal, "inp_sha256_new": m._sha(f),
+                    "line_no": _diff[0] + 1,
+                    "line_old": _ol[_diff[0]], "line_new": _nl[_diff[0]],
+                    "loc_suffix_old": old, "loc_suffix_new": suf,
+                    "loccheck_cert_sha256": _cert_sha,
+                    "at": _time.strftime("%Y-%m-%dT%H:%M:%S")})
     # ⛔⛔ 회신 W P0-5 — **고쳤으면 봉인도 갱신해야 한다.** 종전엔 입력을 고쳐
     #   놓고 manifest 의 `inp_sha256` 은 생성 시점 값 그대로였다. 계보 대조를
     #   붙이는 순간 이 단계가 스스로 만든 불일치로 전건이 막힌다(실측). 그리고
@@ -6732,7 +6845,13 @@ for jk, jm in man.get("jobs", {}).items():
     man["jobs"][jk]["inp_sha256"] = m._sha(f)
     man["jobs"][jk]["inp_sha256_at_generate"] = man["jobs"][jk].get(
         "inp_sha256_at_generate") or jm.get("inp_sha256")
+if _tr:
+    with open(os.path.join(d, "L2_SUFFIX_TRANSITIONS.jsonl"), "a",
+              encoding="utf-8") as _f:
+        for _r in _tr:
+            _f.write(json.dumps(_r, ensure_ascii=False) + "\n")
 man["loc_suffix_actual"] = suf
+man["loc_suffix_transitions"] = "L2_SUFFIX_TRANSITIONS.jsonl"
 man["loc_suffix_patched_inputs"] = n
 if n:
     man["⚠_loc_suffix_변경"] = (
@@ -6848,7 +6967,10 @@ def main():
     ap.add_argument("--maxcore", type=int, default=PIL_MAXCORE_MB,
                     help="ORCA %%maxcore — **proc 당** MB (총 요청 = nprocs × 이 값)")
     ap.add_argument("--nprocs", type=int, default=1,
-                    help="ORCA %pal nprocs. 1 이면 직렬 — 200원자 SP 는 사실상 안 끝난다")
+                    # ⛔ 2026-09-02 (회신 X P1) — argparse 는 help 를 `%` 포맷한다.
+                    #   `%pal` 이 escape 되지 않아 **`--help` 가 ValueError 로 죽었다**
+                    #   (바로 위 줄은 `%%maxcore` 로 맞게 써 놓고 이 줄만 틀렸다).
+                    help="ORCA %%pal nprocs. 1 이면 직렬 — 200원자 SP 는 사실상 안 끝난다")
     ap.add_argument("--eps_why",
                     help="ε=1 이 아닌 환경의 **근거**. 사전등록 항목이라 생략하면 거부한다")
     a = ap.parse_args()
@@ -6876,6 +6998,19 @@ def main():
         return 0
     if a.polaron_preflight:
         _d, _stg = a.polaron_preflight
+        # ⛔⛔ 회신 X P0-3 — **비용이 발생하는 지점이 사전등록을 안 봤다.**
+        #   `--polaron_preflight … L` 은 200원자 두 잡을 여는 문인데 사전등록 digest 를
+        #   망가뜨려도 rc=0 이었다. seeds/restart/analyze 에는 게이트가 있고 여기만
+        #   없었다 — 게이트는 **돈이 나가기 전**에 있어야 한다.
+        try:
+            _mm = json.loads((Path(_d) / "MANIFEST_PILOT.json").read_text())
+        except Exception as _e:                                  # noqa: BLE001
+            print("⛔ MANIFEST_PILOT.json 을 읽을 수 없다: %r" % (_e,))
+            return 2
+        global PIL_PREREG_S0
+        if _mm.get("prereg"):
+            PIL_PREREG_S0 = _mm["prereg"]
+        _pil_check_prereg(_mm, "polaron_preflight(%s %s)" % (_d, _stg))
         probs, n = pil_lineage_check(_d, _stg)
         if probs:
             print("⛔ 계보 대조 실패 (%d건 · 잡 %d) — 돌리지 않는다 (회신 W P0-5):" %
