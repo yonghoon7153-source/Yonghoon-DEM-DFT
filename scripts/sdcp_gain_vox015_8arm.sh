@@ -142,13 +142,18 @@ AS_TAG=""; AS_FLAG=""
 if [ -n "${SIGMA_AM_S_OVERRIDE:-}" ]; then
   case "$SIGMA_AM_S_OVERRIDE" in ''|*[!0-9.eE+-]*)
     echo "ABORT — SIGMA_AM_S_OVERRIDE 는 수치여야 한다 (받은 값: $SIGMA_AM_S_OVERRIDE)"; exit 2;; esac
-  AS_TAG="_as${SIGMA_AM_S_OVERRIDE//./}"; AS_FLAG=" --sigma-am-s $SIGMA_AM_S_OVERRIDE"
+  #  ⚠⚠ 점을 **지우면 안 된다** — `${V//./}` 는 `2.5` 와 `25` 를 똑같이 `25` 로 만든다.
+  #    사전등록 격자의 σ_SDCP 가 정확히 `2.5, 25, 250, 2500, 25000` 이라 두 점이 **같은
+  #    디렉터리**로 떨어진다 ⇒ 러너가 기존 영수증을 맞다고 보고 팔을 재사용한다.
+  #    ⇒ `.` → `p` 로 **무손실** 치환.  (기존 축의 규칙은 안 건드린다 — 이미 돈 팔의
+  #    디렉터리 이름이 바뀌면 완주한 산출물을 못 찾는다.)
+  AS_TAG="_as${SIGMA_AM_S_OVERRIDE//./p}"; AS_FLAG=" --sigma-am-s $SIGMA_AM_S_OVERRIDE"
 fi
 SD_SIG_TAG=""; SD_SIG_FLAG=""
 if [ -n "${SIGMA_SDCP_OVERRIDE:-}" ]; then
   case "$SIGMA_SDCP_OVERRIDE" in ''|*[!0-9.eE+-]*)
     echo "ABORT — SIGMA_SDCP_OVERRIDE 는 수치여야 한다 (받은 값: $SIGMA_SDCP_OVERRIDE)"; exit 2;; esac
-  SD_SIG_TAG="_sd${SIGMA_SDCP_OVERRIDE//./}"; SD_SIG_FLAG=" --sigma-sdcp $SIGMA_SDCP_OVERRIDE"
+  SD_SIG_TAG="_sd${SIGMA_SDCP_OVERRIDE//./p}"; SD_SIG_FLAG=" --sigma-sdcp $SIGMA_SDCP_OVERRIDE"
 fi
 
 #  ★★★ 2026-08-30 (Codex R13 C-7 ⓒ) — **두 이온 σ 를 정식 축으로 올린다.**
@@ -396,7 +401,8 @@ _RCPT_JSON="$(python3 - "$SCR" "$VOX" "$BRIDGE_UM" "$FIBRE_STAMP" "${SDCP_SPHERE
                   "${SIGMA_VGCF_OVERRIDE:-}" \
                   "$PERIODIC_ON" "$ARMS" "${EXPECT_BACKEND:-gpu}" "${SDCP_BRIDGE:-}" \
                   "${LEAN:-0}" "${SIGMA_ION_SDCP:-}" "${SIGMA_ION_SE:-}" \
-                  "${PTFE_BLOCK_UM:-}" "${PTFE_BLOCK_SCOPE:-}" <<'PYRCPT'
+                  "${PTFE_BLOCK_UM:-}" "${PTFE_BLOCK_SCOPE:-}" \
+                  "${SIGMA_AM_S_OVERRIDE:-}" "${SIGMA_SDCP_OVERRIDE:-}" <<'PYRCPT'
 import json, os, sys
 sys.path.insert(0, sys.argv[1])
 import run_contract as RC
@@ -407,6 +413,8 @@ _isd  = sys.argv[15] if len(sys.argv) > 15 else ''
 _ise  = sys.argv[16] if len(sys.argv) > 16 else ''
 _pbu  = sys.argv[17] if len(sys.argv) > 17 else ''
 _pbs  = sys.argv[18] if len(sys.argv) > 18 else ''
+_ams  = sys.argv[19] if len(sys.argv) > 19 else ''
+_sdsg = sys.argv[20] if len(sys.argv) > 20 else ''
 vox = float(_vox)
 rec = {'vox_um': vox, 'bridge_um': float(_br), 'fibre_stamp': _fs,
        'sdcp_stamp': ('sphere' if _sd else 'point'),
@@ -450,6 +458,16 @@ if _pt:
     rec['sigma_ptfe_S_cm'] = float(_pt)
 if _sg:
     rec['sigma_vgcf_S_cm'] = float(_sg)      # 명시 override 일 때만 (러너가 정한 것)
+#  ★★ 2026-09-02 — closure 스윕의 두 대비 축.  **러너가 정했을 때만** 선언한다
+#    (RECEIPT_AXES 규약: 기본값으로 돈 기존 팔은 그대로 산다).
+#  ⚠ 둘은 `RECEIPT_AXES_NODIGEST` 다 — digest 에 넣으면 `rec.get(k)=None` 이 해시 본문에
+#    들어가 **기존 digest 가 전부 바뀌고** 커밋된 코호트 디렉터리 이름까지 어긋난다.
+#    디렉터리를 가르는 일은 위의 무손실 태그(`_as`·`_sd`)가 하고, 여기서는 **팔마다
+#    매니페스트와 대조**해 '러너가 의도한 σ 로 돌았는가' 를 증명한다.
+if _ams:
+    rec['sigma_am_s_S_cm'] = float(_ams)
+if _sdsg:
+    rec['sigma_sdcp_S_cm'] = float(_sdsg)
 #  ★ code SHA 는 payload 와 **같은 함수**로 (사본을 두면 갈라진다)
 try:
     import mpm_webapp_payload as _P

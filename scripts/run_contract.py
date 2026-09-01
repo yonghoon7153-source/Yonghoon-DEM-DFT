@@ -255,7 +255,16 @@ RECEIPT_META = ('code_sha', 'origins', 'arms', 'expect_backend')
 #    lean3 팔이 lean4 요청에 SKIP 으로 통과**한다 (코드리뷰 2026-08-30 지적 1).
 #  ⚠ **선언한 축만 검사한다** — 러너가 안 적으면 건너뛴다 (`RECEIPT_AXES` 와 같은 규약).
 #    그래야 이 키를 모르는 옛 팔이 통째로 무효가 되지 않는다.
-RECEIPT_AXES_NODIGEST = ('field_requested',)
+#  ★★ 2026-09-02 — closure 스윕의 두 대비 축 (`σ_AM_S/σ_VGCF` · `σ_SDCP/σ_VGCF`).
+#    **왜 여기(해시 밖)인가**: `receipt_digest` 는 `RECEIPT_AXES` 를 `rec.get(k)` 로 훑어
+#    **없는 키도 `null` 로 해시 본문에 넣는다** ⇒ 목록에 이름 하나만 더해도 기존 설정의
+#    digest 가 전부 바뀌고 `docs/data/cohorts/` 의 **커밋된 디렉터리 이름**까지 어긋난다.
+#  ⇒ 디렉터리를 가르는 일은 러너의 **무손실 태그**(`_as…`·`_sd…`)가 하고, 여기서는 팔마다
+#    영수증↔매니페스트를 대조해 *"러너가 의도한 σ 로 돌았는가"* 를 증명한다.
+#  ⚠ 안전 조건 확인함 — payload 가 이미 두 키를 매니페스트에 적으므로
+#    (`mpm_webapp_payload.py`: `sigma_am_s_S_cm` · `sigma_sdcp_S_cm`) 기존 팔이
+#    `RCPT|missing` 으로 무너지지 않는다.  그래도 **러너가 선언한 팔만** 검사한다.
+RECEIPT_AXES_NODIGEST = ('field_requested', 'sigma_am_s_S_cm', 'sigma_sdcp_S_cm')
 
 
 def expected_origins_for(vox):
@@ -1053,6 +1062,39 @@ def _selftest():
         _s3 = _pay._code_sha(_sd)
         chk(bool(_s3) and _s3.endswith('+dirty'), 'RCPT-sha-modified tracked 수정은 dirty')
         _sl.rmtree(_d, ignore_errors=True)
+
+    #  ── ★★ 2026-09-02 — `receipt_digest` 가 **무엇인지** 를 시험으로 박는다 ────────────
+    #    계기: NODIGEST 에 두 축을 더한 뒤 커밋된 영수증 17건을 재계산했더니 **전부 불일치**
+    #    했다.  5분간 오염으로 읽었는데, 원인은 내 변경이 아니라 08-30/08-31 에 늘어난
+    #    `RECEIPT_AXES` 4개였다 (그 넷을 빼면 옛 digest 가 정확히 재현된다).
+    #  ⇒ digest 는 **런타임 캐시 키**이지 내용 해시가 아니다.  코드 버전을 넘어 재현되지
+    #    않는 것이 **설계**다 (새 축 = 새 디렉터리 = 낡은 팔 재사용 차단).  그런데 값이
+    #    커밋된 디렉터리 이름에 박혀 있어 **내용 해시처럼 보인다** ⇒ 다음 사람이 같은
+    #    오독을 한다.  두 성질을 각각 고정한다.
+    _rc_fix = {'vox_um': 0.15, 'bridge_um': 0.48, 'fibre_stamp': 'segment',
+               'sdcp_stamp': 'sphere', 'sdcp_sphere_d_um': 0.30, 'ptfe_stamp': 'centerline',
+               'arms': 8, 'expect_backend': 'gpu', 'code_sha': 'deadbeef', 'origins': []}
+    _d_before = receipt_digest(_rc_fix)
+    _saved_nd = globals()['RECEIPT_AXES_NODIGEST']
+    try:
+        globals()['RECEIPT_AXES_NODIGEST'] = _saved_nd + ('zz_new_nodigest_axis',)
+        chk(receipt_digest(_rc_fix) == _d_before,
+            'RCPT-nodigest ★★ `RECEIPT_AXES_NODIGEST` 에 축을 더해도 digest 는 **안 움직인다** '
+            '— 이것이 그 목록의 존재 이유다 (움직이면 커밋된 코호트 디렉터리 이름이 어긋난다)')
+    finally:
+        globals()['RECEIPT_AXES_NODIGEST'] = _saved_nd
+    _saved_ax = globals()['RECEIPT_AXES']
+    try:
+        globals()['RECEIPT_AXES'] = _saved_ax + ('zz_new_hashed_axis',)
+        chk(receipt_digest(_rc_fix) != _d_before,
+            'RCPT-axes ★★ 반대로 `RECEIPT_AXES` 에 더하면 digest 가 **반드시 움직인다** — '
+            '없는 키도 `rec.get(k)=None` 으로 해시 본문에 들어가기 때문이다.  ⇒ digest 는 '
+            '런타임 캐시 키이지 내용 해시가 아니고, **옛 영수증의 digest 는 재계산으로 '
+            '재현되지 않는 것이 정상**이다 (오염이 아니다)')
+    finally:
+        globals()['RECEIPT_AXES'] = _saved_ax
+    chk(len(set(RECEIPT_AXES) & set(RECEIPT_AXES_NODIGEST)) == 0,
+        'RCPT-disjoint ★ 두 목록이 겹치지 않는다 (겹치면 NODIGEST 의 약속이 거짓이 된다)')
 
     print(f'\nrun_contract selftest: {ok}/{ok + fail} PASS'
           + ('' if not fail else '   ✗ 실패 있음'))

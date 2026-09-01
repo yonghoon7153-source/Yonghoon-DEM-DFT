@@ -2525,6 +2525,35 @@ def _selftest():
         '(SIGMA_VGCF_OVERRIDE 는 옛 판도 읽으므로 지목 대상이 아니다 = 가려서 문다)',
         _rc_o == 2 and 'SIGMA_AM_S_OVERRIDE' in _o_o and 'SIGMA_SDCP_OVERRIDE' in _o_o
         and 'SIGMA_VGCF_OVERRIDE' not in _o_o.split('받았다:', 1)[-1].splitlines()[0])
+    #  ── ★★ 2026-09-02 — **태그가 격자점을 가르지 못하면 스윕이 조용히 합쳐진다** ─────
+    #    기존 태그 규칙은 `${VAR//./}` = 점을 **지운다**.  그런데 사전등록 격자의 σ_SDCP 가
+    #    정확히 `2.5, 25, 250, 2500, 25000` 이라 앞의 둘이 **똑같이 `25`** 가 된다.
+    #    영수증 digest 도 두 축을 안 실었으므로 **디렉터리 이름 전체가 같아지고**, 러너는
+    #    기존 영수증을 "맞다" 로 읽어 **다른 σ 의 팔을 재사용**한다.  = 다른 실험 둘이
+    #    한 디렉터리에서 섞인다.  ⇒ 새 두 축만 `.`→`p` 무손실로 바꿨다 (기존 축의 규칙은
+    #    안 건드린다 — 이미 돈 팔의 디렉터리 이름이 바뀌면 완주 산출물을 못 찾는다).
+    #  ⚠ 중간 변수가 아니라 **실제 OUTDIR** 을 본다 — 섞이는 것은 디렉터리이지 태그 문자열이
+    #    아니다.  (`_RCPT_TAG` 는 두 축이 `RECEIPT_AXES_NODIGEST` 라 안 움직이므로, OUTDIR 이
+    #    갈리면 그것은 **오로지 태그 덕**이다 = 이 시험이 정확히 태그를 잰다.)
+    #  ⚠ `runner_config` 는 `bash -s` 라 러너가 자기 소스를 못 읽는다 ⇒ env 게이트가 발동한다.
+    #    `P2_SELF` 로 경로를 알려 준다 (게이트가 그러라고 적어 둔 그대로).
+    _rp = os.path.join(ROOT, 'scripts', 'sdcp_gain_vox015_8arm.sh')
+
+    def _outdir_for(sdcp):
+        _c = runner_config({'VOX': '0.15', 'ARMS': '8', 'SDCP_SPHERE_D': '0.30',
+                            'PTFE_STAMP': 'centerline', 'LEAN': '2',
+                            'SIGMA_SDCP_OVERRIDE': sdcp, 'P2_SELF': _rp})
+        return (_c or {}).get('OUTDIR', '')
+    _o25, _o2p5 = _outdir_for('25'), _outdir_for('2.5')
+    chk(f'L-1m: ★★ 사전등록 격자의 `2.5` 와 `25` 가 **다른 디렉터리**로 간다 — 같으면 러너가 '
+        f'기존 영수증을 맞다고 읽고 **다른 σ 의 팔을 재사용**한다 (실험 둘이 한 곳에서 섞인다)',
+        bool(_o25) and bool(_o2p5) and _o25 != _o2p5)
+    _grid = ['0.000333333', '0.00182574', '0.01', '0.0547723', '0.3',
+             '2.5', '25', '250', '2500', '25000']
+    _outs = [_outdir_for(g) for g in _grid]
+    chk(f'L-1n: ★ 등록된 격자값 {len(_grid)}개가 **전부 서로 다른** 디렉터리를 받는다 '
+        f'({len(set(_outs))}개) — 무손실 규칙의 전수 확인',
+        len(set(_outs)) == len(_grid) and all(_outs))
     _m1 = _rmut('LEAN_FLAGS=" --no-step4 --no-thermal --no-trackb --no-field --no-ion --no-pore --no-collector"',
                 'LEAN_FLAGS=" --no-step4 --no-thermal --no-trackb --no-field --no-ion --no-pore"')
     chk(f'L-2: ★ LEAN=2 에서 `--no-collector` 를 빼면 **잡는다** ({len(_m1)}건)',
