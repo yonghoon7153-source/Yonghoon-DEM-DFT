@@ -39,6 +39,32 @@ if [ "${1:-}" = "--selftest" ]; then
   mkdir -p "$W/gs1/.lock_seed"; echo $$ > "$W/gs1/.lock_seed/pid"     # 살아있는 pid
   mkdir -p "$W/gs2/.lock_seed"; echo 999999 > "$W/gs2/.lock_seed/pid" # 죽은 pid
   printf 'GEOMETRY OPTIMIZATION CYCLE   1\n' > "$W/gs2/dp6_gs2_neutral.out"
+  # ⛔⛔ 2026-09-02 — 아래 둘은 **실물이 잡아 준** 결함이다. 첫 판 selftest 6건은
+  #   전부 통과하는데 gabia 첫 화면이 둘 다 틀렸다. 픽스처가 실물의 두 모양을
+  #   갖고 있지 않았다: ⓐ 종료필드 없는 **구판 receipt** ⓑ **lock 없이 도는** 잡.
+  mkdir -p "$W/gs4"
+  printf 'GEOMETRY OPTIMIZATION CYCLE   1\nORCA TERMINATED NORMALLY\n' > "$W/gs4/dp6_gs4_neutral.out"
+  echo '{"returncode":0,"relaxed":true}' > "$W/gs4/receipt.json"   # ← 종료필드 없음
+  OUT=$(bash "$0" "$W" 2>&1)
+  chk "$(echo "$OUT" | grep gs4 | grep -q '비정상종료' && echo 0 || echo 1)" \
+      "⛔음성 실물: 종료필드가 **없는 구판 receipt** 를 비정상종료로 모함하지 않는다 \
+(같은 줄이 DONE 인데 비정상이라고 하면 자기모순이다)"
+  chk "$(echo "$OUT" | grep gs4 | grep -q '구판receipt' && echo 1 || echo 0)" \
+      "⛔음성 실물: **없음**과 **false** 를 가른다 (없으면 구판이라고 말한다)"
+  # ⓑ lock 없이 도는 잡 — 커널의 cwd 가 근거다 (lock 파일이 아니라)
+  mkdir -p "$W/gs5"; printf 'GEOMETRY OPTIMIZATION CYCLE   1\n' > "$W/gs5/dp6_gs5_neutral.out"
+  cp /bin/sleep "$T/orca_fake" 2>/dev/null && chmod +x "$T/orca_fake"
+  if [ -x "$T/orca_fake" ]; then
+    ( cd "$W/gs5" && exec -a orca_fake "$T/orca_fake" 300 ) & _fk=$!
+    sleep 1
+    OUTB=$(bash "$0" "$W" 2>&1)
+    kill "$_fk" 2>/dev/null
+    chk "$(echo "$OUTB" | grep gs5 | grep -qE 'run' && echo 1 || echo 0)" \
+        "⛔음성 실물: **lock 없이 도는** 잡(구판 러너)을 '이전시도' 로 오판하지 않는다 \
+— 커널의 cwd 가 근거다"
+    chk "$(echo "$OUTB" | grep gs5 | grep -q '구판 러너' && echo 1 || echo 0)" \
+        "그 경우 lock 이 없다는 사실을 비고에 적는다 (정상임을 같이 말한다)"
+  fi
   OUT=$(bash "$0" "$W" 2>&1)
   chk "$(echo "$OUT" | grep -q "gs0.*DONE" && echo 1 || echo 0)" "완주한 seed 를 DONE 으로 찍는다"
   chk "$(echo "$OUT" | grep -qE "gs1.*(run|도는)" && echo 1 || echo 0)" \
@@ -97,8 +123,25 @@ for d in $(ls -1 "$W" 2>/dev/null | sort); do
   #   ⛔ 감시는 죽은 lock 을 지우지 않는다 (러너의 STALE_LOCK_MIN 몫).
   st="대기"; note=""
   LK="$SD/.lock_seed"
+  # ⛔⛔ 2026-09-02 실물 — **lock 유무만 보면 구판 러너가 띄운 잡이 안 보인다.**
+  #   gs2 는 seed lock 도입 **전에** 시작해서 `.lock_seed` 가 없는데 실제로는 돌고
+  #   있었다(ORCA 314%). 첫 판이 그걸 "이전시도" 로 찍었다 — 도는 잡을 놀고 있다고
+  #   보고하는 것은 감시의 실패다.
+  #   ⇒ **프로세스의 cwd** 를 근거로 쓴다. lock 파일이 아니라 커널이 아는 사실이다.
+  _rp=""
+  for _pd in /proc/[0-9]*; do
+    _c=$(readlink "$_pd/cwd" 2>/dev/null) || continue
+    [ "$_c" = "$SD" ] || continue
+    case "$(cat "$_pd/comm" 2>/dev/null)" in
+      *orca*|*ORCA*) _rp="${_pd#/proc/}"; break ;;
+    esac
+  done
   if [ -n "$OUTF" ] && grep -aq "ORCA TERMINATED NORMALLY" "$OUTF" 2>/dev/null; then
     st="DONE"; _ndone=$((_ndone+1))
+  elif [ -n "$_rp" ]; then
+    _own=$(cat "$LK/pid" 2>/dev/null || echo "")
+    st="run (orca $_rp)"; _nrun=$((_nrun+1))
+    [ -d "$LK" ] || note="lock 없음 — 구판 러너가 띄운 잡 (정상)"
   elif [ -d "$LK" ]; then
     _p=$(cat "$LK/pid" 2>/dev/null || echo "")
     if [ -n "$_p" ] && kill -0 "$_p" 2>/dev/null; then
@@ -114,11 +157,20 @@ for d in $(ls -1 "$W" 2>/dev/null | sort); do
   fi
 
   # 경과·사이클·에너지
+  # ⚠ 2026-09-02 — 열 뜻을 **상태마다 다르게** 둔다. 하나로 쓰면 둘 다 오해된다.
+  #   도는 중 → 시작 이후 경과 (지금 얼마나 돌았나)
+  #   DONE    → 실제 소요 (마지막 쓰기 − 생성) · 끝난 뒤 흐른 시간이 아니다
+  #   이전/대기 → 마지막 갱신 이후 (얼마나 조용한가)
   age="-"; cyc="-"; ene="-"
   if [ -n "$OUTF" ]; then
-    age=$(( ( $(date +%s) - $(stat -c %Y "$OUTF" 2>/dev/null || date +%s) ) / 60 ))
-    _st=$(stat -c %W "$OUTF" 2>/dev/null || echo 0)
-    [ "${_st:-0}" -gt 0 ] && age=$(( ( $(date +%s) - _st ) / 60 ))
+    _mt=$(stat -c %Y "$OUTF" 2>/dev/null || date +%s)
+    _bt=$(stat -c %W "$OUTF" 2>/dev/null || echo 0)
+    case "$st" in
+      DONE*) age=$( [ "${_bt:-0}" -gt 0 ] && echo $(( (_mt - _bt) / 60 )) || echo "?" ) ;;
+      run*)  age=$( [ "${_bt:-0}" -gt 0 ] && echo $(( ( $(date +%s) - _bt ) / 60 )) \
+                    || echo $(( ( $(date +%s) - _mt ) / 60 )) ) ;;
+      *)     age=$(( ( $(date +%s) - _mt ) / 60 )) ;;
+    esac
     cyc=$(grep -ac "GEOMETRY OPTIMIZATION CYCLE" "$OUTF" 2>/dev/null || echo 0)
     ene=$(grep -a "FINAL SINGLE POINT ENERGY" "$OUTF" 2>/dev/null | tail -1 | awk '{print $NF}')
     [ -n "$ene" ] || ene=$(grep -a "Total Energy  *:" "$OUTF" 2>/dev/null | tail -1 | awk '{print $4}')
@@ -126,12 +178,20 @@ for d in $(ls -1 "$W" 2>/dev/null | sort); do
   fi
   # receipt 가 있으면 rc·정상종료를 비고에 (파일명·기억이 아니라 원장에서 읽는다)
   if [ -f "$SD/receipt.json" ] && [ -z "$note" ]; then
+    # ⛔⛔ 2026-09-02 실물 — **필드 부재를 거짓으로 읽어 정상 실행을 모함했다.**
+    #   `orca_terminated_normally` 는 2026-08-30 에 추가된 필드다. 그 전에 만들어진
+    #   receipt 에는 아예 없는데, 첫 판이 없음을 false 로 읽어 `⛔비정상종료` 를
+    #   찍었다 — 같은 줄에서 `DONE` 이라고 해놓고서다 (자기모순).
+    #   ⇒ **없음**과 **false** 를 가른다. 없으면 구판이라고 말하고, 판정은 .out 이
+    #     이미 한 것(DONE 열)을 따른다.
     note=$(python3 -c "
 import json,sys
 try:
     r=json.load(open('$SD/receipt.json'))
-    print('rc=%s relaxed=%s%s' % (r.get('returncode'), r.get('relaxed'),
-          '' if r.get('orca_terminated_normally') else ' ⛔비정상종료'))
+    n=r.get('orca_terminated_normally')
+    tag = '' if n is True else (' ⚠구판receipt(종료필드없음)' if n is None
+                                else ' ⛔비정상종료')
+    print('rc=%s relaxed=%s%s' % (r.get('returncode'), r.get('relaxed'), tag))
 except Exception: pass" 2>/dev/null)
   fi
   printf "  %-6s %-22s %7s %5s %-22s %s\n" "$d" "$st" "$age" "$cyc" "$ene" "$note"
