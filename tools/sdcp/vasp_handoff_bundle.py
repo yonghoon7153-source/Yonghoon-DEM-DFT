@@ -360,18 +360,24 @@ if [ -f "$_ROOT/MANIFEST.json" ]; then
     2>/dev/null || true)
 fi
 if [ "$_FIXTURE" != 1 ] && [ -n "$_STAGED" ]; then
-  # 🔴 회신 AV P0-2 — staged 번들: **lock 소유자만** 실행할 수 있다. 토큰은
-  #   run_staged.sh(또는 run_dense_selected.sh)가 lock 을 잡으며 발급한 값이고,
-  #   lock 파일 내용과 같아야 한다 — 값을 아는 것이 곧 소유 증명이다.
-  #   ⚠ 이 게이트가 못 막는 것: 잡 폴더를 번들 **밖으로 복사**해 돌리는 것.
-  #     그 경우 봉인 대조를 여기서 못 하므로, 분석기가 반송 receipt 의 해시를
-  #     root seal 과 대조해 잡는다 (다른 바이너리면 그쪽에서 걸린다).
+  # 🔴 회신 AV P0-2 → **AY P0-2 로 주장 하향**. 이 검사는 run_job.sh 가 러너를
+  #   거쳐 불렸는지 **표시**하는 것이지 **소유권 증명이 아니다.**
+  #   ⛔ 종전 주석은 "값을 아는 것이 곧 소유 증명" 이라고 적었는데 **틀렸다** —
+  #     `.lock_bundle` 은 같은 사용자가 **읽을 수 있으므로**, 그 값을 그대로
+  #     RUNNER_TOKEN 에 넣으면 직접 호출이 통과한다 (회신 AY P0-2 실측 지적).
+  #   ⇒ 이 게이트가 실제로 하는 일: **사고성 직접 실행**(러너를 안 거치고 잡
+  #     폴더에서 바로 `bash run_job.sh`)을 막는다. 같은 사용자의 **의도적** 우회는
+  #     막지 못하며, 그것은 위협모델 밖이다(계약 문제).
+  #   ⚠ 그래서 사후 구분은 분석기가 진다 — receipt 의 `_runner_start` 가 정확히
+  #     하나여야 하고(AY P0-2), 상별 실행파일·launcher 해시가 root seal 과 같아야
+  #     한다(AY P0-1). 러너를 안 거친 실행은 `_runner_start` 가 없어 거기서 걸린다.
   [ -n "${RUNNER_TOKEN:-}" ] || {
     echo "⛔ run_job.sh 를 직접 부르지 마세요 — 'bash $_STAGED {1|2}' 가 유일한 실행 경로입니다"
-    echo "   (lock-owner 토큰이 없습니다 — 회신 AV P0-2)"; exit 1; }
+    echo "   (러너 토큰이 없습니다 — 회신 AV P0-2·AY P0-2)"; exit 1; }
   _lk=$(cat "$_ROOT/.lock_bundle" 2>/dev/null || true)
   if [ -z "$_lk" ] || [ "$_lk" != "$RUNNER_TOKEN" ]; then
-    echo "⛔ RUNNER_TOKEN 이 번들 lock 과 다릅니다 — run_staged.sh 가 발급한 실행만 유효합니다"; exit 1
+    echo "⛔ RUNNER_TOKEN 이 번들 lock 과 다릅니다 — run_staged.sh 가 발급한 실행만 유효합니다"
+    echo "   (⚠ 이 검사는 사고성 직접 실행을 막는 표시일 뿐 소유권 증명이 아닙니다 — AY P0-2)"; exit 1
   fi
 fi
 # ── 실행 argv 조립 (자유형 문자열 없음 — 회신 AV P0-2) ─────────────────────
@@ -385,11 +391,22 @@ case "$VASP_LAUNCHER_KIND" in
     case "${VASP_NPROC:-}" in
       ''|*[!0-9]*|0) echo "⛔ VASP_NPROC 가 양의 정수가 아닙니다"; exit 1 ;;
     esac
-    if [ -z "${LAUNCHER_BIN:-}" ]; then
-      LAUNCHER_BIN=$(command -v "$VASP_LAUNCHER_KIND" 2>/dev/null || true)
+    # ⛔⛔ 2026-09-01 (회신 AY P0-1) — **PATH 조회를 폐기한다.**
+    #   종전: LAUNCHER_BIN=$(command -v "$VASP_LAUNCHER_KIND"). PATH 앞에 가짜
+    #   mpirun 을 두면 그놈이 이겼고, 봉인된 VASP_EXE 를 인자로 받고도 무시할 수
+    #   있었다. 이제 **봉인에 적힌 절대경로**만 쓴다 (매 상 재해시는 아래 루프에서).
+    if [ "$_FIXTURE" != 1 ]; then
+      _lsp=$(python3 -c 'import json;d=json.load(open("POTCAR_ROOT_SEAL.json"));print(d.get("launcher_path") or "")' 2>/dev/null || true)
+      _lsk=$(python3 -c 'import json;d=json.load(open("POTCAR_ROOT_SEAL.json"));print(d.get("launcher_kind") or "")' 2>/dev/null || true)
+      [ -n "$_lsp" ] || { echo "⛔ root seal 에 launcher 가 없습니다 — SEAL_POTCAR_ROOT.sh 를 VASP_LAUNCHER_KIND·LAUNCHER_BIN 과 함께 다시 돌리세요 (회신 AY P0-1)"; exit 1; }
+      [ "$_lsk" = "$VASP_LAUNCHER_KIND" ] || { echo "⛔ launcher kind 가 봉인($_lsk)과 다릅니다: $VASP_LAUNCHER_KIND"; exit 1; }
+      if [ -n "${LAUNCHER_BIN:-}" ] && [ "$LAUNCHER_BIN" != "$_lsp" ]; then
+        echo "⛔ LAUNCHER_BIN 이 봉인과 다릅니다 — 봉인: $_lsp"; exit 1
+      fi
+      LAUNCHER_BIN=$_lsp
     fi
-    [ -n "$LAUNCHER_BIN" ] && [ -x "$LAUNCHER_BIN" ] || {
-      echo "⛔ $VASP_LAUNCHER_KIND 를 찾을 수 없습니다"; exit 1; } ;;
+    [ -n "${LAUNCHER_BIN:-}" ] && [ -x "$LAUNCHER_BIN" ] || {
+      echo "⛔ launcher 실행파일이 없습니다: ${LAUNCHER_BIN:-<빈값>}"; exit 1; } ;;
   none) : ;;
   wrapper)
     [ -n "${VASP_WRAPPER:-}" ] && [ -x "${VASP_WRAPPER:-}" ] || {
@@ -513,7 +530,8 @@ for ph in pre relax static dense; do
   esac
   # 🔴 회신 AV P0-2 — **상 직전마다** 실행파일을 봉인과 재대조하고 receipt 에
   #   append 한다. 러너 시작 때 한 번 보는 것으로는 긴 실행 중 교체를 못 잡고,
-  #   receipt 는 분석기가 읽는 **필수 반송물**이다 (열: ts phase sha exe kind nproc).
+  #   receipt 는 분석기가 읽는 **필수 반송물**이다
+#   (열 8개: ts phase exe_sha exe kind nproc launcher launcher_sha — AY P0-1).
   _exe_h=$(sha256sum "$VASP_EXE" | cut -d" " -f1)
   if [ "$_FIXTURE" != 1 ] && [ -f "$_ROOT/POTCAR_ROOT_SEAL.json" ]; then
     _sealed=$(python3 -c \
@@ -531,10 +549,29 @@ for ph in pre relax static dense; do
         echo "⛔ $ph 직전: wrapper 가 봉인과 다릅니다"; exit 1
       fi
     fi
+    # ⛔ 회신 AY P0-1 — named launcher 도 **상 직전마다** 재해시해 봉인과 대조한다.
+    #   실행파일만 보던 종전 검사로는 launcher 교체를 못 잡았다.
+    case "$VASP_LAUNCHER_KIND" in
+      mpirun|mpiexec|srun)
+        _lh=$(sha256sum "$LAUNCHER_BIN" | cut -d" " -f1)
+        _lsealed=$(python3 -c \
+          'import json;print(json.load(open("../../POTCAR_ROOT_SEAL.json")).get("launcher_sha256") or "")' \
+          2>/dev/null || true)
+        if [ -z "$_lsealed" ] || [ "$_lh" != "$_lsealed" ]; then
+          echo "⛔ $ph 직전: launcher 가 봉인과 다릅니다 (지금 $_lh / 봉인 $_lsealed)"; exit 1
+        fi ;;
+    esac
   fi
-  printf '%s\t%s\t%s\t%s\t%s\t%s\n' \
+  # 영수증 8열 (회신 AY P0-1·P1): ts phase exe_sha exe kind nproc launcher launcher_sha
+  case "$VASP_LAUNCHER_KIND" in
+    mpirun|mpiexec|srun) _rl="$LAUNCHER_BIN"; _rlh="${_lh:-$(sha256sum "$LAUNCHER_BIN" | cut -d" " -f1)}" ;;
+    wrapper)             _rl="$VASP_WRAPPER"; _rlh="${_wr_h:-$(sha256sum "$VASP_WRAPPER" | cut -d" " -f1)}" ;;
+    *)                   _rl="-"; _rlh="-" ;;
+  esac
+  printf '%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\n' \
     "$(date -u +%Y-%m-%dT%H:%M:%SZ)" "$ph" "$_exe_h" \
-    "$VASP_EXE" "$VASP_LAUNCHER_KIND" "${VASP_NPROC:-1}" >> EXECUTABLE_RECEIPT.tsv
+    "$VASP_EXE" "$VASP_LAUNCHER_KIND" "${VASP_NPROC:-1}" \
+    "$_rl" "$_rlh" >> EXECUTABLE_RECEIPT.tsv
   echo "  ▶ $ph"
   ( cd "$ph" && _launch > vasp.out 2>&1 )
   grep -aq "General timing" "$ph/OUTCAR" || {
@@ -951,11 +988,18 @@ run_wave() {   # $1 = 목록 파일
     # 🔴 회신 AT P0-5 · AV P0-2 — receipt 는 **헤더행(러너) + 상별 행(run_job.sh)**.
     #   종전엔 러너가 잡당 한 행만 썼고 분석기가 읽지 않았다. 이제 run_job.sh 가
     #   상 직전마다 해시를 재서 append 하고, 분석기가 **필수 반송물**로 읽는다.
-    #   열: ts  phase  exe_sha256  exe  kind  nproc
-    printf "%s\t_runner_start\t%s\t%s\t%s\t%s\n" \
+    #   열 8개: ts phase exe_sha256 exe kind nproc launcher launcher_sha (AY P0-1)
+    case "$VASP_LAUNCHER_KIND" in
+      mpirun|mpiexec|srun) _hl="$LAUNCHER_BIN" ;;
+      wrapper)             _hl="$VASP_WRAPPER" ;;
+      *)                   _hl="" ;;
+    esac
+    if [ -n "$_hl" ]; then _hlh=$(sha256sum "$_hl" | cut -d" " -f1); else _hl="-"; _hlh="-"; fi
+    printf "%s\t_runner_start\t%s\t%s\t%s\t%s\t%s\t%s\n" \
       "$(date -u +%Y-%m-%dT%H:%M:%SZ)" \
       "$(sha256sum "$VASP_EXE" | cut -d" " -f1)" \
-      "$VASP_EXE" "$VASP_LAUNCHER_KIND" "$VASP_NPROC" > "$j/EXECUTABLE_RECEIPT.tsv"
+      "$VASP_EXE" "$VASP_LAUNCHER_KIND" "$VASP_NPROC" \
+      "$_hl" "$_hlh" > "$j/EXECUTABLE_RECEIPT.tsv"
     echo "=== $j 시작 ==="
     ( cd "$j" && bash run_job.sh ) || { echo "⛔ $j 실패"; exit 1; }
     echo "=== $j 완료 ==="
@@ -998,6 +1042,21 @@ SEAL_POTCAR_ROOT = r'''#!/usr/bin/env bash
 set -e
 : "${PP:?PP=/path/to/potpaw_PBE.54 를 주세요}"
 : "${POTCAR_ALLOWLIST:?POTCAR_ALLOWLIST=/abs/site_allow.txt 를 주세요}"
+# ⛔ 회신 AY P0-1 — launcher 를 여기서 **절대경로로** 받아 봉인한다.
+#    PATH 조회는 폐기됐다 (러너가 더 이상 command -v 를 쓰지 않는다).
+: "${VASP_LAUNCHER_KIND:?VASP_LAUNCHER_KIND=mpirun|mpiexec|srun|none|wrapper 를 주세요}"
+case "$VASP_LAUNCHER_KIND" in
+  mpirun|mpiexec|srun)
+    : "${LAUNCHER_BIN:?KIND=$VASP_LAUNCHER_KIND 면 LAUNCHER_BIN=/abs/path/to/$VASP_LAUNCHER_KIND 가 필요합니다 (PATH 에서 찾지 않습니다)}"
+    case "$LAUNCHER_BIN" in /*) : ;; *) echo "⛔ LAUNCHER_BIN 은 절대경로여야 합니다: $LAUNCHER_BIN"; exit 1 ;; esac
+    [ -x "$LAUNCHER_BIN" ] || { echo "⛔ LAUNCHER_BIN 이 실행파일이 아닙니다: $LAUNCHER_BIN"; exit 1; }
+    LAUNCHER_SHA=$(sha256sum "$LAUNCHER_BIN" | cut -d" " -f1); export LAUNCHER_SHA LAUNCHER_BIN ;;
+  none)    export LAUNCHER_BIN=""; export LAUNCHER_SHA="" ;;
+  wrapper) : "${VASP_WRAPPER:?KIND=wrapper 면 VASP_WRAPPER 절대경로가 필요합니다}"
+           export LAUNCHER_BIN=""; export LAUNCHER_SHA="" ;;
+  *) echo "⛔ 모르는 VASP_LAUNCHER_KIND: $VASP_LAUNCHER_KIND"; exit 1 ;;
+esac
+export VASP_LAUNCHER_KIND
 
 # ⛔⛔ 회신 AT P0-6 (2026-08-31) — 이 스크립트도 **번들 전역 lock** 에 참여한다.
 #   종전엔 러너만 잠갔고 봉인기·attestation 생성기는 그냥 들어왔다. 같은 번들의
@@ -1161,6 +1220,13 @@ rec = {
     "vasp_version_banner": os.environ.get("VASP_VER") or None,
     "launcher_wrapper": os.environ.get("VASP_WRAPPER") or None,
     "launcher_wrapper_sha256": os.environ.get("WRAP_SHA") or None,
+    # ⛔⛔ 2026-09-01 (회신 AY P0-1) — **named launcher 도 봉인한다.**
+    #   종전엔 wrapper 만 봉인하고 mpirun/mpiexec/srun 은 러너가 PATH 에서 찾았다.
+    #   PATH 앞에 가짜 mpirun 을 두면 봉인된 VASP_EXE 를 인자로 받고도 무시하고
+    #   다른 실행파일을 돌릴 수 있었다 — 봉인이 반쪽이었다.
+    "launcher_kind": os.environ.get("VASP_LAUNCHER_KIND") or None,
+    "launcher_path": os.environ.get("LAUNCHER_BIN") or None,
+    "launcher_sha256": os.environ.get("LAUNCHER_SHA") or None,
     "bundle_zip_sha256": os.environ.get("BUNDLE_ZIP_SHA256") or None,
     "sealed_at_utc": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
     "sealed_before_production": True,
@@ -4534,7 +4600,11 @@ def selftest_k() -> int:
     _SEAL_SHA = "a" * 64
     _MRC = {"staged_runner": "run_staged.sh",
             "files_sha256": {"j/run_job.sh": "x"},
-            "_potcar_root_seal": {"vasp_executable_sha256": _SEAL_SHA}}
+            # ⛔ 회신 AY P0-1 — 봉인에 **launcher 해시도** 있어야 대조가 성립한다
+            "_potcar_root_seal": {"vasp_executable_sha256": _SEAL_SHA,
+                                  "launcher_kind": "mpirun",
+                                  "launcher_path": "/opt/ompi/bin/mpirun",
+                                  "launcher_sha256": "c" * 64}}
 
     def _erg(text, man=None, executed=("static",), rel="j"):
         f = _rjp / "EXECUTABLE_RECEIPT.tsv"
@@ -4544,24 +4614,56 @@ def selftest_k() -> int:
             f.write_text(text, encoding="utf-8")
         return executable_receipt_gates(str(_rjp), rel, man or _MRC, list(executed))
 
-    _ROW = "2026-08-31T00:00:00Z\t%s\t%s\t/x/vasp_std\t%s\t48\n"
-    _ok_rcpt = (_ROW % ("_runner_start", _SEAL_SHA, "mpirun")
-                + _ROW % ("static", _SEAL_SHA, "mpirun"))
+    # 8열 (AY P0-1): ts phase exe_sha exe kind nproc launcher launcher_sha
+    _LSHA = "c" * 64
+    _ROW = ("2026-08-31T00:00:00Z\t%s\t%s\t/x/vasp_std\t%s\t48"
+            "\t/opt/ompi/bin/mpirun\t%s\n")
+    _ok_rcpt = (_ROW % ("_runner_start", _SEAL_SHA, "mpirun", _LSHA)
+                + _ROW % ("static", _SEAL_SHA, "mpirun", _LSHA))
     chk(_erg(_ok_rcpt) == [], "AV P0-2 양성: 봉인과 같은 해시의 receipt 는 게이트 0건")
     chk(any("RECEIPT_MISSING" in g for g in _erg(None)),
         "⛔음성 AV P0-2: receipt 가 없으면 막는다 (분석기가 실제로 **읽는다**)")
     chk(any("RECEIPT_EXE_MISMATCH" in g for g in
-            _erg(_ROW % ("static", "b" * 64, "mpirun"))),
+            _erg(_ROW % ("_runner_start", _SEAL_SHA, "mpirun", _LSHA)
+                 + _ROW % ("static", "b" * 64, "mpirun", _LSHA))),
         "⛔음성 AV P0-2: 봉인 밖 바이너리 해시면 막는다")
+    # ⛔⛔ 회신 AY P0-1 — PATH 앞의 가짜 mpirun
+    chk(any("RECEIPT_LAUNCHER_MISMATCH" in g for g in
+            _erg(_ROW % ("_runner_start", _SEAL_SHA, "mpirun", _LSHA)
+                 + _ROW % ("static", _SEAL_SHA, "mpirun", "f" * 64))),
+        "⛔음성 AY P0-1: **launcher 해시가 봉인과 다르면 막는다** "
+        "(PATH 앞의 가짜 mpirun — AV 판이 놓쳤던 구멍)")
+    chk(any("RECEIPT_RUNNER_START" in g for g in
+            _erg(_ROW % ("static", _SEAL_SHA, "mpirun", _LSHA))),
+        "⛔음성 AY P0-2: `_runner_start` 가 없으면 막는다 (러너를 안 거친 실행)")
+    chk(any("RECEIPT_RUNNER_START" in g for g in
+            _erg(_ROW % ("_runner_start", _SEAL_SHA, "mpirun", _LSHA) * 2
+                 + _ROW % ("static", _SEAL_SHA, "mpirun", _LSHA))),
+        "⛔음성 AY P0-2: `_runner_start` 가 둘이면 막는다 (이어붙인 receipt)")
+    chk(any("RECEIPT_MALFORMED" in g for g in
+            _erg("2026-08-31T00:00:00Z\tstatic\t%s\t/x/vasp_std\tnone\t48\n" % _SEAL_SHA)),
+        "⛔음성 AY P1: 열이 8개가 아니면 막는다 (종전 `<6` 은 열이 남아도 통과시켰다)")
+    chk(any("RECEIPT_NPROC" in g for g in
+            _erg(_ROW % ("_runner_start", _SEAL_SHA, "mpirun", _LSHA)
+                 + ("2026-08-31T00:00:00Z\tstatic\t%s\t/x/vasp_std\tmpirun\t0"
+                    "\t/opt/ompi/bin/mpirun\t%s\n" % (_SEAL_SHA, _LSHA)))),
+        "⛔음성 AY P1: nproc 가 양의 정수가 아니면 막는다")
+    chk(any("RECEIPT_TIME_FORMAT" in g for g in
+            _erg(_ROW % ("_runner_start", _SEAL_SHA, "mpirun", _LSHA)
+                 + ("어제\tstatic\t%s\t/x/vasp_std\tmpirun\t48"
+                    "\t/opt/ompi/bin/mpirun\t%s\n" % (_SEAL_SHA, _LSHA)))),
+        "⛔음성 AY P1: UTC 형식이 아니면 막는다")
     chk(any("RECEIPT_PHASE_MISSING" in g for g in
-            _erg(_ROW % ("_runner_start", _SEAL_SHA, "mpirun"))),
+            _erg(_ROW % ("_runner_start", _SEAL_SHA, "mpirun", _LSHA))),
         "⛔음성 AV P0-2: OUTCAR 가 있는 상의 receipt 행이 없으면 막는다 "
         "(run_job.sh 밖 실행)")
     chk(any("RECEIPT_LAUNCHER_KIND" in g for g in
-            _erg(_ROW % ("static", _SEAL_SHA, "env"))),
+            _erg(_ROW % ("_runner_start", _SEAL_SHA, "mpirun", _LSHA)
+                 + _ROW % ("static", _SEAL_SHA, "env", _LSHA))),
         "⛔음성 AV P0-2: 허용 밖 launcher(env)가 receipt 에 있으면 막는다")
     chk(any("RECEIPT_UNVERIFIABLE" in g for g in
-            _erg(_ROW % ("static", _SEAL_SHA, "mpirun"),
+            _erg(_ROW % ("_runner_start", _SEAL_SHA, "mpirun", _LSHA)
+                 + _ROW % ("static", _SEAL_SHA, "mpirun", _LSHA),
                  man={**_MRC, "_potcar_root_seal": {}})),
         "⛔음성 AV P0-2: 봉인에 실행파일 해시가 없으면 '확인 못 함 = 통과 아님'")
     chk(_erg(_ok_rcpt, man={"files_sha256": {"j/run_job.sh": "x"}}) == [],
@@ -5740,7 +5842,8 @@ def executable_receipt_gates(job_dir, rel, man, executed_phases):
     같을 때만 성립한다. staged 번들(run_staged.sh 경로)에만 적용한다 —
     비-staged 구판 번들에는 이 계약이 없었으므로 소급 요구하지 않는다.
 
-    행 형식: ts  phase  exe_sha256  exe  kind  nproc  (러너 헤더행은 phase=_runner_start)
+    행 형식(8열): ts phase exe_sha256 exe kind nproc launcher launcher_sha256
+      (러너 헤더행은 phase=`_runner_start` — **정확히 하나** 있어야 한다)
 
     ⛔ 이 함수가 못 하는 것: receipt 는 외주처 기계가 쓴 텍스트다 — **위조 자체**는
       막지 못한다. 이 게이트의 몫은 "위조하지 않은 정직한 우회"(다른 바이너리로
@@ -5759,13 +5862,26 @@ def executable_receipt_gates(job_dir, rel, man, executed_phases):
         return ["RECEIPT_MISSING(EXECUTABLE_RECEIPT.tsv 가 반송물에 없다 — 어떤 "
                 "바이너리로 돌았는지 확인할 수 없다. run_staged.sh 경로로 돌았다면 "
                 "잡마다 남는다)"]
-    rows = []
+    want_l = seal.get("launcher_sha256")
+    want_w = seal.get("launcher_wrapper_sha256")
+    rows, n_start = [], 0
     for ln in open(rp, encoding="utf-8", errors="replace").read().splitlines():
-        c = ln.split("\t")
-        if len(c) < 6:
-            g.append("RECEIPT_MALFORMED(%r — 열 6개 미만)" % ln[:60])
+        if not ln.strip():
             continue
+        c = ln.split("\t")
+        # ⛔ 회신 AY P1 — **열 수를 정확히** 본다. 종전 `len(c) < 6` 은 열이 남아도
+        #   통과시켰고, 그래서 줄바꿈 주입으로 열이 늘어난 행을 못 잡았다.
+        if len(c) != 8:
+            g.append("RECEIPT_MALFORMED(%r — 열 %d개, 8개여야 한다)" % (ln[:60], len(c)))
+            continue
+        if c[1] == "_runner_start":
+            n_start += 1
         rows.append(c)
+    # ⛔ 회신 AY P0-2 — `_runner_start` 가 **정확히 하나** 있어야 한다. 없으면
+    #   run_staged.sh 를 거치지 않은 실행이고, 여럿이면 이어붙인 것이다.
+    if n_start != 1:
+        g.append("RECEIPT_RUNNER_START(%d개 — 정확히 1개여야 한다. 0이면 러너를 "
+                 "거치지 않은 실행, 2개 이상이면 이어붙인 receipt 다)" % n_start)
     ph_rows = {c[1] for c in rows if c[1] != "_runner_start"}
     for c in rows:
         if c[1] == "_runner_start":
@@ -5779,6 +5895,27 @@ def executable_receipt_gates(job_dir, rel, man, executed_phases):
                      "바이너리로 돌았다)" % (c[1], c[2][:12], want[:12]))
         if c[4] not in ("mpirun", "mpiexec", "srun", "none", "wrapper"):
             g.append("RECEIPT_LAUNCHER_KIND(%s — 허용 밖 launcher)" % c[4])
+        # ⛔ 회신 AY P1 — 시각·프로세스 수 형식
+        if not re.match(r"^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z$", c[0]):
+            g.append("RECEIPT_TIME_FORMAT(%r — UTC ...Z 형식이 아니다)" % c[0][:32])
+        if not (c[5].isdigit() and int(c[5]) > 0):
+            g.append("RECEIPT_NPROC(%r — 양의 정수가 아니다)" % c[5][:24])
+        # ⛔⛔ 회신 AY P0-1 — **launcher 도 봉인과 대조한다.**
+        #   종전엔 실행파일만 봤다. 그래서 PATH 앞의 가짜 mpirun 이 통과했다.
+        if c[4] in ("mpirun", "mpiexec", "srun"):
+            if not want_l:
+                g.append("RECEIPT_LAUNCHER_UNSEALED(%s 상: root seal 에 launcher 해시가 "
+                         "없다 — PATH 에서 집은 launcher 를 대조할 수 없다)" % c[1])
+            elif c[7] != want_l:
+                g.append("RECEIPT_LAUNCHER_MISMATCH(%s 상의 launcher %s ≠ 봉인 %s — "
+                         "봉인 밖 launcher 로 돌았다)" % (c[1], c[7][:12], want_l[:12]))
+        elif c[4] == "wrapper":
+            if not want_w:
+                g.append("RECEIPT_LAUNCHER_UNSEALED(%s 상: wrapper 가 봉인돼 있지 않다)"
+                         % c[1])
+            elif c[7] != want_w:
+                g.append("RECEIPT_LAUNCHER_MISMATCH(%s 상의 wrapper %s ≠ 봉인 %s)"
+                         % (c[1], c[7][:12], want_w[:12]))
     for ph in executed_phases or []:
         if ph not in ph_rows:
             g.append("RECEIPT_PHASE_MISSING(%s 상의 OUTCAR 는 있는데 receipt 행이 "
