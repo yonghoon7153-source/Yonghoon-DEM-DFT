@@ -3,7 +3,7 @@ title: "리뷰 요청 BA — C-12 v21 (회신 AZ P0 7건 + P1 전건 이행)"
 date: 2026-09-02
 updated: 2026-09-02
 tags: [review, codex, sdcp, c12, vasp, handoff, prompt]
-status: 발송 대기
+status: 회신 수령 — 후속 BB
 kind: review-request
 system: sdcp
 confidence: high
