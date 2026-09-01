@@ -34,6 +34,7 @@ PRESERVE = ROOT / "tools" / "preserve.py"
 RP = ROOT / "docs" / "22p_gap" / "row_projection.py"
 TDL = ROOT / "tests" / "test_docs_lint.py"
 GRID = ROOT / "src" / "grid.py"
+FITTING = ROOT / "src" / "fitting.py"
 
 #: ★ 46차 #9 조건 9 — 변이는 **작업 트리에 손대지 않는다.** 45차 runner 는
 #:   실제 저장소 파일을 고쳤다가 `finally` 로 되돌렸다. 그러면 (a) 중단되면
@@ -415,7 +416,8 @@ MUTANTS = [
      "",
      "finalize_writes_a_complete_contract_status_tuple"),
     ("fit-axis-is-the-real-policy", PRESERVE,
-     'LEG_SPEC_FIT_KEYS = ("config_digest", "objective_order", "reference",\n'
+     'LEG_SPEC_FIT_KEYS = ("config_digest", "objective_order", "objectives_digest",\n'
+     '                     "reference",\n'
      '                     "halfcell_recipe", "halfcell_cache_sha256",\n'
      '                     "base_config_digest", "bounds_preset", "bounds_digest",\n'
      '                     "optimizer", "use_noisy", "row_selection",\n'
@@ -498,17 +500,19 @@ MUTANTS = [
      "closed_run_cannot_be_resurrected_by_a_late_phase or "
      "released_run_cannot_be_resurrected_by_a_late_phase"),
     ("token-is-written-before-the-claim", PRESERVE,
-     "    token = _new_token()\n"
-     "    write_token_file(token_file, token)\n"
-     "    try:\n"
-     "        return claim_planned_leg(leg_id, run_spec, source_digest, ledger=ledger,\n"
-     "                                 claims_root=claims_root, token=token)",
-     "    token = _new_token()\n"
-     "    try:\n"
-     "        claim = claim_planned_leg(leg_id, run_spec, source_digest, ledger=ledger,\n"
-     "                                 claims_root=claims_root, token=token)\n"
+     "        token = _new_token()\n"
      "        write_token_file(token_file, token)\n"
-     "        return claim",
+     "        try:\n"
+     "            return claim_planned_leg(leg_id, run_spec, source_digest,\n"
+     "                                     ledger=ledger, claims_root=claims_root,\n"
+     "                                     token=token)",
+     "        token = _new_token()\n"
+     "        try:\n"
+     "            claim = claim_planned_leg(leg_id, run_spec, source_digest,\n"
+     "                                      ledger=ledger, claims_root=claims_root,\n"
+     "                                      token=token)\n"
+     "            write_token_file(token_file, token)\n"
+     "            return claim",
      "crash_between_the_claim_and_the_token_leaves_nothing_stranded"),
     ("fit-axis-seals-the-input-content", PRESERVE,
      '                     "halfcell_recipe", "halfcell_cache_sha256",\n'
@@ -531,19 +535,150 @@ MUTANTS = [
      "            raise SystemExit(",
      "deleting_the_journal_does_not_erase_the_freeze"),
     ("module-defs-see-tuple-targets", RP,
-     "            for t in node.targets:\n"
-     "                for name in _target_names(t):\n"
-     "                    defs[name] = node",
-     "            for t in node.targets:\n"
-     "                if isinstance(t, ast.Name):\n"
-     "                    defs[t.id] = node",
+     "                for t in node.targets:\n"
+     "                    for name in _target_names(t):\n"
+     "                        defs[name] = top or node",
+     "                for t in node.targets:\n"
+     "                    if isinstance(t, ast.Name):\n"
+     "                        defs[t.id] = top or node",
      "producer_closure_sees_tuple_targets or "
      "producer_closure_follows_a_tuple_defined_constant"),
-    ("closure-refuses-reading-a-docstring", RP,
-     '                    "__dict__", "__globals__", "__code__", "__doc__"):',
-     '                    "__dict__", "__globals__", "__code__"):',
-     "reading_a_docstring_inside_the_closure_is_fail_closed"),
-    ("canon-absorbs-the-pep701-empty-piece", RP,
+    # ★ 51차 P0-I — 복합문 안으로 들어가지 않으면 `for X in ...` 이 묶은
+    #   계산 상수가 identity 밖이다 (리뷰어 반례).
+    ("module-defs-enter-compound-statements", RP,
+     "            elif kind in _MODULE_COMPOUND:",
+     "            elif kind in _MODULE_COMPOUND:\n"
+     "                continue\n"
+     "            elif False:",
+     "producer_closure_sees_every_module_binding_form"),
+    # ★ 51차 P0-I — 모르는 문을 조용히 지나치면 열거가 곧 구멍이다.
+    ("module-defs-fail-closed-on-unknown", RP,
+     "            else:\n"
+     "                raise SystemExit(\n"
+     "                    f\"✗ producer 소스의 module scope 에 모델링하지 않은 binding \"",
+     "            else:\n"
+     "                continue\n"
+     "            if False:\n"
+     "                raise SystemExit(\n"
+     "                    f\"✗ producer 소스의 module scope 에 모델링하지 않은 binding \"",
+     "unmodelled_module_binding_form_is_fail_closed"),
+    # ★ 51차 P0-I — docstring 을 버리면 alias 로 읽어 identity 를 우회한다.
+    ("canon-keeps-docstrings", RP,
+     "def _keep_docstrings(tree):",
+     "def _keep_docstrings(tree):\n"
+     "    import ast\n"
+     "    for node in ast.walk(tree):\n"
+     "        body = getattr(node, \"body\", None)\n"
+     "        if not isinstance(body, list) or not body:\n"
+     "            continue\n"
+     "        if not isinstance(node, (ast.Module, ast.FunctionDef,\n"
+     "                                 ast.AsyncFunctionDef, ast.ClassDef)):\n"
+     "            continue\n"
+     "        first = body[0]\n"
+     "        if isinstance(first, ast.Expr) \\\n"
+     "                and isinstance(first.value, ast.Constant) \\\n"
+     "                and isinstance(first.value.value, str):\n"
+     "            node.body = body[1:] or [ast.Pass()]\n"
+     "    return tree\n"
+     "def _unused_keep(tree):",
+     "docstring_the_computation_reads_is_inside_the_identity"),
+    # ─────────────────────────────────────────────────────────────────────
+    # 51차 방어
+    # ─────────────────────────────────────────────────────────────────────
+    # ★ P0-L1 — 발급이 살아 있는 claim 을 보기 **전에** token 을 덮으면, 두
+    #   번째 정상 호출이 owner 의 소유 증명을 파괴한다 (리뷰어 실측).
+    ("open-checks-the-live-claim-first", PRESERVE,
+     "        if cp.is_file():\n"
+     "            raise PreserveError(\n"
+     "                \"plan\",\n"
+     "                f\"{leg_id!r} 은 이미 실행 중이다 (claim: {cp}) — 두 번째 실행을 \"",
+     "        if False:\n"
+     "            raise PreserveError(\n"
+     "                \"plan\",\n"
+     "                f\"{leg_id!r} 은 이미 실행 중이다 (claim: {cp}) — 두 번째 실행을 \"",
+     "second_open_never_touches_the_live_owners_token"),
+    # ★ P0-L1/P1-P — 전달 통로가 authority 경로를 점유할 수 있으면 claim reader
+    #   전체가 malformed JSON 을 만난다.
+    ("token-path-is-disjoint-from-authority", PRESERVE,
+     "    _assert_token_path_disjoint(token_file, claims_root, ledger)",
+     "    pass",
+     "token_path_cannot_alias_the_claim_authority"),
+    # ★ P0-L2 — 삭제는 상태 전이다. 경로만 보고 지우면 남의 generation 을 지운다.
+    ("token-unlink-is-generation-scoped", PRESERVE,
+     "    if not secrets.compare_digest(cur, str(token)):\n"
+     "        return False",
+     "    if False:\n"
+     "        return False",
+     "late_release_cleanup_cannot_delete_the_next_attempts_token"),
+    # ★ P0-L2 — mutator 가 쓰기 지점에서 live attempt 를 재확인하지 않으면
+    #   stale handle 과 위조 handle 이 남의 실행을 취소한다.
+    ("abandon-rechecks-the-live-attempt", PRESERVE,
+     "        _assert_live_attempt(json.loads(claim.path.read_text(encoding=\"utf-8\")),\n"
+     "                             claim, \"발급 되돌림\")",
+     "        pass",
+     "stale_claim_handle_cannot_cancel_the_next_attempt or "
+     "readonly_claim_cannot_abandon_the_live_owner"),
+    # ★ P0-L3 — claim 을 먼저 지우면 crash 가 회수 불가능한 running orphan 을
+    #   남긴다. 원장이 먼저여야 중간 상태가 재시도 가능하다.
+    ("release-moves-the-ledger-before-the-claim", PRESERVE,
+     "        # 원장이 `planned` 로 굳은 **뒤에만** claim 을 놓는다.\n"
+     "        claim.path.unlink(missing_ok=True)",
+     "        pass",
+     "crash_inside_release_leaves_a_recoverable_state"),
+    # ★ P0-L3 — `os.replace` 뒤의 오류를 미커밋으로 보면 claim/token 을 지운다.
+    ("rollback-rereads-the-committed-state", PRESERVE,
+     "        if _plan_status(leg_id, ledger=ledger) != \"running\":\n"
+     "            path.unlink(missing_ok=True)",
+     "        path.unlink(missing_ok=True)",
+     "durability_error_after_the_ledger_commit_keeps_the_claim"),
+    # ★ P0-A1 — 목적함수 payload 가 승인 밖이면 같은 이름으로 다른 J 를 낸다.
+    ("fit-axis-seals-the-objective-payload", FITTING,
+     '        "objectives_digest": _dg({str(k): objectives[k]\n'
+     '                                  for k in sorted(objectives)}),',
+     '        "objectives_digest": "0" * 16,',
+     "objective_payload_is_inside_the_approval_digest"),
+    # ★ P0-A2 — leaf 만 해시하면 `extends` 부모로 행을 옮길 수 있다.
+    ("fit-axis-seals-the-config-closure", FITTING,
+     '        "base_config_digest": _config_closure_digest(\n'
+     '            base_config or "configs/base.yaml", repo_root=bytes_root),',
+     '        "base_config_digest": _file_digest16(\n'
+     '            base_config or "configs/base.yaml"),',
+     "base_config_parent_is_inside_the_approval_digest"),
+    # ★ P0-A3 — 검사한 pathname 을 나중에 다시 열면 그 사이가 무방비다.
+    ("fit-stages-its-inputs-before-the-gate", FITTING,
+     "    _staged = _stage_fit_inputs(in_dir, base_config, reference,\n"
+     "                                halfcell_method, halfcell_kw)",
+     "    _staged = {\"root\": None, \"in_dir\": Path(in_dir),\n"
+     "               \"base_config\": base_config,\n"
+     "               \"origin_in_dir\": str(in_dir),\n"
+     "               \"origin_base_config\": str(base_config)}",
+     "run_fit_hands_the_body_the_staged_copies_not_the_originals"),
+    # ★ P1-E1 — 외부 입력 분기가 곡선 하나만 보면 manifest 를 갈아 끼울 수 있다.
+    ("external-binding-covers-the-package", FITTING,
+     "    got = fit_input_package_digest(got_map)",
+     '    got = got_map["curves_sha256"]',
+     "external_input_binding_covers_the_whole_package"),
+    # ★ P0-A4 — 완방상태 캐시가 승인 밖이면 격자 truth 기준점이 조용히 움직인다.
+    ("grid-axis-seals-the-discharged-cache", GRID,
+     '        "discharged_cache_sha256": (\n'
+     "            _h.sha256(cache.read_bytes()).hexdigest()\n"
+     "            if use_cache and cache.is_file() else None),",
+     '        "discharged_cache_sha256": None,',
+     "grid_axis_binds_the_discharged_state_cache"),
+    # ★ P0-F — 얼린 것은 이름이 아니라 그 디렉터리다.
+    ("freeze-seals-the-output-directory", RP,
+     "    for d, cid in frozen_dirs_from_journal().items():\n"
+     "        out.setdefault(cid, (REPO / d).resolve())",
+     "    pass",
+     "frozen_directory_cannot_be_republished_under_a_new_cohort_id"),
+    # ★ P1-O — fail-closed 는 정지가 아니다. 남은 전이를 완주해야 한다.
+    ("freeze-completes-a-half-written-transition", RP,
+     "    if recorded == \"frozen\":\n"
+     "        if row.get(\"status\") == \"active\":",
+     "    if recorded == \"frozen\":\n"
+     "        if False:",
+     "freeze_is_retryable_after_a_crash_between_its_two_writes"),
+        ("canon-absorbs-the-pep701-empty-piece", RP,
      "            if isinstance(node, ast.JoinedStr) and f == \"values\" \\\n"
      "                    and isinstance(v, list):\n"
      "                v = [x for x in v\n"
@@ -586,12 +721,12 @@ MULTI = [
     ("producer-normalizes-the-node", RP, [
         ("def _ast_normal_node(node) -> str:",
          "def _ast_normal_node(node, _src=None) -> str:"),
-        ("    return _ast_canon(_strip_docstrings(copy.deepcopy(node)))",
+        ("    return _ast_canon(_keep_docstrings(copy.deepcopy(node)))",
          "    import ast\n"
          "    seg = ast.unparse(node)\n"
          "    body = ast.parse(seg).body[0]\n"
          "    body.decorator_list = []\n"
-         "    return _ast_canon(_strip_docstrings(body))"),
+         "    return _ast_canon(_keep_docstrings(body))"),
      ], "producer_digest_sees_decorators"),
     # ★ 47차 — `dir_fd` 는 두 자리에 있다(`os.stat` · `os.open`). 하나만
     #   되돌리면 다른 철자가 남아 구조 검사가 통과한다 — 실측했다.
@@ -1024,12 +1159,134 @@ EXPECT: dict = {
             "tests/test_docs_lint.py::test_dynamic_name_resolution_inside_the_closure_is_fail_closed[vars(sc)['add_error_columns'](df)]": "Failed: DID NOT RAISE SystemExit"
         }
     },
-    "closure-refuses-reading-a-docstring": {
+    "canon-keeps-docstrings": {
         "fail": [
-            "tests/test_docs_lint.py::test_reading_a_docstring_inside_the_closure_is_fail_closed"
+            "tests/test_docs_lint.py::test_a_docstring_the_computation_reads_is_inside_the_identity"
         ],
         "witness": {
-            "tests/test_docs_lint.py::test_reading_a_docstring_inside_the_closure_is_fail_closed": "Failed: DID NOT RAISE SystemExit"
+            "tests/test_docs_lint.py::test_a_docstring_the_computation_reads_is_inside_the_identity": "AssertionError: `score_canonical.__doc__` 로 읽는 docstring 을 바꿨는데 producer digest 가 그대로다 — 계산이 쓰는 값이 identity 밖에 있다"
+        }
+    },
+    "external-binding-covers-the-package": {
+        "fail": [
+            "tests/test_fitting.py::test_the_external_input_binding_covers_the_whole_package"
+        ],
+        "witness": {
+            "tests/test_fitting.py::test_the_external_input_binding_covers_the_whole_package": "tools.preserve.PreserveError: [plan] 계획이 승인한 입력 묶음과 지금 읽는 묶음이 다르다"
+        }
+    },
+    "fit-axis-seals-the-config-closure": {
+        "fail": [
+            "tests/test_fitting.py::test_the_base_config_parent_is_inside_the_approval_digest"
+        ],
+        "witness": {
+            "tests/test_fitting.py::test_the_base_config_parent_is_inside_the_approval_digest": "AssertionError: `extends` 부모를 바꿔도 승인 digest 가 같다 — 승인은 실제로 읽히는 파일 전부를 담아야 한다"
+        }
+    },
+    "fit-axis-seals-the-objective-payload": {
+        "fail": [
+            "tests/test_fitting.py::test_the_objective_payload_is_inside_the_approval_digest"
+        ],
+        "witness": {
+            "tests/test_fitting.py::test_the_objective_payload_is_inside_the_approval_digest": "AssertionError: 같은 이름 아래 다른 가중치가 같은 승인 digest 를 냈다 — 승인한 것은 계산이 아니라 이름이다"
+        }
+    },
+    "fit-stages-its-inputs-before-the-gate": {
+        "fail": [
+            "tests/test_fitting.py::test_run_fit_hands_the_body_the_staged_copies_not_the_originals"
+        ],
+        "witness": {
+            "tests/test_fitting.py::test_run_fit_hands_the_body_the_staged_copies_not_the_originals": "AssertionError: 본체가 staging 뿌리를 못 받았다"
+        }
+    },
+    "freeze-completes-a-half-written-transition": {
+        "fail": [
+            "tests/test_docs_lint.py::test_freeze_is_retryable_after_a_crash_between_its_two_writes"
+        ],
+        "witness": {
+            "tests/test_docs_lint.py::test_freeze_is_retryable_after_a_crash_between_its_two_writes": "SystemExit: ✗ cohort 'gZ' 는 이미 frozen 으로 기록됐다 — 두 번 얼릴 수 없다"
+        }
+    },
+    "freeze-seals-the-output-directory": {
+        "fail": [
+            "tests/test_docs_lint.py::test_a_frozen_directory_cannot_be_republished_under_a_new_cohort_id"
+        ],
+        "witness": {
+            "tests/test_docs_lint.py::test_a_frozen_directory_cannot_be_republished_under_a_new_cohort_id": "Failed: DID NOT RAISE SystemExit"
+        }
+    },
+    "grid-axis-seals-the-discharged-cache": {
+        "fail": [
+            "tests/test_grid.py::test_the_grid_axis_binds_the_discharged_state_cache"
+        ],
+        "witness": {
+            "tests/test_grid.py::test_the_grid_axis_binds_the_discharged_state_cache": "AssertionError: 완방상태 캐시를 갈아도 승인 digest 가 같다 — 승인 밖에서 격자 truth 의 기준점이 움직인다"
+        }
+    },
+    "module-defs-enter-compound-statements": {
+        "fail": [
+            "tests/test_docs_lint.py::test_the_producer_closure_sees_every_module_binding_form"
+        ],
+        "witness": {
+            "tests/test_docs_lint.py::test_the_producer_closure_sees_every_module_binding_form": "AssertionError: module-level `for` 이 묶은 계산 상수를 바꿨는데 producer digest 가 그대로다 — 그 문법으로 identity 밖에 나갈 수 있다"
+        }
+    },
+    "module-defs-fail-closed-on-unknown": {
+        "fail": [
+            "tests/test_docs_lint.py::test_an_unmodelled_module_binding_form_is_fail_closed"
+        ],
+        "witness": {
+            "tests/test_docs_lint.py::test_an_unmodelled_module_binding_form_is_fail_closed": "Failed: DID NOT RAISE SystemExit"
+        }
+    },
+    "open-checks-the-live-claim-first": {
+        "fail": [
+            "tests/test_preserve.py::test_a_second_open_never_touches_the_live_owners_token"
+        ],
+        "witness": {
+            "tests/test_preserve.py::test_a_second_open_never_touches_the_live_owners_token": "AssertionError: 두 번째 발급이 살아 있는 owner 의 소유 증명을 덮었다"
+        }
+    },
+    "release-moves-the-ledger-before-the-claim": {
+        "fail": [
+            "tests/test_preserve.py::test_a_crash_inside_release_leaves_a_recoverable_state"
+        ],
+        "witness": {
+            "tests/test_preserve.py::test_a_crash_inside_release_leaves_a_recoverable_state": "AssertionError: assert not True"
+        }
+    },
+    "rollback-rereads-the-committed-state": {
+        "fail": [
+            "tests/test_preserve.py::test_a_durability_error_after_the_ledger_commit_keeps_the_claim"
+        ],
+        "witness": {
+            "tests/test_preserve.py::test_a_durability_error_after_the_ledger_commit_keeps_the_claim": "AssertionError: 커밋된 전이인데 claim 을 지웠다 — 회수 불가능한 running orphan"
+        }
+    },
+    "token-path-is-disjoint-from-authority": {
+        "fail": [
+            "tests/test_preserve.py::test_the_token_path_cannot_alias_the_claim_authority"
+        ],
+        "witness": {
+            "tests/test_preserve.py::test_the_token_path_cannot_alias_the_claim_authority": "AssertionError: assert not True"
+        }
+    },
+    "token-unlink-is-generation-scoped": {
+        "fail": [
+            "tests/test_preserve.py::test_a_late_release_cleanup_cannot_delete_the_next_attempts_token"
+        ],
+        "witness": {
+            "tests/test_preserve.py::test_a_late_release_cleanup_cannot_delete_the_next_attempts_token": "AssertionError: 옛 release 의 cleanup 이 새 attempt 의 token 을 지웠다"
+        }
+    },
+    "abandon-rechecks-the-live-attempt": {
+        "fail": [
+            "tests/test_preserve.py::test_a_readonly_claim_cannot_abandon_the_live_owner",
+            "tests/test_preserve.py::test_a_stale_claim_handle_cannot_cancel_the_next_attempt"
+        ],
+        "witness": {
+            "tests/test_preserve.py::test_a_readonly_claim_cannot_abandon_the_live_owner": "Failed: DID NOT RAISE PreserveError",
+            "tests/test_preserve.py::test_a_stale_claim_handle_cannot_cancel_the_next_attempt": "Failed: DID NOT RAISE PreserveError"
         }
     },
     "closure-unresolved-attr-is-fail-closed": {
@@ -1786,6 +2043,61 @@ def main() -> int:
     return rc
 
 
+def _is_semantic_noop(src: str, old: str, new: str) -> bool:
+    """이 치환이 **계산을 안 바꾸는가** (51차 P1-E2).
+
+    50차는 `old == new` 만 봤다 — 바이트 부등식이다. 리뷰어가 주석 한 줄만
+    더한 mutant 를 등록해 `check_preimages_rc=0` 를 받았다: 변이가 계산을 안
+    바꾸면 시험은 당연히 초록이고, 그것을 "물었다" 로 세면 전수 인증이 거짓이
+    된다.
+
+    정규형(AST → `ast.unparse`)이 같으면 그 치환은 주석·공백·따옴표 서식만
+    바꾼 것이다. 파싱이 안 되면 **변이로 인정한다** — 문법을 깨는 치환은
+    적어도 no-op 은 아니다 (그 경우는 재생이 잡는다).
+    """
+    import ast
+
+    if old not in src:
+        return False
+    try:
+        a = ast.unparse(ast.parse(src))
+        b = ast.unparse(ast.parse(src.replace(old, new, 1)))
+    except SyntaxError:
+        return False
+    return a == b
+
+
+def _registry_digest() -> str:
+    """등록부 **전체**의 내용 주소 — 이름·파일·preimage·기대 node 까지 (51차)."""
+    body = json.dumps(
+        [[n, p.name, o, w, k] for n, p, o, w, k in MUTANTS]
+        + [[n, p.name, list(map(list, pairs)), k] for n, p, pairs, k in MULTI],
+        ensure_ascii=False, sort_keys=True)
+    return hashlib.sha256(body.encode("utf-8")).hexdigest()
+
+
+def _expect_digest() -> str:
+    return hashlib.sha256(json.dumps(EXPECT, ensure_ascii=False, sort_keys=True)
+                          .encode("utf-8")).hexdigest()
+
+
+def _runner_digest() -> str:
+    return hashlib.sha256(
+        pathlib.Path(__file__).read_bytes()).hexdigest()
+
+
+def _head() -> str:
+    """이 증거가 어느 트리에서 나왔는가. git 이 없으면 빈 문자열."""
+    import subprocess
+
+    try:
+        r = subprocess.run(["git", "rev-parse", "HEAD"], capture_output=True,
+                           text=True, cwd=str(pathlib.Path(__file__).parent))
+        return r.stdout.strip() if r.returncode == 0 else ""
+    except OSError:                                       # pragma: no cover
+        return ""
+
+
 def check_preimages(k: str = "") -> int:
     """변이 지점이 **살아 있는가** — pytest 없이 (49차).
 
@@ -1801,9 +2113,13 @@ def check_preimages(k: str = "") -> int:
         # ★ 50차 P1 — **아무 것도 안 바꾸는 변이**를 거부한다. `old == new` 면
         #   시험은 당연히 초록이고, 그것을 "물었다" 로 세면 전수 인증이 거짓이
         #   된다 (49차 리뷰어 지적). 변이가 아닌 것을 변이로 셀 수 없다.
+        src = path.read_text(encoding="utf-8")
         if old == new:
             bad.append(f"{name:34s} {path.name:20s} 변이가 아무 것도 안 바꾼다")
-        c = path.read_text(encoding="utf-8").count(old)
+        elif _is_semantic_noop(src, old, new):
+            bad.append(f"{name:34s} {path.name:20s} 변이가 **의미**를 안 바꾼다 "
+                       "(주석·공백·문자열 서식만)")
+        c = src.count(old)
         if c != 1:
             bad.append(f"{name:34s} {path.name:20s} preimage {c}회")
     for name, path, pairs, kexpr in MULTI:
@@ -1814,6 +2130,9 @@ def check_preimages(k: str = "") -> int:
             if old == new:
                 bad.append(f"{name:34s} {path.name:20s} site {i} 변이가 아무 "
                            "것도 안 바꾼다")
+            elif _is_semantic_noop(src, old, new):
+                bad.append(f"{name:34s} {path.name:20s} site {i} 변이가 "
+                           "**의미**를 안 바꾼다 (주석·공백만)")
             c = src.count(old)
             if c != 1:
                 bad.append(f"{name:34s} {path.name:20s} site {i} preimage {c}회")
@@ -1935,9 +2254,23 @@ def _write_coverage(path, selector, items, multi, declared, bit) -> None:
         scen[name] = {"class": "declared" if name in decl_names else "executable",
                       "sites": len(pairs), "kexpr": kexpr,
                       "ran": name in bit, "bit": bit.get(name)}
-    rec = {"schema": "mutation-coverage/v1",
+    # ★ 51차 P1-E2 — 증거를 **이 등록부·이 코드·이 실행**에 묶는다. 50차
+    #   artifact 는 아무 것에도 안 묶여 있어서, 과거 JSON 만으로 99/99 가
+    #   나왔다 (리뷰어 실측 `replay_calls=0`). "무엇을 덮었다" 가 아니라
+    #   "무엇이 실제로 돌았다" 가 증거다.
+    transcript = json.dumps(
+        [[n, bool(v["ran"]), (None if v["bit"] is None else bool(v["bit"]))]
+         for n, v in sorted(scen.items())], ensure_ascii=False, sort_keys=True)
+    rec = {"schema": "mutation-coverage/v2",
            "selector": selector,
            "at": dt.datetime.now(dt.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
+           "binding": {
+               "registry_digest": _registry_digest(),
+               "expect_digest": _expect_digest(),
+               "runner_digest": _runner_digest(),
+               "head": _head(),
+               "transcript_digest": hashlib.sha256(
+                   transcript.encode("utf-8")).hexdigest()},
            "scenarios": scen}
     p = pathlib.Path(path)
     p.parent.mkdir(parents=True, exist_ok=True)
@@ -1965,13 +2298,37 @@ def check_coverage(paths) -> int:
         print("✗ 실행 가능 변이인데 기대 실패 집합이 비었거나 없다: "
               + ", ".join(empty))
         return 1
+    # ★ 51차 P1-E2 — 조각이 **지금 이 등록부·이 runner** 에서 나왔는지 먼저 본다.
+    want = {"registry_digest": _registry_digest(),
+            "expect_digest": _expect_digest(),
+            "runner_digest": _runner_digest()}
     seen: dict = {}
     for path in paths:
         rec = json.loads(pathlib.Path(path).read_text(encoding="utf-8"))
-        if rec.get("schema") != "mutation-coverage/v1":
-            print(f"✗ {path}: coverage schema 가 아니다: {rec.get('schema')!r}")
+        if rec.get("schema") != "mutation-coverage/v2":
+            print(f"✗ {path}: coverage schema 가 아니다: {rec.get('schema')!r} "
+                  "(51차부터 v2 — 결속 없는 v1 은 증거가 아니다)")
             return 1
-        for name, v in (rec.get("scenarios") or {}).items():
+        binding = rec.get("binding") or {}
+        for key, w in want.items():
+            if binding.get(key) != w:
+                print(f"✗ {path}: {key} 가 살아 있는 값과 다르다 "
+                      f"({str(binding.get(key))[:16]} ≠ {w[:16]}) — 이 조각은 "
+                      "지금 등록부/코드가 아닌 것에서 나왔다")
+                return 1
+        scen = rec.get("scenarios") or {}
+        transcript = json.dumps(
+            [[n, bool(v.get("ran")),
+              (None if v.get("bit") is None else bool(v.get("bit")))]
+             for n, v in sorted(scen.items())], ensure_ascii=False,
+            sort_keys=True)
+        got = hashlib.sha256(transcript.encode("utf-8")).hexdigest()
+        if binding.get("transcript_digest") != got:
+            print(f"✗ {path}: transcript_digest 가 담긴 결과와 다르다 "
+                  f"({str(binding.get('transcript_digest'))[:16]} ≠ "
+                  f"{got[:16]}) — 결과를 나중에 고쳤다")
+            return 1
+        for name, v in scen.items():
             cur = seen.setdefault(name, {"class": v["class"], "ran": False,
                                          "bit": None, "slices": []})
             if cur["class"] != v["class"]:

@@ -521,6 +521,42 @@ def _file_digest16(path) -> str:
     return _h.sha256(p.read_bytes()).hexdigest()[:16]
 
 
+def _config_closure_digest(path, repo_root=None) -> str:
+    """`extends` 연쇄 **전체**의 내용 주소 (51차 P0-A2).
+
+    `_file_digest16()` 은 leaf 하나만 본다. 이 저장소의 config 는 부모를 재귀
+    로드하고(`config_dependencies()`), 본체는 그 연쇄 전부를 snapshot·merge 해
+    `reference_inventory()` 에 넣는다. 승인이 leaf 만 담으면 부모를 바꿔 행을
+    옮기면서도 같은 승인으로 통과한다.
+
+    키는 저장소 기준 상대경로로 정규화한다 — 같은 파일을 두 표기로 넘겨도 같은
+    preimage 여야 한다.
+    """
+    import hashlib as _h
+
+    from src.config import config_dependencies
+    from src.io import canonical_input_key as _ck
+
+    deps = config_dependencies(path)
+    if not deps:
+        from tools.preserve import PreserveError
+        raise PreserveError("plan", f"승인 축이 가리키는 config 연쇄가 비었다: {path}")
+    body = "\n".join(
+        f"{_ck(d, repo_root)}={_h.sha256(_P_read_bytes(d)).hexdigest()}"
+        for d in sorted(deps, key=lambda x: _ck(x, repo_root)))
+    return _h.sha256(body.encode("utf-8")).hexdigest()[:16]
+
+
+def _P_read_bytes(path) -> bytes:
+    from pathlib import Path as _P
+
+    p = _P(path)
+    if not p.is_file():
+        from tools.preserve import PreserveError
+        raise PreserveError("plan", f"승인 축이 가리키는 입력이 없다: {p}")
+    return p.read_bytes()
+
+
 def _halfcell_cache_sha(base_config, reference: str, method: str, kw):
     """기준 캐시의 **바이트** (grid 기준이면 `None` — 캐시를 안 읽는다)."""
     import hashlib as _h
@@ -545,7 +581,7 @@ def live_fit_axis(objectives: dict, obj_cfg: dict, bounds: dict,
                   limit, subset, reference: str, warm_start: bool,
                   adaptive: bool, method: str, halfcell_method: str,
                   halfcell_kw: dict | None, in_dir, out_dir,
-                  base_config=None) -> dict:
+                  base_config=None, bytes_root=None) -> dict:
     """이 실행이 **실제로 하려는 것** 을 승인 축으로 편다 (49차 P0-5).
 
     48차 fit 축은 `{config_digest, objectives, out}` 셋뿐이었다. 그런데
@@ -581,8 +617,22 @@ def live_fit_axis(objectives: dict, obj_cfg: dict, bounds: dict,
         #   (49차 반례: 승인한 A 대신 유효한 B 가 계산·게시됐다).
         "halfcell_cache_sha256": _halfcell_cache_sha(
             base_config, reference, halfcell_method, halfcell_kw),
+        # ★ 51차 P0-A1 — **이름과 순서만으로는 부족하다.** 50차 축은
+        #   `objective_order` 하나였는데 `_fit_one()` 이 실제로 소비하는 것은
+        #   `{이름: 가중치}` payload 다. 같은 이름 아래 `{w_pocv:1}` 과
+        #   `{w_pocv:1, w_dvdq:20}` 을 주면 J 도 행도 달라지는데 승인 digest 는
+        #   같았다 (리뷰어 실측). CLI 가 지금 둘을 함께 만든다는 사실은 public
+        #   production API 의 불변식이 아니다 — 인자가 둘이면 축도 둘이다.
+        "objectives_digest": _dg({str(k): objectives[k]
+                                  for k in sorted(objectives)}),
         # 재고 분배 상수 — 축 자체가 없었다
-        "base_config_digest": _file_digest16(base_config or "configs/base.yaml"),
+        # ★ 51차 P0-A2 — leaf 가 아니라 **dependency closure 전체**다. 50차는
+        #   `extends:` 로 가리키는 부모를 안 봤다. 본체는 `config_dependencies()`
+        #   전부를 snapshot·merge 하고 `reference_inventory(base_cfg)` 가 행을
+        #   바꾼다 — 부모의 `pe_vf` 만 바꿔도 lli_hat 이 움직이는데 leaf 는
+        #   byte-identical 이라 승인이 같았다 (리뷰어 실측).
+        "base_config_digest": _config_closure_digest(
+            base_config or "configs/base.yaml", repo_root=bytes_root),
         "bounds_preset": str(bounds_preset),
         "bounds_digest": _dg(bounds),
         "optimizer": {"method": str(method), "n_restarts": int(n_restarts),
@@ -602,6 +652,147 @@ def live_fit_axis(objectives: dict, obj_cfg: dict, bounds: dict,
         # `_assert_fit_authorized()` 가 선언에서 읽어 채운다.
         "in": leg_out_key(in_dir),
         "out": leg_out_key(out_dir)}
+
+
+def _stage_fit_inputs(in_dir, base_config, reference: str,
+                      halfcell_method: str, halfcell_kw) -> dict:
+    """gate **앞에서** 입력 바이트의 immutable 사본을 뜬다 (51차 P0-A3).
+
+    50차까지의 순서는 이랬다:
+
+        ① 원본 pathname 세 개를 해시해 receipt·계획과 대조한다
+        ② `acquire_run_lock(out_dir)` 로 **출력**을 잠근다
+        ③ 나중에 같은 pathname 을 다시 열어 `seal_inputs`·`snapshot_inputs`
+
+    ①과 ③ 사이는 아무도 안 잡고 있다 — 출력 lock 은 입력 writer 를 붙잡지
+    않는다. 리뷰어가 그 틈에서 독립적으로 **유효한** package B 로 세 파일을
+    통째 갈아 끼웠고, snapshot·validator·optimizer·writer 가 전부 B 를
+    계산·게시했다 (`three_file_binding_rejected_swap=False`). 결속 key 를
+    하나에서 셋으로 늘려도 이 틈은 안 닫힌다 — **대조 대상이 원본 pathname
+    이기 때문이다.**
+
+    그래서 승인보다 먼저 사본을 뜨고, 승인·결속·계산이 **모두 그 사본만** 본다.
+    사본은 저장소 상대경로 구조를 그대로 재현하므로 (`stage/<repo-rel>`)
+    `extends:` 연쇄와 half-cell 캐시 경로 유도가 그 안에서 닫히고,
+    `canonical_input_key(..., repo_root=stage)` 가 원래 키를 그대로 돌려준다 —
+    manifest 의 `input_sha256` 키가 staging 경로로 오염되지 않는다.
+
+    사본을 뜨는 것 자체는 승인 대상 목적지(`out_dir`)에 아무 것도 쓰지 않는다.
+    쓰는 자리는 세션 전용 임시 디렉터리이고 끝나면 지운다.
+    """
+    import shutil as _sh
+    import tempfile
+
+    from pathlib import Path as _P
+
+    from src.config import config_dependencies
+    from src.io import canonical_input_key as _ck
+    from tools.preserve import PreserveError
+
+    root = _P(__file__).resolve().parents[1]
+    stage = _P(tempfile.mkdtemp(prefix="fit-stage-"))
+
+    def _take(src):
+        """원본 하나를 `stage/<repo-rel>` 로 복사하고 사본 경로를 준다."""
+        src = _P(src)
+        if not src.is_file():
+            _sh.rmtree(stage, ignore_errors=True)
+            raise PreserveError("plan", f"fit 이 읽을 입력이 없다: {src}")
+        dst = stage / _ck(src, root)
+        dst.parent.mkdir(parents=True, exist_ok=True)
+        _sh.copy2(src, dst)
+        return dst
+
+    try:
+        src_in = _P(in_dir)
+        for name in FIT_INPUT_NAMES:
+            _take(src_in / name)
+        if (src_in / "failed.csv").is_file():
+            _take(src_in / "failed.csv")
+        staged_in = stage / _ck(src_in, root)
+
+        bc = base_config or "configs/base.yaml"
+        deps = config_dependencies(bc)
+        for d in deps:
+            _take(d)
+        staged_bc = stage / _ck(bc, root)
+
+        if str(reference) == "halfcell":
+            from src.config import load_config as _lc
+            from src.halfcell import halfcell_meta_path as _hmp
+            cache = halfcell_path_for(_lc(bc), halfcell_method, halfcell_kw)
+            meta = _hmp(cache)
+            # ★ F63 — 캐시가 없으면 **여기서** 멈추고 만드는 법을 알려준다.
+            #   생성은 봉인할 수 없는 작업이므로 fitting 안에서 하지 않는다.
+            #   (51차에 사본 뜨는 자리가 이 검사보다 앞으로 왔으므로 안내도
+            #   같이 옮긴다 — 앞선 검사가 덜 친절한 메시지로 가로채면 그 안내는
+            #   사실상 사라진다.)
+            if not cache.exists() or not meta.exists():
+                raise RuntimeError(
+                    f"half-cell 기준 캐시가 없습니다: {cache}\n"
+                    f"  먼저 준비 단계를 실행하세요:\n"
+                    f"    python -m src.halfcell --config {bc} "
+                    f"--method {halfcell_method}"
+                    + "".join(f" --{k.replace('_', '-')} {v}"
+                              for k, v in sorted((halfcell_kw or {}).items()))
+                    + "\n  (fitting 안에서 만들면 '무엇을 읽었는가'를 봉인할 수 "
+                      "없습니다 — F63)")
+            _take(cache)
+            _take(meta)
+    except BaseException:
+        _sh.rmtree(stage, ignore_errors=True)
+        raise
+    return {"root": stage, "in_dir": staged_in, "base_config": str(staged_bc),
+            "origin_in_dir": str(src_in), "origin_base_config": str(bc)}
+
+
+def _discard_staged_inputs(staged: dict) -> None:
+    """staging 사본을 지운다 — 실행이 끝나면 근거는 `out_dir/_inputs` 에 있다."""
+    import shutil as _sh
+
+    if staged:
+        _sh.rmtree(staged.get("root"), ignore_errors=True)
+
+
+#: fit 이 읽는 입력 묶음의 파일 이름 — `PHASE_INPUT_KEYS` 와 **자리로** 짝짓는다.
+FIT_INPUT_NAMES = ("curves.parquet", "curves_manifest.yaml",
+                   "curves_manifest_start.yaml")
+
+
+def _fit_input_digests(in_dir) -> dict:
+    """입력 묶음 세 파일의 full digest map (`PHASE_INPUT_KEYS` 를 키로)."""
+    import hashlib as _h
+
+    from pathlib import Path as _P
+
+    from tools.preserve import PHASE_INPUT_KEYS, PreserveError
+
+    out = {}
+    for key, name in zip(PHASE_INPUT_KEYS, FIT_INPUT_NAMES):
+        f = _P(in_dir) / name
+        if not f.is_file():
+            raise PreserveError("plan", f"fit 이 읽을 입력이 없다: {f}")
+        out[key] = _h.sha256(f.read_bytes()).hexdigest()
+    return out
+
+
+def fit_input_package_digest(digests: dict) -> str:
+    """입력 **묶음 하나**의 내용 주소 (51차 P1-E1).
+
+    계획이 적는 `fit.in_digest` 가 이 값이다. 파일 하나가 아니라 묶음이므로,
+    곡선을 그대로 두고 manifest 만 갈아 끼우는 교체가 표현 불가능해진다.
+    """
+    import hashlib as _h
+
+    from tools.preserve import PHASE_INPUT_KEYS, PreserveError
+
+    if set(digests) != set(PHASE_INPUT_KEYS):
+        raise PreserveError(
+            "plan",
+            f"입력 묶음 digest 의 key 집합이 계약과 다르다: {sorted(digests)} "
+            f"≠ {sorted(PHASE_INPUT_KEYS)}")
+    body = "\n".join(f"{k}={digests[k]}" for k in PHASE_INPUT_KEYS)
+    return _h.sha256(body.encode("utf-8")).hexdigest()
 
 
 def _assert_fit_input_is_authorized(claim, live_fit: dict, in_dir) -> None:
@@ -625,24 +816,42 @@ def _assert_fit_input_is_authorized(claim, live_fit: dict, in_dir) -> None:
         return                                   # smoke namespace — 계획 밖이다
     from tools.preserve import PHASE_INPUT_KEYS
 
-    got_map, names = {}, ("curves.parquet", "curves_manifest.yaml",
-                          "curves_manifest_start.yaml")
-    for key, name in zip(PHASE_INPUT_KEYS, names):
-        f = _P(in_dir) / name
-        if not f.is_file():
-            raise PreserveError("plan", f"fit 이 읽을 입력이 없다: {f}")
-        got_map[key] = _h.sha256(f.read_bytes()).hexdigest()
-    got = got_map["curves_sha256"]
+    got_map = _fit_input_digests(in_dir)
     declared = live_fit["in_digest"]
     if declared is None:
         assert_phase_input_binding(claim, got_map)
         return
+    # ★ 51차 P1-E1 — 외부 입력 분기도 **묶음 전체**를 본다. 50차는 세 digest 를
+    #   계산해 놓고 여기서 `curves_sha256` 하나만 비교했다 — 나머지 둘은
+    #   계산하고 버렸으므로, 승인한 provenance 와 다른 manifest 로도 fit 이
+    #   끝까지 성공했다 (리뷰어 실측). `in_digest` 의 의미를 "곡선 파일 하나" 가
+    #   아니라 "묶음의 package digest" 로 바꾼다 — 타입은 그대로 hex64 다.
+    got = fit_input_package_digest(got_map)
     if declared != got:
         raise PreserveError(
             "plan",
-            f"계획이 승인한 입력과 지금 읽는 곡선이 다르다 "
+            f"계획이 승인한 입력 묶음과 지금 읽는 묶음이 다르다 "
             f"(계획 {str(declared)[:16]} ≠ 지금 {got[:16]}) — 경로가 같아도 "
-            "바이트가 다르면 다른 실행이다")
+            "바이트가 다르면 다른 실행이다. 지금 묶음: "
+            + ", ".join(f"{k}={v[:12]}" for k, v in sorted(got_map.items())))
+
+
+def _assert_fit_leg_is_planned(out_dir, leg: str | None) -> None:
+    """계획 **소속**만 먼저 묻는다 — 아무 것도 바꾸지 않는다 (51차).
+
+    실제 승인(claim 발급)은 `_assert_fit_authorized()` 가 살아 있는 축 전부를
+    갖춘 뒤에 한다. 여기서 보는 것은 "이 다리가 계획에 있고 code identity 가
+    같은가" 뿐이다.
+    """
+    from src.grid import leg_name
+    from src.io import source_digest
+    from tools.preserve import (assert_planned_leg, is_inside_namespace,
+                                SMOKE_NAMESPACE)
+
+    if is_inside_namespace(out_dir, SMOKE_NAMESPACE):
+        return
+    assert_planned_leg(leg_name(leg), source_digest(),
+                       allow=("planned", "running"))
 
 
 def _assert_fit_authorized(live_fit: dict, out_dir, leg: str | None = None,
@@ -720,25 +929,63 @@ def run_fit(in_dir, out_dir, obj_cfg: dict, objectives: dict, bounds: dict,
     from src.io import acquire_run_lock, release_run_lock
 
     out_dir = Path(out_dir)
+    # ★ 51차 — 사본을 뜨기 **전에** 이 다리가 계획에 있는지부터 묻는다.
+    #   staging 은 목적지에 아무 것도 쓰지 않지만, 입력이 없어서 나는 오류가
+    #   "계획에 없는 다리다" 보다 먼저 나오면 **판정이 뒤로 밀린 것처럼 보인다**.
+    #   순서 결함은 부작용만의 문제가 아니라 어느 명제가 먼저 판정되는가의
+    #   문제다 (리뷰어가 `build()` 에서 짚은 것과 같은 축).
+    _assert_fit_leg_is_planned(out_dir, leg)
+    # ★ 51차 P0-A3 — **승인보다 먼저** 입력 바이트의 immutable 사본을 뜬다.
+    #   50차는 원본 pathname 을 해시해 대조하고, 한참 뒤 같은 pathname 을 다시
+    #   열어 계산했다. 그 사이는 아무도 안 잡고 있다 (출력 lock 은 입력 writer 를
+    #   붙잡지 않는다). 아래부터 승인·결속·계산이 **전부 이 사본만** 본다.
+    _staged = _stage_fit_inputs(in_dir, base_config, reference,
+                                halfcell_method, halfcell_kw)
+    try:
+        return _run_fit_staged(_staged, in_dir, out_dir, obj_cfg, objectives,
+                               bounds, bounds_preset, n_restarts, nproc,
+                               use_noisy, limit, base_config, reference, resume,
+                               subset, warm_start, adaptive, method,
+                               halfcell_method, halfcell_kw, leg, token_file)
+    finally:
+        _discard_staged_inputs(_staged)
+
+
+def _run_fit_staged(_staged, in_dir, out_dir, obj_cfg, objectives, bounds,
+                    bounds_preset, n_restarts, nproc, use_noisy, limit,
+                    base_config, reference, resume, subset, warm_start,
+                    adaptive, method, halfcell_method, halfcell_kw, leg,
+                    token_file) -> dict:
+    """`run_fit()` 본체 — 입력이 이미 staging 사본으로 고정된 뒤."""
+    from pathlib import Path
+
+    from src.io import acquire_run_lock, release_run_lock
+
     # ★ 48차 P0-8 — **첫 부작용 전에** 계획 gate 를 지난다. 47차는 `src.grid`
     #   만 배선하고 fit 은 다음 라운드로 미뤘는데, 실제 결과(`fits.parquet`)를
     #   만드는 것은 fit 이다. gate 없는 쪽이 결과를 만들면 gate 는 장식이다.
+    #
+    #   축의 `in`·`out` key 는 **논리 경로**여야 한다 (staging 은 실행마다 다른
+    #   임시 경로다). 바이트는 사본에서, 이름은 원래 자리에서 온다.
     _live = live_fit_axis(objectives, obj_cfg, bounds, bounds_preset,
                           n_restarts, use_noisy, limit, subset, reference,
                           warm_start, adaptive, method, halfcell_method,
                           halfcell_kw, in_dir, out_dir,
-                          base_config=base_config)
+                          base_config=_staged["base_config"],
+                          bytes_root=_staged["root"])
     claim, _fit_axis = _assert_fit_authorized(_live, out_dir, leg=leg,
                                               token_file=token_file)
-    _assert_fit_input_is_authorized(claim, _fit_axis, in_dir)
+    _assert_fit_input_is_authorized(claim, _fit_axis, _staged["in_dir"])
     out_dir.mkdir(parents=True, exist_ok=True)
     acquire_run_lock(out_dir, ".fit.lock")
     try:
-        summary = _run_fit_locked(in_dir, out_dir, obj_cfg, objectives, bounds,
+        summary = _run_fit_locked(_staged["in_dir"], out_dir, obj_cfg,
+                                  objectives, bounds,
                                   bounds_preset, n_restarts, nproc, use_noisy,
-                                  limit, base_config, reference, resume, subset,
+                                  limit, _staged["base_config"], reference,
+                                  resume, subset,
                                   warm_start, adaptive, method, halfcell_method,
-                                  halfcell_kw)
+                                  halfcell_kw, stage_root=_staged["root"])
         # ★ 48차 P0-4 — 끝난 phase 를 **durable 하게 닫는다.** 47차는
         #   `phase_done()`·`finalize_leg()` 을 만들어 놓고 production 에서 한
         #   번도 부르지 않았다 — lifecycle 이 있는데 아무 것도 그 상태를
@@ -757,8 +1004,14 @@ def _run_fit_locked(in_dir, out_dir, obj_cfg: dict, objectives: dict, bounds: di
                     warm_start: bool = True, adaptive: bool = True,
                     method: str = "Nelder-Mead",
                     halfcell_method: str = "ocp",
-                    halfcell_kw: dict | None = None) -> dict:
-    """run_fit 본체. 호출자가 이미 .fit.lock 을 보유한 상태여야 한다."""
+                    halfcell_kw: dict | None = None, stage_root=None) -> dict:
+    """run_fit 본체. 호출자가 이미 .fit.lock 을 보유한 상태여야 한다.
+
+    ★ 51차 P0-A3 — `in_dir`·`base_config` 는 **staging 사본**을 가리킨다.
+      `stage_root` 는 그 사본의 뿌리이고, 봉인 map 의 키를 원래 저장소 상대
+      경로로 되돌리는 데 쓴다 (`canonical_input_key(..., repo_root=stage)`).
+      그래서 manifest 의 `input_sha256` 키는 staging 경로로 오염되지 않는다.
+    """
     import os
     import time
     from pathlib import Path
@@ -769,8 +1022,11 @@ def _run_fit_locked(in_dir, out_dir, obj_cfg: dict, objectives: dict, bounds: di
 
     import yaml
 
-    from src.io import canonical_input_key as _ck
+    from src.io import canonical_input_key as _ck_raw
     from src.io import snapshot_inputs
+
+    def _ck(path):                       # 51차 P0-A3 — 키는 staging 뿌리 기준
+        return _ck_raw(path, stage_root)
     from src.io import (base_manifest, env_fingerprint, file_digest, git_info,
                         seal_inputs, source_digest, write_manifest)
 
@@ -878,7 +1134,8 @@ def _run_fit_locked(in_dir, out_dir, obj_cfg: dict, objectives: dict, bounds: di
             [in_dir / "curves.parquet", *_cfg_deps,   # F74: extends 연쇄 전체
              _prod, _prod_start,           # F70/F74: producer 기록 + 시작 기록
              _prod_failed,                 # 10차 발견 1: 실패 목록 (있을 때)
-             _hc_pre, _hc_meta]),          # F64: recipe 기록도 함께 봉인
+             _hc_pre, _hc_meta],           # F64: recipe 기록도 함께 봉인
+            repo_root=stage_root),
         "halfcell_cache": _ck(_hc_pre) if _hc_pre else None,
         "halfcell_recipe": _hc_recipe,
         "_주의": ("실행 **시작** 시점 상태다 (입력 로드·self-fit 이전). "
@@ -900,7 +1157,8 @@ def _run_fit_locked(in_dir, out_dir, obj_cfg: dict, objectives: dict, bounds: di
     out_dir.mkdir(parents=True, exist_ok=True)
     # ★ F72 — 봉인한 **바이트 자체**를 스냅샷으로 떠서, 이후 계산은 그것만 읽는다.
     #   digest 를 몇 번 더 비교해도 "해시한 시점"과 "읽는 시점" 사이는 못 막는다.
-    _snap = snapshot_inputs(start_prov["input_sha256"], out_dir)
+    _snap = snapshot_inputs(start_prov["input_sha256"], out_dir,
+                            repo_root=stage_root)
     df = pd.read_parquet(_snap[_ck(in_dir / "curves.parquet")])
     # ★ F72/8차 발견 3 — producer 문서는 **스냅샷에서** 읽는다. 선읽은 메모리
     #   값을 run_spec 에 쓰면, seal 직전 교체 시 기록과 봉인이 어긋난 채 통과한다

@@ -2370,3 +2370,230 @@ def test_run_spec_seals_the_p_ini_anchor_condition(tmp_path):
     conds = set(pd.read_parquet(out / "fits.parquet")["cond_id"])
     assert spec["p_ini_cond"] in conds, \
         f"p_ini_cond={spec['p_ini_cond']} 가 fits 에 없다"
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# 51차 P0-A1 · P0-A2 · P0-A3 · P1-E1 — 승인 축이 **실제 계산 축**을 안 덮는다
+#
+# 50차는 `subset_sha256`·`base_config_digest`·`halfcell_cache_sha256` 를 더했다.
+# 리뷰어는 그 밖에서 **행 바이트를 바꾸는** 축 셋을 더 찾았다:
+#   · objective payload — 축에는 **이름과 순서만** 들어간다. 같은 이름 아래
+#     다른 가중치를 주면 J 도 행도 달라지는데 승인 digest 는 같다.
+#   · base config 의 `extends` 부모 — leaf 만 해시한다. 부모의 `pe_vf` 를 바꾸면
+#     `reference_inventory()` 가 다른 재고를 주고 lli_hat 이 움직인다.
+#   · 검사한 바이트와 읽는 바이트 — 세 파일을 다 대조해도, 대조는 원본
+#     pathname 에 대고 계산은 **나중에 다시 연** 같은 pathname 에 대고 한다.
+# ─────────────────────────────────────────────────────────────────────────────
+
+_FIT_AXIS_ARGS = dict(bounds={"lli": [0.0, 1.0]}, bounds_preset="expanded",
+                      n_restarts=3, use_noisy=True, limit=None, subset=None,
+                      reference="grid", warm_start=True, adaptive=True,
+                      method="Nelder-Mead", halfcell_method="ocp",
+                      halfcell_kw=None)
+
+
+def _axis(tmp_path, **over):
+    from src.fitting import live_fit_axis
+
+    kw = dict(_FIT_AXIS_ARGS)
+    kw.update(over)
+    objectives = kw.pop("objectives")
+    obj_cfg = kw.pop("obj_cfg")
+    base_config = kw.pop("base_config")
+    return live_fit_axis(objectives, obj_cfg, kw.pop("bounds"),
+                         kw.pop("bounds_preset"), kw.pop("n_restarts"),
+                         kw.pop("use_noisy"), kw.pop("limit"), kw.pop("subset"),
+                         kw.pop("reference"), kw.pop("warm_start"),
+                         kw.pop("adaptive"), kw.pop("method"),
+                         kw.pop("halfcell_method"), kw.pop("halfcell_kw"),
+                         tmp_path, tmp_path, base_config=base_config)
+
+
+def test_the_objective_payload_is_inside_the_approval_digest(tmp_path):
+    """★ 51차 P0-A1 — 목적함수의 **가중치 payload** 가 승인에 들어간다.
+
+    리뷰어 실측: 같은 이름 `same_name` 아래 A=`{w_pocv:1}` 와
+    B=`{w_pocv:1, w_dvdq:20}` 를 real optimizer 에 넣으면
+
+        authorization_digest_A == authorization_digest_B   (같다)
+        semantic_row_sha_A     != semantic_row_sha_B       (다르다)
+        J_A=[0.0114, 7.6e-16]  J_B=[0.1329, 1.7e-13]
+
+    `live_fit_axis()` 는 `list(objectives)` — **이름과 순서만** 담는다. 그런데
+    `_fit_one()` 은 `task["objectives"].items()` 로 payload 를 소비한다. CLI 가
+    지금은 둘을 함께 만든다는 것은 public production API 의 불변식이 아니다.
+    """
+    cfgp = str(tmp_path / "objectives.yaml")
+    Path(cfgp).write_text("objectives: {}\n", encoding="utf-8")
+    obj_cfg = {"objectives": {}}
+    base = tmp_path / "base.yaml"
+    base.write_text("baseline: {pe_vf: 0.665}\n", encoding="utf-8")
+
+    a = _axis(tmp_path, objectives={"same_name": {"w_pocv": 1.0}},
+              obj_cfg=obj_cfg, base_config=str(base))
+    b = _axis(tmp_path, objectives={"same_name": {"w_pocv": 1.0,
+                                                  "w_dvdq": 20.0}},
+              obj_cfg=obj_cfg, base_config=str(base))
+    assert a != b, ("같은 이름 아래 다른 가중치가 같은 승인 digest 를 냈다 — "
+                    "승인한 것은 계산이 아니라 이름이다")
+
+
+def test_the_base_config_parent_is_inside_the_approval_digest(tmp_path):
+    """★ 51차 P0-A2 — 승인은 leaf 가 아니라 **dependency closure** 를 담는다.
+
+    리뷰어 실측: leaf 는 두 실행 모두 `extends: parent.yaml` 로 byte-identical
+    이고 부모의 `pe_vf` 만 `0.665 → 0.500` 으로 바꿨다.
+
+        child_digest_A == child_digest_B                   (같다 — leaf 만 본다)
+        semantic_row_sha_A != semantic_row_sha_B           (다르다)
+        lli_hat_A=[0.017343...] lli_hat_B=[0.017400...]
+
+    본체는 `config_dependencies()` **전체**를 snapshot·merge 하고
+    `reference_inventory(base_cfg)` 가 행을 바꾼다. 승인만 leaf 를 본다.
+    """
+    parent = tmp_path / "parent.yaml"
+    leaf = tmp_path / "leaf.yaml"
+    leaf.write_text("extends: parent.yaml\n", encoding="utf-8")
+    obj_cfg = {"objectives": {}}
+    objectives = {"pocv": {"w_pocv": 1.0}}
+
+    parent.write_text("baseline: {pe_vf: 0.665}\n", encoding="utf-8")
+    a = _axis(tmp_path, objectives=objectives, obj_cfg=obj_cfg,
+              base_config=str(leaf))
+    parent.write_text("baseline: {pe_vf: 0.500}\n", encoding="utf-8")
+    b = _axis(tmp_path, objectives=objectives, obj_cfg=obj_cfg,
+              base_config=str(leaf))
+    assert a != b, ("`extends` 부모를 바꿔도 승인 digest 가 같다 — 승인은 "
+                    "실제로 읽히는 파일 전부를 담아야 한다")
+
+
+def test_the_external_input_binding_covers_the_whole_package(tmp_path):
+    """★ 51차 P1-E1 — 외부 입력 분기도 **세 파일 전부**를 승인에 결속한다.
+
+    50차는 세 digest 를 계산해 놓고 hex64 분기에서는 `curves_sha256` 하나만
+    비교했다. 나머지 둘은 계산하고 버렸다 (리뷰어 실측:
+    `real_fit_completed_with_unapproved_manifest=True`).
+
+    `in_digest` 의 의미를 "curves.parquet 하나의 digest" 에서 "묶음 전체의
+    package digest" 로 바꾼다 — 타입은 그대로 hex64 다.
+    """
+    from src.fitting import (_assert_fit_input_is_authorized,
+                             fit_input_package_digest, _fit_input_digests)
+    from tools.preserve import PHASE_INPUT_KEYS, PreserveError
+
+    names = ("curves.parquet", "curves_manifest.yaml",
+             "curves_manifest_start.yaml")
+    for n in names:
+        (tmp_path / n).write_bytes(n.encode("utf-8"))
+    pkg = fit_input_package_digest(_fit_input_digests(tmp_path))
+
+    class _Claim:                      # phase receipt 는 이 분기에서 안 쓰인다
+        pass
+
+    _assert_fit_input_is_authorized(_Claim(), {"in_digest": pkg}, tmp_path)
+
+    # 어느 파일을 갈아도 package digest 가 달라져 거부돼야 한다
+    for n in names:
+        keep = (tmp_path / n).read_bytes()
+        (tmp_path / n).write_bytes(keep + b"x")
+        with pytest.raises(PreserveError):
+            _assert_fit_input_is_authorized(_Claim(), {"in_digest": pkg},
+                                            tmp_path)
+        (tmp_path / n).write_bytes(keep)
+    assert len(PHASE_INPUT_KEYS) == 3
+
+
+def test_the_fit_body_reads_the_bytes_the_gate_verified(tmp_path, monkeypatch):
+    """★ 51차 P0-A3 — 검사한 바이트와 계산이 읽는 바이트가 **같은 사본**이다.
+
+    리뷰어 실측: 유효 package A 의 세 파일을 receipt 와 다 대조한 직후,
+    `acquire_run_lock()` 경계에서 독립적으로 유효한 package B 로 통째 교체했다.
+    snapshot·validator·optimizer·writer 가 전부 B 를 계산·게시했다
+    (`three_file_binding_rejected_swap=False`). key 를 하나에서 셋으로 늘려도
+    check-use gap 은 닫히지 않는다 — **대조 대상이 원본 pathname 이기 때문이다.**
+
+    그래서 gate 앞에서 immutable 사본을 먼저 뜨고, 승인·결속·계산이 모두 그
+    사본만 본다. 이 시험은 gate 통과 뒤 원본을 통째로 갈아 끼운 다음, 본체가
+    받은 경로의 바이트가 **승인한 A** 그대로인지 본다.
+    """
+    import src.fitting as F
+
+    src = tmp_path / "in"
+    src.mkdir()
+    names = ("curves.parquet", "curves_manifest.yaml",
+             "curves_manifest_start.yaml")
+    for n in names:
+        (src / n).write_bytes(b"package-A:" + n.encode("utf-8"))
+    (src / "failed.csv").write_text("cond_id\n", encoding="utf-8")
+    base = tmp_path / "base.yaml"
+    base.write_text("baseline: {pe_vf: 0.665}\n", encoding="utf-8")
+
+    staged = F._stage_fit_inputs(src, str(base), "grid", "ocp", None)
+    try:
+        # ── gate 를 지난 **뒤** 원본을 유효한 package B 로 통째 교체한다 ──
+        for n in names:
+            (src / n).write_bytes(b"package-B:" + n.encode("utf-8"))
+        base.write_text("baseline: {pe_vf: 0.500}\n", encoding="utf-8")
+
+        for n in names:
+            assert (staged["in_dir"] / n).read_bytes() == \
+                b"package-A:" + n.encode("utf-8"), (
+                    f"본체가 받는 {n} 이 교체된 B 를 가리킨다 — 검증한 바이트와 "
+                    "계산하는 바이트가 다르다")
+        assert Path(staged["base_config"]).read_text(encoding="utf-8") == \
+            "baseline: {pe_vf: 0.665}\n"
+        assert Path(staged["in_dir"]).resolve() != src.resolve(), (
+            "본체가 여전히 원본 pathname 을 받는다")
+    finally:
+        F._discard_staged_inputs(staged)
+
+
+def test_run_fit_hands_the_body_the_staged_copies_not_the_originals(tmp_path,
+                                                                    monkeypatch):
+    """★ 51차 P0-A3 — **배선**을 본다: `run_fit()` 이 본체에 무엇을 넘기는가.
+
+    바로 위 시험은 `_stage_fit_inputs()` 를 직접 불러 사본의 성질만 봤다. 그
+    함수가 아무리 옳아도 `run_fit()` 이 원본 경로를 그대로 넘기면 아무 것도
+    닫히지 않는다 — 변이 시험이 정확히 그것을 보여 줬다 (호출을 원본 경로를
+    쓰는 dict 로 바꿔도 위 시험은 초록이었다). 검사는 **쓰는 자리**를 봐야 한다.
+    """
+    import src.fitting as F
+
+    src = tmp_path / "in"
+    src.mkdir()
+    names = ("curves.parquet", "curves_manifest.yaml",
+             "curves_manifest_start.yaml")
+    for n in names:
+        (src / n).write_bytes(b"package-A:" + n.encode("utf-8"))
+    base = tmp_path / "base.yaml"
+    base.write_text("baseline: {pe_vf: 0.665}\n", encoding="utf-8")
+    out = tmp_path / "out"      # conftest 가 tmp_path 를 smoke namespace 로 옮긴다
+
+    seen = {}
+
+    def _fake_locked(in_dir, out_dir, *a, **kw):
+        seen["in_dir"] = Path(in_dir)
+        seen["base_config"] = kw.get("base_config") or a[8]
+        seen["stage_root"] = kw.get("stage_root")
+        # gate 를 지난 뒤 원본을 유효한 package B 로 통째 교체한다
+        for n in names:
+            (src / n).write_bytes(b"package-B:" + n.encode("utf-8"))
+        base.write_text("baseline: {pe_vf: 0.500}\n", encoding="utf-8")
+        # 본체가 **그 순간** 읽는 바이트를 그대로 뜬다 (staging 은 반환 뒤 지워진다)
+        seen["bytes"] = {n: (Path(in_dir) / n).read_bytes() for n in names}
+        seen["cfg"] = Path(seen["base_config"]).read_text(encoding="utf-8")
+        return {"n_rows": 0}
+
+    monkeypatch.setattr(F, "_run_fit_locked", _fake_locked)
+    F.run_fit(src, out, {"objectives": {}}, {"pocv": {"w_pocv": 1.0}},
+              {"lli": [0.0, 1.0]}, "expanded", 1, 1, base_config=str(base))
+
+    assert seen["stage_root"] is not None, "본체가 staging 뿌리를 못 받았다"
+    assert seen["in_dir"].resolve() != src.resolve(), (
+        "본체가 **원본** 입력 경로를 받았다 — 검증한 바이트와 계산하는 바이트가 "
+        "다를 수 있다")
+    for n in names:
+        assert seen["bytes"][n] == b"package-A:" + n.encode("utf-8"), (
+            f"본체가 읽는 {n} 이 교체된 package B 다 — 검증한 바이트와 계산하는 "
+            "바이트가 다르다")
+    assert seen["cfg"] == "baseline: {pe_vf: 0.665}\n"

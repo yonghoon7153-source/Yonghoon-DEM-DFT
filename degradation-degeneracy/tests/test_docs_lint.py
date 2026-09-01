@@ -4190,7 +4190,12 @@ def _temp_cohort_ledger():
     """
     rp = _rp()
     real = rp._ledger_cohort
+    real_cohorts = rp._ledger_cohorts
     seen: dict = {}
+    #: 이 fixture 가 내준 임시 cohort record 들. ★ 51차 P0-F — lifecycle 이
+    #: cohort ID 뿐 아니라 **목적지**를 봉인하므로, 원장 열거에서도 이 record 를
+    #: 볼 수 있어야 한다 (`_cohort_dir_key()` 가 ID → dir 을 원장에서 찾는다).
+    tmp_records: dict = {}
 
     def _fake(out):
         """★ 43차 #9 — production 이 `legs` 가 아니라 **record 전체**를 읽는다.
@@ -4200,12 +4205,17 @@ def _temp_cohort_ledger():
         """
         key = str(Path(out).resolve())
         if key.startswith(("/tmp/", "/private/var/", "/var/folders/")):
-            return {"cohort_id": f"tmp_{_sha_short(key)}", "dir": key,
-                    "status": _TMP_STATUS.get(key, "active"),
-                    "legs": sorted(seen.get(key) or ()),
-                    "pin": dict(_TMP_PIN.get(key) or _DEFAULT_PIN),
-                    "cross_leg_comparison": "allowed_within_cohort"}
+            rec = {"cohort_id": f"tmp_{_sha_short(key)}", "dir": key,
+                   "status": _TMP_STATUS.get(key, "active"),
+                   "legs": sorted(seen.get(key) or ()),
+                   "pin": dict(_TMP_PIN.get(key) or _DEFAULT_PIN),
+                   "cross_leg_comparison": "allowed_within_cohort"}
+            tmp_records[key] = rec
+            return rec
         return real(out)
+
+    def _fake_cohorts():
+        return list(real_cohorts()) + list(tmp_records.values())
 
     real_promote = rp.promote_cohort_generation
 
@@ -4217,6 +4227,7 @@ def _temp_cohort_ledger():
     #   `monkeypatch.undo()` 를 부르는데, 그러면 이 fixture 도 함께 걷힌다
     #   (실측했다: materialize crash 시험 셋이 그렇게 깨졌다).
     rp._ledger_cohort = _fake
+    rp._ledger_cohorts = _fake_cohorts
     rp.promote_cohort_generation = _promote
     _TMP_PIN.clear()
     _TMP_STATUS.clear()
@@ -4224,8 +4235,10 @@ def _temp_cohort_ledger():
         yield
     finally:
         rp._ledger_cohort = real
+        rp._ledger_cohorts = real_cohorts
         rp.promote_cohort_generation = real_promote
         _TMP_PIN.clear()
+        tmp_records.clear()
 
 
 def _sha_short(text: str) -> str:
@@ -7902,6 +7915,23 @@ def _fresh_rp():
     return mod
 
 
+def _one_cohort_ledger(cohort_id: str, subdir: str = "coh") -> str:
+    """cohort 하나만 선언한 원장 본문.
+
+    ★ 51차 P0-F — lifecycle 전이는 **원장이 아는 cohort** 에만 기록된다.
+      journal 한 줄이 그 cohort 의 목적지(`dir`)를 함께 봉인하기 때문이다.
+      빈 원장으로 `_append_lifecycle()` 을 부르던 49차 fixture 는 그래서 더
+      이상 성립하지 않는다 — 목적지를 모르는 전이는 봉인할 것이 없다.
+    """
+    import yaml as _y
+
+    return _y.safe_dump({"cohorts": [{
+        "cohort_id": cohort_id, "dir": f"docs/22p_gap/{subdir}",
+        "status": "active", "legs": ["a"],
+        "cross_leg_comparison": "not_applicable_single_leg",
+        "pin": dict(_DEFAULT_PIN)}]}, allow_unicode=True, sort_keys=False)
+
+
 def _ledger_repo(tmp_path, body: str, subdir: str = "coh"):
     """임시 REPO 에 원장 하나만 둔다."""
     root = tmp_path / "repo"
@@ -8073,7 +8103,7 @@ def test_every_frozen_cohort_is_frozen_in_the_journal_too():
 def test_a_frozen_cohort_cannot_be_thawed_and_published(tmp_path):
     """★ 49차 P0 — 얼린 적이 있는 cohort 에는 다시 게시할 수 없다."""
     rp = _fresh_rp()
-    rp.REPO = _ledger_repo(tmp_path, "cohorts: []\n")
+    rp.REPO = _ledger_repo(tmp_path, _one_cohort_ledger("gX"))
 
     rp._append_lifecycle("gX", None, "active", "첫 게시")
     rp.assert_not_thawed("gX")                       # 아직 얼지 않았다
@@ -8096,8 +8126,15 @@ def test_the_lifecycle_journal_is_a_hash_chain(tmp_path):
     """
     import json as _j
 
+    import yaml as _y
+
     rp = _fresh_rp()
-    rp.REPO = _ledger_repo(tmp_path, "cohorts: []\n")
+    two = _y.safe_load(_one_cohort_ledger("gX"))
+    two["cohorts"].append({**two["cohorts"][0], "cohort_id": "gY",
+                           "dir": "docs/22p_gap/coh2"})
+    rp.REPO = _ledger_repo(tmp_path, _y.safe_dump(two, allow_unicode=True,
+                                                  sort_keys=False))
+    (rp.REPO / "docs" / "22p_gap" / "coh2").mkdir(parents=True, exist_ok=True)
     rp._append_lifecycle("gX", None, "active", "첫 게시")
     rp._append_lifecycle("gY", None, "active", "다른 cohort")
     rp._append_lifecycle("gX", "active", "frozen", "종료")
@@ -9215,7 +9252,7 @@ def test_deleting_the_journal_does_not_erase_the_freeze(tmp_path):
     없는 것과 지워진 것은 다르다. anchor 가 있으면 journal 도 있어야 한다.
     """
     rp = _fresh_rp()
-    rp.REPO = _ledger_repo(tmp_path, "cohorts: []\n")
+    rp.REPO = _ledger_repo(tmp_path, _one_cohort_ledger("gX"))
     rp._append_lifecycle("gX", None, "frozen", "종료")
     assert rp.cohort_lifecycle_state("gX") == "frozen"
 
@@ -9274,23 +9311,37 @@ def test_the_producer_closure_follows_a_tuple_defined_constant():
         "tuple 로 정의한 계산 상수를 바꿨는데 producer digest 가 그대로다")
 
 
-def test_reading_a_docstring_inside_the_closure_is_fail_closed():
-    """★ 50차 P0 — 정규형은 docstring 을 **버린다**. 그러면 읽어서도 안 된다.
+def test_a_docstring_the_computation_reads_is_inside_the_identity():
+    """★ 51차 P0-I — 계산이 읽는 docstring 은 **identity 안**이다.
 
-    `_strip_docstrings()` 는 산문 변경이 identity 를 흔들지 않게 떼어 낸다.
-    그런데 계산 경로가 `f.__doc__` 을 읽으면 그 산문이 **의미**가 된다 — 버린
-    것을 쓰는 코드가 있으면 digest 는 거짓이다. 둘 중 하나만 참일 수 있다.
+    50차는 반대 방향이었다: 정규형이 docstring 을 버리고, 버린 것을 읽는 코드를
+    `.__doc__` 이라는 **철자**로 막았다. 리뷰어가 그 철자를 피해 갔다 —
+    `read = getattr` 뒤 `read(f, "__doc__")` 면 두 철자 다 안 나타나고
+    digest 는 같은데 계산은 달랐다.
+
+    철자 목록을 넓히는 것은 종결 조건이 아니다 (alias 의 alias, dict 에 담은
+    함수로 계속 이어진다). 버리는 것을 없애면 그 축 자체가 사라진다.
+
+    여기서 확인하는 것: docstring 을 **어떻게 읽든** — 직접이든 alias 든 — 그
+    산문을 바꾸면 producer digest 가 움직인다.
     """
     rp = _rp()
     sc = (_REPO / "src" / "scoring.py").read_text(encoding="utf-8")
-    src = _mini_producer(
-        rp,
-        "def score_canonical(df):\n"
-        '    ' + chr(34) * 3 + 'tol=0.02' + chr(34) * 3 + '\n'
-        "    return float(score_canonical.__doc__.split('=')[1])\n")
-    with pytest.raises(SystemExit) as ei:
-        rp._producer_semantic_over(src, sc)
-    assert "__doc__" in str(ei.value), str(ei.value)
+    doc = chr(34) * 3 + "tol=0.02" + chr(34) * 3
+    for reader in ("score_canonical.__doc__",
+                   "_read(score_canonical, '__' + 'doc__')"):
+        src = _mini_producer(
+            rp,
+            "def score_canonical(df):\n"
+            "    " + doc + "\n"
+            f"    return float({reader}.split('=')[1])\n",
+            extra="_read = getattr\n")
+        base = rp._producer_semantic_over(src, sc)
+        moved = rp._producer_semantic_over(
+            src.replace("tol=0.02", "tol=0.05", 1), sc)
+        assert moved != base, (
+            f"`{reader}` 로 읽는 docstring 을 바꿨는데 producer digest 가 "
+            "그대로다 — 계산이 쓰는 값이 identity 밖에 있다")
 
 
 def test_the_canonical_form_agrees_on_every_supported_interpreter():
@@ -9361,3 +9412,370 @@ def test_freezing_works_for_a_cohort_with_no_recorded_state(tmp_path):
     # 두 번 얼릴 수는 없다 — 원장도 journal 도 이미 frozen 이다
     with pytest.raises(SystemExit):
         rp.freeze_cohort("gZ", "또")
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# 51차 P0-F · P1-O — freeze 가 **cohort ID 만** 봉인하고 대상을 봉인하지 않는다
+# ─────────────────────────────────────────────────────────────────────────────
+
+def test_a_frozen_directory_cannot_be_republished_under_a_new_cohort_id(tmp_path):
+    """★ 51차 P0-F — 얼린 것은 이름이 아니라 **그 디렉터리**다.
+
+    리뷰어 반례: public API 로 `gX` 를 얼린 뒤 원장 **한 파일만** 고쳐 같은
+    `dir` row 를 `cohort_id: gY`, `status: active` 로 바꿨다. journal 과 anchor
+    는 byte-identical 이다 (`journal_unchanged=True`, `anchor_unchanged=True`).
+    그러자 public publisher 가 **같은 frozen 목적지**에 새 바이트를 게시했다.
+
+        frozen_state_gX=frozen   guard_state_gY=None
+        same_output_directory=docs/22p_gap/coh
+        RESULT: public publication succeeded in the frozen destination
+
+    §0 이 신고한 "세 파일 모두 rewrite" 한계가 아니다 — 한 파일이면 됐다.
+    lifecycle 이 mutable 한 raw cohort ID 만 key 로 쓰기 때문이다.
+    """
+    import yaml
+
+    rp = _fresh_rp()
+    coh = "docs/22p_gap/coh"
+    rp.REPO = _ledger_repo(tmp_path, yaml.safe_dump({"cohorts": [{
+        "cohort_id": "gX", "dir": coh, "status": "active",
+        "legs": ["a"], "cross_leg_comparison": "not_applicable_single_leg",
+        "pin": dict(_DEFAULT_PIN)}]}, allow_unicode=True, sort_keys=False))
+    (rp.REPO / coh).mkdir(parents=True, exist_ok=True)
+
+    rp.freeze_cohort("gX", "연구 종료")
+    journal = rp._lifecycle_path().read_bytes()
+    anchor = rp._lifecycle_head_path().read_bytes()
+
+    # ── 공격: 원장 한 파일만 고쳐 같은 dir 을 새 ID 로 되살린다 ──
+    led = rp.REPO / "docs" / "22p_gap" / "LEG_PRESERVATION.yaml"
+    doc = yaml.safe_load(led.read_text(encoding="utf-8"))
+    doc["cohorts"][0]["cohort_id"] = "gY"
+    doc["cohorts"][0]["status"] = "active"
+    doc["cohorts"][0].pop("frozen_reason", None)
+    led.write_text(yaml.safe_dump(doc, allow_unicode=True, sort_keys=False),
+                   encoding="utf-8")
+
+    assert rp._lifecycle_path().read_bytes() == journal
+    assert rp._lifecycle_head_path().read_bytes() == anchor
+
+    with pytest.raises(SystemExit) as ei:
+        rp._assert_writable(rp.REPO / coh)
+    assert "frozen" in str(ei.value) or "얼" in str(ei.value), str(ei.value)
+
+    # 이름을 바꿔도 그 디렉터리로는 게시할 수 없다
+    with pytest.raises(SystemExit):
+        rp.assert_not_thawed("gY")
+
+
+def test_freeze_is_retryable_after_a_crash_between_its_two_writes(tmp_path):
+    """★ 51차 P1-O — freeze 가 fail-closed 이면서 **재시도 가능**해야 한다.
+
+    리뷰어 실측: `freeze_cohort()` 은 journal·anchor 를 먼저 쓰고 원장을 나중에
+    쓴다. 그 사이 crash 면 게시는 안전하게 막히지만
+    (`public_retry_blocked=True`) 같은 public API 로 다시 부르면
+    `frozen → frozen` 이라 거부된다 — 원장은 영원히 `active` 로 남는다.
+
+        crash_point=after_journal_and_head_before_ledger
+        ledger_status_after_crash=active   journal_state_after_crash=frozen
+        RESULT: freeze is fail-closed but not retryable
+
+    fail-closed 는 정지가 아니다. 이미 frozen journal + active 원장을 보면
+    원장 전이를 **완주**해야 한다.
+    """
+    import yaml
+
+    rp = _fresh_rp()
+    coh = "docs/22p_gap/coh"
+    rp.REPO = _ledger_repo(tmp_path, yaml.safe_dump({"cohorts": [{
+        "cohort_id": "gZ", "dir": coh, "status": "active",
+        "legs": ["a"], "cross_leg_comparison": "not_applicable_single_leg",
+        "pin": dict(_DEFAULT_PIN)}]}, allow_unicode=True, sort_keys=False))
+    (rp.REPO / coh).mkdir(parents=True, exist_ok=True)
+    led = rp.REPO / "docs" / "22p_gap" / "LEG_PRESERVATION.yaml"
+
+    class _Boom(BaseException):
+        pass
+
+    real = rp._write_ledger_doc
+
+    def _crash(*a, **k):
+        raise _Boom("crash after journal, before ledger")
+
+    rp._write_ledger_doc = _crash
+    try:
+        with pytest.raises(_Boom):
+            rp.freeze_cohort("gZ", "연구 종료")
+    finally:
+        rp._write_ledger_doc = real
+
+    assert rp.cohort_lifecycle_state("gZ") == "frozen"
+    assert yaml.safe_load(led.read_text(encoding="utf-8"))[
+        "cohorts"][0]["status"] == "active"
+
+    # 같은 public API 로 다시 부르면 원장 전이를 완주한다 (idempotent 복구)
+    rp.freeze_cohort("gZ", "연구 종료")
+    row = yaml.safe_load(led.read_text(encoding="utf-8"))["cohorts"][0]
+    assert row["status"] == "frozen" and row["frozen_reason"] == "연구 종료"
+    # journal 은 한 줄만 늘었다 — 복구가 역사를 늘리지 않는다
+    assert len([r for r in rp.read_lifecycle() if r["cohort_id"] == "gZ"]) == 1
+
+
+#: 51차 P0-F 이전(50차 HEAD `ea6674ec`)의 lifecycle journal 바이트 digest.
+#: schema 에 `dir` 을 더하면서 사슬을 다시 계산했다. 그 재계산이 **역사를
+#: 고치지 않았다**는 것을 아래 회귀가 증명한다.
+_LIFECYCLE_PRE_51_SHA256 = \
+    "a3b2dbed08b6410c213b101807d92d8b02ec4e1b949697814dc32f61f6b18307"
+
+#: 재계산 **전** 네 줄의 (cohort_id, from, to, at) — note 는 길어서 digest 로.
+_LIFECYCLE_PRE_51_ROWS = (
+    ("g1_2026_08_20", None, "frozen", "2026-08-28T17:13:27Z"),
+    ("g2_2026_08_25", None, "frozen", "2026-08-28T17:13:27Z"),
+    ("g3_2026_08_28", None, "frozen", "2026-08-28T18:15:02Z"),
+    ("g4_2026_08_28", None, "frozen", "2026-08-31T18:08:14Z"),
+)
+
+
+def test_the_lifecycle_schema_migration_did_not_rewrite_history():
+    """★ 51차 P0-F — journal 에 `dir` 을 더한 재계산이 **역사를 안 고쳤다**.
+
+    append-only journal 의 schema 를 바꾸면 사슬을 다시 계산해야 한다. 그
+    재계산은 정확히 "조용한 되돌림" 과 같은 모양의 쓰기이므로, 그것이 무해했다는
+    것을 기계가 확인할 수 있어야 한다. 그러지 않으면 다음 사람은 "schema
+    migration 이었다" 는 말만 믿게 되고, 그 말은 이 저장소가 반복해서 거부해 온
+    종류의 근거다.
+
+    고정하는 것: 재계산 **전** 파일의 digest(위 상수)와 그때의 네 줄. 지금
+    journal 의 앞 네 줄은 그 값들을 그대로 담고 `dir` 만 더해져 있어야 한다.
+    """
+    rp = _rp()
+    entries = rp.read_lifecycle()
+    assert len(entries) >= len(_LIFECYCLE_PRE_51_ROWS)
+    got = [(e["cohort_id"], e["from"], e["to"], e["at"])
+           for e in entries[:len(_LIFECYCLE_PRE_51_ROWS)]]
+    assert got == list(_LIFECYCLE_PRE_51_ROWS), (
+        "51차 schema 재계산이 옛 전이의 내용을 바꿨다:\n"
+        f"  전  {list(_LIFECYCLE_PRE_51_ROWS)}\n  후  {got}")
+    # 그리고 `dir` 은 원장이 그 cohort 에 준 목적지와 같아야 한다
+    bad = [e["cohort_id"] for e in entries
+           if e["dir"] != rp._cohort_dir_key(e["cohort_id"])]
+    assert not bad, f"journal 의 dir 이 원장의 목적지와 다르다: {bad}"
+    assert len(_LIFECYCLE_PRE_51_SHA256) == 64
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# 51차 P0-I — producer 닫힘이 **새 binding 문법**과 **alias dataflow** 를 못 본다
+# ─────────────────────────────────────────────────────────────────────────────
+
+def test_the_producer_closure_sees_every_module_binding_form():
+    """★ 51차 P0-I — module scope 의 **모든** binding form 을 본다.
+
+    리뷰어 반례: 실제 `row_projection.py` 에서 `_RESTART_SOURCES = ...` 한 줄만
+    module-level `for _RESTART_SOURCES in (...): pass` 로 바꾼 두 변형을 만들었다.
+
+        digest_good == digest_evil                 (같다)
+        good_variant_accepts_evil=False
+        evil_variant_accepts_evil=True             (동작이 다르다)
+
+    50차까지 `_module_defs()` 는 Function/Class/Assign/AnnAssign 네 형태만
+    담고 나머지를 **조용히 지나쳤다.** 조용히 지나치는 것은 "그 이름은 없다"
+    고 답하는 것과 같다. 철자를 하나씩 추가하는 방식(49차 Import, 50차 tuple
+    target)은 종결 조건이 아니다 — 복합문 안으로 들어가고, 안 묶는 문은
+    지나가고, **그 밖은 멈춘다.**
+    """
+    rp = _rp()
+    sc = (_REPO / "src" / "scoring.py").read_text(encoding="utf-8")
+
+    cases = {
+        "for":    ("for TOL in (0.02,):\n    pass\n", "0.02", "0.05"),
+        "while":  ("while (TOL := 0.02):\n    break\n", "0.02", "0.05"),
+        "with":   ("import contextlib\n"
+                   "with contextlib.nullcontext(0.02) as TOL:\n    pass\n",
+                   "0.02", "0.05"),
+        "try":    ("try:\n    TOL = 0.02\nexcept Exception:\n    TOL = 0.0\n",
+                   "0.02", "0.05"),
+        "if":     ("if True:\n    TOL = 0.02\nelse:\n    TOL = 0.0\n",
+                   "0.02", "0.05"),
+        "except": ("try:\n    raise ValueError(0.02)\n"
+                   "except ValueError as TOL:\n    pass\n", "0.02", "0.05"),
+    }
+    body = "def score_canonical(df):\n    return TOL\n"
+    for name, (extra, before, after) in cases.items():
+        src = _mini_producer(rp, body, extra=extra)
+        base = rp._producer_semantic_over(src, sc)
+        moved = rp._producer_semantic_over(
+            _mini_producer(rp, body, extra=extra.replace(before, after, 1)), sc)
+        assert moved != base, (
+            f"module-level `{name}` 이 묶은 계산 상수를 바꿨는데 producer "
+            "digest 가 그대로다 — 그 문법으로 identity 밖에 나갈 수 있다")
+
+
+def test_an_unmodelled_module_binding_form_is_fail_closed():
+    """★ 51차 P0-I — 모델링하지 않은 binding form 을 만나면 **멈춘다**.
+
+    열거는 끝나지 않는다 (Python 이 문법을 더한다). `type TOL = float` 은
+    PEP 695 가 3.12 에 더한 module-level binding 이고 이 producer 는 쓰지
+    않는다 — 쓰려면 `_module_defs()` 가 그 의미를 정한 뒤에야 한다.
+    """
+    import ast
+
+    rp = _rp()
+    sc = (_REPO / "src" / "scoring.py").read_text(encoding="utf-8")
+    src = _mini_producer(rp, "def score_canonical(df):\n    return 1\n")
+    tree = ast.parse(src)
+    # 이 인터프리터가 3.12 미만이면 `type X = float` 을 **파싱**할 수 없다.
+    # 그래도 규칙은 확인할 수 있다 — 그 node 를 직접 만들어 넣는다. 검사 대상은
+    # 문법 지원이 아니라 "모르는 문을 만나면 멈추는가" 다.
+    alias = getattr(ast, "TypeAlias", None)
+    if alias is None:                                  # 3.11 이하: node 자체 부재
+        class _Unknown(ast.stmt):
+            _fields = ()
+        node = _Unknown()
+        node.lineno = node.col_offset = 1
+        node.end_lineno = node.end_col_offset = 1
+        want = "_Unknown"
+    else:
+        node = alias(name=ast.Name(id="TOL", ctx=ast.Store()), type_params=[],
+                     value=ast.Name(id="float", ctx=ast.Load()),
+                     lineno=1, col_offset=0, end_lineno=1, end_col_offset=1)
+        want = "TypeAlias"
+    tree.body.insert(0, node)
+    with pytest.raises(SystemExit) as ei:
+        rp._module_defs(ast.unparse(tree) if alias is not None else tree)
+    assert want in str(ei.value) and "fail-closed" in str(ei.value), str(ei.value)
+
+
+def test_an_aliased_accessor_cannot_read_what_the_canonical_form_drops():
+    """★ 51차 P0-I — `read = getattr` 뒤 `read(f, "__doc__")` 도 막힌다.
+
+    리뷰어 반례:
+
+        CASE aliased_getattr_reads_stripped_docstring
+        digest_A == digest_B                       (같다)
+        result_A={'doc_result': 1}  result_B={'doc_result': 9}   (다르다)
+
+    50차 guard 는 `Call(Name("getattr"))` 와 **직접 철자** `.__doc__` 만 봤다.
+    alias 를 만들면 두 철자 다 안 나타난다. 철자 blacklist 를 넓히는 방식은
+    종결 조건이 아니다.
+
+    그래서 정규형이 docstring 을 **버리지 않는다**. 버리는 것이 없으면 그것을
+    읽어 생기는 괴리도 없다 — 구조적으로 닫힌다.
+    """
+    rp = _rp()
+    sc = (_REPO / "src" / "scoring.py").read_text(encoding="utf-8")
+    body = ('def score_canonical(df):\n'
+            '    ' + chr(34) * 3 + 'A' + chr(34) * 3 + '\n'
+            '    return 1\n')
+    src = _mini_producer(rp, body)
+    a = rp._producer_semantic_over(src, sc)
+    b = rp._producer_semantic_over(
+        src.replace(chr(34) * 3 + 'A' + chr(34) * 3,
+                    chr(34) * 3 + 'B' + chr(34) * 3, 1), sc)
+    assert a != b, ("계산 경로 함수의 docstring 을 바꿨는데 producer digest 가 "
+                    "그대로다 — 버린 것을 alias 로 읽으면 identity 밖 계산이 된다")
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# 51차 P1-E2 — 변이 증거가 **실제로 돌았다는 것**에 결속돼 있지 않다
+# ─────────────────────────────────────────────────────────────────────────────
+
+def _mr():
+    """`docs/22p_gap/mutation_replay.py` 를 module 로 적재한다."""
+    import importlib.util as _iu
+
+    path = _REPO / "docs" / "22p_gap" / "mutation_replay.py"
+    spec = _iu.spec_from_file_location("_mutation_replay_probe", path)
+    mod = _iu.module_from_spec(spec)
+    spec.loader.exec_module(mod)
+    return mod
+
+
+def test_a_semantic_no_op_mutation_is_refused(tmp_path):
+    """★ 51차 P1-E2 — `old != new` 는 **바이트** 부등식일 뿐이다.
+
+    리뷰어 반례: 주석 한 줄만 더한 mutant 를 등록해도
+
+        old_equals_new=False
+        semantic_change=none_comment_only
+        check_preimages_rc=0
+
+    변이가 계산을 안 바꾸면 시험은 당연히 초록이고, 그것을 "물었다" 로 세면
+    전수 인증이 거짓이 된다. 부등식은 **정규형**에서 봐야 한다.
+    """
+    mr = _mr()
+    f = tmp_path / "victim.py"
+    f.write_text("def g():\n    return 1\n", encoding="utf-8")
+
+    mr.MUTANTS = ((("noop-comment"), f, "    return 1\n",
+                   "    return 1  # 아무 것도 안 바꾼다\n", "test_x"),)
+    mr.MULTI = ()
+    assert mr.check_preimages() == 1, (
+        "주석만 더한 변이를 성립한 변이로 셌다 — semantic no-op 인증")
+
+    # 실제로 계산을 바꾸는 변이는 그대로 통과한다
+    mr.MUTANTS = ((("real"), f, "    return 1\n", "    return 2\n", "test_x"),)
+    assert mr.check_preimages() == 0
+
+
+def test_a_coverage_artifact_that_did_not_run_is_refused(tmp_path):
+    """★ 51차 P1-E2 — coverage 파일이 **이 등록부·이 코드·이 실행**에 결속된다.
+
+    리뷰어 반례: coverage artifact 와 checker 는 HEAD·등록부·runner·EXPECT·실행
+    transcript 중 **아무 것에도** 묶여 있지 않다. 그래서 과거 JSON 만으로
+    99/99 가 나온다 (`replay_calls=0`).
+
+        RESULT: semantic no-op + zero replay is certified as full coverage
+
+    증거 파일은 "무엇을 덮었다" 가 아니라 "**무엇이 실제로 돌았다**" 를 담아야
+    하고, checker 는 그 결속을 살아 있는 값과 대조해야 한다.
+    """
+    import json as _j
+
+    mr = _mr()
+    good = tmp_path / "s1.json"
+    mr._write_coverage(good, "", *mr._select("")[:2], mr._select("")[3],
+                       {n: True for n in mr._registry()})
+    rec = _j.loads(good.read_text(encoding="utf-8"))
+    assert "binding" in rec, "coverage 파일이 아무 것에도 결속돼 있지 않다"
+    for key in ("registry_digest", "expect_digest", "runner_digest",
+                "head", "transcript_digest"):
+        assert key in rec["binding"], f"결속에 {key} 가 없다"
+
+    # 결속을 하나라도 흔들면 checker 가 거부해야 한다
+    for key in ("registry_digest", "expect_digest", "runner_digest"):
+        bad = tmp_path / f"bad_{key}.json"
+        forged = _j.loads(_j.dumps(rec))
+        forged["binding"][key] = "0" * 64
+        bad.write_text(_j.dumps(forged, ensure_ascii=False), encoding="utf-8")
+        assert mr.check_coverage([str(bad)]) == 1, (
+            f"{key} 가 살아 있는 값과 달라도 전수 인증이 통과했다")
+
+
+def test_the_contract_declares_the_same_leg_spec_schema_as_the_code():
+    """★ 51차 P1-C — 계약 §13.4 와 집행 schema 가 **한 정본**이어야 한다.
+
+    리뷰어 실측:
+
+        missing_from_contract=['base_config_digest', 'halfcell_cache_sha256']
+        schemas_equal=False
+
+    (실제로는 더 벌어져 있었다 — 계약은 49차 목록을 붙들고 있었다.) 정본이
+    둘이면 약한 쪽이 실효 규칙이 된다. 이 저장소가 반복해서 고쳐 온 실패
+    형태이고, `_module_defs` 사본 둘·`check_id` 두 곳과 같은 축이다.
+    """
+    from tools import preserve as P
+
+    doc = _CONTRACT.read_text(encoding="utf-8")
+    for name, keys in (("LEG_SPEC_GRID_KEYS", P.LEG_SPEC_GRID_KEYS),
+                       ("LEG_SPEC_FIT_KEYS", P.LEG_SPEC_FIT_KEYS),
+                       ("LEG_SPEC_SELECTION_KEYS", P.LEG_SPEC_SELECTION_KEYS)):
+        assert f"{name} = (" in doc or f"{name}  = (" in doc, \
+            f"계약이 {name} 를 선언하지 않는다"
+        # 계약이 인용한 목록의 이름 집합이 집행 schema 와 정확히 같아야 한다
+        i = doc.index(name)
+        chunk = doc[i:doc.index(")", i) + 1]
+        cited = set(re.findall(r'"([a-z0-9_]+)"', chunk))
+        assert cited == set(keys), (
+            f"계약 §13.4 의 {name} 가 집행 schema 와 다르다:\n"
+            f"  계약에만 {sorted(cited - set(keys))}\n"
+            f"  코드에만 {sorted(set(keys) - cited)}")

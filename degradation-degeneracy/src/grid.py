@@ -402,17 +402,88 @@ def _assert_grid_authorized(cfg: dict, out_dir, conditions=None,
     # 어느 쪽이 경계인지 정할 수 없다.
     if is_inside_namespace(out_dir, SMOKE_NAMESPACE):
         return None
-    cond_ids = sorted(c.cond_id for c in (conditions or []))
-    live_grid = {
-        "config_digest": _cfg_digest(cfg),
-        "condition_ids_sha256": _h.sha256(
-            "\n".join(cond_ids).encode("utf-8")).hexdigest()[:16],
-        "n_conditions": len(cond_ids),
-        "out": leg_out_key(out_dir)}
+    live_grid = live_grid_axis(cfg, conditions, out_dir)
     declared = declared_leg_run_spec(leg)
     spec = leg_run_spec(leg, live_grid, declared.get("fit") or {})
     return assert_run_is_authorized(leg, "grid", [out_dir], spec,
                                     source_digest(), token_file=token_file)
+
+def _discharged_kw(cfg: dict, claim) -> dict:
+    """승인 축이 정한 **완방상태 입력 대상** 을 `get_discharged_state()` 인자로.
+
+    ★ 51차 P0-A4 — 승인과 소비를 같은 바이트에 묶는 자리다. 50차는 승인이 이
+      축을 아예 담지 않았고, 본체는 그냥 경로를 열었다.
+    """
+    import hashlib as _h
+
+    from tools.preserve import PreserveError, declared_leg_run_spec
+
+    if claim is None:
+        return {}                       # smoke namespace — 계획 밖이다
+    want = ((declared_leg_run_spec(claim.leg_id).get("grid") or {})
+            .get("discharged_cache_sha256"))
+    if want is None:
+        # 계획이 "이 실행이 계산한다" 고 승인했다 — 캐시를 읽지 않는다.
+        return {"force": True}
+    cache = discharged_cache_path_for(cfg)
+    if not cache.is_file():
+        raise PreserveError(
+            "plan",
+            f"계획이 승인한 완방상태 캐시가 없다: {cache} (승인 {want[:16]}) — "
+            "승인 대상이 사라진 채로 격자 truth 를 만들 수 없다")
+    raw = cache.read_bytes()
+    got = _h.sha256(raw).hexdigest()
+    if got != want:
+        raise PreserveError(
+            "plan",
+            f"계획이 승인한 완방상태 캐시와 지금 있는 캐시가 다르다 "
+            f"(승인 {want[:16]} ≠ 지금 {got[:16]}) — 격자 전체 truth 의 "
+            "기준점이 승인 밖에서 움직였다")
+    return {"cache_bytes": raw}
+
+
+def discharged_cache_path_for(cfg: dict):
+    """완방상태 캐시 경로를 계산하는 **단 한 곳** (51차 P0-A4).
+
+    승인 축과 본체가 다른 함수로 경로를 계산하면 둘이 갈릴 수 있고, 갈리면
+    "승인한 캐시" 와 "읽은 캐시" 가 다른 파일이 된다.
+    """
+    from src.baseline import _cache_path
+
+    return _cache_path(cfg, None)
+
+
+def live_grid_axis(cfg: dict, conditions, out_dir) -> dict:
+    """지금 이 실행이 하려는 grid 를 **살아 있는 입력에서** 그대로 적는다.
+
+    ★ 51차 P0-A4 — `discharged_cache_sha256` 가 여기 있다. 완방상태는 격자
+      전체 truth 의 기준점인데 50차 축에는 config·조건·출력뿐이었다. 리뷰어가
+      production reader 의 검사를 전부 통과하는 두 캐시로 같은 승인 아래 다른
+      곡선을 계산했다 (`q_mah` 5621.148 ≠ 5540.777).
+
+      사후 grid signature 에는 `discharged_sha` 가 이미 있었다. **실행 뒤에
+      무엇을 읽었는지 적는 것**과 **실행 전에 무엇을 읽을지 승인하는 것**은
+      다른 명제다 — 앞의 것은 서명이고 뒤의 것만 gate 다.
+
+      캐시가 없으면 `None` 이다: 이 실행이 cfg 와 code identity 로부터 직접
+      계산한다는 뜻이고, 그때 본체는 캐시 읽기가 금지된다 (`run_grid` 의
+      `force=True`). 그러지 않으면 승인 뒤에 생긴 캐시가 조용히 쓰인다.
+    """
+    import hashlib as _h
+
+    cond_ids = sorted(c.cond_id for c in (conditions or []))
+    cache = discharged_cache_path_for(cfg)
+    use_cache = bool(cfg.get("discharged_state", {}).get("cache", True))
+    return {
+        "config_digest": _cfg_digest(cfg),
+        "condition_ids_sha256": _h.sha256(
+            "\n".join(cond_ids).encode("utf-8")).hexdigest()[:16],
+        "n_conditions": len(cond_ids),
+        "discharged_cache_sha256": (
+            _h.sha256(cache.read_bytes()).hexdigest()
+            if use_cache and cache.is_file() else None),
+        "out": leg_out_key(out_dir)}
+
 
 def leg_name(explicit: str | None = None) -> str:
     """이 실행이 어느 다리인가 (48차 P0-5).
@@ -485,7 +556,11 @@ def run_grid(cfg: dict, conditions: list[Condition], nproc: int,
                 "이어서 하려면 --resume, 새로 하려면 다른 --out 을 쓰세요.", len(prev))
 
     # ── 완방상태는 병렬 전에 1회 산출 (워커에 값만 전달) ──
-    d = get_discharged_state(cfg)
+    # ★ 51차 P0-A4 — **승인이 가리키는 바이트만** 읽는다. 승인 축의
+    #   `discharged_cache_sha256` 가 hex64 면 그 바이트를 그대로 파싱하고,
+    #   `null` 이면 캐시를 아예 안 읽고 계산한다 (승인 뒤에 생긴 캐시가 조용히
+    #   쓰이는 것을 막는다). 승인이 없는 smoke 실행은 예전대로다.
+    d = get_discharged_state(cfg, **_discharged_kw(cfg, _claim))
     d_dict = asdict(d)
     b = Baseline.from_config(cfg)
     guards = cfg.get("guards", {})

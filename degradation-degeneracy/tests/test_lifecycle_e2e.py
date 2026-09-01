@@ -77,12 +77,8 @@ conds = conditions_from_config(cfg, cli={
     "lli": None, "lam_pe": None, "lam_ne": None,
     "lam_pe_type": None, "lam_ne_type": None, "noise": None})
 cond_ids = sorted(c.cond_id for c in conds)
-grid_axis = {
-    "config_digest": _cfg_digest(cfg),
-    "condition_ids_sha256": hashlib.sha256(
-        "\n".join(cond_ids).encode("utf-8")).hexdigest()[:16],
-    "n_conditions": len(cond_ids),
-    "out": leg_out_key(root / out_rel)}
+from src.grid import live_grid_axis
+grid_axis = live_grid_axis(cfg, conds, root / out_rel)
 
 ocfg = load_config("configs/objectives.yaml")
 objectives = {objective: ocfg["objectives"][objective]}
@@ -203,7 +199,7 @@ def test_grid_then_fit_then_finalize_completes_across_processes(tree):
     made = _py(root, _MAKE_PLAN, _LEG, "configs/_e2e49.yaml", _OUT_REL, "pocv")
     assert made["n_conditions"] == 2, made
 
-    tok = root / "results" / "_claims" / f"{_LEG}.token"
+    tok = root / "results" / "_attempts" / f"{_LEG}.token"
 
     # ── ① grid process — 실행권을 발급하고 소유 증명을 남긴다
     g = _run(root, "--mode", "grid", "--leg", _LEG,
@@ -298,7 +294,7 @@ def test_a_released_leg_can_be_started_again(tree):
     leg = "e2e49b"
     out_rel = "results/e2e49b"
     _py(root, _MAKE_PLAN, leg, "configs/_e2e49.yaml", out_rel, "pocv")
-    tok = root / "results" / "_claims" / f"{leg}.token"
+    tok = root / "results" / "_attempts" / f"{leg}.token"
 
     _run(root, "--mode", "grid", "--leg", leg,
          "--config", "configs/_e2e49.yaml", "--out", out_rel, "--nproc", "2")

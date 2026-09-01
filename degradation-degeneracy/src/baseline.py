@@ -120,7 +120,8 @@ def compute_discharged_state(cfg: dict, solver=None) -> DischargedState:
 
 
 def get_discharged_state(
-    cfg: dict, cache_dir: str | Path | None = None, force: bool = False
+    cfg: dict, cache_dir: str | Path | None = None, force: bool = False,
+    cache_bytes: bytes | None = None,
 ) -> DischargedState:
     """완방상태 조회. baseline 해시 키 캐시 → 미스 시 시뮬레이션 산출.
 
@@ -129,8 +130,22 @@ def get_discharged_state(
     use_cache = bool(cfg["discharged_state"].get("cache", True))
     path = _cache_path(cfg, cache_dir)
 
-    if use_cache and not force and path.exists():
+    # ★ 51차 P0-A4 — 호출자가 **승인한 바이트**를 그대로 넘길 수 있다.
+    #   경로를 다시 여는 대신 그 바이트를 파싱하면, "승인 축이 해시한 것" 과
+    #   "격자 truth 가 읽은 것" 이 같은 바이트임이 구조적으로 보장된다. 리뷰어
+    #   반례는 두 캐시 모두 reader 의 identity 검사를 통과했다 — 검사를 더
+    #   붙이는 것이 아니라 읽는 대상을 고정하는 것이 답이다.
+    if cache_bytes is not None:
+        if force or not use_cache:
+            raise RuntimeError(
+                "완방상태: 캐시 바이트를 주면서 동시에 재계산을 요구할 수 없다 "
+                "— 승인이 가리키는 대상이 둘이 된다")
+        data = json.loads(cache_bytes.decode("utf-8"))
+    elif use_cache and not force and path.exists():
         data = json.loads(path.read_text(encoding="utf-8"))
+    else:
+        data = None
+    if data is not None:
         # ★ F82/9차 발견 1 — 캐시가 **이 baseline 의 것인지** 읽기 전에 확인한다.
         #   예전에는 파일 존재만 보고 그대로 신뢰해서, 다른 baseline 의 상태나
         #   손상된 값이 그대로 격자 truth 의 기준이 됐다.

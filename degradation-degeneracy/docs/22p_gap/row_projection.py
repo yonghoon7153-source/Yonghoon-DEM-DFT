@@ -376,21 +376,33 @@ _PRODUCER_CUT = ("promote_cohort_generation",
                  "_assert_writable")
 
 
-def _strip_docstrings(tree):
-    """docstring 을 떼어 낸다 — 산문 변경이 producer identity 를 흔들지 않게."""
-    import ast
+def _keep_docstrings(tree):
+    """docstring 을 **남긴다** — 51차 P0-I.
 
-    for node in ast.walk(tree):
-        body = getattr(node, "body", None)
-        if not isinstance(body, list) or not body:
-            continue
-        if not isinstance(node, (ast.Module, ast.FunctionDef,
-                                 ast.AsyncFunctionDef, ast.ClassDef)):
-            continue
-        first = body[0]
-        if isinstance(first, ast.Expr) and isinstance(first.value, ast.Constant) \
-                and isinstance(first.value.value, str):
-            node.body = body[1:] or [ast.Pass()]
+    50차까지 이 자리는 `_strip_docstrings()` 였다. 산문 변경이 identity 를
+    흔들지 않게 하려는 것이었고, 그 대신 "버린 것을 읽는 코드" 를 guard 가
+    막았다: `.__doc__` 이라는 **철자**를 거부했다.
+
+    리뷰어가 그 철자를 피해 갔다:
+
+        read_attribute = getattr
+        read_attribute(score_canonical, "__doc__")
+
+        digest_A == digest_B                       (같다)
+        result_A={'doc_result': 1}  result_B={'doc_result': 9}
+
+    철자 blacklist 를 alias 까지 넓히는 것은 종결 조건이 아니다 — alias 의
+    alias, 부분 적용, dict 에 담은 함수로 계속 이어진다. 종결 조건은 **버리는
+    것을 없애는 것**이다. 버린 것이 없으면 그것을 읽어 생기는 괴리도 없다.
+
+    대가는 명확하다: 계산 경로 함수의 docstring 을 고치면 producer identity 가
+    움직이고 cohort 를 새로 만들어야 한다. 산문 한 줄이 그만한 값인가 — 그렇다.
+    "digest 가 거짓일 수 있다" 를 남기는 것보다 싸다. (계산 경로 **밖**의
+    docstring 은 애초에 닫힘에 안 들어가므로 영향이 없다.)
+
+    함수는 identity 로 남긴다 — 정규형 pipeline 의 자리를 지우면 다음 사람이
+    "여기서 무엇을 버리나" 를 다시 묻게 된다. 지금 답은 **아무 것도 안 버린다** 다.
+    """
     return tree
 
 
@@ -415,7 +427,7 @@ def _ast_normal_node(node) -> str:
     """
     import copy
 
-    return _ast_canon(_strip_docstrings(copy.deepcopy(node)))
+    return _ast_canon(_keep_docstrings(copy.deepcopy(node)))
 
 
 #: ★ 49차 P0-2 — **지원하는 인터프리터 집합.** 정규형이 버전에 안 묶인다는
@@ -550,25 +562,92 @@ def _target_names(node):
     return []                       # Attribute·Subscript 는 module 이름이 아니다
 
 
+#: module scope 에서 **이름을 묶지 않는** 단순문.
+_MODULE_NONBINDING = ("Expr", "Pass", "Raise", "Assert", "Delete", "AugAssign",
+                      "Global", "Nonlocal", "Break", "Continue", "Return",
+                      "Import", "ImportFrom")
+
+#: **안으로 들어가야 하는** 복합문 — 그 안의 정의도 module scope 다.
+_MODULE_COMPOUND = ("If", "Try", "TryStar", "For", "AsyncFor", "While",
+                    "With", "AsyncWith", "Match")
+
+
 def _module_defs(src: str) -> dict:
-    """module-level 정의 이름 → node."""
+    """module-level 정의 이름 → node. **모르는 문은 거부한다** (51차 P0-I).
+
+    50차까지 이 함수는 Function/Class/Assign/AnnAssign 네 형태만 담고 나머지를
+    조용히 지나쳤다. 조용히 지나치는 것은 "그 이름은 없다" 고 답하는 것과 같고
+    그 답은 거짓일 수 있다. 리뷰어가 실제 파일의 `_RESTART_SOURCES = ...` 한
+    줄을 `for _RESTART_SOURCES in (...): pass` 로 바꾼 두 변형을 만들었다 —
+    **동작이 다른데 sealed identity 가 같았다.**
+
+    철자를 하나씩 추가하는 방식(49차 Import, 50차 tuple target)은 종결 조건이
+    아니다. 종결 조건은 셋이다:
+
+      · 복합문은 **안으로 들어간다** (`_MODULE_COMPOUND`) — `if`/`try` 안의
+        정의도 module scope 이고, `for`/`with`/`except` 는 자기 target 도 묶는다.
+      · 이름을 안 묶는 단순문은 지나간다 (`_MODULE_NONBINDING`).
+      · **그 밖은 멈춘다.** 새 문법이 필요해지면 여기 넣고 그때 의미를 정한다.
+
+    묶는 이름은 그 문 **전체** node 에 매핑한다 — 값이 어디서 오든 그 문의
+    소스가 identity 에 들어가야 값 변경이 digest 를 움직인다.
+    """
     import ast
 
     defs: dict = {}
-    for node in ast.parse(src).body:
-        if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef, ast.ClassDef)):
-            defs[node.name] = node
-        elif isinstance(node, ast.Assign):
-            # ★ 50차 P0 — `A, B = 1, 2` · `(D,) = (4,)` · `[E, *F] = …` 도
-            #   module 정의다. 49차는 `ast.Name` target 만 담았으므로 계산
-            #   상수를 tuple 대입으로 바꾸면 producer identity 에서 통째로
-            #   빠졌다 (문법 하나로 identity 밖으로 나가는, P0-2 와 같은 형태).
-            for t in node.targets:
-                for name in _target_names(t):
+
+    def _walrus(node):
+        for sub in ast.walk(node):
+            if isinstance(sub, ast.NamedExpr):
+                for name in _target_names(sub.target):
                     defs[name] = node
-        elif isinstance(node, ast.AnnAssign):
-            for name in _target_names(node.target):
-                defs[name] = node
+
+    def _visit(body, top):
+        for node in body:
+            kind = type(node).__name__
+            if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef,
+                                 ast.ClassDef)):
+                defs[node.name] = node
+                continue
+            _walrus(top or node)
+            if isinstance(node, ast.Assign):
+                # ★ 50차 P0 — `A, B = 1, 2` · `(D,) = (4,)` · `[E, *F] = …` 도
+                #   module 정의다. 49차는 `ast.Name` target 만 담았으므로 계산
+                #   상수를 tuple 대입으로 바꾸면 identity 에서 통째로 빠졌다.
+                for t in node.targets:
+                    for name in _target_names(t):
+                        defs[name] = top or node
+            elif isinstance(node, ast.AnnAssign):
+                for name in _target_names(node.target):
+                    defs[name] = top or node
+            elif kind in _MODULE_NONBINDING:
+                continue                  # import 는 `_crossed_*` 가 따로 본다
+            elif kind in _MODULE_COMPOUND:
+                here = top or node
+                for name in _target_names(getattr(node, "target", None)
+                                          or ast.Pass()):
+                    defs[name] = here
+                for item in getattr(node, "items", ()) or ():
+                    if item.optional_vars is not None:
+                        for name in _target_names(item.optional_vars):
+                            defs[name] = here
+                for h in getattr(node, "handlers", ()) or ():
+                    if getattr(h, "name", None):
+                        defs[h.name] = here
+                    _visit(h.body, here)
+                for attr in ("body", "orelse", "finalbody"):
+                    _visit(getattr(node, attr, ()) or (), here)
+                for case in getattr(node, "cases", ()) or ():
+                    _visit(case.body, here)
+            else:
+                raise SystemExit(
+                    f"✗ producer 소스의 module scope 에 모델링하지 않은 binding "
+                    f"form 이 있다: `{kind}` ({getattr(node, 'lineno', '?')}행) "
+                    "— 닫힘이 볼 수 없는 이름은 identity 밖 계산을 만든다. 이 "
+                    "문법을 쓰려면 `_MODULE_COMPOUND`/`_MODULE_NONBINDING` 에 "
+                    "넣고 `_module_defs()` 가 무엇을 묶는지 정하라 (fail-closed)")
+
+    _visit(ast.parse(src).body, None)
     return defs
 
 
@@ -643,13 +722,16 @@ def _assert_no_dynamic_resolution(node, where: str, mods: set) -> None:
 
     for sub in ast.walk(node):
         if not isinstance(sub, ast.Call) or not isinstance(sub.func, ast.Name):
+            # ★ 51차 P0-I — `__doc__` 은 여기서 빠졌다. 이제 정규형이
+            #   docstring 을 **버리지 않으므로** 그것을 읽는 것은 identity 밖
+            #   계산이 아니다. 나머지 셋은 여전히 정규형이 못 보는 것이고,
+            #   그쪽은 철자 목록이 아니라 "실행 시점 이름 풀기" 축이다.
             if isinstance(sub, ast.Attribute) and sub.attr in (
-                    "__dict__", "__globals__", "__code__", "__doc__"):
+                    "__dict__", "__globals__", "__code__"):
                 raise SystemExit(
                     f"✗ producer 닫힘 안에서 정규형이 **버리는 것**을 읽는다: "
-                    f"{where} 의 `.{sub.attr}` — `_ast_canon()`·"
-                    "`_strip_docstrings()` 가 떼어 낸 값을 계산이 쓰면 digest 가 "
-                    "거짓이 된다 (둘 중 하나만 참일 수 있다)")
+                    f"{where} 의 `.{sub.attr}` — `_ast_canon()` 이 못 보는 값을 "
+                    "계산이 쓰면 digest 가 거짓이 된다 (둘 중 하나만 참일 수 있다)")
             continue
         fn = sub.func.id
         if fn in _DYNAMIC_ALWAYS:
@@ -2669,7 +2751,13 @@ _CROSS_LEG_POLICY = ("allowed_within_cohort", "not_applicable_single_leg")
 # ─────────────────────────────────────────────────────────────────────────────
 
 #: 전이 journal 한 줄의 **닫힌** key 집합.
-_LIFECYCLE_KEYS = ("seq", "at", "cohort_id", "from", "to", "note", "prev")
+#:
+#: ★ 51차 P0-F — `dir` 이 추가됐다. 50차까지 lifecycle 의 key 는 mutable 한 raw
+#: cohort ID 하나였다. 그래서 원장 **한 파일만** 고쳐 같은 `dir` row 의
+#: `cohort_id` 를 바꾸면 (journal 도 anchor 도 손대지 않고) frozen 목적지에
+#: public publisher 가 그대로 게시했다 (리뷰어 실측). 얼린 것은 **이름이 아니라
+#: 그 디렉터리**다 — 봉인이 이름만 잡으면 이름을 바꿔서 빠져나간다.
+_LIFECYCLE_KEYS = ("seq", "at", "cohort_id", "dir", "from", "to", "note", "prev")
 
 #: 허용 전이. 여기 없는 순서쌍은 만들 수 없다.
 _LIFECYCLE_MOVES = ((None, "active"), (None, "frozen"), ("active", "frozen"))
@@ -2766,6 +2854,39 @@ def cohort_lifecycle_state(cohort_id: str, entries=None):
     return last
 
 
+def _cohort_dir_key(cohort_id: str) -> str:
+    """원장이 이 cohort 에 준 목적지를 **저장소 상대 canonical 경로**로.
+
+    journal 이 봉인할 대상 identity 다 (51차 P0-F).
+    """
+    for c in _ledger_cohorts():
+        if c.get("cohort_id") == cohort_id:
+            d = (REPO / str(c.get("dir") or "")).resolve()
+            try:
+                return d.relative_to(Path(REPO).resolve()).as_posix()
+            except ValueError:
+                return d.as_posix()
+    raise SystemExit(f"✗ 원장에 cohort {cohort_id!r} 이 없다")
+
+
+def frozen_dirs_from_journal(entries=None) -> dict[str, str]:
+    """journal 이 frozen 이라고 **기록한** 목적지 → 그때의 cohort ID (51차 P0-F).
+
+    원장의 현재 ID 와 무관하다. 원장은 사람이 고칠 수 있는 한 줄이고 journal 은
+    되돌릴 수 없다 — 그래서 "이 디렉터리가 얼린 적이 있는가" 의 정본은 여기다.
+    """
+    out = {}
+    for rec in (read_lifecycle() if entries is None else entries):
+        d = rec.get("dir")
+        if not d:
+            continue
+        if rec["to"] == "frozen":
+            out[str(d)] = rec["cohort_id"]
+        else:
+            out.pop(str(d), None)
+    return out
+
+
 def _append_lifecycle(cohort_id: str, frm, to: str, note: str) -> dict:
     """전이 하나를 **덧붙인다.** 허용 전이가 아니면 만들지 않는다."""
     entries = read_lifecycle()
@@ -2783,7 +2904,8 @@ def _append_lifecycle(cohort_id: str, frm, to: str, note: str) -> dict:
     if entries:
         prev = hashlib.sha256(
             _lifecycle_line(entries[-1]).encode("utf-8")).hexdigest()
-    rec = {"seq": len(entries), "cohort_id": cohort_id, "from": frm, "to": to,
+    rec = {"seq": len(entries), "cohort_id": cohort_id,
+           "dir": _cohort_dir_key(cohort_id), "from": frm, "to": to,
            "note": str(note),
            "at": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
            "prev": prev}
@@ -2829,6 +2951,15 @@ def assert_not_thawed(cohort_id: str) -> None:
             f"✗ cohort {cohort_id!r} 는 이미 frozen 으로 기록됐다 "
             f"({_lifecycle_path()}) — 원장의 status 를 active 로 되돌려도 게시할 "
             "수 없다. 얼린 cohort 는 자라지 않는다. 새 cohort 를 만들어라")
+    # ★ 51차 P0-F — 이름이 아니라 **목적지**로도 묻는다. 원장의 cohort_id 만
+    #   바꾸면 이 cohort 에는 frozen 기록이 없지만, 그 디렉터리에는 있다.
+    frozen = frozen_dirs_from_journal()
+    here = _cohort_dir_key(cohort_id)
+    if here in frozen:
+        raise SystemExit(
+            f"✗ cohort {cohort_id!r} 의 목적지 {here} 는 {frozen[here]!r} 로 "
+            f"이미 frozen 기록이 있다 ({_lifecycle_path()}) — 원장에서 ID 를 "
+            "바꿔도 그 디렉터리는 얼려 있다. 새 세대는 **새 디렉터리**를 쓴다")
 
 
 def freeze_cohort(cohort_id: str, reason: str) -> dict:
@@ -2844,6 +2975,22 @@ def freeze_cohort(cohort_id: str, reason: str) -> dict:
                 if c.get("cohort_id") == cohort_id), None)
     if row is None:
         raise SystemExit(f"✗ 원장에 cohort {cohort_id!r} 이 없다")
+    recorded = cohort_lifecycle_state(cohort_id)
+    # ★ 51차 P1-O — **crash 복구가 먼저다.** journal·anchor 를 먼저 쓰고 원장을
+    #   나중에 쓰므로, 그 사이에 죽으면 journal 은 frozen 인데 원장은 active 다.
+    #   게시는 안전하게 막히지만(fail-closed) 같은 API 로 다시 부르면
+    #   `frozen → frozen` 이라 거부됐다 — 원장은 영영 active 로 남는다 (리뷰어
+    #   실측). fail-closed 는 정지가 아니다. 남은 전이를 **완주**한다.
+    if recorded == "frozen":
+        if row.get("status") == "active":
+            prev = next((r for r in read_lifecycle()
+                         if r["cohort_id"] == cohort_id and r["to"] == "frozen"),
+                        None)
+            _write_ledger_doc(led, doc, row, prev["note"] if prev else reason)
+            return prev
+        raise SystemExit(
+            f"✗ cohort {cohort_id!r} 는 이미 frozen 으로 기록됐다 — 두 번 "
+            "얼릴 수 없다")
     if row.get("status") != "active":
         raise SystemExit(
             f"✗ cohort {cohort_id!r} 의 상태가 {row.get('status')!r} 이라 "
@@ -2851,13 +2998,19 @@ def freeze_cohort(cohort_id: str, reason: str) -> dict:
     # 출발점은 **기록된** 상태다. journal 이 생기기 전부터 active 이던 cohort 는
     # 기록이 없고(`None`), 그 경우도 얼릴 수 있어야 한다 — 게시는 lifecycle 을
     # 움직이지 않으므로 "active 기록" 은 없는 것이 정상이다.
-    rec = _append_lifecycle(cohort_id, cohort_lifecycle_state(cohort_id),
-                            "frozen", reason)
+    rec = _append_lifecycle(cohort_id, recorded, "frozen", reason)
+    _write_ledger_doc(led, doc, row, reason)
+    return rec
+
+
+def _write_ledger_doc(led: Path, doc: dict, row: dict, reason: str) -> None:
+    """freeze 의 **두 번째** 쓰기 — 원장 전이. 재시도해도 같은 결과다."""
+    import yaml
+
     row["status"] = "frozen"
     row["frozen_reason"] = str(reason)
     led.write_text(yaml.safe_dump(doc, allow_unicode=True, sort_keys=False),
                    encoding="utf-8")
-    return rec
 
 #: producer identity 의 **닫힌** 필드 집합. 하나라도 빠지거나 남으면 거부한다.
 _PIN_AUTHORITY = ("schema_version", "compute_sha256", "row_projection_py_sha256",
@@ -2985,8 +3138,14 @@ def _frozen_cohort_dirs() -> dict[str, Path]:
       원자료를 잃은 여덟 투영을 실수로 덮을 수 있었다. 목적지는 cohort 로
       고르고, frozen 이면 여기서 막는다.
     """
-    return {c["cohort_id"]: (REPO / c["dir"]).resolve()
-            for c in _ledger_cohorts() if c.get("status") == "frozen"}
+    out = {c["cohort_id"]: (REPO / c["dir"]).resolve()
+           for c in _ledger_cohorts() if c.get("status") == "frozen"}
+    # ★ 51차 P0-F — journal 이 기록한 목적지도 **합집합**이다. 원장의 현재 ID 와
+    #   status 는 한 파일 수정으로 바뀐다. 얼린 적이 있는 디렉터리는 그 뒤 어떤
+    #   이름을 붙여도 얼린 디렉터리다.
+    for d, cid in frozen_dirs_from_journal().items():
+        out.setdefault(cid, (REPO / d).resolve())
+    return out
 
 
 def _assert_writable(dest: Path) -> None:

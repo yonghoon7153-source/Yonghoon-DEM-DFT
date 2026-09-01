@@ -65,9 +65,9 @@ for k in range(n_max):
 
 | # | 교란 | 근거 |
 |---|---|---|
-| 1 | `warm_start` 하나가 **원점과 조건 fitting 을 동시에** 바꾼다 | `src/fitting.py:1064` 가 조건 task 를 그대로 물려받는다. 404 half-cell `p_ini(34p)` `[1.509716,…] → [1.518503,…]` |
+| 1 | `warm_start` 하나가 **원점과 조건 fitting 을 동시에** 바꾼다 | `src/fitting.py:1322` 가 조건 task 를 그대로 물려받는다. 404 half-cell `p_ini(34p)` `[1.509716,…] → [1.518503,…]` |
 | 2 | `--n-restarts` 는 실행 횟수가 아니라 **예산 상한** | adaptive 조기 종료. 2회 종료 행 223 → 238 |
-| 3 | **noise 층을 바꾸면 restart 난수가 통째로 갈린다** | `cond_id = sha1(asdict(Condition))[:12]` 가 `noise`·`seed` 포함 (`src/grid.py:99`) → `task["seed"] = int(sha1(cond_id)[:8],16)` (`src/fitting.py:1019`) |
+| 3 | **noise 층을 바꾸면 restart 난수가 통째로 갈린다** | `cond_id = sha1(asdict(Condition))[:12]` 가 `noise`·`seed` 포함 (`src/grid.py:99`) → `task["seed"] = int(sha1(cond_id)[:8],16)` (`src/fitting.py:1277`) |
 | 4 | **warm 은 slot 을 교체한다** (§0) | 투영 `restart_sources` |
 | 5 | **예산을 바꾸면 warm 후보 자체가 바뀐다** | 연쇄 구조 (`src/fitting.py:392-406`) — 33p 예산 ↑ → 33p 해 변화 → 34p 가 받는 warm 좌표 변화. 22차 발견 2 |
 
@@ -1174,12 +1174,31 @@ phase 가 각자 자기 몫을 살아 있는 입력에서 만들어 같은 diges
 
 ```
 LEG_SPEC_GRID_KEYS = ("config_digest", "condition_ids_sha256",
-                      "n_conditions", "out")
-LEG_SPEC_FIT_KEYS  = ("config_digest", "objective_order", "reference",
-                      "halfcell_recipe", "bounds_preset", "bounds_digest",
-                      "optimizer", "use_noisy", "row_selection",
-                      "in", "in_digest", "out")
+                      "n_conditions", "discharged_cache_sha256", "out")
+LEG_SPEC_FIT_KEYS = ("config_digest", "objective_order", "objectives_digest",
+                     "reference",
+                     "halfcell_recipe", "halfcell_cache_sha256",
+                     "base_config_digest", "bounds_preset", "bounds_digest",
+                     "optimizer", "use_noisy", "row_selection",
+                     "in", "in_digest", "out")
+LEG_SPEC_SELECTION_KEYS = ("mode", "limit", "subset_sha256")
 ```
+
+이 목록은 **집행 schema 의 사본이 아니라 그 자체를 옮긴 것**이고,
+`test_the_contract_declares_the_same_leg_spec_schema_as_the_code` 가 두 곳의
+일치를 강제한다. 51차 P1-C 실측: 계약이 49차 목록을 붙들고 있는 동안 코드는
+`base_config_digest`·`halfcell_cache_sha256`·`row_selection.subset_sha256` 를
+더했다 — 정본이 둘이면 약한 쪽이 실효 규칙이 된다.
+
+50차·51차가 더한 축과 그 사유:
+
+| key | 라운드 | 이것이 없으면 |
+|---|---|---|
+| `halfcell_cache_sha256` | 50차 P0 | 같은 recipe 로 만든 **다른 캐시**를 놓으면 승인한 A 대신 유효한 B 가 계산·게시된다 |
+| `base_config_digest` | 50차 P0 / 51차 P0-A2 | 재고 분배 상수가 승인 밖. 51차부터 leaf 가 아니라 `extends` **dependency closure 전체**의 내용 주소다 — 부모의 `pe_vf` 만 바꿔도 `reference_inventory()` 가 다른 재고를 준다 |
+| `row_selection.subset_sha256` | 50차 P0 | 개수·모드만으로는 **다른 표본**이 같은 승인으로 접힌다 |
+| `objectives_digest` | 51차 P0-A1 | 축이 목적함수의 **이름과 순서만** 담는다. `_fit_one()` 이 소비하는 것은 `{이름: 가중치}` payload 이므로, 같은 이름 아래 다른 가중치가 같은 승인으로 다른 J 를 낸다 |
+| `discharged_cache_sha256` | 51차 P0-A4 | 완방상태는 격자 전체 truth 의 기준점인데 그것을 담은 캐시가 승인 밖이다. reader 의 baseline/solver/runtime 검사를 **전부 통과하는** 두 캐시가 같은 승인으로 다른 곡선을 만든다. `null` 은 "캐시를 안 읽고 이 실행이 계산한다" 이고 그때 본체는 캐시 읽기가 금지된다 |
 
 ★ 49차 P0-5 — fit 축은 48차에 `{config_digest, objectives, out}` 셋뿐이었다.
 그런데 `src/fitting.py` 의 실제 F67 run_spec 이 쓰는 것은 목적함수 **순서**
@@ -1195,11 +1214,26 @@ LEG_SPEC_FIT_KEYS  = ("config_digest", "objective_order", "reference",
 
 | 값 | 뜻 | 런타임 대조 |
 |---|---|---|
-| hex64 | 이 다리 **밖**에서 온 입력 (F70 의 분리 producer 구조). 계획 시점에 실재하므로 사람이 적는다 | fit 이 읽은 바이트와 직접 대조 |
-| `null` | 이 다리의 grid 가 만든다. 계획 시점에는 알 수 없다 | grid **phase receipt** 의 `curves_sha256` 과 대조 (`assert_phase_input_binding()`) |
+| hex64 | 이 다리 **밖**에서 온 입력 (F70 의 분리 producer 구조). 계획 시점에 실재하므로 사람이 적는다 | fit 이 읽은 **묶음 전체**의 package digest 와 대조 (`fit_input_package_digest()`) |
+| `null` | 이 다리의 grid 가 만든다. 계획 시점에는 알 수 없다 | grid **phase receipt** 의 `PHASE_INPUT_KEYS` 셋과 대조 (`assert_phase_input_binding()`) |
 
 경로만 봉인하면 같은 이름 아래 다른 바이트가 들어와도 fit 이 끝까지 성공한다 —
 그 결과는 계획이 승인한 실행의 산물이 아니다.
+
+★ 51차 P1-E1 — hex64 분기의 **의미가 바뀌었다.** 50차까지 그 값은
+`curves.parquet` 하나의 digest 였고, 나머지 두 manifest 는 계산해 놓고 버렸다.
+그래서 승인한 provenance 와 다른 manifest 로도 fit 이 끝까지 성공했다 (리뷰어
+실측). 이제 `in_digest` 는 세 파일의 package digest 이고, 곡선을 그대로 둔 채
+manifest 만 갈아 끼우는 교체가 표현 불가능하다.
+
+★ 51차 P0-A3 — **검증한 바이트와 계산이 읽는 바이트가 같은 사본이다.** 50차는
+원본 pathname 을 해시해 대조하고 한참 뒤 같은 pathname 을 다시 열어 계산했다.
+그 사이는 아무도 안 잡고 있어서 (출력 lock 은 입력 writer 를 안 붙잡는다),
+독립적으로 유효한 package B 로 세 파일을 통째 갈아 끼우면 그것이 계산·게시됐다.
+이제 `run_fit()` 이 gate **앞에서** `_stage_fit_inputs()` 로 immutable 사본을
+뜨고, 승인 축·입력 결속·본체가 모두 그 사본만 본다. 사본은 저장소 상대 구조를
+재현하므로 `extends` 연쇄와 half-cell 캐시 경로 유도가 그 안에서 닫히고,
+manifest 의 `input_sha256` 키는 원래 저장소 상대경로 그대로 남는다.
 
 강제하는 것은 `tools/preserve.py` 의 두 함수다.
 
@@ -1250,6 +1284,37 @@ open_leg_run(leg, spec, digest, token_file)   coordinator 가 한 번 발급
 → finalize_leg(leg, evidence, token_file=…)   소유 증명 **필수**
    또는 release_leg_run(leg, token_file=…)    되돌림 (dry-run·중단 정리)
 ```
+
+**★ 51차 P0-L1/L2/L3 — 순서는 CAS 가 아니었다.** 50차는 "token 을 먼저 쓴다"
+로 발급 crash 창을 닫았다고 선언했다. 리뷰어가 그 위에서 반례 여섯을 만들었다:
+두 번째 정상 `open_leg_run()` 이 살아 있는 owner 의 token 을 먼저 덮고, 옛
+release 의 늦은 cleanup 이 새 attempt 의 token 을 지우고, stale `LegClaim` 과
+소유 증명 없는 진단 handle 이 남의 claim 을 취소하고, release crash 와
+post-replace fsync 오류가 회수 불가능한 `running` orphan 을 만들었다.
+
+공통 원인 하나: **자격 검사와 쓰기가 같은 임계 구역에 없고, 쓰기가 자기가 쓴
+generation 인지 확인하지 않았다.** 51차의 규칙은 넷이다.
+
+| 규칙 | 무엇 |
+|---|---|
+| 발급은 claim lock 안에서 | `open_leg_run()` 이 살아 있는 claim 을 **먼저 판정하고** 그 다음에야 token 을 쓴다. rollback 도 자기 generation 만 지운다 |
+| 삭제는 generation 대조 | `_unlink_token_generation()` — 그 경로에 지금 있는 것이 내가 쓴 token 일 때만 지운다 |
+| mutator 는 쓰기 지점에서 live attempt 재확인 | `_assert_live_attempt()` — verifier·attempt_id·spec·source 를 claim lock 안에서 대조한다. `phase_done()` 뿐 아니라 `_abandon_claim()` 도 |
+| 되돌림은 원장 먼저, claim 나중 | 중간 상태가 "claim 은 있고 계획은 `planned`" 여야 소유 증명으로 재시도할 수 있다. 반대 순서의 중간 상태는 회수 불가다 |
+
+**커밋 불확실성을 실패로 단정하지 않는다.** `_atomic_write_text()` 는
+`os.replace` 로 새 값을 보이게 만든 **뒤** parent directory 를 fsync 한다. 그
+fsync 가 오류를 보고하면 전이는 이미 커밋됐다. 50차 rollback 은 그것을
+미커밋으로 보고 claim 과 token 을 지웠다 — 남는 것은 계획 `running` + 소유자
+없음이고 공개 API 어느 것으로도 회수할 수 없다. 이제 rollback 은
+`_plan_status()` 로 **살아 있는 원장을 다시 읽고** 결정한다.
+
+**전달 통로는 authority namespace 밖이다 (51차 P1-P).** `--attempt-file` 이
+`<claims_root>/<leg>.claim` 이면 token-first 쓰기가 claim authority 경로를
+점유하고, 그 뒤 모든 claim reader 가 `JSONDecodeError` 를 만난다 (그것은
+`PreserveError` 가 아니므로 fail-closed 분기에도 안 걸린다).
+`_assert_token_path_disjoint()` 가 canonical absolute path 로 경계를 강제하고,
+`run.sh` 의 기본 자리도 `results/_attempts/` 로 옮겼다.
 
 claim 파일은 재개 credential 을 **담지 않는다** — 담으면 claims root 를 읽을 수
 있는 주체에게 "소유 증명" 이 아무 것도 요구하지 않는 것과 같다. 진단 경로

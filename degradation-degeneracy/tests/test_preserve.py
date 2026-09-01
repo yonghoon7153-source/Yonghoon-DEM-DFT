@@ -27,6 +27,7 @@ import shutil
 import tempfile
 import uuid
 from pathlib import Path
+from unittest import mock
 
 import pytest
 
@@ -6516,7 +6517,7 @@ def test_the_leg_run_spec_seals_what_actually_gets_computed():
     from tools.preserve import leg_run_spec, run_spec_digest
 
     g = {"config_digest": "a" * 16, "condition_ids_sha256": "b" * 16,
-         "n_conditions": 12, "out": "results/grid_fit_v4"}
+         "n_conditions": 12, "discharged_cache_sha256": None, "out": "results/grid_fit_v4"}
     # ★ 49차 P0-5 — fit 축이 넓어졌다 (아래 `_F49` 와 같은 계약)
     f = dict(_F49, out="results/grid_fit_v4", **{"in": "results/grid_fit_v4"})
     base = run_spec_digest(leg_run_spec("L", g, f))
@@ -6548,7 +6549,7 @@ def test_the_leg_run_spec_refuses_an_undeclared_axis():
     from tools.preserve import leg_run_spec, PreserveError
 
     g = {"config_digest": "a" * 16, "condition_ids_sha256": "b" * 16,
-         "n_conditions": 12, "out": "results/x"}
+         "n_conditions": 12, "discharged_cache_sha256": None, "out": "results/x"}
     f = dict(_F49, out="results/x", **{"in": "results/x"})
     with pytest.raises(PreserveError):
         leg_run_spec("L", dict(g, nproc=8), f)
@@ -6947,9 +6948,10 @@ def test_finalize_writes_a_complete_contract_status_tuple(tmp_path):
 # ─────────────────────────────────────────────────────────────────────────────
 
 _G49 = {"config_digest": "a" * 16, "condition_ids_sha256": "b" * 16,
-        "n_conditions": 12, "out": "results/v4"}
+        "n_conditions": 12, "discharged_cache_sha256": None, "out": "results/v4"}
 _F49 = {"config_digest": "c" * 16,
         "objective_order": ["pocv", "pocv_dvdq"],
+        "objectives_digest": "0123456789abcdef",
         "reference": "grid",
         "halfcell_recipe": {"method": "ocp", "kw": {}},
         "halfcell_cache_sha256": None,
@@ -7499,3 +7501,253 @@ def test_the_grid_receipt_binds_every_curve_input_not_just_the_parquet(tmp_path)
     for k in want:
         with pytest.raises(PreserveError):
             assert_phase_input_binding(c, dict(sealed, **{k: "f" * 64}))
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# 51차 P0-L1 · P0-L2 · P0-L3 · P1-P — lifecycle generation 이 없다
+#
+# 50차는 "token 을 먼저 쓴다" 로 발급 순서를 고쳤다. 그것은 **순서**였지
+# compare-and-swap 이 아니었다. 리뷰어 실측:
+#   · 두 번째 정상 open 이 살아 있는 owner 의 token 을 먼저 덮는다
+#   · 옛 release 의 늦은 cleanup 이 새 attempt 의 token 을 지운다
+#   · stale `LegClaim` 이 새 attempt 의 claim 을 지운다
+#   · 소유 증명 없는 진단 claim 으로 남의 실행을 취소할 수 있다
+#   · release crash 와 post-replace fsync 오류가 회수 불가능한 orphan 을 만든다
+#   · caller 가 준 token 경로가 claim authority 경로와 alias 될 수 있다
+#
+# 공통 원인 하나: **자격 검사와 쓰기가 같은 임계 구역에 없고, 쓰기가 자기가
+# 쓴 generation 인지 확인하지 않는다.**
+# ─────────────────────────────────────────────────────────────────────────────
+
+def test_a_second_open_never_touches_the_live_owners_token(tmp_path):
+    """★ 51차 P0-L1 — 중복 발급이 정상 owner 의 소유 증명을 파괴하면 안 된다.
+
+    리뷰어 반례: A 를 정상 발급한 뒤 같은 public 함수를 같은 token 경로로 다시
+    부르면, B 는 계획 대조로 거부되기 **전에** token 파일을 자기 것으로 덮는다.
+    거부된 뒤 rollback 은 "claim 이 있다" 는 이유로 B 의 token 을 남긴다.
+    결과: claim 의 verifier 는 A, 파일은 B → A 도 이어갈 수 없다.
+    """
+    from tools.preserve import (open_leg_run, attach_leg_run, release_leg_run,
+                                finalize_leg, read_token_file, PreserveError)
+
+    led = _lifecycle_ledger(tmp_path)
+    claims = tmp_path / "claims"
+    tok = tmp_path / "L.token"
+
+    a = open_leg_run("L", _RUN_SPEC_L, "0123456789abcdef", tok,
+                     ledger=led, claims_root=claims)
+    mine = read_token_file(tok)
+
+    with pytest.raises(PreserveError):
+        open_leg_run("L", _RUN_SPEC_L, "0123456789abcdef", tok,
+                     ledger=led, claims_root=claims)
+
+    assert read_token_file(tok) == mine, (
+        "두 번째 발급이 살아 있는 owner 의 소유 증명을 덮었다")
+    # 그리고 A 는 여전히 붙고·닫고·되돌릴 수 있다
+    assert attach_leg_run("L", tok, ledger=led,
+                          claims_root=claims).attempt_id == a.attempt_id
+    release_leg_run("L", token_file=tok, ledger=led, claims_root=claims)
+
+
+def test_a_late_release_cleanup_cannot_delete_the_next_attempts_token(tmp_path):
+    """★ 51차 P0-L2 — token 삭제는 **자기가 쓴 generation** 에만 적용된다.
+
+    리뷰어 반례: release A 가 claim·원장을 되돌린 뒤 token unlink 직전에 멈춘다.
+    정상 B 가 같은 다리를 다시 열어 B 의 token 을 쓴다. 그 뒤 A 가 재개하면
+    A 의 unlink 가 **B 의** 소유 증명을 지운다.
+    """
+    from tools.preserve import (open_leg_run, attach_leg_run, read_token_file,
+                                _unlink_token_generation)
+
+    led = _lifecycle_ledger(tmp_path)
+    claims = tmp_path / "claims"
+    tok = tmp_path / "L.token"
+
+    open_leg_run("L", _RUN_SPEC_L, "0123456789abcdef", tok,
+                 ledger=led, claims_root=claims)
+    stale = read_token_file(tok)                      # A 의 소유 증명
+    from tools.preserve import release_leg_run
+    release_leg_run("L", token=stale, ledger=led, claims_root=claims)
+
+    b = open_leg_run("L", _RUN_SPEC_L, "0123456789abcdef", tok,
+                     ledger=led, claims_root=claims)
+    # ── 여기서 A 의 늦은 cleanup 이 재개한다 ──
+    _unlink_token_generation(tok, stale)
+
+    assert tok.is_file(), "옛 release 의 cleanup 이 새 attempt 의 token 을 지웠다"
+    assert attach_leg_run("L", tok, ledger=led,
+                          claims_root=claims).attempt_id == b.attempt_id
+
+
+def test_a_stale_claim_handle_cannot_cancel_the_next_attempt(tmp_path):
+    """★ 51차 P0-L2 — mutator 가 **쓰기 지점에서** live attempt 를 다시 본다.
+
+    리뷰어 반례: release R1 이 `resume_claim()` 으로 A 를 검증한 뒤 멈춘다.
+    그 사이 A 가 정상 release 되고 B 가 열린다. R1 이 재개해 stale
+    `LegClaim(A)` 로 `_abandon_claim()` 을 부르면 **B 의** claim 이 지워지고
+    원장도 planned 로 돌아간다.
+    """
+    from tools.preserve import (open_leg_run, release_leg_run, resume_claim,
+                                _abandon_claim, planned_index, _claim_path,
+                                read_token_file, PreserveError)
+
+    led = _lifecycle_ledger(tmp_path)
+    claims = tmp_path / "claims"
+    tok = tmp_path / "L.token"
+
+    open_leg_run("L", _RUN_SPEC_L, "0123456789abcdef", tok,
+                 ledger=led, claims_root=claims)
+    ta = read_token_file(tok)
+    stale = resume_claim("L", claims_root=claims, token=ta, ledger=led)
+
+    release_leg_run("L", token=ta, ledger=led, claims_root=claims)
+    b = open_leg_run("L", _RUN_SPEC_L, "0123456789abcdef", tok,
+                     ledger=led, claims_root=claims)
+
+    with pytest.raises(PreserveError):
+        _abandon_claim(stale, ledger=led)
+
+    assert _claim_path("L", claims).is_file(), (
+        "stale handle 이 새 attempt 의 claim 을 지웠다")
+    assert planned_index(ledger=led)["L"]["status"] == "running"
+    assert resume_claim("L", claims_root=claims, token=read_token_file(tok),
+                        ledger=led).attempt_id == b.attempt_id
+
+
+def test_a_readonly_claim_cannot_abandon_the_live_owner(tmp_path):
+    """★ 51차 P0-L2 — 소유 증명 없는 진단 handle 은 **쓰기 경로에 못 들어간다**.
+
+    리뷰어 반례: 공개 진단 필드와 claim 경로만으로 `LegClaim(..., token=None)`
+    을 만들어 `_abandon_claim()` 에 주면 실제 owner 가 취소된다. 50차가
+    `phase_done()` 에 넣은 verifier 검사는 이 쓰기 경로에는 없었다.
+    """
+    from tools.preserve import (open_leg_run, inspect_leg_run, LegClaim,
+                                _abandon_claim, _claim_path, planned_index,
+                                PreserveError)
+
+    led = _lifecycle_ledger(tmp_path)
+    claims = tmp_path / "claims"
+    tok = tmp_path / "L.token"
+
+    open_leg_run("L", _RUN_SPEC_L, "0123456789abcdef", tok,
+                 ledger=led, claims_root=claims)
+    pub = inspect_leg_run("L", claims_root=claims)
+    forged = LegClaim(pub["leg_id"], pub["cohort_id"], pub["attempt_id"],
+                      pub["run_spec_digest"], pub["source_digest"],
+                      _claim_path("L", claims), token=None)
+
+    with pytest.raises(PreserveError):
+        _abandon_claim(forged, ledger=led)
+
+    assert _claim_path("L", claims).is_file(), "위조 handle 이 owner 를 취소했다"
+    assert planned_index(ledger=led)["L"]["status"] == "running"
+
+
+def test_a_crash_inside_release_leaves_a_recoverable_state(tmp_path):
+    """★ 51차 P0-L3 — release 중 crash 가 **회수 불가능한 orphan** 을 만들면 안 된다.
+
+    리뷰어 반례: `_abandon_claim()` 이 claim 을 먼저 지우고 원장 전이를 나중에
+    한다. 그 사이 죽으면 claim 은 없고 계획은 `running` 이라 새 발급도
+    (`planned` 아님) 재개도 (claim 없음) 되돌림도 안 된다.
+
+    두 순서 중 **회수 가능한 쪽**은 원장 먼저다: claim 이 남고 계획이 `planned`
+    면 소유 증명으로 그냥 다시 되돌리면 된다.
+    """
+    from tools.preserve import (open_leg_run, release_leg_run, _claim_path,
+                                planned_index, read_token_file, precheck_leg_run)
+
+    led = _lifecycle_ledger(tmp_path)
+    claims = tmp_path / "claims"
+    tok = tmp_path / "L.token"
+
+    open_leg_run("L", _RUN_SPEC_L, "0123456789abcdef", tok,
+                 ledger=led, claims_root=claims)
+    token = read_token_file(tok)
+
+    # release 의 두 쓰기 **사이**에서 죽는다 — 원장 전이를 굳히는 순간
+    import tools.preserve as P
+
+    class _Boom(BaseException):
+        pass
+
+    with mock.patch.object(P, "_atomic_write_text",
+                           side_effect=_Boom("crash between the two writes")):
+        with pytest.raises(_Boom):
+            release_leg_run("L", token=token, ledger=led, claims_root=claims)
+
+    # 회수 가능해야 한다: 같은 소유 증명으로 다시 되돌린다
+    assert _claim_path("L", claims).is_file()
+    release_leg_run("L", token=token, ledger=led, claims_root=claims)
+    assert planned_index(ledger=led)["L"]["status"] == "planned"
+    assert not _claim_path("L", claims).is_file()
+    assert precheck_leg_run("L", "0123456789abcdef",
+                            ledger=led, claims_root=claims)["kind"] == "new"
+
+
+def test_a_durability_error_after_the_ledger_commit_keeps_the_claim(tmp_path):
+    """★ 51차 P0-L3 — `os.replace` **뒤**의 오류는 미커밋이 아니다.
+
+    리뷰어 반례: `_atomic_write_text()` 가 새 `running` 원장을 `os.replace` 한
+    뒤 parent fsync 에서 오류를 보고하면 새 값은 이미 보인다. 그런데 caller 는
+    전부 미커밋으로 보고 claim 을 지우고 token 도 지운다 → 계획은 `running`,
+    소유자는 없음. 회수 불가.
+
+    rollback 은 같은 lock 아래 **실제 상태를 다시 읽고** 결정해야 한다.
+    """
+    import tools.preserve as P
+
+    led = _lifecycle_ledger(tmp_path)
+    claims = tmp_path / "claims"
+    tok = tmp_path / "L.token"
+
+    real_fsync = os.fsync
+    state = {"replaced": False}
+    real_replace = os.replace
+
+    def _replace(a, b, *args, **kw):
+        r = real_replace(a, b, *args, **kw)
+        if str(b) == str(led):
+            state["replaced"] = True
+        return r
+
+    def _fsync(fd):
+        if state["replaced"]:
+            state["replaced"] = False
+            raise OSError(5, "parent fsync failure after os.replace")
+        return real_fsync(fd)
+
+    with mock.patch.object(os, "replace", _replace), \
+         mock.patch.object(os, "fsync", _fsync):
+        with pytest.raises(OSError):
+            P.open_leg_run("L", _RUN_SPEC_L, "0123456789abcdef", tok,
+                           ledger=led, claims_root=claims)
+
+    # 원장이 이미 running 이면 claim 과 token 은 살아 있어야 한다
+    if P.planned_index(ledger=led)["L"]["status"] == "running":
+        assert P._claim_path("L", claims).is_file(), (
+            "커밋된 전이인데 claim 을 지웠다 — 회수 불가능한 running orphan")
+        assert tok.is_file(), "커밋된 전이인데 소유 증명을 지웠다"
+        P.release_leg_run("L", token_file=tok, ledger=led, claims_root=claims)
+    assert P.planned_index(ledger=led)["L"]["status"] == "planned"
+
+
+def test_the_token_path_cannot_alias_the_claim_authority(tmp_path):
+    """★ 51차 P1-P — caller 가 준 token 경로가 claim·원장 namespace 와 겹치면 거부.
+
+    리뷰어 반례: `token_file == claims_root/L.claim` 이면 token-first 쓰기가
+    claim authority 경로를 먼저 점유한다. claim 발급은 `O_EXCL` 에서 실패하지만
+    rollback 은 "경로가 있다" 는 이유로 token 문자열을 남긴다. 그 뒤 모든 claim
+    reader 가 malformed JSON 을 만나고 정상 cleanup 도 막힌다.
+    """
+    from tools.preserve import open_leg_run, _claim_path, PreserveError
+
+    led = _lifecycle_ledger(tmp_path)
+    claims = tmp_path / "claims"
+    for alias in (_claim_path("L", claims),
+                  Path(str(_claim_path("L", claims)) + ".lock"),
+                  led, Path(str(led) + ".lock")):
+        with pytest.raises(PreserveError):
+            open_leg_run("L", _RUN_SPEC_L, "0123456789abcdef", alias,
+                         ledger=led, claims_root=claims)
+        assert not _claim_path("L", claims).is_file()

@@ -88,7 +88,7 @@ MODE
                          **반드시** 지난다 (건너뛰는 환경변수는 없다).
   --attempt-file PATH    ★ 49차 P0-3 — 실행권의 소유 증명 파일. grid 가 발급해
                          여기 두고 fit 이 그것으로 같은 실행에 붙는다. 비우면
-                         `results/_claims/<leg>.token`. 파일 내용(token)은
+                         `results/_attempts/<leg>.token`. 파일 내용(token)은
                          argv 로 넘기지 않는다 — `ps` 로 새어 나가기 때문이다.
 
 열화 모드 축   (형식: 0:0.2:0.02 | 0,0.05,0.1 | 0.1 | none)
@@ -249,12 +249,19 @@ export MPLBACKEND="Agg"          # headless 강제
 #: 못한다. 다만 그렇게 하면 그 산출은 정본이 될 수 없다 (계약 §13.4).
 SMOKE_NS="results/_smoke"
 
-#: 소유 증명 파일의 기본 자리. claim 과 같은 root 에 두고 0600 으로 만든다
-#: (`tools.preserve.write_token_file`). `--attempt-file` 로 덮어쓸 수 있다.
+#: 소유 증명 파일의 기본 자리. 0600 으로 만든다 (`tools.preserve.write_token_file`).
+#: `--attempt-file` 로 덮어쓸 수 있다.
+#:
+#: ★ 51차 P1-P — claim root **밖**이다. 50차는 `results/_claims/<leg>.token`
+#: 이었고, 그러면 전달 통로와 claim authority 가 같은 namespace 를 쓴다.
+#: caller 가 `--attempt-file results/_claims/<leg>.claim` 을 주면 token-first
+#: 쓰기가 authority 경로를 점유했다 (리뷰어 실측: 그 뒤 모든 claim reader 가
+#: `JSONDecodeError` 를 만나고 정상 cleanup 도 막힌다). 이제
+#: `_assert_token_path_disjoint()` 가 이 경계를 강제하므로 기본값도 밖에 둔다.
 attempt_file_for() {
   local leg="$1"
   if [[ -n "$ATTEMPT_FILE" ]]; then echo "$ATTEMPT_FILE"; else
-    echo "results/_claims/${leg}.token"
+    echo "results/_attempts/${leg}.token"
   fi
 }
 

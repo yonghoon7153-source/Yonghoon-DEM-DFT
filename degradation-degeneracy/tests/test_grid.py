@@ -125,19 +125,17 @@ def _plan_for_live_grid(led, leg, out_dir, cfg, src_digest):
     사람이 계획을 적을 때 하는 일과 같다 — 무엇을 돌릴지 선언하고 그 digest 를
     봉인한다. 조건이 없는 dry-run 이므로 조건 집합은 빈 목록이다.
     """
-    import hashlib as _h
-
     import yaml
 
     import src.grid as G
     from tools.preserve import leg_run_spec, run_spec_digest
 
-    grid_axis = {
-        "config_digest": G._cfg_digest(cfg),
-        "condition_ids_sha256": _h.sha256(b"").hexdigest()[:16],
-        "n_conditions": 0,
-        "out": G.leg_out_key(out_dir)}
+    # ★ 51차 — 계획 축은 production 과 **같은 함수**로 만든다. 손으로 적으면
+    #   축이 하나 늘 때마다 시험이 낡은 축을 승인하고, 그 낡음이 곧 false green
+    #   이다 (49차에 fit 축에서 같은 일이 있었다).
+    grid_axis = G.live_grid_axis(cfg, [], out_dir)
     fit_axis = {"config_digest": "0" * 16, "objective_order": ["pocv_dvdq"],
+                "objectives_digest": "0" * 16,
                 "reference": "grid",
                 "halfcell_recipe": {"method": "ocp", "kw": {}},
                 "halfcell_cache_sha256": None, "base_config_digest": "0" * 16,
@@ -221,3 +219,40 @@ def test_a_dry_run_does_not_strand_the_plan_in_running(monkeypatch, tmp_path):
     # 되돌렸으므로 **진짜 실행**이 바로 시작될 수 있다 — 되돌림의 유일한 증명
     P.claim_planned_leg("L49", P.declared_leg_run_spec("L49", ledger=led),
                         source_digest(), ledger=led, claims_root=claims)
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# 51차 P0-A4 — 완방상태 cache 가 grid 승인 밖에서 실제 곡선을 바꾼다
+# ─────────────────────────────────────────────────────────────────────────────
+
+def test_the_grid_axis_binds_the_discharged_state_cache(tmp_path, monkeypatch):
+    """★ 51차 P0-A4 — 승인 축이 완방상태 캐시의 **바이트**를 담는다.
+
+    리뷰어 실측: 두 캐시 모두 production reader 의 baseline/solver/
+    effective-solver/source/runtime 검사를 통과하고 값도 finite 인데, 숫자만
+    다르게 두고 같은 config·Condition·out 으로 real PyBaMM 을 돌렸다.
+
+        authorization_digest_A == authorization_digest_B   (같다)
+        q_mah_A=5621.148...    q_mah_B=5540.776...         (다르다)
+
+    사후 grid signature 에는 `discharged_sha` 가 있다. **사전 승인에는 없었다** —
+    실행 뒤에 무엇을 읽었는지 적는 것과 실행 전에 무엇을 읽을지 승인하는 것은
+    다른 명제다.
+    """
+    import src.grid as G
+    from src.config import load_config
+
+    cfg = load_config("configs/grid_coarse.yaml")
+    cache = tmp_path / "discharged.json"
+
+    cache.write_text('{"ne_primary": 1.0, "ne_secondary": 2.0, "pe": 3.0}',
+                     encoding="utf-8")
+    monkeypatch.setattr(G, "discharged_cache_path_for", lambda c: cache)
+    a = G.live_grid_axis(cfg, [], tmp_path)
+
+    cache.write_text('{"ne_primary": 9.0, "ne_secondary": 2.0, "pe": 3.0}',
+                     encoding="utf-8")
+    b = G.live_grid_axis(cfg, [], tmp_path)
+
+    assert a != b, ("완방상태 캐시를 갈아도 승인 digest 가 같다 — 승인 밖에서 "
+                    "격자 truth 의 기준점이 움직인다")
