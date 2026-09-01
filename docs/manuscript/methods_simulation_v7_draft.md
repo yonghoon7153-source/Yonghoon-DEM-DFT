@@ -114,13 +114,18 @@ network and LPSCl and SDCP the ionic network. The insulating binder was represen
 excluding its centerline voxels from conduction. Sensitivity of the reported conductivities to
 this representation is given in Table S3c.
 
-*Conductivity of the carbon network.* The conductivity assigned to VGCF is an **effective
-network value, not a fibre material constant**. Voxelisation fuses touching fibres into shared
-cells and therefore removes the fibre–fibre contact resistance that dominates a real carbon
-network — the two orders of magnitude between the compressed-powder (≈ 83 S cm⁻¹) and
-single-filament (≈ 10⁴ S cm⁻¹) values of VGCF-H is essentially that contact resistance. The
-powder-scale value (100 S cm⁻¹) was therefore adopted and rescaled to the voxel grid so that the
-axial conductance of a fibre is preserved (78.5 S cm⁻¹ at 0.15 μm).
+*Conductivity of the carbon network.* The coefficient assigned to the VGCF phase
+(100 S cm⁻¹) is a **frozen, uncalibrated legacy voxel-network coefficient**, not a fibre
+material constant and not a value derived from any measurement reported here. It is retained so
+that the results presented in this work remain reproducible. Voxelisation fuses touching fibres
+into shared cells and therefore does not resolve fibre–fibre contact resistance, which is one of
+several contributions separating single-filament (≈ 10⁴ S cm⁻¹) from compressed-powder
+(≈ 83 S cm⁻¹) measurements of VGCF-H; packing fraction, orientation, network tortuosity,
+contact number, compaction pressure and the measurement configuration also enter the powder
+value. The coefficient is rescaled with voxel size so that the one-voxel-thick tube carries the
+axial conductance of a 0.15 μm fibre, σ_eff = σ·πd²/(4h²), giving 78.5 S cm⁻¹ at h = 0.15 μm.
+Because this coefficient was not independently calibrated, the conductivities and ratios below
+are protocol responses under a stated closure rather than material-level estimates.
 
 *Grid-origin ensemble and reported statistics.* Because the voxel grid samples the same
 microstructure differently depending on where its origin falls, each electrode was solved at all

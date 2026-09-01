@@ -964,6 +964,49 @@ def runner_config(env, runner=None):
     return out
 
 
+#: ── 러너 대입/참조 추출 (2026-09-02, 규칙 L 의 두 사각지대) ──────────────────────
+#:   실측: `SIGMA_AM_S_OVERRIDE` 축을 배선하며 러너에 두 줄을 넣었더니 **검사기 두 곳이
+#:   동시에 눈이 멀었다**.  둘 다 "우연한 표기법에 기대고 있었다" 는 같은 뿌리다.
+#:
+#:   ⓐ 자동 seed 의 `_assigned` 가 **줄머리 대입만** 봤다 (`^\s*VAR=`).  기존 축이 전부
+#:      `SBRG_FLAG=""; SBRG_TAG=""` 처럼 **FLAG 를 먼저** 적은 것은 규약이 아니라 우연인데,
+#:      순서를 뒤집어 `AS_TAG=""; AS_FLAG=""` 로 적자 `AS_FLAG` 가 unbound 로 프로브를
+#:      통째로 죽였다 — 이 파일이 이미 두 번 겪은 그 위장된 실패다.
+#:   ⓑ L-1e 의 참조 추출이 `$VAR` 만 봤다 (`\$([A-Z]…)`).  `${VAR}` 중괄호 꼴은 **조용히
+#:      집합에서 빠져** 무조건-초기화 방어선 밖으로 나간다 — ⓐ 와 달리 **소리도 안 난다**.
+#:      (자동 seed 쪽은 `\$\{?` 라 중괄호를 이미 봤다 ⇒ 두 정규식이 어긋나 있었다.)
+#:   ⇒ 추출을 이름 붙은 함수로 올려 **두 소비자가 같은 규칙을 쓰게** 하고 fixture 로 고정한다.
+
+#: 문장 경계에서의 대입 — 줄머리 · `;` · `&&` · `||` · `then` · `do` · `else` 뒤.
+#: 용도: "러너가 이 이름을 **텍스트로 대입하기는 하는가**" (자동 seed 의 오타 방어 조건).
+_RE_ASSIGN_ANY = re.compile(
+    r'(?:^|;|&&|\|\||\bthen\b|\bdo\b|\belse\b)[ \t]*(?:local[ \t]+)?([A-Z][A-Z0-9_]*)=', re.M)
+
+#: 조립 줄이 참조하는 변수 — `$VAR` 과 `${VAR}` 을 **둘 다** 본다.
+_RE_SHELL_REF = re.compile(r'\$\{?([A-Z][A-Z0-9_]*)')
+
+
+def _asm_assigned(src):
+    """러너 소스가 문장 경계에서 대입하는 대문자 변수 이름 집합."""
+    return set(_RE_ASSIGN_ANY.findall(src))
+
+
+def _asm_flag_refs(src_line):
+    """조립 줄이 참조하는 FLAG 변수 이름 집합 (`$X` · `${X}` 양쪽)."""
+    return {m for m in _RE_SHELL_REF.findall(src_line)
+            if m.endswith(('_FLAG', '_FLAGS'))}
+
+
+def _asm_uncond(src, name):
+    """`name` 이 **무조건** 대입되는가 — 줄머리 또는 `;` 뒤.
+
+    ⚠ `&&` · `then` · `do` · `else` 뒤는 **조건부**라 일부러 뺀다: 조건이 거짓이면 그
+      플래그는 러너 자신에게서 `set -u` 로 죽는다.  그것이 L-1e 가 지키는 것이다.
+    """
+    return re.search(r'(?:^|;)[ \t]*(?:local[ \t]+)?' + re.escape(name) + r'=',
+                     src, re.M) is not None
+
+
 def runner_extra_flags(env, runner=None):
     """러너의 `--extra-flags "…"` 문자열을 **셸에 실제로 전개**시켜 돌려준다.
 
@@ -1003,9 +1046,11 @@ def runner_extra_flags(env, runner=None):
     #    **러너가 실제로 대입하는 것**만 자동으로 빈 값 seed 한다.
     #    ⚠ "러너가 대입한다" 는 조건이 오타 검출력을 지킨다 — 러너에 없는 이름은 그대로
     #    unbound 로 죽어 프로브가 **소리 내어** 실패한다 (자동 seed 가 오타를 덮지 않는다).
+    #  ⚠ 대입 추출은 **문장 경계** 기준이다 (`_RE_ASSIGN_ANY`) — 줄머리만 보던 첫 판은
+    #    `AS_TAG=""; AS_FLAG=""` 처럼 한 줄에 둘을 적으면 뒤엣것을 놓쳤다 (2026-09-02).
     _seeded = {x.split('=', 1)[0] for x in _seed}
-    _assigned = set(re.findall(r'^\s*(?:local\s+)?([A-Z][A-Z0-9_]*)=', '\n'.join(lines), re.M))
-    for _v in sorted(set(re.findall(r'\$\{?([A-Z][A-Z0-9_]*)', _lit + ' '.join(_ep + _xp)))):
+    _assigned = _asm_assigned('\n'.join(lines))
+    for _v in sorted(set(_RE_SHELL_REF.findall(_lit + ' '.join(_ep + _xp)))):
         if _v not in _seeded and _v in _assigned:
             _seed.append(f'{_v}=')
     probe = '\n'.join(['set -u', *_seed, *_ep, *_xp,
@@ -2397,17 +2442,43 @@ def _selftest():
     #    (러너의 팔 함수 안 EP/XP 가 그 꼴) ⓑ `$LEAN_FLAGS` 를 `LEAN_FLAG` 로 잘라 잡으면
     #    없는 변수를 만든다 ⇒ 전체 이름을 잡고 접미사로 거른다.
     _asm = [ln for ln in _RSRC.splitlines() if '--extra-flags "' in ln]
-    _refs = {m for m in re.findall(r'\$([A-Z][A-Z0-9_]*)', _asm[0] if _asm else '')
-             if m.endswith(('_FLAG', '_FLAGS'))}
-    #  기준 = **줄머리 대입**(옵션 `local`).  조건부 형태(`[ x ] && VAR=…` · `if …; then
-    #  VAR=…`)는 전부 줄 중간이라 안 잡힌다 ⇒ "조건부 대입만 있고 기본값이 없는" 플래그를
-    #  정확히 골라낸다 (그런 플래그는 조건이 거짓일 때 러너 자신이 `set -u` 로 죽는다).
+    #  ⚠ 참조 추출은 `${VAR}` 중괄호 꼴도 본다 (`_asm_flag_refs`).  `$VAR` 만 보던 첫 판은
+    #    중괄호 꼴 플래그를 **집합에서 조용히 빼** 방어선 밖으로 내보냈다 (2026-09-02).
+    _refs = _asm_flag_refs(_asm[0] if _asm else '')
+    #  기준 = **무조건 대입** = 줄머리 또는 `;` 뒤 (옵션 `local`).  조건부 형태
+    #  (`[ x ] && VAR=…` · `if …; then VAR=…`)는 일부러 뺀다 ⇒ "조건부 대입만 있고
+    #  기본값이 없는" 플래그를 정확히 골라낸다 (그런 플래그는 조건이 거짓일 때 러너
+    #  자신이 `set -u` 로 죽는다).
     #  ⚠ 여러 줄 죽은 가지는 이 기준으로도 통과한다 — 그것이 L-1d 가 고정한 잔여 한계다.
-    _uncond = {m for m in _refs
-               if re.search(r'^\s*(?:local\s+)?' + m + r'=', _RSRC, re.M)}
-    chk(f'L-1e: ★★ 조립 줄의 FLAG {len(_refs)}개가 전부 **줄머리(무조건) 대입**을 갖는다 '
+    _uncond = {m for m in _refs if _asm_uncond(_RSRC, m)}
+    chk(f'L-1e: ★★ 조립 줄의 FLAG {len(_refs)}개가 전부 **무조건 대입**을 갖는다 '
         f'({len(_uncond)}개) — 조건부 대입만 있으면 조건이 거짓일 때 러너가 죽는다',
         bool(_refs) and _uncond == _refs)
+    #  ── ★★ 2026-09-02 — 위 두 추출이 **우연한 표기법에 기대고 있었다** (실측 2건) ──────
+    #    `SIGMA_AM_S_OVERRIDE` 축 배선 중 러너에 `AS_TAG=""; AS_FLAG=""` 와 `${AS_FLAG}` 를
+    #    넣자 ⓐ 자동 seed 가 `AS_FLAG` 를 못 봐 프로브가 unbound 로 죽고 ⓑ L-1e 의 참조
+    #    집합에서 중괄호 꼴이 조용히 빠졌다.  ⓑ 는 **소리도 안 나는** 검출력 손실이라 더 나쁘다.
+    #  ⇒ 두 부류를 각각 고정한다.  ⓐ 는 러너 변이로, ⓑ 는 fixture 로 (L-1e 는 실러너를
+    #    직접 읽으므로 변이 경로가 없다).
+    _src_semi = _RSRC.replace(
+        'RQG_FLAG=""', 'RQG_FLAG=""\nSEMI_TAG=""; SEMI_FLAG=""', 1).replace(
+        '$SBRG_FLAG$RQG_FLAG', '$SBRG_FLAG$RQG_FLAG$SEMI_FLAG', 1)
+    chk('L-1f: ★★ 한 줄에 `TAG=""; FLAG=""` 로 적어도 자동 seed 가 **뒤엣것을 본다** '
+        '(줄머리 앵커가 FLAG 를 먼저 적는 우연한 순서에 기대고 있었다)',
+        _rmut_src(_src_semi) == [])
+    _fx = 'A_FLAG=""; B_FLAG=""\n[ -n "$X" ] && C_FLAG=" --c"\nif true; then D_FLAG=" --d"; fi\n'
+    chk('L-1g: ★ 참조 추출이 `${VAR}` 중괄호 꼴을 본다 (안 보면 그 플래그가 L-1e '
+        '방어선 **밖으로 조용히** 나간다)',
+        _asm_flag_refs('--extra-flags "$A_FLAG${B_FLAG}${LEAN_FLAGS}"')
+        == {'A_FLAG', 'B_FLAG', 'LEAN_FLAGS'})
+    chk('L-1h: ★★ 무조건/조건부 판별이 살아 있다 — 줄머리·`;` 뒤는 무조건, '
+        '`&&`·`then` 뒤는 **조건부**로 남는다 (넓히면서 이 구분을 잃으면 L-1e 가 '
+        '항상-참으로 썩는다)',
+        _asm_uncond(_fx, 'A_FLAG') and _asm_uncond(_fx, 'B_FLAG')
+        and not _asm_uncond(_fx, 'C_FLAG') and not _asm_uncond(_fx, 'D_FLAG'))
+    chk('L-1i: ★ 대입 추출이 네 꼴을 다 본다 (줄머리·`;`·`&&`·`then`) — 자동 seed 의 '
+        '조건은 "러너가 **텍스트로** 대입하는가" 이므로 조건부도 포함이다',
+        _asm_assigned(_fx) == {'A_FLAG', 'B_FLAG', 'C_FLAG', 'D_FLAG'})
     _m1 = _rmut('LEAN_FLAGS=" --no-step4 --no-thermal --no-trackb --no-field --no-ion --no-pore --no-collector"',
                 'LEAN_FLAGS=" --no-step4 --no-thermal --no-trackb --no-field --no-ion --no-pore"')
     chk(f'L-2: ★ LEAN=2 에서 `--no-collector` 를 빼면 **잡는다** ({len(_m1)}건)',

@@ -26,7 +26,16 @@ DESIGN / TRUST (docs/step3_sigma_network.md):
                                   ⚠ scale transplant: those endpoints are coefficients of a MACROSCOPIC
                                   effective form; using them as a voxel **phase** σ has an unknown
                                   multiplier (§F1 → null).  Treat as an order-of-magnitude hook.
-      VGCF 100 · SuperP 10      ⚠ VGCF 100 은 **유효 망 값** (분말 저항률 0.012 Ω·cm ≈ 83 S/cm 급;
+      VGCF 100 · SuperP 10      ⚠⚠ **frozen, uncalibrated legacy voxel-network coefficient**
+                                  (Codex R20).  ★ 이 값은 **83 에서 유도되지 않았다** — 도입
+                                  커밋 `087d1a07` 이 `order-of-magnitude hook` 으로 넣었고
+                                  그것이 83 문헌 감사보다 **앞선다**.  ⇒ *"분말값을 보고
+                                  채택했다"* 는 서사를 쓰지 말 것 (R20-04).
+                                  ⚠ 그리고 83 으로 **바꾸는 것도 답이 아니다**: 83 은 압착
+                                  분말의 시편-단면 유효값이고 복셀이 요구하는 것은 **국소
+                                  섬유 closure** 다.  `diameter_preserving_sigma` 가
+                                  `σ_bulk·A/L` 을 전제하므로 범주 오류가 된다.
+                                  ⚠ 분말 저항률 0.012 Ω·cm ≈ 83 S/cm 급;
                                   단섬유는 1e4 S/cm — 차이 = 섬유-섬유 접촉저항, CL-47).  복셀 융합이
                                   접촉저항을 0 으로 만들므로 이 낮은 σ 가 그 결손을 뭉뚱그린다 —
                                   ⚠ 재료상수가 아니라 규약이다.  단섬유값 대입 = 등전위 섬유 + 완전

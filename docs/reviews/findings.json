@@ -1597,15 +1597,19 @@
   {
    "id": "R20-02",
    "severity": "P1",
-   "status": "open",
+   "status": "claimed_fixed",
    "owner": "claude",
    "found_by": "codex",
    "opened_in": "docs/reviews/codex_review_request_r20_phase_sigma_20260902.md",
    "title": "CL-48 최종 수치가 **원자료로 재현되지 않는다** — 커밋된 파일은 옛 값·SBE 한 행뿐",
-   "note": "판정에 쓴 SBE 6.525664 / DBE 5.818477 · R = 0.891630 은 러너 stdout 이다.  커밋된 `docs/data/sdcp_runs/prereg_v2_vox015_sph_b048_sg7854_lean2.json` 에는 **SBE 한 행과 옛 값 6.546818**, 그리고 `HOLD`/`PROTOCOL_ID_MISSING` 만 있다 ⇒ 리포만으로 판정을 재도출할 수 없고, 더 나쁘게는 **낡은 값이 그 자리에 남아 있다**.\n⇒ 축소 패키지 두 팔을 반입·봉인하기 전에는 이 수치를 원고에 올리지 않는다.",
+   "note": "판정에 쓴 SBE 6.525664 / DBE 5.818477 · R = 0.891630 은 러너 stdout 이다.  커밋된 `docs/data/sdcp_runs/prereg_v2_vox015_sph_b048_sg7854_lean2.json` 에는 **SBE 한 행과 옛 값 6.546818**, 그리고 `HOLD`/`PROTOCOL_ID_MISSING` 만 있다 ⇒ 리포만으로 판정을 재도출할 수 없고, 더 나쁘게는 **낡은 값이 그 자리에 남아 있다**.\n⇒ 축소 패키지 두 팔을 반입·봉인하기 전에는 이 수치를 원고에 올리지 않는다.\n\n── 2026-09-02 처분 ──\n★ **반입 완료** — `docs/data/cl48_sg7854_arm0_20260902/` (kgy 에서 축소·푸시).  값이 판정과 **정확히 일치**한다: SBE 6.525663872491329 · DBE 5.818477164878071 · 둘 다 `cg_info=0`.\n★ 축소기가 처음엔 **거부했다** (*\"불완전한 cohort 는 감사 패키지가 아니다\"*, 2팔 vs 기대 16) — 가드가 옳게 작동한 것이고, 진단 팔용 우회로가 **이미 있었다**: `--expect-arms 2 --diagnostic` 이 원자료를 보존하면서 판정기가 `DIAGNOSTIC_TREE` 로 거부하게 표지를 박는다.  ⇒ *\"재현 가능\"* 과 *\"이 팔로 판정 금지\"* 를 동시에 만족한다.\n★ 낡은 파일 `sdcp_runs/prereg_v2_vox015_sph_b048_sg7854_lean2.json` 은 **지우지 않고** `_SUPERSEDED` 표지를 박았다 — 그것은 **1차 미수렴 시도**(SBE 6.546818, `cg_info=30000`)이고, 왜 실패했고 어떻게 고쳤는지가 CL-48 판정의 일부다.\n⚠ **부수 발견**: kgy `~/mt-push` 의 영구 dirty 는 **줄바꿈(CRLF↔LF) 잡음**이었다 (윈도우에서 만든 EIS CSV·`validation_all_cases.csv`).  커밋 안 된 코드가 아니다 ⇒ 지금까지 축소본에 붙은 `+dirty` 도장은 그렇게 읽어야 한다.  근본 해결은 `.gitattributes` 또는 `git add --renormalize` 이고 **별도 커밋**으로 분리한다.\n★ 두 팔이 `e6bd2134` 로 들어왔고 값이 판정과 **자릿수 끝까지** 일치한다 (SBE 6.525663872491329 · DBE 5.818477164878071, 둘 다 `cg_info=0`).  옛 값이 남아 있던 `prereg_v2_…_sg7854_lean2.json` 에는 `_SUPERSEDED` 표지를 박았다.\n⚠ 반입본은 **진단 패키지**다 — `.diagnostic_arms2` 가 붙어 `sdcp_gain_verdict.py` 가 `HOLD [DIAGNOSTIC_TREE]` 로 **거부**한다.  그것이 맞는 상태다: 이 팔은 탄소망 상한 프로브이지 생산 판정이 아니고, R20 이 판정에 쓰지 말라고 명시했다.  ⇒ 재현성 결손은 닫혔고, \"이 값을 헤드라인으로 쓰지 않는다\" 는 제약은 **파일 자신이 강제**한다.",
    "evidence_tests": [
-    "docs/data/sdcp_runs/prereg_v2_vox015_sph_b048_sg7854_lean2.json"
-   ]
+    "docs/data/cl48_sg7854_arm0_20260902/p2_SBE_sph_a0.json",
+    "docs/data/cl48_sg7854_arm0_20260902/p2_DBE_sph_a0.json",
+    "docs/data/cl48_sg7854_arm0_20260902/verdict_receipt.txt",
+    "scripts/sdcp_gain_verdict.py"
+   ],
+   "claimed_fixed_sha": "e6bd2134"
   },
   {
    "id": "R20-03",
@@ -1657,6 +1661,19 @@
    "note": "`network_conductivity.py` 는 입력 `σ_bulk` 로 스케일되는 **명시-접촉 모델 추정치**이지 물리 정본이 아니다.  게다가 **AM–AM 망만** 풀고 VGCF/SDCP 복합망은 풀지 않으므로 복셀 솔버와 **같은 estimand 가 아니다**.\n⇒ R20 권장 라벨: 접촉망 = `DEM AM-contact formation factor F_e = σ_eff/σ_AM,input [–]` · 복셀 = `Voxel-FV composite conductivity under specified local closure [S/cm]`.",
    "evidence_tests": [
     "scripts/network_conductivity.py"
+   ]
+  },
+  {
+   "id": "SELF-14",
+   "severity": "P2",
+   "status": "open",
+   "owner": "claude",
+   "found_by": "claude",
+   "opened_in": "docs/reviews/sigma_closure_sweep_prereg_20260902.md",
+   "title": "규칙 L 의 대입/참조 추출이 **우연한 표기법**에 기대고 있었다 — 한쪽은 조용히 눈이 멀었다",
+   "note": "사전등록 스윕을 위해 러너에 `SIGMA_AM_S_OVERRIDE`·`SIGMA_SDCP_OVERRIDE` 두 축을 배선하다 검사기 **두 곳이 동시에** 무력화됐다.  둘 다 뿌리가 같다 — 정규식이 기존 코드의 *우연한 표기 순서*에 기대고 있었다.\nⓐ 자동 seed 의 `_assigned` 가 **줄머리 대입만** 봤다 (`^\\s*VAR=`).  기존 축이 전부 `SBRG_FLAG=\"\"; SBRG_TAG=\"\"` 처럼 FLAG 를 **먼저** 적은 것은 규약이 아니라 우연인데, 순서를 뒤집어 `AS_TAG=\"\"; AS_FLAG=\"\"` 로 적자 `AS_FLAG` 가 unbound 로 `set -u` 프로브를 통째로 죽였다 — 이 파일이 이미 두 번 겪은(`SBRG_FLAG`·`RQG_FLAG`) **위장된 실패**의 세 번째다.\nⓑ ★★ 더 나쁜 쪽 — L-1e 의 참조 추출이 `$VAR` 만 봤다 (`\\$([A-Z]…)`).  `${VAR}` 중괄호 꼴은 집합에서 **조용히 빠져** 무조건-초기화 방어선 밖으로 나간다.  ⓐ 는 소리를 내며 죽지만 ⓑ 는 **아무 소리도 없이 검출력만 사라진다**.  같은 파일의 자동 seed 쪽은 `\\$\\{?` 라 중괄호를 이미 보고 있었다 ⇒ **두 정규식이 서로 어긋나 있었다**.\n⇒ 추출을 이름 붙은 함수 셋(`_asm_assigned`·`_asm_flag_refs`·`_asm_uncond`)으로 올려 두 소비자가 **같은 규칙**을 쓰게 했다.  넓히면서 무조건/조건부 구분(`;` 뒤 = 무조건, `&&`·`then` 뒤 = 조건부)은 그대로 지켰다 — 그것을 잃으면 L-1e 가 항상-참으로 썩는다.\n★ 검출력 실증: 세 정규식을 각각 옛 판으로 되돌려 재실행하니 L-1f·L-1i / L-1g / L-1h 가 정확히 짝지어 실패했다 (셋 다 되돌림당 의도한 시험만 문다).\n★ 교훈: **검사기가 대상의 표기 관습에 기대면 관습이 바뀌는 날 조용히 죽는다.**  CLAUDE.md 규칙 ④(\"정본은 밖으로 강제되지 않으면 새어나간다\")의 코드판이다.",
+   "evidence_tests": [
+    "scripts/check_method_discipline.py --selftest"
    ]
   }
  ]

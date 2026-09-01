@@ -94,6 +94,23 @@ fi
 BR_TAG="_b${BRIDGE_UM/./}"
 #  σ_VGCF 를 명시로 고정한 런은 **다른 실험**이다 — 디렉터리를 갈라 SKIP 이 섞이지 않게.
 SG_TAG=""; [ -n "${SIGMA_VGCF_OVERRIDE:-}" ] && SG_TAG="_sg${SIGMA_VGCF_OVERRIDE//./}"
+#  ★★ 2026-09-02 (사전등록 `sigma_closure_sweep_prereg_20260902.md`) — **두 대비를 축으로.**
+#    R20-05: 비의 불확실성은 공통 스케일이 아니라 `σ_AM_S/σ_VGCF` · `σ_SDCP/σ_VGCF` **두
+#    독립 대비**에 있고 그것은 상쇄되지 않는다.  그 스윕을 하려면 두 σ 도 러너 축이어야
+#    한다 (payload CLI 에는 `--sigma-am-s`·`--sigma-sdcp` 가 이미 있었고 러너만 안 넘겼다).
+#  ⚠ 값을 고정한 런은 **다른 실험**이므로 디렉터리를 가른다 (SG_TAG 와 같은 규칙).
+AS_TAG=""; AS_FLAG=""
+if [ -n "${SIGMA_AM_S_OVERRIDE:-}" ]; then
+  case "$SIGMA_AM_S_OVERRIDE" in ''|*[!0-9.eE+-]*)
+    echo "ABORT — SIGMA_AM_S_OVERRIDE 는 수치여야 한다 (받은 값: $SIGMA_AM_S_OVERRIDE)"; exit 2;; esac
+  AS_TAG="_as${SIGMA_AM_S_OVERRIDE//./}"; AS_FLAG=" --sigma-am-s $SIGMA_AM_S_OVERRIDE"
+fi
+SD_SIG_TAG=""; SD_SIG_FLAG=""
+if [ -n "${SIGMA_SDCP_OVERRIDE:-}" ]; then
+  case "$SIGMA_SDCP_OVERRIDE" in ''|*[!0-9.eE+-]*)
+    echo "ABORT — SIGMA_SDCP_OVERRIDE 는 수치여야 한다 (받은 값: $SIGMA_SDCP_OVERRIDE)"; exit 2;; esac
+  SD_SIG_TAG="_sd${SIGMA_SDCP_OVERRIDE//./}"; SD_SIG_FLAG=" --sigma-sdcp $SIGMA_SDCP_OVERRIDE"
+fi
 
 #  ★★★ 2026-08-30 (Codex R13 C-7 ⓒ) — **두 이온 σ 를 정식 축으로 올린다.**
 #    여태 배선이 없었다: `P2_EXTRA="--sigma-ion-sdcp 0.00062"` 는 허용목록(수치 전용)에서
@@ -405,7 +422,7 @@ print(json.dumps(rec, ensure_ascii=False, sort_keys=True))
 PYRCPT
 )" || { echo "[p2] ABORT — 런 영수증을 못 만들었다"; exit 2; }
 _RCPT_TAG="_r$(printf '%s' "$_RCPT_JSON" | python3 -c 'import json,sys; print(json.load(sys.stdin)["receipt_digest"])')"
-OUTDIR="${OUTDIR:-$PWD/prereg_v2_vox${VOX/./}${SD_TAG}${BR_TAG}${SG_TAG}${YV_TAG}${PT_TAG}${PS_TAG}${SBRG_TAG}${FS_TAG}${SION_TAG}${PB_TAG}${AR_TAG}${LEAN_TAG}${_RCPT_TAG}}"
+OUTDIR="${OUTDIR:-$PWD/prereg_v2_vox${VOX/./}${SD_TAG}${BR_TAG}${SG_TAG}${AS_TAG}${SD_SIG_TAG}${YV_TAG}${PT_TAG}${PS_TAG}${SBRG_TAG}${FS_TAG}${SION_TAG}${PB_TAG}${AR_TAG}${LEAN_TAG}${_RCPT_TAG}}"
 #  ★★★ R3-CX-09 — 진단 런(ARMS≠8)은 **사용자가 준 OUTDIR 에도** 접미사를 강제한다.
 #    안 그러면 `ARMS=2 OUTDIR=<생산경로>` 로 2팔 산출물이 8팔 디렉터리에 섞인다.
 #  ★ 2026-09-01 — 검사를 **끝자리**에서 **포함**으로 바꾼다.  기본 OUTDIR 은 이미
@@ -424,7 +441,7 @@ fi
 #    production 디렉터리로 가리키는 junction/symlink 를 만들면 문자열 검사는 통과하고
 #    **resolved path 는 production** 이 된다 (Codex 실측).  ⇒ 실경로로 충돌을 본다.
 if [ "$ARMS" -ne 8 ]; then
-  _PROD="$PWD/prereg_v2_vox${VOX/./}${SD_TAG}${BR_TAG}${SG_TAG}${YV_TAG}${PT_TAG}${PS_TAG}${SBRG_TAG}${FS_TAG}${SION_TAG}${PB_TAG}${LEAN_TAG}"
+  _PROD="$PWD/prereg_v2_vox${VOX/./}${SD_TAG}${BR_TAG}${SG_TAG}${AS_TAG}${SD_SIG_TAG}${YV_TAG}${PT_TAG}${PS_TAG}${SBRG_TAG}${FS_TAG}${SION_TAG}${PB_TAG}${LEAN_TAG}"
   mkdir -p "$OUTDIR" 2>/dev/null || true
   _R_OUT="$(cd "$OUTDIR" 2>/dev/null && pwd -P || echo "$OUTDIR")"
   _R_PROD="$([ -d "$_PROD" ] && cd "$_PROD" && pwd -P || echo "$_PROD")"
@@ -608,7 +625,7 @@ PY
   local SHF="$RUN/${TAG}.$$.sh"
   ( cd "$RUN" && P2_SCR="$SCR" python3 "$SCR/sr01_stamp_compare.py" \
       --extract-payload "$KIT/run_mpm.sh" --stamp "$FIBRE_STAMP" \
-      --extra-flags "--sigma-vgcf $SIGMA --step3-vox $VOX --step3-bridge-um $BRIDGE_UM --step3-origin-shift $SH$SD_FLAG$YV_FLAG$PT_FLAG$PS_FLAG$SBRG_FLAG$RQG_FLAG$EP_FLAG$XP_FLAG$FS_FLAG$SION_FLAG$PB_FLAG$LEAN_FLAGS${P2_EXTRA:+ $P2_EXTRA}" \
+      --extra-flags "--sigma-vgcf $SIGMA${AS_FLAG}${SD_SIG_FLAG} --step3-vox $VOX --step3-bridge-um $BRIDGE_UM --step3-origin-shift $SH$SD_FLAG$YV_FLAG$PT_FLAG$PS_FLAG$SBRG_FLAG$RQG_FLAG$EP_FLAG$XP_FLAG$FS_FLAG$SION_FLAG$PB_FLAG$LEAN_FLAGS${P2_EXTRA:+ $P2_EXTRA}" \
       --tag "$TAG" --out-name "$(basename "$OUT")" > "$SHF.body" ) || return 1
   { echo 'set -uo pipefail'; echo "KIT=\"$KIT\""; echo "SCR=\"$SCR\"";
     #  ★ R4-CX-03 — `:+` 는 값 `0` 도 nonempty 라 켰다.  `= 1` 만 켠다.

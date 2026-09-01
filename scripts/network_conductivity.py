@@ -8,7 +8,11 @@ Each SE-SE (or AM-AM) contact → edge with R = R_bulk + R_constriction (series)
   R_constriction: Maxwell spreading resistance R = 1/(2σa), Holm (1967)
 
 Three decomposition runs:
-  1. FULL: R_bulk + R_constriction → σ_full (physical ground truth)
+  1. FULL: R_bulk + R_constriction → σ_full (explicit-contact model estimate)
+     ⚠ **물리 정본이 아니다** (Codex R20-06).  입력 σ_bulk 로 선형 스케일되는 모델
+       추정치이고, **AM–AM 망만** 푼다 (VGCF/SDCP 복합망은 STEP3 복셀 솔버 소관) ⇒
+       두 솔버는 같은 estimand 가 아니다.  이 값의 자연스러운 형태는 무차원
+       formation factor `F_e = σ_eff / σ_AM,input` 이다.
   2. CONTACT_FREE: R_constriction=0 → σ_cf (upper bound, ideal contact limit)
   3. CONSTRICTION_ONLY: R_bulk=0 → σ_constr (spreading resistance limit)
 
@@ -946,7 +950,7 @@ def run_decomposition(atoms_raw, contacts_raw, target_types, scale,
                       boundary_factor=2.0):
     """
     Run full decomposition analysis:
-    1. FULL (R_bulk + R_constriction): physical ground truth
+    1. FULL (R_bulk + R_constriction): explicit-contact model estimate (물리 정본 아님, R20-06)
     2. CONTACT_FREE (R_constriction=0): ideal contact upper bound
     3. CONSTRICTION_ONLY (R_bulk=0): spreading resistance limit
 
@@ -1101,7 +1105,7 @@ def run_decomposition(atoms_raw, contacts_raw, target_types, scale,
     print(f"  {'Mode':<22s} {'σ/σ_bulk':>10s} {'σ (mS/cm)':>10s}")
     print(f"  {'─'*44}")
     if sigma_full:
-        print(f"  {'FULL (ground truth)':22s} {sigma_full:10.6f} {sigma_full*sigma_bulk*1000:10.4f}")
+        print(f"  {'FULL (explicit-contact)':22s} {sigma_full:10.6f} {sigma_full*sigma_bulk*1000:10.4f}")
     if sigma_cf:
         print(f"  {'CONTACT_FREE (upper)':22s} {sigma_cf:10.6f} {sigma_cf*sigma_bulk*1000:10.4f}")
     if sigma_constr_net:
