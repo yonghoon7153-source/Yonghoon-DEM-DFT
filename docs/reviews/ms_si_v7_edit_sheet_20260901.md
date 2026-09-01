@@ -68,6 +68,7 @@
 | §2-1 | 본문 σ 수치가 철회된 세대 | ⛔ **미착수 [P1]** |
 | §2-2 | SI Table S3 σ 행 | ⛔ **미착수 [P1]** |
 | §2-3 | Methods 의 `standard error` | ⛔ **미착수 [P1]** · 저자 승인됨 |
+| §2-4 | **공저자 DOCX 의 VGCF 문단** (§2·§3 두 곳) | ⛔ **미착수 [P1·신규 09-02]** — 두 죽은 주장이 한 문장에 |
 | §3-1 | Table S2 재구성 (3블록) | ⛔ 미착수 |
 | §3-2 | Table S3 나머지 행 | ⛔ 미착수 |
 | §3-3 | Table S3 σ_ion 행 | ✅ **09-01 값 확보** — 넣을 수 있다 |
@@ -128,6 +129,48 @@
 
 ⚠ 문서 전체에서 `standard error` · `SE` · `95 % CI` · `±` 를 **원고 표현으로** 쓴 자리를
 전부 훑을 것.  **숫자는 맞고 이름만 낡았다.**
+
+### 2-4. ⛔ [P1·신규 09-02] 공저자 DOCX 의 VGCF 문단 — **두 죽은 주장이 한 문장에** 있다
+
+**어디에.**  `docs/manuscript/Methods_simulation_v7_for_coauthors.docx` 의 **§2 설명형**과
+**§3 압축형**, 두 곳 다.  ⚠ 이건 편집 지시의 찾기-문자열이 아니라 **실제 Methods 산문**이고,
+지금 공저자들이 그것을 읽고 있다.  (같은 문서의 `standard error` 와 `1.98 to 3.00` 은 §7
+편집 지시의 찾기-문자열이라 이미 정리돼 있다 — 혼동하지 말 것.)
+
+**무엇이 죽었나** (Codex R20):
+- *"is essentially that contact resistance"* — **과하다.**  분말값에는 접촉저항 말고도
+  포장률·배향·굴곡도·접촉수·압밀밀도·측정법이 함께 들어 있다.
+- *"The powder-scale value was therefore adopted"* — **거짓 계보.**  `100` 은 도입 커밋이
+  스스로 `order-of-magnitude hook` 이라 적으며 들어왔고 그것이 `83` 문헌 감사보다 **앞선다**.
+  분말값을 보고 고른 것이 아니다 ⇒ **없었던 판단 근거를 지어내는 문장**이다.
+- ⚠ 부수: 제조사 사양은 **0.017 Ω·cm @ 압축밀도 0.8 g/cm³ (58.8 S cm⁻¹)** 이고, `83`
+  (0.012 Ω·cm) 은 문헌 통용값인데 **조건이 안 붙어 있다.**  둘 중 **덜 문서화된 쪽**을 인용해
+  왔다.  그리고 `100` 은 두 분말값 **둘 다보다 위**다 (58.8 의 1.70배 · 83 의 1.20배).
+
+| | |
+|---|---|
+| **찾기 (§2 설명형)** | `The conductivity assigned to VGCF is an effective network value, not a fibre material constant.` … `(78.5 S cm⁻¹ at 0.15 μm).` — 문단 전체 |
+| **찾기 (§3 압축형)** | `The VGCF conductivity is an effective network value rather than a fibre constant,` … `(78.5 S cm⁻¹).` — 마지막 문장 |
+
+**바꾸기 (두 곳 같은 내용, 압축형은 마지막 두 문장만):**
+
+> The coefficient assigned to the VGCF phase (100 S cm⁻¹) is a frozen, uncalibrated legacy
+> voxel-network coefficient, not a fibre material constant and not a value derived from any
+> measurement reported here. It is retained so that the results presented in this work remain
+> reproducible. Voxelisation fuses touching fibres into shared cells and therefore does not
+> resolve fibre–fibre contact resistance, which is one of several contributions separating
+> single-filament (≈ 10⁴ S cm⁻¹) from compressed-powder measurements of VGCF-H; packing
+> fraction, orientation, network tortuosity, contact number, compaction density and the
+> measurement configuration also enter the powder value, and the manufacturer's stated figure
+> (0.017 Ω·cm at a compaction density of 0.8 g cm⁻³, i.e. 58.8 S cm⁻¹) carries a condition that
+> the commonly quoted 83 S cm⁻¹ does not. The coefficient is rescaled with voxel size so that
+> the one-voxel-thick tube carries the axial conductance of a 0.15 μm fibre,
+> σ_eff = σ·πd²/(4h²), giving 78.5 S cm⁻¹ at h = 0.15 μm. Because this coefficient was not
+> independently calibrated, the conductivities and ratios reported here are protocol responses
+> under a stated closure rather than material-level estimates.
+
+⚠ **`78.5` 는 본문 식 안에만 남기고 Table S2 의 값 행에서는 뺀다** (§3-1).  격자 산물이라
+다른 해상도에서 그대로 넣으면 틀리고, 우리 자신이 세 격자에서 다른 값을 썼다.
 
 ---
 
