@@ -10295,6 +10295,29 @@ bash run_staged.sh 2     # 1단계 통과(STAGE1_PASS.json) 뒤에만
 
 **POTCAR 를 따로 조립하지 마십시오** — `run_staged.sh` 가 첫 VASP 실행 전에
 `SEAL_POTCAR_ROOT.sh` 로 전 잡 조립 + 원본 fingerprint 봉인까지 합니다.
+
+### 🙏 부탁 — 첫 잡 전에 한 줄만 더 (POTCAR 신원)
+
+```bash
+bash MAKE_POTCAR_ATTESTATION.sh     # ← 첫 VASP 실행 **전에만** 가능합니다
+```
+
+**막지는 않습니다. 없어도 러너는 돕니다.** 다만 이것 하나로 결과의 쓰임새가 달라져
+말씀드립니다.
+
+저희 봉인(`SEAL_POTCAR_ROOT.sh`)이 보증하는 것은 *"16잡이 전부 같은 하나의 트리에서
+나왔고 그 트리가 첫 계산 전에 고정됐다"* 까지입니다. **그 트리가 승인된 PAW dataset
+인지는 보증하지 못합니다** — VASP 는 같은 원소에도 여러 PAW 세트와 suffix variant
+(`Li` vs `Li_sv`, release 5.2 vs 5.4 …)를 배포하고, 어느 것을 썼는지에 따라 에너지가
+달라지므로 dataset 신원은 범함수 선택과 같은 급의 **계산 조건**입니다.
+해시는 "바뀌지 않았다"만 말하고 "이것이 무엇이다"는 말해 주지 않습니다.
+
+- **돌려 주시면**: 원고에 PAW dataset 을 그대로 적을 수 있습니다.
+- **안 돌리셔도**: 계산은 그대로 진행되고 결과도 유효합니다. 저희가 원고에서
+  **"PAW dataset 조건부"** 라는 단서를 달고 인용합니다.
+
+시간은 몇 초입니다. 첫 VASP 실행 뒤에는 만들 수 없습니다(생산 전이라는 사실 자체가
+근거이기 때문입니다 — 회신 AR P0-6).
 `run_all.sh` 는 이 묶음에 **넣지 않았습니다** (전체 제출 경로가 있으면 1단계
 정지 규칙이 무력화됩니다).
 
@@ -12169,6 +12192,30 @@ def build_bundle(a, ledger: Optional[Dict[str, Any]] = None) -> Path:
             "② 생성 시 `--potcar_identity require_attestation` — 외주처가 첫 VASP "
             "실행 **전에** `bash MAKE_POTCAR_ATTESTATION.sh` 를 돌려야 러너가 시작한다. "
             "그리고 1저자가 조건부-PP 정책을 비준한다"],
+        # ⛔⛔ 1저자 결정 (2026-09-01, 회신 AZ P0-7 에 대한 응답) — **게이트를 걸지
+        #   않는다.** POTCAR 는 외주처 소관이고, README 로 **권고**만 한다.
+        #   ⇒ 리뷰어의 판정(post_hoc 은 manuscript-citable 이 아니다)은 유효하며,
+        #     그 대가를 이 필드가 그대로 지고 간다: 인용 시 PAW dataset 조건부 병기.
+        "1저자_결정_2026_09_01": {
+            "선택": "post_hoc 유지 — attestation 을 **강제하지 않는다**",
+            "근거": "POTCAR 트리 관리는 외주처 소관이다. 절차를 늘려 발송을 막는 것보다 "
+                    "README 권고 + 인용 단서로 처리한다 (1저자 판단, 두 번 재확인)",
+            "받아들인_대가": [
+                "이 묶음의 결과는 **PAW dataset 조건부**로만 인용한다 — Methods 에 "
+                "그 단서를 반드시 적는다 (아래 Methods_필수문장)",
+                "외주처가 attestation 을 돌려주면 그 조건부가 풀린다 (README 권고)",
+                "'승인된 공식 PAW 세트를 썼다' 는 문장은 **쓰지 않는다** — 확인 안 됐다"],
+            "Methods_필수문장": {
+                "ko": "PAW 유사퍼텐셜은 계산 수행 기관이 관리하는 트리에서 조립됐으며, "
+                      "전 잡이 동일 트리에서 나왔음이 생산 전 해시 봉인으로 확인된다. "
+                      "해당 트리의 공식 배포판 여부는 본 연구에서 독립 확인하지 않았다.",
+                "en": "PAW potentials were assembled from a POTCAR tree maintained by "
+                      "the computing site; a pre-production hash seal confirms that all "
+                      "jobs used the same tree. The tree's correspondence to an official "
+                      "distribution was not independently verified in this work."},
+            "⚠_리뷰어_판정": ("회신 AZ Q4 = '현재 형태로는 원고용 불가'. 1저자가 그 "
+                             "판정을 **알고** post_hoc 을 선택했다 — 몰라서가 아니다. "
+                             "이 기록이 그 구분의 증거다")},
         "현재_판정": ("원고 인용 가능 (신원 근거 있음)"
                       if (_idm == "require_attestation" or getattr(a, "potcar_pin", None))
                       else "⛔ **탐색용** — 원고 인용 불가 (승인 dataset 확인 없음)"),
@@ -13267,6 +13314,14 @@ def selftest() -> int:
         # ══ 회신 AR P1-11 · 해제조건 9 — 문서가 **실물과 일치**하는가 ══════════
         _rd9 = (_st / "README_REQUEST.md").read_text(encoding="utf-8")
         _sb9 = (_st / "SUBMIT_CONTRACT.md").read_text(encoding="utf-8")
+        # ⛔ 회신 AZ P0-7 (1저자 결정) — 게이트 대신 **README 권고**로 간다.
+        #   권고가 실제로 문서에 있고, 대가까지 적혀 있어야 결정이 성립한다.
+        chk("MAKE_POTCAR_ATTESTATION.sh" in _rd9 and "막지는 않습니다" in _rd9,
+            "회신 AZ P0-7: README 가 attestation 을 **권고**한다 (강제하지 않는다고 "
+            "명시)")
+        chk("PAW dataset 조건부" in _rd9 and "승인된 PAW dataset" in _rd9,
+            "회신 AZ P0-7: README 가 **왜** 부탁하는지와 **안 하면 어떻게 되는지**를 "
+            "같이 적는다 — 근거 없는 부탁은 무시된다")
         _sm9 = m_st.get("submission") or {}
         _has_clean9 = bool((m_st.get("refs") or {}).get("clean_slab"))
         chk(_has_clean9 or ("clean slab) 잡이 없습니다" in _rd9
@@ -14339,6 +14394,14 @@ def selftest() -> int:
     _rc9 = _return_contract(dict(m_sp, potcar_identity_policy={"mode": "require_attestation"}))
     chk(any("필수" in x for x in _rc9["root"] if "ATTESTATION" in x),
         "회신 AZ P0-7: 정책이 require_attestation 이면 반송 계약이 **필수**로 바뀐다")
+    _d1a = _pol.get("1저자_결정_2026_09_01") or {}
+    chk(_d1a.get("선택", "").startswith("post_hoc")
+        and "Methods_필수문장" in _d1a and "⚠_리뷰어_판정" in _d1a,
+        "회신 AZ P0-7 · 1저자 결정: 게이트를 걸지 **않는다**. 그 선택과 **받아들인 "
+        "대가**(PAW dataset 조건부 인용)가 산출물에 같이 남는다")
+    chk("몰라서가 아니다" in str(_d1a.get("⚠_리뷰어_판정")),
+        "회신 AZ P0-7: 리뷰어 판정을 **알고** 고른 것임이 기록된다 — 누락과 결정을 "
+        "산출물에서 구분할 수 있어야 한다")
     _rc0 = _return_contract(dict(m_sp, potcar_identity_policy={"mode": "post_hoc"}))
     chk(any("원고 인용 자격이 없습니다" in x for x in _rc0["root"] if "ATTESTATION" in x),
         "⛔음성 AZ P0-7: post_hoc 이면 반송 계약이 **인용 자격 없음**을 명시한다")

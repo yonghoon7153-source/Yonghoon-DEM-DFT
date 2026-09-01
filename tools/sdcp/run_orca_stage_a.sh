@@ -133,6 +133,39 @@ EOS
   ORCA="$T/nonexistent_orca" bash "$0" "$T/a" "$T/w2" >"$T/log3" 2>&1
   chk "$([ $? -ne 0 ] && echo 1 || echo 0)" "[음성] ORCA 실행파일이 없으면 거부"
 
+  # ══ 2026-09-02 — ONLY 필터 + seed lock (동시 실행) ═══════════════════════
+  #   왜: 전역 lock 하나라 인스턴스가 하나뿐이었고, ORCA 가 8랭크 중 3개만 쓰는데도
+  #   남는 코어를 못 썼다 (gs2 실측). seed 는 서로 독립이라 나눠 돌려도 된다.
+  mkdir -p "$T/a6/gs0" "$T/a6/gs1"
+  cp "$T/a/gs0/dp6_gs0_neutral.inp" "$T/a6/gs0/"
+  cp "$T/a/gs0/dp6_gs0_neutral.xyz" "$T/a6/gs0/"
+  sed 's/gs0/gs1/g' "$T/a/gs0/dp6_gs0_neutral.inp" > "$T/a6/gs1/dp6_gs1_neutral.inp"
+  cp "$T/a/gs0/dp6_gs0_neutral.xyz" "$T/a6/gs1/dp6_gs1_neutral.xyz"
+  echo '{"geometry_seeds":[{"gseed":0,"dir":"gs0","tag":"dp6_gs0_neutral"},
+                           {"gseed":1,"dir":"gs1","tag":"dp6_gs1_neutral"}]}' \
+    > "$T/a6/manifest_stage_a.json"
+  ONLY=gs1 ORCA="$T/fakeorca" NPROCS=2 bash "$0" "$T/a6" "$T/w6" >"$T/log6" 2>&1 || true
+  chk "$([ -f "$T/w6/gs1/receipt.json" ] && [ ! -f "$T/w6/gs0/receipt.json" ] && echo 1 || echo 0)" \
+      "ONLY=gs1 은 **gs1 만** 돌린다 (gs0 은 손대지 않는다)"
+  ONLY="gs0 gs1" ORCA="$T/fakeorca" NPROCS=2 bash "$0" "$T/a6" "$T/w7" >"$T/log7" 2>&1 || true
+  chk "$([ -f "$T/w7/gs0/receipt.json" ] && [ -f "$T/w7/gs1/receipt.json" ] && echo 1 || echo 0)" \
+      "ONLY 는 공백으로 여러 seed 를 받는다"
+  # ⛔음성: 남이 잡고 있는 seed 는 **건드리지 않는다** (mkdir 원자성)
+  mkdir -p "$T/w8/gs0/.lock_seed"; echo 999999 > "$T/w8/gs0/.lock_seed/pid"
+  ONLY=gs0 ORCA="$T/fakeorca" NPROCS=2 bash "$0" "$T/a6" "$T/w8" >"$T/log8" 2>&1 || true
+  chk "$([ ! -f "$T/w8/gs0/receipt.json" ] && grep -q "다른 인스턴스가 맡았다" "$T/log8" \
+        && echo 1 || echo 0)" \
+      "⛔음성: lock 이 잡힌 seed 는 **다른 인스턴스가 안 뺏는다** (같은 폴더 동시 실행 = 산출물 오염)"
+  chk "$([ -d "$T/w8/gs0/.lock_seed" ] && echo 1 || echo 0)" \
+      "⛔음성: 남의 lock 을 **지우지 않는다** (죽은 것으로 단정하지 않는다)"
+  # 정상 종료 뒤에는 자기 lock 을 반납한다 — 안 그러면 다음 실행이 영영 막힌다
+  chk "$([ ! -d "$T/w7/gs0/.lock_seed" ] && [ ! -d "$T/w7/gs1/.lock_seed" ] && echo 1 || echo 0)" \
+      "끝난 seed 의 lock 은 반납된다 (남으면 재실행이 영영 막힌다)"
+  # ⛔음성: ONLY 에 없는 이름을 줘도 조용히 전부 돌지 않는다
+  ONLY=gs9 ORCA="$T/fakeorca" NPROCS=2 bash "$0" "$T/a6" "$T/w9" >"$T/log9" 2>&1 || true
+  chk "$([ ! -f "$T/w9/gs0/receipt.json" ] && [ ! -f "$T/w9/gs1/receipt.json" ] && echo 1 || echo 0)" \
+      "⛔음성: ONLY 에 없는 이름이면 **아무것도 안 돈다** (전부 도는 쪽으로 열리지 않는다)"
+
   rm -rf "$T"
   echo "selftest: $ok 통과 / $bad 실패"
   [ $bad -eq 0 ] || exit 1
@@ -165,8 +198,15 @@ esac
 command -v "$ORCA" >/dev/null 2>&1 || [ -x "$ORCA" ] || {
   ts "⛔ ORCA 를 찾을 수 없다: $ORCA  (ORCA=/full/path 로 지정)"; exit 1; }
 
-LOCK=/tmp/sdcp_orca_stage_a.lock; exec 9>"$LOCK"
-command -v flock >/dev/null && { flock -n 9 || { ts "⛔ 이미 돈다"; exit 0; }; }
+# ⛔⛔ 2026-09-02 — **전역 lock 을 seed 별 lock 으로 바꾼다.**
+#   종전엔 `/tmp/sdcp_orca_stage_a.lock` 하나라 인스턴스가 **하나만** 돌 수 있었다.
+#   그래서 seed 8개가 순차로만 돌았고, 실측 결과 ORCA 가 8랭크 중 3개만 쓰는 바람에
+#   (2026-09-02 gs2: 랭크 3개가 누적 CPU 2일 · 나머지 5개는 3시간 이하) 남는 코어를
+#   두고도 벽시계가 77시간이었다. seed 끼리는 서로 독립이므로 **동시에 돌아도 된다**.
+#   ⇒ lock 을 seed 폴더로 내리고, `ONLY` 로 맡을 seed 를 나눠 준다.
+#   ⚠ 여전히 **한 seed 를 두 인스턴스가 잡는 일은 없다** (mkdir 은 원자적이다).
+ONLY=${ONLY:-}                       # 예: ONLY="gs3 gs4" — 비우면 전부
+STALE_LOCK_MIN=${STALE_LOCK_MIN:-0}  # >0 이면 그만큼 오래된 lock 을 죽은 것으로 본다
 
 BSHA=$(sha "$BUILDER")                                   # 조건 ⑤
 BCOMMIT=$(cd "$REPO" && git rev-parse HEAD 2>/dev/null || echo unknown)
@@ -203,11 +243,33 @@ VER=$("$ORCA" 2>&1 | grep -am1 "Program Version" | sed 's/^ *//' || true)
 
 while read -r d t; do
   SD="$W/$d"                                              # ③ seed 별 scratch
+  # ── ONLY 필터 (2026-09-02) — 여러 인스턴스가 seed 를 나눠 맡는다 ──────────
+  if [ -n "$ONLY" ]; then
+    case " $ONLY " in *" $d "*) : ;; *) continue ;; esac
+  fi
   if grep -aq "ORCA TERMINATED NORMALLY" "$SD/$t.out" 2>/dev/null; then
     ts "  ✓ $d/$t 이미 완료"; continue
   fi
-  ts "═══ $d/$t ═══"
+  # ── seed lock — 같은 seed 를 두 인스턴스가 잡지 않는다 (mkdir 은 원자적) ──
   mkdir -p "$SD"
+  SEEDLOCK="$SD/.lock_seed"
+  if [ "${STALE_LOCK_MIN:-0}" -gt 0 ] && [ -d "$SEEDLOCK" ]; then
+    if [ -z "$(find "$SEEDLOCK" -maxdepth 0 -mmin -"$STALE_LOCK_MIN" 2>/dev/null)" ]; then
+      _op=$(cat "$SEEDLOCK/pid" 2>/dev/null || echo "?")
+      if [ "$_op" = "?" ] || ! kill -0 "$_op" 2>/dev/null; then
+        ts "  ⚠ $d: ${STALE_LOCK_MIN}분 넘은 죽은 lock 을 치운다 (pid $_op)"
+        rm -rf "$SEEDLOCK"
+      fi
+    fi
+  fi
+  if ! mkdir "$SEEDLOCK" 2>/dev/null; then
+    ts "  ⏭ $d 는 다른 인스턴스가 맡았다 (pid $(cat "$SEEDLOCK/pid" 2>/dev/null || echo ?))"
+    continue
+  fi
+  echo $$ > "$SEEDLOCK/pid"
+  # ⚠ **우리 것일 때만** 지운다. 남의 lock 을 치우지 않는다.
+  trap '[ "$(cat "$SEEDLOCK/pid" 2>/dev/null)" = "$$" ] && rm -rf "$SEEDLOCK"' EXIT
+  ts "═══ $d/$t ═══"
   cp "$A/$d/$t.inp" "$SD/$t.inp"
   cp "$A/$d/$t.xyz" "$SD/$t.xyz"
   cp "$A/$d/$t.xyz" "$SD/${t}_start.xyz"                   # ④ 시작구조 별도 보존
@@ -272,6 +334,9 @@ print(f"  receipt: relaxed={r['relaxed']} · rc={rc}")
 PY
   grep -aq "ORCA TERMINATED NORMALLY" "$SD/$t.out" \
     && ts "  ✓ 정상종료" || { ts "  ✗ 비정상 — 꼬리:"; tail -5 "$SD/$t.out"; }
+  # seed lock 반납 — 다음 seed 로 넘어가기 전에 (trap 은 프로세스 종료용 보험이다)
+  [ "$(cat "$SEEDLOCK/pid" 2>/dev/null)" = "$$" ] && rm -rf "$SEEDLOCK"
+  trap - EXIT
 done <<< "$TAGS"
 
 ts "═══ 결산 ═══"
