@@ -963,8 +963,16 @@ def _run(kexpr: str) -> dict:
              "--json-report", f"--json-report-file={rep}"],
             cwd=_sandboxed(ROOT), capture_output=True, text=True, timeout=1800)
         if rep.is_file() and rep.stat().st_size:
-            raw = rep.read_bytes()
-            data = json.loads(raw.decode("utf-8"))
+            data = json.loads(rep.read_text(encoding="utf-8"))
+            # ★ 52차 P1-2 — 영수증으로 남기는 것은 **판정에 쓰이는 부분**이다.
+            #   pytest 의 `collectors` 는 1300여 시험의 수집 tree 라 파일 하나가
+            #   216 KB 이고 그 중 212 KB 가 이 질문과 무관하다 (조각 12개면
+            #   50 MB). `tests` 항목은 **그대로** 담고 나머지는 뺀다 — 줄인
+            #   것은 무엇을 담는가이지 어떻게 판정하는가가 아니다.
+            raw = json.dumps({"exitcode": data.get("exitcode"),
+                              "summary": data.get("summary"),
+                              "tests": data.get("tests", [])},
+                             ensure_ascii=False, sort_keys=True).encode("utf-8")
             # ★ 52차 P1-2 — **원본 report 바이트**를 들고 나간다. 조각은 이것을
             #   증거로 남기고, checker 는 이 바이트에서 판정을 다시 유도한다.
             #   51차 artifact 는 runner 의 self-claim 만 담았고, checker 는 그
