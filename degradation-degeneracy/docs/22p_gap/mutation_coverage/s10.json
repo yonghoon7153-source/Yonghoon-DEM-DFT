@@ -1,84 +1,95 @@
 {
-  "at": "2026-09-01T05:07:56Z",
+  "at": "2026-09-01T09:27:05Z",
   "binding": {
-    "expect_digest": "849931cfb6788222e6b48acca58db5c8deecc30fa0852fedf59fecd355c34377",
-    "head": "d1275d76e3cec143b4c51f41617965e8e5f413aa",
-    "registry_digest": "4ed8eb2856941c73d4666d8b94efa58f18dc517e2f17165d8445f93430881cf5",
-    "runner_digest": "45d2bdd9d6905ec1a213cedb8d1a8d4388345fae8f2bf31fecd84426b6558719",
-    "transcript_digest": "cfdf1a077b0b7a21b5bf4a8665b736b8d275bd2703d8b66a9e0f055d7d3255c9"
+    "expect_digest": "118328eb875379f975ccd92a9d1f496531cdc402139304c01f2c27ca5c338831",
+    "head": "318f59dc2fc7b51affbc4d660aa192f0c5dea8ab",
+    "registry_digest": "ae74d2634a63b696fbdf0e97d267abf94cd9d131437d51af68d4e4de09912bf0",
+    "reports_dir": "s10",
+    "runner_digest": "603b4679dd47c66cb924351bf074a59cd57e62c8edf3eef77fdfab323d2a229d",
+    "transcript_digest": "7de92cd1bf4a982b13b507ebaae1403038ef2c7d0dc571a7ded7d6fb82197b7a"
   },
   "scenarios": {
-    "claim-checks-the-whole-index": {
+    "children-read-through-dirfd": {
       "bit": true,
       "class": "executable",
-      "kexpr": "whole_index_must_be_consistent_before_any_leg_is_claimed",
+      "kexpr": "holds_a_directory_fd_for_its_children",
       "ran": true,
-      "sites": 1
-    },
-    "dry-run-releases-the-claim": {
-      "bit": true,
-      "class": "executable",
-      "kexpr": "dry_run_does_not_strand_the_plan_in_running",
-      "ran": true,
-      "sites": 1
-    },
-    "flock-two-publisher": {
-      "bit": true,
-      "class": "executable",
-      "kexpr": "two_independent_publishers",
-      "ran": true,
+      "report_sha256": "c81fa5fa39683e9aec09581516cae175e32f70cea6e256256796db0fd8498ea3",
       "sites": 2
     },
-    "interpreter-set-is-pinned": {
-      "bit": null,
-      "class": "declared",
-      "kexpr": null,
-      "ran": false,
-      "sites": 1
-    },
-    "namespace-check-rejects-symlinks": {
+    "crash-recovery-needs-the-credential": {
       "bit": true,
       "class": "executable",
-      "kexpr": "symlinked_path_is_not_inside_the_smoke_namespace or namespace_check_is_fail_closed_on_a_symlinked_component",
+      "kexpr": "the_crash_recovery_needs_the_owner_credential",
       "ran": true,
+      "report_sha256": "3ea17319f76414188ff92107b5c015941878a70afe628a635928db46359692c1",
       "sites": 1
     },
-    "plan-parser-dir-hygiene": {
+    "fit-axis-seals-the-objective-payload": {
       "bit": true,
       "class": "executable",
-      "kexpr": "plan_parser_requires_a_canonical_relative_dir or plan_parser_refuses_a_cohort_dir_outside_the_repository",
+      "kexpr": "objective_payload_is_inside_the_approval_digest",
       "ran": true,
+      "report_sha256": "856d2baf6d1816f94fbcd61d93a00630906dcf8d7813e95f118677c24254b474",
       "sites": 1
     },
-    "prelock-version-id-is-a-string": {
+    "guard-before-commit": {
       "bit": true,
       "class": "executable",
-      "kexpr": "falsy_version_id",
+      "kexpr": "pathname_after_the_check or same_roster_ledger_change",
       "ran": true,
+      "report_sha256": "08eee03640a73bad5bdd2ab56f02f6339d23bbb84a3001ceeb39ff4c074ee633",
       "sites": 1
     },
-    "public-lifecycle-in-two-publisher-fixture": {
-      "bit": null,
-      "class": "declared",
-      "kexpr": null,
-      "ran": false,
-      "sites": 1
-    },
-    "seal-exact-types": {
+    "module-defs-enter-compound-statements": {
       "bit": true,
       "class": "executable",
-      "kexpr": "an_omap_and_a_list_of_lists_do_not_share_a_seal",
+      "kexpr": "producer_closure_sees_every_module_binding_form",
       "ran": true,
+      "report_sha256": "b53f00a42a693d54c4b8b1de684b9cc6f2f457f55eb650f1849c1bce5ae7f1bf",
       "sites": 1
     },
-    "token-unlink-is-generation-scoped": {
+    "phase-input-binding-needs-a-receipt": {
       "bit": true,
       "class": "executable",
-      "kexpr": "late_release_cleanup_cannot_delete_the_next_attempts_token",
+      "kexpr": "fit_refuses_when_its_grid_phase_is_missing",
       "ran": true,
+      "report_sha256": "3ed356eb04f17fa80247442fa28913f5f755b758673d9f810db35b26dedb7b26",
+      "sites": 1
+    },
+    "pre-write-authority": {
+      "bit": true,
+      "class": "executable",
+      "kexpr": "frozen_cohort_publish_writes_nothing_before_it_refuses",
+      "ran": true,
+      "report_sha256": "9187557eb6599bb2dae7043bd5f764b0f53c2228ba8ee89544b066a3c25d59a2",
+      "sites": 1
+    },
+    "producer-semantic-sealed": {
+      "bit": true,
+      "class": "executable",
+      "kexpr": "producer_change_cannot_mix_two_producers or producer_semantic_identity_is_sealed",
+      "ran": true,
+      "report_sha256": "2d7fb57c6d186c9fa1574661f9c6e16f8470a270d0e4ae25d4fd532b5bb8731a",
+      "sites": 1
+    },
+    "roster-is-a-set": {
+      "bit": true,
+      "class": "executable",
+      "kexpr": "ledger_roster_is_a_set_not_a_multiset",
+      "ran": true,
+      "report_sha256": "91837c11a288bf78c405f900acd876d3d2ccdc98b7227fd646101ab38f15c47b",
+      "sites": 1
+    },
+    "token-file-is-bound-to-its-leg": {
+      "bit": true,
+      "class": "executable",
+      "kexpr": "two_legs_cannot_share_one_attempt_file",
+      "ran": true,
+      "report_sha256": "e8be94fde338f98b343e8361659cdf07829d94b0eadf6e681a34de67fe464c5f",
       "sites": 1
     }
   },
-  "schema": "mutation-coverage/v2",
+  "schema": "mutation-coverage/v3",
   "selector": ""
 }

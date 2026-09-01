@@ -1,0 +1,94 @@
+{
+  "at": "2026-09-01T09:30:32Z",
+  "binding": {
+    "expect_digest": "118328eb875379f975ccd92a9d1f496531cdc402139304c01f2c27ca5c338831",
+    "head": "318f59dc2fc7b51affbc4d660aa192f0c5dea8ab",
+    "registry_digest": "ae74d2634a63b696fbdf0e97d267abf94cd9d131437d51af68d4e4de09912bf0",
+    "reports_dir": "s12",
+    "runner_digest": "603b4679dd47c66cb924351bf074a59cd57e62c8edf3eef77fdfab323d2a229d",
+    "transcript_digest": "9df2ce10e0d8e2a9d8ade0140595fff80f3ce0cf3cdf745ab6e68319eaec6e8a"
+  },
+  "scenarios": {
+    "claim-is-atomic": {
+      "bit": true,
+      "class": "executable",
+      "kexpr": "exactly_one_attempt_enters_compute",
+      "ran": true,
+      "report_sha256": "d1cf734c3393e69ffc673ca9f71a7cd5871cea75f88811b5342dc8c31c658f9c",
+      "sites": 2
+    },
+    "dry-run-releases-the-claim": {
+      "bit": true,
+      "class": "executable",
+      "kexpr": "dry_run_does_not_strand_the_plan_in_running",
+      "ran": true,
+      "report_sha256": "473369e1980add848fae10cd4b81f1afe8aac2f7b718908aaa2bdc0bd6162273",
+      "sites": 1
+    },
+    "fit-stages-its-inputs-before-the-gate": {
+      "bit": true,
+      "class": "executable",
+      "kexpr": "run_fit_hands_the_body_the_staged_copies_not_the_originals",
+      "ran": true,
+      "report_sha256": "e1aa4f6ae4045f27fba7a65e7e08469a2b83277c7c439743e508c58a5d9d732c",
+      "sites": 1
+    },
+    "inner-unbound-kernel": {
+      "bit": true,
+      "class": "executable",
+      "kexpr": "blank_its_own_inner_check",
+      "ran": true,
+      "report_sha256": "f8a7b8a5fe00c953c035ef04a10ad3877d421b625c9ff26c9fcc86ee9b2273bf",
+      "sites": 1
+    },
+    "module-defs-see-tuple-targets": {
+      "bit": true,
+      "class": "executable",
+      "kexpr": "producer_closure_sees_tuple_targets or producer_closure_follows_a_tuple_defined_constant",
+      "ran": true,
+      "report_sha256": "0573110415715c363470a7ee9e2506fa11b91b6f8163c78bcc44612a9be75727",
+      "sites": 1
+    },
+    "phase-write-refuses-a-closed-claim": {
+      "bit": true,
+      "class": "executable",
+      "kexpr": "closed_run_cannot_be_resurrected_by_a_late_phase or released_run_cannot_be_resurrected_by_a_late_phase",
+      "ran": true,
+      "report_sha256": "451846a0c4ebd7729c33a31bcf02de1d31bb097b789366d82f2ff1fffd80659e",
+      "sites": 1
+    },
+    "prelock-digest-check": {
+      "bit": true,
+      "class": "executable",
+      "kexpr": "wrong_bytes_are_never_locked",
+      "ran": true,
+      "report_sha256": "9a959af7600d5148c7109291ca311b320a20e71c51c5845aa642d3cf8f562eee",
+      "sites": 1
+    },
+    "proof-until-equals-lease": {
+      "bit": null,
+      "class": "declared",
+      "kexpr": null,
+      "ran": false,
+      "sites": 1
+    },
+    "seal-exact-types": {
+      "bit": true,
+      "class": "executable",
+      "kexpr": "an_omap_and_a_list_of_lists_do_not_share_a_seal",
+      "ran": true,
+      "report_sha256": "5b152b3be36a99ea49fc5f030765b8b9b6918021ddf776161338a1055504c82e",
+      "sites": 1
+    },
+    "token-path-is-disjoint-from-authority": {
+      "bit": true,
+      "class": "executable",
+      "kexpr": "token_path_cannot_alias_the_claim_authority",
+      "ran": true,
+      "report_sha256": "065b4e1bd29fb4cf66a62385fa069171061f121ee62de76cf1f0d1b3e5c68b88",
+      "sites": 1
+    }
+  },
+  "schema": "mutation-coverage/v3",
+  "selector": ""
+}

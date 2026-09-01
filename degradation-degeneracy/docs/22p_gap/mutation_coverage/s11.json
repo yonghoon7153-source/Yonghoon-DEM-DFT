@@ -1,84 +1,94 @@
 {
-  "at": "2026-09-01T05:09:09Z",
+  "at": "2026-09-01T09:28:53Z",
   "binding": {
-    "expect_digest": "849931cfb6788222e6b48acca58db5c8deecc30fa0852fedf59fecd355c34377",
-    "head": "d1275d76e3cec143b4c51f41617965e8e5f413aa",
-    "registry_digest": "4ed8eb2856941c73d4666d8b94efa58f18dc517e2f17165d8445f93430881cf5",
-    "runner_digest": "45d2bdd9d6905ec1a213cedb8d1a8d4388345fae8f2bf31fecd84426b6558719",
-    "transcript_digest": "6c26d62336e4bed91d1b8bcae49e1558afd1c9ea56e6c61aa08ec4428691cdc8"
+    "expect_digest": "118328eb875379f975ccd92a9d1f496531cdc402139304c01f2c27ca5c338831",
+    "head": "318f59dc2fc7b51affbc4d660aa192f0c5dea8ab",
+    "registry_digest": "ae74d2634a63b696fbdf0e97d267abf94cd9d131437d51af68d4e4de09912bf0",
+    "reports_dir": "s11",
+    "runner_digest": "603b4679dd47c66cb924351bf074a59cd57e62c8edf3eef77fdfab323d2a229d",
+    "transcript_digest": "8b96f82062246e6b0410ba233bba71c7217af491fa10856291fc71797ce7f0da"
   },
   "scenarios": {
-    "claim-is-atomic": {
+    "claim-checks-the-whole-index": {
       "bit": true,
       "class": "executable",
-      "kexpr": "exactly_one_attempt_enters_compute",
+      "kexpr": "whole_index_must_be_consistent_before_any_leg_is_claimed",
       "ran": true,
-      "sites": 2
-    },
-    "external-binding-covers-the-package": {
-      "bit": true,
-      "class": "executable",
-      "kexpr": "external_input_binding_covers_the_whole_package",
-      "ran": true,
+      "report_sha256": "b75182c48f4fff41650a42cb1d81b21fd995c44788d654e3ee02c3c7852380aa",
       "sites": 1
     },
-    "freeze-completes-a-half-written-transition": {
+    "diagnostic-hides-the-credential": {
       "bit": true,
       "class": "executable",
-      "kexpr": "freeze_is_retryable_after_a_crash_between_its_two_writes",
+      "kexpr": "the_diagnostic_reader_never_hands_out_the_credential",
       "ran": true,
+      "report_sha256": "84defbc81b7af75db891b8ac6ace03bdea6e941f49315a3d5d4e017c2090b849",
       "sites": 1
     },
-    "ledger-dir-contained": {
+    "fit-axis-seals-the-smoothing-backend": {
       "bit": true,
       "class": "executable",
-      "kexpr": "dir_that_is_not_contained",
+      "kexpr": "effective_smoothing_backend_is_inside_the_approval",
       "ran": true,
+      "report_sha256": "6ea7338f5b5784db01a3768cbf512328d7ade1112388a05306849f5138fd3977",
       "sites": 1
     },
-    "open-checks-the-live-claim-first": {
-      "bit": true,
-      "class": "executable",
-      "kexpr": "second_open_never_touches_the_live_owners_token",
-      "ran": true,
+    "idempotent-shares-the-validator": {
+      "bit": null,
+      "class": "declared",
+      "kexpr": null,
+      "ran": false,
       "sites": 1
     },
-    "planned-binds-the-code-identity": {
+    "module-defs-fail-closed-on-unknown": {
       "bit": true,
       "class": "executable",
-      "kexpr": "plan_to_the_code_identity",
+      "kexpr": "unmodelled_module_binding_form_is_fail_closed",
       "ran": true,
+      "report_sha256": "1d2a13308dd0e2b4e77d93c11130a7b27f49f381af02f74cddec7359d0ed316f",
       "sites": 1
     },
-    "preservation-status-inside-the-contract": {
+    "phase-write-checks-the-credential": {
       "bit": true,
       "class": "executable",
-      "kexpr": "the_runtime_preservation_enum_is_inside_the_contract",
+      "kexpr": "forged_claim_object_cannot_write_a_phase",
       "ran": true,
+      "report_sha256": "bcdeea5c3d6198ca8802bddf7c656ceb5f2d4148eedf68eaffa4a4b5278b08a6",
       "sites": 1
     },
-    "publisher-owns-the-merge-temp": {
+    "precheck-tells-new-from-resume": {
       "bit": true,
       "class": "executable",
-      "kexpr": "caller_stage_is_untouched",
+      "kexpr": "precheck_tells_a_new_run_from_an_owned_resume",
       "ran": true,
+      "report_sha256": "c91700a35f0f46e3caac4827fc2d10612fd84ab3b8a3efe5ae7c8d45796d65af",
       "sites": 1
     },
-    "seal-finite-floats": {
+    "proof-handoff-to-verify": {
       "bit": true,
       "class": "executable",
-      "kexpr": "seal_domain_is_exact_not_isinstance",
+      "kexpr": "repaired_proof_is_handed or pre_journal_finalize or journal_seals_the_content",
       "ran": true,
+      "report_sha256": "169d12e4d724efff9e6eb2376efdb27c57a1c511dfd1711eeb00b1feab30a7fa",
       "sites": 1
     },
-    "trust-boundary-declared": {
+    "row-selection-seals-its-content": {
       "bit": true,
       "class": "executable",
-      "kexpr": "publisher_declares_its_trust_boundary",
+      "kexpr": "fit_axis_seals_the_row_selection_content",
       "ran": true,
+      "report_sha256": "eb35df9c0f630bf1d764ba30f001f36ddf69333c00f2305a13a17149187b88e3",
+      "sites": 1
+    },
+    "token-is-written-before-the-claim": {
+      "bit": true,
+      "class": "executable",
+      "kexpr": "crash_between_the_claim_and_the_token_leaves_nothing_stranded",
+      "ran": true,
+      "report_sha256": "7f4a2df111aa40042f0ca1d8d6ded91bb223c344d746b436447bd9f49831b8fa",
       "sites": 1
     }
   },
-  "schema": "mutation-coverage/v2",
+  "schema": "mutation-coverage/v3",
   "selector": ""
 }
