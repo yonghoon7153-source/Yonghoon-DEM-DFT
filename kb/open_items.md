@@ -207,9 +207,12 @@ D_rel 이 들어오면 그 파일의 `성공기준_사전확정` **그대로** �
 - **2026-08-31 이행 완료**: P0-1 `895af2ed` · P0-2 `1b3fbefc` · P0-3 `d29c322e` ·
   P0-4 `4aed52ff` · P1-5+해제조건⑦ `290513d3`,`ddc6d7ca`.
   해제조건 ①~⑦ 닫힘.
-- ▶ **남은 것은 해제조건 ⑧ 하나** — v19 재생성 + 새 ZIP/MANIFEST 해시로 실물형 e2e 재검증.
-  생성 인자는 `runs/sdcp_c12_2026_08_30/IDENTITY_v18.json` 의 `generated_argv` 그대로
-  (같은 입력이어야 v18↔v19 차이가 '고친 것' 만이 된다).
+- ✅ **해제조건 ⑧ 닫힘 (2026-09-01)** — gabia 에서 v19 재생성 완료. v18 argv 를 `--out` 만
+  바꿔 그대로 썼다. ZIP `c423b082…` · MANIFEST `6d8dd2f4…` · 커밋 `3817eb5d` · **git_dirty false**
+  (v18 은 true 였다). verify_zip PASS(rc 0 · 해시확인 110/110) · 배포본 selftest **294/294**
+  (v18 274) · 보고량 판정 검사 94건(v18 87) · 비UTF8 로케일 PASS.
+  기록: `runs/sdcp_c12_2026_08_30/IDENTITY_v19.json` · 리뷰 **AY** 발송 대기.
+- ▶ **다음 한 수는 리뷰 AY 회신** — GO 면 외주 발송, NO-GO 면 그 P0 이행.
 - ⛔ **v18 을 돌리지 않는다.** 계산 추가는 필요 없다 — analyzer·runner·반송계약 수정과
   재생성만이다 (회신 AV Q6).
 - ⚠ **잡 수의 정본은 MANIFEST/IDENTITY_v18(16잡)** 이다.

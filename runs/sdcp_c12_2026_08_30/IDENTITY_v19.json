@@ -1,0 +1,73 @@
+{
+ "schema": "bundle_identity/v1",
+ "date": "2026-09-01",
+ "bundle": "sdcp_c12_v19",
+ "zip_sha256": "c423b0821ced031f8ac676fd007a2b95bbbbf3d4760c19995976c1bb616b3b36",
+ "zip_bytes": 414332,
+ "manifest_sha256": "6d8dd2f4bf9f7217f36f255f7c47a82fa66d5bc3619499050dbdb5db20a3fb7f",
+ "generated_commit": "3817eb5dda9b87a2109bf4c09e285a8f5699c9a1",
+ "git_dirty": false,
+ "branch": "claude/friendly-meitner-lldvar",
+ "generated_on": "gabia (kserver116-27) · 2026-09-01T08:55:04Z",
+ "generated_argv": "--from_basins db/properties/c12_poses_2026_08_30.json --frags sdcp_neutral ptfe_c10 --refs --refs_minimal --both_seeds --single_point --allow_no_pin --cell_c 36.6551 --cell_c2 40.6551 --min_vacuum 15.0 --roles primary sensitivity stress_sensitivity --out /data/work/runs/sdcp_c12_v19",
+ "⚠_argv_출처": "v18 의 generated_argv 를 **--out 만 바꿔** 그대로 썼다. 같은 입력이어야 v18↔v19 차이가 '고친 것' 만이 된다 (해제조건 ⑧ 의 요건).",
+
+ "상태": "회신 AV 의 P0 4건 + P1 1건 + 해제조건 ①~⑧ **전건 이행 완료**. VASP 는 여전히 **0잡**이다.",
+ "잡": 16,
+ "단계": {"static": 16, "dense": 2},
+ "배포파일": 110,
+
+ "계보": {
+  "candidate_set": "c12 (frozen cc87f6eeae5f9c3a)",
+  "poses_sha256": "547544cc8b84b188100495f67f85b5565a3594f81afa0ce03a527e1f57a29df8",
+  "clean_slab_sha256": "d5f18feb15701f3fc932a1c8f64a09ed48c39ca270d8d8a8f5339658b6c43676",
+  "generator_sha256": "263e9a807fa7e61475f5da3e89e18ba22b07cf77ac032c03e644e60268d80bee",
+  "analyzer_in_bundle_sha256": "e108537817d2b27beaaf4c6f812aeacac6cbc858f41e749ec589ccae9ff68030"
+ },
+
+ "구성_실물에서_센_것": {
+  "references": {"endpoints": 8, "d3_off_twins": 0},
+  "complexes": {"pose×seed": 8, "d3_off_twins": 0},
+  "audit_pose": 0,
+  "pose당": "pm1/D3-on · net4/D3-on — **D3-off 쌍둥이를 만들지 않는다** (C3 는 D3-on OUTCAR 의 Edisp 로 낸다)",
+  "⚠": "이 표는 산출물에서 센 것이지 설명문이 아니다"
+ },
+
+ "검증": {
+  "verify_zip": "PASS · rc 0 · 입력 preflight 게이트 0건 (job.json 16개) · 해시확인 110/110",
+  "배포본_selftest": "294/294 PASS (v18 은 274/274)",
+  "보고량_판정_검사": "94건 — 배포본 안에서 실행 (v18 은 87건)",
+  "비UTF8_로케일": "PASS (env -u PYTHONIOENCODING LC_ALL=C PYTHONUTF8=0)",
+  "k_selftest": "PASS",
+  "zip_entry_hazards": []
+ },
+
+ "v18_와_다른_점": {
+  "P0-2_런처": "자유형 launcher 문자열 폐기 → KIND enum(mpirun|mpiexec|srun|none|wrapper) + 러너 조립 argv. RUNNER_TOKEN(락 파일 내용)으로 소유권 증명, 단계별 실행파일 재해시 + EXECUTABLE_RECEIPT.tsv 를 분석기 필수 반송물로. `295af2ed`",
+  "P0-3_C1_C3": "슬랩 Edisp 는 조각 공통 상수라 D 에서 소거된다 — clean slab 의존 제거. vacconv c2 잡은 자세가 아니라 진공 탐침으로 분리. 'n/a' 와 'unresolved' 를 구분한다. `1b3fbefc`",
+  "P0-4_반송계약": "세 사본(README·SUBMIT·MANIFEST)이 갈라져 KCONV_NOT_MEASURED·CANARY_GEOM_UNCHECKED 거부를 낳았다 → 단일 정본을 세 곳에 **축자 렌더**. `d29c322e`",
+  "P1-5_인용자격": "D_raw 는 유효 입력이면 항상 보존. B_num 은 '시험한 세 축의 보수적 sensitivity envelope' 이지 총 오차 상한이 아니다. citable_at_0.01eV 를 방향 판정과 분리. `4aed52ff`,`290513d3`,`ddc6d7ca`",
+  "해제조건_③⑦": "주기영상 항의 소거를 **주장하지 않는다** 로 coverage_scope 재서술 · 자기인용 금지 회귀시험 추가",
+  "git_dirty": "v18 은 true 였다(원인은 untracked `bundles/` 하나) → v19 는 **false**. 봉인 커밋이 생성 코드를 그대로 설명한다."
+ },
+
+ "⚠_알고_보내는_한계": {
+  "POTCAR_pin_없음": "`--allow_no_pin` 을 v18 argv 그대로 승계했다. 회수 시 `POTCAR_PROVENANCE.json` 으로 **사후** 대조하며, run_job.sh 는 그 파일 없이는 돌지 않는다. 못 보는 것: '우리가 의도한 트리와 다른 트리를 썼다'. 미리 고정하려면 `--potcar_pin`.",
+  "calibration·audit_0": "동결 calibration·audit 자세가 0개인 것은 결함이 아니라 회신 AI §A-Q4 = C 채택의 결과다 — H1·holdout·calibration/holdout merge·adaptive δ 를 실행 경로에서 뺐다.",
+  "단일점": "relax 상이 없다. static(+일부 dense) 만 돈다 — 고정 기하 위의 단일점이 보고량 정의의 일부다.",
+  "POTCAR_미포함": "라이선스 문제로 ZIP 에 없다. 잡마다 `POTCAR_ASSEMBLE.sh` 로 조립한다 (종 순서가 잡마다 다르다)."
+ },
+
+ "🔴_번들_밖_미해결": [
+  "프로토콜 파일의 잡 수가 실물과 다르다 — `sdcp_c12_protocol_2026_08_30.json` §0 12잡 · §12 19잡 vs 실물 **16잡**. citation_hazards 등재됨, 파일 자체는 미정정 (1저자 판단)",
+  "사전등록 둘이 보고량 이름에서 충돌 — 프로토콜 §1 은 'adsorption energy', claim prereg 는 그 이름을 금지어로 지정. 정본은 claim prereg 라고 보지만 사전등록 수정이라 1저자 판단",
+  "거버넌스: `D-2026-08-30-sdcp-c12-path` 는 proposed 로 등록됐으나, 회신 AW P0-3 이 **proposed successor 가 전역 policy 를 폐기한 간선은 불허** 로 판정했다 — 그 간선 제거가 선행돼야 한다"
+ ],
+
+ "사전등록": [
+  "db/properties/sdcp_c12_claim_prereg_2026_08_31.json (보고량 이름·허용/금지 서술 — 정본)",
+  "db/properties/sdcp_c12_protocol_2026_08_30.json (⚠ 잡 수·이름이 낡음)"
+ ],
+ "리뷰": "kb/reviews/codex_AY_prompt_c12_v19_2026_09_01.md",
+ "이전판": "runs/sdcp_c12_2026_08_30/IDENTITY_v18.json"
+}

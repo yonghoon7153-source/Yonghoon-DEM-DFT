@@ -1,6 +1,6 @@
 # kb 카탈로그 (생성물 — 손으로 고치지 말 것)
 
-> `python3 tools/kb_wiki.py index` 가 만든다 · 2026-09-01 · managed-files: 328
+> `python3 tools/kb_wiki.py index` 가 만든다 · 2026-09-01 · managed-files: 329
 
 규칙: kb/SCHEMA.md · 열린 질문: kb/questions/ · 논지 카드: kb/syntheses/ · 원장: kb/open_items.md · 문헌: litdb/INDEX.md
 
@@ -171,7 +171,7 @@
 - `kb/results/vgcf_hbn_figure_plan.md` — VGCF/h-BN 원고 — 층수 연구를 어디에 둘 것인가 (2026-07-31 결정)
 - `kb/results/vgcf_hbn_gallery_mechanism_2026_07_30.md` — h-BN@VGCF — 209 meV 층수효과의 정체: confinement 확정 (2026-07-30)
 
-## reviews/ (81)
+## reviews/ (82)
 - `kb/reviews/ECERD2600097_review_notes.md` — 📝 리뷰 노트 — ECER-D-26-00097 (Fan 외, *Stability Issues in Sulfide-Based ASSB*)
 - `kb/reviews/INDEX.md` — 리뷰 사슬 색인 — 프롬프트↔회신 (자동 생성) ○미열람
 - `kb/reviews/codex_AA_prompt_stageA_v5_regate_2026_08_29.md` — Codex 재검토 요청 AA — 회신 Z 의 P0 8건 처리 후 Stage A v5 재게이트 ○미열람
@@ -201,6 +201,7 @@
 - `kb/reviews/codex_AW_prompt_webapp_audit_2026_09_01.md` — 리뷰 요청 AW — DFT 웹앱 전수 감사 (실패 2건 수선 · 마감/철회 화면 반영 · 인용위험 원장 합류 · 승인 게이트 fail-open 봉인) ○미열람
 - `kb/reviews/codex_AW_reply_webapp_audit_2026_09_01.md` — 회신 AW — 웹앱 전수 감사: NO-GO (P0 4건 · P1 6건 · 해제조건 6) ○미열람
 - `kb/reviews/codex_AX_prompt_lpsocl_600K_amendment_2026_09_01.md` — 리뷰 요청 AX — LPSOCl 3×3×1 600 K 가 선언한 창에서 정의되지 않는다 (생산길이 개정 제안 + 판정 코드) ○미열람
+- `kb/reviews/codex_AY_prompt_c12_v19_2026_09_01.md` — 리뷰 요청 AY — C-12 v19 (회신 AV P0 4건 + P1 1건 + 해제조건 ⑧ 이행 · 재생성본) ○미열람
 - `kb/reviews/codex_A_cascade_ml_2026_08_20.md` — 교차리뷰 A — cascade 파이프라인 + 머신러닝 (codex 작업지시서) ○미열람
 - `kb/reviews/codex_B_neb_md_tools_2026_08_20.md` — 교차리뷰 B — NEB · MD · 도구 (codex 작업지시서) ○미열람
 - `kb/reviews/codex_C_funnel_2026_08_20.md` — 교차리뷰 C v2.1 — cascade 깔때기는 잘 작동했나 (codex 2라운드 종료) ○미열람
