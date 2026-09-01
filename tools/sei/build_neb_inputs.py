@@ -1409,6 +1409,19 @@ def main():
     if not a.plan:
         os.makedirs(a.work, exist_ok=True)
 
+    # ⛔⛔ 2026-09-02 실측 (kgy) — **모르는 태그를 줘도 조용히 0행이었다.**
+    #   `--only li_metal_bcc` (실행 폴더 이름) 를 주니 아무 상도 안 돌고, 그런데도
+    #   프서 목록과 "계획 모드다" 꼬리말이 정상처럼 찍혀 **다 된 것처럼 보였다.**
+    #   등록 태그는 `li_metal` 이다. 오타 하나가 조용한 무작업이 되면 안 된다.
+    if a.only:
+        _bad = [t for t in a.only if t not in TARGETS]
+        if _bad:
+            sys.exit("⛔ --only 에 모르는 태그: %s\n"
+                     "   아는 태그: %s\n"
+                     "   ⚠ 태그는 **구조 등록명**이지 DFT 실행 폴더 이름이 아니다 "
+                     "(예: 폴더 `li_metal_bcc` → 태그 `li_metal`)."
+                     % (", ".join(_bad), ", ".join(sorted(TARGETS))))
+
     rows = []
     for tag, (path, disp) in TARGETS.items():
         if a.only and tag not in a.only:

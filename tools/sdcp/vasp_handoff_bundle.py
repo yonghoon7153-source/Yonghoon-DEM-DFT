@@ -10111,6 +10111,21 @@ def main():
             % (len(missing_sens), missing_sens[:3]))
     results["sensitivity_status"] = ("complete" if not missing_sens
                                      else "incomplete (%d건)" % len(missing_sens))
+    # ⛔⛔ 회신 BB P0-1 (2026-09-02) — **두 가지가 겹친 사고다.**
+    #   ① 마지막 인용 블록이 `res["citation_status"]` 를 썼는데 이 스코프에 `res` 가
+    #      없다. main() 을 끝까지 타면 **반드시 NameError** 로 죽는다. 1단계는 그
+    #      전에 return 하고, selftest 는 최종 main() 경로를 한 번도 안 탔다.
+    #   ② `res` 를 `results` 로 고쳐도 부족하다 — RESULTS.json 을 **여기서 이미
+    #      저장**하므로 인용 판정이 파일에 안 남는다. 중간 `return 2` 경로도 여럿이라
+    #      그 경우에도 안 남았다.
+    #   ⇒ 판정을 **저장 전에** 계산해 `results` 에 넣는다. 뒤쪽은 출력·종료코드만.
+    _cl = (results.get("prereg_closure") or {})
+    _vc = (results.get("closure_vacconv") or _cl.get("closure_vacconv") or {})
+    _cit = citation_status(man, _cl)
+    results["citation_status"] = _cit
+    _cl["manuscript_citable"] = _cit["manuscript_citable"]
+    _cl["⛔_인용"] = _cit["why"]
+
     out = os.path.join(root, "RESULTS.json")
     results["required_missing"] = missing
     for r in jobs.values():
@@ -10170,8 +10185,7 @@ def main():
     # ⛔⛔ 회신 AO P0-1 (2026-08-31) — stage gate 를 **다른 종료 검사보다 먼저**
     #   판정한다. 종전엔 e_ads·전체 completeness 검사 뒤에 있어서, 1단계 8잡만
     #   정상 완료한 상태가 여기까지 오지도 못하고 exit 2 로 끝났다.
-    _cl = (results.get("prereg_closure") or {})
-    _vc = (results.get("closure_vacconv") or _cl.get("closure_vacconv") or {})
+    # (`_cl`·`_vc` 는 저장 전에 이미 만들었다 — 회신 BB P0-1)
     if _gate_arg:
         if _gate_arg != "vacconv":
             print(f"⛔ 모르는 --gate: {_gate_arg!r} (지원: vacconv)")
@@ -10275,10 +10289,8 @@ def main():
     # ⛔⛔ 회신 BA P0-3 · 해제조건 4 — **계산 성공과 원고 인용 자격을 분리한다.**
     #   종전엔 분석기가 `manuscript_citable` 을 읽지도 않았고, post-hoc·overall=None
     #   이어도 `_final_verdict` 가 성공을 반환했다.
-    _cit = citation_status(man, _cl)
-    res["citation_status"] = _cit
-    _cl["manuscript_citable"] = _cit["manuscript_citable"]
-    _cl["⛔_인용"] = _cit["why"]
+    #  ⚠ 계산은 저장 전에 끝났다 (회신 BB P0-1). 여기서는 **출력만** 한다 —
+    #    여기서 다시 계산하면 파일에 든 값과 화면 값이 갈릴 수 있다.
     print("")
     print("── 인용 자격 ──")
     print("  manuscript_citable = %s" % _cit["manuscript_citable"])
@@ -14979,6 +14991,37 @@ def selftest() -> int:
             t = _re.sub(r"(?m)^ KPOINTS: .*$", f" KPOINTS: {_dkt}", t)
         t = t.replace("LREAL = Auto", "LREAL = .FALSE.")
         (dj / "OUTCAR").write_text(t.replace(f"{e0:.6f}", f"{e0 + shift:.6f}"))
+    # ══ 회신 BB P0-1 — **완주 e2e**: 아무것도 안 망가뜨린 묶음으로 main() 을 끝까지 ══
+    #  ⛔⛔ 채택 이유. 기존 e2e 는 **언제나** 음성을 심고 돌려 `required_missing` 에서
+    #    exit 2 로 빠졌다. 그래서 main() 의 **마지막 구간**(인용 자격 판정)을 한 번도
+    #    지나지 않았고, 거기 있던 `res["citation_status"]`(정의 안 된 이름)를
+    #    selftest 310건이 전부 통과하면서 놓쳤다. 완주하면 **반드시 NameError** 였다.
+    #    같은 형태를 AZ P0-1(C-12 launcher)에서 이미 한 번 맞았다 — 정상 경로를
+    #    시험이 지나지 않으면 통과 개수는 아무것도 보증하지 않는다.
+    _clean = out.parent / (out.name + "_clean")
+    shutil.copytree(out, _clean)
+    _rc_ok = subprocess.run(
+        [sys.executable, str(_clean / "analyze_results.py"), str(_clean)],
+        capture_output=True, text=True)
+    chk("NameError" not in _rc_ok.stderr and "Traceback" not in _rc_ok.stderr,
+        "BB P0-1 완주 e2e: 정상 묶음으로 analyze_results 가 **끝까지 돈다** "
+        "(예외 없음)%s" % ("" if "Traceback" not in _rc_ok.stderr
+                           else " — " + _rc_ok.stderr.strip().splitlines()[-1][:120]))
+    _rj_ok = json.loads((_clean / "RESULTS.json").read_text())
+    chk("citation_status" in _rj_ok,
+        "BB P0-1: 인용 판정이 **RESULTS.json 에 남는다** — 종전엔 저장이 판정보다 "
+        "먼저라 `res` 를 고쳐도 파일에 안 남았다")
+    chk(_rj_ok["citation_status"].get("manuscript_citable") is False
+        and any("post_hoc" in b or "POTCAR" in b
+                for b in _rj_ok["citation_status"]["blockers"]),
+        "BB P0-1: post_hoc 묶음은 완주해도 `manuscript_citable=false` 다 "
+        "(계산 성공과 인용 자격은 다른 상태다)")
+    if "인용 자격" not in _rc_ok.stdout:
+        print("DEBUG rc=%d tail:\n%s" % (_rc_ok.returncode, _rc_ok.stdout[-1500:]))
+    chk("인용 자격" in _rc_ok.stdout,
+        "BB P0-1: 인용 자격 절이 **화면에도** 찍힌다 (완주 경로를 실제로 지났다)")
+    shutil.rmtree(_clean)
+
     # ★ 음성 N13 (Codex 7차 §8) — dense 에서 **모멘트 표만** 지운다. 에너지·NKPTS 는
     #   멀쩡하므로, 게이트가 없으면 이 잡은 아무 문제 없이 κ 에 들어간다.
     dm_job = None
