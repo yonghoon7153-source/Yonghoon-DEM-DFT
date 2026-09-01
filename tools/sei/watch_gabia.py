@@ -807,7 +807,10 @@ tmux = [t.split(":")[0] for t in sh("tmux ls").splitlines() if t.strip()]
 #   그러면 "0 이면 죽은 것" 판정이 영원히 안 걸린다 (2026-08-11 스모크 테스트에서 발견).
 pw = len([x for x in sh(r"pgrep -f '[p]w\.x|[d]os\.x|[p]rojwfc\.x'").split() if x])
 up = sh("uptime -p").strip() or sh("uptime").strip()
-print(f"gabia · {datetime.now():%m-%d %H:%M} · GPU {gpu or '?'} · "
+# ⛔ 2026-09-02 — 라벨을 "gabia" 로 **하드코딩**하고 있었다. kgy 에서 돌리면
+#   화면이 gabia 라고 거짓말한다. 어느 기계의 상황판인지가 이 화면의 전제다.
+_host = (os.environ.get("WATCH_HOST") or sh("hostname").strip() or "?")
+print(f"{_host} · {datetime.now():%m-%d %H:%M} · GPU {gpu or '?'} · "
       f"QE 프로세스 {pw} · tmux {' '.join(tmux) or '없음'}")
 print(f"가동 {up}")
 print(BAR)
@@ -1013,10 +1016,16 @@ neb_pid = len([x for x in sh(r"pgrep -f '[n]eb\.x'").split() if x])
 by_root = [(d, [neb_status(x) for x in sorted(glob.glob(os.path.join(d, "*")))
                 if os.path.isdir(x)]) for d in roots]
 nebs = [s for _d, ss in by_root for s in ss]
-for m in missing_roots:
-    print(f"④ ⚠ NEB 루트 없음: {m}")
+# ⛔ 2026-09-02 — 없는 루트를 한 줄씩 찍으니 kgy(=NEB 루트 0개)에서 이 절만
+#   5줄이었다. 없는 것을 길게 보고하는 화면은 있는 것을 가린다 (출력 규율).
+#   목록은 --full 에서만 편다.
+if missing_roots:
+    print("④ ⚠ NEB 루트 %d개가 이 기계에 없다%s"
+          % (len(missing_roots),
+             (": " + " · ".join(missing_roots)) if FULL else " (목록은 --full)"))
 if not nebs:
-    print(f"④ SEI NEB — {roots or NEBW} 에 상 폴더가 없다 (build_neb_inputs.py 부터)")
+    print("④ SEI NEB — 상 폴더가 없다 (build_neb_inputs.py 부터)"
+          + ("" if roots else " · 있는 루트 0개"))
 else:
     print(f"④ SEI NEB — 루트 {len(by_root)}개 · neb.x 프로세스 {neb_pid}"
           f"   (✓수렴 ▪스텝소진 ▸진행 ◦SCF중 ✗오류 공백 미착수)")
@@ -1158,7 +1167,10 @@ _fz()
 
 
 # ── 5) 디스크 ──────────────────────────────────────────────────────────────
-df = sh("df -h /data | tail -1").split()
+# ⛔ 2026-09-02 — `/data` 는 gabia 경로다. kgy 는 홈 아래라 없는 마운트를 봤다.
+#   SEI 루트가 실제로 있는 곳의 여유를 본다 (그게 계산이 죽는 자리다).
+_dfp = next((r for r in sei_roots if os.path.isdir(r)), None) or os.getcwd()
+df = sh("df -h %s | tail -1" % _dfp).split()
 if len(df) >= 5:
-    print(f"\n디스크 /data  {df[2]} 사용 / {df[1]}  (여유 {df[3]}, {df[4]})")
+    print(f"\n디스크 {_dfp}  {df[2]} 사용 / {df[1]}  (여유 {df[3]}, {df[4]})")
 print(BAR)
