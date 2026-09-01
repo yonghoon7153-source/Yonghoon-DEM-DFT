@@ -70,6 +70,140 @@ HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE))
 import site_screen as SS                      # noqa: E402  (게이트·POSCAR·조각 레지스트리)
 
+# ══ 회신 BB P1 (2026-09-02) — census 를 **한 벌**로 ═══════════════════════════
+#
+#  ⛔⛔ 러너 안에 같은 122줄이 **두 벌** 있었다 (실행 전 · SEAL 뒤 RECHECK_SEAL=1).
+#    지금은 바이트가 같지만 사본은 언젠가 갈린다 — 이 파일에서만 그 사고가
+#    세 번 났다(BA 해제조건 8 의 증서 사본 · BB P1 의 기대 자세 술어 ×2).
+#    ⇒ 번들에 `census.py` **하나**를 넣고 러너가 두 번 부른다. 그 파일 SHA 는
+#      MANIFEST.files_sha256 에 들어가므로 무결성 검사가 사본 변조를 잡는다.
+#
+#  ⛔ 못 하는 것: census 는 **계획과 산출물의 대응**만 본다. 계산이 옳은지,
+#    OUTCAR 내용이 맞는지는 분석기의 몫이다.
+CENSUS_PY = r'''import json, os, sys, glob, hashlib
+stage = sys.argv[1]
+man = json.load(open("MANIFEST.json"))
+mh = hashlib.sha256(open("MANIFEST.json", "rb").read()).hexdigest()
+bad = []
+# ⛔⛔ 회신 AS 해제조건 7 (2026-08-31) — ZIP 안의 해시는 **자기 자신을 증명하지
+#   못한다**. 우리가 ZIP 밖(메일 본문)에 고정한 digest 를 현장이 붙여넣어야
+#   비로소 "우리가 보낸 그 물건" 이 확인된다. **선택이 아니라 필수**로 만든다.
+_HEX = "0123456789abcdef"
+def _need_hex(name):
+    v = os.environ.get(name, "").strip().lower()
+    if not v:
+        bad.append("%s 가 없다 — 우리가 보낸 정본 메시지의 digest 를 넣어야 "
+                   "이 번들이 그 배포본인지 확인할 수 있다" % name)
+        return None
+    if len(v) != 64 or any(c not in _HEX for c in v):
+        bad.append("%s 가 64자리 hex 가 아니다" % name)
+        return None
+    return v
+exp = _need_hex("EXPECT_MANIFEST_SHA256")
+if exp and exp != mh:
+    bad.append("MANIFEST sha256 %s ≠ EXPECT_MANIFEST_SHA256 %s" % (mh[:12], exp[:12]))
+expz = _need_hex("EXPECT_ZIP_SHA256")
+_zt_env = os.environ.get("BUNDLE_ZIP_SHA256", "").strip().lower()
+if expz and _zt_env and expz != _zt_env:
+    bad.append("받은 ZIP 해시 %s ≠ EXPECT_ZIP_SHA256 %s — 우리가 보낸 배포본이 "
+               "아니다" % (_zt_env[:12], expz[:12]))
+# ⛔ 회신 AR 해제조건 7 — 봉인을 **모든 실행에서 필수화**한다
+# ⛔⛔ 회신 BA P0-1 (2026-09-02) — 이 census 는 이제 **SEAL 보다 먼저** 돈다.
+#   그래서 첫 실행에는 봉인이 아직 없다 — 그때는 봉인 검사를 **건너뛰고**,
+#   SEAL 직후 두 번째 census(`RECHECK_SEAL=1`)가 그 몫을 진다.
+#   ⚠ 건너뛰는 것은 봉인 검사뿐이다. 파일 무결성·EXPECT·잡 집합은 **여기서** 끝난다.
+_seal_required = os.environ.get("RECHECK_SEAL") == "1"
+try:
+    seal = json.load(open("POTCAR_ROOT_SEAL.json"))
+except Exception as e:
+    seal = {}
+    if _seal_required:
+        bad.append("POTCAR_ROOT_SEAL.json 을 읽을 수 없다 (%r) — 봉인 없이 돌리지 않는다" % e)
+    else:
+        print("  (봉인 검사는 SEAL 뒤 두 번째 census 로 미룬다 — 회신 BA P0-1)")
+_need_seal = ("schema", "source_sha256", "allowlist_sha256", "manifest_sha256",
+              "bundle_zip_sha256", "vasp_executable", "vasp_executable_sha256",
+              "vasp_version_banner", "sealed_at_utc", "assembled_sha256_by_job",
+              "sealed_before_production", "sealed_before_production_evidence")
+if seal:
+    _sm = [k for k in _need_seal if not seal.get(k)]
+    if _sm:
+        bad.append("봉인에 %s 가 없다 — 반쪽 봉인으로 돌리지 않는다" % _sm)
+    if seal.get("manifest_sha256") and seal["manifest_sha256"] != mh:
+        bad.append("봉인이 다른 MANIFEST 에 대한 것이다 (%s ≠ %s)"
+                   % (seal["manifest_sha256"][:12], mh[:12]))
+    _zt = ""
+    try:
+        _zt = open("ZIP_SHA256.txt").read().split()[0].strip().lower()
+    except Exception:
+        bad.append("ZIP_SHA256.txt 가 없다 — 받은 ZIP 과의 결박을 확인할 수 없다")
+    if _zt and seal.get("bundle_zip_sha256") and seal["bundle_zip_sha256"] != _zt:
+        bad.append("봉인의 ZIP 해시가 ZIP_SHA256.txt 와 다르다")
+# ⛔⛔ 회신 AS 해제조건 6 — 실행 전에 **배포 파일 전수**를 해시 대조한다.
+#   종전엔 잡 집합만 셌다. INCAR 한 줄이 바뀌어도 census 는 통과했다.
+_fh = man.get("files_sha256") or {}
+if not _fh:
+    bad.append("MANIFEST 에 files_sha256 이 없다 — 입력 무결성을 확인할 수 없다")
+else:
+    _chg, _mis = [], []
+    for _rel, _want in sorted(_fh.items()):
+        _pth = os.path.join(*_rel.split("/"))
+        if not os.path.isfile(_pth):
+            _mis.append(_rel); continue
+        _h = hashlib.sha256(open(_pth, "rb").read()).hexdigest()
+        if _h != _want:
+            _chg.append(_rel)
+    if _mis:
+        bad.append("배포 파일이 없다 %d건: %s" % (len(_mis), _mis[:3]))
+    if _chg:
+        bad.append("배포 파일이 바뀌었다 %d건: %s (입력을 고치면 그 잡은 "
+                   "거부됩니다)" % (len(_chg), _chg[:3]))
+    print("  ✓ 입력 무결성 %d 파일" % len(_fh))
+cen = man.get("run_census") or {}
+if not cen.get("job_keys") or not cen.get("stage_of"):
+    bad.append("MANIFEST 에 run_census 가 없다 — 이 번들로는 census 를 확인할 수 "
+               "없다 (구판 번들이면 재생성하십시오)")
+else:
+    want = set(cen["job_keys"])
+    have = {os.path.dirname(p).replace(os.sep, "/") for p in glob.glob("*/*/job.json")}
+    dirs = {d.rstrip("/").replace(os.sep, "/") for d in glob.glob("*/*/")}
+    if have != want:
+        bad.append("job.json 집합이 계획과 다르다 — 없음 %s · 계획 밖 %s"
+                   % (sorted(want - have)[:4], sorted(have - want)[:4]))
+    if dirs != want:
+        bad.append("잡 폴더 집합이 계획과 다르다 — 없음 %s · 계획 밖 %s"
+                   % (sorted(want - dirs)[:4], sorted(dirs - want)[:4]))
+    # 단계 분류를 **디스크의 job.json 으로 다시 계산**해 선언과 대조한다
+    got = {}
+    for jp in sorted(glob.glob("*/*/job.json")):
+        m = json.load(open(jp))
+        d = os.path.dirname(jp).replace(os.sep, "/")
+        kind, role, vac = m.get("kind"), m.get("role"), m.get("vacconv")
+        if kind is None:
+            bad.append("job.json 에 kind 가 없다: " + jp); continue
+        if kind == "mol_ref":
+            got[d] = "1"
+        elif kind == "prospective_pose" and role == "primary":
+            got[d] = "1" if (vac or m.get("seed") == "afm2424_pm1") else "2"
+        else:
+            got[d] = "2"
+    diff = sorted(k for k in set(got) | set(cen["stage_of"])
+                  if got.get(k) != cen["stage_of"].get(k))
+    if diff:
+        bad.append("단계 분류가 선언과 다르다: %s" % diff[:4])
+    cnt = {st: sum(1 for v in got.values() if v == st) for st in ("1", "2")}
+    if cnt != cen.get("stage_counts"):
+        bad.append("단계 개수가 선언과 다르다: 실물 %s ≠ 선언 %s"
+                   % (cnt, cen.get("stage_counts")))
+if bad:
+    print("⛔ 실행 전 census:")
+    for b in bad:
+        print("   · " + b)
+    sys.exit(1)
+print("✓ census: MANIFEST %s · 잡 %d · 단계 %s"
+      % (mh[:12], len(cen["job_keys"]), cen["stage_counts"]))'''
+
+
 # ══ 회신 BB P0-5 (2026-09-02) — **생성 계보를 번들 안에서 닫는다** ═══════════
 #
 #  ⛔⛔ 무엇이 문제였나. MANIFEST 는 생성기 자신의 SHA 조차 담지 않았다(검증
@@ -587,10 +721,39 @@ if [ "${ALLOW_RESUME:-0}" = "1" ]; then
   echo "   처음부터 돌려 주십시오."; exit 2
 fi
 # 계획된 이어달리기(dense 승격)만 완료 상을 건너뛴다. DENSE_PLAN.json 이 증거다.
+# ⛔⛔ 회신 BB P1 (2026-09-02) — 종전엔 **파일 존재만** 봤다. 그래서 계약이
+#   "dense 전용 이어달리기" 가 아니라 "DENSE_PLAN.json 이 있으면 완료 상 전부
+#   건너뛰기" 였다. 이름과 실제가 다른 게이트는 언젠가 다른 것을 통과시킨다.
+#   ⇒ ① 이 잡이 **promote 목록에 있는지** 확인하고 ② 실제로 도는 상이 dense
+#     **하나뿐인지** 확인한다. 아니면 거부한다.
 _PLANCONT=0
 if [ "${PLANNED_CONTINUATION:-0}" = "1" ]; then
-  if [ -s "$_ROOT/DENSE_PLAN.json" ]; then _PLANCONT=1
-  else echo "⛔ PLANNED_CONTINUATION=1 인데 $_ROOT/DENSE_PLAN.json 이 없습니다"; exit 2; fi
+  if [ ! -s "$_ROOT/DENSE_PLAN.json" ]; then
+    echo "⛔ PLANNED_CONTINUATION=1 인데 $_ROOT/DENSE_PLAN.json 이 없습니다"; exit 2
+  fi
+  _JOBREL=$(python3 -c 'import os,sys;print(os.path.relpath(os.getcwd(), sys.argv[1]))' "$_ROOT")
+  python3 - "$_ROOT/DENSE_PLAN.json" "$_JOBREL" <<'PYDP' || exit 2
+import json, sys
+# ⚠ 역슬래시 정규화를 넣었다가 heredoc→파이썬 문자열 두 겹을 지나며 이스케이프가
+#   깨졌다 (2026-09-02 실측: SyntaxError). 이 러너는 POSIX 셸 전용이니 안 쓴다.
+p, jr = sys.argv[1], sys.argv[2]
+d = json.load(open(p, encoding="utf-8"))
+pro = d.get("promote") or d.get("promoted") or []
+keys = {(x if isinstance(x, str) else (x.get("job") or "")) for x in pro}
+if not keys:
+    sys.exit("⛔ DENSE_PLAN.json 에 promote 목록이 없습니다 — 무엇을 승격하는지 "
+             "적히지 않은 계획은 이어달리기의 근거가 아닙니다 (회신 BB P1)")
+if jr not in keys:
+    sys.exit("⛔ 이 잡(%s)은 DENSE_PLAN 의 promote 목록에 **없습니다** — 계획된 "
+             "이어달리기는 그 목록의 잡에만 허용됩니다 (목록 %d건). "
+             "다른 잡을 이어 돌리려면 폴더를 새로 푸십시오." % (jr, len(keys)))
+print("  ✔ DENSE_PLAN promote 목록에 있음: %s" % jr)
+PYDP
+  # dense 가 아직 안 돌았고 나머지가 완료여야 "dense 승격" 이다
+  if [ -f dense/OUTCAR ] && grep -aq "General timing" dense/OUTCAR; then
+    echo "⛔ dense 가 이미 완료입니다 — 승격할 것이 없습니다 (이어달리기 아님)"; exit 2
+  fi
+  _PLANCONT=1
 fi
 if [ "$_PLANCONT" != 1 ]; then
   _stale=""
@@ -611,7 +774,18 @@ fi
 for ph in pre relax static dense; do
   [ -d "$ph" ] || continue
   if [ -f "$ph/OUTCAR" ] && grep -aq "General timing" "$ph/OUTCAR"; then
-    echo "  ✓ $ph 이미 완료 — 건너뜀 (계획된 이어달리기 · DENSE_PLAN.json)"; continue
+    # ⛔ 회신 BB P1 — 완료 상 건너뛰기는 **계획된 이어달리기에서만** 허용된다.
+    #   종전엔 이 줄이 무조건이라, 게이트 문구와 달리 아무 때나 건너뛸 수 있었다.
+    if [ "$_PLANCONT" != 1 ]; then
+      echo "⛔ $ph 가 이미 완료인데 계획된 이어달리기가 아닙니다 — 건너뛰지 "
+      echo "   않습니다 (폴더를 새로 푸십시오)."; exit 1
+    fi
+    echo "  ✓ $ph 이미 완료 — 건너뜀 (계획된 이어달리기 · DENSE_PLAN promote)"; continue
+  fi
+  if [ "$_PLANCONT" = 1 ] && [ "$ph" != dense ]; then
+    echo "⛔ 계획된 이어달리기인데 **$ph 를 새로 돌려야 합니다** — 이것은 dense "
+    echo "   승격이 아닙니다 (계약: dense 하나만 추가). 폴더를 새로 푸십시오."
+    exit 1
   fi
   cp POTCAR "$ph/"
   case "$ph" in
@@ -903,130 +1077,7 @@ export RUNNER_TOKEN="$RUNID"
 #   만 분류하고 디렉터리 수만 비교해서, job.json 하나를 지워도 통과했다.
 #   ⇒ ① MANIFEST 해시(봉인/EXPECT 와 결박) ② 계획 잡 **집합** 완전일치
 #     ③ 단계 분류가 manifest 선언과 **정확히** 같은지 — 셋 다 확인한다.
-python3 - "$stage" <<'PYPRE' || { echo "⛔ 실행 전 census 실패 — 중단"; exit 2; }
-import json, os, sys, glob, hashlib
-stage = sys.argv[1]
-man = json.load(open("MANIFEST.json"))
-mh = hashlib.sha256(open("MANIFEST.json", "rb").read()).hexdigest()
-bad = []
-# ⛔⛔ 회신 AS 해제조건 7 (2026-08-31) — ZIP 안의 해시는 **자기 자신을 증명하지
-#   못한다**. 우리가 ZIP 밖(메일 본문)에 고정한 digest 를 현장이 붙여넣어야
-#   비로소 "우리가 보낸 그 물건" 이 확인된다. **선택이 아니라 필수**로 만든다.
-_HEX = "0123456789abcdef"
-def _need_hex(name):
-    v = os.environ.get(name, "").strip().lower()
-    if not v:
-        bad.append("%s 가 없다 — 우리가 보낸 정본 메시지의 digest 를 넣어야 "
-                   "이 번들이 그 배포본인지 확인할 수 있다" % name)
-        return None
-    if len(v) != 64 or any(c not in _HEX for c in v):
-        bad.append("%s 가 64자리 hex 가 아니다" % name)
-        return None
-    return v
-exp = _need_hex("EXPECT_MANIFEST_SHA256")
-if exp and exp != mh:
-    bad.append("MANIFEST sha256 %s ≠ EXPECT_MANIFEST_SHA256 %s" % (mh[:12], exp[:12]))
-expz = _need_hex("EXPECT_ZIP_SHA256")
-_zt_env = os.environ.get("BUNDLE_ZIP_SHA256", "").strip().lower()
-if expz and _zt_env and expz != _zt_env:
-    bad.append("받은 ZIP 해시 %s ≠ EXPECT_ZIP_SHA256 %s — 우리가 보낸 배포본이 "
-               "아니다" % (_zt_env[:12], expz[:12]))
-# ⛔ 회신 AR 해제조건 7 — 봉인을 **모든 실행에서 필수화**한다
-# ⛔⛔ 회신 BA P0-1 (2026-09-02) — 이 census 는 이제 **SEAL 보다 먼저** 돈다.
-#   그래서 첫 실행에는 봉인이 아직 없다 — 그때는 봉인 검사를 **건너뛰고**,
-#   SEAL 직후 두 번째 census(`RECHECK_SEAL=1`)가 그 몫을 진다.
-#   ⚠ 건너뛰는 것은 봉인 검사뿐이다. 파일 무결성·EXPECT·잡 집합은 **여기서** 끝난다.
-_seal_required = os.environ.get("RECHECK_SEAL") == "1"
-try:
-    seal = json.load(open("POTCAR_ROOT_SEAL.json"))
-except Exception as e:
-    seal = {}
-    if _seal_required:
-        bad.append("POTCAR_ROOT_SEAL.json 을 읽을 수 없다 (%r) — 봉인 없이 돌리지 않는다" % e)
-    else:
-        print("  (봉인 검사는 SEAL 뒤 두 번째 census 로 미룬다 — 회신 BA P0-1)")
-_need_seal = ("schema", "source_sha256", "allowlist_sha256", "manifest_sha256",
-              "bundle_zip_sha256", "vasp_executable", "vasp_executable_sha256",
-              "vasp_version_banner", "sealed_at_utc", "assembled_sha256_by_job",
-              "sealed_before_production", "sealed_before_production_evidence")
-if seal:
-    _sm = [k for k in _need_seal if not seal.get(k)]
-    if _sm:
-        bad.append("봉인에 %s 가 없다 — 반쪽 봉인으로 돌리지 않는다" % _sm)
-    if seal.get("manifest_sha256") and seal["manifest_sha256"] != mh:
-        bad.append("봉인이 다른 MANIFEST 에 대한 것이다 (%s ≠ %s)"
-                   % (seal["manifest_sha256"][:12], mh[:12]))
-    _zt = ""
-    try:
-        _zt = open("ZIP_SHA256.txt").read().split()[0].strip().lower()
-    except Exception:
-        bad.append("ZIP_SHA256.txt 가 없다 — 받은 ZIP 과의 결박을 확인할 수 없다")
-    if _zt and seal.get("bundle_zip_sha256") and seal["bundle_zip_sha256"] != _zt:
-        bad.append("봉인의 ZIP 해시가 ZIP_SHA256.txt 와 다르다")
-# ⛔⛔ 회신 AS 해제조건 6 — 실행 전에 **배포 파일 전수**를 해시 대조한다.
-#   종전엔 잡 집합만 셌다. INCAR 한 줄이 바뀌어도 census 는 통과했다.
-_fh = man.get("files_sha256") or {}
-if not _fh:
-    bad.append("MANIFEST 에 files_sha256 이 없다 — 입력 무결성을 확인할 수 없다")
-else:
-    _chg, _mis = [], []
-    for _rel, _want in sorted(_fh.items()):
-        _pth = os.path.join(*_rel.split("/"))
-        if not os.path.isfile(_pth):
-            _mis.append(_rel); continue
-        _h = hashlib.sha256(open(_pth, "rb").read()).hexdigest()
-        if _h != _want:
-            _chg.append(_rel)
-    if _mis:
-        bad.append("배포 파일이 없다 %d건: %s" % (len(_mis), _mis[:3]))
-    if _chg:
-        bad.append("배포 파일이 바뀌었다 %d건: %s (입력을 고치면 그 잡은 "
-                   "거부됩니다)" % (len(_chg), _chg[:3]))
-    print("  ✓ 입력 무결성 %d 파일" % len(_fh))
-cen = man.get("run_census") or {}
-if not cen.get("job_keys") or not cen.get("stage_of"):
-    bad.append("MANIFEST 에 run_census 가 없다 — 이 번들로는 census 를 확인할 수 "
-               "없다 (구판 번들이면 재생성하십시오)")
-else:
-    want = set(cen["job_keys"])
-    have = {os.path.dirname(p).replace(os.sep, "/") for p in glob.glob("*/*/job.json")}
-    dirs = {d.rstrip("/").replace(os.sep, "/") for d in glob.glob("*/*/")}
-    if have != want:
-        bad.append("job.json 집합이 계획과 다르다 — 없음 %s · 계획 밖 %s"
-                   % (sorted(want - have)[:4], sorted(have - want)[:4]))
-    if dirs != want:
-        bad.append("잡 폴더 집합이 계획과 다르다 — 없음 %s · 계획 밖 %s"
-                   % (sorted(want - dirs)[:4], sorted(dirs - want)[:4]))
-    # 단계 분류를 **디스크의 job.json 으로 다시 계산**해 선언과 대조한다
-    got = {}
-    for jp in sorted(glob.glob("*/*/job.json")):
-        m = json.load(open(jp))
-        d = os.path.dirname(jp).replace(os.sep, "/")
-        kind, role, vac = m.get("kind"), m.get("role"), m.get("vacconv")
-        if kind is None:
-            bad.append("job.json 에 kind 가 없다: " + jp); continue
-        if kind == "mol_ref":
-            got[d] = "1"
-        elif kind == "prospective_pose" and role == "primary":
-            got[d] = "1" if (vac or m.get("seed") == "afm2424_pm1") else "2"
-        else:
-            got[d] = "2"
-    diff = sorted(k for k in set(got) | set(cen["stage_of"])
-                  if got.get(k) != cen["stage_of"].get(k))
-    if diff:
-        bad.append("단계 분류가 선언과 다르다: %s" % diff[:4])
-    cnt = {st: sum(1 for v in got.values() if v == st) for st in ("1", "2")}
-    if cnt != cen.get("stage_counts"):
-        bad.append("단계 개수가 선언과 다르다: 실물 %s ≠ 선언 %s"
-                   % (cnt, cen.get("stage_counts")))
-if bad:
-    print("⛔ 실행 전 census:")
-    for b in bad:
-        print("   · " + b)
-    sys.exit(1)
-print("✓ census: MANIFEST %s · 잡 %d · 단계 %s"
-      % (mh[:12], len(cen["job_keys"]), cen["stage_counts"]))
-PYPRE
+python3 census.py "$stage" || { echo "⛔ 실행 전 census 실패 — 중단"; exit 2; }
 
 # ⛔⛔ 회신 BA P0-1 (2026-09-02) — **SEAL 을 preflight 뒤로 옮긴다.**
 #   종전엔 러너가 SEAL 을 **먼저** 불렀고, SEAL 은 16개 `POTCAR_ASSEMBLE.sh` 를
@@ -1043,130 +1094,7 @@ BUNDLE_LOCK_HELD=1 bash SEAL_POTCAR_ROOT.sh || { echo "POTCAR 조립·봉인 실
 
 # ⛔ 회신 BA P0-1 — SEAL 이 만든 봉인을 **여기서** 검사한다 (앞 census 는 파일
 #   무결성만 봤다). 같은 코드를 두 번 돌리므로 검사 로직이 갈라지지 않는다.
-RECHECK_SEAL=1 python3 - "$stage" <<'PYSEALCHK' || { echo "⛔ 봉인 census 실패 — 중단"; exit 2; }
-import json, os, sys, glob, hashlib
-stage = sys.argv[1]
-man = json.load(open("MANIFEST.json"))
-mh = hashlib.sha256(open("MANIFEST.json", "rb").read()).hexdigest()
-bad = []
-# ⛔⛔ 회신 AS 해제조건 7 (2026-08-31) — ZIP 안의 해시는 **자기 자신을 증명하지
-#   못한다**. 우리가 ZIP 밖(메일 본문)에 고정한 digest 를 현장이 붙여넣어야
-#   비로소 "우리가 보낸 그 물건" 이 확인된다. **선택이 아니라 필수**로 만든다.
-_HEX = "0123456789abcdef"
-def _need_hex(name):
-    v = os.environ.get(name, "").strip().lower()
-    if not v:
-        bad.append("%s 가 없다 — 우리가 보낸 정본 메시지의 digest 를 넣어야 "
-                   "이 번들이 그 배포본인지 확인할 수 있다" % name)
-        return None
-    if len(v) != 64 or any(c not in _HEX for c in v):
-        bad.append("%s 가 64자리 hex 가 아니다" % name)
-        return None
-    return v
-exp = _need_hex("EXPECT_MANIFEST_SHA256")
-if exp and exp != mh:
-    bad.append("MANIFEST sha256 %s ≠ EXPECT_MANIFEST_SHA256 %s" % (mh[:12], exp[:12]))
-expz = _need_hex("EXPECT_ZIP_SHA256")
-_zt_env = os.environ.get("BUNDLE_ZIP_SHA256", "").strip().lower()
-if expz and _zt_env and expz != _zt_env:
-    bad.append("받은 ZIP 해시 %s ≠ EXPECT_ZIP_SHA256 %s — 우리가 보낸 배포본이 "
-               "아니다" % (_zt_env[:12], expz[:12]))
-# ⛔ 회신 AR 해제조건 7 — 봉인을 **모든 실행에서 필수화**한다
-# ⛔⛔ 회신 BA P0-1 (2026-09-02) — 이 census 는 이제 **SEAL 보다 먼저** 돈다.
-#   그래서 첫 실행에는 봉인이 아직 없다 — 그때는 봉인 검사를 **건너뛰고**,
-#   SEAL 직후 두 번째 census(`RECHECK_SEAL=1`)가 그 몫을 진다.
-#   ⚠ 건너뛰는 것은 봉인 검사뿐이다. 파일 무결성·EXPECT·잡 집합은 **여기서** 끝난다.
-_seal_required = os.environ.get("RECHECK_SEAL") == "1"
-try:
-    seal = json.load(open("POTCAR_ROOT_SEAL.json"))
-except Exception as e:
-    seal = {}
-    if _seal_required:
-        bad.append("POTCAR_ROOT_SEAL.json 을 읽을 수 없다 (%r) — 봉인 없이 돌리지 않는다" % e)
-    else:
-        print("  (봉인 검사는 SEAL 뒤 두 번째 census 로 미룬다 — 회신 BA P0-1)")
-_need_seal = ("schema", "source_sha256", "allowlist_sha256", "manifest_sha256",
-              "bundle_zip_sha256", "vasp_executable", "vasp_executable_sha256",
-              "vasp_version_banner", "sealed_at_utc", "assembled_sha256_by_job",
-              "sealed_before_production", "sealed_before_production_evidence")
-if seal:
-    _sm = [k for k in _need_seal if not seal.get(k)]
-    if _sm:
-        bad.append("봉인에 %s 가 없다 — 반쪽 봉인으로 돌리지 않는다" % _sm)
-    if seal.get("manifest_sha256") and seal["manifest_sha256"] != mh:
-        bad.append("봉인이 다른 MANIFEST 에 대한 것이다 (%s ≠ %s)"
-                   % (seal["manifest_sha256"][:12], mh[:12]))
-    _zt = ""
-    try:
-        _zt = open("ZIP_SHA256.txt").read().split()[0].strip().lower()
-    except Exception:
-        bad.append("ZIP_SHA256.txt 가 없다 — 받은 ZIP 과의 결박을 확인할 수 없다")
-    if _zt and seal.get("bundle_zip_sha256") and seal["bundle_zip_sha256"] != _zt:
-        bad.append("봉인의 ZIP 해시가 ZIP_SHA256.txt 와 다르다")
-# ⛔⛔ 회신 AS 해제조건 6 — 실행 전에 **배포 파일 전수**를 해시 대조한다.
-#   종전엔 잡 집합만 셌다. INCAR 한 줄이 바뀌어도 census 는 통과했다.
-_fh = man.get("files_sha256") or {}
-if not _fh:
-    bad.append("MANIFEST 에 files_sha256 이 없다 — 입력 무결성을 확인할 수 없다")
-else:
-    _chg, _mis = [], []
-    for _rel, _want in sorted(_fh.items()):
-        _pth = os.path.join(*_rel.split("/"))
-        if not os.path.isfile(_pth):
-            _mis.append(_rel); continue
-        _h = hashlib.sha256(open(_pth, "rb").read()).hexdigest()
-        if _h != _want:
-            _chg.append(_rel)
-    if _mis:
-        bad.append("배포 파일이 없다 %d건: %s" % (len(_mis), _mis[:3]))
-    if _chg:
-        bad.append("배포 파일이 바뀌었다 %d건: %s (입력을 고치면 그 잡은 "
-                   "거부됩니다)" % (len(_chg), _chg[:3]))
-    print("  ✓ 입력 무결성 %d 파일" % len(_fh))
-cen = man.get("run_census") or {}
-if not cen.get("job_keys") or not cen.get("stage_of"):
-    bad.append("MANIFEST 에 run_census 가 없다 — 이 번들로는 census 를 확인할 수 "
-               "없다 (구판 번들이면 재생성하십시오)")
-else:
-    want = set(cen["job_keys"])
-    have = {os.path.dirname(p).replace(os.sep, "/") for p in glob.glob("*/*/job.json")}
-    dirs = {d.rstrip("/").replace(os.sep, "/") for d in glob.glob("*/*/")}
-    if have != want:
-        bad.append("job.json 집합이 계획과 다르다 — 없음 %s · 계획 밖 %s"
-                   % (sorted(want - have)[:4], sorted(have - want)[:4]))
-    if dirs != want:
-        bad.append("잡 폴더 집합이 계획과 다르다 — 없음 %s · 계획 밖 %s"
-                   % (sorted(want - dirs)[:4], sorted(dirs - want)[:4]))
-    # 단계 분류를 **디스크의 job.json 으로 다시 계산**해 선언과 대조한다
-    got = {}
-    for jp in sorted(glob.glob("*/*/job.json")):
-        m = json.load(open(jp))
-        d = os.path.dirname(jp).replace(os.sep, "/")
-        kind, role, vac = m.get("kind"), m.get("role"), m.get("vacconv")
-        if kind is None:
-            bad.append("job.json 에 kind 가 없다: " + jp); continue
-        if kind == "mol_ref":
-            got[d] = "1"
-        elif kind == "prospective_pose" and role == "primary":
-            got[d] = "1" if (vac or m.get("seed") == "afm2424_pm1") else "2"
-        else:
-            got[d] = "2"
-    diff = sorted(k for k in set(got) | set(cen["stage_of"])
-                  if got.get(k) != cen["stage_of"].get(k))
-    if diff:
-        bad.append("단계 분류가 선언과 다르다: %s" % diff[:4])
-    cnt = {st: sum(1 for v in got.values() if v == st) for st in ("1", "2")}
-    if cnt != cen.get("stage_counts"):
-        bad.append("단계 개수가 선언과 다르다: 실물 %s ≠ 선언 %s"
-                   % (cnt, cen.get("stage_counts")))
-if bad:
-    print("⛔ 실행 전 census:")
-    for b in bad:
-        print("   · " + b)
-    sys.exit(1)
-print("✓ census: MANIFEST %s · 잡 %d · 단계 %s"
-      % (mh[:12], len(cen["job_keys"]), cen["stage_counts"]))
-PYSEALCHK
+RECHECK_SEAL=1 python3 census.py "$stage" || { echo "⛔ 봉인 census 실패 — 중단"; exit 2; }
 
 # ⛔⛔ 회신 AZ P0-7 (2026-09-01) — **attestation 을 생산 전에 강제**한다.
 #   봉인은 "이 계산들이 하나의 트리에서 나왔고 그 트리가 생산 전에 고정됐다" 까지만
@@ -11114,7 +11042,7 @@ export EXPECT_ZIP_SHA256=<메일 본문의 ZIP SHA256>   # **필수** — 없으
 export VASP_LAUNCHER_KIND=mpirun            # mpirun|mpiexec|srun|none|wrapper
 export VASP_NPROC=%d                        # 랭크 수
 export VASP_EXE=/abs/path/to/vasp_std       # 실행파일 절대경로 (봉인 대상)
-bash run_staged.sh 1     # POTCAR 조립+봉인 → census → 1단계 → 자동 판정
+bash run_staged.sh 1     # census → POTCAR 조립+봉인 → 봉인 census → 1단계 → 판정
 bash run_staged.sh 2     # 1단계 통과(STAGE1_PASS.json) 뒤에만
 ```
 
@@ -11162,13 +11090,15 @@ bash MAKE_POTCAR_ATTESTATION.sh     # ← 첫 VASP 실행 **전에만** 가능�
 ⛔ **단일 잡을 손으로 돌리는 경로는 이 묶음에서 삭제했습니다** (회신 AT P0-5).
 `run_job.sh` 를 직접 부르면 봉인된 실행파일 검사와 번들 전역 lock 을 **둘 다 우회**해,
 봉인이 무의미해지고 같은 번들에 두 실행이 들어올 수 있습니다.
-한 잡을 다시 돌리셔야 하면 그 잡의 산출물을 지우고 **`ALLOW_RESUME=1` 을 명시해서**
-`ALLOW_RESUME=1 bash run_staged.sh <단계>` 로 부르십시오. 그 선언이 없으면 러너가
-**거부합니다** — 건너뛰지 않습니다.
-⛔ 종전 안내는 *"그냥 다시 부르면 완료된 잡은 건너뜁니다"* 였는데 **코드와 반대**였고
-(회신 AY P1), 그대로 따르면 실행이 막혀 이유를 알 수 없었습니다. 거부가 맞는 동작입니다
-— 남이 다른 설정으로 돌려 둔 결과를 우리 것으로 반송하는 사고를 막는 게이트입니다
-(회신 AA P0-5). 재개 사실은 `NOTES.txt` 에 남겨 주십시오.
+⛔ **`ALLOW_RESUME` 은 폐지됐습니다** (회신 BA 해제조건 7). 러너는 그 변수를 보면
+**거부합니다** — 이 문서가 그것을 지시하고 있었던 것은 잘못이고, 그대로 따르면
+실행이 막혀 이유를 알 수 없었습니다 (회신 BB P1 지적).
+
+한 잡을 다시 돌리셔야 하면 **폴더를 새로 풀고 처음부터** 돌리십시오. 부분 재개는
+남이 다른 설정으로 돌려 둔 결과를 우리 것으로 반송하는 사고를 막지 못합니다
+(회신 AA P0-5). 실패 잡이 남아 다시 돌려야 하는 경우는 저희에게 알려 주시면
+**그 잡만 담은 별도 rescue 묶음**을 만들어 보내 드립니다 — 그 묶음은 부모 번들을
+`parent`/`supersedes` 로 명시해 계보가 끊기지 않습니다 (회신 BB Q3).
 
 """ % (n_jobs, _n1, "<메일 본문의 MANIFEST SHA256>",
        getattr(a, "cores", 48))) if _staged else ""
@@ -11485,7 +11415,7 @@ export EXPECT_ZIP_SHA256=<메일 본문의 ZIP SHA256>                          
 export VASP_LAUNCHER_KIND=mpirun            # mpirun|mpiexec|srun|none|wrapper
 export VASP_NPROC=%d                        # 랭크 수
 export VASP_EXE=/abs/path/to/vasp_std       # 봉인 대상 실행파일
-bash run_staged.sh 1     # 조립+봉인 → census → 1단계 → 판정
+bash run_staged.sh 1     # census → 조립+봉인 → 봉인 census → 1단계 → 판정
 bash run_staged.sh 2     # 1단계 통과 뒤에만
 ```
 ⛔ **전체를 배열로 한꺼번에 던지지 마십시오.** 위 의존성 때문에 결과가 무의미해집니다.
@@ -13049,6 +12979,9 @@ def build_bundle(a, ledger: Optional[Dict[str, Any]] = None) -> Path:
     (out / "analyze_results.py").write_text(ANALYZER)
     if getattr(a, "refs_minimal", False):
         (out / "run_staged.sh").write_text(RUN_STAGED)
+        # ⛔ 회신 BB P1 — census 는 **한 벌**이다. 러너가 이 파일을 두 번 부른다
+        #   (실행 전 · SEAL 뒤 `RECHECK_SEAL=1`). 사본을 두면 언젠가 갈린다.
+        (out / "census.py").write_text(CENSUS_PY)
         (out / "SEAL_POTCAR_ROOT.sh").write_text(SEAL_POTCAR_ROOT)
         # ⛔ 회신 AP #12 — 원고에서 PAW release 를 주장하려면 **계산 전** attestation
         (out / "POTCAR_ATTESTATION_REQUEST.md").write_text(POTCAR_ATTESTATION_REQUEST)
@@ -13847,17 +13780,44 @@ def _runner_regression(out: Path, chk) -> None:
     chk(r7c.returncode != 0 and "DENSE_PLAN.json" in (r7c.stdout + r7c.stderr),
         "⛔음성 BA 해제조건 7: `PLANNED_CONTINUATION=1` 인데 DENSE_PLAN.json 이 없으면 "
         "거부한다 (계획의 증거 없이 완료 상을 건너뛰지 않는다)")
-    (jd.parent.parent / "DENSE_PLAN.json").write_text('{"planned": true}')
+    # ⛔ 회신 BB P1 — DENSE_PLAN 은 **promote 목록**을 담아야 한다. 종전 픽스처는
+    #   `{"planned": true}` 였고, 그래서 "파일만 있으면 통과" 하는 계약을 시험이
+    #   그대로 굳히고 있었다 (리뷰어 지적: dense 전용 continuation 계약이 아니다).
+    _jrel = os.path.relpath(jd, jd.parent.parent).replace(os.sep, "/")
+    _dpp = jd.parent.parent / "DENSE_PLAN.json"
+    _dpp.write_text(json.dumps({"promote": [_jrel]}))
     log2.unlink(missing_ok=True)
     r7d = subprocess.run(["bash", "run_job.sh"], cwd=jd, capture_output=True, text=True,
                          env={**os.environ, "PATH": f"{stub_dir}:{os.environ.get('PATH','')}",
                               "VASP_LAUNCHER_KIND": "none", "VASP_EXE": str(stub_dir / "vasp_std"),
                               "STUB_LOG": str(log2), "PLANNED_CONTINUATION": "1"})
     ran7d = log2.read_text().split() if log2.is_file() else []
-    chk(r7d.returncode == 0 and ran7d == [],
-        f"BA 해제조건 7 양성: DENSE_PLAN.json 이 있으면 계획된 이어달리기가 완료 상을 "
-        f"건너뛴다 rc={r7d.returncode} 실행 {ran7d}")
-    (jd.parent.parent / "DENSE_PLAN.json").unlink(missing_ok=True)
+    chk(r7d.returncode != 0 and ran7d == []
+        and "승격할 것이 없습니다" in (r7d.stdout + r7d.stderr),
+        f"⛔음성 BB P1: dense 까지 **이미 완료**인데 PLANNED_CONTINUATION 을 주면 "
+        f"거부한다 — 승격할 것이 없는데 rc=0 을 내면 일이 된 것처럼 보인다 "
+        f"rc={r7d.returncode} 실행 {ran7d}")
+    # ⛔음성 — promote 목록에 **없는** 잡은 이어 돌리지 못한다
+    _dpp.write_text(json.dumps({"promote": ["some/other/job"]}))
+    log2.unlink(missing_ok=True)
+    _r7e = subprocess.run(["bash", "run_job.sh"], cwd=jd, capture_output=True, text=True,
+                          env={**os.environ, "PATH": f"{stub_dir}:{os.environ.get('PATH','')}",
+                               "VASP_LAUNCHER_KIND": "none", "VASP_EXE": str(stub_dir / "vasp_std"),
+                               "STUB_LOG": str(log2), "PLANNED_CONTINUATION": "1"})
+    chk(_r7e.returncode != 0 and "promote 목록에 **없습니다**" in (_r7e.stdout + _r7e.stderr),
+        "⛔음성 BB P1: DENSE_PLAN 에 **이 잡이 없으면** 이어 돌리지 못한다 "
+        "(종전엔 파일 존재만 봐서 아무 잡이나 통과했다)")
+    # ⛔음성 — promote 목록이 아예 없는 계획도 근거가 아니다
+    _dpp.write_text('{"planned": true}')
+    log2.unlink(missing_ok=True)
+    _r7f = subprocess.run(["bash", "run_job.sh"], cwd=jd, capture_output=True, text=True,
+                          env={**os.environ, "PATH": f"{stub_dir}:{os.environ.get('PATH','')}",
+                               "VASP_LAUNCHER_KIND": "none", "VASP_EXE": str(stub_dir / "vasp_std"),
+                               "STUB_LOG": str(log2), "PLANNED_CONTINUATION": "1"})
+    chk(_r7f.returncode != 0 and "promote 목록이 없습니다" in (_r7f.stdout + _r7f.stderr),
+        "⛔음성 BB P1: 무엇을 승격하는지 적히지 않은 계획은 이어달리기의 근거가 "
+        "아니다 (옛 픽스처가 바로 이 모양이었다)")
+    _dpp.unlink(missing_ok=True)
 
     # ── R8 ⛔ 회신 BA 해제조건 7 — **부분 재개도 폐지됐다.** 계획된 이어달리기만 ──
     #   종전 R8 은 `ALLOW_RESUME=1` 로 dense 만 다시 도는 것을 양성으로 봤다.
@@ -13875,7 +13835,8 @@ def _runner_regression(out: Path, chk) -> None:
         f"⛔음성 BA 해제조건 7: 부분 재개(ALLOW_RESUME)도 **거부**된다 "
         f"rc={r3.returncode} 실행 {ran3}")
     # 같은 상황을 **계획된 이어달리기**로 하면 dense 만 돈다 (정상 경로)
-    (jd.parent.parent / "DENSE_PLAN.json").write_text('{"planned": true}')
+    (jd.parent.parent / "DENSE_PLAN.json").write_text(
+        json.dumps({"promote": [_jrel]}))
     log2.unlink(missing_ok=True)
     r3b = subprocess.run(["bash", "run_job.sh"], cwd=jd, capture_output=True, text=True,
                          env={**os.environ, "PATH": f"{stub_dir}:{os.environ.get('PATH','')}",
@@ -14313,8 +14274,23 @@ def selftest() -> int:
         chk("JOBS_PARALLEL" in _rs and "xargs" in _rs and "_wave2" in _rs,
             "⛔음성 AS 10: 러너가 **실제로 병렬**로 돌고(직렬인데 MANIFEST 는 "
             "동시 8이라고 적고 있었다) 부모 의존 잡을 뒤 물결로 민다")
-        chk("run_census" in _rs and "stage_counts" in _rs and "EXPECT_MANIFEST_SHA256" in _rs,
-            "⛔음성 AR P0-7: 러너가 실행 전에 manifest 해시·exact 잡 집합·단계 분류를 "
+        # ⚠ 회신 BB P1 — census 본문이 러너에서 `census.py` 로 빠졌다. 검사도
+        #   실물이 있는 곳을 봐야 한다 (러너에는 **호출**이 남는다).
+        # ⚠ `RECHECK_SEAL=1 python3 census.py …` 도 앞 문자열을 **포함**한다 —
+        #   부분문자열로 세면 1 이 아니라 2 다 (2026-09-02 실측).
+        chk(_rs.count("python3 census.py") == 2
+            and _rs.count('RECHECK_SEAL=1 python3 census.py "$stage"') == 1,
+            "BB P1: 러너가 census **한 벌**을 두 번 부른다 (실행 전 · SEAL 뒤) — "
+            "종전엔 같은 122줄이 두 벌이었다")
+        chk((_st / "census.py").is_file()
+            and "census.py" in (json.loads((_st / "MANIFEST.json").read_text())
+                                .get("files_sha256") or {}),
+            "BB P1: census.py 가 번들에 있고 **MANIFEST 에 해시**된다 — 무결성 검사가 "
+            "사본 변조를 잡는다")
+        _cs_src = (_st / "census.py").read_text()
+        chk("run_census" in _cs_src and "stage_counts" in _cs_src
+            and "EXPECT_MANIFEST_SHA256" in _cs_src,
+            "⛔음성 AR P0-7: census 가 실행 전에 manifest 해시·exact 잡 집합·단계 분류를 "
             "확인한다 (종전엔 존재하는 job.json 만 세어 하나를 지워도 통과했다)")
         _cen = m_st.get("run_census") or {}
         chk(sorted(_cen.get("job_keys") or []) == sorted(m_st.get("planned") or {})
@@ -16551,7 +16527,7 @@ def _runner_e2e(bundle: Path, chk) -> bool:
     문자열 grep 은 "그 코드가 있다" 만 말하고 "그 코드가 막는다" 는 말하지 못한다.
 
     가짜 PP 트리 · site allowlist · stub `vasp_std` 를 만들어 실제 경로를 탄다:
-      SEAL_POTCAR_ROOT.sh (조립 + 봉인) → 실행 전 census → 단계 분류
+      실행 전 census → SEAL_POTCAR_ROOT.sh (조립 + 봉인) → 봉인 census → 단계 분류
 
     이 시험이 **못 하는 것**
       · 진짜 VASP 를 돌리지 않는다 (stub 이라 잡 실행은 실패해도 된다 —
