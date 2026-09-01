@@ -169,6 +169,27 @@
    "blank": 0.925
   },
   {
+   "key": "fS11",
+   "kind": "figure",
+   "label": "S11",
+   "page": 16,
+   "file": "fig_S11.png",
+   "caption": "Figure S11 The migration energy barrier of Li ionic conductor obtained by DFT calculation and experiments [15-28]",
+   "rotated_deg": 0,
+   "bbox": [
+    60.0,
+    80.0,
+    540.0,
+    455.0
+   ],
+   "w": 2400,
+   "h": 1875,
+   "dpi": 360,
+   "src": "85. Sup) Lai2020_Li2S_Interfacial_Layer_Amorphous_Sulfide_CSE.pdf",
+   "blank": 0.925,
+   "note": "자동 캡션 앵커가 놓쳐(SI 캡션이 그림 아래·회전 텍스트) 2026-09-01 손으로 렌더해 추가"
+  },
+  {
    "key": "t1",
    "kind": "table",
    "label": "1",

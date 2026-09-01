@@ -100,7 +100,7 @@ Li_xSb_yS_z 부동태 계면 형성**을, **양극쪽(S₈)에서는 전해질�
 | **CI-NEB: Li⁺ across LiSbS₂** | **0.23 eV** (정방향) · figure-read 역방향 ≈**0.37 eV** | `Fig. 3h` |
 | E_ads(Li₂S / LPSC) | **−5.14 eV** | **`Fig. S36` 그림 안에만** — 본문·캡션 어디에도 없다 |
 | E_ads(Li₂S / LPSC-SbO) | **−6.39 eV** | 〃 |
-| Li₂S 0.22 eV · LiF 0.67 eV | **이 논문 계산 아님 — ref [30b] 소환값** | §6.4 |
+| Li₂S 0.22 eV · LiF 0.67 eV | **이 논문 계산 아님 — ref [30b] 소환값**<br>✅ 원출처 확인 완료 → **`papers/lai2020_li2s_interfacial_layer_amorphous_sulfide_cse.md`** (Lai 는 실제로 CI-NEB 를 했다. 단 **벌크가 아니라 "층" 관통 장벽**) | §6.4 |
 
 ---
 
@@ -241,6 +241,15 @@ in-situ Raman 에서 LPSC 의 430.5 cm⁻¹ 세기 감소(P–S 분해) — LPSC
 | **N1** | **LiSbS₂ 계면상** | **0.23 eV** (정방향)<br>figure-read 역방향 ≈**0.37 eV** | **이 논문 자체 계산** (`Fig. 3h`) | *"Li⁺ across the LiSbS₂"* — **슬랩을 가로지르는 관통 경로**. 반응좌표 0→**≈9.6 Å**, 삽화상 Li 이 슬랩 **윗면 → 아랫면** 으로 이동. **어느 자리→어느 자리인지 논문에 없음** | **명시 없음** (진공 15 Å + dipole = 슬랩으로 추정) | **명시 없음** — `Fig. 3h` 의 초록 마커 **figure-read ≈ 7개**(끝점 포함) | 본문 "climbing image NEB", SI "climbing-image under elastic band" ⇒ **CI 사용이라 서술**, 설정 세부 없음 | **명시 없음.** 여분 Li 을 넣었는지 공공을 만들었는지, `NELECT`/배경전하를 건드렸는지 **한 줄도 없다** ⇒ 기본값이면 **중성 셀** | VASP / PBE-PAW / **400 eV** (공통 사양 상속으로 추정, NEB 전용 사양 미기재) | 공통값 상속 추정: 1e−5 eV / 0.02 eV/Å. **NEB 힘 임계 별도 명시 없음** |
 | **N2** | **Li₂S 층** | **0.22 eV** | ⛔ **이 논문 계산 아님 — 소환값**<br>ref **[30b] = C. Lai, C. Shu, W. Li, L. Wang, X. Wang, T. Zhang, X. Yin, I. Ahmad, M. Li, X. Tian, P. Yang, W. Tang, N. Miao, G. W. Zheng, *Nano Lett.* 2020, 20, 8273** | **이 PDF 안에 정보 0** | — | — | — | — | — | — |
 | **N3** | **LiF 층** | **0.67 eV** | ⛔ **소환값, 같은 ref [30b]** | 〃 | — | — | — | — | — | — |
+
+**✅ 원출처 확인 완료 (2026-09-01) — `papers/lai2020_li2s_interfacial_layer_amorphous_sulfide_cse.md`**
+> ref [30b] 의 **제목** (AFM 양식이라 위 서지에 비어 있던 칸): **"Stabilizing a Lithium Metal Battery by an In Situ Li₂S-modified Interfacial Layer via Amorphous-Sulfide Composite Solid Electrolyte"**,
+> *Nano Lett.* **2020**, 20(11), **8273−8281** · DOI `10.1021/acs.nanolett.0c03395` · 원고 ID `nl0c03395` · 저자 14명·순서·교신 3인(Wei Tang / Naihua Miao / G. W. Zheng) **완전 일치 ⇒ 동일 논문 확정**.
+>
+> **판정 3가지**
+> ① **Lai 2020 은 진짜로 NEB 를 했다** — SI 에 `DFT calculation methods` 절이 있고(VASP/PAW/GGA-PBE/520 eV/k-density 4 Å⁻¹/진공 20 Å/**CI-NEB**, Henkelman 2000 인용, NEB 힘 0.05 eV/Å), 본문 **`Fig. 3e`(LiF)·`Fig. 3f`(Li₂S)** 에 MEP 곡선 실물(각 7점 + 구조 인셋)이 있으며, SI **`Fig. S11`** 이 그 두 값을 **"Present work"** 로 문헌값과 나란히 그린다. ⇒ **인용 사슬은 3단이 아니라 2단(Liu 2024 → Lai 2020)에서 끝난다.**
+> ② **그러나 0.22 eV 는 벌크 Li₂S 값이 아니다.** Lai 자신이 `Fig. S11` 에서 **"Li₂S"(벌크, 문헌 = Moradabadi & Kaghazchi *APL* 2016; Cal. figure-read ≈0.45 eV)** 와 **"Li₂S layer"(자기 계산 0.22 eV)** 를 **별개 막대로 분리**했고, 본문도 *"bulk Li₂S shows low Li ion conductivity … the nanoscale Li₂S SEI exhibits high … **For these reasons**"* 로 **층을 고른 이유를 스스로 밝힌다**. 경로는 **여분 Li 한 개가 얇은 자립 슬랩을 위→아래로 뚫는 6단 다중홉**(figure-read)이다.
+> ③ **Liu 2024 의 0.23 eV(LiSbS₂ 관통) ↔ Lai 의 0.22 eV(Li₂S 층 관통) 병치는, 두 값이 적어도 *같은 종류의 양*(슬랩 관통)이라는 점에서는 그동안 우리가 본 것보다 덜 부당하다.** 다만 Lai 는 CI-NEB·힘 임계를 밝혔고 Liu 는 안 밝혔으며, **둘 다 전하 규약·셀·이미지 수가 없다** ⇒ 우리 `v2/li2s` 0.305 eV(벌크 하전 공공 단일홉)에 대해서는 **여전히 반증도 지지도 아니다**.
 
 **원문 그대로 (p.8, 좌단):**
 > *"Figure 3h shows that the calculated Li⁺ migration energy barrier through the LiSbS₂ interphase is only **0.23 eV**.
