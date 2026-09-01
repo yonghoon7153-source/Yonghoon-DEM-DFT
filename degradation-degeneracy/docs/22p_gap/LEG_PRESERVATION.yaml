@@ -309,7 +309,7 @@ cohorts:
     g9 로 간다.
 - cohort_id: g9_2026_09_01
   dir: docs/22p_gap/proj_g9
-  status: active
+  status: frozen
   prospective_legs: []
   cross_leg_comparison: not_applicable_single_leg
   무엇이_달라졌나: '54차 게이트 리뷰(53차 조건)가 producer identity 의 남은 구멍 셋을 짚었다: (1) module scope
@@ -331,6 +331,42 @@ cohorts:
     src_scoring_py_sha256: 69e69cb046f4b4ae
     analysis_spec_sha256: 43d74dd385b1f66d28cc371dd7ebbd00fc0289323e0a515114eb2b8d45d56271
     producer_semantic_sha256: d4c3dc8ff856d31a
+  runtime:
+    python: 3.11.15
+    pandas: 3.0.5
+    pyarrow: 25.0.1
+    numpy: 2.4.6
+    yaml: 6.0.3
+  legs:
+  - paired_fixed5_v4
+  frozen_reason: 55차 producer identity 정의가 또 바뀌었다 (P0-5 alias·동적 dunder) — pin 은 cohort
+    lifetime 동안 고정이므로 새 cohort 로 간다
+- cohort_id: g10_2026_09_01
+  dir: docs/22p_gap/proj_g10
+  status: active
+  prospective_legs: []
+  cross_leg_comparison: not_applicable_single_leg
+  무엇이_달라졌나: '55차 게이트 리뷰(54차 조건)가 producer identity 의 남은 문법 둘을 짚었다: (1) module-level
+    `Expr` 를 **쓰여 있는 이름**에 결속했으므로 `BOX={}; ALIAS=BOX; ALIAS.update(tol=…)` 처럼 별칭을
+    한 겹 끼우면 계산이 읽는 이름의 닫힘에서 빠졌다 (리뷰어 실측: digest 동일 · 0.02 → 0.09). 별칭 겹수는 이름
+    추적으로 이길 수 없으므로 방향을 뒤집어, docstring 이 아닌 module-level 표현식은 예약 이름 `MODULE_EFFECTS`
+    에 묶여 두 닫힘 walk 의 seed 에 **무조건** 들어간다. (2) dunder 검사가 직접 `Constant` 인자만 봤으므로
+    `getattr(f, *["__globals__"])` · `getattr(f, ["__globals__"][0])` · `getattr(f, KEY)` 가
+    그대로 통과했다 (실측: digest 동일 · 1 → 9). 이름 인자 식에서 **정적으로 읽히는 문자열**(중첩 리터럴·module
+    상수 경유)을 모아 같은 규칙을 먹인다. 둘을 고치면서 `producer_semantic_sha256` 이 `d4c3dc8ff856d31a`
+    → `effc3eef2e23fabd` 로, `compute_sha256` 이 `b12e9ff10385169e` → `0f59ad72af31703e` 로 움직였다.
+    계약 §13.3.2 대로 pin 은 cohort lifetime 동안 고정이므로 g9 을 얼리고 `g10_2026_09_01` 로 간다. **행
+    바이트는 안 움직였다** — 움직인 것은 identity 의 정의다.'
+  행_바이트가_같은가: 같다. `projection_sha256` · `restart_projection_sha256` · `fits_sha256`
+    이 g9 과 바이트 동일하다 (55차 변경은 전부 lock 순서·원장 해석·mount 해석·identity 정의이고 계산식이 아니다).
+    그래도 **cross-cohort 비교는 금지**다 — 같은 바이트라는 사실은 회귀가 확인하는 것이지 인용의 근거가 아니다.
+  pin:
+    schema_version: 3
+    compute_sha256: 0f59ad72af31703e
+    row_projection_py_sha256: 969916b10e845036
+    src_scoring_py_sha256: 69e69cb046f4b4ae
+    analysis_spec_sha256: 43d74dd385b1f66d28cc371dd7ebbd00fc0289323e0a515114eb2b8d45d56271
+    producer_semantic_sha256: effc3eef2e23fabd
   runtime:
     python: 3.11.15
     pandas: 3.0.5
@@ -430,12 +466,12 @@ legs:
     payload_index_sha256: eeb8ae8911083c992710ace2c8f255682b64930a03929f12ae72796ade174716
     member_rehash_by: tools.archive_bundle.check
     verification_receipt: docs/22p_gap/receipts/paired_fixed5_v4.validate.yaml
-    verification_receipt_core_sha256: 77235418c8f3e8e8128dccf7ae93062727182cf1208652b386b1a068aa89e0aa
+    verification_receipt_core_sha256: 2fd81e7015a279bbdd5db8f3b77dbf3bc890e1bd5c624cae037a9b6309c3e2a5
     verification_receipt_generator: docs/22p_gap/make_receipt.py
     empty_root_restore: true
     rescored_from_restored_fits: true
     validator_identity:
-      source_digest: 7b968b9bf0965402
+      source_digest: 82aeae57631f6c0c
       n_checks: 34
       ok: true
     leg_source_digest: d50295f980ccaa81

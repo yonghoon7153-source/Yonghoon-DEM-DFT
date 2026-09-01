@@ -937,6 +937,50 @@ MUTANTS = [
     #   이 변이를 재생하면 baseline 자체가 빨갛다 (검사가 아니라 환경이 다르다).
     #   회귀 자체는 실저장소에서 돌고 초록이다
     #   (`..._recorded_head_must_exist_in_this_repository`).
+    # ── 55차 (게이트 54차 반증 조건) ─────────────────────────────────────
+    # ★ P0-2 — 원장 해석은 **한 자리**다. 두 벌이면 symlink 원장의 자기 쓰기가
+    #   그 사이를 벌린다.
+    ("ledger-is-resolved-once", PRESERVE,
+     '    return Path(ledger or DEFAULT_LEDGER).resolve()',
+     '    return Path(ledger or DEFAULT_LEDGER)',
+     "same_ledger_argument_always_names_the_same_claims_root"),
+    # ★ P0-1 — 정상 finalize 도 attempt-path 부터 잡는다. 되돌린 값이 54차
+    #   상태(claim lock 만) 그대로다 — 그때 리뷰어가 친 자리다.
+    ("normal-finalize-holds-the-attempt-path", PRESERVE,
+     "    with _lifecycle_locks(leg_id, token_file, claims_root):",
+     "    with _ledger_lock(_claim_path(leg_id, claims_root)):",
+     "normal_finalize_cannot_delete_the_next_attempts_token"),
+    # ★ P0-3 — journal·anchor 를 바꾸는 경로가 공유하는 임계 구역.
+    ("anchor-repair-holds-the-lifecycle-lock", RP,
+     "    with _lifecycle_lock():\n"
+     "        entries = read_lifecycle()\n"
+     "        if not entries:\n"
+     "            return False",
+     "    if True:\n"
+     "        entries = read_lifecycle()\n"
+     "        if not entries:\n"
+     "            return False",
+     "stale_anchor_repair_cannot_rewind_the_head"),
+    # ★ P0-4 — 목적지를 **mount 관계로** 푼다 (이름으로는 bind 가 안 보인다).
+    ("destination-is-resolved-through-mounts", RP,
+     "    real = _through_bind_mounts(dest)",
+     "    real = Path(dest).resolve()",
+     "bind_mounted_alias_of_a_frozen_child_is_not_writable"),
+    # ★ P1-1 — 검사는 **첫 부작용 앞**에 있어야 검사다.
+    ("freeze-checks-the-destination-first", RP,
+     "    _assert_dest_inside_repo(dest, cohort_id)\n"
+     "    # LOCK ORDER: publish → ledger.",
+     "    # LOCK ORDER: publish → ledger.",
+     "freeze_validates_the_destination_before_its_first_side_effect"),
+    # ★ P1-2 — 증거는 **시험한 트리**에 묶인다 (commit 실재는 아무 것도 안 묻는다).
+    ("coverage-is-bound-to-the-tested-tree", MR,
+     '        got = str((rec.get("binding") or {}).get("tree_digest") or "")\n'
+     "        if not got:",
+     '        got = str((rec.get("binding") or {}).get("tree_digest") or "")\n'
+     "        if True:\n"
+     "            continue\n"
+     "        if not got:",
+     "coverage_is_bound_to_the_tree_it_actually_tested"),
     ("coverage-checks-the-recorded-head", MR,
      "    if _assert_heads_are_real(paths) != 0:\n"
      "        return 1",
@@ -965,6 +1009,28 @@ MULTI = [
          "            print(f\"✗ {path}: {name} 의 판정이 "
          "영수증과 다르다 \""),
      ], "unreadable_receipt_is_not_a_pass"),
+    # ── 55차 (게이트 54차 반증 조건) ─────────────────────────────────────
+    # ★ P0-5① — module 효과의 뿌리는 **두 닫힘 walk 의 seed** 에 함께 있다.
+    #   하나만 되돌리면 다른 쪽이 여전히 값을 담아 digest 를 움직인다.
+    ("module-effects-are-an-unconditional-root", RP, [
+        ("    if MODULE_EFFECTS in defs:                            # 55차 P0-5①\n"
+         '        todo.append(("rp", MODULE_EFFECTS))',
+         "    if False:\n"
+         '        todo.append(("rp", MODULE_EFFECTS))'),
+        ("    if MODULE_EFFECTS in defs:                            # 55차 P0-5①\n"
+         "        todo.append(MODULE_EFFECTS)",
+         "    if False:\n"
+         "        todo.append(MODULE_EFFECTS)"),
+     ], "module_effect_through_an_alias_still_moves_the_producer_digest"),
+    # ★ P0-5② — 감싼 이름을 정적으로 읽는 자리.
+    ("wrapped-dunder-names-are-refused", RP, [
+        ("                    for nm in _static_strings(arg, consts):",
+         "                    for nm in []:"),
+        ("        elif isinstance(sub, ast.Name) and consts and sub.id in consts:\n"
+         "            out.append(consts[sub.id])",
+         "        elif False:\n"
+         "            out.append(consts[sub.id])"),
+     ], "dunder_named_indirectly_is_still_refused"),
     # ★ 54차 P0-1 — 발급이 얼린 cohort 로 들어가는 것을 막는 자리가 둘이다:
     #   commit 시점의 cohort 재검사(발급 쪽)와 살아 있는 실행권 검사(동결 쪽).
     #   하나만 되돌리면 다른 하나가 여전히 막는다 — 함께 되돌려야 관측된다.
