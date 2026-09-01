@@ -197,6 +197,57 @@ def path_overlay(case, mark=True, verbose=True):
     return nm, len(mov), at
 
 
+def crop_local(case, radius=6.0, mark=True, verbose=True):
+    """경로 **주변만** 남긴 국소 덩어리. VESTA 로 볼 때 셀 전체는 못 읽는다.
+
+    슈퍼셀을 통째로 열면 원자가 수백 개라 경로가 파묻힌다 (2026-09-01 실측:
+    li2s 3×3×3 은 86개, 경계 타일링까지 켜면 수천 개). 이동 경로에서 `radius` Å
+    안의 골격만 남기면 배위 다면체가 보이는 크기가 된다.
+
+    ⛔ 못 하는 것
+      · **주기경계를 자른다.** 이 파일은 보기 전용이고 계산 입력이 아니다
+        (잘린 면의 원자가 배위를 잃는다).
+      · 어느 반경이 옳은지 정하지 않는다 — 4~8 Å 를 바꿔 보고 고르는 것이다.
+    """
+    crd, dat, base, rep, label = CASES[case]
+    imgs = read_crd(os.path.join(RAW, crd))
+    _b = read(os.path.join(ROOT, base))
+    cell = _b.cell.array * rep
+
+    d = np.linalg.norm(imgs[-1][1] - imgs[0][1], axis=1)
+    mov = np.where(d > MOVE_MIN_A)[0]
+    path = np.array([imgs[k][1][i] for k in range(len(imgs)) for i in mov])
+
+    # 골격 원자 — 경로의 어느 점에서든 radius 안이면 남긴다 (주기 이미지 포함)
+    sym0, pos0 = imgs[0]
+    keep = []
+    for i in range(len(sym0)):
+        if i in set(mov):
+            continue
+        probe = Atoms(symbols=["H"] * (len(path) + 1),
+                      positions=np.vstack([path, pos0[i]]), cell=cell, pbc=True)
+        if probe.get_distances(len(path), range(len(path)), mic=True).min() <= radius:
+            keep.append(i)
+
+    S = [sym0[i] for i in keep]
+    P = [list(pos0[i]) for i in keep]
+    for k, (sym, pos) in enumerate(imgs):
+        for i in mov:
+            S.append(sym[i] if (k in (0, len(imgs) - 1) or not mark) else PATH_MARK)
+            P.append(list(pos[i]))
+
+    at = Atoms(symbols=S, positions=np.array(P), cell=cell, pbc=True)
+    os.makedirs(OUT, exist_ok=True)
+    nm = f"{case}_path_local{radius:g}A"
+    write(os.path.join(OUT, nm + ".vasp"), at, format="vasp", direct=True, sort=True)
+    write(os.path.join(OUT, nm + ".xyz"), at, format="extxyz")
+    if verbose:
+        print(f"  {label}: 반경 {radius:g} Å 안 골격 {len(keep)}/{len(sym0)-len(mov)} "
+              f"+ 경로 {len(path)} = {len(S)}개")
+        print(f"    → db/structures/neb_paths/{nm}.{{vasp,xyz}}")
+    return nm, at
+
+
 def selftest():
     """⛔음성 포함."""
     ok = [0, 0]
@@ -249,6 +300,14 @@ def selftest():
     _, nm2, at2 = path_overlay("li3nd_ccc", verbose=False)
     chk(nm2 >= 1, "li3nd c→c 도 이동 원자를 찾는다 (%d개)" % nm2)
 
+    _, c6 = crop_local("li2s", 6.0, verbose=False)
+    _, c4 = crop_local("li2s", 4.0, verbose=False)
+    chk(len(c6) < 86, "국소 6 Å 가 전체(86)보다 작다 (%d)" % len(c6))
+    chk(len(c4) < len(c6), "⛔음성 반경을 줄이면 더 작아진다 (4 Å %d < 6 Å %d)"
+        % (len(c4), len(c6)))
+    chk(sum(1 for x in c4.get_chemical_symbols() if x == PATH_MARK) == 5,
+        "⛔음성 잘라도 경로 7점은 **전부** 남는다 (표지 5 + 양끝 2)")
+
     print("selftest: %d 통과 / %d 실패" % (ok[0], ok[1]))
     return 0 if ok[1] == 0 else 1
 
@@ -260,6 +319,8 @@ def main():
     ap.add_argument("--all", action="store_true", help="7 이미지 전부 뽑는다")
     ap.add_argument("--overlay", action="store_true",
                     help="골격 + 이동원자 7위치를 **한 파일**로 (경로 한 장 보기)")
+    ap.add_argument("--crop", type=float, default=None, metavar="R",
+                    help="경로에서 R Å 안의 골격만 남긴 **국소** 파일 (보기 전용)")
     ap.add_argument("--no_mark", action="store_true",
                     help="겹침에서 중간 위치도 실제 원소로 (표지 He 안 씀)")
     ap.add_argument("--selftest", action="store_true")
@@ -270,6 +331,8 @@ def main():
         build(c, dump_all=a.all)
         if a.overlay:
             path_overlay(c, mark=not a.no_mark)
+        if a.crop:
+            crop_local(c, a.crop, mark=not a.no_mark)
     print("\n⚠ VESTA: .vasp 로 열어야 Boundary 타일링이 된다 (xyz 는 격자가 없다).")
     print("⚠ 이 구조들의 장벽은 citable=false 다 — db/properties/sei_neb.json 참조.")
     return 0
