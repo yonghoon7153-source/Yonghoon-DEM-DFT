@@ -1,0 +1,7 @@
+{
+ "arms": 2,
+ "consumer": "scripts/ion_r_verdict.py",
+ "not_a_cohort": "cohort 판정(16팔 factorial)의 전제 밖이다",
+ "schema": "reduced-arm/2-diagnostic",
+ "source_dir": "prereg_v2_vox015_sph_b048_sg7854_arm1_lean2_r5ef6da47ca4e_arm1"
+}

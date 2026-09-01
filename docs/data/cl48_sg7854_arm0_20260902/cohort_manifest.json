@@ -1,0 +1,39 @@
+{
+ "arms": 2,
+ "diagnostic": {
+  "arms": 2,
+  "consumer": "scripts/ion_r_verdict.py",
+  "not_a_cohort": "cohort 판정(16팔 factorial)의 전제 밖이다",
+  "schema": "reduced-arm/2-diagnostic",
+  "source_dir": "prereg_v2_vox015_sph_b048_sg7854_arm1_lean2_r5ef6da47ca4e_arm1"
+ },
+ "equivalence_checked": true,
+ "equivalence_modes": [
+  "ion_r_verdict 소비 필드 + manifest"
+ ],
+ "files": [
+  {
+   "dropped": [],
+   "name": "p2_DBE_sph_a0.json",
+   "out_bytes": 7560,
+   "out_sha256": "5c03ec7a23dc18a5d1defb57dd74761f1f486ee8a3349ffca687ff7e6ed012d3",
+   "src_bytes": 130751482,
+   "src_sha256": "2e9a2896e4f339baf45d51e58d55299efe33ab1a5ee50b9a1f7ae1f88b3d098b"
+  },
+  {
+   "dropped": [],
+   "name": "p2_SBE_sph_a0.json",
+   "out_bytes": 7403,
+   "out_sha256": "256ee4e6655430b464f3f932a4760bf7d2bb5d487cc182e5cc6ccd91ebf8f76f",
+   "src_bytes": 132129056,
+   "src_sha256": "be312d361005432d80ddb71369d0b18d38830cfb3fe01e9ee05128b531662576"
+  }
+ ],
+ "max_list": 64,
+ "note": "scalar decision-audit package — solver/viz 재생용 원자료가 아니다 (R9 Q5)",
+ "receipt_sha256": "2b4eab5832de40931c5874706dfe045a124aaa64cbcff14ff3d06aefbb597328",
+ "schema": "reduced-arm/2-diagnostic",
+ "source_dir": "prereg_v2_vox015_sph_b048_sg7854_arm1_lean2_r5ef6da47ca4e_arm1",
+ "tool": "scripts/reduce_arm_payloads.py",
+ "tool_commit": "2951db678c03b4de98118e6343cc61b15b78d543+dirty"
+}
