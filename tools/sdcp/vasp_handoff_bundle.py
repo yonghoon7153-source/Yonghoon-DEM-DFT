@@ -6494,6 +6494,30 @@ def _pick(jobs, **want):
     return sorted(out)
 
 
+def _expected_pose_keys(man, f, seed=None):
+    """조각 f 의 **기대 자세 키**를 동결된 manifest 에서 고른다 (이름 파싱 금지).
+
+    ⛔⛔ 회신 BB P1 (2026-09-02) — 이 술어가 **두 벌**이었다. BA P1 이 C1(J_f) 쪽만
+      구조화 필드로 고쳤고, C3(Edisp) 쪽은 여전히 `startswith("prospective/")` +
+      `endswith(SEED_MAIN)` 로 **잡 키 문자열**을 파싱했다. 게다가 그쪽은
+      d3-off 쌍둥이를 기대에는 넣고 선택(`d3="on"`)에서는 빼서
+      **정상 2자세×2seed 에서도 used<required → 영구 unresolved** 였다.
+      ⇒ 술어를 하나로 합친다. 두 벌이면 또 갈라진다 (이번이 두 번째다).
+
+    ⚠ `planned.meta` 에는 `d3` 가 없다 — d3-off 쌍둥이는 `d3_twin_of` 유무로 뺀다
+      (있는 필드로만 맞춘다).
+    """
+    _sd = SEED_MAIN if seed is None else seed
+    out = []
+    for k, v in (man.get("planned") or {}).items():
+        m = (v or {}).get("meta") or {}
+        if (m.get("kind") == "prospective_pose" and m.get("fragment") == f
+                and m.get("seed") == _sd and m.get("vacconv") is None
+                and not m.get("d3_twin_of")):
+            out.append(k)
+    return sorted(out)
+
+
 def _twin_of(jobs, parent_key):
     """그 잡의 D3-off 쌍둥이 키. `d3_twin_of` 로만 찾는다 (접미어 추측 금지)."""
     for jn, jr in jobs.items():
@@ -7644,12 +7668,7 @@ def closure_C1(man, jobs, E, emol, frags):
         #   ⚠ `planned.meta` 는 `kind·fragment·role·seed·basin_id·vacconv·
         #     species_order` 만 싣는다 (`d3` 는 없다). 그래서 d3-off 쌍둥이는
         #     `d3_twin_of` 유무로 뺀다 — 있는 필드로만 맞춘다.
-        _PRED = (("kind", "prospective_pose"), ("fragment", f), ("seed", SEED_MAIN),
-                 ("vacconv", None))
-        _want_keys = sorted(
-            k for k, v in (man.get("planned") or {}).items()
-            if all((((v or {}).get("meta") or {}).get(_k) == _v) for _k, _v in _PRED)
-            and not (((v or {}).get("meta") or {}).get("d3_twin_of")))
+        _want_keys = _expected_pose_keys(man, f)      # 술어는 한 곳이다 (BB P1)
         n_want = len(_want_keys)
         if not n_want:
             res["by_frag"][f] = {"verdict": "unresolved",
@@ -8011,12 +8030,11 @@ def closure_C3(man, jobs, E, frags):
             rows.append({"job": jn, "delta_eV": round(d_cx - d_slab - d_mol, 6)})
         # ★ 기대 자세 수는 **동결된 manifest** 에서 온다 (C1 과 같은 규율) — 회수분에서
         #   세면 자세가 통째로 빠져도 기대가 같이 줄어 영영 못 잡는다.
-        n_want = len([k for k in (man.get("planned") or {})
-                      if k.startswith("prospective/")
-                      and k.rsplit("/", 1)[-1].startswith(f + "__")
-                      and k.endswith(SEED_MAIN)
-                      and not (((man["planned"][k] or {}).get("meta") or {})
-                               .get("vacconv"))])
+        # ⛔ 회신 BB P1 — 여기가 **이름 파싱**이었고 d3-off 쌍둥이를 기대에만 넣어
+        #   정상 묶음에서도 used<required 로 영구 unresolved 였다. C1 과 **같은
+        #   술어**를 쓴다.
+        _want_keys = _expected_pose_keys(man, f)
+        n_want = len(_want_keys)
         if not n_want:
             res["by_frag"][f] = {"verdict": "unresolved",
                                  "why": "MANIFEST.planned 에 이 조각의 pm1 자세가 없다"}
@@ -8024,6 +8042,12 @@ def closure_C3(man, jobs, E, frags):
         if miss or len(rows) != n_want or not rows:
             res["by_frag"][f] = {"verdict": "unresolved", "missing": miss,
                                  "n_used": len(rows), "n_required": n_want,
+                                 "required_keys": _want_keys[:6],
+                                 "used_keys": [x["job"] for x in rows][:6],
+                                 "예상밖": sorted(set(x["job"] for x in rows)
+                                                  - set(_want_keys))[:4],
+                                 "누락": sorted(set(_want_keys)
+                                                - set(x["job"] for x in rows))[:4],
                                  "why": "자세 하나라도 Edisp 가 없거나 검사에 걸리면 "
                                         "unresolved — 부분집합 평균을 내지 않는다"}
             continue
@@ -8453,16 +8477,35 @@ def _closure_estimand(man, results, E, emol, jobs, merge_info=None):
         #   한둘이 빠지면 range 가 자동으로 좁아져 **거짓 PASS** 가 된다(C1 과 같은
         #   편향). 기대 자세 수는 동결 manifest 에서 세고, 그 수만큼 두 seed 가
         #   **모두** 유효할 때만 낸다.
-        _want = len({k.rsplit("/", 1)[-1].split("__")[1]
-                     for k in (man.get("planned") or {})
-                     if k.startswith("prospective/")
-                     and k.rsplit("/", 1)[-1].startswith(f + "__")
-                     and len(k.rsplit("/", 1)[-1].split("__")) > 2})
+        # ⛔⛔ 회신 BB P1 (2026-09-02) — **고르는 술어와 세는 술어가 또 달랐다.**
+        #   선택은 `_is(jn, f)` 로 ALT_ROLES(sensitivity·stress_sensitivity)를 빼는데
+        #   기대는 잡 키를 `split("__")[1]` 로 파싱해 **대안 자세까지 셌다.** 그래서
+        #   정상 2자세×2seed 에서도 `n_pose_used=1 · n_pose_required=2` 로
+        #   **영구 unresolved** 였다 (BA P1 이 C1 에서 고친 것과 같은 형태의 세 번째).
+        #   ⇒ 구조화 meta 로, **선택과 같은 역할 정책**으로 센다.
+        _want_ids = {(_p.get("meta") or {}).get("basin_id")
+                     for _p in (man.get("planned") or {}).values()
+                     if ((_p.get("meta") or {}).get("kind") == "prospective_pose"
+                         and (_p.get("meta") or {}).get("fragment") == f
+                         and ((_p.get("meta") or {}).get("role") or "primary")
+                         not in ALT_ROLES
+                         and (_p.get("meta") or {}).get("vacconv") is None
+                         and not (_p.get("meta") or {}).get("d3_twin_of")
+                         and (_p.get("meta") or {}).get("basin_id"))}
+        _want = len(_want_ids)
         if not _want or len(dp) != _want:
             out.setdefault("pose_basin_interaction", {})[f] = {
                 "판정": "unresolved", "n_pose_used": len(dp), "n_pose_required": _want,
+                # ⛔ 회신 BB P1 — 수만 보면 원인을 못 찾는다. 어느 자세가 어긋났는지.
+                "required_pose_ids": sorted(x for x in _want_ids if x)[:6],
+                "used_pose_ids": sorted(dp)[:6],
+                "누락": sorted(_want_ids - set(dp))[:4],
+                "예상밖": sorted(set(dp) - _want_ids)[:4],
                 "why": ("계획한 자세 전부가 두 seed 다 유효해야 한다 — 부분집합은 "
-                        "range 를 좁혀 통과 쪽으로 편향된다 (회신 AB P0-7)")}
+                        "range 를 좁혀 통과 쪽으로 편향된다 (회신 AB P0-7). "
+                        "⚠ 기대 수는 **선택과 같은 술어**로 센다: 대안 역할"
+                        "(sensitivity·stress_sensitivity)·vacconv·d3-off 제외 "
+                        "(회신 BB P1)")}
             continue
         jf = max(dp.values()) - min(dp.values())
         out.setdefault("pose_basin_interaction", {})[f] = {
@@ -14651,6 +14694,50 @@ def selftest() -> int:
     #   없다(분석기는 MANIFEST 의 provenance 를 **읽기만** 한다). 그래서
     #   `_selftest_closure`(배포본에서도 도는 묶음) 안에 두면 NameError 다.
     #   건너뛰기로 덮지 않고 여기로 옮긴다 (2026-09-02 실측).
+    # ══ 회신 BB P1 — 기대 자세 술어가 **한 곳**인가 (두 벌이면 또 갈라진다) ══
+    _AN = ANALYZER
+    # ⚠ `startswith("prospective/")` 는 **selftest 픽스처**(가짜 planned 조립)에도
+    #   있다 — 그건 정당하다. 막아야 하는 것은 **production 기대 수 계산**이 잡 키를
+    #   파싱하는 것이다. 그 두 자리를 이름으로 짚는다 (전수 grep 은 헛경보다).
+    chk(_AN.count("def _expected_pose_keys(") == 1
+        and _AN.count("_expected_pose_keys(man, f)") == 2
+        and '.rsplit("/", 1)[-1].startswith(f + "__")' not in _AN
+        and '{k.rsplit("/", 1)[-1].split("__")[1]' not in _AN,
+        "BB P1: production 기대 수 계산에서 **잡 키 파싱**이 사라졌다 "
+        "(C3 Edisp · J_f 두 자리 — 선택은 구조화 필드인데 기대만 문자열이었다)")
+    _ns2 = {}
+    exec(compile(ANALYZER, "<analyzer-template>", "exec"), _ns2)
+    _epk = _ns2["_expected_pose_keys"]
+    _SD = _ns2["SEED_MAIN"]
+    _pl = {
+        "prospective/f__p0__%s" % _SD: {"meta": {"kind": "prospective_pose",
+                                                 "fragment": "f", "seed": _SD}},
+        "prospective/f__p1__%s" % _SD: {"meta": {"kind": "prospective_pose",
+                                                 "fragment": "f", "seed": _SD}},
+        # d3-off 쌍둥이 — 기대에 **들어가면 안 된다** (선택은 d3="on" 만 본다)
+        "prospective/f__p0__%s_nod3" % _SD: {"meta": {
+            "kind": "prospective_pose", "fragment": "f", "seed": _SD,
+            "d3_twin_of": "prospective/f__p0__%s" % _SD}},
+        # vacconv — 자세가 아니다
+        "prospective/f__p0__%s_c2" % _SD: {"meta": {
+            "kind": "prospective_pose", "fragment": "f", "seed": _SD,
+            "vacconv": True}},
+        # 다른 조각 · 다른 seed
+        "prospective/g__p0__%s" % _SD: {"meta": {"kind": "prospective_pose",
+                                                 "fragment": "g", "seed": _SD}},
+        "prospective/f__p0__other": {"meta": {"kind": "prospective_pose",
+                                              "fragment": "f", "seed": "other"}},
+    }
+    _got = _epk({"planned": _pl}, "f")
+    chk(len(_got) == 2 and all(x.endswith(_SD) for x in _got),
+        "BB P1 양성: 기대 자세가 **2개**다 — d3-off 쌍둥이·vacconv·다른 조각·다른 "
+        "seed 를 전부 뺀다 (실제 %s)" % [x.rsplit("/", 1)[-1] for x in _got])
+    chk(not any("nod3" in x or "_c2" in x for x in _got),
+        "⛔음성 BB P1 (리뷰어 재현): d3-off 쌍둥이를 기대에 넣으면 선택(d3=on)과 "
+        "어긋나 **정상 2자세×2seed 에서도 used<required → 영구 unresolved** 였다")
+    chk(_epk({"planned": {"x": {"meta": {"kind": "clean_slab"}}}}, "f") == [],
+        "⛔음성 BB P1: 자세가 아닌 잡은 기대에 들어가지 않는다")
+
     _pv_live = provenance_closure()
     chk(_pv_live["n_files"] >= 2
         and any(v["kind"] == "generator" for v in _pv_live["files"].values())
