@@ -783,6 +783,44 @@ export RUNNER_TOKEN="$RUNID"
 #   교착하지 않도록 알려 준다 (단독 실행이면 SEAL 이 스스로 잡는다).
 BUNDLE_LOCK_HELD=1 bash SEAL_POTCAR_ROOT.sh || { echo "POTCAR 조립·봉인 실패 — 중단"; exit 1; }
 
+# ⛔⛔ 회신 AZ P0-7 (2026-09-01) — **attestation 을 생산 전에 강제**한다.
+#   봉인은 "이 계산들이 하나의 트리에서 나왔고 그 트리가 생산 전에 고정됐다" 까지만
+#   보증한다. **그 트리가 승인된 PAW dataset 인지**는 보증하지 않는다. VASP 는 여러
+#   PAW 세트와 suffix variant 를 배포하므로 dataset 신원은 계산 조건의 일부다.
+#   ⇒ 사후 provenance 만으로는 원고 인용 자격이 안 선다 (회신 AZ Q4).
+#   이 게이트는 MANIFEST 의 `potcar_identity_policy` 가 정한다:
+#     require_attestation  → attestation 이 없으면 **한 잡도 안 돈다** (원고용)
+#     post_hoc             → 경고만 하고 진행 (탐색용 — 원고 인용 불가)
+_AP=$(python3 -c 'import json;print((json.load(open("MANIFEST.json")).get("potcar_identity_policy") or {}).get("mode") or "post_hoc")' 2>/dev/null || echo post_hoc)
+if [ "$_AP" = "require_attestation" ]; then
+  if [ ! -s POTCAR_ATTESTATION.json ]; then
+    echo "⛔ POTCAR_ATTESTATION.json 이 없습니다 — 이 묶음은 **원고용 정책**"
+    echo "   (potcar_identity_policy.mode=require_attestation)이라 attestation 없이는"
+    echo "   한 잡도 돌리지 않습니다 (회신 AZ P0-7)."
+    echo "   첫 VASP 실행 **전에** 만드십시오:  bash MAKE_POTCAR_ATTESTATION.sh"
+    exit 2
+  fi
+  python3 - <<'PYATT' || exit 2
+import json, sys
+try:
+    a = json.load(open("POTCAR_ATTESTATION.json"))
+    s = json.load(open("POTCAR_ROOT_SEAL.json"))
+except Exception as e:
+    sys.exit("⛔ attestation/봉인 파싱 실패: %r" % (e,))
+if not a.get("sealed_before_production"):
+    sys.exit("⛔ attestation 이 생산 전에 만들어졌다는 표시가 없습니다")
+_as, _ss = a.get("source_sha256") or {}, s.get("source_sha256") or {}
+_d = sorted(k for k in set(_as) | set(_ss) if _as.get(k) != _ss.get(k))
+if _d:
+    sys.exit("⛔ attestation 과 root 봉인의 원본 SHA 가 다릅니다: %s" % _d[:4])
+print("  ✔ POTCAR attestation 확인 (생산 전 · 봉인과 일치)")
+PYATT
+else
+  echo "  ⚠ POTCAR 신원 정책 = post_hoc — attestation 없이 진행합니다."
+  echo "     이 묶음의 결과는 **탐색용**이고 원고 인용 자격이 서지 않습니다"
+  echo "     (승인된 PAW dataset 인지 확인 못 함 · 회신 AZ P0-7·Q4)."
+fi
+
 # ⛔⛔ 회신 AR P0-7 · 해제조건 8 — **실행 전 census.** 종전엔 존재하는 job.json
 #   만 분류하고 디렉터리 수만 비교해서, job.json 하나를 지워도 통과했다.
 #   ⇒ ① MANIFEST 해시(봉인/EXPECT 와 결박) ② 계획 잡 **집합** 완전일치
@@ -10120,12 +10158,21 @@ def _return_contract(man: Dict[str, Any]) -> Dict[str, Any]:
     if staged:
         root.append("STAGE1_PASS.json (1단계 통과 receipt)")
     # ⛔ 회신 AY P1 — attestation 이 반송 목록에는 있는데 주 실행 절차에 생성 단계가
-    #   없어 필수/선택이 갈렸다. **선택**으로 통일하고 그 대가를 명시한다 —
-    #   POTCAR 은 1저자 결정(2026-09-01)으로 외주처 소관이므로 pin 을 걸지 않는다.
-    root.append("POTCAR_ATTESTATION.json — **선택**. 주 실행 절차에 생성 단계가 "
-                "없으므로 만들지 않아도 됩니다. 다만 없으면 PAW release 를 단정하지 "
-                "못하고 **조건부**로만 보고합니다 (MAKE_POTCAR_ATTESTATION.sh 로 만들려면 "
-                "**첫 VASP 실행 전에만** 가능합니다 — 회신 AR P0-6)")
+    #   없어 필수/선택이 갈렸다.
+    # ⛔⛔ 회신 AZ P0-7 (2026-09-01) — 필수/선택을 **정책이 정한다.** 사후 provenance
+    #   만으로는 승인된 PAW dataset 인지 판정할 수 없어 원고 인용 자격이 안 선다.
+    if ((man or {}).get("potcar_identity_policy") or {}).get("mode") == "require_attestation":
+        root.append("POTCAR_ATTESTATION.json — 🔴 **필수**. 이 묶음은 원고용 정책이라 "
+                    "attestation 없이는 러너가 **한 잡도 시작하지 않습니다**. "
+                    "첫 VASP 실행 **전에** `bash MAKE_POTCAR_ATTESTATION.sh` 를 "
+                    "돌려 주십시오 (회신 AZ P0-7 · AR P0-6)")
+    else:
+        root.append("POTCAR_ATTESTATION.json — **선택** (탐색용 정책). 없어도 러너는 "
+                    "돕니다. ⚠ 다만 그 결과는 **원고 인용 자격이 없습니다** — 사후 "
+                    "provenance 는 무엇을 썼는지만 기록하고 그것이 승인된 PAW dataset "
+                    "인지 판정하지 못합니다 (회신 AZ P0-7·Q4). 만들려면 "
+                    "`MAKE_POTCAR_ATTESTATION.sh` 를 **첫 VASP 실행 전에만** "
+                    "돌릴 수 있습니다 (회신 AR P0-6)")
     return {
         "⚠_정본": "이 구조가 반송 계약의 정본이다 — README·SUBMIT 은 이것의 렌더다 "
                   "(회신 AV P0-4)",
@@ -12103,6 +12150,29 @@ def build_bundle(a, ledger: Optional[Dict[str, Any]] = None) -> Path:
     #   외주처가 조립기를 한 번 돌려 보낸 SHA 를 여기 박은 뒤 재발행한다.
     #   비어 있으면 분석기가 '잡 사이 일치만 확인했다' 를 결과에 적는다 (fail-open 아님 —
     #   불일치는 여전히 막고, 한계를 명시한다).
+    # ⛔ 회신 AZ P0-7 — 신원 정책을 MANIFEST 에 봉인한다. 러너가 이것을 읽고 게이트한다.
+    _idm = str(getattr(a, "potcar_identity", "post_hoc") or "post_hoc")
+    man["potcar_identity_policy"] = {
+        "mode": _idm,
+        "manuscript_citable": _idm == "require_attestation" or bool(getattr(a, "potcar_pin", None)),
+        "무엇을_보증하나": (
+            "root 봉인은 '이 계산들이 하나의 트리에서 나왔고 그 트리가 생산 전에 "
+            "고정됐다' 까지만 보증한다. **그 트리가 승인된 PAW dataset 인지는 "
+            "보증하지 않는다** — VASP 는 여러 PAW 세트·suffix variant 를 배포한다."),
+        "⛔_post_hoc_의_한계": (
+            "사후 POTCAR_PROVENANCE.json 은 **무엇을 썼는지**는 기록하지만 그것이 "
+            "승인된 dataset 인지 **판정하지 못한다**. 그래서 이 모드의 결과는 "
+            "탐색용이고 원고 인용 자격이 서지 않는다 (회신 AZ P0-7·Q4)."),
+        "원고용으로_가는_두_길": [
+            "① 생성 전 `--potcar_pin <json>` — 외주처 sysadmin 에게 원본 SHA256·"
+            "VASP 버전·승인 트리 확인을 받아 채운다 (외부 기준)",
+            "② 생성 시 `--potcar_identity require_attestation` — 외주처가 첫 VASP "
+            "실행 **전에** `bash MAKE_POTCAR_ATTESTATION.sh` 를 돌려야 러너가 시작한다. "
+            "그리고 1저자가 조건부-PP 정책을 비준한다"],
+        "현재_판정": ("원고 인용 가능 (신원 근거 있음)"
+                      if (_idm == "require_attestation" or getattr(a, "potcar_pin", None))
+                      else "⛔ **탐색용** — 원고 인용 불가 (승인 dataset 확인 없음)"),
+    }
     _pin = getattr(a, "potcar_pin", None)
     if _pin and os.path.isfile(_pin):
         man["potcar_pin"] = json.loads(Path(_pin).read_text())
@@ -14252,6 +14322,26 @@ def selftest() -> int:
     chk(isinstance(m_sp.get("cost_frozen"), dict)
         and m_sp["cost_frozen"].get("total_wall_h"),
         f"비용이 MANIFEST 에 동결됐다 ({(m_sp.get('cost_frozen') or {}).get('total_wall_h')} h)")
+    # ══ 회신 AZ P0-7 — POTCAR 신원 정책이 **산출물에 봉인되고 러너를 게이트하나** ══
+    _pol = m_sp.get("potcar_identity_policy") or {}
+    chk(_pol.get("mode") in ("post_hoc", "require_attestation"),
+        "회신 AZ P0-7: POTCAR 신원 정책이 MANIFEST 에 봉인된다 (%r)" % _pol.get("mode"))
+    chk(_pol.get("mode") != "post_hoc" or _pol.get("manuscript_citable") is False,
+        "⛔음성 AZ P0-7·Q4: `post_hoc` 는 **원고 인용 자격이 없다** — 사후 provenance 는 "
+        "무엇을 썼는지만 기록하고 승인 dataset 인지 판정하지 못한다")
+    chk("탐색용" in str(_pol.get("현재_판정")) or _pol.get("manuscript_citable"),
+        "회신 AZ P0-7: post_hoc 이면 산출물이 스스로 **탐색용**이라고 적는다")
+    _rs = "".join(RUN_STAGED if isinstance(RUN_STAGED, str) else "")
+    chk("require_attestation" in _rs and "POTCAR_ATTESTATION.json 이 없습니다" in _rs,
+        "회신 AZ P0-7: 러너가 정책을 읽고 attestation 없으면 **한 잡도 안 돈다**")
+    chk("sealed_before_production" in _rs and "봉인의 원본 SHA 가 다릅니다" in _rs,
+        "회신 AZ P0-7: attestation 이 **생산 전**이고 봉인과 같은 트리인지 본다")
+    _rc9 = _return_contract(dict(m_sp, potcar_identity_policy={"mode": "require_attestation"}))
+    chk(any("필수" in x for x in _rc9["root"] if "ATTESTATION" in x),
+        "회신 AZ P0-7: 정책이 require_attestation 이면 반송 계약이 **필수**로 바뀐다")
+    _rc0 = _return_contract(dict(m_sp, potcar_identity_policy={"mode": "post_hoc"}))
+    chk(any("원고 인용 자격이 없습니다" in x for x in _rc0["root"] if "ATTESTATION" in x),
+        "⛔음성 AZ P0-7: post_hoc 이면 반송 계약이 **인용 자격 없음**을 명시한다")
     chk("branch_policy" in (m_sp.get("submission") or {})
         and "미주장" in m_sp["submission"]["branch_policy"],
         "branch policy 가 MANIFEST 에 명시 (게이트로 막는다는 옛 문구 제거)")
@@ -16128,6 +16218,15 @@ def main():
                     help="사전 승인된 POTCAR/VASP 신원 JSON 경로 "
                          "({source_sha256:{원소:sha}, vasp_version:'...'}). "
                          "이것이 **외부 기준**이다 — 없으면 회신끼리의 일치만 본다")
+    # ⛔ 회신 AZ P0-7 (2026-09-01) — 사후 provenance 만으로는 **원고 인용 자격이 안 선다.**
+    #   봉인은 트리가 하나로 고정됐음까지만 보증하고, 그 트리가 승인된 PAW dataset 인지는
+    #   못 본다. VASP 는 여러 PAW 세트·suffix variant 를 배포하므로 dataset 신원은
+    #   계산 조건의 일부다. 두 길 중 하나여야 한다: pin(사전) 또는 attestation(생산 전).
+    ap.add_argument("--potcar_identity", choices=("post_hoc", "require_attestation"),
+                    default="post_hoc",
+                    help="POTCAR 신원 정책. post_hoc=사후 대조만(**탐색용** — 원고 인용 "
+                         "불가) · require_attestation=생산 전 attestation 없으면 러너가 "
+                         "한 잡도 안 돈다(원고용). 회신 AZ P0-7·Q4")
     ap.add_argument("--cell_c2", type=float, default=None,
                     help="진공 두께 수렴 시험용 **둘째** 셀 높이 [Å]. 주면 primary 자세를 "
                          "주 seed 로 이 높이에서도 낸다 (vacconv/). 판정은 두 조각의 "
