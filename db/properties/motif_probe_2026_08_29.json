@@ -1,4 +1,5 @@
 {
+ "지위": "⛔ **범위 밖 (2026-08-31 표시)** — 모티프 대비(Stage A C4)는 회신 Z P0-5 로 Stage B 뒤로 미뤄졌고, Stage A 자체가 C-12 로 대체됐다. 이 probe 는 **던지지 않았다**. 선정 규칙과 UMA 격차(0.265 eV)는 기록으로 유효하다. ⚠ `freeze_sha256` 는 해시가 아니라 선언 문자열이다 — 무결성 대조에 쓰지 말 것.",
  "schema": "prospective_basins/v1",
  "date": "2026-08-29",
  "freeze_sha256": "motif_probe_declared_before_dft_2026_08_29",

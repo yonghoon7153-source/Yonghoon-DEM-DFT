@@ -1,178 +1,209 @@
 {
-  "property": "citation_hazards",
-  "purpose": "db 파일마다 붙어 있는 **인용 금지·보류·조건부** 단서를 한 곳에 모은다. 각 파일 안에 흩어져 있어 원고·그림을 쓸 때 놓친다 — 2026-08-12 provenance 전수조사에서 파일을 열어 보고서야 발견한 것들이다.",
-  "how_to_use": "원고나 그림에 db 값을 넣기 전에 이 표를 먼저 본다. level=BLOCKED 는 어떤 형태로도 인용 금지, CONDITIONAL 은 단서와 함께만.",
-  "collected": "2026-08-12",
-  "hazards": [
-    {
-      "file": "db/properties/sei_neb.json",
-      "level": "BLOCKED",
-      "what": "전량 철회 (retracted=true, n_citable=0)",
-      "why": "tot_charge=+1 부호 오류 + 끝점 미이완",
-      "fix": "tools/sei/build_neb_inputs.py 로 재계산"
-    },
-    {
-      "file": "db/properties/doping_cascade_verified.json",
-      "level": "RESOLVED",
-      "what": "[해소] Sc2O3_x002 · Al2O3_x005 5개 값 — gabia FINAL_RANKING.json 으로 trivalent_M3 가 전부 맞음이 확정. verified 파일을 정정했다.",
-      "why": "doping_cascade_trivalent_M3.json 과 값 충돌 미해소 (E 18.7 vs 42.1)",
-      "fix": "[2026-08-13 해소] '최연질 = Sc2O3 18.7 GPa' 는 실제 **42.082** 이므로 E_VRH 순위표를 다시 매겨야 한다 (2.2배 오차). → 재정렬 완료.",
-      "resolved": "2026-08-12"
-    },
-    {
-      "file": "db/properties/sdcp_phaseB_dftu_v1.json",
-      "level": "BLOCKED",
-      "what": "E_ads 델타 (−32 meV)",
-      "why": "자세 불일치 + 보정 누락",
-      "fix": "dE_extract(+0.3356 eV)만 인용"
-    },
-    {
-      "file": "db/properties/vgcf_hbn_binding_matrix.json",
-      "level": "BLOCKED",
-      "what": "headline 의 '1L 모델로 NEB 정당' 절",
-      "why": "CI-NEB 결과가 뒤집음 (2026-07-27 자기철회)",
-      "fix": "vgcf_hbn_neb.json 참조"
-    },
-    {
-      "file": "db/properties/lpsocl_md_arrhenius.json",
-      "level": "HOLD",
-      "what": "Ea",
-      "why": "⚠_DIFFUSIVE_GATE_2026_08_01 — 확산영역 β 게이트 미통과",
-      "fix": "tools/ionic/msd_diffusive_check.py 통과 후 해제"
-    },
-    {
-      "file": "db/properties/li_transport.json",
-      "level": "HOLD",
-      "what": "Ea",
-      "why": "같은 확산영역 게이트",
-      "fix": "동일"
-    },
-    {
-      "file": "db/properties/b2o3_md_arrhenius.json",
-      "level": "CONDITIONAL",
-      "what": "Ea — 헤드라인이 3회 교체됨 (0.207 → 0.2234 단일시드 → 0.199±0.034)",
-      "why": "중간판이 아직 파일에 남아 있다",
-      "fix": "FINAL_for_paper.Ea_eV_PAPER 만 인용"
-    },
-    {
-      "file": "db/properties/vgcf_hbn_neb.json",
-      "level": "CONDITIONAL",
-      "what": "표면 확산 배리어 7 meV",
-      "why": "수치 분해능(20–46 meV) **아래**다",
-      "fix": "'< 0.01 eV, 사실상 barrierless' 로만 서술 — 숫자로 인용 금지"
-    },
-    {
-      "file": "db/properties/nd_icohp.json · bonds.json",
-      "level": "CONDITIONAL",
-      "what": "comp1 P–S ICOHP −5.944",
-      "why": "2026-06-03 낡은 요약값 (drift)",
-      "fix": "정본 −5.9381 (per_bond_json/bonds_comp1_k444.json)"
-    },
-    {
-      "file": "db/properties/nd_gap_reference_mp.json",
-      "level": "CONDITIONAL",
-      "what": "Nd 상 갭",
-      "why": "우리 계산 아님 (MP 소환값)",
-      "fix": "우리 db 갭 표와 같은 표/플롯에 섞지 말 것. Nd 3종은 sei_electronic 의 *_frozen4f 가 우리 값"
-    },
-    {
-      "file": "db/properties/external_benchmarks_symposium_2026.json",
-      "level": "CONDITIONAL",
-      "what": "전 항목",
-      "why": "외부 발표 소환값",
-      "fix": "우리 db 절대값과 같은 표/플롯 금지"
-    },
-    {
-      "file": "db/properties/cascade_v23_themes.json",
-      "level": "CONDITIONAL",
-      "what": "gap_lit_eV · 가격등급 · air_stability",
-      "why": "문헌 전형값 큐레이션 — 우리 계산 아님",
-      "fix": "curation_disclaimer 와 함께만"
-    },
-    {
-      "file": "db/properties/anode_interface_b2o3.json",
-      "level": "CONDITIONAL",
-      "what": "전 항목",
-      "why": "MP API 직접 조회인데 **스냅샷 버전 미기록** — 재현 불가",
-      "fix": "재실행 시 값이 달라도 어느 쪽이 맞는지 알 수 없다. 앞으로 MP 치는 도구는 버전 기록 필수"
-    },
-    {
-      "file": "db/properties/eos.json",
-      "level": "CONDITIONAL",
-      "what": "V0_A3",
-      "why": "extensive 량",
-      "fix": "셀 크기 다른 계끼리 직접 비교 금지"
-    },
-    {
-      "file": "db/properties/elastic.json",
-      "level": "CONDITIONAL",
-      "what": "조성 간 비교",
-      "why": "조성별 pseudo/ecut/k 가 다르다",
-      "fix": "kb/methodology/elastic_constants.md 확인 후"
-    },
-    {
-      "file": "db/properties/cascade_v23_eos_refit.json",
-      "level": "CONDITIONAL",
-      "what": "MnO_x002",
-      "why": "r²=0.946 — 파일 자체가 low-confidence 표시",
-      "fix": "등급 표기와 함께만"
-    },
-    {
-      "file": "db/properties/li3n_adsorption.json",
-      "level": "CONDITIONAL",
-      "what": "v1 값 (−3.439 / −3.321)",
-      "why": "미수렴 bare slab — 파일이 SUPERSEDES 로 철회",
-      "fix": "v2 값만 유효"
-    },
-    {
-      "file": "db/properties/doping_cascade_verified.json",
-      "level": "RESOLVED",
-      "what": "coating_candidates_ranked_by_E_VRH 순위표",
-      "why": "rank1 의 E_VRH 가 18.7 → 42.082 로 정정돼 **순위 자체가 무효**",
-      "fix": "완료 — 40 챔피언 전체 재정렬. 새 1~3위 Li2O_x005 32.4 / MnO_x005 32.6 / NiO_x010 33.9. Sc2O3_x002 18위(42.082), Al2O3_x005 28위(47.018). 옛 순위표는 doping_cascade_verified.json `_superseded_ranking_2026_08_12` 에 보존.",
-      "resolved": "2026-08-13"
-    },
-    {
-      "file": "db/properties/lpsocl_md_arrhenius.json",
-      "level": "BLOCKED",
-      "what": "계간 Ea 직접 비교 (`vs_modelc` +90 meV 2.3σ · `vs_modelc_SUPERSEDED_mixed` · `anchors_same_window_singleseed` 의 계간 대조) — citable:no",
-      "why": "세 계(LPSOCl·modelc·b2o3)가 각자 다른 셀·다른 수렴상태다. 회신 AK(2026-08-30) Q2=C 판정: 세 계 Ea 직접 비교는 철회·보류",
-      "fix": "계별 셀·VRAM·finite-size 감사를 포함한 **별도 캠페인**으로 재설계. 계 내부 값(62원자 4시드×3T Ea 0.287±0.024)은 cell-specific estimand 로는 유효",
-      "added": "2026-08-30",
-      "근거": "db/properties/lpsocl_box331_estimand_2026_08_30.json"
-    },
-    {
-      "file": "tools/ionic/msd_diffusive_check.py (규약)",
-      "level": "SUPERSEDED",
-      "what": "β ≥ 0.80 하드게이트 — **판정으로 인용 금지**. β 는 경보로만",
-      "why": "kb/concepts/beta-gate.md §7-5(2026-08-26)·§7-8b(회신 F, 2026-08-27)에서 폐기. 우리 운영점에서 고정문턱 0.8 은 거짓탈락률 50 %",
-      "fix": "판정축은 D_inc plateau · 창 안정성 · 홉 수. 도구는 2026-08-30 에 맞췄다 (그 전 나흘간 도구가 폐기된 문턱을 강제했고 회신 AK 가 그걸 근거로 인용했다)",
-      "added": "2026-08-30"
-    },
-    {
-      "file": "docs/manuscripts/figure2e_explained_v10.md",
-      "level": "STALE",
-      "what": "42잡 · holdout 8자세 · 조각당 12자세 · clean slab 계산 · 완화 방식 — **전부 인용 금지**. 2부 영문 문장도 마찬가지",
-      "why": "회신 AN(NO-GO) 이전 설계다. 실제 발송 번들 v13 은 14잡(1단계 8) · basin 승계 양 시드 · clean slab 미계산(대수 상쇄) · 고정 MLIP 기하 single-point · 개별 E_ads 미보고",
-      "fix": "문서 상단에 STALE 배너를 박았다(2026-08-31). 회신 AO 확정 후 v11 로 갱신. 그 전까지 잡수·자세수·프로토콜 문장은 db/properties/sdcp_c12_protocol_2026_08_30.json 과 번들 manifest 를 본다",
-      "added": "2026-08-31"
-    },
-    {
-      "file": "db/properties/lpsocl_box331_two_point_2026_08_31.json",
-      "level": "PREVIEW",
-      "what": "'3×3×1 Ea = 0.170 eV' — **인용 금지**. 두 점(600/1000 K)이고 직선성 미검증이다",
-      "why": "T800 3시드 미완(~57 h). 시드 조합 9개가 0.151–0.187 eV 로 흩어진다(sd 0.012). 62원자 셀 0.2855 eV 와의 −116 meV 차이는 '셀 효과가 Ea 에서 상쇄되지 않는다'는 정성 결론까지만 지지한다",
-      "fix": "T800 완료 → msd_diffusive_check.py --mto --scan 로 D_inc plateau 판정 → 가중 3점 피팅. 그 결과만 Ea(3×3×1 cell-conditioned) 로 인용",
-      "added": "2026-08-31"
-    }
-  ],
-  "_history": [
-    "2026-08-13: E_VRH 순위표 재계산 완료 — HOLD 해소. 최연질이 Sc2O3 → Li2O_x005 로 바뀌었고, Sc2O3 는 형성에너지 1위 · 연질 18위로 두 축이 분리됐다.",
-    "2026-08-12: doping_cascade 값 충돌 해소 (BLOCKED→RESOLVED). 순위표 재계산이 새 HOLD 로 승계.",
-    "2026-08-30 — 회신 AK 반영: 계간 Ea 비교 citable:no 잠금 + β=0.80 하드게이트 폐기를 레지스트리에 명시",
-    {
-      "date": "2026-08-31",
-      "change": "figure2e v10 STALE(AN 이전 설계) · LPSOCl 3×3×1 두 점 Ea PREVIEW 등록"
-    }
-  ]
+ "property": "citation_hazards",
+ "purpose": "db 파일마다 붙어 있는 **인용 금지·보류·조건부** 단서를 한 곳에 모은다. 각 파일 안에 흩어져 있어 원고·그림을 쓸 때 놓친다 — 2026-08-12 provenance 전수조사에서 파일을 열어 보고서야 발견한 것들이다.",
+ "how_to_use": "원고나 그림에 db 값을 넣기 전에 이 표를 먼저 본다. level=BLOCKED 는 어떤 형태로도 인용 금지, CONDITIONAL 은 단서와 함께만.",
+ "collected": "2026-08-12",
+ "hazards": [
+  {
+   "file": "db/properties/sei_neb.json",
+   "level": "BLOCKED",
+   "what": "전량 철회 (retracted=true, n_citable=0)",
+   "why": "tot_charge=+1 부호 오류 + 끝점 미이완",
+   "fix": "tools/sei/build_neb_inputs.py 로 재계산"
+  },
+  {
+   "file": "db/properties/doping_cascade_verified.json",
+   "level": "RESOLVED",
+   "what": "[해소] Sc2O3_x002 · Al2O3_x005 5개 값 — gabia FINAL_RANKING.json 으로 trivalent_M3 가 전부 맞음이 확정. verified 파일을 정정했다.",
+   "why": "doping_cascade_trivalent_M3.json 과 값 충돌 미해소 (E 18.7 vs 42.1)",
+   "fix": "[2026-08-13 해소] '최연질 = Sc2O3 18.7 GPa' 는 실제 **42.082** 이므로 E_VRH 순위표를 다시 매겨야 한다 (2.2배 오차). → 재정렬 완료.",
+   "resolved": "2026-08-12"
+  },
+  {
+   "file": "db/properties/sdcp_phaseB_dftu_v1.json",
+   "level": "BLOCKED",
+   "what": "E_ads 델타 (−32 meV)",
+   "why": "자세 불일치 + 보정 누락",
+   "fix": "⛔ **아무것도 인용하지 않는다.** 종전 fix 였던 'dE_extract(+0.3356 eV)만 인용' 은 틀렸다 — `sdcp_doped_closed_2026_08_28.json`(active·ratified)이 회신 P P0 로 그 추출 부호를 **철회**하고 citable:no 로 강등했다 (두 endpoint 총자화 2.378/0.518 μB 불일치 · basin 동등성 미입증). geometry_audit 의 O···Li 2.094 Å 도 회신 T P0-1 로 철회됐다.",
+   "updated": "2026-08-31"
+  },
+  {
+   "file": "db/properties/vgcf_hbn_binding_matrix.json",
+   "level": "BLOCKED",
+   "what": "headline 의 '1L 모델로 NEB 정당' 절",
+   "why": "CI-NEB 결과가 뒤집음 (2026-07-27 자기철회)",
+   "fix": "vgcf_hbn_neb.json 참조"
+  },
+  {
+   "file": "db/properties/lpsocl_md_arrhenius.json",
+   "level": "HOLD",
+   "what": "Ea",
+   "why": "⚠_DIFFUSIVE_GATE_2026_08_01 — 확산영역 β 게이트 미통과",
+   "fix": "tools/ionic/msd_diffusive_check.py 통과 후 해제"
+  },
+  {
+   "file": "db/properties/li_transport.json",
+   "level": "HOLD",
+   "what": "Ea",
+   "why": "같은 확산영역 게이트",
+   "fix": "동일"
+  },
+  {
+   "file": "db/properties/b2o3_md_arrhenius.json",
+   "level": "CONDITIONAL",
+   "what": "Ea — 헤드라인이 3회 교체됨 (0.207 → 0.2234 단일시드 → 0.199±0.034)",
+   "why": "중간판이 아직 파일에 남아 있다",
+   "fix": "FINAL_for_paper.Ea_eV_PAPER 만 인용"
+  },
+  {
+   "file": "db/properties/vgcf_hbn_neb.json",
+   "level": "CONDITIONAL",
+   "what": "표면 확산 배리어 7 meV",
+   "why": "수치 분해능(20–46 meV) **아래**다",
+   "fix": "'< 0.01 eV, 사실상 barrierless' 로만 서술 — 숫자로 인용 금지"
+  },
+  {
+   "file": "db/properties/nd_icohp.json · bonds.json",
+   "level": "CONDITIONAL",
+   "what": "comp1 P–S ICOHP −5.944",
+   "why": "2026-06-03 낡은 요약값 (drift)",
+   "fix": "정본 −5.9381 (per_bond_json/bonds_comp1_k444.json)"
+  },
+  {
+   "file": "db/properties/nd_gap_reference_mp.json",
+   "level": "CONDITIONAL",
+   "what": "Nd 상 갭",
+   "why": "우리 계산 아님 (MP 소환값)",
+   "fix": "우리 db 갭 표와 같은 표/플롯에 섞지 말 것. Nd 3종은 sei_electronic 의 *_frozen4f 가 우리 값"
+  },
+  {
+   "file": "db/properties/external_benchmarks_symposium_2026.json",
+   "level": "CONDITIONAL",
+   "what": "전 항목",
+   "why": "외부 발표 소환값",
+   "fix": "우리 db 절대값과 같은 표/플롯 금지"
+  },
+  {
+   "file": "db/properties/cascade_v23_themes.json",
+   "level": "CONDITIONAL",
+   "what": "gap_lit_eV · 가격등급 · air_stability",
+   "why": "문헌 전형값 큐레이션 — 우리 계산 아님",
+   "fix": "curation_disclaimer 와 함께만"
+  },
+  {
+   "file": "db/properties/anode_interface_b2o3.json",
+   "level": "CONDITIONAL",
+   "what": "전 항목",
+   "why": "MP API 직접 조회인데 **스냅샷 버전 미기록** — 재현 불가",
+   "fix": "재실행 시 값이 달라도 어느 쪽이 맞는지 알 수 없다. 앞으로 MP 치는 도구는 버전 기록 필수"
+  },
+  {
+   "file": "db/properties/eos.json",
+   "level": "CONDITIONAL",
+   "what": "V0_A3",
+   "why": "extensive 량",
+   "fix": "셀 크기 다른 계끼리 직접 비교 금지"
+  },
+  {
+   "file": "db/properties/elastic.json",
+   "level": "CONDITIONAL",
+   "what": "조성 간 비교",
+   "why": "조성별 pseudo/ecut/k 가 다르다",
+   "fix": "kb/methodology/elastic_constants.md 확인 후"
+  },
+  {
+   "file": "db/properties/cascade_v23_eos_refit.json",
+   "level": "CONDITIONAL",
+   "what": "MnO_x002",
+   "why": "r²=0.946 — 파일 자체가 low-confidence 표시",
+   "fix": "등급 표기와 함께만"
+  },
+  {
+   "file": "db/properties/li3n_adsorption.json",
+   "level": "CONDITIONAL",
+   "what": "v1 값 (−3.439 / −3.321)",
+   "why": "미수렴 bare slab — 파일이 SUPERSEDES 로 철회",
+   "fix": "v2 값만 유효"
+  },
+  {
+   "file": "db/properties/doping_cascade_verified.json",
+   "level": "RESOLVED",
+   "what": "coating_candidates_ranked_by_E_VRH 순위표",
+   "why": "rank1 의 E_VRH 가 18.7 → 42.082 로 정정돼 **순위 자체가 무효**",
+   "fix": "완료 — 40 챔피언 전체 재정렬. 새 1~3위 Li2O_x005 32.4 / MnO_x005 32.6 / NiO_x010 33.9. Sc2O3_x002 18위(42.082), Al2O3_x005 28위(47.018). 옛 순위표는 doping_cascade_verified.json `_superseded_ranking_2026_08_12` 에 보존.",
+   "resolved": "2026-08-13"
+  },
+  {
+   "file": "db/properties/lpsocl_md_arrhenius.json",
+   "level": "BLOCKED",
+   "what": "계간 Ea 직접 비교 (`vs_modelc` +90 meV 2.3σ · `vs_modelc_SUPERSEDED_mixed` · `anchors_same_window_singleseed` 의 계간 대조) — citable:no",
+   "why": "세 계(LPSOCl·modelc·b2o3)가 각자 다른 셀·다른 수렴상태다. 회신 AK(2026-08-30) Q2=C 판정: 세 계 Ea 직접 비교는 철회·보류",
+   "fix": "계별 셀·VRAM·finite-size 감사를 포함한 **별도 캠페인**으로 재설계. 계 내부 값(62원자 4시드×3T Ea 0.287±0.024)은 cell-specific estimand 로는 유효",
+   "added": "2026-08-30",
+   "근거": "db/properties/lpsocl_box331_estimand_2026_08_30.json"
+  },
+  {
+   "file": "tools/ionic/msd_diffusive_check.py (규약)",
+   "level": "SUPERSEDED",
+   "what": "β ≥ 0.80 하드게이트 — **판정으로 인용 금지**. β 는 경보로만",
+   "why": "kb/concepts/beta-gate.md §7-5(2026-08-26)·§7-8b(회신 F, 2026-08-27)에서 폐기. 우리 운영점에서 고정문턱 0.8 은 거짓탈락률 50 %",
+   "fix": "판정축은 D_inc plateau · 창 안정성 · 홉 수. 도구는 2026-08-30 에 맞췄다 (그 전 나흘간 도구가 폐기된 문턱을 강제했고 회신 AK 가 그걸 근거로 인용했다)",
+   "added": "2026-08-30"
+  },
+  {
+   "file": "docs/manuscripts/figure2e_explained_v10.md",
+   "level": "STALE",
+   "what": "42잡 · holdout 8자세 · 조각당 12자세 · clean slab 계산 · 완화 방식 — **전부 인용 금지**. 2부 영문 문장도 마찬가지",
+   "why": "회신 AN(NO-GO) 이전 설계다. ⚠ 2026-08-31 갱신: 그 뒤 캠페인이 Stage A → **C-12** 로 개명되고 v13→v18 로 갔다. 실물은 **v18 · 16잡**(단계 1:10, 2:6)이고 회신 **AV 가 NO-GO**(P0 4 · P1 1). 종전 문구의 'v13 은 14잡' 도 이미 낡았다.",
+   "fix": "문서 상단 STALE 배너 유지. 잡수·자세수·프로토콜 문장은 번들 MANIFEST 와 `runs/sdcp_c12_2026_08_30/IDENTITY_v18.json` 을 본다. ⚠ `sdcp_c12_protocol_2026_08_30.json` 의 잡 수(12·19)는 실물 16 과 다르므로 그 파일을 잡 수의 정본으로 쓰지 않는다.",
+   "added": "2026-08-31",
+   "updated": "2026-08-31"
+  },
+  {
+   "file": "db/properties/lpsocl_box331_two_point_2026_08_31.json",
+   "level": "PREVIEW",
+   "what": "'3×3×1 Ea = 0.170 eV' — **인용 금지**. 두 점(600/1000 K)이고 직선성 미검증이다",
+   "why": "T800 3시드 미완(~57 h). 시드 조합 9개가 0.151–0.187 eV 로 흩어진다(sd 0.012). 62원자 셀 0.2855 eV 와의 −116 meV 차이는 '셀 효과가 Ea 에서 상쇄되지 않는다'는 정성 결론까지만 지지한다",
+   "fix": "T800 완료 → msd_diffusive_check.py --mto --scan 로 D_inc plateau 판정 → 가중 3점 피팅. 그 결과만 Ea(3×3×1 cell-conditioned) 로 인용",
+   "added": "2026-08-31"
+  },
+  {
+   "file": "db/properties/sdcp_wave1_citable.json",
+   "level": "BLOCKED",
+   "what": "절대 흡착에너지 4종과 0.346 eV 헤드라인",
+   "why": "기준 비대칭 — 기준 분자는 NUPDOWN 고정·LREAL=F 인데 복합체는 자유·LREAL=T 다 (δ_m + δ_LREAL 미측정, 회신 P). 조각 내 자리대비에서는 소거되지만 절대값과 조각 간 차에는 남는다",
+   "fix": "reference-equivalence 복구 전까지 절대값·0.346 eV·부등호 방향 서술 전부 인용 금지. 자리대비(c10 49.8 meV · dimer 36.1 meV)와 상자 수렴은 영향 없다",
+   "added": "2026-08-31"
+  },
+  {
+   "file": "db/properties/sdcp_neutral_closed_2026_08_28.json",
+   "level": "CONDITIONAL",
+   "what": "술폰산 접촉 기전 — **양방향 모두**",
+   "why": "wave1 자세에서 산성 H 가 7.08–7.17 Å 라 '술포네이트가 앵커링한다' 는 철회됐고(회신 T P0-1), 신규 동결 후보의 최저 자세는 산성 O–H···표면 O 1.83 Å 수소결합이라 '상호작용하지 않는다' 도 못 쓴다. 후자는 **MLIP 기하**이고 DFT 확인 전이다",
+   "fix": "기전 문장을 쓰지 않는다. C-12 가 회수되면 그 DFT 로 판정한다",
+   "added": "2026-08-31"
+  },
+  {
+   "file": "db/properties/sdcp_c12_protocol_2026_08_30.json",
+   "level": "STALE",
+   "what": "잡 수(§0 '12잡' · §12 '19잡') · §3 잡 목록 · §11 clean slab 3잡 · §1 보고량 이름",
+   "why": "실물 v18 은 **16잡**이고 clean slab 은 제거됐다(커밋 57cfcdea · 회신 AV Q6 '추가 불필요'). §3 의 job key 네임스페이스 `main/` 은 생성기에 존재하지 않는다(실물은 `prospective/`). §1 의 이름 'adsorption energy' 는 `sdcp_c12_claim_prereg_2026_08_31.json` 이 **금지어로 지정**했다 — 같은 번들에 모순되는 사전등록 둘이 달려 있다",
+   "fix": "보고량 이름·허용서술은 claim_prereg 를 정본으로 본다. 잡 수는 MANIFEST/IDENTITY_v18. 프로토콜은 §2b(D 정의)와 §4(C1~C4 문턱)만 유효하다",
+   "added": "2026-08-31"
+  }
+ ],
+ "_history": [
+  "2026-08-13: E_VRH 순위표 재계산 완료 — HOLD 해소. 최연질이 Sc2O3 → Li2O_x005 로 바뀌었고, Sc2O3 는 형성에너지 1위 · 연질 18위로 두 축이 분리됐다.",
+  "2026-08-12: doping_cascade 값 충돌 해소 (BLOCKED→RESOLVED). 순위표 재계산이 새 HOLD 로 승계.",
+  "2026-08-30 — 회신 AK 반영: 계간 Ea 비교 citable:no 잠금 + β=0.80 하드게이트 폐기를 레지스트리에 명시",
+  {
+   "date": "2026-08-31",
+   "change": "figure2e v10 STALE(AN 이전 설계) · LPSOCl 3×3×1 두 점 Ea PREVIEW 등록"
+  },
+  {
+   "at": "2026-08-31",
+   "note": "전수 조사 — 인용 게이트 자체의 오류 2건 정정(phaseB dE_extract 를 '인용하라'고 적고 있었다 · figure2e 의 v13/14잡 표기), 미등재 위험 3건 추가"
+  }
+ ],
+ "updated": "2026-08-31"
 }

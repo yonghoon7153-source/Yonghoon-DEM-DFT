@@ -1,68 +1,68 @@
 {
-  "schema": "c12_shipping_identity/v3",
-  "date": "2026-08-31",
-  "상태": "🟡 v13 발송 후보 · **회신 AO 리뷰 대기** (해제조건 10개 전부 처리)",
-  "발송_후보": {
-    "bundle": "sdcp_c12_v13",
-    "생성": "2026-08-30 (gabia)",
-    "zip_sha256": "3f4aad8910caac541b65ccde6a291875f286a698f04c66f2377da6c62368a9a4",
-    "zip_bytes": 280976,
-    "n_jobs": 14,
-    "n_vasp_executions": 16,
-    "files_hashed": "94 / 94",
-    "estimand": "고정 MLIP 기하 단일점 · pm1 조건부 D",
-    "상_분포": {
-      "pre": 0,
-      "relax": 2,
-      "static": 14
-    },
-    "실물_확인_2026_08_31": {
-      "estimand_job_keys": "branch afm2424_pm1 · 식 정확",
-      "refs.clean_slab": "[] (ghost 제거)",
-      "molecular_spin_controls": 2,
-      "canary_INCAR": "NUPDOWN=-1 · ICHARG=2",
-      "gas_box_prior": {
-        "ptfe_c10": 0.07,
-        "sdcp_neutral": 0.32
-      },
-      "staged_runner": "run_staged.sh · README 14잡 / 1단계 8잡"
-    }
+ "schema": "c12_shipping_identity/v3",
+ "date": "2026-08-31",
+ "상태": "⛔ **낡음 (2026-08-31)** — 이 파일은 v13 시점 기록이다. 현재는 **v18** 이고 회신 AV 가 NO-GO 를 냈다(P0 4·P1 1, 전건 이행 완료 · 해제조건 ⑧ v19 재생성 잔여). 같은 폴더의 `IDENTITY_v18.json` 이 정본이다. 종전 값: 🟡 v13 발송 후보 · **회신 AO 리뷰 대기** (해제조건 10개 전부 처리)",
+ "발송_후보": {
+  "bundle": "sdcp_c12_v13",
+  "생성": "2026-08-30 (gabia)",
+  "zip_sha256": "3f4aad8910caac541b65ccde6a291875f286a698f04c66f2377da6c62368a9a4",
+  "zip_bytes": 280976,
+  "n_jobs": 14,
+  "n_vasp_executions": 16,
+  "files_hashed": "94 / 94",
+  "estimand": "고정 MLIP 기하 단일점 · pm1 조건부 D",
+  "상_분포": {
+   "pre": 0,
+   "relax": 2,
+   "static": 14
   },
-  "estimand_job_keys": {
-    "E_C_sdcp": "prospective/sdcp_neutral__b00__afm2424_pm1",
-    "E_C_control": "prospective/ptfe_c10__b00__afm2424_pm1",
-    "E_G_sdcp": "refs/mol__sdcp_neutral__box24",
-    "E_G_control": "refs/mol__ptfe_c10__box24",
-    "formula": "D = (E_C_sdcp − E_G_sdcp) − (E_C_control − E_G_control)",
-    "branch": "afm2424_pm1",
-    "⛔": "net4 4잡과 대안 자세 4잡은 D 에 안 들어간다 — 민감도 병기용"
-  },
-  "해제조건_이행": {
-    "1_estimand_job_keys": "✅ manifest 에 봉인 · 분석기가 그 네 에너지만 직접 대입 (없거나 게이트되면 NO_VALUE)",
-    "2_ghost_clean_refs": "✅ refs_minimal 이면 clean_slab 을 선언하지 않는다 · 위상 게이트를 production 스키마(realized_basin.ni_moments_muB)로 교정",
-    "3_gas_only_minimal_ref": "✅ has_refs 가 기체 기준으로도 참 · box20 없으면 gas_box_prior 를 요구",
-    "4_stage_gate": "✅ analyze_results.py --gate vacconv (1단계 cohort 만) · 비인용 상태면 exit 2",
-    "5_gas_canary": "✅ 조각당 nzmag static (NUPDOWN=-1 · ICHARG=2 · 비영 보상 MAGMOM) + molecular_spin_controls",
-    "6_chgcar_read_gate": "✅ ICHARG=1 상은 실제 read 증거를 hard gate 로",
-    "7_potcar_pin": "🔴 **미완 — 사람이 받아야 한다** (아래)",
-    "8_gas_box": "✅ wave1 선행 대조를 gas_box_prior 로 (ptfe 0.07 · sdcp 0.32 meV) · 미확인 항목 명시",
-    "9_문서_동기화": "✅ README 가 staged 를 유일 지침으로 · 잡 수를 계획에서 센다 (14잡 · 1단계 8잡)",
-    "10_e2e": "✅ v12 재생성 + verify rc=0 + 1단계 분류 실측 8건 확인"
-  },
-  "🔴_남은_블로커": {
-    "무엇": "없음 — POTCAR pin 은 **차단에서 라벨로 내렸다** (2026-08-31)",
-    "판정": "회신 AN Q4 를 뒤집었다. 근거 셋: ① 우리는 '승인 트리를 썼다' 를 주장하지 않는다 (v13 을 새 provenance root 로 선언, wave1 동등성은 철회) ② D 는 번들 안에서 닫힌 양이라 트리가 무엇이든 그 안에서 일관되면 유효하다 ③ run_job.sh 가 POTCAR_PROVENANCE.json 없이는 안 돌아 신원 기록은 자동으로 회수된다",
-    "대신": "결과에 `identity_scope: self_consistent_only` 라벨이 박힌다 — '사전 승인된 트리와 대조하지 않았다' 를 명시한다. 잡 사이 일치가 깨지면 그건 여전히 blocking.",
-    "⚠_리뷰_대기": "이 뒤집기가 맞는지를 회신 AO 에서 묻고 있다 (Q1). 반려되면 pin 을 받아 재발행한다."
-  },
-  "⛔_이전판": {
-    "v3 (19잡)": "회신 AJ NO-GO",
-    "dryrun3 (12잡, relax 포함)": "회신 AM NO-GO — 선언과 실제 estimand 불일치 외 P0 여섯",
-    "v7 (12잡, 단일점)": "회신 AN NO-GO — 새 estimand 가 분석기·실행 계약에 미구현 (P0 다섯)"
-  },
-  "연결": [
-    "kb/reviews/codex_AN_prompt_c12_v7_2026_08_31.md",
-    "db/properties/sdcp_c12_protocol_2026_08_30.json",
-    "db/properties/c12_poses_2026_08_30.json"
-  ]
+  "실물_확인_2026_08_31": {
+   "estimand_job_keys": "branch afm2424_pm1 · 식 정확",
+   "refs.clean_slab": "[] (ghost 제거)",
+   "molecular_spin_controls": 2,
+   "canary_INCAR": "NUPDOWN=-1 · ICHARG=2",
+   "gas_box_prior": {
+    "ptfe_c10": 0.07,
+    "sdcp_neutral": 0.32
+   },
+   "staged_runner": "run_staged.sh · README 14잡 / 1단계 8잡"
+  }
+ },
+ "estimand_job_keys": {
+  "E_C_sdcp": "prospective/sdcp_neutral__b00__afm2424_pm1",
+  "E_C_control": "prospective/ptfe_c10__b00__afm2424_pm1",
+  "E_G_sdcp": "refs/mol__sdcp_neutral__box24",
+  "E_G_control": "refs/mol__ptfe_c10__box24",
+  "formula": "D = (E_C_sdcp − E_G_sdcp) − (E_C_control − E_G_control)",
+  "branch": "afm2424_pm1",
+  "⛔": "net4 4잡과 대안 자세 4잡은 D 에 안 들어간다 — 민감도 병기용"
+ },
+ "해제조건_이행": {
+  "1_estimand_job_keys": "✅ manifest 에 봉인 · 분석기가 그 네 에너지만 직접 대입 (없거나 게이트되면 NO_VALUE)",
+  "2_ghost_clean_refs": "✅ refs_minimal 이면 clean_slab 을 선언하지 않는다 · 위상 게이트를 production 스키마(realized_basin.ni_moments_muB)로 교정",
+  "3_gas_only_minimal_ref": "✅ has_refs 가 기체 기준으로도 참 · box20 없으면 gas_box_prior 를 요구",
+  "4_stage_gate": "✅ analyze_results.py --gate vacconv (1단계 cohort 만) · 비인용 상태면 exit 2",
+  "5_gas_canary": "✅ 조각당 nzmag static (NUPDOWN=-1 · ICHARG=2 · 비영 보상 MAGMOM) + molecular_spin_controls",
+  "6_chgcar_read_gate": "✅ ICHARG=1 상은 실제 read 증거를 hard gate 로",
+  "7_potcar_pin": "🔴 **미완 — 사람이 받아야 한다** (아래)",
+  "8_gas_box": "✅ wave1 선행 대조를 gas_box_prior 로 (ptfe 0.07 · sdcp 0.32 meV) · 미확인 항목 명시",
+  "9_문서_동기화": "✅ README 가 staged 를 유일 지침으로 · 잡 수를 계획에서 센다 (14잡 · 1단계 8잡)",
+  "10_e2e": "✅ v12 재생성 + verify rc=0 + 1단계 분류 실측 8건 확인"
+ },
+ "🔴_남은_블로커": {
+  "무엇": "없음 — POTCAR pin 은 **차단에서 라벨로 내렸다** (2026-08-31)",
+  "판정": "회신 AN Q4 를 뒤집었다. 근거 셋: ① 우리는 '승인 트리를 썼다' 를 주장하지 않는다 (v13 을 새 provenance root 로 선언, wave1 동등성은 철회) ② D 는 번들 안에서 닫힌 양이라 트리가 무엇이든 그 안에서 일관되면 유효하다 ③ run_job.sh 가 POTCAR_PROVENANCE.json 없이는 안 돌아 신원 기록은 자동으로 회수된다",
+  "대신": "결과에 `identity_scope: self_consistent_only` 라벨이 박힌다 — '사전 승인된 트리와 대조하지 않았다' 를 명시한다. 잡 사이 일치가 깨지면 그건 여전히 blocking.",
+  "⚠_리뷰_대기": "이 뒤집기가 맞는지를 회신 AO 에서 묻고 있다 (Q1). 반려되면 pin 을 받아 재발행한다."
+ },
+ "⛔_이전판": {
+  "v3 (19잡)": "회신 AJ NO-GO",
+  "dryrun3 (12잡, relax 포함)": "회신 AM NO-GO — 선언과 실제 estimand 불일치 외 P0 여섯",
+  "v7 (12잡, 단일점)": "회신 AN NO-GO — 새 estimand 가 분석기·실행 계약에 미구현 (P0 다섯)"
+ },
+ "연결": [
+  "kb/reviews/codex_AN_prompt_c12_v7_2026_08_31.md",
+  "db/properties/sdcp_c12_protocol_2026_08_30.json",
+  "db/properties/c12_poses_2026_08_30.json"
+ ]
 }

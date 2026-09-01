@@ -1,4 +1,5 @@
 {
+ "지위": "⛔ **SUPERSEDED (2026-08-31 표시)** — 이 사전등록의 primary estimand `ΔΔE_lowE = min_p A(SDCP,p) − min_q A(c10,q)` 는 회신 X 가 NO-GO 판정했고, 후속 캠페인(Stage A → C-12)은 **다른 양**(사전 고정 네 잡의 직접 대입 D)을 잰다. 정본은 `sdcp_c12_claim_prereg_2026_08_31.json`(보고량) + `sdcp_c12_protocol_2026_08_30.json` §2b(D 정의). ⚠ 이 파일의 **실측 기록**(UMA-DFT 오프셋·술폰산 수소결합·표본밀도 비대칭)은 여전히 유효하다 — 폐기된 것은 estimand 이지 관측이 아니다.",
  "schema": "prereg/v1",
  "date": "2026-08-29",
  "제목": "중성 SDCP vs perfluorodecane 조각 간 대비 — **결과 보기 전** 사전등록",
