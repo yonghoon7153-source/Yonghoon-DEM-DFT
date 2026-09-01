@@ -213,6 +213,51 @@ def test_ratification_gate_cannot_be_bypassed_by_field_name():
         C.registry, C.artifacts = real_reg, real_art
 
 
+def test_narrow_decision_cannot_supersede_global_policy():
+    """⛔음성 (회신 AW P0-3 · AZ P0-6) — **좁은 노드가 전역 정책을 덮으면 잡히는가.**
+
+    2026-09-01 실제 구멍: C-12 estimand 노드(systems 2개)가 전역 마감정책
+    (systems `*`, kind=policy)을 supersede 하고 있었다. 그 상태로 계산을 던지면
+    결과가 정책 결정에 압력을 준다 — 사전등록의 의미가 사라진다. 리뷰어가
+    **비용 발생 전** 닫으라고 판정했다 (발송 차단 사유).
+
+    ⛔ 이 시험이 못 하는 것: 어떤 정책이 옳은지는 안 본다. 그래프 규칙만 본다.
+    """
+    real = (C.decisions, C.assessments, C.registry, C.artifacts)
+    try:
+        C.assessments = lambda root=None: {}
+        C.registry = lambda root=None: {"entries": []}
+        C.artifacts = lambda root=None: {}
+        glob = {"id": "D-glob", "kind": "policy", "slot": "sg",
+                "status": "proposed", "applies_to": {"systems": ["*"]}}
+
+        def _v(extra):
+            C.decisions = lambda root=None: {"D-glob": glob, extra["id"]: extra}
+            return [x for x in C.validate_governance() if extra["id"] in x]
+
+        assert _v({"id": "D-narrow", "kind": "estimand", "slot": "sn",
+                   "status": "proposed", "applies_to": {"systems": ["a", "b"]},
+                   "supersedes": ["D-glob"]}), \
+            "좁은 estimand 노드가 전역 정책을 supersede 하는데 통과한다"
+        assert _v({"id": "D-np", "kind": "estimand", "slot": "sn2",
+                   "status": "proposed", "applies_to": {"systems": ["*"]},
+                   "supersedes": ["D-glob"]}), \
+            "policy 를 non-policy 가 대체하는데 통과한다"
+        # 양성: 전역 policy 끼리는 대체할 수 있다
+        assert not _v({"id": "D-g2", "kind": "policy", "slot": "sg2",
+                       "status": "proposed", "applies_to": {"systems": ["*"]},
+                       "supersedes": ["D-glob"]}), \
+            "정상적인 policy→policy 대체를 오탐한다"
+        # 상태 어휘 밖 · 타입 오류
+        assert _v({"id": "D-badstate", "slot": "sb", "status": "aktive"}), \
+            "허용 어휘 밖 상태가 통과한다 (검사를 조용히 건너뛴다)"
+        assert _v({"id": "D-badtype", "slot": "sb2", "status": "proposed",
+                   "supersedes": "D-glob"}), \
+            "supersedes 가 문자열인데 통과한다 (글자 단위로 순회된다)"
+    finally:
+        C.decisions, C.assessments, C.registry, C.artifacts = real
+
+
 def test_governance_page_renders_citation_hazards():
     """인용 위험 원장이 화면에 **전건** 오르는가 (2026-09-01 신설 절).
 

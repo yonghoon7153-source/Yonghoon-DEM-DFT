@@ -339,6 +339,18 @@ if [ -n "${VASP_CMD:-}" ] || [ -n "${VASP_LAUNCHER:-}" ]; then
   echo "   VASP_LAUNCHER_KIND / VASP_NPROC / VASP_EXE 를 쓰세요 — README 참조"; exit 1
 fi
 _ROOT=../..
+# ⛔⛔ 2026-09-01 (회신 AZ P0-1) — **봉인 경로를 변수 하나로 묶는다.**
+#   AY P0-1 패치가 잡 폴더에서 `POTCAR_ROOT_SEAL.json` 을 찾았는데 실물은
+#   `../../POTCAR_ROOT_SEAL.json` 이다. 같은 파일 안에서 두 경로가 섞여 있었고
+#   (아래 진공/해시 대조는 `../../` 를 제대로 썼다), 그 결과 **16잡이 전부
+#   첫 launcher 검사에서 죽었다.** selftest 300건이 통과하는 동안
+#   정상 launcher 경로를 한 번도 실행하지 않아 못 봤다.
+#   ⇒ 경로는 여기 한 번만 적는다. 두 벌이면 또 갈라진다.
+_SEAL="$_ROOT/POTCAR_ROOT_SEAL.json"
+_seal_get() {   # $1 = 키 이름 → 값 (없으면 빈 문자열)
+  python3 -c 'import json,sys;print(json.load(open(sys.argv[1])).get(sys.argv[2]) or "")' \
+    "$_SEAL" "$1" 2>/dev/null || true
+}
 # ⛔ 회신 AV 해제조건 ③ — 시험 표시 **파일만으로는** 아무것도 못 끈다. MANIFEST 가
 #   스스로 selftest_fixture=true 를 선언한 픽스처 번들에서만 유효하다. production
 #   MANIFEST 에 그 필드를 심으면 해시가 바뀌어 EXPECT·봉인·분석기 대조가 전부 깨지고,
@@ -396,8 +408,9 @@ case "$VASP_LAUNCHER_KIND" in
     #   mpirun 을 두면 그놈이 이겼고, 봉인된 VASP_EXE 를 인자로 받고도 무시할 수
     #   있었다. 이제 **봉인에 적힌 절대경로**만 쓴다 (매 상 재해시는 아래 루프에서).
     if [ "$_FIXTURE" != 1 ]; then
-      _lsp=$(python3 -c 'import json;d=json.load(open("POTCAR_ROOT_SEAL.json"));print(d.get("launcher_path") or "")' 2>/dev/null || true)
-      _lsk=$(python3 -c 'import json;d=json.load(open("POTCAR_ROOT_SEAL.json"));print(d.get("launcher_kind") or "")' 2>/dev/null || true)
+      [ -f "$_SEAL" ] || { echo "⛔ 봉인 파일이 없습니다: $_SEAL — SEAL_POTCAR_ROOT.sh 를 먼저 돌리세요"; exit 1; }
+      _lsp=$(_seal_get launcher_path)
+      _lsk=$(_seal_get launcher_kind)
       [ -n "$_lsp" ] || { echo "⛔ root seal 에 launcher 가 없습니다 — SEAL_POTCAR_ROOT.sh 를 VASP_LAUNCHER_KIND·LAUNCHER_BIN 과 함께 다시 돌리세요 (회신 AY P0-1)"; exit 1; }
       [ "$_lsk" = "$VASP_LAUNCHER_KIND" ] || { echo "⛔ launcher kind 가 봉인($_lsk)과 다릅니다: $VASP_LAUNCHER_KIND"; exit 1; }
       if [ -n "${LAUNCHER_BIN:-}" ] && [ "$LAUNCHER_BIN" != "$_lsp" ]; then
@@ -533,18 +546,14 @@ for ph in pre relax static dense; do
   #   receipt 는 분석기가 읽는 **필수 반송물**이다
 #   (열 8개: ts phase exe_sha exe kind nproc launcher launcher_sha — AY P0-1).
   _exe_h=$(sha256sum "$VASP_EXE" | cut -d" " -f1)
-  if [ "$_FIXTURE" != 1 ] && [ -f "$_ROOT/POTCAR_ROOT_SEAL.json" ]; then
-    _sealed=$(python3 -c \
-      'import json;print(json.load(open("../../POTCAR_ROOT_SEAL.json")).get("vasp_executable_sha256") or "")' \
-      2>/dev/null || true)
+  if [ "$_FIXTURE" != 1 ] && [ -f "$_SEAL" ]; then
+    _sealed=$(_seal_get vasp_executable_sha256)
     if [ -z "$_sealed" ] || [ "$_exe_h" != "$_sealed" ]; then
       echo "⛔ $ph 직전: 실행파일이 root 봉인과 다릅니다 (지금 $_exe_h / 봉인 $_sealed)"; exit 1
     fi
     if [ "$VASP_LAUNCHER_KIND" = wrapper ]; then
       _wr_h=$(sha256sum "$VASP_WRAPPER" | cut -d" " -f1)
-      _wsealed=$(python3 -c \
-        'import json;print(json.load(open("../../POTCAR_ROOT_SEAL.json")).get("launcher_wrapper_sha256") or "")' \
-        2>/dev/null || true)
+      _wsealed=$(_seal_get launcher_wrapper_sha256)
       if [ -z "$_wsealed" ] || [ "$_wr_h" != "$_wsealed" ]; then
         echo "⛔ $ph 직전: wrapper 가 봉인과 다릅니다"; exit 1
       fi
@@ -554,9 +563,7 @@ for ph in pre relax static dense; do
     case "$VASP_LAUNCHER_KIND" in
       mpirun|mpiexec|srun)
         _lh=$(sha256sum "$LAUNCHER_BIN" | cut -d" " -f1)
-        _lsealed=$(python3 -c \
-          'import json;print(json.load(open("../../POTCAR_ROOT_SEAL.json")).get("launcher_sha256") or "")' \
-          2>/dev/null || true)
+        _lsealed=$(_seal_get launcher_sha256)
         if [ -z "$_lsealed" ] || [ "$_lh" != "$_lsealed" ]; then
           echo "⛔ $ph 직전: launcher 가 봉인과 다릅니다 (지금 $_lh / 봉인 $_lsealed)"; exit 1
         fi ;;
@@ -672,18 +679,34 @@ if [ -n "${VASP_CMD:-}" ] || [ -n "${VASP_LAUNCHER:-}" ]; then
 fi
 VASP_LAUNCHER_KIND=${VASP_LAUNCHER_KIND:?VASP_LAUNCHER_KIND 를 지정하세요 (mpirun|mpiexec|srun|none|wrapper)}
 VASP_EXE=${VASP_EXE:?VASP_EXE 를 지정하세요 (실행파일 절대경로 — 이것이 봉인 대상입니다)}
-case "$VASP_EXE" in /*) ;; *) VASP_EXE=$(command -v "$VASP_EXE" 2>/dev/null || true) ;; esac
-[ -n "$VASP_EXE" ] && [ -x "$VASP_EXE" ] || { echo "⛔ VASP_EXE 를 실행파일로 찾을 수 없습니다"; exit 2; }
-LAUNCHER_BIN=""
+# ⛔⛔ 2026-09-01 (회신 AZ P0-2) — **PATH 조회를 여기서도 폐기한다.**
+#   AY P0-1 에서 run_job.sh 의 PATH 조회만 걷고 "폐기했다" 고 적었는데, **봉인을
+#   만드는 이 자리가 그대로였다.** PATH 앞에 가짜 mpirun/vasp_std 를 두면 그 파일이
+#   **정상적으로 봉인된다** — 봉인 뒤 교체만 막고 '가짜를 처음부터 봉인하는' 경로는
+#   열려 있었다. 우회를 닫은 게 아니라 한 겹 더 미룬 것이었다 (같은 실수 두 번째).
+#   ⇒ 절대경로만 받는다. PATH 에서 찾아 주지 않는다.
+case "$VASP_EXE" in
+  /*) ;;
+  *) echo "⛔ VASP_EXE 는 **절대경로**여야 합니다 (회신 AZ P0-2): $VASP_EXE"
+     echo "   PATH 에서 찾아 주지 않습니다 — PATH 앞의 가짜가 봉인될 수 있습니다."
+     echo "   예: export VASP_EXE=\\$(command -v vasp_std)   # 값을 **직접 확인한 뒤** 주세요"
+     exit 2 ;;
+esac
+[ -f "$VASP_EXE" ] && [ -x "$VASP_EXE" ] || { echo "⛔ VASP_EXE 가 실행파일이 아닙니다: $VASP_EXE"; exit 2; }
+LAUNCHER_BIN=${LAUNCHER_BIN:-}
 VASP_WRAPPER=${VASP_WRAPPER:-}
 case "$VASP_LAUNCHER_KIND" in
   mpirun|mpiexec|srun)
     case "${VASP_NPROC:-}" in
       ''|*[!0-9]*|0) echo "⛔ VASP_NPROC 가 양의 정수가 아닙니다: '${VASP_NPROC:-}'"; exit 2 ;;
     esac
-    # launcher 는 이름으로만 받고 **러너가** PATH 에서 해석한다 — 경로/인자 밀반입 불가
-    LAUNCHER_BIN=$(command -v "$VASP_LAUNCHER_KIND" 2>/dev/null || true)
-    [ -n "$LAUNCHER_BIN" ] || { echo "⛔ $VASP_LAUNCHER_KIND 를 PATH 에서 찾을 수 없습니다"; exit 2; }
+    # ⛔ 회신 AZ P0-2 — launcher 도 **절대경로로 직접** 받는다 (PATH 조회 없음).
+    [ -n "$LAUNCHER_BIN" ] || {
+      echo "⛔ LAUNCHER_BIN=/abs/path/to/$VASP_LAUNCHER_KIND 를 주세요 (회신 AZ P0-2)."
+      echo "   PATH 에서 찾아 주지 않습니다 — 그 경로로 가짜가 봉인될 수 있었습니다."
+      exit 2; }
+    case "$LAUNCHER_BIN" in /*) ;; *) echo "⛔ LAUNCHER_BIN 은 절대경로여야 합니다: $LAUNCHER_BIN"; exit 2 ;; esac
+    [ -f "$LAUNCHER_BIN" ] && [ -x "$LAUNCHER_BIN" ] || { echo "⛔ LAUNCHER_BIN 이 실행파일이 아닙니다: $LAUNCHER_BIN"; exit 2; }
     ;;
   none)
     VASP_NPROC=${VASP_NPROC:-1} ;;
@@ -995,11 +1018,31 @@ run_wave() {   # $1 = 목록 파일
       *)                   _hl="" ;;
     esac
     if [ -n "$_hl" ]; then _hlh=$(sha256sum "$_hl" | cut -d" " -f1); else _hl="-"; _hlh="-"; fi
-    printf "%s\t_runner_start\t%s\t%s\t%s\t%s\t%s\t%s\n" \
-      "$(date -u +%Y-%m-%dT%H:%M:%SZ)" \
-      "$(sha256sum "$VASP_EXE" | cut -d" " -f1)" \
-      "$VASP_EXE" "$VASP_LAUNCHER_KIND" "$VASP_NPROC" \
-      "$_hl" "$_hlh" > "$j/EXECUTABLE_RECEIPT.tsv"
+    # ⛔⛔ 회신 AZ P1 (2026-09-01) — **재개가 영수증을 파괴했다.**
+    #   종전엔 언제나 `> receipt` 로 **덮어썼다**. `ALLOW_RESUME=1` 이면 새 헤더만
+    #   남고 run_job.sh 는 완료된 상을 건너뛰므로, 이미 돈 상의 행이 통째로 사라져
+    #   분석기가 `RECEIPT_PHASE_MISSING` 을 냈다 — 정직하게 이어 돌린 사람이
+    #   "러너 밖에서 돌렸다" 는 판정을 받았다.
+    #   ⇒ 재개는 **이어 쓰고** 표지를 `_runner_resume` 으로 구분한다.
+    #     `_runner_start` 는 여전히 정확히 하나다 (첫 실행에만 찍힌다).
+    if [ -s "$j/EXECUTABLE_RECEIPT.tsv" ] && [ "${ALLOW_RESUME:-0}" = "1" ]; then
+      _rtag=_runner_resume; _rop=append
+    else
+      _rtag=_runner_start;  _rop=truncate
+    fi
+    if [ "$_rop" = append ]; then
+      printf "%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\n" \
+        "$(date -u +%Y-%m-%dT%H:%M:%SZ)" "$_rtag" \
+        "$(sha256sum "$VASP_EXE" | cut -d" " -f1)" \
+        "$VASP_EXE" "$VASP_LAUNCHER_KIND" "$VASP_NPROC" \
+        "$_hl" "$_hlh" >> "$j/EXECUTABLE_RECEIPT.tsv"
+    else
+      printf "%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\n" \
+        "$(date -u +%Y-%m-%dT%H:%M:%SZ)" "$_rtag" \
+        "$(sha256sum "$VASP_EXE" | cut -d" " -f1)" \
+        "$VASP_EXE" "$VASP_LAUNCHER_KIND" "$VASP_NPROC" \
+        "$_hl" "$_hlh" > "$j/EXECUTABLE_RECEIPT.tsv"
+    fi
     echo "=== $j 시작 ==="
     ( cd "$j" && bash run_job.sh ) || { echo "⛔ $j 실패"; exit 1; }
     echo "=== $j 완료 ==="
@@ -1272,13 +1315,27 @@ if os.path.exists(out):
     elif _at > rec["sealed_at_utc"]:
         bad.append("sealed_at_utc 가 **미래**다 (봉인 %s > 지금 %s)"
                    % (_at, rec["sealed_at_utc"]))
+    # ⛔⛔ 회신 AZ P0-2 (2026-09-01) — **launcher 3종을 불변량 목록에 넣는다.**
+    #   AY P0-1 이 launcher_kind/path/sha256 을 봉인에 **쓰기만** 하고, 재대조
+    #   목록에는 안 넣었다. 그래서 봉인이 `mpirun` 인데 다음 단계에서 kind 를
+    #   바꿔도 "대조 통과" 가 찍혔다 (리뷰어가 kind=none 으로 재현).
     for k in ("allowlist_sha256", "manifest_sha256", "bundle_zip_sha256",
-              "vasp_executable", "vasp_executable_sha256", "vasp_version_banner"):
-        if old.get(k) and old[k] != rec.get(k):
-            bad.append("%s: 봉인 %s ≠ 지금 %s"
-                       % (k, str(old[k])[:16], str(rec.get(k))[:16]))
-        if not old.get(k):
+              "vasp_executable", "vasp_executable_sha256", "vasp_version_banner",
+              "launcher_kind", "launcher_path", "launcher_sha256"):
+        # launcher_path/sha 는 kind=none|wrapper 면 비어 있는 것이 정상이다 —
+        # 그때는 **양쪽 다 비어 있어야** 한다 (한쪽만 비면 아래 불일치로 잡힌다).
+        if (old.get(k) or "") != (rec.get(k) or ""):
+            bad.append("%s: 봉인 %r ≠ 지금 %r"
+                       % (k, str(old.get(k))[:24], str(rec.get(k))[:24]))
+        if not old.get(k) and k not in ("launcher_path", "launcher_sha256"):
             bad.append("%s: 기존 봉인에 없다 — 반쪽 봉인이다" % k)
+    if not old.get("launcher_kind"):
+        bad.append("launcher_kind: 기존 봉인에 없다 — AY P0-1 이전 판이다 "
+                   "(SEAL 을 VASP_LAUNCHER_KIND·LAUNCHER_BIN 과 함께 다시 만들 것)")
+    if (old.get("launcher_kind") or "") in ("mpirun", "mpiexec", "srun") \
+            and not (old.get("launcher_path") and old.get("launcher_sha256")):
+        bad.append("launcher_kind=%s 인데 launcher_path/sha256 이 비었다 — 반쪽 봉인이다"
+                   % old.get("launcher_kind"))
     oa, na = (old.get("assembled_sha256_by_job") or {}), (rec.get("assembled_sha256_by_job") or {})
     if not oa:
         bad.append("assembled_sha256_by_job: 기존 봉인에 없다")
@@ -3543,16 +3600,19 @@ def _selftest_closure(chk):
     chk(_rex.get("D_raw_eV") is not None
         and abs(_rex["D_raw_eV"] - (-0.5)) < 1e-6,
         "🔴 AV P1-5: 초과여도 **D_raw 는 보존**된다 (%s)" % _rex.get("D_raw_eV"))
-    chk(_rex.get("reported_X_eV") is None
+    chk(_rex.get("rounded_value_under_tested_axes_eV") is None
         and _rex.get("tested_axes_stable_at_0.01eV") is False
-        and "0.01 eV 인용 자격 없음" in str(_rex.get("reported_X_⛔")),
+        and "0.01 eV 인용 자격 없음" in str(_rex.get("rounded_value_under_tested_axes_⚠")),
         "🔴 AV P1-5: 초과 시 **0.01 eV 반올림 보고만** 철회된다 "
         "(tested_axes_stable_at_0.01eV=false)")
-    chk(_rex.get("verdict") == "보고 가능"
+    # ⛔음성 회신 AZ P0-5 — `reported_X_eV` 는 overall 자격이 설 때만 존재한다
+    chk(_rex.get("reported_X_eV") is None and _rex.get("overall_citable_at_0.01eV") is None,
+        "⛔음성 AZ P0-5: `overall_citable_at_0.01eV=None` 이면 무조건적 "
+        "`reported_X_eV` 를 내지 않는다 (종전엔 시험한 축만 통과하면 냈다)")
+    chk(_rex.get("verdict") == "보고 가능 (시험한 축 조건부)"
         and (_rex.get("D_interval_eV") or {}).get("hi", 0) <= -0.10,
-        "AV P1-5: 구간 [D−B, D+B] 전체가 guard 이하면 방향 결론은 유지된다 "
-        "(인용 해상도와 방향 결론은 서로 다른 판정이다) · %s"
-        % _rex.get("D_interval_eV"))
+        "AV P1-5 + AZ P0-5: 구간 [D−B, D+B] 전체가 guard 이하면 방향 결론은 유지되되 "
+        "**시험한 축 조건부**로 적는다 · %s" % _rex.get("D_interval_eV"))
     # 구간이 guard 를 **가로지르면** 방향 결론이 NO_CLAIM 으로 내려간다
     _en_g = dict(_en)
     _en_g["prospective/sdcp_neutral__b00__afm2424_pm1"] = -200.605
@@ -3959,7 +4019,7 @@ def _selftest_closure(chk):
         and any("GAS_BOX_DELTA" in a for a in (_rgb.get("advisories") or []))
         and _gd.get("pass") is False
         and _rgb.get("tested_axes_stable_at_0.01eV") is False
-        and _rgb.get("reported_X_eV") is None
+        and _rgb.get("rounded_value_under_tested_axes_eV") is None
         and _rgb.get("D_raw_eV") is not None,
         "⛔음성 AP #11·AV P1-5: 조각별 4 meV 씩이어도 부호가 반대면 δ_gas 8 meV → "
         "**0.01 eV 인용 자격 상실 (D_raw 는 보존)** "
@@ -4008,8 +4068,11 @@ def _selftest_closure(chk):
     chk(abs(r["secondary_G_eV_diagnostic"] - 0.4) < 1e-6,
         f"[V P0-4] secondary G = +0.4 (>0 = 최약 SDCP 도 최강 c10 보다 음수) · "
         f"실제 {r.get('secondary_G_eV')}")
-    chk(r["verdict"] == "보고 가능" and r["reported_X_eV"] == -0.5,
-        "[V P0-4] guard(-0.10) 통과 + 0.01 eV 반올림")
+    chk(r["verdict"] == "보고 가능 (시험한 축 조건부)"
+        and r["rounded_value_under_tested_axes_eV"] == -0.5
+        and r["reported_X_eV"] is None,
+        "[V P0-4 + AZ P0-5] guard(-0.10) 통과 + 0.01 eV 반올림은 "
+        "**시험한 축 조건부 필드**로만 나온다")
     # 음성: guard band 미달
     _en2 = dict(_en)
     _en2["prospective/sdcp_neutral__b00__afm2424_pm1"] = -200.55
@@ -5864,7 +5927,15 @@ def executable_receipt_gates(job_dir, rel, man, executed_phases):
                 "잡마다 남는다)"]
     want_l = seal.get("launcher_sha256")
     want_w = seal.get("launcher_wrapper_sha256")
-    rows, n_start = [], 0
+    # ⛔⛔ 회신 AZ P0-2 (2026-09-01) — **kind·path 를 봉인과 대조한다.**
+    #   종전엔 kind 가 허용 목록 안이기만 하면 통과였고, path 는 아예 안 봤다.
+    #   그래서 봉인이 `mpirun` 인데 receipt 가 `kind=none` 이면 launcher 해시 검사
+    #   자체를 건너뛰어 게이트 `[]` 로 통과했다 (리뷰어가 재현). launcher 신원은
+    #   **불변량**이지 행마다 고를 수 있는 값이 아니다.
+    want_k = seal.get("launcher_kind")
+    want_p = seal.get("launcher_path")
+    rows, n_start, start_rows = [], 0, []
+    n_resume, resume_rows = 0, []
     for ln in open(rp, encoding="utf-8", errors="replace").read().splitlines():
         if not ln.strip():
             continue
@@ -5876,15 +5947,59 @@ def executable_receipt_gates(job_dir, rel, man, executed_phases):
             continue
         if c[1] == "_runner_start":
             n_start += 1
+            start_rows.append(c)
+        if c[1] == "_runner_resume":
+            n_resume += 1
+            resume_rows.append(c)
         rows.append(c)
     # ⛔ 회신 AY P0-2 — `_runner_start` 가 **정확히 하나** 있어야 한다. 없으면
     #   run_staged.sh 를 거치지 않은 실행이고, 여럿이면 이어붙인 것이다.
     if n_start != 1:
         g.append("RECEIPT_RUNNER_START(%d개 — 정확히 1개여야 한다. 0이면 러너를 "
                  "거치지 않은 실행, 2개 이상이면 이어붙인 receipt 다)" % n_start)
-    ph_rows = {c[1] for c in rows if c[1] != "_runner_start"}
+    # ⛔ 회신 AZ P1 — 헤더행의 **내용**도 본다. 종전엔 개수만 셌다 (아무 값이나
+    #   `_runner_start` 라고 적으면 통과했다).
+    if n_start == 1:
+        h = start_rows[0]
+        if not re.match(r"^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z$", h[0]):
+            g.append("RECEIPT_RUNNER_START_MALFORMED(시각 %r — UTC ...Z 가 아니다)" % h[0][:32])
+        if want and h[2] != want:
+            g.append("RECEIPT_RUNNER_START_MALFORMED(헤더의 실행파일 %s ≠ 봉인 %s)"
+                     % (h[2][:12], want[:12]))
+        if want_k and h[4] != want_k:
+            g.append("RECEIPT_RUNNER_START_MALFORMED(헤더의 kind %r ≠ 봉인 %r)"
+                     % (h[4][:16], want_k))
+    # ⛔ 회신 AZ P1 — 재개행이 있으면 **그 사실을 보고**하고, 신원이 첫 실행과
+    #   같은지 본다. 재개 자체는 계약이 허용하지만(NOTES.txt 선언 필요) 다른
+    #   바이너리로 이어 돌린 것은 아니어야 한다.
+    if n_resume:
+        g.append("RECEIPT_RESUMED(%d회 — `ALLOW_RESUME=1` 로 이어 돌렸다. NOTES.txt 에 "
+                 "선언돼 있어야 한다)" % n_resume)
+        for c in resume_rows:
+            if want and c[2] != want:
+                g.append("RECEIPT_RESUME_IDENTITY(재개 시 실행파일 %s ≠ 봉인 %s)"
+                         % (c[2][:12], want[:12]))
+            if want_k and c[4] != want_k:
+                g.append("RECEIPT_RESUME_IDENTITY(재개 시 kind %r ≠ 봉인 %r)"
+                         % (c[4][:16], want_k))
+    _HDR = ("_runner_start", "_runner_resume")
+    ph_rows = {c[1] for c in rows if c[1] not in _HDR}
+    # ⛔ 회신 AZ P1 — 같은 상이 **두 번** 찍히면 막는다 (ALLOW_RESUME 로 이어붙인
+    #   receipt 가 이 형태다). 상 하나에 실행 하나가 계약이다.
+    _seen_ph = {}
     for c in rows:
-        if c[1] == "_runner_start":
+        if c[1] in _HDR:
+            continue
+        _seen_ph[c[1]] = _seen_ph.get(c[1], 0) + 1
+    _dupe = sorted(k for k, n in _seen_ph.items() if n > 1)
+    if _dupe:
+        g.append("RECEIPT_PHASE_DUPLICATE(%s — 상 하나에 실행 하나가 계약이다. "
+                 "이어달리기로 receipt 를 덮어썼거나 이어붙였다)" % _dupe[:3])
+    if not want_k:
+        g.append("RECEIPT_LAUNCHER_UNSEALED(root seal 에 launcher_kind 가 없다 — "
+                 "AY P0-1 이전 봉인이다. 확인 못 함은 통과가 아니다)")
+    for c in rows:
+        if c[1] in _HDR:
             continue
         if not want:
             g.append("RECEIPT_UNVERIFIABLE(root seal 에 실행파일 해시가 없어 receipt "
@@ -5895,6 +6010,20 @@ def executable_receipt_gates(job_dir, rel, man, executed_phases):
                      "바이너리로 돌았다)" % (c[1], c[2][:12], want[:12]))
         if c[4] not in ("mpirun", "mpiexec", "srun", "none", "wrapper"):
             g.append("RECEIPT_LAUNCHER_KIND(%s — 허용 밖 launcher)" % c[4])
+        # ⛔⛔ 회신 AZ P0-2 — kind 는 봉인과 **정확히 같아야** 한다.
+        elif want_k and c[4] != want_k:
+            g.append("RECEIPT_LAUNCHER_KIND(%s 상의 kind %r ≠ 봉인 %r — launcher 종류는 "
+                     "불변량이다. kind 를 바꿔 해시 검사를 건너뛸 수 없다)"
+                     % (c[1], c[4], want_k))
+        # ⛔⛔ 회신 AZ P0-2 — 경로도 봉인과 정확히 같아야 한다 (해시만으로는
+        #   같은 내용의 다른 파일을 구별 못 한다).
+        if c[4] in ("mpirun", "mpiexec", "srun"):
+            if not want_p:
+                g.append("RECEIPT_LAUNCHER_UNSEALED(%s 상: root seal 에 launcher_path 가 "
+                         "없다)" % c[1])
+            elif c[6] != want_p:
+                g.append("RECEIPT_LAUNCHER_PATH(%s 상의 launcher 경로 %r ≠ 봉인 %r)"
+                         % (c[1], c[6][:40], str(want_p)[:40]))
         # ⛔ 회신 AY P1 — 시각·프로세스 수 형식
         if not re.match(r"^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z$", c[0]):
             g.append("RECEIPT_TIME_FORMAT(%r — UTC ...Z 형식이 아니다)" % c[0][:32])
@@ -7078,6 +7207,23 @@ def closure_C3(man, jobs, E, frags):
            "source": "Edisp (eV) from the D3-on OUTCAR — no D3-off twin required",
            "offset_definition": C3_OFFSET_UMA_MINUS_DFT,
            "offset_within_fragment_range_eV": C3_OFFSET_RANGE_EV,
+           # ⛔ 회신 AZ P1 (2026-09-01) — 이 단서를 **결과 객체에도** 싣는다.
+           #   코드 주석에만 있으면 산출물을 읽는 사람에게 안 간다.
+           "⚠_C3_가_무엇인가": {
+               "ko": ("IVDW=11(D3 zero damping)의 correction 은 total energy 에 "
+                      "**더해질 뿐 SCF 에 들어가지 않는다.** 그래서 고정기하 static 에서 "
+                      "`E_on − E_off = Edisp` 가 항등식이고, 쌍둥이 D3-off 잡이 필요 없다. "
+                      "⇒ C3 는 **exact-cell 차등량에 대한 전체 D3 기여**이지 "
+                      "조각–슬랩 쌍 분산으로 분해한 값이 **아니다**."),
+               "en": ("With IVDW=11 (D3, zero damping) the correction is added to the "
+                      "total energy and does not enter the SCF, so at fixed geometry "
+                      "E_on − E_off = Edisp identically and no D3-off twin is needed. "
+                      "C3 is therefore the **total D3 contribution to the exact-cell "
+                      "difference**, not a fragment–slab pair decomposition."),
+               "출처": "https://vasp.at/wiki/IVDW",
+               "⛔_틀린_근거": ("*'두 조각이 슬랩을 다르게 편극시키지 않는다'* 는 "
+                               "**틀렸다** — D3 계수는 원자종·배위 기하에 의존한다 "
+                               "(회신 AY Q2 정정)")},
            "by_frag": {}}
 
     def pair_delta(jn):
@@ -8150,16 +8296,34 @@ def _closure_estimand(man, results, E, emol, jobs, merge_info=None):
     _cit01 = bool(_nbF.get("tested_axes_stable_at_0.01eV"))
     out["tested_axes_stable_at_0.01eV"] = _cit01
     out["overall_citable_at_0.01eV"] = None      # ENCUT 근거 없음 (AY P1)
+    # ⛔⛔ 회신 AZ P0-5 (2026-09-01) — **`overall=None` 을 출력 경로가 우회했다.**
+    #   `overall_citable_at_0.01eV=None`("모른다")을 옳게 넣어 놓고, 바로 아래에서
+    #   *시험한 축만* 통과하면 `reported_X_eV` 라는 **무조건적 이름의 숫자**를 냈다.
+    #   필드명에 범위가 없으면 읽는 사람은 그것을 최종 인용값으로 읽는다.
+    #   ⇒ 필드명에 범위를 박는다: `rounded_value_under_tested_axes_eV`.
+    #     `reported_X_eV` 는 **overall 이 True 일 때만** 나온다 — 지금은 영영 None 이다.
     if _cit01:
-        out["reported_X_eV"] = round(
-            round(primary / PREREG_ROUND_EV) * PREREG_ROUND_EV, 2)
+        _rv = round(round(primary / PREREG_ROUND_EV) * PREREG_ROUND_EV, 2)
+        out["rounded_value_under_tested_axes_eV"] = _rv
+        out["rounded_value_under_tested_axes_⚠"] = (
+            "**시험한 축 조건부** 값이다 (ENCUT·축간 상호작용은 안 쟀다). "
+            "overall_citable_at_0.01eV 가 True 가 되기 전에는 최종 인용값이 아니다 "
+            "(회신 AZ P0-5)")
     else:
-        out["reported_X_eV"] = None
-        out["reported_X_⛔"] = (
+        out["rounded_value_under_tested_axes_eV"] = None
+        out["rounded_value_under_tested_axes_⚠"] = (
             "0.01 eV 인용 자격 없음 (B_num envelope %s · missing %s · 미설계 %s) — "
             "D_raw 와 축별 민감도만 보고한다 (회신 AV P1-5)"
             % (_nbF.get("B_num_meV"), _nbF.get("missing_axes"),
                _nbF.get("axes_not_designed")))
+    # `reported_X_eV` 는 overall 자격이 섰을 때만 존재한다 (지금은 언제나 None).
+    out["reported_X_eV"] = (out["rounded_value_under_tested_axes_eV"]
+                            if out["overall_citable_at_0.01eV"] is True else None)
+    out["reported_X_⛔"] = (
+        "overall_citable_at_0.01eV=%r — ENCUT·축간 상호작용을 안 쟀으므로 무조건적 "
+        "인용값을 내지 않는다. 시험한 축 조건부 값은 "
+        "`rounded_value_under_tested_axes_eV` 에 있다 (회신 AZ P0-5)"
+        % (out["overall_citable_at_0.01eV"],))
     # 방향 결론 — envelope 구간 [D−B, D+B] 가 0 이나 guard 를 **가로지르면** 방향을
     #   말하지 않는다 (회신 AV P1-5). B 가 없으면(축 결측) 이미 위에서 NO_VALUE 다.
     _bev = (float(_nbF["B_num_meV"]) / 1000.0
@@ -8173,7 +8337,9 @@ def _closure_estimand(man, results, E, emol, jobs, merge_info=None):
         if _hi <= PREREG_GUARD_EV:
             out["guard"] = ("통과 (구간 [%.4f, %.4f] 전체가 guard %.2f 이하)"
                             % (_lo, _hi, PREREG_GUARD_EV))
-            out["verdict"] = "보고 가능"
+            # ⛔⛔ 회신 AZ P0-5 — 방향 판정도 **시험한 축 조건부**다. 무조건적
+            #   "보고 가능" 은 overall 자격이 없는데도 최종 승인처럼 읽혔다.
+            out["verdict"] = "보고 가능 (시험한 축 조건부)"
         elif (_lo <= PREREG_GUARD_EV < _hi) or (_lo < 0.0 <= _hi):
             out["guard"] = ("⛔ 구간 [%.4f, %.4f] 가 guard(%.2f) 또는 0 을 "
                             "가로지른다" % (_lo, _hi, PREREG_GUARD_EV))
@@ -8185,11 +8351,16 @@ def _closure_estimand(man, results, E, emol, jobs, merge_info=None):
             out["verdict"] = "NO_DIRECTIONAL_CLAIM"
     elif primary <= PREREG_GUARD_EV:
         out["guard"] = "통과 (primary %.4f <= %.2f · envelope 미상)" % (primary, PREREG_GUARD_EV)
-        out["verdict"] = "보고 가능"
+        out["verdict"] = "보고 가능 (시험한 축 조건부)"
     else:
         out["guard"] = ("⛔ primary %+.4f > %.2f — guard band 미달"
                         % (primary, PREREG_GUARD_EV))
         out["verdict"] = "NO_DIRECTIONAL_CLAIM"
+    out["verdict_scope"] = {
+        "범위": "tested axes only (ENCUT·축간 상호작용 미측정)",
+        "⛔": ("이 판정은 `overall_citable_at_0.01eV` 가 True 가 되기 전에는 "
+               "최종 인용 승인이 아니다. 원고 문장에 축 조건을 병기한다 "
+               "(회신 AZ P0-5)")}
     # ⛔ 회신 AO P0-6 — 기체 상자 수렴을 **이 묶음에서 검증하지 않았으면** 그 사실이
     #   D 에 라벨로 붙어야 한다. prior 를 비차단으로 내린 대가는 침묵이 아니다.
     _bx = [k for k, v in ((results or {}).get("numerical_gates") or {}).items()
@@ -9953,7 +10124,7 @@ def _return_contract(man: Dict[str, Any]) -> Dict[str, Any]:
     #   POTCAR 은 1저자 결정(2026-09-01)으로 외주처 소관이므로 pin 을 걸지 않는다.
     root.append("POTCAR_ATTESTATION.json — **선택**. 주 실행 절차에 생성 단계가 "
                 "없으므로 만들지 않아도 됩니다. 다만 없으면 PAW release 를 단정하지 "
-                "못하고 **조건부**로만 보고합니다 (make_attestation.sh 로 만들려면 "
+                "못하고 **조건부**로만 보고합니다 (MAKE_POTCAR_ATTESTATION.sh 로 만들려면 "
                 "**첫 VASP 실행 전에만** 가능합니다 — 회신 AR P0-6)")
     return {
         "⚠_정본": "이 구조가 반송 계약의 정본이다 — README·SUBMIT 은 이것의 렌더다 "
@@ -11432,10 +11603,29 @@ def build_bundle(a, ledger: Optional[Dict[str, Any]] = None) -> Path:
     #     이름은 **E_ads** 로 쓰고, 단서(고정기하·단일점)는 **Methods 문장**이 진다.
     #   AS Q7 lateral: 옵션 (a) — **셀 조건으로 한정**한다 (lateral 대조를 넣지 않는다).
     man["reported_quantity"] = {
-        "name": "E_ads (adsorption energy) · 조각 간 차는 ΔE_ads",
-        "korean": "흡착에너지 E_ads · 두 조각의 차 ΔE_ads",
-        "formula": ("E_ads(f) = E_C(f) − E_G(f) ; "
-                    "ΔE_ads = E_ads(sdcp) − E_ads(control)"),
+        # ⛔ 회신 AZ P0-4 — 보고하는 것은 **ΔE_ads 하나**다. 이름 자리에서부터
+        #   그렇게 적는다 (종전엔 E_ads 를 앞에 세워 개별값이 산출물처럼 읽혔다).
+        "name": "ΔE_ads (두 조각의 흡착에너지 차) — 개별 E_ads 는 산출하지 않는다",
+        "korean": "흡착에너지 차 ΔE_ads · 개별 E_ads 는 E_S 를 안 재서 미산출",
+        # ⛔⛔ 회신 AZ P0-4 (2026-09-01) — **성분 균형이 안 맞았다.**
+        #   `E_ads(f) = E_C(f) − E_G(f)` 에는 clean-slab 항 E_S 가 없다. 그건
+        #   흡착에너지가 아니라 "복합체 − 기체" 이고, 그 이름으로 부르면 정의가
+        #   틀린 채로 나간다. 게다가 같은 문서가 개별 E_ads 를 산출물이 아니라고
+        #   말하면서 이름은 E_ads 로 쓰고 있었다 (문서 내부 모순).
+        #   ⇒ 정의는 균형 잡힌 형태로 적고, **보고하는 것은 ΔE_ads 하나**임을
+        #     같은 자리에 박는다. 공통 E_S 는 ΔE_ads 에서 대수적으로 소거되므로
+        #     **clean-slab 추가 잡은 필요 없다** (리뷰어 확인).
+        "formula": ("E_ads(f) = E_C(f) − E_S − E_G(f)   [정의 — 이 묶음은 **산출하지 않는다**] ; "
+                    "ΔE_ads = [E_C(sdcp) − E_G(sdcp)] − [E_C(ptfe) − E_G(ptfe)]"
+                    "   [**이것만 보고한다**]"),
+        "formula_note": {
+            "E_S_는_왜_없나": "공통 clean slab E_S 는 ΔE_ads 의 두 대괄호에서 서로 "
+                              "빼지므로 대수적으로 소거된다. 그래서 ΔE_ads 만 보고하는 "
+                              "한 clean-slab 잡이 **필요 없다** (회신 AZ P0-4·Q6).",
+            "개별_E_ads_는": "E_S 를 재지 않았으므로 **산출 불가**다. 값을 만들지 않고, "
+                             "만들 수 있는 것처럼 적지도 않는다.",
+            "⛔_종전_식": "`E_ads(f) = E_C(f) − E_G(f)` 는 **틀렸다** (E_S 누락). "
+                          "v20 까지 이 식이 MANIFEST 에 있었다 — 회신 AZ P0-4 정정."},
         "⚠_반드시_함께_적는_단서": {
             "ko": "MLIP(UMA-s-1p1) 이완 기하 위의 **단일점** 계산이며 DFT 이온 이완을 "
                   "하지 않았다. 조각·표면 변형에너지와 고정 gas conformer 선택 효과가 "
@@ -11461,8 +11651,16 @@ def build_bundle(a, ledger: Optional[Dict[str, Any]] = None) -> Path:
             # 🔴 회신 AV 해제조건 ⑦ — "공통 주기영상 항이 상당 부분 소거" 는 AT Q1
             #   에서 철회한 근거인데 이 필드에 살아 있었다. 철회와 같은 산출물에서
             #   그 문구가 다시 나가면 철회가 무효가 된다. 소거를 주장하지 않는다.
-            "왜": ("주기영상 항의 소거를 **주장하지 않는다** (회신 AT Q1 철회 — 두 "
-                   "복합체의 슬랩 조성이 달라 공통항 보장이 없다). 그래서 값을 이 셀 "
+            # ⛔ 회신 AZ P1 (2026-09-01) — 종전 근거 *"두 복합체의 슬랩 조성이 다르다"*
+            #   는 **거짓**이었다. 공통 슬랩은 둘 다 `Li48 Ni48 O96` · 192원자로 같다.
+            #   결론(소거를 주장하지 않는다)은 그대로이고 **이유가 틀렸다** —
+            #   비소거 위험은 조성이 아니라 **복합체 전체 조성·기하와 주기영상 항이
+            #   다른 데서** 온다 (흡착 조각이 다르므로 쌍극자·분산·이미지 상호작용이
+            #   조각마다 다르다).
+            "왜": ("주기영상 항의 소거를 **주장하지 않는다**. ⚠ 근거 정정(AZ P1): "
+                   "공통 슬랩은 두 복합체가 **같다**(Li48 Ni48 O96 · 192원자). "
+                   "비소거 위험은 **복합체 전체의 조성·기하와 주기영상 항이 조각마다 "
+                   "다르다**는 데서 온다. 그래서 값을 이 셀 "
                    "조건으로 **한정**해 보고한다. lateral 확장은 잡당 원자수 2배"
                    "(비용 ~4배·9일)라 이 단계의 질문에 비해 과하다"),
             "⛔_금지": ("고립 분자 흡착·실제 전극 피복률로 확장 금지. 원고 문장에 "
@@ -11972,8 +12170,15 @@ def build_bundle(a, ledger: Optional[Dict[str, Any]] = None) -> Path:
             "schema": "vacuum_convergence/v1",
             "c1_A": (man.get("vacuum") or {}).get("c_after_A"),
             "c2_A": float(_c2), "jobs": _vc,
-            "판정": "두 조각의 **대비 변화** |D(c2) − D(c1)| ≤ 0.005 eV 이고, "
-                    "두 값의 0.01 eV 반올림이 같아야 통과",
+            # ⛔⛔ 회신 AZ P0-3 (2026-09-01) — **정본이 둘이면 결과를 보고 고를 수 있다.**
+            #   코드는 2026-08-31(AM Q1)에 이미 반올림을 정보용으로 내렸는데 MANIFEST 는
+            #   *"그리고 0.01 eV 반올림이 같아야"* 를 계속 요구했다. AY P0-3 에서
+            #   docstring 만 고치고 **이 문자열을 안 고쳤다.** D(c1)=0.0049 ·
+            #   D(c2)=0.0051 이 정확히 그 틈이다 — 코드 PASS · 문서 FAIL.
+            "판정": "두 조각의 **대비 변화** |D(c2) − D(c1)| ≤ 0.005 eV — 이것 하나가 "
+                    "hard gate 다 (회신 AM Q1 · AY P0-3 · AZ P0-3)",
+            "0.01_eV_반올림": "표시 안정성 **정보**일 뿐 판정에 안 들어간다. 반올림만 "
+                              "갈리면 Figure 삭제가 아니라 불확도 병기 또는 한 자리 추가 보고",
             "왜_대비인가": "기체 기준과 슬랩 항은 c 에 무관하거나 두 조각에 공통이라 "
                            "대비를 취하면 소거된다. 조각별 변화가 아니라 대비 변화가 판정 대상",
             "5_meV_출처": "물리 상수가 아니라 **보고 최소단위(0.01 eV)의 절반**",
@@ -12294,6 +12499,151 @@ esac
 echo " General timing and accounting informations for this job" >> OUTCAR
 exit 0
 """
+
+
+FAKE_MPIRUN = r"""#!/usr/bin/env bash
+# 가짜 mpirun — `-np N <exe>` 만 받아 그대로 실행한다 (봉인 경로 시험용).
+set -u
+[ "${1:-}" = "-np" ] || [ "${1:-}" = "-n" ] || { echo "FAKE_MPIRUN: 첫 인자가 -np/-n 이 아니다: ${1:-}"; exit 9; }
+shift 2
+exec "$@"
+"""
+
+
+def _runner_launcher_regression(out: Path, chk) -> None:
+    """★ 회신 AZ P0-1 — **정상 launcher 경로로 run_job.sh 를 실제로 돌린다.**
+
+    ⛔⛔ 왜 이 시험이 새로 필요한가 (2026-09-01)
+      `_runner_regression` 은 언제나 `.SELFTEST_FIXTURE`(=`_FIXTURE=1`) 와
+      `VASP_LAUNCHER_KIND=none` 으로 돌았다. 그 둘이 각각 **봉인 조회 블록 전체**와
+      **mpirun 분기 전체**를 건너뛴다. 그래서 AY P0-1 패치가 봉인 파일 경로를
+      틀리게 적었는데도(`POTCAR_ROOT_SEAL.json` ← 실제는 `../../…`) selftest
+      300건이 통과했고, 리뷰어가 **16잡이 전부 첫 줄에서 죽는다**는 것을 잡았다.
+      ⇒ 픽스처 표시 **없이**, 실제 봉인 파일을 놓고, named launcher 로 돈다.
+
+    ⛔ 이 시험이 못 하는 것: 실제 MPI·VASP 동작. 러너의 **봉인 조회·재해시·영수증**
+      계약만 본다.
+    """
+    sp = [p.parent for p in sorted(out.rglob("job.json"))
+          if "dense" in (json.loads(p.read_text()).get("phases") or [])]
+    if not sp:
+        chk(False, "AZ P0-1: dense 를 도는 잡이 없다 — launcher 회귀를 못 돌린다")
+        return
+    src = sp[0]
+    rel = src.relative_to(out)
+    bindir = out.parent / "_lbin"
+    bindir.mkdir(exist_ok=True)
+    (bindir / "vasp_std").write_text(STUB_VASP)
+    (bindir / "vasp_std").chmod(0o755)
+    (bindir / "mpirun").write_text(FAKE_MPIRUN)
+    (bindir / "mpirun").chmod(0o755)
+    exe, mpi = bindir / "vasp_std", bindir / "mpirun"
+
+    def _sha_f(p):
+        return hashlib.sha256(Path(p).read_bytes()).hexdigest()
+
+    def stage(tag, seal_patch=None, drop_seal=False):
+        """번들을 통째로 복사하고 **실물 봉인**을 놓는다 (픽스처 표시 없음)."""
+        b = out.parent / ("_lrun_" + tag)
+        shutil.rmtree(b, ignore_errors=True)
+        shutil.copytree(out, b)
+        jd = b / rel
+        (jd / "POTCAR").write_text("stub POTCAR\n")
+        # POTCAR provenance — 이 시험의 축이 아니므로 계약대로 채워 준다
+        (jd / "POTCAR_PROVENANCE.json").write_text(json.dumps({
+            "allowlist": "/abs/site_allow.txt",
+            "allowlist_sha256": "0" * 64,
+            "assembled_sha256": _sha_f(jd / "POTCAR")}, ensure_ascii=False))
+        seal = {"schema": "potcar_root_seal/v1",
+                "vasp_executable": str(exe),
+                "vasp_executable_sha256": _sha_f(exe),
+                "launcher_kind": "mpirun",
+                "launcher_path": str(mpi),
+                "launcher_sha256": _sha_f(mpi)}
+        if seal_patch:
+            seal.update(seal_patch)
+        if not drop_seal:
+            (b / "POTCAR_ROOT_SEAL.json").write_text(
+                json.dumps(seal, ensure_ascii=False, indent=1))
+        return b, jd
+
+    def go(jd, extra=None, token=None):
+        log = jd / "_ph.log"
+        log.unlink(missing_ok=True)
+        env = {**os.environ, "PATH": f"{bindir}:{os.environ.get('PATH','')}",
+               "VASP_LAUNCHER_KIND": "mpirun", "VASP_NPROC": "2",
+               "VASP_EXE": str(exe), "STUB_LOG": str(log)}
+        if token is not None:
+            env["RUNNER_TOKEN"] = token
+        env.update(extra or {})
+        r = subprocess.run(["bash", "run_job.sh"], cwd=jd, env=env,
+                           capture_output=True, text=True)
+        return r, (log.read_text().split() if log.is_file() else [])
+
+    # ── L1 양성: 봉인된 mpirun 으로 **끝까지 돈다** ─────────────────────────
+    b, jd = stage("ok")
+    _tok = (b / ".lock_bundle").read_text().strip() if (b / ".lock_bundle").is_file() else None
+    if _tok is None:                     # staged 러너가 lock 을 안 남긴 상태 — 만들어 준다
+        (b / ".lock_bundle").write_text("selftest-token\n")
+        _tok = "selftest-token"
+    r, ran = go(jd, token=_tok)
+    chk(r.returncode == 0 and ran,
+        "★ 회신 AZ P0-1 양성: **픽스처 표시 없이** 봉인된 mpirun 으로 run_job.sh 가 "
+        "완주한다 (rc=%d · 상 %s)%s — 이 시험이 없어서 봉인 경로 오타로 16잡이 전부 "
+        "죽는 것을 못 봤다"
+        % (r.returncode, ran, "" if r.returncode == 0 else " | " + (r.stdout + r.stderr).strip()[-160:]))
+    rcpt = jd / "EXECUTABLE_RECEIPT.tsv"
+    _rows = [l.split("\t") for l in rcpt.read_text().splitlines() if l.strip()] \
+        if rcpt.is_file() else []
+    chk(bool(_rows) and all(len(c) == 8 for c in _rows),
+        "AZ P0-1: 영수증이 8열로 실제로 쓰였다 (%d행)" % len(_rows))
+    chk(bool(_rows) and all(c[4] == "mpirun" and c[6] == str(mpi)
+                            and c[7] == _sha_f(mpi) for c in _rows),
+        "AZ P0-2: 영수증의 kind·launcher 경로·해시가 봉인과 같다")
+
+    # ── L2 음성: 봉인에 launcher 가 없으면 **거부** ─────────────────────────
+    b2, jd2 = stage("noloc", seal_patch={"launcher_path": "", "launcher_kind": ""})
+    (b2 / ".lock_bundle").write_text("t2\n")
+    r2, ran2 = go(jd2, token="t2")
+    chk(r2.returncode != 0 and not ran2,
+        "⛔음성 AZ P0-1: 봉인에 launcher 가 없으면 **한 상도 안 돌고 거부**한다")
+
+    # ── L3 음성: 봉인 파일 자체가 없으면 거부 ───────────────────────────────
+    b3, jd3 = stage("noseal", drop_seal=True)
+    (b3 / ".lock_bundle").write_text("t3\n")
+    r3, ran3 = go(jd3, token="t3")
+    chk(r3.returncode != 0 and not ran3,
+        "⛔음성 AZ P0-1: 봉인 파일이 없으면 거부한다 (종전엔 이 경로를 **못 찾아서** "
+        "언제나 여기로 떨어졌다)")
+
+    # ── L4 음성: 환경으로 준 LAUNCHER_BIN 이 봉인과 다르면 거부 ─────────────
+    b4, jd4 = stage("otherlauncher")
+    (b4 / ".lock_bundle").write_text("t4\n")
+    other = bindir / "mpirun_other"
+    other.write_text(FAKE_MPIRUN + "\n# 다른 파일\n")
+    other.chmod(0o755)
+    r4, ran4 = go(jd4, extra={"LAUNCHER_BIN": str(other)}, token="t4")
+    chk(r4.returncode != 0 and not ran4,
+        "⛔음성 AZ P0-2: 환경의 LAUNCHER_BIN 이 봉인과 다르면 거부한다")
+
+    # ── L5 음성: launcher 를 **도중에 바꾸면** 다음 상에서 잡는다 ───────────
+    b5, jd5 = stage("swap")
+    (b5 / ".lock_bundle").write_text("t5\n")
+    swap = bindir / "mpirun_swap"
+    shutil.copy(mpi, swap)
+    _s = json.loads((b5 / "POTCAR_ROOT_SEAL.json").read_text())
+    _s["launcher_path"] = str(swap)
+    _s["launcher_sha256"] = _sha_f(swap)
+    (b5 / "POTCAR_ROOT_SEAL.json").write_text(json.dumps(_s, ensure_ascii=False))
+    swap.write_text(FAKE_MPIRUN + "\n# 실행 중 교체됨\n")   # 봉인 뒤 내용 변경
+    swap.chmod(0o755)
+    r5, ran5 = go(jd5, token="t5")
+    chk(r5.returncode != 0,
+        "⛔음성 AZ P0-1: launcher 가 봉인 뒤 바뀌면 상 직전 재해시가 잡는다 "
+        "(rc=%d)" % r5.returncode)
+    for _d in ("_lrun_ok", "_lrun_noloc", "_lrun_noseal", "_lrun_otherlauncher",
+               "_lrun_swap"):
+        shutil.rmtree(out.parent / _d, ignore_errors=True)
 
 
 def _runner_regression(out: Path, chk) -> None:
@@ -13916,6 +14266,7 @@ def selftest() -> int:
             for c in m_sp["magnetic_controls"]),
         "SP: 자기 대조군은 dense 없음 (coarse static 만 — 예산)")
     _runner_regression(out_sp, chk)
+    _runner_launcher_regression(out_sp, chk)
 
     E = {"clean": -500.0, "mol": -50.0}
     truth = dict(DIRS)

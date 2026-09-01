@@ -620,7 +620,7 @@
    },
    "title": "마감은 조건 먼저 — upgrade 트리거와 invalidation 트리거를 분리한다",
    "statement": "캠페인 마감 기록은 확정값·허용/금지 서술·재개 조건을 담되, 재개 조건은 planned_upgrade_triggers(범위 확장 투자 결정)와 mandatory_invalidation_triggers(estimand/산술/프로토콜 결함·source 변경·게이트 실패·상충 증거·scope 확대) 로 분리한다. '이 목록 밖으로는 열지 않는다' 는 upgrade 쪽에만 적용된다 — 결론의 반증 가능성은 닫을 수 없다. 마감 기록은 값을 복사하지 않고 claim/result/source 참조로 쓴다.",
-   "decision_state": "superseded",
+   "decision_state": "proposed",
    "evidence": [
     "SDCP: 조건 없는 마감 2회가 2회 반려 (07-17 doped v1 · 08-28 회신 M)",
     "회신 N P0: 마감 도입 커밋 자체가 citable headline 충돌·혼합-basin 근거 재사용"
@@ -631,8 +631,15 @@
     "회신 N 승인조건 5 항목 완료 후 ratify 검토"
    ],
    "enforcement": "webapp/tests/test_webapp.py::test_sdcp_closure_consistency 가 첫 사례를 봉인",
-   "status": "superseded",
-   "superseded_by": "D-2026-08-30-sdcp-c12-path"
+   "status": "proposed",
+   "status_history": [
+    {
+     "at": "2026-09-01",
+     "state": "proposed",
+     "note": "C-12 노드의 잘못된 supersede 간선을 제거했다 (회신 AW P0-3 불허 · AZ P0-6). ⚠ 되돌려 보니 이 정책은 **사람 승인 기록이 한 번도 없었다** — `superseded` 상태가 그 사실을 가리고 있었다. 그래서 `active` 가 아니라 `proposed` 로 둔다. 원장 fail-closed 검사(AW P0-4)가 이것을 잡았다."
+    }
+   ],
+   "⚠_비준_필요": "전역 마감정책이 승인 없이 서 있다. 1저자가 ratify 해야 active 다 (webapp/canonical.py validate_governance 가 강제)"
   },
   {
    "id": "D-2026-08-28-sdcp-doped-scope-closure",
@@ -761,20 +768,19 @@
     ]
    },
    "title": "C-12 경로 채택 — 사전 고정 네 잡 직접 대입의 조각 대비 D (회신 AI §A-Q4 = C)",
-   "statement": "D = (E_C_sdcp − E_G_sdcp) − (E_C_control − E_G_control). 사전 고정 기하의 단일점 네 잡 직접 대입이며, 이름은 'fixed-geometry differential complex–gas reference energy' — adsorption energy·binding energy·E_ads 로 부르지 않는다 (claim_prereg §1). 포함: 조각·표면 변형에너지, 고정 gas conformer 선택 효과. 제외: 기하 이완, 영점·열적 기여, 용매·계면 전기장.",
+   "statement": "ΔE_ads = [E_C(sdcp) − E_G(sdcp)] − [E_C(ptfe_c10) − E_G(ptfe_c10)]. 사전 고정 기하의 단일점 네 잡 직접 대입이다. ⚠ 회신 AZ P0-4 정정: 개별 흡착에너지의 정의는 E_ads(f) = E_C(f) − E_S − E_G(f) 이고 이 묶음은 clean slab E_S 를 재지 않으므로 **개별 E_ads 를 산출하지 않는다**. 공통 E_S 는 ΔE_ads 에서 대수적으로 소거되므로 clean-slab 추가 잡은 불필요하다. 이름은 **ΔE_ads**(1저자 2026-09-01) 이고 단서(MLIP 이완 기하 위 단일점·DFT 이온 이완 없음·조각/표면 변형과 고정 gas conformer 효과 포함)는 Methods 가 진다. 포함: 조각·표면 변형에너지, 고정 gas conformer 선택 효과. 제외: 기하 이완, 영점·열적 기여, 용매·계면 전기장.",
    "rationale": "회신 AI 2026-08-30 §A-Q4 판정 = C: 42잡·10잡 카나리·추적 ZIP 전부 NO-GO, POTCAR 해시를 외부 기준에 결속한 12잡 묶음이 GO. 이 채택으로 옛 체계(H1·holdout·C1 의 S_f·calibration/holdout merge·adaptive δ·후보집합 완전성·D3-off pair·비용모형을 과학적 게이트로 쓰는 규칙)가 실행 경로에서 제거됐다. 커밋 390450ea 가 그 채택이고, 이 노드는 그때 원장에 빠진 등록을 소급 보충한다 (branch_state_2026_08_31 §3-2).",
    "supersedes": [
-    "D-2026-08-28-closure-criteria-first",
     "D-2026-08-30-sdcp-neutral-ptfe-ddE-obs"
    ],
    "does_not_supersede": [
     "doped 마감 (D-2026-08-28-sdcp-doped-scope-closure) — 그대로 유지",
-    "estimand-before-compute (D-2026-08-28) — 그대로 유지"
+    "estimand-before-compute (D-2026-08-28) — 그대로 유지",
+    "전역 마감정책 (D-2026-08-28-closure-criteria-first) — **좁은 estimand 노드는 전역 정책을 supersede 할 수 없다.** 회신 AW P0-3 불허 · 회신 AZ P0-6 이 이 간선을 발송 차단 사유로 재확인 (2026-09-01 제거)"
    ],
    "open_conflicts": [
-    "명칭: sdcp_c12_protocol_2026_08_30.json §1 은 같은 양을 'adsorption energy' 라 부르는데 sdcp_c12_claim_prereg_2026_08_31.json §1 은 그 이름을 금지한다 — 정본 판정은 비준 시 함께 (branch_state_2026_08_31 §3-1)",
-    "범위: D-2026-08-28-closure-criteria-first 는 systems=['*'] 인 일반 마감 정책인데, CLAUDE.md 마감 규율(2026-08-28 채택)은 여전히 현행이다. 강등이 전면 폐지인지 SDCP 집행부만인지 비준 시 판정 필요 — 커밋 390450ea 는 두 건 모두를 명시적으로 superseded 로 내렸다",
-    "프로토콜 잡 수 불일치 (§0 12잡·§12 19잡 vs 실물 16잡) — citation_hazards 등재됨, 파일 정정은 1저자 (branch_state_2026_08_31 §3-3)"
+    "⚠ 2026-09-01 해소: 범위 충돌(전역 마감정책 supersede)은 간선 제거로 닫혔다 (회신 AW P0-3 · AZ P0-6)",
+    "⚠ 2026-09-01 해소: 명칭 충돌은 회신 AZ P0-4 로 닫혔다 — 보고량은 **ΔE_ads** 하나이고 개별 E_ads 는 E_S 를 안 재서 산출하지 않는다. sdcp_c12_protocol_2026_08_30.json §1 의 'adsorption energy' 표현은 ΔE_ads 정의로 정정 대상 (citation_hazards 등재)"
    ],
    "method_ref": "db/properties/sdcp_c12_claim_prereg_2026_08_31.json",
    "protocol_ref": "db/properties/sdcp_c12_protocol_2026_08_30.json",
@@ -782,7 +788,14 @@
    "enforcement": "tools/sdcp/vasp_handoff_bundle.py 의 ANALYZER — 게이트 통과 시에만 D 를 내고, D_raw/구간/판정 사다리와 citable_at_0.01eV 를 분리한다 (회신 AV P1-5)",
    "registered_at": "2026-09-01",
    "registered_by": "agent (소급 등록 — 채택 자체는 2026-08-30 커밋 390450ea)",
-   "note": "⚠ proposed — 사람이 ratify 해야 active. VASP 0잡 시점 등록."
+   "note": "⚠ proposed — 사람이 ratify 해야 active. VASP 0잡 시점 등록.",
+   "status_history": [
+    {
+     "at": "2026-09-01",
+     "state": "proposed",
+     "note": "회신 AZ P0-4·P0-6 반영: supersede 간선 제거 · 보고량을 ΔE_ads 로 정정(E_S 균형) · open_conflicts 해소. **비준은 여전히 사람 몫이고, 회신 AZ P0-6 은 비준 전 발송을 막는다.**"
+    }
+   ]
   },
   {
    "id": "D-2026-08-31-sdcp-polaron-Fbb",

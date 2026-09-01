@@ -279,6 +279,9 @@ def gate_prefix(e: dict) -> str:
 
 #: lineage 축 어휘 — **두 축은 독립**이다 (codex R4). 한 enum 으로 합치면 사다리가 된다.
 LINEAGE_BINDING = ("missing", "prose_only", "unverified", "unwired", "wired", "verified")
+#: ⛔ 회신 AW P0-4 — 결정 상태 어휘. **모르는 상태는 검사를 조용히 건너뛰게 한다**
+#:   (예: `status: "aktive"` 오타가 active 검사에도 superseded 검사에도 안 걸린다).
+DECISION_STATES = frozenset(("proposed", "active", "superseded", "retracted", "rejected"))
 NUMERIC_REPRO = ("none", "approximate", "exact")
 
 
@@ -403,9 +406,34 @@ def validate_governance(reg: dict = None, root=None) -> list:
                 and d["decision_state"] != d["status"]):
             bad.append(f"결정 {d['id']} 의 decision_state({d['decision_state']!r}) 와 "
                        f"status({d['status']!r}) 가 어긋난다 — 어느 쪽이 정본인지 알 수 없다")
+        # ⛔ 상태 어휘 (AW P0-4) — 모르는 상태는 검사를 조용히 건너뛰게 한다
+        _st = _dstate(d)
+        if _st is not None and _st not in DECISION_STATES:
+            bad.append(f"결정 {d['id']} 의 상태 {_st!r} 가 허용 어휘 밖이다 "
+                       f"({sorted(DECISION_STATES)})")
+        for f in ("supersedes", "does_not_supersede", "open_conflicts", "evidence"):
+            if f in d and not isinstance(d[f], list):
+                bad.append(f"결정 {d['id']} 의 {f} 가 리스트가 아니다 ({type(d[f]).__name__})")
         for ref in d.get("supersedes", []):
             if ref not in dec:
                 bad.append(f"결정 {d['id']} 의 supersedes 대상 {ref} 가 원장에 없다 (dangling)")
+            else:
+                # ⛔⛔ 회신 AW P0-3 · AZ P0-6 (2026-09-01) — **좁은 노드가 전역 정책을
+                #   supersede 할 수 없다.** C-12 estimand 노드(systems 2개)가 전역
+                #   마감정책(systems `*`)을 대체하고 있었고, 그 상태로 계산을 던지면
+                #   결과가 정책 결정에 압력을 준다 (사전등록의 의미가 사라진다).
+                _t = dec[ref]
+                _ts = ((_t.get("applies_to") or {}).get("systems") or [])
+                _ds = ((d.get("applies_to") or {}).get("systems") or [])
+                if "*" in _ts and "*" not in _ds:
+                    bad.append(
+                        f"결정 {d['id']}(systems {_ds}) 가 **전역** 결정 {ref}"
+                        f"(systems ['*']) 를 supersede 한다 — 좁은 노드는 전역 정책을 "
+                        f"대체할 수 없다 (회신 AW P0-3 불허 · AZ P0-6)")
+                if _t.get("kind") == "policy" and d.get("kind") != "policy":
+                    bad.append(
+                        f"결정 {d['id']}(kind={d.get('kind')!r}) 가 policy 결정 {ref} 를 "
+                        f"supersede 한다 — 정책은 정책으로만 대체한다")
         sb = d.get("superseded_by")
         if sb and sb not in dec:
             bad.append(f"결정 {d['id']} 의 superseded_by {sb} 가 원장에 없다 (dangling)")
@@ -436,6 +464,22 @@ def validate_governance(reg: dict = None, root=None) -> list:
     for slot, ids in slots.items():
         if len(ids) > 1:
             bad.append(f"slot '{slot}' 에 active 결정이 {len(ids)}개다: {ids}")
+    # ⛔ 회신 AW P0-4 — 중복 ID 는 **로더가 조용히 덮어쓴다** (dict 라 뒤가 이긴다).
+    #   원장을 손으로 이어붙이다 같은 id 를 두 번 쓰면 앞 기록이 사라지는데
+    #   아무 검사에도 안 걸렸다. 원본 리스트에서 직접 센다.
+    try:
+        _base = Path(root) if root else Path(__file__).resolve().parent.parent
+        _raw = json.loads((_base / "db/governance/decisions.json")
+                          .read_text(encoding="utf-8")).get("decisions") or []
+        _ids = [x.get("id") for x in _raw if isinstance(x, dict)]
+        _dup = sorted({i for i in _ids if i and _ids.count(i) > 1})
+        if _dup:
+            bad.append(f"결정 id 가 중복이다 {_dup} — 로더가 조용히 덮어쓴다")
+        if len(_raw) != len(dec):
+            bad.append(f"원장 항목 {len(_raw)}개인데 적재된 결정은 {len(dec)}개다 "
+                       f"— 조용히 사라진 기록이 있다")
+    except Exception as exc:                                    # noqa: BLE001
+        bad.append(f"decisions.json 원본을 다시 읽지 못했다 (fail-closed): {exc!r}")
 
     # ── 판정 원장 ────────────────────────────────────────────────────────
     for a in book.values():
