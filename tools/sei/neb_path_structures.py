@@ -190,10 +190,19 @@ def center_on_path(cell, S, P, n_path):
     """
     P = np.asarray(P, float)
     path = P[len(P) - n_path:]
-    shift = cell.sum(axis=0) / 2.0 - path.mean(axis=0)      # 경로 중심 → 셀 중심
+    ctr = path.mean(axis=0)
+    shift = cell.sum(axis=0) / 2.0 - ctr                    # 경로 중심 → 셀 중심
     Q = P + shift
-    fr = np.linalg.solve(cell.T, Q[:len(Q) - n_path].T).T   # 골격만 감싼다
-    Q[:len(Q) - n_path] = (fr - np.floor(fr)) @ cell
+
+    # ⛔ 2026-09-01 — 여기서 골격을 [0,1) 로 **감쌌더니 클러스터가 찢어졌다.**
+    #   경로 바로 옆 원자가 반대쪽 면으로 넘어가 "골격이 주기적으로 안 보이는"
+    #   그림이 됐다(1저자 실측). 감싸는 것이 아니라 **경로에 가장 가까운 주기
+    #   이미지**로 놓아야 덩어리가 안 끊긴다.
+    n_fr = len(Q) - n_path
+    if n_fr:
+        c2 = cell.sum(axis=0) / 2.0                          # 옮긴 뒤의 경로 중심
+        f = np.linalg.solve(cell.T, (Q[:n_fr] - c2).T).T
+        Q[:n_fr] = (f - np.round(f)) @ cell + c2             # 최소 이미지
     return Q
 
 
@@ -391,10 +400,16 @@ def selftest():
     chk(d_on < 1e-6, "중앙화하면 경로 중심이 셀 중심과 일치한다 (%.1e Å)" % d_on)
     chk(d_off > 1.0, "⛔음성 안 하면 실제로 벗어나 있다 (%.2f Å — 모서리에 걸린다)" % d_off)
     chk(len(a_on) == len(a_off), "중앙화가 원자를 잃거나 더하지 않는다")
-    sp = np.linalg.solve(a_on.cell.array.T,
-                         a_on.positions[:len(a_on) - npath].T).T
-    chk(sp.min() >= -1e-9 and sp.max() < 1.0 + 1e-9,
-        "골격은 셀 안으로 감싸진다 (분수 %.3f~%.3f)" % (sp.min(), sp.max()))
+    # ⛔음성: 골격이 경로에서 **끊기지 않는가** (감싸면 반대쪽 면으로 날아간다)
+    _pc = a_on.positions[-npath:].mean(axis=0)
+    _dfr = np.linalg.norm(a_on.positions[:len(a_on) - npath] - _pc, axis=1)
+    # 최소이미지면 분수 오프셋이 [-0.5,0.5) 이므로 **가장 긴 체대각선의 절반**이 상한이다
+    _C = a_on.cell.array
+    _lim = max(np.linalg.norm(sx * _C[0] + sy * _C[1] + sz * _C[2])
+               for sx in (1, -1) for sy in (1, -1) for sz in (1, -1)) / 2.0
+    chk(_dfr.max() <= _lim + 1e-6,
+        "⛔음성 골격이 경로 주변에 모여 있다 — 감싸서 반대편으로 날아간 것이 없다 "
+        "(최원 %.2f Å ≤ 체대각선 절반 %.2f)" % (_dfr.max(), _lim))
 
     print("selftest: %d 통과 / %d 실패" % (ok[0], ok[1]))
     return 0 if ok[1] == 0 else 1
