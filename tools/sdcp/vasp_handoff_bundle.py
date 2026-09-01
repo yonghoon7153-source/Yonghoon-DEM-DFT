@@ -3676,9 +3676,16 @@ def citation_status(man, cl):
             b.append("참조 문서의 **비준 상태**가 번들에 없다 — 구판이다 (BB P0-2). "
                      "SHA 만으로는 그 내용이 비준됐는지 알 수 없다")
         else:
+            _sup_ref = sorted(k.rsplit("/", 1)[-1] for k, v in _rs.items()
+                              if (v or {}).get("superseded"))
+            if _sup_ref:
+                b.append("참조 문서가 **SUPERSEDED** 다 %s — 폐기된 사전등록으로 "
+                         "결과를 붙이지 않는다 (BB P0-4)" % _sup_ref)
             _bad_ref = sorted("%s(status=%r)" % (k.rsplit("/", 1)[-1],
                                                  (v or {}).get("status"))
-                              for k, v in _rs.items() if not (v or {}).get("ratified"))
+                              for k, v in _rs.items()
+                              if not (v or {}).get("ratified")
+                              and not (v or {}).get("superseded"))
             if _bad_ref:
                 b.append("참조 문서 미비준 %s — 주장을 **정의하는** 문서가 닫히지 "
                          "않았다 (BB P0-2)" % _bad_ref)
@@ -4278,6 +4285,20 @@ def _selftest_closure(chk):
         and any("주장을 **정의하는** 문서" in x for x in _r["blockers"]),
         "⛔음성 BB P0-2 (실물 재현): decision 은 active 인데 **claim prereg 가 "
         "proposed** 면 인용 불가다 — 실제 C-12 정본이 이 상태였다")
+    _r = _cs(dict(_GBOK, reference_files_state={
+        "old.json": {"status": None, "ratified": False, "superseded": True}}))
+    chk(any("SUPERSEDED" in x for x in _r["blockers"]),
+        "⛔음성 BB P0-4: 참조 문서가 **SUPERSEDED** 면 그 사실을 이름으로 말한다 "
+        "(단순 미비준과 다른 문제다 — 폐기 문서는 비준해도 안 된다)")
+    # ⛔ 회신 BB P0-4 실물 — provenance 가 폐기 문서를 가리키지 않는가
+    _pcd = _closure_estimand(_man7, _RES(), lambda j: _en7.get(j), _emol,
+                             _jb7)["prereg_doc"]
+    _pcd = _pcd if isinstance(_pcd, list) else [_pcd]
+    chk(all("prereg_sdcp_neutral_contrast_2026_08_29" not in x for x in _pcd)
+        and any("sdcp_c12_claim_prereg" in x for x in _pcd),
+        "⛔음성 BB P0-4 (실물): `prereg_closure.prereg_doc` 이 **SUPERSEDED 된** "
+        "2026-08-29 문서가 아니라 C-12 정본을 가리킨다 (%s)"
+        % [x.rsplit("/", 1)[-1] for x in _pcd])
     chk(citation_status({"potcar_identity_policy": {"manuscript_citable": True}},
                         {"overall_citable_at_0.01eV": True,
                          "potcar_identity": {"allowed_claim": "paw_release_attested"}}
@@ -7991,7 +8012,24 @@ def _closure_estimand(man, results, E, emol, jobs, merge_info=None):
         return (c.get("role") or "primary") not in ALT_ROLES
     out = {
         "schema": "prereg_closure/v1",
-        "prereg_doc": "db/properties/prereg_sdcp_neutral_contrast_2026_08_29.json",
+        # ⛔⛔ 회신 BB P0-4 (2026-09-02) — **폐기된 사전등록을 가리키고 있었다.**
+        #   `prereg_sdcp_neutral_contrast_2026_08_29.json` 은 스스로 `지위:
+        #   ⛔ SUPERSEDED` 라고 적혀 있다. 그 문서의 primary estimand
+        #   (`ΔΔE_lowE = min_p A(SDCP,p) − min_q A(c10,q)`)는 회신 X 가 NO-GO 를
+        #   냈고, C-12 는 **다른 양**(사전 고정 네 잡의 직접 대입 D)을 잰다.
+        #   결과 provenance 가 폐기 문서를 가리키면 "무엇을 사전등록했나" 가
+        #   이어지지 않는다 — 이 캠페인이 내내 문제 삼은 형태 그대로다.
+        "prereg_doc": ["db/properties/sdcp_c12_claim_prereg_2026_08_31.json",
+                       "db/properties/sdcp_c12_protocol_2026_08_30.json"],
+        "prereg_doc_note": (
+            "보고량은 claim prereg, D 의 정의는 protocol §2b 다. 두 문서의 내용 SHA 와 "
+            "비준 상태는 MANIFEST.governance_binding 에 결박돼 있다 (회신 BB P0-2)."),
+        "superseded_origin": {
+            "doc": "db/properties/prereg_sdcp_neutral_contrast_2026_08_29.json",
+            "지위": "⛔ SUPERSEDED (2026-08-31) — estimand 가 다르다",
+            "⚠": ("이 문서의 **실측 기록**(UMA–DFT 오프셋·술폰산 수소결합·표본밀도 "
+                  "비대칭)은 여전히 유효하다. 폐기된 것은 estimand 이지 관측이 "
+                  "아니다. 여기에 남기는 이유는 계보이지 근거가 아니다.")},
         "candidate_set": man.get("candidate_set") or "legacy_champion/cross (미동결)",
         "blocks": [], "block_records": [], "A_by_frag": {},
     }
@@ -12229,13 +12267,21 @@ def build_bundle(a, ledger: Optional[Dict[str, Any]] = None) -> Path:
             return {"status": None, "ratified": False, "why": "JSON 파싱 실패"}
         _st = _j.get("status")
         _rt = (_j.get("ratification") or {})
+        # ⛔ 회신 BB P0-4 — 폐기 표시는 `status` 가 아니라 `지위` 같은 다른 칸에
+        #   있을 수 있다 (실측: prereg_sdcp_neutral_contrast 는 `지위` 에만 있다).
+        #   문자열이 어디 있든 SUPERSEDED/철회면 그 문서로 결과를 붙이지 않는다.
+        _sup = any(isinstance(v, str) and
+                   ("SUPERSEDED" in v.upper() or "철회" in v or "폐기" in v)
+                   for k, v in _j.items() if k in ("지위", "status", "state", "성격"))
         _ok = (_st in ("ratified", "active")
                and _rt.get("state") == "ratified"
-               and _rt.get("role") == "scientific_owner")
-        return {"status": _st, "ratified": bool(_ok),
+               and _rt.get("role") == "scientific_owner"
+               and not _sup)
+        return {"status": _st, "ratified": bool(_ok), "superseded": bool(_sup),
                 "has_ratification_record": bool(_rt),
                 "why": (None if _ok else
-                        ("status=%r · 사람 비준 기록 %s — 이 문서가 정의하는 주장은 "
+                        ("⛔ SUPERSEDED/철회 문서다" if _sup else
+                         "status=%r · 사람 비준 기록 %s — 이 문서가 정의하는 주장은 "
                          "아직 닫히지 않았다" % (_st, "있음" if _rt else "**없음**")))}
 
     _REFS = ["db/properties/sdcp_c12_claim_prereg_2026_08_31.json",
