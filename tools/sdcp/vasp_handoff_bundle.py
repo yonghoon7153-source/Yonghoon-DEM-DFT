@@ -3702,11 +3702,20 @@ def citation_status(man, cl):
             if _sup_ref:
                 b.append("참조 문서가 **SUPERSEDED** 다 %s — 폐기된 사전등록으로 "
                          "결과를 붙이지 않는다 (BB P0-4)" % _sup_ref)
+            # ⛔ 회신 BB P0-2 — `frozen_input` 은 **비준 대상이 아니다**. 내용
+            #   결박(SHA)만 요구한다. 데이터 파일에 비준을 요구하면 고무도장이 된다.
             _bad_ref = sorted("%s(status=%r)" % (k.rsplit("/", 1)[-1],
                                                  (v or {}).get("status"))
                               for k, v in _rs.items()
-                              if not (v or {}).get("ratified")
+                              if (v or {}).get("role", "claim") == "claim"
+                              and not (v or {}).get("ratified")
                               and not (v or {}).get("superseded"))
+            _bad_in = sorted(k.rsplit("/", 1)[-1] for k, v in _rs.items()
+                             if (v or {}).get("role") == "frozen_input"
+                             and not (_rf or {}).get(k))
+            if _bad_in:
+                b.append("동결 입력이 **내용 결박되지 않았다** %s — 데이터는 비준이 "
+                         "아니라 SHA 로 묶는다 (BB P0-2)" % _bad_in)
             if _bad_ref:
                 b.append("참조 문서 미비준 %s — 주장을 **정의하는** 문서가 닫히지 "
                          "않았다 (BB P0-2)" % _bad_ref)
@@ -4345,6 +4354,22 @@ def _selftest_closure(chk):
     chk(_r["manuscript_citable"] is False
         and any("provenance 가 없다" in x for x in _r["blockers"]),
         "⛔음성 BB P0-5: provenance 없는 구판 번들은 인용 불가다 (v22 가 이 상태였다)")
+    # ⛔음성 BB P0-2 — frozen_input 은 **비준을 요구하지 않지만 SHA 는 요구한다**
+    _r = _cs(dict(_GBOK,
+                  reference_files_sha256={"poses.json": "0" * 64},
+                  reference_files_state={"poses.json": {
+                      "status": None, "ratified": False, "role": "frozen_input"}}))
+    chk(_r["manuscript_citable"] is True,
+        "BB P0-2 양성: **동결 입력**(자세 집합 같은 데이터)은 비준 대상이 아니다 — "
+        "SHA 결박이 있으면 통과한다 (데이터에 비준을 요구하면 고무도장이 된다)")
+    _r = _cs(dict(_GBOK,
+                  reference_files_sha256={"poses.json": None},
+                  reference_files_state={"poses.json": {
+                      "status": None, "ratified": False, "role": "frozen_input"}}))
+    chk(_r["manuscript_citable"] is False
+        and any("결박" in x for x in _r["blockers"]),
+        "⛔음성 BB P0-2: 동결 입력의 **SHA 가 없으면** 불가다 — 비준 대신 요구하는 "
+        "것이 그것이다")
     _r = _cs(dict(_GBOK, reference_files_state={
         "old.json": {"status": None, "ratified": False, "superseded": True}}))
     chk(any("SUPERSEDED" in x for x in _r["blockers"]),
@@ -12465,7 +12490,9 @@ def build_bundle(a, ledger: Optional[Dict[str, Any]] = None) -> Path:
             _j = json.loads(_p.read_text(encoding="utf-8"))
         except Exception:                                    # noqa: BLE001
             return {"status": None, "ratified": False, "why": "JSON 파싱 실패"}
-        _st = _j.get("status")
+        # ⚠ 상태 칸 이름이 문서마다 다르다 — protocol 은 `지위` 에만 적혀 있다.
+        #   한 칸만 보면 "status 없음" 으로 읽혀 실제 상태를 놓친다 (2026-09-02 실측).
+        _st = _j.get("status") or _j.get("지위")
         _rt = (_j.get("ratification") or {})
         # ⛔ 회신 BB P0-4 — 폐기 표시는 `status` 가 아니라 `지위` 같은 다른 칸에
         #   있을 수 있다 (실측: prereg_sdcp_neutral_contrast 는 `지위` 에만 있다).
@@ -12484,9 +12511,16 @@ def build_bundle(a, ledger: Optional[Dict[str, Any]] = None) -> Path:
                          "status=%r · 사람 비준 기록 %s — 이 문서가 정의하는 주장은 "
                          "아직 닫히지 않았다" % (_st, "있음" if _rt else "**없음**")))}
 
-    _REFS = ["db/properties/sdcp_c12_claim_prereg_2026_08_31.json",
-             "db/properties/sdcp_c12_protocol_2026_08_30.json",
-             "db/properties/c12_poses_2026_08_30.json"]
+    # ⛔⛔ 회신 BB P0-2 (2026-09-02) — 참조 문서를 **두 종류로 가른다.**
+    #   ⓐ 주장 문서(claim): 보고량·프로토콜. 사람 비준이 있어야 한다.
+    #   ⓑ 동결 입력(frozen input): 자세 집합 같은 **데이터**. 비준의 대상이
+    #     아니라 **내용 결박**의 대상이다 (`freeze_sha256`).
+    #   둘을 한 목록에 두고 전부 ratified 를 요구하면 데이터 파일에 고무도장을
+    #   찍게 된다 — 그러면 비준이라는 말이 아무것도 뜻하지 않게 된다.
+    _REFS_CLAIM = ["db/properties/sdcp_c12_claim_prereg_2026_08_31.json",
+                   "db/properties/sdcp_c12_protocol_2026_08_30.json"]
+    _REFS_INPUT = ["db/properties/c12_poses_2026_08_30.json"]
+    _REFS = _REFS_CLAIM + _REFS_INPUT
     _DEC_IDS = ["D-2026-08-30-sdcp-c12-path", "D-2026-08-28-closure-criteria-first"]
     _dec_all = {}
     try:
@@ -12534,16 +12568,27 @@ def build_bundle(a, ledger: Optional[Dict[str, Any]] = None) -> Path:
         "reference_files_sha256": {r: _ref_sha(r) for r in _REFS},
         # ⛔ 회신 BB P0-2 — 참조 문서의 **자기 상태**. SHA 는 "무엇을 썼나" 고
         #   이것은 "그것이 비준됐나" 다. 둘은 다른 질문이다.
-        "reference_files_state": {r: _ref_state(r) for r in _REFS},
+        "reference_files_state": {r: dict(_ref_state(r),
+                                          role=("claim" if r in _REFS_CLAIM
+                                                else "frozen_input"))
+                                  for r in _REFS},
+        "⛔_참조_두_종류": (
+            "claim(보고량·프로토콜)은 **사람 비준**이 있어야 하고, frozen_input"
+            "(자세 집합 같은 데이터)은 **내용 결박**(sha256)이 있으면 된다. "
+            "데이터 파일에 비준을 요구하면 고무도장이 되어 비준이 아무것도 뜻하지 "
+            "않게 된다 (회신 BB P0-2 이행 중 1저자 판단 · 2026-09-02)."),
         "decisions_all_ratified": all(
             (((_dec_all.get(_i) or {}).get("ratification") or {}).get("state")
              == "ratified") for _i in _DEC_IDS),
         "reference_files_all_ratified": all(
-            _ref_state(r)["ratified"] for r in _REFS),
+            _ref_state(r)["ratified"] for r in _REFS_CLAIM),
+        "frozen_inputs_all_bound": all(
+            bool(_ref_sha(r)) for r in _REFS_INPUT),
         "all_ratified": (all(
             (((_dec_all.get(_i) or {}).get("ratification") or {}).get("state")
              == "ratified") for _i in _DEC_IDS)
-            and all(_ref_state(r)["ratified"] for r in _REFS)),
+            and all(_ref_state(r)["ratified"] for r in _REFS_CLAIM)
+            and all(bool(_ref_sha(r)) for r in _REFS_INPUT)),
         "⛔_요약은_판정이_아니다": (
             "회신 BB P0-3 — 분석기는 이 불리언을 **믿지 않는다.** decision 항목마다 "
             "state·ratified·digest 를, 참조 문서마다 status·비준 기록을 각각 본다. "
