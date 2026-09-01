@@ -309,19 +309,27 @@ def crop_local(case, radius=6.0, mark=True, center=True, verbose=True):
     mov = np.where(d > MOVE_MIN_A)[0]
     path = np.array([imgs[k][1][i] for k in range(len(imgs)) for i in mov])
 
-    # 골격 원자 — 경로의 어느 점에서든 radius 안이면 남긴다 (주기 이미지 포함)
+    # 골격 원자 — 경로에서 radius 안이면 남긴다.
+    # ⛔ 2026-09-01 — 옛 판은 셀 **한 벌**의 원자만 썼다. 그래서 li3nd 처럼 셀이 작은
+    #   계에서 클러스터가 텅 비어 보였다 (1저자: "뭔가 비어 보이잖아"). 실제 결정엔
+    #   그 원자들의 **주기 복제본**이 사방에 있으므로 그것들을 채운다 — 없는 것을
+    #   그리는 게 아니라 **있는 것을 빠뜨리지 않는 것**이다.
     sym0, pos0 = imgs[0]
-    keep = []
-    for i in range(len(sym0)):
-        if i in set(mov):
-            continue
-        probe = Atoms(symbols=["H"] * (len(path) + 1),
-                      positions=np.vstack([path, pos0[i]]), cell=cell, pbc=True)
-        if probe.get_distances(len(path), range(len(path)), mic=True).min() <= radius:
-            keep.append(i)
-
-    S = [sym0[i] for i in keep]
-    P = [list(pos0[i]) for i in keep]
+    fr = [i for i in range(len(sym0)) if i not in set(mov)]
+    inv = np.linalg.inv(cell.T)
+    fpath = (inv @ path.T).T
+    rng = range(-2, 3)                       # ±2 셀이면 radius ≲ 셀변까지 충분하다
+    S, P = [], []
+    for i in fr:
+        fi = inv @ pos0[i]
+        for na in rng:
+            for nb in rng:
+                for nc in rng:
+                    q = fi + np.array([na, nb, nc])
+                    d = np.linalg.norm((fpath - q) @ cell, axis=1).min()
+                    if d <= radius:
+                        S.append(sym0[i])
+                        P.append(list(q @ cell))
     sad = saddle_indices(os.path.join(RAW, dat))
     for k, (sym, pos) in enumerate(imgs):
         for i in mov:
@@ -330,15 +338,18 @@ def crop_local(case, radius=6.0, mark=True, center=True, verbose=True):
 
     Q = np.array(P, float)
     if center:
-        Q = center_on_path(cell, S, Q, len(mov) * len(imgs))
+        # ⚠ crop 은 **평행이동만** 한다. 복제본을 다시 최소이미지로 접으면 같은 자리에
+        #   두 개가 포개진다 (복제본이 이미 제자리에 있으므로).
+        Q = Q + (cell.sum(axis=0) / 2.0 - Q[len(Q) - len(mov) * len(imgs):].mean(axis=0))
     at = Atoms(symbols=S, positions=Q, cell=cell, pbc=True)
     os.makedirs(OUT, exist_ok=True)
     nm = f"{case}_path_local{radius:g}A"
     write(os.path.join(OUT, nm + ".vasp"), at, format="vasp", direct=True, sort=True)
     write(os.path.join(OUT, nm + ".xyz"), at, format="extxyz")
     if verbose:
-        print(f"  {label}: 반경 {radius:g} Å 안 골격 {len(keep)}/{len(sym0)-len(mov)} "
-              f"+ 경로 {len(path)} = {len(S)}개")
+        print(f"  {label}: 반경 {radius:g} Å 안 골격 {len(S)-len(path)} "
+              f"(주기 복제본 포함 · 원 셀 {len(sym0)-len(mov)}) + 경로 {len(path)} "
+              f"= {len(S)}개")
         print(f"    → db/structures/neb_paths/{nm}.{{vasp,xyz}}")
     return nm, at
 
@@ -407,6 +418,19 @@ def selftest():
     chk(len(c6) < 86, "국소 6 Å 가 전체(86)보다 작다 (%d)" % len(c6))
     chk(len(c4) < len(c6), "⛔음성 반경을 줄이면 더 작아진다 (4 Å %d < 6 Å %d)"
         % (len(c4), len(c6)))
+    # ⛔음성: 주기 복제본을 채우면서 **같은 자리에 두 개**를 놓지 않았는가
+    _n4 = len(c4)
+    _p4 = set(range(_n4 - 7, _n4))                    # 뒤쪽 7개가 경로
+    _f4 = [i for i in range(_n4) if i not in _p4]
+    _D4 = (np.linalg.norm(c4.positions[:, None, :] - c4.positions[None, :, :], axis=2)
+           + np.eye(_n4) * 1e3)
+    chk(_D4[np.ix_(_f4, _f4)].min() > 2.0,
+        "⛔음성 주기 복제본이 겹치지 않는다 (골격 최단 %.2f Å) — 겹치면 같은 원자를 "
+        "두 번 그린 것이다" % _D4[np.ix_(_f4, _f4)].min())
+    _, c5 = crop_local("li3nd_ccc", 5.0, verbose=False)
+    chk(len(c5) > len(c4), "⛔음성 반경을 키우면 복제본이 들어와 실제로 커진다 "
+                           "(4 Å %d → 5 Å %d)" % (len(c4), len(c5)))
+
     _cs = c4.get_chemical_symbols()
     chk(_cs.count(PATH_MARK) + _cs.count(SADDLE_MARK) == 5,
         "⛔음성 잘라도 경로 7점이 다 남는다 (중간 %d + 안장점 %d + 양끝 2)"
