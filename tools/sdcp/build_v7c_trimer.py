@@ -2735,6 +2735,21 @@ def selftest():
              "V P0-3: 증서에 ORCA 버전이 없다 (구판이거나 손으로 만든 것)"),
             ("neg_certsuf", {"loccheck_bad": "loc_suffix"},
              "V P0-3: 증서에 loc_suffix 가 없다 — 어느 파일을 읽을지 모른 채 진행 금지"),
+            # ── 회신 W P0-4 — 증서가 **지금** 무엇을 보증하는가 ──────────────
+            ("neg_cert_orca_gone", {"loccheck_bad": "orca_missing"},
+             "W P0-4: 증서가 기록한 **ORCA 경로가 지금 없다** — 다른 기계이거나 "
+             "설치가 바뀌었다. 종전엔 증서를 읽기만 하고 재확인하지 않았다"),
+            ("neg_cert_orca_diff", {"loccheck_bad": "orca_changed"},
+             "W P0-4: 증서를 만든 ORCA 와 **지금 ORCA 의 SHA 가 다르다** — 증서를 "
+             "만든 뒤 ORCA 를 바꿔도 그대로 통과했다"),
+            ("neg_cert_nol2i", {"loccheck_bad": "l2_inp_sha256"},
+             "W P0-4: 증서에 **L2(`%moinp` readback) 입력 해시가 없다** — L 형만 "
+             "시험한 구판 증서다. seed 의 원천은 L2 인데 그 사슬을 안 봤다"),
+            # ⚠ 위는 키를 **지운** 경로(필수키 검사)고, 아래는 키는 있는데 **빈** 경로다.
+            #   둘이 다른 분기라 하나만 시험하면 나머지가 열린 채로 남는다.
+            ("neg_cert_nol2o", {"loccheck_bad": "l2_blank"},
+             "W P0-4: 증서의 L2 해시가 **빈 값**이다 — 키만 있고 readback 이 실제로 "
+             "됐는지 증명되지 않는다 (키 존재 검사만으로는 못 잡는다)"),
             # ── 회신 V P0-2 — 사전등록 **내용** 결박. 파일 해시만으로는 부족하다 ──
             ("neg_pre_parent", {"_prereg_patch": {"parent_sha256": "d" * 64}},
              "V P0-2: 사전등록의 **부모 구조 SHA** 가 생성물과 다르다 — 리뷰어 반례"
@@ -2831,6 +2846,137 @@ def selftest():
         chk(_b["n_seeds"] == 4 and _b["n_distinct_basins"] == 4,
             "Q4 4층: 서로 다른 해 4개가 basin 4개로 갈렸다 (seed %d → basin %d)"
             % (_b["n_seeds"], _b["n_distinct_basins"]))
+
+        # ══ 회신 W P0-5 — **계보 해시를 소비하는가** ════════════════════════
+        #  기록만 하고 아무도 안 읽던 값들이다. 양성 하나에 음성 다섯.
+        chk(_r.get("run_receipts", {}).get("n", 0) >= 7,
+            "W P0-5 양성: 분석기가 실행 receipt 를 **읽는다** (%d건) — 종전엔 "
+            "manifest 에 해시를 기록만 하고 아무도 안 봤다"
+            % _r.get("run_receipts", {}).get("n", 0))
+        _pf, _pn = pil_lineage_check(os.path.join(ptd, "q4_ok"), "S")
+        chk(not _pf and _pn == 7,
+            "W P0-5 양성: 손대지 않은 묶음은 계보 대조를 **통과**한다 (S 잡 %d건)"
+            % _pn)
+
+        _rr = _ana("w5_norcpt", drop_receipt=("B_ring0",))
+        chk(any("RUN_RECEIPT_MISSING" in g
+                for g in _rr["jobs"]["S/eps1/Dradical/B_ring0"]["gates"]),
+            "⛔음성 W P0-5: receipt 없는 잡은 **판정하지 않는다** — 러너 밖에서 "
+            "돌았는지 구분할 수 없다")
+        _rs = _ana("w5_stale", stale_receipt=("B_ring1",))
+        chk(any("RUN_RECEIPT_STALE" in g
+                for g in _rs["jobs"]["S/eps1/Dradical/B_ring1"]["gates"]),
+            "⛔음성 W P0-5: receipt 의 입력 해시가 **지금 입력과 다르면** 게이트 — "
+            "입력을 고친 뒤 남은 옛 출력을 판정에 쓰지 않는다")
+
+        # 계보 대조 — 러너가 실행 **전에** 보는 쪽
+        _w5 = os.path.join(ptd, "w5_pre")
+        _copy2.copytree(os.path.join(ptd, "q4_ok"), _w5)
+        _tgt = os.path.join(_w5, "S/eps1/Dradical/B_ring0/B_ring0.inp")
+        open(_tgt, "a", encoding="utf-8").write("\n# 손댔다\n")
+        _p1, _ = pil_lineage_check(_w5, "S")
+        chk(any(x.startswith("INP_CHANGED") for x in _p1),
+            "⛔음성 W P0-5: 생성 뒤 **입력을 고치면** 실행 전에 잡는다 "
+            "(종전엔 봉인 해시를 아무도 안 봐서 그대로 돌았다)")
+        chk(any(x.startswith("STALE_OUTPUT") for x in _p1),
+            "⛔음성 W P0-5: 입력이 바뀌었는데 옛 정상종료 출력이 있으면 "
+            "**건너뛰기 금지** — 종전 `run()` 은 'TERMINATED NORMALLY' 만 보고 "
+            "옛 결과를 그대로 썼다 (run_sei_dft.sh 는 2026-08-12 에 같은 사고를 "
+            "겪고 지문 가드가 있는데 이 러너엔 없었다)")
+        _w5b = os.path.join(ptd, "w5_moinp")
+        _copy2.copytree(os.path.join(ptd, "q4_ok"), _w5b)
+        os.remove(os.path.join(_w5b, "L/eps1/L_dminus/L_dminus.loc"))
+        _p2, _ = pil_lineage_check(_w5b, "S")
+        chk(any(x.startswith("MOINP_MISSING") for x in _p2),
+            "⛔음성 W P0-5: `%moinp` 가 가리키는 국재 파일이 없으면 **돌리지 "
+            "않는다** — seed 의 원천이 끊긴 채 200원자를 여는 셈이다")
+        # ══ 러너가 **문법적으로 실행 가능한가** (2026-09-02 실측 P0) ═══════
+        #  ⛔⛔ `bash -n` 을 처음 걸어 보니 배포 중이던 run_pilot.sh 가 **파싱조차
+        #    안 됐다.** 파이썬 주석에 쓴 `\n` 이 실제 줄바꿈이 돼 뒷부분이 주석이
+        #    아니라 명령줄이 됐고(열린 따옴표 + 짝 없는 백틱), 어떤 단계도 돌지
+        #    않았다. 아무도 못 본 이유는 러너를 한 번도 안 돌렸기 때문이다
+        #    (phase L 이 리뷰 대기 중). selftest 225건이 전부 통과하고 있었다.
+        _rsh = os.path.join(ptd, "_run_pilot_syntax.sh")
+        open(_rsh, "w", encoding="utf-8").write(PIL_RUNNER)
+        _bn = subprocess.run(["bash", "-n", _rsh], capture_output=True, text=True)
+        chk(_bn.returncode == 0,
+            "러너가 **bash 로 파싱된다** (`bash -n`) — 종전엔 깨진 채로 배포됐다%s"
+            % ("" if _bn.returncode == 0 else ": " + _bn.stderr.strip()[:160]))
+        _broken = PIL_RUNNER.replace('run() {', 'run() { `\n', 1)
+        open(_rsh, "w", encoding="utf-8").write(_broken)
+        chk(subprocess.run(["bash", "-n", _rsh], capture_output=True).returncode != 0,
+            "⛔음성: 짝 없는 백틱을 넣으면 이 시험이 **실제로 잡는다** "
+            "(양성만 있는 시험은 아무것도 보증 못 한다)")
+
+        # ══ 러너 안의 PYL2 블록을 **실제로 실행한다** ══════════════════════
+        #  ⛔⛔ 채택 이유 (AZ P0-1 재발 방지). C-12 에서 selftest 300건이 정상 실행
+        #    경로를 **한 번도** 지나지 않아 16잡이 전부 죽었다. 여기 PIL_RUNNER 안의
+        #    heredoc 파이썬도 똑같이 한 번도 안 돌았다 — suffix 패치와 그 뒤의
+        #    봉인 갱신(W P0-5)이 시험 밖에 있었다.
+        import sys as _sys
+        _pyl2 = re.search(r"<<'PYL2'[^\n]*\n(.*?)\nPYL2\n", PIL_RUNNER, re.S).group(1)
+        _l2d = os.path.join(ptd, "w5_l2patch")
+        _copy2.copytree(str(_po), _l2d)
+        _mm2 = json.loads(open(os.path.join(_l2d, "MANIFEST_PILOT.json")).read())
+        # 실측 suffix 가 생성 시 가정(.loc)과 **다른** 경우 — 이 단계의 존재 이유다
+        _pil_fake_phaseL(_l2d, _mm2, loc_suffix=".loc.gbw")
+        _pf2 = _fixture_prereg(_mm2)
+        PIL_PREREG_S0 = _pf2
+        _mm2["prereg"] = _pf2; _mm2["prereg_sha256"] = _sha(_pf2)
+        open(os.path.join(_l2d, "MANIFEST_PILOT.json"), "w").write(
+            json.dumps(_mm2, ensure_ascii=False))
+        _scr = os.path.join(ptd, "_pyl2.py")
+        open(_scr, "w", encoding="utf-8").write(_pyl2)
+        _rr2 = subprocess.run([_sys.executable, _scr, _l2d, __file__],
+                        capture_output=True, text=True)
+        chk(_rr2.returncode == 0 and "loc suffix = .loc.gbw" in _rr2.stdout,
+            "W P0-5 양성: 러너의 L2 suffix 패치 블록이 **실제로 돈다** "
+            "(rc=%d · %s)" % (_rr2.returncode,
+                              (_rr2.stdout or _rr2.stderr).strip()[-60:]))
+        _mm3 = json.loads(open(os.path.join(_l2d, "MANIFEST_PILOT.json")).read())
+        chk(_mm3.get("loc_suffix_patched_inputs", 0) >= 1,
+            "W P0-5: 가정과 다른 suffix 라 L2 입력 %d개의 `%%moinp` 를 고쳤다"
+            % _mm3.get("loc_suffix_patched_inputs", 0))
+        _p4, _n4 = pil_lineage_check(_l2d, "L2")
+        chk(_n4 >= 1 and not [x for x in _p4 if x.startswith(("INP_CHANGED",
+                                                             "MOINP_MISSING"))],
+            "⛔음성 W P0-5 (핵심): 입력을 고친 **그 단계가 봉인도 갱신**해야 한다 — "
+            "안 하면 계보 대조가 이 단계 스스로 만든 불일치로 전건을 막는다 "
+            "(L2 잡 %d건 · INP_CHANGED 0)" % _n4)
+        # ⚠ 같은 목록에 STALE_OUTPUT 은 **남아 있어야 옳다** — `%moinp` 를 고쳤으니
+        #   그 전에 나온 L2 출력은 다른 입력의 결과다. 이것까지 없애면 패치 전
+        #   출력을 그대로 판정에 쓰게 된다.
+        chk(any(x.startswith("STALE_OUTPUT") for x in _p4),
+            "W P0-5: suffix 를 고쳤으면 **패치 전 L2 출력은 낡은 것**이다 — "
+            "다시 돌리게 만든다 (봉인만 맞추고 옛 출력을 통과시키지 않는다)")
+        chk(all(j.get("inp_sha256_at_generate")
+                for k, j in _mm3["jobs"].items() if j["phase"] == "L2"),
+            "W P0-5: 생성 시점 해시를 `inp_sha256_at_generate` 로 남긴다 "
+            "(무엇이 바뀌었는지 산출물이 말한다)")
+        # 봉인 갱신 줄을 지우면 대조가 깨지는가 (되돌림 시험)
+        _bad = os.path.join(ptd, "_pyl2_bad.py")
+        open(_bad, "w", encoding="utf-8").write(
+            _pyl2.replace('man["jobs"][jk]["inp_sha256"] = m._sha(f)', "pass"))
+        _l2e = os.path.join(ptd, "w5_l2patch_bad")
+        _copy2.copytree(str(_po), _l2e)
+        _mm4 = json.loads(open(os.path.join(_l2e, "MANIFEST_PILOT.json")).read())
+        _pil_fake_phaseL(_l2e, _mm4, loc_suffix=".loc.gbw")
+        _mm4["prereg"] = _pf2; _mm4["prereg_sha256"] = _sha(_pf2)
+        open(os.path.join(_l2e, "MANIFEST_PILOT.json"), "w").write(
+            json.dumps(_mm4, ensure_ascii=False))
+        subprocess.run([_sys.executable, _bad, _l2e, __file__], capture_output=True)
+        _p5, _ = pil_lineage_check(_l2e, "L2")
+        chk(any(x.startswith("INP_CHANGED") for x in _p5),
+            "⛔음성 W P0-5: 갱신 줄을 지우면 `INP_CHANGED` 로 실제로 깨진다 "
+            "(이 시험이 장식이 아님을 증명한다)")
+
+        _w5c = os.path.join(ptd, "w5_rcpt_out")
+        _copy2.copytree(os.path.join(ptd, "q4_ok"), _w5c)
+        os.remove(os.path.join(_w5c, PIL_RECEIPTS))
+        _p3, _ = pil_lineage_check(_w5c, "S")
+        chk(any(x.startswith("STALE_OUTPUT") for x in _p3),
+            "⛔음성 W P0-5: 정상종료 출력이 있는데 receipt 가 **없으면** 이 러너 "
+            "밖에서 돈 것이다 — 건너뛰지 않는다")
 
         _r2 = _ana("q4_deg", degenerate=True)
         _b2 = _r2["seed_vs_basin"]["eps1/Dradical"]
@@ -4098,6 +4244,170 @@ def _repo_path(rel):
 PIL_LOC_SUFFIX_CANDIDATES = (".loc", ".loc.gbw")
 PIL_LOCCHECK_CERT = "LOCCHECK_PASS.json"
 
+# ══ 회신 W P0-5 (2026-09-02) — **계보 해시를 소비한다** ═══════════════════════
+#
+#  ⛔⛔ 무엇이 문제였나. manifest 는 잡마다 `inp_sha256`·`xyz_sha256`·
+#    `loc_sha256`/`gbw_sha256` 를 **기록**했지만 러너가 실행 전에 **한 번도 대조하지
+#    않았다.** 생성 뒤에 입력을 손으로 고쳐도 그대로 돌았고, 산출물은 봉인된 해시를
+#    달고 나왔다 — 봉인이 가리키는 파일과 실제로 돈 파일이 다를 수 있었다.
+#    그리고 `run()` 은 `.out` 에 'TERMINATED NORMALLY' 만 있으면 건너뛰었다.
+#    입력이 바뀌어도 **옛 결과를 그대로 판정에 썼다.**
+#    (같은 함정을 `run_sei_dft.sh` 에서 2026-08-12 에 이미 한 번 맞았고 거기엔
+#     지문 가드가 있다. 이 러너에는 없었다 — 규약이 파일마다 갈렸다.)
+#
+#  ⇒ ① `pil_lineage_check` : 단계 실행 **전에** 그 phase 의 잡 전건을 대조한다.
+#    ② `pil_write_receipt`  : 잡마다 실행 receipt 를 JSONL 로 남긴다.
+#    ③ `pilot_analyze`      : receipt 없는/낡은 잡은 **판정하지 않는다**.
+#
+#  ⛔ 이것이 못 하는 것: 위조는 막지 못한다(같은 사용자). 막는 것은
+#    "고친 줄 모르고 옛 결과를 판정에 쓰는 것" 이다.
+PIL_RECEIPTS = "RUN_RECEIPTS.jsonl"
+PIL_PHASE_OF_STAGE = {"L": "L", "L2": "L2", "probe": "S0P", "S": "S", "restart": "SR"}
+
+
+def pil_job_tag(jobkey, jm):
+    """잡 폴더 안 파일 이름의 앞부분. S0P(probe) 만 `_probe` 가 붙는다."""
+    t = str(jobkey).rsplit("/", 1)[-1]
+    return t + "_probe" if (jm or {}).get("phase") == "S0P" else t
+
+
+def pil_moinp_path(inp_text):
+    """입력의 `%moinp "…"` 경로 (잡 폴더 기준 상대). 없으면 None."""
+    m = re.search(r'^\s*%moinp\s+"([^"]+)"', inp_text or "", re.M)
+    return m.group(1) if m else None
+
+
+def pil_lineage_check(d, stage):
+    """단계 실행 **전** 계보 대조. → (문제 목록, 검사한 잡 수).
+
+    보는 것 (전부 manifest 가 봉인한 값 대비):
+      · `<tag>.inp` 존재 · sha256 일치      → 생성 뒤 손댔으면 잡는다
+      · `<tag>.xyz` 존재 · sha256 일치      (기록된 잡만)
+      · `%moinp` 대상 파일 존재             → 사슬이 끊겼으면 돌리지 않는다
+      · `loc_sha256`/`gbw_sha256` 일치      (기록된 잡만)
+      · 이미 정상종료한 `.out` 이 있는데 receipt 가 없거나 그 receipt 의
+        입력 해시가 **지금 입력과 다르면** `STALE_OUTPUT` — 건너뛰기 금지
+
+    ⛔ 못 하는 것: 입력의 *내용*이 옳은지는 안 본다 (결박만 본다).
+    """
+    d = Path(d)
+    ph = PIL_PHASE_OF_STAGE.get(stage)
+    if ph is None:
+        return [], 0
+    manp = d / "MANIFEST_PILOT.json"
+    if not manp.is_file():
+        return ["MANIFEST_MISSING(%s)" % manp], 0
+    man = json.loads(manp.read_text(encoding="utf-8"))
+    rc = pil_read_receipts(d)
+    probs, n = [], 0
+    for jk, jm in sorted((man.get("jobs") or {}).items()):
+        if jm.get("phase") != ph:
+            continue
+        n += 1
+        jd = d / jk
+        tag = pil_job_tag(jk, jm)
+        inp = jd / (tag + ".inp")
+        if not inp.is_file():
+            probs.append("INP_MISSING(%s)" % jk); continue
+        got = _sha(inp)
+        want = jm.get("inp_sha256")
+        if want and got != want:
+            probs.append("INP_CHANGED(%s: 봉인 %s… ≠ 현재 %s…)"
+                         % (jk, str(want)[:12], got[:12]))
+        elif not want:
+            probs.append("INP_UNSEALED(%s: manifest 에 inp_sha256 이 없다)" % jk)
+        # xyz — 기록한 잡만 (L2 는 L 의 사본이라 기록이 없다)
+        wx = jm.get("xyz_sha256")
+        if wx:
+            xs = sorted(jd.glob("*.xyz"))
+            if not xs:
+                probs.append("XYZ_MISSING(%s)" % jk)
+            elif _sha(xs[0]) != wx:
+                probs.append("XYZ_CHANGED(%s: 봉인 %s… ≠ 현재 %s…)"
+                             % (jk, str(wx)[:12], _sha(xs[0])[:12]))
+        # `%moinp` 사슬 — 이게 seed 의 원천이다
+        mo = pil_moinp_path(inp.read_text(encoding="utf-8", errors="replace"))
+        if mo:
+            mp = (jd / mo).resolve()
+            if not mp.is_file():
+                probs.append("MOINP_MISSING(%s → %s)" % (jk, mo))
+            else:
+                for key in ("loc_sha256", "gbw_sha256"):
+                    wv = jm.get(key)
+                    if wv and _sha(mp) != wv:
+                        probs.append("ORBITALS_CHANGED(%s %s: 봉인 %s… ≠ 현재 %s…)"
+                                     % (jk, key, str(wv)[:12], _sha(mp)[:12]))
+        elif jm.get("orbitals_from") and jm.get("seed") != "default":
+            probs.append("MOINP_ABSENT(%s: manifest 는 `%s` 를 읽는다는데 입력에 "
+                         "`%%moinp` 가 없다)" % (jk, jm["orbitals_from"]))
+        # 이미 돈 결과를 건너뛰어도 되나 — receipt 로만 판단한다
+        out = jd / (tag + ".out")
+        if out.is_file() and "ORCA TERMINATED NORMALLY" in out.read_text(
+                encoding="utf-8", errors="replace"):
+            r = rc.get(jk)
+            if not r:
+                probs.append("STALE_OUTPUT(%s: 정상종료한 출력이 있는데 실행 receipt "
+                             "가 없다 — 이 러너 밖에서 돈 것이다)" % jk)
+            elif r.get("inp_sha256") != got:
+                probs.append("STALE_OUTPUT(%s: 출력은 입력 %s… 로 돌았는데 지금 입력은 "
+                             "%s… 다 — 옛 결과를 판정에 쓰지 않는다)"
+                             % (jk, str(r.get("inp_sha256"))[:12], got[:12]))
+    return probs, n
+
+
+def pil_read_receipts(d):
+    """`RUN_RECEIPTS.jsonl` → {잡키: 마지막 receipt}. 없으면 {}."""
+    p = Path(d) / PIL_RECEIPTS
+    out = {}
+    if not p.is_file():
+        return out
+    for ln in p.read_text(encoding="utf-8", errors="replace").splitlines():
+        ln = ln.strip()
+        if not ln:
+            continue
+        try:
+            r = json.loads(ln)
+        except Exception:                                        # noqa: BLE001
+            continue
+        if isinstance(r, dict) and r.get("job"):
+            out[r["job"]] = r          # 마지막 것이 이긴다 (재실행이 덮는다)
+    return out
+
+
+def pil_write_receipt(d, stage, jobkey, rc, started=None, orca=None):
+    """잡 하나의 실행 receipt 를 JSONL 에 **덧붙인다**. → 쓴 dict.
+
+    ⚠ 덮어쓰지 않는다 — 재개·재실행 이력이 남아야 한다 (회신 AZ P1 에서 C-12 가
+      같은 실수를 했다: 헤더로 덮어써 완료 상의 행이 사라졌다).
+    """
+    d = Path(d)
+    man = json.loads((d / "MANIFEST_PILOT.json").read_text(encoding="utf-8"))
+    jm = (man.get("jobs") or {}).get(jobkey) or {}
+    jd = d / jobkey
+    tag = pil_job_tag(jobkey, jm)
+    inp, out = jd / (tag + ".inp"), jd / (tag + ".out")
+    xs = sorted(jd.glob("*.xyz"))
+    mo = (pil_moinp_path(inp.read_text(encoding="utf-8", errors="replace"))
+          if inp.is_file() else None)
+    mop = (jd / mo) if mo else None
+    txt = out.read_text(encoding="utf-8", errors="replace") if out.is_file() else ""
+    r = {"schema": "polaron_run_receipt/v1",
+         "stage": stage, "job": jobkey, "tag": tag, "phase": jm.get("phase"),
+         "ts_start": started, "ts_end": time.strftime("%Y-%m-%dT%H:%M:%S"),
+         "rc": int(rc),
+         "inp_sha256": _sha(inp) if inp.is_file() else None,
+         "xyz_sha256": _sha(xs[0]) if xs else None,
+         "moinp": mo,
+         "moinp_sha256": (_sha(mop) if mop and mop.is_file() else None),
+         "out_sha256": _sha(out) if out.is_file() else None,
+         "terminated_normally": bool(pil_seg_terminated(txt)[0]) if txt else False,
+         "orca_path": orca,
+         "orca_sha256": (_sha(Path(orca)) if orca and Path(orca).is_file() else None),
+         "builder_sha256": man.get("builder_sha256")}
+    with (d / PIL_RECEIPTS).open("a", encoding="utf-8") as f:
+        f.write(json.dumps(r, ensure_ascii=False) + "\n")
+    return r
+
 
 def pil_loc_file(dirp, tag, cert=None):
     """국재 궤도 파일 경로. 증서가 suffix 를 정했으면 그것만, 아니면 후보를 훑는다.
@@ -4134,8 +4444,10 @@ def pil_read_loccheck(d):
         c = json.loads(p.read_text(encoding="utf-8"))
     except Exception as e:                                       # noqa: BLE001
         return None, "%s 파싱 실패: %r" % (p, e)
-    miss = [k for k in ("orca_path", "orca_version", "inp_sha256", "out_sha256",
-                        "loc_suffix", "mopop_parsed", "mos_parsed") if k not in c]
+    miss = [k for k in ("orca_path", "orca_version", "orca_sha256",
+                        "inp_sha256", "out_sha256", "loc_suffix",
+                        "l2_inp_sha256", "l2_out_sha256",
+                        "mopop_parsed", "mos_parsed") if k not in c]
     if miss:
         return None, "증서에 %s 가 없다 — 구판이거나 손으로 만든 것이다" % miss
     if c.get("loc_suffix") not in PIL_LOC_SUFFIX_CANDIDATES:
@@ -4145,6 +4457,23 @@ def pil_read_loccheck(d):
         return None, ("loccheck 에서 파서가 실물을 못 읽었다 "
                       "(인구 %r · 계수 %r) — 200원자를 열 이유가 없다"
                       % (c.get("mopop_parsed"), c.get("mos_parsed")))
+    # ⛔⛔ 회신 W P0-4 (2026-09-02) — **증서가 기록한 ORCA 를 지금도 쓰는지 본다.**
+    #   종전엔 증서를 읽기만 하고 현재 ORCA 경로·SHA 를 재검증하지 않았다. 증서를
+    #   만든 뒤 ORCA 를 바꿔도 그대로 통과했다 — 증서가 무엇을 보증하는지가 흐려진다.
+    _op = c.get("orca_path")
+    if _op and Path(_op).is_file():
+        _now = hashlib.sha256(Path(_op).read_bytes()).hexdigest()
+        if c.get("orca_sha256") and _now != c["orca_sha256"]:
+            return None, ("증서를 만든 ORCA 와 **지금 ORCA 가 다르다** "
+                          "(증서 %s… ≠ 현재 %s…) — loccheck 을 다시 돌릴 것"
+                          % (str(c["orca_sha256"])[:12], _now[:12]))
+    elif _op:
+        return None, ("증서가 기록한 ORCA 경로가 없다: %s — 다른 기계이거나 "
+                      "설치가 바뀌었다. loccheck 을 다시 돌릴 것" % _op)
+    # L2 사슬이 증서에 있어야 한다 (seed 의 원천이 거기다)
+    if not (c.get("l2_inp_sha256") and c.get("l2_out_sha256")):
+        return None, ("증서에 L2(`%moinp` readback) 사슬이 없다 — L 형만 시험한 "
+                      "구판 증서다 (회신 W P0-4). loccheck 을 다시 돌릴 것")
     return c, "ok"
 
 
@@ -5166,17 +5495,34 @@ def _pil_fake_orbener(ener, occ):
     return t + "\n"
 
 
-def _pil_fake_loccheck(out, suffix=".loc", mopop=True, mos=True, drop_key=None):
-    """selftest 용 loccheck 증서 (회신 V P0-3). 인자들이 **음성 경로**다."""
+def _pil_fake_loccheck(out, suffix=".loc", mopop=True, mos=True, drop_key=None,
+                       orca_missing=False, orca_changed=False):
+    """selftest 용 loccheck 증서 (회신 V P0-3). 인자들이 **음성 경로**다.
+
+    ⚠ 회신 W P0-4 이후로 판독기가 **증서가 기록한 ORCA 를 실제로 다시 해시**한다.
+      그래서 픽스처도 진짜 파일을 하나 둔다 — 예전처럼 `/fake/orca` 를 적으면
+      양성 경로가 죽는다(2026-09-02 실측: selftest rc=1). 없는 경로·바뀐 해시는
+      각각 `orca_missing`·`orca_changed` 로 **일부러** 만든다.
+    """
+    out = Path(out)
+    _bin = out / ".fake_orca_bin"
+    _bin.write_bytes(b"#!/bin/sh\n# fake orca for selftest\n")
+    _real = hashlib.sha256(_bin.read_bytes()).hexdigest()
     c = {"schema": "loccheck_pass/v1",
-         "orca_path": "/fake/orca", "orca_version": "Program Version 6.1.1",
-         "orca_sha256": "0" * 64,
+         "orca_path": str(out / ".fake_orca_gone") if orca_missing else str(_bin),
+         "orca_version": "Program Version 6.1.1",
+         "orca_sha256": ("f" * 64) if orca_changed else _real,
          "inp_sha256": "1" * 64, "out_sha256": "2" * 64,
          "loc_suffix": suffix, "loc_sha256": "3" * 64,
+         # ⛔ 회신 W P0-4 — L2 사슬(seed 의 원천)도 증서에 있어야 한다
+         "l2_inp_sha256": "4" * 64, "l2_out_sha256": "5" * 64,
+         "l2_moread_suffix": suffix,
          "mopop_parsed": mopop, "mos_parsed": mos}
-    if drop_key:
+    if drop_key == "l2_blank":            # 키는 있고 **값이 빈** 경로 (다른 분기다)
+        c["l2_inp_sha256"] = c["l2_out_sha256"] = ""
+    elif drop_key:
         c.pop(drop_key, None)
-    (Path(out) / PIL_LOCCHECK_CERT).write_text(json.dumps(c, ensure_ascii=False))
+    (out / PIL_LOCCHECK_CERT).write_text(json.dumps(c, ensure_ascii=False))
     return c
 
 
@@ -5192,7 +5538,11 @@ def _pil_fake_phaseL(out, man, rand_mark=False, kill_guessmode=False, no_mopop=F
                            mopop=(loccheck_bad != "mopop"),
                            mos=(loccheck_bad != "mos"),
                            drop_key=(loccheck_bad if loccheck_bad in
-                                     ("orca_version", "loc_suffix") else None))
+                                     ("orca_version", "loc_suffix",
+                                      "l2_inp_sha256", "l2_blank")
+                                     else None),
+                           orca_missing=(loccheck_bad == "orca_missing"),
+                           orca_changed=(loccheck_bad == "orca_changed"))
     amf = man["atom_manifest"]
     for jk, jm in man["jobs"].items():
         if jm["phase"] != "L2":
@@ -5289,7 +5639,7 @@ def _pil_fake_sout(charge, mult, nel, spins, E, S2=0.7530, stable=True,
 def _pil_fake_phaseS(out, man, probe_wrong=(), flat_ring=(), unstable=(),
                      no_stab=(), degenerate=False, drop_probe=(),
                      drop_pcation=False, flip_spin=(), baseline_high=False,
-                     drop_baseline=False):
+                     drop_baseline=False, drop_receipt=(), stale_receipt=()):
     """selftest 용 phase S + 1층 probe 산출물. 인자들이 **음성 경로**다.
 
     · `degenerate=True`  같은 에너지 (스핀 벡터는 seed 마다 다르다)
@@ -5369,6 +5719,17 @@ def _pil_fake_phaseS(out, man, probe_wrong=(), flat_ring=(), unstable=(),
         (out / jk / (sd + ".out")).write_text(_pil_fake_sout(
             jm["charge"], jm["mult"], jm["n_electrons"], _v, _E,
             stable=(sd not in unstable), stability=(sd not in no_stab)))
+        # ⛔ 회신 W P0-5 — 실물 러너는 잡마다 receipt 를 남긴다. 픽스처가 안 남기면
+        #   **픽스처가 실물과 다른 계**가 되고, 분석기의 receipt 게이트가 시험되지
+        #   않는다 (AZ P0-1 에서 정확히 이 이유로 16잡이 죽었다: selftest 가 정상
+        #   실행 경로를 한 번도 지나지 않았다).
+        if sd not in drop_receipt:
+            pil_write_receipt(out, "S", jk, 0, "1970-01-01T00:00:00")
+            if sd in stale_receipt:      # 입력이 바뀐 뒤의 옛 출력을 흉내낸다
+                with (out / PIL_RECEIPTS).open("a", encoding="utf-8") as _f:
+                    _r = pil_read_receipts(out)[jk]
+                    _r["inp_sha256"] = "9" * 64
+                    _f.write(json.dumps(_r, ensure_ascii=False) + "\n")
     return out
 
 def pilot_restart(d):
@@ -5597,6 +5958,34 @@ def pilot_analyze(d):
         else:
             res.setdefault("no_rotation_controls", {})[pk] = pv
 
+    # ⛔⛔ 회신 W P0-5 (2026-09-02) — **실행 receipt 를 소비한다.**
+    #   종전엔 계보 해시를 manifest 에 기록만 하고 아무도 읽지 않았다. `.out` 이
+    #   있으면 그것으로 판정했다 — 러너 밖에서 돌렸든, 입력을 고친 뒤 옛 출력이
+    #   남았든 구분하지 못했다. (C-12 는 같은 결론에 이미 도달해 있었다:
+    #   `RECEIPT_PHASE_MISSING`. 규약이 파일마다 갈려 있었다.)
+    _rcpt = pil_read_receipts(d)
+    res["run_receipts"] = {"file": PIL_RECEIPTS, "n": len(_rcpt),
+                           "⛔_무엇을_보증하나": (
+                               "잡이 **이 러너로** 돌았고, 그때 쓴 입력이 지금 파일과 "
+                               "같다는 것. 위조는 막지 못한다(같은 사용자) — 막는 것은 "
+                               "고친 줄 모르고 옛 결과를 판정에 쓰는 것이다")}
+
+    def _receipt_gates(jk, jd, tag):
+        """이 잡의 실행 receipt 가 지금 입력과 이어지나. → 게이트 목록."""
+        g, rr = [], _rcpt.get(jk)
+        inp = jd / (tag + ".inp")
+        if rr is None:
+            g.append("RUN_RECEIPT_MISSING(러너 밖에서 돌았거나 receipt 가 지워졌다 — "
+                     "무엇으로 돌았는지 확인할 수 없다)")
+            return g
+        if inp.is_file() and rr.get("inp_sha256") != _sha(inp):
+            g.append("RUN_RECEIPT_STALE(receipt 의 입력 %s… ≠ 현재 입력 %s… — "
+                     "입력이 바뀐 뒤의 옛 출력이다)"
+                     % (str(rr.get("inp_sha256"))[:12], _sha(inp)[:12]))
+        if not rr.get("terminated_normally"):
+            g.append("RUN_RECEIPT_NOT_TERMINATED(rc=%s)" % rr.get("rc"))
+        return g
+
     for jk, jm in sorted(man["jobs"].items()):
         if jm["phase"] != "S":
             continue
@@ -5607,6 +5996,7 @@ def pilot_analyze(d):
              "gates": []}
         if not outp.is_file():
             r["gates"].append("NOT_RUN"); res["jobs"][jk] = r; continue
+        r["gates"].extend(_receipt_gates(jk, jd, tag))
         txt = outp.read_text(errors="replace")
         _term, seg0, _twhy = pil_seg_terminated(txt)   # 회신 W P0-6
         if not _term:
@@ -5633,6 +6023,13 @@ def pilot_analyze(d):
         if _st == "UNSTABLE_REJUDGED_STABLE" and _rej is not None:
             seg = _rej
             r["judged_from"] = r.get("restart_job")
+            # ⛔ 회신 W P0-5 — 판정 재료를 **재계산 잡**에서 읽으므로 receipt 도
+            #   그 잡의 것을 봐야 한다. S 잡 것만 보면 대표가 무검증으로 들어온다.
+            _rk2 = r.get("restart_job")
+            if _rk2:
+                r["gates"].extend(
+                    "SR_" + g for g in _receipt_gates(
+                        _rk2, d / _rk2, _rk2.rsplit("/", 1)[-1]))
             r["⚠_판정_출처"] = ("원래 해가 불안정해 **재계산 출력**에서 에너지·스핀·"
                                 "class 를 읽었다 (회신 U P0-7). 원래 출력의 값은 "
                                 "basin 대표가 아니다")
@@ -6022,6 +6419,14 @@ PIL_RUNNER = r"""#!/usr/bin/env bash
 #   bash run_pilot.sh analyze  판정 (4층)
 #   bash run_pilot.sh restart  3층 재판정 — 불안정 잡을 따라 내려간 해로 다시
 #
+# ⛔ 회신 W P0-5 — 계산 단계는 **실행 전에 계보를 대조**한다(preflight): 입력·xyz 의
+#    봉인 해시, `%moinp` 대상 파일, 그리고 "정상종료한 출력이 있는데 receipt 가 없거나
+#    낡았다"(STALE_OUTPUT). 걸리면 그 단계 전체를 돌리지 않는다.
+#    잡마다 `RUN_RECEIPTS.jsonl` 에 실행 receipt 를 **덧붙인다**(덮어쓰지 않는다).
+#    분석기는 receipt 없는/낡은 S·SR 잡을 판정하지 않는다.
+#    ⛔ receipt 는 위조를 막지 못한다(같은 사용자) — 막는 것은 "고친 줄 모르고 옛
+#      결과를 판정에 쓰는 것" 이다.
+#
 # ⛔ 회신 T Q4 — probe 를 S 앞에 두는 이유: 회전이 목표 자리에 스핀을 **안** 놓았으면
 #    그 seed 는 다른 출발점이 아니다. 200원자 r2SCAN-3c 를 돌리기 전에 알아야 한다.
 #
@@ -6076,23 +6481,42 @@ fi
 echo $$ > "$LOCK/pid"
 trap 'rm -rf "$LOCK"' EXIT INT TERM
 
+# ⛔⛔ 회신 W P0-5 (2026-09-02) — 단계 실행 **전에** 계보를 대조한다.
+#   manifest 가 잡마다 입력·xyz·`%moinp` 해시를 봉인해 놓고도 러너가 한 번도
+#   보지 않았다. 생성 뒤 입력을 고쳐도 그대로 돌았고, 산출물은 봉인 해시를 달고
+#   나왔다. 여기서 걸리면 **그 단계 전체를 돌리지 않는다** (한 잡만 빼지 않는다 —
+#   무엇이 어긋났는지 사람이 봐야 한다).
+preflight() {
+  python3 "$BUILDER" --polaron_preflight "$D" "$1" || exit 2
+}
+
 run() {
-  local j=$1 tag=$2
+  local j=$1 tag=$2 jk="${1#$D/}" t0 rc
   if [ -f "$j/$tag.out" ] && grep -aq "ORCA TERMINATED NORMALLY" "$j/$tag.out"; then
-    echo "  이미 완료 — ${j#$D/}"; return 0; fi
-  echo "  [$(date +%H:%M:%S)] ${j#$D/}"
-  ( cd "$j" && "$ORCA" "$tag.inp" > "$tag.out" 2>&1 )
+    # ⚠ preflight 가 STALE_OUTPUT 을 이미 걸렀다 — 여기 오면 receipt 와 입력이
+    #   일치하는 정상 완료다. (종전엔 이 줄이 **유일한** 판단이었다.)
+    echo "  이미 완료 — $jk"; return 0; fi
+  t0=$(date +%Y-%m-%dT%H:%M:%S)
+  echo "  [$(date +%H:%M:%S)] $jk"
+  ( cd "$j" && "$ORCA" "$tag.inp" > "$tag.out" 2>&1 ); rc=$?
+  python3 "$BUILDER" --polaron_receipt "$D" "$stage" "$jk" "$rc" \
+      --receipt_started "$t0" --receipt_orca "$ORCA" || true
   if grep -aq "ORCA TERMINATED NORMALLY" "$j/$tag.out"; then
-    echo "  [$(date +%H:%M:%S)] 정상 종료 — ${j#$D/}"; return 0; fi
-  echo "  중단: ${j#$D/}  (마지막: $(tail -1 "$j/$tag.out" 2>/dev/null))"; return 1
+    echo "  [$(date +%H:%M:%S)] 정상 종료 — $jk"; return 0; fi
+  echo "  중단: $jk  (마지막: $(tail -1 "$j/$tag.out" 2>/dev/null))"; return 1
 }
 
 pop_count() {   # 국재 궤도 인구 블록이 실제로 찍혔나 (헤더는 REDUCED 유무 둘 다)
   # ⛔ 회신 V P1 (2026-09-02) — `grep -c … || echo 0` 는 **false-green** 이다.
   #   grep -c 는 0건일 때 "0" 을 **찍고도** exit 1 이라, `|| echo 0` 이 하나 더 붙어
-  #   출력이 `0\n0` 이 된다. 그 문자열을 수로 비교하면 `[ "0
-0" != 0 ]` 이 참이라
+  #   출력이 두 줄("0" 다음에 또 "0")이 된다. 그 문자열을 수로 비교하면 참이라
   #   **0건이 통과**한다. (같은 함정을 run_sei_neb.sh 에서 이미 한 번 맞았다.)
+  #   ⛔⛔ 2026-09-02 (회신 W P0-5 작업 중 `bash -n` 으로 발견) — 이 주석 자체가
+  #     러너를 **문법적으로 깨뜨리고 있었다.** 원문은 파이썬 문자열 안에서 `\n` 을
+  #     썼는데 그게 실제 줄바꿈이 돼, 뒷부분이 주석이 아니라 **명령줄**이 됐다
+  #     (열린 따옴표 + 짝 없는 백틱). 즉 지금까지 배포한 run_pilot.sh 는 어떤
+  #     단계도 실행되지 않는다. 아무도 못 본 이유: 러너를 **한 번도 안 돌렸다**
+  #     (phase L 이 리뷰 대기 중이었다). ⇒ selftest 에 `bash -n` 을 넣었다.
   #   ⇒ 출력을 받고 첫 줄만 쓴다. 실패해도 빈 문자열이지 두 줄이 아니다.
   _n=$(grep -acE "LOEWDIN (REDUCED )?ORBITAL POPULATIONS PER MO" "$1" 2>/dev/null | head -1)
   printf '%s\n' "${_n:-0}"
@@ -6105,8 +6529,10 @@ case "$stage" in
     #   우리가 `Randomize 0` 이라는 **없는 키**를 세 판 동안 쓰고도 몰랐던 이유가
     #   이것이다: 200원자 잡이 정상 종료하면 `%loc` 가 무시됐는지 알 길이 없다.
     #   H₂O 하나면 30초다. 여기서 걸리면 phase L 을 돌릴 이유가 없다.
-    echo "== %loc 구문 확인 (H2O · 30초) =="
-    LC="$D/_loccheck"; mkdir -p "$LC"
+    echo "== %loc 구문 확인 (H2O · L→L2 · 30초) =="
+    # ⛔ 회신 W P0-4 — **fresh 디렉터리**여야 한다. 옛 `.loc` 가 남아 있으면
+    #   suffix 판정이 그것을 집어 이번 실행이 만든 것이 아닌 파일을 봉인한다.
+    LC="$D/_loccheck"; rm -rf "$LC"; mkdir -p "$LC"
     cat > "$LC/w.inp" <<'EOF'
 ! RKS BP86 def2-SVP TightSCF NoAutoStart
 %loc
@@ -6148,10 +6574,42 @@ EOF
     done
     if [ -n "$_LSUF" ]; then echo "  ✔ 국재 파일 suffix = $_LSUF  ($(ls -la "$LC/w$_LSUF" | awk '{print $5}') B)"
     else echo "  ⛔ 국재 궤도 파일이 안 나왔습니다 (.loc / .loc.gbw 둘 다 없음):"; ls -la "$LC"; fail=1; fi
+    # ⛔⛔ 회신 W P0-4 (2026-09-02) — **L 형만 시험하면 사슬을 증명하지 못한다.**
+    #   seed 의 원천은 L2 의 `%moinp` readback 인데 loccheck 은 그걸 한 번도 돌리지
+    #   않았다. 그리고 `_LSUF` 판정은 옛 `.loc` 파일이 남아 있으면 그것을 집는다.
+    #   ⇒ **fresh 디렉터리**에서 L → L2 를 **둘 다** 돌린다. L2 는 방금 만든 국재
+    #     파일을 MORead + NoIter 로 읽고, 거기서 인구·계수를 파싱한다.
+    if [ "$fail" = 0 ]; then
+      cat > "$LC/w2.inp" <<EOF
+! RKS BP86 def2-SVP TightSCF NoAutoStart NoIter
+%scf
+  Guess MORead
+  GuessMode CMatrix
+end
+%moinp "w$_LSUF"
+%output
+  Print[P_OrbPopMO_L] 1
+  Print[P_MOs] 1
+end
+* xyz 0 1
+O   0.000000  0.000000  0.117300
+H   0.000000  0.757200 -0.469200
+H   0.000000 -0.757200 -0.469200
+*
+EOF
+      ( cd "$LC" && "$ORCA" w2.inp > w2.out 2>&1 )
+      if grep -aq "ORCA TERMINATED NORMALLY" "$LC/w2.out"; then
+        echo "  ✔ L2 (%moinp readback · NoIter) 정상 종료"
+      else
+        echo "  ⛔ **L2 가 실패했습니다** — seed 의 원천이 이 단계입니다:"
+        tail -25 "$LC/w2.out"; fail=1
+      fi
+    fi
     # ⛔ 우리 파서 **둘 다** 실물 출력에서 되는지 확인한다 (블록 존재만으로는 부족)
+    #   ⚠ 회신 W P0-4 — **L2 출력**으로 친다 (seed 를 거기서 고르기 때문이다).
     _MPOP=false; _MMOS=false
     if [ "$fail" = 0 ]; then
-      _PR=$(python3 - "$LC/w.out" "$BUILDER_PATH" <<'PYLC'
+      _PR=$(python3 - "$LC/w2.out" "$BUILDER_PATH" <<'PYLC'
 import json, sys, importlib.util
 out, bp = sys.argv[1], sys.argv[2]
 spec = importlib.util.spec_from_file_location("_b", bp)
@@ -6188,6 +6646,14 @@ json.dump({
  "out_sha256": h(os.path.join(lc, "w.out")),
  "loc_suffix": suf,
  "loc_sha256": h(os.path.join(lc, "w" + suf)) if suf and os.path.isfile(os.path.join(lc, "w" + suf)) else None,
+ # ⛔ 회신 W P0-4 — **L2 사슬**의 해시도 봉인한다 (seed 의 원천이 거기다)
+ "l2_inp_sha256": h(os.path.join(lc, "w2.inp")) if os.path.isfile(os.path.join(lc, "w2.inp")) else None,
+ "l2_out_sha256": h(os.path.join(lc, "w2.out")) if os.path.isfile(os.path.join(lc, "w2.out")) else None,
+ "l2_moread_suffix": suf,
+ "⛔_무엇을_증명하나": ("이 설치본에서 ⓐ `%loc` 블록이 받아들여지고 ⓑ 국재 파일이 "
+                        "어느 suffix 로 나오며 ⓒ **그 파일을 `%moinp` 로 다시 읽는 "
+                        "L2 가 돈다** ⓓ 우리 파서 둘이 그 **L2 출력**을 읽는다. "
+                        "물리·수렴은 보증하지 않는다 (회신 V P0-3 · W P0-4)."),
  "mopop_parsed": mp == "true", "mos_parsed": mm == "true",
 }, open(os.path.join(d, "LOCCHECK_PASS.json"), "w"), indent=1, ensure_ascii=False)
 print("  → LOCCHECK_PASS.json (suffix %s · 파서 인구=%s 계수=%s)" % (suf, mp, mm))
@@ -6220,6 +6686,7 @@ if c is None:
 print("  ✔ loccheck 증서 확인 (suffix %s · ORCA %s)"
       % (c["loc_suffix"], str(c.get("orca_version"))[:40]))
 PYLG
+    preflight L
     echo "== phase L (SCF + 국재화) =="
     for j in "$D"/L/*/*; do [ -d "$j" ] || continue; run "$j" "$(basename "$j")" || fail=1; done
     echo "== 국재화가 돌았나 =="
@@ -6258,6 +6725,13 @@ for jk, jm in man.get("jobs", {}).items():
                 lambda mo: mo.group(1) + mo.group(2) + suf + mo.group(3), t)
     if t2 != t:
         open(f, "w", encoding="utf-8").write(t2); n += 1
+    # ⛔⛔ 회신 W P0-5 — **고쳤으면 봉인도 갱신해야 한다.** 종전엔 입력을 고쳐
+    #   놓고 manifest 의 `inp_sha256` 은 생성 시점 값 그대로였다. 계보 대조를
+    #   붙이는 순간 이 단계가 스스로 만든 불일치로 전건이 막힌다(실측). 그리고
+    #   갱신하지 않으면 "봉인이 가리키는 입력"과 "실제로 돈 입력"이 영구히 갈린다.
+    man["jobs"][jk]["inp_sha256"] = m._sha(f)
+    man["jobs"][jk]["inp_sha256_at_generate"] = man["jobs"][jk].get(
+        "inp_sha256_at_generate") or jm.get("inp_sha256")
 man["loc_suffix_actual"] = suf
 man["loc_suffix_patched_inputs"] = n
 if n:
@@ -6268,6 +6742,9 @@ json.dump(man, open(man_p, "w"), indent=1, ensure_ascii=False)
 print("  ✔ loc suffix = %s (L2 입력 %d개 수정%s)"
       % (suf, n, "" if n else " — 가정과 같아 손대지 않음"))
 PYL2
+    # ⚠ 순서 — suffix 패치가 입력을 고치므로 preflight 는 **그 뒤**다.
+    #   앞에 두면 이 단계가 스스로 만든 불일치로 막힌다.
+    preflight L2
     echo "== phase L2 (국재 궤도 인구 · NoIter) =="
     for j in "$D"/L2/*/*; do [ -d "$j" ] || continue; run "$j" "$(basename "$j")" || fail=1; done
     echo "== smoke test — 국재 궤도의 MO 인구가 찍혔나 =="
@@ -6287,6 +6764,7 @@ PYL2
     fi
     ;;
   probe)
+    preflight probe
     echo "== 1층 개입 확인 probe (NoIter · 회신 T Q4) =="
     for j in "$D"/S0P/*/*/*; do
       [ -d "$j" ] || continue; run "$j" "$(basename "$j")_probe" || fail=1; done
@@ -6294,6 +6772,7 @@ PYL2
                    || echo "probe 에 실패가 있습니다 — phase S 로 가지 않습니다."
     ;;
   S)
+    preflight S
     echo "== phase S (측정) =="
     for j in "$D"/S/*/*/*; do [ -d "$j" ] || continue; run "$j" "$(basename "$j")" || fail=1; done
     [ "$fail" = 0 ] && echo "다음: bash run_pilot.sh analyze" \
@@ -6305,6 +6784,7 @@ PYL2
   restart)
     # 3층 — 불안정 잡을 따라 내려간 `.gbw` 로 재계산하고 안정성을 다시 본다
     python3 "$BUILDER" --polaron_restart "$D" || { fail=1; echo "재판정 입력 생성 실패"; }
+    preflight restart
     for j in "$D"/SR/*/*/*; do [ -d "$j" ] || continue; run "$j" "$(basename "$j")" || fail=1; done
     [ "$fail" = 0 ] && echo "다음: bash run_pilot.sh analyze (3층 재판정 반영)"
     ;;
@@ -6348,6 +6828,14 @@ def main():
     ap.add_argument("--polaron_seeds", help="phase L 완주 디렉터리 — seed 선택 + phase S 생성")
     ap.add_argument("--polaron_restart", help="3층 재판정 입력 생성 (불안정 잡)")
     ap.add_argument("--polaron_analyze", help="phase S 완주 디렉터리 — F 집합·class·판정")
+    # ⛔ 회신 W P0-5 — 러너가 부른다 (사람이 직접 쓸 일은 없다)
+    ap.add_argument("--polaron_preflight", nargs=2, metavar=("DIR", "STAGE"),
+                    help="단계 실행 **전** 계보 대조 (입력·xyz·%%moinp·낡은 출력)")
+    ap.add_argument("--polaron_receipt", nargs=4,
+                    metavar=("DIR", "STAGE", "JOBKEY", "RC"),
+                    help="잡 하나의 실행 receipt 를 RUN_RECEIPTS.jsonl 에 덧붙인다")
+    ap.add_argument("--receipt_started", help="--polaron_receipt 의 시작 시각")
+    ap.add_argument("--receipt_orca", help="--polaron_receipt 가 봉인할 ORCA 절대경로")
     ap.add_argument("--site", help="H 제거 위치 (1-based 산성 H). 생략하면 사전 규칙(중간)")
     # ⛔ 회신 T P0-3 — 국재화 realization. primary 는 결정론이 기본이다.
     ap.add_argument("--loc_realization", choices=("deterministic", "random"),
@@ -6385,6 +6873,28 @@ def main():
             print("⚠ --nprocs 1 (직렬) — 200원자 r2SCAN-3c SP 는 사실상 끝나지 않습니다. "
                   "가용 코어를 주세요 (예: --nprocs 8)")
         pilot_generate(a)
+        return 0
+    if a.polaron_preflight:
+        _d, _stg = a.polaron_preflight
+        probs, n = pil_lineage_check(_d, _stg)
+        if probs:
+            print("⛔ 계보 대조 실패 (%d건 · 잡 %d) — 돌리지 않는다 (회신 W P0-5):" %
+                  (len(probs), n))
+            for p in probs[:12]:
+                print("   " + p)
+            if len(probs) > 12:
+                print("   … 외 %d건" % (len(probs) - 12))
+            print("   고치는 법: 입력을 손댔으면 되돌리거나, 묶음을 다시 만드십시오.\n"
+                  "   낡은 출력이면 그 잡 폴더의 `.out` 을 지우고 다시 돌리십시오.")
+            return 2
+        print("  ✔ 계보 대조 통과 — %s 단계 잡 %d건 (입력·xyz·%%moinp·receipt)"
+              % (_stg, n))
+        return 0
+    if a.polaron_receipt:
+        _d, _stg, _jk, _rc = a.polaron_receipt
+        r = pil_write_receipt(_d, _stg, _jk, _rc, a.receipt_started, a.receipt_orca)
+        print("  · receipt: %s rc=%s 정상종료=%s" %
+              (_jk, r["rc"], r["terminated_normally"]))
         return 0
     if a.polaron_seeds:
         return 0 if pilot_seeds(a.polaron_seeds) else 2
