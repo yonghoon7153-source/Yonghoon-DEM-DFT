@@ -118,7 +118,13 @@ run 'check_method_discipline (규칙 A~M + claims 원장)' python3 scripts/check
 #  ★★ 2026-08-30 — 원장이 "제3자가 리포만으로 재도출한 값이 이 문서와 일치한다" 고 적는데
 #    그것은 08-29 에 손으로 한 번 돌린 결과였고 **아무것도 다시 확인하지 않았다**.
 #    비·산포를 팔의 σ_e 에서 재계산해 원장 산문과 대조한다 (저장된 판정 필드를 읽지 않는다).
+run 'check_doc_refs          --selftest' python3 scripts/check_doc_refs.py --selftest
 run 'check_cohort_packages  (커밋된 패키지 ↔ 원장)' python3 scripts/check_cohort_packages.py
+#  ★★ 2026-08-31 — 문서가 **없는 파일·없는 커밋**을 가리키는 자리를 잡는다.
+#    깨진 참조는 조용하다: 열어 보기 전에는 안 보이고, 열어 봤을 때는 이미 그 문서를
+#    믿고 판단한 뒤다.  예외는 `docs/reviews/doc_refs_allowlist.tsv` 에 **이유와 함께**
+#    등재하고, 그 파일이 생기면 검사기가 등재 자체를 낡았다고 지적한다.
+run 'check_doc_refs         (문서가 가리키는 것이 실재하는가)' python3 scripts/check_doc_refs.py --quiet
 #  ★★ 2026-08-30 — 봉인된 설계를 **매번** 다시 검증한다 (R14 조건 6·7).
 #    상자는 기존 130 런에서 유도되고 CSV 는 해시로 사전등록에 묶여 있는데, 08-29~30 에는
 #    사람이 한 번 돌려 보고 끝이었다.  손으로만 도는 검사는 없는 것과 같다 (규칙 K).

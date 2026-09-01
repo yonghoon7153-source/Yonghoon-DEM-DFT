@@ -1,0 +1,35 @@
+# 문서 참조 예외 등재 — `경로<TAB>이유`  (검사기 `scripts/check_doc_refs.py`)
+#
+# ⚠ 이유 없는 등재는 검사기가 거부한다.  그리고 그 파일이 **생기면** 검사기가 이 등재를
+#   "낡았다" 고 지적한다 — 예외가 조용히 영구화되지 않게 하려는 것이다.
+# ⚠ 여기 있다고 "문제 없음" 이 아니다.  "왜 없는지 알고 있다" 는 뜻이다.
+
+# ── ① 문서가 약속했지만 만들어지지 않은 산출물 (미실행 · 계획 단계) ──
+docs/data/xy_heatmap_summary.csv	PHASE_C 계획 산출물 — 실행되지 않았다
+docs/data/oh2026_sigma_ionic.csv	문헌 digitize 계획 — 미실행 (lit_oh2026 · literature_yonsei 둘 다 참조)
+docs/data/park2020_sigma_vs_ncm.csv	문헌 digitize 계획 — 미실행
+docs/data/park2020_step4_params.csv	문헌 digitize 계획 — 미실행
+docs/data/zhang2026_dry_cbd_percolation.csv	문헌 digitize 계획 — 미실행
+docs/data/sse_sigma_ion_population.csv	R_int 앵커 DB 계획 — 미실행
+docs/data/mpm_dem_match.csv	wallP 교차검증 원자료 — 커밋되지 않았다 (요약만 문서에)
+
+# ── ② 리포 밖 경로 (외부 저장소 · 일회성 작업공간) ──
+db/properties/sdcp_linio2_binding_phaseA.csv	DFT 저장소 소관 (gabia)
+webapp/data.py	웹앱 저장소 소관 — 이 브랜치에 없다
+scratchpad/SI_21.txt	일회성 작업공간 (커밋 대상 아님)
+litdb_cache/context__literature_yonsei_dtbl_2026.md	litdb 캐시 — 생성물, 커밋 대상 아님
+regress/make_grid.py	외부 회귀 하네스 — 이 브랜치에 없다
+origin_review/fixtures.py	일회성 리뷰 픽스처 — 커밋되지 않았다
+docs/db/.mtime_cache.json	캐시 파일 (gitignore 대상)
+post_lhs00_110/atom_2980000.liggghts	ibb 런 산출물 — 용량상 리포에 없다 (영수증만 커밋)
+post_lhs00_000/atom_2425000.liggghts	ibb 런 산출물 — 용량상 리포에 없다 (영수증만 커밋)
+
+# ── ③ Codex 리뷰 원문 (외부 산출, 우리 응답만 커밋됨) ──
+docs/codex_phase_ab_crosscheck_20260807.md	Codex 산출 원문 — 미커밋 (응답 문서만 있다)
+docs/codex_phase_ab_reverification_20260807.md	Codex 산출 원문 — 미커밋
+docs/codex_round3_crosscheck_20260807.md	Codex 산출 원문 — 미커밋
+docs/codex_round4_crosscheck_20260807.md	Codex 산출 원문 — 미커밋
+
+# ── ④ 표기 문제 ──
+docs/data/sdcp8_v04/v03/v025.json	`{v04,v03,v025}.json` 축약 표기 — 실제 경로가 아니다
+docs/sigma_electronic_stage21_close_out.md	개명됨 → `docs/sigma_e_stage21_history.md` (본문이 그 사실을 적고 있다)

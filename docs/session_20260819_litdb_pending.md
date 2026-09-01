@@ -15,7 +15,7 @@ webapp 은 `scripts/litdb_sync.py` 가 `origin/<branch>` 를 **직접 읽으므�
 
 | | 논문 | 상태 |
 |---|---|---|
-| A | Wang & Wang, JMCA 2026 (건식 후막 NCM94 실패기전) | ✅ **완료** `papers/wang2026_dryprocess_thick_cathode_failure_ncm94.md` (824줄) |
+| A | Wang & Wang, JMCA 2026 (건식 후막 NCM94 실패기전) | ✅ **완료** `litdb/papers/wang2026_dryprocess_thick_cathode_failure_ncm94.md` (824줄) |
 | B | Weitze/Franco, ESM 2024 (습식 resolved-AM) | 진행 중 — **기존 카드 심화** (`wet_processing_resolved_am_ssb_cathode_manufacturing.md`) |
 | C | Alabdali/Franco, JPS 2023 (3D 습식 제조) | 진행 중 — 신규 |
 | D | Joule (후막 열화 multiscale imaging + 모델) | 진행 중 — 신규 |
@@ -75,7 +75,7 @@ vox 0.125 CL-41, 11/16 팔 시점 5쌍 평균 ~~R = 1.14508~~ (SE 0.107 %p) — 
 
 # B편 완료 (2026-08-19) — Weitze/Franco 카드 심화 288 → **528줄**
 
-수정 파일: `papers/wet_processing_resolved_am_ssb_cathode_manufacturing.md` (신규 절 + 본문 26곳 `⚠정정2026-08-19`) ·
+수정 파일: `litdb/papers/wet_processing_resolved_am_ssb_cathode_manufacturing.md` (신규 절 + 본문 26곳 `⚠정정2026-08-19`) ·
 `comparison_vs_ours_DEM.md` (+230줄, 축 A/B/C/F).  `INDEX_DEM.md` 는 **자동생성**이라 미수정 (헤더가 손대지 말라고 명시).
 
 ## ★★ 옛 카드 정정 7건 — 하나는 우리 쪽 **근거 없는 서술**
@@ -143,7 +143,7 @@ vox 0.125 CL-41, 11/16 팔 시점 5쌍 평균 ~~R = 1.14508~~ (SE 0.107 %p) — 
 
 ## 정정 ① "So 2022 JPS coated-particle DEM 을 digest 해야 한다" → **이미 정본에 있다**
 
-`papers/so2022_dem_compaction_coated_particles_assb.md` (236줄, digested 2026-06-26,
+`litdb/papers/so2022_dem_compaction_coated_particles_assb.md` (236줄, digested 2026-06-26,
 DOI 10.1016/j.jpowsour.2022.231279).  `so2022_dem_contact_model_assb_compaction_sintering`
 (MethodsX = 방법) 과 **한 쌍**이고 데이터 CSV `docs/data/so2022_coated_particles.csv` 까지 있다.
 ⇒ **웹서치 결과만 보고 "신규 digest 후보 1순위" 라고 한 것은 틀렸다.**  litdb 를 먼저 봤어야 했다
