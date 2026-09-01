@@ -149,8 +149,16 @@ def build(case, dump_all=False, verbose=True):
 #:   ⚠ 실제 원소가 아니다 — VESTA 에서 색이 갈리라고 쓰는 **표지**다.
 #:   그래서 파일명에 `_marked` 를 달고, 겹침 파일은 계산 입력으로 쓰지 않는다.
 PATH_MARK = "He"
-#: 이동 원자로 볼 최소 변위 [Å] (초기→최종). 협동 이동이면 여럿이 잡힌다.
-MOVE_MIN_A = 1.0
+#: 이동 원자로 볼 최소 변위 [Å] (초기→최종).
+#: ⚠ 2026-09-01 실측으로 1.0 → 1.5 로 올렸다. li3nd c→c 는 뛰는 Li 이 4.21 Å 인데
+#:   **Nd 여덟 개가 0.95–1.04 Å 로 거의 똑같이** 밀린다 (격자 이완 · 대칭적 숨쉬기).
+#:   문턱 1.0 이 그 사이에 떨어져 **똑같이 움직이는 Nd 중 2개만 경로로 그려졌다** —
+#:   물리적 구분이 아니라 문턱의 우연이었다. 1.5 면 뛰는 이온만 남는다.
+#:   ⛔ 이 값은 "협동 이동을 가리는" 문턱이 아니다 — 진짜 릴레이 이동이면 여러 이온이
+#:      **홉 거리급**(≳2 Å)으로 움직이므로 1.5 로도 잡힌다.
+MOVE_MIN_A = 1.5
+#: 문턱 바로 아래에 원자가 몰려 있으면 알린다 (문턱이 임의로 갈랐다는 신호).
+MOVE_WARN_BAND = 0.5
 
 
 def center_on_path(cell, S, P, n_path):
@@ -195,6 +203,15 @@ def path_overlay(case, mark=True, center=True, verbose=True):
     if len(mov) == 0:
         raise SystemExit(f"⛔ {case}: 변위 {MOVE_MIN_A} Å 를 넘는 원자가 없다 — "
                          f"경로가 비었거나 이미지 순서가 어긋났다 (최대 {d.max():.2f} Å)")
+    near = np.where((d <= MOVE_MIN_A) & (d > MOVE_MIN_A - MOVE_WARN_BAND))[0]
+    if len(near) and verbose:
+        el = {}
+        for i in near:
+            el[imgs[0][0][i]] = el.get(imgs[0][0][i], 0) + 1
+        print(f"    ⚠ 문턱({MOVE_MIN_A} Å) 바로 아래에 {len(near)}개 "
+              f"({', '.join(f'{k}×{v}' for k, v in el.items())} · "
+              f"{d[near].min():.2f}–{d[near].max():.2f} Å) — 격자 이완으로 보이지만, "
+              f"문턱을 옮기면 그림이 바뀐다는 뜻이다")
 
     sym0, pos0 = imgs[0]
     keep = [i for i in range(len(sym0)) if i not in set(mov)]
@@ -325,7 +342,12 @@ def selftest():
     chk(sum(1 for x in at.get_chemical_symbols() if x == PATH_MARK) == 5,
         "⛔음성 중간 5장만 표지로 찍고 처음·끝은 **실제 원소**로 남긴다")
     _, nm2, at2 = path_overlay("li3nd_ccc", verbose=False)
-    chk(nm2 >= 1, "li3nd c→c 도 이동 원자를 찾는다 (%d개)" % nm2)
+    chk(nm2 == 1, "⛔음성 li3nd c→c 의 이동 원자는 **Li 하나**다 — Nd 는 0.95–1.04 Å "
+                  "로 밀리는 격자 이완이지 이동이 아니다 (%d개)" % nm2)
+    _s0 = read_crd(os.path.join(RAW, CASES["li3nd_ccc"][0]))
+    _dd = np.linalg.norm(_s0[-1][1] - _s0[0][1], axis=1)
+    _el = [_s0[0][0][i] for i in np.where(_dd > MOVE_MIN_A)[0]]
+    chk(set(_el) == {"Li"}, "경로에 Nd 가 들어가지 않는다 (%s)" % set(_el))
 
     _, c6 = crop_local("li2s", 6.0, verbose=False)
     _, c4 = crop_local("li2s", 4.0, verbose=False)
@@ -335,10 +357,12 @@ def selftest():
     chk(sum(1 for x in c4.get_chemical_symbols() if x == PATH_MARK) == 5,
         "⛔음성 잘라도 경로 7점은 **전부** 남는다 (표지 5 + 양끝 2)")
 
-    _, _, a_off = path_overlay("li3nd_ccc", center=False, verbose=False)
+    _, _nmv, a_off = path_overlay("li3nd_ccc", center=False, verbose=False)
     _, _, a_on = path_overlay("li3nd_ccc", center=True, verbose=False)
     cc = a_on.cell.array.sum(axis=0) / 2.0
-    npath = 3 * 7
+    # ⚠ 이동 원자 수를 **하드코딩하지 않는다** — 문턱을 바꾸면 달라진다
+    #   (2026-09-01: 1.0→1.5 로 올리자 3개 → 1개가 되어 이 시험이 깨졌다)
+    npath = _nmv * 7
     d_off = np.linalg.norm(a_off.positions[-npath:].mean(axis=0) - cc)
     d_on = np.linalg.norm(a_on.positions[-npath:].mean(axis=0) - cc)
     chk(d_on < 1e-6, "중앙화하면 경로 중심이 셀 중심과 일치한다 (%.1e Å)" % d_on)
