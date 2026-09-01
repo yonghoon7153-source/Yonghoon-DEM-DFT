@@ -249,3 +249,19 @@ lhs00_004  경과 4-18:45  남음 5:14  스텝   373,000
    재실행은 **손으로** 해야 한다.
 3. 어느 케이스가 대상인지는 완주 후 게이트가 ID 로 찍는다:
    `python3 scripts/lhs_ext_submit_gate.py --manifest … --sacct …`
+
+## 재실행 대상 뽑기 — **194건이 다 끝난 뒤에** 돌린다
+
+⚠ 실행·대기가 남은 동안 돌리면 목록이 확정되지 않는다 (09-01 16:25 기준 실행 60 · 대기 39).
+
+```bash
+sacct -X -u $USER -S 2026-08-01 -n -P -o JobName,State \
+| awk -F'|' '$1 ~ /^lhs/ {s=$2; sub(/ .*/,"",s); m[$1]=s}
+  END{for(k in m) if(m[k]!="COMPLETED" && m[k]!="RUNNING" && m[k]!="PENDING") print k}' \
+| sort > ~/rerun_list.txt; wc -l ~/rerun_list.txt
+```
+
+★ **이름별 마지막 상태만** 본다 — 08-27·08-31 재제출로 생긴 옛 `CANCELLED` 기록이
+완주한 케이스를 덮지 않게 하려는 것이다 (같은 이름이 여러 세대로 남아 있다).
+
+⇒ 나오는 ID 가 **코어를 늘려 재제출할 대상**이다.  재제출은 사용자가 직접 한다.
