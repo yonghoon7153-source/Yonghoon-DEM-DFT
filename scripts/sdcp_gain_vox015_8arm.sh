@@ -408,7 +408,15 @@ _RCPT_TAG="_r$(printf '%s' "$_RCPT_JSON" | python3 -c 'import json,sys; print(js
 OUTDIR="${OUTDIR:-$PWD/prereg_v2_vox${VOX/./}${SD_TAG}${BR_TAG}${SG_TAG}${YV_TAG}${PT_TAG}${PS_TAG}${SBRG_TAG}${FS_TAG}${SION_TAG}${PB_TAG}${AR_TAG}${LEAN_TAG}${_RCPT_TAG}}"
 #  ★★★ R3-CX-09 — 진단 런(ARMS≠8)은 **사용자가 준 OUTDIR 에도** 접미사를 강제한다.
 #    안 그러면 `ARMS=2 OUTDIR=<생산경로>` 로 2팔 산출물이 8팔 디렉터리에 섞인다.
-if [ "$ARMS" -ne 8 ] && [ "${OUTDIR%_arm$ARMS}" = "$OUTDIR" ]; then
+#  ★ 2026-09-01 — 검사를 **끝자리**에서 **포함**으로 바꾼다.  기본 OUTDIR 은 이미
+#    `${AR_TAG}` 로 팔 수를 담는데 그 뒤에 `${LEAN_TAG}${_RCPT_TAG}` 가 붙으므로 끝자리
+#    검사가 "없다" 로 읽고 **또** 붙였다 (실측: `…_arm1_lean2_r5ef6da47ca4e_arm1`).
+#    디렉터리 이름은 이 리포에서 규약의 일부라(판정기가 태그로 팔을 짝짓는다) 중복은
+#    조용한 오독의 씨앗이다.
+#  ⚠ **"사용자가 준 경우만" 으로 좁히지 말 것** — 처음에 그렇게 고쳤다가 L-5a 가 잡았다.
+#    그 시험이 지키는 것은 **이중 방어**다: 조립에서 `${AR_TAG}` 가 지워져도 이 줄이
+#    여전히 진단 산출물을 격리해야 한다.  포함 검사는 두 요구를 동시에 만족한다.
+if [ "$ARMS" -ne 8 ] && [ "${OUTDIR#*_arm$ARMS}" = "$OUTDIR" ]; then
   OUTDIR="${OUTDIR}_arm${ARMS}"
   echo "[p2] ⚠ 진단 런($ARMS 팔) — OUTDIR 에 강제 접미사: $OUTDIR"
 fi

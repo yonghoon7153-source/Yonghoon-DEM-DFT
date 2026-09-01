@@ -1046,6 +1046,26 @@ def check_runner_integration(verbose=True, runner=None):
     if _std.get('LEAN_FLAGS', '<UNSET>').strip():
         problems.append(f'L_LEANDEFAULT| LEAN 미지정인데 LEAN_FLAGS 가 비어 있지 않다 '
                         f'(`{_std.get("LEAN_FLAGS")}`) — 기본이 조용히 LEAN 이 된다')
+    #  ⓐ-3 (2026-09-01) — **진단 런의 OUTDIR 이 팔 수를 정확히 한 번 담는가.**
+    #    실측 결함: 기본 OUTDIR 은 이미 `${AR_TAG}` 로 `_arm1` 을 담는데, 강제-접미사
+    #    가드가 **끝자리만** 보느라 뒤의 `_lean2_r…` 때문에 "없다" 로 읽고 또 붙였다
+    #    (`…_sg7854_arm1_lean2_r5ef6da47ca4e_arm1`).  디렉터리 이름은 이 리포에서
+    #    **규약의 일부**다 (판정기가 태그로 팔을 짝짓는다) — 중복은 조용한 오독의 씨앗이다.
+    for _lv in ('1', '2'):
+        _c = runner_config({'ARMS': _lv}, runner)
+        _od = _c.get('OUTDIR', '')
+        if _c.get('_aborted') or not _od or _od == '<UNSET>':
+            continue
+        _n = os.path.basename(_od).count(f'_arm{_lv}')
+        if _n != 1:
+            problems.append(f'L_ARMTAG| ARMS={_lv} 의 기본 OUTDIR 이 `_arm{_lv}` 를 '
+                            f'{_n}번 담는다 (정확히 1번이어야 한다) — '
+                            f'`{os.path.basename(_od)}`')
+    #  ★ 8팔 생산은 그 접미사를 **달면 안 된다** (진단 산출물과 섞이지 않게)
+    _c8 = runner_config({'ARMS': '8'}, runner)
+    if not _c8.get('_aborted') and '_arm' in os.path.basename(_c8.get('OUTDIR', '') or ''):
+        problems.append(f'L_ARMTAG| 8팔 생산 OUTDIR 에 `_arm` 접미사가 붙었다 — '
+                        f'`{os.path.basename(_c8.get("OUTDIR", ""))}`')
     #  ⓐ-2 (2026-08-30, 코드리뷰 지적 4) — LEAN=3·4 도 단언한다.  여태 LEAN=2 와 미지정만
     #    봤고, 그래서 새 레벨의 **한 토큰 회귀가 초록으로 나간다**.  두 레벨의 정의는
     #    "LEAN=2 에서 무엇을 빼느냐" 이므로 **차집합으로** 적어 오타가 드러나게 한다.
@@ -2411,7 +2431,7 @@ def _selftest():
         not _m4b)
     _both = _RSRC.replace('${FS_TAG}${SION_TAG}${PB_TAG}${AR_TAG}${LEAN_TAG}', '${FS_TAG}${SION_TAG}${PB_TAG}${LEAN_TAG}')
     _m4c = _rmut_src(_both.replace(
-        'if [ "$ARMS" -ne 8 ] && [ "${OUTDIR%_arm$ARMS}" = "$OUTDIR" ]; then', 'if false; then'))
+        'if [ "$ARMS" -ne 8 ] && [ "${OUTDIR#*_arm$ARMS}" = "$OUTDIR" ]; then', 'if false; then'))
     chk(f'L-5: ★★ 두 겹을 **다** 지우면 잡는다 — 진단 런이 생산 OUTDIR 에 쓴다 '
         f'({len(_m4c)}건)',
         any(x.startswith(('L_ARMTAG', 'L_ARMNS')) for x in _m4c))
@@ -2437,7 +2457,7 @@ def _selftest():
     chk(f'L-12: ★★ 봉인 **실패** 경로가 원값을 자동으로 찍으면 잡는다 — metadata 를 '
         f'일부러 깨뜨려 raw table 을 보는 경로 (R3-CX-02) ({len(_m12)}건)',
         any(x.startswith('L_FAILDUMP') for x in _m12))
-    _m13 = _rmut('''if [ "$ARMS" -ne 8 ] && [ "${OUTDIR%_arm$ARMS}" = "$OUTDIR" ]; then''',
+    _m13 = _rmut('''if [ "$ARMS" -ne 8 ] && [ "${OUTDIR#*_arm$ARMS}" = "$OUTDIR" ]; then''',
                  'if false; then')
     chk(f'L-13: ★★ 진단 런이 **사용자 OUTDIR** 을 그대로 쓰면 잡는다 — 2팔이 8팔 '
         f'디렉터리에 섞인다 (R3-CX-09) ({len(_m13)}건)',
