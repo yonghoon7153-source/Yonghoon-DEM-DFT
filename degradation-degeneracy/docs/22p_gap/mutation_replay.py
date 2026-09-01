@@ -624,11 +624,15 @@ MUTANTS = [
      "        pass",
      "crash_inside_release_leaves_a_recoverable_state"),
     # ★ P0-L3 — `os.replace` 뒤의 오류를 미커밋으로 보면 claim/token 을 지운다.
+    # ★ 53차 P0-1 — 되돌림의 **기본값이 뒤집혔다.** 52차는 `except BaseException`
+    #   이 기본 되돌림이었고 불확실만 예외로 뺐다. 변이는 그 상태를 복원한다 —
+    #   "모르면 되돌린다" 로 돌아가면 lock exit 실패 하나가 orphan 을 만든다.
     ("rollback-only-on-certain-non-commit", PRESERVE,
-     "    except PlanWriteUncertain:",
-     "    except _NeverRaised:",
+     "    except PlanNotCommitted:",
+     "    except BaseException:",
      "durability_error_after_the_ledger_commit_keeps_the_claim or "
-     "uncertain_ledger_write_never_discards_the_claim"),
+     "uncertain_ledger_write_never_discards_the_claim or "
+     "failure_while_leaving_the_ledger_lock_preserves_the_authority"),
     # ★ P0-A1 — 목적함수 payload 가 승인 밖이면 같은 이름으로 다른 J 를 낸다.
     ("fit-axis-seals-the-objective-payload", FITTING,
      '        "objectives_digest": _dg({str(k): objectives[k]\n'
@@ -665,10 +669,10 @@ MUTANTS = [
      "grid_axis_binds_the_discharged_state_cache"),
     # ★ P1-O — fail-closed 는 정지가 아니다. 남은 전이를 완주해야 한다.
     ("freeze-completes-a-half-written-transition", RP,
-     "    if recorded == \"frozen\":\n"
-     "        if row.get(\"status\") == \"active\":",
-     "    if recorded == \"frozen\":\n"
-     "        if False:",
+     "        if recorded == \"frozen\":\n"
+     "            if row.get(\"status\") == \"active\":",
+     "        if recorded == \"frozen\":\n"
+     "            if False:",
      "freeze_is_retryable_after_a_crash_between_its_two_writes"),
         # ─────────────────────────────────────────────────────────────────────
     # 52차 방어
@@ -718,15 +722,14 @@ MUTANTS = [
      "frozen_directory_carries_its_own_seal"),
     # ★ P0-3 — 얼리기와 발급이 같은 transaction 에 없으면 얼린 안에서 자란다.
     ("freeze-refuses-a-live-execution", RP,
-     "    live = _live_claims_for(cohort_id, claims_root)\n"
-     "    if live:",
-     "    live = []\n"
-     "    if live:",
+     "        live = _live_claims_for(cohort_id)\n"
+     "        if live:",
+     "        live = []\n"
+     "        if live:",
      "freeze_refuses_while_an_execution_holds_the_cohort"),
     # ★ P1-1 — 한 줄 앞선 partial commit 은 위조가 아니라 미완의 append 다.
     ("lifecycle-completes-a-partial-append", RP,
      "        if len(out) >= 1 and out[-1][\"prev\"] == head:\n"
-     "            _write_head_anchor(prev)\n"
      "            return out",
      "        pass",
      "freeze_crash_between_journal_and_anchor_is_recoverable"),
@@ -748,11 +751,137 @@ MUTANTS = [
      "                     if not (isinstance(x, ast.Constant) and x.value == \"\")]",
      "            pass",
      "canonical_form_agrees_on_every_supported_interpreter"),
+    # ─────────────────────────────────────────────────────────────────────
+    # 53차 방어 — 게이트 52 반례
+    # ─────────────────────────────────────────────────────────────────────
+    # ★ P0-1 — 불확실 구역은 **임계 구역 전체**다 (호출 하나가 아니다).
+    ("plan-uncertainty-covers-the-whole-critical-section", PRESERVE,
+     "            attempted = True",
+     "            attempted = False",
+     "failure_while_leaving_the_ledger_lock_preserves_the_authority or "
+     "uncertain_ledger_write_never_discards_the_claim"),
+    # ★ P0-2 — `write(2)` 는 요청한 만큼 쓴다고 약속하지 않는다.
+    ("claim-write-is-all-or-nothing", PRESERVE,
+     "            _write_all(fd, body, path)",
+     "            os.write(fd, body)",
+     "short_write_does_not_leave_a_truncated_claim"),
+    ("token-write-is-all-or-nothing", PRESERVE,
+     "            _write_all(fd, body, tmp)",
+     "            os.write(fd, body)",
+     "short_write_does_not_leave_a_truncated_claim"),
+    # ★ P0-2 — 반환값도 자기 보고다. 권한 파일은 실물에서 다시 읽는다.
+    ("claim-bytes-are-verified-on-disk", PRESERVE,
+     '        _assert_bytes_on_disk(path, body, "claim")',
+     "        pass",
+     "lying_write_is_caught_by_reading_the_bytes_back"),
+    # ★ P0-3 — 경로의 배타는 **경로 위**에 있어야 한다 (claim lock 은 다리마다 다르다).
+    ("attempt-path-is-exclusive", PRESERVE,
+     "    with _ledger_lock(_attempt_path_lock(token_file)), \\\n"
+     "         _ledger_lock(cp):              # LOCK_ORDER: attempt_path \u2192 claim",
+     "    with _ledger_lock(cp):",
+     "two_legs_that_share_one_attempt_file_cannot_interleave"),
+    # ★ P0-4 — 증거의 위치를 caller 가 고를 수 없다.
+    ("freeze-authority-is-not-caller-selected", RP,
+     "    root = claims_root_for(REPO)",
+     '    root = REPO / "not-the-claims-root"',
+     "freeze_cannot_be_pointed_at_an_empty_claims_directory"),
+    # ★ P0-5 — 쓰기 직전에 다시 읽는다 (lock 밖에서 읽은 doc 을 되쓰면 증거가 사라진다).
+    ("freeze-rereads-the-ledger-before-writing", RP,
+     '    doc = yaml.safe_load(led.read_text(encoding="utf-8")) or {}\n'
+     "    row = next((c for c in doc.get(\"cohorts\") or []\n"
+     "                if c.get(\"cohort_id\") == cohort_id), None)\n"
+     "    if row is None:\n"
+     '        raise SystemExit(f"\u2717 \uc6d0\uc7a5\uc5d0 cohort {cohort_id!r} \uc774 \uc5c6\ub2e4")\n'
+     '    row["status"] = "frozen"',
+     '    doc = {"cohorts": (yaml.safe_load(led.read_text(encoding="utf-8"))\n'
+     '                       or {}).get("cohorts")}\n'
+     "    row = next((c for c in doc.get(\"cohorts\") or []\n"
+     "                if c.get(\"cohort_id\") == cohort_id), None)\n"
+     "    if row is None:\n"
+     '        raise SystemExit(f"\u2717 \uc6d0\uc7a5\uc5d0 cohort {cohort_id!r} \uc774 \uc5c6\ub2e4")\n'
+     '    row["status"] = "frozen"',
+     "freeze_does_not_erase_a_record_written_while_it_ran"),
+    # ★ P0-5 — 살아 있는 실행 검사가 **복구 분기보다 먼저** 온다.
+    ("freeze-checks-live-claims-before-recovery", RP,
+     "        live = _live_claims_for(cohort_id)\n"
+     "        if live:",
+     '        live = ([] if cohort_lifecycle_state(cohort_id) == "frozen"\n'
+     "                else _live_claims_for(cohort_id))\n"
+     "        if live:",
+     "freeze_recovery_branch_also_refuses_while_an_execution_is_live"),
+    # ★ P0-5 — 동결과 게시가 한 transaction 이다 (검사가 아니라 상호배제).
+    ("freeze-holds-the-publish-lock", RP,
+     "    with _PublishLock(dest), _preserve_ledger_lock(led):",
+     "    with _preserve_ledger_lock(led):",
+     "publication_cannot_land_after_the_cohort_was_frozen"),
+    # ★ P0-6 — 허용 전이는 **읽을 때** 검사한다 (writer 측 검사는 authority 가 아니다).
+    ("lifecycle-transitions-are-checked-when-read", RP,
+     '        if (rec["from"], rec["to"]) not in _LIFECYCLE_MOVES:',
+     "        if False:",
+     "lifecycle_reader_never_anchors_a_transition_it_did_not_make"),
+    # ★ P0-6 — 읽기는 쓰지 않는다.
+    ("lifecycle-reader-does-not-write", RP,
+     '        if len(out) >= 1 and out[-1]["prev"] == head:\n'
+     "            return out",
+     '        if len(out) >= 1 and out[-1]["prev"] == head:\n'
+     "            _write_head_anchor(prev)\n"
+     "            return out",
+     "lifecycle_reader_never_anchors_a_transition_it_did_not_make"),
+    # ★ P0-7 — module scope 의 컨테이너 변형도 그 이름의 상태를 정한다.
+    ("producer-binds-container-mutations", RP,
+     "        if isinstance(base, ast.Name):\n"
+     "            return [base.id]",
+     "        if isinstance(base, ast.Name):\n"
+     "            return []",
+     "module_scope_container_mutation_is_inside_producer_identity"),
+    # ★ P0-7 — 뿌리 이름이 없는 target 은 멈춘다 (빈 목록은 거짓말이다).
+    ("producer-fails-closed-on-rootless-targets", RP,
+     "        raise SystemExit(\n"
+     '            f"\u2717 producer \uc18c\uc2a4\uc758 module scope \uc5d0 \ubfcc\ub9ac \uc774\ub984\uc774 \uc5c6\ub294 \ub300\uc785 target \uc774 "',
+     "        return []\n"
+     "        raise SystemExit(\n"
+     '            f"\u2717 producer \uc18c\uc2a4\uc758 module scope \uc5d0 \ubfcc\ub9ac \uc774\ub984\uc774 \uc5c6\ub294 \ub300\uc785 target \uc774 "',
+     "unmodelled_assignment_target_is_fail_closed"),
+    # ★ P0-7 — dunder 는 allowlist 다 (blacklist 는 끝나지 않는다).
+    ("producer-dunder-is-an-allowlist", RP,
+     "            if _is_dunder(name) and name not in _DUNDER_ALLOWED:",
+     "            if False:",
+     "producer_cannot_reach_its_own_bytes_through_the_module_loader"),
+    # ★ P1 — 영수증은 **어느 변이의 것인지** 말해야 영수증이다.
+    ("receipt-is-bound-to-the-mutant", MR,
+     "    h.update(_scenario_binding(name))\n"
+     "    h.update(b\"\\x00\")",
+     "    pass",
+     "receipt_is_bound_to_the_exact_mutant"),
+    # ★ P1 — "모르겠다" 는 "물었다" 가 아니다.
+    ("receipt-verdict-is-fail-closed", MR,
+     "        if bool(v.get(\"bit\")) != derived:\n"
+     "            print(f\"\u2717 {path}: {name} \uc758 \ud310\uc815\uc774 \uc601\uc218\uc99d\uacfc \ub2e4\ub974\ub2e4 \"",
+     "        if derived is not None and bool(v.get(\"bit\")) != derived:\n"
+     "            print(f\"\u2717 {path}: {name} \uc758 \ud310\uc815\uc774 \uc601\uc218\uc99d\uacfc \ub2e4\ub974\ub2e4 \"",
+     "unreadable_receipt_is_not_a_pass"),
 ]
 
 #: 여러 지점을 **함께** 되돌려야 관측되는 변이 (심층 방어라 하나만 지우면
 #: 다른 하나가 가린다). 41·42·43차에 실측했다.
 MULTI = [
+    # ★ 53차 P0-2 — 소유 증명의 read-back 은 두 자리다 (보이기 전 · 보인 뒤).
+    #   하나만 지우면 다른 하나가 같은 바이트를 잡으므로 단일 변이는 안 문다.
+    ("token-bytes-are-verified-on-disk", PRESERVE, [
+        ('        _assert_bytes_on_disk(tmp, body, "\uc18c\uc720 \uc99d\uba85")', "        pass"),
+        ('    _assert_bytes_on_disk(p, body, "\uc18c\uc720 \uc99d\uba85")', "    pass"),
+     ], "lying_write_is_caught_by_reading_the_bytes_back"),
+    # ★ 53차 P0-7 — loader 로 가는 길은 둘이다 (dunder 문 · importlib 능력).
+    #   dunder allowlist 가 `__loader__`/`__spec__` 을 먼저 막으므로, loader
+    #   protocol 이름만 지워도 그 두 반례는 여전히 거부된다 — 함께 되돌려야
+    #   `importlib.util.find_spec(...).loader.get_source(...)` 가 관측된다.
+    ("source-reflection-covers-the-loader-protocol", RP, [
+        ('                      "get_source", "get_data", "get_code", "source_to_code")',
+         "                      )"),
+        ('_SOURCE_REFLECTION_MODULES = ("inspect", "linecache", "dis", "traceback",\n'
+         '                              "importlib")',
+         '_SOURCE_REFLECTION_MODULES = ("inspect", "linecache", "dis", "traceback")'),
+     ], "producer_cannot_reach_its_own_bytes_through_the_module_loader"),
     # ★ 48차 — 이것도 방벽이 둘이 됐다. 42차 버그(재확인이 `set(legs)` 만 본다)를
     #   복원해도, 48차가 임계 구역에 넣은 **살아 있는 status 재조회**가 freeze 를
     #   먼저 잡아 시험이 초록이다. 즉 내가 이번에 더한 검사가 이 변이를 가린다.
@@ -773,8 +902,8 @@ MULTI = [
     #   이고 상태 전이는 lock 에 기대는 두 번째 방벽이다. 둘 다 남기되, 변이는
     #   47차 상태(둘 다 없음)를 복원해 그 쌍이 실제로 일하는지 본다.
     ("claim-is-atomic", PRESERVE, [
-        ("        fd = os.open(path, os.O_CREAT | os.O_EXCL | os.O_WRONLY, 0o644)",
-         "        fd = os.open(path, os.O_CREAT | os.O_WRONLY, 0o644)"),
+        ("        fd = os.open(path, os.O_CREAT | os.O_EXCL | os.O_WRONLY | _O_BIN, 0o644)",
+         "        fd = os.open(path, os.O_CREAT | os.O_WRONLY | _O_BIN, 0o644)"),
         ("        row[\"status\"] = \"running\"",
          "        row[\"status\"] = \"planned\""),
      ], "exactly_one_attempt_enters_compute"),
@@ -810,10 +939,10 @@ MULTI = [
          "        if not want_sha:",
          "        want_sha = str(v.get(\"report_sha256\") or \"\")\n"
          "        if False:"),
-        ("        derived = _verdict_from_reports(name, rep_dir)\n"
-         "        if derived is not None and bool(v.get(\"bit\")) != derived:",
-         "        derived = _verdict_from_reports(name, rep_dir)\n"
-         "        if False:"),
+        ("        if bool(v.get(\"bit\")) != derived:\n"
+         "            print(f\"\u2717 {path}: {name} \uc758 \ud310\uc815\uc774 \uc601\uc218\uc99d\uacfc \ub2e4\ub974\ub2e4 \"",
+         "        if False:\n"
+         "            print(f\"\u2717 {path}: {name} \uc758 \ud310\uc815\uc774 \uc601\uc218\uc99d\uacfc \ub2e4\ub974\ub2e4 \""),
         ("            if not f.is_file():\n"
          "                print(f\"✗ {path}: {name} 의 {phase} report 파일이 없다 ({f})\")",
          "            if False:\n"
@@ -1173,6 +1302,153 @@ def _last_line(text: str) -> str:
 #:   `witness` 는 **node → 실패 메시지 부분문자열** map 이다. 시각·임시 경로
 #:   처럼 실행마다 달라지는 부분은 손으로 잘라 안정한 접두만 남긴다.
 EXPECT: dict = {
+
+    "attempt-path-is-exclusive": {
+        "fail": [
+            "tests/test_preserve.py::test_two_legs_that_share_one_attempt_file_cannot_interleave"
+        ],
+        "witness": {
+            "tests/test_preserve.py::test_two_legs_that_share_one_attempt_file_cannot_interleave": "tools.preserve.PreserveError: [plan] 소유 증명 파일이 다른 다리의 것이다"
+        }
+    },
+    "claim-bytes-are-verified-on-disk": {
+        "fail": [
+            "tests/test_preserve.py::test_a_lying_write_is_caught_by_reading_the_bytes_back"
+        ],
+        "witness": {
+            "tests/test_preserve.py::test_a_lying_write_is_caught_by_reading_the_bytes_back": "Failed: DID NOT RAISE PreserveError"
+        }
+    },
+    "claim-write-is-all-or-nothing": {
+        "fail": [
+            "tests/test_preserve.py::test_a_short_write_does_not_leave_a_truncated_claim"
+        ],
+        "witness": {
+            "tests/test_preserve.py::test_a_short_write_does_not_leave_a_truncated_claim": "tools.preserve.PreserveError: [write] claim 를 쓴 뒤 다시 읽었더니 바이트가 다르다"
+        }
+    },
+    "freeze-authority-is-not-caller-selected": {
+        "fail": [
+            "tests/test_docs_lint.py::test_freeze_cannot_be_pointed_at_an_empty_claims_directory"
+        ],
+        "witness": {
+            "tests/test_docs_lint.py::test_freeze_cannot_be_pointed_at_an_empty_claims_directory": "Failed: DID NOT RAISE SystemExit"
+        }
+    },
+    "freeze-checks-live-claims-before-recovery": {
+        "fail": [
+            "tests/test_docs_lint.py::test_the_freeze_recovery_branch_also_refuses_while_an_execution_is_live"
+        ],
+        "witness": {
+            "tests/test_docs_lint.py::test_the_freeze_recovery_branch_also_refuses_while_an_execution_is_live": "Failed: DID NOT RAISE SystemExit"
+        }
+    },
+    "freeze-holds-the-publish-lock": {
+        "fail": [
+            "tests/test_docs_lint.py::test_a_publication_cannot_land_after_the_cohort_was_frozen"
+        ],
+        "witness": {
+            "tests/test_docs_lint.py::test_a_publication_cannot_land_after_the_cohort_was_frozen": "SystemExit: ✗ 이 디렉터리는 `gX` 로 얼렸다"
+        }
+    },
+    "freeze-rereads-the-ledger-before-writing": {
+        "fail": [
+            "tests/test_docs_lint.py::test_freeze_does_not_erase_a_record_written_while_it_ran"
+        ],
+        "witness": {
+            "tests/test_docs_lint.py::test_freeze_does_not_erase_a_record_written_while_it_ran": "AssertionError: 동결이 그 사이에 굳은 실행 기록을 지웠다"
+        }
+    },
+    "lifecycle-reader-does-not-write": {
+        "fail": [
+            "tests/test_docs_lint.py::test_the_lifecycle_reader_never_anchors_a_transition_it_did_not_make"
+        ],
+        "witness": {
+            "tests/test_docs_lint.py::test_the_lifecycle_reader_never_anchors_a_transition_it_did_not_make": "AssertionError: 읽기가 anchor 를 옮겼다"
+        }
+    },
+    "lifecycle-transitions-are-checked-when-read": {
+        "fail": [
+            "tests/test_docs_lint.py::test_the_lifecycle_reader_never_anchors_a_transition_it_did_not_make"
+        ],
+        "witness": {
+            "tests/test_docs_lint.py::test_the_lifecycle_reader_never_anchors_a_transition_it_did_not_make": "Failed: DID NOT RAISE SystemExit"
+        }
+    },
+    "plan-uncertainty-covers-the-whole-critical-section": {
+        "fail": [
+            "tests/test_preserve.py::test_a_failure_while_leaving_the_ledger_lock_preserves_the_authority",
+            "tests/test_preserve.py::test_an_uncertain_ledger_write_never_discards_the_claim"
+        ],
+        "witness": {
+            "tests/test_preserve.py::test_a_failure_while_leaving_the_ledger_lock_preserves_the_authority": "AssertionError: 원장은 running 인데 claim 이 지워졌다",
+            "tests/test_preserve.py::test_an_uncertain_ledger_write_never_discards_the_claim": "AssertionError: 커밋 여부가 불확실한데 claim 을 버렸다"
+        }
+    },
+    "producer-binds-container-mutations": {
+        "fail": [
+            "tests/test_docs_lint.py::test_a_module_scope_container_mutation_is_inside_producer_identity"
+        ],
+        "witness": {
+            "tests/test_docs_lint.py::test_a_module_scope_container_mutation_is_inside_producer_identity": "AssertionError: module scope 의 컨테이너 변형이 계산 값을 바꿨는데 producer digest 가 그대로다"
+        }
+    },
+    "producer-dunder-is-an-allowlist": {
+        "fail": [
+            "tests/test_docs_lint.py::test_the_producer_cannot_reach_its_own_bytes_through_the_module_loader"
+        ],
+        "witness": {
+            "tests/test_docs_lint.py::test_the_producer_cannot_reach_its_own_bytes_through_the_module_loader": "Failed: DID NOT RAISE SystemExit"
+        }
+    },
+    "producer-fails-closed-on-rootless-targets": {
+        "fail": [
+            "tests/test_docs_lint.py::test_an_unmodelled_assignment_target_is_fail_closed"
+        ],
+        "witness": {
+            "tests/test_docs_lint.py::test_an_unmodelled_assignment_target_is_fail_closed": "Failed: DID NOT RAISE SystemExit"
+        }
+    },
+    "receipt-is-bound-to-the-mutant": {
+        "fail": [
+            "tests/test_docs_lint.py::test_a_receipt_is_bound_to_the_exact_mutant"
+        ],
+        "witness": {
+            "tests/test_docs_lint.py::test_a_receipt_is_bound_to_the_exact_mutant": "AssertionError: 같은 바이트가"
+        }
+    },
+    "receipt-verdict-is-fail-closed": {
+        "fail": [
+            "tests/test_docs_lint.py::test_an_unreadable_receipt_is_not_a_pass"
+        ],
+        "witness": {
+            "tests/test_docs_lint.py::test_an_unreadable_receipt_is_not_a_pass": "AssertionError: 빈 영수증이 '물었다' 로 인증됐다"
+        }
+    },
+    "source-reflection-covers-the-loader-protocol": {
+        "fail": [
+            "tests/test_docs_lint.py::test_the_producer_cannot_reach_its_own_bytes_through_the_module_loader"
+        ],
+        "witness": {
+            "tests/test_docs_lint.py::test_the_producer_cannot_reach_its_own_bytes_through_the_module_loader": "Failed: DID NOT RAISE SystemExit"
+        }
+    },
+    "token-bytes-are-verified-on-disk": {
+        "fail": [
+            "tests/test_preserve.py::test_a_lying_write_is_caught_by_reading_the_bytes_back"
+        ],
+        "witness": {
+            "tests/test_preserve.py::test_a_lying_write_is_caught_by_reading_the_bytes_back": "json.decoder.JSONDecodeError: Unterminated string"
+        }
+    },
+    "token-write-is-all-or-nothing": {
+        "fail": [
+            "tests/test_preserve.py::test_a_short_write_does_not_leave_a_truncated_claim"
+        ],
+        "witness": {
+            "tests/test_preserve.py::test_a_short_write_does_not_leave_a_truncated_claim": "tools.preserve.PreserveError: [write] 소유 증명 를 쓴 뒤 다시 읽었더니 바이트가 다르다"
+        }
+    },
     "authority-frozen": {
         "fail": [
             "tests/test_docs_lint.py::test_a_frozen_authority_cannot_be_edited_by_its_holder"
@@ -1289,10 +1565,14 @@ EXPECT: dict = {
     },
     "rollback-only-on-certain-non-commit": {
         "fail": [
-            "tests/test_preserve.py::test_a_durability_error_after_the_ledger_commit_keeps_the_claim"
+            "tests/test_preserve.py::test_a_durability_error_after_the_ledger_commit_keeps_the_claim",
+            "tests/test_preserve.py::test_a_failure_while_leaving_the_ledger_lock_preserves_the_authority",
+            "tests/test_preserve.py::test_an_uncertain_ledger_write_never_discards_the_claim"
         ],
         "witness": {
-            "tests/test_preserve.py::test_a_durability_error_after_the_ledger_commit_keeps_the_claim": "OSError: [Errno 5] parent fsync failure after os.replace"
+            "tests/test_preserve.py::test_a_durability_error_after_the_ledger_commit_keeps_the_claim": "AssertionError: 커밋된 전이인데 claim 을 지웠다",
+            "tests/test_preserve.py::test_a_failure_while_leaving_the_ledger_lock_preserves_the_authority": "AssertionError: 원장은 running 인데 claim 이 지워졌다",
+            "tests/test_preserve.py::test_an_uncertain_ledger_write_never_discards_the_claim": "AssertionError: 커밋 여부가 불확실한데 claim 을 버렸다"
         }
     },
     "token-cleanup-is-inside-the-claim-lock": {
@@ -2528,8 +2808,8 @@ def _write_coverage(path, selector, items, multi, declared, bit,
             for phase in ("before", "after"):
                 blob = r.get(phase) or b""
                 (rep_dir / f"{name}.{phase}.json").write_bytes(blob)
-            scen[name]["report_sha256"] = hashlib.sha256(
-                (r.get("before") or b"") + (r.get("after") or b"")).hexdigest()
+            scen[name]["report_sha256"] = _receipt_digest(
+                name, r.get("before") or b"", r.get("after") or b"")
     rec = {"schema": "mutation-coverage/v3",
            "selector": selector,
            "at": dt.datetime.now(dt.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
@@ -2547,6 +2827,48 @@ def _write_coverage(path, selector, items, multi, declared, bit,
     print(f"\ncoverage 조각을 남겼다: {p}")
 
 
+def _scenario_binding(name: str) -> bytes:
+    """이 scenario 의 **정확한 변이**를 바이트로 (53차 P1).
+
+    담는 것: 이름 · 대상 파일 · preimage/치환 쌍 전부 · 선택식 · 기대 node.
+    등록부에 없는 이름이면 빈 결속을 만들지 않는다 — 이름만 지어내면 통과하는
+    통로가 되기 때문이다.
+    """
+    for n, path, old, new, kexpr in MUTANTS:
+        if n == name:
+            sites = [[pathlib.Path(path).name, old, new]]
+            break
+    else:
+        for n, path, pairs, kexpr in MULTI:
+            if n == name:
+                sites = [[pathlib.Path(path).name, o, w] for o, w in pairs]
+                break
+        else:
+            raise SystemExit(
+                f"✗ 등록부에 없는 scenario 의 영수증을 만들 수 없다: {name!r}")
+    return json.dumps({"name": name, "sites": sites, "kexpr": kexpr,
+                       "expect": sorted((EXPECT.get(name) or {}).get("fail") or ())},
+                      sort_keys=True, ensure_ascii=False,
+                      separators=(",", ":")).encode("utf-8")
+
+
+def _receipt_digest(name: str, before: bytes, after: bytes) -> str:
+    """영수증 digest — **바이트 + 그 변이의 identity** (53차 P1).
+
+    52차는 `sha256(before + after)` 였다. 그러면 digest 는 바이트만의 함수이고,
+    기대 node 가 같은 scenario 사이에서 report 를 **이름만 바꿔** 옮길 수
+    있었다 (리뷰어 실측: 새 pytest 실행 0회로 두 칸이 채워졌다). 영수증은 어느
+    변이의 것인지 말해야 영수증이다.
+    """
+    h = hashlib.sha256()
+    h.update(_scenario_binding(name))
+    h.update(b"\x00")
+    h.update(before)
+    h.update(b"\x00")
+    h.update(after)
+    return h.hexdigest()
+
+
 def verify_receipts(path, scen: dict, binding: dict) -> int:
     """조각의 **실행 영수증**을 검사하고 판정을 다시 유도한다 (52차 P1-2).
 
@@ -2558,7 +2880,13 @@ def verify_receipts(path, scen: dict, binding: dict) -> int:
     """
     rep_dir = pathlib.Path(path).parent / "reports" / \
         str(binding.get("reports_dir") or "")
+    # ★ 53차 P1 — 어떤 scenario 가 **실행 가능한가** 는 등록부가 정한다.
+    #   조각에 적힌 `class` 로 판단하면 "declared 라고 적으면 검사를 건너뛴다"
+    #   가 된다 (조각은 검사 대상이지 authority 가 아니다).
+    reg = _registry()
     for name, v in sorted(scen.items()):
+        if (reg.get(name) or {}).get("class") != "executable":
+            continue
         if not v.get("ran"):
             continue
         want_sha = str(v.get("report_sha256") or "")
@@ -2566,21 +2894,29 @@ def verify_receipts(path, scen: dict, binding: dict) -> int:
             print(f"✗ {path}: {name} 이 돌았다는데 실행 영수증이 없다 — "
                   "self-claim 은 증거가 아니다")
             return 1
-        blobs = b""
+        blob = {}
         for phase in ("before", "after"):
             f = rep_dir / f"{name}.{phase}.json"
             if not f.is_file():
                 print(f"✗ {path}: {name} 의 {phase} report 파일이 없다 ({f})")
                 return 1
-            blobs += f.read_bytes()
-        if hashlib.sha256(blobs).hexdigest() != want_sha:
+            blob[phase] = f.read_bytes()
+        blob_before, blob_after = blob["before"], blob["after"]
+        if _receipt_digest(name, blob_before, blob_after) != want_sha:
             print(f"✗ {path}: {name} 의 report digest 가 다르다 — 결과를 "
-                  "나중에 고쳤다")
+                  "나중에 고쳤거나 **다른 변이의 영수증**을 붙였다")
             return 1
         derived = _verdict_from_reports(name, rep_dir)
-        if derived is not None and bool(v.get("bit")) != derived:
+        # ★ 53차 P1 — **"모르겠다" 는 "물었다" 가 아니다.** 52차는 여기 앞에
+        #   `derived is not None and` 를 두어 유도 실패를 건너뛰었고, 0바이트
+        #   report 두 개면 어떤 scenario 든 통과했다 (리뷰어 실측:
+        #   `new_pytest_runs=0`). 유도할 수 없으면 `None` 이 그대로 비교에
+        #   들어가 어긋난다 — 그것이 fail-closed 다.
+        if bool(v.get("bit")) != derived:
             print(f"✗ {path}: {name} 의 판정이 영수증과 다르다 "
-                  f"(적힌 것 {v.get('bit')} ≠ report {derived})")
+                  f"(적힌 것 {v.get('bit')} ≠ report {derived})"
+                  + (" — report 를 읽을 수 없거나 기대 node 가 없다"
+                     if derived is None else ""))
             return 1
     return 0
 

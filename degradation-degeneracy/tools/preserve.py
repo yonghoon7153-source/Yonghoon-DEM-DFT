@@ -159,16 +159,44 @@ def _is_hex64(s) -> bool:
 _O_BIN = getattr(os, "O_BINARY", 0)
 
 
+def _write_all(fd: int, data: bytes, where) -> None:
+    """`write(2)` 가 **요청한 만큼 쓴다고 약속하지 않는다** — 다 쓸 때까지 쓴다.
+
+    ★ 53차 P0-2 — 이 저장소에는 이 loop 가 `_write_exact()` 안에 이미 있었는데
+      claim·소유 증명 발급 경로는 맨손 `os.write()` 를 썼다. 같은 규칙을 두 곳에서
+      다르게 정하면 **약한 쪽이 실효 규칙**이다 (48차 P0-6 에서 배운 것과 같다).
+    """
+    n = 0
+    while n < len(data):
+        w = os.write(fd, data[n:])
+        if w <= 0:                                        # pragma: no cover
+            raise PreserveError("write", f"쓰기가 0을 돌려줬다 ({where})")
+        n += w
+
+
+def _assert_bytes_on_disk(path: Path, want: bytes, what: str) -> None:
+    """쓴 뒤 **실물에서 다시 읽어** 대조한다 (53차 P0-2).
+
+    `write()` 의 반환 길이도 자기 보고다. 권한을 나르는 파일(claim · 소유 증명)
+    은 자기 보고가 아니라 실물로 확인한다.
+    """
+    try:
+        got = Path(path).read_bytes()
+    except OSError as exc:
+        raise PreserveError(
+            "write", f"{what} 를 쓴 뒤 다시 읽을 수 없다 ({path}): {exc}") from exc
+    if got != want:
+        raise PreserveError(
+            "write",
+            f"{what} 를 쓴 뒤 다시 읽었더니 바이트가 다르다 ({path}) — "
+            f"디스크 {len(got)}B ≠ 쓴 것 {len(want)}B")
+
+
 def _write_exact(path: Path, data: bytes) -> None:
     """binary 로 **전부** 쓰고 fsync 한다. zero-return 은 오류로 본다."""
     fd = os.open(path, os.O_CREAT | os.O_EXCL | os.O_WRONLY | _O_BIN, 0o644)
     try:
-        n = 0
-        while n < len(data):
-            w = os.write(fd, data[n:])
-            if w <= 0:                                    # pragma: no cover
-                raise PreserveError("write", f"쓰기가 0을 돌려줬다 ({path})")
-            n += w
+        _write_all(fd, data, path)
         os.fsync(fd)
     finally:
         os.close(fd)
@@ -4350,7 +4378,11 @@ class LegClaim:
 #:
 #: 이유: claim 은 실행 하나에 국한되고 원장은 전역이다. 좁은 것을 먼저 잡아야
 #: 전역 lock 을 쥔 채 좁은 것을 기다리는 시간이 생기지 않는다.
-LOCK_ORDER = ("claim", "ledger")
+#: 임계 구역을 겹쳐 쥐는 **유일한 순서** (53차 P0-3 에서 한 층 늘었다).
+#:   attempt_path — 소유 증명 **경로**의 배타 (`open_leg_run()` 만 잡는다)
+#:   claim        — 그 다리의 발급/폐기
+#:   ledger       — 원장 전이
+LOCK_ORDER = ("attempt_path", "claim", "ledger")
 
 
 @contextlib.contextmanager
@@ -4416,7 +4448,19 @@ def _atomic_write_json(path: Path, rec: dict) -> None:
         os.close(dfd)
 
 
-DEFAULT_CLAIMS_ROOT = (Path(__file__).resolve().parents[1] / "results" / "_claims")
+def claims_root_for(repo_root) -> Path:
+    """이 저장소에서 실행권이 **사는 곳**. 발급자가 정하는 유일한 규칙이다.
+
+    ★ 53차 P0-4 — 동결(`row_projection.freeze_cohort()`)이 "살아 있는 실행이
+      있는가" 를 물을 때 어디를 볼지는 **묻는 쪽이 고를 수 없어야** 한다.
+      52차는 그것을 인자로 받았고, 리뷰어는 빈 디렉터리를 넘겨 동결을
+      완주시켰다 (`stale_handle_phase_done=SUCCEEDED`). 규칙을 한 함수로 두면
+      묻는 쪽은 "어디냐" 만 물을 수 있고 "여기라고 치자" 는 못 한다.
+    """
+    return Path(repo_root) / "results" / "_claims"
+
+
+DEFAULT_CLAIMS_ROOT = claims_root_for(Path(__file__).resolve().parents[1])
 
 
 def _claim_path(leg_id: str, claims_root=None) -> Path:
@@ -4438,32 +4482,58 @@ def _mark_plan_running(leg_id: str, ledger=None) -> None:
     값을 쓰지 않았다.** 그래서 원장만 보고 "지금 도는 다리가 있는가" 를 답할 수
     없었고, claim 파일이 사라진 crash 뒤에 계획은 여전히 `planned` 이라 다른
     실행이 태연히 새 claim 을 땄다. 선언만 있고 전이가 없으면 상태 기계가 아니다.
+
+    ★ 53차 P0-1 — 불확실 구역이 **임계 구역 전체**다. 52차는 그것을
+      `_atomic_write_text()` 호출 하나로 잡았는데, 리뷰어는 그 밖을 쳤다:
+      값이 보이게 된 뒤 `flock(LOCK_UN)`·`close` 가 실패하면 평범한 `OSError`
+      가 새어 나갔고 caller 는 그것을 "확정 미커밋" 으로 오판했다 (실측:
+      ledger_status=running · claim_exists=False · token_exists=False).
+
+      그래서 `with` 문 **전체**를 감싸고, 어느 지점을 지났는지를 flag 하나로
+      기억한다. 두 결과 중 하나만 나온다 — `PlanNotCommitted`(원장을 건드리기
+      전에 멈췄다) 또는 `PlanWriteUncertain`(모른다). 이름 없는 세 번째는 없다.
     """
     import yaml
 
     path = Path(ledger or DEFAULT_LEDGER)
-    with _ledger_lock(path):
-        doc = yaml.safe_load(path.read_text(encoding="utf-8")) or {}
-        row = next((e for e in doc.get("planned") or []
-                    if e.get("leg_id") == leg_id), None)
-        if row is None:
-            raise PreserveError("plan", f"계획 index 에 {leg_id!r} 이 없다")
-        if row.get("status") != "planned":
-            raise PreserveError(
-                "plan", f"{leg_id!r} 의 계획 상태가 {row.get('status')!r} 이라 "
-                        "running 으로 옮길 수 없다")
-        row["status"] = "running"
-        # ★ 52차 P0-2 — 이 지점부터는 **커밋 여부가 불확실**하다.
-        #   `_atomic_write_text()` 는 `os.replace` 로 값을 보이게 만든 뒤
-        #   directory 를 fsync 한다. 어느 단계에서 실패했는지 caller 는 알 수
-        #   없으므로, 그 불확실성을 **타입으로** 알린다.
-        try:
+    attempted = False
+    try:
+        with _ledger_lock(path):
+            doc = yaml.safe_load(path.read_text(encoding="utf-8")) or {}
+            row = next((e for e in doc.get("planned") or []
+                        if e.get("leg_id") == leg_id), None)
+            if row is None:
+                raise PreserveError("plan", f"계획 index 에 {leg_id!r} 이 없다")
+            if row.get("status") != "planned":
+                raise PreserveError(
+                    "plan", f"{leg_id!r} 의 계획 상태가 {row.get('status')!r} 이라 "
+                            "running 으로 옮길 수 없다")
+            row["status"] = "running"
+            # ↓ 이 줄부터 **커밋 여부가 불확실**하다. `_atomic_write_text()` 도,
+            #   그 뒤 lock 을 놓는 것도, 어디서 실패했는지 caller 는 모른다.
+            attempted = True
             _atomic_write_text(path, yaml.safe_dump(doc, allow_unicode=True,
                                                     sort_keys=False))
-        except BaseException as exc:
+    except BaseException as exc:
+        if attempted:
             raise PlanWriteUncertain(
                 f"{leg_id!r} 의 계획 전이(planned → running)가 커밋됐는지 알 수 "
                 f"없다: {exc}") from exc
+        raise PlanNotCommitted(
+            f"{leg_id!r} 의 계획 전이가 시작되기 전에 멈췄다: {exc}") from exc
+
+
+class PlanNotCommitted(PreserveError):
+    """계획 전이가 **확정적으로 미커밋**이다 (53차 P0-1).
+
+    원장 파일을 아직 건드리지 않은 채 멈췄다는 뜻이다 — 이때만 발급을 되돌릴
+    수 있다. 이 타입이 **아닌** 모든 실패는 보존한다: 기본값이 "모르면
+    되돌린다" 이면 한 번의 오판이 회수 불가능한 orphan 을 만들고, "모르면
+    보존한다" 이면 최악이 사람이 `release_leg_run()` 을 한 번 더 부르는 것이다.
+    """
+
+    def __init__(self, msg: str):
+        super().__init__("plan", msg)
 
 
 class PlanWriteUncertain(PreserveError):
@@ -4529,39 +4599,46 @@ def claim_planned_leg(leg_id: str, run_spec: dict, source_digest: str,
            "opened_at": dt.datetime.now(dt.timezone.utc).strftime(
                "%Y-%m-%dT%H:%M:%SZ"),
            "phases": {}}
-    body = json.dumps(rec, sort_keys=True, ensure_ascii=False,
-                      separators=(",", ":")) + "\n"
+    body = (json.dumps(rec, sort_keys=True, ensure_ascii=False,
+                       separators=(",", ":")) + "\n").encode("utf-8")
     try:
-        fd = os.open(path, os.O_CREAT | os.O_EXCL | os.O_WRONLY, 0o644)
+        fd = os.open(path, os.O_CREAT | os.O_EXCL | os.O_WRONLY | _O_BIN, 0o644)
     except FileExistsError as exc:
         raise PreserveError(
             "plan",
             f"{leg_id!r} 의 claim 이 이미 열려 있다: {path} — 같은 다리를 두 번 "
             "시작할 수 없다. 중단된 실행이면 `resume_claim()` 으로 이어라") from exc
+    # ★ 53차 P0-2 — 전부 쓰고, 디스크에서 **다시 읽어** 대조한다. 52차는
+    #   `os.write()` 의 반환 길이를 버렸다: 부분 쓰기가 성공으로 통과하고 그 뒤
+    #   모든 reader 가 malformed JSON 을 만났다 (리뷰어 실측:
+    #   `public_attach=JSONDecodeError`). 반환값을 보는 것만으로도 부족하다 —
+    #   그것도 자기 보고다. 권한 파일은 **실물**로 확인한다.
     try:
-        os.write(fd, body.encode("utf-8"))
-        os.fsync(fd)
-    finally:
-        os.close(fd)
-    dfd = os.open(path.parent, os.O_RDONLY)
-    try:
-        os.fsync(dfd)
-    finally:
-        os.close(dfd)
+        try:
+            _write_all(fd, body, path)
+            os.fsync(fd)
+        finally:
+            os.close(fd)
+        _fsync_dir(path.parent)
+        _assert_bytes_on_disk(path, body, "claim")
+    except BaseException:
+        # 원장은 아직 안 건드렸다 — 확정 미커밋이다. 깨진 claim 을 남기면
+        # 그것이 곧 다음 발급을 막는 잠금이 된다.
+        path.unlink(missing_ok=True)
+        raise
     # ★ 48차 P0-6 — claim 파일을 굳힌 **뒤** 계획을 running 으로 옮긴다.
     #   순서가 중요하다: 파일이 먼저여야 `O_EXCL` 이 상호배제의 authority 로
     #   남는다. 원장 전이가 실패하면 claim 을 되돌린다 — 잡아만 놓고 원장에는
     #   안 보이는 다리를 남기지 않는다.
     try:
         _mark_plan_running(leg_id, ledger=ledger)
-    except PlanWriteUncertain:
-        # ★ 52차 P0-2 — 커밋 여부를 **모른다** → authority 를 보존한다.
-        #   claim 과 (호출자 쪽의) token 이 남아 있으면 `release_leg_run()` 으로
-        #   회수할 수 있다. 지우면 회수 경로가 사라진다.
-        raise
-    except BaseException:
-        # 쓰기 **전에** 실패했다 — 원장은 안 건드려졌고 전이는 확정적으로
-        # 미커밋이다. 이때만 되돌린다.
+    except PlanNotCommitted:
+        # ★ 53차 P0-1 — **확정 미커밋일 때만** 되돌린다. 52차는 반대였다:
+        #   `except BaseException` 이 기본 되돌림이었고 불확실만 예외로 뺐다.
+        #   그래서 예상 못 한 실패 하나(lock exit)가 곧바로 회수 불가능한
+        #   orphan 이 됐다. 기본값은 **보존**이어야 한다 — 살아 있는 claim 과
+        #   소유 증명은 `release_leg_run()` 으로 언제든 회수되지만, 지워진
+        #   소유 증명은 어떤 공개 API 로도 되살아나지 않는다.
         path.unlink(missing_ok=True)
         raise
     return LegClaim(leg_id, e["cohort_id"], attempt_id, want, source_digest,
@@ -4676,22 +4753,28 @@ def write_token_file(path, token: str, leg_id: str | None = None,
         raise PreserveError("plan", "소유 증명의 형식이 계약과 다르다")
     rec = {"leg_id": str(leg_id or ""), "attempt_id": str(attempt_id or ""),
            "token": str(token)}
+    body = (json.dumps(rec, sort_keys=True, ensure_ascii=False)
+            + "\n").encode("utf-8")
     p = Path(path)
     p.parent.mkdir(parents=True, exist_ok=True)
     tmp = p.with_name(f".{p.name}.{uuid.uuid4().hex}.tmp")
-    fd = os.open(tmp, os.O_CREAT | os.O_EXCL | os.O_WRONLY, 0o600)
+    # ★ 53차 P0-2 — claim 과 같은 규칙: 전부 쓰고, 보이게 만들기 **전에** 실물을
+    #   대조하고, 보이게 만든 뒤 한 번 더 대조한다. 소유 증명은 권한이므로
+    #   반쪽짜리가 보이면 그 다리는 아무도 붙을 수 없다.
     try:
-        os.write(fd, (json.dumps(rec, sort_keys=True, ensure_ascii=False)
-                      + "\n").encode("utf-8"))
-        os.fsync(fd)
-    finally:
-        os.close(fd)
+        fd = os.open(tmp, os.O_CREAT | os.O_EXCL | os.O_WRONLY | _O_BIN, 0o600)
+        try:
+            _write_all(fd, body, tmp)
+            os.fsync(fd)
+        finally:
+            os.close(fd)
+        _assert_bytes_on_disk(tmp, body, "소유 증명")
+    except BaseException:
+        tmp.unlink(missing_ok=True)
+        raise
     os.replace(tmp, p)
-    dfd = os.open(p.parent, os.O_RDONLY)
-    try:
-        os.fsync(dfd)
-    finally:
-        os.close(dfd)
+    _fsync_dir(p.parent)
+    _assert_bytes_on_disk(p, body, "소유 증명")
     return p
 
 
@@ -4814,6 +4897,27 @@ def _assert_token_path_disjoint(token_file, claims_root=None, ledger=None) -> Pa
     return p
 
 
+def _attempt_path_lock(token_file) -> Path:
+    """소유 증명 **경로 자체**의 배타 지점을 정한다 (53차 P0-3).
+
+    52차는 "이 경로에 남의 살아 있는 소유 증명이 있는가" 를 claim lock 안에서
+    물었다. 그런데 서로 다른 다리는 **서로 다른 claim lock** 을 잡는다 — 두
+    발급이 빈 공유 파일 위에서 나란히 통과했고, 뒤에 쓴 쪽이 앞의 credential 을
+    덮었다 (리뷰어 실측: `stranded_running_legs=['L']`).
+
+    술어가 지키는 대상은 claim 이 아니라 **경로**다. 배타도 경로 위에 있어야
+    한다. 심볼릭 링크와 `..` 로 같은 파일을 다른 이름으로 부를 수 있으므로
+    정규화한 뒤 이름을 만든다 (`_assert_token_path_disjoint()` 가 이 경로가
+    authority namespace 밖임을 이미 보장한다).
+    """
+    p = Path(token_file)
+    try:
+        p = p.resolve(strict=False)
+    except OSError:                                       # pragma: no cover
+        p = p.absolute()
+    return p.with_name(p.name + ".attempt")
+
+
 def open_leg_run(leg_id: str, run_spec: dict, source_digest: str, token_file,
                  ledger=None, claims_root=None) -> LegClaim:
     """coordinator 가 실행권을 **한 번** 발급하고 소유 증명을 파일로 내놓는다.
@@ -4841,10 +4945,16 @@ def open_leg_run(leg_id: str, run_spec: dict, source_digest: str, token_file,
     #   발급 전체를 claim 임계 구역 안으로 넣는다. 안에서 살아 있는 claim 을
     #   먼저 판정하고, 그 다음에야 token 을 쓴다. rollback 도 **자기가 쓴
     #   generation** 일 때만 지운다 (`_unlink_token_generation`).
+    #
+    # ★ 53차 P0-3 — **claim lock 은 경로를 지키지 않는다.** 다리마다 다른 lock
+    #   이므로 공유된 `--attempt-file` 위에서 두 발급이 나란히 통과했다. 경로의
+    #   배타는 경로 위에 둔다 (`_attempt_path_lock`), 그리고 free-check 부터
+    #   발급 확정까지 **그 안**에서 끝낸다.
     _assert_token_path_disjoint(token_file, claims_root, ledger)
     cp = _claim_path(leg_id, claims_root)
     cp.parent.mkdir(parents=True, exist_ok=True)
-    with _ledger_lock(cp):                                  # LOCK_ORDER: claim
+    with _ledger_lock(_attempt_path_lock(token_file)), \
+         _ledger_lock(cp):              # LOCK_ORDER: attempt_path → claim
         if cp.is_file():
             raise PreserveError(
                 "plan",

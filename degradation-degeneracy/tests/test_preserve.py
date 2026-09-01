@@ -7122,7 +7122,7 @@ def test_the_canonical_lock_order_is_declared_and_finalize_holds_the_claim(tmp_p
 
     from tools import preserve as P
 
-    assert P.LOCK_ORDER == ("claim", "ledger"), (
+    assert P.LOCK_ORDER == ("attempt_path", "claim", "ledger"), (
         "정본 잠금 순서가 선언돼 있지 않다 — 두 경로가 반대로 잡으면 deadlock 이다")
 
     led, claims, tok, c = _ready_claim(tmp_path)
@@ -7925,3 +7925,182 @@ def test_an_uncertain_ledger_write_never_discards_the_claim(tmp_path):
     # 그리고 실제로 회수된다
     P.release_leg_run("L", token_file=tok, ledger=led, claims_root=claims)
     assert P.planned_index(ledger=led)["L"]["status"] == "planned"
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# 53차 — 게이트 52 반례. 발급 경계가 **호출 하나** 단위였다
+# ─────────────────────────────────────────────────────────────────────────────
+
+_RUN_SPEC_M = {**_RUN_SPEC_L, "leg_id": "M"}
+
+
+def _lifecycle_ledger_two(tmp_path) -> pathlib.Path:
+    """계획된 다리가 **둘**인 원장 — 다리 사이의 경계를 시험하려면 필요하다."""
+    import yaml
+
+    led = _lifecycle_ledger(tmp_path)
+    doc = yaml.safe_load(led.read_text(encoding="utf-8"))
+    row = next(e for e in doc["planned"] if e["leg_id"] == "L")
+    m = json.loads(json.dumps(row))
+    m["leg_id"] = "M"
+    m["run_spec"] = dict(_RUN_SPEC_M)
+    m["run_spec_digest"] = _spec_digest(_RUN_SPEC_M)
+    doc["planned"].append(m)
+    doc["cohorts"][0]["prospective_legs"].append("M")
+    led.write_text(yaml.safe_dump(doc, allow_unicode=True, sort_keys=False),
+                   encoding="utf-8")
+    return led
+
+
+def test_a_failure_while_leaving_the_ledger_lock_preserves_the_authority(tmp_path):
+    """★ 53차 P0-1 — 커밋 뒤 **임계 구역을 빠져나오다** 실패해도 보존한다.
+
+    52차는 불확실 구역을 `_atomic_write_text()` **호출 하나**로 잡았다.
+    리뷰어는 그 밖을 쳤다: 값이 보이게 된 뒤 `flock(LOCK_UN)`·`close` 가
+    실패하면 평범한 `OSError` 가 새어 나가고, `claim_planned_leg()` 의
+    `except BaseException` 이 그것을 "확정 미커밋" 으로 오판해 claim 과 소유
+    증명을 지웠다 (실측: ledger_status=running · claim_exists=False ·
+    token_exists=False — 공개 API 어느 것으로도 회수할 수 없다).
+
+    경계는 호출이 아니라 **임계 구역 전체**다. 그리고 기본값이 틀렸다 —
+    "모르면 되돌린다" 가 아니라 **"모르면 보존한다"** 여야 한다.
+    """
+    import contextlib as _cl
+    import tools.preserve as P
+
+    led = _lifecycle_ledger(tmp_path)
+    claims = tmp_path / "claims"
+    tok = tmp_path / "L.token"
+    real_lock = P._ledger_lock
+    state = {"hit": False}
+
+    @_cl.contextmanager
+    def flaky(path):
+        with real_lock(path):
+            yield
+        if str(path) == str(led) and not state["hit"]:
+            state["hit"] = True
+            raise OSError(5, "lock release failed after the value became visible")
+
+    with mock.patch.object(P, "_ledger_lock", flaky):
+        with pytest.raises(BaseException):
+            P.open_leg_run("L", _RUN_SPEC_L, "0123456789abcdef", tok,
+                           ledger=led, claims_root=claims)
+
+    assert P.planned_index(ledger=led)["L"]["status"] == "running"
+    assert P._claim_path("L", claims).is_file(), (
+        "원장은 running 인데 claim 이 지워졌다 — 회수 불가능한 orphan")
+    assert tok.is_file(), "원장은 running 인데 소유 증명이 지워졌다"
+    P.release_leg_run("L", token_file=tok, ledger=led, claims_root=claims)
+    assert P.planned_index(ledger=led)["L"]["status"] == "planned"
+
+
+def test_a_short_write_does_not_leave_a_truncated_claim(tmp_path):
+    """★ 53차 P0-2 — `os.write()` 는 **요청한 만큼 쓴다고 약속하지 않는다**.
+
+    반환 길이를 안 보면 부분 쓰기가 성공으로 통과하고, 그 뒤 모든 reader 가
+    malformed JSON 을 만난다 (리뷰어 실측: `public_attach=JSONDecodeError`).
+    """
+    import tools.preserve as P
+
+    led = _lifecycle_ledger(tmp_path)
+    claims = tmp_path / "claims"
+    tok = tmp_path / "L.token"
+    real_write = os.write
+
+    def short(fd, data):
+        return real_write(fd, data[:max(1, len(data) // 3)])
+
+    with mock.patch.object(P.os, "write", short):
+        run = P.open_leg_run("L", _RUN_SPEC_L, "0123456789abcdef", tok,
+                             ledger=led, claims_root=claims)
+    g = P.attach_leg_run("L", tok, ledger=led, claims_root=claims)
+    assert g.attempt_id == run.attempt_id, "부분 쓰기가 실행권을 갈랐다"
+
+
+def test_a_lying_write_is_caught_by_reading_the_bytes_back(tmp_path):
+    """★ 53차 P0-2 — 반환값도 증거가 아니다. **디스크에서 다시 읽어** 대조한다.
+
+    반환 길이를 믿는 것은 여전히 자기 보고를 믿는 것이다. 권한 파일은
+    쓴 뒤 읽어서 바이트가 같은지 본다 — 아니면 그 자리에서 멈춘다.
+    """
+    import tools.preserve as P
+
+    led = _lifecycle_ledger(tmp_path)
+    claims = tmp_path / "claims"
+    tok = tmp_path / "L.token"
+    real_write = os.write
+
+    def liar(fd, data):
+        real_write(fd, data[:len(data) // 2])
+        return len(data)                       # 다 썼다고 **보고만** 한다
+
+    with mock.patch.object(P.os, "write", liar):
+        with pytest.raises(P.PreserveError):
+            P.open_leg_run("L", _RUN_SPEC_L, "0123456789abcdef", tok,
+                           ledger=led, claims_root=claims)
+
+    assert P.planned_index(ledger=led)["L"]["status"] == "planned", (
+        "권한 파일이 깨졌는데 계획은 running 으로 갔다")
+    assert not P._claim_path("L", claims).is_file()
+    # 반쪽짜리 소유 증명을 남기지 않는다 — 남기면 그 경로는 아무도 못 쓴다
+    if tok.exists():
+        P.read_token_file(tok, "L")
+
+    # claim 자체도 같은 규칙이다 (소유 증명 검사가 가리지 않게 **직접** 부른다)
+    with mock.patch.object(P.os, "write", liar):
+        with pytest.raises(P.PreserveError):
+            P.claim_planned_leg("L", _RUN_SPEC_L, "0123456789abcdef",
+                                ledger=led, claims_root=claims,
+                                token="0" * P.TOKEN_HEX)
+    assert P.planned_index(ledger=led)["L"]["status"] == "planned"
+    assert not P._claim_path("L", claims).is_file(), "깨진 claim 이 남았다"
+
+
+def test_two_legs_that_share_one_attempt_file_cannot_interleave(tmp_path):
+    """★ 53차 P0-3 — 전달 통로의 배타는 **그 통로 위**에 있어야 한다.
+
+    52차의 "남의 살아 있는 소유 증명이면 거부" 는 술어만 있고 배타가 없었다.
+    L 과 M 은 **서로 다른 claim lock** 을 잡으므로 빈 공유 파일에서 둘 다
+    검사를 통과하고, 뒤에 쓴 쪽이 앞의 credential 을 덮는다 (리뷰어 실측:
+    `stranded_running_legs=['L']`).
+
+    불변식: **`running` 인 다리는 그 소유 증명으로 자기 실행에 붙을 수 있다.**
+    """
+    import threading
+    import tools.preserve as P
+
+    led = _lifecycle_ledger_two(tmp_path)
+    claims = tmp_path / "claims"
+    tok = tmp_path / "shared.token"
+    err = []
+
+    def open_m():
+        try:
+            P.open_leg_run("M", _RUN_SPEC_M, "0123456789abcdef", tok,
+                           ledger=led, claims_root=claims)
+        except BaseException as exc:                       # noqa: BLE001
+            err.append(exc)
+
+    t = threading.Thread(target=open_m, daemon=True)
+    real_new = P._new_token
+    state = {"hit": False}
+
+    def hook():
+        # L 이 "비었다" 를 확인한 **직후**, 발급을 굳히기 전에 M 이 끼어든다
+        if not state["hit"]:
+            state["hit"] = True
+            t.start()
+            t.join(timeout=2.0)
+        return real_new()
+
+    with mock.patch.object(P, "_new_token", hook):
+        P.open_leg_run("L", _RUN_SPEC_L, "0123456789abcdef", tok,
+                       ledger=led, claims_root=claims)
+    t.join(10)
+    assert not t.is_alive(), "M 이 영원히 막혔다"
+
+    idx = P.planned_index(ledger=led)
+    for leg in ("L", "M"):
+        if idx[leg]["status"] == "running":
+            P.attach_leg_run(leg, tok, ledger=led, claims_root=claims)

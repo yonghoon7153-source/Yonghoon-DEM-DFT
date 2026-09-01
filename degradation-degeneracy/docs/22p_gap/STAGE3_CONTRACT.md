@@ -1079,6 +1079,41 @@ pointer 가 유효했다) `compute_sha256` 은 세 번 움직였다.
 나머지 셋은 여전히 기록이며, `..._digests_recompute_from_the_current_tree` 가
 그 축을 본다.
 
+**닫힘이 볼 수 없는 것은 identity 밖 계산이다 — 그래서 볼 수 없으면 거부한다.**
+49차부터 53차까지 이 축은 같은 모양으로 다섯 번 뚫렸고, 그때마다 답은 "철자를
+하나 더 막는다" 가 아니라 **"그 능력을 닫는다"** 였다:
+
+| 라운드 | 뚫린 곳 | 닫은 방식 |
+|---|---|---|
+| 49 P0-2 | `import src.scoring as sc` 뒤 `sc.foo` | 문법이 아니라 **동적 이름 풀기**를 금지 (`globals`/`getattr`/`eval`) |
+| 51 P0-I | module-level `for TOL in (...)` | 복합문은 들어가고, 안 묶는 문은 지나가고, **그 밖은 멈춘다** |
+| 52 P0-8 | `inspect.getsource()` · `_gs = getsource` | 철자가 아니라 **raw source 를 들고 있는 모듈**에 묶이는 이름을 금지 |
+| 53 P0-7 | module scope 의 `BOX['v'] = …` | 컨테이너 변형을 **뿌리 이름에 결속**하고, 뿌리가 없으면 fail-closed |
+| 53 P0-7 | `__loader__.get_source(__name__)` | dunder 를 **allowlist 로 뒤집는다** (`_DUNDER_ALLOWED`) + loader protocol 의 source 반환 method 와 `importlib` 을 능력 목록에 |
+
+dunder allowlist 의 허용 근거는 둘뿐이다: ① 정규형이 그 값을 볼 수 있다
+(`__doc__`·`__name__`·`__init__` …), ② 코드·바이트로 가는 손잡이가 아닌
+scalar 이고 그 축은 따로 기록된다 (`pd.__version__` — library 버전은 25차부터
+producer identity 밖이고 manifest provenance 로 남는다). 그 결과 `REPO` 와
+provenance 파일 위치(`_producer_source_files()`)가 **절단면 뒤로** 갔다 —
+checkout 위치는 producer 의미가 아니고, `Path(__file__)` 은 닫힘 안에서 열 수
+없는 문이기 때문이다.
+
+### 13.3.2.1 동결은 발급·게시와 **한 transaction** 이다 (53차 P0-4/P0-5/P0-6)
+
+52차까지 `freeze_cohort()` 는 lock 없이 원장을 read-modify-write 했고, 살아
+있는 실행을 볼 위치를 **인자로** 받았고, 복구 분기가 그 검사보다 먼저 돌았고,
+`read_lifecycle()` 은 읽으면서 anchor 를 옮겼다. 네 가지가 각각 반례였다.
+
+| 규칙 | 무엇 |
+|---|---|
+| 증거의 위치는 발급자가 정한다 | `claims_root_for(REPO)` — `freeze_cohort()` 에 `claims_root` 인자가 **없다**. 물어볼 수 없으면 얼리지 않는다 (52차의 `except: return []` 는 fail-open 이었다) |
+| 살아 있는 실행 검사가 **맨 앞** | 복구 분기보다 먼저. 자라고 있는 것을 두고 "더 자라지 않는다" 를 선언할 수 없다 |
+| 게시 lock 을 잡는다 | LOCK ORDER `publish → ledger`. 게시자가 authority 를 고정한 뒤 pointer 를 옮기기 **전에** 동결이 끼어들면 남은 검사는 이미 지났다 — 순서는 검사로 못 막고 상호배제로 막는다 |
+| 쓰기 직전에 다시 읽는다 | `_write_ledger_doc()` 이 cohort row 두 필드만 고친다. 시작 시점에 읽은 doc 을 되쓰면 그 사이에 굳은 실행 기록이 사라진다 |
+| 읽기는 아무것도 확정하지 않는다 | `read_lifecycle()` 은 **허용 전이를 읽을 때 검사하고**(writer 측 검사는 파일을 고칠 수 있는 주체에게 authority 가 아니다) anchor 는 옮기지 않는다. 미완의 append 완주는 `repair_lifecycle_anchor()` — 이미 "쓰겠다" 고 선언한 경로만 부른다 |
+| 봉인은 **대상 안**에 | `.FROZEN` marker. 52차에 도입했고 53차에 g1..g5 로 소급해 채웠다 (`backfill_frozen_markers()`) — 그때까지는 이름을 바꾸면 그 디렉터리가 자기가 얼렸다는 것을 말할 수 없었다 |
+
 `cross_leg_comparison` 은 소비자가 **지켜야 하는 사용 정책**이므로 같은 이유로
 authority 다.
 
@@ -1308,8 +1343,29 @@ generation 인지 확인하지 않았다.** 51차의 규칙은 넷이다.
 `os.replace` 로 새 값을 보이게 만든 **뒤** parent directory 를 fsync 한다. 그
 fsync 가 오류를 보고하면 전이는 이미 커밋됐다. 50차 rollback 은 그것을
 미커밋으로 보고 claim 과 token 을 지웠다 — 남는 것은 계획 `running` + 소유자
-없음이고 공개 API 어느 것으로도 회수할 수 없다. 이제 rollback 은
-`_plan_status()` 로 **살아 있는 원장을 다시 읽고** 결정한다.
+없음이고 공개 API 어느 것으로도 회수할 수 없다.
+
+51차는 그것을 `_plan_status()` 재독으로 **추정**했고(재독까지 실패하면 또
+틀렸다), 52차는 커밋 여부를 **타입**으로 바꿨다. 53차는 그 타입의 **경계와
+기본값**을 고쳤다:
+
+| 규칙 | 무엇 (53차 P0-1) |
+|---|---|
+| 불확실 구역은 임계 구역 **전체** | `_mark_plan_running()` 이 `with _ledger_lock(...)` 전체를 감싼다. 값이 보이게 된 뒤 `flock(LOCK_UN)`·`close` 가 실패해도 그것은 `PlanWriteUncertain` 이다 (52차는 `_atomic_write_text()` 호출 하나만 감쌌고, 그 밖의 `OSError` 는 "확정 미커밋" 으로 새어 나갔다) |
+| 되돌림은 **typed 확정**에서만 | `claim_planned_leg()` 은 `PlanNotCommitted` 일 때만 claim 을 지운다. 그 밖의 모든 실패는 **보존**한다 — 기본값이 "모르면 되돌린다" 이면 오판 하나가 회수 불가능한 orphan 이고, "모르면 보존한다" 이면 최악이 `release_leg_run()` 한 번이다 |
+
+**권한 파일은 전부 쓰고 다시 읽는다 (53차 P0-2).** `write(2)` 는 요청한 만큼
+쓴다고 약속하지 않는다. claim 과 소유 증명은 `_write_all()` 로 끝까지 쓰고
+`_assert_bytes_on_disk()` 로 **디스크에서 다시 읽어** 대조한다 — 반환 길이도
+자기 보고이기 때문이다. 52차는 맨손 `os.write()` 였고 부분 쓰기가 성공으로
+통과해 이후 모든 reader 가 malformed JSON 을 만났다.
+
+**전달 통로의 배타는 그 경로 위에 있다 (53차 P0-3).** claim lock 은 다리마다
+다르므로, 두 다리가 같은 `--attempt-file` 을 쓰면 빈 파일 위에서 두 발급이
+나란히 "비었다" 를 통과하고 뒤에 쓴 쪽이 앞의 credential 을 덮는다. 그래서
+`LOCK_ORDER = ("attempt_path", "claim", "ledger")` 이고, `open_leg_run()` 은
+`_attempt_path_lock()`(정규화한 소유 증명 경로 옆의 sentinel)을 **가장 먼저**
+잡는다.
 
 **전달 통로는 authority namespace 밖이다 (51차 P1-P).** `--attempt-file` 이
 `<claims_root>/<leg>.claim` 이면 token-first 쓰기가 claim authority 경로를

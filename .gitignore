@@ -33,5 +33,9 @@ latest_run
 #   끼울 수 있다 (그 자체가 lock capability 를 무효화하는 조건이다).
 .publish.lock
 
+# ★ 53차 P0-5 — 동결이 원장 전이를 발급자와 **같은 lock** 으로 감싼다
+#   (`tools/preserve.py` 의 `_ledger_lock()`). 그 sentinel 도 runtime 파일이다.
+LEG_PRESERVATION.yaml.lock
+
 # ★ 48차 P0-8 — gated 진입점을 태우는 단위 시험의 산출 (면제 namespace 안)
 degradation-degeneracy/results/_smoke/_unit/
