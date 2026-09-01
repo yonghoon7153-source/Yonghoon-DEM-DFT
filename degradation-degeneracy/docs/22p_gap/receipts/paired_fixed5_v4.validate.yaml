@@ -1,7 +1,7 @@
 schema_version: 2
 _주의: 이 파일은 손으로 쓰지 않는다. `python3 docs/22p_gap/make_receipt.py <leg>` 가 만들고 `--check` 가 **core 바이트 동일**
   재생성을 확인한다.
-core_sha256: b691dd8f9e4664319489599d5ad6c2f7e533a09e37e1c50a9a3f6a3de26fab67
+core_sha256: a54c2b0af8905508298e06b8d65c6858c151dce2e9edc140eccccbd4e96ca0b6
 core:
   leg_id: paired_fixed5_v4
   bundle:
@@ -61,13 +61,13 @@ core:
       필수_입력_존재: 통과
       행별_서명: 통과
   identity:
-    validator_source_digest: c2abd52735ca73d6
+    validator_source_digest: c9cd0b2955956e77
     src_io_sha256: fcef6c662f72ae6d
     src_scoring_sha256: 69e69cb046f4b4ae
     archive_bundle_sha256: 3ee7b9314964957b
     make_receipt_sha256: 9c8cf71af310de03
-    row_projection_sha256: 0ee9b706436236c3
-    row_projection_compute_sha256: ac6ff10f3f1aaab9
+    row_projection_sha256: 06e8dcfe58946e9e
+    row_projection_compute_sha256: 730e673e74edb8ae
   outputs:
   - role: rescored_summary
     produced_from: restored fits.parquet only
@@ -93,9 +93,9 @@ core:
   outputs_agree: true
 stamp:
   _주의: 기록용. core 재생성 대조에서 제외된다.
-  validator_commit: 23a5da7ab33117f463ab859eb0d76cddc68f2cbf
+  validator_commit: 995c222183b4e6583f4c565f5df1e7abc19f529e
   validator_tree_dirty: true
-  generated_at_utc: '2026-08-31T18:29:40Z'
+  generated_at_utc: '2026-09-01T04:07:13Z'
   runtime:
     python: 3.11.15
     platform: Linux-6.18.44-fc-v22-x86_64-with-glibc2.39
