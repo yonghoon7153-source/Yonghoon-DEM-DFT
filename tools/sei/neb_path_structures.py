@@ -153,7 +153,28 @@ PATH_MARK = "He"
 MOVE_MIN_A = 1.0
 
 
-def path_overlay(case, mark=True, verbose=True):
+def center_on_path(cell, S, P, n_path):
+    """경로가 셀 **가운데**에 오도록 전체를 옮긴다. → 새 좌표 배열
+
+    ⚠ 왜 필요한가 (2026-09-01 실측): 경로가 원 구조의 원점 근처에서 시작하면
+      셀 **모서리에 걸쳐** 반토막으로 그려진다. 보기 나쁠 뿐 아니라 경로가
+      두 조각으로 보여 오해를 부른다.
+
+    ⛔ 골격만 감싸고 **경로 원자는 감싸지 않는다** — 감싸면 이온이 셀을 넘는 순간
+      경로가 튀어 다시 두 조각이 된다. 경로는 셀 밖으로 조금 나가도 그대로 둔다.
+
+    P 의 **뒤쪽 n_path 개**가 경로 원자라고 가정한다 (이 파일의 조립 순서).
+    """
+    P = np.asarray(P, float)
+    path = P[len(P) - n_path:]
+    shift = cell.sum(axis=0) / 2.0 - path.mean(axis=0)      # 경로 중심 → 셀 중심
+    Q = P + shift
+    fr = np.linalg.solve(cell.T, Q[:len(Q) - n_path].T).T   # 골격만 감싼다
+    Q[:len(Q) - n_path] = (fr - np.floor(fr)) @ cell
+    return Q
+
+
+def path_overlay(case, mark=True, center=True, verbose=True):
     """골격(고정 원자) + 이동 원자의 **7 위치**를 한 파일에.
 
     경로를 한 장으로 보는 표준 그림이다 — 격자는 한 번만 그리고 뛰는 이온을
@@ -185,7 +206,10 @@ def path_overlay(case, mark=True, verbose=True):
             S.append(sym[i] if (first_last or not mark) else PATH_MARK)
             P.append(pos[i])
 
-    at = Atoms(symbols=S, positions=np.array(P), cell=cell, pbc=True)
+    Q = np.array(P, float)
+    if center:
+        Q = center_on_path(cell, S, Q, len(mov) * len(imgs))
+    at = Atoms(symbols=S, positions=Q, cell=cell, pbc=True)
     os.makedirs(OUT, exist_ok=True)
     nm = f"{case}_path_all{len(imgs)}" + ("_marked" if mark else "")
     write(os.path.join(OUT, nm + ".vasp"), at, format="vasp", direct=True, sort=True)
@@ -197,7 +221,7 @@ def path_overlay(case, mark=True, verbose=True):
     return nm, len(mov), at
 
 
-def crop_local(case, radius=6.0, mark=True, verbose=True):
+def crop_local(case, radius=6.0, mark=True, center=True, verbose=True):
     """경로 **주변만** 남긴 국소 덩어리. VESTA 로 볼 때 셀 전체는 못 읽는다.
 
     슈퍼셀을 통째로 열면 원자가 수백 개라 경로가 파묻힌다 (2026-09-01 실측:
@@ -236,7 +260,10 @@ def crop_local(case, radius=6.0, mark=True, verbose=True):
             S.append(sym[i] if (k in (0, len(imgs) - 1) or not mark) else PATH_MARK)
             P.append(list(pos[i]))
 
-    at = Atoms(symbols=S, positions=np.array(P), cell=cell, pbc=True)
+    Q = np.array(P, float)
+    if center:
+        Q = center_on_path(cell, S, Q, len(mov) * len(imgs))
+    at = Atoms(symbols=S, positions=Q, cell=cell, pbc=True)
     os.makedirs(OUT, exist_ok=True)
     nm = f"{case}_path_local{radius:g}A"
     write(os.path.join(OUT, nm + ".vasp"), at, format="vasp", direct=True, sort=True)
@@ -308,6 +335,20 @@ def selftest():
     chk(sum(1 for x in c4.get_chemical_symbols() if x == PATH_MARK) == 5,
         "⛔음성 잘라도 경로 7점은 **전부** 남는다 (표지 5 + 양끝 2)")
 
+    _, _, a_off = path_overlay("li3nd_ccc", center=False, verbose=False)
+    _, _, a_on = path_overlay("li3nd_ccc", center=True, verbose=False)
+    cc = a_on.cell.array.sum(axis=0) / 2.0
+    npath = 3 * 7
+    d_off = np.linalg.norm(a_off.positions[-npath:].mean(axis=0) - cc)
+    d_on = np.linalg.norm(a_on.positions[-npath:].mean(axis=0) - cc)
+    chk(d_on < 1e-6, "중앙화하면 경로 중심이 셀 중심과 일치한다 (%.1e Å)" % d_on)
+    chk(d_off > 1.0, "⛔음성 안 하면 실제로 벗어나 있다 (%.2f Å — 모서리에 걸린다)" % d_off)
+    chk(len(a_on) == len(a_off), "중앙화가 원자를 잃거나 더하지 않는다")
+    sp = np.linalg.solve(a_on.cell.array.T,
+                         a_on.positions[:len(a_on) - npath].T).T
+    chk(sp.min() >= -1e-9 and sp.max() < 1.0 + 1e-9,
+        "골격은 셀 안으로 감싸진다 (분수 %.3f~%.3f)" % (sp.min(), sp.max()))
+
     print("selftest: %d 통과 / %d 실패" % (ok[0], ok[1]))
     return 0 if ok[1] == 0 else 1
 
@@ -321,6 +362,8 @@ def main():
                     help="골격 + 이동원자 7위치를 **한 파일**로 (경로 한 장 보기)")
     ap.add_argument("--crop", type=float, default=None, metavar="R",
                     help="경로에서 R Å 안의 골격만 남긴 **국소** 파일 (보기 전용)")
+    ap.add_argument("--no_center", action="store_true",
+                    help="경로를 셀 중앙으로 옮기지 않는다 (기본은 옮긴다)")
     ap.add_argument("--no_mark", action="store_true",
                     help="겹침에서 중간 위치도 실제 원소로 (표지 He 안 씀)")
     ap.add_argument("--selftest", action="store_true")
@@ -330,9 +373,9 @@ def main():
     for c in a.cases:
         build(c, dump_all=a.all)
         if a.overlay:
-            path_overlay(c, mark=not a.no_mark)
+            path_overlay(c, mark=not a.no_mark, center=not a.no_center)
         if a.crop:
-            crop_local(c, a.crop, mark=not a.no_mark)
+            crop_local(c, a.crop, mark=not a.no_mark, center=not a.no_center)
     print("\n⚠ VESTA: .vasp 로 열어야 Boundary 타일링이 된다 (xyz 는 격자가 없다).")
     print("⚠ 이 구조들의 장벽은 citable=false 다 — db/properties/sei_neb.json 참조.")
     return 0
