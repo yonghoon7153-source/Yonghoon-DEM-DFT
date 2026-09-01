@@ -1,6 +1,6 @@
 # kb 카탈로그 (생성물 — 손으로 고치지 말 것)
 
-> `python3 tools/kb_wiki.py index` 가 만든다 · 2026-09-01 · managed-files: 335
+> `python3 tools/kb_wiki.py index` 가 만든다 · 2026-09-01 · managed-files: 336
 
 규칙: kb/SCHEMA.md · 열린 질문: kb/questions/ · 논지 카드: kb/syntheses/ · 원장: kb/open_items.md · 문헌: litdb/INDEX.md
 
@@ -172,7 +172,7 @@
 - `kb/results/vgcf_hbn_figure_plan.md` — VGCF/h-BN 원고 — 층수 연구를 어디에 둘 것인가 (2026-07-31 결정)
 - `kb/results/vgcf_hbn_gallery_mechanism_2026_07_30.md` — h-BN@VGCF — 209 meV 층수효과의 정체: confinement 확정 (2026-07-30)
 
-## reviews/ (86)
+## reviews/ (87)
 - `kb/reviews/ECERD2600097_review_notes.md` — 📝 리뷰 노트 — ECER-D-26-00097 (Fan 외, *Stability Issues in Sulfide-Based ASSB*)
 - `kb/reviews/INDEX.md` — 리뷰 사슬 색인 — 프롬프트↔회신 (자동 생성) ○미열람
 - `kb/reviews/codex_AA_prompt_stageA_v5_regate_2026_08_29.md` — Codex 재검토 요청 AA — 회신 Z 의 P0 8건 처리 후 Stage A v5 재게이트 ○미열람
@@ -245,6 +245,7 @@
 - `kb/reviews/codex_V_prompt_closure_incar_audit_2026_08_29.md` — Codex 회신 V 요청 — closure 번들 INCAR 실물 감사 (던지기 전 마지막 관문) ○미열람
 - `kb/reviews/codex_V_prompt_polaron_S0_2026_09_01.md` — 리뷰 요청 V — 폴라론 S0 (회신 U P0 9건 이행) ○미열람
 - `kb/reviews/codex_W_prompt_mlip_selector_validity_2026_08_29.md` — Codex 회신 W 요청 — MLIP 를 후보 선택기로 쓰는 것이 이 계에서 성립하나 (실측 오프셋 첨부) ○미열람
+- `kb/reviews/codex_W_prompt_polaron_S0_2026_09_02.md` — 리뷰 요청 W — 폴라론 S0 (회신 V P0 5건 이행 · 비준 대기) ○미열람
 - `kb/reviews/codex_X_bundle_reply_2026_08_29.md` — Codex 회신 X — prospective 번들 NO-GO · P0 6건 · Stage A/B 재설계 ○미열람
 - `kb/reviews/codex_X_prompt_prospective_bundle_ready_2026_08_29.md` — Codex 회신 X 요청 — prospective 번들 40잡, 던지기 전 최종 감사 (실물 첨부) ○미열람
 - `kb/reviews/codex_stats_question_2026_08_11.md` — Codex 질문 — 통계 판정 3건 (β 귀무분포 · 사다리 설계 · BVSE 부호 · 판정바닥 ddof)

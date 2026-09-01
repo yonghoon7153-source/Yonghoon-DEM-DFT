@@ -1,9 +1,9 @@
 ---
 title: "리뷰 요청 V — 폴라론 S0 (회신 U P0 9건 이행)"
 date: 2026-09-01
-updated: 2026-09-01
+updated: 2026-09-02
 tags: [review, codex, sdcp, polaron, orca, prompt]
-status: 발송 대기
+status: 회신 수령 — 후속 W (P0 5건 이행)
 kind: review-request
 system: sdcp
 confidence: high

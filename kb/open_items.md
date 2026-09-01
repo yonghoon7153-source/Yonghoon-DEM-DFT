@@ -234,7 +234,7 @@ D_rel 이 들어오면 그 파일의 `성공기준_사전확정` **그대로** �
   (`grep -c c12` = 0). 세 사전등록 파일이 전부 "proposed — 사람이 ratify" 라 적었지만
   등록 자체가 안 됐다. CLAUDE.md 규율 위반.
 
-### ⏭-7. 폴라론 S0 (ORCA) — 🔴 **회신 U = NO-GO · P0 9건** (2026-09-01 갱신)
+### ⏭-7. 폴라론 S0 (ORCA) — 🔴 **회신 V = NO-GO · P0 5건** (2026-09-02 갱신)
 
 - **회신 U (2026-09-01) = NO-GO — phase L 도 돌리지 말 것.**
   기록: `kb/reviews/codex_U_reply_polaron_S0_2026_09_01.md`. 리뷰어가 **직접 빌더를
@@ -267,8 +267,26 @@ D_rel 이 들어오면 그 파일의 `성공기준_사전확정` **그대로** �
   · 러너에 `loccheck` 단계 — H₂O 하나로 `%loc` 구문·`.loc` suffix·인쇄 블록 30초 확인.
 - 🔴 **아직 안 한 것**: 실물 ORCA 확인 0회 · Q3 `localized_no_rotation` control ·
   `RING_ASSIGNMENT_UNRESOLVED` · `S0_EPS1_ANION_REFERENCE_INADEQUATE` · R0/R1 교차비교.
-- ▶ **다음 한 수**: 리뷰 V 발송 (`kb/reviews/codex_V_prompt_polaron_S0_2026_09_01.md`).
-  GO 가 나오면 `loccheck` 부터 — 그것이 통과해야 phase L 이다.
+- 🔴 **회신 V (2026-09-02) = NO-GO · P0 5건.** "P0 9건 전부 이행" 이 실물과 달랐다.
+  · **P0-1 은 우리 절차 오류**였다 — 리뷰 V 에 적은 사전등록 해시는 **작업 트리** 것이고
+    같이 적은 커밋에는 그 변경이 없었다. 리뷰어가 그 커밋을 받아 옛 파일을 봤다.
+    ⇒ `tools/review_manifest.py` 신설: `git show <commit>:<path>` 로만 해시를 계산하고
+      **작업 트리를 안 본다.** dirty 거부 · 없는 경로 거부 · `--require_pushed` 로
+      원격 포함 확인. selftest 9(음성 4).
+  · P0-2 사전등록을 **파일 해시만** 결박했다 → builder·parent·atom_manifest·functional·
+    ε·realization·status 를 파싱해 fail-closed 교차검증 (음성 8). 리뷰어 반례
+    (미이완 start.xyz)가 시험으로 들어갔다.
+  · P0-3 `loccheck → L` 이 문구였다 → `LOCCHECK_PASS.json` 증서를 L·seeds 가 **강제**.
+    ORCA 6.1 문서의 **`.loc.gbw`** 도 지원 (L2 가 증서 suffix 로 `%moinp` 를 고친다).
+  · P0-4 추이성 검사가 불완전 → **연결성분마다 clique 검사** (반례 재현·수정 확인).
+  · P0-5 restart 가 **미완결 출력을 대표로 승격** → 판정 segment 에서 정상종료 요구.
+  · Q1 π 를 `pi_orientation_score` 로 제한 · Q2 상한 기각 경로 폐기 ·
+    Q6-1 `S0_EPS1_ANION_REFERENCE_INADEQUATE` 기준을 결과 보기 전에 봉인.
+  selftest 195 → **212**.
+- 🔴 **비준 두 건이 phase L 을 막는다** (사람 몫): S0 사전등록 · 전역 마감정책.
+- 🔴 **아직 안 한 것**: Q6-2 `localized_no_rotation` control · Q6-3
+  `RING_ASSIGNMENT_UNRESOLVED` · Q6-4 R0/R1 교차비교 · 실물 ORCA 확인 0회.
+- ▶ **다음 한 수**: 리뷰 W 발송 (`kb/reviews/codex_W_prompt_polaron_S0_2026_09_02.md`).
   ⚠ phase L 에는 `Rotate` 가 없으므로 L 성공을 Rotate 검증으로 쓰지 않는다.
 
 ⚠ 이것도 장부에 없었다.
