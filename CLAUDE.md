@@ -35,6 +35,9 @@
   (VRAM 47/48 GB 점유 사례) — nvidia-smi로 확인 후 실행.
 - **desktop WSL**: ORCA r2SCAN-3c (SDCP 분자 계열).
 - 공통: 실행 스크립트에 pgrep 중복실행 가드, 출력 grep은 `grep -a`(NUL 오염 대비), watch 스크립트 관례 유지.
+- **산출물 회수 기본 경로 = `C:\Users\Administrator\Downloads\`** (1저자 지정 2026-09-01).
+  scp 블록은 이 경로를 기본으로 쓰고, 받은 뒤 해시 대조까지 한 블록에 넣는다
+  (PowerShell `Get-FileHash -Algorithm SHA256` · cmd `certutil -hashfile <경로> SHA256`).
 
 ## Git
 - 브랜치 **claude/friendly-meitner-lldvar** 에만 커밋/푸시. PR 생성 금지(요청 시에만).
