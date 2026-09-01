@@ -50,6 +50,16 @@ function Controlled({ start }: { start: number[] }) {
       <button type="button" onClick={() => setValue([2, 3])}>
         표에서 행 선택
       </button>
+      {/* 표의 행은 **토글**이다 (`SampleDetail` 의 `onSelect`).  단추가
+          갈아치우기로 바뀐 뒤로, 여럿을 나란히 보는 길은 여기뿐이다. */}
+      <button
+        type="button"
+        onClick={() => setValue((was) => (was.includes(10)
+          ? was.filter((c) => c !== 10)
+          : [...was, 10].sort((a, b) => a - b)))}
+      >
+        표에서 행 추가
+      </button>
     </>
   )
 }
@@ -79,20 +89,53 @@ describe('CyclePicker', () => {
     expect(screen.getByText(/선택된 사이클이 없습니다/)).toBeInTheDocument()
   })
 
-  it('첫 사이클 과 마지막 은 서로를 밀어내지 않는다', async () => {
-    // 한 화면에서 제일 보고 싶은 둘이 어디서 시작했고 지금 어디인가인데,
-    // 두 버튼이 선택을 통째로 갈아치우면 그건 손으로 쳐야만 볼 수 있었다.
+  //: 한동안 이 둘은 토글이었다 (선택에 더하고 빼기).  쓰는 사람에게는 누른
+  //  것이 안 먹는 것으로 읽혔다 — 열 곡선 위에 한 줄이 더해질 뿐이라 어느
+  //  것이 1번인지 안 보이고, 한 번 더 누르면 사라졌다 (F&Q, 2026-08-30).
+  it('첫 사이클 은 그 사이클만 남긴다', async () => {
     const onChange = vi.fn()
-    render(<CyclePicker cycles={cycles} value={[1]} onChange={onChange} basis="mAh" />)
-    await userEvent.click(screen.getByRole('button', { name: '마지막' }))
-    expect(onChange).toHaveBeenCalledWith([1, 10])
+    render(<CyclePicker cycles={cycles} value={[2, 3, 10]} onChange={onChange} basis="mAh" />)
+    await userEvent.click(screen.getByRole('button', { name: '첫 사이클' }))
+    expect(onChange).toHaveBeenCalledWith([1])
   })
 
-  it('이미 골라 둔 사이클을 다시 누르면 뺀다', async () => {
+  it('마지막 도 마찬가지다 — 같은 줄의 단추는 다 갈아치운다', async () => {
     const onChange = vi.fn()
-    render(<CyclePicker cycles={cycles} value={[1, 10]} onChange={onChange} basis="mAh" />)
-    await userEvent.click(screen.getByRole('button', { name: '첫 사이클' }))
+    render(<CyclePicker cycles={cycles} value={[1, 2]} onChange={onChange} basis="mAh" />)
+    await userEvent.click(screen.getByRole('button', { name: '마지막' }))
     expect(onChange).toHaveBeenCalledWith([10])
+  })
+
+  //: "나타났다가 사라졌다가 해요" 가 이 시험의 이유다.  두 번 눌러도 그대로다.
+  it('다시 눌러도 사라지지 않는다', async () => {
+    render(<Controlled start={[1, 10]} />)
+    const button = screen.getByRole('button', { name: '첫 사이클' })
+    await userEvent.click(button)
+    expect(screen.getByLabelText('사이클 선택')).toHaveValue('1')
+    await userEvent.click(button)
+    expect(screen.getByLabelText('사이클 선택')).toHaveValue('1')
+  })
+
+  //: 갈아치우기로 바꾸면서 잃을 뻔한 것 — "처음과 지금을 나란히".  그 성질은
+  //  사라지지 않고 **사이클 표**로 옮겨 갔다 (행은 여전히 토글이다).  단추만
+  //  보고 고치는 사람이 표까지 갈아치우지 않도록 여기서 못 박는다.
+  it('처음과 지금을 나란히 보는 길은 표에 남아 있다', async () => {
+    render(<Controlled start={[]} />)
+    await userEvent.click(screen.getByRole('button', { name: '첫 사이클' }))
+    expect(screen.getByLabelText('사이클 선택')).toHaveValue('1')
+    await userEvent.click(screen.getByRole('button', { name: '표에서 행 추가' }))
+    expect(screen.getByLabelText('사이클 선택')).toHaveValue('1,10')
+  })
+
+  //: 켜진 단추는 누를 것이 없어야 한다.  1·10 을 보고 있을 때 `첫 사이클` 이
+  //  켜져 보이면, 눌러도 아무 일이 없다고 읽히는데 실제로는 10 이 사라진다.
+  it('여럿을 보고 있으면 단추는 켜져 보이지 않는다', () => {
+    const { rerender } = render(
+      <CyclePicker cycles={cycles} value={[1]} onChange={() => {}} basis="mAh" />)
+    expect(screen.getByRole('button', { name: '첫 사이클' })).toHaveClass('on')
+    rerender(
+      <CyclePicker cycles={cycles} value={[1, 10]} onChange={() => {}} basis="mAh" />)
+    expect(screen.getByRole('button', { name: '첫 사이클' })).not.toHaveClass('on')
   })
 
   it('초기화 는 선택을 비운다', async () => {

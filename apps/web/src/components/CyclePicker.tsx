@@ -65,18 +65,31 @@ export function CyclePicker({
     send(picks)
   }
 
-  /** Add or remove one cycle, leaving the rest of the selection alone.
+  /** 이 사이클 **하나만** 남긴다.
    *
-   * 첫 사이클 and 마지막 used to replace the whole selection, so the two most
-   * common things to want on screen at once -- where the cell started and
-   * where it is now -- could not be had without typing them. */
-  function toggle(cycle: number | undefined) {
+   *  한동안 이 둘은 토글이었다 (선택에 더하고 빼기).  "처음과 지금을 나란히"
+   *  를 손으로 안 치고 보게 하려던 것이었는데, 쓰는 사람에게는 **누른 것이
+   *  안 먹는 것**으로 읽혔다: 이미 열 곡선이 그려져 있으면 거기에 한 줄이
+   *  더해질 뿐이라 어느 것이 1번인지 안 보이고, 한 번 더 누르면 사라진다 —
+   *  "나타났다가 사라졌다가 한다" (F&Q, 2026-08-30).
+   *
+   *  같은 줄의 다른 단추는 전부 **갈아치운다** (초기화 · 균등 8개 · 전체).
+   *  이 둘만 달랐고, 그래서 이 둘만 예측이 안 됐다.
+   *
+   *  **더하는 자리는 그대로 있다**: 사이클 표의 행은 여전히 토글이다
+   *  ("행을 누르면 프로파일에 추가·제거됩니다").  처음과 지금을 나란히
+   *  보려면 `첫 사이클` 을 누르고 표에서 마지막 행을 누른다. */
+  function only(cycle: number | undefined) {
     if (cycle === undefined) return
-    const next = value.includes(cycle)
-      ? value.filter((c) => c !== cycle)
-      : [...value, cycle].sort((a, b) => a - b)
-    preset(next)
+    preset([cycle])
   }
+
+  /** 지금 보고 있는 것이 **딱 이것 하나**인가.
+   *
+   *  `includes` 로 두면 1·5·9 를 보고 있을 때도 `첫 사이클` 이 켜져 보이는데,
+   *  그 단추를 누르면 화면이 바뀐다 — 켜진 단추는 누를 것이 없어야 한다. */
+  const onlyOne = (cycle: number | undefined) =>
+    cycle !== undefined && value.length === 1 && value[0] === cycle
 
   const first = available.at(0)
   const last = available.at(-1)
@@ -110,17 +123,19 @@ export function CyclePicker({
         </button>
         <button
           type="button"
-          className={`sm${first !== undefined && value.includes(first) ? ' on' : ''}`}
+          className={`sm${onlyOne(first) ? ' on' : ''}`}
           disabled={first === undefined}
-          onClick={() => toggle(first)}
+          onClick={() => only(first)}
+          title="첫 사이클만 남깁니다 — 더하려면 사이클 표의 행을 누르세요"
         >
           첫 사이클
         </button>
         <button
           type="button"
-          className={`sm${last !== undefined && value.includes(last) ? ' on' : ''}`}
+          className={`sm${onlyOne(last) ? ' on' : ''}`}
           disabled={last === undefined}
-          onClick={() => toggle(last)}
+          onClick={() => only(last)}
+          title="마지막 사이클만 남깁니다 — 더하려면 사이클 표의 행을 누르세요"
         >
           마지막
         </button>
