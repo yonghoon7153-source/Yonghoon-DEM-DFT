@@ -10848,12 +10848,29 @@ def test_a_module_scope_expression_statement_is_fail_closed():
     assert moved != base, (
         "값을 버리는 표현식이 계산 값을 바꿨는데 producer digest 가 그대로다")
 
-    # 대상 이름을 정할 수 없는 표현식은 **멈춘다** (빈 통과는 거짓말이다)
+    # 대상 이름을 정할 수 없는 **대입**은 여전히 멈춘다 (53차 규칙)
     with pytest.raises(SystemExit) as ei:
         rp._module_defs(_mini_producer(
             rp, "def score_canonical(df):\n    return 1\n",
-            extra="def _f():\n    return {}\n_f()['tol'] = 1\n_f().update(x=1)\n"))
+            extra="def _f():\n    return {}\n_f()['tol'] = 1\n"))
     assert "fail-closed" in str(ei.value), str(ei.value)
+
+    # ★ 55차 — 뿌리를 정할 수 없는 **표현식**은 이제 멈추지 않고 **담긴다.**
+    #   54차는 여기서 `SystemExit` 을 던졌다: 뿌리를 모르면 그 문이 닫힘 밖으로
+    #   새기 때문이었다. 55차에 module-level 표현식이 `MODULE_EFFECTS` 로
+    #   무조건 닫힘에 들어오면서 샐 자리가 사라졌으므로, 멈추는 대신 담는 것이
+    #   **더 강한** 상태다 (거부가 아니라 포함이 불변식을 지킨다).
+    #   이 단언이 없으면 그 fail-closed 를 지운 것이 조용한 약화로 보인다.
+    root_free = "def _f():\n    return {}\n_f().update(tol=0.02)\n"
+    base2 = rp._producer_semantic_over(
+        _mini_producer(rp, "def score_canonical(df):\n    return 1\n",
+                       extra=root_free), sc)
+    moved2 = rp._producer_semantic_over(
+        _mini_producer(rp, "def score_canonical(df):\n    return 1\n",
+                       extra=root_free.replace("0.02", "0.09", 1)), sc)
+    assert moved2 != base2, (
+        "뿌리를 정할 수 없는 module 표현식이 digest 밖이다 — 54차는 그래서 "
+        "멈췄고, 지금은 담아야 한다")
 
 
 def test_a_dunder_named_by_a_string_literal_is_still_a_dunder():

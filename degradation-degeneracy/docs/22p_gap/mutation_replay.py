@@ -902,10 +902,13 @@ MUTANTS = [
      "partial_write_during_freeze_leaves_the_ledger_readable"),
     # ★ P0-4 — 목적지의 frozen 은 단조다.
     # ★ P0-5 — module scope 의 표현식도 상태를 정한다.
+    # ★ 55차 — **declared.** 55차 P0-5① 이 module-level 표현식을
+    #   `MODULE_EFFECTS` 로 무조건 닫힘에 넣으면서, 뿌리 이름에 결속하는 것은
+    #   더 이상 identity 를 지키는 **고유한 자리가 아니다** (아래 사유 참조).
     ("module-expr-binds-its-target", RP,
      "                root = _expr_root_name(node.value)",
      "                root = None if True else _expr_root_name(node.value)",
-     "module_scope_expression_statement_is_fail_closed"),
+     None),
     ("dunder-as-a-string-is-still-a-dunder", RP,
      "            for arg in list(sub.args) + [k.value for k in sub.keywords]:\n"
      "                if not (isinstance(arg, ast.Constant)\n"
@@ -1249,6 +1252,18 @@ DECLARED_MASKED = {
         "(`..._the_recorded_head_must_exist_in_this_repository`)가 실저장소에서 "
         "매번 돌며, 모든 HEAD 를 40개의 `0` 으로 바꾼 조각이 `rc 1` 로 "
         "거부되는지 확인한다 (리뷰어 반례를 그대로 고정한 것이다).",
+    "module-expr-binds-its-target":
+        "55차 P0-5① 이 module-level 표현식을 예약 이름 `MODULE_EFFECTS` 로 "
+        "**무조건** 닫힘에 넣었다. 그래서 뿌리 이름에 결속하는 것은 더 이상 "
+        "identity 를 지키는 **고유한 자리가 아니다** — 결속을 지워도 그 문은 "
+        "여전히 digest 안에 있고, 그것이 54차보다 강한 상태다 (54차는 뿌리를 "
+        "모르면 **멈췄고**, 지금은 **담는다**). 호출 지점만 되돌려도 시험이 "
+        "초록인 것은 시험이 약해서가 아니라 자리가 하나로 합쳐졌기 때문이다 "
+        "— 48차 `idempotent-shares-the-validator` 와 같은 형태다. 없는 자리를 "
+        "만들어 내는 대신 신고한다. 그 성질은 "
+        "`module-effects-are-an-unconditional-root` 가 관측하고, 회귀"
+        "(`..._module_scope_expression_statement_is_fail_closed`)는 뿌리를 "
+        "정할 수 없는 표현식도 digest 를 움직이는지 매번 확인한다.",
     "warm-consumer-wiring":
         "positive wiring 회귀는 배선이 **끊길 때** 빨개진다. assert 를 지우는 "
         "변이는 그 시험 자신만 무력화하므로 다른 시험이 물지 않는다 — "
@@ -1609,14 +1624,6 @@ EXPECT: dict = {
         ],
         "witness": {
             "tests/test_docs_lint.py::test_a_later_active_record_cannot_thaw_a_frozen_destination": "AssertionError: 허용 전이 한 줄로 frozen 목적지가 journal 에서 사라졌다"
-        }
-    },
-    "module-expr-binds-its-target": {
-        "fail": [
-            "tests/test_docs_lint.py::test_a_module_scope_expression_statement_is_fail_closed"
-        ],
-        "witness": {
-            "tests/test_docs_lint.py::test_a_module_scope_expression_statement_is_fail_closed": "SystemExit: ✗ producer 소스의 module scope 에 대상 이름을 알 수 없는 표현식이 있다 (2행) — 무엇의 상태를 바꾸는지 정적으로 답할 수 없으면 identity 밖 계산이 된다 (fai"
         }
     },
     "release-cleanup-holds-the-attempt-path": {
