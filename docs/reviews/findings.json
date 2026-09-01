@@ -1567,6 +1567,19 @@
     "scripts/check_doc_refs.py",
     "docs/data/w4_ptfe_centerline_20260827/cohort_manifest.json"
    ]
+  },
+  {
+   "id": "SELF-13",
+   "severity": "P2",
+   "status": "open",
+   "owner": "claude",
+   "found_by": "claude",
+   "opened_in": "docs/reviews/codex_review_request_r20_phase_sigma_20260902.md",
+   "title": "복셀 솔버의 **상별 σ 여섯 칸이 전부 자릿수 hook** 이다 — 측정에 묶인 것이 하나도 없다",
+   "note": "`scripts/step3_sigma.py:79` `SIGMA_DEFAULT` 의 지위를 git 으로 추적한 결과:\n· `AM_S`/`AM_P` 0.010/0.005 — 도입 커밋은 `✅ A1-locked (Trevisanello)` 였으나 **A1 close-out (2026-06-30) 이 그 귀속을 철회**했다.  지금 docstring 이 스스로 *\"corpus-fit endpoints, NOT a Trevisanello measurement\"* + *\"scale transplant … unknown multiplier\"* 라 적는다.\n· `VGCF` 100 — 도입 커밋 `087d1a07` 이 **처음부터** `⚠ literature order-of-magnitude hooks (graphitic fibre / CB compact)` 로 적었다 = 자리표시자.  게다가 라벨이 틀렸다 (`graphitic fibre` 라 적혔지만 100 은 **분말** 급) — CL-47 이 *\"유효 망 값\"* 으로 정정.\n  ⚠ **데이터시트 분말값은 83 인데 코드는 100 이다.  그 차이의 근거가 리포 어디에도 없다.**\n    영향: 비 ΔR ≈ −0.002 (CL-39 감도) · 절대 σ_e +17 % (CL-11 지수 0.858).\n· `SuperP` 10 — 같은 hook.  `SDCP` 250 — USER anchor, 원장이 `provenance unrecorded` 로 적는다.\n⇒ **여섯 칸 중 측정에 묶인 것이 0 개다.**\n★ 그리고 이것이 무해하지 않다는 것이 **09-02 에 측정됐다** (CL-48): σ_VGCF 를 데이터시트의 다른 끝값(단섬유)으로 바꾸면 비의 **부호가 뒤집힌다** (R 1.1263 → 0.8916).  비가 σ 에 둔감하다는 근거는 CL-39 의 ×1.44 창뿐이었고, 그 국소 기울기로 ×100 을 외삽하면 **5.1배 틀린다**.\n⇒ 처분은 Codex R20 판정 대기 (Q1~Q6).  우리 권고안은 σ_VGCF 를 ㉢ 근거 찾기 → 안 되면 ㉠ 데이터시트 83 으로 (비는 −0.002 만 움직인다).\n⚠ `check_doc_refs` 는 이 부류를 원리적으로 못 잡는다 — 경로가 아니라 **값의 출처**다 (SELF-12 와 같은 축).",
+   "evidence_tests": [
+    "scripts/step3_sigma.py"
+   ]
   }
  ]
 }
