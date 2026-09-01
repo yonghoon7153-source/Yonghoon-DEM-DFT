@@ -1,12 +1,12 @@
 {
-  "at": "2026-09-01T09:11:19Z",
+  "at": "2026-09-01T09:36:37Z",
   "binding": {
     "expect_digest": "118328eb875379f975ccd92a9d1f496531cdc402139304c01f2c27ca5c338831",
-    "head": "318f59dc2fc7b51affbc4d660aa192f0c5dea8ab",
+    "head": "1f1253c5858e200e08ba70048427dbc96217fb2d",
     "registry_digest": "ae74d2634a63b696fbdf0e97d267abf94cd9d131437d51af68d4e4de09912bf0",
     "reports_dir": "s2",
-    "runner_digest": "603b4679dd47c66cb924351bf074a59cd57e62c8edf3eef77fdfab323d2a229d",
-    "transcript_digest": "efe4760d10cf886fcb9aabc482e9da35acdbdbb263c2d107adc2ca191e73eee1"
+    "runner_digest": "7ba0cd54cf24af49cab78afab67302492b0a248e438dadadfbf746f5bab9f00a",
+    "transcript_digest": "9dd8bcceb469682a0a52fcaa22e14e4fcaf6d1b0ea2b8520033b23623cf3cba3"
   },
   "scenarios": {
     "approved-cache-bytes-are-authoritative": {
@@ -14,7 +14,7 @@
       "class": "executable",
       "kexpr": "approved_cache_bytes_are_authoritative",
       "ran": true,
-      "report_sha256": "d9bde7720997a0ac4195d488e8901d76634c04d1df055cc368d40fa25ba0ec89",
+      "report_sha256": "9b674d238414d0d5f7382d19a7cc0d6c07e76df7f4fa37c3d7e725bd479abf84",
       "sites": 2
     },
     "claim-stores-a-verifier-not-the-token": {
@@ -22,7 +22,7 @@
       "class": "executable",
       "kexpr": "claim_file_never_stores_the_resume_credential",
       "ran": true,
-      "report_sha256": "c4bbcec19ab15946283645dc01113d952c209b45896175aa279a8a6b69c996ac",
+      "report_sha256": "ebc2779e88c5d26ea9811c63ed2840ffed880fbd4dae67980064cf972c003d6a",
       "sites": 1
     },
     "external-binding-covers-the-package": {
@@ -30,7 +30,7 @@
       "class": "executable",
       "kexpr": "external_input_binding_covers_the_whole_package",
       "ran": true,
-      "report_sha256": "f3f21db859cbb59d41e0a3936c3c21b761370ae0abf887a85e32740bf9d78bd4",
+      "report_sha256": "9bd816216e572ae982e6d11dec3a94edffae15a74e9b00e2b09b0c4afc1c67bc",
       "sites": 1
     },
     "freeze-completes-a-half-written-transition": {
@@ -38,7 +38,7 @@
       "class": "executable",
       "kexpr": "freeze_is_retryable_after_a_crash_between_its_two_writes",
       "ran": true,
-      "report_sha256": "8ac3b0b4d7f8d1aef6aed8c6982787d37d8c2b2750a56fbfb8df49d910099051",
+      "report_sha256": "cca7a339abd11c4e56de77126250c14f0fa0e1c511573d8fc6c8ee5a049844fa",
       "sites": 1
     },
     "interpreter-set-is-pinned": {
@@ -53,7 +53,7 @@
       "class": "executable",
       "kexpr": "producer_closure_tracks_mutating_and_import_bindings",
       "ran": true,
-      "report_sha256": "9805559ead729259b29fc92c64eacd3c341629468dfc99915710f5292f77aad6",
+      "report_sha256": "4a1ab65a826bb5ca02f3fb1af8c00e3e29b04d5ad7469f5de902ed7d18bb0b17",
       "sites": 1
     },
     "plan-index-exact-equality": {
@@ -61,7 +61,7 @@
       "class": "executable",
       "kexpr": "phantom_executed_plan_without_an_execution_record",
       "ran": true,
-      "report_sha256": "6d8b552df16284b71371a284db256711c6096bcf1695ee4d98e6d27fb0ebf4ed",
+      "report_sha256": "9b289cdcda65ce14590f2120b310191689206350f0aea4a4159f31539094be6b",
       "sites": 1
     },
     "prelock-version-id-is-a-string": {
@@ -69,7 +69,7 @@
       "class": "executable",
       "kexpr": "falsy_version_id",
       "ran": true,
-      "report_sha256": "f4f719986f2d6e6d89b5ca55aea899d95b7107111a20010444e4b2cce16b5ec0",
+      "report_sha256": "b3a06c50a44c0703b396710854ee5327bfa82385c542493fee7ae2086ed69f2e",
       "sites": 1
     },
     "publisher-owns-the-merge-temp": {
@@ -77,7 +77,7 @@
       "class": "executable",
       "kexpr": "caller_stage_is_untouched",
       "ran": true,
-      "report_sha256": "0b46e8cf369b82ec117738fb9977906b25ab746ab064536967d54a3f76860e44",
+      "report_sha256": "15f13d049ec536b231b0c889f3f9f2f8f8c32aa44be4a7574aa17d8294393c09",
       "sites": 1
     },
     "seal-typed-input": {
@@ -85,7 +85,7 @@
       "class": "executable",
       "kexpr": "types_differ_is_not_folded",
       "ran": true,
-      "report_sha256": "f236ab944bfdffd709b995b29cc25b8cbdbbae7b23e54b04c45cf9fd7d75322b",
+      "report_sha256": "b8e5ad5348c5d7da5e3f09b3e1cab58f1fb45df1ddb890aa9939958d531ced27",
       "sites": 1
     },
     "token-unlink-is-generation-scoped": {
@@ -93,7 +93,7 @@
       "class": "executable",
       "kexpr": "late_release_cleanup_cannot_delete_the_next_attempts_token",
       "ran": true,
-      "report_sha256": "3a18262e4142f1d3ff3e548f0f0660a58c08ad35631c303f97c470ce4a4d8730",
+      "report_sha256": "e841776c653bb38f72e926a23cc0b500da1b3b8cdd26d41298a4b67ba66753c7",
       "sites": 1
     }
   },

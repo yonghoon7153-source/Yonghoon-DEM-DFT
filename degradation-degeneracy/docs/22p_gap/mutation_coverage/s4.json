@@ -1,12 +1,12 @@
 {
-  "at": "2026-09-01T09:15:38Z",
+  "at": "2026-09-01T09:40:48Z",
   "binding": {
     "expect_digest": "118328eb875379f975ccd92a9d1f496531cdc402139304c01f2c27ca5c338831",
-    "head": "318f59dc2fc7b51affbc4d660aa192f0c5dea8ab",
+    "head": "1f1253c5858e200e08ba70048427dbc96217fb2d",
     "registry_digest": "ae74d2634a63b696fbdf0e97d267abf94cd9d131437d51af68d4e4de09912bf0",
     "reports_dir": "s4",
-    "runner_digest": "603b4679dd47c66cb924351bf074a59cd57e62c8edf3eef77fdfab323d2a229d",
-    "transcript_digest": "4e6e0e80c8fdc0b980fac5259cdfea3f9a8519dc494d4c6b5575fe7942105069"
+    "runner_digest": "7ba0cd54cf24af49cab78afab67302492b0a248e438dadadfbf746f5bab9f00a",
+    "transcript_digest": "859e57b80ab986799285a8d54f9006efa1c57c083b5218892176d98bf1017c1f"
   },
   "scenarios": {
     "authority-frozenset": {
@@ -14,7 +14,7 @@
       "class": "executable",
       "kexpr": "frozen_authority_holds_only_immutable",
       "ran": true,
-      "report_sha256": "3b97d3fb6545ac497438514a2791687c3c3baa15fdfc385d181d4aaa405b7f7a",
+      "report_sha256": "6cc50afde548e0be58b19ccfd69185ee62576daefb5bfef744dab1833ea3f465",
       "sites": 1
     },
     "closure-refuses-dynamic-resolution": {
@@ -22,7 +22,7 @@
       "class": "executable",
       "kexpr": "dynamic_name_resolution_inside_the_closure_is_fail_closed",
       "ran": true,
-      "report_sha256": "5cf1896d74df25772922822afda5d758038530e4798d033e1bb10a496fbaba88",
+      "report_sha256": "863637a684a8117637dcb55a603029acdb52b2673553341eabde4aa77d147955",
       "sites": 1
     },
     "finalize-rechecks-in-the-ledger-lock": {
@@ -30,7 +30,7 @@
       "class": "executable",
       "kexpr": "finalize_rechecks_the_whole_authority_inside_the_ledger_lock",
       "ran": true,
-      "report_sha256": "4a91ae4f2e9182e3d0c212cf8ddffd9473268b7ce032001a2ea24901ac621d36",
+      "report_sha256": "b79d8f34cf4a20d53f624d2180eb5cb67171b4e5c9654afc26d51341b1d4bcfc",
       "sites": 1
     },
     "freeze-seals-the-output-directory": {
@@ -38,7 +38,7 @@
       "class": "executable",
       "kexpr": "frozen_directory_cannot_be_republished_under_a_new_cohort_id",
       "ran": true,
-      "report_sha256": "171ff7786d0ad35c12eed56e68b231dc20626521112167c8837475c2b770c2b0",
+      "report_sha256": "981de4e53e6123160d1cb9d10311b57e78bcf84a2da0e7f17cbbc5482d5882be",
       "sites": 2
     },
     "ledger-seal-record": {
@@ -46,7 +46,7 @@
       "class": "executable",
       "kexpr": "same_roster_ledger_change",
       "ran": true,
-      "report_sha256": "e9c8c6c9ecdb1d81229573c39d6c9f190f7658ca3d7d9fb2ff7e51f38acf0a9b",
+      "report_sha256": "47f20ab9c1d10c1efc731a555baf56118897f66e2ffdbdfe92176252d8f76233",
       "sites": 2
     },
     "namespace-check-rejects-symlinks": {
@@ -54,7 +54,7 @@
       "class": "executable",
       "kexpr": "symlinked_path_is_not_inside_the_smoke_namespace or namespace_check_is_fail_closed_on_a_symlinked_component",
       "ran": true,
-      "report_sha256": "9afbc7cde5bca420b9988db35cb67f7b235d280fdaace869b11fee102dfffd30",
+      "report_sha256": "8ddcd968718b09b667b0dedfef5bf8717e089d4ee3c03155fa7f8ed928ff100e",
       "sites": 1
     },
     "planned-binds-the-code-identity": {
@@ -62,7 +62,7 @@
       "class": "executable",
       "kexpr": "plan_to_the_code_identity",
       "ran": true,
-      "report_sha256": "124504f99e10597580b8c4b4646085c435c636502a67d4bd9673c53c1fc671f7",
+      "report_sha256": "bf6fe9cfa52af701ade5aaeece378a962aaf52e61649edabe0ceee02ae5e0b7b",
       "sites": 1
     },
     "producer-canon-drops-empty-fields": {
@@ -70,7 +70,7 @@
       "class": "executable",
       "kexpr": "producer_digest_is_the_same_on_every_python_here",
       "ran": true,
-      "report_sha256": "c63916de6f96115cc4291b26886ccee24238bc4c1e8f11183f9e967f2bd17a12",
+      "report_sha256": "ab94e6308269721dd37d98eda9c95b2e72c2922deb0e24b17fc97606f63d4149",
       "sites": 1
     },
     "recheck-before-rename": {
@@ -78,7 +78,7 @@
       "class": "executable",
       "kexpr": "rechecked_immediately_before_the_rename",
       "ran": true,
-      "report_sha256": "a9ce364dba1c3c767b89393d5b60dba78a957b02d05a32823e0d6ed7fc0fa4fb",
+      "report_sha256": "1d69b4793c99c65d6c9a18cbd04683f37d407a672935690ea268f999a5ad5e05",
       "sites": 1
     },
     "sink-validates-itself": {
@@ -86,7 +86,7 @@
       "class": "executable",
       "kexpr": "sink_refuses_an_incomplete",
       "ran": true,
-      "report_sha256": "679cf201f0998e3dd99d52fee6723d8c4e3e7b960da338ba1b35530d62d57ead",
+      "report_sha256": "c6990201db7043cedfb96cf6e4ea4d5d27259cf27a40c9413a9368dbcc55db78",
       "sites": 1
     },
     "version-candidates-typed": {
@@ -94,7 +94,7 @@
       "class": "executable",
       "kexpr": "every_enumerated_version_candidate or falsy_version_never_reaches_lock",
       "ran": true,
-      "report_sha256": "d3147b043643e295383a1aca4d3db6279704974b683b911f86ae7703f85a13c7",
+      "report_sha256": "4ec1e33e06ede0a282cd9de637a3983a86f6893a88c6aabc73be4b7d06ac182a",
       "sites": 1
     }
   },

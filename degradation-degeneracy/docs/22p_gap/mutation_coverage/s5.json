@@ -1,12 +1,12 @@
 {
-  "at": "2026-09-01T09:17:44Z",
+  "at": "2026-09-01T09:42:53Z",
   "binding": {
     "expect_digest": "118328eb875379f975ccd92a9d1f496531cdc402139304c01f2c27ca5c338831",
-    "head": "318f59dc2fc7b51affbc4d660aa192f0c5dea8ab",
+    "head": "1f1253c5858e200e08ba70048427dbc96217fb2d",
     "registry_digest": "ae74d2634a63b696fbdf0e97d267abf94cd9d131437d51af68d4e4de09912bf0",
     "reports_dir": "s5",
-    "runner_digest": "603b4679dd47c66cb924351bf074a59cd57e62c8edf3eef77fdfab323d2a229d",
-    "transcript_digest": "aeb349ed17f6a090d95d3461ff2fa4abaa897a7dc13521fb46bdc029b7122627"
+    "runner_digest": "7ba0cd54cf24af49cab78afab67302492b0a248e438dadadfbf746f5bab9f00a",
+    "transcript_digest": "63895d54fb3f3c01e9221f5056f354adedd61dc7f210ba01415c2190e2721730"
   },
   "scenarios": {
     "authority-registry": {
@@ -14,7 +14,7 @@
       "class": "executable",
       "kexpr": "raw_publisher_takes_no",
       "ran": true,
-      "report_sha256": "a85c1f54647b8715e061eb8e20912e3a9595c16ee5b5498100e0c96e862a03e7",
+      "report_sha256": "32f16d120b49f5148e335266f87e66c2b52f42ba1289faee3ede3cf48f8b8c52",
       "sites": 1
     },
     "closure-refuses-source-reflection": {
@@ -22,7 +22,7 @@
       "class": "executable",
       "kexpr": "reading_the_producers_raw_source_is_fail_closed",
       "ran": true,
-      "report_sha256": "5eedcd7844707c68a9e140a5d60e8262a3f73309f3c07a59c50cce1f2da52137",
+      "report_sha256": "91ce2430d585cf9476189f5143b481fb919910d5c374249e8bccf26b68fe5880",
       "sites": 1
     },
     "finalize-requires-the-credential": {
@@ -30,7 +30,7 @@
       "class": "executable",
       "kexpr": "finalize_requires_the_owner_credential",
       "ran": true,
-      "report_sha256": "be28c95948040faa1b50d3cd55eed6ffbcc5a9a828b5529f6b34683f077bcb38",
+      "report_sha256": "489043aadee4941792750b6e6bb205f5f9035df084c3f75c389e801281294094",
       "sites": 1
     },
     "frozen-target-carries-its-own-seal": {
@@ -38,7 +38,7 @@
       "class": "executable",
       "kexpr": "frozen_directory_carries_its_own_seal",
       "ran": true,
-      "report_sha256": "2be8a477fdfd13a2147542271665e3dd170035995cee44ac3639604db34448bc",
+      "report_sha256": "5740d5e65c2a8c1acc9cce44ed4b87e0ae57a8450541e2cd273c7eb3ce648d63",
       "sites": 1
     },
     "ledger-status-enum": {
@@ -46,7 +46,7 @@
       "class": "executable",
       "kexpr": "status_is_an_exact_enum",
       "ran": true,
-      "report_sha256": "6e14064df8482bdeb009ae238ceae4eeeb8e09581e7e5c57364017229436e306",
+      "report_sha256": "569bc40657216c0b3701c88a441658415ed5d79567de77799cde4bc4196f2f7c",
       "sites": 1
     },
     "open-checks-the-live-claim-first": {
@@ -54,7 +54,7 @@
       "class": "executable",
       "kexpr": "second_open_never_touches_the_live_owners_token",
       "ran": true,
-      "report_sha256": "8d2774c311a3acbf3170c2dd225c7f7e5bea8fb775fe629f55b986126ea850fa",
+      "report_sha256": "067a0cae391e5d9a884d29171a0c6b32474cbd6d9e03ec3f75e08278bd063e59",
       "sites": 1
     },
     "planned-binds-the-execution-record": {
@@ -62,7 +62,7 @@
       "class": "executable",
       "kexpr": "planned_index_is_bound_to_the_real",
       "ran": true,
-      "report_sha256": "be25e4373d68d1c6db6ab1de7389b22467313afffcb89cc5f73e5d3e3bdf270c",
+      "report_sha256": "45e6030f91245b91afc0711619eeff7935edb690d24f68fe33d0dd58c2f2d916",
       "sites": 1
     },
     "producer-crosses-into-scoring": {
@@ -70,7 +70,7 @@
       "class": "executable",
       "kexpr": "producer_digest_crosses_into_src_scoring",
       "ran": true,
-      "report_sha256": "c2dda487fb04c846d2a90584b0a0736c09595ad565fac4a9473f40b56bb4be5c",
+      "report_sha256": "5beea8a6ffe7152e298b5eb49b3721a56e6ad670260390af30656e142eb14222",
       "sites": 1
     },
     "release-moves-the-ledger-before-the-claim": {
@@ -78,7 +78,7 @@
       "class": "executable",
       "kexpr": "crash_inside_release_leaves_a_recoverable_state",
       "ran": true,
-      "report_sha256": "435994de1873b28989d58e180792aed332873f30b4c236cd710c548f3f9034af",
+      "report_sha256": "2ff698c6c944a7d765e1ca65b2452a9cd47a70f8b7ab850bec7ecec605c5d9f2",
       "sites": 1
     },
     "staging-nlink-one": {
@@ -86,7 +86,7 @@
       "class": "executable",
       "kexpr": "staging_aliases_never_become_an_immutable_generation",
       "ran": true,
-      "report_sha256": "252f0df818438009c303b7308b0c2d8bfe1dc639868d132036f89f4cc8d1253f",
+      "report_sha256": "78d63b81d8736e2df0ead4e5e7c247b1ee430c4f22d2544f47c8487d7636c146",
       "sites": 1
     },
     "warm-consumer-uses-accessor": {
@@ -94,7 +94,7 @@
       "class": "executable",
       "kexpr": "warm_consumers_go_through_the_accessors",
       "ran": true,
-      "report_sha256": "7b73592d0c5af84621b152359cf4e5938ec78a4460d047d161e3abb40109d6d8",
+      "report_sha256": "081f7395bca7ceaf403cc5694beb86ce11ac152a0bf31413ca3a9701ff5d2b9e",
       "sites": 1
     }
   },

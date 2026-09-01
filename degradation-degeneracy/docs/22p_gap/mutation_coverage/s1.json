@@ -1,12 +1,12 @@
 {
-  "at": "2026-09-01T09:09:26Z",
+  "at": "2026-09-01T09:34:48Z",
   "binding": {
     "expect_digest": "118328eb875379f975ccd92a9d1f496531cdc402139304c01f2c27ca5c338831",
-    "head": "318f59dc2fc7b51affbc4d660aa192f0c5dea8ab",
+    "head": "1f1253c5858e200e08ba70048427dbc96217fb2d",
     "registry_digest": "ae74d2634a63b696fbdf0e97d267abf94cd9d131437d51af68d4e4de09912bf0",
     "reports_dir": "s1",
-    "runner_digest": "603b4679dd47c66cb924351bf074a59cd57e62c8edf3eef77fdfab323d2a229d",
-    "transcript_digest": "33e26112016264320d9ae3be68216fd9575cd8598bccc026906a47b0a370efa5"
+    "runner_digest": "7ba0cd54cf24af49cab78afab67302492b0a248e438dadadfbf746f5bab9f00a",
+    "transcript_digest": "6d4ee8e1f86b4450ef370fb267394539e825be0023cc2d143e5bd5a0e85791de"
   },
   "scenarios": {
     "abandon-rechecks-the-live-attempt": {
@@ -14,7 +14,7 @@
       "class": "executable",
       "kexpr": "stale_claim_handle_cannot_cancel_the_next_attempt or readonly_claim_cannot_abandon_the_live_owner",
       "ran": true,
-      "report_sha256": "301c62b21a27a4764e13eb0da6b87ec4e5541428ce526902beb717401364a261",
+      "report_sha256": "761a23ac5eeafe06de9787dbd35fece8e8984e9aba30bcc813ee30e10f7a81f1",
       "sites": 1
     },
     "claim-seals-the-run-spec": {
@@ -22,7 +22,7 @@
       "class": "executable",
       "kexpr": "claim_seals_the_exact_run_spec",
       "ran": true,
-      "report_sha256": "744d6032c6942df1fd4e90fc8f96578713483676c3655958f5f2326d930018ed",
+      "report_sha256": "2bf6fe0869dd0c793a472cb3faaacad963a18005b29a1a8fd107e6279e8d9a84",
       "sites": 1
     },
     "env-fingerprint-seals-the-smoothing-backend": {
@@ -30,7 +30,7 @@
       "class": "executable",
       "kexpr": "effective_smoothing_backend_is_inside_the_approval",
       "ran": true,
-      "report_sha256": "4f97e866b6d8534582075cf91783fb9132b5dd44583bc5470945cd716ec3f2bf",
+      "report_sha256": "ef2f7019e96dde276fc39803fb04f3c97933f13f5dfab92f4ab1bcaa9a361b7a",
       "sites": 1
     },
     "flock-two-publisher": {
@@ -38,7 +38,7 @@
       "class": "executable",
       "kexpr": "two_independent_publishers",
       "ran": true,
-      "report_sha256": "ef1da0c60e763bb7174cf2fc5c19eb990e28024e4b391218b7bb7198b4606290",
+      "report_sha256": "a0c9609d66c683676ff8b2723bf9c62e52f7fd0e51191ab31e60d3dd4668a910",
       "sites": 2
     },
     "inner-unbound-sentinel": {
@@ -46,7 +46,7 @@
       "class": "executable",
       "kexpr": "blank_its_sentinel_check",
       "ran": true,
-      "report_sha256": "9c12bc08dce00930da74b3d01b6871f0802c3ef929f6b020c10705b194a05646",
+      "report_sha256": "27f5876daef4049777d922557f08aa95ec88d78073374a20356747971e814281",
       "sites": 1
     },
     "module-defs-track-import-bindings": {
@@ -54,7 +54,7 @@
       "class": "executable",
       "kexpr": "producer_closure_tracks_mutating_and_import_bindings",
       "ran": true,
-      "report_sha256": "481afd6f50ac29d52977f3436cc6662d3a54623ded49687d82a784ff3194ac62",
+      "report_sha256": "d19af3c35adb01938c8a78f9d4db24838e495c0a0af2c8f6225cafb2becaf2a0",
       "sites": 1
     },
     "pin-is-publication-authority": {
@@ -62,7 +62,7 @@
       "class": "executable",
       "kexpr": "producer_pin_is_part",
       "ran": true,
-      "report_sha256": "45fd8a55fa2bc3ccf70604d8e6c5fa03ae6f8c79fffde6dd673fbf864b0f15e5",
+      "report_sha256": "2bde76e031323ebe7643e44b6b27774c8e30b44f7d84ceab2ddd118fd084f9c9",
       "sites": 1
     },
     "prelock-readback-check": {
@@ -70,7 +70,7 @@
       "class": "executable",
       "kexpr": "returns_the_wrong_version",
       "ran": true,
-      "report_sha256": "364cd5395ae0fcd5e5abac6e3797b6675d8bc972d9719d74c7fb4642277564ca",
+      "report_sha256": "b755bef83689d91a7b3ffe4efbf6c7672546365c992b99fda95e97876ab5394e",
       "sites": 1
     },
     "public-lifecycle-in-two-publisher-fixture": {
@@ -85,7 +85,7 @@
       "class": "executable",
       "kexpr": "seal_domain_is_exact_not_isinstance",
       "ran": true,
-      "report_sha256": "3b67fea8a1802a3e1069add4a997dfd9459345aa0e38707790b175e0afb53367",
+      "report_sha256": "95f2375f7405b2643e44179c4309d8b9d43b6c43f99a050afc829904259afd75",
       "sites": 1
     },
     "token-read-checks-the-leg": {
@@ -93,7 +93,7 @@
       "class": "executable",
       "kexpr": "an_attempt_file_from_another_leg_is_refused",
       "ran": true,
-      "report_sha256": "3e9c2b20031aebc8ee0894ed87c1c84e2c4714999469ee3e8cc082febe4bf13d",
+      "report_sha256": "882527f50292eab34e7e8dbe91d2331e582454189cd788c53e7db5a615d6901e",
       "sites": 1
     }
   },

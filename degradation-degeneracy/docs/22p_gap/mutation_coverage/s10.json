@@ -1,12 +1,12 @@
 {
-  "at": "2026-09-01T09:27:05Z",
+  "at": "2026-09-01T09:51:58Z",
   "binding": {
     "expect_digest": "118328eb875379f975ccd92a9d1f496531cdc402139304c01f2c27ca5c338831",
-    "head": "318f59dc2fc7b51affbc4d660aa192f0c5dea8ab",
+    "head": "1f1253c5858e200e08ba70048427dbc96217fb2d",
     "registry_digest": "ae74d2634a63b696fbdf0e97d267abf94cd9d131437d51af68d4e4de09912bf0",
     "reports_dir": "s10",
-    "runner_digest": "603b4679dd47c66cb924351bf074a59cd57e62c8edf3eef77fdfab323d2a229d",
-    "transcript_digest": "7de92cd1bf4a982b13b507ebaae1403038ef2c7d0dc571a7ded7d6fb82197b7a"
+    "runner_digest": "7ba0cd54cf24af49cab78afab67302492b0a248e438dadadfbf746f5bab9f00a",
+    "transcript_digest": "b6bf3e28e8bd26d855656c1a0e976745e5d50eb98460cadf263d774c38eafe17"
   },
   "scenarios": {
     "children-read-through-dirfd": {
@@ -14,7 +14,7 @@
       "class": "executable",
       "kexpr": "holds_a_directory_fd_for_its_children",
       "ran": true,
-      "report_sha256": "c81fa5fa39683e9aec09581516cae175e32f70cea6e256256796db0fd8498ea3",
+      "report_sha256": "0ba38abd5542c76c0c6e2fe3fc69b294857bd41fb5dcd7d533c70ab11a1fb253",
       "sites": 2
     },
     "crash-recovery-needs-the-credential": {
@@ -22,7 +22,7 @@
       "class": "executable",
       "kexpr": "the_crash_recovery_needs_the_owner_credential",
       "ran": true,
-      "report_sha256": "3ea17319f76414188ff92107b5c015941878a70afe628a635928db46359692c1",
+      "report_sha256": "ccfcca3c696d9454298201769feb9874e46274ce0884ce9f0ec535baa8735e52",
       "sites": 1
     },
     "fit-axis-seals-the-objective-payload": {
@@ -30,7 +30,7 @@
       "class": "executable",
       "kexpr": "objective_payload_is_inside_the_approval_digest",
       "ran": true,
-      "report_sha256": "856d2baf6d1816f94fbcd61d93a00630906dcf8d7813e95f118677c24254b474",
+      "report_sha256": "7ee93f8e297dd53f0246c16c687a08e2736b1ce69d1704e1e877b3b423875025",
       "sites": 1
     },
     "guard-before-commit": {
@@ -38,7 +38,7 @@
       "class": "executable",
       "kexpr": "pathname_after_the_check or same_roster_ledger_change",
       "ran": true,
-      "report_sha256": "08eee03640a73bad5bdd2ab56f02f6339d23bbb84a3001ceeb39ff4c074ee633",
+      "report_sha256": "41ecf556c0b2958e0c908d0acb919bf447da4c05d512c24712cd630b753beaf9",
       "sites": 1
     },
     "module-defs-enter-compound-statements": {
@@ -46,7 +46,7 @@
       "class": "executable",
       "kexpr": "producer_closure_sees_every_module_binding_form",
       "ran": true,
-      "report_sha256": "b53f00a42a693d54c4b8b1de684b9cc6f2f457f55eb650f1849c1bce5ae7f1bf",
+      "report_sha256": "654f2784038ae84dc95e330ce751ce078b9e24e069ecca10df2e2ee77257b19e",
       "sites": 1
     },
     "phase-input-binding-needs-a-receipt": {
@@ -54,7 +54,7 @@
       "class": "executable",
       "kexpr": "fit_refuses_when_its_grid_phase_is_missing",
       "ran": true,
-      "report_sha256": "3ed356eb04f17fa80247442fa28913f5f755b758673d9f810db35b26dedb7b26",
+      "report_sha256": "032aec03a950d433bba0534b083679a59b5b54da4ca4ccade98af792e2c034d4",
       "sites": 1
     },
     "pre-write-authority": {
@@ -62,7 +62,7 @@
       "class": "executable",
       "kexpr": "frozen_cohort_publish_writes_nothing_before_it_refuses",
       "ran": true,
-      "report_sha256": "9187557eb6599bb2dae7043bd5f764b0f53c2228ba8ee89544b066a3c25d59a2",
+      "report_sha256": "ef88564daf1d3e1092e9c93594072fa8f7a73a2c4b6275037352576487d1e363",
       "sites": 1
     },
     "producer-semantic-sealed": {
@@ -70,7 +70,7 @@
       "class": "executable",
       "kexpr": "producer_change_cannot_mix_two_producers or producer_semantic_identity_is_sealed",
       "ran": true,
-      "report_sha256": "2d7fb57c6d186c9fa1574661f9c6e16f8470a270d0e4ae25d4fd532b5bb8731a",
+      "report_sha256": "f041fc299d8648c0f4910c778fd91a136a8010cd6308e3efa31d81b939f0e6af",
       "sites": 1
     },
     "roster-is-a-set": {
@@ -78,7 +78,7 @@
       "class": "executable",
       "kexpr": "ledger_roster_is_a_set_not_a_multiset",
       "ran": true,
-      "report_sha256": "91837c11a288bf78c405f900acd876d3d2ccdc98b7227fd646101ab38f15c47b",
+      "report_sha256": "ea72ec133dcba16cf228dff0c25e5ed8dba7ade519c47685d56d8f327aa0f0d1",
       "sites": 1
     },
     "token-file-is-bound-to-its-leg": {
@@ -86,7 +86,7 @@
       "class": "executable",
       "kexpr": "two_legs_cannot_share_one_attempt_file",
       "ran": true,
-      "report_sha256": "e8be94fde338f98b343e8361659cdf07829d94b0eadf6e681a34de67fe464c5f",
+      "report_sha256": "7ad84acbf53695afe3348f96aef157430a0e5749a13e5a89df71e77a3733a0a7",
       "sites": 1
     }
   },

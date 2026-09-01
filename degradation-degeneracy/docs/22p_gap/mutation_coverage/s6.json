@@ -1,12 +1,12 @@
 {
-  "at": "2026-09-01T09:19:37Z",
+  "at": "2026-09-01T09:44:44Z",
   "binding": {
     "expect_digest": "118328eb875379f975ccd92a9d1f496531cdc402139304c01f2c27ca5c338831",
-    "head": "318f59dc2fc7b51affbc4d660aa192f0c5dea8ab",
+    "head": "1f1253c5858e200e08ba70048427dbc96217fb2d",
     "registry_digest": "ae74d2634a63b696fbdf0e97d267abf94cd9d131437d51af68d4e4de09912bf0",
     "reports_dir": "s6",
-    "runner_digest": "603b4679dd47c66cb924351bf074a59cd57e62c8edf3eef77fdfab323d2a229d",
-    "transcript_digest": "70ea814d3a2f2b4450cb3f3ddc52baa1810ed5b3528e8898be885f2becf89ec4"
+    "runner_digest": "7ba0cd54cf24af49cab78afab67302492b0a248e438dadadfbf746f5bab9f00a",
+    "transcript_digest": "af7187d119f3c1396aa807f1098d6e0e98b175f35146ab22681fa83a35cccb06"
   },
   "scenarios": {
     "both-pointers-checked": {
@@ -14,7 +14,7 @@
       "class": "executable",
       "kexpr": "pointer_moved_by_another",
       "ran": true,
-      "report_sha256": "2531645e499744948cff534585cc8c0c1558fe3f33cefc9b92547a861822c82f",
+      "report_sha256": "63c32634f50bd62df1e41c12d49f28571b26f2e9ecfc33c2e1ee203ac7eb4bdf",
       "sites": 1
     },
     "closure-unresolved-attr-is-fail-closed": {
@@ -22,7 +22,7 @@
       "class": "executable",
       "kexpr": "unresolved_producer_module_reference_is_fail_closed",
       "ran": true,
-      "report_sha256": "f2f8470b931a71d38b3efe794a05e8dc065a75c48b4f0c4fb21142ed5107bbc6",
+      "report_sha256": "140c2637fe96c5bb3a8fb3e41b9282f8cb717f84a97ab4dd6c97158117b96cc3",
       "sites": 1
     },
     "finalize-writes-the-whole-tuple": {
@@ -30,7 +30,7 @@
       "class": "executable",
       "kexpr": "finalize_writes_a_complete_contract_status_tuple",
       "ran": true,
-      "report_sha256": "96c7f1742dcf45feec81e37c4552a53e74684c645adfa082e30ccf3b92ce7f43",
+      "report_sha256": "cdb59406cc47aaa71deb4114eec1a23721c313fbde7aa32c54f2a7fd981f2f96",
       "sites": 1
     },
     "generation-namespace-guard": {
@@ -38,7 +38,7 @@
       "class": "executable",
       "kexpr": "current_generation_cannot_be_used_as_its_own_staging",
       "ran": true,
-      "report_sha256": "1e3b861fc669b5194370245ef8b4f463e484e7aaaf0ad37e6eee94017065a7c1",
+      "report_sha256": "4a50a0c17bb55f11fdc2e3a60ebd9f1e7abd8a76bc1e092f1a7c0816414e7f23",
       "sites": 1
     },
     "lifecycle-chain-is-verified": {
@@ -46,7 +46,7 @@
       "class": "executable",
       "kexpr": "the_lifecycle_journal_is_a_hash_chain",
       "ran": true,
-      "report_sha256": "a8c5eccb31ce054fa461ba6676533f10b070922e6440b0e079376cfc38be61f3",
+      "report_sha256": "0e7390c25d9d238803d2dda5c1d4078fc341501d9a0318c473e41a7f7d778778",
       "sites": 1
     },
     "pending-base-generation": {
@@ -54,7 +54,7 @@
       "class": "executable",
       "kexpr": "stale_bootstrap_pending",
       "ran": true,
-      "report_sha256": "4b582fa7d1abd3092beb3b996f395cde5827ea9ad9358d5a093f1042656318bd",
+      "report_sha256": "6aa0820c49da8958bfcad8960af71b0623faa25e20d43734abd0dde10956dcd7",
       "sites": 1
     },
     "planned-status-is-not-standing": {
@@ -62,7 +62,7 @@
       "class": "executable",
       "kexpr": "standing_authorization",
       "ran": true,
-      "report_sha256": "0c2dd19e887e2b9244cd33b7e11b9a4d31cad92622ef10d6aac3f4023d262de8",
+      "report_sha256": "b8985b7e2d9dd00f2222d9d32bbe1dd2db0b11c60710b60c31ccace93328df21",
       "sites": 1
     },
     "producer-crossing-is-fail-closed": {
@@ -70,7 +70,7 @@
       "class": "executable",
       "kexpr": "breaking_the_crossing_into_src_scoring_is_fail_closed",
       "ran": true,
-      "report_sha256": "e38085aaac0516e1dbeadfbe96126ca6e1ca53725ce9b8e0a2c70a4e96753470",
+      "report_sha256": "e6648938c23adb563ec1cc96ac1c207f04b880f22d76a050f14249f454228198",
       "sites": 1
     },
     "release-returns-the-plan": {
@@ -78,7 +78,7 @@
       "class": "executable",
       "kexpr": "released_run_returns_the_plan_to_planned",
       "ran": true,
-      "report_sha256": "0f394ce16d83bf7bc6cbbd1dd4bfe8888cd3da86833dd5642a29b9138e314a9e",
+      "report_sha256": "93df8bfe910abc5ecf279cab156dcf2cb2ca597d09f405a8bd13cf5ede679a64",
       "sites": 1
     },
     "staging-regular-only": {
@@ -86,7 +86,7 @@
       "class": "executable",
       "kexpr": "staging_aliases_never_become_an_immutable_generation",
       "ran": true,
-      "report_sha256": "969851c84321bc887c789c4ea24673b294de2c10a021c7e9eb07390017a8746b",
+      "report_sha256": "75a7746f3cf01698c942e6f8976c9daaf9a52f5009996a5ffc9d2d513c78bfbd",
       "sites": 2
     },
     "warm-consumer-wiring": {
