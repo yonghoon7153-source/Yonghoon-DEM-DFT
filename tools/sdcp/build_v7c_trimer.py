@@ -2542,7 +2542,7 @@ def selftest():
 
         def _fixture_prereg(mm, **patch):
             f = os.path.join(ptd, "prereg_fixture_%d.json" % (len(patch) + hash(str(patch)) % 97))
-            doc = {"schema": "prereg/v1", "status": "proposed",
+            doc = {"schema": "prereg/v1", "status": "ratified",
                    "0_시각_증거": {"builder_sha256": mm.get("builder_sha256"),
                                     "builder_commit": mm.get("builder_commit")},
                    "대상": {"parent_sha256": mm.get("parent_sha256"),
@@ -2552,12 +2552,27 @@ def selftest():
                             "epsilon": sorted(float(v["epsilon"])
                                               for v in mm["environments"].values())}}
             for k, v in patch.items():
+                if k.startswith("_"):
+                    continue
                 if k in ("builder_sha256", "builder_commit"):
                     doc["0_시각_증거"][k] = v
                 elif k == "status":
                     doc["status"] = v
                 else:
                     doc["대상"][k] = v
+            # ⛔ 회신 V Q5-1 — 비준 기록과 **내용 지문**을 넣는다 (실물과 같은 모양).
+            if not patch.get("_no_ratification"):
+                _cc = {k: v for k, v in doc.items() if k != "ratification"}
+                doc["ratification"] = {
+                    "state": "ratified", "role": "scientific_owner",
+                    "actor_id": "selftest", "timestamp": "2026-09-02T00:00:00Z",
+                    "commit": "0" * 40,
+                    "content_digest": hashlib.sha256(
+                        json.dumps(_cc, sort_keys=True, ensure_ascii=False)
+                        .encode("utf-8")).hexdigest()}
+                if patch.get("_break_digest"):
+                    doc["ratification"]["content_digest"] = "9" * 64
+            doc.pop("_no_ratification", None); doc.pop("_break_digest", None)
             open(f, "w").write(json.dumps(doc, ensure_ascii=False))
             return f
 
@@ -2696,6 +2711,16 @@ def selftest():
              "V P0-2: 사전등록의 **국재화 realization** 이 다르다"),
             ("neg_pre_status", {"_prereg_patch": {"status": "retracted"}},
              "V P0-2: 사전등록이 **철회 상태**다 — 그 문서로 결과를 붙이지 않는다"),
+            # ── 회신 V Q5-1 (2026-09-02 비준 후) — 비준이 phase L 의 선행 조건이다 ──
+            ("neg_pre_proposed", {"_prereg_patch": {"status": "proposed"}},
+             "V Q5-1: 사전등록이 **`proposed`** 다 — 비준 전에는 seed 를 만들지 않는다 "
+             "(비용 발생 전에 닫는다)"),
+            ("neg_pre_norat", {"_prereg_patch": {"_no_ratification": True}},
+             "V Q5-1: 사전등록에 **사람 비준 기록이 없다** (status 문자열만으로는 "
+             "비준이 아니다)"),
+            ("neg_pre_digest", {"_prereg_patch": {"_break_digest": True}},
+             "V Q5-1: 사전등록이 **비준 이후에 바뀌었다** (내용 지문 불일치) — "
+             "재승인이 필요하다"),
         ):
             raises(lambda _s=_sub, _k=_kw: _run(_s, **_k), "⛔음성 e2e: " + _why)
         # ══ 회신 T Q4 — 4층 판정 e2e (분석기도 한 번도 안 돌려 봤다) ══════
@@ -4025,9 +4050,22 @@ def _pil_check_prereg(man, where):
     _ev = _pj.get("0_시각_증거") or {}
     _tg = _pj.get("대상") or {}
     bad = []
-    if _pj.get("status") not in ("proposed", "ratified", "active"):
-        bad.append("사전등록 status 가 %r 다 (proposed/ratified/active 가 아니다)"
-                   % _pj.get("status"))
+    # ⛔⛔ 회신 V Q5-1 (2026-09-02 비준 후) — phase L 을 열려면 사전등록이
+    #   **비준**돼 있어야 한다. `proposed` 로는 seed 를 만들지 않는다.
+    #   1저자 비준(2026-09-02)으로 이 조건이 충족됐고, 그래서 게이트를 올린다.
+    if _pj.get("status") not in ("ratified", "active"):
+        bad.append("사전등록 status 가 %r 다 — **비준(ratified/active)** 이어야 한다 "
+                   "(회신 V Q5-1: 비용 발생 전에 닫는다)" % _pj.get("status"))
+    _rt = _pj.get("ratification") or {}
+    if _rt.get("state") != "ratified" or _rt.get("role") != "scientific_owner":
+        bad.append("사전등록에 사람(scientific_owner) 비준 기록이 없다")
+    else:
+        import hashlib as _h
+        _cc = {k: v for k, v in _pj.items() if k != "ratification"}
+        _dg = _h.sha256(json.dumps(_cc, sort_keys=True, ensure_ascii=False)
+                        .encode("utf-8")).hexdigest()
+        if _rt.get("content_digest") != _dg:
+            bad.append("사전등록이 **비준 이후에 바뀌었다** (지문 불일치) — 재승인 필요")
     _wb, _gb = _ev.get("builder_sha256"), man.get("builder_sha256")
     if _wb and _gb and _wb != _gb:
         bad.append("빌더 SHA: 사전등록 %s… ≠ 생성물 %s… — 사전등록이 봉인한 규칙과 "

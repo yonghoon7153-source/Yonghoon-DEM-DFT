@@ -620,7 +620,7 @@
    },
    "title": "마감은 조건 먼저 — upgrade 트리거와 invalidation 트리거를 분리한다",
    "statement": "캠페인 마감 기록은 확정값·허용/금지 서술·재개 조건을 담되, 재개 조건은 planned_upgrade_triggers(범위 확장 투자 결정)와 mandatory_invalidation_triggers(estimand/산술/프로토콜 결함·source 변경·게이트 실패·상충 증거·scope 확대) 로 분리한다. '이 목록 밖으로는 열지 않는다' 는 upgrade 쪽에만 적용된다 — 결론의 반증 가능성은 닫을 수 없다. 마감 기록은 값을 복사하지 않고 claim/result/source 참조로 쓴다.",
-   "decision_state": "proposed",
+   "decision_state": "active",
    "evidence": [
     "SDCP: 조건 없는 마감 2회가 2회 반려 (07-17 doped v1 · 08-28 회신 M)",
     "회신 N P0: 마감 도입 커밋 자체가 citable headline 충돌·혼합-basin 근거 재사용"
@@ -631,15 +631,30 @@
     "회신 N 승인조건 5 항목 완료 후 ratify 검토"
    ],
    "enforcement": "webapp/tests/test_webapp.py::test_sdcp_closure_consistency 가 첫 사례를 봉인",
-   "status": "proposed",
+   "status": "active",
    "status_history": [
     {
      "at": "2026-09-01",
      "state": "proposed",
      "note": "C-12 노드의 잘못된 supersede 간선을 제거했다 (회신 AW P0-3 불허 · AZ P0-6). ⚠ 되돌려 보니 이 정책은 **사람 승인 기록이 한 번도 없었다** — `superseded` 상태가 그 사실을 가리고 있었다. 그래서 `active` 가 아니라 `proposed` 로 둔다. 원장 fail-closed 검사(AW P0-4)가 이것을 잡았다."
+    },
+    {
+     "at": "2026-09-02",
+     "state": "active",
+     "note": "1저자 비준 (scientific_owner). 계산 전에 닫았다 — 결과가 정책 결정에 압력을 주지 않는다."
     }
    ],
-   "⚠_비준_필요": "전역 마감정책이 승인 없이 서 있다. 1저자가 ratify 해야 active 다 (webapp/canonical.py validate_governance 가 강제)"
+   "⚠_비준_필요": "전역 마감정책이 승인 없이 서 있다. 1저자가 ratify 해야 active 다 (webapp/canonical.py validate_governance 가 강제)",
+   "ratification": {
+    "state": "ratified",
+    "role": "scientific_owner",
+    "actor_id": "yonghoon7153@gmail.com",
+    "timestamp": "2026-09-01T21:29:29Z",
+    "commit": "2f96eeb4d41ccfb99e476097338dc389ca39996b",
+    "decision_digest": "sha256:14f4db5f4fecd38971d5c6a95088dd3c2f3c19d536c3ae03b896a4558ebc318e",
+    "⚠_digest_의_뜻": "이 지문은 `ratification` 을 뺀 결정 내용의 sha256 이다. 비준 뒤 내용을 고치면 지문이 어긋나 검사가 **재승인을 요구**한다.",
+    "근거": "회신 AW P0-3 · AZ P0-6 · BA 해제조건 3 이 공통으로 '비용 발생 전에 닫으라' 고 판정했다. 1저자가 2026-09-02 세 건을 함께 비준했다."
+   }
   },
   {
    "id": "D-2026-08-28-sdcp-doped-scope-closure",
@@ -750,7 +765,7 @@
    "kind": "estimand",
    "scope": "sdcp.c12.fragment_contrast",
    "slot": "fragment_contrast_estimand",
-   "decision_state": "proposed",
+   "decision_state": "active",
    "applies_to": {
     "systems": [
      "sdcp_neutral",
@@ -794,8 +809,24 @@
      "at": "2026-09-01",
      "state": "proposed",
      "note": "회신 AZ P0-4·P0-6 반영: supersede 간선 제거 · 보고량을 ΔE_ads 로 정정(E_S 균형) · open_conflicts 해소. **비준은 여전히 사람 몫이고, 회신 AZ P0-6 은 비준 전 발송을 막는다.**"
+    },
+    {
+     "at": "2026-09-02",
+     "state": "active",
+     "note": "1저자 비준 (scientific_owner). 계산 전에 닫았다 — 결과가 정책 결정에 압력을 주지 않는다."
     }
-   ]
+   ],
+   "status": "active",
+   "ratification": {
+    "state": "ratified",
+    "role": "scientific_owner",
+    "actor_id": "yonghoon7153@gmail.com",
+    "timestamp": "2026-09-01T21:29:29Z",
+    "commit": "2f96eeb4d41ccfb99e476097338dc389ca39996b",
+    "decision_digest": "sha256:93ae1556c15ed0a821d2d9e7c660ae876379ea4f51262c5bf3b0fdcb961e8762",
+    "⚠_digest_의_뜻": "이 지문은 `ratification` 을 뺀 결정 내용의 sha256 이다. 비준 뒤 내용을 고치면 지문이 어긋나 검사가 **재승인을 요구**한다.",
+    "근거": "회신 AW P0-3 · AZ P0-6 · BA 해제조건 3 이 공통으로 '비용 발생 전에 닫으라' 고 판정했다. 1저자가 2026-09-02 세 건을 함께 비준했다."
+   }
   },
   {
    "id": "D-2026-08-31-sdcp-polaron-Fbb",

@@ -1,8 +1,8 @@
 {
  "schema": "estimand_prereg/v2",
  "date": "2026-08-31",
- "status": "proposed",
- "⚠_비준": "proposed 다 — 사람이 ratify 해야 active (db/governance/decisions.json 규율)",
+ "status": "ratified",
+ "⚠_비준": "2026-09-02 1저자 비준. 회신 V Q5-1 이 요구한 조건이다 — 이 문서가 ratified 여야 phase L 을 연다. ⚠ 비준은 **이 시점의 내용**에 묶인다: 아래 ratification.content_digest 가 어긋나면 재승인이 필요하다.",
  "제목": "S0 — ε=1 기술적 적합성 pilot 사전등록 (회신 T 로 격하된 판, P0 4건 이행 반영)",
  "이_문서의_성격": {
   "무엇인가": "회신 T 가 '전체 pilot NO-GO / ε=1 기술적 적합성 pilot(S0) 한정 조건부 GO' 로 격하한 것을 받아 **범위를 줄여 다시 등록**한 판이다.",
@@ -203,6 +203,11 @@
    "at": "2026-09-02",
    "state": "proposed",
    "note": "회신 V (NO-GO · P0 5건) 이행으로 재발행. 결박 필드(functional·epsilon·loc_realization)를 대상 절에 넣어 생성기가 교차검증하게 했고, S0_EPS1_ANION_REFERENCE_INADEQUATE 기준을 L_dminus 보기 전에 봉인했으며, loccheck 증서 요구를 실행_전_봉인에 적었다. ⚠ **비준은 사람 몫이고 회신 V 는 비준까지 요구한다** — phase L 전 조건."
+  },
+  {
+   "at": "2026-09-02",
+   "state": "ratified",
+   "note": "1저자 비준 (scientific_owner). 회신 V Q5-1 · BA 해제조건 3 이 요구한 '비용 발생 전에 닫기'. phase L 의 선행 조건 하나가 풀렸다."
   }
  ],
  "회신_U_이행": {
@@ -214,5 +219,14 @@
  },
  "실행_전_봉인": {
   "loccheck": "phase L 전에 `bash run_pilot.sh loccheck` 가 LOCCHECK_PASS.json 을 남겨야 한다 (ORCA 경로·버전·입출력 해시·국재 파일 suffix·파서 둘 다 PASS). L·seeds 가 그 증서를 **강제**한다 — 순서가 문구가 아니라 게이트다 (회신 V P0-3)."
+ },
+ "ratification": {
+  "state": "ratified",
+  "role": "scientific_owner",
+  "actor_id": "yonghoon7153@gmail.com",
+  "timestamp": "2026-09-01T21:29:55Z",
+  "commit": "2f96eeb4d41ccfb99e476097338dc389ca39996b",
+  "content_digest": "c87fddce88ac599a524e7eda30461d4f76e154c5d9ef70946cfb4482af62ea41",
+  "⚠": "`ratification` 을 뺀 이 문서 내용의 sha256. 비준 뒤 고치면 어긋난다."
  }
 }
