@@ -149,6 +149,9 @@ def build(case, dump_all=False, verbose=True):
 #:   ⚠ 실제 원소가 아니다 — VESTA 에서 색이 갈리라고 쓰는 **표지**다.
 #:   그래서 파일명에 `_marked` 를 달고, 겹침 파일은 계산 입력으로 쓰지 않는다.
 PATH_MARK = "He"
+#: **안장점** 이미지의 이동 원자만 따로 찍는 표지 — 경로에서 제일 중요한 한 점이라
+#: 색을 갈라야 한다 (1저자 요청 2026-09-01). 역시 가짜 원소다.
+SADDLE_MARK = "Ne"
 #: 이동 원자로 볼 최소 변위 [Å] (초기→최종).
 #: ⚠ 2026-09-01 실측으로 1.0 → 1.5 로 올렸다. li3nd c→c 는 뛰는 Li 이 4.21 Å 인데
 #:   **Nd 여덟 개가 0.95–1.04 Å 로 거의 똑같이** 밀린다 (격자 이완 · 대칭적 숨쉬기).
@@ -159,6 +162,18 @@ PATH_MARK = "He"
 MOVE_MIN_A = 1.5
 #: 문턱 바로 아래에 원자가 몰려 있으면 알린다 (문턱이 임의로 갈랐다는 신호).
 MOVE_WARN_BAND = 0.5
+
+
+def _mark_for(el, k, n, sad, mark):
+    """이미지 k 의 이동 원자를 무엇으로 찍을까. 3단이다.
+
+    처음·끝 = 실제 원소 · **안장점 = SADDLE_MARK** · 나머지 중간 = PATH_MARK.
+    ⚠ 안장점이 처음/끝과 같은 이미지면(진단 홉이 그렇다) 실제 원소가 이긴다 —
+      없는 안장점을 색으로 만들어내지 않는다.
+    """
+    if not mark or k in (0, n - 1):
+        return el
+    return SADDLE_MARK if (sad is not None and k == sad) else PATH_MARK
 
 
 def center_on_path(cell, S, P, n_path):
@@ -213,14 +228,14 @@ def path_overlay(case, mark=True, center=True, verbose=True):
               f"{d[near].min():.2f}–{d[near].max():.2f} Å) — 격자 이완으로 보이지만, "
               f"문턱을 옮기면 그림이 바뀐다는 뜻이다")
 
+    sad = saddle_index(os.path.join(RAW, dat))
     sym0, pos0 = imgs[0]
     keep = [i for i in range(len(sym0)) if i not in set(mov)]
     S = [sym0[i] for i in keep]
     P = [pos0[i] for i in keep]
     for k, (sym, pos) in enumerate(imgs):          # 이동 원자의 7 위치
         for i in mov:
-            first_last = k in (0, len(imgs) - 1)
-            S.append(sym[i] if (first_last or not mark) else PATH_MARK)
+            S.append(_mark_for(sym[i], k, len(imgs), sad, mark))
             P.append(pos[i])
 
     Q = np.array(P, float)
@@ -272,9 +287,10 @@ def crop_local(case, radius=6.0, mark=True, center=True, verbose=True):
 
     S = [sym0[i] for i in keep]
     P = [list(pos0[i]) for i in keep]
+    sad = saddle_index(os.path.join(RAW, dat))
     for k, (sym, pos) in enumerate(imgs):
         for i in mov:
-            S.append(sym[i] if (k in (0, len(imgs) - 1) or not mark) else PATH_MARK)
+            S.append(_mark_for(sym[i], k, len(imgs), sad, mark))
             P.append(list(pos[i]))
 
     Q = np.array(P, float)
@@ -339,8 +355,10 @@ def selftest():
     chk(nmov == 1, "li2s 는 이동 원자가 1개다 (공공 매개 단일 홉, %d)" % nmov)
     chk(len(at) == 80 + 6,
         "겹침 파일 = 골격 79 + 이동원자 7위치 = 86 (%d)" % len(at))
-    chk(sum(1 for x in at.get_chemical_symbols() if x == PATH_MARK) == 5,
-        "⛔음성 중간 5장만 표지로 찍고 처음·끝은 **실제 원소**로 남긴다")
+    _s = at.get_chemical_symbols()
+    chk(_s.count(PATH_MARK) == 4 and _s.count(SADDLE_MARK) == 1,
+        "⛔음성 중간은 표지, **안장점은 따로**, 처음·끝은 실제 원소 (%d/%d)"
+        % (_s.count(PATH_MARK), _s.count(SADDLE_MARK)))
     _, nm2, at2 = path_overlay("li3nd_ccc", verbose=False)
     chk(nm2 == 1, "⛔음성 li3nd c→c 의 이동 원자는 **Li 하나**다 — Nd 는 0.95–1.04 Å "
                   "로 밀리는 격자 이완이지 이동이 아니다 (%d개)" % nm2)
@@ -354,8 +372,13 @@ def selftest():
     chk(len(c6) < 86, "국소 6 Å 가 전체(86)보다 작다 (%d)" % len(c6))
     chk(len(c4) < len(c6), "⛔음성 반경을 줄이면 더 작아진다 (4 Å %d < 6 Å %d)"
         % (len(c4), len(c6)))
-    chk(sum(1 for x in c4.get_chemical_symbols() if x == PATH_MARK) == 5,
-        "⛔음성 잘라도 경로 7점은 **전부** 남는다 (표지 5 + 양끝 2)")
+    _cs = c4.get_chemical_symbols()
+    chk(_cs.count(PATH_MARK) == 4 and _cs.count(SADDLE_MARK) == 1,
+        "⛔음성 잘라도 경로 7점이 다 남고 **안장점만 색이 다르다** "
+        "(중간 %d + 안장점 %d + 양끝 2)" % (_cs.count(PATH_MARK), _cs.count(SADDLE_MARK)))
+    _, _, _ccb = path_overlay("li3nd_ccb", verbose=False)
+    chk(SADDLE_MARK not in _ccb.get_chemical_symbols(),
+        "⛔음성 진단 홉은 안장점이 끝점과 같아 **안장점 표지를 만들지 않는다**")
 
     _, _nmv, a_off = path_overlay("li3nd_ccc", center=False, verbose=False)
     _, _, a_on = path_overlay("li3nd_ccc", center=True, verbose=False)
