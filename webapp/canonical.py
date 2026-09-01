@@ -366,6 +366,17 @@ def validate_artifacts(root=None) -> list:
     return bad
 
 
+def _dstate(d: dict):
+    """판례의 상태를 읽는다 — `decision_state` 가 정본, `status` 는 별칭.
+
+    ⛔ 왜 별칭까지 읽나 (2026-09-01): 승인 검사가 `decision_state` 만 보던 동안
+      원장에 `status` 만 든 기록이 있었고, 그 기록은 `status: active` 로 올려도
+      **어떤 검사에도 안 걸렸다**. 별칭을 같이 읽어 그 경로를 막는다.
+      (필드 부재·두 필드 불일치 자체도 validate_governance 가 위반으로 낸다.)
+    """
+    return d.get("decision_state", d.get("status"))
+
+
 def validate_governance(reg: dict = None, root=None) -> list:
     """판례·판정 원장의 무결성. 위반 문자열 리스트 (빈 리스트 = 통과).
 
@@ -380,6 +391,18 @@ def validate_governance(reg: dict = None, root=None) -> list:
 
     # ── 판례 그래프 ──────────────────────────────────────────────────────
     for d in dec.values():
+        # ⛔ 2026-09-01 fail-open 봉인 — 아래 승인 검사가 `decision_state` 만 보는데
+        #   원장에 `status` 만 든 기록이 2건 있었다(polaron Fbb·S0). 그 기록은
+        #   나중에 `status: active` 로 올려도 **어떤 검사에도 안 걸린다** —
+        #   즉 사람 승인 없이 active 가 되는 경로가 열려 있었다.
+        #   두 필드를 같이 읽고, 어긋나거나 둘 다 없으면 그 자체를 위반으로 낸다.
+        if "decision_state" not in d and "status" not in d:
+            bad.append(f"결정 {d['id']} 에 decision_state 가 없다 — 승인 검사가 통째로 "
+                       f"건너뛰어진다 (fail-open)")
+        elif ("decision_state" in d and "status" in d
+                and d["decision_state"] != d["status"]):
+            bad.append(f"결정 {d['id']} 의 decision_state({d['decision_state']!r}) 와 "
+                       f"status({d['status']!r}) 가 어긋난다 — 어느 쪽이 정본인지 알 수 없다")
         for ref in d.get("supersedes", []):
             if ref not in dec:
                 bad.append(f"결정 {d['id']} 의 supersedes 대상 {ref} 가 원장에 없다 (dangling)")
@@ -387,7 +410,7 @@ def validate_governance(reg: dict = None, root=None) -> list:
         if sb and sb not in dec:
             bad.append(f"결정 {d['id']} 의 superseded_by {sb} 가 원장에 없다 (dangling)")
         rat = d.get("ratification") or {}
-        if d.get("decision_state") == "active" and not (
+        if _dstate(d) == "active" and not (
                 rat.get("state") == "ratified" and rat.get("role") == "scientific_owner"):
             bad.append(f"결정 {d['id']} 이 사람(scientific_owner) 승인 없이 active 다")
         # ⭐ 승인은 **그 시점의 내용**에 묶인다. 승인 뒤 내용을 고치면 지문이 어긋난다.
@@ -408,7 +431,7 @@ def validate_governance(reg: dict = None, root=None) -> list:
     # slot 유일성 — 같은 slot 에 active 가 둘이면 어느 쪽이 이기는지 알 수 없다
     slots = {}
     for d in dec.values():
-        if d.get("decision_state") == "active":
+        if _dstate(d) == "active":
             slots.setdefault(d.get("slot"), []).append(d["id"])
     for slot, ids in slots.items():
         if len(ids) > 1:

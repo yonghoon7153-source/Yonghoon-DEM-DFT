@@ -182,6 +182,37 @@ def test_governance_graph_has_no_dangling_edges():
     assert corr and all(c["supersedes_assessment_id"] in book for c in corr)
 
 
+def test_ratification_gate_cannot_be_bypassed_by_field_name():
+    """⛔음성 — `status` 만 든 판례가 승인 없이 active 로 올라가면 잡히는가.
+
+    2026-09-01 실제 구멍: 승인 검사가 `decision_state` 만 읽는데 원장의 두 기록
+    (polaron Fbb·S0)은 `status` 만 갖고 있었다 → 그 둘은 `active` 로 올려도
+    **어떤 검사에도 안 걸렸다**(fail-open). 별칭을 같이 읽게 고친 뒤의 회귀시험.
+    """
+    real_dec, real_ass = C.decisions, C.assessments
+    real_reg, real_art = C.registry, C.artifacts
+    try:
+        C.assessments = lambda root=None: {}
+        C.registry = lambda root=None: {"entries": []}
+        C.artifacts = lambda root=None: {}
+
+        def _only(d):
+            C.decisions = lambda root=None: {d["id"]: d}
+            return [x for x in C.validate_governance() if d["id"] in x]
+
+        assert _only({"id": "D-x", "status": "active", "slot": "s1"}), \
+            "status 별칭으로 승인 게이트를 우회할 수 있다"
+        assert _only({"id": "D-y", "slot": "s2"}), "상태 필드가 없는데 통과한다"
+        assert _only({"id": "D-z", "decision_state": "proposed",
+                      "status": "active", "slot": "s3"}), "두 필드 불일치를 못 본다"
+        # 양성: 별칭만 써도 proposed 는 정상이어야 한다 (실제 원장의 2건이 이 꼴)
+        assert not _only({"id": "D-ok", "status": "proposed", "slot": "s4"}), \
+            "별칭을 쓴 정상 기록을 오탐한다"
+    finally:
+        C.decisions, C.assessments = real_dec, real_ass
+        C.registry, C.artifacts = real_reg, real_art
+
+
 def test_governance_page_renders_citation_hazards():
     """인용 위험 원장이 화면에 **전건** 오르는가 (2026-09-01 신설 절).
 
