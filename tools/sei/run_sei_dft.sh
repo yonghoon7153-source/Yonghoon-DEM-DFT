@@ -15,11 +15,22 @@ WORK=${WORK:-/data/work/runs/sei_dft}
 QE=${QE:-/data/apps/qe-7.4.1-gpu/bin/pw.x}
 DOSX=${DOSX:-/data/apps/qe-7.4.1-gpu/bin/dos.x}
 PROJ=${PROJ:-/data/apps/qe-7.4.1-gpu/bin/projwfc.x}
-H_MPI=/data/apps/nvhpc/Linux_x86_64/24.11/comm_libs/12.6/hpcx/hpcx-2.20/ompi
+# ⚠ 2026-09-01 — 이 블록은 **gabia 전용 경로가 하드코딩**돼 있어서 kgy 에서
+#   `mpirun: No such file or directory` 로 죽었다(실측). 더 나쁜 것은
+#   `LD_LIBRARY_PATH` 를 통째로 **덮어쓴다**는 점이다 — 다른 기계의 QE 가
+#   라이브러리를 못 찾는다. 그래서 **있을 때만** 붙이고, 환경으로 덮을 수 있게 한다.
+H_MPI=${H_MPI:-/data/apps/nvhpc/Linux_x86_64/24.11/comm_libs/12.6/hpcx/hpcx-2.20/ompi}
 MPIRUN=${MPIRUN:-$H_MPI/bin/mpirun}
-export PATH=$H_MPI/bin:$PATH OPAL_PREFIX=$H_MPI OMP_NUM_THREADS=1 CUDA_VISIBLE_DEVICES=0
+[ -x "$MPIRUN" ] || MPIRUN=$(command -v mpirun || echo "$MPIRUN")
+export OMP_NUM_THREADS=${OMP_NUM_THREADS:-1} CUDA_VISIBLE_DEVICES=${CUDA_VISIBLE_DEVICES:-0}
 export OMPI_ALLOW_RUN_AS_ROOT=1 OMPI_ALLOW_RUN_AS_ROOT_CONFIRM=1
-export LD_LIBRARY_PATH=$H_MPI/lib:/data/apps/nvhpc/Linux_x86_64/24.11/compilers/lib:/usr/local/cuda-12.6/lib64
+if [ -d "$H_MPI/bin" ]; then
+  export PATH=$H_MPI/bin:$PATH OPAL_PREFIX=$H_MPI
+fi
+for _d in "$H_MPI/lib" /data/apps/nvhpc/Linux_x86_64/24.11/compilers/lib \
+          /usr/local/cuda-12.6/lib64 ${SEI_LD_EXTRA:-}; do
+  [ -d "$_d" ] && export LD_LIBRARY_PATH="$_d:${LD_LIBRARY_PATH:-}"
+done
 ts(){ echo "[$(date +%H:%M:%S)] $*"; }
 
 LOCK=/tmp/sei_dft.lock; exec 9>"$LOCK"
