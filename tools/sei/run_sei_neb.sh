@@ -21,7 +21,10 @@
 set -uo pipefail; set +H
 REPO="$(cd "$(dirname "$0")/../.." && pwd)"
 WORK=${WORK:-/data/work/runs/sei_neb}
+# ⚠ 2026-09-01 — gabia 경로가 기본값이라 kgy 에서 매번 막혔다(실측 2회).
+#   기본값은 두되 **없으면 PATH 에서 찾는다**. 환경으로 준 값이 언제나 이긴다.
 NEB=${NEB:-/data/apps/qe-7.4.1-gpu/bin/neb.x}
+[ -x "$NEB" ] || NEB=$(command -v neb.x || echo "$NEB")
 # ⛔ 2026-08-28 — 이 블록이 여기에만 있어서, 새 스크립트(run_prereq_chain.sh)가 이걸
 #   빠뜨리고 `libgomp: TODO` 로 죽었다. 정본을 파일로 뽑고 둘이 같이 쓴다.
 # shellcheck disable=SC1090
@@ -251,6 +254,7 @@ TARGETS=("$@"); [ ${#TARGETS[@]} -eq 0 ] && TARGETS=("${ORDER[@]}")
 # EPSUF: 이어달리기용 디렉터리 접미사 (예: EPSUF=_r2 → ep_initial_r2). 기본은 없음.
 if [ "$MODE" = endpoints ]; then
   PW=${PW:-/data/apps/qe-7.4.1-gpu/bin/pw.x}
+  [ -x "$PW" ] || PW=$(command -v pw.x || echo "$PW")
   EPSUF=${EPSUF:-}
   [ -x "$PW" ] || { ts "⛔ pw.x 없음: $PW"; exit 1; }
   for t in "${TARGETS[@]}"; do
