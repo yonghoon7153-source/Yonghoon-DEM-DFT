@@ -61,6 +61,12 @@ TARGETS = {                       # tag → (구조 파일, 표시명)
     # 2026-08-11 — Xu 2026 의 "Li–Nd alloy 계면상" 주장을 우리가 직접 잰다.
     # ⚠ **금속**이라 전하 규약이 다르다 (아래 electronic_class 분기). 같은 Nd PP 게이트를 탄다.
     "li3nd":   ("db/structures/sei_li3nd_mp-976264.vasp", "Li3Nd"),
+    # 2026-09-01 (1저자 요청) — **순수 Li 금속**의 공공 이동. 음극 본체의 기준선이다.
+    #   ⚠ 금속이므로 **중성 공공 + 금속 smearing** 이고 jellium 을 쓰지 않는다
+    #     → 하전 결함의 1/L 이미지 항이 없어 유한크기에 훨씬 둔감하다.
+    #   ⚠ 게이트 통과 최소단위는 **관용셀 3×3×3 (54원자 · λ₁ 10.53 Å)** 이다
+    #     (primitive 3×3×3 은 9.12 Å 로 탈락 — 같은 "3×3×3" 이라도 기저가 다르면 갈린다).
+    "li_metal": ("db/structures/sei_li_metal_mp-135.vasp", "Li metal (bcc)"),
 }
 DFT_WORK = "/data/work/runs/sei_dft"      # run_sei_dft.sh 의 vc-relax 산출물 (이완본 출처)
 #: ⚠ Nd 계는 **frozen-4f PP** 로 따로 돌아서 이완본이 다른 뿌리에 있다

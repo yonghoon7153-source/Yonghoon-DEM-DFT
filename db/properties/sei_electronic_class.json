@@ -1,134 +1,143 @@
 {
-  "property": "sei_electronic_class",
-  "purpose": "상마다 **금속인가 절연체인가**를 한 곳에서 선언한다. NEB 전하 규약·갭 단계 실행 여부·회수기 차단 조건이 전부 이 값에서 갈린다. 도구마다 따로 판단하면 서로 어긋난다.",
-  "why": "우리 SEI 파이프라인은 **넓은 갭 절연체 전용**으로 설계돼 있다. Li₃Nd 같은 금속에 그대로 돌리면 (a) fixed-occ 갭 단계가 의미 없는 숫자를 내고 (b) tot_charge=−1 + jellium 이 물리적으로 틀리고 (c) 회수기가 옳은 계산을 '옛 규약'이라며 막는다. 2026-08-11 Li₃Nd 착수 결정으로 분기가 필요해졌다.",
-  "classes": {
-    "insulator": "갭이 열려 있다. Li 공공은 원자가띠에 정공을 만든다 → V_Li⁻ (tot_charge = −1) + jellium. 갭 단계 유효.",
-    "metal": "E_F 에 상태가 있다. 공공을 만들어도 전도전자가 스스로 가려준다 → **중성 공공 (tot_charge = 0)** + 금속용 smearing. ⛔ 갭 단계는 NOT_APPLICABLE — 숫자가 나와도 db 갭 표에 넣지 않는다.",
-    "undetermined": "우리 계산으로는 아직 판정할 수 없다. ⛔ **금속 선언이 아니다.** NEB·갭 **모두** 막는다 (갭은 --diagnose_undetermined 로만 진단 생성). DOS/PDOS 는 돈다."
+ "property": "sei_electronic_class",
+ "purpose": "상마다 **금속인가 절연체인가**를 한 곳에서 선언한다. NEB 전하 규약·갭 단계 실행 여부·회수기 차단 조건이 전부 이 값에서 갈린다. 도구마다 따로 판단하면 서로 어긋난다.",
+ "why": "우리 SEI 파이프라인은 **넓은 갭 절연체 전용**으로 설계돼 있다. Li₃Nd 같은 금속에 그대로 돌리면 (a) fixed-occ 갭 단계가 의미 없는 숫자를 내고 (b) tot_charge=−1 + jellium 이 물리적으로 틀리고 (c) 회수기가 옳은 계산을 '옛 규약'이라며 막는다. 2026-08-11 Li₃Nd 착수 결정으로 분기가 필요해졌다.",
+ "classes": {
+  "insulator": "갭이 열려 있다. Li 공공은 원자가띠에 정공을 만든다 → V_Li⁻ (tot_charge = −1) + jellium. 갭 단계 유효.",
+  "metal": "E_F 에 상태가 있다. 공공을 만들어도 전도전자가 스스로 가려준다 → **중성 공공 (tot_charge = 0)** + 금속용 smearing. ⛔ 갭 단계는 NOT_APPLICABLE — 숫자가 나와도 db 갭 표에 넣지 않는다.",
+  "undetermined": "우리 계산으로는 아직 판정할 수 없다. ⛔ **금속 선언이 아니다.** NEB·갭 **모두** 막는다 (갭은 --diagnose_undetermined 로만 진단 생성). DOS/PDOS 는 돈다."
+ },
+ "evidence_levels": {
+  "measured": "우리 fixed-occ nscf 고유값으로 갭이 실측됐다 (db/properties/sei_electronic.json).",
+  "declared": "문헌·조성 논거로 선언만 했다. **DOS/PDOS 로 E_F 상태를 확인하기 전에는 NEB 을 걸지 않는다.**",
+  "blocked": "방법 실패로 판정 불가."
+ },
+ "results": {
+  "li2o": {
+   "class": "insulator",
+   "evidence": "measured",
+   "gap_eV": 4.986,
+   "source": "sei_electronic.json:li2o_mp-1960"
   },
-  "evidence_levels": {
-    "measured": "우리 fixed-occ nscf 고유값으로 갭이 실측됐다 (db/properties/sei_electronic.json).",
-    "declared": "문헌·조성 논거로 선언만 했다. **DOS/PDOS 로 E_F 상태를 확인하기 전에는 NEB 을 걸지 않는다.**",
-    "blocked": "방법 실패로 판정 불가."
+  "li2s": {
+   "class": "insulator",
+   "evidence": "measured",
+   "gap_eV": 3.4379,
+   "source": "sei_electronic.json:li2s_mp-1153"
   },
-  "results": {
-    "li2o": {
-      "class": "insulator",
-      "evidence": "measured",
-      "gap_eV": 4.986,
-      "source": "sei_electronic.json:li2o_mp-1960"
-    },
-    "li2s": {
-      "class": "insulator",
-      "evidence": "measured",
-      "gap_eV": 3.4379,
-      "source": "sei_electronic.json:li2s_mp-1153"
-    },
-    "licl": {
-      "class": "insulator",
-      "evidence": "measured",
-      "gap_eV": 6.2603,
-      "source": "sei_electronic.json:licl_mp-22905"
-    },
-    "li3p": {
-      "class": "insulator",
-      "evidence": "measured",
-      "gap_eV": 0.7092,
-      "source": "sei_electronic.json:li3p_mp-736",
-      "note": "좁은 갭(0.709 eV)이지만 열려 있다 — 절연체 규약을 쓴다. SEI 6종 중 전자 절연이 가장 나쁜 상이다."
-    },
-    "li3po4g": {
-      "class": "insulator",
-      "evidence": "measured",
-      "gap_eV": 5.8211,
-      "source": "sei_electronic.json:li3po4g_mp-2878"
-    },
-    "lindo2": {
-      "class": "insulator",
-      "evidence": "measured",
-      "gap_eV": 3.698,
-      "basis": "LiNdO₂ 는 갭이 열린 산화물 — MP frozen-4f 참조값 기준 (db/properties/nd_gap_reference_mp.json).",
-      "history_2026_08_11": "이전 판정 undetermined/blocked — 4f-in-valence PP(z=14)로는 갭이 정의되지 않았다. Nd 4f 를 원자가에 둔 PP (z_valence=14) 로는 E_F 에 평평한 f 다중항이 얹혀 갭이 정의되지 않는다. 우리 실측 −0.0284 eV 는 **금속성이 아니라 방법의 실패**다 (E_F ±0.5 eV DOS 의 95–96% 가 Nd_f).",
-      "unblocked_by": "frozen-4f PP 확보: Nd.pbe-spdn-kjpaw_psl.1.0.0.UPF (z=11, sha256 18a3835e…35101) — PP_PIN 으로 파일명 고정 (tools/sei/build_*_inputs.py)",
-      "measured_2026_08_11": {
-        "gap_eV": 3.698,
-        "mp_reference_eV": 4.212,
-        "delta_pct": -12.2,
-        "source": "/data/work/runs/sei_dft_frozen4f (fixed-occ nscf · frozen-4f PP · zval 버그 수정판 nbnd)",
-        "note": "MP 대비 −12.2% — 코드/PP 계열 차이 범위. ⚠ Nd₂O₃(3.948)와 **순위가 MP 와 뒤집힌다**(MP: LiNdO₂ 4.212 > Nd₂O₃ 3.812) — 두 값 차 0.25 eV 는 교차코드 산포 안이라 판정엔 영향 없으나 인용 시 명시할 것."
-      }
-    },
-    "li3nd": {
-      "class": "metal",
-      "evidence": "measured",
-      "gap_eV": null,
-      "material_id": "mp-976264",
-      "spacegroup": "Fm-3m",
-      "e_above_hull_eV_per_atom": 0.197,
-      "theoretical": true,
-      "basis": "Li₃Nd 는 Li–희토류 금속간화합물이다 — 두 성분 모두 금속이고 전기음성도 차가 작아 이온 갭이 열릴 이유가 없다. Xu 2026 §2.6 이 주장하는 '전자 전도성 계면상' 이라는 것 자체가 금속이라는 주장이다.",
-      "blocker": "Nd frozen-4f PP (todo #27) — LiNdO₂ 와 **같은 PP 를 공유한다**. 하나 확보하면 둘 다 열린다.",
-      "cite_with": "⚠ 장벽을 단독으로 내면 우리 P2 판정(Li–Nd 안정 ordered 상 0개, hull +0.197 eV/atom · theoretical)과 모순돼 보인다. 반드시 '설령 동역학적으로 생겼다 치더라도' 조건절과 hull 거리를 같이 쓴다.",
-      "measured_2026_08_11": {
-        "N_EF_states_per_eV": 5.324,
-        "E_F_eV": 4.168,
-        "N_EF_pm0p5eV_avg": 4.374,
-        "source": "/data/work/runs/sei_dft_frozen4f/li3nd_mp-976264 (vc-relax → nscf → dos.x)",
-        "pseudo_Nd": "Nd.pbe-spdn-kjpaw_psl.1.0.0.UPF (z=11 · 4f-in-core · sha256 18a3835e…35101)",
-        "pdos_channels": "Li s/s/p ×3 · Nd s/s/p/p/d — **Nd_f 채널 부재는 방법의 정의**(4f core)",
-        "reading": "E_F 에 상태가 뚜렷하다(5.3 states/eV — 경계값이 아니다). **itinerant 상태(Li-s/Nd-spd)만으로 금속**이므로, 4f 를 더해도 이 방향의 결론은 뒤집히지 않는다. 반대로 '갭이 열렸다' 는 결론은 이 방법으로는 낼 수 없었을 것이다 — 그 비대칭이 이 판정을 안전하게 만든다.",
-        "remaining_robustness": "⚠ NEB 착수 전 확인 항목(Codex): degauss 0.02→0.01→0.005 Ry 사다리에서 N(E_F) 유지 · k 조밀화에서 유지. DOS 는 6·6·6 nosym + degauss 0.007 로 이미 조밀한 편이다."
-      },
-      "neb_gate": "열림 — metal·measured. 남은 선행: NEB 스택 재리뷰 확인 + degauss/k 사다리."
-    },
-    "nd2o3": {
-      "class": "insulator",
-      "evidence": "measured",
-      "gap_eV": 3.9479,
-      "method_id": "gap-fixedocc-frozen4f-v1",
-      "measured_2026_08_11": {
-        "vbm": 9.8839,
-        "cbm": 13.8318,
-        "gap_eV": 3.9479,
-        "source_dir": "/data/work/runs/sei_dft_frozen4f/nd2o3_mp-2763",
-        "pseudo_Nd": "Nd.pbe-spdn-kjpaw_psl.1.0.0.UPF (z=11, 4f-in-core, sha256 18a3835e…35101)",
-        "spin": "없음(불필요 — 4f 가 core)",
-        "hubbard_u": 0.0,
-        "wall_time": "체인 전체 ~3분 (스핀·U 부재의 실질 이점)",
-        "mp_check": "MP mp-2763(같은 구조 핀) 3.812 eV vs 우리 3.948 — +0.136 eV(3.6%), 합격"
-      },
-      "history_2026_08_11": "이전 판정 undetermined/blocked — 4f-in-valence PP(z=14)로는 갭이 정의되지 않았다. 같은 4f 문제 (실측 −6.46 eV 는 ↑/↓ 점유수 불일치까지 겹친 값이라 더 무의미하다).",
-      "unblocked_by": "frozen-4f PP 확보: Nd.pbe-spdn-kjpaw_psl.1.0.0.UPF (z=11, sha256 18a3835e…35101) — PP_PIN 으로 파일명 고정 (tools/sei/build_*_inputs.py)",
-      "measured_2026_08_11_robustness": "nbnd 21(여유 0밴드) → 35(여유 15밴드) 재실행에서 **동일값 3.948 eV** — 여유-0밴드 우려 해소, 값 확정."
-    },
-    "nd2s3": {
-      "class": "insulator",
-      "evidence": "measured",
-      "gap_eV": 0.77,
-      "basis": "Nd₂S₃ 는 좁은 갭 절연체 — MP frozen-4f 참조 0.760 eV (db/properties/nd_gap_reference_mp.json).",
-      "history_2026_08_11": "이전 판정 undetermined/blocked — 4f-in-valence PP(z=14)로는 갭이 정의되지 않았다. 같은 4f 문제 (실측 −0.0213 eV).",
-      "unblocked_by": "frozen-4f PP 확보: Nd.pbe-spdn-kjpaw_psl.1.0.0.UPF (z=11, sha256 18a3835e…35101) — PP_PIN 으로 파일명 고정 (tools/sei/build_*_inputs.py)",
-      "measured_2026_08_11": {
-        "gap_eV": 0.77,
-        "mp_reference_eV": 0.76,
-        "delta_pct": 1.3,
-        "source": "/data/work/runs/sei_dft_frozen4f (fixed-occ nscf · frozen-4f PP · zval 버그 수정판 nbnd)",
-        "note": "MP 대비 +1.3% — 좁은 갭(가장 어려운 시험)이 거의 정확히 재현됐다."
-      }
-    }
+  "licl": {
+   "class": "insulator",
+   "evidence": "measured",
+   "gap_eV": 6.2603,
+   "source": "sei_electronic.json:licl_mp-22905"
   },
-  "provenance": {
-    "created": "2026-08-11",
-    "reason": "Codex 착수전 검토 + Li₃Nd 우선 착수 결정 (저자 요청). kb/methodology/li3nd_metal_protocol_note_2026_08_11.md §5 의 코드 수정 목록 1번.",
-    "consumers": [
-      "tools/sei/electronic_class.py (로더)",
-      "tools/sei/build_neb_inputs.py (전하 규약·smearing 분기 · protocol_hash)",
-      "tools/sei/collect_neb.py (차단 조건 분기)",
-      "tools/sei/build_dft_inputs.py (갭 단계 실행 여부)",
-      "tools/sei/extract_gap.py (db 등재 여부)",
-      "tools/sei/collect_results.py (DOS/PDOS 에너지 영점 — gap=None 이면 E_F 기준)",
-      "tools/sei/run_sei_dft.sh (03 입력 부재 처리)"
-    ]
+  "li3p": {
+   "class": "insulator",
+   "evidence": "measured",
+   "gap_eV": 0.7092,
+   "source": "sei_electronic.json:li3p_mp-736",
+   "note": "좁은 갭(0.709 eV)이지만 열려 있다 — 절연체 규약을 쓴다. SEI 6종 중 전자 절연이 가장 나쁜 상이다."
+  },
+  "li3po4g": {
+   "class": "insulator",
+   "evidence": "measured",
+   "gap_eV": 5.8211,
+   "source": "sei_electronic.json:li3po4g_mp-2878"
+  },
+  "lindo2": {
+   "class": "insulator",
+   "evidence": "measured",
+   "gap_eV": 3.698,
+   "basis": "LiNdO₂ 는 갭이 열린 산화물 — MP frozen-4f 참조값 기준 (db/properties/nd_gap_reference_mp.json).",
+   "history_2026_08_11": "이전 판정 undetermined/blocked — 4f-in-valence PP(z=14)로는 갭이 정의되지 않았다. Nd 4f 를 원자가에 둔 PP (z_valence=14) 로는 E_F 에 평평한 f 다중항이 얹혀 갭이 정의되지 않는다. 우리 실측 −0.0284 eV 는 **금속성이 아니라 방법의 실패**다 (E_F ±0.5 eV DOS 의 95–96% 가 Nd_f).",
+   "unblocked_by": "frozen-4f PP 확보: Nd.pbe-spdn-kjpaw_psl.1.0.0.UPF (z=11, sha256 18a3835e…35101) — PP_PIN 으로 파일명 고정 (tools/sei/build_*_inputs.py)",
+   "measured_2026_08_11": {
+    "gap_eV": 3.698,
+    "mp_reference_eV": 4.212,
+    "delta_pct": -12.2,
+    "source": "/data/work/runs/sei_dft_frozen4f (fixed-occ nscf · frozen-4f PP · zval 버그 수정판 nbnd)",
+    "note": "MP 대비 −12.2% — 코드/PP 계열 차이 범위. ⚠ Nd₂O₃(3.948)와 **순위가 MP 와 뒤집힌다**(MP: LiNdO₂ 4.212 > Nd₂O₃ 3.812) — 두 값 차 0.25 eV 는 교차코드 산포 안이라 판정엔 영향 없으나 인용 시 명시할 것."
+   }
+  },
+  "li3nd": {
+   "class": "metal",
+   "evidence": "measured",
+   "gap_eV": null,
+   "material_id": "mp-976264",
+   "spacegroup": "Fm-3m",
+   "e_above_hull_eV_per_atom": 0.197,
+   "theoretical": true,
+   "basis": "Li₃Nd 는 Li–희토류 금속간화합물이다 — 두 성분 모두 금속이고 전기음성도 차가 작아 이온 갭이 열릴 이유가 없다. Xu 2026 §2.6 이 주장하는 '전자 전도성 계면상' 이라는 것 자체가 금속이라는 주장이다.",
+   "blocker": "Nd frozen-4f PP (todo #27) — LiNdO₂ 와 **같은 PP 를 공유한다**. 하나 확보하면 둘 다 열린다.",
+   "cite_with": "⚠ 장벽을 단독으로 내면 우리 P2 판정(Li–Nd 안정 ordered 상 0개, hull +0.197 eV/atom · theoretical)과 모순돼 보인다. 반드시 '설령 동역학적으로 생겼다 치더라도' 조건절과 hull 거리를 같이 쓴다.",
+   "measured_2026_08_11": {
+    "N_EF_states_per_eV": 5.324,
+    "E_F_eV": 4.168,
+    "N_EF_pm0p5eV_avg": 4.374,
+    "source": "/data/work/runs/sei_dft_frozen4f/li3nd_mp-976264 (vc-relax → nscf → dos.x)",
+    "pseudo_Nd": "Nd.pbe-spdn-kjpaw_psl.1.0.0.UPF (z=11 · 4f-in-core · sha256 18a3835e…35101)",
+    "pdos_channels": "Li s/s/p ×3 · Nd s/s/p/p/d — **Nd_f 채널 부재는 방법의 정의**(4f core)",
+    "reading": "E_F 에 상태가 뚜렷하다(5.3 states/eV — 경계값이 아니다). **itinerant 상태(Li-s/Nd-spd)만으로 금속**이므로, 4f 를 더해도 이 방향의 결론은 뒤집히지 않는다. 반대로 '갭이 열렸다' 는 결론은 이 방법으로는 낼 수 없었을 것이다 — 그 비대칭이 이 판정을 안전하게 만든다.",
+    "remaining_robustness": "⚠ NEB 착수 전 확인 항목(Codex): degauss 0.02→0.01→0.005 Ry 사다리에서 N(E_F) 유지 · k 조밀화에서 유지. DOS 는 6·6·6 nosym + degauss 0.007 로 이미 조밀한 편이다."
+   },
+   "neb_gate": "열림 — metal·measured. 남은 선행: NEB 스택 재리뷰 확인 + degauss/k 사다리."
+  },
+  "nd2o3": {
+   "class": "insulator",
+   "evidence": "measured",
+   "gap_eV": 3.9479,
+   "method_id": "gap-fixedocc-frozen4f-v1",
+   "measured_2026_08_11": {
+    "vbm": 9.8839,
+    "cbm": 13.8318,
+    "gap_eV": 3.9479,
+    "source_dir": "/data/work/runs/sei_dft_frozen4f/nd2o3_mp-2763",
+    "pseudo_Nd": "Nd.pbe-spdn-kjpaw_psl.1.0.0.UPF (z=11, 4f-in-core, sha256 18a3835e…35101)",
+    "spin": "없음(불필요 — 4f 가 core)",
+    "hubbard_u": 0.0,
+    "wall_time": "체인 전체 ~3분 (스핀·U 부재의 실질 이점)",
+    "mp_check": "MP mp-2763(같은 구조 핀) 3.812 eV vs 우리 3.948 — +0.136 eV(3.6%), 합격"
+   },
+   "history_2026_08_11": "이전 판정 undetermined/blocked — 4f-in-valence PP(z=14)로는 갭이 정의되지 않았다. 같은 4f 문제 (실측 −6.46 eV 는 ↑/↓ 점유수 불일치까지 겹친 값이라 더 무의미하다).",
+   "unblocked_by": "frozen-4f PP 확보: Nd.pbe-spdn-kjpaw_psl.1.0.0.UPF (z=11, sha256 18a3835e…35101) — PP_PIN 으로 파일명 고정 (tools/sei/build_*_inputs.py)",
+   "measured_2026_08_11_robustness": "nbnd 21(여유 0밴드) → 35(여유 15밴드) 재실행에서 **동일값 3.948 eV** — 여유-0밴드 우려 해소, 값 확정."
+  },
+  "nd2s3": {
+   "class": "insulator",
+   "evidence": "measured",
+   "gap_eV": 0.77,
+   "basis": "Nd₂S₃ 는 좁은 갭 절연체 — MP frozen-4f 참조 0.760 eV (db/properties/nd_gap_reference_mp.json).",
+   "history_2026_08_11": "이전 판정 undetermined/blocked — 4f-in-valence PP(z=14)로는 갭이 정의되지 않았다. 같은 4f 문제 (실측 −0.0213 eV).",
+   "unblocked_by": "frozen-4f PP 확보: Nd.pbe-spdn-kjpaw_psl.1.0.0.UPF (z=11, sha256 18a3835e…35101) — PP_PIN 으로 파일명 고정 (tools/sei/build_*_inputs.py)",
+   "measured_2026_08_11": {
+    "gap_eV": 0.77,
+    "mp_reference_eV": 0.76,
+    "delta_pct": 1.3,
+    "source": "/data/work/runs/sei_dft_frozen4f (fixed-occ nscf · frozen-4f PP · zval 버그 수정판 nbnd)",
+    "note": "MP 대비 +1.3% — 좁은 갭(가장 어려운 시험)이 거의 정확히 재현됐다."
+   }
+  },
+  "li_metal": {
+   "class": "metal",
+   "evidence": "declared",
+   "gap_eV": null,
+   "source": "원소 Li 금속(bcc, mp-135) — 조성 논거. ⚠ declared 이므로 NEB 전에 DOS/PDOS 로 E_F 상태를 확인해 measured 로 올린다 (레지스트리 자체 규칙).",
+   "why_metal": "알칼리 금속 단체. 공공을 만들어도 전도전자가 가려주므로 **중성 공공**(tot_charge 0) + 금속 smearing 을 쓰고 jellium 을 쓰지 않는다.",
+   "finite_size_note": "하전 결함의 1/L 이미지 항이 없어 절연체 상들보다 셀 크기에 훨씬 둔감하다. 게이트 통과 최소단위는 관용셀 3×3×3 (54원자 · λ₁ 10.53 Å).",
+   "registered": "2026-09-01 (1저자 요청 — 음극 본체 기준선)"
   }
+ },
+ "provenance": {
+  "created": "2026-08-11",
+  "reason": "Codex 착수전 검토 + Li₃Nd 우선 착수 결정 (저자 요청). kb/methodology/li3nd_metal_protocol_note_2026_08_11.md §5 의 코드 수정 목록 1번.",
+  "consumers": [
+   "tools/sei/electronic_class.py (로더)",
+   "tools/sei/build_neb_inputs.py (전하 규약·smearing 분기 · protocol_hash)",
+   "tools/sei/collect_neb.py (차단 조건 분기)",
+   "tools/sei/build_dft_inputs.py (갭 단계 실행 여부)",
+   "tools/sei/extract_gap.py (db 등재 여부)",
+   "tools/sei/collect_results.py (DOS/PDOS 에너지 영점 — gap=None 이면 E_F 기준)",
+   "tools/sei/run_sei_dft.sh (03 입력 부재 처리)"
+  ]
+ }
 }
