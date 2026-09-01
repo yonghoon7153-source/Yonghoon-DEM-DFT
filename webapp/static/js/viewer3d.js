@@ -2946,7 +2946,9 @@ function applyViewMode(state, mode) {
     const carbonPts = ((state.data && state.data.additive_points) || []).filter(p => p[3] === 2 || p[3] === 3 || p[3] === 5 || p[3] === 6);
     const BAND = 0.3;
     // 서브샘플 가중 보정 — additive_points는 phase별 서브샘플이라 raw count는 payload마다 밀도가
-    // 다름.  metrics.additive_counts(전체 seeded)로 w=total/shown을 곱해 "환산 접점수"를 만들면
+    // 다름.  metrics.additive_counts(전체 seeded)로 w=total/shown을 곱해 부표본을 보정한다.
+    // ⚠ 이 양을 "환산 접점수" 라고 부르면 안 된다 (철회, 원장 §18) — d ≥ r 하한이 없고
+    //   개체가 아니라 점을 세므로 접점 수가 아니다.  이름 = **AM 근접 탄소 점밀도**.
     // SBE↔DBE 케이스 간 수치·색 비교가 유효해짐 (uniform random subsample → unbiased estimate).
     const _PHN = { 2: 'VGCF', 3: 'SuperP', 5: 'SDCP', 6: 'SWCNT' };
     const _shown = { 2: 0, 3: 0, 5: 0, 6: 0 };   // ★6=SWCNT (σ_e 100 S/cm 도체) — 2026-07-27
@@ -2966,7 +2968,7 @@ function applyViewMode(state, mode) {
         const k = keyOf(p[0], p[1], p[2]);
         let a = hash.get(k); if (!a) { a = []; hash.set(k, a); } a.push(p);
       });
-      touch = new Map();                                     // particle-object → 환산 접점수
+      touch = new Map();                          // particle-object → AM 근접 탄소 점밀도 (⚠접점 아님)
       contactsOf = new Map();                                // particle-object → 닿은 카본 점들 (패치 overlay)
       ['AM_P', 'AM_S'].forEach(t => {
         const m = state.meshes[t]; if (!m) return;
@@ -3122,11 +3124,12 @@ function applyViewMode(state, mode) {
     const jstops = [0, 0.25, 0.5, 0.75, 1].map(v => '#' + jetColor(v).toString(16).padStart(6, '0'));
     const wireBar = touch
       ? `<div style="margin:5px 0 2px 0;height:10px;border-radius:3px;background:linear-gradient(90deg,${jstops.join(',')})"></div>
-         <div style="display:flex;justify-content:space-between;font-size:10px;color:#9ca3af"><span>약함 ${Math.round(lo5)}</span><span>환산 접점/AM</span><span>강함 ${Math.round(hi95)}</span></div>
-         <div style="margin-top:2px;color:#9ca3af;font-size:10.5px">중앙값 <b>${Math.round(medTouch).toLocaleString()}</b> 환산접점/AM · 도메인 캡=접점 28° 클러스터(패치×1)+✨glow 깊이누적 · ⚖ 팝업과 동일 문법(거긴 공동 스케일) · 감마톤=전류밀도와 동일</div>`
+         <div style="display:flex;justify-content:space-between;font-size:10px;color:#9ca3af"><span>약함 ${Math.round(lo5)}</span><span>AM 근접 탄소 점밀도 (임의단위)</span><span>강함 ${Math.round(hi95)}</span></div>
+         <div style="margin-top:2px;color:#f59e0b;font-size:10.5px">⚠ <b>접점 수가 아니다</b> — AM 중심에서 r+0.3&nbsp;µm 안의 <b>탄소 점</b>을 세고 부표본 가중을 곱한 값이다.  d&nbsp;≥&nbsp;r 하한이 없어 내부 점도 들어가고, 개체가 아니라 점을 세므로 점 목록을 복제하면 값이 2배가 된다.  <b>이 숫자를 인용하지 말 것</b> — 정량값은 <code>cbd_contacts_per_am.py</code> (전수·개체·외피).</div>
+         <div style="margin-top:2px;color:#9ca3af;font-size:10.5px">중앙값 <b>${Math.round(medTouch).toLocaleString()}</b> (임의단위) · 도메인 캡=28° 클러스터(패치×1)+✨glow 깊이누적 · ⚖ 팝업과 동일 문법(거긴 공동 스케일) · 감마톤=전류밀도와 동일</div>`
       : '';
     state.cbarSpec = touch ? { map: 'jet', gamma: 1.6,
-      title: 'Carbon wiring \u2014 weighted contacts per AM (p5\u2013p95)',
+      title: 'Conductive-additive density near AM, arb. units (p5\u2013p95) \u2014 NOT a contact count',
       left: '\uc57d\ud568 ' + Math.round(lo5), right: '\uac15\ud568 ' + Math.round(hi95) } : null;
     setLegend(state,
       `<b>전기 연결성 — 탄소 배선 강도</b>
@@ -5403,14 +5406,14 @@ function _wiringCounts(particles, addPts, addCounts, boxLx, boxLy) {
   const hits = new Array((particles || []).length);         // per-AM touching carbon pts (패치 렌더용)
   if (!carbon.length || !counts.length) return { counts, median: 0, hits };
   // 가중치는 반드시 ghost 복제 BEFORE 계산 — shown에 ghost가 들어가면 w=total/shown이 희석돼
-  // 환산 접점이 축소됨 (버그였음: 중앙값 348→290 하락의 원인).
+  // 점밀도가 축소됨 (버그였음: 중앙값 348→290 하락의 원인).
   const PHN = { 2: 'VGCF', 3: 'SuperP', 5: 'SDCP', 6: 'SWCNT' };
   const shown = { 2: 0, 3: 0, 5: 0, 6: 0 };   // ★6=SWCNT 포함 (미포함 시 shown[6] undefined → NaN)
   carbon.forEach(p => { shown[p[3]]++; });
   const w = {};
   [2, 3, 5, 6].forEach(ph => {
     const tot = Number((addCounts || {})[PHN[ph]] || 0);
-    w[ph] = (tot > 0 && shown[ph] > 0) ? tot / shown[ph] : 1;   // 서브샘플 가중 → 환산 접점
+    w[ph] = (tot > 0 && shown[ph] > 0) ? tot / shown[ph] : 1;   // 서브샘플 가중 (⚠접점 아님)
   });
   // PERIODIC (x,y) — RVE 경계 너머로 닿는 접점을 ghost 복제로 포함 (경계 입자의 배선이
   // 잘려 보이던 문제).  margin = max(r)+band 안에 드는 이미지 점만 복제 (z는 비주기).
@@ -5635,15 +5638,62 @@ function _captureHiRes(state, scale) {
   return url;
 }
 
+/* 캔버스 폭에 글줄을 맞춘다 — 글꼴을 줄이고, 그래도 안 맞으면 낱말 경계로 줄바꿈.
+ * ★★ 2026-08-31 — 왜 생겼나: 컬러바 제목을 정직한 이름으로 고치자마자 **PNG 에서 잘렸다**
+ *   (오른쪽 "— NOT a contact count" 가 통째로 사라졌다).  폭이 `470*S2` 로 고정인데 제목만
+ *   길어졌기 때문이다.  ⚠ 이 실패 방식이 나쁜 이유는 **조용하다**는 것이다 — 잘린 PNG 는
+ *   여전히 그럴듯해 보이고, 하필 잘려 나가는 부분이 **경고 문구**다.  라벨을 정직하게 쓸수록
+ *   길어지므로 사람 눈에 기대면 안 된다.  ⇒ 폭에 맞추는 것을 코드가 한다.
+ * `measure(text, px)` 를 주입받아 순수 함수로 둔다 (headless 검사 가능 — check_all 규율).
+ */
+export function fitTextLines(measure, text, maxW, basePx, minPx, maxLines) {
+  const t = String(text == null ? '' : text).trim();
+  if (!t) return { lines: [], px: basePx };
+  const lim = Math.max(1, maxLines || 2);
+  const wrapAt = (px) => {                       // 낱말 경계 greedy 줄바꿈
+    const words = t.split(/\s+/);
+    const out = [];
+    let cur = '';
+    for (const w of words) {
+      const cand = cur ? cur + ' ' + w : w;
+      if (cur && measure(cand, px) > maxW) { out.push(cur); cur = w; } else { cur = cand; }
+    }
+    if (cur) out.push(cur);
+    return out;
+  };
+  for (let px = basePx; px >= minPx; px -= 0.5) {
+    const ls = wrapAt(px);
+    //  한 낱말이 혼자서도 폭을 넘으면 그 px 는 실패다 (greedy 가 못 자른다).
+    if (ls.length <= lim && ls.every(l => measure(l, px) <= maxW)) return { lines: ls, px };
+  }
+  return { lines: wrapAt(minPx), px: minPx };    // 최후 — 줄이 늘어도 자르지는 않는다
+}
+
 function exportColorbarPNG(spec, fname) {
   const sp = spec || { map: 'jet', gamma: 1.6, title: '|J| (normalized)', left: '0', right: 'high' };
-  const S2 = 6, W2 = 470 * S2, H2 = (sp.sub ? 96 : 80) * S2;
+  const S2 = 6, W2 = 470 * S2;
+  //  레이아웃을 **먼저 재고** 그 다음에 캔버스 높이를 정한다 (캔버스 크기를 바꾸면 컨텍스트가
+  //  초기화되므로 그린 뒤에 늘릴 수 없다).
+  const mcv = document.createElement('canvas');
+  const mcx = mcv.getContext('2d');
+  const mkMeasure = (weight) => (txt, px) => {
+    mcx.font = `${weight}${px}px Arial`;
+    return mcx.measureText(txt).width;
+  };
+  const innerW = W2 - 20 * S2;
+  const tFit = fitTextLines(mkMeasure('600 '), sp.title, innerW, 13 * S2, 8.5 * S2, 2);
+  const sFit = sp.sub ? fitTextLines(mkMeasure(''), sp.sub, innerW, 9.5 * S2, 7 * S2, 2)
+                      : { lines: [], px: 9.5 * S2 };
+  const tLH = tFit.px * 1.18, sLH = sFit.px * 1.22;
+  const titleH = Math.max(1, tFit.lines.length) * tLH;
+  const H2 = Math.round(titleH + 8 * S2 + 25 * S2 + 20 * S2
+                        + (sFit.lines.length ? sFit.lines.length * sLH + 4 * S2 : 0));
   const cv = document.createElement('canvas'); cv.width = W2; cv.height = H2;
   const cx = cv.getContext('2d');
   cx.fillStyle = '#ffffff'; cx.fillRect(0, 0, W2, H2);
-  cx.fillStyle = '#111111'; cx.font = `600 ${13 * S2}px Arial`; cx.textAlign = 'left';
-  cx.fillText(sp.title, 10 * S2, 17 * S2);
-  const bx = 10 * S2, by = 25 * S2, bw = W2 - 20 * S2, bh = 25 * S2;
+  cx.fillStyle = '#111111'; cx.font = `600 ${tFit.px}px Arial`; cx.textAlign = 'left';
+  tFit.lines.forEach((ln, i) => cx.fillText(ln, 10 * S2, tFit.px + i * tLH));
+  const bx = 10 * S2, by = titleH + 8 * S2, bw = innerW, bh = 25 * S2;
   for (let i = 0; i < bw; i++) {
     const t = i / (bw - 1);
     const hx = sp.map === 'coolwarm' ? coolwarmColor(t) : jetColor(sp.gamma ? Math.pow(t, sp.gamma) : t);
@@ -5665,21 +5715,34 @@ function exportColorbarPNG(spec, fname) {
     if (sp.mid != null) { cx.textAlign = 'center'; cx.fillText(String(sp.mid), bx + bw / 2, by + bh + 15 * S2); }
     cx.textAlign = 'right'; cx.fillText(sp.right != null ? String(sp.right) : '', bx + bw, by + bh + 15 * S2);
   }
-  if (sp.sub) {
-    cx.fillStyle = '#444444'; cx.font = `${9.5 * S2}px Arial`; cx.textAlign = 'left';
-    cx.fillText(String(sp.sub), bx, by + bh + 28 * S2);
+  if (sFit.lines.length) {
+    cx.fillStyle = '#444444'; cx.font = `${sFit.px}px Arial`; cx.textAlign = 'left';
+    sFit.lines.forEach((ln, i) => cx.fillText(ln, bx, by + bh + 22 * S2 + sFit.px + i * sLH));
   }
   const a2 = document.createElement('a'); a2.href = cv.toDataURL('image/png');
   a2.download = fname || 'colorbar.png'; document.body.appendChild(a2); a2.click(); a2.remove();
 }
 
 /* focus 컬러바 수치 눈금: 0 → step 간격 (1/2/5/10/20 자동) → 상단 ×top ⟨J⟩ */
+/* 컬러바 눈금.  ★ 눈금 **개수**를 먼저 묶고 그로부터 간격을 정한다.
+   ⚠ 옛 판은 간격 사다리를 `top > 60 → 20` 에서 멈췄다.  focusing 이 10 급일 때를
+     가정한 코드인데 실제 전자 필드는 10³ 급이 나온다 — `top ≈ 1190` 이면 20 간격으로
+     **51개**를 한 바에 찍어 라벨이 통째로 뭉개졌다 (2026-09-02 실측, SI 그림 export).
+     그림은 조용히 망가진다: 값은 맞고 **읽을 수만 없다**. */
+const FOCUS_MAX_TICKS = 8;
 function _focusTicks(f) {
   const top = Number(f && f.focus_top);
-  if (!(top > 0)) return null;
-  const step = top > 60 ? 20 : top > 30 ? 10 : top > 12 ? 5 : top > 6 ? 2 : 1;
+  if (!(top > 0) || !isFinite(top)) return null;
+  const raw = top / FOCUS_MAX_TICKS;
+  const mag = Math.pow(10, Math.floor(Math.log10(raw)));
+  const n = raw / mag;
+  const step = (n <= 1 ? 1 : n <= 2 ? 2 : n <= 5 ? 5 : 10) * mag;
+  if (!(step > 0) || !isFinite(step)) return null;
+  const dec = Math.max(0, -Math.floor(Math.log10(step)));
   const t = [{ p: 0, label: '0' }];
-  for (let v = step; v < top * 0.86; v += step) t.push({ p: v / top, label: '×' + v });
+  for (let v = step; v < top * 0.86; v += step) {
+    t.push({ p: v / top, label: '×' + Number(v.toFixed(dec)) });
+  }
   t.push({ p: 1, label: '×' + Number(top.toPrecision(3)) + ' ⟨J⟩' });
   return t;
 }
@@ -6095,14 +6158,41 @@ export async function showLabCompareModal(pidA, pidB, nameA, nameB) {
   const wireB = _wiringCounts(B.particles, B.additive_points, mmB.additive_counts,
                               (B.box || {}).x_max || 0, (B.box || {}).y_max || 0);
   const gsh = (s, k, ph) => 100 * (((s || {})[k] || {})[ph] || 0);
+  //  ★★★ 2026-08-30 — **어느 팔을 보고 있는지 제목에 박는다.**
+  //    뷰어는 payload **하나**만 읽으므로 여기 σ 는 그 팔(single origin)의 값이다.
+  //    코호트 8팔 평균과 셋째 자리에서 갈리는데(예: 0.0545 vs 0.0540) 화면 값을 논문에
+  //    인용하면 표와 어긋난다.  ⇒ origin 을 보여 **팔 값임을 자명하게** 만든다.
+  //    ⚠ 8팔 평균을 여기 표시하지 않는다 — 로드한 파일에 없는 숫자를 그리는 것은
+  //      이 리포가 반복해서 맞은 실패 유형이다.  평균이 필요하면 코호트 요약을 따로 싣는다.
+  //  ⚠ 2026-08-30 (R15 J) — **fail-closed 로 고친다.**  초판은 ⓐ 결손을 조용히 숨기고
+  //    (둘 다 없으면 태그가 사라졌다) ⓑ 0 이 아닌 값을 **검증 없이 ½ 로** 찍었다.
+  //    ⇒ 결손은 `없음` 으로 **드러내고**, {0, vox/2} 가 아닌 값은 원값을 그대로 보인다.
+  const _armTag = (a, b) => {
+    const o = (s) => {
+      const m = (s || {}).manifest || {};
+      const v = m.origin_shift_um, vox = +m.vox_um;
+      if (!Array.isArray(v) || v.length !== 3) return '없음';
+      const half = (vox > 0) ? vox / 2 : null;
+      return '(' + v.map((x) => {
+        const n = +x;
+        if (n === 0) return '0';
+        if (half !== null && Math.abs(n - half) < 1e-9) return '½';
+        return String(x);                      // ⚠ 등록 밖 값 — 숨기지 않고 그대로 보인다
+      }).join(',') + ')';
+    };
+    const oa = o(a), ob = o(b);
+    const bad = (oa === '없음' || ob === '없음');
+    return '  ⟨팔 ' + oa + (ob !== oa ? ' / ' + ob : '')
+         + (bad ? ' · ⚠ origin 기록 없음' : '') + ' · 코호트 평균 아님⟩';
+  };
   // 운전(1C) 평균 전류밀도 = 면적용량[mAh/cm²]×1C = j_1C [mA/cm²] (payload field_scale_e.j_1C_mA_cm2).
   //   초표면(σ_eff/L) 평균 → 전류보존으로 전자·이온 동일값.  국소 피크는 ×focus(아래 집중 행).
   const jc1 = (s) => { const f = (s || {}).field_scale_e || {}; return (f.j_1C_mA_cm2 != null ? f.j_1C_mA_cm2 : f.areal_capacity_mAh_cm2); };
   // 축별 설명 카드 (hover) — 정의·유도식·논문 표현 팁 (분석 요약 문법)
   const rowsQ = [
-    ['σ_e_eff (S/cm)', sA.sigma_e_eff_S_cm, sB.sigma_e_eff_S_cm,
-     '유효 through-plane 전자전도도.\n복셀 Kirchhoff: ∇·(σ∇φ)=0, 플레이트 ΔV=1V, 측면 Neumann → σ_eff = I·L/(A·ΔV).\n전도상: AM + VGCF/SuperP + SDCP(250 S/cm 앵커).\n논문: "effective through-plane electronic conductivity".\n⚠ 여기 Δ% 는 **불러온 payload 의 침대·격자·스탬프 규약**에서 나온 값이다 — 헤드라인이 아니다.  옛 "+52 %" 는 vox 0.4 점-스탬프 산물로 2026-08-13 철회됐다 (claims.json CL-24).'],
-    ['σ_ion_eff (S/cm)', sA.sigma_ion_eff_S_cm, sB.sigma_ion_eff_S_cm,
+    ['σ_e_eff (S/cm)' + _armTag(sA, sB), sA.sigma_e_eff_S_cm, sB.sigma_e_eff_S_cm,
+     '유효 through-plane 전자전도도.\n복셀 Kirchhoff: ∇·(σ∇φ)=0, 플레이트 ΔV=1V, 측면 Neumann → σ_eff = I·L/(A·ΔV).\n전도상: AM + VGCF/SuperP + SDCP(250 S/cm 앵커).\n논문: "effective through-plane electronic conductivity".\n⚠ 여기 Δ% 는 **불러온 payload 의 침대·격자·스탬프 규약**에서 나온 값이다 — 헤드라인이 아니다.  옛 "+52 %" 는 vox 0.4 점-스탬프 산물로 2026-08-13 철회됐다 (claims.json CL-24).\n⚠⚠ **이 값은 불러온 payload 한 팔(single origin)의 값이다.**  origin factorial 코호트의 8팔 평균이 아니다 — 논문·표에는 **코호트 평균**을 쓴다 (원장 table_s3_data).  제목 옆 origin 태그로 어느 팔인지 확인할 것.'],
+    ['σ_ion_eff (S/cm)' + _armTag(sA, sB), sA.sigma_ion_eff_S_cm, sB.sigma_ion_eff_S_cm,
      '유효 through-plane 이온전도도 (같은 솔브, 전도상 = SE + SDCP).\nSE는 t⁺≈1 단일이온 전도체 → 정상상태 이온망은 순수 옴 저항망.\n논문: Bazzoun 2026 RNM/EIS 축과 직접 비교 가능 — "effective ionic conductivity".'],
     ['⟨J_e⟩ 평균 (A/cm²@1V)', (sA.field_scale_e || {}).j_mean_z_A_cm2_per_V, (sB.field_scale_e || {}).j_mean_z_A_cm2_per_V,
      '평균 관통 전류밀도 ⟨J_z⟩ = σ_eff·ΔV/L (옴 항등식 — σ 행과 Δ% 동일해야 정상 = 자기검산 행).\n⚠ @1V = 수송능 프로브(선형, 운전점 아님) — 1V 물리 ≠ 1C 물리.  실운전 전류는 아래 @1C 행.\n논문: "mean through-plane current density @1V bias".'],
@@ -6132,8 +6222,20 @@ export async function showLabCompareModal(pidA, pidB, nameA, nameB) {
      '집전체까지 전자 경로가 이어진 AM 비율 (percolation 판정).\n100% = 고립 AM 없음 — dead-AM 반론 차단 축 (두 전극 모두 완전 연결이라 이득이 "연결 회복"이 아님을 증명).'],
     ['carbon clusters', ecA.n_carbon_clusters, ecB.n_carbon_clusters,
      '전도상(carbon+SDCP) 연결 성분 수.\n×2.7 (3,175→8,643) = 랜덤 분산 SDCP가 만든 새 브리지 단위들 — §3-② 기하 증거.\n논문: "the number of conductive clusters increases 2.7-fold".'],
-    ['환산접점 중앙값 /AM', wireA.median, wireB.median,
-     '입자별 탄소 배선수 N_C의 중앙값 — AM 표면 0.3µm 밴드 내 전도성 탄소(서브샘플 가중 환산, PTFE 제외).\n+19% = §3-②의 "carbon contacts per AM rise by 19%" 그 숫자.\n메인-2(배선 지도)의 스칼라 요약 — Methods 정의문(N_C) 참조.'],
+    ['⚠ AM 근접 점유량 (접점 아님)', wireA.median, wireB.median,
+     '⛔⛔ **이것은 접점 수가 아니다.**  2026-08-30 (Codex R15 A) 로 그 해석이 철회됐다.\n'
+     + '실제로 세는 것: AM 중심에서 `d ≤ r+0.3µm` 안의 **가중 물질점 점유량** '
+     + '(weighted near-AM material-point occupancy).\n'
+     + '왜 접점이 아닌가 — ① `d ≥ r` **하한이 없어** AM 구 **안쪽 점까지 센다** '
+     + '② **개체가 아니라 점**을 센다 (굵은 섬유 하나가 점 여럿 = 여럿으로 셈) '
+     + '③ payload 는 상별 무작위 **120,000 점(약 6.3 %)** 만 담고 `total/shown` 으로 부풀린다 — '
+     + '중앙값은 비선형이라 그 가중에 불편성이 없다.\n'
+     + '★ 결정적 반례: 점 목록을 **좌표 그대로 2배 복제**하면 물리 접촉망은 그대로인데 '
+     + '값이 정확히 2배가 된다 (876.650 → 1043.926).  접점 수라면 불변이어야 한다.\n'
+     + '⛔ 이 값을 `contact` · `coordination number` 로 읽지 말 것.  원고 인용 금지.\n'
+     + '✅ 원고용 접점 값은 **전수 침대**를 읽는 `scripts/cbd_contacts_per_am.py` 가 낸다 '
+     + '(개체 단위 · AM 표면 **바깥** 껍질만): band 0.15 µm 에서 **74 → 86 (+16.2 %)**, '
+     + 'band 0.30 µm 에서 89 → 112 (+25.8 %).  원장 table_s3_data §18.'],
     ['pore-τ (구조·확산)', (sA.pore || {}).tau, (sB.pore || {}).tau,
      '공극상 유효확산 tortuosity (TauFactor 규약: void σ=1 Laplace → D_eff/D0, τ=ε/D_rel).\n치밀 전극(ε~7%)은 공극이 비관통이라 τ 정의 불가(—)가 정상 — 액체전해질 침투 불가 = 전고체 서사 강화 축.\n⚠ ASSB Li⁺ 수송은 SE 접촉망(σ_ion)이 담당 — 이 τ를 수송식에 대입 금지.'],
     ['첨가제→SE nn_med (µm)', ((mmA.additive_dispersion || {}).conductive_all || {}).nn_med_um,
@@ -6610,7 +6712,7 @@ export async function showLabCompareModal(pidA, pidB, nameA, nameB) {
     S.scene.add(grp); S.grp = grp;
   }
   function buildWiringDelta(S, payload, d, R, thr) {
-    // 입자별 Δ(A−B 환산접점) coolwarm 맵 — thr>0이면 |Δ|<thr 입자는 고스트(핫스팟 뷰).
+    // 입자별 Δ(A−B 탄소 점밀도, ⚠접점 아님) coolwarm 맵 — thr>0이면 |Δ|<thr 입자는 고스트.
     const parts = payload.particles || [];
     const grp = new THREE.Group();
     const mesh = createInstancedSpheres(parts, 16, 0xffffff, 1.0, false);
@@ -6670,12 +6772,39 @@ export async function showLabCompareModal(pidA, pidB, nameA, nameB) {
       const hi = joint.length ? Math.max(joint[Math.floor(0.95 * (joint.length - 1))], lo + 1) : 1;
       buildWiring(SA, A, wireA, lo, hi, patchF, glowOn);
       buildWiring(SB, B, wireB, lo, hi, patchF, glowOn);
-      const leg = (w) => `중앙값 <b>${Math.round(w.median)}</b> 환산접점/AM · 공동 스케일 ${Math.round(lo)}–${Math.round(hi)} (색 비교 유효 ★, 접촉 도메인=클러스터 융합 캡, periodic 이미지 접점 포함)`
-        + barHtml([`약함 ${Math.round(lo)}`, '환산 접점/AM', `강함 ${Math.round(hi)}`]);
+      const leg = (w) => `중앙값 <b>${Math.round(w.median)}</b> (임의단위) · 공동 스케일 ${Math.round(lo)}–${Math.round(hi)} · <b>패턴 비교용</b> (도메인=클러스터 융합 캡, periodic 이미지 포함)`
+        + `<div style="margin-top:2px;color:#f59e0b;font-size:10px">⚠ <b>접점 수가 아니다</b> — r+0.3&nbsp;µm 안의 탄소 <b>점</b> 개수 × 부표본 가중.  두 패널 차이에는 “탄소가 더 많다”와 “다르게 표본됐다”가 섞인다 (SDCP 는 DBE 에만 있다).  <b>숫자 인용 금지</b> — 정량은 <code>cbd_contacts_per_am.py</code>.</div>`
+        + barHtml([`약함 ${Math.round(lo)}`, 'AM 근접 탄소 점밀도 (임의단위)', `강함 ${Math.round(hi)}`]);
       $('cmp-leg-a').innerHTML = leg(wireA);
       $('cmp-leg-b').innerHTML = leg(wireB);
-      cbarSpec = { map: 'jet', gamma: 1.6, title: 'Carbon wiring — weighted contacts per AM (joint scale)',
-                   left: '약함 ' + Math.round(lo), right: '강함 ' + Math.round(hi) };
+      //  ★ 2026-08-31 — 이 컬러바는 **논문 그림에 그대로 들어간다** (PNG export).  옛 제목
+      //    'weighted contacts per AM' 은 철회된 해석이라(§18) 그림 안에서 살아남으면 안 된다:
+      //    평문·pptx 스윕은 PNG 속 글자를 못 읽으므로 여기가 유일한 방어선이다.
+      //  ★★ 2026-08-31 — 논문 export 용 눈금을 **SBE 중앙값으로 정규화**한다.
+      //    옛 판은 원시 점밀도(arb. units)를 찍었는데, 그 절대값은 표본 밀도에 딸린 값이라
+      //    뜻이 없고 독자가 본문의 접점 수(개체 단위)와 연결하려다 어긋난다.  1.0 = SBE
+      //    중앙값으로 두면 눈금이 **정량이면서** 접점 수와 자릿수가 달라 혼동이 없다.
+      //    ⚠ 기준은 `wireA.median` = **패널 A** 의 중앙값이다 (A 에 SBE 를 올리는 규약).
+      //    ⚠ 철자는 미국식 — 'centre' 가 그림에 그대로 찍혀 나가던 것을 고쳤다.
+      //    ⚠⚠ 'Carbon' 이 아니라 'Conductive-additive' 다 — 세는 상이 VGCF·SuperP·**SDCP**·
+      //      SWCNT 인데 SDCP 는 전도성 **고분자**이지 탄소가 아니다 (2026-08-31 사용자 지적).
+      //  ★ 기준은 **중앙값이 낮은 쪽 패널**이다 — 이 뷰어는 임의의 두 payload 를 비교하므로
+      //    'SBE' 같은 우리 원고 이름을 코드에 박으면 안 된다.  낮은 쪽을 1.0 으로 두면
+      //    기준이 결정론적이고(적재 순서에 안 딸림) 다른 쪽이 항상 1 위로 온다.
+      //    ⚠ 이름에서 ` arm<N>` 은 뗀다 — 내부 표기이지 그림에 나갈 이름이 아니다.
+      const _mA = (wireA && wireA.median > 0) ? wireA.median : 0;
+      const _mB = (wireB && wireB.median > 0) ? wireB.median : 0;
+      const _refIsA = !(_mB > 0 && _mA > 0 && _mB < _mA);
+      const _ref = (_refIsA ? _mA : _mB) || 1;
+      const _refNm = String((_refIsA ? nameA : nameB) || (_refIsA ? 'A' : 'B'))
+                       .replace(/\s*arm\s*\d+\s*$/i, '').trim() || (_refIsA ? 'A' : 'B');
+      //  ⚠ `sub` 를 일부러 넣지 않는다 — 정의(0.3 µm · center · 공동 스케일)는 **원고
+      //    캡션**이 들고 간다 (저자 결정 2026-08-31).  그림 안에 같은 문장을 또 두면
+      //    캡션과 어긋날 때 어느 쪽이 정본인지 갈리지 않는다.  `exportColorbarPNG` 는
+      //    `sp.sub ?` 로 가드돼 있어 없어도 안전하다.
+      cbarSpec = { map: 'jet', gamma: 1.6,
+                   title: `Conductive-additive density near AM (normalized to ${_refNm} median)`,
+                   left: (lo / _ref).toFixed(2), right: (hi / _ref).toFixed(2) };
     } else if (mode === 'wiring_delta') {
       // Δ 배선 — 같은 AM 골격(같은 케이스 파생) 두 payload의 입자별 접점 차이 (user: "차이 자체를 색칠")
       const partsA = A.particles || [], partsB = B.particles || [];
@@ -6701,7 +6830,7 @@ export async function showLabCompareModal(pidA, pidB, nameA, nameB) {
         const nUp = fin.filter(v => v > 0).length;
         buildWiringDelta(SA, A, d, R, 0);
         buildWiringDelta(SB, A, d, R, thr);                  // 같은 골격 → A 좌표로 렌더
-        $('cmp-leg-a').innerHTML = 'Δ = A−B 환산접점 전체맵 · 평균 ' + (mean >= 0 ? '+' : '') + mean.toFixed(1)
+        $('cmp-leg-a').innerHTML = 'Δ = A−B 탄소 점밀도(임의단위) 전체맵 ⚠접점 아님 · 평균 ' + (mean >= 0 ? '+' : '') + mean.toFixed(1)
           + ' · Δ>0 입자 ' + Math.round(100 * nUp / Math.max(fin.length, 1)) + '% · 범위 ±' + Math.round(R)
           + ' (빨강 = A쪽 배선 보강)';
         $('cmp-leg-b').innerHTML = '|Δ| 상위 20% 핫스팟만 (임계 ' + Math.round(thr) + ') — 보강/약화가 어디 몰렸나';
