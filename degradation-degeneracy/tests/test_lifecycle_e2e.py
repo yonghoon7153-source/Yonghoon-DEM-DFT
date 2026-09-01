@@ -155,10 +155,29 @@ def tree():
     (root / "docs" / "22p_gap").mkdir(parents=True, exist_ok=True)
     shutil.copy2(REPO / "docs" / "22p_gap" / "STAGE3_CONTRACT.md",
                  root / "docs" / "22p_gap" / "STAGE3_CONTRACT.md")
-    # 완방상태·반쪽셀 캐시는 재계산하면 몇 분이 더 든다 — 원본을 그대로 쓴다
-    if (REPO / ".cache").is_dir():
-        os.symlink(REPO / ".cache", root / ".cache")
+    # 완방상태·반쪽셀 캐시는 재계산하면 몇 분이 더 든다 — 원본을 가져다 쓴다.
+    #
+    # ★ 52차 P0-5 — 그런데 **그대로** 쓸 수는 없다. 이 tree 는 `configs/` 에
+    #   `_e2e49.yaml` 을 더하므로 `source_digest()` 가 저장소와 다르고, 승인이
+    #   가리키는 완방상태 바이트를 다른 코드가 만든 것이 된다. 51차까지는 그것을
+    #   조용히 "미스" 로 접어 재계산했고, 그것이 곧 승인 밖의 값을 만드는 셋째
+    #   길이었다 (리뷰어 반례). 이제는 hard error 다 — **옳은 동작이다.**
+    #
+    #   실제 운영자가 할 일은 그 tree 에서 준비 단계를 다시 도는 것이다
+    #   (`python -m src.baseline`). 여기서는 그것과 같은 결과를 싸게 만든다:
+    #   캐시를 복사하고 `source_digest` 를 이 tree 의 값으로 다시 적는다.
     (root / "configs" / "_e2e49.yaml").write_text(_TINY_CONFIG, encoding="utf-8")
+    if (REPO / ".cache").is_dir():
+        shutil.copytree(REPO / ".cache", root / ".cache", dirs_exist_ok=True)
+        here = _py(root, "import json,sys\n"
+                         "sys.path.insert(0, %r)\n"
+                         "from src.io import source_digest\n"
+                         "print(json.dumps({'sd': source_digest()}))\n"
+                   % str(root))["sd"]
+        for c in (root / ".cache" / "discharged_state").glob("*.json"):
+            d = json.loads(c.read_text(encoding="utf-8"))
+            d["source_digest"] = here
+            c.write_text(json.dumps(d, indent=2), encoding="utf-8")
     yield root
     shutil.rmtree(root, ignore_errors=True)
 
@@ -227,7 +246,11 @@ def test_grid_then_fit_then_finalize_completes_across_processes(tree):
 
     #   ②-b **틀린** 소유 증명 — 파일은 있는데 내용이 다르다
     forged = root / "forged.token"
-    forged.write_text("0" * 32 + "\n", encoding="utf-8")
+    # ★ 52차 P0-1 — 소유 증명 파일은 이제 leg·attempt 를 담는 record 다.
+    #   형식은 맞고 **비밀만 틀린** 파일이어야 verifier 검사에 도달한다.
+    forged.write_text(json.dumps(
+        {"leg_id": _LEG, "attempt_id": "0" * 32, "token": "0" * 32},
+        sort_keys=True) + "\n", encoding="utf-8")
     bad = _run(root, "--mode", "fit", "--leg", _LEG, "--in", _OUT_REL,
                "--attempt-file", str(forged),
                "--objective", "pocv", "--nproc", "2", expect_rc=1)

@@ -2597,3 +2597,65 @@ def test_run_fit_hands_the_body_the_staged_copies_not_the_originals(tmp_path,
             f"본체가 읽는 {n} 이 교체된 package B 다 — 검증한 바이트와 계산하는 "
             "바이트가 다르다")
     assert seen["cfg"] == "baseline: {pe_vf: 0.665}\n"
+
+
+def test_the_effective_smoothing_backend_is_inside_the_approval(tmp_path):
+    """★ 52차 P0-6 — 결과를 바꾸는 runtime backend 는 봉인 안이다.
+
+    리뷰어 반례: `DD_SMOOTH_CACHE` 가 실제 smoothing backend 를 바꾸고 그것이
+    목적함수 `J` 를 바꾼다. 그런데 fit 승인 축에도 `env_fingerprint()` 에도
+    없었다.
+
+        AXIS_SHA: 두 실행 동일     ENV_SHA: 두 실행 동일
+        DD_SMOOTH_CACHE=1 → J=0x1.ab7510443d0efp-4
+        DD_SMOOTH_CACHE=0 → J=0x1.ab7510443ec34p-4
+
+    이 `J` 는 결과 행에 기록된다. 환경변수 하나가 승인·서명 **양쪽** 밖에서
+    행을 옮기면, 그 행이 어느 실행의 산물인지 말할 근거가 없다.
+
+    `_SMOOTH_CACHE_ENABLED` 는 import 시점에 굳으므로 **별도 process** 로
+    확인한다 (리뷰어도 그렇게 했다). 같은 process 에서 환경변수만 바꾸는
+    시험은 이 축을 못 본다 — 그 자체가 실측이다.
+    """
+    import json
+    import os
+    import subprocess
+    import sys
+
+    probe = (
+        "import json, os, sys\n"
+        "sys.path.insert(0, %r)\n"
+        "from src.io import env_fingerprint\n"
+        "from src.objective import effective_smoothing_backend\n"
+        "from src.fitting import live_fit_axis\n"
+        "ax = live_fit_axis({'pocv': {'w_pocv': 1.0}}, {'objectives': {}},\n"
+        "                   {'lli': [0.0, 1.0]}, 'expanded', 3, True, None,\n"
+        "                   None, 'grid', True, True, 'Nelder-Mead', 'ocp',\n"
+        "                   None, %r, %r, base_config=%r)\n"
+        "print(json.dumps({'backend': effective_smoothing_backend(),\n"
+        "                  'axis': ax,\n"
+        "                  'env': env_fingerprint()}, sort_keys=True,"
+        " default=str))\n"
+    ) % (str(ROOT), str(tmp_path), str(tmp_path), str(tmp_path / "base.yaml"))
+    (tmp_path / "base.yaml").write_text("baseline: {pe_vf: 0.665}\n",
+                                        encoding="utf-8")
+
+    got = {}
+    for flag in ("1", "0"):
+        r = subprocess.run([sys.executable, "-c", probe], text=True,
+                           capture_output=True, cwd=str(ROOT),
+                           env=dict(os.environ, DD_SMOOTH_CACHE=flag,
+                                    PYTHONPATH=str(ROOT)))
+        assert r.returncode == 0, r.stderr[-2000:]
+        got[flag] = json.loads(r.stdout)
+
+    assert got["1"]["backend"] != got["0"]["backend"], (
+        "두 flag 가 같은 backend 를 보고한다 — 시험 전제가 깨졌다")
+    # 승인 축과 환경 지문을 **따로** 본다. OR 로 묶으면 한쪽을 지워도 다른
+    # 쪽이 가린다 (변이 시험에서 실측했다 — 그것이 곧 약한 시험이다).
+    assert got["1"]["axis"] != got["0"]["axis"], (
+        "smoothing backend 를 갈아도 **승인 축**이 그대로다 — 결과를 바꾸는 "
+        "축이 승인 밖에 있다")
+    assert got["1"]["env"] != got["0"]["env"], (
+        "smoothing backend 를 갈아도 **환경 지문**이 그대로다 — 결과를 바꾸는 "
+        "축이 실행 서명 밖에 있다")

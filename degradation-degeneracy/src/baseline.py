@@ -187,16 +187,28 @@ def get_discharged_state(
         _env_now = {k: _ef().get(k) for k in _ENV_KEYS}
         _env_old = {k: (data.get("env") or {}).get(k) for k in _ENV_KEYS}
         _eff_now = _eff(cfg)
+        # ★ 52차 P0-5 — **authoritative mode 에서는 미스로 접지 않는다.**
+        #   호출자가 승인한 바이트를 줬다면 그 바이트를 쓰거나 거부해야 한다.
+        #   "stale 이면 다시 계산한다" 는 캐시 정책으로는 옳지만, 승인이 그
+        #   바이트를 가리킬 때는 승인 밖의 값을 만드는 **셋째 길**이 된다
+        #   (리뷰어 실측: 승인 (1.0,2.0,3.0) · 소비 (101.0,202.0,303.0)).
+        _mismatch = None
         if _env_old != _env_now:
-            log.warning("완방상태 캐시가 다른 runtime 에서 계산됨 (%s ≠ %s) — "
-                        "미스로 취급해 재계산: %s", _env_old, _env_now, path)
+            _mismatch = ("runtime", _env_old, _env_now)
         elif data.get("effective_solver") != _eff_now:
-            log.warning("완방상태 캐시가 다른 solver backend 로 계산됨 (%s ≠ %s) — "
-                        "미스로 취급해 재계산: %s",
-                        data.get("effective_solver"), _eff_now, path)
+            _mismatch = ("solver backend", data.get("effective_solver"), _eff_now)
         elif data.get("source_digest") != _sd():
-            log.warning("완방상태 캐시가 다른 코드로 계산됨 (%s ≠ %s) — 미스로 "
-                        "취급해 재계산: %s", data.get("source_digest"), _sd(), path)
+            _mismatch = ("코드", data.get("source_digest"), _sd())
+        if _mismatch is not None and cache_bytes is not None:
+            raise RuntimeError(
+                f"승인한 완방상태 캐시가 이 실행과 다른 {_mismatch[0]} 로 "
+                f"계산됐습니다 ({_mismatch[1]} ≠ {_mismatch[2]}).\n"
+                f"  승인이 이 바이트를 가리키므로 재계산으로 넘어갈 수 없습니다 "
+                f"(52차 P0-5). 준비 단계를 다시 돌려 캐시를 만들고 계획의 "
+                f"`discharged_cache_sha256` 을 갱신하세요.")
+        if _mismatch is not None:
+            log.warning("완방상태 캐시가 다른 %s 로 계산됨 (%s ≠ %s) — 미스로 "
+                        "취급해 재계산: %s", *_mismatch, path)
         else:
             vals = {k: data.get(k) for k in ("ne_primary", "ne_secondary", "pe")}
             bad = [k for k, v in vals.items()
@@ -207,6 +219,12 @@ def get_discharged_state(
             log.info("완방상태 캐시 적중: %s", path)
             return DischargedState(**vals)
 
+    # ★ 52차 P0-5 — authoritative mode 는 여기까지 오면 안 된다. 위 분기가
+    #   모두 raise 하므로 도달 불가지만, 도달했다면 그것이 곧 결함이다.
+    if cache_bytes is not None:
+        raise RuntimeError(
+            "승인한 완방상태 바이트를 받고도 재계산 경로에 도달했습니다 — "
+            "승인과 소비가 갈렸습니다 (52차 P0-5)")
     state = compute_discharged_state(cfg)
 
     if use_cache:

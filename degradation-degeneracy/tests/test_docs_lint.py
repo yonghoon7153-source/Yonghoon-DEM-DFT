@@ -9718,37 +9718,118 @@ def test_a_semantic_no_op_mutation_is_refused(tmp_path):
 
 
 def test_a_coverage_artifact_that_did_not_run_is_refused(tmp_path):
-    """★ 51차 P1-E2 — coverage 파일이 **이 등록부·이 코드·이 실행**에 결속된다.
+    """★ 52차 P1-2 — checker 가 runner 의 **자기 신고**를 그대로 세지 않는다.
 
-    리뷰어 반례: coverage artifact 와 checker 는 HEAD·등록부·runner·EXPECT·실행
-    transcript 중 **아무 것에도** 묶여 있지 않다. 그래서 과거 JSON 만으로
-    99/99 가 나온다 (`replay_calls=0`).
+    51차 반례(리뷰어): artifact 의 `bit` 는 caller 가 준 값을 그대로 적은 것이고
+    checker 는 그 self-claim 을 다시 해시할 뿐이다.
 
-        RESULT: semantic no-op + zero replay is certified as full coverage
+        replay_calls=0   forged_executable_bits=108   check_coverage_rc=0
+        등록부 114 전체를 정확히 덮었다
 
-    증거 파일은 "무엇을 덮었다" 가 아니라 "**무엇이 실제로 돌았다**" 를 담아야
-    하고, checker 는 그 결속을 살아 있는 값과 대조해야 한다.
+    transcript digest 는 실행 영수증이 아니라 self-checksum 이었다. 증거는
+    "무엇을 했다고 말했는가" 가 아니라 **무엇이 남았는가** 여야 한다: 조각은
+    scenario 마다 실제 pytest report 를 남기고, checker 는 그 report 에서
+    판정을 **다시 유도한다.**
     """
     import json as _j
 
     mr = _mr()
     good = tmp_path / "s1.json"
-    mr._write_coverage(good, "", *mr._select("")[:2], mr._select("")[3],
-                       {n: True for n in mr._registry()})
+    items, multi, _executed, declared = mr._select("")
+    reg = mr._registry()
+    # 정상 조각이 남기는 것과 같은 모양의 영수증 (변이 후 기대 node 가 빨갛다)
+    receipts = {}
+    for n in reg:
+        fails = (mr.EXPECT.get(n) or {}).get("fail") or []
+        receipts[n] = {
+            "kexpr": "",
+            "before": _j.dumps({"tests": [
+                {"nodeid": f, "call": {"outcome": "passed"}} for f in fails]}
+            ).encode("utf-8"),
+            "after": _j.dumps({"tests": [
+                {"nodeid": f, "call": {"outcome": "failed"}} for f in fails]}
+            ).encode("utf-8")}
+    mr._write_coverage(good, "", items, multi, declared,
+                       {n: True for n in reg}, receipts)
     rec = _j.loads(good.read_text(encoding="utf-8"))
-    assert "binding" in rec, "coverage 파일이 아무 것에도 결속돼 있지 않다"
-    for key in ("registry_digest", "expect_digest", "runner_digest",
-                "head", "transcript_digest"):
-        assert key in rec["binding"], f"결속에 {key} 가 없다"
+    assert mr.check_coverage([str(good)]) == 0, "정상 조각이 거부됐다"
 
-    # 결속을 하나라도 흔들면 checker 가 거부해야 한다
-    for key in ("registry_digest", "expect_digest", "runner_digest"):
-        bad = tmp_path / f"bad_{key}.json"
-        forged = _j.loads(_j.dumps(rec))
-        forged["binding"][key] = "0" * 64
-        bad.write_text(_j.dumps(forged, ensure_ascii=False), encoding="utf-8")
-        assert mr.check_coverage([str(bad)]) == 1, (
-            f"{key} 가 살아 있는 값과 달라도 전수 인증이 통과했다")
+    # 조각이 실제 report 를 남겼는가 (남기지 않으면 셀 수 없다)
+    assert rec["binding"].get("reports_dir"), (
+        "조각이 실행 영수증(pytest report)을 안 남겼다 — 남은 것이 self-claim "
+        "뿐이면 그것은 증거가 아니다")
+
+    # 위조: report 없이 bit 만 세운 artifact 는 거부돼야 한다
+    forged = tmp_path / "forged.json"
+    body = _j.loads(_j.dumps(rec))
+    for v in body["scenarios"].values():
+        v["ran"], v["bit"] = True, True
+        v.pop("report_sha256", None)
+    body["binding"]["transcript_digest"] = mr._transcript_digest(
+        body["scenarios"])
+    forged.write_text(_j.dumps(body, ensure_ascii=False), encoding="utf-8")
+    assert mr.check_coverage([str(forged)]) == 1, (
+        "실행 영수증 없이 bit 만 세운 조각이 전수 인증을 통과했다")
+
+
+def test_coverage_receipts_are_verified_independently(tmp_path):
+    """★ 52차 P1-2 — 판정을 **영수증에서 다시 유도한다** (self-claim 이 아니라).
+
+    `verify_receipts()` 를 따로 겨눈다. `check_coverage()` 는 맨 앞에서
+    `check_preimages()` 를 부르므로, 이 파일 자신을 변이시키면 그 gate 가 먼저
+    걸려 어떤 변이든 "거부됐다" 로 보인다 — 물긴 하지만 **선언한 이유로 물지
+    않는다.** (실측했다: witness 가 "정상 조각이 거부됐다" 였다. 그런 증인은
+    증거가 아니다.)
+    """
+    import json as _j
+
+    mr = _mr()
+    good = tmp_path / "s1.json"
+    items, multi, _executed, declared = mr._select("")
+    reg = mr._registry()
+
+    def _receipts(bit_says: bool):
+        out = {}
+        for n in reg:
+            fails = (mr.EXPECT.get(n) or {}).get("fail") or []
+            out[n] = {"kexpr": "",
+                      "before": _j.dumps({"tests": [
+                          {"nodeid": f, "call": {"outcome": "passed"}}
+                          for f in fails]}).encode("utf-8"),
+                      "after": _j.dumps({"tests": [
+                          {"nodeid": f,
+                           "call": {"outcome": "failed" if bit_says else "passed"}}
+                          for f in fails]}).encode("utf-8")}
+        return out
+
+    mr._write_coverage(good, "", items, multi, declared,
+                       {n: True for n in reg}, _receipts(True))
+    rec = _j.loads(good.read_text(encoding="utf-8"))
+    assert mr.verify_receipts(str(good), rec["scenarios"], rec["binding"]) == 0
+
+    # ① 영수증이 없다
+    no_rep = _j.loads(_j.dumps(rec))
+    for v in no_rep["scenarios"].values():
+        v.pop("report_sha256", None)
+    assert mr.verify_receipts(str(good), no_rep["scenarios"],
+                              rec["binding"]) == 1, (
+        "실행 영수증 없이 bit 만 세운 조각이 통과했다")
+
+    # ② 영수증이 **안 물었다** 고 말하는데 적힌 판정은 '물었다'
+    lying = tmp_path / "lying.json"
+    mr._write_coverage(lying, "", items, multi, declared,
+                       {n: True for n in reg}, _receipts(False))
+    lrec = _j.loads(lying.read_text(encoding="utf-8"))
+    assert mr.verify_receipts(str(lying), lrec["scenarios"],
+                              lrec["binding"]) == 1, (
+        "영수증이 '안 물었다' 인데 적힌 판정이 '물었다' 인 조각이 통과했다 — "
+        "checker 가 영수증에서 판정을 다시 유도하지 않는다")
+
+    # ③ 영수증 바이트를 나중에 고쳤다
+    (tmp_path / "reports" / "s1" /
+     f"{sorted(reg)[0]}.after.json").write_text("{}", encoding="utf-8")
+    assert mr.verify_receipts(str(good), rec["scenarios"],
+                              rec["binding"]) == 1
 
 
 def test_the_contract_declares_the_same_leg_spec_schema_as_the_code():
@@ -9779,3 +9860,203 @@ def test_the_contract_declares_the_same_leg_spec_schema_as_the_code():
             f"계약 §13.4 의 {name} 가 집행 schema 와 다르다:\n"
             f"  계약에만 {sorted(cited - set(keys))}\n"
             f"  코드에만 {sorted(set(keys) - cited)}")
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# 52차 P0-7 · P0-8 — producer identity 가 실제 binding 과 raw source 를 놓친다
+# ─────────────────────────────────────────────────────────────────────────────
+
+def test_the_producer_closure_tracks_mutating_and_import_bindings():
+    """★ 52차 P0-7 — `AugAssign`·import·match capture 도 이름을 **묶는다**.
+
+    51차는 `_MODULE_NONBINDING` 에 `AugAssign` 과 import 를 넣었다. 둘 다
+    이름을 묶거나 바꾸는 문이다. 리뷰어가 셋을 실측했다:
+
+        digest_a == digest_b    result_a=2  result_b=10
+
+    이름 → **단일 node** 매핑이 애초에 부족했다. `TOL = 1` 다음에 `TOL += 9` 가
+    오면 값을 정하는 것은 두 문의 **순서**이고, 하나만 담으면 나머지가 identity
+    밖이다. 이름 → ordered binding 목록이어야 한다.
+    """
+    rp = _rp()
+    sc = (_REPO / "src" / "scoring.py").read_text(encoding="utf-8")
+    body = "def score_canonical(df):\n    return TOL\n"
+
+    # ① AugAssign — 뒤따르는 변형이 값을 바꾼다
+    a = _mini_producer(rp, body, extra="TOL = 1\nTOL += 9\n")
+    b = _mini_producer(rp, body, extra="TOL = 1\nTOL += 99\n")
+    assert rp._producer_semantic_over(a, sc) != rp._producer_semantic_over(b, sc), (
+        "module-level `TOL += …` 를 바꿨는데 producer digest 가 그대로다")
+
+    # ② import — 어느 이름을 들여오는가가 계산을 바꾼다
+    a = _mini_producer(rp, "def score_canonical(df):\n    return TOL(1.5)\n",
+                       extra="from math import floor as TOL\n")
+    b = _mini_producer(rp, "def score_canonical(df):\n    return TOL(1.5)\n",
+                       extra="from math import ceil as TOL\n")
+    assert rp._producer_semantic_over(a, sc) != rp._producer_semantic_over(b, sc), (
+        "module-level import 가 묶는 이름을 바꿨는데 digest 가 그대로다")
+
+
+def test_reading_the_producers_raw_source_is_fail_closed():
+    """★ 52차 P0-8 — 정규형이 버린 **raw source** 를 계산이 읽으면 거부한다.
+
+    리뷰어 반례: AST 정규형은 comment·서식을 버리지만 `inspect.getsource()` 는
+    그 바이트를 그대로 준다. 그래서 변이 runner 가 "semantic no-op" 이라 부른
+    주석 변경이 실제로는 계산 입력이 된다.
+
+        mutation_runner_calls_it_semantic_noop=True
+        digest_a == digest_b     result_a=1  result_b=2
+
+    51차에 docstring 으로 같은 교훈을 얻었다: **버리는 것을 읽으면 digest 는
+    거짓이다.** docstring 은 안 버리는 쪽으로 닫았지만 raw source 전체를
+    identity 에 넣을 수는 없다 (주석 한 줄이 cohort 를 새로 만든다). 그러면
+    남는 답은 하나 — 그것을 **관찰하는 능력**을 닫는 것이다.
+    """
+    rp = _rp()
+    sc = (_REPO / "src" / "scoring.py").read_text(encoding="utf-8")
+    for reader in ("inspect.getsource(score_canonical)",
+                   "_gs(score_canonical)",
+                   "inspect.getsourcelines(score_canonical)[0]"):
+        src = _mini_producer(
+            rp,
+            "def score_canonical(df):\n"
+            f"    return len({reader})\n",
+            extra="import inspect\nfrom inspect import getsource as _gs\n")
+        with pytest.raises(SystemExit) as ei:
+            rp._producer_semantic_over(src, sc)
+        assert "source" in str(ei.value) or "원본" in str(ei.value), str(ei.value)
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# 52차 P0-3 · P0-4 · P1-1 — 동결이 발급·게시와 같은 transaction 에 없다
+# ─────────────────────────────────────────────────────────────────────────────
+
+def test_a_frozen_directory_carries_its_own_seal(tmp_path):
+    """★ 52차 P0-4 — 얼린 것은 **그 디렉터리 자신**이 안다.
+
+    리뷰어 반례: bind mount 는 `Path.resolve()` 에도 다른 경로로 남지만 같은
+    inode tree 에 쓴다. frozen 실디렉터리를 active alias 에 bind 하고 원장 한
+    파일만 바꾸자 journal/head 를 안 건드리고 게시됐다.
+
+        writable_guard=PASSED   lifecycle_guard=PASSED
+        publication_returned_published=True
+        current_visible_at_frozen_real=True
+
+    pathname 은 대상 identity 가 아니다. 51차의 `dir` 봉인은 **이름**을 하나 더
+    본 것이었고, alias 는 이름을 또 만든다.
+
+    답은 marker 를 **대상 안에** 두는 것이다. 어느 이름으로 열든 같은 tree 를
+    열면 같은 marker 를 본다. (이 컨테이너에서는 mount 권한이 없어 bind 자체를
+    재현할 수 없다 — 대신 그 결과인 "원장·journal 이 모르는 이름으로 열린 frozen
+    tree" 를 만들어 guard 가 그래도 거부하는지 본다.)
+    """
+    import yaml
+
+    rp = _fresh_rp()
+    coh = "docs/22p_gap/coh"
+    rp.REPO = _ledger_repo(tmp_path, yaml.safe_dump({"cohorts": [{
+        "cohort_id": "gX", "dir": coh, "status": "active", "legs": ["a"],
+        "cross_leg_comparison": "not_applicable_single_leg",
+        "pin": dict(_DEFAULT_PIN)}]}, allow_unicode=True, sort_keys=False))
+    dest = rp.REPO / coh
+    dest.mkdir(parents=True, exist_ok=True)
+
+    rp.freeze_cohort("gX", "연구 종료")
+    assert (dest / rp.FROZEN_MARKER).is_file(), (
+        "얼린 디렉터리 안에 봉인 marker 가 없다 — 이름을 바꾸면 아무도 모른다")
+
+    # ── 공격: 원장·journal 이 **모르는 이름**으로 같은 tree 를 가리킨다 ──
+    led = rp.REPO / "docs" / "22p_gap" / "LEG_PRESERVATION.yaml"
+    doc = yaml.safe_load(led.read_text(encoding="utf-8"))
+    doc["cohorts"][0].update(cohort_id="gY", status="active")
+    doc["cohorts"][0].pop("frozen_reason", None)
+    led.write_text(yaml.safe_dump(doc, allow_unicode=True, sort_keys=False),
+                   encoding="utf-8")
+    # journal 의 dir 결속도 안 보이게 지운다 (alias 라면 애초에 안 걸린다)
+    rp.frozen_dirs_from_journal = lambda entries=None: {}
+
+    with pytest.raises(SystemExit) as ei:
+        rp._assert_writable(dest)
+    assert "frozen" in str(ei.value) or "얼" in str(ei.value), str(ei.value)
+
+
+def test_freeze_refuses_while_an_execution_holds_the_cohort(tmp_path):
+    """★ 52차 P0-3 — 발급과 동결이 **같은 transaction** 에 있다.
+
+    리뷰어 반례: 발급은 cohort status 를 lock 밖에서 보고, commit 은 계획
+    status 만 다시 본다. freeze 는 그 lock 을 아예 공유하지 않는다.
+
+        cohort status: frozen        plan status written by issuer: running
+        claim exists: True           stale handle phase_done: SUCCEEDED
+        fresh attach/release: frozen 이라 거부
+
+    즉 **얼린 cohort 안에서 실행이 계속되고**, 그 실행은 되돌릴 수도 닫을 수도
+    없다. 얼리기는 "더 자라지 않는다" 는 선언인데 자라고 있는 것을 두고 선언하면
+    선언이 아니다.
+    """
+    import yaml
+
+    rp = _fresh_rp()
+    coh = "docs/22p_gap/coh"
+    led = _ledger_repo(tmp_path, yaml.safe_dump({"cohorts": [{
+        "cohort_id": "gX", "dir": coh, "status": "active", "legs": ["a"],
+        "cross_leg_comparison": "not_applicable_single_leg",
+        "pin": dict(_DEFAULT_PIN)}]}, allow_unicode=True, sort_keys=False))
+    rp.REPO = led
+    (rp.REPO / coh).mkdir(parents=True, exist_ok=True)
+    claims = rp.REPO / "claims"
+    claims.mkdir()
+    (claims / "a.claim").write_text("{}", encoding="utf-8")
+
+    with pytest.raises(SystemExit) as ei:
+        rp.freeze_cohort("gX", "연구 종료", claims_root=claims)
+    assert "실행" in str(ei.value) or "claim" in str(ei.value), str(ei.value)
+
+
+def test_a_freeze_crash_between_journal_and_anchor_is_recoverable(tmp_path):
+    """★ 52차 P1-1 — journal 은 썼고 anchor 는 못 쓴 상태가 회수 가능해야 한다.
+
+    리뷰어 반례: journal replace 뒤 head replace 전에 죽으면 원장은 active,
+    journal 은 frozen, head 는 낡았다. `read_lifecycle()` 이 retry 분기 전에
+    멈춘다.
+
+        journal_exists=True   head_exists=False
+        ledger_status_after_crash=active
+        retry_result=BLOCKED: 끝 digest 가 anchor 와 다르다
+
+    fail-closed 는 옳지만 **나갈 길**이 있어야 한다. 정확히 한 줄만 더 보이는
+    partial commit 은 검증 가능하다 — 앞줄까지의 사슬이 anchor 와 맞고 마지막
+    줄의 `prev` 가 그 anchor 와 같으면, 그것은 위조가 아니라 미완의 append 다.
+    """
+    import yaml
+
+    rp = _fresh_rp()
+    coh = "docs/22p_gap/coh"
+    rp.REPO = _ledger_repo(tmp_path, yaml.safe_dump({"cohorts": [{
+        "cohort_id": "gZ", "dir": coh, "status": "active", "legs": ["a"],
+        "cross_leg_comparison": "not_applicable_single_leg",
+        "pin": dict(_DEFAULT_PIN)}]}, allow_unicode=True, sort_keys=False))
+    (rp.REPO / coh).mkdir(parents=True, exist_ok=True)
+    ledp = rp.REPO / "docs" / "22p_gap" / "LEG_PRESERVATION.yaml"
+
+    class _Boom(BaseException):
+        pass
+
+    real = rp._write_head_anchor
+    rp._write_head_anchor = lambda *a, **k: (_ for _ in ()).throw(_Boom("crash"))
+    try:
+        with pytest.raises(_Boom):
+            rp.freeze_cohort("gZ", "연구 종료")
+    finally:
+        rp._write_head_anchor = real
+
+    assert rp._lifecycle_path().is_file()
+    assert yaml.safe_load(ledp.read_text(encoding="utf-8"))[
+        "cohorts"][0]["status"] == "active"
+
+    # 같은 public API 로 다시 부르면 완주한다
+    rp.freeze_cohort("gZ", "연구 종료")
+    row = yaml.safe_load(ledp.read_text(encoding="utf-8"))["cohorts"][0]
+    assert row["status"] == "frozen"
+    assert len([r for r in rp.read_lifecycle() if r["cohort_id"] == "gZ"]) == 1, (
+        "복구가 전이를 두 번 적었다")

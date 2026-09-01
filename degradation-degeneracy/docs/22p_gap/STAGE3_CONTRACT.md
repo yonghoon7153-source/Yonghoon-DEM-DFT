@@ -65,9 +65,9 @@ for k in range(n_max):
 
 | # | 교란 | 근거 |
 |---|---|---|
-| 1 | `warm_start` 하나가 **원점과 조건 fitting 을 동시에** 바꾼다 | `src/fitting.py:1322` 가 조건 task 를 그대로 물려받는다. 404 half-cell `p_ini(34p)` `[1.509716,…] → [1.518503,…]` |
+| 1 | `warm_start` 하나가 **원점과 조건 fitting 을 동시에** 바꾼다 | `src/fitting.py:1334` 가 조건 task 를 그대로 물려받는다. 404 half-cell `p_ini(34p)` `[1.509716,…] → [1.518503,…]` |
 | 2 | `--n-restarts` 는 실행 횟수가 아니라 **예산 상한** | adaptive 조기 종료. 2회 종료 행 223 → 238 |
-| 3 | **noise 층을 바꾸면 restart 난수가 통째로 갈린다** | `cond_id = sha1(asdict(Condition))[:12]` 가 `noise`·`seed` 포함 (`src/grid.py:99`) → `task["seed"] = int(sha1(cond_id)[:8],16)` (`src/fitting.py:1277`) |
+| 3 | **noise 층을 바꾸면 restart 난수가 통째로 갈린다** | `cond_id = sha1(asdict(Condition))[:12]` 가 `noise`·`seed` 포함 (`src/grid.py:99`) → `task["seed"] = int(sha1(cond_id)[:8],16)` (`src/fitting.py:1289`) |
 | 4 | **warm 은 slot 을 교체한다** (§0) | 투영 `restart_sources` |
 | 5 | **예산을 바꾸면 warm 후보 자체가 바뀐다** | 연쇄 구조 (`src/fitting.py:392-406`) — 33p 예산 ↑ → 33p 해 변화 → 34p 가 받는 warm 좌표 변화. 22차 발견 2 |
 
@@ -1179,7 +1179,8 @@ LEG_SPEC_FIT_KEYS = ("config_digest", "objective_order", "objectives_digest",
                      "reference",
                      "halfcell_recipe", "halfcell_cache_sha256",
                      "base_config_digest", "bounds_preset", "bounds_digest",
-                     "optimizer", "use_noisy", "row_selection",
+                     "optimizer", "use_noisy", "smoothing_backend",
+                     "row_selection",
                      "in", "in_digest", "out")
 LEG_SPEC_SELECTION_KEYS = ("mode", "limit", "subset_sha256")
 ```
@@ -1198,6 +1199,7 @@ LEG_SPEC_SELECTION_KEYS = ("mode", "limit", "subset_sha256")
 | `base_config_digest` | 50차 P0 / 51차 P0-A2 | 재고 분배 상수가 승인 밖. 51차부터 leaf 가 아니라 `extends` **dependency closure 전체**의 내용 주소다 — 부모의 `pe_vf` 만 바꿔도 `reference_inventory()` 가 다른 재고를 준다 |
 | `row_selection.subset_sha256` | 50차 P0 | 개수·모드만으로는 **다른 표본**이 같은 승인으로 접힌다 |
 | `objectives_digest` | 51차 P0-A1 | 축이 목적함수의 **이름과 순서만** 담는다. `_fit_one()` 이 소비하는 것은 `{이름: 가중치}` payload 이므로, 같은 이름 아래 다른 가중치가 같은 승인으로 다른 J 를 낸다 |
+| `smoothing_backend` | 52차 P0-6 | `DD_SMOOTH_CACHE` 가 실제 smoothing backend 를 바꾸고 그것이 목적함수 `J` 를 bit 단위로 바꾼다. 그 `J` 는 결과 행에 기록되는데 승인에도 `env_fingerprint()` 에도 없었다. "동등성 검증용" 이라는 **의도**는 축이 아니다 — 무엇이 실제로 돌았는가가 축이다 |
 | `discharged_cache_sha256` | 51차 P0-A4 | 완방상태는 격자 전체 truth 의 기준점인데 그것을 담은 캐시가 승인 밖이다. reader 의 baseline/solver/runtime 검사를 **전부 통과하는** 두 캐시가 같은 승인으로 다른 곡선을 만든다. `null` 은 "캐시를 안 읽고 이 실행이 계산한다" 이고 그때 본체는 캐시 읽기가 금지된다 |
 
 ★ 49차 P0-5 — fit 축은 48차에 `{config_digest, objectives, out}` 셋뿐이었다.

@@ -35,6 +35,9 @@ RP = ROOT / "docs" / "22p_gap" / "row_projection.py"
 TDL = ROOT / "tests" / "test_docs_lint.py"
 GRID = ROOT / "src" / "grid.py"
 FITTING = ROOT / "src" / "fitting.py"
+BASELINE = ROOT / "src" / "baseline.py"
+IO = ROOT / "src" / "io.py"
+MR = ROOT / "docs" / "22p_gap" / "mutation_replay.py"
 
 #: ★ 46차 #9 조건 9 — 변이는 **작업 트리에 손대지 않는다.** 45차 runner 는
 #:   실제 저장소 파일을 고쳤다가 `finally` 로 되돌렸다. 그러면 (a) 중단되면
@@ -420,7 +423,8 @@ MUTANTS = [
      '                     "reference",\n'
      '                     "halfcell_recipe", "halfcell_cache_sha256",\n'
      '                     "base_config_digest", "bounds_preset", "bounds_digest",\n'
-     '                     "optimizer", "use_noisy", "row_selection",\n'
+     '                     "optimizer", "use_noisy", "smoothing_backend",\n'
+     '                     "row_selection",\n'
      '                     "in", "in_digest", "out")',
      'LEG_SPEC_FIT_KEYS = ("config_digest", "objective_order", "out")',
      "fit_axis_seals_every_intent_that_changes_the_answer"),
@@ -435,9 +439,10 @@ MUTANTS = [
      "    if False:",
      "fit_refuses_when_its_grid_phase_is_missing"),
     ("release-returns-the-plan", PRESERVE,
-     "    claim = resume_claim(leg_id, claims_root, token=token, ledger=ledger)\n"
-     "    _abandon_claim(claim, ledger=ledger)",
-     "    claim = resume_claim(leg_id, claims_root, token=token, ledger=ledger)",
+     "    _abandon_claim(claim, ledger=ledger,\n"
+     "                   token_file=token_file if token_file is not None else None,\n"
+     "                   token=token)",
+     "    pass",
      "released_run_returns_the_plan_to_planned"),
     ("dry-run-releases-the-claim", GRID,
      "        if _claim is not None:\n"
@@ -475,7 +480,8 @@ MUTANTS = [
      "                    raise SystemExit(",
      "unresolved_producer_module_reference_is_fail_closed"),
     ("closure-refuses-dynamic-resolution", RP,
-     "        _assert_no_dynamic_resolution(node, key, mods)",
+     "        for node in nodes:\n"
+     "            _assert_no_dynamic_resolution(node, key, mods, reflect)",
      "        pass",
      "dynamic_name_resolution_inside_the_closure_is_fail_closed"),
     ("interpreter-set-is-pinned", RP,
@@ -497,18 +503,10 @@ MUTANTS = [
      "released_run_cannot_be_resurrected_by_a_late_phase"),
     ("token-is-written-before-the-claim", PRESERVE,
      "        token = _new_token()\n"
-     "        write_token_file(token_file, token)\n"
-     "        try:\n"
-     "            return claim_planned_leg(leg_id, run_spec, source_digest,\n"
-     "                                     ledger=ledger, claims_root=claims_root,\n"
-     "                                     token=token)",
+     "        attempt_hint = uuid.uuid4().hex\n"
+     "        write_token_file(token_file, token, leg_id, attempt_hint)",
      "        token = _new_token()\n"
-     "        try:\n"
-     "            claim = claim_planned_leg(leg_id, run_spec, source_digest,\n"
-     "                                      ledger=ledger, claims_root=claims_root,\n"
-     "                                      token=token)\n"
-     "            write_token_file(token_file, token)\n"
-     "            return claim",
+     "        attempt_hint = uuid.uuid4().hex",
      "crash_between_the_claim_and_the_token_leaves_nothing_stranded"),
     ("fit-axis-seals-the-input-content", PRESERVE,
      '                     "halfcell_recipe", "halfcell_cache_sha256",\n'
@@ -531,12 +529,16 @@ MUTANTS = [
      "            raise SystemExit(",
      "deleting_the_journal_does_not_erase_the_freeze"),
     ("module-defs-see-tuple-targets", RP,
+     "            if isinstance(node, ast.Assign):\n"
+     "                # ★ 50차 P0 — `A, B = 1, 2` · `(D,) = (4,)` · `[E, *F] = …` 도\n"
+     "                #   module 정의다. 49차는 `ast.Name` target 만 담았다.\n"
      "                for t in node.targets:\n"
      "                    for name in _target_names(t):\n"
-     "                        defs[name] = top or node",
+     "                        _bind(name, top or node)",
+     "            if isinstance(node, ast.Assign):\n"
      "                for t in node.targets:\n"
      "                    if isinstance(t, ast.Name):\n"
-     "                        defs[t.id] = top or node",
+     "                        _bind(t.id, top or node)",
      "producer_closure_sees_tuple_targets or "
      "producer_closure_follows_a_tuple_defined_constant"),
     # ★ 51차 P0-I — 복합문 안으로 들어가지 않으면 `for X in ...` 이 묶은
@@ -622,11 +624,11 @@ MUTANTS = [
      "        pass",
      "crash_inside_release_leaves_a_recoverable_state"),
     # ★ P0-L3 — `os.replace` 뒤의 오류를 미커밋으로 보면 claim/token 을 지운다.
-    ("rollback-rereads-the-committed-state", PRESERVE,
-     "        if _plan_status(leg_id, ledger=ledger) != \"running\":\n"
-     "            path.unlink(missing_ok=True)",
-     "        path.unlink(missing_ok=True)",
-     "durability_error_after_the_ledger_commit_keeps_the_claim"),
+    ("rollback-only-on-certain-non-commit", PRESERVE,
+     "    except PlanWriteUncertain:",
+     "    except _NeverRaised:",
+     "durability_error_after_the_ledger_commit_keeps_the_claim or "
+     "uncertain_ledger_write_never_discards_the_claim"),
     # ★ P0-A1 — 목적함수 payload 가 승인 밖이면 같은 이름으로 다른 J 를 낸다.
     ("fit-axis-seals-the-objective-payload", FITTING,
      '        "objectives_digest": _dg({str(k): objectives[k]\n'
@@ -674,7 +676,78 @@ MUTANTS = [
      "    if recorded == \"frozen\":\n"
      "        if False:",
      "freeze_is_retryable_after_a_crash_between_its_two_writes"),
-        ("canon-absorbs-the-pep701-empty-piece", RP,
+        # ─────────────────────────────────────────────────────────────────────
+    # 52차 방어
+    # ─────────────────────────────────────────────────────────────────────
+    # ★ P0-1 — 비교와 삭제가 같은 임계 구역에 없으면 술어가 낡는다.
+    ("token-cleanup-is-inside-the-claim-lock", PRESERVE,
+     "        if token_file is not None and token is not None:\n"
+     "            _unlink_token_generation(token_file, token)",
+     "        pass",
+     "token_cleanup_happens_under_the_claim_lock"),
+    # ★ P0-1 — 소유 증명 파일이 어느 다리의 것인지 모르면 남의 것을 덮는다.
+    ("token-file-is-bound-to-its-leg", PRESERVE,
+     "        _assert_token_file_free_for(token_file, leg_id, claims_root)",
+     "        pass",
+     "two_legs_cannot_share_one_attempt_file"),
+    ("token-read-checks-the-leg", PRESERVE,
+     "    if leg_id is not None and rec[\"leg_id\"] and rec[\"leg_id\"] != str(leg_id):",
+     "    if False:",
+     "an_attempt_file_from_another_leg_is_refused"),
+    # ★ P0-7 — `AugAssign`·import 도 이름을 묶는다.
+    ("module-defs-track-mutating-bindings", RP,
+     "            elif isinstance(node, (ast.AnnAssign, ast.AugAssign)):",
+     "            elif isinstance(node, ast.AnnAssign):",
+     "producer_closure_tracks_mutating_and_import_bindings"),
+    ("module-defs-track-import-bindings", RP,
+     "            elif isinstance(node, (ast.Import, ast.ImportFrom)):\n"
+     "                # ★ 52차 P0-7 — import 도 이름을 묶는다. `from math import\n"
+     "                #   floor as TOL` 을 `ceil` 로 바꾸면 계산이 바뀐다.\n"
+     "                #   (`_crossed_*` 는 producer 모듈 **사이**를 따라가는 별개\n"
+     "                #   질문이고, 여기는 \"이 이름이 무엇에 묶였나\" 다.)\n"
+     "                for al in node.names:\n"
+     "                    _bind(al.asname or al.name.split(\".\")[0], top or node)",
+     "            elif isinstance(node, (ast.Import, ast.ImportFrom)):\n"
+     "                continue",
+     "producer_closure_tracks_mutating_and_import_bindings"),
+    # ★ P0-8 — 정규형이 버리는 raw source 를 계산이 읽으면 digest 가 거짓이다.
+    ("closure-refuses-source-reflection", RP,
+     "        if isinstance(sub, ast.Name) and sub.id in banned:",
+     "        if False:",
+     "reading_the_producers_raw_source_is_fail_closed"),
+    # ★ P0-4 — 봉인이 대상 **안**에 없으면 이름을 하나 더 만들어 빠져나간다.
+    ("frozen-target-carries-its-own-seal", RP,
+     "    here = read_frozen_marker(dest)\n"
+     "    if here is not None:",
+     "    here = None\n"
+     "    if here is not None:",
+     "frozen_directory_carries_its_own_seal"),
+    # ★ P0-3 — 얼리기와 발급이 같은 transaction 에 없으면 얼린 안에서 자란다.
+    ("freeze-refuses-a-live-execution", RP,
+     "    live = _live_claims_for(cohort_id, claims_root)\n"
+     "    if live:",
+     "    live = []\n"
+     "    if live:",
+     "freeze_refuses_while_an_execution_holds_the_cohort"),
+    # ★ P1-1 — 한 줄 앞선 partial commit 은 위조가 아니라 미완의 append 다.
+    ("lifecycle-completes-a-partial-append", RP,
+     "        if len(out) >= 1 and out[-1][\"prev\"] == head:\n"
+     "            _write_head_anchor(prev)\n"
+     "            return out",
+     "        pass",
+     "freeze_crash_between_journal_and_anchor_is_recoverable"),
+    # ★ P1-2 — checker 가 runner 의 self-claim 을 그대로 세면 증거가 아니다.
+    # ★ P0-6 — 승인 축과 환경 지문 **양쪽**이 담는다. 시험은 둘을 따로 본다
+    #   (OR 로 묶으면 한쪽을 지워도 다른 쪽이 가린다 — 실측했다).
+    ("fit-axis-seals-the-smoothing-backend", FITTING,
+     '        "smoothing_backend": _effective_smoothing_backend(),',
+     '        "smoothing_backend": "fixed",',
+     "effective_smoothing_backend_is_inside_the_approval"),
+    ("env-fingerprint-seals-the-smoothing-backend", IO,
+     '        out["smoothing_backend"] = effective_smoothing_backend()',
+     '        out["smoothing_backend"] = "fixed"',
+     "effective_smoothing_backend_is_inside_the_approval"),
+    ("canon-absorbs-the-pep701-empty-piece", RP,
      "            if isinstance(node, ast.JoinedStr) and f == \"values\" \\\n"
      "                    and isinstance(v, list):\n"
      "                v = [x for x in v\n"
@@ -725,6 +798,33 @@ MULTI = [
          "        out.setdefault(cid, (REPO / d).resolve())",
          "    pass"),
      ], "publisher_refuses_a_thawed_cohort_before_the_first_write"),
+    # ★ 52차 P0-5 — 두 자리가 함께 막는다: 불일치 즉시 거부 · 재계산 경로 도달
+    #   자체를 거부. 하나만 지우면 다른 쪽이 여전히 raise 하므로 단일 변이는
+    #   안 문다 (심층 방어의 정상 신호).
+    ("approved-cache-bytes-are-authoritative", BASELINE, [
+        ("        if _mismatch is not None and cache_bytes is not None:",
+         "        if False:"),
+        ("    if cache_bytes is not None:\n"
+         "        raise RuntimeError(\n"
+         "            \"승인한 완방상태 바이트를 받고도 재계산 경로에 도달했습니다 — \"",
+         "    if False:\n"
+         "        raise RuntimeError(\n"
+         "            \"승인한 완방상태 바이트를 받고도 재계산 경로에 도달했습니다 — \""),
+     ], "approved_cache_bytes_are_authoritative"),
+    ("coverage-checker-derives-from-receipts", MR, [
+        ("        want_sha = str(v.get(\"report_sha256\") or \"\")\n"
+         "        if not want_sha:",
+         "        want_sha = str(v.get(\"report_sha256\") or \"\")\n"
+         "        if False:"),
+        ("        derived = _verdict_from_reports(name, rep_dir)\n"
+         "        if derived is not None and bool(v.get(\"bit\")) != derived:",
+         "        derived = _verdict_from_reports(name, rep_dir)\n"
+         "        if False:"),
+        ("            if not f.is_file():\n"
+         "                print(f\"✗ {path}: {name} 의 {phase} report 파일이 없다 ({f})\")",
+         "            if False:\n"
+         "                print(f\"✗ {path}: {name} 의 {phase} report 파일이 없다 ({f})\")"),
+     ], "coverage_receipts_are_verified_independently"),
     ("producer-normalizes-the-node", RP, [
         ("def _ast_normal_node(node) -> str:",
          "def _ast_normal_node(node, _src=None) -> str:"),
@@ -855,8 +955,15 @@ def _run(kexpr: str) -> dict:
              "--json-report", f"--json-report-file={rep}"],
             cwd=_sandboxed(ROOT), capture_output=True, text=True, timeout=1800)
         if rep.is_file() and rep.stat().st_size:
-            data = json.loads(rep.read_text(encoding="utf-8"))
-            out = {"rc": r.returncode, "nodes": {}, "collect_errors": []}
+            raw = rep.read_bytes()
+            data = json.loads(raw.decode("utf-8"))
+            # ★ 52차 P1-2 — **원본 report 바이트**를 들고 나간다. 조각은 이것을
+            #   증거로 남기고, checker 는 이 바이트에서 판정을 다시 유도한다.
+            #   51차 artifact 는 runner 의 self-claim 만 담았고, checker 는 그
+            #   claim 을 다시 해시했을 뿐이다 (리뷰어 실측: `replay_calls=0` 으로
+            #   전수 인증).
+            out = {"rc": r.returncode, "nodes": {}, "collect_errors": [],
+                   "raw": raw}
             # ★ 46차 — collector 오류를 **따로** 본다. 수집이 깨지면 test
             #   node 가 아예 없고, 45차 판정은 그것을 "아무도 안 물었다" 와
             #   구별하지 못했다 (둘 다 실패로 보이지만 원인이 전혀 다르다).
@@ -1092,6 +1199,118 @@ EXPECT: dict = {
             "tests/test_docs_lint.py::test_a_dangling_symlink_in_the_caller_stage_never_creates_an_outside_file": "Failed: DID NOT RAISE SystemExit"
         }
     },
+    "approved-cache-bytes-are-authoritative": {
+        "fail": [
+            "tests/test_grid.py::test_the_approved_cache_bytes_are_authoritative"
+        ],
+        "witness": {
+            "tests/test_grid.py::test_the_approved_cache_bytes_are_authoritative": "Failed: DID NOT RAISE RuntimeError"
+        }
+    },
+    "closure-refuses-source-reflection": {
+        "fail": [
+            "tests/test_docs_lint.py::test_reading_the_producers_raw_source_is_fail_closed"
+        ],
+        "witness": {
+            "tests/test_docs_lint.py::test_reading_the_producers_raw_source_is_fail_closed": "Failed: DID NOT RAISE SystemExit"
+        }
+    },
+    "env-fingerprint-seals-the-smoothing-backend": {
+        "fail": [
+            "tests/test_fitting.py::test_the_effective_smoothing_backend_is_inside_the_approval"
+        ],
+        "witness": {
+            "tests/test_fitting.py::test_the_effective_smoothing_backend_is_inside_the_approval": "AssertionError: smoothing backend 를 갈아도 **환경 지문**이 그대로다 — 결과를 바꾸는 축이 실행 서명 밖에 있다"
+        }
+    },
+    "fit-axis-seals-the-smoothing-backend": {
+        "fail": [
+            "tests/test_fitting.py::test_the_effective_smoothing_backend_is_inside_the_approval"
+        ],
+        "witness": {
+            "tests/test_fitting.py::test_the_effective_smoothing_backend_is_inside_the_approval": "AssertionError: smoothing backend 를 갈아도 **승인 축**이 그대로다 — 결과를 바꾸는 축이 승인 밖에 있다"
+        }
+    },
+    "freeze-refuses-a-live-execution": {
+        "fail": [
+            "tests/test_docs_lint.py::test_freeze_refuses_while_an_execution_holds_the_cohort"
+        ],
+        "witness": {
+            "tests/test_docs_lint.py::test_freeze_refuses_while_an_execution_holds_the_cohort": "Failed: DID NOT RAISE SystemExit"
+        }
+    },
+    "frozen-target-carries-its-own-seal": {
+        "fail": [
+            "tests/test_docs_lint.py::test_a_frozen_directory_carries_its_own_seal"
+        ],
+        "witness": {
+            "tests/test_docs_lint.py::test_a_frozen_directory_carries_its_own_seal": "Failed: DID NOT RAISE SystemExit"
+        }
+    },
+    "lifecycle-completes-a-partial-append": {
+        "fail": [
+            "tests/test_docs_lint.py::test_a_freeze_crash_between_journal_and_anchor_is_recoverable"
+        ],
+        "witness": {
+            "tests/test_docs_lint.py::test_a_freeze_crash_between_journal_and_anchor_is_recoverable": "SystemExit: ✗ cohort lifecycle journal 의 사슬이 끊겼다"
+        }
+    },
+    "module-defs-track-import-bindings": {
+        "fail": [
+            "tests/test_docs_lint.py::test_the_producer_closure_tracks_mutating_and_import_bindings"
+        ],
+        "witness": {
+            "tests/test_docs_lint.py::test_the_producer_closure_tracks_mutating_and_import_bindings": "AssertionError: module-level import 가 묶는 이름을 바꿨는데 digest 가 그대로다"
+        }
+    },
+    "module-defs-track-mutating-bindings": {
+        "fail": [
+            "tests/test_docs_lint.py::test_the_producer_closure_tracks_mutating_and_import_bindings"
+        ],
+        "witness": {
+            "tests/test_docs_lint.py::test_the_producer_closure_tracks_mutating_and_import_bindings": "SystemExit: ✗ producer 소스의 module scope 에 모델링하지 않은 binding form 이 있다: `AugAssign`"
+        }
+    },
+    "rollback-only-on-certain-non-commit": {
+        "fail": [
+            "tests/test_preserve.py::test_a_durability_error_after_the_ledger_commit_keeps_the_claim"
+        ],
+        "witness": {
+            "tests/test_preserve.py::test_a_durability_error_after_the_ledger_commit_keeps_the_claim": "OSError: [Errno 5] parent fsync failure after os.replace"
+        }
+    },
+    "token-cleanup-is-inside-the-claim-lock": {
+        "fail": [
+            "tests/test_preserve.py::test_the_token_cleanup_happens_under_the_claim_lock"
+        ],
+        "witness": {
+            "tests/test_preserve.py::test_the_token_cleanup_happens_under_the_claim_lock": "AssertionError: 소유 증명을 지우는 순간 claim lock 이 안 잡혀 있었다 — 그 사이에 정상 발급이 들어오면 새 attempt 의 credential 이 지워진다"
+        }
+    },
+    "token-file-is-bound-to-its-leg": {
+        "fail": [
+            "tests/test_preserve.py::test_two_legs_cannot_share_one_attempt_file"
+        ],
+        "witness": {
+            "tests/test_preserve.py::test_two_legs_cannot_share_one_attempt_file": "tools.preserve.PreserveError: [plan] 소유 증명 파일이 없다"
+        }
+    },
+    "token-read-checks-the-leg": {
+        "fail": [
+            "tests/test_preserve.py::test_an_attempt_file_from_another_leg_is_refused"
+        ],
+        "witness": {
+            "tests/test_preserve.py::test_an_attempt_file_from_another_leg_is_refused": "AssertionError: Regex pattern did not match."
+        }
+    },
+    "coverage-checker-derives-from-receipts": {
+        "fail": [
+            "tests/test_docs_lint.py::test_coverage_receipts_are_verified_independently"
+        ],
+        "witness": {
+            "tests/test_docs_lint.py::test_coverage_receipts_are_verified_independently": "AssertionError: 영수증이 '안 물었다' 인데 적힌 판정이 '물었다' 인 조각이 통과했다 — checker 가 영수증에서 판정을 다시 유도하지 않는다"
+        }
+    },
     "canon-absorbs-the-pep701-empty-piece": {
         "fail": [
             "tests/test_docs_lint.py::test_the_canonical_form_agrees_on_every_supported_interpreter"
@@ -1260,14 +1479,6 @@ EXPECT: dict = {
         ],
         "witness": {
             "tests/test_preserve.py::test_a_crash_inside_release_leaves_a_recoverable_state": "AssertionError: assert not True"
-        }
-    },
-    "rollback-rereads-the-committed-state": {
-        "fail": [
-            "tests/test_preserve.py::test_a_durability_error_after_the_ledger_commit_keeps_the_claim"
-        ],
-        "witness": {
-            "tests/test_preserve.py::test_a_durability_error_after_the_ledger_commit_keeps_the_claim": "AssertionError: 커밋된 전이인데 claim 을 지웠다 — 회수 불가능한 running orphan"
         }
     },
     "token-path-is-disjoint-from-authority": {
@@ -2154,6 +2365,7 @@ def check_preimages(k: str = "") -> int:
 
 def _replay(plan, bad, observed_all, a, sel=None) -> int:
     items, multi, executed, declared = sel or _select(a.k)
+    receipts: dict = {}
     ran = 0
     bit: dict = {}
 
@@ -2195,6 +2407,10 @@ def _replay(plan, bad, observed_all, a, sel=None) -> int:
         observed_all[name] = observed
         ran += 1
         bit[name] = not errs
+        # ★ 52차 P1-2 — **실행 영수증**을 들고 간다. 판정은 나중에 checker 가
+        #   이 바이트에서 다시 유도한다 (runner 의 self-claim 이 아니라).
+        receipts[name] = {"kexpr": kexpr, "before": before.get("raw") or b"",
+                          "after": after.get("raw") or b""}
         print(f"{'물었다' if not errs else '★ 안 물었다':10s} {name:30s} "
               f"node {len(nodes)} · -k {kexpr}")
         bad += errs
@@ -2223,7 +2439,8 @@ def _replay(plan, bad, observed_all, a, sel=None) -> int:
     #   썼으므로, rc 를 안 보는 사람에게는 "덮었다" 로 읽혔다. 증거 파일은
     #   그 자체로 참이어야 한다.
     if a.emit_coverage and not bad and ran == n_exec:
-        _write_coverage(a.emit_coverage, a.k, items, multi, declared, bit)
+        _write_coverage(a.emit_coverage, a.k, items, multi, declared, bit,
+                        receipts)
 
     if bad:
         print("\n=== 문제 ===")
@@ -2244,7 +2461,18 @@ def _replay(plan, bad, observed_all, a, sel=None) -> int:
     return 0
 
 
-def _write_coverage(path, selector, items, multi, declared, bit) -> None:
+def _transcript_digest(scen: dict) -> str:
+    """조각이 담은 **결과**의 내용 주소 (52차 P1-2 — 영수증 digest 포함)."""
+    body = json.dumps(
+        [[n, bool(v.get("ran")),
+          (None if v.get("bit") is None else bool(v.get("bit"))),
+          str(v.get("report_sha256") or "")]
+         for n, v in sorted(scen.items())], ensure_ascii=False, sort_keys=True)
+    return hashlib.sha256(body.encode("utf-8")).hexdigest()
+
+
+def _write_coverage(path, selector, items, multi, declared, bit,
+                    receipts: dict | None = None) -> None:
     """이 조각이 **무엇을 덮었는지** 기계 판독 가능하게 남긴다 (49차 P1).
 
     전수(64건)를 한 번에 돌리면 시간이 넘치므로 조각으로 나눠 돌린다. 그러면
@@ -2265,10 +2493,28 @@ def _write_coverage(path, selector, items, multi, declared, bit) -> None:
     #   artifact 는 아무 것에도 안 묶여 있어서, 과거 JSON 만으로 99/99 가
     #   나왔다 (리뷰어 실측 `replay_calls=0`). "무엇을 덮었다" 가 아니라
     #   "무엇이 실제로 돌았다" 가 증거다.
-    transcript = json.dumps(
-        [[n, bool(v["ran"]), (None if v["bit"] is None else bool(v["bit"]))]
-         for n, v in sorted(scen.items())], ensure_ascii=False, sort_keys=True)
-    rec = {"schema": "mutation-coverage/v2",
+    # ★ 52차 P1-2 — **실행 영수증**을 옆에 남긴다. 51차 artifact 는 runner 의
+    #   self-claim(`bit`)만 담았고 checker 는 그것을 다시 해시했으므로,
+    #   replay 를 한 번도 안 하고 전수 인증이 나왔다 (리뷰어 실측
+    #   `replay_calls=0 · forged_executable_bits=108 · rc=0`).
+    #
+    #   이제 조각마다 scenario 별 pytest report 원본을 저장하고, checker 는 그
+    #   바이트에서 판정을 **다시 유도한다**. 남은 한계는 명시한다: report 자체를
+    #   위조하면 여전히 통과한다. 그러나 그것은 "아무 것도 안 하고 숫자만 적는
+    #   것" 과 다른 종류의 주장이고, report 는 committed·diffable 이다.
+    p = pathlib.Path(path)
+    rep_dir = p.parent / "reports" / p.stem
+    if receipts is not None:
+        import shutil as _sh
+        _sh.rmtree(rep_dir, ignore_errors=True)
+        rep_dir.mkdir(parents=True, exist_ok=True)
+        for name, r in sorted(receipts.items()):
+            for phase in ("before", "after"):
+                blob = r.get(phase) or b""
+                (rep_dir / f"{name}.{phase}.json").write_bytes(blob)
+            scen[name]["report_sha256"] = hashlib.sha256(
+                (r.get("before") or b"") + (r.get("after") or b"")).hexdigest()
+    rec = {"schema": "mutation-coverage/v3",
            "selector": selector,
            "at": dt.datetime.now(dt.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
            "binding": {
@@ -2276,14 +2522,78 @@ def _write_coverage(path, selector, items, multi, declared, bit) -> None:
                "expect_digest": _expect_digest(),
                "runner_digest": _runner_digest(),
                "head": _head(),
-               "transcript_digest": hashlib.sha256(
-                   transcript.encode("utf-8")).hexdigest()},
+               "reports_dir": rep_dir.name if receipts is not None else "",
+               "transcript_digest": _transcript_digest(scen)},
            "scenarios": scen}
-    p = pathlib.Path(path)
     p.parent.mkdir(parents=True, exist_ok=True)
     p.write_text(json.dumps(rec, ensure_ascii=False, indent=2, sort_keys=True)
                  + "\n", encoding="utf-8")
     print(f"\ncoverage 조각을 남겼다: {p}")
+
+
+def verify_receipts(path, scen: dict, binding: dict) -> int:
+    """조각의 **실행 영수증**을 검사하고 판정을 다시 유도한다 (52차 P1-2).
+
+    `check_coverage()` 에서 떼어 낸 것은 시험이 이 축만 따로 겨눌 수 있게 하기
+    위해서다. `check_coverage()` 는 맨 앞에서 `check_preimages()` 를 부르므로,
+    이 파일 자신을 변이시키면 **그 gate 가 먼저 걸려** 어떤 변이든 "거부됐다"
+    로 보인다 — 물긴 하지만 **선언한 이유로 물지 않는다.** 그런 증인은 증거가
+    아니다 (실측했다: witness 가 "정상 조각이 거부됐다" 였다).
+    """
+    rep_dir = pathlib.Path(path).parent / "reports" / \
+        str(binding.get("reports_dir") or "")
+    for name, v in sorted(scen.items()):
+        if not v.get("ran"):
+            continue
+        want_sha = str(v.get("report_sha256") or "")
+        if not want_sha:
+            print(f"✗ {path}: {name} 이 돌았다는데 실행 영수증이 없다 — "
+                  "self-claim 은 증거가 아니다")
+            return 1
+        blobs = b""
+        for phase in ("before", "after"):
+            f = rep_dir / f"{name}.{phase}.json"
+            if not f.is_file():
+                print(f"✗ {path}: {name} 의 {phase} report 파일이 없다 ({f})")
+                return 1
+            blobs += f.read_bytes()
+        if hashlib.sha256(blobs).hexdigest() != want_sha:
+            print(f"✗ {path}: {name} 의 report digest 가 다르다 — 결과를 "
+                  "나중에 고쳤다")
+            return 1
+        derived = _verdict_from_reports(name, rep_dir)
+        if derived is not None and bool(v.get("bit")) != derived:
+            print(f"✗ {path}: {name} 의 판정이 영수증과 다르다 "
+                  f"(적힌 것 {v.get('bit')} ≠ report {derived})")
+            return 1
+    return 0
+
+
+def _verdict_from_reports(name: str, rep_dir) -> bool | None:
+    """저장된 pytest report 에서 "물었는가" 를 **다시 유도한다** (52차 P1-2).
+
+    runner 가 적은 값을 믿지 않는다. `EXPECT[name]["fail"]` 의 node 들이
+    변이 **후** report 에서 call 단계에 실패로 나타나고 변이 **전** report 에서는
+    안 나타나야 물었다.
+
+    남은 한계: report 자체를 위조하면 통과한다. 그러나 그것은 "아무 것도 안 하고
+    숫자만 적는 것" 과 다른 주장이고, report 는 committed·diffable 이다.
+    """
+    want = set((EXPECT.get(name) or {}).get("fail") or ())
+    if not want:
+        return None
+    def _failed(phase):
+        f = pathlib.Path(rep_dir) / f"{name}.{phase}.json"
+        try:
+            data = json.loads(f.read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError):
+            return None
+        return {t["nodeid"] for t in data.get("tests", [])
+                if (t.get("call") or {}).get("outcome") == "failed"}
+    before, after = _failed("before"), _failed("after")
+    if before is None or after is None:
+        return None
+    return want.issubset(after) and not (want & before)
 
 
 def check_coverage(paths) -> int:
@@ -2312,9 +2622,9 @@ def check_coverage(paths) -> int:
     seen: dict = {}
     for path in paths:
         rec = json.loads(pathlib.Path(path).read_text(encoding="utf-8"))
-        if rec.get("schema") != "mutation-coverage/v2":
+        if rec.get("schema") != "mutation-coverage/v3":
             print(f"✗ {path}: coverage schema 가 아니다: {rec.get('schema')!r} "
-                  "(51차부터 v2 — 결속 없는 v1 은 증거가 아니다)")
+                  "(52차부터 v3 — 실행 영수증 없는 조각은 증거가 아니다)")
             return 1
         binding = rec.get("binding") or {}
         for key, w in want.items():
@@ -2324,12 +2634,9 @@ def check_coverage(paths) -> int:
                       "지금 등록부/코드가 아닌 것에서 나왔다")
                 return 1
         scen = rec.get("scenarios") or {}
-        transcript = json.dumps(
-            [[n, bool(v.get("ran")),
-              (None if v.get("bit") is None else bool(v.get("bit")))]
-             for n, v in sorted(scen.items())], ensure_ascii=False,
-            sort_keys=True)
-        got = hashlib.sha256(transcript.encode("utf-8")).hexdigest()
+        if verify_receipts(path, scen, binding) != 0:
+            return 1
+        got = _transcript_digest(scen)
         if binding.get("transcript_digest") != got:
             print(f"✗ {path}: transcript_digest 가 담긴 결과와 다르다 "
                   f"({str(binding.get('transcript_digest'))[:16]} ≠ "

@@ -142,7 +142,7 @@ def _plan_for_live_grid(led, leg, out_dir, cfg, src_digest):
                 "bounds_preset": "expanded", "bounds_digest": "0" * 16,
                 "optimizer": {"method": "Nelder-Mead", "n_restarts": 5,
                               "adaptive": True, "warm_start": True},
-                "use_noisy": True,
+                "use_noisy": True, "smoothing_backend": "banded_cache",
                 "row_selection": {"mode": "full", "limit": None,
                                   "subset_sha256": None},
                 "in": G.leg_out_key(out_dir), "in_digest": None,
@@ -256,3 +256,51 @@ def test_the_grid_axis_binds_the_discharged_state_cache(tmp_path, monkeypatch):
 
     assert a != b, ("완방상태 캐시를 갈아도 승인 digest 가 같다 — 승인 밖에서 "
                     "격자 truth 의 기준점이 움직인다")
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# 52차 P0-5 — 승인한 cache bytes 가 authoritative 하지 않다
+# ─────────────────────────────────────────────────────────────────────────────
+
+def test_the_approved_cache_bytes_are_authoritative(tmp_path, monkeypatch):
+    """★ 52차 P0-5 — 승인한 바이트를 주면 **그것을 쓰거나 거부**한다.
+
+    리뷰어 반례: `src/grid.py` 는 승인 digest 와 맞는 bytes 를 넘기지만
+    `src/baseline.py` 는 runtime/source 불일치를 **cache miss 로 바꿔 재계산**한다.
+
+        APPROVED_SHA_MATCH=True
+        APPROVED_STATE=(1.0, 2.0, 3.0)
+        RECOMPUTE_CALLS=1
+        CONSUMED_STATE=(101.0, 202.0, 303.0)
+
+    "그 파일이 stale 이면 다시 계산한다" 는 캐시로서는 옳은 정책이지만,
+    **승인이 그 바이트를 가리킬 때는** 아니다. 승인한 것과 다른 것을 계산하는
+    셋째 길이 있으면 승인은 승인이 아니다.
+    """
+    import json
+
+    import src.baseline as B
+
+    cfg = {"discharged_state": {"cache": True},
+           "baseline": {}, "solver": {"kind": "casadi"}}
+    monkeypatch.setattr(B, "baseline_hash", lambda c: "bh")
+    monkeypatch.setattr(B, "_cache_path", lambda c, d: tmp_path / "d.json")
+    calls = {"n": 0}
+
+    def _boom(c, solver=None):
+        calls["n"] += 1
+        return B.DischargedState(101.0, 202.0, 303.0)
+
+    monkeypatch.setattr(B, "compute_discharged_state", _boom)
+
+    raw = json.dumps({"ne_primary": 1.0, "ne_secondary": 2.0, "pe": 3.0,
+                      "baseline_hash": "bh", "solver": {"kind": "casadi"},
+                      "effective_solver": {"cls": "다른 것"},
+                      "source_digest": "다른 코드",
+                      "env": {"python": "다른 runtime"}}).encode("utf-8")
+
+    with pytest.raises(RuntimeError) as ei:
+        B.get_discharged_state(cfg, cache_bytes=raw)
+    assert calls["n"] == 0, (
+        "승인한 바이트를 주었는데 재계산했다 — 승인 밖의 값이 격자 truth 가 된다")
+    assert "승인" in str(ei.value) or "authoritative" in str(ei.value), str(ei.value)

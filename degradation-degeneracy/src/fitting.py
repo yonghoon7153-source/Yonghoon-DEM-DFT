@@ -521,6 +521,13 @@ def _file_digest16(path) -> str:
     return _h.sha256(p.read_bytes()).hexdigest()[:16]
 
 
+def _effective_smoothing_backend() -> str:
+    """승인 축이 쓰는 backend 이름 — 정본은 `src.objective` 하나다 (52차 P0-6)."""
+    from src.objective import effective_smoothing_backend
+
+    return effective_smoothing_backend()
+
+
 def _config_closure_digest(path, repo_root=None) -> str:
     """`extends` 연쇄 **전체**의 내용 주소 (51차 P0-A2).
 
@@ -639,6 +646,11 @@ def live_fit_axis(objectives: dict, obj_cfg: dict, bounds: dict,
                       "adaptive": bool(adaptive),
                       "warm_start": bool(warm_start)},
         "use_noisy": bool(use_noisy),
+        # ★ 52차 P0-6 — 실제로 쓰는 smoothing backend. 환경변수
+        #   `DD_SMOOTH_CACHE` 하나가 목적함수 J 를 바꾸고 그 J 가 행에 기록된다.
+        #   "동등성 검증용" 이라는 의도는 축이 아니다 — 무엇이 실제로 돌았는가가
+        #   축이다.
+        "smoothing_backend": _effective_smoothing_backend(),
         "row_selection": {
             "mode": ("subset" if subset is not None
                      else "limit" if limit else "full"),

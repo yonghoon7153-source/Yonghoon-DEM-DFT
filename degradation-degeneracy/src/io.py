@@ -243,6 +243,14 @@ def env_fingerprint() -> dict:
     out = {"python": sys.version.split()[0],
            "platform": platform.platform(),
            "machine": platform.machine()}
+    # ★ 52차 P0-6 — 결과를 바꾸는 **실제 backend** 도 runtime 축이다.
+    #   `DD_SMOOTH_CACHE` 는 목적함수 J 를 bit 단위로 바꾸고 그 J 는 행에
+    #   기록되는데, 51차까지 승인에도 지문에도 없었다 (리뷰어 실측).
+    try:
+        from src.objective import effective_smoothing_backend
+        out["smoothing_backend"] = effective_smoothing_backend()
+    except Exception:                                     # pragma: no cover
+        out["smoothing_backend"] = "unknown"
     for name in ("numpy", "scipy", "pandas", "joblib", "pyarrow", "pybamm",
                  "matplotlib", "yaml"):
         try:

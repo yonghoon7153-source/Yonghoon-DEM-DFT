@@ -333,7 +333,9 @@ def _compute_closure(src: str) -> dict[str, str]:
     #   49차까지 이 함수가 같은 walk 의 사본을 들고 있었고, 그래서 tuple
     #   대입을 담게 고칠 때 한쪽만 고치면 약한 쪽이 실효 규칙이 된다
     #   (실측: 여기만 고쳤더니 `_module_defs()` 는 그대로였다).
-    defs: dict[str, ast.AST] = _module_defs(src)
+    # ★ 52차 P0-7 — 이름 하나에 문이 **여럿**일 수 있다 (`TOL = 1` · `TOL += 9`).
+    #   값을 정하는 것이 문들의 순서이므로 전부 담는다.
+    defs: dict[str, list] = _module_defs(src)
 
     missing = [n for n in _COMPUTE_NAMES if n not in defs]
     if missing:
@@ -346,11 +348,19 @@ def _compute_closure(src: str) -> dict[str, str]:
         name = todo.pop()
         if name in out:
             continue
-        node = defs[name]
-        out[name] = ast.get_source_segment(src, node) or ""
-        for sub in ast.walk(node):
-            if isinstance(sub, ast.Name) and sub.id in defs and sub.id not in out:
-                todo.append(sub.id)
+        nodes = defs[name]
+        # ★ 52차 P0-8 — **정규형**으로 담는다. 51차까지는
+        #   `ast.get_source_segment()` 로 raw 바이트를 잘라 왔는데, 그것은
+        #   producer 닫힘 안에서 raw source 를 읽는 코드다 — 새 guard 가 자기
+        #   자신을 잡았다. 정규형으로 바꾸면 그 능력이 닫힘에서 사라지고,
+        #   덤으로 `compute_sha256` 이 주석 편집에 안 흔들린다 (그 흔들림은
+        #   22차부터 알려진 잡음이었다).
+        out[name] = "\n".join(_ast_normal_node(n) for n in nodes)
+        for node in nodes:
+            for sub in ast.walk(node):
+                if isinstance(sub, ast.Name) and sub.id in defs \
+                        and sub.id not in out:
+                    todo.append(sub.id)
     return out
 
 
@@ -562,82 +572,117 @@ def _target_names(node):
     return []                       # Attribute·Subscript 는 module 이름이 아니다
 
 
-#: module scope 에서 **이름을 묶지 않는** 단순문.
-_MODULE_NONBINDING = ("Expr", "Pass", "Raise", "Assert", "Delete", "AugAssign",
-                      "Global", "Nonlocal", "Break", "Continue", "Return",
-                      "Import", "ImportFrom")
+#: module scope 에서 **이름을 아예 안 건드리는** 단순문.
+#:
+#: ★ 52차 P0-7 — `AugAssign` 과 import 가 여기서 빠졌다. 둘 다 이름을 묶거나
+#: 바꾼다. 리뷰어 실측: `TOL = 1` 뒤의 `TOL += 9` 를 바꿔도 digest 가 같았고
+#: (`result_a=2 · result_b=10`), `from math import floor as TOL` 을
+#: `ceil` 로 바꿔도 같았다.
+_MODULE_NONBINDING = ("Expr", "Pass", "Raise", "Assert", "Global", "Nonlocal",
+                      "Break", "Continue", "Return")
 
 #: **안으로 들어가야 하는** 복합문 — 그 안의 정의도 module scope 다.
 _MODULE_COMPOUND = ("If", "Try", "TryStar", "For", "AsyncFor", "While",
                     "With", "AsyncWith", "Match")
 
 
+def _match_capture_names(pat) -> list:
+    """`match` pattern 이 묶는 이름 (52차 P0-7).
+
+    `case {..., **rest}` · `case [*tail]` · `case X as y` 는 전부 이름을 묶는다.
+    """
+    import ast
+
+    out = []
+    for sub in ast.walk(pat):
+        name = getattr(sub, "name", None)
+        if isinstance(sub, (getattr(ast, "MatchAs", ()),
+                            getattr(ast, "MatchStar", ()))) and name:
+            out.append(name)
+        rest = getattr(sub, "rest", None)
+        if isinstance(sub, getattr(ast, "MatchMapping", ())) and rest:
+            out.append(rest)
+    return out
+
+
 def _module_defs(src: str) -> dict:
-    """module-level 정의 이름 → node. **모르는 문은 거부한다** (51차 P0-I).
+    """module-level 이름 → **그 이름을 묶거나 바꾸는 문들** (순서대로).
 
-    50차까지 이 함수는 Function/Class/Assign/AnnAssign 네 형태만 담고 나머지를
-    조용히 지나쳤다. 조용히 지나치는 것은 "그 이름은 없다" 고 답하는 것과 같고
-    그 답은 거짓일 수 있다. 리뷰어가 실제 파일의 `_RESTART_SOURCES = ...` 한
-    줄을 `for _RESTART_SOURCES in (...): pass` 로 바꾼 두 변형을 만들었다 —
-    **동작이 다른데 sealed identity 가 같았다.**
+    ★ 52차 P0-7 — 51차까지 이것은 이름 → **단일 node** 였다. 그러면 같은 이름을
+      여러 문이 건드릴 때 마지막(또는 첫) 하나만 identity 에 들어간다.
+      `TOL = 1` 다음에 `TOL += 9` 가 오면 값을 정하는 것은 두 문의 **순서**인데
+      한 문만 담았으므로 나머지가 identity 밖이었다.
 
-    철자를 하나씩 추가하는 방식(49차 Import, 50차 tuple target)은 종결 조건이
-    아니다. 종결 조건은 셋이다:
+      값을 정하는 것이 문 하나가 아니라 **문들의 순서**이므로, 담는 것도
+      목록이어야 한다.
 
-      · 복합문은 **안으로 들어간다** (`_MODULE_COMPOUND`) — `if`/`try` 안의
-        정의도 module scope 이고, `for`/`with`/`except` 는 자기 target 도 묶는다.
-      · 이름을 안 묶는 단순문은 지나간다 (`_MODULE_NONBINDING`).
-      · **그 밖은 멈춘다.** 새 문법이 필요해지면 여기 넣고 그때 의미를 정한다.
-
-    묶는 이름은 그 문 **전체** node 에 매핑한다 — 값이 어디서 오든 그 문의
-    소스가 identity 에 들어가야 값 변경이 digest 를 움직인다.
+    ★ 51차 P0-I — 복합문은 안으로 들어가고, 이름을 안 건드리는 문은 지나가고,
+      **그 밖은 멈춘다.** 철자를 하나씩 추가하는 방식(49차 Import, 50차 tuple
+      target, 51차 for)은 종결 조건이 아니다.
     """
     import ast
 
     defs: dict = {}
 
-    def _walrus(node):
+    def _bind(name, node):
+        defs.setdefault(name, []).append(node)
+
+    def _walrus(node, top):
         for sub in ast.walk(node):
             if isinstance(sub, ast.NamedExpr):
                 for name in _target_names(sub.target):
-                    defs[name] = node
+                    _bind(name, top or node)
 
     def _visit(body, top):
         for node in body:
             kind = type(node).__name__
             if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef,
                                  ast.ClassDef)):
-                defs[node.name] = node
+                _bind(node.name, node)
                 continue
-            _walrus(top or node)
+            _walrus(node, top)
             if isinstance(node, ast.Assign):
                 # ★ 50차 P0 — `A, B = 1, 2` · `(D,) = (4,)` · `[E, *F] = …` 도
-                #   module 정의다. 49차는 `ast.Name` target 만 담았으므로 계산
-                #   상수를 tuple 대입으로 바꾸면 identity 에서 통째로 빠졌다.
+                #   module 정의다. 49차는 `ast.Name` target 만 담았다.
                 for t in node.targets:
                     for name in _target_names(t):
-                        defs[name] = top or node
-            elif isinstance(node, ast.AnnAssign):
+                        _bind(name, top or node)
+            elif isinstance(node, (ast.AnnAssign, ast.AugAssign)):
+                # ★ 52차 P0-7 — `AugAssign` 은 **기존 이름을 바꾼다.** 값을
+                #   정하는 문이므로 identity 안이다.
                 for name in _target_names(node.target):
-                    defs[name] = top or node
+                    _bind(name, top or node)
+            elif isinstance(node, ast.Delete):
+                for t in node.targets:
+                    for name in _target_names(t):
+                        _bind(name, top or node)
+            elif isinstance(node, (ast.Import, ast.ImportFrom)):
+                # ★ 52차 P0-7 — import 도 이름을 묶는다. `from math import
+                #   floor as TOL` 을 `ceil` 로 바꾸면 계산이 바뀐다.
+                #   (`_crossed_*` 는 producer 모듈 **사이**를 따라가는 별개
+                #   질문이고, 여기는 "이 이름이 무엇에 묶였나" 다.)
+                for al in node.names:
+                    _bind(al.asname or al.name.split(".")[0], top or node)
             elif kind in _MODULE_NONBINDING:
-                continue                  # import 는 `_crossed_*` 가 따로 본다
+                continue
             elif kind in _MODULE_COMPOUND:
                 here = top or node
                 for name in _target_names(getattr(node, "target", None)
                                           or ast.Pass()):
-                    defs[name] = here
+                    _bind(name, here)
                 for item in getattr(node, "items", ()) or ():
                     if item.optional_vars is not None:
                         for name in _target_names(item.optional_vars):
-                            defs[name] = here
+                            _bind(name, here)
                 for h in getattr(node, "handlers", ()) or ():
                     if getattr(h, "name", None):
-                        defs[h.name] = here
+                        _bind(h.name, here)
                     _visit(h.body, here)
                 for attr in ("body", "orelse", "finalbody"):
                     _visit(getattr(node, attr, ()) or (), here)
                 for case in getattr(node, "cases", ()) or ():
+                    for name in _match_capture_names(case.pattern):
+                        _bind(name, here)
                     _visit(case.body, here)
             else:
                 raise SystemExit(
@@ -700,13 +745,51 @@ def _crossed_modules(src: str) -> set:
 #: 이름 공간을 통째로 여는 호출 — 인자와 무관하게 거부한다.
 _DYNAMIC_ALWAYS = ("eval", "exec", "__import__")
 
+#: ★ 52차 P0-8 — 정규형이 **버리는 것**(주석·서식·줄바꿈)을 그대로 돌려주는
+#: 관찰자. AST 정규형은 주석을 안 보지만 `inspect.getsource()` 는 raw 바이트를
+#: 준다. 그래서 변이 runner 가 "semantic no-op" 이라 부른 주석 변경이 실제로는
+#: 계산 입력이 된다 (리뷰어 실측: `digest_a == digest_b · result_a=1 ·
+#: result_b=2`).
+#:
+#: 51차에 docstring 으로 같은 형태를 만났고 그때는 **안 버리는 쪽**으로 닫았다.
+#: raw source 전체는 그럴 수 없다 — 주석 한 줄이 cohort 를 새로 만들게 된다.
+#: 그러면 남는 답은 하나: 그것을 **관찰하는 능력**을 닫는다.
+_SOURCE_REFLECTION = ("getsource", "getsourcelines", "getsourcefile",
+                      "getsourcesegment", "get_source_segment", "getfile",
+                      "findsource", "unparse")
+
+#: raw source 를 **들고 있는** 표준 모듈. 이름이 아니라 **능력**을 막는다 —
+#: 51차 docstring 건에서 배운 대로 철자 목록은 끝나지 않는다 (`read = getattr`
+#: 이 그랬고, 여기서는 `from inspect import getsource as _gs` 가 그랬다).
+_SOURCE_REFLECTION_MODULES = ("inspect", "linecache", "dis", "traceback")
+
+
+def _source_reflection_locals(node) -> set:
+    """이 node 안에서 raw source 관찰자에 묶이는 지역 이름 (52차 P0-8)."""
+    import ast
+
+    out = set()
+    for sub in ast.walk(node):
+        if isinstance(sub, ast.Import):
+            for al in sub.names:
+                if al.name.split(".")[0] in _SOURCE_REFLECTION_MODULES:
+                    out.add(al.asname or al.name.split(".")[0])
+        elif isinstance(sub, ast.ImportFrom):
+            base = (sub.module or "").split(".")[0]
+            for al in sub.names:
+                if base in _SOURCE_REFLECTION_MODULES \
+                        or al.name in _SOURCE_REFLECTION:
+                    out.add(al.asname or al.name)
+    return out
+
 #: 대상이 **module 이름 공간**일 때만 거부하는 호출. `getattr(self, …)` 이나
 #: `getattr(node, …)` 처럼 객체의 속성을 읽는 정상 용법까지 막지 않는다 —
 #: 그것은 module-level 이름을 푸는 것이 아니므로 정적 닫힘이 잃는 것이 없다.
 _DYNAMIC_ON_NAMESPACE = ("globals", "locals", "vars", "getattr", "setattr")
 
 
-def _assert_no_dynamic_resolution(node, where: str, mods: set) -> None:
+def _assert_no_dynamic_resolution(node, where: str, mods: set,
+                                  reflect: set | None = None) -> None:
     """계산 경로 안에서 **module-level 이름**을 동적으로 푸는가 (49차 P0-2).
 
     `globals()[...]` · `getattr(sc, ...)` · `eval` 은 module-level 이름을 실행
@@ -720,12 +803,27 @@ def _assert_no_dynamic_resolution(node, where: str, mods: set) -> None:
     """
     import ast
 
+    # ★ 52차 P0-8 — 이 node 안의 지역 import 도 능력을 들여온다.
+    banned = set(reflect or ()) | _source_reflection_locals(node)
     for sub in ast.walk(node):
+        if isinstance(sub, ast.Name) and sub.id in banned:
+            raise SystemExit(
+                f"✗ producer 닫힘 안에서 **raw source 관찰자**를 쓴다: {where} 의 "
+                f"`{sub.id}` — 정규형은 주석·서식을 버리는데 그 바이트를 계산이 "
+                "읽으면 digest 가 거짓이 된다. 값이 필요하면 상수로 적어라 "
+                "(이름을 바꿔도 같다 — 막는 것은 철자가 아니라 능력이다)")
         if not isinstance(sub, ast.Call) or not isinstance(sub.func, ast.Name):
             # ★ 51차 P0-I — `__doc__` 은 여기서 빠졌다. 이제 정규형이
             #   docstring 을 **버리지 않으므로** 그것을 읽는 것은 identity 밖
             #   계산이 아니다. 나머지 셋은 여전히 정규형이 못 보는 것이고,
             #   그쪽은 철자 목록이 아니라 "실행 시점 이름 풀기" 축이다.
+            # ★ 52차 P0-8 — `inspect.getsource(f)` 처럼 **속성 호출**로도
+            #   온다. 이름 alias 는 위 `Name` 분기가, 모듈 경유는 여기가 막는다.
+            if isinstance(sub, ast.Attribute) and sub.attr in _SOURCE_REFLECTION:
+                raise SystemExit(
+                    f"✗ producer 닫힘 안에서 **raw source** 를 읽는다: {where} 의 "
+                    f"`.{sub.attr}(...)` — 정규형은 주석·서식을 버리는데 그 "
+                    "바이트를 계산이 쓰면 digest 가 거짓이 된다")
             if isinstance(sub, ast.Attribute) and sub.attr in (
                     "__dict__", "__globals__", "__code__"):
                 raise SystemExit(
@@ -734,6 +832,11 @@ def _assert_no_dynamic_resolution(node, where: str, mods: set) -> None:
                     "계산이 쓰면 digest 가 거짓이 된다 (둘 중 하나만 참일 수 있다)")
             continue
         fn = sub.func.id
+        if fn in _SOURCE_REFLECTION:
+            raise SystemExit(
+                f"✗ producer 닫힘 안에서 **raw source** 를 읽는다: {where} 의 "
+                f"`{fn}(...)` — 정규형은 주석·서식을 버리는데 그 바이트를 계산이 "
+                "쓰면 digest 가 거짓이 된다. 값이 필요하면 상수로 적어라")
         if fn in _DYNAMIC_ALWAYS:
             raise SystemExit(
                 f"✗ producer 닫힘 안에서 이름을 **동적으로** 푼다: "
@@ -772,6 +875,9 @@ def _producer_closure(src: str, scoring_src: str | None = None) -> dict[str, str
     sdefs = _module_defs(scoring_src)
     alias = _crossed_aliases(src)
     mods = _crossed_modules(src)          # ★ 49차 P0-2 — `sc.foo` 형태
+    # ★ 52차 P0-8 — module scope 에서 raw source 관찰자에 묶인 이름들.
+    import ast as _ast
+    reflect = _source_reflection_locals(_ast.parse(src))
 
     missing = [x for x in _COMPUTE_NAMES if x not in defs]
     if missing:
@@ -799,12 +905,14 @@ def _producer_closure(src: str, scoring_src: str | None = None) -> dict[str, str
         if kind == "rp" and name in _PRODUCER_CUT:
             out[key] = f"<cut:{name}>"          # 이름별 표식 (48차)
             continue
-        node = defs[name] if kind == "rp" else sdefs[name]
+        nodes = defs[name] if kind == "rp" else sdefs[name]
         # ★ 49차 P0-2 — 볼 수 없는 계산은 identity 밖이다. 닫힘에 들어오는
         #   **모든** 노드에 대해 동적 이름 풀이를 거부한다.
-        _assert_no_dynamic_resolution(node, key, mods)
-        out[key] = _ast_normal_node(node)
-        for sub_node in ast.walk(node):
+        # ★ 52차 P0-7 — 한 이름에 묶인 문이 여럿이면 **전부** 본다.
+        for node in nodes:
+            _assert_no_dynamic_resolution(node, key, mods, reflect)
+        out[key] = "\n".join(_ast_normal_node(n) for n in nodes)
+        for sub_node in [x for n in nodes for x in ast.walk(n)]:
             # ★ 49차 P0-2 — `sc.foo` (Import + Attribute). 48차는 이 문법을
             #   전혀 따라가지 않아, import 형태만 바꾸면 채점 의미가 통째로
             #   닫힘 밖으로 나갔다.
@@ -2838,6 +2946,13 @@ def read_lifecycle() -> list:
     hp = _lifecycle_head_path()
     head = hp.read_text(encoding="utf-8").strip() if hp.is_file() else ""
     if head != prev:
+        # ★ 52차 P1-1 — **정확히 한 줄 앞선** partial commit 인가. journal 을
+        #   굳히고 anchor 를 굳히기 전에 죽으면 그렇게 된다. 그 경우 마지막 줄의
+        #   `prev` 가 곧 anchor 값이므로, 위조와 구별할 수 있다: 위조는 마지막
+        #   줄을 **바꾸는** 것이고 그러면 그 줄의 `prev` 는 anchor 와 무관하다.
+        if len(out) >= 1 and out[-1]["prev"] == head:
+            _write_head_anchor(prev)
+            return out
         raise SystemExit(
             f"✗ cohort lifecycle journal 의 사슬이 끊겼다 — 끝 digest 가 anchor "
             f"와 다르다 ({prev[:16] or '없음'} ≠ {head[:16] or '없음'}). "
@@ -2920,11 +3035,27 @@ def _append_lifecycle(cohort_id: str, frm, to: str, note: str) -> dict:
     finally:
         os.close(fd)
     os.replace(tmp, p)
-    # 사슬의 끝을 anchor 에 고정한다 — journal **다음**에 쓴다. 그 사이에
-    # 죽으면 anchor 가 낡아 `read_lifecycle()` 이 fail-closed 로 멈춘다
-    # (조용히 통과하는 것보다 낫다).
+    # 사슬의 끝을 anchor 에 고정한다 — journal **다음**에 쓴다.
+    _write_head_anchor(hashlib.sha256(
+        _lifecycle_line(rec).encode("utf-8")).hexdigest())
+    dfd = os.open(p.parent, os.O_RDONLY)
+    try:
+        os.fsync(dfd)
+    finally:
+        os.close(dfd)
+    return rec
+
+
+def _write_head_anchor(tip: str) -> None:
+    """사슬의 끝을 anchor 에 굳힌다 (journal **다음**).
+
+    ★ 52차 P1-1 — 그 사이에 죽으면 anchor 가 한 줄 낡는다. 51차까지
+      `read_lifecycle()` 은 그것을 위조와 구별하지 못하고 멈췄고, 같은 API 로
+      다시 부를 수도 없었다 (`retry_result=BLOCKED`). fail-closed 는 옳지만
+      **나갈 길**이 있어야 한다 — `read_lifecycle()` 이 "정확히 한 줄 앞선"
+      partial commit 을 인식하고 anchor 를 완주시킨다 (아래).
+    """
     hp = _lifecycle_head_path()
-    tip = hashlib.sha256(_lifecycle_line(rec).encode("utf-8")).hexdigest()
     htmp = hp.with_name(f".{hp.name}.{uuid.uuid4().hex}.tmp")
     htmp.write_text(tip + "\n", encoding="utf-8")
     hfd = os.open(htmp, os.O_RDONLY)
@@ -2933,11 +3064,49 @@ def _append_lifecycle(cohort_id: str, frm, to: str, note: str) -> dict:
     finally:
         os.close(hfd)
     os.replace(htmp, hp)
-    dfd = os.open(p.parent, os.O_RDONLY)
+
+
+#: 얼린 디렉터리 **안**에 두는 봉인 marker (52차 P0-4).
+#:
+#: 51차의 `dir` 봉인은 **이름**을 하나 더 본 것이었다. bind mount 는 이름을 또
+#: 만든다 — `Path.resolve()` 에도 다른 경로로 남지만 같은 inode tree 에 쓴다
+#: (리뷰어 실측: `writable_guard=PASSED · publication_returned_published=True`).
+#: 이름을 몇 개 보든 새 이름을 만들 수 있으므로, 봉인은 **대상 안**에 있어야
+#: 한다. 어느 이름으로 열든 같은 tree 를 열면 같은 marker 를 본다.
+FROZEN_MARKER = ".FROZEN"
+
+
+def _write_frozen_marker(dest: Path, cohort_id: str, tip: str) -> None:
+    """대상 디렉터리 자신에 봉인을 남긴다 (52차 P0-4)."""
+    dest = Path(dest)
+    dest.mkdir(parents=True, exist_ok=True)
+    body = json.dumps({"cohort_id": str(cohort_id), "lifecycle_tip": str(tip),
+                       "at": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())},
+                      sort_keys=True, ensure_ascii=False) + "\n"
+    m = dest / FROZEN_MARKER
+    tmp = m.with_name(f".{m.name}.{uuid.uuid4().hex}.tmp")
+    tmp.write_text(body, encoding="utf-8")
+    fd = os.open(tmp, os.O_RDONLY)
     try:
-        os.fsync(dfd)
+        os.fsync(fd)
     finally:
-        os.close(dfd)
+        os.close(fd)
+    os.replace(tmp, m)
+
+
+def read_frozen_marker(dest) -> dict | None:
+    """이 디렉터리 자신이 "나는 얼렸다" 고 말하는가 (52차 P0-4)."""
+    m = Path(dest) / FROZEN_MARKER
+    if not m.is_file():
+        return None
+    try:
+        rec = json.loads(m.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        raise SystemExit(
+            f"✗ 얼림 marker 를 읽을 수 없다: {m} — 읽을 수 없는 봉인은 통과가 "
+            "아니다 (fail-closed)")
+    if type(rec) is not dict or not rec.get("cohort_id"):
+        raise SystemExit(f"✗ 얼림 marker 의 형식이 계약과 다르다: {m}")
     return rec
 
 
@@ -2962,7 +3131,28 @@ def assert_not_thawed(cohort_id: str) -> None:
             "바꿔도 그 디렉터리는 얼려 있다. 새 세대는 **새 디렉터리**를 쓴다")
 
 
-def freeze_cohort(cohort_id: str, reason: str) -> dict:
+def _live_claims_for(cohort_id: str, claims_root=None) -> list:
+    """이 cohort 안에서 **아직 살아 있는 실행권** (52차 P0-3).
+
+    발급은 `tools/preserve.py` 가, 동결은 여기가 한다. 두 쪽이 같은 lock 을 안
+    쓰면 "얼린 cohort 안에서 실행이 계속되고 그 실행은 되돌릴 수도 닫을 수도
+    없는" 상태가 만들어진다 (리뷰어 실측). 그래서 얼리기 전에 claim 실물을
+    본다 — 있으면 거부하고, 소유자가 `--mode release`/`finalize` 로 닫은 뒤에
+    다시 얼린다.
+    """
+    root = Path(claims_root) if claims_root is not None else None
+    if root is None:
+        try:
+            from tools.preserve import DEFAULT_CLAIMS_ROOT
+            root = Path(DEFAULT_CLAIMS_ROOT)
+        except Exception:                                 # pragma: no cover
+            return []
+    if not root.is_dir():
+        return []
+    return sorted(p.name[:-len(".claim")] for p in root.glob("*.claim"))
+
+
+def freeze_cohort(cohort_id: str, reason: str, claims_root=None) -> dict:
     """cohort 를 얼린다 — 원장과 전이 journal **양쪽**에 (49차 P0).
 
     원장만 고치면 그 사실이 되돌릴 수 있는 한 줄로만 남는다.
@@ -2986,6 +3176,9 @@ def freeze_cohort(cohort_id: str, reason: str) -> dict:
             prev = next((r for r in read_lifecycle()
                          if r["cohort_id"] == cohort_id and r["to"] == "frozen"),
                         None)
+            _write_frozen_marker(REPO / str(row.get("dir") or ""), cohort_id,
+                                 hashlib.sha256(_lifecycle_line(prev).encode(
+                                     "utf-8")).hexdigest() if prev else "")
             _write_ledger_doc(led, doc, row, prev["note"] if prev else reason)
             return prev
         raise SystemExit(
@@ -2995,10 +3188,26 @@ def freeze_cohort(cohort_id: str, reason: str) -> dict:
         raise SystemExit(
             f"✗ cohort {cohort_id!r} 의 상태가 {row.get('status')!r} 이라 "
             "얼릴 수 없다")
+    # ★ 52차 P0-3 — **살아 있는 실행이 있으면 얼리지 않는다.** 발급과 동결이
+    #   같은 lock 을 안 쓰면, 얼린 cohort 안에서 실행이 계속되고 그 실행은
+    #   되돌릴 수도 닫을 수도 없다 (리뷰어 실측: `stale handle phase_done:
+    #   SUCCEEDED · fresh attach/release: frozen 이라 거부`).
+    live = _live_claims_for(cohort_id, claims_root)
+    if live:
+        raise SystemExit(
+            f"✗ 아직 살아 있는 실행권이 있다: {live} — 얼리기는 '더 자라지 "
+            "않는다' 는 선언인데 자라고 있는 것을 두고 선언할 수 없다.\n"
+            "  소유자가 `./run.sh --mode finalize` 또는 `--mode release` 로 "
+            "닫은 뒤에 다시 얼려라.")
     # 출발점은 **기록된** 상태다. journal 이 생기기 전부터 active 이던 cohort 는
     # 기록이 없고(`None`), 그 경우도 얼릴 수 있어야 한다 — 게시는 lifecycle 을
     # 움직이지 않으므로 "active 기록" 은 없는 것이 정상이다.
     rec = _append_lifecycle(cohort_id, recorded, "frozen", reason)
+    # ★ 52차 P0-4 — 봉인을 **대상 안**에 남긴다. 이름 목록은 alias 로 늘릴 수
+    #   있지만 tree 안의 marker 는 그럴 수 없다.
+    _write_frozen_marker(REPO / str(row.get("dir") or ""), cohort_id,
+                         hashlib.sha256(
+                             _lifecycle_line(rec).encode("utf-8")).hexdigest())
     _write_ledger_doc(led, doc, row, reason)
     return rec
 
@@ -3150,6 +3359,15 @@ def _frozen_cohort_dirs() -> dict[str, Path]:
 
 def _assert_writable(dest: Path) -> None:
     """frozen cohort 로는 쓸 수 없다. **쓰기 지점**에서 막는다 (27차 P1-8)."""
+    # ★ 52차 P0-4 — **대상 자신에게 먼저 묻는다.** 이름 목록(원장·journal)은
+    #   alias 로 늘릴 수 있지만 tree 안의 marker 는 그럴 수 없다.
+    here = read_frozen_marker(dest)
+    if here is not None:
+        raise SystemExit(
+            f"✗ 이 디렉터리는 `{here['cohort_id']}` 로 얼렸다 ({dest}) — "
+            f"봉인 marker 가 대상 안에 있다 ({FROZEN_MARKER}). 원장에서 이름을 "
+            "바꿔도, 다른 경로로 같은 tree 를 가리켜도 쓸 수 없다.\n"
+            "  새 세대는 **새 디렉터리**를 쓴다 (계약 v4 §13.3).")
     d = Path(dest).resolve()
     for cid, frozen in _frozen_cohort_dirs().items():
         # ★ 28차 P1-5 — exact equality 만 봤다. `frozen/child` 는 frozen tree

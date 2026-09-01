@@ -54,6 +54,20 @@ _SMOOTH_KERNEL: dict[tuple[int, int], tuple] = {}
 _SMOOTH_CACHE_ENABLED = os.environ.get("DD_SMOOTH_CACHE", "1") != "0"
 
 
+def effective_smoothing_backend() -> str:
+    """지금 이 process 가 **실제로 쓰는** smoothing backend (52차 P0-6).
+
+    `DD_SMOOTH_CACHE` 는 동등성 검증용 스위치였는데, 두 backend 의 결과가
+    bit-identical 이 아니다 — 리뷰어가 목적함수 `J` 에서 실측했다
+    (`0x1.ab7510443d0efp-4` ≠ `0x1.ab7510443ec34p-4`). 그 `J` 는 결과 행에
+    기록되므로, 승인·서명 어디에도 없는 환경변수 하나가 행을 옮긴다.
+
+    "동등성 검증용" 이라는 의도는 축이 아니다. **실제로 무엇이 돌았는가**가
+    축이고, 그것은 승인 spec 과 환경 지문 양쪽에 들어가야 한다.
+    """
+    return "banded_cache" if _SMOOTH_CACHE_ENABLED else "scipy_savgol"
+
+
 def _smooth_kernel(w: int, polyorder: int):
     """(내부 컨볼루션 계수, 상단 가장자리 블록, 하단 가장자리 블록, 반폭)."""
     key = (w, polyorder)

@@ -6960,7 +6960,7 @@ _F49 = {"config_digest": "c" * 16,
         "bounds_digest": "d" * 16,
         "optimizer": {"method": "Nelder-Mead", "n_restarts": 5,
                       "adaptive": True, "warm_start": True},
-        "use_noisy": True,
+        "use_noisy": True, "smoothing_backend": "banded_cache",
         "row_selection": {"mode": "full", "limit": None,
                           "subset_sha256": None},
         "in": "results/v4",
@@ -7203,7 +7203,7 @@ def test_finalize_is_idempotent_after_a_crash_before_cleanup(tmp_path):
 
     led, claims, tok, c = _ready_claim(tmp_path)
     before = c.path.read_bytes()
-    token = tok.read_text(encoding="utf-8").strip()
+    token = P.read_token_file(tok, "L")
 
     P.finalize_leg("L", {"leg_source_digest": "0123456789abcdef",
                          "cohorts": ["gA"]},
@@ -7227,7 +7227,7 @@ def test_the_crash_recovery_needs_the_owner_credential(tmp_path):
 
     led, claims, tok, c = _ready_claim(tmp_path)
     before = c.path.read_bytes()
-    token = tok.read_text(encoding="utf-8").strip()
+    token = P.read_token_file(tok, "L")
     P.finalize_leg("L", {"leg_source_digest": "0123456789abcdef",
                          "cohorts": ["gA"]},
                    ledger=led, claims_root=claims, token=token)
@@ -7719,7 +7719,8 @@ def test_a_durability_error_after_the_ledger_commit_keeps_the_claim(tmp_path):
 
     with mock.patch.object(os, "replace", _replace), \
          mock.patch.object(os, "fsync", _fsync):
-        with pytest.raises(OSError):
+        # ★ 52차 P0-2 — 이제 커밋 불확실성이 **타입**으로 나온다.
+        with pytest.raises(P.PlanWriteUncertain):
             P.open_leg_run("L", _RUN_SPEC_L, "0123456789abcdef", tok,
                            ledger=led, claims_root=claims)
 
@@ -7751,3 +7752,170 @@ def test_the_token_path_cannot_alias_the_claim_authority(tmp_path):
             open_leg_run("L", _RUN_SPEC_L, "0123456789abcdef", alias,
                          ledger=led, claims_root=claims)
         assert not _claim_path("L", claims).is_file()
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# 52차 P0-1 · P0-2 — token handoff 가 아직 generation CAS 가 아니다
+#
+# 51차는 "내가 쓴 token 일 때만 지운다" 를 넣었다. 리뷰어가 그 **안의 창**을
+# 짚었다: 비교와 unlink 가 두 syscall 이고 그 사이에 다른 주체가 들어온다.
+# 그리고 서로 다른 leg 가 같은 caller token 경로를 쓰면 두 번째 발급이 첫
+# 번째 credential 을 그냥 덮는다 — leg 안에서만 배타적이었지 경로에 대해서는
+# 아니었다.
+# ─────────────────────────────────────────────────────────────────────────────
+
+def test_the_token_cleanup_happens_under_the_claim_lock(tmp_path):
+    """★ 52차 P0-1 — 비교와 삭제 **사이**에 새 발급이 끼어들 수 없다.
+
+    리뷰어 반례: release A 가 token 을 읽고 자기 것임을 확인한 **뒤** 멈춘다.
+    그 사이 B 가 정상 발급된다. A 가 재개해 `unlink` 하면 **B 의** credential 이
+    사라진다.
+
+        final plan status: running
+        B claim exists: True     B token exists: False
+        attach B: 소유 증명 파일이 없다
+
+    "내가 쓴 것일 때만" 은 옳은 술어였지만, 술어와 행위가 같은 임계 구역에
+    없으면 그 술어는 낡는다.
+
+    확인하는 것은 그 **구조**다: token 을 지우는 순간 claim lock 이 잡혀 있는가.
+    발급도 같은 lock 을 잡으므로, 잡혀 있으면 끼어들 수 없다. (상태로 확인하려면
+    두 주체를 실제로 겹쳐 돌려야 하는데, 배타적이면 그 시험 자체가 서로를
+    기다리며 멈춘다 — 그것은 확인이 아니라 hang 이다. 실측했다.)
+    """
+    import fcntl
+
+    from tools.preserve import open_leg_run, release_leg_run, _claim_path
+    from tools.preserve import planned_index
+    import tools.preserve as P
+
+    led = _lifecycle_ledger(tmp_path)
+    claims = tmp_path / "claims"
+    tok = tmp_path / "L.token"
+    lockfile = Path(str(_claim_path("L", claims)) + ".lock")
+
+    open_leg_run("L", _RUN_SPEC_L, "0123456789abcdef", tok,
+                 ledger=led, claims_root=claims)
+
+    seen = {}
+    real = P._unlink_token_generation
+
+    def _watched(path, token):
+        # 같은 process 의 **다른 fd** 로 잡아 본다 — flock 은 fd 단위이므로
+        # 이미 잡혀 있으면 EWOULDBLOCK 이다.
+        fd = os.open(lockfile, os.O_CREAT | os.O_RDWR, 0o644)
+        try:
+            try:
+                fcntl.flock(fd, fcntl.LOCK_EX | fcntl.LOCK_NB)
+                seen["held"] = False
+                fcntl.flock(fd, fcntl.LOCK_UN)
+            except OSError:
+                seen["held"] = True
+        finally:
+            os.close(fd)
+        return real(path, token)
+
+    with mock.patch.object(P, "_unlink_token_generation", _watched):
+        release_leg_run("L", token_file=tok, ledger=led, claims_root=claims)
+
+    assert seen.get("held") is True, (
+        "소유 증명을 지우는 순간 claim lock 이 안 잡혀 있었다 — 그 사이에 정상 "
+        "발급이 들어오면 새 attempt 의 credential 이 지워진다")
+    assert not tok.is_file() and not _claim_path("L", claims).is_file()
+    assert planned_index(ledger=led)["L"]["status"] == "planned"
+
+
+def test_two_legs_cannot_share_one_attempt_file(tmp_path):
+    """★ 52차 P0-1 — 소유 증명 파일은 **어느 다리의 어느 attempt** 인지 안다.
+
+    리뷰어 반례: 서로 다른 정상 leg L·M 이 같은 `--attempt-file` 경로를 쓰면
+    두 번째 발급이 첫 번째 credential 을 덮는다.
+
+        L plan/claim: running/True    M plan/claim: running/True
+        attach L: verifier 불일치     attach M: SUCCEEDED
+
+    L 은 자기 실행에 못 붙고 되돌리지도 닫지도 못한다. 51차의 경계는 claim
+    namespace 였고 **다른 leg 의 전달 통로**는 보지 않았다.
+    """
+    from tools.preserve import open_leg_run, attach_leg_run, PreserveError
+
+    led = _lifecycle_ledger(tmp_path)
+    claims = tmp_path / "claims"
+    tok = tmp_path / "shared.token"
+
+    a = open_leg_run("L", _RUN_SPEC_L, "0123456789abcdef", tok,
+                     ledger=led, claims_root=claims)
+    with pytest.raises(PreserveError):
+        open_leg_run("done", _RUN_SPEC_L, "0123456789abcdef", tok,
+                     ledger=led, claims_root=claims)
+    assert attach_leg_run("L", tok, ledger=led,
+                          claims_root=claims).attempt_id == a.attempt_id
+
+
+def test_an_attempt_file_from_another_leg_is_refused(tmp_path):
+    """★ 52차 P0-1 — 남의 다리 소유 증명으로 이 다리에 붙을 수 없다."""
+    from tools.preserve import open_leg_run, attach_leg_run, PreserveError
+
+    led = _lifecycle_ledger(tmp_path)
+    claims = tmp_path / "claims"
+    ta, tb = tmp_path / "L.token", tmp_path / "M.token"
+
+    open_leg_run("L", _RUN_SPEC_L, "0123456789abcdef", ta,
+                 ledger=led, claims_root=claims)
+    tb.write_bytes(ta.read_bytes())          # 다른 이름으로 복사
+    with pytest.raises(PreserveError, match="다리"):
+        attach_leg_run("done", tb, ledger=led, claims_root=claims)
+
+
+def test_an_uncertain_ledger_write_never_discards_the_claim(tmp_path):
+    """★ 52차 P0-2 — 커밋 여부를 **모르면** authority 를 보존한다.
+
+    리뷰어 반례: `_plan_status()` 는 재독 오류를 `None` 으로 접고, rollback 은
+    `None != "running"` 을 근거로 claim 을 지웠다. 원장이 실제로는 `running`
+    으로 굳은 뒤였다.
+
+        post-error plan status: running
+        claim exists: False   token exists: False
+        recovery new open/resume/release: 모두 PreserveError
+
+    재독으로 커밋 여부를 **추정**하는 것 자체가 틀린 설계다. `_mark_plan_running`
+    이 쓰기 **전에** 실패했는가(확정 미커밋) 아니면 쓰기 도중·이후인가(불확정)를
+    자기가 알고 있으므로, 그것을 타입으로 알려야 한다.
+    """
+    import tools.preserve as P
+
+    led = _lifecycle_ledger(tmp_path)
+    claims = tmp_path / "claims"
+    tok = tmp_path / "L.token"
+
+    real_replace = os.replace
+    real_read = P.Path.read_text
+    state = {"hit": False, "reread": False}
+
+    def _replace(a, b, *args, **kw):
+        r = real_replace(a, b, *args, **kw)
+        if str(b) == str(led) and not state["hit"]:
+            state["hit"] = True
+            raise OSError(5, "durability error after the value became visible")
+        return r
+
+    def _read_text(self, *a, **kw):
+        # 재독도 실패시킨다 — 커밋 여부를 **알 수 없는** 상태를 만든다
+        if state["hit"] and not state["reread"] and str(self) == str(led):
+            state["reread"] = True
+            raise OSError(5, "re-read failed too")
+        return real_read(self, *a, **kw)
+
+    with mock.patch.object(os, "replace", _replace), \
+         mock.patch.object(P.Path, "read_text", _read_text):
+        with pytest.raises(BaseException):
+            P.open_leg_run("L", _RUN_SPEC_L, "0123456789abcdef", tok,
+                           ledger=led, claims_root=claims)
+
+    assert P.planned_index(ledger=led)["L"]["status"] == "running"
+    assert P._claim_path("L", claims).is_file(), (
+        "커밋 여부가 불확실한데 claim 을 버렸다 — 회수 불가능한 orphan")
+    assert tok.is_file(), "커밋 여부가 불확실한데 소유 증명을 버렸다"
+    # 그리고 실제로 회수된다
+    P.release_leg_run("L", token_file=tok, ledger=led, claims_root=claims)
+    assert P.planned_index(ledger=led)["L"]["status"] == "planned"
