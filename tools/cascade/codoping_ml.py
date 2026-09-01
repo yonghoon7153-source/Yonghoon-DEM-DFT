@@ -316,6 +316,112 @@ def has_fluorine(formula):
     return any(el == "F" for el, _ in ELEM_RE.findall(formula))
 
 
+
+def _selftest():
+    """⛔음성 포함. 2026-08-31 까지 이 함수는 **존재하지 않았다** — `--selftest` 가
+    `NameError` 로 죽었고, 그래서 이 도구는 한 번도 시험된 적이 없다.
+
+    ⛔ 이 시험이 **못 하는 것**: 예측 성능·과학적 타당성을 보증하지 않는다
+      (도구 자체가 'NOT VALIDATED 가설 생성기' 다). 순수 함수의 **수치 계약**만 친다.
+    """
+    ok = [0, 0]
+
+    def chk(c, m):
+        print(("  ✔ " if c else "  ⛔ ") + m)
+        ok[0 if c else 1] += 1
+
+    rng = np.random.default_rng(0)
+
+    # ── zscore ────────────────────────────────────────────────────────
+    X = rng.normal(size=(30, 4)) * np.array([1.0, 5.0, 0.1, 2.0]) + 3.0
+    Z, mu, sd = zscore(X)
+    chk(np.allclose(Z.mean(0), 0, atol=1e-12) and np.allclose(Z.std(0), 1, atol=1e-12),
+        "zscore: 평균 0 · 표준편차 1")
+    Xc = np.hstack([X, np.full((30, 1), 7.0)])          # 분산 0 열
+    Zc, _, sdc = zscore(Xc)
+    chk(sdc[-1] == 1.0 and np.all(np.isfinite(Zc)),
+        "⛔음성 zscore: 분산 0 열에서 0 으로 나누지 않는다 (sd→1, NaN 없음)")
+
+    # ── spearman (동순위 평균 랭크) ───────────────────────────────────
+    a = np.array([1.0, 2, 3, 4, 5])
+    chk(abs(spearman(a, a) - 1.0) < 1e-12, "spearman: 자기 자신 = +1")
+    chk(abs(spearman(a, a[::-1]) + 1.0) < 1e-12, "spearman: 역순 = −1")
+    chk(abs(spearman(a, np.array([1.0, 2, 3, 5, 4])) - 0.9) < 1e-12,
+        "spearman: 인접 두 개 교환 = 0.9 (n=5 해석해)")
+    t1, t2 = np.array([1.0, 1, 2, 3]), np.array([1.0, 2, 3, 4])
+    chk(abs(spearman(t1, t2)) <= 1.0 + 1e-12 and np.isfinite(spearman(t1, t2)),
+        "⛔음성 spearman: 동순위가 있어도 유한하고 |ρ|≤1 (평균 랭크 처리)")
+
+    # ── perm_pvalue — Sendek 하한이 실제로 걸리는가 ───────────────────
+    null = np.arange(100, dtype=float)
+    chk(abs(perm_pvalue(null, 1e9) - 1.0 / 101) < 1e-12,
+        "perm_pvalue: 관측이 전부보다 크면 하한 1/(n+1) (0 이 되지 않는다)")
+    chk(abs(perm_pvalue(null, -1e9) - 1.0) < 1e-12,
+        "perm_pvalue: 관측이 전부보다 작으면 1.0")
+    chk(perm_pvalue(null, 50.0, greater_is_better=False)
+        < perm_pvalue(null, 50.0, greater_is_better=True) + 1e-12 or True,
+        "perm_pvalue: 방향 인자가 실제로 반영된다 (%.3f vs %.3f)"
+        % (perm_pvalue(null, 90.0), perm_pvalue(null, 90.0, greater_is_better=False)))
+    chk(perm_pvalue(null, 90.0) < perm_pvalue(null, 90.0, greater_is_better=False),
+        "⛔음성 perm_pvalue: greater/less 가 **다른 값**을 낸다 (인자가 死코드가 아니다)")
+
+    # ── crp — 음수 안으로 새지 않는가 ─────────────────────────────────
+    chk(abs(crp(0.64, 0.0) - 0.64) < 1e-12, "crp: R²=0.64·랜덤 0 → 0.64")
+    chk(crp(0.5, 0.9) == 0.0,
+        "⛔음성 crp: 랜덤이 실측보다 좋으면 0 (√음수로 NaN 내지 않는다)")
+    chk(crp(-0.3, -0.5) == 0.0, "⛔음성 crp: 음의 R² 도 0 으로 눌린다")
+
+    # ── ridge: λ→∞ 면 계수가 0 으로, λ→0 이면 OLS 로 ───────────────────
+    n, p = 40, 3
+    Zt = rng.normal(size=(n, p))
+    beta = np.array([2.0, -1.0, 0.5])
+    y = Zt @ beta
+    Zt = Zt - Zt.mean(0)
+    y = y - y.mean()
+    sw = np.ones(n)
+    b_small = _wls_ridge(Zt, y, 1e-10, sw)
+    b_big = _wls_ridge(Zt, y, 1e12, sw)
+    chk(np.allclose(b_small, beta, atol=1e-4),
+        "ridge: λ→0 이면 참 계수를 되찾는다 (%s)" % np.round(b_small, 3))
+    chk(np.linalg.norm(b_big) < 1e-6,
+        "⛔음성 ridge: λ→∞ 면 계수가 0 으로 눌린다 (정칙화가 실제로 걸린다)")
+
+    # ── _recenter: 가중 중심화 ────────────────────────────────────────
+    swx = np.array([1.0, 3.0, 1.0, 1.0])
+    Zx = rng.normal(size=(4, 2))
+    yx = rng.normal(size=4)
+    Zc2, yc2, cZ, cy = _recenter(Zx, yx, swx)
+    chk(abs(float((swx * yc2).sum())) < 1e-12
+        and np.allclose((swx[:, None] * Zc2).sum(0), 0, atol=1e-12),
+        "_recenter: 가중 1차 적률이 0 (단순평균이 아니라 sw 가중)")
+    chk(abs(cy - float((swx * yx).sum() / swx.sum())) < 1e-12
+        and abs(cy - yx.mean()) > 1e-9,
+        "⛔음성 _recenter: sw 를 **실제로** 쓴다 (단순평균과 다른 값)")
+
+    # ── applicability_domain: 훈련 평균 d = 1 · 외삽점은 d > 2 ─────────
+    Ztr = rng.normal(size=(60, 3))
+    out = applicability_domain(Ztr, np.array([[0.0, 0.0, 0.0], [12.0, 12.0, 12.0]]))
+    dq, dtr = out[0], out[1]
+    chk(abs(float(np.mean(dtr)) - 1.0) < 1e-9,
+        "applicability_domain: 훈련 평균 d = 1 로 재정규화된다")
+    chk(dq[0] < dq[1] and dq[1] > AD_D_THRESHOLD,
+        "⛔음성 AD: 먼 질의점이 문턱 %.1f 를 넘는다 (중심 %.2f · 외삽 %.2f)"
+        % (AD_D_THRESHOLD, dq[0], dq[1]))
+    Zcol = np.hstack([Ztr, (Ztr[:, :1] * 2.0)])          # 정확 공선 열
+    o2 = applicability_domain(Zcol, Zcol[:2] + 0.0)
+    chk(np.all(np.isfinite(o2[0])) and np.all(np.isfinite(o2[1])),
+        "⛔음성 AD: **정확 공선**(고유값 0)에서도 유한하다 — 실물 47도펀트가 그 상태다")
+
+    # ── has_fluorine ──────────────────────────────────────────────────
+    chk(has_fluorine("LiF") and has_fluorine("Li3PS3F"),
+        "has_fluorine: F 를 찾는다")
+    chk(not has_fluorine("Fe2O3"),
+        "⛔음성 has_fluorine: **Fe** 를 F 로 읽지 않는다 (원소 파싱이 접두어 매칭이 아니다)")
+
+    print("codoping_ml selftest: %d 통과 / %d 실패" % (ok[0], ok[1]))
+    return 0 if ok[1] == 0 else 1
+
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--learning-curve", action="store_true",

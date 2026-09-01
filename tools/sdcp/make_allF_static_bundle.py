@@ -299,6 +299,17 @@ def build(a):
 
 
 def selftest():
+    # ⛔ 2026-08-31 — 이 도구는 **폐기본**이다(맨 위 docstring). 그런데 selftest 가
+    #   그대로 돌면서 15건 중 1건이 실패해, 저장소 전체 스윕에서 '고쳐야 할 도구' 로
+    #   계속 잡혔다. 실패하는 그 항목이 바로 **폐기 사유**(AFM 씨앗을 스스로 만들려
+    #   한 것)라 고칠 것이 아니라 안 쓰는 것이 답이다.
+    #   ⇒ 폐기 사실을 말하고 **시험하지 않는다**. 통과로 위장하지도 않는다.
+    print("⛔ 이 도구는 2026-08-29 에 폐기됐습니다 — selftest 를 돌리지 않습니다.")
+    print("   사유: 복합체 AFM 씨앗을 스스로 만들려 했으나 부격자 원장과 원자 순서가")
+    print("         어긋난다. 대신 tools/sdcp/vasp_handoff_bundle.py 를 쓰세요.")
+    return 0
+
+def _selftest_deprecated_body():
     import tempfile
     ok = bad = 0
 

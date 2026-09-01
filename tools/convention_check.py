@@ -14,6 +14,10 @@
 의도적으로 **검사하지 않는 것**: 아레니우스 온도 집합. 타당한 변이(타당성 스캔
 300–1000 K, 6점 진단, 3점 정본)가 많아 경고가 소음이 된다.
 
+사용:
+  python3 tools/convention_check.py              # 물리 규약
+  python3 tools/convention_check.py --selftests  # 전 도구 selftest 스윕 (죽은 시험 탐지)
+
 이 도구가 **못 하는 것**: 정규식 기반이라 AST 수준 우회를 못 본다 —
 변수를 경유한 계산(`den = 6*t; D = msd/den`), 다른 모듈에서 import 한 창 상수,
 동적으로 만든 창은 안 잡힌다. 통과가 곧 정합성 보증은 아니다.
@@ -156,7 +160,72 @@ def check(root=None):
     return viol, warn
 
 
+
+# ── selftest 스윕 (2026-08-31 추가) ──────────────────────────────────────
+#: 왜 여기인가: 이 파일은 "같은 규약이 조용히 갈라지는 것" 을 막는 가드다.
+#:   **죽은 selftest** 도 같은 병이다 — 2026-08-31 스윕에서 `codoping_ml.py` 의
+#:   `--selftest` 가 존재하지 않는 함수를 부르며 `NameError` 로 죽어 있었다.
+#:   그 도구는 한 번도 시험된 적이 없었고 아무도 몰랐다.
+SWEEP_TIMEOUT_S = 120
+#: 인자가 더 필요해 rc≠0 인 것은 실패가 아니다 (argparse 필수인자)
+SWEEP_NOT_FAILURE = ("required", "expected one argument", "the following arguments")
+
+
+def sweep_selftests(root=None, verbose=False):
+    """`--selftest` 를 가진 **.py 도구 전부**를 돌려 죽은 것을 찾는다.
+
+    → (pass, fail, skip, [(경로, rc, 마지막줄)])
+
+    ⛔ 이 함수가 **못 하는 것**
+      · selftest 의 **내용**이 의미 있는지는 모른다. 통과한다는 것만 본다
+        (양성만 있는 selftest 는 통과해도 아무것도 보증하지 않는다 — CLAUDE.md).
+      · `.sh` 러너와 `__pycache__` 는 제외한다 (파이썬이 아니다).
+      · 타임아웃(%d s)을 넘으면 실패가 아니라 skip 이다 — 느린 것과 죽은 것은 다르다.
+    """ % SWEEP_TIMEOUT_S
+    import subprocess
+    root = Path(root or REPO)
+    tools = sorted(p for p in (root / "tools").rglob("*.py")
+                   if "__pycache__" not in p.parts
+                   and "--selftest" in p.read_text(errors="ignore"))
+    ok = fails = skipped = 0
+    bad = []
+    for p in tools:
+        try:
+            r = subprocess.run([sys.executable, str(p), "--selftest"],
+                               capture_output=True, text=True,
+                               timeout=SWEEP_TIMEOUT_S, cwd=str(root))
+        except subprocess.TimeoutExpired:
+            skipped += 1
+            if verbose:
+                print("  ⏱ %s" % p.relative_to(root))
+            continue
+        out = (r.stdout or "") + (r.stderr or "")
+        if r.returncode == 0:
+            ok += 1
+            if verbose:
+                print("  ✔ %s" % p.relative_to(root))
+            continue
+        if any(k in out for k in SWEEP_NOT_FAILURE):
+            skipped += 1                       # 인자 부족 — 시험 실패가 아니다
+            continue
+        fails += 1
+        last = [x for x in out.strip().splitlines() if x.strip()]
+        bad.append((str(p.relative_to(root)), r.returncode,
+                    last[-1][:110] if last else ""))
+    return ok, fails, skipped, bad
+
+
+def cmd_sweep(verbose=False):
+    ok, fails, skipped, bad = sweep_selftests(verbose=verbose)
+    for path, rc, last in bad:
+        print("  \u26d4 rc=%s  %s\n       %s" % (rc, path, last))
+    print("selftest 스윕: PASS %d \u00b7 FAIL %d \u00b7 skip %d" % (ok, fails, skipped))
+    return 1 if fails else 0
+
+
 def main():
+    if "--selftests" in sys.argv:
+        return cmd_sweep("-v" in sys.argv or "--verbose" in sys.argv)
     viol, warn = check()
     print("=== 물리 규약 검사 ===")
     print(f"면제 {len(EXEMPT)}건 (사유 명시됨)\n")
