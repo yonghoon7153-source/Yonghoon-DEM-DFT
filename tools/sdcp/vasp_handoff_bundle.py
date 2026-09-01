@@ -3544,10 +3544,10 @@ def _selftest_closure(chk):
         and abs(_rex["D_raw_eV"] - (-0.5)) < 1e-6,
         "🔴 AV P1-5: 초과여도 **D_raw 는 보존**된다 (%s)" % _rex.get("D_raw_eV"))
     chk(_rex.get("reported_X_eV") is None
-        and _rex.get("citable_at_0.01eV") is False
+        and _rex.get("tested_axes_stable_at_0.01eV") is False
         and "0.01 eV 인용 자격 없음" in str(_rex.get("reported_X_⛔")),
         "🔴 AV P1-5: 초과 시 **0.01 eV 반올림 보고만** 철회된다 "
-        "(citable_at_0.01eV=false)")
+        "(tested_axes_stable_at_0.01eV=false)")
     chk(_rex.get("verdict") == "보고 가능"
         and (_rex.get("D_interval_eV") or {}).get("hi", 0) <= -0.10,
         "AV P1-5: 구간 [D−B, D+B] 전체가 guard 이하면 방향 결론은 유지된다 "
@@ -3958,7 +3958,7 @@ def _selftest_closure(chk):
     chk(not any("GAS_BOX_DELTA" in b for b in _rgb["blocks"])
         and any("GAS_BOX_DELTA" in a for a in (_rgb.get("advisories") or []))
         and _gd.get("pass") is False
-        and _rgb.get("citable_at_0.01eV") is False
+        and _rgb.get("tested_axes_stable_at_0.01eV") is False
         and _rgb.get("reported_X_eV") is None
         and _rgb.get("D_raw_eV") is not None,
         "⛔음성 AP #11·AV P1-5: 조각별 4 meV 씩이어도 부호가 반대면 δ_gas 8 meV → "
@@ -7829,12 +7829,27 @@ def _closure_estimand(man, results, E, emol, jobs, merge_info=None):
                         "셋이 같은 방향이면 실제 편차는 단순합에 가깝다 (회신 AT Q2)"),
         "by_axis_meV": {k: round(v, 3) for k, v in sorted(_bax.items())},
         "missing_axes": _bmiss,
-        "axes_not_designed": _bskip,
+        # ⛔ 회신 AY P1 — 설계에 **애초에 없는** 축을 실제 배열로 적는다. 종전엔
+        #   측정 못 한 축(_bskip)만 담겨서, ENCUT 처럼 처음부터 설계에 없던 축이
+        #   목록에 안 보였다 — 보이지 않으면 없는 것처럼 읽힌다.
+        "axes_not_designed": sorted(set(_bskip) | {
+            "ENCUT (평면파 컷오프 수렴 — 이 묶음에 설계 자체가 없다)",
+            "축간 상호작용 (교차항 — 한 축씩만 흔들어 봤다)",
+        }),
         "B_num_meV": (round(sum(_bax.values()), 3) if _bax and not _bmiss else None),
         "tol_meV": _BTOL,
         "pass": (bool(_bax) and not _bmiss and sum(_bax.values()) <= _BTOL),
-        "citable_at_0.01eV": (bool(_bax) and not _bmiss
-                              and sum(_bax.values()) <= _BTOL),
+        # ⛔⛔ 회신 AY P1 — 이름이 과했다. 이 불리언이 말하는 것은 **시험한 축들이**
+        #   0.01 eV 안에서 안정하다는 것뿐인데, `citable_at_0.01eV` 는 값 전체가
+        #   그렇다고 읽힌다. 이름을 사실에 맞추고, **전체**는 별도 키로 두되
+        #   ENCUT 근거가 없으므로 None 이다 (False 가 아니라 **모른다**).
+        "tested_axes_stable_at_0.01eV": (bool(_bax) and not _bmiss
+                                         and sum(_bax.values()) <= _BTOL),
+        "overall_citable_at_0.01eV": None,
+        "⚠_두_키의_차이": ("tested_axes_… 는 **시험한 세 축**만 말한다. "
+                            "overall_… 은 ENCUT·교차항 근거가 없어 **None(모른다)** "
+                            "이다 — False 가 아니다. 전체 0.01 eV 를 주장하려면 "
+                            "별도 ENCUT 설계가 필요하다 (회신 AY Q6)."),
         "⚠_문턱_봉인": "결과를 보기 전에 정한 값이다 (회신 AT Q2 · 코드 상수)",
         "미달이면": ("값을 버리지 않는다 — **0.01 eV 안정성 주장을 하지 않고** 보고 "
                      "해상도를 낮추거나 축별 민감도만 낸다"),
@@ -7849,7 +7864,7 @@ def _closure_estimand(man, results, E, emol, jobs, merge_info=None):
         #   NO_VALUE 가 됐다. 문구("넘어도 raw D 는 보존, 0.01 eV 주장만 철회")와
         #   코드가 반대였다. envelope 초과는 입력이 무효라는 뜻이 아니다 —
         #   D_raw 와 축별 변화는 보존하고 **0.01 eV 인용 자격만** 없앤다.
-        out["numeric_budget"]["citable_at_0.01eV"] = False
+        out["numeric_budget"]["tested_axes_stable_at_0.01eV"] = False
         out.setdefault("advisories", []).append(
             "NUMERIC_BUDGET_EXCEEDED(B_num %.2f meV > %.0f — 축별로는 통과해도 "
             "합이 넘는다 %s. D_raw 는 보존하고 0.01 eV 인용 자격만 철회한다 · "
@@ -8123,8 +8138,9 @@ def _closure_estimand(man, results, E, emol, jobs, merge_info=None):
     out["D_raw_eV"] = round(primary, 6)
     out["fragments"] = {"sdcp": sd, "control": ct}
     _nbF = out.get("numeric_budget") or {}
-    _cit01 = bool(_nbF.get("citable_at_0.01eV"))
-    out["citable_at_0.01eV"] = _cit01
+    _cit01 = bool(_nbF.get("tested_axes_stable_at_0.01eV"))
+    out["tested_axes_stable_at_0.01eV"] = _cit01
+    out["overall_citable_at_0.01eV"] = None      # ENCUT 근거 없음 (AY P1)
     if _cit01:
         out["reported_X_eV"] = round(
             round(primary / PREREG_ROUND_EV) * PREREG_ROUND_EV, 2)

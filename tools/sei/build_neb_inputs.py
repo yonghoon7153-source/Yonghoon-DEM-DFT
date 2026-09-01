@@ -256,10 +256,29 @@ def load_relaxed(tag, path, relaxed_from):
     """
     import re
     from ase import Atoms
-    cands = sorted(glob.glob(os.path.join(relaxed_from, f"{tag}_mp-*"))) \
-        or ([os.path.join(relaxed_from, tag)] if os.path.isdir(os.path.join(relaxed_from, tag)) else [])
+    # ⛔ 2026-09-01 (kgy 실측) — 이완본 폴더 이름은 **구조 파일명**에서 오지 태그에서
+    #   오지 않는다. build_dft_inputs 가 `sei_<stem>.vasp` → `<stem>` 으로 만든다.
+    #   그래서 태그 `li_metal` + 파일 `sei_li_metal_bcc.vasp` 조합에서 글롭
+    #   `li_metal_mp-*` 가 실제 폴더 `li_metal_bcc` 를 못 찾아 막혔다.
+    #   ⇒ 태그와 **구조 파일 stem** 둘 다로 찾는다.
+    _stem = os.path.basename(path)
+    for _p in (".vasp", ".cif", ".xyz"):
+        if _stem.endswith(_p):
+            _stem = _stem[: -len(_p)]
+    _stem = _stem[4:] if _stem.startswith("sei_") else _stem
+    _names, _seen = [], set()
+    for _n in (tag, _stem):
+        if _n and _n not in _seen:
+            _seen.add(_n)
+            _names.append(_n)
+    cands = []
+    for _n in _names:
+        cands += sorted(glob.glob(os.path.join(relaxed_from, f"{_n}_mp-*")))
+        _d = os.path.join(relaxed_from, _n)
+        if os.path.isdir(_d):
+            cands.append(_d)
     if not cands:
-        return None, f"{relaxed_from}/{tag}_mp-* 없음"
+        return None, (f"{relaxed_from}/{{{','.join(_names)}}}[_mp-*] 없음")
     outp = os.path.join(cands[0], "01_vcrelax.out")
     if not os.path.isfile(outp):
         return None, f"{outp} 없음"
