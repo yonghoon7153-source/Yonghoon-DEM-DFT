@@ -908,7 +908,11 @@ _RUNNER_AXES = ('LEAN', 'VOX', 'ARMS', 'SIGMA_PTFE', 'PTFE_STAMP', 'FIBRE_STAMP'
                 #    ⇒ 러너 축을 늘리면 **이 목록도 같이** 늘린다 (검사 대상과 같은 축).
                 'SIGMA_ION_SDCP', 'SIGMA_ION_SE',
                 #  ★ 2026-08-31 (Codex R16 P1-5) — PTFE 이온 차단 축.
-                'PTFE_BLOCK_UM', 'PTFE_BLOCK_SCOPE')
+                'PTFE_BLOCK_UM', 'PTFE_BLOCK_SCOPE',
+                #  ★ 2026-09-02 — closure 스윕의 두 대비 축 + 게이트 전용 문.
+                #    ⚠ 이제 안 넣으면 **두 겹으로** 막힌다: 격리가 뚫리는 옛 경로에 더해,
+                #    러너의 새 env fail-closed 가 `bash -s` 경로에서 ABORT 를 낸다.
+                'SIGMA_AM_S_OVERRIDE', 'SIGMA_SDCP_OVERRIDE', 'P2_ENV_GUARD_ONLY', 'P2_SELF')
 
 
 def _hermetic_env(env):
@@ -2479,6 +2483,48 @@ def _selftest():
     chk('L-1i: ★ 대입 추출이 네 꼴을 다 본다 (줄머리·`;`·`&&`·`then`) — 자동 seed 의 '
         '조건은 "러너가 **텍스트로** 대입하는가" 이므로 조건부도 포함이다',
         _asm_assigned(_fx) == {'A_FLAG', 'B_FLAG', 'C_FLAG', 'D_FLAG'})
+    #  ── ★★ 2026-09-02 — **읽지 않는 축 env 는 조용히 무시되면 안 된다** (실측 사고) ──
+    #    closure 스윕 중심점을 `SIGMA_AM_S_OVERRIDE=0.01 SIGMA_SDCP_OVERRIDE=250` 으로
+    #    띄웠는데 실행 머신의 러너가 **배선 이전 커밋**이었다.  두 변수는 안 읽히는
+    #    환경변수가 됐고, 값이 마침 프리셋 기본값과 같아 런은 **정확히 옳은 σ_e 를 내며
+    #    통과**했다 — 아무것도 시험하지 않은 채로.  ⚠ 이 부류의 위험은 "틀린 답" 이 아니라
+    #    **"맞는 답인데 근거가 없는 것"** 이다.  주의 문구로는 못 막으므로 러너가 죽는다.
+    #  ⇒ 게이트는 **자기 소스의 `$VAR` 역참조**를 본다 (손목록 아님 — 이 리포가 그 방식으로
+    #    세 번 졌다).  아래 세 시험이 "죽는가 / 안 죽는가 / **가려서** 죽는가" 를 고정한다.
+    _envg_rel = os.path.join('scripts', 'sdcp_gain_vox015_8arm.sh')
+
+    def _env_guard(extra, src=None):
+        _e = _hermetic_env(dict(extra, P2_ENV_GUARD_ONLY='1'))
+        _p = _sp.run(['bash', src or os.path.join(ROOT, _envg_rel)],
+                     capture_output=True, text=True, env=_e, timeout=120, cwd=ROOT)
+        return _p.returncode, _p.stdout + _p.stderr
+
+    _rc_b, _o_b = _env_guard({'SIGMA_BOGUS_OVERRIDE': '1'})
+    chk('L-1j: ★★ 러너가 **읽지 않는** 축 env 를 받으면 죽는다 (조용히 무시되면 그 팔은 '
+        '옳은 숫자를 내면서 아무것도 시험하지 않는다 — 2026-09-02 실측)',
+        _rc_b == 2 and '읽지 않는' in _o_b and 'SIGMA_BOGUS_OVERRIDE' in _o_b)
+    _rc_g, _o_g = _env_guard({'SIGMA_AM_S_OVERRIDE': '0.01', 'SIGMA_SDCP_OVERRIDE': '250',
+                              'SIGMA_VGCF_OVERRIDE': '100'})
+    chk('L-1k: ★ 러너가 **읽는** 축 env 셋은 통과한다 — 게이트가 전부를 막으면 생산이 선다',
+        _rc_g == 0 and '게이트 통과' in _o_g)
+    #  ⓒ ★★ **가려서** 죽는가 — 사고 당시의 옛 러너를 그대로 세워 재현한다.
+    #    옛 판은 `SIGMA_VGCF_OVERRIDE` 는 배선했고 나머지 둘은 안 했다 ⇒ 게이트가 그 둘만
+    #    지목해야 한다.  전부 거부하거나 전부 통과하면 이 시험이 문다.
+    _old = _RSRC
+    for _drop in ('AS_FLAG', 'SD_SIG_FLAG'):
+        _old = re.sub(r'^.*SIGMA_(?:AM_S|SDCP)_OVERRIDE.*$', '', _old, flags=re.M)
+    _rel_old, _abs_old = _rmut_path()
+    with open(_abs_old, 'w', encoding='utf-8') as _f:
+        _f.write(_old)
+    try:
+        _rc_o, _o_o = _env_guard({'SIGMA_AM_S_OVERRIDE': '0.01', 'SIGMA_SDCP_OVERRIDE': '250',
+                                  'SIGMA_VGCF_OVERRIDE': '100'}, src=_abs_old)
+    finally:
+        os.remove(_abs_old)
+    chk('L-1l: ★★ 배선 **이전** 러너를 세우면 안 배선된 둘만 지목하고 죽는다 '
+        '(SIGMA_VGCF_OVERRIDE 는 옛 판도 읽으므로 지목 대상이 아니다 = 가려서 문다)',
+        _rc_o == 2 and 'SIGMA_AM_S_OVERRIDE' in _o_o and 'SIGMA_SDCP_OVERRIDE' in _o_o
+        and 'SIGMA_VGCF_OVERRIDE' not in _o_o.split('받았다:', 1)[-1].splitlines()[0])
     _m1 = _rmut('LEAN_FLAGS=" --no-step4 --no-thermal --no-trackb --no-field --no-ion --no-pore --no-collector"',
                 'LEAN_FLAGS=" --no-step4 --no-thermal --no-trackb --no-field --no-ion --no-pore"')
     chk(f'L-2: ★ LEAN=2 에서 `--no-collector` 를 빼면 **잡는다** ({len(_m1)}건)',

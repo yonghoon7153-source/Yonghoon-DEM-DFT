@@ -56,6 +56,45 @@ SDCP_SPHERE_D="${SDCP_SPHERE_D:-}"
 #  ★ 2026-08-25 — `bash -s`(stdin) 로 설정부만 돌리면 `BASH_SOURCE` 가 없다 (규칙 L 이 그렇게 돈다).
 #    `P2_SCR` 를 먼저 보고, 없으면 `$0` 로 떨어진다 — 리포에 이미 있는 규약이다.
 SCR="${P2_SCR:-$(cd "$(dirname "${BASH_SOURCE[0]:-$0}")" && pwd)}"
+
+#  ★★★ 2026-09-02 — **읽지 않는 축 env 는 조용히 무시되면 안 된다** (실측 사고).
+#    사고: closure 스윕 중심점을 `SIGMA_AM_S_OVERRIDE=0.01 SIGMA_SDCP_OVERRIDE=250` 으로
+#    띄웠는데 kgy 의 `~/dem-mt` 가 **배선 이전 커밋**이었다.  두 변수는 그냥 안 읽히는
+#    환경변수가 됐고, 그 값들이 마침 프리셋 기본값과 같아서 런은 **정확히 옳은 σ_e 를
+#    내며 통과**했다 — 아무것도 시험하지 않은 채로.  디렉터리 태그를 눈으로 확인하지
+#    않았다면 그대로 25 격자점 스윕에 들어갔다.
+#  ⚠ 이 부류의 위험은 "틀린 답" 이 아니라 **"맞는 답인데 근거가 없는 것"** 이다.
+#    사전등록 축이 적용되지 않은 팔은 대조로도 판정으로도 쓸 수 없다.
+#  ⇒ **목록을 손으로 유지하지 않는다** (이 리포가 그 방식으로 세 번 졌다 —
+#    `SBRG_FLAG`·`RQG_FLAG`·`AS_FLAG`).  러너가 **자기 소스를 읽어** 실제로 역참조하는
+#    이름만 인정하고, 축 이름꼴(`SIGMA_*`·`SDCP_*`·`PTFE_*`)인데 안 읽는 것이 설정돼
+#    있으면 **죽는다**.  주석에 이름이 적힌 것만으로는 통과하지 않는다 (`$VAR` 역참조를 본다).
+_SELF="${P2_SELF:-${BASH_SOURCE[0]:-$0}}"
+if [ -r "$_SELF" ]; then
+  _p2_unread=""
+  for _v in $(env | sed -n 's/^\(SIGMA_[A-Z0-9_]*\|SDCP_[A-Z0-9_]*\|PTFE_[A-Z0-9_]*\)=.*/\1/p'); do
+    grep -qE '\$\{?'"$_v"'\b' "$_SELF" || _p2_unread="$_p2_unread $_v"
+  done
+  if [ -n "$_p2_unread" ]; then
+    echo "[p2] ABORT — 이 러너가 **읽지 않는** 축 env 를 받았다:$_p2_unread"
+    echo "     그대로 돌면 그 축이 조용히 무시된 채 런이 통과한다 — 값이 우연히 기본값과"
+    echo "     같으면 **옳은 숫자를 내면서 아무것도 시험하지 않는다** (2026-09-02 실측)."
+    echo "     원인 대개: 러너 코드가 배선 이전 커밋이다.  고치는 법:"
+    echo "       git -C \"\$(dirname \"$SCR\")\" fetch origin claude/stoic-knuth-NObVQ"
+    echo "       git -C \"\$(dirname \"$SCR\")\" merge --ff-only origin/claude/stoic-knuth-NObVQ"
+    echo "     오타라면 이름을 고칠 것.  러너: $_SELF"
+    exit 2
+  fi
+elif env | grep -qE '^(SIGMA_|SDCP_|PTFE_)[A-Z0-9_]*='; then
+  #  자기 소스를 못 읽는 경로(`bash -s` 등)에서 축 env 가 실려 오면 **판정 불가**다.
+  #  fail-open 하면 위 사고가 그대로 재발하므로 여기서도 죽는다.
+  echo "[p2] ABORT — 축 env 가 설정됐는데 러너가 자기 소스($_SELF)를 못 읽어 배선을 확인할 수 없다."
+  echo "     `P2_SELF=<러너 경로>` 를 주거나 파일로 직접 실행할 것."
+  exit 2
+fi
+#  ★ 위 게이트만 돌려 보고 나가는 문 (규율 검사기가 GPU 없이 거동을 시험한다).
+[ -n "${P2_ENV_GUARD_ONLY:-}" ] && { echo "[p2] env 게이트 통과"; exit 0; }
+
 SD_FLAG=""; SD_TAG=""
 if [ -n "$SDCP_SPHERE_D" ]; then
   SD_FLAG=" --step3-sdcp-sphere-d $SDCP_SPHERE_D"; SD_TAG="_sph"
