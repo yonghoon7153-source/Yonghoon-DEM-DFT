@@ -308,10 +308,19 @@ for S in comp1 modelc; do
             #   문턱은 **실측 per-pool-kpt 시간의 1.5배**로 잡는다 — 그보다 오래 조용하면
             #   그때가 진짜 이상이다. (실측이 없으면 판정을 보류하지 경고하지 않는다.)
             printf "        로그 갱신 %s분 전" "$AGE"
-            if [ "${KD:-0}" -gt 0 ] && [ -n "$CPUT" ]; then
-                awk -v age="$AGE" -v k="$KD" -v t="$CPUT" 'BEGIN{
-                    per = t/k/60                       # pool0 kpt 하나당 분
-                    if (age > 1.5*per) printf "  (pool0 기준 정상 주기 %.0f분/kpt 초과 — 아래 생사 판정을 본다)", per
+            if [ "${KTOT:-0}" -gt 0 ] && [ -n "$CPUT" ]; then
+                # ⛔⛔ 2026-09-02 실측 — 문턱이 **npool 배(10×) 헐거웠다.**
+                #   종전: per = t/KD/60 — `t` 는 **전 랭크 누적 CPU 시간**인데
+                #   `KD` 는 **pool0 하나의** kpt 수다. 단위가 섞여 npool 배 커진다.
+                #   실측(modelc, npool 10): 바로 윗줄이 `2484 s/kpt`(=41.4분) 를 찍는데
+                #   같은 블록에서 `414분/kpt` 이 나왔다 — 정확히 10배다.
+                #   그래서 문턱이 621분이 되어, **84분 침묵을 '정상' 으로 찍었다**
+                #   (자기 규칙대로면 62분 초과이므로 경고했어야 한다). fail-open 이다.
+                #   ⇒ 바로 윗줄과 **같은 기준**(전체 kpt)을 쓴다. 두 수가 갈라지면
+                #     둘 중 하나는 반드시 틀린 것이다.
+                awk -v age="$AGE" -v kt="$KTOT" -v t="$CPUT" 'BEGIN{
+                    per = t/kt/60                      # kpt 하나당 분 (전체 기준)
+                    if (age > 1.5*per) printf "  (정상 주기 %.0f분/kpt 초과 — 아래 생사 판정을 본다)", per
                     else                printf "  (정상 — kpt 하나에 %.0f분 걸린다)", per
                 }'
             fi
