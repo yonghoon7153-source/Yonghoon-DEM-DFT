@@ -144,6 +144,59 @@ def build(case, dump_all=False, verbose=True):
     return made, imgs, cell, sad
 
 
+
+#: 경로 겹침 파일에서 **중간 이미지**의 이동 원자를 무엇으로 찍을까.
+#:   ⚠ 실제 원소가 아니다 — VESTA 에서 색이 갈리라고 쓰는 **표지**다.
+#:   그래서 파일명에 `_marked` 를 달고, 겹침 파일은 계산 입력으로 쓰지 않는다.
+PATH_MARK = "He"
+#: 이동 원자로 볼 최소 변위 [Å] (초기→최종). 협동 이동이면 여럿이 잡힌다.
+MOVE_MIN_A = 1.0
+
+
+def path_overlay(case, mark=True, verbose=True):
+    """골격(고정 원자) + 이동 원자의 **7 위치**를 한 파일에.
+
+    경로를 한 장으로 보는 표준 그림이다 — 격자는 한 번만 그리고 뛰는 이온을
+    구슬 사슬로 얹는다.
+
+    ⛔ 못 하는 것
+      · 이동 원자를 **자동으로 하나라고 가정하지 않는다.** 초기→최종 변위가
+        MOVE_MIN_A 를 넘는 원자를 전부 넣는다 (협동 이동이면 여럿이다).
+      · 표지 원소(He)는 **가짜다.** 계산 입력으로 쓰면 안 된다.
+    """
+    crd, dat, base, rep, label = CASES[case]
+    imgs = read_crd(os.path.join(RAW, crd))
+    _b = read(os.path.join(ROOT, base))
+    cell = _b.cell.array * rep
+
+    d = np.linalg.norm(imgs[-1][1] - imgs[0][1], axis=1)
+    mov = np.where(d > MOVE_MIN_A)[0]
+    if len(mov) == 0:
+        raise SystemExit(f"⛔ {case}: 변위 {MOVE_MIN_A} Å 를 넘는 원자가 없다 — "
+                         f"경로가 비었거나 이미지 순서가 어긋났다 (최대 {d.max():.2f} Å)")
+
+    sym0, pos0 = imgs[0]
+    keep = [i for i in range(len(sym0)) if i not in set(mov)]
+    S = [sym0[i] for i in keep]
+    P = [pos0[i] for i in keep]
+    for k, (sym, pos) in enumerate(imgs):          # 이동 원자의 7 위치
+        for i in mov:
+            first_last = k in (0, len(imgs) - 1)
+            S.append(sym[i] if (first_last or not mark) else PATH_MARK)
+            P.append(pos[i])
+
+    at = Atoms(symbols=S, positions=np.array(P), cell=cell, pbc=True)
+    os.makedirs(OUT, exist_ok=True)
+    nm = f"{case}_path_all{len(imgs)}" + ("_marked" if mark else "")
+    write(os.path.join(OUT, nm + ".vasp"), at, format="vasp", direct=True, sort=True)
+    write(os.path.join(OUT, nm + ".xyz"), at, format="extxyz")
+    if verbose:
+        print(f"  {label}: 골격 {len(keep)} + 이동원자 {len(mov)}개 × {len(imgs)} 위치 "
+              f"= {len(S)} · 변위 {d[mov].min():.2f}–{d[mov].max():.2f} Å")
+        print(f"    → db/structures/neb_paths/{nm}.{{vasp,xyz}}")
+    return nm, len(mov), at
+
+
 def selftest():
     """⛔음성 포함."""
     ok = [0, 0]
@@ -187,6 +240,15 @@ def selftest():
                  "끝점이 높은 진단 홉 — 0-based %s)" % s2)
     chk(not any("saddle" in x for x in m2),
         "⛔음성 그래서 saddle 파일을 만들지 않는다 (final 과 같은 이미지다)")
+    nm, nmov, at = path_overlay("li2s", verbose=False)
+    chk(nmov == 1, "li2s 는 이동 원자가 1개다 (공공 매개 단일 홉, %d)" % nmov)
+    chk(len(at) == 80 + 6,
+        "겹침 파일 = 골격 79 + 이동원자 7위치 = 86 (%d)" % len(at))
+    chk(sum(1 for x in at.get_chemical_symbols() if x == PATH_MARK) == 5,
+        "⛔음성 중간 5장만 표지로 찍고 처음·끝은 **실제 원소**로 남긴다")
+    _, nm2, at2 = path_overlay("li3nd_ccc", verbose=False)
+    chk(nm2 >= 1, "li3nd c→c 도 이동 원자를 찾는다 (%d개)" % nm2)
+
     print("selftest: %d 통과 / %d 실패" % (ok[0], ok[1]))
     return 0 if ok[1] == 0 else 1
 
@@ -196,12 +258,18 @@ def main():
                                  formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--cases", nargs="*", default=list(CASES))
     ap.add_argument("--all", action="store_true", help="7 이미지 전부 뽑는다")
+    ap.add_argument("--overlay", action="store_true",
+                    help="골격 + 이동원자 7위치를 **한 파일**로 (경로 한 장 보기)")
+    ap.add_argument("--no_mark", action="store_true",
+                    help="겹침에서 중간 위치도 실제 원소로 (표지 He 안 씀)")
     ap.add_argument("--selftest", action="store_true")
     a = ap.parse_args()
     if a.selftest:
         return selftest()
     for c in a.cases:
         build(c, dump_all=a.all)
+        if a.overlay:
+            path_overlay(c, mark=not a.no_mark)
     print("\n⚠ VESTA: .vasp 로 열어야 Boundary 타일링이 된다 (xyz 는 격자가 없다).")
     print("⚠ 이 구조들의 장벽은 citable=false 다 — db/properties/sei_neb.json 참조.")
     return 0
