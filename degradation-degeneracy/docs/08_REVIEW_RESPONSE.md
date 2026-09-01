@@ -5843,9 +5843,9 @@ docstring 에 남은 문자열에도 걸린다. 실제로 걸려 있었다: 이 
 
 | 무엇 | 값 |
 |---|---|
-| 전체 회귀 | **1390 passed · 1 xfailed · 0 failed** |
+| 전체 회귀 | **1391 passed · 1 xfailed · 0 failed** (825s) |
 | strict smoke | **rc 0 · 52 ✅ · 0 ❌** |
-| 변이 전수 | 등록부 **156** (executable 149 · declared 7) · 12 조각. 정본은 `mutation_coverage/s1..s12.json` 과 `reports/` |
+| 변이 전수 | 등록부 **157** (executable 150 · declared 7) · 12 조각 · 조각별 문제 0건 · 합집합이 등록부 전체를 정확히 덮었다 (관측 157). 정본은 `mutation_coverage/s1..s12.json` 과 `reports/` |
 | 산출물 | g8 을 얼리고 g9 로 · `proj ad598fe77e75afec` (행 바이트 불변) |
 | 영수증 | core_sha `77235418c8f3e8e8…` · validator identity `7b968b9bf0965402` |
 

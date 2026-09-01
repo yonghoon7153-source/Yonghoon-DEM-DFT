@@ -74,14 +74,17 @@
 
 ## §2 증거
 
-### 2-1 전체 회귀 — **1390 passed · 1 xfailed · 0 failed**
+### 2-1 전체 회귀 — **1391 passed · 1 xfailed · 0 failed** (825s)
 
-### 2-2 strict smoke — **rc 0 · 52 ✅ · 0 ❌** (clean 커밋에서)
+### 2-2 strict smoke — **rc 0 · 52 ✅ · 0 ❌** (clean 커밋 `5480aae4` 에서)
 
 ### 2-3 변이 전수 — 등록부 **157 scenario** (executable 150 · declared 7)
 
 145 → 157. 이번 라운드 방어 12개를 등록했고, 54차 수정으로 원문이 움직인 낡은
 preimage 를 갱신했다 (`--check-preimages` 가 그것을 먼저 잡는다).
+
+12조각 전부를 **이 커밋의 코드에서** 다시 돌렸고 조각별 문제는 0건이다.
+`--check-coverage` 는 `조각 합집합이 등록부 전체를 정확히 덮었다` (관측 157).
 
 **전수 재생 결과의 정본은 커밋된 증거 파일이다** —
 `docs/22p_gap/mutation_coverage/s1..s12.json` 과 그 옆의 `reports/`. 이 문서에
