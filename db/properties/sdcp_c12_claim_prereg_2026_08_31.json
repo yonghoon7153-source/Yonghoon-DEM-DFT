@@ -6,26 +6,38 @@
  "제목": "C-12 보고량 한정·오차예산·자세 해석 규칙 (회신 AT Q1/Q2/Q5/Q6 · 해제조건 8)",
  "근거": "kb/reviews/codex_AT_reply_c12_v17_2026_08_31.md",
  "0_시각_증거": "VASP 결과를 **하나도 보기 전**이다. 이 시점의 계산 산출물은 0개다 — git log 가 그 순서의 증거다.",
-
  "1_보고량": {
-  "이름": "fixed-geometry differential complex–gas reference energy",
-  "한국어": "고정기하 복합체−기체기준 차등에너지 (두 조각의 차)",
+  "이름": "adsorption energy difference (ΔΔE_ads)",
+  "한국어": "흡착에너지 차 (두 조각의 차)",
   "식": "D = (E_C_sdcp − E_G_sdcp) − (E_C_control − E_G_control)",
   "⛔_부르면_안_되는_이름": [
-   "adsorption energy — 각 항을 그렇게 부르지 않는다",
    "binding energy · free energy — 평형·고립계 양이 아니다",
-   "E_ads · dE_site — 이 묶음의 산출물이 아니다 (옛 wave 용어). 낡은 claim_policy 에서 삭제했다"
+   "E_ads · dE_site 를 **옛 wave 값과 같은 표에** 두는 것 (다른 프로토콜이다)"
   ],
-  "포함": ["조각 변형에너지", "표면 변형에너지", "고정된 gas conformer 선택 효과"],
-  "제외": ["기하 이완", "영점·열적 기여", "용매·계면 전기장"]
+  "포함": [
+   "조각 변형에너지",
+   "표면 변형에너지",
+   "고정된 gas conformer 선택 효과"
+  ],
+  "제외": [
+   "기하 이완",
+   "영점·열적 기여",
+   "용매·계면 전기장"
+  ],
+  "⚠_개명_2026_09_01": "1저자 결정: 'adsorption' 을 쓴다. 종전 판은 그 단어 자체를 금지어로 뒀는데, README·MANIFEST·프로토콜이 서로 다른 이름을 쓰는 상태(회신 AY P0-4)를 만들었다. ⇒ **한정어 'fixed-geometry' 를 붙인 형태로 통일**한다 — 결정을 따르되 재는 것과 부르는 것이 어긋나지 않게. 한정어를 떼는 것은 별도 결정이 필요하다.",
+  "기호": "ΔΔE_ads = ΔE_ads(SDCP) − ΔE_ads(control),  ΔE_ads(f) = E_C(f) − E_G(f)",
+  "⚠_이름에_단서를_넣지_않는다": "2026-09-01 1저자: 'fixed-geometry adsorption energy difference' 같은 이름을 쓰는 논문은 없다 — 맞는 지적이다. **이름은 평범하게 쓰고 단서는 Methods 가 진다.** 그래서 이름은 ΔΔE_ads 로 두되, 아래 `Methods_필수문장` 을 원고에 **반드시** 넣는다. 단서를 이름에서 뺀 것이지 없앤 것이 아니다.",
+  "Methods_필수문장": {
+   "ko": "흡착에너지는 MLIP(UMA-s-1p1)로 이완한 기하 위의 **단일점 계산**으로 얻었고, DFT 수준의 이온 이완은 수행하지 않았다. 따라서 조각 변형·표면 변형 에너지와 고정된 기체 conformer 선택 효과가 값에 포함된다.",
+   "en": "Adsorption energies were obtained as single-point calculations on MLIP-relaxed (UMA-s-1p1) geometries; no further ionic relaxation was performed at the DFT level. Fragment and surface deformation energies and the choice of the fixed gas-phase conformer are therefore included in the reported values.",
+   "⛔": "이 문장이 빠지면 ΔΔE_ads 라는 이름이 재는 것과 어긋난다 — 그때는 인용 불가다."
+  }
  },
-
  "2_허용_서술_이대로만": {
   "문구": "사전등록한 18.272 × 11.512 Å² lateral cell, 1 fragment/cell (0.5009 nm⁻²), fixed geometry, pm1, PBE+U+D3 프로토콜에서의 differential complex–gas reference energy 이다. 잔여 lateral-size/coverage 의존은 추정하지 않았으며, 고립 흡착·평형 결합·실제 전극 피복률로 일반화하지 않는다.",
   "출처": "회신 AT Q6 이 준 문구",
   "⛔": "이 문구를 줄이거나 조건절을 떼지 않는다"
  },
-
  "3_오차예산": {
   "정의": "B_num = |Δ_vac| + |δ_gas| + |δ_k|   (meV)",
   "문턱": 5.0,
@@ -36,20 +48,23 @@
   "구현": "tools/sdcp/vasp_handoff_bundle.py · `numeric_budget` (분석기), 문턱은 코드 상수",
   "⚠_봉인": "결과를 보기 전에 정했다"
  },
-
  "4_자세_해석_규칙": {
   "primary": "b00 — MLIP 스크린의 E_pose 최저 basin. DFT 결과를 하나도 보기 전에 동결했다 (sdcp_c12_protocol_2026_08_30.json)",
   "보고량은_primary_조건이다": "대안 자세(b12 등)의 값을 primary 값처럼 싣지 않는다",
   "분자-이미지_최단거리": {
    "⛔_정정_2026_08_31": "종전엔 조각별 **최솟값 하나**만 실어, sdcp 4.613 Å(대안 자세 b12 의 worst case)이 primary 값처럼 보고됐다. role 별로 나눈다.",
-   "primary_b00": {"sdcp_neutral": 4.894, "ptfe_c10": 5.646},
-   "대안_b12_worst": {"sdcp_neutral": 4.613},
+   "primary_b00": {
+    "sdcp_neutral": 4.894,
+    "ptfe_c10": 5.646
+   },
+   "대안_b12_worst": {
+    "sdcp_neutral": 4.613
+   },
    "⚠": "격자벡터 길이(11.512 Å)와 **다른 양**이다 — 그것을 최소이미지라고 찍으면 실제보다 여유가 있어 보인다"
   },
   "⛔_철회한_근거": "'공통 주기영상 항이 상당 부분 소거된다' — **삭제한다.** 두 primary 복합체의 슬랩 원자 수가 48/192 로 다르고 최대 변위가 약 0.296 Å 이라 공통항이라는 보장이 없다 (회신 AT Q1)",
   "D3": "IVDW=11 은 pairwise D3 zero-damping 이다. D3-off 쌍 잡은 **만들지 않는다** — 기존 OUTCAR 의 Edisp 네 항으로 D 의 총 D3 기여를 계산할 수 있다 (고정기하 static 에서 E_on − E_off = Edisp 가 항등식)"
  },
-
  "5_pooled_영구_비인용": {
   "결정": "선택지 (a) — pooled 최솟값과 secondary_G 를 **영구 진단값(비인용)** 으로 고정. 추가 VASP 잡 0",
   "1저자_결정": "2026-08-31",
@@ -62,7 +77,6 @@
   "값은_남긴다": "`secondary_G_eV_diagnostic` — 숫자를 지우면 왜 못 쓰는지도 같이 사라져 재논증이 반복된다",
   "대신_무엇을_쓰나": "자세 탐색의 폭은 **MLIP 스크린**이 진다 (§6)"
  },
-
  "6_MLIP_역할_원고_구조": {
   "구조": "MLIP 가 넓게 훑고, DFT 가 한 점을 정밀하게 찍는다",
   "왜_이_구조인가": "pooled('DFT 값 여러 개 중 제일 좋은 것')는 체리피킹으로 읽힌다. 탐색과 판정을 분리하면 자세를 결과 보고 고르지 않았다는 것이 자동으로 증명된다",
@@ -78,23 +92,38 @@
   ],
   "⛔_doped_는_제외": "MLIP 스크린에 sdcp_doped 가 들어 있으나, doped 마감 문서의 금지 서술에 '무선호 또는 자리선호 방향 일체' 가 있다. 원고의 MLIP 절은 sdcp_neutral + ptfe_c10(+ptfe_dimer)만 쓰고 doped 스크린은 내부 기록으로 둔다 (db/properties/sdcp_doped_closed_2026_08_28.json)"
  },
-
  "7_추가_계산이_필요한_주장": {
   "citable_pooled": "net4 primary 두 복합체에 dense 2상 (+2잡) — **그리고** basin 설계 변경. 지금 하지 않는다",
   "k×vac_결합_안정성": "vacconv c2 에 dense (+2잡). 지금 하지 않는다",
   "coverage-independent / isolated affinity": "lateral 확장 쌍 별도 wave. 지금 하지 않는다",
   "⛔": "위 셋 중 어느 것도 지금 주장하지 않는다 — §2 문구가 그것을 명시적으로 배제한다"
  },
-
  "연결": {
   "프로토콜": "db/properties/sdcp_c12_protocol_2026_08_30.json",
   "MLIP_스크린": "db/properties/sdcp_ptfe_site_preference_uma_v1.json",
   "doped_마감": "db/properties/sdcp_doped_closed_2026_08_28.json",
-  "리뷰": ["kb/reviews/codex_AS_prompt_c12_v16_2026_08_31.md",
-            "kb/reviews/codex_AT_prompt_c12_v17_2026_08_31.md"]
+  "리뷰": [
+   "kb/reviews/codex_AS_prompt_c12_v16_2026_08_31.md",
+   "kb/reviews/codex_AT_prompt_c12_v17_2026_08_31.md"
+  ]
  },
  "status_history": [
-  {"at": "2026-08-31", "state": "proposed",
-   "note": "회신 AT 의 Q1/Q2/Q5/Q6 과 해제조건 8 을 사전등록으로 고정. VASP 결과 0개 시점. ratify 대기"}
- ]
+  {
+   "at": "2026-08-31",
+   "state": "proposed",
+   "note": "회신 AT 의 Q1/Q2/Q5/Q6 과 해제조건 8 을 사전등록으로 고정. VASP 결과 0개 시점. ratify 대기"
+  },
+  {
+   "date": "2026-09-01",
+   "what": "보고량 개명 (회신 AY P0-4 · 1저자 결정 2단계)",
+   "from": "fixed-geometry differential complex–gas reference energy",
+   "to": "adsorption energy difference (ΔΔE_ads)",
+   "경위": "1차로 'fixed-geometry adsorption energy difference' 를 제안했으나 1저자가 '그런 이름 쓰는 논문 없다' 고 기각 — 옳다. 단서를 이름에서 Methods 로 옮겼다."
+  }
+ ],
+ "8_POTCAR_정책_2026_09_01": {
+  "결정": "**외주처 소관** (1저자 2026-09-01). potcar_pin 없이 보내고 회수 시 POTCAR_PROVENANCE.json 으로 사후 대조한다.",
+  "회신_AY_P0-5_에_대한_답": "P0-5 는 'pin 재생성' 과 '조건부-PP 보고량 비준' 둘 중 하나를 요구했는데, 1저자가 **전자도 후자도 아닌 세 번째** — 외주처가 자기 트리를 관리하는 것 — 을 택했다.",
+  "⚠_그래서_남는_한계": "'우리가 의도한 트리와 다른 트리를 썼다' 는 여전히 못 본다. 결과를 인용할 때 **PAW dataset 조건부**임을 병기한다."
+ }
 }

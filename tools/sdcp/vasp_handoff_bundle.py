@@ -4365,7 +4365,7 @@ def selftest_k() -> int:
     chk(_rv2["pass"] is False and "FAIL" in _rv2["verdict"],
         "⛔음성 AJ: Δ_vac 6 meV → 실패 (문턱 5 meV · 조각별로 보면 안 보인다)")
 
-    # ⛔음성 ②: 5 meV 안이어도 0.01 eV 반올림이 갈리면 막는다
+    # ② 5 meV 안이면 반올림이 갈려도 **통과**한다 (반올림은 정보용 — AM Q1·AY P0-3)
     #   경계를 **걸치게** 한다: −0.4048 → −0.40 · −0.4052 → −0.41 (차 0.4 meV)
     _jv3, _ev3 = _vjobs(-1.2048, -1.2052, -0.80, -0.80)
     _rv3 = closure_vacconv(_VM, _jv3, lambda j: _ev3.get(j), _emv,
@@ -6469,7 +6469,12 @@ def closure_vacconv(man, jobs, E, emol, frags):
         D(c) = [E_C^SDCP(c) − E_G^SDCP] − [E_C^PTFE(c) − E_G^PTFE]
         Δ_vac = D_primary,pm1(c2) − D_primary,pm1(c1)
 
-    통과: |Δ_vac| ≤ 5 meV **그리고** D(c1)·D(c2) 의 0.01 eV 반올림이 같다.
+    통과: **|Δ_vac| ≤ 5 meV 하나만**이 hard gate 다.
+    ⛔ 2026-09-01 (회신 AY P0-3) — 이 줄은 *"그리고 0.01 eV 반올림이 같다"* 라고
+      적혀 있었는데 **코드는 2026-08-31(회신 AM Q1)에 이미 반올림을 정보용으로 내렸다.**
+      문서만 낡아 두 판정이 공존했고, `D(c1)=0.0049 · D(c2)=0.0051` 이면 코드는
+      PASS 인데 문서 기준으로는 FAIL 이었다. 코드 쪽으로 일원화한다 —
+      `same_rounded` 는 **표시 안정성 정보**이지 물리 게이트가 아니다.
 
     🔑 왜 조각별 변화가 아니라 대비인가 — 기체 항은 c 에 무관하고 슬랩 항은 두 조각에
        공통이라, 대비를 취하면 둘 다 소거된다. 조각별로 보면 소거되지 않는 항이 남는다.
