@@ -2,10 +2,11 @@
 {% block title %}판정 원장 · DFT{% endblock %}
 {% block content %}
 {#
-  판정 원장 화면. 세 원장을 한 곳에서 본다:
-    db/governance/decisions.json   판례 (무엇을 규칙으로 삼기로 했나)
-    db/governance/assessments.json 평가 (게이트가 실제로 어떻게 났나 — append-only)
-    db/governance/artifacts.json   산출물 (그 판정의 근거 파일이 어디 있나)
+  판정 원장 화면. 네 원장을 한 곳에서 본다:
+    db/governance/decisions.json        판례 (무엇을 규칙으로 삼기로 했나)
+    db/governance/assessments.json      평가 (게이트가 실제로 어떻게 났나 — append-only)
+    db/governance/artifacts.json        산출물 (그 판정의 근거 파일이 어디 있나)
+    db/properties/citation_hazards.json 인용위험 (무엇을 인용하면 안 되나 — 2026-09-01 합류)
   ⚠ 이 화면은 값의 옳고 그름을 판정하지 않는다. **판정의 근거와 소재**만 보인다.
 #}
 <div class="page-header">
@@ -38,6 +39,42 @@
   {% if need %}<p>⚠ <strong>복제 필요로 표시된 것 {{ need|length }}건</strong> —
      {% for a in need %}<code>{{ a.id }}</code>{% if not loop.last %}, {% endif %}{% endfor %}</p>{% endif %}
 </div>
+
+{# ── 인용 위험 원장 (2026-09-01 신설): "무엇을 인용하면 안 되나" ──────────
+   db/properties/citation_hazards.json — 파일마다 흩어진 인용 금지·보류·조건부
+   단서를 모은 원장. 화면 밖에 있으면 원고 쓸 때 놓친다 (repo 반복 사고 유형). #}
+{% if hazards %}
+<div class="card">
+  <h2>⛔ 인용 위험 원장 <span class="sub" style="font-weight:400">— {{ hazards|length }}건
+    · citation_hazards.json{% if hazards_updated %} · 갱신 {{ hazards_updated }}{% endif %}</span></h2>
+  <p class="sub">원고·그림에 값을 넣기 전에 여기부터 본다. 파일 안 단서가 원문이고 이 표는 집계다.</p>
+  {% set hz_color = {"BLOCKED": "#be123c", "HOLD": "#c05621", "STALE": "#b45309",
+                     "SUPERSEDED": "#6b7280", "CONDITIONAL": "#0284c7",
+                     "PREVIEW": "#7c3aed", "RESOLVED": "#0d9488"} %}
+  <div style="overflow-x:auto">
+  <table class="data-table" style="font-size:.78rem">
+    <thead><tr><th>수준</th><th>파일</th><th>무엇이</th><th>왜</th><th>풀리는 조건</th></tr></thead>
+    <tbody>
+    {% for h in hazards %}
+    <tr>
+      <td><span class="tbadge" style="background:{{ hz_color.get(h.level, '#6b7280') }};color:#fff">{{ h.level }}</span></td>
+      <td class="mono" style="font-size:.7rem">{{ h.file }}</td>
+      <td>{{ h.what|bold }}</td>
+      <td class="muted">{{ h.why|bold }}</td>
+      <td class="muted">{{ h.fix|bold }}</td>
+    </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+  </div>
+</div>
+{% else %}
+<div class="card" style="border-left:4px solid #be123c">
+  <h2>⛔ 인용 위험 원장을 못 읽었다</h2>
+  <p class="sub">db/properties/citation_hazards.json 이 없거나 비어 있다 —
+    "위험 0건" 이 아니라 <b>원장 부재</b>다. 빈 표로 안심하지 말 것.</p>
+</div>
+{% endif %}
 
 {# ── 산출물 원장 ────────────────────────────────────────────────────────── #}
 <div class="card">

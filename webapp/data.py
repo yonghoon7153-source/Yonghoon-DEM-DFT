@@ -2694,6 +2694,19 @@ def _sweep_view(sw: dict) -> dict:
     return sw
 
 
+def citation_hazards() -> dict:
+    """db/properties/citation_hazards.json — 인용 금지·보류·조건부 단서의 원장.
+
+    왜 화면에 필요한가 (2026-09-01): 이 원장은 25건인데 웹앱 어디에도 안 보였다.
+    단서는 각 db 파일 안에 흩어져 있고, 원고·그림을 쓸 때 놓치는 것이 이 repo 의
+    반복 사고 유형이다 — 모아 둔 원장이 화면 밖이면 모은 의미가 없다.
+
+    이 함수가 못 하는 것: 위험의 현행성을 판정하지 않는다. 원장을 그대로 옮긴다
+    (원장 자체가 낡으면 화면도 낡는다 — 그건 원장 갱신 규율의 몫).
+    """
+    return _load_json(DB / "properties" / "citation_hazards.json") or {}
+
+
 def uma_force_benchmark() -> dict:
     """db/properties/uma_force_benchmark.json — 우리 포텐셜의 힘 정확도(문헌 DFT 라벨 대비).
 

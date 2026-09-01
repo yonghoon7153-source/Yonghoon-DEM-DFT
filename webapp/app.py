@@ -486,7 +486,7 @@ def requests_page():
 
 @app.route("/governance")
 def governance_page():
-    """판례·평가·산출물 원장을 한 화면에 — **판정이 어디에 근거하는지**를 보여준다.
+    """판례·평가·산출물·인용위험 네 원장을 한 화면에 — **판정이 어디에 근거하는지**.
 
     ⛔ 이 페이지는 상태를 저장하지 않는다. release_status 와 같은 파생 판정은
        질의 시각에 계산한다 (D-2026-08-20-source-authority: canonical DB 가 원본).
@@ -514,9 +514,19 @@ def governance_page():
         want = d.get("ratification", {}).get("decision_digest")
         d["_digest_ok"] = (want is None) or (want == _C.decision_digest(d))
 
+    # 네 번째 원장 (2026-09-01): 인용 위험. 25건이 화면 밖에 있었다 —
+    #   "무엇을 알아냈나" 만 보이고 "무엇을 인용하면 안 되나" 가 안 보이는 화면은
+    #   이 repo 의 반복 사고 유형(낡은 인용)을 못 막는다. 심각한 것부터 정렬.
+    haz = D.citation_hazards()
+    _sev = {"BLOCKED": 0, "HOLD": 1, "STALE": 2, "SUPERSEDED": 3,
+            "CONDITIONAL": 4, "PREVIEW": 5, "RESOLVED": 6}
+    hazards = sorted(haz.get("hazards", []),
+                     key=lambda h: (_sev.get(h.get("level"), 9), h.get("file", "")))
+
     return render_template("governance.html", active="governance",
                            decisions=dec, assessments=ass, artifacts=art,
                            single=single, lost=lost,
+                           hazards=hazards, hazards_updated=haz.get("updated"),
                            problems=_C.validate_governance() + _C.validate_artifacts())
 
 

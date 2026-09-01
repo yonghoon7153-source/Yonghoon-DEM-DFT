@@ -182,6 +182,27 @@ def test_governance_graph_has_no_dangling_edges():
     assert corr and all(c["supersedes_assessment_id"] in book for c in corr)
 
 
+def test_governance_page_renders_citation_hazards():
+    """인용 위험 원장이 화면에 **전건** 오르는가 (2026-09-01 신설 절).
+
+    왜: 원장은 25건인데 화면 0건이던 상태가 이 절의 신설 사유다 — 다시 그 상태가
+    되면(원장 필드 개명·로더 경로 오타) 조용히 빈 표가 되지 않고 여기서 잡힌다.
+    ⛔ 이 시험이 못 하는 것: 위험 목록의 **내용 현행성**은 못 본다 (원장 규율의 몫).
+    """
+    import json as _json
+    raw = _json.loads((ROOT / "db" / "properties" / "citation_hazards.json")
+                      .read_text(encoding="utf-8"))
+    n = len(raw["hazards"])
+    assert n >= 20, "원장이 갑자기 줄었다 — 삭제가 아니라 RESOLVED 로 남기는 규약이다"
+    html = A.app.test_client().get("/governance").get_data(as_text=True)
+    assert "인용 위험 원장" in html
+    assert f"{n}건" in html, "화면의 건수가 원장과 다르다"
+    # 수준 어휘가 화면 정렬 사전에 없으면 9로 밀린다 — 새 수준이 생기면 여기서 알아챈다
+    known = {"BLOCKED", "HOLD", "STALE", "SUPERSEDED", "CONDITIONAL", "PREVIEW", "RESOLVED"}
+    levels = {h["level"] for h in raw["hazards"]}
+    assert levels <= known, f"원장에 새 수준이 생겼다: {levels - known} — 화면 정렬·색을 갱신할 것"
+
+
 def test_artifact_ledger_keeps_verdicts_in_the_ledger():
     """산출물 판정이 **원장 안에** 있는지 — 파일명·기억에 있으면 실패.
 
