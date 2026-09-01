@@ -1185,25 +1185,15 @@ if [ "$_AP" = "require_attestation" ]; then
     echo "   첫 VASP 실행 **전에** 만드십시오:  bash MAKE_POTCAR_ATTESTATION.sh"
     exit 2
   fi
-  python3 - <<'PYATT' || exit 2
-import json, sys
-try:
-    a = json.load(open("POTCAR_ATTESTATION.json"))
-    s = json.load(open("POTCAR_ROOT_SEAL.json"))
-except Exception as e:
-    sys.exit("⛔ attestation/봉인 파싱 실패: %r" % (e,))
-# ⛔ 회신 BA 해제조건 8 — **스키마가 어긋나 정상 증서도 거부됐다.**
-#   생성기는 `made_before_production` / `variants` 를 쓰는데 이 게이트는
-#   `sealed_before_production` / `source_sha256` 을 요구했다. 실제 키를 쓴다.
-if not a.get("made_before_production"):
-    sys.exit("⛔ attestation 이 생산 전에 만들어졌다는 표시(made_before_production)가 없습니다")
-_as = {k: (v or {}).get("source_sha256") for k, v in (a.get("variants") or {}).items()}
-_ss = s.get("source_sha256") or {}
-_d = sorted(k for k in set(_as) | set(_ss) if _as.get(k) != _ss.get(k))
-if _d:
-    sys.exit("⛔ attestation 과 root 봉인의 원본 SHA 가 다릅니다: %s" % _d[:4])
-print("  ✔ POTCAR attestation 확인 (생산 전 · 봉인과 일치)")
-PYATT
+  # ⛔⛔ 회신 BB P0-6 (2026-09-02) — **검사 사본을 두지 않는다.**
+  #   종전엔 여기에 짧은 파이썬 사본이 있어 `made_before_production` 과 SHA map
+  #   두 가지만 봤다. schema·ZIP·manifest·allowlist·VASP·시각은 **분석 단계에
+  #   가서야** 봤으므로, 잘못된 증서로 16잡(약 300 h)을 다 돌린 뒤 거부될 수
+  #   있었다. 그리고 사본은 언젠가 정본과 갈린다 (BA 해제조건 8 이 그 사고였다:
+  #   사본이 `sealed_before_production`/`source_sha256` 이라는 **없는 키**를
+  #   요구해 정상 증서를 거부했다).
+  #   ⇒ 정본 하나(`potcar_identity_gates`)를 부른다. 그 파일 SHA 는 MANIFEST 에 있다.
+  python3 analyze_results.py . --check_attestation || exit 2
 else
   echo "  ⚠ POTCAR 신원 정책 = post_hoc — attestation 없이 진행합니다."
   echo "     이 묶음의 결과는 **탐색용**이고 원고 인용 자격이 서지 않습니다"
@@ -5547,8 +5537,11 @@ def selftest_k() -> int:
     _MB2 = dict(_MBASE, _potcar_root_seal=_SEALOK)
     _ra = potcar_identity_gates(_one, dict(_MB2, _potcar_attestation=_ATT))
     # ⛔ 회신 BA P0-3 — **외부 앵커(potcar_pin)가 있어야** attested 로 올린다.
+    # ⛔ 회신 BB P0-6 · Q4 — 앵커는 **{label + 전체 source SHA map}** 을 함께
+    #   결박해야 한다. 바이트만 있는 pin 은 이름을 인증하지 못한다.
     _PINOK = {"source_sha256": {k: v.get("source_sha256")
-                                for k, v in (_ATT.get("variants") or {}).items()}}
+                                for k, v in (_ATT.get("variants") or {}).items()},
+              "release_label": _ATT.get("release_label")}
     _ra_anch = potcar_identity_gates(
         _one, dict(_MB2, _potcar_attestation=_ATT, potcar_pin=_PINOK))
     chk(_ra_anch["attestation"]["usable"] and "PAW-PBE datasets from the" in
@@ -5659,11 +5652,37 @@ def selftest_k() -> int:
     _ra_fake = potcar_identity_gates(
         _one, dict(_MB2, _potcar_attestation=dict(_ATT, release_label="FAKE_RELEASE"),
                    potcar_pin=_PINOK))
-    chk(_ra_fake.get("allowed_claim") == "paw_release_attested"
-        and "FAKE_RELEASE" in str(_ra_fake.get("methods_candidate")),
-        "⚠ BA P0-3 한계 명시: 앵커가 있어도 **label 문자열 자체**는 우리가 검증하지 "
-        "못한다 — 앵커는 *바이트*를 결박하지 *이름*을 결박하지 않는다. 이 사실을 "
-        "시험으로 박아 둔다 (숨기지 않는다)")
+    # ⛔⛔ 회신 BB P0-6 (2026-09-02) — 이 시험은 종전에 **구멍을 기록**하고 있었다:
+    #   "앵커가 있어도 label 문자열은 검증하지 못한다" 를 통과 조건으로 박아 뒀다.
+    #   BB P0-6 · Q4 가 그 구멍을 닫으라고 했다 — 바이트 앵커는 이름을 인증하지
+    #   않으므로, pin 이 label 을 함께 결박하지 않으면 이름을 주장하지 않는다.
+    #   ⇒ 시험을 **뒤집는다**: 같은 `FAKE_RELEASE` 재현이 이제 차단돼야 한다.
+    chk(_ra_fake.get("allowed_claim") == "self_declared_label_only"
+        and "FAKE_RELEASE" not in str(_ra_fake.get("methods_candidate"))
+        and _ra_fake.get("site_reported_release_label") == "FAKE_RELEASE"
+        and _ra_fake["release_label_anchor_detail"]["label_matches_site_report"]
+        is False,
+        "⛔음성 BB P0-6 (BA 때 열려 있던 구멍): 현장이 label 을 `FAKE_RELEASE` 로 "
+        "바꾸면 pin 의 label 과 어긋나 **이름을 주장하지 않는다**. 이름은 "
+        "`site_reported_release_label` 메타데이터로만 남는다 (실제 %r)"
+        % _ra_fake.get("allowed_claim"))
+    # SHA map 이 variant 를 다 안 덮으면 그것도 앵커가 아니다
+    _ra_part = potcar_identity_gates(
+        _one, dict(_MB2, _potcar_attestation=_ATT,
+                   # ⚠ 픽스처의 variant 는 하나뿐이라 "첫 항목만 남기기" 로는
+                   #   uncovered 가 안 생긴다 — **다른 variant** 를 담은 pin 을 준다
+                   #   (실측: 빈 목록으로 시험이 공허하게 참이 됐다).
+                   potcar_pin=dict(_PINOK,
+                                   source_sha256={"Zz_other": _H64("zz")})))
+    chk(_ra_part.get("allowed_claim") == "self_declared_label_only"
+        and _ra_part["release_label_anchor_detail"]["uncovered_variants"],
+        "⛔음성 BB P0-6: pin 의 SHA map 이 attestation variant 를 **전부** 덮지 "
+        "않으면 앵커가 아니다 — 덮이지 않은 variant 를 이름으로 말한다 (%s)"
+        % _ra_part["release_label_anchor_detail"]["uncovered_variants"][:3])
+    chk("바이트 pin 만으로는" in str(
+        _ra_anch["release_label_anchor_detail"].get("⛔")),
+        "BB P0-6: 앵커 판정의 **근거를 산출물에 적는다** (무엇을 봤고 무엇을 못 "
+        "보는가)")
 
     # ⛔음성 AP #7 — blocking 이 있으면 **절대** sealed 라벨이 안 나온다
     _mm = potcar_identity_gates(
@@ -7148,11 +7167,35 @@ def potcar_identity_gates(jobs, man):
     #   attestation 은 "현장이 이 트리를 이렇게 부른다" 를 기록할 뿐, 그 이름이
     #   아카이브된 배포판과 같은지는 **우리가 확인한 적이 없다.**
     #   ⇒ 외부 앵커(사전 승인 해시 또는 서명)가 없으면 `attested` 로 올리지 않는다.
+    # ⛔⛔ 회신 BB P0-6 (2026-09-02) — **바이트 앵커는 이름을 인증하지 않는다.**
+    #   BA P0-3 에서 `potcar_pin.source_sha256` 만 있으면 `paw_release_attested`
+    #   로 올렸는데, 그 pin 은 *우리가* 적어 둔 바이트 지문이다. "이 바이트가 pin 과
+    #   같다" 는 말하지만 "그 바이트가 potpaw_PBE.54 다" 는 말하지 못한다.
+    #   즉 자기선언 `release_label` 이 바이트 pin 하나로 공식 release 이름으로
+    #   승격됐다. 리뷰어 Q4: label 은 `site_reported_release_label` **메타데이터로만**
+    #   남길 수 있고, 공식 release 를 주장하려면 외부 앵커가 **{label, 전체 source
+    #   SHA map}** 을 함께 결박해야 한다.
+    #   ⇒ pin 이 label 을 담고, 그 label 이 현장 신고와 같고, pin 의 SHA map 이
+    #     attestation 의 variant 를 **전부** 덮을 때만 이름을 주장한다.
     _anchor = (man or {}).get("potcar_pin") or {}
-    _anchored = bool(_anchor.get("source_sha256"))
+    _pin_map = _anchor.get("source_sha256") or {}
+    _att_vars = set((_att.get("variants") or {}))
+    _pin_label = _anchor.get("release_label")
+    _label_bound = bool(_pin_label) and _pin_label == _att.get("release_label")
+    _map_covers = bool(_att_vars) and _att_vars <= set(_pin_map)
+    _anchored = bool(_pin_map) and _label_bound and _map_covers
+    res["release_label_anchor_detail"] = {
+        "pin_has_sha_map": bool(_pin_map),
+        "pin_declares_label": _pin_label,
+        "label_matches_site_report": _label_bound,
+        "sha_map_covers_all_variants": _map_covers,
+        "uncovered_variants": sorted(_att_vars - set(_pin_map)),
+        "⛔": ("바이트 pin 만으로는 **이름**을 인증하지 못한다 (회신 BB P0-6 · Q4). "
+               "`{label, 전체 source SHA map}` 을 함께 결박한 외부 앵커여야 한다."),
+    }
     if _att_ok and not (res.get("blocking") or []) and _anchored:
         res["allowed_claim"] = "paw_release_attested"
-        res["release_label_anchor"] = "potcar_pin (외부 기준)"
+        res["release_label_anchor"] = "potcar_pin (label + 전체 SHA map 결박)"
         res["methods_candidate"] = (
             "Calculations were performed using VASP %s with PAW-PBE datasets from the "
             "%s release (%s). Each source dataset was identified by its embedded VASP "
@@ -7162,9 +7205,11 @@ def potcar_identity_gates(jobs, man):
             % (_vv[0], _att.get("release_label"),
                ", ".join(sorted(_att.get("variants") or {}))))
     elif _att_ok and not (res.get("blocking") or []) and not _anchored:
-        # attestation 은 통과했지만 **외부 앵커가 없다** — 이름은 자기선언이다.
+        # attestation 은 통과했지만 **이름을 결박한 외부 앵커가 없다.**
         res["allowed_claim"] = "self_declared_label_only"
         res["release_label_anchor"] = None
+        # ⛔ 회신 BB P0-6 · Q4 — 이름은 **메타데이터**로만 남긴다
+        res["site_reported_release_label"] = _att.get("release_label")
         res["release_label_⛔"] = (
             "attestation 의 `release_label`(%r)은 **현장 자기선언**이다. 아카이브된 "
             "배포판과 같은지 확인한 적이 없다 — 리뷰어가 `FAKE_RELEASE` 로 바꿔도 "
@@ -9121,6 +9166,46 @@ def main():
         except Exception:
             _zsha = None
     man["_zip_sha256_observed"] = (_zsha or "").strip().lower() or None
+
+    # ⛔⛔ 회신 BB P0-6 (2026-09-02) — **증서 검증을 생산 **전**에 한 곳에서 한다.**
+    #   종전 run_staged.sh 는 `made_before_production` 과 SHA map 두 가지만 봤고,
+    #   schema·ZIP·manifest·allowlist·VASP·시각은 **분석 단계에 가서야** 봤다.
+    #   즉 잘못된 증서로 16잡(약 300 h)을 다 돌린 뒤 거부될 수 있었다.
+    #   ⇒ 러너가 이 경로를 부른다. 검사 논리는 `potcar_identity_gates` **하나**이고
+    #     그 파일 SHA 는 MANIFEST 에 있다 (검사 사본을 두지 않는다 — 회신 BB P1).
+    if "--check_attestation" in sys.argv:
+        # ⚠ 생산 **전**이라 잡 반송이 없다 — jobs={} 로 부른다. 그러면 잡 사이
+        #   일치(cross-job) 검사는 못 하고 증서·봉인 검사만 한다. 그 한계를 화면에
+        #   적는다 (잡 사이 검사는 분석 단계의 몫이다).
+        _cg = potcar_identity_gates({}, man)
+        _att_s = _cg.get("attestation") or {}
+        _bad = list(_cg.get("blocking") or []) + list(_att_s.get("why") or [])
+        _pol = ((man.get("potcar_identity_policy") or {}).get("mode") or "post_hoc")
+        print("== POTCAR 증서 사전 검증 (생산 전 · 회신 BB P0-6) ==")
+        print("  정책 mode = %s" % _pol)
+        print("  attestation present=%s usable=%s"
+              % (_att_s.get("present"), _att_s.get("usable")))
+        print("  allowed_claim = %s" % _cg.get("allowed_claim"))
+        _an = _cg.get("release_label_anchor_detail") or {}
+        if _an:
+            print("  이름 앵커: label 결박=%s · SHA map 포괄=%s%s"
+                  % (_an.get("label_matches_site_report"),
+                     _an.get("sha_map_covers_all_variants"),
+                     (" · 미포괄 %s" % _an["uncovered_variants"][:3])
+                     if _an.get("uncovered_variants") else ""))
+        for _x in _bad[:12]:
+            print("   ⛔ %s" % _x)
+        if _pol == "require_attestation" and (_bad or not _att_s.get("usable")):
+            print("  ⛔ **원고용 정책인데 증서가 쓸 수 없다** — 한 잡도 돌리지 않는다.")
+            return 2
+        if _pol != "require_attestation":
+            print("  ⚠ post_hoc 정책 — 증서 없이 진행한다. 이 묶음의 결과는 "
+                  "**탐색용**이고 원고 인용 자격이 서지 않는다.")
+        print("  ✔ 생산을 진행해도 되는 상태다 (정책 %s 기준)" % _pol)
+        print("  ⛔ 이 검사가 **못 하는 것**: 잡 반송이 아직 없으므로 잡 사이 "
+              "POTCAR/VASP 일치는 보지 않는다 — 그것은 분석 단계의 몫이다.")
+        return 0
+
     spec = man.get("potcar_spec", {})
     planned = man.get("planned", {})
 
@@ -15293,8 +15378,19 @@ def selftest() -> int:
     _rs = "".join(RUN_STAGED if isinstance(RUN_STAGED, str) else "")
     chk("require_attestation" in _rs and "POTCAR_ATTESTATION.json 이 없습니다" in _rs,
         "회신 AZ P0-7: 러너가 정책을 읽고 attestation 없으면 **한 잡도 안 돈다**")
-    chk("sealed_before_production" in _rs and "봉인의 원본 SHA 가 다릅니다" in _rs,
-        "회신 AZ P0-7: attestation 이 **생산 전**이고 봉인과 같은 트리인지 본다")
+    # ⛔⛔ 회신 BB P0-6 (2026-09-02) — 이 시험은 **주석 문자열을 잡고 있었다.**
+    #   `sealed_before_production` 은 BA 해제조건 8 이 "없는 키" 로 판정한 것이고,
+    #   코드는 `made_before_production` 을 쓴다. 그 문자열이 러너의 **주석**에 남아
+    #   있어 시험이 통과했다 — 행동이 아니라 글자를 본 것이다.
+    #   ⇒ 러너가 **정본 검사기를 부르는지**를 본다 (사본이 없어야 갈리지 않는다).
+    chk("--check_attestation" in _rs
+        and "봉인의 원본 SHA 가 다릅니다" not in _rs
+        and "made_before_production" not in _rs.split("# ")[0],
+        "BB P0-6: 러너가 증서 검사 **사본을 두지 않고** 정본(`analyze_results.py "
+        "--check_attestation`)을 부른다 — 사본은 언젠가 정본과 갈린다 "
+        "(BA 해제조건 8 이 그 사고였다)")
+    chk("--check_attestation" in ANALYZER and "생산 전 · 회신 BB P0-6" in ANALYZER,
+        "BB P0-6: 그 정본이 **배포본 안에** 있다 (외주처가 재현할 수 있다)")
     _rc9 = _return_contract(dict(m_sp, potcar_identity_policy={"mode": "require_attestation"}))
     chk(any("필수" in x for x in _rc9["root"] if "ATTESTATION" in x),
         "회신 AZ P0-7: 정책이 require_attestation 이면 반송 계약이 **필수**로 바뀐다")
