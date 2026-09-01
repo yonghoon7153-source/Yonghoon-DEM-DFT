@@ -118,6 +118,14 @@ run 'check_method_discipline (규칙 A~M + claims 원장)' python3 scripts/check
 #  ★★ 2026-08-30 — 원장이 "제3자가 리포만으로 재도출한 값이 이 문서와 일치한다" 고 적는데
 #    그것은 08-29 에 손으로 한 번 돌린 결과였고 **아무것도 다시 확인하지 않았다**.
 #    비·산포를 팔의 σ_e 에서 재계산해 원장 산문과 대조한다 (저장된 판정 필드를 읽지 않는다).
+#  ★★ 2026-08-31 — 웹앱 테스트 5개가 **어디에도 배선돼 있지 않았다.**  그래서 둘이
+#    빨간불인 채로 남아 있었고, 그중 하나는 앱이 **더 안전해졌기 때문에**(철회 게이트)
+#    난 실패였다.  돌지 않는 검사는 없는 것과 같다 (규칙 K).
+run 'webapp: pipeline_provenance' python3 webapp/test_pipeline_provenance.py
+run 'webapp: predictor_ui'        python3 webapp/test_predictor_ui_and_sigma_grain.py
+run 'webapp: security_phase_a'    python3 webapp/test_security_phase_a.py
+run 'webapp: seminar_page'        python3 webapp/test_seminar_page.py
+run 'webapp: temp_pressure'       python3 webapp/test_temp_pressure_wiring.py
 run 'check_doc_refs          --selftest' python3 scripts/check_doc_refs.py --selftest
 run 'check_cohort_packages  (커밋된 패키지 ↔ 원장)' python3 scripts/check_cohort_packages.py
 #  ★★ 2026-08-31 — 문서가 **없는 파일·없는 커밋**을 가리키는 자리를 잡는다.

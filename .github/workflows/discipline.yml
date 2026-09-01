@@ -85,3 +85,46 @@ jobs:
 
       - name: LHS 문턱 적합기 (Firth · 프로파일 구간 · 예외 규칙) (selftest)
         run: python scripts/lhs_perc_fit.py --selftest
+
+      # ★★ 2026-08-31 — LHS 확장 제출 도구 셋.  설계 봉인이 CI 에서 매번 재검증된다.
+      - name: LHS 확장 설계 생성기 (LHS 점유 · 소수 seed · 절대 칸) (selftest)
+        run: python scripts/lhs_ext_design.py --selftest
+
+      - name: LHS 확장 덱 재료화 (템플릿 왕복 · 가중 합 1) (selftest)
+        run: python scripts/lhs_ext_materialize.py --selftest
+
+      - name: LHS 확장 제출 게이트 (상태를 센다 — 총수가 아니라) (selftest)
+        run: python scripts/lhs_ext_submit_gate.py --selftest
+
+      - name: 봉인 설계 ↔ 상자 ↔ 해시 (리포 실물)
+        run: >
+          python scripts/lhs_ext_design.py
+          --verify docs/data/lhs_ext_design_v2_20260829.csv
+          --box docs/data/lhs_ext_box_v2_20260829.json
+          --expect-sha256 bc72b8bf274842b7c54e319ceac70f5cb2804aa3635f329dfed34697bd52ea19
+
+      # ★★ 2026-08-31 — 문서가 없는 파일·없는 커밋을 가리키는 자리를 잡는다.
+      #   ⚠ `fetch-depth: 0` 이 필수다 — 얕은 클론이면 SHA 실재 확인이 무의미해진다.
+      - name: 문서 참조 실재 (경로 · 커밋) (selftest)
+        run: python scripts/check_doc_refs.py --selftest
+
+      - name: 문서 참조 실재 (리포 실물)
+        run: python scripts/check_doc_refs.py --quiet
+
+      # ★★ 2026-08-31 — 웹앱 테스트 5개가 **어디에도 배선돼 있지 않았다**.
+      #   그래서 둘이 빨간불인 채로 남아 있었고, 그중 하나는 앱이 철회 게이트로
+      #   **더 안전해졌기 때문에** 난 실패였다.  돌지 않는 검사는 없는 것과 같다.
+      - name: 웹앱 — 파이프라인 provenance
+        run: python webapp/test_pipeline_provenance.py
+
+      - name: 웹앱 — 예측기 UI · σ_grain
+        run: python webapp/test_predictor_ui_and_sigma_grain.py
+
+      - name: 웹앱 — 보안 Phase A
+        run: python webapp/test_security_phase_a.py
+
+      - name: 웹앱 — 세미나 페이지 (철회 게이트 계약)
+        run: python webapp/test_seminar_page.py
+
+      - name: 웹앱 — 온도 · 압력 배선
+        run: python webapp/test_temp_pressure_wiring.py

@@ -15,7 +15,7 @@ docs/data/mpm_dem_match.csv	wallP 교차검증 원자료 — 커밋되지 않았
 
 # ── ② 리포 밖 경로 (외부 저장소 · 일회성 작업공간) ──
 db/properties/sdcp_linio2_binding_phaseA.csv	DFT 저장소 소관 (gabia)
-webapp/data.py	웹앱 저장소 소관 — 이 브랜치에 없다
+webapp/data.py	배포 웹앱 저장소의 파일 — `webapp/` 은 이 브랜치에 있지만 `data.py` 는 그쪽 소관 (문서 본문이 "다른 저장소 대상" 이라고 적는다)
 scratchpad/SI_21.txt	일회성 작업공간 (커밋 대상 아님)
 litdb_cache/context__literature_yonsei_dtbl_2026.md	litdb 캐시 — 생성물, 커밋 대상 아님
 regress/make_grid.py	외부 회귀 하네스 — 이 브랜치에 없다

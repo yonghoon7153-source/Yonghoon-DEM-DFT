@@ -1070,10 +1070,45 @@ def main():
             "_s3mark('_step3', 'failed'" in _pay)
         chk('58) ★ manifest 가 payload 에 실제로 박힌다 (배선)',
             "'schema_version': 2," in _pay)
-        chk('59) ★ RC6-08 실제 backend 를 기록한다 (요청≠실제일 수 있다)',
-            'LAST_BACKEND' in _s3s and "LAST_BACKEND['used'] = 'cpu'" in _s3s
-            and "LAST_BACKEND['used'] = 'gpu'" in _s3s
-            and "fallback_reason" in _s3s)
+        #  ★★ 2026-08-31 — 이 검사는 **소스 문자열의 철자**를 보고 있었다.
+        #    `LAST_BACKEND['used'] = 'cpu'` 는 있는데 gpu 쪽이 `update(used='gpu', …)` 로
+        #    쓰이자 기능은 멀쩡한데 검사만 빨간불이 됐다.  철자를 보는 검사는 구현이
+        #    조금만 다르게 쓰여도 거짓 실패를 내고, 반대로 **주석에 그 문자열을 적어도
+        #    통과**한다 (규율 4번: 자기 신고를 읽지 마라).
+        #  ⇒ AST 로 **대입을 실제로 찾는다** — 주석·문자열은 안 세고, 표기 차이는 무시한다.
+        import ast as _ast
+        _tree = _ast.parse(_s3s)
+        _assigned = set()
+        for _n in _ast.walk(_tree):
+            #  `LAST_BACKEND['used'] = 'gpu'`
+            if isinstance(_n, _ast.Assign):
+                for _t in _n.targets:
+                    if (isinstance(_t, _ast.Subscript)
+                            and getattr(_t.value, 'id', None) == 'LAST_BACKEND'
+                            and isinstance(_n.value, _ast.Constant)
+                            and getattr(_t.slice, 'value', None) == 'used'):
+                        _assigned.add(_n.value.value)
+            #  `LAST_BACKEND.update(used='gpu', …)`
+            if (isinstance(_n, _ast.Call)
+                    and isinstance(_n.func, _ast.Attribute)
+                    and _n.func.attr == 'update'
+                    and getattr(_n.func.value, 'id', None) == 'LAST_BACKEND'):
+                for _kw in _n.keywords:
+                    if _kw.arg == 'used' and isinstance(_kw.value, _ast.Constant):
+                        _assigned.add(_kw.value.value)
+        chk('59) ★ RC6-08 실제 backend 를 기록한다 — cpu·gpu 둘 다 대입된다 (AST)',
+            {'cpu', 'gpu'} <= _assigned)
+        #  선언에 fallback 사유 자리가 있는가 — 이것도 AST 로 본다 (모듈을 import 하면
+        #  numpy·scipy 를 끌어와 이 테스트가 무거워진다).
+        _decl_keys = set()
+        for _n in _ast.walk(_tree):
+            if (isinstance(_n, _ast.Assign)
+                    and any(getattr(_t, 'id', None) == 'LAST_BACKEND' for _t in _n.targets)
+                    and isinstance(_n.value, _ast.Dict)):
+                _decl_keys = {k.value for k in _n.value.keys
+                              if isinstance(k, _ast.Constant)}
+        chk('59b) ★ 선언에 requested·used·fallback_reason 자리가 있다',
+            {'requested', 'used', 'fallback_reason'} <= _decl_keys)
         chk('60) ★ 그 backend 가 manifest 로 흘러간다 (배선)',
             "'backend': dict(getattr(_s3, 'LAST_BACKEND'" in _pay)
 
