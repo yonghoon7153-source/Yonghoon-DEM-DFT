@@ -234,7 +234,27 @@ D_rel 이 들어오면 그 파일의 `성공기준_사전확정` **그대로** �
   (`grep -c c12` = 0). 세 사전등록 파일이 전부 "proposed — 사람이 ratify" 라 적었지만
   등록 자체가 안 됐다. CLAUDE.md 규율 위반.
 
-### ⏭-7. 폴라론 S0 (ORCA) — **번들 생성 완료 · 코어 대기 · 리뷰 U 발송 대기** (2026-08-31 신설)
+### ⏭-7. 폴라론 S0 (ORCA) — 🔴 **회신 U = NO-GO · P0 9건** (2026-09-01 갱신)
+
+- **회신 U (2026-09-01) = NO-GO — phase L 도 돌리지 말 것.**
+  기록: `kb/reviews/codex_U_reply_polaron_S0_2026_09_01.md`. 리뷰어가 **직접 빌더를
+  돌려 재현**했다 (UTF-8 selftest 152건 PASS · 생성 정상 확인).
+- 🔴 **P0 아홉 중 둘이 같은 유형 — 합성 fixture 가 실물과 달라 결함을 숨겼다.**
+  · π 판정식이 **좌표축 의존** — 이상적 p_normal 을 넣어도 0.34–0.67 이라 문턱 0.60 이면
+    **완전한 π 궤도도 5/6 탈락**. 우리 fixture 가 축 정렬이라 안 보였다.
+  · spin parser 가 `0 C:` 콜론을 강제 — 실제 ORCA 6.1 출력엔 콜론이 없다. fixture 가
+    인위적으로 콜론을 넣어 가렸다.
+  ⇒ **selftest 152건이 전부 통과한 채로** 그랬다. 이 캠페인의 fixture 는 **실물 ORCA
+    출력 조각**이어야 한다.
+- 나머지 P0: `%loc Randomize 0` → 공식 키는 **`Random 0`** · localized MO 에너지로
+  core 거르기 불가(ORCA 가 orbital energy 없다고 명시) · 분석기에 **`ADEQUATE` 경로
+  자체가 없음**(폐기한 전체-pilot verdict 를 냄) · basin 수가 **job 이름 순서**에 따라
+  1 또는 2 + 전역 α↔β 반전을 다른 상태로 세어 `basin ≥2` 를 **거짓 충족** 가능 ·
+  restart 가 에너지를 원래 불안정 출력에서 계속 읽음 · 미관측 positive control 을
+  `NO_VALUE` 가 아니라 방법 실패로 바꿈 · 생성물이 S0 사전등록이 아니라 **구판**을 가리킴.
+- ▶ **다음 한 수**: 회신의 해제 순서대로 — `%loc` 수정 → manifest 결박 → π·parser 수정
+  → S0 전용 verdict → R0-conditional 제한 → **작은 분자로 `%loc` 문법 확인** → 그 뒤에야
+  200원자 smoke. ⚠ phase L 에는 `Rotate` 가 없으므로 L 성공을 Rotate 검증으로 쓰지 않는다.
 
 ⚠ 이것도 장부에 없었다.
 
