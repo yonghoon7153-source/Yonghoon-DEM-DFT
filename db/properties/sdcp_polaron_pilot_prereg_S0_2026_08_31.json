@@ -2,7 +2,7 @@
  "schema": "estimand_prereg/v2",
  "date": "2026-08-31",
  "status": "proposed",
- "⚠_비준": "⚠ **재비준 대기.** 회신 W P0-1/P0-3 이행으로 내용이 바뀌었다 — 2026-09-02 비준은 그 이전 내용에 대한 것이므로 무효다. digest 결박이 그것을 자동으로 잡는다.",
+ "⚠_비준": "⚠ **재비준 대기.** 회신 W P0-1/P0-3/P0-4/P0-5 이행으로 내용이 바뀌었다 — 2026-09-02 비준은 그 이전 내용에 대한 것이므로 무효다. digest 결박이 그것을 자동으로 잡는다.",
  "제목": "S0 — ε=1 기술적 적합성 pilot 사전등록 (회신 T 로 격하된 판, P0 4건 이행 반영)",
  "이_문서의_성격": {
   "무엇인가": "회신 T 가 '전체 pilot NO-GO / ε=1 기술적 적합성 pilot(S0) 한정 조건부 GO' 로 격하한 것을 받아 **범위를 줄여 다시 등록**한 판이다.",
@@ -17,16 +17,16 @@
  },
  "0_시각_증거": {
   "봉인_시점": "2026-09-02",
-  "builder_sha256": "27a9cb08f015854e17c0448ed2366337e05d038150fa5b748e4274fa6d975cd9",
-  "⚠_원본과_다른_해시인_이유": "회신 V P0 1~5 이행으로 빌더가 또 바뀌었다 (c3445652… → f07ef910…). 재발행이다 — 고친 것이 아니다. ⚠ 회신 V P0-1 이 지적한 대로 **직전 재발행(2026-09-01)은 커밋되지 않은 작업 트리에서 해시를 공표해** 리뷰어가 옛 파일을 받았다. 이번에는 커밋 후 `tools/review_manifest.py` 로 커밋된 트리에서만 해시를 뽑는다.",
+  "builder_sha256": "ded52c96d75ff929029f149f3d8e6768cbd27f53bfcab4a7aa301e85eb6cc90a",
+  "⚠_원본과_다른_해시인_이유": "회신 W P0-4/P0-5 이행으로 빌더가 또 바뀌었다 (27a9cb08… → ded52c96…). 재발행이다 — 고친 것이 아니다. 범위·질문·판정어·게이트 문턱은 그대로이고 결박만 옮겼다. 해시는 커밋 6f9e28b2 의 트리에서 뽑았다 (tools/review_manifest.py 규율).",
   "이_시점의_doped_잡": "0개 — git log 가 그 순서의 증거다. 결과를 보고 규칙을 고치지 않는다.",
   "이_시점의_ORCA_잡": "0개 — phase L 도 아직 돌리지 않았다 (회신 U Q7 NO-GO)",
   "이전_봉인": {
-   "builder_commit": "f58b8e5fec6b4780b0b0fc9772fb504e605031ba",
-   "builder_sha256": "d89acdedf0d4158b93466dc24ded8caf0ac5d5ee0e938f1b4b1c1f21ed15f83b",
-   "봉인_시점": "2026-08-31"
+   "builder_sha256": "27a9cb08f015854e17c0448ed2366337e05d038150fa5b748e4274fa6d975cd9",
+   "builder_last_change_commit": "97cb2d4d3bcd73b96d6168cc977c8ea8e624b761",
+   "봉인_시점": "2026-09-02"
   },
-  "builder_last_change_commit": "97cb2d4d3bcd73b96d6168cc977c8ea8e624b761",
+  "builder_last_change_commit": "6f9e28b21bec3ac602b487edd9a2d53024d00a97",
   "⚠_왜_전체_커밋이_아닌가": "회신 W P0-1 — '이 파일이 들어간 커밋' 은 파일 안에 넣을 수 없다 (커밋 해시가 파일 내용에 의존하므로 순환이다). 종전 판은 그 자리에 placeholder 를 넣었고, 검사가 그것을 실제 커밋과 비교해 **seed 생성이 반드시 막혔다**. ⇒ 봉인하는 것은 ⓐ 빌더 blob SHA ⓑ **빌더를 마지막으로 바꾼 커밋** 둘이다. 전체 커밋 결박은 파일 밖 attestation(tools/review_manifest.py)이 진다."
  },
  "대상": {
@@ -219,6 +219,11 @@
    "at": "2026-09-02",
    "state": "proposed",
    "note": "회신 W P0-1 — `builder_commit`(자기 자신을 담는 커밋) 봉인을 `builder_last_change_commit` 으로 교체. **내용이 바뀌었으므로 재비준이 필요하다** — 앞선 비준은 그 이전 내용에 대한 것이다."
+  },
+  {
+   "at": "2026-09-02",
+   "state": "proposed",
+   "note": "회신 W P0-4/P0-5 이행으로 재봉인. loccheck 증서가 L→L2 사슬과 현재 ORCA 를 증명하게 했고, 계보 해시를 러너·분석기가 **소비**하게 했다(preflight + RUN_RECEIPTS.jsonl). 부수로 run_pilot.sh 가 bash 로 파싱조차 안 되던 것을 고치고 `bash -n` 시험을 넣었다. 범위·질문·판정어 불변. ⚠ 재비준 필요."
   }
  ],
  "회신_U_이행": {
@@ -229,6 +234,8 @@
   "실행_승인": "없음 — 회신 U Q7 은 NO-GO 이고 phase L 도 금지다"
  },
  "실행_전_봉인": {
-  "loccheck": "phase L 전에 `bash run_pilot.sh loccheck` 가 LOCCHECK_PASS.json 을 남겨야 한다 (ORCA 경로·버전·입출력 해시·국재 파일 suffix·파서 둘 다 PASS). L·seeds 가 그 증서를 **강제**한다 — 순서가 문구가 아니라 게이트다 (회신 V P0-3)."
- }
+  "loccheck": "phase L 전에 `bash run_pilot.sh loccheck` 가 LOCCHECK_PASS.json 을 남겨야 한다. 증서는 **fresh 디렉터리에서 L → L2 를 둘 다** 돌려 만든 것이어야 하고 (l2_inp_sha256·l2_out_sha256·l2_moread_suffix), 파서 검증은 L2 출력으로 한다 — seed 의 원천이 거기다. 판독 시 증서가 기록한 ORCA 를 다시 해시해 같은지 본다. L·seeds 가 그 증서를 **강제**한다 — 순서가 문구가 아니라 게이트다 (회신 V P0-3 · W P0-4).",
+  "계보_대조": "계산 단계(L·L2·probe·S·restart)는 실행 **전에** 입력·xyz 봉인 해시와 `%moinp` 대상 파일을 대조하고, 정상종료한 출력이 있는데 실행 receipt 가 없거나 낡았으면 STALE_OUTPUT 으로 막는다. 잡마다 RUN_RECEIPTS.jsonl 에 receipt 를 남기고, 분석기는 receipt 없는/낡은 S·SR 잡을 판정하지 않는다 (회신 W P0-5)."
+ },
+ "ratification": null
 }
