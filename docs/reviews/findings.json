@@ -1553,6 +1553,19 @@
     "webapp/test_seminar_page.py"
    ],
    "claimed_fixed_sha": "1d3d5ac3"
+  },
+  {
+   "id": "SELF-12",
+   "severity": "P2",
+   "status": "open",
+   "owner": "claude",
+   "found_by": "claude",
+   "opened_in": "docs/reviews/ion_r_sensitivity_prereg_20260831.md",
+   "title": "사전등록의 설계 근거 `0.30 %` 가 **커밋된 원자료에 매여 있지 않다**",
+   "note": "`ion_r_sensitivity_prereg_20260831.md` §3 이 *\"8팔이 필요 없다\"* 를 `w4_ptscenterline` **8팔 산포 0.30 %** 로 정당화한다.  그런데 ⓐ 그 이름의 디렉터리는 **리포에 없다** — kgy `~/dem-mt/docs/data/w4_ptscenterline_20260827/` 에 미추적으로 남아 있고 `table_s3_data_20260827.md` §613 이 *\"push 권한 문제로 전송 대기\"* 라 적고 있다 ⓑ 커밋된 `w4_ptfe_centerline_20260827` 32팔에서 재계산하면 쌍대응 비 SD **0.228 %** · 비 폭 0.667 % · 침대별 CV 0.554/0.653 % 로, **0.30 % 와 정확히 일치하는 양이 없다**.\n★ **결정 자체는 안전하다** — 후보값 무엇을 써도 문턱(10~30 %) 대비 30~100배 여유라는 결론이 바뀌지 않는다.  판정값도 리포만으로 재현된다 (R̄ = 1.307820, 문서가 적은 값과 일치).\n⇒ 남은 것은 **출처 고정**이다: 그 디렉터리가 커밋된 것의 중복이면 지우고 사전등록의 인용을 커밋된 양(0.228 % SD 등)으로 정정한다.  중복이 아니면 반입해 `0.30 %` 를 검증 가능하게 만든다.\n⚠ 이 부류가 위험한 이유는 규칙 ④ 그대로다 — 설계 결정의 근거가 밖에서 강제되지 않으면 새어나간다.  `check_doc_refs` 는 **경로**만 보므로 이런 수치 출처는 못 잡는다.",
+   "evidence_tests": [
+    "scripts/check_doc_refs.py"
+   ]
   }
  ]
 }
