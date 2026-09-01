@@ -7,12 +7,12 @@
  "근거": "kb/reviews/codex_AT_reply_c12_v17_2026_08_31.md",
  "0_시각_증거": "VASP 결과를 **하나도 보기 전**이다. 이 시점의 계산 산출물은 0개다 — git log 가 그 순서의 증거다.",
  "1_보고량": {
-  "이름": "adsorption energy difference (ΔΔE_ads)",
-  "한국어": "흡착에너지 차 (두 조각의 차)",
+  "이름": "E_ads (adsorption energy) · 조각 간 차는 ΔE_ads",
+  "한국어": "흡착에너지 E_ads · 두 조각의 차 ΔE_ads",
   "식": "D = (E_C_sdcp − E_G_sdcp) − (E_C_control − E_G_control)",
   "⛔_부르면_안_되는_이름": [
    "binding energy · free energy — 평형·고립계 양이 아니다",
-   "E_ads · dE_site 를 **옛 wave 값과 같은 표에** 두는 것 (다른 프로토콜이다)"
+   "⚠ 이름이 아니라 **용법 금지**: 이 E_ads 를 옛 wave1 값과 **같은 표에** 두지 않는다 (프로토콜이 다르다 — 그쪽은 별도 마감·보류 상태다)"
   ],
   "포함": [
    "조각 변형에너지",
@@ -25,8 +25,8 @@
    "용매·계면 전기장"
   ],
   "⚠_개명_2026_09_01": "1저자 결정: 'adsorption' 을 쓴다. 종전 판은 그 단어 자체를 금지어로 뒀는데, README·MANIFEST·프로토콜이 서로 다른 이름을 쓰는 상태(회신 AY P0-4)를 만들었다. ⇒ **한정어 'fixed-geometry' 를 붙인 형태로 통일**한다 — 결정을 따르되 재는 것과 부르는 것이 어긋나지 않게. 한정어를 떼는 것은 별도 결정이 필요하다.",
-  "기호": "ΔΔE_ads = ΔE_ads(SDCP) − ΔE_ads(control),  ΔE_ads(f) = E_C(f) − E_G(f)",
-  "⚠_이름에_단서를_넣지_않는다": "2026-09-01 1저자: 'fixed-geometry adsorption energy difference' 같은 이름을 쓰는 논문은 없다 — 맞는 지적이다. **이름은 평범하게 쓰고 단서는 Methods 가 진다.** 그래서 이름은 ΔΔE_ads 로 두되, 아래 `Methods_필수문장` 을 원고에 **반드시** 넣는다. 단서를 이름에서 뺀 것이지 없앤 것이 아니다.",
+  "기호": "E_ads(f) = E_C(f) − E_G(f)   ·   ΔE_ads = E_ads(SDCP) − E_ads(control)",
+  "⚠_이름에_단서를_넣지_않는다": "2026-09-01 1저자: **그냥 E_ads 로 쓴다.** 단서는 이름이 아니라 Methods 가 진다 (아래 `Methods_필수문장`). 종전 판이 이 이름을 금지어로 뒀던 것은 철회한다 — 금지의 취지(재는 것과 부르는 것을 어긋나게 하지 말 것)는 Methods 문장이 대신 진다.",
   "Methods_필수문장": {
    "ko": "흡착에너지는 MLIP(UMA-s-1p1)로 이완한 기하 위의 **단일점 계산**으로 얻었고, DFT 수준의 이온 이완은 수행하지 않았다. 따라서 조각 변형·표면 변형 에너지와 고정된 기체 conformer 선택 효과가 값에 포함된다.",
    "en": "Adsorption energies were obtained as single-point calculations on MLIP-relaxed (UMA-s-1p1) geometries; no further ionic relaxation was performed at the DFT level. Fragment and surface deformation energies and the choice of the fixed gas-phase conformer are therefore included in the reported values.",
@@ -117,8 +117,8 @@
    "date": "2026-09-01",
    "what": "보고량 개명 (회신 AY P0-4 · 1저자 결정 2단계)",
    "from": "fixed-geometry differential complex–gas reference energy",
-   "to": "adsorption energy difference (ΔΔE_ads)",
-   "경위": "1차로 'fixed-geometry adsorption energy difference' 를 제안했으나 1저자가 '그런 이름 쓰는 논문 없다' 고 기각 — 옳다. 단서를 이름에서 Methods 로 옮겼다."
+   "to": "E_ads (adsorption energy) · 차는 ΔE_ads",
+   "경위": "1차 'fixed-geometry adsorption energy difference' → 1저자 기각(그런 이름 쓰는 논문 없다, 옳다) → 2차 'ΔΔE_ads' → 1저자: **그냥 E_ads**. 단서는 Methods 로."
   }
  ],
  "8_POTCAR_정책_2026_09_01": {
