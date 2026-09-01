@@ -3,7 +3,7 @@ title: "브랜치 현황 지도 2026-08-30 — 지금 살아 있는 것과 죽�
 date: 2026-08-30
 updated: 2026-08-30
 tags: [handoff, branch, status, sdcp, li3nd, ionic]
-status: 진행
+status: superseded — kb/results/branch_state_2026_08_31.md
 confidence: high
 verificationStatus: verified
 verifiedAt: 2026-08-30
@@ -16,6 +16,10 @@ evidenceScope: multi-source-primary
 ---
 
 # 브랜치 지도 (2026-08-30)
+
+> ⛔ **대체됨 → `kb/results/branch_state_2026_08_31.md`** (2026-08-31 전수 조사).
+> 이 문서의 §4 는 SDCP 를 "Stage A v9" 로 적는데, 그 뒤 캠페인이 **C-12 로 개명되고
+> v18** 까지 갔다. §1·§2 의 gabia 실측(GPU 점유·li3nd 체인 사망)은 그 시점 기록으로 유효하다.
 
 원래 세션이 토큰으로 멈춰 보조 세션이 이어받은 상태. 이 문서는 **SDCP Stage A
 하나만 보던 시야를 브랜치 전체로 넓힌 결과**다. 인계 문서

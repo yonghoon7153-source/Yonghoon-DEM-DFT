@@ -1,6 +1,6 @@
 # kb 카탈로그 (생성물 — 손으로 고치지 말 것)
 
-> `python3 tools/kb_wiki.py index` 가 만든다 · 2026-09-01 · managed-files: 324
+> `python3 tools/kb_wiki.py index` 가 만든다 · 2026-09-01 · managed-files: 325
 
 규칙: kb/SCHEMA.md · 열린 질문: kb/questions/ · 논지 카드: kb/syntheses/ · 원장: kb/open_items.md · 문헌: litdb/INDEX.md
 
@@ -75,7 +75,7 @@
 - `kb/methodology/terminology_register.md` — 🗣 용어 대장 — 우리 말 → 필드 표준어 → 근거
 - `kb/methodology/vanhove_plateau_70traj_2026_08_28.md` — van Hove 70궤적 — 고원은 세 계 공통이고, 고원 안 온도차는 대부분 못 읽는다 ○미열람
 
-## results/ (93)
+## results/ (94)
 - `kb/results/MASTER_structure_property_logic_2026_06_21.md` — Structure–Property Relationship of Argyrodite SEs — 통합 논리 (MASTER)
 - `kb/results/adhesion_100seeds_analysis.md` — Adhesion Energy — Complete Analysis (2026-04-17)
 - `kb/results/adhesion_final.md` — Adhesion Energy — Final Results (2026-04-14, CONFIRMED)
@@ -107,6 +107,7 @@
 - `kb/results/b2o3_voronoi_disorder_2026_07_02.md` — B₂O₃-doped 챔피언 — Voronoi 부피 disorder 분석 (slide 9/17의 b2o3 판)
 - `kb/results/b2o3_vs_lpscl16_md_2026_07_02.md` — B₂O₃-doped vs LPSCl1.6 — MD 이온수송 종합 비교 (아레니우스·전도도·D분해·저온)
 - `kb/results/branch_state_2026_08_30.md` — 브랜치 현황 지도 2026-08-30 — 지금 살아 있는 것과 죽어 있는 것 ○미열람
+- `kb/results/branch_state_2026_08_31.md` — 브랜치 현황 지도 2026-08-31 — 전수 조사 후 ○미열람
 - `kb/results/bvse_3system_conclusions_2026_07_21.md` — BVSE 3-시스템 결론 — LPSCl1.6 / LPSOCl(+O) / +B₂O₃ (2026-07-21 확정)
 - `kb/results/bvse_cubic_approx_2026_07_16.md` — BVSE 큐빅 근사 — "이상화 셀" 지적 대응 + LPSOCl 첫 BVSE (2026-07-16)
 - `kb/results/cascade_v23_literature_grounding_2026_06_25.md` — Cascade v23 — 문헌 기반 검증·novelty·reconciliation (2026-06-25)

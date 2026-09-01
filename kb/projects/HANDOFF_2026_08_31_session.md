@@ -16,6 +16,8 @@ claimType: mixed
 evidenceScope: multi-source-primary
 ---
 
+> 📍 브랜치 전체 지도: `kb/results/branch_state_2026_08_31.md` (2026-08-31 전수 조사)
+
 # 인수인계 — 2026-08-31 세션
 
 > 이 문서 하나로 이어받을 수 있게 썼다. **§0 을 먼저 실행**하고 §1 부터 읽는다.

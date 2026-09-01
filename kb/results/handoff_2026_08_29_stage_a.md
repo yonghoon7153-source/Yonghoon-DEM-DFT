@@ -18,7 +18,7 @@ evidenceScope: multi-source-primary
 # 인수인계 — 여기서부터 이어서
 
 > ⚠ **이 문서는 Stage A 만 다룬다.** 브랜치 전체(지금 도는 것·죽은 것·장부)는
-> `kb/results/branch_state_2026_08_30.md` 를 볼 것 — 2026-08-30 에 보조 세션이
+> `kb/results/branch_state_2026_08_31.md` 를 볼 것 — 2026-08-30 에 보조 세션이
 > 만든 지도다. Stage A 번들도 그 사이 **v2 → v9** 로 갔다 (리뷰 X·Z·AA 3연속 NO-GO).
 
 > **목표는 하나다: 원고에 들어갈 결합에너지 숫자를 얻는다.** 절차를 더 만들지 않는다.
