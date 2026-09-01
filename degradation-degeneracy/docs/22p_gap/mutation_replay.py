@@ -862,10 +862,6 @@ MUTANTS = [
     # 54차 방어 — 게이트 53 반례
     # ─────────────────────────────────────────────────────────────────────
     # ★ P0-1 — 승인 commit 은 plan 한 줄이 아니라 그때의 authority 를 본다.
-    ("admission-rechecks-the-cohort-at-commit", PRESERVE,
-     "            _assert_cohort_admits(doc, row, leg_id)",
-     "            pass",
-     "issuer_cannot_admit_a_run_into_a_cohort_that_froze_meanwhile"),
     # ★ P0-1 — 동결의 **시작**이 발급자에게 보여야 한다.
     ("freeze-linearizes-its-start", RP,
      '        if row.get("status") == "active":\n'
@@ -905,14 +901,6 @@ MUTANTS = [
      "def backfill_frozen_markers",
      "partial_write_during_freeze_leaves_the_ledger_readable"),
     # ★ P0-4 — 목적지의 frozen 은 단조다.
-    ("frozen-destination-is-monotonic", RP,
-     "        if rec[\"to\"] == \"frozen\":\n"
-     "            out.setdefault(str(d), rec[\"cohort_id\"])",
-     "        if rec[\"to\"] == \"frozen\":\n"
-     "            out[str(d)] = rec[\"cohort_id\"]\n"
-     "        else:\n"
-     "            out.pop(str(d), None)",
-     "later_active_record_cannot_thaw_a_frozen_destination"),
     # ★ P0-5 — module scope 의 표현식도 상태를 정한다.
     ("module-expr-binds-its-target", RP,
      "                root = _expr_root_name(node.value)",
@@ -931,12 +919,17 @@ MUTANTS = [
      "        ids = {t.get(\"nodeid\") or \"\" for t in data.get(\"tests\", [])}\n"
      "        if False:",
      "genuine_report_from_another_mutant_is_refused"),
+    # ★ 54차 P1 — **declared.** 이 검사는 git 역사가 있어야 물을 수 있는데
+    #   변이 sandbox 는 저장소 복사본이라 `.git` 이 없다. 그래서 sandbox 안에서
+    #   이 변이를 재생하면 baseline 자체가 빨갛다 (검사가 아니라 환경이 다르다).
+    #   회귀 자체는 실저장소에서 돌고 초록이다
+    #   (`..._recorded_head_must_exist_in_this_repository`).
     ("coverage-checks-the-recorded-head", MR,
      "    if _assert_heads_are_real(paths) != 0:\n"
      "        return 1",
      "    if False:\n"
      "        return 1",
-     "recorded_head_must_exist_in_this_repository"),
+     None),
     # ★ P1 — "모르겠다" 는 "물었다" 가 아니다.
     ("receipt-verdict-is-fail-closed", MR,
      "        if bool(v.get(\"bit\")) != derived:\n"
@@ -949,6 +942,31 @@ MUTANTS = [
 #: 여러 지점을 **함께** 되돌려야 관측되는 변이 (심층 방어라 하나만 지우면
 #: 다른 하나가 가린다). 41·42·43차에 실측했다.
 MULTI = [
+    # ★ 54차 P0-1 — 발급이 얼린 cohort 로 들어가는 것을 막는 자리가 둘이다:
+    #   commit 시점의 cohort 재검사(발급 쪽)와 살아 있는 실행권 검사(동결 쪽).
+    #   하나만 되돌리면 다른 하나가 여전히 막는다 — 함께 되돌려야 관측된다.
+    ("admission-rechecks-the-cohort-at-commit", PRESERVE, [
+        ("            _assert_cohort_admits(doc, row, leg_id)",
+         "            pass"),
+        ('    coh = e["_cohort"]\n'
+         '    if coh.get("status") != "active":',
+         '    coh = e["_cohort"]\n'
+         "    if False:"),
+     ], "issuer_cannot_admit_a_run_into_a_cohort_that_froze_meanwhile"),
+    # ★ 54차 P0-4 — 목적지의 frozen 단조는 두 자리가 함께 만든다: 읽을 때
+    #   다른 이름의 재개방을 거부하는 것과, 합집합에서 frozen 을 **빼지 않는**
+    #   것. 하나만 되돌리면 다른 하나가 여전히 막으므로 단일 변이는 안 문다
+    #   (심층 방어의 정상 신호다 — 53차에도 같은 형태를 만났다).
+    ("frozen-destination-is-monotonic", RP, [
+        ('        if d in frozen_dirs and frozen_dirs[d] != rec["cohort_id"]:',
+         "        if False:"),
+        ("        if rec[\"to\"] == \"frozen\":\n"
+         "            out.setdefault(str(d), rec[\"cohort_id\"])",
+         "        if rec[\"to\"] == \"frozen\":\n"
+         "            out[str(d)] = rec[\"cohort_id\"]\n"
+         "        else:\n"
+         "            out.pop(str(d), None)"),
+     ], "later_active_record_cannot_thaw_a_frozen_destination"),
     # ★ 53차 P0-2 — 소유 증명의 read-back 은 두 자리다 (보이기 전 · 보인 뒤).
     #   하나만 지우면 다른 하나가 같은 바이트를 잡으므로 단일 변이는 안 문다.
     ("token-bytes-are-verified-on-disk", PRESERVE, [
@@ -1222,6 +1240,12 @@ def _run(kexpr: str, marker: str = "") -> dict:
                     out["collect_errors"].append(
                         f"{c.get('nodeid')}:{c.get('outcome')}")
             for t in data.get("tests", []):
+                # ★ 54차 P1 — 표식 node 는 **영수증에만** 남는다 (`raw` 는 위에서
+                #   그대로 담았다). 판정 집합에 넣으면 baseline 수집 목록과
+                #   어긋나므로, 여기서는 뺀다 — 표식은 "누구의 report 인가" 를
+                #   말하는 것이지 "무엇이 물었는가" 가 아니다.
+                if "test_mutant_" in (t.get("nodeid") or ""):
+                    continue
                 phases = {ph: t[ph]["outcome"] for ph in
                           ("setup", "call", "teardown") if ph in t}
                 out["nodes"][t["nodeid"]] = {
@@ -1407,6 +1431,89 @@ def _last_line(text: str) -> str:
 #:   `witness` 는 **node → 실패 메시지 부분문자열** map 이다. 시각·임시 경로
 #:   처럼 실행마다 달라지는 부분은 손으로 잘라 안정한 접두만 남긴다.
 EXPECT: dict = {
+
+    "receipt-carries-the-mutant-marker": {
+        "fail": [
+            "tests/test_docs_lint.py::test_a_genuine_report_from_another_mutant_is_refused"
+        ],
+        "witness": {
+            "tests/test_docs_lint.py::test_a_genuine_report_from_another_mutant_is_refused": "이름으로 붙였는데 통과했다"
+        }
+    },
+
+    "admission-rechecks-the-cohort-at-commit": {
+        "fail": [
+            "tests/test_docs_lint.py::test_an_issuer_cannot_admit_a_run_into_a_cohort_that_froze_meanwhile"
+        ],
+        "witness": {
+            "tests/test_docs_lint.py::test_an_issuer_cannot_admit_a_run_into_a_cohort_that_froze_meanwhile": "AssertionError: 얼린 cohort(frozen) 안에서 실행이 시작됐다"
+        }
+    },
+    "freeze-ledger-write-is-atomic": {
+        "fail": [
+            "tests/test_docs_lint.py::test_a_partial_write_during_freeze_leaves_the_ledger_readable"
+        ],
+        "witness": {
+            "tests/test_docs_lint.py::test_a_partial_write_during_freeze_leaves_the_ledger_readable": "AssertionError: 원장의 최상위 구조가 깨졌다"
+        }
+    },
+
+    "claims-root-comes-from-the-ledger": {
+        "fail": [
+            "tests/test_docs_lint.py::test_the_issuer_cannot_choose_where_its_claim_lives"
+        ],
+        "witness": {
+            "tests/test_docs_lint.py::test_the_issuer_cannot_choose_where_its_claim_lives": "AssertionError: claim 의 자리가 원장에서 유도되지 않는다"
+        }
+    },
+    "dunder-as-a-string-is-still-a-dunder": {
+        "fail": [
+            "tests/test_docs_lint.py::test_a_dunder_named_by_a_string_literal_is_still_a_dunder"
+        ],
+        "witness": {
+            "tests/test_docs_lint.py::test_a_dunder_named_by_a_string_literal_is_still_a_dunder": "Failed: DID NOT RAISE SystemExit"
+        }
+    },
+    "finalize-recovery-holds-the-claim-lock": {
+        "fail": [
+            "tests/test_preserve.py::test_the_finalize_recovery_branch_holds_the_claim_lock"
+        ],
+        "witness": {
+            "tests/test_preserve.py::test_the_finalize_recovery_branch_holds_the_claim_lock": "AssertionError: 복구가 지운 claim 을 늦은 phase 가 되살렸다 — 부활 금지가 무너졌다"
+        }
+    },
+    "freeze-linearizes-its-start": {
+        "fail": [
+            "tests/test_docs_lint.py::test_an_issuer_refuses_while_a_freeze_is_half_committed"
+        ],
+        "witness": {
+            "tests/test_docs_lint.py::test_an_issuer_refuses_while_a_freeze_is_half_committed": "Failed: DID NOT RAISE PreserveError"
+        }
+    },
+    "frozen-destination-is-monotonic": {
+        "fail": [
+            "tests/test_docs_lint.py::test_a_later_active_record_cannot_thaw_a_frozen_destination"
+        ],
+        "witness": {
+            "tests/test_docs_lint.py::test_a_later_active_record_cannot_thaw_a_frozen_destination": "AssertionError: 허용 전이 한 줄로 frozen 목적지가 journal 에서 사라졌다"
+        }
+    },
+    "module-expr-binds-its-target": {
+        "fail": [
+            "tests/test_docs_lint.py::test_a_module_scope_expression_statement_is_fail_closed"
+        ],
+        "witness": {
+            "tests/test_docs_lint.py::test_a_module_scope_expression_statement_is_fail_closed": "SystemExit: ✗ producer 소스의 module scope 에 대상 이름을 알 수 없는 표현식이 있다 (2행) — 무엇의 상태를 바꾸는지 정적으로 답할 수 없으면 identity 밖 계산이 된다 (fai"
+        }
+    },
+    "release-cleanup-holds-the-attempt-path": {
+        "fail": [
+            "tests/test_preserve.py::test_a_release_cleanup_cannot_delete_another_legs_token"
+        ],
+        "witness": {
+            "tests/test_preserve.py::test_a_release_cleanup_cannot_delete_another_legs_token": "tools.preserve.PreserveError: [plan] 소유 증명 파일이 없다:"
+        }
+    },
 
     "attempt-path-is-exclusive": {
         "fail": [
@@ -3139,6 +3246,16 @@ def _assert_heads_are_real(paths) -> int:
     if not re.fullmatch(r"[0-9a-f]{40}", head):
         print(f"✗ 조각의 HEAD 가 commit 형식이 아니다: {head!r}")
         return 1
+    # 이 검사는 **git 역사가 있는 맥락**에서만 물을 수 있다. 변이 sandbox 는
+    # 저장소 복사본이라 `.git` 이 없다 — 거기서는 형식과 일치만 본다. 그
+    # 경계를 §0 에 신고한다 (그래서 이 scenario 는 declared 로 등록한다).
+    try:
+        has_git = subprocess.run(["git", "rev-parse", "--git-dir"],
+                                 cwd=str(ROOT), capture_output=True).returncode
+    except OSError:                                       # pragma: no cover
+        has_git = 1
+    if has_git != 0:
+        return 0
     try:
         rc = subprocess.run(["git", "cat-file", "-e", head + "^{commit}"],
                             cwd=str(ROOT), capture_output=True).returncode

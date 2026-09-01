@@ -10476,7 +10476,9 @@ def test_a_partial_write_during_freeze_leaves_the_ledger_readable(tmp_path):
 
     rp = _fresh_rp()
     coh = "docs/22p_gap/coh"
-    rp.REPO = _ledger_repo(tmp_path, _one_cohort_ledger("gX"))
+    # 최상위 key 가 여럿인 원장을 쓴다 — 잘린 문서도 YAML 로는 파싱될 수
+    # 있으므로, "완전한가" 는 **구조가 그대로인가** 로 물어야 한다.
+    rp.REPO = _ledger_repo(tmp_path, _lifecycle_ledger_body("gX", coh))
     (rp.REPO / coh).mkdir(parents=True, exist_ok=True)
     led = rp.REPO / "docs" / "22p_gap" / "LEG_PRESERVATION.yaml"
     before = led.read_text(encoding="utf-8")
@@ -10486,20 +10488,23 @@ def test_a_partial_write_during_freeze_leaves_the_ledger_readable(tmp_path):
 
     real_write_text = _pl.Path.write_text
     real_os_write = os.write
-    state = {"hit": False}
+    # 두 seam 에 **각자** 한 번씩 넣는다. 하나로 묶으면 앞선 쓰기(`freezing`
+    # 전이)가 주입을 소진해 정작 보려던 쓰기가 멀쩡히 지나간다.
+    state = {"text": False, "bytes": False}
 
     def _short_text(self, data, *a, **k):
         # 옛 경로: 원장을 제자리에서 자른다
-        if str(self) == str(led) and not state["hit"]:
-            state["hit"] = True
+        if str(self) == str(led) and not state["text"]:
+            state["text"] = True
             real_write_text(self, data[:len(data) // 3], *a, **k)
             raise OSError(28, "No space left on device")
         return real_write_text(self, data, *a, **k)
 
     def _short_bytes(fd, data):
-        # 새 경로: temp 에 쓰다가 같은 지점에서 실패한다
-        if not state["hit"] and len(data) > 64:
-            state["hit"] = True
+        # 새 경로: 원장 본문을 temp 에 쓰다가 같은 지점에서 실패한다
+        if (not state["bytes"] and b"cohorts:" in data
+                and b"status: frozen" in data):
+            state["bytes"] = True
             real_os_write(fd, data[:len(data) // 3])
             raise OSError(28, "No space left on device")
         return real_os_write(fd, data)
@@ -10512,8 +10517,11 @@ def test_a_partial_write_during_freeze_leaves_the_ledger_readable(tmp_path):
     after = led.read_text(encoding="utf-8")
     doc = yaml.safe_load(after)          # 여기서 ParserError 면 원장이 깨졌다
     assert doc and doc.get("cohorts"), "원장이 반쪽으로 남았다"
-    assert after == before or doc["cohorts"][0]["status"] == "frozen", (
-        "완전한 옛것도 완전한 새것도 아니다")
+    # 완전한 문서여야 하고, 상태는 선언된 전이 중 하나여야 한다. 부분 쓰기
+    # 뒤에도 `freezing`(동결 시작이 굳은 상태)은 정상적인 중간 상태다.
+    assert doc["cohorts"][0]["status"] in rp._LEDGER_STATUS, (
+        f"완전한 상태가 아니다: {doc['cohorts'][0]['status']!r}")
+    assert set(doc) == set(yaml.safe_load(before)), "원장의 최상위 구조가 깨졌다"
 
 
 def test_a_later_active_record_cannot_thaw_a_frozen_destination(tmp_path):
@@ -10719,18 +10727,19 @@ def test_an_issuer_cannot_admit_a_run_into_a_cohort_that_froze_meanwhile(tmp_pat
             err.append(exc)
 
     t = threading.Thread(target=do_freeze, daemon=True)
-    real_mark = P._mark_plan_running
+    real_new = P._new_token
     state = {"hit": False}
 
-    def hooked(leg_id, ledger=None):
-        # 사전검사는 지났고, plan 전이를 쓰기 **직전**이다
+    def hooked():
+        # 발급이 시작됐지만 claim 파일은 아직 없다 — 이 창에서 freeze 가 완주
+        # 하면, 그 뒤의 승인 commit 이 얼린 cohort 로 들어갈 수 있다.
         if not state["hit"]:
             state["hit"] = True
             t.start()
-            t.join(timeout=2.0)
-        return real_mark(leg_id, ledger=ledger)
+            t.join(timeout=3.0)
+        return real_new()
 
-    with mock.patch.object(P, "_mark_plan_running", hooked):
+    with mock.patch.object(P, "_new_token", hooked):
         try:
             P.open_leg_run("L", _RUN_SPEC_GX, "0123456789abcdef", tok,
                            ledger=led)

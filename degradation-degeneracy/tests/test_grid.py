@@ -208,8 +208,12 @@ def test_a_dry_run_does_not_strand_the_plan_in_running(monkeypatch, tmp_path):
     # smoke namespace **밖**이어야 gate 가 실제로 걸린다 (conftest 의 tmp_path
     # 는 gated entrypoint 시험을 위해 smoke 안으로 옮겨져 있다).
     out_dir = pathlib.Path(tempfile.mkdtemp(prefix="dd49-dry-"))
-    led = pathlib.Path(tempfile.mkstemp(prefix="dd49-led-", suffix=".yaml")[1])
-    claims = out_dir / "_claims"
+    # ★ 54차 P0-1 — claim 의 자리는 **원장에서 유도**된다. 원장을 격리된
+    #   디렉터리에 두어야 claim 도 그 안에 생긴다 (`/tmp` 바로 아래에 두면
+    #   실행끼리 같은 `_claims` 를 공유해 잔여가 다음 실행을 막는다).
+    led = out_dir / "ledger" / "LEG_PRESERVATION.yaml"
+    led.parent.mkdir(parents=True, exist_ok=True)
+    claims = P.claims_root_for_ledger(led)
     monkeypatch.setattr(P, "DEFAULT_LEDGER", led)
     monkeypatch.setattr(P, "DEFAULT_CLAIMS_ROOT", claims)
     monkeypatch.setattr(G, "get_discharged_state",
