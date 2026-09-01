@@ -1,0 +1,151 @@
+{
+ "slug": "liu2024_pband_center_sbo_dual_interface",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-09-01",
+ "sources": [
+  "84. Liu2024_pBand_Center_Sulfur_Argyrodite_Dual_Interface.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 3,
+   "file": "fig_1.png",
+   "caption": "Figure 1. Physicochemical properties of argyrodite Li6PS5Cl (LPSC) and Li6PS5Cl-SbO (LPSC-SbO) electrolytes. a) The Nyquist plots of LPSC-SbO electrolytes at a temperature range of 25 to 60 °C. b) The reﬁnement results of the neutron powder diﬀraction (NPD) of LPSC-SbO electrolyte and corresponding crystal structural image of LPSC-SbO electrolyte in the unit cell. Transmission electron microscope (TEM) images of c) LPSC and e LPSC-SbO electrolytes and corresponding selected area electron diﬀraction (SAED) of d) LPSC and f) LPSC-SbO electrolytes. g) Sb 3d XPS spectra of LPSC-SbO electrolyte. h) Sb K-edge XANES spectra of Sb foil, Sb2O3, Sb2O5, and LPSC-SbO electrolyte. i) The amount of H2S gas generated from LPSC and LPSC-SbO electrolytes as exposure time in 35% air humidity.",
+   "rotated_deg": 0,
+   "bbox": [
+    44.8,
+    70.4,
+    552.9,
+    486.7
+   ],
+   "w": 2118,
+   "h": 1736,
+   "dpi": 300,
+   "src": "84. Liu2024_pBand_Center_Sulfur_Argyrodite_Dual_Interface.pdf",
+   "blank": 0.677
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 5,
+   "file": "fig_2.png",
+   "caption": "Figure 2. Interface stability of LPSC and LPSC-SbO electrolytes against Li metal. a) Polarization curve of the Li/LPSC/Li and Li/LPSC-SbO/Li symmetric cells at 0.1 mA cm−2 under 25 °C. Galvanostatic cycling of the Li symmetric cells with b) LPSC and c) LPSC-SbO electrolytes at step-increased current densities and 25 °C. d) The critical current density (CCD) comparison of sulﬁde electrolytes reported in previous works. e) Galvanostatic electrochem- ical impedance spectroscopy (GEIS) of the Li/LPSC-SbO/Li symmetric cell at 25 °C and f) corresponding DRT transition result. g) Tafel plots of the Li symmetric cells with LPSC and LPSC-SbO electrolytes. h) Schematic diagram of diﬀerent Li plating/stripping behaviors with LPSC and LPSC-SbO electrolytes.",
+   "rotated_deg": 0,
+   "bbox": [
+    44.8,
+    70.7,
+    552.9,
+    616.7
+   ],
+   "w": 2118,
+   "h": 2276,
+   "dpi": 300,
+   "src": "84. Liu2024_pBand_Center_Sulfur_Argyrodite_Dual_Interface.pdf",
+   "blank": 0.635
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 7,
+   "file": "fig_3.png",
+   "caption": "Figure 3. Analysis of interface composition and properties. a) XRD patterns of pristine Li and cycled Li exfoliated from the Li/LPSC/Li and the Li/LPSC- SbO/Li symmetric cell after a long cycle. b) Schematic illustration of the interphase formed at the Li/LPSC-SbO interface. XPS depth proﬁling analysis of interfacial compositions at cycled Li/LPSC-SbO interface for c) Sb 3d and d) S 2p after diﬀerent sputtering times. e) Time-of-ﬂight secondary ion mass spectrometry (TOF-SIMS) depth analysis of several typical second ion fragments on the cycled Li/LPSC-SbO surface. f) TOF-SIMS 3D proﬁling of second ion fragments with 800 s of sputtering in the cycled Li metal. g) The dynamic changes of Li/LPSC-SbO interface models before MD (0 ps) and after MD (10 ps). h) The migration energy barrier of Li ions passing through the LiSbS2 interphase.",
+   "rotated_deg": 0,
+   "bbox": [
+    44.8,
+    71.1,
+    552.9,
+    609.7
+   ],
+   "w": 2118,
+   "h": 2245,
+   "dpi": 300,
+   "src": "84. Liu2024_pBand_Center_Sulfur_Argyrodite_Dual_Interface.pdf",
+   "blank": 0.785
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 9,
+   "file": "fig_4.png",
+   "caption": "Figure 4. Schematic illustration of the inﬂuence of sulﬁde electrolyte properties on a) the CNTs/electrolyte interface stability and b) the S8/electrolyte interface compatibility within the composite sulfur cathode. c) Cyclic voltammetry proﬁles of Li/LPSC/LPSC+CNTs and Li/LPSC-SbO/LPSC-SbO+CNTs semi-blocking cells at 0.1 mV s−1. Electron density diﬀerence of d) the S8/LPSC system and e) the S8/LPSC-SbO system after reaction. Ex situ Raman spectra of the Li/S cells with f) LPSC and g) LPSC-SbO electrolytes at various voltage states during the charge and discharge process. h) XPS spectra of S 2p in S@LPSC composite cathode and S@LPSC-SbO composite cathode after cycling.",
+   "rotated_deg": 0,
+   "bbox": [
+    44.8,
+    70.8,
+    552.9,
+    511.7
+   ],
+   "w": 2118,
+   "h": 1839,
+   "dpi": 300,
+   "src": "84. Liu2024_pBand_Center_Sulfur_Argyrodite_Dual_Interface.pdf",
+   "blank": 0.815
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 10,
+   "file": "fig_5.png",
+   "caption": "Figure 5. Mechanism analysis of dual solid–solid interface stability by ﬁrst-principle calculations. Calculated partial density of states (PDOS) of a) the Li atoms coordinated with tetrahedron in electrolytes and b) the PS4 unit in LPSC and the SbS4 unit in LPSC-SbO electrolytes. c) Sketch for illustrating the redox mechanism for LPSC and LPSC-SbO with S8 and Li metal.",
+   "rotated_deg": 0,
+   "bbox": [
+    42.0,
+    71.2,
+    550.1,
+    406.7
+   ],
+   "w": 2118,
+   "h": 1399,
+   "dpi": 300,
+   "src": "84. Liu2024_pBand_Center_Sulfur_Argyrodite_Dual_Interface.pdf",
+   "blank": 0.43
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 12,
+   "file": "fig_6.png",
+   "caption": "Figure 6. The electrochemical performances of all-solid-state Li/S battery with LPSC-SbO electrolyte. a) Schematic illustration of the conﬁguration of all-solid-state Li/S cell. b) Cycling performances of the cells with LPSC and LPSC-SbO electrolytes under 0.1 C and at 25 °C. c) Rate performances of the cells with LPSC and LPSC-SbO electrolytes at 25 °C. d) Cycling performances of the Li/S cells with LPSC and LPSC-SbO electrolytes under 0.2 C at 60 °C. e) Digital photographs of the pouch cell lighting up LEDs under extreme conditions. f) Cycling performance of the Li/S pouch cells with LPSC-SbO electrolyte at 0.2 C (anode: Li-In foil). g) The comparison of battery performance of Li/LPSC-SbO/S cell with literature-reported results.",
+   "rotated_deg": 0,
+   "bbox": [
+    42.0,
+    70.5,
+    550.0,
+    542.7
+   ],
+   "w": 2118,
+   "h": 1969,
+   "dpi": 300,
+   "src": "84. Liu2024_pBand_Center_Sulfur_Argyrodite_Dual_Interface.pdf",
+   "blank": 0.729
+  },
+  {
+   "key": "s1",
+   "kind": "scheme",
+   "label": "1",
+   "page": 2,
+   "file": "sch_1.png",
+   "caption": "Scheme 1. Schematics of interface properties between diﬀerent sulﬁde electrolytes and composite sulfur cathode/lithium anode in ASSLSBs. The irre- versible interface reaction involves the electrolyte decomposition at both the S/LPSC and CNTs/LPSC interfaces within the composite sulfur cathode. The interface reaction between the LPSC electrolyte and Li metal induces the growth of lithium dendrites. However, the stable S/LPSC-SbO interface and CNTs/LPSC-SbO interface can prevent the electrolyte decomposition in the composite sulfur cathode. Additionally, the in situ formed interphase improves the compatibility at the Li/LPSC-SbO interface.",
+   "rotated_deg": 0,
+   "bbox": [
+    42.0,
+    70.8,
+    550.1,
+    263.7
+   ],
+   "w": 2118,
+   "h": 804,
+   "dpi": 300,
+   "src": "84. Liu2024_pBand_Center_Sulfur_Argyrodite_Dual_Interface.pdf",
+   "blank": 0.15
+  }
+ ]
+}
