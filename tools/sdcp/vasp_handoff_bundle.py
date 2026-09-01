@@ -3635,16 +3635,53 @@ def citation_status(man, cl):
         b.append("potcar_identity.allowed_claim=%r — 외부 앵커가 없다"
                  % _pi.get("allowed_claim"))
     # ⛔ 회신 BA 해제조건 3 — 거버넌스 비준이 없으면 인용 자격이 서지 않는다.
+    # ⛔⛔ 회신 BB P0-3 (2026-09-02) — **요약 불리언을 믿으면 fail-open 이다.**
+    #   종전엔 `all_ratified` 하나만 봤다. 그 값이 true 이면 내부 decision 이
+    #   proposed/false/digest BROKEN 이어도 `manuscript_citable=true` 가 재현됐다.
+    #   ⇒ 항목마다 직접 본다. 요약은 **정보**이고, 개별 항목과 어긋나면 그 자체가
+    #     차단 사유다 (누가 요약만 고쳐 놓는 경로를 닫는다).
     _gb = (man or {}).get("governance_binding") or {}
     if _gb:
-        if not _gb.get("all_ratified"):
-            _un = sorted(k for k, v in (_gb.get("decisions") or {}).items()
-                         if not v.get("ratified"))
-            b.append("거버넌스 미비준 %s — 비용 발생 전에 닫아야 한다 (AZ P0-6)" % _un)
+        _dec = _gb.get("decisions") or {}
+        if not _dec:
+            b.append("governance_binding.decisions 가 비었다 — 무엇 아래 나온 "
+                     "결과인지 산출물이 말하지 못한다")
+        _bad_dec = []
+        for _i, _v in sorted(_dec.items()):
+            _v = _v or {}
+            if not _v.get("ratified"):
+                _bad_dec.append("%s(ratified=false)" % _i)
+            elif _v.get("state") not in ("active", "ratified"):
+                _bad_dec.append("%s(state=%r)" % (_i, _v.get("state")))
+            elif not _v.get("digest") or str(_v.get("digest")).upper() == "BROKEN":
+                _bad_dec.append("%s(digest=%r)" % (_i, _v.get("digest")))
+            elif _v.get("digest_matches") is False:
+                _bad_dec.append("%s(비준 이후 내용이 바뀌었다 — 재승인 필요)" % _i)
+        if _bad_dec:
+            b.append("거버넌스 미비준/결박불량 %s — 비용 발생 전에 닫아야 한다 "
+                     "(AZ P0-6 · BB P0-3)" % _bad_dec)
+        # 요약이 개별 항목과 어긋나면 요약이 손을 탄 것이다
+        _sum = _gb.get("all_ratified")
+        if _dec and bool(_sum) != (not _bad_dec):
+            b.append("all_ratified=%r 가 개별 decision 상태와 **어긋난다** — 요약만 "
+                     "고쳐 놓은 번들이다 (BB P0-3)" % _sum)
+        # ⛔ 회신 BB P0-2 — 참조 문서의 **자기 status** 도 본다. SHA 를 적은 것은
+        #   "그 내용이 비준됐다" 는 증거가 아니다.
         _rf = _gb.get("reference_files_sha256") or {}
         if any(v is None for v in _rf.values()):
             b.append("참조 문서 SHA 결박 누락 %s"
                      % sorted(k for k, v in _rf.items() if v is None))
+        _rs = _gb.get("reference_files_state")
+        if _rs is None:
+            b.append("참조 문서의 **비준 상태**가 번들에 없다 — 구판이다 (BB P0-2). "
+                     "SHA 만으로는 그 내용이 비준됐는지 알 수 없다")
+        else:
+            _bad_ref = sorted("%s(status=%r)" % (k.rsplit("/", 1)[-1],
+                                                 (v or {}).get("status"))
+                              for k, v in _rs.items() if not (v or {}).get("ratified"))
+            if _bad_ref:
+                b.append("참조 문서 미비준 %s — 주장을 **정의하는** 문서가 닫히지 "
+                         "않았다 (BB P0-2)" % _bad_ref)
     else:
         b.append("governance_binding 이 없다 — 구판 번들이다 (BA 해제조건 3)")
     return {"manuscript_citable": not b,
@@ -4152,9 +4189,17 @@ def _selftest_closure(chk):
         "⛔음성 BA P0-3: post_hoc + overall=None 이면 `manuscript_citable=false` 를 "
         "**기계가 집행**한다 (종전엔 분석기가 그 필드를 읽지도 않았다)")
     # ⛔ 회신 BA 해제조건 3 — 거버넌스 결박·비준이 있어야 인용 자격이 선다
+    # ⚠ 회신 BB P0-2·P0-3 — 픽스처가 **실물과 같은 모양**이어야 한다. 종전 픽스처는
+    #   `{"ratified": True}` 하나뿐이라 state·digest·참조문서 상태가 전부 빠져 있었고,
+    #   그래서 요약 불리언만 보는 fail-open 을 시험이 잡아내지 못했다.
     _GBOK = {"all_ratified": True,
-             "decisions": {"D-x": {"ratified": True}},
-             "reference_files_sha256": {"a.json": "0" * 64}}
+             "decisions": {"D-x": {"ratified": True, "state": "active",
+                                   "digest": "a" * 64, "digest_matches": True,
+                                   "recorded_digest": "sha256:" + "a" * 64,
+                                   "ratification_base_commit": "b" * 40}},
+             "reference_files_sha256": {"a.json": "0" * 64},
+             "reference_files_state": {"a.json": {"status": "ratified",
+                                                  "ratified": True}}}
     _cs_ok = citation_status(
         {"potcar_identity_policy": {"mode": "require_attestation",
                                     "manuscript_citable": True},
@@ -4184,6 +4229,55 @@ def _selftest_closure(chk):
          "potcar_identity": {"allowed_claim": "paw_release_attested"}})
     chk(_cs_noref["manuscript_citable"] is False,
         "⛔음성 BA 해제조건 3: 참조 문서 SHA 가 결박되지 않으면 인용 불가다")
+
+    # ══ 회신 BB P0-2·P0-3 — **요약 불리언 fail-open** (리뷰어 재현 그대로) ══
+    def _cs(gb):
+        return citation_status(
+            {"potcar_identity_policy": {"mode": "require_attestation",
+                                        "manuscript_citable": True},
+             "governance_binding": gb},
+            {"overall_citable_at_0.01eV": True,
+             "potcar_identity": {"allowed_claim": "paw_release_attested"}})
+
+    for _nm, _gb, _need in (
+        ("state=proposed",
+         dict(_GBOK, decisions={"D-x": dict(_GBOK["decisions"]["D-x"],
+                                            state="proposed")}), "state="),
+        ("ratified=false",
+         dict(_GBOK, decisions={"D-x": dict(_GBOK["decisions"]["D-x"],
+                                            ratified=False)}), "ratified=false"),
+        ("digest=BROKEN",
+         dict(_GBOK, decisions={"D-x": dict(_GBOK["decisions"]["D-x"],
+                                            digest="BROKEN")}), "digest="),
+        ("비준 후 내용 변경",
+         dict(_GBOK, decisions={"D-x": dict(_GBOK["decisions"]["D-x"],
+                                            digest_matches=False)}), "재승인"),
+    ):
+        _r = _cs(_gb)
+        chk(_r["manuscript_citable"] is False
+            and any(_need in x for x in _r["blockers"]),
+            "⛔음성 BB P0-3: `all_ratified=true` 인데 내부가 **%s** 면 인용 불가다 — "
+            "종전엔 요약 불리언만 봐서 `manuscript_citable=true` 가 재현됐다" % _nm)
+    _r = _cs(dict(_GBOK, all_ratified=False))
+    chk(any("어긋난다" in x for x in _r["blockers"]),
+        "⛔음성 BB P0-3: 요약이 개별 항목과 **어긋나면** 그 자체가 차단 사유다 "
+        "(요약만 고쳐 놓는 경로를 닫는다)")
+    _r = _cs(dict(_GBOK, decisions={}))
+    chk(_r["manuscript_citable"] is False
+        and any("decisions 가 비었다" in x for x in _r["blockers"]),
+        "⛔음성 BB P0-3: decisions 를 **비우면** 통과하던 경로 (all(빈 것)=True) 를 "
+        "닫았다")
+    _r = _cs({k: v for k, v in _GBOK.items() if k != "reference_files_state"})
+    chk(_r["manuscript_citable"] is False
+        and any("구판" in x for x in _r["blockers"]),
+        "⛔음성 BB P0-2: 참조 문서의 **비준 상태**가 없는 구판 번들은 인용 불가다 "
+        "(SHA 만으로는 그 내용이 비준됐는지 알 수 없다)")
+    _r = _cs(dict(_GBOK, reference_files_state={
+        "prereg.json": {"status": "proposed", "ratified": False}}))
+    chk(_r["manuscript_citable"] is False
+        and any("주장을 **정의하는** 문서" in x for x in _r["blockers"]),
+        "⛔음성 BB P0-2 (실물 재현): decision 은 active 인데 **claim prereg 가 "
+        "proposed** 면 인용 불가다 — 실제 C-12 정본이 이 상태였다")
     chk(citation_status({"potcar_identity_policy": {"manuscript_citable": True}},
                         {"overall_citable_at_0.01eV": True,
                          "potcar_identity": {"allowed_claim": "paw_release_attested"}}
@@ -12118,6 +12212,32 @@ def build_bundle(a, ledger: Optional[Dict[str, Any]] = None) -> Path:
         return (hashlib.sha256(_p.read_bytes()).hexdigest()
                 if _p.is_file() else None)
 
+    # ⛔⛔ 회신 BB P0-2 (2026-09-02) — **SHA 를 적는 것은 비준의 증거가 아니다.**
+    #   종전엔 decision 두 건만 세어 `all_ratified=true` 를 만들었는데, 정작 주장을
+    #   정의하는 문서들은 그 안에 없었다: claim prereg 는 `proposed`, protocol 과
+    #   poses 는 **status 필드 자체가 없었다.** decision 에는 이 파일들의 *경로*만
+    #   있고 내용 SHA 가 비준된 payload 안에 없으므로, MANIFEST 가 나중에 SHA 를
+    #   기록한 것은 "그 내용이 비준됐다" 는 증거가 되지 못한다.
+    #   ⇒ 참조 문서의 **자기 status·비준 기록**을 따로 읽어 싣고, 종합 판정에 넣는다.
+    def _ref_state(rel):
+        _p = Path(__file__).resolve().parent.parent.parent / rel
+        if not _p.is_file():
+            return {"status": None, "ratified": False, "why": "파일 없음"}
+        try:
+            _j = json.loads(_p.read_text(encoding="utf-8"))
+        except Exception:                                    # noqa: BLE001
+            return {"status": None, "ratified": False, "why": "JSON 파싱 실패"}
+        _st = _j.get("status")
+        _rt = (_j.get("ratification") or {})
+        _ok = (_st in ("ratified", "active")
+               and _rt.get("state") == "ratified"
+               and _rt.get("role") == "scientific_owner")
+        return {"status": _st, "ratified": bool(_ok),
+                "has_ratification_record": bool(_rt),
+                "why": (None if _ok else
+                        ("status=%r · 사람 비준 기록 %s — 이 문서가 정의하는 주장은 "
+                         "아직 닫히지 않았다" % (_st, "있음" if _rt else "**없음**")))}
+
     _REFS = ["db/properties/sdcp_c12_claim_prereg_2026_08_31.json",
              "db/properties/sdcp_c12_protocol_2026_08_30.json",
              "db/properties/c12_poses_2026_08_30.json"]
@@ -12142,15 +12262,48 @@ def build_bundle(a, ledger: Optional[Dict[str, Any]] = None) -> Path:
         "decisions": {
             _i: {"state": (_dec_all.get(_i) or {}).get("decision_state"),
                  "digest": _dec_digest(_dec_all.get(_i)) if _i in _dec_all else None,
+                 # ⛔⛔ 회신 BB P0-3 (2026-09-02) — **base_commit 과 내용 앵커는
+                 #   다른 것이다.** 비준 기록의 `commit` 은 비준을 *누른 시점*의
+                 #   HEAD 이지 그 digest 가 가리키는 내용이 있는 커밋이 아니다
+                 #   (실측: 두 비준 모두 2f96eeb… 인데 active 내용은 97cb2d4… 에
+                 #   있다). 둘을 같은 칸에 두면 "커밋을 받으면 그 내용이 나온다" 로
+                 #   읽힌다 — 요청 V P0-1 과 같은 형태의 오독이다.
+                 "recorded_digest": (((_dec_all.get(_i) or {}).get("ratification")
+                                      or {}).get("decision_digest")),
+                 "ratification_base_commit": (
+                     ((_dec_all.get(_i) or {}).get("ratification") or {}).get("commit")),
+                 "digest_matches": (
+                     None if _i not in _dec_all else
+                     (str((((_dec_all.get(_i) or {}).get("ratification") or {})
+                           .get("decision_digest")) or "").split(":")[-1]
+                      == _dec_digest(_dec_all.get(_i)))),
                  "ratified": bool(((_dec_all.get(_i) or {}).get("ratification") or {})
                                   .get("state") == "ratified")}
             for _i in _DEC_IDS},
+        "⛔_base_commit_은_내용_앵커가_아니다": (
+            "`ratification_base_commit` 은 비준을 누른 시점의 HEAD 다. 그 커밋을 "
+            "받아도 비준된 내용이 나온다는 뜻이 아니다 — 내용 앵커는 "
+            "`recorded_digest`(비준 당시 내용의 sha256) 이고, `digest_matches` 가 "
+            "지금 원장 내용과 같은지를 말한다 (회신 BB P0-3)."),
         "reference_files_sha256": {r: _ref_sha(r) for r in _REFS},
-        "all_ratified": all(
+        # ⛔ 회신 BB P0-2 — 참조 문서의 **자기 상태**. SHA 는 "무엇을 썼나" 고
+        #   이것은 "그것이 비준됐나" 다. 둘은 다른 질문이다.
+        "reference_files_state": {r: _ref_state(r) for r in _REFS},
+        "decisions_all_ratified": all(
             (((_dec_all.get(_i) or {}).get("ratification") or {}).get("state")
              == "ratified") for _i in _DEC_IDS),
-        "⚠_비준_전_발송_금지": ("`all_ratified` 가 false 인 번들은 **탐색 목적으로도** "
-                                 "결과 해석을 시작하지 않는다. 분석기가 이 필드를 읽고 "
+        "reference_files_all_ratified": all(
+            _ref_state(r)["ratified"] for r in _REFS),
+        "all_ratified": (all(
+            (((_dec_all.get(_i) or {}).get("ratification") or {}).get("state")
+             == "ratified") for _i in _DEC_IDS)
+            and all(_ref_state(r)["ratified"] for r in _REFS)),
+        "⛔_요약은_판정이_아니다": (
+            "회신 BB P0-3 — 분석기는 이 불리언을 **믿지 않는다.** decision 항목마다 "
+            "state·ratified·digest 를, 참조 문서마다 status·비준 기록을 각각 본다. "
+            "요약이 개별 항목과 어긋나면 그 자체가 차단 사유다 (fail-open 차단)."),
+        "⚠_비준_전_발송_금지": ("비준되지 않은 번들은 **탐색 목적으로도** 결과 해석을 "
+                                 "시작하지 않는다. 분석기가 개별 항목을 읽고 "
                                  "citation_status 를 막는다."),
     }
     man["reported_quantity"] = {
