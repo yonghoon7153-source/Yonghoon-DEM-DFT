@@ -6702,9 +6702,15 @@ def test_a_crash_after_grid_resumes_and_finalizes(tmp_path):
     del run                                           # process 가 죽었다
 
     # 소유 증명 없는 제3자는 붙지 못한다
+    # ★ 52차 — 소유 증명 파일이 leg·attempt 를 담는 record 가 됐으므로, 형식은
+    #   맞고 **비밀만 틀린** 파일이어야 verifier 대조에 도달한다. raw hex 를 두면
+    #   형식 검사에서 먼저 죽어 이 시험이 verifier 를 확인하지 못한다 (변이 전수가
+    #   실측했다 — `resume-compares-the-verifier` 가 안 물었다).
     other = tmp_path / "other.token"
-    other.write_text("0" * 32, encoding="utf-8")
-    with pytest.raises(PreserveError):
+    other.write_text(json.dumps(
+        {"leg_id": "L", "attempt_id": "0" * 32, "token": "0" * 32},
+        sort_keys=True) + "\n", encoding="utf-8")
+    with pytest.raises(PreserveError, match="소유 증명"):
         attach_leg_run("L", other, ledger=led, claims_root=claims)
 
     r = attach_leg_run("L", tok, ledger=led, claims_root=claims)

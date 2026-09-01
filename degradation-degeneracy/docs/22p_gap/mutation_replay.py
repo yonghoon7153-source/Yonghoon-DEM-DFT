@@ -663,12 +663,6 @@ MUTANTS = [
      "            if use_cache and cache.is_file() else None),",
      '        "discharged_cache_sha256": None,',
      "grid_axis_binds_the_discharged_state_cache"),
-    # ★ P0-F — 얼린 것은 이름이 아니라 그 디렉터리다.
-    ("freeze-seals-the-output-directory", RP,
-     "    for d, cid in frozen_dirs_from_journal().items():\n"
-     "        out.setdefault(cid, (REPO / d).resolve())",
-     "    pass",
-     "frozen_directory_cannot_be_republished_under_a_new_cohort_id"),
     # ★ P1-O — fail-closed 는 정지가 아니다. 남은 전이를 완주해야 한다.
     ("freeze-completes-a-half-written-transition", RP,
      "    if recorded == \"frozen\":\n"
@@ -825,13 +819,27 @@ MULTI = [
          "            if False:\n"
          "                print(f\"✗ {path}: {name} 의 {phase} report 파일이 없다 ({f})\")"),
      ], "coverage_receipts_are_verified_independently"),
+    # ★ 51차 P0-F + 52차 P0-4 — 같은 게시를 막는 자리가 둘이 됐다: journal 이
+    #   기록한 목적지 합집합(51차)과 대상 안의 봉인 marker(52차). 하나만 지우면
+    #   다른 쪽이 여전히 거부하므로 함께 되돌려야 관측된다 (심층 방어의 정상
+    #   신호 — 변이 전수가 실측했다).
+    ("freeze-seals-the-output-directory", RP, [
+        ("    for d, cid in frozen_dirs_from_journal().items():\n"
+         "        out.setdefault(cid, (REPO / d).resolve())",
+         "    pass"),
+        ("    here = read_frozen_marker(dest)\n"
+         "    if here is not None:",
+         "    here = None\n"
+         "    if here is not None:"),
+     ], "frozen_directory_cannot_be_republished_under_a_new_cohort_id"),
     ("producer-normalizes-the-node", RP, [
         ("def _ast_normal_node(node) -> str:",
          "def _ast_normal_node(node, _src=None) -> str:"),
+        # ★ 52차 — 47차 결함(decorator 를 못 본다)을 **reflection 없이**
+        #   재현한다. `ast.unparse` 를 쓰면 P0-8 guard 에 먼저 걸려 변이가
+        #   **선언한 이유가 아닌** 것으로 물었다 (실측했다).
         ("    return _ast_canon(_keep_docstrings(copy.deepcopy(node)))",
-         "    import ast\n"
-         "    seg = ast.unparse(node)\n"
-         "    body = ast.parse(seg).body[0]\n"
+         "    body = copy.deepcopy(node)\n"
          "    body.decorator_list = []\n"
          "    return _ast_canon(_keep_docstrings(body))"),
      ], "producer_digest_sees_decorators"),
