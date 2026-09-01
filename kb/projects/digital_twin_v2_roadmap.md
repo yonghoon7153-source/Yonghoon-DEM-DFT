@@ -4,7 +4,7 @@
 > 구조만으로 전기화학적 성능까지 예측. 기계·전기·화학 복합 학습.
 > — 2026-05-16, 사용자 비전
 
-이전 v1 (`archive/digital_twin_phase_2026_05/digital_twin_roadmap.md`) 은
+이전 v1 (`kb/projects/digital_twin_roadmap.md`) 은
 일반 platform 기반 계획이었지만 chemistry foundation이 약했음. **v2 = 우리
 도핑 파이프라인의 검증된 chemistry를 deep learning으로 일반화**.
 

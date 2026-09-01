@@ -207,7 +207,7 @@ python3 tools/figures/harvest_msd_curves.py \
     --run lpsocl=~/work/runs/lpsocl_md/ladder \
     --merge db/properties/msd_LPSCl_LPSCl16_b2o3.csv \
     --out   db/properties/msd_4sys_origin.csv
-python3 tools/figures/fig_msd_4sys.py       # → docs/figures/msd_4sys.png + Origin CSV
+python3 tools/figures/fig_msd_hosts.py       # → docs/figures/msd_hosts.png + Origin CSV
 ```
 
 `msd_4sys_origin.csv` 가 없으면 그림 스크립트는 **기존 3계로 폴백**하고 그렇다고 알린다
@@ -228,7 +228,7 @@ python3 tools/figures/fig_msd_4sys.py       # → docs/figures/msd_4sys.png + Or
 
 ### 2-4. ⚠ 그림 파일은 repo 에 없다 — 서버에서 생성한다
 
-`docs/figures/msd_4sys.png` 와 `msd_4sys_plotted.csv` 는 **.gitignore 에 넣었다.**
+`docs/figures/msd_hosts.png` 와 `msd_4sys_plotted.csv` 는 **.gitignore 에 넣었다.**
 로컬에는 LPSOCl 곡선이 없어서 폴백(3계)으로만 그려지는데, 그걸 커밋하면
 **제목은 "four compositions" 인데 3계만 있는 그림**이 repo 에 남는다(실제로 한 번 그랬다).
 서버에서 실데이터로 그린 확정본이 나오면 그때 `git add -f` 로 명시적으로 넣는다.

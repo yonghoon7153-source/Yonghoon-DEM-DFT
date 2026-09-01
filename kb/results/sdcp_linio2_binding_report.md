@@ -290,7 +290,7 @@ doped가 0.5 Å 더 가까이 + 1.77 eV 더 강함 → **자기-도핑이 표면
 - `best_doped_oc20.xyz`, `best_neutral_oc20.xyz` — VESTA 확인용
 
 ### Repo (Yonghoon-DEM-DFT) — ⚠ 아래 스크립트는 끝내 커밋되지 않았다 (git 이력에 없음; 현세대 도구는 tools/sdcp/ 에 별도 구현)
-- `tools/sdcp_binding/build_linio2_slab.py` — LiNiO₂ (104) slab builder <!-- lint-skip-path -->
+- `tools/sdcp/build_linio2_slab.py` — LiNiO₂ (104) slab builder <!-- lint-skip-path -->
 - `tools/sdcp_binding/build_linio2_dft_input.py` — QE PBE+U+AFM input gen <!-- lint-skip-path -->
 - `tools/sdcp_binding/run_linio2_dft.sh` — gabia QE launcher <!-- lint-skip-path -->
 - `tools/sdcp_binding/scan_binding_rigid.py` — Phase A rigid scan <!-- lint-skip-path -->

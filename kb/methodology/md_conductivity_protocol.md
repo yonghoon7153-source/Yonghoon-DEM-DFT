@@ -121,7 +121,7 @@ python3 tools/ionic/cage_jump_descriptors.py \
 ### 6.2 동역학 (재실행 MD **trajectory 저장 필요**)
 ⚠️ **현재 `disorder_ensemble_diffusion.py`는 msd.json만 저장(위치 없음).** jump 통계엔 **프레임 좌표(extended-xyz)** 필요 →
 - 옵션 A: 재실행 시 각 T의 frames를 `traj.xyz`로 덤프하도록 `run_md`에 1줄 추가(`write(cdir/f"T{int(T)}"/"traj.xyz", frames)`), 또는
-- 옵션 B: 대표 온도(예 600 K)만 `tools/ionic/aimd_mlip.py`로 별도 trajectory MD.
+- 옵션 B: 대표 온도(예 600 K)만 `tools/modelc_v3/aimd_mlip.py`로 별도 trajectory MD.
 ```bash
 python3 tools/ionic/aimd_jump_stats.py \
   --traj /data/work/b2o3md/b2o3_unified/d0.00_cfg0/T600/traj.xyz \

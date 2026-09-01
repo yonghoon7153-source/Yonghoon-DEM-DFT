@@ -657,4 +657,4 @@ A. 좋은 후보 이름이 아니라, 어떤 증거가 다음 비싼 계산과 �
 - db/properties/cascade_audit_manifest.json
 - db/properties/cascade_audit_gate_completeness.csv
 - db/properties/cascade_audit_ml_validation.csv
-- kb/reviews/cascade_9abe5105_release_audit_2026_08_14.md
+- docs/reviews/cascade_9abe5105_release_audit_2026_08_14.md

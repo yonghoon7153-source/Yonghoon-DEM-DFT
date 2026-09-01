@@ -220,7 +220,7 @@ argyrodite 음이온은 **세 종류 자리**:
 
 ⚠ per-bond json(`bonds_modelc_k663.json`)의 Cl 4a×7/4d×1은 **Li-배위 cutoff proxy** 기준 —
 위 **위치(fractional) 기준 4a×5/4d×3**가 결정학적으로 더 정확 (relaxed rhombohedral이라 배위수
-distorted). 구조 = `db/structures/modelc_V0_k663.cif`.
+distorted). 구조 = `db/structures/modelc_V0_k663.xyz`.
 
 ## II.3 Bader (plot_num=17 AE charge density) — paper-grade
 
