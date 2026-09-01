@@ -62,5 +62,5 @@ evidenceScope: multi-source-primary
 | S | 2026-08-31 | `codex_S_prompt_backbone_polaron_estimand_2026_08_31.md` | — | 회신 수령 (원문 파일 없음 — 근거: 후속 T (폴라론 pilot seeds)) | ⚠ 인용 13회 — 라벨 재사용이라 **증거 아님** |
 | T | 2026-08-31 | `codex_T_prompt_polaron_pilot_seeds_2026_08_31.md` | `codex_T_reply_polaron_pilot_2026_08_31.md` | 회신 수령 — `kb/reviews/codex_T_reply_polaron_pilot_2026_08_31.md` | 같은 라벨 · 주제 토큰 일치 ['pilot', 'polaron']; ⚠ 인용 18회 — 라벨 재사용이라 **증거 아님** |
 | U | 2026-08-31 | `codex_U_prompt_polaron_S0_2026_08_31.md` | — | 발송 대기 (⚠ 라벨 U 가 재사용됨 — 인용 횟수는 codex_U_prompt_neutral_close_plan 과 합산되므로 근거가 아니다) | ⚠ 인용 11회 — 라벨 재사용이라 **증거 아님** |
-| AW | 2026-09-01 | `codex_AW_prompt_webapp_audit_2026_09_01.md` | — | 발송 대기 | — |
+| AW | 2026-09-01 | `codex_AW_prompt_webapp_audit_2026_09_01.md` | `codex_AW_reply_webapp_audit_2026_09_01.md` | 회신 수령 — NO-GO · `kb/reviews/codex_AW_reply_webapp_audit_2026_09_01.md` · 이행 중 | 회신 본문의 `요청:` 역링크 |
 | AX | 2026-09-01 | `codex_AX_prompt_lpsocl_600K_amendment_2026_09_01.md` | — | 발송 대기 | — |

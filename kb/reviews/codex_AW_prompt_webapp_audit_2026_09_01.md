@@ -3,7 +3,7 @@ title: "리뷰 요청 AW — DFT 웹앱 전수 감사 (실패 2건 수선 · 마
 date: 2026-09-01
 updated: 2026-09-01
 tags: [review, codex, webapp, governance, sdcp, prompt]
-status: 발송 대기
+status: 회신 수령 — NO-GO · `kb/reviews/codex_AW_reply_webapp_audit_2026_09_01.md` · 이행 중
 kind: review-request
 system: repo
 confidence: medium
