@@ -858,7 +858,15 @@ else:
                 g = "  (금속 — 갭 미정의)"
             else:
                 g = f"  ({_je or 'gap.json 손상'})"[:34]
-        _ok = all(m == "✓" for m in marks) and os.path.isfile(gj)
+        # ⛔ 2026-09-02 실측 (kgy li_metal_bcc) — **금속은 영원히 미완주로 찍혔다.**
+        #   금속엔 03(fixed-occ 갭) 단계가 아예 생성되지 않는데(build_dft_inputs 가
+        #   GAP_NOT_APPLICABLE 을 남긴다) `all(marks)` 가 그 빈칸 때문에 거짓이 됐다.
+        #   화면은 적용 가능한 단계를 전부 ✓ 로 찍으면서 "완주 0/1" 이라고 말했다 —
+        #   같은 화면이 스스로 모순됐다. 금속에서는 갭 칸을 **적용 대상에서 뺀다**.
+        _metal = bool(_je and "손상 아님" in _je) if os.path.isfile(gj) else False
+        _need = [m for st, m in zip(STAGES, marks)
+                 if not (_metal and st[0] == "03_nscf_gap")]
+        _ok = all(m == "✓" for m in _need) and os.path.isfile(gj)
         if _ok:
             ndone += 1
         # ⚠ 감시 화면은 **손볼 것**을 보여 주는 곳이다. 완주하고 갭도 정상인 상은
