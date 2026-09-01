@@ -921,10 +921,22 @@ def main():
     ap.add_argument('--sigma-am-p', type=float, default=None,
                     help='σ_e AM_P (S/cm) — 미지정 시 --cam 프리셋 (nmc811: 0.005 / nca: 0.010)')
     ap.add_argument('--sigma-vgcf', type=float, default=100.0,
-                    help='σ_e VGCF (S/cm).  ⚠ NOT a material property — this is an EFFECTIVE '
-                         'NETWORK constant (CL-47): voxel fusion deletes fibre-fibre contact '
-                         'resistance, so 100 lumps that missing loss (powder 83, single fibre '
-                         '1e4 S/cm).  Same epistemology as the DEM E_eff 18x softening.')
+                    help='σ_e VGCF (S/cm).  ⚠ NOT a material property — FROZEN, UNCALIBRATED '
+                         'legacy voxel-network coefficient (R20-04).  It entered as an explicit '
+                         'order-of-magnitude hook BEFORE any powder-value audit, so it was NOT '
+                         'derived from a datasheet number: do not write that lineage.  Voxel '
+                         'fusion deletes fibre-fibre contact resistance, but that is only ONE of '
+                         'several contributions (packing fraction, orientation, network '
+                         'tortuosity, contact number, compaction density, method) separating '
+                         'single-fibre 1e-4 ohm.cm (1e4 S/cm) from compressed-powder values.  '
+                         '⚠ The manufacturer states 0.017 ohm.cm AT 0.8 g/cm3 compaction '
+                         '(58.8 S/cm); the 0.012 ohm.cm (83 S/cm) figure common in the '
+                         'literature carries no stated condition.  0.8 g/cm3 is 40 percent of '
+                         'the fibre true density and unrelated to fibre packing in an electrode, '
+                         'so substituting either into the diameter-preserving sigma_bulk*A/L is '
+                         'a CATEGORY ERROR, not a fix.  ⚠ Not the same epistemic grade as the '
+                         'DEM E_eff softening: that was calibrated against a densification '
+                         'target, this was calibrated against nothing.')
     ap.add_argument('--sigma-superp', type=float, default=10.0, help='σ_e SuperP (S/cm) — lit order ⚠hook')
     ap.add_argument('--sigma-sdcp', type=float, default=250.0,
                     help='σ_e SDCP (S/cm).  ⚠ NOT a material property — like --sigma-vgcf this is '
