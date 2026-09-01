@@ -8400,6 +8400,20 @@ def test_the_same_ledger_argument_always_names_the_same_claims_root(tmp_path):
     link = tmp_path / "ledger.yaml"
     link.symlink_to(led_real)
 
+    # ★ 55차 자체 발견 — 처음 쓴 시험은 이 축을 안 겨눴다. 해석을 **아예 안
+    #   하는** 변이를 걸면 전후가 똑같이 *틀린* 곳을 가리켜 "안정적" 이 되고,
+    #   무는 것은 아래 symlink 단언뿐이었다. 리뷰어 반례의 본질은 그것이
+    #   아니라 **같은 실제 원장을 가리키는 서로 다른 이름이 다른 claims root
+    #   를 준다** 는 것이다. 그 축을 먼저 못 박는다.
+    other = tmp_path / "another_name.yaml"
+    other.symlink_to(led_real)
+    assert P.claims_root_for_ledger(link) == P.claims_root_for_ledger(other) \
+            == P.claims_root_for_ledger(led_real), (
+        f"같은 실제 원장을 가리키는 두 이름이 다른 claims root 를 준다 "
+        f"({P.claims_root_for_ledger(link)} · {P.claims_root_for_ledger(other)} "
+        f"· {P.claims_root_for_ledger(led_real)}) — 실행권의 자리가 "
+        "**어느 이름으로 불렀는가** 에 달렸다")
+
     before = P.claims_root_for_ledger(link)
     tok = tmp_path / "L.token"
     P.open_leg_run("L", _RUN_SPEC_L, "0123456789abcdef", tok, ledger=link)

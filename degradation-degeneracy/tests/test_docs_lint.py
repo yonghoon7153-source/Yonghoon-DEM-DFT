@@ -11315,7 +11315,9 @@ def test_coverage_is_bound_to_the_tree_it_actually_tested(tmp_path):
                     "after": _report(n, "after")} for n in reg}
     mr._write_coverage(good, "", items, multi, declared,
                        {n: True for n in reg}, receipts)
-    assert mr.check_coverage([str(good)]) == 0, "정상 조각이 거부됐다"
+    # 이 축만 겨눈다 — `check_coverage()` 는 맨 앞에서 head 를 보는데 변이
+    # sandbox 에는 `.git` 이 없어 그것이 **먼저** 거부한다 (실측했다).
+    assert mr._assert_trees_are_current([str(good)]) == 0, "정상 조각이 거부됐다"
 
     rec = _j.loads(good.read_text(encoding="utf-8"))
     assert rec["binding"].get("tree_digest"), (
@@ -11326,5 +11328,11 @@ def test_coverage_is_bound_to_the_tree_it_actually_tested(tmp_path):
     rec["binding"]["tree_digest"] = "0" * 64
     good.write_text(_j.dumps(rec, ensure_ascii=False, indent=2, sort_keys=True),
                     encoding="utf-8")
-    assert mr.check_coverage([str(good)]) == 1, (
+    assert mr._assert_trees_are_current([str(good)]) == 1, (
         "지금 트리와 다른 코드에서 나온 증거가 통과했다")
+    # 결속이 **없는** 조각도 거부한다 (54차의 head 는 그것도 통과시켰다)
+    del rec["binding"]["tree_digest"]
+    good.write_text(_j.dumps(rec, ensure_ascii=False, indent=2, sort_keys=True),
+                    encoding="utf-8")
+    assert mr._assert_trees_are_current([str(good)]) == 1, (
+        "어느 코드에 대한 증거인지 말하지 않는 조각이 통과했다")

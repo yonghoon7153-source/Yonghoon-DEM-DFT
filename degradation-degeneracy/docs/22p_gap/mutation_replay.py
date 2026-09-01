@@ -974,12 +974,10 @@ MUTANTS = [
      "freeze_validates_the_destination_before_its_first_side_effect"),
     # ★ P1-2 — 증거는 **시험한 트리**에 묶인다 (commit 실재는 아무 것도 안 묻는다).
     ("coverage-is-bound-to-the-tested-tree", MR,
-     '        got = str((rec.get("binding") or {}).get("tree_digest") or "")\n'
-     "        if not got:",
-     '        got = str((rec.get("binding") or {}).get("tree_digest") or "")\n'
-     "        if True:\n"
-     "            continue\n"
-     "        if not got:",
+     "        if got != now:\n"
+     "            return _refuse(",
+     "        if False:\n"
+     "            return _refuse(",
      "coverage_is_bound_to_the_tree_it_actually_tested"),
     ("coverage-checks-the-recorded-head", MR,
      "    if _assert_heads_are_real(paths) != 0:\n"
@@ -2366,6 +2364,54 @@ EXPECT: dict = {
             "tests/test_docs_lint.py::test_a_witness_found_only_in_the_traceback_body_is_not_a_witness": "주석에만 있는 문자열이 증인으로 인정됐다"
         }
     },
+    "normal-finalize-holds-the-attempt-path": {
+        "fail": ["tests/test_preserve.py::test_a_normal_finalize_cannot_delete_the_next_attempts_token"],
+        "witness": {
+            "tests/test_preserve.py::test_a_normal_finalize_cannot_delete_the_next_attempts_token": "소유 증명 파일이 없다"
+        }
+    },
+    "ledger-is-resolved-once": {
+        "fail": ["tests/test_preserve.py::test_the_same_ledger_argument_always_names_the_same_claims_root"],
+        "witness": {
+            "tests/test_preserve.py::test_the_same_ledger_argument_always_names_the_same_claims_root": "같은 실제 원장을 가리키는 두 이름이 다른 claims root"
+        }
+    },
+    "anchor-repair-holds-the-lifecycle-lock": {
+        "fail": ["tests/test_docs_lint.py::test_a_stale_anchor_repair_cannot_rewind_the_head"],
+        "witness": {
+            "tests/test_docs_lint.py::test_a_stale_anchor_repair_cannot_rewind_the_head": "cohort lifecycle journal 의 사슬이 끊겼다"
+        }
+    },
+    "destination-is-resolved-through-mounts": {
+        "fail": ["tests/test_docs_lint.py::test_a_bind_mounted_alias_of_a_frozen_child_is_not_writable"],
+        "witness": {
+            "tests/test_docs_lint.py::test_a_bind_mounted_alias_of_a_frozen_child_is_not_writable": "DID NOT RAISE SystemExit"
+        }
+    },
+    "freeze-checks-the-destination-first": {
+        "fail": ["tests/test_docs_lint.py::test_freeze_validates_the_destination_before_its_first_side_effect"],
+        "witness": {
+            "tests/test_docs_lint.py::test_freeze_validates_the_destination_before_its_first_side_effect": "거부했는데 저장소 밖에 파일을 만들었다"
+        }
+    },
+    "module-effects-are-an-unconditional-root": {
+        "fail": ["tests/test_docs_lint.py::test_a_module_effect_through_an_alias_still_moves_the_producer_digest"],
+        "witness": {
+            "tests/test_docs_lint.py::test_a_module_effect_through_an_alias_still_moves_the_producer_digest": "alias 를 거친 module 효과가 계산 값을 바꿨는데 producer digest 가 그대로다"
+        }
+    },
+    "wrapped-dunder-names-are-refused": {
+        "fail": ["tests/test_docs_lint.py::test_a_dunder_named_indirectly_is_still_refused"],
+        "witness": {
+            "tests/test_docs_lint.py::test_a_dunder_named_indirectly_is_still_refused": "DID NOT RAISE SystemExit"
+        }
+    },
+    "coverage-is-bound-to-the-tested-tree": {
+        "fail": ["tests/test_docs_lint.py::test_coverage_is_bound_to_the_tree_it_actually_tested"],
+        "witness": {
+            "tests/test_docs_lint.py::test_coverage_is_bound_to_the_tree_it_actually_tested": "지금 트리와 다른 코드에서 나온 증거가 통과했다"
+        }
+    },
     "module-gate-before-side-effects": {
         "fail": [
             "tests/test_preserve.py::test_run_grid_calls_the_gate_before_its_first_side_effect"
@@ -3387,6 +3433,38 @@ def _verdict_from_reports(name: str, rep_dir) -> bool | None:
     return want.issubset(after) and not (want & before)
 
 
+def _assert_trees_are_current(paths) -> int:
+    """조각이 가리키는 코드가 **지금 트리의 코드**인가 (55차 P1-2).
+
+    54차의 `head` 결속은 "그 commit 이 실재하는가" 만 물었고, 리뷰어는 12조각의
+    `binding.head` 를 저장소 **최초 commit** 으로 일괄 교체하고도 `rc 0 ·
+    157/157 exact` 를 받았다. 실재하기만 하면 무엇이든 통과하는 값은 결속이
+    아니라 장식이다.
+
+    `check_coverage()` 에서 떼어 낸 것은 시험이 이 축만 따로 겨눌 수 있게 하기
+    위해서다 (52차에 `verify_receipts()` 를 뗀 것과 같은 이유). `check_coverage()`
+    는 맨 앞에서 `_assert_heads_are_real()` 을 부르는데 변이 sandbox 에는
+    `.git` 이 없어 그 검사가 **먼저** 거부한다 — 그러면 이 축의 변이가 "물긴
+    했지만 선언한 이유가 아닌" 상태가 된다 (실측했다).
+    """
+    now = _tested_tree_digest()
+    for pth in paths:
+        try:
+            rec = json.loads(pathlib.Path(pth).read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError) as exc:
+            return _refuse(f"✗ {pth}: 조각을 읽을 수 없다: {exc}")
+        got = str((rec.get("binding") or {}).get("tree_digest") or "")
+        if not got:
+            return _refuse(
+                f"✗ {pth}: 시험한 트리 digest 가 없다 — 어느 코드에 대한 "
+                "증거인지 말하지 않는 조각은 증거가 아니다")
+        if got != now:
+            return _refuse(
+                f"✗ {pth}: 증거가 가리키는 트리가 지금 트리와 다르다 "
+                f"({got[:16]} ≠ {now[:16]}) — 그 코드는 다시 재생해야 한다")
+    return 0
+
+
 def _assert_heads_are_real(paths) -> int:
     """조각이 적은 `head` 가 **이 저장소에 실재하는 commit** 인가 (54차 P1).
 
@@ -3445,25 +3523,8 @@ def check_coverage(paths) -> int:
     #   값은 결속이 아니라 장식이다.
     if _assert_heads_are_real(paths) != 0:
         return 1
-    # ★ 55차 P1-2 — `head` 는 "실재하는가" 만 물으므로 어느 commit 이든 통과한다
-    #   (리뷰어 실측: 12조각의 head 를 최초 commit 으로 바꿔도 rc 0 · 157/157).
-    #   물어야 하는 것은 **이 증거가 가리키는 코드가 지금 트리의 코드인가** 다.
-    now = _tested_tree_digest()
-    for pth in paths:
-        try:
-            rec = json.loads(pathlib.Path(pth).read_text(encoding="utf-8"))
-        except (OSError, json.JSONDecodeError) as exc:
-            print(f"✗ {pth}: 조각을 읽을 수 없다: {exc}")
-            return 1
-        got = str((rec.get("binding") or {}).get("tree_digest") or "")
-        if not got:
-            print(f"✗ {pth}: 시험한 트리 digest 가 없다 — 어느 코드에 대한 "
-                  "증거인지 말하지 않는 조각은 증거가 아니다")
-            return 1
-        if got != now:
-            print(f"✗ {pth}: 증거가 가리키는 트리가 지금 트리와 다르다 "
-                  f"({got[:16]} ≠ {now[:16]}) — 그 코드는 다시 재생해야 한다")
-            return 1
+    if _assert_trees_are_current(paths) != 0:
+        return 1
     # ★ 50차 P1 — 합집합을 세기 전에 **등록부 자체**가 성립하는지 본다.
     #   no-op 변이·죽은 지점·빈 기대 집합이 있으면 그 위에서 센 수는 뜻이 없다.
     if check_preimages() != 0:
