@@ -505,6 +505,20 @@ abstract 본문·실험 서사는 공저자와 함께 검증된 부분이라 손
 **판정: h1** (등록 h1 = `G ≤ 0.060`, h0 = `G ≥ 0.100`).  중간대 MIXED 에도 해당하지 않는다.
 두 팔 다 수렴했다 (`cg_info = 0`).  1차 실행은 반복수 소진으로 미수렴이었고 상향으로 해소됐다.
 
+> ⚠⚠ **적용 범위 정정 (2026-09-02, Codex R20 판정)** — 이 팔은 **PTFE 미표현 규약**에서만
+> 돌았다.  ⇒ 갈라 적어야 한다:
+>
+> | | |
+> |---|---|
+> | **PTFE 미표현** `R ≈ 1.124` 의 방향 강건성 | **반증됨** (여기서 뒤집혔다) |
+> | **본문이 쓰는 centerline** `R ≈ 1.308` 의 방향 강건성 | **미식별** — CL-48 이 **시험하지 않았다** |
+>
+> ⛔ 그러므로 *"헤드라인 이득이 σ_VGCF 가정에 걸려 있다"* 로 **일반화해 쓰지 않는다.**
+> ★ 그런데 안심할 일도 아니다 — Codex 가 현행 centerline 팔의 **소산 분담**에서 국소
+> 기울기를 재계산했더니 `dR/dlnσ_VGCF ≈ **+0.0158**` 로 **0 이 아니고 부호도 반대**다
+> (PTFE 미표현 팔의 −0.0099 와 반대 방향).  ⇒ centerline 도 σ_VGCF 에 **불변이 아니다**.
+> 다만 그 축에서 부호가 뒤집히는지는 **아직 안 재 봤다.**
+
 **⇒ 이득이 줄어드는 정도가 아니라 부호가 뒤집힌다.**  기전은 런 전에 등록해 둔 그대로다:
 σ_SDCP/σ_VGCF 대비가 3.18 → 0.032 로 뒤집혀 SDCP 가 *"가장 좋은 도체"* 에서
 *"백본보다 31배 나쁜 충전재"* 가 되면, 그것을 넣는 것이 **부피를 밀어내는 손해**로만 남는다.
@@ -524,9 +538,23 @@ abstract 본문·실험 서사는 공저자와 함께 검증된 부분이라 손
 - ✅ 대신 **가정을 밝히고 정당화한다** — §3-1 의 Methods 두 문장.  분말값을 쓰는 이유는
   복셀이 셀을 융합해 섬유–섬유 접촉저항을 표현하지 못하기 때문이고, 그 결손이 단섬유값과
   분말값의 두 자릿수 차이의 정체다.
-- ✅ 그리고 이것은 **약점 고백이 아니다.**  단섬유값 대입은 접촉저항이 0 인 세계 = 실물보다
-  **좋은** 탄소망이고, 거기서 SDCP 가 손해가 되는 것은 *"이미 충분히 좋은 망에는 더 넣을
-  이유가 없다"* 는 뜻이다.  ⇒ §5-3 ①(**부피**가 레버)과 같은 방향의 이야기다.
+- ⚠ **그리고 우리 해석 하나는 Codex 가 자기변호로 판정했다** (R20 Q6).
+  *"이미 충분히 좋은 망에는 더 넣을 이유가 없다"* 는 **가능한 기전이지 식별된 것이 아니다** —
+  두 끝점 · 한 origin · 접촉 없는 모델로는 갈리지 않는다.  ⇒ §5-3 ①(부피가 레버)을
+  **지지하는 증거로 쓰지 않는다.**  CL-48 이 실제로 보인 것은 하나뿐이다:
+  *"PTFE 미표현 · arm 0 복셀 모델에서 탄소 closure 대비를 크게 바꾸면 명목 DBE 우위가
+  사라지고 뒤집힐 수 있다."*
+- ✅ **원고에 쓸 수 있는 최대 문안** (R20 제시, 원자료 반입 후):
+
+  > Under the stated voxel-FV closure, the paired DBE/SBE electronic-conductivity ratio was
+  > 1.308 for the selected centerline representation and 1.124 when binder voxels were omitted.
+  > These are protocol responses rather than material-level estimates because the local phase
+  > coefficients were not independently calibrated.  In a registered one-origin sensitivity
+  > conducted only for the binder-omitted protocol, replacing the nominal VGCF closure by a
+  > single-filament ideal-contact value reversed the ordering.  This upper-limit arm does not
+  > identify the physical carbon coefficient and was not applied to the selected centerline
+  > protocol; it demonstrates that the binder-omitted ordering is not robust to carbon-network
+  > coarse-graining.  The physical DBE/SBE ordering therefore remains unresolved.
 
 ### 8-2. 🔵 Figure S17/S18 필드 계산
 

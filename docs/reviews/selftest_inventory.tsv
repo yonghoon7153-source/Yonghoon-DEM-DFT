@@ -126,3 +126,13 @@ scripts/viz_se_voxel_2d.py	--selftest	fast	none	claude	초록 1.2s (실측)
 scripts/voxel_conductivity.py	--selftest-temp	fast	none	claude	초록 0.7s (실측)
 webapp/predictor_engine.py	--selftest-temp	fast	none	claude	초록 0.2s (실측)
 webapp/structure_predictor.py	--selftest	fast	none	claude	초록 1.4s (실측)
+#
+# ── 2026-09-02 병합으로 들어온 것 (stoic-knuth 웹앱·OAT 트랙) ──
+#   ★ 이 여섯은 병합 직후 `check_selftest_inventory` 가 **미등재로 잡아냈다** — 어제
+#     만든 검사가 병합에서 값을 했다.  전부 실제로 돌려 등급을 정했다 (1초 이내, 초록).
+scripts/diagnose_webapp_data.py	--selftest	fast	none	claude	초록 16/16 · 1s (실측)
+scripts/gen_dem_oat_sweep.py	--selftest	fast	none	claude	초록 35/35 · 0s (실측)
+scripts/ml_shap_pareto.py	--selftest	fast	none	claude	초록 31/31 · 1s (실측)
+scripts/rebuild_cases_from_csv.py	--selftest	fast	none	claude	초록 25/25 · 0s (실측)
+scripts/rebuild_tables_from_metrics.py	--selftest	fast	none	claude	초록 22/22 · 0s (실측)
+scripts/restore_webapp_data.py	--selftest	fast	none	claude	초록 3/3 · 0s (실측)
