@@ -1,6 +1,6 @@
 # 51차 게이트 리뷰 요청 — 묶음 9 (실행 전 승인 · 보존 lifecycle)
 
-**대상 커밋**: `1ca133ae` 이후 (브랜치 `claude/14-gate-code-review-9qkx05`)
+**대상 커밋**: `3d37c757` (브랜치 `claude/14-gate-code-review-9qkx05`)
 **직전 판정**: 50차 **NO-GO** — "49차의 입력 key 와 쓰기 지점 검사를 늘렸지만,
 그 검사가 lifecycle generation 또는 계산이 실제 소비한 immutable bytes 와
 **구조적으로 묶이지 않았다**" (새 P0 9건 · P1 5건)
