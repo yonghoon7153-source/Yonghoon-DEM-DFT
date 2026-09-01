@@ -2308,6 +2308,10 @@ def selftest():
         # 종전 식을 그 자리에서 다시 계산해 **무너지는 것**을 기록한다
         _pv = [sum(_ao2[i]["2p" + ax] for i in _rid) for ax in "xyz"]
         _olds.append(sum(_n2[k] ** 2 * _pv[k] for k in range(3)) / sum(_pv))
+    chk("pi_orientation_score" in _chpi and "⚠_pi_이름" in _chpi
+        and "물리적 π share 가 아니다" in _chpi["⚠_pi_이름"],
+        "회신 V Q1: 이 값을 **방향 점수**로 부르고, raw AO 계수가 Löwdin 인구가 "
+        "아니라는 단서를 산출물에 싣는다 (원고에 'π 성분 N%' 로 적지 않는다)")
     chk(all(p > 0.99 for p in _pis),
         "회신 U P0-2 **회전불변**: 이상적 p_normal 은 어느 방향에서도 π=1 이다 "
         "(%s)" % " ".join("%.3f" % p for p in _pis))
@@ -2343,11 +2347,16 @@ def selftest():
         "⛔음성 T P0-2: ORCA 가 p 를 **축 없이** 찍으면 π 를 확인할 수 없다 — "
         "확인 못 한 것은 통과가 아니다")
     # ⛔음성 U P0-2 — 상한만으로도 **기각**은 할 수 있다 (엄밀한 부등식이라 안전)
+    # ⛔음성 회신 V Q2 — 상한은 **엄밀하지 않다** (인쇄 threshold 로 인구가 생략된다).
+    #   따라서 상한이 문턱보다 작아도 **기각 근거로 쓰지 않는다** — UNRESOLVED 다.
     _chub = pil_mo_character(_sg_ao, _rid, _rsym, _rp, _rid)          # 계수 없음
     _ok_ub, _w_ub = pil_character_verdict(_chub, "pi")
-    chk(not _ok_ub and _chub["pi_upper"] is not None and _chub["pi_upper"] < PIL_PI_MIN,
-        "회신 U P0-2: 계수가 없어도 **상한**(Cauchy–Schwarz)이 문턱보다 작으면 "
-        "π 가 아님을 확정한다 (상한 %.3f)" % (_chub["pi_upper"] or -1))
+    chk(not _ok_ub and "UNRESOLVED" in _w_ub,
+        "⛔음성 V Q2: 계수가 없으면 상한이 작아도 **UNRESOLVED** 다 — Cauchy–Schwarz "
+        "상한은 인쇄 threshold 때문에 엄밀하지 않다 (상한 %s 는 진단용)"
+        % (_chub.get("pi_upper"),))
+    chk("엄밀한 상한이 아니다" in (pil_mo_character.__doc__ or ""),
+        "회신 V Q2: 상한이 왜 판정에 못 쓰이는지가 docstring 에 적혀 있다")
     # ── MO 계수 파서 (실물 형식) ──────────────────────────────────────────────
     _mo_txt = ("MOLECULAR ORBITALS\n------------------\n"
                "                      0         1\n"
@@ -2524,8 +2533,37 @@ def selftest():
             % (_pm["atom_manifest"]["P"]["n_atoms"],
                _pm["atom_manifest"]["D"]["n_atoms"]))
 
-        def _run(sub, **kw):
+        # ⛔ 회신 V P0-2 — 사전등록 **내용** 결박 검사를 시험이 지나게 한다.
+        #   합성 다이머는 실물 부모(b490…)와 다르므로, 픽스처가 자기 조건을 적은
+        #   사전등록을 쓰고 `PIL_PREREG_S0` 를 거기로 돌린다 (production 우회 아님 —
+        #   `_repo_path` 가 절대경로를 그대로 받는 것뿐이다).
+        global PIL_PREREG_S0
+        _prereg_real = PIL_PREREG_S0
+
+        def _fixture_prereg(mm, **patch):
+            f = os.path.join(ptd, "prereg_fixture_%d.json" % (len(patch) + hash(str(patch)) % 97))
+            doc = {"schema": "prereg/v1", "status": "proposed",
+                   "0_시각_증거": {"builder_sha256": mm.get("builder_sha256"),
+                                    "builder_commit": mm.get("builder_commit")},
+                   "대상": {"parent_sha256": mm.get("parent_sha256"),
+                            "atom_manifest_hash": mm.get("atom_manifest_hash"),
+                            "functional": mm.get("functional"),
+                            "loc_realization": mm.get("loc_realization"),
+                            "epsilon": sorted(float(v["epsilon"])
+                                              for v in mm["environments"].values())}}
+            for k, v in patch.items():
+                if k in ("builder_sha256", "builder_commit"):
+                    doc["0_시각_증거"][k] = v
+                elif k == "status":
+                    doc["status"] = v
+                else:
+                    doc["대상"][k] = v
+            open(f, "w").write(json.dumps(doc, ensure_ascii=False))
+            return f
+
+        def _run(sub, _prereg_patch=None, **kw):
             """base 를 복사해 phase L 산출물을 만들고 pilot_seeds 를 돌린다."""
+            global PIL_PREREG_S0        # ⚠ 중첩 함수는 자기 선언이 필요하다
             d = os.path.join(ptd, sub)
             _copy2.copytree(str(_po), d)
             mm = json.loads(open(os.path.join(d, "MANIFEST_PILOT.json")).read())
@@ -2533,6 +2571,16 @@ def selftest():
             _pil_fake_phaseL(d, mm, **kw)
             if _post:
                 _post(Path(d))
+            # 픽스처 사전등록으로 결박을 갱신한다.
+            # ⚠ `_post` 가 manifest 를 고쳤을 수 있으므로 **다시 읽어서** 덧쓴다
+            #   (통째로 덮으면 neg_oldman 같은 음성 픽스처가 되살아난다).
+            _mp = os.path.join(d, "MANIFEST_PILOT.json")
+            mm2 = json.loads(open(_mp).read())
+            _pf = _fixture_prereg(mm, **(_prereg_patch or {}))
+            PIL_PREREG_S0 = _pf
+            mm2["prereg"] = _pf
+            mm2["prereg_sha256"] = _sha(_pf)
+            open(_mp, "w").write(json.dumps(mm2, ensure_ascii=False))
             return pilot_seeds(d)
 
         _n = _run("ok")
@@ -2541,6 +2589,16 @@ def selftest():
         chk(_n == 7 and len(_S) == 7,
             "e2e: `--polaron_seeds` 가 **실제로 돈다** — D• 4 + P⁺ 3 = 7 잡 "
             "(종전 4-튜플 언팩 ValueError 회귀시험)")
+        # ⛔ 회신 V P0-3 양성 — ORCA 6.1 문서 표기 `.loc.gbw` 로도 돌아야 한다.
+        #   우리 코드는 `.loc` 만 기대해 왔다. 어느 쪽인지는 loccheck 가 정한다.
+        _ngbw = _run("gbw", loc_suffix=".loc.gbw")
+        _mgbw = json.loads(open(os.path.join(ptd, "gbw", "MANIFEST_PILOT.json")).read())
+        chk(_ngbw == 7 and any('.loc.gbw' in open(os.path.join(
+                ptd, "gbw", k, k.rsplit("/", 1)[-1] + ".inp")).read()
+                for k, v in _mgbw["jobs"].items()
+                if v["phase"] == "S" and v.get("orbitals_from")),
+            "회신 V P0-3 양성: 국재 파일이 **`.loc.gbw`** 여도 seed 가 만들어지고 "
+            "입력이 그 파일을 읽는다 (ORCA 6.1 문서 표기)")
         _pi = [v for k, v in _S.items() if v["seed"].startswith("B_ring")]
         chk(len(_pi) == 4 and all(v["seed_mo_character"]["pi_share"] >= PIL_PI_MIN
                                   and v["seed_mo_character"]["p_frac"] >= PIL_PFRAC_MIN
@@ -2607,19 +2665,59 @@ def selftest():
             ("neg_nolout", {"_post": lambda d: os.remove(
                 d / "L" / "eps1" / "L_dminus" / "L_dminus.out")},
              "U P0-4: phase L(국재화 **전**) 출력이 없다 — canonical 창의 출처다"),
+            # ── 회신 V P0-3 신설 음성 ────────────────────────────────────────
+            ("neg_nocert", {"no_loccheck": True},
+             "V P0-3: **loccheck 증서가 없다** — 순서가 문구가 아니라 게이트여야 한다"),
+            ("neg_certmopop", {"loccheck_bad": "mopop"},
+             "V P0-3: loccheck 에서 **MO 인구 파서가 실물을 못 읽었다** — 200원자를 "
+             "열 이유가 없다"),
+            ("neg_certmos", {"loccheck_bad": "mos"},
+             "V P0-3: loccheck 에서 **MO 계수 파서가 실물을 못 읽었다**"),
+            ("neg_certold", {"loccheck_bad": "orca_version"},
+             "V P0-3: 증서에 ORCA 버전이 없다 (구판이거나 손으로 만든 것)"),
+            ("neg_certsuf", {"loccheck_bad": "loc_suffix"},
+             "V P0-3: 증서에 loc_suffix 가 없다 — 어느 파일을 읽을지 모른 채 진행 금지"),
+            # ── 회신 V P0-2 — 사전등록 **내용** 결박. 파일 해시만으로는 부족하다 ──
+            ("neg_pre_parent", {"_prereg_patch": {"parent_sha256": "d" * 64}},
+             "V P0-2: 사전등록의 **부모 구조 SHA** 가 생성물과 다르다 — 리뷰어 반례"
+             "(미이완 `dp6_gs0_neutral_start.xyz` 가 통과하던 경로)"),
+            ("neg_pre_builder", {"_prereg_patch": {"builder_sha256": "e" * 64}},
+             "V P0-2: 사전등록이 봉인한 **빌더**가 실제와 다르다 — 봉인한 규칙과 "
+             "적용된 규칙이 갈린다"),
+            ("neg_pre_commit", {"_prereg_patch": {"builder_commit": "f" * 40}},
+             "V P0-2: 사전등록의 빌더 **commit** 이 다르다"),
+            ("neg_pre_amf", {"_prereg_patch": {"atom_manifest_hash": "a" * 64}},
+             "V P0-2: 사전등록의 **atom_manifest 해시**가 다르다 (P/D 프레임이 다르다)"),
+            ("neg_pre_func", {"_prereg_patch": {"functional": "PBE0"}},
+             "V P0-2: 사전등록의 **범함수**가 다르다"),
+            ("neg_pre_eps", {"_prereg_patch": {"epsilon": [4.0]}},
+             "V P0-2: 사전등록의 **환경 ε** 가 다르다"),
+            ("neg_pre_real", {"_prereg_patch": {"loc_realization": "R1_random"}},
+             "V P0-2: 사전등록의 **국재화 realization** 이 다르다"),
+            ("neg_pre_status", {"_prereg_patch": {"status": "retracted"}},
+             "V P0-2: 사전등록이 **철회 상태**다 — 그 문서로 결과를 붙이지 않는다"),
         ):
             raises(lambda _s=_sub, _k=_kw: _run(_s, **_k), "⛔음성 e2e: " + _why)
         # ══ 회신 T Q4 — 4층 판정 e2e (분석기도 한 번도 안 돌려 봤다) ══════
         import contextlib, io as _io
 
         def _ana(sub, **kw):
+            global PIL_PREREG_S0
             d = os.path.join(ptd, sub)
             if not os.path.isdir(d):
                 _copy2.copytree(str(_po), d)
                 mm = json.loads(open(os.path.join(d, "MANIFEST_PILOT.json")).read())
                 _pil_fake_phaseL(d, mm)
+                _pf = _fixture_prereg(mm)
+                PIL_PREREG_S0 = _pf
+                mm["prereg"] = _pf; mm["prereg_sha256"] = _sha(_pf)
+                open(os.path.join(d, "MANIFEST_PILOT.json"), "w").write(
+                    json.dumps(mm, ensure_ascii=False))
                 with contextlib.redirect_stdout(_io.StringIO()):   # 픽스처 소음 제거
                     pilot_seeds(d)
+            else:
+                _mm = json.loads(open(os.path.join(d, "MANIFEST_PILOT.json")).read())
+                PIL_PREREG_S0 = _mm.get("prereg")
             mm = json.loads(open(os.path.join(d, "MANIFEST_PILOT.json")).read())
             _pil_fake_phaseS(d, mm, **kw)
             return pilot_analyze(d)
@@ -2719,6 +2817,25 @@ def selftest():
         chk(all(v.get("judged_from") == k for k, v in _r["jobs"].items()),
             "회신 U P0-7: 재판정이 없으면 `judged_from` 이 자기 자신이다 "
             "(판정 출처를 언제나 산출물에 남긴다)")
+        # ⛔⛔ 회신 V P0-5 실측 재현 — restart 출력에서 **정상종료 한 줄만 지워도**
+        #   종전엔 UNSTABLE_REJUDGED_STABLE · gates=[] · ADEQUATE 가 나왔다.
+        for _g5 in ("Dradical", "Pcation"):
+            _k5 = os.path.join(_du, "SR", "eps1", _g5, "B_ring0", "B_ring0.out")
+            _t5 = open(_k5).read().replace("ORCA TERMINATED NORMALLY\n", "")
+            open(_k5, "w").write(_t5)
+        _r8b = pilot_analyze(_du)
+        _j8b = _r8b["jobs"]["S/eps1/Dradical/B_ring0"]
+        chk(_j8b["stability"]["status"] == "UNSTABLE_REJUDGED_UNSTABLE"
+            and _j8b["gates"] and _r8b["verdict"] != "ADEQUATE"
+            and _j8b.get("judged_from") == "S/eps1/Dradical/B_ring0",
+            "⛔음성 V P0-5: 재계산 출력이 **정상종료하지 않으면** 대표로 승격하지 "
+            "않는다 (상태 %s · 게이트 %d · 전체 %s) — 잘린 출력의 마지막 SCF 는 "
+            "수렴한 해가 아니다"
+            % (_j8b["stability"]["status"], len(_j8b["gates"]), _r8b["verdict"]))
+        # 원상복구 — 뒤따르는 시험이 이 폴더를 다시 쓴다
+        for _g5 in ("Dradical", "Pcation"):
+            _k5 = os.path.join(_du, "SR", "eps1", _g5, "B_ring0", "B_ring0.out")
+            open(_k5, "a").write("ORCA TERMINATED NORMALLY\n")
 
         # ══ 회신 U P0-8 — basin 군집 4중 결함 (단위시험) ═════════════════════
         def _row(E, sv, rp, **kw):
@@ -3158,6 +3275,22 @@ def pilot_partition_check(F_low, F_hir, tol=PIL_PARTITION_TOL):
 #                      (⛔ seed 개수는 반복수가 아니다)
 #
 #  ⛔ 이 문턱들은 **결과를 보기 전에** 봉인한다.
+# ⛔⛔ 회신 V Q6-1 (2026-09-02) — **ε=1 의 D⁻ 기준계가 부적합한지**를 판정하는
+#   기준을 `L_dminus` **결과를 보기 전에** 봉인한다. 회신 U Q6 이 이미 말했다:
+#   ε=1 의 D⁻ 가 diffuse/unbound 라 실패하면 그것은 **방법 전체의**
+#   `MODEL_NONDIAGNOSTIC` 이 아니라 `S0_EPS1_ANION_REFERENCE_INADEQUATE` 다.
+#   그런데 그 문턱을 안 정해 두면 결과를 보고 "이건 unbound 였다" 고 사후에
+#   부르게 된다 — 그게 정확히 사전등록이 막으려는 것이다.
+#
+#   판정 신호 (하나라도 걸리면 그 잡은 ε=1 음이온 기준계 부적합):
+#     ⓐ HOMO 에너지가 **양수** (ε=1 에서 여분 전자가 묶이지 않았다)
+#     ⓑ SCF 가 수렴하지 않았다 (ORCA 정상종료 + 수렴 문구 부재)
+#     ⓒ 여분 전자 밀도가 **분자 밖**으로 샌다 — 가장 큰 Löwdin/Hirshfeld
+#        스핀·전하 몫이 어떤 원자에도 PIL_EPS1_MIN_ONMOL 만큼 안 걸린다
+#   ⚠ 이 셋은 **필요조건이 아니라 신호**다. 걸리면 그 잡의 결과를 방법 실패로
+#     읽지 않고 별도 판정어로 닫는다.
+PIL_EPS1_HOMO_MAX_EH = 0.0   # ⓐ HOMO > 0 이면 여분 전자가 안 묶였다
+PIL_EPS1_MIN_ONMOL = 0.60    # ⓒ 최대 원자 몫이 이보다 작으면 밀도가 분자 밖이다
 PIL_MAXCORE_MB = 6000       # ORCA `%maxcore` — **proc 당** MB (총량 아니다)
 PIL_PROBE_MIN = 0.50        # 1층: 회전 직후 초기밀도의 목표집합 |스핀| 몫
 PIL_HIT_MARGIN = 0.10       # 2층: 최대 링과 차순위 링의 최소 차 (링 몫 단위)
@@ -3202,6 +3335,59 @@ def pil_target_hit(ring_p, target, margin=PIL_HIT_MARGIN):
     else:
         out["why"] = "심은 자리가 없다 (fresh guess) — 명중 여부는 정의되지 않는다"
     return out
+
+
+def pil_eps1_anion_adequacy(seg, eps, charge, spins=None,
+                            homo_max=PIL_EPS1_HOMO_MAX_EH,
+                            min_onmol=PIL_EPS1_MIN_ONMOL):
+    """ε=1 에서 음이온 기준계(D⁻)가 성립하는가. → (ok, code, why).
+
+    ⛔⛔ 회신 U Q6 · V Q6-1 — 문턱을 **결과 보기 전에** 봉인한 판정이다.
+      ε=1 의 D⁻ 가 diffuse/unbound 면 그것은 **방법 실패가 아니라 기준계 부적합**이다.
+      `MODEL_NONDIAGNOSTIC` 으로 부르면 방법 전체를 잘못 기각한다.
+
+    → code ∈ OK · S0_EPS1_ANION_REFERENCE_INADEQUATE · S0_EPS1_INCONCLUSIVE
+
+    ⛔ 못 하는 것
+      · 진짜 bound 인지 증명하지 않는다 (그건 basis 확장·CBS 몫이다).
+      · ε>1 에는 적용하지 않는다 — 용매가 있으면 음이온이 대개 묶인다.
+      · 신호를 못 읽으면 **OK 가 아니라 INCONCLUSIVE** 다.
+    """
+    if eps is None or abs(float(eps) - 1.0) > 1e-9 or int(charge) >= 0:
+        return True, "OK", "ε=1 음이온이 아니다 — 이 판정의 대상이 아니다"
+    why = []
+    # ⓑ 수렴·정상종료
+    if "ORCA TERMINATED NORMALLY" not in (seg or ""):
+        return False, "S0_EPS1_INCONCLUSIVE", "정상종료하지 않았다 — 신호를 못 읽는다"
+    if re.search(r"(?i)SCF NOT CONVERGED|convergence.*not.*achieved", seg or ""):
+        why.append("SCF 미수렴")
+    # ⓐ HOMO 부호
+    m = re.findall(r"(?i)E\(HOMO\)\s*[:=]\s*(-?\d+\.\d+)", seg or "")
+    homo = float(m[-1]) if m else None
+    if homo is None:
+        _o = re.findall(r"^\s*\d+\s+([12]\.\d+)\s+(-?\d+\.\d+)\s+-?\d+\.\d+\s*$",
+                        seg or "", re.M)
+        homo = float(_o[-1][1]) if _o else None
+    if homo is not None and homo > homo_max:
+        why.append("HOMO %+.4f Eh > %.1f — 여분 전자가 묶이지 않았다" % (homo, homo_max))
+    # ⓒ 밀도가 분자 위에 있나
+    if spins:
+        t = sum(abs(v) for v in spins) or 0.0
+        if t > 0 and (max(abs(v) for v in spins) / t) < 0.0:
+            pass
+        if t <= 0:
+            why.append("스핀 밀도가 0 — 분자 위에 여분 전자가 없다")
+        else:
+            _frac = sum(abs(v) for v in spins) / t
+            if _frac < min_onmol:
+                why.append("분자 위 몫 %.2f < %.2f" % (_frac, min_onmol))
+    if why:
+        return (False, "S0_EPS1_ANION_REFERENCE_INADEQUATE",
+                "ε=1 D⁻ 기준계 부적합: " + " · ".join(why)
+                + " ⇒ **방법 실패가 아니다** (회신 U Q6 · V Q6-1)")
+    if homo is None:
+        return False, "S0_EPS1_INCONCLUSIVE", "HOMO 에너지를 못 읽었다 — 확인 못 함"
+    return True, "OK", "ε=1 D⁻ 가 묶여 있다 (HOMO %+.4f Eh)" % homo
 
 
 def pil_basin_key(row):
@@ -3299,29 +3485,46 @@ def pil_basin_cluster(rows, de=PIL_BASIN_DE_EH, dl1=PIL_BASIN_SPIN_L1,
     def rel(a, b):
         return True if a == b else S.get((a, b), False)
 
-    # 동치성(추이성) 검사 — 깨지면 군집하지 않는다
+    # ── 연결성분을 먼저 만들고, **각 성분이 clique 인지** 본다 ────────────────
+    #  ⛔⛔ 회신 V P0-4 (2026-09-02) — 종전 추이성 검사는 **불완전**했다.
+    #    정렬된 keys 를 (i<j<k) 로만 훑으면서 `rel(a,b)` 가 거짓이면 `continue` 해서,
+    #    **가운데 원소가 가운데 자리에 없는 V 배치**를 통째로 놓쳤다.
+    #    리뷰어 반례: E(a,b,c) = (0, 1.8e-4, 0.9e-4) Eh → a~c · b~c · a≁b.
+    #    실측 결과 `OK` 와 `[['a','c'], ['b','c']]` 를 냈다 — **c 가 두 군집에 중복**됐고
+    #    이름 순서를 바꾸면 판정도 바뀌었다.
+    #    ⇒ 연결성분(느슨한 묶음)을 만든 뒤 **성분 안의 모든 쌍**이 related 인지 본다.
+    #      clique 가 아니면 그 성분은 완전연결로 묶을 수 없다 → CLUSTER_AMBIGUOUS.
+    #      이 검사는 세 V 배치를 전부 포괄한다 (triple 을 따로 셀 필요가 없다).
+    _idx = {k: i for i, k in enumerate(keys)}
+    _par = list(range(len(keys)))
+
+    def _find(x):
+        while _par[x] != x:
+            _par[x] = _par[_par[x]]
+            x = _par[x]
+        return x
+
     for i, a in enumerate(keys):
-        for j in range(i + 1, len(keys)):
-            b = keys[j]
-            if not rel(a, b):
-                continue
-            for c in keys[j + 1:]:
-                if rel(b, c) and not rel(a, c):
+        for b in keys[i + 1:]:
+            if rel(a, b):
+                ra, rb = _find(_idx[a]), _find(_idx[b])
+                if ra != rb:
+                    _par[ra] = rb
+    comp = {}
+    for k in keys:
+        comp.setdefault(_find(_idx[k]), []).append(k)
+    clusters = sorted((sorted(v) for v in comp.values()), key=lambda g: g[0])
+    for grp in clusters:
+        for i, a in enumerate(grp):
+            for b in grp[i + 1:]:
+                if not rel(a, b):
                     return {"clusters": None, "n_distinct": None, "n_jobs": len(ok),
                             "unclustered": bad, "excluded_gated": gated,
                             "borderline": border, "verdict": "CLUSTER_AMBIGUOUS",
-                            "why": ("군집 관계가 **추이적이지 않다** (%s~%s, %s~%s 인데 "
-                                    "%s≁%s) — 완전연결로 묶을 수 없다. 문턱을 결과를 "
-                                    "보고 고치지 않는다 (회신 U P0-8ⓐ)"
-                                    % (a, b, b, c, a, c))}
-    # 동치관계이므로 연결성분 = 완전연결 군집 (순서와 무관)
-    clusters, seen = [], set()
-    for a in keys:
-        if a in seen:
-            continue
-        grp = sorted(b for b in keys if rel(a, b))
-        seen.update(grp)
-        clusters.append(grp)
+                            "why": ("연결성분 %s 이 **clique 가 아니다** (%s≁%s) — "
+                                    "완전연결로 묶을 수 없다. 문턱을 결과를 보고 "
+                                    "고치지 않는다 (회신 U P0-8ⓐ · V P0-4)"
+                                    % (grp[:4], a, b))}
     return {"clusters": clusters, "n_distinct": len(clusters),
             "n_jobs": len(ok), "unclustered": bad, "excluded_gated": gated,
             "borderline": border, "verdict": "OK",
@@ -3352,6 +3555,17 @@ def pil_stability_layer(inp_txt, seg, rejudge_seg=None):
         return ("UNSTABLE_NOT_REJUDGED",
                 "불안정한데 따라 내려간 해로 **재계산·재판정한 잡이 없다** — "
                 "이 에너지와 스핀분포는 basin 대표가 아니다")
+    # ⛔⛔ 회신 V P0-5 (2026-09-02) — **미완결 출력을 대표로 승격하고 있었다.**
+    #   리뷰어 재현: restart 출력에서 `ORCA TERMINATED NORMALLY` **한 줄만 지워도**
+    #   `UNSTABLE_REJUDGED_STABLE` · gates=[] · 에너지 −100.5 · 전체 `ADEQUATE` 가
+    #   나왔다. 잘린 출력의 마지막 SCF 는 수렴한 해가 아닌데 그것을 basin 대표로
+    #   삼은 것이다. 원래 잡에는 `NOT_TERMINATED` 게이트가 있었는데 **재계산 잡에는
+    #   그 검사가 없었다** — 구제 경로가 게이트를 우회하는 문이 됐다.
+    #   ⇒ 판정에 쓰는 **바로 그 segment** 에서 정상종료를 요구한다.
+    if "ORCA TERMINATED NORMALLY" not in rejudge_seg:
+        return ("UNSTABLE_REJUDGED_UNSTABLE",
+                "재계산 출력이 **정상종료하지 않았다** — 잘린 출력의 마지막 SCF 를 "
+                "basin 대표로 승격하지 않는다 (회신 V P0-5)")
     if re.search(r"(?i)wavefunction is unstable|instabilit", rejudge_seg):
         return "UNSTABLE_REJUDGED_UNSTABLE", "재계산해도 여전히 불안정하다"
     if not re.search(r"(?i)stability analysis", rejudge_seg):
@@ -3583,6 +3797,12 @@ def pilot_generate(a):
             "회신 T P0-3 — ORCA 6.1 의 `%loc Random 0` 이 무작위 seed 를 끈다. "
             "primary 는 R0(결정론)이고, R1(무작위)은 **민감도 realization** 이다. "
             "두 realization 이 다른 최종 basin 집합을 주면 LOCALIZATION_DEPENDENT."),
+        "loc_suffix_assumed": PIL_LOC_SUFFIX_CANDIDATES[0],
+        "⚠_loc_suffix": ("생성 시점엔 loccheck 를 안 돌렸으므로 국재 파일 suffix 를 "
+                         "**모른다**. ORCA 6.1 문서는 `.loc.gbw` 로 설명하는데 우리 "
+                         "코드는 `.loc` 를 기대해 왔다 (회신 V P0-3). 러너의 loccheck "
+                         "단계가 실측해 증서에 적고, L2 단계가 그 값으로 `%moinp` 를 "
+                         "고친다 — 고치면 그 사실을 화면과 manifest 에 남긴다."),
         "builder_sha256": _sha(__file__),
         "builder_commit": _git_commit(),
         "phase_L_역할": ("seed 생성원. D⁻ 국재화는 D• seed 를, 중성 국재화는 P⁺ seed 를 "
@@ -3628,7 +3848,10 @@ def pilot_generate(a):
         (j2 / (tag + ".xyz")).write_text((jd / (tag + ".xyz")).read_text())
         _pil_inp(j2 / (tag + ".inp"), tag + ".xyz", jm["charge"], jm["mult"],
                  jm["wf"], jm["epsilon"], a.functional,
-                 moread=os.path.relpath(jd / (tag + ".loc"), j2),
+                 # ⛔ 회신 V P0-3 — 생성 시점엔 loccheck 를 아직 안 돌렸으므로
+                 #   suffix 를 **모른다**. 기본값으로 쓰고 `loc_suffix_assumed` 로
+                 #   가정임을 남긴다. 러너의 L2 단계가 증서를 보고 필요하면 고친다.
+                 moread=os.path.relpath(jd / (tag + PIL_LOC_SUFFIX_CANDIDATES[0]), j2),
                  noiter=True, mopop=True, nprocs=a.nprocs, maxcore=_mc)
         man["jobs"]["L2/%s/%s" % (en, tag)] = {
             "phase": "L2", "env": en, "epsilon": jm["epsilon"],
@@ -3697,8 +3920,71 @@ PIL_PREREG_LEGACY = "db/properties/sdcp_polaron_pilot_prereg_2026_08_31.json"
 
 
 def _repo_path(rel):
-    """repo 루트 기준 상대경로 → Path. 이 파일 위치에서 두 단계 위가 루트다."""
-    return Path(__file__).resolve().parent.parent.parent / rel
+    """repo 루트 기준 상대경로 → Path. 이 파일 위치에서 두 단계 위가 루트다.
+
+    ⚠ 절대경로면 그대로 돌려준다 — **selftest 가 자기 픽스처 사전등록을 가리키게**
+      하려는 것이다 (production 경로에 우회를 만들지 않고 같은 코드를 지나게 한다).
+    """
+    _p = Path(rel)
+    return _p if _p.is_absolute() else Path(__file__).resolve().parent.parent.parent / rel
+
+
+#: ⛔⛔ 회신 V P0-3 (2026-09-02) — **국재 궤도 파일의 suffix 를 우리가 모른다.**
+#:   코드는 `<tag>.loc` 를 기대하는데 ORCA 6.1 공식 문서는 inline localization 산출을
+#:   `.loc.gbw` 로 설명한다. 어느 쪽이 실제 설치본에 맞는지는 **loccheck 가 판정**한다.
+#:   그 증서 없이 phase L 을 열면, 200원자 두 잡을 돌리고 나서 seed 생성 단계에서
+#:   "파일이 없다" 로 막히게 된다 (또는 더 나쁘게, 엉뚱한 파일을 읽는다).
+PIL_LOC_SUFFIX_CANDIDATES = (".loc", ".loc.gbw")
+PIL_LOCCHECK_CERT = "LOCCHECK_PASS.json"
+
+
+def pil_loc_file(dirp, tag, cert=None):
+    """국재 궤도 파일 경로. 증서가 suffix 를 정했으면 그것만, 아니면 후보를 훑는다.
+
+    → (Path, suffix) 또는 (None, None).
+
+    ⛔ 못 하는 것: 파일 **내용**이 국재 궤도인지 확인하지 않는다 (이름과 존재만).
+    """
+    sufs = ([cert["loc_suffix"]] if (cert or {}).get("loc_suffix")
+            else list(PIL_LOC_SUFFIX_CANDIDATES))
+    for s in sufs:
+        p = Path(dirp) / (tag + s)
+        if p.is_file():
+            return p, s
+    return None, None
+
+
+def pil_read_loccheck(d):
+    """`LOCCHECK_PASS.json` 증서를 읽고 **내용까지** 본다. → (cert, 사유).
+
+    증서가 보증해야 하는 것 (회신 V P0-3):
+      · ORCA 경로·버전  · 입력·출력 해시
+      · 실제로 생긴 국재 파일의 **suffix**
+      · 우리 파서 **둘 다**(MO 인구 · MO 계수) 실물 출력에서 PASS
+
+    ⛔ 못 하는 것: 증서 자체의 위조는 막지 못한다 (같은 사용자 위협모델 밖).
+      막는 것은 "확인 안 하고 200원자를 여는 것" 이다.
+    """
+    p = Path(d) / PIL_LOCCHECK_CERT
+    if not p.is_file():
+        return None, ("%s 가 없다 — `bash run_pilot.sh loccheck` 를 **먼저** 돌릴 것 "
+                      "(회신 V P0-3: 순서가 문구가 아니라 게이트여야 한다)" % p)
+    try:
+        c = json.loads(p.read_text(encoding="utf-8"))
+    except Exception as e:                                       # noqa: BLE001
+        return None, "%s 파싱 실패: %r" % (p, e)
+    miss = [k for k in ("orca_path", "orca_version", "inp_sha256", "out_sha256",
+                        "loc_suffix", "mopop_parsed", "mos_parsed") if k not in c]
+    if miss:
+        return None, "증서에 %s 가 없다 — 구판이거나 손으로 만든 것이다" % miss
+    if c.get("loc_suffix") not in PIL_LOC_SUFFIX_CANDIDATES:
+        return None, ("증서의 loc_suffix %r 가 아는 후보 %s 밖이다"
+                      % (c.get("loc_suffix"), list(PIL_LOC_SUFFIX_CANDIDATES)))
+    if not (c.get("mopop_parsed") and c.get("mos_parsed")):
+        return None, ("loccheck 에서 파서가 실물을 못 읽었다 "
+                      "(인구 %r · 계수 %r) — 200원자를 열 이유가 없다"
+                      % (c.get("mopop_parsed"), c.get("mos_parsed")))
+    return c, "ok"
 
 
 def _pil_check_prereg(man, where):
@@ -3707,6 +3993,8 @@ def _pil_check_prereg(man, where):
     ⛔ 못 하는 것: 사전등록의 *내용*이 옳은지는 안 본다 — 결박만 확인한다.
     """
     rel = man.get("prereg")
+    # ⚠ `PIL_PREREG_S0` 는 selftest 가 자기 픽스처로 돌릴 수 있게 모듈 전역이다.
+    #   production 에서는 언제나 db/properties/…_S0_… 이고, 그 값과 다르면 막는다.
     if rel != PIL_PREREG_S0:
         raise SystemExit(
             "⛔ %s 의 manifest 가 S0 사전등록을 가리키지 않는다 (`prereg`=%r).\n"
@@ -3727,6 +4015,55 @@ def _pil_check_prereg(man, where):
             "   봉인 %s\n   현재 %s\n"
             "   회신 U P0-5: 사전등록을 고쳤으면 그것은 새 사전등록이다 — 결과를 "
             "옛 문서에 붙이지 않는다. 재발행하고 생성기를 다시 돌릴 것." % (p, want, got))
+    # ⛔⛔ 회신 V P0-2 (2026-09-02) — **파일만 결박하고 내용은 안 봤다.**
+    #   raw SHA 만 맞으면 통과했으므로, 사전등록이 무엇을 봉인했는지(빌더·부모 구조·
+    #   ε·범함수·realization)와 실제 생성물이 어긋나도 알 수 없었다.
+    #   리뷰어 반례: 정본 final XYZ 는 `b490…` 인데 **미이완** `dp6_gs0_neutral_start.xyz`
+    #   (`dd2f…`)도 구조 검사를 통과해 S0 manifest 를 만들 수 있었다.
+    #   ⇒ 사전등록의 조건을 **파싱해 교차검증**한다. 하나라도 어긋나면 멈춘다.
+    _pj = json.loads(p.read_text(encoding="utf-8"))
+    _ev = _pj.get("0_시각_증거") or {}
+    _tg = _pj.get("대상") or {}
+    bad = []
+    if _pj.get("status") not in ("proposed", "ratified", "active"):
+        bad.append("사전등록 status 가 %r 다 (proposed/ratified/active 가 아니다)"
+                   % _pj.get("status"))
+    _wb, _gb = _ev.get("builder_sha256"), man.get("builder_sha256")
+    if _wb and _gb and _wb != _gb:
+        bad.append("빌더 SHA: 사전등록 %s… ≠ 생성물 %s… — 사전등록이 봉인한 규칙과 "
+                   "실제 적용된 규칙이 다르다" % (str(_wb)[:12], str(_gb)[:12]))
+    _wc, _gc = _ev.get("builder_commit"), man.get("builder_commit")
+    if _wc and _gc and _wc != _gc:
+        bad.append("빌더 commit: 사전등록 %s… ≠ 생성물 %s…"
+                   % (str(_wc)[:12], str(_gc)[:12]))
+    _wp, _gp = _tg.get("parent_sha256"), man.get("parent_sha256")
+    if _wp and _gp and _wp != _gp:
+        bad.append("부모 구조 SHA: 사전등록 %s… ≠ 생성물 %s… — **다른 구조로 "
+                   "만들었다** (미이완 start.xyz 가 통과하던 경로다)"
+                   % (str(_wp)[:12], str(_gp)[:12]))
+    _wf = _tg.get("functional") or _pj.get("functional")
+    if _wf and man.get("functional") and _wf != man["functional"]:
+        bad.append("범함수: 사전등록 %r ≠ 생성물 %r" % (_wf, man["functional"]))
+    _we = _tg.get("epsilon") or _tg.get("eps")
+    if _we is not None:
+        _ge = sorted(float(v["epsilon"]) for v in (man.get("environments") or {}).values())
+        _wl = sorted(float(x) for x in (_we if isinstance(_we, list) else [_we]))
+        if _ge and _wl and _ge != _wl:
+            bad.append("환경 ε: 사전등록 %s ≠ 생성물 %s" % (_wl, _ge))
+    _wa, _ga = _tg.get("atom_manifest_hash"), man.get("atom_manifest_hash")
+    if _wa and _ga and _wa != _ga:
+        bad.append("atom_manifest 해시: 사전등록 %s… ≠ 생성물 %s… — P/D 프레임이 "
+                   "다르다" % (str(_wa)[:12], str(_ga)[:12]))
+    _wr = _tg.get("loc_realization") or _pj.get("loc_realization")
+    if _wr and man.get("loc_realization") and _wr != man["loc_realization"]:
+        bad.append("국재화 realization: 사전등록 %r ≠ 생성물 %r"
+                   % (_wr, man["loc_realization"]))
+    if bad:
+        raise SystemExit(
+            "⛔ %s: 사전등록과 생성물의 **내용**이 어긋난다 (회신 V P0-2 — 파일 해시만"
+            " 맞추는 것으로는 부족하다):\n   · %s\n"
+            "   사전등록을 현재 빌더·구조에 맞춰 **재발행**하거나, 생성기를 그 조건으로 "
+            "다시 돌릴 것." % (where, "\n   · ".join(bad)))
 
 
 #: ⛔ 2026-08-31 실측 — ORCA 6.1.1 의 실제 헤더는 **REDUCED 가 없다**:
@@ -3950,10 +4287,11 @@ def pil_mo_character(ao_mo, group_idx, sym, pos, ring_idx=None, coef_mo=None):
       pi_share = 그 p 밀도 중 **고리 법선 n̂** 방향 비율 — `coef_mo`(MO 계수)로만 낸다:
                      n̂ᵀ P n̂ / tr P,   P = Σ_{원자,껍질} v vᵀ,  v = (c_x, c_y, c_z)
                  회전 R 에서 v→Rv, n̂→Rn̂ 이라 **불변**이고 이상적 p_n̂ 에서 정확히 1.
-      pi_upper = 계수가 없을 때 **인구 대각만으로 낼 수 있는 엄밀한 상한**
-                     n̂ᵀPn̂ ≤ (Σ_k |n̂_k| √P_kk)²      (PSD 에 대한 Cauchy–Schwarz)
-                 상한이 문턱보다 작으면 **π 가 아님을 확정**할 수 있다.
-                 상한이 커도 **통과는 못 준다** — 상한일 뿐이다.
+      pi_upper = 계수가 없을 때 인구 대각으로 낸 값 — **진단 전용, 판정에 안 쓴다.**
+                 ⛔ 회신 V Q2: `n̂ᵀPn̂ ≤ (Σ_k |n̂_k| √P_kk)²` 는 *완전한* PSD 대각이라야
+                 성립하는데, ORCA 는 인쇄 threshold(기본 0.1%) 아래를 **생략**하므로
+                 우리 대각은 전체가 아니다 ⇒ **엄밀한 상한이 아니다.** 누락 질량을
+                 포함한 보수 상한 + closure 검사가 생기기 전에는 기각 근거로 못 쓴다.
       O_frac   = 목표 집합 인구 중 산소 위 비율 (sulfonate seed 용)
 
     ⛔ 이 함수가 **못 하는 것**
@@ -4037,6 +4375,18 @@ def pil_mo_character(ao_mo, group_idx, sym, pos, ring_idx=None, coef_mo=None):
     num = sum(n[a] * P[a][b] * n[b] for a in range(3) for b in range(3))
     out["pi_share"] = round(max(0.0, min(1.0, num / tr)), 4)
     out["pi_basis"] = PIL_PI_BASIS_OK
+    # ⛔⛔ 회신 V Q1 (2026-09-02) — **이름을 물리량으로 부르지 않는다.**
+    #   `P = Σ v vᵀ` 는 직교 좌표회전에 대해 정확히 불변이다(그건 맞다). 그러나 raw AO
+    #   계수는 `CᵀSC = 1` 이지 Euclidean population 이 아니다 — 원자 간·radial shell 간
+    #   overlap 을 버린 값이므로 **물리적인 'π share' 가 아니다.**
+    #   ⇒ 당분간 `pi_orientation_score` 로 부르고, 알려진 π/σ 실물 대조 또는
+    #     `S^{1/2}C` 기반 Löwdin tensor 로 검증되기 전에는 그 이름을 쓴다.
+    out["pi_orientation_score"] = out["pi_share"]
+    out["⚠_pi_이름"] = (
+        "이 값은 **방향 점수**이지 물리적 π share 가 아니다. raw AO 계수는 CᵀSC=1 "
+        "이라 overlap 을 버린 vvᵀ 는 Löwdin 인구가 아니다 (회신 V Q1). 회전불변성은 "
+        "성립하므로 '고리 법선을 향하는가' 판정에는 쓰되, 원고에 'π 성분 N%' 로 "
+        "적지 않는다. 검증 경로: 알려진 π/σ 실물 대조 또는 S^{1/2}C Löwdin tensor.")
     return out
 
 
@@ -4058,12 +4408,13 @@ def pil_character_verdict(ch, kind):
     if ch["p_frac"] < PIL_PFRAC_MIN:
         return False, ("SEED_NOT_PI(p 성분 %.2f < %.2f — σ 결합 궤도다)"
                        % (ch["p_frac"], PIL_PFRAC_MIN))
-    # 계수가 없어도 **상한**으로 기각은 할 수 있다 (엄밀한 부등식이므로 안전한 방향).
-    if ch.get("pi_share") is None and ch.get("pi_upper") is not None \
-            and ch["pi_upper"] < PIL_PI_MIN:
-        return False, ("SEED_NOT_PI(π 상한 %.2f < %.2f — 계수 없이도 확정 기각. "
-                       "상한은 Cauchy–Schwarz 로 엄밀하다)"
-                       % (ch["pi_upper"], PIL_PI_MIN))
+    # ⛔⛔ 회신 V Q2 (2026-09-02) — **상한 기각 경로를 걷는다.**
+    #   Cauchy–Schwarz 상한은 *완전한 동일 PSD tensor 의 대각* 이라면 맞다. 그런데
+    #   ORCA 는 인쇄 threshold(기본 0.1%) 아래 인구를 **생략**하므로 우리가 가진
+    #   대각은 전체 MO 의 것이 아니다 ⇒ 지금 값은 **엄밀한 상한이 아니다.**
+    #   게다가 production 은 계수가 없으면 앞에서 먼저 멈추므로 이 경로는 애초에
+    #   도달 불가능했다. 누락 질량을 포함한 보수 상한 + closure 검사가 생기기 전에는
+    #   `UNRESOLVED` 가 맞다 (회신 V Q2 그대로).
     # ⛔⛔ **통과는 회전불변 근거(MO 계수)에서만 나온다.** 종전에는 대각 인구식이
     #   통과를 줬는데, 그 식은 축 정렬일 때만 맞고 대각 법선에서 1/3 로 무너져
     #   완전한 π 를 6개 중 5개 탈락시켰다 (회신 U P0-2 재현).
@@ -4215,6 +4566,11 @@ def pilot_seeds(d):
     man = json.loads((d / "MANIFEST_PILOT.json").read_text())
     # ⛔ 회신 U P0-5 — 산출물이 **S0 사전등록에 결박**돼 있는지 먼저 본다
     _pil_check_prereg(man, "pilot_seeds(%s)" % d)
+    # ⛔ 회신 V P0-3 — seed 생성도 증서를 요구한다. 여기서 막지 않으면 L 을 우회해
+    #   들어온 산출물로 seed 를 만들게 된다.
+    _lcert, _lwhy = pil_read_loccheck(d)
+    if _lcert is None:
+        raise SystemExit("⛔ loccheck 증서 없이 seed 를 만들지 않는다 — %s" % _lwhy)
     _amf = man.get("atom_manifest")
     if not _amf:
         raise SystemExit("⛔ MANIFEST_PILOT.json 에 `atom_manifest` 가 없다 — 구판 "
@@ -4267,10 +4623,14 @@ def pilot_seeds(d):
                 "⛔ %s 에 `GuessMode CMatrix` 가 없다 — 이 L2 는 국재 MO 를 재정렬된 "
                 "순서로 읽었을 수 있다. 그 인구표로 고른 인덱스는 신뢰할 수 없다 "
                 "(회신 T P0-3). 입력을 다시 만들고 phase L2 를 다시 돌릴 것." % _l2inp)
-        locf = src / (tag + ".loc")
-        if not locf.is_file():
-            raise SystemExit("⛔ %s 가 없다 — phase L 의 국재 궤도가 없으면 seed 를 "
-                             "만들 수 없다" % locf)
+        # ⛔ 회신 V P0-3 — suffix 는 **loccheck 증서**가 정한다 (.loc vs .loc.gbw).
+        locf, _lsuf = pil_loc_file(src, tag, _lcert)
+        if locf is None:
+            raise SystemExit(
+                "⛔ %s/%s{%s} 가 하나도 없다 — phase L 의 국재 궤도가 없으면 seed 를 "
+                "만들 수 없다.\n   loccheck 증서가 정한 suffix: %r (회신 V P0-3)"
+                % (src, tag, "|".join(PIL_LOC_SUFFIX_CANDIDATES),
+                   (_lcert or {}).get("loc_suffix")))
         loc_sha = _sha(locf)
         is_dm = tag == "L_dminus"
         nat_j = nat - (1 if is_dm else 0)
@@ -4567,18 +4927,40 @@ def _pil_fake_orbener(ener, occ):
     return t + "\n"
 
 
+def _pil_fake_loccheck(out, suffix=".loc", mopop=True, mos=True, drop_key=None):
+    """selftest 용 loccheck 증서 (회신 V P0-3). 인자들이 **음성 경로**다."""
+    c = {"schema": "loccheck_pass/v1",
+         "orca_path": "/fake/orca", "orca_version": "Program Version 6.1.1",
+         "orca_sha256": "0" * 64,
+         "inp_sha256": "1" * 64, "out_sha256": "2" * 64,
+         "loc_suffix": suffix, "loc_sha256": "3" * 64,
+         "mopop_parsed": mopop, "mos_parsed": mos}
+    if drop_key:
+        c.pop(drop_key, None)
+    (Path(out) / PIL_LOCCHECK_CERT).write_text(json.dumps(c, ensure_ascii=False))
+    return c
+
+
 def _pil_fake_phaseL(out, man, rand_mark=False, kill_guessmode=False, no_mopop=False,
                      sigma_ring=False, bad_term=False, no_mos=False, no_orbener=False,
-                     kill_tcore=False):
+                     kill_tcore=False, no_loccheck=False, loc_suffix=".loc",
+                     loccheck_bad=None):
     """selftest 용 phase L/L2 산출물(.loc/.out) 생성. 인자들이 **음성 경로**다."""
     out = Path(out)
+    # ⛔ 회신 V P0-3 — 증서가 없으면 seed 생성이 막혀야 한다 (`no_loccheck`).
+    if not no_loccheck:
+        _pil_fake_loccheck(out, suffix=loc_suffix,
+                           mopop=(loccheck_bad != "mopop"),
+                           mos=(loccheck_bad != "mos"),
+                           drop_key=(loccheck_bad if loccheck_bad in
+                                     ("orca_version", "loc_suffix") else None))
     amf = man["atom_manifest"]
     for jk, jm in man["jobs"].items():
         if jm["phase"] != "L2":
             continue
         tag = jk.rsplit("/", 1)[-1]
         src = out / jm["reads_localized_from"]
-        (src / (tag + ".loc")).write_text("fake localized orbitals\n")
+        (src / (tag + loc_suffix)).write_text("fake localized orbitals\n")
         fr = amf["D" if tag == "L_dminus" else "P"]
         sy, _ = read_xyz(src / (tag + ".xyz"))
         rg = {k: sorted(set(v["core"]) | set(v["ether_O"]))
@@ -5205,6 +5587,26 @@ def pilot_analyze(d):
             "⛔_에너지_순서": ("S0 은 어느 상태가 낮은지 판정하지 않는다 — 환경 1·"
                               "범함수 1·conformer 1 이다 (사전등록 "
                               "⛔_통과해도_말할_수_없는_것)")}
+    # ⛔ 회신 V Q6-1 — ε=1 음이온 기준계 부적합은 **방법 실패가 아니다.**
+    #   문턱은 코드 상수로 결과 보기 전에 봉인돼 있다 (PIL_EPS1_*).
+    res["eps1_anion_reference"] = {}
+    for _jk, _jm in sorted(man["jobs"].items()):
+        if _jm.get("phase") != "L2" or int(_jm.get("charge", 0)) >= 0:
+            continue
+        if abs(float(_jm.get("epsilon", 1.0)) - 1.0) > 1e-9:
+            continue
+        _lo = d / _jm["reads_localized_from"] / (
+            _jm["reads_localized_from"].rsplit("/", 1)[-1] + ".out")
+        _sg = _last_segment(_lo.read_text(errors="replace")) if _lo.is_file() else ""
+        _ok_a, _code_a, _why_a = pil_eps1_anion_adequacy(
+            _sg, _jm.get("epsilon"), _jm.get("charge"))
+        res["eps1_anion_reference"][_jk] = {"code": _code_a, "why": _why_a}
+        if not _ok_a:
+            res["verdict"] = _code_a
+            res["why"] = ("%s: %s — 이것은 **방법 실패가 아니라 기준계 부적합**이다 "
+                          "(회신 U Q6 · V Q6-1). MODEL_NONDIAGNOSTIC 으로 부르지 않는다."
+                          % (_jk, _why_a))
+            return res
     _amb = [e for e, v in res["by_env"].items() if v["cluster_verdict"] == "CLUSTER_AMBIGUOUS"]
     if _amb:
         res["verdict"] = "SEARCH_PROTOCOL_DEPENDENT"
@@ -5278,6 +5680,7 @@ case "$stage" in loccheck|L|L2|seeds|probe|S|analyze|restart) ;;
   *) echo "모르는 단계: $stage"; exit 2;; esac
 ORCA=${ORCA:?ORCA 절대경로를 주세요 (병렬은 full pathname 이 필요합니다)}
 BUILDER=${BUILDER:?build_v7c_trimer.py 경로를 주세요}
+BUILDER_PATH=$(cd "$(dirname "$BUILDER")" && pwd)/$(basename "$BUILDER")
 D=$(cd "$(dirname "$0")" && pwd)
 case "$ORCA" in /*) ;; *) echo "ORCA 는 절대경로여야 합니다: $ORCA"; exit 2;; esac
 if head -c 64 "$ORCA" | grep -qa "python"; then
@@ -5328,7 +5731,14 @@ run() {
 }
 
 pop_count() {   # 국재 궤도 인구 블록이 실제로 찍혔나 (헤더는 REDUCED 유무 둘 다)
-  grep -acE "LOEWDIN (REDUCED )?ORBITAL POPULATIONS PER MO" "$1" 2>/dev/null || echo 0
+  # ⛔ 회신 V P1 (2026-09-02) — `grep -c … || echo 0` 는 **false-green** 이다.
+  #   grep -c 는 0건일 때 "0" 을 **찍고도** exit 1 이라, `|| echo 0` 이 하나 더 붙어
+  #   출력이 `0\n0` 이 된다. 그 문자열을 수로 비교하면 `[ "0
+0" != 0 ]` 이 참이라
+  #   **0건이 통과**한다. (같은 함정을 run_sei_neb.sh 에서 이미 한 번 맞았다.)
+  #   ⇒ 출력을 받고 첫 줄만 쓴다. 실패해도 빈 문자열이지 두 줄이 아니다.
+  _n=$(grep -acE "LOEWDIN (REDUCED )?ORBITAL POPULATIONS PER MO" "$1" 2>/dev/null | head -1)
+  printf '%s\n' "${_n:-0}"
 }
 
 fail=0
@@ -5373,12 +5783,86 @@ EOF
       if grep -aq "$_blk" "$LC/w.out"; then echo "  ✔ $_blk 있음"
       else echo "  ⛔ $_blk 없음 — 파서가 읽을 게 없습니다"; fail=1; fi
     done
-    ls "$LC"/*.loc >/dev/null 2>&1 && echo "  ✔ .loc suffix 확인: $(ls "$LC"/*.loc)" \
-      || { echo "  ⛔ .loc 파일이 안 나왔습니다 — 실제 suffix 를 확인하십시오"; fail=1; }
-    [ "$fail" = 0 ] && echo "다음: bash run_pilot.sh L" \
-                   || echo "⛔ %loc 계약이 실물과 다릅니다 — 200원자를 돌리지 마십시오."
+    # ⛔ 회신 V P0-3 — `.loc` 인지 `.loc.gbw` 인지 **여기서 판정**한다.
+    #   ORCA 6.1 문서는 `.loc.gbw` 로 설명하는데 우리 코드는 `.loc` 를 기대했다.
+    _LSUF=""
+    for _s in .loc .loc.gbw; do
+      [ -f "$LC/w$_s" ] && { _LSUF="$_s"; break; }
+    done
+    if [ -n "$_LSUF" ]; then echo "  ✔ 국재 파일 suffix = $_LSUF  ($(ls -la "$LC/w$_LSUF" | awk '{print $5}') B)"
+    else echo "  ⛔ 국재 궤도 파일이 안 나왔습니다 (.loc / .loc.gbw 둘 다 없음):"; ls -la "$LC"; fail=1; fi
+    # ⛔ 우리 파서 **둘 다** 실물 출력에서 되는지 확인한다 (블록 존재만으로는 부족)
+    _MPOP=false; _MMOS=false
+    if [ "$fail" = 0 ]; then
+      _PR=$(python3 - "$LC/w.out" "$BUILDER_PATH" <<'PYLC'
+import json, sys, importlib.util
+out, bp = sys.argv[1], sys.argv[2]
+spec = importlib.util.spec_from_file_location("_b", bp)
+m = importlib.util.module_from_spec(spec); spec.loader.exec_module(m)
+t = open(out, encoding="utf-8", errors="replace").read()
+pr = m.pil_parse_mopop(t, 3)
+co = m.pil_parse_mos(t, 3)
+print(json.dumps({"mopop": bool(pr), "mos": bool(co)}))
+PYLC
+) || _PR='{"mopop": false, "mos": false}'
+      _MPOP=$(printf '%s' "$_PR" | python3 -c 'import json,sys;print(str(json.load(sys.stdin)["mopop"]).lower())')
+      _MMOS=$(printf '%s' "$_PR" | python3 -c 'import json,sys;print(str(json.load(sys.stdin)["mos"]).lower())')
+      [ "$_MPOP" = true ] && echo "  ✔ MO 인구 파서 PASS" || { echo "  ⛔ MO 인구 파서가 실물을 못 읽었습니다"; fail=1; }
+      [ "$_MMOS" = true ] && echo "  ✔ MO 계수 파서 PASS" || { echo "  ⛔ MO 계수 파서가 실물을 못 읽었습니다"; fail=1; }
+    fi
+    if [ "$fail" = 0 ]; then
+      python3 - "$D" "$ORCA" "$LC" "$_LSUF" "$_MPOP" "$_MMOS" <<'PYCERT'
+import hashlib, json, os, subprocess, sys
+d, orca, lc, suf, mp, mm = sys.argv[1:7]
+h = lambda p: hashlib.sha256(open(p, "rb").read()).hexdigest()
+try:
+    ver = subprocess.run([orca], capture_output=True, text=True, timeout=60).stdout
+    ver = next((l.strip() for l in ver.splitlines() if "Program Version" in l), "?")
+except Exception:
+    ver = "?"
+json.dump({
+ "schema": "loccheck_pass/v1",
+ "⛔_무엇을_보증하나": ("이 설치본에서 `%loc` 블록이 받아들여졌고, 국재 파일이 어느 "
+                       "suffix 로 나오며, 우리 파서 둘이 그 출력을 실제로 읽는다는 것. "
+                       "물리·수렴은 보증하지 않는다 (회신 V P0-3)"),
+ "orca_path": os.path.abspath(orca), "orca_version": ver,
+ "orca_sha256": h(orca) if os.path.isfile(orca) else None,
+ "inp_sha256": h(os.path.join(lc, "w.inp")),
+ "out_sha256": h(os.path.join(lc, "w.out")),
+ "loc_suffix": suf,
+ "loc_sha256": h(os.path.join(lc, "w" + suf)) if suf and os.path.isfile(os.path.join(lc, "w" + suf)) else None,
+ "mopop_parsed": mp == "true", "mos_parsed": mm == "true",
+}, open(os.path.join(d, "LOCCHECK_PASS.json"), "w"), indent=1, ensure_ascii=False)
+print("  → LOCCHECK_PASS.json (suffix %s · 파서 인구=%s 계수=%s)" % (suf, mp, mm))
+PYCERT
+      echo "다음: bash run_pilot.sh L"
+    else
+      rm -f "$D/LOCCHECK_PASS.json"
+      echo "⛔ %loc 계약이 실물과 다릅니다 — 200원자를 돌리지 마십시오."
+      echo "   (증서를 만들지 않았으므로 L 단계가 거부합니다)"
+    fi
     ;;
   L)
+    # ⛔⛔ 회신 V P0-3 — **순서가 문구가 아니라 게이트여야 한다.**
+    #   종전엔 loccheck 와 L 이 독립 case 라 L 이 loccheck PASS 를 요구하지 않았다.
+    #   국재 파일 suffix(.loc vs .loc.gbw)조차 확정되지 않은 채 200원자 두 잡을
+    #   여는 셈이었다.
+    if [ ! -s "$D/LOCCHECK_PASS.json" ]; then
+      echo "⛔ LOCCHECK_PASS.json 이 없습니다 — 먼저 `bash run_pilot.sh loccheck` 를"
+      echo "   돌리십시오. H2O 하나로 30초입니다 (회신 V P0-3)."
+      exit 2
+    fi
+    python3 - "$D" "$BUILDER_PATH" <<'PYLG' || exit 2
+import importlib.util, sys
+d, bp = sys.argv[1:3]
+spec = importlib.util.spec_from_file_location("_b", bp)
+m = importlib.util.module_from_spec(spec); spec.loader.exec_module(m)
+c, why = m.pil_read_loccheck(d)
+if c is None:
+    sys.exit("⛔ loccheck 증서가 유효하지 않습니다 — %s" % why)
+print("  ✔ loccheck 증서 확인 (suffix %s · ORCA %s)"
+      % (c["loc_suffix"], str(c.get("orca_version"))[:40]))
+PYLG
     echo "== phase L (SCF + 국재화) =="
     for j in "$D"/L/*/*; do [ -d "$j" ] || continue; run "$j" "$(basename "$j")" || fail=1; done
     echo "== 국재화가 돌았나 =="
@@ -5391,6 +5875,42 @@ EOF
                    || echo "phase L 에 실패가 있습니다 — 다음 단계로 가지 않습니다."
     ;;
   L2)
+    # ⛔ 회신 V P0-3 — 증서가 정한 suffix 로 `%moinp` 를 맞춘다 (생성 시점엔 몰랐다).
+    python3 - "$D" "$BUILDER_PATH" <<'PYL2' || exit 2
+import importlib.util, json, os, re, sys
+d, bp = sys.argv[1:3]
+spec = importlib.util.spec_from_file_location("_b", bp)
+m = importlib.util.module_from_spec(spec); spec.loader.exec_module(m)
+c, why = m.pil_read_loccheck(d)
+if c is None:
+    sys.exit("⛔ loccheck 증서가 유효하지 않습니다 — %s" % why)
+suf = c["loc_suffix"]
+man_p = os.path.join(d, "MANIFEST_PILOT.json")
+man = json.load(open(man_p))
+old = man.get("loc_suffix_assumed") or ".loc"
+n = 0
+for jk, jm in man.get("jobs", {}).items():
+    if jm.get("phase") != "L2":
+        continue
+    tag = jk.rsplit("/", 1)[-1]
+    f = os.path.join(d, jk, tag + ".inp")
+    if not os.path.isfile(f):
+        continue
+    t = open(f, encoding="utf-8").read()
+    t2 = re.sub(r'(%moinp\s+")([^"]*?)' + re.escape(old) + r'(")',
+                lambda mo: mo.group(1) + mo.group(2) + suf + mo.group(3), t)
+    if t2 != t:
+        open(f, "w", encoding="utf-8").write(t2); n += 1
+man["loc_suffix_actual"] = suf
+man["loc_suffix_patched_inputs"] = n
+if n:
+    man["⚠_loc_suffix_변경"] = (
+        "loccheck 실측 suffix 가 %r 라 생성 시 가정 %r 과 달라 L2 입력 %d개의 "
+        "`%%moinp` 를 고쳤다 (회신 V P0-3). 정본 대비 이 한 줄이 다르다." % (suf, old, n))
+json.dump(man, open(man_p, "w"), indent=1, ensure_ascii=False)
+print("  ✔ loc suffix = %s (L2 입력 %d개 수정%s)"
+      % (suf, n, "" if n else " — 가정과 같아 손대지 않음"))
+PYL2
     echo "== phase L2 (국재 궤도 인구 · NoIter) =="
     for j in "$D"/L2/*/*; do [ -d "$j" ] || continue; run "$j" "$(basename "$j")" || fail=1; done
     echo "== smoke test — 국재 궤도의 MO 인구가 찍혔나 =="
