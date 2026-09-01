@@ -1409,6 +1409,150 @@
    "found_by": "codex",
    "title": "AM-AM 브릿지는 SE 를 덮어쓴다 — 브릿지를 건드리는 연산자는 **전자 전용이 아니다**",
    "decision_note": "제안 B 를 등록하지 않으므로 지금 고칠 것은 없다.  다만 이것은 제안이 아니라 **생산 코드의 지속적 성질**이라 남긴다: SE(sid 6)는 가장 낮은 우선순위로 먼저 찍히고(`scripts/step3_sigma.py:293`), AM-AM 브릿지는 `_ball` 로 **무조건 덮어쓴다**(`:303-314`, 호출 `:345`; 빈 셀 전용 `_ball_empty` 는 SDCP 브릿지용 `:507`).  전자·이온이 같은 sid 격자를 공유하므로 브릿지를 빼면 그 셀이 SE 로 되돌아가 **이온망이 늘어난다**.  ⇒ 앞으로 브릿지를 건드리는 어떤 연산자도 이온축과 직교하지 않는다.  이온 전용이 필요하면 shared sid 대신 별도 conductivity field 를 쓸 것 (`scripts/step3_sigma.py:1119` `sigma_field`)."
+  },
+  {
+   "id": "R19-01",
+   "severity": "P1",
+   "status": "claimed_fixed",
+   "owner": "claude",
+   "found_by": "codex",
+   "opened_in": "docs/reviews/codex_r19_verdict_20260901.md",
+   "title": "세미나 재작성이 **긍정 계약을 잃었다** — `/api/seminar/deck` 은 검사가 아예 없었다",
+   "note": "게이트를 `if False:` 로 한 줄 바꾸면 표지 없는 철회 pptx 가 기본 경로로 나가는데 28/28 이 초록이었다.  ⇒ 네 경로를 고정했다 (슬라이드 거부 · 슬라이드 historical 스키마 · 덱 거부 · 덱 내려받기).  두 게이트 돌연변이가 각각 6·5 건을 빨간불로 만드는 것을 실행해 확인했다.  덱 거부는 평문 403 → JSON 으로 바꿨다 (화면이 content-type 만 보고 그 주소로 **이동**해 버렸다).",
+   "evidence_tests": [
+    "webapp/test_seminar_page.py"
+   ],
+   "claimed_fixed_sha": "1c3f647e"
+  },
+  {
+   "id": "R19-02",
+   "severity": "P1",
+   "status": "claimed_fixed",
+   "owner": "claude",
+   "found_by": "codex",
+   "opened_in": "docs/reviews/codex_r19_verdict_20260901.md",
+   "title": "근거를 슬라이드 → platen 문서로 옮긴 것은 **바꿔치기**였다",
+   "note": "API 거부는 CLAUDE.md·claims.json 을 가리키는데 검사는 다른 트랙의 문서(스스로 rev6 에서 멈췄다고 적은)를 봤고, 검사 17 의 \"독립성 철회\" 계약은 대체 없이 사라졌다.  ⇒ 응답에 `evidence_ref`·`evidence_claim` 을 실었고, 회귀가 그 파일을 **열어** 항목 등재를 확인한다.  옛 검사 16·17 은 데이터가 있는 자리(`?historical=1`)에서 원래 계약 그대로 복구했다.",
+   "evidence_tests": [
+    "webapp/test_seminar_page.py"
+   ],
+   "claimed_fixed_sha": "1c3f647e"
+  },
+  {
+   "id": "R19-03",
+   "severity": "P1",
+   "status": "claimed_fixed",
+   "owner": "claude",
+   "found_by": "codex",
+   "opened_in": "docs/reviews/codex_r19_verdict_20260901.md",
+   "title": "화면 검사가 HTML 문자열만 훑어 `renderDeck()` 을 들어내도 초록이었다",
+   "note": "`webapp/test_seminar_dom.mjs` 신설 — 템플릿의 `<script>` 를 최소 DOM·fetch 껍데기 위에서 **실제로 돌려** 거부 사유가 `#smRoot` 에 닿는지 본다.  자기 민감도를 스스로 증명한다(분기를 제거한 사본으로 재실행해 빨간불이 되는지 확인).  ★ 쓰다가 실결함 발견: 내려받기 핸들러가 content-type 만 봐서 403 이면 페이지가 그 주소로 이동했다.",
+   "evidence_tests": [
+    "webapp/test_seminar_dom.mjs"
+   ],
+   "claimed_fixed_sha": "1c3f647e"
+  },
+  {
+   "id": "R19-04",
+   "severity": "P1",
+   "status": "claimed_fixed",
+   "owner": "claude",
+   "found_by": "codex",
+   "opened_in": "docs/reviews/codex_r19_verdict_20260901.md",
+   "title": "AST 검사도 **소스**를 읽는다 — GPU 대입 뒤에 `used = None` 을 끼워도 초록",
+   "note": "가짜 cupy·cupyx 를 numpy/scipy 위에 세워 GPU 분기를 **실제로 태운다**.  cpu / gpu / gpu-사망-폴백 세 경로에서 해와 `LAST_BACKEND` 를 함께 본다.  Codex 가 제시한 돌연변이를 그대로 넣어 59e 가 빨간불이 되는 것을 확인했다.  ⚠ 비용 논거는 접었다 — CI 가 이미 numpy·scipy 를 깐다.",
+   "evidence_tests": [
+    "webapp/test_pipeline_provenance.py"
+   ],
+   "claimed_fixed_sha": "1c3f647e"
+  },
+  {
+   "id": "R19-05",
+   "severity": "P1",
+   "status": "claimed_fixed",
+   "owner": "claude",
+   "found_by": "codex",
+   "opened_in": "docs/reviews/codex_r19_verdict_20260901.md",
+   "title": "`check_doc_refs` 가 SHA **앞 7~8자만** 비교해 틀린 토큰을 통과시켰다",
+   "note": "실재 `7dbf38fb…` 때문에 `7dbf38f0` 과 `7dbf38f0abcd` 가 둘 다 통과했다 = 잡으라고 만든 그 오타를 통과시켰다.  ⇒ 토큰 전체를 `rev-list --all` **도달 가능성**에 대조한다.  ⚠ `cat-file -e` 로 바꾸지 말 것 — 리베이스로 버려진 객체가 통과한다 (원장 `_commit_exists` 항목).  얕은 클론도 `--is-shallow-repository` 로 따로 잡는다.",
+   "evidence_tests": [
+    "scripts/check_doc_refs.py --selftest",
+    "scripts/check_doc_refs.py"
+   ],
+   "claimed_fixed_sha": "1c3f647e"
+  },
+  {
+   "id": "R19-06",
+   "severity": "P1",
+   "status": "claimed_fixed",
+   "owner": "claude",
+   "found_by": "codex",
+   "opened_in": "docs/reviews/codex_r19_verdict_20260901.md",
+   "title": "자연어 면제가 **무관한 SHA 를 가려** 정말 없는 커밋을 통과시켰다",
+   "note": "`codex_absorb_verdict_20260825.md` 07 행의 \"증인이 없다\" 하나로 같은 표의 `c0ac0ad8` **8건 전부**가 문서 단위로 면제됐다 (원장은 그 변경이 `8bcfbeff` 로 들어갔다고 이미 적고 있었다).  ⇒ 면제를 `doc_refs_sha_exceptions.tsv` 의 (문서, 정확한 SHA, 대체참조, 이유) 로만 받고, SHA 가 도달 가능해지거나 대체참조가 도달 불가면 **등재 자체를 지적**한다.  ★ 길이 상한(12자)도 걷었다 — 13~15자를 통째로 못 보고 40자 **진짜 커밋 3건**도 못 봤다.  표 머리글이 \"커밋\" 이면 각 행도 검사한다 (그 8행이 정확히 이 모양이다).",
+   "evidence_tests": [
+    "scripts/check_doc_refs.py --selftest"
+   ],
+   "claimed_fixed_sha": "1c3f647e"
+  },
+  {
+   "id": "R19-07",
+   "severity": "P2",
+   "status": "claimed_fixed",
+   "owner": "claude",
+   "found_by": "codex",
+   "opened_in": "docs/reviews/codex_r19_verdict_20260901.md",
+   "title": "allowlist 22건의 **이유가 확인 불가능한 산문**이었고 여섯 건이 사실과 달랐다",
+   "note": "(경로, 종류, ref, 이유) 로 바꿔 확인 가능한 주장은 검사기가 확인한다.  ⓐ `webapp/data.py`·`db/properties/…phaseA.csv` 는 \"다른 저장소\" 가 아니라 **이 리포의 DFT 브랜치**(`claude/friendly-meitner-lldvar`)에 실재 — cross_branch 로 등재하고 그 ref 에서 실물 확인 ⓑ `xy_heatmap_summary.csv` 는 \"미실행\" 이 아니라 **실행됐고 CSV 만 미커밋** ⓒ `sdcp8_v04/v03/v025.json` 과 `sigma_electronic_stage21_close_out.md` 는 등재가 아니라 **문서를 고쳤다** (후자는 개명이 아니라 끝내 안 만들어진 파일이었다) ⓓ 1차 증거 3건은 sha256 이 없어 **보고**한다 (막지 않음 — 그 기계에서 받아야 한다).  ★ 감사 중 실데이터 오류 발견: `oh2026_bimodal_sigma_porosity.csv` 의 σ_eff_e 가 CAM7:3 ↔ CAM6:4 로 전치돼 있었다 (우리 P:S 7:3 대응점).",
+   "evidence_tests": [
+    "scripts/check_doc_refs.py --selftest",
+    "scripts/check_doc_refs.py"
+   ],
+   "claimed_fixed_sha": "1c3f647e"
+  },
+  {
+   "id": "R19-08",
+   "severity": "P1",
+   "status": "claimed_fixed",
+   "owner": "claude",
+   "found_by": "codex",
+   "opened_in": "docs/reviews/codex_r19_verdict_20260901.md",
+   "title": "`--selftest` 진입점 101개 중 **72개가 어디서도 안 돌았다** — 둘은 실제로 빨간불",
+   "note": "규칙 K 는 손으로 적은 10개 목록을 대조하므로 *둘 다에 없는* 것은 원리적으로 못 잡는다.  실측으로 드러난 빨간불: ⓐ `env_db` — `MPM_S4_CG_BUDGET_S`·`MPM_S4_CG_PROBE_MAX_DOF` 가 DB 에 없었다 ⓑ `seminar_deck_extract` — 철회 배너가 1번 장이 되며 `n==1` 표지 면제가 깨졌다 (면제를 위치 → **내용**으로 바꿨다) ⓒ `step3_sigma --selftest-segstamp` — payload 가 요청·적용을 갈라 적게 **개선**됐는데 철자 검사만 빨간불 (AST 계약 검사로).  ⇒ 72개를 손으로 옮겨 적지 않고 **드라이버**(`--run-fast`)가 등재를 읽어 돈다 = 98/98, 34 s.  플래그를 등재의 한 칸으로 둔 이유는 여럿이 `--selftest` 를 안 받기 때문이다 (`--selftest-temperature` 등).",
+   "evidence_tests": [
+    "scripts/check_selftest_inventory.py --selftest",
+    "scripts/check_selftest_inventory.py",
+    "scripts/check_selftest_inventory.py --run-fast"
+   ],
+   "claimed_fixed_sha": "1c3f647e"
+  },
+  {
+   "id": "R19-09",
+   "severity": "P2",
+   "status": "claimed_fixed",
+   "owner": "claude",
+   "found_by": "codex",
+   "opened_in": "docs/reviews/codex_r19_verdict_20260901.md",
+   "title": "CI 가 flask·requests 를 안 깔아 **웹앱 테스트 5개가 깨끗한 러너에서 import 부터 죽는다**",
+   "note": "배선해 놓고 실제로는 안 도는 상태였다 (`app.py` → `storage_sync.py` → `requests`).  ⇒ CI 가 부르는 스크립트의 **의존 폐포**를 계산해 `pip install` 줄과 대조한다.  ⚠ 진입점은 AST 전체를, 도달 모듈은 최상위만 본다 — 다섯 테스트가 전부 `def main(): import app` 꼴이라 최상위만 보면 flask 가 안 보인다.  flask 를 지우면 검사가 빨간불이 되는 것을 확인했다.",
+   "evidence_tests": [
+    "scripts/check_selftest_inventory.py"
+   ],
+   "claimed_fixed_sha": "1c3f647e"
+  },
+  {
+   "id": "R19-10",
+   "severity": "P1",
+   "status": "claimed_fixed",
+   "owner": "claude",
+   "found_by": "claude",
+   "opened_in": "docs/reviews/codex_r19_verdict_20260901.md",
+   "title": "세미나 화면이 **배너 없는 14장짜리 옛 덱**을 보여주고 있었다 (pptx 는 15장)",
+   "note": "`56dcbca1` 이 CDXIJ-9 대응으로 pptx **1번 장에 철회 배너**를 끼웠는데 `seminar_deck.json` 을 다시 안 뽑았다 ⇒ 그 배너가 화면에 한 번도 안 떴다.  경로 비교(옛 검사 14·15)로는 못 잡는다 — 두 산출물이 같은 파일을 가리키면서 내용이 갈라진 것이라서.  ⇒ ⓐ JSON 재생성 ⓑ 추출기가 `_RETRACTED` 표지를 **이어받게** (다시 뽑으면 조용히 사라지던 값이다) ⓒ 회귀가 JSON 장 수 ↔ pptx 장 수를 대조.  옛 JSON 을 되돌리면 그 검사가 빨간불이 되는 것을 확인했다.",
+   "evidence_tests": [
+    "webapp/test_seminar_page.py"
+   ],
+   "claimed_fixed_sha": "1c3f647e"
   }
  ]
 }
