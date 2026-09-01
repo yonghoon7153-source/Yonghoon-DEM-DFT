@@ -161,17 +161,73 @@ def load_sdcp_selfdoping_md() -> str:
             if SDCP_SELFDOPING_MD.exists() else "")
 
 
-def sdcp_wave1_rows() -> dict:
-    """wave1 잡 표를 **basin 일치 여부와 함께** 낸다.
+#: 인용 지위 어휘 — 화면·시험이 같이 쓴다. 순서 = 심각도.
+WAVE1_STATUS = ("BLOCKED", "HOLD", "NO_VERDICT", "CITABLE")
 
-    ⛔ 이 함수가 못 하는 것: basin 이 어긋난 잡의 값을 보정하지 않는다.
-      50 meV 벌점을 알고 있어도 빼지 않는다 — 4점 추정으로 결론을 만들면
-      측정이 아니라 가정이 된다. 어긋난 행은 값과 함께 **경고를 달아** 낸다.
+
+def _wave1_gate() -> dict:
+    """wave1 의 **인용 게이트**를 정본에서 읽어 온다 (raw 결과가 아니라).
+
+    ⛔ 2026-09-01 회신 AW P0-1 — 종전 `sdcp_wave1_rows()` 는 raw 결과의
+      `basin` 일치만으로 `valid` 를 만들었고, 화면은 그 `valid` 를 유일한 지위로
+      썼다. 그런데 basin 일치는 **네 지위 중 하나의 입력**일 뿐이다:
+        · doped 전 항목       → BLOCKED  (캠페인 마감 · 수치·방향 서술 금지)
+        · 절대 E_ads          → HOLD     (회신 O δ_m · δ_LREAL 미해소)
+        · sdcp_neutral 자리   → NO_VERDICT (사전등록 판정바닥 30 meV 아래)
+        · ptfe 자리 대비      → CITABLE  (허용 문구를 값과 함께 인용)
+      그래서 basin 이 맞는 doped 행이 화면에서 ✓ 로 보였다. 지위는 이제
+      `sdcp_wave1_citable.json` 과 두 마감 문서에서 **파생**한다.
+
+    이 함수가 못 하는 것: 지위를 스스로 판정하지 않는다. 정본이 없으면
+      `source_missing=True` 를 세우고 **전부 BLOCKED 로 잠근다** (fail-closed).
+    """
+    cit = _load_json(DB / "properties" / "sdcp_wave1_citable.json")
+    neu = _load_json(DB / "properties" / "sdcp_neutral_closed_2026_08_28.json")
+    dop = _load_json(DB / "properties" / "sdcp_doped_closed_2026_08_28.json")
+    g = {"source_missing": not (cit and neu and dop),
+         "citable_dE": set((cit.get("dE_site_meV") or {}).keys()),
+         "not_citable": cit.get("not_citable") or [],
+         "caveats": cit.get("⚠_caveats_MUST_QUOTE_WITH_VALUES") or [],
+         "eads_hold": cit.get("⚠_hold_2026_08_28_회신O") or {},
+         "neutral_forbidden": neu.get("⛔_금지_서술") or [],
+         "doped_forbidden": dop.get("⛔_금지_서술") or [],
+         "dE_notes": cit.get("dE_notes") or {}}
+    return g
+
+
+def _wave1_status(fragment: str, kind: str, gate: dict) -> tuple:
+    """(지위, 사유) — `kind` 는 'dE' | 'eads'.
+
+    ⚠ 정본이 없으면 전부 BLOCKED 다. "판정 못 함" 을 "통과" 로 바꾸지 않는다.
+    """
+    if gate.get("source_missing"):
+        return "BLOCKED", "인용 원장을 못 읽었다 — 지위 불명이므로 잠근다"
+    if fragment == "sdcp_doped":
+        return "BLOCKED", "doped 캠페인 마감 (2026-08-28) — 수치·방향 서술 전부 금지"
+    if kind == "eads":
+        return "HOLD", ("절대 E_ads 는 회신 O 로 보류 — 분자 기준의 스핀 제약(δ_m)과 "
+                        "LREAL 비대칭(δ_LREAL)이 남아 있다")
+    if fragment == "sdcp_neutral":
+        return "NO_VERDICT", ("사전등록 판정바닥 30 meV 아래 — **미해결**이다. "
+                              "'무선호' 라고 쓰지 않는다")
+    return "CITABLE", gate["dE_notes"].get(fragment, "허용 문구와 함께만 인용한다")
+
+
+def sdcp_wave1_rows() -> dict:
+    """wave1 잡 표를 **인용 지위와 함께** 낸다.
+
+    ⛔ 이 함수가 못 하는 것
+      · basin 이 어긋난 잡의 값을 **보정하지 않는다**. 50 meV 벌점을 알고 있어도
+        빼지 않는다 — 4점 추정으로 결론을 만들면 측정이 아니라 가정이 된다.
+      · 값을 숨기지도 않는다. 지위를 붙여 **접힌 역사 절**로 내려보낸다
+        (삭제하면 감사 추적이 끊기고, 현재형으로 두면 철회가 되살아난다).
     """
     if not SDCP_WAVE1_JSON.exists():
         return {}
     d = json.loads(SDCP_WAVE1_JSON.read_text(encoding="utf-8"))
     jobs = d.get("jobs", [])
+    gate = _wave1_gate()
+
     # 자리 선호 ΔE = E(Ni_top) − E(Li_top) — 같은 조각·같은 seed 끼리만
     by = {}
     for j in jobs:
@@ -182,11 +238,24 @@ def sdcp_wave1_rows() -> dict:
             continue
         ni, li = d2["Nitop"], d2["Litop"]
         same = ni["basin"] == li["basin"]
+        st, why = _wave1_status(frag, "dE", gate)
+        if st == "CITABLE" and not same:
+            st, why = "BLOCKED", ("basin 이 갈린 쌍 — 분자 효과가 아니라 슬랩 자기상태 "
+                                  "차이를 섞어 본다")
         dE.append({"fragment": frag, "seed": seed,
                    "dE_meV": round((ni["E_total_eV"] - li["E_total_eV"]) * 1000, 1),
-                   "basin_pair": f'{li["basin"]}/{ni["basin"]}', "valid": same})
-    return {"meta": d, "jobs": jobs, "dE": dE,
-            "n_valid": sum(1 for r in dE if r["valid"]), "n_dE": len(dE)}
+                   "basin_pair": f'{li["basin"]}/{ni["basin"]}',
+                   "basin_same": same, "status": st, "why": why,
+                   # 하위호환: 옛 화면·시험이 쓰던 이름. **지위가 아니라 basin 일치다.**
+                   "valid": same})
+    for j in jobs:
+        st, why = _wave1_status(j.get("fragment", ""), "eads", gate)
+        j["status"], j["status_why"] = st, why
+
+    return {"meta": d, "jobs": jobs, "dE": dE, "gate": gate,
+            "n_valid": sum(1 for r in dE if r["valid"]), "n_dE": len(dE),
+            "n_citable_dE": sum(1 for r in dE if r["status"] == "CITABLE"),
+            "n_blocked": sum(1 for r in dE if r["status"] == "BLOCKED")}
 
 
 OPEN_ITEMS_MD = KB / "open_items.md"
