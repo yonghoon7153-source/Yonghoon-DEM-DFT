@@ -5507,3 +5507,115 @@ at)` 을 고정하고, 지금 journal 의 앞 네 줄이 그 값을 그대로 �
 | baseline·sweep1d·wsweep 의 계획 gate | **미착수** |
 | 실물 object-lock adapter · power-loss 모델 · publisher 전용 OS principal | **미구현** |
 | 외적타당도 #48/#49/#50 | **미착수** |
+
+---
+
+## §60 52차 게이트 리뷰 대응 — 능력을 닫는다 (묶음 9)
+
+51차 판정은 **NO-GO**. 새 P0 뿌리 8건 · P1 2건. 리뷰어의 총평이 정확했다:
+"이번에도 **검사 하나 뒤의 창**, **다른 lock namespace**, **self-attested
+evidence** 가 반복됐다."
+
+### 반례 대응표
+
+| # | 51차 반례 | 재현 | 고친 자리 |
+|---|---|---|---|
+| P0-1a | `_unlink_token_generation()` 의 비교 뒤 unlink 사이에 새 발급이 끼어든다 | ○ | claim 폐기와 token 삭제를 **한 임계 구역**으로 |
+| P0-1b | 서로 다른 leg 가 같은 `--attempt-file` 을 쓰면 두 번째가 첫 번째 credential 을 덮는다 | ○ | 소유 증명 파일이 **leg·attempt 를 담는다** + 살아 있는 남의 것은 안 덮는다 |
+| P0-2 | `_plan_status()` 가 재독 오류를 `None` 으로 접고 rollback 이 그것을 미커밋으로 읽는다 | ○ | `PlanWriteUncertain` — 커밋 여부를 **타입으로** 알린다. 추정을 없앴다 |
+| P0-3 | 발급·phase·게시·freeze 가 다른 lock namespace | ○ | freeze 가 **살아 있는 claim 을 거부**한다 |
+| P0-4 | bind mount alias 로 frozen tree 에 게시 | ○ | 봉인 marker 를 **대상 안**에 (`.FROZEN`) |
+| P0-5 | 승인한 cache bytes 가 runtime 불일치에서 재계산으로 넘어간다 | ○ | authoritative mode 에서는 **거부**한다 |
+| P0-6 | `DD_SMOOTH_CACHE` 가 J 를 바꾸는데 승인·지문 밖 | ○ | `smoothing_backend` 를 승인 축과 `env_fingerprint()` **양쪽**에 |
+| P0-7 | `AugAssign`·import·match capture 가 binding 인데 안 담긴다 | ○ | 이름 → **ordered binding 목록** |
+| P0-8 | `inspect.getsource()` 로 정규형이 버린 raw source 를 읽는다 | ○ | raw source **관찰 능력**을 닫는다 (철자가 아니라) |
+| P1-1 | journal→head crash 가 재시도 불가 | ○ | 한 줄 앞선 partial commit 을 인식해 anchor 를 완주 |
+| P1-2 | coverage v2 도 replay 0회를 인증한다 | ○ | 조각이 **pytest report 원본**을 남기고 checker 가 거기서 판정을 다시 유도 (v3) |
+
+### 52-1 이번 라운드의 형태: **철자에서 능력으로**
+
+세 자리에서 같은 결론에 도달했다.
+
+- `.__doc__` 철자를 막았더니 `read = getattr` 이 피해 갔다 (51차) → 버리는 것을
+  없앴다.
+- `getsource` 철자를 막았더니 `from inspect import getsource as _gs` 가 피해
+  갔다 (52차) → **`inspect`·`linecache`·`dis`·`traceback` 에 묶이는 이름을
+  닫힘 안에서 금지**했다. 지역 import 도 본다.
+- 이름 → 단일 node 는 `TOL = 1` · `TOL += 9` 를 구별하지 못했다 → 이름 →
+  **순서 있는 목록**.
+
+blacklist 를 넓히는 것은 언제나 다음 철자를 남긴다. 닫는 것은 **그 능력을 쓸 수
+있는가** 여야 한다.
+
+### 52-2 추정을 없앴다
+
+51차 `_plan_status()` 는 "쓰기가 실패했는데 커밋됐나" 를 **재독으로 추정**했다.
+리뷰어가 재독까지 실패시키자 그 추정이 `None` 을 냈고, `None != "running"` 이
+회수 불가능한 orphan 을 만들었다.
+
+`_mark_plan_running()` 은 자기가 **쓰기 전에** 실패했는지(원장을 안 건드렸다 →
+확정 미커밋) 아니면 쓰는 도중·이후인지(불확정)를 **알고 있다.** 그것을 예외
+타입으로 내보내면 caller 는 추정할 필요가 없다. 규칙: **확정 미커밋에서만
+되돌린다.**
+
+### 52-3 이름은 대상이 아니다
+
+49차는 cohort ID 를 봉인했다. 51차는 `dir` 을 더했다 — 이름을 하나 더 본 것이다.
+52차 반례는 bind mount 였다: **이름은 언제나 더 만들 수 있다.**
+
+봉인을 대상 **안**에 둔다 (`.FROZEN`). 어느 이름으로 열든 같은 tree 를 열면 같은
+marker 를 본다. 원장·journal 은 여전히 필요하지만(이름으로 묻는 질문이 있다),
+쓰기 지점의 마지막 판정은 대상 자신에게 묻는다.
+
+### 52-4 증거가 self-checksum 이었다
+
+51차 v2 는 등록부·EXPECT·runner·HEAD 를 결속했지만, `bit` 는 여전히 runner 가
+적은 값이었고 `transcript_digest` 는 그 값을 다시 해시한 것이었다. 리뷰어가
+`replay_calls=0` 으로 108개 bit 를 세워 통과시켰다.
+
+v3 는 scenario 마다 **pytest report 원본**을 남기고, checker 가 그 바이트에서
+판정을 다시 유도한다 (`verify_receipts()`). 남은 한계는 명시한다: report 자체를
+위조하면 통과한다. 그러나 그것은 "아무 것도 안 하고 숫자만 적는 것" 과 다른
+종류의 주장이고, report 는 committed·diffable 이다.
+
+### 52-5 증인이 **선언한 이유로** 물어야 한다
+
+`coverage-checker-derives-from-receipts` 변이가 처음에는 물었는데, 증인이
+"정상 조각이 거부됐다" 였다. `check_coverage()` 가 맨 앞에서
+`check_preimages()` 를 부르므로, 이 파일 **자신**을 변이시키면 그 gate 가 먼저
+걸려 어떤 변이든 거부된다 — 물긴 하지만 다른 이유로 문 것이다.
+
+영수증 검사를 `verify_receipts()` 로 떼어 내고 시험이 그것만 겨누게 했다. 이제
+증인이 "영수증이 '안 물었다' 인데 적힌 판정이 '물었다'" 다.
+
+### 실측
+
+| 무엇 | 값 |
+|---|---|
+| 전체 회귀 | **1360 passed · 1 xfailed · 0 failed** |
+| strict smoke | **rc 0 · 52 ✅ · 0 ❌** |
+| 변이 전수 | 등록부 127 scenario (executable 121 · declared 6) · 12 조각. 재생 결과의 정본은 `mutation_coverage/s1..s12.json` 과 `reports/` |
+| 산출물 | g6 을 얼리고 g7 로 · `proj ad598fe77e75afec` (행 바이트 불변) |
+| 영수증 | core_sha `5ca1f4ecc140762b…` · validator identity `257c5b6d8ef8712a` |
+
+### 52-6 lifecycle e2e 가 캐시를 물려받지 않는다
+
+P0-5 를 고치자 e2e 가 깨졌다. 그 tree 는 `configs/` 에 시험용 config 를 더하므로
+`source_digest()` 가 저장소와 다르고, 저장소 `.cache` 를 symlink 하면 **승인이
+가리키는 완방상태 바이트를 다른 코드가 만든 것**이 된다.
+
+51차까지는 그것을 조용히 미스로 접어 재계산했고 그것이 정확히 리뷰어의 반례였다.
+이제 hard error 이고 **그것이 옳다** — 실제 운영자도 그 tree 에서 준비 단계를
+다시 돌아야 한다. e2e 는 캐시를 복사한 뒤 `source_digest` 를 그 tree 의 값으로
+다시 적는다 (준비 단계를 다시 돈 것과 같은 결과를 싸게 만든다).
+
+### 아직 아닌 것
+
+| 항 | 상태 |
+|---|---|
+| 조건 P0-1 producer 결속 — 닫힌 typed manifest 파싱 · 두 payload 압축해제 재해시 · producer 발행 영수증 | **미착수** (49차부터 네 라운드째) |
+| 조건 P0-8 — 경로 무관 typed·sealed 실행 class marker | **미착수** |
+| 조건 P0-4 — typed 보존 영수증 소비 | **부분** |
+| 발급·게시·freeze 를 **하나의 generation transaction** 으로 | **부분** — 배타성은 공유하지만 단일 transaction 은 아니다 (§0) |
+| baseline·sweep1d·wsweep 계획 gate · 실물 object-lock adapter · power-loss 모델 · publisher 전용 OS principal | **미착수** |
+| 외적타당도 #48/#49/#50 | **미착수** |
