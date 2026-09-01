@@ -138,7 +138,7 @@
    "level": "BLOCKED",
    "what": "계간 Ea 직접 비교 (`vs_modelc` +90 meV 2.3σ · `vs_modelc_SUPERSEDED_mixed` · `anchors_same_window_singleseed` 의 계간 대조) — citable:no",
    "why": "세 계(LPSOCl·modelc·b2o3)가 각자 다른 셀·다른 수렴상태다. 회신 AK(2026-08-30) Q2=C 판정: 세 계 Ea 직접 비교는 철회·보류",
-   "fix": "계별 셀·VRAM·finite-size 감사를 포함한 **별도 캠페인**으로 재설계. 계 내부 값(62원자 4시드×3T Ea 0.287±0.024)은 cell-specific estimand 로는 유효",
+   "fix": "계별 셀·VRAM·finite-size 감사를 포함한 **별도 캠페인**으로 재설계. 계 내부 값(62원자 4시드×3T Ea 0.287±0.024)은 cell-specific 보고량 로는 유효",
    "added": "2026-08-30",
    "근거": "db/properties/lpsocl_box331_estimand_2026_08_30.json"
   },
