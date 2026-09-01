@@ -147,9 +147,14 @@
 ★ ③ 안에서 다시 **재료 앵커**와 **유효 상 전도도**를 가른다.  복셀 격자는 닿은 셀을
 융합해 **접촉저항을 표현하지 않으므로**, 상 전도도로 넣은 값은 물성이 아니라 규약이다.
 
-- `σ_ion(SE)` = **재료 앵커** (문헌값)
-- `σ_e(VGCF)` · `σ_e(SDCP)` = **유효 상 전도도** — 물성이 아니다
-- `σ_SDCP = 250` 은 `Assumed` 가 아니라 **`Effective (convention-dependent); provenance unrecorded`**
+- `σ_ion(SE)` = **재료 앵커** (문헌값 — Cronau 단결정)
+- `σ_e(AM_S)` · `σ_e(VGCF)` · `σ_e(SDCP)` = **유효 상 전도도** — 물성이 아니고 **셋 다
+  미보정**이다.  이 셋이 소산에 나타나는 활성 상 전부다 (R20).
+  · `AM_S 0.010` — 코퍼스-적합 endpoint 를 복셀 상 σ 로 옮긴 것이라 **미상 배수**가 붙는다
+    (`step3_sigma.py` docstring 자신이 그렇게 적는다)
+  · `VGCF 100` — **`Frozen, uncalibrated legacy voxel-network coefficient`**
+  · `SDCP 250` — `Assumed`/`Calculated` 가 아니라 **`Effective (convention-dependent);
+    provenance unrecorded`** (SELF-13)
 
 ⛔ `E (dense) 24 GPa` 와 `E (DEM contact, calibrated) 1.35 GPa` 행을 **둘 다 남긴다.**
 지우면 연화 배수를 감추는 것이 된다.  MPM `ν = 0.49` 도 남긴다.
@@ -229,10 +234,14 @@ $$\sigma_{\text{eff}} = \sigma \cdot \frac{\pi d^{2}}{4 h^{2}}
 ⚠ 앞서 적은 `−17 %` · `ΔR ≈ −0.002` 도 **국소 민감도 외삽값**이지 83 재실행의 정본 결과가
 아니다.
 
-⚠ **표 안의 범주 비대칭도 밝힌다**: `σ_SDCP 250` 은 재료 앵커인데 `σ_VGCF 100` 은 유효 망
-상수다.  나란히 놓이면 독자가 같은 종류로 읽는다.
-⇒ **`σ_e(SDCP) 250` 도 출처·성격을 같이 적는다** (지금은 `Calculated` 로만 적혀 있고 우리
-리포에는 출처 기록이 없다).
+⚠⚠ **④ *"표 안에 범주 비대칭이 있다"* 도 틀렸다** (2026-09-02 정정).  초판은 *"`σ_SDCP 250`
+은 재료 앵커인데 `σ_VGCF 100` 은 유효 망 상수"* 라고 적었는데, **250 도 출처가 리포에 없다**
+(SELF-13 · 이 문서 §3-1 이 이미 `provenance unrecorded` 로 적고 있어 **자기모순**이었다).
+게다가 소산에 나타나는 활성 상은 셋(`AM_S` · `VGCF` · `SDCP`)이고 **셋 다 미보정**이다.
+⇒ 비대칭은 없다.  **있는 것은 공통 결손**이고, 비대칭이라 적으면 SDCP 를 실제보다 잘
+근거된 것처럼 보이게 한다 — 초판이 고치려던 오해를 **반대 방향으로** 만드는 셈이다.
+⇒ 표에서 **`σ_e(VGCF) 100` 과 `σ_e(SDCP) 250` 을 같은 등급으로** 라벨한다
+(`Frozen, uncalibrated`).
 
 ### 3-2. Table S3 — 나머지 행을 새 침대 값으로
 

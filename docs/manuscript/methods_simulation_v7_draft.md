@@ -197,11 +197,15 @@ coupled through harmonic-mean conductances and ∇·(σ∇φ) = 0 solved with 1 
 separator and current-collector faces, the remaining boundaries insulating. NCM811, VGCF and
 SDCP carried the electronic network and LPSCl and SDCP the ionic network. The insulating binder was
 represented by excluding its centerline voxels from conduction; sensitivity to this
-representation is given in Table S3c. The VGCF conductivity is an effective network
-value rather than a fibre constant, since voxelisation removes the fibre–fibre contact
-resistance that separates the powder (≈ 83 S cm⁻¹) and single-filament (≈ 10⁴ S cm⁻¹) values;
-the powder-scale value was adopted and rescaled to preserve axial fibre conductance
-(78.5 S cm⁻¹).
+representation is given in Table S3c. The coefficient assigned to the VGCF phase
+(100 S cm⁻¹) is a frozen, uncalibrated legacy value rather than a fibre constant. Voxelisation
+fuses touching fibres and so carries no fibre–fibre contact resistance, one of several
+contributions — along with packing fraction, orientation, network tortuosity, contact number
+and compaction pressure — separating single-filament (≈ 10⁴ S cm⁻¹) from compressed-powder
+(≈ 83 S cm⁻¹) measurements. The coefficient is rescaled with voxel size to preserve the axial
+conductance of a 0.15 μm fibre (78.5 S cm⁻¹ at the 0.15 μm grid used here). Because it was not
+independently calibrated, the conductivities and ratios reported are protocol responses under a
+stated closure rather than material-level estimates.
 
 Each electrode was solved at all eight half-voxel grid-origin shifts of a 2 × 2 × 2 factorial,
 SBE and DBE sharing the same origins so that ratios are paired. These eight phases are a
@@ -242,10 +246,19 @@ terminal wall separation and a high-rate diagnostic; and the specimen provenance
 |---|---|
 | **DEM (packing)** | 도메인 50 × 50 µm² · NCM811 r 2.5 / E 140 GPa · LPSCl r 0.5 / E(dense) 24 / **E(DEM contact) 1.35 `Calibrated`** |
 | **MPM (plastic compaction)** | E 1.53 · ν 0.49 → **`Model choice`** (K 25.5 · G 0.51 을 만든다) · σ_y 0.30 → **`Selected against densification target`** |
-| **Voxel transport** | Voxel edge 0.15 µm · σ_e(NCM) 1.0 × 10⁻² · σ_ion(LPSCl) 3.0 × 10⁻³ · **σ_e(VGCF, powder) 1.0 × 10²** · **σ_e(VGCF, voxel diameter-preserving) 78.5** · σ_e(SDCP) 250 · PTFE 0 |
+| **Voxel transport** | Voxel edge 0.15 µm · σ_e(NCM) 1.0 × 10⁻² · σ_ion(LPSCl) 3.0 × 10⁻³ · **σ_e(VGCF) 1.0 × 10² → `Frozen, uncalibrated`** · **σ_e(SDCP) 250 → `Frozen, uncalibrated`** · PTFE 0 |
 
-⚠ `E(dense) 24` 와 `E(DEM contact) 1.35` 를 **둘 다 남긴다.**  VGCF 두 행(powder / voxel)도
-그대로 — 규약이 표에서 보여야 한다.
+⚠ `E(dense) 24` 와 `E(DEM contact) 1.35` 는 **둘 다 남긴다** (전자가 물성, 후자가 규약).
+⚠⚠ **VGCF 는 그 형식이 아니다** (2026-09-02 정정).  `78.5` 는 물성이 아니라 `100` 을 이
+격자에 환산한 **격자 산물**이라 재료 파라미터 표에 값으로 있을 자리가 없다 — 세 격자에서
+78.5 / 113.1 / 133.6 을 썼으므로 하나만 실으면 나머지 계산이 다른 물질처럼 보이고, 다른
+해상도로 재현하려는 독자가 그 값을 그대로 넣으면 틀린다.  ⇒ 표에는 `100` 한 줄, 환산은
+Methods 의 **식**으로 (`σ_eff = σ·πd²/(4h²)`).
+⚠⚠ **`powder` 라벨을 쓰지 않는다** — 그것은 `100` 이 83 에서 유도됐다는 뜻으로 읽히는데
+**거짓**이다 (도입 커밋이 83 감사보다 앞서고 스스로 order-of-magnitude hook 이라 적었다).
+⚠⚠ **SDCP 250 도 같은 등급이다** — 출처가 리포에 없다 (SELF-13).  옛 서술이 *"SDCP 는
+재료 앵커, VGCF 는 유효 망 상수"* 라는 **범주 비대칭**을 말했는데, 그것은 SDCP 를 실제보다
+잘 근거된 것처럼 보이게 한다.  둘 다 미보정으로 같이 라벨한다.
 ⚠⚠ **`Calibrated` 한 라벨로 뭉치지 않는다** (R10 재판정): `E(DEM contact) 1.35` 는
 **`Empirical contact-law input`**, MPM 의 `E, ν` 는 **`Model choice`**, `σ_y` 는
 **`Selected against densification target`**.  세 역할이 다르다.
