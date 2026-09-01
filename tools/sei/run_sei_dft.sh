@@ -12,23 +12,21 @@
 set -uo pipefail; set +H
 REPO="$(cd "$(dirname "$0")/../.." && pwd)"
 WORK=${WORK:-/data/work/runs/sei_dft}
-QE=${QE:-/data/apps/qe-7.4.1-gpu/bin/pw.x}
+# ⛔⛔ 2026-09-01 — MPI 환경 블록을 **정본(qe_env.sh)으로 합쳤다.**
+#   여기 있던 사본은 gabia 경로가 하드코딩돼 kgy 에서 두 번 죽었다:
+#     ① `mpirun: No such file or directory`      (경로 없음)
+#     ② `mpirun: Error: unknown option "-np"`     (OPAL_PREFIX 가 없는 트리를 가리킴)
+#   ②는 옵션 문제로 보이지만 **환경 문제**다. 정본은 OPAL_PREFIX 를 하드코딩하지 않고
+#   실제로 쓰는 mpirun 의 트리에서 유도한다 — 사본이 있는 한 또 갈라진다.
+# shellcheck disable=SC1090
+. "$(dirname "$0")/qe_env.sh"
+QE=${QE:-$PW}                                   # 이 스크립트는 pw.x 를 QE 로 부른다
+[ -x "$QE" ] || QE=$(command -v pw.x || echo "$QE")
 DOSX=${DOSX:-/data/apps/qe-7.4.1-gpu/bin/dos.x}
+[ -x "$DOSX" ] || DOSX=$(command -v dos.x || echo "$DOSX")
 PROJ=${PROJ:-/data/apps/qe-7.4.1-gpu/bin/projwfc.x}
-# ⚠ 2026-09-01 — 이 블록은 **gabia 전용 경로가 하드코딩**돼 있어서 kgy 에서
-#   `mpirun: No such file or directory` 로 죽었다(실측). 더 나쁜 것은
-#   `LD_LIBRARY_PATH` 를 통째로 **덮어쓴다**는 점이다 — 다른 기계의 QE 가
-#   라이브러리를 못 찾는다. 그래서 **있을 때만** 붙이고, 환경으로 덮을 수 있게 한다.
-H_MPI=${H_MPI:-/data/apps/nvhpc/Linux_x86_64/24.11/comm_libs/12.6/hpcx/hpcx-2.20/ompi}
-MPIRUN=${MPIRUN:-$H_MPI/bin/mpirun}
-[ -x "$MPIRUN" ] || MPIRUN=$(command -v mpirun || echo "$MPIRUN")
-export OMP_NUM_THREADS=${OMP_NUM_THREADS:-1} CUDA_VISIBLE_DEVICES=${CUDA_VISIBLE_DEVICES:-0}
-export OMPI_ALLOW_RUN_AS_ROOT=1 OMPI_ALLOW_RUN_AS_ROOT_CONFIRM=1
-if [ -d "$H_MPI/bin" ]; then
-  export PATH=$H_MPI/bin:$PATH OPAL_PREFIX=$H_MPI
-fi
-for _d in "$H_MPI/lib" /data/apps/nvhpc/Linux_x86_64/24.11/compilers/lib \
-          /usr/local/cuda-12.6/lib64 ${SEI_LD_EXTRA:-}; do
+[ -x "$PROJ" ] || PROJ=$(command -v projwfc.x || echo "$PROJ")
+for _d in ${SEI_LD_EXTRA:-}; do
   [ -d "$_d" ] && export LD_LIBRARY_PATH="$_d:${LD_LIBRARY_PATH:-}"
 done
 ts(){ echo "[$(date +%H:%M:%S)] $*"; }
@@ -67,7 +65,7 @@ for t in "${TARGETS[@]}"; do
       ts "  ✓ $in 이미 완료"; return 0
     fi
     ts "  ▶ $in"
-    $MPIRUN -np 1 --oversubscribe "$exe" -in "$in" > "$out" 2>&1
+    $MPIRUN $MPI_NP $MPI_OVERSUB "$exe" -in "$in" > "$out" 2>&1
     if grep -aq "JOB DONE" "$out"; then
       sha256sum "$in" 2>/dev/null | cut -c1-16 > "${in}.sha256"
       return 0

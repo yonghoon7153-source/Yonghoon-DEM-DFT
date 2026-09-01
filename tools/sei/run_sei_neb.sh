@@ -266,7 +266,7 @@ if [ "$MODE" = endpoints ]; then
       if grep -aq "The maximum number of steps has been reached" "$d/relax.out" 2>/dev/null; then
         ts "  ▪ $t/${ep}${EPSUF} 스텝 소진분이 있다 — 이 디렉터리를 덮어쓰고 다시 돈다"; fi
       ts "  ▶ $t/${ep}${EPSUF} relax"
-      ( cd "$d" && $MPIRUN -np 1 --oversubscribe "$PW" -in relax.in > relax.out 2>&1 )
+      ( cd "$d" && $MPIRUN $MPI_NP $MPI_OVERSUB "$PW" -in relax.in > relax.out 2>&1 )
       if grep -aq "Begin final coordinates" "$d/relax.out"; then
         ts "  ✅ $t/${ep}${EPSUF} 수렴"
       elif grep -aq "The maximum number of steps has been reached" "$d/relax.out"; then
@@ -379,7 +379,7 @@ for t in "${TARGETS[@]}"; do
   nat=$(grep -a -m1 "nat" neb.in | grep -oE "[0-9]+")
   prep_resume
   ts "  ▶ neb.x (원자 ${nat:-?})  — 진행은 neb.out 의 'activation energy' 줄로 본다"
-  $MPIRUN -np 1 --oversubscribe "$NEB" -inp neb.in > neb.out 2>&1
+  $MPIRUN $MPI_NP $MPI_OVERSUB "$NEB" -inp neb.in > neb.out 2>&1
   # ⚠ mpirun 실행 실패는 '미수렴' 이 아니다 — 아예 안 돈 것이다. 구분해서 말한다.
   if grep -aqE "unable to launch|could not access or execute|command not found" neb.out; then
     ts "  ⛔ neb.x 실행 자체가 실패했다 (계산이 안 돌았다):"
