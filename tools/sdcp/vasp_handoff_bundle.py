@@ -12300,13 +12300,28 @@ def build_bundle(a, ledger: Optional[Dict[str, Any]] = None) -> Path:
     # ⚠ 2026-08-29 — 종전엔 **전 조각**을 훑었다. 이 번들에 안 들어가는 조각의 clean 이
     #   달라도 막혀서, `--frags` 로 두 조각만 뽑을 때 무관한 조각 때문에 중단됐다.
     #   제약의 뜻은 "**이 번들 안의** 조각들이 같은 슬랩을 쓴다" 이므로 범위를 그렇게 좁힌다.
-    # ⛔ 회신 BD P0-2 — 자세 파일이 clean slab 을 **동결**했으면 그것을 쓴다
-    #   (repo 안이라 clean tree 가 덮는다). 없으면 종전대로 runs 트리를 훑는다.
-    _frz_cs = ((fb.get("⛔_선택_XYZ_동결_2026_09_02") or {}).get("clean_slab")
-               if isinstance(locals().get("fb"), dict) else None)
+    # ⛔⛔ 회신 BD P0-2 (2026-09-02) — 자세 파일이 clean slab 을 **동결**했으면
+    #   그것을 쓴다 (repo 안이라 clean tree 가 덮는다). 종전엔 이 변수를 만들어
+    #   놓고 **쓰지 않아** v26 에서 외부 입력 2개가 그대로 남았다 (실측).
+    #   없으면 종전대로 runs 트리를 훑는다 (레거시 경로).
+    _frz_cs = None
+    if isinstance(locals().get("fb"), dict):
+        _frz_cs = (fb.get("⛔_선택_XYZ_동결_2026_09_02") or {}).get("clean_slab")
     _want = set(a.frags) if a.frags else None
-    cps = sorted(q for q in Path(a.runs).glob(f"*/relax_f{a.freeze:.2f}/_clean_slab.vasp")
-                 if _want is None or q.parent.parent.name in _want)
+    if _frz_cs and _frz_cs.get("path"):
+        _fp = Path(__file__).resolve().parent.parent.parent / _frz_cs["path"]
+        if not _fp.is_file():
+            sys.exit("⛔ 동결된 clean slab 이 없다: %s (회신 BD P0-2)" % _frz_cs["path"])
+        _got_cs = hashlib.sha256(_fp.read_bytes()).hexdigest()
+        if _frz_cs.get("sha256") and _got_cs != _frz_cs["sha256"]:
+            sys.exit("⛔ clean slab 이 **동결된 것과 다르다** (동결 %s… ≠ 현재 %s…) "
+                     "— 자세 파일을 재발행하고 protocol 을 재비준할 것 (BD P0-2)."
+                     % (str(_frz_cs["sha256"])[:12], _got_cs[:12]))
+        cps = [_fp]
+    else:
+        cps = sorted(q for q in Path(a.runs).glob(
+                         f"*/relax_f{a.freeze:.2f}/_clean_slab.vasp")
+                     if _want is None or q.parent.parent.name in _want)
     if not cps:
         sys.exit(f"⛔ {a.runs}/*/relax_f{a.freeze:.2f}/_clean_slab.vasp 이 하나도 없다 — "
                  f"raw 슬랩으로 조용히 대체하지 않는다 (E_ads 기준계가 달라진다)")
