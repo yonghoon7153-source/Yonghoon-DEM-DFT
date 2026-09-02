@@ -15530,9 +15530,16 @@ def selftest() -> int:
     #   그 지점보다 **뒤에서** 읽히기 때문이다 (v26·v27 두 판에서 외부 입력 2개가
     #   그대로 남았다). ⇒ 동결 clean slab 이 선언되면 **glob 을 타지 않는지**를 친다.
     _srcp2 = Path(__file__).read_text(encoding="utf-8")
-    chk('locals().get("fb")' not in _srcp2,
-        "BD P0-2: 동결 clean slab 판정에 `locals().get(\"fb\")` 를 쓰지 않는다 "
-        "— 그 변수는 이 지점보다 뒤에서 정의된다 (두 판을 헛돌린 원인)")
+    # ⚠ 이 시험의 **자기 주석**이 그 문자열을 담으면 자기 자신을 잡는다 —
+    #   토큰을 쪼개 만든다 (같은 함정을 reader 스캔에서 이미 한 번 맞았다).
+    #  ⚠ **주석은 빼고** 본다 — 이 실수를 설명하는 주석이 소스에 남아 있고,
+    #    그것까지 위반으로 세면 이력을 적을 수 없게 된다.
+    _BADPAT = "locals()." + "get(" + chr(34) + "fb" + chr(34) + ")"
+    _code2 = "\n".join(l for l in _srcp2.split("\n")
+                        if not l.strip().startswith("#"))
+    chk(_code2.count(_BADPAT) == 0,
+        "BD P0-2: 동결 clean slab 판정이 **뒤에서 정의되는 변수**를 locals 로 "
+        "찾지 않는다 (두 판을 헛돌린 원인)")
     chk('_frz_cs and _frz_cs.get("path")' in _srcp2
         and "cps = [_fp]" in _srcp2,
         "BD P0-2: 동결이 선언되면 `cps` 를 **동결본 하나**로 고정한다 (runs 트리를 "
