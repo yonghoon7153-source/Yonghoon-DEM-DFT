@@ -11197,7 +11197,10 @@ def test_a_dunder_named_indirectly_is_still_refused():
         msg = str(ei.value)
         # 옛 규칙(직접 문자열 상수)이 대신 잡으면 이 시험은 증명하는 것이
         # 없다 — **새 규칙**이 물었는지 못 박는다.
-        assert "감싸서" in msg and "fail-closed" in msg, (
+        # 56차 P0-9 로 규칙이 exact 상수 평가가 되면서, 값을 정할 수 없는
+        # 인자는 "계산해서" 쪽에서 먼저 멈춘다. 둘 다 55·56차 규칙이고
+        # 54차의 "문자열로 건넨다" 와는 구별된다 — 그것을 못 박는다.
+        assert "fail-closed" in msg and "문자열로" not in msg, (
             f"{form} 를 거부한 것이 새 규칙이 아니다: {msg}")
 
 
@@ -11353,3 +11356,221 @@ def test_coverage_is_bound_to_the_tree_it_actually_tested(tmp_path):
                     encoding="utf-8")
     assert mr._assert_trees_are_current([str(good)]) == 1, (
         "어느 코드에 대한 증거인지 말하지 않는 조각이 통과했다")
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# 56차 — 게이트 55 반례
+# ─────────────────────────────────────────────────────────────────────────────
+
+def test_the_evidence_tree_digest_does_not_depend_on_the_checkout_path(tmp_path):
+    """★ 56차 P1-1 — 증거 digest 가 **checkout 절대경로**에 묶여 있었다.
+
+    `_tested_tree_digest()` 가 `str(f)` 를 해시하는데 `f` 는 절대경로다. 그래서
+    같은 커밋을 다른 자리에 checkout 하면 커밋된 증거가 그 자리에서 거부된다.
+    리뷰어 실측 (clean checkout):
+
+        recorded f61a89835586cde9… · current ee7a9dcca5876f7d…
+        check_coverage_rc=1 · "증거가 가리키는 트리가 지금 트리와 다르다"
+
+    같은 바이트를 symlink 경로로 읽어도 다른 digest 가 나왔다. 증거가
+    **어디에 놓였는가**에 반응하면 그것은 코드의 identity 가 아니다.
+    """
+    mr = _mr()
+    real = mr.ROOT
+    base = mr._tested_tree_digest()
+
+    alias = tmp_path / "checkout_alias"
+    alias.symlink_to(real, target_is_directory=True)
+    saved = (mr.ROOT, mr.PRESERVE, mr.RP, mr.MR)
+    try:
+        mr.ROOT = alias
+        mr.PRESERVE = alias / "tools" / "preserve.py"
+        mr.RP = alias / "docs" / "22p_gap" / "row_projection.py"
+        mr.MR = alias / "docs" / "22p_gap" / "mutation_replay.py"
+        aliased = mr._tested_tree_digest()
+    finally:
+        mr.ROOT, mr.PRESERVE, mr.RP, mr.MR = saved
+
+    assert aliased == base, (
+        f"같은 바이트를 다른 경로로 읽었더니 digest 가 달라졌다 "
+        f"({base[:16]} ≠ {aliased[:16]}) — 증거가 checkout 위치에 묶이면 "
+        "커밋된 조각을 다른 자리에서 검증할 수 없다")
+
+
+def _frozen_alias_repo(tmp_path, rp):
+    """frozen cohort(gF)와 active cohort(gA)를 가진 임시 저장소."""
+    import yaml as _y
+
+    two = _y.safe_load(_one_cohort_ledger("gF"))
+    two["cohorts"].append({**two["cohorts"][0], "cohort_id": "gA",
+                           "dir": "docs/22p_gap/coh2"})
+    rp.REPO = _ledger_repo(tmp_path, _y.safe_dump(two, allow_unicode=True,
+                                                  sort_keys=False))
+    frozen = rp.REPO / "docs" / "22p_gap" / "coh"
+    active = rp.REPO / "docs" / "22p_gap" / "coh2"
+    active.mkdir(parents=True, exist_ok=True)
+    (frozen / "child").mkdir(parents=True, exist_ok=True)
+    rp._append_lifecycle("gF", None, "active", "첫 게시")
+    rp.freeze_cohort("gF", "연구 종료")
+    assert (frozen / rp.FROZEN_MARKER).is_file(), "시험 전제가 깨졌다"
+    return frozen, active
+
+
+def _bind(src, dst):
+    import subprocess
+    return subprocess.run(["mount", "--bind", str(src), str(dst)],
+                          capture_output=True).returncode == 0
+
+
+def _umount(p):
+    import subprocess
+    subprocess.run(["umount", str(p)], capture_output=True)
+
+
+def test_a_frozen_alias_whose_path_has_a_space_is_not_writable(tmp_path):
+    """★ 56차 P0-5 — mountinfo 의 **octal escape** 를 안 풀었다.
+
+    Linux mountinfo 는 공백을 `\\040` 으로 적는다. 55차는 field 를 그대로
+    `Path` 에 넣었으므로 공백이 든 alias 는 어떤 mount 와도 매치되지 않았고,
+    guard 가 그냥 통과했다 (리뷰어 실측: `guard PASSED · published true ·
+    CURRENT_inside_frozen_child true`).
+    """
+    import os.path
+
+    if not os.path.isfile("/proc/self/mountinfo"):
+        pytest.skip("mountinfo 가 없는 환경")
+    rp = _fresh_rp()
+    frozen, active = _frozen_alias_repo(tmp_path, rp)
+    alias = active / "a b"                      # ← 공백
+    alias.mkdir(parents=True, exist_ok=True)
+    if not _bind(frozen / "child", alias):
+        pytest.skip("bind mount 를 만들 수 없다")
+    try:
+        with pytest.raises(SystemExit) as ei:
+            rp._assert_writable(alias)
+        assert "frozen" in str(ei.value) or "얼" in str(ei.value), str(ei.value)
+    finally:
+        _umount(alias)
+
+
+def test_the_deepest_mount_wins_when_binds_overlap(tmp_path):
+    """★ 56차 P0-6 — **첫 row** 를 고르고 `break` 했다.
+
+    바깥 조상 mount 를 먼저 만나면 경로가 그쪽으로 바뀌고, 실제 대상인 더 깊은
+    mount 는 다시 매치할 수 없다 (리뷰어 실측: `translation_chose_benign_outer
+    _source true · published true`). 매 단계에서 **가장 깊은** mountpoint 를
+    골라야 한다.
+    """
+    import os.path
+
+    if not os.path.isfile("/proc/self/mountinfo"):
+        pytest.skip("mountinfo 가 없는 환경")
+    rp = _fresh_rp()
+    frozen, active = _frozen_alias_repo(tmp_path, rp)
+    benign = tmp_path / "benign"
+    (benign / "inner").mkdir(parents=True, exist_ok=True)
+    inner = active / "inner"
+    inner.mkdir(parents=True, exist_ok=True)
+    if not _bind(benign, active):                 # 바깥
+        pytest.skip("bind mount 를 만들 수 없다")
+    try:
+        if not _bind(frozen / "child", inner):    # 안쪽 (더 깊다)
+            pytest.skip("중첩 bind 를 만들 수 없다")
+        try:
+            with pytest.raises(SystemExit) as ei:
+                rp._assert_writable(inner)
+            assert "frozen" in str(ei.value) or "얼" in str(ei.value), str(ei.value)
+        finally:
+            _umount(inner)
+    finally:
+        _umount(active)
+
+
+def test_a_bind_from_a_separate_filesystem_is_resolved_by_the_mount_graph(tmp_path):
+    """★ 56차 P0-7 — mountinfo 의 `root` 를 **namespace 절대경로**로 오해했다.
+
+    별도 filesystem(tmpfs)의 child 를 bind 하면 `root=/child` 인데 그것은 **그
+    filesystem 안의** 경로다. 55차는 그것을 namespace 의 `/child` 로 읽었고,
+    엉뚱한 곳으로 풀린 뒤 guard 가 통과했다 (리뷰어 실측:
+    `translation_is_filesystem_relative_root true · published true`).
+
+    그러므로 `(mountpoint, root)` 문자열 치환으로는 닫히지 않는다 —
+    major:minor 를 들고 **같은 filesystem 을 보여 주는 창**으로 되돌려야 한다.
+    """
+    import os.path
+    import subprocess
+
+    if not os.path.isfile("/proc/self/mountinfo"):
+        pytest.skip("mountinfo 가 없는 환경")
+    rp = _fresh_rp()
+    frozen, active = _frozen_alias_repo(tmp_path, rp)
+
+    # frozen tree 를 별도 filesystem 위에 올린다
+    if subprocess.run(["mount", "-t", "tmpfs", "tmpfs", str(frozen)],
+                      capture_output=True).returncode != 0:
+        pytest.skip("tmpfs 를 붙일 수 없다")
+    try:
+        (frozen / "child").mkdir(parents=True, exist_ok=True)
+        rp._write_frozen_marker(frozen, "gF", "x" * 64)
+        alias = active / "alias"
+        alias.mkdir(parents=True, exist_ok=True)
+        if not _bind(frozen / "child", alias):
+            pytest.skip("bind mount 를 만들 수 없다")
+        try:
+            with pytest.raises(SystemExit) as ei:
+                rp._assert_writable(alias)
+            assert "frozen" in str(ei.value) or "얼" in str(ei.value), str(ei.value)
+        finally:
+            _umount(alias)
+    finally:
+        _umount(frozen)
+
+
+def test_module_effects_are_seeded_in_every_crossed_module():
+    """★ 56차 P0-8 — `MODULE_EFFECTS` 를 **primary module 에만** seed 했다.
+
+    55차는 `row_projection.py` 의 `defs` 에만 넣었다. 건너간 `src.scoring` 의
+    정의는 `sdefs` 에 있지만 `("sc", MODULE_EFFECTS)` 는 시작점에 없었다.
+    리뷰어 실측: crossed module 의 alias 효과가 값을 1 → 9 로 바꿔도
+    `digest_a == digest_b`.
+
+    닫힘에 들어오는 **모든** module 을 같은 모델로 다뤄야 한다 — primary 만의
+    특별 규칙이면 같은 형태가 다시 생긴다.
+    """
+    rp = _rp()
+    body = "def score_canonical(df):\n    return external(df)\n"
+    src = _mini_producer(rp, body, extra="from src.scoring import external\n")
+    sc = ("BOX = {}\nALIAS = BOX\nALIAS.update(value=1)\n"
+          "def external(df):\n    return BOX['value']\n")
+    base = rp._producer_semantic_over(src, sc)
+    moved = rp._producer_semantic_over(src, sc.replace("value=1", "value=9", 1))
+    assert moved != base, (
+        "건너간 module 의 module 효과가 계산 값을 바꿨는데 producer digest 가 "
+        "그대로다 — seed 가 primary module 에만 있다")
+
+
+def test_an_assembled_dunder_name_is_refused():
+    """★ 56차 P0-9 — 이름을 **조립**하면 정적 문자열 수집이 못 본다.
+
+    `_static_strings()` 는 AST 안의 조각과 단순 상수만 모으고 식의 **값**을
+    계산하지 않는다. 리뷰어 실측:
+
+        KEY = "__" + "globals__"
+        getattr(score_canonical, KEY)["SECRET"]
+        → accepted=True · digest 동일 · result 1 → 9
+
+    조각을 **찾는** 검사는 닫힌 규칙이 아니다. 허용하는 것은 exact 하게
+    계산되는 상수식뿐이고, 계산할 수 없으면 멈춘다.
+    """
+    rp = _rp()
+    sc = (_REPO / "src" / "scoring.py").read_text(encoding="utf-8")
+    for extra, note in (
+            ('KEY = "__" + "globals__"\n', "문자열 덧셈"),
+            ('_A = "globals__"\nKEY = f"__{_A}"\n', "f-string 조립"),
+            ('KEY = "".join(["__", "globals__"])\n', "join 조립")):
+        body = ("def score_canonical(df):\n"
+                "    return getattr(score_canonical, KEY)['SECRET']\n")
+        with pytest.raises(SystemExit) as ei:
+            rp._producer_semantic_over(_mini_producer(rp, body, extra=extra), sc)
+        assert "fail-closed" in str(ei.value) or "감싸서" in str(ei.value), (
+            f"{note} 를 거부하지 않는다: {ei.value}")

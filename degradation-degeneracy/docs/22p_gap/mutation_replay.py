@@ -1014,10 +1014,14 @@ MULTI = [
     # ★ P0-5① — module 효과의 뿌리는 **두 닫힘 walk 의 seed** 에 함께 있다.
     #   하나만 되돌리면 다른 쪽이 여전히 값을 담아 digest 를 움직인다.
     ("module-effects-are-an-unconditional-root", RP, [
-        ("    if MODULE_EFFECTS in defs:                            # 55차 P0-5①\n"
-         '        todo.append(("rp", MODULE_EFFECTS))',
+        ("    if MODULE_EFFECTS in defs:\n"
+         '        todo.append(("rp", MODULE_EFFECTS))\n'
+         "    if MODULE_EFFECTS in sdefs:\n"
+         '        todo.append(("sc", MODULE_EFFECTS))',
          "    if False:\n"
-         '        todo.append(("rp", MODULE_EFFECTS))'),
+         '        todo.append(("rp", MODULE_EFFECTS))\n'
+         "    if False:\n"
+         '        todo.append(("sc", MODULE_EFFECTS))'),
         ("    if MODULE_EFFECTS in defs:                            # 55차 P0-5①\n"
          "        todo.append(MODULE_EFFECTS)",
          "    if False:\n"
@@ -1025,8 +1029,8 @@ MULTI = [
      ], "module_effect_through_an_alias_still_moves_the_producer_digest"),
     # ★ P0-5② — 감싼 이름을 정적으로 읽는 자리.
     ("wrapped-dunder-names-are-refused", RP, [
-        ("                    for nm in _static_strings(arg, consts):",
-         "                    for nm in []:"),
+        ("                    ok, val = _exact_const(arg, consts)",
+         "                    ok, val = (True, None)"),
         ("        elif isinstance(sub, ast.Name) and consts and sub.id in consts:\n"
          "            out.append(consts[sub.id])",
          "        elif False:\n"
@@ -3021,14 +3025,27 @@ def _tested_tree_digest() -> str:
     for sub in ("src", "tools", "tests"):
         files.update((ROOT / sub).rglob("*.py"))
     files = {f for f in files if "__pycache__" not in str(f)}
-    h = hashlib.sha256()
-    for f in sorted(files, key=lambda x: str(x)):
-        rel = pathlib.Path(f)
+    # ★ 56차 P1-1 — 이름은 **저장소 상대 POSIX 경로**로 해시한다. 55차는
+    #   `str(f)`(절대경로)를 넣었고, 그래서 같은 커밋을 다른 자리에 checkout
+    #   하면 커밋된 증거가 그 자리에서 거부됐다 (리뷰어 실측: clean checkout
+    #   에서 `check_coverage_rc=1`). 증거가 **어디에 놓였는가**에 반응하면
+    #   그것은 코드의 identity 가 아니다.
+    root = pathlib.Path(ROOT)
+    named = []
+    for f in files:
+        fp = pathlib.Path(f)
         try:
-            body = rel.read_bytes()
+            key = fp.relative_to(root).as_posix()
+        except ValueError:                                # pragma: no cover
+            key = fp.name
+        named.append((key, fp))
+    h = hashlib.sha256()
+    for key, fp in sorted(named, key=lambda kv: kv[0]):
+        try:
+            body = fp.read_bytes()
         except OSError:
             body = b"<missing>"
-        h.update(str(rel).encode("utf-8") + b"\0")
+        h.update(key.encode("utf-8") + b"\0")
         h.update(hashlib.sha256(body).digest())
     return h.hexdigest()
 

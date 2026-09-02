@@ -543,8 +543,11 @@ def _ast_canon(node) -> str:
 
     if isinstance(node, ast.AST):
         parts = []
-        for f in node._fields:
-            v = getattr(node, f, None)
+        # ★ 56차 P0-9 — 여기서 동적 `getattr` 을 쓰지 않는다. 이름 인자를
+        #   exact 하게 계산할 수 없으면 거부하는 규칙을 걸려면, producer
+        #   자신이 그 문법을 쓰지 않아야 한다 (55차엔 이것 때문에 규칙을
+        #   좁혔고, 그 틈으로 조립된 이름이 들어왔다).
+        for f, v in ast.iter_fields(node):
             # ★ 50차 P0 — PEP 701(3.12) 이 중첩 format spec 끝에 붙이는 빈
             #   조각을 버린다. 같은 뜻인데 3.11·3.13 에는 없다.
             if isinstance(node, ast.JoinedStr) and f == "values" \
@@ -762,8 +765,12 @@ def _module_defs(src: str) -> dict:
                     if getattr(h, "name", None):
                         _bind(h.name, here)
                     _visit(h.body, here)
-                for attr in ("body", "orelse", "finalbody"):
-                    _visit(getattr(node, attr, ()) or (), here)
+                # ★ 56차 P0-9 — 루프 변수로 이름을 푸는 대신 **적어 놓는다**.
+                #   규칙을 완전히 닫으려면 producer 자신이 그 문법을 안 써야
+                #   한다 (55차엔 이런 자리 때문에 규칙을 좁혔다).
+                _visit(getattr(node, "body", ()) or (), here)
+                _visit(getattr(node, "orelse", ()) or (), here)
+                _visit(getattr(node, "finalbody", ()) or (), here)
                 for case in getattr(node, "cases", ()) or ():
                     for name in _match_capture_names(case.pattern):
                         _bind(name, here)
@@ -911,6 +918,74 @@ def _source_reflection_locals(node) -> set:
 _DYNAMIC_ON_NAMESPACE = ("globals", "locals", "vars", "getattr", "setattr")
 
 
+def _exact_const(node, consts: dict | None = None):
+    """식의 값을 **정확히** 계산한다 (56차 P0-9).
+
+    55차는 AST 안의 문자열 **조각을 모았다**. 조각을 찾는 검사는 닫힌 규칙이
+    아니다 — 리뷰어는 `"__" + "globals__"` · f-string · `join` 으로 그대로
+    통과했다 (실측: digest 동일 · 1 → 9).
+
+    그래서 값을 계산한다: 리터럴 · module-level 문자열 상수 · 그 위의 덧셈 ·
+    f-string · `str.join` 만 닫힌 규칙으로 편다. 그 밖이면 `(False, None)` 이고
+    caller 가 멈춘다.
+    """
+    import ast
+
+    consts = consts or {}
+    if isinstance(node, ast.Constant):
+        return True, node.value
+    if isinstance(node, ast.Name):
+        if node.id in consts:
+            return True, consts[node.id]
+        return False, None
+    if isinstance(node, ast.Starred):
+        return _exact_const(node.value, consts)
+    if isinstance(node, (ast.List, ast.Tuple)):
+        vals = []
+        for e in node.elts:
+            ok, v = _exact_const(e, consts)
+            if not ok:
+                return False, None
+            vals.append(v)
+        return True, vals
+    if isinstance(node, ast.Subscript):
+        ok, base = _exact_const(node.value, consts)
+        oki, idx = _exact_const(node.slice, consts)
+        if ok and oki and isinstance(base, list) and isinstance(idx, int):
+            if -len(base) <= idx < len(base):
+                return True, base[idx]
+        return False, None
+    if isinstance(node, ast.BinOp) and isinstance(node.op, ast.Add):
+        okl, l = _exact_const(node.left, consts)
+        okr, r = _exact_const(node.right, consts)
+        if okl and okr and isinstance(l, str) and isinstance(r, str):
+            return True, l + r
+        return False, None
+    if isinstance(node, ast.JoinedStr):
+        out = []
+        for part in node.values:
+            if isinstance(part, ast.Constant) and isinstance(part.value, str):
+                out.append(part.value)
+            elif isinstance(part, ast.FormattedValue) \
+                    and part.format_spec is None and part.conversion in (-1, None):
+                ok, v = _exact_const(part.value, consts)
+                if not ok or not isinstance(v, str):
+                    return False, None
+                out.append(v)
+            else:
+                return False, None
+        return True, "".join(out)
+    if isinstance(node, ast.Call) and isinstance(node.func, ast.Attribute) \
+            and node.func.attr == "join" and len(node.args) == 1:
+        oks, sep = _exact_const(node.func.value, consts)
+        oka, items = _exact_const(node.args[0], consts)
+        if oks and oka and isinstance(sep, str) and isinstance(items, list) \
+                and all(isinstance(x, str) for x in items):
+            return True, sep.join(items)
+        return False, None
+    return False, None
+
+
 def _static_strings(node, consts: dict | None = None) -> list:
     """식 안에서 **정적으로 읽히는** 문자열들 (55차 P0-5②).
 
@@ -988,19 +1063,39 @@ def _assert_no_dynamic_resolution(node, where: str, mods: set,
                      else sub.func.attr if isinstance(sub.func, ast.Attribute)
                      else None)
             if fname in _DYNAMIC_ON_NAMESPACE:
-                for arg in list(sub.args) + [k.value for k in sub.keywords]:
+                # **이름 인자만** 본다. `getattr(obj, name, default)` 에서 이름은
+                # 두 번째다 — 대상 객체까지 상수로 요구하면 producer 자신의
+                # 정상 코드가 먼저 걸린다 (실측했다).
+                if fname not in ("getattr", "setattr"):
+                    name_args = []
+                elif any(isinstance(a, ast.Starred) for a in sub.args):
+                    # `*[...]` 이 있으면 몇 번째가 이름인지 셀 수 없다 — 전부 본다
+                    name_args = list(sub.args)
+                else:
+                    name_args = sub.args[1:2]
+                for arg in name_args:
                     # 직접 문자열 상수는 **54차 규칙**이 아래에서 잡는다 —
                     # 두 규칙이 같은 자리를 물면 어느 쪽이 사는지 알 수 없다.
                     if isinstance(arg, ast.Constant):
                         continue
-                    for nm in _static_strings(arg, consts):
-                        if (_is_dunder(nm) and nm not in _DUNDER_ALLOWED) \
-                                or nm in _SOURCE_REFLECTION:
-                            raise SystemExit(
-                                f"✗ producer 닫힘 안에서 이름을 **감싸서** "
-                                f"건넨다: {where} 의 `{fname}(...)` 안 {nm!r} — "
-                                "`*[...]`·`[...][0]`·module 상수는 한 겹일 뿐 "
-                                "같은 계산이고 같은 규칙을 받는다 (fail-closed)")
+                    ok, val = _exact_const(arg, consts)
+                    if not ok:
+                        raise SystemExit(
+                            f"✗ producer 닫힘 안에서 이름을 **계산해서** "
+                            f"건넨다: {where} 의 `{fname}(...)` — 이 식의 값을 "
+                            "정적으로 정할 수 없으면 무엇을 여는지 답할 수 "
+                            "없다. 조각을 찾는 검사는 닫힌 규칙이 아니다 "
+                            "(fail-closed)")
+                    cand = val if isinstance(val, list) else [val]
+                    for val in [x for x in cand if isinstance(x, str)]:
+                      if ((_is_dunder(val) and val not in _DUNDER_ALLOWED)
+                            or val in _SOURCE_REFLECTION):
+                        raise SystemExit(
+                            f"✗ producer 닫힘 안에서 이름을 **감싸서** "
+                            f"건넨다: {where} 의 `{fname}(...)` 값 {val!r} — "
+                            "덧셈·f-string·join·`*[...]` 은 한 겹일 뿐 같은 "
+                            "계산이고 같은 규칙을 받는다 (fail-closed)")
+
             for arg in list(sub.args) + [k.value for k in sub.keywords]:
                 if not (isinstance(arg, ast.Constant)
                         and isinstance(arg.value, str)):
@@ -1113,8 +1208,13 @@ def _producer_closure(src: str, scoring_src: str | None = None) -> dict[str, str
 
     out: dict[str, str] = {}
     todo = [("rp", x) for x in _COMPUTE_NAMES]
-    if MODULE_EFFECTS in defs:                            # 55차 P0-5①
+    # ★ 56차 P0-8 — **모든 module** 을 같은 모델로 다룬다. 55차는 primary 만
+    #   seed 했고, 건너간 `src.scoring` 의 module 효과는 닫힘 밖이었다
+    #   (리뷰어 실측: alias 효과가 값을 1 → 9 로 바꿔도 digest 동일).
+    if MODULE_EFFECTS in defs:
         todo.append(("rp", MODULE_EFFECTS))
+    if MODULE_EFFECTS in sdefs:
+        todo.append(("sc", MODULE_EFFECTS))
     while todo:
         kind, name = todo.pop()
         key = name if kind == "rp" else f"src.scoring:{name}"
@@ -3879,58 +3979,113 @@ def _frozen_cohort_dirs() -> dict[str, Path]:
     return out
 
 
-def _mount_roots() -> list:
-    """이 namespace 의 mount 목록 — `(mountpoint, root)` (55차 P0-4).
+#: mountinfo 가 경로에 쓰는 octal escape (`proc_pid_mountinfo(5)`) — 56차 P0-5.
+_MOUNTINFO_ESC = {"040": " ", "011": "\t", "012": "\n", "134": "\\"}
 
-    bind mount 는 **새 이름**을 만들지만 pathname 으로는 보이지 않는다. 이
-    기계에서 실측했다::
 
-        os.path.ismount(alias) = False   (같은 파일시스템 bind 는 안 잡힌다)
-        os.path.realpath(alias) = alias  (bind 는 안 풀린다)
-        alias 의 st_ino == 원본의 st_ino (같은 tree 다)
+def _mountinfo_unescape(raw: str) -> str:
+    """`\\040` 류를 되돌린다 (56차 P0-5).
 
-    `/proc/self/mountinfo` 는 mountpoint 와 **그 mount 가 어느 경로를
-    담고 있는지**(root)를 함께 준다. 이름이 아니라 mount 관계를 읽는다.
+    55차는 field 를 그대로 `Path` 에 넣었고, 공백이 든 alias 는 어떤 mount 와도
+    매치되지 않아 guard 가 통과했다 (리뷰어 실측: `published true`).
     """
-    out = []
+    out, i = [], 0
+    while i < len(raw):
+        if raw[i] == "\\" and raw[i + 1:i + 4] in _MOUNTINFO_ESC:
+            out.append(_MOUNTINFO_ESC[raw[i + 1:i + 4]])
+            i += 4
+        else:
+            out.append(raw[i])
+            i += 1
+    return "".join(out)
+
+
+def _mount_table() -> list:
+    """이 namespace 의 mount **그래프** (56차 P0-5·6·7).
+
+    55차는 `(mountpoint, root)` 문자열 쌍만 들고 첫 매치를 골랐다. 리뷰어는 그
+    모델의 세 축을 전부 쳤다:
+
+      · 공백 경로가 `\\040` 이라 매치되지 않았다 (P0-5)
+      · 겹친 bind 에서 **바깥** 조상을 먼저 골라 더 깊은 mount 를 잃었다 (P0-6)
+      · `root` 는 **그 filesystem 안의** 경로인데 namespace 절대경로로 읽었다
+        (P0-7 — 별도 tmpfs 의 child 를 bind 하면 `root=/child` 다)
+
+    그래서 major:minor 와 mount/parent ID 를 함께 들고 다닌다. 읽을 수 없거나
+    형식이 어긋나면 **비어 있다고 하지 않고** 예외로 알린다 — 알 수 없는 것을
+    "mount 가 없다" 로 바꾸면 그것이 fail-open 이다.
+    """
     try:
         body = Path("/proc/self/mountinfo").read_text(encoding="utf-8")
-    except OSError:
-        return out
+    except OSError as exc:
+        raise SystemExit(
+            f"✗ mount 관계를 읽을 수 없다 ({exc}) — 목적지가 얼린 tree 의 "
+            "별칭인지 답할 수 없으므로 게시하지 않는다 (fail-closed)")
+    out = []
     for ln in body.splitlines():
+        if not ln.strip():
+            continue
         f = ln.split()
-        if len(f) >= 5:
-            out.append((f[4], f[3]))
+        if len(f) < 7:
+            raise SystemExit(f"✗ mountinfo 행을 해석할 수 없다: {ln[:120]!r}")
+        out.append({"id": f[0], "parent": f[1], "dev": f[2],
+                    "root": _mountinfo_unescape(f[3]),
+                    "mp": _mountinfo_unescape(f[4])})
     return out
 
 
-def _through_bind_mounts(dest: Path) -> Path:
-    """목적지를 **mount 관계로** 푼 실제 경로 (55차 P0-4).
+def _deepest_mount_for(path: Path, table) -> dict | None:
+    """`path` 를 담고 있는 **가장 깊은** mount (56차 P0-6)."""
+    best = None
+    for m in table:
+        mp = Path(m["mp"])
+        if path == mp or mp in path.parents:
+            if best is None or len(mp.parts) > len(Path(best["mp"]).parts):
+                best = m
+    return best
 
-    `dest` 나 그 조상이 bind mountpoint 이면 그 mount 의 root 로 갈아 끼운다.
-    풀 것이 없으면 그대로 돌려준다. 겹친 mount 도 풀리도록 더 안 바뀔 때까지
-    되풀이한다 (횟수는 제한한다 — 순환을 만들 수 있기 때문이다).
+
+def _through_bind_mounts(dest: Path) -> Path:
+    """목적지를 **mount 그래프로** 푼 실제 경로 (55차 P0-4 · 56차 P0-5·6·7).
+
+    한 걸음은 두 단계다.
+
+    1. `dest` 를 담는 가장 깊은 mount 를 찾아 **filesystem 안의** 경로를 얻는다
+       (`root` + mountpoint 이후 나머지).
+    2. 같은 major:minor 를 가진 mount 중 그 filesystem 경로를 담는 것을 찾아
+       namespace 에서 보이는 이름으로 되돌린다. 후보가 여럿이면 `root` 가 가장
+       짧은 것(그 filesystem 을 가장 넓게 보여 주는 창)을 고른다.
+
+    되돌릴 창이 **없으면** 게시를 거부한다 — 목적지가 어디인지 답하지 못한
+    채로 쓰는 것보다 멈추는 편이 낫다.
     """
     cur = Path(dest).resolve()
-    mounts = _mount_roots()
-    if not mounts:
-        return cur
-    for _ in range(16):
-        moved = False
-        for mp, root in mounts:
-            try:
-                mpp = Path(mp).resolve()
-            except OSError:                                # pragma: no cover
-                continue
-            if root in ("/", "") or mpp == cur and root == str(cur):
-                continue
-            if cur == mpp or mpp in cur.parents:
-                cur = Path(root) / cur.relative_to(mpp)
-                moved = True
-                break
-        if not moved:
-            break
-    return cur
+    table = _mount_table()
+    for _ in range(32):
+        m = _deepest_mount_for(cur, table)
+        if m is None:
+            return cur
+        rel = cur.relative_to(Path(m["mp"]))
+        fs_path = Path(m["root"]) / rel if str(rel) != "." else Path(m["root"])
+        # 같은 filesystem 을 보여 주는 창들 중 이 경로를 담는 것
+        wins = [c for c in table
+                if c["dev"] == m["dev"]
+                and (Path(c["root"]) == fs_path
+                     or Path(c["root"]) in fs_path.parents)]
+        if not wins:
+            raise SystemExit(
+                f"✗ 목적지가 어느 이름으로도 보이지 않는다 ({dest} → "
+                f"dev {m['dev']} 의 {fs_path}) — 얼린 tree 의 별칭인지 답할 수 "
+                "없으므로 게시하지 않는다 (fail-closed)")
+        win = min(wins, key=lambda c: len(Path(c["root"]).parts))
+        sub = fs_path.relative_to(Path(win["root"]))
+        nxt = Path(win["mp"]) / sub if str(sub) != "." else Path(win["mp"])
+        if nxt == cur:
+            return cur
+        cur = nxt
+    raise SystemExit(
+        f"✗ mount 해석이 {dest} 에서 끝나지 않는다 — 순환일 수 있으므로 "
+        "게시하지 않는다 (fail-closed)")
 
 
 def _assert_writable(dest: Path) -> None:
