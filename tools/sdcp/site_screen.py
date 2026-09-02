@@ -190,12 +190,26 @@ def counts_of(atoms: Atoms) -> Dict[str, int]:
     return dict(Counter(atoms.get_chemical_symbols()))
 
 
+#: ⛔ 회신 BC P0-1 (2026-09-02) — 이 모듈이 **읽은 입력**을 부르는 쪽이 알 수 있게
+#:   남긴다. 생성기의 provenance 폐포가 이 목록을 가져간다. 여기 없으면 그 입력은
+#:   폐포 밖이고, clean git tree 로도 덮이지 않는다 (repo 밖 파일일 수 있다).
+INPUTS_READ: "list[str]" = []
+
+
+def _note_input(path):
+    p = str(path)
+    if p not in INPUTS_READ:
+        INPUTS_READ.append(p)
+    return path
+
+
 def load_slab() -> Atoms:
     if not SLAB["path"].is_file():
         sys.exit(f"⛔ 슬랩이 없다: {SLAB['path']}")
     got = sha256(SLAB["path"])
     if got != SLAB["sha256"]:
         sys.exit(f"⛔ 슬랩 sha256 불일치\n   기대 {SLAB['sha256']}\n   실제 {got}")
+    _note_input(SLAB["path"])
     return read(SLAB["path"])
 
 
@@ -207,6 +221,7 @@ def load_fragment(name: str) -> Tuple[Optional[Atoms], Dict[str, Any]]:
         return None, {"status": "MISSING", "path": str(p)}
     mol = read(p)
     got = sha256(p)
+    _note_input(p)                       # 회신 BC P0-1
     info = {"status": "OK", "path": str(p), "sha256": got, "counts": counts_of(mol)}
     if spec["sha256"] and got != spec["sha256"]:
         info["status"] = "SHA_MISMATCH"

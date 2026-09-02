@@ -255,6 +255,62 @@ def _prov_git(root, rels):
     return st
 
 
+# ⛔⛔ 회신 BC P0-2 (2026-09-02) — **모듈 수준으로 뺀다.** 종전엔 생성기 안 중첩
+#   함수라 시험이 실물 판독기를 부를 수 없었고, "digest 를 재계산하는가" 를 문자열
+#   검사로밖에 못 봤다. 검사기가 시험 밖에 있으면 그것은 검사가 아니다.
+#: C-12 protocol 정본 경로 — 자세 역할 규칙(W0·분류)의 **비준된 출처**.
+#:  ⚠ selftest 가 픽스처로 갈아 끼운다 (회신 BC P0-4).
+C12_PROTOCOL = "db/properties/sdcp_c12_protocol_2026_08_30.json"
+#: 자세 파일 → 그 파일의 규칙이 든 protocol. **selftest 전용**이다 (production 은
+#:  비어 있고 `C12_PROTOCOL` 하나를 쓴다). 픽스처가 여러 개일 때 전역 하나를 돌려
+#:  쓰면 **호출 순서에 따라** 엉뚱한 protocol 을 보게 된다 (2026-09-02 실측).
+C12_PROTOCOL_BY_POSE: "dict" = {}
+
+
+def ref_doc_state(path):
+    """참조 문서의 비준 상태 → dict. **`content_digest` 를 재계산해 대조한다.**
+
+    ⛔ 못 하는 것: 그 문서의 *내용*이 옳은지는 안 본다 — 비준 결박만 본다.
+    """
+    _p = Path(path)
+    if not _p.is_file():
+        return {"status": None, "ratified": False, "why": "파일 없음"}
+    try:
+        _j = json.loads(_p.read_text(encoding="utf-8"))
+    except Exception:                                        # noqa: BLE001
+        return {"status": None, "ratified": False, "why": "JSON 파싱 실패"}
+    # ⚠ 상태 칸 이름이 문서마다 다르다 — protocol 은 `지위` 에만 적혀 있다.
+    _st = _j.get("status") or _j.get("지위")
+    _rt = (_j.get("ratification") or {})
+    # ⛔ 회신 BB P0-4 — 폐기 표시가 `지위` 같은 다른 칸에 있을 수 있다.
+    _sup = any(isinstance(v, str) and
+               ("SUPERSEDED" in v.upper() or "철회" in v or "폐기" in v)
+               for k, v in _j.items() if k in ("지위", "status", "state", "성격"))
+    # ⛔⛔ 회신 BC P0-2 — **digest 를 재계산한다.** 종전엔 상태 문자열과 role 만
+    #   보고 `ratified` 를 냈다. 비준을 받아 놓고 내용을 고친 문서가 그대로
+    #   통과했고, 그러면 digest 를 적어 둔 의미가 없다.
+    _dg = hashlib.sha256(
+        json.dumps({k: v for k, v in _j.items() if k != "ratification"},
+                   sort_keys=True, ensure_ascii=False).encode("utf-8")).hexdigest()
+    _rec = str(_rt.get("content_digest") or "").split(":")[-1]
+    _dg_ok = bool(_rec) and _rec == _dg
+    _ok = (_st in ("ratified", "active")
+           and _rt.get("state") == "ratified"
+           and _rt.get("role") == "scientific_owner"
+           and _dg_ok and not _sup)
+    return {"status": _st, "ratified": bool(_ok), "superseded": bool(_sup),
+            "has_ratification_record": bool(_rt),
+            "digest_recomputed": _dg, "digest_recorded": _rec or None,
+            "digest_matches": _dg_ok,
+            "why": (None if _ok else
+                    ("⛔ SUPERSEDED/철회 문서다" if _sup else
+                     "비준 기록에 `content_digest` 가 없다" if not _rec else
+                     "**비준 이후 내용이 바뀌었다** (기록 %s… ≠ 재계산 %s…)"
+                     % (_rec[:12], _dg[:12]) if not _dg_ok else
+                     "status=%r · 사람 비준 기록 %s — 이 문서가 정의하는 주장은 "
+                     "아직 닫히지 않았다" % (_st, "있음" if _rt else "**없음**")))}
+
+
 def provenance_closure(repo_root=None):
     """생성 계보 폐포 → dict. 생성기·import 모듈·등록된 입력의 SHA 와 git 상태.
 
@@ -281,14 +337,27 @@ def provenance_closure(repo_root=None):
         _f = getattr(_m, "__file__", None)
         if _f and str(Path(_f).resolve()).startswith(str(root)):
             _add(_f, "imported_module")
-    for _i in _PROV_INPUTS:                                # ③ 읽은 입력
+    # ⛔⛔ 회신 BC P0-1 (2026-09-02) — **`_prov_note` 를 정의만 하고 부르지 않았다.**
+    #   그래서 외부 clean slab·선택 XYZ·동결 JSON·기체 구조가 폐포 밖이었고,
+    #   clean git tree 는 **repo 밖 파일을 덮지 못한다**. 실제로 읽은 것을 다 가져온다.
+    for _i in list(_PROV_INPUTS) + list(getattr(SS, "INPUTS_READ", [])):
         _add(_i, "input")
+    # ⛔ 회신 BC P0-1 — repo 안 입력과 **repo 밖(외부) 입력**은 다른 보증을 받는다.
+    #   안쪽은 git 이 상태를 말해 주고, 바깥쪽은 **내용 SHA 밖에 없다**. 섞어 세면
+    #   "clean tree 니까 다 안전하다" 가 거짓 안심이 된다.
+    for k, v in files.items():
+        v["scope"] = "repo" if not os.path.isabs(k) else "external_content_bound"
     _rel_tracked = [k for k in files if not os.path.isabs(k)]
     _st = _prov_git(root, _rel_tracked)
     for k, v in files.items():
         v["git"] = _st.get(k, "unknown")
+    for k, v in files.items():
+        if v["scope"] == "external_content_bound":
+            v["git"] = "n/a (repo 밖 — 내용 SHA 로만 결박된다)"
     _dirty = sorted(k for k, v in files.items() if v["git"] in ("modified", "untracked"))
     _unk = sorted(k for k, v in files.items() if v["git"] == "unknown")
+    _ext = sorted(k for k, v in files.items()
+                  if v["scope"] == "external_content_bound")
     return {
         "schema": "bundle_provenance/v1",
         "repo_root": str(root),
@@ -296,7 +365,13 @@ def provenance_closure(repo_root=None):
         "n_files": len(files),
         "dirty": _dirty,
         "unknown_git_state": _unk,
+        "external_inputs": _ext,
+        "n_inputs": sum(1 for v in files.values() if v["kind"] == "input"),
         "clean": (not _dirty) and (not _unk),
+        "⚠_외부_입력": (None if not _ext else
+                        "repo 밖 입력 %d개는 git 이 상태를 말해 주지 않는다 — "
+                        "**내용 SHA 로만** 결박된다. clean tree 가 이것을 덮는다고 "
+                        "읽으면 안 된다 (회신 BC P0-1)." % len(_ext)),
         "scope": ("실행 중인 생성기 + repo 안에서 import 된 모든 모듈 + 생성기가 "
                   "`_prov_note` 로 등록한 입력. **등록하지 않은 입력은 여기 없다** — "
                   "그래서 이것은 '우리가 본 범위' 이지 절대적 폐포가 아니다."),
@@ -3693,6 +3768,26 @@ def citation_status(man, cl):
             b.append("참조 문서 SHA 결박 누락 %s"
                      % sorted(k for k, v in _rf.items() if v is None))
         _rs = _gb.get("reference_files_state")
+        # ⛔⛔ 회신 BC P0-2 — 리뷰어가 재현한 네 가지 fail-open 을 닫는다.
+        if isinstance(_rs, dict) and not _rs:
+            b.append("참조 문서 목록이 **비어 있다** — 무엇 아래 나온 결과인지 "
+                     "산출물이 말하지 못한다 (BC P0-2 · `all(빈 것)=True`)")
+        if isinstance(_rs, dict) and _rs:
+            if not [1 for v in _rs.values()
+                    if (v or {}).get("role", "claim") == "claim"]:
+                b.append("참조 문서에 `claim` 이 **하나도 없다** — 역할을 전부 "
+                         "`frozen_input` 으로 바꾸면 비준 요구가 사라진다 (BC P0-2)")
+            _nod = sorted(k.rsplit("/", 1)[-1] for k, v in _rs.items()
+                          if (v or {}).get("role", "claim") == "claim"
+                          and (v or {}).get("digest_matches") is None)
+            if _nod:
+                b.append("참조 문서의 **digest 재계산 결과가 없다** %s — 상태 "
+                         "문자열만 보고 비준을 인정하지 않는다 (BC P0-2)" % _nod)
+            _bd = sorted(k.rsplit("/", 1)[-1] for k, v in _rs.items()
+                         if (v or {}).get("digest_matches") is False)
+            if _bd:
+                b.append("참조 문서가 **비준 이후에 바뀌었다** %s — 재승인이 필요하다"
+                         % _bd)
         if _rs is None:
             b.append("참조 문서의 **비준 상태**가 번들에 없다 — 구판이다 (BB P0-2). "
                      "SHA 만으로는 그 내용이 비준됐는지 알 수 없다")
@@ -4248,8 +4343,12 @@ def _selftest_closure(chk):
                                    "recorded_digest": "sha256:" + "a" * 64,
                                    "ratification_base_commit": "b" * 40}},
              "reference_files_sha256": {"a.json": "0" * 64},
+             # ⚠ 회신 BC P0-2 — 픽스처가 **실물과 같은 모양**이어야 한다. 종전엔
+             #   digest 재계산 결과가 없어 그것을 안 보는 fail-open 을 시험이 못 잡았다
+             #   (같은 형태의 픽스처 사고가 이번이 세 번째다).
              "reference_files_state": {"a.json": {"status": "ratified",
-                                                  "ratified": True}}}
+                                                  "ratified": True, "role": "claim",
+                                                  "digest_matches": True}}}
     _PVOK = {"clean": True, "dirty": [], "unknown_git_state": [], "n_files": 12}
     _cs_ok = citation_status(
         {"potcar_identity_policy": {"mode": "require_attestation",
@@ -4357,19 +4456,43 @@ def _selftest_closure(chk):
     # ⛔음성 BB P0-2 — frozen_input 은 **비준을 요구하지 않지만 SHA 는 요구한다**
     _r = _cs(dict(_GBOK,
                   reference_files_sha256={"poses.json": "0" * 64},
-                  reference_files_state={"poses.json": {
-                      "status": None, "ratified": False, "role": "frozen_input"}}))
+                  reference_files_state={
+                      "a.json": {"status": "ratified", "ratified": True,
+                                 "role": "claim", "digest_matches": True},
+                      "poses.json": {"status": None, "ratified": False,
+                                     "role": "frozen_input"}}))
     chk(_r["manuscript_citable"] is True,
         "BB P0-2 양성: **동결 입력**(자세 집합 같은 데이터)은 비준 대상이 아니다 — "
         "SHA 결박이 있으면 통과한다 (데이터에 비준을 요구하면 고무도장이 된다)")
     _r = _cs(dict(_GBOK,
-                  reference_files_sha256={"poses.json": None},
-                  reference_files_state={"poses.json": {
-                      "status": None, "ratified": False, "role": "frozen_input"}}))
+                  reference_files_sha256={"a.json": "0" * 64, "poses.json": None},
+                  reference_files_state={
+                      "a.json": {"status": "ratified", "ratified": True,
+                                 "role": "claim", "digest_matches": True},
+                      "poses.json": {"status": None, "ratified": False,
+                                     "role": "frozen_input"}}))
     chk(_r["manuscript_citable"] is False
         and any("결박" in x for x in _r["blockers"]),
         "⛔음성 BB P0-2: 동결 입력의 **SHA 가 없으면** 불가다 — 비준 대신 요구하는 "
         "것이 그것이다")
+    # ══ 회신 BC P0-2 — 리뷰어가 재현한 네 가지 fail-open ═══════════════════
+    for _nm, _rsx, _need in (
+        ("빈 참조 집합", {}, "비어 있다"),
+        ("claim → frozen_input 역할 변경",
+         {"prereg.json": {"status": "proposed", "ratified": False,
+                          "role": "frozen_input"}}, "하나도 없다"),
+        ("digest_matches 누락",
+         {"a.json": {"status": "ratified", "ratified": True, "role": "claim"}},
+         "digest 재계산 결과가 없다"),
+        ("비준 후 내용 변경",
+         {"a.json": {"status": "ratified", "ratified": True, "role": "claim",
+                     "digest_matches": False}}, "비준 이후에 바뀌었다"),
+    ):
+        _r = _cs(dict(_GBOK, reference_files_state=_rsx))
+        chk(_r["manuscript_citable"] is False
+            and any(_need in x for x in _r["blockers"]),
+            "⛔음성 BC P0-2: **%s** 으로 인용 가능을 통과하던 경로를 닫았다" % _nm)
+
     _r = _cs(dict(_GBOK, reference_files_state={
         "old.json": {"status": None, "ratified": False, "superseded": True}}))
     chk(any("SUPERSEDED" in x for x in _r["blockers"]),
@@ -11823,7 +11946,47 @@ def build_bundle(a, ledger: Optional[Dict[str, Any]] = None) -> Path:
     #   ⛔ champion/cross 자동탐색을 **쓰지 않는다.** 자세는 동결 manifest 가 정하고,
     #      생성기는 그것만 읽는다 — 그래야 "사전등록된 집합" 이 실제로 강제된다.
     if getattr(a, "from_basins", None):
-        fb = json.load(open(a.from_basins))
+        fb = json.load(open(_prov_note(a.from_basins)))     # 회신 BC P0-1
+        # ⛔⛔ 회신 BC P0-4 (2026-09-02) — 자세 파일에 **규칙**(W0·역할 분류)이 들어
+        #   있었다. 규칙은 주장을 정의하므로 비준 대상이고, 데이터 파일에 두면 비준
+        #   없이 판정 기준이 바뀔 수 있다. 규칙 정본은 protocol 로 옮겼다.
+        #   ⇒ 여기서 ① W0 가 같은지 ② 자세 파일 SHA 가 비준 payload 의 값과 같은지
+        #     확인한다. 다르면 번들을 만들지 않는다.
+        # ⚠ selftest 는 자기 픽스처 protocol 을 가리켜야 한다 — 모듈 상수로 둔다
+        #   (`PIL_PREREG_S0` 와 같은 관례). production 에서는 언제나 db/properties 다.
+        _prot_p = Path(C12_PROTOCOL_BY_POSE.get(
+            str(Path(a.from_basins).resolve()), C12_PROTOCOL))
+        if not _prot_p.is_absolute():
+            _prot_p = Path(__file__).resolve().parent.parent.parent / _prot_p
+        _rule = {}
+        if _prot_p.is_file():
+            _rule = (json.loads(_prot_p.read_text(encoding="utf-8"))
+                     .get("⛔_자세_역할_규칙_2026_09_02") or {})
+        if not _rule:
+            raise SystemExit(
+                "⛔ protocol 에 자세 역할 규칙(`⛔_자세_역할_규칙_2026_09_02`)이 없다 "
+                "— 규칙이 비준 문서 밖에 있으면 비준 없이 판정 기준이 바뀐다 "
+                "(회신 BC P0-4).")
+        _w0_data = ((fb.get("params") or {}).get("W0_eV"))
+        if _w0_data != _rule.get("W0_eV"):
+            raise SystemExit(
+                "⛔ W0 가 다르다: 자세 파일 %r ≠ 비준 규칙 %r — 역할 분류가 비준한 "
+                "규칙과 다른 문턱으로 매겨졌다 (회신 BC P0-4)."
+                % (_w0_data, _rule.get("W0_eV")))
+        _pose_sha = hashlib.sha256(Path(a.from_basins).read_bytes()).hexdigest()
+        if _rule.get("c12_poses_sha256") != _pose_sha:
+            raise SystemExit(
+                "⛔ 자세 파일이 비준 payload 가 결박한 것과 다르다 (비준 %s… ≠ 현재 "
+                "%s…) — 데이터가 바뀌었으면 규칙을 다시 비준해야 한다 (회신 BC P0-4)."
+                % (str(_rule.get("c12_poses_sha256"))[:12], _pose_sha[:12]))
+        man["pose_rule_binding"] = {
+            "W0_eV": _rule.get("W0_eV"), "규칙": _rule.get("규칙"),
+            "c12_poses_sha256": _pose_sha,
+            "source_basins": _rule.get("source_basins"),
+            "⛔": ("역할 분류 규칙의 정본은 **protocol**(비준 대상)이다. 자세 파일은 "
+                   "데이터이고, 거기 적힌 W0·규칙은 적용 기록이지 정본이 아니다 "
+                   "(회신 BC P0-4)."),
+        }
         # 회신 X P0-2 — calibration 만 낸 것은 **최종 후보집합이 아니다.**
         #   이름을 그대로 두면 분석기가 primary 를 내고, audit 이 나중에 더 낮게
         #   나와도 "더 낮은 자세를 찾았다" 로 흡수돼 selector 실패가 사라진다.
@@ -12483,33 +12646,8 @@ def build_bundle(a, ledger: Optional[Dict[str, Any]] = None) -> Path:
     #   기록한 것은 "그 내용이 비준됐다" 는 증거가 되지 못한다.
     #   ⇒ 참조 문서의 **자기 status·비준 기록**을 따로 읽어 싣고, 종합 판정에 넣는다.
     def _ref_state(rel):
-        _p = Path(__file__).resolve().parent.parent.parent / rel
-        if not _p.is_file():
-            return {"status": None, "ratified": False, "why": "파일 없음"}
-        try:
-            _j = json.loads(_p.read_text(encoding="utf-8"))
-        except Exception:                                    # noqa: BLE001
-            return {"status": None, "ratified": False, "why": "JSON 파싱 실패"}
-        # ⚠ 상태 칸 이름이 문서마다 다르다 — protocol 은 `지위` 에만 적혀 있다.
-        #   한 칸만 보면 "status 없음" 으로 읽혀 실제 상태를 놓친다 (2026-09-02 실측).
-        _st = _j.get("status") or _j.get("지위")
-        _rt = (_j.get("ratification") or {})
-        # ⛔ 회신 BB P0-4 — 폐기 표시는 `status` 가 아니라 `지위` 같은 다른 칸에
-        #   있을 수 있다 (실측: prereg_sdcp_neutral_contrast 는 `지위` 에만 있다).
-        #   문자열이 어디 있든 SUPERSEDED/철회면 그 문서로 결과를 붙이지 않는다.
-        _sup = any(isinstance(v, str) and
-                   ("SUPERSEDED" in v.upper() or "철회" in v or "폐기" in v)
-                   for k, v in _j.items() if k in ("지위", "status", "state", "성격"))
-        _ok = (_st in ("ratified", "active")
-               and _rt.get("state") == "ratified"
-               and _rt.get("role") == "scientific_owner"
-               and not _sup)
-        return {"status": _st, "ratified": bool(_ok), "superseded": bool(_sup),
-                "has_ratification_record": bool(_rt),
-                "why": (None if _ok else
-                        ("⛔ SUPERSEDED/철회 문서다" if _sup else
-                         "status=%r · 사람 비준 기록 %s — 이 문서가 정의하는 주장은 "
-                         "아직 닫히지 않았다" % (_st, "있음" if _rt else "**없음**")))}
+        """모듈 정본 `ref_doc_state` 로 위임한다 — 사본을 두지 않는다 (회신 BC P0-2)."""
+        return ref_doc_state(Path(__file__).resolve().parent.parent.parent / rel)
 
     # ⛔⛔ 회신 BB P0-2 (2026-09-02) — 참조 문서를 **두 종류로 가른다.**
     #   ⓐ 주장 문서(claim): 보고량·프로토콜. 사람 비준이 있어야 한다.
@@ -13443,6 +13581,15 @@ def build_bundle(a, ledger: Optional[Dict[str, Any]] = None) -> Path:
                 print("   ? %s (git 상태 미상)" % _u)
             print("   커밋본과 다른 코드·입력으로 만들어졌다 — clean tree 에서 "
                   "다시 만드십시오 (별도 clone 또는 git stash 후 재생성).")
+            # ⛔⛔ 회신 BC P0-1 — **경고만 하고 ZIP 을 완성했다.** "폐기다" 라고
+            #   찍어 놓고 산출물이 그대로 나가면 그것이 어딘가로 흘러간다.
+            #   게이트는 말이 아니라 막는 것이어야 한다.
+            if not getattr(a, "allow_dirty_provenance", False):
+                raise SystemExit(
+                    "⛔ 생성 계보가 dirty 라 **번들을 만들지 않는다** (회신 BC P0-1). "
+                    "clean tree 에서 다시 만들거나, 탐색용임을 알고 진행하려면 "
+                    "`--allow_dirty_provenance` 를 명시하십시오 — 그러면 "
+                    "`provenance.clean=false` 가 박혀 분석기가 인용을 막습니다.")
     (out / "MANIFEST.json").write_text(json.dumps(man, indent=1, ensure_ascii=False))
 
     if out_final.exists():
@@ -14078,6 +14225,25 @@ def selftest() -> int:
     from ase import Atoms
     from ase.io import write as ase_write
     td = Path(tempfile.mkdtemp(prefix="vasp_bundle_v3_st_"))
+
+    # ⛔⛔ 회신 BC P0-4 (2026-09-02) — 자세 역할 규칙(W0·분류)의 정본은 **비준
+    #   protocol** 이다. 픽스처 자세 파일을 쓰면 그에 맞는 픽스처 protocol 이
+    #   따라와야 한다 — production protocol 을 그대로 두면 실물 SHA 와 어긋나
+    #   막힌다(그게 옳은 동작이라 우회하지 않고 픽스처를 만든다).
+    def _bind_pose_rule(pose_path):
+        _pp = Path(pose_path)
+        _pj = json.loads(_pp.read_text(encoding="utf-8"))
+        _pf = td / ("protocol_fix_%s.json"
+                    % hashlib.sha256(str(_pp).encode()).hexdigest()[:8])
+        _pf.write_text(json.dumps({
+            "schema": "sdcp_c12_protocol/v1",
+            "⛔_자세_역할_규칙_2026_09_02": {
+                "W0_eV": (_pj.get("params") or {}).get("W0_eV"),
+                "규칙": "fixture — primary/sensitivity/stress_sensitivity",
+                "source_basins": (_pj.get("params") or {}).get("source"),
+                "c12_poses_sha256": hashlib.sha256(_pp.read_bytes()).hexdigest()},
+        }, ensure_ascii=False), encoding="utf-8")
+        C12_PROTOCOL_BY_POSE[str(_pp.resolve())] = str(_pf)
     print(f"selftest → {td}")
 
     pos, symb = [], []
@@ -14257,6 +14423,7 @@ def selftest() -> int:
                                  "cell_c": None, "cell_c2": None,
                                  "min_vacuum": 0.0,
                                  "dense_frags": None})
+    _bind_pose_rule(_fbp)
     _st = None
     try:
         build_bundle(a_st, ledger=led)
@@ -14787,6 +14954,32 @@ def selftest() -> int:
     chk(_epk({"planned": {"x": {"meta": {"kind": "clean_slab"}}}}, "f") == [],
         "⛔음성 BB P1: 자세가 아닌 잡은 기대에 들어가지 않는다")
 
+    # ⚠ `ref_doc_state` 도 **생성기 전용**이다 — 배포본 분석기에는 없다.
+    #   `_selftest_closure`(배포본에서도 도는 묶음)에 두면 NameError 다
+    #   (2026-09-02 실측 — provenance_closure 때와 같은 실수를 반복했다).
+    # 실물 판독기가 digest 를 정말 재계산하는가 (문자열 검사가 아니다)
+    import tempfile as _tf3
+    _dp3 = Path(_tf3.mkdtemp()) / "doc.json"
+
+    def _mkdoc(tamper):
+        _d = {"schema": "x/v1", "status": "ratified", "본문": "원래 내용"}
+        _dg = hashlib.sha256(json.dumps(_d, sort_keys=True, ensure_ascii=False)
+                             .encode("utf-8")).hexdigest()
+        _d["ratification"] = {"state": "ratified", "role": "scientific_owner",
+                              "content_digest": _dg}
+        if tamper:
+            _d["본문"] = "비준 뒤에 고친 내용"
+        _dp3.write_text(json.dumps(_d, ensure_ascii=False), encoding="utf-8")
+
+    _mkdoc(False); _st_ok = ref_doc_state(_dp3)
+    _mkdoc(True); _st_bad = ref_doc_state(_dp3)
+    chk(_st_ok["ratified"] is True and _st_ok["digest_matches"] is True,
+        "BC P0-2 양성: 손대지 않은 비준 문서는 digest 재계산이 맞는다")
+    chk(_st_bad["ratified"] is False and _st_bad["digest_matches"] is False
+        and "비준 이후 내용이 바뀌었다" in str(_st_bad["why"]),
+        "⛔음성 BC P0-2 (**실물 판독기**): 비준 뒤 한 글자만 고쳐도 digest 재계산이 "
+        "어긋나 `ratified=False` 다 — 종전엔 상태 문자열만 봐서 통과했다")
+
     _pv_live = provenance_closure()
     chk(_pv_live["n_files"] >= 2
         and any(v["kind"] == "generator" for v in _pv_live["files"].values())
@@ -14861,6 +15054,7 @@ def selftest() -> int:
                                      "from_basins": str(_fbp), "both_seeds": False,
                                      "frags": ["ptfe_dimer"], "champion": False,
                                      "refs": False, "d3_pairs": False})
+        _bind_pose_rule(_fbp)
         build_bundle(a_fb, ledger=led)
         _mfb = json.load(open(Path(str(td)) / "bundle_fb" / "MANIFEST.json"))
         _dirs = sorted(x.parent.parent.name for x in
@@ -14892,6 +15086,7 @@ def selftest() -> int:
                                      "frags": ["ptfe_dimer"], "champion": False,
                                      "refs": False, "d3_pairs": False,
                                      "roles": ["holdout"]})
+        _bind_pose_rule(_fhp)
         build_bundle(a_fh, ledger=led)
         _mfh = json.load(open(Path(str(td)) / "bundle_fh" / "MANIFEST.json"))
         chk(str(_mfh.get("candidate_set")).startswith("holdout_stratified"),
@@ -17020,8 +17215,19 @@ def _selftest_e2e() -> int:
         basins["fragments"]["ptfe_dimer"]["calibration"].append(
             {"basin_id": f"b{k:02d}", "rep_label": lab, "role": "calibration",
              "why": "e2e", "E_pose_eV": 0.01 * k})
+    # ⛔ 회신 BC P0-4 — 자세 파일에 W0 를 넣고, 그 규칙이 든 protocol 픽스처를
+    #   짝지어 둔다 (production 은 비준 protocol 이 정본이다).
+    basins["params"] = {"source": "e2e_fixture", "W0_eV": 0.15}
     bp = td / "basins.json"
     bp.write_text(json.dumps(basins, ensure_ascii=False))
+    _e2e_prot = td / "protocol_e2e.json"
+    _e2e_prot.write_text(json.dumps({
+        "schema": "sdcp_c12_protocol/v1",
+        "⛔_자세_역할_규칙_2026_09_02": {
+            "W0_eV": 0.15, "규칙": "e2e fixture", "source_basins": "e2e_fixture",
+            "c12_poses_sha256": hashlib.sha256(bp.read_bytes()).hexdigest()},
+    }, ensure_ascii=False), encoding="utf-8")
+    C12_PROTOCOL_BY_POSE[str(bp.resolve())] = str(_e2e_prot)
 
     # ⛔ 2026-08-30 — e2e 픽스처도 **pin 을 박는다.** 검사기가 pin 없는 번들을
     #   `✅ 제출 가능` 으로 통과시키던 fail-open 을 고치면서, 이 픽스처가 pin 없이
@@ -17543,6 +17749,9 @@ def main():
                     help="계약 위반을 안고 만든다 (기본은 중단 — 축소 번들 방지)")
     ap.add_argument("--no_prescf", action="store_true",
                     help="dipole-off pre-SCF 상을 빼고 relax 부터 (권장하지 않음)")
+    ap.add_argument("--allow_dirty_provenance", action="store_true",
+                    help="계보가 dirty 여도 번들을 만든다 — 탐색용이고 "
+                         "`provenance.clean=false` 가 박혀 인용이 막힌다 (회신 BC P0-1)")
     ap.add_argument("--selftest", action="store_true")
     a = ap.parse_args()
     # ⛔ 홀드아웃은 **단독 tranche** 다. calibration 과 섞어 내면 사전등록된
