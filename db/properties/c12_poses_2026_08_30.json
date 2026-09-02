@@ -49,7 +49,9 @@
      "height_A": 5.072,
      "tilt_deg": 85.5,
      "role": "primary",
-     "why": "MLIP 전역 최소 basin"
+     "why": "MLIP 전역 최소 basin",
+     "source_xyz_path": "db/structures/c12_frozen/sdcp_neutral__O_top__fib08__r000.xyz",
+     "source_xyz_sha256": "a687e0601db82feb304d1deca48c8d73d08f1d55049523c23fdc2da69a5b4a13"
     }
    ],
    "stress_sensitivity": [
@@ -92,7 +94,9 @@
      "height_A": 5.137,
      "tilt_deg": 58.0,
      "role": "stress_sensitivity",
-     "why": "앵커 원소 다름(O) · ΔE_pose +0.278 eV > W0=0.15 ⇒ stress_sensitivity"
+     "why": "앵커 원소 다름(O) · ΔE_pose +0.278 eV > W0=0.15 ⇒ stress_sensitivity",
+     "source_xyz_path": "db/structures/c12_frozen/sdcp_neutral__LiNi_bridge__fib11__r270.xyz",
+     "source_xyz_sha256": "17c0e130243c687b89c2383573bff233def61acd2bea203abd699696a79f4a6d"
     }
    ]
   },
@@ -127,7 +131,9 @@
      "height_A": 4.208,
      "tilt_deg": 86.1,
      "role": "primary",
-     "why": "MLIP 전역 최소 basin"
+     "why": "MLIP 전역 최소 basin",
+     "source_xyz_path": "db/structures/c12_frozen/ptfe_c10__Ni_top__fib05__r270.xyz",
+     "source_xyz_sha256": "4e6659fcec53b99497327977b1939b8b6c66e8f9156491bef6b75c2ee0c33d54"
     }
    ],
    "sensitivity": [
@@ -150,12 +156,25 @@
      "height_A": 5.46,
      "tilt_deg": 75.9,
      "role": "sensitivity",
-     "why": "앵커 원소 다름(F) · ΔE_pose +0.106 eV ≤ W0=0.15 ⇒ sensitivity"
+     "why": "앵커 원소 다름(F) · ΔE_pose +0.106 eV ≤ W0=0.15 ⇒ sensitivity",
+     "source_xyz_path": "db/structures/c12_frozen/ptfe_c10__O_top__fib04__r090.xyz",
+     "source_xyz_sha256": "8a21109f560d6a5e981f5ce46c5542be9cf883a17f2da714d76ddb2750223b93"
     }
    ]
   }
  },
  "freeze_sha256": "cc87f6eeae5f9c3a0114a3851e13cd975cb2cd6b45caa4cfc4e82baa069cff70",
  "⚠_규칙은_여기_없다": "회신 BC P0-4 (2026-09-02) — 역할 분류 **규칙**과 `W0_eV` 의 정본은 `sdcp_c12_protocol_2026_08_30.json` 의 `⛔_자세_역할_규칙_2026_09_02` 다 (비준 대상). 아래 `params.W0_eV` 와 `역할_규칙` 은 **그때 적용한 값의 기록**이고 정본이 아니다 — 둘이 어긋나면 생성기가 막는다.",
- "역할_규칙_⚠": "↑ 정본 아님 (protocol 이 정본). 적용 기록으로만 읽을 것."
+ "역할_규칙_⚠": "↑ 정본 아님 (protocol 이 정본). 적용 기록으로만 읽을 것.",
+ "⛔_선택_XYZ_동결_2026_09_02": {
+  "왜": "회신 BD P0-2 — 종전엔 label·에너지·fingerprint 만 있고 **선택 XYZ 의 SHA 가 없었다**. 생성기가 label 로 외부 파일을 연 뒤 그때 계산한 SHA 를 기록했으므로, 좌표를 topology 허용범위 안에서 바꿔도 이 파일과 protocol SHA 는 그대로였고 **바뀐 POSCAR 를 가진 번들이 정상 생성**됐다. 사후 무결성은 됐지만 prospective freeze 를 입증하지 못했다.",
+  "무엇을_했나": "자세마다 `source_xyz_path` + `source_xyz_sha256` 를 넣었다. 파일은 repo 안(`db/structures/c12_frozen/`)으로 옮겨 clean tree 가 덮게 했다 — 종전엔 `/data/work/runs/…` 에 있어 external_content_bound 였다.",
+  "clean_slab": {
+   "path": "db/structures/c12_frozen/clean_slab_f0.85.vasp",
+   "sha256": "d5f18feb15701f3fc932a1c8f64a09ed48c39ca270d8d8a8f5339658b6c43676",
+   "⚠": "두 조각이 같은 슬랩을 쓴다 — 생성기가 그것도 강제한다"
+  },
+  "⛔_생성기가_읽기_전에_대조한다": "label 로 파일을 여는 것이 아니라, 여기 적힌 **경로**를 열고 여기 적힌 **SHA** 와 먼저 대조한다. 다르면 번들을 만들지 않는다 (GO 해제조건 2).",
+  "n_poses": 4
+ }
 }

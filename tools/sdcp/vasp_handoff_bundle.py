@@ -224,6 +224,40 @@ print("✓ census: MANIFEST %s · 잡 %d · 단계 %s"
 _PROV_INPUTS: "list[str]" = []
 
 
+def frozen_xyz(rec, runs_root, label):
+    """자세 레코드가 **동결한 경로**를 열고 SHA 를 먼저 대조한다 → Path.
+
+    ⛔⛔ 회신 BD P0-2 · GO 해제조건 2 (2026-09-02) — 종전엔 label 로 외부 XYZ 를
+      연 뒤 **그때 계산한 SHA** 를 기록했다. 그러면 좌표를 topology 허용범위 안에서
+      바꿔도 pose·protocol SHA 는 그대로이고 바뀐 POSCAR 를 가진 번들이 정상
+      생성된다 — 사후 무결성은 되지만 **prospective freeze 는 입증하지 못한다**.
+      ⇒ 비준된 payload 의 `source_xyz_path` 를 열고 `source_xyz_sha256` 와
+        **읽기 전에** 대조한다. 다르면 번들을 만들지 않는다.
+
+    ⛔ 못 하는 것: 그 좌표가 물리적으로 옳은지는 안 본다 (동결만 본다).
+    """
+    _p = (rec or {}).get("source_xyz_path")
+    _w = (rec or {}).get("source_xyz_sha256")
+    if not (_p and _w):
+        raise SystemExit(
+            "⛔ 자세 %r 에 `source_xyz_path`/`source_xyz_sha256` 가 없다 — 선택 XYZ 가 "
+            "**사전 동결되지 않았다** (회신 BD P0-2). 자세 파일을 재발행하고 "
+            "protocol 을 재비준할 것." % label)
+    #  ⚠ 픽스처는 repo 밖 임시 경로를 쓴다 — 절대경로면 그대로 연다.
+    _f = Path(_p) if os.path.isabs(_p) else (
+        Path(__file__).resolve().parent.parent.parent / _p)
+    if not _f.is_file():
+        raise SystemExit("⛔ 동결된 선택 XYZ 가 없다: %s (자세 %r)" % (_p, label))
+    _got = hashlib.sha256(_f.read_bytes()).hexdigest()
+    if _got != _w:
+        raise SystemExit(
+            "⛔ 선택 XYZ 가 **동결된 것과 다르다** (자세 %r · 동결 %s… ≠ 현재 %s…). "
+            "좌표가 바뀌었다면 자세 파일을 재발행하고 protocol 을 재비준할 것 "
+            "— 바뀐 구조로 조용히 번들을 만들지 않는다 (회신 BD P0-2)."
+            % (label, _w[:12], _got[:12]))
+    return _prov_note(_f)
+
+
 def _prov_note(path):
     """생성기가 **읽은** 입력을 계보에 등록한다. 경로를 그대로 돌려준다."""
     try:
@@ -12208,6 +12242,10 @@ def build_bundle(a, ledger: Optional[Dict[str, Any]] = None) -> Path:
     # ⚠ 2026-08-29 — 종전엔 **전 조각**을 훑었다. 이 번들에 안 들어가는 조각의 clean 이
     #   달라도 막혀서, `--frags` 로 두 조각만 뽑을 때 무관한 조각 때문에 중단됐다.
     #   제약의 뜻은 "**이 번들 안의** 조각들이 같은 슬랩을 쓴다" 이므로 범위를 그렇게 좁힌다.
+    # ⛔ 회신 BD P0-2 — 자세 파일이 clean slab 을 **동결**했으면 그것을 쓴다
+    #   (repo 안이라 clean tree 가 덮는다). 없으면 종전대로 runs 트리를 훑는다.
+    _frz_cs = ((fb.get("⛔_선택_XYZ_동결_2026_09_02") or {}).get("clean_slab")
+               if isinstance(locals().get("fb"), dict) else None)
     _want = set(a.frags) if a.frags else None
     cps = sorted(q for q in Path(a.runs).glob(f"*/relax_f{a.freeze:.2f}/_clean_slab.vasp")
                  if _want is None or q.parent.parent.name in _want)
@@ -12383,11 +12421,12 @@ def build_bundle(a, ledger: Optional[Dict[str, Any]] = None) -> Path:
                   f"audit {len(fr.get('sealed_audit') or [])})")
             for b in picks:
                 lab = b["rep_label"]
-                xp = run / f"{lab}.xyz"
-                if not xp.is_file():
-                    bad(f"{frag}/{b['basin_id']}: {xp} 없음")
-                    continue
-                cx = ase_read(_prov_note(xp))
+                # ⛔⛔ 회신 BD P0-2 · GO 해제조건 2 — label 로 외부 파일을 여는 것이
+                #   아니라, **비준된 payload 가 동결한 경로**를 열고 SHA 를 먼저
+                #   대조한다. 종전 방식은 사후 무결성만 보증하고 prospective freeze 는
+                #   입증하지 못했다.
+                xp = frozen_xyz(b, run, lab)   # 등록·SHA 대조를 자기 안에서 한다
+                cx = ase_read(xp)                # noqa: 등록됨 (위 줄이 보증)
                 cx.set_cell(slab.cell.array)
                 cx.set_pbc(True)
                 _assert_slab_lineage(cx, nslab, slab, f"{frag}/{b['basin_id']}", man)
@@ -14572,6 +14611,32 @@ def selftest() -> int:
     #   protocol** 이다. 픽스처 자세 파일을 쓰면 그에 맞는 픽스처 protocol 이
     #   따라와야 한다 — production protocol 을 그대로 두면 실물 SHA 와 어긋나
     #   막힌다(그게 옳은 동작이라 우회하지 않고 픽스처를 만든다).
+    # ⛔ 회신 BD P0-2 — 픽스처도 실물처럼 **동결 payload**(경로+SHA)를 담아야
+    #   한다. 안 담으면 그 게이트가 시험되지 않는다 (GO 해제조건 7).
+    def _freeze_poses(pose_path, xyz_dir):
+        _pp = Path(pose_path)
+        _pj = json.loads(_pp.read_text(encoding="utf-8"))
+        _root = Path(__file__).resolve().parent.parent.parent
+        for _fr, _roles in (_pj.get("fragments") or {}).items():
+            for _r, _lst in _roles.items():
+                if not isinstance(_lst, list):
+                    continue
+                for _b in _lst:
+                    _lab = _b.get("rep_label")
+                    if not _lab:
+                        continue
+                    _f = Path(xyz_dir) / (_lab + ".xyz")
+                    if not _f.is_file():
+                        continue
+                    try:
+                        _rel = str(_f.resolve().relative_to(_root))
+                    except ValueError:
+                        _rel = str(_f.resolve())      # repo 밖 픽스처는 절대경로
+                    _b["source_xyz_path"] = _rel
+                    _b["source_xyz_sha256"] = hashlib.sha256(
+                        _f.read_bytes()).hexdigest()
+        _pp.write_text(json.dumps(_pj, ensure_ascii=False), encoding="utf-8")
+
     def _bind_pose_rule(pose_path):
         _pp = Path(pose_path)
         _pj = json.loads(_pp.read_text(encoding="utf-8"))
@@ -14765,6 +14830,7 @@ def selftest() -> int:
                                  "cell_c": None, "cell_c2": None,
                                  "min_vacuum": 0.0,
                                  "dense_frags": None})
+    _freeze_poses(_fbp, Path(a_sp.runs) / "ptfe_dimer" / "relax_f0.85")   # 회신 BD P0-2
     _bind_pose_rule(_fbp)
     _st = None
     try:
@@ -15322,6 +15388,36 @@ def selftest() -> int:
         "⛔음성 BC P0-2 (**실물 판독기**): 비준 뒤 한 글자만 고쳐도 digest 재계산이 "
         "어긋나 `ratified=False` 다 — 종전엔 상태 문자열만 봐서 통과했다")
 
+    # ══ 회신 BD P0-2 · GO 해제조건 2 — 선택 XYZ **사전 동결** ═══════════════
+    import tempfile as _tf4
+    _td4 = Path(_tf4.mkdtemp())
+    _fx = _td4 / "pose.xyz"
+    _fx.write_text("1\nfixture\nH 0 0 0\n", encoding="utf-8")
+    _rec_ok = {"source_xyz_path": str(_fx),
+               "source_xyz_sha256": hashlib.sha256(_fx.read_bytes()).hexdigest()}
+    chk(Path(frozen_xyz(_rec_ok, _td4, "lab")).is_file(),
+        "BD P0-2 양성: 동결된 경로+SHA 가 맞으면 연다")
+    for _nm, _rec, _need in (
+        ("경로가 없음", {"source_xyz_sha256": "a" * 64}, "사전 동결되지 않았다"),
+        ("SHA 가 없음", {"source_xyz_path": str(_fx)}, "사전 동결되지 않았다"),
+        ("파일이 사라짐", {"source_xyz_path": str(_td4 / "nope.xyz"),
+                           "source_xyz_sha256": "a" * 64}, "동결된 선택 XYZ 가 없다"),
+    ):
+        try:
+            frozen_xyz(_rec, _td4, "lab")
+            chk(False, "⛔음성 BD P0-2: **%s** 이면 거부해야 한다" % _nm)
+        except SystemExit as _e:
+            chk(_need in str(_e), "⛔음성 BD P0-2: **%s** 이면 거부한다" % _nm)
+    # ⛔ 핵심 재현 — 좌표를 바꾸면 pose·protocol SHA 는 그대로인데 파일만 다르다
+    _fx.write_text("1\nfixture\nH 0 0 0.01\n", encoding="utf-8")
+    try:
+        frozen_xyz(_rec_ok, _td4, "lab")
+        chk(False, "⛔음성 BD P0-2: 좌표가 바뀌면 거부해야 한다")
+    except SystemExit as _e:
+        chk("동결된 것과 다르다" in str(_e),
+            "⛔음성 BD P0-2 (리뷰어 재현): **좌표를 바꾸면** 거부한다 — 종전엔 "
+            "label 로 열고 그때 SHA 를 기록해 바뀐 POSCAR 로 번들이 정상 생성됐다")
+
     _pv_live = provenance_closure()
     chk(_pv_live["n_files"] >= 2
         and any(v["kind"] == "generator" for v in _pv_live["files"].values())
@@ -15346,10 +15442,18 @@ def selftest() -> int:
     _READERS = ("ase_" + _RD, "AL." + _PQ, "AL." + _PP, "SS." + _LS, "SS." + _LF)
     #: 자기 모듈에서 `INPUTS_READ` 에 등록하는 함수 — 호출부에 `_prov_note` 가 없어도 된다
     _SELF_REG = ("AL." + _PQ, "AL." + _PP, "SS." + _LS, "SS." + _LF)
+    # ⚠ `frozen_xyz(...)` 는 **자기 안에서** `_prov_note` 를 부른다 (그리고 읽기 전
+    #   SHA 대조까지 한다). 그 반환값을 읽는 줄은 등록된 것이다.
+    _FROZEN = "frozen_xyz("
     _bare = []
     for ln in _srcp.split("\n"):
         t = ln.strip()
         if t.startswith("#") or "from ase.io" in t:
+            continue
+        if "= " + _FROZEN in t or "(" + _FROZEN in t:
+            continue
+        # 명시적 면제 — **이유를 적어야** 통과한다 (빈 noqa 는 안 받는다)
+        if "noqa: 등록됨" in t:
             continue
         for _r in _READERS:
             if _r in t and _r not in _SELF_REG and "_prov_note" not in t:
@@ -15435,6 +15539,7 @@ def selftest() -> int:
                                      "from_basins": str(_fbp), "both_seeds": False,
                                      "frags": ["ptfe_dimer"], "champion": False,
                                      "refs": False, "d3_pairs": False})
+        _freeze_poses(_fbp, Path(a_sp.runs) / "ptfe_dimer" / "relax_f0.85")
         _bind_pose_rule(_fbp)
         build_bundle(a_fb, ledger=led)
         _mfb = json.load(open(Path(str(td)) / "bundle_fb" / "MANIFEST.json"))
@@ -15467,6 +15572,7 @@ def selftest() -> int:
                                      "frags": ["ptfe_dimer"], "champion": False,
                                      "refs": False, "d3_pairs": False,
                                      "roles": ["holdout"]})
+        _freeze_poses(_fhp, Path(a_sp.runs) / "ptfe_dimer" / "relax_f0.85")
         _bind_pose_rule(_fhp)
         build_bundle(a_fh, ledger=led)
         _mfh = json.load(open(Path(str(td)) / "bundle_fh" / "MANIFEST.json"))
@@ -17629,6 +17735,12 @@ def _selftest_e2e() -> int:
     # ⛔ 회신 BC P0-4 — 자세 파일에 W0 를 넣고, 그 규칙이 든 protocol 픽스처를
     #   짝지어 둔다 (production 은 비준 protocol 이 정본이다).
     basins["params"] = {"source": "e2e_fixture", "W0_eV": 0.15}
+    # ⛔ 회신 BD P0-2 — e2e 픽스처도 **선택 XYZ 를 동결**한다 (경로+SHA). 안 하면
+    #   생성기가 (옳게) 거부한다 — 그게 이 게이트의 존재 이유다.
+    for _b in basins["fragments"]["ptfe_dimer"]["calibration"]:
+        _xf = run / f"{_b['rep_label']}.xyz"
+        _b["source_xyz_path"] = str(_xf.resolve())
+        _b["source_xyz_sha256"] = hashlib.sha256(_xf.read_bytes()).hexdigest()
     bp = td / "basins.json"
     bp.write_text(json.dumps(basins, ensure_ascii=False))
     _e2e_prot = td / "protocol_e2e.json"
