@@ -983,10 +983,8 @@ MUTANTS = [
      "deepest_mount_wins_when_binds_overlap"),
     # ★ P0-7 — `root` 는 filesystem 안의 경로다 (major:minor 로 창을 찾는다).
     ("mount-root-is-filesystem-relative", RP,
-     '        wins = [c for c in table\n'
-     '                if c["dev"] == m["dev"]',
-     '        wins = [c for c in table\n'
-     '                if c["dev"] == m["dev"] and False',
+     '        nxt = Path(win["mp"]) / sub if str(sub) != "." else Path(win["mp"])',
+     '        nxt = fs_path',
      "bind_from_a_separate_filesystem_is_resolved_by_the_mount_graph"),
     # ★ P0-8 — 건너간 module 에도 module 효과를 seed 한다.
     ("crossed-module-effects-are-seeded", RP,
@@ -996,10 +994,6 @@ MUTANTS = [
      '        todo.append(("sc", MODULE_EFFECTS))',
      "module_effects_are_seeded_in_every_crossed_module"),
     # ★ P0-9 — 조립된 이름은 exact 평가로만 통과한다.
-    ("assembled-names-are-exactly-evaluated", RP,
-     "    if isinstance(node, ast.BinOp) and isinstance(node.op, ast.Add):",
-     "    if False:",
-     "assembled_dunder_name_is_refused"),
     # ★ P1-1 — 증거의 이름은 저장소 상대다.
     ("evidence-paths-are-repo-relative", MR,
      "            key = fp.relative_to(root).as_posix\u0028\u0029",
@@ -1052,6 +1046,17 @@ MUTANTS = [
 #: 여러 지점을 **함께** 되돌려야 관측되는 변이 (심층 방어라 하나만 지우면
 #: 다른 하나가 가린다). 41·42·43차에 실측했다.
 MULTI = [
+    # ★ 56차 P0-9 — 조립된 이름을 막는 것은 **평가 + fail-closed** 둘이다.
+    #   평가 분기 하나만 꺼도 그 식은 "정할 수 없다" 가 되어 fail-closed 가
+    #   잡는다 (실측했다). 넷을 함께 되돌려야 55차 상태가 복원된다.
+    ("assembled-names-are-exactly-evaluated", RP, [
+        ("                    if not ok:", "                    if False:"),
+        ("    if isinstance(node, ast.BinOp) and isinstance(node.op, ast.Add):",
+         "    if False:"),
+        ("    if isinstance(node, ast.JoinedStr):", "    if False:"),
+        ('            and node.func.attr == "join" and len(node.args) == 1:',
+         "            and False:"),
+     ], "assembled_dunder_name_is_refused"),
     # ★ P1 — "모르겠다" 는 "물었다" 가 아니다. 54차에 자리가 **둘로 늘었다**:
     #   빈 report 는 이제 신원 검사(`_report_identity_rc`)가 먼저 거부하므로,
     #   fail-closed 비교만 되돌리면 시험이 여전히 초록이다 (53차에는 단일
@@ -2480,6 +2485,72 @@ EXPECT: dict = {
         "fail": ["tests/test_docs_lint.py::test_coverage_is_bound_to_the_tree_it_actually_tested"],
         "witness": {
             "tests/test_docs_lint.py::test_coverage_is_bound_to_the_tree_it_actually_tested": "지금 트리와 다른 코드에서 나온 증거가 통과했다"
+        }
+    },
+    "token-path-alias-is-refused": {
+        "fail": ["tests/test_preserve.py::test_a_symlinked_token_path_cannot_split_the_attempt_lock"],
+        "witness": {
+            "tests/test_preserve.py::test_a_symlinked_token_path_cannot_split_the_attempt_lock": "정상 발급 하나가 attempt lock identity 를 바꿨다"
+        }
+    },
+    "ledger-hardlink-is-refused": {
+        "fail": ["tests/test_preserve.py::test_a_hardlinked_ledger_alias_cannot_fork_the_authority"],
+        "witness": {
+            "tests/test_preserve.py::test_a_hardlinked_ledger_alias_cannot_fork_the_authority": "같은 leg 를 두 alias 로 각각 발급했다"
+        }
+    },
+    "ledger-seals-the-attempt-verifier": {
+        "fail": ["tests/test_preserve.py::test_a_crash_after_the_claim_unlink_can_still_be_finalized"],
+        "witness": {
+            "tests/test_preserve.py::test_a_crash_after_the_claim_unlink_can_still_be_finalized": "이어받을 claim 이 없다"
+        }
+    },
+    "append-finishes-the-pending-anchor-first": {
+        "fail": ["tests/test_docs_lint.py::test_two_consecutive_partial_appends_are_still_recoverable"],
+        "witness": {
+            "tests/test_docs_lint.py::test_two_consecutive_partial_appends_are_still_recoverable": "미완을 완주시키지 않은 채 새 줄이 붙었다"
+        }
+    },
+    "mountinfo-octal-escape-is-decoded": {
+        "fail": ["tests/test_docs_lint.py::test_a_frozen_alias_whose_path_has_a_space_is_not_writable"],
+        "witness": {
+            "tests/test_docs_lint.py::test_a_frozen_alias_whose_path_has_a_space_is_not_writable": "DID NOT RAISE SystemExit"
+        }
+    },
+    "deepest-mount-is-chosen": {
+        "fail": ["tests/test_docs_lint.py::test_the_deepest_mount_wins_when_binds_overlap"],
+        "witness": {
+            "tests/test_docs_lint.py::test_the_deepest_mount_wins_when_binds_overlap": "DID NOT RAISE SystemExit"
+        }
+    },
+    "crossed-module-effects-are-seeded": {
+        "fail": ["tests/test_docs_lint.py::test_module_effects_are_seeded_in_every_crossed_module"],
+        "witness": {
+            "tests/test_docs_lint.py::test_module_effects_are_seeded_in_every_crossed_module": "건너간 module 의 module 효과가 계산 값을 바꿨는데 producer digest 가 그대로다"
+        }
+    },
+    "evidence-paths-are-repo-relative": {
+        "fail": ["tests/test_docs_lint.py::test_the_evidence_tree_digest_does_not_depend_on_the_checkout_path"],
+        "witness": {
+            "tests/test_docs_lint.py::test_the_evidence_tree_digest_does_not_depend_on_the_checkout_path": "같은 바이트를 다른 경로로 읽었더니 digest 가 달라졌다"
+        }
+    },
+    "evidence-binds-the-environment": {
+        "fail": ["tests/test_docs_lint.py::test_the_evidence_binds_the_execution_environment"],
+        "witness": {
+            "tests/test_docs_lint.py::test_the_evidence_binds_the_execution_environment": "환경변수 DD_SMOOTH_CACHE 이 바뀌었는데 실행 영수증이 그대로다"
+        }
+    },
+    "mount-root-is-filesystem-relative": {
+        "fail": ["tests/test_docs_lint.py::test_a_bind_from_a_separate_filesystem_is_resolved_by_the_mount_graph"],
+        "witness": {
+            "tests/test_docs_lint.py::test_a_bind_from_a_separate_filesystem_is_resolved_by_the_mount_graph": "DID NOT RAISE SystemExit"
+        }
+    },
+    "assembled-names-are-exactly-evaluated": {
+        "fail": ["tests/test_docs_lint.py::test_an_assembled_dunder_name_is_refused"],
+        "witness": {
+            "tests/test_docs_lint.py::test_an_assembled_dunder_name_is_refused": "DID NOT RAISE SystemExit"
         }
     },
     "module-gate-before-side-effects": {
