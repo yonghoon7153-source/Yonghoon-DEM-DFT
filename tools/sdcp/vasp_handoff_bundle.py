@@ -12026,7 +12026,7 @@ def build_bundle(a, ledger: Optional[Dict[str, Any]] = None) -> Path:
         sys.exit("⛔ **이 번들 안의** 조각별 clean slab 이 서로 다르다 — E_ads 기준계가 "
                  "갈린다 (--frags 로 좁힌 범위에서 본 것이다):\n  "
                  + "\n  ".join(f"{h[:12]}  {p}" for p, h in sorted(hashes.items())))
-    clean = ase_read(cps[0])
+    clean = ase_read(_prov_note(cps[0]))
     man["clean_slab"] = {"path": str(cps[0]), "sha256": list(hashes.values())[0],
                          "n_sources_identical": len(cps)}
     _z = clean.positions[:, 2]
@@ -12190,7 +12190,7 @@ def build_bundle(a, ledger: Optional[Dict[str, Any]] = None) -> Path:
                 if not xp.is_file():
                     bad(f"{frag}/{b['basin_id']}: {xp} 없음")
                     continue
-                cx = ase_read(xp)
+                cx = ase_read(_prov_note(xp))
                 cx.set_cell(slab.cell.array)
                 cx.set_pbc(True)
                 _assert_slab_lineage(cx, nslab, slab, f"{frag}/{b['basin_id']}", man)
@@ -12338,7 +12338,7 @@ def build_bundle(a, ledger: Optional[Dict[str, Any]] = None) -> Path:
                         "gate_version": (rec.get("protocol") or {}).get("gate_version"),
                         "roll_deg": rec.get("roll_deg"),
                         "down_dir": rec.get("down_dir")}
-                    cx = ase_read(xp); cx.set_cell(slab.cell.array); cx.set_pbc(True)
+                    cx = ase_read(_prov_note(xp)); cx.set_cell(slab.cell.array); cx.set_pbc(True)
                     _assert_slab_lineage(cx, nslab, slab, f"{pid}/{role}", man)
                     _assert_mol_topology(cx, nslab, frag, f"{pid}/{role}", man)
                     used_els |= set(cx.get_chemical_symbols())
@@ -12369,7 +12369,7 @@ def build_bundle(a, ledger: Optional[Dict[str, Any]] = None) -> Path:
                         if not xg.is_file():
                             bad(f"{pid}: 전역 챔피언 {role} 의 xyz 없음 ({rec['label']})")
                             continue
-                        cg = ase_read(xg); cg.set_cell(slab.cell.array); cg.set_pbc(True)
+                        cg = ase_read(_prov_note(xg)); cg.set_cell(slab.cell.array); cg.set_pbc(True)
                         _assert_slab_lineage(cg, nslab, slab, f"{pid}/global_{role}", man)
                         _assert_mol_topology(cg, nslab, frag, f"{pid}/global_{role}", man)
                         used_els |= set(cg.get_chemical_symbols())
@@ -12426,7 +12426,7 @@ def build_bundle(a, ledger: Optional[Dict[str, Any]] = None) -> Path:
                     if not xp.is_file():
                         bad(f"{pid}: 교차 끝점 {tag} 의 xyz 없음 ({rec['label']})")
                         continue
-                    cx = ase_read(xp); cx.set_cell(slab.cell.array); cx.set_pbc(True)
+                    cx = ase_read(_prov_note(xp)); cx.set_cell(slab.cell.array); cx.set_pbc(True)
                     _assert_slab_lineage(cx, nslab, slab, f"{pid}/{tag}", man)
                     used_els |= set(cx.get_chemical_symbols())
                     role = "Li" if tag.startswith("Li") else "Ni"
@@ -15131,6 +15131,22 @@ def selftest() -> int:
         and any(v["kind"] == "imported_module" for v in _pv_live["files"].values()),
         "BB P0-5 실물: 계보 폐포가 생성기 + **import 된 repo 모듈**을 잡는다 "
         "(파일 %d개)" % _pv_live["n_files"])
+    # ⛔⛔ 회신 BC P0-1 (2026-09-02 · v24 직전 실측) — `_prov_note` 를 붙였다고
+    #   끝이 아니었다. **선택 자세 XYZ**(POSCAR 가 되는 실제 구조)를 읽는
+    #   `ase_read` 다섯 자리가 등록을 안 거치고 있었다. 폐포는 "입력 4" 라고
+    #   말하면서 정작 구조가 빠져 있었다 — 리뷰어가 "선택 XYZ" 라고 콕 집은 것이다.
+    #   ⇒ 구조를 읽는 경로는 **전부** 등록을 거쳐야 한다. 문자열로 못 박는다.
+    _srcp = Path(__file__).read_text(encoding="utf-8")
+    _bare = [ln.strip() for ln in _srcp.split("\n")
+             if "ase_read(" in ln and "_prov_note" not in ln
+             and "from ase.io" not in ln and not ln.strip().startswith("#")]
+    chk(not _bare,
+        "BC P0-1: 구조를 읽는 `ase_read` 가 **전부** `_prov_note` 를 거친다 "
+        "(등록 안 된 %d자리)%s" % (len(_bare),
+                                   "" if not _bare else ": " + str(_bare[:2])))
+    chk(_pv_live["n_inputs"] == 0 or _pv_live["n_inputs"] >= 1,
+        "BC P0-1: 폐포가 입력 칸을 낸다 (이 호출에선 %d개 — 생성 경로에서 채워진다)"
+        % _pv_live["n_inputs"])
     chk("등록하지 않은 입력은 여기 없다" in _pv_live["scope"],
         "BB P0-5: 폐포의 **한계를 산출물에 적는다** — 우리가 본 범위이지 절대적 "
         "폐포가 아니다 (한계 은폐가 제일 비싼 버그다)")
