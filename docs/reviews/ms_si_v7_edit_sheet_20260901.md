@@ -70,6 +70,7 @@
 | §2-3 | Methods 의 `standard error` | ⛔ **미착수 [P1]** · 저자 승인됨 |
 | §2-4 | **공저자 DOCX 의 VGCF 문단** (§2·§3 두 곳) | ⛔ **미착수 [P1·신규 09-02]** — 두 죽은 주장이 한 문장에 |
 | §3-1 | Table S2 재구성 (3블록) | 🟡 **보류 — 저자 결정 2026-09-02** ↓ |
+| §2-5 | **본문 R_ele 문장 — 절대값 440배 격차를 가린다** | ⛔ **미착수 [P1·신규 09-02]** — CL-38 해제로 확정 |
 | §3-2 | Table S3 나머지 행 | ⛔ 미착수 |
 | §3-3 | Table S3 σ_ion 행 | ✅ **09-01 값 확보** — 넣을 수 있다 |
 | §4-1 | Figure 4b 재작도 | 생성기 준비됨 |
@@ -141,6 +142,58 @@
 
 ⚠ 문서 전체에서 `standard error` · `SE` · `95 % CI` · `±` 를 **원고 표현으로** 쓴 자리를
 전부 훑을 것.  **숫자는 맞고 이름만 낡았다.**
+
+### 2-5. ⛔ [P1·신규 09-02] 본문 R_ele 문장 — **비는 맞는데 절대값 440배를 가린다**
+
+**어디에.**  본문 §2, Figure 4c 를 설명하는 문장:
+
+> *"The extracted electronic resistance (Rele) decreases from 59.7 Ω cm² for the SBE to
+> 48.5 Ω cm² for the DBE, **consistent with the enhanced σele predicted by the DEM simulations**."*
+
+★ **CL-38 이 2주간 hold 였다가 오늘 해제됐다** — 대기 조건(*"methods/캡션 텍스트"*)이 SI v6
+**Table S4** 로 충족됐다.  그 표가 `Rbulk` · `Rion` · `Rele` 을 **별도 칼럼**으로 두므로
+이 값은 **대칭셀 TLM 의 전자 레일 저항**이 확정이다 (이온 저항도, 풀셀 `R_int` 도 아니다).
+
+**그러면 숫자가 이렇게 된다** (L = 72.48 µm):
+
+| | σ_e | 비 |
+|---|---:|---:|
+| 실험 (`L/R_ele`) | SBE **1.21 × 10⁻⁴** · DBE 1.50 × 10⁻⁴ S/cm | **1.231** |
+| 우리 (centerline 8팔) | SBE 5.40 × 10⁻² · DBE 7.06 × 10⁻² | 1.308 |
+| | **~440배 과대** | |
+
+⚠ 지금 문장은 *"consistent"* 라는 말로 **비**를 가리키는데, 같은 그림에서 **절대값이 440배**
+어긋난다.  심사자가 `L/R_ele` 을 계산하는 데 30초면 된다.
+
+★★ **그런데 이건 약점이 아니라 우리가 가진 가장 좋은 한계 서술이다.**  두 실험 앵커가 서로
+~500배 어긋나고 그 차이에 **이름이 있다**:
+
+| 앵커 | σ_e | 우리 대비 |
+|---|---:|---|
+| 문헌 펠릿 **DC 분극** (Lee 2025 · Kim 2024) | 34–65 mS/cm | **같은 자릿수** |
+| 이 논문 **대칭셀 TLM `Rele`** | 0.121 mS/cm | ~440배 |
+
+DC 분극은 **벌크**를 재고, TLM 전자 레일은 **입자-입자·집전체 접촉을 포함**한다.  우리 솔버는
+접촉저항을 **정확히 0** 으로 둔다 (Methods 가 이미 그렇게 적는다).  ⇒ **440배가 우리가 빼먹은
+것의 크기**이고, 지금까지 정성으로만 적던 한계에 **숫자가 붙는다**.
+
+**바꾸기 (제안):**
+
+> The extracted electronic resistance (Rele) decreases from 59.7 to 48.5 Ω cm², a ratio of 1.23.
+> The simulated ratio brackets this value (1.12 with the binder omitted from the electronic grid,
+> 1.31 with its centerline voxels excluded), **although the simulated absolute conductivities
+> exceed those implied by Rele by more than two orders of magnitude: the transmission-line
+> electronic rail includes particle–particle and collector contact resistances, which the
+> voxel solver sets to zero.**
+
+⛔ *"맞췄다"* 로 쓰지 않는다 — 규약을 고르지 않았으므로 **괄호**이지 일치가 아니다.
+
+★ 부수: 같은 표의 `Rion` 59.61 → 56.45 ⇒ **σ_ion 비 1.056** 인데 우리 8팔 비는 **≈ 0.99** 다.
+**방향이 다르다.**  Fig 2h 가 PTFE ×0.27 · SDCP ×0.80 을 주므로 기전상 실험 방향이 자연스럽고,
+⇒ **우리 PTFE 이온 차단이 과소평가일 가능성**이 남는다 (D13 이 이미 잔차 −26.1 % 를 기록했다).
+
+⚠ 잔여: 대칭셀은 전극이 **둘**이라 `Rele` 이 셀당인지 전극당인지 캡션이 안 밝힌다 — 셀당이면
+배수가 444 → 222 다.  **자릿수는 안 바뀐다.**
 
 ### 2-4. ⛔ [P1·신규 09-02] 공저자 DOCX 의 VGCF 문단 — **두 죽은 주장이 한 문장에** 있다
 
