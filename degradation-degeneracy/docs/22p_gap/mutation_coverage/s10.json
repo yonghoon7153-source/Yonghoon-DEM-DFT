@@ -1,114 +1,117 @@
 {
-  "at": "2026-09-01T16:54:32Z",
+  "at": "2026-09-02T00:01:34Z",
   "binding": {
-    "expect_digest": "fcaad066ac039701029fb9f2fc3024c4308f8f75f3971fae7614b697ed56d9fc",
-    "head": "c85666a4f7ac27d92f74d114517986ddcf3c1622",
-    "registry_digest": "1d6e34efe30d7a9ed009e7d9680b69e1aec536434e2b5cbea0eb2a501e02eef4",
+    "expect_digest": "523c66033b3b64dfd83b10bcd320f8fcb25c2e31bff40c5d97c8c837f0cef626",
+    "head": "2032afbba7758cc0ff81940e0043a55ca9f21d21",
+    "registry_digest": "0553202a6868557609dd20267cea16eeb77bcc107ffb7a915f7094f601d07bbe",
     "reports_dir": "s10",
-    "runner_digest": "0102bb13df740fe18b88da9156c57bd0fd3fbd5c38a0b689c0582cba63214ce0",
-    "transcript_digest": "b759f881e3e50c26bc70225d1f5362f7a2e726e8ef54ac9a660888c9ad08db5e"
+    "runner_digest": "66ace7d19a30ffcac4a63c25a222ac108d7b5df9808f89a99bc9f915bdd2f514",
+    "transcript_digest": "e02c7e7e27b3ad8d912a41716dd8a26824f1ae3fddb95dab20d4bd2f81860259",
+    "tree_digest": "f61a89835586cde973f9ce06b4e942f2eee264b322c164dff48be3055824fc22"
   },
   "scenarios": {
-    "canon-absorbs-the-pep701-empty-piece": {
+    "caller-stage-safe-read": {
       "bit": true,
       "class": "executable",
-      "kexpr": "canonical_form_agrees_on_every_supported_interpreter",
+      "kexpr": "dangling_symlink_in_the_caller",
       "ran": true,
-      "report_sha256": "ee87cf53b70962538c628465ca67a9476bf44b376a12d579edc9f33be0f81d92",
+      "report_sha256": "1b8ad28c8a0a3190ac98aabc44920eb51339a6b4be67cd89f35afccaf7e0e575",
       "sites": 1
     },
-    "closure-refuses-source-reflection": {
+    "closure-refuses-dynamic-resolution": {
       "bit": true,
       "class": "executable",
-      "kexpr": "reading_the_producers_raw_source_is_fail_closed",
+      "kexpr": "dynamic_name_resolution_inside_the_closure_is_fail_closed",
       "ran": true,
-      "report_sha256": "bcb8382d1bbf6d48e05143714e020fc6eb1385b4dc8f9c2933e5f1b23170182b",
+      "report_sha256": "333300b23d0eabd613de47d6bd6c6152cf39507ecf775bf85bbbc2e5bbb1ac7d",
       "sites": 1
     },
-    "finalize-holds-the-claim-lock": {
+    "dunder-as-a-string-is-still-a-dunder": {
       "bit": true,
       "class": "executable",
-      "kexpr": "canonical_lock_order_is_declared_and_finalize_holds_the_claim",
+      "kexpr": "dunder_named_by_a_string_literal_is_still_a_dunder",
       "ran": true,
-      "report_sha256": "8029b7a5a42246d38dad387e7f3b0c46aba4a25cd3ae4cb7e6809a21d7a2421d",
+      "report_sha256": "926e418ab655910686f8469a2f8f7ad919be83ed3a6bb2496fa3b89f3a03b302",
       "sites": 1
     },
-    "freeze-authority-is-not-caller-selected": {
+    "fit-axis-seals-the-smoothing-backend": {
       "bit": true,
       "class": "executable",
-      "kexpr": "freeze_cannot_be_pointed_at_an_empty_claims_directory",
+      "kexpr": "effective_smoothing_backend_is_inside_the_approval",
       "ran": true,
-      "report_sha256": "5bc3c74ff44cc8719438d27696877c287b3f948b7b8c2479873eb918e59048c2",
+      "report_sha256": "ed14ac1fe304c9d3b1996a15646d405fa215428aa40015356bc1bece03686d67",
       "sites": 1
     },
-    "generation-owns-its-bytes": {
-      "bit": null,
-      "class": "declared",
-      "kexpr": null,
-      "ran": false,
-      "sites": 1
-    },
-    "lifecycle-completes-a-partial-append": {
+    "freeze-seals-the-output-directory": {
       "bit": true,
       "class": "executable",
-      "kexpr": "freeze_crash_between_journal_and_anchor_is_recoverable",
+      "kexpr": "frozen_directory_cannot_be_republished_under_a_new_cohort_id",
       "ran": true,
-      "report_sha256": "b7b22e55651656a62e7c7345bddd51e4be1237cf3cc570ff5a703295f336c774",
-      "sites": 1
-    },
-    "namespace-check-rejects-symlinks": {
-      "bit": true,
-      "class": "executable",
-      "kexpr": "symlinked_path_is_not_inside_the_smoke_namespace or namespace_check_is_fail_closed_on_a_symlinked_component",
-      "ran": true,
-      "report_sha256": "6050f53e7d38be3ce67907770bfdb39511df52a541c4b728a54592d76953fc09",
-      "sites": 1
-    },
-    "plan-uncertainty-covers-the-whole-critical-section": {
-      "bit": true,
-      "class": "executable",
-      "kexpr": "failure_while_leaving_the_ledger_lock_preserves_the_authority or uncertain_ledger_write_never_discards_the_claim",
-      "ran": true,
-      "report_sha256": "46a641ae9332403df28132b0d13cc33d3a0f05c2d401cb96fc761671a5ede0e8",
-      "sites": 1
-    },
-    "preservation-status-inside-the-contract": {
-      "bit": true,
-      "class": "executable",
-      "kexpr": "the_runtime_preservation_enum_is_inside_the_contract",
-      "ran": true,
-      "report_sha256": "54260db7a9e14b4c9f1710044483bb4709937d373eb02d9eaad27d15f8a128f4",
-      "sites": 1
-    },
-    "proof-until-equals-lease": {
-      "bit": null,
-      "class": "declared",
-      "kexpr": null,
-      "ran": false,
-      "sites": 1
-    },
-    "resume-compares-the-verifier": {
-      "bit": true,
-      "class": "executable",
-      "kexpr": "phase_cannot_be_recorded_without_the_owner_token or crash_after_grid_resumes_and_finalizes",
-      "ran": true,
-      "report_sha256": "cd11890e86af5a90d7768c2ab9e25dbc76e8aa2df026193dc40714e20492544d",
-      "sites": 1
-    },
-    "thaw-is-refused-before-the-first-write": {
-      "bit": true,
-      "class": "executable",
-      "kexpr": "publisher_refuses_a_thawed_cohort_before_the_first_write",
-      "ran": true,
-      "report_sha256": "7f46e77615fb2cc8bf181c42c5203d56f8888b1d157edc4685dab287acd2d4e3",
+      "report_sha256": "5d5c096f977a2ae4c8c499721bd2ae96f4dd33a77d58bf797dd876d93b1a4b43",
       "sites": 2
     },
-    "warm-consumer-uses-accessor": {
+    "ledger-dir-contained": {
       "bit": true,
       "class": "executable",
-      "kexpr": "warm_consumers_go_through_the_accessors",
+      "kexpr": "dir_that_is_not_contained",
       "ran": true,
-      "report_sha256": "03b7fdbdfafade4e1d35cd960cebf1cb81f30e2db79e4b407585b6dc2013a243",
+      "report_sha256": "11a3e0135292965c4f8c0aca6c1891ce87f158b099999015e7d3a8d3cf086a42",
+      "sites": 1
+    },
+    "module-defs-see-tuple-targets": {
+      "bit": true,
+      "class": "executable",
+      "kexpr": "producer_closure_sees_tuple_targets or producer_closure_follows_a_tuple_defined_constant",
+      "ran": true,
+      "report_sha256": "935335e411156f46e45b462142450d6aa064813dcdc9016dacf4efdcaf4e840c",
+      "sites": 1
+    },
+    "phase-input-binding-covers-the-package": {
+      "bit": true,
+      "class": "executable",
+      "kexpr": "grid_receipt_binds_every_curve_input_not_just_the_parquet",
+      "ran": true,
+      "report_sha256": "f2b0dc1b0640495fede0c11efc696763381eecfe37560521fec1c9d3ef37a6b2",
+      "sites": 1
+    },
+    "pointer-loss-is-terminal": {
+      "bit": true,
+      "class": "executable",
+      "kexpr": "losing_the_pointer_of_a_cohort",
+      "ran": true,
+      "report_sha256": "14fca6640b08eabc6e8c55ae02d2f9e803d3f6a43aab546608e6caac5133eece",
+      "sites": 1
+    },
+    "producer-cut-is-declared": {
+      "bit": true,
+      "class": "executable",
+      "kexpr": "producer_semantic_digest_excludes_the_publication_path",
+      "ran": true,
+      "report_sha256": "9a95c97afcfa14186b651db3ae06deef8ebdef56580f7ccb9362be00c5d00b98",
+      "sites": 1
+    },
+    "receipt-is-bound-to-the-mutant": {
+      "bit": true,
+      "class": "executable",
+      "kexpr": "receipt_is_bound_to_the_exact_mutant",
+      "ran": true,
+      "report_sha256": "8111c97a0cd86c64d557bb0f74e030778c35586744614eeb3cbfc4022d14825d",
+      "sites": 1
+    },
+    "seal-finite-floats": {
+      "bit": true,
+      "class": "executable",
+      "kexpr": "seal_domain_is_exact_not_isinstance",
+      "ran": true,
+      "report_sha256": "3be7e56b268c9eada54c1dcc64159b3736f2449ea4b599910df67b5ed5675786",
+      "sites": 1
+    },
+    "token-is-written-before-the-claim": {
+      "bit": true,
+      "class": "executable",
+      "kexpr": "crash_between_the_claim_and_the_token_leaves_nothing_stranded",
+      "ran": true,
+      "report_sha256": "ad3c86dad22f17689e9cd15b6cef878983ea986b30246152f7836ca3873123ab",
       "sites": 1
     }
   },

@@ -1,116 +1,117 @@
 {
-  "at": "2026-09-01T16:59:32Z",
+  "at": "2026-09-02T00:06:34Z",
   "binding": {
-    "expect_digest": "fcaad066ac039701029fb9f2fc3024c4308f8f75f3971fae7614b697ed56d9fc",
-    "head": "c85666a4f7ac27d92f74d114517986ddcf3c1622",
-    "registry_digest": "1d6e34efe30d7a9ed009e7d9680b69e1aec536434e2b5cbea0eb2a501e02eef4",
+    "expect_digest": "523c66033b3b64dfd83b10bcd320f8fcb25c2e31bff40c5d97c8c837f0cef626",
+    "head": "2032afbba7758cc0ff81940e0043a55ca9f21d21",
+    "registry_digest": "0553202a6868557609dd20267cea16eeb77bcc107ffb7a915f7094f601d07bbe",
     "reports_dir": "s12",
-    "runner_digest": "0102bb13df740fe18b88da9156c57bd0fd3fbd5c38a0b689c0582cba63214ce0",
-    "transcript_digest": "a18a9dfb4f842cdd9b93a0e6a902fe4f7123cde4646719b4c813cad3682d334c"
+    "runner_digest": "66ace7d19a30ffcac4a63c25a222ac108d7b5df9808f89a99bc9f915bdd2f514",
+    "transcript_digest": "94eff7c905bc5fc542ddcfcafb965fffe16c301f63c85f7927c7692916e70d29",
+    "tree_digest": "f61a89835586cde973f9ce06b4e942f2eee264b322c164dff48be3055824fc22"
   },
   "scenarios": {
-    "children-read-through-dirfd": {
+    "canon-keeps-docstrings": {
       "bit": true,
       "class": "executable",
-      "kexpr": "holds_a_directory_fd_for_its_children",
+      "kexpr": "docstring_the_computation_reads_is_inside_the_identity",
       "ran": true,
-      "report_sha256": "932d995468a9fbc384473967937a0147a9e66f27c6b17c9b9ac1374b9de1b931",
+      "report_sha256": "1939a6022af0df2999a8920ef26d1a518e553a02d3be4c8607e4a55d61f85588",
+      "sites": 1
+    },
+    "closure-unresolved-attr-is-fail-closed": {
+      "bit": true,
+      "class": "executable",
+      "kexpr": "unresolved_producer_module_reference_is_fail_closed",
+      "ran": true,
+      "report_sha256": "f80466c73123fc72463070e12f7f80d1b68bf5d3978689559b703665f10f48bd",
+      "sites": 1
+    },
+    "external-binding-covers-the-package": {
+      "bit": true,
+      "class": "executable",
+      "kexpr": "external_input_binding_covers_the_whole_package",
+      "ran": true,
+      "report_sha256": "e5dd585dddf441dfacb7e47ce8a0c1bd222edcf28b40b5dd11341282c31cb810",
+      "sites": 1
+    },
+    "flock-two-publisher": {
+      "bit": true,
+      "class": "executable",
+      "kexpr": "two_independent_publishers",
+      "ran": true,
+      "report_sha256": "450ec1b244308b7c865f44bf092c672f8f13539c2b38207b69c150c85424a761",
       "sites": 2
     },
-    "complete-current-supersedes-pending": {
+    "frozen-target-carries-its-own-seal": {
       "bit": true,
       "class": "executable",
-      "kexpr": "complete_current_supersedes_a_leftover_pending",
+      "kexpr": "frozen_directory_carries_its_own_seal",
       "ran": true,
-      "report_sha256": "dbcd353256640de924037f34cd3935820605d8f14b0f828011b40e5bcbaec20e",
+      "report_sha256": "db118f978ec2d548208ed49ab01fd96fa274a40814677e9f88a3393139428641",
       "sites": 1
     },
-    "finalize-recovery-holds-the-claim-lock": {
+    "ledger-seal-record": {
       "bit": true,
       "class": "executable",
-      "kexpr": "finalize_recovery_branch_holds_the_claim_lock",
+      "kexpr": "same_roster_ledger_change",
       "ran": true,
-      "report_sha256": "fd0a45611c0ce5d53adbc0aa64e40985429dfb092721f3754c53b95b8e494b47",
-      "sites": 1
-    },
-    "freeze-completes-a-half-written-transition": {
-      "bit": true,
-      "class": "executable",
-      "kexpr": "freeze_is_retryable_after_a_crash_between_its_two_writes",
-      "ran": true,
-      "report_sha256": "5597c0c6ca58f313d9437e54ab3e79ce624bec8a0d4488d9cf1f9a28cf7b640b",
-      "sites": 1
-    },
-    "grid-axis-seals-the-discharged-cache": {
-      "bit": true,
-      "class": "executable",
-      "kexpr": "grid_axis_binds_the_discharged_state_cache",
-      "ran": true,
-      "report_sha256": "079e48ffe56cd05486ff9a35aee51eb4b6c847278d5230056601181aeeea8782",
-      "sites": 1
-    },
-    "lifecycle-reader-does-not-write": {
-      "bit": true,
-      "class": "executable",
-      "kexpr": "lifecycle_reader_never_anchors_a_transition_it_did_not_make",
-      "ran": true,
-      "report_sha256": "0e138e3c01b391bf042c5b45970194cd6488ed62b23a195989b2e63d0003e244",
-      "sites": 1
-    },
-    "pending-base-generation": {
-      "bit": true,
-      "class": "executable",
-      "kexpr": "stale_bootstrap_pending",
-      "ran": true,
-      "report_sha256": "45845f97a48132639d4675fd1ad245143b0d65553539f651e7b72e64d463a818",
-      "sites": 1
-    },
-    "planned-binds-the-execution-record": {
-      "bit": true,
-      "class": "executable",
-      "kexpr": "planned_index_is_bound_to_the_real",
-      "ran": true,
-      "report_sha256": "07e131292e0404a3f7625612882c61c78953f9378e396c39d352ed640a1150a6",
-      "sites": 1
-    },
-    "producer-canon-drops-empty-fields": {
-      "bit": true,
-      "class": "executable",
-      "kexpr": "producer_digest_is_the_same_on_every_python_here",
-      "ran": true,
-      "report_sha256": "b77d6e6489557b2e5615ec6bd256cd66dba3b4e58a55a544918f71841336fe55",
-      "sites": 1
-    },
-    "publisher-owns-the-merge-temp": {
-      "bit": true,
-      "class": "executable",
-      "kexpr": "caller_stage_is_untouched",
-      "ran": true,
-      "report_sha256": "c837db35387f74f7dbfa6c46a81c67663748541e4e64a2755f6f2b1bf52acbef",
-      "sites": 1
-    },
-    "roster-is-a-set": {
-      "bit": true,
-      "class": "executable",
-      "kexpr": "ledger_roster_is_a_set_not_a_multiset",
-      "ran": true,
-      "report_sha256": "2a87212fdf32c43ffb0dfeb2726519c1e037050717b4723fa239e9062c10de34",
-      "sites": 1
-    },
-    "token-bytes-are-verified-on-disk": {
-      "bit": true,
-      "class": "executable",
-      "kexpr": "lying_write_is_caught_by_reading_the_bytes_back",
-      "ran": true,
-      "report_sha256": "176e2348fcaa80204ee78b99eb681f514c49f13a7c3115106cd328875bf8ac64",
+      "report_sha256": "2f909509a1ac82a1a2dcb77f9d66de019a75633e15481262e2e8ba61a30520dc",
       "sites": 2
     },
-    "warm-edges-are-declared": {
+    "module-defs-track-mutating-bindings": {
       "bit": true,
       "class": "executable",
-      "kexpr": "warm_consumers_go_through_the_accessors",
+      "kexpr": "producer_closure_tracks_mutating_and_import_bindings",
       "ran": true,
-      "report_sha256": "a9538ea1bfa77d2c78f6c4ecd7f5c6ebd43d6c2c40b27cc85c35d2b10e132b51",
+      "report_sha256": "c629e7f88afedf7fb5606a4666645a5a14711e2308b53f5158ff30e44a61589f",
+      "sites": 1
+    },
+    "phase-write-checks-the-credential": {
+      "bit": true,
+      "class": "executable",
+      "kexpr": "forged_claim_object_cannot_write_a_phase",
+      "ran": true,
+      "report_sha256": "c4320176490e1b0a9791e1baf0b1ae4e1d2aebc7f2f739c56a332e610cdbc0c8",
+      "sites": 1
+    },
+    "pre-write-authority": {
+      "bit": true,
+      "class": "executable",
+      "kexpr": "frozen_cohort_publish_writes_nothing_before_it_refuses",
+      "ran": true,
+      "report_sha256": "98094e9a5e8a35921e423475e3b520a95c1d345fdcf8c646411e72479bf4ba0b",
+      "sites": 1
+    },
+    "producer-dunder-is-an-allowlist": {
+      "bit": true,
+      "class": "executable",
+      "kexpr": "producer_cannot_reach_its_own_bytes_through_the_module_loader",
+      "ran": true,
+      "report_sha256": "ea2bb6fa34ce41f58e326c810d03da3adc3bbbf7b659821b465c7c0618d85b97",
+      "sites": 1
+    },
+    "recheck-before-rename": {
+      "bit": true,
+      "class": "executable",
+      "kexpr": "rechecked_immediately_before_the_rename",
+      "ran": true,
+      "report_sha256": "d5de8d4701d66e7165e6861b8b0e466c6cb572db0bfa1d03fd1e6447bc8b4985",
+      "sites": 1
+    },
+    "sink-subset-of-roster": {
+      "bit": true,
+      "class": "executable",
+      "kexpr": "complete_undeclared_leg_never_reaches_pending",
+      "ran": true,
+      "report_sha256": "9aab0d577fe9f6ec4440df1e193b4010b8bd045cb3af020a7f7088adef90c4f3",
+      "sites": 1
+    },
+    "token-read-checks-the-leg": {
+      "bit": true,
+      "class": "executable",
+      "kexpr": "an_attempt_file_from_another_leg_is_refused",
+      "ran": true,
+      "report_sha256": "d47741c44753587c5cd9e63cf349541fdba48009cbf06126805c4c2752e36942",
       "sites": 1
     }
   },

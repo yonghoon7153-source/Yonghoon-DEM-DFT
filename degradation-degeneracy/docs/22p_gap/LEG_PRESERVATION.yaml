@@ -487,6 +487,7 @@ legs:
     - g7_2026_09_01
     - g8_2026_09_01
     - g9_2026_09_01
+    - g10_2026_09_01
     regeneration_capability: available_raw_present
   claim_roles:
   - claim_id: LEGACY_PAIRED_FIXED5
