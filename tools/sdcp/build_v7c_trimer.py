@@ -2780,6 +2780,19 @@ def selftest():
             # ── 회신 W P0-2 — **필드를 지우면 검사가 건너뛰어지던 fail-open** ──
             # ── 회신 X P0-3 — **생성물(manifest) 쪽을 지우는 나머지 반쪽** ──
             # ── 회신 X P0-1 — **비준한 양과 구현한 양이 같은가** ──────────
+            # ── 회신 X P0-5 — L→L2→S 국재 궤도 계보 ─────────────────────────
+            ("neg_lin_stale_loc", {"stale_loc": True},
+             "X P0-5 (리뷰어 재현): **L2 뒤에 `.loc` 가 바뀌면** 옛 population 에서 "
+             "고른 MO 번호로 새 궤도를 심게 된다 — 조용한 오답이다"),
+            ("neg_lin_stale_out", {"stale_out": True},
+             "X P0-5: L2 **출력**이 receipt 이후에 바뀌었다 — 이 population 은 그 "
+             "실행의 것이 아니다"),
+            ("neg_lin_no_l2_rcpt", {"drop_receipt": ("L2",)},
+             "X P0-5: L2 실행 receipt 가 없다 — 무엇으로 만든 population 인지 "
+             "모르는 채 seed 를 고르지 않는다"),
+            ("neg_lin_no_l_rcpt", {"drop_receipt": ("L",)},
+             "X P0-5: **국재화를 만든 L 잡**의 receipt 가 없다 — `.loc` 가 어디서 "
+             "왔는지 이어지지 않는다"),
             ("neg_form_missing", {"_prereg_patch": {"estimand_form": None}},
              "X P0-1: 사전등록이 `estimand_form` 을 **선언하지 않으면** 무엇을 "
              "재는지 대조할 수 없다 — 나머지 결박이 전부 맞아도 다른 관측량일 수 "
@@ -2961,7 +2974,7 @@ def selftest():
         _copy2.copytree(str(_po), _l2d)
         _mm2 = json.loads(open(os.path.join(_l2d, "MANIFEST_PILOT.json")).read())
         # 실측 suffix 가 생성 시 가정(.loc)과 **다른** 경우 — 이 단계의 존재 이유다
-        _pil_fake_phaseL(_l2d, _mm2, loc_suffix=".loc.gbw")
+        _pil_fake_phaseL(_l2d, _mm2, loc_suffix=".loc.gbw", pre_patch_suffix=False)
         _pf2 = _fixture_prereg(_mm2)
         PIL_PREREG_S0 = _pf2
         _mm2["prereg"] = _pf2; _mm2["prereg_sha256"] = _sha(_pf2)
@@ -2984,7 +2997,7 @@ def selftest():
         _l2h = os.path.join(ptd, "w5_l2patch_launder")
         _copy2.copytree(str(_po), _l2h)
         _mmh = json.loads(open(os.path.join(_l2h, "MANIFEST_PILOT.json")).read())
-        _pil_fake_phaseL(_l2h, _mmh, loc_suffix=".loc.gbw")
+        _pil_fake_phaseL(_l2h, _mmh, loc_suffix=".loc.gbw", pre_patch_suffix=False)
         _mmh["prereg"] = _pf2; _mmh["prereg_sha256"] = _sha(_pf2)
         open(os.path.join(_l2h, "MANIFEST_PILOT.json"), "w").write(
             json.dumps(_mmh, ensure_ascii=False))
@@ -3012,6 +3025,59 @@ def selftest():
             and t.get("loccheck_cert_sha256") for t in _trs),
             "X P0-4: 정상 패치는 **transition receipt** 를 남긴다 (old/new SHA · "
             "바뀐 줄 · 근거 증서 SHA · %d건)" % len(_trs))
+        # ══ 회신 X P0-6 — receipt 를 **현재 출력**에 결박 ══════════════════
+        _p6 = os.path.join(ptd, "x6_out_swap")
+        _copy2.copytree(os.path.join(ptd, "q4_ok"), _p6)
+        _vj = "S/eps1/Dradical/B_ring0"
+        _vo = os.path.join(_p6, _vj, "B_ring0.out")
+        _txt6 = open(_vo, encoding="utf-8").read()
+        # 다른 **정상종료** 출력으로 갈아끼운다 (에너지만 다르다)
+        open(_vo, "w", encoding="utf-8").write(
+            _txt6.replace("-100.0", "-999.0", 1))
+        _r6 = pilot_analyze(_p6)
+        chk(any("RUN_RECEIPT_OUTPUT_CHANGED" in g
+                for g in _r6["jobs"][_vj]["gates"]),
+            "⛔음성 X P0-6 (리뷰어 재현): receipt 뒤에 출력을 **다른 정상종료 "
+            "출력으로 바꿔도** 통과했다 — 기록만 하고 안 쓰는 필드는 결박이 아니다")
+        _p6b = os.path.join(ptd, "x6_no_outsha")
+        _copy2.copytree(os.path.join(ptd, "q4_ok"), _p6b)
+        _rp = os.path.join(_p6b, PIL_RECEIPTS)
+        _rows = [json.loads(x) for x in open(_rp, encoding="utf-8").read().splitlines()
+                 if x.strip()]
+        # ⚠ `for _r in ...` 로 쓰면 바깥의 `_r`(q4_ok 분석 결과)을 **덮어쓴다** —
+        #   selftest 는 한 스코프라 루프 변수가 샌다 (2026-09-02 실측: 뒤쪽 시험이
+        #   KeyError 로 죽었다). 이름을 갈라 둔다.
+        with open(_rp, "w", encoding="utf-8") as _f:
+            for _rr6 in _rows:
+                _rr6.pop("out_sha256", None)
+                _f.write(json.dumps(_rr6, ensure_ascii=False) + "\n")
+        _r6b = pilot_analyze(_p6b)
+        chk(any("RUN_RECEIPT_NO_OUTPUT_HASH" in g
+                for g in _r6b["jobs"][_vj]["gates"]),
+            "⛔음성 X P0-6: 출력 해시가 **없는 구판 receipt** 도 통과시키지 않는다 "
+            "(없는 것을 통과로 세면 그게 fail-open 이다)")
+
+        # ══ 회신 X P0-9 — 증서 ORCA vs **이번 실행의 ORCA** ════════════════
+        _cert = json.loads(open(os.path.join(ptd, "q4_ok", PIL_LOCCHECK_CERT),
+                                encoding="utf-8").read())
+        _other = os.path.join(ptd, "other_orca_bin")
+        open(_other, "wb").write("#!/bin/sh\n# 다른 ORCA\n".encode("utf-8"))
+        _sv = os.environ.get("PIL_RUNNER_ORCA")
+        os.environ["PIL_RUNNER_ORCA"] = _other
+        _c9, _w9 = pil_read_loccheck(os.path.join(ptd, "q4_ok"))
+        os.environ["PIL_RUNNER_ORCA"] = _cert["orca_path"]
+        _c9ok, _w9ok = pil_read_loccheck(os.path.join(ptd, "q4_ok"))
+        if _sv is None:
+            os.environ.pop("PIL_RUNNER_ORCA", None)
+        else:
+            os.environ["PIL_RUNNER_ORCA"] = _sv
+        chk(_c9 is None and "이번 실행의 ORCA 가 다르다" in str(_w9),
+            "⛔음성 X P0-9 (리뷰어 재현): 증서를 A 로 만들고 **B 로 실행**하면 "
+            "막는다 — 종전엔 증서의 ORCA 를 재해시할 뿐 이번 실행과 비교하지 "
+            "않았다")
+        chk(_c9ok is not None,
+            "X P0-9 양성: 같은 ORCA 로 실행하면 증서가 유효하다")
+
         _p4, _n4 = pil_lineage_check(_l2d, "L2")
         chk(_n4 >= 1 and not [x for x in _p4 if x.startswith(("INP_CHANGED",
                                                              "MOINP_MISSING"))],
@@ -3035,7 +3101,7 @@ def selftest():
         _l2e = os.path.join(ptd, "w5_l2patch_bad")
         _copy2.copytree(str(_po), _l2e)
         _mm4 = json.loads(open(os.path.join(_l2e, "MANIFEST_PILOT.json")).read())
-        _pil_fake_phaseL(_l2e, _mm4, loc_suffix=".loc.gbw")
+        _pil_fake_phaseL(_l2e, _mm4, loc_suffix=".loc.gbw", pre_patch_suffix=False)
         _mm4["prereg"] = _pf2; _mm4["prereg_sha256"] = _sha(_pf2)
         open(os.path.join(_l2e, "MANIFEST_PILOT.json"), "w").write(
             json.dumps(_mm4, ensure_ascii=False))
@@ -3080,9 +3146,9 @@ def selftest():
         chk(any("PROBE_BASELINE_MISSING" in g or "BASELINE" in g
                 for g in _r8b["jobs"]["S/eps1/Dradical/B_ring0"]["gates"]),
             "⛔음성 W P0-8: 무회전 control 이 **없으면** 확인 못 함이지 통과가 아니다")
-        chk((_r["no_rotation_controls"] or {}) and all(
+        chk((_r.get("no_rotation_controls") or {}) and all(
                 v["status"] == "NO_ROTATION_BASELINE"
-                for v in _r["no_rotation_controls"].values()),
+                for v in (_r.get("no_rotation_controls") or {}).values()),
             "회신 U Q3 · W P0-8: 무회전 control 은 **개입이 아니다** — 별도 판정어로 "
             "내고 seed 판정에 섞지 않는다 (%d건)" % len(_r.get("no_rotation_controls") or {}))
         _r4 = _ana("q4_noprobe", drop_probe=("B_ring0",))
@@ -4583,6 +4649,21 @@ def pil_read_loccheck(d):
     if not (c.get("l2_inp_sha256") and c.get("l2_out_sha256")):
         return None, ("증서에 L2(`%moinp` readback) 사슬이 없다 — L 형만 시험한 "
                       "구판 증서다 (회신 W P0-4). loccheck 을 다시 돌릴 것")
+    # ⛔⛔ 회신 X P0-9 (2026-09-02) — **증서의 ORCA 와 이번 실행의 ORCA 를 묶는다.**
+    #   종전엔 증서가 기록한 ORCA(A)를 재해시할 뿐, 이번 러너에 준 `$ORCA`(B)와
+    #   비교하지 않았다. A 로 증서를 만들어 두고 A 를 남긴 채 **B 로 L 을 실행**할
+    #   수 있었다 — 증서가 보증하는 것과 실제로 도는 것이 갈린다.
+    _now_orca = os.environ.get("PIL_RUNNER_ORCA")
+    if _now_orca:
+        if not Path(_now_orca).is_file():
+            return None, ("이번 실행의 ORCA 경로가 없다: %s" % _now_orca)
+        _nsha = hashlib.sha256(Path(_now_orca).read_bytes()).hexdigest()
+        if c.get("orca_sha256") and _nsha != c["orca_sha256"]:
+            return None, ("증서를 만든 ORCA 와 **이번 실행의 ORCA 가 다르다** "
+                          "(증서 %s… ≠ 실행 %s…). 증서는 그 ORCA 에 대한 것이므로 "
+                          "다른 실행파일로 phase L 을 열지 않는다 (회신 X P0-9). "
+                          "그 ORCA 로 loccheck 을 다시 돌릴 것."
+                          % (str(c["orca_sha256"])[:12], _nsha[:12]))
     return c, "ok"
 
 
@@ -5277,6 +5358,52 @@ def pilot_seeds(d):
         _t2, _seg2, _w2 = pil_seg_terminated(txt)       # 회신 W P0-6
         if not _t2:
             raise SystemExit("⛔ %s 가 정상 종료하지 않았다 — %s" % (outp, _w2))
+        # ⛔⛔ 회신 X P0-5 (2026-09-02) — **L→L2→S 의 국재 궤도 계보가 끊겼다.**
+        #   ① 생성된 L2 행에 실제 `.loc` SHA 가 없었고
+        #   ② `pilot_seeds()` 가 L/L2 receipt 도 L2 출력 SHA 도 보지 않았다.
+        #   그래서 L2 **뒤에** `.loc` 가 바뀌면, 우리는 **옛 population** 에서 MO
+        #   번호를 고르고 phase S 는 **새 궤도 파일**의 같은 번호를 읽는다 — 조용히
+        #   다른 궤도를 심는 것이다.
+        #   ⇒ seed 를 고르기 전에 사슬을 확인한다.
+        _rc_all = pil_read_receipts(d)
+        _r_l2 = _rc_all.get(jk)
+        if not _r_l2:
+            raise SystemExit(
+                "⛔ %s 의 실행 receipt 가 없다 — 이 러너로 돌지 않았거나 receipt 가 "
+                "지워졌다. 무엇으로 만든 population 인지 모르는 채 seed 를 고르지 "
+                "않는다 (회신 X P0-5)." % jk)
+        if _r_l2.get("out_sha256") != _sha(outp):
+            raise SystemExit(
+                "⛔ %s 의 출력이 receipt 이후에 **바뀌었다** (receipt %s… ≠ 현재 "
+                "%s…) — 이 population 은 그 실행의 것이 아니다 (회신 X P0-5)."
+                % (jk, str(_r_l2.get("out_sha256"))[:12], _sha(outp)[:12]))
+        if not _r_l2.get("terminated_normally"):
+            raise SystemExit("⛔ %s 의 receipt 가 정상종료가 아니다 (rc=%s)"
+                             % (jk, _r_l2.get("rc")))
+        # L 잡(국재화를 만든 쪽)도 이 러너로 돌았어야 한다
+        _r_l = _rc_all.get(src_jk)
+        if not _r_l:
+            raise SystemExit(
+                "⛔ %s(국재화를 만든 L 잡)의 실행 receipt 가 없다 — `.loc` 가 어디서 "
+                "왔는지 이어지지 않는다 (회신 X P0-5)." % src_jk)
+        # ③ L2 가 **실제로 읽은** 궤도 파일이 지금 것과 같은가
+        _moinp = _r_l2.get("moinp")
+        _mo_now = (jd / _moinp) if _moinp else None
+        if _mo_now is None or not _mo_now.is_file():
+            raise SystemExit(
+                "⛔ %s 의 receipt 에 `%%moinp` 대상이 없거나 파일이 사라졌다 (%r) — "
+                "seed 의 원천이 끊겼다 (회신 X P0-5)." % (jk, _moinp))
+        _mo_sha = _sha(_mo_now)
+        if _r_l2.get("moinp_sha256") != _mo_sha:
+            raise SystemExit(
+                "⛔ **L2 가 읽은 궤도 파일이 그 뒤에 바뀌었다** (receipt %s… ≠ 현재 "
+                "%s…). 그대로 두면 옛 population 에서 고른 MO 번호로 **새 궤도**를 "
+                "심게 된다 — 조용한 오답이다 (회신 X P0-5)."
+                % (str(_r_l2.get("moinp_sha256"))[:12], _mo_sha[:12]))
+        # 사슬을 manifest 에 남긴다 (다음 단계가 이것을 대조한다)
+        jm["loc_sha256_read_by_L2"] = _mo_sha
+        jm["out_sha256_at_seed_time"] = _sha(outp)
+        jm["l_receipt_out_sha256"] = _r_l.get("out_sha256")
         # ⛔⛔ 회신 T P0-3 (2026-08-31) — 종전 주석은 "결정론을 만들 수 없으므로
         #   실현된 .loc 에 결박한다" 였다. **그 전제가 틀렸다** — `%loc Random 0`
         #   이 있다. 이제 primary 는 결정론 국재화를 **요구**하고, 무작위 국재화는
@@ -5673,7 +5800,8 @@ def _pil_fake_loccheck(out, suffix=".loc", mopop=True, mos=True, drop_key=None,
 def _pil_fake_phaseL(out, man, rand_mark=False, kill_guessmode=False, no_mopop=False,
                      sigma_ring=False, bad_term=False, no_mos=False, no_orbener=False,
                      kill_tcore=False, no_loccheck=False, loc_suffix=".loc",
-                     loccheck_bad=None):
+                     loccheck_bad=None, drop_receipt=(), stale_loc=False,
+                     stale_out=False, pre_patch_suffix=True):
     """selftest 용 phase L/L2 산출물(.loc/.out) 생성. 인자들이 **음성 경로**다."""
     out = Path(out)
     # ⛔ 회신 V P0-3 — 증서가 없으면 seed 생성이 막혀야 한다 (`no_loccheck`).
@@ -5741,6 +5869,44 @@ def _pil_fake_phaseL(out, man, rand_mark=False, kill_guessmode=False, no_mopop=F
                 raise AssertionError("픽스처 전제 붕괴: %s 가 없다" % f)
             f.write_text("\n".join(l for l in f.read_text().splitlines()
                                    if "T_CORE" not in l) + "\n")
+    # ⛔⛔ 회신 X P0-5 (2026-09-02) — 실물 러너는 L·L2 마다 receipt 를 남긴다.
+    #   픽스처가 안 남기면 **픽스처가 실물과 다른 계**가 되고, seed 생성의 계보
+    #   게이트가 시험되지 않는다 (BB P0-5 에서 phase S 로 같은 교훈을 얻었다).
+    # ⚠ 실물에서는 **러너의 L2 단계가** `%moinp` 를 실측 suffix 로 고친 뒤 돈다.
+    #   픽스처가 그 순서를 안 지키면 receipt 의 moinp 가 없는 파일을 가리킨다
+    #   (2026-09-02 실측: `.loc.gbw` 픽스처에서 바로 걸렸다).
+    #   ⚠ 러너의 L2 단계를 **직접 시험하는** 픽스처는 이것을 끈다
+    #     (`pre_patch_suffix=False`) — 안 그러면 고칠 게 없어 그 시험이 공허해진다.
+    if pre_patch_suffix and loc_suffix != PIL_LOC_SUFFIX_CANDIDATES[0]:
+        for jk, jm in sorted(man["jobs"].items()):
+            if jm["phase"] != "L2":
+                continue
+            tag = jk.rsplit("/", 1)[-1]
+            f = out / jk / (tag + ".inp")
+            if f.is_file():
+                f.write_text(f.read_text().replace(
+                    PIL_LOC_SUFFIX_CANDIDATES[0] + '"', loc_suffix + '"'))
+                jm["inp_sha256"] = _sha(f)
+    for jk, jm in sorted(man["jobs"].items()):
+        if jm["phase"] not in ("L", "L2"):
+            continue
+        if jk in drop_receipt or jm["phase"] in drop_receipt:
+            continue
+        pil_write_receipt(out, jm["phase"], jk, 0, "1970-01-01T00:00:00")
+    # ⛔음성 경로: receipt 를 남긴 **뒤에** 원천을 바꾼다
+    if stale_loc or stale_out:
+        for jk, jm in sorted(man["jobs"].items()):
+            if jm["phase"] != "L2":
+                continue
+            tag = jk.rsplit("/", 1)[-1]
+            if stale_loc:
+                _src = out / jm["reads_localized_from"]
+                _lf = _src / (tag + loc_suffix)
+                _lf.write_text(_lf.read_text() + "\n# 국재화가 다시 돌았다\n")
+            if stale_out:
+                _of = out / jk / (tag + ".out")
+                _of.write_text(_of.read_text() + "\n# 출력이 바뀌었다\n")
+            break
     return out
 
 def _pil_fake_sout(charge, mult, nel, spins, E, S2=0.7530, stable=True,
@@ -6126,6 +6292,29 @@ def pilot_analyze(d):
             g.append("RUN_RECEIPT_STALE(receipt 의 입력 %s… ≠ 현재 입력 %s… — "
                      "입력이 바뀐 뒤의 옛 출력이다)"
                      % (str(rr.get("inp_sha256"))[:12], _sha(inp)[:12]))
+        # ⛔⛔ 회신 X P0-6 (2026-09-02) — **receipt 가 현재 출력에 결박되지 않았다.**
+        #   기록은 output·xyz·moinp·ORCA·builder SHA 까지 하는데 소비자는 입력 SHA 와
+        #   저장된 `terminated_normally` 만 봤다. 리뷰어 재현: receipt 뒤에 출력을
+        #   **다른 정상종료 출력**으로 바꿔도 통과했다. 기록만 하고 안 쓰는 필드는
+        #   결박이 아니다.
+        _out = jd / (tag + ".out")
+        if _out.is_file() and rr.get("out_sha256") and rr["out_sha256"] != _sha(_out):
+            g.append("RUN_RECEIPT_OUTPUT_CHANGED(receipt 의 출력 %s… ≠ 현재 %s… — "
+                     "이 출력은 그 실행의 산물이 아니다)"
+                     % (str(rr["out_sha256"])[:12], _sha(_out)[:12]))
+        elif _out.is_file() and not rr.get("out_sha256"):
+            g.append("RUN_RECEIPT_NO_OUTPUT_HASH(receipt 에 출력 해시가 없다 — "
+                     "구판 receipt 라 지금 출력과 이을 수 없다)")
+        _xs = sorted(jd.glob("*.xyz"))
+        if _xs and rr.get("xyz_sha256") and rr["xyz_sha256"] != _sha(_xs[0]):
+            g.append("RUN_RECEIPT_XYZ_CHANGED(구조가 실행 이후 바뀌었다)")
+        _mo = rr.get("moinp")
+        if _mo and rr.get("moinp_sha256"):
+            _mp = jd / _mo
+            if not _mp.is_file():
+                g.append("RUN_RECEIPT_MOINP_GONE(%s)" % _mo)
+            elif _sha(_mp) != rr["moinp_sha256"]:
+                g.append("RUN_RECEIPT_MOINP_CHANGED(읽은 궤도 파일이 바뀌었다)")
         if not rr.get("terminated_normally"):
             g.append("RUN_RECEIPT_NOT_TERMINATED(rc=%s)" % rr.get("rc"))
         return g
@@ -6819,6 +7008,8 @@ PYCERT
       echo "   돌리십시오. H2O 하나로 30초입니다 (회신 V P0-3)."
       exit 2
     fi
+    # ⛔ 회신 X P0-9 — 판독기가 **이번 실행의 ORCA** 를 알아야 증서와 묶을 수 있다.
+    export PIL_RUNNER_ORCA="$ORCA"
     python3 - "$D" "$BUILDER_PATH" <<'PYLG' || exit 2
 import importlib.util, sys
 d, bp = sys.argv[1:3]
@@ -6844,6 +7035,7 @@ PYLG
     ;;
   L2)
     # ⛔ 회신 V P0-3 — 증서가 정한 suffix 로 `%moinp` 를 맞춘다 (생성 시점엔 몰랐다).
+    export PIL_RUNNER_ORCA="$ORCA"        # 회신 X P0-9
     python3 - "$D" "$BUILDER_PATH" <<'PYL2' || exit 2
 import importlib.util, json, os, re, sys
 d, bp = sys.argv[1:3]
