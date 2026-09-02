@@ -944,9 +944,72 @@ MUTANTS = [
     # ★ P0-2 — 원장 해석은 **한 자리**다. 두 벌이면 symlink 원장의 자기 쓰기가
     #   그 사이를 벌린다.
     ("ledger-is-resolved-once", PRESERVE,
-     '    return Path(ledger or DEFAULT_LEDGER).resolve()',
-     '    return Path(ledger or DEFAULT_LEDGER)',
+     '    path = Path(ledger or DEFAULT_LEDGER).resolve()',
+     '    path = Path(ledger or DEFAULT_LEDGER)',
      "same_ledger_argument_always_names_the_same_claims_root"),
+    # ── 56차 (게이트 55차 반증 조건) ─────────────────────────────────────
+    # ★ P0-1 — 전달 통로의 alias 는 첫 부작용 앞에서 거부한다.
+    ("token-path-alias-is-refused", PRESERVE,
+     "    if p.is_symlink():",
+     "    if False:",
+     "symlinked_token_path_cannot_split_the_attempt_lock"),
+    # ★ P0-2 — 원장의 이름이 여럿이면 정본을 정할 수 없다.
+    ("ledger-hardlink-is-refused", PRESERVE,
+     "    if stat.S_ISREG(st.st_mode) and st.st_nlink != 1:",
+     "    if False:",
+     "hardlinked_ledger_alias_cannot_fork_the_authority"),
+    # ★ P0-3 — claim 이 없어도 원장이 소유자를 인증한다.
+    ("ledger-seals-the-attempt-verifier", PRESERVE,
+     '            rec_evidence["attempt_verifier"] = _token_verifier(token)',
+     "            pass",
+     "crash_after_the_claim_unlink_can_still_be_finalized"),
+    # ★ P0-4 — 미완을 완주시키기 전에는 새 줄을 붙이지 않는다.
+    ("append-finishes-the-pending-anchor-first", RP,
+     "    _finish_pending_anchor()\n"
+     "    entries = read_lifecycle()",
+     "    entries = read_lifecycle()",
+     "two_consecutive_partial_appends_are_still_recoverable"),
+    # ★ P0-5 — mountinfo 의 octal escape 를 푼다.
+    ("mountinfo-octal-escape-is-decoded", RP,
+     '                    "root": _mountinfo_unescape(f[3]),\n'
+     '                    "mp": _mountinfo_unescape(f[4])})',
+     '                    "root": f[3],\n'
+     '                    "mp": f[4]})',
+     "frozen_alias_whose_path_has_a_space_is_not_writable"),
+    # ★ P0-6 — 가장 깊은 mountpoint 를 고른다.
+    ("deepest-mount-is-chosen", RP,
+     "            if best is None or len(mp.parts) > len(Path(best[\"mp\"]).parts):",
+     "            if best is None:",
+     "deepest_mount_wins_when_binds_overlap"),
+    # ★ P0-7 — `root` 는 filesystem 안의 경로다 (major:minor 로 창을 찾는다).
+    ("mount-root-is-filesystem-relative", RP,
+     '        wins = [c for c in table\n'
+     '                if c["dev"] == m["dev"]',
+     '        wins = [c for c in table\n'
+     '                if c["dev"] == m["dev"] and False',
+     "bind_from_a_separate_filesystem_is_resolved_by_the_mount_graph"),
+    # ★ P0-8 — 건너간 module 에도 module 효과를 seed 한다.
+    ("crossed-module-effects-are-seeded", RP,
+     "    if MODULE_EFFECTS in sdefs:\n"
+     '        todo.append(("sc", MODULE_EFFECTS))',
+     "    if False:\n"
+     '        todo.append(("sc", MODULE_EFFECTS))',
+     "module_effects_are_seeded_in_every_crossed_module"),
+    # ★ P0-9 — 조립된 이름은 exact 평가로만 통과한다.
+    ("assembled-names-are-exactly-evaluated", RP,
+     "    if isinstance(node, ast.BinOp) and isinstance(node.op, ast.Add):",
+     "    if False:",
+     "assembled_dunder_name_is_refused"),
+    # ★ P1-1 — 증거의 이름은 저장소 상대다.
+    ("evidence-paths-are-repo-relative", MR,
+     "            key = fp.relative_to(root).as_posix\u0028\u0029",
+     "            key = str\u0028fp\u0029",
+     "evidence_tree_digest_does_not_depend_on_the_checkout_path"),
+    # ★ P1-2 — 환경·의존성도 증거 안이다.
+    ("evidence-binds-the-environment", MR,
+     "            \u0022env\u0022: {k: os.environ.get(k, \u0022\u0022) for k in BOUND_ENV},",
+     "            \u0022env\u0022: {},",
+     "evidence_binds_the_execution_environment"),
     # ★ P0-1 — 정상 finalize 도 attempt-path 부터 잡는다. 되돌린 값이 54차
     #   상태(claim lock 만) 그대로다 — 그때 리뷰어가 친 자리다.
     ("normal-finalize-holds-the-attempt-path", PRESERVE,
@@ -956,13 +1019,9 @@ MUTANTS = [
     # ★ P0-3 — journal·anchor 를 바꾸는 경로가 공유하는 임계 구역.
     ("anchor-repair-holds-the-lifecycle-lock", RP,
      "    with _lifecycle_lock():\n"
-     "        entries = read_lifecycle()\n"
-     "        if not entries:\n"
-     "            return False",
+     "        return _finish_pending_anchor()",
      "    if True:\n"
-     "        entries = read_lifecycle()\n"
-     "        if not entries:\n"
-     "            return False",
+     "        return _finish_pending_anchor()",
      "stale_anchor_repair_cannot_rewind_the_head"),
     # ★ P0-4 — 목적지를 **mount 관계로** 푼다 (이름으로는 bind 가 안 보인다).
     ("destination-is-resolved-through-mounts", RP,
