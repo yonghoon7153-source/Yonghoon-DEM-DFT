@@ -2,7 +2,7 @@
  "schema": "estimand_prereg/v2",
  "date": "2026-08-31",
  "status": "proposed",
- "⚠_비준": "⚠ **재비준 대기.** 회신 X P0-1(estimand_form)·P0-2(중단/판정 규칙 분리 + 삭제된 상수 제거) 로 내용이 바뀌었다.",
+ "⚠_비준": "⚠ **재비준 대기.** 회신 X 전건(P0 9 · P1 7) 이행으로 내용이 바뀌었다.",
  "제목": "S0 — ε=1 기술적 적합성 pilot 사전등록 (회신 T 로 격하된 판, P0 4건 이행 반영)",
  "이_문서의_성격": {
   "무엇인가": "회신 T 가 '전체 pilot NO-GO / ε=1 기술적 적합성 pilot(S0) 한정 조건부 GO' 로 격하한 것을 받아 **범위를 줄여 다시 등록**한 판이다.",
@@ -17,16 +17,16 @@
  },
  "0_시각_증거": {
   "봉인_시점": "2026-09-02",
-  "builder_sha256": "ded52c96d75ff929029f149f3d8e6768cbd27f53bfcab4a7aa301e85eb6cc90a",
-  "⚠_원본과_다른_해시인_이유": "회신 W P0-4/P0-5 이행으로 빌더가 또 바뀌었다 (27a9cb08… → ded52c96…). 재발행이다 — 고친 것이 아니다. 범위·질문·판정어·게이트 문턱은 그대로이고 결박만 옮겼다. 해시는 커밋 6f9e28b2 의 트리에서 뽑았다 (tools/review_manifest.py 규율).",
+  "builder_sha256": "071052c77d5726469a6946e9882a594945a1bb27455ef6fabd70975a71bcfeb8",
+  "⚠_원본과_다른_해시인_이유": "회신 X P0 9건 + P1 7건 이행으로 빌더가 바뀌었다. 재발행이다 — 범위·질문·판정어·게이트 문턱은 그대로다.",
   "이_시점의_doped_잡": "0개 — git log 가 그 순서의 증거다. 결과를 보고 규칙을 고치지 않는다.",
   "이_시점의_ORCA_잡": "0개 — phase L 도 아직 돌리지 않았다 (회신 U Q7 NO-GO)",
   "이전_봉인": {
-   "builder_sha256": "27a9cb08f015854e17c0448ed2366337e05d038150fa5b748e4274fa6d975cd9",
-   "builder_last_change_commit": "97cb2d4d3bcd73b96d6168cc977c8ea8e624b761",
+   "builder_sha256": "ded52c96d75ff929029f149f3d8e6768cbd27f53bfcab4a7aa301e85eb6cc90a",
+   "builder_last_change_commit": "6f9e28b21bec3ac602b487edd9a2d53024d00a97",
    "봉인_시점": "2026-09-02"
   },
-  "builder_last_change_commit": "6f9e28b21bec3ac602b487edd9a2d53024d00a97",
+  "builder_last_change_commit": "d7ddebbdeab740df90fefde057dc2a24eb58eb74",
   "⚠_왜_전체_커밋이_아닌가": "회신 W P0-1 — '이 파일이 들어간 커밋' 은 파일 안에 넣을 수 없다 (커밋 해시가 파일 내용에 의존하므로 순환이다). 종전 판은 그 자리에 placeholder 를 넣었고, 검사가 그것을 실제 커밋과 비교해 **seed 생성이 반드시 막혔다**. ⇒ 봉인하는 것은 ⓐ 빌더 blob SHA ⓑ **빌더를 마지막으로 바꾼 커밋** 둘이다. 전체 커밋 결박은 파일 밖 attestation(tools/review_manifest.py)이 진다."
  },
  "대상": {
@@ -197,15 +197,16 @@
   "⛔_이_수는_산출물이_정한다": "회신 X P1 (2026-09-02) — 종전엔 손으로 적었고 그래서 산수가 틀렸다(2+2+16+13=33 인데 '총 32')·무회전 control 2건이 빠졌다. 이제 생성기가 `MANIFEST_PILOT.scale_actual` 에 실제 수를 세고, 게이트가 아래 값과 대조해 다르면 막는다. **여기 숫자를 손으로 고치면 게이트가 잡는다.**",
   "phase_L": 2,
   "phase_L2": 2,
-  "측정_SP": 16,
-  "1층_probe": 14,
+  "측정_SP": 15,
+  "1층_probe": 13,
   "무회전_control": 2,
-  "총_ORCA_실행": 36,
+  "총_ORCA_실행": 34,
   "⚠_probe": "probe 는 `NoIter` 라 싸고 **측정이 아니다**. phase S 앞에 돌아 개입이 실패한 seed 로 200원자 r2SCAN-3c 를 돌리지 않게 한다.",
   "⚠_무회전_control": "종별 하나씩. **개입이 아니다** — 판정어는 NO_ROTATION_BASELINE 이고 basin 계수에 들어가지 않는다 (회신 U Q3 · W P0-8).",
   "Opt": "**없다** — S0 은 fixed-geometry SP 만이다",
   "재판정_SR": "불안정이 나온 만큼만 (미리 세지 않는다 — 위 총계에 없다)",
-  "calibration": "+1 (스핀밀도 cube 1개 · estimand_form_calibration · 회신 X P0-1 ③)"
+  "calibration": "+1 (스핀밀도 cube 1개 · estimand_form_calibration · 회신 X P0-1 ③)",
+  "⛔_어떻게_얻었나": "2026-09-02 **버리는 dry-run** 으로 실제 seed plan 을 세었다 (D• 8 seed + P⁺ 7 = 15 · default 를 뺀 probe 13 · 종별 control 1씩 2). ORCA 는 한 잡도 안 돌렸고 산출물은 버렸다 — 숫자를 세는 것이 목적이었다. ⚠ 종전 값 16 은 생성기 자신이 `n_meas` 에 근거 없는 `+1` 을 갖고 있어 나온 수이고, 그것이 사전등록으로 옮겨졌다. 그 `+1` 도 함께 걷었다."
  },
  "실행_순서": [
   "bash run_pilot.sh loccheck  (H₂O 하나로 `%loc` 구문·`.loc` suffix·파서 둘 확인 — **첫 단계이고, L 이 이 증서를 강제한다**)",
@@ -286,6 +287,11 @@
    "at": "2026-09-02",
    "state": "proposed",
    "note": "회신 X P1 — ⓐ D• 조성을 부모 P 와 갈라 적었다(199원자·961전자). ⓑ 규모를 산출물이 정하게 하고 게이트가 대조한다 (손으로 적은 32는 산수가 틀렸고 무회전 control 2건이 빠져 있었다)."
+  },
+  {
+   "at": "2026-09-02",
+   "state": "proposed",
+   "note": "회신 X 전건 이행 후 재봉인. 규모를 **실측**으로 교체(측정 15 · probe 13 · control 2 · 총 34) — 종전 16은 생성기의 근거 없는 `+1` 에서 나왔고 그것도 걷었다. 리뷰어가 말한 34와 일치한다. 재비준 필요."
   }
  ],
  "회신_U_이행": {

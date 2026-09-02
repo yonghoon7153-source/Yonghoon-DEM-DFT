@@ -4394,8 +4394,12 @@ def pilot_generate(a):
                             "형태의 backbone radical cation 을 표현할 수 있는가' (회신 S Q4)")},
         "⛔": "seed 는 phase L 실행 뒤에만 만든다 — 미리 만들면 임의 MO 를 고르는 것이다",
     }
+    # ⛔⛔ 회신 X P1 (2026-09-02 실측) — 여기 `+ 1` 이 붙어 있었다. 근거가 없고,
+    #   실제로 만들어지는 S 잡은 seed 수의 합이다 (D• 8 + P⁺ 7 = 15). 그래서
+    #   생성기가 스스로 "측정 SP 예정 16" 을 찍었고 그 16 이 사전등록에 옮겨졌다.
+    #   **손으로 센 수는 갈린다** — 세는 자리를 하나로 둔다.
     n_meas = (len(man["seed_plan"]["Dradical"]["seeds"])
-              + len(man["seed_plan"]["Pcation"]["seeds"]) + 1) * len(envs)
+              + len(man["seed_plan"]["Pcation"]["seeds"])) * len(envs)
     _n_probe = (len([x for x in man["seed_plan"]["Dradical"]["seeds"] if x != "default"])
                 + len([x for x in man["seed_plan"]["Pcation"]["seeds"]
                        if x != "default"])) * len(envs)
