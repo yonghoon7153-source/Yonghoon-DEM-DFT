@@ -66,10 +66,6 @@ def _make_sandbox() -> pathlib.Path:
 MUTANTS = [
     # ── 48차 (게이트 47차 반증 조건) ──────────────────────────────────────
     #   P0-2: producer 닫힘의 네 구멍. 각 자리를 47차 상태로 되돌린다.
-    ("producer-crosses-into-scoring", RP,
-     '_PRODUCER_MODULES = ("src.scoring",)',
-     '_PRODUCER_MODULES = ()',
-     "producer_digest_crosses_into_src_scoring"),
     ("producer-crossing-is-fail-closed", RP,
      "    alias_missing = sorted({v for v in alias.values() if v not in sdefs})",
      "    alias_missing = []",
@@ -467,12 +463,6 @@ MUTANTS = [
      "    if head != prev:",
      "    if False:",
      "the_lifecycle_journal_is_a_hash_chain"),
-    ("closure-follows-module-aliases", RP,
-     "            if kind == \"rp\" and isinstance(sub_node, ast.Attribute) \\\n"
-     "                    and isinstance(sub_node.value, ast.Name) \\\n"
-     "                    and sub_node.value.id in mods:",
-     "            if False:",
-     "closure_follows_a_module_alias_attribute"),
     ("closure-unresolved-attr-is-fail-closed", RP,
      "                if attr not in sdefs:\n"
      "                    raise SystemExit(",
@@ -1046,6 +1036,28 @@ MUTANTS = [
 #: 여러 지점을 **함께** 되돌려야 관측되는 변이 (심층 방어라 하나만 지우면
 #: 다른 하나가 가린다). 41·42·43차에 실측했다.
 MULTI = [
+    # ★ 56차 — 56차 P0-8 이 건너간 module 의 `MODULE_EFFECTS` 를 **무조건**
+    #   seed 하면서, 건너기 자체를 끊는 옛 변이 둘이 안 물게 됐다: seed 가
+    #   scoring 의 내용을 여전히 닫힘에 넣으므로 digest 가 움직인다. 새 방어가
+    #   옛 변이를 가리는 이 저장소의 반복 패턴이고(54차에도 만났다), 답은
+    #   방어를 지우는 것이 아니라 **함께 되돌리는** 것이다.
+    ("producer-crosses-into-scoring", RP, [
+        ('_PRODUCER_MODULES = ("src.scoring",)', "_PRODUCER_MODULES = ()"),
+        ("    if MODULE_EFFECTS in sdefs:\n"
+         '        todo.append(("sc", MODULE_EFFECTS))',
+         "    if False:\n"
+         '        todo.append(("sc", MODULE_EFFECTS))'),
+     ], "producer_digest_crosses_into_src_scoring"),
+    ("closure-follows-module-aliases", RP, [
+        ("            if kind == \"rp\" and isinstance(sub_node, ast.Attribute) \\\n"
+         "                    and isinstance(sub_node.value, ast.Name) \\\n"
+         "                    and sub_node.value.id in mods:",
+         "            if False:"),
+        ("    if MODULE_EFFECTS in sdefs:\n"
+         '        todo.append(("sc", MODULE_EFFECTS))',
+         "    if False:\n"
+         '        todo.append(("sc", MODULE_EFFECTS))'),
+     ], "closure_follows_a_module_alias_attribute"),
     # ★ 56차 P0-9 — 조립된 이름을 막는 것은 **평가 + fail-closed** 둘이다.
     #   평가 분기 하나만 꺼도 그 식은 "정할 수 없다" 가 되어 fail-closed 가
     #   잡는다 (실측했다). 넷을 함께 되돌려야 55차 상태가 복원된다.
