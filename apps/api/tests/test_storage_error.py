@@ -13,13 +13,18 @@
 from __future__ import annotations
 
 import pytest
-from sqlalchemy.exc import OperationalError
+from sqlalchemy.exc import (
+    DatabaseError,
+    IntegrityError,
+    InterfaceError,
+    OperationalError,
+)
 
 from app.db import get_session
 from app.main import app
 
 
-def _dead(said: str):
+def _dead(said: str, kind=OperationalError):
     """무엇을 부르든 sqlite 가 그 말을 하며 죽는 세션.
 
     라우터마다 부르는 것이 달라서(`exec` · `get` · `scalar`) 하나만 막으면
@@ -28,7 +33,7 @@ def _dead(said: str):
     class _DeadStorage:
         def __getattr__(self, _name):
             def boom(*_args, **_kwargs):
-                raise OperationalError("SELECT 1", {}, Exception(said))
+                raise kind("SELECT 1", {}, Exception(said))
             return boom
 
     def _yield():
@@ -39,8 +44,8 @@ def _dead(said: str):
 
 @pytest.fixture
 def broken(client):
-    def use(said: str):
-        app.dependency_overrides[get_session] = _dead(said)
+    def use(said: str, kind=OperationalError):
+        app.dependency_overrides[get_session] = _dead(said, kind)
         return client
     yield use
     app.dependency_overrides.pop(get_session, None)
@@ -80,6 +85,36 @@ def test_스키마_오류도_장치_탓이_아니다(broken):
     detail = broken("no such column: foo").get("/api/samples").json()["detail"]
     assert "외장하드" not in detail
     assert "no such column" in detail
+
+
+#: **`OperationalError` 하나로는 모자랐다.**  드라이브가 죽으면 sqlite 가 내는
+#: 것이 하나가 아니다: `database disk image is malformed` 는 `DatabaseError`,
+#: 끊긴 연결은 `InterfaceError` 다.  둘 다 `OperationalError` 의 하위가 아니라
+#: **형제**라서 (실측: `issubclass(DatabaseError, OperationalError)` 는 False)
+#: 처음 핸들러를 그냥 지나쳤고, 화면에는 고치기 전과 똑같은 맨 500 이 나갔다.
+@pytest.mark.parametrize(
+    ("kind", "said"),
+    [
+        (OperationalError, "disk I/O error"),
+        (DatabaseError, "database disk image is malformed"),
+        (InterfaceError, "Cannot operate on a closed database"),
+    ],
+)
+def test_드라이버가_내는_것은_다_잡는다(broken, kind, said):
+    response = broken(said, kind).get("/api/samples")
+    assert response.status_code == 503
+    assert "데이터 폴더를 읽지 못했습니다" in response.json()["detail"]
+    assert said in response.json()["detail"]
+
+
+#: 같은 가지에 달렸지만 **저장소 문제가 아닌 것**은 감싸지 않는다.  사람이
+#: 보낸 것이 잘못된 것을 "외장하드를 보세요" 로 덮으면, 그 안내를 따라간
+#: 사람이 멀쩡한 드라이브를 뽑았다 끼운다.  500 과 traceback 그대로 나간다.
+def test_사람_잘못은_저장소_탓으로_감싸지_않는다(broken):
+    # 핸들러가 도로 던지므로 예외가 그대로 올라온다 — `TestClient` 는 그것을
+    # 다시 던지고, 실제 서버에서는 500 과 traceback 이 된다 (예전 그대로).
+    with pytest.raises(IntegrityError):
+        broken("UNIQUE constraint failed", IntegrityError).get("/api/samples")
 
 
 def test_health_는_저장소가_죽어도_200(broken):

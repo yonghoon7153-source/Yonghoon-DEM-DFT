@@ -7001,3 +7001,37 @@ F&Q (안용훈, 2026-08-30): "'첫 사이클' 버튼 누르면 첫 사이클만 
 읽히는데, 실제로는 10 이 사라진다.
 
 옛 코드에 새 시험을 걸어 4건이 실패하는 것을 확인했다. 웹 705 → 708건.
+
+## [2026-08-28] fix | OperationalError 하나로는 모자랐다 — 드라이버가 내는 것 전부
+
+이틀 전 "외장하드가 빠지면 그렇게 말한다" 를 넣었는데, 같은 화면에 **맨
+`500 Internal Server Error` 가 다시 떴다.** 고쳤다고 한 바로 그 자리에서.
+
+핸들러를 `OperationalError` 에만 걸었던 것이 원인이다. 드라이브가 죽으면
+sqlite 가 내는 것이 하나가 아니다:
+
+```
+database disk image is malformed   → sqlalchemy.exc.DatabaseError
+Cannot operate on a closed database → sqlalchemy.exc.InterfaceError
+disk I/O error                     → sqlalchemy.exc.OperationalError   ← 이것만 잡고 있었다
+```
+
+앞의 둘은 `OperationalError` 의 **하위가 아니라 형제**다 (실측:
+`issubclass(DatabaseError, OperationalError)` 는 False — `OperationalError` 가
+`DatabaseError` 의 하위다). 그래서 핸들러를 그냥 지나쳐 예전과 똑같은 맨 500 이
+나갔다. **고친 줄이 실제로 걸리는지 확인하지 않은 것**이 진짜 실수다.
+
+이제 `DBAPIError` — 드라이버가 내는 것 전부 — 를 받는다. 대신 같은 가지에
+달렸지만 **저장소 문제가 아닌 것**(`IntegrityError` · `ProgrammingError` ·
+`DataError`)은 도로 던진다: 사람이 보낸 값이 잘못된 것을 "외장하드를 보세요"
+로 덮으면, 그 안내를 따라간 사람이 멀쩡한 드라이브를 뽑았다 끼운다. 도로
+던지면 500 과 traceback 이 예전 그대로 나간다 (실측으로 확인).
+
+문구를 고르는 정규식에도 `disk image is malformed` · `closed database` ·
+`not a database` 를 더했다.
+
+시험은 세 종류를 다 태운다 (`parametrize`) — 한 종류만 걸어 뒀던 것이 이 사고의
+직접 원인이다.
+
+**아직 안 끝났다**: 이번 500 이 정말 이것인지는 `bml logs` 의 traceback 이
+말해 준다. 그것이 다른 예외면 여기가 아니라 그쪽이다.

@@ -28,7 +28,12 @@ from fastapi.responses import (  # noqa: E402
     StreamingResponse,
 )
 from fastapi.staticfiles import StaticFiles  # noqa: E402
-from sqlalchemy.exc import OperationalError  # noqa: E402
+from sqlalchemy.exc import (  # noqa: E402
+    DataError,
+    DBAPIError,
+    IntegrityError,
+    ProgrammingError,
+)
 
 from wrdkit import __version__ as wrdkit_version  # noqa: E402
 from wrdkit.composition import Role  # noqa: E402
@@ -115,14 +120,29 @@ async def _validation_error(request, exc: RequestValidationError):
 #: 옮긴다.  추측한 처방을 지어내지 않는다.
 _STORAGE_GONE = re.compile(
     r"disk i/o error|unable to open database file|input/output error"
-    r"|no such file or directory|stale file handle|attempt to write a readonly",
+    r"|no such file or directory|stale file handle|attempt to write a readonly"
+    r"|disk image is malformed|closed database|not a database",
     re.IGNORECASE,
 )
 
+#: 사람이 보낸 것이 잘못된 것들.  같은 `DBAPIError` 가지에 달려 있지만 저장소
+#: 문제가 아니라서, "외장하드를 보세요" 로 감싸면 안 된다 — 다시 던져서
+#: 500 과 traceback 을 그대로 보낸다.
+_NOT_STORAGE = (IntegrityError, ProgrammingError, DataError)
 
-@app.exception_handler(OperationalError)
-async def _storage_unreadable(request, exc: OperationalError):
+
+#: **`OperationalError` 하나로는 모자랐다.**  드라이브가 죽으면 sqlite 는
+#: `OperationalError` 만 내지 않는다 — `database disk image is malformed` 는
+#: `DatabaseError` 로, 끊긴 연결은 `InterfaceError` 로 온다.  둘 다
+#: `OperationalError` 의 하위가 아니라서 (형제다) 예전 핸들러를 그냥 지나쳐
+#: **맨 500 이 그대로** 나갔다 — 고쳤다고 한 바로 그 화면이.
+#: 그래서 드라이버가 내는 것(`DBAPIError`) 전부를 받고, 우리 몫이 아닌 것만
+#: 도로 던진다.
+@app.exception_handler(DBAPIError)
+async def _storage_unreadable(request, exc: DBAPIError):
     """503 with a sentence, instead of a bare 500."""
+    if isinstance(exc, _NOT_STORAGE):
+        raise exc
     said = str(getattr(exc, "orig", None) or exc).strip().splitlines()[0][:200]
     if _STORAGE_GONE.search(said):
         detail = (
