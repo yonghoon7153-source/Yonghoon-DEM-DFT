@@ -2598,6 +2598,9 @@ def selftest():
                             "epsilon": sorted(float(v["epsilon"])
                                               for v in mm["environments"].values())}}
             for k, v in patch.items():
+                if k == "_extra":            # 시험용 — 문서에 임의 절을 더한다
+                    doc.update(v)
+                    continue
                 if k.startswith("_"):
                     continue
                 if k == "estimand_form":
@@ -2793,6 +2796,13 @@ def selftest():
             ("neg_lin_no_l_rcpt", {"drop_receipt": ("L",)},
              "X P0-5: **국재화를 만든 L 잡**의 receipt 가 없다 — `.loc` 가 어디서 "
              "왔는지 이어지지 않는다"),
+            # ── 회신 X P0-2 — 문서가 코드에 없는 규칙을 요구하는가 ──────────
+            ("neg_dead_const",
+             {"_prereg_patch": {"_extra": {"문턱": "PIL_EPS1_MIN_ONMOL=0.60 이어야 "
+                                                   "한다"}}},
+             "X P0-2 (리뷰어 재현): 사전등록이 **삭제된 상수**(PIL_EPS1_MIN_ONMOL)를 "
+             "요구하면 막는다 — 문서와 판정기가 다른 규칙을 말하면 어느 쪽이 "
+             "집행되는지 아무도 모른다"),
             ("neg_form_missing", {"_prereg_patch": {"estimand_form": None}},
              "X P0-1: 사전등록이 `estimand_form` 을 **선언하지 않으면** 무엇을 "
              "재는지 대조할 수 없다 — 나머지 결박이 전부 맞아도 다른 관측량일 수 "
@@ -4738,6 +4748,27 @@ def _pil_check_prereg(man, where):
                    "(원자 내부 α·β 상쇄가 복구되지 않는다 — 회신 X P0-1). "
                    "문서를 구현에 맞추거나 구현을 바꾼 뒤 **재비준**할 것."
                    % (_wform, PIL_ESTIMAND_FORM))
+    # ⛔⛔ 회신 X P0-2 (2026-09-02) — **사전등록이 코드에 없는 상수를 요구했다.**
+    #   `PIL_EPS1_MIN_ONMOL=0.60` 은 W P0-7 에서 삭제됐는데(정의상 항상 1이라
+    #   관측 불가능) 문서에는 남아 있었다. 그러면 문서와 판정기가 **다른 규칙**을
+    #   말하고, 어느 쪽이 집행되는지 아무도 모른다.
+    #   ⇒ 문서가 부르는 `PIL_*` 상수가 실제로 있는지 본다. 없으면 위반이다.
+    #   ⚠ '삭제됐다' 고 **명시적으로 적은** 언급은 위반이 아니다 — 이력은 남겨야 한다.
+    _txt_pj = json.dumps(_pj, ensure_ascii=False)
+    #   ⚠ `PIL_BASIN_*` 같은 **와일드카드 표기**는 상수 이름이 아니다 — 끝이
+    #     밑줄이거나 뒤에 `*` 가 붙은 것은 뺀다 (2026-09-02 실측 오탐).
+    for _cname in sorted(set(re.findall(r"\bPIL_[A-Z0-9]+(?:_[A-Z0-9]+)*\b",
+                                        _txt_pj))):
+        if _cname.endswith("_"):
+            continue
+        if _cname in globals():
+            continue
+        _ctx = " ".join(re.findall(r".{0,80}%s.{0,80}" % re.escape(_cname), _txt_pj))
+        if "삭제" in _ctx or "폐기" in _ctx or "제거" in _ctx:
+            continue                     # 이력으로 적은 것은 요구가 아니다
+        bad.append("사전등록이 **코드에 없는 상수** `%s` 를 요구한다 — 문서와 판정기가 "
+                   "다른 규칙을 말한다 (회신 X P0-2). 삭제된 것이면 그렇게 적을 것."
+                   % _cname)
     if _pj.get("status") not in ("ratified", "active"):
         bad.append("사전등록 status 가 %r 다 — **비준(ratified/active)** 이어야 한다 "
                    "(회신 V Q5-1: 비용 발생 전에 닫는다)" % _pj.get("status"))
@@ -6263,6 +6294,14 @@ def pilot_analyze(d):
                             pv["status"] = "INTERVENED"
         pv["threshold"] = PIL_PROBE_MIN
         pv["gain_min"] = PIL_PROBE_GAIN_MIN
+        # ⛔⛔ 회신 X P0-7 (2026-09-02) — **S0P 는 인과 증거인데 receipt 가 없었다.**
+        #   probe 와 무회전 control 은 seed **채택 여부를 바꾼다**. 그런데 입력 SHA 만
+        #   봉인되고 분석기는 receipt 없이 읽었다 — S·SR 에는 걸어 놓고 정작 판정을
+        #   가르는 층을 안 걸었다.
+        _pg = _receipt_gates(pk, d / pk, pil_job_tag(pk, pm))
+        if _pg:
+            pv["receipt_gates"] = _pg
+            pv["status"] = ("PROBE_RECEIPT_UNVERIFIED(%s)" % _pg[0])
         if pm.get("probe_of"):
             probes[pm["probe_of"]] = pv
         else:
@@ -7148,8 +7187,14 @@ PYL2
     echo "== 1층 개입 확인 probe (NoIter · 회신 T Q4) =="
     for j in "$D"/S0P/*/*/*; do
       [ -d "$j" ] || continue; run "$j" "$(basename "$j")_probe" || fail=1; done
+    # ⛔⛔ 회신 X P0-7 — 종전엔 ORCA **정상종료만** 확인하고 "다음: phase S" 를
+    #   안내했다. probe 의 존재 이유는 *개입이 실제로 일어났는가* 인데 그 판정을
+    #   하지 않고 다음 단계를 열어 준 것이다. 정상종료는 개입의 증거가 아니다.
+    if [ "$fail" = 0 ]; then
+      python3 "$BUILDER" --polaron_probe_verdict "$D" || fail=1
+    fi
     [ "$fail" = 0 ] && echo "다음: **리뷰 통과 뒤** bash run_pilot.sh S" \
-                   || echo "probe 에 실패가 있습니다 — phase S 로 가지 않습니다."
+                   || echo "probe 판정이 서지 않았습니다 — phase S 로 가지 않습니다."
     ;;
   S)
     preflight S
@@ -7208,6 +7253,8 @@ def main():
     ap.add_argument("--polaron_seeds", help="phase L 완주 디렉터리 — seed 선택 + phase S 생성")
     ap.add_argument("--polaron_restart", help="3층 재판정 입력 생성 (불안정 잡)")
     ap.add_argument("--polaron_analyze", help="phase S 완주 디렉터리 — F 집합·class·판정")
+    ap.add_argument("--polaron_probe_verdict",
+                    help="1층 probe **판정** — 개입이 실제로 일어났는가 (phase S 앞)")
     # ⛔ 회신 W P0-5 — 러너가 부른다 (사람이 직접 쓸 일은 없다)
     ap.add_argument("--polaron_preflight", nargs=2, metavar=("DIR", "STAGE"),
                     help="단계 실행 **전** 계보 대조 (입력·xyz·%%moinp·낡은 출력)")
@@ -7256,6 +7303,23 @@ def main():
             print("⚠ --nprocs 1 (직렬) — 200원자 r2SCAN-3c SP 는 사실상 끝나지 않습니다. "
                   "가용 코어를 주세요 (예: --nprocs 8)")
         pilot_generate(a)
+        return 0
+    if a.polaron_probe_verdict:
+        # ⛔ 회신 X P0-7 — ORCA 정상종료는 개입의 증거가 아니다. probe 를 **판정**하고
+        #   그 결과로 phase S 를 열지 말지 정한다.
+        _pv_res = pilot_probe_verdict(a.polaron_probe_verdict)
+        print("== 1층 probe 판정 (회신 X P0-7) ==")
+        for _k in sorted(_pv_res["probes"]):
+            print("  %-44s %s" % (_k, _pv_res["probes"][_k]))
+        for _k in sorted(_pv_res.get("controls") or {}):
+            print("  %-44s %s (무회전 기준)" % (_k, _pv_res["controls"][_k]))
+        if _pv_res["blocks"]:
+            print("⛔ probe 판정이 서지 않았다 — phase S 를 열지 않는다:")
+            for _b in _pv_res["blocks"][:10]:
+                print("   · %s" % _b)
+            return 2
+        print("  ✔ 개입 확인 %d건 · 무회전 기준 %d건 — phase S 로 갈 수 있다"
+              % (_pv_res["n_intervened"], len(_pv_res.get("controls") or {})))
         return 0
     if a.polaron_preflight:
         _d, _stg = a.polaron_preflight

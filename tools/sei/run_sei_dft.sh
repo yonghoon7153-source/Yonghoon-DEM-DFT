@@ -31,13 +31,24 @@ for _d in ${SEI_LD_EXTRA:-}; do
 done
 ts(){ echo "[$(date +%H:%M:%S)] $*"; }
 
-LOCK=/tmp/sei_dft.lock; exec 9>"$LOCK"
-command -v flock >/dev/null && { flock -n 9 || { ts "⛔ 이미 돈다"; exit 0; }; }
+# ⛔⛔ 2026-09-02 — lock 이 **전역**이라 서로 무관한 상들을 동시에 못 돌렸다.
+#   li3nd r2 가 돌고 있어서 r1 재시작이 "⛔ 이미 돈다" 로 막혔다. 두 상은 폴더도
+#   입력도 겹치지 않는다 — 막을 이유가 없다. (`run_orca_stage_a.sh` 에서 같은
+#   이유로 이미 seed 별 lock 으로 바꿨는데 여기가 남아 있었다.)
+#   ⇒ **대상별** lock. 같은 상을 두 번 도는 것은 여전히 막는다.
+_lock_key() { printf '%s' "${WORK}/$1" | tr -c 'A-Za-z0-9' '_'; }
+_take_lock() {
+  local k; k=$(_lock_key "$1")
+  exec 9>"/tmp/sei_dft_${k}.lock"
+  command -v flock >/dev/null || return 0
+  flock -n 9 || { ts "⛔ $1 은 이미 돈다 (다른 상은 영향 없다)"; return 1; }
+}
 
 TARGETS=("$@"); [ ${#TARGETS[@]} -eq 0 ] && TARGETS=($(ls "$WORK"))
 
 for t in "${TARGETS[@]}"; do
   d="$WORK/$t"; [ -d "$d" ] || { ts "⛔ 없음: $d"; continue; }
+  _take_lock "$t" || continue          # 이 상만 건너뛴다 (2026-09-02)
   ts "═══ $t ═══"
   cd "$d" || continue
 
