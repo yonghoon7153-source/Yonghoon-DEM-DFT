@@ -2797,6 +2797,15 @@ def selftest():
              "X P0-5: **국재화를 만든 L 잡**의 receipt 가 없다 — `.loc` 가 어디서 "
              "왔는지 이어지지 않는다"),
             # ── 회신 X P0-2 — 문서가 코드에 없는 규칙을 요구하는가 ──────────
+            ("neg_scale_mismatch",
+             {"_prereg_patch": {"_extra": {"규모_실측": {"phase_L": 99}}}},
+             "X P1: 사전등록의 **규모**가 산출물의 실제 수와 다르면 막는다 — 손으로 "
+             "적은 수는 갈린다 (실제로 '2+2+16+13=33' 인데 '총 32' 였다)"),
+            ("neg_scale_arith",
+             {"_prereg_patch": {"_extra": {"규모_실측": {
+                 "phase_L": 2, "phase_L2": 2, "측정_SP": 7, "1층_probe": 5,
+                 "무회전_control": 2, "총_ORCA_실행": 99}}}},
+             "X P1: 사전등록 규모의 **산수가 안 맞으면** 막는다 (항목 합 ≠ 총계)"),
             ("neg_dead_const",
              {"_prereg_patch": {"_extra": {"문턱": "PIL_EPS1_MIN_ONMOL=0.60 이어야 "
                                                    "한다"}}},
@@ -4839,6 +4848,26 @@ def _pil_check_prereg(man, where):
         bad.append("사전등록이 **코드에 없는 상수** `%s` 를 요구한다 — 문서와 판정기가 "
                    "다른 규칙을 말한다 (회신 X P0-2). 삭제된 것이면 그렇게 적을 것."
                    % _cname)
+    # ⛔ 회신 X P1 — 사전등록의 규모와 **산출물의 실제 수**를 대조한다.
+    _ws = _pj.get("규모_실측") or {}
+    _gs = man.get("scale_actual") or {}
+    # ⛔ 생성 시점엔 아직 seed 가 없어 `scale_actual` 이 없다 (정상). 그러나 seed
+    #   이후 단계에서 없으면 **구판 묶음**이고, "둘 다 없으면 통과" 는 이 세션에서
+    #   반복해 잡은 fail-open 이다.
+    if _ws and not _gs and "generate" not in str(where):
+        bad.append("생성물에 `scale_actual` 이 없다 — 사전등록은 규모를 봉인했다. "
+                   "구판 묶음이거나 seed 를 다시 만들어야 한다 (회신 X P1)")
+    if _ws and _gs:
+        for _k in ("phase_L", "phase_L2", "측정_SP", "1층_probe",
+                   "무회전_control", "총_ORCA_실행"):
+            if _k in _ws and _ws.get(_k) != _gs.get(_k):
+                bad.append("규모가 다르다 `%s`: 사전등록 %r ≠ 산출물 %r — 손으로 적은 "
+                           "수는 갈린다 (회신 X P1)" % (_k, _ws.get(_k), _gs.get(_k)))
+        _sum = sum(_ws.get(_k, 0) for _k in ("phase_L", "phase_L2", "측정_SP",
+                                             "1층_probe", "무회전_control"))
+        if "총_ORCA_실행" in _ws and _sum != _ws["총_ORCA_실행"]:
+            bad.append("사전등록 규모의 **산수가 안 맞는다**: 항목 합 %d ≠ 총 %r"
+                       % (_sum, _ws["총_ORCA_실행"]))
     if _pj.get("status") not in ("ratified", "active"):
         bad.append("사전등록 status 가 %r 다 — **비준(ratified/active)** 이어야 한다 "
                    "(회신 V Q5-1: 비용 발생 전에 닫는다)" % _pj.get("status"))
@@ -5799,6 +5828,24 @@ def pilot_seeds(d):
                                                               and rot is None) else "",
                                         ("%.1f%%" % w) if w is not None else "-"))
             made += 1
+    # ⛔ 회신 X P1 (2026-09-02) — 사전등록의 `규모_실측` 을 **손으로 적어** 왔고
+    #   그래서 산수가 틀렸다 (2+2+16+13=33 인데 "총 32"), 무회전 control 2건도
+    #   빠졌다. 실제 수를 산출물이 내고 게이트가 대조한다.
+    _cnt = {}
+    for _v in man["jobs"].values():
+        _cnt[_v["phase"]] = _cnt.get(_v["phase"], 0) + 1
+    man["scale_actual"] = {
+        "phase_L": _cnt.get("L", 0), "phase_L2": _cnt.get("L2", 0),
+        "측정_SP": _cnt.get("S", 0),
+        "1층_probe": sum(1 for v in man["jobs"].values()
+                         if v["phase"] == "S0P" and v.get("seed") != "__no_rotation"),
+        "무회전_control": sum(1 for v in man["jobs"].values()
+                              if v["phase"] == "S0P"
+                              and v.get("seed") == "__no_rotation"),
+        "총_ORCA_실행": sum(_cnt.get(k, 0) for k in ("L", "L2", "S", "S0P")),
+        "⚠": ("산출물에서 센 것이다 — 사전등록의 숫자와 다르면 게이트가 막는다 "
+               "(회신 X P1). SR(재판정)은 불안정이 나온 만큼이라 여기 없다."),
+    }
     man["seeds_made"] = made
     man["probes_made"] = probed          # 회신 T Q4 1층 — 개입 확인 probe
     man["seeds_made_at"] = time.strftime("%Y-%m-%dT%H:%M:%S")
@@ -6255,6 +6302,11 @@ def pilot_probe_verdict(d):
             res["probes"][pk] = "UNREADABLE(%s)" % _why
             res["blocks"].append("probe 를 읽지 못했다: %s — %s" % (pk, _why))
             continue
+        if pm.get("rotate") is None:
+            # 회신 X P1 — 회전이 no-op 인 seed 는 gain 을 요구하지 않는다 (위 참조)
+            res["probes"][pk] = ("NO_ROTATION_NEEDED(몫 %.3f · 회전이 no-op)" % _sh)
+            res["n_intervened"] += 1
+            continue
         _bj = _base.get((pm.get("env"), pk.rsplit("/", 2)[-2]))
         _b = None
         if _bj is not None:
@@ -6525,6 +6577,15 @@ def pilot_analyze(d):
                             pv["status"] = ("PROBE_BASELINE_MISSING(no-rotation "
                                             "control 이 없다 — 회전이 몫을 **늘렸는지** "
                                             "확인할 수 없다 · 회신 W P0-8)")
+                        elif pm.get("rotate") is None:
+                            # ⛔⛔ 회신 X P1 (2026-09-02) — **회전이 생략된 seed 는
+                            #   초기밀도가 무회전 control 과 같다** (고른 MO 가 이미
+                            #   HOMO 라 Rotate 가 no-op). 그러면 gain 이 구조적으로 0
+                            #   이고, 개입 seed 로 평가하면 **항상 탈락**한다.
+                            #   개입이 없는 것이 결함이 아니라 **설계**다.
+                            pv["status"] = ("NO_ROTATION_NEEDED(고른 MO 가 HOMO 자체라 "
+                                            "회전이 no-op — 초기밀도가 무회전 기준과 "
+                                            "같다. gain 을 요구하지 않는다)")
                         elif pv["share"] <= pv["baseline_share"] + PIL_PROBE_GAIN_MIN:
                             pv["status"] = ("SEED_INTERVENTION_FAILED(회전 후 %.3f ≤ "
                                             "무회전 %.3f + %.2f — 목표 몫이 늘지 "
@@ -7033,6 +7094,28 @@ if [ "$_bs" != "$_bm" ]; then
   exit 2
 fi
 
+# ⛔⛔ 회신 X P1 (2026-09-02) — **단계 lock 이 서로 독립이라** probe 와 S 를 동시에
+#   열 수 있었다. 그 둘은 순서가 있는 단계다 (probe 판정이 S 를 여는 조건이다).
+#   ⇒ 의존 단계의 **완료**를 lock 조건으로 쓴다. 앞 단계가 안 끝났으면 시작하지 않고,
+#     앞 단계가 **돌고 있으면** 그 lock 이 잡혀 있으므로 그것도 막는다.
+case "$stage" in
+  L2)      _dep=L ;;
+  seeds)   _dep=L2 ;;
+  probe)   _dep=seeds ;;
+  S)       _dep=probe ;;
+  restart) _dep=S ;;
+  *)       _dep="" ;;
+esac
+if [ -n "$_dep" ] && [ -d "$D/.lock_$_dep" ]; then
+  _dp=$(cat "$D/.lock_$_dep/pid" 2>/dev/null || echo "?")
+  if [ "$_dp" != "?" ] && kill -0 "$_dp" 2>/dev/null; then
+    echo "⛔ 앞 단계 '$_dep' 가 아직 돌고 있습니다 (pid $_dp) — '$stage' 를 열지"
+    echo "   않습니다. 두 단계를 동시에 열면 앞 단계의 판정 없이 뒤가 시작됩니다"
+    echo "   (회신 X P1)."
+    exit 3
+  fi
+fi
+
 LOCK="$D/.lock_$stage"
 if ! mkdir "$LOCK" 2>/dev/null; then
   owner=$(cat "$LOCK/pid" 2>/dev/null || echo "?")
@@ -7056,9 +7139,18 @@ preflight() {
   python3 "$BUILDER" --polaron_preflight "$D" "$1" || exit 2
 }
 
+# ⛔⛔ 회신 X P1 (2026-09-02) — **완료 판정 규칙이 둘이었다.** 러너는 파일 전체를
+#   grep 했고 분석기는 **마지막 segment** 안에서만 봤다. 그래서 앞선 실행이 남긴
+#   'TERMINATED NORMALLY' 가 파일에 있으면 러너는 "완료" 라고 하고 분석기는
+#   "정상종료 아님" 이라고 하는 상태가 가능했다. 정본은 분석기 쪽(마지막 segment)이다.
+_term_ok() {   # $1=출력파일 — **마지막 실행 구간**에서만 정상종료를 본다
+  [ -f "$1" ] || return 1
+  python3 "$BUILDER" --polaron_term_check "$1" >/dev/null 2>&1
+}
+
 run() {
   local j=$1 tag=$2 jk="${1#$D/}" t0 rc
-  if [ -f "$j/$tag.out" ] && grep -aq "ORCA TERMINATED NORMALLY" "$j/$tag.out"; then
+  if _term_ok "$j/$tag.out"; then
     # ⚠ preflight 가 STALE_OUTPUT 을 이미 걸렀다 — 여기 오면 receipt 와 입력이
     #   일치하는 정상 완료다. (종전엔 이 줄이 **유일한** 판단이었다.)
     echo "  이미 완료 — $jk"; return 0; fi
@@ -7067,7 +7159,7 @@ run() {
   ( cd "$j" && "$ORCA" "$tag.inp" > "$tag.out" 2>&1 ); rc=$?
   python3 "$BUILDER" --polaron_receipt "$D" "$stage" "$jk" "$rc" \
       --receipt_started "$t0" --receipt_orca "$ORCA" || true
-  if grep -aq "ORCA TERMINATED NORMALLY" "$j/$tag.out"; then
+  if _term_ok "$j/$tag.out"; then
     echo "  [$(date +%H:%M:%S)] 정상 종료 — $jk"; return 0; fi
   echo "  중단: $jk  (마지막: $(tail -1 "$j/$tag.out" 2>/dev/null))"; return 1
 }
@@ -7260,8 +7352,14 @@ PYLG
     echo "== 국재화가 돌았나 =="
     for j in "$D"/L/*/*; do
       [ -d "$j" ] || continue; n=$(basename "$j")
-      if [ -f "$j/$n.loc" ]; then echo "  ✔ $n.loc ($(stat -c%s "$j/$n.loc") B)"
-      else echo "  ⛔ $n.loc 없음 — 국재화가 안 됐습니다"; fail=1; fi
+      # ⛔ 회신 X P1 — loccheck 은 `.loc.gbw` 를 허용하는데 여기는 `.loc` 만 찾아
+      #   ORCA 6.1 표기에서 정상 국재화를 "안 됐다" 로 판정했다. 증서가 정한
+      #   suffix 를 쓴다 (없으면 두 후보를 다 본다).
+      _lsuf=$(python3 -c 'import json,sys;print(json.load(open(sys.argv[1])).get("loc_suffix") or "")' "$D/LOCCHECK_PASS.json" 2>/dev/null || true)
+      _lf=""
+      for _s in ${_lsuf:-.loc .loc.gbw}; do [ -f "$j/$n$_s" ] && { _lf="$j/$n$_s"; break; }; done
+      if [ -n "$_lf" ]; then echo "  ✔ $(basename "$_lf") ($(stat -c%s "$_lf") B)"
+      else echo "  ⛔ 국재 궤도 파일 없음 (${_lsuf:-.loc/.loc.gbw}) — 국재화가 안 됐습니다"; fail=1; fi
     done
     [ "$fail" = 0 ] && echo "다음: bash run_pilot.sh L2" \
                    || echo "phase L 에 실패가 있습니다 — 다음 단계로 가지 않습니다."
@@ -7447,6 +7545,9 @@ def main():
     ap.add_argument("--polaron_seeds", help="phase L 완주 디렉터리 — seed 선택 + phase S 생성")
     ap.add_argument("--polaron_restart", help="3층 재판정 입력 생성 (불안정 잡)")
     ap.add_argument("--polaron_analyze", help="phase S 완주 디렉터리 — F 집합·class·판정")
+    ap.add_argument("--polaron_term_check",
+                    help="출력의 **마지막 실행 구간**에서 정상종료를 본다 (러너용 · "
+                         "분석기와 같은 규칙). 정상이면 rc 0")
     ap.add_argument("--polaron_probe_verdict",
                     help="1층 probe **판정** — 개입이 실제로 일어났는가 (phase S 앞)")
     # ⛔ 회신 W P0-5 — 러너가 부른다 (사람이 직접 쓸 일은 없다)
@@ -7498,6 +7599,15 @@ def main():
                   "가용 코어를 주세요 (예: --nprocs 8)")
         pilot_generate(a)
         return 0
+    if a.polaron_term_check:
+        # ⛔ 회신 X P1 — 러너와 분석기가 **같은 규칙**을 쓰게 한다 (사본 금지).
+        _p = Path(a.polaron_term_check)
+        if not _p.is_file():
+            return 1
+        _ok, _, _w = pil_seg_terminated(_p.read_text(errors="replace"))
+        if not _ok:
+            print("⛔ %s: %s" % (_p, _w))
+        return 0 if _ok else 1
     if a.polaron_probe_verdict:
         # ⛔ 회신 X P0-7 — ORCA 정상종료는 개입의 증거가 아니다. probe 를 **판정**하고
         #   그 결과로 phase S 를 열지 말지 정한다.
