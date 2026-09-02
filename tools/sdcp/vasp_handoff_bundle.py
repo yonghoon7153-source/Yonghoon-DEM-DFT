@@ -12304,9 +12304,18 @@ def build_bundle(a, ledger: Optional[Dict[str, Any]] = None) -> Path:
     #   그것을 쓴다 (repo 안이라 clean tree 가 덮는다). 종전엔 이 변수를 만들어
     #   놓고 **쓰지 않아** v26 에서 외부 입력 2개가 그대로 남았다 (실측).
     #   없으면 종전대로 runs 트리를 훑는다 (레거시 경로).
+    # ⛔⛔ 회신 BD P0-2 (2026-09-02 실측) — `fb`(자세 파일)는 **이 지점보다 뒤에서**
+    #   읽힌다. `locals().get("fb")` 는 언제나 None 이었고 동결 분기가 한 번도 안
+    #   탔다 — v26·v27 에서 외부 입력 2개가 그대로 남은 이유다. 여기서 직접 읽는다.
+    #   ⚠ 아래 `fb = json.load(...)` 와 **같은 파일**이다 (이중 읽기지만 등록은 dedup).
     _frz_cs = None
-    if isinstance(locals().get("fb"), dict):
-        _frz_cs = (fb.get("⛔_선택_XYZ_동결_2026_09_02") or {}).get("clean_slab")
+    if getattr(a, "from_basins", None):
+        try:
+            _fbj = json.loads(Path(_prov_note(a.from_basins)).read_text(
+                encoding="utf-8"))
+            _frz_cs = (_fbj.get("⛔_선택_XYZ_동결_2026_09_02") or {}).get("clean_slab")
+        except Exception as _e:                              # noqa: BLE001
+            sys.exit("⛔ 자세 파일을 읽을 수 없다: %r" % (_e,))
     _want = set(a.frags) if a.frags else None
     if _frz_cs and _frz_cs.get("path"):
         _fp = Path(__file__).resolve().parent.parent.parent / _frz_cs["path"]
@@ -15515,6 +15524,19 @@ def selftest() -> int:
         chk("동결된 것과 다르다" in str(_e),
             "⛔음성 BD P0-2 (리뷰어 재현): **좌표를 바꾸면** 거부한다 — 종전엔 "
             "label 로 열고 그때 SHA 를 기록해 바뀐 POSCAR 로 번들이 정상 생성됐다")
+
+    # ⛔⛔ 회신 BD P0-2 (2026-09-02 실측) — 동결 분기가 **한 번도 안 탔는데**
+    #   시험이 그것을 못 봤다. `_frz_cs` 를 `locals().get("fb")` 로 찾았는데 `fb` 는
+    #   그 지점보다 **뒤에서** 읽히기 때문이다 (v26·v27 두 판에서 외부 입력 2개가
+    #   그대로 남았다). ⇒ 동결 clean slab 이 선언되면 **glob 을 타지 않는지**를 친다.
+    _srcp2 = Path(__file__).read_text(encoding="utf-8")
+    chk('locals().get("fb")' not in _srcp2,
+        "BD P0-2: 동결 clean slab 판정에 `locals().get(\"fb\")` 를 쓰지 않는다 "
+        "— 그 변수는 이 지점보다 뒤에서 정의된다 (두 판을 헛돌린 원인)")
+    chk('_frz_cs and _frz_cs.get("path")' in _srcp2
+        and "cps = [_fp]" in _srcp2,
+        "BD P0-2: 동결이 선언되면 `cps` 를 **동결본 하나**로 고정한다 (runs 트리를 "
+        "훑지 않는다 → 외부 입력이 남지 않는다)")
 
     _pv_live = provenance_closure()
     chk(_pv_live["n_files"] >= 2
