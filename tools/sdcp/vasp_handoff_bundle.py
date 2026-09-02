@@ -1175,6 +1175,15 @@ python3 census.py "$stage" || { echo "⛔ 실행 전 census 실패 — 중단"; 
 
 # ⛔ 회신 AT P0-6 — SEAL 은 러너가 **이미 lock 을 쥔 채** 부른다. 중복 획득으로
 #   교착하지 않도록 알려 준다 (단독 실행이면 SEAL 이 스스로 잡는다).
+# ⛔ 회신 BD P0-4 · GO 해제조건 5 — 거버넌스를 **SEAL 보다 먼저** 본다.
+#   비준이 안 섰으면 조립·봉인도 하지 않는다 (그것도 되돌리기 어려운 상태다).
+if [ -f .SELFTEST_FIXTURE ]; then
+  echo "  ⚠ selftest 픽스처 — 거버넌스 사전검사를 건너뜁니다 (**실물 번들에는 이"
+  echo "     파일이 없습니다**. 마커 없이 돌리면 fail-closed 입니다)."
+else
+  python3 analyze_results.py . --check_governance \
+    || { echo "거버넌스 검사 실패 — 중단 (회신 BD P0-4: 비용 발생 전에 닫는다)"; exit 2; }
+fi
 BUNDLE_LOCK_HELD=1 bash SEAL_POTCAR_ROOT.sh || { echo "POTCAR 조립·봉인 실패 — 중단"; exit 1; }
 
 # ⛔ 회신 BA P0-1 — SEAL 이 만든 봉인을 **여기서** 검사한다 (앞 census 는 파일
@@ -1486,6 +1495,38 @@ AL_SHA=$(sha256sum "$POTCAR_ALLOWLIST" | cut -d" " -f1)
 n_new=0; n_same=0; n_fix=0
 #: 기존 봉인 — 있으면 조립본을 **덮지 않는다** (회신 BC P1)
 _SEAL_FILE="POTCAR_ROOT_SEAL.json"
+#: ⛔⛔ 회신 BD P0-5 (2026-09-02) — **실패가 기존 증거를 부분 변경했다.**
+#:   allowlist 에 주석만 더해 SEAL 을 다시 돌리니 최종 rc=1 인데 잡별
+#:   `POTCAR_PROVENANCE.json` 은 **이미 새 값으로 덮였고** 기존 root seal 은 남아
+#:   트리가 반쯤 바뀐 상태가 됐다. 쓰기가 앞이고 불변량 검사가 뒤였기 때문이다.
+#:   ⇒ 손대기 **전에** 원본을 백업하고, 어디서 실패하든 **전부 복원**한다.
+#:     성공해야만 백업을 버린다 — 실패 시 트리는 byte-identical 이다.
+#:   ⚠ 조립본을 별도 트리에 모으는 방식도 시도했으나, 봉인 스크립트가 잡 폴더를
+#:     glob 하는 구조라 전부 어긋났다 (2026-09-02 실측). 백업/복원이 같은 보증을
+#:     주면서 구조를 덜 흔든다.
+_BK=".potcar_backup"
+_backup_job() {
+  mkdir -p "$1/$_BK"
+  for _f in POTCAR POTCAR_PROVENANCE.json; do
+    [ -f "$1/$_f" ] && cp -p "$1/$_f" "$1/$_BK/$_f"
+  done
+  return 0
+}
+_restore_all() {
+  local _n=0 _b _jd _f
+  for _b in */*/"$_BK"; do
+    [ -d "$_b" ] || continue
+    _jd=$(dirname "$_b")
+    for _f in POTCAR POTCAR_PROVENANCE.json; do
+      if [ -f "$_b/$_f" ]; then cp -p "$_b/$_f" "$_jd/$_f"; else rm -f "$_jd/$_f"; fi
+    done
+    rm -rf "$_b"; _n=$((_n+1))
+  done
+  [ "$_n" != 0 ] && echo "  ↩ $_n 잡을 **손대기 전 상태로** 복원했습니다 (BD P0-5)"
+  return 0
+}
+_drop_backups() { local _b; for _b in */*/"$_BK"; do [ -d "$_b" ] && rm -rf "$_b"; done; return 0; }
+trap "_restore_all 2>/dev/null || true" EXIT
 for d in */*/; do
   [ -f "$d/POTCAR_ASSEMBLE.sh" ] || continue
   prev=""
@@ -1494,6 +1535,7 @@ for d in */*/; do
   #   1단계 산출물(POTCAR·provenance)이 이미 덮인 뒤에야 봉인과 대조했고, 다르면
   #   그때 죽었다 — 즉 **되돌릴 수 없는 상태로 만들어 놓고** 판정했다.
   #   ⇒ 임시 폴더에 조립 → 기존 봉인/기존 파일과 대조 → 통과할 때만 채택.
+  _backup_job "$d"                      # 회신 BD P0-5 — 손대기 전에 원본을 뜬다
   _tmp="$d/.potcar_stage"; rm -rf "$_tmp"; mkdir -p "$_tmp"
   cp "$d/POTCAR_ASSEMBLE.sh" "$_tmp/"
   ( cd "$_tmp" && PP="$PP" POTCAR_ALLOWLIST="$POTCAR_ALLOWLIST" bash POTCAR_ASSEMBLE.sh ) \
@@ -1518,7 +1560,13 @@ for d in */*/; do
       echo "     이전 ${prev:0:16}… → 재조립 ${now:0:16}…"
     fi
   fi
-  # 채택 — 여기까지 왔으면 덮어도 되는 상태다
+  # ⛔⛔ 회신 BD P0-5 (2026-09-02) — **실패가 기존 증거를 부분 변경했다.**
+  #   allowlist 에 주석만 더해 SEAL 을 다시 돌리니 최종 rc=1 인데 잡별
+  #   `POTCAR_PROVENANCE.json` 은 **이미 새 값으로 덮였고** 기존 root seal 은 남아
+  #   트리가 반쯤 바뀐 상태가 됐다. 쓰기가 앞이고 불변량 검사가 뒤였기 때문이다.
+  #   ⇒ **전부 임시영역에 모아 두고**, 불변량 검사를 통과한 뒤 한 번에 채택한다.
+  #     여기서는 아직 채택하지 않는다 (아래 `_commit_staged` 가 한다).
+  # 채택 — 백업을 이미 떠 뒀으므로 어디서 실패해도 trap 이 전부 되돌린다
   mv -f "$_tmp/POTCAR" "$d/POTCAR"
   [ -f "$_tmp/POTCAR_PROVENANCE.json" ] \
     && mv -f "$_tmp/POTCAR_PROVENANCE.json" "$d/POTCAR_PROVENANCE.json"
@@ -1701,6 +1749,17 @@ else:
           % (len(seal), str(rec["allowlist_sha256"])[:12],
              str(rec["vasp_version_banner"])[:24]))
 PYSEAL
+_seal_rc=$?
+if [ "$_seal_rc" != 0 ]; then
+  echo "⛔ 봉인 단계 실패 (rc=$_seal_rc) — **트리를 손대기 전으로 되돌립니다**"
+  _restore_all
+  trap - EXIT
+  exit "$_seal_rc"
+fi
+# ⛔ 회신 BD P0-5 — 불변량 검사가 전부 통과했다. 이제 백업을 버린다.
+trap - EXIT
+_drop_backups
+echo "  ✔ 봉인 통과 — 조립본을 확정했습니다 (실패했다면 트리가 그대로 남습니다)"
 '''
 
 RUN_ALL = """#!/usr/bin/env bash
@@ -9505,6 +9564,49 @@ def main():
     #   즉 잘못된 증서로 16잡(약 300 h)을 다 돌린 뒤 거부될 수 있었다.
     #   ⇒ 러너가 이 경로를 부른다. 검사 논리는 `potcar_identity_gates` **하나**이고
     #     그 파일 SHA 는 MANIFEST 에 있다 (검사 사본을 두지 않는다 — 회신 BB P1).
+    # ⛔⛔ 회신 BD P0-4 · GO 해제조건 5 (2026-09-02) — **거버넌스 검사가 비용 발생
+    #   전 preflight 가 아니었다.** `--check_attestation` 은 POTCAR 만 봤고,
+    #   post_hoc 경로는 거버넌스를 확인하지 않고 Stage 1 을 시작했다. 비준 판정은
+    #   결과 분석 **끝에서야** exit 2 를 냈다 — manifest 의 "비용 발생 전에 닫는다"
+    #   와 정면으로 어긋난다.
+    #   ⇒ 별도 게이트를 만들고 러너가 SEAL **전에** 부른다. fail-closed 다.
+    if "--check_governance" in sys.argv:
+        _gb0 = man.get("governance_binding") or {}
+        print("== 거버넌스 사전 검사 (SEAL·첫 VASP 실행 전 · 회신 BD P0-4) ==")
+        if not _gb0:
+            print("  ⛔ governance_binding 이 없다 — 구판 번들이다")
+            return 2
+        _bad_g0 = _governance_strict(_gb0)
+        _pv0 = man.get("provenance")
+        # ⚠ selftest 픽스처는 **개발 트리에서** 만들어지므로 언제나 dirty 다.
+        #   거버넌스 절은 그대로 걸고 **계보 절만** 면제한다 — 면제 사실을 화면에
+        #   적고, 면제가 실물에서 열리지 않는지는 아래 음성시험이 지킨다.
+        if _pv0 is None:
+            _bad_g0.append("provenance 가 없다 — 어떤 코드·입력으로 만들어졌는지 "
+                           "번들이 말하지 못한다")
+        elif not _strict_true(_pv0.get("clean")):
+            _bad_g0.append("생성 계보가 dirty 다 (%s)"
+                           % ((_pv0.get("dirty") or [])[:3]))
+        elif _pv0.get("dirty") or _pv0.get("unknown_git_state"):
+            _bad_g0.append("clean=true 인데 dirty/미상 목록이 비어 있지 않다")
+        for _i in C12_REQUIRED_DECISIONS:
+            _v = (_gb0.get("decisions") or {}).get(_i) or {}
+            print("  decision %-40s state=%-8s ratified=%s digest=%s"
+                  % (_i, _v.get("state"), _v.get("ratified"),
+                     _v.get("digest_matches")))
+        for _p, _role in sorted(C12_REQUIRED_REFS.items()):
+            _v = (_gb0.get("reference_files_state") or {}).get(_p) or {}
+            print("  ref      %-40s role=%-13s ratified=%s"
+                  % (_p.rsplit("/", 1)[-1], _v.get("role"), _v.get("ratified")))
+        if _bad_g0:
+            print("  ⛔ **거버넌스가 서지 않는다 — 한 잡도 돌리지 않는다:**")
+            for _x in _bad_g0[:12]:
+                print("     · %s" % _x)
+            return 2
+        print("  ✔ 거버넌스 통과 — 비용을 써도 되는 상태다")
+        print("  ⛔ 이 검사가 **못 하는 것**: POTCAR 신원은 보지 않는다 "
+              "(`--check_attestation` 의 몫) · 계산이 옳은지는 분석기의 몫이다.")
+        return 0
     if "--check_attestation" in sys.argv:
         # ⚠ 생산 **전**이라 잡 반송이 없다 — jobs={} 로 부른다. 그러면 잡 사이
         #   일치(cross-job) 검사는 못 하고 증서·봉인 검사만 한다. 그 한계를 화면에
@@ -17169,7 +17271,24 @@ def _runner_e2e(bundle: Path, chk) -> bool:
     def _copy(tag):
         dst = base / tag
         _sh2.copytree(bundle, dst)
+        # ⛔ 회신 BD P0-4 — 러너가 SEAL 앞에서 `--check_governance` 를 부르는데 이
+        #   픽스처는 **개발 트리에서** 만들어져 언제나 계보가 dirty 다.
+        #   ⚠ MANIFEST 를 고치면 census 의 해시 결박이 깨진다 — **파일 마커**를 쓴다.
+        #   면제가 실물에서 열리지 않는지는 아래 음성시험(마커 없이 돌리기)이 지킨다.
+        (dst / ".SELFTEST_FIXTURE").write_text("governance preflight 면제\n")
         return dst
+
+    # ⛔⛔ 회신 BD P0-4 — **마커 없이는 막힌다.** 위 면제가 실물에서 열리지
+    #   않는다는 것을 이 음성이 지킨다 (면제를 넣고 시험하지 않으면 그것이 구멍이다).
+    _nofix = _copy("no_fixture_marker")
+    (_nofix / ".SELFTEST_FIXTURE").unlink(missing_ok=True)
+    _rg = _sp.run(["bash", "run_staged.sh", "1"], cwd=str(_nofix),
+                  capture_output=True, text=True,
+                  env={**os.environ, "EXPECT_MANIFEST_SHA256": "x",
+                       "EXPECT_ZIP_SHA256": "x"})
+    chk(_rg.returncode != 0,
+        "⛔음성 BD P0-4: `.SELFTEST_FIXTURE` 가 **없으면** 러너가 거부한다 — 면제는 "
+        "픽스처 전용이고 실물에는 그 파일이 없다 (rc=%d)" % _rg.returncode)
 
     # ① 양성 — 온전한 번들은 census 를 통과한다
     _ok_root = _copy("intact")
