@@ -1,6 +1,6 @@
 # 55차 게이트 리뷰 요청 — 묶음 9 (실행 전 승인 · 보존 lifecycle)
 
-**대상 커밋**: `TBD` (브랜치 `claude/14-gate-code-review-9qkx05`)
+**대상 커밋**: `1404c7b6` (브랜치 `claude/14-gate-code-review-9qkx05`) — 코드·시험·계약·산출물(g10)·변이 전수 증거를 전부 담은 커밋이다. 이 줄을 고치는 커밋만 그 뒤에 하나 더 있다 (내용 동일).
 **직전 판정**: 54차 **NO-GO** — P0 5묶음 · P1 2건
 
 ---
@@ -72,19 +72,22 @@ alias 의 st_ino == 원본의 st_ino  (같은 tree 다)
 
 ## §2 증거
 
-### 2-1 전체 회귀 — `TBD`
+### 2-1 전체 회귀 — **1399 passed · 1 xfailed · 0 failed** (785s)
 
-### 2-2 strict smoke — `TBD`
+### 2-2 strict smoke — **rc 0 · 52 ✅ · 0 ❌** (clean 커밋 `1404c7b6` 에서)
 
 ### 2-3 변이 전수 — 등록부 **165 scenario** (executable 157 · declared 8)
 
 157 → 165. 55차 방어 8건을 등록했고, 55차 수정으로 원문이 움직인 낡은 preimage
 4건을 갱신했다 (`--check-preimages` 가 그것을 먼저 잡았다).
 
+12조각을 **HEAD 를 고정한 채** 끝까지 돌렸고 조각별 문제는 0건이다.
+`--check-coverage` 는 `등록부 scenario 165 (executable 157 · declared 8) · 조각 12개에서 관측 165 · 조각 합집합이 등록부 전체를 정확히 덮었다` (rc 0).
+
 **전수 재생 결과의 정본은 커밋된 증거 파일이다** —
 `docs/22p_gap/mutation_coverage/s1..s12.json` 과 그 옆의 `reports/`.
 
-### 2-4 이번 라운드에 변이가 잡은 것 셋 — **하나는 내가 조용히 약화시킨 자리였다**
+### 2-4 증거 층이 잡은 것 넷 — **둘은 내 수정 자체의 결함이었다**
 
 **① P0-1 의 첫 재현 시험이 거짓 초록이었다.** hook 을
 `_unlink_token_generation()` 에 걸었더니 그 함수의 generation 검사가 먼저 막았다.
@@ -109,6 +112,15 @@ digest 를 움직인다 (`d43c0e39…` → `3f0e1af2…`). `MODULE_EFFECTS` 가 
 (`module_scope_expression_statement_is_fail_closed` 가 이제 "뿌리를 정할 수 없는
 표현식도 digest 를 움직이는가" 를 본다), scenario 를 **declared** 로 옮겨
 사유를 적었다.
+
+**④ 합집합 검사가 P1-2 의 결속이 아직 헐겁다고 알려줬다.** 조각이 도는 중에
+문서를 커밋했더니 `조각들이 서로 다른 HEAD 에서 나왔다` 로 거부했다. 검사를
+느슨하게 만들지 않고 다시 돌렸다 — 방금 빨개진 검사를 약화시켜 초록을 얻는
+것은 이 게이트가 막으려는 행동이다. 그 과정에서 진짜 구멍이 보였다:
+`_tested_tree_digest()` 가 변이 대상 3파일과 EXPECT 가 이름한 시험 파일만
+봤으므로, `src/scoring.py`(producer 닫힘이 건너가는 곳)·`conftest.py`·`tools/`
+의 나머지가 바뀌어도 digest 는 안 움직였다. "실제로 시험한 코드" 라고 부르려면
+그 전부여야 하므로 `src/`·`tools/`·`tests/` 의 모든 `.py` 로 넓혔다.
 
 ### 2-5 산출물 — g9 을 얼리고 g10 으로
 
@@ -146,8 +158,10 @@ identity 의 **정의**다. 그래도 cross-cohort 비교는 금지다.
    끌려 들어온 곳은 없는가 (절단면이 조용히 넓어졌는가).
 5. **lifecycle lock.** `_lifecycle_lock()` 과 원장 lock·게시 lock 사이의 순서에
    순환이 있는가. 수리와 동결이 겹치는 다른 schedule.
-6. **증거.** `_tested_tree_digest()` 가 세는 파일 집합이 실제로 시험한 코드와
-   다른 경우 (변이 대상 3파일 + 기대 실패 시험 파일 밖에서 결과가 바뀌는 경로).
+6. **증거.** `_tested_tree_digest()` 는 `src/`·`tools/`·`tests/` 의 모든
+   `.py` 와 변이 대상 3파일을 센다. 그 **밖**에서 시험 결과를 바꾸는 것이
+   있는가 (설정 파일 · 환경변수 · 설치된 의존성 버전 · `configs/`). 그리고
+   `head` 는 여전히 "실재하는 commit 이고 조각들이 같은 것" 만 묻는다.
 7. **거부하면서 남기는 기록.** freeze 말고 다른 경로에도 같은 형태가 있는가.
 8. **순서 결함.** 부작용·판정 순서가 뒤바뀐 다른 자리.
 
