@@ -1390,6 +1390,26 @@ run_wave() {   # $1 = 목록 파일
       echo "   중단된 실행은 폴더를 새로 풀고 처음부터 돌려 주십시오."
       exit 2
     fi
+    # ⛔⛔ 회신 BD P1 (2026-09-02) — **receipt 를 먼저 자르고 나서 거부했다.**
+    #   Stage 1 을 실수로 다시 부르면 run_job.sh 가 "이미 산출물이 있다" 로 거부하는데,
+    #   그 **전에** 러너가 정상 receipt 를 헤더 한 줄로 덮어써 증거를 망가뜨렸다.
+    #   ⇒ 기존 산출물 검사를 **쓰기보다 앞에** 둔다. 거부하면 아무것도 손대지 않는다.
+    if [ "${PLANNED_CONTINUATION:-0}" != "1" ]; then
+      _stale_pre=""
+      for _ph in pre relax static dense; do
+        [ -d "$j/$_ph" ] || continue
+        for _f in OUTCAR vasprun.xml OSZICAR CONTCAR WAVECAR CHGCAR; do
+          [ -e "$j/$_ph/$_f" ] && _stale_pre="$_stale_pre $_ph/$_f"
+        done
+      done
+      if [ -n "$_stale_pre" ]; then
+        echo "⛔ $j 에 이미 산출물이 있습니다:$_stale_pre"
+        echo "   이 잡은 **1회용**입니다 — 폴더를 새로 풀고 처음부터 돌려 주십시오."
+        echo "   ⚠ receipt 는 **손대지 않았습니다** (회신 BD P1: 종전엔 먼저 덮어쓴 뒤"
+        echo "      거부해 증거가 망가졌습니다)."
+        exit 1
+      fi
+    fi
     # 계획된 이어달리기(dense 승격)는 **새 상**을 여는 것이라 성격이 다르다.
     if [ "${PLANNED_CONTINUATION:-0}" = "1" ] && [ -s "$j/EXECUTABLE_RECEIPT.tsv" ]; then
       _rtag=_runner_continue; _rop=append
@@ -4719,6 +4739,14 @@ def _selftest_closure(chk):
         ("supersedes 가 목록", {"supersedes": ["a", "b"]}, "목록이다"),
         ("부모 자동 대체", {"auto_replace_parent": True}, "자동으로 덮지 않는다"),
         ("원본 덮어씀", {"overwrote_parent": True}, "원본은 보존"),
+        # ⛔ 회신 BD P1 재현 — 값의 **모양**을 안 봤다
+        ("부모 ZIP SHA 가 'x'", {"parent_bundle_zip_sha256": "x"}, "64-hex"),
+        ("부모 MANIFEST SHA 가 'x'", {"parent_manifest_sha256": "x"}, "64-hex"),
+        ("입력 SHA 가 'x'", {"parent_input_sha256": {"INCAR": "x"}}, "64-hex"),
+        ("입력 SHA 가 dict 가 아님", {"parent_input_sha256": "x" * 64},
+         "dict 여야 한다"),
+        ("job 키 모양이 아님", {"parent_job_key": "not-a-key",
+                                "supersedes": "not-a-key"}, "모양이 아니다"),
     ):
         _m = ({"rescue": {}} if _nm == "봉투 자체가 없음"
               else {"rescue": dict(_RGOOD["rescue"], **_mut)})
@@ -6673,6 +6701,10 @@ C12_RESCUE_ENVELOPE = {
     "⛔_아직_없는_것": ("생성기의 rescue 모드. 이 봉투는 **무엇을 만들지**를 고정한 "
                         "것이고, 실패별 SCF 처방(ALGO·NELM·AMIX…)은 실패를 보고 "
                         "정한다 (회신 BC Q4)."),
+    "⛔_이_검사가_못_하는_것": ("부모 번들이 손에 없으면 `parent_job_key` 가 **실제로 "
+                               "존재하는 잡인지** 확인할 수 없다 — 여기서는 키의 "
+                               "**모양**만 본다. 존재 확인은 rescue 생성기가 부모 "
+                               "MANIFEST 를 받아서 해야 한다 (회신 BD P1)."),
 }
 
 
@@ -6700,6 +6732,26 @@ def c12_rescue_envelope_ok(meta):
                    "**자동으로 덮지 않는다** (어느 것을 쓸지는 사전등록이 정한다)")
     if r.get("overwrote_parent"):
         bad.append("부모 산출물을 덮었다고 기록돼 있다 — 원본은 보존해야 한다")
+    # ⛔ 회신 BD P1 (2026-09-02) — 부모 SHA 에 `"x"` 를 넣고 **없는 job** 을 써도
+    #   통과했다. 봉투가 "칸이 채워졌나" 만 보고 **값의 모양**을 안 봤다.
+    for _k in ("parent_bundle_zip_sha256", "parent_manifest_sha256"):
+        _v = str(r.get(_k) or "")
+        if _v and not re.match(r"^[0-9a-f]{64}$", _v):
+            bad.append("`rescue.%s` 가 64-hex 가 아니다 (%r)" % (_k, r.get(_k)))
+    _pin = r.get("parent_input_sha256")
+    if _pin is not None:
+        if not isinstance(_pin, dict) or not _pin:
+            bad.append("`rescue.parent_input_sha256` 가 비어 있지 않은 dict 여야 한다")
+        else:
+            _badh = sorted(k for k, v in _pin.items()
+                           if not re.match(r"^[0-9a-f]{64}$", str(v or "")))
+            if _badh:
+                bad.append("`rescue.parent_input_sha256` 의 값이 64-hex 가 아니다 %s"
+                           % _badh[:3])
+    #   job 키는 `<tier>/<잡이름>` 모양이어야 한다 (존재 확인은 부모 번들이 있어야
+    #   가능하므로 여기서는 **모양**만 본다 — 그 한계를 적는다)
+    if _pj and not re.match(r"^[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+$", str(_pj)):
+        bad.append("`rescue.parent_job_key` 가 `<tier>/<잡>` 모양이 아니다 (%r)" % _pj)
     _aid = str(r.get("attempt_id") or "")
     if _aid and not re.match(r"^\d{8}T\d{6}Z_[A-Za-z0-9_.-]+$", _aid):
         bad.append("`attempt_id` 형식이 아니다 (YYYYMMDDTHHMMSSZ_라벨): %r" % _aid)
@@ -12193,9 +12245,15 @@ def build_bundle(a, ledger: Optional[Dict[str, Any]] = None) -> Path:
         # ⚠ 모드에 따라 **사실이 다르다**. 단일점 판에 "다상·LREAL=F" 를 적어 두면
         #   외주처와 나중의 우리가 다른 프로토콜을 돌았다고 읽는다 (Codex 6차 §8).
         "protocol_delta_vs_phaseB": (
+            # ⛔ 회신 BD P1 (2026-09-02) — 이 문장이 "LREAL 도 Auto 로 같다" 고
+            #   적혀 있었는데 **실물 18개 INCAR 은 전부 `.FALSE.`** 다 (회신 U P0-5
+            #   에서 고정기하 단일점의 LREAL 오차가 조각 간 대비에서 소거되지
+            #   않는다는 이유로 바꿨다). 설명이 그 변경을 따라오지 않았다.
             ("의도된 개선: LASPH T(납품 F) · LDIPOL T(납품 F) · ISMEAR 0/0.05"
-             "(납품 1/0.2). **상 구성은 납품과 같은 단일점**이고 LREAL 도 Auto 로 "
-             "같다 — 이번 판이 바꾼 것은 기하 출처(UMA 이완)와 자기 seed 2종이다. "
+             "(납품 1/0.2) · **LREAL .FALSE.(납품 Auto)** — 고정기하 단일점에서 "
+             "LREAL 오차는 조각 간 대비에서 소거되지 않는다 (회신 U P0-5). "
+             "**상 구성은 납품과 같은 단일점**이고, 이번 판이 바꾼 것은 기하 "
+             "출처(UMA 이완)와 자기 seed 2종이다. "
              "승계: U 6.2 · IVDW 11 · ENCUT 520 · Ni_pv.")
             if a.single_point else
             ("의도된 개선: LASPH T(납품 F) · LDIPOL T(납품 F) · ISMEAR 0/0.05"
@@ -13931,6 +13989,31 @@ def build_bundle(a, ledger: Optional[Dict[str, Any]] = None) -> Path:
     if _noasm:
         sys.exit(f"⛔ POTCAR 조립기가 없는 잡 {len(_noasm)}개 — 제출 본문이 "
                  f"exit 127 로 죽는다: {_noasm[:5]}")
+    # ⛔⛔ 회신 BD P1 (2026-09-02) — `vacuum.per_job_A` 의 **c2 두 값이 c1 값을
+    #   반복**했다. `fit_bundle_vacuum` 은 c1 로 한 번 돌고, vacconv(c2) 잡은 그
+    #   **뒤에** 만들어지기 때문이다 — 기록이 실물과 달랐다.
+    #   ⇒ 잡이 다 만들어진 뒤 **디스크에서 다시 잰다**. 손으로 맞추지 않는다.
+    if isinstance(man.get("vacuum"), dict):
+        _re_pj, _miss_pj = {}, []
+        for _jk in sorted(man.get("planned") or {}):
+            _pc = out / _jk / "POSCAR"
+            if not _pc.is_file():
+                _miss_pj.append(_jk); continue
+            try:
+                _v = image_separation_A(_pc)
+            except Exception:                                # noqa: BLE001
+                _miss_pj.append(_jk); continue
+            if _v is not None:
+                _re_pj[_jk] = round(float(_v), 3)
+        if _re_pj:
+            man["vacuum"]["per_job_A"] = _re_pj
+            man["vacuum"]["per_job_A_measured_after_all_jobs"] = True
+            man["vacuum"]["⛔_per_job_출처"] = (
+                "잡이 **다 만들어진 뒤 디스크의 POSCAR 에서** 다시 쟀다. 종전엔 "
+                "c1 한 번의 결과를 그대로 실어 vacconv(c2) 잡이 c1 값을 반복했다 "
+                "(회신 BD P1). 기체 기준계는 슬랩이 없어 여기 없다.")
+            if _miss_pj:
+                man["vacuum"]["per_job_A_unmeasured"] = _miss_pj[:8]
     man["files_sha256"] = files
 
     # 번들이 **자기가 어떻게 만들어졌는지**를 담는다. wave1 은 이게 없어서
@@ -16120,6 +16203,18 @@ def selftest() -> int:
     chk(bool(_pj), f"자세별 진공이 기록된다 ({len(_pj)}개)")
     chk(all(v >= _vac["declared_A"] - 1e-6 for v in _pj.values()),
         f"배포 전 자세가 **전부** 선언치 이상 (최소 {_vac.get('min_after_A')} Å)")
+    # ⛔ 회신 BD P1 — c2(vacconv) 잡의 값이 c1 을 **반복하지 않는가**
+    chk(_vac.get("per_job_A_measured_after_all_jobs") is True,
+        "BD P1: `per_job_A` 를 **잡이 다 만들어진 뒤 디스크에서** 다시 잰다 "
+        "(종전엔 c1 한 번의 결과라 vacconv 가 c1 값을 반복했다)")
+    _c2jobs = [k for k in _pj if (((m_sp.get("planned") or {}).get(k) or {})
+                                  .get("meta") or {}).get("vacconv")]
+    if _c2jobs:
+        _c1jobs = [k for k in _pj if k not in _c2jobs]
+        chk(any(abs(_pj[a_] - _pj[b_]) > 1e-6
+                for a_ in _c2jobs for b_ in _c1jobs),
+            "BD P1: c2 잡의 진공이 c1 잡과 **다른 값**이다 (%s vs %s)"
+            % ([_pj[k] for k in _c2jobs][:2], [_pj[k] for k in _c1jobs][:2]))
 
     # ── 진공 유닛시험: 짧은 셀 → 늘림 → 원자가 안 움직였는가 ────────────────
     _vd = td / "vactest"
@@ -16253,6 +16348,19 @@ def selftest() -> int:
     chk(all("dense" not in (m_sp["planned"][c].get("phases") or [])
             for c in m_sp["magnetic_controls"]),
         "SP: 자기 대조군은 dense 없음 (coarse static 만 — 예산)")
+    # ⛔ 회신 BD P1 (2026-09-02) — MANIFEST 설명이 **실물 INCAR** 과 달랐다.
+    #   "LREAL 도 Auto 로 같다" 라고 적혀 있는데 18개 INCAR 은 전부 `.FALSE.` 였다
+    #   (회신 U P0-5 에서 바꿨고 설명이 따라오지 않았다).
+    #   ⚠ 이 시험은 **생성기 쪽**이다 — `m_sp` 는 배포본 스코프에 없다 (실측).
+    _pd = m_sp.get("protocol_delta_vs_phaseB") or ""
+    _real_lreal = sorted({
+        (v.get("static") or {}).get("LREAL")
+        for v in (m_sp.get("planned") or {}).values()
+        if isinstance(v.get("incar_expected"), dict)
+        for _k, v2 in [("x", v["incar_expected"])] for v in [v2]} - {None})
+    chk("LREAL .FALSE." in _pd and "LREAL 도 Auto 로 같다" not in _pd,
+        "BD P1: MANIFEST 설명이 **실물 LREAL(.FALSE.)** 과 같은 말을 한다 "
+        "(종전엔 'Auto 로 같다' 라고 적혀 있었다)")
     _runner_regression(out_sp, chk)
     _runner_launcher_regression(out_sp, chk)
 
