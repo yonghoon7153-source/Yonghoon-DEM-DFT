@@ -3088,6 +3088,44 @@ def selftest():
         chk(_c9ok is not None,
             "X P0-9 양성: 같은 ORCA 로 실행하면 증서가 유효하다")
 
+        # ══ 회신 X P0-8 — manifest 와 **디스크**의 exact census ═══════════
+        _p8 = os.path.join(ptd, "x8_extra_dir")
+        _copy2.copytree(os.path.join(ptd, "q4_ok"), _p8)
+        os.makedirs(os.path.join(_p8, "L", "eps1", "L_intruder"), exist_ok=True)
+        _pp8, _nn8 = pil_lineage_check(_p8, "L")
+        chk(any(x.startswith("UNSEALED_JOB_DIRS") for x in _pp8),
+            "⛔음성 X P0-8 (리뷰어 재현): 봉인되지 않은 **세 번째 L 디렉터리**를 "
+            "넣으면 잡는다 — 종전엔 preflight 가 manifest 만 돌아 '2잡 정상' 으로 "
+            "통과하고 러너는 디스크를 glob 해 **3잡을 실행**했다")
+        _p8b = os.path.join(ptd, "x8_missing_dir")
+        _copy2.copytree(os.path.join(ptd, "q4_ok"), _p8b)
+        _copy2.rmtree(os.path.join(_p8b, "L", "eps1", "L_neutral"))
+        _pp8b, _ = pil_lineage_check(_p8b, "L")
+        chk(any(x.startswith("MISSING_JOB_DIRS") or x.startswith("INP_MISSING")
+                for x in _pp8b),
+            "⛔음성 X P0-8: 계획된 잡 폴더가 **없으면** 잡는다")
+
+        # ══ 회신 X P0-7 — S0P 도 receipt · probe 판정을 phase S 앞에 ═══════
+        _p7 = os.path.join(ptd, "x7_probe_no_rcpt")
+        _copy2.copytree(os.path.join(ptd, "q4_ok"), _p7)
+        _rp7 = os.path.join(_p7, PIL_RECEIPTS)
+        _keep = [x for x in open(_rp7, encoding="utf-8").read().splitlines()
+                 if x.strip() and '"phase": "S0P"' not in x]
+        open(_rp7, "w", encoding="utf-8").write("\n".join(_keep) + "\n")
+        _r7 = pilot_analyze(_p7)
+        chk(any("PROBE_RECEIPT_UNVERIFIED" in str(v.get("intervention", {}).get("status"))
+                for v in _r7["jobs"].values()),
+            "⛔음성 X P0-7: S0P receipt 가 없으면 probe 판정을 **확인 못 함**으로 "
+            "낸다 — seed 채택을 가르는 층인데 종전엔 receipt 없이 읽었다")
+        _v7 = pilot_probe_verdict(os.path.join(ptd, "q4_ok"))
+        chk(_v7["n_intervened"] >= 1 and not _v7["blocks"],
+            "X P0-7 양성: `--polaron_probe_verdict` 가 **개입을 판정한다** "
+            "(확인 %d건 · 기준 %d건)" % (_v7["n_intervened"], len(_v7["controls"])))
+        _v7b = pilot_probe_verdict(_p7)
+        chk(_v7b["blocks"],
+            "⛔음성 X P0-7: receipt 없는 probe 로는 phase S 를 열지 않는다 "
+            "(종전엔 ORCA 정상종료만 보고 '다음: phase S' 를 안내했다)")
+
         _p4, _n4 = pil_lineage_check(_l2d, "L2")
         chk(_n4 >= 1 and not [x for x in _p4 if x.startswith(("INP_CHANGED",
                                                              "MOINP_MISSING"))],
@@ -4537,6 +4575,38 @@ def pil_lineage_check(d, stage):
                 probs.append("STALE_OUTPUT(%s: 출력은 입력 %s… 로 돌았는데 지금 입력은 "
                              "%s… 다 — 옛 결과를 판정에 쓰지 않는다)"
                              % (jk, str(r.get("inp_sha256"))[:12], got[:12]))
+    # ⛔⛔ 회신 X P0-8 (2026-09-02) — **manifest 만 순회하고 디스크는 안 봤다.**
+    #   preflight 는 manifest 의 잡을 돌고, 러너는 `"$D"/L/*/*` 를 glob 한다.
+    #   그래서 봉인되지 않은 세 번째 L 디렉터리를 넣으면 preflight 는 "2잡 정상" 으로
+    #   통과하고 러너는 **3잡을 실행**했다. 계획과 실행이 갈린다.
+    #   ⇒ 그 phase 의 **디스크 폴더 집합**과 manifest 집합이 정확히 같아야 한다.
+    _want_dirs = {jk for jk, jm in (man.get("jobs") or {}).items()
+                  if jm.get("phase") == ph}
+    _root = d / ph
+    _seen_dirs = set()
+    if _root.is_dir():
+        for _p in sorted(_root.glob("*/*")):
+            if _p.is_dir():
+                _seen_dirs.add(str(_p.relative_to(d)).replace(os.sep, "/"))
+        # S0P 는 한 단계 더 깊다 (env/grp/seed)
+        if ph == "S0P":
+            _seen_dirs = set()
+            for _p in sorted(_root.glob("*/*/*")):
+                if _p.is_dir():
+                    _seen_dirs.add(str(_p.relative_to(d)).replace(os.sep, "/"))
+        elif ph in ("S", "SR"):
+            _seen_dirs = set()
+            for _p in sorted(_root.glob("*/*/*")):
+                if _p.is_dir():
+                    _seen_dirs.add(str(_p.relative_to(d)).replace(os.sep, "/"))
+    _extra = sorted(_seen_dirs - _want_dirs)
+    _missing = sorted(_want_dirs - _seen_dirs)
+    if _extra:
+        probs.append("UNSEALED_JOB_DIRS(%s) — manifest 에 없는 잡 폴더가 있다. "
+                     "러너는 디스크를 glob 하므로 **이것도 실행한다** (회신 X P0-8)"
+                     % _extra[:4])
+    if _missing:
+        probs.append("MISSING_JOB_DIRS(%s) — 계획된 잡 폴더가 없다" % _missing[:4])
     return probs, n
 
 
@@ -6071,6 +6141,18 @@ def _pil_fake_phaseS(out, man, probe_wrong=(), flat_ring=(), unstable=(),
                     _r = pil_read_receipts(out)[jk]
                     _r["inp_sha256"] = "9" * 64
                     _f.write(json.dumps(_r, ensure_ascii=False) + "\n")
+    # ⛔ 회신 X P0-7 — 실물 러너는 **S0P(probe·무회전 control)에도** receipt 를
+    #   남긴다. 픽스처가 안 남기면 그 층의 게이트가 시험되지 않는다 (S 로 같은
+    #   교훈을 이미 얻었다 — BB P0-5).
+    for jk, jm in sorted(man["jobs"].items()):
+        if jm.get("phase") != "S0P":
+            continue
+        _tg = pil_job_tag(jk, jm)
+        if not (out / jk / (_tg + ".out")).is_file():
+            continue                       # 안 만든 픽스처(drop_probe 등)는 건너뛴다
+        if jm.get("seed") in drop_receipt:
+            continue
+        pil_write_receipt(out, "probe", jk, 0, "1970-01-01T00:00:00")
     return out
 
 def pilot_restart(d):
@@ -6136,6 +6218,118 @@ def pilot_restart(d):
 
 # ── 폴라론 pilot · 분석 ─────────────────────────────────────────────────────
 
+def pilot_probe_verdict(d):
+    """1층 probe **판정** — 개입이 실제로 일어났는가. → dict (phase S 앞 게이트).
+
+    ⛔⛔ 회신 X P0-7 (2026-09-02) — 러너의 probe 단계는 ORCA **정상종료만** 확인하고
+      "다음: phase S" 를 안내했다. probe 의 존재 이유는 *회전이 목표 자리에 스핀을
+      놓았는가* 인데 그 판정을 하지 않고 다음 단계를 열어 준 것이다. 정상종료는
+      개입의 증거가 아니다.
+
+    ⛔ 못 하는 것: 개입이 **성공했다고** 그 상태가 실현된다는 뜻은 아니다 —
+      그것이 2~4층의 몫이다. 여기서 보는 것은 1층 하나다.
+    """
+    d = Path(d)
+    man = json.loads((d / "MANIFEST_PILOT.json").read_text())
+    _pil_check_prereg(man, "polaron_probe_verdict(%s)" % d)
+    _amf = man.get("atom_manifest") or {}
+    _rc = pil_read_receipts(d)
+    res = {"schema": "polaron_probe_verdict/v1", "probes": {}, "controls": {},
+           "blocks": [], "n_intervened": 0}
+    # 무회전 기준을 먼저 모은다 (종별 하나)
+    # ⚠ 무회전 control 은 `target_group=None` 이다 — 종별 **하나**뿐이고 목표 집합은
+    #   probe 마다 다르다. 그러니 control 의 출력을 **probe 의 목표 집합으로** 읽어야
+    #   한다 (2026-09-02 실측: control 자기 집합으로 읽으려다 NO_BASELINE 이 났다).
+    _base = {}
+    for pk, pm in sorted(man["jobs"].items()):
+        if pm.get("phase") != "S0P" or pm.get("seed") != "__no_rotation":
+            continue
+        _grp = pk.rsplit("/", 2)[-2]
+        _base[(pm.get("env"), _grp)] = (pk, pm)
+        res["controls"][pk] = "NO_ROTATION_BASELINE (목표 집합은 probe 마다 읽는다)"
+    for pk, pm in sorted(man["jobs"].items()):
+        if pm.get("phase") != "S0P" or pm.get("seed") == "__no_rotation":
+            continue
+        _sh, _why = _pil_probe_share(d, pk, pm, _amf, _rc)
+        if _sh is None:
+            res["probes"][pk] = "UNREADABLE(%s)" % _why
+            res["blocks"].append("probe 를 읽지 못했다: %s — %s" % (pk, _why))
+            continue
+        _bj = _base.get((pm.get("env"), pk.rsplit("/", 2)[-2]))
+        _b = None
+        if _bj is not None:
+            _b, _bwhy = _pil_probe_share(d, _bj[0], _bj[1], _amf, _rc,
+                                         target_group=pm.get("target_group"))
+            if _b is None:
+                res["blocks"].append("무회전 기준을 읽지 못했다: %s — %s"
+                                     % (_bj[0], _bwhy))
+        if _b is None:
+            res["probes"][pk] = "NO_BASELINE"
+            res["blocks"].append("무회전 기준이 없다: %s (회신 W P0-8)" % pk)
+        elif _sh <= _b + PIL_PROBE_GAIN_MIN:
+            res["probes"][pk] = ("FAILED(회전 후 %.3f ≤ 무회전 %.3f + %.2f — 목표 "
+                                 "몫이 늘지 않았다)" % (_sh, _b, PIL_PROBE_GAIN_MIN))
+            res["blocks"].append("개입이 확인되지 않았다: %s" % pk)
+        elif _sh < PIL_PROBE_MIN:
+            res["probes"][pk] = ("FAILED(보조 sanity gate %.3f < %.2f)"
+                                 % (_sh, PIL_PROBE_MIN))
+            res["blocks"].append("개입 몫이 문턱 미만이다: %s" % pk)
+        else:
+            res["probes"][pk] = "INTERVENED(몫 %.3f · 무회전 %.3f)" % (_sh, _b)
+            res["n_intervened"] += 1
+    if not res["probes"]:
+        res["blocks"].append("probe 잡이 하나도 없다 — `bash run_pilot.sh seeds` 부터")
+    return res
+
+
+def _pil_probe_share(d, pk, pm, amf, rc, target_group=None):
+    """probe 출력에서 목표 집합의 |스핀| 몫 → (몫, 사유). 못 읽으면 (None, 사유).
+
+    ⛔ receipt 를 **요구한다** (회신 X P0-7) — S0P 는 seed 채택을 가르는 인과
+      증거인데 종전엔 입력 SHA 만 봉인되고 분석기가 receipt 없이 읽었다.
+    """
+    jd = d / pk
+    tag = pil_job_tag(pk, pm)
+    _g = []
+    rr = rc.get(pk)
+    if not rr:
+        return None, "실행 receipt 가 없다 (이 러너로 돌지 않았다)"
+    outp = jd / (tag + ".out")
+    if not outp.is_file():
+        return None, "출력이 없다"
+    if rr.get("out_sha256") != _sha(outp):
+        return None, "출력이 receipt 이후에 바뀌었다"
+    if not rr.get("terminated_normally"):
+        return None, "receipt 가 정상종료가 아니다 (rc=%s)" % rr.get("rc")
+    txt = outp.read_text(errors="replace")
+    _t, seg, _w = pil_seg_terminated(txt)
+    if not _t:
+        return None, _w
+    fr = amf.get(pm.get("atom_frame") or "P") or {}
+    _nat = fr.get("n_atoms")
+    if not _nat:
+        return None, "프레임 원자수를 모른다 (atom_manifest 없음)"
+    # ⚠ 분할은 **둘 다** 본다 — 한쪽만 읽고 판정하면 분할 의존을 놓친다 (회신 R4).
+    #   probe 는 1층이라 Hirshfeld 를 primary 로 쓰고, 없으면 Löwdin 으로 후퇴한다.
+    mv = _hirshfeld_spins(seg, _nat) or _lowdin_spins(seg, _nat)
+    if not mv:
+        return None, "스핀 population 을 읽지 못했다 (Hirshfeld·Löwdin 둘 다)"
+    idx = None
+    _tg = target_group or pm.get("target_group")
+    if _tg == "A_sulfonate":
+        idx = sorted((fr.get("components") or {}).get("sulfonate") or [])
+    elif str(_tg).startswith("B_"):
+        _rg = (fr.get("rings") or {}).get(str(_tg)[2:])
+        if _rg:
+            idx = sorted(set(_rg["core"]) | set(_rg["ether_O"]))
+    if idx is None:
+        return None, "목표 집합을 모른다 (target_group=%r)" % _tg
+    tot = sum(abs(x) for x in mv)
+    if tot <= 0:
+        return None, "총 |스핀| 이 0 이다"
+    return sum(abs(mv[i]) for i in idx if i < len(mv)) / tot, "ok"
+
+
 def pilot_analyze(d):
     """phase S 결과 → F 집합 · class · 민감도 · 종료 규칙. 전부 fail-closed."""
     d = Path(d)
@@ -6192,6 +6386,57 @@ def pilot_analyze(d):
             if rg:
                 return sorted(set(rg["core"]) | set(rg["ether_O"]))
         return None
+
+    # ⛔⛔ 회신 W P0-5 (2026-09-02) — **실행 receipt 를 소비한다.**
+    #   종전엔 계보 해시를 manifest 에 기록만 하고 아무도 읽지 않았다. `.out` 이
+    #   있으면 그것으로 판정했다 — 러너 밖에서 돌렸든, 입력을 고친 뒤 옛 출력이
+    #   남았든 구분하지 못했다. (C-12 는 같은 결론에 이미 도달해 있었다:
+    #   `RECEIPT_PHASE_MISSING`. 규약이 파일마다 갈려 있었다.)
+    _rcpt = pil_read_receipts(d)
+    res["run_receipts"] = {"file": PIL_RECEIPTS, "n": len(_rcpt),
+                           "⛔_무엇을_보증하나": (
+                               "잡이 **이 러너로** 돌았고, 그때 쓴 입력이 지금 파일과 "
+                               "같다는 것. 위조는 막지 못한다(같은 사용자) — 막는 것은 "
+                               "고친 줄 모르고 옛 결과를 판정에 쓰는 것이다")}
+
+    def _receipt_gates(jk, jd, tag):
+        """이 잡의 실행 receipt 가 지금 입력과 이어지나. → 게이트 목록."""
+        g, rr = [], _rcpt.get(jk)
+        inp = jd / (tag + ".inp")
+        if rr is None:
+            g.append("RUN_RECEIPT_MISSING(러너 밖에서 돌았거나 receipt 가 지워졌다 — "
+                     "무엇으로 돌았는지 확인할 수 없다)")
+            return g
+        if inp.is_file() and rr.get("inp_sha256") != _sha(inp):
+            g.append("RUN_RECEIPT_STALE(receipt 의 입력 %s… ≠ 현재 입력 %s… — "
+                     "입력이 바뀐 뒤의 옛 출력이다)"
+                     % (str(rr.get("inp_sha256"))[:12], _sha(inp)[:12]))
+        # ⛔⛔ 회신 X P0-6 (2026-09-02) — **receipt 가 현재 출력에 결박되지 않았다.**
+        #   기록은 output·xyz·moinp·ORCA·builder SHA 까지 하는데 소비자는 입력 SHA 와
+        #   저장된 `terminated_normally` 만 봤다. 리뷰어 재현: receipt 뒤에 출력을
+        #   **다른 정상종료 출력**으로 바꿔도 통과했다. 기록만 하고 안 쓰는 필드는
+        #   결박이 아니다.
+        _out = jd / (tag + ".out")
+        if _out.is_file() and rr.get("out_sha256") and rr["out_sha256"] != _sha(_out):
+            g.append("RUN_RECEIPT_OUTPUT_CHANGED(receipt 의 출력 %s… ≠ 현재 %s… — "
+                     "이 출력은 그 실행의 산물이 아니다)"
+                     % (str(rr["out_sha256"])[:12], _sha(_out)[:12]))
+        elif _out.is_file() and not rr.get("out_sha256"):
+            g.append("RUN_RECEIPT_NO_OUTPUT_HASH(receipt 에 출력 해시가 없다 — "
+                     "구판 receipt 라 지금 출력과 이을 수 없다)")
+        _xs = sorted(jd.glob("*.xyz"))
+        if _xs and rr.get("xyz_sha256") and rr["xyz_sha256"] != _sha(_xs[0]):
+            g.append("RUN_RECEIPT_XYZ_CHANGED(구조가 실행 이후 바뀌었다)")
+        _mo = rr.get("moinp")
+        if _mo and rr.get("moinp_sha256"):
+            _mp = jd / _mo
+            if not _mp.is_file():
+                g.append("RUN_RECEIPT_MOINP_GONE(%s)" % _mo)
+            elif _sha(_mp) != rr["moinp_sha256"]:
+                g.append("RUN_RECEIPT_MOINP_CHANGED(읽은 궤도 파일이 바뀌었다)")
+        if not rr.get("terminated_normally"):
+            g.append("RUN_RECEIPT_NOT_TERMINATED(rc=%s)" % rr.get("rc"))
+        return g
 
     # ── 1층: 초기 개입 probe 판독 (회신 T Q4) ─────────────────────────────
     #  ⛔ probe 는 `NoIter` 라 **에너지·class 판정에 쓰지 않는다.** 오직
@@ -6306,57 +6551,6 @@ def pilot_analyze(d):
             probes[pm["probe_of"]] = pv
         else:
             res.setdefault("no_rotation_controls", {})[pk] = pv
-
-    # ⛔⛔ 회신 W P0-5 (2026-09-02) — **실행 receipt 를 소비한다.**
-    #   종전엔 계보 해시를 manifest 에 기록만 하고 아무도 읽지 않았다. `.out` 이
-    #   있으면 그것으로 판정했다 — 러너 밖에서 돌렸든, 입력을 고친 뒤 옛 출력이
-    #   남았든 구분하지 못했다. (C-12 는 같은 결론에 이미 도달해 있었다:
-    #   `RECEIPT_PHASE_MISSING`. 규약이 파일마다 갈려 있었다.)
-    _rcpt = pil_read_receipts(d)
-    res["run_receipts"] = {"file": PIL_RECEIPTS, "n": len(_rcpt),
-                           "⛔_무엇을_보증하나": (
-                               "잡이 **이 러너로** 돌았고, 그때 쓴 입력이 지금 파일과 "
-                               "같다는 것. 위조는 막지 못한다(같은 사용자) — 막는 것은 "
-                               "고친 줄 모르고 옛 결과를 판정에 쓰는 것이다")}
-
-    def _receipt_gates(jk, jd, tag):
-        """이 잡의 실행 receipt 가 지금 입력과 이어지나. → 게이트 목록."""
-        g, rr = [], _rcpt.get(jk)
-        inp = jd / (tag + ".inp")
-        if rr is None:
-            g.append("RUN_RECEIPT_MISSING(러너 밖에서 돌았거나 receipt 가 지워졌다 — "
-                     "무엇으로 돌았는지 확인할 수 없다)")
-            return g
-        if inp.is_file() and rr.get("inp_sha256") != _sha(inp):
-            g.append("RUN_RECEIPT_STALE(receipt 의 입력 %s… ≠ 현재 입력 %s… — "
-                     "입력이 바뀐 뒤의 옛 출력이다)"
-                     % (str(rr.get("inp_sha256"))[:12], _sha(inp)[:12]))
-        # ⛔⛔ 회신 X P0-6 (2026-09-02) — **receipt 가 현재 출력에 결박되지 않았다.**
-        #   기록은 output·xyz·moinp·ORCA·builder SHA 까지 하는데 소비자는 입력 SHA 와
-        #   저장된 `terminated_normally` 만 봤다. 리뷰어 재현: receipt 뒤에 출력을
-        #   **다른 정상종료 출력**으로 바꿔도 통과했다. 기록만 하고 안 쓰는 필드는
-        #   결박이 아니다.
-        _out = jd / (tag + ".out")
-        if _out.is_file() and rr.get("out_sha256") and rr["out_sha256"] != _sha(_out):
-            g.append("RUN_RECEIPT_OUTPUT_CHANGED(receipt 의 출력 %s… ≠ 현재 %s… — "
-                     "이 출력은 그 실행의 산물이 아니다)"
-                     % (str(rr["out_sha256"])[:12], _sha(_out)[:12]))
-        elif _out.is_file() and not rr.get("out_sha256"):
-            g.append("RUN_RECEIPT_NO_OUTPUT_HASH(receipt 에 출력 해시가 없다 — "
-                     "구판 receipt 라 지금 출력과 이을 수 없다)")
-        _xs = sorted(jd.glob("*.xyz"))
-        if _xs and rr.get("xyz_sha256") and rr["xyz_sha256"] != _sha(_xs[0]):
-            g.append("RUN_RECEIPT_XYZ_CHANGED(구조가 실행 이후 바뀌었다)")
-        _mo = rr.get("moinp")
-        if _mo and rr.get("moinp_sha256"):
-            _mp = jd / _mo
-            if not _mp.is_file():
-                g.append("RUN_RECEIPT_MOINP_GONE(%s)" % _mo)
-            elif _sha(_mp) != rr["moinp_sha256"]:
-                g.append("RUN_RECEIPT_MOINP_CHANGED(읽은 궤도 파일이 바뀌었다)")
-        if not rr.get("terminated_normally"):
-            g.append("RUN_RECEIPT_NOT_TERMINATED(rc=%s)" % rr.get("rc"))
-        return g
 
     for jk, jm in sorted(man["jobs"].items()):
         if jm["phase"] != "S":
