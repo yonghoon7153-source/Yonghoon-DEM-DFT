@@ -80,8 +80,22 @@ def vecmat(v, m):
 
 
 # ── 파서 ────────────────────────────────────────────────────────────────────
+#: ⛔ 회신 BD P0-1 (2026-09-02) — 이 모듈이 읽은 입력을 부르는 쪽이 알 수 있게
+#:   남긴다. 생성기의 provenance 폐포가 **`INPUTS_READ` 를 가진 모든 repo 모듈**에서
+#:   모은다 — 새 읽기 모듈이 생겨도 자동으로 덮인다.
+INPUTS_READ: "list" = []
+
+
+def _note_input(path):
+    p = str(path)
+    if p not in INPUTS_READ:
+        INPUTS_READ.append(p)
+    return path
+
+
 def parse_qe(path) -> dict:
     """QE 입력 → {cell, labels, frac}. Ni1/Ni2 라벨을 **그대로** 보존한다."""
+    _note_input(path)                       # 회신 BD P0-1
     t = Path(path).read_text(errors="ignore")
     if "CELL_PARAMETERS" not in t or "ATOMIC_POSITIONS" not in t:
         raise ValueError(f"{path}: CELL_PARAMETERS/ATOMIC_POSITIONS 가 없다")
@@ -132,6 +146,7 @@ def parse_poscar(path) -> dict:
     ⚠ 이 슬랩 파일은 종 헤더가 `Li Ni O` × 48 로 **반복**된다 (원자가 원소별로 안
       묶여 있다). counts 와 zip 해서 그대로 펼쳐야 원자 순서가 보존된다.
     """
+    _note_input(path)                       # 회신 BD P0-1
     L = Path(path).read_text(errors="ignore").splitlines()
     scale = float(L[1].split()[0])
     cell = [[float(x) * scale for x in L[i].split()[:3]] for i in (2, 3, 4)]

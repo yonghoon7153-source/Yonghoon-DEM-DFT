@@ -340,7 +340,17 @@ def provenance_closure(repo_root=None):
     # ⛔⛔ 회신 BC P0-1 (2026-09-02) — **`_prov_note` 를 정의만 하고 부르지 않았다.**
     #   그래서 외부 clean slab·선택 XYZ·동결 JSON·기체 구조가 폐포 밖이었고,
     #   clean git tree 는 **repo 밖 파일을 덮지 못한다**. 실제로 읽은 것을 다 가져온다.
-    for _i in list(_PROV_INPUTS) + list(getattr(SS, "INPUTS_READ", [])):
+    # ⛔⛔ 회신 BD P0-1 (2026-09-02) — 모듈을 **이름으로 나열**하면 새 reader 가
+    #   생길 때마다 빠진다. 실제로 `afm_ledger.parse_qe` 가 그렇게 빠져 QE 입력이
+    #   폐포 밖이었다. `INPUTS_READ` 를 가진 **모든 repo 모듈**에서 모은다 —
+    #   등록 경로가 하나여야 한다는 것이 GO 해제조건 1 이다.
+    _reg = list(_PROV_INPUTS)
+    for _m in list(sys.modules.values()):
+        _f = getattr(_m, "__file__", None)
+        if not (_f and str(Path(_f).resolve()).startswith(str(root))):
+            continue
+        _reg += list(getattr(_m, "INPUTS_READ", []) or [])
+    for _i in _reg:
         _add(_i, "input")
     # ⛔ 회신 BC P0-1 — repo 안 입력과 **repo 밖(외부) 입력**은 다른 보증을 받는다.
     #   안쪽은 git 이 상태를 말해 주고, 바깥쪽은 **내용 SHA 밖에 없다**. 섞어 세면
@@ -3727,6 +3737,110 @@ def _stage1_prereqs(_cl, _vc, results):
     return _pre
 
 
+#: ⛔ 회신 BD P0-3 · GO 해제조건 3 — **필수 문서 집합과 path→role 을 코드에 고정**한다.
+#:   목록을 산출물에서 읽으면, 목록을 바꾼 번들이 자기 기준으로 통과한다.
+C12_REQUIRED_DECISIONS = ("D-2026-08-30-sdcp-c12-path",
+                          "D-2026-08-28-closure-criteria-first")
+C12_REQUIRED_REFS = {
+    "db/properties/sdcp_c12_claim_prereg_2026_08_31.json": "claim",
+    "db/properties/sdcp_c12_protocol_2026_08_30.json": "claim",
+    "db/properties/c12_poses_2026_08_30.json": "frozen_input",
+}
+_HEX64 = re.compile(r"^[0-9a-f]{64}$")
+
+
+def _strict_true(v):
+    """**불리언 True 만** 참으로 본다 — 문자열 "false" 는 파이썬에서 참이다."""
+    return v is True
+
+
+def _governance_strict(gb):
+    """거버넌스 결박을 엄격하게 본다 → 차단 사유 목록 (회신 BD P0-3).
+
+    ⛔ 못 하는 것: 그 문서의 *내용*이 옳은지는 안 본다 — 결박과 상태만 본다.
+    """
+    b = []
+    _dec = gb.get("decisions")
+    if not isinstance(_dec, dict):
+        return ["governance_binding.decisions 가 dict 가 아니다 (%r)" % type(_dec).__name__]
+    # ── ① 필수 decision **집합**이 정확히 있는가 (목록을 산출물이 정하지 않는다)
+    _miss = [i for i in C12_REQUIRED_DECISIONS if i not in _dec]
+    if _miss:
+        b.append("필수 decision 이 없다 %s — 목록은 코드가 정한다 (BD P0-3)" % _miss)
+    for _i in C12_REQUIRED_DECISIONS:
+        _v = _dec.get(_i)
+        if not isinstance(_v, dict):
+            continue
+        if not _strict_true(_v.get("ratified")):
+            b.append("%s: ratified 가 **불리언 True 가 아니다** (%r)"
+                     % (_i, _v.get("ratified")))
+        if _v.get("state") not in ("active", "ratified"):
+            b.append("%s: state=%r" % (_i, _v.get("state")))
+        _dg = str(_v.get("digest") or "")
+        if not _HEX64.match(_dg):
+            b.append("%s: digest 가 64-hex 가 아니다 (%r)" % (_i, _v.get("digest")))
+        if not _strict_true(_v.get("digest_matches")):
+            b.append("%s: 기록 digest 와 재계산이 일치하지 않는다 (%r)"
+                     % (_i, _v.get("digest_matches")))
+    # ── ② 참조 문서 — 경로별 **역할이 코드에 고정**돼 있다
+    _rs = gb.get("reference_files_state")
+    _rf = gb.get("reference_files_sha256")
+    if not isinstance(_rs, dict) or not isinstance(_rf, dict):
+        return b + ["reference_files_state/sha256 가 dict 가 아니다"]
+    for _p, _role in sorted(C12_REQUIRED_REFS.items()):
+        if _p not in _rs or _p not in _rf:
+            b.append("필수 참조 문서가 없다: %s — 목록은 코드가 정한다" % _p)
+            continue
+        _sha = str(_rf.get(_p) or "")
+        if not _HEX64.match(_sha):
+            b.append("%s: SHA 가 64-hex 가 아니다 (%r)" % (_p, _rf.get(_p)))
+        _v = _rs.get(_p) or {}
+        if _v.get("role") != _role:
+            b.append("%s: role 이 %r 이어야 하는데 %r 다 — 역할을 바꿔 비준 요구를 "
+                     "우회할 수 없다" % (_p, _role, _v.get("role")))
+            continue
+        if _v.get("superseded"):
+            b.append("%s: **SUPERSEDED** 문서다" % _p)
+        if _role == "claim":
+            # ⛔ GO 해제조건 4 — claim 만 ratification digest 로 본다
+            if not _strict_true(_v.get("ratified")):
+                b.append("%s: ratified 가 불리언 True 가 아니다 (%r)"
+                         % (_p, _v.get("ratified")))
+            if not _strict_true(_v.get("has_ratification_record")):
+                b.append("%s: 사람 비준 기록이 없다" % _p)
+            if not _strict_true(_v.get("digest_matches")):
+                b.append("%s: 비준 이후 내용이 바뀌었다 (digest 불일치)" % _p)
+        else:
+            # ⛔ GO 해제조건 4 — frozen_input 은 **raw SHA** 로만 본다.
+            #   합법적으로 digest_matches=false 이므로 그것으로 막지 않는다.
+            if _v.get("ratified") is True:
+                b.append("%s: frozen_input 인데 ratified=True 다 — 데이터에 비준을 "
+                         "붙이면 고무도장이 된다" % _p)
+    # ⛔ 회신 BD P1 — 요약 **네 칸**을 전부 교차검사한다. 종전엔 `all_ratified` 만
+    #   봤고 나머지 셋은 지우거나 false 로 바꿔도 통과했다.
+    _dec_ok = all(_strict_true((_dec.get(i) or {}).get("ratified"))
+                  for i in C12_REQUIRED_DECISIONS)
+    _ref_ok = all(_strict_true((_rs.get(p_) or {}).get("ratified"))
+                  for p_, r_ in C12_REQUIRED_REFS.items() if r_ == "claim")
+    _in_ok = all(bool(_rf.get(p_)) for p_, r_ in C12_REQUIRED_REFS.items()
+                 if r_ == "frozen_input")
+    for _k, _want in (("decisions_all_ratified", _dec_ok),
+                      ("reference_files_all_ratified", _ref_ok),
+                      ("frozen_inputs_all_bound", _in_ok),
+                      ("all_ratified", _dec_ok and _ref_ok and _in_ok)):
+        if _k not in gb:
+            b.append("요약 `%s` 가 없다 — 네 칸을 전부 교차검사한다 (BD P1)" % _k)
+        elif bool(gb.get(_k)) != _want:
+            b.append("요약 `%s`=%r 가 개별 항목(%r)과 **어긋난다** (BD P1)"
+                     % (_k, gb.get(_k), _want))
+    # 목록 밖 문서가 섞여 있으면 그 자체가 신호다 (evil.json 재현)
+    _extra = sorted(set(_rs) - set(C12_REQUIRED_REFS))
+    if _extra:
+        b.append("코드가 모르는 참조 문서가 섞여 있다 %s — 목록을 바꾼 번들이 자기 "
+                 "기준으로 통과할 수 없다" % _extra[:3])
+    return b
+
+
 def citation_status(man, cl):
     """계산 성공과 **원고 인용 자격**을 분리해 낸다 (회신 BA P0-3 · 해제조건 4).
 
@@ -3757,84 +3871,18 @@ def citation_status(man, cl):
     #   proposed/false/digest BROKEN 이어도 `manuscript_citable=true` 가 재현됐다.
     #   ⇒ 항목마다 직접 본다. 요약은 **정보**이고, 개별 항목과 어긋나면 그 자체가
     #     차단 사유다 (누가 요약만 고쳐 놓는 경로를 닫는다).
+    # ⛔⛔ 회신 BD P0-3 (2026-09-02) — **판독기가 fail-open 과 fail-closed 를 동시에
+    #   냈다.** 필수 문서 집합과 path→role 을 고정하지 않아 다음이 전부
+    #   `manuscript_citable=true` 로 통과했다(리뷰어 재현): 필수 문서 삭제 · 전체
+    #   reference 를 evil.json 하나로 교체 · SHA 를 "x" 로 · has_ratification_record
+    #   =false · clean=true 인데 dirty 가 비어 있지 않음 · 불리언 대신 문자열 "false".
+    #   반대로 **정상 frozen pose** 는 비준 대상이 아니라 합법적으로
+    #   digest_matches=false 인데 role 을 안 봐서 "비준 후 변경" 으로 거짓 차단했다.
+    #   ⇒ 필수 key 집합과 role 을 **코드에 고정**하고, 엄격 타입으로 본다.
     _gb = (man or {}).get("governance_binding") or {}
     if _gb:
-        _dec = _gb.get("decisions") or {}
-        if not _dec:
-            b.append("governance_binding.decisions 가 비었다 — 무엇 아래 나온 "
-                     "결과인지 산출물이 말하지 못한다")
-        _bad_dec = []
-        for _i, _v in sorted(_dec.items()):
-            _v = _v or {}
-            if not _v.get("ratified"):
-                _bad_dec.append("%s(ratified=false)" % _i)
-            elif _v.get("state") not in ("active", "ratified"):
-                _bad_dec.append("%s(state=%r)" % (_i, _v.get("state")))
-            elif not _v.get("digest") or str(_v.get("digest")).upper() == "BROKEN":
-                _bad_dec.append("%s(digest=%r)" % (_i, _v.get("digest")))
-            elif _v.get("digest_matches") is False:
-                _bad_dec.append("%s(비준 이후 내용이 바뀌었다 — 재승인 필요)" % _i)
-        if _bad_dec:
-            b.append("거버넌스 미비준/결박불량 %s — 비용 발생 전에 닫아야 한다 "
-                     "(AZ P0-6 · BB P0-3)" % _bad_dec)
-        # 요약이 개별 항목과 어긋나면 요약이 손을 탄 것이다
-        _sum = _gb.get("all_ratified")
-        if _dec and bool(_sum) != (not _bad_dec):
-            b.append("all_ratified=%r 가 개별 decision 상태와 **어긋난다** — 요약만 "
-                     "고쳐 놓은 번들이다 (BB P0-3)" % _sum)
-        # ⛔ 회신 BB P0-2 — 참조 문서의 **자기 status** 도 본다. SHA 를 적은 것은
-        #   "그 내용이 비준됐다" 는 증거가 아니다.
-        _rf = _gb.get("reference_files_sha256") or {}
-        if any(v is None for v in _rf.values()):
-            b.append("참조 문서 SHA 결박 누락 %s"
-                     % sorted(k for k, v in _rf.items() if v is None))
-        _rs = _gb.get("reference_files_state")
-        # ⛔⛔ 회신 BC P0-2 — 리뷰어가 재현한 네 가지 fail-open 을 닫는다.
-        if isinstance(_rs, dict) and not _rs:
-            b.append("참조 문서 목록이 **비어 있다** — 무엇 아래 나온 결과인지 "
-                     "산출물이 말하지 못한다 (BC P0-2 · `all(빈 것)=True`)")
-        if isinstance(_rs, dict) and _rs:
-            if not [1 for v in _rs.values()
-                    if (v or {}).get("role", "claim") == "claim"]:
-                b.append("참조 문서에 `claim` 이 **하나도 없다** — 역할을 전부 "
-                         "`frozen_input` 으로 바꾸면 비준 요구가 사라진다 (BC P0-2)")
-            _nod = sorted(k.rsplit("/", 1)[-1] for k, v in _rs.items()
-                          if (v or {}).get("role", "claim") == "claim"
-                          and (v or {}).get("digest_matches") is None)
-            if _nod:
-                b.append("참조 문서의 **digest 재계산 결과가 없다** %s — 상태 "
-                         "문자열만 보고 비준을 인정하지 않는다 (BC P0-2)" % _nod)
-            _bd = sorted(k.rsplit("/", 1)[-1] for k, v in _rs.items()
-                         if (v or {}).get("digest_matches") is False)
-            if _bd:
-                b.append("참조 문서가 **비준 이후에 바뀌었다** %s — 재승인이 필요하다"
-                         % _bd)
-        if _rs is None:
-            b.append("참조 문서의 **비준 상태**가 번들에 없다 — 구판이다 (BB P0-2). "
-                     "SHA 만으로는 그 내용이 비준됐는지 알 수 없다")
-        else:
-            _sup_ref = sorted(k.rsplit("/", 1)[-1] for k, v in _rs.items()
-                              if (v or {}).get("superseded"))
-            if _sup_ref:
-                b.append("참조 문서가 **SUPERSEDED** 다 %s — 폐기된 사전등록으로 "
-                         "결과를 붙이지 않는다 (BB P0-4)" % _sup_ref)
-            # ⛔ 회신 BB P0-2 — `frozen_input` 은 **비준 대상이 아니다**. 내용
-            #   결박(SHA)만 요구한다. 데이터 파일에 비준을 요구하면 고무도장이 된다.
-            _bad_ref = sorted("%s(status=%r)" % (k.rsplit("/", 1)[-1],
-                                                 (v or {}).get("status"))
-                              for k, v in _rs.items()
-                              if (v or {}).get("role", "claim") == "claim"
-                              and not (v or {}).get("ratified")
-                              and not (v or {}).get("superseded"))
-            _bad_in = sorted(k.rsplit("/", 1)[-1] for k, v in _rs.items()
-                             if (v or {}).get("role") == "frozen_input"
-                             and not (_rf or {}).get(k))
-            if _bad_in:
-                b.append("동결 입력이 **내용 결박되지 않았다** %s — 데이터는 비준이 "
-                         "아니라 SHA 로 묶는다 (BB P0-2)" % _bad_in)
-            if _bad_ref:
-                b.append("참조 문서 미비준 %s — 주장을 **정의하는** 문서가 닫히지 "
-                         "않았다 (BB P0-2)" % _bad_ref)
+        _bad_g = _governance_strict(_gb)
+        b.extend(_bad_g)
     else:
         b.append("governance_binding 이 없다 — 구판 번들이다 (BA 해제조건 3)")
     # ⛔⛔ 회신 BB P0-5 (2026-09-02) — **생성 계보가 dirty 면 인용 자격이 없다.**
@@ -3844,7 +3892,13 @@ def citation_status(man, cl):
     if _pv is None:
         b.append("provenance 가 없다 — 구판 번들이다 (BB P0-5). 어떤 코드·입력으로 "
                  "만들어졌는지 번들 안에서 말하지 못한다")
-    elif not _pv.get("clean"):
+    elif (_pv.get("dirty") or _pv.get("unknown_git_state")) and _pv.get("clean"):
+        # ⛔ 회신 BD P0-3 재현 — `clean=true` 인데 dirty 가 비어 있지 않은 번들이
+        #   통과했다. 요약과 목록이 어긋나면 그 자체가 차단 사유다.
+        b.append("provenance.clean=true 인데 dirty/미상 목록이 **비어 있지 않다** "
+                 "(%s) — 요약과 목록이 어긋난다 (BD P0-3)"
+                 % ((_pv.get("dirty") or _pv.get("unknown_git_state"))[:3]))
+    elif not _strict_true(_pv.get("clean")):
         b.append("생성 계보가 **dirty** 다 (수정 %d · git상태 미상 %d) %s — "
                  "커밋본과 다른 코드·입력으로 만든 번들이다 (BB P0-5 · Q5)"
                  % (len(_pv.get("dirty") or []),
@@ -4358,18 +4412,35 @@ def _selftest_closure(chk):
     # ⚠ 회신 BB P0-2·P0-3 — 픽스처가 **실물과 같은 모양**이어야 한다. 종전 픽스처는
     #   `{"ratified": True}` 하나뿐이라 state·digest·참조문서 상태가 전부 빠져 있었고,
     #   그래서 요약 불리언만 보는 fail-open 을 시험이 잡아내지 못했다.
-    _GBOK = {"all_ratified": True,
-             "decisions": {"D-x": {"ratified": True, "state": "active",
-                                   "digest": "a" * 64, "digest_matches": True,
-                                   "recorded_digest": "sha256:" + "a" * 64,
-                                   "ratification_base_commit": "b" * 40}},
-             "reference_files_sha256": {"a.json": "0" * 64},
-             # ⚠ 회신 BC P0-2 — 픽스처가 **실물과 같은 모양**이어야 한다. 종전엔
-             #   digest 재계산 결과가 없어 그것을 안 보는 fail-open 을 시험이 못 잡았다
-             #   (같은 형태의 픽스처 사고가 이번이 세 번째다).
-             "reference_files_state": {"a.json": {"status": "ratified",
-                                                  "ratified": True, "role": "claim",
-                                                  "digest_matches": True}}}
+    # ⛔⛔ 회신 BD P0-3 · GO 해제조건 7 (2026-09-02) — 픽스처를 **production 형태**로
+    #   바꾼다. 종전엔 `D-x`·`a.json` 같은 장난감이라, 필수 key 집합과 path→role 을
+    #   고정하지 않은 fail-open 을 시험이 잡아낼 수 없었다 (리뷰어가 evil.json 하나로
+    #   전체 reference 를 교체해 통과시켰다).
+    def _gb_ok():
+        _d = {i: {"state": "active", "ratified": True, "digest": "a" * 64,
+                  "digest_matches": True, "recorded_digest": "sha256:" + "a" * 64,
+                  "ratification_base_commit": "b" * 40}
+              for i in C12_REQUIRED_DECISIONS}
+        _rs, _rf = {}, {}
+        for _p, _role in C12_REQUIRED_REFS.items():
+            _rf[_p] = "0" * 64
+            if _role == "claim":
+                _rs[_p] = {"status": "ratified", "ratified": True, "role": "claim",
+                           "has_ratification_record": True, "digest_matches": True}
+            else:
+                # ⛔ 정상 frozen pose 는 **합법적으로** digest_matches=false 다 —
+                #   role 을 안 보고 막던 거짓 차단을 이 픽스처가 지킨다.
+                _rs[_p] = {"status": None, "ratified": False, "role": "frozen_input",
+                           "digest_matches": False}
+        return {"all_ratified": True, "decisions_all_ratified": True,
+                "reference_files_all_ratified": True, "frozen_inputs_all_bound": True,
+                "decisions": _d,
+                "reference_files_sha256": _rf, "reference_files_state": _rs}
+
+    _GBOK = _gb_ok()
+    _DEC0 = C12_REQUIRED_DECISIONS[0]
+    _CLAIM0 = [k for k, v in C12_REQUIRED_REFS.items() if v == "claim"][0]
+    _FROZ0 = [k for k, v in C12_REQUIRED_REFS.items() if v == "frozen_input"][0]
     _PVOK = {"clean": True, "dirty": [], "unknown_git_state": [], "n_files": 12}
     _cs_ok = citation_status(
         {"potcar_identity_policy": {"mode": "require_attestation",
@@ -4385,12 +4456,15 @@ def _selftest_closure(chk):
         {"potcar_identity_policy": {"mode": "require_attestation",
                                     "manuscript_citable": True},
          "governance_binding": dict(_GBOK, all_ratified=False,
-                                    decisions={"D-x": {"ratified": False}}),
+                                    decisions=dict(_GBOK["decisions"], **{
+                                        _DEC0: dict(_GBOK["decisions"][_DEC0],
+                                                    ratified=False)})),
          "provenance": _PVOK},
         {"overall_citable_at_0.01eV": True,
          "potcar_identity": {"allowed_claim": "paw_release_attested"}})
     chk(_cs_gov["manuscript_citable"] is False
-        and any("미비준" in b for b in _cs_gov["blockers"]),
+        and any("불리언 True 가 아니다" in b or "미비준" in b
+                for b in _cs_gov["blockers"]),
         "⛔음성 BA 해제조건 3: 거버넌스가 **미비준**이면 인용 불가다 — 비용 발생 전에 "
         "닫아야 한다")
     _cs_noref = citation_status(
@@ -4412,43 +4486,52 @@ def _selftest_closure(chk):
             {"overall_citable_at_0.01eV": True,
              "potcar_identity": {"allowed_claim": "paw_release_attested"}})
 
+    def _mut_dec(**kw):
+        return dict(_GBOK, decisions=dict(
+            _GBOK["decisions"], **{_DEC0: dict(_GBOK["decisions"][_DEC0], **kw)}))
+
     for _nm, _gb, _need in (
-        ("state=proposed",
-         dict(_GBOK, decisions={"D-x": dict(_GBOK["decisions"]["D-x"],
-                                            state="proposed")}), "state="),
-        ("ratified=false",
-         dict(_GBOK, decisions={"D-x": dict(_GBOK["decisions"]["D-x"],
-                                            ratified=False)}), "ratified=false"),
-        ("digest=BROKEN",
-         dict(_GBOK, decisions={"D-x": dict(_GBOK["decisions"]["D-x"],
-                                            digest="BROKEN")}), "digest="),
-        ("비준 후 내용 변경",
-         dict(_GBOK, decisions={"D-x": dict(_GBOK["decisions"]["D-x"],
-                                            digest_matches=False)}), "재승인"),
+        ("state=proposed", _mut_dec(state="proposed"), "state="),
+        ("ratified=false", _mut_dec(ratified=False), "불리언 True 가 아니다"),
+        ("digest=BROKEN", _mut_dec(digest="BROKEN"), "64-hex"),
+        ("비준 후 내용 변경", _mut_dec(digest_matches=False), "일치하지 않는다"),
+        # ⛔ 회신 BD P0-3 재현 — 불리언 대신 **문자열**
+        ("ratified='false' (문자열)", _mut_dec(ratified="false"),
+         "불리언 True 가 아니다"),
+        ("digest_matches='true' (문자열)", _mut_dec(digest_matches="true"),
+         "일치하지 않는다"),
+        ("SHA 가 'x'", _mut_dec(digest="x"), "64-hex"),
     ):
         _r = _cs(_gb)
         chk(_r["manuscript_citable"] is False
             and any(_need in x for x in _r["blockers"]),
             "⛔음성 BB P0-3: `all_ratified=true` 인데 내부가 **%s** 면 인용 불가다 — "
             "종전엔 요약 불리언만 봐서 `manuscript_citable=true` 가 재현됐다" % _nm)
+    # ⚠ 회신 BD P0-3 이후 판정은 **개별 항목**만으로 선다 — 요약은 참고값이다.
+    #   요약을 false 로 바꿔도 개별이 다 서면 통과하는 것이 옳다 (요약이 판정을
+    #   좌우하면 그것이 곧 fail-open 이다). 대신 요약 네 칸을 교차검사한다(아래).
     _r = _cs(dict(_GBOK, all_ratified=False))
-    chk(any("어긋난다" in x for x in _r["blockers"]),
-        "⛔음성 BB P0-3: 요약이 개별 항목과 **어긋나면** 그 자체가 차단 사유다 "
-        "(요약만 고쳐 놓는 경로를 닫는다)")
+    chk(_r["manuscript_citable"] is False
+        and any("요약" in x for x in _r["blockers"]),
+        "⛔음성 BD P1: 요약 `all_ratified` 가 개별 항목과 어긋나면 차단한다 "
+        "(요약만 고쳐 놓는 경로)")
     _r = _cs(dict(_GBOK, decisions={}))
     chk(_r["manuscript_citable"] is False
-        and any("decisions 가 비었다" in x for x in _r["blockers"]),
-        "⛔음성 BB P0-3: decisions 를 **비우면** 통과하던 경로 (all(빈 것)=True) 를 "
-        "닫았다")
+        and any("필수 decision 이 없다" in x for x in _r["blockers"]),
+        "⛔음성 BD P0-3: decisions 를 **비우면** 막는다 — 필수 목록은 **코드가** "
+        "정한다 (종전엔 산출물이 정해 `all(빈 것)=True` 로 통과했다)")
     _r = _cs({k: v for k, v in _GBOK.items() if k != "reference_files_state"})
     chk(_r["manuscript_citable"] is False
-        and any("구판" in x for x in _r["blockers"]),
+        and any("dict 가 아니다" in x or "구판" in x for x in _r["blockers"]),
         "⛔음성 BB P0-2: 참조 문서의 **비준 상태**가 없는 구판 번들은 인용 불가다 "
         "(SHA 만으로는 그 내용이 비준됐는지 알 수 없다)")
-    _r = _cs(dict(_GBOK, reference_files_state={
-        "prereg.json": {"status": "proposed", "ratified": False}}))
+    _r = _cs(dict(_GBOK, reference_files_state=dict(
+        _GBOK["reference_files_state"], **{
+            _CLAIM0: dict(_GBOK["reference_files_state"][_CLAIM0],
+                          status="proposed", ratified=False,
+                          has_ratification_record=False)})))
     chk(_r["manuscript_citable"] is False
-        and any("주장을 **정의하는** 문서" in x for x in _r["blockers"]),
+        and any("불리언 True 가 아니다" in x for x in _r["blockers"]),
         "⛔음성 BB P0-2 (실물 재현): decision 은 active 인데 **claim prereg 가 "
         "proposed** 면 인용 불가다 — 실제 C-12 정본이 이 상태였다")
     # ══ 회신 BB P0-5 — 생성 계보 (dirty 면 폐기) ═══════════════════════════
@@ -4475,39 +4558,45 @@ def _selftest_closure(chk):
         and any("provenance 가 없다" in x for x in _r["blockers"]),
         "⛔음성 BB P0-5: provenance 없는 구판 번들은 인용 불가다 (v22 가 이 상태였다)")
     # ⛔음성 BB P0-2 — frozen_input 은 **비준을 요구하지 않지만 SHA 는 요구한다**
-    _r = _cs(dict(_GBOK,
-                  reference_files_sha256={"poses.json": "0" * 64},
-                  reference_files_state={
-                      "a.json": {"status": "ratified", "ratified": True,
-                                 "role": "claim", "digest_matches": True},
-                      "poses.json": {"status": None, "ratified": False,
-                                     "role": "frozen_input"}}))
+    # ⛔ 정상 frozen pose 는 `digest_matches=False` 여도 통과해야 한다
+    #   (회신 BD P0-3 이 잡은 **거짓 차단**)
+    _r = _cs(_GBOK)
     chk(_r["manuscript_citable"] is True,
         "BB P0-2 양성: **동결 입력**(자세 집합 같은 데이터)은 비준 대상이 아니다 — "
         "SHA 결박이 있으면 통과한다 (데이터에 비준을 요구하면 고무도장이 된다)")
-    _r = _cs(dict(_GBOK,
-                  reference_files_sha256={"a.json": "0" * 64, "poses.json": None},
-                  reference_files_state={
-                      "a.json": {"status": "ratified", "ratified": True,
-                                 "role": "claim", "digest_matches": True},
-                      "poses.json": {"status": None, "ratified": False,
-                                     "role": "frozen_input"}}))
+    _r = _cs(dict(_GBOK, reference_files_sha256=dict(
+        _GBOK["reference_files_sha256"], **{_FROZ0: None})))
     chk(_r["manuscript_citable"] is False
-        and any("결박" in x for x in _r["blockers"]),
+        and any("64-hex" in x for x in _r["blockers"]),
         "⛔음성 BB P0-2: 동결 입력의 **SHA 가 없으면** 불가다 — 비준 대신 요구하는 "
         "것이 그것이다")
     # ══ 회신 BC P0-2 — 리뷰어가 재현한 네 가지 fail-open ═══════════════════
     for _nm, _rsx, _need in (
-        ("빈 참조 집합", {}, "비어 있다"),
+        ("빈 참조 집합", {}, "필수 참조 문서가 없다"),
         ("claim → frozen_input 역할 변경",
-         {"prereg.json": {"status": "proposed", "ratified": False,
-                          "role": "frozen_input"}}, "하나도 없다"),
+         dict(_GBOK["reference_files_state"], **{
+             _CLAIM0: dict(_GBOK["reference_files_state"][_CLAIM0],
+                           role="frozen_input")}), "role 이"),
         ("digest_matches 누락",
-         {"a.json": {"status": "ratified", "ratified": True, "role": "claim"}},
-         "digest 재계산 결과가 없다"),
+         dict(_GBOK["reference_files_state"], **{
+             _CLAIM0: {k: v for k, v in
+                       _GBOK["reference_files_state"][_CLAIM0].items()
+                       if k != "digest_matches"}}), "비준 이후 내용이 바뀌었다"),
         ("비준 후 내용 변경",
-         {"a.json": {"status": "ratified", "ratified": True, "role": "claim",
-                     "digest_matches": False}}, "비준 이후에 바뀌었다"),
+         dict(_GBOK["reference_files_state"], **{
+             _CLAIM0: dict(_GBOK["reference_files_state"][_CLAIM0],
+                           digest_matches=False)}), "비준 이후 내용이 바뀌었다"),
+        # ⛔ 회신 BD P0-3 재현 — 전체 reference 를 evil.json 하나로 교체
+        ("evil.json 하나로 교체",
+         {"db/properties/evil.json": {"status": "ratified", "ratified": True,
+                                      "role": "claim", "digest_matches": True,
+                                      "has_ratification_record": True}},
+         "필수 참조 문서가 없다"),
+        # ⛔ 정상 frozen pose 를 **거짓 차단**하던 것 (role 을 안 봤다)
+        ("frozen pose 를 claim 으로 오분류",
+         dict(_GBOK["reference_files_state"], **{
+             _FROZ0: dict(_GBOK["reference_files_state"][_FROZ0],
+                          role="claim")}), "role 이"),
     ):
         _r = _cs(dict(_GBOK, reference_files_state=_rsx))
         chk(_r["manuscript_citable"] is False
@@ -4564,8 +4653,10 @@ def _selftest_closure(chk):
         "BC P1: `_final_verdict` 자체는 빈 closure 를 막지 않는다 — **보고량을 "
         "선언한 번들일 때만** 호출부가 막는다 (레거시 쌍 경로를 깨뜨리지 않는다)")
 
-    _r = _cs(dict(_GBOK, reference_files_state={
-        "old.json": {"status": None, "ratified": False, "superseded": True}}))
+    _r = _cs(dict(_GBOK, reference_files_state=dict(
+        _GBOK["reference_files_state"], **{
+            _CLAIM0: dict(_GBOK["reference_files_state"][_CLAIM0],
+                          superseded=True)})))
     chk(any("SUPERSEDED" in x for x in _r["blockers"]),
         "⛔음성 BB P0-4: 참조 문서가 **SUPERSEDED** 면 그 사실을 이름으로 말한다 "
         "(단순 미비준과 다른 문제다 — 폐기 문서는 비준해도 안 된다)")
@@ -12026,7 +12117,11 @@ def build_bundle(a, ledger: Optional[Dict[str, Any]] = None) -> Path:
         sys.exit("⛔ **이 번들 안의** 조각별 clean slab 이 서로 다르다 — E_ads 기준계가 "
                  "갈린다 (--frags 로 좁힌 범위에서 본 것이다):\n  "
                  + "\n  ".join(f"{h[:12]}  {p}" for p, h in sorted(hashes.items())))
-    clean = ase_read(_prov_note(cps[0]))
+    # ⛔ 회신 BD P0-1 — 두 조각의 `_clean_slab.vasp` 를 **둘 다 읽어 해시**하면서
+    #   등록은 하나만 했다. 읽은 것은 전부 등록한다.
+    for _cp in cps:
+        _prov_note(_cp)
+    clean = ase_read(_prov_note(cps[0]))     # 중복 등록은 무해하다 (dedup)
     man["clean_slab"] = {"path": str(cps[0]), "sha256": list(hashes.values())[0],
                          "n_sources_identical": len(cps)}
     _z = clean.positions[:, 2]
@@ -15136,14 +15231,37 @@ def selftest() -> int:
     #   `ase_read` 다섯 자리가 등록을 안 거치고 있었다. 폐포는 "입력 4" 라고
     #   말하면서 정작 구조가 빠져 있었다 — 리뷰어가 "선택 XYZ" 라고 콕 집은 것이다.
     #   ⇒ 구조를 읽는 경로는 **전부** 등록을 거쳐야 한다. 문자열로 못 박는다.
+    # ⛔⛔ 회신 BD P0-1 (2026-09-02) — 스캔이 `ase_read` 만 찾아 **`parse_qe` 를
+    #   놓쳤다.** 등록 경로가 하나여야 한다는 것이 GO 해제조건 1 이므로, 파일을 여는
+    #   **모든 호출**을 본다. 등록은 두 형태 중 하나면 된다:
+    #     ⓐ 같은 줄에서 `_prov_note(...)` 를 거친다
+    #     ⓑ 그 함수가 자기 모듈의 `INPUTS_READ` 에 남긴다 (아래 화이트리스트)
     _srcp = Path(__file__).read_text(encoding="utf-8")
-    _bare = [ln.strip() for ln in _srcp.split("\n")
-             if "ase_read(" in ln and "_prov_note" not in ln
-             and "from ase.io" not in ln and not ln.strip().startswith("#")]
+    # ⚠ 스캐너 자신의 정의 줄이 이 문자열들을 담고 있다 — 자기 자신을 잡지 않게
+    #   토큰을 쪼개 만든다 (2026-09-02 실측: 자기 줄을 위반으로 셌다).
+    _RD = "read(" ; _PQ = "parse_qe(" ; _PP = "parse_poscar("
+    _LS = "load_slab(" ; _LF = "load_fragment("
+    _READERS = ("ase_" + _RD, "AL." + _PQ, "AL." + _PP, "SS." + _LS, "SS." + _LF)
+    #: 자기 모듈에서 `INPUTS_READ` 에 등록하는 함수 — 호출부에 `_prov_note` 가 없어도 된다
+    _SELF_REG = ("AL." + _PQ, "AL." + _PP, "SS." + _LS, "SS." + _LF)
+    _bare = []
+    for ln in _srcp.split("\n"):
+        t = ln.strip()
+        if t.startswith("#") or "from ase.io" in t:
+            continue
+        for _r in _READERS:
+            if _r in t and _r not in _SELF_REG and "_prov_note" not in t:
+                _bare.append(t)
+                break
     chk(not _bare,
-        "BC P0-1: 구조를 읽는 `ase_read` 가 **전부** `_prov_note` 를 거친다 "
-        "(등록 안 된 %d자리)%s" % (len(_bare),
-                                   "" if not _bare else ": " + str(_bare[:2])))
+        "BD P0-1: 파일을 여는 **모든 호출**이 등록을 거친다 (직접 `_prov_note` 또는 "
+        "자기 모듈 `INPUTS_READ`) — 등록 안 된 %d자리%s"
+        % (len(_bare), "" if not _bare else ": " + str(_bare[:2])))
+    # 자기 등록 모듈이 실제로 그 칸을 갖고 있는가 (화이트리스트가 거짓말이 아닌지)
+    import afm_ledger as _AL          # ⚠ 생산 경로는 함수 안에서 import 한다
+    chk(hasattr(_AL, "INPUTS_READ") and hasattr(SS, "INPUTS_READ"),
+        "BD P0-1: 화이트리스트에 넣은 모듈이 **실제로** `INPUTS_READ` 를 갖는다 "
+        "(없으면 화이트리스트가 구멍이다)")
     chk(_pv_live["n_inputs"] == 0 or _pv_live["n_inputs"] >= 1,
         "BC P0-1: 폐포가 입력 칸을 낸다 (이 호출에선 %d개 — 생성 경로에서 채워진다)"
         % _pv_live["n_inputs"])
