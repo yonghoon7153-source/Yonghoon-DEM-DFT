@@ -116,8 +116,14 @@ this representation is given in Table S3c.
 
 *Conductivity of the carbon network.* The coefficient assigned to the VGCF phase
 (100 S cm⁻¹) is a **frozen, uncalibrated legacy voxel-network coefficient**, not a fibre
-material constant and not a value derived from any measurement reported here. It is retained so
-that the results presented in this work remain reproducible. Voxelisation fuses touching fibres
+material constant and not a value derived from any measurement reported here. It was introduced
+as an explicit order-of-magnitude placeholder, taken from the low end of a range cited at the
+time as the literature band for graphitic fibre (10²–10³ S cm⁻¹); that band was subsequently
+found to describe compacted powder rather than single filaments, VGCF-H having a single-filament
+resistivity of 1 × 10⁻⁴ Ω cm (10⁴ S cm⁻¹). The coefficient therefore coincides with the powder
+regime rather than having been selected against it, and it has not been recalibrated since. It
+is retained so that the results presented in this work remain reproducible. Voxelisation fuses
+touching fibres
 into shared cells and therefore does not resolve fibre–fibre contact resistance, which is one of
 several contributions separating single-filament (≈ 10⁴ S cm⁻¹) from compressed-powder
 (≈ 83 S cm⁻¹) measurements of VGCF-H; packing fraction, orientation, network tortuosity,

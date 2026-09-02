@@ -69,7 +69,7 @@
 | §2-2 | SI Table S3 σ 행 | ⛔ **미착수 [P1]** |
 | §2-3 | Methods 의 `standard error` | ⛔ **미착수 [P1]** · 저자 승인됨 |
 | §2-4 | **공저자 DOCX 의 VGCF 문단** (§2·§3 두 곳) | ⛔ **미착수 [P1·신규 09-02]** — 두 죽은 주장이 한 문장에 |
-| §3-1 | Table S2 재구성 (3블록) | ⛔ 미착수 |
+| §3-1 | Table S2 재구성 (3블록) | 🟡 **보류 — 저자 결정 2026-09-02** ↓ |
 | §3-2 | Table S3 나머지 행 | ⛔ 미착수 |
 | §3-3 | Table S3 σ_ion 행 | ✅ **09-01 값 확보** — 넣을 수 있다 |
 | §4-1 | Figure 4b 재작도 | 생성기 준비됨 |
@@ -86,6 +86,18 @@
 | §9 | 오늘 닫힌 것 | ✅ |
 
 ---
+
+> ★ **순서 결정 (저자, 2026-09-02)**: *"기억하고 있다가 Methods 에서만 확실히 하자."*
+> ⇒ **Methods 문단을 먼저 확정**하고 Table S2 라벨은 공저자와 함께 처리한다 (표에 공저자
+> 소관 데이터가 섞여 있다).
+>
+> ⚠ **다만 "나중" 이지 "안 함" 이 아니다.**  Table S2 의 `Calculated` 라벨은 그대로 두면
+> **같은 논문 안에서 Methods 와 정면으로 부딪힌다**:
+> Methods = *"not a value derived from any measurement reported here"* ↔ Table S2 = `Calculated`.
+> `Calculated` 는 *"무언가로부터 계산했다"* 는 뜻이라, 독자가 둘 중 하나를 거짓으로 읽는다.
+> ⇒ Methods 를 넣는 순간 이 모순이 **생긴다** — 표 수정 전에는 두 문서를 같이 내지 않는다.
+> (78.5 행은 상대적으로 덜 급하다 — Methods 가 식으로 설명하므로 모순은 아니고 **재현성**
+> 문제로만 남는다.)
 
 ## 2. [P1] 지금 바로 고칠 것 — 찾아 바꾸기
 
@@ -143,6 +155,17 @@
 - *"The powder-scale value was therefore adopted"* — **거짓 계보.**  `100` 은 도입 커밋이
   스스로 `order-of-magnitude hook` 이라 적으며 들어왔고 그것이 `83` 문헌 감사보다 **앞선다**.
   분말값을 보고 고른 것이 아니다 ⇒ **없었던 판단 근거를 지어내는 문장**이다.
+- ★★ **정정 (2026-09-02 저녁, 저자 지적으로 재발굴)** — *"왜 100 인지 모른다"* 는 **틀렸다.**
+  도입 커밋 `087d1a07` 이 같이 만든 `docs/step3_sigma_network.md` 의 앵커 표가 근거를 적고 있다:
+  `| VGCF | 100 | ⚠ §F1 자릿수 hook (graphitic fibre 문헌 10²-10³) |`
+  ⇒ **"흑연 섬유 문헌 밴드의 밑단"** 을 잡은 것이다.  그런데 **그 밴드가 틀렸다** (CL-47):
+  VGCF-H 단섬유는 10⁴ S/cm 이고 10² 대는 분말/압착 영역이다.  ⇒ 저자는 *"섬유값의 밑단"* 을
+  겨냥했고 **우연히 분말 영역에 착지**했다.  ★ 거짓 계보 판정은 **더 강해진다** — 분말값을
+  보고 고른 게 아니라 **보지도 않았다**.
+  ⇒ Methods 문단에 그 밴드와 그것이 뒤에 반증된 사실을 **같이 적는다** (아래 대체 문단 반영됨).
+- ⚠ `SDCP 250` 도 *"출처 없음"* 이 아니다: `9d8b0a0e` 가 `USER-provided interim material
+  conductivity (S-PEDOT class)` 로 150 을 넣었고 `0e548ee4` 가 250 으로 갱신했다.  정확한 결손은
+  **시편 규약 미기록**(캐스팅 막인가 압착 펠릿인가)이고, `--sigma-sdcp` help 가 이미 그렇게 적는다.
 - ⚠ 부수: 제조사 사양은 **0.017 Ω·cm @ 압축밀도 0.8 g/cm³ (58.8 S cm⁻¹)** 이고, `83`
   (0.012 Ω·cm) 은 문헌 통용값인데 **조건이 안 붙어 있다.**  둘 중 **덜 문서화된 쪽**을 인용해
   왔다.  그리고 `100` 은 두 분말값 **둘 다보다 위**다 (58.8 의 1.70배 · 83 의 1.20배).
@@ -156,7 +179,13 @@
 
 > The coefficient assigned to the VGCF phase (100 S cm⁻¹) is a frozen, uncalibrated legacy
 > voxel-network coefficient, not a fibre material constant and not a value derived from any
-> measurement reported here. It is retained so that the results presented in this work remain
+> measurement reported here. It was introduced as an explicit order-of-magnitude placeholder,
+> taken from the low end of a range cited at the time as the literature band for graphitic fibre
+> (10²–10³ S cm⁻¹); that band was subsequently found to describe compacted powder rather than
+> single filaments, VGCF-H having a single-filament resistivity of 1 × 10⁻⁴ Ω cm (10⁴ S cm⁻¹).
+> The coefficient therefore coincides with the powder regime rather than having been selected
+> against it, and it has not been recalibrated since. It is retained so that the results
+> presented in this work remain
 > reproducible. Voxelisation fuses touching fibres into shared cells and therefore does not
 > resolve fibre–fibre contact resistance, which is one of several contributions separating
 > single-filament (≈ 10⁴ S cm⁻¹) from compressed-powder measurements of VGCF-H; packing
