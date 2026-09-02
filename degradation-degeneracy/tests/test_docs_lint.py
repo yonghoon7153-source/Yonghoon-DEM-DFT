@@ -11574,3 +11574,94 @@ def test_an_assembled_dunder_name_is_refused():
             rp._producer_semantic_over(_mini_producer(rp, body, extra=extra), sc)
         assert "fail-closed" in str(ei.value) or "감싸서" in str(ei.value), (
             f"{note} 를 거부하지 않는다: {ei.value}")
+
+
+def test_two_consecutive_partial_appends_are_still_recoverable(tmp_path):
+    """★ 56차 P0-4 — journal 이 anchor 보다 **두 줄** 앞서면 복구가 없다.
+
+    `read_lifecycle()` 은 정확히 한 줄 앞선 상태를 의도대로 받아들인다. 그런데
+    다음 writer 가 그 상태를 **먼저 수리하지 않고** 새 줄을 덧붙일 수 있다.
+    둘째도 같은 창에서 죽으면 head 는 두 줄 뒤처지고, reader 는 이를 위조로
+    보며 repair 함수도 reader 를 먼저 부르므로 public 복구 경로가 없다.
+
+        journal_lines 2 · head_exists false
+        read_lifecycle SystemExit: end digest != anchor
+        repair_lifecycle_anchor SystemExit: 같은 이유
+        retry_A blocked · retry_B blocked · RESULT VULNERABLE
+
+    "한 줄 관용" 은 **그 한 줄을 곧 완주시킨다**는 전제 위에서만 안전하다.
+    그러므로 새 줄을 덧붙이기 전에 미완을 먼저 완주시킨다.
+    """
+    import yaml as _y
+
+    rp = _fresh_rp()
+    two = _y.safe_load(_one_cohort_ledger("gA"))
+    two["cohorts"].append({**two["cohorts"][0], "cohort_id": "gB",
+                           "dir": "docs/22p_gap/coh2"})
+    rp.REPO = _ledger_repo(tmp_path, _y.safe_dump(two, allow_unicode=True,
+                                                  sort_keys=False))
+    (rp.REPO / "docs" / "22p_gap" / "coh2").mkdir(parents=True, exist_ok=True)
+
+    real_head = rp._write_head_anchor
+    fail = {"on": True}
+
+    def dying(tip):
+        if fail["on"]:
+            raise OSError("crash: head 쓰기 직전")
+        return real_head(tip)
+
+    rp._write_head_anchor = dying
+    try:
+        for cid in ("gA", "gB"):
+            with pytest.raises(OSError):
+                rp._append_lifecycle(cid, None, "active", f"{cid} 게시")
+    finally:
+        rp._write_head_anchor = real_head
+
+    lines = rp._lifecycle_path().read_text(encoding="utf-8").strip().splitlines()
+    assert len(lines) <= 1, (
+        f"미완을 완주시키지 않은 채 새 줄이 붙었다 (journal {len(lines)}줄, "
+        "anchor 는 그대로) — 그 상태는 어떤 public 경로로도 복구되지 않는다")
+    # 그리고 남은 미완은 수리로 완주할 수 있어야 한다
+    rp.repair_lifecycle_anchor()
+    assert rp.read_lifecycle(), "수리 뒤에도 읽을 수 없다"
+
+
+def test_the_evidence_binds_the_execution_environment(tmp_path):
+    """★ 56차 P1-2 — 의존성·환경·비-Python 입력이 증거 밖이었다.
+
+    리뷰어 실측: `requirements.txt` 를 바꿔도 tree digest 가 같았고,
+    `DD_SMOOTH_CACHE=0/1` 은 실제 `src.objective._SMOOTH_CACHE_ENABLED` 를
+    `False/True` 로 바꾸는데 digest 는 그대로였다.
+
+        requirements_changed=True digest_equal=True
+        DD_SMOOTH_CACHE=0 -> False; =1 -> True · tree_digest_unchanged=True
+
+    "이 증거가 어느 코드에서 나왔는가" 는 `.py` 만으로 답할 수 없다. 시험이
+    실제로 소비하는 것 — interpreter, 의존성 잠금, 선택된 환경변수, configs ·
+    scripts · requirements — 을 하나의 실행 영수증으로 묶는다.
+    """
+    import os
+
+    mr = _mr()
+    base = mr._execution_receipt()
+    for key in ("interpreter", "packages", "env", "inputs"):
+        assert key in base, f"실행 영수증에 {key} 가 없다: {sorted(base)}"
+
+    # 선택된 환경변수가 바뀌면 영수증이 움직여야 한다
+    name = sorted(base["env"])[0] if base["env"] else "DD_SMOOTH_CACHE"
+    old = os.environ.get(name)
+    try:
+        os.environ[name] = (old or "") + "_changed"
+        moved = mr._execution_receipt()
+    finally:
+        if old is None:
+            os.environ.pop(name, None)
+        else:
+            os.environ[name] = old
+    assert moved != base, (
+        f"환경변수 {name} 이 바뀌었는데 실행 영수증이 그대로다")
+
+    # 비-Python 입력(requirements)도 결속돼 있어야 한다
+    assert any("requirements" in k for k in base["inputs"]), (
+        f"의존성 선언이 증거 밖이다: {sorted(base['inputs'])[:6]}")

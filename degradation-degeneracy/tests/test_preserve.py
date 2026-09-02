@@ -8426,3 +8426,137 @@ def test_the_same_ledger_argument_always_names_the_same_claims_root(tmp_path):
         "원장 쓰기가 symlink 를 일반 파일로 교체했다 — 해석 결과가 바뀐다")
     # 같은 인자로 회수할 수 있어야 한다 ("회수 가능" 주장의 뜻이다)
     P.attach_leg_run("L", tok, ledger=link)
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# 56차 — 게이트 55 반례
+# ─────────────────────────────────────────────────────────────────────────────
+
+def test_a_symlinked_token_path_cannot_split_the_attempt_lock(tmp_path):
+    """★ 56차 P0-1 — token symlink 가 **자기 첫 쓰기로** lock identity 를 바꾼다.
+
+    `shared.token -> token-target` 에서 L 은 `token-target.attempt` 를 잡는다.
+    그런데 `write_token_file()` 의 `os.replace()` 가 symlink 자체를 일반 파일로
+    바꾸므로, 이어 시작한 M 은 같은 API pathname 에서 `shared.token.attempt` 를
+    잡는다. 둘은 **서로 다른 lock** 안에서 모두 running 이 된다.
+
+        old_attempt_lock .../token-target.attempt
+        new_attempt_lock .../shared.token.attempt
+        L_plan running · M_plan running · RESULT VULNERABLE
+
+    `_assert_token_path_disjoint()` 는 canonical 을 계산해 놓고 raw `p` 를
+    돌려주며, 그 반환값마저 caller 가 버린다. 경로는 **공개 진입에서 한 번**
+    고정돼야 한다.
+    """
+    import tools.preserve as P
+
+    led = _lifecycle_ledger_two(tmp_path)
+    target = tmp_path / "token-target"
+    target.write_text("", encoding="utf-8")
+    tok = tmp_path / "shared.token"
+    tok.symlink_to(target)
+
+    before = P._attempt_path_lock(tok)
+    try:
+        P.open_leg_run("L", _RUN_SPEC_L, "0123456789abcdef", tok, ledger=led)
+    except P.PreserveError:
+        return                      # 첫 부작용 전에 거부하는 것도 옳은 결말이다
+    after = P._attempt_path_lock(tok)
+
+    # **축은 이것이다** — 같은 API pathname 의 배타 지점이 정상 발급 하나로
+    #   움직이면, 그 뒤 시작한 다리는 다른 lock 안에서 돈다. 순차 실행에서는
+    #   내용 검사가 우연히 막지만 그것은 **다른** guard 다 (실측했다).
+    assert before == after, (
+        f"정상 발급 하나가 attempt lock identity 를 바꿨다 "
+        f"({before.name} → {after.name}) — 같은 pathname 을 쓰는 다음 다리는 "
+        "다른 lock 안에서 돈다")
+    assert tok.is_symlink(), (
+        "token 쓰기가 symlink 를 일반 파일로 교체했다 — 경로 해석이 바뀐다")
+
+
+def test_a_hardlinked_ledger_alias_cannot_fork_the_authority(tmp_path):
+    """★ 56차 P0-2 — hardlink ledger alias 가 승인 원장을 **둘로 가른다**.
+
+    서로 다른 디렉터리의 두 이름을 hardlink 로 만들면 첫 발급 전에는
+    `os.path.samefile=True` 다. 그런데 `Path.resolve()` 는 hardlink 를 합치지
+    못하므로 claims root 와 lock namespace 가 갈린다. 첫 `os.replace()` 는 이름
+    A 만 새 inode 로 바꾸고 이름 B 에는 아직 `planned` 인 옛 원장이 남는다.
+
+        same_inode_before_first_write True · claims_roots_equal False
+        ledger_a_plan running · ledger_b_plan running · RESULT VULNERABLE
+
+    §0 의 symlink **재지정** 재확인이 아니다 — 제3자가 경로를 바꾸지 않아도
+    정상 writer 자신의 atomic replace 가 authority 를 분기한다.
+    """
+    import os
+
+    import tools.preserve as P
+
+    a_dir = tmp_path / "A"
+    a_dir.mkdir()
+    led_a = _lifecycle_ledger(a_dir)
+    b_dir = tmp_path / "B"
+    b_dir.mkdir()
+    led_b = b_dir / led_a.name
+    os.link(led_a, led_b)
+    assert os.path.samefile(led_a, led_b), "시험 전제가 깨졌다"
+
+    ok = []
+    for name, led in (("A", led_a), ("B", led_b)):
+        try:
+            P.open_leg_run("L", _RUN_SPEC_L, "0123456789abcdef",
+                           tmp_path / f"{name}.token", ledger=led)
+            ok.append(name)
+        except P.PreserveError:
+            pass
+    assert len(ok) <= 1, (
+        f"같은 leg 를 두 alias 로 각각 발급했다 ({ok}) — 하나의 승인 원장이 "
+        "두 authority 로 갈렸다")
+
+
+def test_a_crash_after_the_claim_unlink_can_still_be_finalized(tmp_path):
+    """★ 56차 P0-3 — 원장 commit **뒤** claim 삭제에서 죽으면 재시도가 막힌다.
+
+    리뷰어는 실제 unlink 직후 `os._exit(71)` 을 주입했다. 원장은 durable
+    `executed`, claim 은 없음, token 은 남음이다. `_already_finalized()` 는
+    claim 이 없으면 즉시 `None` 을 돌려주고 public retry 는 `resume_claim()`
+    에서 막힌다.
+
+        plan_after_crash executed · claim_exists False · token_exists True
+        finalize_retry FAILED: no claim to resume · RESULT VULNERABLE
+
+    54·55차 회귀는 unlink 가 실제로 일어나기 **전** 실패시키거나, 성공 뒤
+    claim 을 시험이 **다시 만들어** 전건을 인위적으로 참으로 했다 — 그래서 이
+    상태를 한 번도 안 봤다. 원장 자신이 소유자를 인증할 수 있어야 한다.
+    """
+    import tools.preserve as P
+
+    led, claims, tok, c = _ready_claim(tmp_path)
+    token = P.read_token_file(tok, "L")
+    ev = {"leg_source_digest": "0123456789abcdef", "cohorts": ["gA"]}
+
+    # 원장 commit 은 끝났고 claim 은 지워졌다 — 그 상태로 죽었다
+    real_unlink = P.Path.unlink
+    state = {"hit": False}
+
+    class _Boom(BaseException):
+        pass
+
+    def hooked(self, *a, **k):
+        out = real_unlink(self, *a, **k)
+        if str(self) == str(c.path) and not state["hit"]:
+            state["hit"] = True
+            raise _Boom("crash: claim 삭제 직후")
+        return out
+
+    with mock.patch.object(P.Path, "unlink", hooked):
+        with pytest.raises(_Boom):
+            P.finalize_leg("L", ev, ledger=led, token_file=tok)
+    assert state["hit"], "시험이 겨눈 자리를 지나지 않았다"
+    assert P.planned_index(ledger=led)["L"]["status"] == "executed"
+    assert not c.path.exists(), "시험 전제가 깨졌다 (claim 이 남았다)"
+
+    # 소유 증명을 쥔 사람은 **같은 결과로** 재개할 수 있어야 한다
+    again = P.finalize_leg("L", ev, ledger=led, token_file=tok)
+    assert again["status"] == "executed"
+    assert not tok.exists(), "재개가 남은 소유 증명을 치우지 않았다"

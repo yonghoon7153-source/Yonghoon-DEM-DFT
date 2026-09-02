@@ -4489,7 +4489,24 @@ def canonical_ledger(ledger=None) -> Path:
     해석은 여기 한 번뿐이고, 읽기·쓰기·lock·claims root 가 전부 이것을
     부른다. 두 쪽이 같은 함수를 부르면 그 사이가 벌어질 수 없다.
     """
-    return Path(ledger or DEFAULT_LEDGER).resolve()
+    path = Path(ledger or DEFAULT_LEDGER).resolve()
+    # ★ 56차 P0-2 — `resolve()` 는 **hardlink 를 합치지 못한다.** 서로 다른
+    #   디렉터리의 두 이름이 같은 inode 여도 claims root 와 lock namespace 가
+    #   갈리고, 첫 `os.replace()` 가 이름 A 만 새 inode 로 바꾸면 이름 B 에는
+    #   아직 `planned` 인 옛 원장이 남는다 — 같은 leg 를 두 번 발급할 수 있다
+    #   (리뷰어 실측: `ledger_a_plan running · ledger_b_plan running`).
+    #   제3자가 경로를 바꾸지 않아도 **정상 writer 자신의** atomic replace 가
+    #   authority 를 분기한다. 이름이 여럿이면 정본을 정할 수 없으므로 멈춘다.
+    try:
+        st = path.lstat()
+    except OSError:
+        return path                              # 아직 없다 — bootstrap
+    if stat.S_ISREG(st.st_mode) and st.st_nlink != 1:
+        raise PreserveError(
+            "plan",
+            f"원장에 다른 이름(hardlink)이 있다: {path} (nlink={st.st_nlink}) — "
+            "하나의 승인 원장이 두 authority 로 갈린다. 이름을 하나로 두어라")
+    return path
 
 
 def claims_root_for_ledger(ledger=None) -> Path:
@@ -4992,7 +5009,28 @@ def _assert_token_path_disjoint(token_file, claims_root=None, ledger=None) -> Pa
             "plan",
             f"소유 증명 경로가 claim namespace 안에 있다: {p} (claims_root: "
             f"{root}) — 전달 통로가 authority 경로를 점유할 수 있다")
-    return p
+    # ★ 56차 P0-1 — **alias 는 첫 부작용 앞에서 거부한다.** 55차는 canonical 을
+    #   계산해 놓고 raw `p` 를 돌려줬고, 그 반환값마저 caller 가 버렸다.
+    #   `shared.token -> token-target` 이면 L 은 `token-target.attempt` 를 잡는데,
+    #   token 쓰기의 `os.replace()` 가 symlink 자체를 일반 파일로 바꾸므로 그
+    #   뒤 같은 pathname 은 `shared.token.attempt` 를 잡는다 — 배타 지점이
+    #   정상 발급 하나로 움직인다 (리뷰어 실측: 두 다리가 모두 running).
+    if p.is_symlink():
+        raise PreserveError(
+            "plan",
+            f"소유 증명 경로가 symlink 다: {p} — 첫 쓰기가 링크를 갈아치우면 "
+            "배타 지점이 움직인다. 실제 경로를 직접 주어라")
+    try:
+        st = p.lstat()
+    except OSError:
+        st = None
+    if st is not None and stat.S_ISREG(st.st_mode) and st.st_nlink != 1:
+        raise PreserveError(
+            "plan",
+            f"소유 증명 경로에 다른 이름(hardlink)이 있다: {p} (nlink="
+            f"{st.st_nlink}) — 같은 파일을 두 이름으로 부르면 배타가 갈린다")
+    # 해석은 **여기 한 번**이고, caller 는 이 값을 그대로 쓴다.
+    return cand
 
 
 def _attempt_path_lock(token_file) -> Path:
@@ -5384,7 +5422,26 @@ def _already_finalized(leg_id: str, token: str, ledger=None) -> dict | None:
     want = _token_verifier(token)
     cp = _claim_path(leg_id, claims_root_for_ledger(ledger))
     if not cp.is_file():
-        return None
+        # ★ 56차 P0-3 — claim 이 **이미 지워진** post-commit crash. 원장에
+        #   봉인한 검증자로 소유자를 확인하고, 남은 정리를 완주한 뒤 같은
+        #   답을 돌려준다. 근거는 여전히 원장 하나다 (정본을 늘리지 않는다).
+        doc = _load_ledger(ledger)
+        row = next((e for e in doc.get("planned") or []
+                    if e.get("leg_id") == leg_id), None)
+        leg = next((e for e in doc.get("legs") or []
+                    if e.get("leg_id") == leg_id), None)
+        if row is None or leg is None or row.get("status") != "executed":
+            return None
+        ev = leg.get("evidence") or {}
+        sealed = str(ev.get("attempt_verifier") or "")
+        if not sealed:
+            return None                  # 55차 이전 기록 — 인증할 근거가 없다
+        if not secrets.compare_digest(want, sealed):
+            raise PreserveError(
+                "plan",
+                f"{leg_id!r} 은 이미 닫혔고, 그 실행의 소유 증명이 아니다 — "
+                "남의 실행을 대신 닫을 수 없다")
+        return {"attempt_id": ev.get("attempt_id")}
     rec = json.loads(cp.read_text(encoding="utf-8"))
     if set(rec) != set(CLAIM_KEYS):
         return None
@@ -5543,6 +5600,12 @@ def finalize_leg(leg_id: str, evidence: dict, ledger=None, *,
                                       for ph in CLAIM_PHASES}
             rec_evidence["attempt_id"] = claim.attempt_id
             rec_evidence["run_spec_digest"] = claim.run_spec_digest
+            # ★ 56차 P0-3 — 소유 증명의 **검증자를 원장에** 봉인한다. 55차까지
+            #   그것은 claim 파일에만 있었고, 원장 commit 뒤 claim 삭제에서
+            #   죽으면 인증할 근거가 사라져 재시도가 영영 막혔다 (리뷰어 실측:
+            #   `finalize_retry FAILED: no claim to resume`). 원장이 스스로
+            #   소유자를 확인할 수 있어야 claim 이 없어도 완주할 수 있다.
+            rec_evidence["attempt_verifier"] = _token_verifier(token)
             # ★ 49차 P0-4 — 계약 §8 은 **세 축의 튜플**을 요구한다. 48차는
             #   `preservation_status` 하나만 적고 나머지를 비웠으므로 그 기록은
             #   `test_registry_rejects_impossible_status_tuples` 를 통과할 수

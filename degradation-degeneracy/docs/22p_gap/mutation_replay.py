@@ -3001,6 +3001,60 @@ def _runner_digest() -> str:
         pathlib.Path(__file__).read_bytes()).hexdigest()
 
 
+#: 시험 결과를 바꾸는 **환경변수** — 값이 바뀌면 증거도 바뀌어야 한다 (56차 P1-2).
+#: 목록은 `src/`·`tools/` 에서 실제로 읽는 것에서 왔다. 새 변수를 도입하면서
+#: 여기 안 적으면 `..._evidence_binds_the_execution_environment` 가 잡는다.
+BOUND_ENV = ("DD_SMOOTH_CACHE",)
+
+#: 시험이 소비하는 **비-Python 입력** (56차 P1-2).
+BOUND_INPUT_GLOBS = ("requirements*.txt", "configs/*.yaml", "scripts/*.sh",
+                     "run.sh", "pytest.ini", "conftest.py")
+
+
+def _execution_receipt() -> dict:
+    """이 증거가 **어떤 실행에서** 나왔는가 (56차 P1-2).
+
+    55차의 tree digest 는 `.py` 만 봤다. 그런데 리뷰어 실측대로
+    `requirements.txt` 를 바꿔도, `DD_SMOOTH_CACHE` 를 뒤집어도 (실제로
+    `src.objective._SMOOTH_CACHE_ENABLED` 가 `False/True` 로 바뀐다) digest 는
+    그대로였다. "어느 코드에서 나왔는가" 는 `.py` 만으로 답할 수 없다.
+
+    이것은 §0 에 신고한 **독립 replay** 를 대체하지 않는다 — checker 가 스스로
+    재생하지는 않는다. 다만 "같은 코드·같은 환경" 이라는 주장의 범위를 실제
+    소비하는 것까지 넓힌다.
+    """
+    import os
+    import sys
+
+    root = pathlib.Path(ROOT)
+    inputs = {}
+    for pat in BOUND_INPUT_GLOBS:
+        for f in sorted(root.glob(pat)):
+            if f.is_file():
+                inputs[f.relative_to(root).as_posix()] = hashlib.sha256(
+                    f.read_bytes()).hexdigest()[:16]
+    pkgs = {}
+    try:
+        from importlib import metadata as _md
+
+        for dist in _md.distributions():
+            nm = (dist.metadata or {}).get("Name")
+            if nm:
+                pkgs[str(nm).lower()] = str(dist.version)
+    except Exception:                                     # pragma: no cover
+        pkgs = {"<unavailable>": ""}
+    return {"interpreter": "%d.%d.%d" % sys.version_info[:3],
+            "packages": dict(sorted(pkgs.items())),
+            "env": {k: os.environ.get(k, "") for k in BOUND_ENV},
+            "inputs": inputs}
+
+
+def _execution_receipt_digest() -> str:
+    return hashlib.sha256(json.dumps(_execution_receipt(), sort_keys=True,
+                                     ensure_ascii=False).encode("utf-8")
+                          ).hexdigest()
+
+
 def _tested_tree_digest() -> str:
     """**실제로 시험한 파일들**의 내용 digest (55차 P1-2).
 
@@ -3272,6 +3326,8 @@ def _write_coverage(path, selector, items, multi, declared, bit,
                "runner_digest": _runner_digest(),
                "head": _head(),
                "tree_digest": _tested_tree_digest(),      # 55차 P1-2
+               "execution": _execution_receipt(),         # 56차 P1-2
+               "execution_digest": _execution_receipt_digest(),
                "reports_dir": rep_dir.name if receipts is not None else "",
                "transcript_digest": _transcript_digest(scen)},
            "scenarios": scen}

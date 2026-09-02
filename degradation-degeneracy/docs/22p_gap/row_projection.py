@@ -3448,6 +3448,13 @@ def _append_lifecycle(cohort_id: str, frm, to: str, note: str) -> dict:
 
 
 def _append_lifecycle_locked(cohort_id: str, frm, to: str, note: str) -> dict:
+    # ★ 56차 P0-4 — **미완을 먼저 완주시킨다.** `read_lifecycle()` 은 정확히
+    #   한 줄 앞선 상태를 관용하는데, 그 관용은 "그 한 줄을 곧 완주시킨다" 는
+    #   전제 위에서만 안전하다. 55차는 그 상태 위에 새 줄을 덧붙일 수 있었고,
+    #   둘째도 같은 창에서 죽으면 head 가 두 줄 뒤처져 **어떤 public 경로로도
+    #   복구되지 않았다** (리뷰어 실측: read·repair 둘 다 SystemExit).
+    #   이미 lock 안이므로 anchor 만 맞춘다 (재귀하지 않는다).
+    _finish_pending_anchor()
     entries = read_lifecycle()
     live = cohort_lifecycle_state(cohort_id, entries)
     if live != frm:
@@ -3516,6 +3523,25 @@ def _write_head_anchor(tip: str) -> None:
     os.replace(htmp, hp)
 
 
+def _finish_pending_anchor() -> bool:
+    """미완의 append 를 anchor 까지 완주시킨다 — **lock 을 이미 쥔 채** (56차 P0-4).
+
+    `repair_lifecycle_anchor()` 와 같은 일을 하지만 lock 을 다시 잡지 않는다.
+    `flock` 은 재진입이 안 되므로 잠긴 경로에서 부를 함수가 따로 필요하다.
+    """
+    entries = read_lifecycle()
+    if not entries:
+        return False
+    tip = hashlib.sha256(
+        _lifecycle_line(entries[-1]).encode("utf-8")).hexdigest()
+    hp = _lifecycle_head_path()
+    cur = hp.read_text(encoding="utf-8").strip() if hp.is_file() else ""
+    if cur == tip:
+        return False
+    _write_head_anchor(tip)
+    return True
+
+
 def repair_lifecycle_anchor() -> bool:
     """미완의 append 를 **의도를 가지고** 완주시킨다 (53차 P0-6).
 
@@ -3527,17 +3553,7 @@ def repair_lifecycle_anchor() -> bool:
     # ★ 55차 P0-3 — 읽기와 쓰기가 **같은 임계 구역**이다. 54차는 lock 도 CAS 도
     #   없이 읽고 썼고, 그래서 낡은 수리가 전진한 head 를 과거로 되돌렸다.
     with _lifecycle_lock():
-        entries = read_lifecycle()
-        if not entries:
-            return False
-        tip = hashlib.sha256(
-            _lifecycle_line(entries[-1]).encode("utf-8")).hexdigest()
-        hp = _lifecycle_head_path()
-        cur = hp.read_text(encoding="utf-8").strip() if hp.is_file() else ""
-        if cur == tip:
-            return False
-        _write_head_anchor(tip)
-        return True
+        return _finish_pending_anchor()
 
 
 #: 얼린 디렉터리 **안**에 두는 봉인 marker (52차 P0-4).
