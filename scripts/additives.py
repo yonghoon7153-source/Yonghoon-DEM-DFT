@@ -854,7 +854,12 @@ ADDITIVE_PROCESS = {
         # ⚠ 2026-09-02 판독: 이 값은 **그림으로 정할 수 없다** — 조밀 충전 분말 SEM 은 투영이라
         #   '표면에 붙었다' 와 '옆에 놓였다' 가 구분되지 않고, Fig 2f 는 NCM+SDCP 둘뿐이라
         #   '공극에 떠 있다' 선택지가 애초에 없다.  ⇒ 그림은 '표면에 붙는다' 는 **사실**을 정하고
-        #   '몇 %' 는 정하지 않는다.  §F1 hook 으로 둔 것이 옳다.  hand-mix
+        #   '몇 %' 는 정하지 않는다.  §F1 hook 으로 둔 것이 옳다.
+        # ★ 그럼 LPSCl 표면에 앉은 SDCP 는? (저자 판단 2026-09-02: '공극으로 들어가는 것으로 보면 된다')
+        #   ⇒ **이미 그렇게 된다.**  1-surface_frac 이 seed_blobs 로 AM 밖 셀에 뿌려지므로 위치상
+        #   'AM 이 아닌 곳' 이고, 전도 기여는 **가정이 아니라 연결성**이 정한다: 안 닿으면 STEP3 가
+        #   floating island 로 제거하고(zero current by physics), 한쪽만 닿으면 DC 해에서 전류 0,
+        #   양쪽을 이으면 실제로 기여한다.  ⇒ '불활성으로 친다' 는 가정보다 낫고 추가 구현이 없다.  hand-mix
         # lower: a ~3µm guest on a 5µm host has adhesion/weight ~100× weaker than a 0.3µm guest → ordered
         # mixing fades toward random).  clump = NCM-decoration cluster size (user §3.7 hypothesis; default
         # 1 = Fig-2f-faithful singles; SBE/DBE payload proximity + SEM/EDS discriminate).  agg_d = surviving
