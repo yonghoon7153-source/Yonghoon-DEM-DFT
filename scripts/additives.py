@@ -39,13 +39,19 @@ PTFE_D, PTFE_L = 0.25, 40.0      # PTFE FIBRIL Ø, length — dry-process hot-ro
                                  # thin threads (branch to 10s nm) spanning tens of NMC; LONGER + HIGHER
                                  # aspect (AR≈160) than VGCF (AR≈67) → reads as the spanning binder web,
                                  # not a short rod.  Soft binder FIBRE (RSC D5EE03240G; Front. Energy 2023.1336344)
-SDCP_D = 0.30                    # SDCP in-electrode particle Ø (µm) — manuscript Fig S3 (0.2-0.5µm dispersed;
-                                 # as-made ~3µm S2, milled down by the dry process)
-SDCP_AGG_D = 3.0                 # SDCP AS-MADE agglomerate Ø (µm) — manuscript Fig S2 (~3µm particles before
+SDCP_D = 0.30                    # SDCP in-electrode particle Ø (µm) — manuscript **Figure 2f + S5**
+                                 # (0.2-0.5µm dispersed; as-made ~3µm = Figure 2b, milled by the dry process).
+                                 # ⚠ 2026-09-02: SI v6 에서 번호가 밀렸다 — 옛 주석의 `Fig S3`/`Fig S2` 는 이제
+                                 #   각각 **DFT 그림**과 **합성 도식**이다.  앵커 그림은 본문 Figure 2 로 승격됐다.
+                                 #   값 자체는 SI Table S2 가 `0.30 µm · Measured` 로 싣는다 (유효).
+SDCP_AGG_D = 3.0                 # SDCP AS-MADE agglomerate Ø (µm) — manuscript **Figure 2b** (~3µm particles before
                                  # milling).  Low-shear mixing (hand-mix) has no milling energy → these survive
-                                 # (seeded via seed_sdcp agg_d); high-shear (ball-mill/Thinky) mills → S3 singles.
+                                 # (seeded via seed_sdcp agg_d); high-shear (ball-mill/Thinky) mills → Fig 2f singles.
+                                 # ⚠ 원고 R13 은 크기를 `micrometer-sized` 로만 적는다 (숫자 없음).  Figure 2b 의
+                                 #   2 µm 스케일바 대비로는 **~1.5-2 µm** 로 읽혀 3.0 이 다소 크다 — 확인 대상.
+                                 #   ⚠ 다만 **잠자는 노브**다: agg_d 는 hand-mix 전용이고 생산은 ball-mill(agg_d=0).
 SDCP_AGG_PACK = 0.64             # ASSUMED internal packing of the as-made agglomerate (RCP-like) — §F1 hook,
-                                 # NOT anchored: S2 anchors the ~3µm SIZE only; a denser (even fully solid,
+                                 # NOT anchored: Figure 2b anchors the ~3µm SIZE only; a denser (even fully solid,
                                  # 1.0) precipitation-grown particle is not excluded.  Sets n_agg = pack·
                                  # (agg_d/d)³ and the member-ball radius in seed_sdcp.
 SDCP_SHELL = 0.20                # legacy coat-shell (µm) — coat-variant option only; manuscript default = PARTICLE
@@ -515,7 +521,7 @@ def seed_sdcp(n, box, dx, rng, am=None, in_am=None, surface_frac=0.5, clump=1,
 
     Two dispersion modes (agg_d wins):
       agg_d == 0 — HIGH SHEAR (ball-mill / Thinky; manuscript electrode): the dry process
-        mills the powder to 0.2-0.5µm SINGLES (Fig S3).  `surface_frac` of them are
+        mills the powder to 0.2-0.5µm SINGLES (Figure 2f · S5).  `surface_frac` of them are
         anchored ON the AM surfaces (seed_coat shell = d/2 — sulfonate chemisorption +
         ordered-mixing decoration of the coarse host); the rest disperse in-pore via
         seed_blobs rejection sampling (count-preserving — a 0D particle sits in the pore
@@ -524,7 +530,7 @@ def seed_sdcp(n, box, dx, rng, am=None, in_am=None, surface_frac=0.5, clump=1,
         as `clump`-member clusters scattered ~1 particle Ø (gaussian σ = d) around
         AM-surface centres; the bulk share STAYS singles (the powder itself is dispersed).
       agg_d > 0 — LOW SHEAR (hand-mix): no milling energy → the AS-MADE ~agg_d
-        agglomerates (Fig S2) survive.  BOUNDING ENDPOINT (full survival; partial
+        agglomerates (Figure 2b) survive.  BOUNDING ENDPOINT (full survival; partial
         breakage / fines mixtures not modelled).  ALL SDCP seeds as agglomerates: the
         EXACT n members are distributed over n_cl ≈ n/n_agg clusters (n_agg =
         SDCP_AGG_PACK·(agg_d/d)³), each uniform-in-sphere with radius
@@ -533,7 +539,7 @@ def seed_sdcp(n, box, dx, rng, am=None, in_am=None, surface_frac=0.5, clump=1,
         surfaces (members poking into the host DROP → a cap DRAPED on the NCM, the
         soft-agglomerate adhesion contact) and the bulk pore space.
     ⚠ HONESTY (§F1):
-      • SDCP_AGG_PACK=0.64 is an ASSUMED as-made internal packing (RCP-like) — S2 anchors
+      • SDCP_AGG_PACK=0.64 is an ASSUMED as-made internal packing (RCP-like) — Figure 2b anchors
         the ~3µm SIZE only; a denser/solid particle is not excluded.  Tunable hook.
       • surface_frac is the SEED-TIME split, NOT the realized share: in-AM/out-of-box
         drops are population-asymmetric (draped caps lose ~half their members; bulk
@@ -838,24 +844,28 @@ ADDITIVE_PROCESS = {
     },
     'SDCP': {    # self-doped conductive binder — MANUSCRIPT morphology, MIXING-dependent dispersion state.
         # The manuscript anchors BOTH endpoints of the shear axis:
-        #   S3 = IN-ELECTRODE 0.2-0.5µm dispersed singles (their high-shear dry process mills the powder),
-        #   S2 = AS-MADE ~3µm particles (what a mixer that CANNOT mill inherits — hand-mix has no milling
+        #   Figure 2f + S5 = IN-ELECTRODE 0.2-0.5µm dispersed singles (high-shear dry process mills the powder),
+        #   Figure 2b = AS-MADE ~3µm particles (what a mixer that CANNOT mill inherits — hand-mix has no milling
         #        energy → full-survival BOUNDING ENDPOINT: the SIZE is the S2 anchor, survival-at-low-shear
         #        is inference, partial breakage / fines mixtures not modelled.  Dispersion is a property of
         #        the POWDER after mixing, so it applies to the anchored AND the bulk share alike).
         # surface_frac = AM-anchored share (sulfonate anchoring + ordered-mixing decoration of the coarse
-        # NCM host by the fine guest; MAGNITUDE un-anchored §F1 hook — S3 shows both populations.  hand-mix
+        # NCM host by the fine guest; MAGNITUDE un-anchored §F1 hook — Figure 2f/S5 show both populations.
+        # ⚠ 2026-09-02 판독: 이 값은 **그림으로 정할 수 없다** — 조밀 충전 분말 SEM 은 투영이라
+        #   '표면에 붙었다' 와 '옆에 놓였다' 가 구분되지 않고, Fig 2f 는 NCM+SDCP 둘뿐이라
+        #   '공극에 떠 있다' 선택지가 애초에 없다.  ⇒ 그림은 '표면에 붙는다' 는 **사실**을 정하고
+        #   '몇 %' 는 정하지 않는다.  §F1 hook 으로 둔 것이 옳다.  hand-mix
         # lower: a ~3µm guest on a 5µm host has adhesion/weight ~100× weaker than a 0.3µm guest → ordered
         # mixing fades toward random).  clump = NCM-decoration cluster size (user §3.7 hypothesis; default
-        # 1 = S3-faithful singles; SBE/DBE payload proximity + SEM/EDS discriminate).  agg_d = surviving
+        # 1 = Fig-2f-faithful singles; SBE/DBE payload proximity + SEM/EDS discriminate).  agg_d = surviving
         # as-made agglomerate Ø (µm; 0 = milled to singles).  Consumed by seed_sdcp (single source shared
         # by mpm3d_compaction and preview_sdcp_mixing).
         'ballmill': dict(regime='particle', surface_frac=0.5, clump=1, agg_d=0.0,
-                         morph='milled 0.2-0.5µm singles, NCM-anchor bias (S3)'),
+                         morph='milled 0.2-0.5µm singles, NCM-anchor bias (Fig 2f)'),
         'thinky':   dict(regime='particle', surface_frac=0.5, clump=1, agg_d=0.0,
-                         morph='milled 0.2-0.5µm singles, NCM-anchor bias (S3; ≡ballmill — both high-shear)'),
+                         morph='milled 0.2-0.5µm singles, NCM-anchor bias (Fig 2f; ≡ballmill — both high-shear)'),
         'handmix':  dict(regime='particle', surface_frac=0.3, clump=1, agg_d=SDCP_AGG_D,
-                         morph='as-made ~3µm agglomerates (size=S2 anchor; low-shear survival=inference); weaker NCM decoration'),
+                         morph='as-made ~3µm agglomerates (size=Fig 2b anchor; low-shear survival=inference); weaker NCM decoration'),
     },
     'PTFE': {    # binder fibril — fibril = fibrillation degree vs mixing SHEAR (dry-process; ∈(0,1], 1=full web)
         'ballmill': dict(regime='bulk', fibril=1.0,  morph='fibrillated binder web (high shear)'),

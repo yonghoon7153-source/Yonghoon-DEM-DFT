@@ -252,7 +252,7 @@ terminal wall separation and a high-rate diagnostic; and the specimen provenance
 |---|---|
 | **DEM (packing)** | 도메인 50 × 50 µm² · NCM811 r 2.5 / E 140 GPa · LPSCl r 0.5 / E(dense) 24 / **E(DEM contact) 1.35 `Calibrated`** |
 | **MPM (plastic compaction)** | E 1.53 · ν 0.49 → **`Model choice`** (K 25.5 · G 0.51 을 만든다) · σ_y 0.30 → **`Selected against densification target`** |
-| **Voxel transport** | Voxel edge 0.15 µm · σ_e(NCM) 1.0 × 10⁻² · σ_ion(LPSCl) 3.0 × 10⁻³ · **σ_e(VGCF) 1.0 × 10² → `Frozen, uncalibrated`** · **σ_e(SDCP) 250 → `Frozen, uncalibrated`** · PTFE 0 |
+| **Voxel transport** | Voxel edge 0.15 µm · σ_e(NCM) 1.0 × 10⁻² · σ_ion(LPSCl) 3.0 × 10⁻³ · **σ_e(VGCF) 1.0 × 10² → `Frozen, uncalibrated`** · **σ_e(SDCP) 250 → `Assumed (specified by the authors, S-PEDOT class)`** · PTFE 0 |
 
 ⚠ `E(dense) 24` 와 `E(DEM contact) 1.35` 는 **둘 다 남긴다** (전자가 물성, 후자가 규약).
 ⚠⚠ **VGCF 는 그 형식이 아니다** (2026-09-02 정정).  `78.5` 는 물성이 아니라 `100` 을 이
@@ -262,9 +262,17 @@ terminal wall separation and a high-rate diagnostic; and the specimen provenance
 Methods 의 **식**으로 (`σ_eff = σ·πd²/(4h²)`).
 ⚠⚠ **`powder` 라벨을 쓰지 않는다** — 그것은 `100` 이 83 에서 유도됐다는 뜻으로 읽히는데
 **거짓**이다 (도입 커밋이 83 감사보다 앞서고 스스로 order-of-magnitude hook 이라 적었다).
-⚠⚠ **SDCP 250 도 같은 등급이다** — 출처가 리포에 없다 (SELF-13).  옛 서술이 *"SDCP 는
-재료 앵커, VGCF 는 유효 망 상수"* 라는 **범주 비대칭**을 말했는데, 그것은 SDCP 를 실제보다
-잘 근거된 것처럼 보이게 한다.  둘 다 미보정으로 같이 라벨한다.
+⚠⚠ **SDCP 250 과 VGCF 100 은 등급이 다르다 — 다만 옛 서술이 말한 그 차이가 아니다**
+(2026-09-02 저자 확인으로 정정).  옛 서술은 *"SDCP 는 재료 앵커, VGCF 는 유효 망 상수"* 라는
+**물리적** 비대칭을 말했는데 그것은 틀렸다 (둘 다 측정값이 아니다).  실제 차이는 **출처의
+책임 주체**다:
+· `SDCP 250` — **재료를 만든 저자가 지정한 값** (S-PEDOT 급; `9d8b0a0e` 가 150 을
+  `USER-provided interim material conductivity (S-PEDOT class)` 로, `0e548ee4` 가 250 으로).
+  ⇒ 지정된 **모델 입력**이고 책임 주체가 있다.  라벨 `Assumed (specified by the authors)`.
+  ⚠ 문헌 앵커는 **요구하지 않는다** (저자 지시 2026-09-02) — 감도는 closure 스윕 `C₂` 축이 준다.
+· `VGCF 100` — 코드 작성자가 *"흑연 섬유 문헌 밴드 10²–10³"* 의 밑단으로 잡았고 **그 밴드가
+  뒤에 반증됐다** (CL-47).  책임 주체가 없는 **기술 부채**다.  라벨 `Frozen, uncalibrated`.
+⇒ 둘을 같은 문자열로 라벨하면 SDCP 를 실제보다 근거 없어 보이게 한다 (앞선 정정의 과교정).
 ⚠⚠ **`Calibrated` 한 라벨로 뭉치지 않는다** (R10 재판정): `E(DEM contact) 1.35` 는
 **`Empirical contact-law input`**, MPM 의 `E, ν` 는 **`Model choice`**, `σ_y` 는
 **`Selected against densification target`**.  세 역할이 다르다.

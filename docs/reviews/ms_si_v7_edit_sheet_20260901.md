@@ -225,8 +225,12 @@
   · `AM_S 0.010` — 코퍼스-적합 endpoint 를 복셀 상 σ 로 옮긴 것이라 **미상 배수**가 붙는다
     (`step3_sigma.py` docstring 자신이 그렇게 적는다)
   · `VGCF 100` — **`Frozen, uncalibrated legacy voxel-network coefficient`**
-  · `SDCP 250` — `Assumed`/`Calculated` 가 아니라 **`Effective (convention-dependent);
-    provenance unrecorded`** (SELF-13)
+  · `SDCP 250` — **`Assumed (specified by the authors, S-PEDOT class)`**
+    ★ 정정 2026-09-02: *"provenance unrecorded"* 는 과했다.  **저자가 지정한 값**이고
+    (`9d8b0a0e` = `USER-provided interim material conductivity (S-PEDOT class)` → `0e548ee4`
+    250), 저자 지시로 **문헌 앵커는 요구하지 않는다**.  ⇒ 지정된 모델 입력이라 `Assumed` 가
+    정확하고, 감도는 closure 스윕 `C₂` 축이 준다.  ⚠ `VGCF 100` 과 **같은 문자열로 묶지 말 것**
+    — 그쪽은 책임 주체가 없는 기술 부채이고 이쪽은 저자가 지정한 입력이다
 
 ⛔ `E (dense) 24 GPa` 와 `E (DEM contact, calibrated) 1.35 GPa` 행을 **둘 다 남긴다.**
 지우면 연화 배수를 감추는 것이 된다.  MPM `ν = 0.49` 도 남긴다.
