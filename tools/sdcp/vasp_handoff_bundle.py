@@ -1474,24 +1474,45 @@ fi
 AL_SHA=$(sha256sum "$POTCAR_ALLOWLIST" | cut -d" " -f1)
 [ -d "$PP" ] || { echo "⛔ PP 트리가 없습니다: $PP — 원본 없이 봉인하지 않습니다"; exit 1; }
 n_new=0; n_same=0; n_fix=0
+#: 기존 봉인 — 있으면 조립본을 **덮지 않는다** (회신 BC P1)
+_SEAL_FILE="POTCAR_ROOT_SEAL.json"
 for d in */*/; do
   [ -f "$d/POTCAR_ASSEMBLE.sh" ] || continue
   prev=""
   if [ -f "$d/POTCAR" ]; then prev=$(sha256sum "$d/POTCAR" | cut -d" " -f1); fi
-  # 기존 산출물을 **치우고** 원본에서 다시 만든다 (있으면 믿는 경로를 없앤다)
-  rm -f "$d/POTCAR" "$d/POTCAR_PROVENANCE.json"
-  ( cd "$d" && PP="$PP" POTCAR_ALLOWLIST="$POTCAR_ALLOWLIST" bash POTCAR_ASSEMBLE.sh ) \
-    || { echo "⛔ POTCAR 조립 실패: $d (PP 원본·allowlist 를 확인하세요)"; exit 1; }
-  now=$(sha256sum "$d/POTCAR" | cut -d" " -f1)
+  # ⛔⛔ 회신 BC P1 (2026-09-02) — **먼저 지우고 조립했다.** 2단계에서 다시 부르면
+  #   1단계 산출물(POTCAR·provenance)이 이미 덮인 뒤에야 봉인과 대조했고, 다르면
+  #   그때 죽었다 — 즉 **되돌릴 수 없는 상태로 만들어 놓고** 판정했다.
+  #   ⇒ 임시 폴더에 조립 → 기존 봉인/기존 파일과 대조 → 통과할 때만 채택.
+  _tmp="$d/.potcar_stage"; rm -rf "$_tmp"; mkdir -p "$_tmp"
+  cp "$d/POTCAR_ASSEMBLE.sh" "$_tmp/"
+  ( cd "$_tmp" && PP="$PP" POTCAR_ALLOWLIST="$POTCAR_ALLOWLIST" bash POTCAR_ASSEMBLE.sh ) \
+    || { echo "⛔ POTCAR 조립 실패: $d (PP 원본·allowlist 를 확인하세요)"; \
+         rm -rf "$_tmp"; exit 1; }
+  now=$(sha256sum "$_tmp/POTCAR" | cut -d" " -f1)
   n_new=$((n_new+1))
   if [ -n "$prev" ]; then
     if [ "$prev" = "$now" ]; then n_same=$((n_same+1))
     else
+      # ⛔ 기존 봉인이 있으면 **덮지 않는다** — 봉인이 그 잡의 조립본을 이미
+      #   결박했으므로, 다른 조립본이 나오는 것은 환경이 바뀌었다는 뜻이다.
+      if [ -f "$_SEAL_FILE" ]; then
+        echo "  ⛔ $d: 재조립본이 **기존 POTCAR 와 다른데 봉인이 이미 있습니다**"
+        echo "     기존 ${prev:0:16}… ≠ 재조립 ${now:0:16}…"
+        echo "     1단계 산출물을 덮지 않습니다 — PP 원본·allowlist 가 바뀌었는지"
+        echo "     확인하십시오 (회신 BC P1)."
+        rm -rf "$_tmp"; exit 1
+      fi
       n_fix=$((n_fix+1))
-      echo "  🔴 $d: 있던 POTCAR 가 원본 재조립본과 **다릅니다**"
-      echo "     이전 ${prev:0:16}… → 재조립 ${now:0:16}…  (재조립본으로 대체했습니다)"
+      echo "  🔴 $d: 있던 POTCAR 가 원본 재조립본과 **다릅니다** (봉인 전이라 채택)"
+      echo "     이전 ${prev:0:16}… → 재조립 ${now:0:16}…"
     fi
   fi
+  # 채택 — 여기까지 왔으면 덮어도 되는 상태다
+  mv -f "$_tmp/POTCAR" "$d/POTCAR"
+  [ -f "$_tmp/POTCAR_PROVENANCE.json" ] \
+    && mv -f "$_tmp/POTCAR_PROVENANCE.json" "$d/POTCAR_PROVENANCE.json"
+  rm -rf "$_tmp"
   # ③ PP **원본 파일 자체**를 독립 검증한다 — provenance 를 되읽어 확인하지 않고,
   #    거기 적힌 source 경로를 PP 아래에서 직접 열어 SHA·TITEL·allowlist 를 다시 잰다.
   ( cd "$d" && PP="$PP" AL="$POTCAR_ALLOWLIST" python3 - <<'PYSRC'
@@ -4493,6 +4514,56 @@ def _selftest_closure(chk):
             and any(_need in x for x in _r["blockers"]),
             "⛔음성 BC P0-2: **%s** 으로 인용 가능을 통과하던 경로를 닫았다" % _nm)
 
+    # ══ 회신 BC P1 — C-12 rescue **봉투** (300 h 잡 전에 고정) ═══════════════
+    _RGOOD = {"rescue": {
+        "parent_bundle_zip_sha256": "a" * 64, "parent_manifest_sha256": "b" * 64,
+        "parent_job_key": "tier1/x__fib00__Litop__pm1",
+        "parent_input_sha256": {"INCAR": "c" * 64},
+        "attempt_id": "20260902T120000Z_scf_algo_all",
+        "supersedes": "tier1/x__fib00__Litop__pm1",
+        "reason": "SCF 미수렴 (NELM 소진)"}}
+    _ok_r, _why_r = c12_rescue_envelope_ok(_RGOOD)
+    chk(_ok_r and not _why_r,
+        "BC P1 양성: 갖춘 rescue 봉투는 통과한다 (부모 ZIP·MANIFEST·잡·입력 SHA · "
+        "attempt_id · supersedes · 사유)")
+    for _nm, _mut, _need in (
+        ("봉투 자체가 없음", {"rescue": {}}, "봉투가 없다"),
+        ("부모 ZIP SHA 누락", {"parent_bundle_zip_sha256": None},
+         "parent_bundle_zip_sha256"),
+        ("부모 입력 SHA 누락", {"parent_input_sha256": None}, "parent_input_sha256"),
+        ("attempt_id 누락", {"attempt_id": None}, "attempt_id"),
+        ("attempt_id 형식 오류", {"attempt_id": "retry1"}, "형식이 아니다"),
+        ("supersedes 가 다른 잡", {"supersedes": "tier1/other"}, "다르다"),
+        ("supersedes 가 목록", {"supersedes": ["a", "b"]}, "목록이다"),
+        ("부모 자동 대체", {"auto_replace_parent": True}, "자동으로 덮지 않는다"),
+        ("원본 덮어씀", {"overwrote_parent": True}, "원본은 보존"),
+    ):
+        _m = ({"rescue": {}} if _nm == "봉투 자체가 없음"
+              else {"rescue": dict(_RGOOD["rescue"], **_mut)})
+        _o, _w = c12_rescue_envelope_ok(_m)
+        chk(_o is False and any(_need in x for x in _w),
+            "⛔음성 BC P1 rescue 봉투: **%s** 이면 거부한다" % _nm)
+    chk("생성기의 rescue 모드" in C12_RESCUE_ENVELOPE["⛔_아직_없는_것"],
+        "BC P1: 봉투는 있고 **생성기 모드는 아직 없다**는 것을 산출물이 스스로 "
+        "말한다 (없는 것을 있다고 하지 않는다)")
+
+    # ══ 회신 BC P1 — **C-12 형태에서 D·verdict 가 실제로 나오는가** ═══════════
+    #  ⛔ 종전 완주 e2e 는 레거시 쌍 경로 번들이라 `prereg_closure` 가 아예 없었고,
+    #    그래서 "끝까지 돈다" 만 보고 **무엇을 냈는지**는 보지 않았다. 보고량을
+    #    선언한 번들에서 D 와 판정어가 나오는지를 여기서 친다.
+    _c12_ok = _closure_estimand(_man7, _RES(), lambda j: _en7.get(j), _emol, _jb7)
+    _d12 = (_c12_ok.get("diagnostic_only") or {}).get("primary_ddE_lowE_eV")
+    chk(_d12 is not None and isinstance(_d12, (int, float)),
+        "BC P1: C-12 형태에서 **D 가 실제로 나온다** (%s eV)" % _d12)
+    chk(_c12_ok.get("verdict") is None
+        or not str(_c12_ok["verdict"]).startswith("NO_VALUE"),
+        "BC P1: 정상 묶음이 **NO_VALUE 로 닫히지 않는다** (%s)"
+        % str(_c12_ok.get("verdict"))[:40])
+    chk(_final_verdict({}, {}) == [] and
+        _final_verdict({"verdict": "NO_VALUE(x)"}, {}) != [],
+        "BC P1: `_final_verdict` 자체는 빈 closure 를 막지 않는다 — **보고량을 "
+        "선언한 번들일 때만** 호출부가 막는다 (레거시 쌍 경로를 깨뜨리지 않는다)")
+
     _r = _cs(dict(_GBOK, reference_files_state={
         "old.json": {"status": None, "ratified": False, "superseded": True}}))
     chk(any("SUPERSEDED" in x for x in _r["blockers"]),
@@ -6398,6 +6469,57 @@ def check_pin(jobdir):
     if chg_info:
         print(f"   CHGCAR sha256 {chg_info['sha256'][:16]}… ({chg_info['bytes']} B)")
     return 0 if not bad else 1
+
+
+#: ⛔⛔ 회신 BC P1 (2026-09-02) — **C-12 rescue 의 봉투**를 300 h 잡 **전에** 박는다.
+#:   리뷰어 판정: 실패별 SCF 처방은 실패 후 정해도 되지만, 계보·봉인 구조는 미리
+#:   고정해야 한다. 실패가 난 뒤에 만들면 그때는 이미 시간이 없다.
+#:   ⚠ **생성기 모드는 아직 없다** — 여기 있는 것은 봉투(스키마)와 그 검사기다.
+#:     무엇을 만들지 정해 두면 실패 형태를 보고 *내용*만 채우면 된다.
+C12_RESCUE_ENVELOPE = {
+    "schema": "c12_rescue/v1",
+    "필수": ["parent_bundle_zip_sha256", "parent_manifest_sha256", "parent_job_key",
+             "parent_input_sha256", "attempt_id", "supersedes", "reason"],
+    "supersedes": ("정확히 **그 잡 하나**를 가리킨다 (`parent_job_key` 와 같아야 "
+                   "한다). 번들 전체나 여러 잡을 한 번에 대체하지 않는다."),
+    "원본_보존": ("부모 번들의 산출물은 **손대지 않는다**. rescue 는 새 폴더에 "
+                  "만들고, 분석은 둘을 **같이** 본다."),
+    "자동_대체_금지": ("rescue 결과가 부모 값을 자동으로 덮지 않는다. 어느 것을 쓸지는 "
+                       "판정 규칙이 정하고, 그 규칙은 사전등록에 있어야 한다."),
+    "⛔_아직_없는_것": ("생성기의 rescue 모드. 이 봉투는 **무엇을 만들지**를 고정한 "
+                        "것이고, 실패별 SCF 처방(ALGO·NELM·AMIX…)은 실패를 보고 "
+                        "정한다 (회신 BC Q4)."),
+}
+
+
+def c12_rescue_envelope_ok(meta):
+    """rescue 봉투가 갖춰졌나 → (ok, 사유 목록). **전부 fail-closed.**
+
+    ⛔ 못 하는 것: 그 rescue 를 **돌려도 되는가**는 판정하지 않는다 (사전등록의 몫).
+    """
+    r = (meta or {}).get("rescue") or {}
+    bad = []
+    if not r:
+        return False, ["`rescue` 봉투가 없다 — 이 잡이 무엇을 대체하는지 말하지 못한다"]
+    for k in C12_RESCUE_ENVELOPE["필수"]:
+        v = r.get(k)
+        if v in (None, "", [], {}):
+            bad.append("`rescue.%s` 가 없다" % k)
+    _sup, _pj = r.get("supersedes"), r.get("parent_job_key")
+    if _sup and _pj and _sup != _pj:
+        bad.append("`supersedes`(%r) 가 `parent_job_key`(%r) 와 다르다 — rescue 는 "
+                   "**그 잡 하나**만 대체한다" % (_sup, _pj))
+    if isinstance(_sup, (list, tuple, set)):
+        bad.append("`supersedes` 가 목록이다 — 여러 잡을 한 번에 대체하지 않는다")
+    if r.get("auto_replace_parent"):
+        bad.append("`auto_replace_parent` 가 참이다 — rescue 결과가 부모 값을 "
+                   "**자동으로 덮지 않는다** (어느 것을 쓸지는 사전등록이 정한다)")
+    if r.get("overwrote_parent"):
+        bad.append("부모 산출물을 덮었다고 기록돼 있다 — 원본은 보존해야 한다")
+    _aid = str(r.get("attempt_id") or "")
+    if _aid and not re.match(r"^\d{8}T\d{6}Z_[A-Za-z0-9_.-]+$", _aid):
+        bad.append("`attempt_id` 형식이 아니다 (YYYYMMDDTHHMMSSZ_라벨): %r" % _aid)
+    return (not bad), bad
 
 
 def rescue_provenance_ok(jd):
@@ -10779,6 +10901,23 @@ def main():
         print("     문장을 쓰지 않는다 (회신 BA P0-3).")
 
     _bad_final = _final_verdict(_cl, _vc)
+    # ⛔⛔ 회신 BC P1 (2026-09-02) — **아무것도 안 내고 rc=0 이 나왔다.**
+    #   `prereg_closure` 가 비면 `_final_verdict` 의 `bad` 가 빈 목록이라 성공으로
+    #   끝났다. 보고량을 선언한 번들이 그것을 못 만들었으면 성공이 아니다.
+    #   ⚠ 레거시 쌍(Li/Ni) 경로는 이 보고량을 선언하지 않는다 — 거기까지 막으면
+    #     맞는 동작을 깨뜨린다. **선언한 번들에만** 건다.
+    if man.get("reported_quantity") or man.get("from_basins"):
+        if not (_cl or {}):
+            _bad_final = list(_bad_final) + [
+                "prereg_closure 가 **없다** — 보고량(ΔE_ads)을 선언한 번들이 그것을 "
+                "만들지 못했다 (회신 BC P1)"]
+        elif (_cl or {}).get("verdict") in (None, ""):
+            _bad_final = list(_bad_final) + [
+                "prereg_closure.verdict 가 **비어 있다** — 판정을 내지 못했다"]
+    # ⛔ 회신 BC P1 — 인용 불가도 종료코드에 건다 (BA P0-3 의 의도).
+    if not _cit.get("manuscript_citable"):
+        _bad_final = list(_bad_final) + [
+            "manuscript_citable=false (%s)" % (_cit.get("blockers") or [])[:2]]
     if _bad_final:
         print("⛔ **비인용 상태로 끝났다** — 종료코드를 0 으로 두지 않는다:")
         for b in _bad_final:
@@ -11466,6 +11605,10 @@ DFT-relaxed adsorption energy · 평형 결합에너지 · 자유에너지로 �
 - 그래도 직접 재시도해 보셔야 한다면, **원본을 덮지 마시고**
   `<잡폴더>/_retry_1/` 처럼 별도 디렉터리에 남겨 주세요. 원본 실패 상태와 재시도를
   둘 다 받아야 저희가 원인을 압니다.
+  ⚠ 이 `_retry_1` 은 **진단 자료**이지 반송물이 아닙니다 — 저희 검증은 그 값을
+    쓰지 않습니다. 다시 돌려야 하는 잡은 저희가 **별도 rescue 묶음**으로 만들어
+    보내 드립니다 (부모 번들·잡·입력 SHA 와 attempt ID 가 박히고, 원본은 그대로
+    보존되며 자동 대체는 하지 않습니다 — 회신 BC P1).
 
 ## 확인용
 
@@ -11686,6 +11829,8 @@ POTCAR 는 미포함(라이선스) — `POTCAR_SPEC.txt` 변형 그대로. **Ni 
     통과하지 못해 버려집니다.
   · 그래도 재시도하셔야 하면 **원본을 덮지 마시고** `<잡폴더>/_retry_1/` 에 남겨
     주세요 — 실패 상태와 재시도를 둘 다 받아야 원인을 압니다.
+    ⚠ 그 `_retry_1` 은 **진단 자료**입니다 — 검증에 쓰지 않습니다. 다시 돌릴 잡은
+    저희가 **별도 rescue 묶음**으로 만들어 보내 드립니다 (회신 BC P1).
 - static 은 relax 의 CONTCAR/CHGCAR 를 승계합니다 (run_job.sh 가 자동으로 합니다).
 - 발산/미수렴 잡은 그대로 두고 알려 주세요.
 
@@ -15841,6 +15986,19 @@ def selftest() -> int:
         print("DEBUG rc=%d tail:\n%s" % (_rc_ok.returncode, _rc_ok.stdout[-1500:]))
     chk("인용 자격" in _rc_ok.stdout,
         "BB P0-1: 인용 자격 절이 **화면에도** 찍힌다 (완주 경로를 실제로 지났다)")
+    # ══ 회신 BC P1 — 완주 e2e 가 **rc·D·verdict 를 확인하지 않았다** ═══════════
+    #  ⛔ "예외 없이 끝까지 돈다" 는 약한 주장이다. 무엇을 냈는지 봐야 완주다.
+    _cl_ok = _rj_ok.get("prereg_closure") or {}
+    chk(_rj_ok.get("reported_quantity") is None
+        and _rj_ok.get("prereg_closure") is None,
+        "BC P1 (범위): 이 픽스처는 **레거시 쌍 경로**라 C-12 보고량을 선언하지 "
+        "않는다 — D·verdict 대조는 C-12 형태 번들에서 한다 (아래 bundle_fb)")
+    chk(_rc_ok.returncode == 2,
+        "BC P1: post_hoc 묶음의 완주 rc 는 **2 다** (인용 자격이 없으면 종료코드를 "
+        "0 으로 두지 않는다 — 실제 %d)" % _rc_ok.returncode)
+    chk(not (_cl_ok.get("primary_estimand_blocks") or []),
+        "BC P1: 손대지 않은 묶음은 primary 게이트가 **비어 있다** (%s)"
+        % (_cl_ok.get("primary_estimand_blocks") or [])[:2])
     shutil.rmtree(_clean)
 
     # ★ 음성 N13 (Codex 7차 §8) — dense 에서 **모멘트 표만** 지운다. 에너지·NKPTS 는
