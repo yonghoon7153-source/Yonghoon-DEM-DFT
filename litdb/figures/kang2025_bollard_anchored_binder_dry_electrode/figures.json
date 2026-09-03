@@ -5,7 +5,10 @@
  "generated": "2026-08-29",
  "sources": [
   "f5fb19c3-Advanced_Materials__2025__Kang__Bollard_Anchored_Binder_System_for_High_Loading_Cathodes_Fabricated_via_Dry_Electrode.pdf",
-  "26749347-adma202416872sup0001suppmat.pdf"
+  "26749347-adma202416872sup0001suppmat.pdf",
+  "adma202416872sup0002movies1.mp4",
+  "adma202416872sup0003movies2.mp4",
+  "adma202416872sup0004movies3.mp4"
  ],
  "figures": [
   {
@@ -848,5 +851,66 @@
    "src": "26749347-adma202416872sup0001suppmat.pdf",
    "blank": 0.914
   }
- ]
+ ],
+ "movies": [
+  {
+   "key": "mS1",
+   "kind": "movie",
+   "label": "S1",
+   "file": "movie_S1.mp4",
+   "frames_sheet": "movie_S1_frames.png",
+   "sha256": "c9d81b4b6205f61a4bd1d466de2fa49d037077669bcec36ab44693e322d1b804",
+   "duration_s": 14.04,
+   "fps": 10.04,
+   "size_px": [
+    960,
+    720
+   ],
+   "n_frames_approx": 141,
+   "maps_to_ps": 10.0,
+   "caption": "Movie S1. PTFE 단독 — NMC622 (2×2×1) 슬랩 위 10 ps NNP(PFP) MD.",
+   "figure_read": "figure-read: 초기에 표면에 눕혀진 사슬이 궤적 동안 **말려 올라가고** 접촉 구간이 짧아진다. 10 ps 안에 표면을 완전히 떠나지는 않는다 (digest §4.7 의 '탈착이 아니라 ≈1.9 Å 들뜬 뒤 정지' 와 일치).",
+   "src": "adma202416872sup0002movies1"
+  },
+  {
+   "key": "mS2",
+   "kind": "movie",
+   "label": "S2",
+   "file": "movie_S2.mp4",
+   "frames_sheet": "movie_S2_frames.png",
+   "sha256": "dc15f45a017724ba7191ddc102dcf9b7415b0fffa4101ef67bd4c2c56fbbf672",
+   "duration_s": 14.04,
+   "fps": 10.04,
+   "size_px": [
+    960,
+    720
+   ],
+   "n_frames_approx": 141,
+   "maps_to_ps": 10.0,
+   "caption": "Movie S2. PC + PTFE (Na 포함) — 같은 슬랩·같은 10 ps.",
+   "figure_read": "figure-read: 파란 사슬 구간이 궤적 내내 표면에 붙어 있다. 노란 Na 는 **가로로** 움직인다 — centroid 이동폭 74.3 px(가로) vs 9.0 px(세로), 같은 프레임의 표면 원자 주기 ≈31 px 기준 **가로 ≈2.4 칸 · 세로 ≈0.3 칸**. 카메라 고정 확인(슬랩 centroid 표준편차 0.5 px).",
+   "src": "adma202416872sup0003movies2"
+  },
+  {
+   "key": "mS3",
+   "kind": "movie",
+   "label": "S3",
+   "file": "movie_S3.mp4",
+   "frames_sheet": "movie_S3_frames.png",
+   "sha256": "ebf74853e7030cd7d6e9aa9d7a35748604b8f7a5bf2b71f6458b439d00ba2e60",
+   "duration_s": 14.04,
+   "fps": 10.04,
+   "size_px": [
+    960,
+    720
+   ],
+   "n_frames_approx": 141,
+   "maps_to_ps": 10.0,
+   "caption": "Movie S3. PC + PTFE (Na 포함) — 다른 배열/시점, 같은 10 ps.",
+   "figure_read": "figure-read: 사슬이 표면에 더 넓게 깔린 채 유지된다. Na centroid 이동폭 36.4 px(가로) vs 22.8 px(세로), 표면 주기 ≈35.6 px 기준 **가로 ≈1.0 칸 · 세로 ≈0.6 칸**.",
+   "src": "adma202416872sup0004movies3"
+  }
+ ],
+ "⚠_movies_주의": "Na 이동량은 **노란 화소 centroid** 기준이라 Na 가 둘이면 둘을 섞은 값이고, 원근이 들어간 렌더라 px→Å 환산은 하지 않았다 (슬랩 원자수·facet 미기재 — digest §4.3). 표면 원자 주기는 슬랩 한 행의 FFT 주파수 최대점이다. 정량 인용 금지 · 정성 근거로만.",
+ "movies_generated": "2026-09-03"
 }
