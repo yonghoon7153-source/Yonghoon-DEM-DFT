@@ -1,16 +1,16 @@
 ---
 title: Birkl OCV 열화 진단 알고리즘 (2017)
-description: "3-parameter OCV fitting for LLI/LAM_PE/LAM_NE: cut-off constraints, the li/de degeneracy the authors themselves state, and how it differs from our window model"
+description: "3-parameter OCV fitting for LLI/LAM_PE/LAM_NE: cut-off constraints, the li/de degeneracy the authors themselves state, its lineage from Dubarry 2012, and how it differs from our window model"
 created: 2026-09-03
 updated: 2026-09-03
 type: concept
 tags: [battery, degradation, research]
-sources: [raw/papers/birkl2017_degradation-diagnostics-ocv.md]
+sources: [raw/papers/birkl2017_degradation-diagnostics-ocv.md, raw/papers/dubarry2012_synthesize-degradation-modes.md]
 confidence: medium
 explored: false
 verificationStatus: unverified
 claimType: definition
-evidenceScope: single-source
+evidenceScope: multi-source-primary
 ---
 
 # Birkl OCV 열화 진단 알고리즘 (2017)
@@ -70,6 +70,32 @@ degradation modes". 그러나 그 근거는 **같은 모델로 만든 무노이�
 (Fig. 7 의 RMSE 0.0 mV)이므로 inverse crime 이고, 전칭 명제의 증명이 아니다.
 파라미터 상관·Hessian·신뢰구간·노이즈 스윕은 논문 전체에 **없다**.
 
+## 계보 — 이 논문 앞에 [[dubarry-mechanistic-mode-synthesis]] 가 있다 ★
+
+**2026-09-03 추가.** 이 논문의 참고문헌 [19] = Dubarry, Truchot, Liaw,
+*J. Power Sources* **219** (2012) 204–216 을 흡수해 대조한 결과, **이 페이지가
+"우리 절차의 원전" 이라고 부르던 것 중 상당 부분이 Birkl 이 아니라 Dubarry 2012
+에서 온다.** 판정 전문은 [[dubarry-mechanistic-mode-synthesis]], 대조표는
+`raw/papers/dubarry2012_synthesize-degradation-modes.md` §10.
+
+| 요소 | 어디서 왔는가 |
+|---|---|
+| α·β **창 파라미터화** (scaling + offset) | **Dubarry 2012** — `LR`(폭)·`OFS`(왼쪽 끝), 식 (2')(3), Fig. 4 의 치수선. **Birkl 본문에는 없다** |
+| LAM ↔ scaling 관계 | **Dubarry 2012** 식 (5) — 우리 `α_NE/α_PE = (1−LAM_NE)/(1−LAM_PE)` 와 **동일** |
+| LLI ↔ offset 관계 | **Dubarry 2012** 식 (8') |
+| `LAM_liPE/dePE/liNE/deNE` **4분류와 명명 규칙** | **Dubarry 2012 §3.1** 이 정의문의 출처. Birkl 은 이것을 물려받아 [19] 로 인용한다 |
+| `[LLI, LAM_PE, LAM_NE]` **3-파라미터 역문제** + 컷오프 등식 소거 | **Birkl 2017** (이 페이지) — 이쪽이 고유 기여다 |
+
+`[해석]` 즉 **Birkl 의 기여는 좌표계가 아니라 "그 좌표계를 3개로 줄여 역문제로
+푼 것"** 이다. 자유도 계보는 Dubarry **2** → Birkl **3** → 우리 창 모델 **4**.
+
+**축퇴도 계보가 있다.** 이 페이지 아래 "저자들이 명시한 축퇴" 의 명제
+(`LLI + LAM_de ↔ LAM_li`)는 **Dubarry 식 (5)+(8') 에서 곧바로 나온다** —
+`{LAM_liNE = x}` 와 `{LAM_deNE = x, LLI = LR·x}` 는 `LR` 도 `OFS` 도 같게 만든다.
+즉 Birkl §4.2 는 **2012년 식 안에 이미 대수적으로 들어 있던 것을 5년 뒤 말로
+쓴 것**이다. Dubarry 자신은 같은 사실을 축퇴가 아니라 **"masking"**(비관측성)
+으로 읽었다.
+
 ## 왜 중요한가
 
 이 알고리즘은 **[[degradation-degeneracy]] 가 식별 가능성을 판정하는 대상
@@ -94,11 +120,12 @@ full-cell OCV 에 fitting" 이라 적으며 인용한 문헌이 이것이고, �
 
 ## 이 위키에서의 적용
 
-- **용어의 정본**: `LAM_*,li` / `LAM_*,de` (lithiated / delithiated LAM) 구분의
-  출처가 이 논문 §2.1 이다. 우리 격자의 `lam_pe_type`/`lam_ne_type ∈ {de, li}`
-  는 **의미가 정확히 일치**한다 (`src/modes.py` 는 `de` 일 때만 잔여 전극
-  초기농도를 `c/(1-lam)` 로 되올린다 = 죽은 물질은 비어 있었다). 다만 명명의
-  계보가 이 논문이라는 문장은 저장소 어디에도 인쇄돼 있지 않다 — 미확인.
+- **용어의 정본** (2026-09-03 정정): `LAM_*,li` / `LAM_*,de` 구분을 이 논문 §2.1
+  이 쓰는 것은 맞으나, **정의문의 출처는 이 논문이 아니라
+  [[dubarry-mechanistic-mode-synthesis]] §3.1** 이다 (Birkl 이 [19] 로 인용).
+  우리 격자의 `lam_pe_type`/`lam_ne_type ∈ {de, li}` 는 **의미가 정확히 일치**
+  한다 (`src/modes.py` 는 `de` 일 때만 잔여 전극 초기농도를 `c/(1-lam)` 로
+  되올린다 = 죽은 물질은 비어 있었다).
 - **인용 금지 문장** (이 논문을 근거로 쓸 수 없다):
   - "OCV fitting 이 LAM 의 리튬화/탈리튬화를 가른다" → 원문이 불가능하다고 적음
   - "OCV fitting 의 LLI 는 SEI 등 기생반응 손실이다" → total LLI 다
@@ -110,11 +137,20 @@ full-cell OCV 에 fitting" 이라 적으며 인용한 문헌이 이것이고, �
   2. **기울기 마스크 on/off paired 비교.** Birkl 은 급경사(EoD) 구간을 목적함수
      에서 뺀다 — 식별에 가장 유리한 구간을 버리는 선택이며, 그 대가가 얼마인지
      논문은 재지 않았다.
-- **미해결 인용 확인**: `degradation-degeneracy/docs/02_CODE_AUDIT.md` 와
-  `docs/04_PROMPTS.md` 가 `LLI = (1−α_PE) + (β_PE − β_NE)` 에 "Birkl 2017 부호
-  규약" 주석을 단다. **이 논문 본문에 α·β 창 파라미터도 그 식도 없다** (본문의
-  `a` 는 Eq. 1 의 이온 상호작용 에너지다). 출처가 [19] Dubarry 2012 또는 [26]
-  Marongiu 2016 이거나 유도 결과일 수 있다 — 이 논문으로는 확인되지 않는다.
+- **인용 확인 — 종결 (2026-09-03)**: `degradation-degeneracy/docs/02_CODE_AUDIT.md`
+  와 `docs/04_PROMPTS.md` 의 `LLI = (1−α_PE) + (β_PE − β_NE)` 에 붙은
+  "Birkl 2017 부호 규약" 주석은 **틀린 이름이다**. 후보 [19] Dubarry 2012 를
+  흡수해 대조한 결과 (판정 전문: [[dubarry-mechanistic-mode-synthesis]] §판정):
+  - **α·β 창 좌표계와 li/de 4분류는 Dubarry 2012 가 출처다** → 주석이 가리켜야
+    할 이름은 "Dubarry 2012 (LR·OFS) 창 파라미터화".
+  - **그러나 저 LLI 식 자체는 두 논문 어디에도 없다.** Dubarry 식 (8') 과
+    비교하면 offset 항 **부호가 반대**이고, LAM 항을 **더하며**(Dubarry 는 뺀다),
+    그 LAM 항의 전극도 다르다(Dubarry 는 `LAM_liNE`·`LAM_dePE` 만 — `LAM_liPE` 는
+    offset 에 들어가지 않는다). → **문서화되지 않은 우리 쪽 (재)유도**로 봐야 한다.
+  - 현행 `src/fitting.py:23` 의 `κ·(β_NE − β_PE)` 는 **offset 부호가 Dubarry 와
+    일치**한다 — 어긋난 것은 legacy 문서 쪽이다.
+  - 이번 세션도 해당 문서를 **읽기만 했고 고치지 않았다** (RUN_SCOPE 밖이지만
+    미변경).
 
 ## 한계 (raw digest §13 요약)
 
@@ -129,6 +165,7 @@ full-cell OCV 에 fitting" 이라 적으며 인용한 문헌이 이것이고, �
   p.381 의 "solving Equation (2)" (Eq. 4 여야 한다).
 
 ## 관련
+- [[dubarry-mechanistic-mode-synthesis]] — 이 알고리즘이 물려받은 좌표계(LR·OFS)와 li/de 4분류의 출처 (2012)
 - [[fitting-degeneracy]] — 이 알고리즘이 답해야 하는 질문 자체의 정의
 - [[degradation-degeneracy]] — 이 절차의 식별 가능성을 PyBaMM 합성 truth 로 판정하는 satellite
 - [[22p-physics-or-degeneracy]] — 우리 분해가 물리인지 축퇴인지의 질문 카드

@@ -2,10 +2,10 @@
 title: degradation-degeneracy
 description: "PyBaMM synthetic-truth grid for testing whether the 22p seminar LLI/LAM split is physics or fitting degeneracy"
 created: 2026-08-11
-updated: 2026-08-20
+updated: 2026-09-03
 type: entity
 tags: [project, satellite, battery, degradation, pybamm, gate-review]
-sources: [raw/repositories/degradation-degeneracy-audit.md]
+sources: [raw/repositories/degradation-degeneracy-audit.md, raw/papers/dubarry2012_synthesize-degradation-modes.md]
 confidence: high
 explored: false
 verificationStatus: unverified
@@ -33,6 +33,25 @@ evidenceScope: multi-source-primary
 1. 격자 truth 대비 복원 오차·degeneracy 비율로 22p 의 분리가능성 판정
 2. 목적함수 4종(pOCV/dVdQ/dQdV 조합) 비교 — 무엇이 분리 능력을 더하는가
 3. 기준 곡선 2종(Case 1 half-cell vs Case 2 grid) 비교
+
+## 선행 연구 인정 (2026-09-03 추가 — 정직성 기록)
+
+**"열화 모드를 입력으로 넣어 곡선을 정방향 합성한다" 는 발상 자체는 우리 것이
+아니다.** [[dubarry-mechanistic-mode-synthesis]] (Dubarry/Truchot/Liaw,
+*J. Power Sources* 219 (2012) 204–216) 가 13년 앞선다 — 그 논문의 제목
+"Synthesize battery degradation modes" 가 바로 그 뜻이고, 저자들은 이를
+"'what if' scenarios of degradation are the **inputs** to the simulation" 이라
+명시한다. LAM/LLI 를 창 파라미터(`LR`,`OFS`)로 환산하는 식 (5),(8') 과 모드별
+곡선 스윕(Fig. 6,7,13,14)이 우리 정방향 격자와 같은 발상이다.
+
+**우리 기여의 자리는 정방향이 아니라 그 다음이다** — Dubarry 에 없는 것:
+- **역방향 fitting 이 없다** → truth 대비 복원 오차를 **잴 수 없다**.
+- **격자가 없다** → 단독 축 스윕(모드당 6단계) + 조합 시나리오 **2건**뿐.
+- **noise·모델오차 층이 없다**, 식별 가능성 정량 진단이 **0개**.
+
+즉 **"합성 truth 를 만든다" 는 선행이고, "합성 truth 로 식별 가능성을
+판정한다" 는 이 논문에 없다.** 발표·문서에서 정방향 합성을 우리 독창으로
+서술하지 않는다.
 
 ## 상태
 - **[2026-08-11]** 13차 게이트 리뷰 요청 발신 (대상 `c9970ebc`). 12차까지의

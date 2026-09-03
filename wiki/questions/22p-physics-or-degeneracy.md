@@ -146,3 +146,34 @@ LAM_PE ≈ LAM_NE 는 물리가 아니라 **flat valley 방향에서 두 전극�
      (본문에 α·β 창 파라미터가 없다). 다른 문헌([19] Dubarry 2012, [26]
      Marongiu 2016)이거나 유도 결과일 수 있다. 이번 세션은 그 문서를 **읽기만
      하고 고치지 않았다**.
+
+- **[2026-09-03 (3)]** 그 원전의 **앞 세대**를 흡수했다 —
+  [[dubarry-mechanistic-mode-synthesis]] (Dubarry/Truchot/Liaw 2012, raw:
+  `raw/papers/dubarry2012_synthesize-degradation-modes.md`). status `active` 유지.
+  이 카드에 달라진 것 셋:
+  1. **식별 가능성 어휘 전수 확인 (합자 정규화 후, 13쪽 61,578자)**:
+     `identifiab` **0** · `degenerat` **0** · `non-unique` **0** · `ill-posed` **0** ·
+     `collinear` **0** · `confidence` **0** · `inverse` **0**. `uniqu` 7회는
+     **전부 "unique/novel technique"** 의 자화자찬 어휘이고 수학적 유일성 주장이
+     아니다. **정량 진단(상관·Hessian·신뢰구간·노이즈 스윕)은 0개.**
+     → Birkl 때와 같은 결론: **원전 계열은 식별 가능성을 정량으로 재지 않는다.**
+     다만 Birkl 과 마찬가지로 **부정하지도 않는다** — `ambigu` 3회가 전부 축퇴
+     논의이고, 저자들은 **LAM_liPE ↔ LLI 를 이름 붙여 구별 불가로 인정**한다
+     ("it is difficult to distinguish between LAM_liPE and LLI unambiguously",
+     원인은 LFP 의 평탄 plateau). 유일 식별 가능한 것은 LAM_deNE 뿐이라고 적는다.
+  2. **★ 우리가 재는 축퇴가 2012년 식 안에 해석적으로 예측돼 있다.** Dubarry
+     식 (5)+(8') 은 세 모드(`LAM_liNE`,`LAM_dePE`,`LLI`)를 **단 하나의 스칼라
+     offset 에 덧셈으로** 넣는다. 여기서 곧바로
+     `{LAM_liNE = x} ≡ {LAM_deNE = x, LLI = LR·x}` 가 나온다 (두 시나리오가
+     `LR`·`OFS` 를 모두 같게 만든다). 지금까지 우리가 본 축퇴는 **수치적으로
+     발견된 것**인데, 이것은 **닫힌 형태로 예측된 축퇴 방향**이다 — 격자에 그
+     방향의 truth 쌍을 심어 **직접** 시험할 수 있다. 검증력이 다르다. 미실행.
+  3. **자유도 계보가 이 카드의 가설 하나를 더 선명하게 만든다**: Dubarry **2**
+     (`LR`,`OFS`) → Birkl **3** (`[LLI,LAM_PE,LAM_NE]`) → 우리 창 모델 **4**
+     (α_PE,β_PE,α_NE,β_NE). "우리가 관측하는 degeneracy 의 일부가 원전에 없는
+     자유도에서 온다"는 가설의 좌표가 이제 셋 다 인쇄됐다. 여전히 미실측.
+  - 부수 확인 (이 카드 밖): 2026-09-03 (2) 에서 열어둔 **인용 확인 항목이
+    종결됐다** — 상세는 [[dubarry-mechanistic-mode-synthesis]] 및
+    [[birkl-ocv-degradation-diagnostic]] "인용 확인 — 종결". 요지는
+    **좌표계 계보는 Dubarry 2012 이고, legacy LLI 식은 두 원전 어디에도 없다.**
+    이번 세션도 그 문서들을 **읽기만 하고 고치지 않았다.**
