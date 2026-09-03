@@ -115,6 +115,12 @@ _read_out() {
   elif grep -aq "Error in routine" "$f" 2>/dev/null; then
     ST="☠ QE 오류"
     NOTE=$(grep -a -A1 "Error in routine" "$f" 2>/dev/null | tail -1 | cut -c1-60)
+  elif grep -aq "JOB DONE" "$f" 2>/dev/null; then
+    # ⛔ 2026-09-03 kgy 실물 — scf·nscf·dos 류 **단발 계산**은 relax 마커가 없다.
+    #   li_metal_bcc 의 02_scf/03_nscf/… 네 개가 전부 '☠ 죽음' 으로 찍혔다 (거짓 사망).
+    #   위 분기(수렴·nstep소진·오류)에 안 걸리고 JOB DONE 이 있으면 정상 종료다.
+    ST="✅ 종료"
+    NOTE="relax/NEB 마커 없음 — scf·nscf·dos 류 단발 계산 완주"
   fi
 }
 
@@ -138,6 +144,11 @@ if [ "${1:-}" = "--selftest" ]; then
   mkdir -p "$R/nebconv" "$R/nebmax"
   printf '     activation energy (->) =   0.251000 eV\n     activation energy (<-) =   0.251000 eV\n     activation energy (->) =   0.229000 eV\n     activation energy (<-) =   0.229000 eV\n     neb: convergence achieved in   2 iterations\n     JOB DONE.\n' > "$R/nebconv/neb.out"
   printf '     activation energy (->) =   0.400000 eV\n     activation energy (<-) =   0.380000 eV\n     neb: reached the maximum number of steps\n     JOB DONE.\n' > "$R/nebmax/neb.out"
+  # 한 폴더에 여러 .out — vc-relax(수렴) + scf(단발, relax 마커 없음). 둘째가 '죽음' 이면 거짓 사망.
+  mkdir -p "$R/multi"
+  printf '     Total force =     0.000000     Total SCF correction = 0.0\n!    total energy = -28.94 Ry\n     bfgs converged in   8 scf cycles and   6 bfgs steps\n     JOB DONE.\n' > "$R/multi/01_vcrelax.out"
+  printf '!    total energy = -28.94439973 Ry\n     JOB DONE.\n' > "$R/multi/02_scf.out"
+  printf '     End of band structure calculation\n     JOB DONE.\n' > "$R/multi/03_nscf.out"
 
   # 가짜 QE 프로세스 — cwd 가 근거이므로 그 폴더에서 띄운다
   cp /bin/sleep "$T/qefake" && chmod +x "$T/qefake"
@@ -171,6 +182,14 @@ if [ "${1:-}" = "--selftest" ]; then
       "⑨-b NEB 는 스텝을 'activation energy (->)' 줄로 세고 마지막 정방향 Ea 를 에너지 칸에 낸다"
   chk "$(echo "$OUT" | grep -E '^  nebmax' | grep -q 'nstep소진(NEB)' && echo 1 || echo 0)" \
       "⑩ ⛔음성(NEB): 'reached the maximum number of steps' 는 JOB DONE 이어도 **미수렴**이다"
+  chk "$(echo "$OUT" | grep -E '^  multi/02_scf' | grep -q '종료' && echo 1 || echo 0)" \
+      "⑪ ⛔음성(kgy 실물): relax 마커 없는 scf 단발 계산의 JOB DONE 은 **종료**다 — 죽음으로 찍지 않는다"
+  chk "$(echo "$OUT" | grep -E '^  multi/03_nscf' | grep -q '죽음' && echo 0 || echo 1)" \
+      "⑪-b nscf(에너지 줄도 없음)도 죽음이 아니다"
+  chk "$(echo "$OUT" | grep -E '^  multi/01_vcrelax' | grep -q '수렴' && echo 1 || echo 0)" \
+      "⑫ 한 폴더에 .out 이 여럿이면 **파일명까지** 낸다 (폴더명 네 줄은 읽을 수 없다)"
+  chk "$(echo "$OUT" | grep -qE '단발종료 2' && echo 1 || echo 0)" \
+      "⑫-b 합계에 단발종료를 따로 센다 (죽음/오류에 섞지 않는다)"
 
   OUT2=$(bash "$0" "$T/nonexistent" 2>&1); _rc=$?
   chk "$([ $_rc -ne 0 ] && echo 1 || echo 0)" "⑧ ⛔음성: 루트가 없으면 0 이 아닌 코드로 끝난다"
@@ -207,13 +226,18 @@ if [ -n "$_gpu_map" ]; then
     echo "  ⚠ GPU 를 둘 이상이 나눠 쓴다 — QE 는 이럴 때 cuMemAlloc 으로 즉사한다 (li3nd r2 실측)"
 fi
 
-printf "\n  %-34s %-14s %6s %5s %9s %-16s %s\n" 폴더 상태 조용m step "|F|" E_Ry 비고
-_nlive=0; _ndead=0; _nhang=0; _nconv=0
+printf "\n  %-40s %-14s %6s %5s %9s %-16s %s\n" 폴더/파일 상태 조용m step "|F|" E_Ry 비고
+_nlive=0; _ndead=0; _nhang=0; _nconv=0; _nfin=0
 for r in $ROOTS; do
   [ -d "$r" ] || continue
   while IFS= read -r f; do
     [ -n "$f" ] || continue
     d=$(dirname "$f")
+    # 한 폴더에 .out 이 여럿(01_vcrelax·02_scf·03_nscf…)이면 파일명까지 낸다 —
+    # 폴더명만 네 줄 찍으면 어느 줄이 뭔지 알 수 없다 (2026-09-03 kgy 실물).
+    _nout=$(find "$d" -maxdepth 1 -name '*.out' -not -name '*_run.out' 2>/dev/null | wc -l)
+    label=$(basename "$d")
+    if [ "${_nout:-1}" -gt 1 ]; then _fb=$(basename "$f"); label="$label/${_fb%.out}"; fi
     _read_out "$f"
     pid=$(_pid_for_dir "$d")
     if [ -z "$ST" ]; then                       # 종료마커 없음 → 생사로 가른다
@@ -230,7 +254,8 @@ for r in $ROOTS; do
       fi
     else
       case "$ST" in
-        "✅ 수렴") _nconv=$((_nconv+1)) ;;
+        "✅ 수렴"*) _nconv=$((_nconv+1)) ;;      # 수렴(NEB) 도 여기 (글롭이어야 한다)
+        "✅ 종료")  _nfin=$((_nfin+1)) ;;
         *) _ndead=$((_ndead+1)) ;;
       esac
     fi
@@ -241,14 +266,14 @@ for r in $ROOTS; do
       ST="$ST[$pid]"
       NOTE="${NOTE:+$NOTE · }CPU ${_cpu:-?}%${_gm:+ · GPU ${_gm}MiB}"
     fi
-    printf "  %-34s %-14s %6s %5s %9s %-16s %s\n" \
-           "$(basename "$d")" "$ST" "$AGE" "$STEP" "$FRC" "$ENE" "$NOTE"
+    printf "  %-40s %-14s %6s %5s %9s %-16s %s\n" \
+           "$label" "$ST" "$AGE" "$STEP" "$FRC" "$ENE" "$NOTE"
   done <<EOF
 $(find "$r" -maxdepth "$DEPTH" -name '*.out' -not -name '*_run.out' 2>/dev/null | sort)
 EOF
 done
 
-printf "\n  살아있음 %d · 수렴 %d · 죽음/종료 %d" "$_nlive" "$_nconv" "$_ndead"
+printf "\n  살아있음 %d · 수렴 %d · 단발종료 %d · 죽음/오류 %d" "$_nlive" "$_nconv" "$_nfin" "$_ndead"
 [ "$_nhang" -gt 0 ] && printf " · ⛔ 정체 %d" "$_nhang"
 echo
 [ "$_nhang" -gt 0 ] && \

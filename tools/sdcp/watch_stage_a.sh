@@ -37,6 +37,8 @@ if [ "${1:-}" = "--selftest" ]; then
   printf 'GEOMETRY OPTIMIZATION CYCLE   1\nGEOMETRY OPTIMIZATION CYCLE   2\nTotal Energy       :      -10051.2\n' \
     > "$W/gs1/dp6_gs1_neutral.out"
   mkdir -p "$W/gs1/.lock_seed"; echo $$ > "$W/gs1/.lock_seed/pid"     # 살아있는 pid
+  # 도는 seed 옆의 receipt 는 **이전 시도** 것이다 (gs2 재시작 실물: rc=143 이 run 옆에 붙었다)
+  echo '{"returncode":143,"relaxed":false,"orca_terminated_normally":false}' > "$W/gs1/receipt.json"
   mkdir -p "$W/gs2/.lock_seed"; echo 999999 > "$W/gs2/.lock_seed/pid" # 죽은 pid
   printf 'GEOMETRY OPTIMIZATION CYCLE   1\n' > "$W/gs2/dp6_gs2_neutral.out"
   # ⛔⛔ 2026-09-02 — 아래 둘은 **실물이 잡아 준** 결함이다. 첫 판 selftest 6건은
@@ -86,6 +88,10 @@ if [ "${1:-}" = "--selftest" ]; then
   chk "$(echo "$OUT" | grep -q "gs0.*DONE" && echo 1 || echo 0)" "완주한 seed 를 DONE 으로 찍는다"
   chk "$(echo "$OUT" | grep -qE "gs1.*(run|도는)" && echo 1 || echo 0)" \
       "lock 주인이 **살아 있으면** 도는 중으로 찍는다"
+  chk "$(echo "$OUT" | grep gs1 | grep -q '이전 시도 receipt' && echo 1 || echo 0)" \
+      "⛔음성 실물(gs2 재시작): 도는 seed 의 receipt 는 **이전 시도** 라고 말한다 (rc=143 이 지금 잡의 것처럼 보이면 안 된다)"
+  chk "$(echo "$OUT" | grep gs0 | grep -q '이전 시도' && echo 0 || echo 1)" \
+      "DONE 인 seed 의 receipt 에는 그 접두를 붙이지 않는다 (그건 이번 시도 것이다)"
   chk "$(echo "$OUT" | grep -q "gs2" && echo "$OUT" | grep -qi "죽은\|stale" && echo 1 || echo 0)" \
       "⛔음성: lock 은 있는데 **pid 가 죽었으면** 그렇게 말한다 (도는 중으로 세지 않는다)"
   chk "$([ -d "$W/gs2/.lock_seed" ] && echo 1 || echo 0)" \
@@ -218,6 +224,11 @@ for d in $(ls -1 "$W" 2>/dev/null | sort); do
     [ -n "$ene" ] || ene="-"
   fi
   # receipt 가 있으면 rc·정상종료를 비고에 (파일명·기억이 아니라 원장에서 읽는다)
+  # ⛔ 2026-09-03 실물 — 도는 seed 의 receipt 는 **이전 시도** 것이다 (receipt 은 끝날 때
+  #   쓴다). gs2 를 다시 걸자 `run` 옆에 죽은 시도의 `rc=143 ⛔비정상종료` 가 붙어 나와
+  #   지금 도는 잡이 잘못된 것처럼 읽혔다. 도는 중이면 그렇게 표시한다.
+  _rpref=""
+  case "$st" in run*|"⛔ 정체"*) _rpref="이전 시도 receipt → " ;; esac
   if [ -f "$SD/receipt.json" ] && [ -z "$note" ]; then
     # ⛔⛔ 2026-09-02 실물 — **필드 부재를 거짓으로 읽어 정상 실행을 모함했다.**
     #   `orca_terminated_normally` 는 2026-08-30 에 추가된 필드다. 그 전에 만들어진
@@ -234,6 +245,7 @@ try:
                                 else ' ⛔비정상종료')
     print('rc=%s relaxed=%s%s' % (r.get('returncode'), r.get('relaxed'), tag))
 except Exception: pass" 2>/dev/null)
+    [ -n "$note" ] && note="${_rpref}${note}"
   fi
   printf "  %-6s %-22s %7s %5s %-22s %s\n" "$d" "$st" "$age" "$cyc" "$ene" "$note"
   # 사이클당 시간은 **자료에서 계산한다** (아래 각주용). 하드코딩 금지 — 2026-09-02 에
