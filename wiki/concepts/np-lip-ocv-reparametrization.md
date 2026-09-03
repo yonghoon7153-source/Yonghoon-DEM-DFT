@@ -5,7 +5,7 @@ created: 2026-09-03
 updated: 2026-09-03
 type: concept
 tags: [battery, degradation, research]
-sources: [raw/papers/lin2024_ocv-degradation-mode-identifiability.md, raw/papers/birkl2017_degradation-diagnostics-ocv.md, raw/papers/dubarry2012_synthesize-degradation-modes.md, raw/papers/schaeffer2024_nullspace-regularization-interpretation.md]
+sources: [raw/papers/lin2024_ocv-degradation-mode-identifiability.md, raw/papers/birkl2017_degradation-diagnostics-ocv.md, raw/papers/dubarry2012_synthesize-degradation-modes.md, raw/papers/schaeffer2024_nullspace-regularization-interpretation.md, raw/papers/cui2024_electrode-utilization-formation-cycle-life.md]
 confidence: high
 explored: false
 verificationStatus: unverified
@@ -165,6 +165,32 @@ satellite `mode-observability` Phase 1c 가 우리 합성 격자에서 그것을
 - **복합전극(Si/Gr)을 명시적으로 범위 밖에 둔다** — 우리 셀의 기본 구성이다.
 - **동역학 없음.** 총용량 `Q̂max`(열역학)과 충·방전 용량(동역학+프로토콜)의 구분을
   §1 에서 강조하며, 후자와 혼동하지 말라고 적는다.
+
+## 실측 원조 — "전극 이용범위" 는 이 직선을 컷오프에서 잰 값이다 (2026-09-03 추가)
+
+Cui et al. 2024 (*Joule* 8, 3072–3087) 가 정의하는 "electrode utilization range"
+`[인쇄]` "the utilization range of an electrode is determined by its SOC at
+full-cell top of charge (4.4 V) and bottom of discharge (3 V)" 는 이 정리의
+`z⁺(z⁻) = z₀⁺ − r_N/P·z⁻` 직선을 **풀셀 컷오프 전압 두 점에서 평가한 값과
+같은 대상**이다 — 다만 Lin 은 순수 열역학 모형으로 그 값을 유도하고, Cui 는
+**해체한 전극의 half-cell 을 실측해 DVA(4-파라미터 적합, `Q_NE, Q_PE, SOC_NE,0,
+SOC_PE,0`)로 역산**한다. 상세: `raw/papers/cui2024_electrode-utilization-formation-cycle-life.md` §2 질문①.
+
+이 논문은 또한 이 위키가 처음 마주친 **N/P 고정·Li/P 만 이동하는 실측 사례**를
+준다 — 셀 설계로 `N/P = 1.16` 고정(Table 1), 형성 프로토콜(특히 형성 전류)이
+움직이는 것은 `Q_Li`(∝ `z₀⁺`) 하나뿐이다(`[인쇄]` "A lower post-formation Li
+inventory results in a shift in electrode-specific utilization"). `[해석]`
+이것은 이 페이지의 `(1,1,1)` null 방향과는 **다른** 방향이다 — 형성은 세
+모드를 같은 비율로 밀지 않고 `z₀⁺`(주로 LLI) 하나만 특정적으로 민다. 즉
+실제 셀이 pristine 이후 처음 관측되는 지점(형성 직후)은 이 정리의 flat
+방향 위가 아니라 `z₀⁺` 축 위에 있을 개연성을 실측이 준다 — 정량 검증은
+미실행.
+
+**주의(범위 한정)**: Cui 의 `Q_PE, Q_NE, Q_Li` 는 **형성 직후 단일 시점의
+절대량**(Ah)이고, 이 페이지·우리 프로젝트가 쓰는 `LLI, LAM_PE, LAM_NE` 는
+**pristine 대비 사이클링에 따른 손실 비율**이다. 비교 기준(=사이클링 전
+pristine 값)이 Cui 원문에 없으므로 **정량 환산식은 없다** — 정의의 대응만
+확인됐고 수치 변환은 안 된다.
 
 ## 관련
 - [[nullspace-coefficient-interpretation]]

@@ -5,7 +5,7 @@ created: 2026-08-11
 updated: 2026-09-03
 type: research-question
 tags: [battery, degradation, research]
-sources: [raw/repositories/degradation-degeneracy-audit.md, raw/papers/birkl2017_degradation-diagnostics-ocv.md, raw/papers/rhyu2025_systematic-feature-design-formation.md, raw/papers/lin2024_ocv-degradation-mode-identifiability.md, raw/papers/schaeffer2024_nullspace-regularization-interpretation.md]
+sources: [raw/repositories/degradation-degeneracy-audit.md, raw/papers/birkl2017_degradation-diagnostics-ocv.md, raw/papers/rhyu2025_systematic-feature-design-formation.md, raw/papers/lin2024_ocv-degradation-mode-identifiability.md, raw/papers/schaeffer2024_nullspace-regularization-interpretation.md, raw/papers/cui2024_electrode-utilization-formation-cycle-life.md]
 confidence: medium
 explored: false
 verificationStatus: unverified
@@ -494,3 +494,40 @@ LAM_PE ≈ LAM_NE 는 물리가 아니라 **flat valley 방향에서 두 전극�
   이 경고는 **저열화 영역(100·200 사이클 행)** 에 걸린다. 그쪽 fitting 결과의
   bound active 검사를 따로 집계해야 한다 (파이프라인이 이미 `_bound_active` 로
   재고 있으므로 집계만 남았다).
+
+- **[2026-09-03 (13)]** `active` 유지 — 이 계열의 **마지막(13번째) 문헌**을
+  흡수했다 ([[fused-lasso-feature-design-framework]] 의 데이터셋 원전,
+  Cui et al., *Joule* **8** (2024) 3072–3087, raw:
+  `raw/papers/cui2024_electrode-utilization-formation-cycle-life.md`). Rhyu 2025
+  가 참고문헌 [47] 로 인용하는 바로 그 186셀·62프로토콜 데이터셋을 만들고 처음
+  분석한 논문이다. 이 카드에 준 것 셋:
+  1. **★ 잡음 문턱에 처음으로 실측 정박점이 생겼다.** DVA(differential voltage
+     analysis) 적합 잔차 `[인쇄, SI Fig. S15 캡션]` "root mean squared error
+     below **6 mV**" — 우리 σ = 5 mV 문턱과 같은 자릿수다(잔차이지 raw 잡음이
+     아니므로 상한으로만 쓴다). 그리고 SI Table S3(반쪽전지 harvested-electrode
+     반복측정, 원문 표에서 우리가 직접 계산)이 **전극별로 갈리는 재현성**을
+     준다: **PE 전압 재현성 1–12 mV**(σ=1/5 mV 사이·근방), **NE 전압 재현성
+     8–93 mV**(훨씬 나쁨 — NE 가 이 SOC 대역에서 평평해 작은 SOC 차이가
+     컷오프 근처 전압으로 크게 증폭). `[해석]` 우리 Phase 1c/1d 가 가정한
+     "전압 전체 창에 균일한 σ" 가 지나치게 단순할 수 있다는 첫 실측 근거다 —
+     **Evidence 어느 쪽도 아니다, 다음 실측(전극별·SOC별 σ)의 입력값으로
+     등재한다.**
+  2. **이 논문 자신도 4-파라미터 DVA 적합에 오차막대가 없다** (Figure 8,
+     `[Q_NE, Q_PE, SOC_NE,0, SOC_PE,0]`, optimizer 1종, 반복 시작점 비교 없음) —
+     Rhyu SI Note S11·Birkl 2017·Dubarry 2012 와 같은 패턴의 **네 번째 야생
+     사례**. 다만 이 논문은 half-cell 곡선이 **실측(해체 전극)**이라 Rhyu 의
+     범용 OCV 다항식 모델보다 물리적으로 더 직접적이고, **Table S3 의 독립
+     반쪽전지 측정**(DVA 적합이 아니라 별도 실측)이 DVA 가 추론한 방향과
+     일치한다는 교차검증이 있다 — Birkl 2017 의 코인셀 검증과 같은 계열의
+     **드문 사례**.
+  3. **형성이 우리 격자의 시작점을 어디에 놓는지에 대한 실측 단서.** N/P 는
+     셀 설계로 고정(`[인쇄, Table 1]` 1.16)이고 형성 프로토콜이 움직이는 것은
+     `Q_Li`(∝ Li/P, Lin 의 `z0+` 방향) 하나뿐이다. `[해석]` 이것은 **`(1,1,1)`
+     null 방향과는 다른 방향** — 형성 직후 상태는 이 카드가 다루는 flat
+     direction 위가 아니라 z0+ 축(주로 LLI) 위에 있을 가능성을 시사한다.
+     검증은 미실행이며, 값싸게 확인 가능하다(형성-유사 초기조건을 LLI 만 민
+     지점으로 놓고 22p 류 분해를 재현).
+  - 상세·근거 등급(A/B/C)·양쪽 원문 대조는 raw digest §2(사용자 질문 6개)·
+    §11(우리 프로젝트 접점) 참조. 이 카드의 status 는 바뀌지 않는다(`active`
+    유지) — 새 근거는 방법론적 패턴 확인과 잡음 정박점이지, 22p 수치 자체에
+    대한 직접 증거는 아니다.

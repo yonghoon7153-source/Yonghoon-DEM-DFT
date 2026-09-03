@@ -1,0 +1,752 @@
+{
+ "slug": "cui2024_electrode-utilization-formation-cycle-life",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-09-03",
+ "sources": [
+  "58131fdb-13._Datadriven_analysis_of_battery_formation_reveals_the_role_of_electrode_utilization_in_extending_cycle_life.pdf",
+  "7e50e4ea-13._Sup_Datadriven_analysis_of_battery_formation_reveals_the_role_of_electrode_utilization_in_extending_cycle_life.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 6,
+   "file": "fig_1.png",
+   "caption": "Figure 1. Formation experimental design (A) Formation template illustrated using one speciﬁc formation protocol (the initial constant voltage hold at 1.5 V for 24 h is not shown here). See supplemental information Section S1.1 for more data generation details. (B) Illustration showing how the CC1 and CC2 values sampled using Latin hypercube sampling are distributed over the parameter space. Current values are sampled on a logarithmic scale. (C) The number of values tested for each formation parameter. Top row is for continuous variables, and bottom is for discrete variables.",
+   "rotated_deg": 0,
+   "bbox": [
+    51.7,
+    97.3,
+    382.5,
+    307.3
+   ],
+   "w": 1379,
+   "h": 876,
+   "dpi": 300,
+   "src": "58131fdb-13._Datadriven_analysis_of_battery_formation_reveals_the_role_of_electrode_utilization_in_extending_cycle_life.pdf",
+   "blank": 0.898
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 7,
+   "file": "fig_2.png",
+   "caption": "Figure 2. Discharge capacity and resistance degradation for the entire dataset (A–C) The data are plotted every 100 cycles for (A) the RPT C/20 discharge capacity, (B) the HPPC 10 s discharge resistance measured at the top of charge (100% SOC), and (C) the 3C/4 aging cycle discharge capacity. The color of each curve indicates the battery’s cycle life, which is deﬁned as when the 3C/4 aging cycle discharge capacity of a cell reaches 80% of its initial value. (D) 62 formation protocols ranked by their mean total energy throughput on the x axis. Data are represented as mean G standard error. The dotted line represents the mean energy throughput of 3 replicates for the baseline formation protocol.",
+   "rotated_deg": 0,
+   "bbox": [
+    51.7,
+    70.1,
+    550.9,
+    348.2
+   ],
+   "w": 2081,
+   "h": 1159,
+   "dpi": 300,
+   "src": "58131fdb-13._Datadriven_analysis_of_battery_formation_reveals_the_role_of_electrode_utilization_in_extending_cycle_life.pdf",
+   "blank": 0.9
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 8,
+   "file": "fig_3.png",
+   "caption": "Figure 3. Cycling results and the impact of formation parameters (A) Cycle life plotted as a function of formation time (24 h CV hold at 1.5 V excluded) for the 186 NMC532/AG cell dataset, with their distribution shown on each axis. (B) Matrix plot representing the feature importance of formation parameters (vertical axis) on performance metrics (horizontal axis). The absolute mean SHAP value is used to assess the feature importance. The white spaces separate performance metrics across different stages of operation: during formation (formation), after 120 aging cycles (cycling), and after cells reach end of life (EOL). Li inventory, as illustrated in Figure 5B. Slow and fast-formed cells may have similar 3C/4 discharge capacities after formation (0.246 G 0.001 versus 0.244 G 0.002 Ah), but their electrode-speciﬁc utilization range, the potential range where the PE and NE are cycled after",
+   "rotated_deg": 0,
+   "bbox": [
+    51.7,
+    70.1,
+    550.9,
+    279.8
+   ],
+   "w": 2081,
+   "h": 874,
+   "dpi": 300,
+   "src": "58131fdb-13._Datadriven_analysis_of_battery_formation_reveals_the_role_of_electrode_utilization_in_extending_cycle_life.pdf",
+   "blank": 0.869
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 9,
+   "file": "fig_4.png",
+   "caption": "Figure 4. Establishing a relationship between electrode-speciﬁc utilization and cycle life through formation capacities and differential voltage analysis for cells formed below 55\u0001C (A) Formation discharge capacity plotted as a function of formation ﬁrst-cycle charge capacity. Data are represented as mean G standard error. During the 1 h CV hold on discharge (Section S1.2), an average of 3% of the capacity can be extracted as shown in Figure S25. Gray here represents cells formed with CC1 and CC2, both less than 1 C. (B) Formation ﬁrst-cycle charge capacity plotted as a function of the two formation charge currents. (C) An illustration of the electrode utilization range deﬁnition. (D) Correlation plot of cycle life versus PE SOCs at the bottom of discharge (3 V) immediately after formation. Blue highlights cells tested with high- formation charge currents (CC1 and CC2 R1C), and gray show",
+   "rotated_deg": 0,
+   "bbox": [
+    51.7,
+    70.1,
+    550.8,
+    345.9
+   ],
+   "w": 2081,
+   "h": 1150,
+   "dpi": 300,
+   "src": "58131fdb-13._Datadriven_analysis_of_battery_formation_reveals_the_role_of_electrode_utilization_in_extending_cycle_life.pdf",
+   "blank": 0.931
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 10,
+   "file": "fig_5.png",
+   "caption": "Figure 5. The origin and implication of the shifted electrode-speciﬁc utilization (A) Fitted differential voltage analysis of the electrode voltage for a slow-formed cell (CC1 and CC2 = C/50, cell sequence number 169) after formation. The gray dotted line represents when full cell hits the discharge cutoff voltage at 3 V and charge cutoff voltage at 4.4 V. (B) Fitted results for a fast-formed cell (CC1 and CC2 R 1C, sequence number 106). (C) Voltage versus capacity plot for C/20 and 3C/4 rates, comparing a slow-formed cell (gray dotted line) to a fast-formed cell (blue line). (D) Correlation plot of full-cell resistance (10 s discharge resistance at 100% SOC) after 720 cycles versus PE utilization shift determined at bottom of discharge immediately after formation.",
+   "rotated_deg": 0,
+   "bbox": [
+    51.7,
+    70.1,
+    550.9,
+    316.1
+   ],
+   "w": 2081,
+   "h": 1026,
+   "dpi": 300,
+   "src": "58131fdb-13._Datadriven_analysis_of_battery_formation_reveals_the_role_of_electrode_utilization_in_extending_cycle_life.pdf",
+   "blank": 0.921
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 11,
+   "file": "fig_6.png",
+   "caption": "Figure 6. PE SOC shift, resistance, and cycle life plotted as a function of formation temperature Only cells with CC1 and CC2 < 1 C are plotted. (A) PE SOC when full cell is at 3 V immediately after formation estimated by the differential voltage analysis. (B) 10 s discharge resistance at 100% SOC after formation but before cycling aging measured by HPPC. (C) Cycle life. At each temperature, other formation parameters can vary. The boxplot displays the interquartile range with box limits at the 25th and 75th percentiles. Whiskers extend 1.5 times the interquartile range from these percentiles, and outliers are represented by circles.",
+   "rotated_deg": 0,
+   "bbox": [
+    51.7,
+    45.3,
+    382.5,
+    536.3
+   ],
+   "w": 1379,
+   "h": 2047,
+   "dpi": 300,
+   "src": "58131fdb-13._Datadriven_analysis_of_battery_formation_reveals_the_role_of_electrode_utilization_in_extending_cycle_life.pdf",
+   "blank": 0.926
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 14,
+   "file": "fig_7.png",
+   "caption": "Figure 7. Cycling proﬁle after formation Aging cycles and diagnostic cycles detailed in Table S4 plotted here.",
+   "rotated_deg": 0,
+   "bbox": [
+    51.7,
+    97.6,
+    468.0,
+    419.6
+   ],
+   "w": 1736,
+   "h": 1343,
+   "dpi": 300,
+   "src": "58131fdb-13._Datadriven_analysis_of_battery_formation_reveals_the_role_of_electrode_utilization_in_extending_cycle_life.pdf",
+   "blank": 0.929
+  },
+  {
+   "key": "f8",
+   "kind": "figure",
+   "label": "8",
+   "page": 15,
+   "file": "fig_8.png",
+   "caption": "Figure 8. Procedure for differential voltage ﬁtting and an example of the ﬁtting result The ﬁtting error is a combination of the dV/dQ and VQ error, and dQ/dV is plotted here as a separate validation of the ﬁtting result.",
+   "rotated_deg": 0,
+   "bbox": [
+    51.7,
+    45.2,
+    498.9,
+    337.4
+   ],
+   "w": 1864,
+   "h": 1218,
+   "dpi": 300,
+   "src": "58131fdb-13._Datadriven_analysis_of_battery_formation_reveals_the_role_of_electrode_utilization_in_extending_cycle_life.pdf",
+   "blank": 0.939
+  },
+  {
+   "key": "fS1",
+   "kind": "figure",
+   "label": "S1",
+   "page": 4,
+   "file": "fig_S1.png",
+   "caption": "Figure S1: A matrix plot showing the pairwise correlation between any of the two forma- tion parameters. The numbers inside each square represent the Pearson coefficient. The low Pearson coefficient between non identical parameters confirms that Latin hypercube sampling minimizes the parameter correlation during experiment design.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    69.6,
+    529.3,
+    363.0
+   ],
+   "w": 1931,
+   "h": 1223,
+   "dpi": 300,
+   "src": "7e50e4ea-13._Sup_Datadriven_analysis_of_battery_formation_reveals_the_role_of_electrode_utilization_in_extending_cycle_life.pdf",
+   "blank": 0.677
+  },
+  {
+   "key": "fS2",
+   "kind": "figure",
+   "label": "S2",
+   "page": 4,
+   "file": "fig_S2.png",
+   "caption": "Figure S2: Histograms of the parameter value distribution for the first 150-cell batch. As a reference, 1C current is defined as 0.24 A for this dataset.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    466.8,
+    529.3,
+    684.0
+   ],
+   "w": 1931,
+   "h": 907,
+   "dpi": 300,
+   "src": "7e50e4ea-13._Sup_Datadriven_analysis_of_battery_formation_reveals_the_role_of_electrode_utilization_in_extending_cycle_life.pdf",
+   "blank": 0.881
+  },
+  {
+   "key": "fS3",
+   "kind": "figure",
+   "label": "S3",
+   "page": 5,
+   "file": "fig_S3.png",
+   "caption": "Figure S3: Histograms of the parameter value distribution for the 36 fast-formed cells in batch 2.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    71.7,
+    529.3,
+    394.3
+   ],
+   "w": 1931,
+   "h": 1345,
+   "dpi": 300,
+   "src": "7e50e4ea-13._Sup_Datadriven_analysis_of_battery_formation_reveals_the_role_of_electrode_utilization_in_extending_cycle_life.pdf",
+   "blank": 0.734
+  },
+  {
+   "key": "fS5",
+   "kind": "figure",
+   "label": "S5",
+   "page": 6,
+   "file": "fig_S5.png",
+   "caption": "Figure S5: Baseline formation protocol, C/20 charge and discharge, 1 cycle, at 40◦C [3–5]. The three repeats of the baseline protocol correspond to sequence number 324, 325, 326.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    453.5,
+    529.3,
+    655.0
+   ],
+   "w": 1931,
+   "h": 841,
+   "dpi": 300,
+   "src": "7e50e4ea-13._Sup_Datadriven_analysis_of_battery_formation_reveals_the_role_of_electrode_utilization_in_extending_cycle_life.pdf",
+   "blank": 0.876
+  },
+  {
+   "key": "fS6",
+   "kind": "figure",
+   "label": "S6",
+   "page": 6,
+   "file": "fig_S6.png",
+   "caption": "Figure S6: Distribution of normalized C/20 discharge capacities immediately after forma- tion for 186 cells. Each protocol has 3 replicates and the mean capacity of each protocol is used for normalization. The cell capacity distribution is centered around 1, so the cell-to-cell variability is minimal.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    453.5,
+    529.4,
+    655.0
+   ],
+   "w": 1931,
+   "h": 841,
+   "dpi": 300,
+   "src": "7e50e4ea-13._Sup_Datadriven_analysis_of_battery_formation_reveals_the_role_of_electrode_utilization_in_extending_cycle_life.pdf",
+   "blank": 0.876
+  },
+  {
+   "key": "fS7",
+   "kind": "figure",
+   "label": "S7",
+   "page": 7,
+   "file": "fig_S7.png",
+   "caption": "Figure S7: Distribution of normalized cycle life for 186 cells. Each protocol has 3 repli- cates and the mean cycle life for each protocol is used for normalization. Battery aging introduces an expected increase in variability for metrics. For the majority of cells, their cycle life lies within a 10% deviation of the mean.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    85.7,
+    529.3,
+    271.0
+   ],
+   "w": 1931,
+   "h": 772,
+   "dpi": 300,
+   "src": "7e50e4ea-13._Sup_Datadriven_analysis_of_battery_formation_reveals_the_role_of_electrode_utilization_in_extending_cycle_life.pdf",
+   "blank": 0.838
+  },
+  {
+   "key": "fS8",
+   "kind": "figure",
+   "label": "S8",
+   "page": 7,
+   "file": "fig_S8.png",
+   "caption": "Figure S8: How the 6 formation parameters affect metrics at different stages of cycling: (1) cycle 0, after formation but before cycling aging (2) after 120 aging cycles (3) at the end of life. The plot is generated by constructing random forest models using the 6 formation parameters and extracting their importance on metrics via SHAP analysis. Darker colors in the matrix plot indicate a larger impact. The prediction errors of the models are listed in Table.S1.",
+   "rotated_deg": 0,
+   "bbox": [
+    48.4,
+    371.2,
+    546.7,
+    656.9
+   ],
+   "w": 2077,
+   "h": 1191,
+   "dpi": 300,
+   "src": "7e50e4ea-13._Sup_Datadriven_analysis_of_battery_formation_reveals_the_role_of_electrode_utilization_in_extending_cycle_life.pdf",
+   "blank": 0.766
+  },
+  {
+   "key": "fS9",
+   "kind": "figure",
+   "label": "S9",
+   "page": 9,
+   "file": "fig_S9.png",
+   "caption": "Figure S9: Both formation temperature and formation currents positively affect cycle life. When the parameter value increases, the impact is also increasing in the positive direction as shown in the plot. During model training, the errors for training and test are: Train MAPE = 23.4% Train RMSE = 0.090 Test MAPE = 35.2% Test RMSE = 0.152. The cycle life label is normalized to be between 0 and 1 during model training.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    471.0,
+    529.3,
+    705.5
+   ],
+   "w": 1931,
+   "h": 978,
+   "dpi": 300,
+   "src": "7e50e4ea-13._Sup_Datadriven_analysis_of_battery_formation_reveals_the_role_of_electrode_utilization_in_extending_cycle_life.pdf",
+   "blank": 0.923
+  },
+  {
+   "key": "fS10",
+   "kind": "figure",
+   "label": "S10",
+   "page": 9,
+   "file": "fig_S10.png",
+   "caption": "Figure S10: First-cycle electrochemistry during formation for three repeats of the fast and slow-formed cells. For fast-formed cells, most of the first-cycle charge capacity was extracted during the 1 h CV hold.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    471.0,
+    529.3,
+    705.5
+   ],
+   "w": 1931,
+   "h": 978,
+   "dpi": 300,
+   "src": "7e50e4ea-13._Sup_Datadriven_analysis_of_battery_formation_reveals_the_role_of_electrode_utilization_in_extending_cycle_life.pdf",
+   "blank": 0.923
+  },
+  {
+   "key": "fS11",
+   "kind": "figure",
+   "label": "S11",
+   "page": 10,
+   "file": "fig_S11.png",
+   "caption": "Figure S11: Half-cell CE measurement for electrodes harvested from full cells: (a) and (b) show NMCs and Grs in the same electrolyte system. NMC CE is around 90%, and Gr CE is around 92.5%.",
+   "rotated_deg": 0,
+   "bbox": [
+    61.9,
+    251.5,
+    533.4,
+    370.3
+   ],
+   "w": 1966,
+   "h": 496,
+   "dpi": 300,
+   "src": "7e50e4ea-13._Sup_Datadriven_analysis_of_battery_formation_reveals_the_role_of_electrode_utilization_in_extending_cycle_life.pdf",
+   "blank": 0.97
+  },
+  {
+   "key": "fS12",
+   "kind": "figure",
+   "label": "S12",
+   "page": 10,
+   "file": "fig_S12.png",
+   "caption": "Figure S12: Rate capability tests for fast (CC1 and CC2 > 1C, protocol with sequence number 106) and slow-formed (CC1 and CC2 = C/20, baseline formation protocol) cells at C/20, 1C and 2C. The capacity difference between fast and slow formation only shows up at low discharge rates (C/20).",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    492.0,
+    529.3,
+    677.8
+   ],
+   "w": 1931,
+   "h": 775,
+   "dpi": 300,
+   "src": "7e50e4ea-13._Sup_Datadriven_analysis_of_battery_formation_reveals_the_role_of_electrode_utilization_in_extending_cycle_life.pdf",
+   "blank": 0.952
+  },
+  {
+   "key": "fS13",
+   "kind": "figure",
+   "label": "S13",
+   "page": 11,
+   "file": "fig_S13.png",
+   "caption": "Figure S13: Comparing the SOC distribution for positive electrode (PE) and negative electrode (NE) when they are both at the delithiated state (full cell at 3 V for NE and full cell at 4.4 V for PE). We observe that the distribution for both is less than 1% in this dataset.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    123.2,
+    529.3,
+    300.6
+   ],
+   "w": 1931,
+   "h": 740,
+   "dpi": 300,
+   "src": "7e50e4ea-13._Sup_Datadriven_analysis_of_battery_formation_reveals_the_role_of_electrode_utilization_in_extending_cycle_life.pdf",
+   "blank": 0.935
+  },
+  {
+   "key": "fS14",
+   "kind": "figure",
+   "label": "S14",
+   "page": 11,
+   "file": "fig_S14.png",
+   "caption": "Figure S14: Comparing the SOC distribution for PE and NE when they are both at the lithiated state (full cell at 4.4 V for NE and full cell at 3 V for PE). We observe that the distribution for both can be as large as 8%, and fast-formed cells tend to have less lithiated PE and NE.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    477.1,
+    529.3,
+    654.5
+   ],
+   "w": 1931,
+   "h": 741,
+   "dpi": 300,
+   "src": "7e50e4ea-13._Sup_Datadriven_analysis_of_battery_formation_reveals_the_role_of_electrode_utilization_in_extending_cycle_life.pdf",
+   "blank": 0.928
+  },
+  {
+   "key": "fS15",
+   "kind": "figure",
+   "label": "S15",
+   "page": 12,
+   "file": "fig_S15.png",
+   "caption": "Figure S15: Representative differential voltage analysis results for slow (a) – (c) and fast- formed cells (d) – (f). From left to right, we have dV/dQ, dQ/dV and V-Q curves. All of the first-cycle fitting results have a root mean squared error below 6mV. The slow-formed cell is identified by sequence number 169, and the fast-formed cell by sequence number 106.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    71.6,
+    529.3,
+    262.7
+   ],
+   "w": 1931,
+   "h": 797,
+   "dpi": 300,
+   "src": "7e50e4ea-13._Sup_Datadriven_analysis_of_battery_formation_reveals_the_role_of_electrode_utilization_in_extending_cycle_life.pdf",
+   "blank": 0.934
+  },
+  {
+   "key": "fS16",
+   "kind": "figure",
+   "label": "S16",
+   "page": 12,
+   "file": "fig_S16.png",
+   "caption": "Figure S16: Comparing electrode utilization shifts using dV/dQ plots. (a) – (b) show results for slow-formed cells and (c) – (d) show results for fast-formed cells. The half cell voltage is vs Li/Li+. NMC of the fast-formed cell after formation avoids the kinetic limited region, and graphite at full cell top of charge (4.4 V) is also less lithiated by comparing (a) to (c). Especially when comparing (b) to (d), we can clearly see that at 3 V (when the cell is fully discharged), the PE of the fast-formed cell avoids a big part of the steep voltage change in dV/dQ. The peaks of the grey solid line (real full cell) and the dotted line (fitted full cells) are well aligned, demonstrating the accuracy of the fitting results.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    356.9,
+    529.3,
+    626.1
+   ],
+   "w": 1931,
+   "h": 1122,
+   "dpi": 300,
+   "src": "7e50e4ea-13._Sup_Datadriven_analysis_of_battery_formation_reveals_the_role_of_electrode_utilization_in_extending_cycle_life.pdf",
+   "blank": 0.927
+  },
+  {
+   "key": "fS17",
+   "kind": "figure",
+   "label": "S17",
+   "page": 13,
+   "file": "fig_S17.png",
+   "caption": "Figure S17: Full-cell Li inventory (QLi) extracted from differential voltage analysis plotted against (a) first-cycle formation charge capacity and (b) PE SOC at full cell bottom of discharge (3 V). Blue represents data from fast-formed cells. Extra capacity extracted during formation first charge are used for side reactions as opposed to Li intercalation which is accompanied by a decrease in Li inventory. The reduced Li inventory shifts the electrode utilization.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    107.4,
+    529.3,
+    295.0
+   ],
+   "w": 1931,
+   "h": 783,
+   "dpi": 300,
+   "src": "7e50e4ea-13._Sup_Datadriven_analysis_of_battery_formation_reveals_the_role_of_electrode_utilization_in_extending_cycle_life.pdf",
+   "blank": 0.882
+  },
+  {
+   "key": "fS18",
+   "kind": "figure",
+   "label": "S18",
+   "page": 13,
+   "file": "fig_S18.png",
+   "caption": "Figure S18: Resistance (100% SOC, 10s, discharge) measured by HPPC plotted against Li inventory, showing that lower Li inventory does not result in higher resistance. The blue markers represent fast-formed cells.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    484.5,
+    529.3,
+    672.2
+   ],
+   "w": 1931,
+   "h": 783,
+   "dpi": 300,
+   "src": "7e50e4ea-13._Sup_Datadriven_analysis_of_battery_formation_reveals_the_role_of_electrode_utilization_in_extending_cycle_life.pdf",
+   "blank": 0.882
+  },
+  {
+   "key": "fS19",
+   "kind": "figure",
+   "label": "S19",
+   "page": 14,
+   "file": "fig_S19.png",
+   "caption": "Figure S19: Charge capacity for fast-formed cells during the first formation cycle as a function of temperature. A significant component of Qch during fast formation arises from Li plating. The decrease in Qch with increasing temperature is attributed to improved Li intercalation kinetics and transport properties in graphite that reduce the likelihood of Li plating. All box plots display the interquartile range with box limits at the 25th and 75th percentiles. Whiskers extend 1.5 times the interquartile range from these percentiles, and outliers are represented by circles.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    114.7,
+    529.4,
+    282.0
+   ],
+   "w": 1931,
+   "h": 697,
+   "dpi": 300,
+   "src": "7e50e4ea-13._Sup_Datadriven_analysis_of_battery_formation_reveals_the_role_of_electrode_utilization_in_extending_cycle_life.pdf",
+   "blank": 0.938
+  },
+  {
+   "key": "fS20",
+   "kind": "figure",
+   "label": "S20",
+   "page": 14,
+   "file": "fig_S20.png",
+   "caption": "Figure S20: Charge capacity for slow-formed cells (CC1 and CC2 ≤C/5) during the first formation cycle as a function of temperature. Unlike in the fast-formed cells’ case, we observe increasing formation Qch with increasing temperature, suggesting that no or minimal Li plating occurs in the slow-formed cells.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    476.1,
+    529.3,
+    662.5
+   ],
+   "w": 1931,
+   "h": 778,
+   "dpi": 300,
+   "src": "7e50e4ea-13._Sup_Datadriven_analysis_of_battery_formation_reveals_the_role_of_electrode_utilization_in_extending_cycle_life.pdf",
+   "blank": 0.927
+  },
+  {
+   "key": "fS21",
+   "kind": "figure",
+   "label": "S21",
+   "page": 15,
+   "file": "fig_S21.png",
+   "caption": "Figure S21: C/5 discharge capacity with 1 h CV hold at the end of formation as a function of temperature for fast formed cells.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    88.6,
+    529.4,
+    267.3
+   ],
+   "w": 1931,
+   "h": 745,
+   "dpi": 300,
+   "src": "7e50e4ea-13._Sup_Datadriven_analysis_of_battery_formation_reveals_the_role_of_electrode_utilization_in_extending_cycle_life.pdf",
+   "blank": 0.917
+  },
+  {
+   "key": "fS22",
+   "kind": "figure",
+   "label": "S22",
+   "page": 15,
+   "file": "fig_S22.png",
+   "caption": "Figure S22: Disassembled graphite electrode sheet from a fast-formed full cell after for- mation charge and the 1 h CV hold at 4.4 V. The full cell was formed with CC1 = 0.295 A and CC2 = 0.283 A.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    444.5,
+    529.3,
+    607.2
+   ],
+   "w": 1931,
+   "h": 679,
+   "dpi": 300,
+   "src": "7e50e4ea-13._Sup_Datadriven_analysis_of_battery_formation_reveals_the_role_of_electrode_utilization_in_extending_cycle_life.pdf",
+   "blank": 0.652
+  },
+  {
+   "key": "fS23",
+   "kind": "figure",
+   "label": "S23",
+   "page": 16,
+   "file": "fig_S23.png",
+   "caption": "Figure S23: Disassembled graphite electrode sheet from a slow-formed full cell after formation charge and the 1 h CV hold at 4.4 V. The full cell was formed with CC1 = 0.012 A and CC2 = 0.012 A.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    194.7,
+    529.3,
+    318.0
+   ],
+   "w": 1931,
+   "h": 515,
+   "dpi": 300,
+   "src": "7e50e4ea-13._Sup_Datadriven_analysis_of_battery_formation_reveals_the_role_of_electrode_utilization_in_extending_cycle_life.pdf",
+   "blank": 0.793
+  },
+  {
+   "key": "fS24",
+   "kind": "figure",
+   "label": "S24",
+   "page": 16,
+   "file": "fig_S24.png",
+   "caption": "Figure S24: There is a correlation between Coulombic efficiency (CE) and cycle life for cells formed below 55°C, since shifted electrode utilization (a lower Li inventory) is also a reflection of the CE. However, for cells formed at 55°C, the electrode utilization or CE varies only narrowly, so no correlation can be established between CE and cycle life.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    511.1,
+    529.3,
+    692.8
+   ],
+   "w": 1931,
+   "h": 758,
+   "dpi": 300,
+   "src": "7e50e4ea-13._Sup_Datadriven_analysis_of_battery_formation_reveals_the_role_of_electrode_utilization_in_extending_cycle_life.pdf",
+   "blank": 0.911
+  },
+  {
+   "key": "fS25",
+   "kind": "figure",
+   "label": "S25",
+   "page": 17,
+   "file": "fig_S25.png",
+   "caption": "Figure S25: Capacity extracted (%) during the 1 h CV hold on formation C/5 discharge.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    394.8,
+    529.4,
+    655.8
+   ],
+   "w": 1931,
+   "h": 1088,
+   "dpi": 300,
+   "src": "7e50e4ea-13._Sup_Datadriven_analysis_of_battery_formation_reveals_the_role_of_electrode_utilization_in_extending_cycle_life.pdf",
+   "blank": 0.975
+  },
+  {
+   "key": "fS26",
+   "kind": "figure",
+   "label": "S26",
+   "page": 17,
+   "file": "fig_S26.png",
+   "caption": "Figure S26: Detecting Li plating electrochemically by comparing the derivative of voltage with respect to time (dV/dt) [6] during the rest period before (a) and after (b) the CV hold.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    394.8,
+    529.4,
+    655.8
+   ],
+   "w": 1931,
+   "h": 1088,
+   "dpi": 300,
+   "src": "7e50e4ea-13._Sup_Datadriven_analysis_of_battery_formation_reveals_the_role_of_electrode_utilization_in_extending_cycle_life.pdf",
+   "blank": 0.975
+  },
+  {
+   "key": "t1",
+   "kind": "table",
+   "label": "1",
+   "page": 4,
+   "file": "tab_1.png",
+   "caption": "Table 1. Information of the full cells",
+   "rotated_deg": 0,
+   "bbox": [
+    52.7,
+    102.4,
+    549.9,
+    170.6
+   ],
+   "w": 2073,
+   "h": 285,
+   "dpi": 300,
+   "src": "58131fdb-13._Datadriven_analysis_of_battery_formation_reveals_the_role_of_electrode_utilization_in_extending_cycle_life.pdf",
+   "blank": 0.734
+  },
+  {
+   "key": "t2",
+   "kind": "table",
+   "label": "2",
+   "page": 5,
+   "file": "tab_2.png",
+   "caption": "Table 2. Deﬁnitions of all formation parameter abbreviations Name Deﬁnition T formation temperature CC1 formation current 1 Vtransition transition voltage CC2 formation current 2 nverification number of the veriﬁcation cycles tocv rest time after formation before cycling aging",
+   "rotated_deg": 0,
+   "bbox": [
+    52.7,
+    102.4,
+    381.5,
+    198.8
+   ],
+   "w": 1371,
+   "h": 403,
+   "dpi": 300,
+   "src": "58131fdb-13._Datadriven_analysis_of_battery_formation_reveals_the_role_of_electrode_utilization_in_extending_cycle_life.pdf",
+   "blank": 0.587
+  },
+  {
+   "key": "tS1",
+   "kind": "table",
+   "label": "S1",
+   "page": 8,
+   "file": "tab_S1.png",
+   "caption": "Table S1: Prediction errors of the models to construct the SI SHAP plot. The Mean Absolute Percentage Error (MAPE) and Root Mean Squared Error (RMSE) are listed. All the labels are normalized between 0 and 1.",
+   "rotated_deg": 0,
+   "bbox": [
+    67.0,
+    217.0,
+    584.0,
+    424.0
+   ],
+   "w": 2155,
+   "h": 863,
+   "dpi": 300,
+   "src": "7e50e4ea-13._Sup_Datadriven_analysis_of_battery_formation_reveals_the_role_of_electrode_utilization_in_extending_cycle_life.pdf",
+   "blank": 0.913
+  },
+  {
+   "key": "tS2",
+   "kind": "table",
+   "label": "S2",
+   "page": 8,
+   "file": "tab_S2.png",
+   "caption": "Table S2: Prediction errors of the models to generate the SHAP matrix plot in the main text. The Mean Absolute Percentage Error (MAPE) and Root Mean Squared Error (RMSE) are listed. All the labels are normalized between 0 and 1.",
+   "rotated_deg": 0,
+   "bbox": [
+    67.0,
+    424.9,
+    528.3,
+    615.0
+   ],
+   "w": 1923,
+   "h": 793,
+   "dpi": 300,
+   "src": "7e50e4ea-13._Sup_Datadriven_analysis_of_battery_formation_reveals_the_role_of_electrode_utilization_in_extending_cycle_life.pdf",
+   "blank": 0.902
+  }
+ ]
+}
