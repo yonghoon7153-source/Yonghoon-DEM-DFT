@@ -4397,6 +4397,35 @@ class LegClaim:
 LOCK_ORDER = ("attempt_path", "claim", "ledger")
 
 
+#: ★ 57차 B — **lifecycle 경로의 신뢰 경계** (계약 §13.3.4).
+#:
+#: 44차는 게시 경로에서 "검사 횟수로 닫히지 않는 창" 을 만나 보장을 철회하고
+#: 전제를 적었다 (`row_projection._TRUST_BOUNDARY`). 그 처리가 발급·동결·원장
+#: 경로에는 **없었다** — §13.3.1 을 각주로 두 번 인용할 뿐이었고, 그래서 이
+#: 경로는 위협 모델이 무한한 채로 55·56차 리뷰를 받았다.
+#:
+#: 전제는 배포 형태에서 참일 때만 적을 수 있다. 실측(계약 §13.3.4):
+#: 저장소는 단일 principal 소유이고, 원장이 놓이는 것은 로컬 블록 장치의
+#: ext4 이며(네트워크 파일시스템이 아니다 → `flock` 이 실효), 상정하는 위협은
+#: 같은 파이프라인의 동시 leg 가 서로를 덮는 **사고**다.
+#:
+#: **이 전제가 면제하지 않는 것**: 공개 API 를 지나는 호출은 전부 전제 **안**
+#: 이다. 공개 API 자신이 caller 가 준 pathname 으로 authority 파일을 덮을 수
+#: 있다면 그것은 "비협조적 writer" 가 아니라 **이 모듈의 결함**이고, 전제로
+#: 빼지 않는다 (57차 P0-1 이 정확히 그 자리였다).
+_TRUST_BOUNDARY = """보존 원장(`LEG_PRESERVATION.yaml`)·실행권 디렉터리
+(`<ledger>/_claims/`)·소유 증명 파일·lifecycle journal 과 그 anchor 는
+**하나의 OS principal 이 소유**하고, 그것들을 바꾸는 모든 writer 는
+공개 lifecycle API(`open_leg_run`·`attach_leg_run`·`claim_planned_leg`·
+`finalize_leg`·`release_leg_run`·`resume_claim`)를 지나 `LOCK_ORDER =
+("attempt_path", "claim", "ledger")` 를 따른다. 비협조적 writer — 같은
+principal 로 lock 없이 원장·claim·journal 을 직접 고치는 코드 — 는 지원 범위
+**밖**이다. 배타는 같은 기계의 `flock` 이므로 네트워크 파일시스템과 컨테이너
+경계 밖의 동시 발급자도 범위 밖이다. 반대로 **공개 API 를 지나는 호출은 전부
+범위 안**이다 — 그 API 가 caller 가 준 pathname 으로 authority 를 덮을 수
+있으면 전제가 아니라 결함이다."""
+
+
 @contextlib.contextmanager
 def _ledger_lock(path: Path):
     """원장 전이의 **임계 구역** (48차 P0-6).

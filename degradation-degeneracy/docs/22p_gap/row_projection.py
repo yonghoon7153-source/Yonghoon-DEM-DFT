@@ -3424,6 +3424,12 @@ def _lifecycle_lock():
 
     수리가 저장소를 수리 불가능하게 만드는 것은 fail-open 보다 나쁘다.
     읽기와 쓰기가 같은 임계 구역 안에 있으면 그 schedule 이 표현 불가능해진다.
+
+    ★ 57차 B — 이 lock 이 지키는 journal·anchor 는 보존 원장과 **같은 신뢰
+      경계** 안에 있다. 위협 모델의 정본은 `tools/preserve.py` 의
+      `preserve._TRUST_BOUNDARY` (계약 §13.3.4)이고, 여기 문구를 복제하지
+      않는다 — 복제하는 순간 authority 가 둘이 된다. 같은 principal 로 lock
+      없이 journal/head 를 직접 고치는 writer 는 그 전제의 밖이다.
     """
     import fcntl
 

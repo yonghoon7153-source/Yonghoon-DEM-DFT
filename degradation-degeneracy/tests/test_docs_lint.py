@@ -7475,6 +7475,65 @@ def test_the_publisher_declares_its_trust_boundary():
         "게시 authority 필드가 계약에 없다 (§13.3.2)")
 
 
+def test_the_lifecycle_declares_its_trust_boundary():
+    """★ 57차 B — 발급·동결·원장 경로에는 위협 모델 **선언이 없었다**.
+
+    44차는 게시 경로에서 "검사 횟수로 닫히지 않는 창" 을 만나 보장을 철회하고
+    전제를 적었다 (`row_projection._TRUST_BOUNDARY`, 계약 §13.3.1). 그런데
+    같은 처리가 `tools/preserve.py` 에는 없었다 — §13.3.1 을 각주로 두 번
+    인용할 뿐이었다 (`preserve.py:4411` 네트워크 파일시스템 ·
+    `preserve.py:4855` 같은 uid 의 token 읽기). 개별 한계의 각주는 경로 전체의
+    위협 모델이 아니다.
+
+    선언이 없으면 표면이 유한하지 않다. 그래서 매 라운드 요청문 §0 이 표면을
+    **신고만** 했고, 신고는 범위를 좁히지 않는다 — 리뷰어 입장에서 어느 것이
+    "못 하는 것" 이고 어느 것이 "안 한 것" 인지 구분되지 않는다.
+
+    **전제는 실제 배포 형태에서 참일 때만 적을 수 있다.** 그래서 계약이 그
+    전제를 참으로 만드는 **실측**을 함께 적는지 본다 — 못 재는 전제는 소망이지
+    경계가 아니다.
+
+    그리고 전제가 **무엇을 면제하지 않는지**를 못 박는다. 공개 API 를 지나는
+    호출은 전제 **안**이고, 그 API 자신이 caller 가 준 pathname 으로 authority
+    를 덮을 수 있으면 그것은 전제로 뺄 일이 아니라 **결함**이다. 이 절이 없으면
+    이 선언은 GO 를 받는 지름길이 된다.
+    """
+    from tools import preserve as P
+
+    tb = getattr(P, "_TRUST_BOUNDARY", None)
+    assert isinstance(tb, str) and "principal" in tb, (
+        "lifecycle 이 신뢰 경계를 선언하지 않는다")
+    for need in ("LOCK_ORDER", "밖", "공개"):
+        assert need in tb, f"lifecycle 신뢰 경계 선언에 `{need}` 가 없다"
+
+    contract = (DOCS / "22p_gap" / "STAGE3_CONTRACT.md").read_text(
+        encoding="utf-8")
+    assert "preserve.py` 의 `_TRUST_BOUNDARY" in contract, (
+        "계약서가 lifecycle 쪽 신뢰 경계 선언을 가리키지 않는다")
+    # 전제를 참으로 만드는 **실측**이 계약에 있어야 한다 (§4 의 세 질문).
+    for need in ("단일 principal", "네트워크 파일시스템이 아니다", "사고"):
+        assert need in contract, (
+            f"계약이 전제의 근거 실측(`{need}`)을 적지 않았다 — 못 재는 전제는 "
+            "경계가 아니라 소망이다")
+    # 전제가 면제하지 **않는** 것.
+    assert "전제가 면제하지 않는 것" in contract, (
+        "전제의 바깥만 적고 안쪽을 적지 않았다 — 공개 API 자신의 sink 는 "
+        "전제로 빠지지 않는다")
+
+    # 문구를 두 파일에 복제하면 그 순간 authority 가 둘이 된다 (54차에 네 번
+    # 만난 실패 형태). 동결 쪽은 **참조**한다.
+    rp_src = (DOCS / "22p_gap" / "row_projection.py").read_text(
+        encoding="utf-8")
+    probe = "공개 lifecycle API"
+    assert probe in tb, "선언 문구가 바뀌었다 — 이 시험의 probe 를 갱신하라"
+    assert probe not in rp_src, (
+        "동결 쪽이 lifecycle 신뢰 경계 문구를 복제했다 — 정본은 "
+        "`preserve._TRUST_BOUNDARY` 하나다")
+    assert "preserve._TRUST_BOUNDARY" in rp_src, (
+        "동결 쪽이 같은 원장·journal 을 만지면서 lifecycle 신뢰 경계를 "
+        "가리키지 않는다")
+
+
 # ─────────────────────────────────────────────────────────────────────────────
 # 45차 #9 — 동결이 얕았고, staging 이 alias 를 들여왔다
 # ─────────────────────────────────────────────────────────────────────────────
