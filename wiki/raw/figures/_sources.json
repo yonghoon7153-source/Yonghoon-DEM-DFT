@@ -28,6 +28,13 @@
    "e93e3031-6._Sup_Lifetime_Prediction_of_Lithium_Ion_Batteries_by_Using_the_Heterogeneity_of_Graphite_Anodes.pdf"
   ]
  },
+ "lin2024_ocv-degradation-mode-identifiability": {
+  "figures": 14,
+  "generated": "2026-09-03",
+  "pdfs": [
+   "169bb35b-11._Identifiability_study_of_lithiumion_battery_capacity_fade_using_degradation_mode_sensitivity_for_a_minimally_and_intuitively_parametrized_electrodespecific_cell_opencircuit_voltage_model.pdf"
+  ]
+ },
  "rhyu2025_systematic-feature-design-formation": {
   "figures": 23,
   "generated": "2026-09-03",
@@ -44,7 +51,7 @@
   ]
  },
  "tao2025_nondestructive-degradation-decoupling": {
-  "figures": 21,
+  "figures": 22,
   "generated": "2026-09-03",
   "pdfs": [
    "0ff584d6-10._Nondestructive_degradation_pattern_decoupling_for_early_battery_trajectory_prediction_via_physicsinformed_learning.pdf",

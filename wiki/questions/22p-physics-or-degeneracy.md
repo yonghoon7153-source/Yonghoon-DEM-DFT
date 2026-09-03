@@ -5,7 +5,7 @@ created: 2026-08-11
 updated: 2026-09-03
 type: research-question
 tags: [battery, degradation, research]
-sources: [raw/repositories/degradation-degeneracy-audit.md, raw/papers/birkl2017_degradation-diagnostics-ocv.md, raw/papers/rhyu2025_systematic-feature-design-formation.md]
+sources: [raw/repositories/degradation-degeneracy-audit.md, raw/papers/birkl2017_degradation-diagnostics-ocv.md, raw/papers/rhyu2025_systematic-feature-design-formation.md, raw/papers/lin2024_ocv-degradation-mode-identifiability.md]
 confidence: medium
 explored: false
 verificationStatus: unverified
@@ -59,6 +59,39 @@ LAM_PE ≈ LAM_NE 는 물리가 아니라 **flat valley 방향에서 두 전극�
   제작 재현성(5.4%)** 이지 추정 불확실성이 아니다 — 논문이 §4.3 에서 명시한다.
   즉 이 카드의 질문은 원전이 **비워 둔 자리**이지, 이미 답이 있는데 우리가
   모르는 것이 아니다.
+
+- **[2026-09-03 (5)] ★★ 이 가설의 방향이 닫힌 형태로 예측돼 있었다 — 그리고 22p
+  의 세 숫자가 그 방향 바로 옆에 있다.** [[np-lip-ocv-reparametrization]]
+  (Lin & Khoo 2024, *J. Power Sources* **605**, 234446) 은 SOC 정규화 full-cell
+  OCV 의 **형상이 두 자유도뿐**임을 증명하고 (`[인쇄]` "the shape of an OCV curve
+  … is **only governed by two degrees of freedom**"), 그 둘이 세 모드의
+  **1 마이너스 값의 비**로만 결정된다고 적는다 (식 16). 따라오는 결과 둘:
+  1. **정확한 null 방향**: pristine 에서 `LLI = LAM_PE = LAM_NE = x` 인 모든 `x`
+     에 대해 곡선 형상이 **글자 그대로 pristine 과 같다** (총용량만 `1−x` 배).
+     이 카드의 가설이 말하는 "PE·NE 가 같은 부호로 묶이는 flat 방향" 의
+     **3차원 일반형**이며, 격자에 truth 쌍으로 직접 심어 시험할 수 있다.
+  2. **22p 삼중항의 형상 정보는 스칼라 하나다.** 세미나 22p 값
+     (LAM_PE ≈ LAM_NE ≈ 13 %, LLI ≈ 17 %) 을 식 (16) 에 넣으면
+     `r_N/P / r_ini = (1−0.13)/(1−0.13) = **1.000**` (N/P 가 pristine 에서 한 발짝도
+     안 움직였다), `z₀⁺ / z₀,ini = (1−0.17)/(1−0.13) = **0.954**`.
+     `[해석]` **세 개의 독립된 물리량처럼 읽히는 값이 곡선 형상 자유도로는 한 개다.**
+     세 숫자 중 둘(LAM_PE, LAM_NE)은 서로를 정확히 상쇄해 형상에 흔적을 남기지
+     않았고, 남은 정보는 "Li/P 가 4.6 % 줄었다" 뿐이다. 이것은 **degeneracy 의
+     증명이 아니라** — 형상 2 + 측정 총용량 1 = 3 이므로 원리적 복원은 가능하다 —
+     "이 삼중항이 놓인 자리가 null 방향에 얼마나 가까운가" 를 처음으로 **좌표로**
+     보여 준 것이다.
+  (세미나 값의 정본은 이 카드이고, 우리 파이프라인 수치의 정본은 artifact +
+  `degradation-degeneracy/docs/RESULTS*.md` 다. 여기서는 환산만 했다.)
+- **[2026-09-03 (5)] 이 논문이 우리 방법의 구조적 약점을 이름 붙여 지목한다.**
+  `[인쇄, p.13]` "A straightforward approach is to devise an estimator and
+  calibrate the estimation error by feeding measurements coming from a known
+  ground truth **[3,19]**. The drawback of this approach is that it **entangles
+  the identifiability intrinsic to the problem with the error incurred by the
+  estimator itself**." — `[3]` 이 [[birkl-ocv-degradation-diagnostic]] 이고, 우리
+  파이프라인이 정확히 그 계열이다. `[해석]` 우리는 이 얽힘을 이미 알고 설계했다
+  ([[fitting-degeneracy]] 의 flat valley ↔ multimodal 구분, 무작위 restart 끼리만
+  비교하는 multi-start 진단). **그들은 회피했고 우리는 분해하려 한다** — 이 카드의
+  질문이 왜 남의 CRLB 계산으로 닫히지 않는지의 근거이기도 하다.
 
 ## Evidence Against
 - (방향성 관측, 인용 금지 등급) half-cell 기준(Case 1)과 dQ/dV 항 추가가 복원
@@ -239,3 +272,62 @@ LAM_PE ≈ LAM_NE 는 물리가 아니라 **flat valley 방향에서 두 전극�
      제목에는 "decoupling" 을 쓴다.
   - 식별 가능성 어휘 전수 (아홉 편째): `identifiab*` **0** · `degenerac*` **0** ·
     `cross-valid*` **0** · `half-cell` **0** (본문 16쪽 + SI 75쪽).
+
+- **[2026-09-03 (10)]** `active` 유지 — **예약해 둔 1순위 문헌을 흡수했다**
+  ([[np-lip-ocv-reparametrization]], Lin & Khoo, *J. Power Sources* **605** (2024)
+  234446, raw: `raw/papers/lin2024_ocv-degradation-mode-identifiability.md`).
+  2026-09-03 (4) 에서 "이 계보에서 제목에 identifiability 가 있는 **유일한**
+  문헌" 으로 지목했던 그것이다. 이 카드에 달라진 것 다섯:
+  1. **Evidence For 2건 추가** (위): 닫힌 형태 null 방향 + 22p 삼중항의 좌표 환산,
+     그리고 우리 검증 방식의 구조적 약점을 원전이 이름 붙여 지목한다는 것.
+  2. **★ 어휘 전수에서 연속 0회가 깨졌다 — 그러나 반쪽만.** 합자 정규화 후 본문
+     77,217자에서 `identifiab*` **26** (열 편 중 처음으로 0이 아니다) ·
+     `sensitivit*` 46 · `Fisher` 12 · `error covariance` 4. 그런데
+     `degenerac*` **0** · `non-unique` **0** · `collinear*` **0** · `ill-posed`
+     **0** · `nullspace` **0** · `Hessian` **0** · `singular value` **0** ·
+     `condition number` **0** · `profile likelihood` **0** · `noise` **0**(!) ·
+     `error bar` **0** · `cross-valid*` **0** · **파라미터 상관 언급 0**.
+     `[해석]` **"파라미터를 얼마나 정확히 재는가"(추정 정밀도) 어휘는 갖췄지만
+     "서로 다른 조합이 같은 관측을 내는가"(비유일성) 어휘는 여전히 없다.**
+     §2.3 에서 그 비유일성을 닫힌 형태로 인쇄해 놓고 그것을 표기법상의
+     "redundancy" 라고 부른다. 열 편째의 새 형태 — **개념을 절반만 자기 쪽으로
+     돌린다.**
+  3. **이 카드의 질문에 그들이 답하지 **않은** 세 자리가 확정됐다.**
+     (a) `[인쇄]` "any statements based on sensitivity gradients are **only valid
+     locally**" — 전역 축퇴는 `[인쇄]` "we will report our findings in **future
+     work**", (b) **추정기를 한 번도 돌리지 않는다** (Fig. 8·9 는 참값에서 평가한
+     CRLB 이고 복원 오차·국소최소 분포가 없다), (c) **오차공분산 `C_θ` 를
+     계산해 놓고 `sqrt(diag)` 만 그린다** — 축퇴의 **방향**(비대각·최소 고유벡터)을
+     손에 쥔 채 한 번도 표시하지 않는다. **우리 프로젝트가 서 있는 자리가 정확히
+     이 셋이다.**
+  4. **점검 항목 2건이 새로 열렸다** (미검증, `[해석]`):
+     - **B1**: 우리 목적함수의 x축이 `[코드 주석]` "각 셀 자기 용량" 정규화이므로
+       (`src/fitting.py` 헤더) pOCV 항은 Lin 의 `U_OCV(z)` 에 해당하고 **형상
+       자유도가 2개뿐**인데 우리는 **α_PE·β_PE·α_NE·β_NE 4개**를 맞춘다. 재구성이
+       양 끝 컷오프 전압을 근사적으로 맞추면 제약 2개가 소모되어 유효 자유도가 2로
+       떨어진다 — **Lin 이 Birkl/Mohtat 매개화를 비판한 바로 그 구조**
+       (`[인쇄]` "non-independent parameters, of which the **redundancy**
+       complicates their estimation"). 2026-09-03 (2) 에서 열어 둔 "우리가 관측한
+       degeneracy 의 일부가 원전에 없는 자유도에서 온다" 가설의 **정확한 좌표**다.
+       사영 대응: `z₀⁺ ↔ (β_NE−β_PE)/α_PE`, `r_N/P ↔ α_NE/α_PE`.
+     - **B2**: **dQ/dV 항을 더해도 개선이 없었던 2026-08-20 결과가 이 논문으로
+       설명될 수 있다.** `dQ/dV` 는 **같은 정규화 곡선의 함수**이므로 그 곡선이
+       가진 자유도를 늘릴 수 없고, 국소 null 방향은 재가중에 **불변**이다.
+       `[해석]` 논문은 이 말을 하지 않는다 — 2 자유도 진술에서 따라오며 값싸게
+       확인 가능하다. 확인되면 그 실험 결과는 "우연" 이 아니라 **구조적 필연**이
+       된다.
+  5. **경험적 결론 하나가 해석식과 만났다.** `degradation-degeneracy/docs/
+     07_LAM_LLI.md` 는 우리 셀을 NE-limited 로 기술하며 "**양극 활물질이 조금
+     줄어도 전체 용량은 거의 안 변하므로, LAM_PE는 full-cell 곡선에 흔적을 거의
+     남기지 않는다**" 고 적는다. Lin 식 (47) `∂Q̂max/∂Q̂⁺_max = z⁺_max λ⁺_l −
+     z⁺_min λ⁺_u` 가 그 문장의 **일반 판정식**이다 (`λ⁺_l → 0` 이면 0으로 간다).
+     `[해석]` 그리고 한 가지를 더 준다 — **`λ⁺_l` 은 SOH 에 따라 움직인다.**
+     "LAM_PE 가 안 보인다" 는 이 셀의 고정된 성질이 아니라 `(r_N/P, z₀⁺)` 의 위치에
+     따라 켜지고 꺼지는 성질이며, 우리 격자 안에서 그 전환이 일어나는지는 값싸게
+     계산 가능하다. 미실행.
+  - **다음 흡수 후보 2건 확정**: `[11]` **Mohtat et al. 2019** (*J. Power Sources*
+    427, 101–111) 과 `[15]` **Lee et al. 2020** (*IEEE Trans. Ind. Inform.* 16(5),
+    3376) — Lin 이 `[인쇄]` "They also derive the gradient … and **use Fisher
+    information to quantify the parametric identifiability**" 라고 적는다. 즉
+    **Fisher 를 이 문제에 처음 쓴 것은 Lin & Khoo 가 아니다.** 그리고 그 모델이
+    `[인쇄]` "**has been incorporated in PyBaMM**" 이므로 우리 도구와 직접 닿는다.

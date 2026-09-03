@@ -1,0 +1,291 @@
+{
+ "slug": "lin2024_ocv-degradation-mode-identifiability",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-09-03",
+ "sources": [
+  "169bb35b-11._Identifiability_study_of_lithiumion_battery_capacity_fade_using_degradation_mode_sensitivity_for_a_minimally_and_intuitively_parametrized_electrodespecific_cell_opencircuit_voltage_model.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 5,
+   "file": "fig_1.png",
+   "caption": "Fig. 1. (a) A schematic of the OCV model. (b–e) The assembly of electrode OCPs into a full-cell OCV, as well as how this assembly is affected by the N/P ratio 𝑟N∕P and Li/P ratio 𝑧+ 0 . (b) OCV square plots (advocated by Olson et al. [9]) of the LFP-graphite cell chemistry overlaid with five lines of 𝑧+(𝑧−) corresponding to cells with different (𝑟N∕P, 𝑧+ 0 ) pairs as indicated by the legends. Note that the color bar is associated with the contours. (d) Various 𝑧-based OCV curves with different (𝑟N∕P, 𝑧+ 0 ) pairs, which can be considered read off from the contour values on the respective lines in (b). (c, e) Counterparts of (b) and (d) for the NMC-graphite chemistry. (For interpretation of the references to color in this figure legend, the reader is referred to the web version of this article.)",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    49.8,
+    563.7,
+    607.7
+   ],
+   "w": 2218,
+   "h": 2326,
+   "dpi": 300,
+   "src": "169bb35b-11._Identifiability_study_of_lithiumion_battery_capacity_fade_using_degradation_mode_sensitivity_for_a_minimally_and_intuitively_parametrized_electrodespecific_cell_opencircuit_voltage_model.pdf",
+   "blank": 0.847
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 6,
+   "file": "fig_2.png",
+   "caption": "Fig. 2. (a, b) LFP/MCMB. (c, d) NMC/MCMB. (a, c) Cell OCV at SOC 𝑧= 20%, 40%, 60%, and 80% with different (𝑟N∕P, 𝑧+ 0 ) pairs. Note the varied OCV sensitivity at different 𝑧’s. (b, d) Maximum errors (MaxE), Root-mean-square errors (RMSE), mean absolute errors (MAE), and mean absolute percentage errors (MAPE) between cell OCV with an arbitrary (𝑟N∕P, 𝑧+ 0 ) pair and OCV with 𝑟N∕P = 1 and 𝑧+ 0 = 1 (marked as truth). 0 ≤𝑧≤1. The electrode SOC limits in (11) also relate the electrode capacity to their full-cell counterpart by charge conservation:̂ lithium plating and other side reactions during charging, we typically design the N/P ratio to be slightly larger than 1. However, when a cell degrades upon cycling or storage, lithium inventory and active materials may not diminish at the same rate so the N/P and Li/P ratio can potentially evolve to other non-typical values. This is why in this wo",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    49.8,
+    563.7,
+    476.4
+   ],
+   "w": 2218,
+   "h": 1779,
+   "dpi": 300,
+   "src": "169bb35b-11._Identifiability_study_of_lithiumion_battery_capacity_fade_using_degradation_mode_sensitivity_for_a_minimally_and_intuitively_parametrized_electrodespecific_cell_opencircuit_voltage_model.pdf",
+   "blank": 0.619
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 9,
+   "file": "fig_3.png",
+   "caption": "Fig. 3. (a) PE DV fraction square plots (inspired by but different from the DV square plots of Olson et al. [9]) of the LFP-MCMB chemistry overlaid with five lines of 𝑧+(𝑧−) corresponding to cells with different (𝑟N∕P, 𝑧+ 0 ) pairs as indicated by the legends. Note that the color bar is associated with the contours. Such plots and be read analogously to how the OCV square plots Figs. 1(b) and 1(c) are interpreted. (c) The PE DV fraction with (𝑟N∕P = 1, 𝑧+ 0 = 1). This can again be read off from (a), where the peaks and troughs correspond to where the blue line in (a) crosses the dark and light areas, respectively. (b, d) NMC/MCMB counterparts of (a, c). (For interpretation of the references to color in this figure legend, the reader is referred to the web version of this article.)",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    49.8,
+    563.7,
+    438.4
+   ],
+   "w": 2218,
+   "h": 1620,
+   "dpi": 300,
+   "src": "169bb35b-11._Identifiability_study_of_lithiumion_battery_capacity_fade_using_degradation_mode_sensitivity_for_a_minimally_and_intuitively_parametrized_electrodespecific_cell_opencircuit_voltage_model.pdf",
+   "blank": 0.807
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 10,
+   "file": "fig_4.png",
+   "caption": "Fig. 4. Electrode SOC limits (left) and PE DV fractions (right) at different N/P ratio and Li/P ratio. In either (a) or (b), the top regards the fully charged state 𝑈OCV = 𝑈max, where the variation mostly depends on 𝑧+ 0 ∕𝑟N∕P, which is essentially the Li/N ratio, and has a sharp change at 𝑧+ 0 ∕𝑟N∕P = 1. In contrast, the bottom is at the fully discharged state 𝑈OCV = 𝑈min, whose variation mostly depends on the Li/P ratio and has a sharp change at 𝑧+ 0 = 1. will inevitably be complicated by the relative contributions of the two electrodes to the OCV slope, as the previous sensitivity gradients are. Before diving into this case, here we will first look into an ideal total capacity 𝑄max defined solely by exhausting the usable electrode SOC range, irrespective of the voltage, which will be compared later to the case with a voltage window.",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    49.8,
+    563.7,
+    536.7
+   ],
+   "w": 2218,
+   "h": 2030,
+   "dpi": 300,
+   "src": "169bb35b-11._Identifiability_study_of_lithiumion_battery_capacity_fade_using_degradation_mode_sensitivity_for_a_minimally_and_intuitively_parametrized_electrodespecific_cell_opencircuit_voltage_model.pdf",
+   "blank": 0.681
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 11,
+   "file": "fig_5.png",
+   "caption": "Fig. 5. (a, b) Variation of NE SOC 𝑧−-based (left) and cell SOC 𝑧-based (right) cell OCV when 𝑟N∕P changes and 𝑧+ 0 = 1. (c, d) Derivative-based local sensitivity of 𝑧±(𝑧) (left) and of 𝑧-based electrode OCPs and cell OCV (right) with respect to 𝑟N∕P. All the sensitivity derivatives are evaluated at 𝑟N∕P = 1 and 𝑧+ 0 = 1. (e, f) NMC/MCMB counterparts of (a, b). 𝜕̂𝑄max max, 𝜕̂𝑄max 𝜕̂𝑄+ directly relating the total capacity to the SOH parameters. Our re- sults also reveal the counter-intuitive negative dependence of total capacity on lithium inventory when there is a surplus of the latter, which is missed in previous work and will be discussed in more detail later. 0 = (𝜆+ u −𝜆+ l )̂𝑄+ = (𝑧− max −𝑧− min)𝑟N∕P (41) 𝜕𝑧+ max where we have used Eqs. (34) and (38). In contrast to 𝑈OCV(𝑧), the total capacitŷ 𝑄max can be alternatively parametrized bŷ 𝑄Li max,̂ 𝑄− max, and̂ 𝑄+ max, all of which ar",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    60.7,
+    563.7,
+    536.3
+   ],
+   "w": 2218,
+   "h": 1983,
+   "dpi": 300,
+   "src": "169bb35b-11._Identifiability_study_of_lithiumion_battery_capacity_fade_using_degradation_mode_sensitivity_for_a_minimally_and_intuitively_parametrized_electrodespecific_cell_opencircuit_voltage_model.pdf",
+   "blank": 0.931
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 12,
+   "file": "fig_6.png",
+   "caption": "Fig. 6. (a, b) Variation of NE SOC 𝑧−-based (left) and cell SOC 𝑧-based (right) cell OCV when Li/P ratio 𝑧+ 0 changes and 𝑟N∕P = 1. (c, d) Derivative-based local sensitivity of 𝑧±(𝑧) (left) and of 𝑧-based electrode OCPs and cell OCV (right) with respect to 𝑧+ 0 . All the sensitivity derivatives are evaluated at 𝑟N∕P = 1 and 𝑧+ 0 = 1. (e, f) NMC/MCMB counterparts of (a, b).",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    49.8,
+    563.7,
+    527.3
+   ],
+   "w": 2218,
+   "h": 1990,
+   "dpi": 300,
+   "src": "169bb35b-11._Identifiability_study_of_lithiumion_battery_capacity_fade_using_degradation_mode_sensitivity_for_a_minimally_and_intuitively_parametrized_electrodespecific_cell_opencircuit_voltage_model.pdf",
+   "blank": 0.931
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 14,
+   "file": "fig_7.png",
+   "caption": "Fig. 7. (a, b) Variation of 𝑄c-based cell OCV and total capacitŷ 𝑄max when 𝑟N∕P changes and 𝑧+ 0 = 1 (left) and when 𝑧+ 0 changes and 𝑟N∕P = 1 (right), both assuminĝ 𝑄+ max = 1Ah. For the former case, this implies that̂ 𝑄− max changes whilê 𝑄Li max =̂ 𝑄+ max = 1Ah. (c) Gradient-based sensitivity of total capacity with respect to the amount of lithium inventory, NE, and PE active materials at different (𝑟N∕P, 𝑧+ 0 ) pairs. (d, e, f) NMC/MCMB counterparts of (a, b, c).",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    73.4,
+    563.7,
+    687.9
+   ],
+   "w": 2218,
+   "h": 2562,
+   "dpi": 300,
+   "src": "169bb35b-11._Identifiability_study_of_lithiumion_battery_capacity_fade_using_degradation_mode_sensitivity_for_a_minimally_and_intuitively_parametrized_electrodespecific_cell_opencircuit_voltage_model.pdf",
+   "blank": 0.813
+  },
+  {
+   "key": "f8",
+   "kind": "figure",
+   "label": "8",
+   "page": 16,
+   "file": "fig_8.png",
+   "caption": "Fig. 8. Standard estimation errors of the N/P ratio 𝑟N∕P and Li/P ratio 𝑧+ 0 based on OCV measurements sampled at every 1% SOC within any cell SOC window [𝑧lower, 𝑧upper] at least 1% apart. The errors are obtained as the square root of the diagonals of the inverse Fisher information matrix evaluated at different pairs of (𝑟N∕P, 𝑧+ 0 ) values corresponding to the four regimes discussed in Section 2.7. The standard OCV measurement error is assumed to be 𝜎𝑈= 5mV. (a, b, c, d) LFP/MCMB results. (e, f, g, h) NMC/MCMB counterparts.",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    49.7,
+    563.7,
+    569.7
+   ],
+   "w": 2218,
+   "h": 2167,
+   "dpi": 300,
+   "src": "169bb35b-11._Identifiability_study_of_lithiumion_battery_capacity_fade_using_degradation_mode_sensitivity_for_a_minimally_and_intuitively_parametrized_electrodespecific_cell_opencircuit_voltage_model.pdf",
+   "blank": 0.777
+  },
+  {
+   "key": "f9",
+   "kind": "figure",
+   "label": "9",
+   "page": 17,
+   "file": "fig_9.png",
+   "caption": "Fig. 9. Standard estimation errors (in mAh) of the lithium inventorŷ 𝑄Li",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    49.8,
+    530.3,
+    457.1
+   ],
+   "w": 2079,
+   "h": 1698,
+   "dpi": 300,
+   "src": "169bb35b-11._Identifiability_study_of_lithiumion_battery_capacity_fade_using_degradation_mode_sensitivity_for_a_minimally_and_intuitively_parametrized_electrodespecific_cell_opencircuit_voltage_model.pdf",
+   "blank": 0.777
+  },
+  {
+   "key": "t1",
+   "kind": "table",
+   "label": "1",
+   "page": 4,
+   "file": "tab_1.png",
+   "caption": "Table 1 Upper and lower cutoff potential specified for each electrode chemistry used in this work.",
+   "rotated_deg": 0,
+   "bbox": [
+    32.6,
+    31.3,
+    563.3,
+    748.2
+   ],
+   "w": 2213,
+   "h": 2988,
+   "dpi": 300,
+   "src": "169bb35b-11._Identifiability_study_of_lithiumion_battery_capacity_fade_using_degradation_mode_sensitivity_for_a_minimally_and_intuitively_parametrized_electrodespecific_cell_opencircuit_voltage_model.pdf",
+   "blank": 0.859
+  },
+  {
+   "key": "t2",
+   "kind": "table",
+   "label": "2",
+   "page": 4,
+   "file": "tab_2.png",
+   "caption": "Table 2 Upper and lower cutoff potential specified for each electrode chemistry used in this work.",
+   "rotated_deg": 0,
+   "bbox": [
+    32.6,
+    31.3,
+    563.3,
+    748.2
+   ],
+   "w": 2213,
+   "h": 2988,
+   "dpi": 300,
+   "src": "169bb35b-11._Identifiability_study_of_lithiumion_battery_capacity_fade_using_degradation_mode_sensitivity_for_a_minimally_and_intuitively_parametrized_electrodespecific_cell_opencircuit_voltage_model.pdf",
+   "blank": 0.859
+  },
+  {
+   "key": "t3",
+   "kind": "table",
+   "label": "3",
+   "page": 10,
+   "file": "tab_3.png",
+   "caption": "Table 3 Electrode SOC limits at the ideal case. Note that the Li/P ratio is 𝑧+ 0 and the Li/N ratio is 𝑧+ 0 ∕𝑟N∕P. We also use Li, N, and P as shorthand notations for̂ 𝑄Li max,̂ 𝑄− max, and̂ 𝑄+ max, respectively. Fully discharged Fully charged max 𝑧+ 𝑧− min 𝑧+ max 𝑧− min Li∕P > 1 (Li −P)∕N 1 Li∕N > 1 1 (Li −N)∕P Li∕P ≤1 0 Li∕P Li∕N ≤1 Li∕N 0",
+   "rotated_deg": 0,
+   "bbox": [
+    32.6,
+    31.3,
+    563.3,
+    747.2
+   ],
+   "w": 2213,
+   "h": 2984,
+   "dpi": 300,
+   "src": "169bb35b-11._Identifiability_study_of_lithiumion_battery_capacity_fade_using_degradation_mode_sensitivity_for_a_minimally_and_intuitively_parametrized_electrodespecific_cell_opencircuit_voltage_model.pdf",
+   "blank": 0.747
+  },
+  {
+   "key": "t4",
+   "kind": "table",
+   "label": "4",
+   "page": 13,
+   "file": "tab_4.png",
+   "caption": "Table 4 Four regimes of dependence of ideal cell total capacity 𝑄max on lithium inventorŷ 𝑄Li",
+   "rotated_deg": 0,
+   "bbox": [
+    32.6,
+    31.3,
+    563.3,
+    747.8
+   ],
+   "w": 2213,
+   "h": 2986,
+   "dpi": 300,
+   "src": "169bb35b-11._Identifiability_study_of_lithiumion_battery_capacity_fade_using_degradation_mode_sensitivity_for_a_minimally_and_intuitively_parametrized_electrodespecific_cell_opencircuit_voltage_model.pdf",
+   "blank": 0.875
+  },
+  {
+   "key": "t5",
+   "kind": "table",
+   "label": "5",
+   "page": 13,
+   "file": "tab_5.png",
+   "caption": "Table 5 Four regimes of sensitivity of cell total capacitŷ 𝑄max to lithium inventorŷ 𝑄Li max and active materialŝ 𝑄±",
+   "rotated_deg": 0,
+   "bbox": [
+    32.6,
+    31.3,
+    563.3,
+    747.8
+   ],
+   "w": 2213,
+   "h": 2986,
+   "dpi": 300,
+   "src": "169bb35b-11._Identifiability_study_of_lithiumion_battery_capacity_fade_using_degradation_mode_sensitivity_for_a_minimally_and_intuitively_parametrized_electrodespecific_cell_opencircuit_voltage_model.pdf",
+   "blank": 0.875
+  }
+ ]
+}
