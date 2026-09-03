@@ -39,3 +39,9 @@ LEG_PRESERVATION.yaml.lock
 
 # ★ 48차 P0-8 — gated 진입점을 태우는 단위 시험의 산출 (면제 namespace 안)
 degradation-degeneracy/results/_smoke/_unit/
+
+# webapp 실행용 가상환경 (bms.sh 가 만든다)
+.venv/
+
+# 3자 데이터셋 원본 — manifest 와 파생 소표만 커밋한다 (재배포·용량)
+mode-observability/data/
