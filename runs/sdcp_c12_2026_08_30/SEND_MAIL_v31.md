@@ -1,0 +1,112 @@
+# C-12 v31 발송 메일 (그대로 복붙)
+
+> 첨부: `sdcp_c12_v31.zip` (0.6 MB · 16잡)
+> 이 파일 자체는 발송 기록이다 — 보낸 뒤 고치지 않는다.
+
+---
+
+## 제목
+
+```
+[DFT 위탁] SDCP/PTFE–LiNiO₂ 계면 단일점 16잡 — 번들 v31
+```
+
+## 본문
+
+안녕하세요.
+
+지난번 말씀드린 SDCP·PTFE 바인더 계면 계산 번들을 보내드립니다. **VASP 단일점(static) 16잡**이고,
+번들 안에 실행 스크립트·검증 스크립트·분석기가 전부 들어 있습니다.
+
+### 1. 무결성 확인 (먼저 해 주십시오)
+
+```
+EXPECT_ZIP_SHA256      = 714948eeff506ea2b4b3c164e88282e6e50a905e749212bc2055c36ab6161709
+EXPECT_MANIFEST_SHA256 = 2b9c840ced96986b57efcd1eb31f063a66eebff501743ddfc26838eb7a0acdf0
+```
+
+받으신 zip 의 sha256 이 위와 다르면 **전송이 깨진 것**이니 다시 요청해 주십시오.
+
+```bash
+sha256sum sdcp_c12_v31.zip     # 위 EXPECT_ZIP_SHA256 과 대조
+unzip sdcp_c12_v31.zip && cd sdcp_c12_v31
+sha256sum MANIFEST.json        # 위 EXPECT_MANIFEST_SHA256 과 대조
+```
+
+### 2. 실행
+
+⚠ **환경변수 여섯 개가 전부 필수**입니다. 하나라도 빠지면 러너가 즉시 멈춥니다
+(조용히 다른 설정으로 도는 것보다 멈추는 게 낫다고 보아 그렇게 만들었습니다).
+
+```bash
+export BUNDLE_ZIP_SHA256=$(sha256sum /경로/sdcp_c12_v31.zip | cut -d" " -f1)
+export EXPECT_MANIFEST_SHA256=2b9c840ced96986b57efcd1eb31f063a66eebff501743ddfc26838eb7a0acdf0
+export EXPECT_ZIP_SHA256=714948eeff506ea2b4b3c164e88282e6e50a905e749212bc2055c36ab6161709
+
+export VASP_LAUNCHER_KIND=mpirun            # mpirun|mpiexec|srun|none|wrapper
+export LAUNCHER_BIN=/abs/path/to/mpirun     # ★ 절대경로 (PATH 에서 찾지 않습니다)
+export VASP_NPROC=48                        # 랭크 수 — 환경에 맞게
+export VASP_EXE=/abs/path/to/vasp_std       # 실행파일 절대경로
+
+bash run_staged.sh 1     # census → POTCAR 조립·봉인 → 1단계 → 판정
+bash run_staged.sh 2     # 1단계가 STAGE1_PASS.json 을 낸 뒤에만
+```
+
+⛔ **배열 잡으로 한꺼번에 던지지 말아 주십시오.** 2단계가 1단계 결과에 의존해서
+동시에 돌리면 결과가 무의미해집니다. 그래서 `run_all.sh` 를 일부러 안 넣었습니다.
+
+### 3. POTCAR — 보내실 것 없습니다
+
+**POTCAR 파일 자체는 주고받지 않습니다** (라이선스). 그쪽 트리를 그대로 쓰시면 됩니다.
+
+`POTCAR_ASSEMBLE.sh` 가 잡마다 조립하면서 `POTCAR_PROVENANCE.json`(변형별 원본 SHA256 ·
+TITEL 줄 · 조립본 SHA256)을 자동으로 만듭니다. 저희는 **그 해시로만** 대조합니다.
+파일은 그쪽에 두시면 됩니다.
+
+> 종 순서가 잡마다 다르므로 **잡별로** 조립 스크립트를 돌려 주십시오. 손으로 POTCAR 를
+> 놓으면 `run_job.sh` 가 실행을 거부합니다.
+
+### 4. 반송해 주실 것
+
+잡마다:
+- `static/OUTCAR` (또는 .gz) · `static/OSZICAR`
+- `static/POSCAR` — 실행된 기하 (기하 감사용, 없으면 분석이 막힙니다)
+- `POTCAR_PROVENANCE.json` (조립기가 자동 생성)
+- `EXECUTABLE_RECEIPT.tsv` (러너가 자동 생성)
+
+루트에:
+- `POTCAR_ROOT_SEAL.json` · `ZIP_SHA256.txt` · `STAGE1_PASS.json`
+
+**안 보내셔도 되는 것**: CHGCAR · WAVECAR (용량) · vasprun.xml · **POTCAR**
+
+⚠ **발산·미수렴 잡도 지우지 말고 그대로 보내 주십시오.** 실패도 판정의 일부입니다.
+
+### 5. 예상 자원
+
+16잡 단일점, 48랭크 기준 대략 **300 시간** (계에 따라 편차). 1단계 → 2단계 순차입니다.
+
+---
+
+문제가 생기면 러너가 찍는 메시지를 그대로 보내 주시면 됩니다. 어디서 멈췄는지 알 수 있게
+만들어 두었습니다.
+
+감사합니다.
+
+---
+
+## ⚠ 보내기 전 마지막 확인 (1저자)
+
+- [ ] 첨부한 zip 의 sha256 == `714948ee…` (위 EXPECT 와 같은지)
+- [ ] 메일 본문에 두 해시가 **정확히** 들어갔는지 (오타 나면 상대 러너가 멈춘다)
+- [ ] `LAUNCHER_BIN` 줄이 살아 있는지 (이게 빠져서 v30 까지 문서대로 실행하면 exit 2 였다)
+- [ ] 받는 사람 주소
+
+## 기록
+
+| | |
+|---|---|
+| 번들 | `runs/sdcp_c12_2026_08_30/sdcp_c12_v31.zip` |
+| 증서 | `runs/sdcp_c12_2026_08_30/IDENTITY_v31.json` |
+| 생성 커밋 | `f81270c5` (clean tree) |
+| 사람 확인 7가지 | 전부 PASS (IDENTITY_v31 의 `사람_확인_7가지`) |
+| 리뷰 | 회신 BF(외부 마지막) · BG(내부) — `kb/reviews/` |
