@@ -104,8 +104,15 @@ _read_out() {
     ST="⛔ nstep소진(NEB)"
     NOTE="${NOTE:+$NOTE · }nstep_path 소진 **미수렴** — nstep_path 늘려 restart_mode='restart' 로 이어야 한다"
   elif grep -aq "bfgs converged in" "$f" 2>/dev/null; then
+    # ⛔ 2026-09-03 kgy 실물 — 이 주의문이 **모든** 수렴 잡에 "li3nd r0" 을 붙이고 있었다.
+    #   ep_final·ep_initial·li_metal_bcc/01_vcrelax 는 li3nd 가 아니다. 화면이 거짓 출처를
+    #   대는 건 값이 틀린 것과 같은 등급이다 (회신 Z-2 의 `_PSU` 거짓 표시와 같은 부류).
+    #   일반 문구는 유지하고(수렴은 정류점이지 바닥상태가 아니다), **실측 근거는 그 계에만** 붙인다.
     ST="✅ 수렴"
-    NOTE="⚠ 수렴 ≠ 바닥상태 (대칭보호 정류점 가능 — li3nd r0)"
+    NOTE="⚠ 수렴 = 정류점 · 바닥상태 보장 아님"
+    case "$f" in
+      *li3nd*|*li3n_*) NOTE="$NOTE (대칭보호 정류점 실측 — li3nd r0: |F|=1.6e-5 인데 정류점)" ;;
+    esac
   elif grep -aq "The maximum number of steps has been" "$f" 2>/dev/null; then
     ST="⛔ nstep소진"
     NOTE="JOB DONE 이지만 **미수렴** — nstep 늘려 restart_mode='restart' 로 이어야 한다"
@@ -149,6 +156,11 @@ if [ "${1:-}" = "--selftest" ]; then
   printf '     Total force =     0.000000     Total SCF correction = 0.0\n!    total energy = -28.94 Ry\n     bfgs converged in   8 scf cycles and   6 bfgs steps\n     JOB DONE.\n' > "$R/multi/01_vcrelax.out"
   printf '!    total energy = -28.94439973 Ry\n     JOB DONE.\n' > "$R/multi/02_scf.out"
   printf '     End of band structure calculation\n     JOB DONE.\n' > "$R/multi/03_nscf.out"
+  # ⛔ 2026-09-03 kgy 실물 — 수렴 주의문이 li3nd 아닌 잡에도 "li3nd r0" 을 붙였다.
+  #   li3nd 인 잡(양성)과 아닌 잡(음성)을 같이 둬서 출처가 계를 따라가는지 본다.
+  mkdir -p "$R/li3nd_r0" "$R/ep_final"
+  printf '     Total force =     0.000016     Total SCF correction = 0.0\n!    total energy = -14652.03 Ry\n     bfgs converged in  40 scf cycles and  1 bfgs steps\n     JOB DONE.\n' > "$R/li3nd_r0/00_relax.out"
+  printf '     Total force =     0.002819     Total SCF correction = 0.0\n!    total energy = -766.97 Ry\n     bfgs converged in  90 scf cycles and 18 bfgs steps\n     JOB DONE.\n' > "$R/ep_final/00_relax.out"
 
   # 가짜 QE 프로세스 — cwd 가 근거이므로 그 폴더에서 띄운다
   cp /bin/sleep "$T/qefake" && chmod +x "$T/qefake"
@@ -172,6 +184,12 @@ if [ "${1:-}" = "--selftest" ]; then
       "⑤ 양성: bfgs converged 는 수렴이다"
   chk "$(echo "$OUT" | grep -E '^  conv' | grep -q '바닥상태' && echo 1 || echo 0)" \
       "⑤-b 수렴이 바닥상태 보장이 **아니라는** 것을 같이 말한다 (li3nd r0 대칭보호)"
+  chk "$(echo "$OUT" | grep -E '^  ep_final' | grep -q 'li3nd' && echo 0 || echo 1)" \
+      "⑬ ⛔음성(kgy 실물): li3nd 가 **아닌** 수렴 잡에 'li3nd' 출처를 붙이지 않는다"
+  chk "$(echo "$OUT" | grep -E '^  ep_final' | grep -q '바닥상태 보장 아님' && echo 1 || echo 0)" \
+      "⑬-b 그래도 일반 주의(정류점 ≠ 바닥상태)는 모든 수렴 잡에 남는다"
+  chk "$(echo "$OUT" | grep -E '^  li3nd_r0' | grep -q 'li3nd r0' && echo 1 || echo 0)" \
+      "⑬-c 양성: li3nd 잡에는 실측 근거를 그대로 붙인다"
   chk "$(echo "$OUT" | grep -E '^  oom' | grep -q 'OOM' && echo 1 || echo 0)" \
       "⑥ ⛔음성(li3nd r2 12:08 실측): GPU OOM 사망을 그냥 '죽음' 으로 뭉뚱그리지 않는다"
   chk "$(echo "$OUT" | grep -qE '살아있음 *1|살아있음 1' && echo 1 || echo 0)" \
