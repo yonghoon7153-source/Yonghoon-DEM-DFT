@@ -193,6 +193,36 @@ def schedule_makespan(job_hours, m):
     return max(free) if free else 0.0
 
 
+def stage_of(rel, meta, seed_main):
+    """잡이 1단계인가 2단계인가 — **run_staged.sh 와 같은 규칙**. → 1 | 2
+
+    ⚠ 규칙이 두 곳에 있으면 갈린다. 생성기(`_readme_sp` 의 1단계 계수)와 러너가 쓰는
+      규칙을 여기서 한 번 더 적는 것이므로, 바꿀 때 셋을 같이 본다.
+    """
+    kind = (meta or {}).get("kind")
+    role = (meta or {}).get("role") or "primary"
+    if kind == "mol_ref":
+        return 1
+    if kind == "prospective_pose" and role == "primary" and (
+            (meta or {}).get("vacconv") or (meta or {}).get("seed") == seed_main):
+        return 1
+    return 2
+
+
+def staged_makespan(s1_hours, s2_hours, m):
+    """단계 게이트를 **반영한** makespan [h] = makespan(1단계) + makespan(2단계).
+
+    🔴 2026-09-03 — 종전 `schedule_makespan(전체, m)` 은 16잡을 한 물결로 돌린다고
+      가정했다. 그런데 `run_staged.sh` 는 1단계 10잡이 **전부 끝나고 게이트 8축을
+      통과해야** 2단계 6잡을 시작한다. 그래서 동시 실행을 아무리 늘려도 실제 벽시계는
+      `max(1단계) + max(2단계)` 밑으로 내려가지 않는다 — 종전 보고는 그 절반을 냈다
+      (실측: 48코어 동시 12잡에서 4.61일이라고 적었지만 단계를 반영하면 9.5일).
+    ⛔ 못 하는 것: **사람의 게이트 판정 시간**(반송 → 우리 분석 → 2단계 지시)은 안 센다.
+      그건 계산 시간이 아니라 왕복 시간이고, 실제로는 여기에 며칠이 더 붙는다.
+    """
+    return schedule_makespan(s1_hours, m) + schedule_makespan(s2_hours, m)
+
+
 def poscar_volume_A3(path):
     """POSCAR 셀 부피 [Å³]. 못 읽으면 None (조용히 1.0 으로 가정하지 않는다)."""
     try:
@@ -353,22 +383,31 @@ def main() -> int:
 
 def solve_target(jobs_h, base_cores, target_days, nk=7.2,
                  core_grid=(48, 64, 96, 128, 192, 256, 384),
-                 conc_grid=tuple(range(2, 49))):
+                 conc_grid=tuple(range(2, 49)), stages=None):
     """목표 일수를 맞추는 (코어/잡, 동시잡) 조합 중 **총 코어수가 최소**인 것들.
 
     반환 [(총코어, 코어/잡, 동시잡, 일수)] — 총코어 오름차순.
+    🔴 2026-09-03 — `stages` 를 주면 **단계 게이트를 반영**해서 푼다 (staged_makespan).
+      주지 않으면 종전대로 한 물결 가정인데, staged 번들에서는 그 답이 낙관적이다.
     ⛔ 못 하는 것: 큐 정책·노드 경계·메모리를 모른다. 총코어가 그 기계에서
-      실제로 동시에 잡히는지는 **여기서 판정하지 않는다.**
+      실제로 동시에 잡히는지는 **여기서 판정하지 않는다.** 사람의 게이트 판정 왕복도 안 센다.
     """
     tgt_h = target_days * 24.0
     out = []
     for c in core_grid:
         sp = par_speedup(c, base_cores, nk)
         hs = [h / sp for h in jobs_h]
-        if max(hs) > tgt_h:            # 가장 긴 잡이 이미 목표를 넘으면 불가
+        if stages:
+            s1 = [h / sp for h, s in zip(jobs_h, stages) if s == 1]
+            s2 = [h / sp for h, s in zip(jobs_h, stages) if s == 2]
+            floor = (max(s1) if s1 else 0.0) + (max(s2) if s2 else 0.0)
+        else:
+            s1 = s2 = None
+            floor = max(hs)
+        if floor > tgt_h:              # 직렬 하한이 이미 목표를 넘으면 불가
             continue
         for m in conc_grid:
-            mk = schedule_makespan(hs, m)
+            mk = (staged_makespan(s1, s2, m) if stages else schedule_makespan(hs, m))
             if mk <= tgt_h:
                 out.append((c * m, c, m, mk / 24.0))
                 break                  # 이 코어수에서 최소 동시잡
@@ -392,7 +431,16 @@ def report_manifest(a, base) -> int:
     hs = [h for _r, h, _p in jobs]
     total = sum(hs)
     lo = max(total / max(1, a.concurrent), max(hs))     # 도달 가능한 하한
-    mk = schedule_makespan(hs, a.concurrent)            # LPT 근사
+    mk = schedule_makespan(hs, a.concurrent)            # LPT 근사 (단계 무시)
+    # 🔴 2026-09-03 — staged 번들이면 **단계 게이트를 반영한** 값이 진짜 벽시계다.
+    _pl_r = man.get("planned") or {}
+    _seed = man.get("seed_main")
+    stages = [stage_of(r, (_pl_r.get(r) or {}).get("meta") or {}, _seed)
+              for r, _h, _p in jobs] if man.get("staged_runner") else None
+    s1h = [h for h, s in zip(hs, stages or [])if s == 1]
+    s2h = [h for h, s in zip(hs, stages or []) if s == 2]
+    n_s1, n_s2 = len(s1h), len(s2h)
+    s_mk = (staged_makespan(s1h, s2h, a.concurrent) if (s1h and s2h) else None)
     n_ph = sum(len(p) for _r, _h, p in jobs)
     by_ph: dict = {}
     for _r, _h, p in jobs:
@@ -421,16 +469,32 @@ def report_manifest(a, base) -> int:
     print(f"  산술 하한   {total / max(1, a.concurrent) / 24:.2f} 일  "
           f"(총 ÷ 동시 {a.concurrent})")
     print(f"  도달 하한   {lo / 24:.2f} 일  (max(산술하한, 가장 긴 잡))")
-    print(f"  ★ 추정      {mk / 24:.2f} 일  (LPT 스케줄링 · 동시 {a.concurrent}잡)")
+    print(f"  한 물결 가정 {mk / 24:.2f} 일  (LPT · 동시 {a.concurrent}잡 · **단계 게이트 무시**)")
     if mk > total / max(1, a.concurrent) * 1.05:
         print(f"     ⚠ 산술 하한보다 {mk / (total / max(1, a.concurrent)):.2f}배 — "
               f"잡 길이가 고르지 않아 하한에 도달하지 못한다")
+    # 🔴 2026-09-03 — staged 번들의 **진짜** 벽시계. 1단계가 다 끝나고 게이트를 통과해야
+    #   2단계가 열린다. 종전엔 이 줄이 없어 문서·MANIFEST 가 절반 값을 실었다.
+    if s_mk is not None:
+        print(f"  ★ 추정      {s_mk / 24:.2f} 일  (**단계 반영** · 1단계 {n_s1}잡 → 게이트 "
+              f"→ 2단계 {n_s2}잡 · 동시 {a.concurrent}잡)")
+        print(f"     1단계 {schedule_makespan(s1h, a.concurrent) / 24:.2f} 일 "
+              f"(최장 {max(s1h):.0f} h) + 2단계 "
+              f"{schedule_makespan(s2h, a.concurrent) / 24:.2f} 일 (최장 {max(s2h):.0f} h)")
+        print(f"     ⛔ 여기에 **사람의 게이트 판정 왕복**(반송→분석→2단계 지시)은 "
+              f"안 들어 있다 — 그건 계산 시간이 아니다")
+        print(f"     ⛔ 직렬 하한 {(max(s1h) + max(s2h)) / 24:.2f} 일 — 동시 실행을 "
+              f"무한히 늘려도 이보다 짧아지지 않는다")
     print()
     print("  동시 실행별:")
     for m in (4, 8, 12, 20, 40):
-        print(f"     {m:3d}잡 → {schedule_makespan(hs, m) / 24:5.2f} 일"
+        _one = schedule_makespan(hs, m)
+        _stg = staged_makespan(s1h, s2h, m) if s_mk is not None else None
+        print(f"     {m:3d}잡 → 한물결 {_one / 24:5.2f} 일"
+              + (f" · 단계반영 {_stg / 24:5.2f} 일" if _stg is not None else "")
               + ("   (여기부터는 가장 긴 잡이 지배)"
-                 if schedule_makespan(hs, m) <= max(hs) * 1.001 else ""))
+                 if (_stg if _stg is not None else _one)
+                 <= ((max(s1h) + max(s2h)) if s_mk is not None else max(hs)) * 1.001 else ""))
     print("\n  가장 비싼 잡 5개:")
     for rel, h, p in sorted(jobs, key=lambda t: -t[1])[:5]:
         print(f"     {h:6.1f} h  {rel}  "
@@ -439,7 +503,10 @@ def report_manifest(a, base) -> int:
         print(f"\n★ 목표 {a.target_days} 일을 맞추는 조합 (총 코어 최소순):")
         sol = solve_target(hs if cores == base["cores"] else
                            [h * par_speedup(cores, base["cores"], 7.2) for h in hs],
-                           base["cores"], a.target_days)
+                           base["cores"], a.target_days,
+                           stages=stages if s_mk is not None else None)
+        if s_mk is not None:
+            print("   (단계 게이트 반영 · 사람의 판정 왕복은 별도)")
         if not sol:
             print(f"   ⛔ 없다 — 이 상 구성으로는 목표에 못 간다.")
             print(f"      가장 긴 잡을 줄여야 한다 (상 제거 · k 축소 · 잡 분할).")
@@ -613,6 +680,39 @@ def selftest() -> int:
     #  ★ 음성: 가장 긴 잡보다 짧은 목표는 **해가 없어야** 한다
     chk(solve_target([500.0], 48, 0.5, core_grid=(48,)) == [],
         "[음성] 가장 긴 잡(500 h)보다 짧은 목표 → 해 없음 (조용히 내지 않는다)")
+    # ── 🔴 단계 게이트 (2026-09-03) ───────────────────────────────────────
+    #   run_staged.sh 는 1단계가 **전부** 끝나고 게이트를 통과해야 2단계를 연다.
+    #   종전 보고는 16잡을 한 물결로 봐서 절반 값을 냈다 (실측: 48코어 동시 12잡에서
+    #   4.61일이라 적었지만 단계를 반영하면 8.78일).
+    _s1, _s2 = [100.0, 90.0, 80.0], [70.0, 60.0]
+    chk(abs(staged_makespan(_s1, _s2, 99) - (100.0 + 70.0)) < 1e-9,
+        "단계 반영: 동시 실행이 무한이어도 max(1단계)+max(2단계) 다 "
+        f"({staged_makespan(_s1, _s2, 99):.0f} h)")
+    chk(staged_makespan(_s1, _s2, 99) > schedule_makespan(_s1 + _s2, 99),
+        "[음성] 단계 반영값이 한 물결 가정보다 **크다** — 종전 보고가 낙관적이었다")
+    chk(staged_makespan(_s1, _s2, 1) == schedule_makespan(_s1 + _s2, 1),
+        "동시 1잡이면 둘이 같다 (직렬이라 게이트가 비용을 더하지 않는다)")
+    #  ★ 음성: stages 를 준 solve_target 은 단계 하한(max1+max2)보다 짧은 목표를 못 푼다
+    #   같은 잡·같은 코어·같은 목표(5일)인데 단계를 반영하면 **해가 사라진다**.
+    #   한 물결 가정은 100 h(4.2일)면 된다고 답하지만 실제는 100+70 = 170 h(7.1일)다.
+    _jh3, _st3 = [100.0, 70.0], [1, 2]
+    chk(solve_target(_jh3, 48, 5.0, core_grid=(48,), stages=_st3) == [],
+        "[음성] 단계 하한(170 h ≈ 7.1일)보다 짧은 5일 목표 → 해 없음")
+    chk(bool(solve_target(_jh3, 48, 5.0, core_grid=(48,))),
+        "[대조] 같은 잡을 단계 무시로 풀면 5일에 해가 나온다 — 그 답이 종전의 낙관값이다")
+    #  ★ 단계 분류가 러너 규칙과 같은가 (mol_ref · primary+주seed · vacconv → 1단계)
+    _sm = "afm2424_pm1"
+    chk(stage_of("refs/mol__x__box24", {"kind": "mol_ref"}, _sm) == 1
+        and stage_of("p/a", {"kind": "prospective_pose", "role": "primary",
+                             "seed": _sm}, _sm) == 1
+        and stage_of("v/a", {"kind": "prospective_pose", "role": "primary",
+                             "seed": "afm2424_net4", "vacconv": "c2"}, _sm) == 1
+        and stage_of("p/b", {"kind": "prospective_pose", "role": "primary",
+                             "seed": "afm2424_net4"}, _sm) == 2
+        and stage_of("p/c", {"kind": "prospective_pose", "role": "sensitivity",
+                             "seed": _sm}, _sm) == 2,
+        "단계 분류가 run_staged 규칙과 같다 (mol_ref · primary+주seed · vacconv = 1단계)")
+
     #  ★ 음성: 상을 빼면 총량이 **반드시** 줄어야 한다
     _b0 = phase_hours("dense", 192, "4 6 1", b, True)
     chk(_b0 > 0 and phase_hours("static", 192, "3 4 1", b, True) < _b0,

@@ -14,13 +14,15 @@
   db/governance/decisions.json
     D-2026-09-03-sdcp-c12-kconv-axis-excluded ← 새 결정 (proposed → --ratify 때 active)
 """
-import argparse, hashlib, json, pathlib, subprocess, datetime
+import argparse, hashlib, json, pathlib, subprocess, sys, datetime
 
+# ⚠ `db` 만 보고 올라가면 **`tools/db/` 에서 멈춘다** (실측 2026-09-03 — 그 상태로 돌리면
+#   없는 경로를 읽어 죽는다). 우리가 쓰는 두 하위 디렉터리를 **둘 다** 요구한다.
 REPO = pathlib.Path(__file__).resolve()
-while not (REPO / "db").is_dir():
+while not ((REPO / "db" / "properties").is_dir() and (REPO / "db" / "governance").is_dir()):
     REPO = REPO.parent
     if REPO == REPO.parent:
-        raise SystemExit("repo 루트를 못 찾았다")
+        raise SystemExit("repo 루트를 못 찾았다 (db/properties + db/governance 가 있는 곳)")
 PRE = REPO / "db/properties/sdcp_c12_claim_prereg_2026_08_31.json"
 DEC = REPO / "db/governance/decisions.json"
 KEY = "축_설계_제외_2026_09_03"
@@ -88,8 +90,71 @@ def dec_digest(x):
     return hashlib.sha256(json.dumps(c, sort_keys=True, ensure_ascii=False).encode("utf-8")).hexdigest()
 
 
+def _selftest():
+    """⛔ 음성 포함. 양성만 있는 selftest 는 통과해도 아무것도 보증하지 못한다 (CLAUDE.md)."""
+    import copy, tempfile
+    n = [0, 0]
+
+    def chk(c, m):
+        n[0] += 1
+        n[1] += bool(c)
+        print(("  ✓ " if c else "  ✗ ") + m)
+
+    # 🔴 렌즈6′ P0 회귀 — 기록 digest 가 **최종 문서**의 것이어야 한다.
+    doc = {"schema": "x", "3_오차예산": {"정의": "B"}, "status": "proposed",
+           "status_history": [{"at": "2026-09-02", "state": "ratified"}]}
+    d2 = copy.deepcopy(doc)
+    d2["status_history"].append({"at": "2026-09-03", "state": "ratified"})
+    d2["status"] = "ratified"
+    d2["ratification"] = {"state": "ratified", "content_digest": prereg_digest(d2)}
+    chk(prereg_digest(d2) == d2["ratification"]["content_digest"],
+        "양성: 문서를 다 고친 뒤 계산한 digest 는 최종 문서와 일치한다")
+    d3 = copy.deepcopy(doc)
+    _early = prereg_digest(d3)                       # ← 종전 버그: 먼저 계산
+    d3["status_history"].append({"at": "2026-09-03", "state": "ratified"})
+    d3["status"] = "ratified"
+    d3["ratification"] = {"state": "ratified", "content_digest": _early}
+    chk(prereg_digest(d3) != _early,
+        "⛔음성 렌즈6′ P0: digest 를 **먼저** 뽑고 status/history 를 고치면 어긋난다 "
+        "(종전 코드가 이것이었다 — 외주처 --check_governance rc 2)")
+    chk(prereg_digest({"a": 1, "ratification": {"x": 1}}) == prereg_digest({"a": 1}),
+        "digest 는 ratification 칸을 뺀 내용의 것이다")
+    # 재개 조건이 분석기 형식 검사(_kconv_reopen_rule_problems)를 통과하는 모양인가
+    for v, r in VARIANTS.items():
+        chk(str(r.get("판정량")) == "D_raw_eV" and r.get("비교") in ("abs_lt", "boundary", "none")
+            and float(r.get("문턱_eV")) > 0 and str(r.get("충족시") or "").strip(),
+            "안 %s 의 재개 조건이 기계 평가 구조를 갖췄다 (판정량·비교·문턱·충족시)" % v)
+        chk(r.get("비교") != "boundary" or float(r.get("가드밴드_eV", 0)) > 0,
+            "⛔음성: boundary 안 %s 는 가드밴드가 있어야 한다" % v)
+    chk(all(str(r.get("판정량")) != "rounded_value_under_tested_axes_eV"
+            for r in VARIANTS.values()),
+        "⛔음성: 판정량으로 **반올림값**을 쓰지 않는다 (결과 보고 값을 고를 여지)")
+    # ⛔ 경로 해석 — **건너뛰지 않는다.** `db` 만 보고 올라가면 `tools/db/` 에서 멈춰
+    #   없는 파일을 가리켰고, 종전 selftest 는 `if PRE.is_file()` 로 그것을 조용히 건너뛰었다.
+    chk(PRE.is_file() and DEC.is_file(),
+        "repo 루트 해석이 맞다 (%s · %s)" % (PRE.is_file(), DEC.is_file()))
+    chk(PRE.parent.name == "properties" and DEC.parent.name == "governance"
+        and PRE.parts[-3] == "db",
+        "대상 경로가 db/properties · db/governance 다 (%s)" % PRE)
+    if PRE.is_file():
+        # 실물 문서에 적용해도 위 불변량이 서는가 (사본 · repo 미변경)
+        real = json.loads(PRE.read_text(encoding="utf-8"))
+        real["3_오차예산"][KEY] = {"축": "δ_k"}
+        real["status_history"].append({"at": "T", "state": "ratified"})
+        real["status"] = "ratified"
+        real.pop("ratification", None)
+        real["ratification"] = {"content_digest": prereg_digest(real)}
+        chk(prereg_digest(real) == real["ratification"]["content_digest"],
+            "실물 사전등록 사본에서도 성립한다 (repo 는 안 건드린다)")
+    print("selftest %d/%d · %s" % (n[1], n[0], "PASS" if n[1] == n[0] else "FAIL"))
+    return 0 if n[1] == n[0] else 1
+
+
 def main():
     ap = argparse.ArgumentParser()
+    if "--selftest" in sys.argv:
+        raise SystemExit(_selftest())
+    ap.add_argument("--selftest", action="store_true")
     ap.add_argument("--variant", choices=sorted(VARIANTS), required=True)
     ap.add_argument("--ratify", action="store_true", help="1저자 '비준' 뒤에만")
     ap.add_argument("--date", default=datetime.date.today().isoformat())
@@ -111,14 +176,27 @@ def main():
                               "렌즈5 P1-1 이 '비준 문서 이탈 · 원장 부재' 를 잡았다. v32–v34 는 이 항 없이 생성됐고 "
                               "발송되지 않았다. ⚠ 비준은 사람 몫." % (a.variant, KEY))})
     if a.ratify:
-        pre["ratification"] = dict(pre.get("ratification") or {}, **{
-            "state": "ratified", "role": "scientific_owner", "at": today, "by": "1저자",
-            "content_digest": prereg_digest(pre),
-            "actor_id": BY, "timestamp": now, "commit": head,
-        })
+        # 🔴🔴 렌즈6′ P0 (2026-09-03) — **digest 는 문서를 다 고친 뒤에 계산한다.**
+        #   종전엔 digest 를 먼저 뽑고 그 다음에 status_history 와 status 를 바꿔서,
+        #   기록된 content_digest 가 최종 문서와 어긋났다. 그러면 ref_doc_state 가
+        #   "비준 이후 내용이 바뀌었다" 로 읽어 ratified=False → 그 사전등록으로 만든
+        #   번들은 외주처 --check_governance 에서 rc 2 (한 잡도 못 돈다).
         hist.append({"at": today, "state": "ratified",
                      "note": "1저자 비준 (scientific_owner) — δ_k 설계 제외 · 재개 조건 안 %s. DFT 결과 0잡 시점." % a.variant})
         pre["status"] = "ratified"
+        pre.pop("ratification", None)          # 지문은 ratification 을 뺀 내용의 것이다
+        pre["ratification"] = {
+            "state": "ratified", "role": "scientific_owner", "at": today, "by": "1저자",
+            "content_digest": prereg_digest(pre),      # ← 마지막에, 최종 내용으로
+            "actor_id": BY, "timestamp": now, "commit": head,
+            "⛔_무엇에_대한_비준인가": ("이 문서에서 `ratification` 을 뺀 내용의 sha256 이다. "
+                                        "한 글자라도 바뀌면 지문이 달라지고 게이트가 재승인을 "
+                                        "요구한다 — 비준을 받아 놓고 내용을 고치는 경로를 닫는다."),
+        }
+        # 자기검사 — 기록한 지문이 최종 문서와 **정말** 같은가 (P0 회귀)
+        _re = str(pre["ratification"]["content_digest"])
+        if _re != prereg_digest(pre):
+            raise SystemExit("⛔ 내부 오류: 기록 digest ≠ 최종 문서 digest (렌즈6′ P0 회귀)")
     else:
         pre["status"] = "proposed"
     PRE.write_text(json.dumps(pre, ensure_ascii=False, indent=1) + "\n", encoding="utf-8")

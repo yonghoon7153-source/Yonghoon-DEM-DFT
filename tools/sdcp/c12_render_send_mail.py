@@ -54,7 +54,9 @@ wall = mw.group(1).strip()
 # ── 재개 조건: MANIFEST.kconv_pair (사전등록에서 복사된 것) ──
 kp = man.get("kconv_pair") or {}
 reopen = next((v for k, v in kp.items() if "재개_조건" in str(k)), {}) or {}
-mk = (man.get("cost_frozen") or {}).get("makespan_d") or {}
+_cf = man.get("cost_frozen") or {}
+# 🔴 2026-09-03 — staged 번들은 단계 게이트 반영값을 인용한다 (makespan_d 는 한 물결 가정).
+mk = _cf.get("makespan_staged_d") or _cf.get("makespan_d") or {}
 conc = int(((man.get("submission") or {}).get("max_concurrency")) or 8)
 mk_c = mk.get(str(conc), mk.get(conc))
 longest = round((man.get("cost_frozen") or {}).get("longest_job_h") or 0)

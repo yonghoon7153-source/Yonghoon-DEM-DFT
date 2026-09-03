@@ -143,11 +143,15 @@ if seal:
     #   "비어 있지 않은가" 만 봤고, ` running on 1 total cores` 같은 첫 줄이 통과했다.
     #   그 봉인으로 1단계를 다 태우면 ROOT_SEAL_VASP_MISMATCH 로 전건이 막힌다.
     import re as _re_v
+    # 🔴 렌즈1′ P1-1 (2026-09-03) — 행 앵커. `…/vasp.6.4.3/bin/vasp_std` 같은 **경로 에코**가
+    #   봉인에 박혀 있으면 그것도 "버전이 아닌 줄" 이다 (VASP 가 안 돌았다는 뜻이다).
     if seal.get("vasp_version_banner") and not _re_v.search(
-            r"vasp\.[0-9][A-Za-z0-9._-]*", str(seal["vasp_version_banner"])):
-        bad.append("봉인의 vasp_version_banner 에 'vasp.<버전>' 토큰이 없다 (%r) — "
-                   "봉인이 VASP 버전이 아닌 줄을 담았다. SEAL 을 다시 돌리십시오 "
-                   "(회신 BH P0-1)" % str(seal["vasp_version_banner"])[:60])
+            r"(?m)^[ \t]*vasp\.[0-9][A-Za-z0-9._-]*",
+            str(seal["vasp_version_banner"])):
+        bad.append("봉인의 vasp_version_banner 에 행두 'vasp.<버전>' 토큰이 없다 (%r) — "
+                   "봉인이 VASP 버전이 아닌 줄(또는 설치 경로)을 담았다. SEAL 을 다시 "
+                   "돌리십시오 (회신 BH P0-1 · 렌즈1′ P1-1)"
+                   % str(seal["vasp_version_banner"])[:60])
     if seal.get("manifest_sha256") and seal["manifest_sha256"] != mh:
         bad.append("봉인이 다른 MANIFEST 에 대한 것이다 (%s ≠ %s)"
                    % (seal["manifest_sha256"][:12], mh[:12]))
@@ -508,8 +512,11 @@ def _kconv_reopen_eval(rule, d_raw):
         out["충족"] = bool(a < float(rule["문턱_eV"]))
         out["행동"] = (str(rule.get("충족시")) if out["충족"] else "조건 불충족 — 추가 계산 없음")
     elif _c == "boundary":
+        # ⚠ 렌즈6′ P2 — eV 부동소수로 하면 0.05+0.01 = 0.060000000000000005 라 |D|=0.06 이
+        #   "< 0.06" 인데도 충족이 된다. **meV 정수 근방**에서 비교한다 (선언과 같은 뜻).
         t, g = float(rule["문턱_eV"]), float(rule["가드밴드_eV"])
-        out["충족"] = bool(t <= a < t + g)
+        _am, _tm, _gm = round(a * 1000, 3), round(t * 1000, 3), round(g * 1000, 3)
+        out["충족"] = bool(_tm <= _am < _tm + _gm)
         if out["충족"]:
             out["행동"] = str(rule.get("충족시"))
         elif a < t:
@@ -1907,7 +1914,15 @@ if [ -n "$VASP_BIN" ]; then
   #   그래서 봉인에 버전이 아닌 줄이 박히고, 1단계(최장 ~300 h)를 다 태운 뒤
   #   분석기가 OUTCAR 의 실제 버전과 대조하다 ROOT_SEAL_VASP_MISMATCH 로 전건을 닫는다.
   #   봉인·분석기는 files_sha256 에 결박돼 현장에서 고칠 수도 없다.
-  #   ⇒ **출력 전체**에서 `vasp.<버전>` 토큰을 찾고, 못 찾으면 **봉인을 거부**한다
+  #   🔴🔴 렌즈1′ P1-1 (2026-09-03) — **행 앵커가 없으면 fail-closed 가 뚫린다.** VASP 표준
+  #     설치 경로가 `…/vasp.6.4.3/bin/vasp_std` 라, 기동 실패 메시지가 그 경로를 되울리면
+  #     (`timeout: failed to run command '/opt/vasp.6.4.9/bin/vasp_std'` · ld.so
+  #     `…/vasp_std: error while loading shared libraries`) 토큰이 잡혀 **VASP 가 한 줄도
+  #     안 돌았는데 봉인이 통과**한다. 게다가 디렉터리명이 실제 빌드와 다르면 300 h 뒤
+  #     ROOT_SEAL_VASP_MISMATCH — BH P0-1 이 막으려던 바로 그 사고다.
+  #     ⇒ **행 시작**(Fortran list-directed 출력의 선행 공백 허용)으로 앵커한다. 경로 에코는
+  #       토큰이 행 중간이라 안 걸린다.
+  #   ⇒ **출력 전체**에서 행두 `vasp.<버전>` 토큰을 찾고, 못 찾으면 **봉인을 거부**한다
   #     (비용 발생 **전에** 멈춘다 — fail-closed).
   #   ⚠ 임시 디렉터리에서 기동한다: VASP 는 실행되면 그 자리에 OUTCAR 등을 남기고,
   #     번들 루트에 남으면 이후 attestation 의 `find -name OUTCAR` 가 거부한다.
@@ -1919,7 +1934,8 @@ if [ -n "$VASP_BIN" ]; then
   #   줄 **뒤**에 나므로 무관하다. (실물 VASP 로 검증하지 못한 추론 — 표본 순서에 근거.)
   : > "$_vprobe_d/INCAR"
   VASP_VER=$( (cd "$_vprobe_d" && timeout 120 "$VASP_BIN" 2>&1 || true) \
-              | grep -a -m1 -oE 'vasp\.[0-9][A-Za-z0-9._-]*' || true )
+              | grep -a -m1 -oE '^[[:space:]]*vasp\.[0-9][A-Za-z0-9._-]*' \
+              | tr -d '[:space:]' || true )
   rm -rf "$_vprobe_d"
   if [ -z "$VASP_VER" ]; then
     echo "⛔ VASP 버전을 관측하지 못했습니다 — 봉인하지 않습니다 (회신 BH P0-1)."
@@ -2022,10 +2038,14 @@ if os.path.exists(out):
     # 🔴 회신 BH P0-1 — `vasp_version_banner` 는 **원문 정확일치로 보지 않는다.**
     #   배너 줄에 host·PID·타임스탬프가 섞이는 사이트면 2단계 SEAL 재실행에서
     #   "봉인 ≠ 지금" 으로 죽는다. 불변량은 배너 원문이 아니라 **버전 토큰**이다.
-    _vt = lambda x: (re.search(r"vasp\.[0-9][A-Za-z0-9._-]*", str(x or "")) or [None])
-    _v_old = re.search(r"vasp\.[0-9][A-Za-z0-9._-]*", str(old.get("vasp_version_banner") or ""))
-    _v_new = re.search(r"vasp\.[0-9][A-Za-z0-9._-]*", str(rec.get("vasp_version_banner") or ""))
-    if (_v_old.group(0) if _v_old else None) != (_v_new.group(0) if _v_new else None):
+    # 🔴 렌즈1′ P1-1 (2026-09-03) — 행 앵커. 경로 에코(`…/vasp.6.4.3/bin/vasp_std`)를
+    #   버전 토큰으로 읽지 않는다. 봉인 배너는 토큰 하나이거나 선행 공백 있는 배너 줄이다.
+    _VT_RE = r"(?m)^[ \t]*vasp\.[0-9][A-Za-z0-9._-]*"
+    _vt = lambda x: ((re.search(_VT_RE, str(x or "")) or [None]))
+    _v_old = re.search(_VT_RE, str(old.get("vasp_version_banner") or ""))
+    _v_new = re.search(_VT_RE, str(rec.get("vasp_version_banner") or ""))
+    if (_v_old.group(0).strip() if _v_old else None) != (
+            _v_new.group(0).strip() if _v_new else None):
         bad.append("VASP 버전 토큰이 다르다 (봉인 %r ≠ 지금 %r) — 다른 코드 세대다"
                    % (_v_old.group(0) if _v_old else None,
                       _v_new.group(0) if _v_new else None))
@@ -2641,18 +2661,28 @@ vb = os.environ["VASP_BIN"]
 #   ⇒ SEAL 과 **같은 절차**: 임시 폴더 + 빈 INCAR + 출력 전체에서 토큰 regex. 토큰이
 #     없으면 attestation 을 **만들지 않는다** (fail-closed — 잘못된 증서로 111 h 뒤 막히는
 #     것보다 지금 멈추는 편이 싸다). 원문 앞 8줄은 기록용으로만 따로 둔다.
+# 🔴 렌즈1′ P1-2 (2026-09-03) — SEAL 과 **같은 규칙**이어야 한다:
+#   ① stderr 를 stdout 에 **병합**(SEAL 의 `2>&1`) — 따로 이어붙이면 순서가 달라져 다른
+#      토큰이 잡히고, 그 차이가 111 h 뒤 ATTESTATION_VASP_VERSION_MISMATCH 로 나온다.
+#   ② timeout 이면 **부분 출력을 살린다**(SEAL 은 `grep -m1` 이 이미 잡은 뒤 죽는다).
+#      배너를 찍고 매달리는 빌드에서 SEAL 은 봉인하는데 MAKE 만 거부하던 비대칭.
+#   ③ 행 앵커 — 경로 에코(`/opt/vasp.6.4.3/bin/vasp_std`)를 버전으로 읽지 않는다.
 import re, tempfile, shutil
 _pd = tempfile.mkdtemp(prefix="att_vprobe_")
 try:
     open(os.path.join(_pd, "INCAR"), "w").close()
     try:
-        _o = subprocess.run([vb], capture_output=True, text=True, timeout=120, cwd=_pd)
-        _txt = (_o.stdout or "") + "\n" + (_o.stderr or "")
+        _o = subprocess.run([vb], stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
+                            text=True, timeout=120, cwd=_pd)
+        _txt = _o.stdout or ""
+    except subprocess.TimeoutExpired as e:
+        _txt = (e.stdout.decode("utf-8", "replace")
+                if isinstance(e.stdout, bytes) else (e.stdout or ""))
     except Exception as e:
         _txt = "실행 실패: %r" % e
 finally:
     shutil.rmtree(_pd, ignore_errors=True)
-_m = re.search(r"vasp\.[0-9][A-Za-z0-9._-]*", _txt)
+_m = re.search(r"(?m)^[ \t]*vasp\.[0-9][A-Za-z0-9._-]*", _txt)
 if not _m:
     raise SystemExit(
         "⛔ VASP 버전 토큰('vasp.<버전>')을 관측하지 못했습니다 — attestation 을 만들지 않습니다.\n"
@@ -2660,7 +2690,7 @@ if not _m:
         "   (봉인 SEAL_POTCAR_ROOT.sh 와 같은 규칙입니다 — 렌즈4 P0-1. 그 출력을 보내 주시면 "
         "규칙을 맞춰 다시 만들어 드립니다.)\n   관측한 출력 앞부분:\n%s"
         % (vb, "\n".join("     | " + l for l in _txt.strip().splitlines()[:8])))
-ver = _m.group(0)
+ver = _m.group(0).strip()
 ver_head = "\n".join(_txt.strip().splitlines()[:8])
 rec = {
     "schema": "potcar_attestation/v1",
@@ -8764,7 +8794,8 @@ def potcar_identity_gates(jobs, man):
         #   선택 attestation 을 성실히 돌린 외주처가 1단계 ~111 h 뒤 potcar_identity 에서
         #   막히는 함정. 픽스처는 방향이 반대(banner 쪽이 더 김)여서 425/425 가 통과했다.
         #   토큰이 attestation 쪽에 없으면 그것도 '확인 못 함 = 일치 아님' 이다.
-        _VTOK = r"vasp\.[0-9][A-Za-z0-9._-]*"
+        # 🔴 렌즈1′ P1-1 — 행 앵커 (경로 에코를 버전으로 읽지 않는다) + 앞뒤 공백 제거 후 비교
+        _VTOK = r"(?m)^[ \t]*vasp\.[0-9][A-Za-z0-9._-]*"
         _vt_att = re.search(_VTOK, str(_att.get("vasp_version_raw") or ""))
         _vt_seal = re.search(_VTOK, str(_seal_rec.get("vasp_version_banner") or ""))
         if _att.get("vasp_version_raw") and _seal_rec.get("vasp_version_banner"):
@@ -8773,7 +8804,7 @@ def potcar_identity_gates(jobs, man):
                                 "vasp_version_raw %r 에 'vasp.<버전>' 토큰이 없다 — "
                                 "확인 못 한 것은 일치가 아니다)"
                                 % (str(_att["vasp_version_raw"])[:40],))
-            elif _vt_seal and _vt_att.group(0) != _vt_seal.group(0):
+            elif _vt_seal and _vt_att.group(0).strip() != _vt_seal.group(0).strip():
                 _att_why.append("ATTESTATION_VASP_VERSION_MISMATCH(%r vs 봉인 %r)"
                                 % (_vt_att.group(0), _vt_seal.group(0)))
         _att_var_bad = [v for v, d in (_att.get("variants") or {}).items()
@@ -11336,7 +11367,12 @@ def _closure_estimand(man, results, E, emol, jobs, merge_info=None):
     if isinstance(_ko, dict) and isinstance(_ko.get("재개_조건"), dict):
         _ev = _kconv_reopen_eval(_ko["재개_조건"], primary)
         _ko["reopen_eval"] = _ev
-        _tag = ("KCONV_REOPEN_TRIGGERED" if _ev.get("충족") and _ev.get("비교") == "abs_lt"
+        # 🔴 렌즈6′ P1-4 (2026-09-03) — 태그는 **비교 연산자가 아니라 선언된 행동**이 정한다.
+        #   종전엔 `abs_lt` 일 때만 TRIGGERED 라, boundary + "dense 2잡 추가"(안 B)가 충족돼도
+        #   자문 태그가 나왔다 — 재개인데 기계 기록은 자문이라고 말한다.
+        _act = str((_ko.get("재개_조건") or {}).get("충족시") or "")
+        _adds = any(w in _act for w in ("추가", "dense", "재개", "확장"))
+        _tag = ("KCONV_REOPEN_TRIGGERED" if _ev.get("충족") and _adds
                 else "KCONV_UNTESTED_AXIS_AT_THRESHOLD" if _ev.get("충족")
                 else "KCONV_REOPEN_NOT_TRIGGERED")
         out.setdefault("advisories", []).append(
@@ -13617,18 +13653,32 @@ def _walltime_block(man: Dict[str, Any], a) -> str:
       폐지됨 — 이행 불가한 약속) · SUBMIT "252 h 권장"(산식 없음). 168 h 큐 사이트는 README
       로는 문제없고 SUBMIT 으로는 잘린다. 한 함수에서 한 문장을 낸다.
     """
-    _h = round((man.get("cost_frozen") or {}).get("longest_job_h") or 56)
+    _cf_w = man.get("cost_frozen") or {}
+    _h = round(_cf_w.get("longest_job_h") or 56)
     _h2 = _h * 2
     _rec = max(24, int(_h2 * 1.1 // 12 + 1) * 12)
     _cores = int(getattr(a, "cores", 48) or 48)
     _conc = int(((man.get("submission") or {}).get("max_concurrency")) or 8)
+    # 🔴 2026-09-03 — 단계 게이트 반영 전체 일수. 없으면(비 staged) 한 물결 값.
+    _mkw = (_cf_w.get("makespan_staged_d") or _cf_w.get("makespan_d") or {})
+    _mk_tot = _mkw.get(str(_conc), _mkw.get(_conc))
+    _stg_l = _cf_w.get("stage_longest_h") or {}
+    _tot_line = ("" if _mk_tot is None else
+                 ("\n⚠ **전체 일정** — 동시 %d잡 기준 약 **%s일**입니다"
+                  % (_conc, _mk_tot))
+                 + ("" if not _stg_l else
+                    " (1단계 최장 %s h → 게이트 → 2단계 최장 %s h · 두 단계는 **직렬**이라 "
+                    "동시 실행을 늘려도 이 아래로는 내려가지 않습니다)"
+                    % (_stg_l.get("1"), _stg_l.get("2")))
+                 + ". 여기에 1단계 반송 뒤 저희 판정 왕복 시간은 포함돼 있지 않습니다.")
     return (f"⚠ **walltime** — 가장 긴 잡의 중앙 추정 **{_h} h** ({_cores}코어/잡 · 모형 불확실성 ±2배 → "
             f"외피 {_h2} h). 잡당 walltime 은 **{_rec} h** 를 권합니다 (= 외피 × 1.1 을 12 h 단위로 올림 · "
             f"그보다 짧으면 잘립니다). 큐 상한이 {_rec} h 보다 짧으면 **제출 전에** 알려 주십시오 — static "
             f"단일점은 나눌 수 없고 재개도 없어, 그 잡은 더 긴 큐/노드 배정이 필요합니다.\n"
             f"⚠ **실행 위치** — `run_staged.sh` 는 **계산 노드 할당 안에서**(로그인 노드 아님) 잡 {_conc}개 × "
             f"VASP_NPROC 랭크를 동시에 띄우므로, 그 할당이 단계 전체(1단계 최장 ≈{_rec} h) 동안 유지돼야 "
-            f"합니다. 봉인 프로브도 같은 노드에서 VASP 를 인자 없이 한 번 잠깐 기동합니다.")
+            f"합니다. 봉인 프로브도 같은 노드에서 VASP 를 인자 없이 한 번 잠깐 기동합니다."
+            + _tot_line)
 
 
 def _readme_sp(man: Dict[str, Any], a, zcut: float, n_jobs: int,
@@ -14099,7 +14149,10 @@ n=$(wc -l < JOBS.txt)
     _so_txt = ("`" + "` · `".join(_so_set) + "`") if _so_set else "각 잡 POSCAR 6행 참조"
     _dense_dep_line = ("\n   └─ dense   (같은 잡의 static/CHGCAR 필요 → **그 잡 안에서는 직렬**)"
                        if _n_dn_sub else "   ← 이 묶음은 static 만 (dense 없음 · δ_k 설계 제외)")
-    _mk_d = (man.get("cost_frozen") or {}).get("makespan_d") or {}
+    # 🔴 2026-09-03 — staged 번들은 **단계 반영값**을 인용한다. makespan_d(한 물결)는
+    #   1단계 게이트를 무시해 실제의 절반이 나온다.
+    _cf_s = man.get("cost_frozen") or {}
+    _mk_d = _cf_s.get("makespan_staged_d") or _cf_s.get("makespan_d") or {}
     _conc_s = int(((man.get("submission") or {}).get("max_concurrency")) or 8)
     _mk_c = _mk_d.get(str(_conc_s), _mk_d.get(_conc_s))
     _crit_txt = ("한 잡의 static→dense 임계경로가 그 하한보다 길면 하한에 도달할 수 없습니다."
@@ -15113,6 +15166,17 @@ def build_bundle(a, ledger: Optional[Dict[str, Any]] = None) -> Path:
         if _pe_g is None:
             sys.exit("⛔ --no_kconv: %s\n   1저자가 사전등록 3_오차예산 에 '축_설계_제외_*' 항을 "
                      "비준한 뒤 다시 만드십시오 (렌즈2 P0-1 · 렌즈4 P0-2 · 렌즈5 P1-1)." % _pew_g)
+        # 🔴 렌즈6′ P1-1 (2026-09-03) — 항이 **있기만** 하면 통과시키면, 개정하고 비준 전인
+        #   상태(status proposed · digest 불일치)로도 번들이 만들어진다. 막히는 곳은 발송
+        #   **뒤** 외주처의 --check_governance 다. 항 부재는 여기서 막으면서 비준 부재는
+        #   안 막는 것은 비대칭이다 — 같은 자리에서 비준 상태까지 요구한다.
+        _rs_g = ref_doc_state(Path(__file__).resolve().parent.parent.parent / C12_PREREG_REL)
+        if not _rs_g.get("ratified"):
+            sys.exit("⛔ --no_kconv: 사전등록 %s 가 비준 상태가 아니다 — %s\n"
+                     "   (status=%r · digest 일치=%r). 1저자 비준 뒤 다시 만드십시오 — "
+                     "지금 만들면 외주처 `--check_governance` 가 rc 2 로 막습니다 (렌즈6′ P1-1)."
+                     % (C12_PREREG_REL, _rs_g.get("why"), _rs_g.get("status"),
+                        _rs_g.get("digest_matches")))
         _rq_g = _pe_g.get("재개_조건_결과_보기_전에_선언") or {}
         _rpp_g = _kconv_reopen_rule_problems(_rq_g)
         if _rpp_g:
@@ -16023,8 +16087,11 @@ def build_bundle(a, ledger: Optional[Dict[str, Any]] = None) -> Path:
             str(_repo / "runs/sdcp_phaseB_vasp_v1_2026_08_08/slab/OUTCAR.gz")) \
             or dict(CE.BASE)
         _jh = []
+        _jst = []          # 🔴 2026-09-03 — 잡별 단계 (1|2). 단계 게이트 반영 makespan 용.
         for _jp in sorted(out.rglob("job.json")):
             _m = json.loads(_jp.read_text())
+            _jst.append(CE.stage_of(str(_jp.parent.relative_to(out)),
+                                    _m.get("meta") or _m, man.get("seed_main")))
             _n = len(_m.get("magmom_poscar") or []) or sum(_m.get("counts") or [0]) or 222
             _ni = CE.N_IONIC if _n > 60 else 25
             # ★ 회신 AF P0-8 — 진공을 늘리면 평면파·FFT 가 부피에 비례해 커진다.
@@ -16054,6 +16121,24 @@ def build_bundle(a, ledger: Optional[Dict[str, Any]] = None) -> Path:
                         "잡 시간 자체도 모형이라 ±2배 — 곱하면 넓다"),
             "makespan_d": {str(m): round(CE.schedule_makespan(_jh, m) / 24, 2)
                            for m in (4, 8, 12, 20)},
+            "⚠_makespan_d_는_단계를_무시한다": (
+                "makespan_d 는 전 잡을 한 물결로 돌린다고 본 값이다. staged 번들은 1단계가 "
+                "**전부 끝나고 게이트를 통과해야** 2단계가 열리므로 실제 벽시계는 "
+                "makespan_staged_d 다 (2026-09-03 정정 — 종전 문서는 절반 값을 실었다)."),
+            # 🔴 2026-09-03 — **문서가 인용해야 하는 값.** 1단계 makespan + 2단계 makespan.
+            "makespan_staged_d": ({str(m): round(CE.staged_makespan(
+                [h for h, s in zip(_jh, _jst) if s == 1],
+                [h for h, s in zip(_jh, _jst) if s == 2], m) / 24, 2)
+                for m in (4, 8, 12, 20)} if (1 in _jst and 2 in _jst) else None),
+            "stage_jobs": {"1": _jst.count(1), "2": _jst.count(2)},
+            "stage_longest_h": {
+                "1": round(max([h for h, s in zip(_jh, _jst) if s == 1] or [0]), 1),
+                "2": round(max([h for h, s in zip(_jh, _jst) if s == 2] or [0]), 1)},
+            "⛔_직렬_하한_d": (round((max([h for h, s in zip(_jh, _jst) if s == 1] or [0])
+                                     + max([h for h, s in zip(_jh, _jst) if s == 2] or [0]))
+                                    / 24, 2) if (1 in _jst and 2 in _jst) else None),
+            "⛔_사람_왕복_미포함": ("1단계 반송 → 우리 분석 → 2단계 지시의 왕복 시간은 위 어느 "
+                                    "값에도 없다. 그건 계산 시간이 아니다."),
             "estimator": "tools/sdcp/vasp_cost_estimate.py",
             # ⚠ 이건 hash 가 아니라 **경로**다. 이름을 그렇게 부르면 안 된다.
             "estimator_baseline_source": _base.get("source"),
@@ -19866,7 +19951,19 @@ def _runner_e2e(bundle: Path, chk) -> bool:
              "실물 첫 줄만 나오고 버전 줄이 없는 경우 (VASP 가 배너를 늦게 찍거나 잘린 출력)"),
             ("bh_mpi_error",
              "echo 'MPI startup(): failed to init' >&2\n",
-             "MPI 초기화 실패로 버전이 아예 안 나오는 경우")):
+             "MPI 초기화 실패로 버전이 아예 안 나오는 경우"),
+            # 🔴🔴 렌즈1′ P1-1 (2026-09-03) — **경로 에코를 버전으로 읽으면 안 된다.**
+            #   VASP 표준 설치 경로가 `…/vasp.6.4.3/bin/vasp_std` 라, 기동 실패 메시지가
+            #   그 경로를 되울리면 행 앵커 없는 regex 가 토큰을 잡아 **VASP 가 한 줄도
+            #   안 돌았는데 봉인이 통과**했다. 디렉터리명이 실제 빌드와 다르면 300 h 뒤
+            #   ROOT_SEAL_VASP_MISMATCH — BH P0-1 이 막으려던 그 사고가 그대로 재발한다.
+            ("lens1p_path_echo_ldso",
+             "echo '/opt/vasp.6.4.9/bin/vasp_std: error while loading shared libraries: "
+             "libmkl_rt.so: cannot open shared object file' >&2\n",
+             "ld.so 가 **설치 경로**(vasp.6.4.9)를 되울리는 경우 — 기동 자체가 실패했다"),
+            ("lens1p_path_echo_timeout",
+             "echo \"timeout: failed to run command '/opt/vasp.6.4.9/bin/vasp_std': \"\n",
+             "실행기가 경로를 되울리는 경우 (같은 함정 · stdout 쪽)")):
         _bad_root = _copy(_tag)
         _bb = base / ("bin_" + _tag); _bb.mkdir(exist_ok=True)
         _bv = _bb / "vasp_std"
