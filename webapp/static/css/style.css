@@ -3,15 +3,45 @@
    ----------------------------------------------------------------------------
    설계 전제 셋 (이걸 알고 봐야 왜 이렇게 생겼는지 읽힌다)
 
-   1. 외부 자원이 **하나도** 없다. CSP 가 `default-src 'self'` 라 웹폰트·CDN·
-      아이콘 폰트를 못 쓴다. 타이포는 전부 시스템 폰트 스택 위에서 짰고,
-      아이콘은 base.html 의 인라인 SVG 스프라이트다.
+   1. 외부 자원이 **하나도** 없다. CSP 가 `default-src 'self'` 라 CDN 을 못 쓴다.
+      그래서 폰트도 **저장소 안에 두고 우리가 직접 서빙**한다 (`static/fonts/`,
+      아래 @font-face). 아이콘은 base.html 의 인라인 SVG 스프라이트다.
    2. 이 앱은 **긴 기술 문서를 읽는 도구**다. 6만 자짜리 논문 digest 가 주 화면이고,
       한글·영문·수식·코드가 한 문단에 섞인다. 장식보다 본문 폭·행간·제목 계층이
       먼저다. 등장 애니메이션 같은 건 없다 (상태 변화에만 150~200ms).
    3. 다크 모드가 **덤이 아니다.** 연구실에서 밤에 본다. 토큰을 두 벌 다 손으로
       골랐고, 라이트에서 쓴 값을 그냥 뒤집지 않았다.
    ========================================================================== */
+
+/* ── 폰트: 저장소가 들고 있다 ─────────────────────────────────────────────
+   왜 시스템 폰트를 버렸나 — 이 앱의 주 화면은 **한글·영문·코드가 한 문단에
+   섞인** 논문 digest 다. Windows 의 기본 한글 폰트(맑은 고딕)는 획이 가늘고
+   라틴 글자가 Segoe UI 로 갈아 끼워지면서 한 줄 안에서 굵기와 기준선이 흔들린다.
+   Pretendard 는 한글과 라틴을 **한 벌로** 그린 폰트라 그 흔들림이 없다.
+
+   두 파일 다 SIL Open Font License 1.1 이라 재배포할 수 있다. 원본을 그대로
+   두지 않고 이 위키가 실제로 쓰는 문자만 남겼다 (`static/fonts/LICENSE.md` 에
+   출처·판본·잘라낸 범위를 적어 뒀다).
+
+   `font-display: swap` — 폰트가 도착하기 전에도 글이 먼저 보여야 한다. */
+@font-face {
+  font-family: "Pretendard";
+  src: url("../fonts/Pretendard.subset.woff2") format("woff2-variations"),
+       url("../fonts/Pretendard.subset.woff2") format("woff2");
+  font-weight: 45 920;   /* 가변축 — 640 같은 중간 굵기를 진짜로 그린다 */
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "JetBrains Mono";
+  src: url("../fonts/JetBrainsMono-Regular.woff2") format("woff2");
+  font-weight: 400; font-style: normal; font-display: swap;
+}
+@font-face {
+  font-family: "JetBrains Mono";
+  src: url("../fonts/JetBrainsMono-Bold.woff2") format("woff2");
+  font-weight: 700; font-style: normal; font-display: swap;
+}
 
 /* ── 토큰: 라이트 ─────────────────────────────────────────────────────── */
 :root {
@@ -22,11 +52,13 @@
   --line:       #dfddd5;
   --line-2:     #eceae4;
   --ink:        #14161a;
-  --ink-2:      #414650;
-  /* ⚠ ink-3 은 캡션·메타·눈금 같은 **11~13px 글자**에 쓴다. 예쁜 회색을 고르면
+  --ink-2:      #33383f;
+  /* ⚠ ink-3 은 캡션·메타·눈금 같은 **작은 글자**에 쓴다. 예쁜 회색을 고르면
      작은 글자에서 AA(4.5:1)가 깨진다 — 이 값은 흰 카드·회색 카드·본문 바탕
-     셋 모두에서 4.5 를 넘도록 잡았다 (#737a85 는 4.07 로 모자랐다). */
-  --ink-3:      #646b75;
+     셋 모두에서 4.5 를 넘도록 잡았다 (#737a85 는 4.07 로 모자랐다).
+     2026-09-03: #646b75 (4.9:1) 도 "흐리다" 는 지적을 받아 한 단 더 내렸다 —
+     AA 를 겨우 넘기는 것과 **읽기 편한 것**은 다르다. 지금은 6.0:1 근처. */
+  --ink-3:      #545b66;
 
   --accent:      #175d8d;
   --accent-2:    #0f4569;
@@ -76,8 +108,8 @@
   --line:       #2c323b;
   --line-2:     #232830;
   --ink:        #e7e8ea;
-  --ink-2:      #b4bac3;
-  --ink-3:      #8b929d;
+  --ink-2:      #c5cbd4;
+  --ink-3:      #9ba2ad;
 
   --accent:      #6cb2e2;
   --accent-2:    #9bcef0;
@@ -111,7 +143,7 @@
   :root:not([data-theme="light"]) {
     --bg:#0f1114; --surface:#16191e; --surface-2:#1c2027; --surface-3:#242931;
     --line:#2c323b; --line-2:#232830;
-    --ink:#e7e8ea; --ink-2:#b4bac3; --ink-3:#8b929d;
+    --ink:#e7e8ea; --ink-2:#c5cbd4; --ink-3:#9ba2ad;
     --accent:#6cb2e2; --accent-2:#9bcef0; --accent-soft:#142b3c; --on-accent:#0f1114;
     --ok:#56c08a; --ok-soft:#11291f; --bad:#ef8a80; --bad-soft:#2e1a18;
     --warn:#dcaa61; --warn-soft:#2b2214; --gap:#a99ce8; --gap-soft:#211f36;
@@ -131,10 +163,12 @@
    자간이 함께** 움직여야 계층이 보인다: 작은 글자는 촘촘하면 안 읽히고
    (--lh-ui), 큰 제목은 행간이 넓으면 흩어진다 (--lh-tight). */
 :root {
-  --sans: system-ui, -apple-system, "Segoe UI", Roboto, "Apple SD Gothic Neo",
-          "Noto Sans KR", "Malgun Gothic", "맑은 고딕", sans-serif;
-  --mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas,
-          "DejaVu Sans Mono", "Liberation Mono", monospace;
+  /* 앞의 둘은 우리가 서빙하는 파일, 뒤는 도착 전(또는 실패 시) 대역 */
+  --sans: "Pretendard", "Pretendard Variable", system-ui, -apple-system,
+          "Segoe UI", Roboto, "Apple SD Gothic Neo", "Noto Sans KR",
+          "Malgun Gothic", "맑은 고딕", sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, SFMono-Regular, "SF Mono", Menlo,
+          Consolas, "DejaVu Sans Mono", "Liberation Mono", monospace;
 
   --fs-3xl: 1.875rem;   /* 30px  페이지 제목            */
   --fs-2xl: 1.375rem;   /* 22px  본문 h1 / 큰 절 제목   */
@@ -142,9 +176,11 @@
   --fs-lg:  1.0625rem;  /* 17px  h3 · 카드 제목         */
   --fs-md:  1rem;       /* 16px  본문                   */
   --fs-sm:  .9375rem;   /* 15px  촘촘한 본문 · UI       */
-  --fs-xs:  .8125rem;   /* 13px  메타 · 캡션            */
-  --fs-2xs: .75rem;     /* 12px  칩 · 라벨              */
-  --fs-3xs: .6875rem;   /* 11px  눈금 · 아이라우            */
+  /* 작은 쪽 셋은 2026-09-03 에 한 단씩 올렸다 — 11px 는 한글에서 받침이 뭉갠다.
+     (13.5 / 12.5 / 11.5px. 실수 px 는 브라우저가 서브픽셀로 처리한다.) */
+  --fs-xs:  .84375rem;  /* 13.5px  메타 · 캡션          */
+  --fs-2xs: .78125rem;  /* 12.5px  칩 · 라벨            */
+  --fs-3xs: .71875rem;  /* 11.5px  눈금 · 아이브라우    */
 
   --lh-prose: 1.78;     /* 한글 본문은 라틴보다 행간이 더 필요하다 */
   --lh-ui:    1.5;
@@ -170,8 +206,12 @@ body {
   font-family: var(--sans);
   font-size: var(--fs-md);
   line-height: var(--lh-ui);
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  /* Pretendard 는 가변축이라 400 과 450 사이가 실제로 그려진다. 한글 본문은
+     라틴보다 획이 촘촘해 400 이면 화면에서 얇게 보인다 — 반 단 올린다.
+     (`-webkit-font-smoothing: antialiased` 는 **뺐다**. macOS 에서 획을 더
+      얇게 만들어 지금 고치려는 문제를 다시 만든다.) */
+  font-weight: 430;
+  font-optical-sizing: auto;
   text-rendering: optimizeLegibility;
 }
 
@@ -630,11 +670,13 @@ li.claim { border-left-width: 2px; margin-left: -.2em; }
 .toc-l a {
   display: block; padding: 4px 10px;
   border-left: 2px solid transparent; margin-left: -1px;
-  color: var(--ink-3); font-size: var(--fs-2xs); line-height: 1.45;
+  /* 목차는 **읽는 대상**이지 눈금이 아니다 — 본문 보조색까지 올린다 (흐리다는
+     지적, 2026-09-03). 계층은 색이 아니라 들여쓰기·크기로 낸다. */
+  color: var(--ink-2); font-size: var(--fs-2xs); line-height: 1.5;
   word-break: keep-all; transition: color var(--t), border-color var(--t);
 }
 .toc-l a:hover { color: var(--ink); text-decoration: none; border-left-color: var(--line); }
-.toc-l .lv-3 a { padding-left: 21px; font-size: var(--fs-3xs); }
+.toc-l .lv-3 a { padding-left: 21px; font-size: var(--fs-3xs); color: var(--ink-3); }
 /* 현재 위치 — 스크롤스파이가 붙인다 */
 .toc-l a.is-here { color: var(--accent); border-left-color: var(--accent); font-weight: 640; }
 
