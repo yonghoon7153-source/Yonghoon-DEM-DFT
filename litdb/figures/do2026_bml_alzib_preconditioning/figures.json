@@ -1,0 +1,112 @@
+{
+  "slug": "do2026_bml_alzib_preconditioning",
+  "mode": "embedded-raster",
+  "generated": "2026-09-03",
+  "sources": [
+    "794a02af-2026.09.02 …….pdf (md5 12fa7c66c7550c46cb8c3768ce615c59, 30 pages)"
+  ],
+  "extraction_note": [
+    "⚠ 이 폴더는 tools/litdb/extract_figures.py 산출물이 아니다. 이 환경에는 PyMuPDF 도 PDF 렌더러도 없어 캡션-앵커 영역 렌더가 불가능했다.",
+    "대신 PowerPoint 가 PDF 에 심어 둔 이미지 XObject 를 stdlib(zlib) + PIL 로 직접 꺼내 SMask 를 흰 배경에 합성했다.",
+    "⛔ 따라서 축 라벨 · 범례 · 주석 · 막대그래프 · 'Short-circuit' 화살표는 벡터로 그려져 있어 이 PNG 에 들어 있지 않다.",
+    "⛔ 곡선 모양은 보이지만 그 곡선이 어느 조건인지는 이 그림만으로 확정할 수 없다. 조건 배정은 digest 본문의 좌표 대조 결과를 따를 것.",
+    "label = 덱의 인쇄 슬라이드 번호 (= PDF 쪽 번호). digest 본문의 `Fig. 17` 표기가 이 label 17 을 가리킨다."
+  ],
+  "figures": [
+    {
+      "key": "F11",
+      "kind": "figure",
+      "label": "11",
+      "page": 11,
+      "file": "fig_11.png",
+      "panels": 1,
+      "viewed": true,
+      "caption": "슬 11 'Surface morphology of Cu after pre-conditioning' — pre-conditioned Cu 표면 SEM (래스터 1패널)",
+      "digest_note": "조밀한 결절상 전착이 표면을 덮은 것이 보인다. 본문의 'densely packed nanoscale Zn deposits' 와 일치."
+    },
+    {
+      "key": "F13",
+      "kind": "figure",
+      "label": "13",
+      "page": 13,
+      "file": "fig_13.png",
+      "panels": 4,
+      "viewed": true,
+      "caption": "슬 13 'Zn deposition morphology on pre-conditioned Cu' — 0.1 mAh Zn 전착 후 SEM 4패널",
+      "digest_note": "1장 = 기판과 평행한 판상(육각형에 가까움)이 치밀하게 깔림 (G7 주장 뒷받침), 2장 = 수직으로 선 판/침상(덴드라이트형), 1장 = 비교적 평탄. ⚠ 패널↔조건 배정은 라벨이 벡터라 미확정."
+    },
+    {
+      "key": "F16",
+      "kind": "figure",
+      "label": "16",
+      "page": 16,
+      "file": "fig_16.png",
+      "panels": 3,
+      "viewed": false,
+      "caption": "슬 16 'OCV as an operando descriptor' — Zn 로딩(0.1–1.6 mAh cm-2) · ZnI2 농도(0.1/0.2/0.3 M) 스윕",
+      "digest_note": "미판독 (맥락 예산). 본문 §5.5 는 텍스트 레이어 기준."
+    },
+    {
+      "key": "F17",
+      "kind": "figure",
+      "label": "17",
+      "page": 17,
+      "file": "fig_17.png",
+      "panels": 2,
+      "viewed": true,
+      "caption": "슬 17 'Corrosion resistance of pre-conditioned Cu' — 0.1 mAh cm-2 전착 후 휴지 OCV",
+      "digest_note": "figure-read ≈ : 한 곡선이 0 V 를 ≈4.1 h(2 M ZnSO4) / ≈3.0 h(+0.2 M ZnI2) 유지 후 상승, 나머지 두 곡선은 ≈0.1 h 안에 0.4 V 이상. 본문의 '~3–4 h vs ~10 min' 검증됨."
+    },
+    {
+      "key": "F19",
+      "kind": "figure",
+      "label": "19",
+      "page": 19,
+      "file": "fig_19.png",
+      "panels": 4,
+      "viewed": true,
+      "caption": "슬 19 'Average Zn CE measured by the modified Aurbach protocol' — 전압-시간 프로파일 4패널",
+      "digest_note": "figure-read ≈ : 0.5 mAh 프로토콜 ~40–43 min, 5 mAh 프로토콜 ~5.7 h 에서 최종 탈리 스파이크. 프로토콜 서술(0.1 mAh ×9 / 1 mAh ×9) 검증됨. ⚠ CE 막대(77.8/98.1 …)는 벡터라 이 PNG 에 없다."
+    },
+    {
+      "key": "F20",
+      "kind": "figure",
+      "label": "20",
+      "page": 20,
+      "file": "fig_20.png",
+      "panels": 4,
+      "viewed": false,
+      "caption": "슬 20 'Performance of in-situ pre-conditioned half cell' — 5 mA cm-2 · 1 mAh cm-2 전압 프로파일 4패널",
+      "digest_note": "미판독. 사이클 수(2700/1584/868/597)는 텍스트 x-좌표 대조로 확정 — digest §5.9."
+    },
+    {
+      "key": "F21",
+      "kind": "figure",
+      "label": "21",
+      "page": 21,
+      "file": "fig_21.png",
+      "panels": 2,
+      "viewed": true,
+      "caption": "슬 21 'Rate capability of pre-conditioned Cu at high areal capacity' (CCD, 10 mAh cm-2)",
+      "digest_note": "0–20 h, ±0.4 V vs Zn/Zn2+ 계단 프로파일. 각 패널에서 밝은 곡선이 어두운 곡선보다 먼저 종료. ⛔ C-rate 라벨(1C–10C)·'Short-circuit' 화살표는 벡터라 없다 → 본문의 4C/2C 는 그림으로 검증 못 함."
+    },
+    {
+      "key": "F23",
+      "kind": "figure",
+      "label": "23",
+      "page": 23,
+      "file": "fig_23.png",
+      "panels": 1,
+      "viewed": false,
+      "caption": "슬 23 'Pre-conditioning in full-cell configuration' (Cu||AC, 0.1 mAh/cycle, 0.6 V cut-off)",
+      "digest_note": "미판독."
+    }
+  ],
+  "not_extractable": [
+    "Fig. 7 / 8 / 9 (CE·과전압 vs 사이클) — 전량 벡터. '~500 사이클 수렴' 이라는 이 덱의 핵심 주장을 그림으로 검증하지 못했다.",
+    "Fig. 12 (XRD) — 벡터. 43° 피크(G1)를 직접 못 봤다. 대신 db/properties/zn_cu_phase_fingerprint_2026_09_03.json 의 계산으로 답했다.",
+    "Fig. 14 / 26 (EIS Nyquist) — 벡터. 축 눈금(0–120 / 0–8 / 0–15 Ω cm²)만 텍스트로 확보.",
+    "Fig. 22 벤치마크 · Fig. 24 / 25 (풀셀 SEM·XRD) · Fig. 27 · Fig. 28 — 미추출 또는 슬라이드 대응 불확실.",
+    "슬라이드 전체 렌더 0장 (렌더러 없음)."
+  ]
+}
