@@ -1,6 +1,15 @@
 ---
 title: 회신 BF — C-12 v29 VASP 외주 번들 (실행 NO-GO · P0 4 · P1 4 · Q1–Q3)
 date: 2026-09-03
+updated: 2026-09-03
+tags: [review, codex, sdcp, c12, vasp, reply]
+status: 회신반영
+kind: review-reply
+system: sdcp
+confidence: high
+verificationStatus: verified
+verifiedAt: 2026-09-03
+verifiedBy: "회신 원문 (마지막 codex 리뷰 · P0 4건 + P1 이행 커밋 c895bbb4)"
 campaign: sdcp_c12_vasp_handoff
 target: v29 번들 (원격 add4951e…) · 생성기 tools/sdcp/vasp_handoff_bundle.py
 verdict: 실행 NO-GO — 현재 실물 무결성 PASS · "잘못 생성된 다음 번들도 fail-closed 로 막는가" NO-GO

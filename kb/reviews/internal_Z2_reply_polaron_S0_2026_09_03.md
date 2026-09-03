@@ -1,6 +1,15 @@
 ---
 title: 회신 Z-2 — 폴라론 S0 내부 적대적 리뷰 2차 (NO-GO · P0 2 · P1 9)
 date: 2026-09-03
+updated: 2026-09-03
+tags: [review, internal, sdcp, polaron, orca, reply]
+status: 회신반영
+kind: review-reply
+system: sdcp
+confidence: high
+verificationStatus: verified
+verifiedAt: 2026-09-03
+verifiedBy: "내부 리뷰 원문 (scratch mutation 17건 · P0 2건 이행 커밋 341e0d7e)"
 campaign: sdcp_polaron_S0
 reviewer: 내부 (별도 컨텍스트 서브에이전트 · 파일 무수정 · scratch 사본 mutation 17개)
 target: 커밋 52b0edcd (회신 Z 이행) + 6d61104f (사전등록 재발행)

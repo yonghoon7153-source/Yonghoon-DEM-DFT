@@ -1,6 +1,6 @@
 # kb 카탈로그 (생성물 — 손으로 고치지 말 것)
 
-> `python3 tools/kb_wiki.py index` 가 만든다 · 2026-09-03 · managed-files: 340
+> `python3 tools/kb_wiki.py index` 가 만든다 · 2026-09-03 · managed-files: 344
 
 규칙: kb/SCHEMA.md · 열린 질문: kb/questions/ · 논지 카드: kb/syntheses/ · 원장: kb/open_items.md · 문헌: litdb/INDEX.md
 
@@ -172,7 +172,7 @@
 - `kb/results/vgcf_hbn_figure_plan.md` — VGCF/h-BN 원고 — 층수 연구를 어디에 둘 것인가 (2026-07-31 결정)
 - `kb/results/vgcf_hbn_gallery_mechanism_2026_07_30.md` — h-BN@VGCF — 209 meV 층수효과의 정체: confinement 확정 (2026-07-30)
 
-## reviews/ (91)
+## reviews/ (95)
 - `kb/reviews/ECERD2600097_review_notes.md` — 📝 리뷰 노트 — ECER-D-26-00097 (Fan 외, *Stability Issues in Sulfide-Based ASSB*)
 - `kb/reviews/INDEX.md` — 리뷰 사슬 색인 — 프롬프트↔회신 (자동 생성) ○미열람
 - `kb/reviews/codex_AA_prompt_stageA_v5_regate_2026_08_29.md` — Codex 재검토 요청 AA — 회신 Z 의 P0 8건 처리 후 Stage A v5 재게이트 ○미열람
@@ -209,6 +209,7 @@
 - `kb/reviews/codex_BB_prompt_c12_v22_2026_09_02.md` — 리뷰 요청 BB — C-12 v22 (회신 BA 해제조건 8건 + 거버넌스 비준) ○미열람
 - `kb/reviews/codex_BC_prompt_c12_v23_2026_09_02.md` — 리뷰 요청 BC — C-12 v23 (회신 BB P0 6건 + P1 6건 이행 · clean tree 재생성) ○미열람
 - `kb/reviews/codex_BF_prompt_c12_v29_2026_09_03.md` — 리뷰 요청 BF — C-12 v29 (회신 BE P0 4건 + P1 3건 이행 · clean tree 재생성) ○미열람
+- `kb/reviews/codex_BF_reply_c12_v29_2026_09_03.md` — 회신 BF — C-12 v29 VASP 외주 번들 (실행 NO-GO · P0 4 · P1 4 · Q1–Q3)
 - `kb/reviews/codex_B_neb_md_tools_2026_08_20.md` — 교차리뷰 B — NEB · MD · 도구 (codex 작업지시서) ○미열람
 - `kb/reviews/codex_C_funnel_2026_08_20.md` — 교차리뷰 C v2.1 — cascade 깔때기는 잘 작동했나 (codex 2라운드 종료) ○미열람
 - `kb/reviews/codex_D_symposium_talk_standard_2026_08_25.md` — 교차리뷰 D — 심포지엄 세션(덱+녹취) 표준 (codex 작업지시서) ○미열람
@@ -252,7 +253,10 @@
 - `kb/reviews/codex_X_bundle_reply_2026_08_29.md` — Codex 회신 X — prospective 번들 NO-GO · P0 6건 · Stage A/B 재설계 ○미열람
 - `kb/reviews/codex_X_prompt_polaron_S0_2026_09_02.md` — 리뷰 요청 X — 폴라론 S0 (회신 W P0 8건 이행 · 사전등록 비준 완료) ○미열람
 - `kb/reviews/codex_X_prompt_prospective_bundle_ready_2026_08_29.md` — Codex 회신 X 요청 — prospective 번들 40잡, 던지기 전 최종 감사 (실물 첨부) ○미열람
+- `kb/reviews/codex_Y_reply_polaron_S0_2026_09_03.md` — 회신 Y — 폴라론 S0 (NO-GO · P0 8 · P1 8 · Q1–Q5)
 - `kb/reviews/codex_stats_question_2026_08_11.md` — Codex 질문 — 통계 판정 3건 (β 귀무분포 · 사다리 설계 · BVSE 부호 · 판정바닥 ddof)
+- `kb/reviews/internal_Z2_reply_polaron_S0_2026_09_03.md` — 회신 Z-2 — 폴라론 S0 내부 적대적 리뷰 2차 (NO-GO · P0 2 · P1 9)
+- `kb/reviews/internal_Z_reply_polaron_S0_2026_09_03.md` — 회신 Z — 폴라론 S0 내부 적대적 리뷰 (NO-GO · P0 4 · P1 12)
 - `kb/reviews/section3_review_candidates.md` — 📋 §3 리뷰 코멘트 후보 — 소거법 작업용 (ECER-D-26-00097)
 - `kb/reviews/section3_review_comments_compressed.md` — Comments on Section 3 (Intrinsic Stability of Sulfide SEs) — 압축판 v2
 - `kb/reviews/sei_neb_li3nd_rereview_request_2026_08_11.md` — 재리뷰 요청 — SEI NEB 6종 · Li₃Nd 금속 분기 · P2 범위 축소 (착수 직전)
