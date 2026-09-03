@@ -13,7 +13,9 @@
 
 | # | 내용 | 필요한 것 | 상태 |
 |---|---|---|---|
-| 1 | **PVS Jacobian** — 합성 truth 격자의 곡선에서 PVS 를 계산하고, 모드 파라미터에 대한 Jacobian 특이값으로 국소 식별 가능성을 판정 | degradation-degeneracy 의 기존 dQ/dV 경로 재사용 (읽기 전용) | 미착수 |
+| 1 | **PVS Jacobian** — 합성 truth 격자의 곡선에서 PVS 를 계산하고, 모드 파라미터에 대한 Jacobian 특이값으로 국소 식별 가능성을 판정 | degradation-degeneracy 의 기존 dQ/dV 경로 재사용 (읽기 전용) | ○ `phase1_pvs_jacobian.py` · `docs/PHASE1_NOTES.md` |
+| 1b | **연속 추적 PVS** — Phase 1 의 비단조가 물리가 아니라 창내 극값 갈아타기였다 | 위와 같음 | ○ `phase1b_tracked_pvs.py` · `docs/PHASE1B_NOTES.md` |
+| **1c** | **Lin 의 해석적 null 방향을 우리 좌표에서 수치 검증** — `JᵀJ` 최소 고유벡터가 `(1,1,1)/√3` 과 **12.04°** 안에서 일치. 조건수는 18.2 뿐이라 **구조적 축퇴가 아니라 잡음 제한 축퇴**다 | 위와 같음 | ○ `phase1c_null_direction.py` · **`docs/PHASE1C_NOTES.md`** |
 | 2 | **SEV 시뮬레이션** — PyBaMM P2D 로 0.2C 전류 차단 프로토콜을 돌려 ΔV(1 s)·SEV 를 합성하고, (PVS, SEV) 2×3 Jacobian 으로 "부호는 같아도 감도 비가 다른가"(H2)를 판정 | 동역학 파라미터 세트 (열역학만으로는 안 됨) | 미착수 — **2026-09-03 실측 대조 층의 제약 확정** (아래) |
 | 3 | **ML 라벨 degeneracy 전파** — fitted 라벨로 학습한 모드 예측 ML 이 라벨의 비식별성을 어떻게 물려받는지, 정답을 아는 합성 데이터로 정량화. 프로토콜 식별자 입력의 기여 분리 (permutation/SHAP) | Phase 1–2 의 feature + RF/GBM (sklearn) | 미착수 |
 
