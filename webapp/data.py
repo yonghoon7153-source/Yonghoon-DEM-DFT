@@ -1010,6 +1010,45 @@ def canonical_status_for(cid: str) -> dict:
     return out
 
 
+#: NEB 결과 키의 상(phase) 부분 → SEI 표의 tag stem. 루트 라벨은 상이 아니라 **실행 계보**다.
+_NEB_PHASE_ALIAS = {"li3nd": "lindo2", "li3po4g": "li3po4g", "li2o": "li2o",
+                    "li2s": "li2s", "li3p": "li3p", "licl": "licl"}
+
+
+def sei_neb_by_phase() -> dict:
+    """`db/properties/sei_neb.json` 을 **상별 한 건**으로 정리한다. → {phase: rec}
+
+    왜 필요한가 (2026-09-04): 이 파일의 키는 `<루트라벨>/<상>` 이고 같은 상이 루트마다
+    있다 (`v2/li3nd` 2.07 eV 옛 경로 vs `v2_ccpath/li3nd` 0.229 eV). 화면이 아무거나
+    집으면 **철회된 경로의 값을 보여준다.** 고르는 규칙을 여기 한 곳에 둔다.
+
+    규칙 — ① `Ea_effective_eV` 가 있어야 후보다 ② 그중 `scientific_status` 가 **적힌**
+    것만 남긴다 (인용자격 계약을 통과한 기록이다. 상태가 없는 건 계약 이전 기록이다)
+    ③ 그래도 둘 이상이면 **고르지 않고** `ambiguous` 로 표시한다 — 조용히 하나를 집는
+    것이 이 repo 에서 제일 비싼 실수다.
+
+    ⛔ 이 함수가 **못 하는 것**: 셀 수렴을 판정하지 않는다. 전건이
+      `provisional_single_cell` 이면 그대로 실어 나른다 — 화면이 그 상태를 그대로 적어야 한다.
+    """
+    j = _load_json_safe("db/properties/sei_neb.json") or {}
+    res = j.get("results") or {}
+    by: dict = {}
+    for key, v in res.items():
+        if not isinstance(v, dict) or v.get("Ea_effective_eV") is None:
+            continue
+        root, _, phase = key.rpartition("/")
+        by.setdefault(phase or key, []).append(dict(v, _root=root, _key=key))
+    out = {}
+    for phase, cands in by.items():
+        rated = [c for c in cands if c.get("scientific_status")]
+        pick = rated or cands
+        rec = dict(pick[0])
+        rec["ambiguous"] = (len(pick) > 1)
+        rec["superseded_keys"] = sorted(c["_key"] for c in cands if c is not pick[0])
+        out[phase] = rec
+    return out
+
+
 def sei_summary() -> dict:
     """SEI 분해상 캠페인 요약 — 갭 × 형성전위를 한 표로 (2026-08-07).
 
@@ -1031,6 +1070,13 @@ def sei_summary() -> dict:
             "li2s": ("Li₂S", "Li2S"), "li3p": ("Li₃P", "Li3P"),
             "lindo2": ("LiNdO₂", "LiNdO2"), "nd2o3": ("Nd₂O₃", "Nd2O3"),
             "nd2s3": ("Nd₂S₃", "Nd2S3")}
+    # 🔴 2026-09-04 — NEB Li 이동장벽을 같은 표에 싣는다 (상 → 값). 상별 선택 규칙은
+    #   sei_neb_by_phase() 한 곳에만 있다. ⛔ BVSE 프록시와는 같은 표에 두지 않는다
+    #   (sei_neb.json 의 warning: 단위는 같아도 다른 양이다).
+    _NEB = sei_neb_by_phase()
+    _neb_by_stem = {}
+    for _ph, _r in _NEB.items():
+        _neb_by_stem[_NEB_PHASE_ALIAS.get(_ph, _ph)] = _r
     rows, rejected = [], []
     for tag, g in G.get("results", {}).items():
         # ★ status allowlist — denylist 는 새 status 가 생길 때마다 뚫린다.
@@ -1054,6 +1100,17 @@ def sei_summary() -> dict:
              "vstatus": v.get("status"),
              "decomp": " + ".join(v.get("decomposition_products_above_window")
                                   or v.get("decomposition_products_at_min") or [])}
+        # ⚠ 키를 **항상** 넣는다. 값이 있을 때만 넣으면 템플릿이 Undefined 에 걸려
+        #   페이지가 통째로 500 이 된다 (2026-09-04 실측).
+        _nb = _neb_by_stem.get(stem) or {}
+        r.update({
+            "ea_neb": _nb.get("Ea_effective_eV"),
+            "ea_neb_status": _nb.get("scientific_status"),
+            "ea_neb_citable": bool(_nb.get("citable")),
+            "ea_neb_class": _nb.get("electronic_class"),
+            "ea_neb_root": _nb.get("_root"),
+            "ea_neb_ambiguous": bool(_nb.get("ambiguous")),
+            "ea_neb_superseded": _nb.get("superseded_keys") or []})
         (rejected if r["gap_rejected"] else rows).append(r)
     rows.sort(key=lambda x: -(x["gap"] or 0))
     return {
@@ -1064,7 +1121,23 @@ def sei_summary() -> dict:
                 "db/properties/sei_dos_panels_origin.csv"],
         "note": ("갭 = **우리 QE** fixed-occ nscf 고유값 (PBE — 넓은 갭에서 30–50% 과소, "
                  "**순위로만**). 형성전위 = **Materials Project** GGA/GGA+U 대분배 위상도. "
-                 "★ 출처가 다르므로 두 축의 절대값을 섞어 인용하지 말 것."),
+                 "Ea = **우리 QE CI-NEB** (공공 매개 Li 홉). "
+                 "★ 세 축의 출처가 다르므로 절대값을 섞어 인용하지 말 것."),
+        # 🔴 2026-09-04 — NEB 값을 표에 실으면서 그 값의 **한계도 같이** 싣는다.
+        #   sei_neb.json 의 warning 을 화면이 그대로 말하지 않으면 표가 거짓말을 한다.
+        "neb_note": ("Ea 는 jellium 유한셀 근사 위의 값이다 — **셀 수렴을 확인하기 전에는 "
+                     "절대값을 실험과 나란히 놓지 않는다.** 용도는 **상 사이 비교**다. "
+                     "전하 규약이 상마다 갈린다: 부도체 = V_Li⁻(tot_charge −1) + jellium · "
+                     "gaussian smearing / 금속 = 중성 공공(tot_charge 0) · mv smearing. "
+                     "⛔ BVSE 프록시 값과 같은 표에 놓지 말 것 (단위는 같아도 다른 양이다)."),
+        "neb_extra": [
+            {"name": ("Li metal (bcc)" if p == "li_metal" else p), "phase": p,
+             "ea": r.get("Ea_effective_eV"), "status": r.get("scientific_status"),
+             "citable": bool(r.get("citable")), "cls": r.get("electronic_class"),
+             "root": r.get("_root")}
+            for p, r in sorted(sei_neb_by_phase().items())
+            if _NEB_PHASE_ALIAS.get(p, p) not in {x.get("tag", "").split("_mp")[0]
+                                                  for x in rows}],
     }
 
 
@@ -1117,6 +1190,12 @@ def sei_axes() -> dict:
             neb_reason = _nj.get("retraction_reason")
         except (OSError, ValueError):
             neb = {}
+    # 🔴 2026-09-04 — 분모를 하드코딩 6 으로 두면 루트가 늘 때마다 화면이 틀린다.
+    #   협업자 요청 6종을 **명시**하고, 그 밖의 상(li_metal 같은 참조계)은 따로 센다.
+    _REQ6 = ("li2o", "li3po4g", "li3nd", "licl", "li2s", "li3p")
+    _bp = sei_neb_by_phase()
+    _req_done = {p: r for p, r in _bp.items() if p in _REQ6}
+    _extra = {p: r for p, r in _bp.items() if p not in _REQ6}
     n_neb = sum(1 for v in neb.values() if v.get("citable"))
     # ⛔ 2026-08-16 — citable 0 을 "계산 안 됐다" 로 읽히게 두면 안 된다. 셀 수렴 축을
     #   따로 세우면서 li2s·li3nd 가 provisional_single_cell 로 내려가 citable 이 0 이 됐는데,
@@ -1133,8 +1212,15 @@ def sei_axes() -> dict:
          "detail": ("⛔ 기존 NEB 결과 전건 철회 (2026-08-11) — 재계산 대기. "
                     "협업자 요청 6종: Li₂O · Li₃PO₄γ · LiNdO₂ · LiCl · Li₂S · Li₃P"
                     if neb_retracted else
-                    (f"DFT CI-NEB — 경로 수치 유효 {n_neb_path_ok}/6 · "
-                     f"셀 수렴 확인 {n_neb}/6 (인용 가능)"
+                    ((f"DFT CI-NEB — 요청 6종 중 값 나온 것 {len(_req_done)}/6 · "
+                      f"셀 수렴 확인 {n_neb}/6 (인용 가능)"
+                      + ("  ·  " + " / ".join(
+                          f"{p} {r['Ea_effective_eV']:.3f}"
+                          for p, r in sorted(_req_done.items())) if _req_done else "")
+                      + ("  ·  참조계 " + " / ".join(
+                          f"{p} {r['Ea_effective_eV']:.3f}"
+                          for p, r in sorted(_extra.items())) if _extra else "")
+                      + "  eV  ⚠ 전건 셀 수렴 미시험 — **상 사이 비교용**")
                      if neb else
                      "DFT CI-NEB 계산 중 (협업자 요청 6종)")),
          "why": ("BVSE 는 화학계를 넘나드는 비교에 못 쓴다 — 하필 Figure 5 의 주인공 "

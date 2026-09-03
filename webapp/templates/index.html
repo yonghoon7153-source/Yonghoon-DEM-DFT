@@ -71,6 +71,7 @@
   <table class="data-table">
     <thead><tr>
       <th>상</th><th class="num">Band gap (eV)</th>
+      <th class="num">Li 이동장벽 E<sub>a</sub> (eV)</th>
       <th class="num">안정 구간 (V vs Li/Li⁺)</th><th>구간 밖에서 →</th><th>읽는 법</th>
     </tr></thead>
     <tbody>
@@ -78,6 +79,14 @@
       <tr>
         <td><b>{{ r.name }}</b> <span class="muted mono" style="font-size:.7rem">{{ r.mp }}</span></td>
         <td class="num"{% if r.gap and r.gap < 2 %} style="color:#b91c1c;font-weight:700"{% endif %}>{{ '%.3f'|format(r.gap) }}</td>
+        {# 🔴 2026-09-04 — NEB Ea. 전건 셀 수렴 미시험이라 값 옆에 상태를 **항상** 붙인다.
+           숫자만 보여주면 인용 가능한 값으로 읽힌다 (sei_neb.json 은 citable=false 다). #}
+        <td class="num">
+          {%- if r.ea_neb is not none %}{{ '%.3f'|format(r.ea_neb) }}
+            <span class="badge" style="color:#b45309;background:#fef3c7;font-size:.62rem"
+                  title="{{ r.ea_neb_status }} · 실행계보 {{ r.ea_neb_root }}{% if r.ea_neb_superseded %} · 대체됨: {{ r.ea_neb_superseded|join(', ') }}{% endif %}">잠정</span>
+            {%- if r.ea_neb_ambiguous %} <span class="badge" style="color:#b91c1c;background:#fee2e2;font-size:.62rem">복수해</span>{% endif %}
+          {%- else %}—{% endif %}</td>
         <td class="num">{% if r.vlo is not none %}{{ '%.2f'|format(r.vlo) }} – {{ '%.2f'|format(r.vhi) }}{% else %}—{% endif %}</td>
         <td class="mono" style="font-size:.75rem">{{ r.decomp or '—' }}</td>
         <td class="muted" style="font-size:.74rem">
@@ -97,6 +106,16 @@
     <b>MP frozen-4f 값을 인용할 것.</b>
     <span class="mono" style="font-size:.92em">kb/projects/sei_products_2026_08_06.md §최종 판정</span>
   </div>
+  {% endif %}
+  {% if sei.neb_extra %}
+  <div class="muted" style="font-size:.76rem;margin-top:10px;line-height:1.6">
+    📐 <b>참조계</b> (SEI 분해상이 아니라 비교 기준):
+    {% for e in sei.neb_extra %}<b>{{ e.name }}</b> E<sub>a</sub> = {{ '%.3f'|format(e.ea) }} eV
+      <span class="mono" style="font-size:.9em">({{ e.cls or '?' }})</span>{{ ' · ' if not loop.last }}{% endfor %}
+  </div>
+  {% endif %}
+  {% if sei.neb_note %}
+  <div class="callout cal-warn" style="margin-top:10px;font-size:.75rem">{{ sei.neb_note|mdlite }}</div>
   {% endif %}
   <div class="muted" style="font-size:.74rem;margin-top:10px">{{ sei.note|mdlite }}</div>
   <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:12px">
