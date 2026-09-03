@@ -5,7 +5,7 @@ created: 2026-08-11
 updated: 2026-09-03
 type: research-question
 tags: [battery, degradation, research]
-sources: [raw/repositories/degradation-degeneracy-audit.md]
+sources: [raw/repositories/degradation-degeneracy-audit.md, raw/papers/birkl2017_degradation-diagnostics-ocv.md]
 confidence: medium
 explored: false
 verificationStatus: unverified
@@ -44,6 +44,21 @@ LAM_PE ≈ LAM_NE 는 물리가 아니라 **flat valley 방향에서 두 전극�
   국소해로 수렴**할 수 있고, 그 원점 차이가 붕괴율 차이와 같이 움직인다.
   분해 결과가 데이터가 아니라 최적화 경로에 의존하는 통로가 실재한다는 뜻 —
   진단 도구 `tools/diagnose_pini_transition.py`, 절차적 함의는 아래 Status Log.
+- **[2026-09-03, 원전 흡수]** 이 절차의 원전
+  ([[birkl-ocv-degradation-diagnostic]], Birkl et al. 2017) 이 **자기 방법의
+  축퇴를 명시적으로 진술한다** — "a combination of e.g. LLI and LAM_NE,de
+  creates the same OCV signature as an equal amount of LAM_NE,li. … The
+  fractions of lithiated and delithiated LAM can therefore **not be uniquely
+  identified**" (§4.2, p.382). 저자들의 대응은 축퇴를 푸는 것이 아니라
+  `[total-LLI, LAM_PE, LAM_NE]` 라는 **동치류 좌표로 옮기는 것**이다. 즉
+  이 계열 방법의 출력은 처음부터 **몫공간의 값**이며, 원전이 그렇게 설계했다고
+  적는다.
+- **[2026-09-03] 원전에 식별 가능성 진단이 하나도 없다.** 파라미터 상관·Hessian·
+  신뢰구간·노이즈 스윕이 전무하고, 국소최소 대응은 `fmincon` + MultiStart 100회
+  뿐이며 그 100개 해의 분포도 보고되지 않는다. Fig. 8 의 오차 막대는 **코인셀
+  제작 재현성(5.4%)** 이지 추정 불확실성이 아니다 — 논문이 §4.3 에서 명시한다.
+  즉 이 카드의 질문은 원전이 **비워 둔 자리**이지, 이미 답이 있는데 우리가
+  모르는 것이 아니다.
 
 ## Evidence Against
 - (방향성 관측, 인용 금지 등급) half-cell 기준(Case 1)과 dQ/dV 항 추가가 복원
@@ -60,6 +75,22 @@ LAM_PE ≈ LAM_NE 는 물리가 아니라 **flat valley 방향에서 두 전극�
 - 남아 있는 반대 근거는 좁다: 붕괴가 **전 조건에서 일어나지는 않는다**. 다만 그
   낮은 사건률의 상당 부분이 임계 설정(판정선 간격 대 실측 격차오차)의 결과라
   원장이 명시하므로, 이것을 "물리다"의 근거로 쓸 수 없다.
+- **[2026-09-03, 원전 흡수] 원전의 실험 검증이 이 카드가 받은 가장 강한 반대
+  근거다.** Birkl 2017 은 열화를 **공학적으로 제작한 코인셀 6종**(디스크 지름
+  → LAM, 조립 SoC → LLI)에서 지배 모드를 대체로 맞혔다 (raw digest §8.2 표).
+  정답이 fitting 이 아니라 **독립적인 제작 설계값**이라는 점에서, 이 카드가
+  지금까지 받은 근거 중 유일하게 "적어도 큰 신호에서는 분해가 실물을 되짚는다"
+  는 방향이다. **다만 무게는 제한적이다**: (a) 정답 6점뿐, (b) 오차 막대가
+  추정 분산이 아니고, (c) 잃은 활물질이 "가위로 잘라낸 균일한 조각"이라 원전의
+  핵심 가정(열화가 개별 상에 다르게 작용하지 않는다)을 구조적으로 시험하지
+  못하며, (d) 6셀 중 4셀에서 **없어야 할 LAM_PE 가 일관되게 6–10%p 새어
+  나온다** — 저자는 셀별 제작 아티팩트로 설명하지만 "LAM_PE 방향이 잘 안
+  갈린다"는 축퇴 해석도 같은 데이터를 설명하고, 원전은 그 대안을 검토하지
+  않는다.
+- **[2026-09-03] 합성 검증은 반대 근거로 세지 않는다.** 원전 Fig. 7 의 3점
+  완전 복원(RMSE 0.0 mV)은 **생성 모델 = 적합 모델, 노이즈 0** 의 inverse crime
+  이다. 저자의 "proves … uniquely identify" 문장은 그 설계가 지지하는 범위를
+  넘는다.
 
 ## Status Log
 - **[2026-08-05]** 세미나 22p 발표 — 질문 성립.
@@ -90,3 +121,28 @@ LAM_PE ≈ LAM_NE 는 물리가 아니라 **flat valley 방향에서 두 전극�
   답이 이 카드의 "어떤 측정에서 의미를 갖는가" 에 직접 들어온다.
   이 카드의 상태는 바뀌지 않는다 (`active` 유지) — 새 근거는 아직 없고,
   갈라진 질문만 등록했다.
+- **[2026-09-03 (2)]** 이 절차의 **원전**을 흡수했다 —
+  [[birkl-ocv-degradation-diagnostic]] (raw:
+  `raw/papers/birkl2017_degradation-diagnostics-ocv.md`). status 는 `active`
+  유지. 이 카드에 실제로 달라진 것 셋:
+  1. **"저자들이 식별 가능성에 침묵하는가"에 답이 나왔다 — 침묵하지 않는다.**
+     한 종류의 축퇴(pure-LLI + LAM_de ↔ LAM_li)를 정확히 지목하고, 3-파라미터
+     출력이 그 **동치류 좌표**임을 설계 이유로 적는다. 다만 3-파라미터 공간
+     **안에서의** 식별 가능성(우리가 재는 것)에 대한 진단은 전혀 없다.
+     → 후속 인용자가 이 문단을 인용하지 않는 것이 문제이지 원전이 숨긴 것이
+     아니다. 우리 기여의 자리는 "원전이 말한 축퇴"가 아니라 "원전이 안 잰
+     축퇴"다.
+  2. **★ 우리가 재는 절차가 원전과 같지 않다.** Birkl 원안은 자유 파라미터가
+     **3개**이고 `Δx_EoC`/`Δx_EoD` 를 **컷오프 전압 등식(Eq. 11–12)으로
+     소거**한다. 우리 저장소 문서가 서술하는 창 모델(α_PE, β_PE, α_NE, β_NE)은
+     그 제약이 없다. **우리가 관측한 degeneracy 의 일부가 원전에 없는
+     자유도에서 올 수 있다** — 검증 가능한 가설이며, 답이 이 카드의 "어떤
+     조건에서 분해가 의미를 갖는가" 에 직접 들어온다. 반대로 원안은 절대
+     전압을 등식으로 쓰므로 우리가 이미 관측한 **OCP 수 mV 왜곡 민감도**가 더
+     나쁘게 나타날 개연성이 있다. 둘 다 미실측.
+  3. **인용 확인 항목 하나 열림**: `degradation-degeneracy/docs/02_CODE_AUDIT.md`
+     와 `docs/04_PROMPTS.md` 의 `LLI = (1−α_PE) + (β_PE − β_NE)` 에 붙은
+     "Birkl 2017 부호 규약" 주석은 **이 논문 본문으로 확인되지 않는다**
+     (본문에 α·β 창 파라미터가 없다). 다른 문헌([19] Dubarry 2012, [26]
+     Marongiu 2016)이거나 유도 결과일 수 있다. 이번 세션은 그 문서를 **읽기만
+     하고 고치지 않았다**.

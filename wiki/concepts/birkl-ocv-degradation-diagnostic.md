@@ -1,0 +1,136 @@
+---
+title: Birkl OCV 열화 진단 알고리즘 (2017)
+description: "3-parameter OCV fitting for LLI/LAM_PE/LAM_NE: cut-off constraints, the li/de degeneracy the authors themselves state, and how it differs from our window model"
+created: 2026-09-03
+updated: 2026-09-03
+type: concept
+tags: [battery, degradation, research]
+sources: [raw/papers/birkl2017_degradation-diagnostics-ocv.md]
+confidence: medium
+explored: false
+verificationStatus: unverified
+claimType: definition
+evidenceScope: single-source
+---
+
+# Birkl OCV 열화 진단 알고리즘 (2017)
+
+## 정의
+
+Birkl, Roberts, McTurk, Bruce, Howey, *J. Power Sources* **341** (2017) 373–386
+(doi:10.1016/j.jpowsour.2016.12.011, CC BY) 이 제시한 진단 알고리즘.
+**full-cell pseudo-OCV 하나만으로** 세 열화 모드 `[LLI, LAM_PE, LAM_NE]` 를
+추정한다. 미분(ICA/DVA)을 쓰지 않는 것이 설계 목표였다.
+
+절차는 **3단계**이고 자유도가 단계마다 다르다 (수식·기호는 raw digest §6):
+
+| 단계 | 대상 | 자유 파라미터 | 목적함수 |
+|---|---|---|---|
+| 1 | 반쪽셀 OCP → 5상 해석 모델 (Eq. 1) | 전극당 **15** (E₀ᵢ, Δxᵢ, aᵢ × 5상) | 전압 RMSE (Eq. 2) |
+| 2 | 기준 full-cell + 두 반쪽셀 동시 재적합 | **30** (PE 15 + NE 15) | 세 RMSE 의 **단순 합** (Eq. 5) |
+| 3 | 열화셀 full-cell OCV | **3** = `[LLI, LAM_PE, LAM_NE]` (Eq. 19) | full-cell 전압 RMSE (Eq. 18) |
+
+단계 1–2 는 pristine 기준셀에서 **한 번만** 수행하고 이후 30개를 **고정**한다.
+전제: "열화가 개별 상에 서로 다르게 작용하지 않는다."
+
+**핵심 구조 — 컷오프가 자유도를 소거한다.** 모드는 전극 창에 (i) offset(LLI),
+(ii) scaling(LAM), (iii) stoichiometric offset `Δx_EoC`/`Δx_EoD` 로 작용한다
+(Eq. 7–10). 셋째 항인 `Δx_EoC`/`Δx_EoD` 는 **자유 변수가 아니다** — 고정
+컷오프 전압(4.2 V / 2.7 V)이 두 개의 등식(Eq. 11–12)을 주고, 그 선형계를 풀어
+결정된다. 이 "imposed voltage limits 가 만드는 stoichiometric offset" 을 모델에
+넣은 것이 저자들이 주장하는 문헌 대비 기여다 (30% LLI 에서 ~2% 의 용량 이득).
+
+최적화: MATLAB `fmincon` **active-set** + `MultiStart` **100회**. 경계값과
+초기값 목록은 인쇄되지 않았다. 목적함수는 가중치 대신 **하드 마스크**를 쓴다 —
+`ΔE_Cell,deg/ΔSoC < 0.1` 구간으로 RMSE 계산을 제한한다 (EoD 쪽 급경사 편향
+방지). 단, 논문이 **보고하는** RMSE 는 전 구간(2.7–4.2 V) 기준이라 최소화된
+값과 다르다.
+
+## 저자들이 명시한 축퇴 ★
+
+이 페이지가 존재하는 이유. 저자들은 식별 가능성에 **침묵하지 않는다** — 한
+종류의 축퇴를 지목하고, 그것을 풀지 않고 **파라미터화를 바꿔 우회한다**
+(원문 §4.2, p.382, 전문은 raw digest §7):
+
+> "a combination of e.g. LLI and LAM_NE,de creates the same OCV signature as an
+> equal amount of LAM_NE,li. The same holds true for combinations of LLI and
+> LAM_PE. **The fractions of lithiated and delithiated LAM can therefore not be
+> uniquely identified** if the assumption is that LLI can occur simultaneously,
+> resulting from a different mechanism."
+
+따라서 출력 3종은 **동치류에 붙인 좌표**다:
+- `LAM_PE`/`LAM_NE` = **총량**(lithiated + delithiated). 하위 귀속 불가.
+- `LLI` = **total LLI** = pure LLI (SEI 등) **+** lithiated LAM 안에 갇힌 리튬.
+  원문 예시: pure 10% + LAM_NE,li 5% → total LLI 15%.
+- 조건부 예외: LAM 이 검출되고 LLI 가 0 이면 그 LAM 은 delithiated 로 유일 식별.
+
+반대 방향의 강한 문장도 같은 절에 있다 — 합성 3점 복원을 두고 "proves the
+ability of the diagnostic algorithm to **uniquely identify** the three different
+degradation modes". 그러나 그 근거는 **같은 모델로 만든 무노이즈 데이터**
+(Fig. 7 의 RMSE 0.0 mV)이므로 inverse crime 이고, 전칭 명제의 증명이 아니다.
+파라미터 상관·Hessian·신뢰구간·노이즈 스윕은 논문 전체에 **없다**.
+
+## 왜 중요한가
+
+이 알고리즘은 **[[degradation-degeneracy]] 가 식별 가능성을 판정하는 대상
+절차의 원전**이다. 2026-09-02 BML 세미나(김시원) p.3 이 "half-cell OCP 를
+full-cell OCV 에 fitting" 이라 적으며 인용한 문헌이 이것이고, 그 세미나의 ML
+라벨이 이 계열 절차로 만들어진다 ([[pvs-sev-lli-lampe-separability]] 의
+"라벨의 불확실성" Gap).
+
+**우리 절차와 같지 않다** — 이 차이가 실용적 산출물이다:
+
+| 축 | Birkl 2017 | 우리 저장소 문서가 서술하는 창 모델 |
+|---|---|---|
+| 자유 파라미터 | **3** `[LLI, LAM_PE, LAM_NE]` | α_PE, β_PE, α_NE, β_NE 형태 |
+| EoC/EoD | 컷오프 등식으로 **소거** | 자유롭게 따라 움직임 |
+| 목적함수 | 전압 RMSE + 기울기 마스크 | 전압 잔차 (+ dQ/dV 항 실험) |
+
+즉 Birkl 원안은 **구조적으로 자유도가 낮고**, 그 대가로 반쪽셀 OCP 의 **절대
+전압 정확도**에 직접 의존한다 (Eq. 11–12 가 4.2/2.7 V 를 등식으로 쓴다).
+우리가 이미 관측한 "PE 쪽 OCP 를 수 mV 왜곡하면 분해가 무너진다"
+([[22p-physics-or-degeneracy]]) 는 이 원안에서 **더 나쁘게** 나타날 개연성이
+있다 — 아직 실측하지 않았다.
+
+## 이 위키에서의 적용
+
+- **용어의 정본**: `LAM_*,li` / `LAM_*,de` (lithiated / delithiated LAM) 구분의
+  출처가 이 논문 §2.1 이다. 우리 격자의 `lam_pe_type`/`lam_ne_type ∈ {de, li}`
+  는 **의미가 정확히 일치**한다 (`src/modes.py` 는 `de` 일 때만 잔여 전극
+  초기농도를 `c/(1-lam)` 로 되올린다 = 죽은 물질은 비어 있었다). 다만 명명의
+  계보가 이 논문이라는 문장은 저장소 어디에도 인쇄돼 있지 않다 — 미확인.
+- **인용 금지 문장** (이 논문을 근거로 쓸 수 없다):
+  - "OCV fitting 이 LAM 의 리튬화/탈리튬화를 가른다" → 원문이 불가능하다고 적음
+  - "OCV fitting 의 LLI 는 SEI 등 기생반응 손실이다" → total LLI 다
+  - "이 방법은 유일해를 준다" → 근거는 무노이즈 3점
+- **가져올 수 있는 실험 두 개** (미실행, [[mode-observability]] 급 비용):
+  1. **컷오프 등식 (11)(12) 을 제약으로 추가**했을 때 degeneracy 가 줄어드는가.
+     목적함수에 항을 더하는 대신 **제약으로 자유도를 줄이는** 접근이며, dQ/dV
+     항 추가가 실패한 전례가 있는 우리에게 값싼 대안이다.
+  2. **기울기 마스크 on/off paired 비교.** Birkl 은 급경사(EoD) 구간을 목적함수
+     에서 뺀다 — 식별에 가장 유리한 구간을 버리는 선택이며, 그 대가가 얼마인지
+     논문은 재지 않았다.
+- **미해결 인용 확인**: `degradation-degeneracy/docs/02_CODE_AUDIT.md` 와
+  `docs/04_PROMPTS.md` 가 `LLI = (1−α_PE) + (β_PE − β_NE)` 에 "Birkl 2017 부호
+  규약" 주석을 단다. **이 논문 본문에 α·β 창 파라미터도 그 식도 없다** (본문의
+  `a` 는 Eq. 1 의 이온 상호작용 에너지다). 출처가 [19] Dubarry 2012 또는 [26]
+  Marongiu 2016 이거나 유도 결과일 수 있다 — 이 논문으로는 확인되지 않는다.
+
+## 한계 (raw digest §13 요약)
+
+- 합성 검증은 **inverse crime**: 생성 모델 = 적합 모델, 노이즈 0, 3점뿐.
+- 코인셀 검증의 정답은 **제작 설계값**이다 (해체 대조 없음). 오차 막대 5.4% 는
+  **제작 재현성**이지 추정 불확실성이 아니다.
+- 6셀 중 최소 2셀에서 본문 서술이 그림보다 관대하다 (Fig. 8 패널 d, j).
+- 상용 노화셀 적용 없음, 다른 화학종 검증 없음 (저자가 future work 로 인정).
+- 검증셀의 열화는 전부 "잘라낸 균일한 조각" 이라, 단계 2 의 핵심 가정(열화가
+  개별 상에 다르게 작용하지 않는다)을 **구조적으로 시험할 수 없다**.
+- 조판 오식 2건: Table 2 의 LLI 셀 전극 지름 20 mm (본문·Fig. 4 는 15 mm),
+  p.381 의 "solving Equation (2)" (Eq. 4 여야 한다).
+
+## 관련
+- [[fitting-degeneracy]] — 이 알고리즘이 답해야 하는 질문 자체의 정의
+- [[degradation-degeneracy]] — 이 절차의 식별 가능성을 PyBaMM 합성 truth 로 판정하는 satellite
+- [[22p-physics-or-degeneracy]] — 우리 분해가 물리인지 축퇴인지의 질문 카드
+- [[pvs-sev-lli-lampe-separability]] — 관측을 늘리면 갈리는가 (이 논문은 관측 하나만 쓴다)
+- [[mode-observability]] — 위 "가져올 수 있는 실험 두 개" 의 실행 주체 후보

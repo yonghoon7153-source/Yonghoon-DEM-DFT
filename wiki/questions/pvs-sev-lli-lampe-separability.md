@@ -5,7 +5,7 @@ created: 2026-09-03
 updated: 2026-09-03
 type: research-question
 tags: [battery, degradation, research]
-sources: [raw/papers/2026-09-02-siwon-kim-degradation-mode-ml-seminar.md, raw/transcripts/2026-09-03-voice-memo-007-degradation-mode-ml.md]
+sources: [raw/papers/2026-09-02-siwon-kim-degradation-mode-ml-seminar.md, raw/transcripts/2026-09-03-voice-memo-007-degradation-mode-ml.md, raw/papers/birkl2017_degradation-diagnostics-ocv.md]
 confidence: medium
 explored: false
 verificationStatus: unverified
@@ -101,6 +101,13 @@ H2 가 참일 수 있음에 주의한다 — 부호가 같다고 벡터가 평�
   한 라벨을 얼마나 잘 재현했는가" 를 재는 값이다. 이 공백을 메우는 것이 원문
   p.15 discussion point 1("fitting quality 개선")이고, 우리 프로젝트가 직접
   기여할 수 있는 자리다.
+  - **[2026-09-03] 이 공백은 세미나가 만든 것이 아니라 원전에서 상속된 것이다.**
+    세미나 p.3 이 인용한 라벨 생성 절차의 원전
+    ([[birkl-ocv-degradation-diagnostic]], Birkl et al. 2017) 에도 추정값의
+    신뢰구간·파라미터 상관·노이즈 스윕이 **전무하다**. 원전의 유일한 오차
+    수치 5.4% 는 **코인셀 제작 재현성**이지 추정 불확실성이 아니며, 논문이
+    §4.3 에서 그렇게 명시한다. 즉 이 계열의 라벨은 **한 번도 오차 막대를 가진
+    적이 없다** — 세미나에 요구할 것이 아니라 우리가 만들어 공급할 것이다.
 - **LOGO-CV 의 group 정의가 원문에 인쇄되지 않았다.** 셀 단위인지 프로토콜
   단위인지에 따라 p.13 수치의 의미가 갈린다. 프로토콜 식별자가 입력에 있으므로
   group 이 셀이면 같은 프로토콜의 형제 셀로부터 예측하는 구조가 된다.
@@ -110,6 +117,15 @@ H2 가 참일 수 있음에 주의한다 — 부호가 같다고 벡터가 평�
   늘어난다.** p.8 에서 Si loss 와 Gr loss 는 PVS 를 같은 방향(↓)으로 움직이고
   크기만 다르다 — 새 독립 관측 없이 쪼개면 식별성은 반드시 나빠진다. 이
   귀결은 아직 정량화되지 않았다.
+  - **[2026-09-03] 이 패턴의 문헌 전례가 있다.**
+    [[birkl-ocv-degradation-diagnostic]] 은 LAM 을 lithiated/delithiated 로
+    쪼개려다 정확히 이 벽에 부딪혔고 — "The fractions of lithiated and
+    delithiated LAM can therefore **not be uniquely identified** if the
+    assumption is that LLI can occur simultaneously" (§4.2) — **쪼개기를
+    포기하고 총량 + total-LLI 로 되묶는 것을 알고리즘의 설계 이유로 삼았다.**
+    같은 관측(full-cell OCV)을 유지한 채 LAM 을 하위 분할하면 식별성이
+    무너진다는 것이 이미 한 번 문서화된 셈이다. Si/Gr 분할이 다른 결과를
+    내려면 **새 독립 관측**이 필요하다는 이 카드의 논지를 지지한다.
 
 ## Status Log
 
@@ -129,3 +145,15 @@ H2 가 참일 수 있음에 주의한다 — 부호가 같다고 벡터가 평�
     세미나 p.15 discussion point 3 이 실측으로 확인된 셈.
   - LAM_PE ≥ 0.08 에서 peak 이 창을 벗어나 NaN — PVS 류의 구조적 커버리지
     한계.
+- [2026-09-03 (3)] open 유지 — 라벨 절차의 **원전**을 흡수
+  ([[birkl-ocv-degradation-diagnostic]]). 이 카드에 준 것은 새 증거가 아니라
+  **Gap 두 개의 출처 확정**이다 (위 Gap 절의 2026-09-03 항목 둘): 라벨
+  불확실성 공백이 세미나가 아니라 원전에서 상속된 것이라는 점, 그리고 LAM 을
+  하위 분할하려다 식별성이 무너진 문헌 전례가 있다는 점.
+  **이 카드의 축에 새로 붙는 설계 하나**: 이 카드는 지금까지 "관측을 늘리면
+  갈리는가" 만 다뤘는데, Birkl 은 **관측을 늘리는 대신 제약을 더한다** —
+  컷오프 전압 2개를 등식(Eq. 11–12)으로 걸어 stoichiometric offset 2 자유도를
+  소거한다. **제약 추가**는 위 "답하는 방법" 4단계에 없는 세 번째 경로이고,
+  값이 싸다 (새 프로토콜 시뮬레이션이 필요한 SEV 와 달리 기존 곡선으로 된다).
+  단, 이 논문의 관측은 **순수 열역학**(저자가 §1 에서 kinetics 를 명시적으로
+  범위 밖에 둔다)이므로 SEV(동역학 축)와는 직교하며 서로를 대체하지 않는다.

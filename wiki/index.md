@@ -1,7 +1,7 @@
 # Wiki Index
 
 > Content catalog. Every wiki page listed under its type with a one-line summary.
-> Last updated: 2026-09-03 | Total pages: 13
+> Last updated: 2026-09-03 | Total pages: 14
 
 ## Entities
 
@@ -15,6 +15,7 @@
 - [[agent-harness-patterns]] — ponytail·caveman·superpowers 에서 무엇을 채택·각색·기각했는가와 그 근거 (결과: 루트 CLAUDE.md + 커맨드 4종).
 - [[llm-wiki-pattern]] — Karpathy 식 LLM wiki: raw 불변층 + frontmatter progressive disclosure + wikilink 그래프 + mothership/satellite (이 위키의 근거 패턴).
 - [[pvs-sev-degradation-mode-features]] — ICA 할선 기울기(PVS)와 스케일링 EOC 전압강하(SEV): 정의·물리 귀속·모드별 부호 구조, 그리고 두 부호 패턴이 같다는 관측.
+- [[birkl-ocv-degradation-diagnostic]] — 우리가 판정 대상으로 삼는 OCV fitting 절차의 원전(2017): 자유 파라미터 3개 + 컷오프 등식 소거, 그리고 저자들이 스스로 진술한 li/de 축퇴.
 
 ## Comparisons
 
