@@ -139,6 +139,15 @@ if seal:
     _sm = [k for k in _need_seal if not seal.get(k)]
     if _sm:
         bad.append("봉인에 %s 가 없다 — 반쪽 봉인으로 돌리지 않는다" % _sm)
+    # 🔴 회신 BH P0-1 — 배너가 **버전 토큰을 담고 있는지** 여기서 본다. 종전엔
+    #   "비어 있지 않은가" 만 봤고, ` running on 1 total cores` 같은 첫 줄이 통과했다.
+    #   그 봉인으로 1단계를 다 태우면 ROOT_SEAL_VASP_MISMATCH 로 전건이 막힌다.
+    import re as _re_v
+    if seal.get("vasp_version_banner") and not _re_v.search(
+            r"vasp\.[0-9][A-Za-z0-9._-]*", str(seal["vasp_version_banner"])):
+        bad.append("봉인의 vasp_version_banner 에 'vasp.<버전>' 토큰이 없다 (%r) — "
+                   "봉인이 VASP 버전이 아닌 줄을 담았다. SEAL 을 다시 돌리십시오 "
+                   "(회신 BH P0-1)" % str(seal["vasp_version_banner"])[:60])
     if seal.get("manifest_sha256") and seal["manifest_sha256"] != mh:
         bad.append("봉인이 다른 MANIFEST 에 대한 것이다 (%s ≠ %s)"
                    % (seal["manifest_sha256"][:12], mh[:12]))
@@ -1784,7 +1793,30 @@ VASP_BIN=$(command -v "${VASP_EXE:-vasp_std}" 2>/dev/null || true)
 VASP_SHA=""; VASP_VER=""
 if [ -n "$VASP_BIN" ]; then
   VASP_SHA=$(sha256sum "$VASP_BIN" | cut -d" " -f1)
-  VASP_VER=$("$VASP_BIN" --version 2>&1 | head -1 || true)
+  # 🔴🔴 회신 BH P0-1 (2026-09-03) — **첫 줄은 버전이 아니다.**
+  #   종전: `"$VASP_BIN" --version 2>&1 | head -1`.
+  #   VASP 는 argv 를 해석하지 않으므로 `--version` 은 그냥 기동이고, 실물 stdout 의
+  #   첫 줄은 ` running on N total cores` 다 (버전은 대략 5번째 줄).
+  #   그래서 봉인에 버전이 아닌 줄이 박히고, 1단계(최장 ~300 h)를 다 태운 뒤
+  #   분석기가 OUTCAR 의 실제 버전과 대조하다 ROOT_SEAL_VASP_MISMATCH 로 전건을 닫는다.
+  #   봉인·분석기는 files_sha256 에 결박돼 현장에서 고칠 수도 없다.
+  #   ⇒ **출력 전체**에서 `vasp.<버전>` 토큰을 찾고, 못 찾으면 **봉인을 거부**한다
+  #     (비용 발생 **전에** 멈춘다 — fail-closed).
+  #   ⚠ 임시 디렉터리에서 기동한다: VASP 는 실행되면 그 자리에 OUTCAR 등을 남기고,
+  #     번들 루트에 남으면 이후 attestation 의 `find -name OUTCAR` 가 거부한다.
+  _vprobe_d=$(mktemp -d)
+  VASP_VER=$( (cd "$_vprobe_d" && timeout 120 "$VASP_BIN" 2>&1 || true) \
+              | grep -a -m1 -oE 'vasp\.[0-9][A-Za-z0-9._-]*' || true )
+  rm -rf "$_vprobe_d"
+  if [ -z "$VASP_VER" ]; then
+    echo "⛔ VASP 버전을 관측하지 못했습니다 — 봉인하지 않습니다 (회신 BH P0-1)."
+    echo "   \`$VASP_BIN\` 를 인자 없이 실행한 출력에서 'vasp.<버전>' 패턴을 못 찾았습니다."
+    echo "   확인: cd \$(mktemp -d) && $VASP_BIN 2>&1 | head -20"
+    echo "   그 출력을 보내 주시면 규칙을 맞춰 다시 만들어 드립니다."
+    echo "   (여기서 멈추는 이유: 잘못된 배너를 봉인하면 1단계 ~300 h 를 태운 뒤에야"
+    echo "    ROOT_SEAL_VASP_MISMATCH 로 전건이 막히고, 그때는 번들 재발급밖에 없습니다.)"
+    exit 1
+  fi
 fi
 # 🔴 회신 AV Q5 — 목록 밖 launcher 는 해시로 봉인한 wrapper 로만. 봉인 시점에
 #   wrapper 를 받았으면 해시를 함께 박는다 (실행 직전 재대조는 run_staged 가 한다).
@@ -1874,8 +1906,18 @@ if os.path.exists(out):
     #   AY P0-1 이 launcher_kind/path/sha256 을 봉인에 **쓰기만** 하고, 재대조
     #   목록에는 안 넣었다. 그래서 봉인이 `mpirun` 인데 다음 단계에서 kind 를
     #   바꿔도 "대조 통과" 가 찍혔다 (리뷰어가 kind=none 으로 재현).
+    # 🔴 회신 BH P0-1 — `vasp_version_banner` 는 **원문 정확일치로 보지 않는다.**
+    #   배너 줄에 host·PID·타임스탬프가 섞이는 사이트면 2단계 SEAL 재실행에서
+    #   "봉인 ≠ 지금" 으로 죽는다. 불변량은 배너 원문이 아니라 **버전 토큰**이다.
+    _vt = lambda x: (re.search(r"vasp\.[0-9][A-Za-z0-9._-]*", str(x or "")) or [None])
+    _v_old = re.search(r"vasp\.[0-9][A-Za-z0-9._-]*", str(old.get("vasp_version_banner") or ""))
+    _v_new = re.search(r"vasp\.[0-9][A-Za-z0-9._-]*", str(rec.get("vasp_version_banner") or ""))
+    if (_v_old.group(0) if _v_old else None) != (_v_new.group(0) if _v_new else None):
+        bad.append("VASP 버전 토큰이 다르다 (봉인 %r ≠ 지금 %r) — 다른 코드 세대다"
+                   % (_v_old.group(0) if _v_old else None,
+                      _v_new.group(0) if _v_new else None))
     for k in ("allowlist_sha256", "manifest_sha256", "bundle_zip_sha256",
-              "vasp_executable", "vasp_executable_sha256", "vasp_version_banner",
+              "vasp_executable", "vasp_executable_sha256",
               "launcher_kind", "launcher_path", "launcher_sha256"):
         # launcher_path/sha 는 kind=none|wrapper 면 비어 있는 것이 정상이다 —
         # 그때는 **양쪽 다 비어 있어야** 한다 (한쪽만 비면 아래 불일치로 잡힌다).
@@ -19065,8 +19107,19 @@ def _runner_e2e(bundle: Path, chk) -> bool:
     # ── stub vasp_std (SEAL 이 --version 을 부른다) ─────────────────────
     binp = base / "bin"; binp.mkdir()
     vb = binp / "vasp_std"
-    vb.write_text("#!/bin/sh\necho 'vasp.6.4.1 24Jul23 (build selftest)'\nexit 0\n",
-                  encoding="utf-8")
+    # 🔴🔴 회신 BH P0-1 — stub 이 **실물 VASP 의 출력 순서**를 흉내내야 한다.
+    #   종전 stub 은 버전을 **한 줄로** 찍었고 시험은 `startswith("vasp.6.4.1")` 을
+    #   단언했다. 그래서 "첫 줄 = 버전" 이라는 **틀린 가정이 시험에 박혀** 422/422 가
+    #   통과하는데도 실물에서는 봉인이 깨지는 상태였다.
+    #   실물(ASE 표본): 첫 줄은 ` running on N total cores` 이고 버전은 5번째 줄이다.
+    #   VASP 는 argv 를 해석하지 않으므로 `--version` 도 그냥 기동이다.
+    vb.write_text("#!/bin/sh\n"
+                  "echo ' running on    1 total cores'\n"
+                  "echo ' distrk:  each k-point on    1 cores,    1 groups'\n"
+                  "echo ' distr:  one band on    1 cores,    1 groups'\n"
+                  "echo ' using from now: INCAR'\n"
+                  "echo ' vasp.6.4.1 24Jul23 (build selftest) complex'\n"
+                  "exit 0\n", encoding="utf-8")
     vb.chmod(0o755)
     env = dict(os.environ)
     env["PATH"] = str(binp) + os.pathsep + env.get("PATH", "")
@@ -19146,8 +19199,37 @@ def _runner_e2e(bundle: Path, chk) -> bool:
     chk(_seal.get("bundle_zip_sha256") == "0" * 64
         and _seal.get("manifest_sha256") == hashlib.sha256(
             (_ok_root / "MANIFEST.json").read_bytes()).hexdigest()
-        and _seal.get("vasp_version_banner", "").startswith("vasp.6.4.1"),
-        "AR 해제조건 7: 봉인이 ZIP·MANIFEST·VASP 배너를 실제로 담는다")
+        and re.search(r"vasp\.6\.4\.1", _seal.get("vasp_version_banner", "") or ""),
+        "AR 해제조건 7 + 🔴 BH P0-1: 봉인이 ZIP·MANIFEST·VASP **버전 토큰**을 담는다 "
+        "— stub 이 실물 순서(버전 5번째 줄)로 찍어도 잡아낸다 (첫 줄만 보면 실패한다) "
+        "· 배너 %r" % (_seal.get("vasp_version_banner") or "")[:40])
+
+    # ①-a2 🔴🔴 회신 BH P0-1 음성 — **버전을 안 찍는 VASP 면 봉인을 거부한다**
+    #   이것이 이번 P0 의 회귀시험이다. 종전 코드(`--version | head -1`)로 되돌리면
+    #   아래 두 케이스가 봉인을 **성공**시키고(잘못된 배너가 박히고) 이 시험이 뒤집힌다.
+    for _tag, _body, _why in (
+            ("bh_first_line_only",
+             "echo ' running on    1 total cores'\necho ' distr: one band'\n",
+             "실물 첫 줄만 나오고 버전 줄이 없는 경우 (VASP 가 배너를 늦게 찍거나 잘린 출력)"),
+            ("bh_mpi_error",
+             "echo 'MPI startup(): failed to init' >&2\n",
+             "MPI 초기화 실패로 버전이 아예 안 나오는 경우")):
+        _bad_root = _copy(_tag)
+        _bb = base / ("bin_" + _tag); _bb.mkdir(exist_ok=True)
+        _bv = _bb / "vasp_std"
+        _bv.write_text("#!/bin/sh\n" + _body + "exit 0\n", encoding="utf-8")
+        _bv.chmod(0o755)
+        _benv = dict(env); _benv["PATH"] = str(_bb) + os.pathsep + env["PATH"]
+        _benv["VASP_EXE"] = str(_bv)
+        _r_bh = subprocess.run(["bash", "SEAL_POTCAR_ROOT.sh"], cwd=_bad_root,
+                               env=_benv, capture_output=True, text=True, timeout=600)
+        _sealed = (_bad_root / "POTCAR_ROOT_SEAL.json").is_file()
+        chk(_r_bh.returncode != 0 and not _sealed,
+            "⛔음성 BH P0-1 (%s): %s → **봉인을 거부한다** (rc %s · 봉인파일 %s). "
+            "종전엔 첫 줄을 그대로 박아 1단계 ~300 h 뒤 ROOT_SEAL_VASP_MISMATCH 로 "
+            "전건이 막혔다" % (_tag, _why, _r_bh.returncode, _sealed))
+        chk("버전을 관측하지 못했습니다" in (_r_bh.stdout + _r_bh.stderr),
+            "BH P0-1 (%s): 거부 메시지가 **왜 멈췄는지**와 확인 명령을 준다" % _tag)
 
     # ①-b 🔴 회신 AT P0-3 — **가짜 POTCAR + 자기일관 provenance** 공격 (리뷰어 재현)
     #   종전엔 provenance 의 allowlist_sha 만 맞으면 재조립을 건너뛰어, PP 원본이
