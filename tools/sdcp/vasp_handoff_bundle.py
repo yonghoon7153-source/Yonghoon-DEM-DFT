@@ -14663,7 +14663,10 @@ def build_bundle(a, ledger: Optional[Dict[str, Any]] = None) -> Path:
                                         "sdcp ~1.070 vs ptfe ~0.167 eV · 차등 0.90 eV). "
                                         "|ΔE_ads| 가 클 것이라고 **가정하지 않는다.**"),
         }
-    if len(_pri_k) != 2:
+    if len(_pri_k) != 2 and not getattr(a, "no_kconv", False):
+        # ⚠ `--no_kconv` 는 위에서 이미 kconv_pair 를 status=not_designed 로 썼다.
+        #   여기서 다시 쓰면 그것을 `not_applicable` 로 덮어써 **선언된 생략이
+        #   "해당 없음" 으로 둔갑**한다 (둘은 뜻이 다르다 — 전자는 재개 조건이 있다).
         _pri_k = {}
         if getattr(a, "refs_minimal", False) and man.get("estimand_job_keys"):
             man["kconv_pair"] = {
@@ -15773,7 +15776,10 @@ def build_bundle(a, ledger: Optional[Dict[str, Any]] = None) -> Path:
     if a.single_point or a.closure:
         print("  ⚠ POTCAR 미포함(라이선스) — 잡마다 POTCAR_ASSEMBLE.sh 로 조립할 것 "
               "(종 순서가 잡마다 다르다)")
-        print("  ⚠ 단일점 — relax 상이 없다. static (+일부 dense) 만 돈다")
+        _ndn_msg = sum(1 for _v in man["planned"].values()
+                       if "dense" in (_v.get("phases") or []))
+        print("  ⚠ 단일점 — relax 상이 없다. static %s 만 돈다"
+              % ("(+dense %d잡)" % _ndn_msg if _ndn_msg else "(dense 없음 — k 축 설계 제외)"))
     else:
         print("  ⚠ POTCAR 미포함(라이선스) — POTCAR_SPEC.txt 의 변형(Ni_pv)을 정확히 쓸 것")
         print("  ⚠ 판정 에너지는 static — relax 만 돌리면 분석기가 fail-closed 로 막는다")
