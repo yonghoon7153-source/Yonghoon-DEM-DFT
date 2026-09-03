@@ -61,7 +61,13 @@ March 노트의 핵심 물리(4f 국소화·차폐·spectator, Mott-Hubbard vs b
 6s→5d 떼면 3+에서 멈춤(4f는 차폐돼 안 떨어짐). 안정 배치 4f⁰/4f⁷/4f¹⁴(exchange 안정화) → Ce 4+(→4f⁰), Eu/Yb 2+(→4f⁷/4f¹⁴). Nd³⁺(4f³)는 마법수 멀어 **3+ only**.
 
 ### 2-6. NdS₄ 사면체 불가 — **(MgS₄ 비판과 동일 논리)**
-- 크기: Shannon(4배위) **P⁵⁺ 0.38 ≪ Nd³⁺ 0.98 Å** → S₄ 사면체에 못 들어감(2.6× 큼).
+- 크기: Shannon(4배위) **P⁵⁺ 0.17 ≪ Nd³⁺ 0.98 Å**(둘 다 effective ionic radius, CN 은 P 4 · Nd 6)
+  → S₄ 사면체에 못 들어감 (**5.8× 큼**).
+  ⚠ **2026-09-03 정정**: 여기 적혀 있던 `0.38 Å` 은 Shannon 표에 없는 값이었다. P⁵⁺ CN=4 는
+  **effective 0.17 / crystal 0.31** 이고 0.38 은 둘 다 아니다. 같은 카드의 litdb 연결 줄이
+  이미 0.17 을 쓰고 있어 **한 문서 안에서 두 값이 갈려 있었다.** 결론(Nd 가 압도적으로 크다)은
+  안 바뀌지만 배수가 2.6× → 5.8× 로 바뀌므로 **옛 배수를 원고에 인용하지 말 것**.
+  (⚠ 비교는 같은 척도끼리만: crystal 끼리면 P 0.31 vs Nd³⁺ CN=6 1.123 Å = 3.6×.)
 - 전하: [PS₄]³⁻ vs [NdS₄]⁵⁻(불균형).
 - 배위: Nd–S는 6–8배위(Nd₂S₃), 4배위 결핍.
 - → **시뮬레이션에서 NdS₄ 보이면 안정상 아님(계면 결함/비정질). 논문 언급 금지.**
@@ -74,6 +80,15 @@ March 노트의 핵심 물리(4f 국소화·차폐·spectator, Mott-Hubbard vs b
 **Dual substitution + 결함화학** (March §10–11 + June 교정):
 1. **O → PS₄ S(16e) 치환**(검증, C2): P–O 강결합(−8.43, C3) → P–S* antibonding 고에너지화 → **PS₄ 환원붕괴 억제**. = March의 "PS₄ 강화" 가설을 June COHP가 입증.
 2. **Nd³⁺ → Li 자리**(크기상 P 자리 불가): +3 Li(2 vacancy) = aliovalent. Nd는 결합·전자구조엔 미미(C4).
+   ★ **이건 반경 논증만이 아니다 — 실제로 계산됐다** (2026-09-03 상호참조 추가):
+   `kb/methodology/dopant_screening_funnel_2026_06_13.md` §1.1–1.2 가 342 config 을 열거해
+   UMA 로 훑고 어닐했고, 그 안에 **Track 1B = Nd@P** 가 들어 있다. 챔피언 cfg141(Track 1A,
+   Nd@Li) vs 최선 경쟁자 **cfg23(Track 1B, Nd@P) = 1.633 eV/cell = 0.544 eV per O-defect**.
+   500 K 어닐 온도에서 Boltzmann 비 P(1B)/P(1A) ≈ 4×10⁻¹⁷, 1000 K 급랭에서도 ~1×10⁻⁸.
+   ⚠ **단 이건 UMA(MLIP) 수준이다.** 같은 카드 §1.4 의 `Phase-3 DFT+U 재랭킹 margin` 은
+   여전히 **PENDING** 이다 — "UMA 노이즈가 뒤집었을 수 있다" 는 반론을 정량으로 닫는 것이
+   그 항목이다. 1.633 eV 는 MLIP 오차보다 훨씬 크지만, **DFT 확인 전까지는 그렇게 말한다.**
+   ⇒ 원고 문구는 카드 §1.3 의 *seminar-safe phrasing* 을 그대로 쓸 것.
 3. **self-limiting SEI**(분해산물이 wide-gap 전자절연):
    - **bulk/GB·anode**: **O-유래 Li₃PO₄ 5.73 / Li₂O 5.24** → σ_e↓(GB percolation 차단) → dendrite·self-discharge 억제 → cycle↑. (= 논문 central, O 주역)
    - **cathode(고전압)**: **Nd³⁺ 생존 → NdPO₄ 5.55* / NdCl₃ 4.30*** wide-gap passivation. (= 여기서만 Nd가 직접 기여, electron blocking §2-4)
