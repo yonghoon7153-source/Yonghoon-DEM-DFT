@@ -346,7 +346,27 @@ def ref_doc_state(path):
         return {"status": None, "ratified": False, "why": "JSON 최상위가 객체가 아니다"}
     # ⚠ 상태 칸 이름이 문서마다 다르다 — protocol 은 `지위` 에만 적혀 있다.
     _st = _j.get("status") or _j.get("지위")
-    _rt = (_j.get("ratification") or {})
+    _rt = _j.get("ratification")
+    # 🔴 회신 BF P0-4·P1 — 비준 기록은 **dict 이고 필수 필드·타입**을 갖춰야 한다.
+    #   종전엔 사실상 state=="ratified" 만 봤고, 기록이 list/문자열이면 예외로 죽었다.
+    if _rt is None:
+        _rt = {}
+    if not isinstance(_rt, dict):
+        return {"status": _st, "ratified": False, "superseded": False,
+                "has_ratification_record": False, "digest_recomputed": dec_digest(_j),
+                "digest_recorded": None, "digest_matches": False,
+                "why": "비준 기록이 객체가 아니다 (%s) — 형식 위반 (BF P0-4)" % type(_rt).__name__}
+    _rt_bad = []
+    _actor = _rt.get("by") or _rt.get("actor_id")
+    _when = _rt.get("at") or _rt.get("timestamp")
+    if not (isinstance(_actor, str) and _actor.strip()):
+        _rt_bad.append("actor(by/actor_id) 없음")
+    if not (isinstance(_when, str) and _when.strip()):
+        _rt_bad.append("timestamp(at/timestamp) 없음")
+    if not (isinstance(_rt.get("state"), str) and isinstance(_rt.get("role"), str)):
+        _rt_bad.append("state/role 이 문자열이 아니다")
+    if _rt and not isinstance(_rt.get("content_digest"), str):
+        _rt_bad.append("content_digest 가 문자열이 아니다")
     # ⛔ 회신 BB P0-4 — 폐기 표시가 `지위` 같은 다른 칸에 있을 수 있다.
     _sup = any(isinstance(v, str) and
                ("SUPERSEDED" in v.upper() or "철회" in v or "폐기" in v)
@@ -360,13 +380,15 @@ def ref_doc_state(path):
     _ok = (_st in ("ratified", "active")
            and _rt.get("state") == "ratified"
            and _rt.get("role") == "scientific_owner"
-           and _dg_ok and not _sup)
+           and _dg_ok and not _sup and not _rt_bad)
     return {"status": _st, "ratified": bool(_ok), "superseded": bool(_sup),
-            "has_ratification_record": bool(_rt),
+            "has_ratification_record": bool(_rt) and not _rt_bad,
+            "record_problems": _rt_bad,
             "digest_recomputed": _dg, "digest_recorded": _rec or None,
             "digest_matches": _dg_ok,
             "why": (None if _ok else
                     ("⛔ SUPERSEDED/철회 문서다" if _sup else
+                     "비준 기록 형식 위반: %s (BF P0-4)" % "; ".join(_rt_bad) if (_rt and _rt_bad) else
                      "비준 기록에 `content_digest` 가 없다" if not _rec else
                      "**비준 이후 내용이 바뀌었다** (기록 %s… ≠ 재계산 %s…)"
                      % (_rec[:12], _dg[:12]) if not _dg_ok else
@@ -1023,6 +1045,10 @@ for ph in pre relax static dense; do
     "$(date -u +%Y-%m-%dT%H:%M:%SZ)" "$ph" "$_exe_h" \
     "$VASP_EXE" "$VASP_LAUNCHER_KIND" "${VASP_NPROC:-1}" \
     "$_rl" "$_rlh" "$_pot_h" >> EXECUTABLE_RECEIPT.tsv
+  # 🔴 회신 BF P1 — receipt 를 쓴 뒤 **실행 직전**에 상 폴더 POTCAR 를 다시 해시한다.
+  #   복사·해시(위)와 실행 사이의 변경을 종전엔 검출하지 못했다.
+  _pot_h2=$(sha256sum "$ph/POTCAR" | cut -d" " -f1)
+  [ "$_pot_h2" = "$_pot_h" ] || { echo "⛔ $ph 직전: POTCAR 가 receipt 기록 뒤에 바뀌었다 (기록 ${_pot_h:0:12} / 지금 ${_pot_h2:0:12})"; exit 1; }
   echo "  ▶ $ph"
   ( cd "$ph" && _launch > vasp.out 2>&1 )
   grep -aq "General timing" "$ph/OUTCAR" || {
@@ -1497,7 +1523,17 @@ if [ "$stage" = 1 ]; then
   echo "1단계 통과 — 2단계는 'bash run_staged.sh 2'"
 else
   # ⛔ 회신 AP #9 — 2단계 뒤 **최종 분석**까지가 러너의 일이다.
-  echo "== 최종 판정 =="
+  # 🔴 회신 BF P1 (2026-09-03) — 2단계에 실패한 잡이 있으면 **분석하지 않는다.** 종전엔 fail=1
+  #   이어도 그대로 분석해 rc 3 을 "계산은 완주했으나…" 로 출력할 수 있었다. 완주가 아니다.
+  [ "$fail" = 0 ] || { echo "⛔ 2단계에 실패한 잡이 있다 — 완주가 아니므로 판정하지 않는다 (rc 2)."; exit 2; }
+  # 완주 census — 이 단계의 모든 잡이 반송 receipt(_runner_start) 를 남겼는가
+  _miss_rc=0
+  while read -r j; do
+    [ -n "$j" ] || continue
+    grep -q "_runner_start" "$j/EXECUTABLE_RECEIPT.tsv" 2>/dev/null || { echo "⛔ $j: 실행 receipt 가 없다 — 이 잡은 러너로 완주하지 않았다"; _miss_rc=1; }
+  done < _stage_jobs.txt
+  [ "$_miss_rc" = 0 ] || { echo "⛔ 완주하지 않은 잡이 있다 — 판정하지 않는다 (rc 2)."; exit 2; }
+  echo "== 최종 판정 (2단계 전 잡 완주 확인됨) =="
   # 🔴 회신 BE P1 — 분석기 rc 3 (완주했으나 원고 인용 불가·탐색용) 을 계산 실패 2 와 가른다.
   python3 analyze_results.py .; _frc=$?
   case "$_frc" in
@@ -3444,7 +3480,7 @@ def read_poscar(p):
         direct = bool(L[i].strip()) and L[i].strip()[0] in "Dd"
         i += 1
         n = sum(counts)
-        pos, fixed = [], []
+        pos, fixed, sd_flags = [], [], []
         for k in range(n):
             v = L[i + k].split()
             xyz = [float(x) for x in v[:3]]
@@ -3455,12 +3491,16 @@ def read_poscar(p):
             pos.append(xyz)
             fixed.append(seldyn and len(v) >= 6 and
                          all(f.upper().startswith("F") for f in v[3:6]))
+            # 🔴 회신 BF P0-2 — 원자별 **3축** selective-dynamics 플래그를 그대로 보존한다.
+            #   `fixed` 는 "셋 다 F" 로 접은 값이라 T T F 같은 축 차이를 못 본다.
+            sd_flags.append(tuple(f.upper()[:1] for f in v[3:6]) if (seldyn and len(v) >= 6)
+                            else None)
         syms = []
         if species:
             for s, c in zip(species, counts):
                 syms += [s] * c
-        return {"cell": cell, "pos": pos, "fixed": fixed, "syms": syms,
-                "species": species, "counts": counts}
+        return {"cell": cell, "pos": pos, "fixed": fixed, "sd_flags": sd_flags, "syms": syms,
+                "species": species, "counts": counts, "selective": seldyn}
     except Exception:
         return None
 
@@ -3968,15 +4008,17 @@ def _governance_strict(gb):
             b.append("%s: role 이 %r 이어야 하는데 %r 다 — 역할을 바꿔 비준 요구를 "
                      "우회할 수 없다" % (_p, _role, _v.get("role")))
             continue
-        if _v.get("superseded"):
-            b.append("%s: **SUPERSEDED** 문서다" % _p)
+        # 🔴 회신 BF P1 — 불리언 필드는 **정확히 불리언**이어야 한다 (문자열 "false" 는 참이다)
+        if _v.get("superseded") is not False:
+            b.append("%s: superseded 가 불리언 False 가 아니다 (%r) — SUPERSEDED 문서이거나 형식 위반"
+                     % (_p, _v.get("superseded")))
         if _role == "claim":
             # ⛔ GO 해제조건 4 — claim 만 ratification digest 로 본다
             if not _strict_true(_v.get("ratified")):
                 b.append("%s: ratified 가 불리언 True 가 아니다 (%r)"
                          % (_p, _v.get("ratified")))
             if not _strict_true(_v.get("has_ratification_record")):
-                b.append("%s: 사람 비준 기록이 없다" % _p)
+                b.append("%s: 사람 비준 기록이 없다 (또는 불리언 True 가 아니다)" % _p)
             if not _strict_true(_v.get("digest_matches")):
                 b.append("%s: 비준 이후 내용이 바뀌었다 (digest 불일치)" % _p)
         else:
@@ -4010,6 +4052,69 @@ def _governance_strict(gb):
     return b
 
 
+def provenance_strict(man):
+    """생성 계보(provenance)의 **완전성**을 본다 → 차단 목록 (회신 BF P0-4).
+
+    🔴 종전엔 `{"clean": true, "dirty": [], "unknown_git_state": []}` 만 남겨도 통과했다 —
+      필수 입력 집합·개별 SHA·개수·schema 를 검사하지 않았기 때문이다.
+      ⇒ ① schema · files(dict, 비어 있지 않음) · n_files 일치 ② 항목마다 sha 64-hex · kind ·
+        git · scope ③ generator 항목 ≥1 ④ dirty/unknown/clean 이 항목의 git 상태와 **재계산**
+        일치 ⑤ 필수 입력 집합(비준 참조 문서 3 + decisions.json)이 있고 참조 문서 SHA 는
+        governance_binding.reference_files_sha256 과 같다.
+    ⛔ 못 하는 것: 등록되지 않은 입력·위조는 못 본다 (이 검사는 "목록을 줄여 놓은 번들" 을 닫는다).
+    """
+    b = []
+    pv = (man or {}).get("provenance")
+    if not isinstance(pv, dict):
+        return b                        # 부재는 호출부가 따로 막는다
+    if not str(pv.get("schema") or "").startswith("bundle_provenance/"):
+        b.append("PROVENANCE_INCOMPLETE(schema=%r — bundle_provenance/* 가 아니다)" % (pv.get("schema"),))
+    files = pv.get("files")
+    if not isinstance(files, dict) or not files:
+        return b + ["PROVENANCE_INCOMPLETE(files 목록이 없다 — clean 요약만 있는 계보는 계보가 아니다 · BF P0-4)"]
+    if pv.get("n_files") != len(files):
+        b.append("PROVENANCE_INCOMPLETE(n_files=%r ≠ files %d)" % (pv.get("n_files"), len(files)))
+    _kinds_ok = {"generator", "imported_module", "input"}
+    _dirty, _unk, _ngen = [], [], 0
+    for k, v in sorted(files.items()):
+        if not isinstance(v, dict):
+            b.append("PROVENANCE_INCOMPLETE(%s: 항목이 객체가 아니다)" % k); continue
+        if not _HEX64.match(str(v.get("sha256") or "")):
+            b.append("PROVENANCE_INCOMPLETE(%s: sha256 이 64-hex 가 아니다)" % k)
+        if v.get("kind") not in _kinds_ok:
+            b.append("PROVENANCE_INCOMPLETE(%s: kind=%r)" % (k, v.get("kind")))
+        if v.get("scope") not in ("repo", "external_content_bound"):
+            b.append("PROVENANCE_INCOMPLETE(%s: scope=%r)" % (k, v.get("scope")))
+        g = str(v.get("git") or "")
+        if not g:
+            b.append("PROVENANCE_INCOMPLETE(%s: git 상태가 없다)" % k)
+        if g in ("modified", "untracked"):
+            _dirty.append(k)
+        if g == "unknown":
+            _unk.append(k)
+        if v.get("kind") == "generator":
+            _ngen += 1
+    if _ngen < 1:
+        b.append("PROVENANCE_INCOMPLETE(generator 항목이 없다)")
+    if sorted(pv.get("dirty") or []) != sorted(_dirty):
+        b.append("PROVENANCE_INCOMPLETE(dirty 목록 %s ≠ 항목의 git 상태에서 재계산 %s)"
+                 % ((pv.get("dirty") or [])[:3], _dirty[:3]))
+    if sorted(pv.get("unknown_git_state") or []) != sorted(_unk):
+        b.append("PROVENANCE_INCOMPLETE(unknown_git_state 목록 ≠ 재계산)")
+    if pv.get("clean") is not ((not _dirty) and (not _unk)):
+        b.append("PROVENANCE_INCOMPLETE(clean=%r 가 항목 재계산(%s)과 다르다)"
+                 % (pv.get("clean"), (not _dirty) and (not _unk)))
+    _rf = ((man or {}).get("governance_binding") or {}).get("reference_files_sha256") or {}
+    for p in list(C12_REQUIRED_REFS) + ["db/governance/decisions.json"]:
+        if p not in files:
+            b.append("PROVENANCE_INCOMPLETE(필수 입력 %s 이 계보에 없다 — 목록을 줄인 번들 · BF P0-4)" % p)
+            continue
+        if p in _rf and _rf.get(p) and str(files[p].get("sha256")) != str(_rf.get(p)):
+            b.append("PROVENANCE_INCOMPLETE(%s: 계보 sha %s… ≠ governance 기록 %s…)"
+                     % (p, str(files[p].get("sha256"))[:12], str(_rf.get(p))[:12]))
+    return b
+
+
 def governance_bytes_check(man):
     """governance_binding 을 **번들에 실린 원문 byte** 에서 다시 계산해 대조한다 → 차단 목록.
 
@@ -4037,13 +4142,8 @@ def governance_bytes_check(man):
         return ["번들 루트를 모른다 — governance 원문을 읽을 수 없다 (BE P0-4)"]
 
     def _bundled(rel):
-        _r = srcs.get(rel)
-        if not _r:
-            return None, "%s: bundled_sources 에 원문 사본 경로가 없다" % rel
-        _f = os.path.join(root, *str(_r).split("/"))
-        if not os.path.isfile(_f):
-            return None, "%s: 원문 사본이 번들에 없다 (%s)" % (rel, _r)
-        return _f, None
+        # 🔴 회신 BF P0-4 — 번들 **안**으로만 해석되는 경로 (`..`·절대경로 이탈 금지)
+        return _bundled_ref_path(man, rel)
 
     _rs = gb.get("reference_files_state") or {}
     _rf = gb.get("reference_files_sha256") or {}
@@ -4174,6 +4274,8 @@ def citation_status(man, cl):
                  % (len(_pv.get("dirty") or []),
                     len(_pv.get("unknown_git_state") or []),
                     (_pv.get("dirty") or _pv.get("unknown_git_state") or [])[:3]))
+    # 🔴 회신 BF P0-4 — 요약 세 칸만으로는 계보가 아니다: 목록·SHA·개수·필수 집합을 본다
+    b.extend(provenance_strict(man))
     return {"manuscript_citable": not b,
             "blockers": b,
             "why": ("원고 인용 가능" if not b else
@@ -4294,19 +4396,35 @@ def _selftest_closure(chk):
     #   box20 = 30 Å 상자 · box24 = 34 Å 상자, 좌표는 +2.0 Å 강체 평행이동 (COM 중심 정의).
     _GROOT_EST = pathlib.Path(__import__("tempfile").mkdtemp()) / "est"
 
-    def _write_gas_poscars(root, frag, same_cell=False, shift=2.0):
-        for _b, _L in (("20", 30.0), ("24", 30.0 if same_cell else 34.0)):
+    def _write_gas_poscars(root, frag, same_cell=False, shift=2.0, center_shift=0.0,
+                           box_extra=0.0):
+        """🔴 회신 BF P0-3 — 픽스처를 **생성기 계약 그대로** 만든다: 질량중심을 셀 중앙에,
+        상자 = 내부 span + margin(20/24). 종전 픽스처(30/34 Å 상자 · 모서리 근처 배치)는 상대
+        관계만 맞아서 절대 검사를 시험할 수 없었다. `center_shift`·`box_extra` 가 음성 손잡이다."""
+        _geo = ((0.0, 0.0, 0.0), (0.9, 0.0, 0.0), (0.0, 0.9, 0.0))          # O, H, H
+        _ms = (15.999, 1.008, 1.008)
+        _com = [sum(m * g[ax] for m, g in zip(_ms, _geo)) / sum(_ms) for ax in range(3)]
+        _span = [max(g[ax] for g in _geo) - min(g[ax] for g in _geo) for ax in range(3)]
+        for _b, _mg in (("20", 20.0), ("24", 20.0 if same_cell else 24.0)):
             _d = root / "refs" / ("mol__%s__box%s" % (frag, _b))
             _d.mkdir(parents=True, exist_ok=True)
-            _off = 0.0 if _b == "20" else shift
+            _box = [_span[ax] + _mg + box_extra for ax in range(3)]
+            # `shift` ≠ 2.0 (음성): 셀은 그대로 +4 Å 두고 **좌표만** 2.0 대신 shift 만큼 밀어
+            #   "+2.0 Å 강체 평행이동" 검사가 걸리게 한다 (셀 차 검사에서 먼저 끊기지 않게)
+            _extra = (shift - 2.0) if (_b == "24" and not same_cell) else 0.0
             _lines = ["gas %s box%s" % (frag, _b), "1.0",
-                      "  %.6f 0.0 0.0" % _L, "  0.0 %.6f 0.0" % _L, "  0.0 0.0 %.6f" % _L,
-                      "  O H", "  1 2", "Cartesian"]
-            for (x, y, z) in ((10.0, 10.0, 10.0), (10.9, 10.0, 10.0), (10.0, 10.9, 10.0)):
-                _lines.append("  %.6f %.6f %.6f" % (x + _off, y + _off, z + _off))
+                      "  %.6f 0.0 0.0" % _box[0], "  0.0 %.6f 0.0" % _box[1],
+                      "  0.0 0.0 %.6f" % _box[2], "  O H", "  1 2", "Cartesian"]
+            for g in _geo:
+                _lines.append("  %.6f %.6f %.6f" % tuple(
+                    g[ax] - _com[ax] + _box[ax] / 2.0 + center_shift + _extra for ax in range(3)))
             (_d / "POSCAR").write_text("\n".join(_lines) + "\n", encoding="utf-8")
     for _f0 in ("sdcp_neutral", "ptfe_c10"):
         _write_gas_poscars(_GROOT_EST, _f0)
+    # 🔴 회신 BF P0-1·P0-2 — 실물 번들처럼 **비준 protocol 원문 사본**을 번들 안에 싣는다.
+    #   분석기는 estimand 네 키를 protocol 의 exact map 과, 진공 시험 셀을 protocol 의
+    #   c1_A/c2_A 와 대조한다. 사본이 없으면 확인 못 함 = 통과 아님 (아래 음성시험).
+    _GB_EST = _write_proto_fixture(_GROOT_EST)          # 모듈 수준 헬퍼 (selftest_k 도 쓴다)
     # ⛔ 회신 AS 9 — 실물 manifest 는 kconv_pair 를 담는다. 픽스처도 실물 모양으로.
     _KJ = ("prospective/sdcp_neutral__b00__afm2424_pm1",
            "prospective/ptfe_c10__b00__afm2424_pm1")
@@ -4318,6 +4436,8 @@ def _selftest_closure(chk):
             # 🔴 회신 BE P0-1·P0-2 — 실물 manifest 는 언제나 네 키를 봉인하고, 분석기는
             #   번들 루트(_root)에서 POSCAR 실물을 읽는다. 픽스처도 그 모양이어야 한다.
             "estimand_job_keys": dict(_EJK_PM1), "_root": str(_GROOT_EST),
+            # 🔴 회신 BF P0-1 — 비준 protocol 사본 (exact map 의 정본)
+            "governance_binding": dict(_GB_EST),
             # ⛔ 회신 AR 해제조건 3 — 실물 생성기가 박는 기체 쌍 정책
             "gas_geometry_policy": {"fixed_geometry_static": True},
             "molecular_spin_controls": {
@@ -4376,10 +4496,13 @@ def _selftest_closure(chk):
     #   실물 `_emit_mol_job` 이 내는 필드 그대로 픽스처를 만든다.
     #   (energies 만 주던 옛 픽스처는 계약을 검증할 수 없다 = 통과가 아니다.)
     def _GASJ(frag, tag, geo="g-%s" % "x", **kw):
+        # 🔴 회신 BF P0-3 — 내부기하 지문은 **픽스처 POSCAR 에서 재계산**한 값이어야 한다
+        #   (분석기가 좌표에서 다시 만들어 대조한다 — "geo-<frag>" 장난감은 이제 걸린다)
+        _pfx = read_poscar(str(_GROOT_EST / "refs" / ("mol__%s__%s" % (frag, tag)) / "POSCAR"))
         m = {"kind": "mol_ref", "fragment": frag, "box_margin_A": 20.0 if tag == "box20" else 24.0,
              "species_order": ["O", "S", "C", "F", "H"], "counts": [3, 1, 10, 20, 4],
              "gas_placement": "com_at_cell_center",
-             "internal_geometry_sha": "geo-" + frag,
+             "internal_geometry_sha": (_gas_internal_sha(_pfx) if _pfx else "geo-" + frag),
              "electronic_state_sha": "st-" + frag,
              # 생성기가 모든 job.json 에 사후로 박는 필드 (없으면 COHORT_INCOHERENT)
              "d3": "on", "ivdw_expected": 11,
@@ -4820,10 +4943,13 @@ def _selftest_closure(chk):
     _GROOT = pathlib.Path(__import__("tempfile").mkdtemp()) / "govbundle"
     (_GROOT / "governance").mkdir(parents=True)
 
-    def _ratified_doc(body):
+    def _ratified_doc(body, **rt_over):
         d = dict(body)
-        d["ratification"] = {"state": "ratified", "role": "scientific_owner",
-                             "content_digest": "sha256:" + dec_digest(d)}
+        # 🔴 회신 BF P0-4 — 실물 비준 기록 모양(at·by·state·role·content_digest). 필드가 빠지면
+        #   ref_doc_state 가 ratified=False 를 낸다 (아래 음성시험).
+        d["ratification"] = dict({"state": "ratified", "role": "scientific_owner",
+                                  "at": "2026-09-02", "by": "fixture-owner",
+                                  "content_digest": "sha256:" + dec_digest(d)}, **rt_over)
         return d
     _gdocs = {}
     for _p, _role in C12_REQUIRED_REFS.items():
@@ -4875,7 +5001,17 @@ def _selftest_closure(chk):
     _DEC0 = C12_REQUIRED_DECISIONS[0]
     _CLAIM0 = [k for k, v in C12_REQUIRED_REFS.items() if v == "claim"][0]
     _FROZ0 = [k for k, v in C12_REQUIRED_REFS.items() if v == "frozen_input"][0]
-    _PVOK = {"clean": True, "dirty": [], "unknown_git_state": [], "n_files": 12}
+    # 🔴 회신 BF P0-4 — 계보 픽스처를 **완전한 registry** 로 만든다 (요약 세 칸만인 옛 픽스처가
+    #   바로 리뷰어가 통과시킨 fail-open 모양이었다 — 그것은 아래 음성시험으로 남긴다).
+    _PVFILES = {}
+    for _p in list(C12_REQUIRED_REFS) + ["db/governance/decisions.json"]:
+        _PVFILES[_p] = {"kind": "input", "scope": "repo", "git": "clean",
+                        "sha256": hashlib.sha256((_GROOT / _GSRC[_p]).read_bytes()).hexdigest()}
+    _PVFILES["tools/sdcp/vasp_handoff_bundle.py"] = {"kind": "generator", "scope": "repo",
+                                                      "git": "clean", "sha256": "7" * 64}
+    _PVOK = {"schema": "bundle_provenance/v1", "files": _PVFILES, "n_files": len(_PVFILES),
+             "clean": True, "dirty": [], "unknown_git_state": []}
+    _PVOK_MINIMAL = {"clean": True, "dirty": [], "unknown_git_state": [], "n_files": 12}
     _cs_ok = citation_status(
         {"potcar_identity_policy": {"mode": "require_attestation",
                                     "manuscript_citable": True},
@@ -5518,6 +5654,123 @@ def _selftest_closure(chk):
         "AR 5: pooled_diagnostic 로 강등된 block 은 1단계를 막지 않는다 "
         "(정본 blocks 에는 남아 있어도 scope 로 거른다)")
 
+    # ══ 회신 BF (2026-09-03 · 마지막 codex 리뷰) — P0 4건 + P1 ═══════════════════
+    # ── P0-1: estimand 네 키는 **비준 protocol 의 exact map** 에 결박된다 ─────────
+    _KB12 = "prospective/sdcp_neutral__b12__afm2424_pm1"
+    _jobs_b12 = dict(_jobs, **{_KB12: _BAS("aaaa1111", _KB12)})            # job 메타도 primary
+    _man_b12 = dict(_man, planned=dict(_PLANNED, **{_KB12: _PL(_KB12)}))    # planned 도 primary
+    _sem_b12 = _estimand_semantics_check(dict(_EJK_PM1, E_C_sdcp=_KB12), _jobs_b12, _man_b12,
+                                         "pm1", "primary")
+    chk(any(b.startswith("ESTIMAND_NOT_RATIFIED_KEY") for b in _sem_b12["blocks"]),
+        "⛔음성 BF P0-1 (리뷰어 재현): b12 를 job/planned 메타까지 primary 로 맞춰 넣어도 비준 "
+        "protocol 의 b00 경로가 아니면 막힌다")
+    _K00 = _EJK_PM1["E_C_sdcp"]
+    _jobs_norole = dict(_jobs, **{_K00: dict(_jobs[_K00], meta={
+        k: v for k, v in _jobs[_K00]["meta"].items() if k != "role"})})
+    _sem_norole = _estimand_semantics_check(dict(_EJK_PM1), _jobs_norole, _man, "pm1", "primary")
+    chk(any("role 가 없다" in b for b in _sem_norole["blocks"]),
+        "⛔음성 BF P0-1: role 이 없는 잡을 primary 로 간주하지 않는다 (기본값 제거)")
+    _pl_nob = dict(_PLANNED, **{_K00: dict(_PLANNED[_K00], meta={
+        k: v for k, v in _PLANNED[_K00]["meta"].items() if k != "basin_id"})})
+    _sem_nob = _estimand_semantics_check(dict(_EJK_PM1), _jobs, dict(_man, planned=_pl_nob),
+                                         "pm1", "primary")
+    chk(any("planned.basin_id 가 없다" in b for b in _sem_nob["blocks"]),
+        "⛔음성 BF P0-1: planned.meta 의 kind/fragment/role/seed/basin_id 는 **필수**다 — 하나가 "
+        "빠지면 막힌다 (있을 때만 비교하지 않는다)")
+    _sem_noproto = _estimand_semantics_check(dict(_EJK_PM1), _jobs, dict(_man, governance_binding={}),
+                                             "pm1", "primary")
+    chk(any(b.startswith("ESTIMAND_PROTOCOL_MAP_UNVERIFIED") for b in _sem_noproto["blocks"]),
+        "⛔음성 BF P0-1: 번들에 protocol 원문 사본이 없으면 exact map 을 확인 못 한 것 = 통과 아님")
+    _sem_ok = _estimand_semantics_check(dict(_EJK_PM1), _jobs, _man, "pm1", "primary")
+    chk(not _sem_ok["blocks"], "BF P0-1 양성: 비준 경로 그대로면 통과한다 (%s)" % _sem_ok["blocks"][:1])
+    # ── P0-3: 기체 상자 — 상대 이동만이 아니라 **절대 관계** ─────────────────────
+    def _gas_root_variant(**kw):
+        _r = pathlib.Path(__import__("tempfile").mkdtemp()) / "estv"
+        for _f0 in ("sdcp_neutral", "ptfe_c10"):
+            _write_gas_poscars(_r, _f0, **kw)
+        return _r
+    _bad_cs = _gas_bytes_check(dict(_man, _root=str(_gas_root_variant(center_shift=1.0))), "sdcp_neutral")
+    chk(any("질량중심" in b for b in _bad_cs),
+        "⛔음성 BF P0-3 (리뷰어 재현): 두 상자를 **함께** 중심 밖으로 옮겨도 COM ≠ (0.5,0.5,0.5) 로 막힌다")
+    _bad_bx = _gas_bytes_check(dict(_man, _root=str(_gas_root_variant(box_extra=2.0))), "sdcp_neutral")
+    chk(any("절대 상자 크기" in b for b in _bad_bx),
+        "⛔음성 BF P0-3 (리뷰어 재현): 둘 다 더 큰 상자로 바꿔도 상자 − span ≠ margin 으로 막힌다")
+    _bad_ph = _gas_bytes_check(_man, "sdcp_neutral",
+                               planned={"refs/mol__sdcp_neutral__box20": {"phases": ["relax", "static"]}})
+    chk(any("planned.phases" in b for b in _bad_ph),
+        "⛔음성 BF P0-3: planned.phases ≠ ['static'] 이면 막힌다 (fixed_geometry_static=true 를 믿지 않는다)")
+    _bad_sha = _gas_bytes_check(_man, "sdcp_neutral",
+                                metas={"20": dict(_GASJOBS["refs/mol__sdcp_neutral__box20"]["meta"],
+                                                  internal_geometry_sha="geo-LIE"),
+                                       "24": _GASJOBS["refs/mol__sdcp_neutral__box24"]["meta"]})
+    chk(any("좌표에서 재계산" in b for b in _bad_sha),
+        "⛔음성 BF P0-3: 메타의 internal_geometry_sha 가 좌표에서 재계산한 값과 다르면 막힌다 (메타를 믿지 않는다)")
+    _bad_rc = _gas_bytes_check(dict(_man, staged_runner="run_staged.sh"), "sdcp_neutral")
+    chk(any("반송 receipt 가 없어" in b for b in _bad_rc),
+        "⛔음성 BF P0-3: staged 번들에서 receipt 가 없으면 실행 상 집합을 확인 못 한 것 = 통과 아님")
+    _RCROW = "t\t%s\tx\tx\tnone\t1\t-\t-\t-\n"
+    for _b0 in ("20", "24"):
+        (_GROOT_EST / "refs" / ("mol__sdcp_neutral__box%s" % _b0) / "EXECUTABLE_RECEIPT.tsv").write_text(
+            _RCROW % "_runner_start" + _RCROW % "static", encoding="utf-8")
+    _ok_rc = _gas_bytes_check(dict(_man, staged_runner="run_staged.sh"), "sdcp_neutral",
+                              metas={"20": _GASJOBS["refs/mol__sdcp_neutral__box20"]["meta"],
+                                     "24": _GASJOBS["refs/mol__sdcp_neutral__box24"]["meta"]},
+                              planned=_man["planned"])
+    chk(not _ok_rc, "BF P0-3 양성: COM 중앙 · span+margin · 지문 재계산 · static 단독 receipt 면 통과 (%s)"
+        % _ok_rc[:1])
+    (_GROOT_EST / "refs" / "mol__sdcp_neutral__box20" / "EXECUTABLE_RECEIPT.tsv").write_text(
+        _RCROW % "_runner_start" + _RCROW % "relax" + _RCROW % "static", encoding="utf-8")
+    _bad_rl = _gas_bytes_check(dict(_man, staged_runner="run_staged.sh"), "sdcp_neutral")
+    chk(any("실행된 상 집합" in b for b in _bad_rl),
+        "⛔음성 BF P0-3: receipt 에 relax 상이 있으면 막힌다 (상자별 이완이 δ_gas 에 섞인다)")
+    for _b0 in ("20", "24"):
+        (_GROOT_EST / "refs" / ("mol__sdcp_neutral__box%s" % _b0) / "EXECUTABLE_RECEIPT.tsv").unlink()
+    _ok_all = _closure_estimand(_man, _RES(), _E, _emol, _jobs)
+    chk(not any(b.startswith("GAS_PAIR_CONTRACT") for b in _ok_all["blocks"]),
+        "BF P0-3 양성: 실물 계약대로 만든 픽스처는 GAS_PAIR_CONTRACT 에 걸리지 않는다 (%s)"
+        % [b[:70] for b in _ok_all["blocks"] if b.startswith("GAS")][:1])
+    # ── P0-4: provenance 폐포 완전성 · bundled_sources containment · 비준 기록 형식 ──
+    _r_min = _csp(_PVOK_MINIMAL)
+    chk(_r_min["manuscript_citable"] is False
+        and any("PROVENANCE_INCOMPLETE" in x for x in _r_min["blockers"]),
+        "⛔음성 BF P0-4 (리뷰어 재현): {clean:true, dirty:[], unknown:[]} 만 남긴 계보는 인용 불가다 "
+        "(목록·SHA·개수·필수 집합을 본다)")
+    _r_drop = _csp(dict(_PVOK, files={k: v for k, v in _PVOK["files"].items() if k != _CLAIM0},
+                        n_files=len(_PVOK["files"]) - 1))
+    chk(any("필수 입력" in x for x in _r_drop["blockers"]),
+        "⛔음성 BF P0-4: 필수 입력(비준 참조 문서)이 계보 목록에서 빠지면 막힌다")
+    _r_sha = _csp(dict(_PVOK, files=dict(_PVOK["files"], **{_CLAIM0: dict(_PVOK["files"][_CLAIM0],
+                                                                          sha256="0" * 64)})))
+    chk(any("governance 기록" in x for x in _r_sha["blockers"]),
+        "⛔음성 BF P0-4: 계보의 참조 문서 SHA 가 governance 기록과 다르면 막힌다")
+    _r_dl = _csp(dict(_PVOK, files=dict(_PVOK["files"], **{_CLAIM0: dict(_PVOK["files"][_CLAIM0],
+                                                                         git="modified")})))
+    chk(any("dirty 목록" in x for x in _r_dl["blockers"]),
+        "⛔음성 BF P0-4: 항목은 modified 인데 dirty 목록이 비어 있으면 요약이 거짓이다 (재계산 대조)")
+    chk(_csp(_PVOK)["manuscript_citable"] is True, "BF P0-4 양성: 완전한 registry 는 통과한다")
+    _r_esc = _cs(dict(_GBOK, bundled_sources=dict(_GSRC, **{_CLAIM0: "../" + _GSRC[_CLAIM0]})))
+    chk(any("번들 밖" in x for x in _r_esc["blockers"]),
+        "⛔음성 BF P0-4: bundled_sources 가 `../` 로 번들 밖을 가리키면 막힌다 (containment)")
+    _r_sup = _cs(dict(_GBOK, reference_files_state=dict(_GBOK["reference_files_state"], **{
+        _CLAIM0: dict(_GBOK["reference_files_state"][_CLAIM0], superseded="false")})))
+    chk(any("불리언 False 가 아니다" in x for x in _r_sup["blockers"]),
+        "⛔음성 BF P1: superseded 가 문자열 'false' 면 막힌다 (문자열은 참이다)")
+    _tdoc = pathlib.Path(__import__("tempfile").mkdtemp())
+    (_tdoc / "noby.json").write_text(json.dumps(_ratified_doc({"status": "ratified", "x": 1}, by=None)),
+                                     encoding="utf-8")
+    _st_noby = ref_doc_state(_tdoc / "noby.json")
+    chk(_st_noby["ratified"] is False and _st_noby.get("record_problems"),
+        "⛔음성 BF P0-4: 비준 기록에 actor(by/actor_id) 가 없으면 ratified=False (%s)"
+        % _st_noby.get("record_problems"))
+    (_tdoc / "mal.json").write_text(json.dumps({"status": "ratified", "ratification": ["x"]}),
+                                    encoding="utf-8")
+    _st_mal = ref_doc_state(_tdoc / "mal.json")
+    chk(_st_mal["ratified"] is False and "객체가 아니다" in str(_st_mal.get("why")),
+        "⛔음성 BF P1: 비준 기록이 list 면 예외로 죽지 않고 형식 위반으로 ratified=False")
+    (_tdoc / "ok.json").write_text(json.dumps(_ratified_doc({"status": "ratified", "x": 1})), encoding="utf-8")
+    chk(ref_doc_state(_tdoc / "ok.json")["ratified"] is True,
+        "BF P0-4 양성: at·by·state·role·content_digest 를 갖춘 기록은 비준으로 읽힌다")
+
 
 
 def selftest_k() -> int:
@@ -5820,22 +6073,26 @@ def selftest_k() -> int:
     _VROOT = pathlib.Path(__import__("tempfile").mkdtemp()) / "vac"
     _VC1, _VC2 = 36.6551, 40.6551
 
-    def _vposcar(key, c, move=0.0):
+    def _vposcar(key, c, move=0.0, tilt=0.0, flags2="T T T"):
         _d = _VROOT / key
         _d.mkdir(parents=True, exist_ok=True)
         _z = [8.0, 12.0 + move]                          # Cartesian z (Å)
+        # 🔴 회신 BF P0-2 — `tilt` 는 c 벡터를 (tilt, 0, c) 로 기울인다 (리뷰어 재현) ·
+        #   `flags2` 는 둘째 원자의 3축 selective-dynamics 플래그
         _lines = ["slab fixture", "1.0", "  10.0 0.0 0.0", "  0.0 10.0 0.0",
-                  "  0.0 0.0 %.6f" % c, "  Ni O", "  1 1", "Selective dynamics", "Direct",
-                  "  0.1 0.1 %.10f F F F" % (_z[0] / c), "  0.2 0.2 %.10f T T T" % (_z[1] / c)]
+                  "  %.6f 0.0 %.6f" % (tilt, c), "  Ni O", "  1 1", "Selective dynamics", "Direct",
+                  "  0.1 0.1 %.10f F F F" % (_z[0] / c), "  0.2 0.2 %.10f %s" % (_z[1] / c, flags2)]
         (_d / "POSCAR").write_text("\n".join(_lines) + "\n", encoding="utf-8")
 
+    _GB_VAC = _write_proto_fixture(_VROOT)                # 회신 BF P0-2 — protocol 의 c1_A/c2_A
     _VM = {"vacuum_convergence": {"c1_A": _VC1, "c2_A": _VC2}, "_root": str(_VROOT),
+           "governance_binding": dict(_GB_VAC),
            "estimand_job_keys": {"E_C_sdcp": "c1/sdcp_neutral__c1",
                                  "E_C_control": "c1/ptfe_c10__c1"}}
     _emv = {"sdcp_neutral": -100.0, "ptfe_c10": -50.0}
 
     def _vjobs(d_sdcp_c1, d_sdcp_c2, d_ptfe_c1, d_ptfe_c2, rb="r1", rb_c2=None,
-               geom_break=0.0, dc_break=False):
+               geom_break=0.0, dc_break=False, abs_shift=0.0, tilt_c2=0.0, flags_c2="T T T"):
         jb, en = {}, {}
         for f, (a1, a2) in (("sdcp_neutral", (d_sdcp_c1, d_sdcp_c2)),
                             ("ptfe_c10", (d_ptfe_c1, d_ptfe_c2))):
@@ -5846,8 +6103,11 @@ def selftest_k() -> int:
             for cell, kind, a in (("c1", "prospective_pose", a1),
                                   ("c2", "prospective_pose", a2)):
                 k = "%s/%s__%s" % (cell, f, cell)
-                _vposcar(k, _VC1 if (cell == "c1" or dc_break) else _VC2,
-                         move=(geom_break if cell == "c2" else 0.0))
+                # 🔴 BF P0-2 음성 손잡이: abs_shift(두 셀 함께 +N Å · Δc 유지) · tilt_c2 · flags_c2
+                _vposcar(k, (_VC1 if (cell == "c1" or dc_break) else _VC2) + abs_shift,
+                         move=(geom_break if cell == "c2" else 0.0),
+                         tilt=(tilt_c2 if cell == "c2" else 0.0),
+                         flags2=(flags_c2 if cell == "c2" else "T T T"))
                 jb[k] = {"meta": {"kind": kind, "fragment": f, "seed": SEED_MAIN,
                                   "role": "primary",
                                   **({"vacconv": "c2"} if cell == "c2" else {})},
@@ -5920,6 +6180,37 @@ def selftest_k() -> int:
     _rv9 = closure_vacconv(_VM, _jv7, lambda j: _ev7.get(j), _emv, ["sdcp_neutral", "ptfe_c10"])
     chk(_rv9["pass"] is True and not _rv9["blocks"],
         "BE P0-2 양성: 같은 좌표·같은 고정 플래그·Δc 일치·exact key 면 통과한다")
+    # ══ 회신 BF P0-2 (2026-09-03) — **절대 셀 · full c 벡터 · 3축 플래그 · protocol 선언** ══
+    #  ⚠ `_vjobs` 는 같은 경로의 POSCAR 를 덮어쓴다 — 각 음성은 만든 직후 바로 판정한다.
+    _FR2 = ["sdcp_neutral", "ptfe_c10"]
+    _jv_abs, _ev_abs = _vjobs(-1.20, -1.19, -0.80, -0.79, abs_shift=4.0)   # 두 셀 +4 Å · Δc 유지
+    _rv_abs = closure_vacconv(_VM, _jv_abs, lambda j: _ev_abs.get(j), _emv, _FR2)
+    chk(any("VACCONV_GEOMETRY_MISMATCH" in b and "절대 높이" in b for b in _rv_abs["blocks"])
+        and _rv_abs["pass"] is False,
+        "⛔음성 BF P0-2 (리뷰어 재현): 실제 셀을 +4 Å 로 바꾸고 Δc 만 유지해도 **절대 높이**가 "
+        "선언 c1_A/c2_A 와 달라 막힌다 (종전엔 Δc 만 봤다)")
+    _jv_tilt, _ev_tilt = _vjobs(-1.20, -1.19, -0.80, -0.79, tilt_c2=0.25)
+    _rv_tilt = closure_vacconv(_VM, _jv_tilt, lambda j: _ev_tilt.get(j), _emv, _FR2)
+    chk(any("기울어진 셀" in b for b in _rv_tilt["blocks"]) and _rv_tilt["pass"] is False,
+        "⛔음성 BF P0-2 (리뷰어 재현): c2 를 (0.25, 0, c) 로 기울이면 막힌다 — full c 벡터를 본다")
+    _jv_fl, _ev_fl = _vjobs(-1.20, -1.19, -0.80, -0.79, flags_c2="T T F")
+    _rv_fl = closure_vacconv(_VM, _jv_fl, lambda j: _ev_fl.get(j), _emv, _FR2)
+    chk(any("3축 selective-dynamics" in b for b in _rv_fl["blocks"]) and _rv_fl["pass"] is False,
+        "⛔음성 BF P0-2: 원자별 3축 selective-dynamics 플래그가 다르면(T T T vs T T F) 막힌다")
+    _jv_np, _ev_np = _vjobs(-1.20, -1.19, -0.80, -0.79)
+    _rv_np = closure_vacconv(dict(_VM, governance_binding={}), _jv_np, lambda j: _ev_np.get(j), _emv, _FR2)
+    chk(any("protocol 의 c1_A/c2_A" in b for b in _rv_np["blocks"]) and _rv_np["pass"] is False,
+        "⛔음성 BF P0-2: 비준 protocol 사본이 번들에 없으면 선언 c1/c2 를 대조 못 한 것 = 통과 아님")
+    _rv_pd = closure_vacconv(dict(_VM, vacuum_convergence={"c1_A": 36.6551, "c2_A": 44.6551}),
+                             *(_vjobs(-1.20, -1.19, -0.80, -0.79, dc_break=False)[:1]),
+                             lambda j: _ev_np.get(j), _emv, _FR2)
+    chk(any("비준 protocol" in b for b in _rv_pd["blocks"]) and _rv_pd["pass"] is False,
+        "⛔음성 BF P0-2: manifest 선언 c1/c2 가 비준 protocol 과 다르면 막힌다 (선언 자체를 결박)")
+    _jv_p2, _ev_p2 = _vjobs(-1.20, -1.19, -0.80, -0.79)
+    _rv_p2 = closure_vacconv(_VM, _jv_p2, lambda j: _ev_p2.get(j), _emv, _FR2)
+    chk(_rv_p2["pass"] is True and not _rv_p2["blocks"],
+        "BF P0-2 양성: 절대 셀·c 벡터·플래그·protocol 선언이 모두 맞으면 통과한다 (%s)"
+        % _rv_p2["blocks"][:1])
 
     # [음성] 옛 번들에는 적용하지 않는다
     chk(closure_vacconv({}, {}, lambda j: None, _emv,
@@ -6086,11 +6377,23 @@ def selftest_k() -> int:
 
     # 9열 (AY P0-1 · BE P1): ts phase exe_sha exe kind nproc launcher launcher_sha potcar_sha
     _LSHA = "c" * 64
-    _PSHA = "d" * 64                       # 상 폴더 POTCAR 해시 (BE P1)
+    # 🔴 회신 BF P1 — 분석기가 상 폴더 POTCAR **실물**을 다시 해시하므로 픽스처도 실물을 둔다
+    _PBYTES = b"PAW_PBE fixture POTCAR (selftest)\n"
+    (_rjp / "static").mkdir(exist_ok=True)
+    (_rjp / "static" / "POTCAR").write_bytes(_PBYTES)
+    _PSHA = hashlib.sha256(_PBYTES).hexdigest()      # 상 폴더 POTCAR 해시 (BE P1 · BF P1 실물)
     _ROW = ("2026-08-31T00:00:00Z\t%s\t%s\t/x/vasp_std\t%s\t48"
             "\t/opt/ompi/bin/mpirun\t%s\t" + _PSHA + "\n")
     _ok_rcpt = (_ROW % ("_runner_start", _SEAL_SHA, "mpirun", _LSHA)
                 + _ROW % ("static", _SEAL_SHA, "mpirun", _LSHA))
+    # 🔴 회신 BF P1 — receipt 9열과 반송 상 폴더 POTCAR **실물**을 대조한다
+    (_rjp / "static" / "POTCAR").write_bytes(b"PAW_PBE SWAPPED after run\n")
+    chk(any("RECEIPT_POTCAR_FILE_MISMATCH" in g for g in _erg(_ok_rcpt)),
+        "⛔음성 BF P1: 상 폴더 POTCAR 실물 해시 ≠ receipt 9열이면 막힌다 (receipt 문자열만 믿지 않는다)")
+    (_rjp / "static" / "POTCAR").unlink()
+    chk(any("RECEIPT_POTCAR_FILE_MISSING" in g for g in _erg(_ok_rcpt)),
+        "⛔음성 BF P1: 반송물에 상 폴더 POTCAR 가 없으면 대조 불가 = 통과 아님")
+    (_rjp / "static" / "POTCAR").write_bytes(_PBYTES)          # 원상복구 — 아래 양성이 쓴다
     chk(_erg(_ok_rcpt) == [], "AV P0-2 양성: 봉인과 같은 해시의 receipt 는 게이트 0건")
     chk(any("RECEIPT_MISSING" in g for g in _erg(None)),
         "⛔음성 AV P0-2: receipt 가 없으면 막는다 (분석기가 실제로 **읽는다**)")
@@ -7601,6 +7904,18 @@ def executable_receipt_gates(job_dir, rel, man, executed_phases):
         elif _asm_sha and c[8] != _asm_sha:
             g.append("RECEIPT_POTCAR_MISMATCH(%s 상의 POTCAR %s ≠ 조립본 %s — 조립 뒤 바뀐 "
                      "POTCAR 로 돌았다)" % (c[1], c[8][:12], _asm_sha[:12]))
+        # 🔴 회신 BF P1 — 반송된 상 폴더 POTCAR **실물**을 다시 해시해 receipt 문자열과 대조한다
+        #   (receipt 만 믿지 않는다). 반송물에 POTCAR 가 없으면 대조 불가 = 통과 아님.
+        _pf_path = os.path.join(job_dir, c[1], "POTCAR")
+        if _HEX64.match(c[8] or ""):
+            if not os.path.isfile(_pf_path):
+                g.append("RECEIPT_POTCAR_FILE_MISSING(%s 상: 반송물에 %s/POTCAR 가 없어 receipt 의 "
+                         "해시를 실물과 대조할 수 없다 — 확인 못 함은 통과가 아니다 · BF P1)" % (c[1], c[1]))
+            else:
+                _pf_h = hashlib.sha256(open(_pf_path, "rb").read()).hexdigest()
+                if _pf_h != c[8]:
+                    g.append("RECEIPT_POTCAR_FILE_MISMATCH(%s 상: 실물 POTCAR %s ≠ receipt %s — "
+                             "receipt 문자열과 실물이 다르다 · BF P1)" % (c[1], _pf_h[:12], c[8][:12]))
         if not want:
             g.append("RECEIPT_UNVERIFIABLE(root seal 에 실행파일 해시가 없어 receipt "
                      "를 대조할 수 없다 — 확인 못 함은 통과가 아니다)")
@@ -8506,9 +8821,39 @@ def closure_vacconv(man, jobs, E, emol, frags):
             _gbad.append("원소·개수가 다르다")
         elif _p1["fixed"] != _p2["fixed"]:
             _gbad.append("고정 플래그가 다르다")
+        # 🔴 회신 BF P0-2 — 원자별 **3축** selective-dynamics 플래그까지 같아야 한다
+        elif _p1.get("sd_flags") != _p2.get("sd_flags"):
+            _gbad.append("원자별 3축 selective-dynamics 플래그가 다르다")
         for _ax in (0, 1):
             if any(abs(_p1["cell"][_ax][i] - _p2["cell"][_ax][i]) > 1e-6 for i in range(3)):
                 _gbad.append("%s 벡터가 다르다" % "ab"[_ax])
+        # 🔴🔴 회신 BF P0-2 (2026-09-03) — **절대 셀과 full c 벡터**를 본다. 종전엔 a·b 와
+        #   c[2][2] 의 차만 봤다. 리뷰어 재현: 실제 셀을 46.66→50.66 Å 로 바꾸고 Δc=4 만
+        #   유지해도 PASS · c2 를 (0.25, 0, 40.66) 로 기울여도 PASS.
+        #   ⇒ ① c 벡터는 (0, 0, c) 여야 한다 (기울기 금지) ② c 의 **절대값**이 manifest 선언
+        #     c1_A/c2_A 와 같아야 한다 ③ 그 선언이 **비준 protocol** 의 c1_A/c2_A 와 같아야 한다.
+        for _lab, _pp in (("c1", _p1), ("c2", _p2)):
+            if abs(_pp["cell"][2][0]) > 1e-6 or abs(_pp["cell"][2][1]) > 1e-6:
+                _gbad.append("%s 의 c 벡터가 (0,0,c) 가 아니다 (%.4f, %.4f, %.4f) — 기울어진 셀"
+                             % (_lab, _pp["cell"][2][0], _pp["cell"][2][1], _pp["cell"][2][2]))
+        try:
+            _c1_decl, _c2_decl = float(_vcm.get("c1_A")), float(_vcm.get("c2_A"))
+        except (TypeError, ValueError):
+            _c1_decl = _c2_decl = None
+        if _c1_decl is None:
+            _gbad.append("manifest 에 c1_A/c2_A 가 없어 절대 셀을 대조할 수 없다")
+        else:
+            if abs(_p1["cell"][2][2] - _c1_decl) > 1e-3:
+                _gbad.append("c1 절대 높이 %.4f Å ≠ 선언 %.4f Å" % (_p1["cell"][2][2], _c1_decl))
+            if abs(_p2["cell"][2][2] - _c2_decl) > 1e-3:
+                _gbad.append("c2 절대 높이 %.4f Å ≠ 선언 %.4f Å" % (_p2["cell"][2][2], _c2_decl))
+            _pvc, _pvw = _protocol_vacuum_cells(man)
+            if _pvc is None:
+                _gbad.append("비준 protocol 의 c1_A/c2_A 를 번들에서 읽을 수 없다 (%s) — 선언을 "
+                             "protocol 과 대조하지 못하면 확인 못 함이다" % _pvw)
+            elif abs(_pvc[0] - _c1_decl) > 1e-6 or abs(_pvc[1] - _c2_decl) > 1e-6:
+                _gbad.append("manifest 선언 c1/c2 (%.4f/%.4f) ≠ 비준 protocol (%.4f/%.4f)"
+                             % (_c1_decl, _c2_decl, _pvc[0], _pvc[1]))
         _dc = _p2["cell"][2][2] - _p1["cell"][2][2]
         try:
             _want_dc = float(_vcm.get("c2_A")) - float(_vcm.get("c1_A"))
@@ -9146,6 +9491,125 @@ def _estimand_topology_check(keys, jobs, label):
     return out
 
 
+#: 🔴 회신 BF P0-1 — 비준된 protocol 의 **정확한 네 잡 경로**가 estimand 의 정본이다.
+C12_PROTOCOL_REL = "db/properties/sdcp_c12_protocol_2026_08_30.json"
+#: protocol 의 job_key 이름 → manifest estimand_job_keys 이름 (PTFE = control 조각)
+C12_PROTOCOL_KEY_MAP = {"E_C_SDCP": "E_C_sdcp", "E_C_PTFE": "E_C_control",
+                        "E_G_SDCP": "E_G_sdcp", "E_G_PTFE": "E_G_control"}
+#: 질량표 — 기체 상자의 **질량중심** 재계산용 (생성기 ase 질량과 같은 값, 소수 3자리)
+C12_MASS = {"H": 1.008, "Li": 6.94, "C": 12.011, "N": 14.007, "O": 15.999, "F": 18.998,
+            "P": 30.974, "S": 32.06, "Cl": 35.45, "Ni": 58.693, "Nd": 144.242}
+
+
+#: selftest 픽스처용 — 실물 protocol 의 **결박에 쓰이는 두 절**만 흉내낸 최소 사본.
+#:   (selftest_k 와 _selftest_closure 둘 다 쓰므로 모듈 수준에 둔다 — 2026-09-03 NameError 실측)
+_PROTO_FIX = {"schema": "fixture/protocol", "status": "ratified",
+              "2b_D_의_job_key_사전고정_2026_08_31": {"job_key": {
+                  "E_C_SDCP": "prospective/sdcp_neutral__b00__afm2424_pm1",
+                  "E_C_PTFE": "prospective/ptfe_c10__b00__afm2424_pm1",
+                  "E_G_SDCP": "refs/mol__sdcp_neutral__box24",
+                  "E_G_PTFE": "refs/mol__ptfe_c10__box24"}},
+              "4_진공_두께_수렴_시험": {"c1_A": 36.6551, "c2_A": 40.6551}}
+
+
+def _write_proto_fixture(root, doc=None):
+    """selftest 용 — 번들 루트에 protocol 원문 사본을 쓰고 governance_binding 조각을 돌려준다."""
+    root = pathlib.Path(root)
+    (root / "governance").mkdir(parents=True, exist_ok=True)
+    (root / "governance" / "sdcp_c12_protocol_2026_08_30.json").write_text(
+        json.dumps(doc if doc is not None else _PROTO_FIX, ensure_ascii=False, indent=1),
+        encoding="utf-8")
+    return {"bundled_sources": {C12_PROTOCOL_REL: "governance/sdcp_c12_protocol_2026_08_30.json"}}
+
+
+def _bundled_ref_path(man, rel):
+    """번들에 실린 참조 문서 원문 사본의 절대경로 → (path | None, 사유).
+
+    🔴 회신 BF P0-4 — `bundled_sources` 경로가 번들 **안**에 있어야 한다 (`../` 이탈 금지).
+    """
+    root = (man or {}).get("_root")
+    srcs = ((man or {}).get("governance_binding") or {}).get("bundled_sources") or {}
+    if not root:
+        return None, "번들 루트(_root)를 모른다"
+    r = srcs.get(rel)
+    if not r or not isinstance(r, str):
+        return None, "%s: bundled_sources 에 원문 사본 경로가 없다" % rel
+    if os.path.isabs(r) or ".." in r.replace("\\", "/").split("/"):
+        return None, "%s: bundled_sources 경로 %r 가 번들 밖을 가리킨다 (절대경로·`..` 금지)" % (rel, r)
+    f = os.path.realpath(os.path.join(root, *r.split("/")))
+    if not (f == os.path.realpath(root) or f.startswith(os.path.realpath(root) + os.sep)):
+        return None, "%s: 원문 사본 %r 이 번들 루트 밖으로 해석된다" % (rel, r)
+    if not os.path.isfile(f):
+        return None, "%s: 원문 사본이 번들에 없다 (%s)" % (rel, r)
+    return f, None
+
+
+def _protocol_exact_map(man):
+    """비준 protocol 원문 사본에서 estimand 네 잡의 **정확한 경로**를 읽는다 → (map | None, 사유)."""
+    f, why = _bundled_ref_path(man, C12_PROTOCOL_REL)
+    if f is None:
+        return None, why
+    try:
+        with open(f, encoding="utf-8") as _fh:
+            pj = json.load(_fh)
+    except Exception as e:                                   # noqa: BLE001
+        return None, "protocol 원문 파싱 실패 (%r)" % (e,)
+    jk = ((pj.get("2b_D_의_job_key_사전고정_2026_08_31") or {}).get("job_key") or {})
+    out = {}
+    for pk, mk in C12_PROTOCOL_KEY_MAP.items():
+        v = jk.get(pk)
+        if not v or not isinstance(v, str):
+            return None, "protocol 의 job_key.%s 가 없다 — exact map 이 봉인되지 않았다" % pk
+        out[mk] = v
+    return out, None
+
+
+def _protocol_vacuum_cells(man):
+    """비준 protocol 원문 사본의 진공 시험 셀 높이 (c1_A, c2_A) → (tuple | None, 사유)."""
+    f, why = _bundled_ref_path(man, C12_PROTOCOL_REL)
+    if f is None:
+        return None, why
+    try:
+        with open(f, encoding="utf-8") as _fh:
+            pj = json.load(_fh)
+        sec = pj.get("4_진공_두께_수렴_시험") or {}
+        return (float(sec["c1_A"]), float(sec["c2_A"])), None
+    except Exception as e:                                   # noqa: BLE001
+        return None, "protocol 의 4_진공_두께_수렴_시험.c1_A/c2_A 를 읽을 수 없다 (%r)" % (e,)
+
+
+def _com_frac_poscar(p):
+    """POSCAR 판독 결과의 **질량중심** 분수좌표 (직교 대각 셀 전제 — 호출부가 확인)."""
+    ms = [C12_MASS.get(str(s).capitalize(), 0.0) for s in p["syms"]]
+    if not ms or sum(ms) <= 0:
+        return None
+    com = [sum(m * r[ax] for m, r in zip(ms, p["pos"])) / sum(ms) for ax in range(3)]
+    return [com[ax] / p["cell"][ax][ax] for ax in range(3)]
+
+
+def _gas_internal_sha(p):
+    """생성기 `_emit_mol_job` 과 **같은 식**으로 내부기하 지문을 다시 만든다 (원소:COM기준 상대좌표).
+    ⚠ 생성기는 `at.positions − box/2` 를 쓴다 — COM 이 셀 중앙이면 그것이 COM 기준 상대좌표다."""
+    box = [p["cell"][ax][ax] for ax in range(3)]
+    sig = "|".join("%s:%.6f,%.6f,%.6f" % (s, r[0] - box[0] / 2.0, r[1] - box[1] / 2.0,
+                                          r[2] - box[2] / 2.0)
+                   for s, r in zip(p["syms"], p["pos"]))
+    return hashlib.sha256(sig.encode()).hexdigest()
+
+
+def receipt_phase_set(job_dir):
+    """반송된 EXECUTABLE_RECEIPT.tsv 의 **실행된 상 집합** → set | None(파일 없음)."""
+    rp = os.path.join(job_dir, "EXECUTABLE_RECEIPT.tsv")
+    if not os.path.isfile(rp):
+        return None
+    out = set()
+    for ln in open(rp, encoding="utf-8", errors="replace").read().splitlines():
+        c = ln.split("\t")
+        if len(c) >= 2 and c[1] and not c[1].startswith("_runner_"):
+            out.add(c[1])
+    return out
+
+
 def _estimand_semantics_check(keys, jobs, man, label, want_role):
     """D 에 들어가는 **네 키의 의미**를 구조화 meta 로 검사한다 → {"blocks", "by_key"}.
 
@@ -9183,11 +9647,26 @@ def _estimand_semantics_check(keys, jobs, man, label, want_role):
     planned = (man or {}).get("planned") or {}
     want = {"E_C_sdcp": ("complex", sd), "E_C_control": ("complex", ct),
             "E_G_sdcp": ("gas", sd), "E_G_control": ("gas", ct)}
+    # 🔴🔴 회신 BF P0-1 (2026-09-03) — **비준된 protocol 의 exact map 과 직접 대조한다.**
+    #   종전엔 누락·빈 role 을 primary 로 간주하고 planned.meta 는 있을 때만 비교했다.
+    #   리뷰어 재현: b12 를 넣고 job/planned metadata 를 함께 primary 로 바꾸면 통과.
+    #   protocol 은 b00 네 경로를 이미 고정했다 — 그것과 다르면 D 를 만들지 않는다.
+    _pmap, _pwhy = (None, None)
+    if label == "pm1" and want_role == "primary":
+        _pmap, _pwhy = _protocol_exact_map(man)
+        if _pmap is None:
+            out["blocks"].append("ESTIMAND_PROTOCOL_MAP_UNVERIFIED(%s: 비준 protocol 의 exact "
+                                 "map 을 번들 안에서 읽을 수 없다 — %s. 확인 못 함은 통과가 아니다)"
+                                 % (label, _pwhy))
     for k, (kind, frag) in want.items():
         jn = (keys or {}).get(k)
         if not jn:
             out["blocks"].append("ESTIMAND_SEMANTICS_KEY_MISSING(%s: %s 가 없다)" % (label, k))
             continue
+        if _pmap is not None and _pmap.get(k) != jn:
+            out["blocks"].append("ESTIMAND_NOT_RATIFIED_KEY(%s: %s=%s 이 비준 protocol 의 %s 와 "
+                                 "다르다 — 메타를 primary 로 맞춰도 비준 경로가 아니면 D 가 아니다 "
+                                 "· BF P0-1)" % (label, k, jn, _pmap.get(k)))
         jm = ((jobs.get(jn) or {}).get("meta") or {})
         pm = ((planned.get(jn) or {}).get("meta") or {})
         bad = []
@@ -9200,8 +9679,11 @@ def _estimand_semantics_check(keys, jobs, man, label, want_role):
                 bad.append("kind=%r≠prospective_pose" % (jm.get("kind"),))
             if jm.get("fragment") != frag:
                 bad.append("fragment=%r≠%r" % (jm.get("fragment"), frag))
-            role = jm.get("role") or "primary"
-            if want_role == "primary":
+            # 🔴 BF P0-1 — role 기본값 없음. 없으면 그 자체가 위반이다.
+            role = jm.get("role")
+            if not role:
+                bad.append("role 가 없다 (기본값을 primary 로 읽지 않는다 · BF P0-1)")
+            elif want_role == "primary":
                 if role != "primary":
                     bad.append("role=%r≠primary (대안 자세를 primary 자리에 넣었다)" % role)
             elif role not in tuple(want_role):
@@ -9215,8 +9697,15 @@ def _estimand_semantics_check(keys, jobs, man, label, want_role):
                 bad.append("d3-off twin 이다")
             if jm.get("d3") != "on":
                 bad.append("d3=%r≠on" % (jm.get("d3"),))
+            # 🔴 BF P0-1 — planned.meta 의 다섯 필드는 **필수**다 (있을 때만 비교하지 않는다)
+            if not pm:
+                bad.append("planned.meta 가 없다 (선언 없는 잡은 estimand 가 될 수 없다 · BF P0-1)")
             for fld in ("kind", "fragment", "role", "seed", "basin_id"):
-                if pm and fld in pm and pm.get(fld) != jm.get(fld):
+                if not pm:
+                    break
+                if fld not in pm or pm.get(fld) in (None, ""):
+                    bad.append("planned.%s 가 없다 (필수 선언 · BF P0-1)" % fld)
+                elif pm.get(fld) != jm.get(fld):
                     bad.append("planned.%s=%r≠job.json %r" % (fld, pm.get(fld), jm.get(fld)))
         else:
             if jn != "refs/mol__%s__box24" % frag:
@@ -9243,8 +9732,15 @@ def _estimand_semantics_check(keys, jobs, man, label, want_role):
     return out
 
 
-def _gas_bytes_check(man, frag):
+def _gas_bytes_check(man, frag, metas=None, planned=None):
     """box20/box24 POSCAR **실물**에서 셀·좌표 관계를 본다 → 위반 목록.
+
+    🔴🔴 회신 BF P0-3 (2026-09-03) — 종전엔 **상대 관계**(셀 +4 Å · 좌표 +2 Å)만 봤다.
+      두 상자를 함께 중심 밖으로 옮기거나 둘 다 더 큰 상자로 바꿔도 통과했고,
+      `fixed_geometry_static=true` 는 믿을 뿐 실제 phase 집합을 요구하지 않았다.
+      ⇒ 실물에서 ① 질량중심 = (0.5, 0.5, 0.5) ② 절대 상자 = 내부 span + 선언 margin(20/24)
+        ③ 내부기하 지문(internal_geometry_sha)을 좌표에서 **재계산**해 메타와 대조
+        ④ planned phase 집합 == ["static"] · 반송 receipt 의 실행 상 집합 == {"static"} 을 요구한다.
 
     🔴 회신 BE P0-2 (2026-09-03) — 리뷰어 재현: box20/24 를 **같은 셀**로 만들고
       `not_centered` 로 선언해도 계약과 수렴이 통과했다. 자기 선언(sha·필드)만 봤기
@@ -9285,6 +9781,59 @@ def _gas_bytes_check(man, frag):
     if mx > 1e-4:
         bad.append("%s: 좌표가 +2.0 Å 강체 평행이동이 아니다 (최대 편차 %.4f Å) — "
                    "내부기하 또는 중심 배치가 다르다" % (frag, mx))
+    # 🔴 BF P0-3 ① 질량중심이 두 셀 모두 **정확히 중앙**인가 (상대 이동만으로는 함께 밀린 것을 못 본다)
+    metas = metas or {}
+    for tag, pp in (("20", p20), ("24", p24)):
+        com = _com_frac_poscar(pp)
+        if com is None:
+            bad.append("%s box%s: 질량표에 없는 원소라 질량중심을 재계산할 수 없다 (%s)"
+                       % (frag, tag, sorted(set(pp["syms"]))))
+            continue
+        if max(abs(c - 0.5) for c in com) > 1e-3:
+            bad.append("%s box%s: 질량중심 분수좌표 (%.4f, %.4f, %.4f) ≠ (0.5, 0.5, 0.5) — "
+                       "COM 중심 배치가 아니다 (두 상자를 함께 옮겨도 잡힌다 · BF P0-3)"
+                       % (frag, tag, com[0], com[1], com[2]))
+        # ② 절대 상자 = 내부 span + 선언 margin (둘 다 더 큰 상자로 바꾼 것을 잡는다)
+        span = [max(r[ax] for r in pp["pos"]) - min(r[ax] for r in pp["pos"]) for ax in range(3)]
+        want_margin = float(tag)
+        mm = metas.get(tag) or {}
+        try:
+            decl_margin = float(mm.get("box_margin_A"))
+        except (TypeError, ValueError):
+            decl_margin = None
+        if decl_margin is not None and abs(decl_margin - want_margin) > 1e-6:
+            bad.append("%s box%s: 메타 box_margin_A=%r ≠ %s" % (frag, tag, mm.get("box_margin_A"), tag))
+        for ax in range(3):
+            got = pp["cell"][ax][ax] - span[ax]
+            if abs(got - want_margin) > 1e-3:
+                bad.append("%s box%s: %s축 상자 − span = %.4f Å ≠ margin %.0f — 절대 상자 크기가 "
+                           "선언과 다르다 (BF P0-3)" % (frag, tag, "abc"[ax], got, want_margin))
+                break
+        gap = min(min(r[ax] for r in pp["pos"]) for ax in range(3))
+        gap2 = min(pp["cell"][ax][ax] - max(r[ax] for r in pp["pos"]) for ax in range(3))
+        if min(gap, gap2) < 4.0 - 1e-6:
+            bad.append("%s box%s: 최소 진공 여백 %.2f Å < 4 — 생성기 계약 위반" % (frag, tag, min(gap, gap2)))
+        # ③ 내부기하 지문을 **좌표에서 재계산**해 메타와 대조 (메타만 같게 적은 것을 잡는다)
+        if mm:
+            _sha_now = _gas_internal_sha(pp)
+            if mm.get("internal_geometry_sha") != _sha_now:
+                bad.append("%s box%s: internal_geometry_sha 메타 %s… ≠ 좌표에서 재계산 %s… — 메타가 "
+                           "실물을 말하지 않는다 (BF P0-3)"
+                           % (frag, tag, str(mm.get("internal_geometry_sha"))[:12], _sha_now[:12]))
+        # ④ phase 집합 — 선언(planned)과 실행(receipt) 둘 다 정확히 static 하나
+        key = "refs/mol__%s__box%s" % (frag, tag)
+        pl = ((planned or {}).get(key) or {})
+        if pl and list(pl.get("phases") or []) != ["static"]:
+            bad.append("%s box%s: planned.phases=%r ≠ ['static'] — 고정기하 static 단독이 아니다"
+                       % (frag, tag, pl.get("phases")))
+        if (man or {}).get("staged_runner"):
+            ph = receipt_phase_set(os.path.join(root, "refs", "mol__%s__box%s" % (frag, tag)))
+            if ph is None:
+                bad.append("%s box%s: 반송 receipt 가 없어 실행된 상 집합을 확인할 수 없다 (통과 아님)"
+                           % (frag, tag))
+            elif ph != {"static"}:
+                bad.append("%s box%s: 실행된 상 집합 %s ≠ {'static'} — 상자별 이완이 δ_gas 에 섞인다"
+                           % (frag, tag, sorted(ph)))
     return bad
 
 
@@ -9750,7 +10299,9 @@ def _closure_estimand(man, results, E, emol, jobs, merge_info=None):
                 if _bmv is None or abs(_bmv - float(_b)) > 1e-6:
                     _gx.append("%s box%s: box_margin_A=%r ≠ %s" % (_f, _b, _mm.get("box_margin_A"), _b))
             # 🔴 회신 BE P0-2 — 그리고 POSCAR **실물**에서 셀 +4 Å · 좌표 +2 Å 강체이동을 본다
-            _gx += _gas_bytes_check(man, _f)
+            # 🔴 회신 BF P0-3 — 절대 관계(COM 중앙 · span+margin · 내부기하 재계산 · phase 집합)까지
+            _gx += _gas_bytes_check(man, _f, metas={"20": _m20, "24": _m24},
+                                    planned=(man.get("planned") or {}))
         if _gp.get("fixed_geometry_static") is not True:
             _gx.append("manifest.gas_geometry_policy.fixed_geometry_static 이 true 가 "
                        "아니다 (%r)" % (_gp.get("fixed_geometry_static"),))
@@ -10459,6 +11010,8 @@ def main():
                            % ((_pv0.get("dirty") or [])[:3]))
         elif _pv0.get("dirty") or _pv0.get("unknown_git_state"):
             _bad_g0.append("clean=true 인데 dirty/미상 목록이 비어 있지 않다")
+        # 🔴 회신 BF P0-4 — preflight 도 계보의 **완전성**을 본다 (요약 세 칸으로는 통과 불가)
+        _bad_g0 += provenance_strict(man)
         for _i in C12_REQUIRED_DECISIONS:
             _v = (_gb0.get("decisions") or {}).get(_i) or {}
             print("  decision %-40s state=%-8s ratified=%s digest=%s"
@@ -12595,8 +13148,9 @@ basin 으로 수렴하면 저희가 계산을 중단하고 별도 절차를 요�
 """ if _staged else ("""```
 cd <잡폴더>
 PP=/path/to/potpaw_PBE.54 POTCAR_ALLOWLIST=/abs/site_allow.txt bash POTCAR_ASSEMBLE.sh
-VASP_LAUNCHER_KIND=mpirun VASP_NPROC=%d VASP_EXE=/abs/path/vasp_std bash run_job.sh
-```""" % a.cores))
+VASP_LAUNCHER_KIND=mpirun LAUNCHER_BIN=/abs/path/to/mpirun VASP_NPROC=%d VASP_EXE=/abs/path/vasp_std bash run_job.sh
+```
+(⚠ `LAUNCHER_BIN` 은 **필수**입니다 — PATH 에서 찾지 않습니다. 없으면 즉시 중단됩니다 · 회신 BF P1)""" % a.cores))
 
     return f"""# VASP 계산 요청 — LiNiO₂(104) 위 분자 조각 단일점
 
@@ -12884,7 +13438,7 @@ MLIP 스크리닝은 경향까지만 냈고, 이 DFT+U 가 최종 판정입니�
 `run_job.sh` 가 상 사이 CHGCAR/WAVECAR 승계를 **강제**합니다 — 파일이 없으면 멈춥니다.
 ```
 cd <잡폴더> && cp <POTCAR> POTCAR && \\
-VASP_LAUNCHER_KIND=mpirun VASP_NPROC=48 VASP_EXE=/abs/path/vasp_std bash run_job.sh
+VASP_LAUNCHER_KIND=mpirun LAUNCHER_BIN=/abs/path/to/mpirun VASP_NPROC=48 VASP_EXE=/abs/path/vasp_std bash run_job.sh
 ```
 전체는 번들 루트에서 `bash run_all.sh` (tier1 → refs → tier2 순).
 
@@ -16308,7 +16862,9 @@ def selftest() -> int:
         _d = {"schema": "x/v1", "status": "ratified", "본문": "원래 내용"}
         _dg = hashlib.sha256(json.dumps(_d, sort_keys=True, ensure_ascii=False)
                              .encode("utf-8")).hexdigest()
+        # 🔴 회신 BF P0-4 — 실물 비준 기록 모양(at·by 포함). 필드가 빠지면 형식 위반으로 ratified=False.
         _d["ratification"] = {"state": "ratified", "role": "scientific_owner",
+                              "at": "2026-09-02", "by": "fixture-owner",
                               "content_digest": _dg}
         if tamper:
             _d["본문"] = "비준 뒤에 고친 내용"
