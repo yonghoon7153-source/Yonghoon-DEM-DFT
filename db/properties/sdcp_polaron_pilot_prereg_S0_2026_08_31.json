@@ -1,8 +1,8 @@
 {
  "schema": "estimand_prereg/v2",
  "date": "2026-08-31",
- "status": "ratified",
- "⚠_비준": "✔ **2026-09-02 1저자 비준 (scientific_owner).** 회신 X 전건(P0 9 · P1 7) 이행분에 대한 비준이다. 이후 내용이 바뀌면 digest 결박이 자동으로 재비준을 요구한다.",
+ "status": "proposed",
+ "⚠_비준": "⏳ **재비준 대기 (2026-09-03).** 회신 Y P0 8건 이행으로 내용이 바뀌었다 — estimand 형태 대조를 비 문턱에서 직접 대조·전 잡으로 바꾸고(P0-1·P0-2), probe 증서·ORCA identity·receipt 결박·원자적 패치를 봉인에 넣었다. 앞선 비준(2026-09-02)은 그 이전 내용에 대한 것이다.",
  "제목": "S0 — ε=1 기술적 적합성 pilot 사전등록 (회신 T 로 격하된 판, P0 4건 이행 반영)",
  "이_문서의_성격": {
   "무엇인가": "회신 T 가 '전체 pilot NO-GO / ε=1 기술적 적합성 pilot(S0) 한정 조건부 GO' 로 격하한 것을 받아 **범위를 줄여 다시 등록**한 판이다.",
@@ -16,18 +16,27 @@
   "왜_지금_격하하나": "회신 T 의 P0 넷(원자 프레임 · MO 성격 · 국재화 결정론 · seed 중복)이 전부 **판정을 조용히 틀리게 만드는** 것들이었다. 그것들을 고친 코드가 실제로 도는지부터 확인하지 않고 생산을 돌리면 아홉 번째 반려다."
  },
  "0_시각_증거": {
-  "봉인_시점": "2026-09-02",
-  "builder_sha256": "071052c77d5726469a6946e9882a594945a1bb27455ef6fabd70975a71bcfeb8",
-  "⚠_원본과_다른_해시인_이유": "회신 X P0 9건 + P1 7건 이행으로 빌더가 바뀌었다. 재발행이다 — 범위·질문·판정어·게이트 문턱은 그대로다.",
+  "봉인_시점": "2026-09-03",
+  "builder_sha256": "e9ea6e4b0efa9fc6020160c7b17b4e924717fe16c978465a1551b62421b6d3b8",
+  "⚠_원본과_다른_해시인_이유": "회신 Y P0 8건 + P1 이행으로 빌더·calibration 도구가 바뀌었다 (커밋 57c5909e). 재발행이다 — 범위·질문·판정어는 그대로고, estimand 형태 대조 규칙(비 문턱 → 직접 대조·전 잡)과 게이트 봉인이 바뀌었다.",
   "이_시점의_doped_잡": "0개 — git log 가 그 순서의 증거다. 결과를 보고 규칙을 고치지 않는다.",
-  "이_시점의_ORCA_잡": "0개 — phase L 도 아직 돌리지 않았다 (회신 U Q7 NO-GO)",
-  "이전_봉인": {
-   "builder_sha256": "ded52c96d75ff929029f149f3d8e6768cbd27f53bfcab4a7aa301e85eb6cc90a",
-   "builder_last_change_commit": "6f9e28b21bec3ac602b487edd9a2d53024d00a97",
-   "봉인_시점": "2026-09-02"
-  },
-  "builder_last_change_commit": "d7ddebbdeab740df90fefde057dc2a24eb58eb74",
-  "⚠_왜_전체_커밋이_아닌가": "회신 W P0-1 — '이 파일이 들어간 커밋' 은 파일 안에 넣을 수 없다 (커밋 해시가 파일 내용에 의존하므로 순환이다). 종전 판은 그 자리에 placeholder 를 넣었고, 검사가 그것을 실제 커밋과 비교해 **seed 생성이 반드시 막혔다**. ⇒ 봉인하는 것은 ⓐ 빌더 blob SHA ⓑ **빌더를 마지막으로 바꾼 커밋** 둘이다. 전체 커밋 결박은 파일 밖 attestation(tools/review_manifest.py)이 진다."
+  "이_시점의_ORCA_잡": "0개 — phase L 도 아직 돌리지 않았다 (회신 Y: loccheck 단독만 GO · 그것도 아직 안 돌림)",
+  "builder_last_change_commit": "57c5909ea9fc7850f8ecc2abd0500d1beb6a61f7",
+  "⚠_왜_전체_커밋이_아닌가": "회신 W P0-1 — '이 파일이 들어간 커밋' 은 파일 안에 넣을 수 없다 (커밋 해시가 파일 내용에 의존하므로 순환이다). 종전 판은 그 자리에 placeholder 를 넣었고, 검사가 그것을 실제 커밋과 비교해 **seed 생성이 반드시 막혔다**. ⇒ 봉인하는 것은 ⓐ 빌더 blob SHA ⓑ **빌더를 마지막으로 바꾼 커밋** 둘이다. 전체 커밋 결박은 파일 밖 attestation(tools/review_manifest.py)이 진다.",
+  "이전_봉인_이력": [
+   {
+    "builder_sha256": "ded52c96d75ff929029f149f3d8e6768cbd27f53bfcab4a7aa301e85eb6cc90a",
+    "builder_last_change_commit": "6f9e28b21bec3ac602b487edd9a2d53024d00a97",
+    "봉인_시점": "2026-09-02"
+   },
+   {
+    "builder_sha256": "071052c77d5726469a6946e9882a594945a1bb27455ef6fabd70975a71bcfeb8",
+    "builder_last_change_commit": "d7ddebbdeab740df90fefde057dc2a24eb58eb74",
+    "봉인_시점": "2026-09-02"
+   }
+  ],
+  "calib_tool_sha256": "e92299faf5db9e3cfb9f407bcacd1ac01378f99cdc0018670cbb81df2d1670fd",
+  "⚠_calib_tool_sha256": "tools/sdcp/spin_partition_calib.py 의 blob SHA — 생성기가 manifest 에 같은 값을 봉인하고 판정기가 잡별 대조 산출물의 tool_sha256 과 대조한다 (회신 Y P0-2). 도구가 바뀌면 재봉인."
  },
  "대상": {
   "정본_명칭": "neutral H-atom-removed n=6 radical model (D•)",
@@ -51,30 +60,33 @@
    "⛔_실공간_적분이_아니다": "결정 D-2026-08-31-sdcp-polaron-Fbb 는 `F_G = ∫W_G|ρα−ρβ|dr / ∫|ρα−ρβ|dr` 로 적혀 있다. 그것은 절댓값을 **적분 안에서** 취하므로 원자 내부의 α·β 상쇄까지 센다. 이 pilot 이 계산하는 것은 절댓값을 **원자 밖에서** 취한 값이고, 삼각부등식으로 Σ_A|∫w_AΔρ| ≤ ∫|Δρ| 이라 분자·분모 모두 하한이다. **두 수는 다르고 비율의 대소도 보장되지 않는다** (회신 X P0-1).",
    "왜_이것을_쓰나": "phase L2 가 내는 것은 궤도·원자 population 이지 실공간 스핀밀도 격자가 아니다. 적분형을 계산하려면 스핀밀도 cube + 같은 격자의 Hirshfeld 가중치가 필요하고 그것은 이 pilot 의 산출물이 아니다.",
    "언제_틀리나": "한 원자 안에서 α 와 β 가 크게 겹칠 때 이 값은 적분형보다 **작다**. 즉 국재화를 과소평가하는 방향이다.",
-   "판정어에_미치는_영향": "class 문턱(F≥0.5 · 다음 집합과 차 ≥0.10)은 적분형을 염두에 두고 정했다. 하한을 쓰면 통과가 **더 어려워지므로** 거짓 양성 쪽으로는 편향되지 않는다. 다만 '통과 못 함' 을 '국재화 안 됨' 으로 읽으면 안 된다 — 그것은 S0_UNDERESTIMATED_BY_PARTITION 로 남긴다."
+   "판정어에_미치는_영향": "⛔ **2026-09-03 철회 (회신 Y P0-1).** 종전 문구 *'하한을 쓰면 통과가 더 어려워지므로 거짓 양성 쪽으로는 편향되지 않는다'* 는 **틀렸다**. 삼각부등식은 원자별 항에 성립할 뿐이고 F 는 분자·분모가 둘 다 줄어드는 비라 대소가 보장되지 않는다. 리뷰어 반례: 실공간 0.49/0.31/0.20 에서 target 밖에서만 0.10 이 상쇄되면 cancellation_ratio=0.90 인데 population target 은 0.49/0.90=0.544 로 0.5 경계를 **거짓으로 넘는다**. ⇒ population 형의 class 는 그 잡의 적분형과 **직접 대조**가 일치할 때만 부여한다 (아래 estimand_form_calibration). '통과 못 함' 을 '국재화 안 됨' 으로 읽지 않는다는 조항은 그대로다."
   },
   "estimand_form_calibration": {
-   "지위": "⚠ **1저자 선택 ③ (2026-09-02)** — population 형을 primary 로 두되, 하한이 얼마나 낮은지 **한 자세에서 실측**한다.",
-   "왜": "'하한이라 안전하다' 는 크기를 모르는 채 하는 말이다. 술포네이트 라디칼은 S·O 에 강한 spin polarization 이 걸릴 수 있어 원자 내부 상쇄가 작지 않을 수 있다 (회신 X P0-1 논의).",
+   "지위": "⚠ **2026-09-03 개정 (회신 Y P0-1·P0-2·Q3).** population 형(F_out)을 primary 로 두되, **측정 잡마다** 그 잡의 실공간 적분형(F_in)과 직접 대조하고, 네 조건이 전부 일치할 때만 그 잡의 class 를 연다. 종전 판(한 자세 · 비 문턱 0.90/0.70)은 철회 — 비는 class gate 가 될 수 없다 (위 반례).",
    "무엇을_재나": {
     "F_out": "Σ_{A∈G}|s_A| / Σ_A|s_A|   (절댓값이 원자 **밖** — production 형)",
     "F_in": "∫W_G|Δρ|dr / ∫|Δρ|dr        (절댓값이 적분 **안** — 결정문 형)",
-    "cancellation_ratio": "Σ_A|∫w_AΔρ| / ∫|Δρ|  ≤ 1. 이것이 손실의 크기다."
+    "cancellation_ratio": "Σ_A|∫w_AΔρ| / ∫|Δρ| ≤ 1 — **설명용 QC 만**. class 판정에 쓰지 않는다."
    },
-   "⛔_교란_제거": "둘 다 **같은 Becke 가중치·같은 격자**로 계산한다. 그래야 차이가 절댓값 위치 때문이지 분할 계열 때문이 아니다. production 은 Hirshfeld 를 쓰므로 이 값은 **production F 의 재현이 아니다** — 재는 것은 손실의 크기다.",
-   "범위": "ε=1 · D• 의 자세 **하나** (가장 국재화된 basin 대표). 32회 예산 밖 +1.",
-   "도구": "tools/sdcp/spin_partition_calib.py (selftest 14건 · 음성 8건)",
-   "추가_산출물": "phase S 그 잡에서 orca_plot 스핀밀도 cube 1개",
-   "판정에_어떻게_쓰나": {
-    "ratio ≥ 0.90": "population 형이 좋은 근사다. F 를 그대로 인용하되 비를 각주로 단다.",
-    "0.70 ≤ ratio < 0.90": "F 를 인용할 때 **비를 같이 인용한다** (하한임을 본문에).",
-    "ratio < 0.70": "⛔ population 형으로 class 판정을 하지 않는다 — 판정어는 `S0_UNDERESTIMATED_BY_PARTITION` 이고, 적분형 구현 없이는 닫지 않는다."
+   "⛔_교란_제거": "둘 다 **같은 Becke 가중치·같은 격자**로 계산한다. 그래야 차이가 절댓값 위치 때문이지 분할 계열 때문이 아니다. production 은 Hirshfeld 를 쓰므로 이 대조가 보증하는 것은 **'절댓값 위치가 class 를 바꾸지 않는다'** 이고, Hirshfeld 분할 자체의 옳음은 보증하지 않는다 (정직한 범위 — 회신 Y P1).",
+   "범위": "ε=1 의 **측정 잡 전부**(S · SR). 잡마다 `%plots SpinDens` 로 스핀밀도 cube 를 같은 실행에서 뽑는다 — ORCA 추가 실행 0. 한 자세 결과를 다른 basin 에 일반화하지 않는다 (회신 Y P1).",
+   "판정_게이트_네_조건": {
+    "ⓐ": "winning group 이 같다",
+    "ⓑ": "모든 집합의 F ≥ PIL_CLASS_MIN(0.50) 경계 통과 여부가 같다",
+    "ⓒ": "winner − runner-up ≥ PIL_CLASS_MARGIN(0.10) 판정이 같다",
+    "ⓓ": "max_G |F_in − F_out| ≤ PIL_CALIB_MAX_DF = 0.05",
+    "어느_하나라도_다르면": "그 잡은 `ESTIMAND_FORM_DISAGREES(코드)` 게이트 — class 없음. 값은 남긴다.",
+    "없음·낡음": "`<tag>_calib.json` 이 없거나(CALIB_MISSING) cube·분할·도구 SHA 가 다르면(CALIB_CUBE_CHANGED · CALIB_GROUPS_MISMATCH · CALIB_TOOL_CHANGED) 같은 게이트다. 기록만 하고 안 읽는 필드가 아니라 **필수 입력**이다 (회신 Y P0-2)."
    },
-   "⛔_문턱을_결과_보기_전에_박는다": "0.90 · 0.70 은 지금(cube 0개) 정한 값이다.",
+   "격자_QC": "간격 ≤ PIL_CUBE_MAX_SPACING_A(0.35 Å) · 상자 면의 max|Δρ| ≤ 전체 max 의 1e-3 · ∫Δρ = 홀전자수 ±0.05 · Becke 균등 대체 질량 ≤ 1e-3. 하나라도 걸리면 CALIB_QC_FAILED (회신 Y P1).",
+   "결박": "manifest 가 `calib_tool_sha256`(spin_partition_calib.py)·`calib_gate`(문턱)를 봉인하고, 잡마다 `<tag>_calib.json` 이 cube SHA·분할 SHA·도구 SHA 를 담는다. 판정기(`pilot_analyze`)가 전부 재대조한다. calibration 마다 RUN_RECEIPTS 에 행을 남긴다.",
+   "도구": "tools/sdcp/spin_partition_calib.py (`direct_comparison_gate` · numpy 벡터화 · QC) — selftest 29건 (음성 ≥ 15)",
+   "⛔_문턱을_결과_보기_전에_박는다": "0.50 · 0.10 은 class 문턱 그대로, 0.05 는 margin 의 절반 — 2026-09-03, production cube 0개 시점에 코드 상수로 봉인.",
    "⛔_이_calibration_이_못_하는_것": [
-    "자세 하나의 결과다 — 다른 basin 에서 상쇄가 더 클 수 있다.",
-    "Hirshfeld 로 재계산한 것이 아니다 (Becke 계열 안의 비교다).",
-    "격자 오차를 보정하지 않는다 (도구가 성긴 격자를 거부할 뿐이다)."
+    "Hirshfeld 로 재계산한 것이 아니다 (Becke 계열 안의 비교다) — 분할 자체의 타당성은 보증하지 않는다.",
+    "두 형태가 같은 격자 오차로 **같이 틀린** 경우는 못 본다 — 격자 QC 가 표시할 뿐이다.",
+    "cube 를 만들지 않는다 — ORCA `%plots` 몫이고, 없으면 그 잡은 class 가 없다."
    ]
   },
   "조성_⚠": "두 계를 **따로** 적는다. 프레임도 따로 봉인한다 (P 200 / D 199 · 회신 T P0-1). 전자수는 probe 의 charge/mult 와 직접 이어진다 — D• 961전자 doublet → Nα/Nβ = 481/480."
@@ -177,7 +189,7 @@
  ],
  "중단_규칙": {
   "즉시_중단": [
-   "1층에서 seed 의 절반 이상이 SEED_INTERVENTION_FAILED — 회전이 작동하지 않는 것이므로 더 돌리지 않고 seed 생성 방식을 고친다",
+   "1층에서 seed 의 절반 이상이 SEED_INTERVENTION_FAILED — 회전이 작동하지 않는 것이므로 남은 진단 probe 도 멈추고 seed 생성 방식을 고친다 (⚠ 판정은 별개: 하나라도 실패면 NO_VALUE · S 금지)",
    "positive control 이 전부 게이트 — 방법이 알려진 형태조차 표현하지 못한다",
    "L2 에서 국재 궤도 인구가 안 찍힘 — seed 선택 자체가 불가능하다"
   ],
@@ -205,7 +217,7 @@
   "⚠_무회전_control": "종별 하나씩. **개입이 아니다** — 판정어는 NO_ROTATION_BASELINE 이고 basin 계수에 들어가지 않는다 (회신 U Q3 · W P0-8).",
   "Opt": "**없다** — S0 은 fixed-geometry SP 만이다",
   "재판정_SR": "불안정이 나온 만큼만 (미리 세지 않는다 — 위 총계에 없다)",
-  "calibration": "+1 (스핀밀도 cube 1개 · estimand_form_calibration · 회신 X P0-1 ③)",
+  "calibration": "ORCA 추가 실행 **0** — 측정 잡(S 15 + SR)마다 `%plots` 로 cube 를 같은 실행에서 뽑고, `spin_partition_calib.py` 대조를 잡 수만큼 돈다 (ORCA 아님 · 회신 Y P0-2 개정). 종전 '+1 (한 자세)' 는 철회.",
   "⛔_어떻게_얻었나": "2026-09-02 **버리는 dry-run** 으로 실제 seed plan 을 세었다 (D• 8 seed + P⁺ 7 = 15 · default 를 뺀 probe 13 · 종별 control 1씩 2). ORCA 는 한 잡도 안 돌렸고 산출물은 버렸다 — 숫자를 세는 것이 목적이었다. ⚠ 종전 값 16 은 생성기 자신이 `n_meas` 에 근거 없는 `+1` 을 갖고 있어 나온 수이고, 그것이 사전등록으로 옮겨졌다. 그 `+1` 도 함께 걷었다."
  },
  "실행_순서": [
@@ -227,10 +239,12 @@
   "원본_사전등록": "db/properties/sdcp_polaron_pilot_prereg_2026_08_31.json",
   "카드": "kb/questions/sdcp_backbone_polaron_estimand_2026_08_31.md",
   "리뷰": [
-   "kb/reviews/codex_T_reply_polaron_pilot_2026_08_31.md"
+   "kb/reviews/codex_T_reply_polaron_pilot_2026_08_31.md",
+   "kb/reviews/codex_Y_reply_polaron_S0_2026_09_03.md"
   ],
   "결정": "D-2026-08-31-sdcp-polaron-Fbb (proposed)",
-  "⛔_다른_캠페인": "sdcp_doped 흡착(슬랩)과 **다른 캠페인**이다. db/properties/sdcp_doped_closed_2026_08_28.json 의 잠금은 그쪽이고 여기에 적용되지 않는다"
+  "⛔_다른_캠페인": "sdcp_doped 흡착(슬랩)과 **다른 캠페인**이다. db/properties/sdcp_doped_closed_2026_08_28.json 의 잠금은 그쪽이고 여기에 적용되지 않는다",
+  "⚠_리뷰_체계_변경_2026_09_03": "회신 Y 가 마지막 외부(codex) 교차리뷰다 (1저자 결정). 이후 SDCP 리뷰는 **내부 적대적 리뷰**(별도 컨텍스트 · GO/NO-GO · P0/P1 형식 유지) + 1저자 비준으로 간다."
  },
  "status_history": [
   {
@@ -297,6 +311,11 @@
    "at": "2026-09-02",
    "state": "ratified",
    "note": "1저자 비준 (scientific_owner). 회신 X 전건 이행분. 봉인: builder 071052c7… · last_change d7ddebbd… · 커밋 0ada1761. 규모는 dry-run 실측(총 34)이고 게이트가 산출물과 대조한다. estimand_form 은 `atom_partitioned_abs_population`(하한)이고 적분형 대조는 1자세 calibration 으로 문턱(0.90/0.70)을 미리 박아 두었다. ⚠ 실행 승인은 별개다 — loccheck 증서가 아직 없다."
+  },
+  {
+   "at": "2026-09-03",
+   "state": "proposed",
+   "note": "회신 Y (NO-GO · P0 8 · P1 8) 이행. ⓐ P0-1 — 'F_out 은 하한이라 거짓 양성 없음' **철회**(비는 대소를 보장하지 않는다 · 리뷰어 반례 0.544). ⓑ P0-2 — calibration 을 판정기가 **소비**: 측정 잡마다 `%plots` cube → 직접 대조 네 조건(winner·경계·margin·|ΔF|≤0.05) 일치해야 class · 도구/cube/분할 SHA 결박. ⓒ P0-3 — 'generate' 문자열 우회 제거(pre_seed 인자) · main 의 prereg 재지정 제거. ⓓ P0-4 — PROBE_VERDICT_PASS.json 영구 증서(S 단계·분석기 요구). ⓔ P0-5 — receipt xyz 는 입력이 읽는 파일 · 해시 부재 fail-closed · L out/xyz 결박 · L2/S0P xyz_sha256. ⓕ P0-6 — control receipt 실패 → 최종 block. ⓖ P0-7 — 모든 단계 ORCA identity(preflight + receipt 소비). ⓗ P0-8 — L2 패치 원자화. P1: NO_ROTATION_NEEDED 통과 · census=scale · stop_rule 계산 · 격자 QC · 균등 대체 질량 · UTF-8 콘솔. ⚠ 이 회신이 마지막 codex 리뷰 — 이후 내부 리뷰 체계. 재비준 필요."
   }
  ],
  "회신_U_이행": {
@@ -308,7 +327,11 @@
  },
  "실행_전_봉인": {
   "loccheck": "phase L 전에 `bash run_pilot.sh loccheck` 가 LOCCHECK_PASS.json 을 남겨야 한다. 증서는 **fresh 디렉터리에서 L → L2 를 둘 다** 돌려 만든 것이어야 하고 (l2_inp_sha256·l2_out_sha256·l2_moread_suffix), 파서 검증은 L2 출력으로 한다 — seed 의 원천이 거기다. 판독 시 증서가 기록한 ORCA 를 다시 해시해 같은지 본다. L·seeds 가 그 증서를 **강제**한다 — 순서가 문구가 아니라 게이트다 (회신 V P0-3 · W P0-4).",
-  "계보_대조": "계산 단계(L·L2·probe·S·restart)는 실행 **전에** 입력·xyz 봉인 해시와 `%moinp` 대상 파일을 대조하고, 정상종료한 출력이 있는데 실행 receipt 가 없거나 낡았으면 STALE_OUTPUT 으로 막는다. 잡마다 RUN_RECEIPTS.jsonl 에 receipt 를 남기고, 분석기는 receipt 없는/낡은 S·SR 잡을 판정하지 않는다 (회신 W P0-5)."
+  "계보_대조": "계산 단계(L·L2·probe·S·restart)는 실행 **전에** 입력·xyz 봉인 해시와 `%moinp` 대상 파일을 대조하고, 정상종료한 출력이 있는데 실행 receipt 가 없거나 낡았으면 STALE_OUTPUT 으로 막는다. 잡마다 RUN_RECEIPTS.jsonl 에 receipt 를 남기고, 분석기는 receipt 없는/낡은 S·SR 잡을 판정하지 않는다 (회신 W P0-5).",
+  "probe_증서": "phase S 는 `PROBE_VERDICT_PASS.json` 이 있어야 열린다 — probe 판정에 block 이 없을 때만 생기고, S0P receipt·manifest 지문을 봉인한다. probe 를 다시 돌리면 낡은 증서가 되어 재판정을 요구한다. 분석기도 같은 증서를 요구한다 (회신 Y P0-4).",
+  "ORCA_identity": "모든 계산 단계(L·L2·probe·S·restart)의 preflight 가 loccheck 증서의 ORCA 와 이번 실행의 ORCA 를 대조하고, 분석기는 receipt 의 orca_sha256 을 증서와 대조한다 (회신 Y P0-7).",
+  "receipt_결박": "receipt 가 봉인하는 xyz 는 glob 첫 파일이 아니라 **입력이 읽는 파일**이다. xyz·%moinp 해시가 빠진 receipt 는 fail-closed. seed 생성은 L receipt 의 out·xyz SHA 를 지금 파일과 대조한다. L2·S0P·SR 행에도 xyz_sha256 이 있다 (회신 Y P0-5).",
+  "L2_suffix_패치_원자성": "전건 선검증 → 임시 파일 → os.replace. 하나라도 거부면 아무 파일도 바뀌지 않는다 (회신 Y P0-8)."
  },
  "ratification": {
   "state": "ratified",
@@ -323,7 +346,7 @@
   "왜_적나": "회신 X P0-2 — 사전등록과 판정기가 **다른 규칙을 집행한다**는 지적을 받았다. 실제로는 두 종류의 규칙을 한 칸에 섞어 쓴 것이었다: **중단 규칙**(비용을 더 쓸지)과 **판정 규칙**(값을 보고할지). 둘은 문턱이 달라도 모순이 아니지만, 문서가 구분해 적지 않으면 어느 쪽을 집행하는지 알 수 없다.",
   "중단_규칙": {
    "무엇": "돌리는 것을 멈출지 — 사람이 개입할 시점",
-   "probe": "1층에서 seed 의 **절반 이상** SEED_INTERVENTION_FAILED → 즉시 중단",
+   "probe": "1층에서 seed 의 **절반 이상** 실패 → 남은 **진단** probe 도 중단하고 seed 생성 방식을 고친다 (`pilot_probe_verdict` 가 stop_rule 을 계산해 낸다 — 회신 Y Q2). ⚠ 이것은 판정 규칙이 아니다.",
    "P⁺": "positive control 이 통째로 실패 → 즉시 중단",
    "⚠": "여기서 멈추면 값을 내지 않는다. 멈추지 않았다고 값이 나오는 것은 아니다."
   },
@@ -331,7 +354,8 @@
    "무엇": "보고할 값이 서는지 — 기계가 집행",
    "seed": "seed 가 **하나라도** 게이트에 걸리면 전체 NO_VALUE (부분집합으로 lowest-found·basin 수를 말하지 않는다 — 회신 S Q8)",
    "P⁺": "MODEL_NONDIAGNOSTIC(방법이 못 본다)은 계획된 positive control 이 **전건 정상 판정**됐는데도 backbone 상태가 없을 때만이다 (회신 U P0-9). 실행 실패·결측은 언제나 NO_VALUE 다.",
-   "⚠": "합격 조건의 '적어도 하나' 는 **통과의 조건**이고, 위 '전건 정상 판정' 은 **부정 판정어를 쓸 자격**이다. 서로 다른 문장이며 둘 다 유효하다."
+   "⚠": "합격 조건의 '적어도 하나' 는 **통과의 조건**이고, 위 '전건 정상 판정' 은 **부정 판정어를 쓸 자격**이다. 서로 다른 문장이며 둘 다 유효하다.",
+   "probe": "probe 가 **하나라도** 실패하면 class 는 즉시 NO_VALUE 이고 증서가 생기지 않는다 → S 를 열지 않는다. 추가 probe 는 진단 목적으로만 계속할 수 있다 (회신 Y Q2). 어느 경우에도 첫 실패 뒤 production S 를 열지 않는다."
   },
   "⛔_이_구분이_없으면": "'절반 이상' 을 판정 규칙으로 읽으면 seed 절반이 죽어도 값을 내게 되고, '적어도 하나' 를 부정 판정 자격으로 읽으면 positive control 이 대부분 죽어도 '방법이 틀렸다' 고 말하게 된다. 둘 다 이 캠페인이 금지한 것이다."
  }
