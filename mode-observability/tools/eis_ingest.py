@@ -18,8 +18,11 @@ manifest 가 있으면 다른 사람이 같은 zip 을 받아 `--verify` 로 **�
 ----------------------------------------
     time/s  cycle number  freq/Hz  Re(Z)/Ohm  -Im(Z)/Ohm  |Z|/Ohm  Phase(Z)/deg
 
-첫 줄이 헤더, 이후 공백 구분 수치. 한 파일에 **여러 스펙트럼**이 들어 있고
-`cycle number` 로 갈린다 (실측: 파일당 4,921행 ≈ 스펙트럼 수십 개).
+**헤더가 있는 파일과 없는 파일이 섞여 있다** (실측: `EIS_state_III_35C01.txt`
+는 첫 줄부터 수치다). 그래서 열 순서를 헤더에만 기대지 않고 **물리 항등식**
+(`|Z| = hypot(Re, Im)` · `Phase = atan2(Im, Re)`)으로 확인한다 — 헤더는
+거짓말할 수 있지만 항등식은 못 한다. 한 파일에 **여러 스펙트럼**이 들어 있고
+`cycle number` 로 갈린다 (실측: 4,920행 · 82 스펙트럼 · 0.02 Hz~20 kHz).
 
 파일명: `EIS_state_<로마숫자>_<온도>C<셀번호>.txt`
   · state I~IX — 충방전 사이클 안의 측정 지점 (SOC 축이 아니다; 원문 확인 필요)
@@ -65,13 +68,79 @@ def parse_name(fn: str) -> dict | None:
             "temp_C": temp, "cell": cell}
 
 
-def read_spectra(path: Path) -> tuple[list[str], list[list[float]]]:
-    """(헤더, 행) — 헤더가 계약과 다르면 거부한다."""
-    with path.open(encoding="utf-8", errors="strict") as fh:
-        head = fh.readline()
-        cols = head.split()
-        # 열 이름에 공백이 있어(`cycle number`) split 으로는 못 가른다.
-        # 계약 열 이름을 순서대로 **문자열 안에서** 찾는 것으로 확인한다.
+def _is_data_row(line: str) -> list[float] | None:
+    """이 줄이 계약 열 수만큼의 수치인가. 아니면 None."""
+    f = line.split()
+    if len(f) != len(COLUMNS):
+        return None
+    try:
+        return [float(x) for x in f]
+    except ValueError:
+        return None
+
+
+def _assert_column_identity(rows: list[list[float]], path: Path,
+                            probe: int = 64) -> None:
+    """열 순서를 **물리 항등식으로 확인**한다 (헤더 유무와 무관).
+
+    ★ 실측 (2026-09-03, 1저자 환경) — 이 데이터셋은 **헤더가 있는 파일과 없는
+      파일이 섞여 있다.** `EIS_state_III_35C01.txt` 는 첫 줄부터 수치다.
+      헤더가 없다고 읽기를 포기하면 데이터의 상당수를 버리고, 그냥 읽으면
+      **열 순서를 가정**하는 것이다 — 가정한 순서가 틀리면 그 뒤 모든 수치가
+      조용히 거짓이 된다.
+
+    다행히 이 형식에는 **검사 가능한 항등식**이 둘 있다::
+
+        |Z|      = hypot(Re(Z), Im(Z))          # Im = -( -Im )
+        Phase(Z) = atan2(Im(Z), Re(Z))   [deg]
+
+    실측으로 확인했다 (Re 0.29797 · -Im -0.02827 → hypot 0.29931 vs 파일
+    0.29930 · atan2 5.41973° vs 파일 5.42007°). 이 둘이 맞으면 3~7열의 의미가
+    **가정이 아니라 측정**으로 고정된다. 헤더가 있는 파일에도 똑같이 적용한다
+    — 헤더는 거짓말할 수 있지만 항등식은 못 한다.
+    """
+    import math
+
+    checked = 0
+    for r in rows[:probe]:
+        re_z, neg_im, abs_z, phase = r[3], r[4], r[5], r[6]
+        im_z = -neg_im
+        mag = math.hypot(re_z, im_z)
+        if abs_z <= 0 or mag <= 0:
+            continue                       # 0 근처는 상대오차가 의미 없다
+        if abs(mag - abs_z) / abs_z > 1e-3:
+            raise SystemExit(
+                f"✗ {path.name}: |Z| 가 Re·Im 과 맞지 않는다 "
+                f"(hypot {mag:.6g} ≠ 파일 {abs_z:.6g}) — 열 순서가 계약과 "
+                "다르다는 뜻이다. 가정하고 읽지 않는다 (fail-closed)")
+        want = math.degrees(math.atan2(im_z, re_z))
+        if abs(want - phase) > 0.05:
+            raise SystemExit(
+                f"✗ {path.name}: Phase 가 atan2(Im, Re) 와 맞지 않는다 "
+                f"({want:.4f}° ≠ 파일 {phase:.4f}°) — 열 순서가 계약과 "
+                "다르다 (fail-closed)")
+        checked += 1
+    if checked == 0:
+        raise SystemExit(
+            f"✗ {path.name}: 항등식으로 확인할 수 있는 행이 하나도 없다 — "
+            "열 의미를 실물로 고정하지 못하므로 읽지 않는다 (fail-closed)")
+
+
+def read_spectra(path: Path) -> tuple[bool, list[list[float]]]:
+    """(헤더가 있었나, 행들).
+
+    헤더가 있으면 계약 열 이름을 순서대로 확인하고, 없으면 첫 줄부터 데이터로
+    읽는다. **어느 쪽이든** 열 순서는 `_assert_column_identity()` 가 물리
+    항등식으로 확인한다.
+    """
+    lines = path.read_text(encoding="utf-8", errors="strict").splitlines()
+    if not lines:
+        raise SystemExit(f"✗ {path.name} 이 비어 있다")
+
+    first_as_data = _is_data_row(lines[0])
+    has_header = first_as_data is None
+    if has_header:
+        head, body = lines[0], lines[1:]
         pos, ok = 0, True
         for c in COLUMNS:
             i = head.find(c, pos)
@@ -81,28 +150,31 @@ def read_spectra(path: Path) -> tuple[list[str], list[list[float]]]:
             pos = i + len(c)
         if not ok:
             raise SystemExit(
-                f"✗ {path.name} 의 헤더가 계약과 다르다.\n"
-                f"  기대: {list(COLUMNS)}\n  실제: {head.strip()!r}\n"
-                "  형식이 바뀐 파일을 옛 열 순서로 읽으면 모든 수치가 거짓이 "
-                "된다 — 읽지 않는다 (fail-closed)")
-        rows = []
-        for ln in fh:
-            f = ln.split()
-            if len(f) != len(COLUMNS):
-                if not ln.strip():
-                    continue
-                raise SystemExit(
-                    f"✗ {path.name} 에 열 수가 다른 행이 있다 "
-                    f"({len(f)} ≠ {len(COLUMNS)}): {ln[:100]!r}")
-            rows.append([float(x) for x in f])
-    return cols, rows
+                f"✗ {path.name} 의 첫 줄이 데이터도 아니고 계약 헤더도 아니다.\n"
+                f"  기대 열: {list(COLUMNS)}\n  실제: {head.strip()[:140]!r}")
+    else:
+        body = lines
+
+    rows = []
+    for ln in body:
+        if not ln.strip():
+            continue
+        r = _is_data_row(ln)
+        if r is None:
+            raise SystemExit(
+                f"✗ {path.name} 에 계약과 다른 행이 있다: {ln[:100]!r}")
+        rows.append(r)
+    if not rows:
+        raise SystemExit(f"✗ {path.name} 에 데이터 행이 없다")
+    _assert_column_identity(rows, path)
+    return has_header, rows
 
 
 def summarize(path: Path) -> dict:
-    _, rows = read_spectra(path)
+    has_header, rows = read_spectra(path)
     cyc = sorted({r[1] for r in rows})
     frq = [r[2] for r in rows]
-    return {"rows": len(rows), "spectra": len(cyc),
+    return {"rows": len(rows), "spectra": len(cyc), "header": int(has_header),
             "cycle_min": min(cyc) if cyc else float("nan"),
             "cycle_max": max(cyc) if cyc else float("nan"),
             "freq_min": min(frq) if frq else float("nan"),
@@ -117,7 +189,7 @@ def sha256(path: Path) -> str:
     return h.hexdigest()
 
 
-FIELDS = ("file", "sha256", "bytes", "rows", "spectra", "state",
+FIELDS = ("file", "sha256", "bytes", "rows", "spectra", "header", "state",
           "state_roman", "temp_C", "cell", "cycle_min", "cycle_max",
           "freq_min", "freq_max")
 
