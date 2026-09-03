@@ -8555,3 +8555,121 @@ def test_a_cross_leg_attempt_collision_is_unrepresentable(tmp_path):
 
     # 53차 P0-3 의 배타 지점은 여전히 다리마다 **다르다**
     assert P._attempt_path_lock(a) != P._attempt_path_lock(b)
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# 57차 P0-5 — 55차 이전 durable state 가 **갇힌다**
+#
+# 56차 P0-3 이 post-commit crash 를 복구 가능하게 만들 때, 소유자 인증의 근거로
+# 원장에 봉인한 `evidence.attempt_verifier` 를 썼다. 그런데 그 필드는 56차부터
+# 생겼다. 그 이전에 닫힌 다리가 같은 모양(원장 executed · claim 없음 · token
+# 남음)으로 남아 있으면 `_already_finalized()` 가 조용히 `None` 을 돌려주고,
+# 그러면 `finalize_leg()` 은 `resume_claim()` 으로 내려가 계획이 executed 라
+# 거부당한다 — **닫을 수도 되돌릴 수도 없다.**
+#
+# "인증할 근거가 없으니 모른다" 는 판단은 맞다. 틀린 것은 **거기서 끝난다**는
+# 것이다. 버전이 다른 durable state 를 만나면 그 사실을 말하고 사람이 무엇을
+# 해야 하는지 알려 줘야 한다.
+# ─────────────────────────────────────────────────────────────────────────────
+
+def _gate55_shaped_state(tmp_path):
+    """원장 executed · claim 없음 · token 남음 · attempt_verifier 없음.
+
+    정상 lifecycle 로 한 번 닫은 뒤 **56차가 더한 필드만** 걷어내고 token 을
+    되돌려 놓는다 — 손으로 지어낸 상태가 아니라 55차 코드가 남겼을 모양이다.
+    """
+    import yaml
+
+    from tools import preserve as P
+
+    led = _lifecycle_ledger(tmp_path)
+    run = P.open_leg_run("L", _RUN_SPEC_L, "0123456789abcdef", ledger=led)
+    tok_path = P.attempt_path_for("L", ledger=led)
+    tok_bytes = tok_path.read_bytes()
+    c = P.attach_leg_run("L", ledger=led)
+    for ph in ("grid", "fit"):
+        c.phase_done(ph, {"ok": True})
+    P.finalize_leg("L", {"leg_source_digest": "0123456789abcdef",
+                         "cohorts": ["gA"]}, ledger=led, token=c.token)
+
+    doc = yaml.safe_load(led.read_text(encoding="utf-8"))
+    for e in doc.get("legs") or []:
+        if e.get("leg_id") == "L":
+            (e.get("evidence") or {}).pop("attempt_verifier", None)
+    led.write_text(yaml.safe_dump(doc, allow_unicode=True, sort_keys=False),
+                   encoding="utf-8")
+    tok_path.parent.mkdir(parents=True, exist_ok=True)
+    tok_path.write_bytes(tok_bytes)          # 55차는 token 을 남긴 채 죽었다
+    return led, run.token if hasattr(run, "token") else c.token
+
+
+def test_a_pre_verifier_durable_state_is_named_not_silently_stranded(tmp_path):
+    """★ 57차 P0-5 — 버전이 다른 durable state 를 **말하고** 끝나야 한다.
+
+    지금은 `_already_finalized()` 가 `None` 을 돌려주고 `finalize_leg()` 이
+    `resume_claim()` 에서 "계획이 executed 라 재개할 수 없다" 로 죽는다. 그
+    메시지는 **무엇이 문제인지도 무엇을 하라는지도** 말하지 않는다 — 운영자
+    입장에서는 정상 재시도가 알 수 없는 이유로 막힌 것이다.
+
+    요구: 이 모양을 **알아보고**, 버전이 다르다는 것과 어떻게 넘기는지를
+    오류에 담는다. 조용히 통과시키면 안 된다 (인증 근거가 없으므로 아무나
+    남의 다리를 닫게 된다).
+    """
+    from tools import preserve as P
+
+    led, token = _gate55_shaped_state(tmp_path)
+
+    with pytest.raises(P.PreserveError) as ei:
+        P.finalize_leg("L", {"leg_source_digest": "0123456789abcdef",
+                             "cohorts": ["gA"]}, ledger=led, token=token)
+    msg = str(ei.value)
+    assert "attempt_verifier" in msg, (
+        f"무엇이 없어서 인증이 안 되는지 말하지 않는다: {msg}")
+    assert "migrate_legacy_finalized_leg" in msg, (
+        f"운영자가 무엇을 해야 하는지 말하지 않는다: {msg}")
+
+
+def test_the_legacy_migration_is_explicit_and_leaves_a_versioned_record(tmp_path):
+    """★ 57차 P0-5 — 넘기는 것은 **사람이 한 번 명시적으로** 한다.
+
+    자동으로 넘기면 인증 근거가 없는 상태를 코드가 스스로 통과시키는 것이고,
+    그러면 다리 이름만 아는 호출이 남의 실행을 닫는다. 그래서 별도 API 로
+    두고, 넘긴 사실을 **버전 태그와 함께 원장에 남긴다** — 나중에 "이 기록은
+    어떻게 인증됐나" 를 물을 수 있어야 한다.
+    """
+    import yaml
+
+    from tools import preserve as P
+
+    led, token = _gate55_shaped_state(tmp_path)
+
+    out = P.migrate_legacy_finalized_leg("L", token=token, ledger=led)
+    assert out["status"] == "executed"
+
+    doc = yaml.safe_load(led.read_text(encoding="utf-8"))
+    leg = next(e for e in doc["legs"] if e["leg_id"] == "L")
+    ev = leg["evidence"]
+    assert ev.get("attempt_verifier"), "넘긴 뒤에도 인증 근거가 없다"
+    assert ev.get("verifier_origin") == "legacy_migration_57", (
+        f"어떻게 인증됐는지 원장에 안 남았다: {ev.get('verifier_origin')}")
+
+    # 넘긴 뒤에는 정상 경로가 idempotent 하게 답한다
+    again = P.finalize_leg("L", {"leg_source_digest": "0123456789abcdef",
+                                 "cohorts": ["gA"]}, ledger=led, token=token)
+    assert again["status"] == "executed"
+    assert not P.attempt_path_for("L", ledger=led).exists(), (
+        "넘긴 뒤에도 소유 증명 파일이 남았다")
+
+
+def test_the_legacy_migration_still_refuses_a_stranger(tmp_path):
+    """★ 57차 P0-5 — migration 이 인증을 **면제하지는 않는다**.
+
+    근거가 약해진 것은 사실이다(원장에 봉인된 verifier 가 없다). 남아 있는
+    근거는 **디스크의 소유 증명 파일**이고, 그것과 맞지 않는 token 은 거부한다.
+    """
+    from tools import preserve as P
+
+    led, _token = _gate55_shaped_state(tmp_path)
+
+    with pytest.raises(P.PreserveError):
+        P.migrate_legacy_finalized_leg("L", token="0" * 32, ledger=led)

@@ -5458,6 +5458,99 @@ def _verify_declared_bundle(evidence: dict, repo_root=None) -> list:
     return bad
 
 
+#: ★ 57차 P0-5 — legacy migration 의 **버전 태그**. 원장의
+#: `evidence.verifier_origin` 에 남아 "이 기록은 어떻게 인증됐나" 를 나중에
+#: 물을 수 있게 한다. 정상 경로가 봉인한 것에는 이 필드가 없다 —
+#: 없음 = finalize 가 직접 봉인, 있음 = 사람이 넘긴 것.
+LEGACY_VERIFIER_ORIGIN = "legacy_migration_57"
+
+
+def migrate_legacy_finalized_leg(leg_id: str, token: str,
+                                 ledger=None) -> dict:
+    """56차 이전 durable state 를 **한 번 명시적으로** 넘긴다 (57차 P0-5).
+
+    대상은 정확히 이 모양이다: 원장 `executed` · claim 파일 없음 ·
+    `evidence.attempt_verifier` 없음. 56차가 post-commit crash 를 복구
+    가능하게 만들 때 쓴 인증 근거가 그 필드인데, 그 필드는 56차부터 생겼다.
+    그 이전에 같은 자리에서 죽은 다리는 인증할 근거가 원장에 없다.
+
+    **왜 자동으로 넘기지 않는가.** 근거가 없는 상태를 코드가 스스로 통과시키면
+    다리 이름만 아는 호출이 남의 실행을 닫는다 (48차 P0-3 이 막은 것과 같은
+    형태다). 그래서 별도 API 로 두고, 사람이 한 번 부른다.
+
+    **무엇으로 인증하는가.** 원장에 없으면 남는 근거는 **디스크의 소유 증명
+    파일**이다. 그 파일의 token 이 제시된 것과 같고, 그 파일이 가리키는
+    attempt 가 원장이 기록한 attempt 와 같아야 한다. 이 근거는 원장 봉인보다
+    약하다 — 같은 principal 이 그 파일을 만들 수 있기 때문이다 (계약
+    §13.3.4 의 전제 안이다). 약해진 만큼을 숨기지 않고
+    `evidence.verifier_origin` 에 적는다.
+    """
+    import yaml
+
+    check_id(leg_id)
+    if not _TOKEN_RE.match(str(token)):
+        raise PreserveError("plan", "소유 증명의 형식이 계약과 다르다")
+
+    claims_root = claims_root_for_ledger(ledger)
+    token_file = attempt_path_for(leg_id, ledger=ledger)
+    path = canonical_ledger(ledger)
+
+    with _lifecycle_locks(leg_id, token_file, claims_root) as cp:
+        with _ledger_lock(path):
+            doc = _load_ledger(ledger)
+            row = next((e for e in doc.get("planned") or []
+                        if e.get("leg_id") == leg_id), None)
+            leg = next((e for e in doc.get("legs") or []
+                        if e.get("leg_id") == leg_id), None)
+            if row is None or leg is None or row.get("status") != "executed":
+                raise PreserveError(
+                    "plan",
+                    f"{leg_id!r} 은 legacy finalized state 가 아니다 (계획 "
+                    f"{row and row.get('status')!r} · 실행 기록 "
+                    f"{'있음' if leg else '없음'}) — 이 API 는 원장 executed 인 "
+                    "기록만 넘긴다")
+            ev = leg.setdefault("evidence", {})
+            if ev.get("attempt_verifier"):
+                raise PreserveError(
+                    "plan",
+                    f"{leg_id!r} 은 이미 인증 근거를 갖고 있다 — 넘길 것이 "
+                    "없다. 정상 경로(`finalize_leg`)를 쓰라")
+            if cp.is_file():
+                raise PreserveError(
+                    "plan",
+                    f"{leg_id!r} 의 claim 이 아직 있다 ({cp}) — 이것은 legacy "
+                    "post-commit state 가 아니다. 정상 경로를 쓰라")
+
+            # ── 남은 유일한 근거: 디스크의 소유 증명 ──────────────────────
+            try:
+                rec = _read_token_record(token_file)
+            except (PreserveError, OSError) as exc:
+                raise PreserveError(
+                    "plan",
+                    f"{leg_id!r} 을 넘길 근거가 없다 — 원장에 "
+                    f"`attempt_verifier` 가 없고 소유 증명 파일도 읽을 수 없다 "
+                    f"({token_file}). 이 다리는 사람이 원장·산출물을 직접 보고 "
+                    "판단해야 한다") from exc
+            if not secrets.compare_digest(str(rec["token"]), str(token)):
+                raise PreserveError(
+                    "plan",
+                    f"{leg_id!r} 의 소유 증명이 아니다 — 남의 실행을 대신 넘길 "
+                    "수 없다")
+            want_attempt = str(ev.get("attempt_id") or "")
+            if want_attempt and str(rec["attempt_id"]) != want_attempt:
+                raise PreserveError(
+                    "plan",
+                    f"{leg_id!r} 의 소유 증명이 다른 attempt 를 가리킨다 "
+                    f"({rec['attempt_id']} ≠ 원장 {want_attempt})")
+
+            ev["attempt_verifier"] = _token_verifier(token)
+            ev["verifier_origin"] = LEGACY_VERIFIER_ORIGIN
+            _atomic_write_text(path, yaml.safe_dump(doc, allow_unicode=True,
+                                                    sort_keys=False))
+    return {"leg_id": leg_id, "attempt_id": ev.get("attempt_id"),
+            "status": "executed", "verifier_origin": LEGACY_VERIFIER_ORIGIN}
+
+
 def _already_finalized(leg_id: str, token: str, ledger=None) -> dict | None:
     """이미 닫힌 다리인가 — **소유 증명을 확인한 뒤에만** 그렇다고 답한다 (49차 P0-6).
 
@@ -5491,7 +5584,23 @@ def _already_finalized(leg_id: str, token: str, ledger=None) -> dict | None:
         ev = leg.get("evidence") or {}
         sealed = str(ev.get("attempt_verifier") or "")
         if not sealed:
-            return None                  # 55차 이전 기록 — 인증할 근거가 없다
+            # ★ 57차 P0-5 — 55차 이전 기록이다. 인증할 근거가 없다는 판단은
+            #   맞지만, 56차는 **거기서 끝냈다** (`return None`). 그러면 caller 가
+            #   `resume_claim()` 으로 내려가 "계획이 executed 라 재개할 수 없다"
+            #   로 죽고, 운영자에게는 정상 재시도가 알 수 없는 이유로 막힌 것으로
+            #   보인다 — 그 다리는 닫을 수도 되돌릴 수도 없다.
+            #
+            #   버전이 다른 durable state 를 만나면 **그렇다고 말한다.** 조용히
+            #   통과시키지도 않는다 (근거가 없으므로 아무나 남의 다리를 닫게
+            #   된다). 넘기는 것은 사람이 한 번 명시적으로 한다.
+            raise PreserveError(
+                "plan",
+                f"{leg_id!r} 은 이미 executed 로 닫혔지만 원장에 "
+                "`attempt_verifier` 가 없다 — 56차 이전 코드가 남긴 durable "
+                "state 다. 소유자를 인증할 근거가 원장에 없으므로 자동으로 "
+                "넘기지 않는다. 디스크의 소유 증명으로 확인한 뒤 넘기려면 "
+                "`migrate_legacy_finalized_leg()` 을 쓰라 (넘긴 사실이 "
+                "`evidence.verifier_origin` 에 남는다)")
         if not secrets.compare_digest(want, sealed):
             raise PreserveError(
                 "plan",
