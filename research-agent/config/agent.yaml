@@ -1,0 +1,173 @@
+# =====================================================================
+# research-agent 설정 (v0.1.0)
+# 경로는 이 파일이 있는 repo 루트 기준 상대경로. 환경변수 ${VAR} 치환 지원.
+# =====================================================================
+
+owner:
+  name: "안용훈"
+  email: "yonghoon71@hanyang.ac.kr"        # 디제스트 수신 주소 (= Scholar alert 수신 계정)
+  timezone: "Asia/Seoul"
+
+# ---------------------------------------------------------------------
+# 추적 키워드. Google Scholar alert의 검색어와 1:1로 맞춘다.
+#   - name      : Scholar alert에 등록한 검색어 그대로
+#   - vault_note: Obsidian Keywords/ 폴더의 MOC 노트 이름
+#   - weight    : 여러 키워드에 동시에 잡힌 논문에 주는 보너스 계산용
+#   - active    : false면 수집은 하되 디제스트 우선순위에서 제외
+# ---------------------------------------------------------------------
+keywords:
+  - name: "dem battery"
+    vault_note: "dem battery"
+    weight: 1.0
+    active: true
+    description: "DEM(discrete element method) 기반 전극/복합양극 시뮬레이션"
+  - name: "dft battery"
+    vault_note: "dft battery"
+    weight: 1.0
+    active: true
+    description: "DFT/first-principles 기반 배터리 재료·계면 계산"
+  - name: "anode-less assb"          # 2026-09-04 사용자 요청으로 추적 중단 (기존 노트 보존용, alert 미등록)
+    vault_note: "anode-less assb"
+    weight: 0.5
+    active: false
+    description: "Anode-less / anode-free 전고체전지 (추적 중단, 아카이브)"
+
+# ---------------------------------------------------------------------
+# 수집 소스
+# ---------------------------------------------------------------------
+sources:
+  scholar_email:
+    enabled: true
+    backend: "imap"                      # imap | gmail_api | mbox | manual
+    sender: "scholaralerts-noreply@google.com"
+    imap:
+      host: "${EMAIL_IMAP_HOST:-imap.gmail.com}"
+      port: 993
+      user: "${EMAIL_ADDRESS}"
+      password: "${EMAIL_PASSWORD}"      # Gmail 앱 비밀번호(16자리). Hermes .env와 공유
+      folder: "INBOX"
+      mark_seen: false                   # alert 메일을 읽음 처리할지 (Hermes 게이트웨이와 충돌 방지 위해 false 권장)
+      lookback_days: 3                   # 처음 실행/누락 대비 최근 N일 재스캔 (중복은 DB에서 걸러짐)
+    label_processed: "ResearchAgent/Processed"   # gmail_api 백엔드에서만 사용
+  manual:
+    enabled: true
+    dir: "data/inbox/manual"             # {title, authors, venue, year, doi, url, abstract, keyword} JSON 드롭 폴더
+
+# ---------------------------------------------------------------------
+# 메타데이터 보강 (로컬 PC에서만 동작 — Crossref/OpenAlex/Semantic Scholar)
+# ---------------------------------------------------------------------
+enrich:
+  enabled: true
+  providers: ["crossref", "openalex", "semanticscholar"]
+  mailto: "yonghoon71@hanyang.ac.kr"     # polite pool
+  timeout_sec: 15
+  fetch_abstract: true
+
+# ---------------------------------------------------------------------
+# Triage — "IF 높은 순" 우선순위 + 연구 관련도 게이트
+#   priority = 관련도 threshold를 넘긴 논문만 남긴 뒤 (IF desc, relevance desc) 정렬
+# ---------------------------------------------------------------------
+triage:
+  relevance_threshold: 0.35              # 이 값 미만은 status=rejected (DB에는 남김)
+  if_unknown_default: 3.0                # IF 테이블에 없는 저널(프리프린트 포함) 기본값
+  preprint_if: 0.0                       # arXiv/ChemRxiv 등은 IF 0으로 두고 relevance만으로 판단
+  tiers:                                 # 디제스트 섹션 구분
+    A: { min_if: 15.0, min_relevance: 0.55 }   # 반드시 읽을 것
+    B: { min_if: 8.0,  min_relevance: 0.45 }   # 읽어볼 만함
+    C: { min_if: 0.0,  min_relevance: 0.35 }   # 참고
+  max_deep_analysis_per_run: 8           # 12시 배치에서 심층 분석할 최대 편수 (비용 제어)
+  llm_refine: true                       # LLM 백엔드가 있으면 관련도 점수를 LLM으로 재평가
+
+# ---------------------------------------------------------------------
+# LLM 백엔드 — 심층 분석/디제스트 문장 생성
+#   anthropic  : ANTHROPIC_API_KEY 필요 (완전 자동, crontab만으로 동작)
+#   claude-cli : `claude -p` 헤드리스 (Claude Code 구독으로 동작, claude 설치 필요)
+#   hermes     : Hermes Agent가 스킬 절차에 따라 직접 분석 JSON을 작성 (스크립트는 큐만 만듦)
+#   none       : 템플릿만 생성, 분석은 'pending' 상태로 대기
+# ---------------------------------------------------------------------
+llm:
+  backend: "${RA_LLM_BACKEND:-hermes}"
+  model: "${RA_LLM_MODEL:-claude-sonnet-4-5}"
+  max_tokens: 6000
+  temperature: 0.2
+  claude_cli_bin: "claude"
+
+# ---------------------------------------------------------------------
+# 저장소
+# ---------------------------------------------------------------------
+storage:
+  sqlite: "data/papers.sqlite"
+  jsonl_export: "data/papers.jsonl"      # git diff 친화적 미러 (매 실행 후 갱신)
+  raw_inbox: "data/inbox"
+  analysis_queue: "data/analysis/pending"    # LLM 백엔드가 hermes/none일 때 대기열
+  analysis_done: "data/analysis/done"
+  state: "data/state.json"
+
+vault:
+  root: "vault"                          # Obsidian vault (또는 vault 안의 하위 폴더)로 symlink/복사
+  papers_dir: "Papers"
+  digests_dir: "Digests"
+  keywords_dir: "Keywords"
+  moc: "00_MOC/Research Agent Home.md"
+  templates_dir: "Templates"
+  note_filename: "{year} - {first_author} - {short_title}"
+
+# ---------------------------------------------------------------------
+# 스케줄 (owner.timezone 기준)
+# ---------------------------------------------------------------------
+schedule:
+  noon:                                  # 알림 메일 → 수집·triage·심층분석·DB·vault·git commit
+    cron: "0 12 * * *"
+    job: "ra noon"
+  morning:                               # DB → 디제스트 md → 메일 발송
+    cron: "0 9 * * *"
+    job: "ra morning"
+  quick_insight:                         # (v0.2 예정) alert 도착 직후 3줄 인사이트 회신
+    enabled: false
+    cron: "*/30 * * * *"
+    job: "ra quick"
+
+# ---------------------------------------------------------------------
+# 메일 발송 (디제스트)
+# ---------------------------------------------------------------------
+mail:
+  backend: "smtp"                        # smtp | gmail_api | hermes(스킬이 전달) | none
+  smtp:
+    host: "${EMAIL_SMTP_HOST:-smtp.gmail.com}"
+    port: 587
+    user: "${EMAIL_ADDRESS}"
+    password: "${EMAIL_PASSWORD}"
+    from_name: "Research Agent"
+  subject_template: "[Research Agent] {date} 논문 디제스트 — {n_papers}편 (A:{n_a} B:{n_b} C:{n_c})"
+  attach_markdown: true                  # Obsidian에 바로 넣을 수 있게 .md 첨부
+  html: true                             # md→html 변환 본문 (plain text 대체본 동봉)
+  digest_window_hours: 36                # 마지막 디제스트 이후 + 여유분
+
+git:
+  auto_commit: true
+  branch: "claude/friendly-meitner-lldvar"
+  commit_message: "ra: {job} {date} (+{n_new} papers, {n_analyzed} analyzed)"
+  push: false                            # 로컬 검증 후 true로
+
+# ---------------------------------------------------------------------
+# litdb 연동 (브랜치의 기존 literature DB에도 동일 레코드를 적재)
+#   mode: file → litdb.path(JSONL/SQLite)에 병합 / cli → Kitchin `litdb add <doi>`
+#   field_map 은 실제 litdb 스키마를 확인한 뒤 맞춘다 (exporters/litdb.py DEFAULT_FIELD_MAP 참고)
+# ---------------------------------------------------------------------
+litdb:
+  enabled: true
+  mode: "file"
+  format: "jsonl"                        # jsonl | sqlite
+  path: "data/litdb.jsonl"               # 브랜치의 litdb 경로로 교체 (예: ../litdb/papers.jsonl)
+  project_dir: "."                       # cli 모드: litdb.toml 이 있는 폴더
+  bin: "litdb"
+  also_file: false
+
+# ---------------------------------------------------------------------
+# 클라우드(Cowork) ↔ 로컬(Hermes/Claude Code) 릴레이
+# ---------------------------------------------------------------------
+handoff:
+  enabled: true
+  subject_tag: "[RA-HANDOFF]"
+  outbox: "data/handoff/outbox"          # 클라우드가 만든 payload (메일 첨부 전 사본)
+  lookback_days: 7                       # ra sync 가 훑는 기간

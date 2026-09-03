@@ -1,0 +1,33 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "research-agent"
+version = "0.1.2.dev0"
+description = "PhD research assistant: Google Scholar alert → triage (IF/relevance) → deep analysis → Obsidian DB → daily digest mail. Designed to run under Hermes Agent, Claude Code, or plain cron."
+readme = "README.md"
+requires-python = ">=3.11"
+license = { text = "MIT" }
+authors = [{ name = "안용훈 (Yonghoon Ahn)", email = "yonghoon71@hanyang.ac.kr" }]
+dependencies = [
+  "pyyaml>=6.0",
+  "beautifulsoup4>=4.12",
+  "lxml>=5.0",
+  "markdown>=3.5",
+  "requests>=2.31",
+  "python-dateutil>=2.9",
+]
+
+[project.optional-dependencies]
+llm = ["anthropic>=0.40"]
+dev = ["pytest>=8.0"]
+
+[project.scripts]
+ra = "research_agent.cli:main"
+
+[tool.setuptools.packages.find]
+include = ["research_agent*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
