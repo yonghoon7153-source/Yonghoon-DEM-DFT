@@ -698,6 +698,8 @@ def _incar_expected_from(txt):
 #:     나눠떨어지지 않아 랭크가 남고, VASP 가 그 배치를 거부하거나 놀리는 코어가 생긴다.
 #:   ⚠ 대가: k-그룹마다 배열 사본을 들어 **노드당 메모리가 늘어난다**. 문서에 적는다.
 KPAR_VAL = 4
+#: INCAR 의 `NCORE` — 랭크 배치 조건이 `NPROC % (KPAR × NCORE)` 라서 상수로 뺀다 (렌즈 K2 P1-3).
+NCORE_VAL = 4
 
 
 def _kpar_for_mesh(km) -> int:
@@ -710,18 +712,29 @@ def _kpar_for_mesh(km) -> int:
     ⚠ 값을 **1·2·4 로만** 낸다. 48·64·96·128·256 을 전부 나누는 수여야 랭크가 남지 않고,
       한 묶음 안에서 여러 KPAR 이 섞여도 "랭크는 4의 배수" 한 줄로 조건이 닫힌다.
       (격자에서 그냥 뽑으면 2 3 1 → 3 이 나오는데, 3 은 128·256 을 나누지 못한다.)
-    ⚠ 시간반전 축약(≈0.6배)을 반영한 **하한**으로 본다 — 실제 NKPTS 가 그보다 크면
-      손해가 없고, 작으면 VASP 가 거부한다. 모르면 작게 잡는 쪽이 안전하다.
+    🔴 렌즈 K1 P2-1 (2026-09-04) — 종전엔 시간반전 축약을 **0.6배 근사**로 잡았는데 그건
+      "하한" 이 아니다 (홀수×홀수에서 과대: 5 5 1 → 15 로 보지만 실제 13). Γ-centered ·
+      unshifted · 시간반전만 적용일 때 **정확식**이 있다:
+          NKPTS = (N + Π_i (1 if n_i 홀수 else 2)) / 2,   N = Π_i n_i
+      (self-inverse 점 = 각 성분이 0 또는 1/2 인 점의 수 = Π_i (홀수면 1, 짝수면 2))
+      검산: 1 1 1 → 1 · 2 3 1 → 4 · 3 4 1 → 7 · 4 6 1 → 14. 실측 배너와 맞는다.
+    ⚠ 이 식은 **ISYM=0**(점군 대칭 끔 · 시간반전만) 과 Γ-centered unshifted 를 전제한다.
+      템플릿이 그렇게 박혀 있다. ISYM 을 켜거나 shift 를 주면 이 식은 무효다.
     """
     try:
-        n = 1
-        for t in str(km).split():
-            n *= int(t)
+        ns = [int(t) for t in str(km).split()]
     except (TypeError, ValueError):
         return 1
+    if not ns:
+        return 1
+    n = 1
+    self_inv = 1
+    for x in ns:
+        n *= x
+        self_inv *= (1 if x % 2 else 2)
     if n <= 1:
         return 1
-    n_irr = max(1, int(n * 0.6))          # 시간반전 축약 후 k점 수의 보수적 하한
+    n_irr = max(1, (n + self_inv) // 2)
     for cand in (4, 2):
         if cand <= n_irr:
             return cand
@@ -1379,21 +1392,39 @@ esac
 #   (MANIFEST 사본을 믿지 않는다 — 사본은 언젠가 정본과 갈린다).
 #   ⚠ KPAR 은 **잡마다 다르다** (슬랩 4 · 기체 Γ-only 1). 하나만 보면 기체 잡을 집어
 #     검사를 건너뛴다 — 전 INCAR 을 훑어 **최댓값**으로 조건을 건다 (그 배수면 1·2·4 전부 나눈다).
+#   🔴 렌즈 K2 P1-3 (2026-09-04) — 실제 조건은 `% KPAR` 이 **아니다.** VASP 는 k-그룹당 랭크를
+#     다시 NCORE 로 나누므로 `NPROC % (KPAR × NCORE)` 여야 INCAR 대로 돈다. `% KPAR` 만 보면
+#     랭크 20(=4×5)이 통과하는데 5 는 NCORE=4 로 안 나뉘어 **VASP 가 NCORE 를 말없이 재설정**한다 —
+#     동결한 INCAR 과 실제 병렬화가 갈리고 비용모형(NCORE=4 전제)도 다시 어긋난다.
+#   🔴 렌즈 K2 P1-1 — 산술은 `10#` 을 붙인다. `VASP_NPROC=09` 는 위 정수검사를 통과하는데
+#     bash 가 8진수로 읽어 죽고, `set -e` 가 없어 **가드를 조용히 새어 나간다** (실측).
 _KPAR=$(find . -mindepth 3 -maxdepth 4 -name INCAR -exec \
           sed -n 's/^[[:space:]]*KPAR[[:space:]]*=[[:space:]]*\([0-9][0-9]*\).*/\1/p' {} + 2>/dev/null \
         | sort -n | tail -1)
-if [ -n "$_KPAR" ]; then
-  if [ "$_KPAR" -gt 1 ] 2>/dev/null; then
-    if [ $(( ${VASP_NPROC:-1} % _KPAR )) -ne 0 ]; then
-      echo "⛔ VASP_NPROC=${VASP_NPROC:-1} 이 INCAR 의 KPAR=$_KPAR 의 배수가 아닙니다."
-      echo "   이 묶음의 INCAR 은 k-point 병렬을 KPAR=$_KPAR 로 고정해 두었습니다"
-      echo "   (해시로 동결돼 있어 고칠 수 없습니다 — 고치면 그 잡이 거부됩니다)."
-      echo "   랭크 수를 $_KPAR 의 배수로 주십시오. 예: 48 · 64 · 96 · 128 · 256"
+_NCORE=$(find . -mindepth 3 -maxdepth 4 -name INCAR -exec \
+          sed -n 's/^[[:space:]]*NCORE[[:space:]]*=[[:space:]]*\([0-9][0-9]*\).*/\1/p' {} + 2>/dev/null \
+        | sort -n | tail -1)
+if [ -z "$_KPAR" ]; then
+  # 🔴 렌즈 K2 P2-1 — "구판이라 없음" 과 "find 가 헛돌았음"(잘못된 cwd 등)을 구분해야 한다.
+  #   이 생성기는 전 INCAR 에 KPAR 을 쓰므로, 못 읽었으면 **말한다** (조용한 건너뜀 금지).
+  echo "  ⚠ INCAR 에서 KPAR 을 읽지 못했습니다 — 랭크 배치 검사를 건너뜁니다."
+  echo "     묶음 루트에서 실행 중인지 확인해 주십시오 (구판 묶음이면 정상입니다)."
+else
+  _NCORE=${_NCORE:-1}
+  _NEED=$(( 10#$_KPAR * 10#$_NCORE ))
+  if [ "$_NEED" -gt 1 ] 2>/dev/null; then
+    if [ $(( 10#${VASP_NPROC:-1} % _NEED )) -ne 0 ]; then
+      echo "⛔ VASP_NPROC=${VASP_NPROC:-1} 이 이 묶음의 랭크 배치와 맞지 않습니다."
+      echo "   INCAR 이 KPAR=$_KPAR · NCORE=$_NCORE 로 고정돼 있어 랭크 수는 **$_NEED 의 배수**여야 합니다"
+      echo "   (k-그룹당 랭크 = NPROC/KPAR 이 다시 NCORE 로 나눠져야 합니다)."
+      echo "   INCAR 은 해시로 동결돼 있어 고칠 수 없습니다 — 고치면 그 잡이 거부됩니다."
+      echo "   쓸 수 있는 랭크 수: $_NEED · $(( _NEED * 2 )) · 48 · 64 · 96 · 128 · 256"
+      echo "   (스모크 테스트만 하실 거면 $_NEED 랭크로도 돕니다.)"
       echo "   ⚠ KPAR 은 k-그룹마다 배열 사본을 들어 **노드당 메모리가 늘어납니다**."
-      echo "     메모리가 모자라면 랭크를 줄이지 마시고 노드를 늘려 주십시오."
+      echo "     메모리가 모자라도 **랭크를 줄이지 마시고**(배수 조건이 깨집니다) 노드를 늘려 주십시오."
       exit 2
     fi
-    echo "  ✔ 랭크 ${VASP_NPROC:-1} = KPAR $_KPAR × $(( ${VASP_NPROC:-1} / _KPAR )) (k-그룹당 랭크)"
+    echo "  ✔ 랭크 ${VASP_NPROC:-1} = KPAR $_KPAR × NCORE $_NCORE × $(( 10#${VASP_NPROC:-1} / _NEED ))"
   fi
 fi
 export VASP_EXE VASP_LAUNCHER_KIND VASP_NPROC LAUNCHER_BIN VASP_WRAPPER
@@ -16173,8 +16204,12 @@ def build_bundle(a, ledger: Optional[Dict[str, Any]] = None) -> Path:
             or dict(CE.BASE)
         _jh = []
         _jst = []          # 🔴 2026-09-03 — 잡별 단계 (1|2). 단계 게이트 반영 makespan 용.
+        _jkcap = []        # 🔴 2026-09-04 (렌즈 K1 P1-2) — 잡별 k 병렬 상한 min(KPAR, k점 수)
         for _jp in sorted(out.rglob("job.json")):
             _m = json.loads(_jp.read_text())
+            # 그 잡에서 제일 무거운 상의 격자로 상한을 잡는다 (상별 시간 가중은 안 한다 — 근사).
+            _km_j = (_m.get("kmesh") or {}).get("static") or "1 1 1"
+            _jkcap.append(min(_kpar_for_mesh(_km_j), CE.nk_eff(_km_j)))
             _jst.append(CE.stage_of(str(_jp.parent.relative_to(out)),
                                     _m.get("meta") or _m, man.get("seed_main")))
             _n = len(_m.get("magmom_poscar") or []) or sum(_m.get("counts") or [0]) or 222
@@ -16196,16 +16231,21 @@ def build_bundle(a, ledger: Optional[Dict[str, Any]] = None) -> Path:
         #   (리뷰어가 14.7일로 읽은 이유). 실제 속도향상으로 나눈다.
         # 🔴 2026-09-04 — k 병렬 상한은 **KPAR** 이 정한다. 종전엔 7.2(k점 수)를 그대로 써서
         #   KPAR 이 없던 v34 까지의 번들에서 속도향상을 과대평가했다.
-        _nkcap = min(KPAR_VAL, 7.2)
-        _sp = CE.par_speedup(a.cores, _base.get("cores", 48), _nkcap)
-        _jh = [h / _sp for h in _jh]
+        # 🔴🔴 렌즈 K1 P1-2 — 상한은 **잡마다 다르다** (기체 Γ-only 는 1, relax 는 4, static 은 4).
+        #   전 잡에 같은 `_sp` 를 쓰면 기체 6잡의 시간을 4배 낙관한다. 그리고 이 숫자가
+        #   MANIFEST·README 로 **외주처에 나가는 값**이다 — 추정기만 잡별로 옳게 보면 소용없다.
+        _nkcap_max = min(KPAR_VAL, 7.2)
+        _jh = [h / CE.par_speedup(a.cores, _base.get("cores", 48), _k)
+               for h, _k in zip(_jh, _jkcap)]
+        _sp = CE.par_speedup(a.cores, _base.get("cores", 48), _nkcap_max)
         man["cost_frozen"] = {
             "total_wall_h": round(sum(_jh), 1),
             "core_h": round(sum(_jh) * a.cores),
             "longest_job_h": round(max(_jh), 1) if _jh else None,
             "cores_per_job": a.cores,
             "par_speedup_vs_baseline": round(_sp, 2),
-            "k_parallel_cap": _nkcap,
+            "k_parallel_cap": _nkcap_max,
+            "k_parallel_cap_by_job": sorted(set(_jkcap)),
             "⚠_k_parallel_cap": ("min(KPAR %d, k점 7.2). KPAR 이 없으면 VASP 기본값 1 이라 "
                                  "코어를 늘려도 k 병렬이 안 걸린다 — 2026-09-04 정정."
                                  % KPAR_VAL),
@@ -19926,9 +19966,10 @@ def _runner_e2e(bundle: Path, chk) -> bool:
     # 🔴 회신 AV P0-2 — 자유형 launcher 문자열이 폐지됐다. 종전 이 시험이
     #   `VASP_LAUNCHER="env"` 를 썼는데, env 야말로 AV 가 잡은 우회 통로였다.
     env["VASP_LAUNCHER_KIND"] = "none"    # stub 직접 실행 (launcher 없음)
-    # 🔴 2026-09-04 — INCAR 이 KPAR=4 를 고정하므로 랭크 수는 4의 배수여야 한다.
+    # 🔴 2026-09-04 — 랭크 수는 **KPAR × NCORE 의 배수**여야 한다 (렌즈 K2 P1-3):
+    #   k-그룹당 랭크(NPROC/KPAR)가 다시 NCORE 로 나눠져야 VASP 가 INCAR 대로 돈다.
     #   (kind=none 의 기본값 1 로 두면 러너가 옳게 거부한다 — 아래 음성시험이 그걸 친다.)
-    env["VASP_NPROC"] = str(KPAR_VAL)
+    env["VASP_NPROC"] = str(KPAR_VAL * NCORE_VAL)
     env["VASP_EXE"] = str(vb)
     env.pop("VASP_CMD", None)
     env.pop("VASP_LAUNCHER", None)
@@ -20001,18 +20042,39 @@ def _runner_e2e(bundle: Path, chk) -> bool:
     #   INCAR 은 해시로 동결돼 현장에서 KPAR 을 못 고친다. 배수가 아닌 랭크로 던지면
     #   VASP 가 k-그룹을 못 나눠 배치를 거부하거나 랭크를 놀린다 — 둘 다 walltime 을
     #   태운 뒤에 드러난다. 여기서 잡는다.
+    _NEED = KPAR_VAL * NCORE_VAL
     _kp_bad = _copy("kpar_not_multiple")
-    _rc_kb, _o_kb = _run(_kp_bad, {"VASP_NPROC": "6"})      # 6 % 4 != 0
+    _rc_kb, _o_kb = _run(_kp_bad, {"VASP_NPROC": "6"})      # 6 % 16 != 0
     chk(_rc_kb != 0 and "KPAR" in _o_kb and "배수" in _o_kb
         and not (_kp_bad / "POTCAR_ROOT_SEAL.json").is_file(),
-        "⛔음성 2026-09-04: VASP_NPROC 이 KPAR 의 배수가 아니면 **봉인 전에** 거부한다 "
+        "⛔음성 2026-09-04: VASP_NPROC 이 KPAR×NCORE 의 배수가 아니면 **봉인 전에** 거부한다 "
         "(rc=%d · 봉인 %s)" % (_rc_kb, (_kp_bad / "POTCAR_ROOT_SEAL.json").is_file()))
-    chk("48" in _o_kb and "128" in _o_kb,
-        "2026-09-04: 거부 메시지가 **쓸 수 있는 랭크 수**를 예시로 준다 (막고 끝내지 않는다)")
+    # 🔴 렌즈 K2 P1-3 — `% KPAR` 만 보면 20(=4×5)이 통과하는데 5 는 NCORE=4 로 안 나뉜다.
+    #   그러면 VASP 가 NCORE 를 말없이 재설정해 **동결한 INCAR 과 실제 병렬화가 갈린다.**
+    _kp_nc = _copy("kpar_ok_ncore_bad")
+    _rc_nc, _o_nc = _run(_kp_nc, {"VASP_NPROC": str(KPAR_VAL * 5)})   # KPAR 배수지만 NCORE 아님
+    chk(_rc_nc != 0 and str(_NEED) in _o_nc
+        and not (_kp_nc / "POTCAR_ROOT_SEAL.json").is_file(),
+        "⛔음성 렌즈 K2 P1-3: 랭크 %d 는 KPAR 배수지만 k-그룹당 랭크가 NCORE 로 안 나뉘어 "
+        "거부된다 (rc=%d)" % (KPAR_VAL * 5, _rc_nc))
+    # 🔴 렌즈 K2 P1-1 — 선행 0 (`09`) 은 8진수로 읽혀 산술이 죽고 `set -e` 가 없어 새어 나갔다.
+    _kp_oct = _copy("kpar_octal_09")
+    _rc_oc, _o_oc = _run(_kp_oct, {"VASP_NPROC": "09"})
+    chk(_rc_oc != 0 and not (_kp_oct / "POTCAR_ROOT_SEAL.json").is_file()
+        and "value too great" not in _o_oc,
+        "⛔음성 렌즈 K2 P1-1: `VASP_NPROC=09` 는 8진수로 죽지 않고 **거부**된다 (rc=%d)" % _rc_oc)
     _kp_ok = _copy("kpar_multiple")
-    _rc_ko, _o_ko = _run(_kp_ok, {"VASP_NPROC": str(KPAR_VAL * 2)})
-    chk("✓ census" in _o_ko and "k-그룹당 랭크" in _o_ko,
-        "양성 2026-09-04: 배수면 통과하고 k-그룹당 랭크를 찍는다 (rc=%d)" % _rc_ko)
+    _rc_ko, _o_ko = _run(_kp_ok, {"VASP_NPROC": str(_NEED * 2)})
+    chk("✓ census" in _o_ko and ("KPAR %d × NCORE %d" % (KPAR_VAL, NCORE_VAL)) in _o_ko,
+        "양성 2026-09-04: 배수면 통과하고 랭크 배치를 찍는다 (rc=%d)" % _rc_ko)
+    # 🔴 렌즈 K2 P2-1 — KPAR 을 못 읽었으면 **조용히 건너뛰지 않는다** (잘못된 cwd 와 구분)
+    _kp_none = _copy("kpar_absent")
+    for _f in sorted(_kp_none.rglob("INCAR")):
+        _f.write_text(re.sub(r"(?m)^KPAR\s*=.*\n", "", _f.read_text(encoding="utf-8")),
+                      encoding="utf-8")
+    _rc_no, _o_no = _run(_kp_none, {"VASP_NPROC": "6"})
+    chk("KPAR 을 읽지 못했습니다" in _o_no,
+        "렌즈 K2 P2-1: INCAR 에서 KPAR 을 못 읽으면 **말한다** (조용한 건너뜀 금지)")
     # INCAR 에 실제로 KPAR 이 박혔는가 (문서만 말하고 입력엔 없는 상태 방지)
     # INCAR 에 실제로 KPAR 이 박혔고, **잡마다 다른가** (슬랩 4 · 기체 Γ-only 1)
     def _kp_of(p):
