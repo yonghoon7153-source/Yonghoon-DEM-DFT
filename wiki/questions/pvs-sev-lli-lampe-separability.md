@@ -5,7 +5,7 @@ created: 2026-09-03
 updated: 2026-09-03
 type: research-question
 tags: [battery, degradation, research]
-sources: [raw/papers/2026-09-02-siwon-kim-degradation-mode-ml-seminar.md, raw/transcripts/2026-09-03-voice-memo-007-degradation-mode-ml.md, raw/papers/birkl2017_degradation-diagnostics-ocv.md, raw/papers/wang2025_interpretable-ml-battery-prognosis.md, raw/papers/kim2023_graphite-heterogeneity-lifetime.md, raw/papers/su2024_drt-soh-health-features.md, raw/papers/rhyu2025_systematic-feature-design-formation.md, raw/papers/zhang2020_eis-gpr-capacity-rul.md, raw/papers/tao2025_nondestructive-degradation-decoupling.md, raw/papers/lin2024_ocv-degradation-mode-identifiability.md]
+sources: [raw/papers/2026-09-02-siwon-kim-degradation-mode-ml-seminar.md, raw/transcripts/2026-09-03-voice-memo-007-degradation-mode-ml.md, raw/papers/birkl2017_degradation-diagnostics-ocv.md, raw/papers/wang2025_interpretable-ml-battery-prognosis.md, raw/papers/kim2023_graphite-heterogeneity-lifetime.md, raw/papers/su2024_drt-soh-health-features.md, raw/papers/rhyu2025_systematic-feature-design-formation.md, raw/papers/zhang2020_eis-gpr-capacity-rul.md, raw/papers/tao2025_nondestructive-degradation-decoupling.md, raw/papers/lin2024_ocv-degradation-mode-identifiability.md, raw/papers/schaeffer2024_nullspace-regularization-interpretation.md]
 confidence: medium
 explored: false
 verificationStatus: unverified
@@ -136,6 +136,27 @@ H2 가 참일 수 있음에 주의한다 — 부호가 같다고 벡터가 평�
   is harder than estimating 𝑧₀⁺** in most cases here" (Fig. 8). `r_N/P` 는
   LAM_NE 가 사는 유일한 통로이므로, 실측에서 먼저 무너지는 것은 **LAM_NE 방향**
   이라는 예측이 따라온다. 우리 격자에서 확인 가능하고 미실행.
+
+- **[2026-09-03 (11)] ★ Evidence For 2번의 논거(permutation importance 가 낮다)
+  가 약해진다.** [[nullspace-coefficient-interpretation]] (Schaeffer et al.
+  2024) 이 **"계수/가중치가 작다 ⇒ 그 변수는 정보가 없다"** 를 그림으로
+  반증한다. 원전 `[도표]` Fig. 4a: 참계수가 전 구간 **상수 0.001** 인데 PLS
+  회귀계수는 **3.2 V 위에서 ≈ 0 으로 붕괴**하고, nullspace 보정하면
+  **≈ 0.0009 로 되돌아온다**. 원전 서술도 같다 — `[인쇄]` "the differences in
+  the region 3.2 to 3.5 V **do not change the prediction results** … and arise
+  due to the **interplay of the regularization objective with the nullspace**."
+  `[해석]` **이 카드에 주는 것**: 이 카드 Evidence For 2번은 "PVS 의
+  permutation importance 가 네 target 모두에서 최하위권(~0.06–0.16)" 이라는
+  것을 H1 의 근거로 삼는다. 그런데 예측자들이 강하게 공선일 때 **낮은 귀속값은
+  "정보 없음" 이 아니라 "그 정보가 다른 예측자에 이미 실려 있음"** 일 수 있고,
+  그 배분은 데이터가 아니라 정칙화·알고리즘이 정한다. 세미나의 입력에는
+  SOH·voltage window 라는 강한 예측자가 함께 들어 있으므로 정확히 그 상황이다.
+  → **Evidence For 2번을 폐기하지는 않되 등급을 낮춘다**: "PVS 가 LLI↔LAM_PE
+  방향에 정보를 주지 않는다" 의 근거가 아니라 **"PVS 가 그 모형에서 고유하게
+  기여한 몫이 작다"** 까지만 말한다. 두 진술은 다르다.
+  **범위 한정**: 원전은 **선형회귀 계수**를 다루고 permutation importance 를
+  다루지 않는다 (그 용어 0회). 위 확장은 `[해석]` 이며, 판정 가능한 형태는
+  이 카드가 이미 적어 둔 **agnostic 기준선 paired 비교** (2026-09-03 (7)) 다.
 
 - **[2026-09-03] 두 feature 의 물리 경로가 다르다.** PVS 는 **열역학적**
   신호(OCV 미분의 형상), SEV 는 **동역학적** 신호(charge-transfer 저항)다.
@@ -608,3 +629,37 @@ H2 가 참일 수 있음에 주의한다 — 부호가 같다고 벡터가 평�
   - **새 Gap 1건**: 세미나가 PVS 를 **SOC 정규화 곡선**에서 계산했는지 **Ah 축**
     에서 계산했는지가 원문에 인쇄돼 있지 않다. 이 구분이 위 따름정리의 적용
     여부를 가른다 (Ah 축이면 총용량 정보가 섞여 셋째 숫자를 실을 수 있다).
+
+- [2026-09-03 (11)] open 유지 — [[fused-lasso-feature-design-framework]] 의
+  참고문헌 `[13]`(= 그 논문 저자 그룹 자신의 nullspace 논문)을 본문 + SI +
+  **저자 공개 저장소**로 흡수 ([[nullspace-coefficient-interpretation]],
+  Schaeffer et al., *Comput. Chem. Eng.* **180** (2024) 108471, raw:
+  `raw/papers/schaeffer2024_nullspace-regularization-interpretation.md`).
+  이 카드에 준 것 넷:
+  - **Evidence Against 1건 추가** (= H1 반대쪽): 낮은 귀속값을 "정보 없음" 으로
+    읽는 이 카드 Evidence For 2번의 논거가 약해진다. **Evidence For 에는
+    아무것도 붙지 않는다** — 이 논문은 PVS·SEV 도, LLI/LAM 도 다루지 않는다
+    (`LLI`·`LAM`·`half-cell` 각 **0회**).
+  - **위 (10) 의 새 Gap 이 이 논문으로 무거워진다.** "PVS 를 어느 축에서
+    계산했는가" 는 이 논문의 **z-scoring 논쟁과 같은 종류의 문제**다. 원전은
+    같은 데이터·같은 방법에서 **좌표 선택이 결론을 뒤집는 것**을 두 번 보인다:
+    참계수가 상수면 z-scoring 이 돕고(Fig. 4), 참계수가 데이터 스케일을
+    따라가면 z-scoring 이 해친다(Fig. 5) — 그리고 `[인쇄]` **어느 쪽인지는
+    데이터가 말해 주지 않는다.** `[해석]` feature 를 정의하는 축(정규화 여부)이
+    **사전지식 주입 지점**이라는 뜻이고, 세미나 원문에 그 지점이 인쇄돼 있지
+    않다는 사실의 무게가 커진다.
+  - **SNR 지도라는 값싼 도구 1건.** `src/hd_data.py:144
+    analyze_snr_by_splines` — 스플라인 잔차로 **좌표별(전압별) SNR** 을 낸다
+    (원전 SI Fig. S2 생성기). `[해석]` [[mode-observability]] Phase 1 이 관측한
+    **valley 정의 민감도**(인접 −20.0 vs 창내 전역 최소 −11.3)와
+    [[dv-peak-heterogeneity-descriptor]] 가 valley 를 버린 이유가 **같은 병**
+    이라면, 이 도구가 "우리 곡선의 어느 구간이 정보를 싣는가" 를 데이터로
+    답한다. PVS 창 선택의 근거가 될 수 있다.
+  - **어휘 전수 (이 계보 열한 편째) — 새 형태.** `nullspace` **69회**(본문)로
+    비유일성을 논문 전체의 주제로 다루면서 `identifiab*` **0** ·
+    `degenerac*` **0** · `unique`/`non-unique` **0** · `ill-posed` **0** ·
+    `Hessian` **0** · `Fisher` **0** · `uncertaint*` **0** · `error bar` **0**.
+    `[해석]` **개념을 정면으로 다루되 표준 어휘를 안 쓴다** — 그래서 Lin & Khoo
+    2024(`identifiab*` 26 / `nullspace` 0)와 이 논문은 같은 수학적 대상을
+    다루면서 서로를 인용하지 않는다. 이 카드의 "라벨 불확실성 공백" 은 여전히
+    닫히지 않았다 (이 논문도 오차 막대를 그리지 않는다).

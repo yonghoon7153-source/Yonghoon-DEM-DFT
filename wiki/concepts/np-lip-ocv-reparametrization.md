@@ -5,7 +5,7 @@ created: 2026-09-03
 updated: 2026-09-03
 type: concept
 tags: [battery, degradation, research]
-sources: [raw/papers/lin2024_ocv-degradation-mode-identifiability.md, raw/papers/birkl2017_degradation-diagnostics-ocv.md, raw/papers/dubarry2012_synthesize-degradation-modes.md]
+sources: [raw/papers/lin2024_ocv-degradation-mode-identifiability.md, raw/papers/birkl2017_degradation-diagnostics-ocv.md, raw/papers/dubarry2012_synthesize-degradation-modes.md, raw/papers/schaeffer2024_nullspace-regularization-interpretation.md]
 confidence: high
 explored: false
 verificationStatus: unverified
@@ -71,6 +71,19 @@ LLI = LR·x}` 와 같은 계보이되 더 일반적이다.
 문제는 원리가 아니라 **조건수**이고, 원전 Fig. 9 가 그것이 대부분의 조건에서 매우
 나쁘다는 것을 보여 준다.
 
+### 이 방향을 그리는 법은 다른 문헌에 있다 (2026-09-03 추가)
+
+원전은 이 방향을 **인쇄만 하고 그리지 않는다** (오차공분산 `C_θ` 를 계산해
+놓고 `sqrt(diag)` 만 그린다). 그 그림을 그리는 기계는
+[[nullspace-coefficient-interpretation]] (Schaeffer et al. 2024) 에 있다 —
+식 (19) 의 `γ`-완화 사영과 "직교 성분 대조" 그림. **두 페이지는 짝이다:
+여기가 *무엇을* 그릴지, 저기가 *어떻게* 그릴지.** 절차는
+[[fitting-degeneracy]] 의 "그 방향을 그리는 법" 절에.
+
+`[해석]` 두 문헌은 서로를 인용하지 않는다. 어휘가 갈라져 있기 때문이다 —
+Lin 은 `identifiab*` 26회 / `nullspace` **0회**, Schaeffer 는 `nullspace`
+69회 / `identifiab*` **0회**. 같은 수학적 대상의 두 이름이다.
+
 ## 파생 도구 — 전극 DV fraction `λ±`
 
 ```
@@ -127,6 +140,7 @@ Table 4 캡션은 "**only** identifiable" 이라고 쓰는데 같은 문장의 �
   §1 에서 강조하며, 후자와 혼동하지 말라고 적는다.
 
 ## 관련
+- [[nullspace-coefficient-interpretation]]
 - [[fitting-degeneracy]]
 - [[birkl-ocv-degradation-diagnostic]]
 - [[dubarry-mechanistic-mode-synthesis]]

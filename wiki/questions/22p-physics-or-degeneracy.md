@@ -5,7 +5,7 @@ created: 2026-08-11
 updated: 2026-09-03
 type: research-question
 tags: [battery, degradation, research]
-sources: [raw/repositories/degradation-degeneracy-audit.md, raw/papers/birkl2017_degradation-diagnostics-ocv.md, raw/papers/rhyu2025_systematic-feature-design-formation.md, raw/papers/lin2024_ocv-degradation-mode-identifiability.md]
+sources: [raw/repositories/degradation-degeneracy-audit.md, raw/papers/birkl2017_degradation-diagnostics-ocv.md, raw/papers/rhyu2025_systematic-feature-design-formation.md, raw/papers/lin2024_ocv-degradation-mode-identifiability.md, raw/papers/schaeffer2024_nullspace-regularization-interpretation.md]
 confidence: medium
 explored: false
 verificationStatus: unverified
@@ -92,6 +92,38 @@ LAM_PE ≈ LAM_NE 는 물리가 아니라 **flat valley 방향에서 두 전극�
   ([[fitting-degeneracy]] 의 flat valley ↔ multimodal 구분, 무작위 restart 끼리만
   비교하는 multi-start 진단). **그들은 회피했고 우리는 분해하려 한다** — 이 카드의
   질문이 왜 남의 CRLB 계산으로 닫히지 않는지의 근거이기도 하다.
+
+- **[2026-09-03 (6)] ★ 축퇴 방향 위의 값은 데이터가 아니라 *추정기가* 정한다 —
+  일반 명제가 인쇄됐다.** [[nullspace-coefficient-interpretation]] (Schaeffer
+  et al. 2024, *Comput. Chem. Eng.* **180**, 108471) 은 선형 모형에서
+  `X(β + w) = Xβ, w ∈ 𝒩(X)` 이므로 **데이터가 계수를 부분공간 하나만큼
+  결정하지 못하고 그 안의 점은 오직 정칙화가 고른다**는 것을 증명·시연한다
+  (`[인쇄]` "The vectors in the nullspace **affect only the regularization
+  term** in the objective function"). 그리고 그 선택이 답을 바꾼다는 것을
+  같은 데이터에서 보인다 — `[도표]` Fig. 1b: 모양이 9배 다른 두 계수 벡터
+  (포물선 vs 상수)의 NRMSE 가 **0.105 % 대 0.105 %**.
+  `[해석]` **이 카드에 주는 것**: 우리 fitting 에는 명시적 정칙화가 없지만
+  **암묵적 정칙화**(초기값·경계·optimizer 경로·좌표 정규화)가 그 자리를
+  대신한다. 즉 축퇴 방향 위에서 22p 삼중항이 놓인 자리는 **데이터가 고른
+  값이 아닐 수 있고, 목적함수 값은 그것을 구별하지 못한다.** 이것은
+  2026-08-20 실측 "half-cell 기준의 좌표 원점이 격자마다 다른 국소해로 수렴
+  하고 그 원점 차이가 붕괴율 차이와 같이 움직인다" 와 **같은 현상의 일반형**
+  이며, 그 관찰에 문헌 근거를 붙인다.
+  **범위 한정 3개** (과대 인용 방지): (a) 원전은 **선형**이고 우리는 비선형
+  이다 — 다리는 Jacobian 이며 그 nullspace 는 **국소**다. (b) 원전은
+  `LLI`·`LAM`·`half-cell` 을 **각 0회** 쓰고 열화 모드를 재지 않는다. 따라서
+  이것은 22p 수치에 대한 증거가 아니라 **메커니즘에 대한 증거**다.
+  (c) 원전에서 `𝒩(X)` 는 `p ≫ n` 이라 **정확히** 비어 있는 방향이지만,
+  우리는 미지수 3개에 관측이 곡선 전체라 **근사 null**(작은 특이값)이다 —
+  "구별 불가능" 이 아니라 "조건수가 나쁘다" 가 정확한 진술이다.
+
+- **[2026-09-03 (6)] "목적함수 값이 낮은 해가 참에 가깝다" 가 반증됐다
+  (그림판).** 같은 원전 `[도표]` Fig. 4a·4b·5a·5b 범례의 NRMSE 순서:
+  Fig. 4b 에서 PLS **0.108 %** < nullspace 보정 **0.118 %** < **참계수
+  0.127 %**. 참계수가 **가장 나쁘다** (적합 모형이 잡음을 먹었기 때문).
+  `[해석]` 이 카드가 다루는 22p 분해도 목적함수 최소점에서 읽은 값이다.
+  **낮은 잔차는 참에 가깝다는 증거가 아니다** — 우리 파이프라인이 `|err|`
+  (복원 오차)로 판정하도록 설계된 이유이기도 하다.
 
 ## Evidence Against
 - (방향성 관측, 인용 금지 등급) half-cell 기준(Case 1)과 dQ/dV 항 추가가 복원
@@ -331,3 +363,45 @@ LAM_PE ≈ LAM_NE 는 물리가 아니라 **flat valley 방향에서 두 전극�
     information to quantify the parametric identifiability**" 라고 적는다. 즉
     **Fisher 를 이 문제에 처음 쓴 것은 Lin & Khoo 가 아니다.** 그리고 그 모델이
     `[인쇄]` "**has been incorporated in PyBaMM**" 이므로 우리 도구와 직접 닿는다.
+
+- **[2026-09-03 (11)]** `active` 유지 — 이 위키가 **두 번 지목해 둔** 문헌을
+  흡수했다 ([[nullspace-coefficient-interpretation]], Schaeffer et al.,
+  *Comput. Chem. Eng.* **180** (2024) 108471, raw:
+  `raw/papers/schaeffer2024_nullspace-regularization-interpretation.md`).
+  2026-09-03 (4) 항목 2 에서 "저자 그룹 자신의 nullspace 논문인데 본문에서
+  긍정 근거로만 인용된다" 고 적었던 Rhyu 2025 의 참고문헌 `[13]` 이 이것이다.
+  이 카드에 달라진 것 넷:
+  1. **Evidence For 2건 추가** (위): 축퇴 방향 위의 값은 추정기가 정한다는
+     일반 명제 · "낮은 잔차 ⇒ 참에 가깝다" 의 그림판 반증.
+     **Evidence Against 에는 아무것도 붙지 않는다** — 이 논문은 22p 분해가
+     물리라는 쪽 근거를 하나도 주지 않는다 (열화 모드를 재지 않으므로).
+  2. **★ 이 카드의 방법론에 도구가 하나 들어왔다.** 지금까지 이 카드는
+     격자 스캔(전역)으로만 축퇴를 봤는데, 원전 식 (19)
+     `v_γ = −(γ JᵀJ + I)⁻¹ θ_Δ` 를 쓰면 22p 동작점에서 **국소 축퇴 방향과
+     valley 폭을 직접 계산**할 수 있다. 절차는 [[fitting-degeneracy]] 의
+     "그 방향을 그리는 법" 절. **본 실행이 필요 없고 값이 싸다.**
+     그 계산이 곧 (10) 항목 4 의 점검 항목 **B1** (우리 4-파라미터 창 모델의
+     유효 자유도가 정말 2로 떨어지는가) 을 판정하는 방법이기도 하다 —
+     `J` 의 특이값 스펙트럼에서 셋째 값이 얼마나 작은지를 보면 된다.
+  3. **어휘 전수 (이 계보 열한 편째) — 새 형태다.** 본문 44,379자 + SI
+     8,826자에서 `nullspace` **69/9회**로 비유일성을 **논문 전체의 주제**로
+     다루는데, `identifiab*` **0** · `degenerac*` **0** · `non-unique`/`unique`
+     **0** · `ill-posed` **0** · `Hessian` **0** · `Fisher` **0** ·
+     `uncertaint*` **0** · `error bar` **0** · `confidence` **0**.
+     `[해석]` 아홉 편의 "어휘가 없다", 열 편째의 "절반만 자기 쪽으로 돌린다"
+     와 또 다르다 — **개념을 정면으로 다루면서 자기 어휘를 새로 만들고 표준
+     어휘를 안 쓴다.** 그 결과 Lin & Khoo 2024 와 이 논문은 같은 수학적
+     대상을 다루면서 **서로를 인용하지 않는다.**
+  4. **이 논문 자신의 자기모순을 기록한다** (우리 서술의 반면교사):
+     §1 에서 `[인쇄]` "such an interpretation can lead to misleading
+     conclusions", §4.1 에서 `[인쇄]` "From the data alone, it is not possible
+     to state whether 𝐲 was constructed from constant or parabolic
+     coefficients" 라고 적은 뒤, §4.2.2 에서는 **참계수를 모르는 실측 응답**의
+     계수 봉우리에 철 반사이트 결함 형성에너지(0.55 eV)까지 붙여 해석한다.
+     그리고 `[재현]` 그 물리 해석이 가장 조밀한 3.0–3.3 V 가 **nullspace
+     자유도가 가장 큰 구간**이다 (raw digest §12.3). `[해석]` 우리가 축퇴
+     방향을 그린 뒤에도 정직하게 주장할 수 있는 것은 **"어디까지가 데이터
+     인지 선을 긋는 것"** 까지다.
+  - **다음 흡수 후보가 하나 늘었다**: `[인쇄]` §4.2.2 가 데이터 누수 회피
+    근거로 인용하는 **Geslin et al. 2023**, "Selecting the appropriate features
+    in battery lifetime predictions", *Joule* **7**, 1956–1965.
