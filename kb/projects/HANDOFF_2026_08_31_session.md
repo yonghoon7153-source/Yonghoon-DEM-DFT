@@ -228,11 +228,19 @@ Q4 detached signature 는 선행조건 아니나 **runner 가 실제 ZIP 경로�
 `2026.09.02 …pdf` (Kyungrok Do, "Pre-conditioning Strategy for Highly Reversible
 Anode-Less ZIBs", Weekly Report @BML). PDF 는 repo 밖.
 
-⚠ 이 환경에서 **pypdf·pdfminer.six 설치가 안 된다** — `cryptography` 가
-`pyo3_runtime.PanicException` 을 던진다. stdlib 만으로 텍스트 추출기를 스크래치패드에 써서
-읽었다(`pdftxt.py`). 한계: CID/ToUnicode 폰트 디코딩 없음, 이미지 슬라이드는 아무것도 안 나옴,
-레이아웃 보장 없음. **다음 세션에서 PDF 를 또 읽어야 하면 같은 벽을 만난다** — 이 도구를
-`tools/` 로 승격할지는 판단 필요(현재 스크래치패드에만 있고 컨테이너와 함께 사라진다).
+⚠ **PDF 읽기 — 2026-09-03 정정. 앞서 "PDF 라이브러리를 못 쓴다" 고 쓴 것은 틀렸다.**
+`pip install` 은 실제로 안 된다(`cryptography` 가 `pyo3_runtime.PanicException`).
+그런데 **pdfminer 는 이미 설치돼 있었고**, pdfminer 가 cryptography 를 쓰는 곳은
+*암호화 PDF 복호화 하나뿐*이라 그 모듈만 스텁으로 막으면 정상 동작한다.
+→ `tools/litdb/pdf_text.py` (승격 완료, selftest 27개). 기본 백엔드 pdfminer, 폴백 stdlib.
+
+실측 차이가 크다 — Wiley 논문 1편에서 stdlib 스캐너는 **367자(워터마크만)**,
+pdfminer 는 **39,482자(본문 전체)**. Wiley/Elsevier 는 본문이 Form XObject 안에 있어
+stdlib 백엔드로는 워터마크만 나온다. **stdlib 로 뽑은 결과를 논문 내용으로 믿으면 안 된다.**
+
+이 환경에 없는 것: poppler(`pdftotext`·`pdftoppm`), mutool, gs, qpdf → Read 툴의 PDF
+페이지 렌더링도 안 된다. **스캔/이미지 PDF**(`/Font 0`)는 텍스트가 아예 없으므로
+내장 JPEG(DCTDecode)을 바이트로 뽑아 이미지로 Read 하는 우회가 필요하다.
 
 ### 6.2 기여 스코핑 카드
 
