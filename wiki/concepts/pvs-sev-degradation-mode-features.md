@@ -5,7 +5,7 @@ created: 2026-09-03
 updated: 2026-09-03
 type: concept
 tags: [battery, degradation, research]
-sources: [raw/papers/2026-09-02-siwon-kim-degradation-mode-ml-seminar.md, raw/transcripts/2026-09-03-voice-memo-007-degradation-mode-ml.md, raw/papers/wang2025_interpretable-ml-battery-prognosis.md, raw/papers/kim2023_graphite-heterogeneity-lifetime.md]
+sources: [raw/papers/2026-09-02-siwon-kim-degradation-mode-ml-seminar.md, raw/transcripts/2026-09-03-voice-memo-007-degradation-mode-ml.md, raw/papers/wang2025_interpretable-ml-battery-prognosis.md, raw/papers/kim2023_graphite-heterogeneity-lifetime.md, raw/papers/rhyu2025_systematic-feature-design-formation.md]
 confidence: medium
 explored: false
 verificationStatus: unverified
@@ -98,6 +98,27 @@ P2D 시뮬레이션(PVS, 원문 p.8)과 stoichiometric-window 모식도(SEV, 원
   분류상 새 자리다. 반면 리뷰가 인용하는 DRT 관찰(Su et al. 2024)은
   "**LLI 와 LAM 이 함께** R_ct 를 올린다" 고 적는다 — SEV 로 두 모드를
   가르려는 설계에 불리한 문헌 근거.
+- **[2026-09-03 추가] 세미나 p.4 의 둘째 인용 = 정반대 철학의 프레임.**
+  같은 줄에 적힌 `Joule, 2025, 9, 101884` 는 Rhyu et al. 2025 이고
+  ([[fused-lasso-feature-design-framework]], raw:
+  `raw/papers/rhyu2025_systematic-feature-design-formation.md`), 이것은
+  PVS·SEV 의 **선례가 아니라 대척점**이다. 그 논문은 자기 프레임을 무엇의
+  대안으로 놓는지 명시한다 — `[인쇄]` "automatic feature extraction can be more
+  effective than **handcrafted features that are limited by the many unknown
+  aspects of the underlying physics**". PVS·SEV 는 정확히 그 handcrafted 쪽이다.
+  세 가지를 구분해 둔다:
+  1. **feature 의 형태를 만드는 주체가 다르다.** Rhyu 는 fused lasso 계수 β 의
+     점프로 전압축을 자르고 구간마다 **차분·평균** 두 항을 대수적으로 유도한다
+     (물리가 아니라 선형대수). PVS·SEV 는 전기화학에서 유도한다.
+  2. **Rhyu 의 절차에는 PVS·SEV 를 넣을 문(門)이 없다.** 그 프레임에서 도메인
+     지식이 개입하는 유일한 앞단(입력 후보 선정)은 **후보를 지우기만 하고**
+     새 유도량을 만들지 않는다.
+  3. **그럼에도 세미나 설계에 곧바로 이식할 것이 하나 있다** — **agnostic
+     기준선**. Rhyu 는 프로토콜 파라미터만 쓰는 모형 52개를 별도 기준선으로
+     세우고 물리 feature 모형이 그것을 이기는지로 판정한다. 세미나는
+     `voltage window`(= 프로토콜 식별자)를 물리 feature 와 **같은 상자**에 넣고
+     permutation importance 를 계산한다. 두 상자를 분리하면
+     [[pvs-sev-lli-lampe-separability]] 의 핵심 의심이 **판정 가능한 실험**이 된다.
 - **두 축을 함께 쓰는 설계 자체**의 선행 프레임은 Tao et al. 2025
   (*EES* 18, 1544) — 전압 손실을 **열역학 ΔE / 동역학 η** 로 분해한다
   (리뷰 Fig. 5a). PVS/SEV 조합은 그 프레임의 특수한 구현으로 볼 수 있다.

@@ -5,7 +5,7 @@ created: 2026-08-11
 updated: 2026-09-03
 type: research-question
 tags: [battery, degradation, research]
-sources: [raw/repositories/degradation-degeneracy-audit.md, raw/papers/birkl2017_degradation-diagnostics-ocv.md]
+sources: [raw/repositories/degradation-degeneracy-audit.md, raw/papers/birkl2017_degradation-diagnostics-ocv.md, raw/papers/rhyu2025_systematic-feature-design-formation.md]
 confidence: medium
 explored: false
 verificationStatus: unverified
@@ -177,3 +177,42 @@ LAM_PE ≈ LAM_NE 는 물리가 아니라 **flat valley 방향에서 두 전극�
     [[birkl-ocv-degradation-diagnostic]] "인용 확인 — 종결". 요지는
     **좌표계 계보는 Dubarry 2012 이고, legacy LLI 식은 두 원전 어디에도 없다.**
     이번 세션도 그 문서들을 **읽기만 하고 고치지 않았다.**
+
+- **[2026-09-03 (4)]** 인접 계보의 다섯 번째 원전을 흡수했다 —
+  [[fused-lasso-feature-design-framework]] (Rhyu et al., *Joule* 9 (2025)
+  101884, raw: `raw/papers/rhyu2025_systematic-feature-design-formation.md`).
+  status `active` 유지 — **우리 22p 수치에 직접 닿는 근거는 없다.** 그러나
+  이 카드의 축에 걸리는 것 셋이 나왔다:
+  1. **★ 야생에서 발견된 또 하나의 무-불확실성 모드 적합.** 이 논문 SI
+     Note S11 은 형성 후 C/20 RPT 곡선에 **4-파라미터 전극 이용상태**를
+     맞춘다: `[인쇄]` "the system is parameterized by four parameters:
+     fraction of cathode capacity 'active' to filling/emptying **β_c**,
+     fraction of anode capacity active to filling/emptying **β_a**,
+     **remaining lithium inventory capacity Q_rem**, and **voltage shift due
+     to external resistances V_shift**." 좌표가 우리 축과 대응한다
+     (`1−β_c ↔ LAM_PE`, `1−β_a ↔ LAM_NE`, `1−Q_rem/Q_c,total ↔ LLI`).
+     결과는 Table S9 의 **점추정 넷**(0.911 / 0.854 / 0.930 / 0.014 V) 이고
+     오차 막대·상관·감도가 **없다**. 그런데 거기서 물리 결론을 뽑는다:
+     `[인쇄]` "the learned utilization state indicates that **the effective
+     capacity lost at each electrode is greater than the lithium inventory
+     lost**". 저자 스스로 적합 실패를 인정하면서도 (`[인쇄]` "still **fails to
+     fit** the differential capacitance versus voltage curve perfectly")
+     결론의 방향은 유지한다.
+     `[해석]` **이 카드가 22p 에 대해 묻는 것과 정확히 같은 형태의 주장이
+     다른 논문에서 반복되고 있다.** 우리 합성 truth 격자가 그 주장에 경계를
+     붙일 수 있는 자리다 — 다만 그쪽은 노화가 아니라 **형성 직후** 상태이고
+     셀 화학(SC-NMC532‖AG)·관측(C/20 RPT, 32셀 평균곡선 1개)이 다르다.
+  2. **식별 가능성 어휘 전수 (여섯 편째)**: `degenerac*` **0** ·
+     `uncertain*` **0** · `identifiab*` **1** (참고문헌 [30] 제목 안) ·
+     `nullspace` **1** (참고문헌 [13] 제목 안). 본문 서술은 여전히 0회.
+     특기할 점은 [13] 이 **저자 그룹 자신의 nullspace 논문**(공저자 4명 겹침)
+     인데 본문에서 "β 는 해석을 준다" 는 **긍정 근거로만** 인용된다는 것이다.
+  3. **★ 다음 흡수 최우선 후보가 확정됐다**: 그 참고문헌 [30] —
+     **Lin, J. & Khoo, E. (2024), "Identifiability study of lithium-ion battery
+     capacity fade using degradation mode sensitivity for a minimally and
+     intuitively parametrized electrode-specific cell open-circuit voltage
+     model", *J. Power Sources* 605, 234446.** 이 계보에서 제목에
+     identifiability 가 있는 **유일한** 문헌이며, 이름만으로도 이 카드의
+     선행 연구다. 다음 세션의 1순위.
+  - 우리 쪽 수치는 이 카드에 옮기지 않는다 — 정본은 artifact +
+    `docs/RESULTS*.md`.

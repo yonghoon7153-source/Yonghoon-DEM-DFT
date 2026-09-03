@@ -1,0 +1,472 @@
+{
+ "slug": "rhyu2025_systematic-feature-design-formation",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-09-03",
+ "sources": [
+  "a88abc9b-8._Systematic_feature_design_for_cycle_life_prediction_of_lithiumion_batteries_during_formation.pdf",
+  "727d5b37-mmc1.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 3,
+   "file": "fig_1.png",
+   "caption": "Figure 1. Schematic of formation protocols used for generating the dataset A total of 62 protocols were tested by manipulating the six formation-protocol parameters: C-rate for the two-step charging (CC1 and CC2), the cutoff voltage between the two CC steps ðCVÞ, number of cycles between the ﬁrst charge and last discharge step ðnverÞ, formation temperature ðTÞ, and the rest time ðtOCVÞ. Three common steps among various formation protocols are indicated in blue: the ﬁrst charge step (step A), the last discharge step (step B), and the ﬁrst discharge step (step C). The ﬁgure is modiﬁed from Figure 1 in Cui et al.47",
+   "rotated_deg": 0,
+   "bbox": [
+    53.8,
+    45.2,
+    304.9,
+    328.2
+   ],
+   "w": 1048,
+   "h": 1180,
+   "dpi": 300,
+   "src": "a88abc9b-8._Systematic_feature_design_for_cycle_life_prediction_of_lithiumion_batteries_during_formation.pdf",
+   "blank": 0.653
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 7,
+   "file": "fig_3.png",
+   "caption": "Figure 3. Input data partitioning for feature design (A) Visualization of ~QB i ðVÞ (colored solid lines) for all cells in the training set, b (solid black line), and partition boundaries where a jump occurred (vertical dotted lines) for outer fold 1 with QBðVÞ. (B)–(D) (B) QBðVÞ, (C) dQB=dVðVÞ, and (D) d2QB=dV2ðVÞ with the vertical dotted lines indicating boundaries selected after Algorithm S1 (thin) and the three boundaries near 3:6 V selected after Algorithm S2 (thick). The colors indicate the normalized cycle life, and the thick black solid line in (D) is for the column-wise average. The color of curves at each panel indicates the normalized cycle life of the i th cell where 1 (red) is for the longest and 0 (blue) is for the shortest in the training set.",
+   "rotated_deg": 0,
+   "bbox": [
+    53.8,
+    45.2,
+    556.1,
+    303.1
+   ],
+   "w": 2095,
+   "h": 1076,
+   "dpi": 300,
+   "src": "a88abc9b-8._Systematic_feature_design_for_cycle_life_prediction_of_lithiumion_batteries_during_formation.pdf",
+   "blank": 0.845
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 9,
+   "file": "fig_4.png",
+   "caption": "Figure 4. Predictive performance of the agnostic, autoML, and the designed models (A) Scatter plots of mean, HL estimator, median, and maximum for MAPE and RMSE. (B) Average (dot) and maximum and minimum (error bar) of true and predicted cycle lives per each formation protocol. The protocols are sorted by the average cycle life from the experimental data. The inset shows the histogram of prediction errors (i.e., the difference between the average of actual and predicted cycle lives) of all 62 formation protocols with the dotted vertical line marking 250.",
+   "rotated_deg": 0,
+   "bbox": [
+    53.8,
+    45.2,
+    556.1,
+    351.8
+   ],
+   "w": 2095,
+   "h": 1278,
+   "dpi": 300,
+   "src": "a88abc9b-8._Systematic_feature_design_for_cycle_life_prediction_of_lithiumion_batteries_during_formation.pdf",
+   "blank": 0.887
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 10,
+   "file": "fig_5.png",
+   "caption": "Figure 5. Schematics on how the systematic feature-design framework guides the physics-based investigation to ﬁnd the physical meaning of the designed features The red and blue arrows indicate the relationship learned from the domain knowledge and the feature-design work, respectively. The green dotted arrow indicates the missing link where the physics-based investigation is performed.",
+   "rotated_deg": 0,
+   "bbox": [
+    47.1,
+    483.7,
+    549.2,
+    689.7
+   ],
+   "w": 2093,
+   "h": 859,
+   "dpi": 300,
+   "src": "a88abc9b-8._Systematic_feature_design_for_cycle_life_prediction_of_lithiumion_batteries_during_formation.pdf",
+   "blank": 0.862
+  },
+  {
+   "key": "fS1",
+   "kind": "figure",
+   "label": "S1",
+   "page": 2,
+   "file": "fig_S1.png",
+   "caption": "Figure S1: Linear correlation between RLS and cycle life in dataset in Cui et al.S1 Each panel includes the data points where the RLS was measured at State of Charge (SoC) within 0.25% SoC error near (a) 5% SoC, (b) 7% SoC, (c) 8% SoC, (d) 9% SoC, (e) 10% SoC, and (f) 11% SoC, and within 0.10% SoC error near (g) 9% SoC, (h) 10% SoC, and (i) 11.1% SoC.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.9,
+    131.4,
+    547.1,
+    374.2
+   ],
+   "w": 2010,
+   "h": 1013,
+   "dpi": 300,
+   "src": "727d5b37-mmc1.pdf",
+   "blank": 0.86
+  },
+  {
+   "key": "fS2",
+   "kind": "figure",
+   "label": "S2",
+   "page": 3,
+   "file": "fig_S2.png",
+   "caption": "Figure S2: Data interrogation results using the six formation protocol parameters and cycle life. (a) Pair plot of six formation protocol parameters and cycle life. (b) Linear correlation (from Pearson correlation) and (c) Maximal correlation (from alternating conditional expectations) between formation protocol parameters and cycle life. (d) Quadratic test with the null hypothesis H0 : y = w1x + w0 and the alternative hypothesis Ha : y = w2x2 + w1x + w0. (e) Multicollinearity test with variance inflation factor. (f) Bilinear test with the null hypothesis H0 : y = w1x1 + w2x2 + w0 and the alternative hypothesis Ha : y = w1x1 + w2x2 + w12x1x2 + w0. Data interrogation provides preliminary information on the characteristics of the dataset. Figure S2 dis- plays the data interrogation results using the six formation protocol parameters and cycle life. Comparison of the linear Pearson with max",
+   "rotated_deg": 0,
+   "bbox": [
+    64.9,
+    64.2,
+    547.1,
+    345.2
+   ],
+   "w": 2010,
+   "h": 1172,
+   "dpi": 300,
+   "src": "727d5b37-mmc1.pdf",
+   "blank": 0.85
+  },
+  {
+   "key": "fS3",
+   "kind": "figure",
+   "label": "S3",
+   "page": 5,
+   "file": "fig_S3.png",
+   "caption": "Figure S3: Schematic on nested cross-validation method used in this study.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.9,
+    253.4,
+    547.1,
+    517.7
+   ],
+   "w": 2010,
+   "h": 1102,
+   "dpi": 300,
+   "src": "727d5b37-mmc1.pdf",
+   "blank": 0.848
+  },
+  {
+   "key": "fS4",
+   "kind": "figure",
+   "label": "S4",
+   "page": 6,
+   "file": "fig_S4.png",
+   "caption": "Figure S4: Scatter plot of median and maximum metrics for (a) MAPE and (b) RMSE. Black dotted lines indicate each metric for the best agnostic model (red star) whereas the red dotted line indicates the summation of median and maximum metrics.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.9,
+    173.0,
+    547.1,
+    605.9
+   ],
+   "w": 2010,
+   "h": 1805,
+   "dpi": 300,
+   "src": "727d5b37-mmc1.pdf",
+   "blank": 0.855
+  },
+  {
+   "key": "fS5",
+   "kind": "figure",
+   "label": "S5",
+   "page": 7,
+   "file": "fig_S5.png",
+   "caption": "Figure S5: Determination of λ for outer fold 1 with QB(V ) based on Table S2. (a) Predictiveness, (b) Robustness, and (c) Interpretability metrics as a function of λ. The horizontal dotted line indicates the constraint and the vertical dotted lines are the indices where the constraint is activated. The red region is where the constraint is violated and the blue region is where all three constraints are satisfied. (d) Demonstration of β at various λ values in the blue region. (e) Demonstration of β(k)’s at smallest λ from the blue region for robustness. Colors in panels (a)–(c) and (e) indicate different inner folds.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.9,
+    274.7,
+    547.1,
+    532.0
+   ],
+   "w": 2010,
+   "h": 1073,
+   "dpi": 300,
+   "src": "727d5b37-mmc1.pdf",
+   "blank": 0.772
+  },
+  {
+   "key": "fS6",
+   "kind": "figure",
+   "label": "S6",
+   "page": 8,
+   "file": "fig_S6.png",
+   "caption": "Figure S6: Results of merging partitioned sections. (a) RMSE when predicting ˆysection",
+   "rotated_deg": 0,
+   "bbox": [
+    64.9,
+    323.0,
+    428.2,
+    589.6
+   ],
+   "w": 1515,
+   "h": 1112,
+   "dpi": 300,
+   "src": "727d5b37-mmc1.pdf",
+   "blank": 0.921
+  },
+  {
+   "key": "fS8",
+   "kind": "figure",
+   "label": "S8",
+   "page": 11,
+   "file": "fig_S8.png",
+   "caption": "Figure S8: Three metrics as a function of λ when using V B(˜t) as input data for each outer fold. There is no blue region for outer fold 1.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.9,
+    376.8,
+    478.0,
+    512.5
+   ],
+   "w": 1722,
+   "h": 566,
+   "dpi": 300,
+   "src": "727d5b37-mmc1.pdf",
+   "blank": 0.918
+  },
+  {
+   "key": "fS9",
+   "kind": "figure",
+   "label": "S9",
+   "page": 12,
+   "file": "fig_S9.png",
+   "caption": "Figure S9: Three metrics as a function of λ when using QC(V ) as input data for each outer fold.",
+   "rotated_deg": 0,
+   "bbox": [
+    97.5,
+    339.5,
+    514.5,
+    475.2
+   ],
+   "w": 1738,
+   "h": 566,
+   "dpi": 300,
+   "src": "727d5b37-mmc1.pdf",
+   "blank": 0.915
+  },
+  {
+   "key": "fS10",
+   "kind": "figure",
+   "label": "S10",
+   "page": 13,
+   "file": "fig_S10.png",
+   "caption": "Figure S10: Three metrics as a function of λ when using V C(˜t) as input data for each outer fold.",
+   "rotated_deg": 0,
+   "bbox": [
+    97.0,
+    339.5,
+    515.0,
+    475.2
+   ],
+   "w": 1744,
+   "h": 566,
+   "dpi": 300,
+   "src": "727d5b37-mmc1.pdf",
+   "blank": 0.915
+  },
+  {
+   "key": "fS11",
+   "kind": "figure",
+   "label": "S11",
+   "page": 16,
+   "file": "fig_S11.png",
+   "caption": "Figure S11: Comparison of simulated open circuit voltage and experimental half-cell measurements for cathode (a) and anode (b).",
+   "rotated_deg": 0,
+   "bbox": [
+    64.9,
+    64.9,
+    547.1,
+    207.4
+   ],
+   "w": 2010,
+   "h": 595,
+   "dpi": 300,
+   "src": "727d5b37-mmc1.pdf",
+   "blank": 0.95
+  },
+  {
+   "key": "fS12",
+   "kind": "figure",
+   "label": "S12",
+   "page": 17,
+   "file": "fig_S12.png",
+   "caption": "Figure S12: Post-formation C/20 rate performance test results. (a) Differential capacitance as a function of cell voltage for a post-formation C/20 rate performance test slow formed cells across different temperatures. (b) d2Q/dV 2 for the same cells. (c) Simulated differential capacitance from utilization model for average slow formed cells electrochemical features. (d) d2Q/dV 2 for the same simulation. Designed voltage features in Table 6 are shown as vertical lines to show connections to plotted electrochemical features.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.9,
+    64.9,
+    547.1,
+    320.4
+   ],
+   "w": 2010,
+   "h": 1065,
+   "dpi": 300,
+   "src": "727d5b37-mmc1.pdf",
+   "blank": 0.903
+  },
+  {
+   "key": "t1",
+   "kind": "table",
+   "label": "1",
+   "page": 4,
+   "file": "tab_1.png",
+   "caption": "Table 1. Hyperparameters of ML algorithms",
+   "rotated_deg": 0,
+   "bbox": [
+    48.1,
+    100.0,
+    297.2,
+    253.6
+   ],
+   "w": 1039,
+   "h": 641,
+   "dpi": 300,
+   "src": "a88abc9b-8._Systematic_feature_design_for_cycle_life_prediction_of_lithiumion_batteries_during_formation.pdf",
+   "blank": 0.531
+  },
+  {
+   "key": "t2",
+   "kind": "table",
+   "label": "2",
+   "page": 4,
+   "file": "tab_2.png",
+   "caption": "Table 2. Description of three categories for constructing agnostic models",
+   "rotated_deg": 0,
+   "bbox": [
+    299.2,
+    100.0,
+    548.3,
+    227.0
+   ],
+   "w": 1039,
+   "h": 530,
+   "dpi": 300,
+   "src": "a88abc9b-8._Systematic_feature_design_for_cycle_life_prediction_of_lithiumion_batteries_during_formation.pdf",
+   "blank": 0.38
+  },
+  {
+   "key": "t3",
+   "kind": "table",
+   "label": "3",
+   "page": 6,
+   "file": "tab_3.png",
+   "caption": "Table 3. Description of ﬁve categories for constructing autoML models Category description Options # Input data types QAðVÞ, tAðVÞ, QBðVÞ, VBð~tÞ, QCðVÞ, VCð~tÞ 6 100, 10\u0005 0:5, /, 10\u0005 7:5, 10\u0005 8 17 p values from univariate statistical test",
+   "rotated_deg": 0,
+   "bbox": [
+    48.1,
+    100.0,
+    297.2,
+    244.1
+   ],
+   "w": 1039,
+   "h": 602,
+   "dpi": 300,
+   "src": "a88abc9b-8._Systematic_feature_design_for_cycle_life_prediction_of_lithiumion_batteries_during_formation.pdf",
+   "blank": 0.477
+  },
+  {
+   "key": "t4",
+   "kind": "table",
+   "label": "4",
+   "page": 8,
+   "file": "tab_4.png",
+   "caption": "Table 4. Feature design results for each outer fold when using QBðVÞ",
+   "rotated_deg": 0,
+   "bbox": [
+    48.1,
+    100.0,
+    297.2,
+    206.8
+   ],
+   "w": 1039,
+   "h": 446,
+   "dpi": 300,
+   "src": "a88abc9b-8._Systematic_feature_design_for_cycle_life_prediction_of_lithiumion_batteries_during_formation.pdf",
+   "blank": 0.562
+  },
+  {
+   "key": "t5",
+   "kind": "table",
+   "label": "5",
+   "page": 8,
+   "file": "tab_5.png",
+   "caption": "Table 5. Description of the best agnostic, autoML, and designed models",
+   "rotated_deg": 0,
+   "bbox": [
+    299.2,
+    100.0,
+    548.3,
+    231.9
+   ],
+   "w": 1039,
+   "h": 551,
+   "dpi": 300,
+   "src": "a88abc9b-8._Systematic_feature_design_for_cycle_life_prediction_of_lithiumion_batteries_during_formation.pdf",
+   "blank": 0.429
+  },
+  {
+   "key": "t6",
+   "kind": "table",
+   "label": "6",
+   "page": 10,
+   "file": "tab_6.png",
+   "caption": "Table 6. MAPE and RMSE of each model at each outer fold and mean and HL estimator among ﬁve outer folds Agnostic (best) AutoML (best) Designed (best) MAPE outer fold 1 10.55 10.21 9.20* outer fold 2 11.06 8.14* 8.91 outer fold 3 11.14 10.85 9.13* outer fold 4 11.35 9.72* 11.93 outer fold 5 10.70 9.63* 10.05 mean 10.96 9.71* 9.84 HL 10.95 9.72 9.59* RMSE outer fold 1 108.79 120.44 98.98* outer fold 2 90.98 74.79* 88.51 outer fold 3 124.81 136.92 97.33* outer fold 4 107.10 86.17* 108.54 outer fold 5 100.82 83.14* 95.90 mean 106.50 100.29 97.85* HL 107.10 101.79 97.44* Asterisks indicate the smallest in each row, indicating the best performance. aThis small value was obtained by Weng et al.44 having the cells from the same formation protocol in both their ‘‘validation’’ and ‘‘train/test’’ sets. bFrom the same dataset being used for optimizing hyperparameters and evaluating the model perform",
+   "rotated_deg": 0,
+   "bbox": [
+    48.1,
+    100.0,
+    548.3,
+    355.8
+   ],
+   "w": 2085,
+   "h": 1067,
+   "dpi": 300,
+   "src": "a88abc9b-8._Systematic_feature_design_for_cycle_life_prediction_of_lithiumion_batteries_during_formation.pdf",
+   "blank": 0.59
+  },
+  {
+   "key": "tS2",
+   "kind": "table",
+   "label": "S2",
+   "page": 7,
+   "file": "tab_S2.png",
+   "caption": "Table S2: Description of three metrics used for determining λ. β(k) indicates the fused lasso coefficient learned from the training set in inner fold k ∈{1, · · · , 5}. DTW distance(a,b) indicates the dynamic time warping distance between the vectors a and b. mean(β(−k)) denotes the average of β(i)’s where i ∈{1, · · · , 5}\\{k}. Path length of vector a ∈Rn×1 is calculated by summing |aj−aj+1| for j ∈{1, · · · , n−1}. 1SE rule stands for one-standard-error rule, meaning that we are considering all λ values that result in a mean MAPE smaller than minλ(mean MAPE) + standard error at λ = arg min(mean MAPE). The constraints for robustness and interpretability were chosen based on trial and error to ensure that β from any λ in the blue region possess each characteristic.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.9,
+    274.7,
+    547.1,
+    532.0
+   ],
+   "w": 2010,
+   "h": 1073,
+   "dpi": 300,
+   "src": "727d5b37-mmc1.pdf",
+   "blank": 0.772
+  },
+  {
+   "key": "tS3",
+   "kind": "table",
+   "label": "S3",
+   "page": 10,
+   "file": "tab_S3.png",
+   "caption": "Table S3: Feature design results for each outer fold when using QB(V ). The voltage values used in the designed features are marked in bold.",
+   "rotated_deg": 0,
+   "bbox": [
+    64.9,
+    312.5,
+    537.2,
+    430.9
+   ],
+   "w": 1969,
+   "h": 495,
+   "dpi": 300,
+   "src": "727d5b37-mmc1.pdf",
+   "blank": 0.827
+  }
+ ]
+}

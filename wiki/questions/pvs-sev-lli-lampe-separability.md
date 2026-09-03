@@ -5,7 +5,7 @@ created: 2026-09-03
 updated: 2026-09-03
 type: research-question
 tags: [battery, degradation, research]
-sources: [raw/papers/2026-09-02-siwon-kim-degradation-mode-ml-seminar.md, raw/transcripts/2026-09-03-voice-memo-007-degradation-mode-ml.md, raw/papers/birkl2017_degradation-diagnostics-ocv.md, raw/papers/wang2025_interpretable-ml-battery-prognosis.md, raw/papers/kim2023_graphite-heterogeneity-lifetime.md, raw/papers/su2024_drt-soh-health-features.md]
+sources: [raw/papers/2026-09-02-siwon-kim-degradation-mode-ml-seminar.md, raw/transcripts/2026-09-03-voice-memo-007-degradation-mode-ml.md, raw/papers/birkl2017_degradation-diagnostics-ocv.md, raw/papers/wang2025_interpretable-ml-battery-prognosis.md, raw/papers/kim2023_graphite-heterogeneity-lifetime.md, raw/papers/su2024_drt-soh-health-features.md, raw/papers/rhyu2025_systematic-feature-design-formation.md]
 confidence: medium
 explored: false
 verificationStatus: unverified
@@ -99,6 +99,22 @@ H2 가 참일 수 있음에 주의한다 — 부호가 같다고 벡터가 평�
 - **[2026-09-03] 원문 p.13 의 MAE 는 실제로 작다** (0.30–0.57 %p). H1 이
   참이어도 이 수치는 설명되어야 한다. 다만 정답 축이 "Fitted" 이므로 이
   반론의 무게는 라벨 자체의 식별 가능성에 달려 있다 (아래 Gap).
+- **[2026-09-03 (7)] ★ 동역학 축이 열역학 축과 독립된 셀-대-셀 정보를 실은
+  실측 사례.** Rhyu et al. 2025 ([[fused-lasso-feature-design-framework]],
+  raw: `raw/papers/rhyu2025_systematic-feature-design-formation.md`) 의 느린
+  형성 32셀에서: 형성 후 C/20 RPT 의 미분용량·d²Q/dV² 가 `[인쇄]` "nearly
+  indistinguishable" 인데 (→ 이용상태·잔여 리튬 재고가 거의 같다는 뜻)
+  cycle life 는 유의하게 다르다. 저자들은 그 차이를 **미시 입자 전하전달
+  저항 분포**(동역학)에 귀속시키고, `[인쇄]` "While the former [평균 저항] may
+  be gleaned from simpler features … **the latter [저항 불균일성] is unique to
+  the designed features**" 라고 적는다.
+  `[해석]` **SEV 쪽에 유리한 근거다.** 열역학 신호가 포화·불변인 상황에서도
+  동역학 신호가 셀 간 차이를 실었다는 뜻이며, "PVS 와 SEV 는 물리 경로가
+  달라 감도 비가 다를 수 있다" 는 위 반론에 **실측 한 건**을 붙인다.
+  **주의 (범위 한정)**: 그 32셀은 (a) 노화 셀이 아니라 **형성 직후** 셀이고,
+  (b) SC-NMC532‖AG 이며, (c) LLI/LAM 라벨이 없다(그 논문은 두 약어를 한 번도
+  쓰지 않는다). 따라서 이것은 "**SEV 축이 정보를 가질 수 있다**" 까지만
+  말하고 "**SEV 가 LLI 와 LAM_PE 를 가른다**" 는 말하지 않는다.
 
 ## 이 질문에 답하는 방법 (설계, 미실행)
 
@@ -222,6 +238,41 @@ H2 가 참일 수 있음에 주의한다 — 부호가 같다고 벡터가 평�
 - **LOGO-CV 의 group 정의가 원문에 인쇄되지 않았다.** 셀 단위인지 프로토콜
   단위인지에 따라 p.13 수치의 의미가 갈린다. 프로토콜 식별자가 입력에 있으므로
   group 이 셀이면 같은 프로토콜의 형제 셀로부터 예측하는 구조가 된다.
+  - **[2026-09-03 (7)] 이 Gap 을 닫는 표준이 같은 줄에 인용돼 있었다.**
+    세미나 p.4 의 둘째 인용(Rhyu 2025)은 group = **형성 프로토콜**로 잡고,
+    **feature 설계 자체를 outer training set 안에서** 수행하며, feature 설계용
+    inner 분할과 하이퍼파라미터용 inner 분할을 `[인쇄]` "**intentionally
+    differentiated** … to avoid information leakage" 로 **일부러 다르게** 잡는다
+    (SI Fig. S3, 직접 봄). 게다가 선행 연구의 leakage 를 각주로 못 박는다
+    (`[인쇄, 각주 49]` Weng et al. 의 8% 는 "having the cells from the same
+    formation protocol in **both** their 'validation' set and 'train/test'
+    sets"). 즉 이 계보에 **이미 더 엄격한 전례가 있고 세미나가 그것을
+    인용하고 있다** — 요구할 근거가 생겼다.
+- **[2026-09-03 (7)] ★ agnostic 기준선이 없다 — 그리고 그것을 만드는 법이
+  같은 인용 안에 있다.** 세미나 p.13 은 `voltage window`(프로토콜 식별자)를
+  물리 feature 와 **같은 상자**에 넣고 permutation importance 를 잰다. 그러면
+  "물리 feature 가 프로토콜 식별자를 **넘어서는가**" 를 물을 수 없다.
+  [[fused-lasso-feature-design-framework]] 는 프로토콜 파라미터만 쓰는
+  **agnostic 모형 52개**를 별도 기준선으로 세우고, 설계 feature 모형이 그것을
+  이기는지로 판정한다 — 그리고 agnostic 의 구조적 한계를 스스로 인쇄한다
+  (`[인쇄]` 특정 템플릿에만 적용 가능 · "**no cell-to-cell variability**").
+  `[해석]` **이 카드의 Evidence For 2번(“LAM_PE 분리가 SOH + window 로 설명될
+  여지가 크다”)을 판정 가능한 실험으로 바꾸는 설계가 이것이다**: 프로토콜
+  파라미터만 쓴 기준 모형의 LAM_PE MAE 를 먼저 재고, 물리 feature 를 넣었을 때
+  그것이 줄어드는지를 **paired** 로 본다. 우리 쪽에서도 값이 싸다.
+- **[2026-09-03 (7)] 창(window) 기반 feature 의 계수 부호가 fold 간에
+  뒤집힌 사례.** 같은 논문 SI Fig. S5e (직접 봄): 5개 inner fold 의 fused-lasso
+  계수 β 가 **설계 feature 가 사는 3.45–3.60 V 구간에서만** 크게 갈리고 부호가
+  뒤집힌다 (β^(2) ≈ −0.70 vs β^(5) ≈ +0.37, 근사 판독). 논문은 이 그림을
+  **강건성의 증거**로 제시하는데, 그 "robustness" 는 곡선 형상의 DTW 비율
+  (< 0.7) 로 정의돼 있어 **국소 부호 안정성을 재지 않는다**.
+  `[해석]` PVS 와 SEV 도 **특정 전압창/특정 SOC 지점**의 대비를 쓰는 feature
+  이므로 같은 취약성을 공유한다. [[mode-observability]] Phase 1 이 이미 본
+  valley 정의 민감도와 같은 계열이며, **"feature 값이 안정한가" 와 "그 feature
+  의 회귀 계수 부호가 안정한가" 는 다른 질문**이라는 것을 이 사례가 보여 준다.
+  덧붙여, 이 논문 저자들의 계보는 그 진단 도구를 갖고 있다 — 참고문헌 [13] 이
+  Schaeffer et al. 의 **nullspace** 논문이고 공저자 4명이 겹친다 — 그런데
+  본문에서 그것을 "β 는 해석을 준다" 는 **긍정 근거로만** 인용한다.
 - **모드 동시 진행 시의 가법성**이 미확인 (원문 p.8 은 단독 스윕만).
 - **SEV 의 정량 모드 스윕**이 없다 (p.11 은 모식도).
 - LAM_NE 를 Si loss / Gr loss 로 쪼개면(원문 p.15 point 2) **미지수가 4개로
@@ -329,3 +380,36 @@ H2 가 참일 수 있음에 주의한다 — 부호가 같다고 벡터가 평�
   - **주의 한 줄**: 그 데이터셋에는 **LLI/LAM 라벨이 없다.** 따라서 Phase 2 는
     이 카드의 질문에 직접 답할 수 없고, **전제(축의 재현성·귀속 가능성)만**
     검증할 수 있다. 이 구분을 흐리면 안 된다.
+
+- [2026-09-03 (7)] open 유지 — 세미나 p.4 의 **둘째 인용**을 본문 + SI 로 흡수
+  ([[fused-lasso-feature-design-framework]], Rhyu et al., *Joule* 9 (2025)
+  101884, raw: `raw/papers/rhyu2025_systematic-feature-design-formation.md`).
+  이 카드에 준 것 넷:
+  - **판정 (계보 위치)**: 이 논문은 PVS·SEV 의 **선례가 아니라 대척점**이다.
+    자기 프레임을 `[인쇄]` "handcrafted features that are limited by the many
+    unknown aspects of the underlying physics" 의 대안으로 놓는다. 절차 안에
+    PVS·SEV 같은 유도 스칼라를 넣을 자리가 없다 — 도메인 지식이 개입하는
+    유일한 앞단(입력 후보 선정)은 후보를 **지우기만** 한다. 이 판정 자체는
+    H1/H2 어느 쪽에도 무게를 싣지 않는다.
+  - **Evidence Against 1건 추가**: 동역학 축(입자 저항 분포)이 열역학 축이
+    사실상 포화·불변인 상태에서도 셀-대-셀 정보를 실은 실측 사례 — SEV 쪽에
+    유리하다. 단 **형성 직후 셀 · LLI/LAM 라벨 없음**이라는 범위 한정을 함께
+    적었다.
+  - **Gap 3건 추가**: (1) group 정의 Gap 을 닫는 **표준 설계**가 같은 인용
+    안에 있었다 (프로토콜 group + feature 설계를 학습 fold 안에 가둠 + 두 inner
+    분할을 일부러 다르게), (2) **agnostic 기준선**을 세우면 Evidence For 2번이
+    판정 가능한 실험이 된다, (3) 창 기반 feature 의 **회귀 계수 부호가 fold
+    간에 뒤집힌** 문헌 사례 (SI Fig. S5e, 직접 봄).
+  - **어휘 전수 (이 계보 여섯 편째)**: 합자 정규화 후 본문 15쪽 + SI 19쪽
+    전체에서 `degenerac*` **0** · `uncertain*` **0** · `identifiab*` **1** —
+    그 1회는 **참고문헌 [30] 의 제목 안**이고 (Lin & Khoo 2024,
+    "**Identifiability study** of lithium-ion battery capacity fade using
+    **degradation mode sensitivity** …"), 본문에서 그 문헌은 **DVF 기법 4연속
+    인용의 넷째**로만 쓰인다. `nullspace` 1회도 참고문헌 [13] 제목 안이다.
+    `[해석]` "연속 0회" 는 형식상 깨졌지만 **논문이 자기 추정의 식별 가능성을
+    묻는 문장은 여전히 0개**다. 이번 수확은 "Braatz 그룹은 다르다" 가 아니라
+    **"이 계보에서 방법론적으로 가장 정교한 팀조차, 그 어휘를 인접 문헌으로
+    알고 있으면서 자기 추정에는 적용하지 않는다"** 는 더 강한 형태의 확인이다.
+  - **다음 흡수 최우선 후보 확정**: **Lin, J. & Khoo, E. (2024), *J. Power
+    Sources* 605, 234446** — 이 계보에서 제목에 identifiability 가 있는 **유일한**
+    문헌이고, 우리 프로젝트의 정확한 선행 연구다.

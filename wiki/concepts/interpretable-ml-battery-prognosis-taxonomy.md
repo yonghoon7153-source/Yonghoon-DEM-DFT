@@ -5,7 +5,7 @@ created: 2026-09-03
 updated: 2026-09-03
 type: concept
 tags: [battery, degradation, research]
-sources: [raw/papers/wang2025_interpretable-ml-battery-prognosis.md, raw/papers/su2024_drt-soh-health-features.md]
+sources: [raw/papers/wang2025_interpretable-ml-battery-prognosis.md, raw/papers/su2024_drt-soh-health-features.md, raw/papers/rhyu2025_systematic-feature-design-formation.md]
 confidence: medium
 explored: false
 verificationStatus: unverified
@@ -127,10 +127,26 @@ identifiability 를 묻지 않는다" 는 진단과 같은 뿌리다 — **featu
 이름이 붙어 있는지**는 확인하지만 **그 이름이 근거를 가졌는지**는 확인하지
 않는 것이 이 리뷰의 요약 방식이다. 그 결과가 §4.4 의 이 칸이다.
 
+**정정 2 — §4.2 의 참조 [113] (Rhyu et al. 2025).** 리뷰 표가 인쇄한 요약:
+"형성 공정 중의 **dQ/dV, d²Q/dV² 관련 feature 를 자동 생성** (`Q(V)`) …
+cycle life, **MAPE 9.2%**". 원전(raw:
+`raw/papers/rhyu2025_systematic-feature-design-formation.md`, 컴파일:
+[[fused-lasso-feature-design-framework]]) 대조:
+
+| 리뷰가 적은 것 | 원전의 실제 상태 |
+|---|---|
+| dQ/dV·d²Q/dV² **feature** 를 자동 생성 | 설계된 feature 는 **용량 차분** `Q^B(3.57 V) − Q^B(3.60 V)` 꼴이다. dQ/dV·d²Q/dV² 는 feature 가 **아니라** 선택된 전압값을 **사후 해석**하는 데 쓰인다. 원문은 오히려 부정문을 인쇄한다 — `[인쇄]` "the designed features **do not directly correspond to** features in the dataset's average discharge capacity or **differential capacitance** curves" |
+| MAPE **9.2%** | 9.2 는 designed 모형의 5 outer fold **중앙값**(= fold 1 값)이다. 원문 초록의 대표값은 **9.87%**, Table 6 의 `mean` 은 **9.84**, **최악 fold 는 11.93** 이고 그것은 세 접근(agnostic 11.35 / autoML 10.85 / designed 11.93) 중 **가장 나쁘다**. 리뷰는 어느 통계량인지 밝히지 않고 가장 유리한 값을 옮겼다 |
+| 물리 귀속: 온도 민감도 + 입자 저항 불균일성 | 원전 서술과 일치하나, 그것은 `[인쇄]` "we **hypothesize**" / "allow us to **theorize**" 로 표현된 가설이고 근거는 **시각적 유사성**뿐이다 (정량 일치도 지표 없음) |
+
+`[해석]` 정정 1 과 같은 병이다 — **feature 에 물리적 이름이 붙어 있는지는
+확인하고 그 이름의 근거·통계량의 정체는 확인하지 않는다.** 다만 이번에는
+원전이 훨씬 정직했다 (부정문을 스스로 인쇄하고, 가설임을 명시한다).
+
 `[해석]` **인용 규칙**: 이 리뷰의 §4.2·§4.4 물리 귀속 열은 **2차 요약**으로
-취급하고, 우리 문서에 옮길 때는 반드시 원전을 먼저 본다. 이번이 두 번째
+취급하고, 우리 문서에 옮길 때는 반드시 원전을 먼저 본다. 이번이 세 번째
 사례다 (첫 번째는 §4.2 의 Kim 2023 — [[dv-peak-heterogeneity-descriptor]],
-그때는 리뷰가 아니라 **우리 판독의 추론**이 틀렸다).
+그때는 리뷰가 아니라 **우리 판독의 추론**이 틀렸다. 세 번째가 위 정정 2).
 
 ## 관련
 - [[pvs-sev-degradation-mode-features]] — 두 feature 가 이 분류의 어디에 앉는가
@@ -138,4 +154,5 @@ identifiability 를 묻지 않는다" 는 진단과 같은 뿌리다 — **featu
 - [[birkl-ocv-degradation-diagnostic]] — 라벨을 만드는 반대편 계보
 - [[fitting-degeneracy]] — "해석 가능 ≠ 분해 가능" 의 정확한 형태
 - [[dv-peak-heterogeneity-descriptor]] — §4.2 의 대표 사례, 원전 대조 1회차
+- [[fused-lasso-feature-design-framework]] — 참조 [113] 의 원전, 원전 대조 3회차
 - [[zhang2020-eis-aging-dataset]] — §4.4 의 [127] 이 쓴 데이터의 진짜 출처
