@@ -1,6 +1,6 @@
 ---
 title: Fitting Degeneracy (LLI/LAM 분리가능성)
-description: "Can one full-cell curve separate LLI, LAM_PE and LAM_NE — flat valley vs multimodal distinction"
+description: "full-cell 곡선 하나로 LLI·LAM_PE·LAM_NE 를 가를 수 있는가 — flat valley(데이터 한계)와 multimodal(최적화 난이도)의 구분"
 created: 2026-08-11
 updated: 2026-08-11
 type: concept

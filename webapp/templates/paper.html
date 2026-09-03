@@ -28,11 +28,40 @@
 </p>
 {% endif %}
 
-<div class="reader">
+<div class="reader reader-3" data-annot="{{ page.slug }}">
   <div class="reader-side">
     {{ toc_nav(toc, '이 digest') }}
   </div>
   <article class="prose doc-body" id="digest-body">{{ body_html|safe }}</article>
+
+  {# ── 메모·하이라이트 레일 ─────────────────────────────────────────────
+     ⚠ 이 앱은 저장소에 **아무것도 쓰지 않는다**. 메모와 하이라이트는 읽는
+       사람의 주석이지 위키의 내용이 아니므로 **브라우저 안에만** 남는다
+       (localStorage). 그래서 "화면의 정본은 저장소 파일" 이라는 약속이
+       문자 그대로 유지된다. 대신 브라우저에 갇히지 않게 내보내기를 둔다. #}
+  <aside class="rail" id="annot-rail" aria-label="메모와 하이라이트">
+    <div class="rail-h">
+      <span class="rail-t">메모 <b id="note-n">0</b></span>
+      <button class="btn btn-xs" id="annot-export" type="button" title="이 문서의 메모·하이라이트를 마크다운으로 내려받는다">
+        <svg class="ic" aria-hidden="true"><use href="#i-download"></use></svg>내보내기
+      </button>
+    </div>
+    <p class="rail-hint" id="annot-hint">
+      본문에서 <b>글자를 끌어 선택</b>하면 하이라이트·메모를 남길 수 있다.
+      이 앱은 저장소에 쓰지 않는다 — 주석은 <b>이 브라우저에만</b> 남는다.
+    </p>
+    <ul class="rail-list" id="annot-list"></ul>
+  </aside>
+</div>
+
+{# 선택 시 뜨는 작은 도구막대 — 위치는 JS 가 정한다 #}
+<div class="sel-bar" id="sel-bar" hidden>
+  <button type="button" data-hl="y" title="노랑">·</button>
+  <button type="button" data-hl="g" title="초록">·</button>
+  <button type="button" data-hl="p" title="보라">·</button>
+  <button type="button" data-hl="r" title="빨강">·</button>
+  <span class="sel-sep"></span>
+  <button type="button" data-act="note">메모</button>
 </div>
 {% endblock %}
 

@@ -1,4 +1,5 @@
 ---
+title: "Birkl et al. 2017 — Degradation diagnostics for lithium ion cells (JPS 341)"
 source_url: local-upload/Birkl2017_Degradation_diagnostics_for_lithium_ion_cells.pdf
 ingested: 2026-09-03
 sha256: 8c32a65c108687ad376bad32ff0096dddb4dc0c675f0bf46f447234b84a09146

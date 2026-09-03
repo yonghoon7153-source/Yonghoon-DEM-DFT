@@ -1,6 +1,6 @@
 ---
 title: mode-observability
-description: "Satellite asking whether added observations (PVS, SEV) actually separate LLI from LAM_PE — Jacobian identifiability + ML label-degeneracy propagation"
+description: "관측을 늘리면(PVS·SEV) 정말 LLI 와 LAM_PE 가 갈리는가 — Jacobian 식별 가능성 + ML 라벨 degeneracy 전파를 묻는 satellite"
 created: 2026-09-03
 updated: 2026-09-03
 type: entity

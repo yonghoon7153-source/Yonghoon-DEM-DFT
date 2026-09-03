@@ -1,4 +1,5 @@
 ---
+title: "Dubarry et al. 2012 — Synthesize battery degradation modes (JPS 219)"
 source_url: local-upload/3._Synthesize_battery_degradation_modes_via_a_diagnostic_and_prognostic_model.pdf
 ingested: 2026-09-03
 sha256: 4d9e43e82cc104ce50aff64bd40df19678d8c8d293ead14e85e53897ed042f76

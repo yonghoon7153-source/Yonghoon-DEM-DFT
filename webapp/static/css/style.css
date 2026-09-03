@@ -1109,3 +1109,90 @@ body[data-kind="gate"]      { --k: var(--k-out); --k-soft: var(--k-out-soft); }
 .fold-mark::after  { width: 1.5px; height: 7px; transition: opacity var(--t); }
 .fold[open] > summary .fold-mark::after { opacity: 0; }   /* + → − */
 .fold-body { padding-top: 4px; }
+
+/* ══ 메모 · 하이라이트 ════════════════════════════════════════════════════
+   하이라이트 색은 **네 가지 뜻**을 담으라고 넷을 준다 (근거 / 반증 / 의문 /
+   할 일 처럼). 그래서 본문의 3구분 색(인쇄·도표·해석)과 **겹치지 않게** 골랐다
+   — 같은 색이 두 뜻을 가지면 화면이 거짓말을 한다. */
+:root {
+  --hl-y: #f5d87a; --hl-y-ink: #6b4e05;
+  --hl-g: #9fd8b4; --hl-g-ink: #12492e;
+  --hl-p: #c8bcf0; --hl-p-ink: #362a63;
+  --hl-r: #f3b3ab; --hl-r-ink: #6d1f16;
+}
+:root[data-theme="dark"] {
+  --hl-y: #6a5416; --hl-y-ink: #f3dc9d;
+  --hl-g: #1d5238; --hl-g-ink: #a8e5c2;
+  --hl-p: #3a3070; --hl-p-ink: #cfc4f5;
+  --hl-r: #6a2c25; --hl-r-ink: #f6c2bb;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --hl-y:#6a5416; --hl-y-ink:#f3dc9d; --hl-g:#1d5238; --hl-g-ink:#a8e5c2;
+    --hl-p:#3a3070; --hl-p-ink:#cfc4f5; --hl-r:#6a2c25; --hl-r-ink:#f6c2bb;
+  }
+}
+
+mark.hl { border-radius: 3px; padding: .05em .12em; box-decoration-break: clone; }
+.hl-y { background: var(--hl-y); color: var(--hl-y-ink); }
+.hl-g { background: var(--hl-g); color: var(--hl-g-ink); }
+.hl-p { background: var(--hl-p); color: var(--hl-p-ink); }
+.hl-r { background: var(--hl-r); color: var(--hl-r-ink); }
+/* 메모가 붙은 하이라이트는 **색 말고도** 표시가 하나 더 있어야 한다 */
+mark.hl[data-has-note]::after {
+  content: "✎"; font-size: .78em; vertical-align: super; margin-left: .15em; opacity: .75;
+}
+
+.reader-3 { grid-template-columns: 200px minmax(0, 1fr) 290px; gap: 30px; }
+.rail { position: sticky; top: 24px; align-self: start; max-height: calc(100vh - 48px); overflow: auto; }
+.rail-h { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+.rail-t { font-size: var(--fs-2xs); font-weight: 700; letter-spacing: .05em;
+          text-transform: uppercase; color: var(--ink-3); flex: 1; }
+.rail-t b { color: var(--k); font-variant-numeric: tabular-nums; }
+.btn-xs { font-size: var(--fs-3xs); padding: 3px 8px; gap: 4px; }
+.btn-ghost { border-color: transparent; background: transparent; color: var(--ink-3); }
+.btn-ghost:hover { color: var(--bad); border-color: color-mix(in srgb, var(--bad) 34%, var(--line)); }
+.rail-hint { font-size: var(--fs-2xs); line-height: 1.62; color: var(--ink-3);
+             border: 1px dashed var(--line); border-radius: var(--r); padding: 10px 11px; }
+.rail-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
+.rail-i { border: 1px solid var(--line); border-left: 4px solid; border-radius: var(--r);
+          background: var(--surface); padding: 10px 11px; cursor: pointer; }
+.rail-i.hl-y { border-left-color: var(--hl-y); background: var(--surface); color: inherit; }
+.rail-i.hl-g { border-left-color: var(--hl-g); background: var(--surface); color: inherit; }
+.rail-i.hl-p { border-left-color: var(--hl-p); background: var(--surface); color: inherit; }
+.rail-i.hl-r { border-left-color: var(--hl-r); background: var(--surface); color: inherit; }
+.rail-i:hover { box-shadow: var(--shadow-1); }
+.rail-i.is-stale { border-style: dashed; opacity: .82; }
+.rail-q { margin: 0 0 7px; font-size: var(--fs-2xs); line-height: 1.6; color: var(--ink-2);
+          border: 0; padding: 0; word-break: keep-all; }
+.rail-stale { margin: 0 0 7px; font-size: var(--fs-3xs); line-height: 1.55; color: var(--warn); }
+.rail-note { width: 100%; box-sizing: border-box; resize: vertical;
+             font: inherit; font-size: var(--fs-2xs); line-height: 1.6;
+             color: var(--ink); background: var(--surface-2);
+             border: 1px solid var(--line); border-radius: 5px; padding: 6px 7px; }
+.rail-note:focus { outline: 2px solid color-mix(in srgb, var(--k) 55%, transparent); outline-offset: 1px; }
+.rail-foot { display: flex; align-items: center; gap: 8px; margin-top: 6px; }
+.rail-when { flex: 1; font-size: var(--fs-3xs); color: var(--ink-3); font-variant-numeric: tabular-nums; }
+
+/* 선택하면 뜨는 도구막대 */
+.sel-bar { position: absolute; z-index: 60; display: flex; align-items: center; gap: 3px;
+           background: var(--surface); border: 1px solid var(--line);
+           border-radius: 8px; padding: 4px 5px; box-shadow: var(--shadow-2); }
+.sel-bar button { border: 1px solid transparent; border-radius: 5px; cursor: pointer;
+                  font: inherit; font-size: var(--fs-2xs); color: var(--ink-2);
+                  background: transparent; padding: 3px 8px; }
+.sel-bar button[data-hl] { width: 22px; height: 22px; padding: 0; font-size: 0; }
+.sel-bar button[data-hl="y"] { background: var(--hl-y); }
+.sel-bar button[data-hl="g"] { background: var(--hl-g); }
+.sel-bar button[data-hl="p"] { background: var(--hl-p); }
+.sel-bar button[data-hl="r"] { background: var(--hl-r); }
+.sel-bar button:hover { border-color: var(--ink-3); }
+.sel-sep { width: 1px; height: 18px; background: var(--line); margin: 0 3px; }
+
+@media (max-width: 1180px) {
+  .reader-3 { grid-template-columns: 190px minmax(0, 1fr); }
+  .rail { grid-column: 1 / -1; position: static; max-height: none; margin-top: 18px; }
+}
+@media (max-width: 860px) {
+  .reader-3 { grid-template-columns: minmax(0, 1fr); }
+}

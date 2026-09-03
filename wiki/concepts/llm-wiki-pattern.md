@@ -1,6 +1,6 @@
 ---
 title: LLM Wiki Pattern
-description: "Karpathy-style LLM wiki: immutable raw layer, compiled pages with YAML metadata, wikilink graph, mothership/satellite vaults"
+description: "Karpathy 식 LLM 위키: 불변 raw 층, YAML 메타데이터를 단 컴파일 페이지, wikilink 그래프, mothership/satellite 구조"
 created: 2026-08-11
 updated: 2026-08-11
 type: concept

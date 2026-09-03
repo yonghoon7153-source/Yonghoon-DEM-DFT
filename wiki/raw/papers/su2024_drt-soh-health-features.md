@@ -1,4 +1,5 @@
 ---
+title: "Su et al. 2024 — DRT 유래 health feature 와 GPR SOH 추정 (J. Energy Storage 90)"
 source_url: local-upload/7._Modeling_and_health_feature_extraction_method_for_lithiumion_batteries_state_of_health_estimation_by_distribution_of_relaxation_times.pdf
 ingested: 2026-09-03
 sha256: 5fab7227f0543e6548f5463179d88676ed23547d275f74a72c98174d9957044f

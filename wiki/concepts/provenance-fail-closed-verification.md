@@ -1,6 +1,6 @@
 ---
 title: Provenance & Fail-closed Verification
-description: "Verification design principles distilled from 13 adversarial gate-review rounds"
+description: "13 라운드 적대적 게이트 리뷰에서 증류한 재현성 설계 원칙"
 created: 2026-08-11
 updated: 2026-08-11
 type: concept

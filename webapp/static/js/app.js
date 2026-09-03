@@ -238,3 +238,243 @@ document.addEventListener("click", function (e) {
   }
 });
 if (location.hash) openToHash(location.hash);
+
+/* ══ 메모 · 하이라이트 ════════════════════════════════════════════════════
+   ⚠ 이 앱은 저장소에 **아무것도 쓰지 않는다**. 메모와 하이라이트는 읽는 사람의
+     주석이지 위키의 내용이 아니므로 브라우저 안(localStorage)에만 남는다.
+     그래서 "화면의 정본은 저장소 파일" 이라는 약속이 문자 그대로 유지된다.
+
+   저장 좌표를 **문자열 offset 이 아니라 (제목 id, 그 절 안의 문자 위치)** 로
+   잡는다. 문서가 갱신돼 앞부분이 길어져도 절 안에서 다시 찾을 수 있어야 하고,
+   못 찾으면 **조용히 엉뚱한 곳에 칠하지 않고** 고아로 표시한다 — 잘못된 자리에
+   칠한 하이라이트는 없는 것보다 나쁘다. */
+(function () {
+  var reader = document.querySelector(".reader[data-annot]");
+  if (!reader) return;
+  var body = document.getElementById("digest-body");
+  var rail = document.getElementById("annot-list");
+  var bar = document.getElementById("sel-bar");
+  if (!body || !rail || !bar) return;
+
+  var KEY = "bms.annot." + reader.getAttribute("data-annot");
+  var HUES = { y: "노랑", g: "초록", p: "보라", r: "빨강" };
+
+  function load() {
+    try { return JSON.parse(localStorage.getItem(KEY) || "[]"); }
+    catch (e) { return []; }            // 사설창·저장 차단 — 기능만 죽고 화면은 산다
+  }
+  function save(list) {
+    try { localStorage.setItem(KEY, JSON.stringify(list)); }
+    catch (e) { /* 저장이 막힌 브라우저 — 이번 세션에만 남는다 */ }
+  }
+
+  /* 선택 구간을 (절 id, 절 안 문자 offset, 길이, 원문) 으로 적는다 */
+  function sectionOf(node) {
+    var el = node.nodeType === 3 ? node.parentElement : node;
+    while (el && el !== body) {
+      var prev = el.previousElementSibling;
+      while (prev) {
+        if (/^H[1-6]$/.test(prev.tagName) && prev.id) return prev.id;
+        prev = prev.previousElementSibling;
+      }
+      el = el.parentElement;
+    }
+    return "";
+  }
+  function sectionRoot(id) {
+    var h = id && document.getElementById(id);
+    return h ? h.parentElement : body;
+  }
+  function textOf(root, stopAtId) {
+    // 절 텍스트: 제목 다음부터 다음 같은 수준 제목 전까지
+    var h = stopAtId && document.getElementById(stopAtId);
+    if (!h) return body.textContent;
+    var out = "", n = h.nextElementSibling;
+    while (n && !/^H[1-6]$/.test(n.tagName)) { out += n.textContent; n = n.nextElementSibling; }
+    return out;
+  }
+
+  function capture() {
+    var sel = window.getSelection();
+    if (!sel || sel.isCollapsed) return null;
+    var text = String(sel).trim();
+    if (!text || text.length < 2) return null;
+    var r = sel.getRangeAt(0);
+    if (!body.contains(r.commonAncestorContainer)) return null;
+    var sid = sectionOf(r.startContainer);
+    var hay = textOf(body, sid);
+    var at = hay.indexOf(text);
+    return { sec: sid, at: at, len: text.length, text: text,
+             at_kind: at < 0 ? "unfound" : "found" };
+  }
+
+  function add(hue, note) {
+    var c = capture();
+    if (!c) return;
+    var list = load();
+    list.push({ id: "a" + Date.now().toString(36) + Math.random().toString(36).slice(2, 6),
+                hue: hue || "y", note: note || "", sec: c.sec, at: c.at,
+                len: c.len, text: c.text, at_kind: c.at_kind,
+                made: new Date().toISOString().slice(0, 16).replace("T", " ") });
+    save(list);
+    window.getSelection().removeAllRanges();
+    render();
+  }
+
+  /* ── 그리기 ─────────────────────────────────────────────────────────── */
+  function clearMarks() {
+    body.querySelectorAll("mark.hl").forEach(function (m) {
+      var t = document.createTextNode(m.textContent);
+      m.parentNode.replaceChild(t, m);
+    });
+    body.normalize();
+  }
+
+  function paint(a) {
+    // 절 안에서 원문을 다시 찾는다. 못 찾으면 칠하지 않고 고아로 둔다.
+    var h = a.sec && document.getElementById(a.sec);
+    var start = h ? h.nextElementSibling : body.firstElementChild;
+    var walkRoot = [];
+    var n = start;
+    while (n && !(h && /^H[1-6]$/.test(n.tagName))) { walkRoot.push(n); n = n.nextElementSibling; }
+    if (!walkRoot.length) walkRoot = [body];
+    for (var i = 0; i < walkRoot.length; i++) {
+      var w = document.createTreeWalker(walkRoot[i], NodeFilter.SHOW_TEXT);
+      var tn;
+      while ((tn = w.nextNode())) {
+        var k = tn.nodeValue.indexOf(a.text);
+        if (k < 0) continue;
+        var rg = document.createRange();
+        rg.setStart(tn, k); rg.setEnd(tn, k + a.text.length);
+        var m = document.createElement("mark");
+        m.className = "hl hl-" + (a.hue || "y");
+        m.setAttribute("data-annot-id", a.id);
+        if (a.note) m.setAttribute("data-has-note", "1");
+        try { rg.surroundContents(m); return true; } catch (e) { return false; }
+      }
+    }
+    return false;
+  }
+
+  function render() {
+    var list = load();
+    clearMarks();
+    var orphan = 0;
+    list.forEach(function (a) { if (!paint(a)) { a.stale = true; orphan++; } else { a.stale = false; } });
+
+    rail.textContent = "";
+    var nNotes = 0;
+    list.forEach(function (a) {
+      if (a.note) nNotes++;
+      var li = document.createElement("li");
+      li.className = "rail-i hl-" + (a.hue || "y") + (a.stale ? " is-stale" : "");
+      li.setAttribute("data-annot-id", a.id);
+
+      var q = document.createElement("blockquote");
+      q.className = "rail-q";
+      q.textContent = a.text.length > 180 ? a.text.slice(0, 180) + "…" : a.text;
+      li.appendChild(q);
+
+      if (a.stale) {
+        var w = document.createElement("p");
+        w.className = "rail-stale";
+        w.textContent = "본문에서 이 구절을 찾지 못했다 — 문서가 바뀐 것 같다. "
+                      + "엉뚱한 곳에 칠하지 않으려고 표시만 남긴다.";
+        li.appendChild(w);
+      }
+
+      var ta = document.createElement("textarea");
+      ta.className = "rail-note";
+      ta.rows = a.note ? 3 : 1;
+      ta.placeholder = "메모…";
+      ta.value = a.note || "";
+      ta.addEventListener("input", function () {
+        var l = load(), t = l.find(function (x) { return x.id === a.id; });
+        if (t) { t.note = ta.value; save(l); }
+        document.getElementById("note-n").textContent =
+          String(l.filter(function (x) { return x.note; }).length);
+      });
+      li.appendChild(ta);
+
+      var foot = document.createElement("div");
+      foot.className = "rail-foot";
+      var when = document.createElement("span");
+      when.className = "rail-when"; when.textContent = a.made || "";
+      foot.appendChild(when);
+      var del = document.createElement("button");
+      del.type = "button"; del.className = "btn btn-xs btn-ghost";
+      del.textContent = "지움";
+      del.addEventListener("click", function () {
+        save(load().filter(function (x) { return x.id !== a.id; }));
+        render();
+      });
+      foot.appendChild(del);
+      li.appendChild(foot);
+
+      li.addEventListener("click", function (e) {
+        if (e.target.tagName === "TEXTAREA" || e.target.tagName === "BUTTON") return;
+        var m = body.querySelector('mark[data-annot-id="' + a.id + '"]');
+        if (m) m.scrollIntoView({ block: "center" });
+      });
+      rail.appendChild(li);
+    });
+
+    document.getElementById("note-n").textContent = String(nNotes);
+    var hint = document.getElementById("annot-hint");
+    if (hint) hint.hidden = list.length > 0;
+  }
+
+  /* ── 선택 도구막대 ──────────────────────────────────────────────────── */
+  function placeBar() {
+    var sel = window.getSelection();
+    if (!sel || sel.isCollapsed || !body.contains(sel.anchorNode)) { bar.hidden = true; return; }
+    var r = sel.getRangeAt(0).getBoundingClientRect();
+    if (!r.width && !r.height) { bar.hidden = true; return; }
+    bar.hidden = false;
+    bar.style.top = (window.scrollY + r.top - bar.offsetHeight - 8) + "px";
+    bar.style.left = (window.scrollX + r.left) + "px";
+  }
+  document.addEventListener("selectionchange", function () { window.setTimeout(placeBar, 0); });
+  document.addEventListener("scroll", function () { if (!bar.hidden) placeBar(); }, true);
+
+  bar.addEventListener("mousedown", function (e) { e.preventDefault(); });
+  bar.addEventListener("click", function (e) {
+    var b = e.target.closest("button"); if (!b) return;
+    if (b.dataset.hl) add(b.dataset.hl, "");
+    else if (b.dataset.act === "note") add("y", "");
+    bar.hidden = true;
+    if (b.dataset.act === "note") {
+      var last = rail.lastElementChild;
+      if (last) { var t = last.querySelector("textarea"); if (t) { t.rows = 3; t.focus(); } }
+    }
+  });
+
+  /* ── 내보내기 — 브라우저에 갇히지 않게 ──────────────────────────────── */
+  var exp = document.getElementById("annot-export");
+  if (exp) exp.addEventListener("click", function () {
+    var list = load();
+    if (!list.length) { alert("이 문서에는 아직 메모·하이라이트가 없다."); return; }
+    var slug = reader.getAttribute("data-annot");
+    var out = ["# 메모 · 하이라이트 — " + slug, "",
+               "이 파일은 **브라우저에 있던 개인 주석**을 내보낸 것이다. 위키의 내용이",
+               "아니며, 인용의 근거가 아니다. 정본은 언제나 저장소의 원문이다.", ""];
+    list.forEach(function (a, i) {
+      out.push("## " + (i + 1) + ". " + (HUES[a.hue] || a.hue)
+               + (a.sec ? "  (절: `#" + a.sec + "`)" : "")
+               + (a.stale ? "  ⚠ 본문에서 못 찾음" : ""));
+      out.push("");
+      a.text.split("\n").forEach(function (l) { out.push("> " + l); });
+      out.push("");
+      if (a.note) { out.push(a.note, ""); }
+      out.push("— " + (a.made || ""), "");
+    });
+    var blob = new Blob([out.join("\n")], { type: "text/markdown;charset=utf-8" });
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement("a");
+    a.href = url; a.download = slug + ".notes.md";
+    document.body.appendChild(a); a.click(); a.remove();
+    window.setTimeout(function () { URL.revokeObjectURL(url); }, 1000);
+  });
+
+  render();
+})();

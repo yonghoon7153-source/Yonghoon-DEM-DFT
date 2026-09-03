@@ -1,4 +1,5 @@
 ---
+title: "Wang et al. 2025 — Interpretable ML for Battery Prognosis (Adv. Energy Mater. 15)"
 source_url: local-upload/Advanced_Energy_Materials_2025_Wang_Interpretable_Machine_Learning_for_Battery_Prognosis.pdf
 ingested: 2026-09-03
 sha256: aa4b36a6005bc5986fe66da9fb4efb277d18dcd697ba2fa89ed6d38a1c648d7d

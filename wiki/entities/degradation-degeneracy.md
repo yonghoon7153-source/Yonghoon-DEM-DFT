@@ -1,6 +1,6 @@
 ---
 title: degradation-degeneracy
-description: "PyBaMM synthetic-truth grid for testing whether the 22p seminar LLI/LAM split is physics or fitting degeneracy"
+description: "22p 세미나의 LLI/LAM 분해가 물리인지 fitting degeneracy 인지, 정답을 아는 PyBaMM 합성 곡선 격자로 판별한다"
 created: 2026-08-11
 updated: 2026-09-03
 type: entity

@@ -1,6 +1,6 @@
 ---
 title: Agent Harness Patterns (채택·각색·기각)
-description: "What we took from ponytail, caveman and superpowers — and what we deliberately did not, with reasons"
+description: "외부 하네스 3종(ponytail·caveman·superpowers)에서 무엇을 채택했고 무엇을 일부러 채택하지 않았는가, 그리고 그 근거"
 created: 2026-08-11
 updated: 2026-08-11
 type: concept

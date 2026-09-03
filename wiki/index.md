@@ -1,14 +1,14 @@
-# Wiki Index
+# 위키 색인
 
-> Content catalog. Every wiki page listed under its type with a one-line summary.
-> Last updated: 2026-09-03 | Total pages: 19
+> 내용 목록. 모든 위키 페이지를 종류별로 한 줄 요약과 함께 싣는다.
+> 마지막 갱신: 2026-09-03 | 전체 페이지: 19
 
-## Entities
+## Entities (satellite 프로젝트)
 
 - [[degradation-degeneracy]] — 22p LLI/LAM 분해가 물리인지 degeneracy 인지 판별하는 PyBaMM 합성 truth 프로젝트 (첫 satellite, 13차 게이트 리뷰 대기).
 - [[mode-observability]] — "관측을 늘리면 갈리는가": PVS·SEV Jacobian 식별 가능성 + ML 라벨 degeneracy 전파 (둘째 satellite, 2026-09-03 개설).
 
-## Concepts
+## Concepts (개념)
 
 - [[fitting-degeneracy]] — full-cell 곡선 하나로 LLI/LAM_PE/LAM_NE 를 가를 수 있는가: flat valley(데이터 한계) vs multimodal(최적화 난이도) 구분.
 - [[provenance-fail-closed-verification]] — 13 라운드 게이트 리뷰에서 증류된 재현성 설계 원칙 7가지 (서명·재계산 렌더·봉인 읽기·fail-closed·신뢰 경계).
@@ -22,21 +22,21 @@
 - [[fused-lasso-feature-design-framework]] — Rhyu 2025 의 자동 feature 설계 7단계: 물리는 후보를 지우고 사후 설명만 하며 feature 형태는 선형대수가 만든다, 그리고 이 계보에서 가장 엄격한 검증 설계(agnostic 기준선 + 프로토콜 group CV).
 - [[dv-peak-heterogeneity-descriptor]] — Kim 2023 의 DV `Peak_S2`: 진폭이 아니라 **ridge 절대 높이**이며(진폭은 valley 노이즈로 폐기), LFP‖Gr 에서의 음극 단일 귀속은 PVS 해석과 충돌하지 않는다 — 좌표를 맞추면 오히려 일치.
 
-## Comparisons
+## Comparisons (비교)
 
-## Guides
+## Guides (절차)
 
 - [[gate-review-loop]] — 비싼 본 실행 전 외부 리뷰어와 도는 적대적 게이트 루프: 수정 → 검증 → push → 대상 커밋 명시 요청문 → GO 후에만 실행.
 - [[new-project-kickoff]] — 새 프로젝트 킥오프 프롬프트: 폴더 세팅 + satellite 등록 표준 절차 (repo-root 상대 경로 `wiki` 적응판).
 - [[paper-ingest-mode]] — 논문 수치·정의를 verbatim atom 으로 분해하는 opt-in ingest 모드 (사용자 승인 필수).
 
-## Questions
+## Questions (열린 질문)
 
 - [[22p-physics-or-degeneracy]] — 핵심 연구 질문 카드 (status: active): 22p 분해는 물리인가 flat-valley 결합의 산물인가.
 - [[pvs-sev-lli-lampe-separability]] — 질문 카드 (status: open): PVS·SEV 두 feature 가 LLI 와 LAM_PE 를 실제로 가르는가, 아니면 같은 대비 하나를 재는가.
 
-## Syntheses
+## Syntheses (종합)
 
-## Queries
+## Queries (질의 기록)
 
 - [[lean-review-backlog]] — 사다리가 찾은 실제 중복 후보와 보류 사유 (리뷰 라운드 중 source_digest 변경 금지).

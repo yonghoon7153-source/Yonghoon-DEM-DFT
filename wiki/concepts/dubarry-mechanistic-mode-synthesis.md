@@ -1,6 +1,6 @@
 ---
 title: Dubarry 정방향 모드 합성 모델 (2012) — α·β 창 좌표계의 출처
-description: "The (LR, OFS) window parameterization and the li/de four-type LAM taxonomy originate here, not in Birkl 2017 — verdict on our code's citation"
+description: "(LR, OFS) 창 파라미터화와 li/de 4분류 LAM 분류법의 출처는 Birkl 2017 이 아니라 여기다 — 우리 코드 주석의 인용 판정"
 created: 2026-09-03
 updated: 2026-09-03
 type: concept

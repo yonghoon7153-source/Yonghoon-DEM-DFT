@@ -1,4 +1,5 @@
 ---
+title: "Rhyu et al. 2025 — 형성 데이터로 cycle life 예측하는 체계적 feature 설계 (Joule 9)"
 source_url: https://doi.org/10.1016/j.joule.2025.101884
 ingested: 2026-09-03
 sha256: 40b19bef75884156b2f075f1a244f48488e63cab2350b34a9daaabada24035d6

@@ -1,4 +1,5 @@
 ---
+title: "Kim et al. 2023 — 흑연 음극 불균일성으로 수명 예측 (ACS Energy Lett. 8)"
 source_url: local-upload/ACS_Energy_Lett_2023_Kim_Lifetime_Prediction_by_Heterogeneity_of_Graphite_Anodes.pdf (+ Supporting Information)
 ingested: 2026-09-03
 sha256: dff0405a16a9b364273e3492bbe18ffd3523b62194b3f9b2ca02fccf92760ff2

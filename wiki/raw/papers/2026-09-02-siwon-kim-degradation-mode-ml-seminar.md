@@ -1,4 +1,5 @@
 ---
+title: "BML 연구세미나 (김시원, 2026-09-02) — 열화 모드 진단 ML 프레임워크"
 source_url: local-upload/2026.09.02 김시원 연구세미나.pdf
 ingested: 2026-09-03
 sha256: a1cc3d4fda037c9bf074777d426a6b3b086832e723765dbd03446da5e2f597c1
