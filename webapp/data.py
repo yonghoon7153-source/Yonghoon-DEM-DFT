@@ -3886,13 +3886,15 @@ def dashboard_highlights() -> list:
 
     hi.append({
         "d": "2026-09-03", "t": "⭐ modelc 갭도 **재현** — 정본 두 값 모두 독립 확인",
-        "v": "**gap 2.0989 eV** (정본 2.099)",
+        "v": "VBM 2.4447 · CBM 4.5436 · **gap 2.0989 eV** (정본 2.099)",
         "n": "fixed-occ nscf 고유값 갭. comp1(08-24, 2.0656 vs 2.066) 에 이어 modelc 도 "
              "소수 넷째 자리에서 일치 ⇒ 정본 `eigenvalue_gaps` 의 **두 기준값이 다 서 있다.**\n"
              "⇒ comp1–modelc Δ = +0.033 eV (\"갭은 Cl/Li-공공 무질서에 둔감\") 이 재현 위에서 성립한다.\n"
-             "⚠ 이 재현은 **갭 한 숫자**만 회수됐다 — VBM/CBM/EF · irr k 수 · 실행 기계는 "
-             "`electronic.json › reproduction_checks` 의 `_missing` 에 적힌 대로 아직 안 들어왔다. "
-             "comp1 이 받은 \"셋업 계보까지 확인\" 판정은 그게 채워진 뒤에 준다.\n"
+             "VBM/CBM 도 정본(2.445 / 4.544)과 넷째 자리에서 맞고 irr k-point **68** 까지 같아 "
+             "comp1 과 **같은 등급** — \"셋업 계보까지 확인\" 이다 (gabia/kserver116-27, "
+             "`gap_nscf/modelc/nscf_gap.out`).\n"
+             "· EF 는 이 재현에 없다: fixed-occ nscf 는 EF 를 안 찍는다 (찍히면 smearing 이란 뜻). "
+             "정본 EF 3.487 은 다른 실행에서 온 값이라 **해당 없음**이지 미재현이 아니다.\n"
              "⛔ 재현은 정본을 **덮어쓰지 않는다** — 인용은 계속 2.066 / 2.099. "
              "b2o3·LPSOCl·Nd 계열은 재현 안 했다 (확인된 적 없음 = 그렇게 말한다).\n"
              "⚠ PBE 자기일관성 확인이지 실험 대조가 아니다."})

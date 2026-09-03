@@ -1,356 +1,367 @@
 {
- "property": "electronic_structure",
- "description": "Band gap, DOS/PDOS, Bader charge analysis",
- "band_gaps": [
-  {
-   "id": "comp1",
-   "gap_eV": 2.28,
-   "vbm": "S 3p",
-   "cbm": "Li 2s, P 3s",
-   "_DEPRECATED": "legacy DOS-threshold 판독. canonical = fixed-occ eigenvalue gap (comp1 2.066 / modelc 2.099). CLAUDE.md: DOS-threshold 판독 금지. comp2~comp5 는 eigenvalue 재계산 미완 — 이 값은 계열 경향용이며 canonical 아님."
+  "property": "electronic_structure",
+  "description": "Band gap, DOS/PDOS, Bader charge analysis",
+  "band_gaps": [
+    {
+      "id": "comp1",
+      "gap_eV": 2.28,
+      "vbm": "S 3p",
+      "cbm": "Li 2s, P 3s",
+      "_DEPRECATED": "legacy DOS-threshold 판독. canonical = fixed-occ eigenvalue gap (comp1 2.066 / modelc 2.099). CLAUDE.md: DOS-threshold 판독 금지. comp2~comp5 는 eigenvalue 재계산 미완 — 이 값은 계열 경향용이며 canonical 아님."
+    },
+    {
+      "id": "comp2",
+      "gap_eV": 2.04,
+      "vbm": "S 3p + Br 4p",
+      "cbm": "Li 2s, P 3s",
+      "_DEPRECATED": "legacy DOS-threshold 판독. canonical = fixed-occ eigenvalue gap (comp1 2.066 / modelc 2.099). CLAUDE.md: DOS-threshold 판독 금지. comp2~comp5 는 eigenvalue 재계산 미완 — 이 값은 계열 경향용이며 canonical 아님."
+    },
+    {
+      "id": "comp3",
+      "gap_eV": 2.1,
+      "vbm": "S 3p + I 5p",
+      "cbm": "Li 2s, P 3s",
+      "_DEPRECATED": "legacy DOS-threshold 판독. canonical = fixed-occ eigenvalue gap (comp1 2.066 / modelc 2.099). CLAUDE.md: DOS-threshold 판독 금지. comp2~comp5 는 eigenvalue 재계산 미완 — 이 값은 계열 경향용이며 canonical 아님."
+    },
+    {
+      "id": "comp4",
+      "gap_eV": 1.96,
+      "vbm": "S 3p + Br 4p",
+      "cbm": "Li 2s, P 3s",
+      "_DEPRECATED": "legacy DOS-threshold 판독. canonical = fixed-occ eigenvalue gap (comp1 2.066 / modelc 2.099). CLAUDE.md: DOS-threshold 판독 금지. comp2~comp5 는 eigenvalue 재계산 미완 — 이 값은 계열 경향용이며 canonical 아님."
+    },
+    {
+      "id": "comp5",
+      "gap_eV": 2.06,
+      "vbm": "S 3p + I 5p",
+      "cbm": "Li 2s, P 3s",
+      "basin": "B",
+      "_DEPRECATED": "legacy DOS-threshold 판독. canonical = fixed-occ eigenvalue gap (comp1 2.066 / modelc 2.099). CLAUDE.md: DOS-threshold 판독 금지. comp2~comp5 는 eigenvalue 재계산 미완 — 이 값은 계열 경향용이며 canonical 아님."
+    },
+    {
+      "id": "comp5_A",
+      "gap_eV": 1.77,
+      "vbm": "S(93%)>Li(5%)>Br(1%)",
+      "cbm": "S(44%)+P(36%)+Li(19%)",
+      "basin": "A",
+      "_DEPRECATED": "legacy DOS-threshold 판독. canonical = fixed-occ eigenvalue gap (comp1 2.066 / modelc 2.099). CLAUDE.md: DOS-threshold 판독 금지. comp2~comp5 는 eigenvalue 재계산 미완 — 이 값은 계열 경향용이며 canonical 아님."
+    },
+    {
+      "id": "comp1_v3",
+      "composition": "Li6PS5Cl",
+      "gap_eV": 1.76,
+      "_DEPRECATED": "canonical = fixed-occ eigenvalue gap (comp1 2.066 / modelc 2.099). CLAUDE.md: DOS-threshold 판독 금지.",
+      "EF_eV_qe": 2.821,
+      "VBM_eV": 2.48,
+      "CBM_eV": 4.24,
+      "VBM_peak_eV": 1.64,
+      "CBM_peak_eV": 5.44,
+      "vbm": "S p (91%) + Li p (6%) + Li s (1%) + Cl p (1%)",
+      "cbm": "S p (42%) + P s (25%) + Li p (14%) + S s (11%) + P p (7%)",
+      "method": "QE7.4.1 (PBE), USPP/RRKJUS, 52/520 Ry, k=6x6x6 SCF on k=4x4x4-relaxed V0, dos.x + projwfc.x, MV smearing. Gap from low-DOS run straddling EF (DOS<0.5).",
+      "kmesh_correction_note": "PROPER k=6x6x6. The earlier gap=1.50 was a k=2x2x1 artifact (k×L=10 Å, 4x too sparse). Correct k-mesh raised gap 1.50 -> 1.76 (+0.26 eV). Geometry barely changed (RMS 0.003 Å between k221 and k444 relax) — the k-mesh contamination was electronic (gap), not geometric.",
+      "data_path": "container:/home/ubuntu/work/runs/comp1_v3/v3_post/k444_props/V0_dos_summary.json",
+      "completed_date": "2026-06-04"
+    },
+    {
+      "id": "modelc_v3",
+      "composition": "Li5.4PS4.4Cl1.6",
+      "gap_eV": 1.82,
+      "_DEPRECATED": "canonical = fixed-occ eigenvalue gap (comp1 2.066 / modelc 2.099). CLAUDE.md: DOS-threshold 판독 금지.",
+      "EF_eV_qe": 2.445,
+      "VBM_eV": 2.72,
+      "CBM_eV": 4.54,
+      "VBM_peak_eV": 1.84,
+      "CBM_peak_eV": 5.72,
+      "vbm": "S p (92%) + Li p (6%) + Cl p (1%) + Li s (1%)",
+      "cbm": "S p (45%) + P s (27%) + Li p (13%) + S s (8%) + P p (5%)",
+      "method": "Same as comp1_v3 (6x6x3, k×L=42 Å, converged). Re-analyzed 2026-06-04 with plot_dos.py; matches original 2026-06-01 (gap 1.80 -> 1.82, within DeltaE grid).",
+      "data_path": "container:/home/ubuntu/work/runs/modelC_v3/V0_dos_summary.json",
+      "completed_date": "2026-06-04"
+    }
+  ],
+  "comparison_comp1_v3_vs_modelc_v3": {
+    "gap_eV_comp1": 1.76,
+    "gap_eV_modelc": 1.82,
+    "delta_gap_eV": -0.06,
+    "_CORRECTION": "Earlier delta_gap=-0.32 was a k-MESH ARTIFACT (comp1 ran at k=2x2x1, gap 1.50). With proper k (comp1 6x6x6, modelc 6x6x3, both converged), comp1=1.76 ≈ modelc=1.82, Δ only -0.06 eV.",
+    "interpretation": "With consistent converged k-meshes, LPSCl and LPSCl1.6 have ESSENTIALLY THE SAME PBE gap (~1.8 eV). The band gap is NOT sensitive to Cl content / Li-vacancy disorder. Orbital character is identical in both (VBM S 3p ~91%, CBM S 3p ~42% + P 3s ~25% + Li 2p ~14%). The earlier apparent 0.32 eV narrowing of comp1 was purely numerical (sparse k).",
+    "EF_note": "comp1 EF=2.821 (in gap, clean insulator). modelc EF=2.445 — modelc has Li-vacancy-related states; its defect-band analysis (db bonds/structural) stands as a real feature of the disordered Li-deficient structure.",
+    "absolute_vs_literature": "Both ~1.76-1.82 eV with USPP-PBE + DOS-threshold method; literature PBE for Li6PS5Cl is ~2.15-2.45 (PAW/band-structure). The ~0.3-0.4 eV offset is method/pseudo + DOS-threshold underestimate; consistent for both systems so the comp1-vs-modelc comparison is valid.",
+    "structural_difference_real": "The genuine comp1-vs-modelc difference is STRUCTURAL not electronic: comp1 (LPSCl) is ordered (all Cl on 4a, single Li environment); modelc (LPSCl1.6) is disordered (Cl on 4a+4d anti-sites, Li vacancies). See bonds.json / structural_analysis."
   },
-  {
-   "id": "comp2",
-   "gap_eV": 2.04,
-   "vbm": "S 3p + Br 4p",
-   "cbm": "Li 2s, P 3s",
-   "_DEPRECATED": "legacy DOS-threshold 판독. canonical = fixed-occ eigenvalue gap (comp1 2.066 / modelc 2.099). CLAUDE.md: DOS-threshold 판독 금지. comp2~comp5 는 eigenvalue 재계산 미완 — 이 값은 계열 경향용이며 canonical 아님."
+  "trends": {
+    "Br_effect": "Br 4p contributes to VBM -> slight gap reduction",
+    "PS4_framework": "Invariant across compositions (P-S covalent bonds unchanged)",
+    "notes": "Mechanical property changes are ionic in origin, not covalent.",
+    "gap_range_SUPERSEDED_DOS_threshold": "1.77-2.28 eV",
+    "gap_range": "legacy DOS-threshold 1.77–2.28 eV (폐기). eigenvalue_gap_range 키 참조 — 두 계열을 섞지 말 것.",
+    "eigenvalue_gap_range": "fixed-occ nscf 고유값 (canonical, 2026-06-16 doping family): comp1 2.066 / modelc 2.099 / +B2O3 1.9671 / LPSOCl 2.2309 eV. comp2~comp5 는 이 레시피로 아직 계산 안 됨."
   },
-  {
-   "id": "comp3",
-   "gap_eV": 2.1,
-   "vbm": "S 3p + I 5p",
-   "cbm": "Li 2s, P 3s",
-   "_DEPRECATED": "legacy DOS-threshold 판독. canonical = fixed-occ eigenvalue gap (comp1 2.066 / modelc 2.099). CLAUDE.md: DOS-threshold 판독 금지. comp2~comp5 는 eigenvalue 재계산 미완 — 이 값은 계열 경향용이며 canonical 아님."
+  "bader": {
+    "key_finding": "|Cl charge| > |Br charge| -> Cl more ionic",
+    "Br_polarizability": "Higher -> less charge transfer -> weaker bonds",
+    "PS4_invariance": "P-S charges constant across compositions",
+    "rhombo_issue": "FFT grid problem in rhombo cells -> use pp.x plot_num=21 (all-electron)"
   },
-  {
-   "id": "comp4",
-   "gap_eV": 1.96,
-   "vbm": "S 3p + Br 4p",
-   "cbm": "Li 2s, P 3s",
-   "_DEPRECATED": "legacy DOS-threshold 판독. canonical = fixed-occ eigenvalue gap (comp1 2.066 / modelc 2.099). CLAUDE.md: DOS-threshold 판독 금지. comp2~comp5 는 eigenvalue 재계산 미완 — 이 값은 계열 경향용이며 canonical 아님."
+  "bader_full_matrix": {
+    "method": "Bader (Henkelman) on QE pp.x charge density (plot_num=0)",
+    "values_per_element": {
+      "comp1_v2": {
+        "Li": 0.877,
+        "P": 4.686,
+        "S": -1.807,
+        "Cl": -0.914
+      },
+      "comp2B_v1": {
+        "Li": 0.873,
+        "Cl": -0.925,
+        "Br": -0.904,
+        "S": -1.843
+      },
+      "comp2_v2": {
+        "Li": 0.876,
+        "P": 4.893,
+        "S": -1.85,
+        "Cl": -0.91,
+        "Br": -0.891,
+        "anneal_champion": true,
+        "structure": "v103 (V0 from BM3 fit)",
+        "completed_date": "2026-04-30"
+      },
+      "comp3_v1": {
+        "Li": 0.88,
+        "Cl": -0.903,
+        "Br": -0.915,
+        "S": -1.76
+      },
+      "comp4_v1": {
+        "Li": 0.853,
+        "Cl": -0.884,
+        "Br": -0.882,
+        "S": -1.551
+      },
+      "comp5_v1": {
+        "Li": 0.879,
+        "Cl": -0.913,
+        "Br": -0.896,
+        "S": -1.752
+      },
+      "modelC_v1": {
+        "Li": 0.857,
+        "P": 4.396,
+        "S": -1.728,
+        "Cl": -0.886
+      },
+      "modelC_v2": {
+        "Li": 0.883,
+        "P": 4.34,
+        "S": -1.736,
+        "Cl": -0.918
+      }
+    },
+    "trends_quantitative": {
+      "Cl_more_ionic_than_Br_pct": {
+        "comp2B_v1": 5.9,
+        "comp2_v2": 2.1,
+        "comp3": -1.3,
+        "comp4": 0.2,
+        "comp5": 1.9,
+        "average_excl_anomaly": 2.5,
+        "anneal_effect": "comp2 v1->v2: Cl/Br gap narrowed 5.9% -> 2.1% (Br ordering improved by anneal)"
+      },
+      "comp3_anomaly": "|q(Br)|=0.915 > |q(Cl)|=0.903 (site disorder effect, expected to normalize on anneal)",
+      "comp4_S_anomaly": "|q(S)|=1.551 vs -1.7 to -1.85 in others (most-mixed Br/Cl environment)",
+      "comp2_v2_P_anomaly_NEW": {
+        "value": 4.893,
+        "vs_comp1_v2": "+0.207 e (Br doping STRENGTHENS PS4 covalent backbone)",
+        "vs_modelC_v2": "+0.553 e (Br + vacancy reverse effects on P)",
+        "interpretation": "Br has DUAL effect on PS4: (1) ionic side - Cl |q| weakens (charge competition), (2) covalent side - P |q| strengthens (lattice expansion + Br polarizability changes local Madelung field). Net mechanical change is partial cancellation (B0 only 0.4 GPa down comp2 vs comp1)."
+      },
+      "P_three_anchor_separation": {
+        "comp1_v2": 4.686,
+        "comp2_v2": 4.893,
+        "modelC_v2": 4.34,
+        "Br_alone_effect": "+0.207 e (Br stiffens PS4)",
+        "vacancy_alone_effect": "-0.346 e (vacancy softens PS4)",
+        "predicted_combined_Li5p4_Br": 4.547,
+        "comparison_to_comp3_5_v1": "comp3-5 v1 P not directly measured (~+4.4 estimated from PS4 invariance)"
+      }
+    },
+    "cross_family_wad_paradox": {
+      "Wad_Li6_avg": 1.2,
+      "Wad_Li5p4_avg": 2.0,
+      "Wad_ratio": 1.67,
+      "Bader_delta_negligible": true,
+      "implication": "Wad enhancement in Li5.4 NOT explained by single-atom Bader charges. Must be collective/surface vacancy mechanism (under-coordinated Li at SE-NCM interface forming 'chemical anchor' bonds beyond bulk Bader description).",
+      "supports_paper_draft_narrative": "vacancy-mediated interfacial anchoring (paper draft v1 confirmed by 3000K control experiment)"
+    },
+    "q1q2_over_r_eV_v1bader": {
+      "comp1_v2": {
+        "Li-Cl": 4.64,
+        "Li-S": 9.13,
+        "P-S": 59.0
+      },
+      "comp2B_v1": {
+        "Li-Cl": 4.45,
+        "Li-Br": 4.19,
+        "Li-S": 9.4
+      },
+      "comp2_v2": {
+        "Li-Cl": 4.69,
+        "Li-Br": 4.46,
+        "Li-S": 9.31,
+        "P-S": 63.3,
+        "P-S_vs_comp1_v2": "+7.3% (Br stiffens PS4)",
+        "P-S_vs_modelC_v2": "+20.2% (Br + no-vacancy)"
+      },
+      "comp3_v1": {
+        "Li-Cl": 4.56,
+        "Li-Br": 4.22,
+        "Li-S": 8.86
+      },
+      "comp4_v1": {
+        "Li-Cl": 4.32,
+        "Li-Br": 4.0,
+        "Li-S": 7.57
+      },
+      "comp5_v1": {
+        "Li-Cl": 4.69,
+        "Li-Br": 4.16,
+        "Li-S": 8.99
+      },
+      "modelC_v2": {
+        "Li-Cl": 4.55,
+        "Li-S": 8.65,
+        "P-S": 52.5
+      }
+    }
   },
-  {
-   "id": "comp5",
-   "gap_eV": 2.06,
-   "vbm": "S 3p + I 5p",
-   "cbm": "Li 2s, P 3s",
-   "basin": "B",
-   "_DEPRECATED": "legacy DOS-threshold 판독. canonical = fixed-occ eigenvalue gap (comp1 2.066 / modelc 2.099). CLAUDE.md: DOS-threshold 판독 금지. comp2~comp5 는 eigenvalue 재계산 미완 — 이 값은 계열 경향용이며 canonical 아님."
+  "elf_comparison_v3": {
+    "_method": "ONCV NC pseudo, ecutwfc 80 / ecutrho 320 Ry, pp.x plot_num=8 -> V0_ELF.cube; metrics sampled directly from cube (min-image, Bohr).",
+    "_cube_files": {
+      "comp1": "container:/home/ubuntu/work/runs/comp1_v3/v3_post/k444_props/elf/V0_ELF.cube",
+      "modelc": "container:/home/ubuntu/work/runs/modelC_v3/V0_ELF.cube"
+    },
+    "_figures": "ELF_{comp1,modelC}_{Pz,xy_mid,iso}.png in the cube dirs (slice + 3D iso 0.85). plot tools: tools/modelc_v3/plot_elf_{slice,3d_iso}.py (--label).",
+    "P_S_bridge_ELF": {
+      "comp1_v3": 0.946,
+      "modelc_v3": 0.944,
+      "definition": "ELF at P-S bond midpoint (covalency probe; nuclei avoided)",
+      "note": "~0.94-0.95 both -> strong covalent P-S; IDENTICAL within noise (d=0.002) -> PS4 framework covalency UNCHANGED by Cl-enrichment/vacancy. Consistent with ICOHP(P-S) -5.94 vs -6.0."
+    },
+    "Li_basin_min_ELF": {
+      "comp1_v3": 0.072,
+      "modelc_v3": 0.065,
+      "single_min": {
+        "comp1": 0.07,
+        "modelc": 0.042
+      },
+      "definition": "minimum ELF along Li->nearest-anion line (ionic depletion basin floor; midpoint/at-nucleus sampling fail -> core/anion-shell artifacts)",
+      "note": "~0.07 both, very low -> Li+ ionic (valence donated, no covalent bridge). modelc slightly LOWER (0.065; single-min 0.042) = marginally more depleted/ionic Li, the ELF signature of the disordered vacancy-rich Li sublattice."
+    },
+    "interpretation": "ELF closes the bond->Bader->COHP->ELF chain: covalent P-S (0.94) vs ionic Li (0.07) = ~13x contrast. The covalent PS4 backbone is preserved across BOTH systems (d ELF ~0.002); the only ELF difference from LPSCl1.6's Cl-enrichment+vacancy is a slightly deeper Li depletion basin (disorder). => structural / Li-sublattice difference, NOT framework-electronic. Same conclusion as bond-length (2.07/2.06), Bader PS4 (-2.8/-2.6), ICOHP (-5.9/-6.0).",
+    "status": "FILLED 2026-06-08 (was 'analysis pending' in kb/results/lpscl_vs_lpscl16_v3_comparison.md SII.7)"
   },
-  {
-   "id": "comp5_A",
-   "gap_eV": 1.77,
-   "vbm": "S(93%)>Li(5%)>Br(1%)",
-   "cbm": "S(44%)+P(36%)+Li(19%)",
-   "basin": "A",
-   "_DEPRECATED": "legacy DOS-threshold 판독. canonical = fixed-occ eigenvalue gap (comp1 2.066 / modelc 2.099). CLAUDE.md: DOS-threshold 판독 금지. comp2~comp5 는 eigenvalue 재계산 미완 — 이 값은 계열 경향용이며 canonical 아님."
+  "eigenvalue_gaps_v100_2026_06_16": {
+    "_method": "QE 7.4.1 GPU (V100, NVHPC 24.11 / CUDA 12.6) eigenvalue band gap = CBM(min eig > EF) - VBM(max eig <= EF), literature convention, smearing-independent. Supersedes the DOS-threshold gaps (1.76/1.82) which underestimate ~0.3 eV from MV-smearing tails leaking into the gap.",
+    "comp1": {
+      "gap_eV": 2.066,
+      "VBM_eV": 2.128,
+      "CBM_eV": 4.194,
+      "EF_eV": 3.724,
+      "kpts": "170 irr (k888 nscf)",
+      "N_EF": 0.0,
+      "note": "clean insulator, EF in gap"
+    },
+    "modelc": {
+      "gap_eV": 2.099,
+      "VBM_eV": 2.445,
+      "CBM_eV": 4.544,
+      "EF_eV": 3.487,
+      "kpts": "68 irr",
+      "N_EF": 0.0,
+      "note": "clean insulator, EF in gap"
+    },
+    "b2o3": {
+      "gap_eV": 1.9671,
+      "VBM_eV": 2.4717,
+      "CBM_eV": 4.4388,
+      "kpts": "25 irr (fixed-occ nscf)",
+      "cell": "128-atom B2O3-doped modelc champion (Li58 P8 S41 Cl16 B2 O3)",
+      "N_EF": 0.0,
+      "note": "CONFIRMED 2026-07-16 from KISTI backup b2o3_eos/b2o3_nscf_gap.out ('highest occupied, lowest unoccupied: 2.4717 4.4388'; scf_fixed agrees on VBM). The June slide gap 1.97 was ALREADY this eigenvalue value - never a DOS-threshold number. Gap, VBM-edge %(89.5 S) and N_EF=0 stand as-is; site mean-3p values were RE-DERIVED on the -8..0 eV window (see b2o3_dos_gap.json) because the June full-range PS4-S/Cl means (-5.37/-5.25) carried deep-band weight below -8 eV."
+    },
+    "comp1_vs_modelc": "2.066 vs 2.099, delta +0.033 eV -> band gap INSENSITIVE to Cl/Li-vacancy disorder (eigenvalue confirms DOS-threshold trend, delta even smaller). Backup lobster_nscf cross-check: comp1 2.075 / modelc 2.098.",
+    "modelc_defect_band_CORRECTION": "The earlier 'modelc defect band / EF<VBM' (EF_note above) was a DOS-THRESHOLD ARTIFACT. Fresh eigenvalue AND the DOS curve both show modelc CLEAN: N(EF)=0, no mid-gap states, EF mid-gap (2.10 eV gap). comp1 and modelc are BOTH clean insulators.",
+    "U0_matched_undoped": {
+      "gap_eV": 2.184,
+      "VBM_eV": 2.401,
+      "CBM_eV": 4.585,
+      "EF_eV": 3.658,
+      "cell": "120-atom",
+      "kpts": "k661",
+      "note": "undoped modelc in SAME cell/k as Nd-doped = matched baseline for Nd narrowing; also clean (EF mid-gap)"
+    },
+    "Nd2O3_doped": {
+      "gap_eV": 1.632,
+      "VBM_eV": 3.081,
+      "CBM_eV": 4.712,
+      "EF_eV": 3.879,
+      "cell": "120-atom",
+      "kpts": "k661",
+      "method": "DFT+U(Nd 4f, U=8 eV) + nspin2 AFM"
+    },
+    "Nd_narrowing": "MATCHED: U0 2.184 - Nd 1.632 = 0.55 eV REAL narrowing (same 120-atom/k661, cancels cell/k/method). 62-atom modelc baseline (2.099) gives 0.47; the 0.08 difference is cell+k convergence.",
+    "Nd_narrowing_mechanism": "Host-band shift, NOT a dopant level in the gap. PDOS: VBM = S 3p (host); CBM = PS4-derived S/P/Li (host). O 2p deep (~ -4 eV, not at VBM); Nd 4f out of gap (filled -7.4, empty +1.9); Nd 5d/6s just above CBM (not defining it). Driver: Nd3+/Li-vacancy DOMINATES (Nd 5d/6s + aliovalent electrostatics pull the PS4-derived CBM down). O speciation VERIFIED in relaxed 120-atom cell = 1 PS2O2 (P24: O29+O34) + 1 PS3O (P25: O40) + 8 pristine PS4; O 2p bonding deep (~-4 eV) and P-O antibonding pushed UP, so the oxidized tetrahedra move their frontier states AWAY from both gap edges -> the gap is set by pristine PS4 (VBM free/non-bonding S 3p, CBM PS4 antibonding) + Nd. Net narrowing is Nd-driven, NOT O; pure-O doping (no Nd) is expected to widen/leave gap unchanged (textbook), so the sign flip vs the O-doping literature is due to the Nd co-dopant. Both doped & undoped stay clean (N(EF)=0).",
+    "electron_conductivity_implication": "RECONCILED 2026-06-17 (interpretation; not a direct GB calc). EXPERIMENT (PI): electronic conductivity by DC POLARIZATION (= TOTAL/EFFECTIVE, percolation through grain interiors + grain boundaries + interphase, NOT pure grain-interior) DECREASES with Nd2O3 doping; cycle performance IMPROVES. DFT: all clean (N(EF)=0); bulk gap NARROWS 0.55 eV (2.184->1.632, Nd 5d) -> grain-INTERIOR intrinsic e- conduction would if anything INCREASE. NO conflict: DC-polarization is PERCOLATION-limited, so the O-derived wide-gap phosphate/oxide phases (Li3PO4 5.73 / NdPO4 5.55 / Li2O 5.24 eV; grand-potential run_nd_sei.sh; form ONLY with O) at grain boundaries/interfaces interrupt the electronic network -> effective sigma_e DOWN. The measured drop is therefore an INTERPHASE/microstructure effect, NOT a bulk-gap effect (the bulk gap goes the other way -> a naive 'wider gap lowers e-conduction' reading is WRONG here). Cycle improvement follows: lower electronic leakage (dendrite/self-discharge suppression, Han 2019) + stable phosphate/oxide interphase (cathode passivation + Li2O anode SEI). CAVEATS: interphase mechanism inferred from SEI products + the bulk-goes-wrong-way logic (direct GB electronic conductivity NOT computed); bulk-gap-narrowing absolute is 4f-U sensitive (trend robust). This is the paper's central mechanistic result.",
+    "work_function": "Slab WF (V100 (100)/(001) slabs) ABANDONED: asymmetric slabs -> net dipole -> vacuum potential ramps (no flat plateau) -> spurious WF 6.5-7.2 eV. For absolute band-edge alignment use literature WF (Braga 2026, argyrodite (100) = 3.40 eV) + our bulk edges (comp1~modelc edges ~identical).",
+    "figures": "docs/figures/dos_compare_3.png (comp1/modelc/Nd); docs/figures/nd_dos/nd_dos_pdos_v2.png; data: comp1_pdos_compact.csv, modelc_pdos_compact.csv, nd_dos/nd_pdos_compact.csv; tools: tools/figures/plot_3dos.py, plot_nd_dos_v2.py",
+    "doping_family_2026_07_16": "Same eigenvalue recipe across the family: comp1 2.066 | modelc 2.099 | +B2O3 1.9671 (-0.132 vs modelc, slight NARROWING; VBM still S-3p 89.5%, B 2p sparse/buried, free-S shallowest mean-3p -1.14 (-8..0 eV window = the figure window; the -1.18 quoted earlier was the superseded June full-projwfc-range value)) | +O LPSOCl 2.2309 (+0.132 vs modelc, WIDENING; O 2p buried, S-3p VBM). Both dopants keep clean insulators with host-like band edges; opposite ~0.13 eV shifts. Cells/k differ (b2o3 128at/25irr, LPSOCl 62at/68irr) but method identical; comp1 lobster cross-check puts method scatter ~0.01-0.03 eV."
   },
-  {
-   "id": "comp1_v3",
-   "composition": "Li6PS5Cl",
-   "gap_eV": 1.76,
-   "_DEPRECATED": "canonical = fixed-occ eigenvalue gap (comp1 2.066 / modelc 2.099). CLAUDE.md: DOS-threshold 판독 금지.",
-   "EF_eV_qe": 2.821,
-   "VBM_eV": 2.48,
-   "CBM_eV": 4.24,
-   "VBM_peak_eV": 1.64,
-   "CBM_peak_eV": 5.44,
-   "vbm": "S p (91%) + Li p (6%) + Li s (1%) + Cl p (1%)",
-   "cbm": "S p (42%) + P s (25%) + Li p (14%) + S s (11%) + P p (7%)",
-   "method": "QE7.4.1 (PBE), USPP/RRKJUS, 52/520 Ry, k=6x6x6 SCF on k=4x4x4-relaxed V0, dos.x + projwfc.x, MV smearing. Gap from low-DOS run straddling EF (DOS<0.5).",
-   "kmesh_correction_note": "PROPER k=6x6x6. The earlier gap=1.50 was a k=2x2x1 artifact (k×L=10 Å, 4x too sparse). Correct k-mesh raised gap 1.50 -> 1.76 (+0.26 eV). Geometry barely changed (RMS 0.003 Å between k221 and k444 relax) — the k-mesh contamination was electronic (gap), not geometric.",
-   "data_path": "container:/home/ubuntu/work/runs/comp1_v3/v3_post/k444_props/V0_dos_summary.json",
-   "completed_date": "2026-06-04"
+  "_provenance_audit": {
+    "audited": "2026-08-12",
+    "audited_by": "db provenance sweep (tools/db/validate_canonical.py --cited 로 대상 선정)",
+    "generator": "(없음 — 손으로 누적한 정본 레저)",
+    "source": "container:/home/ubuntu/work/runs/comp1_v3/v3_post/k444_props/ · container:/home/ubuntu/work/runs/modelC_v3/ · KISTI backup b2o3_eos/",
+    "collected": "2026-06-11",
+    "confidence": "high",
+    "note": "블록마다 provenance 가 다르다(갭 2026-06-16 · ELF 2026-06-08 · Bader 2026-04-30). ⚠ container 경로는 사라졌다",
+    "caveat": "이 블록은 **사후 추적** 결과다. 원본 계산 시점에 기록된 것이 아니라 repo·git·파일 내용에서 역추적했다. confidence 를 같이 보라."
   },
-  {
-   "id": "modelc_v3",
-   "composition": "Li5.4PS4.4Cl1.6",
-   "gap_eV": 1.82,
-   "_DEPRECATED": "canonical = fixed-occ eigenvalue gap (comp1 2.066 / modelc 2.099). CLAUDE.md: DOS-threshold 판독 금지.",
-   "EF_eV_qe": 2.445,
-   "VBM_eV": 2.72,
-   "CBM_eV": 4.54,
-   "VBM_peak_eV": 1.84,
-   "CBM_peak_eV": 5.72,
-   "vbm": "S p (92%) + Li p (6%) + Cl p (1%) + Li s (1%)",
-   "cbm": "S p (45%) + P s (27%) + Li p (13%) + S s (8%) + P p (5%)",
-   "method": "Same as comp1_v3 (6x6x3, k×L=42 Å, converged). Re-analyzed 2026-06-04 with plot_dos.py; matches original 2026-06-01 (gap 1.80 -> 1.82, within DeltaE grid).",
-   "data_path": "container:/home/ubuntu/work/runs/modelC_v3/V0_dos_summary.json",
-   "completed_date": "2026-06-04"
+  "reproduction_checks": {
+    "_what": "정본 고유값 갭(eigenvalue_gaps_v100_2026_06_16)을 **다른 시점·다른 기계**에서 다시 계산해 맞는지 본 기록.",
+    "_rule": "재현값은 정본을 **덮어쓰지 않는다.** 정본 옆에 붙는 독립 확인이고, 불일치가 났을 때만 정본을 다시 연다. 인용은 계속 정본 숫자로 한다.",
+    "_why": "_provenance_audit 가 적어 둔 대로 원본 계산의 container 경로가 사라졌다. 그래서 정본 숫자는 있는데 **그 숫자를 낳은 실행이 없는** 상태였다. 재현은 그 구멍을 값의 재확인과 함께 닫는다.",
+    "_method_must_match": "fixed-occupations nscf 의 VBM/CBM 고유값. DOS-threshold 판독은 재현으로 치지 않는다 (~0.3 eV 과소 — CLAUDE.md).",
+    "comp1_2026_08_24": {
+      "gap_eV": 2.0656,
+      "VBM_eV": 2.1281,
+      "CBM_eV": 4.1937,
+      "canonical_gap_eV": 2.066,
+      "delta_eV": 0.0004,
+      "kpts": "170 irr — 정본 기록과 같다",
+      "verdict": "일치 (소수 넷째 자리). irr k-point 수까지 같아 셋업 계보도 확인됨."
+    },
+    "modelc_2026_09_03": {
+      "gap_eV": 2.0989,
+      "VBM_eV": 2.4447,
+      "CBM_eV": 4.5436,
+      "canonical_gap_eV": 2.099,
+      "canonical_VBM_eV": 2.445,
+      "canonical_CBM_eV": 4.544,
+      "delta_eV": 0.0001,
+      "delta_VBM_eV": 0.0003,
+      "delta_CBM_eV": 0.0004,
+      "kpts": "68 irr — 정본 기록('68 irr')과 같다",
+      "machine": "gabia / kserver116-27 (A6000, QE-GPU)",
+      "run_file": "/data/work/runs/gap_nscf/modelc/nscf_gap.out",
+      "occupations": "fixed — QE 가 'highest occupied, lowest unoccupied level' 을 찍었다는 것 자체가 fixed-occ 증거다 (smearing 이면 'the Fermi energy is' 가 나온다).",
+      "EF_eV": null,
+      "_EF_note": "fixed-occ nscf 는 EF 를 찍지 않는다. 정본의 EF_eV 3.487 은 다른 실행(smearing)에서 온 값이라 이 재현으로는 확인 대상이 아니다 — 재현 안 됨이 아니라 **해당 없음**.",
+      "verdict": "일치 (VBM·CBM 소수 넷째 자리, 갭 0.0001 eV). irr k-point 수(68)까지 같아 셋업 계보도 확인됨 — comp1 2026-08-24 과 같은 등급."
+    },
+    "_not_covered": "b2o3(1.9671) · LPSOCl(2.2309) · U0_matched(2.184) · Nd2O3_doped(1.632) 는 재현 안 했다. 이 블록에 없는 항목은 확인된 적이 없다는 뜻이다.",
+    "_pbe_caveat": "재현은 **우리 계산의 자기일관성**만 보인다. PBE 갭은 넓은 갭 절연체에서 30–50 % 과소평가하므로 실험값과 나란히 놓지 않는다."
   }
- ],
- "comparison_comp1_v3_vs_modelc_v3": {
-  "gap_eV_comp1": 1.76,
-  "gap_eV_modelc": 1.82,
-  "delta_gap_eV": -0.06,
-  "_CORRECTION": "Earlier delta_gap=-0.32 was a k-MESH ARTIFACT (comp1 ran at k=2x2x1, gap 1.50). With proper k (comp1 6x6x6, modelc 6x6x3, both converged), comp1=1.76 ≈ modelc=1.82, Δ only -0.06 eV.",
-  "interpretation": "With consistent converged k-meshes, LPSCl and LPSCl1.6 have ESSENTIALLY THE SAME PBE gap (~1.8 eV). The band gap is NOT sensitive to Cl content / Li-vacancy disorder. Orbital character is identical in both (VBM S 3p ~91%, CBM S 3p ~42% + P 3s ~25% + Li 2p ~14%). The earlier apparent 0.32 eV narrowing of comp1 was purely numerical (sparse k).",
-  "EF_note": "comp1 EF=2.821 (in gap, clean insulator). modelc EF=2.445 — modelc has Li-vacancy-related states; its defect-band analysis (db bonds/structural) stands as a real feature of the disordered Li-deficient structure.",
-  "absolute_vs_literature": "Both ~1.76-1.82 eV with USPP-PBE + DOS-threshold method; literature PBE for Li6PS5Cl is ~2.15-2.45 (PAW/band-structure). The ~0.3-0.4 eV offset is method/pseudo + DOS-threshold underestimate; consistent for both systems so the comp1-vs-modelc comparison is valid.",
-  "structural_difference_real": "The genuine comp1-vs-modelc difference is STRUCTURAL not electronic: comp1 (LPSCl) is ordered (all Cl on 4a, single Li environment); modelc (LPSCl1.6) is disordered (Cl on 4a+4d anti-sites, Li vacancies). See bonds.json / structural_analysis."
- },
- "trends": {
-  "Br_effect": "Br 4p contributes to VBM -> slight gap reduction",
-  "PS4_framework": "Invariant across compositions (P-S covalent bonds unchanged)",
-  "notes": "Mechanical property changes are ionic in origin, not covalent.",
-  "gap_range_SUPERSEDED_DOS_threshold": "1.77-2.28 eV",
-  "gap_range": "legacy DOS-threshold 1.77–2.28 eV (폐기). eigenvalue_gap_range 키 참조 — 두 계열을 섞지 말 것.",
-  "eigenvalue_gap_range": "fixed-occ nscf 고유값 (canonical, 2026-06-16 doping family): comp1 2.066 / modelc 2.099 / +B2O3 1.9671 / LPSOCl 2.2309 eV. comp2~comp5 는 이 레시피로 아직 계산 안 됨."
- },
- "bader": {
-  "key_finding": "|Cl charge| > |Br charge| -> Cl more ionic",
-  "Br_polarizability": "Higher -> less charge transfer -> weaker bonds",
-  "PS4_invariance": "P-S charges constant across compositions",
-  "rhombo_issue": "FFT grid problem in rhombo cells -> use pp.x plot_num=21 (all-electron)"
- },
- "bader_full_matrix": {
-  "method": "Bader (Henkelman) on QE pp.x charge density (plot_num=0)",
-  "values_per_element": {
-   "comp1_v2": {
-    "Li": 0.877,
-    "P": 4.686,
-    "S": -1.807,
-    "Cl": -0.914
-   },
-   "comp2B_v1": {
-    "Li": 0.873,
-    "Cl": -0.925,
-    "Br": -0.904,
-    "S": -1.843
-   },
-   "comp2_v2": {
-    "Li": 0.876,
-    "P": 4.893,
-    "S": -1.85,
-    "Cl": -0.91,
-    "Br": -0.891,
-    "anneal_champion": true,
-    "structure": "v103 (V0 from BM3 fit)",
-    "completed_date": "2026-04-30"
-   },
-   "comp3_v1": {
-    "Li": 0.88,
-    "Cl": -0.903,
-    "Br": -0.915,
-    "S": -1.76
-   },
-   "comp4_v1": {
-    "Li": 0.853,
-    "Cl": -0.884,
-    "Br": -0.882,
-    "S": -1.551
-   },
-   "comp5_v1": {
-    "Li": 0.879,
-    "Cl": -0.913,
-    "Br": -0.896,
-    "S": -1.752
-   },
-   "modelC_v1": {
-    "Li": 0.857,
-    "P": 4.396,
-    "S": -1.728,
-    "Cl": -0.886
-   },
-   "modelC_v2": {
-    "Li": 0.883,
-    "P": 4.34,
-    "S": -1.736,
-    "Cl": -0.918
-   }
-  },
-  "trends_quantitative": {
-   "Cl_more_ionic_than_Br_pct": {
-    "comp2B_v1": 5.9,
-    "comp2_v2": 2.1,
-    "comp3": -1.3,
-    "comp4": 0.2,
-    "comp5": 1.9,
-    "average_excl_anomaly": 2.5,
-    "anneal_effect": "comp2 v1->v2: Cl/Br gap narrowed 5.9% -> 2.1% (Br ordering improved by anneal)"
-   },
-   "comp3_anomaly": "|q(Br)|=0.915 > |q(Cl)|=0.903 (site disorder effect, expected to normalize on anneal)",
-   "comp4_S_anomaly": "|q(S)|=1.551 vs -1.7 to -1.85 in others (most-mixed Br/Cl environment)",
-   "comp2_v2_P_anomaly_NEW": {
-    "value": 4.893,
-    "vs_comp1_v2": "+0.207 e (Br doping STRENGTHENS PS4 covalent backbone)",
-    "vs_modelC_v2": "+0.553 e (Br + vacancy reverse effects on P)",
-    "interpretation": "Br has DUAL effect on PS4: (1) ionic side - Cl |q| weakens (charge competition), (2) covalent side - P |q| strengthens (lattice expansion + Br polarizability changes local Madelung field). Net mechanical change is partial cancellation (B0 only 0.4 GPa down comp2 vs comp1)."
-   },
-   "P_three_anchor_separation": {
-    "comp1_v2": 4.686,
-    "comp2_v2": 4.893,
-    "modelC_v2": 4.34,
-    "Br_alone_effect": "+0.207 e (Br stiffens PS4)",
-    "vacancy_alone_effect": "-0.346 e (vacancy softens PS4)",
-    "predicted_combined_Li5p4_Br": 4.547,
-    "comparison_to_comp3_5_v1": "comp3-5 v1 P not directly measured (~+4.4 estimated from PS4 invariance)"
-   }
-  },
-  "cross_family_wad_paradox": {
-   "Wad_Li6_avg": 1.2,
-   "Wad_Li5p4_avg": 2.0,
-   "Wad_ratio": 1.67,
-   "Bader_delta_negligible": true,
-   "implication": "Wad enhancement in Li5.4 NOT explained by single-atom Bader charges. Must be collective/surface vacancy mechanism (under-coordinated Li at SE-NCM interface forming 'chemical anchor' bonds beyond bulk Bader description).",
-   "supports_paper_draft_narrative": "vacancy-mediated interfacial anchoring (paper draft v1 confirmed by 3000K control experiment)"
-  },
-  "q1q2_over_r_eV_v1bader": {
-   "comp1_v2": {
-    "Li-Cl": 4.64,
-    "Li-S": 9.13,
-    "P-S": 59.0
-   },
-   "comp2B_v1": {
-    "Li-Cl": 4.45,
-    "Li-Br": 4.19,
-    "Li-S": 9.4
-   },
-   "comp2_v2": {
-    "Li-Cl": 4.69,
-    "Li-Br": 4.46,
-    "Li-S": 9.31,
-    "P-S": 63.3,
-    "P-S_vs_comp1_v2": "+7.3% (Br stiffens PS4)",
-    "P-S_vs_modelC_v2": "+20.2% (Br + no-vacancy)"
-   },
-   "comp3_v1": {
-    "Li-Cl": 4.56,
-    "Li-Br": 4.22,
-    "Li-S": 8.86
-   },
-   "comp4_v1": {
-    "Li-Cl": 4.32,
-    "Li-Br": 4.0,
-    "Li-S": 7.57
-   },
-   "comp5_v1": {
-    "Li-Cl": 4.69,
-    "Li-Br": 4.16,
-    "Li-S": 8.99
-   },
-   "modelC_v2": {
-    "Li-Cl": 4.55,
-    "Li-S": 8.65,
-    "P-S": 52.5
-   }
-  }
- },
- "elf_comparison_v3": {
-  "_method": "ONCV NC pseudo, ecutwfc 80 / ecutrho 320 Ry, pp.x plot_num=8 -> V0_ELF.cube; metrics sampled directly from cube (min-image, Bohr).",
-  "_cube_files": {
-   "comp1": "container:/home/ubuntu/work/runs/comp1_v3/v3_post/k444_props/elf/V0_ELF.cube",
-   "modelc": "container:/home/ubuntu/work/runs/modelC_v3/V0_ELF.cube"
-  },
-  "_figures": "ELF_{comp1,modelC}_{Pz,xy_mid,iso}.png in the cube dirs (slice + 3D iso 0.85). plot tools: tools/modelc_v3/plot_elf_{slice,3d_iso}.py (--label).",
-  "P_S_bridge_ELF": {
-   "comp1_v3": 0.946,
-   "modelc_v3": 0.944,
-   "definition": "ELF at P-S bond midpoint (covalency probe; nuclei avoided)",
-   "note": "~0.94-0.95 both -> strong covalent P-S; IDENTICAL within noise (d=0.002) -> PS4 framework covalency UNCHANGED by Cl-enrichment/vacancy. Consistent with ICOHP(P-S) -5.94 vs -6.0."
-  },
-  "Li_basin_min_ELF": {
-   "comp1_v3": 0.072,
-   "modelc_v3": 0.065,
-   "single_min": {
-    "comp1": 0.07,
-    "modelc": 0.042
-   },
-   "definition": "minimum ELF along Li->nearest-anion line (ionic depletion basin floor; midpoint/at-nucleus sampling fail -> core/anion-shell artifacts)",
-   "note": "~0.07 both, very low -> Li+ ionic (valence donated, no covalent bridge). modelc slightly LOWER (0.065; single-min 0.042) = marginally more depleted/ionic Li, the ELF signature of the disordered vacancy-rich Li sublattice."
-  },
-  "interpretation": "ELF closes the bond->Bader->COHP->ELF chain: covalent P-S (0.94) vs ionic Li (0.07) = ~13x contrast. The covalent PS4 backbone is preserved across BOTH systems (d ELF ~0.002); the only ELF difference from LPSCl1.6's Cl-enrichment+vacancy is a slightly deeper Li depletion basin (disorder). => structural / Li-sublattice difference, NOT framework-electronic. Same conclusion as bond-length (2.07/2.06), Bader PS4 (-2.8/-2.6), ICOHP (-5.9/-6.0).",
-  "status": "FILLED 2026-06-08 (was 'analysis pending' in kb/results/lpscl_vs_lpscl16_v3_comparison.md SII.7)"
- },
- "eigenvalue_gaps_v100_2026_06_16": {
-  "_method": "QE 7.4.1 GPU (V100, NVHPC 24.11 / CUDA 12.6) eigenvalue band gap = CBM(min eig > EF) - VBM(max eig <= EF), literature convention, smearing-independent. Supersedes the DOS-threshold gaps (1.76/1.82) which underestimate ~0.3 eV from MV-smearing tails leaking into the gap.",
-  "comp1": {
-   "gap_eV": 2.066,
-   "VBM_eV": 2.128,
-   "CBM_eV": 4.194,
-   "EF_eV": 3.724,
-   "kpts": "170 irr (k888 nscf)",
-   "N_EF": 0.0,
-   "note": "clean insulator, EF in gap"
-  },
-  "modelc": {
-   "gap_eV": 2.099,
-   "VBM_eV": 2.445,
-   "CBM_eV": 4.544,
-   "EF_eV": 3.487,
-   "kpts": "68 irr",
-   "N_EF": 0.0,
-   "note": "clean insulator, EF in gap"
-  },
-  "b2o3": {
-   "gap_eV": 1.9671,
-   "VBM_eV": 2.4717,
-   "CBM_eV": 4.4388,
-   "kpts": "25 irr (fixed-occ nscf)",
-   "cell": "128-atom B2O3-doped modelc champion (Li58 P8 S41 Cl16 B2 O3)",
-   "N_EF": 0.0,
-   "note": "CONFIRMED 2026-07-16 from KISTI backup b2o3_eos/b2o3_nscf_gap.out ('highest occupied, lowest unoccupied: 2.4717 4.4388'; scf_fixed agrees on VBM). The June slide gap 1.97 was ALREADY this eigenvalue value - never a DOS-threshold number. Gap, VBM-edge %(89.5 S) and N_EF=0 stand as-is; site mean-3p values were RE-DERIVED on the -8..0 eV window (see b2o3_dos_gap.json) because the June full-range PS4-S/Cl means (-5.37/-5.25) carried deep-band weight below -8 eV."
-  },
-  "comp1_vs_modelc": "2.066 vs 2.099, delta +0.033 eV -> band gap INSENSITIVE to Cl/Li-vacancy disorder (eigenvalue confirms DOS-threshold trend, delta even smaller). Backup lobster_nscf cross-check: comp1 2.075 / modelc 2.098.",
-  "modelc_defect_band_CORRECTION": "The earlier 'modelc defect band / EF<VBM' (EF_note above) was a DOS-THRESHOLD ARTIFACT. Fresh eigenvalue AND the DOS curve both show modelc CLEAN: N(EF)=0, no mid-gap states, EF mid-gap (2.10 eV gap). comp1 and modelc are BOTH clean insulators.",
-  "U0_matched_undoped": {
-   "gap_eV": 2.184,
-   "VBM_eV": 2.401,
-   "CBM_eV": 4.585,
-   "EF_eV": 3.658,
-   "cell": "120-atom",
-   "kpts": "k661",
-   "note": "undoped modelc in SAME cell/k as Nd-doped = matched baseline for Nd narrowing; also clean (EF mid-gap)"
-  },
-  "Nd2O3_doped": {
-   "gap_eV": 1.632,
-   "VBM_eV": 3.081,
-   "CBM_eV": 4.712,
-   "EF_eV": 3.879,
-   "cell": "120-atom",
-   "kpts": "k661",
-   "method": "DFT+U(Nd 4f, U=8 eV) + nspin2 AFM"
-  },
-  "Nd_narrowing": "MATCHED: U0 2.184 - Nd 1.632 = 0.55 eV REAL narrowing (same 120-atom/k661, cancels cell/k/method). 62-atom modelc baseline (2.099) gives 0.47; the 0.08 difference is cell+k convergence.",
-  "Nd_narrowing_mechanism": "Host-band shift, NOT a dopant level in the gap. PDOS: VBM = S 3p (host); CBM = PS4-derived S/P/Li (host). O 2p deep (~ -4 eV, not at VBM); Nd 4f out of gap (filled -7.4, empty +1.9); Nd 5d/6s just above CBM (not defining it). Driver: Nd3+/Li-vacancy DOMINATES (Nd 5d/6s + aliovalent electrostatics pull the PS4-derived CBM down). O speciation VERIFIED in relaxed 120-atom cell = 1 PS2O2 (P24: O29+O34) + 1 PS3O (P25: O40) + 8 pristine PS4; O 2p bonding deep (~-4 eV) and P-O antibonding pushed UP, so the oxidized tetrahedra move their frontier states AWAY from both gap edges -> the gap is set by pristine PS4 (VBM free/non-bonding S 3p, CBM PS4 antibonding) + Nd. Net narrowing is Nd-driven, NOT O; pure-O doping (no Nd) is expected to widen/leave gap unchanged (textbook), so the sign flip vs the O-doping literature is due to the Nd co-dopant. Both doped & undoped stay clean (N(EF)=0).",
-  "electron_conductivity_implication": "RECONCILED 2026-06-17 (interpretation; not a direct GB calc). EXPERIMENT (PI): electronic conductivity by DC POLARIZATION (= TOTAL/EFFECTIVE, percolation through grain interiors + grain boundaries + interphase, NOT pure grain-interior) DECREASES with Nd2O3 doping; cycle performance IMPROVES. DFT: all clean (N(EF)=0); bulk gap NARROWS 0.55 eV (2.184->1.632, Nd 5d) -> grain-INTERIOR intrinsic e- conduction would if anything INCREASE. NO conflict: DC-polarization is PERCOLATION-limited, so the O-derived wide-gap phosphate/oxide phases (Li3PO4 5.73 / NdPO4 5.55 / Li2O 5.24 eV; grand-potential run_nd_sei.sh; form ONLY with O) at grain boundaries/interfaces interrupt the electronic network -> effective sigma_e DOWN. The measured drop is therefore an INTERPHASE/microstructure effect, NOT a bulk-gap effect (the bulk gap goes the other way -> a naive 'wider gap lowers e-conduction' reading is WRONG here). Cycle improvement follows: lower electronic leakage (dendrite/self-discharge suppression, Han 2019) + stable phosphate/oxide interphase (cathode passivation + Li2O anode SEI). CAVEATS: interphase mechanism inferred from SEI products + the bulk-goes-wrong-way logic (direct GB electronic conductivity NOT computed); bulk-gap-narrowing absolute is 4f-U sensitive (trend robust). This is the paper's central mechanistic result.",
-  "work_function": "Slab WF (V100 (100)/(001) slabs) ABANDONED: asymmetric slabs -> net dipole -> vacuum potential ramps (no flat plateau) -> spurious WF 6.5-7.2 eV. For absolute band-edge alignment use literature WF (Braga 2026, argyrodite (100) = 3.40 eV) + our bulk edges (comp1~modelc edges ~identical).",
-  "figures": "docs/figures/dos_compare_3.png (comp1/modelc/Nd); docs/figures/nd_dos/nd_dos_pdos_v2.png; data: comp1_pdos_compact.csv, modelc_pdos_compact.csv, nd_dos/nd_pdos_compact.csv; tools: tools/figures/plot_3dos.py, plot_nd_dos_v2.py",
-  "doping_family_2026_07_16": "Same eigenvalue recipe across the family: comp1 2.066 | modelc 2.099 | +B2O3 1.9671 (-0.132 vs modelc, slight NARROWING; VBM still S-3p 89.5%, B 2p sparse/buried, free-S shallowest mean-3p -1.14 (-8..0 eV window = the figure window; the -1.18 quoted earlier was the superseded June full-projwfc-range value)) | +O LPSOCl 2.2309 (+0.132 vs modelc, WIDENING; O 2p buried, S-3p VBM). Both dopants keep clean insulators with host-like band edges; opposite ~0.13 eV shifts. Cells/k differ (b2o3 128at/25irr, LPSOCl 62at/68irr) but method identical; comp1 lobster cross-check puts method scatter ~0.01-0.03 eV."
- },
- "_provenance_audit": {
-  "audited": "2026-08-12",
-  "audited_by": "db provenance sweep (tools/db/validate_canonical.py --cited 로 대상 선정)",
-  "generator": "(없음 — 손으로 누적한 정본 레저)",
-  "source": "container:/home/ubuntu/work/runs/comp1_v3/v3_post/k444_props/ · container:/home/ubuntu/work/runs/modelC_v3/ · KISTI backup b2o3_eos/",
-  "collected": "2026-06-11",
-  "confidence": "high",
-  "note": "블록마다 provenance 가 다르다(갭 2026-06-16 · ELF 2026-06-08 · Bader 2026-04-30). ⚠ container 경로는 사라졌다",
-  "caveat": "이 블록은 **사후 추적** 결과다. 원본 계산 시점에 기록된 것이 아니라 repo·git·파일 내용에서 역추적했다. confidence 를 같이 보라."
- },
- "reproduction_checks": {
-  "_what": "정본 고유값 갭(eigenvalue_gaps_v100_2026_06_16)을 **다른 시점·다른 기계**에서 다시 계산해 맞는지 본 기록.",
-  "_rule": "재현값은 정본을 **덮어쓰지 않는다.** 정본 옆에 붙는 독립 확인이고, 불일치가 났을 때만 정본을 다시 연다. 인용은 계속 정본 숫자로 한다.",
-  "_why": "_provenance_audit 가 적어 둔 대로 원본 계산의 container 경로가 사라졌다. 그래서 정본 숫자는 있는데 **그 숫자를 낳은 실행이 없는** 상태였다. 재현은 그 구멍을 값의 재확인과 함께 닫는다.",
-  "_method_must_match": "fixed-occupations nscf 의 VBM/CBM 고유값. DOS-threshold 판독은 재현으로 치지 않는다 (~0.3 eV 과소 — CLAUDE.md).",
-  "comp1_2026_08_24": {
-   "gap_eV": 2.0656,
-   "VBM_eV": 2.1281,
-   "CBM_eV": 4.1937,
-   "canonical_gap_eV": 2.066,
-   "delta_eV": 0.0004,
-   "kpts": "170 irr — 정본 기록과 같다",
-   "verdict": "일치 (소수 넷째 자리). irr k-point 수까지 같아 셋업 계보도 확인됨."
-  },
-  "modelc_2026_09_03": {
-   "gap_eV": 2.0989,
-   "canonical_gap_eV": 2.099,
-   "delta_eV": 0.0001,
-   "verdict": "일치 (소수 넷째 자리).",
-   "_missing": "이 실행의 VBM/CBM/EF · irr k-point 수 · 실행 기계 · 실행 폴더가 아직 이 기록에 안 들어왔다. 갭 한 숫자만 회수된 상태다 — 채우기 전까지 '갭이 맞았다' 까지만 말할 수 있고 '셋업 계보가 확인됐다'(comp1 이 받은 판정)는 **아직 못 한다**."
-  },
-  "_not_covered": "b2o3(1.9671) · LPSOCl(2.2309) · U0_matched(2.184) · Nd2O3_doped(1.632) 는 재현 안 했다. 이 블록에 없는 항목은 확인된 적이 없다는 뜻이다.",
-  "_pbe_caveat": "재현은 **우리 계산의 자기일관성**만 보인다. PBE 갭은 넓은 갭 절연체에서 30–50 % 과소평가하므로 실험값과 나란히 놓지 않는다."
- }
 }
