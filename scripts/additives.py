@@ -58,11 +58,31 @@ SDCP_SHELL = 0.20                # legacy coat-shell (µm) — coat-variant opti
 # ── A14 SWCNT surface-conformal sheath (#275 koo2026, Joule 10:102392) ─────────────────
 SWCNT_D = 0.002                  # single-tube outer Ø ≈ 2 nm (koo2026, OCSiAl SWCNT) — DEEPLY sub-voxel;
                                  # the tube Ø is a MATERIAL datum, the bundle scale below is representation.
-SWCNT_BUND_D = 0.05              # vein/bundle Ø used for OBJECT COUNTING + viewer scale (µm).  §F1: koo2026
-                                 # Fig 1D shows "vein-like" SWCNT bundles wrapping NCMA but publishes no
-                                 # bundle-Ø number → 50 nm is an UN-ANCHORED representation scale.  The
-                                 # recipe volume is add_pvs-pinned downstream, so this sets point counts
+SWCNT_BUND_D = 0.05              # vein/bundle Ø used for OBJECT COUNTING + viewer scale (µm).  koo2026
+                                 # Fig 1D shows "vein-like" SWCNT bundles wrapping NCMA and publishes no
+                                 # bundle-Ø NUMBER — but the SI does bound it indirectly.
+                                 # ── 2026-09-03: promoted §F1 (un-anchored) → INDIRECTLY ANCHORED. ──
+                                 # koo2026 Fig S30 BET (digitized): bare NCMA 0.11 → SWCNT-coated 0.21 m2/g.
+                                 # ΔS = 0.10 m2/g_composite ÷ 0.002 g_SWCNT/g = 50 m2/g_SWCNT.  For a
+                                 # cylinder A = 4/(ρd) with ρ = 1.7 g/cm3 (koo2026 Table S3) that is
+                                 # d = 47 nm.  Attributing part of ΔS to newly exposed NCMA instead gives
+                                 # the other extreme d ≥ 22 nm.  ⇒ BUNDLE Ø BRACKET 22–47 nm, and 50 nm
+                                 # sits just at the CONSERVATIVE (coarse) top of it.  DO NOT CHANGE THE
+                                 # VALUE — it is already the conservative end, and the bracket comes from
+                                 # OUR arithmetic on a digitized figure, not from a published number.
+                                 # ⚠ Corollary: 50 m2/g is only 4.2 % of the 1176 m2/g a fully dispersed
+                                 # Ø2 nm tube would give (area is 1/23.5 of dispersed) ⇒ the SWCNT is
+                                 # heavily BUNDLED, not individualised.  Do NOT convert that ratio into a
+                                 # strand count directly: outer-surface-only scaling is A ∝ 1/√n, so
+                                 # 1/23.5 implies ~550 tubes per bundle, not ~24.
+                                 # The recipe volume is add_pvs-pinned downstream, so this sets point counts
                                  # only — NEVER porosity.
+                                 # ⚠⚠ RESOLUTION: the sheath is 10 nm (mass-balance dense-film equivalent)
+                                 # to 47 nm (bundle) vs voxel 115–150 nm ⇒ UNRESOLVED AT EVERY GRID WE CAN
+                                 # RUN, and an order of magnitude worse than SDCP (Ø0.30 µm), whose
+                                 # representation volume alone swung 18.1× across vox 0.4→0.15 (CL-25).
+                                 # ⇒ NO HEADLINE σ_e GAIN MAY BE CLAIMED FOR A14 until a representation-
+                                 # volume ledger exists for the sheath (same measurement CL-25 ran for SDCP).
 SWCNT_SEG_L = 1.0                # µm of vein per counted object (same representation-budget role).
 SWCNT_SHELL = 0.08               # seeded sheath skin thickness (µm).  Real few-layer sheath ~2–10 nm =
                                  # OUR INFERENCE from the published tube Ø 2 nm (koo2026 publishes NO
@@ -439,6 +459,20 @@ def sheath_ion_tradeoff(sheath_pts_um, am_c_um, am_r_um, se_pts_um,
       100% of their SE contacts when contacts cluster inside the cap (dead-AM hotspot
       risk the case-mean hides).  "Upper bound" refers to the ION-BLOCKING-SKIN assumption
       axis, not to cap-orientation realizations.  This is the number to reason with.
+
+      ── 2026-09-03: a SECOND, INDEPENDENT bracket point (recorded ALONGSIDE, not replacing) ──
+      koo2026 Fig S30 BET gives an areal-occupancy estimate for the same sheath: the vein
+      bundle is Ø 22-47 nm (see SWCNT_BUND_D) while the mass-balance dense-film equivalent
+      is only ~10.7 nm thick, so the sheath covers roughly 10.7/47 to 10.7/22 = 23-49 % of
+      the AM surface, NOT 100 %.  That is the same direction as the kim2025 bracket already
+      cited below (ASA -49 %, sigma_ion -31 %) and it lands in the same range.
+      ⚠ It does NOT replace `physical_bound`.  Three reasons: (i) `physical_bound` is by
+      construction the ANALYTIC consequence of wrap_frac — swapping in an empirical estimate
+      would change what the field means, not just its value; (ii) the estimate is OUR
+      arithmetic on a digitized figure, with an unverifiable split of dS between CNT and
+      newly-exposed NCMA; (iii) koo2026 is a LIQUID-electrolyte LIB — a wetted interface is
+      not an LPSCl solid contact, so the geometry transfers in DIRECTION only.
+      ⇒ Report both: the analytic bound (100·wrap_frac) AND this 23-49 % geometric estimate.
 
     • cloud_at_representation_density (per_band) — the SEEDED point cloud vs area-weighted
       Fibonacci AM-surface samples at each band b (Hertz 0.13 / Tabor 0.26 µm project
