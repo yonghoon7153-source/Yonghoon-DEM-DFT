@@ -1,7 +1,7 @@
 # Wiki Index
 
 > Content catalog. Every wiki page listed under its type with a one-line summary.
-> Last updated: 2026-09-03 | Total pages: 14
+> Last updated: 2026-09-03 | Total pages: 15
 
 ## Entities
 
@@ -16,6 +16,7 @@
 - [[llm-wiki-pattern]] — Karpathy 식 LLM wiki: raw 불변층 + frontmatter progressive disclosure + wikilink 그래프 + mothership/satellite (이 위키의 근거 패턴).
 - [[pvs-sev-degradation-mode-features]] — ICA 할선 기울기(PVS)와 스케일링 EOC 전압강하(SEV): 정의·물리 귀속·모드별 부호 구조, 그리고 두 부호 패턴이 같다는 관측.
 - [[birkl-ocv-degradation-diagnostic]] — 우리가 판정 대상으로 삼는 OCV fitting 절차의 원전(2017): 자유 파라미터 3개 + 컷오프 등식 소거, 그리고 저자들이 스스로 진술한 li/de 축퇴.
+- [[interpretable-ml-battery-prognosis-taxonomy]] — interpretable ML 4분류(white box·PIML·physics-inspired feature·post-hoc), PVS·SEV 가 앉는 자리, 그리고 그 분류에 identifiability·uncertainty 어휘가 0회라는 전수 확인.
 
 ## Comparisons
 

@@ -1,0 +1,191 @@
+{
+ "slug": "wang2025_interpretable-ml-battery-prognosis",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-09-03",
+ "sources": [
+  "24d8534b-2._Advanced_Energy_Materials__2025__Wang__Interpretable_Machine_Learning_for_Battery_Prognosis__Retrospect_and_Prospect.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 2,
+   "file": "fig_1.png",
+   "caption": "Figure 1. Comparison between conventional and interpretable ML frameworks for battery prognosis. (a) Conventional ML workﬂow: Battery datasets undergo feature engineering and are fed into black-box models to predict battery targets, such as SOH, RUL and SOC. The model outputs are delivered directly to users or domain experts, but they are not interpretable. (b) Interpretable ML framework: Based on the conventional ML workﬂow, this frame- work incorporates physical knowledge or post-hoc explainable tools to enhance model transparency. This interpretability enables a better understanding of the model’s behavior, supports its validation and optimization, and facilitates the extraction of knowledge for battery material design and system-level improvement.",
+   "rotated_deg": 0,
+   "bbox": [
+    42.0,
+    71.1,
+    550.0,
+    353.7
+   ],
+   "w": 2118,
+   "h": 1178,
+   "dpi": 300,
+   "src": "24d8534b-2._Advanced_Energy_Materials__2025__Wang__Interpretable_Machine_Learning_for_Battery_Prognosis__Retrospect_and_Prospect.pdf",
+   "blank": 0.913
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 3,
+   "file": "fig_2.png",
+   "caption": "Figure 2. Illustrative diagram of four interpretable methods, including white box model, PIML, physics-inspired feature engineering and post-hoc analysis.",
+   "rotated_deg": 0,
+   "bbox": [
+    44.8,
+    70.8,
+    552.9,
+    427.7
+   ],
+   "w": 2118,
+   "h": 1489,
+   "dpi": 300,
+   "src": "24d8534b-2._Advanced_Energy_Materials__2025__Wang__Interpretable_Machine_Learning_for_Battery_Prognosis__Retrospect_and_Prospect.pdf",
+   "blank": 0.886
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 4,
+   "file": "fig_3.png",
+   "caption": "Figure 3. White box model. (a) Discharge capacity curves for the 100th and 10th cycles of a representative cell. (b) Diﬀerence of the discharge capacity curves as a function of voltage between the 100th and 10th cycles, ΔQ100–10 (V), for 124 cells. (c) Cycle life plotted as a function of the variance of ΔQ100–10 (V) on a log–log axis, with a correlation coeﬃcient of −0.93. In all plots, the colors are determined based on the ﬁnal cycle lifetime. Reproduced with permission.[77] Copyright 2019, Springer Nature. (d) The extracted trend mean and seasonality area features from the LMB discharge curves. Reproduced with permission.[79] Copyright 2022, Elsevier. Distribution of the number of batteries with diﬀerent dominant factors determining cell degradation across diﬀerent stages in three battery types: (e) NMC|Li batteries, (f) NMC|Gr batteries, and (g) MIT batteries. F1–F6 represent six sta",
+   "rotated_deg": 0,
+   "bbox": [
+    42.0,
+    70.8,
+    550.1,
+    508.7
+   ],
+   "w": 2118,
+   "h": 1826,
+   "dpi": 300,
+   "src": "24d8534b-2._Advanced_Energy_Materials__2025__Wang__Interpretable_Machine_Learning_for_Battery_Prognosis__Retrospect_and_Prospect.pdf",
+   "blank": 0.871
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 6,
+   "file": "fig_4.png",
+   "caption": "Figure 4. PIML methods. (a) The physical meaning of parameters in the voltage-capacity model. Speciﬁcally, Ai, V0,i, and 𝜔i indicate the area, location, and width of the IC peak, respectively. (b) Flowchart for generating synthetic charging curves using limited realistic charging curves. Reproduced with permission.[93] Copyright 2024, Elsevier. (c) The structure of proposed PINN containing two functions modeled by NNs and a loss function composed of three terms. Reproduced with permission.[95] Copyright 2023, Elsevier.",
+   "rotated_deg": 0,
+   "bbox": [
+    42.0,
+    70.5,
+    550.1,
+    406.3
+   ],
+   "w": 2118,
+   "h": 1401,
+   "dpi": 300,
+   "src": "24d8534b-2._Advanced_Energy_Materials__2025__Wang__Interpretable_Machine_Learning_for_Battery_Prognosis__Retrospect_and_Prospect.pdf",
+   "blank": 0.747
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 9,
+   "file": "fig_5.png",
+   "caption": "Figure 5. Various physics-inspired HIs. (a) The fundamental electrochemical principle of features extracted, where voltage loss was decoupled into thermodynamically induced voltage loss (ΔE) and kinetically induced voltage loss (𝜂). Reproduced with permission.[106] Copyright 2025, Royal Society of Chemistry. (b) The ﬁrst cycle normalized capacity of an example battery and correlation between capacity retention and extracted features. Reproduced with permission.[107] Copyright 2022, Wiley-VCH GmbH. (c) The proposed peak intensity of DV curve as a descriptor to quantify the heterogeneity of lithium-ion intercalation into graphite and to predict the cell lifetime. Reproduced with permission.[108] Copyright 2023, American Chemical Society. (d) Application of the IC curve to choose appropriate feature sequence. Reproduced with permission.[109] Copyright 2024, Elsevier. (e) EIS changes during ",
+   "rotated_deg": 0,
+   "bbox": [
+    44.8,
+    70.6,
+    552.9,
+    520.7
+   ],
+   "w": 2118,
+   "h": 1876,
+   "dpi": 300,
+   "src": "24d8534b-2._Advanced_Energy_Materials__2025__Wang__Interpretable_Machine_Learning_for_Battery_Prognosis__Retrospect_and_Prospect.pdf",
+   "blank": 0.779
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 12,
+   "file": "fig_6.png",
+   "caption": "Figure 6. Adoption of SHAP and LPR to interpret ML model. (a) The feature importance variance across three targets, corresponding to diﬀerent stages of the thermal runaway reaction, is evaluated. The importance of each feature is obtained by calculating the mean SHAP value. Reproduced with permission.[131] Copyright 2025, Royal Society of Chemistry. (b) Feature importance plot where the importance values are calculated as the average of the absolute SHAP values for each feature. The white spaces separate the performance under various stages: during formation (formation), after 120 degradation cycles (cycling), and after cells reach their end of life. Reproduced with permission.[132] Copyright 2024, Elsevier. (c) Layer-wise relevance propagation results show the evolution of the relative feature importance over all the training epochs, and (d) the ﬁnalized relevance score at Epoch 7500. R",
+   "rotated_deg": 0,
+   "bbox": [
+    42.0,
+    70.3,
+    550.0,
+    461.7
+   ],
+   "w": 2118,
+   "h": 1631,
+   "dpi": 300,
+   "src": "24d8534b-2._Advanced_Energy_Materials__2025__Wang__Interpretable_Machine_Learning_for_Battery_Prognosis__Retrospect_and_Prospect.pdf",
+   "blank": 0.679
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 14,
+   "file": "fig_7.png",
+   "caption": "Figure 7. Saliency map for feature importance. (a) The illustration of SELF interpretable framework. The saliency map of two types of batteries, (b) Li|NMC batteries. (c) Li|S batteries. The averaged saliency maps of two types of cells with diﬀerent KPs for (d) Li|NMC batteries. (e) Li|S batteries. The dashed line corresponds to the normalized capacity at which the contribution of the discharge voltage curve starts to exceed 0.2. The green color indicates each part of the discharge curve’s contribution to the KP prediction, with stronger color denoting greater contribution. Reproduced with permission.[154] Copyright 2024, American Chemical Society.",
+   "rotated_deg": 0,
+   "bbox": [
+    42.0,
+    70.5,
+    550.0,
+    301.7
+   ],
+   "w": 2118,
+   "h": 965,
+   "dpi": 300,
+   "src": "24d8534b-2._Advanced_Energy_Materials__2025__Wang__Interpretable_Machine_Learning_for_Battery_Prognosis__Retrospect_and_Prospect.pdf",
+   "blank": 0.594
+  },
+  {
+   "key": "f8",
+   "kind": "figure",
+   "label": "8",
+   "page": 15,
+   "file": "fig_8.png",
+   "caption": "Figure 8. Opportunities and challenges faced by interpretable ML. Oppor- tunities include advancing ML model development and driving scientiﬁc discovery. Challenges include the limited scalability and depth of current interpretable ML methods, the absence of systematic validation frame- works, and issues with data quality and availability.",
+   "rotated_deg": 0,
+   "bbox": [
+    44.8,
+    459.0,
+    297.8,
+    672.5
+   ],
+   "w": 1055,
+   "h": 891,
+   "dpi": 300,
+   "src": "24d8534b-2._Advanced_Energy_Materials__2025__Wang__Interpretable_Machine_Learning_for_Battery_Prognosis__Retrospect_and_Prospect.pdf",
+   "blank": 0.667
+  },
+  {
+   "key": "t1",
+   "kind": "table",
+   "label": "1",
+   "page": 15,
+   "file": "tab_1.png",
+   "caption": "Table 1. The summary table of four interpretable ML methods.",
+   "rotated_deg": 0,
+   "bbox": [
+    45.8,
+    11.9,
+    589.2,
+    771.1
+   ],
+   "w": 2145,
+   "h": 2996,
+   "dpi": 284,
+   "src": "24d8534b-2._Advanced_Energy_Materials__2025__Wang__Interpretable_Machine_Learning_for_Battery_Prognosis__Retrospect_and_Prospect.pdf",
+   "blank": 0.86
+  }
+ ]
+}

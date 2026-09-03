@@ -5,7 +5,7 @@ created: 2026-09-03
 updated: 2026-09-03
 type: research-question
 tags: [battery, degradation, research]
-sources: [raw/papers/2026-09-02-siwon-kim-degradation-mode-ml-seminar.md, raw/transcripts/2026-09-03-voice-memo-007-degradation-mode-ml.md, raw/papers/birkl2017_degradation-diagnostics-ocv.md]
+sources: [raw/papers/2026-09-02-siwon-kim-degradation-mode-ml-seminar.md, raw/transcripts/2026-09-03-voice-memo-007-degradation-mode-ml.md, raw/papers/birkl2017_degradation-diagnostics-ocv.md, raw/papers/wang2025_interpretable-ml-battery-prognosis.md]
 confidence: medium
 explored: false
 verificationStatus: unverified
@@ -61,6 +61,15 @@ H2 가 참일 수 있음에 주의한다 — 부호가 같다고 벡터가 평�
 - **[2026-09-03] 원문이 반대 근거를 제시하지 않는다.** p.8 은 모드를 **하나씩**
   넣은 단독 스윕만 보여 주고, 두 모드를 동시에 넣었을 때 두 feature 가
   분리되는지에 대한 도표가 없다.
+- **[2026-09-03] SEV 축에 대한 문헌 전례: LLI 와 LAM 이 R_ct 를 같은 방향으로
+  민다.** 분야 리뷰([[interpretable-ml-battery-prognosis-taxonomy]] 가 정리한
+  Wang et al. 2025) §4.4 가 인용하는 Su et al. 2024 의 DRT 관찰을 리뷰가
+  이렇게 인쇄한다 — "the variation trends of typical DRT peaks and valleys
+  during battery aging aligned with the increase in charge transfer resistance
+  **caused by LLI and LAM**". 두 모드가 **같은 하나의 물리량(R_ct)을 같은
+  방향으로** 올린다는 진술이며, SEV(= R_ct,PE 의 stoichiometry 의존성)로
+  두 모드를 가르려는 설계에 직접 불리하다. 원전 미확인 — 리뷰의 요약을
+  거친 진술이므로 인용 전에 Su 2024 를 직접 봐야 한다.
 
 ## Evidence Against (H2 지지 / H1 반대)
 
@@ -108,6 +117,26 @@ H2 가 참일 수 있음에 주의한다 — 부호가 같다고 벡터가 평�
     수치 5.4% 는 **코인셀 제작 재현성**이지 추정 불확실성이 아니며, 논문이
     §4.3 에서 그렇게 명시한다. 즉 이 계열의 라벨은 **한 번도 오차 막대를 가진
     적이 없다** — 세미나에 요구할 것이 아니라 우리가 만들어 공급할 것이다.
+  - **[2026-09-03 (2)] 이 공백은 ML 쪽 분야 리뷰도 인지하지 못한다.**
+    [[interpretable-ml-battery-prognosis-taxonomy]] (Wang et al. 2025,
+    *Adv. Energy Mater.* 15, e03067 — 세미나 p.4 가 인용한 바로 그 리뷰) 본문
+    전체에서 `uncertainty` `noise` `error bar` `confidence interval`
+    `identifiability` `degeneracy` 가 **각 0회**다. 상관·공선성은 SHAP/PDP 라는
+    **사후 해석 도구의 신뢰도** 문제로만 두 번 나오고, "feature 가 공선이면
+    모델이 target 을 결정하지 못한다" 는 진술은 없다. 저자들이 미해결로 두는
+    세 challenge(해석의 깊이 · 해석의 검증 · 데이터 양과 질) 중 **라벨의
+    적절성 축은 없다**. 즉 이 Gap 은 한 발표의 누락이 아니라 **두 계보
+    (전기화학 진단 / ML 예후)가 만나는 지점의 구조적 공백**이며, 이 카드의
+    무게는 그만큼 커진다.
+- **[2026-09-03] PVS 의 물리 귀속이 문헌과 어긋난다.** 같은 기하학적 양
+  (DV 곡선의 peak−valley 진폭)에 대해
+  [[interpretable-ml-battery-prognosis-taxonomy]] 가 정리한 선례
+  (Kim et al. 2023, *ACS Energy Lett.* 8, 2946 — 리뷰 Fig. 5c 를 직접 보고
+  확인) 는 **흑연 음극으로의 리튬 삽입 불균일성**이라는 **음극 단일 귀속**을
+  준다. 세미나는 같은 형태의 양을 **양극 peak 과 음극 valley 의 대비**로
+  읽는다. 어느 쪽이 맞는지는 이 카드의 H1/H2 판정에 직접 영향을 준다 —
+  음극 단일 귀속이라면 PVS 는 애초에 LLI↔LAM_PE 방향을 잴 이유가 없다.
+  원전(Kim 2023) 미확인.
 - **LOGO-CV 의 group 정의가 원문에 인쇄되지 않았다.** 셀 단위인지 프로토콜
   단위인지에 따라 p.13 수치의 의미가 갈린다. 프로토콜 식별자가 입력에 있으므로
   group 이 셀이면 같은 프로토콜의 형제 셀로부터 예측하는 구조가 된다.
@@ -157,3 +186,18 @@ H2 가 참일 수 있음에 주의한다 — 부호가 같다고 벡터가 평�
   값이 싸다 (새 프로토콜 시뮬레이션이 필요한 SEV 와 달리 기존 곡선으로 된다).
   단, 이 논문의 관측은 **순수 열역학**(저자가 §1 에서 kinetics 를 명시적으로
   범위 밖에 둔다)이므로 SEV(동역학 축)와는 직교하며 서로를 대체하지 않는다.
+- [2026-09-03 (4)] open 유지 — 세미나 p.4 가 인용한 **분야 리뷰**를 흡수
+  ([[interpretable-ml-battery-prognosis-taxonomy]], Wang et al. 2025). 이 카드에
+  준 것 셋:
+  - **Evidence For 1건 추가** (SEV 축): "LLI 와 LAM 이 **함께** R_ct 를 올린다"
+    는 DRT 관찰이 리뷰에 인쇄돼 있다. SEV 로 두 모드를 가르려는 설계에 불리한
+    문헌 근거이며, 원전(Su 2024) 확인 전에는 인용하지 않는다.
+  - **Gap 1건 추가**: PVS 와 같은 기하량에 대해 문헌이 **음극 단일 귀속**을
+    준다 (Kim 2023). 물리 귀속이 미결이면 부호 구조 논증의 전제가 흔들린다.
+  - **Gap "라벨 불확실성" 의 무게 상향**: 이 공백이 원전(Birkl)뿐 아니라
+    **ML 쪽 분야 리뷰에도** 있다는 전수 확인 (`uncertainty` 0회 등).
+  **이 리뷰가 다루지 않는 것도 함께 기록한다** — 이 리뷰는 (a) 전극 수준
+  (LLI/LAM)을 예측 target 으로 삼는 사례를 하나도 싣지 않고, (b) 역문제의
+  유일성·축퇴·라벨 불확실성을 다루는 절이 없으며, (c) `OCV`·`half-cell` 이
+  본문에 0회다. 즉 **이 카드의 질문에 대한 답을 이 리뷰에서 찾을 수는 없다.**
+  이 리뷰가 준 것은 답이 아니라 **좌표계와 공백의 확정**이다.

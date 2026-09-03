@@ -5,7 +5,7 @@ created: 2026-09-03
 updated: 2026-09-03
 type: concept
 tags: [battery, degradation, research]
-sources: [raw/papers/2026-09-02-siwon-kim-degradation-mode-ml-seminar.md, raw/transcripts/2026-09-03-voice-memo-007-degradation-mode-ml.md]
+sources: [raw/papers/2026-09-02-siwon-kim-degradation-mode-ml-seminar.md, raw/transcripts/2026-09-03-voice-memo-007-degradation-mode-ml.md, raw/papers/wang2025_interpretable-ml-battery-prognosis.md]
 confidence: medium
 explored: false
 verificationStatus: unverified
@@ -60,6 +60,28 @@ P2D 시뮬레이션(PVS, 원문 p.8)과 stoichiometric-window 모식도(SEV, 원
 
 **두 feature 의 부호 패턴이 같다.** 둘 다 `{LLI, LAM_PE}` 를 한 부호로,
 `{LAM_NE}` 를 반대 부호로 놓는다.
+
+## 문헌에서의 자리 (2026-09-03 추가)
+
+[[interpretable-ml-battery-prognosis-taxonomy]] 의 4분류에 넣으면 두 feature 는
+**3번(physics-inspired feature engineering)** 이고, 세부는 갈린다:
+
+- **PVS** — 리뷰 §4.2 (IC/DV 유래) 계열의 변형. 가장 가까운 선례는 Kim et al.
+  2023 (*ACS Energy Lett.* 8, 2946) 의 **DV peak intensity**. 리뷰 Fig. 5c 를
+  직접 보면 그 "intensity" 가 실제로는 **peak−valley 진폭**이고, PVS 는 거기에
+  전압 간격을 분모로 넣은 것이다. **다만 그 선례는 같은 양을 흑연 음극의
+  리튬 삽입 불균일성 — 즉 음극 단일 — 에 귀속시킨다.** 이 페이지가 적는
+  "peak2 = PE / valley2 = NE 의 대비" 해석과 충돌하며, 미해결로
+  [[pvs-sev-lli-lampe-separability]] Gap 에 등재했다.
+- **SEV** — 리뷰에 **current interruption 범주가 없다.** 측정 방식은 §4.3
+  (relaxation), 물리 귀속은 §4.4 (EIS/DRT 의 R_ct) 쪽이며 그 어느 절의 사례도
+  완화 feature 를 **특정 전극의 저항**에 귀속시키지 않는다. 이 점에서 SEV 는
+  분류상 새 자리다. 반면 리뷰가 인용하는 DRT 관찰(Su et al. 2024)은
+  "**LLI 와 LAM 이 함께** R_ct 를 올린다" 고 적는다 — SEV 로 두 모드를
+  가르려는 설계에 불리한 문헌 근거.
+- **두 축을 함께 쓰는 설계 자체**의 선행 프레임은 Tao et al. 2025
+  (*EES* 18, 1544) — 전압 손실을 **열역학 ΔE / 동역학 η** 로 분해한다
+  (리뷰 Fig. 5a). PVS/SEV 조합은 그 프레임의 특수한 구현으로 볼 수 있다.
 
 ## 왜 중요한가
 

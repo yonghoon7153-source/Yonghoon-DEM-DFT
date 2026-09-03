@@ -12,5 +12,12 @@
   "pdfs": [
    "de62df59-1._Degradation_diagnostics_for_lithium_ion_cells.pdf"
   ]
+ },
+ "wang2025_interpretable-ml-battery-prognosis": {
+  "figures": 9,
+  "generated": "2026-09-03",
+  "pdfs": [
+   "24d8534b-2._Advanced_Energy_Materials__2025__Wang__Interpretable_Machine_Learning_for_Battery_Prognosis__Retrospect_and_Prospect.pdf"
+  ]
  }
 }
