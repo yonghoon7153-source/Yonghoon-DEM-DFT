@@ -6379,6 +6379,64 @@ def _finish(claim):
         claim.phase_done(ph, {"ok": True})
 
 
+def test_the_same_leg_finalized_twice_at_once_gets_one_answer(tmp_path):
+    """★ 57차 P1-3 — 멱등성 검사가 **임계 구역 밖**이다.
+
+    `finalize_leg()` 은 맨 앞에서 `_already_finalized()` 로 "이미 닫혔는가" 를
+    묻고, 닫혔으면 남은 정리만 하고 같은 답을 돌려준다 (49차 P0-6 이 세운
+    idempotent 규칙). 그런데 그 물음은 `_lifecycle_locks()` **앞**에 있다.
+
+    같은 다리를 같은 credential 로 동시에 두 번 닫으면 둘 다 "아직 안 닫혔다"
+    를 보고 통과한다. 그 뒤 lock 에서 줄을 서는데, 먼저 들어간 쪽이 닫고
+    claim 을 지우므로 **나중 쪽은 claim 이 사라진 상태**로 임계 구역에 들어간다.
+    그러면 idempotent 하게 같은 답을 받는 대신 예외가 난다 — 재시도·중복
+    호출·감독 프로세스가 겹치기만 해도 나는 형태다.
+
+    "두 번 닫아도 같은 답" 이라는 계약은 **직렬화된 뒤에 다시 물어야** 성립한다.
+    """
+    import queue
+    import threading
+
+    import yaml
+    from tools import preserve as P
+
+    led = _lifecycle_ledger(tmp_path)
+    c = P.claim_planned_leg("L", _RUN_SPEC_L, "0123456789abcdef",
+                            ledger=led, token=_tok())
+    _finish(c)
+
+    barrier = threading.Barrier(2)
+    q: "queue.Queue" = queue.Queue()
+
+    def _go(tag):
+        try:
+            barrier.wait(timeout=30)
+            r = P.finalize_leg("L", {"leg_source_digest": "0123456789abcdef",
+                                     "cohorts": ["gA"]},
+                               ledger=led, token=c.token)
+            q.put((tag, None, r.get("status")))
+        except Exception as e:                              # noqa: BLE001
+            q.put((tag, f"{type(e).__name__}: {e}", None))
+
+    ts = [threading.Thread(target=_go, args=(i,)) for i in (1, 2)]
+    for t in ts:
+        t.start()
+    for t in ts:
+        t.join(timeout=60)
+    out = [q.get() for _ in range(2)]
+
+    final = yaml.safe_load(led.read_text(encoding="utf-8"))
+    rows = [e for e in (final.get("legs") or []) if e["leg_id"] == "L"]
+    assert len(rows) == 1, f"원장에 L 이 {len(rows)}줄이다 — 두 번 기록됐다"
+
+    failed = [(tag, err) for tag, err, _ in out if err]
+    assert not failed, (
+        "같은 다리를 동시에 두 번 닫았더니 한쪽이 예외로 떨어졌다 — "
+        f"idempotent 계약이 직렬화 뒤에 다시 물어지지 않는다: {failed}")
+    assert all(st == "executed" for _, err, st in out if not err), (
+        f"두 호출이 같은 답을 돌려주지 않았다: {out}")
+
+
 def test_two_concurrent_finalizations_lose_no_leg(tmp_path):
     """★ 48차 P0-6 — `finalize_leg()` 은 원장을 **read-modify-write** 했다.
 

@@ -5655,21 +5655,6 @@ def finalize_leg(leg_id: str, evidence: dict, ledger=None, *,
     #   남아 새 실행도 거부된다). 이미 닫힌 것을 다시 닫으라고 하면 남은
     #   정리만 하고 같은 답을 돌려준다 — idempotent.
     claims_root = claims_root_for_ledger(ledger)
-    done = _already_finalized(leg_id, token, ledger=ledger)
-    if done is not None:
-        # ★ 54차 P0-2 — 복구도 **같은 임계 구역 안**이다. 53차는 아무 lock 도
-        #   잡지 않았고, 이미 claim lock 안에서 검사를 통과한 늦은
-        #   `phase_done()` 이 지워진 claim 을 다시 만들었다 (리뷰어 실측).
-        #   `phase_done()` 의 "claim 이 아직 있는가" 가 답을 주려면 지우는 쪽도
-        #   같은 lock 안에 있어야 한다.
-        with _lifecycle_locks(leg_id, token_file, claims_root) as cp:
-            cp.unlink(missing_ok=True)
-            if token_file is not None:
-                _unlink_token_generation(token_file, token)
-        return {"leg_id": leg_id, "attempt_id": done["attempt_id"],
-                "status": "executed"}
-
-    claim = resume_claim(leg_id, token=token, ledger=ledger)
     _assert_json_domain(evidence, "evidence")
     # ★ 48차 P0-4 — 묶음 주장을 **디스크에서** 확인한다. 확인 전에는 아무 것도
     #   쓰지 않는다 (거부하면서 기록을 남기면 그것이 곧 오염이다).
@@ -5684,12 +5669,6 @@ def finalize_leg(leg_id: str, evidence: dict, ledger=None, *,
         raise PreserveError(
             "plan", "evidence.leg_source_digest 가 없다 — 실행 기록을 실물에 "
                     "결속할 수 없다")
-    if evidence["leg_source_digest"] != claim.source_digest:
-        raise PreserveError(
-            "plan",
-            f"실행 기록의 code identity 가 claim 과 다르다 "
-            f"({evidence['leg_source_digest']} ≠ {claim.source_digest})")
-
     path = canonical_ledger(ledger)
     # ★ 49차 P0-6 — 잠금은 **정본 순서**(`LOCK_ORDER`)로 claim → 원장이다.
     #   48차는 claim 을 잠그지 않고 두 번 읽었다: 한 번은 `phases_done()` 으로
@@ -5701,7 +5680,37 @@ def finalize_leg(leg_id: str, evidence: dict, ledger=None, *,
     #   비교한 뒤 `unlink` 하기 전에 M 을 같은 경로로 정상 발급시켜 **L 이
     #   M 의 token 을 지우게** 만들었다 (`attach_M: token missing`).
     #   규칙이 한 자리에 있지 않으면 남은 중복 구현이 곧 반례다.
-    with _lifecycle_locks(leg_id, token_file, claims_root):
+    with _lifecycle_locks(leg_id, token_file, claims_root) as cp:
+        # ★ 57차 P1-3 — "이미 닫혔는가" 를 **이 안에서** 묻는다.
+        #
+        #   56차까지 그 물음은 lock **앞**에 있었다. 그래서 같은 다리를 같은
+        #   credential 로 동시에 두 번 닫으면 둘 다 "아직" 을 보고 통과했고,
+        #   줄을 선 뒤에는 먼저 들어간 쪽이 이미 claim 을 지운 상태라 나중 쪽이
+        #   `claim._read()` 에서 날 `FileNotFoundError` 로 떨어졌다 (실측).
+        #   재시도·중복 호출·감독 프로세스가 겹치기만 해도 나는 형태다.
+        #
+        #   "두 번 닫아도 같은 답" 이라는 계약(49차 P0-6)은 **직렬화된 뒤에
+        #   다시 물어야** 성립한다. 술어와 행위가 같은 임계 구역에 있어야 한다는
+        #   `_lifecycle_locks()` 의 규칙을 멱등성 물음에도 적용한 것이다.
+        #
+        # ★ 54차 P0-2 — 복구 정리도 같은 임계 구역이다. 53차는 아무 lock 도
+        #   잡지 않았고, 이미 claim lock 안에서 검사를 통과한 늦은
+        #   `phase_done()` 이 지워진 claim 을 다시 만들었다 (리뷰어 실측).
+        done = _already_finalized(leg_id, token, ledger=ledger)
+        if done is not None:
+            cp.unlink(missing_ok=True)
+            if token_file is not None:
+                _unlink_token_generation(token_file, token)
+            return {"leg_id": leg_id, "attempt_id": done["attempt_id"],
+                    "status": "executed"}
+
+        # claim 을 읽는 것도 이 안이다 — 밖에서 읽으면 읽은 뒤 지워질 수 있다.
+        claim = resume_claim(leg_id, token=token, ledger=ledger)
+        if evidence["leg_source_digest"] != claim.source_digest:
+            raise PreserveError(
+                "plan",
+                f"실행 기록의 code identity 가 claim 과 다르다 "
+                f"({evidence['leg_source_digest']} ≠ {claim.source_digest})")
         # receipt 를 **한 번만** 읽는다 — 이 snapshot 이 검사와 기록 모두의 근거다
         snap = claim._read()
         if snap["attempt_id"] != claim.attempt_id:
