@@ -1,0 +1,232 @@
+{
+ "slug": "schaeffer2024_nullspace-regularization-interpretation",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-09-03",
+ "sources": [
+  "f6f9bc36-12._Interpretation_of_highdimensional_linear_regression_Effects_of_nullspace_and_regularization_demonstrated_on_battery_data.pdf",
+  "7fc14377-12._Sup_Interpretation_of_highdimensional_linear_regression_Effects_of_nullspace_and_regularization_demonstrated_on_battery_data.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 5,
+   "file": "fig_1.png",
+   "caption": "Fig. 1. (a) Mean-centered parabolic data, with white Gaussian noise corresponding to an SNR of 50 added to 𝐗and 𝐲prior to mean centering, (b) True coefficients in black and regression coefficients in green and nullspace-modified PLS coefficients in magenta.",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    49.8,
+    563.7,
+    227.3
+   ],
+   "w": 2218,
+   "h": 741,
+   "dpi": 300,
+   "src": "f6f9bc36-12._Interpretation_of_highdimensional_linear_regression_Effects_of_nullspace_and_regularization_demonstrated_on_battery_data.pdf",
+   "blank": 0.909
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 5,
+   "file": "fig_2.png",
+   "caption": "Fig. 2. Ridge coefficients in green and fused lasso coefficients in black based on CV and the one-standard-error rule. Nullspace-modified ridge coefficients in magenta.",
+   "rotated_deg": 0,
+   "bbox": [
+    0.0,
+    257.8,
+    294.7,
+    439.3
+   ],
+   "w": 1228,
+   "h": 757,
+   "dpi": 300,
+   "src": "f6f9bc36-12._Interpretation_of_highdimensional_linear_regression_Effects_of_nullspace_and_regularization_demonstrated_on_battery_data.pdf",
+   "blank": 0.934
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 6,
+   "file": "fig_3.png",
+   "caption": "Fig. 3. (a) LFP Discharge capacity difference between cycle 100 and 10, data split into training, primary and secondary test set, (b) Mean-centered training data, (c) z-scored training data.",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    49.8,
+    563.7,
+    173.5
+   ],
+   "w": 2218,
+   "h": 516,
+   "dpi": 300,
+   "src": "f6f9bc36-12._Interpretation_of_highdimensional_linear_regression_Effects_of_nullspace_and_regularization_demonstrated_on_battery_data.pdf",
+   "blank": 0.879
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 6,
+   "file": "fig_4.png",
+   "caption": "Fig. 4. (a) True coefficients in black, PLS coefficients based on CV and the one-standard-error deviation rule in green, nullspace-modified coefficients in magenta, (b) Vullspace perspective similar to a, with PLS coefficients estimated with the one-standard-error rule corresponding to z-scored data.",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    215.3,
+    563.7,
+    390.0
+   ],
+   "w": 2218,
+   "h": 728,
+   "dpi": 300,
+   "src": "f6f9bc36-12._Interpretation_of_highdimensional_linear_regression_Effects_of_nullspace_and_regularization_demonstrated_on_battery_data.pdf",
+   "blank": 0.936
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 6,
+   "file": "fig_5.png",
+   "caption": "Fig. 5. (a) True coefficients in black, PLS coefficients based on CV and the one-standard-error rule in green, nullspace-modified coefficients in magenta, (b) Nullspace perspective similar to a, with PLS coefficients estimated with the one-standard-error rule corresponding to z-scored data.",
+   "rotated_deg": 0,
+   "bbox": [
+    0.0,
+    438.7,
+    563.7,
+    617.7
+   ],
+   "w": 2349,
+   "h": 746,
+   "dpi": 300,
+   "src": "f6f9bc36-12._Interpretation_of_highdimensional_linear_regression_Effects_of_nullspace_and_regularization_demonstrated_on_battery_data.pdf",
+   "blank": 0.93
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 7,
+   "file": "fig_6.png",
+   "caption": "Fig. 6. Cross-validated regression coefficients, original data (cf. Fig. 3b): (a) PLS coefficients, (b) Fused lasso coefficients.",
+   "rotated_deg": 0,
+   "bbox": [
+    81.9,
+    49.8,
+    536.9,
+    176.9
+   ],
+   "w": 1897,
+   "h": 531,
+   "dpi": 300,
+   "src": "f6f9bc36-12._Interpretation_of_highdimensional_linear_regression_Effects_of_nullspace_and_regularization_demonstrated_on_battery_data.pdf",
+   "blank": 0.934
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 7,
+   "file": "fig_7.png",
+   "caption": "Fig. 7. Cross-validated regression coefficients, z-scored data (cf. Fig. 3c): (a) PLS coefficients, (b) Fused lasso coefficients.",
+   "rotated_deg": 0,
+   "bbox": [
+    85.0,
+    199.4,
+    537.1,
+    326.5
+   ],
+   "w": 1884,
+   "h": 531,
+   "dpi": 300,
+   "src": "f6f9bc36-12._Interpretation_of_highdimensional_linear_regression_Effects_of_nullspace_and_regularization_demonstrated_on_battery_data.pdf",
+   "blank": 0.932
+  },
+  {
+   "key": "f8",
+   "kind": "figure",
+   "label": "8",
+   "page": 8,
+   "file": "fig_8.png",
+   "caption": "Fig. 8. Comparison of fused lasso coefficients (blue) and their component orthogonal to the nullspace (red): (a) Original data, (b) z-scored data.",
+   "rotated_deg": 0,
+   "bbox": [
+    77.1,
+    218.7,
+    536.8,
+    345.8
+   ],
+   "w": 1916,
+   "h": 530,
+   "dpi": 300,
+   "src": "f6f9bc36-12._Interpretation_of_highdimensional_linear_regression_Effects_of_nullspace_and_regularization_demonstrated_on_battery_data.pdf",
+   "blank": 0.921
+  },
+  {
+   "key": "fS1",
+   "kind": "figure",
+   "label": "S1",
+   "page": 3,
+   "file": "fig_S1.png",
+   "caption": "Figure S1: Scatter plots of predictions associated with the parabolic data example.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    321.7,
+    499.2,
+    612.6
+   ],
+   "w": 1805,
+   "h": 1213,
+   "dpi": 300,
+   "src": "7fc14377-12._Sup_Interpretation_of_highdimensional_linear_regression_Effects_of_nullspace_and_regularization_demonstrated_on_battery_data.pdf",
+   "blank": 0.942
+  },
+  {
+   "key": "fS2",
+   "kind": "figure",
+   "label": "S2",
+   "page": 3,
+   "file": "fig_S2.png",
+   "caption": "Figure S2: a) Approximated SNR of the LFP data set with SNR in dB, SNR ratio, and the noise power. b) Mean and standard deviation of the data.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    321.7,
+    546.0,
+    612.6
+   ],
+   "w": 2000,
+   "h": 1213,
+   "dpi": 300,
+   "src": "7fc14377-12._Sup_Interpretation_of_highdimensional_linear_regression_Effects_of_nullspace_and_regularization_demonstrated_on_battery_data.pdf",
+   "blank": 0.948
+  },
+  {
+   "key": "t1",
+   "kind": "table",
+   "label": "1",
+   "page": 8,
+   "file": "tab_1.png",
+   "caption": "Table 1 Root-Mean-Square Error (RMSE) prediction accuracies associated with the coefficients in Figs. 6–7. Low Cycle Life (CL): 𝑦𝑖≤1200 cycles; high Cycle Life (CL): 𝑦𝑖> 1200 cycles. All models were trained on the entire training data. Scatter plots of prediction results are shown in the Supplementary Information (SI) Sec. S6. Set Original scale Z-Scored Feature FL D1 PLS 5 Comp. FL D1 PLS 9 Comp. Variance model (Attia et al., 2021) (Severson et al., 2019) Training (41) 68 83 62 57 104 Test 1 (42) 115 116 105 102 138 Test 2 (40) 198 217 192 174 196 Training low CL (39) 62 82 53 50 103 Test 1 low CL (39) 96 101 76 80 96 Test 2 low CL (34) 135 202 115 132 119 Training high CL (2) 138 106 150 139 115 Test 1 high CL (3) 258 231 280 252 385 Test 2 high CL (6) 395 285 412 322 419",
+   "rotated_deg": 0,
+   "bbox": [
+    32.6,
+    31.3,
+    563.3,
+    747.2
+   ],
+   "w": 2213,
+   "h": 2984,
+   "dpi": 300,
+   "src": "f6f9bc36-12._Interpretation_of_highdimensional_linear_regression_Effects_of_nullspace_and_regularization_demonstrated_on_battery_data.pdf",
+   "blank": 0.895
+  }
+ ]
+}

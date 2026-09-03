@@ -43,6 +43,14 @@
    "727d5b37-mmc1.pdf"
   ]
  },
+ "schaeffer2024_nullspace-regularization-interpretation": {
+  "figures": 11,
+  "generated": "2026-09-03",
+  "pdfs": [
+   "f6f9bc36-12._Interpretation_of_highdimensional_linear_regression_Effects_of_nullspace_and_regularization_demonstrated_on_battery_data.pdf",
+   "7fc14377-12._Sup_Interpretation_of_highdimensional_linear_regression_Effects_of_nullspace_and_regularization_demonstrated_on_battery_data.pdf"
+  ]
+ },
  "su2024_drt-soh-health-features": {
   "figures": 15,
   "generated": "2026-09-03",
