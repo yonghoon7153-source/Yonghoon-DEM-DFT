@@ -78,5 +78,7 @@
   "외주처의 실제 PP 트리·VASP build·스케줄러 환경",
   "SCF 수렴·OUTCAR 형식",
   "POTCAR 신원 (post_hoc 정책 — 원고 인용 자격은 별도 판정)"
- ]
+ ],
+ "superseded_by": "IDENTITY_v34.json",
+ "⛔_미발송": "보내지 않았다. SEAL probe INCAR 부재 위험 + SUBMIT δ_k 행 모순으로 v34 재생성. 잡 16개는 v34 와 바이트 동일."
 }

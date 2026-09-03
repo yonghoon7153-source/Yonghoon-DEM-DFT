@@ -1,0 +1,67 @@
+{
+ "schema": "bundle_identity/v1",
+ "date": "2026-09-03",
+ "bundle": "sdcp_c12_v34",
+ "zip_sha256": "a58acad824b2b7bd621f30ed992585ec453ce86b84ab00b4fd51fabd0a5fbb59",
+ "manifest_sha256": "f13371a1cb9167b48873b9c59a7ab9e9a096a35548c74f058fefb11a522b9134",
+ "analyzer_in_bundle_sha256": "e09d61928dd05062e8bc5dcd37d9f31f8cf55fe3d86d74e33e62cad16289cfd4",
+ "census_in_bundle_sha256": "37bba1c1377166c420b00a4689b46bad8c655e2822221b38443966bb0a66cc77",
+ "run_staged_in_bundle_sha256": "c07ca49af14696294bd0ea7f7fb94fc216376c7829592d854e561f9c08482a82",
+ "seal_in_bundle_sha256": "19b8a18aabc839a53b1b9637639403429dc0ec315960233378790453b25243d5",
+ "repo_commit": "2382b6d54fe7ef1b62efb228205db5551c837721",
+ "repo_commit_reachable_from": "origin/claude/friendly-meitner-lldvar (생성 시점에 푸시된 커밋)",
+ "repo_files_sha256_from_commit": {
+  "⚠_출처": "`git show 2382b6d5:<path>`",
+  "tools/sdcp/vasp_handoff_bundle.py": "b97d16ac71c3e390738cfc09cf7f249f8bff6cd8486eeb9e6ee516b2550c9cc2",
+  "db/properties/sdcp_c12_claim_prereg_2026_08_31.json": "5bc7afbcc45eedc7e94ecd4070c4ace08c8b3aa86ccdd3d629e538be008a6aa3",
+  "db/properties/sdcp_c12_protocol_2026_08_30.json": "941f64d38fee97d5408a9a07636b44b77928e7407738f51017c236a664bf663d",
+  "db/properties/c12_poses_2026_08_30.json": "b5760d6c86ee2644da467157acfcdc217ce599371b7dba81120323a509da4f39",
+  "db/governance/decisions.json": "408e0f611c7006a1c0fbb29854ff82ff6931510b6a3d25f2ea3cbc441455acf7"
+ },
+ "generated_argv": [
+  "--from_basins",
+  "db/properties/c12_poses_2026_08_30.json",
+  "--frags",
+  "sdcp_neutral",
+  "ptfe_c10",
+  "--refs",
+  "--refs_minimal",
+  "--both_seeds",
+  "--single_point",
+  "--allow_no_pin",
+  "--potcar_identity",
+  "post_hoc",
+  "--no_kconv",
+  "--cell_c",
+  "36.6551",
+  "--cell_c2",
+  "40.6551",
+  "--min_vacuum",
+  "15.0",
+  "--roles",
+  "primary",
+  "sensitivity",
+  "stress_sensitivity",
+  "--out",
+  "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/82ea256b-12bc-5a75-994e-7718d79c71ba/scratchpad/c12/sdcp_c12_v34"
+ ],
+ "v33_대비": {
+  "① SEAL probe 빈 INCAR": "ASE 표본 순서(INCAR 연 뒤 버전)라 빈 폴더에서는 버전 전에 죽어 봉인이 항상 거부될 수 있었다. 임시폴더에 빈 INCAR 을 놓는다. (실물 VASP 미검증 추론)",
+  "② SUBMIT δ_k 행": "dense 0잡 번들이 δ_k 를 '판정 게이트' 로 적고 있었다 → '설계에 없음 · 0.01 eV 미주장 · 재개 조건' 으로.",
+  "잡 16개": "v33 과 바이트 동일 (SEAL·SUBMIT·MANIFEST 도장만 다름)"
+ },
+ "🔁_재개_조건_결과_보기_전에_선언": {
+  "규칙": "|ΔE_ads| < 50 meV 이면 dense 2잡(primary complex 두 개)을 추가로 돌린다.",
+  "왜_50": "k 가드밴드가 10 meV 다 (GUARD_EV). 그 5배를 문턱으로 둔다 — 그 위면 k 오차가 부호·크기 판정을 못 바꾼다.",
+  "⛔_사후변경_금지": "이 조건은 **결과를 보기 전에** 선언했다. 이 밖의 이유로 dense 를 추가하면 그것은 '결과를 보고 게이트를 바꾼 것' 이다 — 이 캠페인이 여덟 번 반려된 양식.",
+  "추가할_잡": "estimand_job_keys 의 E_C_sdcp · E_C_control (그 둘만)"
+ },
+ "사람_확인_8가지": "전부 PASS — ① 결정 세 곳 + 실행블록 9변수 양쪽 + allowlist 레시피 + δ_k 설계제외 표기 · ② verify_zip ✅ · ③ check_governance rc 0 (✔ 4) · ④ governance 4/4 · ⑤ estimand·진공·16잡·clean · ⑥ 슬랩 10/10 · ⑦ 해시 · ⑧ 커밋 도달성",
+ "⛔_이_증서가_보증하지_않는_것": [
+  "과학적 보고량의 타당성 (D 가 맞는 양인가)",
+  "외주처의 실제 PP 트리·VASP build·스케줄러 환경",
+  "SCF 수렴·OUTCAR 형식",
+  "POTCAR 신원 (post_hoc 정책 — 원고 인용 자격은 별도 판정)",
+  "실물 VASP 의 stdout 순서 (ASE 표본에 근거한 추론 · 외주처 첫 실행에서 확인됨)"
+ ]
+}

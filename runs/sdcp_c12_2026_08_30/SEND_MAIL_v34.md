@@ -1,12 +1,12 @@
-# C-12 v33 발송 메일 (그대로 복붙)
+# C-12 v34 발송 메일 (그대로 복붙)
 
-> 첨부: `sdcp_c12_v33.zip` (0.6 MB · 16잡 · 전부 static)
+> 첨부: `sdcp_c12_v34.zip` (0.6 MB · 16잡 · 전부 static)
 > ⚠ 이 파일은 **자동 생성**이다. 실행 블록·반송 목록을 손으로 고치지 마라 —
 >   번들 README 에서 뽑은 것이고, 손으로 옮기다 `PP`·`dense` 를 빠뜨린 전례가 있다.
 
 ## 제목
 ```
-[DFT 위탁] SDCP/PTFE–LiNiO₂ 계면 단일점 16잡 — 번들 v33
+[DFT 위탁] SDCP/PTFE–LiNiO₂ 계면 단일점 16잡 — 번들 v34
 ```
 
 ## 본문
@@ -19,13 +19,13 @@ SDCP·PTFE 바인더 계면 계산 번들을 보내드립니다. **VASP 단일�
 ### 1. 무결성 확인 (먼저)
 
 ```
-EXPECT_ZIP_SHA256      = ace58221c4c6111d54141c101a3c7fe36e263c40e85fba4aedf4e76c52018f04
-EXPECT_MANIFEST_SHA256 = e08a780a658de468a7572d698bd5dfff88fbe3cb8aea16c88938d58ac04ec388
+EXPECT_ZIP_SHA256      = a58acad824b2b7bd621f30ed992585ec453ce86b84ab00b4fd51fabd0a5fbb59
+EXPECT_MANIFEST_SHA256 = f13371a1cb9167b48873b9c59a7ab9e9a096a35548c74f058fefb11a522b9134
 ```
 
 ```bash
-sha256sum sdcp_c12_v33.zip          # 위 값과 대조 — 다르면 전송이 깨진 것입니다
-unzip sdcp_c12_v33.zip && cd sdcp_c12_v33
+sha256sum sdcp_c12_v34.zip          # 위 값과 대조 — 다르면 전송이 깨진 것입니다
+unzip sdcp_c12_v34.zip && cd sdcp_c12_v34
 sha256sum MANIFEST.json             # 위 값과 대조
 ```
 
@@ -129,7 +129,7 @@ bash run_staged.sh 2     # 1단계 통과(STAGE1_PASS.json) 뒤에만
 
 ## ⚠ 보내기 전 확인 (1저자)
 
-- [ ] 첨부 zip sha256 == `ace58221c4c6…`
+- [ ] 첨부 zip sha256 == `a58acad824b2…`
 - [ ] 본문에 두 해시가 정확히 들어갔는가
 - [ ] 실행 블록에 `PP`·`POTCAR_ALLOWLIST`·`LAUNCHER_BIN` 이 살아 있는가
 - [ ] 받는 사람 주소
@@ -151,8 +151,8 @@ bash run_staged.sh 2     # 1단계 통과(STAGE1_PASS.json) 뒤에만
 
 | | |
 |---|---|
-| 번들 | `runs/sdcp_c12_2026_08_30/sdcp_c12_v33.zip` |
-| 증서 | `runs/sdcp_c12_2026_08_30/IDENTITY_v33.json` |
-| 생성 커밋 | `89684c77` (clean · 생성 시점에 origin 에 있던 커밋) |
+| 번들 | `runs/sdcp_c12_2026_08_30/sdcp_c12_v34.zip` |
+| 증서 | `runs/sdcp_c12_2026_08_30/IDENTITY_v34.json` |
+| 생성 커밋 | `2382b6d5` (clean · 생성 시점에 origin 에 있던 커밋) |
 | 사람 확인 8가지 | 전부 PASS |
 | 리뷰 | BF(외부 마지막) · BG(내부) · BH(다중 감사 7렌즈) — `kb/reviews/` |
