@@ -1,0 +1,271 @@
+{
+ "slug": "marongiu2016_lfp-onboard-capacity-halfcell",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-09-03",
+ "sources": [
+  "7dabaf26-4._Onboard_capacity_estimation_of_lithium_iron_phosphate_batteries_bymeans_of_halfcell_curves.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 3,
+   "file": "fig_1.png",
+   "caption": "Fig. 1. Representation of the degradation mechanisms effect on the voltage curve of LFP cells (based on [17]), a) cell in a fresh state, b) effect of loss of lithium inventory, c) effect of loss of active material in the positive electrode in delithiated state, d) effect of loss of active material in the positive electrode in lithiated state, e) effect of loss of active material in the negative electrode in delithiated state, f) effect of loss of active material in the negative electrode in lithiated state.",
+   "rotated_deg": 0,
+   "bbox": [
+    26.8,
+    56.2,
+    558.9,
+    429.5
+   ],
+   "w": 2218,
+   "h": 1556,
+   "dpi": 300,
+   "src": "7dabaf26-4._Onboard_capacity_estimation_of_lithium_iron_phosphate_batteries_bymeans_of_halfcell_curves.pdf",
+   "blank": 0.854
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 4,
+   "file": "fig_2.png",
+   "caption": "Fig. 2. Novel structure of BMS for degradation mechanisms and actual battery capacity determination.",
+   "rotated_deg": 0,
+   "bbox": [
+    48.3,
+    353.1,
+    556.8,
+    733.1
+   ],
+   "w": 2120,
+   "h": 1584,
+   "dpi": 300,
+   "src": "7dabaf26-4._Onboard_capacity_estimation_of_lithium_iron_phosphate_batteries_bymeans_of_halfcell_curves.pdf",
+   "blank": 0.629
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 5,
+   "file": "fig_3.png",
+   "caption": "Fig. 3. Working principle of the “not real-time” calculation block.",
+   "rotated_deg": 0,
+   "bbox": [
+    128.7,
+    364.0,
+    455.5,
+    732.2
+   ],
+   "w": 1362,
+   "h": 1535,
+   "dpi": 300,
+   "src": "7dabaf26-4._Onboard_capacity_estimation_of_lithium_iron_phosphate_batteries_bymeans_of_halfcell_curves.pdf",
+   "blank": 0.825
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 6,
+   "file": "fig_4.png",
+   "caption": "Fig. 4. Correlation between the plateaus’ lengths in the considered standard condition and the corresponding length under speciﬁed condition for differently aged cells for the charge process, a) correlation between the length of plateau IIA for a current rate of 0.1C and the length of the same plateau for a different current rate, b) correlation between the length of plateau IA for an ambient temperature of 23 \u0004C and the length of the same plateau for a different ambient temperature.",
+   "rotated_deg": 0,
+   "bbox": [
+    305.5,
+    60.7,
+    568.6,
+    371.4
+   ],
+   "w": 1097,
+   "h": 1295,
+   "dpi": 300,
+   "src": "7dabaf26-4._Onboard_capacity_estimation_of_lithium_iron_phosphate_batteries_bymeans_of_halfcell_curves.pdf",
+   "blank": 0.919
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 7,
+   "file": "fig_5.png",
+   "caption": "Fig. 5. Online detection of the plateaus during driving phase at 23 \u0004C, a) current proﬁle of a repeated FTP75 driving cycle, b) comparison among the ofﬂine measured OCV and quasi-OCV curve and the tracked and ﬁltered OCV values by means of an equivalent electrical circuit model.",
+   "rotated_deg": 0,
+   "bbox": [
+    26.8,
+    60.7,
+    289.9,
+    266.1
+   ],
+   "w": 1097,
+   "h": 856,
+   "dpi": 300,
+   "src": "7dabaf26-4._Onboard_capacity_estimation_of_lithium_iron_phosphate_batteries_bymeans_of_halfcell_curves.pdf",
+   "blank": 0.847
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 7,
+   "file": "fig_6.png",
+   "caption": "Fig. 6. Example of the evolution of the parameters during the ofﬂine aging estimation, a) evolution of the LLI, b) evolution of the LAM on the negative electrode in the deli- thiated phase, c) evolution of the total error, d) evolution of the error related to the single plateaus, where L1/VA and L3/IA.",
+   "rotated_deg": 0,
+   "bbox": [
+    295.8,
+    436.3,
+    558.8,
+    707.3
+   ],
+   "w": 1097,
+   "h": 1130,
+   "dpi": 300,
+   "src": "7dabaf26-4._Onboard_capacity_estimation_of_lithium_iron_phosphate_batteries_bymeans_of_halfcell_curves.pdf",
+   "blank": 0.92
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 8,
+   "file": "fig_7.png",
+   "caption": "Fig. 7. Results of the ofﬂine estimation of the total capacity for the different considered scenarios, a) for the charge process and b) for the discharge process.",
+   "rotated_deg": 0,
+   "bbox": [
+    305.5,
+    60.7,
+    568.6,
+    407.1
+   ],
+   "w": 1097,
+   "h": 1444,
+   "dpi": 300,
+   "src": "7dabaf26-4._Onboard_capacity_estimation_of_lithium_iron_phosphate_batteries_bymeans_of_halfcell_curves.pdf",
+   "blank": 0.875
+  },
+  {
+   "key": "f8",
+   "kind": "figure",
+   "label": "8",
+   "page": 10,
+   "file": "fig_8.png",
+   "caption": "Fig. 8. Recalibration of OCV hysteresis model by means of tracked degradation modes, a) OCV hysteresis measured for a fresh (blue circles and dotted lines) and for an aged cell (red lozenges and continuous lines) during charge and discharge, b) OCV hysteresis of the aged cell (red lozenges and continuous lines) and hysteresis of the new cell (green squares and dotted lines) after recalibration, c) error between OCV of a fresh and aged cell, d) error between OCV of an aged and a fresh cell after recalibration. (For interpretation of the references to colour in this ﬁgure legend, the reader is referred to the web version of this article.)",
+   "rotated_deg": 0,
+   "bbox": [
+    36.5,
+    458.7,
+    568.6,
+    707.1
+   ],
+   "w": 2218,
+   "h": 1036,
+   "dpi": 300,
+   "src": "7dabaf26-4._Onboard_capacity_estimation_of_lithium_iron_phosphate_batteries_bymeans_of_halfcell_curves.pdf",
+   "blank": 0.922
+  },
+  {
+   "key": "t1",
+   "kind": "table",
+   "label": "1",
+   "page": 6,
+   "file": "tab_1.png",
+   "caption": "Table 1 Characteristics of the cells used for the algorithm validation. Cell name Aging characteristics Actual SoH/%a Fresh Cell in a fresh state 100 L40C50 Calendar aging at ambient temperature of 40 \u0004C and at SoC of 50% 85.78 L50C20 Calendar aging at ambient temperature of 50 \u0004C and at SoC of 20% 82.30 L50C50 Calendar aging at ambient temperature of 50 \u0004C and at SoC of 50% 76.77 Z01C10 Cycle with constant current of 1C during charge/discharge with a SoC span of 10% between 45% and 55% SoC at ambient temperature of 30 \u0004C 81.53 Z01C50 Cycle with constant current of 1C during charge/discharge with a SoC span of 50% between 25% and 75% SoC at ambient temperature of 30 \u0004C 88.91 Z01C80 Cycle with constant current of 1C during charge/discharge with a SoC span of 80% between 10% and 90% SoC at ambient temperature of 30 \u0004C 84.15 Z06C10 Cycle with constant current of 6C during charge/discharge w",
+   "rotated_deg": 0,
+   "bbox": [
+    37.5,
+    42.8,
+    567.6,
+    748.4
+   ],
+   "w": 2210,
+   "h": 2941,
+   "dpi": 300,
+   "src": "7dabaf26-4._Onboard_capacity_estimation_of_lithium_iron_phosphate_batteries_bymeans_of_halfcell_curves.pdf",
+   "blank": 0.876
+  },
+  {
+   "key": "t2",
+   "kind": "table",
+   "label": "2",
+   "page": 8,
+   "file": "tab_2.png",
+   "caption": "Table 2 Parameters for the VPA approach and their meaning. The two values indicated for some parameters are referred to the charge (ﬁrst raw) and discharge (second raw) process; where not indicated the employed value is the same. Parameter name Value Meaning kvar(LLI) e First step 0.4 Variation of the LLI for the generation of the new parameter set Pi between two consecutive iterations for the ﬁrst step. The value is added in the form LLI$ 1±kvar ð Þ. kvar(LAM) e First step 0.5 Variation of the LAM for the generation of the new parameter set Pi between two consecutive iterations for the ﬁrst step. The value is added in the form LAM$ 1±kvar ð Þ. εthreshold 0.3 Ah Minimum value of the error of the single plateau under which the second step estimation process of the degradation mechanisms can take place. kvar(LLI) e Second step 0.1 Variation of the LLI for the generation of the new paramete",
+   "rotated_deg": 0,
+   "bbox": [
+    37.5,
+    42.8,
+    567.6,
+    745.0
+   ],
+   "w": 2210,
+   "h": 2927,
+   "dpi": 300,
+   "src": "7dabaf26-4._Onboard_capacity_estimation_of_lithium_iron_phosphate_batteries_bymeans_of_halfcell_curves.pdf",
+   "blank": 0.875
+  },
+  {
+   "key": "t3",
+   "kind": "table",
+   "label": "3",
+   "page": 9,
+   "file": "tab_3.png",
+   "caption": "Table 3 Capacity estimation error in % for the tested aged cells for the charge process. The maximum and minimum errors are highlighted in red and green respectively. Cell name 3 Plateaus available 2 Plateaus available 1 Plateau available (LAMstart ¼ 10%) 1 Plateau available (LAMstart ¼ 0%) L40C50 0.76 1.01 6.28 16.49 L50C20 1.10 0.74 10.85 21.50 L50C50 2.66 0.39 1.70 10.90 Z01C10 0.61 1.64 6.29 14.83 Z01C50 0.51 0.34 5.06 4.06 Z01C80 0.77 0.13 4.89 14.44 Z06C10 0.42 1.20 9.59 19.02",
+   "rotated_deg": 0,
+   "bbox": [
+    27.8,
+    42.8,
+    557.9,
+    749.4
+   ],
+   "w": 2210,
+   "h": 2945,
+   "dpi": 300,
+   "src": "7dabaf26-4._Onboard_capacity_estimation_of_lithium_iron_phosphate_batteries_bymeans_of_halfcell_curves.pdf",
+   "blank": 0.902
+  },
+  {
+   "key": "t4",
+   "kind": "table",
+   "label": "4",
+   "page": 9,
+   "file": "tab_4.png",
+   "caption": "Table 4 Capacity estimation error in % for the tested aged cells for the discharge process. The maximum and minimum errors are highlighted in red and green respectively. Cell name 3 Plateaus available 2 Plateaus available 1 Plateau available (LAMstart ¼ 10%) 1 Plateau available (LAMstart ¼ 0%) L40C50 0.93 0.70 5.74 15.76 L50C20 0.23 0.06 6.41 19.11 L50C50 1.26 1.26 3.86 14.15 Z01C10 0.82 0.25 0.22 9.70 Z01C50 0.87 0.32 6.74 1.96 Z01C80 2.71 0.64 2.95 12.72 Z06C10 0.91 1.69 4.39 14.17",
+   "rotated_deg": 0,
+   "bbox": [
+    27.8,
+    42.8,
+    557.9,
+    749.4
+   ],
+   "w": 2210,
+   "h": 2945,
+   "dpi": 300,
+   "src": "7dabaf26-4._Onboard_capacity_estimation_of_lithium_iron_phosphate_batteries_bymeans_of_halfcell_curves.pdf",
+   "blank": 0.902
+  },
+  {
+   "key": "t5",
+   "kind": "table",
+   "label": "5",
+   "page": 9,
+   "file": "tab_5.png",
+   "caption": "Table 5 Combined results for the different scenarios for the charge and discharge process. Error 3 Plateaus available 2 Plateaus available 1 Plateau available (LAMstart ¼ 10%) 1 Plateau available (LAMstart ¼ 0%) Charge Mean value/% 0.98 0.78 6.38 14.46 STD/% 0.72 0.50 2.83 5.28 Discharge Mean value/% 1.10 0.70 4.33 12.51 STD/% 0.71 0.54 2.11 5.05",
+   "rotated_deg": 0,
+   "bbox": [
+    27.8,
+    42.8,
+    557.9,
+    749.4
+   ],
+   "w": 2210,
+   "h": 2945,
+   "dpi": 300,
+   "src": "7dabaf26-4._Onboard_capacity_estimation_of_lithium_iron_phosphate_batteries_bymeans_of_halfcell_curves.pdf",
+   "blank": 0.902
+  }
+ ]
+}

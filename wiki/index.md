@@ -1,7 +1,7 @@
 # 위키 색인
 
 > 내용 목록. 모든 위키 페이지를 종류별로 한 줄 요약과 함께 싣는다.
-> 마지막 갱신: 2026-09-03 | 전체 페이지: 23
+> 마지막 갱신: 2026-09-03 | 전체 페이지: 24
 
 ## Entities (satellite 프로젝트)
 
@@ -27,6 +27,8 @@
 - [[dv-peak-heterogeneity-descriptor]] — Kim 2023 의 DV `Peak_S2`: 진폭이 아니라 **ridge 절대 높이**이며(진폭은 valley 노이즈로 폐기), LFP‖Gr 에서의 음극 단일 귀속은 PVS 해석과 충돌하지 않는다 — 좌표를 맞추면 오히려 일치.
 
 ## Comparisons (비교)
+
+- [[halfcell-window-parametrization-lineage]] — 같은 4개 창 좌표를 무엇으로 매개화하고 여분을 어떻게 죽이는가: Dubarry 2·Marongiu 5(제약 0)·Birkl 3(등식 2)·Lin 2·Navidi/우리 4(제약 0). 여분 처리는 **등식 / 0-고정 / 애초에 안 만들기** 셋뿐이며, Marongiu 식 (2)–(5) 의 null 2차원을 닫힌 형태로 풀어 **Birkl 의 3-파라미터 좌표가 그 몫공간임**을 확인.
 
 ## Guides (절차)
 

@@ -336,3 +336,44 @@
 - **이 세션은 git 명령을 하나도 실행하지 않았다** (사용자 지시). 변경은
   전부 `wiki/` 안이므로 degradation-degeneracy 의 `source_digest` 불변.
   `python3 wiki/tools/lint.py` → **0 errors / 0 warnings** (23 pages).
+
+## [2026-09-03] ingest | Marongiu et al. 2016 — On-board capacity estimation of LFP batteries by means of half-cell curves (JPS 324)
+
+- **사용자가 준 13편의 마지막 누락분.** raw:
+  `raw/papers/marongiu2016_lfp-onboard-capacity-halfcell.md` (sha256 봉인).
+  제목에 **half-cell curves** 가 들어간 유일한 편이고, 22p 카드가 legacy LLI
+  식의 출처 후보로 지목해 둔 **Birkl 참고문헌 [26]** 이 이것이었다.
+- **최대 산출물 — 이 계보의 축퇴를 처음으로 닫힌 형태로 풀었다.** 원전 식
+  (2)–(5) 가 **모드 5개 → 창 좌표 4개** 사상을 등식 제약 **0개**로 인쇄한다.
+  거기서 나오는 정확한 null 2차원 `n₁ = (−N,0,0,+1,−1)`,
+  `n₂ = (+1,−1,+1,0,0)` 이 네 창 좌표·세 관측·총용량을 **정확히 불변**으로
+  두고(수치 확인), 그 몫공간이 **Birkl 2017 의 `[total-LLI, LAM_PE, LAM_NE]`
+  와 정확히 같다**. 산문으로만 있던 진술이 수식이 됐다.
+- 새 페이지 1: [[halfcell-window-parametrization-lineage]] (comparisons/ 첫
+  페이지) — 같은 4개 창 좌표를 무엇으로 매개화하고 여분을 어떻게 죽이는가:
+  **등식(Birkl·Mohtat) / 0-고정(Marongiu) / 애초에 안 만들기(Lin·Navidi·우리)**
+  셋뿐임을 정리.
+- 갱신: [[fitting-degeneracy]] — 닫힌 형태 null 방향 **둘** + **세 번째 실패
+  모드 후보**(중복 관측이 최적화를 방해한다) + 초기값 통제 대조군 실측.
+  [[np-lip-ocv-reparametrization]] — Lin 이 비판한 "redundancy" 의 가장 극단
+  사례(제약 0, 여분 2) 등재. [[birkl-ocv-degradation-diagnostic]] — 3-파라미터
+  좌표가 어느 공간의 몫공간인지 확정.
+  [[22p-physics-or-degeneracy]] — Status Log (15), **Evidence 어느 쪽도 아님
+  = 경계 확정**, status `active` 유지. 인용 계보 항목 종결(legacy 식은 이
+  논문에도 없다 — `docs/02_CODE_AUDIT.md` 의 정정이 옳다).
+  [[pvs-sev-lli-lampe-separability]] — Evidence For 2건(중복 관측을 더했더니
+  **나빠진** 대조군 · 초기값 지배), status `open` 유지.
+- **어휘 전수 (열세 편째)**: `identifiab*` `degenerac*` `uniqu*` `nullspace`
+  `uncertaint*` `error bar` `cross-valid*` `sensitivit*` `Fisher` `Hessian`
+  **각 0** · `mV` **1**. 그런데 `[인쇄]` "The correct determination of all the
+  degradation mechanisms … **is out of the goal of this work**" — **어휘가
+  없는 것과 주장을 절제하는 것은 다른 축**임을 보여 주는 첫 편.
+- **그림 정직성**: 13장(그림 8 + 표 5) 중 **그림 8장 전부를 직접 열어 봄**
+  (fig 1–8). 추가로 저널 조판본 p.160 을 400 dpi 로 재렌더링해 **식 (2)–(5)
+  의 마이너스 부호를 눈으로 확인**했다 (축퇴 계산이 부호에 전적으로 의존).
+  표 5장은 이미지로 안 읽음(PDF 텍스트가 정확, Table 1–5 를 digest 에 전재).
+  **원문 내부 불일치 7건** 기록 — 특히 목적함수가 본문 식 (9)=`max` 와
+  Fig. 3=`Σ` 로 다르고, **Fig. 6 의 숫자가 합 쪽을 지지한다.**
+- **이 세션은 git 명령을 하나도 실행하지 않았다** (사용자 지시). 변경은 전부
+  `wiki/` 안이므로 degradation-degeneracy 의 `source_digest` 불변.
+  `degradation-degeneracy/` 와 `mode-observability/` 는 **읽기만** 했다.

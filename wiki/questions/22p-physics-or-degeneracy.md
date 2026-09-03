@@ -5,7 +5,7 @@ created: 2026-08-11
 updated: 2026-09-03
 type: research-question
 tags: [battery, degradation, research]
-sources: [raw/repositories/degradation-degeneracy-audit.md, raw/papers/birkl2017_degradation-diagnostics-ocv.md, raw/papers/rhyu2025_systematic-feature-design-formation.md, raw/papers/lin2024_ocv-degradation-mode-identifiability.md, raw/papers/schaeffer2024_nullspace-regularization-interpretation.md, raw/papers/cui2024_electrode-utilization-formation-cycle-life.md, raw/papers/navidi2024_piml-degradation-diagnostics-comparison.md]
+sources: [raw/repositories/degradation-degeneracy-audit.md, raw/papers/birkl2017_degradation-diagnostics-ocv.md, raw/papers/rhyu2025_systematic-feature-design-formation.md, raw/papers/lin2024_ocv-degradation-mode-identifiability.md, raw/papers/schaeffer2024_nullspace-regularization-interpretation.md, raw/papers/cui2024_electrode-utilization-formation-cycle-life.md, raw/papers/navidi2024_piml-degradation-diagnostics-comparison.md, raw/papers/marongiu2016_lfp-onboard-capacity-halfcell.md]
 confidence: medium
 explored: false
 verificationStatus: unverified
@@ -613,5 +613,96 @@ LAM_PE ≈ LAM_NE 는 물리가 아니라 **flat valley 방향에서 두 전극�
     목적함수에 추가(2026-08-20 에 시험한 것은 dQ/dV **곡선** 항이고,
     `[도표, Fig. 12]` `r3=0` 에서 `m_p` 가 등가중 대비 78 % 악화되므로
     위치 항은 다른 물건이다). 셋 다 RUN_SCOPE 밖(`mode-observability`)에서.
+  - 우리 쪽 수치는 이 카드에 옮기지 않는다 — 정본은 artifact +
+    `docs/RESULTS*.md`.
+
+- **[2026-09-03 (15)]** `active` 유지 — **사용자가 준 13편의 마지막 누락분을
+  흡수했다. Evidence 어느 쪽도 아니고 「경계 확정」이다** (Marongiu, Nlandi,
+  Rong, Sauer, *J. Power Sources* **324** (2016) 158–169, raw:
+  `raw/papers/marongiu2016_lfp-onboard-capacity-halfcell.md`). 제목에
+  **half-cell curves** 가 들어간 유일한 편이고, 2026-09-03 (2) 항목 3 이
+  legacy LLI 식의 출처 후보로 지목해 둔 **Birkl 참고문헌 [26] 이 이것**이다.
+  이 카드에 달라진 것 다섯:
+
+  1. **★★ 이 계보의 축퇴가 처음으로 닫힌 형태로 풀렸다 — 그리고 그것이 우리
+     층에 없다는 것이 확정됐다.** 이 논문은 **모드 5개 → 창 좌표 4개** 사상을
+     식으로 전부 인쇄한다 (`[인쇄]` 식 2–5, 부호는 조판본 400 dpi 재렌더링으로
+     직접 확인). 등식 제약이 **0개**이므로 null 이 손으로 풀린다 —
+     관측이 평탄역 **길이**(=차이)라 평행이동이 안 보이면 **null 2차원**:
+     ```
+     좌표: (ΔLLI, ΔLAM_Pe,Li, ΔLAM_Pe,De, ΔLAM_Ne,Li, ΔLAM_Ne,De), N = 로딩비
+     n₁ = ( −N ,  0 ,  0 , +1 , −1 )
+     n₂ = ( +1 , −1 , +1 ,  0 ,  0 )
+     ```
+     `[재현]` 두 방향 모두 네 창 좌표·세 관측·원전 식 (8) 의 **총용량을 정확히
+     불변**으로 둔다. `n₁` 은 [[dubarry-mechanistic-mode-synthesis]] 의
+     `{LAM_liNE = x} ≡ {LAM_deNE = x, LLI = LR·x}` 이고, 둘을 합치면
+     **[[birkl-ocv-degradation-diagnostic]] 의 `[total-LLI, LAM_PE, LAM_NE]` 가
+     정확히 `ℝ⁵/span{n₁,n₂}`** 다 (`[재현]` 두 방향을 그 셋에 넣으면 전부 0).
+     계보 표: [[halfcell-window-parametrization-lineage]] (신설).
+     `[해석]` **이 카드에 대한 함의**: 우리는 창 좌표 4개를 **직접** 맞추고
+     모드 층을 만들지 않으므로 `n₁·n₂` 를 **물려받지 않는다.** 2026-09-03 (2)
+     항목 2 에서 열어 둔 가설("우리가 관측한 degeneracy 의 일부가 원전에 없는
+     자유도에서 온다")은 **모드→창 층에 대해서는 방향이 반대**임이 확인됐다 —
+     원전 쪽에 여분이 더 많다. 남는 것은 창→관측 층이고 Phase 1d 가 그것을
+     쟀다. **다만 우리 사후 변환(`LAM_PE = 1 − α_PE·r` 등)은 몫공간으로의
+     사영이므로 우리 출력도 처음부터 몫공간의 값**이다 — 두 층을 섞으면 안 된다.
+
+  2. **★ 성공 지표와 이 카드의 질문이 직교할 수 있다는 것이 증명됐다.**
+     원전의 헤드라인은 `[인쇄]` "an error of approx. 1%" (용량)인데, 위 계산이
+     **총용량이 두 null 방향 위에서 정확히 불변**임을 보인다. 즉 그 1 % 는
+     모드 식별 가능성에 대해 **원리적으로 아무 말도 하지 않는다.** 저자들도
+     그렇게 적는다: `[인쇄, p.165]` "The correct determination of all the
+     degradation mechanisms which physically perfectly mirror the actual
+     battery aging state **is out of the goal of this work**."
+     `[해석]` 이 계보 열세 편 중 **가장 정직한 문장**이고, 동시에 우리가
+     인용에서 절대 하면 안 되는 추론의 이름표다 — **"half-cell 재구성이 잘
+     되더라" 는 분해가 물리라는 근거가 아니다.**
+     (⚠ 같은 논문 §4.2.2 에는 이와 모순되는 `[인쇄]` "assures correctness of
+     the tracked aging mechanisms" 가 있다. raw digest §10 ⑤.)
+
+  3. **초기값이 답을 지배하는 것을 처음으로 통제 대조군에서 봤다.**
+     `[인쇄, Table 5]` 관측을 평탄역 1개로 줄인 상태에서 `LAM_start` 만
+     10 % → 0 % 로 바꾸면 용량 오차가 **6.38 → 14.46 %**(충전),
+     **4.33 → 12.51 %**(방전). `[인쇄]` 저자 설명: "the smaller initial value
+     … **which is kept for the final calculation** … due to the **lack of
+     information to track this mechanism**." `[해석]`
+     [[nullspace-coefficient-interpretation]] 의 일반 명제(축퇴 방향 위의 값은
+     정칙화가 고른다)의 **야생 실측**이며, 관측 개수를 통제한 대조군과 함께
+     나온 것은 이 계보에서 처음이다. 우리는 참값을 알므로 같은 설계로
+     "초기값 → 실제 오차" 를 정량할 수 있다 (기존 artifact 재집계, 미실행).
+
+  4. **관측을 늘렸더니 나빠졌다 — dQ/dV 결과에 경쟁 설명이 생겼다.**
+     `[인쇄, Table 5]` 평탄역 **3개**(0.98 / 1.10 %) 가 **2개**(0.78 / 0.70 %)
+     보다 나쁘다. 원인은 관측 중복 — `[인쇄]` 평탄역 VA 와 IIA 가 "decrease
+     **proportionally**" 하므로 관측의 **유효 rank 는 2**이고, 남는 셋째가
+     `[인쇄]` "the algorithm can **enter a closed loop**" 를 만든다.
+     `[해석]` 2026-08-20 의 "dQ/dV 항을 더했더니 나빠졌다" 에 대해
+     [[np-lip-ocv-reparametrization]] 점검 B2("자유도를 못 늘린다")와
+     **경쟁하는 두 번째 설명**이다 — 전자는 정보 상한, 후자는 수렴 경로.
+     우리는 목적함수 값을 저장하므로 [[fitting-degeneracy]] 의
+     flat valley ↔ multimodal 로 **갈라낼 수 있다** (미실행).
+     ⚠ 그 논문의 노름은 `L^∞`(또는 합 — 원문 안에서 불일치, raw §10 ③),
+     우리는 `L²` 이므로 메커니즘을 그대로 옮기면 안 된다.
+
+  5. **인용 계보 항목이 닫혔다.** 2026-09-03 (2) 항목 3 의 남은 후보 `[26]`
+     을 확인했다. Birkl §3.1 이 `[인쇄]` "The theory underlying the proposed
+     degradation modes and their effects on the OCV … is well documented in
+     the literature **[19,26,29]**" 로 이 논문을 지목한다. 결과:
+     **창 기하의 계보는 Dubarry 2012 → {Marongiu 2016, Birkl 2017} 로
+     확정**되고, **legacy 식 `LLI = (1−α_PE) + (β_PE − β_NE)` 는 이 논문에도
+     없다** (여기서 따라오는 것은 `β_NE − β_PE = LLI + N·LAM_Ne,Li −
+     LAM_Pe,De` 로, `α` 항이 없고 부호가 반대다). 즉
+     `degradation-degeneracy/docs/02_CODE_AUDIT.md` 의 2026-09-03 정정이
+     **옳다.** 다만 현행 `src/fitting.py` 의 `κ·(β_NE − β_PE)` **부호 규약은
+     이 논문 식 (4) 와 일치**한다 (Dubarry 에 이은 두 번째 확인).
+     **이번 세션도 `degradation-degeneracy/` 를 읽기만 했고 고치지 않았다.**
+
+  - **LFP 라는 화학이 준 부수 정박점 하나** (이 카드에 직접 닿지는 않는다):
+    `[도표, Fig. 8c]` 신선셀 vs 노화셀(SoH 77–89 %)의 OCV 차이가
+    **SoC 45–65 % 에서 1–3 mV** 이고 양 끝에서만 32–38 mV 다. 즉 LFP 에서는
+    열화 전체가 중간 SoC 에 거의 전압 흔적을 안 남긴다 — 우리 σ = 5 mV 층이면
+    통째로 묻힌다. **화학이 다르므로 우리 NMC811 격자에 옮겨 쓰면 안 되고**,
+    "평탄한 화학에서 전압 관측이 얼마나 죽는가" 의 첫 실측 크기로만 등재한다.
   - 우리 쪽 수치는 이 카드에 옮기지 않는다 — 정본은 artifact +
     `docs/RESULTS*.md`.

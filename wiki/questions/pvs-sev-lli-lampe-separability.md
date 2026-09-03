@@ -5,7 +5,7 @@ created: 2026-09-03
 updated: 2026-09-03
 type: research-question
 tags: [battery, degradation, research]
-sources: [raw/papers/2026-09-02-siwon-kim-degradation-mode-ml-seminar.md, raw/transcripts/2026-09-03-voice-memo-007-degradation-mode-ml.md, raw/papers/birkl2017_degradation-diagnostics-ocv.md, raw/papers/wang2025_interpretable-ml-battery-prognosis.md, raw/papers/kim2023_graphite-heterogeneity-lifetime.md, raw/papers/su2024_drt-soh-health-features.md, raw/papers/rhyu2025_systematic-feature-design-formation.md, raw/papers/zhang2020_eis-gpr-capacity-rul.md, raw/papers/tao2025_nondestructive-degradation-decoupling.md, raw/papers/lin2024_ocv-degradation-mode-identifiability.md, raw/papers/schaeffer2024_nullspace-regularization-interpretation.md, raw/papers/navidi2024_piml-degradation-diagnostics-comparison.md]
+sources: [raw/papers/2026-09-02-siwon-kim-degradation-mode-ml-seminar.md, raw/transcripts/2026-09-03-voice-memo-007-degradation-mode-ml.md, raw/papers/birkl2017_degradation-diagnostics-ocv.md, raw/papers/wang2025_interpretable-ml-battery-prognosis.md, raw/papers/kim2023_graphite-heterogeneity-lifetime.md, raw/papers/su2024_drt-soh-health-features.md, raw/papers/rhyu2025_systematic-feature-design-formation.md, raw/papers/zhang2020_eis-gpr-capacity-rul.md, raw/papers/tao2025_nondestructive-degradation-decoupling.md, raw/papers/lin2024_ocv-degradation-mode-identifiability.md, raw/papers/schaeffer2024_nullspace-regularization-interpretation.md, raw/papers/navidi2024_piml-degradation-diagnostics-comparison.md, raw/papers/marongiu2016_lfp-onboard-capacity-halfcell.md]
 confidence: medium
 explored: false
 verificationStatus: unverified
@@ -150,6 +150,44 @@ H2 가 참일 수 있음에 주의한다 — 부호가 같다고 벡터가 평�
   수 있어 **관측 가능성과 궤적 복잡도가 갈리지 않는다** — 원문은 후자로
   설명한다 (§6.3: "solid-state diffusion, phase transformations, and
   mechanical stresses").
+
+- **[2026-09-03 (13)] ★ 관측을 늘렸더니 **나빠진** 실측 — 중복 관측의 반례.**
+  Marongiu et al. 2016 (*J. Power Sources* **324**, 158–169, raw:
+  `raw/papers/marongiu2016_lfp-onboard-capacity-halfcell.md`) 은 LFP‖Gr 에서
+  관측을 **평탄역 길이 3개** 로 두고 그중 몇 개를 쓸지를 통제한다:
+
+  | 시나리오 | 충전 용량오차 평균 / % | 방전 / % |
+  |---|---|---|
+  | 평탄역 **3개** | 0.98 (STD 0.72) | 1.10 (STD 0.71) |
+  | 평탄역 **2개** | **0.78** (STD 0.50) | **0.70** (STD 0.54) |
+
+  `[인쇄]` 이유도 인쇄돼 있다 — 관측 셋 중 둘이 **비례한다**("if during the
+  battery lifetime the length of one of the two plateaus decreases, **the other
+  one will decrease proportionally**"), 그래서 셋째를 넣으면 "the change of one
+  of the degradation modes can generate a reduction of the error related to a
+  single plateau but **the increase of the other ones** … the algorithm can
+  **enter a closed loop and converge to an imprecise solution**."
+
+  `[해석]` **이 카드의 질문에 부호가 붙은 반례다.** "관측을 늘리면 갈리는가" 에
+  대해 지금까지 모인 것은 "늘려도 안 갈린다"(Lin 의 2 자유도 상한, Navidi 의
+  100점) 였는데, 이것은 **늘리면 나빠질 수 있다**는 쪽이다 — 늘린 관측이 기존
+  관측과 상관되어 있으면 정보를 안 더하면서 목적함수 지형만 나쁘게 만든다.
+  PVS 와 SEV 를 목적함수에 더할 때 **먼저 기존 관측과의 상관·유효 rank 를
+  봐야 한다**는 설계 근거다.
+  **범위 한정 3개**: (a) 그 논문의 목적함수는 `L^∞`(또는 합 — 원문 안에서
+  불일치)이고 우리는 `L²` 이므로 메커니즘이 그대로 오지 않는다. (b) 그
+  논문의 정답 축은 **용량뿐**이고 모드가 아니다. (c) 화학이 LFP 라 관측 정의
+  자체(평탄역)가 우리와 다르다.
+
+- **[2026-09-03 (13)] ★ 관측을 줄여 축퇴를 키운 통제 대조군에서 초기값이 답을
+  지배한다.** 같은 논문, 평탄역 **1개**만 쓸 때 `LAM_start` 초기값만 바꾼 대조:
+  `[인쇄, Table 5]` 10 % → 오차 6.38 %(충전)/4.33 %(방전),
+  **0 % → 14.46 %/12.51 %**. `[인쇄]` 저자 설명: "the smaller initial value …
+  **which is kept for the final calculation** … due to the **lack of information
+  to track this mechanism**." `[해석]` 이 카드가 "관측이 부족하면 무슨 일이
+  일어나는가" 를 물을 때의 **정량 답 한 건**이고,
+  [[nullspace-coefficient-interpretation]] 의 일반 명제(축퇴 방향 위의 값은
+  추정기가 정한다)의 야생 실측이다.
 
 ## Evidence Against (H2 지지 / H1 반대)
 - **[2026-09-03 (10)] ★ 잃어버리는 방향은 LLI↔LAM_PE 가 아니다 — 구조적으로는
@@ -716,3 +754,23 @@ H2 가 참일 수 있음에 주의한다 — 부호가 같다고 벡터가 평�
   - 어휘 전수 (열두 편째): `identifiab*` **0** · `degenerac*` **0** ·
     `nullspace` **0** · `collinear*` **0** · `mV` **0**, 그런데
     `uncertaint*` **21회(계보 최다)** 이고 **전부 예측 불확실성**이다.
+
+- **[2026-09-03 (13)]** `open` 유지 — 마지막 누락분(Marongiu 2016)을 흡수했다.
+  raw: `raw/papers/marongiu2016_lfp-onboard-capacity-halfcell.md`.
+  이 카드에 준 것 셋:
+  1. **Evidence For 에 2건 추가**(위): 중복 관측을 더했더니 **나빠진** 통제
+     대조군, 그리고 관측을 줄였을 때 초기값이 답을 지배하는 대조군.
+     **Evidence Against 에는 아무것도 붙지 않는다.**
+  2. **"답하는 방법" 3번 설계에 검사 하나가 앞에 붙는다**: `(PVS, SEV)` 의
+     Jacobian 을 보기 **전에** 그 둘이 기존 관측(전압 곡선)과 이루는
+     **상관·유효 rank** 를 먼저 본다. 비례하는 관측은 정보를 안 더하면서
+     지형만 나쁘게 만든다는 실측이 생겼기 때문이다.
+  3. **어휘 전수 (이 계보 열세 편째)**: `identifiab*` **0** ·
+     `degenerac*` **0** · `uniqu*` **0** · `nullspace` **0** ·
+     `uncertaint*` **0** · `error bar` **0** · `cross-valid*` **0** ·
+     `sensitivit*` **0** · `Fisher`/`Hessian`/`condition number`/
+     `singular value` **각 0** · `mV` **1**. `[해석]` 어휘는 전무한데
+     **자기 방법이 모드를 물리적으로 결정하지 못한다고 명시적으로 선언한다**
+     (`[인쇄]` "The correct determination of all the degradation mechanisms …
+     **is out of the goal of this work**"). 어휘가 없는 것과 주장을 절제하는
+     것은 다른 축이라는 것을 이 편이 보여 준다.

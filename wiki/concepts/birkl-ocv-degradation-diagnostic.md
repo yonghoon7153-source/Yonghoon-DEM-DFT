@@ -5,7 +5,7 @@ created: 2026-09-03
 updated: 2026-09-03
 type: concept
 tags: [battery, degradation, research]
-sources: [raw/papers/birkl2017_degradation-diagnostics-ocv.md, raw/papers/dubarry2012_synthesize-degradation-modes.md]
+sources: [raw/papers/birkl2017_degradation-diagnostics-ocv.md, raw/papers/dubarry2012_synthesize-degradation-modes.md, raw/papers/marongiu2016_lfp-onboard-capacity-halfcell.md]
 confidence: medium
 explored: false
 verificationStatus: unverified
@@ -152,6 +152,41 @@ full-cell OCV 에 fitting" 이라 적으며 인용한 문헌이 이것이고, �
   - 이번 세션도 해당 문서를 **읽기만 했고 고치지 않았다** (RUN_SCOPE 밖이지만
     미변경).
 
+## ★ 그 3-파라미터 좌표가 **정확히 무엇의 몫공간인지** 확인됐다 (2026-09-03 추가)
+
+이 페이지는 지금까지 저자들의 산문 진술(`[인쇄]` §4.2 "a combination of e.g. LLI
+and LAM_NE,de creates the same OCV signature as an equal amount of LAM_NE,li …
+The same holds true for combinations of LLI and LAM_PE") 을 옮겨 적기만 했다.
+그 진술이 가리키는 대상이 **닫힌 형태로 확정됐다.**
+
+Birkl 자신이 §3.1 에서 이 이론의 출처로 지목하는 `[26]` (`[인쇄]` "The theory
+underlying the proposed degradation modes and their effects on the OCV of cells
+and electrodes is well documented in the literature **[19,26,29]**") 이
+Marongiu et al. 2016 (*J. Power Sources* **324**, 158–169) 이고, 그 논문이
+**모드 5개 → 창 좌표 4개 사상을 식으로 전부 인쇄한다** (식 2–5). 거기서 나오는
+정확한 null 2차원 (계산·수치 검증: `raw/papers/marongiu2016_lfp-onboard-capacity-halfcell.md` §5,
+계보 표: [[halfcell-window-parametrization-lineage]]):
+
+```
+좌표: (ΔLLI, ΔLAM_Pe,Li, ΔLAM_Pe,De, ΔLAM_Ne,Li, ΔLAM_Ne,De),  N = 로딩비
+n₁ = ( −N ,  0 ,  0 , +1 , −1 )     ← 이 페이지의 "LLI ↔ LAM_NE,li/de" 진술
+n₂ = ( +1 , −1 , +1 ,  0 ,  0 )     ← "The same holds true for … LAM_PE"
+```
+
+`[재현]` 이 두 방향을 Birkl 의 세 좌표
+`total-LLI = LLI + N·LAM_Ne,Li + LAM_Pe,Li`, `LAM_PE = LAM_Pe,Li + LAM_Pe,De`,
+`LAM_NE = LAM_Ne,Li + LAM_Ne,De` 에 넣으면 **전부 정확히 0** 이다.
+
+> `[해석]` **Birkl 의 `[total-LLI, LAM_PE, LAM_NE]` 는 `ℝ⁵/span{n₁,n₂}` 다.**
+> 5 − 2 = 3. 저자들이 "the reason for the diagnostic algorithm to be designed in
+> this manner" 라고 적은 설계 선택이 **몫공간 좌표의 선택**이었음이 수식으로
+> 확인됐다. 이 페이지가 그동안 산문으로만 옮겨 적던 것의 정확한 형태다.
+
+`[해석]` **인용할 때의 함의**: 이 알고리즘의 출력 세 값은 "세 개의 물리량" 이
+아니라 **동치류의 대표원**이다. 하위 귀속(li/de)을 주장하는 후속 인용은 물론,
+"LLI 가 몇 % 였다" 를 절대량으로 읽는 인용도 `n₁`·`n₂` 위에서 임의로 이동
+가능한 값을 인용하는 것이 된다.
+
 ## 한계 (raw digest §13 요약)
 
 - 합성 검증은 **inverse crime**: 생성 모델 = 적합 모델, 노이즈 0, 3점뿐.
@@ -165,6 +200,7 @@ full-cell OCV 에 fitting" 이라 적으며 인용한 문헌이 이것이고, �
   p.381 의 "solving Equation (2)" (Eq. 4 여야 한다).
 
 ## 관련
+- [[halfcell-window-parametrization-lineage]] — 이 알고리즘의 3-파라미터 좌표가 어느 5-모드 공간의 몫공간인지, 그리고 계보 전체의 자유도·제약 비교
 - [[dubarry-mechanistic-mode-synthesis]] — 이 알고리즘이 물려받은 좌표계(LR·OFS)와 li/de 4분류의 출처 (2012)
 - [[fitting-degeneracy]] — 이 알고리즘이 답해야 하는 질문 자체의 정의
 - [[degradation-degeneracy]] — 이 절차의 식별 가능성을 PyBaMM 합성 truth 로 판정하는 satellite

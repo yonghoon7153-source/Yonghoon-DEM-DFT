@@ -5,7 +5,7 @@ created: 2026-08-11
 updated: 2026-09-03
 type: concept
 tags: [battery, degradation, research]
-sources: [raw/repositories/degradation-degeneracy-audit.md, raw/papers/lin2024_ocv-degradation-mode-identifiability.md, raw/papers/schaeffer2024_nullspace-regularization-interpretation.md, raw/papers/navidi2024_piml-degradation-diagnostics-comparison.md]
+sources: [raw/repositories/degradation-degeneracy-audit.md, raw/papers/lin2024_ocv-degradation-mode-identifiability.md, raw/papers/schaeffer2024_nullspace-regularization-interpretation.md, raw/papers/navidi2024_piml-degradation-diagnostics-comparison.md, raw/papers/marongiu2016_lfp-onboard-capacity-halfcell.md]
 confidence: high
 explored: false
 verificationStatus: unverified
@@ -136,6 +136,80 @@ Navidi et al. 2024 (*Energy Storage Mater.* **68**, 103343, raw:
 결론으로 자동 적합을 기각하고 **사람의 수동 적합**을 정답으로 삼는다.
 그 수동 절차는 `(m_n, δ_n)` → `(m_p, δ_p)` **블록 교대**다 (부록 A1) —
 좌표 갱신 순서가 degeneracy 를 줄이는지는 값싸게 시험 가능하다 (미실행).
+
+## ★ 닫힌 형태 null 방향 **둘** 더 — 그리고 그것이 모드 층에만 있다는 것 (2026-09-03 추가)
+
+위 절의 Lin 방향이 **관측(곡선 형상)** 쪽 축퇴라면, 이번 것은 **매개화** 쪽
+축퇴다. Marongiu et al. 2016 (*J. Power Sources* **324**, 158–169, raw:
+`raw/papers/marongiu2016_lfp-onboard-capacity-halfcell.md`) 이 모드 5개 →
+창 좌표 4개 사상을 **식으로 전부 인쇄한다** (식 2–5). 거기서 null 이 손으로
+풀린다 (`[해석]` 계산은 이 위키가 했다. 상세·수치 검증은 raw digest §5,
+계보 표는 [[halfcell-window-parametrization-lineage]]):
+
+```
+좌표: (ΔLLI, ΔLAM_Pe,Li, ΔLAM_Pe,De, ΔLAM_Ne,Li, ΔLAM_Ne,De),  N = 로딩비 Q_Ne,BOL/Q_Pe,BOL
+n₁ = ( −N ,  0 ,  0 , +1 , −1 )
+n₂ = ( +1 , −1 , +1 ,  0 ,  0 )
+```
+
+`[재현]` 두 방향 모두 네 창 좌표(및 평행이동 불변 관측 셋)와 **총용량을 정확히
+불변**으로 둔다. `n₁` 은 [[dubarry-mechanistic-mode-synthesis]] 가 준
+`{LAM_liNE = x} ≡ {LAM_deNE = x, LLI = LR·x}` 의 계수까지 확인해 주고,
+둘을 합치면 **[[birkl-ocv-degradation-diagnostic]] 의 3-파라미터 좌표가 정확히
+`ℝ⁵/span{n₁,n₂}`** 다 (`[재현]` 두 방향을 그 세 좌표에 넣으면 전부 0).
+
+**★ 우리에게 중요한 것은 이 축퇴가 어디에 있느냐다.** `n₁·n₂` 는 **모드 →
+창** 층의 성질이다. 우리 파이프라인은 창 좌표 4개를 **직접** 맞추고 모드 층을
+만들지 않으므로 **이 두 방향을 물려받지 않는다.** 그러나 사후 변환
+(`LAM_PE = 1 − α_PE·r` 등)이 **몫공간으로의 사영**이므로 **우리 출력도 처음부터
+몫공간의 값**이다. [[22p-physics-or-degeneracy]] 가 묻는 것은 **그 몫공간
+안에서의** 축퇴이고, 두 층을 섞어 인용하면 안 된다.
+
+## ★ 세 번째 실패 모드 후보 — 중복 관측이 최적화를 **방해**한다 (2026-09-03 추가)
+
+같은 원전이 이 페이지의 flat valley / multimodal 2분법에 안 들어가는 현상을
+하나 인쇄한다. `[인쇄]` 관측(평탄역 길이) 셋 중 둘이 비례한다 — "if during the
+battery lifetime the length of one of the two plateaus decreases, **the other one
+will decrease proportionally**" — 즉 **관측의 유효 rank 가 3이 아니라 2**다.
+그런데 그 중복 관측을 넣었을 때 결과가 **더 나빠졌다**:
+
+| 시나리오 | 충전 오차 평균 / % | 방전 / % |
+|---|---|---|
+| 평탄역 **3개** | 0.98 | 1.10 |
+| 평탄역 **2개** | **0.78** | **0.70** |
+
+`[인쇄]` 저자의 설명: "the change of one of the degradation modes can generate a
+reduction of the error related to a single plateau but **the increase of the
+other ones** … the algorithm can **enter a closed loop and converge to an
+imprecise solution**."
+
+`[해석]` 이것은 flat valley(데이터 한계)도 multimodal(국소최소 다수)도 아니다 —
+**중복 관측이 목적함수 지형을 나쁘게 만드는** 세 번째 경로다. ⚠ 그 원전의
+목적함수는 `L^∞`(또는 합 — 원문 안에서 불일치, raw digest §10 ③)이고 우리는
+`L²` 이므로 **메커니즘을 그대로 옮길 수 없다.** 그럼에도 우리 2026-08-20
+dQ/dV 결과(항을 더했더니 나빠졌다)에 대해 [[np-lip-ocv-reparametrization]] 의
+점검 B2("자유도를 못 늘린다")와 **경쟁하는 두 번째 설명**을 준다. 우리는 참값과
+목적함수 값을 둘 다 저장하므로 이 페이지의 flat valley ↔ multimodal 구분으로
+**갈라낼 수 있다** (미실행).
+
+## ★ 초기값이 답을 지배하는 것을 통제 대조군으로 본 사례 (2026-09-03 추가)
+
+같은 원전이, 관측을 **일부러 줄여** 축퇴를 키운 상태에서 초기값 하나만 바꾼
+대조를 인쇄한다 (`[인쇄]`, 원전 Table 5):
+
+| 평탄역 1개만 | 충전 오차 / % | 방전 / % |
+|---|---|---|
+| `LAM_start = 10 %` | 6.38 | 4.33 |
+| `LAM_start = 0 %` | **14.46** | **12.51** |
+
+`[인쇄]` 저자의 설명: "the smaller initial value of the LAM_Ne **which is kept
+for the final calculation** … due to the **lack of information to track this
+mechanism**."
+
+`[해석]` [[nullspace-coefficient-interpretation]] 의 일반 명제("축퇴 방향 위의
+값은 데이터가 아니라 정칙화가 고른다")의 **야생 실측**이며, 이 계보에서 처음으로
+**관측 개수를 통제한 대조군**과 함께 나타났다. 우리는 참값을 알므로 같은 설계로
+"초기값 → 실제 오차" 를 정량할 수 있다 (기존 artifact 재집계, 미실행).
 
 ## 판정 방법 (요약)
 정답을 아는 합성 격자에서 복원 오차 |err| 와 tol(2%p) 기반 degenerate 판정,

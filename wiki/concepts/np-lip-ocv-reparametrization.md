@@ -5,7 +5,7 @@ created: 2026-09-03
 updated: 2026-09-03
 type: concept
 tags: [battery, degradation, research]
-sources: [raw/papers/lin2024_ocv-degradation-mode-identifiability.md, raw/papers/birkl2017_degradation-diagnostics-ocv.md, raw/papers/dubarry2012_synthesize-degradation-modes.md, raw/papers/schaeffer2024_nullspace-regularization-interpretation.md, raw/papers/cui2024_electrode-utilization-formation-cycle-life.md]
+sources: [raw/papers/lin2024_ocv-degradation-mode-identifiability.md, raw/papers/birkl2017_degradation-diagnostics-ocv.md, raw/papers/dubarry2012_synthesize-degradation-modes.md, raw/papers/schaeffer2024_nullspace-regularization-interpretation.md, raw/papers/cui2024_electrode-utilization-formation-cycle-life.md, raw/papers/marongiu2016_lfp-onboard-capacity-halfcell.md]
 confidence: high
 explored: false
 verificationStatus: unverified
@@ -37,6 +37,15 @@ z⁺(z⁻) = z₀⁺ − r_N/P · z⁻
   Mohtat 2019 의 4개 + 제약 1개와 달리 제약이 없다. 원전은 그 제약된 매개화들을
   `[인쇄]` "non-independent parameters, of which the **redundancy** complicates
   their estimation" 이라고 비판한다.
+
+`[해석]` **원전이 몰랐던 더 극단적인 사례가 있다** (2026-09-03 추가): Marongiu
+et al. 2016 (*J. Power Sources* **324**, 158–169) 은 같은 창 좌표 4개를
+**모드 5개로, 제약 0개로** 매개화한다 — 여분이 **2차원**이고 그것을 등식이
+아니라 **모드 3개를 0으로 놓아** 죽인다. 계보 전체를 자유도·제약 축으로 나란히
+놓은 표는 [[halfcell-window-parametrization-lineage]]. 그 페이지가 여분 처리
+방법이 **등식 / 0-고정 / 애초에 안 만들기** 셋뿐임을 정리하고, Marongiu 식
+(2)–(5) 의 null 2차원을 닫힌 형태로 풀어 **Birkl 의 3-파라미터 좌표가 정확히 그
+몫공간**임을 확인한다.
 
 ## ★ 2 자유도 정리 (이 페이지의 핵심)
 
@@ -193,6 +202,7 @@ pristine 값)이 Cui 원문에 없으므로 **정량 환산식은 없다** — �
 확인됐고 수치 변환은 안 된다.
 
 ## 관련
+- [[halfcell-window-parametrization-lineage]]
 - [[nullspace-coefficient-interpretation]]
 - [[fitting-degeneracy]]
 - [[birkl-ocv-degradation-diagnostic]]
