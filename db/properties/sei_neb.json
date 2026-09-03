@@ -3,17 +3,134 @@
   "method": "QE CI-NEB (neb.x). 공공 매개 Li 홉. ecutwfc 60 / ecutrho 480 Ry — 갭 계산과 같은 사양. **전하 규약은 상의 electronic_class 로 갈린다**: insulator = V_Li⁻ (tot_charge −1) + jellium · gaussian smearing / metal = 중성 공공 (tot_charge 0) · mv smearing (jellium 없음). 결과마다 electronic_class·tot_charge 를 같이 싣는다. ⛔ 2026-08-11 이전의 tot_charge=+1 입력은 정공 2개라 무효.",
   "warning": "⚠ jellium 보정은 유한 셀 근사다 — 절대값은 셀 수렴 확인 뒤 인용할 것. **상 사이 비교**가 이 값의 용도다. ⛔ BVSE 프록시 값과 같은 표에 놓지 말 것(단위는 같아도 다른 양이다).",
   "roots": [
+    "sei_neb",
     "v2",
-    "v2_ccpath",
     "v2_cc333",
+    "v2_ccpath",
     "v3"
   ],
   "key_format": "<루트라벨>/<상> — 같은 상이 루트마다 다른 홉이라 tag 만으로는 충돌한다",
   "n_citable": 0,
-  "n_total": 8,
-  "retracted": false,
-  "retraction_reason": null,
+  "n_total": 9,
+  "retracted": true,
+  "retraction_reason": "인용 가능한 결과가 0건이다. 각 결과의 blocking_checks 를 볼 것. 이 파일의 어떤 값도 인용하지 말 것.",
   "results": {
+    "sei_neb/li_metal": {
+      "tag": "li_metal",
+      "status": "converged",
+      "n_path_steps": 1,
+      "Ea_forward_eV": 0.080578,
+      "Ea_backward_eV": 0.0806,
+      "num_of_images": 7,
+      "CI_scheme": "auto",
+      "tot_charge_from_input": "0.0",
+      "endpoints_symmetry_equivalent": true,
+      "li_orbits": {
+        "spacegroup": "Im-3m",
+        "n_li_orbits": 1,
+        "wyckoffs": [
+          "a"
+        ]
+      },
+      "pair_orbits": {
+        "vac": [
+          0,
+          "a"
+        ],
+        "hop": [
+          0,
+          "a"
+        ]
+      },
+      "global_n_li_orbits": 1,
+      "neighbor_shells": {
+        "a-a": {
+          "d_min": 2.9721,
+          "n": 1431
+        }
+      },
+      "protocol_hash": "34eca8652481",
+      "protocol_payload": {
+        "tag": "li_metal",
+        "ecutwfc": 60.0,
+        "ecutrho": 480.0,
+        "q": 0.0,
+        "images": 7,
+        "path_thr": 0.05,
+        "kpts": [
+          3,
+          3,
+          3
+        ],
+        "nat": 53,
+        "min_l": 10.0,
+        "min_l_basis": "lambda1",
+        "lambda1_A": 10.296,
+        "face_heights_A": [
+          10.296,
+          10.296,
+          10.296
+        ],
+        "hop_shell": "a-a",
+        "hop_pair_orbits": {
+          "vac": [
+            0,
+            "a"
+          ],
+          "hop": [
+            0,
+            "a"
+          ]
+        },
+        "hop_vac_index": 0,
+        "hop_moving_index": 53,
+        "hop_distance_A": 2.9721,
+        "endpoint_coords_sha": "c347260bb58689db",
+        "cell": [
+          10.295624,
+          0.0,
+          0.0,
+          0.0,
+          10.295624,
+          0.0,
+          0.0,
+          0.0,
+          10.295624
+        ],
+        "smearing": "mv",
+        "degauss": 0.02,
+        "electronic_class": "metal",
+        "pseudos": {
+          "Li": "li_pbe_v1.4.uspp.F.UPF"
+        },
+        "endpoints_relaxed": true,
+        "hash_schema": 2,
+        "lambda1_method_id": "M-2026-08-20-lambda1-exact-3d-ase-minkowski",
+        "ase_version": "3.29.0"
+      },
+      "supercell": [
+        3,
+        3,
+        3
+      ],
+      "min_cell_A": 10.3,
+      "asymmetry_eV": 2.2000000000008124e-05,
+      "Ea_effective_eV": 0.0806,
+      "site_energy_diff_eV": null,
+      "symmetric": true,
+      "vacancy_charge": "neutral",
+      "electronic_class": "metal",
+      "smearing": "mv",
+      "blocking_checks": [],
+      "citable": false,
+      "root": "sei_neb",
+      "cell_convergence_status": "untested",
+      "scientific_status": "provisional_single_cell",
+      "absolute_citable": false,
+      "citable_downgraded_by": "citability_contract_2026_08_16 — 셀 수렴 미시험 (단일 셀). 경로 검사(수렴·CI·대칭)는 통과했으므로 **상 사이 비교**로는 쓸 수 있다. 절대값 인용은 셀 수렴 뒤.",
+      "allowed_statement": "For the li_metal model, the CI-NEB barrier is 0.0806 eV under this finite-cell protocol (electronic_class=metal, vacancy_charge=neutral).",
+      "forbidden_statement": "이 값을 수렴된 고유 물성으로 인용하거나 실험·문헌 값과 나란히 놓는 것. 셀 수렴이 미시험이다."
+    },
     "v2/li2s": {
       "tag": "li2s",
       "status": "converged",
@@ -80,7 +197,8 @@
       },
       "citable_downgraded_by": "scientific_status=provisional_single_cell (사람 판단 우선)",
       "why_not_absolute": "① 셀 수렴 미시험 — 다른 셀에서 재본 적이 없다. ② 하전 공공(q=-1) + jellium 배경이라 유한셀 정전 보정이 근사다. ③ λ₁ 12.100 Å 통과는 **한 셀의 최소 요건**이지 수렴 증거가 아니다.",
-      "hop_note": "루트 라벨 v2 의 'c→b 진단용' 배너는 li3nd 용이다. Li2S 반형석은 Li 궤도가 8c 하나뿐이라(li_orbits.n_li_orbits=1) 이 홉은 c→c 최근접(d=2.8526 Å) — 진단용이 아니라 실제 전도 홉이다."
+      "hop_note": "루트 라벨 v2 의 'c→b 진단용' 배너는 li3nd 용이다. Li2S 반형석은 Li 궤도가 8c 하나뿐이라(li_orbits.n_li_orbits=1) 이 홉은 c→c 최근접(d=2.8526 Å) — 진단용이 아니라 실제 전도 홉이다.",
+      "preserved_from_previous_db": true
     },
     "v2/li3nd": {
       "tag": "li3nd",
@@ -140,7 +258,8 @@
         "no-CI 단계다 — 장벽이 이미지 격자만큼 과소평가된다. 수렴 후 --ci_scheme auto --restart 로 2단계를 돌릴 것"
       ],
       "citable": false,
-      "root": "v2"
+      "root": "v2",
+      "preserved_from_previous_db": true
     },
     "v2_ccpath/li3nd": {
       "tag": "li3nd",
@@ -211,43 +330,38 @@
         "min_face_height_A": 8.469,
         "note": "점결함 이미지는 격자 병진 위에 있다. 면 높이(8.469)는 격자 평면 간 거리라 슬랩용 보수 하한이고 점-이미지 거리가 아니다 — 이 둘을 혼동해 2026-08-16 오전에 '셀 미달' 이라고 잘못 적었다 (Codex 리뷰 P0)."
       },
-      "citable_downgraded_by": "scientific_status=provisional_single_cell (사람 판단 우선)"
+      "citable_downgraded_by": "scientific_status=provisional_single_cell (사람 판단 우선)",
+      "preserved_from_previous_db": true
     },
     "v2_cc333/li3nd": {
       "tag": "li3nd",
       "status": "not_started",
-      "root": "v2_cc333"
+      "root": "v2_cc333",
+      "preserved_from_previous_db": true
     },
     "v3/li2o": {
       "tag": "li2o",
       "status": "not_started",
-      "root": "v3"
+      "root": "v3",
+      "preserved_from_previous_db": true
     },
     "v3/li3p": {
       "tag": "li3p",
       "status": "not_started",
-      "root": "v3"
+      "root": "v3",
+      "preserved_from_previous_db": true
     },
     "v3/li3po4g": {
       "tag": "li3po4g",
       "status": "not_started",
-      "root": "v3"
+      "root": "v3",
+      "preserved_from_previous_db": true
     },
     "v3/licl": {
       "tag": "licl",
       "status": "not_started",
-      "root": "v3"
+      "root": "v3",
+      "preserved_from_previous_db": true
     }
-  },
-  "citability_contract_2026_08_16": {
-    "axes": [
-      "path_numerically_valid",
-      "cell_size_gate_pass",
-      "cell_convergence_status",
-      "absolute_citable"
-    ],
-    "rule": "scientific_status=provisional_single_cell 이면 citable=false. 값은 지우지 않는다.",
-    "current": "셀 수렴이 시험된 장벽은 **0건**이다. 그래서 n_citable=0 이다. 이건 '값이 틀렸다' 가 아니라 '아직 셀 수렴을 안 봤다' 는 뜻이고, allowed_statement 범위 안에서는 그대로 쓸 수 있다.",
-    "what_would_change_it": "v2_cc333 (Li3Nd 3x3x3) 이 닫히면 li3nd 가 승격 후보가 된다. li2s 는 별도의 두 번째 셀이 필요하다 — 아직 계획에 없다."
   }
 }
