@@ -81,6 +81,58 @@ test_a_stacked_mount_is_identified_by_the_kernel_not_by_row_order    (57차 P0-2
 | `destination-is-resolved-through-mounts` | 자리가 둘이 됐으므로 `MULTI` 의 `destination-is-compared-in-filesystem-coordinates` 로 이동 |
 | `mountinfo-octal-escape-is-decoded` | 그대로 — `m["mp"]` 를 목적지에 맞출 때 여전히 load-bearing |
 
+## 마감 절차 (진행 중 — 이 표가 정본이다)
+
+| # | 항목 | 상태 |
+|---|---|---|
+| 1 | 끊긴 변이 anchor 14개 재결속·은퇴 | ○ (`612412ef`) |
+| 2 | g11 → g12 산출물 재생성 | 진행 중 |
+| 3 | 12조각 전수 재생 + 합집합 | — |
+| 4 | `GATE57_REQUEST.md` | — |
+
+### 2. g11 → g12 — 왜 재생성이 아니라 새 cohort 인가
+
+계약 §13.3.2 는 pin 을 **cohort lifetime 동안 고정**으로 둔다. 이 라운드가
+`preserve.py`·`row_projection.py`(RUN_SCOPE)를 고쳐 identity 가 움직였으므로
+g10 → g11 과 같은 형태다: **g11 을 얼리고 g12 를 연다.**
+
+실측한 값 (`_analyzer_provenance()`, 2026-09-03):
+
+| 필드 | g11 | 현행 트리 |
+|---|---|---|
+| `compute_sha256` | `872ca5b9046ca703` | `044a87204bfca078` |
+| `producer_semantic_sha256` | `eb4555abd9490dd0` | `ad36d111337abd39` |
+| `row_projection_py_sha256` | `b9d895261c7a9df1` | `ad1349257095cbd1` |
+| `src_scoring_py_sha256` | `69e69cb046f4b4ae` | 같음 |
+| `platform` | `…fc-v22…` | `…fc-v24…` (컨테이너 커널 교체) |
+
+세 시험이 각각 무엇을 요구하는지 (실측 메시지 그대로):
+
+```
+test_projection_analyzer_digests_recompute_from_the_current_tree
+  g11_2026_09_02/paired_fixed5_v4: compute 872ca5b9046ca703 ≠ 현행 044a87204bfca078
+test_full_bundle_claims_are_backed_by_a_real_bundle
+  paired_fixed5_v4: 영수증이 낡았다 — 9c7e5e71cbef8f05 ≠ 현행 ea35ff4f39b97489
+  → `python3 docs/22p_gap/make_receipt.py paired_fixed5_v4`
+test_exactly_one_cohort_is_active_and_it_tracks_the_current_tree
+  활성 cohort `g11_2026_09_02` 가 현행 트리에서 벗어났다:
+    ['compute_sha256', 'row_projection_py_sha256']
+```
+
+**순서** (56차 `4e35d2e7` 전례):
+
+1. `freeze_cohort("g11_2026_09_02", <사유>)` — 원장 status → frozen, marker, journal
+2. 원장에 `g12_2026_09_03` 행 추가 (`dir: docs/22p_gap/proj_g12`, `status: active`,
+   위 표의 현행 값으로 `pin`, `무엇이_달라졌나`, `행_바이트가_같은가`)
+3. `python3 docs/22p_gap/row_projection.py paired_fixed5_v4 --cohort g12_2026_09_03`
+   (~28분 — 원자료 `results/` 133M 은 이 컨테이너에 있다, 확인함)
+4. `python3 docs/22p_gap/make_receipt.py paired_fixed5_v4` + 원장 core sha 갱신
+5. docs_lint 3건 초록 확인 → 전체 스위트
+
+**행 바이트가 같은지 반드시 확인한다.** 이 라운드의 변경은 lock 순서·경로 고정·
+mount 해석·identity 정의이고 **계산식이 아니다.** g4~g11 이 `proj ad598fe77e75afec`
+로 동일했으므로 g12 도 같아야 한다. 다르면 그것 자체가 발견이다.
+
 ## 남은 부채 (마감 전 반드시)
 
 ### 죽은 변이 preimage (`--check-preimages` 실측)
