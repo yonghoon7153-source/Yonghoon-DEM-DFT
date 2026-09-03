@@ -1,0 +1,75 @@
+{
+ "schema": "bundle_identity/v1",
+ "date": "2026-09-03",
+ "bundle": "sdcp_c12_v32",
+ "zip_sha256": "ae72a179b28c344dcc91677c874a97393804b988b66f625672ee8782adea0c82",
+ "manifest_sha256": "f30f2b2748ddb9817fdfb9dc92c0ea841d95170cc1fce8e5a32016f5b00f51f8",
+ "analyzer_in_bundle_sha256": "1caeadbaa6c0eb69139e64a053e76a4ecf1e15feb13912cab9da9f73278872e5",
+ "census_in_bundle_sha256": "517c92fc09430b2e052cbd3325983243fc75112a3744a480c9e7d6b5f2b8fc81",
+ "run_staged_in_bundle_sha256": "c07ca49af14696294bd0ea7f7fb94fc216376c7829592d854e561f9c08482a82",
+ "repo_commit": "008f1c05ee484c804a17a3bd56210d28f9f571a3",
+ "repo_commit_reachable_from": "origin/claude/friendly-meitner-lldvar (생성 시점에 이미 푸시된 커밋 — v31 교훈)",
+ "repo_files_sha256_from_commit": {
+  "⚠_출처": "`git show 008f1c05:<path>` 로 계산 — 작업 트리를 보지 않는다",
+  "tools/sdcp/vasp_handoff_bundle.py": "3d4381b0088516b15a30289eac6fea3978b108f080eb5abda18d4c4faf3771d9",
+  "db/properties/sdcp_c12_claim_prereg_2026_08_31.json": "5bc7afbcc45eedc7e94ecd4070c4ace08c8b3aa86ccdd3d629e538be008a6aa3",
+  "db/properties/sdcp_c12_protocol_2026_08_30.json": "941f64d38fee97d5408a9a07636b44b77928e7407738f51017c236a664bf663d",
+  "db/properties/c12_poses_2026_08_30.json": "b5760d6c86ee2644da467157acfcdc217ce599371b7dba81120323a509da4f39",
+  "db/governance/decisions.json": "408e0f611c7006a1c0fbb29854ff82ff6931510b6a3d25f2ea3cbc441455acf7"
+ },
+ "generated_on": "Claude Code 원격 컨테이너 (clean tree · HEAD=008f1c05 = origin) · 2026-09-03",
+ "generated_argv": [
+  "--from_basins",
+  "db/properties/c12_poses_2026_08_30.json",
+  "--frags",
+  "sdcp_neutral",
+  "ptfe_c10",
+  "--refs",
+  "--refs_minimal",
+  "--both_seeds",
+  "--single_point",
+  "--allow_no_pin",
+  "--potcar_identity",
+  "post_hoc",
+  "--cell_c",
+  "36.6551",
+  "--cell_c2",
+  "40.6551",
+  "--min_vacuum",
+  "15.0",
+  "--roles",
+  "primary",
+  "sensitivity",
+  "stress_sensitivity",
+  "--out",
+  "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/82ea256b-12bc-5a75-994e-7718d79c71ba/scratchpad/c12/sdcp_c12_v32"
+ ],
+ "⚠_argv_출처": "v22~v31 과 **완전히 같다** (--out 만 다르다).",
+ "v31_대비": {
+  "바뀐_것": "MANIFEST.json 하나 (repo_commit 도장). 잡 16개의 INCAR·POSCAR·KPOINTS·job.json 은 **바이트 동일** (diff -rq 로 확인).",
+  "왜_다시_만들었나": "v31 은 **푸시 전 커밋(f81270c5)** 에서 생성했고 그 뒤 리베이스로 그 커밋이 브랜치에서 떨어졸다. zip 안 MANIFEST 의 repo_commit 이 GitHub 에서 따라갈 수 없는 해시가 됐다 — 외부 앵커 고리 하나가 끊긴 것. 분석기는 커밋 도달성을 안 보므로 기능은 돌지만, 감사 가능성이 깨져 재생성했다.",
+  "교훈": "**번들은 이미 원격에 있는 커밋에서만 생성한다.** 생성 → 리베이스 순서가 되면 도장이 죽는다.",
+  "v31_처분": "미발송. zip·IDENTITY 는 기록으로 남기고 superseded_by 를 적었다."
+ },
+ "사람_확인_8가지": {
+  "①_결정_세곳_일치": "PASS — README 미반송 문장 · per_job 에 POTCAR 없음 · 분석기 C12_POTCAR_RETURNED=False",
+  "②_verify_zip": "PASS (expect_jobs 16 · ✅ 제출 가능)",
+  "③_check_governance": "rc 0 — 정적 물리 3검사 통과 · 건너뜀 1건(실행 뒤 receipt) 화면 명시",
+  "④_governance_4개_외부앵커": "PASS — 번들 사본 4개 sha256 == repo db/ 원본",
+  "⑤_MANIFEST_실물": "PASS — estimand 4경로·branch afm2424_pm1·진공 36.6551/40.6551·16잡·provenance clean",
+  "⑥_슬랩_ab": "PASS — 10/10 이 (18.2724,0,0)/(-3.6264,10.9259,0)",
+  "⑦_메일_내용": "EXPECT 두 해시 + LAUNCHER_BIN 포함 실행 예시 · walltime 은 '가장 긴 잡 ~300 h ±2배'(README 문구 그대로)",
+  "⑧_커밋_도달성": "PASS — MANIFEST.repo_commit 이 origin 브랜치의 조상이다 (v31 에서 깨졌던 고리 · 이번에 추가)"
+ },
+ "추가_확인_2026_09_03": [
+  "배포된 analyze_results.py 단독 --selftest 422/422 PASS",
+  "census.py 가 가짜 BUNDLE_ZIP_SHA256 을 rc 1 로 거부",
+  "분석기에서 상 폴더 POTCAR 실물을 읽는 곳은 5170 한 자리뿐 (BG P0-1 수정 자리)"
+ ],
+ "⛔_이_증서가_보증하지_않는_것": [
+  "과학적 보고량의 타당성 (D 가 맞는 양인가)",
+  "외주처의 실제 PP 트리·VASP build·스케줄러 환경",
+  "SCF 수렴·OUTCAR 형식",
+  "POTCAR 신원 (post_hoc 정책 — 원고 인용 자격은 별도 판정)"
+ ]
+}

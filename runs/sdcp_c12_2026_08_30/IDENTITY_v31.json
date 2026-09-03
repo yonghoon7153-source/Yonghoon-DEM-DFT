@@ -64,5 +64,7 @@
   "외주처의 실제 PP 트리·VASP build·스케줄러 환경",
   "SCF 수렴·OUTCAR 형식",
   "POTCAR 신원 (post_hoc 정책 — 원고 인용 자격은 별도 판정)"
- ]
+ ],
+ "superseded_by": "IDENTITY_v32.json",
+ "⛔_미발송": "보내지 않았다. repo_commit f81270c5 가 리베이스로 브랜치에서 떨어져 zip 안 MANIFEST 의 커밋 도장이 GitHub 에서 따라갈 수 없게 됐다. 잡 16개는 v32 와 바이트 동일."
 }
