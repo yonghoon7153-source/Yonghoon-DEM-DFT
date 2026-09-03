@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% from "_macros.html" import badges, tags, sources %}
+{% block title %}{{ page.title }}{% endblock %}
+{% block content %}
+<nav class="crumbs">
+  {% if page.kind=='concept' %}<a href="/concepts">개념</a>
+  {% elif page.kind=='entity' %}<a href="/entities">satellite</a>
+  {% else %}<a href="/">홈</a>{% endif %}
+  <span>/</span> <b>{{ page.slug }}</b> <span class="kindpill">{{ page.kind }}</span>
+</nav>
+
+<header class="page-head doc-head">
+  <h1>{{ page.title }}</h1>
+  {% if meta.get('description') %}<p class="lead">{{ meta.get('description') }}</p>{% endif %}
+  {{ badges(meta) }}
+  <dl class="kv inline">
+    {% if meta.get('created') %}<dt>created</dt><dd>{{ meta.get('created') }}</dd>{% endif %}
+    {% if meta.get('updated') %}<dt>updated</dt><dd>{{ meta.get('updated') }}</dd>{% endif %}
+    <dt>파일</dt><dd class="mono">{{ page.relpath }}</dd>
+  </dl>
+  {{ tags(meta) }}
+  {{ sources(meta, wl_index) }}
+</header>
+
+<article class="card md doc-body">{{ body_html|safe }}</article>
+{% endblock %}

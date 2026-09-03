@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block title %}게이트 리뷰 원장{% endblock %}
+{% block content %}
+<header class="page-head">
+  <h1>게이트 리뷰 원장 <span class="muted">최근 {{ show }}절</span></h1>
+  {% if gate.available %}
+  <p class="lead">정본: <code>{{ gate.path }}</code>
+    ({{ gate.count }}절 · {{ '%.0f'|format(gate.bytes/1024) }} KB · 파일 수정 {{ gate.mtime }}).
+    이 화면은 <b>읽기 전용</b>이고, 원장 자체는 게이트 리뷰 대상 트리 안에 있으므로 여기서 고칠 수 없다.</p>
+  <p class="note">더 보려면 <code>?n=</code> (최대 10): <a href="/gate?n=1">1</a> ·
+    <a href="/gate?n=3">3</a> · <a href="/gate?n=5">5</a> · <a href="/gate?n=10">10</a></p>
+  {% else %}
+  <p class="lead">원장 파일을 찾지 못했다: <code>{{ gate.path }}</code></p>
+  {% endif %}
+</header>
+
+{% if gate.available %}
+<section class="card">
+  <h2 class="card-h">라운드 색인 <span class="muted">{{ gate.count }}절</span></h2>
+  <ol class="gatelist">
+    {% for t in gate.titles|reverse %}<li>{{ t }}</li>{% endfor %}
+  </ol>
+</section>
+
+{% for s in latest %}
+<section class="card">
+  <h2 class="card-h">{{ s.title }}</h2>
+  <div class="md">{{ s.html|safe }}</div>
+</section>
+{% endfor %}
+{% endif %}
+{% endblock %}

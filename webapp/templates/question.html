@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% from "_macros.html" import badges, tags, sources %}
+{% block title %}{{ page.title }} · 질문 카드{% endblock %}
+{% block content %}
+<nav class="crumbs"><a href="/questions">열린 질문</a> <span>/</span> <b>{{ page.slug }}</b></nav>
+
+<header class="page-head doc-head">
+  <h1>{{ page.title }}</h1>
+  {% if meta.get('description') %}<p class="lead">{{ meta.get('description') }}</p>{% endif %}
+  {{ badges(meta) }}
+  <dl class="kv inline">
+    {% if meta.get('created') %}<dt>created</dt><dd>{{ meta.get('created') }}</dd>{% endif %}
+    {% if meta.get('updated') %}<dt>updated</dt><dd>{{ meta.get('updated') }}</dd>{% endif %}
+    {% if meta.get('feedsInto') %}<dt>feedsInto</dt><dd>{{ meta.get('feedsInto') }}</dd>{% endif %}
+    <dt>파일</dt><dd class="mono">{{ page.relpath }}</dd>
+  </dl>
+  {{ tags(meta) }}
+  {{ sources(meta, wl_index) }}
+</header>
+
+{# 절을 종류별로 갈라 렌더한다 — 이 위키에서 "무엇이 근거이고 무엇이 아직 빈칸인가" 는
+   본문 순서가 아니라 절의 종류가 말한다. #}
+{% for s in secs %}
+<section class="card sec sec-{{ s.cls }}">
+  {% if s.title %}
+  <h2 class="sec-h">
+    <span class="sec-tag t-{{ s.cls }}">
+      {% if s.cls=='for' %}근거 ✓{% elif s.cls=='against' %}반증 ✗{% elif s.cls=='gap' %}빈 근거 ○
+      {% elif s.cls=='log' %}기록{% elif s.cls=='method' %}설계{% elif s.cls=='hypo' %}가설{% else %}절{% endif %}
+    </span>
+    {{ s.title }}
+  </h2>
+  {% endif %}
+  <div class="md">{{ s.html|safe }}</div>
+</section>
+{% endfor %}
+{% endblock %}

@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% from "_macros.html" import badges, tags %}
+{% block title %}개념{% endblock %}
+{% block content %}
+<header class="page-head">
+  <h1>개념</h1>
+  <p class="lead"><code>wiki/concepts/</code> — 여러 원자료에서 컴파일된 재사용 단위.</p>
+</header>
+<div class="grid cards">
+  {% for it in items %}
+  <article class="card">
+    <a class="lit-t" href="{{ it.url }}">{{ it.title }}</a>
+    {% if it.description %}<p class="lit-d">{{ it.description }}</p>{% endif %}
+    {{ badges(it.meta) }}
+    {{ tags(it.meta) }}
+    <div class="lit-foot"><span class="muted">updated {{ it.updated or '—' }}</span>
+      <span class="muted mono">{{ it.relpath }}</span></div>
+  </article>
+  {% else %}<p class="muted">개념 페이지가 없다.</p>{% endfor %}
+</div>
+{% endblock %}

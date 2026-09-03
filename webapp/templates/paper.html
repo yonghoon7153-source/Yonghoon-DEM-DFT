@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% from "_macros.html" import badges, tags, sources %}
+{% block title %}{{ page.title }} · digest{% endblock %}
+{% block content %}
+<nav class="crumbs"><a href="/papers">논문 digest</a> <span>/</span> <b>{{ page.slug }}</b></nav>
+
+<header class="page-head doc-head">
+  <h1>{{ page.title }}</h1>
+  {% if meta.get('description') %}<p class="lead">{{ meta.get('description') }}</p>{% endif %}
+  {{ badges(meta) }}
+  <dl class="kv inline">
+    {% if meta.get('source_url') %}<dt>source</dt><dd class="mono wrap">{{ meta.get('source_url') }}</dd>{% endif %}
+    {% if meta.get('ingested') %}<dt>ingested</dt><dd>{{ meta.get('ingested') }}</dd>{% endif %}
+    {% if sha %}<dt>sha256 (원문 봉인)</dt><dd class="mono wrap">{{ sha }}</dd>{% endif %}
+    <dt>파일</dt><dd class="mono">{{ page.relpath }}</dd>
+  </dl>
+  {{ tags(meta) }}
+  {{ sources(meta, wl_index) }}
+</header>
+
+{% if figs %}
+<div class="fignotice">
+  본문의 <b>Fig. N</b> · <b>Table N</b> 표기는 자동 링크된다 — 마우스를 올리면 옆에, 누르면 고정된다.
+  그림 {{ figs|length }}장은 <code>wiki/raw/figures/{{ page.slug }}/</code> 의 크로핑본이고
+  캡션은 <code>figures.json</code> 에서 온다{% if figmeta.get('generated') %} (추출 {{ figmeta.get('generated') }}, {{ figmeta.get('dpi') }} dpi){% endif %}.
+</div>
+{% endif %}
+
+<article class="card md doc-body" id="digest-body">{{ body_html|safe }}</article>
+{% endblock %}
+
+{% block scripts %}
+<div id="figdata" data-slug="{{ page.slug }}" hidden></div>
+<script src="{{ url_for('static', filename='js/figref.js') }}?v={{ asset_version }}"></script>
+{% endblock %}

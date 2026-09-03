@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% from "_macros.html" import badges, tags %}
+{% block title %}열린 질문{% endblock %}
+{% block content %}
+<header class="page-head">
+  <h1>열린 질문</h1>
+  <p class="lead"><code>wiki/questions/</code> — 이 위키의 핵심 구조는 질문 카드다.
+    각 카드는 <b>Evidence For / Against / Gap / Status Log</b> 로 근거를 갈라 적는다.</p>
+</header>
+
+<div class="grid cards">
+  {% for it in items %}
+  <article class="card q">
+    <a class="q-t" href="{{ it.url }}">{{ it.title }}</a>
+    {% if it.description %}<p class="lit-d">{{ it.description }}</p>{% endif %}
+    {{ badges(it.meta) }}
+    <div class="evbar">
+      <span class="ev ev-for">For {{ it.nfor }}절</span>
+      <span class="ev ev-against">Against {{ it.nagainst }}절</span>
+      {% if 'gap' in it.has %}<span class="ev ev-gap">Gap</span>{% endif %}
+      {% if 'log' in it.has %}<span class="ev ev-log">Status Log</span>{% endif %}
+    </div>
+    {{ tags(it.meta) }}
+    <div class="lit-foot"><a class="btn" href="{{ it.url }}">카드 열기 →</a>
+      <span class="muted mono">{{ it.relpath }}</span></div>
+  </article>
+  {% else %}
+  <p class="muted">질문 카드가 없다.</p>
+  {% endfor %}
+</div>
+{% endblock %}

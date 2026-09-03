@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block title %}검색{% endblock %}
+{% block content %}
+<header class="page-head">
+  <h1>검색</h1>
+  <form class="searchbig" action="/search" method="get" role="search">
+    <input type="search" name="q" value="{{ q }}" placeholder="두 글자 이상…" aria-label="검색어" autofocus>
+    <button class="btn" type="submit">찾기</button>
+  </form>
+  <p class="lead">위키 페이지 + <code>wiki/index.md</code>·<code>log.md</code> +
+    mode-observability 문서 + 게이트 원장 전문을 그대로 훑는다 (단순 부분 문자열, 대소문자 무시).</p>
+</header>
+
+{% if q %}
+<p class="note"><b>{{ hits|length }}</b>개 파일에서 걸렸다 — 검색어 <code>{{ q }}</code></p>
+{% for h in hits %}
+<section class="card hit">
+  <h2 class="card-h"><a href="{{ h.url }}">{{ h.title }}</a>
+    <span class="kindpill">{{ h.kind }}</span>
+    <span class="pill">{{ h.count }}회</span>
+    <span class="muted mono">{{ h.path }}</span></h2>
+  {% for s in h.snips %}
+  <p class="snip">…{{ s.pre }}<mark>{{ s.hit }}</mark>{{ s.post }}…</p>
+  {% endfor %}
+</section>
+{% else %}
+<p class="muted">결과 없음.</p>
+{% endfor %}
+{% endif %}
+{% endblock %}

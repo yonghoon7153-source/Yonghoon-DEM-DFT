@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% from "_macros.html" import badges, tags %}
+{% block title %}논문 digest{% endblock %}
+{% block content %}
+<header class="page-head">
+  <h1>논문 digest</h1>
+  <p class="lead"><code>wiki/raw/papers/</code> — 흡수한 원문의 절별 해체분석.
+    <b>sha256 은 원본 PDF 의 봉인</b>이다 (digest 파일이 아니라 원문의 지문).</p>
+</header>
+
+<div class="grid cards">
+  {% for it in items %}
+  <article class="card lit">
+    <a class="lit-t" href="{{ it.url }}">{{ it.title }}</a>
+    {% if it.description %}<p class="lit-d">{{ it.description }}</p>{% endif %}
+    <dl class="kv">
+      {% if it.source_url %}<dt>source</dt><dd class="mono wrap">{{ it.source_url }}</dd>{% endif %}
+      {% if it.ingested %}<dt>ingested</dt><dd>{{ it.ingested }}</dd>{% endif %}
+      {% if it.sha12 %}<dt>sha256</dt><dd class="mono">{{ it.sha12 }}…</dd>{% endif %}
+      <dt>figures</dt><dd>{{ it.nfig }}장{% if it.ntab %} (표 {{ it.ntab }})</dd>{% else %}</dd>{% endif %}
+    </dl>
+    {{ tags(it.meta) }}
+    <div class="lit-foot"><a class="btn" href="{{ it.url }}">digest 전문 →</a>
+      <span class="muted mono">{{ it.relpath }}</span></div>
+  </article>
+  {% else %}
+  <p class="muted">wiki/raw/papers/ 에 digest 가 없다.</p>
+  {% endfor %}
+</div>
+{% endblock %}

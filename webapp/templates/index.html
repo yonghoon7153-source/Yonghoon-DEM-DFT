@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block title %}홈 · Yonghoon-DEM-DFT 위키{% endblock %}
+{% block content %}
+<header class="page-head">
+  <h1>모노레포 열람</h1>
+  <p class="lead">위키 카탈로그와 연구 산출물을 브라우저에서 읽는다. 이 앱은 <b>아무것도 쓰지 않는다</b> —
+    화면에 보이는 모든 숫자·문장의 정본은 저장소의 파일이다.</p>
+  <div class="counts">
+    <a class="count" href="/papers"><b>{{ counts.get('paper', 0) }}</b><span>논문 digest</span></a>
+    <a class="count" href="/questions"><b>{{ counts.get('question', 0) }}</b><span>열린 질문</span></a>
+    <a class="count" href="/concepts"><b>{{ counts.get('concept', 0) }}</b><span>개념</span></a>
+    <a class="count" href="/entities"><b>{{ counts.get('entity', 0) }}</b><span>satellite</span></a>
+    <span class="count static"><b>{{ total }}</b><span>전체 위키 페이지</span></span>
+  </div>
+</header>
+
+<div class="two-col">
+  <section class="card">
+    <h2 class="card-h">위키 카탈로그 <span class="muted">wiki/index.md</span></h2>
+    <div class="md">{{ index_html|safe }}</div>
+  </section>
+
+  <section class="card">
+    <h2 class="card-h">최근 활동 <span class="muted">wiki/log.md</span></h2>
+    <ol class="loglist">
+      {% for e in log %}
+      <li>
+        <div class="log-top"><span class="log-date">{{ e.date }}</span>
+          <span class="log-act a-{{ e.action }}">{{ e.action }}</span>
+          <span class="log-sub">{{ e.subject }}</span></div>
+        {% if e.body %}<details><summary>내용</summary><pre class="log-body">{{ e.body }}</pre></details>{% endif %}
+      </li>
+      {% else %}
+      <li class="muted">log.md 를 읽지 못했다.</li>
+      {% endfor %}
+    </ol>
+  </section>
+</div>
+{% endblock %}

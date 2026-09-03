@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+{% block title %}Phase 결과 · mode-observability{% endblock %}
+{% block content %}
+<header class="page-head">
+  <h1>Phase 결과 <span class="muted">mode-observability</span></h1>
+  <p class="lead"><code>mode-observability/docs/*.md</code> 와 <code>results/**/*.csv</code>.
+    <b>수치의 정본은 CSV 파일 자체다</b> — 아래 표는 그 파일을 그대로 읽어 그린 것이고,
+    행이 {{ table_max }}개를 넘으면 앞부분과 요약 통계만 보여준다(표로 다 그리면 못 읽는다).</p>
+</header>
+
+{% for d in docs %}
+<section class="card">
+  <h2 class="card-h">{{ d.name }} <span class="muted mono">{{ d.relpath }}</span></h2>
+  <div class="md">{{ d.html|safe }}</div>
+</section>
+{% else %}
+<p class="muted">mode-observability/docs/ 에 문서가 없다.</p>
+{% endfor %}
+
+{% for c in csvs %}
+<section class="card csv">
+  <h2 class="card-h">{{ c.name }}
+    <span class="muted mono">{{ c.relpath }}</span>
+    <span class="pill">{{ c.nrows }} 행 · {{ c.header|length }} 열 · {{ '%.1f'|format(c.bytes/1024) }} KB</span>
+  </h2>
+  {% if c.error %}
+  <p class="muted">읽지 못했다: {{ c.error }}</p>
+  {% else %}
+    {% if not c.full %}
+    <p class="note">행이 많아 <b>앞 {{ c.rows|length }}행</b>만 그린다. 아래 요약 통계는 <b>전체 {{ c.nrows }}행</b>에서 계산했다.</p>
+    {% endif %}
+    <div class="tablewrap">
+      <table class="data">
+        <thead><tr>{% for h in c.header %}<th>{{ h }}</th>{% endfor %}</tr></thead>
+        <tbody>
+        {% for r in c.rows %}<tr>{% for v in r %}<td class="mono">{{ v }}</td>{% endfor %}</tr>{% endfor %}
+        </tbody>
+      </table>
+    </div>
+    {% if c.stats %}
+    <h3 class="sub-h">요약 통계 (전체 {{ c.nrows }}행)</h3>
+    <div class="tablewrap">
+      <table class="data stats">
+        <thead><tr><th>열</th><th>n</th><th>min</th><th>median</th><th>mean</th><th>max</th></tr></thead>
+        <tbody>
+        {% for s in c.stats %}
+        <tr>
+          <td>{{ s.col }}</td>
+          {% if s.numeric %}
+          <td class="mono">{{ s.n }}</td>
+          <td class="mono">{{ '%.6g'|format(s.min) }}</td>
+          <td class="mono">{{ '%.6g'|format(s.median) }}</td>
+          <td class="mono">{{ '%.6g'|format(s.mean) }}</td>
+          <td class="mono">{{ '%.6g'|format(s.max) }}</td>
+          {% else %}
+          <td class="mono">{{ s.n }}</td><td colspan="4" class="muted">숫자 아님 · 고유값 {{ s.uniq }}</td>
+          {% endif %}
+        </tr>
+        {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    {% endif %}
+  {% endif %}
+</section>
+{% else %}
+<p class="muted">mode-observability/results/ 에 CSV 가 없다.</p>
+{% endfor %}
+{% endblock %}

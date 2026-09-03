@@ -1,0 +1,50 @@
+{# frontmatter 배지 — SCHEMA.md 의 progressive-disclosure 필드를 눈에 보이게 한다.
+   값 자체를 클래스에 넣지 않고 화이트리스트로 고른다 (임의 클래스 주입 방지). #}
+{% set _ok = {
+  'confidence': ['high','medium','low'],
+  'verificationStatus': ['verified','partial','unverified','contradicted'],
+  'status': ['open','active','answered','parked','closed'],
+  'claimType': ['empirical','theoretical','prescriptive','definitional'],
+  'evidenceScope': ['multi-source-primary','multi-source','single-source','secondary','anecdotal']
+} %}
+
+{% macro badges(meta, fields=None) %}
+{% set fs = fields or ['confidence','verificationStatus','status','claimType','evidenceScope'] %}
+<div class="badges">
+  {% for f in fs %}
+    {% set v = meta.get(f) %}
+    {% if v %}
+      {% set vs = v|string %}
+      {% set cls = ('v-' ~ vs|replace(' ','-')) if vs in _ok.get(f, []) else 'v-other' %}
+      <span class="badge b-{{ f }} {{ cls }}" title="{{ f }}">
+        <span class="bk">{{ f }}</span><span class="bv">{{ vs }}</span>
+      </span>
+    {% endif %}
+  {% endfor %}
+  {% if meta.get('explored') is not none %}
+    <span class="badge b-explored {{ 'v-yes' if meta.get('explored') else 'v-no' }}" title="explored">
+      <span class="bk">explored</span><span class="bv">{{ 'yes' if meta.get('explored') else 'no' }}</span>
+    </span>
+  {% endif %}
+</div>
+{% endmacro %}
+
+{% macro tags(meta) %}
+{% if meta.get('tags') %}
+<div class="tags">
+  {% for t in meta.get('tags') %}<span class="tag">#{{ t }}</span>{% endfor %}
+</div>
+{% endif %}
+{% endmacro %}
+
+{% macro sources(meta, index) %}
+{% if meta.get('sources') %}
+<div class="srcs"><span class="srcs-h">sources</span>
+  {% for s in meta.get('sources') %}
+    {% set key = (s|string).replace('.md','') %}
+    {% if index.get(key) %}<a class="src" href="{{ index.get(key) }}">{{ s }}</a>
+    {% else %}<span class="src src-plain">{{ s }}</span>{% endif %}
+  {% endfor %}
+</div>
+{% endif %}
+{% endmacro %}

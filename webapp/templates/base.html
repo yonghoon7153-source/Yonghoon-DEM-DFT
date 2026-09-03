@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="ko" data-theme-boot>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<title>{% block title %}Yonghoon-DEM-DFT · 위키·결과 열람{% endblock %}</title>
+{# ⚠ 인라인 <script> 를 쓰지 않는다 — CSP 가 script-src 'self' 라서 막힌다.
+   테마 초기화도 static/js/boot.js 로 뺐다 (문서 <head> 에서 동기 로드 → FOUC 없음). #}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}?v={{ asset_version }}">
+<script src="{{ url_for('static', filename='js/boot.js') }}?v={{ asset_version }}"></script>
+{% block head %}{% endblock %}
+</head>
+<body>
+<a class="skip-link" href="#main">본문으로 건너뛰기</a>
+<button class="menu-toggle" id="menubtn" aria-label="메뉴 열기/닫기" aria-expanded="false">☰</button>
+
+<nav class="sidebar" aria-label="주 메뉴">
+  <div class="sidebar-header">
+    <a href="/" class="brand">Yonghoon<span class="brand-accent">·wiki</span></a>
+    <div class="brand-sub">모노레포 열람 · 읽기 전용</div>
+  </div>
+
+  <form class="searchbox" action="/search" method="get" role="search">
+    <input type="search" name="q" placeholder="전문 검색…" aria-label="전문 검색"
+           value="{{ q if q is defined else '' }}" autocomplete="off">
+  </form>
+
+  <div class="nav-section">위키</div>
+  <ul class="nav-links">
+    <li><a href="/" {% if active=='home' %}class="active" aria-current="page"{% endif %}><span class="ic">▦</span> 홈 · 카탈로그</a></li>
+    <li><a href="/papers" {% if active=='papers' %}class="active" aria-current="page"{% endif %}><span class="ic">▣</span> 논문 digest</a></li>
+    <li><a href="/questions" {% if active=='questions' %}class="active" aria-current="page"{% endif %}><span class="ic">?</span> 열린 질문</a></li>
+    <li><a href="/concepts" {% if active=='concepts' %}class="active" aria-current="page"{% endif %}><span class="ic">◆</span> 개념</a></li>
+    <li><a href="/entities" {% if active=='entities' %}class="active" aria-current="page"{% endif %}><span class="ic">▤</span> 프로젝트(satellite)</a></li>
+  </ul>
+
+  <div class="nav-section">연구 산출물</div>
+  <ul class="nav-links">
+    <li><a href="/results" {% if active=='results' %}class="active" aria-current="page"{% endif %}><span class="ic">📈</span> Phase 결과</a></li>
+    <li><a href="/gate" {% if active=='gate' %}class="active" aria-current="page"{% endif %}><span class="ic">⚖</span> 게이트 원장</a></li>
+    <li><a href="/search" {% if active=='search' %}class="active" aria-current="page"{% endif %}><span class="ic">🔍</span> 검색</a></li>
+  </ul>
+
+  <div class="sidebar-footer">
+    <button class="theme-toggle" id="themebtn" aria-label="라이트/다크 전환">
+      <span class="tt-icon">🌙</span><span class="tt-label">다크 모드</span>
+    </button>
+    <p class="ro-note">이 앱은 <b>아무것도 쓰지 않는다.</b><br>
+      <code>wiki/raw/</code> 는 sha256 봉인 불변층이고,<br>
+      <code>degradation-degeneracy/</code> 는 게이트 리뷰 대상 code identity 다.</p>
+  </div>
+</nav>
+
+<main class="content" id="main" tabindex="-1">
+{% block content %}{% endblock %}
+</main>
+{% block scripts %}{% endblock %}
+</body>
+</html>
