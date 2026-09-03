@@ -20,6 +20,23 @@
 Phase 1·2 는 **본 실행 없이** 판정 가능하도록 설계한다 (Jacobian 은 국소 분석).
 전역 degeneracy 는 degradation-degeneracy 의 격자 방법론을 그대로 가져온다.
 
+## Phases (원전 흡수에서 나온 것)
+
+2026-09-03 에 원전([[birkl-ocv-degradation-diagnostic]], Birkl et al. 2017 —
+`wiki/raw/papers/birkl2017_degradation-diagnostics-ocv.md`)을 해체분석한 결과
+**우리가 재고 있는 절차가 원전과 자유도부터 다르다**는 것이 확인됐다. 그
+차이가 곧 값싼 실험 3건이다.
+
+| # | 실험 | 왜 | 비용 |
+|---|---|---|---|
+| 4 | **컷오프 제약 실험** | 원전은 자유 파라미터 **3개**이고 stoichiometric offset 2자유도를 고정 컷오프(4.2/2.7 V) **등식으로 소거**한다. 우리 창 모델은 `p = [α_PE, β_PE, α_NE, β_NE]` **4개**이고 그 제약이 없다 (`src/fitting.py:60`). 우리가 본 degeneracy 의 일부가 **원전에 없는 자유도**에서 올 수 있다 | 기존 곡선 재사용, 본 실행 불요 |
+| 5 | **기울기 마스크 on/off** | 원전은 `\|ΔE/ΔSoC\| < 0.1` 구간만 목적함수에 넣는다 — 즉 **모드를 가장 잘 가르는 급경사(EoD) 구간을 버린다.** 임계 0.1 의 근거도 민감도 분석도 원문에 없다. paired 비교로 "정보 많은 구간을 버리는 대가" 를 직접 잰다 | 기존 곡선 재사용 |
+| 6 | **li/de 축퇴 재현** | 원전이 스스로 진술한 축퇴("LLI + LAM_NE,de 조합이 같은 양의 LAM_NE,li 와 **같은 OCV 시그니처**를 낸다")를 우리 합성 truth 에서 재현한다. 우리 격자는 `de` 만 돌렸으므로 `li` 를 새로 시뮬레이션해야 한다 — Phase 1b 가 발견한 **LAM_PE 부호 불일치**의 유력 원인이기도 하다 | PyBaMM 소규모 스윕 필요 |
+
+**Phase 4·5 는 원전이 안 한 비교**다. Phase 6 은 원전이 말로만 한 것을
+수치로 확인하는 것이고, 동시에 세미나 p.8 과 우리 Phase 1b 의 LAM_PE 부호
+불일치를 설명할 후보다.
+
 ## 경계 (하드 룰)
 
 1. **RUN_SCOPE 불가침**: `degradation-degeneracy/` 의 `src/ tools/ configs/
