@@ -5,7 +5,7 @@ created: 2026-09-03
 updated: 2026-09-03
 type: research-question
 tags: [battery, degradation, research]
-sources: [raw/papers/2026-09-02-siwon-kim-degradation-mode-ml-seminar.md, raw/transcripts/2026-09-03-voice-memo-007-degradation-mode-ml.md, raw/papers/birkl2017_degradation-diagnostics-ocv.md, raw/papers/wang2025_interpretable-ml-battery-prognosis.md, raw/papers/kim2023_graphite-heterogeneity-lifetime.md, raw/papers/su2024_drt-soh-health-features.md, raw/papers/rhyu2025_systematic-feature-design-formation.md, raw/papers/zhang2020_eis-gpr-capacity-rul.md, raw/papers/tao2025_nondestructive-degradation-decoupling.md]
+sources: [raw/papers/2026-09-02-siwon-kim-degradation-mode-ml-seminar.md, raw/transcripts/2026-09-03-voice-memo-007-degradation-mode-ml.md, raw/papers/birkl2017_degradation-diagnostics-ocv.md, raw/papers/wang2025_interpretable-ml-battery-prognosis.md, raw/papers/kim2023_graphite-heterogeneity-lifetime.md, raw/papers/su2024_drt-soh-health-features.md, raw/papers/rhyu2025_systematic-feature-design-formation.md, raw/papers/zhang2020_eis-gpr-capacity-rul.md, raw/papers/tao2025_nondestructive-degradation-decoupling.md, raw/papers/lin2024_ocv-degradation-mode-identifiability.md]
 confidence: medium
 explored: false
 verificationStatus: unverified
@@ -579,3 +579,32 @@ H2 가 참일 수 있음에 주의한다 — 부호가 같다고 벡터가 평�
     는 것 — `[인쇄]` "The challenge of distinctly identifying these mechanisms
     persists, even with advanced diagnostics" 라고 적은 **뒤에** 제목에
     "decoupling" 을 쓴다. 여덟 편의 "어휘가 없다" 와는 다른 형태다.
+
+- [2026-09-03 (10)] open 유지 — (7) 에서 **다음 흡수 1순위로 예약해 둔** 문헌을
+  흡수했다 ([[np-lip-ocv-reparametrization]], Lin & Khoo, *J. Power Sources*
+  **605** (2024) 234446, raw:
+  `raw/papers/lin2024_ocv-degradation-mode-identifiability.md`).
+  이 카드에 준 것 넷:
+  - **★ 이 카드의 전제 하나가 갈라졌다 — PVS 와 SEV 를 한 묶음으로 다룰 수 없다.**
+    2 자유도 정리의 따름정리에 따라 **PVS 는 새 관측 채널이 아니라 같은 곡선의
+    재가중**이다 (Evidence For 새 항목). 반면 **SEV 는 동역학 축이라 이 정리의
+    사정권 밖**이고, 원전은 동역학을 명시적으로 범위 밖에 둔다. 즉 "관측을 늘리면
+    갈리는가" 라는 이 카드의 질문에 대해 **두 후보의 지위가 다르다.**
+  - **Evidence Against 1건 추가**: 구조적으로 잃는 방향은 **LLI↔LAM_PE 가 아니라
+    세 모드 공통 스케일 방향**이다. 곡선은 원리적으로 LLI 와 LAM_PE 를 구별한다 →
+    H1 이 참이라면 그 이유는 구조가 아니라 **조건수**다. 무대가 옮겨졌다.
+  - **판정 절차 정정 1건** ("답하는 방법" 3번): PVS 의 Jacobian 행은 구조적으로
+    2차원 평면 안에 갇히므로 특이값 검사가 자명하게 통과한다 — `(r_N/P, z₀⁺)`
+    좌표에서 **방향각**을 비교해야 한다.
+  - **어휘 전수 (이 계보 열 편째)**: `identifiab*` **26** — **연속 0회가 처음으로
+    깨졌다.** 그러나 `degenerac*` **0** · `non-unique` **0** · `collinear*` **0** ·
+    `nullspace` **0** · `Hessian` **0** · `singular value` **0** · `noise` **0** ·
+    `error bar` **0** · `cross-valid*` **0** · **파라미터 상관 언급 0**.
+    `[해석]` 열 편째의 새 형태는 **"개념을 절반만 자기 쪽으로 돌린다"** 이다 —
+    추정 정밀도(CRLB)는 재고, 비유일성은 §2.3 에 닫힌 형태로 인쇄해 놓고
+    "redundancy" 라 부르고 지나간다. 그리고 오차공분산의 **비대각을 계산해 놓고
+    `sqrt(diag)` 만 그린다** — 축퇴의 방향을 손에 쥔 채 표시하지 않는다.
+    **우리가 값싸게 공급할 수 있는 것이 바로 그 그림이다.**
+  - **새 Gap 1건**: 세미나가 PVS 를 **SOC 정규화 곡선**에서 계산했는지 **Ah 축**
+    에서 계산했는지가 원문에 인쇄돼 있지 않다. 이 구분이 위 따름정리의 적용
+    여부를 가른다 (Ah 축이면 총용량 정보가 섞여 셋째 숫자를 실을 수 있다).
