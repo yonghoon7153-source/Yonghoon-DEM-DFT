@@ -216,3 +216,26 @@ LAM_PE ≈ LAM_NE 는 물리가 아니라 **flat valley 방향에서 두 전극�
      선행 연구다. 다음 세션의 1순위.
   - 우리 쪽 수치는 이 카드에 옮기지 않는다 — 정본은 artifact +
     `docs/RESULTS*.md`.
+
+- [2026-09-03 (9)] active 유지 — 제목에 "degradation pattern **decoupling**" 이
+  들어간 논문을 흡수했지만 **이 카드에 직접 닿는 근거는 없다**
+  (`raw/papers/tao2025_nondestructive-degradation-decoupling.md`, Tao et al.,
+  *Energy Environ. Sci.* 18 (2025) 1544). 이유를 명시적으로 적는다 — 제목만으로
+  이 카드의 선행 연구로 오인하기 쉽기 때문이다:
+  1. **좌표계가 다르다.** 그 논문의 미지수는 2개(열역학 ΔE / 동역학 η)이고
+     LLI·LAM_PE·LAM_NE 는 **전부 ΔE 한 칸 안**이다
+     ([[thermo-kinetic-loss-partition]]). 22p 와 같은 형태의 분해값
+     (LAM_PE / LAM_NE / LLI 각각의 %)을 **산출하지 않는다.**
+  2. **LLI·LAM 을 정량한 적이 없다.** 두 약어가 본문 12 / 7 회 나오지만 전부
+     정성 서술이고, half-cell OCP fitting·해체분석 정량이 없다. 유일하게 모드를
+     구분하려 한 자리는 Fig. 5g 의 ICA 화살표 주석(peak 강도 ↓ = LAM,
+     peak 이동 = LLI)이며 **수치가 없고** 그 귀속은 참고문헌에 기댄다.
+  3. **그럼에도 한 줄이 이 카드 편에 선다**: `[인쇄]` "**The challenge of
+     distinctly identifying these mechanisms persists, even with advanced
+     diagnostics** …, which struggle to non-destructively elucidate internal
+     aging states and their interdependencies." 즉 이 계보의 논문이 **모드
+     식별의 어려움을 자기 방법의 설계 이유로 인쇄**한 사례가 하나 더 늘었다
+     (Birkl 2017 §4.2 와 같은 형태). 다만 그 어려움을 **정량하지 않고**
+     제목에는 "decoupling" 을 쓴다.
+  - 식별 가능성 어휘 전수 (아홉 편째): `identifiab*` **0** · `degenerac*` **0** ·
+    `cross-valid*` **0** · `half-cell` **0** (본문 16쪽 + SI 75쪽).

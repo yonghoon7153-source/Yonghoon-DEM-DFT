@@ -5,7 +5,7 @@ created: 2026-09-03
 updated: 2026-09-03
 type: research-question
 tags: [battery, degradation, research]
-sources: [raw/papers/2026-09-02-siwon-kim-degradation-mode-ml-seminar.md, raw/transcripts/2026-09-03-voice-memo-007-degradation-mode-ml.md, raw/papers/birkl2017_degradation-diagnostics-ocv.md, raw/papers/wang2025_interpretable-ml-battery-prognosis.md, raw/papers/kim2023_graphite-heterogeneity-lifetime.md, raw/papers/su2024_drt-soh-health-features.md, raw/papers/rhyu2025_systematic-feature-design-formation.md, raw/papers/zhang2020_eis-gpr-capacity-rul.md]
+sources: [raw/papers/2026-09-02-siwon-kim-degradation-mode-ml-seminar.md, raw/transcripts/2026-09-03-voice-memo-007-degradation-mode-ml.md, raw/papers/birkl2017_degradation-diagnostics-ocv.md, raw/papers/wang2025_interpretable-ml-battery-prognosis.md, raw/papers/kim2023_graphite-heterogeneity-lifetime.md, raw/papers/su2024_drt-soh-health-features.md, raw/papers/rhyu2025_systematic-feature-design-formation.md, raw/papers/zhang2020_eis-gpr-capacity-rul.md, raw/papers/tao2025_nondestructive-degradation-decoupling.md]
 confidence: medium
 explored: false
 verificationStatus: unverified
@@ -491,3 +491,28 @@ H2 가 참일 수 있음에 주의한다 — 부호가 같다고 벡터가 평�
     타 방법 기각**이라는 것은, "개념이 없어서 안 쓴 것이 아니라 자기 쪽으로
     돌리지 않은 것" 이라는 **더 강한 형태의 확인**이다. 심사자가 Braatz 였다는
     사실(`[인쇄]` Peer review information)이 이 관찰의 무게를 더한다.
+
+- [2026-09-03 (9)] open 유지 — 제목에 "degradation pattern **decoupling**" 이
+  들어간 논문을 본문 + SI + **저자 공개 저장소 2종**으로 흡수
+  (`raw/papers/tao2025_nondestructive-degradation-decoupling.md`, Tao et al.,
+  *Energy Environ. Sci.* **18** (2025) 1544, DOI 10.1039/d4ee03839h).
+  이 카드에 준 것 셋:
+  - **판정 (경계 확정, Evidence 아님)**: 그 논문의 "decoupling" 은 **우리 축이
+    아니다.** 미지수가 2개(열역학 ΔE / 동역학 η)이고, **LLI·LAM_PE·LAM_NE 가
+    전부 ΔE 한 칸 안**에 들어간다 — 논문 자신의 Fig. 5b 가 LAM·LLI 두 상자를
+    한 화살표로 묶으며 그 옆에 `[인쇄]` **"Hard to decouple"** 을 인쇄하고,
+    Fig. 5e 범례가 `[인쇄]` "Thermodynamic loss (**LAM&LLI**)" 다. 좌표계는
+    [[thermo-kinetic-loss-partition]] 에. **H1/H2 어느 쪽에도 무게를 싣지 않는다.**
+  - **후보 관측 1건 추가 (위 "답하는 방법")**: 전류 축. 다단 충전(0.33C ↔ 3C)이
+    ΔE/η 비중을 바꾸므로 채널이 하나 늘어난다. 단 그 논문은 그 채널로 열역학
+    **안**을 가른 적이 없다.
+  - **우리가 공급할 자리를 그 논문이 명시적으로 남긴다**: `[인쇄]` Discussion
+    "Addressing open challenges of **electrochemical-level decoupling** of
+    degradation patterns could further consolidate the statistical evidence."
+    즉 이 카드의 질문은 그 논문이 스스로 비워 둔 자리다.
+  - **어휘 전수 (이 계보 아홉 편째)**: 본문 16쪽 + SI 75쪽에서 `identifiab*`
+    **0** · `degenerac*` **0** · `cross-valid*` **0** · `half-cell` **0** ·
+    `error bar` **0**. 이 논문의 특이점은 **어휘 없이 개념을 인정하고 넘어간다**
+    는 것 — `[인쇄]` "The challenge of distinctly identifying these mechanisms
+    persists, even with advanced diagnostics" 라고 적은 **뒤에** 제목에
+    "decoupling" 을 쓴다. 여덟 편의 "어휘가 없다" 와는 다른 형태다.
