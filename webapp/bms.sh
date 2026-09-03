@@ -54,7 +54,10 @@ if [[ -f "$PIDF" ]] && kill -0 "$(cat "$PIDF")" 2>/dev/null; then
 fi
 
 # ── 2. git 갱신 — 갈라져 있으면 손대지 않고 알리기만 ──────────────────────
-if [[ $DO_PULL -eq 1 ]] && [[ -d "$ROOT/.git" ]]; then
+# `.git` 은 **파일일 수도 있다** — worktree 에서는 `gitdir: …` 한 줄이 든 파일이다.
+# `-d` 로 물으면 worktree 에서 이 블록이 통째로 건너뛰어지고, 뷰어가 조용히 옛
+# 커밋을 계속 띄운다 (2026-09-03 에 실측: `· 브랜치:` 줄이 아예 안 찍혔다).
+if [[ $DO_PULL -eq 1 ]] && [[ -e "$ROOT/.git" ]]; then
   BR="$(git rev-parse --abbrev-ref HEAD 2>/dev/null)"
   echo "· 브랜치: $BR"
   if git fetch --quiet origin "$BR" 2>/dev/null; then

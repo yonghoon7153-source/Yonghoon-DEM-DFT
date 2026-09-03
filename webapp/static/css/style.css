@@ -45,6 +45,21 @@
   --c-b: #b0631a;   /* LAM_PE */
   --c-c: #59499f;   /* LAM_NE */
 
+  /* ══ 종류 색 — 이 위키의 **3층 구조**를 부호로 만든 것 ══════════════════
+     색은 장식이 아니라 "이 글의 근거 등급이 무엇인가" 를 말한다. 처음 온
+     사람이 색만 보고 셋을 갈라 볼 수 있어야 한다 (홈의 `색이 뜻하는 것`
+     범례가 같은 토큰을 쓴다 — 한 곳에서 바꾸면 둘 다 따라온다).
+
+       1층 raw/  — 불변 원본. sha256 봉인. 우리가 못 고친다        → --k-raw
+       2층 컴파일 — 우리가 원본에서 **판단해 쓴** 것               → 종류별 색
+       3층 산출물 — 기계가 낸 수치. 정본은 artifact·RESULTS*.md    → --k-out  */
+  --k-raw:  #175d8d;  --k-raw-soft:  #e5eff7;   /* 논문 digest (불변) */
+  --k-q:    #59499f;  --k-q-soft:    #edeaf8;   /* 열린 질문 (미결) */
+  --k-c:    #0f6f6b;  --k-c-soft:    #e0f0ef;   /* 개념 (정리된 판단) */
+  --k-e:    #1c7a4d;  --k-e-soft:    #e4f2eb;   /* satellite (살아 있는 프로젝트) */
+  --k-out:  #b0631a;  --k-out-soft:  #f8ecdf;   /* 연구 산출물 (기계 출력) */
+  --k: var(--accent); --k-soft: var(--accent-soft);   /* 현재 화면의 종류 */
+
   --shadow-1: 0 1px 2px rgba(20,22,26,.05), 0 1px 3px rgba(20,22,26,.045);
   --shadow-2: 0 4px 14px rgba(20,22,26,.09), 0 16px 40px rgba(20,22,26,.08);
   --mark:     rgba(233, 178, 42, .38);
@@ -78,6 +93,12 @@
   --c-b: #e0a35e;
   --c-c: #a99ce8;
 
+  --k-raw: #6cb2e2;  --k-raw-soft: #142b3c;
+  --k-q:   #a99ce8;  --k-q-soft:   #211f36;
+  --k-c:   #4fb8b1;  --k-c-soft:   #102b2a;
+  --k-e:   #56c08a;  --k-e-soft:   #11291f;
+  --k-out: #e0a35e;  --k-out-soft: #2d2114;
+
   --shadow-1: 0 1px 2px rgba(0,0,0,.34), 0 1px 3px rgba(0,0,0,.3);
   --shadow-2: 0 6px 18px rgba(0,0,0,.5), 0 20px 48px rgba(0,0,0,.42);
   --mark:     rgba(228, 178, 66, .3);
@@ -95,6 +116,9 @@
     --ok:#56c08a; --ok-soft:#11291f; --bad:#ef8a80; --bad-soft:#2e1a18;
     --warn:#dcaa61; --warn-soft:#2b2214; --gap:#a99ce8; --gap-soft:#211f36;
     --c-a:#6cb2e2; --c-b:#e0a35e; --c-c:#a99ce8;
+    --k-raw:#6cb2e2; --k-raw-soft:#142b3c; --k-q:#a99ce8; --k-q-soft:#211f36;
+    --k-c:#4fb8b1;  --k-c-soft:#102b2a;  --k-e:#56c08a; --k-e-soft:#11291f;
+    --k-out:#e0a35e; --k-out-soft:#2d2114;
     --shadow-1: 0 1px 2px rgba(0,0,0,.34), 0 1px 3px rgba(0,0,0,.3);
     --shadow-2: 0 6px 18px rgba(0,0,0,.5), 0 20px 48px rgba(0,0,0,.42);
     --mark: rgba(228,178,66,.3);
@@ -126,7 +150,9 @@
   --lh-ui:    1.5;
   --lh-tight: 1.28;
 
-  --measure: 68ch;      /* 본문 폭. 화면 끝까지 늘리면 6만 자는 못 읽는다 */
+  --measure: 78ch;      /* 본문 폭. 한글은 라틴보다 글자당 폭이 넓어 68ch 면
+                           한 줄에 45자밖에 안 들어간다 — 표·인용이 많은 이
+                           위키에서는 줄이 너무 자주 끊긴다. */
   --rail: 258px;        /* 사이드바 */
   --r-sm: 7px; --r: 11px; --r-lg: 15px;
   --t: 160ms cubic-bezier(.3, .7, .4, 1);
@@ -474,7 +500,11 @@ a.stat:hover { border-color: var(--accent); text-decoration: none; box-shadow: v
    격자 한 벌로 둘을 동시에 만족시킨다. */
 .prose {
   display: grid;
-  grid-template-columns: [full-start] minmax(0, 1fr) [text-start] minmax(0, var(--measure)) [text-end] minmax(0, 1fr) [full-end];
+  /* ★ 본문은 **왼쪽 정렬**이다. 바깥 컨테이너가 이미 중앙정렬을 하므로
+     여기서 또 가운데로 밀면 목차와 본문 사이에 죽은 여백이 생긴다
+     (2026-09-03 실측: article 928px 안에서 68ch=640px 가 가운데로 가
+     왼쪽에 144px 빈 칸. 화면이 한쪽으로 쏠려 보인 원인). */
+  grid-template-columns: [full-start text-start] minmax(0, var(--measure)) [text-end] minmax(0, 1fr) [full-end];
   font-size: var(--fs-md); line-height: var(--lh-prose); color: var(--ink-2);
 }
 .prose > * { grid-column: text; min-width: 0; }
@@ -985,3 +1015,72 @@ mark { background: var(--mark); color: inherit; border-radius: 3px; padding: .05
   .panel, .card { box-shadow: none; break-inside: avoid; }
   .reader { grid-template-columns: 1fr; }
 }
+
+/* ══ 종류 색의 적용 ══════════════════════════════════════════════════════
+   `<body data-kind="…">` 하나가 `--k` 를 갈아 끼우고, 아래 규칙들은 전부
+   `--k` 만 본다. 색을 바꾸려면 토큰 한 줄만 고치면 되고, 화면마다 색이
+   따로 노는 일이 생기지 않는다. */
+body[data-kind="papers"]    { --k: var(--k-raw); --k-soft: var(--k-raw-soft); }
+body[data-kind="questions"] { --k: var(--k-q);   --k-soft: var(--k-q-soft); }
+body[data-kind="concepts"]  { --k: var(--k-c);   --k-soft: var(--k-c-soft); }
+body[data-kind="entities"]  { --k: var(--k-e);   --k-soft: var(--k-e-soft); }
+body[data-kind="results"],
+body[data-kind="gate"]      { --k: var(--k-out); --k-soft: var(--k-out-soft); }
+
+/* 화면 맨 위의 얇은 띠 — 어느 층을 보고 있는지 스크롤 없이 알 수 있다 */
+.content::before {
+  content: ""; position: fixed; top: 0; left: var(--rail); right: 0; height: 3px;
+  background: var(--k); z-index: 30;
+}
+/* 머리글 아래 규칙선도 같은 색 — 제목과 본문 사이의 경계가 곧 종류 표시다 */
+.phead { border-bottom-color: color-mix(in srgb, var(--k) 42%, var(--line)); }
+.crumbs a { color: var(--k); }
+.chip.kind {
+  color: var(--k); background: var(--k-soft);
+  border-color: color-mix(in srgb, var(--k) 34%, var(--line));
+}
+/* 사이드바에서 지금 있는 곳도 같은 색으로 — 왼쪽 막대·아이콘·글자 셋이 함께 */
+.nav-links a.active { color: var(--k); background: var(--k-soft); }
+.nav-links a.active .ic { color: var(--k); }
+.nav-links a.active::before { background: var(--k); }
+/* 목차의 현재 절 */
+.toc-l a.is-now { color: var(--k); border-left-color: var(--k); }
+
+/* 카드 위 띠 — 목록에서도 같은 부호가 유지된다 */
+.card-paper { border-top-color: var(--k-raw); }
+.card-q     { border-top-color: var(--k-q); }
+.card-ent   { border-top-color: var(--k-e); }
+.card-con   { border-top: 3px solid var(--k-c); }
+
+/* ══ 홈의 "이 위키를 읽는 법" — 처음 온 사람에게 설계 철학을 먼저 준다 ═══ */
+.primer { margin: 0 0 26px; }
+.layers { display: grid; grid-template-columns: repeat(auto-fit, minmax(238px, 1fr)); gap: 14px; }
+.layer {
+  border: 1px solid var(--line); border-top: 3px solid var(--lk, var(--ink-3));
+  border-radius: var(--r); background: var(--surface); padding: 14px 16px 15px;
+  box-shadow: var(--shadow-1);
+}
+.layer-n {
+  display: inline-flex; align-items: center; gap: 7px;
+  font-size: var(--fs-2xs); font-weight: 700; letter-spacing: .06em;
+  text-transform: uppercase; color: var(--lk, var(--ink-3));
+}
+.layer-n::before {
+  content: ""; width: 9px; height: 9px; border-radius: 50%; background: var(--lk, var(--ink-3));
+}
+.layer h3 { margin: 7px 0 5px; font-size: var(--fs-md); font-weight: 660; color: var(--ink); }
+.layer p  { margin: 0; font-size: var(--fs-xs); line-height: 1.66; color: var(--ink-2); word-break: keep-all; }
+.layer .rule { margin-top: 9px; font-size: var(--fs-2xs); color: var(--ink-3); }
+.layer .rule b { color: var(--ink-2); font-weight: 640; }
+.l-raw { --lk: var(--k-raw); }
+.l-wiki-q { --lk: var(--k-q); }
+.l-wiki-c { --lk: var(--k-c); }
+.l-wiki-e { --lk: var(--k-e); }
+.l-out { --lk: var(--k-out); }
+
+.axes { margin-top: 14px; display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 12px; }
+.axis { border-left: 3px solid var(--line); padding-left: 11px; }
+.axis b { display: block; font-size: var(--fs-xs); color: var(--ink); font-weight: 660; }
+.axis span { font-size: var(--fs-2xs); color: var(--ink-3); line-height: 1.6; display: block; margin-top: 2px; }
+.primer-body { padding: 16px 18px 18px; }
+.primer-lead { margin: 0 0 14px; max-width: 80ch; }

@@ -142,7 +142,7 @@ def paper(slug):
     p = _page_or_404("paper", slug)
     meta, body = _read(p)
     figs = C.figures_for(slug)
-    doc = C.render_digest(body)
+    doc = C.render_digest(body, title=meta.get('title') or p['title'])
     return render_template("paper.html", active="papers", page=p, meta=meta,
                            body_html=doc["html"], toc=doc["toc"], claims=doc["claims"],
                            figs=figs, figmeta=C.figure_meta(slug),
@@ -228,7 +228,7 @@ def concepts():
 def concept(slug):
     p = _page_or_404("concept", slug)
     meta, body = _read(p)
-    d = C.render_digest(body)
+    d = C.render_digest(body, title=meta.get('title') or p['title'])
     return render_template("doc.html", active="concepts", page=p, meta=meta,
                            body_html=d["html"], toc=d["toc"], claims=d["claims"])
 
@@ -244,7 +244,7 @@ def entities():
 def entity(slug):
     p = _page_or_404("entity", slug)
     meta, body = _read(p)
-    d = C.render_digest(body)
+    d = C.render_digest(body, title=meta.get('title') or p['title'])
     return render_template("doc.html", active="entities", page=p, meta=meta,
                            body_html=d["html"], toc=d["toc"], claims=d["claims"])
 
@@ -261,7 +261,7 @@ def doc(rel):
     if not p or p["url"] != "/doc/" + rel.strip("/"):
         abort(404)
     meta, body = _read(p)
-    d = C.render_digest(body)
+    d = C.render_digest(body, title=meta.get('title') or p['title'])
     return render_template("doc.html", active="", page=p, meta=meta,
                            body_html=d["html"], toc=d["toc"], claims=d["claims"])
 

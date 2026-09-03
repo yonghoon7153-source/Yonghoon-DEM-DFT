@@ -11,7 +11,7 @@
 <script src="{{ url_for('static', filename='js/boot.js') }}?v={{ asset_version }}"></script>
 {% block head %}{% endblock %}
 </head>
-<body>
+<body{% if active %} data-kind="{{ active }}"{% endif %}>
 {# ── 아이콘 스프라이트 ──────────────────────────────────────────────────
    아이콘 폰트도 CDN 도 못 쓴다 (CSP). 인라인 SVG symbol 이면 의존성 0 이고
    currentColor 를 따라가므로 테마 전환에 저절로 맞는다. #}

@@ -187,13 +187,29 @@ def scan_pages() -> dict[str, dict]:
                 "relpath": f.relative_to(ROOT).as_posix(),
                 "url": prefix + slug,
                 "meta": meta,
-                "title": str(meta.get("title") or slug),
+                "title": str(meta.get("title") or _first_h1(_body) or slug),
                 "description": str(meta.get("description") or ""),
                 "updated": str(meta.get("updated") or meta.get("ingested") or meta.get("created") or ""),
                 "mtime": _mtime(f),
                 "bytes": f.stat().st_size if f.exists() else 0,
             }
     return pages
+
+
+#: 본문 첫 `# 제목` — frontmatter 에 `title` 이 없는 문서의 이름.
+_BODY_H1 = re.compile(r"^\s*#\s+(.+?)\s*$", re.M)
+
+
+def _first_h1(body: str) -> str:
+    """`raw/papers/` digest 는 frontmatter 에 `title` 을 두지 않는다.
+
+    거기 있는 것은 `source_url`·`ingested`·`sha256` 뿐이고 (봉인 대상이라
+    사람이 나중에 제목을 고칠 수 없게 한 설계다), 제목은 본문 첫 `# ` 줄에
+    있다. 그것을 못 읽으면 화면 제목이 slug 로 떨어져
+    `rhyu2025_systematic-feature-design-formation` 처럼 나온다 — 실제로 그랬다.
+    """
+    m = _BODY_H1.search(body or "")
+    return m.group(1).strip() if m else ""
 
 
 def page_index() -> dict[str, str]:
@@ -350,7 +366,7 @@ def mark_claims(html: str) -> tuple[str, dict]:
 
 
 def render_digest(text: str, index: dict[str, str] | None = None,
-                  prefix: str = "h") -> dict:
+                  prefix: str = "h", title: str = "") -> dict:
     """논문 digest 전용 렌더 — 본문 + 목차 + 3구분 개수.
 
     ⚠ `prefix` 는 **한 화면에 이 함수를 두 번 이상 부를 때** 반드시 다르게 준다.
@@ -360,9 +376,37 @@ def render_digest(text: str, index: dict[str, str] | None = None,
       PHASE 노트 두 개를 한 화면에 싣다가 실제로 그랬다).
     """
     html = render_body(text, index)
+    html = drop_leading_h1(html, title)
     html, counts = mark_claims(html)
     html, toc = anchor_headings(html, prefix=prefix)
     return {"html": html, "toc": toc, "claims": counts}
+
+
+#: 본문 첫 `<h1>` — 마크다운 파일이 제목을 한 번 더 적는 관습.
+_LEAD_H1 = re.compile(r"\A\s*<h1[^>]*>(.*?)</h1>\s*", re.S | re.I)
+
+
+def drop_leading_h1(html: str, title: str = "") -> str:
+    """머리글이 이미 보여 준 제목을 본문에서 한 번 더 찍지 않는다.
+
+    이 위키의 마크다운은 frontmatter 의 `title` 과 **같은 문장**을 본문 첫
+    `# 제목` 으로 다시 적는다 (SCHEMA 의 관습). 화면에서는 머리글이 그것을
+    이미 크게 보여 주므로, 본문이 또 찍으면 같은 줄이 두 번 나오고 그 사이
+    간격이 페이지 맨 위를 비워 놓는다.
+
+    같은 문장일 때만 지운다 — 다른 제목이면 저자가 일부러 쓴 것이다.
+    """
+    m = _LEAD_H1.match(html)
+    if not m:
+        return html
+    inner = re.sub(r"<[^>]+>", "", m.group(1))
+    if _norm(inner) != _norm(title):
+        return html
+    return html[m.end():]
+
+
+def _norm(s: str) -> str:
+    return re.sub(r"\s+", " ", (s or "")).strip().lower()
 
 
 # ─────────────────────────────────────────────────────────────────────────
