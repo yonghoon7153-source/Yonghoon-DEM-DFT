@@ -1,6 +1,6 @@
 # kb 카탈로그 (생성물 — 손으로 고치지 말 것)
 
-> `python3 tools/kb_wiki.py index` 가 만든다 · 2026-09-03 · managed-files: 344
+> `python3 tools/kb_wiki.py index` 가 만든다 · 2026-09-03 · managed-files: 345
 
 규칙: kb/SCHEMA.md · 열린 질문: kb/questions/ · 논지 카드: kb/syntheses/ · 원장: kb/open_items.md · 문헌: litdb/INDEX.md
 
@@ -274,7 +274,7 @@
 - `kb/reports/sdcp_preliminary_final_2026_08_03.md` — SDCP 예비 최종 보고서 (2026-08-03)
 - `kb/reports/sdcp_review_action_plan_2026_08_03.md` — SDCP 파이프라인 — 리뷰 2건 통합 실행계획 (2026-08-03)
 
-## projects/ (21)
+## projects/ (22)
 - `kb/projects/HANDOFF_2026_08_31_session.md` — 인수인계 — 2026-08-31 세션 (외주 C-12 AR→AV · 폴라론 S0 · nscf 사고) ○미열람
 - `kb/projects/MULTI_CATEGORY_BATCH_PLAN_v22.md` — Multi-Category Multi-Compound Batch Plan — Paper #2 (v4.5.18)
 - `kb/projects/MUST_READ_digital_twin_north_star.md` — 🚨🚨🚨 MUST READ — AI 계산 스크리닝 플랫폼 North Star (구: Digital Twin)
@@ -296,6 +296,7 @@
 - `kb/projects/sdcp_v7c_structure_spectroscopy_report_2026_07_10.md` — SDCP v7c — 구조·분광 판정 보고 (입문자용 완전판)
 - `kb/projects/sei_products_2026_08_06.md` — SEI 분해상 6종 캠페인 — 확산장벽 · 형성전위 · 밴드갭
 - `kb/projects/symposium_2026_competitive_analysis.md` — 전지기술 심포지엄 2026 — 경쟁 좌표 분석 (이상욱 / 문장혁)
+- `kb/projects/zn_alzib_dft_md_contribution_2026_09_03.md` — Zn ALZIB 세미나(2026-09-02) — 우리가 DFT/MD 로 기여할 수 있는 지점 ○미열람
 
 ## questions/ (10)
 - `kb/questions/doped_declared_state_feasibility_2026_08_29.md` — doped E_ads 를 '상태 선언' 으로 살릴 수 있나 — NUPDOWN 은 홀 위치를 안 묶는다 ○미열람 [open]
@@ -379,4 +380,4 @@
 ## elements/ — 118개 (생성물/템플릿, 목록 생략)
 ## templates/ — 3개 (생성물/템플릿, 목록 생략)
 
-## litdb/ — digest 204개 (정본 목록: litdb/INDEX.md)
+## litdb/ — digest 206개 (정본 목록: litdb/INDEX.md)

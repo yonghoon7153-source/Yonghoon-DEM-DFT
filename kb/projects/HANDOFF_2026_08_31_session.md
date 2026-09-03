@@ -1,8 +1,8 @@
 ---
 title: "인수인계 — 2026-08-31 세션 (외주 C-12 AR→AV · 폴라론 S0 · nscf 사고)"
 date: 2026-08-31
-updated: 2026-08-31
-tags: [handoff, sdcp, c12, polaron, nscf, session]
+updated: 2026-09-03
+tags: [handoff, sdcp, c12, polaron, nscf, session, zinc, alzib]
 status: 활성
 kind: project
 system: sdcp
@@ -216,3 +216,47 @@ Q4 detached signature 는 선행조건 아니나 **runner 가 실제 ZIP 경로�
   원고에 안 쓴다.
 - pooled 최솟값·`secondary_G` 는 **영구 비인용** (AV Q2 로 확인됨).
 - 원격 작업은 "붙여넣기 블록 제공 → 사용자 실행 → 출력 회수". ssh 로 감싸지 않는다.
+
+---
+
+## 6. 추가 — 2026-09-03 세션 (Zn ALZIB 스코핑)
+
+앞 세션 토큰 소진 후 이어받은 짧은 세션. **계산은 하나도 돌리지 않았다.** 한 일은 둘.
+
+### 6.1 세미나 PDF 판독
+
+`2026.09.02 …pdf` (Kyungrok Do, "Pre-conditioning Strategy for Highly Reversible
+Anode-Less ZIBs", Weekly Report @BML). PDF 는 repo 밖.
+
+⚠ 이 환경에서 **pypdf·pdfminer.six 설치가 안 된다** — `cryptography` 가
+`pyo3_runtime.PanicException` 을 던진다. stdlib 만으로 텍스트 추출기를 스크래치패드에 써서
+읽었다(`pdftxt.py`). 한계: CID/ToUnicode 폰트 디코딩 없음, 이미지 슬라이드는 아무것도 안 나옴,
+레이아웃 보장 없음. **다음 세션에서 PDF 를 또 읽어야 하면 같은 벽을 만난다** — 이 도구를
+`tools/` 로 승격할지는 판단 필요(현재 스크래치패드에만 있고 컨테이너와 함께 사라진다).
+
+### 6.2 기여 스코핑 카드
+
+`kb/projects/zn_alzib_dft_md_contribution_2026_09_03.md` — 발표자가 **스스로 미해결로 표시한
+구멍 7개(G1–G7)** 에 우리 기존 기계를 대응시킨 제안서. 계산 7개(C1–C7), 각각 "못 하는 것" 명시.
+권장 순서 **C1(상 지문표) → C2+C3(zincophilicity + ΔG_H*) → C6 → C5(ORCA 용매화) → C7(MD)**.
+
+**상태: proposal.** estimand 카드 미작성, `db/governance/decisions.json` 등록 없음,
+BML 과 협업 합의 없음. 착수하려면 그 카드의 §4 게이트부터다.
+
+⚠ 주의할 점 둘:
+- `kb/elements/Zn.json` 은 **황화물 SE 도펀트 관점**으로만 쓰여 있다. 수계 Zn 금속 음극
+  맥락으로 그대로 인용하면 안 된다.
+- 세미나 수치(CE 77.8→98.1 % 등)는 **발표자 값**이다. 우리 db 절대값과 섞지 않는다
+  (문헌 수치 규율과 동일).
+
+### 6.3 이 세션에서 **안 건드린 것** — 그리고 §1–§4 는 이미 낡았다
+
+이 Zn 세션은 C-12 · S0 를 전혀 손대지 않았다.
+
+⚠ **§1–§4 는 2026-08-31 시점 기록이다.** 그 사이 다른 세션이 훨씬 멀리 갔다:
+C-12 는 **v30 / 회신 BF** 까지, 폴라론 S0 는 **회신 Z-2** 까지 이행됐다
+(`c895bbb4` · `341e0d7e` 등). 따라서 §4 "다음 한 수" 의 AV P0-2/3/4 · P1-5 항목을
+그대로 집어들면 안 된다 — **`git log --oneline -30` 과 `kb/reviews/` 최신 회신부터
+확인**하고, 남은 것이 무엇인지는 거기서 다시 읽는다.
+
+Zn 은 별개 트랙이고 외주 C-12 의 우선순위를 밀지 않는다.
