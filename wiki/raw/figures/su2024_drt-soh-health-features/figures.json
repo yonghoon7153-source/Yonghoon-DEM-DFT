@@ -1,0 +1,311 @@
+{
+ "slug": "su2024_drt-soh-health-features",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-09-03",
+ "sources": [
+  "fa7efb89-7._Modeling_and_health_feature_extraction_method_for_lithiumion_7._batteries_state_of_health_estimation_by_distribution_of_relaxation_times.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 3,
+   "file": "fig_1.png",
+   "caption": "Fig. 1. Battery SOH decay and corresponding EIS: (a) capacity fading of cell 1/2/3/5/6 during aging; (b)–(f) the measured EIS of cell 1/2/3/5/6. 3",
+   "rotated_deg": 0,
+   "bbox": [
+    35.6,
+    437.7,
+    558.7,
+    730.8
+   ],
+   "w": 2180,
+   "h": 1222,
+   "dpi": 300,
+   "src": "fa7efb89-7._Modeling_and_health_feature_extraction_method_for_lithiumion_7._batteries_state_of_health_estimation_by_distribution_of_relaxation_times.pdf",
+   "blank": 0.869
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 4,
+   "file": "fig_2.png",
+   "caption": "Fig. 2. The impedance model and the main current flow in the impedance model: (a) The developed DRT-based impedance model (b) LEIS; (c) HEIS. 4",
+   "rotated_deg": 0,
+   "bbox": [
+    50.5,
+    503.5,
+    549.0,
+    730.8
+   ],
+   "w": 2078,
+   "h": 947,
+   "dpi": 300,
+   "src": "fa7efb89-7._Modeling_and_health_feature_extraction_method_for_lithiumion_7._batteries_state_of_health_estimation_by_distribution_of_relaxation_times.pdf",
+   "blank": 0.949
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 5,
+   "file": "fig_3.png",
+   "caption": "Fig. 3. The EIS fitting example of the impedance model parameters. 5",
+   "rotated_deg": 0,
+   "bbox": [
+    95.7,
+    383.7,
+    499.1,
+    730.8
+   ],
+   "w": 1682,
+   "h": 1447,
+   "dpi": 300,
+   "src": "fa7efb89-7._Modeling_and_health_feature_extraction_method_for_lithiumion_7._batteries_state_of_health_estimation_by_distribution_of_relaxation_times.pdf",
+   "blank": 0.836
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 6,
+   "file": "fig_4.png",
+   "caption": "Fig. 4. The fitted distribution function of relaxation times γ(lnτ): (a) The typical method. (b) The method proposed in this paper. 6",
+   "rotated_deg": 0,
+   "bbox": [
+    83.5,
+    543.8,
+    515.9,
+    730.8
+   ],
+   "w": 1803,
+   "h": 780,
+   "dpi": 300,
+   "src": "fa7efb89-7._Modeling_and_health_feature_extraction_method_for_lithiumion_7._batteries_state_of_health_estimation_by_distribution_of_relaxation_times.pdf",
+   "blank": 0.813
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 7,
+   "file": "fig_5.png",
+   "caption": "Fig. 5. The fitted distribution function of relaxation times γ(lnτ) during aging: (a) cell1; (b) cell2; (c) cell3; (d) cell5; (e) cell6. 3.1. Features extraction of the developed DRT-based impedance model SOH tends to decrease with aging, but it is not easy to measure directly. In Section 2, we have already analyzed that the impedance model parameters change with the battery aging and the extraction of suitable parameters as HFs can be well used to estimate the SOH. Regarding the extraction of features, we can first categorize the model parameter according to its type and then extract multiple features in the corresponding groups. It is worth noting that the feature extraction of the battery polarization process is γ(lnτ) curve feature extraction prob­ lem, the basic idea is to transform the curve data into a set of numerical features, which can reflect the shape of the curve, the trend ",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    50.4,
+    530.7,
+    334.0
+   ],
+   "w": 2081,
+   "h": 1182,
+   "dpi": 300,
+   "src": "fa7efb89-7._Modeling_and_health_feature_extraction_method_for_lithiumion_7._batteries_state_of_health_estimation_by_distribution_of_relaxation_times.pdf",
+   "blank": 0.852
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 7,
+   "file": "fig_6.png",
+   "caption": "Fig. 6. Features extraction of the distribution function of relaxation times. From Eq. (2), the integration of γ(lnτ) can reflect the resistance of the polarization process at that peak. The calculation of Si is defined as:",
+   "rotated_deg": 0,
+   "bbox": [
+    300.6,
+    362.3,
+    566.0,
+    562.9
+   ],
+   "w": 1107,
+   "h": 837,
+   "dpi": 300,
+   "src": "fa7efb89-7._Modeling_and_health_feature_extraction_method_for_lithiumion_7._batteries_state_of_health_estimation_by_distribution_of_relaxation_times.pdf",
+   "blank": 0.749
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 8,
+   "file": "fig_7.png",
+   "caption": "Fig. 7. The correlation coefficients of the extracted features with SOH: (a) Pearson correlation coefficient; (b) Spearman correlation coefficient. 8",
+   "rotated_deg": 0,
+   "bbox": [
+    35.6,
+    541.8,
+    558.6,
+    730.8
+   ],
+   "w": 2180,
+   "h": 788,
+   "dpi": 300,
+   "src": "fa7efb89-7._Modeling_and_health_feature_extraction_method_for_lithiumion_7._batteries_state_of_health_estimation_by_distribution_of_relaxation_times.pdf",
+   "blank": 0.426
+  },
+  {
+   "key": "f8",
+   "kind": "figure",
+   "label": "8",
+   "page": 9,
+   "file": "fig_8.png",
+   "caption": "Fig. 8. Eight extracted HFs with high correlation: (a)–(h) Q, lnτp3, γ",
+   "rotated_deg": 0,
+   "bbox": [
+    53.1,
+    50.3,
+    541.8,
+    448.7
+   ],
+   "w": 2037,
+   "h": 1661,
+   "dpi": 300,
+   "src": "fa7efb89-7._Modeling_and_health_feature_extraction_method_for_lithiumion_7._batteries_state_of_health_estimation_by_distribution_of_relaxation_times.pdf",
+   "blank": 0.843
+  },
+  {
+   "key": "f9",
+   "kind": "figure",
+   "label": "9",
+   "page": 10,
+   "file": "fig_9.png",
+   "caption": "Fig. 9. Flowchart of the battery SOH estimation. 10",
+   "rotated_deg": 0,
+   "bbox": [
+    36.2,
+    375.2,
+    558.3,
+    730.8
+   ],
+   "w": 2177,
+   "h": 1482,
+   "dpi": 300,
+   "src": "fa7efb89-7._Modeling_and_health_feature_extraction_method_for_lithiumion_7._batteries_state_of_health_estimation_by_distribution_of_relaxation_times.pdf",
+   "blank": 0.301
+  },
+  {
+   "key": "f10",
+   "kind": "figure",
+   "label": "10",
+   "page": 11,
+   "file": "fig_10.png",
+   "caption": "Fig. 10. Actual impedance spectra vs. impedance spectra fitted by ECM1, ECM2, ECM3 and ECM4. 11",
+   "rotated_deg": 0,
+   "bbox": [
+    75.6,
+    485.7,
+    518.9,
+    730.8
+   ],
+   "w": 1848,
+   "h": 1022,
+   "dpi": 300,
+   "src": "fa7efb89-7._Modeling_and_health_feature_extraction_method_for_lithiumion_7._batteries_state_of_health_estimation_by_distribution_of_relaxation_times.pdf",
+   "blank": 0.929
+  },
+  {
+   "key": "f11",
+   "kind": "figure",
+   "label": "11",
+   "page": 12,
+   "file": "fig_11.png",
+   "caption": "Fig. 11. RMSE of four models fitting impedance spectra for five batteries: (a) the real part, (b) the imaginary part. averaging 0.2509 s over Feature2’s 0.2798 s. This is due to the fact that high-dimensional inputs, for example, 120 dimensions (120-D) can significantly increase the computational burden of the GPR model. In practice, this burden will be magnified and non-negligible when the number of training dataset samples increases, which proves that the 8 HFs extracted in this paper are more efficient. Table 2 The cumulative contribution rate of the first three principal components in different cases. Case Cell no. Cumulative contribution rate Cumulative1 Cumulative2 Cumulative3 On the other hand, when Feature1–4 are used as inputs to GPR, the sample dimensions are 1-dimensional(1-D), 120-D, 8-D and 1-D, then their time complexity is different during training and testing, and the dim",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    50.2,
+    566.0,
+    193.0
+   ],
+   "w": 2228,
+   "h": 596,
+   "dpi": 300,
+   "src": "fa7efb89-7._Modeling_and_health_feature_extraction_method_for_lithiumion_7._batteries_state_of_health_estimation_by_distribution_of_relaxation_times.pdf",
+   "blank": 0.873
+  },
+  {
+   "key": "f12",
+   "kind": "figure",
+   "label": "12",
+   "page": 13,
+   "file": "fig_12.png",
+   "caption": "Fig. 12. SOH estimation results for five cells by the GPR method: (a) cell1; (b) cell2; (c) cell3; (d) cell5; (e) cell6. 1) The developed DRT-based impedance model is identified, and the electrochemical impedance spectrum is deconvoluted by DRT method. Consideration is given to the impact of false peaks brought on by non-polarization processes. The inductance L and constant phase elements are introduced to improve the DRT model. The R∞ and L are calculated by HEIS region, the constant phase element is calculated by LEIS region and the distribution function of relaxation times γ(lnτ) is fitted by DRTtools. The results show that the modeling approach can successfully avoid the issue of the priori assumptions,",
+   "rotated_deg": 0,
+   "bbox": [
+    32.4,
+    329.6,
+    566.0,
+    657.0
+   ],
+   "w": 2224,
+   "h": 1365,
+   "dpi": 300,
+   "src": "fa7efb89-7._Modeling_and_health_feature_extraction_method_for_lithiumion_7._batteries_state_of_health_estimation_by_distribution_of_relaxation_times.pdf",
+   "blank": 0.925
+  },
+  {
+   "key": "t1",
+   "kind": "table",
+   "label": "1",
+   "page": 6,
+   "file": "tab_1.png",
+   "caption": "Table 1 Steps to calculate the parameters of the developed model such as and CPE at LEIS.",
+   "rotated_deg": 0,
+   "bbox": [
+    32.6,
+    31.6,
+    563.3,
+    748.4
+   ],
+   "w": 2213,
+   "h": 2988,
+   "dpi": 300,
+   "src": "fa7efb89-7._Modeling_and_health_feature_extraction_method_for_lithiumion_7._batteries_state_of_health_estimation_by_distribution_of_relaxation_times.pdf",
+   "blank": 0.862
+  },
+  {
+   "key": "t3",
+   "kind": "table",
+   "label": "3",
+   "page": 12,
+   "file": "tab_3.png",
+   "caption": "Table 3 Accuracy metrics of four ECMs for impedance spectra in different states of cell1. EIS SOH ECM1 ECM2 ECM3 ECM4 RMSE (%) R2 (%) RMSE (%) R2 (%) RMSE (%) R2 (%) RMSE (%) R2 (%) Re(Ω) 100 % 0.322 99.994 5.628 97.937 1.580 99.838 1.039 99.931 85 % 0.371 99.993 5.922 98.099 1.655 99.851 1.141 99.930 EOL 0.630 99.985 6.538 98.200 1.917 99.845 1.292 99.930 Average 0.441 99.991 6.030 98.079 1.717 99.845 1.157 99.930 −Im(Ω) 100 % 6.401 92.440 7.945 85.606 6.583 88.917 6.509 90.128 85 % 5.429 94.773 7.802 84.748 5.798 90.896 5.655 92.153 EOL 4.080 95.943 7.524 84.274 4.504 92.576 4.238 93.791 Average 5.303 94.385 7.757 84.876 5.628 90.797 5.468 92.024",
+   "rotated_deg": 0,
+   "bbox": [
+    32.6,
+    31.6,
+    563.3,
+    744.6
+   ],
+   "w": 2213,
+   "h": 2972,
+   "dpi": 300,
+   "src": "fa7efb89-7._Modeling_and_health_feature_extraction_method_for_lithiumion_7._batteries_state_of_health_estimation_by_distribution_of_relaxation_times.pdf",
+   "blank": 0.872
+  },
+  {
+   "key": "t4",
+   "kind": "table",
+   "label": "4",
+   "page": 13,
+   "file": "tab_4.png",
+   "caption": "Table 4 Accuracy and efficiency of the four features in SOH estimation. Case Cell no Accuracy Efficiency R2 (%) RMSE (%) MaxAE Train (s) Test (s) Total (s) Feature1 Cell1 99.435 0.727 0.0304 0.2351 0.0073 0.2424 Cell2 99.352 0.512 0.0129 0.2325 0.0073 0.2397 Cell3 97.754 0.655 0.0259 0.2234 0.0071 0.2305 Cell5 97.491 1.607 0.0298 0.2265 0.0071 0.2335 Cell6 98.198 0.865 0.0121 0.2260 0.0070 0.2330 Average 98.446 0.873 0.0222 0.2287 0.0071 0.2358 Feature2 Cell1 99.710 0.515 0.0104 0.2556 0.0070 0.2626 Cell2 99.614 0.388 0.0177 0.2650 0.0078 0.2728 Cell3 99.466 0.321 0.0128 0.2817 0.0080 0.2896 Cell5 99.043 1.030 0.0168 0.3106 0.0075 0.3181 Cell6 98.977 0.610 0.0157 0.2479 0.0077 0.2555 Average 99.362 0.573 0.0135 0.2722 0.0076 0.2798 Feature3 Cell1 99.748 0.484 0.0125 0.2395 0.0075 0.2470 Cell2 99.695 0.349 0.0112 0.2447 0.0075 0.2522 Cell3 98.778 0.504 0.0196 0.2316 0.0071 0.2387 Cell5 98",
+   "rotated_deg": 0,
+   "bbox": [
+    32.6,
+    31.6,
+    562.7,
+    739.4
+   ],
+   "w": 2210,
+   "h": 2950,
+   "dpi": 300,
+   "src": "fa7efb89-7._Modeling_and_health_feature_extraction_method_for_lithiumion_7._batteries_state_of_health_estimation_by_distribution_of_relaxation_times.pdf",
+   "blank": 0.926
+  }
+ ]
+}

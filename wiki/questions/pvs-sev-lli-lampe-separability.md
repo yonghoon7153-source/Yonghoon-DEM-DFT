@@ -5,12 +5,12 @@ created: 2026-09-03
 updated: 2026-09-03
 type: research-question
 tags: [battery, degradation, research]
-sources: [raw/papers/2026-09-02-siwon-kim-degradation-mode-ml-seminar.md, raw/transcripts/2026-09-03-voice-memo-007-degradation-mode-ml.md, raw/papers/birkl2017_degradation-diagnostics-ocv.md, raw/papers/wang2025_interpretable-ml-battery-prognosis.md, raw/papers/kim2023_graphite-heterogeneity-lifetime.md]
+sources: [raw/papers/2026-09-02-siwon-kim-degradation-mode-ml-seminar.md, raw/transcripts/2026-09-03-voice-memo-007-degradation-mode-ml.md, raw/papers/birkl2017_degradation-diagnostics-ocv.md, raw/papers/wang2025_interpretable-ml-battery-prognosis.md, raw/papers/kim2023_graphite-heterogeneity-lifetime.md, raw/papers/su2024_drt-soh-health-features.md]
 confidence: medium
 explored: false
 verificationStatus: unverified
 claimType: empirical
-evidenceScope: single-source
+evidenceScope: multi-source-primary
 status: open
 feedsInto: "[[mode-observability]] Phase 1–2 + 2026-09-02 세미나 discussion point 1"
 ---
@@ -61,15 +61,31 @@ H2 가 참일 수 있음에 주의한다 — 부호가 같다고 벡터가 평�
 - **[2026-09-03] 원문이 반대 근거를 제시하지 않는다.** p.8 은 모드를 **하나씩**
   넣은 단독 스윕만 보여 주고, 두 모드를 동시에 넣었을 때 두 feature 가
   분리되는지에 대한 도표가 없다.
-- **[2026-09-03] SEV 축에 대한 문헌 전례: LLI 와 LAM 이 R_ct 를 같은 방향으로
-  민다.** 분야 리뷰([[interpretable-ml-battery-prognosis-taxonomy]] 가 정리한
-  Wang et al. 2025) §4.4 가 인용하는 Su et al. 2024 의 DRT 관찰을 리뷰가
-  이렇게 인쇄한다 — "the variation trends of typical DRT peaks and valleys
-  during battery aging aligned with the increase in charge transfer resistance
-  **caused by LLI and LAM**". 두 모드가 **같은 하나의 물리량(R_ct)을 같은
-  방향으로** 올린다는 진술이며, SEV(= R_ct,PE 의 stoichiometry 의존성)로
-  두 모드를 가르려는 설계에 직접 불리하다. 원전 미확인 — 리뷰의 요약을
-  거친 진술이므로 인용 전에 Su 2024 를 직접 봐야 한다.
+- ~~**[2026-09-03] SEV 축에 대한 문헌 전례: LLI 와 LAM 이 R_ct 를 같은 방향으로
+  민다.**~~ → **[2026-09-03 (6)] 철회.** 원전([[zhang2020-eis-aging-dataset]] 을
+  쓴 Su et al. 2024, *J. Energy Storage* 90, 111770, DOI 10.1016/j.est.2024.111770)
+  을 직접 확인한 결과 **이 항목은 H1 의 근거가 되지 못한다**. 세 가지가 드러났다:
+  - **(a) Su 는 LLI 도 LAM 도 재지 않는다.** 본문 전체에서 두 약어는 네 번
+    나오고 **전부 수치 없는 서술**이다. half-cell OCP fitting·ICA/DVA 분해·
+    해체분석·모드 시뮬레이션 어느 것도 없다.
+  - **(b) 문제의 문장은 상속된 인용이다.** Su 원문
+    `[인쇄, p.6]`: "These trends are **in line with the fact that** the loss of
+    stock (LLI) and loss of active material (LAM) in the electrode makes the
+    charge transfer process more difficult with the battery aging **[20]**."
+    → 진짜 원전은 **Jiang et al., *Appl. Energy* 322 (2022) 119502** 이고,
+    Su 는 자기 DRT 추세를 그 진술로 **해석**했을 뿐이다. 리뷰는 이것을
+    "Su et al. … **observed**" 로 옮겨 **증거 등급을 한 단계 올렸다**.
+  - **(c) Su 자신의 그림이 그 문장과 어긋난다.** Su 가 "charge transfer" 로
+    이름 붙인 peak 은 **p₂** 인데, Fig. 5 에서 p₂ 는 5셀 중 4셀에서 노화와
+    함께 **감소**한다 (Fig. 7 의 γ(lnτ_p₂) 대 SOH 상관이 4셀에서 **양수**).
+    증가하는 것은 저자가 "확산" 이라 부른 **p₃** 다. τ↔f 환산으로는 p₃ ≈
+    5–16 Hz 로 오히려 전하전달 대역이어서, 가장 정합적인 재해석은
+    **저자의 peak 귀속이 한 칸 밀렸다**는 것이다. 어느 쪽이든 이 논문의
+    peak↔과정 대응은 인용에 쓸 수 없다.
+  → **결론: 이 문헌 근거는 H1 을 지지하지 않는다.** SEV 설계에 불리한
+  문헌 근거는 (적어도 이 경로로는) 존재하지 않는다. 남은 확인 대상은
+  **Jiang 2022** 이며, 그것을 보기 전에는 "문헌이 LLI·LAM 의 R_ct 동부호를
+  말한다" 고 쓰지 않는다.
 
 ## Evidence Against (H2 지지 / H1 반대)
 
@@ -161,6 +177,48 @@ H2 가 참일 수 있음에 주의한다 — 부호가 같다고 벡터가 평�
   valley 를 분자에도 분모에도 쓴다. [[mode-observability]] Phase 1 이 관측한
   valley 정의 민감도(인접 −20.0 vs 창내 전역 최소 −11.3)와 **같은 병**이며,
   대조군으로 **valley 를 쓰지 않는 변형**(peak 절대값)을 넣을 근거가 생겼다.
+- **[2026-09-03 (6)] ★ SEV 의 전제(임피던스 유래 feature 의 노화 부호가 안정하다)
+  가 실측에서 성립하지 않는 사례가 있다.** Su 2024 Fig. 7 (히트맵을 직접 봄,
+  수치는 그림에 인쇄된 값) — 동일 화학·동일 온도(25 °C)·동일 프로토콜의
+  **5셀**에서:
+  - **전하전달 peak 높이 γ(lnτ_p₂)** 의 SOH 상관이 cell1 **−0.687** 인데
+    cell2 **+0.934** / cell3 +0.844 / cell5 +0.751 / cell6 +0.869 —
+    **1/5 에서 부호가 뒤집힌다.**
+  - **분극저항 R_pol** 은 cell1 −0.965 / cell5 −0.918 인데 cell2 **+0.864** /
+    cell6 **+0.854**, cell3 는 −0.397 로 거의 무상관 — **2/5 에서 뒤집히고
+    1/5 에서 무의미하다.** "노화하면 분극저항이 오른다" 는 통념이 셀 수준에서
+    지켜지지 않는다.
+  - 둘 다 저자의 0.75 문턱을 통과하지 못해 **health feature 에서 탈락**했다.
+    저자는 상관계수의 **절대값**만 보므로 이 부호 뒤집힘을 진단하지 못하고,
+    "cell consistency 차이" 로만 부른다.
+  - 원인의 일부가 Su Fig. 1 에 그림으로 보인다: cell1/cell5 는 **R_∞ 증가
+    주도**(스펙트럼 평행이동), cell3 는 **반원 성장 주도**(R_∞ 고정),
+    cell2/cell6 는 **둘 다 거의 안 변한다** — 같은 조건에서 임피던스 열화
+    경로가 셋으로 갈린다.
+  `[해석]` **이것은 H1/H2 판정이 아니라 그 두 가설이 다투는 무대 자체에 대한
+  경고다.** SEV 는 R_ct 의 **부호 구조**(LLI↑, LAM_PE↑, LAM_NE↓)를 읽어 모드를
+  가르려 한다. 부호 구조를 쓰는 feature 는 부호가 셀 간에 안정할 때만 작동한다.
+  **Phase 2 는 "SEV 가 모드를 가르는가" 이전에 "SEV 축이 셀 간에 재현되는가"
+  를 먼저 물어야 한다.** (데이터·좌표계는 [[zhang2020-eis-aging-dataset]].)
+- **[2026-09-03 (6)] DRT peak 을 특정 전극에 귀속시키는 것이 자명하지 않다 —
+  실물 사례.** Su 2024 는 셀 수준 EIS 를 DRT 로 풀지만 `positive electrode`/
+  `negative electrode` 가 방법·결과부에 **0회**이고, R_ct,PE 라는 양이 등장하지
+  않는다. peak↔과정 대응(p₁=SEI, p₂=전하전달, p₃=확산)은 **근거 없이 선언**되며
+  (대칭셀·기준전극·half-cell·온도 스윕 전부 없음) 위에 적었듯 자기 데이터와
+  어긋난다. `[해석]` SEV 가 "DRT 로 R_ct,PE 를 얻는다" 고 할 때 **그 한 걸음이
+  공짜가 아니다.** DRT 는 시간상수를 가르지 전극을 가르지 않는다. 이 공백은
+  우리 합성 truth 파이프라인이 메울 수 있는 자리다 (모드를 고정한 채 어느 τ
+  대역이 어느 전극인지를 강제로 알 수 있다).
+- **[2026-09-03 (6)] 임피던스 유래 feature 는 셀 고유 오프셋을 크게 싣는다.**
+  Su Fig. 8 (직접 봄): 같은 feature 값이 셀마다 다른 SOH 에 대응한다 — 예
+  γ(lnτ_p₃) = 0.30 이 cell1 에서는 SOH ≈ 95 %, cell3 에서는 SOH ≈ 78 %.
+  SOH 70 % 에서 γ(lnτ_p₃) 가 cell3 ≈ 0.50 vs cell5 ≈ 0.25 로 **2배** 벌어진다.
+  저자들이 셀 간 학습/시험을 포기하고 셀 **안** 무작위 40/60 분할을 쓴 이유를
+  스스로 밝힌다 `[인쇄, p.14]`: "**This is due to the significant difference in
+  battery consistency**, not only in terms of initial capacity and decay, but
+  also in the EIS." `[해석]` SEV 를 실측에 쓰려면 절대값 대비가 아니라 **같은
+  셀 안의 상대 변화**만 써야 할 가능성이 높은데, 모드를 가르는 설계는 **절대적
+  부호·크기 구조**에 의존한다 — 두 요구가 긴장 관계다.
 - **LOGO-CV 의 group 정의가 원문에 인쇄되지 않았다.** 셀 단위인지 프로토콜
   단위인지에 따라 p.13 수치의 의미가 갈린다. 프로토콜 식별자가 입력에 있으므로
   group 이 셀이면 같은 프로토콜의 형제 셀로부터 예측하는 구조가 된다.
@@ -249,3 +307,25 @@ H2 가 참일 수 있음에 주의한다 — 부호가 같다고 벡터가 평�
   정확했고(그 화살표는 실제로 진폭이다), 틀린 것은 "그림에 그려진 것 = 논문이
   쓴 descriptor" 라는 **한 단계의 추론**이었다. 그림은 본문 서술을 교정하지만
   **본문·SI 를 이기지는 않는다**.
+
+- [2026-09-03 (6)] open 유지 — 리뷰가 SEV 축의 불리한 근거로 든 **원전**을
+  흡수 (`raw/papers/su2024_drt-soh-health-features.md`, Su et al. 2024,
+  *J. Energy Storage* 90, 111770). 이 카드에 준 것 넷:
+  - **Evidence For 1건 철회**: "LLI 와 LAM 이 함께 R_ct 를 올린다" 는
+    (a) Su 의 측정이 아니라 **Jiang 2022 [20] 에서 상속된 해석 한 문장**이고,
+    (b) Su 는 LLI/LAM 을 **한 번도 재지 않으며**, (c) Su 자신의 Fig. 5/Fig. 7 이
+    그 문장과 **부호가 어긋난다**(전하전달로 이름 붙인 p₂ 가 노화와 함께
+    **감소**). → **H1 의 문헌 근거가 아니다.** Wang 리뷰가
+    "Su et al. … observed" 로 옮기며 등급을 올린 것이 오해의 출처다.
+    (리뷰 digest 는 raw 불변층이라 고칠 수 없으므로 **정정은 이 카드와
+    [[interpretable-ml-battery-prognosis-taxonomy]] 가 보유한다**.)
+  - **Gap 3건 추가** (위 Gap 절): SEV 부호 구조의 셀 간 재현성 실패 사례 ·
+    DRT→전극 귀속이 자명하지 않다는 실물 사례 · 임피던스 feature 의 셀 고유
+    오프셋. 세 번째와 첫 번째는 Phase 2 의 **첫 물음을 바꾼다** —
+    "SEV 가 모드를 가르는가" 이전에 "**SEV 축이 셀 간에 재현되는가**".
+  - **데이터 출처 확정**: Phase 2 가 쓰는 EIS 는 Su 가 잰 것이 아니라
+    **Zhang et al. 2020, *Nat. Commun.* 11 (Zenodo 3633835)** 의 재사용이다.
+    좌표계와 미확인 항목은 [[zhang2020-eis-aging-dataset]] 에.
+  - **주의 한 줄**: 그 데이터셋에는 **LLI/LAM 라벨이 없다.** 따라서 Phase 2 는
+    이 카드의 질문에 직접 답할 수 없고, **전제(축의 재현성·귀속 가능성)만**
+    검증할 수 있다. 이 구분을 흐리면 안 된다.

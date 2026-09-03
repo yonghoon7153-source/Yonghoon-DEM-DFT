@@ -5,12 +5,12 @@ created: 2026-09-03
 updated: 2026-09-03
 type: concept
 tags: [battery, degradation, research]
-sources: [raw/papers/wang2025_interpretable-ml-battery-prognosis.md]
+sources: [raw/papers/wang2025_interpretable-ml-battery-prognosis.md, raw/papers/su2024_drt-soh-health-features.md]
 confidence: medium
 explored: false
 verificationStatus: unverified
 claimType: mixed
-evidenceScope: single-source
+evidenceScope: multi-source-primary
 ---
 
 # interpretable ML 4분류 — 그리고 그 분류가 묻지 않는 것
@@ -99,8 +99,43 @@ ensured**" 인데, 이는 물리적 *해석 가능성*과 물리적 *분해 가�
 - 이 분류를 [[birkl-ocv-degradation-diagnostic]] 계열과 나란히 놓으면 두
   계보가 서로를 안 본다는 것이 보인다 — 리뷰에 `OCV`·`half-cell` 이 0회다.
 
+## ★ 이 리뷰의 요약에 붙는 정정 (2026-09-03, 원전 대조)
+
+이 리뷰의 raw digest(`raw/papers/wang2025_interpretable-ml-battery-prognosis.md`)
+는 불변층이라 고칠 수 없다. **정정은 이 페이지가 보유한다.**
+
+**정정 1 — §4.4 의 참조 [127] (Su et al. 2024).** 리뷰 p.10 이 인쇄한 문장:
+
+> "An example of extracting interpretable features from DRT was provided by
+> Su et al., **who observed that** the variation trends of typical DRT peaks
+> and valleys during battery aging aligned with the increase in charge
+> transfer resistance **caused by LLI and LAM**. [127]"
+
+원전(Su et al., *J. Energy Storage* 90 (2024) 111770, digest:
+`raw/papers/su2024_drt-soh-health-features.md`) 을 직접 확인한 결과:
+
+| 리뷰가 함의하는 것 | 원전의 실제 상태 |
+|---|---|
+| Su 가 **관찰**했다 | Su 는 자기 DRT 추세를 **다른 논문의 진술로 해석**했다. 원문 문장은 "These trends are **in line with the fact that** … **[20]**" 이고, **[20] = Jiang et al., *Appl. Energy* 322 (2022) 119502** 다. **진짜 원전은 Jiang 2022** |
+| LLI·LAM 이 근거로 쓰였다 | Su 는 **LLI 도 LAM 도 한 번도 재지 않는다.** 두 약어는 본문에 네 번 나오고 전부 수치 없는 서술이다. half-cell OCP fitting·ICA/DVA·해체분석·모드 시뮬레이션 전부 없음 |
+| 전하전달 저항이 **증가**한다 | Su 가 "charge transfer" 로 이름 붙인 peak(**p₂**)은 5셀 중 **4셀에서 노화와 함께 감소**한다 (Fig. 5, Fig. 7). 증가하는 것은 저자가 "확산" 이라 부른 **p₃** 다. **원전 안에서 어긋난다** |
+| DRT feature 가 **해석 가능**하다 | peak↔과정 대응은 **근거 없이 선언**된다 — 대칭셀·기준전극·half-cell·온도 스윕 어느 것도 없고, 전극 귀속(PE/NE)은 아예 없다 |
+
+`[해석]` 리뷰는 문면상 크게 왜곡하지 않았지만 **증거 등급을 한 단계 올려
+옮겼다**(상속된 해석 → 저자의 관찰). 이 페이지가 정리한 "이 분류는
+identifiability 를 묻지 않는다" 는 진단과 같은 뿌리다 — **feature 에 물리적
+이름이 붙어 있는지**는 확인하지만 **그 이름이 근거를 가졌는지**는 확인하지
+않는 것이 이 리뷰의 요약 방식이다. 그 결과가 §4.4 의 이 칸이다.
+
+`[해석]` **인용 규칙**: 이 리뷰의 §4.2·§4.4 물리 귀속 열은 **2차 요약**으로
+취급하고, 우리 문서에 옮길 때는 반드시 원전을 먼저 본다. 이번이 두 번째
+사례다 (첫 번째는 §4.2 의 Kim 2023 — [[dv-peak-heterogeneity-descriptor]],
+그때는 리뷰가 아니라 **우리 판독의 추론**이 틀렸다).
+
 ## 관련
 - [[pvs-sev-degradation-mode-features]] — 두 feature 가 이 분류의 어디에 앉는가
 - [[pvs-sev-lli-lampe-separability]] — 이 분류가 묻지 않는 질문을 대신 묻는 카드
 - [[birkl-ocv-degradation-diagnostic]] — 라벨을 만드는 반대편 계보
 - [[fitting-degeneracy]] — "해석 가능 ≠ 분해 가능" 의 정확한 형태
+- [[dv-peak-heterogeneity-descriptor]] — §4.2 의 대표 사례, 원전 대조 1회차
+- [[zhang2020-eis-aging-dataset]] — §4.4 의 [127] 이 쓴 데이터의 진짜 출처
