@@ -688,6 +688,51 @@ def _incar_expected_from(txt):
             out[k] = " ".join(m.group(1).split())
     return out
 
+#: 🔴🔴 2026-09-04 — **k-point 병렬(KPAR)을 명시한다.** 종전 INCAR 은 `NCORE=4` 만 있고
+#:   KPAR 이 없어 VASP 기본값 `KPAR=1` 로 돌았다 — k-point 병렬이 아예 안 걸린다.
+#:   그런데 비용 추정기(`par_speedup`)는 "KPAR 구간에서 nk(≈7.2)배까지 거의 선형" 을
+#:   가정하고 있었다. 그래서 **잡당 코어를 늘렸을 때의 속도향상이 과대평가**됐고,
+#:   외주처의 잡당 walltime 상한(91 h)에 들어간다고 계산된 구성이 실제로는 넘쳤다.
+#:   ⚠ KPAR 은 **병렬화 태그다 — 에너지를 바꾸지 않는다**(AUDIT_KEYS 물리 감사 대상 아님).
+#:   ⚠ 4 를 고른 이유: 48·64·96·128·256 을 **전부 나눈다**. 6·7 은 64·128·256 에서
+#:     나눠떨어지지 않아 랭크가 남고, VASP 가 그 배치를 거부하거나 놀리는 코어가 생긴다.
+#:   ⚠ 대가: k-그룹마다 배열 사본을 들어 **노드당 메모리가 늘어난다**. 문서에 적는다.
+KPAR_VAL = 4
+
+
+def _kpar_for_mesh(km) -> int:
+    """이 k-격자에서 **실제로 쓸 수 있는** KPAR. → 1 | 2 | 4
+
+    ⛔⛔ 2026-09-04 — KPAR 을 전 잡에 4 로 박으면 **기체 기준 잡이 깨진다.** 그 잡들은
+      Γ 하나(`1 1 1`)라 NKPTS=1 인데 VASP 는 `KPAR ≤ NKPTS` 를 요구한다 — 배치가
+      거부되거나 랭크 3/4 이 논다. 그리고 그 6잡은 E_ads 의 기준항이라 하나만 죽어도
+      보고량이 안 나온다. ⇒ 잡의 k-격자에서 정한다.
+    ⚠ 값을 **1·2·4 로만** 낸다. 48·64·96·128·256 을 전부 나누는 수여야 랭크가 남지 않고,
+      한 묶음 안에서 여러 KPAR 이 섞여도 "랭크는 4의 배수" 한 줄로 조건이 닫힌다.
+      (격자에서 그냥 뽑으면 2 3 1 → 3 이 나오는데, 3 은 128·256 을 나누지 못한다.)
+    ⚠ 시간반전 축약(≈0.6배)을 반영한 **하한**으로 본다 — 실제 NKPTS 가 그보다 크면
+      손해가 없고, 작으면 VASP 가 거부한다. 모르면 작게 잡는 쪽이 안전하다.
+    """
+    try:
+        n = 1
+        for t in str(km).split():
+            n *= int(t)
+    except (TypeError, ValueError):
+        return 1
+    if n <= 1:
+        return 1
+    n_irr = max(1, int(n * 0.6))          # 시간반전 축약 후 k점 수의 보수적 하한
+    for cand in (4, 2):
+        if cand <= n_irr:
+            return cand
+    return 1
+
+
+def _apply_kpar(txt: str, km) -> str:
+    """INCAR 원문의 `KPAR` 줄을 그 잡의 k-격자에 맞는 값으로 바꾼다."""
+    return re.sub(r"(?m)^KPAR\s*=.*$", "KPAR     = %d" % _kpar_for_mesh(km), txt)
+
+
 # ── INCAR 3종 — Codex §2.2 템플릿 + 실납품 승계값(U 6.2 · IVDW 11 · ENCUT 520) ──
 _COMMON = """GGA      = PE
 PREC     = Accurate
@@ -705,6 +750,7 @@ LORBIT   = 11
 AMIN     = 0.01
 IVDW     = 11
 NCORE    = 4
+KPAR     = 4
 """
 SLAB_PRE = """SYSTEM = {system} [pre-SCF]
 # 0/3상 — **dipole 끄고** 궤도를 먼저 수렴시킨다 (VASP Electrostatic_corrections 권고).
@@ -1326,6 +1372,30 @@ case "$VASP_LAUNCHER_KIND" in
     ;;
   *) echo "⛔ 모르는 VASP_LAUNCHER_KIND: $VASP_LAUNCHER_KIND (mpirun|mpiexec|srun|none|wrapper)"; exit 2 ;;
 esac
+# ⛔⛔ 2026-09-04 — **랭크 수가 KPAR 의 배수여야 한다.** INCAR 이 `KPAR` 을 명시하는데
+#   `VASP_NPROC` 이 그 배수가 아니면 VASP 는 k-그룹을 고르게 못 나눈다 (배치를 거부하거나
+#   남는 랭크를 놀린다). INCAR 은 해시로 동결돼 현장에서 못 고치므로, **비용이 나가기 전에**
+#   여기서 멈추고 쓸 수 있는 랭크 수를 알려 준다. KPAR 은 잡의 INCAR 에서 직접 읽는다
+#   (MANIFEST 사본을 믿지 않는다 — 사본은 언젠가 정본과 갈린다).
+#   ⚠ KPAR 은 **잡마다 다르다** (슬랩 4 · 기체 Γ-only 1). 하나만 보면 기체 잡을 집어
+#     검사를 건너뛴다 — 전 INCAR 을 훑어 **최댓값**으로 조건을 건다 (그 배수면 1·2·4 전부 나눈다).
+_KPAR=$(find . -mindepth 3 -maxdepth 4 -name INCAR -exec \
+          sed -n 's/^[[:space:]]*KPAR[[:space:]]*=[[:space:]]*\([0-9][0-9]*\).*/\1/p' {} + 2>/dev/null \
+        | sort -n | tail -1)
+if [ -n "$_KPAR" ]; then
+  if [ "$_KPAR" -gt 1 ] 2>/dev/null; then
+    if [ $(( ${VASP_NPROC:-1} % _KPAR )) -ne 0 ]; then
+      echo "⛔ VASP_NPROC=${VASP_NPROC:-1} 이 INCAR 의 KPAR=$_KPAR 의 배수가 아닙니다."
+      echo "   이 묶음의 INCAR 은 k-point 병렬을 KPAR=$_KPAR 로 고정해 두었습니다"
+      echo "   (해시로 동결돼 있어 고칠 수 없습니다 — 고치면 그 잡이 거부됩니다)."
+      echo "   랭크 수를 $_KPAR 의 배수로 주십시오. 예: 48 · 64 · 96 · 128 · 256"
+      echo "   ⚠ KPAR 은 k-그룹마다 배열 사본을 들어 **노드당 메모리가 늘어납니다**."
+      echo "     메모리가 모자라면 랭크를 줄이지 마시고 노드를 늘려 주십시오."
+      exit 2
+    fi
+    echo "  ✔ 랭크 ${VASP_NPROC:-1} = KPAR $_KPAR × $(( ${VASP_NPROC:-1} / _KPAR )) (k-그룹당 랭크)"
+  fi
+fi
 export VASP_EXE VASP_LAUNCHER_KIND VASP_NPROC LAUNCHER_BIN VASP_WRAPPER
 PP=${PP:?PP 를 지정하세요 (POTCAR 원본 트리)}
 POTCAR_ALLOWLIST=${POTCAR_ALLOWLIST:?POTCAR_ALLOWLIST 를 지정하세요 (절대경로)}
@@ -2890,9 +2960,10 @@ def _emit_slab_job(jd: Path, atoms, nslab: int, freeze: float, frag: str,
     kmesh, incar_exp, kp_exp = {}, {}, {}
     for ph in phases:
         (jd / ph).mkdir(exist_ok=True)
-        txt = tpls[ph].format(**fmt)
-        (jd / ph / "INCAR").write_text(txt)
         km = KMESH["relax"] if ph == "pre" else kmesh_over.get(ph, KMESH[ph])
+        # 🔴 2026-09-04 — KPAR 은 **그 상의 k-격자**가 정한다 (기체 Γ-only 는 1).
+        txt = _apply_kpar(tpls[ph].format(**fmt), km)
+        (jd / ph / "INCAR").write_text(txt)
         (jd / ph / "KPOINTS").write_text(_kpoints_text(ph, km))
         kp_exp[ph] = _kpoints_expected(ph, km)
         kmesh[ph] = km
@@ -2904,9 +2975,9 @@ def _emit_slab_job(jd: Path, atoms, nslab: int, freeze: float, frag: str,
     #   run_dense_selected.sh 가 dense_cand → dense 로 옮겨 같은 러너로 돌린다.
     if dense_cand and "dense" not in phases:
         (jd / "dense_cand").mkdir(exist_ok=True)
-        txt = tpls["dense"].format(**fmt)
-        (jd / "dense_cand" / "INCAR").write_text(txt)
         km = kmesh_over.get("dense", KMESH["dense"])
+        txt = _apply_kpar(tpls["dense"].format(**fmt), km)
+        (jd / "dense_cand" / "INCAR").write_text(txt)
         (jd / "dense_cand" / "KPOINTS").write_text(_kpoints_text("dense_cand", km))
         kp_exp["dense_cand"] = _kpoints_expected("dense_cand", km)
         kmesh["dense_cand"] = km
@@ -3038,7 +3109,9 @@ def _emit_mol_job(jd: Path, frag: str, mol, margin: float,
                else (("relax", MOL_RELAX), ("static", MOL_STATIC)))
     for ph, tpl in _phases:
         (jd / ph).mkdir(exist_ok=True)
-        txt = tpl.format(**fmt)
+        # 🔴 2026-09-04 — 기체 기준 잡은 Γ 하나다 (NKPTS=1) → **KPAR=1**.
+        #   전 잡에 KPAR=4 를 박으면 VASP 가 k-그룹을 못 나눠 이 6잡이 죽는다.
+        txt = _apply_kpar(tpl.format(**fmt), "1 1 1")
         (jd / ph / "INCAR").write_text(txt)
         (jd / ph / "KPOINTS").write_text(_kpoints_text(ph, "1 1 1"))
         kp_exp[ph] = _kpoints_expected(ph, "1 1 1")
@@ -13585,7 +13658,11 @@ export EXPECT_ZIP_SHA256=%s
 #    문자열 검사는 우회가 가능해, 종류와 수만 받고 실행 명령은 러너가 조립합니다.
 export VASP_LAUNCHER_KIND=mpirun            # mpirun|mpiexec|srun|none|wrapper
 export LAUNCHER_BIN=/abs/path/to/mpirun     # **필수** — PATH 에서 찾지 않습니다. 없으면 exit 2
-export VASP_NPROC=%d                        # 랭크 수 (잡 하나당)
+export VASP_NPROC=%d                        # 랭크 수 (잡 하나당) — **KPAR %d 의 배수**여야 합니다
+#    이 묶음의 INCAR 은 k-point 병렬을 KPAR=%d 로 고정했습니다 (48·64·96·128·256 전부 가능).
+#    배수가 아니면 러너가 **첫 VASP 실행 전에** 멈춥니다. INCAR 은 해시로 동결돼 고칠 수 없습니다.
+#    ⚠ KPAR 은 k-그룹마다 배열 사본을 들어 **노드당 메모리가 늘어납니다.** 모자라면 랭크를
+#      줄이지 마시고(배수 조건이 깨집니다) 노드를 늘려 주십시오.
 export VASP_EXE=/abs/path/to/vasp_std       # 실행파일 절대경로 (봉인 대상)
 
 # ⚠ 러너는 기본으로 잡 %d개를 **동시에** 띄웁니다 (= %d × VASP_NPROC 랭크).
@@ -13598,6 +13675,7 @@ export VASP_EXE=/abs/path/to/vasp_std       # 실행파일 절대경로 (봉인 
 bash run_staged.sh 1     # census → POTCAR 조립+봉인 → 봉인 census → 1단계 → 판정
 bash run_staged.sh 2     # 1단계 통과(STAGE1_PASS.json) 뒤에만""" % (
         manifest_sha, zip_sha, int(getattr(a, "cores", 48) or 48),
+        KPAR_VAL, KPAR_VAL,
         int(((man.get("submission") or {}).get("max_concurrency")) or 8),
         int(((man.get("submission") or {}).get("max_concurrency")) or 8))
 
@@ -13678,7 +13756,14 @@ def _walltime_block(man: Dict[str, Any], a) -> str:
             f"⚠ **실행 위치** — `run_staged.sh` 는 **계산 노드 할당 안에서**(로그인 노드 아님) 잡 {_conc}개 × "
             f"VASP_NPROC 랭크를 동시에 띄우므로, 그 할당이 단계 전체(1단계 최장 ≈{_rec} h) 동안 유지돼야 "
             f"합니다. 봉인 프로브도 같은 노드에서 VASP 를 인자 없이 한 번 잠깐 기동합니다."
-            + _tot_line)
+            + _tot_line
+            # 🔴 2026-09-04 — 모형은 ±2배다. 큐 상한이 빠듯하면 **대표 잡 하나를 먼저 재는 것**이
+            #   모든 모형보다 싸고 정확하다. 그 한 번이 나머지 15잡의 walltime 을 정한다.
+            + (f"\n💡 **먼저 한 잡만 재 보시길 권합니다.** 위 추정은 모형이라 ±2배입니다. "
+               f"큐 상한이 빠듯하시면 `refs/` 의 기체 잡 하나(가장 짧습니다)나 복합체 한 잡을 "
+               f"먼저 돌려 실제 벽시계를 알려 주시면, 나머지 walltime 을 그 값으로 다시 잡아 "
+               f"드립니다. 1단계 전체를 던진 뒤 큐에서 잘리는 것보다 쌉니다 — 잘린 잡은 "
+               f"재개할 수 없어 통째로 다시 돌려야 합니다."))
 
 
 def _readme_sp(man: Dict[str, Any], a, zcut: float, n_jobs: int,
@@ -16109,7 +16194,10 @@ def build_bundle(a, ledger: Optional[Dict[str, Any]] = None) -> Path:
         #   추정기 기준선(48코어)의 시간이라, `--cores 256` 을 줘도 README·계약이
         #   48코어 시간을 "256코어 기준" 이라고 적었다. 외주 견적이 여기서 틀어진다
         #   (리뷰어가 14.7일로 읽은 이유). 실제 속도향상으로 나눈다.
-        _sp = CE.par_speedup(a.cores, _base.get("cores", 48), 7.2)
+        # 🔴 2026-09-04 — k 병렬 상한은 **KPAR** 이 정한다. 종전엔 7.2(k점 수)를 그대로 써서
+        #   KPAR 이 없던 v34 까지의 번들에서 속도향상을 과대평가했다.
+        _nkcap = min(KPAR_VAL, 7.2)
+        _sp = CE.par_speedup(a.cores, _base.get("cores", 48), _nkcap)
         _jh = [h / _sp for h in _jh]
         man["cost_frozen"] = {
             "total_wall_h": round(sum(_jh), 1),
@@ -16117,6 +16205,10 @@ def build_bundle(a, ledger: Optional[Dict[str, Any]] = None) -> Path:
             "longest_job_h": round(max(_jh), 1) if _jh else None,
             "cores_per_job": a.cores,
             "par_speedup_vs_baseline": round(_sp, 2),
+            "k_parallel_cap": _nkcap,
+            "⚠_k_parallel_cap": ("min(KPAR %d, k점 7.2). KPAR 이 없으면 VASP 기본값 1 이라 "
+                                 "코어를 늘려도 k 병렬이 안 걸린다 — 2026-09-04 정정."
+                                 % KPAR_VAL),
             "⚠_속도향상": ("par_speedup 은 벤치마크가 아니라 두 구간 어림이다 (±50 %). "
                         "잡 시간 자체도 모형이라 ±2배 — 곱하면 넓다"),
             "makespan_d": {str(m): round(CE.schedule_makespan(_jh, m) / 24, 2)
@@ -16191,6 +16283,21 @@ def build_bundle(a, ledger: Optional[Dict[str, Any]] = None) -> Path:
     man["submission"] = {
         "cores_per_job": a.cores,
         "max_concurrency": a.concurrency,
+        # 🔴🔴 2026-09-04 — 병렬화 태그를 **기록**한다. 종전엔 INCAR 에만 있고 MANIFEST 는
+        #   침묵해서, 비용 추정기가 k-point 병렬을 제 마음대로 가정했다 (KPAR 이 없어 실제로는
+        #   안 걸리는데 nk≈7.2 배까지 선형이라고 봤다). 랭크 배치의 제약은 계획 정보다.
+        "parallelization": {
+            "NCORE": 4, "KPAR": KPAR_VAL,
+            "⛔_VASP_NPROC_제약": ("랭크 수는 KPAR(%d)의 **배수**여야 한다. 아니면 k-그룹을 "
+                                   "고르게 못 나눠 VASP 가 배치를 거부하거나 랭크를 놀린다. "
+                                   "run_staged.sh 가 실행 전에 검사한다." % KPAR_VAL),
+            "쓸_수_있는_랭크_예": [48, 64, 96, 128, 256],
+            "⚠_메모리": ("KPAR 은 k-그룹마다 배열 사본을 들어 **노드당 메모리가 늘어난다**. "
+                        "모자라면 랭크를 줄이지 말고 노드를 늘려야 한다 (랭크를 줄이면 "
+                        "KPAR 배수 조건이 깨진다)."),
+            "⚠_에너지_불변": ("KPAR·NCORE 는 병렬화 태그다 — 결과를 바꾸지 않으므로 물리 감사"
+                             "(AUDIT_KEYS) 대상이 아니다. 다만 INCAR 해시에는 들어간다."),
+        },
         # ⛔⛔ 회신 AR P1-11 · 해제조건 9 (2026-08-31) — MANIFEST 는 "의존성 없음 +
         #   배열 제출" 을 말하고 다른 문서는 staged 실행을 요구해 **정면으로 충돌**했다.
         #   실행 경로가 둘이면 1단계 정지 규칙이 강제되지 않는다. 구성에서 유도한다.
@@ -19819,6 +19926,9 @@ def _runner_e2e(bundle: Path, chk) -> bool:
     # 🔴 회신 AV P0-2 — 자유형 launcher 문자열이 폐지됐다. 종전 이 시험이
     #   `VASP_LAUNCHER="env"` 를 썼는데, env 야말로 AV 가 잡은 우회 통로였다.
     env["VASP_LAUNCHER_KIND"] = "none"    # stub 직접 실행 (launcher 없음)
+    # 🔴 2026-09-04 — INCAR 이 KPAR=4 를 고정하므로 랭크 수는 4의 배수여야 한다.
+    #   (kind=none 의 기본값 1 로 두면 러너가 옳게 거부한다 — 아래 음성시험이 그걸 친다.)
+    env["VASP_NPROC"] = str(KPAR_VAL)
     env["VASP_EXE"] = str(vb)
     env.pop("VASP_CMD", None)
     env.pop("VASP_LAUNCHER", None)
@@ -19886,6 +19996,35 @@ def _runner_e2e(bundle: Path, chk) -> bool:
     chk((_ok_root / "POTCAR_ROOT_SEAL.json").is_file()
         and (_ok_root / "ZIP_SHA256.txt").is_file(),
         "AR 해제조건 7: 러너가 봉인과 ZIP_SHA256.txt 를 실제로 만든다")
+
+    # 🔴🔴 2026-09-04 — **랭크 수가 KPAR 의 배수가 아니면 비용 전에 멈춘다.**
+    #   INCAR 은 해시로 동결돼 현장에서 KPAR 을 못 고친다. 배수가 아닌 랭크로 던지면
+    #   VASP 가 k-그룹을 못 나눠 배치를 거부하거나 랭크를 놀린다 — 둘 다 walltime 을
+    #   태운 뒤에 드러난다. 여기서 잡는다.
+    _kp_bad = _copy("kpar_not_multiple")
+    _rc_kb, _o_kb = _run(_kp_bad, {"VASP_NPROC": "6"})      # 6 % 4 != 0
+    chk(_rc_kb != 0 and "KPAR" in _o_kb and "배수" in _o_kb
+        and not (_kp_bad / "POTCAR_ROOT_SEAL.json").is_file(),
+        "⛔음성 2026-09-04: VASP_NPROC 이 KPAR 의 배수가 아니면 **봉인 전에** 거부한다 "
+        "(rc=%d · 봉인 %s)" % (_rc_kb, (_kp_bad / "POTCAR_ROOT_SEAL.json").is_file()))
+    chk("48" in _o_kb and "128" in _o_kb,
+        "2026-09-04: 거부 메시지가 **쓸 수 있는 랭크 수**를 예시로 준다 (막고 끝내지 않는다)")
+    _kp_ok = _copy("kpar_multiple")
+    _rc_ko, _o_ko = _run(_kp_ok, {"VASP_NPROC": str(KPAR_VAL * 2)})
+    chk("✓ census" in _o_ko and "k-그룹당 랭크" in _o_ko,
+        "양성 2026-09-04: 배수면 통과하고 k-그룹당 랭크를 찍는다 (rc=%d)" % _rc_ko)
+    # INCAR 에 실제로 KPAR 이 박혔는가 (문서만 말하고 입력엔 없는 상태 방지)
+    # INCAR 에 실제로 KPAR 이 박혔고, **잡마다 다른가** (슬랩 4 · 기체 Γ-only 1)
+    def _kp_of(p):
+        m = re.search(r"(?m)^\s*KPAR\s*=\s*(\d+)", p.read_text(encoding="utf-8"))
+        return int(m.group(1)) if m else None
+    _kp_slab = [_kp_of(p) for p in sorted(bundle.glob("prospective/*/static/INCAR"))]
+    _kp_gas = [_kp_of(p) for p in sorted(bundle.glob("refs/mol__*/static/INCAR"))]
+    chk(bool(_kp_slab) and set(_kp_slab) == {KPAR_VAL},
+        "2026-09-04: 슬랩 잡 INCAR 의 KPAR 이 전부 %d 다 (%s)" % (KPAR_VAL, sorted(set(_kp_slab))))
+    chk(bool(_kp_gas) and set(_kp_gas) == {1},
+        "🔴 2026-09-04: **기체 Γ-only 잡은 KPAR=1** 이다 — 4 를 박으면 VASP 가 k-그룹을 "
+        "못 나눠 E_ads 의 기준항 6잡이 죽는다 (%s)" % sorted(set(_kp_gas)))
     _seal = json.loads((_ok_root / "POTCAR_ROOT_SEAL.json").read_text(encoding="utf-8"))
     chk(_seal.get("bundle_zip_sha256") == "0" * 64
         and _seal.get("manifest_sha256") == hashlib.sha256(

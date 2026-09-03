@@ -236,17 +236,39 @@ def poscar_volume_A3(path):
                + a[0][2] * (a[1][0] * a[2][1] - a[1][1] * a[2][0]))
 
 
-def manifest_jobs(path, base, atoms_fallback, drop=(), mesh_over=None, cores=None):
+def manifest_kpar(man):
+    """이 번들이 실제로 쓰는 **k-병렬 그룹 수**(KPAR). → int
+
+    🔴🔴 2026-09-04 — 종전엔 이 값을 묻지 않고 `nk_eff(mesh)`(≈7.2)까지 k 병렬이 걸린다고
+      가정했다. 그런데 v34 까지의 INCAR 은 `NCORE` 만 있고 **`KPAR` 이 없었다** — VASP
+      기본값은 `KPAR=1` 이라 k 병렬이 아예 안 걸린다. 그래서 잡당 코어를 늘렸을 때의
+      속도향상이 과대평가됐고, 외주처 walltime 상한에 들어간다고 계산된 구성이 넘쳤다.
+    ⛔ **없으면 1 이다** (VASP 기본값) — 모르면 낙관하지 않는다. INCAR 을 안 보고 MANIFEST
+      기록만 읽으므로, 기록이 INCAR 과 갈리면 이 값도 틀린다 (러너가 실행 전에 대조한다).
+    """
+    try:
+        v = int(((man.get("submission") or {}).get("parallelization") or {}).get("KPAR") or 1)
+        return v if v >= 1 else 1
+    except (TypeError, ValueError):
+        return 1
+
+
+def manifest_jobs(path, base, atoms_fallback, drop=(), mesh_over=None, cores=None,
+                  kpar=None):
     """MANIFEST.json(+같은 폴더의 job.json)에서 **실제 계획**을 회수한다.
 
     반환 [(상대경로, 총시간h, {상: h})]. job.json 이 있으면 원자수·k·LREAL 을
     잡마다 정확히 읽고, 없으면 planned 의 상 목록 + --atoms 가정으로 후퇴한다
     (그때는 후퇴했다고 **말한다** — 조용히 가정하지 않는다).
+
+    `kpar` 는 k-병렬 상한이다. None 이면 MANIFEST 에서 읽고, 기록이 없으면 1(VASP 기본)로
+    본다 — **모르면 낙관하지 않는다** (2026-09-04).
     """
     from glob import glob
     with open(path) as fh:
         man = json.load(fh)
     root = os.path.dirname(os.path.abspath(path))
+    _kpar = manifest_kpar(man) if kpar is None else max(1, int(kpar))
     jps = sorted(glob(os.path.join(root, "*", "*", "job.json")))
     out, mode = [], "job.json (정확)"
     if jps:
@@ -283,7 +305,8 @@ def manifest_jobs(path, base, atoms_fallback, drop=(), mesh_over=None, cores=Non
                     ph if ph in ESTEP else "static", n_at,
                     _mesh, base, lr.startswith(".F"), _ni, _vr)
                 if cores:
-                    _h /= par_speedup(cores, base["cores"], nk_eff(_mesh))
+                    # k 병렬 상한은 **KPAR 과 k-점 수 중 작은 쪽**이다 (2026-09-04).
+                    _h /= par_speedup(cores, base["cores"], min(_kpar, nk_eff(_mesh)))
                 ph_h[ph] = _h
             out.append((os.path.relpath(os.path.dirname(jp), root),
                         sum(ph_h.values()), ph_h))
@@ -333,6 +356,8 @@ def main() -> int:
                     help="이 상들을 계획에서 뺀다 (예: --drop_phase dense)")
     ap.add_argument("--static_mesh", default=None,
                     help="static/dense 의 k 메시를 통째로 교체 (예: '2 3 1')")
+    ap.add_argument("--kpar", type=int, default=None,
+                    help="k-병렬 그룹 수 상한 (기본: MANIFEST 기록 · 없으면 1 = VASP 기본값)")
     ap.add_argument("--target_days", type=float, default=None,
                     help="목표 벽시계 일수 — 이를 맞추는 (코어/잡, 동시잡) 조합을 역산")
     ap.add_argument("--selftest", action="store_true")
@@ -424,7 +449,10 @@ def report_manifest(a, base) -> int:
         a.manifest, base, a.atoms, drop=tuple(a.drop_phase or ()),
         mesh_over=({"static": a.static_mesh, "dense": a.static_mesh}
                    if a.static_mesh else None),
-        cores=cores)
+        cores=cores, kpar=getattr(a, "kpar", None))
+    # 🔴 2026-09-04 — k 병렬 상한은 KPAR 이 정한다. 기록이 없으면 1 (VASP 기본 · 낙관 금지).
+    _kpar_eff = manifest_kpar(man) if getattr(a, "kpar", None) is None else max(1, int(a.kpar))
+    _nk_cap = min(_kpar_eff, 7.2)
     if not jobs:
         print(f"⛔ {a.manifest} 에 계획된 잡이 0개 — 비용을 낼 수 없다")
         return 2
@@ -452,8 +480,11 @@ def report_manifest(a, base) -> int:
     print(f"MANIFEST: {a.manifest}")
     if cores != base["cores"]:
         print(f"  ⚡ 코어/잡 {base['cores']} → {cores} · 속도향상 "
-              f"{par_speedup(cores, base['cores'], 7.2):.2f}배 가정 "
-              f"(k 7.2 기준 · ±50 %)")
+              f"{par_speedup(cores, base['cores'], _nk_cap):.2f}배 가정 "
+              f"(k 병렬 상한 {_nk_cap:.1f} = min(KPAR {_kpar_eff}, k점 7.2) · ±50 %)")
+        if _kpar_eff <= 1:
+            print("     ⚠ **KPAR 기록이 없다 → 1 로 본다** (VASP 기본값). k 병렬이 안 걸리면 "
+                  "코어를 늘려도 이만큼만 빨라진다 — INCAR 에 KPAR 을 넣어야 한다.")
     if a.drop_phase:
         print(f"  ⚡ 제거한 상: {' '.join(a.drop_phase)}")
     if a.static_mesh:
@@ -502,8 +533,8 @@ def report_manifest(a, base) -> int:
     if a.target_days:
         print(f"\n★ 목표 {a.target_days} 일을 맞추는 조합 (총 코어 최소순):")
         sol = solve_target(hs if cores == base["cores"] else
-                           [h * par_speedup(cores, base["cores"], 7.2) for h in hs],
-                           base["cores"], a.target_days,
+                           [h * par_speedup(cores, base["cores"], _nk_cap) for h in hs],
+                           base["cores"], a.target_days, nk=_nk_cap,
                            stages=stages if s_mk is not None else None)
         if s_mk is not None:
             print("   (단계 게이트 반영 · 사람의 판정 왕복은 별도)")
@@ -712,6 +743,25 @@ def selftest() -> int:
         and stage_of("p/c", {"kind": "prospective_pose", "role": "sensitivity",
                              "seed": _sm}, _sm) == 2,
         "단계 분류가 run_staged 규칙과 같다 (mol_ref · primary+주seed · vacconv = 1단계)")
+
+    # ── 🔴 KPAR (2026-09-04) — k 병렬 상한을 **기록에서** 읽는다 ───────────────
+    #   v34 까지의 INCAR 은 NCORE 만 있고 KPAR 이 없었다(= VASP 기본 1 = k 병렬 없음)인데
+    #   추정기는 nk≈7.2 까지 걸린다고 봤다. 코어를 늘렸을 때의 속도향상이 과대평가됐고,
+    #   외주처 walltime 상한에 들어간다던 구성이 실제로는 넘쳤다.
+    chk(manifest_kpar({}) == 1 and manifest_kpar({"submission": {}}) == 1,
+        "[음성] KPAR 기록이 없으면 **1** 로 본다 (VASP 기본값 · 모르면 낙관하지 않는다)")
+    chk(manifest_kpar({"submission": {"parallelization": {"KPAR": 4}}}) == 4,
+        "KPAR 기록이 있으면 그 값을 쓴다")
+    chk(manifest_kpar({"submission": {"parallelization": {"KPAR": "x"}}}) == 1
+        and manifest_kpar({"submission": {"parallelization": {"KPAR": 0}}}) == 1,
+        "[음성] KPAR 기록이 망가졌으면 1 로 되돌린다 (예외로 죽지 않는다)")
+    _sp_k1 = par_speedup(128, 48, min(1, 7.2))
+    _sp_k4 = par_speedup(128, 48, min(4, 7.2))
+    chk(_sp_k1 < _sp_k4 < 128 / 48.0 + 1e-9,
+        "KPAR 이 크면 같은 코어에서 더 빠르다 — 그리고 둘 다 선형을 못 넘는다 "
+        f"(KPAR1 {_sp_k1:.2f} < KPAR4 {_sp_k4:.2f} < 선형 {128/48:.2f})")
+    chk(abs(_sp_k1 - (128 / 48.0) ** PAR_PW_EXP) < 1e-9,
+        f"[음성] KPAR=1 이면 **k 병렬 구간이 없다** — 전 구간이 감쇠 지수다 ({_sp_k1:.2f})")
 
     #  ★ 음성: 상을 빼면 총량이 **반드시** 줄어야 한다
     _b0 = phase_hours("dense", 192, "4 6 1", b, True)
