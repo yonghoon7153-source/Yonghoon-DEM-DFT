@@ -77,7 +77,7 @@ _gpu_for_pid() { printf '%s' "$_gpu_map" | awk -F, -v p="$1" '$1==p {print $2; e
 #       'bfgs converged in'                      → 진짜 수렴
 #       'The maximum number of steps has been'   → nstep 소진 (미수렴)
 _read_out() {
-  local f="$1" now mt
+  local f="$1" now mt _nneb _ef _eb
   ST=""; NOTE=""; AGE="-"; STEP="-"; FRC="-"; ENE="-"
   now=$(date +%s); mt=$(stat -c %Y "$f" 2>/dev/null || echo "$now")
   AGE=$(( (now - mt) / 60 ))
@@ -85,8 +85,25 @@ _read_out() {
   ENE=$(grep -a "^!    total energy" "$f" 2>/dev/null | tail -1 | awk '{print $5}')
   FRC=$(grep -a "Total force =" "$f" 2>/dev/null | tail -1 | awk '{print $4}')
   [ -n "$ENE" ] || ENE="-"; [ -n "$FRC" ] || FRC="-"
+  # ── NEB (neb.x) — 스텝은 'activation energy (->)' 줄 수, 에너지 칸엔 정방향 Ea[eV] ──
+  #   ⚠ neb.out 에는 '!    total energy' 도 'bfgs converged' 도 없다. 이 분기가 없으면
+  #     끝난 NEB 가 "죽음" 으로 찍힌다 (2026-09-03 kgy li_metal 에서 미리 잡음).
+  _nneb=$(grep -ac "activation energy (->)" "$f" 2>/dev/null); [ -n "$_nneb" ] || _nneb=0
+  if [ "$_nneb" -gt 0 ]; then
+    STEP=$_nneb
+    _ef=$(grep -a "activation energy (->)" "$f" | tail -1 | awk '{print $(NF-1)}')
+    _eb=$(grep -a "activation energy (<-)" "$f" | tail -1 | awk '{print $(NF-1)}')
+    ENE="Ea→${_ef}"
+    NOTE="Ea ← ${_eb:-?} eV (대칭 끝점이면 →/← 가 같아야 한다)"
+  fi
 
-  if grep -aq "bfgs converged in" "$f" 2>/dev/null; then
+  if grep -aq "neb: convergence achieved" "$f" 2>/dev/null; then
+    ST="✅ 수렴(NEB)"
+    NOTE="${NOTE:+$NOTE · }경로 수렴 — Ea 인용은 collect_neb.py 판정을 따른다"
+  elif grep -aq "neb: reached the maximum number of steps" "$f" 2>/dev/null; then
+    ST="⛔ nstep소진(NEB)"
+    NOTE="${NOTE:+$NOTE · }nstep_path 소진 **미수렴** — nstep_path 늘려 restart_mode='restart' 로 이어야 한다"
+  elif grep -aq "bfgs converged in" "$f" 2>/dev/null; then
     ST="✅ 수렴"
     NOTE="⚠ 수렴 ≠ 바닥상태 (대칭보호 정류점 가능 — li3nd r0)"
   elif grep -aq "The maximum number of steps has been" "$f" 2>/dev/null; then
@@ -117,6 +134,10 @@ if [ "${1:-}" = "--selftest" ]; then
   printf 'Accelerator Fatal Error: cuMemAlloc returned error 2 (CUDA_ERROR_OUT_OF_MEMORY)\n' >> "$R/oom/00_control_relax.out"
   touch -d '300 minutes ago' "$R/stall/00_control_relax.out"
   touch -d '300 minutes ago' "$R/dead/00_control_relax.out"
+  # NEB 출력 — relax 마커가 하나도 없다. 이 분기가 없으면 끝난 NEB 가 '죽음' 이 된다.
+  mkdir -p "$R/nebconv" "$R/nebmax"
+  printf '     activation energy (->) =   0.251000 eV\n     activation energy (<-) =   0.251000 eV\n     activation energy (->) =   0.229000 eV\n     activation energy (<-) =   0.229000 eV\n     neb: convergence achieved in   2 iterations\n     JOB DONE.\n' > "$R/nebconv/neb.out"
+  printf '     activation energy (->) =   0.400000 eV\n     activation energy (<-) =   0.380000 eV\n     neb: reached the maximum number of steps\n     JOB DONE.\n' > "$R/nebmax/neb.out"
 
   # 가짜 QE 프로세스 — cwd 가 근거이므로 그 폴더에서 띄운다
   cp /bin/sleep "$T/qefake" && chmod +x "$T/qefake"
@@ -144,6 +165,12 @@ if [ "${1:-}" = "--selftest" ]; then
       "⑥ ⛔음성(li3nd r2 12:08 실측): GPU OOM 사망을 그냥 '죽음' 으로 뭉뚱그리지 않는다"
   chk "$(echo "$OUT" | grep -qE '살아있음 *1|살아있음 1' && echo 1 || echo 0)" \
       "⑦ 합계에서 정체를 '살아있음' 으로 세지 않는다"
+  chk "$(echo "$OUT" | grep -E '^  nebconv' | grep -q '수렴(NEB)' && echo 1 || echo 0)" \
+      "⑨ 양성(NEB): 'neb: convergence achieved' 는 수렴이다 — relax 마커가 없어도 죽음으로 찍지 않는다"
+  chk "$(echo "$OUT" | grep -E '^  nebconv' | grep -q 'Ea→0.229000' && echo 1 || echo 0)" \
+      "⑨-b NEB 는 스텝을 'activation energy (->)' 줄로 세고 마지막 정방향 Ea 를 에너지 칸에 낸다"
+  chk "$(echo "$OUT" | grep -E '^  nebmax' | grep -q 'nstep소진(NEB)' && echo 1 || echo 0)" \
+      "⑩ ⛔음성(NEB): 'reached the maximum number of steps' 는 JOB DONE 이어도 **미수렴**이다"
 
   OUT2=$(bash "$0" "$T/nonexistent" 2>&1); _rc=$?
   chk "$([ $_rc -ne 0 ] && echo 1 || echo 0)" "⑧ ⛔음성: 루트가 없으면 0 이 아닌 코드로 끝난다"
