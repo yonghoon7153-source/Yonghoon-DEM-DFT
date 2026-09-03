@@ -1136,6 +1136,107 @@ C6(Zn(002) Wulff) · C7(MD)와 각각의 **"못 하는 것"**, 착수 게이트 
   특히 **EES 2024 17:7372 는 C5 의 비교 대상 원전**이라 확보 전엔 λ 를 계산해도 대조할 곳이 없다.
 
 
+### K-5. 📄 논문 축 — **[Zhu26Zn]** 이 들어왔다 (2026-09-03, 논문 에이전트)
+
+> `papers/zhu2026_zhs_precoverage_quasi_anode_free_zn.md` — R. Zhu, T. Yabu, C. Yang, S. Yao, H. Yang,
+> A. Nasu, M. Matsui, **H. Kobayashi\*** (홋카이도대/상하이교통대), "Pre-Coverage of Side Reaction Sites
+> Enables Quasi-Anode-Free Rechargeable Aqueous Zinc Batteries", ***Adv. Funct. Mater.* 2026, 36, e23442**
+> (DOI 10.1002/adfm.202523442, online 2025-11-24).
+> ⇒ **§K-4 의 "AFM(Zhu) 만 인입 중" 이 해소됐다.** 나머지 4편은 여전히 미보유.
+> 이 논문은 **덱 슬 6(G2)의 원출처**이자 **정본**이다 — 덱과 어긋나면 논문이 이긴다.
+> **두 번째 수계 Zn digest**: `papers/cho2026_eipc_zn_anode_azib.md` (코팅막 축, [Cho26Zn]).
+
+**논문값 (⚠ 발표 소환값과 섞지 말 것 — §K-1 표와 *다른 계*다: 1 M ZnSO₄, 요오드 없음, 탄소 코팅 Cu)**
+
+| 지표 | Cu | CuGr | CuStr | **CuGrStr** |
+|---|---|---|---|---|
+| 평균 CE (10 mA cm⁻²·1 mAh cm⁻², 2000 cyc) | 99.86 % | 99.88 % | 99.89 % | **99.94 %** |
+| 4 mAh cm⁻² | 단락 | 단락 | — | **99.74 %** (150 cyc) |
+| GC H₂ 부피 % (`Fig. S13`, figure-read) | 3.31 | 4.29 | **0.55** | **0.28** |
+
+무음극 CE 문턱(`Fig. 1a`): 200 cyc 80 % 유지 → **>99.9 %** · 500 cyc → **>99.95 %**.
+QAF 셀 **≈520 Wh kg⁻¹**(⚠ 본문 표현은 *theoretical*) · 57 cyc 92 % 유지, 감쇠 원인은 **ZMO 양극**.
+
+### K-6. ★★ G2 판정 — **"Cu 표면합금"은 논문에서 *측정된 적이 없다***
+
+덱 슬 6 의 *"For Cu substrate, formation of surface alloy layer exerted a greater influence than ZHS …
+**not systematically investigated**"* 를 원문에서 확인한 결과:
+
+- 본문 전체에서 **"alloy" 는 2회**뿐이고 **둘 다 조건법**이다 —
+  *"only during the early stage **might** the current refer to a UPD or a surface alloying process"* ·
+  *"The improvement in CuStr **likely** arises not from ZHS passivation but from the formation of a
+  surface alloy layer …[15]"* ([15] = Hao 외, *AFM* **2020**, 30, 2001263 — 우리 litdb 미보유).
+- **합금에 대한 자기 측정 0건**: Cu 쪽 XRD 없음(`Fig. 2h` 는 CuGr 전용) · Cu 2p 화학상태 분해 없음 ·
+  **Cu 2p 깊이프로파일 없음**(`Fig. S22` 는 O 1s·Zn 2p 만 4시료) · CuStr 단면 EDS 없음(`Fig. S7` 단면은
+  CuGrStr 전용) · UPD 정량 없음 · **DFT 에 Cu 표면 0건**.
+- 논문의 Cu 논리는 실제로 **기하 논증**이다(`Fig. S8a`): 평판 Cu 는 ZHS 가 표면을 통째로 덮어 **해롭고**,
+  "약한 3D" 탄소는 ZHS 가 생겨도 Zn 활성자리가 남는다. 합금은 *"그래도 CuStr 가 조금 좋아지니
+  원인이 무언가 있어야 한다"* 는 **소거법의 결론**으로만 등장한다.
+
+> ⚠ **덱 표현 정정**: 논문은 *"Cu 에서 합금이 ZHS 보다 크다"* 를 **잰 적이 없다**. 논문이 말한 것은
+> **"탄소에서는 ZHS 가 유익, Cu 에서는 ZHS 가 유해 → 남은 개선분은 합금 때문일 것"** 이다. 부호가 다르다.
+
+⇒ **§K-3 의 권장 다음 단계(C2+C3 한 묶음)가 문헌 공백을 그대로 겨냥한다는 것이 확인됐다.**
+
+### K-7. C1 ↔ 논문 대조 (§K-2 의 보강)
+
+| 항목 | [Zhu26Zn] | 우리 C1 |
+|---|---|---|
+| ZHS | **PDF#00-039-0690** 으로 동정 (`Fig. 2h`, CuGr 기판). ⚠ **2θ·격자상수 본문 미기재** | ⛔ 미계산(수화수 n 미정). 기저면 2θ ≈ 8–11° |
+| 43° 부근 | ⛔ **없음** — Cu/CuStr 쪽 회절 데이터 자체가 0건 | 8상 1.469° 폭 (§K-2) |
+
+**★ 두 줄 결론**
+1. **우리 C1 이 유일하게 못 푼 상(ZHS)을 이 논문이 PDF 카드로 특정했다** — 그 카드의 **수화수 n·격자상수**를
+   확보하면 C1 의 ZHS 항이 닫힌다. (논문 자체에는 2θ 도 격자상수도 없다.)
+2. **ZHS 문제와 43° 문제는 다른 2θ 창의 문제다.** ZHS = 저각(8–25°) · 합금 = **31–39° 진단창**.
+   섞어 말하면 틀린다 — 협업 상대에게 줄 실험 처방도 그래서 둘로 갈린다.
+
+### K-8. C3(ΔG_H\*) ↔ 논문 대조 — **유일하게 직접 겹치는 축**
+
+논문의 계산 집합(`Fig. S1`, `Fig. S2`) = **ZHS · 금속 Zn · 완전 그래핀 · 결함 그래핀** 4종.
+**Cu · CuZn · Cu₅Zn₈ · CuZn₅ · CuI 는 하나도 없다** ⇒ 우리 C2/C3 이 채울 자리가 그대로 남아 있다.
+
+| 계 | 논문 ΔG (figure-read `Fig. S2`) | 우리 C3 계획 |
+|---|---|---|
+| Gr(5×5)-H | **+2.618 eV** | 계획 없음 |
+| Gr(5×5)(D)-H | **−0.216 eV** | 계획 없음 |
+| 금속 Zn · ZHS | 값은 `Fig. 1c`(본문 그림, **우리가 못 본 그림**)에만 — **인용 불가** | Zn(0001) ✅ |
+| **Cu · Cu–Zn 합금 · CuI** | ⛔ **없음** | ✅ **우리만** |
+
+**⛔ 절대값 이식 금지 — 이유가 강하다**: 이 논문은 **계산 방법을 어디에도 적지 않았다.**
+code · 범함수 · vdW · 유사퍼텐셜 · k-mesh · cutoff · 슬랩두께/진공 · 스핀 · 용매모델 ·
+**ΔG 의 ZPE/TΔS 보정 여부와 H 기준(½H₂ vs H⁺+e⁻)** 이 전부 미기재이고, 본문 전문에
+`DFT`·`VASP`·`first-principles`·`PBE`·`k-point`·`plane-wave`·`cutoff`·`force field` 가 **0건**이다
+(MD 도 마찬가지 — code·force field·물 모델·앙상블·길이 전부 미기재, `Fig. S9c` RDF 는 **원자쌍 라벨조차 없다**).
+⇒ 우리 ΔG_H\* 를 2.618 / −0.216 eV **옆에 나란히 그리면 CLAUDE.md "방법 명시 없이 이식 금지" 위반**이다.
+**살아남는 것은 정성 순서뿐**: 결함 그래핀 > Zn > 완전 그래핀 ≈ ZHS.
+
+**✅ 대신 쓸 수 있는 실험 앵커** (C3 의 1차 게이트 후보): GC H₂ %(§K-5 표) · HER LSV(포화 K₂SO₄, 4 mV s⁻¹,
+`Fig. 3b`) · 정전위 0 V vs Zn 20 h 누적전하(`Fig. 3c`).
+⚠ **면적 규약 경고**: GC 는 **셀 총량**, ΔG_H\* 는 **자리당 열역학**이다. 게다가 논문 자신이
+본문(기하면적 LSV)에서는 *"그래핀 코팅이 bare Cu 보다 HER 이 적다"* 고 쓰는데 `Fig. S13`(GC 총량)은
+**CuGr 4.29 % > Cu 3.31 %** 로 **반대**다 — 그 화해(GNP BET 25.239 m² g⁻¹)를 논문이 하지 않았다.
+⇒ 우리 순위와 대조할 땐 **어느 규약인지 반드시 명명**할 것.
+
+### K-9. 🔧 [Zhu26Zn] 에서 **방법으로만** 가져오는 것 + ⛔ 금지 목록
+
+| 항목 | 논문 | 우리 활용 |
+|---|---|---|
+| **operando XRD 계단 정전위** | 정전류가 아니라 **25/50 mV 스텝 · 각 전위 1 h 유지 · 뒤 30 min 수집** | ⭕ 협업 상대의 **GI-XRD 설계(G1)** 에 제안 가능한 형식 |
+| **quasi-in-situ SEM/XPS 위치추적** | 반응을 **1 mm 디스크로 국한** + 스테이지 위치기억 재촬영 (operando 아님, 저자 명시) | ⭕ 같은 자리 추적 설계 |
+| **DRT 로 R_ct1·R_ct2 분리** | `Fig. S12`·`Fig. S16` | `kim2025_impedance_decoupling_tlm_assb` 와 동일 계보 |
+
+⛔ **인용 금지**
+- 논문의 CE·H₂ %·에너지밀도·ΔG 를 `our_dft_baseline.md` / `db/properties/` 황화물 값과 **같은 표**에.
+- ΔG **2.618 / −0.216 eV** 를 우리 ΔG_H\* 와 같은 축에 (방법 미상 → 축이 다르다).
+- `Fig. S12` 의 **14.05 / 20.65 / 18.70 / 17.25** — 인쇄 단위가 **J mol⁻¹ K⁻¹(엔트로피 차원)** 인데
+  Arrhenius 기울기를 되짚으면 **kJ mol⁻¹** 규모다. **순서만** 쓴다.
+- **"520 Wh kg⁻¹"** 를 실측 셀 에너지밀도로 (본문은 *theoretical*).
+- **§K-1 의 발표 소환값과 §K-5 의 논문값을 같은 표에** — 전해질(2 M ZnSO₄+ZnI₂ vs 1 M ZnSO₄)·기판·
+  프로토콜이 전부 다르다. ⛔ 방향은 **논문 → talk** 단방향.
+
+---
+
 ## 🗨️ Q&A 로그
 > 슬라이드·결과를 보며 나온 질문/답 누적. "Q&A 작성해줘" 트리거.
 
