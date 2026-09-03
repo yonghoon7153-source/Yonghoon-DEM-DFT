@@ -13119,6 +13119,51 @@ def _return_contract_flat(man: Dict[str, Any]) -> list:
     return out
 
 
+def _run_env_block(man: Dict[str, Any], a, manifest_sha: str = "<메일 본문의 MANIFEST SHA256>",
+                   zip_sha: str = "<메일 본문의 ZIP SHA256>") -> str:
+    """실행 환경변수 블록의 **단일 정본** — README·SUBMIT·발송 메일이 이것을 렌더한다.
+
+    🔴🔴 회신 BH P1-1 (2026-09-03) — 종전엔 이 블록이 **세 곳에 손으로** 복사돼 있었고
+      (README·SUBMIT·메일) 메일본에서 `PP`·`POTCAR_ALLOWLIST` 두 줄이 빠졌다. 그대로
+      보내면 외주처가 `run_staged.sh` 첫 검사에서 멈춘다. LAUNCHER_BIN 누락(BF P1)과
+      **같은 종류**이고, 그때 러너만 고치고 문서 렌더는 안 묶어서 재발했다.
+      ⇒ 목록을 손으로 들지 않는다. 러너가 `:?` 로 요구하는 변수를 여기 한 곳에 적고
+        셋이 전부 이 함수를 부른다. selftest 가 세 산출물의 export 집합 동일을 강제한다.
+    ⛔ 이 함수가 못 하는 것: 러너 소스에서 필수 변수를 **자동으로 추출하지 않는다**.
+      추가되면 여기와 러너가 갈라질 수 있다 — selftest 가 러너의 `:?` 목록과 대조한다.
+    """
+    return """cd <이 묶음을 푼 디렉터리>              # 묶음 **루트**
+
+# ── POTCAR 원본 트리와 allowlist (조립기가 쓴다) ──
+export PP=/path/to/potpaw_PBE.54
+# allowlist 는 그 트리의 변형별 POTCAR 해시 목록입니다. 없으면 이렇게 만드십시오:
+#   for v in $(ls "$PP"); do sha256sum "$PP/$v/POTCAR"; done > /abs/site_allow.txt
+#   (형식: `<sha256>  <PP>/<variant>/POTCAR` — sha256sum 기본 출력 그대로)
+export POTCAR_ALLOWLIST=/abs/site_allow.txt
+
+# ── 배포본 결박 (ZIP 밖의 값이 유일한 앵커입니다) ──
+export BUNDLE_ZIP_SHA256=$(sha256sum /경로/받은번들.zip | cut -d" " -f1)
+export EXPECT_MANIFEST_SHA256=%s
+export EXPECT_ZIP_SHA256=%s
+
+# ── 실행 방식 ──
+# ⛔ 자유형 launcher 문자열(VASP_CMD·VASP_LAUNCHER)은 **폐지됐습니다** (회신 AV P0-2) —
+#    문자열 검사는 우회가 가능해, 종류와 수만 받고 실행 명령은 러너가 조립합니다.
+export VASP_LAUNCHER_KIND=mpirun            # mpirun|mpiexec|srun|none|wrapper
+export LAUNCHER_BIN=/abs/path/to/mpirun     # **필수** — PATH 에서 찾지 않습니다. 없으면 exit 2
+export VASP_NPROC=%d                        # 랭크 수 (잡 하나당)
+export VASP_EXE=/abs/path/to/vasp_std       # 실행파일 절대경로 (봉인 대상)
+
+# ⚠ 러너는 기본으로 잡 %d개를 **동시에** 띄웁니다 (= %d × VASP_NPROC 랭크).
+#    할당이 그보다 적으면:  export JOBS_PARALLEL=<할당코어 ÷ VASP_NPROC>
+
+bash run_staged.sh 1     # census → POTCAR 조립+봉인 → 봉인 census → 1단계 → 판정
+bash run_staged.sh 2     # 1단계 통과(STAGE1_PASS.json) 뒤에만""" % (
+        manifest_sha, zip_sha, int(getattr(a, "cores", 48) or 48),
+        int(((man.get("submission") or {}).get("max_concurrency")) or 8),
+        int(((man.get("submission") or {}).get("max_concurrency")) or 8))
+
+
 def _render_return_contract(man: Dict[str, Any]) -> str:
     """정본 → 마크다운. README 와 SUBMIT_CONTRACT 가 **글자 그대로 같은** 블록을 싣는다."""
     rc = _return_contract(man)
@@ -13180,7 +13225,7 @@ def _readme_sp(man: Dict[str, Any], a, zcut: float, n_jobs: int,
     #   단일 잡 quickstart 를 그대로 붙였고, `run_all.sh` 는 14잡 전체 제출을
     #   안내했다. 실행 경로가 셋이면 1단계 정지 규칙이 강제되지 않는다.
     #   staged 구성에서는 **경로를 하나로** 줄이고, POTCAR 조립을 그 안에 넣는다.
-    staged_block = ("""⛔ **`run_staged.sh` 로만 실행해 주세요. %d잡을 한꺼번에 던지지 마십시오.**
+    staged_block = (("""⛔ **`run_staged.sh` 로만 실행해 주세요. %d잡을 한꺼번에 던지지 마십시오.**
 1단계(%d잡)가 진공 두께 수렴 시험을 통과해야 2단계를 돌립니다 — 통과 못 하면
 2단계는 **돌리지 않는 것이 맞습니다**(추가 계산으로 메우지 않습니다).
 
@@ -13195,22 +13240,7 @@ cd <이 묶음을 푼 디렉터리>            # 묶음 **루트**에서 실행�
 # ⚠ 러너는 배포 스크립트를 실행하기 **전에** 추출 파일 전수검사(census + files_sha256
 #    + EXPECT)를 끝냅니다. v21 까지는 POTCAR 조립(SEAL)이 그 검사보다 **먼저** 돌아,
 #    변조된 assembler 가 무결성 검사 전에 실행될 수 있었습니다 (회신 BA P0-1).
-export PP=/path/to/potpaw_PBE.54
-export POTCAR_ALLOWLIST=/abs/site_allow.txt
-# 받으신 ZIP 의 SHA256 — 봉인이 **정확히 이 배포본**에 대한 것임을 남깁니다
-export BUNDLE_ZIP_SHA256=$(sha256sum /경로/받은번들.zip | cut -d" " -f1)
-export EXPECT_MANIFEST_SHA256=%s   # 저희가 보낸 값 (러너가 실행 전에 대조합니다)
-export EXPECT_ZIP_SHA256=<메일 본문의 ZIP SHA256>   # **필수** — 없으면 러너가 멈춥니다
-# ⛔ 자유형 launcher 문자열(VASP_CMD·VASP_LAUNCHER)은 폐지됐습니다 (회신 AV P0-2) —
-#    문자열 검사는 우회가 가능해, 종류와 수만 받고 실행 명령은 러너가 조립합니다.
-export VASP_LAUNCHER_KIND=mpirun            # mpirun|mpiexec|srun|none|wrapper
-export LAUNCHER_BIN=/abs/path/to/mpirun     # **필수** — KIND 가 mpirun|mpiexec|srun 이면
-                                            #   절대경로가 있어야 합니다 (PATH 에서 찾지
-                                            #   않습니다 · 회신 AZ P0-2). 없으면 exit 2.
-export VASP_NPROC=%d                        # 랭크 수
-export VASP_EXE=/abs/path/to/vasp_std       # 실행파일 절대경로 (봉인 대상)
-bash run_staged.sh 1     # census → POTCAR 조립+봉인 → 봉인 census → 1단계 → 판정
-bash run_staged.sh 2     # 1단계 통과(STAGE1_PASS.json) 뒤에만
+""" % (n_jobs, _n1)) + _run_env_block(man, a) + """
 ```
 
 ⚠ `BUNDLE_ZIP_SHA256` 이 없으면 봉인 스크립트가 **거부합니다** — 번들 안에는 자기
@@ -13267,8 +13297,7 @@ bash MAKE_POTCAR_ATTESTATION.sh     # ← 첫 VASP 실행 **전에만** 가능�
 **그 잡만 담은 별도 rescue 묶음**을 만들어 보내 드립니다 — 그 묶음은 부모 번들을
 `parent`/`supersedes` 로 명시해 계보가 끊기지 않습니다 (회신 BB Q3).
 
-""" % (n_jobs, _n1, "<메일 본문의 MANIFEST SHA256>",
-       getattr(a, "cores", 48))) if _staged else ""
+""") if _staged else ""
 
     # 🔴 `dense_calibrators` 는 **선언 필드**라 비어 있어도 실제 dense 상이 있을 수 있다.
     #   실물 v13 이 그 사례였다 — 필드가 null 인데 refs/clean_slab__afm2424_pm1/dense 가
@@ -13577,19 +13606,7 @@ sbatch --array=1-$(wc -l < JOBS.txt)%%%%%d \\
 
     _submit_block = ("""## 실행 (이 경로 하나뿐입니다)
 ```bash
-cd <이 묶음을 푼 디렉터리>              # 묶음 **루트**
-export PP=/path/to/potpaw_PBE.54
-export POTCAR_ALLOWLIST=/abs/site_allow.txt
-export BUNDLE_ZIP_SHA256=$(sha256sum /경로/받은번들.zip | cut -d" " -f1)   # 필수
-export EXPECT_MANIFEST_SHA256=<메일 본문의 MANIFEST SHA256>                # **필수**
-export EXPECT_ZIP_SHA256=<메일 본문의 ZIP SHA256>                          # **필수**
-# ⛔ 자유형 launcher 문자열(VASP_CMD·VASP_LAUNCHER)은 폐지됐습니다 (회신 AV P0-2)
-export VASP_LAUNCHER_KIND=mpirun            # mpirun|mpiexec|srun|none|wrapper
-export LAUNCHER_BIN=/abs/path/to/mpirun     # **필수** (PATH 에서 찾지 않습니다) — 없으면 exit 2
-export VASP_NPROC=%d                        # 랭크 수
-export VASP_EXE=/abs/path/to/vasp_std       # 봉인 대상 실행파일
-bash run_staged.sh 1     # census → 조립+봉인 → 봉인 census → 1단계 → 판정
-bash run_staged.sh 2     # 1단계 통과 뒤에만
+""" + _run_env_block(man, a) + """
 ```
 ⛔ **전체를 배열로 한꺼번에 던지지 마십시오.** 위 의존성 때문에 결과가 무의미해집니다.
 `run_all.sh` 는 이 묶음에 **넣지 않았습니다**.
@@ -13610,7 +13627,7 @@ bash run_staged.sh 2     # 1단계 통과 뒤에만
 
 ## 반송 목록
 
-%s""" % (a.cores, _render_return_contract(man))) if _staged_sub else ("""## 병렬 제출 (권장)
+%s""" % (_render_return_contract(man),)) if _staged_sub else ("""## 병렬 제출 (권장)
 `run_all.sh` 는 **직렬 디버그용**입니다. 실제로는 잡 목록을 배열로 던지세요:
 ```bash
 # ⚠ 폴더 이름을 손으로 적지 않는다 — refs/ 냐 controls/ 냐가 모드에 따라 다르다.
@@ -17117,13 +17134,32 @@ def selftest() -> int:
     # ══ 회신 BG P1-2 — 문서의 실행 예시가 **그대로 돌아가는가** ══════════════════
     #   BF P1 로 단일 잡 예시에만 LAUNCHER_BIN 을 넣었고, C-12 가 실제로 보내는
     #   staged 블록(README·SUBMIT)에는 빠져 있었다 → 문서대로 치면 run_staged.sh exit 2.
-    for _who, _src in (("README(staged)", inspect.getsource(_readme_sp)),
-                       ("SUBMIT_CONTRACT", inspect.getsource(_submit_contract))):
-        _blocks = [b for b in _src.split("```") if "run_staged.sh 1" in b]
-        chk(bool(_blocks) and all(("LAUNCHER_BIN" in b) for b in _blocks),
-            "BG P1-2 (%s): staged 실행 예시가 `LAUNCHER_BIN` 을 적는다 — KIND 가 "
-            "mpirun|mpiexec|srun 이면 러너가 절대경로를 요구하고, 없으면 문서대로 실행해도 "
-            "즉시 exit 2 다" % _who)
+    # 🔴 회신 BH P1-1 — 소스 문자열이 아니라 **렌더 결과**를 본다. 실행 블록이
+    #   `_run_env_block()` 한 함수로 통일됐으므로 소스 grep 은 더 이상 의미가 없고,
+    #   외주처가 실제로 읽는 것은 렌더된 문서다.
+    _RUN_REQ = ("PP", "POTCAR_ALLOWLIST", "BUNDLE_ZIP_SHA256", "EXPECT_MANIFEST_SHA256",
+                "EXPECT_ZIP_SHA256", "VASP_LAUNCHER_KIND", "LAUNCHER_BIN",
+                "VASP_NPROC", "VASP_EXE")
+    _a_rb = argparse.Namespace(cores=48, concurrency=8, closure=False, single_point=True)
+    _man_rb = {"submission": {"max_concurrency": 8}, "planned": {}, "staged_runner": True}
+    _blk_rb = _run_env_block(_man_rb, _a_rb)
+    for _v in _RUN_REQ:
+        chk(("export %s=" % _v) in _blk_rb,
+            "BH P1-1: 실행 블록 정본에 `%s` 가 있다 (러너가 `:?` 로 요구하는 변수)" % _v)
+    chk("site_allow.txt" in _blk_rb and "sha256sum" in _blk_rb and "for v in" in _blk_rb,
+        "🔴 BH P1-1: allowlist **만드는 법**이 실행 블록에 있다 — 종전엔 어느 문서에도 "
+        "없어서 그대로 치면 SEAL 에서 멈췄다")
+    chk("JOBS_PARALLEL" in _blk_rb,
+        "BH P1-4: 기본 동시 실행 수와 조절 변수(JOBS_PARALLEL)를 적는다 "
+        "— 종전엔 8잡 × VASP_NPROC 랭크가 말없이 떴다")
+    for _who, _rendered in (("README(staged)", _readme_sp(_man_rel, a_st, 0.0, 16, 16, 0, 16, {})),
+                            ("SUBMIT_CONTRACT", _submit_contract(_man_rel, a_st, {}))):
+        _blocks = [b for b in _rendered.split("```") if "run_staged.sh 1" in b]
+        chk(bool(_blocks) and all(all(("export %s=" % v) in b for v in _RUN_REQ)
+                                  for b in _blocks),
+            "🔴 BH P1-1 (%s): **렌더된 문서**의 staged 실행 블록에 필수 변수 9개가 전부 "
+            "있다 — 손으로 옮겨 적던 것을 `_run_env_block()` 한 곳으로 묶었다 (PP·"
+            "POTCAR_ALLOWLIST 누락이 메일에서 재발했다)" % _who)
     _ns2 = {}
     exec(compile(ANALYZER, "<analyzer-template>", "exec"), _ns2)
     _epk = _ns2["_expected_pose_keys"]
