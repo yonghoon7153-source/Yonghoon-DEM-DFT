@@ -11012,10 +11012,12 @@ def preflight_static_physics(man):
         _pm, _pw = _protocol_exact_map(man)
         if _pm is None:
             bad.append("protocol exact map 을 읽을 수 없다 (%s)" % _pw)
-        elif dict(_keys) != dict(_pm):
+        elif {k: _keys.get(k) for k in _pm} != dict(_pm):
+            # ⚠ manifest 는 branch·formula·주석도 같은 dict 에 담는다 — protocol 이 **정의한
+            #   네 키만** 비교한다 (`_estimand_semantics_check` 와 같은 범위).
             bad.append("estimand_job_keys 가 비준 protocol 의 정확한 네 경로와 다르다 "
                        "(manifest %s ≠ protocol %s)"
-                       % (sorted(_keys.items()), sorted(_pm.items())))
+                       % (sorted((k, _keys.get(k)) for k in _pm), sorted(_pm.items())))
         else:
             done.append("protocol exact map (네 경로가 비준 원문과 정확히 같다)")
     _vc = man.get("vacuum_convergence") or {}
@@ -11056,10 +11058,15 @@ def preflight_static_physics(man):
             except Exception:                                # noqa: BLE001
                 _mt[_b] = {}
                 bad.append("기체 %s box%s: job.json 을 읽을 수 없다 (%s)" % (_f, _b, _jf))
+        # ⚠ `staged_runner` 를 뗀 사본으로 부른다 — receipt 상 집합 검사는 **실행 뒤** 것이고
+        #   preflight 시점엔 반송물이 없다. 없는 것을 위반으로 세면 preflight 가 항상 막힌다.
+        _man_pre = {k: v for k, v in man.items() if k != "staged_runner"}
         bad += ["기체 %s: %s" % (_f, _x) for _x in
-                _gas_bytes_check(man, _f, metas=_mt, planned=_pl)]
+                _gas_bytes_check(_man_pre, _f, metas=_mt, planned=_pl)]
     if _gfr:
-        done.append("기체 절대관계 %s (COM 중앙 · span+margin · 내부기하 · phase 집합)" % _gfr)
+        done.append("기체 절대관계 %s (COM 중앙 · span+margin · 내부기하 · planned phases)" % _gfr)
+        if (man or {}).get("staged_runner"):
+            skipped.append("기체 **실행된** 상 집합 (receipt 는 반송 뒤에 생긴다 — 최종 분석 몫)")
     else:
         skipped.append("기체 절대관계 (planned 에 refs/mol__*__box* 가 없다)")
     return bad, done, skipped
