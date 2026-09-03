@@ -8329,45 +8329,44 @@ def test_the_same_ledger_argument_always_names_the_same_claims_root(tmp_path):
 # ─────────────────────────────────────────────────────────────────────────────
 
 def test_a_symlinked_token_path_cannot_split_the_attempt_lock(tmp_path):
-    """★ 56차 P0-1 — token symlink 가 **자기 첫 쓰기로** lock identity 를 바꾼다.
+    """★ 56차 P0-1 → 57차 재작성 — 시험이 **공허해져 있었다**.
 
-    `shared.token -> token-target` 에서 L 은 `token-target.attempt` 를 잡는다.
-    그런데 `write_token_file()` 의 `os.replace()` 가 symlink 자체를 일반 파일로
-    바꾸므로, 이어 시작한 M 은 같은 API pathname 에서 `shared.token.attempt` 를
-    잡는다. 둘은 **서로 다른 lock** 안에서 모두 running 이 된다.
+    56차가 겨눈 것은 caller 가 고른 token 경로였다: `shared.token -> token-target`
+    을 넘기면 L 은 `token-target.attempt` 를 잡는데, `write_token_file()` 의
+    `os.replace()` 가 symlink 를 일반 파일로 바꾸므로 이어 시작한 M 은 같은 API
+    pathname 에서 `shared.token.attempt` 를 잡았다. 둘이 **다른 lock** 안에서
+    모두 running 이 됐다 (리뷰어 실측).
 
-        old_attempt_lock .../token-target.attempt
-        new_attempt_lock .../shared.token.attempt
-        L_plan running · M_plan running · RESULT VULNERABLE
+    ★ 57차 P0-1 이 caller 지정 경로를 없애면서 그 상황은 **표현 불가**가 됐다.
+      그런데 시험은 지우지 않고 남아, 아무도 건드리지 않는 `tmp_path` 의
+      symlink 를 두고 `before == after` 와 `tok.is_symlink()` 를 단언했다 —
+      둘 다 **아무 일도 안 일어났으므로 참**이다. 변이 등록부가 잡았다:
+      `_assert_not_a_link()` 의 ELOOP 분기를 통째로 꺼도 이 시험은 초록이었다.
 
-    `_assert_token_path_disjoint()` 는 canonical 을 계산해 놓고 raw `p` 를
-    돌려주며, 그 반환값마저 caller 가 버린다. 경로는 **공개 진입에서 한 번**
-    고정돼야 한다.
+    남은 진짜 위험은 caller 가 아니라 **lifecycle 이 정한 그 경로에 symlink 가
+    심긴 경우**다. 첫 쓰기가 링크를 따라가면 그 대상이 덮이고, 그 대상은
+    이 pipeline 의 것이 아닐 수 있다. 그것을 겨눈다.
     """
     import tools.preserve as P
 
-    led = _lifecycle_ledger_two(tmp_path)
-    target = tmp_path / "token-target"
-    target.write_text("", encoding="utf-8")
-    tok = tmp_path / "shared.token"
-    tok.symlink_to(target)
+    led = _lifecycle_ledger(tmp_path)
+    outside = tmp_path / "someone-elses-file"
+    outside.write_text("남의 바이트", encoding="utf-8")
 
-    before = P._attempt_path_lock(tok)
-    try:
-        P.open_leg_run("L", _RUN_SPEC_L, "0123456789abcdef",  ledger=led)
-    except P.PreserveError:
-        return                      # 첫 부작용 전에 거부하는 것도 옳은 결말이다
-    after = P._attempt_path_lock(tok)
+    # lifecycle 이 정한 자리에 symlink 를 심는다 (caller 가 경로를 고르는 것이
+    # 아니라, 그 자리에 미리 놓여 있는 상황이다)
+    planted = P.attempt_path_for("L", ledger=led)
+    planted.parent.mkdir(parents=True, exist_ok=True)
+    planted.symlink_to(outside)
 
-    # **축은 이것이다** — 같은 API pathname 의 배타 지점이 정상 발급 하나로
-    #   움직이면, 그 뒤 시작한 다리는 다른 lock 안에서 돈다. 순차 실행에서는
-    #   내용 검사가 우연히 막지만 그것은 **다른** guard 다 (실측했다).
-    assert before == after, (
-        f"정상 발급 하나가 attempt lock identity 를 바꿨다 "
-        f"({before.name} → {after.name}) — 같은 pathname 을 쓰는 다음 다리는 "
-        "다른 lock 안에서 돈다")
-    assert tok.is_symlink(), (
-        "token 쓰기가 symlink 를 일반 파일로 교체했다 — 경로 해석이 바뀐다")
+    with pytest.raises(P.PreserveError) as ei:
+        P.open_leg_run("L", _RUN_SPEC_L, "0123456789abcdef", ledger=led)
+    assert "symlink" in str(ei.value), (
+        f"거부는 했지만 symlink 판정이 아니다: {ei.value}")
+
+    assert planted.is_symlink(), "거부하면서 링크를 갈아치웠다"
+    assert outside.read_text(encoding="utf-8") == "남의 바이트", (
+        "첫 쓰기가 링크를 따라가 남의 파일을 덮었다")
 
 
 def test_a_hardlinked_ledger_alias_cannot_fork_the_authority(tmp_path):

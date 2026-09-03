@@ -153,7 +153,7 @@ MUTANTS = [
      #   바뀌었다. 호출 지점을 통째로 지우는 것이 이 변이의 뜻이다.
      "    _claim = _assert_grid_authorized(cfg, out_dir, conditions=conditions,\n"
      "                                     dry_run=dry_run, leg=leg,\n"
-     "                                     token_file=token_file)\n",
+     "                                     may_open=may_open)\n",
      "    _claim = None\n",
      "run_grid_calls_the_gate_before_its_first_side_effect"),
     # ── 46차 (게이트 45차 반증 조건) ──────────────────────────────────────
@@ -343,11 +343,9 @@ MUTANTS = [
     # ── 49차 (게이트 48차 반증 조건) ──────────────────────────────────────
     ("precheck-tells-new-from-resume", PRESERVE,
      "    path = _claim_path(leg_id, claims_root_for_ledger(ledger))\n"
-     "    if path.is_file():\n"
-     "        if token_file is None:",
+     "    if path.is_file():",
      "    path = _claim_path(leg_id, claims_root_for_ledger(ledger))\n"
-     "    if False:\n"
-     "        if token_file is None:",
+     "    if False:",
      "precheck_tells_a_new_run_from_an_owned_resume"),
     ("claim-stores-a-verifier-not-the-token", PRESERVE,
      '           "attempt_id": attempt_id, "attempt_verifier": _token_verifier(token),',
@@ -357,8 +355,12 @@ MUTANTS = [
      "        if not secrets.compare_digest(_token_verifier(token),\n"
      '                                      str(rec["attempt_verifier"])):',
      "        if False:",
+     # ★ 57차 — 옛 `finalize-requires-the-credential` 은 `token_file` 인자와
+     #   함께 사라졌고(P0-1), 남은 자리는 이 비교 하나다. 그 회귀를 여기에
+     #   합쳐 selector 로 함께 지킨다 — 자리가 하나면 변이도 하나다.
      "phase_cannot_be_recorded_without_the_owner_token or "
-     "crash_after_grid_resumes_and_finalizes"),
+     "crash_after_grid_resumes_and_finalizes or "
+     "finalize_requires_the_owner_credential"),
     ("diagnostic-hides-the-credential", PRESERVE,
      "        if self._token is None:\n"
      "            raise PreserveError(\n"
@@ -369,18 +371,18 @@ MUTANTS = [
      '                "plan", f"{self.leg_id!r} 의 claim 을 소유 증명 없이 열었다 — "\n'
      '                        "진단용 읽기에는 재개 credential 이 없다")',
      "the_diagnostic_reader_never_hands_out_the_credential"),
-    ("finalize-requires-the-credential", PRESERVE,
-     "    if (token is None) == (token_file is None):\n"
-     "        raise TypeError(\n"
-     '            "finalize_leg() 는 `token` 또는 `token_file` 중 정확히 하나를 "',
-     "    if False:\n"
-     "        raise TypeError(\n"
-     '            "finalize_leg() 는 `token` 또는 `token_file` 중 정확히 하나를 "',
-     "finalize_requires_the_owner_credential"),
+    # ★ 57차 P1-3 — 복구 분기가 정상 경로와 **한 임계 구역**으로 합쳐지면서
+    #   자리가 하나가 됐다. 그래서 옛 `finalize-recovery-holds-the-claim-lock`
+    #   과 `normal-finalize-holds-the-attempt-path` 를 은퇴시키고 그 회귀들을
+    #   이 하나의 selector 로 함께 지킨다 (자리가 하나면 변이도 하나다).
     ("finalize-holds-the-claim-lock", PRESERVE,
-     "    with _lifecycle_locks(leg_id, token_file, claims_root):",
-     "    if True:",
-     "canonical_lock_order_is_declared_and_finalize_holds_the_claim"),
+     "    with _lifecycle_locks(leg_id, token_file, claims_root) as cp:\n"
+     '        # \u2605 57\ucc28 P1-3',
+     "    if True:\n"
+     "        cp = _claim_path(leg_id, claims_root)\n"
+     '        # \u2605 57\ucc28 P1-3',
+     "canonical_lock_order_is_declared_and_finalize_holds_the_claim or "
+     "finalize_recovery_branch_holds_the_claim_lock"),
     ("finalize-rechecks-in-the-ledger-lock", PRESERVE,
      "            assert_planned_index_consistent(ledger)\n"
      "            live = assert_planned_leg(leg_id, claim.source_digest,\n"
@@ -435,9 +437,7 @@ MUTANTS = [
      "    if False:",
      "fit_refuses_when_its_grid_phase_is_missing"),
     ("release-returns-the-plan", PRESERVE,
-     "    _abandon_claim(claim, ledger=ledger,\n"
-     "                   token_file=token_file if token_file is not None else None,\n"
-     "                   token=token)",
+     "    _abandon_claim(claim, ledger=ledger, token_file=token_file, token=token)",
      "    pass",
      "released_run_returns_the_plan_to_planned"),
     ("dry-run-releases-the-claim", GRID,
@@ -471,7 +471,8 @@ MUTANTS = [
      "unresolved_producer_module_reference_is_fail_closed"),
     ("closure-refuses-dynamic-resolution", RP,
      "        for node in nodes:\n"
-     "            _assert_no_dynamic_resolution(node, key, mods, reflect, consts)",
+     "            _assert_no_dynamic_resolution(node, key, mods, reflect, consts,\n"
+     "                                          caps)",
      "        pass",
      "dynamic_name_resolution_inside_the_closure_is_fail_closed"),
     ("interpreter-set-is-pinned", RP,
@@ -585,12 +586,6 @@ MUTANTS = [
      "                \"plan\",\n"
      "                f\"{leg_id!r} 은 이미 실행 중이다 (claim: {cp}) — 두 번째 실행을 \"",
      "second_open_never_touches_the_live_owners_token"),
-    # ★ P0-L1/P1-P — 전달 통로가 authority 경로를 점유할 수 있으면 claim reader
-    #   전체가 malformed JSON 을 만난다.
-    ("token-path-is-disjoint-from-authority", PRESERVE,
-     "    _assert_token_path_disjoint(token_file, claims_root, ledger)",
-     "    pass",
-     "token_path_cannot_alias_the_claim_authority"),
     # ★ P0-L2 — 삭제는 상태 전이다. 경로만 보고 지우면 남의 generation 을 지운다.
     ("token-unlink-is-generation-scoped", PRESERVE,
      "    if not secrets.compare_digest(cur, str(token)):\n"
@@ -673,11 +668,6 @@ MUTANTS = [
      "            _unlink_token_generation(token_file, token)",
      "        pass",
      "token_cleanup_happens_under_the_claim_lock"),
-    # ★ P0-1 — 소유 증명 파일이 어느 다리의 것인지 모르면 남의 것을 덮는다.
-    ("token-file-is-bound-to-its-leg", PRESERVE,
-     "        _assert_token_file_free_for(token_file, leg_id, claims_root)",
-     "        pass",
-     "two_legs_cannot_share_one_attempt_file"),
     ("token-read-checks-the-leg", PRESERVE,
      "    if leg_id is not None and rec[\"leg_id\"] and rec[\"leg_id\"] != str(leg_id):",
      "    if False:",
@@ -768,13 +758,6 @@ MUTANTS = [
      '        _assert_bytes_on_disk(path, body, "claim")',
      "        pass",
      "lying_write_is_caught_by_reading_the_bytes_back"),
-    # ★ P0-3 — 경로의 배타는 **경로 위**에 있어야 한다 (claim lock 은 다리마다 다르다).
-    ("attempt-path-is-exclusive", PRESERVE,
-     "    _assert_token_path_disjoint(token_file, claims_root, ledger)\n"
-     "    with _lifecycle_locks(leg_id, token_file, claims_root) as cp:",
-     "    _assert_token_path_disjoint(token_file, claims_root, ledger)\n"
-     "    with _lifecycle_locks(leg_id, None, claims_root) as cp:",
-     "two_legs_that_share_one_attempt_file_cannot_interleave"),
     # ★ P0-4 — 증거의 위치를 caller 가 고를 수 없다.
     ("freeze-authority-is-not-caller-selected", RP,
      "    root = claims_root_for_ledger(_ledger_path())",
@@ -868,13 +851,6 @@ MUTANTS = [
      "    with _lifecycle_locks(claim.leg_id, token_file, claim.path.parent):",
      "    with _ledger_lock(claim.path):",
      "release_cleanup_cannot_delete_another_legs_token"),
-    ("finalize-recovery-holds-the-claim-lock", PRESERVE,
-     "        with _lifecycle_locks(leg_id, token_file, claims_root) as cp:\n"
-     "            cp.unlink(missing_ok=True)",
-     "        if True:\n"
-     "            cp = _claim_path(leg_id, claims_root)\n"
-     "            cp.unlink(missing_ok=True)",
-     "finalize_recovery_branch_holds_the_claim_lock"),
     # ★ P0-3 — 동결의 원장 쓰기도 원자적이어야 한다.
     ("freeze-ledger-write-is-atomic", RP,
      "    from tools.preserve import _atomic_write_text\n"
@@ -940,13 +916,19 @@ MUTANTS = [
     # ── 56차 (게이트 55차 반증 조건) ─────────────────────────────────────
     # ★ P0-1 — 전달 통로의 alias 는 첫 부작용 앞에서 거부한다.
     ("token-path-alias-is-refused", PRESERVE,
-     "    if p.is_symlink():",
-     "    if False:",
+     "        if exc.errno in (errno.ELOOP, errno.EMLINK):",
+     "        if False:",
      "symlinked_token_path_cannot_split_the_attempt_lock"),
     # ★ P0-2 — 원장의 이름이 여럿이면 정본을 정할 수 없다.
     ("ledger-hardlink-is-refused", PRESERVE,
-     "    if stat.S_ISREG(st.st_mode) and st.st_nlink != 1:",
-     "    if False:",
+     "    if stat.S_ISREG(st.st_mode) and st.st_nlink != 1:\n"
+     "        raise PreserveError(\n"
+     '            "plan",\n'
+     '            f"\uc6d0\uc7a5\uc5d0 \ub2e4\ub978 \uc774\ub984(hardlink)\uc774 \uc788\ub2e4: {path} (nlink={st.st_nlink}) \u2014 "',
+     "    if False:\n"
+     "        raise PreserveError(\n"
+     '            "plan",\n'
+     '            f"\uc6d0\uc7a5\uc5d0 \ub2e4\ub978 \uc774\ub984(hardlink)\uc774 \uc788\ub2e4: {path} (nlink={st.st_nlink}) \u2014 "',
      "hardlinked_ledger_alias_cannot_fork_the_authority"),
     # ★ P0-3 — claim 이 없어도 원장이 소유자를 인증한다.
     ("ledger-seals-the-attempt-verifier", PRESERVE,
@@ -999,15 +981,9 @@ MUTANTS = [
      "evidence_tree_digest_does_not_depend_on_the_checkout_path"),
     # ★ P1-2 — 환경·의존성도 증거 안이다.
     ("evidence-binds-the-environment", MR,
-     "            \u0022env\u0022: {k: os.environ.get(k, \u0022\u0022) for k in BOUND_ENV},",
+     "            \u0022env\u0022: replay_env(),",
      "            \u0022env\u0022: {},",
      "evidence_binds_the_execution_environment"),
-    # ★ P0-1 — 정상 finalize 도 attempt-path 부터 잡는다. 되돌린 값이 54차
-    #   상태(claim lock 만) 그대로다 — 그때 리뷰어가 친 자리다.
-    ("normal-finalize-holds-the-attempt-path", PRESERVE,
-     "    with _lifecycle_locks(leg_id, token_file, claims_root):",
-     "    with _ledger_lock(_claim_path(leg_id, claims_root)):",
-     "normal_finalize_cannot_delete_the_next_attempts_token"),
     # ★ P0-3 — journal·anchor 를 바꾸는 경로가 공유하는 임계 구역.
     ("anchor-repair-holds-the-lifecycle-lock", RP,
      "    with _lifecycle_lock():\n"
@@ -1699,14 +1675,6 @@ EXPECT: dict = {
             "tests/test_docs_lint.py::test_a_dunder_named_by_a_string_literal_is_still_a_dunder": "Failed: DID NOT RAISE SystemExit"
         }
     },
-    "finalize-recovery-holds-the-claim-lock": {
-        "fail": [
-            "tests/test_preserve.py::test_the_finalize_recovery_branch_holds_the_claim_lock"
-        ],
-        "witness": {
-            "tests/test_preserve.py::test_the_finalize_recovery_branch_holds_the_claim_lock": "AssertionError: 복구가 지운 claim 을 늦은 phase 가 되살렸다 — 부활 금지가 무너졌다"
-        }
-    },
     "freeze-linearizes-its-start": {
         "fail": [
             "tests/test_docs_lint.py::test_an_issuer_refuses_while_a_freeze_is_half_committed"
@@ -1732,14 +1700,6 @@ EXPECT: dict = {
         }
     },
 
-    "attempt-path-is-exclusive": {
-        "fail": [
-            "tests/test_preserve.py::test_two_legs_that_share_one_attempt_file_cannot_interleave"
-        ],
-        "witness": {
-            "tests/test_preserve.py::test_two_legs_that_share_one_attempt_file_cannot_interleave": "tools.preserve.PreserveError: [plan] 소유 증명 파일이 다른 다리의 것이다"
-        }
-    },
     "claim-bytes-are-verified-on-disk": {
         "fail": [
             "tests/test_preserve.py::test_a_lying_write_is_caught_by_reading_the_bytes_back"
@@ -2016,14 +1976,6 @@ EXPECT: dict = {
             "tests/test_preserve.py::test_the_token_cleanup_happens_under_the_claim_lock": "AssertionError: 소유 증명을 지우는 순간 claim lock 이 안 잡혀 있었다 — 그 사이에 정상 발급이 들어오면 새 attempt 의 credential 이 지워진다"
         }
     },
-    "token-file-is-bound-to-its-leg": {
-        "fail": [
-            "tests/test_preserve.py::test_two_legs_cannot_share_one_attempt_file"
-        ],
-        "witness": {
-            "tests/test_preserve.py::test_two_legs_cannot_share_one_attempt_file": "tools.preserve.PreserveError: [plan] 소유 증명 파일이 없다"
-        }
-    },
     "token-read-checks-the-leg": {
         "fail": [
             "tests/test_preserve.py::test_an_attempt_file_from_another_leg_is_refused"
@@ -2210,14 +2162,6 @@ EXPECT: dict = {
             "tests/test_preserve.py::test_a_crash_inside_release_leaves_a_recoverable_state": "AssertionError: assert not True"
         }
     },
-    "token-path-is-disjoint-from-authority": {
-        "fail": [
-            "tests/test_preserve.py::test_the_token_path_cannot_alias_the_claim_authority"
-        ],
-        "witness": {
-            "tests/test_preserve.py::test_the_token_path_cannot_alias_the_claim_authority": "AssertionError: assert not True"
-        }
-    },
     "token-unlink-is-generation-scoped": {
         "fail": [
             "tests/test_preserve.py::test_a_late_release_cleanup_cannot_delete_the_next_attempts_token"
@@ -2284,12 +2228,17 @@ EXPECT: dict = {
             "tests/test_grid.py::test_a_dry_run_does_not_strand_the_plan_in_running": "AssertionError: dry-run 이 계획을 running 에 남겼다 — 그 다리는 다시 시작할 수도 닫을 수도 없다"
         }
     },
+    # ★ 57차 P1-3 — 복구 분기가 정상 경로와 한 임계 구역으로 합쳐지면서
+    #   옛 `finalize-recovery-holds-the-claim-lock` 을 은퇴시켰다. 그 회귀는
+    #   사라지지 않고 이 변이가 함께 지킨다 — 실측으로 둘이 같이 문다.
     "finalize-holds-the-claim-lock": {
         "fail": [
-            "tests/test_preserve.py::test_the_canonical_lock_order_is_declared_and_finalize_holds_the_claim"
+            "tests/test_preserve.py::test_the_canonical_lock_order_is_declared_and_finalize_holds_the_claim",
+            "tests/test_preserve.py::test_the_finalize_recovery_branch_holds_the_claim_lock"
         ],
         "witness": {
-            "tests/test_preserve.py::test_the_canonical_lock_order_is_declared_and_finalize_holds_the_claim": "AssertionError: finalize 가 claim lock 을 쥐지 않고 지나갔다 — 검사한 receipt 와 기록한 receipt 가 다를 수 있다"
+            "tests/test_preserve.py::test_the_canonical_lock_order_is_declared_and_finalize_holds_the_claim": "finalize 가 claim lock 을 쥐지 않고 지나갔다",
+            "tests/test_preserve.py::test_the_finalize_recovery_branch_holds_the_claim_lock": "복구가 지운 claim 을 늦은 phase 가 되살렸다"
         }
     },
     "finalize-rechecks-in-the-ledger-lock": {
@@ -2298,14 +2247,6 @@ EXPECT: dict = {
         ],
         "witness": {
             "tests/test_preserve.py::test_finalize_rechecks_the_whole_authority_inside_the_ledger_lock": "AssertionError: 얼어붙은 cohort 에 실행 기록을 썼다: 'ok'"
-        }
-    },
-    "finalize-requires-the-credential": {
-        "fail": [
-            "tests/test_preserve.py::test_finalize_requires_the_owner_credential"
-        ],
-        "witness": {
-            "tests/test_preserve.py::test_finalize_requires_the_owner_credential": "AssertionError: Regex pattern did not match."
         }
     },
     "finalize-writes-the-whole-tuple": {
@@ -2468,12 +2409,6 @@ EXPECT: dict = {
             "tests/test_docs_lint.py::test_a_witness_found_only_in_the_traceback_body_is_not_a_witness": "주석에만 있는 문자열이 증인으로 인정됐다"
         }
     },
-    "normal-finalize-holds-the-attempt-path": {
-        "fail": ["tests/test_preserve.py::test_a_normal_finalize_cannot_delete_the_next_attempts_token"],
-        "witness": {
-            "tests/test_preserve.py::test_a_normal_finalize_cannot_delete_the_next_attempts_token": "소유 증명 파일이 없다"
-        }
-    },
     "ledger-is-resolved-once": {
         "fail": ["tests/test_preserve.py::test_the_same_ledger_argument_always_names_the_same_claims_root"],
         "witness": {
@@ -2518,10 +2453,17 @@ EXPECT: dict = {
             "tests/test_docs_lint.py::test_coverage_is_bound_to_the_tree_it_actually_tested": "지금 트리와 다른 코드에서 나온 증거가 통과했다"
         }
     },
+    # ★ 57차 — 회귀 자체를 다시 썼다. 56차 시험은 caller 지정 경로를 겨눴는데
+    #   P0-1 이 그 인자를 없애면서 **공허해졌다** (아무도 안 건드리는 symlink 를
+    #   두고 "안 바뀌었다" 를 단언). 이 변이가 안 무는 것으로 드러났다.
+    #   지금은 lifecycle 이 정한 자리에 심긴 symlink 를 겨누고, 증인은 커널이
+    #   직접 답한 ELOOP 다 — 임시 경로가 섞이므로 안정한 접두만 적는다.
     "token-path-alias-is-refused": {
-        "fail": ["tests/test_preserve.py::test_a_symlinked_token_path_cannot_split_the_attempt_lock"],
+        "fail": [
+            "tests/test_preserve.py::test_a_symlinked_token_path_cannot_split_the_attempt_lock"
+        ],
         "witness": {
-            "tests/test_preserve.py::test_a_symlinked_token_path_cannot_split_the_attempt_lock": "정상 발급 하나가 attempt lock identity 를 바꿨다"
+            "tests/test_preserve.py::test_a_symlinked_token_path_cannot_split_the_attempt_lock": "OSError: [Errno 40] Too many levels of symbolic links"
         }
     },
     "ledger-hardlink-is-refused": {
@@ -2906,12 +2848,16 @@ EXPECT: dict = {
             "tests/test_preserve.py::test_repair_lookups_go_through_the_validated_version_snapshot": "Failed: DID NOT RAISE PreserveError"
         }
     },
+    # ★ 57차 — 옛 `finalize-requires-the-credential` 의 회귀를 흡수했다.
+    #   실측으로 이 변이 하나에 세 시험 중 둘이 함께 문다.
     "resume-compares-the-verifier": {
         "fail": [
-            "tests/test_preserve.py::test_a_crash_after_grid_resumes_and_finalizes"
+            "tests/test_preserve.py::test_a_crash_after_grid_resumes_and_finalizes",
+            "tests/test_preserve.py::test_finalize_requires_the_owner_credential"
         ],
         "witness": {
-            "tests/test_preserve.py::test_a_crash_after_grid_resumes_and_finalizes": "Failed: DID NOT RAISE PreserveError"
+            "tests/test_preserve.py::test_a_crash_after_grid_resumes_and_finalizes": "DID NOT RAISE PreserveError",
+            "tests/test_preserve.py::test_finalize_requires_the_owner_credential": "DID NOT RAISE PreserveError"
         }
     },
     "roster-is-a-set": {
