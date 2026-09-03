@@ -136,6 +136,14 @@
    "건식전극 논문/02. How to Measure a Reliable Ionic ConductivityThe Stack Pressure Dilemma ofMicrocrystalline Sulfide-Based SolidElectrolytes.pdf"
   ]
  },
+ "cronk2026_lis_positive_electrode_geometry_fem": {
+  "figures": 50,
+  "generated": "2026-09-03",
+  "pdfs": [
+   "45f01803-64._A_highly_utilized_and_practical_lithiumsulfur_positive_electrode_enabled_in_allsolidstate_batteriesA_highly_utilized_and_practical_lithiumsulfur_positive_electrode_enabled_in_allsolidstate_bat.pdf",
+   "c13446ce-64SUP1.PDF"
+  ]
+ },
  "deklerk2016_diffusion_site_disorder_argyrodite": {
   "figures": 6,
   "generated": "2026-08-19",
@@ -184,6 +192,20 @@
   "generated": "2026-08-05",
   "pdfs": [
    "DEM 논문/12. Effect of Contact Deformations on the Adhesion of Particles.pdf"
+  ]
+ },
+ "do2026_bml_alzib_preconditioning": {
+  "figures": 8,
+  "generated": "2026-09-03",
+  "pdfs": [
+   "794a02af-2026.09.02 …….pdf (md5 12fa7c66c7550c46cb8c3768ce615c59, 30 pages)"
+  ]
+ },
+ "duquesnoy2020_calendering_ml_mesostructure_generator": {
+  "figures": 7,
+  "generated": "2026-09-03",
+  "pdfs": [
+   "Duquesnoy_2020_JPowerSources_DataDriven_Calendering_ML.pdf"
   ]
  },
  "duquesnoy2023_ml_multiobjective_manufacturing_optimization": {
@@ -342,7 +364,10 @@
   "generated": "2026-08-29",
   "pdfs": [
    "f5fb19c3-Advanced_Materials__2025__Kang__Bollard_Anchored_Binder_System_for_High_Loading_Cathodes_Fabricated_via_Dry_Electrode.pdf",
-   "26749347-adma202416872sup0001suppmat.pdf"
+   "26749347-adma202416872sup0001suppmat.pdf",
+   "adma202416872sup0002movies1.mp4",
+   "adma202416872sup0003movies2.mp4",
+   "adma202416872sup0004movies3.mp4"
   ]
  },
  "kang2025_highvoltage_parasitic_reaction_benefit_sulfide_assb": {
@@ -1240,6 +1265,13 @@
    "ae64797e-55._Sup_Materials_Design_Principles_for_AirStable_LithiumSodium_SolidElectrolytes.pdf",
    "54. Materials Design Principles for Air-Stable LithiumSodium Solid Electrolytes.pdf",
    "54. Sup) Materials Design Principles for Air-Stable LithiumSodium SolidElectrolytes.pdf"
+  ]
+ },
+ "zhu2026_zhs_precoverage_quasi_anode_free_zn": {
+  "figures": 33,
+  "generated": "2026-09-03",
+  "pdfs": [
+   "Zhu et al., Adv. Funct. Mater. 2026, 36, e23442 — Supporting Information (스캔/이미지 PDF, 폰트 0개)"
   ]
  },
  "zuo2022_chlorination_cathode_interface": {

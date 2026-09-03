@@ -2,7 +2,7 @@
 
 > **이 파일은 `tools/litdb/build_index.py` 가 생성한다 — 손으로 고치지 말 것.**
 > 논평·우선순위가 붙는 SE 축 인덱스는 `INDEX.md` (사람이 큐레이션).
-> digest 112편 · 생성 2026-08-29
+> digest 113편 · 생성 2026-09-03
 
 왜 따로 두나 — `INDEX.md` 는 argyrodite 전해질 축이라 접촉역학·MPM·건식전극
 digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱스에도 없었다**
@@ -52,13 +52,14 @@ digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱
 | `zunker2024_mdr_contact_model_partI` | 층(2.75) 발견 — 점착 탄소성 입자의 역학적으로 유도된 접촉모델, Part I: 차원축소법(MDR) — Zunker & Kamrin (J. Mech. Phys. Solids 2024) | contact-mechanics theory (MDR) + FEM(Abaqus) 검증 | 2026-08-25 | — |
 | `zunker2025_dem_large_deformation_compaction` | 실험검증된 대변형 압밀 DEM (Experimentally validated DEM for large deformation powder compaction: mechanically-derived contact model and screening of non-physical contacts) — Zunker, Dunatun | DEM (LAMMPS, MDR 접촉모델 다체 확장) + MPFEM(Abaqus) 검증 + 제약 tableti | 2026-08-25 | — |
 
-## 복합양극 미세구조 · percolation (16편)
+## 복합양극 미세구조 · percolation (17편)
 
 | slug | 논문 | 유형 | digest | 그림 |
 |---|---|---|---|---|
 | `bielefeld2019_microstructural_modeling_composite_cathode` | 복합 양극의 3D 미세구조 모델링 — percolation 이론으로 이온·전자 전도 클러스터 분석 — Bielefeld (J. Phys. Chem. C 2019) | continuum (geometric microstructure + percolation) | 2026-06-26 | 🖼 11 |
 | `bielefeld2020_effective_ionic_conductivity_binder` | Bielefeld 2020 (ACS Appl. Mater. Interfaces 12, 12821−12833) — 유효 이온전도도 + 바인더 영향 모델링 (Janek 그룹, GeoDict — ★ Bielefeld 2019의 σ-추가 후속편) | FEM·digital-twin | 2026-07-28 | 🖼 7 |
 | `chen2011_percolation_micromodel_composite_electrode` | 다분산 입경 복합전극의 유효물성 예측 — 해석적 percolation 미시모델 (CN·percolation·TPB·σ_inter/intra·hydraulic pore 닫힌식) — Chen (J. Power Sources 2011) | continuum (analytic percolation micro-model — closed-form, N | 2026-06-26 | 🖼 7 |
+| `cronk2026_lis_positive_electrode_geometry_fem` | 확률적 voxel 기하 생성(MATLAB) + TauFactor τ + FEM 팽창응력으로 설계한 Li–S 전환형 양극 (LPSCl 촉매전해질) — 11 mAh cm⁻² · 10 MPa anode-free 파우치 — Cronk (Nat. Commun. 2026) | FEM (COMSOL 6.1, 선형탄성+등방 eigenstrain) + 확률적 voxel 기하생성(MATLA | 2026-09-03 | — |
 | `jung2023_single_crystal_ncm_morphology` | 필독 / 우리-랩 — Customizing the Morphology and Microstructure of Single-Crystalline Ni-rich Layered Cathode Materials for All-Solid-State Batteries — Jung et al. (Chem. Eng. J. 2023) | exp (morphology / electrochemistry / mechanical) | 2026-06-26 | 🖼 7 |
 | `kim2024_carbon_volumetric_occupation_se_domain` | 필독 / 우리-랩 — Accelerated Degradation of ASSBs Induced through Volumetric Occupation of the Carbon Additive in the SE Domain — Kim, Park, Kang, …, Lee, Sun, Cho (Adv. Funct. Mater. 2 | exp | 2026-06-26 | 🖼 5 |
 | `kim2026_a3d_air_electrode_microstructure_transport` | Kim 2026 (Journal of Power Sources 686, 240471) — 디지털트윈 미세구조(GeoDict) → 유효물성 → 1D 전기화학(COMSOL)으로 A3D 공기극 수송 설계 | FEM·digital-twin | 2026-07-28 | — |
@@ -86,10 +87,10 @@ digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱
 | `han2025_icep_conductive_elastic_binder` | 이온전도성 탄성 고분자(ICEP) 바인더로 초고로딩 NCM811 전극 — Han (Adv. Mater. 2025) | exp (+DFT 흡착) | 2026-07-08 | — |
 | `hong2026_sulfide_cathode_binder_digitaltwin` | Hong 2026 (Energy Storage Materials 86, 104930) — 황화물 복합양극 열화 메커니즘 (디지털트윈): Dry(PTFE) vs Wet(NBR) 바인더 ★우리 소재계(LPSCl+NCM) | FEM·digital-twin | 2026-07-28 | — |
 | `jun2026_ppma_econductive_binder_si_lowpressure_assb` | Electron-conductive binder for silicon negative electrode enabling low-pressure all-solid-state batteries — Jun & Jeong et al. (Nat. Commun. 2026) | exp (계산 0) | 2026-07-15 | 🖼 5 |
-| `kang2025_bollard_anchored_binder_dry_electrode` | Bollard-Anchored Binder System for High-Loading Cathodes Fabricated via Dry Electrode Process — Kang, Jihyeon (Adv. Mater. 2025) | exp + NNP(PFP) 흡착/MD + Gaussian16 DFT(IR) | 2026-09-03 | 🖼 42 · 🎬 S1–S3 |
+| `kang2025_bollard_anchored_binder_dry_electrode` | Bollard-Anchored Binder System for High-Loading Cathodes Fabricated via Dry Electrode Process — Kang, Jihyeon (Adv. Mater. 2025) | exp + NNP(PFP) 흡착/MD + Gaussian16 DFT(IR) | 2026-09-03 | 🖼 42 |
 | `kim2026_charge_engineered_cnf_binder` | Kim 2026 (Nature Communications, DOI 10.1038/s41467-026-73909-0) — 전하조작(charge-engineered) 셀룰로오스 나노피브릴 바인더로 PFAS-free 고로딩 양극 | experiment | 2026-07-28 | 🖼 43 |
 | `koo2025_cnt_wrapped_sc_nca_dry_cathode` | Koo 2025 (Energy Storage Materials 78, 104270) — anti-solvent로 MWCNT 감싼 단결정 SC-NCA dry 양극 (99.6 wt%, 4.0 g/cm³) ★ #275(Joule 2026)의 2025 PRECURSOR / SISTER 논문 | FEM·digital-twin | 2026-07-28 | — |
-| `koo2026_swcnt_sheath_thick_electrode` | Koo 2026 (Joule 10, 102392) — 연속 SWCNT sheath가 두꺼운 dry 전극에서 초고에너지밀도 + 급속충전 (★ 우리 CBD SuperP-vs-VGCF 발견의 실험적 증명) | FEM·digital-twin | 2026-07-28 | — |
+| `koo2026_swcnt_sheath_thick_electrode` | Koo 2026 (Joule 10, 102392) — 연속 SWCNT sheath가 두꺼운 dry 전극에서 초고에너지밀도 + 급속충전 (★ 우리 CBD SuperP-vs-VGCF 발견의 실험적 증명) | FEM·digital-twin | 2026-07-28 | 🖼 59 |
 | `lee2025_corolling_dryprocess_lpscl_ptfe` | Co-rolling dry-process로 만든 박막 LPSCl SSE — robust 계면 + 저압(2 MPa) 작동 — Lee (Nat. Commun. 2025) | exp | 2026-06-24 | 🖼 6 |
 | `liu2025_dry_processing_high_energy_li_batteries_review` | 건식공정(DPT)으로 고에너지밀도 Li 전지 전극·SE막 만들기 — DPC / 분무 / 압출 / 바인더 섬유화(PTFE) 4대 기법 총설, LIB→ASSB 적용 — Liu et al. (Small 2025, 리뷰) | REVIEW (건식공정 총설; 실험·시뮬 *원저 아님* — 문헌 종합) | 2026-06-26 | 🖼 12 |
 | `lyu2025_3d_dem_drying_calendering_lib` | LIB 전극 구조진화를 건조+압연 한 번에 — 3D RVE DEM(AM + carbon-binder domain + 용매 + 입자접촉), 3-stage 건조법 + 압연→σ_e·두께방향 응력 — Lyu (Int. J. Electrical Power & Energy Systems 2025) | DEM (3D RVE, 건조+압연 연속; exp 검증) | 2026-06-26 | 🖼 10 |

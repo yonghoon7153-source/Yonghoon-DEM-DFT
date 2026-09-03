@@ -1,0 +1,151 @@
+{
+ "slug": "duquesnoy2020_calendering_ml_mesostructure_generator",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-09-03",
+ "sources": [
+  "Duquesnoy_2020_JPowerSources_DataDriven_Calendering_ML.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 3,
+   "file": "fig_1.png",
+   "caption": "Fig. 1. Overall workflow of the hybrid methodology presented in this work. Experimental and/or physics-based computational results capturing the impact of manufacturing parameters on electrode mesostructure properties (A) are used in a data-driven stochastic electrode mesostructure generator algorithm (B) that calculates the electrode mesostructure properties associated to the manufacturing conditions analysed, building the dataset (C). Such dataset is used to train and validate ML algorithms allowing to map and identify the interdependencies between electrode properties prior the manufacturing step under analysis, process parameters (reported in the Figure as process variables) and electrode properties after the manufacturing process investigated (D). Dark grey arrows represent the steps considered along this work, while light grey ones indicate future perspectives of this methodology. ",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    453.5,
+    565.8,
+    683.0
+   ],
+   "w": 2227,
+   "h": 957,
+   "dpi": 300,
+   "src": "Duquesnoy_2020_JPowerSources_DataDriven_Calendering_ML.pdf",
+   "blank": 0.851
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 5,
+   "file": "fig_3.png",
+   "caption": "Fig. 3. εcalObtained by polynomial fitting of the experimental dataset, in terms of the applied calender pressure and the AM mass fraction for different initial electrode porosities (εinit): A) 42%, B) 44%, C) 46% and D) 48%. 5",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    492.6,
+    565.8,
+    721.3
+   ],
+   "w": 2227,
+   "h": 954,
+   "dpi": 300,
+   "src": "Duquesnoy_2020_JPowerSources_DataDriven_Calendering_ML.pdf",
+   "blank": 0.884
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 6,
+   "file": "fig_4.png",
+   "caption": "Fig. 4. ML-predicted τsol in terms of the applied calendar pressure and the AM mass fraction for different initial electrode porosities (εinit): A) 42%, B) 44%, C) 46% and D) 48%. As reference, the electrode porosity after the calendering (εcal) are reported next to the cross symbols for AM mass fractions equal to 93% and 96% at pressures equal to 40, 80, 120 and 160 MPa. The SD ranges between A) 0.008 and 0.022, B) 0.007 and 0.025, C) 0.005 and 0.025, D) 0.005 and 0.02. because it clearly indicates how the initial condition of the calendering process can have a strong impact on the electrode properties arising from the manufacturing process itself. It should be also mentioned that the calculation of τliq performed with TauFactor does not take into ac­ count the microporosity of the CBD phase, which is expected to affect the results herein reported. Indeed, this would imply a higher volu",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    49.4,
+    566.0,
+    277.9
+   ],
+   "w": 2228,
+   "h": 952,
+   "dpi": 300,
+   "src": "Duquesnoy_2020_JPowerSources_DataDriven_Calendering_ML.pdf",
+   "blank": 0.913
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 5,
+   "file": "fig_5.png",
+   "caption": "Fig. 5 A-D depicts the ML-predicted liquid tortuosity (τliq), i.e. the square root of the porosity times the ratio between the bulk and the effective diffusivity of Li+, in terms of the pressure applied during the calendering for different εinit and AM mass fractions. It can be seen that τliq increases by incrementing the calender pressure. The latter is ex­ pected, as by increasing the applied pressure, εcal lowers, which reduces the size and interconnectivity of the pores. Moreover, the effect of pressure on τliq is more pronounced for lower amounts of AM and, consequently, higher amounts of CBD. Again, as the size of the CBD phase is smaller, upon reducing the porosity, it occupies the interstitial space between the bigger AM particles. This produces a drastic reduction in the size of AM interstitial pores when CBD mass fraction is higher, therefore outputting more tortuous paths with",
+   "rotated_deg": 0,
+   "bbox": [
+    121.0,
+    492.6,
+    566.0,
+    721.3
+   ],
+   "w": 1855,
+   "h": 954,
+   "dpi": 300,
+   "src": "Duquesnoy_2020_JPowerSources_DataDriven_Calendering_ML.pdf",
+   "blank": 0.859
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 8,
+   "file": "fig_6.png",
+   "caption": "Fig. 6. ML-predicted %CC-CBD in terms of the pressure applied during the calendering and the AM mass fraction for different initial electrode porosities (εinit): A) 42%, B) 44%, C) 46% and D) 48%. As reference, the electrode porosity after the calendering (εcal) are reported next to the cross symbols for AM mass fractions equal to 93% and 96% at pressures equal to 40, 80, 120 and 160 MPa. The SD ranges between A) 0.75% and 2.25%, B) 0.6% and 1.4%, C) 0.6% and 1.8%, D) 0.6% and 2%.",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    49.4,
+    565.8,
+    280.8
+   ],
+   "w": 2227,
+   "h": 965,
+   "dpi": 300,
+   "src": "Duquesnoy_2020_JPowerSources_DataDriven_Calendering_ML.pdf",
+   "blank": 0.87
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 8,
+   "file": "fig_7.png",
+   "caption": "Fig. 7. ML-predicted active surface in terms of the pressure applied during the calendering and the AM mass fraction for different initial electrode porosities (εinit): A) 42%, B) 44%, C) 46% and D) 48%. As reference, the electrode porosity after the calendering (εcal) are reported next to the cross symbols for AM mass fractions equal to 93% and 96% at pressures equal to 40, 80, 120 and 160 MPa. The SD ranges between A) 0% and 0.04%, B) 0% and 0.05%, C) 0% and 0.05%, D) 0% and 0.05%. composition most suited for the application of interest, which is ex­ pected to assist the experimental manufacturing optimization. physics-based modelling, together with the experimental data, into the electrode mesostructure generator algorithm are ongoing and will be the core of further reports by our group. The latter will allow investigating manufacturing processes which are expected to influence mainly",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    327.4,
+    566.0,
+    559.3
+   ],
+   "w": 2228,
+   "h": 968,
+   "dpi": 300,
+   "src": "Duquesnoy_2020_JPowerSources_DataDriven_Calendering_ML.pdf",
+   "blank": 0.875
+  },
+  {
+   "key": "f8",
+   "kind": "figure",
+   "label": "8",
+   "page": 9,
+   "file": "fig_8.png",
+   "caption": "Fig. 8. ML-assessed interdependencies between the calendering pressure and the electrode properties before calendering and the output mesoscale proper­ ties. Green and red colours represent direct and inverse relations, respectively, while the size of the circles indicates the degree of correlation (i.e. big circles, strong correlation). The last column indicates the sense to which the property should be tuned (i.e. maximize or minimize the property) in order to increase an electrode performance descriptor (e.g. energy density). (For interpretation of the references to colour in this figure legend, the reader is referred to the Web version of this article.)",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    49.4,
+    296.8,
+    236.1
+   ],
+   "w": 1106,
+   "h": 779,
+   "dpi": 300,
+   "src": "Duquesnoy_2020_JPowerSources_DataDriven_Calendering_ML.pdf",
+   "blank": 0.908
+  }
+ ]
+}
