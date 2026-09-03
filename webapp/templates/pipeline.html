@@ -43,6 +43,16 @@
     <b>서로 다른 정답이 사실상 같은 곡선을 만들어 되돌아갈 길이 하나로 정해지지 않는 상태</b>다.
     실제 셀만 봐서는 둘을 가를 수 없다. <b>정답을 모르기 때문이다.</b></p>
 
+  <div class="pipe-quote pipe-quote-plain">
+    <b>영수증 비유.</b> 두 사람이 같이 장을 봐서 <b>총 10만 원</b>을 썼다. 영수증에
+    <b>합계만</b> 적혀 있으면 (3, 7) 인지 (7, 3) 인지 (5, 5) 인지 알 길이 없다.<br>
+    full-cell 곡선이 바로 그 <b>합계</b>다 — <code class="mono">U_full = U_PE − U_NE</code>.
+    관측은 하나인데 되찾아야 할 미지수는 넷(<code class="mono">α_PE, β_PE, α_NE, β_NE</code>)이다.
+    두 α 를 <b>같은 방향으로</b> 밀면 빼기 구조상 상쇄되어 곡선이 거의 안 움직인다 →
+    잔차도 안 움직인다 → 최적화가 보기에 (5 %, 15 %) 와 (10 %, 10 %) 의 점수가 같다.
+    최소점이 뾰족한 골이 아니라 <b>평평한 골짜기</b>가 된다.
+  </div>
+
   <figure class="pipe-fig">
     <svg class="dg" viewBox="0 0 760 250" role="img"
          aria-label="서로 다른 두 개의 참값 조합이 같은 전압 곡선을 만들고, 거기서 되돌아가면 가운데 답 하나가 나온다">
@@ -84,6 +94,91 @@
     <figcaption>축퇴가 일어나면 <b>맞추기는 성공한 것처럼 보인다</b> — 잔차는 작고 곡선도 잘 겹친다.
       실패한 것은 적합이 아니라 <b>되돌아가는 길의 유일성</b>이다.</figcaption>
   </figure>
+</section>
+
+<!-- ══ 1.5 22쪽 · 34쪽 ══════════════════════════════════════════════════ -->
+<section class="pipe-sec">
+  <h2 class="pipe-h"><span class="pipe-n">※</span> "22쪽"·"34쪽" 이 무엇인가</h2>
+  <p class="pipe-p">이 저장소의 문서와 커밋에 <b>22p</b>·<b>34p</b> 라는 말이 계속 나온다.
+    <b>2026-08-05 연구세미나 발표 자료의 쪽 번호</b>다. 그 자료는 Part 1(실험 진단,
+    5–23쪽)과 Part 2(모델링, 24–41쪽)로 되어 있고, 이 프로젝트는 그중 두 쪽에서 시작했다 —
+    <b>22쪽이 문제를 냈고, 34쪽이 그 답으로 제안된 것</b>이다.</p>
+
+  <div class="pipe-two pipe-two-pages">
+    <!-- ── 22쪽 ── -->
+    <article class="pipe-card pc-p22">
+      <span class="pc-tag">22쪽 — 문제를 낸 자리</span>
+      <h3>정량 fitting 결과가 두 전극을 같다고 답했다</h3>
+      <p>Part 1 의 실험 진단을 다 하고 난 뒤, 셀의 pOCV 곡선에 α·β 맞추기를 돌려
+        열화 모드를 수치로 뽑은 쪽이다. 결과가 이랬다 (단위 %).</p>
+
+      <div class="pg-tablewrap">
+        <table class="pg-table">
+          <thead>
+            <tr><th>항목</th><th>100cyc</th><th>200cyc</th><th>knee 전 (300)</th><th>knee 후 (300)</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>용량 손실</td><td>~2</td><td>~5</td><td>~9</td><td>~13</td></tr>
+            <tr class="is-key"><td>LAM<sub>PE</sub></td><td>~3</td><td>~5</td><td>~9</td><td><b>~13</b></td></tr>
+            <tr class="is-key"><td>LAM<sub>NE</sub></td><td>~2</td><td>~5</td><td>~9</td><td><b>~13</b></td></tr>
+            <tr><td>LLI</td><td>~5</td><td>~7</td><td>~11</td><td>~17</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p><b>용량 손실 ≈ LAM<sub>PE</sub> ≈ LAM<sub>NE</sub> — 세 값이 붙어서 같이 움직인다.</b></p>
+
+      <p class="pg-why"><b>왜 이상한가.</b> 같은 발표의 <b>다른 모든 증거가 음극 쪽을 가리킨다.</b></p>
+      <ul class="pg-list">
+        <li><b>7쪽</b> SEM — 양극 표면에 변화가 없다</li>
+        <li><b>9쪽</b> 전극 두께 — knee 후 <b>음극만</b> 급증 (~132 µm)</li>
+        <li><b>14쪽</b> ICA — ~0.4 V 의 SiC 피크가 <b>사라진다</b> (실리콘 활물질 손실의 직접 증거)</li>
+        <li><b>19쪽</b> DRT — knee 후 음극에서 SEI·전하전달 피크가 갈라진다</li>
+        <li><b>20쪽</b> 3전극 — 200 사이클까지 full-cell 컷오프를 <b>음극이 결정</b>한다</li>
+        <li><b>28쪽</b> COMSOL 모델 — Si LAM ~3.8 %, Gr ~0.8 %, <b>NCM(양극) ≈ 0 %</b></li>
+      </ul>
+      <p>정성 증거도 모델도 "양극은 거의 안 죽었다" 인데 <b>정량 결과만 대칭</b>이다.
+        두 전극이 우연히 같은 비율로 죽을 물리적 이유가 없다.
+        <b>세미나에서 지도교수가 직접 지적한 지점</b>이고, 이 저장소는 그 지적에서 출발했다.</p>
+    </article>
+
+    <!-- ── 34쪽 ── -->
+    <article class="pipe-card pc-p34">
+      <span class="pc-tag">34쪽 — 제안된 답</span>
+      <h3>목적함수에 dQ/dV 항을 더한다</h3>
+      <p>"곡선이 두 전극을 못 가른다" 면 <b>곡선을 다르게 보면</b> 되지 않을까 —
+        그것이 33·34쪽의 fitting 코드 개선이다. 전압 곡선 자체(pOCV)만 맞추던 것에
+        <b>미분 곡선</b>을 항으로 더한다. 미분은 완만한 전압 차이를 <b>피크</b>로
+        바꿔서 키우므로, 눈에 안 띄던 차이가 드러날 것이라는 기대다.</p>
+
+      <div class="pg-eq">
+        <div class="pg-eq-l">J(p) =</div>
+        <div class="pg-eq-r">
+          <span class="t t-1">w<sub>pocv</sub> · RMSE<sub>pocv</sub> / scale</span>
+          <span class="t t-2">+ w<sub>dvdq</sub> · RMSE<sub>dV/dQ</sub> / scale</span>
+          <span class="t t-3">+ w<sub>dqdv</sub> · RMSE<sub>dQ/dV</sub> / scale</span>
+        </div>
+      </div>
+      <ul class="pg-list pg-list-obj">
+        <li><code class="mono">pocv</code> — 첫 항만. 전압 곡선 그대로</li>
+        <li><code class="mono">pocv_dvdq</code> — 앞 두 항. <b>33쪽의 기존 방식</b></li>
+        <li><code class="mono">pocv_dvdq_dqdv</code> — 세 항 전부. <b>34쪽의 개선안</b></li>
+      </ul>
+      <p>그래서 이 프로젝트가 답해야 할 질문 목록에 이런 항목이 들어 있다 —
+        <b>"34쪽의 dQ/dV 항 추가가 축퇴 영역을 얼마나 줄이는가 (X % → Y %)"</b>.
+        답이 나오면 34쪽 수정을 "기능 추가" 가 아니라
+        <b>"축퇴 영역을 X 에서 Y 로 줄였다"</b> 로 정량 보고할 수 있다.</p>
+      <p class="pg-spoiler">…그리고 아래 <a href="#pipe-find">4절의 첫 발견</a>이 그 질문의
+        답이다. <b>기대한 방향이 아니었다.</b></p>
+    </article>
+  </div>
+
+  <div class="pipe-note">
+    <b>32쪽도 한 번 나온다.</b> 모드를 <b>하나씩만</b> 넣어 곡선을 만들어 본
+    "열화모드 라이브러리" 이고, 이 코드베이스의 직접적인 출발점이다. 실제 셀에서는
+    셋이 <b>동시에</b> 일어나므로 하나씩으로는 상쇄를 볼 수 없다 — 그래서 이 프로젝트는
+    <b>조합 격자</b>로 훑는다.
+  </div>
 </section>
 
 <!-- ══ 2. 아이디어 ══════════════════════════════════════════════════════ -->
@@ -223,11 +318,13 @@
     원문을 함께 볼 것.
   </div>
 
-  <ol class="pipe-find">
+  <ol class="pipe-find" id="pipe-find">
     <li>
       <h3>34쪽 개선안은 이 격자에서 <b>이득을 주지 못했다</b></h3>
-      <p>dQ/dV 항을 목적함수에 넣으면 복원 실패가 <b>61.9 % → 87.2 %</b> 로
-        오히려 늘었다. 행별 최대 오차의 평균도 2.4 %p → 6.5 %p.</p>
+      <p>기대는 "dQ/dV 를 더하면 축퇴 영역이 줄어든다" 였다. 실제로는
+        복원 실패가 <b>61.9 % → 87.2 %</b> 로 <b>25 %p 늘었다.</b> 행별 최대 오차의
+        평균도 2.4 %p → 6.5 %p. 미분이 차이를 키우는 만큼 <b>노이즈와 수치 잡음도
+        같이 키운다</b>는 것이 유력한 설명이지만, 이 격자에서 확정된 것은 방향뿐이다.</p>
     </li>
     <li>
       <h3>참값이 뚜렷이 다르면 <b>대체로 갈렸다</b> — 단 조건부다</h3>

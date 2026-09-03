@@ -1599,3 +1599,65 @@ mark.hl.is-focus, .rail-i.is-focus {
   .hero-pipe { grid-template-columns: 1fr; }
   .hp-go { display: none; }
 }
+
+/* ── /pipeline 의 "22쪽·34쪽" 절 ────────────────────────────────────────
+   두 쪽은 **역할이 다르다** — 22쪽은 문제를 냈고 34쪽은 답으로 제안됐다.
+   그 차이를 카드 윗선 색으로 준다 (문제=경고색, 제안=강조색). */
+.pipe-quote-plain {
+  background: var(--surface-2); border-left-color: var(--ink-3);
+  font-size: var(--fs-sm); line-height: 1.75; color: var(--ink-2);
+}
+.pipe-quote-plain b { color: var(--ink); }
+
+.pipe-two-pages { grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); align-items: start; }
+.pc-p22 { border-top-color: var(--bad); }
+.pc-p22 .pc-tag { color: var(--bad); }
+.pc-p34 { border-top-color: var(--accent); }
+.pc-p34 .pc-tag { color: var(--accent); }
+.pipe-card > p { margin: 0 0 10px; }
+.pipe-card > p:last-child { margin-bottom: 0; }
+
+/* 22쪽의 수치 표 — 좁은 화면에서 표만 가로로 움직인다 */
+.pg-tablewrap { overflow-x: auto; margin: 0 0 11px; }
+.pg-table {
+  width: 100%; border-collapse: collapse;
+  font-size: var(--fs-2xs); line-height: 1.5; font-variant-numeric: tabular-nums;
+}
+.pg-table th, .pg-table td {
+  padding: 5px 8px; border-bottom: 1px solid var(--line-2); text-align: right;
+  white-space: nowrap;
+}
+.pg-table th:first-child, .pg-table td:first-child { text-align: left; }
+.pg-table thead th {
+  color: var(--ink-3); font-weight: 700; font-size: var(--fs-3xs);
+  border-bottom-color: var(--line);
+}
+/* 붙어서 움직이는 두 줄이 이 표의 요점이다 — 그 두 줄만 바탕을 준다 */
+.pg-table tr.is-key { background: var(--bad-soft); }
+.pg-table tr.is-key td { color: var(--ink); }
+
+.pg-why { margin-top: 13px !important; }
+.pg-list { margin: 0 0 10px; padding-left: 19px; }
+.pg-list li {
+  margin-bottom: 4px; font-size: var(--fs-xs); line-height: 1.62;
+  color: var(--ink-2); word-break: keep-all;
+}
+
+/* 34쪽의 목적함수 — 세 항이 각각 무엇인지 색으로 갈라 보인다 */
+.pg-eq {
+  display: flex; gap: 10px; align-items: baseline; flex-wrap: wrap;
+  margin: 0 0 11px; padding: 12px 14px;
+  border: 1px solid var(--line); border-radius: var(--r); background: var(--surface-2);
+  font-family: var(--mono); font-size: var(--fs-2xs);
+}
+.pg-eq-l { color: var(--ink); font-weight: 700; }
+.pg-eq-r { display: grid; gap: 3px; }
+.pg-eq .t { white-space: nowrap; }
+.pg-eq .t-1 { color: var(--c-a); }
+.pg-eq .t-2 { color: var(--c-b); }
+.pg-eq .t-3 { color: var(--c-c); font-weight: 700; }
+
+.pg-spoiler {
+  padding-top: 9px; border-top: 1px dashed var(--line);
+  font-size: var(--fs-xs); color: var(--ink-3);
+}
