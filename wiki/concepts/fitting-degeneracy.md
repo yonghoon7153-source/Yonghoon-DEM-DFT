@@ -2,7 +2,7 @@
 title: Fitting Degeneracy (LLI/LAM 분리가능성)
 description: "full-cell 곡선 하나로 LLI·LAM_PE·LAM_NE 를 가를 수 있는가 — flat valley(데이터 한계)와 multimodal(최적화 난이도)의 구분"
 created: 2026-08-11
-updated: 2026-08-11
+updated: 2026-09-03
 type: concept
 tags: [battery, degradation, research]
 sources: [raw/repositories/degradation-degeneracy-audit.md]
@@ -36,6 +36,13 @@ degeneracy 가 있으면 fitting 이 낸 분해값은 물리가 아니라 최적
 정답을 아는 합성 격자에서 복원 오차 |err| 와 tol(2%p) 기반 degenerate 판정,
 clean 바이어스 보정, 복원가능군 한정 집계. PE·NE 가 같은 부호로 묶이는
 flat 방향의 비율이 "LAM_PE ≈ LAM_NE 는 수학" 가설의 직접 증거 후보.
+
+## 인접하지만 다른 분해 (혼동 주의)
+- [[thermo-kinetic-loss-partition]] — 전압 손실을 **열역학 ΔE / 동역학 η** 로
+  가르는 분해 (Tao 2025). 이름이 "degradation pattern decoupling" 이라 이 카드와
+  같은 문제처럼 읽히지만 **미지수 정의가 다르다**: LLI·LAM_PE·LAM_NE 가 **전부
+  ΔE 한 칸 안**에 들어간다. 즉 그 분해가 완벽해도 이 페이지의 질문은 그대로
+  남는다. 원전 자신이 그 셋을 가르는 것을 "Hard to decouple" 이라고 인쇄한다.
 
 ## 한계
 - 판정은 tol 임계와 guard-feasible 모집단에 조건부다.

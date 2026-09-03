@@ -1,7 +1,7 @@
 # 위키 색인
 
 > 내용 목록. 모든 위키 페이지를 종류별로 한 줄 요약과 함께 싣는다.
-> 마지막 갱신: 2026-09-03 | 전체 페이지: 19
+> 마지막 갱신: 2026-09-03 | 전체 페이지: 20
 
 ## Entities (satellite 프로젝트)
 
@@ -20,6 +20,7 @@
 - [[interpretable-ml-battery-prognosis-taxonomy]] — interpretable ML 4분류(white box·PIML·physics-inspired feature·post-hoc), PVS·SEV 가 앉는 자리, 그리고 그 분류에 identifiability·uncertainty 어휘가 0회라는 전수 확인.
 - [[zhang2020-eis-aging-dataset]] — Phase 2 가 쓰는 EIS 데이터의 정체 (2026-09-03 원전 대조로 verified): Eunicell LR2032 코인셀 12개 · 1C CC-CV / 2C CC · `state I~IX` 아홉 정의와 그중 넷이 DC 전류 중이라는 사실 · 모드 라벨 부재 확정 · ARD 가 고른 "두 주파수" 의 비식별성.
 - [[fused-lasso-feature-design-framework]] — Rhyu 2025 의 자동 feature 설계 7단계: 물리는 후보를 지우고 사후 설명만 하며 feature 형태는 선형대수가 만든다, 그리고 이 계보에서 가장 엄격한 검증 설계(agnostic 기준선 + 프로토콜 group CV).
+- [[thermo-kinetic-loss-partition]] — 전류를 축으로 쓰는 ΔE/η 분해 (Tao 2025): LLI·LAM_PE·LAM_NE 가 **전부 ΔE 한 칸 안**에 들어간다는 경계 확정, 그리고 "관측을 늘리면 갈리는가" 의 네 번째 후보(다전류 관측).
 - [[dv-peak-heterogeneity-descriptor]] — Kim 2023 의 DV `Peak_S2`: 진폭이 아니라 **ridge 절대 높이**이며(진폭은 valley 노이즈로 폐기), LFP‖Gr 에서의 음극 단일 귀속은 PVS 해석과 충돌하지 않는다 — 좌표를 맞추면 오히려 일치.
 
 ## Comparisons (비교)
