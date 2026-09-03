@@ -5,7 +5,7 @@ created: 2026-09-03
 updated: 2026-09-03
 type: research-question
 tags: [battery, degradation, research]
-sources: [raw/papers/2026-09-02-siwon-kim-degradation-mode-ml-seminar.md, raw/transcripts/2026-09-03-voice-memo-007-degradation-mode-ml.md, raw/papers/birkl2017_degradation-diagnostics-ocv.md, raw/papers/wang2025_interpretable-ml-battery-prognosis.md, raw/papers/kim2023_graphite-heterogeneity-lifetime.md, raw/papers/su2024_drt-soh-health-features.md, raw/papers/rhyu2025_systematic-feature-design-formation.md]
+sources: [raw/papers/2026-09-02-siwon-kim-degradation-mode-ml-seminar.md, raw/transcripts/2026-09-03-voice-memo-007-degradation-mode-ml.md, raw/papers/birkl2017_degradation-diagnostics-ocv.md, raw/papers/wang2025_interpretable-ml-battery-prognosis.md, raw/papers/kim2023_graphite-heterogeneity-lifetime.md, raw/papers/su2024_drt-soh-health-features.md, raw/papers/rhyu2025_systematic-feature-design-formation.md, raw/papers/zhang2020_eis-gpr-capacity-rul.md]
 confidence: medium
 explored: false
 verificationStatus: unverified
@@ -273,6 +273,21 @@ H2 가 참일 수 있음에 주의한다 — 부호가 같다고 벡터가 평�
   덧붙여, 이 논문 저자들의 계보는 그 진단 도구를 갖고 있다 — 참고문헌 [13] 이
   Schaeffer et al. 의 **nullspace** 논문이고 공저자 4명이 겹친다 — 그런데
   본문에서 그것을 "β 는 해석을 준다" 는 **긍정 근거로만** 인용한다.
+- **[2026-09-03 (8)] ★ 관측 "선택" 자체가 공선 대역 안에서 비식별적이다 —
+  실측 사례.** [[zhang2020-eis-aging-dataset]] 의 원전(Zhang 2020)은 ARD 로
+  120 예측자 중 **두 개**(Im Z at 17.80·2.16 Hz)만 남기고 그것에 물리적 의미를
+  부여한다. 그런데 저자들의 **공개 데이터로 우리가 직접 계산**하면 120개 중
+  **52개**가 단독으로 |r(용량)| > 0.95 이고, 선택된 91번과 이웃 92번의 상관이
+  **0.998** 이다. `[해석]` **"대역이 정보를 갖는다" 와 "그 안의 특정 점이 특정
+  물리에 대응한다" 는 다른 주장이며, 후자는 이 데이터로 지지되지 않는다.**
+  SEV 는 특정 시간상수/주파수 대역의 값을 R_ct 로 읽는 feature 이므로 같은
+  취약성을 공유한다 — [[fitting-degeneracy]] 의 EIS 판이다. 값싼 후속: 셀 제외
+  재적합으로 ARD 선택 인덱스의 분포를 내는 것 (남의 공개 데이터로 재현 가능).
+- **[2026-09-03 (8)] 불확실성 구간을 그리는 것과 그것이 맞는 것은 다른 주장이다.**
+  Zhang 2020 은 이 계보에서 처음으로 ±1 s.d. 음영을 그리지만 보정 검사가 없고
+  (`calibrat*` 0회), `[도표]` Fig. 3a/3b 에서 측정 곡선이 그 음영 **밖에 연속
+  100 사이클 이상** 머문다. 우리가 라벨에 오차 막대를 공급할 때 **coverage 를
+  필수 산출로 넣는** 근거 사례.
 - **모드 동시 진행 시의 가법성**이 미확인 (원문 p.8 은 단독 스윕만).
 - **SEV 의 정량 모드 스윕**이 없다 (p.11 은 모식도).
 - LAM_NE 를 Si loss / Gr loss 로 쪼개면(원문 p.15 point 2) **미지수가 4개로
@@ -413,3 +428,58 @@ H2 가 참일 수 있음에 주의한다 — 부호가 같다고 벡터가 평�
   - **다음 흡수 최우선 후보 확정**: **Lin, J. & Khoo, E. (2024), *J. Power
     Sources* 605, 234446** — 이 계보에서 제목에 identifiability 가 있는 **유일한**
     문헌이고, 우리 프로젝트의 정확한 선행 연구다.
+
+- [2026-09-03 (8)] open 유지 — Phase 2 가 쓰는 **EIS 데이터의 원전**을 본문 + SI
+  로 흡수 ([[zhang2020-eis-aging-dataset]] 갱신, raw:
+  `raw/papers/zhang2020_eis-gpr-capacity-rul.md`, Zhang et al.,
+  *Nat. Commun.* **11**:1706 (2020), DOI 10.1038/s41467-020-15235-7).
+  이 카드에 준 것 넷:
+  - **주의 한 줄이 확정으로 바뀌었다.** (6) 에서 "그 데이터셋에는 LLI/LAM 라벨이
+    없다" 를 Su 원문 근거로 적었는데, 이제 **원전에서 확정**됐다: Zhang 본문 +
+    SI 전체에서 `LLI`·`LAM`·`lithium inventory`·`half-cell` 이 **각 0회**이고,
+    모드를 재는 절차가 하나도 없으며, Introduction 이 미시 기구 모델링을
+    `[인쇄]` "unscalable" 하다며 명시적으로 포기한다. 제목의 "degradation
+    **patterns**" 는 **셀마다 다른 감쇠 궤적**을 뜻한다 (본문 용례 2회 = 제목 +
+    Discussion). → **Phase 2 는 이 카드의 질문에 직접 답할 수 없다**는 제약이
+    한 단계 더 단단해졌다.
+  - **Phase 2 의 SOC 축이 2점으로 축소된다** (설계 정정). SI Fig. 1 (직접 봄)
+    이 state I~IX 아홉 개를 전부 정의하고 **적·녹 점으로 DC 전류 유무**까지
+    준다: **II·III·VI·VII 은 전류가 흐르는 중에 측정**된다. 따라서 평형
+    임피던스로 쓸 수 있는 SOC 는 **0 %(I·VIII·IX) 와 100 %(IV·V) 두 점뿐**이고,
+    중간 SOC(III ≈40 %, VII ≈57 %)는 DC 바이어스 상태다. SEV 는 R_ct 의
+    **stoichiometry 의존성**을 읽는 feature 이므로 이 데이터로는 **곡선이 아니라
+    양 끝점 대비**만 얻는다. 대신 `IV vs V`·`VIII vs IX` 라는 **완화 시간 대비**
+    축이 새로 보인다 (아무도 안 썼다).
+  - **Gap 1건 추가 — 관측 선택 자체의 비식별성 (SEV 축에 직접 걸린다).**
+    원전의 ARD 는 120 예측자 중 `[인쇄]` "**only two salient frequencies**"
+    (17.80 · 2.16 Hz, SI Fig. 3b 로 **허수부** 확정) 만 남기고 그것에
+    **물리적 의미**(계면 물성 변화)를 부여한다. 그런데 저자들의 **공개 데이터로
+    직접 계산하면** 120개 중 **52개**가 단독으로 |r(용량)| > 0.95 이고,
+    91번과 이웃 92번의 상관이 **0.998**, |r| > 0.99 인 다섯 개(예측자 90–94 =
+    Im Z at 22.5/17.8/14.1/11.1/8.8 Hz)의 |r| 은 0.9920~0.9941 로 **소수 셋째
+    자리에서 갈린다**. `[해석]` ARD 가 고른 것은 **주파수가 아니라 공선 대역**
+    이며, 그 안의 어느 점이 뽑히는지는 데이터가 정하지 않는다. **이것이 SEV
+    설계에 직접 걸린다** — SEV 도 "특정 주파수/시간상수 대역의 값" 을 물리량으로
+    읽는 feature 이므로, **"그 대역이 정보를 갖는가"(참일 수 있다)와 "그 안의
+    특정 점이 특정 물리에 대응하는가"(별개의, 대개 미검증인 주장)** 를 분리해야
+    한다. 우리가 값싸게 공급할 수 있는 것: 셀 제외 재적합으로 **ARD 선택
+    인덱스의 분포**를 내는 것.
+  - **불확실성 보고의 전례 하나 + 반면교사 하나.** 이 논문은 이 계보에서
+    **처음으로 예측 불확실성을 그림에 그린다** (GPR 사후 분산, ±1 s.d. 음영,
+    Fig. 1a·2·3a,b·4). 그러나 그것은 **가정한 i.i.d. 관측잡음 + 커널 함수
+    불확실성**일 뿐 라벨 불확실성도 셀 간 변동도 아니며, **보정 검사가 없다** —
+    `calibrat*` 0회이고 `[도표]` Fig. 3a/3b 에서 **측정 곡선이 ±1σ 음영 밖에
+    연속 100 사이클 이상** 머문다 (계통 편의). `[해석]` 이 카드의 Gap "라벨
+    불확실성이 없다" 에 짝을 이루는 교훈: **구간을 그리는 것과 그 구간이 맞는
+    것은 다른 주장이고, 우리가 오차 막대를 공급할 때는 coverage 를 필수 산출로
+    넣는다.**
+  - **어휘 전수 (이 계보 여덟 편째)**: 합자 정규화 후 본문 6쪽 + SI 6쪽 전체에서
+    `degenerac*` **0** · `identifiab*` **0** · `uncertaint*` **1**(식 (3) 뒤
+    "a measure of uncertainty") · `calibrat*` **0** · `cross-valid*` **0**.
+    다만 **`non-unique` 가 1회 있다** — `[인쇄]` "the fit is often non-unique",
+    **등가회로 fitting**(경쟁 방법)에 대한 비판이며 그것을 **자기 방법의
+    정당화 근거**로 쓴다 ("그러니 fitting 하지 말고 회귀하자").
+    `[해석]` 이 계보에서 비유일성 어휘가 처음 나온 자리가 **자기 진단이 아니라
+    타 방법 기각**이라는 것은, "개념이 없어서 안 쓴 것이 아니라 자기 쪽으로
+    돌리지 않은 것" 이라는 **더 강한 형태의 확인**이다. 심사자가 Braatz 였다는
+    사실(`[인쇄]` Peer review information)이 이 관찰의 무게를 더한다.

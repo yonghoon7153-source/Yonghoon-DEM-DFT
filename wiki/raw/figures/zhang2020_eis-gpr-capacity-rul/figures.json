@@ -1,0 +1,172 @@
+{
+ "slug": "zhang2020_eis-gpr-capacity-rul",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-09-03",
+ "sources": [
+  "518492c0-9IDENT1.PDF",
+  "4ec72e7c-9SUPI1.PDF"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 2,
+   "file": "fig_1.png",
+   "caption": "Fig. 1 Estimating battery capacity. a Estimated (red curve) and measured (blue curve) capacity as a function of cycle number for the 25C05 cell. The coefﬁcient of determination (R2) of this model is shown on the left bottom. b The measured capacity against the estimated capacity of all four testing cells cycled at 25 °C. The capacity is normalised against the starting capacity in each case. c ARD shows that the impedance at low frequency is most correlated with degradation. The pink points correspond to the 120 frequencies in the range of 0.02 Hz–20 kHz. The GPR model assigns the largest weights to the 91st and 100th features, corresponding to 17.80 and 2.16 Hz, respectively. The less relevant features have weights close to zero. 2 NATURE COMMUNICATIONS | (2020) 11:1706 | https://doi.org/10.1038/s41467-020-15235-7 | www.nature.com/naturecommunications",
+   "rotated_deg": 0,
+   "bbox": [
+    37.6,
+    537.7,
+    557.7,
+    686.8
+   ],
+   "w": 2168,
+   "h": 622,
+   "dpi": 300,
+   "src": "518492c0-9IDENT1.PDF",
+   "blank": 0.9
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 3,
+   "file": "fig_2.png",
+   "caption": "Fig. 2 Predicting remaining useful life. The predicted RUL of 25C05–25C08 testing cells a–d cycled at 25 °C (shown as green curves). The end of life (EoL) of these four testing cells is 150, 120, 30 and 38, respectively, which is deﬁned as the cycle number when the capacity drops below its initial 80%. The testing EIS spectra are collected at the state V (15 min resting after fully charging). The shaded region indicates ±1 standard deviation. R2 is shown on the right bottom in each panel. NATURE COMMUNICATIONS | (2020) 11:1706 | https://doi.org/10.1038/s41467-020-15235-7 | www.nature.com/naturecommunications 3",
+   "rotated_deg": 0,
+   "bbox": [
+    37.6,
+    368.3,
+    557.7,
+    697.3
+   ],
+   "w": 2168,
+   "h": 1372,
+   "dpi": 300,
+   "src": "518492c0-9IDENT1.PDF",
+   "blank": 0.884
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 4,
+   "file": "fig_3.png",
+   "caption": "Fig. 3 Capacity estimation without deﬁnite knowledge of the temperature. The curves show the estimated (red) and measured (blue) capacity for cell cycled at a 35 °C and b 45 °C; the cycling temperature is not an input to our model. The shaded area indicates ±1 standard deviation. Both EIS spectra are collected at the state V (15 min resting after fully charging). R2 is shown on the left bottom in each panel. ARD shows that the EIS-capacity GPR models at 35 °C c and 45 °C d assign the largest weight to the 91st feature with the corresponding frequency of 17.80 Hz. The irrelevant features have weights close to zero. over cycles. We make a further simpliﬁcation that the tempera- ture is either 25, 35 or 45 °C. We combine the training data acquired at three different temperatures (i.e. 25C01–25C04, 35C01 and 45C01 cells), and in effect forcing GPR to learn fea- tures of the EIS that only dep",
+   "rotated_deg": 0,
+   "bbox": [
+    37.6,
+    65.7,
+    557.7,
+    381.8
+   ],
+   "w": 2168,
+   "h": 1318,
+   "dpi": 300,
+   "src": "518492c0-9IDENT1.PDF",
+   "blank": 0.948
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 5,
+   "file": "fig_4.png",
+   "caption": "Fig. 4 Remaining useful life prediction without deﬁnite knowledge of the temperature. Our model accurately predicts the RUL of three testing cells a–c cycled at 25, 35 and 45 °C, respectively, without information on the cycling temperature. The EoL of these three testing cells is 150, 252 and 396, respectively, which is deﬁned as the cycle number when the capacity reaches its initial 80%. The testing EIS spectra are collected at state V (15 min resting after fully charging). The shaded region indicates ±1 standard deviation. R2 of our method is shown on the right bottom in each panel. In the EIS-RUL GPR model, the input xi is the entire EIS spectra, the same as the EIS-capacity GPR model, but the output yi is the RUL. We use a zero mean function and a linear (LIN) covariance function of 0.02 Hz–20 kHz with an excitation current of 5 mA, following a 15-min open circuit at SoC 0% and SoC 1",
+   "rotated_deg": 0,
+   "bbox": [
+    37.6,
+    67.4,
+    557.8,
+    199.8
+   ],
+   "w": 2168,
+   "h": 552,
+   "dpi": 300,
+   "src": "518492c0-9IDENT1.PDF",
+   "blank": 0.913
+  },
+  {
+   "key": "fS1",
+   "kind": "figure",
+   "label": "S1",
+   "page": 2,
+   "file": "fig_S1.png",
+   "caption": "Supplementary Figure 1 – EIS data are collected at nine diﬀerent states (representing as I-IX) during constant current-constant voltage (CC-CV) charging and discharging: I: Before charging; II: Start charging; III: After 20 minutes charging; IV: After charging and before resting; V: After 15 minutes rest; VI: Start discharging; VII: After 10 minutes discharging; VIII: After discharging and before resting; IX: After 15 minutes rest. The red (green) dots correspond to with (without) DC current.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    544.3,
+    365.9
+   ],
+   "w": 1993,
+   "h": 1250,
+   "dpi": 300,
+   "src": "4ec72e7c-9SUPI1.PDF",
+   "blank": 0.94
+  },
+  {
+   "key": "fS2",
+   "kind": "figure",
+   "label": "S2",
+   "page": 3,
+   "file": "fig_S2.png",
+   "caption": "Supplementary Figure 2 – The estimation results of the EIS-Capacity GPR model for 25C02 cell cycled at the other eight diﬀerent states (I-IX). The red curve shows the estimation of capacity, and the shaded region indicates ± 1 standard deviation. The testing EIS in each panel are collected at states I-IX, respectively. The blue dashed lines are the measured capacity. The coeﬃcient of determination (R2) is shown on the left bottom in each panel.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    544.3,
+    487.2
+   ],
+   "w": 1993,
+   "h": 1755,
+   "dpi": 300,
+   "src": "4ec72e7c-9SUPI1.PDF",
+   "blank": 0.816
+  },
+  {
+   "key": "fS3",
+   "kind": "figure",
+   "label": "S3",
+   "page": 4,
+   "file": "fig_S3.png",
+   "caption": "Supplementary Figure 3 – (a) The EIS spectra mapping along cycle numbers of 25C01 cell at state V (red dots). Blue and green curves indicate the two most salient frequencies of 17.80 and 2.16 Hz, respectively. (b) The imaginary part of the salient frequencies show a positive linear correlation with the cycle number.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    66.0,
+    544.3,
+    649.2
+   ],
+   "w": 1993,
+   "h": 2432,
+   "dpi": 300,
+   "src": "4ec72e7c-9SUPI1.PDF",
+   "blank": 0.896
+  },
+  {
+   "key": "fS4",
+   "kind": "figure",
+   "label": "S4",
+   "page": 5,
+   "file": "fig_S4.png",
+   "caption": "Supplementary Figure 4 – The capacity retention curves of all cells (marked with diﬀerent colors). 25C01-25C04, 35C01 and 45C01 cells are training group. 25C05-25C08, 35C02 and 45C02 are testing group.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    90.5,
+    544.4,
+    382.9
+   ],
+   "w": 1994,
+   "h": 1219,
+   "dpi": 300,
+   "src": "4ec72e7c-9SUPI1.PDF",
+   "blank": 0.936
+  }
+ ]
+}
