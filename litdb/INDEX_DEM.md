@@ -2,7 +2,7 @@
 
 > **이 파일은 `tools/litdb/build_index.py` 가 생성한다 — 손으로 고치지 말 것.**
 > 논평·우선순위가 붙는 SE 축 인덱스는 `INDEX.md` (사람이 큐레이션).
-> digest 113편 · 생성 2026-09-03
+> digest 114편 · 생성 2026-09-03
 
 왜 따로 두나 — `INDEX.md` 는 argyrodite 전해질 축이라 접촉역학·MPM·건식전극
 digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱스에도 없었다**
@@ -52,14 +52,15 @@ digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱
 | `zunker2024_mdr_contact_model_partI` | 층(2.75) 발견 — 점착 탄소성 입자의 역학적으로 유도된 접촉모델, Part I: 차원축소법(MDR) — Zunker & Kamrin (J. Mech. Phys. Solids 2024) | contact-mechanics theory (MDR) + FEM(Abaqus) 검증 | 2026-08-25 | — |
 | `zunker2025_dem_large_deformation_compaction` | 실험검증된 대변형 압밀 DEM (Experimentally validated DEM for large deformation powder compaction: mechanically-derived contact model and screening of non-physical contacts) — Zunker, Dunatun | DEM (LAMMPS, MDR 접촉모델 다체 확장) + MPFEM(Abaqus) 검증 + 제약 tableti | 2026-08-25 | — |
 
-## 복합양극 미세구조 · percolation (17편)
+## 복합양극 미세구조 · percolation (18편)
 
 | slug | 논문 | 유형 | digest | 그림 |
 |---|---|---|---|---|
 | `bielefeld2019_microstructural_modeling_composite_cathode` | 복합 양극의 3D 미세구조 모델링 — percolation 이론으로 이온·전자 전도 클러스터 분석 — Bielefeld (J. Phys. Chem. C 2019) | continuum (geometric microstructure + percolation) | 2026-06-26 | 🖼 11 |
 | `bielefeld2020_effective_ionic_conductivity_binder` | Bielefeld 2020 (ACS Appl. Mater. Interfaces 12, 12821−12833) — 유효 이온전도도 + 바인더 영향 모델링 (Janek 그룹, GeoDict — ★ Bielefeld 2019의 σ-추가 후속편) | FEM·digital-twin | 2026-07-28 | 🖼 7 |
 | `chen2011_percolation_micromodel_composite_electrode` | 다분산 입경 복합전극의 유효물성 예측 — 해석적 percolation 미시모델 (CN·percolation·TPB·σ_inter/intra·hydraulic pore 닫힌식) — Chen (J. Power Sources 2011) | continuum (analytic percolation micro-model — closed-form, N | 2026-06-26 | 🖼 7 |
-| `cronk2026_lis_positive_electrode_geometry_fem` | 확률적 voxel 기하 생성(MATLAB) + TauFactor τ + FEM 팽창응력으로 설계한 Li–S 전환형 양극 (LPSCl 촉매전해질) — 11 mAh cm⁻² · 10 MPa anode-free 파우치 — Cronk (Nat. Commun. 2026) | FEM (COMSOL 6.1, 선형탄성+등방 eigenstrain) + 확률적 voxel 기하생성(MATLA | 2026-09-03 | — |
+| `cronk2026_lis_positive_electrode_geometry_fem` | 확률적 voxel 기하 생성(MATLAB) + TauFactor τ + FEM 팽창응력으로 설계한 Li–S 전환형 양극 (LPSCl 촉매전해질) — 11 mAh cm⁻² · 10 MPa anode-free 파우치 — Cronk (Nat. Commun. 2026) | FEM (COMSOL 6.1, 선형탄성+등방 eigenstrain) + 확률적 voxel 기하생성(MATLA | 2026-09-03 | 🖼 50 |
+| `duquesnoy2020_calendering_ml_mesostructure_generator` | 캘린더링(압연)을 "porosity 를 입력으로 받는" 확률적 전극 생성기 + TauFactor + SISSO 로 — 실험 54셀 → 8,800 in-silico 전극 → 해석식 — Duquesnoy (J. Power Sources 2020) | hybrid (exp 54-electrode 다항회귀 → MATLAB voxel 확률생성기 → TauFact | 2026-09-03 | 🖼 12 |
 | `jung2023_single_crystal_ncm_morphology` | 필독 / 우리-랩 — Customizing the Morphology and Microstructure of Single-Crystalline Ni-rich Layered Cathode Materials for All-Solid-State Batteries — Jung et al. (Chem. Eng. J. 2023) | exp (morphology / electrochemistry / mechanical) | 2026-06-26 | 🖼 7 |
 | `kim2024_carbon_volumetric_occupation_se_domain` | 필독 / 우리-랩 — Accelerated Degradation of ASSBs Induced through Volumetric Occupation of the Carbon Additive in the SE Domain — Kim, Park, Kang, …, Lee, Sun, Cho (Adv. Funct. Mater. 2 | exp | 2026-06-26 | 🖼 5 |
 | `kim2026_a3d_air_electrode_microstructure_transport` | Kim 2026 (Journal of Power Sources 686, 240471) — 디지털트윈 미세구조(GeoDict) → 유효물성 → 1D 전기화학(COMSOL)으로 A3D 공기극 수송 설계 | FEM·digital-twin | 2026-07-28 | — |

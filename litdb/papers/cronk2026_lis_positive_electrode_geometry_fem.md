@@ -68,7 +68,7 @@
 
 | 규약 항목 | 원문 값 | 판정 |
 |---|---|---|
-| 생성기 | ref 67 = **Duquesnoy, Lombardo, Chouchane, Primo, Franco, *J. Power Sources* 480 (2020) 229103** MATLAB 코드 | stated (우리 litdb **미보유** → §12) |
+| 생성기 | ref 67 = **Duquesnoy, Lombardo, Chouchane, Primo, Franco, *J. Power Sources* 480 (2020) 229103** MATLAB 코드 | stated (우리 litdb **보유** ✅ 2026-09-03: `papers/duquesnoy2020_calendering_ml_mesostructure_generator.md` — 그 카드가 **voxel 1 µm · 주기 xyz · 겹침 0.7·(R1+R2) · N=10 시드**를 확정한다 → §12) |
 | S 형상 | **구(sphere)** | stated |
 | 탄소 형상 | **aggregate(응집체)** | stated — 세부 규칙(응집 크기·수·성장법칙) **미기록** |
 | pore | **10 vol% 고정 입력** | stated |
@@ -677,19 +677,42 @@ Al 박 10 µm / 2.7 g cm⁻³, 바인더 **1 %**.
 
 ---
 
-## 12. ★ ref 67 (Duquesnoy 2020) 을 받아야 하는가 — 판정
+## 12. ★ ref 67 (Duquesnoy 2020) 을 받아야 하는가 — 판정 → **✅ 받았다 (2026-09-03 같은 날 digest 완료)**
 
 **Duquesnoy, Lombardo, Chouchane, Primo, Franco, "Data-driven assessment of electrode calendering
 process by combining experimental results, in silico mesostructures generation and machine learning",
-*J. Power Sources* 480 (2020) 229103.**  카드 작성 시점(2026-09-03)에 `papers/` **미보유**
-(우리는 Duquesnoy **2023** ESM 만 보유).
+*J. Power Sources* 480 (2020) 229103.**  → **정본 카드
+`papers/duquesnoy2020_calendering_ml_mesostructure_generator.md`** (2026-09-03 digest).
+(작성 당시 서술은 "미보유"였고 — 우리는 Duquesnoy **2023** ESM 만 갖고 있었다 — 아래 상태박스가 그것을 대체한다.)
 
-> ★★ **상태 갱신 (2026-09-03, 이 카드 작성 중 발견)**: 정본 워크트리에
-> `litdb/figures/duquesnoy2020_calendering_ml_mesostructure_generator/` (그림 7장, 출처 PDF
-> `Duquesnoy_2020_JPowerSources_DataDriven_Calendering_ML.pdf`) 가 **같은 날 생성돼 있다**
-> = **다른 세션이 이미 그 논문을 확보해 digest 진행 중**이다 (카드 `.md` 는 아직 없음).
-> ⇒ 아래 판정은 *"받아야 하나"* 가 아니라 **"받은 것을 무엇에 쓸 것인가"** 로 읽는다.
-> 그 카드가 올라오면 **§3.2 의 미기록 8항목을 1:1 로 대조**할 것 (특히 voxel 크기·주기경계·겹침·시드).
+> ★★★ **상태 닫힘 (2026-09-03 같은 날) — 카드가 올라왔다:
+> `papers/duquesnoy2020_calendering_ml_mesostructure_generator.md`**
+> (본문 + SI + **MIT 라이선스 MATLAB 소스 21파일 전수 독해**).  아래 판정 ①–⑤ 를 결과로 갱신한다.
+>
+> **① 미기록 8항목 대조 결과 — 5개가 닫히고, 그중 넷이 이 카드 §3.2 의 우려를 *확인*한다.**
+>
+> | Cronk 2026 미기록 항목 | 생성기 원논문/코드가 주는 답 |
+> |---|---|
+> | **voxel 크기 h** | ★ **1 µm/pixel** (`Script_Main.m` `res = 1`, SI S3 *"voxel length of 1 µm"*). ⇒ Cronk 의 sub-micron S 입자(⌀ ≲1 µm)는 **1–2 복셀**로 그려진다 |
+> | **주기경계** | `Periodic_Condition_XYZ.m` 이 **x·y·z 세 축 전부**에 거울 이미지 추가. ⚠ 단 **배치만 주기이고 분석(이웃계수·TauFactor)은 전부 비주기** = 규약 불일치 |
+> | **겹침 규칙** | `nonOver2.m` `d ≥ 0.7·(R1+R2)` = **반지름 합의 30 %** 침투 허용. ⚠ SI 산문(*"30 % of the smallest radius"*)과 **다르고**, 서로 다른 크기 쌍에서 최대 **6.3배 관대** |
+> | **시드/반복** | 조건당 **N=10** 확률 반복의 **평균**을 보고 (Cronk 은 반복수 미기재) |
+> | **aggregate 모델** | `AddSurf3.m` — 26-이웃 접촉 조건 + **`probaId`/`probaAM` 두 확률로 cluster↔film 축**. 원논문은 `0.5/0.5` 한 점만 사용 |
+> | RVE 대표성 · 메시 · 산포 | **여전히 미기록** (원논문에도 없음) |
+>
+> **② §3.3·§3.5 판정이 확정형으로 바뀐다 — 그리고 방향이 우리 예측대로다.**
+> 원논문의 공개 880 데이터포인트에서 보고된 *active surface* 는 **100·ε/(1−ε) 와 R² = 0.9964**
+> (= **모든 pore voxel 이 고체에 접함 = 포화**), `d_h/dx ≈ 1.00–1.03`, 그리고 τ 가
+> **같은 그룹의 EIS 실측(τ_TLM = 1.3808 @ ε = 31.5 %)의 2.4–2.7배**.
+> ⇒ 이 카드가 *"active surface(%) = voxel 껍질비 ∝ h → 격자 조이면 0"* 이라고 원리로만 적은 것이
+> **같은 계보 안에서 수치로 실측됐다.** Cronk 의 87.6 % 도 같은 종류의 격자 산물로 읽어야 한다.
+>
+> **③ 계보 구멍 닫힘** — Franco/ARTISTIC → **Duquesnoy 2020(생성기, 이제 보유)** → Duquesnoy 2023(ML) →
+> Chouchane(Meng 그룹 이식) → **Cronk 2026**.  ④ `positioning_vs_geodict.md` 의 "규칙 배치"에 이제
+> **정본 정의**가 붙었다.  ⑤ 2순위(ACS Energy Lett. 9 (2024) 4)는 **여전히 미확보**.
+>
+> ⚠ **전이 게이트는 그대로 유효**: 원논문은 **NMC111 + 액체 LIB** 이고 **이온 위상이 우리와 반대**
+> (pore = 이온전도체) ⇒ **FORM/METHOD-ONLY**, τ·porosity·active surface 절대값 전이 금지.
 
 **판정: 필수다 — 단 목적은 물리가 아니라 *메타데이터*다.**
 

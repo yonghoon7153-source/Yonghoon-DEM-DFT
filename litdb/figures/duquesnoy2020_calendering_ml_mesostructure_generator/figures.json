@@ -4,7 +4,8 @@
  "maxpx": 3000,
  "generated": "2026-09-03",
  "sources": [
-  "Duquesnoy_2020_JPowerSources_DataDriven_Calendering_ML.pdf"
+  "Duquesnoy_2020_JPowerSources_DataDriven_Calendering_ML.pdf",
+  "1-s2.0-S0378775320313987-mmc1.docx (Supporting Information)"
  ],
  "figures": [
   {
@@ -71,9 +72,9 @@
    "key": "f5",
    "kind": "figure",
    "label": "5",
-   "page": 5,
+   "page": 7,
    "file": "fig_5.png",
-   "caption": "Fig. 5 A-D depicts the ML-predicted liquid tortuosity (τliq), i.e. the square root of the porosity times the ratio between the bulk and the effective diffusivity of Li+, in terms of the pressure applied during the calendering for different εinit and AM mass fractions. It can be seen that τliq increases by incrementing the calender pressure. The latter is ex­ pected, as by increasing the applied pressure, εcal lowers, which reduces the size and interconnectivity of the pores. Moreover, the effect of pressure on τliq is more pronounced for lower amounts of AM and, consequently, higher amounts of CBD. Again, as the size of the CBD phase is smaller, upon reducing the porosity, it occupies the interstitial space between the bigger AM particles. This produces a drastic reduction in the size of AM interstitial pores when CBD mass fraction is higher, therefore outputting more tortuous paths with",
+   "caption": "Fig. 5. A-D) ML-predicted tau_liq in terms of the applied pressure and the AM mass fraction for different initial electrode porosities (eps_init): A) 42%, B) 44%, C) 46% and D) 48%. ... E-H) sigma_eff in terms of the eps_cal and the AM mass fraction for the same eps_init. [re-rendered from p.7 by the digest agent: the auto-extractor anchored on the p.5 body reference]",
    "rotated_deg": 0,
    "bbox": [
     121.0,
@@ -146,6 +147,47 @@
    "dpi": 300,
    "src": "Duquesnoy_2020_JPowerSources_DataDriven_Calendering_ML.pdf",
    "blank": 0.908
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 4,
+   "file": "fig_2.png",
+   "caption": "Fig. 2. The hybrid methodology workflow implemented in this work. Experimental data -> polynomial equation (A) -> data-driven stochastic electrode generator (B) -> mesostructure properties (C) -> ML training/validation (D) -> interdependency map (E). [re-rendered by the digest agent; auto-extractor rejected it as vector-only]"
+  },
+  {
+   "key": "fS2",
+   "kind": "figure",
+   "label": "S2",
+   "page": null,
+   "file": "fig_S2_gap_pressure_calibration.png",
+   "caption": "Figure S2 (SI). Calibration plot linking the applied pressure to the calender gap, normalised by the electrode thickness.  Printed in-figure: P = 189*exp(-cal gap/(0.21*elect thick)); electrode thickness = UNCALENDERED electrode including the current collector.  4 calibration points."
+  },
+  {
+   "key": "fS3",
+   "kind": "figure",
+   "label": "S3",
+   "page": null,
+   "file": "fig_S3_psd.jpg",
+   "caption": "Figure S3 (SI). Experimental particle size distribution of the NMC-111 active material, from SEM images (counts vs diameter, 1-17 um).  Same data as Distribution_diameter_emi_nmc111.dat (n=409)."
+  },
+  {
+   "key": "fS4",
+   "kind": "figure",
+   "label": "S4",
+   "page": null,
+   "file": "fig_S4_overlap.png",
+   "caption": "Figure S4 (SI). Schematic of the allowed overlapping between AM particles.  NOTE (digest): the SI text defines the tolerance as 30% of the SMALLEST radius, but nonOver2.m uses 0.7*(R1+R2) = 30% of the SUM."
+  },
+  {
+   "key": "fS5",
+   "kind": "figure",
+   "label": "S5",
+   "page": null,
+   "file": "fig_S5_mesostructures.png",
+   "caption": "Figure S5 (SI). Generated electrode mesostructures: 93-7 / eps_cal 0.402 (A), 93-7 / 0.305 (B), 96-4 / 0.428 (C), 96-4 / 0.33 (D); all at eps_init = 0.48.  Red = AM, blue = CBD, green = electrolyte/pore."
   }
- ]
+ ],
+ "note": "f2/f5 re-rendered from the correct pages; fS2-fS5 lifted from the SI .docx media in document order. Source code (MIT, MarcDuquesnoy/Battery_Combining_In_Silico) read separately - see card sections 4, 5, 13."
 }

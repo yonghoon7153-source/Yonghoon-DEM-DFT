@@ -201,3 +201,23 @@ TauFactor 는 단층촬영으로 얻어 **분할된 voxel 3D(또는 2D) 미세�
 
 ## 🗨️ Q&A 로그
 <!-- "Q&A 작성해줘" 트리거 시 직전 질문/답 누적 -->
+
+---
+
+## 🔗 이 툴을 실제로 호출하는 우리 corpus 논문 (2026-09-03 역링크 추가)
+
+**`papers/duquesnoy2020_calendering_ml_mesostructure_generator.md`** (Duquesnoy, J. Power Sources 2020) 의 공개 MATLAB 생성기는
+`Script_Main.m` 첫 줄 주석이 *"To operate, please launch the App TauFactor first"* 이고,
+`Study_Structure_2.m` 이 **`TauFactor('InLine', 1, 0, 0, im, PhaDir, [1 1 1])`** 를 **한 구조당 3회**
+호출한다(pore / AM / AM∪CBD, **z 방향만**).  상 매핑은 `PhaDir` 행 1/2/3 = **black/green/white**
+= 라벨 **최소/중간/최대**.  ⚠ 그 논문은 **TauFactor 출력 τ(tortuosity FACTOR)를 그대로 CSV 에 저장**하고
+그림에는 **√** 를 취해 그린다 — 공개 데이터 재사용 시 필수 규약.
+
+★★ **이 카드 §3 의 경고가 그 논문에서 정확히 실현됐다.** 여기서 우리는
+*"단일구 = 단일 voxel → SA ×~2, 다voxel 구도 최소 ×1.5, sub-voxel 복잡구조는 임의로 큰 오차"* 라고 적었다.
+그 논문은 **1 µm/voxel** 로 **~4 µm 입자 + nm 급 CBD** 를 그렸고, 결과적으로
+(a) 보고된 *active surface* 가 **100·ε/(1−ε) 와 R² = 0.9964** = **모든 pore voxel 이 고체에 접함(포화)**,
+(b) `d_h/dx ≈ 1.00–1.03` (우리 규칙 ≳ 3.5),
+(c) τ 가 **같은 그룹의 EIS 실측(τ_TLM = 1.3808 @ ε = 31.5 %)의 2.4–2.7배**.
+⇒ **TauFactor 는 정확했고, 입력 voxel 이 미해상이었다.**  이 툴 카드가 "τ 는 입력 미세구조가 정한다"고
+적어 둔 문장의 **실증 사례**이므로 두 카드를 함께 읽을 것.
