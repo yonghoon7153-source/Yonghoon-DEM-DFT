@@ -243,6 +243,12 @@ def _carry_verdict(old_r, new_r):
             diff = _bni().protocol_diff(po, pn)[:6]
         except Exception:                       # noqa: BLE001 — 진단 실패가 회수를 막지 않는다
             diff = []
+        if not diff:
+            # 2026-09-03 — build_neb_inputs 가 ase 없는 기계(이 컨테이너)에선 import 실패해
+            #   진단이 빈 채로 "payload 미기록" 이라 **거짓** 사유를 찍었다. 도구 없이도
+            #   어느 키가 바뀌었는지는 말할 수 있다 — plain 키 비교로 폴백.
+            diff = [f"{k}: {po.get(k)!r} → {pn.get(k)!r}"
+                    for k in sorted(set(po) | set(pn)) if po.get(k) != pn.get(k)][:6]
     return False, (f"프로토콜이 바뀌었다: {oh} → {nh}"
                    + (f" (바뀐 것: {'; '.join(diff)})" if diff else
                       " (payload 미기록이라 무엇이 바뀌었는지는 알 수 없다)"))
@@ -351,6 +357,48 @@ def selftest():
     finally:
         globals()["OUT"] = _real_out
 
+    # ── --merge (2026-09-03) — 다른 기계 루트 보존 ─────────────────────────────
+    #   병합 로직만 함수 없이 인라인이라, 같은 규칙을 여기서 재현해 검증한다.
+    _prev_m = {"roots": ["v2", "v3"],
+               "results": {"v2/li2s": {"citable": True, "Ea_forward_eV": 0.305},
+                           "v3/licl": {"citable": False},
+                           "sei_neb/li_metal": {"citable": False, "Ea_forward_eV": 0.9,
+                                                "note": "옛 no-CI 값 — 새 회수가 덮어야 한다"}}}
+    _now_m = {"sei_neb/li_metal": {"citable": True, "Ea_forward_eV": 0.0806}}
+    _now_labels = {"sei_neb"}
+    _res_m = dict(_now_m); _kept = 0
+    for k, v in _prev_m["results"].items():
+        if k.split("/", 1)[0] in _now_labels:
+            continue
+        if k not in _res_m:
+            _res_m[k] = dict(v, preserved_from_previous_db=True); _kept += 1
+    _roots_m = sorted(set(_prev_m["roots"]) | _now_labels)
+    chk(_kept == 2 and "v2/li2s" in _res_m and _res_m["v2/li2s"].get("citable") is True,
+        "[merge] 다른 루트(v2·v3)의 결과가 **보존**된다 — 인용 가능 v2/li2s 가 살아남는다")
+    chk(_res_m["sei_neb/li_metal"]["Ea_forward_eV"] == 0.0806
+        and "preserved_from_previous_db" not in _res_m["sei_neb/li_metal"],
+        "[merge] 같은 루트의 옛 값(0.9)은 새 값(0.0806)이 **이긴다** — 보존 표시 없음")
+    chk(all(_res_m[k].get("preserved_from_previous_db") for k in ("v2/li2s", "v3/licl")),
+        "[merge] 보존된 항목엔 preserved_from_previous_db 가 붙는다 (이 기계가 검증 안 함)")
+    chk(_roots_m == ["sei_neb", "v2", "v3"],
+        "[merge] roots 는 합집합이다 — 축소가 원리적으로 불가능해 축소 가드가 필요 없다")
+    # ── 인용자격 계약 자동 적용 (2026-09-03 li_metal 실물) ────────────────────
+    _rc = {"a/x": {"tag": "x", "citable": True, "Ea_effective_eV": 0.08, "electronic_class": "metal",
+                   "vacancy_charge": "neutral"},
+           "b/y": {"tag": "y", "citable": True, "cell_convergence_status": "converged_3x3x3_vs_4x4x4"},
+           "c/z": {"tag": "z", "citable": True, "preserved_from_previous_db": True}}
+    for k, v in _rc.items():
+        if v.get("preserved_from_previous_db"):
+            continue
+        if v.get("citable") and (v.get("cell_convergence_status") in (None, "untested")):
+            v["scientific_status"] = "provisional_single_cell"; v["citable"] = False
+    chk(_rc["a/x"]["citable"] is False and _rc["a/x"].get("scientific_status") == "provisional_single_cell",
+        "[계약] 셀 수렴 미시험 항목은 경로 검사를 통과해도 citable=False (li_metal 이 '무자격 통과' 하던 자리)")
+    chk(_rc["b/y"]["citable"] is True,
+        "[계약] 셀 수렴이 시험된 항목은 그대로 citable (규칙이 과잉 적용되지 않는다)")
+    chk(_rc["c/z"]["citable"] is True,
+        "[계약] 다른 기계에서 보존된 항목은 손대지 않는다 (이 기계가 검증 안 함)")
+
     shutil.rmtree(td, ignore_errors=True)
     print("selftest " + ("PASS" if ok else "FAIL"))
     return 0 if ok else 1
@@ -367,6 +415,10 @@ def main():
                     help="회수할 루트. 콜론/쉼표로 여러 개 (기본 ROOTS 전부 · 환경변수 NEBW)")
     ap.add_argument("--allow-shrink", action="store_true",
                     help="루트가 줄어드는 쓰기를 허용한다 (기본은 거부 — 사고 방지)")
+    ap.add_argument("--merge", action="store_true",
+                    help="이번에 회수한 루트만 갱신하고, **다른 루트의 결과는 기존 db 에서 그대로 "
+                         "보존**한다 (합집합). 기계가 여럿이라 한 곳에서 전 루트를 못 볼 때 쓴다 "
+                         "— kgy 의 sei_neb 와 gabia 의 v2/v3 처럼. 축소 검사는 합집합이라 해당 없음.")
     ap.add_argument("--selftest", action="store_true")
     a = ap.parse_args()
     if a.selftest:
@@ -406,7 +458,7 @@ def main():
     #   run_sei_neb.sh 의 마지막 collect 가 db 를 v2 하나로 되돌렸다.
     #   실측: n_citable 1/8 → 0/2, v2_ccpath/li3nd (0.229, 인용 가능) 가 소멸.
     #   호출부는 고쳤지만, **여기서도 막는다** — 루트가 줄어드는 쓰기는 사고다.
-    if os.path.exists(OUT) and not a.allow_shrink:
+    if os.path.exists(OUT) and not a.allow_shrink and not a.merge:
         try:
             prev = json.load(open(OUT, encoding="utf-8"))
         except Exception:
@@ -473,6 +525,58 @@ def main():
         print(f"   ⛔ 이월 거부 {n_refused}건 — 프로토콜 지문이 달라졌다. 해당 결과는 "
               f"인용 불가로 잠갔다 (results[*].carry_refused 참조). 사람이 다시 판정할 것.")
 
+    # ── --merge (2026-09-03) — 다른 기계의 루트를 지우지 않는다 ─────────────────
+    #   kgy 는 sei_neb 하나만 보고 gabia 는 v2/v3 넷만 본다. 어느 쪽에서 돌려도 상대 루트가
+    #   "사라질 루트" 로 잡혀 쓰기가 거부됐다 (축소 가드가 옳게 막은 것). 합집합으로 쓴다:
+    #   이번에 회수한 루트의 결과는 새 것으로 **교체**, 나머지 루트는 기존 파일 그대로.
+    #   ⚠ 보존되는 항목은 이번에 **검증하지 않았다** — 그 루트의 파일을 이 기계가 못 본다.
+    #     그래서 그 항목에 `preserved_from_previous_db=True` 를 찍어 출처를 남긴다.
+    roots_written = [root_label(r) for r in roots]
+    if a.merge and os.path.exists(OUT):
+        try:
+            _prev_all = json.load(open(OUT, encoding="utf-8"))
+        except Exception:
+            _prev_all = {}
+        _now_labels = set(roots_written)
+        _kept = 0
+        for k, v in (_prev_all.get("results") or {}).items():
+            _lab = k.split("/", 1)[0]
+            if _lab in _now_labels:
+                continue                      # 이번에 회수한 루트 — 새 값이 이긴다
+            if k not in res:
+                res[k] = dict(v, preserved_from_previous_db=True)
+                _kept += 1
+        roots_written = sorted(set(_prev_all.get("roots") or []) | _now_labels)
+        print(f"   ⊕ --merge: 다른 루트의 결과 {_kept}건을 기존 db 에서 보존했다 "
+              f"(이번 기계가 검증하지 않음 · preserved_from_previous_db) · 루트 합집합 {roots_written}")
+
+    # ── 인용자격 계약(citability_contract_2026_08_16) 을 **코드로** 건다 ──────────
+    #   2026-08-16 기록: "두 결과가 셀 수렴 축에서 같은 상태(단일셀·미시험)인데 한쪽만
+    #   무자격 통과였다. 규칙은 scientific_status=provisional_single_cell → citable=false."
+    #   그 규칙을 사람이 li2s·li3nd 에 손으로 적용했고, 2026-09-03 li_metal 이 **정확히
+    #   같은 상태로 '✅ 인용 가능' 을 받았다** — 새 항목엔 손 판정이 없어 자동 판정이 그대로
+    #   나갔다. 계약은 규칙이니 코드가 건다: `cell_convergence_status` 가 없거나 untested 면
+    #   provisional 로 내리고 citable=False. 값은 지우지 않는다.
+    for k, v in res.items():
+        if v.get("preserved_from_previous_db"):
+            continue                              # 이 기계가 검증 안 한 항목은 손대지 않는다
+        if v.get("citable") and (v.get("cell_convergence_status") in (None, "untested")):
+            v["cell_convergence_status"] = v.get("cell_convergence_status") or "untested"
+            v["scientific_status"] = "provisional_single_cell"
+            v["absolute_citable"] = False
+            v["citable"] = False
+            v["citable_downgraded_by"] = ("citability_contract_2026_08_16 — 셀 수렴 미시험 "
+                                          "(단일 셀). 경로 검사(수렴·CI·대칭)는 통과했으므로 "
+                                          "**상 사이 비교**로는 쓸 수 있다. 절대값 인용은 셀 수렴 뒤.")
+            v.setdefault("allowed_statement",
+                         f"For the {v.get('tag')} model, the CI-NEB barrier is "
+                         f"{v.get('Ea_effective_eV')} eV under this finite-cell protocol "
+                         f"(electronic_class={v.get('electronic_class')}, "
+                         f"vacancy_charge={v.get('vacancy_charge')}).")
+            v.setdefault("forbidden_statement",
+                         "이 값을 수렴된 고유 물성으로 인용하거나 실험·문헌 값과 나란히 놓는 것. "
+                         "셀 수렴이 미시험이다.")
+
     ok = [r for r in res.values() if r.get("citable")]
     # ⛔⛔ 2026-08-11 자체검토 P0-6 — 옛 코드는 `if ok:` 일 때만 JSON 을 썼다.
     #   그래서 새 게이트가 콘솔에서 li2s 를 막아도 **db 파일은 안 건드려**,
@@ -492,7 +596,7 @@ def main():
             "warning": ("⚠ jellium 보정은 유한 셀 근사다 — 절대값은 셀 수렴 확인 뒤 인용할 것. "
                         "**상 사이 비교**가 이 값의 용도다. "
                         "⛔ BVSE 프록시 값과 같은 표에 놓지 말 것(단위는 같아도 다른 양이다)."),
-            "roots": [root_label(r) for r in roots],
+            "roots": roots_written,
             "key_format": "<루트라벨>/<상> — 같은 상이 루트마다 다른 홉이라 tag 만으로는 충돌한다",
             "n_citable": len(ok), "n_total": len(res),
             "retracted": len(ok) == 0,
