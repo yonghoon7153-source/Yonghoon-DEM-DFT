@@ -52,6 +52,7 @@ from __future__ import annotations
 
 import argparse
 import hashlib
+import inspect
 import json
 import os
 import platform
@@ -329,6 +330,32 @@ def dec_digest(x):
                           .encode("utf-8")).hexdigest()
 
 
+def ratification_record_problems(rt, digest_field="content_digest"):
+    """비준 기록(`ratification`)의 **형식** 위반 목록. → list[str] (빈 리스트 = 통과)
+
+    🔴 회신 BG P1-1 — 이 검사가 참조 문서(`ref_doc_state`)에만 있고 `decisions.json`
+      원문 검사에는 없었다. 거기서는 사실상 `state=="ratified"` 만 봐서 actor·시각·role
+      이 전부 없는 기록도 비준으로 통과했다 (리뷰어 재현: `{state, decision_digest}` 두
+      칸만 남겨도 strict·bytes 둘 다 ok). 규약을 두 벌 두면 반드시 갈라지므로 한 함수다.
+    ⛔ 못 하는 것: actor 가 **실재하는 사람인지**, 시각이 참인지는 모른다 — 형식만 본다.
+      그 앵커는 사람 확인 몫이다.
+    """
+    bad = []
+    if not isinstance(rt, dict):
+        return ["비준 기록이 객체가 아니다 (%s)" % type(rt).__name__]
+    _actor = rt.get("by") or rt.get("actor_id")
+    _when = rt.get("at") or rt.get("timestamp")
+    if not (isinstance(_actor, str) and _actor.strip()):
+        bad.append("actor(by/actor_id) 없음")
+    if not (isinstance(_when, str) and _when.strip()):
+        bad.append("timestamp(at/timestamp) 없음")
+    if not (isinstance(rt.get("state"), str) and isinstance(rt.get("role"), str)):
+        bad.append("state/role 이 문자열이 아니다")
+    if rt and not isinstance(rt.get(digest_field), str):
+        bad.append("%s 가 문자열이 아니다" % digest_field)
+    return bad
+
+
 def ref_doc_state(path):
     """참조 문서의 비준 상태 → dict. **`content_digest` 를 재계산해 대조한다.**
 
@@ -356,17 +383,7 @@ def ref_doc_state(path):
                 "has_ratification_record": False, "digest_recomputed": dec_digest(_j),
                 "digest_recorded": None, "digest_matches": False,
                 "why": "비준 기록이 객체가 아니다 (%s) — 형식 위반 (BF P0-4)" % type(_rt).__name__}
-    _rt_bad = []
-    _actor = _rt.get("by") or _rt.get("actor_id")
-    _when = _rt.get("at") or _rt.get("timestamp")
-    if not (isinstance(_actor, str) and _actor.strip()):
-        _rt_bad.append("actor(by/actor_id) 없음")
-    if not (isinstance(_when, str) and _when.strip()):
-        _rt_bad.append("timestamp(at/timestamp) 없음")
-    if not (isinstance(_rt.get("state"), str) and isinstance(_rt.get("role"), str)):
-        _rt_bad.append("state/role 이 문자열이 아니다")
-    if _rt and not isinstance(_rt.get("content_digest"), str):
-        _rt_bad.append("content_digest 가 문자열이 아니다")
+    _rt_bad = ratification_record_problems(_rt)
     # ⛔ 회신 BB P0-4 — 폐기 표시가 `지위` 같은 다른 칸에 있을 수 있다.
     _sup = any(isinstance(v, str) and
                ("SUPERSEDED" in v.upper() or "철회" in v or "폐기" in v)
@@ -3957,6 +3974,21 @@ C12_REQUIRED_REFS = {
 }
 _HEX64 = re.compile(r"^[0-9a-f]{64}$")
 
+# 🔴🔴 회신 BG P0-1 (2026-09-03) — **반송 계약이 정본이다.**
+#:  BF P1 로 "상 폴더 POTCAR 실물을 다시 해시한다" 를 넣었는데, 반송 계약은 그 파일을
+#:  **주고받지 않는다** (README:"POTCAR 파일 자체는 주고받지 않습니다" · SUBMIT 반송목록에
+#:  없음 · verify_bundle 은 POTCAR 를 FORBIDDEN_NAMES 로 취급 — VASP 라이선스). 그래서
+#:  계약대로 회수하면 16/16 잡이 RECEIPT_POTCAR_FILE_MISSING 으로 막히고, 외주 기계에서
+#:  도는 분석(상 폴더에 사본이 남아 있다)과 우리 재분석이 **서로 다른 판정**을 냈다.
+#:  ⇒ 결과를 본 뒤 게이트를 고치게 되는 구조 — 이 캠페인이 여덟 번 물린 바로 그 모양이다.
+#:  판정: 파일은 계약상 오지 않는다. POTCAR 결박은 **receipt 9열 + POTCAR_PROVENANCE +
+#:  root seal** 이 이미 하고 있고 실물 재해시는 그 위의 **덤**이다. 없음은 계약 이행이지
+#:  무결성 구멍이 아니므로 게이트에서 내린다. 있으면(외주처가 굳이 보냈으면) 반드시
+#:  맞아야 한다 — MISMATCH 는 게이트로 남는다.
+#:  ⚠ 이 상수와 `_return_contract` 의 per_job 목록은 selftest 가 **서로 결박**한다 —
+#:    한쪽만 바꾸면 시험이 깨진다. 계약을 바꾸려면 둘 다 바꿔야 한다.
+C12_POTCAR_RETURNED = False
+
 
 def _strict_true(v):
     """**불리언 True 만** 참으로 본다 — 문자열 "false" 는 파이썬에서 참이다."""
@@ -4193,6 +4225,10 @@ def governance_bytes_check(man):
                      % (_i, _rec[:12], _dg[:12]))
         if _rt.get("state") != "ratified":
             b.append("%s: 원문 ratification.state=%r — 비준이 아니다" % (_i, _rt.get("state")))
+        # 🔴 회신 BG P1-1 — 참조 문서와 **같은 형식 검사**를 결정 원문에도 건다.
+        _rt_bad = ratification_record_problems(_rt, digest_field="decision_digest")
+        if _rt_bad:
+            b.append("%s: 원문 비준 기록 형식 위반 — %s (BG P1-1)" % (_i, "; ".join(_rt_bad)))
         if x.get("decision_state") not in ("active", "ratified"):
             b.append("%s: 원문 decision_state=%r" % (_i, x.get("decision_state")))
         m = _md.get(_i) or {}
@@ -4965,7 +5001,11 @@ def _selftest_closure(chk):
     _gdec = []
     for _i in C12_REQUIRED_DECISIONS:
         _x = {"id": _i, "decision_state": "active", "title": "fixture " + _i}
-        _x["ratification"] = {"state": "ratified", "commit": "b" * 40,
+        # 🔴 회신 BG P1-1 — 실물 decisions.json 은 actor_id·timestamp·role 을 갖는다.
+        #   픽스처가 그걸 빼고 있어서 "state 만 봐도 통과" 를 시험이 굳히고 있었다.
+        _x["ratification"] = {"state": "ratified", "role": "scientific_owner",
+                              "actor_id": "fixture@selftest", "timestamp": "2026-09-01T00:00:00Z",
+                              "commit": "b" * 40,
                               "decision_digest": "sha256:" + dec_digest(_x)}
         _gdec.append(_x)
     (_GROOT / "governance" / "decisions.json").write_text(
@@ -5132,6 +5172,17 @@ def _selftest_closure(chk):
     chk(_r["manuscript_citable"] is False
         and any("digest" in x and "원문" in x for x in _r["blockers"]),
         "⛔음성 BE P0-4: decision 원문 내용이 비준 뒤 바뀌면(기록 digest ≠ 재계산) 인용 불가")
+    # ⓑ-2 🔴 회신 BG P1-1 (리뷰어 재현) — decision 원문의 비준 기록을 {state, digest} 로 깎는다.
+    #     종전엔 strict·bytes 둘 다 통과했다 (actor·시각·role 이 없어도 비준으로 셌다).
+    def _strip_rt(j):
+        for _d in j["decisions"]:
+            _d["ratification"] = {"state": _d["ratification"]["state"],
+                                  "decision_digest": _d["ratification"]["decision_digest"]}
+    _r = _cs(_GBOK, root=_tampered_root("gov_rt_strip", "decisions.json", _strip_rt))
+    chk(_r["manuscript_citable"] is False
+        and any("비준 기록 형식 위반" in x for x in _r["blockers"]),
+        "⛔음성 BG P1-1 (리뷰어 재현): decision 원문의 비준 기록을 {state, digest} 로 깎으면 "
+        "막힌다 — actor·시각·role 없는 비준은 비준이 아니다 (참조 문서와 **같은** 검사)")
     # ⓒ 원문 사본이 없는 번들(bundled_sources 없음) 은 확인 못 한 것 = 통과 아님
     _r = _cs({k: v for k, v in _GBOK.items() if k != "bundled_sources"})
     chk(_r["manuscript_citable"] is False
@@ -6391,8 +6442,12 @@ def selftest_k() -> int:
     chk(any("RECEIPT_POTCAR_FILE_MISMATCH" in g for g in _erg(_ok_rcpt)),
         "⛔음성 BF P1: 상 폴더 POTCAR 실물 해시 ≠ receipt 9열이면 막힌다 (receipt 문자열만 믿지 않는다)")
     (_rjp / "static" / "POTCAR").unlink()
-    chk(any("RECEIPT_POTCAR_FILE_MISSING" in g for g in _erg(_ok_rcpt)),
-        "⛔음성 BF P1: 반송물에 상 폴더 POTCAR 가 없으면 대조 불가 = 통과 아님")
+    # 🔴 회신 BG P0-1 — 계약(`_return_contract`)이 POTCAR 를 반송 목록에 넣지 **않으므로**
+    #   없음은 게이트가 아니다. BF P1 의 이 시험은 계약과 어긋나 16/16 잡을 막고 있었다.
+    chk(not any("RECEIPT_POTCAR_FILE_MISSING" in g for g in _erg(_ok_rcpt)),
+        "🔴 BG P0-1: 반송 계약이 POTCAR 를 요구하지 않으므로 **없음은 게이트가 아니다** "
+        "— 계약대로 회수한 트리에서 전 잡이 막히던 것을 푼다 (결박은 receipt 9열 + "
+        "POTCAR_PROVENANCE + root seal 이 이미 한다)")
     (_rjp / "static" / "POTCAR").write_bytes(_PBYTES)          # 원상복구 — 아래 양성이 쓴다
     chk(_erg(_ok_rcpt) == [], "AV P0-2 양성: 봉인과 같은 해시의 receipt 는 게이트 0건")
     chk(any("RECEIPT_MISSING" in g for g in _erg(None)),
@@ -7909,8 +7964,12 @@ def executable_receipt_gates(job_dir, rel, man, executed_phases):
         _pf_path = os.path.join(job_dir, c[1], "POTCAR")
         if _HEX64.match(c[8] or ""):
             if not os.path.isfile(_pf_path):
-                g.append("RECEIPT_POTCAR_FILE_MISSING(%s 상: 반송물에 %s/POTCAR 가 없어 receipt 의 "
-                         "해시를 실물과 대조할 수 없다 — 확인 못 함은 통과가 아니다 · BF P1)" % (c[1], c[1]))
+                # 🔴 회신 BG P0-1 — 계약상 POTCAR 는 반송되지 않는다. 없음은 이행이지 구멍이
+                #   아니다 (결박은 9열 + PROVENANCE + root seal). 계약을 바꿔 반송을 요구하는
+                #   날에는 C12_POTCAR_RETURNED 를 True 로 — 그때만 없음이 게이트다.
+                if C12_POTCAR_RETURNED:
+                    g.append("RECEIPT_POTCAR_FILE_MISSING(%s 상: 반송 계약이 POTCAR 를 요구하는데 "
+                             "%s/POTCAR 가 없어 receipt 해시를 실물과 대조할 수 없다)" % (c[1], c[1]))
             else:
                 _pf_h = hashlib.sha256(open(_pf_path, "rb").read()).hexdigest()
                 if _pf_h != c[8]:
@@ -10932,6 +10991,80 @@ def _closure_estimand(man, results, E, emol, jobs, merge_info=None):
     return out
 
 
+def preflight_static_physics(man):
+    """번들만으로 판정 가능한 **물리 결박**을 결과 전에 친다 → (위반, 검사한 것, 건너뛴 것).
+
+    🔴 회신 BG P1-4 (2026-09-03) — BF 가 넣은 정적 검사(protocol exact map · 진공 c1/c2 ·
+      기체 절대관계)가 **최종 분석에서만** 돌았다. 그 시점은 ≈300 h 의 계산이 끝난 뒤다.
+      회신 BD P0-4 는 "비용 발생 전에 닫는다" 를 요구했는데, 전부 몇 초짜리 정적 검사라
+      `--check_governance` 에서 돌면 된다. 여기가 그 자리다.
+    ⚠ **봉인된 주장만** 친다 — estimand 를 봉인하지 않은 탐색용 묶음에 네 경로를 요구하면
+      돌지 못한다. 대신 건너뛴 것을 **돌려주고 호출부가 화면에 적는다** (건너뛴 검사를
+      통과로 읽지 않게 — 이 리포의 오래된 규율이다).
+    ⛔ 못 하는 것: 에너지·수렴·k 는 못 본다 (결과가 없다). 기하와 계약만이다.
+    """
+    bad, done, skipped = [], [], []
+    _keys = ((man.get("estimand") or {}).get("job_keys")
+             or man.get("estimand_job_keys") or {})
+    if not _keys:
+        skipped.append("protocol exact map (estimand_job_keys 미봉인 — 탐색용 묶음)")
+    else:
+        _pm, _pw = _protocol_exact_map(man)
+        if _pm is None:
+            bad.append("protocol exact map 을 읽을 수 없다 (%s)" % _pw)
+        elif dict(_keys) != dict(_pm):
+            bad.append("estimand_job_keys 가 비준 protocol 의 정확한 네 경로와 다르다 "
+                       "(manifest %s ≠ protocol %s)"
+                       % (sorted(_keys.items()), sorted(_pm.items())))
+        else:
+            done.append("protocol exact map (네 경로가 비준 원문과 정확히 같다)")
+    _vc = man.get("vacuum_convergence") or {}
+    if not _vc:
+        skipped.append("진공 c1/c2 (vacuum_convergence 미봉인)")
+    else:
+        _pvc, _pvw = _protocol_vacuum_cells(man)
+        if _pvc is None:
+            bad.append("진공 시험 셀을 봉인해 놓고 protocol 원문에서 못 읽는다 (%s)" % _pvw)
+        else:
+            _okv = True
+            for _i, _k in ((0, "c1_A"), (1, "c2_A")):
+                try:
+                    _got = float(_vc.get(_k))
+                except (TypeError, ValueError):
+                    bad.append("vacuum_convergence.%s 가 수가 아니다 (%r)" % (_k, _vc.get(_k)))
+                    _okv = False
+                    continue
+                if abs(_got - float(_pvc[_i])) > 1e-6:
+                    bad.append("vacuum_convergence.%s=%s ≠ protocol %s" % (_k, _got, _pvc[_i]))
+                    _okv = False
+            if _okv:
+                done.append("진공 c1/c2 (%s · %s — protocol 절대값과 일치)" % (_pvc[0], _pvc[1]))
+    # 기체 조각은 planned 의 `refs/mol__<frag>__box<NN>` 키에서 읽는다 (분석기와 같은 출처).
+    _pl = man.get("planned") or {}
+    _gfr = sorted({k.split("__")[1] for k in _pl
+                   if k.startswith("refs/mol__") and k.count("__") >= 2})
+    _rt0 = man.get("_root") or "."
+    for _f in _gfr:
+        # ⚠ meta 는 `planned` 가 아니라 잡의 **job.json** 에서 읽는다 — 분석기 production
+        #   경로가 보는 것이 그 파일이다 (planned 에는 phases 만 있고 지문이 없다).
+        _mt = {}
+        for _b in ("20", "24"):
+            _jf = os.path.join(_rt0, "refs", "mol__%s__box%s" % (_f, _b), "job.json")
+            try:
+                with open(_jf, encoding="utf-8") as _fh:
+                    _mt[_b] = json.load(_fh)
+            except Exception:                                # noqa: BLE001
+                _mt[_b] = {}
+                bad.append("기체 %s box%s: job.json 을 읽을 수 없다 (%s)" % (_f, _b, _jf))
+        bad += ["기체 %s: %s" % (_f, _x) for _x in
+                _gas_bytes_check(man, _f, metas=_mt, planned=_pl)]
+    if _gfr:
+        done.append("기체 절대관계 %s (COM 중앙 · span+margin · 내부기하 · phase 집합)" % _gfr)
+    else:
+        skipped.append("기체 절대관계 (planned 에 refs/mol__*__box* 가 없다)")
+    return bad, done, skipped
+
+
 def main():
     if "--selftest" in sys.argv:
         return selftest_k()
@@ -11021,14 +11154,21 @@ def main():
             _v = (_gb0.get("reference_files_state") or {}).get(_p) or {}
             print("  ref      %-40s role=%-13s ratified=%s"
                   % (_p.rsplit("/", 1)[-1], _v.get("role"), _v.get("ratified")))
+        # 🔴 회신 BG P1-4 — 번들만으로 되는 **물리 결박**도 여기서 친다 (≈300 h 뒤가 아니라).
+        _sp_bad, _sp_done, _sp_skip = preflight_static_physics(man)
+        _bad_g0 += ["[정적 물리] " + _x for _x in _sp_bad]
         if _bad_g0:
             print("  ⛔ **거버넌스가 서지 않는다 — 한 잡도 돌리지 않는다:**")
             for _x in _bad_g0[:12]:
                 print("     · %s" % _x)
             return 2
         print("  ✔ 거버넌스 통과 — 비용을 써도 되는 상태다")
+        for _x in _sp_done:
+            print("  ✔ 정적 물리: %s" % _x)
+        for _x in _sp_skip:
+            print("  ⚠ 정적 물리 **건너뜀** (통과 아님): %s" % _x)
         print("  ⛔ 이 검사가 **못 하는 것**: POTCAR 신원은 보지 않는다 "
-              "(`--check_attestation` 의 몫) · 계산이 옳은지는 분석기의 몫이다.")
+              "(`--check_attestation` 의 몫) · 에너지·수렴·k 는 결과가 없어 못 본다.")
         return 0
     if "--check_attestation" in sys.argv:
         # ⚠ 생산 **전**이라 잡 반송이 없다 — jobs={} 로 부른다. 그러면 잡 사이
@@ -12956,6 +13096,9 @@ export EXPECT_ZIP_SHA256=<메일 본문의 ZIP SHA256>   # **필수** — 없으
 # ⛔ 자유형 launcher 문자열(VASP_CMD·VASP_LAUNCHER)은 폐지됐습니다 (회신 AV P0-2) —
 #    문자열 검사는 우회가 가능해, 종류와 수만 받고 실행 명령은 러너가 조립합니다.
 export VASP_LAUNCHER_KIND=mpirun            # mpirun|mpiexec|srun|none|wrapper
+export LAUNCHER_BIN=/abs/path/to/mpirun     # **필수** — KIND 가 mpirun|mpiexec|srun 이면
+                                            #   절대경로가 있어야 합니다 (PATH 에서 찾지
+                                            #   않습니다 · 회신 AZ P0-2). 없으면 exit 2.
 export VASP_NPROC=%d                        # 랭크 수
 export VASP_EXE=/abs/path/to/vasp_std       # 실행파일 절대경로 (봉인 대상)
 bash run_staged.sh 1     # census → POTCAR 조립+봉인 → 봉인 census → 1단계 → 판정
@@ -13321,7 +13464,7 @@ sbatch --array=1-$(wc -l < JOBS.txt)%%%%%d \\
   j=$(sed -n "${SLURM_ARRAY_TASK_ID}p" JOBS.txt)
   cd "$j"
   PP=/path/to/potpaw_PBE.54 POTCAR_ALLOWLIST=/abs/site_allow.txt bash POTCAR_ASSEMBLE.sh
-  VASP_LAUNCHER_KIND=srun VASP_NPROC=%d VASP_EXE=/abs/path/vasp_std bash run_job.sh'""" % (a.concurrency, a.concurrency,
+  VASP_LAUNCHER_KIND=srun LAUNCHER_BIN=/abs/path/to/srun VASP_NPROC=%d VASP_EXE=/abs/path/vasp_std bash run_job.sh'""" % (a.concurrency, a.concurrency,
                                                         a.cores, a.cores)))
 
     _submit_block = ("""## 실행 (이 경로 하나뿐입니다)
@@ -13334,6 +13477,7 @@ export EXPECT_MANIFEST_SHA256=<메일 본문의 MANIFEST SHA256>                
 export EXPECT_ZIP_SHA256=<메일 본문의 ZIP SHA256>                          # **필수**
 # ⛔ 자유형 launcher 문자열(VASP_CMD·VASP_LAUNCHER)은 폐지됐습니다 (회신 AV P0-2)
 export VASP_LAUNCHER_KIND=mpirun            # mpirun|mpiexec|srun|none|wrapper
+export LAUNCHER_BIN=/abs/path/to/mpirun     # **필수** (PATH 에서 찾지 않습니다) — 없으면 exit 2
 export VASP_NPROC=%d                        # 랭크 수
 export VASP_EXE=/abs/path/to/vasp_std       # 봉인 대상 실행파일
 bash run_staged.sh 1     # census → 조립+봉인 → 봉인 census → 1단계 → 판정
@@ -16818,6 +16962,28 @@ def selftest() -> int:
         and '{k.rsplit("/", 1)[-1].split("__")[1]' not in _AN,
         "BB P1: production 기대 수 계산에서 **잡 키 파싱**이 사라졌다 "
         "(C3 Edisp · J_f 두 자리 — 선택은 구조화 필드인데 기대만 문자열이었다)")
+    # ══ 회신 BG P0-1 — **반송 계약 ↔ 분석기 필수 파일 집합 결박** ═══════════════
+    #   BF P1 이 "상 폴더 POTCAR 실물"을 필수로 만들었는데 계약은 그 파일을 안 준다.
+    #   계약대로 회수하면 16/16 잡이 막혔다. 두 쪽을 코드로 묶어 다시 갈라지지 못하게 한다.
+    _rc_pj = " ".join(_return_contract({"planned": {}, "staged_runner": True})["per_job"])
+    _rc_says_potcar = "POTCAR (" in _rc_pj or "POTCAR —" in _rc_pj or "/POTCAR" in _rc_pj
+    chk(_rc_says_potcar == _ns["C12_POTCAR_RETURNED"],
+        "🔴 BG P0-1 결박: 반송 계약의 per_job 이 POTCAR **파일**을 요구하는가(%s) 와 분석기의 "
+        "C12_POTCAR_RETURNED(%s) 가 같다 — 한쪽만 바꾸면 여기서 깨진다"
+        % (_rc_says_potcar, _ns["C12_POTCAR_RETURNED"]))
+    chk(not _ns["C12_POTCAR_RETURNED"]
+        and "POTCAR 파일 자체는 주고받지 않습니다" in inspect.getsource(_readme_sp),
+        "BG P0-1: 지금 계약은 **미반송**이고 README 도 그렇게 적는다 (세 문장이 같다)")
+    # ══ 회신 BG P1-2 — 문서의 실행 예시가 **그대로 돌아가는가** ══════════════════
+    #   BF P1 로 단일 잡 예시에만 LAUNCHER_BIN 을 넣었고, C-12 가 실제로 보내는
+    #   staged 블록(README·SUBMIT)에는 빠져 있었다 → 문서대로 치면 run_staged.sh exit 2.
+    for _who, _src in (("README(staged)", inspect.getsource(_readme_sp)),
+                       ("SUBMIT_CONTRACT", inspect.getsource(_submit_contract))):
+        _blocks = [b for b in _src.split("```") if "run_staged.sh 1" in b]
+        chk(bool(_blocks) and all(("LAUNCHER_BIN" in b) for b in _blocks),
+            "BG P1-2 (%s): staged 실행 예시가 `LAUNCHER_BIN` 을 적는다 — KIND 가 "
+            "mpirun|mpiexec|srun 이면 러너가 절대경로를 요구하고, 없으면 문서대로 실행해도 "
+            "즉시 exit 2 다" % _who)
     _ns2 = {}
     exec(compile(ANALYZER, "<analyzer-template>", "exec"), _ns2)
     _epk = _ns2["_expected_pose_keys"]
@@ -19402,6 +19568,32 @@ def _selftest_e2e() -> int:
         {"ptfe_dimer": -10.0}, jobs)
     chk(ce is None or ce.get("cohort_fields", {}).get("incoherent") == 0,
         "E2. 생산 번들의 잡 키가 cohort 정합성을 통과한다 — ② 사고의 회귀시험")
+
+    # ── E3. 🔴 회신 BG P1-4 — **정적 물리 결박을 결과 전에** (≈300 h 를 아끼는 자리) ──
+    #   BF 가 넣은 exact map · 진공 c1/c2 · 기체 절대관계는 최종 분석에서만 돌았다.
+    #   전부 몇 초짜리 정적 검사이므로 `--check_governance` 에서 돈다. **생산 모양의
+    #   실물 번들**에 걸어 세 검사가 다 "검사함"으로 나오는지 본다 (건너뜀 = 통과 아님).
+    _man_e3 = dict(man, _root=str(out))
+    _sp_bad, _sp_done, _sp_skip = ns["preflight_static_physics"](_man_e3)
+    chk(not _sp_bad, "🔴 BG P1-4: 생산 번들이 정적 물리 결박을 통과한다 (%s)" % _sp_bad[:2])
+    chk(any("기체" in d for d in _sp_done),
+        "BG P1-4: 기체 절대관계가 **실제로 검사됐다** (건너뛴 것을 통과로 세지 않는다) "
+        "· 검사 %s · 건너뜀 %s" % (_sp_done, _sp_skip))
+    #   ⛔음성 — 기체 POSCAR 를 중심 밖으로 밀면 결과 없이도 잡힌다
+    _gp_e3 = sorted(out.rglob("refs/mol__*__box20/POSCAR"))
+    if _gp_e3:
+        _txt0 = _gp_e3[0].read_text()
+        _ln = _txt0.splitlines()
+        # ⚠ 원소줄이 "C F" 라 첫 글자만 보면 걸린다 (PTFE) — 좌표계 줄을 **단어로** 찾는다
+        _hd = next(i for i, l in enumerate(_ln)
+                   if l.strip().lower().startswith(("direct", "cartesian")))
+        _p0 = _ln[_hd + 1].split()
+        _ln[_hd + 1] = " %.10f %.10f %.10f" % (float(_p0[0]) + 0.20, float(_p0[1]), float(_p0[2]))
+        _gp_e3[0].write_text("\n".join(_ln) + "\n")
+        _b2, _, _ = ns["preflight_static_physics"](_man_e3)
+        _gp_e3[0].write_text(_txt0)
+        chk(bool(_b2), "⛔음성 BG P1-4: 기체 POSCAR 원자 하나를 0.2 Å 밀면 **계산 전에** "
+                       "잡힌다 — 300 h 뒤가 아니다 (%s)" % [x[:60] for x in _b2[:2]])
 
     # ── F. mutation — 흔들면 **깨져야** 한다 ────────────────────────────────
     def mut(name, fn):
