@@ -11,7 +11,7 @@ verificationStatus: unverified
 explored: false
 authoredBy: agent
 effort: medium
-claimType: methodological
+claimType: prescriptive
 evidenceScope: single-source
 ---
 
@@ -148,7 +148,7 @@ grep -rl "e_above_hull" kb/ | head
 (코드 규율 사다리 ②: 이미 있다). 새 스크립트를 쓰지 않는다.
 
 - 기계: gabia (MP 인터넷 + UMA + GPU). ⚠ **pw.x 와 동시 실행 금지** — `nvidia-smi` 먼저.
-- 산출: `db/properties/zn_cu_hull_2026_09_03.json` + Origin-ready CSV
+- 산출: `db/properties/zn_cu_hull_2026_09_03.json` + Origin-ready CSV <!-- lint-skip-path: 계산 후 생성될 파일 — 아직 없음 -->
 - 등록: `db/governance/decisions.json` 에 `proposed` 로 (사람이 ratify 해야 active)
 
 ## 8. ⛔ 이 카드가 **못 하는 것**
