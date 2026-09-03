@@ -2,7 +2,7 @@
 title: 22p 결과는 물리인가 fitting degeneracy 인가
 description: "Is the seminar 22p LLI/LAM decomposition (LAM_PE=LAM_NE=13%, LLI=17%) real physics or an artifact of non-identifiability"
 created: 2026-08-11
-updated: 2026-08-20
+updated: 2026-09-03
 type: research-question
 tags: [battery, degradation, research]
 sources: [raw/repositories/degradation-degeneracy-audit.md]
@@ -82,3 +82,11 @@ LAM_PE ≈ LAM_NE 는 물리가 아니라 **flat valley 방향에서 두 전극�
     `docs/09_22P_GAP.md` §10.
   - 수치는 이 카드에 옮기지 않는다 — 정본은 artifact + `docs/RESULTS*.md`
     ([[provenance-fail-closed-verification]] 원칙).
+- **[2026-09-03]** 인접 질문이 하나 갈라져 나왔다:
+  [[pvs-sev-lli-lampe-separability]]. 이 카드가 "full-cell OCV **하나**로
+  가를 수 있는가" 를 묻는 데 비해, 그쪽은 "**관측을 늘리면** 갈리는가" 를
+  묻는다 — 2026-09-02 세미나가 제안한 [[pvs-sev-degradation-mode-features]]
+  두 개가 그 늘린 관측의 구체적 후보다. 두 카드는 같은 축의 앞뒤이고, 그쪽
+  답이 이 카드의 "어떤 측정에서 의미를 갖는가" 에 직접 들어온다.
+  이 카드의 상태는 바뀌지 않는다 (`active` 유지) — 새 근거는 아직 없고,
+  갈라진 질문만 등록했다.

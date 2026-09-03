@@ -1,7 +1,7 @@
 # Wiki Index
 
 > Content catalog. Every wiki page listed under its type with a one-line summary.
-> Last updated: 2026-08-11 | Total pages: 10
+> Last updated: 2026-09-03 | Total pages: 12
 
 ## Entities
 
@@ -13,6 +13,7 @@
 - [[provenance-fail-closed-verification]] — 13 라운드 게이트 리뷰에서 증류된 재현성 설계 원칙 7가지 (서명·재계산 렌더·봉인 읽기·fail-closed·신뢰 경계).
 - [[agent-harness-patterns]] — ponytail·caveman·superpowers 에서 무엇을 채택·각색·기각했는가와 그 근거 (결과: 루트 CLAUDE.md + 커맨드 4종).
 - [[llm-wiki-pattern]] — Karpathy 식 LLM wiki: raw 불변층 + frontmatter progressive disclosure + wikilink 그래프 + mothership/satellite (이 위키의 근거 패턴).
+- [[pvs-sev-degradation-mode-features]] — ICA 할선 기울기(PVS)와 스케일링 EOC 전압강하(SEV): 정의·물리 귀속·모드별 부호 구조, 그리고 두 부호 패턴이 같다는 관측.
 
 ## Comparisons
 
@@ -25,6 +26,7 @@
 ## Questions
 
 - [[22p-physics-or-degeneracy]] — 핵심 연구 질문 카드 (status: active): 22p 분해는 물리인가 flat-valley 결합의 산물인가.
+- [[pvs-sev-lli-lampe-separability]] — 질문 카드 (status: open): PVS·SEV 두 feature 가 LLI 와 LAM_PE 를 실제로 가르는가, 아니면 같은 대비 하나를 재는가.
 
 ## Syntheses
 
