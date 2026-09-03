@@ -1,13 +1,13 @@
 ---
 title: "리뷰 사슬 색인 — 프롬프트↔회신 (자동 생성)"
-date: 2026-09-01
-updated: 2026-09-01
+date: 2026-09-03
+updated: 2026-09-03
 tags: [index, review, codex]
 status: 자동생성
 kind: index
 confidence: high
 verificationStatus: verified
-verifiedAt: 2026-09-01
+verifiedAt: 2026-09-03
 verifiedBy: tools/kb_wiki.py reviews --write (산출물에서 재구성)
 explored: false
 authoredBy: agent
@@ -37,12 +37,12 @@ evidenceScope: multi-source-primary
 | AA | 2026-08-29 | `codex_AA_prompt_stageA_v5_regate_2026_08_29.md` | — | 발송 완료 — 회신 AA 접수, 후속은 codex_AB_prompt_stageA_v9_regate_2026_08_29.md | 판정 인용 7회 |
 | AB | 2026-08-29 | `codex_AB_prompt_stageA_v9_regate_2026_08_29.md` | — | 회신 수령 (원문 파일 없음 — 근거: AD (Stage A v10)) | 판정 인용 7회 |
 | Q2 | 2026-08-29 | `codex_Q2_prompt_claim_and_normalization_2026_08_29.md` | — | 발송 대기 | 판정 인용 1회 |
-| S | 2026-08-29 | `codex_S_prompt_t13_msd_length_2026_08_29.md` | — | 회신 수령 (원문 파일 없음 — 근거: 판정 등재 db/properties/t13_msd_length_verdict_2026_08_29.json) | ⚠ 인용 13회 — 라벨 재사용이라 **증거 아님** |
-| T | 2026-08-29 | `codex_T_prompt_sdcp_binding_energy_path_2026_08_29.md` | — | 회신 수령 (원문 파일 없음 — 근거: T P0-1 술포네이트 기전 철회가 db 에 등재) | ⚠ 인용 18회 — 라벨 재사용이라 **증거 아님** |
-| U | 2026-08-29 | `codex_U_prompt_neutral_close_plan_2026_08_29.md` | — | 회신 수령 (원문 파일 없음 — 근거: U P0-2 가 회신 W 프롬프트에 인용) | ⚠ 인용 11회 — 라벨 재사용이라 **증거 아님** |
-| V | 2026-08-29 | `codex_V_prompt_closure_incar_audit_2026_08_29.md` | — | 발송 대기 | 판정 인용 2회 |
-| W | 2026-08-29 | `codex_W_prompt_mlip_selector_validity_2026_08_29.md` | — | 발송 대기 | — |
-| X | 2026-08-29 | `codex_X_prompt_prospective_bundle_ready_2026_08_29.md` | `codex_X_bundle_reply_2026_08_29.md` | 회신 수령 — `kb/reviews/codex_X_bundle_reply_2026_08_29.md` | 같은 라벨 · 주제 토큰 일치 ['bundle']; 판정 인용 5회 |
+| S | 2026-08-29 | `codex_S_prompt_t13_msd_length_2026_08_29.md` | — | 회신 수령 (원문 파일 없음 — 근거: 판정 등재 db/properties/t13_msd_length_verdict_2026_08_29.json) | ⚠ 인용 14회 — 라벨 재사용이라 **증거 아님** |
+| T | 2026-08-29 | `codex_T_prompt_sdcp_binding_energy_path_2026_08_29.md` | — | 회신 수령 (원문 파일 없음 — 근거: T P0-1 술포네이트 기전 철회가 db 에 등재) | ⚠ 인용 17회 — 라벨 재사용이라 **증거 아님** |
+| U | 2026-08-29 | `codex_U_prompt_neutral_close_plan_2026_08_29.md` | — | 회신 수령 (원문 파일 없음 — 근거: U P0-2 가 회신 W 프롬프트에 인용) | ⚠ 인용 23회 — 라벨 재사용이라 **증거 아님** |
+| V | 2026-08-29 | `codex_V_prompt_closure_incar_audit_2026_08_29.md` | — | 발송 대기 | ⚠ 인용 13회 — 라벨 재사용이라 **증거 아님** |
+| W | 2026-08-29 | `codex_W_prompt_mlip_selector_validity_2026_08_29.md` | — | 발송 대기 | ⚠ 인용 10회 — 라벨 재사용이라 **증거 아님** |
+| X | 2026-08-29 | `codex_X_prompt_prospective_bundle_ready_2026_08_29.md` | `codex_X_bundle_reply_2026_08_29.md` | 회신 수령 — `kb/reviews/codex_X_bundle_reply_2026_08_29.md` | 같은 라벨 · 주제 토큰 일치 ['bundle']; ⚠ 인용 13회 — 라벨 재사용이라 **증거 아님** |
 | AC | 2026-08-30 | `codex_AC_prompt_manuscript_v8_crosscheck_2026_08_30.md` | — | 발송전 | — |
 | AD | 2026-08-30 | `codex_AD_prompt_stageA_v10_final_regate_2026_08_30.md` | — | 발송전 | — |
 | AE | 2026-08-30 | `codex_AE_prompt_stageA_v13_submit_gate_2026_08_30.md` | — | 발송전 | — |
@@ -59,15 +59,25 @@ evidenceScope: multi-source-primary
 | AS | 2026-08-31 | `codex_AS_prompt_c12_v16_2026_08_31.md` | — | 발송 대기 | 판정 인용 2회 |
 | AT | 2026-08-31 | `codex_AT_prompt_c12_v17_2026_08_31.md` | `codex_AT_reply_c12_v17_2026_08_31.md` | 회신 수령 — `kb/reviews/codex_AT_reply_c12_v17_2026_08_31.md` | 회신 본문의 `요청:` 역링크; 판정 인용 5회 |
 | AU | 2026-08-31 | `codex_AU_prompt_c12_v18_2026_08_31.md` | `codex_AV_reply_c12_v18_2026_08_31.md` | 회신 수령 — `kb/reviews/codex_AV_reply_c12_v18_2026_08_31.md` | 회신 본문의 `요청:` 역링크 |
-| S | 2026-08-31 | `codex_S_prompt_backbone_polaron_estimand_2026_08_31.md` | — | 회신 수령 (원문 파일 없음 — 근거: 후속 T (폴라론 pilot seeds)) | ⚠ 인용 13회 — 라벨 재사용이라 **증거 아님** |
-| T | 2026-08-31 | `codex_T_prompt_polaron_pilot_seeds_2026_08_31.md` | `codex_T_reply_polaron_pilot_2026_08_31.md` | 회신 수령 — `kb/reviews/codex_T_reply_polaron_pilot_2026_08_31.md` | 같은 라벨 · 주제 토큰 일치 ['pilot', 'polaron']; ⚠ 인용 18회 — 라벨 재사용이라 **증거 아님** |
-| U | 2026-08-31 | `codex_U_prompt_polaron_S0_2026_08_31.md` | `codex_U_reply_polaron_S0_2026_09_01.md` | 발송 대기 (⚠ 라벨 U 가 재사용됨 — 인용 횟수는 codex_U_prompt_neutral_close_plan 과 합산되므로 근거가 아니다) | 회신 본문의 `요청:` 역링크; ⚠ 인용 11회 — 라벨 재사용이라 **증거 아님** |
-| AW | 2026-09-01 | `codex_AW_prompt_webapp_audit_2026_09_01.md` | `codex_AW_reply_webapp_audit_2026_09_01.md` | 회신 수령 — NO-GO · `kb/reviews/codex_AW_reply_webapp_audit_2026_09_01.md` · 이행 중 | 회신 본문의 `요청:` 역링크; 판정 인용 1회 |
+| S | 2026-08-31 | `codex_S_prompt_backbone_polaron_estimand_2026_08_31.md` | — | 회신 수령 (원문 파일 없음 — 근거: 후속 T (폴라론 pilot seeds)) | ⚠ 인용 14회 — 라벨 재사용이라 **증거 아님** |
+| T | 2026-08-31 | `codex_T_prompt_polaron_pilot_seeds_2026_08_31.md` | `codex_T_reply_polaron_pilot_2026_08_31.md` | 회신 수령 — `kb/reviews/codex_T_reply_polaron_pilot_2026_08_31.md` | 같은 라벨 · 주제 토큰 일치 ['pilot', 'polaron']; ⚠ 인용 17회 — 라벨 재사용이라 **증거 아님** |
+| U | 2026-08-31 | `codex_U_prompt_polaron_S0_2026_08_31.md` | `codex_U_reply_polaron_S0_2026_09_01.md` | 회신 수령 — 후속 V (P0 9건 이행 완료) | 회신 본문의 `요청:` 역링크; ⚠ 인용 23회 — 라벨 재사용이라 **증거 아님** |
+| AW | 2026-09-01 | `codex_AW_prompt_webapp_audit_2026_09_01.md` | `codex_AW_reply_webapp_audit_2026_09_01.md` | 회신 수령 — NO-GO · `kb/reviews/codex_AW_reply_webapp_audit_2026_09_01.md` · 이행 중 | 회신 본문의 `요청:` 역링크; 판정 인용 6회 |
 | AX | 2026-09-01 | `codex_AX_prompt_lpsocl_600K_amendment_2026_09_01.md` | — | 발송 대기 | — |
 | AY | 2026-09-01 | `codex_AY_prompt_c12_v19_2026_09_01.md` | — | 발송 대기 | 판정 인용 5회 |
-| AZ | 2026-09-01 | `codex_AZ_prompt_c12_v20_2026_09_01.md` | — | 발송 대기 | — |
+| AZ | 2026-09-01 | `codex_AZ_prompt_c12_v20_2026_09_01.md` | — | 발송 대기 | 판정 인용 14회 |
+| V | 2026-09-01 | `codex_V_prompt_polaron_S0_2026_09_01.md` | `codex_Y_reply_polaron_S0_2026_09_03.md` | 회신 수령 — 후속 W (P0 5건 이행) | ⚠ 라벨 어긋남(V→Y) · 주제 slug 완전일치; ⚠ 인용 13회 — 라벨 재사용이라 **증거 아님** |
+| BA | 2026-09-02 | `codex_BA_prompt_c12_v21_2026_09_02.md` | — | 회신 수령 — 후속 BB | 판정 인용 8회 |
+| BB | 2026-09-02 | `codex_BB_prompt_c12_v22_2026_09_02.md` | — | 발송 대기 | 판정 인용 5회 |
+| BC | 2026-09-02 | `codex_BC_prompt_c12_v23_2026_09_02.md` | — | 발송 대기 | 판정 인용 7회 |
+| W | 2026-09-02 | `codex_W_prompt_polaron_S0_2026_09_02.md` | — | 발송 대기 | ⚠ 인용 10회 — 라벨 재사용이라 **증거 아님** |
+| X | 2026-09-02 | `codex_X_prompt_polaron_S0_2026_09_02.md` | — | 발송 대기 | ⚠ 인용 13회 — 라벨 재사용이라 **증거 아님** |
+| BF | 2026-09-03 | `codex_BF_prompt_c12_v29_2026_09_03.md` | `codex_BF_reply_c12_v29_2026_09_03.md` | 발송 대기 | 같은 라벨 · 주제 토큰 일치 ['c12', 'v29'] |
 
 ## 🔴 모순 (status 는 대기인데 증거는 회신 수령)
 
 - `codex_AY_prompt_c12_v19_2026_09_01.md` [발송 대기] — 판정이 5회 인용됐다 — 회신을 받은 것으로 보인다 (원문 파일 없음)
-- `codex_U_prompt_polaron_S0_2026_08_31.md` [발송 대기 (⚠ 라벨 U 가 재사용됨 — 인용 횟수는 codex_U_prompt_neutral_close_plan 과 합산되므로 근거가 아니다)] — 회신 파일이 있다: codex_U_reply_polaron_S0_2026_09_01.md
+- `codex_AZ_prompt_c12_v20_2026_09_01.md` [발송 대기] — 판정이 14회 인용됐다 — 회신을 받은 것으로 보인다 (원문 파일 없음)
+- `codex_BB_prompt_c12_v22_2026_09_02.md` [발송 대기] — 판정이 5회 인용됐다 — 회신을 받은 것으로 보인다 (원문 파일 없음)
+- `codex_BC_prompt_c12_v23_2026_09_02.md` [발송 대기] — 판정이 7회 인용됐다 — 회신을 받은 것으로 보인다 (원문 파일 없음)
+- `codex_BF_prompt_c12_v29_2026_09_03.md` [발송 대기] — 회신 파일이 있다: codex_BF_reply_c12_v29_2026_09_03.md
