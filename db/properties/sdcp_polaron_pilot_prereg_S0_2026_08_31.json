@@ -17,11 +17,11 @@
  },
  "0_시각_증거": {
   "봉인_시점": "2026-09-03",
-  "builder_sha256": "87326fd58951cec2ba1ef6c6b2b3f8a9081e48d1055abf68df8f39d44c9b6bd9",
-  "⚠_원본과_다른_해시인_이유": "회신 Y P0 8건 + 회신 Z(내부) P0 4건 이행으로 빌더·calibration 도구가 바뀌었다 (커밋 52b0edcd). 범위·질문·판정어는 그대로고, estimand 형태 대조(단위·결박·소비)와 게이트 봉인이 바뀌었다.",
+  "builder_sha256": "b92ff52b55f803c5dac574e7c0de5c76ce800b0397d6bc2bae11cdf7936e4697",
+  "⚠_원본과_다른_해시인_이유": "회신 Y + Z + Z-2(내부 2차) 이행으로 빌더가 바뀌었다 (커밋 341e0d7e). 범위·질문·판정어는 그대로고, estimand 형태 대조(단위·결박·소비·계열 class)와 게이트 봉인·smoke 규약 실측이 바뀌었다.",
   "이_시점의_doped_잡": "0개 — git log 가 그 순서의 증거다. 결과를 보고 규칙을 고치지 않는다.",
   "이_시점의_ORCA_잡": "0개 — phase L 도 아직 돌리지 않았다 (회신 Y: loccheck 단독만 GO · 그것도 아직 안 돌림)",
-  "builder_last_change_commit": "52b0edcdac283086ab54ca636fc02ad26c2f8e73",
+  "builder_last_change_commit": "341e0d7e19408c706de9b314987c01f8508c17ec",
   "⚠_왜_전체_커밋이_아닌가": "회신 W P0-1 — '이 파일이 들어간 커밋' 은 파일 안에 넣을 수 없다 (커밋 해시가 파일 내용에 의존하므로 순환이다). 종전 판은 그 자리에 placeholder 를 넣었고, 검사가 그것을 실제 커밋과 비교해 **seed 생성이 반드시 막혔다**. ⇒ 봉인하는 것은 ⓐ 빌더 blob SHA ⓑ **빌더를 마지막으로 바꾼 커밋** 둘이다. 전체 커밋 결박은 파일 밖 attestation(tools/review_manifest.py)이 진다.",
   "이전_봉인_이력": [
    {
@@ -38,6 +38,12 @@
     "builder_sha256": "e9ea6e4b0efa9fc6020160c7b17b4e924717fe16c978465a1551b62421b6d3b8",
     "builder_last_change_commit": "57c5909ea9fc7850f8ecc2abd0500d1beb6a61f7",
     "calib_tool_sha256": "e92299faf5db9e3cfb9f407bcacd1ac01378f99cdc0018670cbb81df2d1670fd",
+    "봉인_시점": "2026-09-03"
+   },
+   {
+    "builder_sha256": "87326fd58951cec2ba1ef6c6b2b3f8a9081e48d1055abf68df8f39d44c9b6bd9",
+    "builder_last_change_commit": "52b0edcdac283086ab54ca636fc02ad26c2f8e73",
+    "calib_tool_sha256": "02d9cb38640d9ef07910e068fd6ee2d74537b2821549e25652b43ae4cca06ac7",
     "봉인_시점": "2026-09-03"
    }
   ],
@@ -86,14 +92,15 @@
     "없음·낡음": "`<tag>_calib.json` 이 없거나(CALIB_MISSING) cube·분할·도구 SHA 가 다르면(CALIB_CUBE_CHANGED · CALIB_GROUPS_MISMATCH · CALIB_TOOL_CHANGED) 같은 게이트다. 기록만 하고 안 읽는 필드가 아니라 **필수 입력**이다 (회신 Y P0-2)."
    },
    "격자_QC": "간격 ≤ max_spacing_A(0.35 Å) · 상자 면의 max|Δρ| ≤ 전체 max 의 1e-3 · ∫Δρ = 홀전자수 ±0.05 · Becke 균등 대체 질량 ≤ 1e-3. 하나라도 걸리면 CALIB_QC_FAILED. ⚠ 1e-3·0.35·5 Å 는 실물 200원자 cube 를 보기 전 값이다 — smoke(OH•)만 지났다.",
-   "결박": "① manifest 가 `calib_tool_sha256`·`calib_gate` 를 봉인하고 사전등록(`0_시각_증거.calib_tool_sha256` · `calib_gate`)·코드 상수·디스크의 도구와 **셋이 같아야** 한다 (회신 Z P0-3). ② receipt 가 그 실행이 낳은 cube 의 SHA 를 봉인하고, calibration 은 receipt 의 cube 와 같은 cube 로만 만들며, cube 의 원자 좌표는 잡의 xyz 와, 격자는 봉인 `cube_grid` 와 대조한다 (회신 Z P0-2). ③ `<tag>_calib.json` 은 원자별 벡터(s_signed_e · w_abs_e)를 담고 판정기는 **F 를 재계산**해 파일 값과 대조한 뒤 extended·strict 두 분할에 네 조건을 적용한다. ④ Becke F_out 과 production Hirshfeld F 의 차가 family_tol(0.10)을 넘으면 CALIB_FAMILY_DIVERGES — 계열이 갈리면 절댓값-위치 대조가 무의미하다. ⑤ calibration receipt 행이 있어야 하고 파일 SHA 와 같아야 한다. ⑥ 판정·seed·calibration 의 python 진입점이 모두 **같은 빌더**(builder_sha256)인지 확인하고 PILOT_RESULT 에 `judged_by_builder_sha256` 을 적는다 (회신 Z P0-3ⓒ).",
-   "도구": "tools/sdcp/spin_partition_calib.py (`direct_comparison_gate` · numpy 벡터화 · QC) — selftest 29건 (음성 ≥ 15)",
+   "결박": "① manifest 가 `calib_tool_sha256`·`calib_gate` 를 봉인하고 사전등록(`0_시각_증거.calib_tool_sha256` · `calib_gate`)·코드 상수·디스크의 도구와 **셋이 같아야** 한다 (회신 Z P0-3). ② receipt 가 그 실행이 낳은 cube 의 SHA 를 봉인하고, calibration 은 receipt 의 cube 와 같은 cube 로만 만들며, cube 의 원자 좌표는 잡의 xyz 와, 격자는 봉인 `cube_grid` 와 대조한다 (회신 Z P0-2). ③ `<tag>_calib.json` 은 원자별 벡터(s_signed_e · w_abs_e)를 담고 판정기는 **F 를 재계산**해 파일 값과 대조한 뒤 extended·strict 두 분할에 네 조건을 적용한다. ④ Becke F_out 과 production Hirshfeld F 의 차가 family_tol(0.10)을 넘으면 CALIB_FAMILY_DIVERGES — 계열이 갈리면 절댓값-위치 대조가 무의미하다. ⑤ calibration receipt 행이 있어야 하고 파일 SHA 와 같아야 한다. ⑥ 판정·seed·calibration 의 python 진입점이 모두 **같은 빌더**(builder_sha256)인지 확인하고 PILOT_RESULT 에 `judged_by_builder_sha256` 을 적는다 (회신 Z P0-3ⓒ). ⑦ Becke F_out 과 Hirshfeld F 는 |ΔF| ≤ family_tol **그리고 class(pilot_class) 동일**을 요구한다 (회신 Z-2 P0-1: |ΔF| 0.095 인데 Becke 계열에서 MIXED 인 반례). ⑧ receipt 는 ORCA 실행 **직전에 옛 cube 를 지운 뒤** 그 실행이 낳은 cube 만 봉인한다 (회신 Z-2 P1).",
+   "도구": "tools/sdcp/spin_partition_calib.py (`direct_comparison_gate` · numpy 벡터화 · QC · 단위 e/bohr³→e) — selftest 32건 (음성 ≥ 18)",
    "⛔_문턱을_결과_보기_전에_박는다": "0.50 · 0.10 은 class 문턱 그대로, 0.05 는 margin 의 절반 — 2026-09-03, production cube 0개 시점에 코드 상수로 봉인.",
    "⛔_이_calibration_이_못_하는_것": [
     "Hirshfeld 로 재계산한 것이 아니다 (Becke 계열 안의 비교다) — 분할 자체의 타당성은 보증하지 않는다. family_tol 대조는 두 계열이 **크게** 갈리는 경우만 잡는다.",
     "두 형태가 같은 격자 오차로 **같이 틀린** 경우는 못 본다 — 격자 QC 가 표시할 뿐이다.",
     "cube 를 만들지 않는다 — ORCA `%plots` 몫이고, 없으면 그 잡은 class 가 없다.",
-    "판정기는 F 를 원자별 벡터에서 재계산하지만 **벡터 자체(Becke 적분)는 calib.json 을 신뢰**한다 — 재적분하지 않는다. 결박(cube·도구·receipt SHA)이 그 신뢰의 근거다."
+    "판정기는 F 를 원자별 벡터에서 재계산하지만 **벡터 자체(Becke 적분)는 calib.json 을 신뢰**한다 — 재적분하지 않는다. 결박(cube·도구·receipt SHA)이 그 신뢰의 근거다.",
+    "smoke(OH•)가 실측하는 것은 `%plots` 의 격자 규약(dim=점 수 · origin=min · 간격)과 단위·∫Δρ 다 — 200원자 상자에서의 면 절단·간격 QC 는 S 잡의 cube 가 처음 본다 (회신 Z-2 P0-2)."
    ],
    "단위": "Gaussian cube 값은 e/bohr³ 이고 적분은 bohr³ 로 한다 (∫Δρ [e]). 회신 Z P0-1 이 잡은 Å³ 적분(0.148 배)은 철회. 산출물 필드는 단위를 이름에 적는다(…_e). loccheck 의 OH• smoke 가 실물 cube 로 ∫Δρ = 1 ± 0.05 를 증서에 봉인해야 phase L 이 열린다.",
    "시간_예산": "Becke 벡터화 실측(리뷰어): 199원자 · 96점 chunk 0.083 s → ~10⁶ 점 cube 하나 ≈ 25 분(1 thread). 측정 15잡 ≈ 6 h 가 S 단계 안에서 ORCA 와 직렬로 들어간다 (+SR). 계획에 넣는다; 정밀도를 깎는 최적화(float32·cutoff)는 하지 않았다."
@@ -251,7 +258,8 @@
   "리뷰": [
    "kb/reviews/codex_T_reply_polaron_pilot_2026_08_31.md",
    "kb/reviews/codex_Y_reply_polaron_S0_2026_09_03.md",
-   "kb/reviews/internal_Z_reply_polaron_S0_2026_09_03.md"
+   "kb/reviews/internal_Z_reply_polaron_S0_2026_09_03.md",
+   "kb/reviews/internal_Z2_reply_polaron_S0_2026_09_03.md"
   ],
   "결정": "D-2026-08-31-sdcp-polaron-Fbb (proposed)",
   "⛔_다른_캠페인": "sdcp_doped 흡착(슬랩)과 **다른 캠페인**이다. db/properties/sdcp_doped_closed_2026_08_28.json 의 잠금은 그쪽이고 여기에 적용되지 않는다",
@@ -332,6 +340,11 @@
    "at": "2026-09-03",
    "state": "proposed",
    "note": "회신 Z(첫 내부 적대적 리뷰 · NO-GO · P0 4) 이행. P0-1 단위 오류(Å³ 적분 → e/bohr³·bohr³) 수정 + loccheck OH• `%plots` smoke 로 실물 cube 양성 봉인; P0-2 receipt 가 cube SHA 봉인 · calibration 은 receipt 의 cube 로만 · 좌표/격자 대조 · Becke↔Hirshfeld family_tol 0.10; P0-3 사전등록 calib_tool_sha256·calib_gate 를 게이트가 읽고 코드 상수·manifest 와 셋 대조 · python 진입점 빌더 SHA 검사 · judged_by_builder_sha256; P0-4 dependency 판정어 닫힘은 block 이 GATED_JOBS 하나뿐일 때만 · 증서 무효 시 RUN_RECEIPT_ORCA_UNVERIFIABLE 잡별 게이트. P1: L/L2 receipt ORCA 대조 · 증서 재발행 시 receipt ORCA 불일치 거부 · S 게이트 판정 재계산 · manifest 원자적 쓰기 · strict 분할 대조(원자별 벡터) · 상자 명시(extent±5 Å · 0.30 Å) · class_candidate · calib receipt 소비 · read_cube NameError. 재비준 필요."
+  },
+  {
+   "at": "2026-09-03",
+   "state": "proposed",
+   "note": "회신 Z-2(내부 2차 · NO-GO · P0 2) 이행. P0-1 family 대조에 class 동일 조건(CALIB_FAMILY_CLASS_DIFFERS); P0-2 loccheck smoke 가 pil_cube_grid 규칙 상자로 cube 헤더(n·origin·간격)를 실측해 grid_convention_verified 봉인. P1: ORCA 전 옛 cube 삭제 · preflight/receipt 빌더 SHA · receipt builder=실제 빌더 · 원자적 manifest · nested class_candidate · calib_gate 여분 키 위반 · 음성시험 6건. 봉인 builder b92ff52b · last_change 341e0d7e · calib 02d9cb38. 재비준 필요 — 비준 시 ratification.content_digest 재계산 필수(지금 기록은 옛 digest)."
   }
  ],
  "회신_U_이행": {
@@ -348,7 +361,7 @@
   "ORCA_identity": "모든 계산 단계(L·L2·probe·S·restart)의 preflight 가 loccheck 증서의 ORCA 와 이번 실행의 ORCA 를 대조하고, 분석기는 receipt 의 orca_sha256 을 증서와 대조한다 (회신 Y P0-7).",
   "receipt_결박": "receipt 가 봉인하는 xyz 는 glob 첫 파일이 아니라 **입력이 읽는 파일**이다. xyz·%moinp 해시가 빠진 receipt 는 fail-closed. seed 생성은 L receipt 의 out·xyz SHA 를 지금 파일과 대조한다. L2·S0P·SR 행에도 xyz_sha256 이 있다 (회신 Y P0-5).",
   "L2_suffix_패치_원자성": "전건 선검증 → 임시 파일 → os.replace(입력·manifest 둘 다). 검증 단계 거부면 파일 변경 0. apply 중 I/O 실패는 preflight 의 INP_CHANGED 로 fail-closed 된다 — '어떤 경우에도 0' 이 아니다 (회신 Z P1 정직화).",
-  "plots_smoke": "loccheck 가 OH•(UKS doublet) 한 잡에 `%plots SpinDens` 를 붙여 실물 cube 를 만들고, calibration 도구가 그것을 끝까지 읽어 ∫Δρ = 1 ± 0.05 · QC 통과 · min/max 단위를 증서 `plots_smoke` 에 봉인해야 phase L·seeds 가 열린다 (회신 Z P0-1). 증서 재발행은 기존 receipt 와 다른 ORCA 면 거부한다 (회신 Z P1)."
+  "plots_smoke": "loccheck 가 OH•(UKS doublet) 한 잡에 `%plots SpinDens` 를 붙여 실물 cube 를 만들고, calibration 도구가 그것을 끝까지 읽어 ∫Δρ = 1 ± 0.05 · QC 통과 · min/max 단위를 증서 `plots_smoke` 에 봉인해야 phase L·seeds 가 열린다 (회신 Z P0-1). 증서 재발행은 기존 receipt 와 다른 ORCA 면 거부한다 (회신 Z P1). smoke 상자는 production 규칙(pil_cube_grid: extent±5 Å · 0.30 Å)으로 만들고 cube 헤더(n·origin·간격 1e-3)를 pil_run_calib 와 같은 대조로 검증해 `grid_convention_verified` 를 봉인해야 한다 — 없으면 seeds·L 이 열리지 않는다 (회신 Z-2 P0-2)."
  },
  "ratification": {
   "state": "ratified",
