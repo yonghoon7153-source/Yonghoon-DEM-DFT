@@ -4720,6 +4720,36 @@ def _selftest_closure(chk):
             and _rr.get("rounded_value_under_tested_axes_eV") is None,
             "⛔음성 BE P0-1: %s → NO_VALUE · 보고값 없음 (막은 게이트 %s)"
             % (why, [b.split("(")[0] for b in _rr["blocks"]][:3]))
+    # 🔴 1저자 결정 2026-09-03 — **dense 를 설계에서 빼는 것**과 **반송에서만 빠지는 것**은
+    #   분석기에서 다른 경로다. 그 둘을 시험이 못박는다 (--no_kconv 의 근거).
+    _r_nk = _closure_estimand(dict(_man, kconv_pair={
+        "status": "not_designed",
+        "🔁_재개_조건_결과_보기_전에_선언": {"규칙": "|ΔE_ads| < 50 meV 이면 dense 2잡"}}),
+        _RES(), _E, _emol, _jobs)
+    _nb_nk = (_r_nk.get("numeric_budget") or {})
+    chk("δ_k" not in (_nb_nk.get("missing_axes") or [])
+        and any("δ_k" in str(x) for x in (_nb_nk.get("axes_not_designed") or []))
+        and _r_nk.get("rounded_value_under_tested_axes_eV") is not None,
+        "🔴 --no_kconv: kconv_pair 에 **jobs 가 없으면** δ_k 는 차단이 아니라 "
+        "`axes_not_designed` 다 — ΔE_ads 는 나온다 (사전등록 3_오차예산 '넘으면' 절) · "
+        "missing %s · 값 %s" % (_nb_nk.get("missing_axes"),
+                                 _r_nk.get("rounded_value_under_tested_axes_eV")))
+    # ⚠ `tested_axes_stable_at_0.01eV` 는 **시험한 축**만 말하므로 True 가 맞다.
+    #   막아야 하는 것은 그것이 아니라 **전체 인용 자격**이다 — 그 필드가 True 로
+    #   올라가면 안 되고, 빠진 축이 화면에 남아야 한다.
+    chk(_nb_nk.get("overall_citable_at_0.01eV") is not True
+        and any("δ_k" in str(x) for x in (_nb_nk.get("axes_not_designed") or []))
+        and any("KCONV_NOT_DESIGNED" in str(x) for x in (_r_nk.get("advisories") or [])),
+        "🔴 --no_kconv: 시험한 축만 안정으로 표시되고 **전체 인용 자격은 안 올라간다** "
+        "· overall=%s · 빠진 축 %s · 주의 %s"
+        % (_nb_nk.get("overall_citable_at_0.01eV"),
+           [x for x in (_nb_nk.get("axes_not_designed") or []) if "δ_k" in str(x)],
+           [x[:40] for x in (_r_nk.get("advisories") or []) if "KCONV" in str(x)]))
+    _r_nk2 = _closure_estimand(dict(_man, kconv_pair=dict(_KCONV)), _RES(), _E, _emol,
+                               {k: dict(v, dense=None) for k, v in _jobs.items()})
+    chk("δ_k" in ((_r_nk2.get("numeric_budget") or {}).get("missing_axes") or []),
+        "⛔음성 대조: kconv_pair 에 jobs 가 **있는데** dense 결과가 없으면 δ_k 가 "
+        "missing 으로 차단된다 — 반송에서만 빼면 300 h 뒤에 막힌다")
     _sem_attack({"E_C_sdcp": _EJK_PM1["E_C_control"], "E_C_control": _EJK_PM1["E_C_sdcp"]},
                 "두 complex 키 교환 (종전 D=+200.5 차단 없음)")
     _sem_attack({"E_G_sdcp": _EJK_PM1["E_G_control"], "E_G_control": _EJK_PM1["E_G_sdcp"]},
@@ -10518,10 +10548,39 @@ def _closure_estimand(man, results, E, emol, jobs, merge_info=None):
                     "dense 로 다시 내거나 보고 해상도를 낮춘다 · D_raw 는 보존)"
                     % (_dk * 1000, _tol * 1000))
     elif (man.get("estimand_job_keys") and
-          str(_kp.get("status")) != "not_applicable"):
+          str(_kp.get("status")) not in ("not_applicable", "not_designed")):
         _blk("KCONV_ABSENT",
              "KCONV_ABSENT(k 수렴 쌍이 봉인돼 있지 않다 — 0.01 eV 보고의 "
              "근거가 없다)", scope="estimand")
+    elif str(_kp.get("status")) == "not_designed":
+        # 🔴🔴 1저자 결정 2026-09-03 — **선언된 축 생략**은 차단이 아니라 주장 축소다.
+        #   비준된 사전등록 `3_오차예산` 이 명시한다: "넘으면 **값을 버리지 않는다.**
+        #   0.01 eV 안정성 주장을 하지 않고, 보고 해상도를 낮추거나 축별 민감도만 보고한다."
+        #   그런데 분석기는 KCONV_ABSENT 로 estimand 를 통째로 막고 있었다 — 비준 문서와
+        #   코드가 어긋나 있었다. 사전등록 쪽이 이긴다.
+        #   ⚠ 그렇다고 아무 생략이나 통과시키지 않는다. **결과를 보기 전에 선언한
+        #     재개 조건**이 있어야만 이 경로가 열린다 (없으면 종전대로 차단) — 그래야
+        #     "결과를 보고 축을 뺀다" 가 불가능하다.
+        _reopen = next((v for k, v in _kp.items() if "재개_조건" in str(k)), None)
+        if not (isinstance(_reopen, dict) and str(_reopen.get("규칙") or "").strip()):
+            _blk("KCONV_OMISSION_UNDECLARED",
+                 "KCONV_OMISSION_UNDECLARED(k 축을 설계에서 뺐다고 하면서 **재개 조건을 "
+                 "결과 보기 전에 선언하지 않았다** — 생략을 사후에 정당화할 수 없다)",
+                 scope="estimand")
+        else:
+            out.setdefault("advisories", []).append(
+                "KCONV_NOT_DESIGNED(k 축을 **설계에서 뺐다** — 사전 선언된 생략이다. "
+                "ΔE_ads 는 보고하되 **0.01 eV 안정성은 주장하지 않는다.** 재개 조건: %s)"
+                % (_reopen.get("규칙"),))
+            # ⚠ `kconv_delta` 로 쓰면 안 된다 — 그 키가 있으면 아래 오차예산이
+            #   `delta_k_meV is None` 을 보고 **missing(차단)** 으로 센다. 선언된 생략은
+            #   missing 이 아니라 `axes_not_designed` 여야 하므로 **다른 키**에 남긴다.
+            out["kconv_omission"] = {
+                "status": "not_designed",
+                "delta_k_meV": None,
+                "⛔": "이 축은 재지 않았다 — 0 이 아니라 **없음**이다",
+                "재개_조건": _reopen,
+            }
 
     # ══ 🔴 회신 AT Q2 — 세 수치축의 **합산 오차예산** (2026-08-31) ═══════════
     #   세 축(Δ_vac · δ_gas · δ_k)은 **독립 확률오차가 아니다.** 같은 계·같은
@@ -14555,6 +14614,38 @@ def build_bundle(a, ledger: Optional[Dict[str, Any]] = None) -> Path:
     #   ⚠ δ_k 는 **두 조각의 차**라 조각이 둘일 때만 뜻이 있다. 하나짜리 구성에서는
     #     dense 를 붙이지 않는다 (붙여 봐야 뺄 상대가 없다).
     _pri_k = dict(man.get("_primary_by_frag") or {})
+    # 🔴🔴 회신 BH / 1저자 결정 2026-09-03 — **k 수렴 축을 설계에서 뺀다 (--no_kconv).**
+    #   왜: dense 2잡이 최장 잡을 299.6 h 로 만들어 전체 일정을 12.5일로 끌고 간다
+    #   (vasp_cost_estimate 실측: dense 200h + static 100h). static 만이면 최장 111 h ≈ 4.6일.
+    #   ⚠ 이건 "축을 못 쟀다" 가 아니라 "설계에 안 넣었다" 다 — 분석기가 두 경우를
+    #     다르게 다룬다: kconv_pair 에 jobs 가 있는데 dense 가 없으면 KCONV_NOT_MEASURED
+    #     로 **차단**되고, 애초에 jobs 가 없으면 `axes_not_designed` 로 **통과**한다.
+    #     그래서 dense 를 반송에서만 빼면 안 되고 **번들 설계에서 빼야** 한다.
+    #   사전등록 `3_오차예산` 이 이미 이 결과를 허용한다: "넘으면 값을 버리지 않는다.
+    #   0.01 eV 안정성 주장을 하지 않고, 보고 해상도를 낮추거나 축별 민감도만 보고한다."
+    #   ⇒ 잃는 것은 "0.01 eV 안에서 안정하다" 한 줄이고 ΔE_ads 자체는 나온다.
+    if getattr(a, "no_kconv", False):
+        _pri_k = {}
+        man["kconv_pair"] = {
+            "status": "not_designed",
+            "why": ("1저자 결정 2026-09-03 — dense 2잡이 최장 잡 299.6 h 로 전체 일정을 "
+                    "12.5일로 만든다. static 만이면 최장 111 h ≈ 4.6일. k 축을 설계에서 뺀다."),
+            "⛔_잃는_것": ("B_num 에서 δ_k 가 빠진다 ⇒ **'0.01 eV 안에서 안정하다' 를 "
+                           "주장하지 않는다.** 진공·기체 두 축만 시험했다고 쓴다. "
+                           "ΔE_ads 값 자체는 그대로 나온다 (사전등록 3_오차예산 '넘으면' 절)."),
+            "🔁_재개_조건_결과_보기_전에_선언": {
+                "규칙": "|ΔE_ads| < 50 meV 이면 dense 2잡(primary complex 두 개)을 추가로 돌린다.",
+                "왜_50": ("k 가드밴드가 10 meV 다 (GUARD_EV). 그 5배를 문턱으로 둔다 — "
+                          "그 위면 k 오차가 부호·크기 판정을 못 바꾼다."),
+                "⛔_사후변경_금지": ("이 조건은 **결과를 보기 전에** 선언했다. 이 밖의 이유로 "
+                                     "dense 를 추가하면 그것은 '결과를 보고 게이트를 바꾼 것' 이다 "
+                                     "— 이 캠페인이 여덟 번 반려된 양식."),
+                "추가할_잡": "estimand_job_keys 의 E_C_sdcp · E_C_control (그 둘만)",
+            },
+            "⚠_UMA_로_미리_판단_금지": ("UMA 조각 간 비교는 무효로 판정돼 있다 (오프셋 "
+                                        "sdcp ~1.070 vs ptfe ~0.167 eV · 차등 0.90 eV). "
+                                        "|ΔE_ads| 가 클 것이라고 **가정하지 않는다.**"),
+        }
     if len(_pri_k) != 2:
         _pri_k = {}
         if getattr(a, "refs_minimal", False) and man.get("estimand_job_keys"):
@@ -20104,6 +20195,11 @@ def main():
     ap.add_argument("--d3_pairs", action="store_true",
                     help="각 endpoint 의 **D3-off 쌍둥이**를 만든다 (IVDW 줄만 제거). "
                          "회신 W Q2 원인 분해용 — 판정값이 아니다. --closure 필수")
+    ap.add_argument("--no_kconv", action="store_true",
+                    help="k 수렴(dense) 상을 **설계에서 뺀다**. 최장 잡 299.6 h → 111 h "
+                         "(전체 12.5일 → ~4.6일). 대신 B_num 에서 δ_k 가 빠져 '0.01 eV "
+                         "안정성' 을 주장하지 못한다. 재개 조건(|ΔE_ads| < 50 meV)이 "
+                         "MANIFEST.kconv_pair 에 결과 보기 전에 박힌다.")
     ap.add_argument("--closure", action="store_true",
                     help="닫힘 모드 (회신 U P0-5) — 전 endpoint 고정기하 static 단독 + "
                          "LREAL=.FALSE. 강제. 기체 기준도 relax 를 돌지 않는다. "
