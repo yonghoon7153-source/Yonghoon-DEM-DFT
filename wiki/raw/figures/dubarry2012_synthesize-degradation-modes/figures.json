@@ -1,0 +1,311 @@
+{
+ "slug": "dubarry2012_synthesize-degradation-modes",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-09-03",
+ "sources": [
+  "2955858d-3._Synthesize_battery_degradation_modes_via_a_diagnostic_and_prognostic_model.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 2,
+   "file": "fig_1.png",
+   "caption": "Fig. 1. Schematic of the modeling approach in this work.",
+   "rotated_deg": 0,
+   "bbox": [
+    125.9,
+    280.0,
+    479.2,
+    732.9
+   ],
+   "w": 1473,
+   "h": 1888,
+   "dpi": 300,
+   "src": "2955858d-3._Synthesize_battery_degradation_modes_via_a_diagnostic_and_prognostic_model.pdf",
+   "blank": 0.796
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 3,
+   "file": "fig_2.png",
+   "caption": "Fig. 2. (a) Simulation of the LFP electrode discharge regimes in a variety of rates from C/25 to 4C. (b) Simulation of the graphite electrode charge regimes from C/25 to 4C.",
+   "rotated_deg": 0,
+   "bbox": [
+    295.8,
+    60.7,
+    558.9,
+    377.4
+   ],
+   "w": 1097,
+   "h": 1320,
+   "dpi": 300,
+   "src": "2955858d-3._Synthesize_battery_degradation_modes_via_a_diagnostic_and_prognostic_model.pdf",
+   "blank": 0.904
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 4,
+   "file": "fig_4.png",
+   "caption": "Fig. 4. Simulation of cell voltage as a function of SOC with the formation of the initial SEI layer.",
+   "rotated_deg": 0,
+   "bbox": [
+    36.5,
+    60.7,
+    299.6,
+    215.3
+   ],
+   "w": 1097,
+   "h": 644,
+   "dpi": 300,
+   "src": "2955858d-3._Synthesize_battery_degradation_modes_via_a_diagnostic_and_prognostic_model.pdf",
+   "blank": 0.909
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 4,
+   "file": "fig_5.png",
+   "caption": "Fig. 5. Simulation results for cell discharge regimes at C/25, C/5, C/2, C, 2C and 4C using a graphite jj LFP cell.",
+   "rotated_deg": 0,
+   "bbox": [
+    305.5,
+    60.7,
+    568.5,
+    207.6
+   ],
+   "w": 1096,
+   "h": 612,
+   "dpi": 300,
+   "src": "2955858d-3._Synthesize_battery_degradation_modes_via_a_diagnostic_and_prognostic_model.pdf",
+   "blank": 0.904
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 5,
+   "file": "fig_6.png",
+   "caption": "Fig. 6. Simulation of the four types of loss of active material (LAMs) at C/25 in delithiated PE (dePE), lithiated PE (liPE), delithiated NE (deNE) and lithiated NE (liNE).",
+   "rotated_deg": 0,
+   "bbox": [
+    42.4,
+    504.5,
+    543.3,
+    732.9
+   ],
+   "w": 2088,
+   "h": 953,
+   "dpi": 300,
+   "src": "2955858d-3._Synthesize_battery_degradation_modes_via_a_diagnostic_and_prognostic_model.pdf",
+   "blank": 0.935
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 6,
+   "file": "fig_7.png",
+   "caption": "Fig. 7. Simulation of the LLI degradation mode at C/25.",
+   "rotated_deg": 0,
+   "bbox": [
+    41.0,
+    60.7,
+    295.2,
+    218.1
+   ],
+   "w": 1061,
+   "h": 656,
+   "dpi": 300,
+   "src": "2955858d-3._Synthesize_battery_degradation_modes_via_a_diagnostic_and_prognostic_model.pdf",
+   "blank": 0.922
+  },
+  {
+   "key": "f8",
+   "kind": "figure",
+   "label": "8",
+   "page": 6,
+   "file": "fig_8.png",
+   "caption": "Fig. 8. Simulation of (a) ohmic resistance increase (ORI) at 2C and (b) faradic rate degradation (FRD).",
+   "rotated_deg": 0,
+   "bbox": [
+    305.5,
+    60.7,
+    568.5,
+    387.9
+   ],
+   "w": 1096,
+   "h": 1364,
+   "dpi": 300,
+   "src": "2955858d-3._Synthesize_battery_degradation_modes_via_a_diagnostic_and_prognostic_model.pdf",
+   "blank": 0.927
+  },
+  {
+   "key": "f9",
+   "kind": "figure",
+   "label": "9",
+   "page": 7,
+   "file": "fig_9.png",
+   "caption": "Fig. 9. Simulation of a graphite jj LFP cell discharge curves with corresponding PE potential versus SOCPE curves in the presence of 0% (thick solid line), 10%, 20% (both in dashed lines), and 30% (thin solid line) of hydrated phase, respectively.",
+   "rotated_deg": 0,
+   "bbox": [
+    26.8,
+    566.4,
+    289.9,
+    715.8
+   ],
+   "w": 1097,
+   "h": 623,
+   "dpi": 300,
+   "src": "2955858d-3._Synthesize_battery_degradation_modes_via_a_diagnostic_and_prognostic_model.pdf",
+   "blank": 0.934
+  },
+  {
+   "key": "f10",
+   "kind": "figure",
+   "label": "10",
+   "page": 7,
+   "file": "fig_10.png",
+   "caption": "Fig. 10. (a) Simulation of capacity loss versus cycle number in multiple concurrent degradation modes of LAMdePE, LAMliNE, and LLI, and (b) the corresponding electrode potential at PE and NE and cell voltage versus SOCPE at the initial and ﬁnal stage of degradation.",
+   "rotated_deg": 0,
+   "bbox": [
+    295.8,
+    308.1,
+    558.9,
+    707.2
+   ],
+   "w": 1097,
+   "h": 1664,
+   "dpi": 300,
+   "src": "2955858d-3._Synthesize_battery_degradation_modes_via_a_diagnostic_and_prognostic_model.pdf",
+   "blank": 0.931
+  },
+  {
+   "key": "f11",
+   "kind": "figure",
+   "label": "11",
+   "page": 8,
+   "file": "fig_11.png",
+   "caption": "Fig. 11. (a) Capacity retention and (b) EOD SOC evolution as a function of %LLI and electrode potentials, cell voltage as a function of SOC simulated with a hypothetical 50% LLI for (c) HP and (d) HE designs.",
+   "rotated_deg": 0,
+   "bbox": [
+    36.5,
+    462.5,
+    568.5,
+    724.3
+   ],
+   "w": 2217,
+   "h": 1091,
+   "dpi": 300,
+   "src": "2955858d-3._Synthesize_battery_degradation_modes_via_a_diagnostic_and_prognostic_model.pdf",
+   "blank": 0.927
+  },
+  {
+   "key": "f13",
+   "kind": "figure",
+   "label": "13",
+   "page": 10,
+   "file": "fig_13.png",
+   "caption": "Fig. 13. IC signatures from the initial state (thick solid line) and at the end of 30% degradation (thin solid line) with 1/5th increment (dotted lines) for (aed) each of the four LAMs, (e) LLI, and (f) a 100% ohmic resistance increase (ORI) at C/25.",
+   "rotated_deg": 0,
+   "bbox": [
+    36.5,
+    60.7,
+    568.6,
+    393.6
+   ],
+   "w": 2218,
+   "h": 1387,
+   "dpi": 300,
+   "src": "2955858d-3._Synthesize_battery_degradation_modes_via_a_diagnostic_and_prognostic_model.pdf",
+   "blank": 0.9
+  },
+  {
+   "key": "f14",
+   "kind": "figure",
+   "label": "14",
+   "page": 11,
+   "file": "fig_14.png",
+   "caption": "Fig. 14. DV signatures from the initial state (thick solid line) and at the end of 30% degradation (thin solid line) with 1/5th increment (dotted lines) for (aed) each of the four LAMs, (e) LLI, and (f) a 100% ohmic resistance increase (ORI) at C/25.",
+   "rotated_deg": 0,
+   "bbox": [
+    26.8,
+    60.7,
+    558.9,
+    411.2
+   ],
+   "w": 2218,
+   "h": 1461,
+   "dpi": 300,
+   "src": "2955858d-3._Synthesize_battery_degradation_modes_via_a_diagnostic_and_prognostic_model.pdf",
+   "blank": 0.902
+  },
+  {
+   "key": "f15",
+   "kind": "figure",
+   "label": "15",
+   "page": 12,
+   "file": "fig_15.png",
+   "caption": "Fig. 15. Evolution of the ps-OCV ¼ f (SOC) curve for (a) 30% capacity fade from each of the four types of LAM and LLI, (b) 30% LLI with 3% increments, and (c) associated evolution in RCV and EOD SOC as a function of %LLI.",
+   "rotated_deg": 0,
+   "bbox": [
+    36.5,
+    60.7,
+    299.6,
+    445.8
+   ],
+   "w": 1097,
+   "h": 1605,
+   "dpi": 300,
+   "src": "2955858d-3._Synthesize_battery_degradation_modes_via_a_diagnostic_and_prognostic_model.pdf",
+   "blank": 0.925
+  },
+  {
+   "key": "f16",
+   "kind": "figure",
+   "label": "16",
+   "page": 12,
+   "file": "fig_16.png",
+   "caption": "Fig. 16. IC signatures simulated with 30% LAMliPE for the HE design with 2C aging. The heavy solid line represents the initial state, the thin one the ﬁnal state, and the dotted ones results in 6% increments.",
+   "rotated_deg": 0,
+   "bbox": [
+    36.5,
+    553.3,
+    299.6,
+    715.7
+   ],
+   "w": 1097,
+   "h": 678,
+   "dpi": 300,
+   "src": "2955858d-3._Synthesize_battery_degradation_modes_via_a_diagnostic_and_prognostic_model.pdf",
+   "blank": 0.921
+  },
+  {
+   "key": "f17",
+   "kind": "figure",
+   "label": "17",
+   "page": 12,
+   "file": "fig_17.png",
+   "caption": "Fig. 17. Evolution of the capacity fade in a cell with linear LLI and exponential loss of LAMdePE.",
+   "rotated_deg": 0,
+   "bbox": [
+    305.5,
+    60.7,
+    568.5,
+    216.6
+   ],
+   "w": 1096,
+   "h": 650,
+   "dpi": 300,
+   "src": "2955858d-3._Synthesize_battery_degradation_modes_via_a_diagnostic_and_prognostic_model.pdf",
+   "blank": 0.914
+  }
+ ]
+}
