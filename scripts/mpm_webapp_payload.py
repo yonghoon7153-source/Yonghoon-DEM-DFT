@@ -1019,7 +1019,12 @@ def main():
                          '항목에 pristine 짝값(시간-일관 BOL)을 병기하기 위한 단일-출처 키')
     ap.add_argument('--sigma-ion-sdcp', type=float, default=0.001,
                     help='σ_ion SDCP (S/cm) — NOT an ion-insulator (user principle: Li-hopping keeps it '
-                         'conducting; pellet ×0.80 vs PTFE ×0.27).  1 mS/cm ⚠F1 hook; Li⁺ DFT 패키지가 앵커 예정.')
+                         'conducting; pellet x0.80 vs PTFE x0.27).  1 mS/cm = UNCALIBRATED F1 hook.  '
+                         '⚠ A pellet-RVE calibration DOES exist and froze a different number '
+                         '(sigma_ion(SDCP)* = 0.62e-3 S/cm; confirmation run 2.8655 vs target 2.86 mS/cm, '
+                         '+0.19 %%, 4/4 seeds — docs/reviews/pellet_calib_freeze_20260825.md).  It is NOT '
+                         'the default here because that value is convention-bound to the pellet RVE and '
+                         'transplanting it into electrode runs is forbidden (freeze doc §14-3).')
     ap.add_argument('--field-max-points', type=int, default=90000,
                     help='max points per current-density FIELD cloud (electronic=AM+carbon, ionic=SE+SDCP). '
                          'High for paper figures; ~90k/field ≈ a few MB JSON.  Hottest 35%% always kept.')
