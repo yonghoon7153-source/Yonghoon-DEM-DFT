@@ -81,8 +81,28 @@ def windowed_curve(f_ref, x_cell_norm, alpha, beta):
 
 LAM_PE = (1 - a_pe) * 100
 LAM_NE = (1 - a_ne) * 100
-LLI    = ((1 - a_pe) + (b_pe - b_ne)) * 100    # Birkl 2017 부호 규약
+LLI    = ((1 - a_pe) + (b_pe - b_ne)) * 100    # ★ 출처 정정 — 아래 참조
 ```
+
+> **★ 2026-09-03 인용 정정.** 위 `LLI` 식에 붙어 있던 `# Birkl 2017 부호 규약`
+> 주석은 **원문으로 확인되지 않아 제거했다.** Birkl et al. 2017 (*J. Power
+> Sources* 341, 373–386) 본문에는 α·β 창 파라미터도 이 식도 없다 — 그 논문은
+> 자유 파라미터 `[LLI, LAM_PE, LAM_NE]` **3개**를 쓰고 stoichiometric offset 은
+> 컷오프 전압 등식으로 소거한다 (해체분석:
+> `wiki/raw/papers/birkl2017_degradation-diagnostics-ocv.md`).
+>
+> 창 기하(scaling `LR` = 폭, offset `OFS` = 왼쪽 끝)의 실제 출처는 **Dubarry,
+> Truchot & Liaw 2012** (*J. Power Sources* 219, 204–216) 이고, `li`/`de`
+> 하위구분의 정의문도 거기다 (해체분석:
+> `wiki/raw/papers/dubarry2012_synthesize-degradation-modes.md`).
+>
+> **다만 이 `LLI` 식 자체는 Dubarry 에도 없다.** 그쪽 식 (8') 과 세 군데가
+> 어긋난다: offset 부호가 반대이고, LAM 항을 빼며, 그 LAM 항은 `LAM_liNE`·
+> `LAM_dePE` 뿐이다(`LAM_liPE` 는 offset 에 안 들어간다). 즉 이 식은 **두 원전
+> 어디에도 없는, 문서화되지 않은 우리 쪽 (재)유도**다. 현행
+> `src/fitting.py:23` 의 `κ·(β_NE − β_PE)` 는 offset 부호가 Dubarry 와
+> **일치**하므로, 어긋난 것은 이 legacy 문서 쪽이다. 유도를 복원해 적기 전에는
+> 이 식을 인용 근거로 쓰지 않는다.
 
 21p 방법론의 **정방향(forward) 구현**. fitting은 이것의 역방향이다.
 → `src/fitting.py`는 이 `windowed_curve`를 그대로 재사용해야 한다.

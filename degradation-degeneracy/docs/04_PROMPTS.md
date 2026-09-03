@@ -326,7 +326,11 @@ Phase 4: 33p MATLAB fitting 코드를 Python으로 이식한다.
   - to_degradation_modes(p) -> dict
       LAM_PE = (1 - a_PE)
       LAM_NE = (1 - a_NE)
-      LLI    = (1 - a_PE) + (b_PE - b_NE)     ← 원본 부호 규약 유지 (Birkl 2017)
+      LLI    = (1 - a_PE) + (b_PE - b_NE)     ← ★ 출처 미확인 (2026-09-03)
+      # Birkl 2017 이 아니다 — 그 본문에 α·β 도 이 식도 없다. 창 기하의
+      # 출처는 Dubarry 2012 (LR·OFS) 이지만 이 식 자체는 거기에도 없다
+      # (offset 부호·LAM 항이 어긋난다). 문서화되지 않은 우리 쪽 재유도다.
+      # 근거: docs/02_CODE_AUDIT.md 의 인용 정정 절.
 
   ⚠ bound 주의:
      원본 33p는 ub=[1.1, 0, 1.1, 0], lb=[1.00, -0.3, 1.00, -0.15].
