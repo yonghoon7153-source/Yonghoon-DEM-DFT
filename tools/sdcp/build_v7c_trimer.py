@@ -47,6 +47,7 @@
 """
 import argparse
 import hashlib
+import inspect
 import json
 import math
 import os
@@ -3830,6 +3831,62 @@ def selftest():
             and all(v is None for k, v in (_j6.get("partition") or {}).items()
                     if str(k).startswith("class") and not k.endswith("_candidate")),
             "Z-2 P1: 게이트된 잡은 hirshfeld_strict.class · partition.class_* 도 candidate 로만 남는다")
+        # ══ 회신 Z-3 (내부 리뷰 3차 · 2026-09-03) — P0-1: 러너 heredoc 을 **실행**한다 ═════════
+        #   왜 필요한가: 337건이 다 통과했는데도 smoke 는 실행되면 100 % ValueError 로 죽었다.
+        #   문자열 존재 검사(`"w3_spin.cube" in PIL_RUNNER`)로는 런타임 오류를 원리적으로 못 본다.
+        _hd = os.path.join(ptd, "z3_heredoc"); os.makedirs(_hd, exist_ok=True)
+        _pyg = os.path.join(_hd, "_pyg.py"); open(_pyg, "w").write(_pil_heredoc("PYG"))
+        _pyu = os.path.join(_hd, "_pyu.py"); open(_pyu, "w").write(_pil_heredoc("PYU"))
+        _lcd = os.path.join(_hd, "loc"); os.makedirs(_lcd, exist_ok=True)
+        _rg = subprocess.run([sys.executable, _pyg, os.path.abspath(__file__), _lcd],
+                             capture_output=True, text=True)
+        chk(_rg.returncode == 0 and os.path.getsize(os.path.join(_lcd, "w3.inp")) > 0,
+            "🔴 Z-3 P0-1: loccheck smoke 의 PYG heredoc 이 **실제로 실행되어** w3.inp 를 쓴다 "
+            "(`%%plots` 를 `%%` 로 escape 하지 않으면 여기서 ValueError 로 죽는다) — rc %s %s"
+            % (_rg.returncode, (_rg.stderr or "").strip().splitlines()[-1:] or ""))
+        _inp3 = open(os.path.join(_lcd, "w3.inp")).read()
+        _g3 = json.loads(open(os.path.join(_lcd, "w3_grid.json")).read())
+        chk(_inp3.startswith("! UKS") and "\n%plots\n" in _inp3
+            and ("  dim1 %d\n" % _g3["dims"][0]) in _inp3 and "SpinDens(\"w3_spin.cube\")" in _inp3
+            and _g3["dims"] == pil_cube_grid([[0.0, 0.0, 0.0], [0.0, 0.0, 0.97]])["dims"],
+            "Z-3 P0-1: 쓰인 w3.inp 의 블록 이름이 ORCA 가 읽는 `%%plots` 한 글자이고 상자는 "
+            "production 규칙(pil_cube_grid)과 같다")
+        _B3 = 0.529177210903
+        _at3 = [(8, 0.0, 0.0, 0.0), (1, 0.0, 0.0, 0.97 / _B3)]
+        _at3 = [(z, (x, y, zz)) for (z, x, y, zz) in _at3]
+        _dm3, _mn3, _sp3 = _g3["dims"], _g3["min_bohr"], [s / _B3 for s in _g3["spacing_A"]]
+        _cases = [
+            ("점-규약 (dim = 점 수 · origin = min · 간격 = L/(n−1))", _dm3, _mn3, _sp3, "bohr"),
+            ("구간-규약 (ORCA 가 dim 을 **구간 수**로 읽어 간격 = L/n)", _dm3, _mn3,
+             [(_g3["max_bohr"][t] - _mn3[t]) / _dm3[t] for t in range(3)], "GRIDFAIL:bohr"),
+            ("Å-판독 (ORCA 가 min/max 를 Å 로 읽어 origin 이 1/B 배)", _dm3,
+             [x / _B3 for x in _mn3], _sp3, "GRIDFAIL:angstrom"),
+            ("중심정렬 (origin 을 상자 중심으로 잡음)", _dm3,
+             [(_mn3[t] + _g3["max_bohr"][t]) / 2 for t in range(3)], _sp3, "GRIDFAIL:unknown"),
+        ]
+        for _why, _d, _o, _s, _want in _cases:
+            _pil_smoke_cube(os.path.join(_lcd, "w3_spin.cube"), _d, _o, _s, _at3)
+            _ru = subprocess.run([sys.executable, _pyu, os.path.abspath(__file__), _lcd],
+                                 capture_output=True, text=True)
+            _got = (_ru.stdout or "").strip()
+            chk(_ru.returncode == 0 and _got == _want,
+                ("Z-3 P0-1 %s: %s → %s" % ("양성" if _want == "bohr" else "⛔음성", _why, _want))
+                + ("" if _got == _want else " (실제 %r · rc %s)" % (_got, _ru.returncode)))
+        chk(json.loads(open(os.path.join(_lcd, "w3_gridcheck.json")).read())
+            .get("grid_convention_verified") is False,
+            "Z-3 P0-1: 실패한 판정도 gridcheck 파일에 **거짓으로** 기록된다 (증서가 참을 못 훔친다)")
+        _cbp = os.path.join(_hd, "conv.cube")
+        _pil_smoke_cube(_cbp, _dm3, _mn3, _sp3, _at3)
+        import spin_partition_calib as _spc3
+        _okc, _unitc, _dc = pil_cube_grid_check(_spc3.read_cube(_cbp), _g3)
+        _pil_smoke_cube(_cbp, _dm3, [x + 5e-3 for x in _mn3], _sp3, _at3)
+        _ok2, _u2, _d2 = pil_cube_grid_check(_spc3.read_cube(_cbp), _g3)
+        chk(_okc and not _ok2 and _u2 == "unknown",
+            "⛔음성 Z-3 P1: 격자 대조가 **한 함수**(pil_cube_grid_check)로 통일됐다 — origin 을 "
+            "5e-3 bohr 밀면 smoke·production 이 **함께** 실패한다 (예전엔 smoke 만 1e-2 라 통과)")
+        chk("pil_cube_grid_check" in _pil_heredoc("PYU")
+            and "pil_cube_grid_check" in inspect.getsource(pil_run_calib),
+            "Z-3 P1: smoke 와 production 이 같은 대조 함수를 부른다 (규약 복사 금지 — CLAUDE.md)")
     print("── 폴라론 pilot 끝 ──")
     print("── %s ──" % ("PASS" if not fails else "FAIL " + str(len(fails))))
     return 1 if fails else 0
@@ -4644,6 +4701,31 @@ def pil_cube_grid(pos, spacing_A=PIL_CUBE_SPACING_A, margin_A=PIL_CUBE_MARGIN_A)
             "min_bohr": [x / B for x in lo], "max_bohr": [x / B for x in hi],
             "target_spacing_A": spacing_A, "margin_A": margin_A,
             "n_points": dims[0] * dims[1] * dims[2]}
+
+
+def pil_cube_grid_check(cb, g, origin_tol_bohr=1e-3, spacing_tol_A=1e-3):
+    """cube 헤더가 `pil_cube_grid` 봉인(g)과 같은 규약인가. → (ok, unit, detail)
+
+    ⛔ 회신 Z-3 P1 — 이 대조가 `pil_run_calib` 와 loccheck smoke **두 곳에 복사**돼 있었고
+      허용차마저 갈렸다(1e-3 vs 1e-2). 규약 복사는 CLAUDE.md 가 금지한다 — 여기가 유일한 원본이다.
+    unit: 'bohr' (origin 이 min_bohr) · 'angstrom' (origin 이 min_bohr/B, 즉 ORCA 가 Å 로 읽음)
+      · 'unknown'. ok 는 **bohr 일 때만** 참이다 — Å 로 읽는 ORCA 는 지원하지 않는다(회신 Z-3 P1).
+    ⛔ 못 하는 것: cube 의 **값**이 맞는지는 안 본다 (∫Δρ·QC 는 calibration 도구 몫).
+    """
+    B = 0.529177210903
+    o = list(cb["origin_bohr"])
+    d_bohr = max(abs(o[t] - g["min_bohr"][t]) for t in range(3))
+    d_ang = max(abs(o[t] - g["min_bohr"][t] / B) for t in range(3))
+    unit = ("bohr" if d_bohr <= origin_tol_bohr else
+            ("angstrom" if d_ang <= origin_tol_bohr else "unknown"))
+    sp = [math.sqrt(sum(c * c for c in v)) for v in cb["vec"]]
+    d_n = list(cb["n"]) != list(g["dims"])
+    d_sp = max(abs(sp[t] - g["spacing_A"][t]) for t in range(3))
+    ok = (not d_n) and unit == "bohr" and d_sp <= spacing_tol_A
+    return ok, unit, {"cube_n": list(cb["n"]), "sealed_dims": list(g["dims"]),
+                      "cube_origin_bohr": o, "sealed_min_bohr": list(g["min_bohr"]),
+                      "cube_spacing_A": sp, "sealed_spacing_A": list(g["spacing_A"]),
+                      "d_origin_bohr": d_bohr, "d_spacing_A": d_sp, "n_differs": d_n}
 
 
 def _pil_cpcm(eps):
@@ -6939,6 +7021,42 @@ def _pil_fake_real_cube(out, man, jk, spins, sigma_A=0.35):
     (jd / (tag + PIL_CUBE_SUFFIX)).write_text("\n".join(L) + "\n")
 
 
+def _pil_heredoc(name, runner=None):
+    """러너(`PIL_RUNNER`)에서 `<<'NAME' … NAME` 본문을 꺼낸다. → str
+
+    ⛔ 회신 Z-3 P0-1 — 러너의 python heredoc 은 **어느 시험도 실행하지 않았다**(문자열 존재만
+      봤다). 그래서 `%plots` 를 `%`-포맷 문자열에 넣은 오타가 selftest 337건을 통과했고,
+      실행하면 반드시 ValueError 로 죽어 증서가 영원히 안 나오는 상태였다. 이 함수는 그
+      본문을 꺼내 **실제로 돌리기** 위한 것이다.
+    ⛔ 못 하는 것: bash 쪽 배선(변수 치환·리다이렉션·`case` 판정)은 안 본다 — python 본문만이다.
+    """
+    src = PIL_RUNNER if runner is None else runner
+    m = re.search(r"<<'%s'[^\n]*\n" % re.escape(name), src)   # 마커 뒤 `|| fail=1` 등이 붙는다
+    if not m:
+        raise KeyError("러너에 heredoc %s 가 없다" % name)
+    end = src.index("\n%s\n" % name, m.end())
+    return src[m.end():end]
+
+
+def _pil_smoke_cube(path, dims, origin_bohr, step_bohr, atoms):
+    """selftest 용 최소 cube — 헤더 규약(n · origin · 간격)만 바꿔 가며 쓰는 시험용.
+
+    회신 Z-3 P0-1 의 네 경우(점-규약 · 구간-규약 · Å-판독 · 중심정렬)를 만들려면 헤더를
+    **자유롭게** 써야 해서 `_pil_fake_real_cube`(봉인 격자 고정)와 따로 둔다.
+    값은 원자 위치 가우시안 합을 정규화 없이 넣는다 — 격자 규약 판정에 값은 안 쓰인다.
+    """
+    L = ["smoke cube (selftest)", "grid-convention fixture",
+         "%5d %12.6f %12.6f %12.6f" % (len(atoms), origin_bohr[0], origin_bohr[1], origin_bohr[2]),
+         "%5d %12.6f %12.6f %12.6f" % (dims[0], step_bohr[0], 0.0, 0.0),
+         "%5d %12.6f %12.6f %12.6f" % (dims[1], 0.0, step_bohr[1], 0.0),
+         "%5d %12.6f %12.6f %12.6f" % (dims[2], 0.0, 0.0, step_bohr[2])]
+    for zz, (x, y, z) in atoms:
+        L.append("%5d %12.6f %12.6f %12.6f %12.6f" % (zz, float(zz), x, y, z))
+    n = dims[0] * dims[1] * dims[2]
+    L += [" ".join("%13.5e" % 0.0 for _ in range(min(6, n - i))) for i in range(0, n, 6)]
+    Path(path).write_text("\n".join(L) + "\n")
+
+
 def _pil_fake_calib(out, man, jk, spins, disagree=False, stale_cube=False,
                     tool_changed=False, family_diverge=False, real_cube=False,
                     cube_text="fake spin density cube", vec_lie=False, no_receipt=False,
@@ -7554,18 +7672,17 @@ def pil_run_calib(d, jk):
     _g = jm.get("cube_grid")
     if not _g:
         raise SystemExit("⛔ %s 에 cube_grid 봉인이 없다 — 구판 묶음이다 (회신 Z P1)" % jk)
-    _B = 0.529177210903
-    _sp_cube = [math.sqrt(sum(c * c for c in v)) for v in cb["vec"]]
-    if (list(cb["n"]) != list(_g["dims"])
-            or max(abs(cb["origin_bohr"][t] - _g["min_bohr"][t]) for t in range(3)) > 1e-3
-            or max(abs(_sp_cube[t] - _g["spacing_A"][t]) for t in range(3)) > 1e-3):
+    # 🔴 회신 Z-3 P1 — 규약 대조는 `pil_cube_grid_check` **한 곳**에만 있다 (loccheck smoke 도 같은 함수).
+    _gok, _gunit, _gd = pil_cube_grid_check(cb, _g)
+    if not _gok:
         raise SystemExit("⛔ CUBE_GRID_MISMATCH: cube 격자(n %s · origin %s bohr · 간격 %s Å)가 봉인 "
-                         "(n %s · min %s · 간격 %s)과 다르다 — ORCA 가 요청한 상자를 다르게 읽었거나 "
-                         "다른 cube 다 (회신 Z P1)"
-                         % (cb["n"], [round(x, 3) for x in cb["origin_bohr"]],
-                            [round(x, 4) for x in _sp_cube], _g["dims"],
-                            [round(x, 3) for x in _g["min_bohr"]],
-                            [round(x, 4) for x in _g["spacing_A"]]))
+                         "(n %s · min %s · 간격 %s)과 다르다 — 단위 판정 %s · Δorigin %.4f bohr · "
+                         "Δ간격 %.4f Å. ORCA 가 요청한 상자를 다르게 읽었거나 다른 cube 다 (회신 Z P1)"
+                         % (_gd["cube_n"], [round(x, 3) for x in _gd["cube_origin_bohr"]],
+                            [round(x, 4) for x in _gd["cube_spacing_A"]], _gd["sealed_dims"],
+                            [round(x, 3) for x in _gd["sealed_min_bohr"]],
+                            [round(x, 4) for x in _gd["sealed_spacing_A"]],
+                            _gunit, _gd["d_origin_bohr"], _gd["d_spacing_A"]))
     res = spc.partition_forms(cb, sets, min_points=8000, use_numpy=True,
                               max_spacing_A=PIL_CUBE_MAX_SPACING_A,
                               n_unpaired=int(jm["mult"]) - 1)
@@ -8710,7 +8827,9 @@ g = m.pil_cube_grid(pos)                                    # production 과 같
 json.dump(g, open(lc + "/w3_grid.json", "w"), indent=1)
 mn, mx, dm = g["min_bohr"], g["max_bohr"], g["dims"]
 open(lc + "/w3.inp", "w").write(
-    "! UKS BP86 def2-SVP TightSCF NoAutoStart\n%plots\n  Format Gaussian_Cube\n"
+    # 🔴 회신 Z-3 P0-1 — `%%plots` 다. `%plots` 로 쓰면 `%p` 가 포맷 지시자로 해석돼
+    #   ValueError 로 죽고, 증서가 **영원히** 안 나온다 (production `_pil_inp` 은 처음부터 `%%`).
+    "! UKS BP86 def2-SVP TightSCF NoAutoStart\n%%plots\n  Format Gaussian_Cube\n"
     "  dim1 %d\n  dim2 %d\n  dim3 %d\n  min1 %.6f\n  max1 %.6f\n  min2 %.6f\n  max2 %.6f\n"
     "  min3 %.6f\n  max3 %.6f\n  SpinDens(\"w3_spin.cube\");\nend\n* xyz 0 2\n"
     "O   0.000000  0.000000  0.000000\nH   0.000000  0.000000  0.970000\n*\n"
@@ -8736,15 +8855,11 @@ m = importlib.util.module_from_spec(spec); spec.loader.exec_module(m)
 import spin_partition_calib as spc
 g = json.load(open(lc + "/w3_grid.json"))
 cb = spc.read_cube(lc + "/w3_spin.cube")
-B = 0.529177210903
-o = cb["origin_bohr"]
-unit = ("bohr" if max(abs(o[t] - g["min_bohr"][t]) for t in range(3)) < 1e-2 else
-        ("angstrom" if max(abs(o[t] - g["min_bohr"][t] / B) for t in range(3)) < 1e-2 else "unknown"))
-sp = [math.sqrt(sum(c * c for c in v)) for v in cb["vec"]]
-ok = (list(cb["n"]) == list(g["dims"]) and unit == "bohr"
-      and max(abs(sp[t] - g["spacing_A"][t]) for t in range(3)) <= 1e-3)
-json.dump({"grid_convention_verified": bool(ok), "unit": unit, "cube_n": list(cb["n"]),
-           "cube_origin_bohr": o, "cube_spacing_A": sp, "sealed": g}, open(lc + "/w3_gridcheck.json", "w"), indent=1)
+# 🔴 회신 Z-3 P1 — production(`pil_run_calib`)과 **같은 함수**로 대조한다. 예전엔 여기에
+#   복사본이 있었고 origin 허용차가 1e-2 로 느슨해 production 만 실패하는 cube 가 통과했다.
+ok, unit, detail = m.pil_cube_grid_check(cb, g)
+json.dump(dict(detail, grid_convention_verified=bool(ok), unit=unit, sealed=g),
+          open(lc + "/w3_gridcheck.json", "w"), indent=1)
 print(unit if ok else ("GRIDFAIL:" + unit))
 PYU
 )
