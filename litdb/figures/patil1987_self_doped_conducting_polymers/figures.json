@@ -1,0 +1,51 @@
+{
+ "slug": "patil1987_self_doped_conducting_polymers",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-09-03",
+ "sources": [
+  "8fd57b40-71._Selfdoped_conducting_polymers.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 5,
+   "file": "fig_3.png",
+   "caption": "Fig. 3. Comparison of the ~'-~'* absorption for a film of P3-BTSH (cast from water; dashed curve) and for a solution of the same polymer in water {solid curve).",
+   "rotated_deg": 0,
+   "bbox": [
+    0.0,
+    57.0,
+    468.0,
+    287.2
+   ],
+   "w": 1950,
+   "h": 960,
+   "dpi": 300,
+   "src": "8fd57b40-71._Selfdoped_conducting_polymers.pdf",
+   "blank": 0.985
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 8,
+   "file": "fig_6.png",
+   "caption": "Fig. 6. Cyclic voltammogram; P3-ETSH on ITO glass as working electrode, platinum as counter electrode, and Ag/Ag + reference electrode (in acetonitrile with fluoroboric acid- trifluoroacetic acid as electrolyte).",
+   "rotated_deg": 0,
+   "bbox": [
+    0.0,
+    56.6,
+    468.0,
+    237.8
+   ],
+   "w": 1950,
+   "h": 755,
+   "dpi": 300,
+   "src": "8fd57b40-71._Selfdoped_conducting_polymers.pdf",
+   "blank": 0.981
+  }
+ ]
+}

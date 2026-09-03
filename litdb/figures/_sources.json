@@ -494,7 +494,7 @@
   ]
  },
  "lai2020_li2s_interfacial_layer_amorphous_sulfide_cse": {
-  "figures": 10,
+  "figures": 11,
   "generated": "2026-09-01",
   "pdfs": [
    "85. Lai2020_Li2S_Interfacial_Layer_Amorphous_Sulfide_CSE.pdf",
@@ -795,6 +795,13 @@
   "generated": "2026-08-05",
   "pdfs": [
    "DEM 논문/11. A linear model of elasto-plastic and adhesive contact deformation.pdf"
+  ]
+ },
+ "patil1987_self_doped_conducting_polymers": {
+  "figures": 2,
+  "generated": "2026-09-03",
+  "pdfs": [
+   "8fd57b40-71._Selfdoped_conducting_polymers.pdf"
   ]
  },
  "petmad2026_lightweight_universal_interatomic_potential_mad": {
