@@ -17,7 +17,7 @@
  },
  "0_시각_증거": {
   "봉인_시점": "2026-09-03",
-  "builder_sha256": "b92ff52b55f803c5dac574e7c0de5c76ce800b0397d6bc2bae11cdf7936e4697",
+  "builder_sha256": "5eac63c6b800043b3676f3ac68c722a5d2ab292cbb98cb6550ae1d743600699d",
   "⚠_원본과_다른_해시인_이유": "회신 Y + Z + Z-2(내부 2차) 이행으로 빌더가 바뀌었다 (커밋 341e0d7e). 범위·질문·판정어는 그대로고, estimand 형태 대조(단위·결박·소비·계열 class)와 게이트 봉인·smoke 규약 실측이 바뀌었다.",
   "이_시점의_doped_잡": "0개 — git log 가 그 순서의 증거다. 결과를 보고 규칙을 고치지 않는다.",
   "이_시점의_ORCA_잡": "0개 — phase L 도 아직 돌리지 않았다 (회신 Y: loccheck 단독만 GO · 그것도 아직 안 돌림)",
@@ -48,7 +48,8 @@
    }
   ],
   "calib_tool_sha256": "02d9cb38640d9ef07910e068fd6ee2d74537b2821549e25652b43ae4cca06ac7",
-  "⚠_calib_tool_sha256": "tools/sdcp/spin_partition_calib.py 의 blob SHA — 생성기가 manifest 에 같은 값을 봉인하고 판정기가 잡별 대조 산출물의 tool_sha256 과 대조한다 (회신 Y P0-2). 도구가 바뀌면 재봉인."
+  "⚠_calib_tool_sha256": "tools/sdcp/spin_partition_calib.py 의 blob SHA — 생성기가 manifest 에 같은 값을 봉인하고 판정기가 잡별 대조 산출물의 tool_sha256 과 대조한다 (회신 Y P0-2). 도구가 바뀌면 재봉인.",
+  "⚠_재봉인_2026_09_03": "회신 Z-3 P0-1 이행으로 빌더가 바뀌었다 (loccheck smoke 가 실행되면 반드시 ValueError 로 죽던 것 수정 + heredoc 실행 시험 9건 + 격자 대조 단일화). **재비준 시 `ratification.content_digest` 를 반드시 재계산할 것** — 지금 값은 옛 판의 것이다."
  },
  "대상": {
   "정본_명칭": "neutral H-atom-removed n=6 radical model (D•)",
@@ -93,14 +94,16 @@
    },
    "격자_QC": "간격 ≤ max_spacing_A(0.35 Å) · 상자 면의 max|Δρ| ≤ 전체 max 의 1e-3 · ∫Δρ = 홀전자수 ±0.05 · Becke 균등 대체 질량 ≤ 1e-3. 하나라도 걸리면 CALIB_QC_FAILED. ⚠ 1e-3·0.35·5 Å 는 실물 200원자 cube 를 보기 전 값이다 — smoke(OH•)만 지났다.",
    "결박": "① manifest 가 `calib_tool_sha256`·`calib_gate` 를 봉인하고 사전등록(`0_시각_증거.calib_tool_sha256` · `calib_gate`)·코드 상수·디스크의 도구와 **셋이 같아야** 한다 (회신 Z P0-3). ② receipt 가 그 실행이 낳은 cube 의 SHA 를 봉인하고, calibration 은 receipt 의 cube 와 같은 cube 로만 만들며, cube 의 원자 좌표는 잡의 xyz 와, 격자는 봉인 `cube_grid` 와 대조한다 (회신 Z P0-2). ③ `<tag>_calib.json` 은 원자별 벡터(s_signed_e · w_abs_e)를 담고 판정기는 **F 를 재계산**해 파일 값과 대조한 뒤 extended·strict 두 분할에 네 조건을 적용한다. ④ Becke F_out 과 production Hirshfeld F 의 차가 family_tol(0.10)을 넘으면 CALIB_FAMILY_DIVERGES — 계열이 갈리면 절댓값-위치 대조가 무의미하다. ⑤ calibration receipt 행이 있어야 하고 파일 SHA 와 같아야 한다. ⑥ 판정·seed·calibration 의 python 진입점이 모두 **같은 빌더**(builder_sha256)인지 확인하고 PILOT_RESULT 에 `judged_by_builder_sha256` 을 적는다 (회신 Z P0-3ⓒ). ⑦ Becke F_out 과 Hirshfeld F 는 |ΔF| ≤ family_tol **그리고 class(pilot_class) 동일**을 요구한다 (회신 Z-2 P0-1: |ΔF| 0.095 인데 Becke 계열에서 MIXED 인 반례). ⑧ receipt 는 ORCA 실행 **직전에 옛 cube 를 지운 뒤** 그 실행이 낳은 cube 만 봉인한다 (회신 Z-2 P1).",
-   "도구": "tools/sdcp/spin_partition_calib.py (`direct_comparison_gate` · numpy 벡터화 · QC · 단위 e/bohr³→e) — selftest 32건 (음성 ≥ 18)",
+   "도구": "tools/sdcp/spin_partition_calib.py (`direct_comparison_gate` · numpy 벡터화 · QC · 단위 e/bohr³→e) — selftest 32건 (그중 ⛔음성 **17건** · 실측 2026-09-03, 회신 Z-3 P1 정정: 종전 '음성 ≥ 18' 은 양성 회귀 1건을 음성으로 셌다)",
    "⛔_문턱을_결과_보기_전에_박는다": "0.50 · 0.10 은 class 문턱 그대로, 0.05 는 margin 의 절반 — 2026-09-03, production cube 0개 시점에 코드 상수로 봉인.",
    "⛔_이_calibration_이_못_하는_것": [
     "Hirshfeld 로 재계산한 것이 아니다 (Becke 계열 안의 비교다) — 분할 자체의 타당성은 보증하지 않는다. family_tol 대조는 두 계열이 **크게** 갈리는 경우만 잡는다.",
     "두 형태가 같은 격자 오차로 **같이 틀린** 경우는 못 본다 — 격자 QC 가 표시할 뿐이다.",
     "cube 를 만들지 않는다 — ORCA `%plots` 몫이고, 없으면 그 잡은 class 가 없다.",
     "판정기는 F 를 원자별 벡터에서 재계산하지만 **벡터 자체(Becke 적분)는 calib.json 을 신뢰**한다 — 재적분하지 않는다. 결박(cube·도구·receipt SHA)이 그 신뢰의 근거다.",
-    "smoke(OH•)가 실측하는 것은 `%plots` 의 격자 규약(dim=점 수 · origin=min · 간격)과 단위·∫Δρ 다 — 200원자 상자에서의 면 절단·간격 QC 는 S 잡의 cube 가 처음 본다 (회신 Z-2 P0-2)."
+    "smoke(OH•)가 실측하는 것은 `%plots` 의 격자 규약(dim=점 수 · origin=min · 간격)과 단위·∫Δρ 다 — 200원자 상자에서의 면 절단·간격 QC 는 S 잡의 cube 가 처음 본다 (회신 Z-2 P0-2).",
+    "**문턱 민감도는 계열 대조 밖이다.** family 대조가 보증하는 것은 **봉인 문턱(0.5 · margin 0.10)에서의 class 동일** 뿐이다. 실측 반례: Hirshfeld {0.61,0.37,0.02} 는 0.4/0.5/0.6 전부 BACKBONE 인데 Becke {0.56,0.42,0.02} 는 0.6 에서 MIXED 다 — |ΔF|=0.05 · 봉인 문턱 class 동일 · CALIB_AGREES 라 게이트가 안 걸린다. `THRESHOLD_DEPENDENT` 판정은 Hirshfeld 한 계열만 본다. ⇒ **문턱을 옮겨도 class 가 안 바뀐다** 는 문장을 이 calibration 으로 쓰지 말 것 (회신 Z-3 P1).",
+    "**Å 로 min/max 를 읽는 ORCA 빌드는 지원하지 않는다.** loccheck smoke 가 bohr 만 통과시키므로 그런 빌드에서는 증서가 발급되지 않고 캠페인이 거기서 멈춘다. 종전엔 판독기가 'angstrom' 도 받아 '실측한 단위로 쓴다' 고 적혀 있었으나 **도달 불가능한 분기**였다 — 코드를 문구에 맞췄다 (회신 Z-3 P1)."
    ],
    "단위": "Gaussian cube 값은 e/bohr³ 이고 적분은 bohr³ 로 한다 (∫Δρ [e]). 회신 Z P0-1 이 잡은 Å³ 적분(0.148 배)은 철회. 산출물 필드는 단위를 이름에 적는다(…_e). loccheck 의 OH• smoke 가 실물 cube 로 ∫Δρ = 1 ± 0.05 를 증서에 봉인해야 phase L 이 열린다.",
    "시간_예산": "Becke 벡터화 실측(리뷰어): 199원자 · 96점 chunk 0.083 s → ~10⁶ 점 cube 하나 ≈ 25 분(1 thread). 측정 15잡 ≈ 6 h 가 S 단계 안에서 ORCA 와 직렬로 들어간다 (+SR). 계획에 넣는다; 정밀도를 깎는 최적화(float32·cutoff)는 하지 않았다."

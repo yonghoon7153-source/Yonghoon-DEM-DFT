@@ -1,6 +1,6 @@
 # kb 카탈로그 (생성물 — 손으로 고치지 말 것)
 
-> `python3 tools/kb_wiki.py index` 가 만든다 · 2026-09-03 · managed-files: 347
+> `python3 tools/kb_wiki.py index` 가 만든다 · 2026-09-03 · managed-files: 349
 
 규칙: kb/SCHEMA.md · 열린 질문: kb/questions/ · 논지 카드: kb/syntheses/ · 원장: kb/open_items.md · 문헌: litdb/INDEX.md
 
@@ -172,7 +172,7 @@
 - `kb/results/vgcf_hbn_figure_plan.md` — VGCF/h-BN 원고 — 층수 연구를 어디에 둘 것인가 (2026-07-31 결정)
 - `kb/results/vgcf_hbn_gallery_mechanism_2026_07_30.md` — h-BN@VGCF — 209 meV 층수효과의 정체: confinement 확정 (2026-07-30)
 
-## reviews/ (95)
+## reviews/ (97)
 - `kb/reviews/ECERD2600097_review_notes.md` — 📝 리뷰 노트 — ECER-D-26-00097 (Fan 외, *Stability Issues in Sulfide-Based ASSB*)
 - `kb/reviews/INDEX.md` — 리뷰 사슬 색인 — 프롬프트↔회신 (자동 생성) ○미열람
 - `kb/reviews/codex_AA_prompt_stageA_v5_regate_2026_08_29.md` — Codex 재검토 요청 AA — 회신 Z 의 P0 8건 처리 후 Stage A v5 재게이트 ○미열람
@@ -255,7 +255,9 @@
 - `kb/reviews/codex_X_prompt_prospective_bundle_ready_2026_08_29.md` — Codex 회신 X 요청 — prospective 번들 40잡, 던지기 전 최종 감사 (실물 첨부) ○미열람
 - `kb/reviews/codex_Y_reply_polaron_S0_2026_09_03.md` — 회신 Y — 폴라론 S0 (NO-GO · P0 8 · P1 8 · Q1–Q5)
 - `kb/reviews/codex_stats_question_2026_08_11.md` — Codex 질문 — 통계 판정 3건 (β 귀무분포 · 사다리 설계 · BVSE 부호 · 판정바닥 ddof)
+- `kb/reviews/internal_BG_reply_c12_2026_09_03.md` — 회신 BG — C-12 내부 적대적 리뷰 (NO-GO · P0 1 · P1 8)
 - `kb/reviews/internal_Z2_reply_polaron_S0_2026_09_03.md` — 회신 Z-2 — 폴라론 S0 내부 적대적 리뷰 2차 (NO-GO · P0 2 · P1 9)
+- `kb/reviews/internal_Z3_reply_polaron_S0_2026_09_03.md` — 회신 Z-3 — 폴라론 S0 내부 적대적 리뷰 3차 (NO-GO · P0 1 · P1 7)
 - `kb/reviews/internal_Z_reply_polaron_S0_2026_09_03.md` — 회신 Z — 폴라론 S0 내부 적대적 리뷰 (NO-GO · P0 4 · P1 12)
 - `kb/reviews/section3_review_candidates.md` — 📋 §3 리뷰 코멘트 후보 — 소거법 작업용 (ECER-D-26-00097)
 - `kb/reviews/section3_review_comments_compressed.md` — Comments on Section 3 (Intrinsic Stability of Sulfide SEs) — 압축판 v2

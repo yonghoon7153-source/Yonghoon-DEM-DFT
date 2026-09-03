@@ -3723,6 +3723,53 @@ def selftest():
         chk(_pil_require_builder({"builder_sha256": _sha(__file__)}, "selftest") == _sha(__file__)
             and _r.get("judged_by_builder_sha256") == _sha(__file__),
             "Z P0-3ⓒ 양성: 같은 빌더면 통과하고 PILOT_RESULT 가 어느 빌더가 판정했는지 적는다")
+        # 🔴 회신 Z-3 P1 — `_pil_require_builder` 를 **부르는 자리**에 음성이 없었다.
+        #   함수 자체의 음성(위)만 있어서, 호출을 지워도(MK1·MK2) 시험이 하나도 안 뒤집혔다.
+        _z3b = os.path.join(ptd, "z3_builder"); _copy2.copytree(os.path.join(ptd, "q4_ok"), _z3b)
+        _mb = Path(_z3b) / "MANIFEST_PILOT.json"
+        _mbj = json.loads(_mb.read_text()); _mbj["builder_sha256"] = "e" * 64
+        _mb.write_text(json.dumps(_mbj, ensure_ascii=False))
+        _pf3 = pil_preflight(_z3b, "S")     # ⚠ 계약상 SystemExit 을 잡아 rc 2 로 낸다
+        chk(_pf3[0] == 2,
+            "⛔음성 Z-3 P1: `--polaron_preflight` 는 빌더가 다른 묶음을 rc 2 로 막는다")
+        # ⚠ 위 rc 2 는 `_pil_check_prereg` 도 같이 잡으므로 **어느 가드가 막았는지 구별하지
+        #   못한다**(두 가드가 겹친다 — require_builder 는 방어 이중화다). 그래서 호출이
+        #   실제로 그 자리에 있는지는 **소스 수준**으로 본다: 지우면 이 시험이 뒤집힌다.
+        #   행동 시험이 아니라는 것을 숨기지 않는다.
+        chk(all("_pil_require_builder(" in inspect.getsource(_f)
+                for _f in (pil_preflight, pil_write_receipt)),
+            "Z-3 P1 (소스 검사): `pil_preflight`·`pil_write_receipt` 가 빌더 결박을 **부른다** "
+            "— 행동으로는 prereg 가드와 겹쳐 구별이 안 되므로 호출 자체를 결박한다")
+        # 🔴 회신 Z-3 P1 — **strict 계열** class 대조에 음성이 없었다. 합성 다이머엔 ether_O 가
+        #   없어 strict ≡ extended 라 e2e 로는 못 만든다(실물 D 프레임은 strict ≠ extended 다).
+        #   게이트 함수를 직접 쳐서 strict 쪽만 class 가 갈리게 만든다.
+        _z3s = os.path.join(ptd, "z3_strict_class")
+        _copy2.copytree(os.path.join(ptd, "q4_ok"), _z3s)
+        _mks = json.loads(open(os.path.join(_z3s, "MANIFEST_PILOT.json")).read())
+        _ses = pil_frame_sets(_mks["atom_manifest"], True, True)["sets"]
+        _rcs = pil_read_receipts(_z3s)
+        _cps = json.loads((Path(_z3s) / _zjk / ("B_ring0" + PIL_CALIB_SUFFIX)).read_text())
+        _svs, _wvs = _cps["s_signed_e"], _cps["w_abs_e"]
+        _hir_x = pil_F_from_vectors(_svs, [abs(x) for x in _svs], _ses)[0]
+        #   extended 는 실제 값 그대로(일치) · strict 만 backbone 을 0.5 밑으로 내려 class 를 가른다
+        _hir_s_bad = {"backbone": 0.46, "sulfonate": 0.52, "other": 0.02}
+        _g3s = pil_calib_gate_for_job(_mks, Path(_z3s) / _zjk, "B_ring0", _ses, _ses,
+                                      _hir_x, _hir_s_bad, _rcs.get(_zjk), _rcs, _zjk)
+        chk(any(f.startswith("CALIB_FAMILY_CLASS_DIFFERS(strict") for f in _g3s["flags"])
+            and not any(f.startswith("CALIB_FAMILY_CLASS_DIFFERS(extended") for f in _g3s["flags"]),
+            "⛔음성 Z-3 P1: extended 계열은 일치해도 **strict 계열**의 class 만 갈리면 게이트다 "
+            "(strict 루프를 지우면 뒤집힌다) · flags %s" % [f[:46] for f in _g3s["flags"]][:2])
+        raises(lambda: pil_write_receipt(_z3b, "S", _zjk, 0),
+               "⛔음성 Z-3 P1: `--polaron_receipt` 도 빌더 결박을 **부른다**")
+        # 🔴 회신 Z-3 P1 — receipt 의 builder 시험이 동어반복이었다: require_builder 가 둘의
+        #   동일을 강제하므로 `== _sha(__file__)` 는 언제나 참이다. 두 필드가 **서로 다른 출처**
+        #   임을 보이도록 바꾼다 — manifest 값은 묶음이 주장하는 것, builder 값은 지금 이 파일.
+        _rc_b2 = pil_read_receipts(os.path.join(ptd, "q4_ok"))[_zjk]
+        chk(_rc_b2.get("manifest_builder_sha256") == json.loads(
+                (Path(ptd) / "q4_ok" / "MANIFEST_PILOT.json").read_text()).get("builder_sha256")
+            and _rc_b2.get("builder_sha256") == _sha(__file__),
+            "Z-3 P1: receipt 의 두 builder 필드가 **서로 다른 출처**다 — manifest_builder_sha256 은 "
+            "묶음의 주장, builder_sha256 은 receipt 를 쓴 이 파일 (동어반복 시험 교체)")
         # ── Z P1 ─────────────────────────────────────────────────────────────
         _zc5 = _ana("z_class_cand", calib_missing=("B_ring0",))
         chk(_zc5["jobs"][_zjk].get("class") is None and _zc5["jobs"][_zjk].get("class_candidate"),
@@ -3826,6 +3873,14 @@ def selftest():
             "⛔음성 Z-2 P1: calib_gate 에 코드에 없는 문턱 키가 있으면 위반이다")
         _zc6 = _ana("z2_class_nested", calib_missing=("B_ring0",))
         _j6 = _zc6["jobs"][_zjk]
+        # ⚠ calib 이 아예 없는 잡(_j6)은 family_class 를 만들지도 못한다 — calibration 이 **돌았고**
+        #   다른 게이트가 걸린 잡(z2_family_class)에서 봐야 이 규칙이 시험된다.
+        _ef21 = (_z21["jobs"][_zjk].get("estimand_form_calibration") or {})
+        chk(_ef21.get("family_class_extended_candidate") is not None
+            and all(v is None for v in (_ef21.get("family_class_extended") or {"x": 1}).values()),
+            "Z-3 P1: 게이트된 잡은 `estimand_form_calibration.family_class_*` 의 class 문자열도 "
+            "candidate 로만 남는다 (게이트 **앞에** 기록되던 자리) · %s"
+            % {k: v for k, v in _ef21.items() if "family_class" in k})
         chk((_j6.get("hirshfeld_strict") or {}).get("class") is None
             and (_j6.get("hirshfeld_strict") or {}).get("class_candidate") is not None
             and all(v is None for k, v in (_j6.get("partition") or {}).items()
@@ -5470,8 +5525,13 @@ def pil_read_loccheck(d):
                           "(회신 Z P0-1)" % _ps.get("int_signed_e"))
     except (TypeError, ValueError):
         return None, "증서의 plots_smoke 에 int_signed_e 가 없다"
-    if _ps.get("minmax_unit") not in ("bohr", "angstrom"):
-        return None, ("증서가 `%%plots` min/max 단위를 실측하지 못했다 (%r) — 격자를 봉인할 수 없다"
+    # 🔴 회신 Z-3 P1 — **bohr 만** 받는다. 종전엔 "angstrom" 도 받아 seeds 가 그 단위로
+    #   `%%plots` 를 쓰게 돼 있었는데, smoke(PYU)는 `unit == "bohr"` 일 때만 통과시키므로
+    #   Å 증서는 **애초에 발급되지 않는다** — 도달 불가능한 분기였다. "실측한 단위로 쓴다" 는
+    #   문구가 거짓이었으므로 코드를 문구에 맞춘다: Å 로 읽는 ORCA 는 여기서 멈춘다(지원 안 함).
+    if _ps.get("minmax_unit") != "bohr":
+        return None, ("증서의 `%%plots` min/max 단위가 bohr 가 아니다 (%r) — 이 도구는 bohr 로 "
+                      "읽는 ORCA 만 지원한다. Å 로 읽는 빌드에서는 멈춘다 (회신 Z-3 P1)"
                       % _ps.get("minmax_unit"))
     # 🔴 회신 Z-2 P0-2 — 격자 규약(dim=점 수 · origin=min · 간격 1e-3)이 production 규칙과 같음을
     #   smoke 가 실측했어야 한다. 아니면 S 15잡 뒤 전건 CUBE_GRID_MISMATCH 가 된다.
@@ -6269,7 +6329,8 @@ def pilot_seeds(d):
     if _lcert is None:
         raise SystemExit("⛔ loccheck 증서 없이 seed 를 만들지 않는다 — %s" % _lwhy)
     # 회신 Z P1 — `%plots` min/max 단위는 증서(smoke)가 실측한 값이다
-    _plots_unit = ((_lcert.get("plots_smoke") or {}).get("minmax_unit")) or "bohr"
+    # 🔴 회신 Z-3 P1 — 판독기가 bohr 만 받으므로 여기는 항상 "bohr" 다 (Å 분기는 지웠다).
+    _plots_unit = "bohr"
     _amf = man.get("atom_manifest")
     if not _amf:
         raise SystemExit("⛔ MANIFEST_PILOT.json 에 `atom_manifest` 가 없다 — 구판 "
@@ -7309,7 +7370,7 @@ def pilot_restart(d):
     _lcert_r, _lwhy_r = pil_read_loccheck(d)
     if _lcert_r is None:
         raise SystemExit("⛔ loccheck 증서 없이 재판정 입력을 만들지 않는다 — %s" % _lwhy_r)
-    _plots_unit_r = ((_lcert_r.get("plots_smoke") or {}).get("minmax_unit")) or "bohr"
+    _plots_unit_r = "bohr"        # 회신 Z-3 P1 — Å 지원 없음 (판독기가 bohr 만 받는다)
     res = pilot_analyze(d)
     made = []
     for jk, r in sorted(res["jobs"].items()):
@@ -8351,6 +8412,15 @@ def pilot_analyze(d):
                 for _ck in [k for k in list(_pt) if str(k).startswith("class")]:
                     if _pt.get(_ck) is not None:
                         _pt[_ck + "_candidate"] = _pt.pop(_ck); _pt[_ck] = None
+            # 🔴 회신 Z-3 P1 — 이번 수정이 추가한 `estimand_form_calibration.family_class_*`
+            #   에도 class 문자열이 남아 있었다(게이트 **앞에** 기록되므로). 같은 규칙을 건다.
+            _ef = r.get("estimand_form_calibration")
+            if isinstance(_ef, dict):
+                for _fk in [k for k in list(_ef) if str(k).startswith("family_class_")]:
+                    _fv = _ef.get(_fk)
+                    if isinstance(_fv, dict) and any(v is not None for v in _fv.values()):
+                        _ef[_fk + "_candidate"] = _ef.pop(_fk)
+                        _ef[_fk] = {k: None for k in _ef[_fk + "_candidate"]}
         res["jobs"][jk] = r
 
     # ── 4층: 실현 basin 군집 (회신 T Q4) ─────────────────────────────────
