@@ -12,7 +12,7 @@
 <header class="phead doc-head">
   <span class="kind-eyebrow">{% if page.kind=='entity' %}satellite 프로젝트{% else %}개념{% endif %}<span class="sep">·</span><span class="w">2층 · 우리가 원전에서 내린 판단</span></span>
   <h1>{{ page.title }}</h1>
-  {% if meta.get('description') %}<p class="lead">{{ meta.get('description') }}</p>{% endif %}
+  {% if meta.get('description') %}<p class="lead">{{ meta.get('description')|mdi }}</p>{% endif %}
   {{ badges(meta) }}
   <dl class="kv kv-inline">
     {% if meta.get('created') %}<dt>created</dt><dd><time>{{ meta.get('created') }}</time></dd>{% endif %}

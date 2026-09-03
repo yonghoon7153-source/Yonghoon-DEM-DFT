@@ -19,6 +19,7 @@ import os
 
 from flask import (Flask, Response, abort, jsonify, render_template, request,
                    send_from_directory)
+from markupsafe import Markup
 
 import content as C
 
@@ -76,6 +77,15 @@ def _asset_version() -> str:
         return str(int(max(os.path.getmtime(p) for p in paths)))
     except (OSError, ValueError):
         return "1"
+
+
+# 저장소의 표 칸·설명문에는 `**굵게**` 와 `` `코드` `` 가 그냥 들어 있다. 본문
+# 렌더러를 태우지 않는 그 짧은 글들을 지금까지 **날것 그대로** 찍고 있었다.
+# `md_inline` 은 **escape 를 먼저** 하고 우리 태그만 되살리므로 (content.py 의
+# 주석 참조) `|safe` 로 넘겨도 주입 경로가 없다.
+@app.template_filter("mdi")
+def _mdi(s):
+    return Markup(C.md_inline(s))
 
 
 @app.context_processor

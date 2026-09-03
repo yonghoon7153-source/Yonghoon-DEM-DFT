@@ -14,7 +14,7 @@
   <article class="card">
     <div class="card-body">
       <a class="card-t" href="{{ it.url }}">{{ it.title }}</a>
-      {% if it.description %}<p class="card-d">{{ it.description }}</p>{% endif %}
+      {% if it.description %}<p class="card-d">{{ it.description|mdi }}</p>{% endif %}
       {{ badges(it.meta, ['confidence','verificationStatus','claimType','evidenceScope']) }}
       {{ tags(it.meta) }}
     </div>

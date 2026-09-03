@@ -16,7 +16,7 @@
   <article class="card card-q">
     <div class="card-body">
       <a class="card-t" href="{{ it.url }}">{{ it.title }}</a>
-      {% if it.description %}<p class="card-d">{{ it.description }}</p>{% endif %}
+      {% if it.description %}<p class="card-d">{{ it.description|mdi }}</p>{% endif %}
       {{ badges(it.meta, ['status','confidence','verificationStatus','evidenceScope']) }}
 
       <div class="evbar" role="group" aria-label="근거 구성">

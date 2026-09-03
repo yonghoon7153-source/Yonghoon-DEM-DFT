@@ -283,6 +283,59 @@ _HTAG = re.compile(r"<h([1-4])>(.*?)</h\1>", re.S)
 _TAGSTRIP = re.compile(r"<[^>]+>")
 
 
+# ─────────────────────────────────────────────────────────────────────────
+# 한 줄짜리 markdown — 표 칸·설명문처럼 **본문 렌더러를 태우지 않는 짧은 글**
+# ─────────────────────────────────────────────────────────────────────────
+# 저장소의 표 칸에는 `**굵게**` 와 `` `코드` `` 가 그냥 들어 있다. 지금까지 그
+# 문자열을 화면에 **날것 그대로** 찍고 있었다 (`/results` 의 Phase 칸에서
+# `**PVS Jacobian**` 이 별표째 보였다).
+#
+# ⚠ 여기서 python-markdown 을 부르지 않는다. 그 파서는 블록 문법·HTML 통과까지
+#   처리하므로 **한 줄 칸에 쓰기엔 너무 넓다.** 대신 이 함수는 순서를 뒤집는다:
+#
+#     1. 먼저 **전체를 escape** 한다 → 이 시점에서 주입 가능성이 0 이 된다
+#     2. 그 다음 우리가 아는 몇 가지 표시만 **우리 태그로** 되살린다
+#
+#   그래서 입력이 무엇이든 (digest 는 외부 PDF 요약본이라 100% 신뢰 대상이
+#   아니다) 태그가 들어갈 길이 없다. `anchor_headings` 가 id 를 우리가 만드는
+#   것과 같은 이유·같은 형태다.
+_MD_CODE = re.compile(r"`([^`\n]+)`")
+_MD_BOLD = re.compile(r"\*\*(?!\s)([^*\n]+?)(?<!\s)\*\*")
+_MD_ITAL = re.compile(r"(?<![\w*])\*(?!\s)([^*\n]+?)(?<!\s)\*(?![\w*])")
+# 링크는 **우리가 아는 스킴만** — `javascript:` 같은 것은 애초에 매치가 안 된다
+_MD_LINK = re.compile(r"\[([^\]\n]+)\]\((https?://[^\s)]+|/[^\s)]*)\)")
+
+
+def md_inline(s) -> str:
+    """짧은 한 줄 markdown → HTML 조각. escape 를 **먼저** 한다.
+
+    처리하는 것: `` `코드` `` · `**굵게**` · `*기울임*` · `[글](주소)`.
+    처리하지 않는 것: 블록 문법(목록·표·제목), 이미지, 원시 HTML — 한 줄 칸에
+    올 것이 아니고, 안 하는 편이 안전하다.
+
+    코드 조각을 자리표시자로 빼 두고 마지막에 되돌린다. 안 그러면
+    `` `a**b` `` 의 별표가 <code> 안에서 굵게 처리된다.
+    """
+    if not s:
+        return ""
+    out = _html.escape(str(s), quote=False)
+
+    holes: list[str] = []
+
+    def _stash(m):
+        holes.append(m.group(1))
+        return f"\x00{len(holes) - 1}\x00"
+
+    out = _MD_CODE.sub(_stash, out)
+    out = _MD_LINK.sub(
+        lambda m: f'<a href="{m.group(2)}">{m.group(1)}</a>', out)
+    out = _MD_BOLD.sub(r"<strong>\1</strong>", out)
+    out = _MD_ITAL.sub(r"<em>\1</em>", out)
+    for i, code in enumerate(holes):
+        out = out.replace(f"\x00{i}\x00", f"<code>{code}</code>")
+    return out
+
+
 _SAFE_ID = re.compile(r"[^a-z0-9]+")
 
 

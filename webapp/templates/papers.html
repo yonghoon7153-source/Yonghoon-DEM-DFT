@@ -14,7 +14,7 @@
   <article class="card card-paper">
     <div class="card-body">
       <a class="card-t" href="{{ it.url }}">{{ it.title }}</a>
-      {% if it.description %}<p class="card-d">{{ it.description }}</p>{% endif %}
+      {% if it.description %}<p class="card-d">{{ it.description|mdi }}</p>{% endif %}
       <dl class="kv kv-sm">
         {% if it.ingested %}<dt>ingested</dt><dd><time>{{ it.ingested }}</time></dd>{% endif %}
         {% if it.sha12 %}<dt>sha256</dt><dd class="mono">{{ it.sha12 }}…</dd>{% endif %}

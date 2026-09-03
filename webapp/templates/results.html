@@ -39,10 +39,10 @@
           {{ p.state_label }}
         </span>
       </div>
-      {% if p.what %}<p class="rail-what">{{ p.what }}</p>{% endif %}
-      {% if p.needs %}<p class="rail-needs"><span class="lbl">필요한 것</span> {{ p.needs }}</p>{% endif %}
+      {% if p.what %}<p class="rail-what">{{ p.what|mdi }}</p>{% endif %}
+      {% if p.needs %}<p class="rail-needs"><span class="lbl">필요한 것</span> {{ p.needs|mdi }}</p>{% endif %}
       <dl class="rail-ev">
-        <dt>README 선언</dt><dd>{{ p.declared or '—' }}</dd>
+        <dt>README 선언</dt><dd>{{ p.declared|mdi or '—' }}</dd>
         <dt>디스크 산출물</dt>
         <dd>
           {% if p.notes or p.results %}
