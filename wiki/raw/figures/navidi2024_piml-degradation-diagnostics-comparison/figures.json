@@ -1,0 +1,511 @@
+{
+ "slug": "navidi2024_piml-degradation-diagnostics-comparison",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-09-03",
+ "sources": [
+  "3188763f-5._Physicsinformed_machine_learning_for_battery_degradation_diagnostics_A_comparison_of_stateoftheart_methods.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 3,
+   "file": "fig_1.png",
+   "caption": "Fig. 1. Overview of capacity fade curves for cells cycled under two distinct temperatures: a. 37 ◦C; b. 55 ◦C. The discharge rate for each group of cells appears in the legend in parentheses (⋅). The standard upper voltage cutoff (Vcutoff) is set at 4.075V. The early-life region includes approximately 8 months of experimental data. 3",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    532.9,
+    565.8,
+    721.3
+   ],
+   "w": 2227,
+   "h": 786,
+   "dpi": 300,
+   "src": "3188763f-5._Physicsinformed_machine_learning_for_battery_degradation_diagnostics_A_comparison_of_stateoftheart_methods.pdf",
+   "blank": 0.882
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 4,
+   "file": "fig_2.png",
+   "caption": "Fig. 2. Overview of the half-cell model parameters. a. remaining active masses; b. slippage parameters; c. derived degradation parameters. 3. Half-cell model 3.1. Degradation mode quantification using the half-cell model The half-cell model is a non-destructive method for quantifying three dominant degradation modes in a lithium-ion battery (i.e., LAMPE, LAMNE, and LLI) by reconstructing a pseudo-OCV curve of the cell [30, 31]. The full-cell OCV curve is obtained by taking the potential differ­ ence between the positive and negative electrode OCV curves over the full-cell operating voltage range. At low rates (≪C/10), kinetic and thermal effects during charge and discharge have minimal impact on the measured OCV of the cell, making it possible to closely model full-cell OCV as the potential difference between the two individual positive and negative electrode half-cells [31,32,55]. The h",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    49.4,
+    566.0,
+    204.7
+   ],
+   "w": 2228,
+   "h": 649,
+   "dpi": 300,
+   "src": "3188763f-5._Physicsinformed_machine_learning_for_battery_degradation_diagnostics_A_comparison_of_stateoftheart_methods.pdf",
+   "blank": 0.918
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 4,
+   "file": "fig_3.png",
+   "caption": "Fig. 3. Simulated incremental capacity curves from the half-cell model with: a. one degradation mode; b. two degradation modes. 4",
+   "rotated_deg": 0,
+   "bbox": [
+    68.8,
+    532.7,
+    526.4,
+    730.8
+   ],
+   "w": 1908,
+   "h": 826,
+   "dpi": 300,
+   "src": "3188763f-5._Physicsinformed_machine_learning_for_battery_degradation_diagnostics_A_comparison_of_stateoftheart_methods.pdf",
+   "blank": 0.933
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 5,
+   "file": "fig_4.png",
+   "caption": "Fig. 4. An overview of degradation diagnostics using PIML techniques.",
+   "rotated_deg": 0,
+   "bbox": [
+    45.5,
+    49.4,
+    549.8,
+    280.3
+   ],
+   "w": 2102,
+   "h": 963,
+   "dpi": 300,
+   "src": "3188763f-5._Physicsinformed_machine_learning_for_battery_degradation_diagnostics_A_comparison_of_stateoftheart_methods.pdf",
+   "blank": 0.778
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 6,
+   "file": "fig_5.png",
+   "caption": "Fig. 5. Overview of physics-informed machine learning (PIML) techniques adopted in this comparative study.",
+   "rotated_deg": 0,
+   "bbox": [
+    57.4,
+    49.7,
+    537.9,
+    316.0
+   ],
+   "w": 2003,
+   "h": 1110,
+   "dpi": 300,
+   "src": "3188763f-5._Physicsinformed_machine_learning_for_battery_degradation_diagnostics_A_comparison_of_stateoftheart_methods.pdf",
+   "blank": 0.797
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 6,
+   "file": "fig_6.png",
+   "caption": "Fig. 6. An overview of the architectures of a baseline neural network (a) and PINN (b) for battery degradation diagnostics depicting data-driven and physics- informed loss terms. 6",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    351.6,
+    565.7,
+    721.3
+   ],
+   "w": 2227,
+   "h": 1541,
+   "dpi": 300,
+   "src": "3188763f-5._Physicsinformed_machine_learning_for_battery_degradation_diagnostics_A_comparison_of_stateoftheart_methods.pdf",
+   "blank": 0.905
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 10,
+   "file": "fig_7.png",
+   "caption": "Fig. 7. Training and test setup for PIML approaches.",
+   "rotated_deg": 0,
+   "bbox": [
+    136.7,
+    49.4,
+    403.5,
+    233.1
+   ],
+   "w": 1113,
+   "h": 767,
+   "dpi": 300,
+   "src": "3188763f-5._Physicsinformed_machine_learning_for_battery_degradation_diagnostics_A_comparison_of_stateoftheart_methods.pdf",
+   "blank": 0.785
+  },
+  {
+   "key": "f8",
+   "kind": "figure",
+   "label": "8",
+   "page": 11,
+   "file": "fig_8.png",
+   "caption": "Fig. 8. Overall performance comparisons between PIML models and purely data-driven baselines. hyperparameters to fit the characteristics of the data. The key parame­ ters that should be determined when training a GPR model with a Matern kernel are summarized in the Table 4. )2 √ √ √ √ × 100% (14) (̂ ∑4 ∑Nk yt,i −yt,i RMSPEt =̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅̅ 1 ∑4 yt,i k=1 i=1 k=1Nk 6.2. Error metrics Here, Nk denotes the number of test samples in the kth folder, and the subscript t denotes the tth degradation parameter. ̂yt,i and yt,i correspond to the predicted value and true value, respectively, for the tth health parameter at the ith test point. Note that a recent study on degradation diagnostics directly relevant to this work used “RMSE%” in place of “RMSPE” [30]. For each fold, we calculated an average test error of each individual PIML model for ea",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    49.4,
+    568.4,
+    301.2
+   ],
+   "w": 2238,
+   "h": 1050,
+   "dpi": 300,
+   "src": "3188763f-5._Physicsinformed_machine_learning_for_battery_degradation_diagnostics_A_comparison_of_stateoftheart_methods.pdf",
+   "blank": 0.886
+  },
+  {
+   "key": "f9",
+   "kind": "figure",
+   "label": "9",
+   "page": 12,
+   "file": "fig_9.png",
+   "caption": "Fig. 9. Impact of training sample size on the performance of a. PIML models b. baseline models (nexp represents the total number of experimental data points). negative and positive active mass parameters (mp and mn) were gener­ ally more complex and challenging to predict compared to the capacity and lithium inventory. The degradation of electrode active materials involves intricate physical and chemical processes, such as solid-state diffusion, phase transformations, and mechanical stresses. These pro­ cesses interact in a highly nonlinear and complex manner, making it challenging to model and predict their combined effects accurately. Despite these inherent difficulties, the PIML methods demonstrated a high level of accuracy in predicting these parameters. This highlights the effectiveness of the PIML approaches in capturing the underlying degradation patterns and enhancing the predict",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    49.5,
+    566.0,
+    539.9
+   ],
+   "w": 2228,
+   "h": 2044,
+   "dpi": 300,
+   "src": "3188763f-5._Physicsinformed_machine_learning_for_battery_degradation_diagnostics_A_comparison_of_stateoftheart_methods.pdf",
+   "blank": 0.923
+  },
+  {
+   "key": "f10",
+   "kind": "figure",
+   "label": "10",
+   "page": 11,
+   "file": "fig_10.png",
+   "caption": "Fig. 10. Extrapolation error comparison for purely data-driven and physics-informed neural networks. The bubble size represents the RMSE computed based on the three degradation parameters. 11",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    520.6,
+    565.8,
+    721.3
+   ],
+   "w": 2227,
+   "h": 837,
+   "dpi": 300,
+   "src": "3188763f-5._Physicsinformed_machine_learning_for_battery_degradation_diagnostics_A_comparison_of_stateoftheart_methods.pdf",
+   "blank": 0.836
+  },
+  {
+   "key": "f11",
+   "kind": "figure",
+   "label": "11",
+   "page": 14,
+   "file": "fig_11.png",
+   "caption": "Fig. 11. Trajectory prediction comparison between purely data-driven and physics-informed machine learning models. cell surrogate model. Furthermore, in the loss function, we perform peak difference minimization between the resulting dQ/dV(V) curves ob­ tained from the predicted half-cell model parameters and the experi­ mental ones from the training set. To showcase the effect of incorporating these enhancements into the baseline model, we compare the extrapolation error of a specific test cell (G2C2) with a C/24 discharge rate and a temperature of 55∘C. We analyze the extrapolation error in the degradation parameters space for both the physics-informed and regular neural networks. The results are visualized in Fig. 10, where the bubble size represents the overall error, given by: baseline data-driven models. The predicted trajectory of the health pa­ rameters by these models exhibits s",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    49.4,
+    566.0,
+    239.7
+   ],
+   "w": 2228,
+   "h": 794,
+   "dpi": 300,
+   "src": "3188763f-5._Physicsinformed_machine_learning_for_battery_degradation_diagnostics_A_comparison_of_stateoftheart_methods.pdf",
+   "blank": 0.918
+  },
+  {
+   "key": "f12",
+   "kind": "figure",
+   "label": "12",
+   "page": 14,
+   "file": "fig_12.png",
+   "caption": "Fig. 12. Sensitivity of prediction error rate of PINN model to each loss term. 14",
+   "rotated_deg": 0,
+   "bbox": [
+    104.4,
+    629.3,
+    476.4,
+    730.8
+   ],
+   "w": 1550,
+   "h": 423,
+   "dpi": 300,
+   "src": "3188763f-5._Physicsinformed_machine_learning_for_battery_degradation_diagnostics_A_comparison_of_stateoftheart_methods.pdf",
+   "blank": 0.926
+  },
+  {
+   "key": "f13",
+   "kind": "figure",
+   "label": "13",
+   "page": 15,
+   "file": "fig_13.png",
+   "caption": "Fig. 13. Sensitivity of the PINN model to augmentation and the physics- informed loss function and sensitivity of the baseline NN model to augmentation. ensuring that the obtained health parameters conform to the model’s constraints. The third term (L 3) considers the constraints on the peak positions of dQ/dV(V) curves resulting from the half-cell model. These loss terms collectively contribute to the comprehensive training of our PINN model. To evaluate the sensitivity of the PINN model’s performance to each of these terms, we assess the ratio of their weights (wi) in computing the total loss relative to the summation of all weights (ri). This can be expressed as: ri = wi ∑3 , (i = 1, 2, 3) (16) k=1wk",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    49.6,
+    297.0,
+    173.3
+   ],
+   "w": 1107,
+   "h": 516,
+   "dpi": 300,
+   "src": "3188763f-5._Physicsinformed_machine_learning_for_battery_degradation_diagnostics_A_comparison_of_stateoftheart_methods.pdf",
+   "blank": 0.799
+  },
+  {
+   "key": "f14",
+   "kind": "figure",
+   "label": "14",
+   "page": 15,
+   "file": "fig_14.png",
+   "caption": "Fig. 14. Sensitivity of prediction error rate of co-kriging model to different kernel functions. 15",
+   "rotated_deg": 0,
+   "bbox": [
+    128.1,
+    521.6,
+    466.3,
+    730.8
+   ],
+   "w": 1410,
+   "h": 872,
+   "dpi": 300,
+   "src": "3188763f-5._Physicsinformed_machine_learning_for_battery_degradation_diagnostics_A_comparison_of_stateoftheart_methods.pdf",
+   "blank": 0.441
+  },
+  {
+   "key": "f15",
+   "kind": "figure",
+   "label": "15",
+   "page": 19,
+   "file": "fig_15.png",
+   "caption": "Fig. 15. Comparison of active mass estimates by PINN, manual and automatic fitting, and experimental validation for two selected cells. 19",
+   "rotated_deg": 0,
+   "bbox": [
+    71.1,
+    393.7,
+    528.4,
+    727.3
+   ],
+   "w": 1906,
+   "h": 1391,
+   "dpi": 300,
+   "src": "3188763f-5._Physicsinformed_machine_learning_for_battery_degradation_diagnostics_A_comparison_of_stateoftheart_methods.pdf",
+   "blank": 0.957
+  },
+  {
+   "key": "f16",
+   "kind": "figure",
+   "label": "16",
+   "page": 22,
+   "file": "fig_16.png",
+   "caption": "Fig. 16. Trajectory prediction results for the first fold (first cell of each group).",
+   "rotated_deg": 0,
+   "bbox": [
+    127.7,
+    49.4,
+    481.5,
+    680.8
+   ],
+   "w": 1476,
+   "h": 2632,
+   "dpi": 300,
+   "src": "3188763f-5._Physicsinformed_machine_learning_for_battery_degradation_diagnostics_A_comparison_of_stateoftheart_methods.pdf",
+   "blank": 0.882
+  },
+  {
+   "key": "f17",
+   "kind": "figure",
+   "label": "17",
+   "page": 23,
+   "file": "fig_17.png",
+   "caption": "Fig. 17. Trajectory prediction results for the second fold (second cell of each group).",
+   "rotated_deg": 0,
+   "bbox": [
+    128.2,
+    49.4,
+    481.4,
+    680.8
+   ],
+   "w": 1472,
+   "h": 2632,
+   "dpi": 300,
+   "src": "3188763f-5._Physicsinformed_machine_learning_for_battery_degradation_diagnostics_A_comparison_of_stateoftheart_methods.pdf",
+   "blank": 0.876
+  },
+  {
+   "key": "f18",
+   "kind": "figure",
+   "label": "18",
+   "page": 24,
+   "file": "fig_18.png",
+   "caption": "Fig. 18. Trajectory prediction results for the third fold (third cell of each group).",
+   "rotated_deg": 0,
+   "bbox": [
+    128.1,
+    49.4,
+    481.5,
+    680.8
+   ],
+   "w": 1474,
+   "h": 2632,
+   "dpi": 300,
+   "src": "3188763f-5._Physicsinformed_machine_learning_for_battery_degradation_diagnostics_A_comparison_of_stateoftheart_methods.pdf",
+   "blank": 0.872
+  },
+  {
+   "key": "f19",
+   "kind": "figure",
+   "label": "19",
+   "page": 25,
+   "file": "fig_19.png",
+   "caption": "Fig. 19. Trajectory prediction results for the forth fold (forth cell of each group).",
+   "rotated_deg": 0,
+   "bbox": [
+    128.0,
+    49.4,
+    481.5,
+    680.8
+   ],
+   "w": 1474,
+   "h": 2632,
+   "dpi": 300,
+   "src": "3188763f-5._Physicsinformed_machine_learning_for_battery_degradation_diagnostics_A_comparison_of_stateoftheart_methods.pdf",
+   "blank": 0.876
+  },
+  {
+   "key": "f20",
+   "kind": "figure",
+   "label": "20",
+   "page": 26,
+   "file": "fig_20.png",
+   "caption": "Fig. 20. Training half-cell surrogate model.",
+   "rotated_deg": 0,
+   "bbox": [
+    172.2,
+    49.4,
+    423.0,
+    144.2
+   ],
+   "w": 1046,
+   "h": 396,
+   "dpi": 300,
+   "src": "3188763f-5._Physicsinformed_machine_learning_for_battery_degradation_diagnostics_A_comparison_of_stateoftheart_methods.pdf",
+   "blank": 0.884
+  },
+  {
+   "key": "t1",
+   "kind": "table",
+   "label": "1",
+   "page": 3,
+   "file": "tab_1.png",
+   "caption": "Table 1 Summary of Aging Test Conditions. Group Charge rate Discharge rate",
+   "rotated_deg": 0,
+   "bbox": [
+    32.6,
+    31.6,
+    563.3,
+    768.8
+   ],
+   "w": 2161,
+   "h": 3001,
+   "dpi": 293,
+   "src": "3188763f-5._Physicsinformed_machine_learning_for_battery_degradation_diagnostics_A_comparison_of_stateoftheart_methods.pdf",
+   "blank": 0.866
+  },
+  {
+   "key": "t2",
+   "kind": "table",
+   "label": "2",
+   "page": 10,
+   "file": "tab_2.png",
+   "caption": "Table 2 Numbers of training points in 4-fold cross-validation.",
+   "rotated_deg": 0,
+   "bbox": [
+    32.6,
+    31.6,
+    563.3,
+    747.5
+   ],
+   "w": 2212,
+   "h": 2984,
+   "dpi": 300,
+   "src": "3188763f-5._Physicsinformed_machine_learning_for_battery_degradation_diagnostics_A_comparison_of_stateoftheart_methods.pdf",
+   "blank": 0.885
+  },
+  {
+   "key": "t3",
+   "kind": "table",
+   "label": "3",
+   "page": 10,
+   "file": "tab_3.png",
+   "caption": "Table 3 Neural network hyperparameters.",
+   "rotated_deg": 0,
+   "bbox": [
+    32.6,
+    31.6,
+    563.3,
+    747.5
+   ],
+   "w": 2212,
+   "h": 2984,
+   "dpi": 300,
+   "src": "3188763f-5._Physicsinformed_machine_learning_for_battery_degradation_diagnostics_A_comparison_of_stateoftheart_methods.pdf",
+   "blank": 0.885
+  },
+  {
+   "key": "t4",
+   "kind": "table",
+   "label": "4",
+   "page": 10,
+   "file": "tab_4.png",
+   "caption": "Table 4 Key parameters for training GPR models with Matern kernel for each fold.",
+   "rotated_deg": 0,
+   "bbox": [
+    32.6,
+    31.6,
+    563.3,
+    747.5
+   ],
+   "w": 2212,
+   "h": 2984,
+   "dpi": 300,
+   "src": "3188763f-5._Physicsinformed_machine_learning_for_battery_degradation_diagnostics_A_comparison_of_stateoftheart_methods.pdf",
+   "blank": 0.885
+  },
+  {
+   "key": "t5",
+   "kind": "table",
+   "label": "5",
+   "page": 16,
+   "file": "tab_5.png",
+   "caption": "Table 5 A qualitative comparison of state-of-the-art PIML approaches covered in this study.",
+   "rotated_deg": 0,
+   "bbox": [
+    32.6,
+    31.6,
+    563.3,
+    748.6
+   ],
+   "w": 2212,
+   "h": 2989,
+   "dpi": 300,
+   "src": "3188763f-5._Physicsinformed_machine_learning_for_battery_degradation_diagnostics_A_comparison_of_stateoftheart_methods.pdf",
+   "blank": 0.857
+  }
+ ]
+}
