@@ -1,0 +1,338 @@
+{% extends "base.html" %}
+{% block title %}연구 파이프라인{% endblock %}
+{% block content %}
+{# 대표 화면 — 처음 온 사람이 이 하나만 읽어도 "무엇을 왜 어떻게" 가 서는 곳.
+
+   ⚠ 두 가지 규율
+   1. **숫자를 새로 만들지 않는다.** 결과 수치는 docs/RESULTS_PAIRED_FIXED5.md
+      의 사본이고, 화면에 그렇게 적고 인용을 금지한다 (하드룰 4).
+   2. **그림은 전부 인라인 SVG** 다. CSP 가 `default-src 'self'` 라 mermaid 같은
+      라이브러리를 못 쓰고, 애초에 이 앱은 바깥 자원을 하나도 안 쓴다.
+      SVG 는 `currentColor` 와 CSS 변수로 색을 받으므로 다크 모드도 따라온다. #}
+<header class="phead phead-pipe">
+  <p class="eyebrow">처음 온 사람을 위한 한 장</p>
+  <h1>full-cell 곡선 하나로 두 전극을 가를 수 있는가</h1>
+  <p class="lead">배터리가 늙는 방식은 크게 셋이다 — <b>리튬이 사라지거나</b>(LLI),
+    <b>양극이 죽거나</b>(LAM<sub>PE</sub>), <b>음극이 죽는다</b>(LAM<sub>NE</sub>).
+    문제는 우리가 흔히 재는 것이 <b>완성된 셀의 전압 곡선 하나뿐</b>이라는 것이다.
+    곡선 하나에서 셋을 되찾을 수 있는가? 이 저장소는 그 물음에
+    <b>정답을 아는 데이터</b>로 답한다.</p>
+</header>
+
+<!-- ══ 1. 문제 ══════════════════════════════════════════════════════════ -->
+<section class="pipe-sec">
+  <h2 class="pipe-h"><span class="pipe-n">1</span> 무엇이 문제인가 — 축퇴(degeneracy)</h2>
+  <p class="pipe-p">2026-08-05 연구세미나 22쪽에서 어떤 셀의 열화를 맞춰 보니
+    <b>양극과 음극이 거의 똑같이(≈13 %) 죽었다</b>는 답이 나왔다. 두 가지로 읽을 수 있다.</p>
+
+  <div class="pipe-two">
+    <div class="pipe-card pc-a">
+      <span class="pc-tag">읽기 A</span>
+      <h3>실제로 그렇다</h3>
+      <p>양극과 음극이 정말 비슷하게 늙었다. 그러면 그 숫자는 물리다.</p>
+    </div>
+    <div class="pipe-card pc-b">
+      <span class="pc-tag">읽기 B</span>
+      <h3>곡선이 못 가른다</h3>
+      <p>사실은 한쪽이 훨씬 많이 죽었는데, <b>full-cell 곡선이 그 차이를 담지 못해서</b>
+        맞추기가 가운데로 뭉갠 것이다. 그러면 그 숫자는 <b>방법의 그림자</b>다.</p>
+    </div>
+  </div>
+
+  <p class="pipe-p">읽기 B 를 <b>fitting degeneracy(축퇴)</b> 라 한다 —
+    <b>서로 다른 정답이 사실상 같은 곡선을 만들어 되돌아갈 길이 하나로 정해지지 않는 상태</b>다.
+    실제 셀만 봐서는 둘을 가를 수 없다. <b>정답을 모르기 때문이다.</b></p>
+
+  <figure class="pipe-fig">
+    <svg class="dg" viewBox="0 0 760 250" role="img"
+         aria-label="서로 다른 두 개의 참값 조합이 같은 전압 곡선을 만들고, 거기서 되돌아가면 가운데 답 하나가 나온다">
+      <!-- 왼쪽: 서로 다른 두 진짜 -->
+      <g class="dg-box dg-truth">
+        <rect x="8" y="24" width="176" height="70" rx="10"/>
+        <text x="96" y="50" class="dg-t dg-t-b">진짜 ①</text>
+        <text x="96" y="72" class="dg-t dg-mono">LAM_PE 20% · LAM_NE 6%</text>
+      </g>
+      <g class="dg-box dg-truth">
+        <rect x="8" y="152" width="176" height="70" rx="10"/>
+        <text x="96" y="178" class="dg-t dg-t-b">진짜 ②</text>
+        <text x="96" y="200" class="dg-t dg-mono">LAM_PE 6% · LAM_NE 20%</text>
+      </g>
+
+      <path class="dg-arrow" d="M190 59 C 240 59, 250 108, 292 118"/>
+      <path class="dg-arrow" d="M190 187 C 240 187, 250 138, 292 128"/>
+
+      <!-- 가운데: 사실상 같은 곡선 -->
+      <g class="dg-box dg-curve">
+        <rect x="296" y="72" width="168" height="106" rx="10"/>
+        <text x="380" y="96" class="dg-t dg-t-b">full-cell 곡선</text>
+        <path class="dg-line dg-line-1" d="M316 156 C 344 152, 366 140, 386 126 C 406 112, 424 102, 446 98"/>
+        <path class="dg-line dg-line-2" d="M316 158 C 344 153, 366 142, 386 128 C 406 113, 424 103, 446 100"/>
+        <text x="380" y="172" class="dg-t dg-small">눈으로도 수치로도 거의 겹친다</text>
+      </g>
+
+      <path class="dg-arrow dg-arrow-back" d="M470 125 C 512 125, 520 125, 560 125"/>
+      <text x="516" y="112" class="dg-t dg-small dg-mid">되돌리면?</text>
+
+      <!-- 오른쪽: 가운데로 뭉친 답 -->
+      <g class="dg-box dg-fit">
+        <rect x="566" y="88" width="186" height="74" rx="10"/>
+        <text x="659" y="114" class="dg-t dg-t-b">복원된 답 하나</text>
+        <text x="659" y="136" class="dg-t dg-mono">LAM_PE 13% · LAM_NE 13%</text>
+      </g>
+      <text x="659" y="184" class="dg-t dg-small dg-warn">둘 중 어느 진짜였는지 알 수 없다</text>
+    </svg>
+    <figcaption>축퇴가 일어나면 <b>맞추기는 성공한 것처럼 보인다</b> — 잔차는 작고 곡선도 잘 겹친다.
+      실패한 것은 적합이 아니라 <b>되돌아가는 길의 유일성</b>이다.</figcaption>
+  </figure>
+</section>
+
+<!-- ══ 2. 아이디어 ══════════════════════════════════════════════════════ -->
+<section class="pipe-sec">
+  <h2 class="pipe-h"><span class="pipe-n">2</span> 핵심 아이디어 — 정답을 아는 셀을 만든다</h2>
+  <p class="pipe-p">실제 셀은 정답이 없으니 <b>정답부터 정해 놓고 셀을 만든다.</b>
+    물리 시뮬레이터(PyBaMM)에 "리튬 10 %, 양극 5 %, 음극 15 % 를 잃은 셀" 이라고
+    <b>직접 입력해서</b> 곡선을 뽑는다. 그러면 그 곡선의 정답은 우리가 안다.
+    이제 기존 맞추기 코드에 그 곡선을 주고 <b>정답을 되찾는지 채점</b>하면 된다.</p>
+  <div class="pipe-quote">
+    맞추기가 정답을 되찾으면 → 방법이 쓸 만하다.<br>
+    <b>되찾지 못하면 → 22쪽의 그 숫자도 믿을 수 없다.</b>
+  </div>
+  <p class="pipe-p">한 조건만 보면 우연일 수 있으니 <b>격자로 훑는다</b> —
+    LLI · LAM<sub>PE</sub> · LAM<sub>NE</sub> 를 각각 0 %부터 20 %까지 촘촘히
+    조합해 수천 개의 "정답을 아는 셀" 을 만들고 전부 채점한다.</p>
+</section>
+
+<!-- ══ 3. 파이프라인 ════════════════════════════════════════════════════ -->
+<section class="pipe-sec">
+  <h2 class="pipe-h"><span class="pipe-n">3</span> 파이프라인 — 여섯 단계</h2>
+  <p class="pipe-p">각 단계는 <code>./run.sh --mode &lt;단계&gt;</code> 하나로 돈다.
+    아래 상자의 <code class="mono">--mode</code> 이름이 실제 명령이다.</p>
+
+  <figure class="pipe-fig pipe-fig-wide">
+    <svg class="dg dg-flow" viewBox="0 0 980 330" role="img"
+         aria-label="여섯 단계 파이프라인: 물리 baseline, 격자 곡선 생성, 맞추기, 채점, 곡률 분석, 보고">
+      <defs>
+        <marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+          <path d="M0 0 L10 5 L0 10 z" class="dg-head"/>
+        </marker>
+      </defs>
+
+      <!-- 위 줄: 입력 -->
+      <g class="dg-box dg-in">
+        <rect x="10" y="14" width="200" height="62" rx="10"/>
+        <text x="110" y="38" class="dg-t dg-t-b">물리 파라미터</text>
+        <text x="110" y="58" class="dg-t dg-small">configs/base.yaml · 임의 변경 금지</text>
+      </g>
+      <g class="dg-box dg-in">
+        <rect x="234" y="14" width="200" height="62" rx="10"/>
+        <text x="334" y="38" class="dg-t dg-t-b">모드 격자</text>
+        <text x="334" y="58" class="dg-t dg-small">LLI × LAM_PE × LAM_NE</text>
+      </g>
+      <path class="dg-arrow" marker-end="url(#ar)" d="M110 80 L110 116"/>
+      <path class="dg-arrow" marker-end="url(#ar)" d="M334 80 L200 116"/>
+
+      <!-- 가운데 줄: 여섯 단계 -->
+      <g class="dg-step s-1">
+        <rect x="10" y="122" width="146" height="86" rx="10"/>
+        <text x="83" y="148" class="dg-t dg-t-b">완방상태 산출</text>
+        <text x="83" y="168" class="dg-t dg-mono dg-cmd">--mode baseline</text>
+        <text x="83" y="192" class="dg-t dg-small">하드코딩 금지 — 매번 계산</text>
+      </g>
+      <path class="dg-arrow" marker-end="url(#ar)" d="M160 165 L186 165"/>
+
+      <g class="dg-step s-2">
+        <rect x="190" y="122" width="146" height="86" rx="10"/>
+        <text x="263" y="148" class="dg-t dg-t-b">곡선 생성</text>
+        <text x="263" y="168" class="dg-t dg-mono dg-cmd">--mode grid</text>
+        <text x="263" y="192" class="dg-t dg-small">PyBaMM · 수천 조건 · 시간~일</text>
+      </g>
+      <path class="dg-arrow" marker-end="url(#ar)" d="M340 165 L366 165"/>
+
+      <g class="dg-step s-3">
+        <rect x="370" y="122" width="146" height="86" rx="10"/>
+        <text x="443" y="148" class="dg-t dg-t-b">맞추기</text>
+        <text x="443" y="168" class="dg-t dg-mono dg-cmd">--mode fit</text>
+        <text x="443" y="192" class="dg-t dg-small">α·β 4개 · restart 5회 고정</text>
+      </g>
+      <path class="dg-arrow" marker-end="url(#ar)" d="M520 165 L546 165"/>
+
+      <g class="dg-step s-4">
+        <rect x="550" y="122" width="146" height="86" rx="10"/>
+        <text x="623" y="148" class="dg-t dg-t-b">채점</text>
+        <text x="623" y="168" class="dg-t dg-mono dg-cmd">--mode score</text>
+        <text x="623" y="192" class="dg-t dg-small">정답 − 복원값 → 축퇴 지도</text>
+      </g>
+      <path class="dg-arrow" marker-end="url(#ar)" d="M700 165 L726 165"/>
+
+      <g class="dg-step s-5">
+        <rect x="730" y="122" width="112" height="86" rx="10"/>
+        <text x="786" y="148" class="dg-t dg-t-b">곡률</text>
+        <text x="786" y="168" class="dg-t dg-mono dg-cmd">--mode hessian</text>
+        <text x="786" y="192" class="dg-t dg-small">조건수·고윳값</text>
+      </g>
+      <path class="dg-arrow" marker-end="url(#ar)" d="M846 165 L866 165"/>
+
+      <g class="dg-step s-6">
+        <rect x="870" y="122" width="100" height="86" rx="10"/>
+        <text x="920" y="148" class="dg-t dg-t-b">보고</text>
+        <text x="920" y="168" class="dg-t dg-mono dg-cmd">--mode report</text>
+        <text x="920" y="192" class="dg-t dg-small">RESULTS*.md</text>
+      </g>
+
+      <!-- 아래 줄: 산출물 -->
+      <path class="dg-arrow" marker-end="url(#ar)" d="M263 212 L263 246"/>
+      <path class="dg-arrow" marker-end="url(#ar)" d="M623 212 L623 246"/>
+      <path class="dg-arrow" marker-end="url(#ar)" d="M920 212 L920 246"/>
+      <g class="dg-box dg-out">
+        <rect x="176" y="252" width="176" height="58" rx="10"/>
+        <text x="264" y="276" class="dg-t dg-t-b dg-mono">curves.parquet</text>
+        <text x="264" y="296" class="dg-t dg-small">sha256 봉인</text>
+      </g>
+      <g class="dg-box dg-out">
+        <rect x="536" y="252" width="176" height="58" rx="10"/>
+        <text x="624" y="276" class="dg-t dg-t-b dg-mono">degeneracy_map</text>
+        <text x="624" y="296" class="dg-t dg-small">조건마다 축퇴 여부</text>
+      </g>
+      <g class="dg-box dg-out">
+        <rect x="832" y="252" width="138" height="58" rx="10"/>
+        <text x="901" y="276" class="dg-t dg-t-b dg-mono">RESULTS*.md</text>
+        <text x="901" y="296" class="dg-t dg-small">수치의 정본</text>
+      </g>
+    </svg>
+    <figcaption>가로로 스크롤된다면 화면이 좁은 것이다 — 그림 안에서만 움직인다.
+      실제 명령과 인자는 <code>degradation-degeneracy/docs/03_ARCHITECTURE.md</code> §2 에 있다.</figcaption>
+  </figure>
+
+  <div class="pipe-note">
+    <b>채점이 무엇을 세는가.</b> 조건마다 <code class="mono">정답 − 복원값</code> 을 세 모드
+    각각에 대해 재고, 그중 가장 큰 오차가 <b>2 %p</b> 를 넘으면 그 조건을 <b>복원 실패</b>로
+    센다. 축퇴의 지문은 따로 있다 — <b>양극 오차와 음극 오차의 부호가 반대</b>인 것
+    (<code class="mono">pe_ne_antisym</code>). 한쪽을 올리고 다른 쪽을 내려 같은 곡선을 만드는,
+    바로 그 상쇄다.
+  </div>
+</section>
+
+<!-- ══ 4. 지금까지 답한 것 ══════════════════════════════════════════════ -->
+<section class="pipe-sec">
+  <h2 class="pipe-h"><span class="pipe-n">4</span> 지금까지 답한 것</h2>
+
+  <div class="pipe-cite">
+    <b>이 칸의 숫자는 사본이다 — 인용 근거가 아니다.</b> 정본은 artifact 와
+    <code>degradation-degeneracy/docs/RESULTS_PAIRED_FIXED5.md</code> 이고,
+    조건·모집단·임계가 붙어야 뜻이 선다. 반드시 <a href="/results">Phase 결과</a> 와
+    원문을 함께 볼 것.
+  </div>
+
+  <ol class="pipe-find">
+    <li>
+      <h3>34쪽 개선안은 이 격자에서 <b>이득을 주지 못했다</b></h3>
+      <p>dQ/dV 항을 목적함수에 넣으면 복원 실패가 <b>61.9 % → 87.2 %</b> 로
+        오히려 늘었다. 행별 최대 오차의 평균도 2.4 %p → 6.5 %p.</p>
+    </li>
+    <li>
+      <h3>참값이 뚜렷이 다르면 <b>대체로 갈렸다</b> — 단 조건부다</h3>
+      <p>참 격차가 6 %p 이상인 조건에서 "두 전극이 같다" 로 붕괴한 것은
+        <b>1/245</b>. 다만 이 값은 <b>복원가능군에서만</b> 센 것이고, 전체 격자에서
+        다시 세면 크게 달라진다. 그래서 원문은 두 값을 <b>함께</b> 인용하도록 못 박는다.</p>
+    </li>
+    <li>
+      <h3>그러므로 22쪽이 물리인지 축퇴인지는 <b>아직 판정되지 않았다</b></h3>
+      <p>22쪽 근방 8개 격자점의 복원 실패는 1/8 인데, 그 8점에는
+        <b>격차가 큰 조건이 하나도 없다.</b> 그 표본으로는 애초에 붕괴를 물을 수 없다.
+        지금 방어할 수 있는 문장은 하나다 — <i>이 합성 격자의 복원가능군에서,
+        참 격차가 뚜렷한 조건이 '같다' 로 붕괴하는 일은 드물었다.</i></p>
+    </li>
+  </ol>
+
+  <p class="pipe-p pipe-caveat">전부 <b>합성 데이터</b>의 결과다. 실제 셀의 모델 오차(SEI,
+    저항 분포 등)는 여기 없고, 합성 truth 가 LLI 를 양·음극 초기농도에 일률 적용하는
+    <b>한 가지 규약</b>에 조건부다. 실제 셀이 더 나쁠지 나을지는 <b>증명되지 않았다</b> —
+    복잡성이 정보를 만들 수도, 없앨 수도 있다.</p>
+</section>
+
+<!-- ══ 5. 증거 층 ═══════════════════════════════════════════════════════ -->
+<section class="pipe-sec">
+  <h2 class="pipe-h"><span class="pipe-n">5</span> 왜 이 숫자를 믿어도 되는가 — 증거 층</h2>
+  <p class="pipe-p">한 번 돌리는 데 <b>열 시간</b>이 걸린다. 돌린 뒤에 "그 코드가
+    이 코드였나" 를 물으면 늦는다. 그래서 실행 전후로 층을 쌓았다.</p>
+
+  <figure class="pipe-fig">
+    <svg class="dg dg-stack" viewBox="0 0 760 230" role="img"
+         aria-label="증거 층 넷: 코드 identity 봉인, 적대적 게이트 리뷰, 변이 전수 재생, cohort 동결">
+      <g class="dg-layer l-1">
+        <rect x="30" y="14" width="700" height="46" rx="9"/>
+        <text x="48" y="34" class="dg-t dg-l dg-t-b">① 코드 identity 봉인</text>
+        <text x="48" y="52" class="dg-t dg-l dg-small">산출물마다 그것을 만든 코드의 digest 를 같이 적는다 — 코드가 바뀌면 산출물이 스스로 무효가 된다</text>
+      </g>
+      <g class="dg-layer l-2">
+        <rect x="30" y="68" width="700" height="46" rx="9"/>
+        <text x="48" y="88" class="dg-t dg-l dg-t-b">② 적대적 게이트 리뷰 — 57라운드</text>
+        <text x="48" y="106" class="dg-t dg-l dg-small">외부 리뷰어가 반례를 만든다. GO 가 나오기 전에는 본 실행을 시작하지 않는다</text>
+      </g>
+      <g class="dg-layer l-3">
+        <rect x="30" y="122" width="700" height="46" rx="9"/>
+        <text x="48" y="142" class="dg-t dg-l dg-t-b">③ 변이 전수 재생 — 170 지점</text>
+        <text x="48" y="160" class="dg-t dg-l dg-small">검사를 하나씩 고의로 망가뜨려 <tspan class="dg-em">시험이 정말 무는지</tspan> 확인한다. 안 물면 그 검사는 장식이다</text>
+      </g>
+      <g class="dg-layer l-4">
+        <rect x="30" y="176" width="700" height="46" rx="9"/>
+        <text x="48" y="196" class="dg-t dg-l dg-t-b">④ cohort 동결</text>
+        <text x="48" y="214" class="dg-t dg-l dg-small">코드가 움직이면 옛 산출물을 얼리고 새 묶음을 연다 — 서로 다른 코드의 결과를 섞어 비교하지 않는다</text>
+      </g>
+    </svg>
+    <figcaption>이 층들이 <b>결과를 더 좋게 만들지는 않는다.</b> 결과가 <b>무엇의 결과인지</b>를
+      나중에도 말할 수 있게 만든다 — 그것이 인용 가능성의 조건이다.
+      진행 상황은 <a href="/gate">게이트 원장</a>에 있다.</figcaption>
+  </figure>
+</section>
+
+<!-- ══ 6. 다음 ══════════════════════════════════════════════════════════ -->
+<section class="pipe-sec">
+  <h2 class="pipe-h"><span class="pipe-n">6</span> 다음 — 관측을 늘리면 갈리는가</h2>
+  <p class="pipe-p">위 질문이 "곡선 <b>하나</b>로 되는가" 였다면, 다음 질문은
+    <b>"채널을 더 주면 갈리는가"</b> 다. satellite 프로젝트
+    <a href="/entity/mode-observability">mode-observability</a> 가 그것을 맡는다.</p>
+
+  <div class="pipe-phases">
+    <div class="ph">
+      <span class="ph-n">Phase 1</span>
+      <h3>PVS Jacobian</h3>
+      <p>곡선의 봉우리–골 기울기(PVS)를 모드 파라미터로 미분해, 특이값으로
+        <b>국소 식별 가능성</b>을 본다. 본 실행 없이 판정 가능하다.</p>
+    </div>
+    <div class="ph">
+      <span class="ph-n">Phase 2</span>
+      <h3>SEV — 전류를 채널로</h3>
+      <p>전류를 끊고 전압이 튀는 양(SEV)을 더한다. 열역학만 보던 축에
+        <b>동역학 축</b>을 하나 더 얹는 것이다.</p>
+    </div>
+    <div class="ph">
+      <span class="ph-n">Phase 3</span>
+      <h3>라벨 축퇴의 전파</h3>
+      <p>맞추기로 만든 라벨로 ML 을 학습하면, ML 은 그 라벨의 <b>비식별성까지</b>
+        물려받는다. 정답을 아는 데이터로 그 양을 잰다.</p>
+    </div>
+  </div>
+
+  <div class="pipe-note">
+    <b>값싼 실험 셋이 원전 대조에서 나왔다.</b> Birkl 2017 은 자유 파라미터가 3개인데
+    우리는 4개다(컷오프 등식 제약이 없다). 원전은 급경사 구간을 <b>버리고</b> 맞춘다.
+    그리고 원전이 말로만 진술한 축퇴(<code class="mono">LLI + LAM_NE,de</code> ≡
+    <code class="mono">LAM_NE,li</code>)를 우리는 아직 수치로 재현하지 않았다.
+    셋 다 기존 곡선을 재사용하므로 <b>새 본 실행이 거의 필요 없다.</b>
+  </div>
+</section>
+
+<!-- ══ 7. 어디서 무엇을 읽나 ════════════════════════════════════════════ -->
+<section class="pipe-sec">
+  <h2 class="pipe-h"><span class="pipe-n">7</span> 어디서 무엇을 읽나</h2>
+  <div class="pipe-map">
+    <a class="pm" href="/results"><b>Phase 결과</b><span>실행 산출물과 노트 — 수치의 정본으로 가는 입구</span></a>
+    <a class="pm" href="/gate"><b>게이트 원장</b><span>적대적 리뷰 57라운드의 발견과 처리</span></a>
+    <a class="pm" href="/questions"><b>열린 질문</b><span>아직 답이 없는 것. Evidence For / Against / Gap 으로 갈라 쌓는다</span></a>
+    <a class="pm" href="/concepts"><b>개념</b><span>축퇴·모드 정의 같은, 우리가 정리해 쓴 판단</span></a>
+    <a class="pm" href="/papers"><b>논문 digest</b><span>흡수한 원문의 절별 해체분석 — 봉인된 1층</span></a>
+    <a class="pm" href="/entity/mode-observability"><b>mode-observability</b><span>다음 질문을 맡은 satellite</span></a>
+  </div>
+</section>
+{% endblock %}

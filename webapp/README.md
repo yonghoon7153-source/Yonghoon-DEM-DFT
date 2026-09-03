@@ -62,6 +62,50 @@ python3 webapp/app.py            # http://127.0.0.1:5057
   기본을 루프백으로 두는 이유는 아래 "읽기 전용" 과 같다 — 이 앱은 인증이 없다.
 - 서버는 요청마다 파일을 다시 읽는다. 위키를 고치면 **새로고침만으로** 반영된다.
 
+### 같은 망의 다른 사람에게 보여 주기 — `bms --share`
+
+```bash
+bms --share          # 0.0.0.0 에 붙이고, 상대가 칠 주소를 찍어 준다
+```
+
+기동 로그가 `같은 망에서는 → http://<이 기계의 IP>:<포트>` 를 직접 알려 준다.
+상대는 그 주소를 브라우저에 치면 된다.
+
+**경계를 여는 것이므로 무엇이 열리는지 알고 쓴다.** 앱이 읽기 전용이라 남이
+저장소를 고칠 수는 없지만, 위키·게이트 원장·결과 수치가 **같은 망의 누구에게나
+그대로 보인다.** 인증이 없고 앞에 리버스 프록시도 없다. 사내망·연구실망에서
+잠깐 같이 보는 용도이며, **공유기 포트포워딩이나 클라우드 공인 IP 에 걸어 두지
+않는다.**
+
+**Ubuntu 방화벽(ufw)이 켜져 있으면** 그 포트를 한 번 열어야 한다:
+
+```bash
+sudo ufw status                       # 꺼져 있으면 아무것도 안 해도 된다
+sudo ufw allow from 192.168.0.0/16 to any port 5100 proto tcp   # 사설망만
+sudo ufw delete allow from 192.168.0.0/16 to any port 5100 proto tcp   # 끝나면 닫는다
+```
+
+**WSL 에서 돌린다면 한 겹이 더 있다.** WSL2 는 Windows 안의 별도 가상 네트워크라
+`--share` 만으로는 Windows 밖에서 안 닿는다. Windows 쪽에서 (관리자 PowerShell):
+
+```powershell
+# WSL 의 IP 는 bms 가 찍어 준 그 주소다
+netsh interface portproxy add v4tov4 listenport=5100 listenaddress=0.0.0.0 `
+      connectport=5100 connectaddress=<WSL IP>
+New-NetFirewallRule -DisplayName "bms wiki 5100" -Direction Inbound `
+      -Protocol TCP -LocalPort 5100 -Action Allow
+```
+
+끝나면 되돌린다:
+
+```powershell
+netsh interface portproxy delete v4tov4 listenport=5100 listenaddress=0.0.0.0
+Remove-NetFirewallRule -DisplayName "bms wiki 5100"
+```
+
+상대는 **Windows 기계의 IP** 로 접속한다 (WSL IP 가 아니다 — WSL IP 는
+재부팅마다 바뀌므로 portproxy 도 다시 걸어야 한다).
+
 ## 원본에서 가져온 것 / 버린 것
 
 참고 원본은 다른 브랜치(argyrodite DFT 계열) 커밋 `e80dd480` 의 `webapp/` 이다

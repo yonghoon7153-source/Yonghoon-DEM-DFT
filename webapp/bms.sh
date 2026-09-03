@@ -3,11 +3,14 @@
 #
 #   git 갱신 → venv 확인 → 의존성 동기화 → 빈 포트 찾기 → 서버 기동
 #
-# 설치 (한 번만):
-#   echo "alias bms='~/Yonghoon-DEM-DFT/webapp/bms.sh'" >> ~/.bashrc && . ~/.bashrc
+# 설치 (한 번만) — 경로는 **이 저장소를 받아 둔 자리**다. 이름이 꼭
+# Yonghoon-DEM-DFT 일 필요는 없다 (~/bms 로 받아 둔 기계도 있다):
+#   echo "alias bms='<저장소>/webapp/bms.sh'" >> ~/.bashrc && . ~/.bashrc
+#   예)  echo "alias bms='~/bms/webapp/bms.sh'" >> ~/.bashrc && . ~/.bashrc
 #
 # 쓰기:
-#   bms              # 갱신하고 띄운다
+#   bms              # 갱신하고 띄운다 (이 기계에서만 보인다)
+#   bms --share      # 같은 망의 다른 사람도 볼 수 있게 (0.0.0.0 바인딩)
 #   bms --no-pull    # 갱신 없이 띄운다 (오프라인·작업 중)
 #   bms --port 5123  # 포트 지정
 #   bms --stop       # 떠 있는 것을 내린다
@@ -26,11 +29,13 @@ VENV="$ROOT/.venv"
 PIDF="$ROOT/.venv/.bms.pid"
 DO_PULL=1
 PORT=""
+SHARE=0
 
 while [[ $# -gt 0 ]]; do
   case "$1" in
     --no-pull) DO_PULL=0; shift ;;
     --port)    PORT="${2:-}"; shift 2 ;;
+    --share)   SHARE=1; shift ;;
     --stop)
       if [[ -f "$PIDF" ]] && kill -0 "$(cat "$PIDF")" 2>/dev/null; then
         kill "$(cat "$PIDF")" && rm -f "$PIDF"
@@ -116,15 +121,40 @@ fi
 
 URL="http://127.0.0.1:$PORT"
 echo "$URL" > "$ROOT/.venv/.bms.url"
-echo "· 기동 → $URL   (끄기: Ctrl-C · 뒤에서 끄기: bms --stop)"
 
-# ── 5. 기동 (foreground — Ctrl-C 로 끈다) ─────────────────────────────────
+# ── 5. 같은 망의 다른 사람에게 보여 줄 때 (--share) ───────────────────────
+# 기본은 `127.0.0.1` 이다 — 이 기계 밖에서는 아예 닿지 않는다. `--share` 는 그
+# 경계를 **의도적으로** 연다. 앱이 읽기 전용이라 남이 저장소를 고칠 수는 없지만,
+# 위키·게이트 원장·결과 수치가 **같은 망의 누구에게나 그대로 보인다.** 인증이
+# 없고, 앞에 리버스 프록시도 없다. 사내망·연구실망에서 잠깐 같이 보는 용도이며
+# 공개망(공유기 포트포워딩, 클라우드 공인 IP)에 걸어 두지 않는다.
+if [[ "$SHARE" == "1" ]]; then
+  BIND="0.0.0.0"
+  # 상대가 칠 주소를 **우리가 찾아서 찍어 준다** — `ip addr` 를 읽게 시키지 않는다
+  LANIP="$(ip -4 -o addr show scope global 2>/dev/null | awk '{split($4,a,"/"); print a[1]; exit}')"
+  [[ -z "$LANIP" ]] && LANIP="$(hostname -I 2>/dev/null | awk '{print $1}')"
+  echo "· 기동 → $URL"
+  if [[ -n "$LANIP" ]]; then
+    echo "· 같은 망에서는 →  http://$LANIP:$PORT"
+    echo "$LANIP" > "$ROOT/.venv/.bms.lanip"
+  else
+    echo "· ⚠ 이 기계의 망 주소를 못 찾았다 — 'ip -4 addr' 로 직접 확인할 것"
+  fi
+  echo "· ⚠ 인증이 없다. 같은 망의 누구나 열람한다 (읽기 전용). 공개망에 걸지 말 것"
+  echo "·   WSL 에서 돌린다면 Windows 쪽 방화벽·포트프록시가 한 겹 더 있다 (README 참고)"
+else
+  BIND="127.0.0.1"
+  echo "· 기동 → $URL   (이 기계에서만 보인다 — 남에게 보여주려면: bms --share)"
+fi
+echo "·   끄기: Ctrl-C · 뒤에서 끄기: bms --stop"
+
+# ── 6. 기동 (foreground — Ctrl-C 로 끈다) ─────────────────────────────────
 echo $$ > "$PIDF"
 trap 'rm -f "$PIDF"' EXIT
-exec "$VENV/bin/python" - "$PORT" <<'PY'
+exec "$VENV/bin/python" - "$PORT" "$BIND" <<'PY'
 import sys, pathlib
 root = pathlib.Path(__file__).resolve().parent if "__file__" in dir() else pathlib.Path.cwd()
 sys.path.insert(0, str(pathlib.Path.cwd() / "webapp"))
 from app import app
-app.run(host="127.0.0.1", port=int(sys.argv[1]), debug=False)
+app.run(host=sys.argv[2], port=int(sys.argv[1]), debug=False)
 PY

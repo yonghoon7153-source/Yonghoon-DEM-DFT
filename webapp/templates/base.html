@@ -31,6 +31,7 @@
   <symbol id="i-close" viewBox="0 0 24 24"><path d="m6 6 12 12M18 6 6 18"/></symbol>
   <symbol id="i-download" viewBox="0 0 24 24"><path d="M12 4v11M7.5 10.5 12 15l4.5-4.5"/><path d="M4.5 18.5h15"/></symbol>
   <symbol id="i-trash" viewBox="0 0 24 24"><path d="M5 7h14M10 7V5h4v2M7 7l1 13h8l1-13"/></symbol>
+  <symbol id="i-flow" viewBox="0 0 24 24"><rect x="2.5" y="8.5" width="6" height="7" rx="1.5"/><rect x="15.5" y="8.5" width="6" height="7" rx="1.5"/><path d="M8.5 12h7M13 9.7l2.5 2.3-2.5 2.3"/></symbol>
   <symbol id="i-note" viewBox="0 0 24 24"><path d="M5 4.5h9l5 5V19a1.5 1.5 0 0 1-1.5 1.5h-11A1.5 1.5 0 0 1 5 19z"/><path d="M14 4.5V10h5M8.5 13.5h7M8.5 16.5h4.5"/></symbol>
   <symbol id="i-lock" viewBox="0 0 24 24"><rect x="5" y="10.5" width="14" height="9.5" rx="2"/><path d="M8.5 10.5V7.5a3.5 3.5 0 0 1 7 0v3"/></symbol>
 </svg>
@@ -56,6 +57,7 @@
   <div class="nav-section" id="nav-wiki">위키</div>
   <ul class="nav-links" aria-labelledby="nav-wiki">
     <li><a href="/"{% if active=='home' %} class="active" aria-current="page"{% endif %}><svg class="ic" aria-hidden="true"><use href="#i-home"></use></svg>홈 · 카탈로그</a></li>
+    <li><a href="/pipeline"{% if active=='pipeline' %} class="active" aria-current="page"{% endif %}><svg class="ic" aria-hidden="true"><use href="#i-flow"></use></svg>연구 파이프라인<span class="nav-tag">처음이면 여기</span></a></li>
     <li><a href="/papers"{% if active=='papers' %} class="active" aria-current="page"{% endif %}><svg class="ic" aria-hidden="true"><use href="#i-paper"></use></svg>논문 digest</a></li>
     <li><a href="/questions"{% if active=='questions' %} class="active" aria-current="page"{% endif %}><svg class="ic" aria-hidden="true"><use href="#i-question"></use></svg>열린 질문</a></li>
     <li><a href="/concepts"{% if active=='concepts' %} class="active" aria-current="page"{% endif %}><svg class="ic" aria-hidden="true"><use href="#i-concept"></use></svg>개념</a></li>
