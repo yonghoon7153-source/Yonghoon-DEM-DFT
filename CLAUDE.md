@@ -459,6 +459,22 @@ raw `/home/...` WSL path because Windows can't resolve it.
   `fan2026_sulfide_assb_stability_review_ECERD2600097.md`, 이 브랜치의
   `li2026_sulfide_stability_review_ecer.md`는 동결 사본.  **카드 만들기 전 정본
   INDEX 먼저 확인.**
+- ★★ **중복 확인은 INDEX 로 하지 마라 — 인덱스가 하나가 아니다** (2026-09-03 실측 사고).
+  정본 `litdb/` 에는 인덱스가 **셋**이다: `INDEX.md`(argyrodite SE 축 전용) ·
+  **`INDEX_DEM.md`**(DEM·건식전극 축) · `INDEX_DEM_snapshot_2026-07-16.md`(동결).
+  내가 `INDEX.md` 만 DOI grep 하고 *"없다"* 고 판정해 **이미 526줄 2판까지 있던 카드**
+  (`kang2025_bollard_anchored_binder_dry_electrode`, digested 2026-08-29)를 새 카드로
+  만들 뻔했다 — ECER 사고와 **같은 구조, 원인만 다르다**(그때는 세션이 갈렸고 이번엔
+  검색 범위가 갈렸다).
+  ⇒ **유일하게 안전한 확인은 파일 목록 자체를 보는 것**이다:
+  ```
+  git fetch origin claude/friendly-meitner-lldvar
+  git ls-tree FETCH_HEAD litdb/papers/ --name-only          # 전수
+  git grep -i '<DOI 또는 제목 낱말>' FETCH_HEAD -- litdb/    # 인덱스 무관
+  ```
+  ⚠ 에이전트에게 중복 판정을 맡길 때도 **"INDEX 를 보라" 가 아니라 "papers/ 를 보라"** 로
+  지시한다.  (이번엔 에이전트가 스스로 `INDEX_DEM.md` 를 찾아내 보강으로 처리했다 —
+  판정 근거를 보고하게 시킨 것이 값을 했다.)
 - 방법: `git fetch origin claude/friendly-meitner-lldvar` → `git worktree add
   ../litdb-canon origin/claude/friendly-meitner-lldvar -b tmp-litdb` → 카드 추가
   → 그 브랜치로 커밋/푸시 → worktree 제거.  코드/문서 등 litdb 외 파일은 여전히
