@@ -1084,3 +1084,28 @@ body[data-kind="gate"]      { --k: var(--k-out); --k-soft: var(--k-out-soft); }
 .axis span { font-size: var(--fs-2xs); color: var(--ink-3); line-height: 1.6; display: block; margin-top: 2px; }
 .primer-body { padding: 16px 18px 18px; }
 .primer-lead { margin: 0 0 14px; max-width: 80ch; }
+
+/* ══ 접는 패널 ══════════════════════════════════════════════════════════
+   `/results` 는 노트 두 편(4,257px)과 CSV 두 벌(2,060px)을 한 화면에 싣는다.
+   전부 펼치면 8화면이라 무엇이 있는지조차 안 보인다. 첫 편만 펼치고 나머지는
+   접되, **접혔다고 도달 못 하면 안 된다** — app.js 의 `openToHash()` 가
+   앵커가 가리키는 곳의 조상 `<details>` 를 전부 열고 나서 스크롤한다. */
+.fold > summary.fold-h {
+  cursor: pointer; list-style: none; user-select: none;
+  display: flex; align-items: center; gap: 9px;
+}
+.fold > summary.fold-h::-webkit-details-marker { display: none; }
+.fold > summary.fold-h:hover { background: var(--surface-2); }
+.fold-mark {
+  flex: none; width: 15px; height: 15px; border-radius: 3px;
+  border: 1px solid color-mix(in srgb, var(--k) 40%, var(--line));
+  background: var(--k-soft); position: relative;
+}
+.fold-mark::before, .fold-mark::after {
+  content: ""; position: absolute; background: var(--k);
+  left: 50%; top: 50%; transform: translate(-50%, -50%);
+}
+.fold-mark::before { width: 7px; height: 1.5px; }
+.fold-mark::after  { width: 1.5px; height: 7px; transition: opacity var(--t); }
+.fold[open] > summary .fold-mark::after { opacity: 0; }   /* + → − */
+.fold-body { padding-top: 4px; }

@@ -17,7 +17,7 @@ from __future__ import annotations
 
 import os
 
-from flask import (Flask, abort, jsonify, render_template, request,
+from flask import (Flask, Response, abort, jsonify, render_template, request,
                    send_from_directory)
 
 import content as C
@@ -117,6 +117,19 @@ def home():
 # ─────────────────────────────────────────────────────────────────────────
 # 논문 digest
 # ─────────────────────────────────────────────────────────────────────────
+#: 브랜드 마크 — 파일 하나를 더 두지 않으려고 여기서 만든다 (CSP: 'self').
+_FAVICON = (
+    '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">'
+    '<rect width="32" height="32" rx="7" fill="#175d8d"/>'
+    '<path d="M8 22V10h3.4l4.6 7 4.6-7H24v12h-3.2v-6.8L16.6 21h-1.2L11.2 15.2V22z"'
+    ' fill="#ffffff"/></svg>')
+
+
+@app.route("/favicon.svg")
+def favicon():
+    return Response(_FAVICON, mimetype="image/svg+xml")
+
+
 @app.route("/papers")
 def papers():
     items = []

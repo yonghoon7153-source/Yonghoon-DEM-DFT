@@ -152,15 +152,26 @@
      노트가 모두 `h-1` 부터 시작해 id 가 겹치고, 아래 절 목차가 전부 첫 노트로 간다. #}
 {% for d in docs %}
 <section class="panel" id="{{ d.id }}">
-  <h2 class="panel-h">{{ d.name }} <code class="src-of">{{ d.relpath }}</code></h2>
-  {% if d.toc %}
-  <nav class="subjump" aria-label="{{ d.name }} 절 목차">
-    {% for h in d.toc %}
-    <a class="jump-i sub lv-{{ h.level }}" href="#{{ h.id }}" data-toc="{{ h.id }}">{{ h.text }}</a>
-    {% endfor %}
-  </nav>
-  {% endif %}
-  <div class="prose">{{ d.html|safe }}</div>
+  {# 노트 한 편이 2,000~2,800px 이라 둘을 펼쳐 두면 화면이 8장이 된다.
+     첫 편만 펼치고 나머지는 접는다. 접힌 안쪽으로 가는 앵커는 app.js 의
+     `openToHash()` 가 열어 주므로 목차 링크는 그대로 동작한다. #}
+  <details class="fold" {% if loop.first %}open{% endif %}>
+    <summary class="panel-h fold-h">
+      <span class="fold-mark" aria-hidden="true"></span>
+      {{ d.name }} <code class="src-of">{{ d.relpath }}</code>
+      <span class="chip">{{ d.toc|length }}절</span>
+    </summary>
+    <div class="fold-body">
+      {% if d.toc %}
+      <nav class="subjump" aria-label="{{ d.name }} 절 목차">
+        {% for h in d.toc %}
+        <a class="jump-i sub lv-{{ h.level }}" href="#{{ h.id }}" data-toc="{{ h.id }}">{{ h.text }}</a>
+        {% endfor %}
+      </nav>
+      {% endif %}
+      <div class="prose">{{ d.html|safe }}</div>
+    </div>
+  </details>
 </section>
 {% else %}
 <p class="empty">mode-observability/docs/ 에 문서가 없다.</p>
@@ -169,10 +180,14 @@
 {# ── CSV ───────────────────────────────────────────────────────────── #}
 {% for c in csvs %}
 <section class="panel" id="{{ c.id }}">
-  <h2 class="panel-h">{{ c.name }}
-    <code class="src-of">{{ c.relpath }}</code>
-    <span class="chip">{{ c.nrows }} 행 · {{ c.header|length }} 열 · {{ '%.1f'|format(c.bytes/1024) }} KB</span>
-  </h2>
+  <details class="fold">
+    <summary class="panel-h fold-h">
+      <span class="fold-mark" aria-hidden="true"></span>
+      {{ c.name }}
+      <code class="src-of">{{ c.relpath }}</code>
+      <span class="chip">{{ c.nrows }} 행 · {{ c.header|length }} 열 · {{ '%.1f'|format(c.bytes/1024) }} KB</span>
+    </summary>
+    <div class="fold-body">
   {% if c.error %}
   <p class="empty">읽지 못했다: {{ c.error }}</p>
   {% else %}
@@ -213,6 +228,8 @@
     </div>
     {% endif %}
   {% endif %}
+    </div>
+  </details>
 </section>
 {% else %}
 <p class="empty">mode-observability/results/ 에 CSV 가 없다.</p>

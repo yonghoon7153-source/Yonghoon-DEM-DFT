@@ -205,3 +205,36 @@
     targets.forEach(function (el) { io.observe(el); });
   }
 })();
+
+/* ── 접힌 안쪽으로 가는 앵커 ──────────────────────────────────────────────
+   `/results` 는 노트·CSV 를 <details> 로 접는다. 접힌 안의 제목으로 가는
+   링크는 브라우저가 열어 주지 않는 경우가 있어, 눌러도 아무 일이 없는 것처럼
+   보인다. 조상 <details> 를 전부 열고 나서 스크롤한다. */
+function openToHash(hash) {
+  var id = (hash || "").replace(/^#/, "");
+  if (!id) return;
+  var t = document.getElementById(id);
+  if (!t) return;
+  var d = t.closest("details");
+  var opened = false;
+  while (d) {
+    if (!d.open) { d.open = true; opened = true; }
+    d = d.parentElement ? d.parentElement.closest("details") : null;
+  }
+  // 방금 편 것이 있으면 배치가 끝난 **다음 프레임**에 스크롤한다. 같은 프레임에
+  // 부르면 아직 접힌 높이로 계산해 엉뚱한 곳에 선다 (실측: top 1727px).
+  if (opened) requestAnimationFrame(function () { t.scrollIntoView({ block: "start" }); });
+  else t.scrollIntoView({ block: "start" });
+}
+window.addEventListener("hashchange", function () { openToHash(location.hash); });
+document.addEventListener("click", function (e) {
+  var a = e.target.closest && e.target.closest('a[href^="#"]');
+  if (!a) return;
+  var h = a.getAttribute("href");
+  if (h && h.length > 1 && document.getElementById(h.slice(1))) {
+    e.preventDefault();
+    if (location.hash !== h) history.pushState(null, "", h);
+    openToHash(h);
+  }
+});
+if (location.hash) openToHash(location.hash);
