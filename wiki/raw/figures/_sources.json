@@ -20,6 +20,14 @@
    "2955858d-3._Synthesize_battery_degradation_modes_via_a_diagnostic_and_prognostic_model.pdf"
   ]
  },
+ "kim2023_graphite-heterogeneity-lifetime": {
+  "figures": 24,
+  "generated": "2026-09-03",
+  "pdfs": [
+   "3b81d57d-6._Lifetime_Prediction_of_Lithium_Ion_Batteries_by_Using_the_Heterogeneity_of_Graphite_Anodes.pdf",
+   "e93e3031-6._Sup_Lifetime_Prediction_of_Lithium_Ion_Batteries_by_Using_the_Heterogeneity_of_Graphite_Anodes.pdf"
+  ]
+ },
  "wang2025_interpretable-ml-battery-prognosis": {
   "figures": 9,
   "generated": "2026-09-03",

@@ -5,7 +5,7 @@ created: 2026-09-03
 updated: 2026-09-03
 type: research-question
 tags: [battery, degradation, research]
-sources: [raw/papers/2026-09-02-siwon-kim-degradation-mode-ml-seminar.md, raw/transcripts/2026-09-03-voice-memo-007-degradation-mode-ml.md, raw/papers/birkl2017_degradation-diagnostics-ocv.md, raw/papers/wang2025_interpretable-ml-battery-prognosis.md]
+sources: [raw/papers/2026-09-02-siwon-kim-degradation-mode-ml-seminar.md, raw/transcripts/2026-09-03-voice-memo-007-degradation-mode-ml.md, raw/papers/birkl2017_degradation-diagnostics-ocv.md, raw/papers/wang2025_interpretable-ml-battery-prognosis.md, raw/papers/kim2023_graphite-heterogeneity-lifetime.md]
 confidence: medium
 explored: false
 verificationStatus: unverified
@@ -128,15 +128,39 @@ H2 가 참일 수 있음에 주의한다 — 부호가 같다고 벡터가 평�
     적절성 축은 없다**. 즉 이 Gap 은 한 발표의 누락이 아니라 **두 계보
     (전기화학 진단 / ML 예후)가 만나는 지점의 구조적 공백**이며, 이 카드의
     무게는 그만큼 커진다.
-- **[2026-09-03] PVS 의 물리 귀속이 문헌과 어긋난다.** 같은 기하학적 양
-  (DV 곡선의 peak−valley 진폭)에 대해
-  [[interpretable-ml-battery-prognosis-taxonomy]] 가 정리한 선례
-  (Kim et al. 2023, *ACS Energy Lett.* 8, 2946 — 리뷰 Fig. 5c 를 직접 보고
-  확인) 는 **흑연 음극으로의 리튬 삽입 불균일성**이라는 **음극 단일 귀속**을
-  준다. 세미나는 같은 형태의 양을 **양극 peak 과 음극 valley 의 대비**로
-  읽는다. 어느 쪽이 맞는지는 이 카드의 H1/H2 판정에 직접 영향을 준다 —
-  음극 단일 귀속이라면 PVS 는 애초에 LLI↔LAM_PE 방향을 잴 이유가 없다.
-  원전(Kim 2023) 미확인.
+- ~~**[2026-09-03] PVS 의 물리 귀속이 문헌과 어긋난다.**~~ → **[2026-09-03 (5)]
+  닫힘.** 원전([[dv-peak-heterogeneity-descriptor]], Kim et al. 2023,
+  *ACS Energy Lett.* 8, 2946, DOI 10.1021/acsenergylett.3c00695) 을 본문 + SI
+  로 직접 확인한 결과 **전제가 거짓이었다**. 셋 다 다르다:
+  (a) **양이 다르다** — 그 논문의 대표 descriptor `Peak_S2` 는 SI 가
+  "**the absolute value at the ridge**" 로 정의하는 **절대 peak 높이**이고,
+  peak−valley 진폭(`ΔPeak_S2`)은 valley 노이즈 때문에 **버려진 변형**이다
+  (ρ 0.75 → 0.82). 리뷰 Fig. 5c 에 그려진 화살표는 그 버린 쪽이다.
+  (b) **화학이 다르다** — LFP‖Gr(2상 평탄 OCP) 이라 dV/dQ 극값 구조가 사실상
+  흑연의 것이다. 음극 단일 귀속은 그 화학에서 강제된 것이지 일반 법칙이 아니다.
+  (c) **좌표를 맞추면 오히려 일치한다** — dV/dQ 의 **ridge** 는 dQ/dV 의
+  **valley** 이므로, Kim 의 `Peak_S2` 는 세미나의 `Valley2`(graphite stage-2
+  단일상)와 **같은 종류의 특징**이고 둘 다 음극에 귀속된다. 세미나가 양극에
+  붙이는 `Peak2`(dQ/dV 의 peak)는 Kim 이 쓰지 않는 쪽이다.
+  → **이 Gap 은 H1/H2 판정에 무게를 싣지 않는다.** 대신 아래 새 Gap 이 열린다.
+- **[2026-09-03 (5)] ★ DV/IC 극값 진폭이 열화 모드 이외의 상태변수를 싣는다.**
+  같은 원전 Fig. S2a(직접 봄): **같은 SOH 80 % 에서** 사이클 조건에 따라
+  ΔPeak_S2 가 **0.083 ~ 0.253 V Ah⁻¹ (약 3배)** 로 갈린다 (1C@45 °C 는 오히려
+  증가, 2C@25 °C 는 급감). 저자는 이것을 "공간적 리튬화 불균일성" 으로 읽지만,
+  같은 데이터는 "**열화 모드 조합이 다르다**"로도 설명된다 — 그 논문은 LLI/LAM
+  을 한 번도 재지 않으므로(약어 0회) 둘을 구분할 수 없다. **PVS 에 대한 함의**:
+  세미나 p.8 의 모드 스윕은 1D P2D(전극면 방향 분산 없음) 위에서 계산된 것이고,
+  실측 셀의 PVS 에는 이 성분이 섞여 들어온다. 즉 PVS 를 모드 관측으로 쓸 때의
+  위협은 "어느 전극인가" 가 아니라 "**모드 이외의 상태변수가 같은 축을
+  흔든다**" 쪽이다. 이 성분의 크기는 아직 아무도 정량하지 않았고, 우리 합성
+  truth 파이프라인은 **모드를 고정한 채** 그 상한을 계산할 수 있다.
+- **[2026-09-03 (5)] valley 를 쓰는 feature 의 노이즈 취약성 — 문헌 전례 확보.**
+  같은 원전이 valley 를 쓰는 변형을 **실전에서 폐기**했다: `[인쇄]` "because of
+  the **fluctuation in the valley** near 0.4 Ah, which is attributed to the
+  limited resolution of voltage detection when the voltage plateaued". PVS 는
+  valley 를 분자에도 분모에도 쓴다. [[mode-observability]] Phase 1 이 관측한
+  valley 정의 민감도(인접 −20.0 vs 창내 전역 최소 −11.3)와 **같은 병**이며,
+  대조군으로 **valley 를 쓰지 않는 변형**(peak 절대값)을 넣을 근거가 생겼다.
 - **LOGO-CV 의 group 정의가 원문에 인쇄되지 않았다.** 셀 단위인지 프로토콜
   단위인지에 따라 p.13 수치의 의미가 갈린다. 프로토콜 식별자가 입력에 있으므로
   group 이 셀이면 같은 프로토콜의 형제 셀로부터 예측하는 구조가 된다.
@@ -201,3 +225,27 @@ H2 가 참일 수 있음에 주의한다 — 부호가 같다고 벡터가 평�
   유일성·축퇴·라벨 불확실성을 다루는 절이 없으며, (c) `OCV`·`half-cell` 이
   본문에 0회다. 즉 **이 카드의 질문에 대한 답을 이 리뷰에서 찾을 수는 없다.**
   이 리뷰가 준 것은 답이 아니라 **좌표계와 공백의 확정**이다.
+
+- [2026-09-03 (5)] open 유지 — 리뷰가 PVS 의 선례로 든 **원전**을 본문 + SI 로
+  흡수 ([[dv-peak-heterogeneity-descriptor]], Kim et al. 2023). 이 카드에 준 것 셋:
+  - **Gap 1건 닫음**: "PVS 의 물리 귀속이 문헌과 어긋난다" 는 **전제가 거짓**
+    이었다. (a) 그 논문의 대표 descriptor 는 peak−valley 진폭이 아니라 **ridge
+    절대 높이**이고 진폭 변형은 valley 노이즈 때문에 폐기됐다, (b) 셀이
+    **LFP‖Gr** 이라 음극 단일 귀속이 화학에 의해 강제된다, (c) `dQ/dV = 1/(dV/dQ)`
+    로 좌표를 맞추면 그 descriptor 는 세미나의 **Valley2**(음극)에 대응해
+    **오히려 일치**한다. 세미나의 양극 귀속(Peak2)은 그 논문이 쓰지 않는 쪽이다.
+    → 이 Gap 은 H1/H2 어느 쪽에도 무게를 싣지 않는다.
+  - **새 Gap 2건**: (1) DV/IC 극값 진폭이 **모드 이외의 상태변수**를 싣는다
+    (같은 SOH 80 % 에서 조건에 따라 3배 변동, 원전 Fig. S2a 직접 봄) —
+    귀속 논쟁보다 무거운 위협이다. (2) valley 를 쓰는 feature 의 노이즈
+    취약성에 **문헌 전례**가 생겼다 (원전은 valley 를 버리는 쪽을 택했고 그래서
+    성능이 올랐다).
+  - **우리가 공급할 것이 하나 늘었다**: 원전은 시뮬레이션을 한 번도 돌리지
+    않으므로(`simulat` 0회) Fig. S2a 의 3배 변동 중 **모드로 설명되는 몫의
+    상한**을 스스로 계산할 수 없다. 우리 합성 truth 파이프라인은 모드를 고정한
+    채 그 상한을 줄 수 있다.
+  **이 흡수의 방법론적 교훈**: 이전 라운드에서 우리는 리뷰 Fig. 5c 를 **직접
+  보고** "intensity = peak−valley 진폭" 이라고 적었다. 그림 판독 자체는
+  정확했고(그 화살표는 실제로 진폭이다), 틀린 것은 "그림에 그려진 것 = 논문이
+  쓴 descriptor" 라는 **한 단계의 추론**이었다. 그림은 본문 서술을 교정하지만
+  **본문·SI 를 이기지는 않는다**.

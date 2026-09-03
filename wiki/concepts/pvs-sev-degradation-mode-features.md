@@ -5,7 +5,7 @@ created: 2026-09-03
 updated: 2026-09-03
 type: concept
 tags: [battery, degradation, research]
-sources: [raw/papers/2026-09-02-siwon-kim-degradation-mode-ml-seminar.md, raw/transcripts/2026-09-03-voice-memo-007-degradation-mode-ml.md, raw/papers/wang2025_interpretable-ml-battery-prognosis.md]
+sources: [raw/papers/2026-09-02-siwon-kim-degradation-mode-ml-seminar.md, raw/transcripts/2026-09-03-voice-memo-007-degradation-mode-ml.md, raw/papers/wang2025_interpretable-ml-battery-prognosis.md, raw/papers/kim2023_graphite-heterogeneity-lifetime.md]
 confidence: medium
 explored: false
 verificationStatus: unverified
@@ -66,12 +66,31 @@ P2D 시뮬레이션(PVS, 원문 p.8)과 stoichiometric-window 모식도(SEV, 원
 [[interpretable-ml-battery-prognosis-taxonomy]] 의 4분류에 넣으면 두 feature 는
 **3번(physics-inspired feature engineering)** 이고, 세부는 갈린다:
 
-- **PVS** — 리뷰 §4.2 (IC/DV 유래) 계열의 변형. 가장 가까운 선례는 Kim et al.
-  2023 (*ACS Energy Lett.* 8, 2946) 의 **DV peak intensity**. 리뷰 Fig. 5c 를
-  직접 보면 그 "intensity" 가 실제로는 **peak−valley 진폭**이고, PVS 는 거기에
-  전압 간격을 분모로 넣은 것이다. **다만 그 선례는 같은 양을 흑연 음극의
-  리튬 삽입 불균일성 — 즉 음극 단일 — 에 귀속시킨다.** 이 페이지가 적는
-  "peak2 = PE / valley2 = NE 의 대비" 해석과 충돌하며, 미해결로
+- **PVS** — 리뷰 §4.2 (IC/DV 유래) 계열의 변형. 가장 가까운 선례로 리뷰가
+  드는 것은 Kim et al. 2023 (*ACS Energy Lett.* 8, 2946) 의
+  **DV peak intensity** = [[dv-peak-heterogeneity-descriptor]].
+  **[2026-09-03 정정]** 이 페이지는 한동안 "그 선례가 같은 기하량을 음극 단일에
+  귀속시켜 PVS 해석과 충돌한다" 고 적어 두었다. **원전(본문 + SI)을 직접 읽은
+  결과 그 서술은 틀렸다** — 정정 셋:
+  1. **그 선례의 대표 descriptor 는 peak−valley 진폭이 아니라 ridge 의 절대
+     높이다.** SI 인쇄: "The Peak_S2 intensity is **the absolute value at the
+     ridge**." 진폭 변형(ΔPeak_S2)은 valley 노이즈 때문에 **버려졌다**
+     (ρ 0.75 → 0.82). 리뷰 Fig. 5c 에 그려진 화살표는 그 버린 쪽이다.
+     즉 "PVS 는 거기에 분모를 넣은 것" 이라는 계보 서술도 성립하지 않는다.
+  2. **화학이 다르다** — 그 논문은 **LFP‖Gr**(2상 평탄 OCP) 이라 dV/dQ 극값
+     구조가 사실상 흑연의 것이다. 음극 단일 귀속은 그 화학에서 **강제**된
+     것이지 NCM811 로 일반화되는 주장이 아니다. 그 논문은 양극을 배제한 것이
+     아니라 **논의하지 않는다**.
+  3. **좌표를 맞추면 오히려 일치한다** — `dQ/dV = 1/(dV/dQ)` 이므로 dV/dQ 의
+     **ridge** ↔ dQ/dV 의 **valley**. 그 논문의 `Peak_S2` 는 이 페이지의
+     `Valley2`(graphite stage-2 단일상)와 **같은 종류의 특징**이고 둘 다 음극
+     귀속이다. 이 페이지가 양극에 붙이는 `Peak2` 는 그 논문이 쓰지 않는 쪽이다.
+
+  **대신 그 원전이 남긴 진짜 위협**은 귀속이 아니라 **교란**이다: 같은 SOH
+  80 % 에서 사이클 조건에 따라 DV 진폭이 약 **3배** 갈린다 (원전 Fig. S2a).
+  DV/IC 극값의 크기가 **열화 모드 분율 이외의 상태변수**(공간 불균일성·국소
+  plating)를 싣는다는 실측이며, PVS 의 부호표(아래)가 1D P2D 위에서 계산된
+  것임을 감안하면 실측 PVS 에는 이 성분이 섞인다.
   [[pvs-sev-lli-lampe-separability]] Gap 에 등재했다.
 - **SEV** — 리뷰에 **current interruption 범주가 없다.** 측정 방식은 §4.3
   (relaxation), 물리 귀속은 §4.4 (EIS/DRT 의 R_ct) 쪽이며 그 어느 절의 사례도

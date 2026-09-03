@@ -1,0 +1,492 @@
+{
+ "slug": "kim2023_graphite-heterogeneity-lifetime",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-09-03",
+ "sources": [
+  "3b81d57d-6._Lifetime_Prediction_of_Lithium_Ion_Batteries_by_Using_the_Heterogeneity_of_Graphite_Anodes.pdf",
+  "e93e3031-6._Sup_Lifetime_Prediction_of_Lithium_Ion_Batteries_by_Using_the_Heterogeneity_of_Graphite_Anodes.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 2,
+   "file": "fig_1.png",
+   "caption": "Figure 1. Heterogeneity of Gr anodes and their relation to voltage profiles. Scheme showing the relation between spatial homoge- neity of lithiation in the Gr anode and voltage profile: (a) homogeneous and (b) heterogeneous lithiation near stage II. Corresponding voltage profiles of different regions in the Gr electrodes (bottom). (c) Voltage profiles of the cells with spatially homogeneous and heterogeneous Gr anodes at stage II. (d) Voltage (top) and corresponding DV (bottom) profiles of an LFP/ Gr cylindrical cell as a function of the capacity during charge consisting of different stages.",
+   "rotated_deg": 0,
+   "bbox": [
+    309.4,
+    131.9,
+    561.5,
+    481.6
+   ],
+   "w": 1051,
+   "h": 1458,
+   "dpi": 300,
+   "src": "3b81d57d-6._Lifetime_Prediction_of_Lithium_Ion_Batteries_by_Using_the_Heterogeneity_of_Graphite_Anodes.pdf",
+   "blank": 0.868
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 3,
+   "file": "fig_2.png",
+   "caption": "Figure 2. Correlation among electrode heterogeneity, cycle life, and electrode arrangement of LFP/Gr cylindrical cells. (a) DV profiles of homogeneous and heterogeneous cells and (b) their corresponding cycle life when measured at 1C for both charge and discharge at room temperature. (c) Side cross-sectional XRM images of the homogeneous and heterogeneous cells (left). Enlarged views of the upper sides of electrodes in the jellyrolls (right). Top cross-sectional XRM images of (d) the homogeneous and (f) heterogeneous cells. All scale bars in this figure are 1 mm. (e) Enlarged central voids of the jellyrolls containing the homogeneous and heterogeneous cells to compare the roundness of the voids. peak shift, which lead to one collective profile with a gentle slope between the two voltage plateaus (Figure 1c). Based on this logic, a cell with greater heterogeneity in its lithiation distrib",
+   "rotated_deg": 0,
+   "bbox": [
+    45.5,
+    54.4,
+    561.5,
+    332.6
+   ],
+   "w": 2151,
+   "h": 1160,
+   "dpi": 300,
+   "src": "3b81d57d-6._Lifetime_Prediction_of_Lithium_Ion_Batteries_by_Using_the_Heterogeneity_of_Graphite_Anodes.pdf",
+   "blank": 0.607
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 4,
+   "file": "fig_3.png",
+   "caption": "Figure 3. Correlation between the life cycle and PeakS2 intensity. (a) Cycling retention profiles and (b) differential voltage profiles of 77 LFP/Gr cells under equivalent cycling conditions of 1C charging and 1C discharging. (c) Correlation between PeakS2 intensity and cycle life with a Pearson correlation coefficient of 0.82. The colors of dots and lines in all plots are graded according to the cycle life and are indicated on the color scale bar in (a). ΔPeakS2 as a Key Descriptor for Electrode Hetero- geneity. To examine the possibility of using ΔPeakS2 as a key descriptor of cell degradation, multiple LFP/Gr commercial cells were operated for one cycle, and their first charging profiles were analyzed by focusing on ΔPeakS2. For example, two cells were identified as homogeneous and heterogeneous cells based on their large and small values of ΔPeakS2, respectively, as displayed in Figu",
+   "rotated_deg": 0,
+   "bbox": [
+    45.5,
+    54.4,
+    561.5,
+    344.3
+   ],
+   "w": 2151,
+   "h": 1209,
+   "dpi": 300,
+   "src": "3b81d57d-6._Lifetime_Prediction_of_Lithium_Ion_Batteries_by_Using_the_Heterogeneity_of_Graphite_Anodes.pdf",
+   "blank": 0.904
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 6,
+   "file": "fig_4.png",
+   "caption": "Figure 4. PeakS2-based diagnosis for module assembly. PeakS2 was used for the high-quality inspection of as-manufactured cells for the assembly of cells into a module.",
+   "rotated_deg": 0,
+   "bbox": [
+    45.5,
+    54.4,
+    561.5,
+    256.5
+   ],
+   "w": 2151,
+   "h": 843,
+   "dpi": 300,
+   "src": "3b81d57d-6._Lifetime_Prediction_of_Lithium_Ion_Batteries_by_Using_the_Heterogeneity_of_Graphite_Anodes.pdf",
+   "blank": 0.905
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 6,
+   "file": "fig_5.png",
+   "caption": "Figure 5. Module construction according to cell classification based on the PeakS2 intensity. (a) Box plots of cycle life vs PeakS2 intensity for three different groups of cells classified by the PeakS2 intensity. (b) Construction of five different modules consisting of six cells based on different standards (PeakS2 intensity, first IR, and first Q). (c) Cycling performance of different modules constructed as in (b). useful correlation to the cycle life. We constructed five modules comprising six cells each, with each module consisting of cells selected for their particular properties with respect to the different parameters of interest (Figure 5b); module 1: low PeakS2, module 2: middle PeakS2, module 3: high PeakS2, module 4: controlled first cycle capacity (first Q), and module 5: controlled first cycle IR. Apart from modules 1−3, the properties of the cells included in modules 4 and ",
+   "rotated_deg": 0,
+   "bbox": [
+    45.5,
+    285.5,
+    561.5,
+    566.7
+   ],
+   "w": 2151,
+   "h": 1173,
+   "dpi": 300,
+   "src": "3b81d57d-6._Lifetime_Prediction_of_Lithium_Ion_Batteries_by_Using_the_Heterogeneity_of_Graphite_Anodes.pdf",
+   "blank": 0.933
+  },
+  {
+   "key": "fS1",
+   "kind": "figure",
+   "label": "S1",
+   "page": 6,
+   "file": "fig_S1.png",
+   "caption": "Figure S1. DV profiles along capacity under the different cycling conditions of (a) 1C@25 °C,",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    79.1,
+    532.3,
+    379.7
+   ],
+   "w": 1943,
+   "h": 1253,
+   "dpi": 300,
+   "src": "e93e3031-6._Sup_Lifetime_Prediction_of_Lithium_Ion_Batteries_by_Using_the_Heterogeneity_of_Graphite_Anodes.pdf",
+   "blank": 0.888
+  },
+  {
+   "key": "fS2",
+   "kind": "figure",
+   "label": "S2",
+   "page": 7,
+   "file": "fig_S2.png",
+   "caption": "Figure S2. (a) ∆PeakS2 and (b) ∆PeakS4 along SOH for four different cycling conditions: 1C@25 °C, 2C@25 °C, 1C@45 °C, and 1C@10 °C.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    79.0,
+    532.3,
+    445.4
+   ],
+   "w": 1943,
+   "h": 1527,
+   "dpi": 300,
+   "src": "e93e3031-6._Sup_Lifetime_Prediction_of_Lithium_Ion_Batteries_by_Using_the_Heterogeneity_of_Graphite_Anodes.pdf",
+   "blank": 0.953
+  },
+  {
+   "key": "fS3",
+   "kind": "figure",
+   "label": "S3",
+   "page": 8,
+   "file": "fig_S3.png",
+   "caption": "Figure S3. ∆PeakS4 is denoted. Same voltage (top) and DV (bottom) profiles of the LFP/Gr cylindrical cell shown in Figure 1d.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    79.0,
+    529.3,
+    355.5
+   ],
+   "w": 1931,
+   "h": 1153,
+   "dpi": 300,
+   "src": "e93e3031-6._Sup_Lifetime_Prediction_of_Lithium_Ion_Batteries_by_Using_the_Heterogeneity_of_Graphite_Anodes.pdf",
+   "blank": 0.956
+  },
+  {
+   "key": "fS4",
+   "kind": "figure",
+   "label": "S4",
+   "page": 9,
+   "file": "fig_S4.png",
+   "caption": "Figure S4. DV vs. capacity profiles during discharge under different cycling conditions: (a)",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    79.1,
+    532.3,
+    429.1
+   ],
+   "w": 1943,
+   "h": 1460,
+   "dpi": 300,
+   "src": "e93e3031-6._Sup_Lifetime_Prediction_of_Lithium_Ion_Batteries_by_Using_the_Heterogeneity_of_Graphite_Anodes.pdf",
+   "blank": 0.936
+  },
+  {
+   "key": "fS5",
+   "kind": "figure",
+   "label": "S5",
+   "page": 10,
+   "file": "fig_S5.png",
+   "caption": "Figure S5. SEM and optical (center) images of the Gr anodes of a fresh unrolled LFP/Gr cell.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    79.0,
+    532.3,
+    402.9
+   ],
+   "w": 1943,
+   "h": 1350,
+   "dpi": 300,
+   "src": "e93e3031-6._Sup_Lifetime_Prediction_of_Lithium_Ion_Batteries_by_Using_the_Heterogeneity_of_Graphite_Anodes.pdf",
+   "blank": 0.499
+  },
+  {
+   "key": "fS6",
+   "kind": "figure",
+   "label": "S6",
+   "page": 11,
+   "file": "fig_S6.png",
+   "caption": "Figure S6. SEM and optical (center) images of the Gr anodes of LFP/Gr cell cycled at 1C@",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    79.0,
+    532.3,
+    402.9
+   ],
+   "w": 1943,
+   "h": 1350,
+   "dpi": 300,
+   "src": "e93e3031-6._Sup_Lifetime_Prediction_of_Lithium_Ion_Batteries_by_Using_the_Heterogeneity_of_Graphite_Anodes.pdf",
+   "blank": 0.479
+  },
+  {
+   "key": "fS7",
+   "kind": "figure",
+   "label": "S7",
+   "page": 12,
+   "file": "fig_S7.png",
+   "caption": "Figure S7. SEM and optical (center) images of the Gr anodes of LFP/Gr cell cycled at 2C@",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    79.0,
+    532.3,
+    402.9
+   ],
+   "w": 1943,
+   "h": 1350,
+   "dpi": 300,
+   "src": "e93e3031-6._Sup_Lifetime_Prediction_of_Lithium_Ion_Batteries_by_Using_the_Heterogeneity_of_Graphite_Anodes.pdf",
+   "blank": 0.494
+  },
+  {
+   "key": "fS8",
+   "kind": "figure",
+   "label": "S8",
+   "page": 13,
+   "file": "fig_S8.png",
+   "caption": "Figure S8. TOF-SIMS results of the Gr anodes in the LFP/Gr cells (a) before cycling",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    79.0,
+    532.3,
+    663.9
+   ],
+   "w": 1943,
+   "h": 2438,
+   "dpi": 300,
+   "src": "e93e3031-6._Sup_Lifetime_Prediction_of_Lithium_Ion_Batteries_by_Using_the_Heterogeneity_of_Graphite_Anodes.pdf",
+   "blank": 0.943
+  },
+  {
+   "key": "fS9",
+   "kind": "figure",
+   "label": "S9",
+   "page": 14,
+   "file": "fig_S9.png",
+   "caption": "Figure S9. DMC solvent used for washing the jellyrolls of LFP/Gr cells: (a) before cycling,",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    79.0,
+    532.3,
+    297.8
+   ],
+   "w": 1943,
+   "h": 913,
+   "dpi": 300,
+   "src": "e93e3031-6._Sup_Lifetime_Prediction_of_Lithium_Ion_Batteries_by_Using_the_Heterogeneity_of_Graphite_Anodes.pdf",
+   "blank": 0.645
+  },
+  {
+   "key": "fS10",
+   "kind": "figure",
+   "label": "S10",
+   "page": 15,
+   "file": "fig_S10.png",
+   "caption": "Figure S10. Vertical cross-sectional XRM images of (a) the homogeneous and (b)",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    79.1,
+    532.3,
+    507.5
+   ],
+   "w": 1943,
+   "h": 1786,
+   "dpi": 300,
+   "src": "e93e3031-6._Sup_Lifetime_Prediction_of_Lithium_Ion_Batteries_by_Using_the_Heterogeneity_of_Graphite_Anodes.pdf",
+   "blank": 0.508
+  },
+  {
+   "key": "fS11",
+   "kind": "figure",
+   "label": "S11",
+   "page": 16,
+   "file": "fig_S11.png",
+   "caption": "Figure S11. The MCC method for calculation of roundness about the enlarged core void of the",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    79.0,
+    529.3,
+    499.4
+   ],
+   "w": 1931,
+   "h": 1752,
+   "dpi": 300,
+   "src": "e93e3031-6._Sup_Lifetime_Prediction_of_Lithium_Ion_Batteries_by_Using_the_Heterogeneity_of_Graphite_Anodes.pdf",
+   "blank": 0.8
+  },
+  {
+   "key": "fS12",
+   "kind": "figure",
+   "label": "S12",
+   "page": 17,
+   "file": "fig_S12.png",
+   "caption": "Figure S12. Cycle life vs. ∆PeakS2 intensity plot with correlation coefficient of 0.75.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    79.1,
+    485.0,
+    327.1
+   ],
+   "w": 1746,
+   "h": 1035,
+   "dpi": 300,
+   "src": "e93e3031-6._Sup_Lifetime_Prediction_of_Lithium_Ion_Batteries_by_Using_the_Heterogeneity_of_Graphite_Anodes.pdf",
+   "blank": 0.959
+  },
+  {
+   "key": "fS13",
+   "kind": "figure",
+   "label": "S13",
+   "page": 18,
+   "file": "fig_S13.png",
+   "caption": "Figure S13. Comparison of RMSE values during 1000 iterations between dummy regressor",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    79.0,
+    529.3,
+    577.5
+   ],
+   "w": 1931,
+   "h": 2078,
+   "dpi": 300,
+   "src": "e93e3031-6._Sup_Lifetime_Prediction_of_Lithium_Ion_Batteries_by_Using_the_Heterogeneity_of_Graphite_Anodes.pdf",
+   "blank": 0.871
+  },
+  {
+   "key": "fS14",
+   "kind": "figure",
+   "label": "S14",
+   "page": 19,
+   "file": "fig_S14.png",
+   "caption": "Figure S14. Correlation of cycle life with (a) PeakS4 intensity, (b) 1st IR, (c) 1st Q, and (d) Var (ΔQ100-10(V)).",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    79.1,
+    529.3,
+    398.5
+   ],
+   "w": 1931,
+   "h": 1332,
+   "dpi": 300,
+   "src": "e93e3031-6._Sup_Lifetime_Prediction_of_Lithium_Ion_Batteries_by_Using_the_Heterogeneity_of_Graphite_Anodes.pdf",
+   "blank": 0.939
+  },
+  {
+   "key": "fS15",
+   "kind": "figure",
+   "label": "S15",
+   "page": 20,
+   "file": "fig_S15.png",
+   "caption": "Figure S15. (a) Capacity distributions of six cells in each module group classified based on",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    79.1,
+    529.3,
+    425.5
+   ],
+   "w": 1931,
+   "h": 1444,
+   "dpi": 300,
+   "src": "e93e3031-6._Sup_Lifetime_Prediction_of_Lithium_Ion_Batteries_by_Using_the_Heterogeneity_of_Graphite_Anodes.pdf",
+   "blank": 0.973
+  },
+  {
+   "key": "fS16",
+   "kind": "figure",
+   "label": "S16",
+   "page": 21,
+   "file": "fig_S16.png",
+   "caption": "Figure S16. (a) Deviation of PeakS2 intensity vs. deviation of capacity decay of individual cells in different modules. (b) Box plots for capacity decay of individual cells in different modules.",
+   "rotated_deg": 0,
+   "bbox": [
+    66.0,
+    79.1,
+    529.3,
+    549.2
+   ],
+   "w": 1931,
+   "h": 1960,
+   "dpi": 300,
+   "src": "e93e3031-6._Sup_Lifetime_Prediction_of_Lithium_Ion_Batteries_by_Using_the_Heterogeneity_of_Graphite_Anodes.pdf",
+   "blank": 0.958
+  },
+  {
+   "key": "t1",
+   "kind": "table",
+   "label": "1",
+   "page": 5,
+   "file": "tab_1.png",
+   "caption": "Table 1. Prediction Errors of the Lifetime Prediction Modelsa RMSE (cycles) MPE (%) Train Test Train Test Dummy regressor 92 93 28.2 (5.5) 28.5 (4.8) PeakS2 intensity 52 51 13.6 (0.7) 13.5 (2.4) PeakS4 intensity 81 81 22.8 (1.1) 22.8 (3.9) first IR 93 94 28.3 (1.2) 28.5 (4.7) first Q 94 94 28.4 (1.3) 28.6 (4.9) Var (ΔQ100−10(V)) 60 60 15.6 (1.0) 15.6 (2.8) aTraining and testing errors of the lifetime prediction models using different parameters from the dataset of 77 LFP/Gr cells. The error values of the dummy regressor without any features serve as a baseline. The values in parentheses are standard deviations.",
+   "rotated_deg": 0,
+   "bbox": [
+    310.4,
+    55.7,
+    560.5,
+    227.9
+   ],
+   "w": 1043,
+   "h": 718,
+   "dpi": 300,
+   "src": "3b81d57d-6._Lifetime_Prediction_of_Lithium_Ion_Batteries_by_Using_the_Heterogeneity_of_Graphite_Anodes.pdf",
+   "blank": 0.761
+  },
+  {
+   "key": "tS1",
+   "kind": "table",
+   "label": "S1",
+   "page": 22,
+   "file": "tab_S1.png",
+   "caption": "Table S1. Average and standard deviation of capacity and IR for the cells selected for the",
+   "rotated_deg": 0,
+   "bbox": [
+    67.0,
+    163.2,
+    581.9,
+    610.6
+   ],
+   "w": 2146,
+   "h": 1866,
+   "dpi": 300,
+   "src": "e93e3031-6._Sup_Lifetime_Prediction_of_Lithium_Ion_Batteries_by_Using_the_Heterogeneity_of_Graphite_Anodes.pdf",
+   "blank": 0.979
+  },
+  {
+   "key": "tS2",
+   "kind": "table",
+   "label": "S2",
+   "page": 4,
+   "file": "tab_S2.png",
+   "caption": "Table S2. ρ was used to describe the degree and direction of linearity between the two variables.",
+   "rotated_deg": 0,
+   "bbox": [
+    67.0,
+    81.6,
+    581.9,
+    786.3
+   ],
+   "w": 2146,
+   "h": 2938,
+   "dpi": 300,
+   "src": "e93e3031-6._Sup_Lifetime_Prediction_of_Lithium_Ion_Batteries_by_Using_the_Heterogeneity_of_Graphite_Anodes.pdf",
+   "blank": 0.938
+  }
+ ]
+}
