@@ -100,6 +100,24 @@ python3 tools/kb_wiki.py lint | head -3          # 0 errors 확인
 - 스코핑: `kb/projects/zn_alzib_dft_md_contribution_2026_09_03.md` (계산 후보 C1–C7)
 - 상대 발표 digest: `litdb/talks/do2026_bml_alzib_preconditioning.md`
 - 교차 비교: `litdb/comparison_vs_ours.md` **§K** (물성 4축과 수치로 안 섞는다는 금지표 포함)
+- **선행연구 정본**: `litdb/papers/zhu2026_zhs_precoverage_quasi_anode_free_zn.md`
+  (Zhu et al., *Adv. Funct. Mater.* 2026, 36, e23442 — 덱 슬 6 = G2 의 원출처)
+
+### ★ G2 판정 — 우리 자리가 확정됐다
+
+논문 원문 확인 결과 **"Cu 표면합금"은 한 번도 측정된 적이 없다.** 본문에 "alloy" 가 2회뿐이고
+둘 다 조건법(might/likely)이며, 두 번째는 자기 결과가 아니라 인용(Hao, AFM 2020)이다.
+Cu XRD · Cu 2p 화학상태 분해 · 깊이프로파일 · 단면 EDS · UPD 정량 · **DFT 의 Cu 표면** 전부 0건.
+논문의 Cu 논리는 실제로는 소거법이다 — 탄소에선 ZHS 유익 / 평판 Cu 에선 ZHS **유해** →
+남은 개선분은 합금 때문일 것. **덱이 인용한 "합금 > ZHS" 와는 부호가 다르다.**
+
+⛔ **그 논문의 ΔG 절대값을 이식하지 마라** — 계산 방법이 논문 어디에도 없다(code·범함수·vdW·
+유사퍼텐셜·k-mesh·슬랩두께·용매·ZPE/TΔS 보정·H 기준 전부 미기재). 살아남는 것은 정성 순서뿐:
+결함 그래핀 > Zn > 완전 그래핀 ≈ ZHS.
+
+**우리 자리**: C3(ΔG_H\*) 의 계 목록에 **Cu · CuZn · Cu₅Zn₈ · CuZn₅ · CuI 가 하나도 없다.**
+C2(zincophilicity)는 겹침 **0**. 선행연구가 자기 이론 도구를 가지고도 Cu 에 한 번도 안 썼다.
+
 
 ### C1 은 이미 돌렸다 — 결과가 실험 설계를 바꾼다
 

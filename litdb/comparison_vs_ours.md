@@ -1206,7 +1206,8 @@ QAF 셀 **≈520 Wh kg⁻¹**(⚠ 본문 표현은 *theoretical*) · 57 cyc 92 %
 **⛔ 절대값 이식 금지 — 이유가 강하다**: 이 논문은 **계산 방법을 어디에도 적지 않았다.**
 code · 범함수 · vdW · 유사퍼텐셜 · k-mesh · cutoff · 슬랩두께/진공 · 스핀 · 용매모델 ·
 **ΔG 의 ZPE/TΔS 보정 여부와 H 기준(½H₂ vs H⁺+e⁻)** 이 전부 미기재이고, 본문 전문에
-`DFT`·`VASP`·`first-principles`·`PBE`·`k-point`·`plane-wave`·`cutoff`·`force field` 가 **0건**이다
+`DFT`·`VASP`·`first-principles`·`PBE`·`k-point`·`plane-wave`·`pseudopotential`·`force field` 가 **0건**이다
+(`functional` 은 "functional groups", `cut-off` 는 전압 컷오프로만 나온다 — 계산 의미의 용례 0건)
 (MD 도 마찬가지 — code·force field·물 모델·앙상블·길이 전부 미기재, `Fig. S9c` RDF 는 **원자쌍 라벨조차 없다**).
 ⇒ 우리 ΔG_H\* 를 2.618 / −0.216 eV **옆에 나란히 그리면 CLAUDE.md "방법 명시 없이 이식 금지" 위반**이다.
 **살아남는 것은 정성 순서뿐**: 결함 그래핀 > Zn > 완전 그래핀 ≈ ZHS.

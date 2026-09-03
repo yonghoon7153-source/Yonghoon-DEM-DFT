@@ -353,7 +353,7 @@ in-situ pre-conditioning."
 | 1 | **Nano-Micro Lett. 2022, 14, 208** | 슬 2(무음극 동기) · 슬 10(I₃⁻ → Cu 나노클러스터 재구성) · 슬 25 | **❌ 없음** (grep: `papers/`·`INDEX.md`·`comparison_vs_ours.md` 전무) |
 | 2 | **Energy Environ. Sci. 2024, 17(19), 7372–7381** | 슬 10 — **I⁻-rich EDL 이 Marcus 전하이동 장벽↓** | **❌ 없음** (litdb 의 "7372" 히트는 `shin2026_bh4…` 의 무관한 숫자) |
 | 3 | **Nat. Commun. 2026, 17, 7363** | 슬 4(기생 부반응 도식) · 슬 18(**Zn–Cu alloy** 근거) | **❌ 없음** |
-| 4 | **Adv. Funct. Mater. 2026, 36, e23442** — Zhu 외, *"Pre-Coverage of Side Reaction Sites Enables Quasi-Anode-Free Rechargeable Aqueous Zinc Batteries"* | 슬 2 · **슬 6 = 직접적 선행연구**(ZHS pre-coverage, Cu 기전 미조사) | ⏳ **인입 중** — 2026-09-03 다른 세션이 PDF(`24f63dd6-72._Adv_Funct_Materials__2025__Zhu…pdf`)를 litdb 에 넣는 중. **digest 가 뜨면 이 행을 ✅ 로 고치고 §3.4 를 그쪽 정본으로 링크할 것.** ⚠ 파일명은 **2025**, 덱 표기는 **2026** — 연도 확인 필요 |
+| 4 | **Adv. Funct. Mater. 2026, 36, e23442** — Zhu 외, *"Pre-Coverage of Side Reaction Sites Enables Quasi-Anode-Free Rechargeable Aqueous Zinc Batteries"* | 슬 2 · **슬 6 = 직접적 선행연구**(ZHS pre-coverage, Cu 기전 미조사) | ✅ **인입 완료 (2026-09-03)** — `papers/zhu2026_zhs_precoverage_quasi_anode_free_zn.md` 가 **정본**이다. 덱과 어긋나면 논문이 이긴다. DOI `10.1002/adfm.202523442`, online **2025-11-24** → 파일명의 2025 와 덱 표기 2026 은 **둘 다 맞다**(온라인 선공개 2025 / 이슈 2026). ⚠ **덱 §3.4 표현 정정 필요**: 논문은 "Cu 에서 합금이 ZHS 보다 크다" 를 **잰 적이 없다** — 실제 논지는 "탄소에선 ZHS 유익 / 평판 Cu 에선 ZHS **유해** → 남은 개선분은 합금 때문일 것" 이라는 소거법이고, 합금 자기 측정은 **0건**이다(Cu XRD·Cu 2p 분해·깊이프로파일·단면 EDS·UPD·DFT Cu 표면 전부 없음). 상세는 `comparison_vs_ours.md` §K-6 |
 | 5 | **Energy Environ. Sci. 2025, 18, 10180** | 슬 4 도식 원출처 (레이아웃 개변 명시) | **❌ 없음** |
 
 **⇒ #4 를 빼면 나머지 4편이 우리 litdb 에 없다.** 수계 Zn 축을 실제로 열려면 **#2(Marcus 전제)**

@@ -25,7 +25,9 @@
 
 > ⛔ **이 digest 의 어떤 수치도 `db/properties/` 의 우리 황화물 절대값과 같은 표에 놓지 않는다.**
 > `comparison_vs_ours.md` 에서도 물성 4축(A 이온전도 / B 산화 / C 기계 / D 전자구조)이 **아니라**
-> 새로 만든 **§K 수계 Zn 축**에 들어간다.
+> **§K 수계 Zn 축**에 들어간다 — 이 논문 몫은 **§K-5 ~ §K-9** 다.
+> (§K-1~K-4 는 세미나 덱 쪽 몫이고 **citable=no** 다. 두 블록의 수치를 같은 표에 놓지 않는다 —
+> 전해질이 1 M ZnSO₄ vs 2 M ZnSO₄+ZnI₂ 로 다르다.)
 
 **우리가 이 논문을 읽는 유일한 이유** = 2026-09-02 BML 세미나(도경록, 무음극 Zn–I₂)에서 발표자가
 스스로 미해결로 표시한 **G2**("Cu 기판에서는 표면합금층이 ZHS보다 영향이 컸는데, 그 Cu 고유 기전은
@@ -370,8 +372,10 @@ CuStr 는 회백색 피복.
 
 **근거**: 본문 Experimental Section 은 *Materials Preparation · Electrode Preparation · Cell Assembly ·
 Electrochemical Tests · Characterization* 5개 소절뿐이고, **"Computational Methods" 소절이 존재하지 않는다.**
-전문 텍스트(39,598자)에 `DFT` · `VASP` · `first-principles` · `functional`(계산 의미) · `PBE` · `k-point` ·
-`plane-wave` · `pseudopotential` · `cutoff` · `LAMMPS` · `GROMACS` · `force field` 가 **모두 0건**이다.
+전문 텍스트(39,598자)에 `DFT` · `VASP` · `first-principles` · `PBE` · `k-point` · `plane-wave` ·
+`pseudopotential` · `LAMMPS` · `GROMACS` · `force field` 가 **모두 0건**이다.
+(`functional` 은 *"functional groups at structural edges"*, `cut-off` 는 **전압 컷오프**로만 등장한다 —
+계산 의미의 용례가 하나도 없다.)
 SI 에서도 우리가 본 범위(→ §16)에 방법 텍스트 페이지가 없었다.
 ⚠ **우리가 SI 33장 중 19장만 봤으므로 "SI 어딘가에 없다"고 단정하지는 않는다.** 다만 본문에는 확실히 없다.
 
@@ -505,6 +509,7 @@ ZHS 와 Zn 의 ΔG 는 **`Fig. 1c`(본문 그림)에만** 있고, 우리는 본�
 
 > 스코핑 카드 원본: **`kb/projects/zn_alzib_dft_md_contribution_2026_09_03.md`** (§2 C1–C7, §3 못 하는 것, §4 게이트).
 > 카드 내용을 여기 복사하지 않는다 — 아래는 **이 논문과의 겹침/공백만**.
+> 교차표 반영본: **`comparison_vs_ours.md` §K-5 ~ §K-9**.
 
 ### C1 — 상 지문표 (`db/properties/zn_cu_phase_fingerprint_2026_09_03.json`)
 
