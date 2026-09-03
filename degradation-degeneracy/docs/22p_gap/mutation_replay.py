@@ -847,10 +847,16 @@ MUTANTS = [
      '    return canonical_ledger(None).parent / "_claims"',
      "issuer_cannot_choose_where_its_claim_lives"),
     # ★ P0-2 — 정리 경로도 같은 lock 순서를 쓴다.
+    # ★ 57차 — **declared** 로 내린다. 이 lock 순서는 그대로 지킬 규칙이지만,
+    #   그것을 물던 회귀(`release_cleanup_cannot_delete_another_legs_token`)는
+    #   cross-leg token 경로를 caller 가 고르는 상황을 겨눴고 P0-1 이 그 인자를
+    #   없애면서 지워졌다. 12조각 전수 재생이 `수집 rc 5`(고른 시험 0건)로
+    #   드러냈다. 표현 불가가 된 시나리오를 흉내 내는 시험을 새로 지어내는 것은
+    #   증거가 아니라 장식이므로, **회귀 없는 방어**임을 신고하고 남긴다.
     ("release-cleanup-holds-the-attempt-path", PRESERVE,
      "    with _lifecycle_locks(claim.leg_id, token_file, claim.path.parent):",
      "    with _ledger_lock(claim.path):",
-     "release_cleanup_cannot_delete_another_legs_token"),
+     None),
     # ★ P0-3 — 동결의 원장 쓰기도 원자적이어야 한다.
     ("freeze-ledger-write-is-atomic", RP,
      "    from tools.preserve import _atomic_write_text\n"
@@ -1339,6 +1345,17 @@ DECLARED_MASKED = {
         "positive wiring 회귀는 배선이 **끊길 때** 빨개진다. assert 를 지우는 "
         "변이는 그 시험 자신만 무력화하므로 다른 시험이 물지 않는다 — "
         "이것은 회귀의 성질이지 결함이 아니다.",
+    "release-cleanup-holds-the-attempt-path":
+        "이 lock 순서(`LOCK_ORDER`: attempt_path → claim → ledger)는 그대로 "
+        "지킬 규칙이다. 그런데 그것을 물던 회귀"
+        "(`release_cleanup_cannot_delete_another_legs_token`)는 **caller 가 "
+        "다른 다리의 token 경로를 고르는** 상황을 겨눴고, 57차 P0-1 이 그 인자를 "
+        "없애면서 시나리오 자체가 표현 불가가 되어 지웠다. 12조각 전수 재생이 "
+        "이것을 `수집 rc 5`(고른 시험 0건)로 드러냈다 — 조각으로 나눠 돌리지 "
+        "않았으면 안 보였을 자리다. 표현 불가가 된 상황을 흉내 내는 시험을 새로 "
+        "지어내면 그것은 증거가 아니라 장식이므로, **회귀 없는 방어**임을 "
+        "신고하고 남긴다. 같은 lock 을 쓰는 다른 자리"
+        "(`finalize-holds-the-claim-lock`)는 여전히 executable 이다.",
 }
 
 
@@ -1691,14 +1708,6 @@ EXPECT: dict = {
             "tests/test_docs_lint.py::test_a_later_active_record_cannot_thaw_a_frozen_destination": "AssertionError: 허용 전이 한 줄로 frozen 목적지가 journal 에서 사라졌다"
         }
     },
-    "release-cleanup-holds-the-attempt-path": {
-        "fail": [
-            "tests/test_preserve.py::test_a_release_cleanup_cannot_delete_another_legs_token"
-        ],
-        "witness": {
-            "tests/test_preserve.py::test_a_release_cleanup_cannot_delete_another_legs_token": "tools.preserve.PreserveError: [plan] 소유 증명 파일이 없다:"
-        }
-    },
 
     "claim-bytes-are-verified-on-disk": {
         "fail": [
@@ -1976,12 +1985,15 @@ EXPECT: dict = {
             "tests/test_preserve.py::test_the_token_cleanup_happens_under_the_claim_lock": "AssertionError: 소유 증명을 지우는 순간 claim lock 이 안 잡혀 있었다 — 그 사이에 정상 발급이 들어오면 새 attempt 의 credential 이 지워진다"
         }
     },
+    # ★ 57차 — guard 회귀를 다시 썼다. 53차 것은 caller 지정 경로를 겨눴고
+    #   P0-1 이 그 인자를 없애면서 지워졌다(전수 재생에서 `수집 rc 5` 로 드러남).
+    #   지금은 lifecycle 이 정한 **자리에 놓인** 남의 token 을 겨눈다.
     "token-read-checks-the-leg": {
         "fail": [
             "tests/test_preserve.py::test_an_attempt_file_from_another_leg_is_refused"
         ],
         "witness": {
-            "tests/test_preserve.py::test_an_attempt_file_from_another_leg_is_refused": "AssertionError: Regex pattern did not match."
+            "tests/test_preserve.py::test_an_attempt_file_from_another_leg_is_refused": "DID NOT RAISE PreserveError"
         }
     },
     "coverage-checker-derives-from-receipts": {
@@ -2472,10 +2484,15 @@ EXPECT: dict = {
             "tests/test_preserve.py::test_a_hardlinked_ledger_alias_cannot_fork_the_authority": "같은 leg 를 두 alias 로 각각 발급했다"
         }
     },
+    # ★ 57차 — 증인이 바뀌었다. P0-5 가 `attempt_verifier` 부재를 예외로 만들면서
+    #   봉인을 지우면 **더 이른 곳에서 더 강하게** 거부한다. 옛 증인('이어받을
+    #   claim 이 없다')은 그보다 뒤에서 나던 것이라 이제 도달하지 않는다.
     "ledger-seals-the-attempt-verifier": {
-        "fail": ["tests/test_preserve.py::test_a_crash_after_the_claim_unlink_can_still_be_finalized"],
+        "fail": [
+            "tests/test_preserve.py::test_a_crash_after_the_claim_unlink_can_still_be_finalized"
+        ],
         "witness": {
-            "tests/test_preserve.py::test_a_crash_after_the_claim_unlink_can_still_be_finalized": "이어받을 claim 이 없다"
+            "tests/test_preserve.py::test_a_crash_after_the_claim_unlink_can_still_be_finalized": "이미 executed 로 닫혔지만 원장에 `attempt_verifier` 가 없다"
         }
     },
     "append-finishes-the-pending-anchor-first": {

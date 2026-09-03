@@ -1,9 +1,12 @@
 {
-  "at": "2026-09-02T03:05:15Z",
+  "at": "2026-09-03T11:29:42Z",
   "binding": {
     "execution": {
       "env": {
-        "DD_SMOOTH_CACHE": ""
+        "DD_SMOOTH_CACHE": "",
+        "HOME": "/root",
+        "PATH": "/root/.local/bin:/root/.cargo/bin:/usr/local/go/bin:/opt/node22/bin:/opt/maven/bin:/opt/gradle/bin:/opt/rbenv/bin:/root/.bun/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
+        "PYTHONHASHSEED": "0"
       },
       "inputs": {
         "configs/base.yaml": "26fe6c7cc2a2d719",
@@ -18,7 +21,7 @@
         "configs/sweep1d.yaml": "3ff4bcf922b9f52c",
         "requirements-gpu.txt": "8e04e2ae6e8d3a93",
         "requirements.txt": "51496f89996c6de2",
-        "run.sh": "6246a62bd1bc9e46",
+        "run.sh": "07ec2788373dce55",
         "scripts/archive_results.sh": "8df49528b0d02283",
         "scripts/bg.sh": "699f4198ed7189cd",
         "scripts/setup_env.sh": "60b530f7aa475309",
@@ -77,6 +80,7 @@
         "ipython_pygments_lexers": "1.1.1",
         "ipywidgets": "8.1.8",
         "isoduration": "20.11.0",
+        "itsdangerous": "2.2.0",
         "jedi": "0.20.0",
         "jinja2": "3.1.6",
         "joblib": "1.5.3",
@@ -103,6 +107,7 @@
         "launchpadlib": "1.11.0",
         "lazr.restfulclient": "0.14.6",
         "lazr.uri": "1.0.6",
+        "markdown": "3.10.3",
         "markdown-it-py": "4.2.0",
         "markupsafe": "3.0.3",
         "matplotlib": "3.11.1",
@@ -150,6 +155,7 @@
         "pygments": "2.20.0",
         "pygobject": "3.48.2",
         "pyjwt": "2.7.0",
+        "pymupdf": "1.28.2",
         "pyparsing": "3.1.1",
         "pytest": "9.1.1",
         "pytest-json-report": "1.5.0",
@@ -191,6 +197,7 @@
         "webcolors": "25.10.0",
         "webencodings": "0.5.1",
         "websocket-client": "1.9.0",
+        "werkzeug": "3.1.8",
         "wheel": "0.42.0",
         "widgetsnbextension": "4.0.15",
         "xarray": "2026.7.0",
@@ -198,134 +205,125 @@
         "yq": "3.1.0"
       }
     },
-    "execution_digest": "e1dda30aaaacaf480b0536b129cb28458ce8eec25c1dc562e8425f84d60702db",
-    "expect_digest": "6c6df09da0ffed6ca2bdebf90ef979cdfc6138f05c0b49b2297d89c11e563451",
-    "head": "b91e49c01cf199eacd0b63af45fb4c6345a6577b",
-    "registry_digest": "8eb620be92d766e85a9fa493368ffe3f5fc5acf6a9a0be878d49256723023bd7",
+    "execution_digest": "06d658a653c849c115a1cd72391fb5ea1fd742ff44fe714c73fb1c119a5cbe4d",
+    "expect_digest": "cd2077270a27b6f6fed0fb6901843d88a7de9a5d24d2285f87fd46a8a174e4b5",
+    "head": "3620f3b1bc6a8113bb1095654a9551bac9d1ab86",
+    "registry_digest": "40458b8ded26a3fee5f6ab7f55326786c27e830ef47a03edf817569b3bb4f496",
     "reports_dir": "s7",
-    "runner_digest": "c31f6961332754c69e229c9c615a146ce204f2fd29efb14fd19b2e1515034489",
-    "transcript_digest": "896400e81930188fb65439f729ab2360debbb028a41a5794faea896d8e63a0ac",
-    "tree_digest": "f9dcbc176d37438e4a6a202e39acae99a8e19e27bd974e3843e4fb0147275cdd"
+    "runner_digest": "6780dae4fa351a0cbc0dca9a2c5b31e4876c3d1749cbeffb426c90a23da9e97c",
+    "transcript_digest": "63f4e700ca6652d970a50e1eda8bc787b83a98564bc984a485b41ac5709ef809",
+    "tree_digest": "ae24f50c54efc87a59b89789813e6ce088ec1f6b5722eef163bceadbb0c24e47"
   },
   "scenarios": {
-    "attempt-path-is-exclusive": {
+    "authority-frozen": {
       "bit": true,
       "class": "executable",
-      "kexpr": "two_legs_that_share_one_attempt_file_cannot_interleave",
+      "kexpr": "frozen_authority_cannot_be_edited",
       "ran": true,
-      "report_sha256": "fc7ba8e330ba8fa7fcf96656872cc45e3617d7d5826677cdbefbd5e96ecc1a83",
+      "report_sha256": "4efff40ff41d3ab8740e85b68bd52672defcae513690ca3b7039483e5c7a8ee5",
       "sites": 1
     },
-    "claim-seals-the-run-spec": {
+    "claim-stores-a-verifier-not-the-token": {
       "bit": true,
       "class": "executable",
-      "kexpr": "claim_seals_the_exact_run_spec",
+      "kexpr": "claim_file_never_stores_the_resume_credential",
       "ran": true,
-      "report_sha256": "a885f17f16d8d7e86a3025957ef92039db6d745e137792032b0f1459f1652166",
+      "report_sha256": "5b16b1a2084b560229af2dc4cd74ca12c896fb70901c01eae394c13420a170ec",
       "sites": 1
     },
-    "crash-recovery-is-idempotent": {
+    "crash-recovery-needs-the-credential": {
       "bit": true,
       "class": "executable",
-      "kexpr": "finalize_is_idempotent_after_a_crash_before_cleanup",
+      "kexpr": "the_crash_recovery_needs_the_owner_credential",
       "ran": true,
-      "report_sha256": "a4b5d2c0ec3c50b4bc25e8ab3542a9957e3afceef14d3882cf28843b0bdd9684",
+      "report_sha256": "2e24db684364abf2ead5f723341983100ebfac40a652c784b3baf0c8e1a6526d",
       "sites": 1
     },
-    "finalize-holds-the-claim-lock": {
+    "finalize-writes-the-whole-tuple": {
       "bit": true,
       "class": "executable",
-      "kexpr": "canonical_lock_order_is_declared_and_finalize_holds_the_claim",
+      "kexpr": "finalize_writes_a_complete_contract_status_tuple",
       "ran": true,
-      "report_sha256": "80dbcfc328a9d26cc21ecb9a0cfe50e15764f51d7271b7ffaf3c01cd8d9f9a76",
+      "report_sha256": "7ad3f5c41275a48d2462dde76f321a0018af3ba5ea301a0a13a96c0588961ed6",
       "sites": 1
     },
-    "freeze-authority-is-not-caller-selected": {
+    "freeze-holds-the-publish-lock": {
       "bit": true,
       "class": "executable",
-      "kexpr": "freeze_cannot_be_pointed_at_an_empty_claims_directory",
+      "kexpr": "publication_cannot_land_after_the_cohort_was_frozen",
       "ran": true,
-      "report_sha256": "a61b2abaaa806027f434ecefc4ca97b76d50374e0a030d82c6d7a608f3cda63b",
+      "report_sha256": "fe75468f318e186e01292f6380a9db3bbacecc28f7c0dbdf892872069814cca0",
       "sites": 1
     },
-    "generation-namespace-guard": {
+    "guard-before-commit": {
       "bit": true,
       "class": "executable",
-      "kexpr": "current_generation_cannot_be_used_as_its_own_staging",
+      "kexpr": "pathname_after_the_check or same_roster_ledger_change",
       "ran": true,
-      "report_sha256": "1c8359fcff96f0f95443fea298f137d08727a385d08b6cd5c28be31833e9f09f",
+      "report_sha256": "21e9230cd476f43220875a68c8244a84f8fea8a74002cacab41b150441668e90",
       "sites": 1
     },
-    "ledger-seal-record": {
+    "lifecycle-completes-a-partial-append": {
       "bit": true,
       "class": "executable",
-      "kexpr": "same_roster_ledger_change",
+      "kexpr": "freeze_crash_between_journal_and_anchor_is_recoverable",
       "ran": true,
-      "report_sha256": "cca4343b0166addd723b305ece8473beb2cc55c1397bb5bb2fbff476dc70d438",
-      "sites": 2
-    },
-    "module-defs-track-import-bindings": {
-      "bit": true,
-      "class": "executable",
-      "kexpr": "producer_closure_tracks_mutating_and_import_bindings",
-      "ran": true,
-      "report_sha256": "40c776497967c744803d9bc16258e6d3dc7807fae5134af73246840896a95d3e",
+      "report_sha256": "cb970dcba7a9243e3432e0b23b89830633a3274ef44542c583b0343c59ee522a",
       "sites": 1
     },
-    "phase-input-binding": {
+    "module-gate-before-side-effects": {
       "bit": true,
       "class": "executable",
-      "kexpr": "fit_refuses_curves_that_its_grid_phase_did_not_produce",
+      "kexpr": "run_grid_calls_the_gate_before_its_first_side_effect",
       "ran": true,
-      "report_sha256": "762f1f590d2691a126caaeec61937b30daa55c5805c356e89dd33fa79806ba47",
+      "report_sha256": "8ed66849827b2f7315928afa170d1882f65753c373420bb603113c367e06bea8",
       "sites": 1
     },
-    "pointer-binds-the-ledger": {
+    "phase-write-refuses-a-closed-claim": {
       "bit": true,
       "class": "executable",
-      "kexpr": "expanding_a_roster_over_an_active_cohort_requires_a_new_cohort",
+      "kexpr": "closed_run_cannot_be_resurrected_by_a_late_phase or released_run_cannot_be_resurrected_by_a_late_phase",
       "ran": true,
-      "report_sha256": "d48b6582ccd2cd8f42cdb87d926227de852e45dc0ae2ec9974fb0a97842c387b",
+      "report_sha256": "0b2c15d1b598992c5c1d5cf0de6cff70df7bbc00853bf0ef33d0423588e70e55",
       "sites": 1
     },
-    "producer-crossing-is-fail-closed": {
+    "precheck-tells-new-from-resume": {
       "bit": true,
       "class": "executable",
-      "kexpr": "breaking_the_crossing_into_src_scoring_is_fail_closed",
+      "kexpr": "precheck_tells_a_new_run_from_an_owned_resume",
       "ran": true,
-      "report_sha256": "441493c94d21163453041948b7058bdbb3711363994b8f480635d285d62cb385",
+      "report_sha256": "45bd56ae0cdded076952998892794ee77e65012d4e75e7aff8d7ab95baf1727e",
       "sites": 1
     },
-    "receipt-carries-the-mutant-marker": {
+    "producer-fails-closed-on-rootless-targets": {
       "bit": true,
       "class": "executable",
-      "kexpr": "genuine_report_from_another_mutant_is_refused",
+      "kexpr": "unmodelled_assignment_target_is_fail_closed",
       "ran": true,
-      "report_sha256": "49ac2bf93180dd0b15ad86fa57034874ca76d501ed68a56b851f5b932d261471",
+      "report_sha256": "feb6631f0517429f45d76d4c0c45b659a63d84fa4d07859cfcdc1b07f55e6e0f",
       "sites": 1
     },
-    "seal-exact-types": {
-      "bit": true,
-      "class": "executable",
-      "kexpr": "an_omap_and_a_list_of_lists_do_not_share_a_seal",
-      "ran": true,
-      "report_sha256": "51b9be2164189974d55dab3de917d916cd1a2d315713b41767a26e05f915c927",
+    "release-cleanup-holds-the-attempt-path": {
+      "bit": null,
+      "class": "declared",
+      "kexpr": null,
+      "ran": false,
       "sites": 1
     },
-    "token-file-is-bound-to-its-leg": {
+    "sink-validates-itself": {
       "bit": true,
       "class": "executable",
-      "kexpr": "two_legs_cannot_share_one_attempt_file",
+      "kexpr": "sink_refuses_an_incomplete",
       "ran": true,
-      "report_sha256": "7b23318183666ccf2743ec960220f69d46636ec9ec7d34901d24b14fcd96c0bf",
+      "report_sha256": "ac53a42eb05fbd201f4cc8782c3ac176289fd7c6823c4b00dc77c63eb7ddc744",
       "sites": 1
     },
-    "witness-must-be-in-the-meaning-line": {
+    "token-write-is-all-or-nothing": {
       "bit": true,
       "class": "executable",
-      "kexpr": "witness_found_only_in_the_traceback_body_is_not_a_witness",
+      "kexpr": "short_write_does_not_leave_a_truncated_claim",
       "ran": true,
-      "report_sha256": "509a215a87291cd7e14ea4865446ead5a9d9d636197c1d5855129d80a5233cce",
+      "report_sha256": "2dea7c65a7de2588000b0407b4e49b4b8bfe16d3f89c97dada4795744f28fa4e",
       "sites": 1
     }
   },

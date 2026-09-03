@@ -8328,6 +8328,45 @@ def test_the_same_ledger_argument_always_names_the_same_claims_root(tmp_path):
 # 56차 — 게이트 55 반례
 # ─────────────────────────────────────────────────────────────────────────────
 
+def test_an_attempt_file_from_another_leg_is_refused(tmp_path):
+    """★ 53차 → 57차 재작성 — 경로로는 못 오지만 **자리에 놓여 있을 수는** 있다.
+
+    53차의 회귀는 "다른 다리의 token 파일 경로를 넘긴다" 였고, 57차 P0-1 이
+    caller 지정 경로를 없애면서 그 시나리오는 API 로 **표현 불가**가 됐다.
+    그래서 그 시험은 지웠다.
+
+    그런데 `read_token_file()` 안의 **다리 이름 대조**는 남아 있다 — lifecycle 이
+    정한 자리에 다른 다리의 token 이 놓여 있는 경우가 남기 때문이다 (앞 실행의
+    잔여, 손으로 옮긴 파일, 복구 중 착오). 검사는 있는데 회귀가 없으면 다음에
+    누군가 "도달 불가" 로 읽고 지운다. 12조각 전수 재생이 그것을 잡았다:
+    이 변이의 guard 가 `수집 rc 5`(고른 시험 0건)였다.
+
+    그러므로 남은 자리를 그대로 겨눈다: M 의 증명을 L 의 자리에 놓고 읽는다.
+    """
+    import tools.preserve as P
+
+    led = _lifecycle_ledger_two(tmp_path)
+    P.open_leg_run("L", _RUN_SPEC_L, "0123456789abcdef", ledger=led)
+    cM = P.open_leg_run("M", dict(_RUN_SPEC_L, leg_id="M"), "0123456789abcdef",
+                        ledger=led)
+
+    lp = P.attempt_path_for("L", ledger=led)
+    mp = P.attempt_path_for("M", ledger=led)
+    assert lp != mp, "시험 전제가 깨졌다 — 두 다리가 같은 자리를 쓴다"
+
+    # M 의 증명을 L 의 자리에 놓는다 (경로를 고른 것이 아니라 자리에 놓인 것)
+    lp.write_bytes(mp.read_bytes())
+
+    with pytest.raises(P.PreserveError) as ei:
+        P.read_token_file(lp, "L")
+    assert "다른 다리의 것이다" in str(ei.value), (
+        f"거부는 했지만 다리 대조가 이유가 아니다: {ei.value}")
+
+    # 그리고 그 자리의 것이 제 다리 것이면 읽힌다 (거부만 하는 것이 아니다)
+    lp.write_bytes(mp.read_bytes().replace(b'"M"', b'"L"').replace(b"'M'", b"'L'"))
+    assert P.read_token_file(lp, "L"), "제 다리의 증명인데 읽지 못했다"
+
+
 def test_a_symlinked_token_path_cannot_split_the_attempt_lock(tmp_path):
     """★ 56차 P0-1 → 57차 재작성 — 시험이 **공허해져 있었다**.
 
