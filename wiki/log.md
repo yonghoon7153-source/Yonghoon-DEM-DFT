@@ -418,3 +418,27 @@ Argument → Counter-arguments **보존** → Gap).
 
 역링크 셋: [[22p-physics-or-degeneracy]] · [[pvs-sev-lli-lampe-separability]] ·
 [[fitting-degeneracy]]. index 전체 페이지 24 → 25.
+
+## [2026-09-03] update | Phase 1e — 컷오프 제약 판정으로 Gap 5 를 닫는다
+
+`syntheses/mode-identifiability-unmeasured-lineage.md` 의 **Gap 5** 를 닫고 그
+결과를 **Counter-argument (d)** 에 접었다. 정본은
+`mode-observability/results/phase1e/` CSV.
+
+**물음**: Lin 이 지적한 `redundancy` 를 컷오프 등식으로 지우면 우리 좌표에서
+무엇이 사라지는가 — σ3·σ4(여분)인가 σ1·σ2(정보)인가.
+
+**실측**: 제약 gradient 가 **강한 쌍과 1.5°·2.0°** 로 거의 겹치고 약한 쌍과는
+65°·16° 로 멀다. 제약 접공간에 `J` 를 제한하면 남는 감도가 원래 최강 방향의
+**0.13~0.49 배**로 떨어진다. → **우리 좌표에서 그 제약은 여분이 아니라 정보를
+지운다.** "Lin 이 지적했으니 우리도 제약을 걸자" 는 처방은 적용하면 안 된다.
+
+**덤**: 가장 약한 방향의 모양이 두 동작점에서 거의 같다 — `Δα_NE ≈ −Δβ_NE`,
+즉 **음극 창의 오른쪽 끝은 두고 왼쪽 끝만 미는** 변형.
+
+**경계 넷을 함께 적었다** — Birkl 이 틀렸다는 말이 아니고(시작 매개화가 다르다) ·
+우리 `g₁·g₂` 는 **대리물**이며 · 국소·두 동작점·한 화학이고 · "제약을 걸면 안
+된다" 가 아니라 "이 제약은 여분 제거가 아니다" 이다.
+
+새로 열린 것 둘: Birkl 등식을 우리 좌표로 정확히 옮기기 · `v₄` 의 "음극 창 왼쪽
+끝" 이 Phase 1c 잔차가 몰린 `x_norm = 0.839` 와 같은 자리인지.
