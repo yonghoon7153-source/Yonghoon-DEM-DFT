@@ -274,3 +274,65 @@
 - **이 세션은 git 명령을 하나도 실행하지 않았다** (사용자 지시). 파일만
   만들어 두었고 커밋은 사용자가 한다. 변경은 전부 `wiki/` 안이므로
   degradation-degeneracy 의 `source_digest` 를 바꾸지 않는다.
+
+## [2026-09-03] ingest | Navidi et al. 2024 — 열화 진단용 PIML 네 방법 비교 (ESM 68, 103343)
+
+**누락분 흡수** (사용자가 준 13편 중 digest 없이 빠져 있던 5번). raw:
+`raw/papers/navidi2024_piml-degradation-diagnostics-comparison.md`
+(sha256 `d71f0cb9…`, 본문 38,963자). 그림 25장 크로핑
+(`raw/figures/navidi2024_piml-degradation-diagnostics-comparison/`).
+
+- **제목이 약속하는 것보다 좁다**: "comparison of state-of-the-art methods" 는
+  **열화 진단 방법의 비교가 아니라, 하나의 진단 모델(4-파라미터 반쪽전지 창
+  적합)을 흉내 내는 ML 배관 네 개의 비교**다 (PINN · co-kriging · delta
+  learning(elastic net) · data augmentation). EIS/DRT·전기화학 모델 역산·
+  ICA 봉우리 진단은 도입부 열거뿐이고 실험에 오르지 않는다. 네 방법은
+  입력(dQ/dV 100점)·물리 모델·**정답(사람의 수동 적합)** 을 전부 공유한다.
+- **★★ 우리 fitting 모델과 좌표가 글자 그대로 같은 첫 문헌**:
+  `V_c(Q) = V_p((Q−δ_p)/m_p) − V_n((Q−δ_n)/m_n)`, 자유 파라미터 **4개**,
+  **컷오프 등식 제약 없음**. `m_p ↔ α_PE · δ_p ↔ β_PE · m_n ↔ α_NE ·
+  δ_n ↔ β_NE`. `LII = Q_p − (δ_p − δ_n)` 이 우리 legacy LLI 식과 구조가
+  같다 (인용 경로의 증거는 **아니다** — 후속 확인 항목으로만 등재).
+- **★ 우리 파이프라인이 이 논문에서 시험대에 올라 기각된다** (부록 A2):
+  자동(비선형 최적화) 적합이 `[인쇄]` "multiple local minima, leading to
+  run-to-run variability … depending on the initial guess" 이라며 **사람의
+  수동 적합**을 정답으로 채택. 5회 다중시작 산포는 `[도표, Fig. 15]`
+  **±1.5–11 %p**(우리 `tol = 2 %p` 의 1~5배). **그러나 목적함수 값을
+  보고하지 않아 flat valley ↔ multimodal 를 구별하지 않은 채 기각했다.**
+- **★ 새 경고 1건**: 같은 그림의 해체 실측 대조에서 **다중시작 산포가 실제
+  오차의 하한조차 아니다** (G2C1 `m_p`: 5개 해 전부 0.835–0.935, 참값 0.63).
+- **본문에 성능 수치가 하나도 인쇄돼 있지 않다** (`mV` 0회, RMSPE 표 없음).
+  모든 비교 주장이 그림 판독으로만 검증되며, **본문이 자기 그림보다 낙관적인
+  곳이 한 방향으로 5건**(raw §7 I3–I7). 인용 금지 4건 확정.
+- **어휘 전수 (열두 편째) — 새 형태**: `identifiab*`·`degenerac*`·
+  `nullspace`·`non-unique`·`collinear*`·`Hessian`·`Fisher`·`mV` **각 0**,
+  그런데 `uncertaint*` **21회로 계보 최다**이고 **21회 전부 예측
+  불확실성**이다(라벨·파라미터 불확실성 0회). 비교 논문인데도 Table 5 의
+  열 개 등급 축에 **"비유일성에 대한 강건성" 이 없다** — 개별 논문의 침묵과
+  달리 그 축이 **선택지 목록 자체에 없었다**는 뜻.
+- **신설**: [[piml-physics-injection-points]] — 물리가 ML 파이프라인에
+  들어가는 **여섯** 자리 (표준 4분류 + **학습 데이터** + **라벨 그 자체**),
+  그리고 Fig. 13 ablation 이 준 첫 실측 순위 **손실항 55–70 % ≫ 학습 데이터
+  10–23 %**. 여섯째 자리는 **방법 간 비교로는 원리적으로 검출되지 않는다**
+  (축퇴가 공통 인자라 차이에서 소거된다).
+- **컴파일 반영 (Evidence For/Against 귀속 명시)**:
+  [[22p-physics-or-degeneracy]] — Status Log (14) 추가, **Evidence 어느
+  쪽도 아님 = 경계 확정**(좌표 일치 + 방법론 정박점이지 22p 수치에 대한
+  직접 증거가 아니다), status `active` 유지.
+  [[pvs-sev-lli-lampe-separability]] — **Evidence For 에 약한 근거 1건**
+  (관측을 곡선 100점까지 늘려도 전극별 분해만 3.7–9.9 % 로 남는다),
+  Evidence Against 에는 없음, status `open` 유지.
+  [[fitting-degeneracy]] — multimodal 가지에 **야생 실측 1건** + "산포는
+  오차의 하한이 아니다" 경고 신설.
+  [[interpretable-ml-battery-prognosis-taxonomy]] — 4분류에 칸 두 개가
+  모자란다는 절 신설, 새 개념 페이지로 분리.
+- **그림 정직성**: 25장(그림 20 + 표 5) 중 **7장을 직접 열어 봄**
+  (fig 2·3·6·7·8·12·13·15 — 여덟이 아니라 fig_15 를 4분면으로 확대해 본 것
+  포함하면 실질 8장이고, Fig. 12 범례는 PDF 14쪽 재렌더로 확인).
+  안 본 것 13장(fig 1·4·5·9·10·11·14·16–19·20)은 도식이거나 §3.1 표를
+  넘어서는 수치를 주지 않아 생략. 표 5장은 이미지로 안 읽음(PDF 텍스트가
+  정확). **본문과 어긋난 그림 4건**(Fig. 8 ×3, Fig. 15 ×1) + **원문 내부
+  표기 불일치 3건**(Fig. 15 의 셀 번호·날짜·온도가 §3.1·Table 1 과 어긋남).
+- **이 세션은 git 명령을 하나도 실행하지 않았다** (사용자 지시). 변경은
+  전부 `wiki/` 안이므로 degradation-degeneracy 의 `source_digest` 불변.
+  `python3 wiki/tools/lint.py` → **0 errors / 0 warnings** (23 pages).

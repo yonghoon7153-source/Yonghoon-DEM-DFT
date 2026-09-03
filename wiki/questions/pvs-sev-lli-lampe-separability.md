@@ -5,7 +5,7 @@ created: 2026-09-03
 updated: 2026-09-03
 type: research-question
 tags: [battery, degradation, research]
-sources: [raw/papers/2026-09-02-siwon-kim-degradation-mode-ml-seminar.md, raw/transcripts/2026-09-03-voice-memo-007-degradation-mode-ml.md, raw/papers/birkl2017_degradation-diagnostics-ocv.md, raw/papers/wang2025_interpretable-ml-battery-prognosis.md, raw/papers/kim2023_graphite-heterogeneity-lifetime.md, raw/papers/su2024_drt-soh-health-features.md, raw/papers/rhyu2025_systematic-feature-design-formation.md, raw/papers/zhang2020_eis-gpr-capacity-rul.md, raw/papers/tao2025_nondestructive-degradation-decoupling.md, raw/papers/lin2024_ocv-degradation-mode-identifiability.md, raw/papers/schaeffer2024_nullspace-regularization-interpretation.md]
+sources: [raw/papers/2026-09-02-siwon-kim-degradation-mode-ml-seminar.md, raw/transcripts/2026-09-03-voice-memo-007-degradation-mode-ml.md, raw/papers/birkl2017_degradation-diagnostics-ocv.md, raw/papers/wang2025_interpretable-ml-battery-prognosis.md, raw/papers/kim2023_graphite-heterogeneity-lifetime.md, raw/papers/su2024_drt-soh-health-features.md, raw/papers/rhyu2025_systematic-feature-design-formation.md, raw/papers/zhang2020_eis-gpr-capacity-rul.md, raw/papers/tao2025_nondestructive-degradation-decoupling.md, raw/papers/lin2024_ocv-degradation-mode-identifiability.md, raw/papers/schaeffer2024_nullspace-regularization-interpretation.md, raw/papers/navidi2024_piml-degradation-diagnostics-comparison.md]
 confidence: medium
 explored: false
 verificationStatus: unverified
@@ -117,6 +117,39 @@ H2 가 참일 수 있음에 주의한다 — 부호가 같다고 벡터가 평�
   degradation modes from **OCV measurements**"). `[해석]` 그러므로 이 정리는
   **"두 후보 중 원리적으로 새 채널일 수 있는 것은 SEV 뿐" 이라는 형태로 이 카드를
   좁힌다** — PVS 와 SEV 를 한 묶음으로 다루던 이 카드의 전제가 갈라진다.
+
+- **[2026-09-03 (12)] ★ 관측을 곡선 전체까지 늘린 극단 사례에서도 전극별
+  분해만 남는다 (약한 근거).** Navidi et al. 2024 (*Energy Storage Mater.*
+  **68**, 103343, raw: `raw/papers/navidi2024_piml-degradation-diagnostics-comparison.md`)
+  는 feature 설계를 **명시적으로 거부**하고 (`[인쇄, §4]` 입력이 dQ/dV(V)
+  곡선 위 **100점**, "eliminates the need for manual feature selection")
+  일곱 모델을 같은 데이터에서 견준다. 결과 (`[도표, Fig. 8]` — **본문에는
+  성능 수치가 하나도 인쇄돼 있지 않다**):
+
+  | 대상 | 일곱 모델 중 범위 (RMSPE %) |
+  |---|---|
+  | `Q` (총용량) | **0.55 – 1.37** (기준선 NN 5.72 제외) |
+  | `LII` (리튬 재고 지표) | **1.45 – 3.87** |
+  | `m_p` (양극 활물질) | **3.68 – 9.58** |
+  | `m_n` (음극 활물질) | **5.56 – 9.85** |
+
+  `[인쇄, §6.3]` 저자도 적는다 — "the degradation trends of the negative and
+  positive active mass parameters … were generally **more complex and
+  challenging to predict** compared to the capacity and lithium inventory."
+
+  `[해석]` **관측을 곡선 안에서 최대로 늘려도(스칼라 feature 몇 개가 아니라
+  100점 전체) 전극별 분해가 총량계 수준으로 좋아지지 않는다.** 이 카드가
+  묻는 "관측을 늘리면 갈리는가" 에 대해, **같은 곡선 안에서 늘리는 것으로는
+  안 된다** 는 쪽 근거다 — [[np-lip-ocv-reparametrization]] 의 2 자유도
+  상한과 방향이 같다.
+
+  **범위 한정 3개** (과대 인용 방지): (a) 좌표가 `LLI` vs `LAM_PE` 가 아니라
+  `LII` vs `m_p`·`m_n` 이므로 **이 카드의 두 모드 쌍에 직접 대응하지 않는다**.
+  (b) 정답이 **사람의 수동 적합**이므로 "어렵다"의 일부는 사람의 재현성일 수
+  있고, 그 재현성은 논문에 없다. (c) `m_p`·`m_n` 궤적이 실제로 더 비단조일
+  수 있어 **관측 가능성과 궤적 복잡도가 갈리지 않는다** — 원문은 후자로
+  설명한다 (§6.3: "solid-state diffusion, phase transformations, and
+  mechanical stresses").
 
 ## Evidence Against (H2 지지 / H1 반대)
 - **[2026-09-03 (10)] ★ 잃어버리는 방향은 LLI↔LAM_PE 가 아니다 — 구조적으로는
@@ -663,3 +696,23 @@ H2 가 참일 수 있음에 주의한다 — 부호가 같다고 벡터가 평�
     2024(`identifiab*` 26 / `nullspace` 0)와 이 논문은 같은 수학적 대상을
     다루면서 서로를 인용하지 않는다. 이 카드의 "라벨 불확실성 공백" 은 여전히
     닫히지 않았다 (이 논문도 오차 막대를 그리지 않는다).
+
+- **[2026-09-03 (12)]** `open` 유지 — 누락분(Navidi 2024)을 흡수했다.
+  이 카드에 준 것 셋:
+  1. **Evidence For 에 약한 근거 1건**(위): 관측을 dQ/dV 곡선 100점까지
+     늘려도 전극별 분해만 3.7–9.9 % 로 남는다. **Evidence Against 에는
+     아무것도 붙지 않는다.**
+  2. **이 계보에서 프로토콜 식별자 누출이 없는 드문 사례다.** 입력이
+     dQ/dV 곡선뿐이고 온도·전류·군 번호가 없다. 반면 CV 는 **셀 단위**이되
+     **프로토콜 단위가 아니다** — 시험 셀의 형제 3개가 같은 조건으로 학습에
+     들어간다. 이 계보의 검증 설계 엄격도는
+     **[[fused-lasso-feature-design-framework]](프로토콜 group CV) >
+     Navidi(셀 CV) > 나머지** 순으로 정리된다.
+  3. **★ "물리를 어디에 넣는가" 에 실측 순위가 처음 붙었다** —
+     [[piml-physics-injection-points]] 신설. `[도표, Fig. 13]` 손실항
+     55–70 % vs 학습 데이터 10–23 % 상대개선. 그리고 그 분류에 칸이 두 개
+     모자란다(학습 데이터·**라벨 그 자체**)는 것이 이 카드의 "라벨 불확실성
+     공백" 과 같은 사각지대다.
+  - 어휘 전수 (열두 편째): `identifiab*` **0** · `degenerac*` **0** ·
+    `nullspace` **0** · `collinear*` **0** · `mV` **0**, 그런데
+    `uncertaint*` **21회(계보 최다)** 이고 **전부 예측 불확실성**이다.

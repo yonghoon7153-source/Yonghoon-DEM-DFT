@@ -5,7 +5,7 @@ created: 2026-08-11
 updated: 2026-09-03
 type: research-question
 tags: [battery, degradation, research]
-sources: [raw/repositories/degradation-degeneracy-audit.md, raw/papers/birkl2017_degradation-diagnostics-ocv.md, raw/papers/rhyu2025_systematic-feature-design-formation.md, raw/papers/lin2024_ocv-degradation-mode-identifiability.md, raw/papers/schaeffer2024_nullspace-regularization-interpretation.md, raw/papers/cui2024_electrode-utilization-formation-cycle-life.md]
+sources: [raw/repositories/degradation-degeneracy-audit.md, raw/papers/birkl2017_degradation-diagnostics-ocv.md, raw/papers/rhyu2025_systematic-feature-design-formation.md, raw/papers/lin2024_ocv-degradation-mode-identifiability.md, raw/papers/schaeffer2024_nullspace-regularization-interpretation.md, raw/papers/cui2024_electrode-utilization-formation-cycle-life.md, raw/papers/navidi2024_piml-degradation-diagnostics-comparison.md]
 confidence: medium
 explored: false
 verificationStatus: unverified
@@ -531,3 +531,87 @@ LAM_PE ≈ LAM_NE 는 물리가 아니라 **flat valley 방향에서 두 전극�
     §11(우리 프로젝트 접점) 참조. 이 카드의 status 는 바뀌지 않는다(`active`
     유지) — 새 근거는 방법론적 패턴 확인과 잡음 정박점이지, 22p 수치 자체에
     대한 직접 증거는 아니다.
+
+- **[2026-09-03 (14)]** `active` 유지 — **누락분 흡수. Evidence 어느 쪽도
+  아니고 「경계 확정」이다** (Navidi et al., *Energy Storage Mater.* **68**
+  (2024) 103343, raw:
+  `raw/papers/navidi2024_piml-degradation-diagnostics-comparison.md`).
+  사용자가 준 13편 중 digest 없이 빠져 있던 것. 제목이 "battery degradation
+  diagnostics 의 state-of-the-art 방법 비교" 이지만, **실제 비교 축은 열화
+  진단 방법이 아니라 하나의 진단 모델을 흉내 내는 ML 배관 네 개**다
+  (PINN · co-kriging · delta learning(elastic net) · data augmentation).
+  이 카드에 달라진 것 다섯:
+
+  1. **★★ 우리 fitting 모델과 좌표가 글자 그대로 같은 첫 문헌이다.**
+     `[인쇄, 부록 A1]` `V_c(Q) = V_p((Q−δ_p)/m_p) − V_n((Q−δ_n)/m_n)` —
+     자유 파라미터 **4개**, **컷오프 등식 제약 없음**. 대응은
+     `m_p ↔ α_PE · δ_p ↔ β_PE · m_n ↔ α_NE · δ_n ↔ β_NE` 다.
+     [[birkl-ocv-degradation-diagnostic]] 의 3개(등식 소거)와 다르고
+     **우리 창 모델과 같다.** 그리고 `[인쇄, §3]` `LII = Q_p − (δ_p − δ_n)`
+     이 우리 문서의 `LLI = (1−α_PE) + (β_PE − β_NE)` 와 **구조가 같다**
+     (잔량 vs 손실 표기 차이). `[해석]` 2026-09-03 (2)·(3) 에서 출처를 못
+     찾고 종결했던 "legacy LLI 식" 에 대해, **같은 형태의 식이 실재하는
+     자리가 처음 확인됐다.** ⚠ **인용 경로의 증거는 아니다** — 이 논문은
+     2024년이고 그 식의 계보를 `[30]` Thelen 2022 · `[55]` Lui 2021 로
+     돌린다. **후속 확인 항목으로만 등재하고 우리 문서는 고치지 않았다.**
+
+  2. **★ 이 카드가 판정하려는 자동 적합을, 이 논문이 시험대에 올려 기각한다.**
+     `[인쇄, 부록 A2]` "the optimization problem for automatic fitting **has
+     multiple local minima, leading to run-to-run variability in optimal
+     active mass parameters depending on the initial guess**. We illustrated
+     this variability by presenting the mean and error bars (spread) derived
+     from **five optimization runs, each starting at a different initial
+     guess**." — 그리고 그 결론으로 **사람의 수동 적합**(부록 A1 의
+     `(m_n,δ_n)` → `(m_p,δ_p)` 블록 교대)을 정답으로 채택한다.
+     `[해석]` 그러므로 이 카드(와 우리 프로젝트)의 자리는 **"남이 안 한 것"이
+     아니라 "남이 해 보고 못 쓴다고 결론 내린 것을, 그 결론이 근거로 삼은
+     구별을 실제로 수행해 재판정하는 것"** 이다. 그들은 5개 해의 **목적함수
+     값을 보고하지 않으므로** [[fitting-degeneracy]] 의 flat valley ↔
+     multimodal 를 **구별하지 않은 채** 기각했다.
+
+  3. **★ 그런데 같은 그림이 우리 진단의 한계도 준다 — 새 경고 1건.**
+     `[도표, Fig. 15]` 자동 적합 다중시작 산포는 정규화 활물질 단위로
+     **±1.5 ~ ±11 %p**(중앙값 ≈ ±5 %p, 우리 `tol = 2 %p` 의 1~5배)인데,
+     같은 셀 해체 실측과 대조하면 **G2C1 `m_p` 에서 5개 해가 전부
+     0.835–0.935 안에 있고 참값은 0.63** 이다. 즉 **다중시작 산포는 실제
+     오차의 하한조차 아니다.** [[nullspace-coefficient-interpretation]] 의
+     "낮은 잔차 ⇒ 참에 가깝다" 반증과 같은 계열의 두 번째 형태이며,
+     우리는 참값을 알기 때문에 **산포 vs 실제 오차 산점도**로 직접 정량할
+     수 있다 (미실행, 기존 artifact 재집계로 충분).
+
+  4. **어휘 전수 (이 계보 열두 편째) — 또 새 형태다.** 본문+참고문헌
+     138,573자에서 `identifiab*` **0** · `degenerac*` **0** · `nullspace`
+     **0** · `non-unique`/`uniqueness` **0** · `collinear*` **0** ·
+     `Hessian`·`Fisher`·`condition number`·`singular value` **각 0** ·
+     `mV` **0**. 그런데 `uncertaint*` **21회로 이 계보 최다**이고,
+     **그 21회 전부가 예측 불확실성이며 라벨·파라미터의 불확실성은 0회**다.
+     `noise` 3회는 전부 "모형이 잡음을 외운다"(과적합). `[해석]`
+     **불확실성 어휘를 갖췄으되 전부 출력 쪽에 쓰고 입력(라벨) 쪽에 한 번도
+     안 쓰는 형태.** 그리고 **비교 논문이므로 침묵의 등급이 다르다** —
+     `[인쇄, Table 5]` 는 열 개 축으로 네 방법을 등급 매기는데
+     **"비유일성에 대한 강건성" 축이 없다.** 개별 논문이 자기 방법을 안 잰
+     것과 달리, 그 축이 **선택지 목록 자체에 없었다**는 뜻이다.
+
+  5. **정황 하나 — 총량은 쉽고 전극별 분해는 어렵다** (`[도표, Fig. 8]`,
+     본문에는 수치가 **하나도 인쇄돼 있지 않다**): 일곱 모델 전부에서
+     `Q` 는 0.55–1.37 % (기준선 NN 제외), `LII` 는 1.45–3.87 % 인데
+     `m_p`·`m_n` 은 **3.68–9.85 %** 다. `[해석]` 이 위키가
+     [[np-lip-ocv-reparametrization]] 에서 예측한 형태(형상 2 + 총용량 1)와
+     같은 방향이지만 **증명이 아니다** — `m_p, m_n` 이 어려운 이유가 관측
+     가능성인지 궤적의 비단조성인지 이 논문은 가르지 않고, 정답이 사람의
+     적합이라 "어렵다"의 일부는 사람의 재현성일 수 있다.
+
+  - **인용 금지 4건** (전부 자기 그림이 반증한다 — raw digest §7 표 I3–I7):
+    ① `[인쇄, §6.3]` "all the PIML methods exhibited improved error rates" ↔
+    co-kriging `Q` **1.37 vs 기준선 0.93**. ② `[인쇄, §7.2.2]` co-kriging
+    용량 예측 "near-zero error rate" ↔ 1.37 %. ③ `[인쇄, §7.2.1]` PINN 이
+    `m_p` 에서 우월 ↔ Data Augmentation **3.68 < PINN 4.52**.
+    ④ `[인쇄, 부록 A2]` 수동·PINN 이 자동보다 실측에 가깝다 ↔ G1C3 `m_n`
+    에서 **자동이 가장 가깝다**.
+  - **후속 실험 3개** (전부 미실행·값싸다): 산포 vs 실제 오차 산점도 ·
+    블록 교대 최적화(부록 A1 순서의 기계판) · **dQ/dV 봉우리 *위치* 2개만**
+    목적함수에 추가(2026-08-20 에 시험한 것은 dQ/dV **곡선** 항이고,
+    `[도표, Fig. 12]` `r3=0` 에서 `m_p` 가 등가중 대비 78 % 악화되므로
+    위치 항은 다른 물건이다). 셋 다 RUN_SCOPE 밖(`mode-observability`)에서.
+  - 우리 쪽 수치는 이 카드에 옮기지 않는다 — 정본은 artifact +
+    `docs/RESULTS*.md`.
