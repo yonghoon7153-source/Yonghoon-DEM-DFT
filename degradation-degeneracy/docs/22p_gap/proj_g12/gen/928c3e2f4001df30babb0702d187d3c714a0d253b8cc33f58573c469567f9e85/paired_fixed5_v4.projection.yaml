@@ -1,0 +1,102 @@
+projection_schema: 3
+leg_id: paired_fixed5_v4
+projection_file: paired_fixed5_v4.projection.csv.gz
+n_rows: 6138
+projection_sha256: ad598fe77e75afecd3b518435bf1988dd40ad09ee0bc77201f007069466f74b9
+by_objective_sha256:
+  pocv_dvdq:
+    n_rows: 3069
+    sha256: 84f442bc5bbb937a0d2bd4a54995e099a0116d0a57904cfac6e62ad9836b1538
+  pocv_dvdq_dqdv:
+    n_rows: 3069
+    sha256: b89434deaa8175eb335219ce0f0b52a6525820d50c4b0d4a5fa5dfde37d195c6
+restart_projection_file: paired_fixed5_v4.restarts.csv.gz
+restart_projection_sha256: 84333ad3c19625ca7dcd2f1bb8a0f1c78cc4296dd46deef4bb17dd57b94467bd
+n_restart_rows: 30690
+analysis_spec_sha256: 43d74dd385b1f66d28cc371dd7ebbd00fc0289323e0a515114eb2b8d45d56271
+analyzer:
+  compute_sha256: 044a87204bfca078
+  producer_semantic_sha256: ad36d111337abd39
+  row_projection_py_sha256: ad1349257095cbd1
+  src_scoring_py_sha256: 69e69cb046f4b4ae
+  python: 3.11.15
+  platform: Linux-6.18.44-fc-v24-x86_64-with-glibc2.39
+  pandas: 3.0.5
+  pyarrow: 25.0.1
+  numpy: 2.4.6
+  yaml: 6.0.3
+analysis_spec:
+  schema_version: 3
+  row_projection:
+    columns:
+    - cond_id
+    - objective
+    - noise
+    - lli
+    - lam_pe
+    - lam_ne
+    - lli_hat
+    - lam_pe_hat
+    - lam_ne_hat
+    - J
+    - abs_err_max
+    - degenerate
+    - recoverable
+    - n_restarts
+    - n_restarts_agree
+    - warm_started
+    - converged
+    - any_bound_active
+    - best_restart_source
+    - restart_sources
+    sort_key:
+    - cond_id
+    - objective
+    digest: sha256 of the uncompressed canonical TSV
+  restart_projection:
+    columns:
+    - cond_id
+    - objective
+    - i
+    - source
+    - J
+    - p0
+    - p1
+    - p2
+    - p3
+    - warm
+    sort_key:
+    - cond_id
+    - objective
+    - i
+    digest: sha256 of the uncompressed canonical TSV
+  summary_comparison:
+    skip_top_level_keys:
+    - _채점원본
+    type_policy: exact
+  fits_binding:
+    actual_bytes: true
+    manifest: true
+    summary: true
+  float_repr: python repr (shortest round-trip)
+  line_sep: \n
+  score_path: 'src.scoring: add_error_columns → classify_recoverability → clean_bias
+    → apply_bias_correction → summarize'
+  tolerance: 0.02
+재계산_검증:
+  봉인_summary: docs/22p_gap/warm_probe/paired_fixed5_v4.summary.yaml
+  전체_일치: true
+  by_objective_일치: true
+  불일치: null
+  fits_sha256_읽은바이트: e033b19510ddbed951cfebe7e28793f19c5f0da915268b0731a30c56f0b3b064
+  fits_sha256_summary: e033b19510ddbed951cfebe7e28793f19c5f0da915268b0731a30c56f0b3b064
+  fits_삼중일치: true
+summary_sha256: 020945db71731bf8019f8705085a5d20e84a4480bc9731f77f7610aa7722021c
+manifest_sha256: 7a14333ee4ace2367f1d0b076ac584271cdfb494b2b5e75ea05c86d6e61c4cfc
+_주의: 이 투영은 원자료가 아니다. 감사·대조용 축약이며, 여기 없는 열(restarts_json 전체, p_spread, 경계 플래그 세부)은
+  담기지 않는다. 완전 복원에는 results/<leg>/ 원본이 필요하다.
+fits_sha256_manifest_seal: e033b19510ddbed951cfebe7e28793f19c5f0da915268b0731a30c56f0b3b064
+fits_sha256: e033b19510ddbed951cfebe7e28793f19c5f0da915268b0731a30c56f0b3b064
+fits_봉인일치: true
+source_digest: d50295f980ccaa81
+warm_start: false
