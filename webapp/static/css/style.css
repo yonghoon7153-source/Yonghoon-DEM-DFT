@@ -329,7 +329,14 @@ summary:focus-visible, [tabindex]:focus-visible {
   font-size: var(--fs-sm); line-height: 1.7; color: var(--ink-2);
   word-break: keep-all; overflow-wrap: break-word;
 }
-.doc-head h1 { font-size: var(--fs-2xl); max-width: 30ch; word-break: keep-all; }
+/* ★ 제목에 `max-width: 30ch` 을 걸어 뒀더니 영문 논문 제목이 세 줄로 접혔다
+   (실측: "Wang et al. 2025 — Interpretable ML / for Battery Prognosis (Adv.
+   Energy / Mater. 15)"). 30ch 은 한글엔 맞아도 영문 서지엔 너무 좁다.
+   폭은 칸이 정하게 두고, 줄이 갈릴 때만 고르게 나누도록 `balance` 를 준다. */
+.doc-head h1 {
+  font-size: var(--fs-2xl); line-height: var(--lh-tight);
+  word-break: keep-all; text-wrap: balance;
+}
 
 .crumbs {
   display: flex; align-items: center; flex-wrap: wrap; gap: 7px;
@@ -1195,4 +1202,43 @@ mark.hl[data-has-note]::after {
 }
 @media (max-width: 860px) {
   .reader-3 { grid-template-columns: minmax(0, 1fr); }
+}
+
+/* ══ 읽는 칸은 **흰 종이** 위에 ═══════════════════════════════════════════
+   본문이 페이지 바탕(따뜻한 회백 `--bg`)에 그대로 얹혀 있었다. 옆의 범례·메모는
+   흰 카드(`--surface`)라서 정작 **가장 오래 보는 칸**만 칙칙했다. 종이를 깔면
+   읽는 자리와 그 주변(목차·메모)이 눈으로 갈린다. */
+.reader .doc-body {
+  background: var(--surface);
+  border: 1px solid var(--line-2);
+  border-radius: var(--r);
+  padding: 28px 32px 32px;
+  box-shadow: var(--shadow-1);
+}
+/* 종이 안에서는 코드·인용의 바탕이 한 단계 더 들어가야 구별된다 */
+.reader .doc-body :is(pre, blockquote) { background: var(--surface-2); }
+.reader .doc-body th { background: var(--surface-2); }
+
+/* ══ 머리글에 종류 색을 실제로 쓴다 ══════════════════════════════════════
+   지금까지 `--k` 는 화면 맨 위 띠와 사이드바에만 있었고 머리글은 통째로 회색
+   이었다. 층을 말하는 색이 정작 그 문서의 머리에 없으면 부호가 아니다. */
+.kind-eyebrow {
+  display: inline-flex; align-items: center; gap: 7px;
+  font-size: var(--fs-3xs); font-weight: 700; letter-spacing: .08em;
+  text-transform: uppercase; color: var(--k);
+  background: var(--k-soft);
+  border: 1px solid color-mix(in srgb, var(--k) 30%, var(--line));
+  border-radius: 999px; padding: 3px 10px 3px 8px; margin-bottom: 11px;
+}
+.kind-eyebrow::before {
+  content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--k);
+}
+.kind-eyebrow .sep { color: color-mix(in srgb, var(--k) 45%, transparent); }
+.kind-eyebrow .w { font-weight: 600; letter-spacing: .02em; text-transform: none; }
+
+/* 메타데이터 키에 종류 색의 왼쪽 표시 — 값과 라벨이 눈으로 갈린다 */
+.doc-head .kv dt {
+  color: var(--ink-3); font-weight: 600;
+  border-left: 2px solid color-mix(in srgb, var(--k) 38%, transparent);
+  padding-left: 8px;
 }

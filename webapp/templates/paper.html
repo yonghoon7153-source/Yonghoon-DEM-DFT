@@ -5,6 +5,7 @@
 <nav class="crumbs" aria-label="위치"><a href="/papers">논문 digest</a><span aria-hidden="true">/</span><b>{{ page.slug }}</b></nav>
 
 <header class="phead doc-head">
+  <span class="kind-eyebrow">논문 digest<span class="sep">·</span><span class="w">1층 · 불변 · sha256 봉인</span></span>
   <h1>{{ page.title }}</h1>
   {% if meta.get('description') %}<p class="lead">{{ meta.get('description') }}</p>{% endif %}
   {{ badges(meta) }}
