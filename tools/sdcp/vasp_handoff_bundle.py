@@ -1352,6 +1352,15 @@ else
   echo "  ⚠ POTCAR 신원 정책 = post_hoc — attestation 없이 진행합니다."
   echo "     이 묶음의 결과는 **탐색용**이고 원고 인용 자격이 서지 않습니다"
   echo "     (승인된 PAW dataset 인지 확인 못 함 · 회신 AZ P0-7·Q4)."
+  # 🔴🔴 렌즈4 P0-1 (2026-09-03) — post_hoc 이라도 **선택 증서가 있으면 지금 검증한다.**
+  #   종전엔 이 분기에서 증서를 보지 않아, 결함 있는 증서(예: 버전 문자열 형식 불일치)가
+  #   1단계 ~111 h 뒤 최종 분석의 potcar_identity 에서 처음 막혔다. "선택" 은 없어도 된다는
+  #   뜻이지 틀린 것이 있어도 된다는 뜻이 아니다. 결함이면 여기서 멈춘다 (지우면 돌아간다).
+  if [ -s POTCAR_ATTESTATION.json ]; then
+    echo "  ⚠ 선택 attestation 이 있습니다 — 생산 전에 봉인·MANIFEST·ZIP 과 대조합니다."
+    python3 analyze_results.py . --check_attestation \
+      || { echo "⛔ 선택 attestation 에 결함 — 지우고 돌리거나 다시 만드십시오 (렌즈4 P0-1)"; exit 2; }
+  fi
 fi
 
 # ⛔ 회신 AP #6 — receipt 존재만으로 2단계를 열지 않는다. **지금 결과로 재판정**한다.
@@ -2519,11 +2528,36 @@ for el, var in sorted(spec.items()):
     if not titel:
         raise SystemExit("TITEL 을 못 읽었다: %s" % f)
 vb = os.environ["VASP_BIN"]
+# 🔴🔴 렌즈4 P0-1 (2026-09-03) — 종전엔 `vasp --version` 의 stdout **전체**를 **번들
+#   루트에서** 받았다. (a) 봉인(SEAL, v34 BH P0-1)은 `vasp.<버전>` 토큰만 담으므로 여러 줄
+#   원문은 토큰의 부분문자열일 수 없어 분석기가 **항상** ATTESTATION_VASP_VERSION_MISMATCH
+#   를 냈다 — 선택 attestation 을 성실히 돌린 외주처가 1단계 ~111 h 뒤 potcar_identity
+#   에서 막히는 함정. (b) VASP 는 argv 를 해석하지 않고 기동하므로 번들 루트에 OUTCAR 가
+#   남아 SEAL 이 "생산 산출물이 이미 있다" 로 거부할 수 있었다.
+#   ⇒ SEAL 과 **같은 절차**: 임시 폴더 + 빈 INCAR + 출력 전체에서 토큰 regex. 토큰이
+#     없으면 attestation 을 **만들지 않는다** (fail-closed — 잘못된 증서로 111 h 뒤 막히는
+#     것보다 지금 멈추는 편이 싸다). 원문 앞 8줄은 기록용으로만 따로 둔다.
+import re, tempfile, shutil
+_pd = tempfile.mkdtemp(prefix="att_vprobe_")
 try:
-    ver = subprocess.run([vb, "--version"], capture_output=True, text=True,
-                         timeout=60).stdout.strip()
-except Exception as e:
-    ver = "실행 실패: %r" % e
+    open(os.path.join(_pd, "INCAR"), "w").close()
+    try:
+        _o = subprocess.run([vb], capture_output=True, text=True, timeout=120, cwd=_pd)
+        _txt = (_o.stdout or "") + "\n" + (_o.stderr or "")
+    except Exception as e:
+        _txt = "실행 실패: %r" % e
+finally:
+    shutil.rmtree(_pd, ignore_errors=True)
+_m = re.search(r"vasp\.[0-9][A-Za-z0-9._-]*", _txt)
+if not _m:
+    raise SystemExit(
+        "⛔ VASP 버전 토큰('vasp.<버전>')을 관측하지 못했습니다 — attestation 을 만들지 않습니다.\n"
+        "   확인: cd $(mktemp -d) && : > INCAR && %s 2>&1 | head -20\n"
+        "   (봉인 SEAL_POTCAR_ROOT.sh 와 같은 규칙입니다 — 렌즈4 P0-1. 그 출력을 보내 주시면 "
+        "규칙을 맞춰 다시 만들어 드립니다.)\n   관측한 출력 앞부분:\n%s"
+        % (vb, "\n".join("     | " + l for l in _txt.strip().splitlines()[:8])))
+ver = _m.group(0)
+ver_head = "\n".join(_txt.strip().splitlines()[:8])
 rec = {
     "schema": "potcar_attestation/v1",
     "made_before_production": True,
@@ -2542,7 +2576,9 @@ rec = {
     "variants": variants,
     "vasp_executable": vb,
     "vasp_executable_sha256": sha(vb),
+    # 토큰만 — 봉인 `vasp_version_banner` 와 같은 규칙 (렌즈4 P0-1). 원문은 아래 head 로.
     "vasp_version_raw": ver,
+    "vasp_version_stdout_head": ver_head,
 }
 json.dump(rec, open("POTCAR_ATTESTATION.json", "w"), indent=1, ensure_ascii=False)
 print("→ POTCAR_ATTESTATION.json (variant %d · release %s)"
@@ -4656,7 +4692,9 @@ def _selftest_closure(chk):
         "🔴 AV P1-5: 초과 시 **0.01 eV 반올림 보고만** 철회된다 "
         "(tested_axes_stable_at_0.01eV=false)")
     # ⛔음성 회신 AZ P0-5 — `reported_X_eV` 는 overall 자격이 설 때만 존재한다
-    chk("reported_X_eV" not in _rex and _rex.get("overall_citable_at_0.01eV") is None
+    # ⚠ 렌즈2 P1-4 (2026-09-03) — overall 은 이제 사전등록 축이 빠지면 False, 다 있으면
+    #   None 이다. 이 검사의 뜻은 "True 로 올라가지 않는다" 이므로 `is not True` 로 본다.
+    chk("reported_X_eV" not in _rex and _rex.get("overall_citable_at_0.01eV") is not True
         and "primary_ddE_lowE_eV" not in _rex,
         "⛔음성 AZ P0-5 · BA P0-2·Q4: 최상위에 **범위 없는 숫자 필드가 없다** — "
         "죽은 `reported_X_eV` 와 맨숫자 `primary_ddE_lowE_eV` 를 둘 다 걷었다 "
@@ -4665,7 +4703,9 @@ def _selftest_closure(chk):
         and "인용 대상이 아니다" in str((_rex.get("diagnostic_only") or {}).get("⛔")),
         "회신 BA P0-2: 값 자체는 **진단 절 안에** 보존한다 (지우면 왜 못 쓰는지도 "
         "사라져 재논증이 반복된다 — 회신 AT Q5 a)")
-    chk(_rex.get("verdict") == "보고 가능 (시험한 축 조건부)"
+    # ⚠ 렌즈2 P1-4 (2026-09-03) — 이 픽스처는 Δ_vac·δ_k 가 설계에 없어 verdict 뒤에
+    #   "사전등록 축 없음 …" 꼬리가 붙는다. 앞머리(방향 결론)만 본다.
+    chk(str(_rex.get("verdict", "")).startswith("보고 가능 (시험한 축 조건부)")
         and (_rex.get("D_interval_eV") or {}).get("hi", 0) <= -0.10,
         "AV P1-5 + AZ P0-5: 구간 [D−B, D+B] 전체가 guard 이하면 방향 결론은 유지되되 "
         "**시험한 축 조건부**로 적는다 · %s" % _rex.get("D_interval_eV"))
@@ -4756,6 +4796,27 @@ def _selftest_closure(chk):
     chk("δ_k" in ((_r_nk2.get("numeric_budget") or {}).get("missing_axes") or []),
         "⛔음성 대조: kconv_pair 에 jobs 가 **있는데** dense 결과가 없으면 δ_k 가 "
         "missing 으로 차단된다 — 반송에서만 빼면 300 h 뒤에 막힌다")
+    # 🔴 렌즈2 P1-1 (2026-09-03) — 조각이 둘인데 `not_applicable` 은 거짓 상태다 → 차단.
+    #   리뷰어 재현: v34 분석기는 이 상태를 어느 분기도 타지 않아 재개 조건 없이 rc 3 통과.
+    _r_na = _closure_estimand(dict(_man, kconv_pair={"status": "not_applicable",
+                                                    "why": "(거짓) 조각이 둘이 아니다"}),
+                              _RES(), _E, _emol, _jobs)
+    chk(any(str(b).startswith("KCONV_STATUS_INVALID") for b in _r_na["blocks"])
+        and "δ_k" in ((_r_na.get("numeric_budget") or {}).get("missing_axes") or [])
+        and _r_na.get("rounded_value_under_tested_axes_eV") is None,
+        "⛔음성 렌즈2 P1-1: 조각이 둘인데 kconv_pair.status=not_applicable 이면 **차단**한다 "
+        "(종전엔 재개 조건 없이도 조용히 통과) · blocks %s"
+        % [str(b)[:40] for b in _r_na["blocks"] if "KCONV" in str(b)][:2])
+    # 🔴 렌즈2 P1-4/P1-5 · 렌즈5 P1-1 — 설계 제외면 overall 은 None 이 아니라 **False** 고,
+    #   정의 문자열은 실제 합산 축(2축)을 말하며 verdict 에도 빠진 축이 남는다.
+    _def_nk = str(_nb_nk.get("정의", ""))
+    _vd_nk = str(_r_nk.get("verdict", ""))
+    chk(_nb_nk.get("overall_citable_at_0.01eV") is False
+        and _nb_nk.get("tested_axes_n") == len(_nb_nk.get("by_axis_meV") or {}) >= 1
+        and "δ_k" not in _def_nk.split("—")[0] and "δ_k" in _def_nk
+        and (not _vd_nk.startswith("보고 가능") or "δ_k" in _vd_nk),
+        "🔴 렌즈2 P1-4·P1-5: δ_k 설계 제외 → overall=False(None 아님) · 정의 '%s' · "
+        "verdict '%s'" % (_def_nk[:60], _vd_nk[:70]))
     _sem_attack({"E_C_sdcp": _EJK_PM1["E_C_control"], "E_C_control": _EJK_PM1["E_C_sdcp"]},
                 "두 complex 키 교환 (종전 D=+200.5 차단 없음)")
     _sem_attack({"E_G_sdcp": _EJK_PM1["E_G_control"], "E_G_control": _EJK_PM1["E_G_sdcp"]},
@@ -5681,7 +5742,7 @@ def _selftest_closure(chk):
     chk(abs(r["secondary_G_eV_diagnostic"] - 0.4) < 1e-6,
         f"[V P0-4] secondary G = +0.4 (>0 = 최약 SDCP 도 최강 c10 보다 음수) · "
         f"실제 {r.get('secondary_G_eV')}")
-    chk(r["verdict"] == "보고 가능 (시험한 축 조건부)"
+    chk(str(r["verdict"]).startswith("보고 가능 (시험한 축 조건부)")
         and r["rounded_value_under_tested_axes_eV"] == -0.5
         and "reported_X_eV" not in r,
         "[V P0-4 + AZ P0-5] guard(-0.10) 통과 + 0.01 eV 반올림은 "
@@ -6719,7 +6780,9 @@ def selftest_k() -> int:
                "bundle_zip_sha256": _H64("ed"),
                "vasp_executable": "/opt/vasp/bin/vasp_std",
                "vasp_executable_sha256": _H64("fa"),
-               "vasp_version_banner": "vasp.6.4.1 24Jul23",
+               # 🔴 렌즈4 P0-1 — v34 SEAL 은 **토큰만** 봉인한다. 픽스처가 전문("… 24Jul23")
+               #   이던 동안 `raw not in banner` 의 방향 오류가 숨었다. 실물 모양으로 둔다.
+               "vasp_version_banner": "vasp.6.4.1",
                "sealed_at_utc": "2026-08-31T00:00:00Z",
                "assembled_sha256_by_job": {"p/a": _H64("1a"), "p/b": _H64("1b")}}
     # 계획 잡 — 봉인 variant 집합과 **일치**해야 한다 (미실행 잡 포함)
@@ -6878,6 +6941,29 @@ def selftest_k() -> int:
         _rr = potcar_identity_gates(_one, dict(_MB2, _potcar_attestation=dict(_ATT, **_mut)))
         chk(any(_code in g for g in _rr["blocking"]) and not _rr["attestation"]["usable"],
             "⛔음성 AR P0-6: %s → %s" % (_why, _code))
+    # 🔴🔴 렌즈4 P0-1 (2026-09-03) 회귀 — MAKE 가 적는 raw 가 **여러 줄 배너**(실물 VASP
+    #   stdout)여도, 봉인이 **토큰만** 담아도, 토큰이 같으면 불일치가 아니다. v34 까지는
+    #   이 조합이 항상 MISMATCH 였고(1단계 111 h 뒤 발견), 픽스처는 반대 방향이라 못 잡았다.
+    _RAW_ML = (" running on    1 total cores\n distrk:  each k-point on    1 cores\n"
+               " distr:  one band on    1 cores\n using from now: INCAR\n"
+               " vasp.6.4.1 24Jul23 (build Aug 01 2023) complex")
+    _ml = potcar_identity_gates(_one, dict(_MB2, _potcar_attestation=dict(
+        _ATT, vasp_version_raw=_RAW_ML), potcar_pin=_PINOK))
+    chk(not any("ATTESTATION_VASP_VERSION" in g for g in _ml["blocking"])
+        and _ml["attestation"]["usable"],
+        "양성 렌즈4 P0-1: 여러 줄 raw vs 토큰 봉인 — 토큰이 같으면 불일치가 아니다 "
+        "(v34 는 여기서 항상 MISMATCH 였다)")
+    _v33 = potcar_identity_gates(_one, dict(
+        _MB2, _potcar_root_seal=dict(_SEALOK, vasp_version_banner=
+                                     "vasp.6.4.1 24Jul23 (build x) complex"),
+        _potcar_attestation=_ATT, potcar_pin=_PINOK))
+    chk(not any("ATTESTATION_VASP_VERSION" in g for g in _v33["blocking"]),
+        "양성 렌즈4 P0-1: v33 식 전문 봉인 vs 토큰 raw 도 여전히 일치다 (하위 호환)")
+    _unr = potcar_identity_gates(_one, dict(_MB2, _potcar_attestation=dict(
+        _ATT, vasp_version_raw="실행 실패: FileNotFoundError")))
+    chk(any("ATTESTATION_VASP_VERSION_UNREADABLE" in g for g in _unr["blocking"])
+        and not _unr["attestation"]["usable"],
+        "⛔음성 렌즈4 P0-1: raw 에 버전 토큰이 없으면 '확인 못 함' 으로 막는다")
     # 🔴 회신 AT P0-4 음성 — 스키마·불리언·시각·root seal 결박
     for _mut, _code, _why in (
             ({"schema": None}, "ATTESTATION_INCOMPLETE", "schema 필드가 없다"),
@@ -8508,12 +8594,24 @@ def potcar_identity_gates(jobs, man):
             if (_att.get(_k) and _seal_rec.get(_k) and _att[_k] != _seal_rec[_k]):
                 _att_why.append("ATTESTATION_VASP_MISMATCH(%s: attestation 과 봉인이 "
                                 "다른 바이너리를 말한다)" % _k)
-        if (_att.get("vasp_version_raw") and _seal_rec.get("vasp_version_banner")
-                and str(_att["vasp_version_raw"]) not in
-                str(_seal_rec["vasp_version_banner"])):
-            _att_why.append("ATTESTATION_VASP_VERSION_MISMATCH(%r vs 봉인 %r)"
-                            % (str(_att["vasp_version_raw"])[:30],
-                               str(_seal_rec["vasp_version_banner"])[:30]))
+        # 🔴🔴 렌즈4 P0-1 (2026-09-03) — 버전은 **토큰끼리** 비교한다. 종전 `raw not in
+        #   banner` 는 v34 봉인(BH P0-1)이 `vasp.<버전>` 토큰만 담게 되자, MAKE 가 적은
+        #   여러 줄 stdout 원문이 토큰의 부분문자열일 수 없어 **항상** 불일치였다 —
+        #   선택 attestation 을 성실히 돌린 외주처가 1단계 ~111 h 뒤 potcar_identity 에서
+        #   막히는 함정. 픽스처는 방향이 반대(banner 쪽이 더 김)여서 425/425 가 통과했다.
+        #   토큰이 attestation 쪽에 없으면 그것도 '확인 못 함 = 일치 아님' 이다.
+        _VTOK = r"vasp\.[0-9][A-Za-z0-9._-]*"
+        _vt_att = re.search(_VTOK, str(_att.get("vasp_version_raw") or ""))
+        _vt_seal = re.search(_VTOK, str(_seal_rec.get("vasp_version_banner") or ""))
+        if _att.get("vasp_version_raw") and _seal_rec.get("vasp_version_banner"):
+            if not _vt_att:
+                _att_why.append("ATTESTATION_VASP_VERSION_UNREADABLE(attestation 의 "
+                                "vasp_version_raw %r 에 'vasp.<버전>' 토큰이 없다 — "
+                                "확인 못 한 것은 일치가 아니다)"
+                                % (str(_att["vasp_version_raw"])[:40],))
+            elif _vt_seal and _vt_att.group(0) != _vt_seal.group(0):
+                _att_why.append("ATTESTATION_VASP_VERSION_MISMATCH(%r vs 봉인 %r)"
+                                % (_vt_att.group(0), _vt_seal.group(0)))
         _att_var_bad = [v for v, d in (_att.get("variants") or {}).items()
                         if not _is_hex64((d or {}).get("source_sha256"))]
         if _att_var_bad:
@@ -10558,6 +10656,17 @@ def _closure_estimand(man, results, E, emol, jobs, merge_info=None):
         _blk("KCONV_ABSENT",
              "KCONV_ABSENT(k 수렴 쌍이 봉인돼 있지 않다 — 0.01 eV 보고의 "
              "근거가 없다)", scope="estimand")
+    # 🔴 렌즈2 P1-1 (2026-09-03) — `not_applicable` 은 "δ_k 를 정의할 primary 조각이 둘이
+    #   아니다" 라는 **사실 주장**이다. 생성기는 조각이 2개가 아닐 때만 이 상태를 쓰지만
+    #   분석기는 그 사실을 대조하지 않아, 조각이 둘인 번들에 `not_applicable` 을 적으면
+    #   재개 조건도 없이 **조용히 통과**했다 (리뷰어 재현: rc 3 · KCONV 차단 0). 상태
+    #   문자열이 아니라 **조각 수**가 판정한다 — 둘이면 '해당 없음' 은 거짓이다.
+    elif str(_kp.get("status")) == "not_applicable" and len(_want_k) == 2:
+        _blk("KCONV_STATUS_INVALID",
+             "KCONV_STATUS_INVALID(kconv_pair.status=not_applicable 인데 estimand 의 primary "
+             "complex 가 둘이다 %s — δ_k 는 정의된다. '해당 없음' 이 아니라 설계 제외"
+             "(not_designed + 결과 보기 전 재개 조건)이거나 결측이다)" % sorted(_want_k),
+             scope="estimand")
     elif str(_kp.get("status")) == "not_designed":
         # 🔴🔴 1저자 결정 2026-09-03 — **선언된 축 생략**은 차단이 아니라 주장 축소다.
         #   비준된 사전등록 `3_오차예산` 이 명시한다: "넘으면 **값을 버리지 않는다.**
@@ -10631,13 +10740,29 @@ def _closure_estimand(man, results, E, emol, jobs, merge_info=None):
             _bmiss.append("δ_k")
         else:
             _bax["k"] = abs(float(_v))
-    elif _bcodes & {"KCONV_NOT_MEASURED", "KCONV_FRAGMENT_UNRESOLVED", "KCONV_ABSENT"}:
+    elif _bcodes & {"KCONV_NOT_MEASURED", "KCONV_FRAGMENT_UNRESOLVED", "KCONV_ABSENT",
+                    "KCONV_STATUS_INVALID"}:
         _bmiss.append("δ_k")
     else:
         _bskip.append("δ_k(k 수렴 쌍이 이 번들 설계에 없음)")
     _BTOL = 5.0
+    # 🔴 렌즈2 P1-5 · 렌즈5 P1-1 (2026-09-03) — 정의 문자열이 **세 축 고정**이었는데 값은
+    #   시험한 축만 합산했다. 기계 기록이 자기 정의와 다른 양을 담으면 읽는 사람은 세 축
+    #   으로 읽는다. 정의를 **실제 합산 축**으로 렌더하고 빠진 축을 같은 줄에 적는다.
+    #   사전등록 원문 정의는 별도 키로 남긴다 (무엇에서 얼마나 빠졌는지 보이게).
+    _axn = {"vac": "Δ_vac", "gas": "δ_gas", "k": "δ_k"}
+    _ax_in = [_axn[k] for k in ("vac", "gas", "k") if k in _bax]
+    _ax_out = sorted(set(_bmiss) | {s.split("(")[0] for s in _bskip})
+    _prereg_out = [x for x in ("Δ_vac", "δ_gas", "δ_k") if x in _ax_out]
+    _def = (("B_num = " + " + ".join("|%s|" % x for x in _ax_in) + "  (meV)")
+            if _ax_in else "B_num = (합산할 실측 축이 없다)")
+    if _prereg_out:
+        _def += "  — 사전등록 3축 중 제외: %s (%s)" % (
+            ", ".join(_prereg_out), "결측" if _bmiss else "이 번들 설계에 없음")
     out["numeric_budget"] = {
-        "정의": "B_num = |Δ_vac| + |δ_gas| + |δ_k|  (meV)",
+        "정의": _def,
+        "정의_사전등록_원문": "B_num = |Δ_vac| + |δ_gas| + |δ_k|  (meV) — 3_오차예산",
+        "tested_axes_n": len(_bax),
         # 🔴 회신 AV P1-5·Q6 — 이름을 정확히 한다. **총 오차 상한이 아니다** —
         #   ENCUT·교차축 검사가 빠져 있어 "전체 0.01 eV 수렴성" 을 말할 수 없다.
         "성격": ("**시험한 세 축의 보수적 sensitivity envelope** — 총 오차 상한이 "
@@ -10664,11 +10789,23 @@ def _closure_estimand(man, results, E, emol, jobs, merge_info=None):
         #   ENCUT 근거가 없으므로 None 이다 (False 가 아니라 **모른다**).
         "tested_axes_stable_at_0.01eV": (bool(_bax) and not _bmiss
                                          and sum(_bax.values()) <= _BTOL),
-        "overall_citable_at_0.01eV": None,
-        "⚠_두_키의_차이": ("tested_axes_… 는 **시험한 세 축**만 말한다. "
-                            "overall_… 은 ENCUT·교차항 근거가 없어 **None(모른다)** "
-                            "이다 — False 가 아니다. 전체 0.01 eV 를 주장하려면 "
-                            "별도 ENCUT 설계가 필요하다 (회신 AY Q6)."),
+        # 🔴 렌즈2 P1-4 (2026-09-03) — 사전등록 3축 중 하나라도 이 결과에 없으면 전체
+        #   0.01 eV 안정성은 **False** 다 (사전등록 50행 "축이 하나라도 없으면 INCOMPLETE").
+        #   종전엔 언제나 None("모른다") 이어서, 문서는 "0.01 eV 주장 안 함" 이라 쓰는데
+        #   기계 기록은 판단을 유보한 것처럼 읽혔다. None 은 세 축이 다 있고 ENCUT·교차항만
+        #   없을 때의 값이다.
+        "overall_citable_at_0.01eV": (False if _prereg_out else None),
+        "overall_⚠": (("사전등록 3_오차예산 축 %s 가 이 결과에 없다 (%s) — 전체 0.01 eV "
+                       "안정성은 **주장하지 않는다(False)**. 시험한 축 %s 의 envelope 만 "
+                       "tested_axes_… 에 남는다 (사전등록 50행)."
+                       % (_prereg_out, "결측" if _bmiss else "설계 제외", _ax_in))
+                      if _prereg_out else
+                      "세 축은 있으나 ENCUT·교차항 근거가 없어 None(모른다) — False 가 아니다"),
+        "⚠_두_키의_차이": ("tested_axes_… 는 **시험한 축**만 말한다. overall_… 은 사전등록 "
+                            "3축이 전부 있을 때 ENCUT·교차항 근거 부재로 None(모른다), "
+                            "하나라도 없으면 False(주장하지 않는다). 전체 0.01 eV 를 "
+                            "주장하려면 세 축 + 별도 ENCUT 설계가 필요하다 (회신 AY Q6 · "
+                            "렌즈2 P1-4)."),
         "⚠_문턱_봉인": "결과를 보기 전에 정한 값이다 (회신 AT Q2 · 코드 상수)",
         "미달이면": ("값을 버리지 않는다 — **0.01 eV 안정성 주장을 하지 않고** 보고 "
                      "해상도를 낮추거나 축별 민감도만 낸다"),
@@ -11016,7 +11153,15 @@ def _closure_estimand(man, results, E, emol, jobs, merge_info=None):
     _nbF = out.get("numeric_budget") or {}
     _cit01 = bool(_nbF.get("tested_axes_stable_at_0.01eV"))
     out["tested_axes_stable_at_0.01eV"] = _cit01
-    out["overall_citable_at_0.01eV"] = None      # ENCUT 근거 없음 (AY P1)
+    # 🔴 렌즈2 P1-4 — numeric_budget 이 정한 값을 그대로 쓴다: 세 축 다 있으면 None(ENCUT
+    #   근거 없음 · AY P1), 사전등록 축이 하나라도 없으면 False(주장하지 않는다).
+    out["overall_citable_at_0.01eV"] = _nbF.get("overall_citable_at_0.01eV")
+    _vsfx = ("" if _nbF.get("overall_citable_at_0.01eV") is not False else
+             " · 사전등록 축 없음(%s) — 0.01 eV 전체 안정성 미주장"
+             % ",".join(str(x).split("(")[0] for x in
+                        (list(_nbF.get("missing_axes") or [])
+                         + [a for a in (_nbF.get("axes_not_designed") or [])
+                            if any(t in str(a) for t in ("Δ_vac", "δ_gas", "δ_k"))])))
     # ⛔⛔ 회신 AZ P0-5 (2026-09-01) — **`overall=None` 을 출력 경로가 우회했다.**
     #   `overall_citable_at_0.01eV=None`("모른다")을 옳게 넣어 놓고, 바로 아래에서
     #   *시험한 축만* 통과하면 `reported_X_eV` 라는 **무조건적 이름의 숫자**를 냈다.
@@ -11060,7 +11205,8 @@ def _closure_estimand(man, results, E, emol, jobs, merge_info=None):
                             % (_lo, _hi, PREREG_GUARD_EV))
             # ⛔⛔ 회신 AZ P0-5 — 방향 판정도 **시험한 축 조건부**다. 무조건적
             #   "보고 가능" 은 overall 자격이 없는데도 최종 승인처럼 읽혔다.
-            out["verdict"] = "보고 가능 (시험한 축 조건부)"
+            # 🔴 렌즈2 P1-4 — 사전등록 축이 빠졌으면 verdict 문자열에도 남긴다.
+            out["verdict"] = "보고 가능 (시험한 축 조건부)" + _vsfx
         elif (_lo <= PREREG_GUARD_EV < _hi) or (_lo < 0.0 <= _hi):
             out["guard"] = ("⛔ 구간 [%.4f, %.4f] 가 guard(%.2f) 또는 0 을 "
                             "가로지른다" % (_lo, _hi, PREREG_GUARD_EV))
@@ -11072,7 +11218,7 @@ def _closure_estimand(man, results, E, emol, jobs, merge_info=None):
             out["verdict"] = "NO_DIRECTIONAL_CLAIM"
     elif primary <= PREREG_GUARD_EV:
         out["guard"] = "통과 (primary %.4f <= %.2f · envelope 미상)" % (primary, PREREG_GUARD_EV)
-        out["verdict"] = "보고 가능 (시험한 축 조건부)"
+        out["verdict"] = "보고 가능 (시험한 축 조건부)" + _vsfx
     else:
         out["guard"] = ("⛔ primary %+.4f > %.2f — guard band 미달"
                         % (primary, PREREG_GUARD_EV))
@@ -11309,7 +11455,22 @@ def main():
         if _pol == "require_attestation" and (_bad or not _att_s.get("usable")):
             print("  ⛔ **원고용 정책인데 증서가 쓸 수 없다** — 한 잡도 돌리지 않는다.")
             return 2
-        if _pol != "require_attestation":
+        # 🔴🔴 렌즈4 P0-1 (2026-09-03) — post_hoc 이라도 **증서가 있으면** 결함을 지금 잡는다.
+        #   종전엔 post_hoc 에서 러너가 이 검사를 부르지 않아, 결함 있는 *선택* 증서가
+        #   1단계 ~111 h 뒤 최종 분석의 potcar_identity 에서 처음 드러났다. "선택" 은
+        #   "없어도 된다" 이지 "틀린 것이 있어도 된다" 가 아니다 — 있으면 맞아야 하고,
+        #   그것은 지금 확인할 수 있다.
+        if (_pol != "require_attestation" and _att_s.get("present")
+                and (_bad or not _att_s.get("usable"))):
+            print("  ⛔ **선택 증서에 결함이 있다** — 이대로 두면 최종 분석에서 "
+                  "potcar_identity 가 막힌다 (렌즈4 P0-1).")
+            print("     POTCAR_ATTESTATION.json 을 지우고 진행하거나(없으면 러너는 "
+                  "돌아간다), MAKE_POTCAR_ATTESTATION.sh 를 다시 돌리십시오.")
+            return 2
+        if _pol != "require_attestation" and _att_s.get("present"):
+            print("  ✔ post_hoc 정책 — 선택 증서가 봉인·MANIFEST·ZIP 과 정합한다 "
+                  "(dataset 신원 **기록**으로 남는다 · 원고 인용 자격은 그대로 없다).")
+        elif _pol != "require_attestation":
             print("  ⚠ post_hoc 정책 — 증서 없이 진행한다. 이 묶음의 결과는 "
                   "**탐색용**이고 원고 인용 자격이 서지 않는다.")
         print("  ✔ 생산을 진행해도 되는 상태다 (정책 %s 기준)" % _pol)
@@ -19358,6 +19519,53 @@ def _runner_e2e(bundle: Path, chk) -> bool:
         "AR 해제조건 7 + 🔴 BH P0-1: 봉인이 ZIP·MANIFEST·VASP **버전 토큰**을 담는다 "
         "— stub 이 실물 순서(버전 5번째 줄)로 찍어도 잡아낸다 (첫 줄만 보면 실패한다) "
         "· 배너 %r" % (_seal.get("vasp_version_banner") or "")[:40])
+
+    # 🔴🔴 렌즈4 P0-1 (2026-09-03) e2e — 선택 attestation 을 **문서대로** 만들고 러너를
+    #   돌린 뒤, 분석기의 증서↔봉인 대조가 버전에서 막히지 않는지 **실물 경로**로 본다.
+    #   v34 까지는 MAKE 가 stdout 전문을, SEAL 이 토큰만 적어 여기서 항상 MISMATCH 였고
+    #   (1단계 ~111 h 뒤 발견), MAKE 가 번들 루트에서 VASP 를 기동해 OUTCAR 를 남길 수
+    #   있었다. 단위 픽스처는 방향이 반대라 못 잡았다 — 그래서 e2e 로 관통한다.
+    _att_root = _copy("attested")
+    _envA2 = dict(env, RELEASE_LABEL="potpaw_PBE.54", SITE="selftest/기관")
+    _rm = _sp.run(["bash", "MAKE_POTCAR_ATTESTATION.sh"], cwd=str(_att_root), env=_envA2,
+                  capture_output=True, text=True, timeout=300)
+    _attj = _att_root / "POTCAR_ATTESTATION.json"
+    _rm_o = ((_rm.stdout or "") + (_rm.stderr or "")).strip()
+    chk(_rm.returncode == 0 and _attj.is_file(),
+        "렌즈4 P0-1 e2e: 문서의 명령(실행블록 export + RELEASE_LABEL·SITE)으로 "
+        "MAKE_POTCAR_ATTESTATION.sh 가 실제로 증서를 만든다 (rc=%d · %s)"
+        % (_rm.returncode, _rm_o.splitlines()[-1][:80] if _rm_o else "출력없음"))
+    _attd = json.loads(_attj.read_text(encoding="utf-8")) if _attj.is_file() else {}
+    chk(_attd.get("vasp_version_raw") == "vasp.6.4.1"
+        and "running on" in str(_attd.get("vasp_version_stdout_head"))
+        and not list(_att_root.rglob("OUTCAR")),
+        "렌즈4 P0-1 e2e: 증서의 버전은 **토큰**(봉인과 같은 규칙)이고 원문은 head 로 따로 "
+        "남으며, 프로브가 번들 루트에 OUTCAR 를 남기지 않는다 · raw=%r"
+        % (_attd.get("vasp_version_raw"),))
+    _rcA2, _oA2 = _run(_att_root)
+    _sealA2 = (json.loads((_att_root / "POTCAR_ROOT_SEAL.json").read_text(encoding="utf-8"))
+               if (_att_root / "POTCAR_ROOT_SEAL.json").is_file() else {})
+    # 배포 분석기의 **생산 전 증서 검사**(--check_attestation)를 그대로 부른다 — 이것이
+    #   외주처가 실제로 돌릴 수 있는 경로이고, 안에서 potcar_identity_gates({}, man) 이
+    #   증서↔봉인 버전 대조를 한다 (분석기 함수는 템플릿 문자열 안이라 여기서 직접 못 부른다).
+    _ca = _sp.run([sys.executable, "analyze_results.py", ".", "--check_attestation"],
+                  cwd=str(_att_root), capture_output=True, text=True, timeout=300,
+                  env=dict(env, PYTHONIOENCODING="utf-8"))
+    _ca_o = (_ca.stdout or "") + (_ca.stderr or "")
+    _okA2 = ("✓ census" in _oA2 and bool(_sealA2)
+             and "attestation present=True" in _ca_o
+             and "ATTESTATION_VASP_VERSION" not in _ca_o)
+    chk(_okA2,
+        "렌즈4 P0-1 e2e: 증서를 만든 뒤 러너(census→SEAL→census)가 통과하고, 배포 분석기 "
+        "--check_attestation 의 증서↔봉인 **버전 대조가 막히지 않는다** (v34: 항상 "
+        "MISMATCH) · rc=%d · %s"
+        % (_rcA2, [l.strip()[:70] for l in _ca_o.splitlines()
+                   if "ATTESTATION" in l or "usable=" in l][:3] or "attestation 차단 없음"))
+    if not _okA2:
+        print("     [진단] runner rc=%s · census=%s · seal=%s\n--- runner tail ---\n%s\n"
+              "--- check_attestation rc=%s ---\n%s"
+              % (_rcA2, "✓ census" in _oA2, bool(_sealA2), _oA2[-600:],
+                 _ca.returncode, _ca_o[-1000:]))
 
     # ①-a2 🔴🔴 회신 BH P0-1 음성 — **버전을 안 찍는 VASP 면 봉인을 거부한다**
     #   이것이 이번 P0 의 회귀시험이다. 종전 코드(`--version | head -1`)로 되돌리면
