@@ -222,15 +222,16 @@ def test_a_dry_run_does_not_strand_the_plan_in_running(monkeypatch, tmp_path):
     cfg = load_config("configs/grid_coarse.yaml")
     _plan_for_live_grid(led, "L49", out_dir, cfg, source_digest())
 
-    tok = out_dir / "L49.token"
     summary = G.run_grid(cfg, [], nproc=1, chunk_size=1, out_dir=out_dir,
-                         dry_run=True, leg="L49", token_file=tok)
+                         dry_run=True, leg="L49", may_open=True)
     assert summary["dry_run"] is True
 
     assert P.planned_index(ledger=led)["L49"]["status"] == "planned", (
         "dry-run 이 계획을 running 에 남겼다 — 그 다리는 다시 시작할 수도 "
         "닫을 수도 없다")
     assert not (claims / "L49.claim").exists(), "dry-run 이 claim 을 남겼다"
+    # ★ 57차 P0-1 — 소유 증명의 자리를 lifecycle 이 정한다 (caller 가 아니다).
+    tok = P.attempt_path_for("L49", ledger=led)
     assert not tok.exists(), "dry-run 이 소유 증명 파일을 남겼다"
 
     # 되돌렸으므로 **진짜 실행**이 바로 시작될 수 있다 — 되돌림의 유일한 증명

@@ -3729,7 +3729,7 @@ SMOKE_NAMESPACE = REPO_ROOT / "results" / "_smoke"
 
 def assert_run_is_authorized(leg_id: str, phase: str, paths, run_spec: dict,
                              source_digest: str, ledger=None,
-                             token: str | None = None, token_file=None):
+                             token: str | None = None, may_open: bool = False):
     """비싼 계산 **직전**에 부르는 단 하나의 gate (47차 P0-2 조건 11-c).
 
     46차 gate 는 `run.sh` **안에만** 있었다. `--leg` 는 shell 이 소비했고
@@ -3747,10 +3747,15 @@ def assert_run_is_authorized(leg_id: str, phase: str, paths, run_spec: dict,
     real = [Path(x) for x in paths if x]
     if real and all(is_inside_namespace(x, SMOKE_NAMESPACE) for x in real):
         return None
-    # ★ 49차 P0-3 — 소유 증명은 **파일 경로**로 넘어온다 (argv 는 `ps` 로
-    #   새어 나간다). 파일이 있으면 그것이 곧 "이미 발급된 실행에 붙어라" 다.
-    if token_file is not None and Path(token_file).is_file():
-        token = read_token_file(token_file)
+    # ★ 57차 P0-1 — **여기서 token 파일을 읽지 않는다.** 49차는 caller 가 준
+    #   경로의 파일을 읽었고, 그 "경로를 줬다" 는 행위 자체가 소유 주장이었다.
+    #   경로 인자를 없앤 뒤 같은 자리에서 자동으로 읽으면, 다리 **이름만** 아는
+    #   호출이 남의 실행에 붙는다 — 48차 P0-3 이 막은 바로 그것이다 (회귀를
+    #   `test_two_public_authorizations_do_not_both_enter_compute` 가 잡았다).
+    #
+    #   재개하려는 process 는 `attach_leg_run(leg_id)` 로 **명시적으로** 붙어
+    #   credential 을 얻고, 그것을 `token=` 으로 넘긴다. 읽는 자리는 한 곳
+    #   (`attach_leg_run`)이고 이 gate 는 받은 것만 본다.
     # ★ 54차 P0-1 — claim 의 자리는 **원장이 정한다** (caller 가 아니다).
     claims_root = claims_root_for_ledger(ledger)
     path = _claim_path(leg_id, claims_root)
@@ -3779,20 +3784,24 @@ def assert_run_is_authorized(leg_id: str, phase: str, paths, run_spec: dict,
                 f"({claim.source_digest} ≠ {source_digest}) — 실행 도중 "
                 "RUN_SCOPE 가 바뀌었다")
         return claim
-    # 아직 없다 — 지금 발급한다. `token_file` 을 준 실행은 **coordinator** 이므로
-    # 그 자리에 소유 증명을 남겨 다음 phase 가 이어받게 한다.
-    if token_file is None:
-        # ★ 54차 P0-6 — `--attempt-file` 없는 직접 호출은 **발급하지 않는다.**
-        #   53차까지 이 경로는 소유 증명을 아무 데도 남기지 않는 claim 을 만들
-        #   수 있었다 (§0 에 신고했고, 리뷰어가 그 위에서 회수 불가 상태를
-        #   실측했다). 발급은 coordinator 의 일이다.
+    # 아직 없다 — 지금 발급한다. **coordinator 만** 발급한다.
+    if not may_open:
+        # ★ 54차 P0-6 — 직접 호출은 **발급하지 않는다.** 53차까지 이 경로는
+        #   소유 증명을 아무 데도 남기지 않는 claim 을 만들 수 있었다 (§0 에
+        #   신고했고, 리뷰어가 그 위에서 회수 불가 상태를 실측했다). 발급은
+        #   coordinator 의 일이다.
+        #
+        # ★ 57차 P0-1 — 54차는 이 구분을 **`--attempt-file` 이 주어졌는가**로
+        #   했다. 그 인자가 sink 라 없앴으므로, 구분도 pathname 이 아니라
+        #   **명시적 의사표시**로 옮긴다. 보장은 그대로다 — 오히려 더 좁다:
+        #   경로를 아무거나 지어내면 coordinator 가 되던 것이, 이제는
+        #   `may_open=True` 를 스스로 적어야 한다.
         raise PreserveError(
             "plan",
-            f"{leg_id!r} 의 실행권을 발급하려면 소유 증명 파일 경로가 있어야 "
-            "한다 (`--attempt-file`) — 그 파일이 중단·재개·되돌림의 유일한 "
-            "통로다. `./run.sh` 가 coordinator 다")
-    return open_leg_run(leg_id, run_spec, source_digest, token_file,
-                        ledger=ledger)
+            f"{leg_id!r} 의 실행권이 아직 발급되지 않았다 — 이 호출은 발급자가 "
+            "아니다 (`may_open=False`). 발급은 coordinator 가 한다: "
+            "`./run.sh` 또는 `--mode open`")
+    return open_leg_run(leg_id, run_spec, source_digest, ledger=ledger)
 
 
 def is_inside_namespace(path, namespace) -> bool:
@@ -4552,6 +4561,40 @@ def claims_root_for_ledger(ledger=None) -> Path:
     return canonical_ledger(ledger).parent / "_claims"
 
 
+def attempts_root_for_ledger(ledger=None) -> Path:
+    """소유 증명이 사는 곳 — claims 와 **같은 authority(원장)** 가 정한다 (57차 P0-1).
+
+    54차는 claim 의 자리를 원장에서 유도했다(`claims_root_for_ledger`). 전달
+    통로만 caller 손에 남았고, 그것이 write-anywhere sink 였다.
+
+    51~56차는 그 sink 를 **blacklist 로** 좁혀 왔다: 원장과 그 lock(51차) ·
+    claim namespace(51차) · 다른 다리의 살아 있는 token(52차) · symlink 와
+    hardlink(56차). 56차 판정이 그 방식 자체를 겨눴다 —
+
+        "authority 경로 blacklist 를 더 늘리는 수정은 새로운 sink 하나를
+         남기므로 종결이 아니다."
+
+    남아 있던 것이 실제로 있었다: lifecycle journal 과 그 `.head`, cohort 의
+    `CURRENT`·`.PENDING`, 그리고 bind-mount 별칭을 지난 그 전부.
+
+    종결은 caller 의 pathname 이 **sink 에 닿지 않게** 만드는 것이다. 자리를
+    원장에서 유도하고 이름을 서버가 정하면, caller 가 고를 수 있는 것이 남지
+    않는다 — 넘기는 것은 `leg_id` 뿐이고 그 도메인은 `check_id()` 다.
+
+    claims 와 **다른** 디렉터리인 이유는 51차 P1-P 의 뿌리다: 전달 통로와
+    authority 가 같은 namespace 에 있으면 통로가 authority 경로를 점유한다.
+    """
+    return canonical_ledger(ledger).parent / "_attempts"
+
+
+def attempt_path_for(leg_id: str, ledger=None, attempts_root=None) -> Path:
+    """이 다리의 소유 증명 경로. **서버가 정하고 caller 는 못 고른다** (57차 P0-1)."""
+    check_id(leg_id)
+    root = Path(attempts_root) if attempts_root is not None else \
+        attempts_root_for_ledger(ledger)
+    return root / f"{leg_id}.token"
+
+
 def claims_root_for(repo_root) -> Path:
     """이 저장소에서 실행권이 **사는 곳**. 발급자가 정하는 유일한 규칙이다.
 
@@ -4871,6 +4914,44 @@ def _token_verifier(token: str) -> str:
     return hashlib.sha256(str(token).encode("utf-8")).hexdigest()
 
 
+def _assert_not_a_link(path: Path, what: str) -> None:
+    """이 이름이 **실물 일반 파일**임을 커널에게 묻는다 (57차 P0-1).
+
+    `O_NOFOLLOW` 로 열어 본다. symlink 면 커널이 `ELOOP` 로 거부하므로 검사와
+    사용 사이의 창이 없다 — pathname 을 `lstat` 으로 본 뒤 다시 여는 방식과
+    다른 점이 그것이다. 파일이 없으면(첫 발급) 통과다.
+
+    hardlink 는 `O_NOFOLLOW` 로 안 잡힌다 (하드링크는 같은 inode 의 다른
+    이름이지 링크 객체가 아니다). 그래서 열린 fd 에서 `st_nlink` 를 본다 —
+    55·56차가 원장에 건 것과 같은 규칙이고, 여기서는 **연 그 fd** 를 보므로
+    이름을 다시 해석하지 않는다.
+    """
+    try:
+        fd = os.open(path, os.O_RDONLY | os.O_NOFOLLOW | _O_BIN)
+    except FileNotFoundError:
+        return                                   # 아직 없다 — 첫 발급
+    except OSError as exc:
+        if exc.errno in (errno.ELOOP, errno.EMLINK):
+            raise PreserveError(
+                "plan",
+                f"{what} 경로가 symlink 다: {path} — 첫 쓰기가 링크를 따라가면 "
+                "그 대상이 덮인다. lifecycle 이 정한 실물 경로여야 한다") from exc
+        raise
+    try:
+        st = os.fstat(fd)
+        if stat.S_ISDIR(st.st_mode):
+            raise PreserveError(
+                "plan", f"{what} 경로가 디렉터리다: {path}")
+        if stat.S_ISREG(st.st_mode) and st.st_nlink != 1:
+            raise PreserveError(
+                "plan",
+                f"{what} 경로에 다른 이름(hardlink)이 있다: {path} "
+                f"(nlink={st.st_nlink}) — 같은 파일을 두 이름으로 부르면 "
+                "배타가 갈린다")
+    finally:
+        os.close(fd)
+
+
 #: 소유 증명 파일의 **닫힌** key 집합 (52차 P0-1).
 TOKEN_FILE_KEYS = ("leg_id", "attempt_id", "token")
 
@@ -4901,6 +4982,11 @@ def write_token_file(path, token: str, leg_id: str | None = None,
             + "\n").encode("utf-8")
     p = Path(path)
     p.parent.mkdir(parents=True, exist_ok=True)
+    # ★ 57차 P0-1 — **열기 자체가 링크를 따라가지 않아야 한다.** 56차는
+    #   caller 경로에 `is_symlink()` 를 걸었는데 그것은 (a) 검사와 열기 사이에
+    #   창이 있고 (b) 자리를 서버가 정해도 **그 자리에 심어 둔** 링크는 여전히
+    #   통한다. 최종 이름을 O_NOFOLLOW 로 확인하면 커널이 판정한다.
+    _assert_not_a_link(p, "소유 증명")
     tmp = p.with_name(f".{p.name}.{uuid.uuid4().hex}.tmp")
     # ★ 53차 P0-2 — claim 과 같은 규칙: 전부 쓰고, 보이게 만들기 **전에** 실물을
     #   대조하고, 보이게 만든 뒤 한 번 더 대조한다. 소유 증명은 권한이므로
@@ -4978,88 +5064,23 @@ def _unlink_token_generation(path, token: str) -> bool:
     return True
 
 
-def _assert_token_file_free_for(token_file, leg_id: str, claims_root=None) -> None:
-    """이 경로의 소유 증명이 **다른 다리의 살아 있는 것**이면 거부한다 (52차 P0-1).
-
-    파일이 없거나, 형식이 아니거나, 같은 다리의 것이거나, 그 다리의 claim 이
-    이미 닫혔으면 덮어도 무해하다 — 가리키는 실행이 없는 credential 은 권한이
-    아니기 때문이다. 살아 있는 남의 것만 막는다.
-    """
-    try:
-        rec = _read_token_record(token_file)
-    except (PreserveError, OSError):
-        return
-    other = str(rec.get("leg_id") or "")
-    if not other or other == str(leg_id):
-        return
-    if not _claim_path(other, claims_root).is_file():
-        return
-    raise PreserveError(
-        "plan",
-        f"이 경로에는 {other!r} 의 살아 있는 소유 증명이 있다: {token_file} — "
-        f"{leg_id!r} 의 발급이 그것을 덮으면 {other!r} 은 자기 실행에 붙을 수 "
-        "없다. 다리마다 다른 `--attempt-file` 을 쓰라")
-
-
-def _assert_token_path_disjoint(token_file, claims_root=None, ledger=None) -> Path:
-    """소유 증명 경로가 **authority namespace 와 겹치지 않는지** 본다 (51차 P1-P).
-
-    리뷰어 반례: caller 가 `token_file == <claims_root>/L.claim` 을 주면
-    token-first 쓰기가 claim authority 경로를 먼저 점유한다. claim 발급은
-    `O_EXCL` 에서 실패하지만 rollback 은 "경로가 있다" 는 이유로 token 문자열을
-    남긴다 — 그 뒤 모든 claim reader 가 malformed JSON 을 만나고 정상 cleanup
-    까지 막힌다 (`JSONDecodeError` 는 `PreserveError` 가 아니므로 fail-closed
-    분기에도 안 걸린다).
-
-    전달 통로와 authority 는 **다른 namespace** 여야 한다. 문자열 비교가 아니라
-    canonical absolute path 로 본다 — `./x/../y` 와 symlink 로 같은 파일을
-    가리킬 수 있다.
-    """
-    p = Path(token_file)
-    try:
-        cand = p.resolve()
-    except OSError as exc:                                    # pragma: no cover
-        raise PreserveError("plan", f"소유 증명 경로를 정규화할 수 없다: {p}") from exc
-    root = Path(claims_root or DEFAULT_CLAIMS_ROOT)
-    led = canonical_ledger(ledger)
-    reserved = {led.resolve(strict=False),
-                Path(str(led) + ".lock").resolve(strict=False)}
-    if cand in reserved:
-        raise PreserveError(
-            "plan",
-            f"소유 증명 경로가 원장 authority 와 같다: {p} — 전달 통로와 "
-            "authority 는 다른 namespace 여야 한다")
-    try:
-        rroot = root.resolve(strict=False)
-    except OSError:                                           # pragma: no cover
-        rroot = root
-    if cand == rroot or rroot in cand.parents:
-        raise PreserveError(
-            "plan",
-            f"소유 증명 경로가 claim namespace 안에 있다: {p} (claims_root: "
-            f"{root}) — 전달 통로가 authority 경로를 점유할 수 있다")
-    # ★ 56차 P0-1 — **alias 는 첫 부작용 앞에서 거부한다.** 55차는 canonical 을
-    #   계산해 놓고 raw `p` 를 돌려줬고, 그 반환값마저 caller 가 버렸다.
-    #   `shared.token -> token-target` 이면 L 은 `token-target.attempt` 를 잡는데,
-    #   token 쓰기의 `os.replace()` 가 symlink 자체를 일반 파일로 바꾸므로 그
-    #   뒤 같은 pathname 은 `shared.token.attempt` 를 잡는다 — 배타 지점이
-    #   정상 발급 하나로 움직인다 (리뷰어 실측: 두 다리가 모두 running).
-    if p.is_symlink():
-        raise PreserveError(
-            "plan",
-            f"소유 증명 경로가 symlink 다: {p} — 첫 쓰기가 링크를 갈아치우면 "
-            "배타 지점이 움직인다. 실제 경로를 직접 주어라")
-    try:
-        st = p.lstat()
-    except OSError:
-        st = None
-    if st is not None and stat.S_ISREG(st.st_mode) and st.st_nlink != 1:
-        raise PreserveError(
-            "plan",
-            f"소유 증명 경로에 다른 이름(hardlink)이 있다: {p} (nlink="
-            f"{st.st_nlink}) — 같은 파일을 두 이름으로 부르면 배타가 갈린다")
-    # 해석은 **여기 한 번**이고, caller 는 이 값을 그대로 쓴다.
-    return cand
+#: ★ 57차 P0-1 — **여기 있던 검사 둘을 지웠다** (`_assert_token_file_free_for`,
+#: `_assert_token_path_disjoint`). 지운 이유는 "필요 없어 보여서" 가 아니라
+#: **구조가 그 술어를 표현 불가능하게 만들었기 때문**이고, 그것을 실측했다:
+#:
+#:   · `_assert_token_file_free_for` — "이 경로에 다른 다리의 살아 있는 소유
+#:     증명이 있는가" 를 물었다. 경로가 `<attempts>/<leg_id>.token` 으로
+#:     고정된 지금, 그 파일을 쓰는 것은 `open_leg_run(<leg_id>)` 하나뿐이므로
+#:     record 의 `leg_id` 는 **항상** 묻는 다리와 같다. 분기가 도달 불가다.
+#:   · `_assert_token_path_disjoint` — "전달 통로가 authority namespace 를
+#:     침범하는가" 를 물었다. 통로의 자리를 `attempts_root_for_ledger()` 가
+#:     정하고 그것이 claims·원장과 다른 디렉터리이므로 침범이 표현 불가다.
+#:     (제거 직전 실측: 실제 호출 0곳 — docstring 언급만 남아 있었다.)
+#:
+#: 살아 있는 보장은 `test_the_attempt_namespace_is_derived_from_the_ledger`
+#: 와 `test_a_cross_leg_attempt_collision_is_unrepresentable` 이 못 박는다.
+#: **도달 불가능한 검사를 남겨 두면 그것이 곧 거짓 보증이다** — 변이 전수가
+#: "안 무는 변이" 로 잡아내는 자리이기도 하다 (55차 교훈).
 
 
 def _attempt_path_lock(token_file) -> Path:
@@ -5072,8 +5093,8 @@ def _attempt_path_lock(token_file) -> Path:
 
     술어가 지키는 대상은 claim 이 아니라 **경로**다. 배타도 경로 위에 있어야
     한다. 심볼릭 링크와 `..` 로 같은 파일을 다른 이름으로 부를 수 있으므로
-    정규화한 뒤 이름을 만든다 (`_assert_token_path_disjoint()` 가 이 경로가
-    authority namespace 밖임을 이미 보장한다).
+    정규화한 뒤 이름을 만든다 (자리를 `attempts_root_for_ledger()` 가 정하므로
+    authority namespace 밖인 것은 구조가 보장한다 — 57차 P0-1).
     """
     p = Path(token_file)
     try:
@@ -5109,12 +5130,18 @@ def _lifecycle_locks(leg_id: str, token_file=None, claims_root=None):
             yield cp                       # LOCK_ORDER: attempt_path → claim
 
 
-def open_leg_run(leg_id: str, run_spec: dict, source_digest: str, token_file,
+def open_leg_run(leg_id: str, run_spec: dict, source_digest: str,
                  ledger=None) -> LegClaim:
     """coordinator 가 실행권을 **한 번** 발급하고 소유 증명을 파일로 내놓는다.
 
     발급 자체는 `claim_planned_leg()` 이다 — 계획 대조·원자적 `O_EXCL`·원장
     `running` 전이가 전부 거기 있다. 여기서 더하는 것은 **전달 경로** 하나다.
+
+    ★ 57차 P0-1 — 그 경로를 **caller 가 더 이상 고르지 않는다.** 56차까지는
+      `token_file` 인자였고, 그것이 authority 파일을 겨눌 수 있는 sink 였다.
+      막는 방법이 blacklist 증설뿐이라 매 라운드 새 sink 가 하나씩 남았다
+      (56차 판정). 이제 자리는 `attempts_root_for_ledger()` 가, 이름은
+      `attempt_path_for()` 가 정하고, caller 가 넘기는 것은 `leg_id` 뿐이다.
     """
     # ★ 50차 P0 — **순서가 뒤집혀 있었다.** 49차는 claim 을 먼저 굳히고 token 을
     #   나중에 썼다. 그 사이에 죽으면 아무도 갖고 있지 않은 verifier 만 남고
@@ -5142,7 +5169,7 @@ def open_leg_run(leg_id: str, run_spec: dict, source_digest: str, token_file,
     #   배타는 경로 위에 둔다 (`_attempt_path_lock`), 그리고 free-check 부터
     #   발급 확정까지 **그 안**에서 끝낸다.
     claims_root = claims_root_for_ledger(ledger)
-    _assert_token_path_disjoint(token_file, claims_root, ledger)
+    token_file = attempt_path_for(leg_id, ledger=ledger)
     with _lifecycle_locks(leg_id, token_file, claims_root) as cp:
         if cp.is_file():
             raise PreserveError(
@@ -5150,11 +5177,6 @@ def open_leg_run(leg_id: str, run_spec: dict, source_digest: str, token_file,
                 f"{leg_id!r} 은 이미 실행 중이다 (claim: {cp}) — 두 번째 실행을 "
                 "시작할 수 없다. 중단된 실행을 이으려면 그 실행의 소유 증명 "
                 "파일로 `attach_leg_run()` 을 쓰라")
-        # ★ 52차 P0-1 — 그 경로에 **다른 다리의 살아 있는** 소유 증명이 있으면
-        #   덮지 않는다. 51차 경계는 claim namespace 였고 다른 다리의 전달
-        #   통로는 안 봤다 — 그래서 같은 `--attempt-file` 을 쓴 두 정상 leg 중
-        #   먼저 연 쪽이 자기 실행에 못 붙었다 (리뷰어 실측).
-        _assert_token_file_free_for(token_file, leg_id, claims_root)
         token = _new_token()
         attempt_hint = uuid.uuid4().hex
         write_token_file(token_file, token, leg_id, attempt_hint)
@@ -5172,9 +5194,15 @@ def open_leg_run(leg_id: str, run_spec: dict, source_digest: str, token_file,
             raise
 
 
-def attach_leg_run(leg_id: str, token_file, ledger=None) -> LegClaim:
-    """넘겨받은 소유 증명으로 **같은 실행**에 붙는다 (phase process 가 쓴다)."""
-    return resume_claim(leg_id, token=read_token_file(token_file, leg_id),
+def attach_leg_run(leg_id: str, ledger=None) -> LegClaim:
+    """넘겨받은 소유 증명으로 **같은 실행**에 붙는다 (phase process 가 쓴다).
+
+    ★ 57차 P0-1 — 넘기는 것이 pathname 에서 `leg_id` 로 바뀌었다. 49차 P0-3 이
+      만든 성질(coordinator 가 한 번 발급 → 여러 phase process 가 같은 실행에
+      붙는다)은 그대로다 — 자리를 양쪽이 **같은 규칙**으로 유도하기 때문이다.
+    """
+    tok = attempt_path_for(leg_id, ledger=ledger)
+    return resume_claim(leg_id, token=read_token_file(tok, leg_id),
                         ledger=ledger)
 
 
@@ -5195,8 +5223,7 @@ def inspect_leg_run(leg_id: str, ledger=None) -> dict:
                                   if p in (rec.get("phases") or {}))}
 
 
-def release_leg_run(leg_id: str, token=None, token_file=None,
-                    ledger=None) -> dict:
+def release_leg_run(leg_id: str, token=None, ledger=None) -> dict:
     """실행권을 **되돌린다** — 계획을 `planned` 로 돌리고 claim 을 지운다.
 
     ★ 49차 P0-3 — 48차에는 이 방향이 없었다. `--dry-run` 은 claim 을 따고
@@ -5208,10 +5235,10 @@ def release_leg_run(leg_id: str, token=None, token_file=None,
       crash 로 남은 claim 을 사람이 정리하는 통로이기도 하다. 소유 증명을
       요구하므로 남의 실행을 취소할 수는 없다.
     """
-    if (token is None) == (token_file is None):
-        raise TypeError(
-            "release_leg_run() 는 `token` 또는 `token_file` 중 정확히 하나를 "
-            "요구한다 — 소유 증명 없이 남의 실행권을 취소할 수 없다")
+    # ★ 57차 P0-1 — `token_file` 인자를 없앴다. 소유 증명은 여전히 **필수**다
+    #   (남의 실행권을 취소할 수 없다). finalize 와 같다 — credential 의 의미는
+    #   그대로이고, 그것이 담긴 파일의 자리만 lifecycle 이 정한다.
+    token_file = attempt_path_for(leg_id, ledger=ledger)
     if token is None:
         token = read_token_file(token_file, leg_id)
     # ★ 49차 P0-6 — 이미 닫힌 다리는 되돌릴 수 없다. crash 로 남은 claim 이면
@@ -5226,9 +5253,7 @@ def release_leg_run(leg_id: str, token=None, token_file=None,
     # ★ 52차 P0-1 — claim 폐기와 token 삭제가 **한 임계 구역** 안이다. 51차는
     #   `_abandon_claim()` 이 lock 을 놓은 뒤 token 을 지웠고, 그 사이에 정상
     #   발급이 들어오면 새 attempt 의 credential 이 지워졌다 (리뷰어 실측).
-    _abandon_claim(claim, ledger=ledger,
-                   token_file=token_file if token_file is not None else None,
-                   token=token)
+    _abandon_claim(claim, ledger=ledger, token_file=token_file, token=token)
     return {"leg_id": leg_id, "attempt_id": claim.attempt_id,
             "status": "planned"}
 
@@ -5323,8 +5348,7 @@ def _abandon_claim(claim: LegClaim, ledger=None, token_file=None,
             _unlink_token_generation(token_file, token)
 
 
-def precheck_leg_run(leg_id: str, source_digest: str, token_file=None,
-                     ledger=None) -> dict:
+def precheck_leg_run(leg_id: str, source_digest: str, ledger=None) -> dict:
     """실행 **전** 사전 점검 — 새 발급인가, 내가 가진 재개인가 (49차 P0-3).
 
     48차 `run.sh` 사전검사는 `assert_planned_leg()` 만 불렀고 그것은 `planned`
@@ -5337,14 +5361,17 @@ def precheck_leg_run(leg_id: str, source_digest: str, token_file=None,
     """
     path = _claim_path(leg_id, claims_root_for_ledger(ledger))
     if path.is_file():
-        if token_file is None:
+        # ★ 57차 P0-1 — 소유 증명의 자리를 lifecycle 이 정한다. 그것이 없으면
+        #   이 claim 은 이 pipeline 의 것이 아니다 (또는 발급이 반쯤 죽었다).
+        token_file = attempt_path_for(leg_id, ledger=ledger)
+        if not token_file.is_file():
             raise PreserveError(
                 "plan",
                 f"{leg_id!r} 은 이미 실행 중이다 (claim: {path}) — 두 번째 "
-                "실행을 시작할 수 없다. 중단된 실행을 이으려면 그 실행의 "
-                "소유 증명 파일을 주라")
-        claim = resume_claim(leg_id,
-                             token=read_token_file(token_file), ledger=ledger)
+                f"실행을 시작할 수 없다. 이 실행의 소유 증명이 {token_file} 에 "
+                "없다: 다른 pipeline 의 실행이거나 발급이 중단된 것이다")
+        claim = resume_claim(leg_id, token=read_token_file(token_file, leg_id),
+                             ledger=ledger)
         if claim.source_digest != source_digest:
             raise PreserveError(
                 "plan",
@@ -5492,7 +5519,7 @@ def _already_finalized(leg_id: str, token: str, ledger=None) -> dict | None:
 
 
 def finalize_leg(leg_id: str, evidence: dict, ledger=None, *,
-                 token: str | None = None, token_file=None) -> dict:
+                 token: str | None = None) -> dict:
     """모든 phase 가 끝난 claim 을 **executed 로 닫는다** (47차 P0-1).
 
     계획 roster 에서 빼고 실행 roster 와 실행 기록에 넣는다. 이 전이가 없으면
@@ -5506,10 +5533,11 @@ def finalize_leg(leg_id: str, evidence: dict, ledger=None, *,
     """
     import yaml
 
-    if (token is None) == (token_file is None):
-        raise TypeError(
-            "finalize_leg() 는 `token` 또는 `token_file` 중 정확히 하나를 "
-            "요구한다 — 소유 증명 없이 원장을 닫을 수 없다")
+    # ★ 57차 P0-1 — `token_file` 인자를 없앴다. 소유 증명의 **필수성**은 그대로
+    #   다 (49차 P0-3). **credential 의 의미는 바뀌지 않는다** — 56차도 caller 가
+    #   준 경로의 파일에서 token 을 읽었고, 지금은 같은 읽기를 lifecycle 이
+    #   정한 경로에서 한다. 바뀐 것은 그 경로를 **누가 고르는가** 하나다.
+    token_file = attempt_path_for(leg_id, ledger=ledger)
     if token is None:
         token = read_token_file(token_file, leg_id)
 

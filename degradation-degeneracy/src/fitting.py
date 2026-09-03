@@ -867,7 +867,7 @@ def _assert_fit_leg_is_planned(out_dir, leg: str | None) -> None:
 
 
 def _assert_fit_authorized(live_fit: dict, out_dir, leg: str | None = None,
-                           token_file=None):
+                           may_open: bool = False):
     """fit 쪽 계획 gate (48차 P0-8 · P0-5 · 49차 P0-5).
 
     grid 와 **같은 spec** 을 만든다: 자기 축은 살아 있는 입력에서
@@ -892,8 +892,16 @@ def _assert_fit_authorized(live_fit: dict, out_dir, leg: str | None = None,
     fit_axis = dict(live_fit,
                     in_digest=(declared.get("fit") or {}).get("in_digest"))
     spec = leg_run_spec(leg, declared.get("grid") or {}, fit_axis)
+    # ★ 57차 P0-1 — grid 와 같은 규칙: worker 가 자기 credential 을 명시적으로
+    #   읽어 넘긴다 (gate 는 스스로 읽지 않는다 — 48차 P0-3).
+    from tools.preserve import attempt_path_for, read_token_file
+
+    tok = attempt_path_for(leg, ledger=None) if leg else None
+    token = read_token_file(tok, leg) if tok is not None and tok.is_file() \
+        else None
     claim = assert_run_is_authorized(leg, "fit", [out_dir], spec,
-                                     source_digest(), token_file=token_file)
+                                     source_digest(), token=token,
+                                     may_open=may_open)
     return claim, fit_axis
 
 
@@ -906,7 +914,7 @@ def run_fit(in_dir, out_dir, obj_cfg: dict, objectives: dict, bounds: dict,
             method: str = "Nelder-Mead",
             halfcell_method: str = "ocp",
             halfcell_kw: dict | None = None,
-            leg: str | None = None, token_file=None) -> dict:
+            leg: str | None = None, may_open: bool = False) -> dict:
     """grid 결과 전체에 fitting 수행 → fits.parquet.
 
     subset: 이 cond_id 집합만 fitting (Phase 6 가중치 sweep의 층화 표본용).
@@ -958,7 +966,7 @@ def run_fit(in_dir, out_dir, obj_cfg: dict, objectives: dict, bounds: dict,
                                bounds, bounds_preset, n_restarts, nproc,
                                use_noisy, limit, base_config, reference, resume,
                                subset, warm_start, adaptive, method,
-                               halfcell_method, halfcell_kw, leg, token_file)
+                               halfcell_method, halfcell_kw, leg, may_open)
     finally:
         _discard_staged_inputs(_staged)
 
@@ -967,7 +975,7 @@ def _run_fit_staged(_staged, in_dir, out_dir, obj_cfg, objectives, bounds,
                     bounds_preset, n_restarts, nproc, use_noisy, limit,
                     base_config, reference, resume, subset, warm_start,
                     adaptive, method, halfcell_method, halfcell_kw, leg,
-                    token_file) -> dict:
+                    may_open) -> dict:
     """`run_fit()` 본체 — 입력이 이미 staging 사본으로 고정된 뒤."""
     from pathlib import Path
 
@@ -986,7 +994,7 @@ def _run_fit_staged(_staged, in_dir, out_dir, obj_cfg, objectives, bounds,
                           base_config=_staged["base_config"],
                           bytes_root=_staged["root"])
     claim, _fit_axis = _assert_fit_authorized(_live, out_dir, leg=leg,
-                                              token_file=token_file)
+                                              may_open=may_open)
     _assert_fit_input_is_authorized(claim, _fit_axis, _staged["in_dir"])
     out_dir.mkdir(parents=True, exist_ok=True)
     acquire_run_lock(out_dir, ".fit.lock")
@@ -1574,8 +1582,11 @@ def main() -> None:
     ap.add_argument("--leg", default=None,
                     help="`LEG_PRESERVATION.yaml` 의 `planned:` 에서 찾을 다리 "
                          "이름 (48차 P0-5 — 없으면 LEG/CANONICAL_RUN 환경변수)")
-    ap.add_argument("--attempt-file", dest="attempt_file", default=None,
-                    help="★ 49차 P0-3 — coordinator 가 발급한 실행권의 소유 "
+    ap.add_argument("--may-open", dest="may_open", action="store_true",
+                    help="★ 57차 P0-1 — 이 호출이 **발급자**임을 밝힌다 "
+                         "(coordinator: `./run.sh`). 없으면 이미 발급된 "
+                         "실행에만 붙는다. 소유 증명의 자리는 lifecycle 이 "
+                         "정하므로 경로 인자는 없다."
                          "증명 파일 경로. grid 가 남긴 그 파일을 주면 같은 "
                          "실행에 붙는다 (주지 않으면 grid 가 이미 잡은 다리를 "
                          "두 번째로 시작하려는 것이라 거부된다)")
@@ -1649,7 +1660,7 @@ def main() -> None:
     bounds = presets[args.bounds]
 
     summary = run_fit(
-        leg=args.leg, token_file=args.attempt_file,
+        leg=args.leg, may_open=args.may_open,
         in_dir=args.in_dir, out_dir=args.out or args.in_dir,
         obj_cfg=cfg, objectives=objectives, bounds=bounds,
         bounds_preset=args.bounds,

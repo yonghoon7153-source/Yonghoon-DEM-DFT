@@ -22,7 +22,6 @@ LEG="${LEG:-}"                    # 계획 index 의 다리 이름 (비우면 CA
 #   자체는 argv 에 절대 싣지 않는다 — `ps` 로 새어 나간다). 비우면 다리 이름에서
 #   유도한다. 48차에는 이 통로가 없어서 `--mode all` 이 grid 직후 fit 에서
 #   자기 자신의 claim 때문에 거부됐다.
-ATTEMPT_FILE="${ATTEMPT_FILE:-}"
 
 # 열화 모드 축 — "start:stop:step" | "a,b,c" | "0.1" | "none"
 LLI="none"
@@ -86,10 +85,6 @@ MODE
   --leg NAME             `LEG_PRESERVATION.yaml` 의 `planned:` 에서 찾을 다리
                          이름. 비우면 CANONICAL_RUN. grid·fit·all 은 이 gate 를
                          **반드시** 지난다 (건너뛰는 환경변수는 없다).
-  --attempt-file PATH    ★ 49차 P0-3 — 실행권의 소유 증명 파일. grid 가 발급해
-                         여기 두고 fit 이 그것으로 같은 실행에 붙는다. 비우면
-                         `results/_attempts/<leg>.token`. 파일 내용(token)은
-                         argv 로 넘기지 않는다 — `ps` 로 새어 나가기 때문이다.
 
 열화 모드 축   (형식: 0:0.2:0.02 | 0,0.05,0.1 | 0.1 | none)
   --lli VAL              LLI 축
@@ -171,7 +166,6 @@ while [[ $# -gt 0 ]]; do
   case "$1" in
     --mode)          MODE="$2"; shift 2 ;;
     --leg)           LEG="$2"; export LEG; shift 2 ;;   # ★ 48차 P0-5 — export
-    --attempt-file)  ATTEMPT_FILE="$2"; shift 2 ;;      # ★ 49차 P0-3
     --config)        CONFIG="$2"; shift 2 ;;
     --lli)           LLI="$2"; shift 2 ;;
     --lam-pe)        LAM_PE="$2"; shift 2 ;;
@@ -249,21 +243,13 @@ export MPLBACKEND="Agg"          # headless 강제
 #: 못한다. 다만 그렇게 하면 그 산출은 정본이 될 수 없다 (계약 §13.4).
 SMOKE_NS="results/_smoke"
 
-#: 소유 증명 파일의 기본 자리. 0600 으로 만든다 (`tools.preserve.write_token_file`).
-#: `--attempt-file` 로 덮어쓸 수 있다.
-#:
-#: ★ 51차 P1-P — claim root **밖**이다. 50차는 `results/_claims/<leg>.token`
-#: 이었고, 그러면 전달 통로와 claim authority 가 같은 namespace 를 쓴다.
-#: caller 가 `--attempt-file results/_claims/<leg>.claim` 을 주면 token-first
-#: 쓰기가 authority 경로를 점유했다 (리뷰어 실측: 그 뒤 모든 claim reader 가
-#: `JSONDecodeError` 를 만나고 정상 cleanup 도 막힌다). 이제
-#: `_assert_token_path_disjoint()` 가 이 경계를 강제하므로 기본값도 밖에 둔다.
-attempt_file_for() {
-  local leg="$1"
-  if [[ -n "$ATTEMPT_FILE" ]]; then echo "$ATTEMPT_FILE"; else
-    echo "results/_attempts/${leg}.token"
-  fi
-}
+#: ★ 57차 P0-1 — **소유 증명 파일의 자리를 여기서 정하지 않는다.**
+#: 51~56차는 이 자리를 shell 이 골라 `--attempt-file` 로 넘겼고, 그 인자가
+#: authority 파일을 겨눌 수 있는 write-anywhere sink 였다. 막는 수단이
+#: blacklist 증설뿐이라 매 라운드 새 sink 가 하나씩 남았다 (56차 판정).
+#: 이제 자리는 `tools.preserve.attempts_root_for_ledger()` 가 원장에서
+#: 유도하고, 이름은 `attempt_path_for(leg)` 가 정한다. shell 이 넘기는 것은
+#: 다리 이름과 "내가 발급자다"(`--may-open`) 뿐이다.
 
 plan_gate() {
   local leg="${LEG:-$CANONICAL_RUN}"
@@ -278,19 +264,19 @@ plan_gate() {
   #   48차는 `assert_planned_leg()` 만 불렀고 그것은 `planned` 만 통과시켰다.
   #   그래서 grid 가 계획을 `running` 으로 옮긴 직후 같은 pipeline 의 fit
   #   사전검사가 **자기 자신 때문에** 거부됐다 — 정상 실행이 완주 불가였다.
-  python - "$leg" "$OUT" "${IN_DIR:-}" "$(attempt_file_for "$leg")" <<'PYGATE'
+  python - "$leg" "$OUT" "${IN_DIR:-}" <<'PYGATE'
 import sys
 from src.io import source_digest
 from tools.preserve import (SMOKE_NAMESPACE, is_inside_namespace,
                             precheck_leg_run, PreserveError)
 
-leg, out, in_dir, tok = sys.argv[1], sys.argv[2], sys.argv[3], sys.argv[4]
+leg, out, in_dir = sys.argv[1], sys.argv[2], sys.argv[3]
 paths = [p for p in (out, in_dir) if p]
 if paths and all(is_inside_namespace(p, SMOKE_NAMESPACE) for p in paths):
     print("· 실행 전 gate 면제 — 모든 경로가 smoke namespace 안이다 (정규 격리)")
     raise SystemExit(0)
 try:
-    e = precheck_leg_run(leg, source_digest(), token_file=(tok or None))
+    e = precheck_leg_run(leg, source_digest())
 except PreserveError as exc:
     print(f"❌ 실행 전 gate 거부 — {exc}", file=sys.stderr)
     raise SystemExit(1)
@@ -310,15 +296,15 @@ PYGATE
 #   기록" 의 마지막 변이 하나가 통째로 비어 있었다. lifecycle 은 닫히지
 #   않으면 lifecycle 이 아니라 그냥 열어 두기다.
 leg_finalize() {
-  local d="$1" tokf="$2"
+  local d="$1"
   local leg="${LEG:-$CANONICAL_RUN}"
-  python - "$leg" "$d" "$tokf" <<'PYFIN'
+  python - "$leg" "$d" <<'PYFIN'
 import sys
 from src.io import source_digest
 from tools.preserve import (SMOKE_NAMESPACE, is_inside_namespace,
                             finalize_leg, inspect_leg_run, PreserveError)
 
-leg, out, tok = sys.argv[1], sys.argv[2], sys.argv[3]
+leg, out = sys.argv[1], sys.argv[2]
 if is_inside_namespace(out, SMOKE_NAMESPACE):
     print("· 실행 기록 닫기 면제 — smoke namespace 다 (정본 실행이 아니다)")
     raise SystemExit(0)
@@ -326,8 +312,7 @@ try:
     view = inspect_leg_run(leg)
     r = finalize_leg(leg, {"leg_source_digest": source_digest(),
                            "cohorts": [view["cohort_id"]],
-                           "out": out},
-                     token_file=tok)
+                           "out": out})
 except PreserveError as exc:
     print(f"\u274c 실행 기록을 닫지 못했다 — {exc}", file=sys.stderr)
     raise SystemExit(1)
@@ -386,7 +371,7 @@ case "$MODE" in
     plan_gate
     # ★ 49차 P0-3 — 실행권의 소유 증명을 **경로로** 넘긴다. 처음이면 grid 가
     #   여기에 발급해 두고, fit 이 그 파일로 같은 실행에 붙는다.
-    GRID_ARGS+=(--attempt-file "$(attempt_file_for "${LEG:-$CANONICAL_RUN}")")
+    GRID_ARGS+=(--may-open)          # ★ 57차 P0-1 — 발급자는 coordinator
     exec python -m src.grid "${GRID_ARGS[@]}"
     ;;
 
@@ -425,7 +410,7 @@ case "$MODE" in
       exit 0
     fi
     plan_gate                       # ★ 46차 P0-11
-    FIT_ARGS+=(--attempt-file "$(attempt_file_for "${LEG:-$CANONICAL_RUN}")")
+    FIT_ARGS+=(--may-open)           # ★ 57차 P0-1
     exec python -m src.fitting "${FIT_ARGS[@]}"
     ;;
 
@@ -434,21 +419,20 @@ case "$MODE" in
     # 중단 뒤 이어 돌린 경우에는 여기로 닫는다. 닫히지 않은 계획은 `running` 에
     # 남아 그 다리를 다시 시작할 수도 없게 만든다.
     D="${IN_DIR:-$OUT}"
-    leg_finalize "$D" "$(attempt_file_for "${LEG:-$CANONICAL_RUN}")"
+    leg_finalize "$D"
     exit 0
     ;;
 
   release)    # ★ 49차 P0-3 — 실행권을 **되돌린다** (중단된 실행 정리)
     # dry-run 은 스스로 되돌리지만, 계산 도중 죽어 claim 만 남은 경우는 사람이
     # 정리해야 한다. 소유 증명이 있어야 하므로 남의 실행은 취소할 수 없다.
-    python - "${LEG:-$CANONICAL_RUN}" \
-             "$(attempt_file_for "${LEG:-$CANONICAL_RUN}")" <<'PYREL'
+    python - "${LEG:-$CANONICAL_RUN}" <<'PYREL'
 import sys
 from tools.preserve import release_leg_run, PreserveError
 
-leg, tok = sys.argv[1], sys.argv[2]
+leg = sys.argv[1]
 try:
-    r = release_leg_run(leg, token_file=tok)
+    r = release_leg_run(leg)
 except PreserveError as exc:
     print(f"\u274c 실행권을 되돌리지 못했다 — {exc}", file=sys.stderr)
     raise SystemExit(1)
@@ -539,8 +523,7 @@ PYREL
     # ★ 49차 P0-3 — `all` 이 **coordinator** 다. 소유 증명 경로 하나를 정해
     #   grid 와 fit 두 하위 호출에 똑같이 넘긴다. 이것이 없으면 grid 가 딴
     #   실행권을 fit 이 이어받을 방법이 없어 pipeline 이 완주하지 못한다.
-    _ATTEMPT="$(attempt_file_for "${LEG:-$CANONICAL_RUN}")"
-    GRID_ARGS+=(--attempt-file "$_ATTEMPT")
+    GRID_ARGS+=(--may-open)          # ★ 57차 P0-1
     [[ "${NOISE_SET:-false}" == "true" ]] && GRID_ARGS+=(--noise "$NOISE")
     [[ -n "${NOISE_SEED:-}" ]] && GRID_ARGS+=(--noise-seed "$NOISE_SEED")
     GRID_ARGS+=("${RESUME_FLAG[@]}")
@@ -555,7 +538,7 @@ PYREL
       [[ -n "$_hca" ]] && FIT_ARGS+=(--halfcell-arg "$_hca")
     done
     [[ -n "$LEG" ]] && FIT_ARGS+=(--leg "$LEG")       # ★ 46차 P0-11
-    FIT_ARGS+=(--attempt-file "$_ATTEMPT")            # ★ 49차 P0-3
+    FIT_ARGS+=(--may-open)           # ★ 49차 P0-3 · 57차 P0-1
     [[ -n "$OBJECTIVE" ]] && FIT_ARGS+=(--objective "$OBJECTIVE")
     [[ "$N_RESTARTS" != "auto" ]] && FIT_ARGS+=(--n-restarts "$N_RESTARTS")
     [[ "$CLEAN" == "true" ]] && FIT_ARGS+=(--clean)
@@ -577,7 +560,7 @@ PYREL
     # ★ 49차 P0-3 — **여기서 닫는다.** 48차는 `phase_done()`·`finalize_leg()`
     #   을 만들어 놓고 어느 production 경로도 부르지 않았다. 그래서 계획은
     #   `running` 에 영원히 남고, 그 다리는 다시 시작할 수도 닫을 수도 없었다.
-    leg_finalize "$D" "$_ATTEMPT"
+    leg_finalize "$D"
     "$0" --mode score --in "$D"
     exec "$0" --mode report --in "$D"
     ;;

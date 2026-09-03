@@ -376,7 +376,7 @@ def write_curves_manifest(out_dir, cfg: dict, conditions=None, extra=None) -> Pa
 
 def _assert_grid_authorized(cfg: dict, out_dir, conditions=None,
                             dry_run: bool = False, leg: str | None = None,
-                            token_file=None):
+                            may_open: bool = False):
     """계획 gate — smoke namespace 밖이면 승인된 claim 이 있어야 한다.
 
     ★ 48차 P0-5 — 승인 spec 이 **실행을 고정한다.** 47차 spec 은
@@ -411,8 +411,17 @@ def _assert_grid_authorized(cfg: dict, out_dir, conditions=None,
     declared = declared_leg_run_spec(leg)
     live_grid = live_grid_axis(cfg, conditions, out_dir)
     spec = leg_run_spec(leg, live_grid, declared.get("fit") or {})
+    # ★ 57차 P0-1 — worker 는 자기 credential 을 **명시적으로** 읽어 넘긴다.
+    #   gate 가 스스로 파일을 읽으면 다리 이름만 아는 호출이 남의 실행에 붙는다
+    #   (48차 P0-3). 자리는 lifecycle 이 정하고, 읽는 결정은 여기서 한다.
+    from tools.preserve import attempt_path_for, read_token_file
+
+    tok = attempt_path_for(leg, ledger=None) if leg else None
+    token = read_token_file(tok, leg) if tok is not None and tok.is_file() \
+        else None
     return assert_run_is_authorized(leg, "grid", [out_dir], spec,
-                                    source_digest(), token_file=token_file)
+                                    source_digest(), token=token,
+                                    may_open=may_open)
 
 def _discharged_kw(cfg: dict, claim) -> dict:
     """승인 축이 정한 **완방상태 입력 대상** 을 `get_discharged_state()` 인자로.
@@ -533,7 +542,7 @@ def _cfg_digest(cfg: dict) -> str:
 def run_grid(cfg: dict, conditions: list[Condition], nproc: int,
              chunk_size: int, out_dir: str | Path,
              resume: bool = False, dry_run: bool = False,
-             leg: str | None = None, token_file=None) -> dict:
+             leg: str | None = None, may_open: bool = False) -> dict:
     """조합 격자 실행. 반환: 요약 dict."""
     from joblib import Parallel, delayed
     from tqdm import tqdm
@@ -544,7 +553,7 @@ def run_grid(cfg: dict, conditions: list[Condition], nproc: int,
     #   계획을 전혀 보지 않았다. mkdir 도 부작용이므로 그보다 먼저 본다.
     _claim = _assert_grid_authorized(cfg, out_dir, conditions=conditions,
                                      dry_run=dry_run, leg=leg,
-                                     token_file=token_file)
+                                     may_open=may_open)
     out_dir.mkdir(parents=True, exist_ok=True)
     protocol_name = cfg.get(GRID_PROTOCOL_KEY, "charge_first")
 
@@ -611,10 +620,7 @@ def run_grid(cfg: dict, conditions: list[Condition], nproc: int,
         if _claim is not None:
             from tools.preserve import release_leg_run
 
-            release_leg_run(_claim.leg_id, token=_claim.token,
-                            token_file=None)
-            if token_file is not None:
-                Path(token_file).unlink(missing_ok=True)
+            release_leg_run(_claim.leg_id, token=_claim.token)
             log.info("dry-run 이라 실행권을 되돌렸다 — 계획은 planned 로 남는다")
         return {"dry_run": True, "n_total": len(conditions), "n_todo": n,
                 "n_infeasible": len(infeasible), "est_min": est_min}
@@ -830,8 +836,11 @@ def main() -> None:
     ap.add_argument("--leg", default=None,
                     help="`LEG_PRESERVATION.yaml` 의 `planned:` 에서 찾을 다리 "
                          "이름 (48차 P0-5 — 없으면 LEG/CANONICAL_RUN 환경변수)")
-    ap.add_argument("--attempt-file", dest="attempt_file", default=None,
-                    help="★ 49차 P0-3 — coordinator 가 발급한 실행권의 소유 "
+    ap.add_argument("--may-open", dest="may_open", action="store_true",
+                    help="★ 57차 P0-1 — 이 호출이 **발급자**임을 밝힌다 "
+                         "(coordinator: `./run.sh`). 없으면 이미 발급된 "
+                         "실행에만 붙는다. 소유 증명의 자리는 lifecycle 이 "
+                         "정하므로 경로 인자는 없다."
                          "증명 파일 경로. 없으면 여기서 발급하고 그 자리에 "
                          "남겨 다음 phase(fit)가 같은 실행에 붙는다. token "
                          "자체는 argv 로 넘기지 않는다 (`ps` 로 새어 나간다)")
@@ -859,7 +868,7 @@ def main() -> None:
 
     summary = run_grid(cfg, conds, nproc=args.nproc, chunk_size=chunk,
                        out_dir=args.out, resume=args.resume, dry_run=args.dry_run,
-                       leg=args.leg, token_file=args.attempt_file)
+                       leg=args.leg, may_open=args.may_open)
     if args.tag and not summary.get("dry_run"):
         write_manifest(args.out, {"tag": args.tag})
     print(json.dumps(summary, ensure_ascii=False, indent=2))

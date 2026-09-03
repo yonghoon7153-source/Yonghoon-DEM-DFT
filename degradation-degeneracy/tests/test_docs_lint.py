@@ -10800,8 +10800,7 @@ def test_an_issuer_cannot_admit_a_run_into_a_cohort_that_froze_meanwhile(tmp_pat
 
     with mock.patch.object(P, "_new_token", hooked):
         try:
-            P.open_leg_run("L", _RUN_SPEC_GX, "0123456789abcdef", tok,
-                           ledger=led)
+            P.open_leg_run("L", _RUN_SPEC_GX, "0123456789abcdef", ledger=led)
         except P.PreserveError:
             pass                       # 거부도 정답이다 (그쪽이 더 낫다)
     t.join(10)
@@ -10851,7 +10850,7 @@ def test_an_issuer_refuses_while_a_freeze_is_half_committed(tmp_path):
 
     tok = rp.REPO / "_attempts" / "L.token"
     with pytest.raises(P.PreserveError) as ei:
-        P.open_leg_run("L", _RUN_SPEC_GX, "0123456789abcdef", tok, ledger=led)
+        P.open_leg_run("L", _RUN_SPEC_GX, "0123456789abcdef", ledger=led)
     assert "active" in str(ei.value) or "동결" in str(ei.value), str(ei.value)
     doc = yaml.safe_load(led.read_text(encoding="utf-8"))
     plan = next(e for e in doc["planned"] if e["leg_id"] == "L")["status"]
