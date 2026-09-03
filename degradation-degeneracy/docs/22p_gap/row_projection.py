@@ -656,6 +656,72 @@ def _match_capture_names(pat) -> list:
 MODULE_EFFECTS = "<module-effects>"
 
 
+def _is_pure_constant(node) -> bool:
+    """이 식이 **계산 없이** 값이 정해지는가 (57차 P0-6).
+
+    `A, B = 1, 2` 의 우변은 `Constant` 가 아니라 `Tuple[Constant, Constant]`
+    다. 그것을 계산으로 세면 상수 선언 전부가 module 효과가 되고, 그러면
+    MODULE_EFFECTS 가 사실상 모든 이름을 끌어와 44차가 그은 게시 경로 경계를
+    넘는다 (실측: `_PublishLock`·`_Authority` 가 producer 닫힘에 들어왔다).
+    """
+    import ast
+
+    if isinstance(node, ast.Constant):
+        return True
+    if isinstance(node, (ast.Tuple, ast.List, ast.Set)):
+        return all(_is_pure_constant(e) for e in node.elts)
+    if isinstance(node, ast.Dict):
+        return all(k is not None and _is_pure_constant(k) for k in node.keys) \
+            and all(_is_pure_constant(v) for v in node.values)
+    if isinstance(node, ast.UnaryOp):
+        return _is_pure_constant(node.operand)
+    return False
+
+
+def _import_time_heads(node) -> list:
+    """이 정의문의 머리 중 import 시 **계산을 실행하는** 식만 (57차 P0-6).
+
+    본문은 호출될 때 돌지만 머리는 정의될 때 **한 번 반드시** 돈다:
+    데코레이터 · 기본 인자(`def f(x=계산())`) · annotation · class base 와
+    keyword. 순수 상수·단순 이름만 있으면 계산이 아니다.
+    """
+    import ast
+
+    heads = list(getattr(node, "decorator_list", ()) or ())
+    args = getattr(node, "args", None)
+    if args is not None:
+        heads += [d for d in (list(getattr(args, "defaults", ()) or ())
+                              + list(getattr(args, "kw_defaults", ()) or ()))
+                  if d is not None]
+        for a in (list(getattr(args, "args", ()) or ())
+                  + list(getattr(args, "posonlyargs", ()) or ())
+                  + list(getattr(args, "kwonlyargs", ()) or ())):
+            if getattr(a, "annotation", None) is not None:
+                heads.append(a.annotation)
+    if getattr(node, "returns", None) is not None:
+        heads.append(node.returns)
+    heads += list(getattr(node, "bases", ()) or ())
+    heads += [k.value for k in (getattr(node, "keywords", ()) or ())]
+
+    # ★ 57차 P0-6 — **계산만 센다.** "상수가 아니면 계산" 으로 잡으면 평범한
+    #   타입 annotation(`-> str`, `x: Path`, `dict[str, str]`, `Path | None`)이
+    #   전부 걸리고, 그러면 이 파일의 거의 모든 함수가 MODULE_EFFECTS 에 묶여
+    #   **44차가 그은 게시 경로 경계를 넘는다** (실측: `_PublishLock`·
+    #   `_Authority` 가 producer 닫힘에 들어왔다).
+    #
+    #   위협은 "이름을 찾아본다" 가 아니라 "다른 계산을 끼워 넣는다" 다.
+    #   그래서 호출·lambda·내포·await, 그리고 **속성 접근**(교차 module 로
+    #   들어가는 유일한 문법)만 계산으로 센다. 이름·상수·이름의 첨자/이항은
+    #   조회일 뿐이고 producer 의미를 바꿀 수 없다.
+    compute = (ast.Call, ast.Lambda, ast.Await, ast.Attribute,
+               ast.ListComp, ast.SetComp, ast.DictComp, ast.GeneratorExp)
+    out = []
+    for h in heads:
+        if any(isinstance(sub, compute) for sub in ast.walk(h)):
+            out.append(ast.copy_location(ast.Expr(value=h), h))
+    return out
+
+
 def _expr_root_name(node):
     """값을 버리는 표현식이 **무엇의** 상태를 바꾸는가 (54차 P0-5).
 
@@ -706,6 +772,26 @@ def _module_defs(src: str) -> dict:
             if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef,
                                  ast.ClassDef)):
                 _bind(node.name, node)
+                # ★ 57차 P0-6 — 정의문에서 **import 시 실제로 도는** 부분은
+                #   본문이 아니라 머리다: 데코레이터 · 기본 인자 · annotation ·
+                #   class base 와 keyword. 그것들은 이름을 안 묶으므로 `_bind`
+                #   만으로는 닫힘에 들어오지 않았고, 아무도 그 이름을 읽지
+                #   않으면 계산이 통째로 봉인 밖에서 돌았다 (57차 실측:
+                #   digest 동일). `Expr` 를 뒤집었을 때와 같은 처리를 한다 —
+                #   **무조건** MODULE_EFFECTS 에 묶는다.
+                #
+                #   class **본문**은 여기서 다루지 않는다: 아래 `_visit` 가
+                #   같은 규칙으로 다시 훑으므로 두 번 묶으면 중복이다.
+                for head in _import_time_heads(node):
+                    # **머리 식만** 묶는다. 정의문 전체를 묶으면 본문까지
+                    # 닫힘에 들어오고, 그러면 게시 경로 함수 하나가
+                    # `@contextlib.contextmanager` 하나 때문에 producer
+                    # identity 안으로 끌려온다 (실측: `_authority`·
+                    # `_generation_dirfd`·`_lifecycle_lock`). 본문은 import 시
+                    # 돌지 않으므로 그것은 과잉이고 44차 경계를 넘는다.
+                    _bind(MODULE_EFFECTS, head)
+                if isinstance(node, ast.ClassDef):
+                    _visit(node.body, top or node)
                 continue
             _walrus(node, top)
             if isinstance(node, ast.Assign):
@@ -714,6 +800,11 @@ def _module_defs(src: str) -> dict:
                 for t in node.targets:
                     for name in _target_names(t):
                         _bind(name, top or node)
+                # ★ 57차 P0-6 — **우변은 import 시 돈다.** 아무도 그 이름을
+                #   읽지 않으면 계산이 닫힘 밖에서 실행된다 (실측: digest 동일).
+                #   상수 대입은 지나간다 — 그것은 계산이 아니다.
+                if not _is_pure_constant(node.value):
+                    _bind(MODULE_EFFECTS, top or node)
             elif isinstance(node, (ast.AnnAssign, ast.AugAssign)):
                 # ★ 52차 P0-7 — `AugAssign` 은 **기존 이름을 바꾼다.** 값을
                 #   정하는 문이므로 identity 안이다.
@@ -915,7 +1006,65 @@ def _source_reflection_locals(node) -> set:
 #: 대상이 **module 이름 공간**일 때만 거부하는 호출. `getattr(self, …)` 이나
 #: `getattr(node, …)` 처럼 객체의 속성을 읽는 정상 용법까지 막지 않는다 —
 #: 그것은 module-level 이름을 푸는 것이 아니므로 정적 닫힘이 잃는 것이 없다.
-_DYNAMIC_ON_NAMESPACE = ("globals", "locals", "vars", "getattr", "setattr")
+_DYNAMIC_ON_NAMESPACE = ("globals", "locals", "vars", "getattr", "setattr",
+                         # ★ 57차 P0-7 — 같은 능력의 다른 계보. `attrgetter` 는
+                         #   이름을 문자열로 받아 속성을 여는 callable 을
+                         #   **만든다** — `getattr` 을 한 번 미룬 것과 같다.
+                         "attrgetter")
+
+
+def _namespace_capabilities(src: str) -> set:
+    """이 module 에서 **namespace 를 여는 능력**을 가리키는 이름 전부 (57차 P0-7).
+
+    49~56차의 guard 는 호출식의 **함수 이름 철자**를 `_DYNAMIC_ON_NAMESPACE` 와
+    비교했다. 56차 판정이 그 방식을 겨눴다 — "문자열 철자 blacklist 증설은
+    불충분하다". 실제로 능력은 이름을 바꿔 부를 수 있다::
+
+        GET = getattr
+        GET(sc, "add_error_columns")      # 철자가 다르므로 통과했다
+        G2 = GET                          # 겹을 늘리면 끝이 없다
+        from operator import attrgetter as AG
+
+    seed(내장 이름)는 목록이어야 한다 — 그것은 언어가 정한다. 닫히지 않던 것은
+    seed 가 아니라 **그 seed 에 묶인 이름들**이었다. 그래서 module-level 의
+    `x = <seed 또는 이미 능력인 이름>` 과 `from … import <seed> as x` 를
+    **고정점까지** 따라간다.
+
+    정적으로 안 보이는 묶임(함수 안에서 만든 alias 등)은 여기서 안 잡힌다 —
+    그런 식은 `_exact_const` 가 값을 정할 수 없으므로 호출 지점에서
+    fail-closed 로 걸린다. 이 함수는 그 앞단의 **정적으로 보이는** 부분이다.
+    """
+    import ast
+
+    caps = set(_DYNAMIC_ON_NAMESPACE)
+    try:
+        tree = ast.parse(src)
+    except SyntaxError:                                   # pragma: no cover
+        return caps
+    # `from operator import attrgetter as AG` — 별칭도 같은 능력이다
+    for node in ast.walk(tree):
+        if isinstance(node, ast.ImportFrom):
+            for a in node.names:
+                if a.name in caps:
+                    caps.add(a.asname or a.name)
+    # `GET = getattr` · `G2 = GET` — 고정점까지 (겹수에 상한을 두지 않는다)
+    changed = True
+    while changed:
+        changed = False
+        for node in tree.body:
+            if not isinstance(node, (ast.Assign, ast.AnnAssign)):
+                continue
+            value = node.value
+            if not isinstance(value, ast.Name) or value.id not in caps:
+                continue
+            targets = (node.targets if isinstance(node, ast.Assign)
+                       else [node.target])
+            for t in targets:
+                for nm in ast.walk(t):
+                    if isinstance(nm, ast.Name) and nm.id not in caps:
+                        caps.add(nm.id)
+                        changed = True
+    return caps
 
 
 def _exact_const(node, consts: dict | None = None):
@@ -1020,7 +1169,8 @@ def _module_string_consts(src_tree) -> dict:
 
 def _assert_no_dynamic_resolution(node, where: str, mods: set,
                                   reflect: set | None = None,
-                                  consts: dict | None = None) -> None:
+                                  consts: dict | None = None,
+                                  caps: set | None = None) -> None:
     """계산 경로 안에서 **module-level 이름**을 동적으로 푸는가 (49차 P0-2).
 
     `globals()[...]` · `getattr(sc, ...)` · `eval` 은 module-level 이름을 실행
@@ -1036,12 +1186,28 @@ def _assert_no_dynamic_resolution(node, where: str, mods: set,
 
     # ★ 52차 P0-8 — 이 node 안의 지역 import 도 능력을 들여온다.
     banned = set(reflect or ()) | _source_reflection_locals(node)
+    # ★ 57차 P0-7 — 능력 집합. 안 주면 seed 만 (옛 호출자 호환).
+    caps = set(caps or _DYNAMIC_ON_NAMESPACE)
     for sub in ast.walk(node):
         # ★ 54차 P0-5 — `getattr(f, "__globals__")` 는 `f.__globals__` 와 같은
         #   계산이다. 53차 검사는 `Attribute`/`Name` node 만 봤으므로 이름을
         #   **문자열 상수**로 적으면 그대로 지나갔다 (리뷰어 실측: digest 동일 ·
         #   결과 1 → 9). 이름이 인자로 **건네지는** 자리에서만 본다 — 선언
         #   테이블 안의 같은 문자열은 데이터이지 접근이 아니다.
+        # ★ 57차 P0-7 — `sys.modules[__name__]` 은 **호출이 아니다.** module
+        #   객체를 그대로 집어 오므로 그 뒤 어떤 속성 접근도 module-level 이름을
+        #   동적으로 푸는 것과 같다. 호출식만 보던 guard 가 통째로 놓쳤다.
+        if isinstance(sub, ast.Subscript):
+            v = sub.value
+            if (isinstance(v, ast.Attribute) and v.attr == "modules"
+                    and isinstance(v.value, ast.Name) and v.value.id == "sys") \
+                    or (isinstance(v, ast.Name) and v.id == "modules"):
+                raise SystemExit(
+                    f"✗ producer 닫힘 안에서 module namespace 를 **통째로** "
+                    f"집는다: {where} 의 `sys.modules[...]` — 그 뒤의 속성 "
+                    "접근은 전부 동적 이름 풀이이고, 정적 닫힘이 볼 수 없다 "
+                    "(fail-closed)")
+
         if isinstance(sub, ast.Call):
             # ★ 55차 P0-5② — 54차는 **직접 Constant 인자만** 봤다. 리뷰어는
             #   같은 이름을 한 겹 감싸 그대로 통과시켰다 (실측: digest 동일 ·
@@ -1062,11 +1228,27 @@ def _assert_no_dynamic_resolution(node, where: str, mods: set,
             fname = (sub.func.id if isinstance(sub.func, ast.Name)
                      else sub.func.attr if isinstance(sub.func, ast.Attribute)
                      else None)
-            if fname in _DYNAMIC_ON_NAMESPACE:
+            if fname == "attrgetter" or (
+                    isinstance(sub.func, ast.Attribute)
+                    and sub.func.attr == "attrgetter"):
+                # ★ 57차 P0-7 — `attrgetter("x")` 는 **대상 없이** 이름만 받아
+                #   속성 접근자를 만든다. 무엇에 적용될지 이 자리에서 알 수
+                #   없으므로 module namespace 에 쓰이는지 가릴 수 없다 —
+                #   getattr 처럼 "대상이 mods 밖이면 정상" 이라는 좁히기가
+                #   성립하지 않는다. 닫힘 안에서는 거부한다 (fail-closed).
+                raise SystemExit(
+                    f"✗ producer 닫힘 안에서 이름 접근자를 **만든다**: "
+                    f"{where} 의 `attrgetter(...)` — 대상 없이 이름만 받는 "
+                    "능력이라 무엇을 여는지 이 자리에서 답할 수 없다. "
+                    "동적 namespace 접근과 같은 규칙이다 (fail-closed)")
+            if fname in caps:
                 # **이름 인자만** 본다. `getattr(obj, name, default)` 에서 이름은
                 # 두 번째다 — 대상 객체까지 상수로 요구하면 producer 자신의
                 # 정상 코드가 먼저 걸린다 (실측했다).
-                if fname not in ("getattr", "setattr"):
+                if fname == "attrgetter":
+                    # `attrgetter("x")` 는 이름이 **첫** 인자다 (getattr 과 다르다)
+                    name_args = list(sub.args)
+                elif fname not in ("getattr", "setattr"):
                     name_args = []
                 elif any(isinstance(a, ast.Starred) for a in sub.args):
                     # `*[...]` 이 있으면 몇 번째가 이름인지 셀 수 없다 — 전부 본다
@@ -1151,7 +1333,7 @@ def _assert_no_dynamic_resolution(node, where: str, mods: set,
                 f"✗ producer 닫힘 안에서 이름을 **동적으로** 푼다: "
                 f"{where} 의 `{fn}(...)` — 정적 닫힘이 볼 수 없는 계산은 "
                 "producer identity 밖이다. 직접 import 해서 부르라")
-        if fn not in _DYNAMIC_ON_NAMESPACE:
+        if fn not in caps:
             continue
         # 인자가 없으면 **현재 module 이름 공간** 전체다
         first = sub.args[0] if sub.args else None
@@ -1189,6 +1371,9 @@ def _producer_closure(src: str, scoring_src: str | None = None) -> dict[str, str
     _tree = _ast.parse(src)
     reflect = _source_reflection_locals(_tree)
     consts = _module_string_consts(_tree)          # 55차 P0-5②
+    # ★ 57차 P0-7 — 철자가 아니라 **능력**을 본다. `GET = getattr` 같은
+    #   module-level alias 를 고정점까지 따라가 같은 규칙을 먹인다.
+    caps = _namespace_capabilities(src)
 
     missing = [x for x in _COMPUTE_NAMES if x not in defs]
     if missing:
@@ -1228,7 +1413,8 @@ def _producer_closure(src: str, scoring_src: str | None = None) -> dict[str, str
         #   **모든** 노드에 대해 동적 이름 풀이를 거부한다.
         # ★ 52차 P0-7 — 한 이름에 묶인 문이 여럿이면 **전부** 본다.
         for node in nodes:
-            _assert_no_dynamic_resolution(node, key, mods, reflect, consts)
+            _assert_no_dynamic_resolution(node, key, mods, reflect, consts,
+                                          caps)
         out[key] = "\n".join(_ast_normal_node(n) for n in nodes)
         for sub_node in [x for n in nodes for x in ast.walk(n)]:
             # ★ 49차 P0-2 — `sc.foo` (Import + Attribute). 48차는 이 문법을

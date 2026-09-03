@@ -11783,3 +11783,142 @@ def test_the_checker_actually_consumes_the_execution_receipt(tmp_path):
                     encoding="utf-8")
     assert mr._assert_execution_is_current([str(good)]) == 1, (
         "본문과 digest 가 어긋난 영수증이 통과했다")
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# 57차 P0-7 — namespace guard 가 **호출 대상의 철자**를 본다
+#
+# 56차 판정: "문자열 철자 blacklist 증설은 불충분하다." 49~56차가 이 guard 를
+# 키워 온 방식이 정확히 그것이다 — `_DYNAMIC_ON_NAMESPACE` 라는 이름 목록에
+# `globals`·`locals`·`vars`·`getattr`·`setattr` 를 적어 두고 **호출식의 함수
+# 이름이 그 철자와 같은지** 본다. 그래서 같은 능력을 다른 이름으로 부르면
+# 그냥 지나간다:
+#
+#     GET = getattr                 # module-level alias
+#     GET(sc, "add_error_columns")  # 철자가 다르므로 통과
+#
+#     from operator import attrgetter
+#     attrgetter("add_error_columns")(sc)
+#
+#     sys.modules[__name__]         # 호출조차 아니다 — module namespace 자체
+#
+# 철자가 아니라 **능력(capability)** 을 봐야 한다: 어떤 이름이 namespace 를
+# 여는 호출 가능 객체에 묶여 있는가를 data-flow 로 따라간다.
+# ─────────────────────────────────────────────────────────────────────────────
+
+@pytest.mark.parametrize("escape", [
+    # ① module-level alias — 능력을 다른 이름으로 부른다
+    "GET(sc, 'add_error_columns')(df)",
+    # ② 한 겹 더 — alias 의 alias
+    "G2(sc, 'add_error_columns')(df)",
+    # ③ operator.attrgetter — 같은 능력, 다른 계보
+    "attrgetter('add_error_columns')(sc)(df)",
+    # ④ 자기 module namespace 를 통째로 집는다 (호출이 아니다)
+    "sys.modules[__name__].add_error_columns(df)",
+])
+def test_the_namespace_guard_follows_capability_not_spelling(escape):
+    """★ 57차 P0-7 — 능력을 다른 이름으로 부르면 지나간다.
+
+    `_DYNAMIC_ON_NAMESPACE` 는 철자 목록이고, 목록에 이름을 더 적는 것으로는
+    닫히지 않는다 (56차 판정). alias 는 무한히 만들 수 있고, `attrgetter` 는
+    아예 다른 계보이며, `sys.modules[__name__]` 은 호출조차 아니다.
+
+    요구: **묶임을 따라가서** 그 이름이 namespace 를 여는 능력을 가리키면
+    같은 규칙을 먹인다. 정적으로 답할 수 없으면 fail-closed.
+    """
+    rp = _rp()
+    sc = (_REPO / "src" / "scoring.py").read_text(encoding="utf-8")
+    src = (
+        "import sys\n"
+        "import src.scoring as sc\n"
+        "from operator import attrgetter\n"
+        "GET = getattr\n"
+        "G2 = GET\n"
+        "def _cell(x):\n    return x\n"
+        "def _restart_list(x):\n    return x\n"
+        "def _restart_facts(x):\n    return x\n"
+        "def _add_multistart_blocks(x):\n    return x\n"
+        "def _analyzer_provenance(x):\n    return x\n"
+        f"def score_canonical(df):\n    return {escape}\n"
+        "def build(x):\n    return x\n"
+    ) + "".join(f"def {n}(*a, **k):\n    return None\n"
+                for n in rp._PRODUCER_CUT)
+    with pytest.raises(SystemExit) as ei:
+        rp._producer_semantic_over(src, sc)
+    msg = str(ei.value)
+    assert "동적" in msg or "namespace" in msg or "능력" in msg, msg
+
+
+def test_the_capability_set_is_derived_not_hardcoded():
+    """★ 57차 P0-7 — 능력 집합이 **소스에서 유도**된다는 것을 못 박는다.
+
+    seed(내장 이름)는 목록이어야 한다 — 그것 자체는 언어가 정한다. 닫히지
+    않던 것은 seed 가 아니라 **그 seed 에 묶인 이름들**이었다. 유도 함수가
+    alias 를 실제로 따라가는지 직접 본다.
+    """
+    rp = _rp()
+    caps = rp._namespace_capabilities(
+        "import sys\n"
+        "from operator import attrgetter as AG\n"
+        "GET = getattr\n"
+        "G2 = GET\n"
+        "G3 = G2\n"
+        "SAFE = len\n")
+    for want in ("getattr", "GET", "G2", "G3", "AG", "attrgetter"):
+        assert want in caps, f"{want} 가 능력 집합에 없다: {sorted(caps)}"
+    assert "SAFE" not in caps, "무해한 별칭까지 능력으로 셌다"
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# 57차 P0-6 — MODULE_EFFECTS 가 import 시 **실행되는** 노드를 다 덮는가
+#
+# 55차 P0-5① 이 방향을 뒤집어 "docstring 아닌 module-level `Expr` 는 무조건
+# MODULE_EFFECTS 에 묶인다" 로 만들었다. 그런데 import 시 실행되는 것은 `Expr`
+# 만이 아니다 — 대입의 우변, 데코레이터, 기본 인자, annotation, class base 와
+# class body 가 전부 그 시점에 돈다. 그 자리에 계산이 들어가면 digest 는 그것을
+# 못 보고 값을 낸다.
+# ─────────────────────────────────────────────────────────────────────────────
+
+@pytest.mark.parametrize("inject", [
+    # ① 대입의 우변 — 아무도 `_SIDE` 를 읽지 않으면 닫힘에 안 들어온다
+    "_SIDE = sc.add_error_columns\n",
+    # ② 데코레이터 — import 시 평가된다
+    "@sc.add_error_columns\ndef _decorated():\n    return None\n",
+    # ③ 기본 인자 — 정의 시점에 한 번 평가된다
+    "def _defaulted(x=sc.add_error_columns):\n    return x\n",
+    # ④ class base — class 문이 돌 때 평가된다
+    "class _Based(sc.ScoreBase if hasattr(sc, 'ScoreBase') else object):\n"
+    "    pass\n",
+    # ⑤ class body — 역시 import 시 실행된다
+    "class _Body:\n    _v = sc.add_error_columns\n",
+])
+def test_import_time_execution_is_inside_the_producer_identity(inject):
+    """★ 57차 P0-6 — import 시 도는 계산은 전부 identity 안이어야 한다.
+
+    이 시험은 **digest 가 움직이는가**를 묻는다. 같은 producer 소스에 위 노드
+    하나를 더했을 때 digest 가 그대로면, 그 계산은 봉인 밖에서 도는 것이고
+    "이 코드가 이 값을 만들었다" 는 주장이 그만큼 거짓이 된다.
+    """
+    rp = _rp()
+    sc = (_REPO / "src" / "scoring.py").read_text(encoding="utf-8")
+    base = (
+        "import src.scoring as sc\n"
+        "def _cell(x):\n    return x\n"
+        "def _restart_list(x):\n    return x\n"
+        "def _restart_facts(x):\n    return x\n"
+        "def _add_multistart_blocks(x):\n    return x\n"
+        "def _analyzer_provenance(x):\n    return x\n"
+        "def score_canonical(df):\n    return df\n"
+        "def build(x):\n    return x\n"
+    ) + "".join(f"def {n}(*a, **k):\n    return None\n"
+                for n in rp._PRODUCER_CUT)
+    with_inject = base + inject
+
+    d0 = rp._producer_semantic_over(base, sc)
+    try:
+        d1 = rp._producer_semantic_over(with_inject, sc)
+    except SystemExit:
+        return          # 거부도 정답이다 — 볼 수 없으면 막는 것이 이 규칙이다
+    assert d0 != d1, (
+        "import 시 실행되는 노드를 더했는데 producer digest 가 그대로다 — "
+        "그 계산은 봉인 밖에서 돈다")
