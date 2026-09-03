@@ -12,7 +12,7 @@ verificationStatus: unverified
 claimType: empirical
 evidenceScope: single-source
 status: open
-feedsInto: "degradation-degeneracy 목적함수 후보 (PVS·SEV 항) + 2026-09-02 세미나 discussion point 1"
+feedsInto: "[[mode-observability]] Phase 1–2 + 2026-09-02 세미나 discussion point 1"
 ---
 
 # PVS·SEV 는 LLI 와 LAM_PE 를 가르는가
@@ -77,7 +77,8 @@ H2 가 참일 수 있음에 주의한다 — 부호가 같다고 벡터가 평�
 
 ## 이 질문에 답하는 방법 (설계, 미실행)
 
-우리 파이프라인 안에서 값싸게 판정 가능하다 — **본 실행이 필요 없다**:
+실행 주체는 satellite [[mode-observability]] (Phase 1–2). 우리 파이프라인의
+코드를 읽기 전용으로 재사용해 값싸게 판정 가능하다 — **본 실행이 필요 없다**:
 
 1. 합성 truth 격자에서 각 격자점의 곡선으로부터 **PVS 와 SEV 를 계산**한다
    (PVS 는 기존 dQ/dV 경로 재사용, SEV 는 CI 프로토콜 시뮬레이션이 필요).

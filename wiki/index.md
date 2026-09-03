@@ -1,11 +1,12 @@
 # Wiki Index
 
 > Content catalog. Every wiki page listed under its type with a one-line summary.
-> Last updated: 2026-09-03 | Total pages: 12
+> Last updated: 2026-09-03 | Total pages: 13
 
 ## Entities
 
 - [[degradation-degeneracy]] — 22p LLI/LAM 분해가 물리인지 degeneracy 인지 판별하는 PyBaMM 합성 truth 프로젝트 (첫 satellite, 13차 게이트 리뷰 대기).
+- [[mode-observability]] — "관측을 늘리면 갈리는가": PVS·SEV Jacobian 식별 가능성 + ML 라벨 degeneracy 전파 (둘째 satellite, 2026-09-03 개설).
 
 ## Concepts
 

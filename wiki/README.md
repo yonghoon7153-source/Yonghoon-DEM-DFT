@@ -14,7 +14,7 @@ Karpathy LLM Wiki 패턴 킷(`llm-wiki-kit_260730`, 커맨드스페이스 구요
 | `concepts|entities|comparisons|queries|guides|questions|syntheses/` | 컴파일된 위키 |
 | `inbox/` | ingest 대기 큐 (`/wiki-inbox` 가 처리) |
 | `index.md` / `log.md` | 카탈로그 / append-only 로그 |
-| `tools/` | `lint.py` `status.py` `new-page.py` + `hooks/` (Python stdlib, 의존성 0) |
+| `tools/` | `lint.py` `status.py` `new-page.py` + `hooks/` (Python stdlib, 의존성 0) · `extract_figures.py` (논문 PDF 그림 크로핑 — pymupdf 필요, DFT/argyrodite 계열 브랜치(루트 `BRANCHES.md` 참조)의 litdb 도구 이식본; 에이전트는 `.claude/agents/paper-curator.md`) |
 
 ## 킷 원본과 다른 점 (이 환경 적응)
 
