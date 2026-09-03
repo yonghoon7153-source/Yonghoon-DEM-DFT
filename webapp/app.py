@@ -142,8 +142,9 @@ def paper(slug):
     p = _page_or_404("paper", slug)
     meta, body = _read(p)
     figs = C.figures_for(slug)
+    doc = C.render_digest(body)
     return render_template("paper.html", active="papers", page=p, meta=meta,
-                           body_html=C.render_body(body),
+                           body_html=doc["html"], toc=doc["toc"], claims=doc["claims"],
                            figs=figs, figmeta=C.figure_meta(slug),
                            sha=str(meta.get("sha256") or ""))
 
@@ -169,14 +170,48 @@ def questions():
 
 @app.route("/question/<slug>")
 def question(slug):
+    """질문 카드 — 절의 **종류**가 화면 형태를 정한다.
+
+    이 위키에서 "무엇이 근거이고 무엇이 아직 빈칸인가" 는 본문 순서가 아니라 절의
+    종류가 말한다. 그래서 세 가지 형태로 갈라 그린다:
+      · Evidence For ↔ Against 가 **연달아** 오면 좌우로 **맞세운다** (`duel`).
+        같은 질문에 대한 찬반은 위아래로 읽으면 대조가 안 된다.
+      · Status Log 는 날짜 항목으로 쪼개 **타임라인**으로 (`timeline`).
+      · 나머지는 종류 라벨을 단 보통 절.
+    """
     p = _page_or_404("question", slug)
     meta, body = _read(p)
     idx = C.page_index()
     secs = []
-    for s in C.split_sections(body):
+    for n, s in enumerate(C.split_sections(body), 1):
         secs.append({"title": s["title"], "cls": C.classify_section(s["title"]),
-                     "html": C.render_body(s["body"], idx)})
-    return render_template("question.html", active="questions", page=p, meta=meta, secs=secs)
+                     "raw": s["body"], "id": f"s-{n}"})
+
+    blocks, i = [], 0
+    while i < len(secs):
+        s = secs[i]
+        nxt = secs[i + 1] if i + 1 < len(secs) else None
+        if s["cls"] == "for" and nxt and nxt["cls"] == "against":
+            blocks.append({"kind": "duel", "sides": [
+                {**side, "html": C.render_body(side["raw"], idx)} for side in (s, nxt)]})
+            i += 2
+            continue
+        if s["cls"] == "log":
+            entries = C.parse_log_entries(s["raw"])
+            if entries:
+                blocks.append({"kind": "timeline", "title": s["title"], "cls": s["cls"],
+                               "id": s["id"],
+                               "entries": [{**e, "html": C.render_body(e["body"], idx)}
+                                           for e in entries]})
+                i += 1
+                continue
+        blocks.append({"kind": "sec", **s, "html": C.render_body(s["raw"], idx)})
+        i += 1
+
+    nav = [{"id": s["id"], "title": s["title"], "cls": s["cls"]}
+           for s in secs if s["title"]]
+    return render_template("question.html", active="questions", page=p, meta=meta,
+                           blocks=blocks, nav=nav)
 
 
 # ─────────────────────────────────────────────────────────────────────────
@@ -193,8 +228,9 @@ def concepts():
 def concept(slug):
     p = _page_or_404("concept", slug)
     meta, body = _read(p)
+    d = C.render_digest(body)
     return render_template("doc.html", active="concepts", page=p, meta=meta,
-                           body_html=C.render_body(body))
+                           body_html=d["html"], toc=d["toc"], claims=d["claims"])
 
 
 @app.route("/entities")
@@ -208,8 +244,9 @@ def entities():
 def entity(slug):
     p = _page_or_404("entity", slug)
     meta, body = _read(p)
+    d = C.render_digest(body)
     return render_template("doc.html", active="entities", page=p, meta=meta,
-                           body_html=C.render_body(body))
+                           body_html=d["html"], toc=d["toc"], claims=d["claims"])
 
 
 @app.route("/doc/<path:rel>")
@@ -224,8 +261,9 @@ def doc(rel):
     if not p or p["url"] != "/doc/" + rel.strip("/"):
         abort(404)
     meta, body = _read(p)
+    d = C.render_digest(body)
     return render_template("doc.html", active="", page=p, meta=meta,
-                           body_html=C.render_body(body))
+                           body_html=d["html"], toc=d["toc"], claims=d["claims"])
 
 
 # ─────────────────────────────────────────────────────────────────────────
@@ -233,19 +271,26 @@ def doc(rel):
 # ─────────────────────────────────────────────────────────────────────────
 @app.route("/results")
 def results():
+    # ⚠ 이 한 화면에 PHASE 노트가 **여러 개** 실린다. 제목 앵커 접두사를 문서마다
+    #   다르게 주지 않으면 모든 문서의 id 가 h-1 부터 다시 시작해 겹치고, 목차
+    #   링크가 전부 첫 문서로 간다 (실측 버그). 접두사는 **파일 이름**에서만 만든다
+    #   — 문서 내용에서 오는 문자열을 id 로 쓰지 않는다.
     docs, csvs = [], []
     dd = C.MO / "docs"
     if dd.is_dir():
         for f in sorted(dd.glob("*.md")):
             text = f.read_text(encoding="utf-8")
-            meta, body = C.split_frontmatter(text)
+            _meta, body = C.split_frontmatter(text)
+            did = C.slug_id(f.stem)
+            rendered = C.render_digest(body, prefix=did)
             docs.append({"name": f.name, "relpath": f.relative_to(C.ROOT).as_posix(),
-                         "meta": meta, "html": C.render_body(body)})
+                         "html": rendered["html"], "toc": rendered["toc"], "id": did})
     rd = C.MO / "results"
     if rd.is_dir():
         for f in sorted(rd.rglob("*.csv")):
             csvs.append(C.read_csv_view(f))
     return render_template("results.html", active="results", docs=docs, csvs=csvs,
+                           phases=C.phase_rail(), chart=C.sweep_chart(),
                            table_max=C.CSV_TABLE_MAX)
 
 
@@ -257,8 +302,16 @@ def gate():
     except ValueError:
         show = 3
     g = C.gate_sections(show)
-    latest = [{"title": s["title"], "html": C.render_body(s["body"])} for s in g.get("latest", [])]
-    return render_template("gate.html", active="gate", gate=g, latest=latest, show=show)
+    latest = []
+    for n, s in enumerate(g.get("latest", []), 1):
+        latest.append({"title": s["title"], "id": f"r-{n}",
+                       "meta": C.gate_round_meta(s["title"], s["body"]),
+                       "html": C.render_body(s["body"])})
+    # 색인은 원장의 **모든** 절을 적지만 화면에 펼친 것은 최근 `show` 개뿐이다.
+    # 실제로 이 화면에 있는 절만 링크로 만든다 — 없는 곳으로 가는 링크를 만들지 않는다.
+    anchors = {s["title"]: s["id"] for s in latest}
+    return render_template("gate.html", active="gate", gate=g, latest=latest,
+                           show=show, anchors=anchors)
 
 
 # ─────────────────────────────────────────────────────────────────────────
@@ -276,6 +329,33 @@ def search():
 @app.route("/api/figures/<slug>.json")
 def api_figures(slug):
     return jsonify({"slug": slug, "figures": C.figures_for(slug)})
+
+
+# ─────────────────────────────────────────────────────────────────────────
+# 커맨드 팔레트 색인 (⌘K / Ctrl-K)
+# ─────────────────────────────────────────────────────────────────────────
+@app.route("/api/palette.json")
+def api_palette():
+    """팔레트가 훑을 목적지 목록.
+
+    ⚠ 인라인 `<script>` 나 `<script type="application/json">` 로 심지 않는다 —
+      CSP 가 `script-src 'self'` 라서 인라인 script 요소는 종류를 가리지 않고
+      막힌다. `connect-src 'self'` 는 열려 있으므로 fetch 로 가져온다.
+    """
+    items = [
+        {"t": "홈 · 카탈로그", "u": "/", "k": "화면", "d": "wiki/index.md + 최근 활동"},
+        {"t": "논문 digest", "u": "/papers", "k": "화면", "d": "wiki/raw/papers/"},
+        {"t": "열린 질문", "u": "/questions", "k": "화면", "d": "wiki/questions/"},
+        {"t": "개념", "u": "/concepts", "k": "화면", "d": "wiki/concepts/"},
+        {"t": "satellite 프로젝트", "u": "/entities", "k": "화면", "d": "wiki/entities/"},
+        {"t": "Phase 결과", "u": "/results", "k": "화면", "d": "mode-observability"},
+        {"t": "게이트 원장", "u": "/gate", "k": "화면", "d": "08_REVIEW_RESPONSE.md"},
+        {"t": "검색", "u": "/search", "k": "화면", "d": "전문 부분 문자열 검색"},
+    ]
+    for p in C.scan_pages().values():
+        items.append({"t": p["title"], "u": p["url"], "k": p["kind"],
+                      "d": p["description"] or p["relpath"], "s": p["slug"]})
+    return jsonify({"items": items})
 
 
 @app.route("/api/file/<path:rel>")

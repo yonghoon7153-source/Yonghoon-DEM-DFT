@@ -1,29 +1,64 @@
 {# frontmatter 배지 — SCHEMA.md 의 progressive-disclosure 필드를 눈에 보이게 한다.
-   값 자체를 클래스에 넣지 않고 화이트리스트로 고른다 (임의 클래스 주입 방지). #}
-{% set _ok = {
-  'confidence': ['high','medium','low'],
-  'verificationStatus': ['verified','partial','unverified','contradicted'],
-  'status': ['open','active','answered','parked','closed'],
-  'claimType': ['empirical','theoretical','prescriptive','definitional'],
-  'evidenceScope': ['multi-source-primary','multi-source','single-source','secondary','anecdotal']
+
+   설계 두 가지:
+   ① 값 자체를 클래스에 넣지 않고 **화이트리스트**로 고른다 (임의 클래스 주입 방지).
+   ② **색만으로 구분하지 않는다.** 배지마다 (a) 축 이름, (b) 값 문자열,
+      (c) 강도 글리프(●◐○·✗)가 함께 있다. 색은 넷째 단서일 뿐이라
+      흑백 인쇄·색각 이상에서도 같은 정보가 남는다. `title` 에 뜻을 적어 둔다. #}
+
+{% set _tone = {
+  'confidence': {
+    'high':   ('good', '●', '증거가 강하다'),
+    'medium': ('mid',  '◐', '증거가 있으나 결정적이지 않다'),
+    'low':    ('weak', '○', '증거가 약하다')},
+  'verificationStatus': {
+    'verified':     ('good', '●', 'raw 원문과 대조해 확인됨'),
+    'partial':      ('mid',  '◐', '일부만 대조됨'),
+    'unverified':   ('weak', '○', '아직 원문 대조 전'),
+    'contradicted': ('bad',  '✗', '원문과 어긋남')},
+  'status': {
+    'open':     ('mid',  '◑', '열린 질문 — 답이 없다'),
+    'active':   ('mid',  '◑', '작업 중'),
+    'answered': ('good', '●', '답이 나왔다'),
+    'parked':   ('weak', '◌', '보류'),
+    'closed':   ('good', '●', '닫힘')},
+  'claimType': {
+    'empirical':    ('info', '▣', '관측·실측에 근거한 주장'),
+    'theoretical':  ('info', '◈', '이론·모형에 근거한 주장'),
+    'prescriptive': ('info', '▤', '무엇을 하라는 지침'),
+    'definitional': ('info', '▦', '정의')},
+  'evidenceScope': {
+    'multi-source-primary': ('good', '●', '복수 1차 자료'),
+    'multi-source':         ('mid',  '◐', '복수 자료'),
+    'single-source':        ('weak', '○', '자료 하나 — confidence: high 금지'),
+    'secondary':            ('weak', '○', '2차 자료'),
+    'anecdotal':            ('bad',  '○', '일화')}
 } %}
 
 {% macro badges(meta, fields=None) %}
 {% set fs = fields or ['confidence','verificationStatus','status','claimType','evidenceScope'] %}
+{% set ns = namespace(any=false) %}
 <div class="badges">
   {% for f in fs %}
     {% set v = meta.get(f) %}
     {% if v %}
+      {% set ns.any = true %}
       {% set vs = v|string %}
-      {% set cls = ('v-' ~ vs|replace(' ','-')) if vs in _ok.get(f, []) else 'v-other' %}
-      <span class="badge b-{{ f }} {{ cls }}" title="{{ f }}">
-        <span class="bk">{{ f }}</span><span class="bv">{{ vs }}</span>
+      {% set t = _tone.get(f, {}).get(vs) %}
+      <span class="badge tone-{{ t[0] if t else 'plain' }}"
+            title="{{ f }}: {{ vs }}{% if t %} — {{ t[2] }}{% endif %}">
+        <span class="b-glyph" aria-hidden="true">{{ t[1] if t else '·' }}</span>
+        <span class="b-key">{{ f }}</span><span class="b-val">{{ vs }}</span>
       </span>
     {% endif %}
   {% endfor %}
   {% if meta.get('explored') is not none %}
-    <span class="badge b-explored {{ 'v-yes' if meta.get('explored') else 'v-no' }}" title="explored">
-      <span class="bk">explored</span><span class="bv">{{ 'yes' if meta.get('explored') else 'no' }}</span>
+    {% set ns.any = true %}
+    {% set ex = meta.get('explored') %}
+    <span class="badge tone-{{ 'good' if ex else 'weak' }}"
+          title="explored: {{ 'yes' if ex else 'no' }} — 사람이 실제로 읽었는가 (에이전트는 못 바꾼다)">
+      <span class="b-glyph" aria-hidden="true">{{ '●' if ex else '○' }}</span>
+      <span class="b-key">explored</span><span class="b-val">{{ 'yes' if ex else 'no' }}</span>
     </span>
   {% endif %}
 </div>
@@ -32,19 +67,60 @@
 {% macro tags(meta) %}
 {% if meta.get('tags') %}
 <div class="tags">
-  {% for t in meta.get('tags') %}<span class="tag">#{{ t }}</span>{% endfor %}
+  {% for t in meta.get('tags') %}<span class="tag">{{ t }}</span>{% endfor %}
 </div>
 {% endif %}
 {% endmacro %}
 
 {% macro sources(meta, index) %}
 {% if meta.get('sources') %}
-<div class="srcs"><span class="srcs-h">sources</span>
+<div class="srcs">
+  <span class="srcs-h">sources</span>
+  <div class="srcs-l">
   {% for s in meta.get('sources') %}
     {% set key = (s|string).replace('.md','') %}
     {% if index.get(key) %}<a class="src" href="{{ index.get(key) }}">{{ s }}</a>
     {% else %}<span class="src src-plain">{{ s }}</span>{% endif %}
   {% endfor %}
+  </div>
+</div>
+{% endif %}
+{% endmacro %}
+
+{# 문서 머리의 키·값 표 — 정의 목록이지만 화면에서는 촘촘한 메타 줄이다. #}
+{% macro metarow(rows) %}
+<dl class="kv">
+  {% for k, v, mono in rows %}
+    {% if v %}<dt>{{ k }}</dt><dd{% if mono %} class="mono wrap"{% endif %}>{{ v }}</dd>{% endif %}
+  {% endfor %}
+</dl>
+{% endmacro %}
+
+{# 스티키 목차 — 6만 자 digest 는 이것 없이 읽히지 않는다. #}
+{% macro toc_nav(toc, label='이 문서 안') %}
+{% if toc|length > 2 %}
+<nav class="toc" id="toc" aria-label="{{ label }} 목차">
+  <div class="toc-h">{{ label }}</div>
+  <ul class="toc-l">
+    {% for h in toc %}
+    <li class="lv-{{ h.level }}"><a href="#{{ h.id }}" data-toc="{{ h.id }}">{{ h.text }}</a></li>
+    {% endfor %}
+  </ul>
+</nav>
+{% endif %}
+{% endmacro %}
+
+{# digest 3구분 범례 — 원문 주장과 우리 판단이 눈으로 갈리는지가 이 저장소의 인용 규율이다. #}
+{% macro claim_legend(claims) %}
+{% if claims and (claims.get('인쇄') or claims.get('도표') or claims.get('해석')) %}
+<div class="legend" role="note">
+  <span class="legend-h">표기 3구분</span>
+  <span class="lg lg-printed"><code class="ctag ct-printed">[인쇄]</code>
+    원문에 글자로 있는 것 <b>{{ claims.get('인쇄', 0) }}</b></span>
+  <span class="lg lg-figure"><code class="ctag ct-figure">[도표]</code>
+    그림에서 읽은 근사값 <b>{{ claims.get('도표', 0) }}</b></span>
+  <span class="lg lg-ours"><code class="ctag ct-ours">[해석]</code>
+    <b>우리</b> 판단 · 논문의 주장이 아니다 <b>{{ claims.get('해석', 0) }}</b></span>
 </div>
 {% endif %}
 {% endmacro %}

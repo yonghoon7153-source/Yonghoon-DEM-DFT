@@ -2,21 +2,32 @@
 {% from "_macros.html" import badges, tags %}
 {% block title %}satellite 프로젝트{% endblock %}
 {% block content %}
-<header class="page-head">
+<header class="phead">
+  <p class="eyebrow">wiki/entities/ · mothership 이 거느린 것</p>
   <h1>satellite 프로젝트</h1>
-  <p class="lead"><code>wiki/entities/</code> — mothership 이 거느린 프로젝트의 상태 카드.
-    상세 수치의 정본은 각 프로젝트의 <code>docs/</code> 와 artifact 이며, 이 카드는 living reference 다.</p>
+  <p class="lead">각 프로젝트의 상태 카드. <b>상세 수치의 정본은 각 프로젝트의
+    <code>docs/</code> 와 artifact</b> 이며, 이 카드는 그것을 가리키는 living reference 다 —
+    수치를 여기에 복사하지 않는다.</p>
 </header>
-<div class="grid cards">
+<div class="cards cards-wide">
   {% for it in items %}
-  <article class="card ent">
-    <a class="lit-t" href="{{ it.url }}">{{ it.title }}</a>
-    {% if it.description %}<p class="lit-d">{{ it.description }}</p>{% endif %}
-    {{ badges(it.meta) }}
-    {{ tags(it.meta) }}
-    <div class="lit-foot"><span class="muted">updated {{ it.updated or '—' }}</span>
-      <span class="muted mono">{{ it.relpath }}</span></div>
+  <article class="card card-ent">
+    <div class="card-body">
+      <a class="card-t" href="{{ it.url }}">{{ it.title }}</a>
+      {% if it.description %}<p class="card-d">{{ it.description }}</p>{% endif %}
+      {{ badges(it.meta) }}
+      {{ tags(it.meta) }}
+    </div>
+    <footer class="card-foot">
+      <span class="muted">updated <time>{{ it.updated or '—' }}</time></span>
+      <a class="btn btn-go" href="{{ it.url }}">상태 카드 <span aria-hidden="true">→</span></a>
+    </footer>
+    <code class="card-path">{{ it.relpath }}</code>
   </article>
-  {% else %}<p class="muted">엔티티 페이지가 없다.</p>{% endfor %}
+  {% else %}<p class="empty">엔티티 페이지가 없다.</p>{% endfor %}
 </div>
+
+<p class="note">
+  Phase 단위 진행 상태와 디스크에 실제로 있는 산출물은 <a href="/results">Phase 결과</a> 에서 본다.
+</p>
 {% endblock %}

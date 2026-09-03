@@ -2,30 +2,39 @@
 {% from "_macros.html" import badges, tags %}
 {% block title %}열린 질문{% endblock %}
 {% block content %}
-<header class="page-head">
+<header class="phead">
+  <p class="eyebrow">wiki/questions/</p>
   <h1>열린 질문</h1>
-  <p class="lead"><code>wiki/questions/</code> — 이 위키의 핵심 구조는 질문 카드다.
-    각 카드는 <b>Evidence For / Against / Gap / Status Log</b> 로 근거를 갈라 적는다.</p>
+  <p class="lead">이 위키의 핵심 구조는 질문 카드다. 각 카드는
+    <b>Evidence For</b> / <b>Evidence Against</b> / <b>Gap</b> / <b>Status Log</b> 로
+    근거를 갈라 적는다 — 무엇이 근거이고 무엇이 아직 빈칸인지를 본문 순서가 아니라
+    <b>절의 종류</b>가 말한다.</p>
 </header>
 
-<div class="grid cards">
+<div class="cards cards-wide">
   {% for it in items %}
-  <article class="card q">
-    <a class="q-t" href="{{ it.url }}">{{ it.title }}</a>
-    {% if it.description %}<p class="lit-d">{{ it.description }}</p>{% endif %}
-    {{ badges(it.meta) }}
-    <div class="evbar">
-      <span class="ev ev-for">For {{ it.nfor }}절</span>
-      <span class="ev ev-against">Against {{ it.nagainst }}절</span>
-      {% if 'gap' in it.has %}<span class="ev ev-gap">Gap</span>{% endif %}
-      {% if 'log' in it.has %}<span class="ev ev-log">Status Log</span>{% endif %}
+  <article class="card card-q">
+    <div class="card-body">
+      <a class="card-t" href="{{ it.url }}">{{ it.title }}</a>
+      {% if it.description %}<p class="card-d">{{ it.description }}</p>{% endif %}
+      {{ badges(it.meta, ['status','confidence','verificationStatus','evidenceScope']) }}
+
+      <div class="evbar" role="group" aria-label="근거 구성">
+        <span class="ev ev-for"><span aria-hidden="true">✓</span> 근거 <b>{{ it.nfor }}</b>절</span>
+        <span class="ev ev-against"><span aria-hidden="true">✗</span> 반증 <b>{{ it.nagainst }}</b>절</span>
+        <span class="ev ev-gap{% if 'gap' not in it.has %} is-off{% endif %}"><span aria-hidden="true">○</span> 빈 근거</span>
+        <span class="ev ev-log{% if 'log' not in it.has %} is-off{% endif %}"><span aria-hidden="true">≡</span> 기록</span>
+      </div>
+      {{ tags(it.meta) }}
     </div>
-    {{ tags(it.meta) }}
-    <div class="lit-foot"><a class="btn" href="{{ it.url }}">카드 열기 →</a>
-      <span class="muted mono">{{ it.relpath }}</span></div>
+    <footer class="card-foot">
+      <span class="muted">updated <time>{{ it.updated or '—' }}</time></span>
+      <a class="btn btn-go" href="{{ it.url }}">카드 열기 <span aria-hidden="true">→</span></a>
+    </footer>
+    <code class="card-path">{{ it.relpath }}</code>
   </article>
   {% else %}
-  <p class="muted">질문 카드가 없다.</p>
+  <p class="empty">질문 카드가 없다.</p>
   {% endfor %}
 </div>
 {% endblock %}

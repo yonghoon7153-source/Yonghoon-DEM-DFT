@@ -1,30 +1,37 @@
 {% extends "base.html" %}
-{% from "_macros.html" import badges, tags %}
+{% from "_macros.html" import tags %}
 {% block title %}논문 digest{% endblock %}
 {% block content %}
-<header class="page-head">
+<header class="phead">
+  <p class="eyebrow">wiki/raw/papers/ · 봉인 불변층</p>
   <h1>논문 digest</h1>
-  <p class="lead"><code>wiki/raw/papers/</code> — 흡수한 원문의 절별 해체분석.
-    <b>sha256 은 원본 PDF 의 봉인</b>이다 (digest 파일이 아니라 원문의 지문).</p>
+  <p class="lead">흡수한 원문의 절별 해체분석. <b>sha256 은 원본 PDF 의 봉인</b>이다 —
+    digest 파일의 해시가 아니라 <b>원문의 지문</b>이고, 그래서 digest 를 고쳐도 이 값은 안 바뀐다.</p>
 </header>
 
-<div class="grid cards">
+<div class="cards">
   {% for it in items %}
-  <article class="card lit">
-    <a class="lit-t" href="{{ it.url }}">{{ it.title }}</a>
-    {% if it.description %}<p class="lit-d">{{ it.description }}</p>{% endif %}
-    <dl class="kv">
-      {% if it.source_url %}<dt>source</dt><dd class="mono wrap">{{ it.source_url }}</dd>{% endif %}
-      {% if it.ingested %}<dt>ingested</dt><dd>{{ it.ingested }}</dd>{% endif %}
-      {% if it.sha12 %}<dt>sha256</dt><dd class="mono">{{ it.sha12 }}…</dd>{% endif %}
-      <dt>figures</dt><dd>{{ it.nfig }}장{% if it.ntab %} (표 {{ it.ntab }})</dd>{% else %}</dd>{% endif %}
-    </dl>
-    {{ tags(it.meta) }}
-    <div class="lit-foot"><a class="btn" href="{{ it.url }}">digest 전문 →</a>
-      <span class="muted mono">{{ it.relpath }}</span></div>
+  <article class="card card-paper">
+    <div class="card-body">
+      <a class="card-t" href="{{ it.url }}">{{ it.title }}</a>
+      {% if it.description %}<p class="card-d">{{ it.description }}</p>{% endif %}
+      <dl class="kv kv-sm">
+        {% if it.ingested %}<dt>ingested</dt><dd><time>{{ it.ingested }}</time></dd>{% endif %}
+        {% if it.sha12 %}<dt>sha256</dt><dd class="mono">{{ it.sha12 }}…</dd>{% endif %}
+        {% if it.source_url %}<dt>source</dt><dd class="mono wrap">{{ it.source_url }}</dd>{% endif %}
+      </dl>
+      {{ tags(it.meta) }}
+    </div>
+    <footer class="card-foot">
+      <span class="figcount">
+        그림 <b>{{ it.nfig }}</b>장{% if it.ntab %} · 표 <b>{{ it.ntab }}</b>장{% endif %}
+      </span>
+      <a class="btn btn-go" href="{{ it.url }}">digest 전문 <span aria-hidden="true">→</span></a>
+    </footer>
+    <code class="card-path">{{ it.relpath }}</code>
   </article>
   {% else %}
-  <p class="muted">wiki/raw/papers/ 에 digest 가 없다.</p>
+  <p class="empty">wiki/raw/papers/ 에 digest 가 없다.</p>
   {% endfor %}
 </div>
 {% endblock %}

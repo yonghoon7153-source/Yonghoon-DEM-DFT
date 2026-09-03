@@ -2484,7 +2484,9 @@ EXPECT: dict = {
             "tests/test_docs_lint.py::test_a_stale_anchor_repair_cannot_rewind_the_head": "cohort lifecycle journal 의 사슬이 끊겼다"
         }
     },
-    "destination-is-resolved-through-mounts": {
+    # ★ 57차 P0-4 — 56차의 `destination-is-resolved-through-mounts` 를 대체한다.
+    #   목적지를 파일시스템 좌표로 옮기면서 자리가 둘이 됐으므로 MULTI 다.
+    "destination-is-compared-in-filesystem-coordinates": {
         "fail": ["tests/test_docs_lint.py::test_a_bind_mounted_alias_of_a_frozen_child_is_not_writable"],
         "witness": {
             "tests/test_docs_lint.py::test_a_bind_mounted_alias_of_a_frozen_child_is_not_writable": "DID NOT RAISE SystemExit"
@@ -2538,16 +2540,23 @@ EXPECT: dict = {
             "tests/test_docs_lint.py::test_two_consecutive_partial_appends_are_still_recoverable": "미완을 완주시키지 않은 채 새 줄이 붙었다"
         }
     },
+    # ★ 57차 — 증인이 바뀌었다. 56차에는 escape 를 안 풀면 alias 가 **어떤
+    #   mount 와도 매치되지 않아** guard 가 그냥 통과했고(`DID NOT RAISE`),
+    #   57차는 커널이 준 mount 를 경로에 맞추다 실패해 **fail-closed 로 거부**
+    #   한다. 거부는 하지만 "얼린 tree 다" 판정은 못 하므로 시험이 문다.
+    #   임시 경로는 실행마다 다르므로 안정한 접두까지만 적는다.
     "mountinfo-octal-escape-is-decoded": {
         "fail": ["tests/test_docs_lint.py::test_a_frozen_alias_whose_path_has_a_space_is_not_writable"],
         "witness": {
-            "tests/test_docs_lint.py::test_a_frozen_alias_whose_path_has_a_space_is_not_writable": "DID NOT RAISE SystemExit"
+            "tests/test_docs_lint.py::test_a_frozen_alias_whose_path_has_a_space_is_not_writable": "거부는 했지만 '얼린 tree' 판정이 아니다 (fail-closed 거부일 수 있다): ✗ 커널이 답한 mount 를 목적지 경로에 맞출 수 없다"
         }
     },
-    "deepest-mount-is-chosen": {
-        "fail": ["tests/test_docs_lint.py::test_the_deepest_mount_wins_when_binds_overlap"],
+    # ★ 57차 P0-2 — 56차의 `deepest-mount-is-chosen` 을 대체한다. 지켜야 할
+    #   규칙이 "가장 깊은 것을 고른다" 에서 "커널에게 묻는다" 로 바뀌었다.
+    "mount-identity-comes-from-the-kernel": {
+        "fail": ["tests/test_docs_lint.py::test_a_stacked_mount_is_identified_by_the_kernel_not_by_row_order"],
         "witness": {
-            "tests/test_docs_lint.py::test_the_deepest_mount_wins_when_binds_overlap": "DID NOT RAISE SystemExit"
+            "tests/test_docs_lint.py::test_a_stacked_mount_is_identified_by_the_kernel_not_by_row_order": "DID NOT RAISE SystemExit"
         }
     },
     "crossed-module-effects-are-seeded": {

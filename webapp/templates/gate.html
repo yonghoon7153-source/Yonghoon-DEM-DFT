@@ -1,31 +1,75 @@
 {% extends "base.html" %}
 {% block title %}게이트 리뷰 원장{% endblock %}
 {% block content %}
-<header class="page-head">
-  <h1>게이트 리뷰 원장 <span class="muted">최근 {{ show }}절</span></h1>
+<header class="phead">
+  <p class="eyebrow">degradation-degeneracy · 적대적 게이트 루프</p>
+  <h1>게이트 리뷰 원장</h1>
   {% if gate.available %}
-  <p class="lead">정본: <code>{{ gate.path }}</code>
-    ({{ gate.count }}절 · {{ '%.0f'|format(gate.bytes/1024) }} KB · 파일 수정 {{ gate.mtime }}).
-    이 화면은 <b>읽기 전용</b>이고, 원장 자체는 게이트 리뷰 대상 트리 안에 있으므로 여기서 고칠 수 없다.</p>
-  <p class="note">더 보려면 <code>?n=</code> (최대 10): <a href="/gate?n=1">1</a> ·
-    <a href="/gate?n=3">3</a> · <a href="/gate?n=5">5</a> · <a href="/gate?n=10">10</a></p>
+  <p class="lead">정본은 <code>{{ gate.path }}</code> —
+    {{ gate.count }}절 · {{ '%.0f'|format(gate.bytes/1024) }} KB · 파일 수정 {{ gate.mtime }}.
+    이 화면은 <b>읽기 전용</b>이고, 원장 자체가 게이트 리뷰 대상 트리 안에 있으므로 여기서 고칠 수 없다.</p>
+  <div class="seg" role="group" aria-label="보여줄 라운드 수">
+    <span class="seg-l">최근</span>
+    {% for n in [1, 3, 5, 10] %}
+    <a class="seg-b{% if show==n %} is-on{% endif %}" href="/gate?n={{ n }}"
+       {% if show==n %}aria-current="true"{% endif %}>{{ n }}절</a>
+    {% endfor %}
+  </div>
   {% else %}
   <p class="lead">원장 파일을 찾지 못했다: <code>{{ gate.path }}</code></p>
   {% endif %}
 </header>
 
 {% if gate.available %}
-<section class="card">
-  <h2 class="card-h">라운드 색인 <span class="muted">{{ gate.count }}절</span></h2>
-  <ol class="gatelist">
-    {% for t in gate.titles|reverse %}<li>{{ t }}</li>{% endfor %}
+<section class="panel">
+  <h2 class="panel-h">라운드 색인 <span class="chip">{{ gate.count }}절</span></h2>
+  <ol class="roundlist">
+    {% for t in gate.titles|reverse %}
+    <li{% if anchors.get(t) %} class="rl-open"{% endif %}>
+      <span class="rl-n">{{ loop.revindex }}</span>
+      {# 아래에 실제로 펼쳐진 절만 링크로 만든다 — 나머지는 링크처럼 보이지 않아야 한다.
+         (없는 앵커로 가는 링크는 눌러도 아무 일이 없어 화면이 고장난 것처럼 읽힌다.) #}
+      {% if anchors.get(t) %}<a href="#{{ anchors.get(t) }}">{{ t }}</a>
+      {% else %}<span class="rl-t">{{ t }}</span>{% endif %}
+    </li>
+    {% endfor %}
   </ol>
+  <p class="note">
+    이 색인은 원장에서 <code>## §N</code> 제목만 뽑은 것이다. <b>굵게 표시된 {{ latest|length }}절</b>만
+    아래에 펼쳐져 있고 링크로 갈 수 있다 — 나머지를 보려면 위에서 라운드 수를 늘린다.
+    앞선 라운드의 절이 다른 파일로 옮겨졌다면 여기 안 보인다 — 없는 것이 아니라
+    <b>이 파일에 없는 것</b>이다.
+  </p>
 </section>
 
 {% for s in latest %}
-<section class="card">
-  <h2 class="card-h">{{ s.title }}</h2>
-  <div class="md">{{ s.html|safe }}</div>
+<section class="panel round" id="{{ s.id }}">
+  <header class="round-h">
+    <h2 class="round-t">{{ s.title }}</h2>
+    <div class="round-meta">
+      {% if s.meta.verdict %}
+      <span class="chip verdict v-{{ s.meta.verdict|lower|replace('-','') }}"
+            title="이 절이 응답하는 직전 라운드의 판정">직전 판정 {{ s.meta.verdict }}</span>
+      {% endif %}
+      {% if s.meta.declared.p0 is not none %}
+      <span class="chip p0" title="원장 머리 문단이 글자로 적은 수">P0 {{ s.meta.declared.p0 }}</span>
+      {% endif %}
+      {% if s.meta.declared.p1 is not none %}
+      <span class="chip p1" title="원장 머리 문단이 글자로 적은 수">P1 {{ s.meta.declared.p1 }}</span>
+      {% endif %}
+    </div>
+  </header>
+
+  {% if s.meta.ids %}
+  <div class="findings">
+    <span class="findings-h" title="본문에 실제로 등장하는 발견 번호를 그대로 모은 것 — 세어 추정한 값이 아니다">본문의 발견 번호</span>
+    <div class="findings-l">
+      {% for i in s.meta.ids %}<span class="chip fid f-{{ 'p0' if i.startswith('P0') else 'p1' }}">{{ i }}</span>{% endfor %}
+    </div>
+  </div>
+  {% endif %}
+
+  <div class="prose">{{ s.html|safe }}</div>
 </section>
 {% endfor %}
 {% endif %}

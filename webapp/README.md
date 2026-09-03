@@ -20,6 +20,7 @@
 | `/gate` | `degradation-degeneracy/docs/08_REVIEW_RESPONSE.md` | 게이트 라운드 색인 + **최근 절만** 렌더 (`?n=1..10`) |
 | `/search?q=` | 위 전부 | 단순 부분 문자열 전문 검색 (파일별 히트 수 + 스니펫 3개) |
 | `/api/figures/<slug>.json` | `figures.json` | 그림 색인 (figref.js 가 쓴다) |
+| `/api/palette.json` | 위 전부 | 커맨드 팔레트(⌘K)가 훑을 목적지 목록 |
 | `/api/file/<slug>/<file>` | `wiki/raw/figures/` | 그림 파일. **이 뿌리 밖은 404** |
 
 frontmatter 의 `confidence` · `verificationStatus` · `status` · `claimType` ·
@@ -27,7 +28,29 @@ frontmatter 의 `confidence` · `verificationStatus` · `status` · `claimType` 
 이 위키에 있으면) 링크로 나온다. 본문의 `[[wikilink]]` 는 해당 페이지로 이어지고,
 **없는 페이지는 링크하지 않고** 점선 표시만 남긴다 (죽은 링크를 만들지 않는다).
 
+## 화면 뼈대
+
+외부 자원이 **하나도** 없다 — CSP 가 `default-src 'self'` 이고 `script-src 'self'` 라
+CDN·웹폰트·아이콘 폰트·인라인 `<script>` 를 전부 못 쓴다. 그 제약 위에서:
+
+| 부품 | 어디에 | 메모 |
+|---|---|---|
+| 아이콘 | `templates/base.html` 의 인라인 SVG `<symbol>` 스프라이트 | `currentColor` 를 따라가므로 테마 전환에 저절로 맞는다 |
+| 타이포 | 시스템 폰트 스택 (`--sans` · `--mono`) | 한글 얼굴(`Apple SD Gothic Neo`·`맑은 고딕`)을 스택에 같이 넣는다 |
+| 라이트/다크 | `style.css` 의 토큰 두 벌 + `data-theme` | 라이트 값을 뒤집은 게 아니라 손으로 두 벌 골랐다. 작은 글자(`--ink-3`)는 두 벌 모두 4.5:1 이상 |
+| 테마 초기화 | `static/js/boot.js` — `<head>` 에서 **동기** 로드 | 인라인 스크립트를 못 쓰므로 파일로 뺐다. 페인트 전에 `data-theme` 을 정해 FOUC 를 막는다 |
+| 커맨드 팔레트 (⌘K · Ctrl-K · `/`) | `static/js/app.js` + `/api/palette.json` | 목록을 `fetch` 로 받아 **DOM 으로** 채운다 (`innerHTML` 금지 — 제목이 위키 파일에서 온 문자열이다) |
+| 목차 스크롤스파이 | `app.js` · `IntersectionObserver` | 6만 자 digest 에서 "지금 어디" 를 목차에 표시 |
+| 스윕 라인 차트 | `content.sweep_chart()` → 인라인 SVG | 차트 라이브러리를 못 쓴다. 좌표를 **서버가** 계산하고 템플릿은 그리기만 한다. 계열은 색 + 파선 + 점 모양 + 선 끝 직접 라벨 **넷**으로 구분 (색 하나에 안 기댄다) |
+
 ## 실행
+
+```bash
+webapp/bms.sh --no-pull          # 권장 — venv·의존성·빈 포트를 알아서 잡는다
+webapp/bms.sh --stop             # 내린다
+```
+
+직접 띄우려면:
 
 ```bash
 python3 -m venv .venv-webapp && . .venv-webapp/bin/activate   # 권장 (시스템 파이썬 오염 방지)
@@ -63,7 +86,7 @@ python3 webapp/app.py            # http://127.0.0.1:5057
 | **쓰기 API 전부** — 코멘트, 하이라이트, 파일 이름변경, 업로드, `journal.jsonl` | 우리 `wiki/raw/` 는 sha256 봉인 불변층이다. 웹에서 고칠 수 있으면 봉인이 봉인이 아니다 |
 | 도메인 페이지 전부 — 원소 주기율표, cascade 스크리닝, DFT 벤치마크, Fair-Chem, 조성, 용어집, T·Q 원장 | argyrodite DFT 도메인. 우리 내용이 아니다 |
 | `data.py`(5768줄)의 `db/*.json` 모델 · `artifact_policy.py` · `glossary.py` | 그쪽 데이터 스키마 전용 |
-| ⌘K 커맨드 팔레트 · Plotly · 첨부 자동연결 규칙 · 즐겨찾기 | 페이지가 20개 남짓이라 사이드바 + `/search` 로 충분하다. 최소주의 사다리 |
+| Plotly · 첨부 자동연결 규칙 · 즐겨찾기 | 차트는 스윕 하나뿐이라 서버가 SVG 좌표를 계산한다(라이브러리 0). 나머지는 우리 데이터에 대응물이 없다 |
 | gunicorn · `render.yaml` 배포 | 공개 배포하지 않는다. 로컬 열람 전용 |
 | figref 의 코멘트 마운트 · digest 주석 점프 · 팝업 드래그 이동 | 각각 쓰기 기능 / 우리 `figures.json` 에 없는 필드 / 창이 하나뿐이라 불필요 |
 | 인라인 `<script>` · Google Fonts | CSP 를 `script-src 'self'` · `default-src 'self'` 로 조일 수 있게. 테마 초기화도 `static/js/boot.js` 로 뺐다 |
@@ -114,14 +137,32 @@ PyYAML 이 없으면 앱은 그래도 뜨고 frontmatter 만 얕게 읽는다.
 
 ```
 webapp/
-  app.py                 라우트 + 읽기 전용 guard + 보안 헤더
-  content.py             파일 읽기 · frontmatter · 마크다운/wikilink 렌더 · 그림 색인 · CSV · 검색
+  bms.sh                 한 줄 실행 런처 (git 갱신 → venv → 빈 포트 → 기동)
+  app.py                 라우트 + 읽기 전용 guard + 보안 헤더 + 앵커 접두사 배분
+  content.py             파일 읽기 · frontmatter · 마크다운/wikilink 렌더 · 제목 앵커/목차 ·
+                         3구분 표기 · 그림 색인 · CSV · Phase 레일 · 스윕 차트 기하 · 검색
   requirements.txt       Flask · markdown · PyYAML (메이저 상한)
-  templates/             base + 화면별 + _macros(배지·태그·sources)
-  static/css/style.css   테마(라이트/다크) · 카드 · figpane
-  static/js/boot.js      테마 토글 (인라인 스크립트 대신)
+  templates/             base(사이드바·스프라이트·팔레트) + 화면 10종 +
+                         _macros(배지·태그·sources·목차·3구분 범례)
+  static/css/style.css   토큰 두 벌(라이트/다크) · 타이포 스케일 · 카드/패널 · 본문 격자 ·
+                         타임라인 · 차트 · 표 · 팔레트 · 좁은 화면 · 인쇄
+  static/js/boot.js      테마 초기화·토글 + 사이드바 서랍 (<head> 동기 로드)
+  static/js/app.js       커맨드 팔레트 + 목차 스크롤스파이 (defer)
   static/js/figref.js    Fig. N 자동 링크 · 팝업 · 그림 카드 · 라이트박스
 ```
+
+### 한 화면에 문서가 둘 이상 실릴 때 (앵커 규칙)
+
+`content.anchor_headings` 는 제목 id 를 **우리가** 만든다 (`h-1`, `h-2`…). 문서
+내용에서 온 문자열을 id 로 쓰지 않으려는 것이고, 그래서 `render_digest` 를 한
+화면에서 두 번 부르면 두 문서가 **둘 다 `h-1` 부터** 다시 시작한다 — id 가 겹쳐
+목차 링크와 `#앵커` 가 전부 첫 문서로 간다. `/results` 가 PHASE 노트 두 편을 한
+화면에 실으면서 실제로 그랬다.
+
+그래서 `render_digest(body, prefix=...)` 에 **문서마다 다른 접두사**를 준다.
+접두사는 `content.slug_id()` 로 **파일 이름에서만** 만든다 (`PHASE1B_NOTES` →
+`phase1b-notes` → `phase1b-notes-1`, `phase1b-notes-2`…). CSV 칸과 검색 결과의
+`/results#…` 딥링크도 같은 함수를 쓰므로 세 곳이 갈라지지 않는다.
 
 ## 한계
 

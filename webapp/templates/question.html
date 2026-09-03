@@ -1,37 +1,87 @@
 {% extends "base.html" %}
 {% from "_macros.html" import badges, tags, sources %}
 {% block title %}{{ page.title }} · 질문 카드{% endblock %}
-{% block content %}
-<nav class="crumbs"><a href="/questions">열린 질문</a> <span>/</span> <b>{{ page.slug }}</b></nav>
 
-<header class="page-head doc-head">
+{% macro sectag(cls) %}
+  {%- if cls=='for' %}<span class="stag t-for"><span aria-hidden="true">✓</span> 근거</span>
+  {%- elif cls=='against' %}<span class="stag t-against"><span aria-hidden="true">✗</span> 반증</span>
+  {%- elif cls=='gap' %}<span class="stag t-gap"><span aria-hidden="true">○</span> 빈 근거</span>
+  {%- elif cls=='log' %}<span class="stag t-log"><span aria-hidden="true">≡</span> 기록</span>
+  {%- elif cls=='method' %}<span class="stag t-method"><span aria-hidden="true">⌾</span> 설계</span>
+  {%- elif cls=='hypo' %}<span class="stag t-hypo"><span aria-hidden="true">◇</span> 가설</span>
+  {%- else %}<span class="stag t-plain">절</span>{% endif -%}
+{% endmacro %}
+
+{% block content %}
+<nav class="crumbs" aria-label="위치"><a href="/questions">열린 질문</a><span aria-hidden="true">/</span><b>{{ page.slug }}</b></nav>
+
+<header class="phead doc-head">
   <h1>{{ page.title }}</h1>
   {% if meta.get('description') %}<p class="lead">{{ meta.get('description') }}</p>{% endif %}
   {{ badges(meta) }}
-  <dl class="kv inline">
-    {% if meta.get('created') %}<dt>created</dt><dd>{{ meta.get('created') }}</dd>{% endif %}
-    {% if meta.get('updated') %}<dt>updated</dt><dd>{{ meta.get('updated') }}</dd>{% endif %}
+  <dl class="kv kv-inline">
+    {% if meta.get('created') %}<dt>created</dt><dd><time>{{ meta.get('created') }}</time></dd>{% endif %}
+    {% if meta.get('updated') %}<dt>updated</dt><dd><time>{{ meta.get('updated') }}</time></dd>{% endif %}
     {% if meta.get('feedsInto') %}<dt>feedsInto</dt><dd>{{ meta.get('feedsInto') }}</dd>{% endif %}
-    <dt>파일</dt><dd class="mono">{{ page.relpath }}</dd>
+    <dt>파일</dt><dd class="mono wrap">{{ page.relpath }}</dd>
   </dl>
   {{ tags(meta) }}
   {{ sources(meta, wl_index) }}
 </header>
 
+{% if nav %}
+<nav class="jump" aria-label="절 바로 가기">
+  {% for n in nav %}
+  <a class="jump-i j-{{ n.cls }}" href="#{{ n.id }}" data-toc="{{ n.id }}">{{ n.title }}</a>
+  {% endfor %}
+</nav>
+{% endif %}
+
 {# 절을 종류별로 갈라 렌더한다 — 이 위키에서 "무엇이 근거이고 무엇이 아직 빈칸인가" 는
    본문 순서가 아니라 절의 종류가 말한다. #}
-{% for s in secs %}
-<section class="card sec sec-{{ s.cls }}">
-  {% if s.title %}
-  <h2 class="sec-h">
-    <span class="sec-tag t-{{ s.cls }}">
-      {% if s.cls=='for' %}근거 ✓{% elif s.cls=='against' %}반증 ✗{% elif s.cls=='gap' %}빈 근거 ○
-      {% elif s.cls=='log' %}기록{% elif s.cls=='method' %}설계{% elif s.cls=='hypo' %}가설{% else %}절{% endif %}
-    </span>
-    {{ s.title }}
-  </h2>
-  {% endif %}
-  <div class="md">{{ s.html|safe }}</div>
+{% for b in blocks %}
+
+{% if b.kind == 'duel' %}
+{# 찬반을 **좌우로 맞세운다.** 위아래로 읽으면 같은 축의 대조가 안 보인다. #}
+<div class="duel">
+  {% for s in b.sides %}
+  <section class="panel sec sec-{{ s.cls }}" id="{{ s.id }}">
+    <h2 class="sec-h">{{ sectag(s.cls) }}<span class="sec-t">{{ s.title }}</span></h2>
+    <div class="prose">{{ s.html|safe }}</div>
+  </section>
+  {% endfor %}
+</div>
+
+{% elif b.kind == 'timeline' %}
+<section class="panel sec sec-log" id="{{ b.id }}">
+  <h2 class="sec-h">{{ sectag(b.cls) }}<span class="sec-t">{{ b.title }}</span>
+    <span class="sec-n">{{ b.entries|length }}개 항목</span></h2>
+  <ol class="tl tl-status">
+    {% for e in b.entries %}
+    <li class="tl-i">
+      <div class="tl-dot{% if loop.last %} is-latest{% endif %}" aria-hidden="true"></div>
+      <div class="tl-body">
+        <div class="tl-top">
+          <time class="tl-date">{{ e.date }}</time>
+          {% if e.suffix %}<span class="tl-seq">{{ e.suffix }}</span>{% endif %}
+          {% if e.state %}<span class="chip st st-{{ e.state }}">{{ e.state }}{% if e.held %} 유지{% endif %}</span>{% endif %}
+          {% if loop.last %}<span class="chip chip-now">가장 최근</span>{% endif %}
+        </div>
+        <div class="prose prose-tight">{{ e.html|safe }}</div>
+      </div>
+    </li>
+    {% endfor %}
+  </ol>
 </section>
+
+{% else %}
+<section class="panel sec sec-{{ b.cls }}" id="{{ b.id }}">
+  {% if b.title %}
+  <h2 class="sec-h">{{ sectag(b.cls) }}<span class="sec-t">{{ b.title }}</span></h2>
+  {% endif %}
+  <div class="prose">{{ b.html|safe }}</div>
+</section>
+{% endif %}
+
 {% endfor %}
 {% endblock %}

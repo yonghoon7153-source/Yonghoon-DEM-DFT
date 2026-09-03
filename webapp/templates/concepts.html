@@ -2,20 +2,28 @@
 {% from "_macros.html" import badges, tags %}
 {% block title %}개념{% endblock %}
 {% block content %}
-<header class="page-head">
+<header class="phead">
+  <p class="eyebrow">wiki/concepts/</p>
   <h1>개념</h1>
-  <p class="lead"><code>wiki/concepts/</code> — 여러 원자료에서 컴파일된 재사용 단위.</p>
+  <p class="lead">여러 원자료에서 컴파일된 재사용 단위. 각 페이지의 근거는 frontmatter 의
+    <code>sources</code> 가 가리키는 <code>raw/</code> 원문이고, 배지는 그 근거가 얼마나
+    검증됐는지를 말한다.</p>
 </header>
-<div class="grid cards">
+<div class="cards">
   {% for it in items %}
   <article class="card">
-    <a class="lit-t" href="{{ it.url }}">{{ it.title }}</a>
-    {% if it.description %}<p class="lit-d">{{ it.description }}</p>{% endif %}
-    {{ badges(it.meta) }}
-    {{ tags(it.meta) }}
-    <div class="lit-foot"><span class="muted">updated {{ it.updated or '—' }}</span>
-      <span class="muted mono">{{ it.relpath }}</span></div>
+    <div class="card-body">
+      <a class="card-t" href="{{ it.url }}">{{ it.title }}</a>
+      {% if it.description %}<p class="card-d">{{ it.description }}</p>{% endif %}
+      {{ badges(it.meta, ['confidence','verificationStatus','claimType','evidenceScope']) }}
+      {{ tags(it.meta) }}
+    </div>
+    <footer class="card-foot">
+      <span class="muted">updated <time>{{ it.updated or '—' }}</time></span>
+      <a class="btn btn-go" href="{{ it.url }}">열기 <span aria-hidden="true">→</span></a>
+    </footer>
+    <code class="card-path">{{ it.relpath }}</code>
   </article>
-  {% else %}<p class="muted">개념 페이지가 없다.</p>{% endfor %}
+  {% else %}<p class="empty">개념 페이지가 없다.</p>{% endfor %}
 </div>
 {% endblock %}

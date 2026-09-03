@@ -1,10 +1,16 @@
 {% extends "base.html" %}
 {% block title %}없는 페이지{% endblock %}
 {% block content %}
-<header class="page-head">
-  <h1>404</h1>
-  <p class="lead">그런 페이지는 없다. 이 앱은 저장소의 파일만 보여주므로,
-    파일이 없으면 화면도 없다.</p>
-  <p><a class="btn" href="/">홈으로</a> <a class="btn" href="/search">검색</a></p>
+<header class="phead nf">
+  <p class="eyebrow">404</p>
+  <h1>그런 페이지는 없다</h1>
+  <p class="lead">이 앱은 저장소의 파일만 보여준다 — <b>파일이 없으면 화면도 없다.</b>
+    경로를 지어내도 아무것도 열리지 않는다 (그게 이 앱의 설계다).</p>
+  <p class="nf-act">
+    <a class="btn btn-primary" href="/">홈으로</a>
+    <a class="btn" href="/search">검색</a>
+    <a class="btn" href="/papers">논문 digest</a>
+    <a class="btn" href="/questions">열린 질문</a>
+  </p>
 </header>
 {% endblock %}

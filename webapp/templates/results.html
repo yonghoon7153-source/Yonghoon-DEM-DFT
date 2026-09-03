@@ -1,59 +1,210 @@
 {% extends "base.html" %}
 {% block title %}Phase 결과 · mode-observability{% endblock %}
 {% block content %}
-<header class="page-head">
-  <h1>Phase 결과 <span class="muted">mode-observability</span></h1>
-  <p class="lead"><code>mode-observability/docs/*.md</code> 와 <code>results/**/*.csv</code>.
-    <b>수치의 정본은 CSV 파일 자체다</b> — 아래 표는 그 파일을 그대로 읽어 그린 것이고,
-    행이 {{ table_max }}개를 넘으면 앞부분과 요약 통계만 보여준다(표로 다 그리면 못 읽는다).</p>
+<header class="phead">
+  <p class="eyebrow">satellite · mode-observability</p>
+  <h1>Phase 결과</h1>
+  <p class="lead"><b>수치의 정본은 CSV 파일 자체다.</b> 아래의 그림·표는 그 파일을 그대로 읽어
+    그린 사본이고, 인용 근거가 아니다. 행이 {{ table_max }}개를 넘으면 앞부분과 요약 통계만
+    보여준다 — 3천 행을 표로 다 그리면 아무도 못 읽는다.</p>
 </header>
 
+{# ── 이 화면 안 바로 가기 ────────────────────────────────────────────────
+   이 한 페이지에 진행 레일 · 차트 · Phase 노트 여러 편 · CSV 여러 개가 세로로
+   이어 붙는다. 다른 화면처럼 왼쪽 스티키 목차를 두면 표·차트가 쓸 폭을 잃으므로
+   맨 위에 가로 알약 줄로 둔다 (질문 카드의 `.jump` 와 같은 부품). #}
+{# `data-toc` 는 **일부러 안 붙인다.** 스크롤스파이는 화면에 걸린 것 중 문서 순서로
+   가장 앞선 것을 현재로 삼는데, 여기 목적지는 절이 아니라 패널(=긴 컨테이너)이라
+   패널이 언제나 그 안의 절을 이겨 버린다. 위치 표시는 아래 절 목차가 맡는다. #}
+<nav class="jump" aria-label="이 화면 안 바로 가기">
+  {% if phases %}<a class="jump-i" href="#phases">Phase 진행</a>{% endif %}
+  {% if chart %}<a class="jump-i" href="#sweep">단독 스윕 차트</a>{% endif %}
+  {% for d in docs %}<a class="jump-i j-doc" href="#{{ d.id }}">{{ d.name }}</a>{% endfor %}
+  {% for c in csvs %}<a class="jump-i j-csv" href="#{{ c.id }}">{{ c.name }}</a>{% endfor %}
+</nav>
+
+{# ── Phase 진행 상태 ──────────────────────────────────────────────────
+   README 의 Phases 표는 **사람이 적은 선언**이고, docs/ 와 results/ 의 파일은
+   **실제로 생긴 산출물**이다. 둘이 어긋날 때 화면이 한쪽을 고르면 거짓말이 된다. #}
+{% if phases %}
+<section class="panel" id="phases">
+  <h2 class="panel-h">Phase 진행 <code class="src-of">mode-observability/README.md + 디스크</code></h2>
+  <ol class="rail">
+    {% for p in phases %}
+    <li class="rail-i is-{{ p.state }}">
+      <div class="rail-top">
+        <span class="rail-n">Phase {{ p.n }}</span>
+        <span class="chip ph ph-{{ p.state }}">
+          <span aria-hidden="true">{% if p.state=='done' %}●{% elif p.state=='partial' %}◐{% else %}○{% endif %}</span>
+          {{ p.state_label }}
+        </span>
+      </div>
+      {% if p.what %}<p class="rail-what">{{ p.what }}</p>{% endif %}
+      {% if p.needs %}<p class="rail-needs"><span class="lbl">필요한 것</span> {{ p.needs }}</p>{% endif %}
+      <dl class="rail-ev">
+        <dt>README 선언</dt><dd>{{ p.declared or '—' }}</dd>
+        <dt>디스크 산출물</dt>
+        <dd>
+          {% if p.notes or p.results %}
+            {% for n in p.notes %}<code class="fpath">{{ n.name }}</code>{% endfor %}
+            {% for r in p.results %}<code class="fpath">{{ r.name }}</code>{% endfor %}
+          {% else %}—{% endif %}
+        </dd>
+      </dl>
+      {% if p.mismatch %}
+      <p class="rail-warn"><b>선언과 파일이 어긋난다</b> — README 는 <code>{{ p.declared }}</code> 라고
+        적었는데 산출물이 있다. 이 앱은 어느 쪽도 고르지 않는다. 정본은 파일이고, README 가 뒤처졌다.</p>
+      {% endif %}
+    </li>
+    {% endfor %}
+  </ol>
+</section>
+{% endif %}
+
+{# ── 단독 스윕 차트 ────────────────────────────────────────────────────
+   JS 차트 라이브러리를 못 쓴다 (CSP: script-src 'self'). 좌표를 서버가 계산하고
+   여기서는 그리기만 한다. 계열은 색 + 파선 + 점 모양 + **선 끝의 직접 라벨** 넷으로
+   구분한다 — 색 하나에 기대면 색각 이상·흑백 인쇄에서 정보가 사라진다. #}
+{% if chart %}
+<section class="panel" id="sweep">
+  <h2 class="panel-h">단독 스윕 — PVS vs 손실 <code class="src-of">{{ chart.source }}</code></h2>
+  <p class="note">
+    나머지 두 모드를 <b>0 으로 고정</b>하고 한 모드만 올린 격자점만 골라 그렸다
+    (총 <b>{{ chart.n_rows }}</b>점). 값은 CSV 그대로이며 보간·평활을 하지 않는다.
+  </p>
+
+  <figure class="chart-fig">
+    <svg class="chart" viewBox="0 0 {{ chart.w }} {{ chart.h }}" role="img"
+         preserveAspectRatio="xMidYMid meet" aria-labelledby="ct-t ct-d">
+      <title id="ct-t">단독 스윕에서의 PVS 변화</title>
+      <desc id="ct-d">가로축 {{ chart.x_label }}, 세로축 {{ chart.y_label }}.
+        LAM_NE 는 단조 감소, LLI 는 증가(덜 음수), LAM_PE 는 손실 0.06 에서 추적이 끊겨 선이 끝난다.
+        정확한 값은 아래 표에 있다.</desc>
+
+      {# 가로 눈금선 + y 라벨 #}
+      {% for t in chart.y_ticks %}
+      <line class="c-grid" x1="{{ chart.ml }}" y1="{{ t.py }}" x2="{{ chart.ml + chart.pw }}" y2="{{ t.py }}"/>
+      <text class="c-tick c-tick-y" x="{{ chart.ml - 10 }}" y="{{ t.py }}">{{ t.label }}</text>
+      {% endfor %}
+
+      {# 세로 눈금 + x 라벨 #}
+      {% for t in chart.x_ticks %}
+      <line class="c-grid c-grid-v" x1="{{ t.px }}" y1="{{ chart.mt }}" x2="{{ t.px }}" y2="{{ chart.mt + chart.ph }}"/>
+      <text class="c-tick c-tick-x" x="{{ t.px }}" y="{{ chart.mt + chart.ph + 22 }}">{{ t.label }}</text>
+      {% endfor %}
+
+      {# 축선 #}
+      <line class="c-axis" x1="{{ chart.ml }}" y1="{{ chart.mt }}" x2="{{ chart.ml }}" y2="{{ chart.mt + chart.ph }}"/>
+      <line class="c-axis" x1="{{ chart.ml }}" y1="{{ chart.mt + chart.ph }}" x2="{{ chart.ml + chart.pw }}" y2="{{ chart.mt + chart.ph }}"/>
+
+      {# 축 이름 — 단위 없는 축은 쓸모가 없다 #}
+      <text class="c-axlabel" x="{{ chart.ml + chart.pw / 2 }}" y="{{ chart.h - 6 }}">{{ chart.x_label }}</text>
+      <text class="c-axlabel" transform="translate(16 {{ chart.mt + chart.ph / 2 }}) rotate(-90)" x="0" y="0">{{ chart.y_label }}</text>
+
+      {# 계열 #}
+      {% for s in chart.series %}
+      <g class="c-s c-{{ s.cls }}">
+        <path class="c-line" d="{{ s.path }}" fill="none"/>
+        {% for p in s.pts %}
+          {% if s.cls == 'a' %}
+          <circle class="c-pt" cx="{{ p.cx }}" cy="{{ p.cy }}" r="3.2"/>
+          {% elif s.cls == 'b' %}
+          <rect class="c-pt" x="{{ p.cx - 3 }}" y="{{ p.cy - 3 }}" width="6" height="6"/>
+          {% else %}
+          <polygon class="c-pt" points="{{ p.cx }},{{ p.cy - 3.6 }} {{ p.cx + 3.4 }},{{ p.cy + 2.6 }} {{ p.cx - 3.4 }},{{ p.cy + 2.6 }}"/>
+          {% endif %}
+        {% endfor %}
+        {# 선 끝 직접 라벨 — 범례를 눈으로 왕복하지 않는다 #}
+        <text class="c-endlabel" x="{{ s.end.cx + 10 }}" y="{{ s.end.cy + 4 }}">{{ s.label }}</text>
+        {% if s.truncated %}
+        <text class="c-cut" x="{{ s.end.cx + 10 }}" y="{{ s.end.cy + 20 }}">추적 끊김</text>
+        {% endif %}
+      </g>
+      {% endfor %}
+    </svg>
+
+    <figcaption>
+      선 끝에서 <b>추적 끊김</b> 이라 적힌 곳은 값이 0 이라는 뜻이 아니라
+      <b>PVS 가 정의되지 않는다</b>는 뜻이다 — peak/valley 쌍이 소멸하거나 순서가 뒤집혀
+      추적이 fail-closed 로 끊긴 자리다. 없는 구간을 이어 그리지 않았다.
+    </figcaption>
+  </figure>
+
+  <details class="disc">
+    <summary>그린 값 그대로 보기 (CSV 대조용 · {{ chart.n_rows }}점)</summary>
+    <div class="tablewrap">
+      <table class="data">
+        <thead><tr><th>모드</th><th>손실</th><th>PVS [Ah·V⁻²]</th></tr></thead>
+        <tbody>
+        {% for s in chart.series %}{% for p in s.pts %}
+          <tr><td>{{ s.label }}</td><td class="mono num">{{ '%.2f'|format(p.x) }}</td><td class="mono num">{{ '%.6f'|format(p.y) }}</td></tr>
+        {% endfor %}{% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </details>
+</section>
+{% endif %}
+
+{# ── Phase 노트 ───────────────────────────────────────────────────────
+   ⚠ 노트가 **여러 편** 실린다. 각 노트의 제목 앵커는 서버에서 파일 이름을 접두사로
+     받아 만든다 (`phase1-notes-1`, `phase1b-notes-1` …) — 접두사 없이 렌더하면 두
+     노트가 모두 `h-1` 부터 시작해 id 가 겹치고, 아래 절 목차가 전부 첫 노트로 간다. #}
 {% for d in docs %}
-<section class="card">
-  <h2 class="card-h">{{ d.name }} <span class="muted mono">{{ d.relpath }}</span></h2>
-  <div class="md">{{ d.html|safe }}</div>
+<section class="panel" id="{{ d.id }}">
+  <h2 class="panel-h">{{ d.name }} <code class="src-of">{{ d.relpath }}</code></h2>
+  {% if d.toc %}
+  <nav class="subjump" aria-label="{{ d.name }} 절 목차">
+    {% for h in d.toc %}
+    <a class="jump-i sub lv-{{ h.level }}" href="#{{ h.id }}" data-toc="{{ h.id }}">{{ h.text }}</a>
+    {% endfor %}
+  </nav>
+  {% endif %}
+  <div class="prose">{{ d.html|safe }}</div>
 </section>
 {% else %}
-<p class="muted">mode-observability/docs/ 에 문서가 없다.</p>
+<p class="empty">mode-observability/docs/ 에 문서가 없다.</p>
 {% endfor %}
 
+{# ── CSV ───────────────────────────────────────────────────────────── #}
 {% for c in csvs %}
-<section class="card csv">
-  <h2 class="card-h">{{ c.name }}
-    <span class="muted mono">{{ c.relpath }}</span>
-    <span class="pill">{{ c.nrows }} 행 · {{ c.header|length }} 열 · {{ '%.1f'|format(c.bytes/1024) }} KB</span>
+<section class="panel" id="{{ c.id }}">
+  <h2 class="panel-h">{{ c.name }}
+    <code class="src-of">{{ c.relpath }}</code>
+    <span class="chip">{{ c.nrows }} 행 · {{ c.header|length }} 열 · {{ '%.1f'|format(c.bytes/1024) }} KB</span>
   </h2>
   {% if c.error %}
-  <p class="muted">읽지 못했다: {{ c.error }}</p>
+  <p class="empty">읽지 못했다: {{ c.error }}</p>
   {% else %}
     {% if not c.full %}
-    <p class="note">행이 많아 <b>앞 {{ c.rows|length }}행</b>만 그린다. 아래 요약 통계는 <b>전체 {{ c.nrows }}행</b>에서 계산했다.</p>
+    <p class="note">행이 많아 <b>앞 {{ c.rows|length }}행</b>만 그린다.
+      아래 요약 통계는 <b>전체 {{ c.nrows }}행</b>에서 계산했다.</p>
     {% endif %}
     <div class="tablewrap">
       <table class="data">
         <thead><tr>{% for h in c.header %}<th>{{ h }}</th>{% endfor %}</tr></thead>
         <tbody>
-        {% for r in c.rows %}<tr>{% for v in r %}<td class="mono">{{ v }}</td>{% endfor %}</tr>{% endfor %}
+        {% for r in c.rows %}<tr>{% for v in r %}<td class="mono num">{{ v }}</td>{% endfor %}</tr>{% endfor %}
         </tbody>
       </table>
     </div>
     {% if c.stats %}
-    <h3 class="sub-h">요약 통계 (전체 {{ c.nrows }}행)</h3>
+    <h3 class="sub-h">요약 통계 <span class="muted">전체 {{ c.nrows }}행</span></h3>
     <div class="tablewrap">
-      <table class="data stats">
+      <table class="data">
         <thead><tr><th>열</th><th>n</th><th>min</th><th>median</th><th>mean</th><th>max</th></tr></thead>
         <tbody>
         {% for s in c.stats %}
         <tr>
-          <td>{{ s.col }}</td>
+          <td class="rowh">{{ s.col }}</td>
           {% if s.numeric %}
-          <td class="mono">{{ s.n }}</td>
-          <td class="mono">{{ '%.6g'|format(s.min) }}</td>
-          <td class="mono">{{ '%.6g'|format(s.median) }}</td>
-          <td class="mono">{{ '%.6g'|format(s.mean) }}</td>
-          <td class="mono">{{ '%.6g'|format(s.max) }}</td>
+          <td class="mono num">{{ s.n }}</td>
+          <td class="mono num">{{ '%.6g'|format(s.min) }}</td>
+          <td class="mono num">{{ '%.6g'|format(s.median) }}</td>
+          <td class="mono num">{{ '%.6g'|format(s.mean) }}</td>
+          <td class="mono num">{{ '%.6g'|format(s.max) }}</td>
           {% else %}
-          <td class="mono">{{ s.n }}</td><td colspan="4" class="muted">숫자 아님 · 고유값 {{ s.uniq }}</td>
+          <td class="mono num">{{ s.n }}</td><td colspan="4" class="muted">숫자 아님 · 고유값 {{ s.uniq }}</td>
           {% endif %}
         </tr>
         {% endfor %}
@@ -64,6 +215,6 @@
   {% endif %}
 </section>
 {% else %}
-<p class="muted">mode-observability/results/ 에 CSV 가 없다.</p>
+<p class="empty">mode-observability/results/ 에 CSV 가 없다.</p>
 {% endfor %}
 {% endblock %}

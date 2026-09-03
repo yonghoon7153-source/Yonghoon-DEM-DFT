@@ -1,26 +1,32 @@
 {% extends "base.html" %}
-{% from "_macros.html" import badges, tags, sources %}
+{% from "_macros.html" import badges, tags, sources, toc_nav, claim_legend %}
 {% block title %}{{ page.title }}{% endblock %}
 {% block content %}
-<nav class="crumbs">
+<nav class="crumbs" aria-label="위치">
   {% if page.kind=='concept' %}<a href="/concepts">개념</a>
   {% elif page.kind=='entity' %}<a href="/entities">satellite</a>
   {% else %}<a href="/">홈</a>{% endif %}
-  <span>/</span> <b>{{ page.slug }}</b> <span class="kindpill">{{ page.kind }}</span>
+  <span aria-hidden="true">/</span><b>{{ page.slug }}</b><span class="chip kind">{{ page.kind }}</span>
 </nav>
 
-<header class="page-head doc-head">
+<header class="phead doc-head">
   <h1>{{ page.title }}</h1>
   {% if meta.get('description') %}<p class="lead">{{ meta.get('description') }}</p>{% endif %}
   {{ badges(meta) }}
-  <dl class="kv inline">
-    {% if meta.get('created') %}<dt>created</dt><dd>{{ meta.get('created') }}</dd>{% endif %}
-    {% if meta.get('updated') %}<dt>updated</dt><dd>{{ meta.get('updated') }}</dd>{% endif %}
-    <dt>파일</dt><dd class="mono">{{ page.relpath }}</dd>
+  <dl class="kv kv-inline">
+    {% if meta.get('created') %}<dt>created</dt><dd><time>{{ meta.get('created') }}</time></dd>{% endif %}
+    {% if meta.get('updated') %}<dt>updated</dt><dd><time>{{ meta.get('updated') }}</time></dd>{% endif %}
+    {% if meta.get('sha256') %}<dt>sha256 <span class="dt-note">원문 봉인</span></dt><dd class="mono wrap">{{ meta.get('sha256') }}</dd>{% endif %}
+    <dt>파일</dt><dd class="mono wrap">{{ page.relpath }}</dd>
   </dl>
   {{ tags(meta) }}
   {{ sources(meta, wl_index) }}
 </header>
 
-<article class="card md doc-body">{{ body_html|safe }}</article>
+{{ claim_legend(claims) }}
+
+<div class="reader">
+  <div class="reader-side">{{ toc_nav(toc) }}</div>
+  <article class="prose doc-body">{{ body_html|safe }}</article>
+</div>
 {% endblock %}

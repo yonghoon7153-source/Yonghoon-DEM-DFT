@@ -12,49 +12,103 @@
 {% block head %}{% endblock %}
 </head>
 <body>
-<a class="skip-link" href="#main">본문으로 건너뛰기</a>
-<button class="menu-toggle" id="menubtn" aria-label="메뉴 열기/닫기" aria-expanded="false">☰</button>
+{# ── 아이콘 스프라이트 ──────────────────────────────────────────────────
+   아이콘 폰트도 CDN 도 못 쓴다 (CSP). 인라인 SVG symbol 이면 의존성 0 이고
+   currentColor 를 따라가므로 테마 전환에 저절로 맞는다. #}
+<svg class="sprite" aria-hidden="true" focusable="false">
+  <symbol id="i-home" viewBox="0 0 24 24"><path d="M3 10.5 12 3l9 7.5M5.5 9.5V20h13V9.5"/></symbol>
+  <symbol id="i-paper" viewBox="0 0 24 24"><path d="M6 3h8l4 4v14H6z"/><path d="M14 3v4h4M9 12h6M9 16h6"/></symbol>
+  <symbol id="i-question" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.5 2.5 0 1 1 3.2 2.4c-.6.2-.7.8-.7 1.4"/><path d="M12 17h.01"/></symbol>
+  <symbol id="i-concept" viewBox="0 0 24 24"><path d="M12 3.5 20 12l-8 8.5L4 12z"/></symbol>
+  <symbol id="i-entity" viewBox="0 0 24 24"><rect x="3.5" y="4.5" width="17" height="15" rx="2"/><path d="M3.5 9.5h17M9 9.5V19.5"/></symbol>
+  <symbol id="i-chart" viewBox="0 0 24 24"><path d="M4 4v16h16"/><path d="M7.5 15l3.5-4.5 3 2.5 4-6"/></symbol>
+  <symbol id="i-gate" viewBox="0 0 24 24"><path d="M12 4v16M6 8h12"/><path d="M4.5 15 7 8.5 9.5 15a2.6 2.6 0 0 1-5 0zM14.5 15 17 8.5 19.5 15a2.6 2.6 0 0 1-5 0z"/></symbol>
+  <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="6.5"/><path d="m16 16 4.5 4.5"/></symbol>
+  <symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2.5v2M12 19.5v2M2.5 12h2M19.5 12h2M5.2 5.2l1.4 1.4M17.4 17.4l1.4 1.4M18.8 5.2l-1.4 1.4M6.6 17.4l-1.4 1.4"/></symbol>
+  <symbol id="i-moon" viewBox="0 0 24 24"><path d="M20 14.5A8.5 8.5 0 0 1 9.5 4a8.5 8.5 0 1 0 10.5 10.5z"/></symbol>
+  <symbol id="i-menu" viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></symbol>
+  <symbol id="i-close" viewBox="0 0 24 24"><path d="m6 6 12 12M18 6 6 18"/></symbol>
+  <symbol id="i-lock" viewBox="0 0 24 24"><rect x="5" y="10.5" width="14" height="9.5" rx="2"/><path d="M8.5 10.5V7.5a3.5 3.5 0 0 1 7 0v3"/></symbol>
+</svg>
 
-<nav class="sidebar" aria-label="주 메뉴">
+<a class="skip-link" href="#main">본문으로 건너뛰기</a>
+<button class="menu-toggle" id="menubtn" aria-label="메뉴 열기/닫기" aria-expanded="false" aria-controls="sidebar">
+  <svg class="ic" aria-hidden="true"><use href="#i-menu"></use></svg>
+</button>
+<div class="nav-veil" id="navveil" hidden></div>
+
+<nav class="sidebar" id="sidebar" aria-label="주 메뉴">
   <div class="sidebar-header">
     <a href="/" class="brand">Yonghoon<span class="brand-accent">·wiki</span></a>
     <div class="brand-sub">모노레포 열람 · 읽기 전용</div>
   </div>
 
-  <form class="searchbox" action="/search" method="get" role="search">
-    <input type="search" name="q" placeholder="전문 검색…" aria-label="전문 검색"
-           value="{{ q if q is defined else '' }}" autocomplete="off">
-  </form>
+  <button class="cmdk-open" id="cmdkbtn" type="button" aria-haspopup="dialog">
+    <svg class="ic" aria-hidden="true"><use href="#i-search"></use></svg>
+    <span>바로 가기…</span>
+    <kbd class="kbd" id="cmdkhint">⌘K</kbd>
+  </button>
 
-  <div class="nav-section">위키</div>
-  <ul class="nav-links">
-    <li><a href="/" {% if active=='home' %}class="active" aria-current="page"{% endif %}><span class="ic">▦</span> 홈 · 카탈로그</a></li>
-    <li><a href="/papers" {% if active=='papers' %}class="active" aria-current="page"{% endif %}><span class="ic">▣</span> 논문 digest</a></li>
-    <li><a href="/questions" {% if active=='questions' %}class="active" aria-current="page"{% endif %}><span class="ic">?</span> 열린 질문</a></li>
-    <li><a href="/concepts" {% if active=='concepts' %}class="active" aria-current="page"{% endif %}><span class="ic">◆</span> 개념</a></li>
-    <li><a href="/entities" {% if active=='entities' %}class="active" aria-current="page"{% endif %}><span class="ic">▤</span> 프로젝트(satellite)</a></li>
+  <div class="nav-section" id="nav-wiki">위키</div>
+  <ul class="nav-links" aria-labelledby="nav-wiki">
+    <li><a href="/"{% if active=='home' %} class="active" aria-current="page"{% endif %}><svg class="ic" aria-hidden="true"><use href="#i-home"></use></svg>홈 · 카탈로그</a></li>
+    <li><a href="/papers"{% if active=='papers' %} class="active" aria-current="page"{% endif %}><svg class="ic" aria-hidden="true"><use href="#i-paper"></use></svg>논문 digest</a></li>
+    <li><a href="/questions"{% if active=='questions' %} class="active" aria-current="page"{% endif %}><svg class="ic" aria-hidden="true"><use href="#i-question"></use></svg>열린 질문</a></li>
+    <li><a href="/concepts"{% if active=='concepts' %} class="active" aria-current="page"{% endif %}><svg class="ic" aria-hidden="true"><use href="#i-concept"></use></svg>개념</a></li>
+    <li><a href="/entities"{% if active=='entities' %} class="active" aria-current="page"{% endif %}><svg class="ic" aria-hidden="true"><use href="#i-entity"></use></svg>satellite 프로젝트</a></li>
   </ul>
 
-  <div class="nav-section">연구 산출물</div>
-  <ul class="nav-links">
-    <li><a href="/results" {% if active=='results' %}class="active" aria-current="page"{% endif %}><span class="ic">📈</span> Phase 결과</a></li>
-    <li><a href="/gate" {% if active=='gate' %}class="active" aria-current="page"{% endif %}><span class="ic">⚖</span> 게이트 원장</a></li>
-    <li><a href="/search" {% if active=='search' %}class="active" aria-current="page"{% endif %}><span class="ic">🔍</span> 검색</a></li>
+  <div class="nav-section" id="nav-out">연구 산출물</div>
+  <ul class="nav-links" aria-labelledby="nav-out">
+    <li><a href="/results"{% if active=='results' %} class="active" aria-current="page"{% endif %}><svg class="ic" aria-hidden="true"><use href="#i-chart"></use></svg>Phase 결과</a></li>
+    <li><a href="/gate"{% if active=='gate' %} class="active" aria-current="page"{% endif %}><svg class="ic" aria-hidden="true"><use href="#i-gate"></use></svg>게이트 원장</a></li>
+    <li><a href="/search"{% if active=='search' %} class="active" aria-current="page"{% endif %}><svg class="ic" aria-hidden="true"><use href="#i-search"></use></svg>검색</a></li>
   </ul>
+
+  {% block sidebar_extra %}{% endblock %}
 
   <div class="sidebar-footer">
-    <button class="theme-toggle" id="themebtn" aria-label="라이트/다크 전환">
-      <span class="tt-icon">🌙</span><span class="tt-label">다크 모드</span>
+    <button class="theme-toggle" id="themebtn" type="button" aria-label="라이트/다크 전환">
+      <svg class="ic tt-icon" aria-hidden="true"><use href="#i-moon" id="tt-use"></use></svg>
+      <span class="tt-label">다크 모드</span>
     </button>
-    <p class="ro-note">이 앱은 <b>아무것도 쓰지 않는다.</b><br>
-      <code>wiki/raw/</code> 는 sha256 봉인 불변층이고,<br>
-      <code>degradation-degeneracy/</code> 는 게이트 리뷰 대상 code identity 다.</p>
+    <p class="ro-note">
+      <svg class="ic" aria-hidden="true"><use href="#i-lock"></use></svg>
+      이 앱은 <b>아무것도 쓰지 않는다.</b>
+      <code>wiki/raw/</code> 는 sha256 봉인 불변층이고
+      <code>degradation-degeneracy/</code> 는 게이트 리뷰 대상 code identity 다.
+    </p>
   </div>
 </nav>
 
 <main class="content" id="main" tabindex="-1">
 {% block content %}{% endblock %}
 </main>
+
+{# ── 커맨드 팔레트 (⌘K / Ctrl-K) ────────────────────────────────────────
+   목록은 /api/palette.json 을 fetch 해 **DOM 으로** 채운다 (innerHTML 금지 —
+   제목은 위키 파일에서 온 문자열이다). #}
+<div class="cmdk" id="cmdk" hidden>
+  <div class="cmdk-veil" data-cmdk-close></div>
+  <div class="cmdk-box" role="dialog" aria-modal="true" aria-label="바로 가기">
+    <div class="cmdk-field">
+      <svg class="ic" aria-hidden="true"><use href="#i-search"></use></svg>
+      <input type="text" id="cmdk-q" autocomplete="off" spellcheck="false"
+             placeholder="페이지·논문·질문 이름…" aria-label="바로 갈 곳" aria-controls="cmdk-list">
+      <button type="button" class="cmdk-x" data-cmdk-close aria-label="닫기">
+        <svg class="ic" aria-hidden="true"><use href="#i-close"></use></svg>
+      </button>
+    </div>
+    <ul class="cmdk-list" id="cmdk-list" role="listbox" aria-label="결과"></ul>
+    <div class="cmdk-foot">
+      <span><kbd class="kbd">↑</kbd><kbd class="kbd">↓</kbd> 이동</span>
+      <span><kbd class="kbd">↵</kbd> 열기</span>
+      <span><kbd class="kbd">esc</kbd> 닫기</span>
+    </div>
+  </div>
+</div>
+
+<script src="{{ url_for('static', filename='js/app.js') }}?v={{ asset_version }}" defer></script>
 {% block scripts %}{% endblock %}
 </body>
 </html>

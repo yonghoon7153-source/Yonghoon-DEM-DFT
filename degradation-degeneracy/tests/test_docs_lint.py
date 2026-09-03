@@ -11317,7 +11317,7 @@ def test_a_bind_mounted_alias_of_a_frozen_child_is_not_writable(tmp_path):
             "별칭에 marker 가 보인다 — 시험이 겨눈 상황이 아니다")
         with pytest.raises(SystemExit) as ei:
             rp._assert_writable(alias)
-        assert "frozen" in str(ei.value) or "얼" in str(ei.value), str(ei.value)
+        _assert_refused_as_frozen(ei.value)
     finally:
         subprocess.run(["umount", str(alias)], capture_output=True)
 
@@ -11485,6 +11485,31 @@ def _umount(p):
     subprocess.run(["umount", str(p)], capture_output=True)
 
 
+#: 얼렸다고 **판정**했을 때만 나오는 어구 (fail-closed 거부와 구별된다).
+_FROZEN_VERDICTS = ("는 frozen cohort 다", "목적지가 얼린 tree")
+
+
+def _assert_refused_as_frozen(exc, cohort_id="gF"):
+    """거부의 **이유**가 "얼린 tree 다" 인지 묻는다 (57차 자체 발견).
+
+    ★ 왜 부분문자열 `"frozen"` 으로는 안 되는가 — pytest 의 `tmp_path` 이름은
+      **시험 함수 이름에서 나온다**. 이름에 `frozen` 이 든 시험은 어떤 오류
+      메시지든 경로만 실리면 `"frozen" in msg` 를 통과한다. 실제로 그랬다:
+      `mountinfo-octal-escape-is-decoded` 변이를 걸면 fail-closed 거부
+      ("커널이 답한 mount 를 목적지 경로에 맞출 수 없다")가 나는데, 그 메시지에
+      실린 tmp_path 가 `…/test_a_frozen_alias_whose_path_ha0/…` 라서 시험이
+      **초록**이었다 — 변이 등록부가 "안 물었다" 로 잡아 준 자리다.
+
+    그러므로 두 가지를 함께 묻는다: 판정 어구와, 그 판정이 지목한 cohort id.
+    fail-closed 거부는 둘 다 갖지 않으므로 이제 구별된다.
+    """
+    msg = str(exc)
+    assert any(v in msg for v in _FROZEN_VERDICTS), (
+        f"거부는 했지만 '얼린 tree' 판정이 아니다 (fail-closed 거부일 수 있다): {msg}")
+    assert cohort_id in msg, (
+        f"판정은 했지만 어느 cohort 인지 말하지 않는다 (기대 {cohort_id!r}): {msg}")
+
+
 def test_a_frozen_alias_whose_path_has_a_space_is_not_writable(tmp_path):
     """★ 56차 P0-5 — mountinfo 의 **octal escape** 를 안 풀었다.
 
@@ -11506,7 +11531,7 @@ def test_a_frozen_alias_whose_path_has_a_space_is_not_writable(tmp_path):
     try:
         with pytest.raises(SystemExit) as ei:
             rp._assert_writable(alias)
-        assert "frozen" in str(ei.value) or "얼" in str(ei.value), str(ei.value)
+        _assert_refused_as_frozen(ei.value)
     finally:
         _umount(alias)
 
@@ -11541,7 +11566,7 @@ def test_overlapping_binds_resolve_to_the_mount_the_kernel_reports(tmp_path):
         try:
             with pytest.raises(SystemExit) as ei:
                 rp._assert_writable(inner)
-            assert "frozen" in str(ei.value) or "얼" in str(ei.value), str(ei.value)
+            _assert_refused_as_frozen(ei.value)
         finally:
             _umount(inner)
     finally:
@@ -11581,7 +11606,7 @@ def test_a_bind_from_a_separate_filesystem_is_resolved_by_the_mount_graph(tmp_pa
         try:
             with pytest.raises(SystemExit) as ei:
                 rp._assert_writable(alias)
-            assert "frozen" in str(ei.value) or "얼" in str(ei.value), str(ei.value)
+            _assert_refused_as_frozen(ei.value)
         finally:
             _umount(alias)
     finally:
@@ -11623,7 +11648,7 @@ def test_a_stacked_mount_is_identified_by_the_kernel_not_by_row_order(tmp_path):
                 "별칭에 marker 가 보인다 — 시험이 겨눈 상황이 아니다")
             with pytest.raises(SystemExit) as ei:
                 rp._assert_writable(alias)
-            assert "frozen" in str(ei.value) or "얼" in str(ei.value), str(ei.value)
+            _assert_refused_as_frozen(ei.value)
         finally:
             _umount(alias)
     finally:
