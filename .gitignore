@@ -45,3 +45,8 @@ degradation-degeneracy/results/_smoke/_unit/
 
 # 3자 데이터셋 원본 — manifest 와 파생 소표만 커밋한다 (재배포·용량)
 mode-observability/data/
+
+# 파이썬 바이트코드 — 저장소 어디에서든 (지금까지 degradation-degeneracy/ 안에만
+# 규칙이 있어 새 satellite 의 __pycache__ 가 untracked 로 떴다)
+__pycache__/
+*.py[cod]
