@@ -4242,58 +4242,115 @@ def _mount_table() -> list:
     return out
 
 
-def _deepest_mount_for(path: Path, table) -> dict | None:
-    """`path` 를 담고 있는 **가장 깊은** mount (56차 P0-6)."""
-    best = None
-    for m in table:
-        mp = Path(m["mp"])
-        if path == mp or mp in path.parents:
-            if best is None or len(mp.parts) > len(Path(best["mp"]).parts):
-                best = m
-    return best
+#: 대상을 **열기만** 하는 flag — 읽기 권한도 directory 여부도 묻지 않는다.
+_O_LOOKUP = getattr(os, "O_PATH", os.O_RDONLY)
 
 
-def _through_bind_mounts(dest: Path) -> Path:
-    """목적지를 **mount 그래프로** 푼 실제 경로 (55차 P0-4 · 56차 P0-5·6·7).
+def _kernel_mount_id(path) -> str:
+    """이 경로가 **실제로 올라앉은** mount 의 ID — 커널이 답한다 (57차 P0-2).
 
-    한 걸음은 두 단계다.
+    ★ 왜 mountinfo 재현을 그만두는가 — 55·56차는 mountinfo 를 파이썬에서
+      다시 풀어 "어느 mount 냐" 를 **추측**했다. 그 추측은 세 번 틀렸다
+      (P0-5 escape · P0-6 깊이 · P0-7 root 의 좌표계). 57차 반례는 네 번째다:
+      같은 mountpoint 에 mount 를 **겹쳐 쌓으면** 깊이가 같아 구별할 수 없고,
+      "행 순서상 먼저" 를 고르면 **아래** mount 를 고른다 — 무해한 bind 를
+      깔고 얼린 child 를 덮으면 번역이 무해한 쪽으로 풀려 guard 가 통과했다.
 
-    1. `dest` 를 담는 가장 깊은 mount 를 찾아 **filesystem 안의** 경로를 얻는다
-       (`root` + mountpoint 이후 나머지).
-    2. 같은 major:minor 를 가진 mount 중 그 filesystem 경로를 담는 것을 찾아
-       namespace 에서 보이는 이름으로 되돌린다. 후보가 여럿이면 `root` 가 가장
-       짧은 것(그 filesystem 을 가장 넓게 보여 주는 창)을 고른다.
+      56차 verdict 가 못 박은 것: **행 순서와 pathname 깊이로 stacked top 을
+      추측하면 안 된다.** 추측을 더 정교하게 만드는 수정은 다음 반례를 부를
+      뿐이고, 종결이 아니다. 겹침·전파·순서는 커널이 **이미 푼** 문제이므로
+      경로를 열고 그 fd 의 mount ID 를 묻는다 (`/proc/self/fdinfo/<fd>`).
 
-    되돌릴 창이 **없으면** 게시를 거부한다 — 목적지가 어디인지 답하지 못한
-    채로 쓰는 것보다 멈추는 편이 낫다.
+    답을 못 얻으면 예외다. "모른다" 를 "mount 가 없다" 로 바꾸는 것이
+    fail-open 이라는 규칙은 `_mount_table()` 과 같다.
     """
-    cur = Path(dest).resolve()
-    table = _mount_table()
-    for _ in range(32):
-        m = _deepest_mount_for(cur, table)
-        if m is None:
-            return cur
-        rel = cur.relative_to(Path(m["mp"]))
-        fs_path = Path(m["root"]) / rel if str(rel) != "." else Path(m["root"])
-        # 같은 filesystem 을 보여 주는 창들 중 이 경로를 담는 것
-        wins = [c for c in table
-                if c["dev"] == m["dev"]
-                and (Path(c["root"]) == fs_path
-                     or Path(c["root"]) in fs_path.parents)]
-        if not wins:
-            raise SystemExit(
-                f"✗ 목적지가 어느 이름으로도 보이지 않는다 ({dest} → "
-                f"dev {m['dev']} 의 {fs_path}) — 얼린 tree 의 별칭인지 답할 수 "
-                "없으므로 게시하지 않는다 (fail-closed)")
-        win = min(wins, key=lambda c: len(Path(c["root"]).parts))
-        sub = fs_path.relative_to(Path(win["root"]))
-        nxt = Path(win["mp"]) / sub if str(sub) != "." else Path(win["mp"])
-        if nxt == cur:
-            return cur
-        cur = nxt
+    try:
+        fd = os.open(str(path), _O_LOOKUP)
+    except OSError as exc:
+        raise SystemExit(
+            f"✗ 목적지를 열 수 없다 ({path}: {exc}) — 어느 mount 위인지 커널에게 "
+            "물을 수 없으므로 게시하지 않는다 (fail-closed)")
+    try:
+        info = Path(f"/proc/self/fdinfo/{fd}").read_text(encoding="utf-8")
+    except OSError as exc:
+        raise SystemExit(
+            f"✗ fd 의 mount ID 를 읽을 수 없다 ({path}: {exc}) — 얼린 tree 의 "
+            "별칭인지 답할 수 없으므로 게시하지 않는다 (fail-closed)")
+    finally:
+        os.close(fd)
+    for ln in info.splitlines():
+        if ln.startswith("mnt_id:"):
+            return ln.split(":", 1)[1].strip()
     raise SystemExit(
-        f"✗ mount 해석이 {dest} 에서 끝나지 않는다 — 순환일 수 있으므로 "
-        "게시하지 않는다 (fail-closed)")
+        f"✗ fdinfo 에 mnt_id 가 없다 ({path}) — 이 커널에서는 목적지의 mount 를 "
+        "확정할 수 없으므로 게시하지 않는다 (fail-closed)")
+
+
+def _fs_identity(path) -> tuple:
+    """`(major:minor, 그 filesystem **안**의 경로)` — 이름이 아니라 **대상**의 좌표.
+
+    이 좌표는 bind·겹침·symlink·이름 변경에 불변이다. 그러므로 "얼린 tree 안인가"
+    를 이 좌표에서 물으면 "어떤 이름으로 왔는가" 는 더 물을 필요가 없다
+    (57차 P0-4). 55·56차가 이름을 하나 골라 되돌리려다 세 번 틀린 자리다.
+
+    `root` 는 **그 filesystem 안의** 경로다 (56차 P0-7) — namespace 절대경로가
+    아니다. 별도 tmpfs 의 child 를 bind 하면 `root=/child` 다.
+
+    목적지는 **아직 없을 수 있다** (새 cohort 디렉터리를 만들기 직전에 묻는
+    것이 이 검사의 정상 용례다). 그래서 존재하는 가장 깊은 조상에게 커널에
+    묻고, 없는 나머지는 그 좌표 뒤에 그대로 붙인다 — 없는 이름 위에는 아무 것도
+    mount 되어 있지 않으므로 그 이어붙임에 추측이 없다.
+    """
+    table = _mount_table()
+    probe, tail = Path(path).resolve(), []
+    while not probe.exists() and probe.parent != probe:
+        tail.append(probe.name)
+        probe = probe.parent
+    mid = _kernel_mount_id(probe)
+    m = next((x for x in table if x["id"] == mid), None)
+    if m is None:
+        raise SystemExit(
+            f"✗ 커널이 답한 mount {mid} 가 mountinfo 에 없다 ({path}) — "
+            "mount 표가 그 사이에 바뀌었을 수 있으므로 게시하지 않는다")
+    try:
+        rel = probe.relative_to(Path(m["mp"]))
+    except ValueError:
+        raise SystemExit(
+            f"✗ 커널이 답한 mount 를 목적지 경로에 맞출 수 없다 "
+            f"({probe} 가 {m['mp']!r} 아래가 아니다) — 게시하지 않는다")
+    fs = Path(m["root"]) / rel if str(rel) != "." else Path(m["root"])
+    for name in reversed(tail):
+        fs = fs / name
+    return (m["dev"], fs)
+
+
+def _names_for(dev: str, fs: Path, table) -> list:
+    """이 namespace 가 `(dev, fs)` 를 보여 주는 **모든** 이름 (57차 P1-4).
+
+    창을 하나 고르지 않는다. 56차는 `root` 가 가장 짧은 창을 골랐고, **고른다는
+    것 자체**가 다음 반례의 자리였다. 후보는 전부 만들고, 각각을 **커널에
+    되물어** 정말 그 대상인지 확인한다 — 위에 덮어씌운 mount 로 가려진 이름은
+    그 되물음에서 떨어진다.
+
+    이름이 하나도 없으면 빈 목록이다. 그 조상은 이 namespace 가 아예 보여 주지
+    않는다는 뜻이고 (예: 컨테이너의 `/` 위쪽), 보여 주지 않는 것은 목적지로도
+    쓸 수 없으므로 거부 사유가 아니다.
+    """
+    out = []
+    for c in table:
+        if c["dev"] != dev:
+            continue
+        root = Path(c["root"])
+        if not (root == fs or root in fs.parents):
+            continue
+        sub = fs.relative_to(root)
+        cand = Path(c["mp"]) / sub if str(sub) != "." else Path(c["mp"])
+        try:
+            if _fs_identity(cand) == (dev, fs):
+                out.append(cand)
+        except (OSError, SystemExit):
+            continue
+    return out
 
 
 def _assert_writable(dest: Path) -> None:
@@ -4307,35 +4364,37 @@ def _assert_writable(dest: Path) -> None:
             f"봉인 marker 가 대상 안에 있다 ({FROZEN_MARKER}). 원장에서 이름을 "
             "바꿔도, 다른 경로로 같은 tree 를 가리켜도 쓸 수 없다.\n"
             "  새 세대는 **새 디렉터리**를 쓴다 (계약 v4 §13.3).")
-    # ★ 55차 P0-4 — 목적지를 **mount 관계로** 푼다. 52차의 marker 는 tree 안에
-    #   있으므로 root 를 어떤 이름으로 열어도 보이지만, 리뷰어는 marker 가 없는
-    #   **자식**을 새 경로에 bind mount 했다 (실측: `marker at alias: false ·
-    #   writable guard: PASSED · CURRENT written inside frozen tree: true`).
-    #   이름을 몇 겹 만들든 mount 관계는 커널이 알고 있다 — 그것을 읽는다.
-    real = _through_bind_mounts(dest)
-    if real != Path(dest).resolve():
-        here = read_frozen_marker(real)
-        if here is not None:
-            raise SystemExit(
-                f"✗ 이 경로는 얼린 tree 를 가리키는 **mount 별칭**이다 "
-                f"({dest} → {real}) — `{here['cohort_id']}` 로 얼렸다. "
-                "이름을 새로 만들어도 같은 tree 다.")
-    for probe in (real, *real.parents):
-        marker = read_frozen_marker(probe)
-        if marker is not None and probe != Path(dest).resolve():
-            raise SystemExit(
-                f"✗ 목적지가 얼린 tree **안**이다 ({dest} → {real}) — "
-                f"`{marker['cohort_id']}` 의 봉인이 {probe} 에 있다. "
-                "새 세대는 **새 디렉터리**를 쓴다 (계약 v4 §13.3).")
-    d = real
+    # ★ 55차 P0-4 · 57차 P0-2/3/4 — 목적지를 **파일시스템 좌표**로 옮긴다.
+    #   52차의 marker 는 tree 안에 있으므로 root 를 어떤 이름으로 열어도 보이지만,
+    #   리뷰어는 marker 가 **없는 자식**을 새 경로에 bind mount 했다 (실측:
+    #   `marker at alias: false · writable guard: PASSED · CURRENT written inside
+    #   frozen tree: true`). 55·56차는 그 이름을 **되돌리려** 했고 세 번 틀렸다.
+    #   57차는 되돌리지 않는다 — `(dev, filesystem 안의 경로)` 로 옮겨 놓으면
+    #   이름이 몇 겹이든 같은 좌표이고, 비교가 이름에 의존하지 않는다.
+    table = _mount_table()
+    dev, fs = _fs_identity(dest)
     for cid, frozen in _frozen_cohort_dirs().items():
         # ★ 28차 P1-5 — exact equality 만 봤다. `frozen/child` 는 frozen tree
         #   **안**인데 통과했다. 자손까지 막는다.
-        if d == frozen or frozen in d.parents:
+        if not frozen.exists():
+            continue
+        fdev, ffs = _fs_identity(frozen)
+        if fdev == dev and (ffs == fs or ffs in fs.parents):
             raise SystemExit(
-                f"✗ `{cid}` 는 frozen cohort 다 ({d}) — 쓸 수 없다.\n"
+                f"✗ `{cid}` 는 frozen cohort 다 ({dest} → dev {dev} 의 {fs}) — "
+                "쓸 수 없다.\n"
                 f"  원자료를 잃은 투영이 들어 있어 덮으면 복구할 수 없다.\n"
                 f"  활성 cohort 를 지정하세요: --cohort <id>")
+    # 원장 **밖**에서 얼린 tree — 좌표의 조상마다 이 namespace 가 보여 주는
+    # **모든** 이름으로 marker 를 본다 (57차 P1-4: 창을 하나 고르지 않는다).
+    for anc in (fs, *fs.parents):
+        for name in _names_for(dev, anc, table):
+            marker = read_frozen_marker(name)
+            if marker is not None and anc != fs:
+                raise SystemExit(
+                    f"✗ 목적지가 얼린 tree **안**이다 ({dest} → dev {dev} 의 "
+                    f"{fs}) — `{marker['cohort_id']}` 의 봉인이 {name} 에 있다. "
+                    "새 세대는 **새 디렉터리**를 쓴다 (계약 v4 §13.3).")
 
 
 def _cohort_dir(cohort_id: str) -> Path:

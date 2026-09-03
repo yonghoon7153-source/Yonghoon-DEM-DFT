@@ -966,15 +966,23 @@ MUTANTS = [
      '                    "root": f[3],\n'
      '                    "mp": f[4]})',
      "frozen_alias_whose_path_has_a_space_is_not_writable"),
-    # ★ P0-6 — 가장 깊은 mountpoint 를 고른다.
-    ("deepest-mount-is-chosen", RP,
-     "            if best is None or len(mp.parts) > len(Path(best[\"mp\"]).parts):",
-     "            if best is None:",
-     "deepest_mount_wins_when_binds_overlap"),
-    # ★ P0-7 — `root` 는 filesystem 안의 경로다 (major:minor 로 창을 찾는다).
+    # ★ 57차 P0-2 — mount 정체는 커널이 답한다 (행 순서로 추측하지 않는다).
+    #   56차의 `deepest-mount-is-chosen` 을 여기로 옮겼다: "가장 깊은 것을
+    #   고른다" 는 규칙 자체가 P0-2 반례(겹쳐 쌓으면 깊이가 같다)로 무너졌고,
+    #   그 규칙을 지키던 코드는 사라졌다. 지켜야 할 것은 **커널에게 묻는다** 다.
+    ("mount-identity-comes-from-the-kernel", RP,
+     "    for ln in info.splitlines():\n"
+     "        if ln.startswith(\"mnt_id:\"):\n"
+     "            return ln.split(\":\", 1)[1].strip()",
+     "    p = Path(path).resolve()\n"
+     "    for c in _mount_table():\n"
+     "        if p == Path(c[\"mp\"]) or Path(c[\"mp\"]) in p.parents:\n"
+     "            return c[\"id\"]",
+     "a_stacked_mount_is_identified_by_the_kernel_not_by_row_order"),
+    # ★ P0-7 — `root` 는 filesystem 안의 경로다 (namespace 절대경로가 아니다).
     ("mount-root-is-filesystem-relative", RP,
-     '        nxt = Path(win["mp"]) / sub if str(sub) != "." else Path(win["mp"])',
-     '        nxt = fs_path',
+     '    fs = Path(m["root"]) / rel if str(rel) != "." else Path(m["root"])',
+     '    fs = probe',
      "bind_from_a_separate_filesystem_is_resolved_by_the_mount_graph"),
     # ★ P0-8 — 건너간 module 에도 module 효과를 seed 한다.
     ("crossed-module-effects-are-seeded", RP,
@@ -1007,11 +1015,6 @@ MUTANTS = [
      "    if True:\n"
      "        return _finish_pending_anchor()",
      "stale_anchor_repair_cannot_rewind_the_head"),
-    # ★ P0-4 — 목적지를 **mount 관계로** 푼다 (이름으로는 bind 가 안 보인다).
-    ("destination-is-resolved-through-mounts", RP,
-     "    real = _through_bind_mounts(dest)",
-     "    real = Path(dest).resolve()",
-     "bind_mounted_alias_of_a_frozen_child_is_not_writable"),
     # ★ P1-1 — 검사는 **첫 부작용 앞**에 있어야 검사다.
     ("freeze-checks-the-destination-first", RP,
      "    _assert_dest_inside_repo(dest, cohort_id)\n"
@@ -1036,6 +1039,18 @@ MUTANTS = [
 #: 여러 지점을 **함께** 되돌려야 관측되는 변이 (심층 방어라 하나만 지우면
 #: 다른 하나가 가린다). 41·42·43차에 실측했다.
 MULTI = [
+    # ★ 55차 P0-4 · 57차 P0-4 — 얼린 tree 의 **자식**을 bind mount 한 별칭.
+    #   56차까지는 자리가 하나였다 (`real = _through_bind_mounts(dest)`).
+    #   57차가 목적지를 파일시스템 좌표로 옮기면서 자리가 **둘**이 됐다:
+    #   원장이 아는 frozen 디렉터리와의 좌표 비교, 그리고 원장 밖에서 얼린
+    #   tree 를 잡는 조상 marker 순회. 하나만 꺼도 다른 하나가 가린다 —
+    #   이 저장소가 반복해 만나는 심층 방어 형태이고, 답은 함께 되돌리는 것이다.
+    ("destination-is-compared-in-filesystem-coordinates", RP, [
+        ("        if fdev == dev and (ffs == fs or ffs in fs.parents):",
+         "        if False:"),
+        ("            if marker is not None and anc != fs:",
+         "            if False:"),
+     ], "bind_mounted_alias_of_a_frozen_child_is_not_writable"),
     # ★ 56차 — 56차 P0-8 이 건너간 module 의 `MODULE_EFFECTS` 를 **무조건**
     #   seed 하면서, 건너기 자체를 끊는 옛 변이 둘이 안 물게 됐다: seed 가
     #   scoring 의 내용을 여전히 닫힘에 넣으므로 digest 가 움직인다. 새 방어가

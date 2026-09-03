@@ -11511,13 +11511,17 @@ def test_a_frozen_alias_whose_path_has_a_space_is_not_writable(tmp_path):
         _umount(alias)
 
 
-def test_the_deepest_mount_wins_when_binds_overlap(tmp_path):
+def test_overlapping_binds_resolve_to_the_mount_the_kernel_reports(tmp_path):
     """★ 56차 P0-6 — **첫 row** 를 고르고 `break` 했다.
 
     바깥 조상 mount 를 먼저 만나면 경로가 그쪽으로 바뀌고, 실제 대상인 더 깊은
     mount 는 다시 매치할 수 없다 (리뷰어 실측: `translation_chose_benign_outer
-    _source true · published true`). 매 단계에서 **가장 깊은** mountpoint 를
-    골라야 한다.
+    _source true · published true`).
+
+    ★ 57차 — 56차는 이것을 "가장 깊은 mountpoint 를 고른다" 로 고쳤고, 그 고름이
+      P0-2 에서 다시 틀렸다 (겹쳐 쌓으면 깊이가 같다). 이제 고르지 않는다 —
+      커널이 답한 mount ID 를 쓴다. 반례는 그대로 회귀로 남긴다: 겹친 bind 에서
+      실제로 보이는 tree 가 얼려 있으면 여전히 막혀야 한다.
     """
     import os.path
 
@@ -11582,6 +11586,48 @@ def test_a_bind_from_a_separate_filesystem_is_resolved_by_the_mount_graph(tmp_pa
             _umount(alias)
     finally:
         _umount(frozen)
+
+
+def test_a_stacked_mount_is_identified_by_the_kernel_not_by_row_order(tmp_path):
+    """★ 57차 P0-2 — 같은 mountpoint 에 겹쳐 올린 mount 를 **행 순서**로 골랐다.
+
+    56차는 "가장 깊은 mountpoint" 로 골랐다. 그런데 두 mount 가 **같은
+    mountpoint** 위에 쌓이면 깊이가 같다 — `_deepest_mount_for()` 는 엄격
+    부등호(`>`)로만 교체하므로 mountinfo 에서 **먼저 나온 행**, 즉 **아래**
+    mount 를 고른다. 실제로 보이는 것은 **위** mount 다.
+
+    그러므로 무해한 bind 를 먼저 깔고 얼린 child 를 그 위에 덮으면, 번역은
+    무해한 쪽으로 풀리고 guard 가 통과한다. 쓰기는 얼린 tree 로 들어간다.
+
+    56차 verdict 가 못 박은 것: **mountinfo 행 순서와 pathname 깊이로 stacked
+    top 을 추측하면 안 된다.** 커널이 이미 알고 있다 — 목적지를 열고 그 fd 의
+    mount ID 를 물으면 된다 (`/proc/self/fdinfo/<fd>` 의 `mnt_id`).
+    """
+    import os.path
+
+    if not os.path.isfile("/proc/self/mountinfo"):
+        pytest.skip("mountinfo 가 없는 환경")
+    rp = _fresh_rp()
+    frozen, active = _frozen_alias_repo(tmp_path, rp)
+    benign = tmp_path / "benign"
+    benign.mkdir(parents=True, exist_ok=True)
+    alias = active / "alias"
+    alias.mkdir(parents=True, exist_ok=True)
+    if not _bind(benign, alias):                   # 아래 — 무해
+        pytest.skip("bind mount 를 만들 수 없다")
+    try:
+        if not _bind(frozen / "child", alias):     # 위 — 실제로 보이는 것
+            pytest.skip("겹친 bind 를 만들 수 없다")
+        try:
+            assert not (alias / rp.FROZEN_MARKER).exists(), (
+                "별칭에 marker 가 보인다 — 시험이 겨눈 상황이 아니다")
+            with pytest.raises(SystemExit) as ei:
+                rp._assert_writable(alias)
+            assert "frozen" in str(ei.value) or "얼" in str(ei.value), str(ei.value)
+        finally:
+            _umount(alias)
+    finally:
+        _umount(alias)
 
 
 def test_module_effects_are_seeded_in_every_crossed_module():
