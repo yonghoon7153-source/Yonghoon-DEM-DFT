@@ -242,6 +242,52 @@ evidenceScope: single-source
 3. **D-7**: 경쟁 Nano Energy 논문 introduction 에서 Nd 선택 논리 직접 인용 확보 → litdb 등록.
 4. **D-4/D-5**: 제목 후보 3개와 각각이 요구하는 실험 조건을 표로. 실험 쪽 결정 사항.
 
+## 부록 A — 이 미팅에서 발표된 덱 (2026-09-03 추가 확인)
+
+전사와 짝이 되는 발표자료를 확보했다:
+**Jae Hyun Park, "Argyrodite electrolyte for all-solid-state Li metal battery",
+Research Seminar 2026-09-02, Battery Materials Lab (38쪽).**
+(= 전사의 참석자 1 = "재현". PDF 는 repo 밖. 추출: `tools/litdb/pdf_text.py`)
+
+⚠ **같은 날짜·같은 이름으로 올라온 다른 PDF 가 있다** — Kyungrok Do 의 Zn ALZIB 덱.
+파일명이 같으니 md5 로 구분해라 (Park `e2035697…` / Do `12fa7c66…`).
+
+### A-1. 덱이 준 확정 수치 — **전사 청취값을 이걸로 교체한다**
+
+| 항목 | 값 (덱) | 비고 |
+|---|---|---|
+| Young's modulus | **15.1 → 13.9 GPa** | ⚠ 전사에서 "14.9" 로 들렸다 — **STT 오류. 덱이 맞다.** |
+| 이온전도 활성화에너지 Ea | **0.313 → 0.263 eV** | "higher lattice flexibility lowers the migration barrier" |
+| Li 이동 장벽 (계산) | **Li₂S 0.305 eV vs Li–Nd alloy 0.229 eV** | ★ P-2 의 그 결과 |
+| 격자상수 | 소폭 증가 | "expansion by Nd³⁺ outweighs contraction by O²⁻" |
+
+→ **전사 기반 수치는 인용하지 마라.** 덱이 1차 출처다.
+
+### A-2. UPS ↔ REELS 구분 — 교수님이 공격한 지점의 정확한 위치
+
+덱 문구:
+> "UPS provides the **work function** as a measure of oxidative stability, whereas
+> REELS reveals the **band gap** associated with electronic conduction"
+> "UPS analysis revealed an enlarged ∣E_F − E_VBM∣ consistent with the delayed oxidation
+> onset and enhanced oxidative stability"
+
+교수님의 07:07–07:45 지적("라인을 어떻게 긋느냐에 따라 달라지는 거 아니냐")은
+**REELS 밴드갭 외삽선**을 향한 것이다. UPS 쪽(work function)은 별개 축이니 섞지 마라.
+→ D-6(b) 대응은 **REELS ΔE 외삽 구간 선정 규칙**을 먼저 선언하는 것이다.
+
+### A-3. 덱의 "Discussion point"(슬라이드 31) = 교수님이 기각한 목록
+
+덱 원문:
+> "전해질 입도 제어 / 계면 분석 및 저항 정량화 / DFT calculation
+>  – 선행 연구의 경우, Li metal 음극 관련 성능 개선에 초점 (CCD, Full cell..)
+>    XRD refinement / 계면 조성 관련 / 양극 관련 데이터 부족"
+> "Separator SE DFT calculation 필요할지"
+
+**이 세 가지가 미팅에서 그대로 기각됐다** — 앞 둘은 "comprehensive"(D-1), 셋째는
+"DFT 자체는 노블티가 아니다"(D-1). 즉 **덱의 차별점 절은 통째로 다시 써야 한다.**
+마지막 줄("Separator SE DFT calculation 필요할지")은 우리에게 온 질문인데,
+**D-3 이 안 풀린 상태에서 계산을 더 얹는 것은 D-1 에 또 걸린다.** 순서는 D-3 이 먼저다.
+
 ## 이 문서가 담지 않은 것
 
 - **STT 원문 전사는 repo 에 없다** (업로드 파일, 컨테이너와 함께 사라짐).
