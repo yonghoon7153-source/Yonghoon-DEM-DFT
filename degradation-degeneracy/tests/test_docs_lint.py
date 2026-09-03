@@ -11665,3 +11665,63 @@ def test_the_evidence_binds_the_execution_environment(tmp_path):
     # 비-Python 입력(requirements)도 결속돼 있어야 한다
     assert any("requirements" in k for k in base["inputs"]), (
         f"의존성 선언이 증거 밖이다: {sorted(base['inputs'])[:6]}")
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# 57차 — 게이트 56 반례
+# ─────────────────────────────────────────────────────────────────────────────
+
+def test_the_checker_actually_consumes_the_execution_receipt(tmp_path):
+    """★ 57차 P1-1 — 실행 영수증을 **쓰기만 하고 안 읽었다**.
+
+    56차는 `binding.execution` 과 `execution_digest` 를 조각에 적었다. 그런데
+    `check_coverage()` 의 `want` 에는 registry/expect/runner digest 만 있어서,
+    리뷰어가 12개 조각에서 두 필드를 **전부 삭제해도** rc 0 이었다.
+
+        execution_fields_removed True · mutated_coverage_rc 0 · RESULT VULNERABLE
+
+    적기만 하고 검사하지 않는 값은 결속이 아니라 장식이다 — 54차에 `head` 로
+    이미 배운 것을 새 필드에서 되풀이했다.
+    """
+    import json as _j
+
+    mr = _mr()
+    reg = mr._registry()
+    items, multi, _e, declared = mr._select("")
+    good = tmp_path / "s1.json"
+
+    def _report(name, phase):
+        fails = (mr.EXPECT.get(name) or {}).get("fail") or []
+        wit = (mr.EXPECT.get(name) or {}).get("witness") or {}
+        mid = mr._marker_id(name)
+        return _j.dumps({"tests": [
+            {"nodeid": f,
+             "call": {"outcome": "failed" if phase == "after" else "passed",
+                      "longrepr": f"E       {wit.get(f, '')}"}}
+            for f in fails] + [
+            {"nodeid": f"tests/test_mutation_marker_{mid}.py::test_mutant_{mid}",
+             "call": {"outcome": "passed", "longrepr": ""}}]}).encode("utf-8")
+
+    receipts = {n: {"kexpr": "", "before": _report(n, "before"),
+                    "after": _report(n, "after")} for n in reg}
+    mr._write_coverage(good, "", items, multi, declared,
+                       {n: True for n in reg}, receipts)
+    assert mr._assert_execution_is_current([str(good)]) == 0, "정상 조각이 거부됐다"
+
+    for drop in ("execution", "execution_digest"):
+        rec = _j.loads(good.read_text(encoding="utf-8"))
+        rec["binding"].pop(drop, None)
+        good.write_text(_j.dumps(rec, ensure_ascii=False, indent=2,
+                                 sort_keys=True), encoding="utf-8")
+        assert mr._assert_execution_is_current([str(good)]) == 1, (
+            f"binding.{drop} 을 지운 조각이 통과했다 — 쓰기만 하고 안 읽는다")
+
+    # 영수증 본문을 고치고 digest 를 안 맞추면 걸려야 한다
+    rec = _j.loads(good.read_text(encoding="utf-8"))
+    rec["binding"]["execution"] = dict(mr._execution_receipt())
+    rec["binding"]["execution"]["env"] = {"DD_SMOOTH_CACHE": "tampered"}
+    rec["binding"]["execution_digest"] = mr._execution_receipt_digest()
+    good.write_text(_j.dumps(rec, ensure_ascii=False, indent=2, sort_keys=True),
+                    encoding="utf-8")
+    assert mr._assert_execution_is_current([str(good)]) == 1, (
+        "본문과 digest 가 어긋난 영수증이 통과했다")

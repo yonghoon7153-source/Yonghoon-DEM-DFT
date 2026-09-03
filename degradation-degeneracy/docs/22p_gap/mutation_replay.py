@@ -3660,6 +3660,46 @@ def _verdict_from_reports(name: str, rep_dir) -> bool | None:
     return want.issubset(after) and not (want & before)
 
 
+def _assert_execution_is_current(paths) -> int:
+    """조각이 **지금 이 실행 환경**에서 나왔는가 (57차 P1-1).
+
+    56차는 `binding.execution` 과 `execution_digest` 를 적기만 하고 checker 는
+    registry/expect/runner digest 만 봤다. 리뷰어는 12개 조각에서 두 필드를
+    **전부 삭제하고도** rc 0 을 받았다 — 적기만 하고 검사하지 않는 값은 결속이
+    아니라 장식이다. 54차에 `head` 로 배운 것을 새 필드에서 되풀이했다.
+
+    셋을 본다: (1) 두 필드가 **있는가**, (2) 본문이 그 digest 로 해시되는가
+    (본문만 고치고 digest 를 안 맞추는 것을 막는다), (3) 지금 환경과 같은가.
+    """
+    now_body = _execution_receipt()
+    now = _execution_receipt_digest()
+    for pth in paths:
+        try:
+            rec = json.loads(pathlib.Path(pth).read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError) as exc:
+            return _refuse(f"✗ {pth}: 조각을 읽을 수 없다: {exc}")
+        b = rec.get("binding") or {}
+        body, got = b.get("execution"), str(b.get("execution_digest") or "")
+        if body is None or not got:
+            return _refuse(
+                f"✗ {pth}: 실행 영수증이 없다 (execution·execution_digest) — "
+                "어떤 환경에서 돌았는지 말하지 않는 조각은 증거가 아니다")
+        recomputed = hashlib.sha256(
+            json.dumps(body, sort_keys=True,
+                       ensure_ascii=False).encode("utf-8")).hexdigest()
+        if recomputed != got:
+            return _refuse(
+                f"✗ {pth}: 실행 영수증 본문이 그 digest 와 다르다 "
+                f"({recomputed[:16]} ≠ {got[:16]}) — 본문을 나중에 고쳤다")
+        if got != now:
+            diff = sorted(k for k in set(body) | set(now_body)
+                          if body.get(k) != now_body.get(k))
+            return _refuse(
+                f"✗ {pth}: 증거가 가리키는 실행 환경이 지금과 다르다 "
+                f"(다른 항목: {diff}) — 그 환경에서 다시 재생해야 한다")
+    return 0
+
+
 def _assert_trees_are_current(paths) -> int:
     """조각이 가리키는 코드가 **지금 트리의 코드**인가 (55차 P1-2).
 
@@ -3751,6 +3791,8 @@ def check_coverage(paths) -> int:
     if _assert_heads_are_real(paths) != 0:
         return 1
     if _assert_trees_are_current(paths) != 0:
+        return 1
+    if _assert_execution_is_current(paths) != 0:          # 57차 P1-1
         return 1
     # ★ 50차 P1 — 합집합을 세기 전에 **등록부 자체**가 성립하는지 본다.
     #   no-op 변이·죽은 지점·빈 기대 집합이 있으면 그 위에서 센 수는 뜻이 없다.
