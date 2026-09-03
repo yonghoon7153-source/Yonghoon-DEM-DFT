@@ -117,3 +117,15 @@ H2 가 참일 수 있음에 주의한다 — 부호가 같다고 벡터가 평�
   개설. 부호표 대조에서 두 feature 의 패턴이 동일함을 발견한 것이 발단.
   아직 계산은 하나도 하지 않았다 — 위 "답하는 방법" 4단계 전부 미실행이며,
   현재 근거는 **원문 도표 판독 + 정성 논증**뿐이다.
+- [2026-09-03 (2)] open 유지 — [[mode-observability]] Phase 1 첫 실측 (방향성
+  관측, 인용 금지 등급 — 정본은 `mode-observability/results/phase1/pvs.csv` 와
+  `mode-observability/docs/PHASE1_NOTES.md`):
+  - **22p 동작점 근방에서 ∂PVS/∂모드 세 개가 동부호** → 거기서 PVS 는
+    LLI↔LAM_PE 방향을 주지 않는다 (H1 쪽 근거 하나).
+  - 단, pristine 에서는 LLI 와 LAM_PE 가 **반대 부호**로 나와 세미나 p.8 과
+    다르다 — 부호 구조가 동작점 의존이고, LLI 단독 스윕이 비단조라 feature
+    tracking 실패 가능성을 먼저 배제해야 한다 (검증 전 인용 금지).
+  - PVS 값이 valley 정의(인접 −20.0 vs 창내 전역 최소 −11.3)에 민감 —
+    세미나 p.15 discussion point 3 이 실측으로 확인된 셈.
+  - LAM_PE ≥ 0.08 에서 peak 이 창을 벗어나 NaN — PVS 류의 구조적 커버리지
+    한계.
