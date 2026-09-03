@@ -1,0 +1,54 @@
+{
+ "schema": "bundle_identity/v1",
+ "date": "2026-09-03",
+ "bundle": "sdcp_c12_v29",
+ "zip_sha256": "21d1af4ad9280970e2a1b69024d29f82fb3e0549e28653fa621d94b8b2f9958d",
+ "manifest_sha256": "a68e478eda58876a9f1701cc86ec4e6db2f06119ea18966d5341d391321d770c",
+ "analyzer_in_bundle_sha256": "78960d0afcc18cbb05732d7ca6d5ea4abd577349c16a1961c6d0300171b3eb0d",
+ "census_in_bundle_sha256": "517c92fc09430b2e052cbd3325983243fc75112a3744a480c9e7d6b5f2b8fc81",
+ "run_staged_in_bundle_sha256": "c53f67beba1390351198c7c8fec0054c48cc1677c4b90e10e78ab870750c83a5",
+ "repo_commit": "add4951e44a03bb83d34523951801ced632a42bf",
+ "repo_files_sha256_from_commit": {
+  "⚠_출처": "`git show add4951e:<path>` 로 계산 — 작업 트리를 보지 않는다",
+  "tools/sdcp/vasp_handoff_bundle.py": "abedb61e153f100f1eaddc9b11e2f8cbad3f141f672db6164a2859cf25328929",
+  "db/properties/sdcp_c12_claim_prereg_2026_08_31.json": "5bc7afbcc45eedc7e94ecd4070c4ace08c8b3aa86ccdd3d629e538be008a6aa3",
+  "db/properties/sdcp_c12_protocol_2026_08_30.json": "941f64d38fee97d5408a9a07636b44b77928e7407738f51017c236a664bf663d",
+  "db/properties/c12_poses_2026_08_30.json": "b5760d6c86ee2644da467157acfcdc217ce599371b7dba81120323a509da4f39",
+  "db/governance/decisions.json": "408e0f611c7006a1c0fbb29854ff82ff6931510b6a3d25f2ea3cbc441455acf7"
+ },
+ "generated_on": "Claude Code 원격 컨테이너 (clean tree · HEAD=add4951e) · 2026-09-03",
+ "generated_argv": "--from_basins db/properties/c12_poses_2026_08_30.json --frags sdcp_neutral ptfe_c10 --refs --refs_minimal --both_seeds --single_point --allow_no_pin --potcar_identity post_hoc --cell_c 36.6551 --cell_c2 40.6551 --min_vacuum 15.0 --roles primary sensitivity stress_sensitivity --out <scratch>/sdcp_c12_v29",
+ "⚠_argv_출처": "v22~v28 과 **완전히 같다** (--out 만 다르다). 물리 입력(16잡 INCAR/POSCAR/KPOINTS)은 v23 이후 바이트 동일 — 바뀐 것은 검증·봉인 층이다.",
+ "상태": "회신 BE (NO-GO · P0 4 · P1 3) 이행. VASP 는 여전히 **0잡**이다.",
+ "잡": 16,
+ "검증": {
+  "verify_zip": "PASS · rc 0 · 잡 16",
+  "생성기_selftest": "rc 0 · ✔ 632 (BE 시점 605)",
+  "배포_분석기_selftest": "390/390 PASS (번들 안에서 실행)",
+  "runner_e2e": "12/12",
+  "check_governance(번들)": "PASS — decision 2 · claim 2 · frozen 1, **원문 byte 재계산 포함**",
+  "provenance": "clean=true · n_files 17 · 입력 13 (protocol·prereg·decisions·poses 포함) · 외부 0",
+  "마커_공격(번들)": "루트 .SELFTEST_FIXTURE → census rc 1 · run_staged.sh rc 2 (BE P0-3 문구로 거부)",
+  "원장_위반": 0
+ },
+ "v28_과_다른_점": {
+  "BE_P0-1": "estimand 네 키 **의미** 검사(_estimand_semantics_check: kind/fragment/role/seed=branch/vacconv/d3/box24/planned 대조) + fragment_min fallback 폐지(ESTIMAND_KEYS_ABSENT). 리뷰어 공격(complex 교환·gas 교환·canary·stress_sensitivity 교체) 전부 NO_VALUE·D 없음.",
+  "BE_P0-2": "vacuum: c1=estimand key(exact) · c1/c2 POSCAR 실물 원소·개수·고정플래그·Cartesian 좌표 동일 · Δc=선언. gas: gas_placement/box_margin 선언 + POSCAR 실물 셀 +4 Å·좌표 +2 Å 강체이동. k: kconv_pair == primary complex 두 키(KCONV_PAIR_NOT_PRIMARY). 실물 없으면 확인 못 함 = 통과 아님.",
+  "BE_P0-3": "run_staged.sh 픽스처 판정 = MANIFEST selftest_fixture=true **그리고** 마커. census.py 가 선언 없는 마커를 거부. e2e 하네스는 선언을 MANIFEST 에 심는다.",
+  "BE_P0-4": "protocol/prereg/decisions 읽기를 _prov_note(단일 registry)로. 번들 governance/ 에 원문 사본 4개(files_sha256 결박 · bundled_sources). GOV_CORE_SRC 하나를 생성기는 exec, 분석기 템플릿엔 삽입 — governance_bytes_check 가 원문에서 상태·digest 를 재계산해 manifest 주장과 항목별 대조(preflight·citation 둘 다).",
+  "BE_P1": "J_f: primary 자세 1개면 not_measurable(None). 분석기 rc 3 = 계산 완주·인용 불가(탐색용), 러너가 rc 2 와 구분. receipt 9열 potcar_sha256(상 폴더 POTCAR 실행 직전 해시) ↔ POTCAR_PROVENANCE.assembled_sha256 대조."
+ },
+ "🔴_이번에_저지른_것": [
+  "처음 넣은 의미 검사는 exact-key 대입 **직전**에만 있었다 — 앞선 구조 게이트가 먼저 NO_VALUE 로 끊으면 '왜 키가 틀렸는지' 가 산출물에 남지 않았다 (selftest 가 잡았다). estimand_topology 자리로 옮겨 항상 돌게 했다.",
+  "stress_sensitivity 교체 시험을 처음엔 planned 를 바꿔 만들었다 — 리뷰어 재현과 달랐다(다른 게이트가 먼저 잡힘). 대안 자세 잡을 기본 픽스처에 상주시키고 **키만** 바꾸도록 고쳤다.",
+  "e2e 번들이 fixture 를 선언하게 되면서 'production 에서 마커만으론 못 끈다' 시험의 전제가 깨졌다 — 선언을 뺀 사본에서 돌리도록 수정."
+ ],
+ "🔴_남은_것": [
+  "POTCAR 신원: post_hoc (1저자 결정) — 이 묶음 결과는 **원고 인용용이 아니다**. rc 3 으로 끝난다.",
+  "0.01 eV overall 인용 자격: ENCUT 수렴 설계가 없어 영영 None (회신 BA Q7).",
+  "의미 검사는 job.json meta 가 **거짓**이면 못 잡는다 — files_sha256·POSCAR/INCAR 실물 대조의 몫.",
+  "governance 원문 사본이 manifest 와 **함께** 위조되면 못 잡는다 — reference_files_sha256 ↔ 우리 repo 원본 대조는 리뷰어 몫 (아래 해시)."
+ ],
+ "이전판": "runs/sdcp_c12_2026_08_30/IDENTITY_v22.json (v23~v28 은 IDENTITY 미기록 · 리뷰 프롬프트/회신은 채팅)",
+ "리뷰": "kb/reviews/codex_BF_prompt_c12_v29_2026_09_03.md"
+}

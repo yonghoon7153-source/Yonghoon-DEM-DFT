@@ -1,6 +1,6 @@
 # kb 카탈로그 (생성물 — 손으로 고치지 말 것)
 
-> `python3 tools/kb_wiki.py index` 가 만든다 · 2026-09-01 · managed-files: 339
+> `python3 tools/kb_wiki.py index` 가 만든다 · 2026-09-03 · managed-files: 340
 
 규칙: kb/SCHEMA.md · 열린 질문: kb/questions/ · 논지 카드: kb/syntheses/ · 원장: kb/open_items.md · 문헌: litdb/INDEX.md
 
@@ -172,7 +172,7 @@
 - `kb/results/vgcf_hbn_figure_plan.md` — VGCF/h-BN 원고 — 층수 연구를 어디에 둘 것인가 (2026-07-31 결정)
 - `kb/results/vgcf_hbn_gallery_mechanism_2026_07_30.md` — h-BN@VGCF — 209 meV 층수효과의 정체: confinement 확정 (2026-07-30)
 
-## reviews/ (90)
+## reviews/ (91)
 - `kb/reviews/ECERD2600097_review_notes.md` — 📝 리뷰 노트 — ECER-D-26-00097 (Fan 외, *Stability Issues in Sulfide-Based ASSB*)
 - `kb/reviews/INDEX.md` — 리뷰 사슬 색인 — 프롬프트↔회신 (자동 생성) ○미열람
 - `kb/reviews/codex_AA_prompt_stageA_v5_regate_2026_08_29.md` — Codex 재검토 요청 AA — 회신 Z 의 P0 8건 처리 후 Stage A v5 재게이트 ○미열람
@@ -208,6 +208,7 @@
 - `kb/reviews/codex_BA_prompt_c12_v21_2026_09_02.md` — 리뷰 요청 BA — C-12 v21 (회신 AZ P0 7건 + P1 전건 이행) ○미열람
 - `kb/reviews/codex_BB_prompt_c12_v22_2026_09_02.md` — 리뷰 요청 BB — C-12 v22 (회신 BA 해제조건 8건 + 거버넌스 비준) ○미열람
 - `kb/reviews/codex_BC_prompt_c12_v23_2026_09_02.md` — 리뷰 요청 BC — C-12 v23 (회신 BB P0 6건 + P1 6건 이행 · clean tree 재생성) ○미열람
+- `kb/reviews/codex_BF_prompt_c12_v29_2026_09_03.md` — 리뷰 요청 BF — C-12 v29 (회신 BE P0 4건 + P1 3건 이행 · clean tree 재생성) ○미열람
 - `kb/reviews/codex_B_neb_md_tools_2026_08_20.md` — 교차리뷰 B — NEB · MD · 도구 (codex 작업지시서) ○미열람
 - `kb/reviews/codex_C_funnel_2026_08_20.md` — 교차리뷰 C v2.1 — cascade 깔때기는 잘 작동했나 (codex 2라운드 종료) ○미열람
 - `kb/reviews/codex_D_symposium_talk_standard_2026_08_25.md` — 교차리뷰 D — 심포지엄 세션(덱+녹취) 표준 (codex 작업지시서) ○미열람
