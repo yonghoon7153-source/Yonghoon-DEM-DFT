@@ -35,8 +35,36 @@
 _qe_env_apply() {
   # 기본값은 gabia. **존재할 때만** 쓴다.
   QE_H_MPI="${QE_H_MPI:-/data/apps/nvhpc/Linux_x86_64/24.11/comm_libs/12.6/hpcx/hpcx-2.20/ompi}"
-  QE_NVHPC_LIB="${QE_NVHPC_LIB:-/data/apps/nvhpc/Linux_x86_64/24.11/compilers/lib}"
-  QE_CUDA_LIB="${QE_CUDA_LIB:-/usr/local/cuda-12.6/lib64}"
+
+  # ⛔⛔ 2026-09-03 — **nvhpc 는 기계마다 다른 데 있다 (kgy 사고 2차, 실측).**
+  #   종전 판은 gabia 절대경로 **하나**만 기본값으로 뒀다. kgy 의 nvhpc 는
+  #   `$HOME/apps/nvhpc/...` 에 있어서 "없는 경로는 export 하지 않는다" 규칙이
+  #   **정확히 의도대로** 동작한 결과 libnvomp 를 아예 못 잡았고, nvhpc 로 빌드된
+  #   neb.x 가 GNU libgomp 를 물어 `libgomp: TODO` 로 즉사했다.
+  #   같은 기계의 pw.x 는 **CPU 빌드**(qe-7.4.1-cpu, libgomp 링크)라 멀쩡히 돌았다 —
+  #   "pw.x 는 되는데 neb.x 만 죽는다" 는 오진하기 딱 좋은 형태라 여기 박아 둔다.
+  #   ⇒ 후보를 늘리는 게 아니라 **판정 기준을 올린다**: "폴더가 있나" 가 아니라
+  #     **"libnvomp.so 가 거기 있나"**. 빈 nvhpc 트리를 잡는 반대 실수도 같이 막힌다.
+  #   ⚠ QE_NVHPC_SEARCH 는 **따옴표 없이** 전개한다 (글롭이 살아야 버전 디렉터리를 훑는다).
+  QE_NVHPC_SEARCH="${QE_NVHPC_SEARCH:-/data/apps/nvhpc/Linux_x86_64/*/compilers/lib $HOME/apps/nvhpc/Linux_x86_64/*/compilers/lib /opt/nvidia/hpc_sdk/Linux_x86_64/*/compilers/lib}"
+  QE_NVHPC_LIB="${QE_NVHPC_LIB:-}"
+  if [ -z "$QE_NVHPC_LIB" ]; then
+    local _c
+    # shellcheck disable=SC2086
+    for _c in $QE_NVHPC_SEARCH; do
+      if [ -e "$_c/libnvomp.so" ]; then QE_NVHPC_LIB="$_c"; break; fi
+    done
+  fi
+
+  QE_CUDA_SEARCH="${QE_CUDA_SEARCH:-/usr/local/cuda-12.6/lib64 /usr/local/cuda/lib64 /usr/local/cuda-*/lib64}"
+  QE_CUDA_LIB="${QE_CUDA_LIB:-}"
+  if [ -z "$QE_CUDA_LIB" ]; then
+    local _u
+    # shellcheck disable=SC2086
+    for _u in $QE_CUDA_SEARCH; do
+      if [ -e "$_u/libcudart.so" ] || [ -e "$_u/libcudart.so.12" ]; then QE_CUDA_LIB="$_u"; break; fi
+    done
+  fi
 
   # ── ① mpirun 을 먼저 정한다 (환경 > gabia 기본 > PATH) ────────────────────
   local _m="${MPIRUN:-}"
@@ -146,6 +174,33 @@ if [ "${BASH_SOURCE[0]:-$0}" = "$0" ] && [ "${1:-}" = "--selftest" ]; then
     [ -z "$MPI_OVERSUB" ] && [ "$MPI_NP" = "-n 4" ]
   ) && _ok "⑤ MPI_OVERSUB=''·MPI_NP 오버라이드 존중" || _no "⑤ 오버라이드가 무시됐다"
 
-  rm -rf "$_T" "$_T2"
-  [ "$_fail" = 0 ] && echo "PASS (5/5)" || { echo "FAIL"; exit 1; }
+  # ⑥ 양성: **libnvomp.so 가 있는** 후보를 고른다 (kgy 는 $HOME 밑에 있다)
+  _T3=$(mktemp -d); mkdir -p "$_T3/24.11/compilers/lib"; : > "$_T3/24.11/compilers/lib/libnvomp.so"
+  ( MPIRUN="$_T/bin/mpirun" QE_NVHPC_SEARCH="$_T3/*/compilers/lib" QE_CUDA_SEARCH=/nonexistent/z
+    unset QE_NVHPC_LIB QE_CUDA_LIB
+    . "$0" _sourced >/dev/null 2>&1
+    [ "$QE_NVHPC_LIB" = "$_T3/24.11/compilers/lib" ] || { echo "NVHPC=$QE_NVHPC_LIB"; exit 1; }
+    case ":$LD_LIBRARY_PATH:" in *":$_T3/24.11/compilers/lib:"*) : ;; *) exit 1 ;; esac
+  ) && _ok "⑥ libnvomp.so 가 있는 nvhpc 트리를 찾아 LD_LIBRARY_PATH 에 넣는다" \
+    || _no "⑥ nvhpc 자동탐색 실패 (kgy libgomp:TODO 재발)"
+
+  # ⑦ 음성 (핵심): 폴더는 있는데 **libnvomp.so 가 없으면** 고르지 않는다.
+  #   "폴더가 있나" 로 판정하면 빈 nvhpc 트리를 잡고, 그러면 libgomp 를 물어 죽는다.
+  _T4=$(mktemp -d); mkdir -p "$_T4/24.11/compilers/lib"        # libnvomp.so 없음
+  ( MPIRUN="$_T/bin/mpirun" QE_NVHPC_SEARCH="$_T4/*/compilers/lib" QE_CUDA_SEARCH=/nonexistent/z
+    unset QE_NVHPC_LIB QE_CUDA_LIB
+    . "$0" _sourced >/dev/null 2>&1
+    [ -z "${QE_NVHPC_LIB:-}" ] || { echo "NVHPC=$QE_NVHPC_LIB"; exit 1; }
+    case ":$LD_LIBRARY_PATH:" in *":$_T4/"*) exit 1 ;; esac
+  ) && _ok "⑦ ⛔음성: libnvomp.so 가 없는 빈 트리는 **고르지 않는다** (폴더 존재만 보지 않는다)" \
+    || _no "⑦ 빈 nvhpc 트리를 잡았다"
+
+  # ⑧ 환경으로 준 QE_NVHPC_LIB 는 탐색보다 언제나 이긴다
+  ( MPIRUN="$_T/bin/mpirun" QE_NVHPC_LIB=/explicit/path QE_NVHPC_SEARCH="$_T3/*/compilers/lib"
+    . "$0" _sourced >/dev/null 2>&1
+    [ "$QE_NVHPC_LIB" = "/explicit/path" ]
+  ) && _ok "⑧ 손으로 준 QE_NVHPC_LIB 가 자동탐색을 이긴다" || _no "⑧ 오버라이드가 무시됐다"
+
+  rm -rf "$_T" "$_T2" "$_T3" "$_T4"
+  [ "$_fail" = 0 ] && echo "PASS (8/8)" || { echo "FAIL"; exit 1; }
 fi

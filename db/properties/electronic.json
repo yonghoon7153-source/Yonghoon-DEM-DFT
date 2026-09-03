@@ -328,5 +328,29 @@
   "confidence": "high",
   "note": "블록마다 provenance 가 다르다(갭 2026-06-16 · ELF 2026-06-08 · Bader 2026-04-30). ⚠ container 경로는 사라졌다",
   "caveat": "이 블록은 **사후 추적** 결과다. 원본 계산 시점에 기록된 것이 아니라 repo·git·파일 내용에서 역추적했다. confidence 를 같이 보라."
+ },
+ "reproduction_checks": {
+  "_what": "정본 고유값 갭(eigenvalue_gaps_v100_2026_06_16)을 **다른 시점·다른 기계**에서 다시 계산해 맞는지 본 기록.",
+  "_rule": "재현값은 정본을 **덮어쓰지 않는다.** 정본 옆에 붙는 독립 확인이고, 불일치가 났을 때만 정본을 다시 연다. 인용은 계속 정본 숫자로 한다.",
+  "_why": "_provenance_audit 가 적어 둔 대로 원본 계산의 container 경로가 사라졌다. 그래서 정본 숫자는 있는데 **그 숫자를 낳은 실행이 없는** 상태였다. 재현은 그 구멍을 값의 재확인과 함께 닫는다.",
+  "_method_must_match": "fixed-occupations nscf 의 VBM/CBM 고유값. DOS-threshold 판독은 재현으로 치지 않는다 (~0.3 eV 과소 — CLAUDE.md).",
+  "comp1_2026_08_24": {
+   "gap_eV": 2.0656,
+   "VBM_eV": 2.1281,
+   "CBM_eV": 4.1937,
+   "canonical_gap_eV": 2.066,
+   "delta_eV": 0.0004,
+   "kpts": "170 irr — 정본 기록과 같다",
+   "verdict": "일치 (소수 넷째 자리). irr k-point 수까지 같아 셋업 계보도 확인됨."
+  },
+  "modelc_2026_09_03": {
+   "gap_eV": 2.0989,
+   "canonical_gap_eV": 2.099,
+   "delta_eV": 0.0001,
+   "verdict": "일치 (소수 넷째 자리).",
+   "_missing": "이 실행의 VBM/CBM/EF · irr k-point 수 · 실행 기계 · 실행 폴더가 아직 이 기록에 안 들어왔다. 갭 한 숫자만 회수된 상태다 — 채우기 전까지 '갭이 맞았다' 까지만 말할 수 있고 '셋업 계보가 확인됐다'(comp1 이 받은 판정)는 **아직 못 한다**."
+  },
+  "_not_covered": "b2o3(1.9671) · LPSOCl(2.2309) · U0_matched(2.184) · Nd2O3_doped(1.632) 는 재현 안 했다. 이 블록에 없는 항목은 확인된 적이 없다는 뜻이다.",
+  "_pbe_caveat": "재현은 **우리 계산의 자기일관성**만 보인다. PBE 갭은 넓은 갭 절연체에서 30–50 % 과소평가하므로 실험값과 나란히 놓지 않는다."
  }
 }

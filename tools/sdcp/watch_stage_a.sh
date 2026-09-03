@@ -65,6 +65,23 @@ if [ "${1:-}" = "--selftest" ]; then
     chk "$(echo "$OUTB" | grep gs5 | grep -q '구판 러너' && echo 1 || echo 0)" \
         "그 경우 lock 이 없다는 사실을 비고에 적는다 (정상임을 같이 말한다)"
   fi
+  # ⛔⛔ 2026-09-03 실물 (gs2 76시간) — **살아있는데 진전이 없는** 상태.
+  #   프로세스만 보면 run, 파일만 보면 죽음. 둘이 어긋나는 게 사실이고 그걸 낸다.
+  mkdir -p "$W/gs6"; printf 'GEOMETRY OPTIMIZATION CYCLE   1\n' > "$W/gs6/dp6_gs6_neutral.out"
+  touch -d '300 minutes ago' "$W/gs6/dp6_gs6_neutral.out"
+  if [ -x "$T/orca_fake" ]; then
+    ( cd "$W/gs6" && exec -a orca_fake "$T/orca_fake" 300 ) & _fk6=$!
+    sleep 1
+    OUTC=$(STALL_MIN=240 bash "$0" "$W" 2>&1)
+    OUTD=$(STALL_MIN=600 bash "$0" "$W" 2>&1)
+    kill "$_fk6" 2>/dev/null
+    chk "$(echo "$OUTC" | grep gs6 | grep -q '정체' && echo 1 || echo 0)" \
+        "⛔음성 실물(gs2 76시간): 프로세스가 살아있어도 .out 이 문턱 넘게 조용하면 **정체**로 찍는다"
+    chk "$(echo "$OUTC" | grep -q '⛔ 정체 1' && echo 1 || echo 0)" \
+        "⛔음성: 정체는 '도는중' 에서 빼고 따로 센다 (합계가 도는 것처럼 보이면 안 된다)"
+    chk "$(echo "$OUTD" | grep gs6 | grep -qE 'run' && echo 1 || echo 0)" \
+        "⛔음성 반대편: 문턱보다 짧게 조용한 건 정체가 아니다 (느린 seed 를 모함하지 않는다)"
+  fi
   OUT=$(bash "$0" "$W" 2>&1)
   chk "$(echo "$OUT" | grep -q "gs0.*DONE" && echo 1 || echo 0)" "완주한 seed 를 DONE 으로 찍는다"
   chk "$(echo "$OUT" | grep -qE "gs1.*(run|도는)" && echo 1 || echo 0)" \
@@ -87,6 +104,9 @@ fi
 
 W=${1:-/data/work/runs/sdcp_stageA_run}
 A=${2:-}
+# 정체 문턱 [분] — 살아있는 프로세스가 이만큼 .out 을 안 키우면 죽은 것으로 **의심**한다.
+# 기본 240 은 실측 최장 사이클(138 분/cyc)의 1.7배다. 짧게 잡으면 느린 seed 를 모함한다.
+STALL_MIN=${STALL_MIN:-240}
 [ -d "$W" ] || { echo "⛔ work 디렉터리가 없습니다: $W"; exit 2; }
 
 echo "════════ SDCP Stage A · ORCA r2SCAN-3c · $(date '+%m-%d %H:%M:%S') ════════"
@@ -112,7 +132,7 @@ printf "  ORCA: 프로세스 %s개 · CPU %s%% (≈%.1f코어) · RSS %s GB\n" \
 
 # ── seed 표 ────────────────────────────────────────────────────────────────
 printf "\n  %-6s %-22s %7s %5s %-22s %s\n" seed 상태 경과m cyc E_Ha 비고
-_ndone=0; _nrun=0; _nidle=0; _nstale=0
+_ndone=0; _nrun=0; _nidle=0; _nstale=0; _nhang=0
 for d in $(ls -1 "$W" 2>/dev/null | sort); do
   SD="$W/$d"; [ -d "$SD" ] || continue
   case "$d" in .*) continue ;; esac
@@ -136,16 +156,17 @@ for d in $(ls -1 "$W" 2>/dev/null | sort); do
       *orca*|*ORCA*) _rp="${_pd#/proc/}"; break ;;
     esac
   done
+  _live=""
   if [ -n "$OUTF" ] && grep -aq "ORCA TERMINATED NORMALLY" "$OUTF" 2>/dev/null; then
     st="DONE"; _ndone=$((_ndone+1))
   elif [ -n "$_rp" ]; then
     _own=$(cat "$LK/pid" 2>/dev/null || echo "")
-    st="run (orca $_rp)"; _nrun=$((_nrun+1))
+    st="run (orca $_rp)"; _nrun=$((_nrun+1)); _live="$_rp"
     [ -d "$LK" ] || note="lock 없음 — 구판 러너가 띄운 잡 (정상)"
   elif [ -d "$LK" ]; then
     _p=$(cat "$LK/pid" 2>/dev/null || echo "")
     if [ -n "$_p" ] && kill -0 "$_p" 2>/dev/null; then
-      st="run (pid $_p)"; _nrun=$((_nrun+1))
+      st="run (pid $_p)"; _nrun=$((_nrun+1)); _live="$_p"
     else
       st="⚠ 죽은 lock"; note="pid ${_p:-?} 없음 — 러너가 STALE_LOCK_MIN 으로 치운다"
       _nstale=$((_nstale+1))
@@ -155,6 +176,26 @@ for d in $(ls -1 "$W" 2>/dev/null | sort); do
   else
     _nidle=$((_nidle+1))
   fi
+
+  # ⛔⛔ 2026-09-03 실측 — **도는 것처럼 보이는데 안 도는** 상태를 가른다 (gs2).
+  #   gs2 는 MPI 랭크가 끊긴 뒤 마스터 프로세스만 남았다. cwd 는 그대로라 위 판정이
+  #   `run` 을 찍었고, `.out` 은 **76시간** 안 커졌는데 3분마다 보면서도 3일을 놓쳤다.
+  #   (마지막에 %CPU 0.0 · MPI `Connection reset by peer` 로 확인)
+  #   ⇒ **'프로세스가 있다' 와 '진전이 있다' 는 다른 사실이다.** 둘째를 따로 본다.
+  #   ⚠ 문턱은 사이클 시간보다 넉넉해야 한다 — 실측 사이클이 11~138 분/cyc 로
+  #     흩어져서, 짧게 잡으면 정상적으로 느린 seed 를 죽었다고 모함한다.
+  #     기본 240 분은 가장 느린 실측(138)의 1.7배다. STALL_MIN 으로 조정한다.
+  case "$st" in
+    run*)
+      if [ -n "$OUTF" ]; then
+        _sm=$(( ( $(date +%s) - $(stat -c %Y "$OUTF" 2>/dev/null || date +%s) ) / 60 ))
+        if [ "$_sm" -ge "$STALL_MIN" ]; then
+          st="⛔ 정체 ${_sm}m"; _nrun=$((_nrun-1)); _nhang=$((_nhang+1))
+          note="pid ${_live:-?} 는 살아있는데 .out 이 ${_sm}분째 안 큰다 — %CPU 를 확인할 것"
+        fi
+      fi
+      ;;
+  esac
 
   # 경과·사이클·에너지
   # ⚠ 2026-09-02 — 열 뜻을 **상태마다 다르게** 둔다. 하나로 쓰면 둘 다 오해된다.
@@ -205,7 +246,13 @@ done
 
 printf "\n  DONE %d · 도는중 %d · 대기/이전 %d" "$_ndone" "$_nrun" "$_nidle"
 [ "$_nstale" -gt 0 ] && printf " · ⚠ 죽은 lock %d" "$_nstale"
+[ "$_nhang" -gt 0 ] && printf " · ⛔ 정체 %d" "$_nhang"
 echo
+if [ "$_nhang" -gt 0 ]; then
+  echo "  ⛔ 정체 seed 가 있다 — 살아있는 프로세스가 진전을 내지 않는다 (gs2 2026-08-31: 76시간)."
+  echo "     확인:  ps -o pid,pcpu,etime,args -p <pid>   ·  tail -20 <seed>/*.out"
+  echo "     %CPU 0.0 이거나 MPI 'Connection reset' 이 보이면 죽은 것이다 — 죽이고 다시 건다."
+fi
 # ⚠ 추정을 예측처럼 쓰지 않는다 — 사이클 시간이 계마다 2배 넘게 다르다 (실측).
 # ⚠ 남은 시간 추정을 싣지 않는 이유를 **지금 자료로** 보인다.
 #   ⛔ 2026-09-02 — 여기 "실측 gs0 61분/cyc · gs2 117분/cyc" 를 **하드코딩**했다가
