@@ -1805,6 +1805,12 @@ if [ -n "$VASP_BIN" ]; then
   #   ⚠ 임시 디렉터리에서 기동한다: VASP 는 실행되면 그 자리에 OUTCAR 등을 남기고,
   #     번들 루트에 남으면 이후 attestation 의 `find -name OUTCAR` 가 거부한다.
   _vprobe_d=$(mktemp -d)
+  # ⚠ ASE 실물 표본의 stdout 순서: `running on` → `distrk` → `distr` → **`using from now: INCAR`**
+  #   → `vasp.6.1.2 …`. 즉 VASP 는 INCAR 을 연 **뒤에** 버전을 찍는다. 빈 폴더에서 띄우면
+  #   INCAR 부재로 버전 전에 죽을 수 있고, 그러면 봉인이 **항상** 거부된다 (fail-closed 지만
+  #   쓸 수 없는 상태). 빈 INCAR 을 놓아 그 분기를 없앤다 — POSCAR·POTCAR 부재 오류는 버전
+  #   줄 **뒤**에 나므로 무관하다. (실물 VASP 로 검증하지 못한 추론 — 표본 순서에 근거.)
+  : > "$_vprobe_d/INCAR"
   VASP_VER=$( (cd "$_vprobe_d" && timeout 120 "$VASP_BIN" 2>&1 || true) \
               | grep -a -m1 -oE 'vasp\.[0-9][A-Za-z0-9._-]*' || true )
   rm -rf "$_vprobe_d"
@@ -13164,6 +13170,22 @@ bash run_staged.sh 2     # 1단계 통과(STAGE1_PASS.json) 뒤에만""" % (
         int(((man.get("submission") or {}).get("max_concurrency")) or 8))
 
 
+def _kconv_gate_row(man: Dict[str, Any]) -> str:
+    """SUBMIT 수치 게이트 표의 δ_k 행 — **이 번들이 실제로 재는가**에 따라 다르게 쓴다.
+
+    🔴 회신 BH 후속 (2026-09-03) — --no_kconv 번들(dense 0잡)의 SUBMIT 이 여전히
+      `k 격자 수렴 δ_k | 5 meV` 를 "결과 판정을 정하는 게이트" 로 적고 있었다.
+      재지 않는 축을 게이트라고 말하는 것은 문서가 거짓을 말하는 것이다.
+    """
+    kp = (man.get("kconv_pair") or {})
+    if kp.get("jobs"):
+        return "| k 격자 수렴 δ_k | 5 meV | static k↔dense k **두 조각의 차** |"
+    _ro = next((v for k, v in kp.items() if "재개_조건" in str(k)), None) or {}
+    return ("| k 격자 수렴 δ_k | **이 번들 설계에 없음** | dense 를 돌리지 않습니다 — "
+            "0.01 eV 안정성은 **주장하지 않습니다**. 재개 조건: %s |"
+            % (_ro.get("규칙") or "(없음 · status=%s)" % kp.get("status")))
+
+
 def _render_return_contract(man: Dict[str, Any]) -> str:
     """정본 → 마크다운. README 와 SUBMIT_CONTRACT 가 **글자 그대로 같은** 블록을 싣는다."""
     rc = _return_contract(man)
@@ -13619,10 +13641,10 @@ sbatch --array=1-$(wc -l < JOBS.txt)%%%%%d \\
 |---|---:|---|
 | 진공 두께 수렴 Δ_vac | 5 meV | 셀 두 높이의 대비 차 |
 | 기체 상자 수렴 δ_gas | 5 meV | box20↔box24 **두 조각의 차** |
-| k 격자 수렴 δ_k | 5 meV | static k↔dense k **두 조각의 차** |
+""" + _kconv_gate_row(man) + """
 | 자기 basin 일치 | 정확 일치 | 비교하는 두 복합체의 Ni 부호 배열 (전역 반전은 동치) |
 
-⚠ 셋 다 **조각별이 아니라 두 조각의 차**에 겁니다. 조각별로 각각 작아도
+⚠ 수치 게이트는 **조각별이 아니라 두 조각의 차**에 겁니다. 조각별로 각각 작아도
 부호가 반대면 차에서 두 배가 되기 때문입니다.
 
 ## 반송 목록
