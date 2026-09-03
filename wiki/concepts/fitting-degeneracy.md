@@ -233,3 +233,9 @@ flat 방향의 비율이 "LAM_PE ≈ LAM_NE 는 수학" 가설의 직접 증거 
   해가 같은 곡선을 내는 **전역** 축퇴는 여전히 격자 스캔이 있어야 한다.
 - 수치는 위키에 복사하지 않는다 — 정본은 artifact 와
   `degradation-degeneracy/docs/RESULTS*.md` ([[provenance-fail-closed-verification]]).
+
+## 이 개념이 속한 논지
+
+[[mode-identifiability-unmeasured-lineage]] — 이 계보가 축퇴를 세 번 인쇄하고도
+(Dubarry 식 · Birkl 산문 · Marongiu 식) 한 번도 null 을 풀지 않았다는 것, 그리고
+위 "그리는 법" 의 기계가 옆 논문에 있는데 **두 논문이 서로를 인용하지 않는다**는 것.

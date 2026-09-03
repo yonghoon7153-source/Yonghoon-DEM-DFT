@@ -774,3 +774,10 @@ H2 가 참일 수 있음에 주의한다 — 부호가 같다고 벡터가 평�
      (`[인쇄]` "The correct determination of all the degradation mechanisms …
      **is out of the goal of this work**"). 어휘가 없는 것과 주장을 절제하는
      것은 다른 축이라는 것을 이 편이 보여 준다.
+
+### 이 카드가 속한 논지 (2026-09-03)
+
+[[mode-identifiability-unmeasured-lineage]] §Counter-arguments (e) 가 이 카드의
+전제를 갈랐다 — **PVS 는 Lin 의 2 자유도 정리 사정권 안**(같은 정규화 곡선의
+함수라 rank 를 못 늘린다)이고 **SEV 는 동역학 축이라 밖**이다. 두 후보를 한
+묶음으로 다루면 안 된다.

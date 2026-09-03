@@ -1,7 +1,7 @@
 # 위키 색인
 
 > 내용 목록. 모든 위키 페이지를 종류별로 한 줄 요약과 함께 싣는다.
-> 마지막 갱신: 2026-09-03 | 전체 페이지: 24
+> 마지막 갱신: 2026-09-03 | 전체 페이지: 25
 
 ## Entities (satellite 프로젝트)
 
@@ -42,6 +42,8 @@
 - [[pvs-sev-lli-lampe-separability]] — 질문 카드 (status: open): PVS·SEV 두 feature 가 LLI 와 LAM_PE 를 실제로 가르는가, 아니면 같은 대비 하나를 재는가.
 
 ## Syntheses (종합)
+
+- [[mode-identifiability-unmeasured-lineage]] — 흡수한 13편은 LLI/LAM 분해를 **보고**하지만 그 분해가 **유일한지**를 잰 편이 하나도 없고, **그것을 잴 도구는 이미 그 13편 안에 흩어져 있다**: 축퇴가 세 번 인쇄됐으나(Dubarry 식 · Birkl 산문 · Marongiu 식 (2)–(5)) 아무도 null 을 풀지 않았고, Lin 은 `C_θ` 를 쥐고 대각선만 그렸으며, 그리는 기계는 Schaeffer 에 있는데 **두 논문이 서로를 인용하지 않는다**(어휘 분단: `identifiab*` 26/0 vs `nullspace` 0/69). 우리 Phase 1c·1d 가 겨눈 결과와 "재지 않은 대가" 의 야생 실측(Marongiu: 초기값만 바꿔 오차 6.38 → 14.46 %)까지.
 
 ## Queries (질의 기록)
 

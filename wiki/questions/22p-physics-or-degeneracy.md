@@ -706,3 +706,10 @@ LAM_PE ≈ LAM_NE 는 물리가 아니라 **flat valley 방향에서 두 전극�
     "평탄한 화학에서 전압 관측이 얼마나 죽는가" 의 첫 실측 크기로만 등재한다.
   - 우리 쪽 수치는 이 카드에 옮기지 않는다 — 정본은 artifact +
     `docs/RESULTS*.md`.
+
+### 이 카드가 속한 논지 (2026-09-03)
+
+이 질문이 왜 아직 열려 있는가를 계보 전체로 넓혀 방어한 문서:
+[[mode-identifiability-unmeasured-lineage]] — **13편 중 분해의 유일성을 잰 편이
+하나도 없다.** 이 카드의 Evidence 는 그 논지의 §5·§6 으로 들어가 있고, 거기
+Counter-arguments (a)~(e) 가 보존돼 있다.
