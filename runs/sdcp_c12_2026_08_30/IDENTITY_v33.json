@@ -1,0 +1,82 @@
+{
+ "schema": "bundle_identity/v1",
+ "date": "2026-09-03",
+ "bundle": "sdcp_c12_v33",
+ "zip_sha256": "ace58221c4c6111d54141c101a3c7fe36e263c40e85fba4aedf4e76c52018f04",
+ "manifest_sha256": "e08a780a658de468a7572d698bd5dfff88fbe3cb8aea16c88938d58ac04ec388",
+ "analyzer_in_bundle_sha256": "e09d61928dd05062e8bc5dcd37d9f31f8cf55fe3d86d74e33e62cad16289cfd4",
+ "census_in_bundle_sha256": "37bba1c1377166c420b00a4689b46bad8c655e2822221b38443966bb0a66cc77",
+ "run_staged_in_bundle_sha256": "c07ca49af14696294bd0ea7f7fb94fc216376c7829592d854e561f9c08482a82",
+ "repo_commit": "89684c77110198506b803a66843b0863f05a9f9b",
+ "repo_commit_reachable_from": "origin/claude/friendly-meitner-lldvar (생성 시점에 이미 푸시된 커밋 — v31 교훈)",
+ "repo_files_sha256_from_commit": {
+  "⚠_출처": "`git show 89684c77:<path>` 로 계산",
+  "tools/sdcp/vasp_handoff_bundle.py": "b1ad0878cc87a066c08e1e2b64c5871c92b1678c26775b5370757edb4adc1437",
+  "db/properties/sdcp_c12_claim_prereg_2026_08_31.json": "5bc7afbcc45eedc7e94ecd4070c4ace08c8b3aa86ccdd3d629e538be008a6aa3",
+  "db/properties/sdcp_c12_protocol_2026_08_30.json": "941f64d38fee97d5408a9a07636b44b77928e7407738f51017c236a664bf663d",
+  "db/properties/c12_poses_2026_08_30.json": "b5760d6c86ee2644da467157acfcdc217ce599371b7dba81120323a509da4f39",
+  "db/governance/decisions.json": "408e0f611c7006a1c0fbb29854ff82ff6931510b6a3d25f2ea3cbc441455acf7"
+ },
+ "generated_on": "Claude Code 원격 컨테이너 (clean tree · HEAD=89684c77 = origin) · 2026-09-03",
+ "generated_argv": [
+  "--from_basins",
+  "db/properties/c12_poses_2026_08_30.json",
+  "--frags",
+  "sdcp_neutral",
+  "ptfe_c10",
+  "--refs",
+  "--refs_minimal",
+  "--both_seeds",
+  "--single_point",
+  "--allow_no_pin",
+  "--potcar_identity",
+  "post_hoc",
+  "--no_kconv",
+  "--cell_c",
+  "36.6551",
+  "--cell_c2",
+  "40.6551",
+  "--min_vacuum",
+  "15.0",
+  "--roles",
+  "primary",
+  "sensitivity",
+  "stress_sensitivity",
+  "--out",
+  "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/82ea256b-12bc-5a75-994e-7718d79c71ba/scratchpad/c12/sdcp_c12_v33"
+ ],
+ "v32_대비": {
+  "바뀐_것": "**--no_kconv** — dense 2잡을 설계에서 뺐다. 16잡 전부 static (VASP 실행 18 → 16회).",
+  "왜": "dense 2잡이 최장 잡을 299.6 h 로 만들어 전체 일정을 12.5일로 끌었다 (vasp_cost_estimate 실측: dense 200h + static 100h). static 만이면 최장 111 h ≈ 4.6일.",
+  "잃는_것": "B_num 에서 δ_k 가 빠진다 ⇒ **'0.01 eV 안에서 안정하다' 를 주장하지 않는다.** ΔE_ads 값 자체는 그대로 나온다 (사전등록 3_오차예산 '넘으면' 절).",
+  "같이_고친_것": [
+   "BH P0-1 — SEAL 이 `--version | head -1` 로 버전 아닌 줄을 봉인하던 것 (1단계 300h 뒤 전건 차단)",
+   "BH P1-1 — 실행 블록을 `_run_env_block()` 한 곳으로 (PP·POTCAR_ALLOWLIST 누락의 뿌리)",
+   "BH P1-4 — JOBS_PARALLEL 안내 · allowlist 만드는 법",
+   "사전등록↔코드 어긋남 — KCONV_ABSENT 가 estimand 를 통째로 막던 것을 선언된 생략 경로로"
+  ]
+ },
+ "🔁_재개_조건_결과_보기_전에_선언": {
+  "규칙": "|ΔE_ads| < 50 meV 이면 dense 2잡(primary complex 두 개)을 추가로 돌린다.",
+  "왜_50": "k 가드밴드가 10 meV 다 (GUARD_EV). 그 5배를 문턱으로 둔다 — 그 위면 k 오차가 부호·크기 판정을 못 바꾼다.",
+  "⛔_사후변경_금지": "이 조건은 **결과를 보기 전에** 선언했다. 이 밖의 이유로 dense 를 추가하면 그것은 '결과를 보고 게이트를 바꾼 것' 이다 — 이 캠페인이 여덟 번 반려된 양식.",
+  "추가할_잡": "estimand_job_keys 의 E_C_sdcp · E_C_control (그 둘만)"
+ },
+ "사람_확인_8가지": {
+  "①_결정_세곳_일치": "PASS — README 미반송 문장 · 분석기 C12_POTCAR_RETURNED=False",
+  "①b_실행블록_필수변수": "PASS — PP·POTCAR_ALLOWLIST 포함 9개가 README·SUBMIT 양쪽 렌더에 있다 + allowlist 레시피 + JOBS_PARALLEL",
+  "②_verify_zip": "PASS (expect_jobs 16 · ✅ 제출 가능)",
+  "③_check_governance": "rc 0 — 정적 물리 3검사 통과 · 건너뜀 1건 화면 명시",
+  "④_governance_4개_외부앵커": "PASS — 번들 사본 4개 sha256 == repo db/ 원본",
+  "⑤_MANIFEST_실물": "PASS — estimand 4경로·branch afm2424_pm1·진공 36.6551/40.6551·16잡·clean",
+  "⑥_슬랩_ab": "PASS — 10/10 이 (18.2724,0,0)/(-3.6264,10.9259,0)",
+  "⑦_메일_내용": "EXPECT 두 해시 + 실행 블록 자동 렌더",
+  "⑧_커밋_도달성": "PASS — MANIFEST.repo_commit 이 origin 브랜치의 조상"
+ },
+ "⛔_이_증서가_보증하지_않는_것": [
+  "과학적 보고량의 타당성 (D 가 맞는 양인가)",
+  "외주처의 실제 PP 트리·VASP build·스케줄러 환경",
+  "SCF 수렴·OUTCAR 형식",
+  "POTCAR 신원 (post_hoc 정책 — 원고 인용 자격은 별도 판정)"
+ ]
+}

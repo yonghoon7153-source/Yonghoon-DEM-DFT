@@ -71,5 +71,7 @@
   "외주처의 실제 PP 트리·VASP build·스케줄러 환경",
   "SCF 수렴·OUTCAR 형식",
   "POTCAR 신원 (post_hoc 정책 — 원고 인용 자격은 별도 판정)"
- ]
+ ],
+ "superseded_by": "IDENTITY_v33.json",
+ "⛔_미발송": "보내지 않았다. dense 2잡이 일정을 12.5일로 끌어 --no_kconv 로 재생성했다 (v33). 잡 16개 중 14개는 v32 와 동일."
 }
