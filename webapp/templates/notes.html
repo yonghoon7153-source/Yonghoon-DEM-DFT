@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{% block title %}메모 모아보기{% endblock %}
+{% block content %}
+{# 메모 모아보기 — 문서마다 흩어져 있던 하이라이트·메모를 한 화면에 날짜순으로.
+
+   ⚠ 이 화면은 **서버가 아무것도 모른다.** 메모는 localStorage 에만 있고, 서버가
+     주는 것은 slug → 제목·URL 이름표뿐이다 (아래 `note-docs`). 모으고·거르고·
+     묶는 것은 전부 static/js/notes.js 다. 그래서 "이 앱은 저장소에 아무것도
+     쓰지 않는다" 는 약속이 이 화면에서도 문자 그대로 유지된다. #}
+<header class="phead phead-notes">
+  <p class="eyebrow">이 브라우저에만 있는 것 · 저장소에 없다</p>
+  <h1>메모 모아보기</h1>
+  <p class="lead">논문 digest 를 읽다 <b>본문에서 글자를 끌어 선택</b>하면 남긴
+    하이라이트와 메모가 여기 모인다. 날짜별 · 최신순. 카드를 누르면
+    <b>적어 둔 그 자리</b>로 간다.</p>
+</header>
+
+{# 서버가 주는 유일한 것 — 이름표. slug 만으로는 카드에 파일 이름밖에 못 적는다. #}
+<script type="application/json" id="note-docs">{{ docs|tojson }}</script>
+
+<div class="nh-bar" id="nh-bar" hidden>
+  <div class="nh-search">
+    <svg class="ic" aria-hidden="true"><use href="#i-search"></use></svg>
+    <label class="sr-only" for="nh-q">메모 검색</label>
+    <input id="nh-q" type="search" placeholder="메모 내용 · 끌어 놓은 구절 · 문서 이름으로…"
+           autocomplete="off">
+  </div>
+  <div class="nh-filters" role="group" aria-label="거르기">
+    <button type="button" class="chip nh-f is-on" data-f="all">전체 <b id="nh-n-all">0</b></button>
+    <button type="button" class="chip nh-f" data-f="note">메모만 <b id="nh-n-note">0</b></button>
+    <span class="nh-sep" aria-hidden="true"></span>
+    <button type="button" class="chip nh-h hl-y" data-hue="y" title="노랑">노랑 <b data-hn="y">0</b></button>
+    <button type="button" class="chip nh-h hl-g" data-hue="g" title="초록">초록 <b data-hn="g">0</b></button>
+    <button type="button" class="chip nh-h hl-p" data-hue="p" title="보라">보라 <b data-hn="p">0</b></button>
+    <button type="button" class="chip nh-h hl-r" data-hue="r" title="빨강">빨강 <b data-hn="r">0</b></button>
+  </div>
+  <button type="button" class="btn btn-sm" id="nh-export">
+    <svg class="ic" aria-hidden="true"><use href="#i-download"></use></svg>전부 내보내기
+  </button>
+</div>
+
+<div id="nh-groups"></div>
+
+<div class="nh-empty" id="nh-empty" hidden>
+  <h2>아직 아무것도 없다</h2>
+  <p><a href="/papers">논문 digest</a> 를 열고 본문에서 <b>글자를 끌어 선택</b>해 보라 —
+    선택한 자리 위에 색 네 개와 <b>메모</b> 단추가 뜬다.</p>
+  <p class="nh-note">메모는 <b>이 브라우저에만</b> 남는다. 다른 기기·다른 브라우저·
+    사설 창에서는 보이지 않고, 저장소에도 올라가지 않는다. 남기고 싶으면
+    <b>내보내기</b> 로 markdown 파일을 받아 두면 된다.</p>
+</div>
+
+<div class="nh-empty" id="nh-none" hidden>
+  <h2>찾는 메모가 없다</h2>
+  <p>검색어나 필터를 지워 보라.</p>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/notes.js') }}?v={{ asset_version }}" defer></script>
+{% endblock %}

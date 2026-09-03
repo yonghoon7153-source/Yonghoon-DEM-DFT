@@ -476,5 +476,41 @@ if (location.hash) openToHash(location.hash);
     window.setTimeout(function () { URL.revokeObjectURL(url); }, 1000);
   });
 
+  /* ── 메모 모아보기에서 넘어온 경우 — `?note=<id>` 로 그 자리를 연다 ────
+     모아보기 카드가 "적어 둔 그 자리로 간다" 고 약속하므로 여기서 지켜야 한다.
+     하이라이트가 본문에서 안 찾아진 고아면 **오른쪽 목록 쪽으로** 데려간다 —
+     아무 데도 안 가고 조용히 실패하면 링크가 깨진 것처럼 보인다. */
+  function focusRequested() {
+    var m = /[?&]note=([^&#]+)/.exec(location.search);
+    if (!m) return;
+    var id;
+    try { id = decodeURIComponent(m[1]); } catch (e) { id = m[1]; }
+    var el = body.querySelector('mark[data-annot-id="' + id + '"]')
+          || rail.querySelector('[data-annot-id="' + id + '"]');
+    if (!el) return;
+    el.scrollIntoView({ block: "center" });
+    el.classList.add("is-focus");
+    window.setTimeout(function () { el.classList.remove("is-focus"); }, 2600);
+  }
+
   render();
+  focusRequested();
+})();
+
+/* ══ 사이드바 배지 — 어느 화면에서든 "메모가 몇 건인지" ════════════════
+   메모 화면에 들어가야만 개수를 아는 것은 불편하다. 0이면 숨긴다 (0을 띄우면
+   눈에 걸리기만 한다). 저장 접근이 막힌 브라우저면 조용히 아무것도 안 한다. */
+(function () {
+  var badge = document.getElementById("nav-note-n");
+  if (!badge) return;
+  var n = 0;
+  try {
+    for (var i = 0; i < localStorage.length; i++) {
+      var k = localStorage.key(i);
+      if (!k || k.indexOf("bms.annot.") !== 0) continue;
+      var l = JSON.parse(localStorage.getItem(k) || "[]");
+      if (Array.isArray(l)) n += l.length;
+    }
+  } catch (e) { return; }
+  if (n > 0) { badge.textContent = String(n); badge.hidden = false; }
 })();
