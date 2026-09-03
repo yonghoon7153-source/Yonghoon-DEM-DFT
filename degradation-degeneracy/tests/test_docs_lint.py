@@ -11796,6 +11796,58 @@ def test_the_evidence_binds_the_execution_environment(tmp_path):
         f"의존성 선언이 증거 밖이다: {sorted(base['inputs'])[:6]}")
 
 
+def test_the_replayed_run_sees_only_a_declared_environment(monkeypatch):
+    """★ 57차 P1-2 — 증거의 환경 목록이 **손으로 적은 주장**이었다.
+
+    56차는 `BOUND_ENV` 에 적힌 것만 영수증에 담았다. 그런데 재생이 띄우는
+    sandbox pytest 는 **부모 환경을 그대로 물려받는다** — `_nodes()` 도
+    `_run()` 도 `subprocess.run(..., env=…)` 을 주지 않는다. 그러므로 목록 밖
+    변수는 시험 결과를 바꾸면서 증거를 전혀 움직이지 않는다.
+
+    목록 밖인데 파이프라인이 **실제로 읽는** 것 (실측):
+
+        src/grid.py:517-518        `LEG` · `CANONICAL_RUN`  (_canonical_run_name)
+        scripts/smoke_e2e.sh:235   `SMOKE_DIRTY`
+
+    목록을 늘리는 것은 종결이 아니다 — 다음 변수 하나가 다시 밖이다 (56차
+    verdict 가 blacklist 증설을 두 번 거절한 것과 같은 형태). 재생이 보는 환경을
+    **선언한 것만 남기고 지우면** 목록이 주장이 아니라 사실이 된다: 밖에 있는
+    변수는 증거를 안 움직이는 것이 아니라 **run 에 닿지 못한다**.
+    """
+    mr = _mr()
+    outside = ("CANONICAL_RUN", "LEG", "SMOKE_DIRTY")
+    assert not (set(outside) & set(mr.BOUND_ENV)), (
+        f"시험 전제가 깨졌다 — 이미 선언 안에 있다: {mr.BOUND_ENV}")
+
+    seen = {}
+
+    class _Done:
+        returncode = 0
+        stdout = "tests/test_x.py::test_y\n"
+        stderr = ""
+
+    def _fake(cmd, **kw):
+        seen.update(kw)
+        return _Done()
+
+    monkeypatch.setattr(mr.subprocess, "run", _fake)
+    for name in outside:
+        monkeypatch.setenv(name, "leaked")
+    mr._nodes("test_y")
+
+    assert seen.get("env") is not None, (
+        "재생이 pytest 에 환경을 지정하지 않는다 — 운영자의 부모 환경이 그대로 "
+        "새어 들고, 그것이 결과를 바꿔도 증거는 안 움직인다")
+    leaked = sorted(n for n in outside if n in seen["env"])
+    assert not leaked, (
+        f"선언하지 않은 환경변수가 재생에 그대로 들어간다: {leaked}")
+
+    # 그리고 영수증은 **고른 것**이 아니라 run 이 실제로 본 것 전부여야 한다.
+    assert mr._execution_receipt()["env"] == seen["env"], (
+        "영수증의 환경이 재생이 실제로 준 환경과 다르다 — 고른 목록은 주장이고, "
+        "주장은 다음 변수 하나로 다시 깨진다")
+
+
 # ─────────────────────────────────────────────────────────────────────────────
 # 57차 — 게이트 56 반례
 # ─────────────────────────────────────────────────────────────────────────────

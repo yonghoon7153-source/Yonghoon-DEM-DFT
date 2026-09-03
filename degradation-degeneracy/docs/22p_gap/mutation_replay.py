@@ -1376,7 +1376,8 @@ def _nodes(kexpr: str) -> list[str]:
     r = subprocess.run(
         [sys.executable, "-m", "pytest", "tests/", "-q", "-k", kexpr,
          "--collect-only", "-p", "no:randomly", "--no-header"],
-        cwd=_sandboxed(ROOT), capture_output=True, text=True, timeout=1800)
+        cwd=_sandboxed(ROOT), env=replay_env(),
+        capture_output=True, text=True, timeout=1800)
     if r.returncode != 0:
         raise _ReplayError(f"수집 rc 가 0 이 아니다 ({r.returncode}): "
                            f"{r.stdout[-400:]}")
@@ -1420,7 +1421,8 @@ def _run(kexpr: str, marker: str = "") -> dict:
              f"({kexpr}) or test_mutant_{marker}" if marker else kexpr,
              "-p", "no:randomly", "--no-header",
              "--json-report", f"--json-report-file={rep}"],
-            cwd=_sandboxed(ROOT), capture_output=True, text=True, timeout=1800)
+            cwd=_sandboxed(ROOT), env=replay_env(),
+            capture_output=True, text=True, timeout=1800)
         if rep.is_file() and rep.stat().st_size:
             data = json.loads(rep.read_text(encoding="utf-8"))
             # ★ 52차 P1-2 — 영수증으로 남기는 것은 **판정에 쓰이는 부분**이다.
@@ -3172,6 +3174,38 @@ def _runner_digest() -> str:
 #: 여기 안 적으면 `..._evidence_binds_the_execution_environment` 가 잡는다.
 BOUND_ENV = ("DD_SMOOTH_CACHE",)
 
+#: 프로세스가 **돌기 위해** 필요한 것 — 지우면 파이썬이 뜨지 않거나 정렬·인코딩이
+#: 기계마다 달라진다. 값은 부모에서 가져오되 **이름은 여기가 정본**이다.
+_PROCESS_ENV = ("PATH", "HOME", "TMPDIR", "LANG", "LC_ALL", "TZ",
+                "VIRTUAL_ENV", "PYTHONPATH", "PYTHONHASHSEED",
+                "SYSTEMROOT", "TEMP", "TMP")
+
+
+def replay_env() -> dict:
+    """재생이 sandbox pytest 에 주는 **환경 전부** (57차 P1-2).
+
+    ★ 왜 목록을 늘리지 않는가 — 56차는 `BOUND_ENV` 에 적힌 것만 영수증에 담았고,
+      정작 sandbox pytest 는 `env=` 없이 떠서 **부모 환경을 통째로** 물려받았다.
+      그래서 목록 밖 변수는 결과를 바꾸면서 증거를 안 움직였다. 실측으로 밖인
+      것: `src/grid.py` 의 `LEG`·`CANONICAL_RUN`, `scripts/smoke_e2e.sh` 의
+      `SMOKE_DIRTY`. 목록을 늘리면 다음 변수 하나가 다시 밖이다 — 56차 verdict
+      가 blacklist 증설을 두 번 거절한 것과 같은 형태다.
+
+      그러므로 목록을 **강제**로 바꾼다. 재생이 보는 환경에서 선언 밖의 것을
+      전부 지우면, 목록은 "이것이 중요하다" 는 주장이 아니라 "이것이 전부였다"
+      는 사실이 된다. 밖에 있는 변수는 증거를 안 움직이는 것이 아니라 **run 에
+      닿지 못한다**.
+
+    `PYTHONHASHSEED` 를 고정하는 것도 같은 이유다 — 재생이 해시 순서에 흔들리면
+    같은 코드가 다른 증거를 낸다.
+    """
+    import os
+
+    out = {k: os.environ[k] for k in _PROCESS_ENV if k in os.environ}
+    out.update({k: os.environ.get(k, "") for k in BOUND_ENV})
+    out.setdefault("PYTHONHASHSEED", "0")
+    return dict(sorted(out.items()))
+
 #: 시험이 소비하는 **비-Python 입력** (56차 P1-2).
 BOUND_INPUT_GLOBS = ("requirements*.txt", "configs/*.yaml", "scripts/*.sh",
                      "run.sh", "pytest.ini", "conftest.py")
@@ -3211,7 +3245,9 @@ def _execution_receipt() -> dict:
         pkgs = {"<unavailable>": ""}
     return {"interpreter": "%d.%d.%d" % sys.version_info[:3],
             "packages": dict(sorted(pkgs.items())),
-            "env": {k: os.environ.get(k, "") for k in BOUND_ENV},
+            # ★ 57차 P1-2 — 고른 목록이 아니라 **run 이 실제로 본 환경 전부**.
+            #   `replay_env()` 가 그 밖을 지우므로 이 값이 곧 사실이다.
+            "env": replay_env(),
             "inputs": inputs}
 
 
