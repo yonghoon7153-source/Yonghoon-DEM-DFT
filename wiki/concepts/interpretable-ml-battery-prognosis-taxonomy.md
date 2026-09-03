@@ -5,7 +5,7 @@ created: 2026-09-03
 updated: 2026-09-03
 type: concept
 tags: [battery, degradation, research]
-sources: [raw/papers/wang2025_interpretable-ml-battery-prognosis.md, raw/papers/su2024_drt-soh-health-features.md, raw/papers/rhyu2025_systematic-feature-design-formation.md]
+sources: [raw/papers/wang2025_interpretable-ml-battery-prognosis.md, raw/papers/su2024_drt-soh-health-features.md, raw/papers/rhyu2025_systematic-feature-design-formation.md, raw/papers/navidi2024_piml-degradation-diagnostics-comparison.md]
 confidence: medium
 explored: false
 verificationStatus: unverified
@@ -71,6 +71,21 @@ hierarchy, they constitute an integrative and flexible toolbox").
 3. **`Parameter identification` 이라는 그림 상자(Fig. 4b)를 실으면서
    `identifiability` 는 한 번도 쓰지 않는다.** 식별을 *수행하는* 언어는
    풍부하고 식별이 *가능한지* 묻는 언어는 없다.
+
+## ★ 이 분류에 칸이 두 개 모자란다 (2026-09-03 추가)
+
+Navidi et al. 2024 (*Energy Storage Mater.* **68**, 103343) 이 **같은 데이터에서
+네 PIML 방법을 견주는** 비교 실험을 제공하면서 이 분류의 빈칸이 드러났다.
+그 네 방법 중 **셋은 물리를 오직 "학습 데이터"로만** 넣고, **넷 전부가
+"라벨 그 자체"** 를 공유한다 — 둘 다 위 4분류에 자리가 없다.
+
+상세와 실측 순위(**손실항 ≫ 학습 데이터**, 55–70 % vs 10–23 % 상대개선)는
+[[piml-physics-injection-points]] 로 분리했다.
+
+`[해석]` **여섯째 자리(라벨)가 없다는 것과 위 표에서 `uncertain*`·
+`identifiab*` 가 각 0회라는 것은 같은 사각지대의 두 표현이다.** 정답이
+물리 모형의 적합값일 때, 그 적합의 불확실성을 묻는 언어가 없으면 여섯째
+자리는 애초에 보이지 않는다.
 
 ## 왜 중요한가
 

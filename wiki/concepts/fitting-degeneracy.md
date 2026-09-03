@@ -5,7 +5,7 @@ created: 2026-08-11
 updated: 2026-09-03
 type: concept
 tags: [battery, degradation, research]
-sources: [raw/repositories/degradation-degeneracy-audit.md, raw/papers/lin2024_ocv-degradation-mode-identifiability.md, raw/papers/schaeffer2024_nullspace-regularization-interpretation.md]
+sources: [raw/repositories/degradation-degeneracy-audit.md, raw/papers/lin2024_ocv-degradation-mode-identifiability.md, raw/papers/schaeffer2024_nullspace-regularization-interpretation.md, raw/papers/navidi2024_piml-degradation-diagnostics-comparison.md]
 confidence: high
 explored: false
 verificationStatus: unverified
@@ -100,6 +100,43 @@ unit vectors which can be difficult to visualize (and interpret)" 다. 실패
 원인은 **차원(959)** 이지 발상이 아니다 — 우리 null 방향은 1차원이므로 그
 장애가 없다.
 
+## ★ 야생 실측 1건 — 그리고 "산포는 오차의 하한이 아니다" (2026-09-03 추가)
+
+이 페이지의 **multimodal 가지**가 실측 셀에서 관측된 사례가 하나 나왔다.
+Navidi et al. 2024 (*Energy Storage Mater.* **68**, 103343, raw:
+`raw/papers/navidi2024_piml-degradation-diagnostics-comparison.md`) 은
+**우리 창 모델과 좌표가 글자 그대로 같은** 4-파라미터 반쪽전지 적합
+(`m_p ↔ α_PE, δ_p ↔ β_PE, m_n ↔ α_NE, δ_n ↔ β_NE`, 컷오프 등식 제약 **없음**)
+을 실측 LCO‖Gr 셀에 돌리고, 부록 A2 에서 이렇게 적는다:
+
+> `[인쇄]` "the optimization problem for automatic fitting **has multiple local
+> minima, leading to run-to-run variability in optimal active mass parameters
+> depending on the initial guess**. We illustrated this variability by
+> presenting the mean and error bars (spread) derived from **five optimization
+> runs, each starting at a different initial guess**."
+
+`[도표, Fig. 15]` 그 산포는 정규화 활물질 단위로 **±1.5 ~ ±11 %p**, 중앙값
+≈ ±5 %p 다 — 우리 판정 임계 `tol = 2 %p` 의 **1~5배**.
+
+**★ 그런데 같은 그림이 이 진단의 한계도 준다.** 같은 셀의 해체 실측(자홍
+마름모)과 대조하면 `[도표]`: G2C1 의 `m_p` 에서 자동 적합 5개 해가 전부
+0.835–0.935 안에 있는데 **해체 실측은 0.63** 이다. 즉
+
+> **다중시작 산포는 실제 오차의 하한조차 아니다.** 다섯 해가 서로 가깝다고
+> 해서 참값 근처라는 뜻이 아니다.
+
+`[해석]` 이것은 [[nullspace-coefficient-interpretation]] 의 "낮은 잔차 ⇒
+참에 가깝다" 반증과 **같은 계열의 두 번째 형태**다 (거기는 잔차, 여기는
+해의 산포). 우리 저장소가 multi-start 산포를 degeneracy 증거로 쓸 때
+반드시 붙어야 할 경고이며, 우리는 참값을 알기 때문에 **산포 vs 실제 오차**
+산점도를 그려 이 관계를 직접 정량할 수 있다 (미실행, 기존 artifact 재집계).
+
+**원전이 못 한 구별을 우리는 한다**: 그들은 5개 해의 **목적함수 값을 보고하지
+않으므로** flat valley 인지 multimodal 인지 판별할 수 없다. 그럼에도 그
+결론으로 자동 적합을 기각하고 **사람의 수동 적합**을 정답으로 삼는다.
+그 수동 절차는 `(m_n, δ_n)` → `(m_p, δ_p)` **블록 교대**다 (부록 A1) —
+좌표 갱신 순서가 degeneracy 를 줄이는지는 값싸게 시험 가능하다 (미실행).
+
 ## 판정 방법 (요약)
 정답을 아는 합성 격자에서 복원 오차 |err| 와 tol(2%p) 기반 degenerate 판정,
 clean 바이어스 보정, 복원가능군 한정 집계. PE·NE 가 같은 부호로 묶이는
@@ -111,6 +148,10 @@ flat 방향의 비율이 "LAM_PE ≈ LAM_NE 는 수학" 가설의 직접 증거 
   같은 문제처럼 읽히지만 **미지수 정의가 다르다**: LLI·LAM_PE·LAM_NE 가 **전부
   ΔE 한 칸 안**에 들어간다. 즉 그 분해가 완벽해도 이 페이지의 질문은 그대로
   남는다. 원전 자신이 그 셋을 가르는 것을 "Hard to decouple" 이라고 인쇄한다.
+
+- [[piml-physics-injection-points]] — 위 Navidi 2024 처럼 **정답 자체가 이
+  적합의 산물**인 파이프라인이 이 계보에 다섯 편 있다. 그 여섯째 자리(라벨)는
+  방법 간 비교로는 원리적으로 검출되지 않는다.
 
 ## 한계
 - 판정은 tol 임계와 guard-feasible 모집단에 조건부다.
