@@ -1,0 +1,68 @@
+{
+ "schema": "bundle_identity/v1",
+ "date": "2026-09-03",
+ "bundle": "sdcp_c12_v31",
+ "zip_sha256": "714948eeff506ea2b4b3c164e88282e6e50a905e749212bc2055c36ab6161709",
+ "manifest_sha256": "2b9c840ced96986b57efcd1eb31f063a66eebff501743ddfc26838eb7a0acdf0",
+ "analyzer_in_bundle_sha256": "1caeadbaa6c0eb69139e64a053e76a4ecf1e15feb13912cab9da9f73278872e5",
+ "census_in_bundle_sha256": "517c92fc09430b2e052cbd3325983243fc75112a3744a480c9e7d6b5f2b8fc81",
+ "run_staged_in_bundle_sha256": "c07ca49af14696294bd0ea7f7fb94fc216376c7829592d854e561f9c08482a82",
+ "repo_commit": "f81270c513839789759c781569c0ad8e743711ad",
+ "repo_files_sha256_from_commit": {
+  "⚠_출처": "`git show f81270c5:<path>` 로 계산 — 작업 트리를 보지 않는다",
+  "tools/sdcp/vasp_handoff_bundle.py": "3d4381b0088516b15a30289eac6fea3978b108f080eb5abda18d4c4faf3771d9",
+  "db/properties/sdcp_c12_claim_prereg_2026_08_31.json": "5bc7afbcc45eedc7e94ecd4070c4ace08c8b3aa86ccdd3d629e538be008a6aa3",
+  "db/properties/sdcp_c12_protocol_2026_08_30.json": "941f64d38fee97d5408a9a07636b44b77928e7407738f51017c236a664bf663d",
+  "db/properties/c12_poses_2026_08_30.json": "b5760d6c86ee2644da467157acfcdc217ce599371b7dba81120323a509da4f39",
+  "db/governance/decisions.json": "408e0f611c7006a1c0fbb29854ff82ff6931510b6a3d25f2ea3cbc441455acf7"
+ },
+ "generated_on": "Claude Code 원격 컨테이너 (clean tree · HEAD=f81270c5) · 2026-09-03",
+ "generated_argv": [
+  "--from_basins",
+  "db/properties/c12_poses_2026_08_30.json",
+  "--frags",
+  "sdcp_neutral",
+  "ptfe_c10",
+  "--refs",
+  "--refs_minimal",
+  "--both_seeds",
+  "--single_point",
+  "--allow_no_pin",
+  "--potcar_identity",
+  "post_hoc",
+  "--cell_c",
+  "36.6551",
+  "--cell_c2",
+  "40.6551",
+  "--min_vacuum",
+  "15.0",
+  "--roles",
+  "primary",
+  "sensitivity",
+  "stress_sensitivity",
+  "--out",
+  "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/82ea256b-12bc-5a75-994e-7718d79c71ba/scratchpad/c12/sdcp_c12_v31"
+ ],
+ "⚠_argv_출처": "v22~v29 와 **완전히 같다** (--out 만 다르다). 물리 입력 16잡은 v23 이후 바이트 동일 — 바뀐 것은 검증·봉인 층뿐이다.",
+ "회신_BG_이행": {
+  "P0-1": "반송 계약(POTCAR 미반송)이 정본. 분석기의 상 폴더 POTCAR **부재**는 게이트에서 내렸다 (MISMATCH 는 유지). C12_POTCAR_RETURNED ↔ _return_contract ↔ README 를 selftest 가 결박.",
+  "P1-1": "decisions.json 비준 기록도 참조 문서와 같은 형식 검사(actor·시각·role)를 받는다.",
+  "P1-2": "staged README·SUBMIT 실행 예시에 LAUNCHER_BIN.",
+  "P1-4": "정적 물리 결박(exact map · 진공 c1/c2 · 기체 절대관계)을 --check_governance 로 앞당겼다."
+ },
+ "사람_확인_7가지": {
+  "①_결정_세곳_일치": "PASS — README 미반송 문장 · per_job 에 POTCAR 없음 · 분석기 C12_POTCAR_RETURNED=False",
+  "②_verify_zip": "PASS (expect_jobs 16 · ✅ 제출 가능)",
+  "③_check_governance": "rc 0 — 정적 물리 3검사 통과 · 건너뜀 1건(실행 뒤 receipt)을 화면에 명시",
+  "④_governance_4개_외부앵커": "PASS — 번들 사본 4개 sha256 == repo db/ 원본",
+  "⑤_MANIFEST_실물": "PASS — estimand 4경로·branch afm2424_pm1·진공 36.6551/40.6551·16잡·provenance clean",
+  "⑥_슬랩_ab": "PASS — 10/10 이 (18.2724,0,0)/(-3.6264,10.9259,0)",
+  "⑦_메일_내용": "EXPECT 두 해시 + LAUNCHER_BIN 포함 실행 예시 확인"
+ },
+ "⛔_이_증서가_보증하지_않는_것": [
+  "과학적 보고량의 타당성 (D 가 맞는 양인가)",
+  "외주처의 실제 PP 트리·VASP build·스케줄러 환경",
+  "SCF 수렴·OUTCAR 형식",
+  "POTCAR 신원 (post_hoc 정책 — 원고 인용 자격은 별도 판정)"
+ ]
+}
