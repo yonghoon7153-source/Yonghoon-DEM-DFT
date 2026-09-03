@@ -420,6 +420,104 @@ def ref_doc_state(path):
                      % (_rec[:12], _dg[:12]) if not _dg_ok else
                      "status=%r · 사람 비준 기록 %s — 이 문서가 정의하는 주장은 "
                      "아직 닫히지 않았다" % (_st, "있음" if _rt else "**없음**")))}
+
+
+# ── KCONV_CORE (2026-09-03 · 렌즈2 P0-1/P1-2/P1-3 · 렌즈4 P0-2 · 렌즈5 P1-1) ──────────────
+#   δ_k 축 **설계 제외**의 법적 근거는 비준 사전등록 `3_오차예산` 의 `축_설계_제외_*` 항이다.
+#   그 항이 없으면 50행("축이 하나라도 없으면 INCOMPLETE")이 그대로 적용된다 — 코드가 비준
+#   문서보다 관대해질 수 없다. 생성기(--no_kconv)는 그 항의 재개 조건을 MANIFEST 로 **복사**하고,
+#   분석기는 번들에 실린 사전등록 사본에서 같은 항을 읽어 **같은지** 본다. 재개 조건은 문장이
+#   아니라 기계 평가 가능한 구조여야 한다 (판정량 D_raw_eV · 문턱 · 비교 · 충족시).
+C12_PREREG_REL = "db/properties/sdcp_c12_claim_prereg_2026_08_31.json"
+KCONV_REOPEN_CMP = ("abs_lt", "boundary", "none")
+
+
+def _prereg_axis_exclusion(man, axis="δ_k"):
+    """비준 사전등록에서 `3_오차예산.축_설계_제외_*` (해당 축) 항 → (entry|None, key|None, 사유|None).
+
+    ⚠ 원문은 ① `man["_prereg_doc"]` (dict — 생성기·픽스처가 직접 준다) ② 번들에 실린 사본
+      (`_bundled_ref_path`, 분석기) 순서로 찾는다. 둘 다 없으면 '없음' 이고 그것은 통과가 아니다.
+    """
+    pj = (man or {}).get("_prereg_doc")
+    if not isinstance(pj, dict):
+        try:
+            f, why = _bundled_ref_path(man, C12_PREREG_REL)      # noqa: F821 (분석기 안에 있다)
+        except NameError:
+            return None, None, "사전등록 원문을 읽을 경로가 없다 (_prereg_doc 도 번들 사본도 없다)"
+        if f is None:
+            return None, None, why
+        try:
+            with open(f, encoding="utf-8") as _fh:
+                pj = json.load(_fh)
+        except Exception as e:                                   # noqa: BLE001
+            return None, None, "사전등록 원문 파싱 실패 (%r)" % (e,)
+    sec = pj.get("3_오차예산") or {}
+    for k in sorted(sec):
+        v = sec.get(k)
+        if (str(k).startswith("축_설계_제외") and isinstance(v, dict)
+                and str(v.get("축") or "") == axis):
+            return v, k, None
+    return None, None, ("사전등록 3_오차예산 에 %s 의 '축_설계_제외_*' 항이 없다 — 50행(축이 하나라도 "
+                        "없으면 INCOMPLETE)이 그대로 적용된다" % axis)
+
+
+def _kconv_reopen_rule_problems(rule):
+    """재개 조건 dict 의 **형식** 위반 목록 — 기계 평가 가능해야 한다 (렌즈2 P1-2). 빈 리스트 = 통과."""
+    bad = []
+    if not isinstance(rule, dict):
+        return ["재개 조건이 dict 가 아니다 (%s)" % type(rule).__name__]
+    if not str(rule.get("규칙") or "").strip():
+        bad.append("규칙 문장이 비었다")
+    if str(rule.get("판정량") or "") != "D_raw_eV":
+        bad.append("판정량은 'D_raw_eV'(pm1 primary 조건부 D · 반올림 전) 여야 한다 (지금 %r)"
+                   % (rule.get("판정량"),))
+    _c = str(rule.get("비교") or "")
+    if _c not in KCONV_REOPEN_CMP:
+        bad.append("비교 는 %s 중 하나여야 한다 (지금 %r)" % (KCONV_REOPEN_CMP, rule.get("비교")))
+    if _c and _c != "none":
+        try:
+            if not (float(rule.get("문턱_eV")) > 0):
+                bad.append("문턱_eV 는 양수여야 한다")
+        except (TypeError, ValueError):
+            bad.append("문턱_eV 가 수가 아니다 (%r)" % (rule.get("문턱_eV"),))
+        if not str(rule.get("충족시") or "").strip():
+            bad.append("충족시 행동이 비었다")
+    if _c == "boundary":
+        try:
+            if not (float(rule.get("가드밴드_eV")) > 0):
+                bad.append("가드밴드_eV 는 양수여야 한다")
+        except (TypeError, ValueError):
+            bad.append("boundary 비교는 가드밴드_eV 가 필요하다 (%r)" % (rule.get("가드밴드_eV"),))
+    return bad
+
+
+def _kconv_reopen_eval(rule, d_raw):
+    """선언된 재개 조건을 D_raw 에 **기계로** 댄다 → {판정량·값·비교·문턱·충족·행동}."""
+    out = {"판정량": "D_raw_eV", "값_eV": (None if d_raw is None else round(float(d_raw), 6)),
+           "비교": rule.get("비교"), "문턱_eV": rule.get("문턱_eV"),
+           "가드밴드_eV": rule.get("가드밴드_eV"), "충족": None, "행동": None}
+    if d_raw is None:
+        out["행동"] = "D_raw 가 없어 평가 불가"
+        return out
+    a = abs(float(d_raw))
+    _c = str(rule.get("비교") or "")
+    if _c == "none":
+        out["충족"] = False
+        out["행동"] = "재개 조건 없음(선언) — %s" % (rule.get("규칙") or "")
+    elif _c == "abs_lt":
+        out["충족"] = bool(a < float(rule["문턱_eV"]))
+        out["행동"] = (str(rule.get("충족시")) if out["충족"] else "조건 불충족 — 추가 계산 없음")
+    elif _c == "boundary":
+        t, g = float(rule["문턱_eV"]), float(rule["가드밴드_eV"])
+        out["충족"] = bool(t <= a < t + g)
+        if out["충족"]:
+            out["행동"] = str(rule.get("충족시"))
+        elif a < t:
+            out["행동"] = "|D_raw| < 문턱 — 프로토콜 §7 미해결 영역 · §8 확장 금지 (재개 대상 아님)"
+        else:
+            out["행동"] = "|D_raw| ≥ 문턱+가드밴드 — 미시험 축이 판정을 못 바꾼다 · 추가 계산 없음"
+    return out
+# ── /KCONV_CORE ────────────────────────────────────────────────────────────────
 # ── /GOV_CORE ─────────────────────────────────────────────────────────────────
 '''
 exec(compile(GOV_CORE_SRC, "<gov-core>", "exec"), globals())
@@ -1828,7 +1926,7 @@ if [ -n "$VASP_BIN" ]; then
     echo "   \`$VASP_BIN\` 를 인자 없이 실행한 출력에서 'vasp.<버전>' 패턴을 못 찾았습니다."
     echo "   확인: cd \$(mktemp -d) && $VASP_BIN 2>&1 | head -20"
     echo "   그 출력을 보내 주시면 규칙을 맞춰 다시 만들어 드립니다."
-    echo "   (여기서 멈추는 이유: 잘못된 배너를 봉인하면 1단계 ~300 h 를 태운 뒤에야"
+    echo "   (여기서 멈추는 이유: 잘못된 배너를 봉인하면 1단계 전체(수백 h)를 태운 뒤에야"
     echo "    ROOT_SEAL_VASP_MISMATCH 로 전건이 막히고, 그때는 번들 재발급밖에 없습니다.)"
     exit 1
   fi
@@ -2405,11 +2503,13 @@ def _bond_types(atoms, idx: List[int]) -> Dict[str, int]:
 #:   **계산 전에** 받은 attestation 이 있어야 한다. POTCAR 원문은 받지 않는다.
 POTCAR_ATTESTATION_REQUEST = """# POTCAR / VASP attestation 요청 (계산 **전**)
 
-원고 Methods 에 PAW release 를 적으려면 아래를 **첫 계산 전에** 확인해 주셔야 합니다.
-POTCAR 파일 자체는 주고받지 않습니다 — 지문과 버전 문자열만입니다.
+이 묶음은 탐색용 정책(post_hoc)입니다 — attestation 은 **선택**입니다. 있으면 PAW dataset 신원
+**기록**이 남고, 없어도 계산·판정은 그대로입니다. 있어도 원고 인용 자격이 올라가지는 않습니다
+(회신 BA P0-3). POTCAR 파일 자체는 주고받지 않습니다 — 지문과 버전 토큰만입니다.
 
-아래 스크립트를 묶음 루트에서 실행하시면 `POTCAR_ATTESTATION.json` 이 만들어집니다.
-그 파일만 반송해 주시면 됩니다.
+아래 스크립트를 묶음 루트에서, README 실행 블록의 export 뒤 · `bash run_staged.sh 1` **앞**에서
+실행하시면 `POTCAR_ATTESTATION.json` 이 만들어집니다. 반송 때 그 파일도 함께 옵니다
+(푼 디렉터리를 통째로 압축하시면 자동입니다).
 
 ```bash
 # 먼저 받으신 ZIP 의 SHA256 을 구합니다 (번들 안에는 자기 해시를 넣을 수 없습니다)
@@ -2420,8 +2520,11 @@ POTCAR_ALLOWLIST=/abs/site_allow.txt \
 RELEASE_LABEL="potpaw_PBE.54" \
 SITE="기관/담당자" \
 BUNDLE_ZIP_SHA256="$ZS" \
+VASP_EXE=/abs/path/to/vasp_std \
 bash MAKE_POTCAR_ATTESTATION.sh
 ```
+(README 실행 블록의 `export` 를 이미 하셨으면 `PP`·`POTCAR_ALLOWLIST`·`BUNDLE_ZIP_SHA256`·`VASP_EXE` 는
+그 값이 그대로 쓰이므로 `RELEASE_LABEL`·`SITE` 두 개만 붙이면 됩니다.)
 
 ⚠ **첫 VASP 실행 전에** 돌려 주세요. 스크립트가 OUTCAR/CONTCAR/CHGCAR 등 산출물이
 있으면 거부합니다 — "계산 전에 만들었다" 를 선언이 아니라 **검사**로 남기기
@@ -2434,11 +2537,12 @@ bash MAKE_POTCAR_ATTESTATION.sh
 - POTCAR 내부 `TITEL` 줄과 embedded hash
 - site allowlist 의 SHA256
 - 생성 UTC 시각 · 사이트/담당자
-- `vasp_std --version` 원문
+- VASP 배너의 버전 토큰 (`vasp.<버전>` — 봉인 `SEAL_POTCAR_ROOT.sh` 와 같은 규칙) 과 배너 앞 8줄
 - VASP 실행파일의 SHA256 과 resolved path
 
-⚠ 이것이 없으면 원고는 `PBE PAW 5.4` 를 **단정하지 않고**, D 를 "이 묶음의
-PAW dataset 에 조건부" 로만 보고합니다.
+⚠ 있어도 없어도 이 묶음의 결과는 **원고 인용용이 아닙니다** (post_hoc 정책 · MANIFEST
+`potcar_identity_policy.manuscript_citable = false`). 있으면 Methods 에 PAW release 이름을 **기록**으로
+적을 수 있고, 없으면 "계산 수행 기관이 관리하는 트리" 로만 적습니다.
 """
 
 MAKE_ATTESTATION = r'''#!/usr/bin/env bash
@@ -4768,11 +4872,71 @@ def _selftest_closure(chk):
             % (why, [b.split("(")[0] for b in _rr["blocks"]][:3]))
     # 🔴 1저자 결정 2026-09-03 — **dense 를 설계에서 빼는 것**과 **반송에서만 빠지는 것**은
     #   분석기에서 다른 경로다. 그 둘을 시험이 못박는다 (--no_kconv 의 근거).
-    _r_nk = _closure_estimand(dict(_man, kconv_pair={
-        "status": "not_designed",
-        "🔁_재개_조건_결과_보기_전에_선언": {"규칙": "|ΔE_ads| < 50 meV 이면 dense 2잡"}}),
-        _RES(), _E, _emol, _jobs)
+    # 🔴 2026-09-03 (렌즈2 P0-1 · P1-2) — 재개 조건은 **기계 평가 가능한 구조**이고, 같은 구조가
+    #   비준 사전등록 `3_오차예산.축_설계_제외_*` 에 있어야 하며, MANIFEST 의 것과 같아야 한다.
+    _RULE_NK = {"규칙": "재개하지 않는다 — 경계(0.05≤|D_raw|<0.06)면 자문만", "판정량": "D_raw_eV",
+                "문턱_eV": 0.05, "가드밴드_eV": 0.01, "비교": "boundary",
+                "충족시": "자문만 (KCONV_UNTESTED_AXIS_AT_THRESHOLD) — dense 추가 없음"}
+    _PRE_NK = {"3_오차예산": {"축_설계_제외_2026_09_03": {
+        "축": "δ_k", "재개_조건_결과_보기_전에_선언": dict(_RULE_NK)}}}
+    _KP_NK = {"status": "not_designed", "🔁_재개_조건_결과_보기_전에_선언": dict(_RULE_NK)}
+    _r_nk = _closure_estimand(dict(_man, kconv_pair=_KP_NK, _prereg_doc=_PRE_NK),
+                              _RES(), _E, _emol, _jobs)
     _nb_nk = (_r_nk.get("numeric_budget") or {})
+    # ⛔음성 — 비준 항이 없으면 종전대로 차단 (코드가 비준 문서보다 관대할 수 없다)
+    _r_unr = _closure_estimand(dict(_man, kconv_pair=_KP_NK), _RES(), _E, _emol, _jobs)
+    chk(any(str(b).startswith("KCONV_OMISSION_UNRATIFIED") for b in _r_unr["blocks"])
+        and "δ_k" in ((_r_unr.get("numeric_budget") or {}).get("missing_axes") or [])
+        and _r_unr.get("rounded_value_under_tested_axes_eV") is None,
+        "⛔음성 렌즈2 P0-1: 사전등록에 '축_설계_제외' 항이 없으면 not_designed 경로가 **열리지 "
+        "않는다** (KCONV_OMISSION_UNRATIFIED · δ_k missing) · %s"
+        % [str(b)[:40] for b in _r_unr["blocks"] if "KCONV" in str(b)][:2])
+    # ⛔음성 — MANIFEST 의 재개 조건이 사전등록 항과 다르면 드리프트 차단
+    _r_drf = _closure_estimand(dict(_man, kconv_pair={
+        "status": "not_designed",
+        "🔁_재개_조건_결과_보기_전에_선언": dict(_RULE_NK, 문턱_eV=0.03)}, _prereg_doc=_PRE_NK),
+        _RES(), _E, _emol, _jobs)
+    chk(any(str(b).startswith("KCONV_OMISSION_DRIFT") for b in _r_drf["blocks"]),
+        "⛔음성 렌즈2 P0-1: MANIFEST 재개 조건 ≠ 사전등록 항 → KCONV_OMISSION_DRIFT")
+    # ⛔음성 — 문장만 있고 구조 필드가 없으면 기계 평가 불가 → UNDECLARED
+    _r_und = _closure_estimand(dict(_man, kconv_pair={
+        "status": "not_designed",
+        "🔁_재개_조건_결과_보기_전에_선언": {"규칙": "|ΔE_ads| < 50 meV 이면 dense 2잡"}},
+        _prereg_doc=_PRE_NK), _RES(), _E, _emol, _jobs)
+    chk(any(str(b).startswith("KCONV_OMISSION_UNDECLARED") for b in _r_und["blocks"]),
+        "⛔음성 렌즈2 P1-2: 재개 조건이 문장뿐(판정량·문턱·비교 없음)이면 KCONV_OMISSION_UNDECLARED")
+    # 양성 — 재개 조건이 D_raw 에 기계로 대어지고 결과에 남는다 (D=−0.5 → 경계 밖 · 불충족)
+    _ev_nk = ((_r_nk.get("kconv_omission") or {}).get("reopen_eval") or {})
+    chk(_ev_nk.get("판정량") == "D_raw_eV" and _ev_nk.get("충족") is False
+        and abs((_ev_nk.get("값_eV") or 0) - (-0.5)) < 1e-6
+        and any("KCONV_REOPEN_NOT_TRIGGERED" in str(x) for x in (_r_nk.get("advisories") or [])),
+        "렌즈2 P1-2 양성: 재개 조건을 D_raw_eV=%s 에 기계로 대어 reopen_eval 에 남긴다 (충족 %s · %s)"
+        % (_ev_nk.get("값_eV"), _ev_nk.get("충족"), str(_ev_nk.get("행동"))[:40]))
+    # 단위 — 세 비교 연산자의 경계 (결과를 보기 전에 정한 규칙이 어느 값에 어떻게 대어지는가)
+    _rb = dict(_RULE_NK)
+    chk(_kconv_reopen_eval(_rb, -0.055)["충족"] is True
+        and _kconv_reopen_eval(_rb, -0.049)["충족"] is False
+        and "§8" in _kconv_reopen_eval(_rb, -0.049)["행동"]
+        and _kconv_reopen_eval(_rb, -0.061)["충족"] is False
+        and _kconv_reopen_eval(dict(_rb, 비교="abs_lt", 충족시="dense 추가"), -0.049)["충족"] is True
+        and _kconv_reopen_eval(dict(_rb, 비교="abs_lt", 충족시="dense 추가"), -0.05)["충족"] is False
+        and _kconv_reopen_eval(dict(_rb, 비교="none"), -0.01)["충족"] is False,
+        "렌즈2 P1-2 단위: boundary [0.05,0.06) · abs_lt <0.05 · none 의 경계가 선언대로다")
+    chk(not _kconv_reopen_rule_problems(_RULE_NK)
+        and _kconv_reopen_rule_problems({"규칙": "x"})
+        and _kconv_reopen_rule_problems(dict(_RULE_NK, 판정량="rounded_value_under_tested_axes_eV"))
+        and _kconv_reopen_rule_problems(dict(_RULE_NK, 비교="boundary", 가드밴드_eV=None)),
+        "렌즈2 P1-2 단위: 재개 조건 형식 검사 — 판정량은 D_raw_eV 만, boundary 는 가드밴드 필수")
+    # 🔴 렌즈2 P1-3 — preflight(--check_governance) 가 같은 정적 조건을 결과 없이 판정한다
+    _pf_ok = preflight_static_physics(dict(_man, kconv_pair=_KP_NK, _prereg_doc=_PRE_NK))
+    _pf_unr = preflight_static_physics(dict(_man, kconv_pair=_KP_NK))
+    _pf_na = preflight_static_physics(dict(_man, kconv_pair={"status": "not_applicable"}))
+    chk(any("kconv 설계 제외 (비준 사전등록" in x for x in _pf_ok[1])
+        and not any("kconv" in x for x in _pf_ok[0])
+        and any("KCONV_OMISSION_UNRATIFIED" in x for x in _pf_unr[0])
+        and any("KCONV_STATUS_INVALID" in x for x in _pf_na[0]),
+        "🔴 렌즈2 P1-3: preflight 가 kconv 생략의 비준·형식·상태를 **결과 전에** 판정한다 "
+        "(양성 done · 비준 없음 bad · not_applicable bad)")
     chk("δ_k" not in (_nb_nk.get("missing_axes") or [])
         and any("δ_k" in str(x) for x in (_nb_nk.get("axes_not_designed") or []))
         and _r_nk.get("rounded_value_under_tested_axes_eV") is not None,
@@ -10669,24 +10833,35 @@ def _closure_estimand(man, results, E, emol, jobs, merge_info=None):
              scope="estimand")
     elif str(_kp.get("status")) == "not_designed":
         # 🔴🔴 1저자 결정 2026-09-03 — **선언된 축 생략**은 차단이 아니라 주장 축소다.
-        #   비준된 사전등록 `3_오차예산` 이 명시한다: "넘으면 **값을 버리지 않는다.**
-        #   0.01 eV 안정성 주장을 하지 않고, 보고 해상도를 낮추거나 축별 민감도만 보고한다."
-        #   그런데 분석기는 KCONV_ABSENT 로 estimand 를 통째로 막고 있었다 — 비준 문서와
-        #   코드가 어긋나 있었다. 사전등록 쪽이 이긴다.
-        #   ⚠ 그렇다고 아무 생략이나 통과시키지 않는다. **결과를 보기 전에 선언한
-        #     재개 조건**이 있어야만 이 경로가 열린다 (없으면 종전대로 차단) — 그래야
-        #     "결과를 보고 축을 뺀다" 가 불가능하다.
+        #   ⚠ 정정 (렌즈2 P0-1 · 렌즈4 P0-2 · 렌즈5 P1-1, 2026-09-03): 종전 주석은 사전등록
+        #   49행("넘으면 값을 버리지 않는다")을 근거로 들었는데, 그 절은 **문턱 초과** 절이고
+        #   축 **부재**의 적용 절은 50행 "축이 하나라도 없으면 NUMERIC_BUDGET_INCOMPLETE" 다.
+        #   그러므로 이 경로는 50행에 대한 **비준된 예외**가 있을 때만 열린다 — 번들에 실린
+        #   비준 사전등록 사본의 `3_오차예산.축_설계_제외_*` 항. 없으면 코드가 비준 문서보다
+        #   관대한 것이므로 종전대로 차단한다. 있으면 MANIFEST 의 재개 조건이 그 항의 재개
+        #   조건과 **같아야** 하고(생성기가 복사한다 — 드리프트 금지), 재개 조건은 문장이 아니라
+        #   **기계 평가 가능한 구조**여야 한다 (렌즈2 P1-2: 어느 값에 무엇을 대는지).
         _reopen = next((v for k, v in _kp.items() if "재개_조건" in str(k)), None)
-        if not (isinstance(_reopen, dict) and str(_reopen.get("규칙") or "").strip()):
+        _rp = _kconv_reopen_rule_problems(_reopen)
+        _pe, _pek, _pew = _prereg_axis_exclusion(man, "δ_k")
+        if _rp:
             _blk("KCONV_OMISSION_UNDECLARED",
-                 "KCONV_OMISSION_UNDECLARED(k 축을 설계에서 뺐다고 하면서 **재개 조건을 "
-                 "결과 보기 전에 선언하지 않았다** — 생략을 사후에 정당화할 수 없다)",
+                 "KCONV_OMISSION_UNDECLARED(k 축을 설계에서 뺐다고 하면서 **결과 보기 전에 기계 "
+                 "평가 가능한 재개 조건을 선언하지 않았다** %s — 생략을 사후에 정당화할 수 없다)"
+                 % _rp[:3], scope="estimand")
+        elif _pe is None:
+            _blk("KCONV_OMISSION_UNRATIFIED",
+                 "KCONV_OMISSION_UNRATIFIED(δ_k 설계 제외가 비준 사전등록에 없다 — %s)" % _pew,
                  scope="estimand")
+        elif (_pe.get("재개_조건_결과_보기_전에_선언") or {}) != dict(_reopen):
+            _blk("KCONV_OMISSION_DRIFT",
+                 "KCONV_OMISSION_DRIFT(MANIFEST 의 재개 조건이 비준 사전등록 %s 의 재개 조건과 "
+                 "다르다 — 생성기가 사전등록에서 복사해야 하는 값이다)" % _pek, scope="estimand")
         else:
             out.setdefault("advisories", []).append(
-                "KCONV_NOT_DESIGNED(k 축을 **설계에서 뺐다** — 사전 선언된 생략이다. "
-                "ΔE_ads 는 보고하되 **0.01 eV 안정성은 주장하지 않는다.** 재개 조건: %s)"
-                % (_reopen.get("규칙"),))
+                "KCONV_NOT_DESIGNED(k 축을 **설계에서 뺐다** — 비준 사전등록 %s 에 선언된 생략. "
+                "ΔE_ads 는 보고하되 **0.01 eV 전체 안정성은 주장하지 않는다.** 재개 조건: %s)"
+                % (_pek, _reopen.get("규칙")))
             # ⚠ `kconv_delta` 로 쓰면 안 된다 — 그 키가 있으면 아래 오차예산이
             #   `delta_k_meV is None` 을 보고 **missing(차단)** 으로 센다. 선언된 생략은
             #   missing 이 아니라 `axes_not_designed` 여야 하므로 **다른 키**에 남긴다.
@@ -10694,7 +10869,9 @@ def _closure_estimand(man, results, E, emol, jobs, merge_info=None):
                 "status": "not_designed",
                 "delta_k_meV": None,
                 "⛔": "이 축은 재지 않았다 — 0 이 아니라 **없음**이다",
+                "prereg_entry": _pek,
                 "재개_조건": _reopen,
+                "reopen_eval": None,          # D_raw 가 나온 뒤 기계로 채운다 (렌즈2 P1-2)
             }
 
     # ══ 🔴 회신 AT Q2 — 세 수치축의 **합산 오차예산** (2026-08-31) ═══════════
@@ -10741,7 +10918,10 @@ def _closure_estimand(man, results, E, emol, jobs, merge_info=None):
         else:
             _bax["k"] = abs(float(_v))
     elif _bcodes & {"KCONV_NOT_MEASURED", "KCONV_FRAGMENT_UNRESOLVED", "KCONV_ABSENT",
-                    "KCONV_STATUS_INVALID"}:
+                    "KCONV_STATUS_INVALID", "KCONV_OMISSION_UNRATIFIED",
+                    "KCONV_OMISSION_DRIFT", "KCONV_OMISSION_UNDECLARED"}:
+        # ⚠ 선언된 생략이 **성립하지 않은** 경우(비준 항 없음·드리프트·형식 불량)는 '설계에
+        #   없음' 이 아니라 **결측**이다 — 확인 못 한 것은 통과가 아니다 (사전등록 50행).
         _bmiss.append("δ_k")
     else:
         _bskip.append("δ_k(k 수렴 쌍이 이 번들 설계에 없음)")
@@ -11149,6 +11329,19 @@ def _closure_estimand(man, results, E, emol, jobs, merge_info=None):
     #   입력·상태·provenance 가 유효하면(여기 도달) D_raw 는 항상 보존한다.
     #   0.01 eV 반올림 보고는 numeric_budget 의 인용 자격이 있을 때만 낸다.
     out["D_raw_eV"] = round(primary, 6)
+    # 🔴 렌즈2 P1-2 (2026-09-03) — 선언된 재개 조건을 **기계로** D_raw 에 댄다: 어느 값에
+    #   대는지(D_raw_eV · 반올림 전), 충족 여부, 그때 하기로 한 행동을 결과에 남긴다 —
+    #   결과를 보고 값을 고르거나(rounded vs raw) 문턱을 다시 읽을 여지를 없앤다.
+    _ko = out.get("kconv_omission")
+    if isinstance(_ko, dict) and isinstance(_ko.get("재개_조건"), dict):
+        _ev = _kconv_reopen_eval(_ko["재개_조건"], primary)
+        _ko["reopen_eval"] = _ev
+        _tag = ("KCONV_REOPEN_TRIGGERED" if _ev.get("충족") and _ev.get("비교") == "abs_lt"
+                else "KCONV_UNTESTED_AXIS_AT_THRESHOLD" if _ev.get("충족")
+                else "KCONV_REOPEN_NOT_TRIGGERED")
+        out.setdefault("advisories", []).append(
+            "%s(|D_raw|=%.4f eV · 비교 %s · 문턱 %s eV · %s)"
+            % (_tag, abs(primary), _ev.get("비교"), _ev.get("문턱_eV"), _ev.get("행동")))
     out["fragments"] = {"sdcp": sd, "control": ct}
     _nbF = out.get("numeric_budget") or {}
     _cit01 = bool(_nbF.get("tested_axes_stable_at_0.01eV"))
@@ -11322,6 +11515,33 @@ def preflight_static_physics(man):
             skipped.append("기체 **실행된** 상 집합 (receipt 는 반송 뒤에 생긴다 — 최종 분석 몫)")
     else:
         skipped.append("기체 절대관계 (planned 에 refs/mol__*__box* 가 없다)")
+    # 🔴 렌즈2 P1-3 (2026-09-03) — kconv 축 생략의 **정적** 조건(상태 · 재개 조건 형식 · 비준 항 ·
+    #   드리프트)은 결과가 없어도 판정된다. 최종 분석에서만 걸면 ~111 h 뒤다 (BG P1-4 와 같은 유형).
+    _kp0 = man.get("kconv_pair") or {}
+    _ejk_p = man.get("estimand_job_keys") or {}
+    _two_p = len({_ejk_p.get("E_C_sdcp"), _ejk_p.get("E_C_control")} - {None}) == 2
+    if _kp0.get("jobs"):
+        done.append("kconv 쌍 봉인 (jobs %d — δ_k 를 잰다)" % len(_kp0["jobs"]))
+    elif not _two_p:
+        skipped.append("kconv 축 (estimand primary 조각이 둘이 아니다 — δ_k 정의 안 됨)")
+    elif str(_kp0.get("status")) == "not_designed":
+        _rq0 = next((v for k, v in _kp0.items() if "재개_조건" in str(k)), None)
+        _rpp0 = _kconv_reopen_rule_problems(_rq0)
+        _pe0, _pek0, _pew0 = _prereg_axis_exclusion(man, "δ_k")
+        if _rpp0:
+            bad.append("kconv 설계 제외의 재개 조건이 기계 평가 불가 %s (KCONV_OMISSION_UNDECLARED)" % _rpp0[:3])
+        elif _pe0 is None:
+            bad.append("kconv 설계 제외가 비준 사전등록에 없다 — %s (KCONV_OMISSION_UNRATIFIED)" % _pew0)
+        elif (_pe0.get("재개_조건_결과_보기_전에_선언") or {}) != dict(_rq0):
+            bad.append("kconv 재개 조건이 비준 사전등록 %s 와 다르다 (KCONV_OMISSION_DRIFT)" % _pek0)
+        else:
+            done.append("kconv 설계 제외 (비준 사전등록 %s · 재개 조건 기계 평가 가능 · 드리프트 없음)" % _pek0)
+    elif str(_kp0.get("status")) == "not_applicable":
+        bad.append("kconv_pair.status=not_applicable 인데 primary 조각이 둘이다 — δ_k 는 정의된다 "
+                   "(KCONV_STATUS_INVALID)")
+    else:
+        bad.append("kconv_pair 가 없거나 상태 미상 (%r) — 0.01 eV 의 k 근거가 없다 (KCONV_ABSENT)"
+                   % (_kp0.get("status"),))
     return bad, done, skipped
 
 
@@ -13231,11 +13451,16 @@ def _return_contract(man: Dict[str, Any]) -> Dict[str, Any]:
     per_job = ["static/OUTCAR (또는 .gz)", "static/OSZICAR",
                "static/POSCAR — **실행된 기하** (부모↔canary 기하 대조·기하 감사. "
                "없으면 CANARY_GEOM_UNCHECKED 로 막힙니다)",
-               "POTCAR_PROVENANCE.json (조립기가 자동 생성)"]
+               "POTCAR_PROVENANCE.json (조립기가 자동 생성)",
+               # 🔴 렌즈4 P1-2 (2026-09-03) — 분석기가 실제로 여는데 목록에 없던 것
+               "job.json (받으신 그대로 — 분석기가 잡의 정체·상 목록을 이것으로 읽습니다 · "
+               "없으면 그 잡은 차단)"]
     if staged:
         per_job.append("EXECUTABLE_RECEIPT.tsv — 상별 실행파일 해시 "
                        "(run_staged 경로가 자동 생성 · 분석기가 root seal 과 대조합니다)")
-    root = ["POTCAR_ROOT_SEAL.json (첫 실행 전 봉인)", "ZIP_SHA256.txt"]
+    root = ["MANIFEST.json (받으신 그대로 — 분석기가 가장 먼저 읽습니다)",
+            "POTCAR_ROOT_SEAL.json (첫 실행 전 봉인)", "ZIP_SHA256.txt",
+            "RESULTS.json (run_staged 가 판정 때 만듦 — 있으면 그대로)"]
     if staged:
         root.append("STAGE1_PASS.json (1단계 통과 receipt)")
     # ⛔ 회신 AY P1 — attestation 이 반송 목록에는 있는데 주 실행 절차에 생성 단계가
@@ -13249,7 +13474,7 @@ def _return_contract(man: Dict[str, Any]) -> Dict[str, Any]:
                     "돌려 주십시오 (회신 AZ P0-7 · AR P0-6)")
     else:
         root.append("POTCAR_ATTESTATION.json — **선택** (탐색용 정책). 없어도 러너는 "
-                    "돕니다. ⚠ 다만 그 결과는 **원고 인용 자격이 없습니다** — 사후 "
+                    "돌아갑니다. ⚠ 다만 그 결과는 **원고 인용 자격이 없습니다** — 사후 "
                     "provenance 는 무엇을 썼는지만 기록하고 그것이 승인된 PAW dataset "
                     "인지 판정하지 못합니다 (회신 AZ P0-7·Q4). 만들려면 "
                     "`MAKE_POTCAR_ATTESTATION.sh` 를 **첫 VASP 실행 전에만** "
@@ -13265,8 +13490,14 @@ def _return_contract(man: Dict[str, Any]) -> Dict[str, Any]:
                         "files": ["relax/OUTCAR", "relax/CONTCAR"],
                         "why": "canary 가 부모 relax 최종 기하를 승계한다"},
         "root": root,
-        "not_required": ["CHGCAR·WAVECAR (용량)", "vasprun.xml (선택)"],
-        "failed_jobs": "발산·미수렴 잡도 지우지 말고 그대로 — 실패가 판정의 일부다",
+        # 🔴 렌즈4 P1-2 · P2-3 · P2-5 (2026-09-03) — '통째로 압축' 이 메일에만 있었다 → 정본에 넣어
+        #   세 문서가 같이 렌더한다. CHGCAR 는 압축에서 빼되 서버에서 지우지 않는다.
+        "how": ("가장 쉬운 방법 — 푼 디렉터리를 **통째로** 다시 압축해 보내 주십시오 (배포 입력·MANIFEST "
+                "포함 · 위 목록이 자동으로 충족됩니다). 예: "
+                "`tar --exclude=CHGCAR --exclude=WAVECAR -czf 반송.tgz <푼 디렉터리>`"),
+        "not_required": ["CHGCAR·WAVECAR (용량 — 압축에서 빼셔도 됩니다 · ⚠ 서버에서는 지우지 말고 두십시오)",
+                         "vasprun.xml (선택)"],
+        "failed_jobs": "발산·미수렴 잡도 지우지 말고 그대로 보내 주십시오 — 실패도 판정의 일부입니다",
     }
 
 
@@ -13324,6 +13555,10 @@ export VASP_EXE=/abs/path/to/vasp_std       # 실행파일 절대경로 (봉인 
 # ⚠ 러너는 기본으로 잡 %d개를 **동시에** 띄웁니다 (= %d × VASP_NPROC 랭크).
 #    할당이 그보다 적으면:  export JOBS_PARALLEL=<할당코어 ÷ VASP_NPROC>
 
+# (선택) PAW release 기록 — 첫 VASP 실행 **전에만** 가능 · 안 하셔도 러너·판정에 영향 없음.
+#   위 export 들이 같은 셸에 있어야 합니다. 결함이면 러너가 생산 **전에** 멈춥니다 (지우면 다시 돌아갑니다).
+#   RELEASE_LABEL="potpaw_PBE.54" SITE="기관/담당자" bash MAKE_POTCAR_ATTESTATION.sh
+
 bash run_staged.sh 1     # census → POTCAR 조립+봉인 → 봉인 census → 1단계 → 판정
 bash run_staged.sh 2     # 1단계 통과(STAGE1_PASS.json) 뒤에만""" % (
         manifest_sha, zip_sha, int(getattr(a, "cores", 48) or 48),
@@ -13352,6 +13587,7 @@ def _render_return_contract(man: Dict[str, Any]) -> str:
     rc = _return_contract(man)
     L = ["**정본은 `MANIFEST.json` 의 `return_contract`** 이며 이 목록은 그 렌더입니다",
          "(README 와 SUBMIT_CONTRACT 어디를 보셔도 같습니다 — 회신 AV P0-4).", "",
+         "**보내는 방법**: " + rc["how"], "",
          "각 잡 폴더에서:"]
     L += ["- " + x for x in rc["per_job"]]
     de = rc["dense_extra"]
@@ -13371,6 +13607,28 @@ def _render_return_contract(man: Dict[str, Any]) -> str:
     L += ["", "보내지 않으셔도 되는 것: " + " · ".join(rc["not_required"]),
           "⚠ " + rc["failed_jobs"]]
     return "\n".join(L)
+
+
+def _walltime_block(man: Dict[str, Any], a) -> str:
+    """walltime·실행 위치 안내 — README·SUBMIT(·메일) 이 **같은 문장**을 싣는다.
+
+    🔴 렌즈4 P1-3 (2026-09-03) — v34 는 세 문서가 세 말을 했다: 메일 "111 h ±2배"(권장 없음) ·
+      README "이보다 짧으면 나눠서 다시 만들어 드립니다"(static 단일점은 나눌 수 없고 재개도
+      폐지됨 — 이행 불가한 약속) · SUBMIT "252 h 권장"(산식 없음). 168 h 큐 사이트는 README
+      로는 문제없고 SUBMIT 으로는 잘린다. 한 함수에서 한 문장을 낸다.
+    """
+    _h = round((man.get("cost_frozen") or {}).get("longest_job_h") or 56)
+    _h2 = _h * 2
+    _rec = max(24, int(_h2 * 1.1 // 12 + 1) * 12)
+    _cores = int(getattr(a, "cores", 48) or 48)
+    _conc = int(((man.get("submission") or {}).get("max_concurrency")) or 8)
+    return (f"⚠ **walltime** — 가장 긴 잡의 중앙 추정 **{_h} h** ({_cores}코어/잡 · 모형 불확실성 ±2배 → "
+            f"외피 {_h2} h). 잡당 walltime 은 **{_rec} h** 를 권합니다 (= 외피 × 1.1 을 12 h 단위로 올림 · "
+            f"그보다 짧으면 잘립니다). 큐 상한이 {_rec} h 보다 짧으면 **제출 전에** 알려 주십시오 — static "
+            f"단일점은 나눌 수 없고 재개도 없어, 그 잡은 더 긴 큐/노드 배정이 필요합니다.\n"
+            f"⚠ **실행 위치** — `run_staged.sh` 는 **계산 노드 할당 안에서**(로그인 노드 아님) 잡 {_conc}개 × "
+            f"VASP_NPROC 랭크를 동시에 띄우므로, 그 할당이 단계 전체(1단계 최장 ≈{_rec} h) 동안 유지돼야 "
+            f"합니다. 봉인 프로브도 같은 노드에서 VASP 를 인자 없이 한 번 잠깐 기동합니다.")
 
 
 def _readme_sp(man: Dict[str, Any], a, zcut: float, n_jobs: int,
@@ -13409,7 +13667,8 @@ def _readme_sp(man: Dict[str, Any], a, zcut: float, n_jobs: int,
     #   안내했다. 실행 경로가 셋이면 1단계 정지 규칙이 강제되지 않는다.
     #   staged 구성에서는 **경로를 하나로** 줄이고, POTCAR 조립을 그 안에 넣는다.
     staged_block = (("""⛔ **`run_staged.sh` 로만 실행해 주세요. %d잡을 한꺼번에 던지지 마십시오.**
-1단계(%d잡)가 진공 두께 수렴 시험을 통과해야 2단계를 돌립니다 — 통과 못 하면
+1단계(%d잡)가 게이트 **8축**(진공 수렴 · 분자 스핀 · canary 기하 · POTCAR 신원 · 기체 상자 δ_gas ·
+pm1 자기 topology · 잔여 차단 0 · 봉인 포괄)을 전부 통과해야 2단계를 돌립니다 — 통과 못 하면
 2단계는 **돌리지 않는 것이 맞습니다**(추가 계산으로 메우지 않습니다).
 
 ```
@@ -13435,14 +13694,17 @@ cd <이 묶음을 푼 디렉터리>            # 묶음 **루트**에서 실행�
 **POTCAR 를 따로 조립하지 마십시오** — `run_staged.sh` 가 첫 VASP 실행 전에
 `SEAL_POTCAR_ROOT.sh` 로 전 잡 조립 + 원본 fingerprint 봉인까지 합니다.
 
-### 🙏 부탁 — 첫 잡 전에 한 줄만 더 (POTCAR 신원)
+### 🙏 부탁 — 첫 잡 전에 한 줄만 더 (POTCAR 신원 · 선택)
 
 ```bash
-bash MAKE_POTCAR_ATTESTATION.sh     # ← 첫 VASP 실행 **전에만** 가능합니다
+# 위 실행 블록의 export 들(PP · POTCAR_ALLOWLIST · BUNDLE_ZIP_SHA256 · VASP_EXE)이 같은 셸에
+# 있어야 합니다. 러너 1단계를 시작하기 **전에** 한 번만 — 첫 VASP 실행 뒤에는 만들 수 없습니다.
+RELEASE_LABEL="potpaw_PBE.54" SITE="기관/담당자" bash MAKE_POTCAR_ATTESTATION.sh
 ```
 
-**막지는 않습니다. 없어도 러너는 돕니다.** 다만 이것 하나로 결과의 쓰임새가 달라져
-말씀드립니다.
+**막지는 않습니다. 없어도 러너는 돌아갑니다.** 있으면 러너가 생산 **전에** 봉인과 대조하고,
+결함이면 그 자리에서 멈춥니다 (파일을 지우면 다시 돌아갑니다). 이것으로 결과의 인용 자격이
+달라지지는 않지만, PAW dataset 신원 **기록**이 남아 말씀드립니다.
 
 저희 봉인(`SEAL_POTCAR_ROOT.sh`)이 보증하는 것은 *"16잡이 전부 같은 하나의 트리에서
 나왔고 그 트리가 첫 계산 전에 고정됐다"* 까지입니다. **그 트리가 승인된 PAW dataset
@@ -13615,19 +13877,22 @@ VASP_LAUNCHER_KIND=mpirun LAUNCHER_BIN=/abs/path/to/mpirun VASP_NPROC=%d VASP_EX
 ```
 (⚠ `LAUNCHER_BIN` 은 **필수**입니다 — PATH 에서 찾지 않습니다. 없으면 즉시 중단됩니다 · 회신 BF P1)""" % a.cores))
 
+    _wall = _walltime_block(man, a)
     return f"""# VASP 계산 요청 — LiNiO₂(104) 위 분자 조각 단일점
 
 바쁘신 중에 부탁드려 죄송합니다. **VASP 실행 {n_all or (n_st + n_dn)}회**입니다
-({ph_line}).
+({ph_line}). 이 밖에 봉인 프로브(단계마다 1회)와 선택 attestation(1회)이 VASP 를 인자 없이
+잠깐 기동합니다 — 생산 계산이 아니라 버전 확인입니다.
 {intro_line}
 
 ## 하실 일
 
-{staged_block}```
-mkdir -p <이 묶음 전용 빈 디렉터리> && cd <그 디렉터리>
-unzip <이 묶음>.zip
 ```
-{manual_block}
+mkdir -p <이 묶음 전용 빈 디렉터리> && cd <그 디렉터리>
+unzip <이 묶음>.zip                      # ← 풀기 **전에** ZIP 의 sha256 을 메일 본문 값과 대조
+```
+
+{staged_block}{manual_block}
 
 ⚠ **묶음이 둘 이상이면 반드시 서로 다른 빈 디렉터리에 풀고 따로 반송해 주세요.**
 같은 자리에 겹쳐 풀면 어느 결과가 어느 묶음 것인지 저희가 되살릴 수 없습니다.
@@ -13675,11 +13940,10 @@ DFT-relaxed adsorption energy · 평형 결합에너지 · 자유에너지로 �
 ## 미리 아셔야 할 것
 
 {sp_line}
-- **가장 긴 잡이 약 {longest} 시간**입니다 ({a.cores}코어 기준 추정, ±2배).
-  walltime 상한이 이보다 짧으면 그 잡만 알려 주세요 — 나눠서 다시 만들어 드립니다.
-- **POTCAR 는 잡마다 종 순서가 다릅니다.** `POTCAR_ASSEMBLE.sh` 가 그 잡에 맞게
-  조립하고 순서·variant·PAW_PBE 까지 확인합니다. 하나를 만들어 전체에 복사하시면
-  **에러 없이 다른 계를 계산합니다.**
+- {_wall}
+- **POTCAR 는 잡마다 종 순서가 다릅니다.** 러너(`SEAL_POTCAR_ROOT.sh`)가 첫 실행 전에 잡마다
+  조립하고 순서·variant·PAW_PBE 까지 확인합니다 — 직접 조립하지 마십시오. 하나를 만들어
+  전체에 복사하시면 **에러 없이 다른 계를 계산합니다.**
 
 ## 보내 주실 것
 
@@ -13716,12 +13980,12 @@ python3 analyze_results.py .       # 판정 실패 exit 2 · 완주했으나 원
 <details><summary>프로토콜 요약 (참고)</summary>
 
 PBE+U(Ni d 6.2 Dudarev) · D3 zero damping(IVDW=11) · ENCUT 520 · ISMEAR 0/0.05 ·
-ISYM=0 · LASPH · ADDGRID · LDIPOL/IDIPOL=3 · static k {ks} · dense k {kd} ·
+ISYM=0 · LASPH · ADDGRID · LDIPOL/IDIPOL=3 · static k {ks} · {("dense k %s" % kd) if n_dn else "dense 없음 (δ_k 축 설계 제외 — 비준 사전등록 3_오차예산)"} ·
 고정 평면 z ≤ {zcut:.3f} Å · 자기 seed 2종(각 끝점마다 둘 다 필요합니다) ·
 Ni 는 **Ni_pv**. ⚠ 이전 wave 와의 PP 동등성은 **주장하지 않습니다**, 배포판(release)도
 여기서 단정하지 않습니다 — variant 는 `POTCAR_SPEC.txt` 그대로 쓰시고, 원본
 fingerprint 는 첫 실행 전에 `SEAL_POTCAR_ROOT.sh` 가 봉인합니다 (회신 AO P1 · AR P1-11).
-dense 는 k 검증용이라 {n_dn}개 잡에만 있습니다: {dc or '(없음)'}.
+{("dense 는 k 검증용이라 %d개 잡에만 있습니다: %s." % (n_dn, dc)) if n_dn else "dense(k 수렴) 상은 이 묶음 설계에 없습니다 — δ_k 는 재지 않으며, 0.01 eV 전체 안정성은 주장하지 않습니다 (시험한 축 조건부로만 보고)."}
 </details>
 """
 
@@ -13826,12 +14090,27 @@ n=$(wc -l < JOBS.txt)
     _long_h = round((man.get("cost_frozen") or {}).get("longest_job_h") or 56)
     _long_h2 = _long_h * 2
     _long_rec = max(24, int(_long_h2 * 1.1 // 12 + 1) * 12)
+    # 🔴 렌즈4 P2-1·P2-2 (2026-09-03) — dense 문구는 dense 잡이 **있을 때만**, 종 순서 목록은
+    #   손으로 적은 옛 목록(`Li Ni O` · … `C F H`) 이 아니라 **planned meta 실물**에서.
+    _n_dn_sub = sum(1 for v in (man.get("planned") or {}).values()
+                    if "dense" in (v.get("phases") or []))
+    _so_set = sorted({" ".join((v.get("meta") or {}).get("species_order") or [])
+                      for v in (man.get("planned") or {}).values()} - {""})
+    _so_txt = ("`" + "` · `".join(_so_set) + "`") if _so_set else "각 잡 POSCAR 6행 참조"
+    _dense_dep_line = ("\n   └─ dense   (같은 잡의 static/CHGCAR 필요 → **그 잡 안에서는 직렬**)"
+                       if _n_dn_sub else "   ← 이 묶음은 static 만 (dense 없음 · δ_k 설계 제외)")
+    _mk_d = (man.get("cost_frozen") or {}).get("makespan_d") or {}
+    _conc_s = int(((man.get("submission") or {}).get("max_concurrency")) or 8)
+    _mk_c = _mk_d.get(str(_conc_s), _mk_d.get(_conc_s))
+    _crit_txt = ("한 잡의 static→dense 임계경로가 그 하한보다 길면 하한에 도달할 수 없습니다."
+                 if _n_dn_sub else
+                 ("이 묶음은 static 만이라 가장 긴 잡 하나가 임계경로입니다"
+                  + (" — 동시 %d잡이면 약 %s일." % (_conc_s, _mk_c) if _mk_c is not None else ".")))
     return f"""# 제출 계약 (SUBMIT_CONTRACT)
 
 ## 상 의존성
 ```
-static  (같은 단계 안에서는 병렬 가능)
-   └─ dense   (같은 잡의 static/CHGCAR 필요 → **그 잡 안에서는 직렬**)
+static  (같은 단계 안에서는 병렬 가능){_dense_dep_line}
 ```
 {_dep_block}
 
@@ -13854,12 +14133,10 @@ static  (같은 단계 안에서는 병렬 가능)
 
 {_submit_block}
 
-⚠ **공통 POTCAR 를 전 잡에 복사하면 안 됩니다.** 조각마다 POSCAR 종 순서가 달라
-(`Li Ni O` · `Li Ni O C F` · `Li Ni O C F H` · `Li Ni O S C H`) 하나를 돌려 쓰면
-그 잡은 조용히 **다른 계**를 계산합니다. `POTCAR_ASSEMBLE.sh` 가 잡마다 조립하고
-TITEL 수까지 검증합니다.
-⚠ walltime — 가장 긴 잡이 중앙 추정 {_long_h} h 이고 모형 불확실성이 ±2배입니다.
-   ±2배 외피가 {_long_h2} h 이므로 **{_long_rec} h** 를 권합니다 (그보다 짧으면 잘립니다).
+⚠ **공통 POTCAR 를 전 잡에 복사하면 안 됩니다** (직접 조립할 일도 없습니다 — 러너가 합니다).
+조각마다 POSCAR 종 순서가 달라 ({_so_txt}) 하나를 돌려 쓰면 그 잡은 조용히 **다른 계**를
+계산합니다. `SEAL_POTCAR_ROOT.sh` 가 첫 실행 전에 전 잡을 조립하고 TITEL 순서까지 검증합니다.
+{_walltime_block(man, a)}
 
 ## 비용 추정의 출처
 - 모델: `tools/sdcp/vasp_cost_estimate.py` — 2026-08-08 납품 `slab/OUTCAR.gz`
@@ -13867,8 +14144,7 @@ TITEL 수까지 검증합니다.
 - **±2배 불확실성**을 인정하는 모델입니다. 계약값이 아니라 계획용 수치입니다.
 - `python3 tools/sdcp/vasp_cost_estimate.py --manifest MANIFEST.json --concurrent {a.concurrency}`
   로 이 번들의 실제 계획에서 다시 계산하세요.
-- ⚠ **aggregate 시간 ÷ 동시 실행 수**는 산술 하한입니다. 한 잡의
-  static→dense 임계경로가 그 하한보다 길면 하한에 도달할 수 없습니다.
+- ⚠ **aggregate 시간 ÷ 동시 실행 수**는 산술 하한입니다. {_crit_txt}
 
 ## 코어 수
 이 번들은 **{a.cores} 코어/잡 · 동시 {a.concurrency}잡**으로 계획했습니다
@@ -14036,7 +14312,7 @@ def build_bundle(a, ledger: Optional[Dict[str, Any]] = None) -> Path:
         commit = "unknown"
     man: Dict[str, Any] = {
         "created": __import__("datetime").date.today().isoformat(), "repo_commit": commit,
-        "bundle_version": "v3", "gate_version": SS.gate_version(),
+        "bundle_version": "v3", "bundle_label": out_final.name, "gate_version": SS.gate_version(),
         "freeze_frac_dft": a.freeze, "kmesh": KMESH, "nslab": nslab,
         "seeds_full": list(SEEDS_FULL), "seed_main": SEED_MAIN,
         "potcar_spec": {}, "fragments": [], "pairs": {}, "refs": {}, "planned": {},
@@ -14826,25 +15102,30 @@ def build_bundle(a, ledger: Optional[Dict[str, Any]] = None) -> Path:
     #   ⇒ 잃는 것은 "0.01 eV 안에서 안정하다" 한 줄이고 ΔE_ads 자체는 나온다.
     if getattr(a, "no_kconv", False):
         _pri_k = {}
+        # 🔴🔴 렌즈2 P0-1 · 렌즈4 P0-2 · 렌즈5 P1-1 (2026-09-03) — 설계 제외의 근거와 재개 조건은
+        #   **비준 사전등록에서 복사**한다 (생성기에 하드코딩하지 않는다). v32–v34 는 여기에 문장을
+        #   박아 두었고 그 문장(|ΔE_ads|<50 meV → dense 추가)은 비준 프로토콜 §7·§8 과 정반대였다.
+        #   항이 없으면 만들지 않는다 — 비준 전에 번들을 만들면 "코드가 비준 문서보다 관대한"
+        #   상태를 배포하는 것이다 (분석기도 같은 항을 요구하므로 어차피 KCONV_OMISSION_UNRATIFIED).
+        _prj = json.loads((Path(__file__).resolve().parent.parent.parent / C12_PREREG_REL)
+                          .read_text(encoding="utf-8"))
+        _pe_g, _pek_g, _pew_g = _prereg_axis_exclusion({"_prereg_doc": _prj}, "δ_k")
+        if _pe_g is None:
+            sys.exit("⛔ --no_kconv: %s\n   1저자가 사전등록 3_오차예산 에 '축_설계_제외_*' 항을 "
+                     "비준한 뒤 다시 만드십시오 (렌즈2 P0-1 · 렌즈4 P0-2 · 렌즈5 P1-1)." % _pew_g)
+        _rq_g = _pe_g.get("재개_조건_결과_보기_전에_선언") or {}
+        _rpp_g = _kconv_reopen_rule_problems(_rq_g)
+        if _rpp_g:
+            sys.exit("⛔ --no_kconv: 사전등록 %s 의 재개 조건이 기계 평가 불가 %s" % (_pek_g, _rpp_g))
         man["kconv_pair"] = {
             "status": "not_designed",
-            "why": ("1저자 결정 2026-09-03 — dense 2잡이 최장 잡 299.6 h 로 전체 일정을 "
-                    "12.5일로 만든다. static 만이면 최장 111 h ≈ 4.6일. k 축을 설계에서 뺀다."),
-            "⛔_잃는_것": ("B_num 에서 δ_k 가 빠진다 ⇒ **'0.01 eV 안에서 안정하다' 를 "
-                           "주장하지 않는다.** 진공·기체 두 축만 시험했다고 쓴다. "
-                           "ΔE_ads 값 자체는 그대로 나온다 (사전등록 3_오차예산 '넘으면' 절)."),
-            "🔁_재개_조건_결과_보기_전에_선언": {
-                "규칙": "|ΔE_ads| < 50 meV 이면 dense 2잡(primary complex 두 개)을 추가로 돌린다.",
-                "왜_50": ("k 가드밴드가 10 meV 다 (GUARD_EV). 그 5배를 문턱으로 둔다 — "
-                          "그 위면 k 오차가 부호·크기 판정을 못 바꾼다."),
-                "⛔_사후변경_금지": ("이 조건은 **결과를 보기 전에** 선언했다. 이 밖의 이유로 "
-                                     "dense 를 추가하면 그것은 '결과를 보고 게이트를 바꾼 것' 이다 "
-                                     "— 이 캠페인이 여덟 번 반려된 양식."),
-                "추가할_잡": "estimand_job_keys 의 E_C_sdcp · E_C_control (그 둘만)",
-            },
-            "⚠_UMA_로_미리_판단_금지": ("UMA 조각 간 비교는 무효로 판정돼 있다 (오프셋 "
-                                        "sdcp ~1.070 vs ptfe ~0.167 eV · 차등 0.90 eV). "
-                                        "|ΔE_ads| 가 클 것이라고 **가정하지 않는다.**"),
+            "prereg_entry": _pek_g,
+            "why": _pe_g.get("결정"),
+            "50행과의_관계": _pe_g.get("50행과의_관계"),
+            "⛔_잃는_것": _pe_g.get("잃는_것"),
+            # ⚠ 사전등록 항과 **바이트 동일**해야 한다 — 분석기가 대조한다 (KCONV_OMISSION_DRIFT)
+            "🔁_재개_조건_결과_보기_전에_선언": dict(_rq_g),
+            "⚠_UMA_로_미리_판단_금지": _pe_g.get("⚠_UMA_로_미리_판단_금지"),
         }
     if len(_pri_k) != 2 and not getattr(a, "no_kconv", False):
         # ⚠ `--no_kconv` 는 위에서 이미 kconv_pair 를 status=not_designed 로 썼다.
@@ -15629,7 +15910,8 @@ def build_bundle(a, ledger: Optional[Dict[str, Any]] = None) -> Path:
                 "⛔ 이 묶음의 결과는 **원고 인용용이 아니다** (회신 BA P0-3·Q5: 사후 "
                 "attestation 으로 승격 불가). 탐색용으로만 쓰고, 쓸 때는 Methods 에 "
                 "그 단서를 반드시 적는다 (아래 Methods_필수문장)",
-                "외주처가 attestation 을 돌려주면 그 조건부가 풀린다 (README 권고)",
+                "외주처가 attestation 을 돌려주면 dataset 신원 **기록**이 더해진다 — 원고 인용 "
+                "자격은 그대로 없다 (회신 BA P0-3 · 렌즈4 P1-1: 종전 '조건부가 풀린다' 는 거짓)",
                 "'승인된 공식 PAW 세트를 썼다' 는 문장은 **쓰지 않는다** — 확인 안 됐다"],
             "Methods_필수문장": {
                 "ko": "PAW 유사퍼텐셜은 계산 수행 기관이 관리하는 트리에서 조립됐으며, "
@@ -15827,15 +16109,19 @@ def build_bundle(a, ledger: Optional[Dict[str, Any]] = None) -> Path:
         # ⛔⛔ 회신 AR P1-11 · 해제조건 9 (2026-08-31) — MANIFEST 는 "의존성 없음 +
         #   배열 제출" 을 말하고 다른 문서는 staged 실행을 요구해 **정면으로 충돌**했다.
         #   실행 경로가 둘이면 1단계 정지 규칙이 강제되지 않는다. 구성에서 유도한다.
+        # 🔴 렌즈4 P2-1 — dense 문구는 dense 잡이 있을 때만 (0잡 번들이 "CHGCAR 승계" 를 말했다)
         "phase_dependencies": (
             ("⛔ **잡 사이에 의존성이 있다** (staged 구성). canary(*__nzmag)는 "
              "PARENT_GEOM 이 가리키는 부모의 최종 기하를 받고, 2단계는 1단계 게이트를 "
-             "통과해야 열린다. 한 잡 안에서 dense 는 static 의 CHGCAR 를 승계한다. "
-             "순서는 run_staged.sh 가 강제한다 — 배열로 한꺼번에 던지면 안 된다.")
+             "통과해야 열린다. "
+             + ("한 잡 안에서 dense 는 static 의 CHGCAR 를 승계한다. " if n_dn
+                else "dense 상은 이 묶음에 없다 (δ_k 설계 제외). ")
+             + "순서는 run_staged.sh 가 강제한다 — 배열로 한꺼번에 던지면 안 된다.")
             if man.get("staged_runner") else
-            ("잡 사이 의존 없음. 한 잡 안에서 dense 는 static 의 "
-             "CHGCAR 를 승계하므로 **직렬** — 잡 하나가 분할 불가 "
-             "작업 하나다 (P||Cmax).")),
+            ("잡 사이 의존 없음. "
+             + ("한 잡 안에서 dense 는 static 의 CHGCAR 를 승계하므로 **직렬** — 잡 하나가 "
+                "분할 불가 작업 하나다 (P||Cmax)." if n_dn
+                else "static 단일점만 — 잡 하나가 분할 불가 작업 하나다 (P||Cmax)."))),
         "n_static": n_st, "n_dense_mandatory": n_dn,
         "n_vasp_executions_total": n_ph_all,
         "n_by_phase": n_by_ph,
@@ -16850,9 +17136,13 @@ def selftest() -> int:
             and (_st / "MAKE_POTCAR_ATTESTATION.sh").is_file(),
             "AP #12: 번들에 **계산 전 attestation 요청서와 생성 스크립트**가 있다")
         _atr = (_st / "POTCAR_ATTESTATION_REQUEST.md").read_text()
-        for _f in ("release label", "SHA256", "TITEL", "vasp_std --version",
-                   "allowlist"):
+        # 🔴 렌즈4 P0-1 (2026-09-03) — 버전은 `--version` 원문이 아니라 **토큰**(봉인과 같은 규칙)
+        for _f in ("release label", "SHA256", "TITEL", "vasp.<버전>", "allowlist"):
             chk(_f in _atr, f"AP #12: 요청서가 `{_f}` 를 요구한다")
+        chk("원고 인용용이 아닙니다" in _atr and "조건부\" 로만 보고합니다" not in _atr
+            and "VASP_EXE=" in _atr,
+            "🔴 렌즈4 P1-1: 요청서가 README 와 같은 말을 한다 — 원고 인용용 아님 · '조건부 보고' "
+            "표현 없음 · 완전한 명령(VASP_EXE 포함)")
         chk("allowlist_sha256" in _sl and "재조립" in _sl,
             "⛔음성 AP #7: 기존 POTCAR/provenance 를 **현재 allowlist 로 재대조**한다 "
             "(종전엔 둘 다 있으면 조용히 건너뛰었다)")
