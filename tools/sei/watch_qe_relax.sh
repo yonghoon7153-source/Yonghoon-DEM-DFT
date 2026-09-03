@@ -162,13 +162,21 @@ if [ "${1:-}" = "--selftest" ]; then
   printf '     Total force =     0.000016     Total SCF correction = 0.0\n!    total energy = -14652.03 Ry\n     bfgs converged in  40 scf cycles and  1 bfgs steps\n     JOB DONE.\n' > "$R/li3nd_r0/00_relax.out"
   printf '     Total force =     0.002819     Total SCF correction = 0.0\n!    total energy = -766.97 Ry\n     bfgs converged in  90 scf cycles and 18 bfgs steps\n     JOB DONE.\n' > "$R/ep_final/00_relax.out"
 
+  # ⛔ 2026-09-03 kgy 실물 — restart: 옛 .out 에 수렴 마커가 남은 채 새 프로세스가 돈다.
+  #   NEB 판(neb: convergence achieved)과 relax 판(bfgs converged) 둘 다 만든다.
+  mkdir -p "$R/restart_neb" "$R/restart_relax"
+  printf '     activation energy (->) =   0.080578 eV\n     activation energy (<-) =   0.080600 eV\n     neb: convergence achieved in  12 iterations\n     JOB DONE.\n' > "$R/restart_neb/neb.out"
+  printf '     Total force =     0.000016     Total SCF correction = 0.0\n!    total energy = -14652.03 Ry\n     bfgs converged in  40 scf cycles and  1 bfgs steps\n     JOB DONE.\n' > "$R/restart_relax/00_relax.out"
+  touch -d '200 minutes ago' "$R/restart_neb/neb.out" "$R/restart_relax/00_relax.out"
   # 가짜 QE 프로세스 — cwd 가 근거이므로 그 폴더에서 띄운다
   cp /bin/sleep "$T/qefake" && chmod +x "$T/qefake"
   ( cd "$R/live"  && exec "$T/qefake" 300 ) & _p1=$!
   ( cd "$R/stall" && exec "$T/qefake" 300 ) & _p2=$!
+  ( cd "$R/restart_neb"   && exec "$T/qefake" 300 ) & _p3=$!
+  ( cd "$R/restart_relax" && exec "$T/qefake" 300 ) & _p4=$!
   sleep 1
   OUT=$(QE_PROC_NAMES=qefake STALL_MIN=45 bash "$0" "$R" 2>&1)
-  kill "$_p1" "$_p2" 2>/dev/null
+  kill "$_p1" "$_p2" "$_p3" "$_p4" 2>/dev/null
 
   chk "$(echo "$OUT" | grep -E '^  live' | grep -qE 'run' && echo 1 || echo 0)" \
       "① 양성: 프로세스가 살아있고 .out 이 최근이면 run"
@@ -182,6 +190,16 @@ if [ "${1:-}" = "--selftest" ]; then
       "④-b ⛔음성: nstep 소진을 '수렴' 으로 세지 않는다"
   chk "$(echo "$OUT" | grep -E '^  conv' | grep -q '수렴' && echo 1 || echo 0)" \
       "⑤ 양성: bfgs converged 는 수렴이다"
+  chk "$(echo "$OUT" | grep -E '^  restart_neb' | grep -qE 'run|정체' && echo 1 || echo 0)" \
+      "⑭ ⛔음성(kgy CI 실물): 옛 .out 에 'neb: convergence achieved' 가 남아 있어도 **살아있는 프로세스가 있으면 run** 이다 — 수렴으로 찍지 않는다"
+  chk "$(echo "$OUT" | grep -E '^  restart_neb +✅' && echo 0 || echo 1)" \
+      "⑭-b 상태 칸이 '✅ 수렴' 이 아니다 (비고에 '이전 실행(수렴)' 을 적는 건 맞다 — 상태만 본다)"
+  chk "$(echo "$OUT" | grep -E '^  restart_neb' | grep -q 'restart\|이전 실행' && echo 1 || echo 0)" \
+      "⑭-c 비고에 '.out 은 이전 실행 파일' 이라고 적는다 — 왜 run 인데 스텝이 옛 값인지 사람이 알 수 있게"
+  chk "$(echo "$OUT" | grep -E '^  restart_relax' | grep -qE 'run|정체' && echo 1 || echo 0)" \
+      "⑭-d relax 판도 같다: 'bfgs converged' 옛 파일 + 살아있는 pw.x → run"
+  chk "$(echo "$OUT" | grep -E '^  restart_neb' | grep -q '정체' && echo 0 || echo 1)" \
+      "⑭-e restart 직후 .out 이 옛 파일이라 조용m 이 커도 **정체로 찍지 않는다** (아직 안 덧썼을 뿐)"
   chk "$(echo "$OUT" | grep -E '^  conv' | grep -q '바닥상태' && echo 1 || echo 0)" \
       "⑤-b 수렴이 바닥상태 보장이 **아니라는** 것을 같이 말한다 (li3nd r0 대칭보호)"
   chk "$(echo "$OUT" | grep -E '^  ep_final' | grep -q 'li3nd' && echo 0 || echo 1)" \
@@ -192,8 +210,8 @@ if [ "${1:-}" = "--selftest" ]; then
       "⑬-c 양성: li3nd 잡에는 실측 근거를 그대로 붙인다"
   chk "$(echo "$OUT" | grep -E '^  oom' | grep -q 'OOM' && echo 1 || echo 0)" \
       "⑥ ⛔음성(li3nd r2 12:08 실측): GPU OOM 사망을 그냥 '죽음' 으로 뭉뚱그리지 않는다"
-  chk "$(echo "$OUT" | grep -qE '살아있음 *1|살아있음 1' && echo 1 || echo 0)" \
-      "⑦ 합계에서 정체를 '살아있음' 으로 세지 않는다"
+  chk "$(echo "$OUT" | grep -qE '살아있음 *3' && echo 1 || echo 0)" \
+      "⑦ 합계에서 정체를 '살아있음' 으로 세지 않는다 (live 1 + restart 2 = 3 · stall 은 제외)"
   chk "$(echo "$OUT" | grep -E '^  nebconv' | grep -q '수렴(NEB)' && echo 1 || echo 0)" \
       "⑨ 양성(NEB): 'neb: convergence achieved' 는 수렴이다 — relax 마커가 없어도 죽음으로 찍지 않는다"
   chk "$(echo "$OUT" | grep -E '^  nebconv' | grep -q 'Ea→0.229000' && echo 1 || echo 0)" \
@@ -258,11 +276,22 @@ for r in $ROOTS; do
     if [ "${_nout:-1}" -gt 1 ]; then _fb=$(basename "$f"); label="$label/${_fb%.out}"; fi
     _read_out "$f"
     pid=$(_pid_for_dir "$d")
-    if [ -z "$ST" ]; then                       # 종료마커 없음 → 생사로 가른다
+    # ⛔ 2026-09-03 kgy 실물 — **restart 를 감지하지 못했다.** li_metal CI 2단계가 돌고 있는데
+    #   .out 은 아직 1단계 파일(수렴 마커 포함)이라 "✅ 수렴(NEB) · 조용m 194" 로 찍혔다. 같은
+    #   화면이 두 번 거짓을 말했다. 규칙: **그 폴더에 살아있는 QE 프로세스가 있으면 그것이
+    #   정본이다** — 파일 마커는 이전 실행의 것일 수 있다. 마커는 프로세스가 없을 때만 믿는다.
+    if [ -n "$pid" ] && [ -n "$ST" ]; then
+      _old_st="$ST"; ST=""
+      NOTE="⚠ .out 은 이전 실행(${_old_st}) 파일 — 지금 pid $pid 가 돌고 있다 (restart 중, 아직 안 덧썼다)"
+    fi
+    if [ -z "$ST" ]; then                       # 종료마커 없음(또는 살아있음) → 생사로 가른다
       if [ -n "$pid" ]; then
-        if [ "$AGE" -ge "$STALL_MIN" ]; then
+        if [ "$AGE" -ge "$STALL_MIN" ] && [ -z "$NOTE" ]; then
           ST="⛔ 정체"; _nhang=$((_nhang+1))
           NOTE="pid $pid 는 살아있는데 ${AGE}분째 .out 이 안 큰다 — %CPU 를 볼 것"
+        elif [ "$AGE" -ge "$STALL_MIN" ]; then
+          # restart 직후엔 .out 이 옛 파일이라 AGE 가 크다 — 정체가 아니라 "아직 안 덧썼다" 다
+          ST="run"; _nlive=$((_nlive+1))
         else
           ST="run"; _nlive=$((_nlive+1))
         fi
