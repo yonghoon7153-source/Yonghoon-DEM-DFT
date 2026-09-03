@@ -1,0 +1,441 @@
+{
+  "slug": "tao2025_nondestructive-degradation-decoupling",
+  "dpi": 300,
+  "maxpx": 3000,
+  "generated": "2026-09-03",
+  "sources": [
+    "0ff584d6-10._Nondestructive_degradation_pattern_decoupling_for_early_battery_trajectory_prediction_via_physicsinformed_learning.pdf",
+    "9d20ccf4-10._Sup_Nondestructive_degradation_pattern_decoupling_for_early_battery_trajectory_prediction_via_physicsinformed_learning.pdf"
+  ],
+  "figures": [
+    {
+      "key": "f1",
+      "kind": "figure",
+      "label": "1",
+      "page": 4,
+      "file": "fig_1.png",
+      "caption": "Fig. 1 Model motivation, model construction, and model deployment. (a) The verification of as-manufactured batteries using early data, and existing guiding samples from accelerated aging tests. (b) The early prediction model uses subtle initial manufacturing variabilities (IMVs) as a condition of battery aging, identified from a multi-step charging before cycling. Multi-dimensional chemical processes influenced by degradation mechanisms, including thermodynamic loss (DE) and kinetic loss (Z) can be evolved from IMVs by characterizing stepwise charge acceptance. Physics-informed transferability metrics enable temperature adaptation, where Ea is the activation energy, kB is the Boltzmann constant, Ts is the source domain temperature and Tt is the target domain temperature. The predicted state st+1 at time t + 1 is continuously updated by previous state st at time t. (c) Routine (pyrometall",
+      "rotated_deg": 0,
+      "bbox": [
+        36.5,
+        43.8,
+        558.7,
+        562.3
+      ],
+      "w": 2177,
+      "h": 2161,
+      "dpi": 300,
+      "src": "0ff584d6-10._Nondestructive_degradation_pattern_decoupling_for_early_battery_trajectory_prediction_via_physicsinformed_learning.pdf",
+      "blank": 0.831
+    },
+    {
+      "key": "f2",
+      "kind": "figure",
+      "label": "2",
+      "page": 5,
+      "file": "fig_2.png",
+      "caption": "Fig. 2 Data generation and analysis. (a) Aging trajectories under 4 verification scenarios, i.e., 25, 35, 45 and 55 1C. (b) Illustration of the multi-step charging profile. The cut-oﬀvoltage values, i.e., from U1 to U9. (c) Stepwise state of charge (SOC) increments and their accumulation. (d) Visualization of cut-oﬀvoltage. (e) Temperature-wise trends of cut-oﬀvoltage values each charging step averaged over all batteries. (f) The deviation of cut-oﬀvoltage values at each temperature, defined as initial manufacturing variabilities (IMVs), for each charging step. IMVs are calculated over batteries at a given temperature. (g) Battery lifetime distribution under EOL73, with lifetime deviations indicated. EOL73 is defined as 73% of the nominal capacity. (h) Arrhenius plot of 4 temperature verification scenarios. (i) Arrhenius transferability (AT) score quantifies dissimilarities between acces",
+      "rotated_deg": 0,
+      "bbox": [
+        36.5,
+        43.8,
+        558.8,
+        437.4
+      ],
+      "w": 2177,
+      "h": 1641,
+      "dpi": 300,
+      "src": "0ff584d6-10._Nondestructive_degradation_pattern_decoupling_for_early_battery_trajectory_prediction_via_physicsinformed_learning.pdf",
+      "blank": 0.756
+    },
+    {
+      "key": "f3",
+      "kind": "figure",
+      "label": "3",
+      "page": 6,
+      "file": "fig_3.png",
+      "caption": "Fig. 3 Featurization taxonomy. (a) Charging dynamics in diﬀerent verification scenarios, i.e., 25, 35, 45, 55 1C. (b) The fundamental electrochemical principle for featurization taxonomy. (c) Featurization taxonomy, including initial manufacturing variabilities (IMVs) and multi-dimensional chemical processes. (d) Visualization of features and battery-wise variations in the lifetime direction. The color maps normalized feature values, and the size of bubbles maps the deviations across battery instances.",
+      "rotated_deg": 0,
+      "bbox": [
+        36.5,
+        185.1,
+        558.8,
+        675.9
+      ],
+      "w": 2177,
+      "h": 2046,
+      "dpi": 300,
+      "src": "0ff584d6-10._Nondestructive_degradation_pattern_decoupling_for_early_battery_trajectory_prediction_via_physicsinformed_learning.pdf",
+      "blank": 0.732
+    },
+    {
+      "key": "f4",
+      "kind": "figure",
+      "label": "4",
+      "page": 8,
+      "file": "fig_4.png",
+      "caption": "Fig. 4 The prototype verification results. Parity plot of lifetime prediction under (a) 35 and (b) 45 1C verification scenarios (intermediate temperature verification), with battery-wise prediction deviation presented. All numerical results achieved in this plot are under the early verification setting that uses 20% of early data from batteries to be verified, otherwise specified. Experimental settings for (a)–(e) are multi-source domain adaptation, i.e., data at 25 and 55 1C is accessible. (c) Model performance comparison between this work and long-short-term memory (LSTM) neural network, model without considering initial manufacturing variabilities (IMVs), model without physics-informed machine learning, and empirical formula. (d) Model sensitivity under different end-of-life capacities. Model prediction error against (e) early data access and (f) parallel guiding sample requirements of target verification scenarios. Accessible data at 55 1C is assumed, which is used to predict the lifetime of 25, 35, and 45 1C verification scenarios. (g) Feature importance of capacity features (Q) in different charging stages. (h) Feature importance of non-capacity features by charging stages, listed in a stepwise order.",
+      "note": "auto-extractor missed this caption block; cropped manually from p8 image bbox during the same ingest"
+    },
+    {
+      "key": "f5",
+      "kind": "figure",
+      "label": "5",
+      "page": 10,
+      "file": "fig_5.png",
+      "caption": "Fig. 5 Decoupling battery degradation loss and polarization types. (a) Schematic illustration of battery performance degradation in diﬀerent lifetime stages. (b) Battery degradation modes and their loss type, i.e., thermodynamics and kinetics. (c) Li-ion concentration visualization inside the battery, i.e., from the anode (Ano.), separator (Sep.) to the cathode (Cat.) under multi-step charging. (d) Overpotential evolution in a lifetime direction from the initial cycle to the 1000th cycle under multi-step charging. (e) Degradation dominance evolution at 25, 35, 45, and 55 1C, respectively, which is calculated by the cycle-wise SAGE importance of features describing relevant microscopic degradation behaviors. (f) Temporally resolved correlation between the thermodynamic loss and concentration polarization. (g) Incremental capacity analysis of discharging curves. (h) Normalized capacity los",
+      "rotated_deg": 0,
+      "bbox": [
+        36.5,
+        43.8,
+        558.8,
+        609.2
+      ],
+      "w": 2177,
+      "h": 2357,
+      "dpi": 300,
+      "src": "0ff584d6-10._Nondestructive_degradation_pattern_decoupling_for_early_battery_trajectory_prediction_via_physicsinformed_learning.pdf",
+      "blank": 0.757
+    },
+    {
+      "key": "f6",
+      "kind": "figure",
+      "label": "6",
+      "page": 12,
+      "file": "fig_6.png",
+      "caption": "Fig. 6 A technology-economic analysis of the scrap material recycling from defective prototypes using refined direct (ours), direct, hydrometallurgy (hydro-), and pyrometallurgy (pyro-) recycling methods, respectively. See Supplementary Note 9 (ESI†) for the methodology of the technology- economic analysis. (a) The unit profit and (b) incremental unit profit (refined direct recycling compared with baselines) comparison of diﬀerent recycling methods, for both nickel manganese cobalt (NMC811) and lithium iron phosphate (LFP) batteries, considering SOH. (c) The total production, scrap rate, and scrap scale of new batteries (including NMC and LFP) from 2020 to 2060, derived from the transport impact model (TIM),48–50 see Supplementary Note 10 (ESI†) for the settings. (d) Annual and accumulated profit from recycling slightly degraded (95% SOH) batteries, calculated based on the production est",
+      "rotated_deg": 0,
+      "bbox": [
+        36.5,
+        43.8,
+        558.8,
+        376.4
+      ],
+      "w": 2177,
+      "h": 1387,
+      "dpi": 300,
+      "src": "0ff584d6-10._Nondestructive_degradation_pattern_decoupling_for_early_battery_trajectory_prediction_via_physicsinformed_learning.pdf",
+      "blank": 0.851
+    },
+    {
+      "key": "fS1",
+      "kind": "figure",
+      "label": "S1",
+      "page": 2,
+      "file": "fig_S1.png",
+      "caption": "Supplementary Figure 1 Battery state of health (SOH) distribution under (a) 25, (b) 35, (c) 45, and (d) 55 when the ℃ cycling tests end, with the maximum and minimum SOH lines indicated for each temperature. There are 9, 9, 7, and 7 battery samples under test for 25, 35, 45, and 55 , respectively. ℃ a b 0.8 0.8",
+      "rotated_deg": 0,
+      "bbox": [
+        84.0,
+        176.8,
+        513.9,
+        626.6
+      ],
+      "w": 1792,
+      "h": 1876,
+      "dpi": 300,
+      "src": "9d20ccf4-10._Sup_Nondestructive_degradation_pattern_decoupling_for_early_battery_trajectory_prediction_via_physicsinformed_learning.pdf",
+      "blank": 0.812
+    },
+    {
+      "key": "fS3",
+      "kind": "figure",
+      "label": "S3",
+      "page": 4,
+      "file": "fig_S3.png",
+      "caption": "Supplementary Figure 3 Illustration of the time for reference performance test (RPT) for batteries. Batteries under high temperatures are of fewer RPTs due to a shortened lifetime.",
+      "rotated_deg": 0,
+      "bbox": [
+        84.0,
+        119.0,
+        513.9,
+        610.3
+      ],
+      "w": 1792,
+      "h": 2048,
+      "dpi": 300,
+      "src": "9d20ccf4-10._Sup_Nondestructive_degradation_pattern_decoupling_for_early_battery_trajectory_prediction_via_physicsinformed_learning.pdf",
+      "blank": 0.93
+    },
+    {
+      "key": "fS7",
+      "kind": "figure",
+      "label": "S7",
+      "page": 8,
+      "file": "fig_S7.png",
+      "caption": "Supplementary Figure 7 Charging dynamics, i.e., voltage response curve against the state of charge (SOC), in each charging step, from (a) to (i) at 25 . The lifetime variation of the charging dynamics is mapped ℃ by colors for the visibility of its trend in the lifetime direction.",
+      "rotated_deg": 0,
+      "bbox": [
+        84.0,
+        134.6,
+        513.9,
+        626.7
+      ],
+      "w": 1792,
+      "h": 2052,
+      "dpi": 300,
+      "src": "9d20ccf4-10._Sup_Nondestructive_degradation_pattern_decoupling_for_early_battery_trajectory_prediction_via_physicsinformed_learning.pdf",
+      "blank": 0.839
+    },
+    {
+      "key": "fS8",
+      "kind": "figure",
+      "label": "S8",
+      "page": 9,
+      "file": "fig_S8.png",
+      "caption": "Supplementary Figure 8 Charging dynamics, i.e., voltage response curve against the state of charge (SOC), in each charging step, from (a) to (i) at 35 . The lifetime variation of the charging dynamics is mapped ℃ by colors for the visibility of its trend in the lifetime direction.",
+      "rotated_deg": 0,
+      "bbox": [
+        84.0,
+        134.6,
+        513.9,
+        626.2
+      ],
+      "w": 1792,
+      "h": 2050,
+      "dpi": 300,
+      "src": "9d20ccf4-10._Sup_Nondestructive_degradation_pattern_decoupling_for_early_battery_trajectory_prediction_via_physicsinformed_learning.pdf",
+      "blank": 0.845
+    },
+    {
+      "key": "fS9",
+      "kind": "figure",
+      "label": "S9",
+      "page": 10,
+      "file": "fig_S9.png",
+      "caption": "Supplementary Figure 9 Charging dynamics, i.e., voltage response curve against the state of charge (SOC), in each charging step, from (a) to (i) at 45 . The lifetime variation of the charging dynamics is mapped ℃ by colors for the visibility of its trend in the lifetime direction.",
+      "rotated_deg": 0,
+      "bbox": [
+        84.0,
+        134.6,
+        513.9,
+        627.5
+      ],
+      "w": 1792,
+      "h": 2055,
+      "dpi": 300,
+      "src": "9d20ccf4-10._Sup_Nondestructive_degradation_pattern_decoupling_for_early_battery_trajectory_prediction_via_physicsinformed_learning.pdf",
+      "blank": 0.84
+    },
+    {
+      "key": "fS10",
+      "kind": "figure",
+      "label": "S10",
+      "page": 11,
+      "file": "fig_S10.png",
+      "caption": "Supplementary Figure 10 Charging dynamics, i.e., voltage response curve against the state of charge (SOC), in each charging step, from (a) to (i) at 55 . The lifetime variation of the charging dynamics is mapped ℃ by colors for the visibility of its trend in the lifetime direction.",
+      "rotated_deg": 0,
+      "bbox": [
+        84.0,
+        134.6,
+        513.9,
+        627.5
+      ],
+      "w": 1792,
+      "h": 2055,
+      "dpi": 300,
+      "src": "9d20ccf4-10._Sup_Nondestructive_degradation_pattern_decoupling_for_early_battery_trajectory_prediction_via_physicsinformed_learning.pdf",
+      "blank": 0.838
+    },
+    {
+      "key": "fS23",
+      "kind": "figure",
+      "label": "S23",
+      "page": 24,
+      "file": "fig_S23.png",
+      "caption": "Supplementary Figure 23 Machine learning pipeline design of the physics machine learning for early prototype verification. The source domain model is trained with accessible samples by projecting the initial manufacturing variabilities (IIMVs) to multi-dimensional chemical processes. The aging rate ( ) is calculated and then transferred to the target domain using the Arrhenius-inspired 𝑟𝑠𝑜𝑢𝑟𝑐𝑒 transferability metric. Chemical processes in the target domain are iteratively updated by the previous states. Transferred chemical processes are fed into the degradation trajectory prediction model to perform verification. Note that the Figure is a general workflow, refer to Methods for detailed explanations as well as the notations.",
+      "rotated_deg": 0,
+      "bbox": [
+        84.0,
+        212.6,
+        513.9,
+        689.1
+      ],
+      "w": 1792,
+      "h": 1987,
+      "dpi": 300,
+      "src": "9d20ccf4-10._Sup_Nondestructive_degradation_pattern_decoupling_for_early_battery_trajectory_prediction_via_physicsinformed_learning.pdf",
+      "blank": 0.635
+    },
+    {
+      "key": "fS26",
+      "kind": "figure",
+      "label": "S26",
+      "page": 27,
+      "file": "fig_S26.png",
+      "caption": "Supplementary Figure 26 Transmission electron microscopy (TEM) for characterizing the cathode-electrolyte interphase (CEI) morphology on the surfaces of two NCM811 cathodes after cycling, indicating one of the side reactions in Supplementary Figure 24. The formation of CEI consumes active materials, manifesting thermodynamic loss, and a thicker, uneven CEI layer leads to non-uniform and slowed lithium transport across the electrolyte-cathode interface, which in turn increases battery polarization, thereby demonstrating kinetic loss.",
+      "rotated_deg": 0,
+      "bbox": [
+        84.0,
+        182.4,
+        513.9,
+        398.3
+      ],
+      "w": 1792,
+      "h": 900,
+      "dpi": 300,
+      "src": "9d20ccf4-10._Sup_Nondestructive_degradation_pattern_decoupling_for_early_battery_trajectory_prediction_via_physicsinformed_learning.pdf",
+      "blank": 0.322
+    },
+    {
+      "key": "fS27",
+      "kind": "figure",
+      "label": "S27",
+      "page": 28,
+      "file": "fig_S27.png",
+      "caption": "Supplementary Figure 27 Scanning electron microscopy (SEM) for characterizing surface morphology change of NCM811 particles after several cycles, indicating the cathode particle cracking in Supplementary Figure 24. The formation of cracks in cathode originates from the fragmentation of active material particles, constituting a thermodynamic loss in itself. Furthermore, the presence of cracks leads to a decline in local lithium-ion transport performance and a reduction in reaction dynamics, signifying kinetic loss. Concurrently, cracks lead to localized stress concentrations, thus continued propagation of cracks, eventually culminating in the failure of the entire particle.",
+      "rotated_deg": 0,
+      "bbox": [
+        84.0,
+        197.0,
+        513.9,
+        354.8
+      ],
+      "w": 1792,
+      "h": 659,
+      "dpi": 300,
+      "src": "9d20ccf4-10._Sup_Nondestructive_degradation_pattern_decoupling_for_early_battery_trajectory_prediction_via_physicsinformed_learning.pdf",
+      "blank": 0.212
+    },
+    {
+      "key": "fS28",
+      "kind": "figure",
+      "label": "S28",
+      "page": 29,
+      "file": "fig_S28.png",
+      "caption": "Supplementary Figure 28 Scanning electron microscopy (SEM) for characterizing the morphological changes of the graphite anode at the (a) initial state and (b) after cycles. Noticeable graphite exfoliation and the presence of lithium plating on the surface of the graphite anode can be discerned, indicating potential side reactions in Supplementary Figure 24. These two side reactions represent common failure modes for graphite anodes; exfoliation of graphite results in degradation both thermodynamically and kinetically, whereas lithium plating primarily affects kinetic loss.",
+      "rotated_deg": 0,
+      "bbox": [
+        84.0,
+        181.4,
+        513.9,
+        358.0
+      ],
+      "w": 1792,
+      "h": 737,
+      "dpi": 300,
+      "src": "9d20ccf4-10._Sup_Nondestructive_degradation_pattern_decoupling_for_early_battery_trajectory_prediction_via_physicsinformed_learning.pdf",
+      "blank": 0.357
+    },
+    {
+      "key": "fS30",
+      "kind": "figure",
+      "label": "S30",
+      "page": 31,
+      "file": "fig_S30.png",
+      "caption": "Supplementary Figure 30 Lithium-ion concentration distribution evolution inside the battery after every step from S1 to S9. It can be seen that after stages S2-6 there is a pronounced concentration polarization, reflecting the characteristics of the kinetics. Note that the notation S refers to each charging step in the multi- step charging process.",
+      "rotated_deg": 0,
+      "bbox": [
+        84.0,
+        150.2,
+        513.9,
+        556.8
+      ],
+      "w": 1792,
+      "h": 1695,
+      "dpi": 300,
+      "src": "9d20ccf4-10._Sup_Nondestructive_degradation_pattern_decoupling_for_early_battery_trajectory_prediction_via_physicsinformed_learning.pdf",
+      "blank": 0.811
+    },
+    {
+      "key": "fS31",
+      "kind": "figure",
+      "label": "S31",
+      "page": 32,
+      "file": "fig_S31.png",
+      "caption": "Supplementary Figure 31 Lithiation state visualization inside the anode graphite particles after every step from S1 to S9. Note that the notation S refers to each charging step in the multi-step charging process.",
+      "rotated_deg": 0,
+      "bbox": [
+        84.0,
+        119.0,
+        513.9,
+        525.5
+      ],
+      "w": 1792,
+      "h": 1695,
+      "dpi": 300,
+      "src": "9d20ccf4-10._Sup_Nondestructive_degradation_pattern_decoupling_for_early_battery_trajectory_prediction_via_physicsinformed_learning.pdf",
+      "blank": 0.713
+    },
+    {
+      "key": "fS32",
+      "kind": "figure",
+      "label": "S32",
+      "page": 33,
+      "file": "fig_S32.png",
+      "caption": "Supplementary Figure 32 Lithiation state visualization inside the cathode NCM811 particles after every step from S1 to S9. Note that the notation S refers to each charging step in the multi-step charging process.",
+      "rotated_deg": 0,
+      "bbox": [
+        84.0,
+        119.0,
+        513.9,
+        525.6
+      ],
+      "w": 1792,
+      "h": 1695,
+      "dpi": 300,
+      "src": "9d20ccf4-10._Sup_Nondestructive_degradation_pattern_decoupling_for_early_battery_trajectory_prediction_via_physicsinformed_learning.pdf",
+      "blank": 0.76
+    },
+    {
+      "key": "fS40",
+      "kind": "figure",
+      "label": "S40",
+      "page": 41,
+      "file": "fig_S40.png",
+      "caption": "Supplementary Figure 40 Decoupled loss type, i.e., thermodynamic, and kinetic losses from total loss from simulation.",
+      "rotated_deg": 0,
+      "bbox": [
+        84.0,
+        103.4,
+        485.5,
+        279.4
+      ],
+      "w": 1674,
+      "h": 735,
+      "dpi": 300,
+      "src": "9d20ccf4-10._Sup_Nondestructive_degradation_pattern_decoupling_for_early_battery_trajectory_prediction_via_physicsinformed_learning.pdf",
+      "blank": 0.95
+    },
+    {
+      "key": "tS4",
+      "kind": "table",
+      "label": "S4",
+      "page": 45,
+      "file": "tab_S4.png",
+      "caption": "Supplementary Table 4 Model early verification performance comparison when guiding samples from 55 are available. ℃ The MAPE and STD refer to the averaged mean absolute percentage error and standard deviation across batteries at 25, 35, and 45 . The maxMAPE refers to the maximum MAPE at a selected ℃ temperature. Model 1 is a long-short-term memory neural network model. Model 2 is our physics- informed machine learning framework without considering initial manufacturing variability. Model 3 is our physics-informed machine learning framework without using Arrhenius-inspired transfer. Model 4 is an empirical formula. Model details are in Supplementary Note 3, otherwise specified in the annotation of this Table.",
+      "rotated_deg": 0,
+      "bbox": [
+        79.5,
+        69.2,
+        515.8,
+        497.2
+      ],
+      "w": 1819,
+      "h": 1784,
+      "dpi": 300,
+      "src": "9d20ccf4-10._Sup_Nondestructive_degradation_pattern_decoupling_for_early_battery_trajectory_prediction_via_physicsinformed_learning.pdf",
+      "blank": 0.87
+    },
+    {
+      "key": "tS5",
+      "kind": "table",
+      "label": "S5",
+      "page": 46,
+      "file": "tab_S5.png",
+      "caption": "Supplementary Table 5 Early verification model by feature selection, i.e., thermodynamic and kinetic loss features. We use Q1+Q9 and Q2 to present thermodynamic and kinetic loss, respectively. The experimental setting is the single-source domain adaptation (only guiding samples from 55℃ are available). 200 cycles of early data from the target domain are used. MAPE(%) Verification temperature 25℃ 35℃ 45℃ Thermodynamic loss(Q1+Q9) 11.05 3.59 3.27 Kinetic loss(Q2) 5.32 1.10 1.12",
+      "rotated_deg": 0,
+      "bbox": [
+        79.6,
+        69.2,
+        512.9,
+        203.9
+      ],
+      "w": 1807,
+      "h": 562,
+      "dpi": 300,
+      "src": "9d20ccf4-10._Sup_Nondestructive_degradation_pattern_decoupling_for_early_battery_trajectory_prediction_via_physicsinformed_learning.pdf",
+      "blank": 0.888
+    }
+  ]
+}

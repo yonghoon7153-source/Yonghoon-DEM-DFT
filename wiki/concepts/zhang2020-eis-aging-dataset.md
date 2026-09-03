@@ -29,8 +29,8 @@ satellite [[mode-observability]] 의 Phase 2(SEV 실측 대조)가 쓰는 EIS �
 
 > Y. Zhang, Q. Tang, Y. Zhang, J. Wang, U. Stimming, A. A. Lee,
 > *Identifying degradation patterns of lithium ion batteries from impedance
-> spectroscopy using machine learning*, **Nature Communications 11 (2020)**,
-> DOI **10.1038/s41467-020-15235-7**.
+> spectroscopy using machine learning*, **Nature Communications 11:1706 (2020)**,
+> DOI **10.1038/s41467-020-15235-7**. (논문번호 1706 은 원전에서 확인)
 > 데이터: **Zenodo DOI 10.5281/zenodo.3633835**.
 
 Su 2024 의 Data availability 전문: "We used an **open dataset** at
