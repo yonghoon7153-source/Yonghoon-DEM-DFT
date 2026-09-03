@@ -2544,7 +2544,11 @@ def selftest():
                    "0_시각_증거": {"builder_sha256": _sha(__file__),
                                     "builder_last_change_commit":
                                         _git_last_change_commit(__file__) or "0" * 40,
-                                    "봉인_시점": "2026-09-02"},
+                                    "봉인_시점": "2026-09-02",
+                                    # 회신 Z P0-3ⓐ — 도구 SHA 도 필수 봉인 (실물 문서와 같은 모양)
+                                    "calib_tool_sha256": _sha(_repo_path(PIL_CALIB_TOOL))},
+                   # 회신 Z P0-3ⓑ — 기계용 문턱 (코드 상수와 같아야 생성이 열린다)
+                   "calib_gate": pil_calib_gate_constants(),
                    "대상": {"parent_sha256": _sha(_dx),
                             "atom_manifest_hash": _bamf["hash"],
                             "functional": "r2SCAN-3c", "epsilon": [1.0],
@@ -2600,7 +2604,11 @@ def selftest():
                        "builder_sha256": mm.get("builder_sha256"),
                        "builder_last_change_commit":
                            mm.get("builder_last_change_commit") or "0" * 40,
-                       "봉인_시점": "2026-09-02"},
+                       "봉인_시점": "2026-09-02",
+                       # 회신 Z P0-3ⓐ — 도구 SHA 도 봉인 (실물 문서와 같은 모양)
+                       "calib_tool_sha256": mm.get("calib_tool_sha256")},
+                   # 회신 Z P0-3ⓑ — 기계용 문턱 (실물 문서와 같은 모양)
+                   "calib_gate": dict(mm.get("calib_gate") or {}),
                    "대상": {"parent_sha256": mm.get("parent_sha256"),
                             "atom_manifest_hash": mm.get("atom_manifest_hash"),
                             "functional": mm.get("functional"),
@@ -2622,8 +2630,10 @@ def selftest():
                         doc["대상"]["estimand_form"] = v
                     continue
                 if k in ("builder_sha256", "builder_last_change_commit",
-                         "봉인_시점"):
+                         "봉인_시점", "calib_tool_sha256"):
                     doc["0_시각_증거"][k] = v
+                elif k == "calib_gate":
+                    doc["calib_gate"] = v
                 elif k == "status":
                     doc["status"] = v
                 else:
@@ -3608,6 +3618,133 @@ def selftest():
             "중단 규칙은 따로 센다 (실패 %d/%d · 중단 %s)"
             % (_v7s["stop_rule"]["n_failed"], _v7s["stop_rule"]["n_probes"],
                _v7s["stop_rule"]["triggered"]))
+        # ══ 회신 Z (내부 적대적 리뷰 · 2026-09-03) — P0 4건 + P1 ═════════════════
+        # ── Z P0-4: 판정 shortcut 이 전역 block 을 우회하지 않는다 ────────────
+        _sv_ts = globals()["pilot_threshold_sensitivity"]
+        globals()["pilot_threshold_sensitivity"] = (
+            lambda F, thrs=PIL_SENS_THR: {"threshold_dependent": True, "⚠": "selftest 강제"})
+        try:
+            _z4 = _ana("z_shortcut_nocert", _no_probe_cert=True)
+            _z4b = _ana("z_shortcut_cert")
+        finally:
+            globals()["pilot_threshold_sensitivity"] = _sv_ts
+        chk(_z4["verdict"] == "NO_VALUE"
+            and any(b.startswith("PROBE_CERT_MISSING") for b in _z4["blocks"])
+            and "THRESHOLD_DEPENDENT" in _z4["gate_codes"],
+            "⛔음성 Z P0-4 (리뷰어 재현): 잡이 전부 THRESHOLD_DEPENDENT 여도 probe 증서가 없으면 "
+            "판정어로 닫지 않고 NO_VALUE 다 (종전엔 shortcut 이 block 을 우회해 rc 0)")
+        chk(_z4b["verdict"] == "THRESHOLD_DEPENDENT",
+            "Z P0-4 양성: block 이 GATED_JOBS 하나뿐이면 dependency 판정어로 닫는다 (기능은 남긴다)")
+        _z4c = os.path.join(ptd, "z_nocert_orca")
+        _copy2.copytree(os.path.join(ptd, "q4_ok"), _z4c)
+        os.remove(os.path.join(_z4c, PIL_LOCCHECK_CERT))
+        _r4c = pilot_analyze(_z4c)
+        chk(any(b.startswith("LOCCHECK_CERT_INVALID") for b in _r4c["blocks"])
+            and all(any("RUN_RECEIPT_ORCA_UNVERIFIABLE" in g for g in v["gates"])
+                    for v in _r4c["jobs"].values()),
+            "⛔음성 Z P0-4 (이중 fail-open): loccheck 증서가 없으면 receipt ORCA 대조가 **꺼지는** 게 "
+            "아니라 잡마다 UNVERIFIABLE 게이트다")
+        # ── Z P0-2: cube 가 그 실행의 것임을 receipt 가 결박 ─────────────────
+        chk(pil_read_receipts(os.path.join(ptd, "q4_ok"))["S/eps1/Dradical/B_ring0"]
+            .get("spin_cube_sha256"),
+            "Z P0-2: receipt 가 그 실행이 낳은 cube 의 SHA 를 봉인한다")
+        _z2 = _ana("z_cube_swapped", calib_cube_swapped=("B_ring0",))
+        chk(any(g.startswith("CALIB_CUBE_NOT_FROM_RUN")
+                for g in _z2["jobs"]["S/eps1/Dradical/B_ring0"]["gates"]),
+            "⛔음성 Z P0-2 (리뷰어 재현): receipt 뒤에 cube+calib 를 **자기일관적으로** 갈아끼워도 "
+            "그 실행의 cube 가 아니라고 막는다 (종전 CALIB_CUBE_CHANGED 는 못 잡았다)")
+        _z2b = _ana("z_family", calib_family_diverge=("B_ring0",))
+        chk(any(g.startswith("CALIB_FAMILY_DIVERGES")
+                for g in _z2b["jobs"]["S/eps1/Dradical/B_ring0"]["gates"]),
+            "⛔음성 Z P0-2: Becke F_out 이 production Hirshfeld F 와 0.10 넘게 갈리면 게이트 — "
+            "계열이 갈리면 절댓값-위치 대조가 무의미하다")
+        chk(all(((v.get("estimand_form_calibration") or {}).get("strict") or {}).get("code")
+                == "CALIB_AGREES" for v in _r["jobs"].values()),
+            "Z P1: strict 분할도 원자별 벡터로 **재계산**해 대조한다 (extended 만 보지 않는다)")
+        # ── Z P0-1: 실물 형식 cube 로 production 경로(pil_run_calib)를 끝까지 지난다 ──
+        _zjk = "S/eps1/Dradical/B_ring0"
+        _zr = _ana("z_real_cube", real_cube=("B_ring0",))
+        chk(any(g.startswith("CALIB_MISSING") for g in _zr["jobs"][_zjk]["gates"]),
+            "Z P0-1 전제: 대조를 아직 안 만든 잡은 CALIB_MISSING 이다")
+        _zd = os.path.join(ptd, "z_real_cube")
+        with contextlib.redirect_stdout(_io.StringIO()):
+            _zc = pil_run_calib(_zd, _zjk)
+        chk(_zc["qc"]["ok"] and abs(_zc["int_signed_e"] - 1.0) < 0.02 and _zc["gate"]["ok"],
+            "Z P0-1 양성: 봉인 격자 위 1 e 가우시안 cube(e/bohr³ · bohr)를 production 경로가 끝까지 "
+            "읽어 ∫Δρ=%.3f · QC 통과 · 대조 일치 (종전 단위 오류면 0.148 로 QC 탈락)"
+            % _zc["int_signed_e"])
+        _zr2 = pilot_analyze(_zd)
+        chk((_zr2["jobs"][_zjk].get("estimand_form_calibration") or {}).get("ok") is True
+            and not any(g.startswith(("CALIB_", "ESTIMAND_")) for g in _zr2["jobs"][_zjk]["gates"]),
+            "Z P0-1 e2e: pil_run_calib 산출물이 판정기의 모든 결박(receipt cube · calib receipt · "
+            "도구 · 분할 · 격자 · 계열)을 통과한다 (family Δ ext %.3f)"
+            % (_zr2["jobs"][_zjk]["estimand_form_calibration"].get("family_max_dF_extended") or -1))
+
+        def _z_rebind(dirp, jk, cubep):
+            """cube 를 고친 뒤 receipt 가 새 cube 를 가리키게 — 결박이 아니라 **다음 검사**를 시험한다."""
+            _rp_ = os.path.join(dirp, PIL_RECEIPTS)
+            _rows_ = [json.loads(x) for x in open(_rp_, encoding="utf-8").read().splitlines()
+                      if x.strip()]
+            with open(_rp_, "w", encoding="utf-8") as _f_:
+                for _rg in _rows_:
+                    if _rg.get("job") == jk:
+                        _rg["spin_cube_sha256"] = _sha(cubep)
+                    _f_.write(json.dumps(_rg, ensure_ascii=False) + "\n")
+        _zg = os.path.join(ptd, "z_grid"); _copy2.copytree(_zd, _zg)
+        _cubep = os.path.join(_zg, _zjk, "B_ring0" + PIL_CUBE_SUFFIX)
+        _Lg = open(_cubep).read().splitlines()
+        _w2 = _Lg[2].split(); _w2[1] = "%.6f" % (float(_w2[1]) + 0.05); _Lg[2] = " ".join(_w2)
+        open(_cubep, "w").write("\n".join(_Lg) + "\n"); _z_rebind(_zg, _zjk, _cubep)
+        raises(lambda: pil_run_calib(_zg, _zjk),
+               "⛔음성 Z P1: cube 격자(origin)가 봉인 cube_grid 와 다르면 대조를 만들지 않는다 "
+               "(CUBE_GRID_MISMATCH — ORCA 가 상자를 다르게 읽은 경우)")
+        _zgeo = os.path.join(ptd, "z_geom"); _copy2.copytree(_zd, _zgeo)
+        _cubeq = os.path.join(_zgeo, _zjk, "B_ring0" + PIL_CUBE_SUFFIX)
+        _Lq = open(_cubeq).read().splitlines()
+        _w6 = _Lq[6].split(); _w6[2] = "%.6f" % (float(_w6[2]) + 0.05); _Lq[6] = " ".join(_w6)
+        open(_cubeq, "w").write("\n".join(_Lq) + "\n"); _z_rebind(_zgeo, _zjk, _cubeq)
+        raises(lambda: pil_run_calib(_zgeo, _zjk),
+               "⛔음성 Z P0-2: cube 의 원자 좌표가 잡의 xyz 와 다르면(다른 기하) 대조를 만들지 않는다")
+        # ── Z P0-3: 봉인됐지만 읽지 않던 결박 셋 ─────────────────────────────
+        raises(lambda: _run("z_pre_tool", _prereg_patch={"calib_tool_sha256": "0" * 64}),
+               "⛔음성 Z P0-3ⓐ (리뷰어 재현): 사전등록의 calibration 도구 SHA 가 실물과 다르면 막는다 "
+               "— 종전엔 아무도 읽지 않았다")
+        raises(lambda: _run("z_man_tool", _man_patch={"calib_tool_sha256": None}),
+               "⛔음성 Z P0-3ⓐ: 생성물 manifest 에서 calib_tool_sha256 을 지우면 막는다")
+        raises(lambda: _run("z_pre_gate", _prereg_patch={
+                   "calib_gate": dict(pil_calib_gate_constants(), max_dF=0.99)}),
+               "⛔음성 Z P0-3ⓑ (리뷰어 재현): 사전등록 calib_gate 의 문턱이 코드 상수와 다르면 막는다")
+        raises(lambda: _run("z_man_gate", _man_patch={
+                   "calib_gate": dict(pil_calib_gate_constants(), class_min=0.4)}),
+               "⛔음성 Z P0-3ⓑ: manifest calib_gate 를 바꾸면 막는다 — 기록만 하고 안 읽던 필드였다")
+        raises(lambda: _pil_require_builder({"builder_sha256": "e" * 64}, "selftest"),
+               "⛔음성 Z P0-3ⓒ: 묶음을 만든 빌더가 아니면 python 진입점도 막는다 (종전엔 bash 러너만 봤다)")
+        chk(_pil_require_builder({"builder_sha256": _sha(__file__)}, "selftest") == _sha(__file__)
+            and _r.get("judged_by_builder_sha256") == _sha(__file__),
+            "Z P0-3ⓒ 양성: 같은 빌더면 통과하고 PILOT_RESULT 가 어느 빌더가 판정했는지 적는다")
+        # ── Z P1 ─────────────────────────────────────────────────────────────
+        _zc5 = _ana("z_class_cand", calib_missing=("B_ring0",))
+        chk(_zc5["jobs"][_zjk].get("class") is None and _zc5["jobs"][_zjk].get("class_candidate"),
+            "Z P1: 게이트된 잡의 class 는 None 이고 class_candidate 로만 남는다 (인용 금지)")
+        _zp = os.path.join(ptd, "z_probe_recompute")
+        _copy2.copytree(os.path.join(ptd, "q4_ok"), _zp)
+        open(os.path.join(_zp, "S0P/eps1/Dradical/B_ring0/B_ring0_probe.out"), "a").write(
+            "\n# 증서 뒤에 바뀐 probe 출력\n")
+        _rq3 = subprocess.run([_sys.executable, __file__, "--polaron_require_probe_pass", _zp],
+                              capture_output=True, text=True)
+        chk(_rq3.returncode != 0 and pil_read_probe_cert(_zp)[0] is not None,
+            "⛔음성 Z P1: 증서 지문은 그대로여도 probe 출력이 바뀌면 **재계산**이 잡아 S 를 열지 "
+            "않는다 — 증서를 신뢰하지 않는다")
+        chk("plots_smoke" in json.loads(open(os.path.join(ptd, "q4_ok", PIL_LOCCHECK_CERT)).read())
+            and "w3_spin.cube" in PIL_RUNNER and "--n_unpaired 1" in PIL_RUNNER
+            and PIL_RUNNER.index("w3_spin.cube") < PIL_RUNNER.index("<<'PYCERT'"),
+            "Z P0-1: loccheck 가 OH• `%%plots` smoke 를 돌려 calibration 도구를 **실물 cube** 로 "
+            "지나고 증서에 봉인한다 (증서 작성 앞)")
+        raises(lambda: _run("z_no_smoke", loccheck_bad="plots_smoke"),
+               "⛔음성 Z P0-1: 증서에 plots_smoke 가 없으면(구판) seed 를 만들지 않는다")
+        chk("min1" in open(os.path.join(ptd, "q4_ok", _zjk, "B_ring0.inp")).read()
+            and _mk["jobs"][_zjk].get("cube_grid", {}).get("dims"),
+            "Z P1: 측정 입력의 `%%plots` 가 상자(min/max)를 명시하고 잡 레코드가 격자를 봉인한다")
     print("── 폴라론 pilot 끝 ──")
     print("── %s ──" % ("PASS" if not fails else "FAIL " + str(len(fails))))
     return 1 if fails else 0
@@ -4025,7 +4162,12 @@ PIL_BASIN_S2 = 0.02         # 4층: ⟨S²⟩ 차
 #       class 를 바꾸지 않는다**는 것이고, Hirshfeld 자체의 F 는 production 값 그대로다.
 #  ⛔ 아래 상수는 **cube 를 하나도 보기 전에**(2026-09-03, S 잡 0개) 박은 값이다.
 PIL_CALIB_MAX_DF = 0.05     # ⓓ 집합별 |F_in − F_out| 허용 상한 (class margin 의 절반)
-PIL_CUBE_DIM = 120          # `%plots dim1/2/3` — ~30 Å 상자에서 0.25 Å 급 (도구가 간격을 검사한다)
+# ⛔ 회신 Z P1 (2026-09-03) — 고정 dim(120) 대신 **분자마다 상자를 명시**한다: 원자 extent
+#   ± margin, 목표 간격으로 dim 을 정한다. 격자는 잡 레코드(`cube_grid`)에 봉인되고 cube
+#   헤더와 대조된다 (CUBE_GRID_MISMATCH). min/max 의 단위는 loccheck smoke 가 실측한다.
+PIL_CUBE_SPACING_A = 0.30   # 목표 격자 간격 [Å] (상한 PIL_CUBE_MAX_SPACING_A 아래)
+PIL_CUBE_MARGIN_A = 5.0     # 원자 extent 바깥 여백 [Å] — 면 절단 QC(1e-3)를 통과할 만큼
+PIL_CALIB_FAMILY_TOL = PIL_PARTITION_TOL   # 회신 Z P0-2 — Becke F_out ↔ Hirshfeld F 허용차 (분할 계열)
 PIL_CUBE_MAX_SPACING_A = 0.35   # 격자 간격 상한 [Å] — 넘으면 두 형태 모두 격자 오차에 묻힌다
 PIL_CALIB_TOOL = "tools/sdcp/spin_partition_calib.py"   # 도구 SHA 를 manifest 에 봉인한다
 PIL_CALIB_SUFFIX = "_calib.json"     # `<tag>_calib.json` — 판정기가 요구하는 산출물
@@ -4374,6 +4516,47 @@ PIL_LOC_KW_RANDOM = ("%%loc\n  LocMet PipekMezey\n  Random 1\n"
 PIL_MOPOP_KW = "%output\n  Print[P_OrbPopMO_L] 1\n  Print[P_MOs] 1\nend\n"
 
 
+PIL_CALIB_GATE_CODE = None   # 채워짐 — pil_calib_gate_constants() 가 정본
+
+
+def pil_calib_gate_constants():
+    """코드 상수의 게이트 사전 — manifest `calib_gate` · 사전등록 `calib_gate` 와 **셋이 같아야** 한다.
+
+    ⛔ 회신 Z P0-3 — 종전엔 manifest 에 쓰기만 하고 아무도 읽지 않았다.
+    """
+    return {"class_min": PIL_CLASS_MIN, "class_margin": PIL_CLASS_MARGIN,
+            "max_dF": PIL_CALIB_MAX_DF, "max_spacing_A": PIL_CUBE_MAX_SPACING_A,
+            "spacing_A": PIL_CUBE_SPACING_A, "margin_A": PIL_CUBE_MARGIN_A,
+            "family_tol": PIL_CALIB_FAMILY_TOL}
+
+
+def pil_calib_gate_matches(g):
+    """→ (같은가, 다른 키 목록). 숫자 키만 비교한다 (⚠ 같은 설명 키는 무시)."""
+    want = pil_calib_gate_constants()
+    bad = [k for k, v in want.items()
+           if (g or {}).get(k) is None or abs(float((g or {}).get(k)) - float(v)) > 1e-12]
+    return (not bad), bad
+
+
+def pil_cube_grid(pos, spacing_A=PIL_CUBE_SPACING_A, margin_A=PIL_CUBE_MARGIN_A):
+    """`%plots` 격자 — 원자 extent ± margin 을 목표 간격으로 덮는 상자. → dict (bohr · Å 둘 다).
+
+    ⛔ 회신 Z P1 — 상자를 ORCA 기본 여백에 맡기지 않는다. 여기서 정한 값이 잡 레코드에
+      봉인되고, calibration 이 cube 헤더(n · origin · 간격)와 대조한다.
+    ⛔ 못 하는 것: ORCA 가 min/max 를 어느 단위로 읽는지 **모른다** — loccheck smoke 가
+      실측해 증서에 적고, seeds 가 그 단위로 쓴다.
+    """
+    lo = [min(p[t] for p in pos) - margin_A for t in range(3)]
+    hi = [max(p[t] for p in pos) + margin_A for t in range(3)]
+    dims = [int(math.ceil((hi[t] - lo[t]) / spacing_A)) + 1 for t in range(3)]
+    sp = [(hi[t] - lo[t]) / (dims[t] - 1) for t in range(3)]
+    B = 0.529177210903
+    return {"dims": dims, "min_A": lo, "max_A": hi, "spacing_A": sp,
+            "min_bohr": [x / B for x in lo], "max_bohr": [x / B for x in hi],
+            "target_spacing_A": spacing_A, "margin_A": margin_A,
+            "n_points": dims[0] * dims[1] * dims[2]}
+
+
 def _pil_cpcm(eps):
     """ε=1 이면 진공(블록 없음), 아니면 CPCM. cavity 규약을 manifest 에 기록한다."""
     if eps is None or abs(eps - 1.0) < 1e-9:
@@ -4383,7 +4566,8 @@ def _pil_cpcm(eps):
 
 def _pil_inp(path, xyz, charge, mult, wf, eps, functional,
              loc=False, moread=None, rotate=None, stab=False, nprocs=1,
-             noiter=False, mopop=False, maxcore=PIL_MAXCORE_MB, plots=None):
+             noiter=False, mopop=False, maxcore=PIL_MAXCORE_MB, plots=None,
+             plots_grid=None, plots_unit="bohr"):
     """pilot 용 ORCA 입력. 관측량 계약(Hirshfeld · open-shell 에 UNO UCO)을 강제한다.
 
     ⚠ `NoAutoStart` 는 **항상** 켠다 — 같은 basename 의 GBW 를 우연히 물지 않게.
@@ -4448,9 +4632,18 @@ def _pil_inp(path, xyz, charge, mult, wf, eps, functional,
     #   `%plots` 는 SCF 결과에 영향이 없고 ORCA 실행을 늘리지 않는다. 판정기는 이
     #   cube 로 F_in/F_out 직접 대조를 하고, 그것이 일치할 때만 class 를 연다.
     if plots:
-        txt += ("%%plots\n  Format Gaussian_Cube\n  dim1 %d\n  dim2 %d\n  dim3 %d\n"
-                "  SpinDens(\"%s\");\nend\n" % (PIL_CUBE_DIM, PIL_CUBE_DIM, PIL_CUBE_DIM,
-                                                plots))
+        if not plots_grid:
+            raise SystemExit("⛔ `%plots` 는 격자(plots_grid)를 명시해야 한다 — ORCA 기본 상자에 "
+                             "맡기지 않는다 (회신 Z P1)")
+        _mn = plots_grid["min_bohr" if plots_unit == "bohr" else "min_A"]
+        _mx = plots_grid["max_bohr" if plots_unit == "bohr" else "max_A"]
+        _dm = plots_grid["dims"]
+        txt += ("%%plots\n  Format Gaussian_Cube\n"
+                "  dim1 %d\n  dim2 %d\n  dim3 %d\n"
+                "  min1 %.6f\n  max1 %.6f\n  min2 %.6f\n  max2 %.6f\n  min3 %.6f\n  max3 %.6f\n"
+                "  SpinDens(\"%s\");\nend\n"
+                % (_dm[0], _dm[1], _dm[2], _mn[0], _mx[0], _mn[1], _mx[1], _mn[2], _mx[2],
+                   plots))
     txt += _pil_cpcm(eps)
     txt += "* xyzfile %d %d %s\n" % (charge, mult, xyz)
     with open(path, "w") as f:
@@ -4688,9 +4881,12 @@ def pilot_generate(a):
     man["calib_tool"] = PIL_CALIB_TOOL
     man["calib_tool_sha256"] = _sha(_ct)
     man["calib_gate"] = {"class_min": PIL_CLASS_MIN, "class_margin": PIL_CLASS_MARGIN,
-                         "max_dF": PIL_CALIB_MAX_DF, "cube_dim": PIL_CUBE_DIM,
+                         "max_dF": PIL_CALIB_MAX_DF,
                          "max_spacing_A": PIL_CUBE_MAX_SPACING_A,
-                         "⚠": "cube 를 보기 전에 봉인한 값이다 (회신 Y P0-1·Q3)"}
+                         "spacing_A": PIL_CUBE_SPACING_A, "margin_A": PIL_CUBE_MARGIN_A,
+                         "family_tol": PIL_CALIB_FAMILY_TOL,
+                         "⚠": ("cube 를 보기 전에 봉인한 값이다 (회신 Y P0-1·Q3). 사전등록의 "
+                               "`calib_gate` 와 코드 상수와 **셋이 같아야** 한다 (회신 Z P0-3)")}
     _pil_check_prereg(man, "pilot_generate(%s)" % out, pre_seed=True)
     (out / "MANIFEST_PILOT.json").write_text(
         json.dumps(man, indent=1, ensure_ascii=False))
@@ -4730,6 +4926,24 @@ def _git_last_change_commit(path):
         return (r.stdout or "").strip() or None
     except Exception:                                        # noqa: BLE001
         return None
+
+
+def _pil_require_builder(man, where):
+    """**이 파일**이 묶음을 만든 빌더인지 본다. 다르면 SystemExit.
+
+    ⛔ 회신 Z P0-3ⓒ — 빌더 SHA 를 manifest 와 대조하는 곳이 bash 러너뿐이었다. python 진입점
+      (`--polaron_analyze` 등)을 상수만 바꾼 빌더로 직접 부르면 사전등록·manifest 검사가 다
+      통과했다 — "문턱은 코드 상수라 바꾸면 커밋에 남는다" 가 판정 산출물에서 성립하지 않았다.
+    """
+    want = (man or {}).get("builder_sha256")
+    now = _sha(__file__)
+    if not want:
+        raise SystemExit("⛔ %s: manifest 에 builder_sha256 이 없다 — 구판 묶음이다" % where)
+    if want != now:
+        raise SystemExit("⛔ %s: 이 빌더(%s…)는 묶음을 만든 빌더(%s…)가 아니다 — 판정·seed·"
+                         "calibration 은 **같은 빌더**로만 한다 (회신 Z P0-3ⓒ). 빌더가 바뀌었으면 "
+                         "묶음을 다시 만들 것." % (where, now[:12], str(want)[:12]))
+    return now
 
 
 def _repo_path(rel):
@@ -5005,6 +5219,11 @@ def pil_write_receipt(d, stage, jobkey, rc, started=None, orca=None):
          "moinp": mo,
          "moinp_sha256": (_sha(mop) if mop and mop.is_file() else None),
          "out_sha256": _sha(out) if out.is_file() else None,
+         # 회신 Z P0-2 — 그 실행이 낳은 스핀밀도 cube 를 receipt 가 봉인한다 (calibration 은
+         #   receipt **뒤에** 만들어지므로, cube 가 그 잡의 것임은 이 해시로만 이어진다)
+         "spin_cube": (tag + PIL_CUBE_SUFFIX) if (jd / (tag + PIL_CUBE_SUFFIX)).is_file() else None,
+         "spin_cube_sha256": (_sha(jd / (tag + PIL_CUBE_SUFFIX))
+                              if (jd / (tag + PIL_CUBE_SUFFIX)).is_file() else None),
          "terminated_normally": bool(pil_seg_terminated(txt)[0]) if txt else False,
          "orca_path": orca,
          "orca_sha256": (_sha(Path(orca)) if orca and Path(orca).is_file() else None),
@@ -5052,9 +5271,25 @@ def pil_read_loccheck(d):
     miss = [k for k in ("orca_path", "orca_version", "orca_sha256",
                         "inp_sha256", "out_sha256", "loc_suffix",
                         "l2_inp_sha256", "l2_out_sha256",
-                        "mopop_parsed", "mos_parsed") if k not in c]
+                        "mopop_parsed", "mos_parsed", "plots_smoke") if k not in c]
     if miss:
         return None, "증서에 %s 가 없다 — 구판이거나 손으로 만든 것이다" % miss
+    # ⛔⛔ 회신 Z P0-1 (2026-09-03) — `%plots` 와 calibration 도구가 **실물 ORCA cube** 를 한 번은
+    #   지났어야 한다 (OH• smoke). 단위 오류(∫Δρ 0.148)는 실물 cube 없이는 잡히지 않았다.
+    _ps = c.get("plots_smoke") or {}
+    if not isinstance(_ps, dict) or _ps.get("qc_ok") is not True:
+        return None, ("증서의 plots_smoke 가 QC 를 통과하지 않았다 (%r) — `%%plots` cube 를 "
+                      "calibration 도구가 끝까지 못 읽었다. 200원자를 열 이유가 없다 (회신 Z P0-1)"
+                      % _ps.get("qc_ok"))
+    try:
+        if abs(float(_ps.get("int_signed_e")) - 1.0) > 0.05:
+            return None, ("증서의 plots_smoke ∫Δρ = %s ≠ 1 (OH• doublet) — 단위나 상자가 틀렸다 "
+                          "(회신 Z P0-1)" % _ps.get("int_signed_e"))
+    except (TypeError, ValueError):
+        return None, "증서의 plots_smoke 에 int_signed_e 가 없다"
+    if _ps.get("minmax_unit") not in ("bohr", "angstrom"):
+        return None, ("증서가 `%%plots` min/max 단위를 실측하지 못했다 (%r) — 격자를 봉인할 수 없다"
+                      % _ps.get("minmax_unit"))
     if c.get("loc_suffix") not in PIL_LOC_SUFFIX_CANDIDATES:
         return None, ("증서의 loc_suffix %r 가 아는 후보 %s 밖이다"
                       % (c.get("loc_suffix"), list(PIL_LOC_SUFFIX_CANDIDATES)))
@@ -5145,7 +5380,8 @@ def _pil_check_prereg(man, where, pre_seed=False):
     #   의미 필드를 `if _wf and man.get(...)` 처럼 **양쪽 값이 있을 때만** 비교하니,
     #   사전등록에서 그 필드를 삭제하면 검사가 통째로 건너뛰어졌다 (fail-open).
     #   ⇒ **필수 스키마**를 먼저 요구한다. 없으면 그 자체가 위반이다.
-    _REQ_EV = ("builder_sha256", "builder_last_change_commit", "봉인_시점")
+    _REQ_EV = ("builder_sha256", "builder_last_change_commit", "봉인_시점",
+               "calib_tool_sha256")          # 회신 Z P0-3ⓐ — 도구 SHA 도 필수 봉인
     _REQ_TG = ("parent_sha256", "atom_manifest_hash", "functional", "epsilon",
                "loc_realization")
     for _k in _REQ_EV:
@@ -5235,8 +5471,38 @@ def _pil_check_prereg(man, where, pre_seed=False):
     #   `if <사전등록> and <생성물>` 이라 **생성물(manifest) 쪽을 지우면** 여전히
     #   검사가 통째로 건너뛰어졌다. 지운 쪽이 어디든 결과는 같다 — 결박이 없다.
     #   ⇒ 사전등록이 그 값을 봉인했으면 생성물에도 **반드시 있어야** 한다.
+    # ⛔⛔ 회신 Z P0-3 (2026-09-03) — **봉인됐지만 아무도 읽지 않던 결박 셋.**
+    #   ⓐ 사전등록 `calib_tool_sha256` 을 여기서 안 읽었다 → 도구를 바꿔도 통과.
+    #   ⓑ manifest `calib_gate` 를 아무도 안 읽었다 → 문턱을 바꿔도 통과.
+    #   ⇒ 사전등록 ↔ manifest ↔ **디스크의 도구/코드 상수** 셋이 같아야 한다.
+    _ct_want = _ev.get("calib_tool_sha256")
+    _ct_man = man.get("calib_tool_sha256")
+    _ct_path = _repo_path(PIL_CALIB_TOOL)
+    _ct_now = _sha(_ct_path) if _ct_path.is_file() else None
+    if _ct_want:
+        if _ct_man != _ct_want:
+            bad.append("calibration 도구 SHA: 사전등록 %s… ≠ 생성물 %s… — 다른 도구로 만든 "
+                       "묶음이다 (회신 Z P0-3ⓐ)" % (str(_ct_want)[:12], str(_ct_man)[:12]))
+        if _ct_now != _ct_want:
+            bad.append("calibration 도구 SHA: 사전등록 %s… ≠ 지금 디스크 %s… — 도구가 비준 뒤 "
+                       "바뀌었다. 재봉인·재비준 (회신 Z P0-3ⓐ)"
+                       % (str(_ct_want)[:12], str(_ct_now)[:12]))
+    _cg_pre = _pj.get("calib_gate") or _tg.get("calib_gate")
+    if not _cg_pre:
+        bad.append("사전등록에 기계용 `calib_gate`(class_min·class_margin·max_dF·max_spacing_A·"
+                   "spacing_A·margin_A·family_tol) 가 없다 — 문턱이 문서에 봉인되지 않았다 (회신 Z P0-3ⓑ)")
+    else:
+        _okc, _badc = pil_calib_gate_matches(_cg_pre)
+        if not _okc:
+            bad.append("사전등록 `calib_gate` 가 코드 상수와 다르다 %s — 문서와 판정기가 다른 "
+                       "문턱을 말한다 (회신 Z P0-3ⓑ)" % _badc)
+    _okm, _badm = pil_calib_gate_matches(man.get("calib_gate"))
+    if not _okm:
+        bad.append("생성물 manifest 의 `calib_gate` 가 코드 상수와 다르다 %s — 생성 뒤 상수가 "
+                   "바뀌었거나 manifest 가 손대졌다 (회신 Z P0-3ⓑ)" % _badm)
     _REQ_MAN = {"builder_sha256": _ev.get("builder_sha256"),
                 "builder_last_change_commit": _ev.get("builder_last_change_commit"),
+                "calib_tool_sha256": _ev.get("calib_tool_sha256"),
                 "parent_sha256": _tg.get("parent_sha256"),
                 "atom_manifest_hash": _tg.get("atom_manifest_hash"),
                 "functional": _tg.get("functional") or _pj.get("functional"),
@@ -5807,11 +6073,14 @@ def pilot_seeds(d):
     # ⛔ 회신 U P0-5 — 산출물이 **S0 사전등록에 결박**돼 있는지 먼저 본다
     #   (seed 가 아직 없어 규모는 못 본다 — 규모는 이 함수 끝에서 다시 검사한다 · Y P0-3)
     _pil_check_prereg(man, "pilot_seeds(%s)" % d, pre_seed=True)
+    _pil_require_builder(man, "pilot_seeds(%s)" % d)          # 회신 Z P0-3ⓒ
     # ⛔ 회신 V P0-3 — seed 생성도 증서를 요구한다. 여기서 막지 않으면 L 을 우회해
     #   들어온 산출물로 seed 를 만들게 된다.
     _lcert, _lwhy = pil_read_loccheck(d)
     if _lcert is None:
         raise SystemExit("⛔ loccheck 증서 없이 seed 를 만들지 않는다 — %s" % _lwhy)
+    # 회신 Z P1 — `%plots` min/max 단위는 증서(smoke)가 실측한 값이다
+    _plots_unit = ((_lcert.get("plots_smoke") or {}).get("minmax_unit")) or "bohr"
     _amf = man.get("atom_manifest")
     if not _amf:
         raise SystemExit("⛔ MANIFEST_PILOT.json 에 `atom_manifest` 가 없다 — 구판 "
@@ -5890,6 +6159,17 @@ def pilot_seeds(d):
                 "%s… · 현재 %s…) — 이 프레임으로 seed 를 고르지 않는다 (회신 Y P0-5 · "
                 "T P0-1)." % (src_jk, str(_jm_l.get("xyz_sha256"))[:12],
                               str(_r_l.get("xyz_sha256"))[:12], str(_lx_now)[:12]))
+        # ⛔ 회신 Z P1 — L·L2 receipt 의 ORCA 도 증서의 ORCA 여야 한다. 사슬의 원천(L)이
+        #   다른 실행파일이면 이후 단계가 전부 증서와 맞아도 의미가 없다.
+        for _rk, _rr in (("L", _r_l), ("L2", _r_l2)):
+            if not _rr.get("orca_sha256"):
+                raise SystemExit("⛔ %s receipt 에 ORCA 해시가 없다 — 증서의 ORCA 로 돌았는지 확인할 "
+                                 "수 없다 (회신 Z P1)" % _rk)
+            if _rr["orca_sha256"] != _lcert.get("orca_sha256"):
+                raise SystemExit("⛔ %s 잡의 ORCA(%s…)가 loccheck 증서의 ORCA(%s…)와 다르다 — "
+                                 "국재화의 원천이 다른 실행파일이다 (회신 Z P1). 그 ORCA 로 "
+                                 "loccheck 부터 다시." % (_rk, _rr["orca_sha256"][:12],
+                                                          str(_lcert.get("orca_sha256"))[:12]))
         # ③ L2 가 **실제로 읽은** 궤도 파일이 지금 것과 같은가
         _moinp = _r_l2.get("moinp")
         _mo_now = (jd / _moinp) if _moinp else None
@@ -6011,6 +6291,8 @@ def pilot_seeds(d):
         homo = nel // 2 - 1              # 부모 닫힌껍질 HOMO (참고용)
         spec = man["seed_plan"]["Dradical" if is_dm else "Pcation"]
         env = jm["env"]
+        # 회신 Z P1 — 이 계(프레임)의 `%plots` 격자: extent ± margin, 목표 간격. 잡마다 봉인.
+        _grid_j = pil_cube_grid(_po_j)
         for sd in spec["seeds"]:
             sdir = d / "S" / env / ("Dradical" if is_dm else "Pcation") / sd
             sdir.mkdir(parents=True, exist_ok=True)
@@ -6075,7 +6357,8 @@ def pilot_seeds(d):
                      rotate=rot, stab=True, nprocs=man.get("nprocs", 1),
                      maxcore=man.get("maxcore_mb_per_proc", PIL_MAXCORE_MB),
                      # 회신 Y P0-1·P0-2 — 측정 잡마다 스핀밀도 cube (estimand 형태 대조용)
-                     plots=sd + PIL_CUBE_SUFFIX)
+                     # 회신 Z P1 — 격자를 명시하고 봉인한다 (단위는 증서 smoke 실측)
+                     plots=sd + PIL_CUBE_SUFFIX, plots_grid=_grid_j, plots_unit=_plots_unit)
             # ⛔⛔ 회신 T Q4 1층 — **초기 개입 확인 probe**. 회전을 걸었다는 사실은
             #   그 자리에 스핀이 놓였다는 증거가 아니다. `NoIter` 로 SCF 전 밀도의
             #   스핀 분포를 계의 **실제** charge/mult 에서 찍는다.
@@ -6201,6 +6484,7 @@ def pilot_seeds(d):
                 # 회신 Y P0-1·P0-2 — 이 잡의 class 는 이 두 산출물의 대조가 열어 준다
                 "spin_cube": sd + PIL_CUBE_SUFFIX,
                 "calib": sd + PIL_CALIB_SUFFIX,
+                "cube_grid": dict(_grid_j, minmax_unit_written=_plots_unit),   # 회신 Z P1
             }
             report.setdefault(env, []).append(
                 "%s/%s mo=%s%s w=%s" % ("D•" if is_dm else "P⁺", sd,
@@ -6321,7 +6605,12 @@ def _pil_fake_loccheck(out, suffix=".loc", mopop=True, mos=True, drop_key=None,
          # ⛔ 회신 W P0-4 — L2 사슬(seed 의 원천)도 증서에 있어야 한다
          "l2_inp_sha256": "4" * 64, "l2_out_sha256": "5" * 64,
          "l2_moread_suffix": suffix,
-         "mopop_parsed": mopop, "mos_parsed": mos}
+         "mopop_parsed": mopop, "mos_parsed": mos,
+         # 회신 Z P0-1 — 실물 `%plots` smoke (픽스처는 통과한 모양을 흉내낸다)
+         "plots_smoke": {"cube_sha256": "6" * 64, "int_signed_e": 1.0004, "qc_ok": True,
+                         "qc_flags": [], "minmax_unit": "bohr",
+                         "tool_sha256": (_sha(_repo_path(PIL_CALIB_TOOL))
+                                         if _repo_path(PIL_CALIB_TOOL).is_file() else None)}}
     if drop_key == "l2_blank":            # 키는 있고 **값이 빈** 경로 (다른 분기다)
         c["l2_inp_sha256"] = c["l2_out_sha256"] = ""
     elif drop_key:
@@ -6359,7 +6648,7 @@ def _pil_fake_phaseL(out, man, rand_mark=False, kill_guessmode=False, no_mopop=F
                            mos=(loccheck_bad != "mos"),
                            drop_key=(loccheck_bad if loccheck_bad in
                                      ("orca_version", "loc_suffix",
-                                      "l2_inp_sha256", "l2_blank")
+                                      "l2_inp_sha256", "l2_blank", "plots_smoke")
                                      else None),
                            orca_missing=(loccheck_bad == "orca_missing"),
                            orca_changed=(loccheck_bad == "orca_changed"))
@@ -6495,39 +6784,119 @@ def _pil_fake_sout(charge, mult, nel, spins, E, S2=0.7530, stable=True,
     return t
 
 
+def _pil_fake_real_cube(out, man, jk, spins, sigma_A=0.35):
+    """selftest 용 **진짜 형식의** 스핀밀도 cube — 봉인 격자(`cube_grid`) 위에 원자별 가우시안.
+
+    값은 e/bohr³ · 격자는 bohr (Gaussian cube 규약). Σ|w| = 1 로 정규화해 ∫Δρ = 1 (doublet).
+    `pil_run_calib` 의 **production 경로**(read_cube → Becke → gate → 결박)를 실제로 지나게 한다
+    (회신 Z P0-1: 가짜 텍스트 cube + 손으로 쓴 qc.ok 로는 이 경로가 시험되지 않았다).
+    """
+    import numpy as np
+    import spin_partition_calib as spc
+    out = Path(out)
+    jd, tag = out / jk, jk.rsplit("/", 1)[-1]
+    jm = man["jobs"][jk]
+    grid = jm["cube_grid"]
+    xyzn = pil_xyz_from_inp((jd / (tag + ".inp")).read_text(encoding="utf-8"))
+    sym, pos = read_xyz(jd / xyzn)
+    SYM2Z = {v: k for k, v in spc.Z2SYM.items()}
+    B = 0.529177210903
+    dims, mn, sp = grid["dims"], grid["min_A"], grid["spacing_A"]
+    tot = sum(abs(s) for s in spins) or 1.0
+    w = [s / tot for s in spins]                       # Σ|w| = 1
+    norm = (2 * math.pi * sigma_A * sigma_A) ** -1.5 * B ** 3   # e/Å³ → e/bohr³
+    xs = mn[0] + np.arange(dims[0]) * sp[0]
+    ys = mn[1] + np.arange(dims[1]) * sp[1]
+    zs = mn[2] + np.arange(dims[2]) * sp[2]
+    X, Y, Z = np.meshgrid(xs, ys, zs, indexing="ij")
+    rho = np.zeros(dims)
+    for a, (x, y, z) in enumerate(pos):
+        if a >= len(w) or w[a] == 0.0:
+            continue
+        rho += w[a] * norm * np.exp(-((X - x) ** 2 + (Y - y) ** 2 + (Z - z) ** 2)
+                                    / (2 * sigma_A * sigma_A))
+    L = ["fake spin density (selftest)", "job %s" % jk,
+         "%5d %12.6f %12.6f %12.6f" % (len(sym), mn[0] / B, mn[1] / B, mn[2] / B),
+         "%5d %12.6f %12.6f %12.6f" % (dims[0], sp[0] / B, 0.0, 0.0),
+         "%5d %12.6f %12.6f %12.6f" % (dims[1], 0.0, sp[1] / B, 0.0),
+         "%5d %12.6f %12.6f %12.6f" % (dims[2], 0.0, 0.0, sp[2] / B)]
+    for s, (x, y, z) in zip(sym, pos):
+        zz = SYM2Z.get(str(s).capitalize(), 6)
+        L.append("%5d %12.6f %12.6f %12.6f %12.6f" % (zz, float(zz), x / B, y / B, z / B))
+    flat = rho.reshape(-1)
+    for i in range(0, len(flat), 6):
+        L.append(" ".join("%13.5e" % v for v in flat[i:i + 6]))
+    (jd / (tag + PIL_CUBE_SUFFIX)).write_text("\n".join(L) + "\n")
+
+
 def _pil_fake_calib(out, man, jk, spins, disagree=False, stale_cube=False,
-                    tool_changed=False):
+                    tool_changed=False, family_diverge=False, real_cube=False,
+                    cube_text="fake spin density cube"):
     """selftest 용 `<tag>_spin.cube` + `<tag>_calib.json` (회신 Y P0-2 소비 경로 픽스처).
 
-    F_out 은 그 잡의 (가짜) Hirshfeld 스핀에서, F_in 은 같은 값(양성) 또는 적분형 winner
-    를 0.5 아래로 내린 값(음성 `disagree` — 리뷰어 반례 형: 경계를 다르게 넘는다).
+    산출물은 **원자별 벡터**(s_signed_e · w_abs_e)를 담고, F 는 그 벡터에서 나온다 (판정기가
+    재계산해 대조한다 — 회신 Z P1). 음성 손잡이:
+      · `disagree`        적분형(w_abs) winner 를 0.5 아래로 → 경계 판정이 갈린다 (리뷰어 반례 형)
+      · `family_diverge`  Becke 벡터(s_signed)를 sulfonate 로 옮긴다 → Hirshfeld 와 계열이 갈린다
+      · `stale_cube`      대조 뒤 cube 를 바꾼다      · `tool_changed`  도구 SHA 가 봉인과 다르다
+      · `real_cube`       진짜 형식 cube 만 쓰고 calib.json 은 **안 만든다** (pil_run_calib 가 만든다)
 
-    ⛔ 못 하는 것: 진짜 cube 적분이 아니다 — **결박(SHA)과 소비(gate)** 를 시험한다.
-      수치 경로(Becke·QC·gate 산수)는 `spin_partition_calib.py --selftest` 가 본다.
+    ⛔ 못 하는 것: real_cube=False 면 진짜 적분이 아니다 — 결박(SHA)과 소비(gate)를 시험한다.
     """
     out = Path(out)
     jd, tag = out / jk, jk.rsplit("/", 1)[-1]
+    if real_cube:
+        _pil_fake_real_cube(out, man, jk, spins)
+        return
     is_dm = "/Dradical/" in jk
     sets = pil_frame_sets(man["atom_manifest"], is_dm, True)["sets"]
-    tot = sum(abs(x) for x in spins) or 1.0
-    F_out = {g: sum(abs(spins[i]) for i in v if i < len(spins)) / tot
-             for g, v in sets.items()}
-    F_in = dict(F_out)
+    nat = man["atom_manifest"]["D" if is_dm else "P"]["n_atoms"]
+    s_signed = [float(spins[i]) if i < len(spins) else 0.0 for i in range(nat)]
+    w_abs = [abs(x) for x in s_signed]
+    if family_diverge:
+        _t = sum(abs(x) for x in s_signed) or 1.0
+        su = sets["sulfonate"]
+        s_signed = [0.0] * nat
+        for i in su:
+            s_signed[i] = _t / len(su)
+        w_abs = [abs(x) for x in s_signed]
     if disagree:
-        w = max(F_in, key=F_in.get)
-        others = [g for g in F_in if g != w]
-        F_in[w] = 0.40
-        for g in others:
-            F_in[g] = 0.60 / len(others)
+        # 리뷰어 반례 형 — winner 는 **그대로** 두고 적분형 몫만 0.5 아래(0.45)로 내린다.
+        #   나머지 0.55 는 다른 **집합마다** 같은 몫(≤ 0.275)으로 나눠 winner 가 바뀌지 않게 한다
+        #   (원자 수대로 뿌리면 `other` 가 winner 가 되어 다른 코드가 난다).
+        _F0 = {g: sum(abs(s_signed[i]) for i in v) for g, v in sets.items()}
+        wset = max(_F0, key=_F0.get)
+        _tot = sum(w_abs) or 1.0
+        _w_in = [0.0] * nat
+        for i in sets[wset]:
+            _w_in[i] = 0.45 * _tot * (w_abs[i] / (sum(w_abs[j] for j in sets[wset]) or 1.0))
+        _og = [g for g in sets if g != wset and sets[g]]
+        for g in _og:
+            for i in sets[g]:
+                _w_in[i] = 0.55 * _tot / len(_og) / len(sets[g])
+        w_abs = _w_in
+    F_out, F_in = pil_F_from_vectors(s_signed, w_abs, sets)
     cube = jd / (tag + PIL_CUBE_SUFFIX)
-    cube.write_text("fake spin density cube for %s\n" % jk)
+    cube.write_text("%s for %s\n" % (cube_text, jk))
     c = {"schema": "spin_partition_calib/v2", "F_in": F_in, "F_out": F_out,
+         "s_signed_e": s_signed, "w_abs_e": w_abs, "n_atoms": nat,
+         "int_signed_e": sum(s_signed), "abs_total_in_e": sum(w_abs),
          "spin_cube_sha256": _sha(cube), "groups_sha256": pil_groups_sha(sets),
          "tool_sha256": ("0" * 64 if tool_changed else
                          (man.get("calib_tool_sha256") or _sha(_repo_path(PIL_CALIB_TOOL)))),
          "qc": {"ok": True, "flags": []}, "cancellation_ratio": 1.0,
-         "max_abs_delta_F": max(abs(F_in[g] - F_out[g]) for g in sets)}
-    (jd / (tag + PIL_CALIB_SUFFIX)).write_text(json.dumps(c, ensure_ascii=False))
+         "max_abs_delta_F": max(abs(F_in[g] - F_out[g]) for g in sets),
+         "gate": {"ok": True, "code": "CALIB_AGREES"}}
+    cp = jd / (tag + PIL_CALIB_SUFFIX)
+    cp.write_text(json.dumps(c, ensure_ascii=False))
+    # 실물 러너처럼 calibration receipt 행도 남긴다 (판정기가 이것을 읽는다 — 회신 Z P1)
+    with (out / PIL_RECEIPTS).open("a", encoding="utf-8") as _f:
+        _f.write(json.dumps({"schema": "polaron_calib_receipt/v1", "stage": "calib",
+                             "job": jk + "#calib", "for_job": jk, "calib_sha256": _sha(cp),
+                             "spin_cube_sha256": c["spin_cube_sha256"],
+                             "tool_sha256": c["tool_sha256"], "gate": "CALIB_AGREES",
+                             "qc_ok": True, "ts_end": "1970-01-01T00:00:01"},
+                            ensure_ascii=False) + "\n")
     if stale_cube:
         cube.write_text(cube.read_text() + "# 대조 뒤에 바뀌었다\n")
 
@@ -6537,7 +6906,8 @@ def _pil_fake_phaseS(out, man, probe_wrong=(), flat_ring=(), unstable=(),
                      drop_pcation=False, flip_spin=(), baseline_high=False,
                      drop_baseline=False, drop_receipt=(), stale_receipt=(),
                      calib_missing=(), calib_disagree=(), calib_stale=(),
-                     calib_tool_changed=False):
+                     calib_tool_changed=False, calib_family_diverge=(),
+                     calib_cube_swapped=(), real_cube=()):
     """selftest 용 phase S + 1층 probe 산출물. 인자들이 **음성 경로**다.
 
     · `degenerate=True`  같은 에너지 (스핀 벡터는 seed 마다 다르다)
@@ -6623,18 +6993,25 @@ def _pil_fake_phaseS(out, man, probe_wrong=(), flat_ring=(), unstable=(),
         if sd not in calib_missing:
             _pil_fake_calib(out, man, jk, _v, disagree=(sd in calib_disagree),
                             stale_cube=(sd in calib_stale),
-                            tool_changed=calib_tool_changed)
+                            tool_changed=calib_tool_changed,
+                            family_diverge=(sd in calib_family_diverge),
+                            real_cube=(sd in real_cube))
         # ⛔ 회신 W P0-5 — 실물 러너는 잡마다 receipt 를 남긴다. 픽스처가 안 남기면
         #   **픽스처가 실물과 다른 계**가 되고, 분석기의 receipt 게이트가 시험되지
         #   않는다 (AZ P0-1 에서 정확히 이 이유로 16잡이 죽었다: selftest 가 정상
         #   실행 경로를 한 번도 지나지 않았다).
+        #   ⚠ 순서: cube 는 receipt **앞에** 있어야 receipt 가 그 cube 를 봉인한다 (회신 Z P0-2).
         if sd not in drop_receipt:
             pil_write_receipt(out, "S", jk, 0, "1970-01-01T00:00:00", orca=_orca)
-            if sd in stale_receipt:      # 입력이 바뀐 뒤의 옛 출력을 흉내낸다
-                with (out / PIL_RECEIPTS).open("a", encoding="utf-8") as _f:
-                    _r = pil_read_receipts(out)[jk]
-                    _r["inp_sha256"] = "9" * 64
-                    _f.write(json.dumps(_r, ensure_ascii=False) + "\n")
+        # ⛔음성 회신 Z P0-2 — receipt **뒤에** cube+calib 를 통째로 갈아끼운다 (자기일관적이지만
+        #   그 실행의 cube 가 아니다). 종전 CALIB_CUBE_CHANGED 는 이것을 못 잡았다.
+        if sd in stale_receipt and sd not in drop_receipt:   # 입력이 바뀐 뒤의 옛 출력을 흉내낸다
+            with (out / PIL_RECEIPTS).open("a", encoding="utf-8") as _f:
+                _r = pil_read_receipts(out)[jk]
+                _r["inp_sha256"] = "9" * 64
+                _f.write(json.dumps(_r, ensure_ascii=False) + "\n")
+        if sd in calib_cube_swapped:
+            _pil_fake_calib(out, man, jk, _v, cube_text="cube from ANOTHER run")
     # ⛔ 회신 X P0-7 — 실물 러너는 **S0P(probe·무회전 control)에도** receipt 를
     #   남긴다. 픽스처가 안 남기면 그 층의 게이트가 시험되지 않는다 (S 로 같은
     #   교훈을 이미 얻었다 — BB P0-5).
@@ -6667,6 +7044,11 @@ def pilot_restart(d):
     man = json.loads((d / "MANIFEST_PILOT.json").read_text())
     # ⛔ 회신 U P0-5 — 산출물이 **S0 사전등록에 결박**돼 있는지 먼저 본다
     _pil_check_prereg(man, "polaron_restart(%s)" % d)
+    _pil_require_builder(man, "polaron_restart(%s)" % d)      # 회신 Z P0-3ⓒ
+    _lcert_r, _lwhy_r = pil_read_loccheck(d)
+    if _lcert_r is None:
+        raise SystemExit("⛔ loccheck 증서 없이 재판정 입력을 만들지 않는다 — %s" % _lwhy_r)
+    _plots_unit_r = ((_lcert_r.get("plots_smoke") or {}).get("minmax_unit")) or "bohr"
     res = pilot_analyze(d)
     made = []
     for jk, r in sorted(res["jobs"].items()):
@@ -6687,12 +7069,14 @@ def pilot_restart(d):
         xyzn = "%s.xyz" % sd
         (rd / xyzn).write_text((d / jk / xyzn).read_text())
         rk = "SR/%s/%s/%s" % (env, grp, sd)
+        _grid_r = jm.get("cube_grid") or pil_cube_grid(read_xyz(rd / xyzn)[1])   # 같은 기하 = 같은 격자
         _pil_inp(rd / (sd + ".inp"), xyzn, jm["charge"], jm["mult"], jm["wf"],
                  jm["epsilon"], man["functional"],
                  moread=os.path.relpath(gbw, rd), rotate=None, stab=True,
                  nprocs=man.get("nprocs", 1),
                  maxcore=man.get("maxcore_mb_per_proc", PIL_MAXCORE_MB),
-                 plots=sd + PIL_CUBE_SUFFIX)          # 회신 Y P0-2 — 대표 잡도 대조한다
+                 plots=sd + PIL_CUBE_SUFFIX,          # 회신 Y P0-2 — 대표 잡도 대조한다
+                 plots_grid=_grid_r, plots_unit=_plots_unit_r)
         man["jobs"][rk] = {
             "phase": "SR", "env": env, "epsilon": jm["epsilon"],
             "charge": jm["charge"], "mult": jm["mult"], "wf": jm["wf"],
@@ -6706,6 +7090,7 @@ def pilot_restart(d):
             "inp_sha256": _sha(rd / (sd + ".inp")),
             "xyz_sha256": _sha(rd / xyzn),               # 회신 Y P0-5
             "spin_cube": sd + PIL_CUBE_SUFFIX, "calib": sd + PIL_CALIB_SUFFIX,
+            "cube_grid": dict(_grid_r, minmax_unit_written=_plots_unit_r),   # 회신 Z P1
         }
         made.append(rk)
     (d / "MANIFEST_PILOT.json").write_text(
@@ -6715,7 +7100,7 @@ def pilot_restart(d):
 
 # ── 폴라론 pilot · 분석 ─────────────────────────────────────────────────────
 
-def pilot_probe_verdict(d):
+def pilot_probe_verdict(d, check_prereg=True):
     """1층 probe **판정** — 개입이 실제로 일어났는가. → dict (phase S 앞 게이트).
 
     ⛔⛔ 회신 X P0-7 (2026-09-02) — 러너의 probe 단계는 ORCA **정상종료만** 확인하고
@@ -6728,7 +7113,11 @@ def pilot_probe_verdict(d):
     """
     d = Path(d)
     man = json.loads((d / "MANIFEST_PILOT.json").read_text())
-    _pil_check_prereg(man, "polaron_probe_verdict(%s)" % d)
+    # ⚠ `check_prereg=False` 는 러너의 S 게이트(`--polaron_require_probe_pass`)만 준다 —
+    #   그 단계는 바로 이어 `preflight S` 가 사전등록을 검사한다 (중복 검사 생략일 뿐 우회가 아니다).
+    if check_prereg:
+        _pil_check_prereg(man, "polaron_probe_verdict(%s)" % d)
+    _pil_require_builder(man, "polaron_probe_verdict(%s)" % d)   # 회신 Z P0-3ⓒ
     _amf = man.get("atom_manifest") or {}
     _rc = pil_read_receipts(d)
     res = {"schema": "polaron_probe_verdict/v1", "probes": {}, "controls": {},
@@ -6949,16 +7338,29 @@ def pil_groups_sha(sets):
     return hashlib.sha256(json.dumps(sets, sort_keys=True).encode("utf-8")).hexdigest()
 
 
+def pil_F_from_vectors(s_signed, w_abs, sets):
+    """원자별 벡터 → (F_out, F_in). 판정기가 **어떤 분할이든** 재계산할 수 있게 (회신 Z P1)."""
+    den_out = sum(abs(x) for x in s_signed) or float("nan")
+    den_in = sum(w_abs) or float("nan")
+    F_out = {g: sum(abs(s_signed[i]) for i in v) / den_out for g, v in sets.items()}
+    F_in = {g: sum(w_abs[i] for i in v) / den_in for g, v in sets.items()}
+    return F_out, F_in
+
+
 def pil_run_calib(d, jk):
     """측정 잡(S·SR) 하나의 스핀밀도 cube 로 **estimand 형태 직접 대조**를 계산한다.
 
-    산출: `<tag>_calib.json` (F_in · F_out · QC · gate · cube/분할/도구 SHA) + receipt 행.
-    판정기(`pilot_analyze`)는 이 파일을 **요구**하고 결박을 다시 대조한다 (회신 Y P0-2).
+    산출: `<tag>_calib.json` (F_in · F_out · 원자별 벡터 · QC · gate · cube/분할/도구 SHA) +
+    receipt 행. 판정기(`pilot_analyze`)는 이 파일을 **요구**하고 결박을 다시 대조한다 (회신 Y P0-2).
 
+    ⛔ 회신 Z P0-2 — cube 가 **그 실행의 것**임은 receipt 가 봉인한 `spin_cube_sha256` 으로만
+      이어진다. receipt 가 없거나 cube 해시가 다르면 대조를 만들지 않는다. cube 의 원자 좌표와
+      격자도 잡의 xyz · 봉인 `cube_grid` 와 대조한다.
     ⛔ 못 하는 것: Hirshfeld 자체의 옳음은 보증하지 않는다 (spin_partition_calib 참조).
     """
     d = Path(d)
     man = json.loads((d / "MANIFEST_PILOT.json").read_text(encoding="utf-8"))
+    _pil_require_builder(man, "pil_run_calib(%s)" % jk)              # 회신 Z P0-3ⓒ
     jm = (man.get("jobs") or {}).get(jk)
     if not jm or jm.get("phase") not in ("S", "SR"):
         raise SystemExit("⛔ %s 는 측정 잡(S·SR)이 아니다 — calibration 대상이 아니다" % jk)
@@ -6969,12 +7371,27 @@ def pil_run_calib(d, jk):
     if not _ct.is_file() or _sha(_ct) != man["calib_tool_sha256"]:
         raise SystemExit("⛔ calibration 도구가 manifest 봉인과 다르다 (%s) — 묶음을 만든 "
                          "도구로 돌리거나 묶음을 다시 만들 것" % PIL_CALIB_TOOL)
+    _okg, _badg = pil_calib_gate_matches(man.get("calib_gate"))
+    if not _okg:
+        raise SystemExit("⛔ manifest 의 calib_gate 가 코드 상수와 다르다 %s — 생성 뒤 문턱이 "
+                         "바뀌었다 (회신 Z P0-3ⓑ)" % _badg)
     tag = jk.rsplit("/", 1)[-1]
     jd = d / jk
     cube = jd / (tag + PIL_CUBE_SUFFIX)
     if not cube.is_file():
         raise SystemExit("⛔ %s 가 없다 — `%%plots SpinDens` 가 안 돌았거나 이름이 다르다. "
                          "cube 없이는 대조가 없고, 대조 없이는 class 가 없다" % cube)
+    # ⛔ 회신 Z P0-2 — receipt 가 봉인한 cube 인가
+    rr = pil_read_receipts(d).get(jk)
+    if not rr:
+        raise SystemExit("⛔ %s 의 실행 receipt 가 없다 — 어느 실행의 cube 인지 모른다 (회신 Z P0-2)" % jk)
+    if not rr.get("spin_cube_sha256"):
+        raise SystemExit("⛔ %s 의 receipt 에 spin_cube_sha256 이 없다 — 그 실행이 cube 를 내지 "
+                         "않았거나 구판 receipt 다. 뒤에 생긴 cube 는 그 실행의 것이 아니다 (회신 Z P0-2)" % jk)
+    if rr["spin_cube_sha256"] != _sha(cube):
+        raise SystemExit("⛔ %s 의 cube(%s…)가 receipt 가 봉인한 cube(%s…)와 다르다 — 다른 실행의 "
+                         "cube 로 대조를 만들지 않는다 (회신 Z P0-2)"
+                         % (jk, _sha(cube)[:12], rr["spin_cube_sha256"][:12]))
     amf = man["atom_manifest"]
     is_dm = "/Dradical/" in jk
     sets = pil_frame_sets(amf, is_dm, True)["sets"]
@@ -6984,12 +7401,37 @@ def pil_run_calib(d, jk):
     if len(cb["atoms"]) != _want_nat:
         raise SystemExit("⛔ cube 원자수 %d ≠ 프레임 %d — 다른 계의 cube 다 (회신 T P0-1)"
                          % (len(cb["atoms"]), _want_nat))
+    # ⛔ 회신 Z P0-2 — cube 의 원자 좌표 = 잡의 xyz (다른 conformer·다른 계 차단)
+    _xn = pil_xyz_from_inp((jd / (tag + ".inp")).read_text(encoding="utf-8", errors="replace"))
+    _sy, _po = read_xyz(jd / _xn)
+    _dmax = max(math.dist(cb["atoms"][i]["xyz"], _po[i]) for i in range(len(_po)))
+    if _dmax > 1e-3:
+        raise SystemExit("⛔ CUBE_GEOMETRY_MISMATCH: cube 원자 좌표가 잡의 xyz 와 최대 %.4f Å 다르다 — "
+                         "다른 기하의 cube 다 (회신 Z P0-2)" % _dmax)
+    # ⛔ 회신 Z P1 — 격자가 봉인(`cube_grid`)과 같은가 (n · origin · 간격)
+    _g = jm.get("cube_grid")
+    if not _g:
+        raise SystemExit("⛔ %s 에 cube_grid 봉인이 없다 — 구판 묶음이다 (회신 Z P1)" % jk)
+    _B = 0.529177210903
+    _sp_cube = [math.sqrt(sum(c * c for c in v)) for v in cb["vec"]]
+    if (list(cb["n"]) != list(_g["dims"])
+            or max(abs(cb["origin_bohr"][t] - _g["min_bohr"][t]) for t in range(3)) > 1e-3
+            or max(abs(_sp_cube[t] - _g["spacing_A"][t]) for t in range(3)) > 1e-3):
+        raise SystemExit("⛔ CUBE_GRID_MISMATCH: cube 격자(n %s · origin %s bohr · 간격 %s Å)가 봉인 "
+                         "(n %s · min %s · 간격 %s)과 다르다 — ORCA 가 요청한 상자를 다르게 읽었거나 "
+                         "다른 cube 다 (회신 Z P1)"
+                         % (cb["n"], [round(x, 3) for x in cb["origin_bohr"]],
+                            [round(x, 4) for x in _sp_cube], _g["dims"],
+                            [round(x, 3) for x in _g["min_bohr"]],
+                            [round(x, 4) for x in _g["spacing_A"]]))
     res = spc.partition_forms(cb, sets, min_points=8000, use_numpy=True,
                               max_spacing_A=PIL_CUBE_MAX_SPACING_A,
                               n_unpaired=int(jm["mult"]) - 1)
     ok, code, why = spc.direct_comparison_gate(res["F_in"], res["F_out"], PIL_CLASS_MIN,
                                                PIL_CLASS_MARGIN, PIL_CALIB_MAX_DF)
     res.update({"job": jk, "spin_cube": cube.name, "spin_cube_sha256": _sha(cube),
+                "receipt_spin_cube_sha256": rr["spin_cube_sha256"],
+                "geometry_max_dev_A": _dmax, "grid_sealed": _g,
                 "groups": sets, "groups_sha256": pil_groups_sha(sets),
                 "tool": PIL_CALIB_TOOL, "tool_sha256": _sha(_ct),
                 "builder_sha256": man.get("builder_sha256"),
@@ -7008,55 +7450,108 @@ def pil_run_calib(d, jk):
     return res
 
 
-def pil_calib_gate_for_job(man, jd, tag, sets):
+def pil_calib_gate_for_job(man, jd, tag, sets_ext, sets_strict, hir_F_ext, hir_F_strict,
+                           receipt, rcpt_all, jk):
     """판정기 쪽 소비 — `<tag>_calib.json` 이 있고, 결박이 맞고, 두 형태가 같은 판정을 주나.
 
-    → {"ok", "gate"(실패 코드 문자열 | None), ...}. 없음·낡음·불일치 전부 게이트다.
+    → {"ok", "gate"(첫 실패 코드 | None), "flags"(전부), ...}. 없음·낡음·불일치 전부 게이트다.
+
+    결박 (회신 Z P0-2·P0-3·P1):
+      · 도구 SHA = manifest 봉인      · manifest calib_gate = 코드 상수
+      · cube SHA = calib 기록 = **receipt 가 봉인한 cube** (그 실행의 것)
+      · calib receipt 행이 있고 파일 SHA 와 같다
+      · 분할 SHA = 판정기의 extended 분할
+    판정 (회신 Y Q3 · Z P1):
+      · F 는 파일의 값을 믿지 않고 **원자별 벡터에서 재계산**한다 (파일 F 와 어긋나면 게이트)
+      · extended · strict 둘 다 직접 대조 네 조건 일치
+      · Becke F_out ↔ production Hirshfeld F 차 ≤ PIL_CALIB_FAMILY_TOL (분할 계열이 갈리면 무의미)
     """
-    out = {"ok": False, "gate": None, "file": tag + PIL_CALIB_SUFFIX}
+    out = {"ok": False, "gate": None, "flags": [], "file": tag + PIL_CALIB_SUFFIX}
     cp, cube = jd / (tag + PIL_CALIB_SUFFIX), jd / (tag + PIL_CUBE_SUFFIX)
+
+    def _fail(code):
+        out["flags"].append(code)
+        if out["gate"] is None:
+            out["gate"] = code
+        return out
+
     if not man.get("calib_tool_sha256"):
-        out["gate"] = "CALIB_TOOL_UNSEALED(manifest 에 calib_tool_sha256 이 없다 — 구판 묶음)"
-        return out
+        return _fail("CALIB_TOOL_UNSEALED(manifest 에 calib_tool_sha256 이 없다 — 구판 묶음)")
+    _okg, _badg = pil_calib_gate_matches(man.get("calib_gate"))
+    if not _okg:
+        return _fail("CALIB_GATE_MISMATCH(manifest 문턱 ≠ 코드 상수 %s — 회신 Z P0-3ⓑ)" % _badg)
     if not cp.is_file():
-        out["gate"] = ("CALIB_MISSING(%s — estimand 형태 대조 없이 class 를 내지 않는다 · "
-                       "회신 Y P0-2)" % cp.name)
-        return out
+        return _fail("CALIB_MISSING(%s — estimand 형태 대조 없이 class 를 내지 않는다 · 회신 Y P0-2)"
+                     % cp.name)
     try:
         c = json.loads(cp.read_text(encoding="utf-8"))
     except Exception as e:                                       # noqa: BLE001
-        out["gate"] = "CALIB_UNREADABLE(%r)" % (e,)
-        return out
+        return _fail("CALIB_UNREADABLE(%r)" % (e,))
     miss = [k for k in ("F_in", "F_out", "spin_cube_sha256", "groups_sha256",
-                        "tool_sha256", "qc") if k not in c]
+                        "tool_sha256", "qc", "s_signed_e", "w_abs_e") if k not in c]
     if miss:
-        out["gate"] = "CALIB_INCOMPLETE(%s 없음)" % miss
-        return out
+        return _fail("CALIB_INCOMPLETE(%s 없음 — 원자별 벡터 없는 구판이면 재계산 불가)" % miss)
     if c["tool_sha256"] != man["calib_tool_sha256"]:
-        out["gate"] = ("CALIB_TOOL_CHANGED(대조를 만든 도구 %s… ≠ 봉인 %s…)"
-                       % (str(c["tool_sha256"])[:12], str(man["calib_tool_sha256"])[:12]))
-        return out
+        return _fail("CALIB_TOOL_CHANGED(대조를 만든 도구 %s… ≠ 봉인 %s…)"
+                     % (str(c["tool_sha256"])[:12], str(man["calib_tool_sha256"])[:12]))
     if not cube.is_file():
-        out["gate"] = "CALIB_CUBE_MISSING(%s)" % cube.name
-        return out
-    if _sha(cube) != c["spin_cube_sha256"]:
-        out["gate"] = "CALIB_CUBE_CHANGED(cube 가 대조 이후에 바뀌었다 — 이 수는 그 cube 의 것이 아니다)"
-        return out
-    if c["groups_sha256"] != pil_groups_sha(sets):
-        out["gate"] = ("CALIB_GROUPS_MISMATCH(대조가 쓴 분할이 판정기의 분할과 다르다)")
-        return out
+        return _fail("CALIB_CUBE_MISSING(%s)" % cube.name)
+    _cs = _sha(cube)
+    if _cs != c["spin_cube_sha256"]:
+        return _fail("CALIB_CUBE_CHANGED(cube 가 대조 이후에 바뀌었다 — 이 수는 그 cube 의 것이 아니다)")
+    # ⛔⛔ 회신 Z P0-2 — 그 **실행의** cube 인가 (receipt 결박). 자기일관성만으로는 다른 실행의
+    #   cube 로 만든 대조가 통과했다.
+    if not receipt:
+        return _fail("CALIB_RUN_RECEIPT_MISSING(이 잡의 실행 receipt 가 없어 cube 를 실행에 결박할 수 없다)")
+    if not receipt.get("spin_cube_sha256"):
+        return _fail("RUN_RECEIPT_NO_CUBE_HASH(receipt 에 cube 해시가 없다 — 그 실행이 cube 를 내지 않았다)")
+    if receipt["spin_cube_sha256"] != _cs:
+        return _fail("CALIB_CUBE_NOT_FROM_RUN(cube %s… ≠ receipt 가 봉인한 %s… — 다른 실행의 cube 로 "
+                     "만든 대조다 · 회신 Z P0-2)" % (_cs[:12], receipt["spin_cube_sha256"][:12]))
+    _cr = (rcpt_all or {}).get(jk + "#calib")
+    if not _cr:
+        return _fail("CALIB_RECEIPT_MISSING(calibration receipt 행이 없다 — 이 러너로 만든 대조가 아니다)")
+    if _cr.get("calib_sha256") != _sha(cp):
+        return _fail("CALIB_RECEIPT_STALE(calib.json 이 receipt 이후에 바뀌었다)")
+    if c["groups_sha256"] != pil_groups_sha(sets_ext):
+        return _fail("CALIB_GROUPS_MISMATCH(대조가 쓴 분할이 판정기의 분할과 다르다)")
     if not (c.get("qc") or {}).get("ok", False):
-        out["gate"] = "CALIB_QC_FAILED(%s)" % (c.get("qc") or {}).get("flags")
-        return out
+        return _fail("CALIB_QC_FAILED(%s)" % (c.get("qc") or {}).get("flags"))
+    # ── F 를 **재계산**한다 (파일의 F 를 믿지 않는다 — 회신 Z P1) ─────────────
+    _ss, _wa = c["s_signed_e"], c["w_abs_e"]
+    _nat_need = max([i for v in list(sets_ext.values()) + list(sets_strict.values()) for i in v]) + 1
+    if len(_ss) < _nat_need or len(_wa) < _nat_need:
+        return _fail("CALIB_VECTOR_SHORT(원자별 벡터 %d < 프레임 %d)" % (len(_ss), _nat_need))
+    F_out_e, F_in_e = pil_F_from_vectors(_ss, _wa, sets_ext)
+    F_out_s, F_in_s = pil_F_from_vectors(_ss, _wa, sets_strict)
+    if max(abs(F_out_e[g] - float(c["F_out"].get(g, float("nan")))) for g in sets_ext) > 1e-6 \
+            or max(abs(F_in_e[g] - float(c["F_in"].get(g, float("nan")))) for g in sets_ext) > 1e-6:
+        return _fail("CALIB_INTERNAL_INCONSISTENT(파일의 F 가 원자별 벡터에서 재계산한 F 와 다르다)")
     import spin_partition_calib as spc
-    ok, code, why = spc.direct_comparison_gate(c["F_in"], c["F_out"], PIL_CLASS_MIN,
-                                               PIL_CLASS_MARGIN, PIL_CALIB_MAX_DF)
-    out.update({"ok": ok, "code": code, "why": why,
-                "F_in": c["F_in"], "F_out": c["F_out"],
+    ok_e, code_e, why_e = spc.direct_comparison_gate(F_in_e, F_out_e, PIL_CLASS_MIN,
+                                                     PIL_CLASS_MARGIN, PIL_CALIB_MAX_DF)
+    ok_s, code_s, why_s = spc.direct_comparison_gate(F_in_s, F_out_s, PIL_CLASS_MIN,
+                                                     PIL_CLASS_MARGIN, PIL_CALIB_MAX_DF)
+    out.update({"code": code_e, "why": why_e, "strict": {"code": code_s, "why": why_s},
+                "F_in": F_in_e, "F_out": F_out_e,
+                "F_in_strict": F_in_s, "F_out_strict": F_out_s,
                 "cancellation_ratio_QC만": c.get("cancellation_ratio"),
-                "max_abs_delta_F": c.get("max_abs_delta_F")})
-    if not ok:
-        out["gate"] = "ESTIMAND_FORM_DISAGREES(%s: %s)" % (code, why)
+                "max_abs_delta_F": max(abs(F_in_e[g] - F_out_e[g]) for g in sets_ext)})
+    if not ok_e:
+        _fail("ESTIMAND_FORM_DISAGREES(%s: %s)" % (code_e, why_e))
+    if not ok_s:
+        _fail("ESTIMAND_FORM_DISAGREES(strict %s: %s)" % (code_s, why_s))
+    # ── 분할 계열 대조 — Becke F_out ↔ production Hirshfeld F (회신 Z P0-2) ──────
+    for _lab, _Fb, _Fh in (("extended", F_out_e, hir_F_ext), ("strict", F_out_s, hir_F_strict)):
+        if not _Fh:
+            _fail("CALIB_NO_HIRSHFELD(%s — production F 가 없어 분할 계열을 대조할 수 없다)" % _lab)
+            continue
+        _dv = max(abs(_Fb[g] - float(_Fh.get(g, float("nan")))) for g in _Fb)
+        out["family_max_dF_%s" % _lab] = _dv
+        if not (_dv <= PIL_CALIB_FAMILY_TOL):
+            _fail("CALIB_FAMILY_DIVERGES(%s: Becke F_out ↔ Hirshfeld F 차 %.3f > %.2f — 분할 계열이 "
+                  "갈려 절댓값-위치 대조가 무의미하다 · 회신 Z P0-2)" % (_lab, _dv, PIL_CALIB_FAMILY_TOL))
+    out["ok"] = not out["flags"]
     return out
 
 
@@ -7066,6 +7561,7 @@ def pilot_analyze(d):
     man = json.loads((d / "MANIFEST_PILOT.json").read_text())
     # ⛔ 회신 U P0-5 — 산출물이 **S0 사전등록에 결박**돼 있는지 먼저 본다
     _pil_check_prereg(man, "pilot_analyze(%s)" % d)
+    _judged_by = _pil_require_builder(man, "pilot_analyze(%s)" % d)   # 회신 Z P0-3ⓒ
     kill = [man["removed_H_0based"]]
     # ⛔⛔ 회신 T P0-1 — **봉인된 프레임**을 쓴다. 런타임에 remap 을 다시 하지
     #   않는다 (계산은 같아도 산출물이 어느 프레임을 썼는지 말하지 못했다).
@@ -7080,6 +7576,9 @@ def pilot_analyze(d):
            "atom_frame_hash": {"P": _amf["P"]["hash"], "D": _amf["D"]["hash"]},
            "remap_hash": _amf["remap"]["hash"],
            "loc_realization": man.get("loc_realization", "R0_deterministic"),
+           # 회신 Z P0-3ⓒ — 어느 빌더가 판정했는지 산출물이 말한다 (manifest 와 같음이 검증됨)
+           "judged_by_builder_sha256": _judged_by,
+           "calib_gate": pil_calib_gate_constants(),
            "blocks": [], "jobs": {}, "verdict": None}
 
     def frame_sets(is_dm, ether):
@@ -7177,14 +7676,18 @@ def pilot_analyze(d):
             elif _sha(_mp) != rr["moinp_sha256"]:
                 g.append("RUN_RECEIPT_MOINP_CHANGED(읽은 궤도 파일이 바뀌었다)")
         # ⛔ 회신 Y P0-7 — 이 잡을 돌린 ORCA 가 증서의 ORCA 인가
-        if _cert_orca:
-            if not rr.get("orca_sha256"):
-                g.append("RUN_RECEIPT_NO_ORCA_HASH(receipt 에 ORCA 해시가 없다 — 증서의 "
-                         "ORCA 로 돌았는지 확인할 수 없다)")
-            elif rr["orca_sha256"] != _cert_orca:
-                g.append("RUN_RECEIPT_ORCA_MISMATCH(receipt %s… ≠ loccheck 증서 %s… — "
-                         "다른 실행파일로 돈 잡이다)"
-                         % (str(rr["orca_sha256"])[:12], str(_cert_orca)[:12]))
+        # ⛔⛔ 회신 Z P0-4 — 증서가 무효면(`_cert_orca is None`) 종전엔 이 검사가 **통째로
+        #   꺼졌다** (이중 fail-open). 증서 없음은 "확인 불가" 게이트다 — 통과가 아니다.
+        if not _cert_orca:
+            g.append("RUN_RECEIPT_ORCA_UNVERIFIABLE(loccheck 증서가 없거나 무효라 이 잡의 ORCA 를 "
+                     "대조할 수 없다 — 회신 Z P0-4)")
+        elif not rr.get("orca_sha256"):
+            g.append("RUN_RECEIPT_NO_ORCA_HASH(receipt 에 ORCA 해시가 없다 — 증서의 "
+                     "ORCA 로 돌았는지 확인할 수 없다)")
+        elif rr["orca_sha256"] != _cert_orca:
+            g.append("RUN_RECEIPT_ORCA_MISMATCH(receipt %s… ≠ loccheck 증서 %s… — "
+                     "다른 실행파일로 돈 잡이다)"
+                     % (str(rr["orca_sha256"])[:12], str(_cert_orca)[:12]))
         if not rr.get("terminated_normally"):
             g.append("RUN_RECEIPT_NOT_TERMINATED(rc=%s)" % rr.get("rc"))
         return g
@@ -7454,8 +7957,13 @@ def pilot_analyze(d):
         #   과 winner·경계·margin·|ΔF| 가 전부 같을 때만 연다. 없음·낡음·불일치는 게이트다.
         _cjk = r.get("judged_from") or jk
         _cjd, _ctag = d / _cjk, _cjk.rsplit("/", 1)[-1]
+        # 회신 Z P0-2·P1 — receipt(cube 결박) · Hirshfeld F(분할 계열 대조) · strict 분할까지 넘긴다
         r["estimand_form_calibration"] = pil_calib_gate_for_job(
-            man, _cjd, _ctag, frame_sets(is_dm, ether=True)["sets"])
+            man, _cjd, _ctag, frame_sets(is_dm, ether=True)["sets"],
+            frame_sets(is_dm, ether=False)["sets"],
+            (r.get("hirshfeld") or {}).get("F"),
+            (r.get("hirshfeld_strict") or {}).get("F"),
+            _rcpt.get(_cjk), _rcpt, _cjk)
         if not r["estimand_form_calibration"]["ok"]:
             r["gates"].append(r["estimand_form_calibration"]["gate"])
         m_e = re.findall(r"FINAL SINGLE POINT ENERGY\s+(-?\d+\.\d+)", seg)
@@ -7558,6 +8066,12 @@ def pilot_analyze(d):
         if r["_basin"]["spin_vec"]:
             r["spin_vector_sha256"] = hashlib.sha256(
                 json.dumps(r["_basin"]["spin_vec"]).encode()).hexdigest()
+        # ⛔ 회신 Z P1 — 게이트된 잡의 class 는 **class 가 아니다**. JSON 을 읽는 사람이 인용하지
+        #   못하게 `class_candidate` 로 옮긴다 (값은 남긴다 — 사전등록 "값은 남기고 판정어로").
+        if r["gates"] and r.get("class") is not None:
+            r["class_candidate"] = r.pop("class")
+            r["class"] = None
+            r["⛔_class"] = "게이트가 있어 class 를 부여하지 않았다 — class_candidate 는 인용 금지"
         res["jobs"][jk] = r
 
     # ── 4층: 실현 basin 군집 (회신 T Q4) ─────────────────────────────────
@@ -7632,7 +8146,12 @@ def pilot_analyze(d):
     res["dependency_verdicts"] = _dep_hit
     if res["blocks"]:
         # "돌려놓고 판정만 보류" 유형만 남았으면 그 판정어로 닫는다 (사전등록 중단_규칙)
-        if _dep_hit and set(_codes) <= set(_DEP):
+        # ⛔⛔ 회신 Z P0-4 (2026-09-03) — 이 shortcut 이 **block 을 우회했다.** `_codes` 는 잡
+        #   gate 만 모으므로, probe 증서 결측·loccheck 증서 무효·SEED_RECEIPT_MISSING 같은
+        #   전역 block 이 있어도 잡들이 dependency gate 만 가지면 판정어(+rc 0)로 닫혔다.
+        #   ⇒ 이 닫힘은 block 이 **GATED_JOBS 하나뿐**일 때만 허용한다.
+        _other_blocks = [b for b in res["blocks"] if not str(b).startswith("GATED_JOBS")]
+        if _dep_hit and set(_codes) <= set(_DEP) and not _other_blocks:
             res["verdict"] = _dep_hit[0]
             res["why"] = ("값은 남기고 판정어로 닫는다 — %s (억지로 하나를 고르지 "
                           "않는다)" % ", ".join(_dep_hit))
@@ -8006,11 +8525,94 @@ PYLC
       [ "$_MPOP" = true ] && echo "  ✔ MO 인구 파서 PASS" || { echo "  ⛔ MO 인구 파서가 실물을 못 읽었습니다"; fail=1; }
       [ "$_MMOS" = true ] && echo "  ✔ MO 계수 파서 PASS" || { echo "  ⛔ MO 계수 파서가 실물을 못 읽었습니다"; fail=1; }
     fi
+    # ⛔⛔ 회신 Z P0-1 (2026-09-03) — **`%plots` + calibration 도구를 실물 ORCA 로 한 번 지난다.**
+    #   단위 오류(∫Δρ = 0.148)는 실물 cube 없이는 잡히지 않았다. OH•(doublet) 한 잡:
+    #   ⓐ `%plots SpinDens` 가 cube 를 내는가 ⓑ min/max 를 ORCA 가 어느 단위로 읽는가(origin 실측)
+    #   ⓒ 도구가 그 cube 를 끝까지 읽어 ∫Δρ = 1 ± 0.05 · QC 통과인가. 셋을 증서에 봉인한다.
+    _PSJ=""; _PSU="unknown"
     if [ "$fail" = 0 ]; then
-      python3 - "$D" "$ORCA" "$LC" "$_LSUF" "$_MPOP" "$_MMOS" <<'PYCERT'
+      cat > "$LC/w3.inp" <<'EOF'
+! UKS BP86 def2-SVP TightSCF NoAutoStart
+%plots
+  Format Gaussian_Cube
+  dim1 40
+  dim2 40
+  dim3 40
+  min1 -8.0
+  max1  8.0
+  min2 -8.0
+  max2  8.0
+  min3 -8.0
+  max3  8.0
+  SpinDens("w3_spin.cube");
+end
+* xyz 0 2
+O   0.000000  0.000000  0.000000
+H   0.000000  0.000000  0.970000
+*
+EOF
+      ( cd "$LC" && "$ORCA" w3.inp > w3.out 2>&1 )
+      if ! grep -aq "ORCA TERMINATED NORMALLY" "$LC/w3.out"; then
+        echo "  ⛔ OH• (%plots smoke) 가 정상 종료하지 않았다:"; tail -20 "$LC/w3.out"; fail=1
+      elif [ ! -s "$LC/w3_spin.cube" ]; then
+        echo "  ⛔ %plots 가 cube 를 내지 않았다 (w3_spin.cube 없음):"; ls -la "$LC"; fail=1
+      else
+        printf '{"O": [0], "H": [1]}\n' > "$LC/w3_groups.json"
+        _PSU=$(python3 - "$LC/w3_spin.cube" <<'PYU'
+import sys
+L = open(sys.argv[1], encoding="utf-8", errors="replace").read().splitlines()
+o = float(L[2].split()[1])
+print("bohr" if abs(o + 8.0) < 1e-2 else ("angstrom" if abs(o + 8.0 / 0.529177210903) < 1e-2 else "unknown"))
+PYU
+)
+        echo "  ✔ %plots cube 생성 (min/max 단위 실측: $_PSU)"
+        if python3 "$(dirname "$BUILDER_PATH")/spin_partition_calib.py" \
+             --spin_cube "$LC/w3_spin.cube" --groups "$LC/w3_groups.json" \
+             --n_unpaired 1 --max_spacing_A 0.35 --min_points 8000 \
+             --json "$LC/w3_calib.json" > "$LC/w3_calib.log" 2>&1; then
+          echo "  ✔ calibration 도구가 실물 cube 를 끝까지 읽었다 (∫Δρ·QC 통과)"; _PSJ="$LC/w3_calib.json"
+        else
+          echo "  ⛔ calibration 도구가 실물 cube 에서 실패/QC 탈락 — 200원자를 열 이유가 없다:"
+          tail -8 "$LC/w3_calib.log"; fail=1
+        fi
+        [ "$_PSU" != "unknown" ] || { echo "  ⛔ %plots min/max 단위를 판정할 수 없다 (origin 이 -8 도 -15.12 도 아니다)"; fail=1; }
+      fi
+    fi
+    if [ "$fail" = 0 ]; then
+      python3 - "$D" "$ORCA" "$LC" "$_LSUF" "$_MPOP" "$_MMOS" "$_PSJ" "$_PSU" <<'PYCERT'
 import hashlib, json, os, subprocess, sys
-d, orca, lc, suf, mp, mm = sys.argv[1:7]
+d, orca, lc, suf, mp, mm, psj, psu = sys.argv[1:9]
 h = lambda p: hashlib.sha256(open(p, "rb").read()).hexdigest()
+# ⛔ 회신 Z P1 — 증서 **재발행**이 옛 receipt 와 다른 ORCA 면 거부한다 (L 을 A 로 돌리고 B 로
+#   증서를 다시 만들면 사슬의 원천이 갈린다). 묶음을 다시 만드는 것이 답이다.
+_rp = os.path.join(d, "RUN_RECEIPTS.jsonl")
+_new_sha = h(orca) if os.path.isfile(orca) else None
+if os.path.isfile(_rp) and _new_sha:
+    for _ln in open(_rp, encoding="utf-8", errors="replace"):
+        try:
+            _r = json.loads(_ln)
+        except Exception:
+            continue
+        if _r.get("orca_sha256") and _r["orca_sha256"] != _new_sha:
+            sys.exit("⛔ 이 묶음의 receipt(%s)는 다른 ORCA(%s…)로 돌았다 — 그 위에 새 ORCA(%s…) "
+                     "증서를 얹지 않는다 (회신 Z P1). 묶음을 다시 만들 것."
+                     % (_r.get("job"), _r["orca_sha256"][:12], _new_sha[:12]))
+_ps = json.load(open(psj, encoding="utf-8")) if psj and os.path.isfile(psj) else {}
+plots_smoke = {
+ "inp_sha256": h(os.path.join(lc, "w3.inp")) if os.path.isfile(os.path.join(lc, "w3.inp")) else None,
+ "out_sha256": h(os.path.join(lc, "w3.out")) if os.path.isfile(os.path.join(lc, "w3.out")) else None,
+ "cube_sha256": h(os.path.join(lc, "w3_spin.cube")) if os.path.isfile(os.path.join(lc, "w3_spin.cube")) else None,
+ "calib_json_sha256": h(psj) if psj and os.path.isfile(psj) else None,
+ "tool_sha256": _ps.get("tool_sha256"),
+ "int_signed_e": _ps.get("int_signed_e"),
+ "qc_ok": bool((_ps.get("qc") or {}).get("ok", False)),
+ "qc_flags": (_ps.get("qc") or {}).get("flags"),
+ "grid_n": _ps.get("grid_n"), "grid_spacing_max_A": _ps.get("grid_spacing_max_A"),
+ "minmax_unit": psu,
+ "⛔_무엇을_증명하나": ("이 설치본에서 `%plots SpinDens` 가 Gaussian cube 를 내고, min/max 를 어느 단위로 "
+                        "읽으며, 우리 calibration 도구가 그 cube 를 끝까지 읽어 ∫Δρ = 홀전자수 · QC 통과를 "
+                        "낸다는 것 (회신 Z P0-1). 200원자 cube 의 물리는 보증하지 않는다."),
+}
 try:
     ver = subprocess.run([orca], capture_output=True, text=True, timeout=60).stdout
     ver = next((l.strip() for l in ver.splitlines() if "Program Version" in l), "?")
@@ -8036,8 +8638,10 @@ json.dump({
                         "L2 가 돈다** ⓓ 우리 파서 둘이 그 **L2 출력**을 읽는다. "
                         "물리·수렴은 보증하지 않는다 (회신 V P0-3 · W P0-4)."),
  "mopop_parsed": mp == "true", "mos_parsed": mm == "true",
+ "plots_smoke": plots_smoke,                       # 회신 Z P0-1
 }, open(os.path.join(d, "LOCCHECK_PASS.json"), "w"), indent=1, ensure_ascii=False)
-print("  → LOCCHECK_PASS.json (suffix %s · 파서 인구=%s 계수=%s)" % (suf, mp, mm))
+print("  → LOCCHECK_PASS.json (suffix %s · 파서 인구=%s 계수=%s · plots ∫Δρ=%s 단위=%s)"
+      % (suf, mp, mm, plots_smoke.get("int_signed_e"), psu))
 PYCERT
       echo "다음: bash run_pilot.sh L"
     else
@@ -8186,7 +8790,10 @@ if n:
     man["⚠_loc_suffix_변경"] = (
         "loccheck 실측 suffix 가 %r 라 생성 시 가정 %r 과 달라 L2 입력 %d개의 "
         "`%%moinp` 를 고쳤다 (회신 V P0-3). 정본 대비 이 한 줄이 다르다." % (suf, old, n))
-json.dump(man, open(man_p, "w"), indent=1, ensure_ascii=False)
+# 회신 Z P1 — manifest 도 임시 파일 → 원자적 교체 (반쯤 쓰인 manifest 를 남기지 않는다)
+with open(man_p + ".tmp", "w", encoding="utf-8") as _mf:
+    json.dump(man, _mf, indent=1, ensure_ascii=False)
+os.replace(man_p + ".tmp", man_p)
 print("  ✔ loc suffix = %s (L2 입력 %d개 수정%s)"
       % (suf, n, "" if n else " — 가정과 같아 손대지 않음"))
 PYL2
@@ -8408,8 +9015,17 @@ def main():
         if _pc is None:
             print("⛔ %s — phase S 를 열지 않는다 (회신 Y P0-4)" % _pw)
             return 2
-        print("  ✔ probe 증서 유효 (%s · 개입 %s건 · S0P 지문 %s…)"
-              % (_pc.get("at"), _pc.get("n_intervened"), str(_pc.get("s0p_digest"))[:12]))
+        # ⛔ 회신 Z P1 — 증서를 **신뢰하지 않고** 판정을 다시 계산한다 (probe 출력 판독은 공짜다).
+        #   증서는 "그때 block 이 없었다" 의 기록이고, 지금도 없어야 S 를 연다.
+        _pv_now = pilot_probe_verdict(a.polaron_require_probe_pass, check_prereg=False)
+        if _pv_now["blocks"]:
+            print("⛔ probe 판정을 다시 계산하니 block 이 있다 — 증서가 있어도 S 를 열지 않는다 "
+                  "(회신 Z P1):")
+            for _b in _pv_now["blocks"][:6]:
+                print("   · %s" % _b)
+            return 2
+        print("  ✔ probe 증서 유효 + 재계산 block 0 (%s · 개입 %s건 · S0P 지문 %s…)"
+              % (_pc.get("at"), _pv_now.get("n_intervened"), str(_pc.get("s0p_digest"))[:12]))
         return 0
     if a.polaron_preflight:
         # ⛔⛔ 회신 X P0-3 — 비용이 발생하는 지점이 사전등록을 봐야 한다.

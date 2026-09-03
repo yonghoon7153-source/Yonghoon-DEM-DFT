@@ -103,7 +103,7 @@ def read_cube(path):
         elif len(w) == 4:
             _xyz = w[1:4]
         else:
-            raise SystemExit("⛔ cube 원자 줄을 못 읽는다 (%d칸): %r" % (len(w), ln))
+            raise SystemExit("⛔ cube 원자 줄을 못 읽는다 (%d칸): %r" % (len(w), L[6 + i]))
         at.append({"Z": z, "sym": Z2SYM.get(z, "X"),
                    "xyz": [float(x) * BOHR_A for x in _xyz]})
     data = []
@@ -120,10 +120,16 @@ def read_cube(path):
     det = (a[0] * (b[1] * c[2] - b[2] * c[1])
            - a[1] * (b[0] * c[2] - b[2] * c[0])
            + a[2] * (b[0] * c[1] - b[1] * c[0]))
-    dv = abs(det) * BOHR_A ** 3
-    return {"n": n, "origin": [x * BOHR_A for x in org],
+    # ⛔⛔ 회신 Z P0-1 (2026-09-03) — **단위.** Gaussian cube 의 값은 e/bohr³ 이다. 종전엔
+    #   dV 를 Å³ 로 바꿔 곱해 ∫Δρ 가 0.529³ = 0.148 배로 나왔고, NORM_OFF 가 모든 실물
+    #   cube 에서 발동할 판이었다 (F 는 비라 안 틀렸지만 절대 적분·QC 가 전부 틀렸다).
+    #   selftest 가 못 잡은 이유: 픽스처가 무차원 값 × Å 좌표라 틀린 규약과 자기일관적이었다.
+    #   ⇒ 적분은 **bohr³** 로 한다 (값 e/bohr³ × bohr³ = e). Å³ 는 참고로만 남긴다.
+    dv_b = abs(det)
+    return {"n": n, "origin": [x * BOHR_A for x in org], "origin_bohr": list(org),
             "vec": [[y * BOHR_A for y in v] for v in vec],
-            "atoms": at, "data": data, "dV_A3": dv}
+            "vec_bohr": [list(v) for v in vec],
+            "atoms": at, "data": data, "dV_bohr3": dv_b, "dV_A3": dv_b * BOHR_A ** 3}
 
 
 def _becke_s(mu, k=3):
@@ -244,7 +250,7 @@ def partition_forms(cube, groups, min_points=8000, progress=False, use_numpy=Tru
                 raise SystemExit("⛔ 원자 %d·%d 가 0.3 Å 안에 겹쳐 있다 — Becke 분할이 "
                                  "정의되지 않는다" % (i, j))
     org, vec, dat = cube["origin"], cube["vec"], cube["data"]
-    dv = cube["dV_A3"]
+    dv = cube["dV_bohr3"]                  # ⛔ 회신 Z P0-1 — 값이 e/bohr³ 라 bohr³ 로 적분한다
     spacing = [math.sqrt(sum(c * c for c in v)) for v in vec]
     aij = _becke_aij(rad)
 
@@ -346,14 +352,18 @@ def partition_forms(cube, groups, min_points=8000, progress=False, use_numpy=Tru
         "schema": "spin_partition_calib/v2",
         "weight_family": "becke_1988_size_adjusted_k3",
         "backend": backend,
-        "n_grid_points": npts, "dV_A3": dv, "n_atoms": nat,
+        "n_grid_points": npts, "dV_bohr3": dv, "dV_A3": cube["dV_A3"], "n_atoms": nat,
         "grid_spacing_A": spacing, "grid_spacing_max_A": max(spacing),
+        "grid_origin_bohr": cube.get("origin_bohr"), "grid_n": list(n),
         "F_out": F_out, "F_in": F_in,
         "delta_F": {g: F_in[g] - F_out[g] for g in groups},
         "max_abs_delta_F": max(abs(F_in[g] - F_out[g]) for g in groups),
-        "abs_total_out_eA3": out_den,       # Σ_A |∫ w_A Δρ|
-        "abs_total_in_eA3": tot_abs,        # ∫ |Δρ|
-        "int_signed_e": tot_signed,         # ∫ Δρ  (= n_unpaired 여야 한다)
+        # 원자별 벡터 — 소비자가 **다른 분할(strict·ring)의 F 를 재계산**할 수 있게 (회신 Z P1)
+        "s_signed_e": s_signed,             # ∫ w_A Δρ    [e]  (부호 있음)
+        "w_abs_e": w_abs,                   # ∫ w_A |Δρ|  [e]
+        "abs_total_out_e": out_den,         # Σ_A |∫ w_A Δρ|  [e]
+        "abs_total_in_e": tot_abs,          # ∫ |Δρ|           [e]
+        "int_signed_e": tot_signed,         # ∫ Δρ  [e] (= n_unpaired 여야 한다)
         "cancellation_ratio": out_den / tot_abs,
         "qc": {"ok": not flags, "flags": flags,
                "boundary_max_rel": b_rel,
@@ -471,9 +481,9 @@ def selftest():
         "⛔음성 (회신 X P0-1 그 상황): 한 원자 안에서 α·β 가 상쇄되면 "
         "population 형의 분모가 **무너진다** — ratio %.4f ≪ 1"
         % r2["cancellation_ratio"])
-    chk(r2["abs_total_in_eA3"] > r2["abs_total_out_eA3"],
+    chk(r2["abs_total_in_e"] > r2["abs_total_out_e"],
         "⛔음성: ∫|Δρ| > Σ|∫wΔρ| 가 실제로 성립한다 (삼각부등식 · %.4f > %.4f)"
-        % (r2["abs_total_in_eA3"], r2["abs_total_out_eA3"]))
+        % (r2["abs_total_in_e"], r2["abs_total_out_e"]))
     chk(r1["cancellation_ratio"] - r2["cancellation_ratio"] > 0.5,
         "⛔음성: 같은 격자·같은 가중치인데 **부호 배치만** 바꿔 비가 크게 갈린다 "
         "— 차이의 원인이 절댓값 위치임이 분리된다 (%.3f → %.3f)"
@@ -592,6 +602,29 @@ def selftest():
         % _rnorm["int_signed_e"])
     chk(_rn["qc"]["uniform_fallback_mass_frac"] == 0.0,
         "정상 cube 에서 균등 대체(죽은 점) 질량은 0 이다 — 값이 기록된다")
+
+    # ══ 회신 Z P0-1 (2026-09-03) — **단위: 실제 1 e 가 1 로 적분되나** ═══════════
+    #  종전 픽스처는 무차원 값 × Å 좌표라 틀린 규약과 자기일관적이었다. 여기서는 cube 규약
+    #  그대로(값 e/bohr³ · 격자 bohr)로 **정규화된 1 e 가우시안**을 넣고 ∫Δρ = 1 을 요구한다.
+    _sg = 0.40                                             # Å
+    _cx = _Lbox / 2
+    _norm_A3 = (2 * math.pi * _sg * _sg) ** -1.5           # e/Å³
+    p7 = os.path.join(td, "one_electron.cube")
+    mkcube(p7, [(6, *A1), (6, *A2)], N, DX,
+           lambda x, y, z: _norm_A3 * BOHR_A ** 3          # e/Å³ → e/bohr³
+           * math.exp(-((x - _cx) ** 2 + (y - _cx) ** 2 + (z - _cx) ** 2) / (2 * _sg * _sg)))
+    _r7 = partition_forms(read_cube(p7), g, min_points=1000, n_unpaired=1, max_spacing_A=1.0)
+    chk(abs(_r7["int_signed_e"] - 1.0) < 0.02 and _r7["qc"]["ok"],
+        "⛔ Z P0-1: 정규화된 1 e 가우시안(e/bohr³ · bohr 격자)이 **1.00 e 로 적분**된다 "
+        "(∫Δρ = %.4f · NORM_OFF 없음) — 종전엔 0.148 이 나와 모든 실물 cube 가 QC 에 걸렸다"
+        % _r7["int_signed_e"])
+    chk(abs(_r7["abs_total_in_e"] - 1.0) < 0.02 and 0.98 < _r7["cancellation_ratio"] <= 1.0,
+        "Z P0-1: ∫|Δρ| 도 e 단위로 1 (%.4f) — 필드 이름이 단위를 말한다 (…_e)"
+        % _r7["abs_total_in_e"])
+    chk(len(_r7["s_signed_e"]) == 2 and len(_r7["w_abs_e"]) == 2
+        and abs(sum(_r7["w_abs_e"]) - _r7["abs_total_in_e"]) < 1e-9,
+        "Z P1: 원자별 벡터(s_signed_e · w_abs_e)를 산출물에 낸다 — 소비자가 strict/ring 분할의 "
+        "F 를 재계산할 수 있다")
 
     print("selftest: %d 통과 / %d 실패" % (n_ok[0], n_bad[0]))
     return 1 if n_bad[0] else 0
