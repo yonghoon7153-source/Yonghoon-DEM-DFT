@@ -2390,6 +2390,91 @@ def selftest():
         "⛔음성 U P0-2: 원자 index 가 계 크기를 넘으면 판독 실패로 본다")
     chk("Print[P_MOs] 1" in PIL_MOPOP_KW,
         "회신 U P0-2: 입력이 실제로 MO 계수를 찍게 한다 (없으면 seed 생성이 멈춘다)")
+
+    # ── 2026-09-04 내부 P0 — 국재 궤도 출처 교체 (L2 폐기) ──────────────────────
+    _lmo_ok = ("                    LOCALIZED MOLECULAR ORBITAL COMPOSITIONS\n"
+               "\nThe Mulliken populations for each LMO on each atom are computed\n"
+               "FOUND  -   2 strongly local MO`s\n"
+               "       -   1 two center bond MO`s\n"
+               "       -   0 significantly delocalized MO`s\n"
+               "\nRather strongly localized orbitals:\n"
+               "MO 210: 113O  -   1.003571\n"
+               "MO 165:  73S  -   1.029535\n"
+               "Bond-like localized orbitals:\n"
+               "MO 480: 198H  -   0.415971  and  64C  -   0.575192\n")
+    _lc = pil_parse_lmo_comp(_lmo_ok)
+    chk(_lc is not None and _lc["n_mo"] == 3 and _lc["n_deloc"] == 0
+        and abs(_lc["pops"][210][113] - 100.3571) < 1e-6
+        and abs(_lc["pops"][480][198] - 41.5971) < 1e-6
+        and abs(_lc["pops"][480][64] - 57.5192) < 1e-6,
+        "2026-09-04: 국재 조성 블록을 읽는다 (단중심 + 이중심 · ×100)")
+    chk(pil_parse_lmo_comp("아무 관계 없는 출력") is None,
+        "⛔음성: 국재 조성 블록이 없으면 None — 정준 인구로 대신하지 않는다")
+    chk(pil_parse_lmo_comp(_lmo_ok.replace("0 significantly", "3 significantly")) is None,
+        "⛔음성 fail-closed: `significantly delocalized` 가 0 이 아니면 막는다 "
+        "(≤2원자 표현이 성립하지 않아 목표집합 가중치가 무의미해진다)")
+    chk(pil_parse_lmo_comp(_lmo_ok.replace("2 strongly local", "9 strongly local")) is None,
+        "⛔음성 부분판독: 선언 개수(9+1)와 실제 판독(3)이 다르면 막는다")
+    chk(pil_parse_lmo_comp(_lmo_ok.replace("FOUND", "XXXXX")
+                           .replace("- 1 two center", "- 1 xx center")
+                           .replace("0 significantly delocalized", "x")) is None,
+        "⛔음성: FOUND 요약을 못 세면 막는다 (개수 대조를 건너뛰지 않는다)")
+    # ⛔⛔ 이게 이 교체의 핵심 위험이다 — L2 의 정준 인구를 국재로 착각하면 안 된다.
+    chk(pil_parse_lmo_comp(_real if "_real" in dir() else "") is None,
+        "⛔음성: `LOEWDIN ORBITAL POPULATIONS PER MO` 실물을 넣어도 국재 파서는 "
+        "아무것도 돌려주지 않는다 (두 블록을 섞지 않는다)")
+
+    _mold = ("[Molden Format]\n[Title]\n test\n\n[Atoms] AU\n"
+             "O    1   8   0.0 0.0 0.0\nC    2   6   0.0 0.0 2.0\n\n[GTO]\n"
+             "  1 0\n s    1 1.00\n   1.0 1.0\n p    1 1.00\n   1.0 1.0\n"
+             " p    1 1.00\n   0.5 1.0\n\n"
+             "  2 0\n s    1 1.00\n   1.0 1.0\n p    1 1.00\n   1.0 1.0\n\n"
+             "[5D]\n[7F]\n[MO]\n Sym= 1a\n Ene= -1.0\n Spin= Alpha\n Occup= 2.0\n"
+             "   1   0.90\n   2   0.10\n   3   0.20\n   4   0.30\n   5   0.40\n"
+             "   6   0.50\n   7   0.60\n   8   0.05\n   9   0.06\n  10   0.07\n"
+             "  11   0.08\n Sym= 2a\n Ene= -0.5\n Spin= Alpha\n Occup= 2.0\n"
+             "   1   0.01\n   5   0.02\n   9   0.03\n")
+    _md = Path(tempfile.mkdtemp()) / "t.molden.input"
+    _md.write_text(_mold)
+    _mo = pil_parse_molden(_md, 2)
+    chk(_mo is not None and abs(_mo[0][0][0]["1s"] - 0.90) < 1e-9
+        and abs(_mo[0][0][0]["2pz"] - 0.60) < 1e-9
+        and abs(_mo[0][0][1]["1px"] - 0.06) < 1e-9 and _mo[1][0] == 2.0,
+        "2026-09-04: Molden 국재 계수를 `{mo:{atom:{껍질라벨:계수}}}` 로 읽는다")
+    chk(_pil_ao_shell("1px")[2] != _pil_ao_shell("2px")[2],
+        "⛔ 껍질 번호가 있어야 1p 와 2p 가 **다른 벡터**로 남는다 "
+        "(합쳐지면 `pil_p_matrix` 의 회전 공변이 깨진다)")
+    chk(pil_parse_molden(_md, 2, keep={1}) is not None
+        and set(pil_parse_molden(_md, 2, keep={1})[0]) == {1},
+        "keep 으로 필요한 MO 만 담는다 (2867² 계수를 다 들지 않는다)")
+    chk(pil_parse_molden(_md, 1) is None,
+        "⛔음성: 원자 index 가 계 크기를 넘으면 판독 실패로 본다")
+    _md2 = _md.parent / "cart.molden.input"
+    _md2.write_text(_mold.replace("[5D]\n[7F]\n", "[6D]\n[10F]\n"))
+    chk(pil_parse_molden(_md2, 2) is None,
+        "⛔음성: 카테시안(6D/10F)이면 성분 정렬이 달라 **조용히 틀린다** — 막는다")
+    _md3 = _md.parent / "nomark.molden.input"
+    _md3.write_text(_mold.replace("[5D]\n[7F]\n", ""))
+    chk(pil_parse_molden(_md3, 2) is None,
+        "⛔음성: 구면/카테시안 표지가 없으면 성분 수를 가정해야 하므로 막는다")
+    _md4 = _md.parent / "bad.molden.input"
+    _md4.write_text(_mold.replace("  11   0.08", "  99   0.08"))
+    chk(pil_parse_molden(_md4, 2) is None,
+        "⛔음성: AO 번호가 [GTO] 로 만든 AO 목록을 넘으면 정렬이 어긋난 것 — 막는다")
+    _md5 = _md.parent / "nohdr.molden.input"
+    _md5.write_text(_mold.replace("[Molden Format]", "[Something Else]"))
+    chk(pil_parse_molden(_md5, 2) is None,
+        "⛔음성: Molden 헤더가 없으면 읽지 않는다")
+    chk(pil_parse_molden(_md.parent / "없는파일.molden.input", 2) is None,
+        "⛔음성: 파일이 없으면 None (부르는 쪽이 사유와 함께 막는다)")
+    _pp = pil_coef_to_pseudo_pop({0: {"2pz": 0.5}})
+    chk(abs(_pp[0]["2pz"] - 25.0) < 1e-9,
+        "c² 대용 인구 — ⚠ 인구가 **아니다**(겹침 무시). 비율로만 쓴다")
+    chk("겹침" in (pil_coef_to_pseudo_pop.__doc__ or ""),
+        "도구 docstring 이 '이 값이 인구가 아니다' 를 명시한다 (한계 은폐 금지)")
+    chk("보존하지 못한다" in (pil_parse_lmo_comp.__doc__ or "")
+        and "Mulliken" in (pil_parse_lmo_comp.__doc__ or ""),
+        "docstring 이 L2 무효 사유와 분할 변경(Löwdin→Mulliken)을 둘 다 적는다")
     # sulfonate seed — O 위 nonbonding 인가
     _so_sym = ["S", "O", "O", "O"]
     _so_pos = [[0, 0, 0], [1, 0, 0], [0, 1, 0], [0, 0, 1]]
@@ -5487,6 +5572,53 @@ def pil_loc_file(dirp, tag, cert=None):
     return None, None
 
 
+def pil_loc_molden(dirp, tag, locf=None, orca=None):
+    """`.loc` → `<tag>_loc.molden.input` 경로. 없으면 `orca_2mkl` 로 만든다.
+
+    → Path (만들지 못했으면 존재하지 않는 경로를 그대로 돌려준다 — 부르는 쪽이 막는다)
+
+    왜 필요한가: 국재 MO **계수**는 `.loc` 바이너리 안에만 있다. phase L 출력의
+    `MOLECULAR ORBITALS` 는 국재화 **앞**에서 찍혀 정준이고(실측 줄번호 2,329 vs
+    1,713,348), phase L2 는 그 궤도를 정준으로 되돌린다. 회신 U P0-2 가 요구한
+    회전불변 π 판정에는 계수가 필수이므로 우회로가 없다.
+
+    ⛔ 이 함수가 **못 하는 것**
+      · Molden 이 국재 궤도인지 검증하지 않는다 — `.loc` 를 넣었다는 것만 보장한다.
+        (참고: `Ene=` 로는 못 가른다. ORCA 가 계수만 바꾸고 에너지는 물려준다.)
+      · `orca_2mkl` 이 없거나 실패하면 **조용히 넘어가지 않는다** — 파일이 안 생기고
+        부르는 쪽의 `pil_parse_molden` 이 None 을 받아 막는다.
+      · 낡은 Molden 을 지우지 않는다. `.loc` 가 더 새로우면 다시 만든다(mtime 비교).
+    """
+    d = Path(dirp)
+    if locf is None:
+        locf, _ = pil_loc_file(d, tag)
+    out = d / (tag + "_loc.molden.input")
+    if locf is None:
+        return out
+    if out.is_file() and out.stat().st_mtime >= Path(locf).stat().st_mtime:
+        return out
+    orca = orca or os.environ.get("PIL_RUNNER_ORCA") or ""
+    o2m = str(Path(orca).parent / "orca_2mkl") if orca else "orca_2mkl"
+    base = d / (tag + "_loc")
+    gbw = Path(str(base) + ".gbw")
+    try:
+        if not gbw.is_file():
+            # `.loc` 는 127 MB 급이다 — 하드링크 → 심링크 → 복사 순으로 아낀다
+            try:
+                os.link(str(locf), str(gbw))
+            except OSError:
+                try:
+                    os.symlink(str(Path(locf).resolve()), str(gbw))
+                except OSError:
+                    gbw.write_bytes(Path(locf).read_bytes())
+        subprocess.run([o2m, str(base), "-molden"], check=True,
+                       stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL,
+                       timeout=1800)
+    except Exception:                                            # noqa: BLE001
+        pass                       # 파일이 안 생기면 부르는 쪽이 사유와 함께 막는다
+    return out
+
+
 def pil_read_loccheck(d):
     """`LOCCHECK_PASS.json` 증서를 읽고 **내용까지** 본다. → (cert, 사유).
 
@@ -6025,6 +6157,230 @@ def _pil_ao_axis(label):
     return "p", ax
 
 
+#: ⛔⛔ 2026-09-04 내부 P0 — **국재 궤도는 phase L2 로 회수할 수 없다.**
+#:   실측(L_dminus, 199원자 · r2SCAN-3c · gabia):
+#:     · phase L 출력의 `MOLECULAR ORBITALS`(2,329줄) 와
+#:       `LOEWDIN ORBITAL POPULATIONS PER MO`(1,378,227줄) 는 둘 다
+#:       `ORCA ORBITAL LOCALIZATION`(1,713,348줄) **앞**에서 찍힌다 ⇒ 정준이다.
+#:     · phase L2 의 `MORead + NoIter` 는 국재화를 **보존하지 못한다** — ORCA SCF 가
+#:       Fock 을 한 번 대각화하므로 읽어온 국재 궤도가 정준으로 되돌아간다.
+#:       `GuessMode CMatrix` 는 기저 사상만 통제하지 대각화를 막지 않는다.
+#:   증거 셋:
+#:     ⓐ 국재 표라면 49개여야 할 `단일원자 ≥95%` 가 L 0건 · L2 0건.
+#:     ⓑ L2 의 MO 상위원자는 국재화 보고서와 **원자는 맞고 인구가 4~6%** 다
+#:        (순서는 읽었으나 밀도가 정준으로 퍼졌다는 뜻).
+#:     ⓒ `.loc` 를 `orca_2mkl -molden` 으로 뽑아 participation ratio 를 재면
+#:        국재 5.9/4.7/6.2/9.2 vs 정준 93.8/50.5/98.6/21.0 (MO 200/300/400/480).
+#:   ⇒ 국재 궤도는 ⓐ 텍스트로는 `LOCALIZED MOLECULAR ORBITAL COMPOSITIONS` 블록
+#:     (Mulliken · MO 당 1~2 원자) ⓑ 계수는 `.loc` → Molden 에서만 나온다.
+#:   ⚠ 이 교체는 **규칙을 바꾸는 것이 아니다** — 사전등록이 요구한 "국재 궤도의 인구"
+#:     를 그것이 실제로 들어 있는 산출물에서 읽도록 출처를 옮기는 것이다.
+#:     분할이 Löwdin → Mulliken 으로 바뀌는 것은 별건이며 사전등록에 선언한다.
+PIL_LMO_HDR = "LOCALIZED MOLECULAR ORBITAL COMPOSITIONS"
+
+
+def pil_parse_lmo_comp(text):
+    """ORCA `%loc` 뒤의 국재 궤도 조성 블록 → 국재 MO 인구.
+
+    → {"pops": {mo: {atom: 백분율}}, "n_local", "n_bond", "n_deloc", "n_mo"}
+      또는 None (블록 없음 · 판독 실패 · delocalized 존재)
+
+    실물 형식 (ORCA 6.1.1)::
+
+        Rather strongly localized orbitals:
+        MO 165:  73S  -   1.029535
+        Bond-like localized orbitals:
+        MO 480: 198H  -   0.415971  and  64C  -   0.575192
+
+    ⚠ **왜 이 블록이어야 하나** — phase L2(`MORead + NoIter`)는 국재화를
+      **보존하지 못한다**(ORCA SCF 가 Fock 을 한 번 대각화한다). phase L 의
+      `LOEWDIN ORBITAL POPULATIONS PER MO` 는 국재화 **앞**에서 찍혀 정준이다.
+      ⇒ 국재 궤도 인구를 담은 텍스트는 이 블록뿐이다 (실측 근거는 `PIL_LMO_HDR` 주석).
+
+    ⛔ 이 함수가 **못 하는 것**
+      · **Löwdin 이 아니라 Mulliken** 이다. `pil_parse_mopop` 과 분할이 다르므로
+        같은 문턱을 그대로 쓰려면 사전등록에 선언해야 한다.
+      · MO 당 **최대 2원자**만 준다. 목표 집합 가중치는 따라서 **하한**이고
+        (나머지 ≤15% 의 소재를 이 블록은 말하지 않는다) 문턱 판정이 보수적이 된다 —
+        통과시킨 seed 는 진짜 값도 그 이상이지만, **탈락시킨 seed 가 진짜로도
+        미달인지는 이 블록만으로 말할 수 없다.**
+      · `significantly delocalized` 가 1개라도 있으면 ≤2원자 표현이 성립하지 않는다
+        ⇒ **None 으로 막는다** (fail-closed). 부분 판독으로 seed 를 만들지 않는다.
+      · AO 라벨이 없다 — π/σ 성격은 여기서 판정 **불가**. 계수(Molden)가 있어야 한다.
+      · 인구가 1.0 을 넘을 수 있다 (Mulliken). 정규화하지 않고 그대로 ×100 한다.
+    """
+    if PIL_LMO_HDR not in text:
+        return None
+    seg = text.split(PIL_LMO_HDR)[-1]
+    for stop in ("Timings for individual modules", "ORCA TERMINATED NORMALLY",
+                 "Sum of individual times"):
+        if stop in seg:
+            seg = seg.split(stop)[0]
+    n_local = n_bond = n_deloc = None
+    m = re.search(r"FOUND\s*-\s*(\d+)\s+strongly local", seg)
+    if m:
+        n_local = int(m.group(1))
+    m = re.search(r"-\s*(\d+)\s+two center bond", seg)
+    if m:
+        n_bond = int(m.group(1))
+    m = re.search(r"-\s*(\d+)\s+significantly delocalized", seg)
+    if m:
+        n_deloc = int(m.group(1))
+    if n_deloc is None or n_deloc > 0:
+        return None                      # 셀 수 없거나 비편재가 있으면 쓰지 않는다
+    pops = {}
+    pat = re.compile(
+        r"^MO\s+(\d+):\s*(\d+)([A-Za-z]{1,2})\s*-\s*(-?\d+\.\d+)"
+        r"(?:\s+and\s+(\d+)([A-Za-z]{1,2})\s*-\s*(-?\d+\.\d+))?\s*$")
+    for ln in seg.splitlines():
+        mm = pat.match(ln.strip())
+        if not mm:
+            continue
+        mo = int(mm.group(1))
+        d = pops.setdefault(mo, {})
+        d[int(mm.group(2))] = d.get(int(mm.group(2)), 0.0) + float(mm.group(4)) * 100.0
+        if mm.group(5) is not None:
+            a2 = int(mm.group(5))
+            d[a2] = d.get(a2, 0.0) + float(mm.group(7)) * 100.0
+    if not pops:
+        return None
+    # 선언한 개수와 실제 판독 줄 수가 다르면 부분 판독이다 — 막는다
+    if n_local is not None and n_bond is not None and len(pops) != n_local + n_bond:
+        return None
+    return {"pops": pops, "n_local": n_local, "n_bond": n_bond,
+            "n_deloc": n_deloc, "n_mo": len(pops)}
+
+
+#: Molden 껍질별 성분 순서 (표준). d/f 는 축 분해를 쓰지 않으므로 이름만 구분한다.
+PIL_MOLDEN_COMP = {
+    "s": ["s"],
+    "p": ["px", "py", "pz"],
+    "sp": ["s", "px", "py", "pz"],
+    "d": ["dz2", "dxz", "dyz", "dx2y2", "dxy"],
+    "f": ["f0", "f1p", "f1m", "f2p", "f2m", "f3p", "f3m"],
+    "g": ["g0", "g1p", "g1m", "g2p", "g2m", "g3p", "g3m", "g4p", "g4m"],
+}
+#: 이 값보다 작은 계수는 버린다 (메모리). ORCA 텍스트 인쇄 threshold 와 같은 성격이고
+#: `pil_p_matrix` 는 비율만 쓰므로 판정을 바꾸지 않는다.
+PIL_MOLDEN_CMIN = 1.0e-4
+
+
+def pil_parse_molden(path, nat, keep=None, cmin=PIL_MOLDEN_CMIN):
+    """`orca_2mkl -molden` 산출 Molden → (coefs, occ, ener) 또는 None.
+
+    `coefs[mo][atom] = {껍질라벨: 계수}` — `pil_parse_mos` 와 **같은 모양**이라
+    `pil_mo_character` / `pil_p_matrix` 에 그대로 넣을 수 있다.
+    라벨은 `1s`·`2s`·`1px`·`2px`… 처럼 **원자·각운동량별 껍질 번호**를 붙인다
+    (`_pil_ao_shell` 이 `npr + l` 로 껍질을 가르므로 번호가 없으면 2p 와 3p 가
+    한 벡터로 합쳐져 회전 공변이 깨진다).
+
+    `keep` 이 주어지면 그 MO 인덱스(0-based)만 담는다 — 2867² 계수를 다 들면
+    수백 MB 다.
+
+    ⛔ 이 함수가 **못 하는 것**
+      · 정준/국재를 스스로 구분하지 않는다. `.loc` 를 넣었는지는 **부르는 쪽**이 안다.
+      · 겹침 행렬을 읽지 않는다 — 계수는 `CᵀSC=1` 이라 c² 는 인구가 아니다.
+        `pil_mo_character` 의 `ao_mo` 로 c² 를 넣을 때 그 사실이 따라붙는다.
+      · 카테시안 d(6D)/f(10F) 를 구분하지 않는다 — 성분 수가 다르면 **정렬이 어긋나
+        조용히 틀린다**. 그래서 `[5D]`/`[7F]` 표지를 요구하고 없으면 막는다.
+      · 원자 순서가 xyz 와 같은지 검증하지 않는다 (부르는 쪽이 원소로 대조한다).
+    """
+    p = Path(path)
+    if not p.is_file():
+        return None
+    with p.open(errors="replace") as _fh:
+        txt_head = _fh.read(200000)
+    if "[Molden Format]" not in txt_head:
+        return None
+    # ⛔ 구면/카테시안 표지 — 없으면 성분 수를 가정해야 하고 그건 조용한 오답이다
+    _sph = ("[5D]" in txt_head or "[5D7F]" in txt_head or "[5D10F]" in txt_head)
+    if ("[6D]" in txt_head) or not _sph:
+        return None
+    ao_atom, ao_lab = [], []             # AO 순서 → (원자 0-based, 라벨)
+    sec, cur_at, shn = None, None, {}
+    coefs, occ, ener = {}, {}, {}
+    mo = -1
+    keepset = None if keep is None else set(keep)
+    take = False
+    with p.open(errors="replace") as fh:
+        for line in fh:
+            s = line.strip()
+            if s.startswith("["):
+                low = s.lower()
+                if low.startswith("[gto]"):
+                    sec = "gto"
+                elif low.startswith("[mo]"):
+                    sec = "mo"
+                elif low.startswith("[atoms]"):
+                    sec = "atoms"
+                else:
+                    sec = None if sec != "mo" else "mo"
+                continue
+            if sec == "gto":
+                t = s.split()
+                if len(t) == 2 and t[0].isdigit() and t[1] == "0":
+                    cur_at = int(t[0]) - 1       # Molden 은 1-based
+                    shn = {}
+                    continue
+                if (len(t) == 3 and t[0].lower() in PIL_MOLDEN_COMP
+                        and t[1].isdigit() and cur_at is not None):
+                    l = t[0].lower()
+                    shn[l] = shn.get(l, 0) + 1
+                    for c in PIL_MOLDEN_COMP[l]:
+                        ao_atom.append(cur_at)
+                        ao_lab.append("%d%s" % (shn[l], c))
+                continue
+            if sec == "mo":
+                if s.startswith("Ene="):
+                    mo += 1
+                    take = (keepset is None or mo in keepset)
+                    try:
+                        ener[mo] = float(s.split("=", 1)[1])
+                    except ValueError:
+                        pass
+                    continue
+                if s.startswith("Occup="):
+                    try:
+                        occ[mo] = float(s.split("=", 1)[1])
+                    except ValueError:
+                        pass
+                    continue
+                if s.startswith("Sym=") or s.startswith("Spin="):
+                    continue
+                if not take or mo < 0:
+                    continue
+                t = s.split()
+                if len(t) != 2 or not t[0].isdigit():
+                    continue
+                try:
+                    c = float(t[1])
+                except ValueError:
+                    continue
+                if abs(c) < cmin:
+                    continue
+                k = int(t[0]) - 1                # Molden AO 번호는 1-based
+                if k < 0 or k >= len(ao_atom):
+                    return None                 # AO 정렬이 어긋났다 — 조용히 넘기지 않는다
+                coefs.setdefault(mo, {}).setdefault(ao_atom[k], {})[ao_lab[k]] = c
+    if not coefs or not ao_atom:
+        return None
+    if max(ao_atom) >= nat:
+        return None                             # 원자 수가 이 계와 다르다
+    return coefs, occ, ener
+
+
+def pil_coef_to_pseudo_pop(coef_mo, scale=100.0):
+    """국재 MO 계수 → `pil_mo_character` 의 `ao_mo` 자리에 넣을 **c² 대용 인구**.
+
+    ⛔ 이것은 인구가 **아니다.** `CᵀSC = 1` 이라 c² 는 겹침을 버린 값이다
+      (회신 V Q1 이 `vvᵀ` 에 대해 지적한 것과 같은 성격의 근사). 쓰는 곳은
+      `p_frac`·`O_frac` **비율** 뿐이고, π 통과 판정은 계수 기반
+      `pil_p_matrix` 가 따로 낸다. 절대 백분율로 인용하지 않는다.
+    """
+    return {ai: {lab: (float(c) ** 2) * scale for lab, c in d.items()}
+            for ai, d in (coef_mo or {}).items()}
+
+
 def pil_mo_character(ao_mo, group_idx, sym, pos, ring_idx=None, coef_mo=None):
     """⛔ 회신 T P0-2 — 고른 MO 가 **π(고리 법선 p)** 인가 · **O-nonbonding** 인가.
 
@@ -6476,32 +6832,48 @@ def pilot_seeds(d):
         loc_sha = _sha(locf)
         is_dm = tag == "L_dminus"
         nat_j = nat - (1 if is_dm else 0)
-        pr = pil_parse_mopop(txt, nat_j)
-        if pr is None:
-            raise SystemExit(
-                "⛔ %s 에서 MO 별 Löwdin 인구를 못 읽었다 — `%%output Print[P_OrbPopMO_L] 1` "
-                "이 실제로 찍혔는지 확인할 것 (seed 를 임의로 고르지 않는다)" % outp)
-        pops, occ, ener, aos = pr
-        # ⛔⛔ 회신 U P0-2 — π 판정은 **MO 계수**가 있어야 회전불변이다. 대각 인구만
-        #   있으면 통과를 줄 수 없다(상한으로 기각만 가능). 여기서 미리 막는다 —
-        #   seed 를 다 만들어 놓고 성격 판정에서 전멸하는 것보다 낫다.
-        coefs = pil_parse_mos(txt, nat_j)
-        if coefs is None:
-            raise SystemExit(
-                "⛔ %s 에서 MO 계수를 못 읽었다 — `%%output Print[P_MOs] 1` 이 실제로 "
-                "찍혔는지 확인할 것.\n"
-                "   회신 U P0-2: 대각 Löwdin 인구만으로는 π 를 **회전불변**하게 판정할 "
-                "수 없다 (종전 식은 대각 법선에서 1/3 로 무너져 완전한 π 를 탈락시켰다)."
-                % outp)
-        # ⛔⛔ 회신 U P0-4 — 코어 배제를 **국재 MO 에너지로 하지 않는다.** 국재 궤도에는
-        #   잘 정의된 궤도 에너지가 없다 (ORCA 문서 명시). 국재화 **전**의 canonical
-        #   `ORBITAL ENERGIES` 로 창을 세고, AO 성격을 두 번째 그물로 쓴다.
+        # ⛔⛔ 2026-09-04 출처 교체 (내부 P0) — 국재 궤도 인구·계수는 **L2 에 없다.**
+        #   근거는 `PIL_LMO_HDR` 위 주석(실측 3건). L2 출력(`txt`)은 계보·결정론·
+        #   `GuessMode CMatrix` 검사에만 쓰고, 궤도 자체는 phase L 산출물에서 읽는다.
         _srct = src_jk.rsplit("/", 1)[-1]
         _srco = src / (_srct + ".out")
         if not _srco.is_file():
-            raise SystemExit("⛔ %s 가 없다 — 국재화 **전** canonical 궤도 에너지가 "
-                             "있어야 코어 창을 만든다 (회신 U P0-4)" % _srco)
-        _ec = pil_parse_orbital_energies(_srco.read_text(errors="replace"))
+            raise SystemExit("⛔ %s 가 없다 — phase L 출력 없이는 국재 궤도를 읽을 수 "
+                             "없다 (2026-09-04 출처 교체)" % _srco)
+        _srcxt = _srco.read_text(errors="replace")
+        _lc = pil_parse_lmo_comp(_srcxt)
+        if _lc is None:
+            raise SystemExit(
+                "⛔ %s 에서 `%s` 블록을 못 읽었다 (또는 `significantly delocalized` 가 "
+                "0 이 아니다). 국재 궤도 인구가 없으면 seed 를 만들지 않는다.\n"
+                "   ⚠ phase L2 의 `LOEWDIN ORBITAL POPULATIONS PER MO` 는 **정준**이다 — "
+                "그것으로 대신하지 않는다 (2026-09-04 실측)." % (_srco, PIL_LMO_HDR))
+        pops = _lc["pops"]
+        if max(max(d) for d in pops.values() if d) >= nat_j:
+            raise SystemExit("⛔ %s 의 국재 조성 원자 index 가 이 계의 원자수 %d 를 "
+                             "넘는다 — 프레임이 어긋났다" % (_srco, nat_j))
+        # 계수는 `.loc` → Molden 에서만 나온다 (π 판정은 계수가 있어야 한다 · 회신 U P0-2)
+        _mol = pil_loc_molden(src, tag, locf=locf)
+        _mp = pil_parse_molden(_mol, nat_j, keep=set(pops))
+        if _mp is None:
+            raise SystemExit(
+                "⛔ %s 를 읽지 못했다 — 국재 MO 계수가 없으면 π 성격을 **회전불변**하게 "
+                "판정할 수 없고, 확인 못 함은 통과가 아니다 (회신 U P0-2).\n"
+                "   만든 법: `orca_2mkl <base> -molden` (base.gbw = %s 의 복사본)"
+                % (_mol, locf))
+        coefs, occ, ener = _mp
+        # `ao_mo` 자리에는 c² 대용 인구를 넣는다 — **인구가 아니다**(겹침 무시).
+        #   쓰이는 곳은 p_frac·O_frac 비율뿐이고 π 통과는 계수로 낸다.
+        aos = {m: pil_coef_to_pseudo_pop(c) for m, c in coefs.items()}
+        for _m in pops:
+            occ.setdefault(_m, 2.0)          # `%loc OCC true VIRT false` — 전부 점유다
+        # ⛔⛔ 회신 U P0-4 — 코어 배제를 **국재 MO 에너지로 하지 않는다.** 국재 궤도에는
+        #   잘 정의된 궤도 에너지가 없다 (ORCA 문서 명시). 국재화 **전**의 canonical
+        #   `ORBITAL ENERGIES` 로 창을 세고, AO 성격을 두 번째 그물로 쓴다.
+        #   ⚠ 2026-09-04 실측이 이 조항을 다시 확인해 준다: `.loc` 를 Molden 으로 뽑으면
+        #     `Ene=` 가 정준 값 그대로 정렬돼 나온다 — ORCA 가 계수만 바꾸고 에너지
+        #     배열은 물려주기 때문이다. 그래서 `Ene=` 로는 국재/정준을 가릴 수도 없다.
+        _ec = pil_parse_orbital_energies(_srcxt)
         core_win, _cw_why = pil_core_window(_ec, PIL_LOC_TCORE_EH)
         if core_win is None:
             raise SystemExit(
@@ -6886,9 +7258,59 @@ def _pil_fixture_orca(out):
         return None
 
 
+def _pil_fake_lmocomp(entries, deloc=0):
+    """selftest 용 `LOCALIZED MOLECULAR ORBITAL COMPOSITIONS` 블록.
+
+    `entries` = [(mo, [(atom, sym, pop), ...]), ...] — 원자 1개면 strongly local,
+    2개면 bond-like. 실물(ORCA 6.1.1) 형식을 그대로 흉내낸다.
+    """
+    loc = [(mo, a) for mo, a in entries if len(a) == 1]
+    bnd = [(mo, a) for mo, a in entries if len(a) == 2]
+    t = ["                    " + PIL_LMO_HDR, "",
+         "The Mulliken populations for each LMO on each atom are computed",
+         "FOUND  -  %d strongly local MO`s" % len(loc),
+         "       - %d two center bond MO`s" % len(bnd),
+         "       -   %d significantly delocalized MO`s" % deloc, ""]
+    if loc:
+        t.append("Rather strongly localized orbitals:")
+        t += ["MO %d: %3d%s  -   %.6f" % (mo, a[0][0], a[0][1], a[0][2]) for mo, a in loc]
+    if bnd:
+        t.append("Bond-like localized orbitals:")
+        t += ["MO %d: %3d%s  -   %.6f  and  %d%s  -   %.6f"
+              % (mo, a[0][0], a[0][1], a[0][2], a[1][0], a[1][1], a[1][2])
+              for mo, a in bnd]
+    return "\n".join(t) + "\n"
+
+
+def _pil_fake_molden(nat, sym, mos, ener, occ, coef, nmo=None):
+    """selftest 용 Molden. 원자마다 s 1개 + p 2껍질 (AO 7개/원자).
+
+    `coef[mo][(atom, 라벨)] = 계수`. 라벨은 `1s`·`1px`…`2pz` 중 하나.
+    ⚠ 실물처럼 **MO 를 0부터 빠짐없이** 쓴다 — 파서가 `Ene=` 순서로 번호를 매기므로
+      건너뛰면 인덱스가 어긋난다 (이 픽스처가 그 계약을 지킨다).
+    """
+    labs = ["1s", "1px", "1py", "1pz", "2px", "2py", "2pz"]
+    t = ["[Molden Format]", "[Title]", " fake", "[Atoms] AU"]
+    t += [" %s  %d  %d   0.0 0.0 %.1f" % (sym[i], i + 1, 6, i * 2.0) for i in range(nat)]
+    t.append("[GTO]")
+    for i in range(nat):
+        t += ["  %d 0" % (i + 1), " s    1 1.00", "   1.0 1.0",
+              " p    1 1.00", "   1.0 1.0", " p    1 1.00", "   0.5 1.0", ""]
+    t += ["[5D]", "[7F]", "[MO]"]
+    top = nmo if nmo is not None else (max(mos) + 1)
+    for m in range(top):
+        t += [" Sym= %da" % (m + 1), " Ene= %.6f" % ener.get(m, 0.5),
+              " Spin= Alpha", " Occup= %.6f" % occ.get(m, 0.0)]
+        d = coef.get(m) or {(0, "1s"): 1.0e-6}
+        for (ai, lab), c in sorted(d.items()):
+            t.append("  %d   %.8f" % (ai * len(labs) + labs.index(lab) + 1, c))
+    return "\n".join(t) + "\n"
+
+
 def _pil_fake_phaseL(out, man, rand_mark=False, kill_guessmode=False, no_mopop=False,
                      sigma_ring=False, bad_term=False, no_mos=False, no_orbener=False,
                      kill_tcore=False, no_loccheck=False, loc_suffix=".loc",
+                     lmo_deloc=False,
                      loccheck_bad=None, drop_receipt=(), stale_loc=False,
                      stale_out=False, pre_patch_suffix=True):
     """selftest 용 phase L/L2 산출물(.loc/.out) 생성. 인자들이 **음성 경로**다."""
@@ -6944,11 +7366,34 @@ def _pil_fake_phaseL(out, man, rand_mark=False, kill_guessmode=False, no_mopop=F
         (out / jk / (tag + ".out")).write_text(txt)
         # ⛔ 회신 U P0-4 — phase L 의 **canonical** 출력. 코어 창을 여기서 센다.
         #   MO 0 만 −20 Eh 라 T_CORE(−3) 아래 = 창 1 → 국재 인쇄의 index 0 이 배제된다.
-        if not no_orbener:
-            (src / (tag + ".out")).write_text(
-                _pil_fake_orbener(ener, occ) + "ORCA TERMINATED NORMALLY\n")
-        else:
-            (src / (tag + ".out")).write_text("ORCA TERMINATED NORMALLY\n")
+        # ⛔⛔ 2026-09-04 — 국재 궤도(인구=조성 블록 · 계수=Molden)도 **여기**에 있다.
+        #   `no_mopop`/`no_mos` 는 이제 그 둘의 음성 경로다 (L2 는 어느 쪽도 못 준다).
+        _lt = "" if no_orbener else _pil_fake_orbener(ener, occ)
+        _rr0, _rr1 = rg[sorted(rg)[0]], rg[sorted(rg)[1]]
+        _oo = [i for i in su if str(sy[i]).upper() == "O"]
+        _ss = [i for i in su if str(sy[i]).upper() == "S"]
+        _ent = [
+            (0, [(_rr0[0], sy[_rr0[0]], 0.99)]),                       # 코어 — 창이 배제
+            (5, [(_rr0[0], sy[_rr0[0]], 0.48), (_rr0[1], sy[_rr0[1]], 0.50)]),
+            (6, [(_rr1[0], sy[_rr1[0]], 0.47), (_rr1[1], sy[_rr1[1]], 0.51)]),
+            (7, [(_oo[0], sy[_oo[0]], 0.98)]),                         # sulfonate O lone pair
+            (40, [(_rr0[0], sy[_rr0[0]], 0.99)]),                      # 가상 — occ 이 배제
+        ]
+        if not no_mopop:
+            _lt += _pil_fake_lmocomp(_ent, deloc=(3 if lmo_deloc else 0))
+        (src / (tag + ".out")).write_text(_lt + "ORCA TERMINATED NORMALLY\n")
+        if not no_mos:
+            _pzl = "2px" if sigma_ring else "2pz"
+            _cf = {0: {(ai, "1s"): 0.7 for ai in _rr0[:2]},
+                   5: dict([((ai, _pzl), 0.55) for ai in _rr0]
+                           + [((_rr0[0], "1s"), 0.05)]),
+                   6: dict([((ai, _pzl), 0.55) for ai in _rr1]
+                           + [((_rr1[0], "1s"), 0.05)]),
+                   7: dict([((ai, "2py"), 0.60) for ai in _oo]
+                           + [((ai, "2px"), 0.10) for ai in _ss]),
+                   40: {(ai, "2pz"): 0.5 for ai in _rr0}}
+            (src / (tag + "_loc.molden.input")).write_text(
+                _pil_fake_molden(len(sy), sy, mos, ener, occ, _cf, nmo=max(mos) + 1))
         if kill_guessmode:
             f = out / jk / (tag + ".inp")
             f.write_text(f.read_text().replace("GuessMode CMatrix", "GuessMode FMatrix"))
