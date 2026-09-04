@@ -931,6 +931,16 @@ def _complete_artifact(tmp_path, repo_root=None, objectives=("pocv_dvdq",)):
         "input_sha256_at_end": dict(sealed), "inputs_changed_during_run": False,
         "fits_seal": _seal,
     }), encoding="utf-8")
+    # ★ 58차 P0-8 — 완성된 산출에는 **실행 class 등록**이 포함된다.
+    #   실물 경로에서는 실행 전 gate(`assert_run_is_authorized`)가 계획 통과를
+    #   근거로 등록한다. 이 fixture 는 gate 를 거치지 않고 산출만 합성하므로,
+    #   그 한 단계를 여기서 대신한다. 안 하면 이 fixture 가 만든 것은
+    #   "게이트를 통과한 적 없는데 승격되는 산출" 이고 — 그것이 바로 P0-8 이
+    #   막으려는 것이다.
+    from tools.preserve import EXEC_CLASS_CANONICAL, record_execution_class
+    record_execution_class(
+        d, EXEC_CLASS_CANONICAL,
+        evidence="시험 fixture `_complete_artifact` 가 정본 산출로 합성했다")
     return d, sig
 
 

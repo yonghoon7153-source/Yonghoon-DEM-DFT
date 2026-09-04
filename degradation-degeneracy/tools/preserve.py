@@ -3746,6 +3746,24 @@ def assert_run_is_authorized(leg_id: str, phase: str, paths, run_spec: dict,
     """
     real = [Path(x) for x in paths if x]
     if real and all(is_inside_namespace(x, SMOKE_NAMESPACE) for x in real):
+        # ★ 58차 P0-8 — 면제를 **기록으로 남긴다.**
+        #   여기가 "이 실행은 smoke 다" 를 authority 가 정하는 유일한 자리다
+        #   (계획 gate 면제의 근거이기도 하다). 48~57차는 그 판단을 쓰고
+        #   버렸고, 그래서 나중에 승격 sink 가 **같은 판단을 경로로 다시**
+        #   해야 했다 — 두 번 하면 두 번째는 옮겨진 바이트를 못 잡는다.
+        #   한 번 정하고 등록부에 굳히면 sink 는 다시 정할 필요가 없다.
+        for x in real:
+            try:
+                record_execution_class(
+                    x, EXEC_CLASS_SMOKE,
+                    evidence=(f"실행 전 gate 면제 (계약 §13.3.3): "
+                              f"{x} 가 {SMOKE_NAMESPACE} 안이라 계획 gate 를 "
+                              f"면제했다 · leg={leg_id} phase={phase}"),
+                    ledger=ledger)
+            except PreserveError:
+                # manifest 가 아직 없는 시점(실행 직전)이면 identity 가 없다.
+                # 그 경우는 산출이 굳은 뒤 `record_smoke_outputs()` 가 맡는다.
+                pass
         return None
     # ★ 57차 P0-1 — **여기서 token 파일을 읽지 않는다.** 49차는 caller 가 준
     #   경로의 파일을 읽었고, 그 "경로를 줬다" 는 행위 자체가 소유 주장이었다.
@@ -3783,6 +3801,7 @@ def assert_run_is_authorized(leg_id: str, phase: str, paths, run_spec: dict,
                 f"{leg_id!r} 의 claim 이 다른 code identity 로 열렸다 "
                 f"({claim.source_digest} ≠ {source_digest}) — 실행 도중 "
                 "RUN_SCOPE 가 바뀌었다")
+        _record_canonical_if_identifiable(real, leg_id, phase, ledger)
         return claim
     # 아직 없다 — 지금 발급한다. **coordinator 만** 발급한다.
     if not may_open:
@@ -3801,7 +3820,34 @@ def assert_run_is_authorized(leg_id: str, phase: str, paths, run_spec: dict,
             f"{leg_id!r} 의 실행권이 아직 발급되지 않았다 — 이 호출은 발급자가 "
             "아니다 (`may_open=False`). 발급은 coordinator 가 한다: "
             "`./run.sh` 또는 `--mode open`")
-    return open_leg_run(leg_id, run_spec, source_digest, ledger=ledger)
+    claim = open_leg_run(leg_id, run_spec, source_digest, ledger=ledger)
+    _record_canonical_if_identifiable(real, leg_id, phase, ledger)
+    return claim
+
+
+def _record_canonical_if_identifiable(paths, leg_id, phase, ledger) -> None:
+    """계획 gate 를 **통과한** 산출을 정본으로 등록한다 (58차 P0-8).
+
+    smoke 쪽 면제와 **같은 authority·같은 순간**이다. 한쪽만 등록하면 등록부가
+    "smoke 목록" 이 되고, 그러면 등록 없음이 다시 "아마 정본" 을 뜻하게 된다 —
+    그 순간 fail-closed 가 무너진다. 두 분기가 모두 적어야 "등록 없음 = 모른다"
+    가 성립한다.
+
+    manifest 가 아직 없는 단계(첫 grid 호출)면 identity 가 없어 조용히 건너뛴다.
+    이후 phase(fit·finalize)가 같은 산출을 다시 지나며 등록한다.
+    """
+    for x in paths or []:
+        try:
+            record_execution_class(
+                x, EXEC_CLASS_CANONICAL,
+                evidence=(f"실행 전 계획 gate 통과: leg={leg_id} phase={phase} "
+                          f"(계획 원장이 승인한 다리)"),
+                ledger=ledger)
+        except PreserveError:
+            # identity 없음(=manifest 전) 또는 이미 다른 class 로 등록됨.
+            # 후자는 진짜 모순이지만 gate 를 여기서 깨뜨리지 않는다 — 승격
+            # sink 가 같은 등록부를 보고 거부한다.
+            pass
 
 
 def is_inside_namespace(path, namespace) -> bool:
@@ -3859,6 +3905,157 @@ def is_inside_namespace(path, namespace) -> bool:
 SMOKE_REFUSAL = "smoke namespace 산출은 승격 대상이 아니다"
 
 
+#: 실행 class 의 도메인. `unknown` 은 값이 아니라 **없음**이며 저장하지 않는다.
+EXEC_CLASS_SMOKE = "smoke"
+EXEC_CLASS_CANONICAL = "canonical"
+EXEC_CLASSES = (EXEC_CLASS_SMOKE, EXEC_CLASS_CANONICAL)
+
+#: run dir 의 **내용 identity** 로 삼는 manifest 후보. 앞의 것이 있으면 그것만
+#: 본다 (여러 개를 섞으면 하나가 빠졌을 때 identity 가 조용히 바뀐다).
+_EXEC_ID_MANIFESTS = ("curves_manifest.yaml", "fits_manifest.yaml",
+                      "manifest.yaml")
+
+
+def exec_class_root_for_ledger(ledger=None) -> Path:
+    """실행 class 등록부가 사는 곳 — claims·attempts 와 **같은 authority**.
+
+    ★ 58차 P0-8 — 왜 run dir 안이 아니라 원장 옆인가.
+
+    P0-8 의 요구는 "경로 무관 typed·sealed 실행 class marker" 다. 그런데
+    marker 를 **run dir 안에** 두면 경로 의존만 옮겨 갈 뿐이다 — 바이트를 통째로
+    복사한 사람이 그 파일도 같이 고칠 수 있기 때문이다. marker 가 진짜 marker 이려면
+    **쓰는 쪽이 authority** 여야 하고, 그 자리는 이미 이 저장소에 있다:
+    claim 과 attempt 가 사는 원장 옆이다 (54차 P0-1 · 57차 P0-1).
+
+    등록부의 **키는 경로가 아니라 내용**(`run_content_id()`)이다. 그래서
+    smoke 산출을 namespace 밖으로 옮겨도 같은 키로 같은 답이 나온다 — 그것이
+    48~57차가 못 닫은 자리다 (`[재현]` 옮기기 전 거부 · 옮긴 뒤 통과).
+    """
+    return canonical_ledger(ledger).parent / "_exec_class"
+
+
+def run_content_id(run_dir) -> str:
+    """이 산출의 **내용 identity**. 경로가 아니라 바이트가 정한다.
+
+    manifest 파일 하나의 sha256 이다. 복사·이동해도 안 바뀌고, 내용이 바뀌면
+    바뀐다 — 그래서 "옮겨서 정본인 척하기" 와 "고쳐서 정본인 척하기" 가 **둘 다**
+    같은 검사에 걸린다.
+
+    manifest 가 없으면 identity 가 없다 → 호출자는 fail-closed 해야 한다.
+    """
+    d = Path(run_dir)
+    for name in _EXEC_ID_MANIFESTS:
+        f = d / name
+        if f.is_file():
+            return hashlib.sha256(f.read_bytes()).hexdigest()
+    raise PreserveError(
+        "promote",
+        f"{d} 에 manifest 가 없어 내용 identity 를 만들 수 없다 "
+        f"(찾은 이름: {list(_EXEC_ID_MANIFESTS)}) — 정본 여부를 판정할 수 없으므로 "
+        "승격을 거부한다")
+
+
+def _exec_class_path(content_id: str, ledger=None) -> Path:
+    if not (isinstance(content_id, str) and len(content_id) == 64
+            and all(c in "0123456789abcdef" for c in content_id)):
+        raise PreserveError("promote", f"내용 identity 형식이 아니다: {content_id!r}")
+    return exec_class_root_for_ledger(ledger) / f"{content_id}.json"
+
+
+def record_execution_class(run_dir, cls: str, evidence: str,
+                           ledger=None) -> Path:
+    """이 산출의 실행 class 를 **등록부에 굳힌다.**
+
+    `evidence` 는 "무엇을 보고 그렇게 정했는가" 를 사람이 읽을 문장으로 남긴다.
+    경로를 보고 정했다면 **그 사실이 여기 적힌다** — 그것이 이 설계의 요점이다:
+    경로 판정을 없애는 것이 아니라 **한 번만, 기록을 남기고** 하게 만든다.
+    """
+    if cls not in EXEC_CLASSES:
+        raise PreserveError("promote",
+                            f"실행 class 는 {EXEC_CLASSES} 중 하나여야 한다: {cls!r}")
+    cid = run_content_id(run_dir)
+    path = _exec_class_path(cid, ledger)
+    path.parent.mkdir(parents=True, exist_ok=True)
+    prev = read_execution_class(cid, ledger=ledger)
+    if prev is not None and prev.get("execution_class") != cls:
+        # 한 내용이 두 class 를 가질 수 없다. 덮어쓰기를 허용하면 등록부가
+        # authority 가 아니라 마지막 쓴 사람의 의견이 된다.
+        raise PreserveError(
+            "promote",
+            f"이 산출은 이미 {prev.get('execution_class')!r} 로 등록돼 있다 — "
+            f"{cls!r} 로 바꿀 수 없다 (내용 {cid[:16]}…)")
+    _atomic_write_json(path, {
+        "content_id": cid,
+        "execution_class": cls,
+        "evidence": str(evidence),
+        "recorded_at": dt.datetime.now(dt.timezone.utc)
+                         .strftime("%Y-%m-%dT%H:%M:%SZ"),
+    })
+    return path
+
+
+def read_execution_class(content_id: str, ledger=None) -> dict | None:
+    p = _exec_class_path(content_id, ledger)
+    if not p.is_file():
+        return None
+    try:
+        rec = json.loads(p.read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        return None
+    if not isinstance(rec, dict) or rec.get("execution_class") not in EXEC_CLASSES:
+        return None
+    if rec.get("content_id") != content_id:
+        return None            # 등록부 안에서 키와 내용이 어긋난다 — 못 믿는다
+    return rec
+
+
+def resolve_execution_class(run_dir, ledger=None) -> dict:
+    """이 산출이 무슨 class 인가. **경로를 보지 않는다.**
+
+    등록부에 없으면 `PreserveError` 다 — fail-closed. 예전 산출(등록 이전에
+    만들어진 것)은 `classify_legacy_run()` 으로 **한 번** 분류해야 하고, 그
+    분류가 무엇을 보고 이뤄졌는지가 등록부에 남는다.
+
+    `[해석]` 이것이 "migration 창" 을 **기간이 아니라 산출별 1회 행위**로 바꾼다.
+    창을 열어 두면 그동안 경로 판정이 조용히 계속 살아 있지만, 이렇게 하면
+    경로를 본 순간이 **영수증으로 남고** 그 뒤로는 다시 보지 않는다.
+    """
+    cid = run_content_id(run_dir)
+    rec = read_execution_class(cid, ledger=ledger)
+    if rec is None:
+        raise PreserveError(
+            "promote",
+            f"{Path(run_dir)} 의 실행 class 가 등록돼 있지 않다 (내용 "
+            f"{cid[:16]}…). 이 산출이 정본 실행인지 smoke 인지 **바이트만 보고는 "
+            "알 수 없으므로** 승격을 거부한다. 예전 산출이면 "
+            "`classify_legacy_run()` 으로 한 번 분류하라 — 무엇을 보고 정했는지가 "
+            "등록부에 남는다")
+    return rec
+
+
+def classify_legacy_run(run_dir, ledger=None, namespace=None) -> dict:
+    """등록 이전에 만들어진 산출을 **한 번** 분류한다 (58차 P0-8 migration).
+
+    지금 이 순간의 경로를 증거로 쓴다. 그것을 숨기지 않고 `evidence` 에 적는다.
+    이미 등록돼 있으면 그대로 돌려준다 (재분류하지 않는다 — 두 번째 분류는
+    첫 번째와 다를 수 있고, 그러면 등록부가 authority 가 아니게 된다).
+    """
+    d = Path(run_dir)
+    cid = run_content_id(d)
+    prev = read_execution_class(cid, ledger=ledger)
+    if prev is not None:
+        return prev
+    ns = SMOKE_NAMESPACE if namespace is None else Path(namespace)
+    inside = is_inside_namespace(d, ns)
+    cls = EXEC_CLASS_SMOKE if inside else EXEC_CLASS_CANONICAL
+    record_execution_class(
+        d, cls,
+        evidence=(f"legacy 분류 (58차 P0-8): 분류 시점 경로 {d} 가 "
+                  f"{ns} {'안' if inside else '밖'}이었다"),
+        ledger=ledger)
+    return read_execution_class(cid, ledger=ledger)
+
+
 def assert_not_smoke_provenance(paths, sink: str, dest=None) -> None:
     """smoke 산출을 **정본으로 승격하지 못하게** 한다 (48차 P0-8).
 
@@ -3886,6 +4083,8 @@ def assert_not_smoke_provenance(paths, sink: str, dest=None) -> None:
     """
     if dest is not None and is_inside_namespace(dest, SMOKE_NAMESPACE):
         return                      # namespace 안에 머문다 — 승격이 아니다
+
+    # ── ① 경로 판정 (48~57차). **먼저** 본다 — 값싸고, 제자리 smoke 를 잡는다.
     bad = [str(p) for p in paths
            if p is not None and is_inside_namespace(p, SMOKE_NAMESPACE)]
     if bad:
@@ -3895,6 +4094,27 @@ def assert_not_smoke_provenance(paths, sink: str, dest=None) -> None:
             f"아래에 있다: {bad}. smoke 는 계획 gate 를 면제받는 자리이므로 "
             "(계약 §13.3.3) 그 산출은 인용 대상이 될 수 없다. 정본을 만들려면 "
             "계획된 다리로 namespace 밖에서 다시 돌려라")
+
+    # ── ② ★ 58차 P0-8 — **내용 판정.** 여기서부터가 새 경계다.
+    #
+    #   ① 만 있던 동안은 **바이트를 옮기면 그만**이었다 (`[재현]` 같은 run dir 를
+    #   namespace 밖으로 copytree 하면 ① 이 통과한다). 경로는 산출의 성질이 아니라
+    #   **지금 어디 놓여 있는가** 이므로, 그것으로 정본 여부를 정하는 한 경계가
+    #   아니라 관례다.
+    #
+    #   등록부는 원장 옆에 있고 키가 **내용**이라 옮겨도 따라온다. 등록이 없으면
+    #   **거부**다 — "모르면 통과" 는 이 검사를 다시 관례로 만든다.
+    for q in paths:
+        if q is None:
+            continue
+        rec = resolve_execution_class(q)          # 없으면 PreserveError
+        if rec["execution_class"] == EXEC_CLASS_SMOKE:
+            raise PreserveError(
+                "promote",
+                f"{SMOKE_REFUSAL} — {sink} 로 올리려는 입력 {q} 의 **내용**이 "
+                f"smoke 로 등록돼 있다 (내용 {rec['content_id'][:16]}…, 근거: "
+                f"{rec.get('evidence')}). 지금 경로가 namespace 밖이어도 "
+                "승격 대상이 아니다")
 
 
 def planned_index(ledger=None) -> dict:
