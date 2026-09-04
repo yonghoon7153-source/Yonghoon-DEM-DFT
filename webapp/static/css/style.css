@@ -1851,3 +1851,23 @@ body.rd-on .reader .doc-body :is(h1, h2, h3, h4) { scroll-margin-top: 14px; }
 .pipe-sec > .hero-trust { margin-top: 14px; }
 .ph-more { margin-top: 8px; padding-top: 8px; border-top: 1px dashed var(--line);
            font-size: var(--fs-xs); color: var(--ink-2); line-height: 1.62; }
+
+/* /trust §3 — "두 흔한 답 vs 고른 길". 셋을 나란히 두어 **왜 셋째인지**가
+   글이 아니라 배치로 보이게 한다. 좁으면 쌓인다. */
+.tw-3 { grid-template-columns: repeat(3, 1fr); }
+@media (max-width: 980px) { .tw-3 { grid-template-columns: 1fr; } }
+.tw-h3 { font-size: var(--fs-lg); margin: 20px 0 6px; word-break: keep-all; }
+.tw-opt {
+  border: 1px solid var(--line); border-radius: 10px;
+  padding: 14px 16px; background: var(--surface);
+}
+.tw-opt h4 { margin: 0 0 7px; font-size: var(--fs-md); word-break: keep-all; }
+.tw-opt p { margin: 0; font-size: var(--fs-sm); line-height: 1.7;
+            color: var(--ink-2); word-break: keep-all; }
+.tw-opt-bad  { border-left: 3px solid var(--bad); }
+.tw-opt-good { border-left: 3px solid var(--ok);
+               background: color-mix(in srgb, var(--ok) 6%, transparent); }
+.tw-tag-b { background: color-mix(in srgb, var(--bad) 14%, transparent); color: var(--bad); }
+.tw-tag-g { background: color-mix(in srgb, var(--ok) 16%, transparent); color: var(--ok); }
+/* /trust 의 지역 화살촉 — 공용 `.dg-arrow` 는 /pipeline 그림도 쓰므로 안 건드린다 */
+.dg-ah { fill: var(--ink-3); stroke: none; }

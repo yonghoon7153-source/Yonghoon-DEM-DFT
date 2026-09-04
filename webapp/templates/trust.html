@@ -54,34 +54,40 @@
   <h2 class="pipe-h"><span class="pipe-n">2</span> 세 겹으로 막는다</h2>
 
   <figure class="pipe-fig">
-    <svg class="dg" viewBox="0 0 780 200" role="img"
+    <svg class="dg" viewBox="0 0 760 172" role="img"
          aria-label="봉인, 게이트, 적대적 리뷰 세 겹이 순서대로 놓인 그림">
+      <defs>
+        <marker id="tw-ah" viewBox="0 0 8 8" refX="7" refY="4"
+                markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+          <path d="M0 0.5 L8 4 L0 7.5 z" class="dg-ah"/>
+        </marker>
+      </defs>
       <g class="dg-layer">
-        <rect x="14" y="34" width="228" height="118" rx="10"/>
-        <text class="dg-head" x="128" y="62">① 봉인</text>
-        <text class="dg-t" x="128" y="88">무엇으로 만들었는지를</text>
-        <text class="dg-t" x="128" y="108">산출물 자신이 적는다</text>
-        <text class="dg-mono dg-small" x="128" y="132">source_digest · input_sha256</text>
+        <rect x="8" y="20" width="212" height="118" rx="10"/>
+        <text class="dg-head" x="114" y="56">① 봉인</text>
+        <text class="dg-t" x="114" y="88">무엇으로 만들었는지를</text>
+        <text class="dg-t" x="114" y="110">산출물 자신이 적는다</text>
       </g>
-      <path class="dg-arrow" d="M246 93 h32"/>
+      <path class="dg-arrow" marker-end="url(#tw-ah)" d="M228 79 h44"/>
       <g class="dg-layer">
-        <rect x="282" y="34" width="228" height="118" rx="10"/>
-        <text class="dg-head" x="396" y="62">② 게이트</text>
-        <text class="dg-t" x="396" y="88">비싼 계산 <tspan class="dg-em">직전</tspan>에</text>
-        <text class="dg-t" x="396" y="108">계획에 있는지 확인한다</text>
-        <text class="dg-mono dg-small" x="396" y="132">계획 원장 · 실행권 claim</text>
+        <rect x="278" y="20" width="212" height="118" rx="10"/>
+        <text class="dg-head" x="384" y="56">② 게이트</text>
+        <text class="dg-t" x="384" y="88">비싼 계산 <tspan class="dg-em">직전</tspan>에</text>
+        <text class="dg-t" x="384" y="110">계획에 있는지 본다</text>
       </g>
-      <path class="dg-arrow" d="M514 93 h32"/>
+      <path class="dg-arrow" marker-end="url(#tw-ah)" d="M498 79 h44"/>
       <g class="dg-layer">
-        <rect x="550" y="34" width="216" height="118" rx="10"/>
-        <text class="dg-head" x="658" y="62">③ 적대적 리뷰</text>
-        <text class="dg-t" x="658" y="88">다른 리뷰어가 <tspan class="dg-em">뚫어 본다</tspan></text>
-        <text class="dg-t" x="658" y="108">막히면 NO-GO</text>
-        <text class="dg-mono dg-small" x="658" y="132">57 라운드째</text>
+        <rect x="548" y="20" width="204" height="118" rx="10"/>
+        <text class="dg-head" x="650" y="56">③ 적대적 리뷰</text>
+        <text class="dg-t" x="650" y="88">다른 리뷰어가 뚫어 본다</text>
+        <text class="dg-t" x="650" y="110">막히면 <tspan class="dg-warn">NO-GO</tspan></text>
       </g>
     </svg>
-    <figcaption class="pipe-cite">세 겹은 서로를 대신하지 못한다 —
-      ①은 “무엇이 만들었나”, ②는 “만들어도 되나”, ③은 “①②에 구멍이 있나”를 본다.</figcaption>
+    <figcaption>세 겹은 서로를 대신하지 못한다 —
+      ①은 “무엇이 만들었나”, ②는 “만들어도 되나”, ③은 “①②에 구멍이 있나”를 본다.
+      ①이 적는 것은 <code class="mono">source_digest</code>·<code class="mono">input_sha256</code>·
+      <code class="mono">run_spec</code> 서명이고, ②가 보는 것은 계획 원장과 실행권
+      <code class="mono">claim</code> 이다.</figcaption>
   </figure>
 
   <div class="pipe-quote pipe-quote-plain">
@@ -131,54 +137,77 @@
   </div>
 
   <figure class="pipe-fig">
-    <svg class="dg" viewBox="0 0 780 268" role="img"
+    <svg class="dg" viewBox="0 0 760 250" role="img"
          aria-label="경로로 판정하면 파일을 옮겼을 때 통과하고, 내용으로 판정하면 옮겨도 거부된다">
-      <text class="dg-head dg-l" x="16" y="24">이전 — <tspan class="dg-warn">경로</tspan>가 정한다</text>
-      <g class="dg-box"><rect x="16" y="36" width="150" height="56" rx="8"/>
-        <text class="dg-t" x="91" y="60">smoke 산출</text>
-        <text class="dg-mono dg-small" x="91" y="80">results/_smoke/…</text></g>
-      <path class="dg-arrow" d="M170 64 h44"/>
-      <text class="dg-mono dg-small" x="192" y="56">cp</text>
-      <g class="dg-box"><rect x="218" y="36" width="168" height="56" rx="8"/>
-        <text class="dg-t" x="302" y="60">같은 바이트</text>
-        <text class="dg-mono dg-small" x="302" y="80">/tmp/looks_canonical</text></g>
-      <path class="dg-arrow" d="M390 64 h44"/>
-      <g class="dg-box dg-out"><rect x="438" y="36" width="176" height="56" rx="8"/>
-        <text class="dg-t dg-t-b" x="526" y="68">승격 통과 ✗</text></g>
+      <defs>
+        <marker id="tw-ah" viewBox="0 0 8 8" refX="7" refY="4"
+                markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+          <path d="M0 0.5 L8 4 L0 7.5 z" class="dg-ah"/>
+        </marker>
+      </defs>
+      <text class="dg-head dg-l" x="8" y="20">이전 — <tspan class="dg-warn">경로</tspan>가 정한다</text>
+      <g><rect x="8" y="32" width="176" height="54" rx="8"/>
+        <text class="dg-t" x="96" y="64">smoke 산출</text></g>
+      <text class="dg-mono dg-small" x="212" y="52">복사</text>
+      <path class="dg-arrow" marker-end="url(#tw-ah)" d="M190 63 h44"/>
+      <g><rect x="240" y="32" width="200" height="54" rx="8"/>
+        <text class="dg-t" x="340" y="64">옮긴 자리 · 같은 바이트</text></g>
+      <path class="dg-arrow" marker-end="url(#tw-ah)" d="M446 63 h44"/>
+      <g class="dg-out"><rect x="500" y="32" width="252" height="54" rx="8"/>
+        <text class="dg-t dg-t-b" x="626" y="65">승격 통과 — 뚫렸다</text></g>
 
-      <text class="dg-head dg-l" x="16" y="150">이후 — <tspan class="dg-em">내용</tspan>이 정한다</text>
-      <g class="dg-box"><rect x="16" y="162" width="150" height="56" rx="8"/>
-        <text class="dg-t" x="91" y="186">smoke 산출</text>
-        <text class="dg-mono dg-small" x="91" y="206">내용 id = a1b2…</text></g>
-      <path class="dg-arrow" d="M170 190 h44"/>
-      <text class="dg-mono dg-small" x="192" y="182">cp</text>
-      <g class="dg-box"><rect x="218" y="162" width="168" height="56" rx="8"/>
-        <text class="dg-t" x="302" y="186">같은 바이트</text>
-        <text class="dg-mono dg-small" x="302" y="206">내용 id = a1b2… (그대로)</text></g>
-      <path class="dg-arrow" d="M390 190 h44"/>
-      <g class="dg-box dg-in"><rect x="438" y="162" width="176" height="56" rx="8"/>
-        <text class="dg-t dg-t-b" x="526" y="194">거부 ✓</text></g>
-      <g class="dg-box"><rect x="632" y="150" width="134" height="80" rx="8"/>
-        <text class="dg-t dg-small" x="699" y="176">등록부</text>
-        <text class="dg-mono dg-small" x="699" y="196">a1b2… → smoke</text>
-        <text class="dg-t dg-small" x="699" y="216">(원장 옆)</text></g>
-      <path class="dg-arrow-back" d="M628 190 h-8"/>
+      <text class="dg-head dg-l" x="8" y="146">이후 — <tspan class="dg-em">내용</tspan>이 정한다</text>
+      <g><rect x="8" y="158" width="176" height="54" rx="8"/>
+        <text class="dg-t" x="96" y="190">smoke 산출</text></g>
+      <text class="dg-mono dg-small" x="212" y="178">복사</text>
+      <path class="dg-arrow" marker-end="url(#tw-ah)" d="M190 189 h44"/>
+      <g><rect x="240" y="158" width="200" height="54" rx="8"/>
+        <text class="dg-t" x="340" y="184">옮긴 자리 · 같은 바이트</text>
+        <text class="dg-small" x="340" y="202">내용 id 는 그대로</text></g>
+      <path class="dg-arrow" marker-end="url(#tw-ah)" d="M446 189 h44"/>
+      <g class="dg-in"><rect x="500" y="158" width="252" height="54" rx="8"/>
+        <text class="dg-t dg-t-b" x="626" y="185">거부 — 등록부가 답한다</text>
+        <text class="dg-small" x="626" y="203">내용 id → smoke</text></g>
     </svg>
-    <figcaption class="pipe-cite">위: 실측으로 재현한 구멍. 아래: 고친 뒤.
-      두 그림의 차이는 <b>화살표가 아니라 무엇을 보느냐</b>다.</figcaption>
+    <figcaption>위는 실측으로 재현한 구멍
+      (<code class="mono">results/_smoke/…</code> 를 통째로 복사하면 통과했다),
+      아래는 고친 뒤. <b>두 그림의 차이는 화살표가 아니라 무엇을 보느냐다.</b>
+      등록부는 원장 옆(<code class="mono">&lt;원장&gt;/_exec_class</code>)에 있고
+      키가 manifest 의 sha256 이라 옮겨도 따라온다.</figcaption>
   </figure>
 
-  <div class="pipe-find">
-    <b>★ 그런데 진짜 어려운 건 “예전 산출물은 어쩌나”였다.</b>
-    이미 만들어 둔 결과에는 새 도장이 없다. 흔한 답은 둘인데 둘 다 나빴다 —
-    <b>전부 거부</b>하면 예전 결과를 못 쓰게 되고,
-    <b>당분간 봐준다</b>(migration 창)를 두면 그동안 <b>옛 경로 판정이 조용히 계속 산다</b>.
-    <br><br>
-    셋째 길을 골랐다: <b>migration 을 “기간”이 아니라 “산출물 한 건당 1회 행위”로 바꿨다.</b>
-    경로를 아예 안 보는 게 아니라 <b>딱 한 번만 보고, 무엇을 보고 정했는지를 영수증에 적는다.</b>
-    그 뒤로는 다시 안 본다. <span class="tw-mini">기간이 아니라 행위라서,
-    “언제 창을 닫나”라는 물음 자체가 사라진다.</span>
+  {# ⚠ 여기는 원래 `.pipe-find` 를 썼다가 통째로 깨졌었다 — 그 클래스는
+     `<ul>/<li>` 전용(`counter-increment`·`li::before` 번호)이라 `<div>` 에
+     인라인 텍스트로 쓰면 아무 규칙도 안 걸리고 `<b>`·`<br>` 만 남는다.
+     여기서는 "두 흔한 답 vs 셋째 길" 이라 **비교 구조**가 맞다. #}
+  <h3 class="tw-h3">★ 진짜 어려운 건 “예전 산출물은 어쩌나”였다</h3>
+  <p class="pipe-p">이미 만들어 둔 결과에는 새 도장이 없다. 흔한 답은 둘인데
+    <b>둘 다 나빴다.</b></p>
+
+  <div class="tw tw-3">
+    <div class="tw-opt tw-opt-bad">
+      <span class="tw-tag tw-tag-b">흔한 답 1</span>
+      <h4>전부 거부</h4>
+      <p>도장 없는 건 다 막는다. 그러면 <b>예전 결과를 못 쓰게 된다</b> —
+        다시 만들어야 하고, 그건 비싸다.</p>
+    </div>
+    <div class="tw-opt tw-opt-bad">
+      <span class="tw-tag tw-tag-b">흔한 답 2</span>
+      <h4>당분간 봐준다</h4>
+      <p>유예 기간을 둔다. 그러면 그동안 <b>옛 경로 판정이 조용히 계속 산다</b> —
+        없애려던 바로 그것이 살아 있다.</p>
+    </div>
+    <div class="tw-opt tw-opt-good">
+      <span class="tw-tag tw-tag-g">고른 길</span>
+      <h4>산출물 한 건당 1회 행위</h4>
+      <p>경로를 <b>딱 한 번만</b> 보고, 무엇을 보고 정했는지를 <b>영수증에 적는다.</b>
+        그 뒤로는 다시 안 본다.</p>
+    </div>
   </div>
+
+  <p class="pipe-p"><b>migration 을 “기간”이 아니라 “행위”로 바꾼 것</b>이다.
+    그래서 <b>“언제 유예를 끝내나”라는 물음 자체가 사라진다</b> —
+    분류된 순간 그 산출물의 유예는 이미 끝나 있다. 영수증은 이렇게 생겼다:</p>
 
   <pre class="tw-code"><code>{
   "execution_class": "canonical",
