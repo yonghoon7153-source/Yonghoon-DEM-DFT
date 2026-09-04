@@ -16205,6 +16205,8 @@ def build_bundle(a, ledger: Optional[Dict[str, Any]] = None) -> Path:
         _jh = []
         _jst = []          # 🔴 2026-09-03 — 잡별 단계 (1|2). 단계 게이트 반영 makespan 용.
         _jkcap = []        # 🔴 2026-09-04 (렌즈 K1 P1-2) — 잡별 k 병렬 상한 min(KPAR, k점 수)
+        _jrel = []         # 🔴 2026-09-04 — 잡 상대경로 (PARENT_GEOM 사슬 판정용)
+        _jph = []          # 🔴 2026-09-04 — 잡별 {상: 시간} (NELM 천장 계산용)
         for _jp in sorted(out.rglob("job.json")):
             _m = json.loads(_jp.read_text())
             # 그 잡에서 제일 무거운 상의 격자로 상한을 잡는다 (상별 시간 가중은 안 한다 — 근사).
@@ -16218,13 +16220,15 @@ def build_bundle(a, ledger: Optional[Dict[str, Any]] = None) -> Path:
             #   종전엔 이 인자가 없어서 셀을 21 % 키워도 견적이 안 움직였다.
             _vol = CE.poscar_volume_A3(str(_jp.parent / "POSCAR"))
             _vr = (_vol / _base.get("volume_A3", CE.BASE["volume_A3"])) if _vol else 1.0
-            _jh.append(sum(
-                CE.phase_hours(ph if ph in CE.ESTEP else "static", _n,
-                               (_m.get("kmesh") or {}).get(ph, "3 4 1"), _base,
-                               str(((_m.get("incar_expected") or {}).get(ph) or {})
-                                   .get("LREAL", ".TRUE.")).upper().startswith(".F"), _ni,
-                               _vr)
-                for ph in (_m.get("phases") or [])))
+            _pd = {ph: CE.phase_hours(ph if ph in CE.ESTEP else "static", _n,
+                                      (_m.get("kmesh") or {}).get(ph, "3 4 1"), _base,
+                                      str(((_m.get("incar_expected") or {}).get(ph) or {})
+                                          .get("LREAL", ".TRUE.")).upper().startswith(".F"),
+                                      _ni, _vr)
+                   for ph in (_m.get("phases") or [])}
+            _jph.append(_pd)
+            _jrel.append(str(_jp.parent.relative_to(out)))
+            _jh.append(sum(_pd.values()))
         # 🔴 회신 AB/AE — `--cores` 가 **라벨만 바꾸고 숫자는 안 바꿨다.** _jh 는
         #   추정기 기준선(48코어)의 시간이라, `--cores 256` 을 줘도 README·계약이
         #   48코어 시간을 "256코어 기준" 이라고 적었다. 외주 견적이 여기서 틀어진다
@@ -16234,10 +16238,32 @@ def build_bundle(a, ledger: Optional[Dict[str, Any]] = None) -> Path:
         # 🔴🔴 렌즈 K1 P1-2 — 상한은 **잡마다 다르다** (기체 Γ-only 는 1, relax 는 4, static 은 4).
         #   전 잡에 같은 `_sp` 를 쓰면 기체 6잡의 시간을 4배 낙관한다. 그리고 이 숫자가
         #   MANIFEST·README 로 **외주처에 나가는 값**이다 — 추정기만 잡별로 옳게 보면 소용없다.
+        # 🔴 2026-09-04 — 기준선 OUTCAR 이 **이미 쓰던 k 그룹 수**(distrk)를 빼야 이득을
+        #   두 번 세지 않는다. 우리 기준선은 `1 groups` 라 값은 안 바뀌지만, 기준선을
+        #   바꾸는 순간 조용히 틀릴 자리였다.
+        _kpb = _base.get("kpar_base") or 1
         _nkcap_max = min(KPAR_VAL, 7.2)
-        _jh = [h / CE.par_speedup(a.cores, _base.get("cores", 48), _k)
-               for h, _k in zip(_jh, _jkcap)]
-        _sp = CE.par_speedup(a.cores, _base.get("cores", 48), _nkcap_max)
+        _spj = [CE.par_speedup(a.cores, _base.get("cores", 48), _k, _kpb) for _k in _jkcap]
+        _jh = [h / s for h, s in zip(_jh, _spj)]
+        _jph = [{k: v / s for k, v in d.items()} for d, s in zip(_jph, _spj)]
+        _sp = CE.par_speedup(a.cores, _base.get("cores", 48), _nkcap_max, _kpb)
+        # ── NELM 천장 (2026-09-04) — "큐에 들어가나" 는 **추정치가 아니라 천장**으로 본다.
+        _nelm = _base.get("nelm") or CE.NELM_DEFAULT
+        _ceil = [(CE.job_ceiling_h(d, _nelm)[0], r) for d, r in zip(_jph, _jrel)]
+        _ceil_ok = [(c, r) for c, r in _ceil if c is not None]
+        _ceil_max = max([c for c, _r in _ceil_ok] or [0.0])
+        _ceil_over = [r for c, r in _ceil_ok if c > CE.QUEUE_CAP_H]
+        # ── PARENT_GEOM 사슬 — `__nzmag` 대조 잡은 부모 기하를 받으므로 **직렬**이다.
+        _jobs3 = list(zip(_jrel, _jh, _jph))
+        _plain, _chains = CE.parent_chains(man, _jobs3)
+        _chrel = {c[2] for c in _chains}
+        _stmap = dict(zip(_jrel, _jst))
+        _s1 = [h for r, h, _d in _jobs3
+               if _stmap.get(r) == 1 and r not in _chrel and r + "__nzmag" not in _chrel]
+        _s2 = [h for r, h, _d in _jobs3
+               if _stmap.get(r) == 2 and r not in _chrel and r + "__nzmag" not in _chrel]
+        _c1 = [c for c in _chains if _stmap.get(c[2], 1) == 1]
+        _c2 = [c for c in _chains if _stmap.get(c[2], 1) == 2]
         man["cost_frozen"] = {
             "total_wall_h": round(sum(_jh), 1),
             "core_h": round(sum(_jh) * a.cores),
@@ -16251,17 +16277,33 @@ def build_bundle(a, ledger: Optional[Dict[str, Any]] = None) -> Path:
                                  % KPAR_VAL),
             "⚠_속도향상": ("par_speedup 은 벤치마크가 아니라 두 구간 어림이다 (±50 %). "
                         "잡 시간 자체도 모형이라 ±2배 — 곱하면 넓다"),
-            "makespan_d": {str(m): round(CE.schedule_makespan(_jh, m) / 24, 2)
+            "baseline_kpar": _kpb,
+            # ── 🔴 NELM 천장 (2026-09-04) ─────────────────────────────────────
+            #   추정치(±2배)로 "큐에 들어간다" 를 판정하면 안 된다. 한 번의 VASP 기동은
+            #   NELM 에서 끊기므로 그게 **결정론적** 상한이다.
+            "nelm": _nelm,
+            "nelm_ceiling_longest_h": round(_ceil_max, 1),
+            "queue_cap_h": CE.QUEUE_CAP_H,
+            "fits_queue_cap": (not _ceil_over) if _ceil_ok else None,
+            "n_jobs_over_queue_cap": len(_ceil_over),
+            "⚠_천장의_뜻": ("천장 = 추정 × NELM / 상별 전자스텝 가정. '얼마나 걸리나'(모형, ±2배)가 "
+                            "아니라 '잘릴 수 있나'(결정론)의 답이다. ⛔ 기동 **1회**의 상한이라 "
+                            "여러 상을 직렬로 도는 잡의 전체 벽시계 상한은 아니다. "
+                            "relax 는 NSW×NELM 이라 여기서 제외된다."),
+            "makespan_d": {str(m): round(CE.schedule_makespan(_plain, m, _chains) / 24, 2)
                            for m in (4, 8, 12, 20)},
+            "parent_geom_chains": len(_chains),
+            "⚠_물결_사슬": ("`__nzmag` 대조 잡은 `PARENT_GEOM` 으로 부모의 최종 기하를 받으므로 "
+                            "부모와 **직렬**이다. 종전엔 나란히 돌 수 있는 것처럼 셌다 "
+                            "(2026-09-04 정정)."),
             "⚠_makespan_d_는_단계를_무시한다": (
                 "makespan_d 는 전 잡을 한 물결로 돌린다고 본 값이다. staged 번들은 1단계가 "
                 "**전부 끝나고 게이트를 통과해야** 2단계가 열리므로 실제 벽시계는 "
                 "makespan_staged_d 다 (2026-09-03 정정 — 종전 문서는 절반 값을 실었다)."),
             # 🔴 2026-09-03 — **문서가 인용해야 하는 값.** 1단계 makespan + 2단계 makespan.
             "makespan_staged_d": ({str(m): round(CE.staged_makespan(
-                [h for h, s in zip(_jh, _jst) if s == 1],
-                [h for h, s in zip(_jh, _jst) if s == 2], m) / 24, 2)
-                for m in (4, 8, 12, 20)} if (1 in _jst and 2 in _jst) else None),
+                _s1, _s2, m, _c1, _c2) / 24, 2)
+                for m in (2, 4, 6, 8, 12, 20)} if (1 in _jst and 2 in _jst) else None),
             "stage_jobs": {"1": _jst.count(1), "2": _jst.count(2)},
             "stage_longest_h": {
                 "1": round(max([h for h, s in zip(_jh, _jst) if s == 1] or [0]), 1),

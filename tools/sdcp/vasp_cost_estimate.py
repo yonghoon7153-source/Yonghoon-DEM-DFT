@@ -29,6 +29,20 @@
     크다. 모형은 기체 잡을 ~1 h 로 내지만 실제로는 10 h대일 수 있다.
     가장 긴 잡이 아니라 결론(makespan)은 안 바뀌지만 총량은 틀린다.
   · 병렬 스케일링(par_speedup)은 **벤치마크가 아니라 두 구간 어림**이다 (±50 %).
+  · **큐 상한을 넘길지는 추정치로 판정하지 않는다** — 그건 NELM 천장으로 본다(아래).
+
+NELM 천장 (2026-09-04 도입 · 이게 외주 코어 수를 정하는 기준이다)
+  추정치는 ±2배다. 그 숫자로 "91 h 큐에 들어간다" 를 판정하면 절반은 틀린다.
+  그런데 **한 번의 VASP 기동이 쓸 수 있는 시간에는 결정론적 상한**이 있다 —
+  INCAR 의 `NELM` 이다. SCF 가 아무리 안 붙어도 NELM 번에서 끊는다.
+
+      천장[h] = 추정[h] × NELM / (그 상에 가정한 전자스텝 수)
+
+  static 은 ESTEP 75 · NELM 200 이므로 천장 = 추정 × 2.67.
+  ⇒ **천장이 큐 walltime 상한 아래면 모형이 2배 틀려도 잡이 안 잘린다.**
+  이건 "얼마나 걸리나"(모형, ±2배) 가 아니라 "잘릴 수 있나"(결정론) 의 답이다.
+  ⛔ 단, 천장은 **VASP 기동 1회**의 상한이다. 한 잡이 여러 상을 직렬로 돌면
+     상마다 천장이 따로 걸린다 — 잡 전체 벽시계의 상한이 아니다.
 """
 from __future__ import annotations
 
@@ -53,9 +67,15 @@ F_LREAL_FALSE = 2.5    # 실공간→역공간 투영 (static/dense)
 F_SMEAR = 1.20         # ISMEAR 0/0.05 는 1/0.2 보다 전자스텝이 더 든다
 #: 상별 전자스텝 수 가정. relax 는 (첫 스텝 + 이온스텝 × 스텝당)
 ESTEP = {"pre": 60, "relax_first": 20, "relax_per_ionic": 10, "static": 75, "dense": 75}
+#: INCAR 의 `NELM` — **한 번의 VASP 기동이 도는 전자스텝의 결정론적 상한**.
+#   기준선 OUTCAR 에서 읽고, 못 읽으면 이 값(번들 INCAR 과 같은 값)을 쓴다.
+NELM_DEFAULT = 200
+#: 외주처 큐의 잡당 walltime 상한 [h] (1저자 확인 2026-09-04).
+QUEUE_CAP_H = 91.0
 N_IONIC = 60           # ⚠ 총비용을 지배하는 가정. 자유원자 수에 따라 30~100.
-KMESH_N = {"2 3 1": 6, "3 4 1": 12, "4 6 1": 24, "1 1 1": 1}
-TR_REDUCE = 0.6        # ISYM=0 이어도 시간반전으로 k 가 줄어드는 비율(근사)
+# ⛔ 2026-09-04 삭제: `KMESH_N` 표 + `TR_REDUCE = 0.6` 어림.
+#   0.6 은 **하한이 아니었다**(5 5 1: 어림 15 > 실제 13 = 낙관 쪽으로 틀림, 렌즈1 P2-1).
+#   `nk_eff()` 가 생성기와 같은 정확식을 쓴다 — 표도 계수도 필요 없다.
 
 
 def outcar_baseline(path):
@@ -74,9 +94,17 @@ def outcar_baseline(path):
     if not (nat and nk and el and n_est):
         return None
     vol = g(r"volume of cell\s*:\s*([\d.]+)")
+    # 🔴 2026-09-04 — 기준선이 **이미 k 병렬을 쓰고 있었는지**를 읽는다.
+    #   `distrk:  each k-point on   48 cores,    1 groups` 의 groups 가 곧 KPAR 이다.
+    #   이걸 안 읽으면 48→192 확장 이득을 **두 번 센다** (기준선이 KPAR 4 였다면
+    #   k 축은 이미 다 썼고 남은 건 감쇠 큰 평면파 축뿐이다).
+    kpb = g(r"distrk:\s*each k-point on\s+\d+\s+cores,\s*(\d+)\s+groups")
+    nelm = g(r"NELM\s*=\s*(\d+)")
     return {"atoms": int(nat), "nkpts": int(nk),
             "cores": int(cores) if cores else BASE["cores"],
             "volume_A3": float(vol) if vol else BASE["volume_A3"],
+            "kpar_base": int(kpb) if kpb else None,
+            "nelm": int(nelm) if nelm else None,
             "sec_per_estep": float(el) / n_est, "source": path}
 
 
@@ -86,12 +114,19 @@ PAR_KP_EXP = 0.95
 PAR_PW_EXP = 0.70
 
 
-def par_speedup(cores, base_cores, nk):
+def par_speedup(cores, base_cores, nk, kpar_base=1):
     """코어를 base_cores → cores 로 늘렸을 때의 **속도향상 배수**.
 
     두 구간 모형:
       · KPAR 구간 — 최대 nk 배까지 거의 선형 (지수 0.95)
       · 그 위 — 밴드/평면파 병렬, 감쇠가 크다 (지수 0.70)
+
+    `kpar_base` — **기준선 OUTCAR 이 이미 쓰고 있던 k-그룹 수**(distrk 의 groups).
+      기준선이 KPAR 1 이면 k 축이 통째로 남아 있고, 4 였다면 이미 다 쓴 것이라
+      남은 헤드룸은 nk/kpar_base 뿐이다. 종전 서명은 이 인자가 없어 **항상 1 로
+      가정**했다 — 기준선이 k 병렬을 쓰고 있었다면 이득을 두 번 센다.
+      (실측 2026-09-04: 우리 기준선은 `1 groups` 라 결과는 안 바뀌었지만,
+       기준선을 바꾸는 순간 조용히 틀릴 자리였다.)
 
     ⛔ 이 함수가 **못 하는 것**
       · 벤치마크가 아니다. 두 지수는 어림이고 메모리 대역·통신망에 따라 크게
@@ -105,20 +140,67 @@ def par_speedup(cores, base_cores, nk):
     r = cores / float(base_cores)
     if r <= 1.0:
         return r
-    kp = min(r, max(1.0, float(nk)))
+    kb = max(1.0, float(kpar_base or 1))
+    # 남은 k 헤드룸. 기준선이 이미 k 를 다 썼으면 1 (= 평면파 축만 남는다).
+    head = max(1.0, float(nk) / kb)
+    kp = min(r, head)
     return kp ** PAR_KP_EXP * (r / kp) ** PAR_PW_EXP
 
 
 def nk_eff(mesh):
-    n = KMESH_N.get(str(mesh).strip())
-    if n is None:
-        try:
-            n = 1
-            for x in str(mesh).split():
-                n *= int(x)
-        except ValueError:
-            n = 1
-    return max(1.0, n * TR_REDUCE)
+    """이 격자의 **기약 k점 수**(Γ-중심·비이동·시간반전만). → float ≥ 1
+
+    🔴 2026-09-04 — 종전엔 `n × 0.6` 어림이었다. 그런데 그건 **하한이 아니다**
+      (`5 5 1` 은 어림 15, 실제 13 — 어림이 더 크다 = 낙관). 생성기
+      `vasp_handoff_bundle._kpar_for_mesh` 와 **같은 정확식**으로 맞춘다:
+
+          NKPTS = (N + Π_i (1 if n_i 홀수 else 2)) / 2,   N = Π_i n_i
+
+      검증: 1 1 1→1 · 2 3 1→4 · 3 4 1→7 · 4 6 1→14 (VASP 실측과 일치)
+    ⛔ 못 하는 것: 결정 대칭(ISYM>0)으로 더 줄어드는 것은 안 센다 — 우리는 ISYM=0 이다.
+    """
+    try:
+        ns = [int(t) for t in str(mesh).split()]
+    except (TypeError, ValueError):
+        ns = []
+    if not ns:
+        return 1.0
+    n, self_inv = 1, 1
+    for x in ns:
+        n *= x
+        self_inv *= (1 if x % 2 else 2)
+    if n <= 1:
+        return 1.0
+    return float(max(1, (n + self_inv) // 2))
+
+
+def ceiling_factor(ph):
+    """이 상의 **NELM 천장 배수** (추정 → 잘릴 수 있는 최대 벽시계). → float | None
+
+    한 번의 VASP 기동은 NELM 전자스텝에서 끊긴다. 우리가 가정한 전자스텝이
+    ESTEP[ph] 이므로, 그 상이 최악으로 길어져도 `NELM / ESTEP[ph]` 배까지다.
+
+    ⛔ `relax` 는 None 을 준다 — 이온스텝마다 NELM 이 새로 걸려서 NELM 하나로는
+      벽시계가 안 묶인다 (NSW × NELM 이 필요하다). 모르는 것을 숫자로 내지 않는다.
+    """
+    if ph in ("static", "dense", "pre"):
+        return NELM_DEFAULT / float(ESTEP[ph])
+    return None
+
+
+def job_ceiling_h(phases, nelm=NELM_DEFAULT):
+    """잡의 **기동별 천장 중 최대** [h] 와, 천장을 못 내는 상 목록. → (h|None, [상])
+
+    큐 walltime 은 **기동 하나**에 걸리므로 합이 아니라 max 로 본다.
+    """
+    caps, unknown = [], []
+    for ph, h in (phases or {}).items():
+        f = ceiling_factor(ph)
+        if f is None:
+            unknown.append(ph)
+        else:
+            caps.append(h * f * (nelm / float(NELM_DEFAULT)))
+    return (max(caps) if caps else None), unknown
 
 
 def phase_hours(ph, atoms, mesh, base, lreal_false, n_ionic=N_IONIC,
@@ -176,8 +258,14 @@ SCENARIOS = {
 }
 
 
-def schedule_makespan(job_hours, m):
+def schedule_makespan(job_hours, m, chains=()):
     """LPT 리스트 스케줄링으로 makespan [h] 을 낸다.
+
+    `chains` — **물결 의존**(`PARENT_GEOM`). `[(부모h, 자식h), …]` 로 주면 그 둘은
+      직렬이라 한 덩어리(부모+자식)로 묶어 배치한다. 종전엔 `__nzmag` 대조 잡이
+      부모 기체 기준의 최종 기하를 받는데도 **동시에 돌 수 있는 것처럼** 셌다
+      (2026-09-04). ⛔ 이건 하한이 아니라 근사다 — LPT 는 근사 알고리즘이고,
+      묶음으로 만들면 실제보다 조금 길게 나올 수 있다(보수적 방향).
 
     ★ 왜 "총시간 ÷ 동시실행" 이 아닌가 (Codex 6차 §7)
       한 잡 안의 상(static→dense)은 **직렬**이다 — dense 가 static 의 CHGCAR 를
@@ -186,11 +274,34 @@ def schedule_makespan(job_hours, m):
       경우가 흔하다: 가장 긴 잡보다 짧아질 수 없기 때문이다.
     """
     m = max(1, int(m))
+    items = list(job_hours) + [c[0] + c[1] for c in (chains or ())]
     free = [0.0] * m
-    for h in sorted(job_hours, reverse=True):      # LPT — 긴 것부터
+    for h in sorted(items, reverse=True):          # LPT — 긴 것부터
         i = min(range(m), key=lambda k: free[k])
         free[i] += h
     return max(free) if free else 0.0
+
+
+def parent_chains(man, jobs):
+    """MANIFEST 에서 `PARENT_GEOM` 사슬을 뽑는다. → (사슬 없는 h 목록, [(부모h, 자식h, 자식rel)])
+
+    ⚠ 번들 폴더가 아니라 **MANIFEST 만으로** 판정한다 — 추정기는 zip 을 안 푼다.
+      규칙: `refs/<X>__nzmag` 의 부모는 `refs/<X>` 다 (생성기 `_cz` 가 그렇게 쓴다).
+    ⛔ 못 하는 것: 생성기가 접미어 규칙을 바꾸면 여기서 **조용히 사슬이 사라진다**.
+      그래서 사슬을 하나도 못 찾았는데 `__nzmag` 잡이 있으면 경고를 낸다(호출부).
+    """
+    byrel = {r: h for r, h, _p in jobs}
+    plain, chains, consumed = [], [], set()
+    for rel, h, _p in jobs:
+        base = rel[:-len("__nzmag")] if rel.endswith("__nzmag") else None
+        if base and base in byrel:
+            chains.append((byrel[base], h, rel))
+            consumed.add(rel)
+            consumed.add(base)
+    for rel, h, _p in jobs:
+        if rel not in consumed:
+            plain.append(h)
+    return plain, chains
 
 
 def stage_of(rel, meta, seed_main):
@@ -209,7 +320,7 @@ def stage_of(rel, meta, seed_main):
     return 2
 
 
-def staged_makespan(s1_hours, s2_hours, m):
+def staged_makespan(s1_hours, s2_hours, m, c1=(), c2=()):
     """단계 게이트를 **반영한** makespan [h] = makespan(1단계) + makespan(2단계).
 
     🔴 2026-09-03 — 종전 `schedule_makespan(전체, m)` 은 16잡을 한 물결로 돌린다고
@@ -220,7 +331,8 @@ def staged_makespan(s1_hours, s2_hours, m):
     ⛔ 못 하는 것: **사람의 게이트 판정 시간**(반송 → 우리 분석 → 2단계 지시)은 안 센다.
       그건 계산 시간이 아니라 왕복 시간이고, 실제로는 여기에 며칠이 더 붙는다.
     """
-    return schedule_makespan(s1_hours, m) + schedule_makespan(s2_hours, m)
+    return (schedule_makespan(s1_hours, m, c1)
+            + schedule_makespan(s2_hours, m, c2))
 
 
 def poscar_volume_A3(path):
@@ -360,6 +472,12 @@ def main() -> int:
                     help="k-병렬 그룹 수 상한 (기본: MANIFEST 기록 · 없으면 1 = VASP 기본값)")
     ap.add_argument("--target_days", type=float, default=None,
                     help="목표 벽시계 일수 — 이를 맞추는 (코어/잡, 동시잡) 조합을 역산")
+    ap.add_argument("--queue_cap_h", type=float, default=QUEUE_CAP_H,
+                    help=f"외주 큐의 잡당 walltime 상한 [h] (기본 {QUEUE_CAP_H:.0f}). "
+                         "**NELM 천장**을 이 값에 대어 잘릴지 판정한다")
+    ap.add_argument("--recommend", action="store_true",
+                    help="큐 상한을 만족하는 **최소 코어 수**를 찾아 권고를 낸다 "
+                         "(--manifest 와 함께)")
     ap.add_argument("--selftest", action="store_true")
     a = ap.parse_args()
     if a.selftest:
@@ -439,6 +557,56 @@ def solve_target(jobs_h, base_cores, target_days, nk=7.2,
     return sorted(out)
 
 
+#: 슈퍼컴 sbatch 에서 실제로 잡을 만한 코어/잡 후보 (노드 배수 · KPAR×NCORE 배수).
+CORE_GRID = (48, 64, 96, 128, 192, 256, 384, 512)
+
+
+def _recommend(a, base, man, jobs, nk_cap, kpar_base, cap_h, nelm,
+               s1h, s2h, c1, c2, stages):
+    """큐 상한을 **NELM 천장으로** 만족시키는 최소 코어 수와 그때의 일정을 낸다.
+
+    순서가 중요하다 — 종전 권고는 *추정치*로 "N코어면 91 h 안에 들어간다" 를 골랐다.
+    추정은 ±2배라 그 판정이 반은 틀린다. 여기서는
+      ① **천장** 으로 코어/잡을 고르고 (결정론)
+      ② 그 코어에서 **단계·사슬 반영 makespan** 으로 동시잡을 고른다 (모형)
+    로 나눈다. ①은 계약 조건, ②는 계획 수치다.
+
+    ⛔ 못 하는 것: 랭크당 메모리를 모른다. 코어를 늘리면 잡당 메모리가 줄어
+      죽는 구간이 있는데 여기서는 안 본다 — pilot 잡으로 확인해야 한다.
+    """
+    base_c = base["cores"]
+    print("\n★ 권고 — **NELM 천장**으로 코어/잡을 고르고, 그 다음 동시잡을 고른다")
+    rows = []
+    for c in CORE_GRID:
+        sp = par_speedup(c, base_c, nk_cap, kpar_base)
+        ceil_max = max(job_ceiling_h(p, nelm)[0] or 0.0 for _r, _h, p in jobs) / sp
+        ok = ceil_max <= cap_h
+        smk = (staged_makespan([h / sp for h in s1h], [h / sp for h in s2h],
+                               a.concurrent,
+                               [(x / sp, y / sp, r) for x, y, r in c1],
+                               [(x / sp, y / sp, r) for x, y, r in c2])
+               if stages else None)
+        rows.append((c, sp, ceil_max, ok, smk))
+    for c, sp, ceil_max, ok, smk in rows:
+        print(f"   {c:4d} 코어/잡 · 속도향상 {sp:4.2f}배 · 천장 {ceil_max:6.1f} h "
+              + ("✔ 들어간다" if ok else "⛔ 잘릴 수 있다")
+              + (f" · 동시 {a.concurrent}잡 {smk / 24:5.2f} 일" if smk else ""))
+    fit = [r for r in rows if r[3]]
+    if not fit:
+        print(f"   ⛔ 이 격자에서 {cap_h:.0f} h 를 만족하는 코어 수가 없다 — 상을 줄여야 한다")
+        return
+    c, sp, ceil_max, _ok, smk = fit[0]
+    print(f"\n   ⇒ **{c} 코어/잡** 이 천장을 만족하는 최소값이다 "
+          f"(천장 {ceil_max:.1f} h ≤ 상한 {cap_h:.0f} h · 여유 {cap_h - ceil_max:.0f} h)")
+    if c % base_c == 0:
+        print(f"      k-그룹당 랭크 {c // max(1, int(nk_cap)):d} — 기준선 {base_c} 랭크와 "
+              "가까울수록 외삽이 짧다")
+    if smk:
+        print(f"      동시 {a.concurrent}잡이면 {smk / 24:.2f} 일 (단계·사슬 반영) · "
+              f"총 {c * a.concurrent} 코어")
+    print("   ⚠ 천장은 결정론이지만 **일수는 모형(±2배)** 이다. 둘을 같은 확신으로 쓰지 않는다.")
+
+
 def report_manifest(a, base) -> int:
     """실제 번들 계획 기반 보고 — 산술 하한과 **스케줄링 makespan** 을 같이 낸다."""
     if not os.path.isfile(a.manifest):
@@ -453,22 +621,34 @@ def report_manifest(a, base) -> int:
     # 🔴 2026-09-04 — k 병렬 상한은 KPAR 이 정한다. 기록이 없으면 1 (VASP 기본 · 낙관 금지).
     _kpar_eff = manifest_kpar(man) if getattr(a, "kpar", None) is None else max(1, int(a.kpar))
     _nk_cap = min(_kpar_eff, 7.2)
+    _kpb = base.get("kpar_base") or 1
     if not jobs:
         print(f"⛔ {a.manifest} 에 계획된 잡이 0개 — 비용을 낼 수 없다")
         return 2
     hs = [h for _r, h, _p in jobs]
     total = sum(hs)
     lo = max(total / max(1, a.concurrent), max(hs))     # 도달 가능한 하한
-    mk = schedule_makespan(hs, a.concurrent)            # LPT 근사 (단계 무시)
+    # 🔴 2026-09-04 — `__nzmag` 대조 잡은 부모 기하를 받는다(PARENT_GEOM) → 직렬 사슬.
+    _plain, _chains = parent_chains(man, jobs)
+    mk = schedule_makespan(_plain, a.concurrent, _chains)   # LPT 근사 (단계 무시)
     # 🔴 2026-09-03 — staged 번들이면 **단계 게이트를 반영한** 값이 진짜 벽시계다.
     _pl_r = man.get("planned") or {}
     _seed = man.get("seed_main")
     stages = [stage_of(r, (_pl_r.get(r) or {}).get("meta") or {}, _seed)
               for r, _h, _p in jobs] if man.get("staged_runner") else None
-    s1h = [h for h, s in zip(hs, stages or [])if s == 1]
-    s2h = [h for h, s in zip(hs, stages or []) if s == 2]
-    n_s1, n_s2 = len(s1h), len(s2h)
-    s_mk = (staged_makespan(s1h, s2h, a.concurrent) if (s1h and s2h) else None)
+    _chain_rels = {r for r, _h, _p in jobs if r.endswith("__nzmag")}
+    _st = dict(zip([r for r, _h, _p in jobs], stages or []))
+    s1h = [h for (r, h, _p), s in zip(jobs, stages or [])
+           if s == 1 and r not in _chain_rels and r + "__nzmag" not in _chain_rels]
+    s2h = [h for (r, h, _p), s in zip(jobs, stages or [])
+           if s == 2 and r not in _chain_rels and r + "__nzmag" not in _chain_rels]
+    # 사슬은 **자식의 단계**에 통째로 얹는다 (부모가 먼저 끝나야 자식이 열리므로).
+    c1 = [c for c in _chains if _st.get(c[2], 1) == 1] if stages else []
+    c2 = [c for c in _chains if _st.get(c[2], 1) == 2] if stages else []
+    n_s1 = len(s1h) + 2 * len(c1)
+    n_s2 = len(s2h) + 2 * len(c2)
+    s_mk = (staged_makespan(s1h, s2h, a.concurrent, c1, c2)
+            if ((s1h or c1) and (s2h or c2)) else None)
     n_ph = sum(len(p) for _r, _h, p in jobs)
     by_ph: dict = {}
     for _r, _h, p in jobs:
@@ -480,11 +660,15 @@ def report_manifest(a, base) -> int:
     print(f"MANIFEST: {a.manifest}")
     if cores != base["cores"]:
         print(f"  ⚡ 코어/잡 {base['cores']} → {cores} · 속도향상 "
-              f"{par_speedup(cores, base['cores'], _nk_cap):.2f}배 가정 "
-              f"(k 병렬 상한 {_nk_cap:.1f} = min(KPAR {_kpar_eff}, k점 7.2) · ±50 %)")
+              f"{par_speedup(cores, base['cores'], _nk_cap, _kpb):.2f}배 가정 "
+              f"(k 병렬 상한 {_nk_cap:.1f} = min(KPAR {_kpar_eff}, k점 7.2) · "
+              f"기준선 KPAR {_kpb} · ±50 %)")
         if _kpar_eff <= 1:
             print("     ⚠ **KPAR 기록이 없다 → 1 로 본다** (VASP 기본값). k 병렬이 안 걸리면 "
                   "코어를 늘려도 이만큼만 빨라진다 — INCAR 에 KPAR 을 넣어야 한다.")
+        if _kpb > 1:
+            print(f"     ⚠ 기준선 OUTCAR 이 이미 k 그룹 {_kpb}개로 돌았다 — 남은 k 헤드룸은 "
+                  f"{_nk_cap / _kpb:.1f}배뿐이다 (이걸 안 빼면 이득을 두 번 센다).")
     if a.drop_phase:
         print(f"  ⚡ 제거한 상: {' '.join(a.drop_phase)}")
     if a.static_mesh:
@@ -530,6 +714,38 @@ def report_manifest(a, base) -> int:
     for rel, h, p in sorted(jobs, key=lambda t: -t[1])[:5]:
         print(f"     {h:6.1f} h  {rel}  "
               + " ".join(f"{k}:{v:.0f}" for k, v in sorted(p.items())))
+    # ── NELM 천장 vs 큐 walltime 상한 ────────────────────────────────────────
+    #   🔴 2026-09-04 — **큐에 들어가나** 를 추정치(±2배)로 판정하면 안 된다.
+    #   한 기동은 NELM 에서 끊기므로 그게 결정론적 상한이다.
+    _nelm = base.get("nelm") or NELM_DEFAULT
+    _cap = float(getattr(a, "queue_cap_h", None) or QUEUE_CAP_H)
+    _ceils, _unk = [], set()
+    for rel, _h, p in jobs:
+        c, u = job_ceiling_h(p, _nelm)
+        _unk |= set(u)
+        if c is not None:
+            _ceils.append((c, rel))
+    print()
+    if not _ceils:
+        print(f"  NELM 천장   낼 수 없다 — 천장이 정의되는 상이 없다 (상: {sorted(_unk)})")
+    else:
+        _cmax, _crel = max(_ceils)
+        _over = [r for c, r in _ceils if c > _cap]
+        print(f"  NELM 천장   최장 {_cmax:.1f} h  (NELM {_nelm} · 추정×{_nelm / ESTEP['static']:.2f}) "
+              f"← {_crel}")
+        print(f"              큐 상한 {_cap:.0f} h 기준: "
+              + (f"⛔ {len(_over)}/{len(_ceils)}잡이 **잘릴 수 있다**"
+                 if _over else f"✔ 전 {len(_ceils)}잡 안전 (여유 {_cap - _cmax:.0f} h)"))
+        if _over:
+            print(f"              예: {_over[0]}")
+            print("              ⇒ 코어를 늘리거나(--cores) 상을 줄여야 한다. "
+                  "추정이 상한 아래여도 **천장이 넘으면 잘린다**.")
+        if _unk:
+            print(f"              ⚠ 천장을 못 내는 상 {sorted(_unk)} 이 있다 "
+                  "(relax 는 NSW×NELM 이라 NELM 하나로 안 묶인다) — 그 잡은 판정에서 빠졌다")
+    if getattr(a, "recommend", False) and _ceils:
+        _recommend(a, base, man, jobs, _nk_cap, _kpb, _cap, _nelm,
+                   s1h, s2h, c1, c2, stages)
     if a.target_days:
         print(f"\n★ 목표 {a.target_days} 일을 맞추는 조합 (총 코어 최소순):")
         sol = solve_target(hs if cores == base["cores"] else
@@ -767,6 +983,64 @@ def selftest() -> int:
     _b0 = phase_hours("dense", 192, "4 6 1", b, True)
     chk(_b0 > 0 and phase_hours("static", 192, "3 4 1", b, True) < _b0,
         "dense 제거가 static 보다 큰 절감이다")
+
+    # ── nk_eff 정확식 (2026-09-04, 렌즈1 P2-1) ───────────────────────────────
+    #   ⚠ `2 2 2` 는 8 이 맞다 — 점이 0 과 0.5 뿐이라 **전부 시간반전 불변**이라 안 줄어든다.
+    for _m, _want in (("1 1 1", 1), ("2 3 1", 4), ("3 4 1", 7), ("4 6 1", 14),
+                      ("5 5 1", 13), ("2 2 2", 8), ("3 3 3", 14)):
+        chk(abs(nk_eff(_m) - _want) < 1e-9,
+            f"nk_eff('{_m}') = {nk_eff(_m):.0f} (기대 {_want} · 생성기와 같은 식)")
+    chk(nk_eff("5 5 1") < 25 * 0.6,
+        f"[음성] 옛 0.6 어림({25*0.6:.0f})은 실제({nk_eff('5 5 1'):.0f})보다 **커서** "
+        "하한이 아니었다 — 그래서 뺐다")
+    chk(nk_eff("") == 1.0 and nk_eff(None) == 1.0,
+        "[음성] 격자를 못 읽으면 1 (모르면 낙관하지 않는다)")
+
+    # ── NELM 천장 (2026-09-04) ───────────────────────────────────────────────
+    chk(abs(ceiling_factor("static") - NELM_DEFAULT / ESTEP["static"]) < 1e-9,
+        f"static 천장 배수 = NELM/ESTEP = {ceiling_factor('static'):.2f}")
+    chk(ceiling_factor("relax") is None,
+        "[음성] relax 는 천장을 **안 낸다** (NSW×NELM 이 필요하다 — 모르는 걸 숫자로 내지 않는다)")
+    _c, _u = job_ceiling_h({"static": 30.0})
+    chk(abs(_c - 80.0) < 1e-9 and not _u, f"천장 30h × 2.67 = {_c:.1f} h")
+    _c2, _u2 = job_ceiling_h({"static": 30.0, "relax": 999.0})
+    chk(abs(_c2 - 80.0) < 1e-9 and _u2 == ["relax"],
+        "[음성] 천장이 없는 상은 max 에 안 섞이고 **따로 보고**된다 (999 h 가 안 샜다)")
+    chk(job_ceiling_h({"relax": 10.0})[0] is None,
+        "[음성] 천장을 낼 수 있는 상이 하나도 없으면 None (0 이 아니다)")
+    _c3, _ = job_ceiling_h({"static": 30.0}, nelm=100)
+    chk(abs(_c3 - 40.0) < 1e-9, f"NELM 을 반으로 줄이면 천장도 반 ({_c3:.1f} h)")
+
+    # ── 기준선 KPAR (distrk) 반영 (2026-09-04) ───────────────────────────────
+    chk(abs(par_speedup(192, 48, 4, 1) - par_speedup(192, 48, 4)) < 1e-9,
+        "기준선 KPAR 1 이면 종전과 같다 (우리 실측 OUTCAR 이 '1 groups')")
+    chk(par_speedup(192, 48, 4, 4) < par_speedup(192, 48, 4, 1),
+        f"[음성] 기준선이 이미 KPAR 4 였다면 이득이 **작아진다** "
+        f"({par_speedup(192,48,4,4):.2f} < {par_speedup(192,48,4,1):.2f}) — "
+        "이걸 안 빼면 이득을 두 번 센다")
+    chk(abs(par_speedup(192, 48, 4, 4) - (192 / 48.0) ** PAR_PW_EXP) < 1e-9,
+        "기준선이 k 를 다 썼으면 남는 건 평면파 축뿐이다")
+
+    # ── PARENT_GEOM 사슬 (2026-09-04) ────────────────────────────────────────
+    _js = [("refs/mol__x__box24", 10.0, {"static": 10.0}),
+           ("refs/mol__x__box24__nzmag", 6.0, {"static": 6.0}),
+           ("prospective/a", 100.0, {"static": 100.0})]
+    _pl, _ch = parent_chains({}, _js)
+    chk(_ch == [(10.0, 6.0, "refs/mol__x__box24__nzmag")] and _pl == [100.0],
+        "사슬을 찾는다 (부모 10 + 자식 6 · 나머지 1잡)")
+    chk(schedule_makespan(_pl, 3, _ch) == 100.0,
+        "동시 3잡: 사슬(16 h)이 최장 잡(100 h) 밑이라 makespan 은 안 늘어난다")
+    chk(schedule_makespan([10.0, 6.0, 100.0], 3) == 100.0
+        and schedule_makespan(_pl, 2, _ch) == 100.0,
+        "동시 2잡에서도 100 h — 사슬은 남는 슬롯에 들어간다")
+    _pl2, _ch2 = parent_chains({}, [("refs/mol__x__box24", 60.0, {"static": 60.0}),
+                                    ("refs/mol__x__box24__nzmag", 60.0, {"static": 60.0})])
+    chk(schedule_makespan(_pl2, 8, _ch2) == 120.0
+        and schedule_makespan([60.0, 60.0], 8) == 60.0,
+        "[음성] 사슬을 무시하면 60 h 라고 답한다 — 실제는 120 h (직렬이라 나란히 못 돈다)")
+    _pl3, _ch3 = parent_chains({}, [("refs/mol__y__box24__nzmag", 6.0, {"static": 6.0})])
+    chk(_ch3 == [] and _pl3 == [6.0],
+        "[음성] 부모가 계획에 없으면 사슬로 세지 않는다 (없는 의존을 지어내지 않는다)")
 
     # ── 실물 번들이 있으면 **그걸로** 돌린다 (합성 fixture 만으론 모양이 어긋난다) ──
     #   2026-08-12: counts 를 dict 로 만든 fixture 는 통과했는데 실물(list)에서 죽었다.

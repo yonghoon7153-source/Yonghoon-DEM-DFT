@@ -908,6 +908,70 @@
    "citable": "no",
    "citable_why": "S0 미실행. 실행해도 ADEQUATE / MODEL_NONDIAGNOSTIC / NO_VALUE / PARTITION_DEPENDENT / THRESHOLD_DEPENDENT / BACKBONE_DEFINITION_DEPENDENT / ETHER_O_CENTERED / LOCALIZATION_DEPENDENT / SEARCH_PROTOCOL_DEPENDENT 중 하나로만 닫히며, 어느 경우에도 에너지 순서·바닥상태·물질 수준 캐리어 위치를 인용하지 않는다.",
    "date": "2026-08-31"
+  },
+  {
+   "id": "D-2026-09-03-sdcp-c12-kconv-axis-excluded",
+   "schema_version": 2,
+   "kind": "gate",
+   "scope": "sdcp.c12.error_budget",
+   "slot": "kconv_axis_design_exclusion",
+   "decision_state": "active",
+   "status": "active",
+   "applies_to": {
+    "systems": [
+     "sdcp_neutral",
+     "ptfe_c10"
+    ],
+    "tasks": [
+     "fragment_contrast"
+    ],
+    "methods": [
+     "vasp-544__pbe-u62__mlip-geom-sp"
+    ],
+    "use_cases": [
+     "manuscript",
+     "closure"
+    ]
+   },
+   "title": "C-12 δ_k(k 수렴) 축 설계 제외 + 결과 보기 전 재개 조건 (안 A)",
+   "statement": "δ_k(k 격자 수렴, static 3×4×1 → dense 4×6×1) 축을 **설계에서 뺀다**. dense 2잡이 최장 잡을 299.6 h 로 만들어 전체 일정을 12.5일로 끌었다 (vasp_cost_estimate 실측: dense 200 h + static 100 h). static 만이면 최장 111 h · 동시 8잡 기준 8.16일. 재개 조건: 재개하지 않는다. |D_raw| < 0.05 eV 는 프로토콜 §7 미해결 · §8 '계산을 확장하지 않는다'. |D_raw| ≥ 0.05 eV 면 k 가드밴드(0.01 eV)가 부호·판정을 못 바꾼다. 경계 구간 0.05 ≤ |D_raw| < 0.06 eV 에서는 분석기가 KCONV_UNTESTED_AXIS_AT_THRESHOLD 자문을 내고 원고는 '미시험 축에 판정이 민감하다' 를 적는다 — 계산은 추가하지 않는다.",
+   "rationale": "렌즈2 P0-1 · 렌즈4 P0-2 · 렌즈5 P1-1 (2026-09-03): v32–v34 는 사전등록 49행('넘으면')을 근거로 δ_k 를 뺐지만 적용 조항은 50행(축 부재 = INCOMPLETE)이고 원장에 기록이 없었다. 종전 재개 조건 '|ΔE_ads| < 50 meV → dense 추가' 는 비준 프로토콜 §7·§8 과 정반대였다. 이 결정으로 예외를 명시적으로 비준하고 재개 조건을 프로토콜과 정합하게 다시 선언한다.",
+   "supersedes": [],
+   "depends_on": [
+    "D-2026-08-30-sdcp-c12-path"
+   ],
+   "record": "db/properties/sdcp_c12_claim_prereg_2026_08_31.json#3_오차예산.축_설계_제외_2026_09_03",
+   "protocol_ref": "db/properties/sdcp_c12_protocol_2026_08_30.json",
+   "review": "kb/reviews/internal_lens_review_c12_v34_2026_09_03.md",
+   "method_ref": "tools/sdcp/vasp_handoff_bundle.py (--no_kconv · _prereg_axis_exclusion · _kconv_reopen_eval)",
+   "enforcement": "분석기: 번들 사전등록 사본에 이 항이 없으면 KCONV_OMISSION_UNRATIFIED, MANIFEST 재개 조건이 항과 다르면 KCONV_OMISSION_DRIFT, 형식 불량이면 KCONV_OMISSION_UNDECLARED — 모두 estimand 차단. 재개 조건은 D_raw_eV 에 기계 평가돼 reopen_eval 로 남는다. preflight(--check_governance)에서도 정적 검사.",
+   "citable": "no",
+   "citable_why": "DFT 결과 0잡 시점. 결과가 나오면 시험한 두 축 조건부로만 보고한다.",
+   "date": "2026-09-04",
+   "registered_at": "2026-09-04",
+   "registered_by": "agent (1저자 결정 A 반영)",
+   "status_history": [
+    {
+     "at": "2026-09-04",
+     "state": "proposed",
+     "note": "렌즈2·4·5 P0/P1 반영 등록 — 비준은 사람 몫"
+    },
+    {
+     "at": "2026-09-04",
+     "state": "active",
+     "note": "1저자 비준 (scientific_owner). 계산 전에 닫았다."
+    }
+   ],
+   "ratification": {
+    "state": "ratified",
+    "role": "scientific_owner",
+    "actor_id": "yonghoon7153@gmail.com",
+    "timestamp": "2026-09-04T00:31:06Z",
+    "commit": "4a548a543d119139b822a9e29dd42eaf55155dc7",
+    "decision_digest": "sha256:883d903cca4157be1a6b0f191808ecc07ccf6f1de47762b23b96a8192750d595",
+    "⚠_digest_의_뜻": "이 지문은 `ratification` 을 뺀 결정 내용의 sha256 이다. 비준 뒤 내용을 고치면 지문이 어긋나 검사가 재승인을 요구한다.",
+    "근거": "렌즈2·4·5 (2026-09-03) 가 공통으로 '비준 문서 이탈 · 원장 부재' 를 잡았다. 1저자가 안 A 를 택해 비준했다."
+   }
   }
  ]
 }
