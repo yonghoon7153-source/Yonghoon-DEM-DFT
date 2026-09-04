@@ -156,9 +156,17 @@ git:
 # ---------------------------------------------------------------------
 litdb:
   enabled: true
-  mode: "file"
-  format: "jsonl"                        # jsonl | sqlite
-  path: "data/litdb.jsonl"               # 브랜치의 litdb 경로로 교체 (예: ../litdb/papers.jsonl)
+  # 🔴 2026-09-04 — 사용자의 실제 litdb 는 JSONL·SQLite 가 아니라 **Markdown digest** 다
+  #   (`litdb/papers/<slug>.md` + INDEX.md / INDEX_DEM.md).  `file` 모드로 쓰면 실제 서랍과
+  #   **영영 안 합쳐지는 평행 JSONL** 이 생긴다.  그래서 markdown 모드가 기본이다.
+  mode: "markdown"                       # markdown | file | cli
+  # ⚠ 정본은 `claude/friendly-meitner-lldvar` 브랜치의 litdb/ **하나뿐**이다 (2026-07-16 결정).
+  #   stoic-knuth 의 litdb/ 는 동결 스냅샷 — 절대 여기로 가리키지 말 것.
+  markdown_dir: "../litdb/papers"
+  # ⛔ 중복 판정은 papers/ **전수**로 한다 (INDEX 로 하면 샌다 — 인덱스가 셋이다, 2026-09-03 사고).
+  #   어댑터가 파일명 + 본문 DOI 를 둘 다 훑는다.
+  format: "jsonl"                        # file 모드용: jsonl | sqlite
+  path: "data/litdb.jsonl"               # file 모드용
   project_dir: "."                       # cli 모드: litdb.toml 이 있는 폴더
   bin: "litdb"
   also_file: false

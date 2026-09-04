@@ -1,6 +1,7 @@
 # Beyond Electrochemistry: Tailoring Mechanical Properties of Halogen-Substituted Argyrodites
 
-**Yonghoon Ahn, BML Lab, Hanyang University**
+**Yonghoon An** · Division of Materials Science & Engineering, Hanyang University
+(E-mail: yonghoon71@hanyang.ac.kr)
 
 > ⚠️ **DRAFT — 2026-07-27 수치 정정 진행중.** §3.4 의 밴드갭은 legacy/k-mesh 세대 값(comp1 2.28 /
 > Model C 1.65)이었다. **1.65 는 k-mesh 아티팩트로 판정됐고**(수렴 k-mesh 에서 재현 안 됨,
