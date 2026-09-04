@@ -465,6 +465,12 @@ CELL_LOG = os.environ.get("CELLLOG") or os.path.join(H, "logs", "lpsocl_3x3x1.lo
 ARR6 = os.environ.get("ARR6ROOT") or os.path.join(H, "work", "runs", "arrhenius_6pt")
 CLOSE_LOG = os.environ.get("CLOSELOG") or os.path.join(H, "logs", "arr6close.log")
 #: 닫기 캠페인 3단계 — (라벨, 온도들, 시드들, prod ps, 무엇을 답하나)
+# ⚠⚠ 2026-09-04 — **이 계획표는 낡았다.** 1저자가 안 B 를 택해 LPSOCl 3×3×1 은
+#   600·800·1000 K **전부 400 ps** 로 재실행 중이고, 200 ps 9런은 superseded 다
+#   (db/properties/lpsocl_box331_amendment_2026_09_01.json · D-2026-09-04-lpsocl-box331-400ps-uniform).
+#   그 캠페인 감시는 **tools/ionic/watch_lpsocl_400ps.sh** 다 — 배치가 달라
+#   여기 `_msd_of` 의 `T{T}_s{sd}` 글롭으로는 안 잡힌다.
+#   아래 세 줄은 그 결정 **이전**의 계획이므로 그대로 읽지 말 것.
 CLOSE_PLAN = [
     ("lpsocl_new",   (600, 1000), ("2", "3", "4"), 200,
      "판정① 확정(작은 셀 MTO) + 2단계 짝"),
