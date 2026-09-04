@@ -914,15 +914,20 @@
      "at": "2026-09-04",
      "state": "active",
      "note": "1저자 비준 (scientific_owner). 사전등록 재봉인과 함께."
+    },
+    {
+     "at": "2026-09-04",
+     "state": "active",
+     "note": "1저자 비준 (scientific_owner). 사전등록 재봉인과 함께."
     }
    ],
    "ratification": {
     "state": "ratified",
     "role": "scientific_owner",
     "actor_id": "yonghoon7153@gmail.com",
-    "timestamp": "2026-09-04T05:52:14Z",
-    "commit": "1a3ad0da8367736e61431f4b04affa992c4b8ac4",
-    "decision_digest": "sha256:809256aab31a1a760e611fcc8b7bc5b4fe53b4f1a258b70192c6a5b6fd3f9c40",
+    "timestamp": "2026-09-04T06:06:08Z",
+    "commit": "8c555667a8bbb18bf5c04e60d7506dd70a7e74a8",
+    "decision_digest": "sha256:03765b6bd7a57c9c0efdb05e88dbbf1f6c374c53e21c66e43727638d5395b462",
     "⚠_digest_의_뜻": "`ratification` 을 뺀 결정 내용의 sha256 이다."
    }
   },

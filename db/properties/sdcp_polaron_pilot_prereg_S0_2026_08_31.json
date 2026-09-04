@@ -21,7 +21,7 @@
   "⚠_원본과_다른_해시인_이유": "회신 Y + Z + Z-2(내부 2차) 이행으로 빌더가 바뀌었다 (커밋 341e0d7e). 범위·질문·판정어는 그대로고, estimand 형태 대조(단위·결박·소비·계열 class)와 게이트 봉인·smoke 규약 실측이 바뀌었다.",
   "이_시점의_doped_잡": "0개 — git log 가 그 순서의 증거다. 결과를 보고 규칙을 고치지 않는다.",
   "이_시점의_ORCA_잡": "0개 — phase L 도 아직 돌리지 않았다 (회신 Y: loccheck 단독만 GO · 그것도 아직 안 돌림)",
-  "builder_last_change_commit": "341e0d7e19408c706de9b314987c01f8508c17ec",
+  "builder_last_change_commit": "4b53788bc7b6fda69eb01f6819522e3751773896",
   "⚠_왜_전체_커밋이_아닌가": "회신 W P0-1 — '이 파일이 들어간 커밋' 은 파일 안에 넣을 수 없다 (커밋 해시가 파일 내용에 의존하므로 순환이다). 종전 판은 그 자리에 placeholder 를 넣었고, 검사가 그것을 실제 커밋과 비교해 **seed 생성이 반드시 막혔다**. ⇒ 봉인하는 것은 ⓐ 빌더 blob SHA ⓑ **빌더를 마지막으로 바꾼 커밋** 둘이다. 전체 커밋 결박은 파일 밖 attestation(tools/review_manifest.py)이 진다.",
   "이전_봉인_이력": [
    {
@@ -49,7 +49,8 @@
   ],
   "calib_tool_sha256": "02d9cb38640d9ef07910e068fd6ee2d74537b2821549e25652b43ae4cca06ac7",
   "⚠_calib_tool_sha256": "tools/sdcp/spin_partition_calib.py 의 blob SHA — 생성기가 manifest 에 같은 값을 봉인하고 판정기가 잡별 대조 산출물의 tool_sha256 과 대조한다 (회신 Y P0-2). 도구가 바뀌면 재봉인.",
-  "⚠_재봉인_2026_09_03": "회신 Z-3 P0-1 이행으로 빌더가 바뀌었다 (loccheck smoke 가 실행되면 반드시 ValueError 로 죽던 것 수정 + heredoc 실행 시험 9건 + 격자 대조 단일화). **재비준 시 `ratification.content_digest` 를 반드시 재계산할 것** — 지금 값은 옛 판의 것이다."
+  "⚠_재봉인_2026_09_03": "회신 Z-3 P0-1 이행으로 빌더가 바뀌었다 (loccheck smoke 가 실행되면 반드시 ValueError 로 죽던 것 수정 + heredoc 실행 시험 9건 + 격자 대조 단일화). **재비준 시 `ratification.content_digest` 를 반드시 재계산할 것** — 지금 값은 옛 판의 것이다.",
+  "⚠_2026_09_04_커밋라벨_정정": "`builder_last_change_commit` 이 341e0d7e… 로 적혀 있었는데 빌더를 마지막으로 바꾼 커밋은 4b53788b… 다. **봉인한 내용(builder_sha256 5eac63c6…)은 처음부터 옳았고** 라벨만 어긋나 있었다 — 재봉인이 4b53788b 안에서 이뤄지면서 그 커밋 자신의 해시를 알 수 없어 직전 값이 적혔다. 생성기가 `_git_last_change_commit(__file__)` 로 계산해 대조하므로 이 라벨은 **검사 대상**이고, 어긋나면 pilot_generate 가 멈춘다(실측 2026-09-04). 내용이 아니라 라벨의 정정이므로 `이전_봉인_이력` 에 넣지 않는다 — 봉인된 빌더는 바뀌지 않았다."
  },
  "대상": {
   "정본_명칭": "neutral H-atom-removed n=6 radical model (D•)",
@@ -353,6 +354,11 @@
    "at": "2026-09-04",
    "state": "ratified",
    "note": "1저자 비준 (scientific_owner) — 회신 Z-3 이행분. 내용 변경 없는 재비준: P0-1 loccheck smoke 의 %plots→%%plots 로 봉인 대상(빌더 SHA)이 바뀌어 지문이 어긋나 있었다. 비준 범위는 **loccheck 까지**다 — seeds 는 LOCCHECK_PASS.json, phase S 는 PROBE_VERDICT_PASS.json 을 강제하고 지금 둘 다 없다(실측 확인). loccheck 결과를 사람이 본 뒤 다음 단계를 판단한다."
+  },
+  {
+   "at": "2026-09-04",
+   "state": "ratified",
+   "note": "1저자 비준 재확인 — builder_last_change_commit 라벨 정정(341e0d7e→4b53788b) 반영. 봉인한 빌더 SHA 5eac63c6 는 불변이고 라벨만 어긋나 pilot_generate 가 멈췄던 것(실측 2026-09-04). 범위는 여전히 loccheck 까지."
   }
  ],
  "회신_U_이행": {
@@ -404,10 +410,10 @@
   "role": "scientific_owner",
   "at": "2026-09-04",
   "by": "1저자",
-  "content_digest": "208c5ac52a9827fa2820d65fd2e1b11600b68222d2ccc08151b85395c33c7893",
+  "content_digest": "19ae50894df01867f2ee8d6347b9488eb192c17f507d5dd88a422bec796d0fc0",
   "actor_id": "yonghoon7153@gmail.com",
-  "timestamp": "2026-09-04T05:52:14Z",
-  "commit": "1a3ad0da8367736e61431f4b04affa992c4b8ac4",
+  "timestamp": "2026-09-04T06:06:08Z",
+  "commit": "8c555667a8bbb18bf5c04e60d7506dd70a7e74a8",
   "⛔_무엇에_대한_비준인가": "이 문서에서 `ratification` 을 뺀 내용의 sha256 이다. 한 글자라도 바뀌면 지문이 달라지고 게이트가 재승인을 요구한다 — 비준을 받아 놓고 내용을 고치는 경로를 닫는다.",
   "⚠_base_commit_이_아니다": "`commit` 은 기록일 뿐 앵커가 아니다. 앵커는 위 digest 다."
  }
