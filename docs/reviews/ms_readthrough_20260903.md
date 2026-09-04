@@ -536,3 +536,68 @@ polished SBE and DBE cross-sections.
 ⚠ **내 앞선 지시 "컬러바 42–118" 은 틀렸다** — 그건 **접촉수** 범위다.
 (a) 는 **SBE 중앙값으로 정규화한 무차원 density** 라 눈금이 1 근처다.
 
+
+---
+
+# Table S2 · S3 · Figure S16 — 저자 확정 (2026-09-04)
+
+## ★★ CL-61 정정 — **σ_e(SDCP) = 250 은 저자의 4-probe 실측이다**
+
+저자 확인 (2026-09-04): *"이건 저자가 4-probe 로 잰 거야."*
+
+⇒ **CL-61 의 *"저자 지정값 · 문헌 앵커 없음"* 서술을 상향한다.**  표 라벨도
+`Assumed` 가 아니라 **`Measured`** 다 (Table S2 반영 완료).
+⚠ **여전히 남는 결손 하나 — 시편 규약**: 4-probe 를 **캐스팅 필름 / 압착 펠릿 / 분말**
+중 무엇으로 쟀는지.  `--sigma-sdcp` help 가 이미 *"cast film 인지 pressed pellet 인지
+UNRECORDED"* 라고 적고 있다.  ★ 오늘 Patil 카드가 보인 대로 **필름(접촉저항 없음) vs
+펠릿(접촉저항 포함)** 이 자릿수를 가르므로, 융합-복셀 규약과의 정합성이 여기 걸린다.
+⇒ **저자에게 이것 하나만 물으면 이 축이 닫힌다.**
+
+## Table S2 — 확정 상태
+
+✅ 반영됨: `Young's modulus (dense) 24 GPa` **행 삭제**(피드백 D — 24 vs 1.35 대비가
+표에서 논쟁을 되열지 않게) · Source 넷 정정(**SDCP Measured** · NCM/VGCF **Assumed** ·
+VGCF 78.5 만 Calculated) · **σ_ion(SDCP) 1.0×10⁻³ Assumed 추가** · `ν (DEM contact) 0.3`
+추가 · thickness 를 S3 로 이관 · 제목 `DEM–MPM`.
+
+★ `ν = 0.3` 은 **DEM 접촉모델 입력**이라 넣는 것이 옳다 (E* 에만 들어가는 2차 인자).
+⛔ **그 값에서 K·G 를 유도해 물성으로 적지 않는다** — 원장이 경고한 자리.  현재 표에 없다 ✓
+
+⚠ 남은 것:
+· **`ν (DEM contact)` 단위가 `GPa-`** 로 되어 있다 → **무차원 `-`**
+· **PTFE 의 기하가 없다** — Methods 가 `centerline voxels of a PTFE fibril` 규약을 쓰므로
+  **fibril 직경 행이 있어야** 그 규약이 정의된다
+· `Calibrated` 각주가 표에 보이지 않는다.  문안:
+  `Parameters marked "Calibrated" were adjusted so that the compacted packing reproduces
+   the porosity and contact overlap measured for cold-pressed LPSCl.`
+
+## Table S3 — 확정 상태
+
+✅ 갱신됨: `Median CBD contacts 433/517` → **`Median CA contacts 74/86`** ·
+`σ_ele 1.98/3.00 S cm⁻¹` → **`54.0/70.6 mS cm⁻¹`**(단위 포함) ·
+`σ_ion 2.03/2.15×10⁻⁴` → **`5.53/5.58×10⁻⁴ S cm⁻¹`** · thickness **72.53** ·
+porosity **7.86/7.37** · 제목 `DEM–MPM`.
+
+★ **유효숫자는 `54.0 / 70.6` 으로 본문·표를 통일했다** (저자 결정).  8팔 산포가
+1.3–1.7 % 라 3자리가 자기일관이다.  ⚠ **Figure 4b 가 `53.99/70.61` 이면 어긋난다 — 확인 필요.**
+
+⚠ 남은 것 둘:
+· **`VGCF coverage of AM 13.1 → 15.5 %` 라벨이 틀렸다** — 늘어난 2.4 %p 는 **SDCP 몫**이고
+  VGCF 함량은 두 전극이 같다.  대시보드도 `도전재덮임`(conductive additive) 이다.
+  ⇒ **`CA coverage of AM`** 으로.  (바로 아래 행은 CBD → CA 로 이미 고쳤다.)
+· **`Areal capacity 3.24/3.23 mAh cm⁻²`** 는 **NCM 비용량(mAh/g) 가정**을 품는다.
+  편집 시트가 그것을 *"비용량 미상"* 으로 판정했으므로 **어떤 비용량을 썼는지** 각주 필요.
+
+## Figure S16 — 캡션 권고
+
+현재: `Constructed SBE and DBE geometries used for the DEM-MPM simulations.`
+(첨가제 상만 보이고 NCM·LPSCl 은 안 보인다 · 척도 없음 · 같은 골격이라는 언급 없음)
+
+권고:
+```
+Figure S16. Constructed SBE and DBE geometries used for the DEM-MPM simulations
+(50 × 50 × 72.5 μm3), showing the additive phases only; the NCM and LPSCl particles are
+omitted for clarity. Both geometries share the same DEM-generated AM/SE skeleton.
+```
+★ 마지막 문장이 **본문 ④(`differences arise solely from their binder phases`)를 그림으로
+뒷받침**한다 — 지금은 그 연결이 없다.
