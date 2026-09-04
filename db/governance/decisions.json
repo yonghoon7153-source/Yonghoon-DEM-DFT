@@ -1057,6 +1057,59 @@
     "⚠_digest_의_뜻": "`ratification` 을 뺀 결정 내용의 sha256 이다.",
     "근거": "1저자 2026-09-04: '다시 개정안이고 adsorption energy로 해'."
    }
+  },
+  {
+   "id": "D-2026-09-04-lpsocl-box331-400ps-uniform",
+   "schema_version": 2,
+   "kind": "gate",
+   "scope": "lpsocl.box331.md_production_length",
+   "slot": "arrhenius_window_uniformity",
+   "decision_state": "active",
+   "status": "active",
+   "applies_to": {
+    "systems": [
+     "lpsocl"
+    ],
+    "tasks": [
+     "arrhenius_Ea"
+    ],
+    "methods": [
+     "uma-s-1p1-omat__langevin-nvt"
+    ],
+    "use_cases": [
+     "manuscript"
+    ]
+   },
+   "title": "LPSOCl 3×3×1 — 전 온도 생산 400 ps 로 통일 (판정 창 수를 온도 간 같게)",
+   "statement": "600·800·1000 K × 3시드 = 9런을 **전부 400 ps 로 재실행**하고 기존 200 ps 9런은 superseded 한다. 판정은 DINC_WINDOWS 4창 전부로 한다.",
+   "rationale": "내부 리뷰 AX P0-1: `(50,100)` 창이 200 ps MTO 최대 lag 100 ps 를 넘어 측정 불가라 9런 전부 3창으로 판정됐다. 600 K 만 400 ps 로 늘리면 그 온도만 4창이 되고, 창이 늘면 max−min 이 단조 증가해 **이미 no-value 인 온도에 더 센 잣대**를 대게 된다. plateau 는 어느 점이 아레니우스에 들어가는지 정하는 게이트이므로 온도 간 잣대가 달라지면 안 된다. 안 A(3창 고정)는 선언한 4창을 영영 안 재는 구멍을 남긴다.",
+   "supersedes": [],
+   "depends_on": [],
+   "record": "db/properties/lpsocl_box331_amendment_2026_09_01.json",
+   "review": "kb/reviews/internal_review_AX_lpsocl_600K_2026_09_04.md",
+   "method_ref": "tools/ionic/msd_diffusive_check.py (dinc_plateau · 골격 판정)",
+   "enforcement": "판정 시 잡마다 `n`(쓰인 창 수)을 기록하고 온도 간 다르면 판정을 내지 않는다. 골격 판정이 framework_mobile/melting 이면 그 온도를 아레니우스에서 제외한다 (plateau 통과와 무관한 별개 축).",
+   "citable": "no",
+   "citable_why": "런 0개 시점. 결과가 나오면 사전 고정한 R1–R5 로만 판정한다.",
+   "date": "2026-09-04",
+   "registered_at": "2026-09-04",
+   "registered_by": "agent (1저자 2026-09-04 안 B 선택)",
+   "status_history": [
+    {
+     "at": "2026-09-04",
+     "state": "active",
+     "note": "1저자 비준 — 안 B. Codex 부재로 내부 적대적 리뷰가 대체(독립성 한계 명시)."
+    }
+   ],
+   "ratification": {
+    "state": "ratified",
+    "role": "scientific_owner",
+    "actor_id": "yonghoon7153@gmail.com",
+    "timestamp": "2026-09-04T07:11:59Z",
+    "commit": "4aa0bf277cf43bff36b01d0652171c19a03444a0",
+    "decision_digest": "sha256:1a1a118aeeaa61483f1950d9a691c631c4a68eb3d6cd30b7104bf1711cabacf5",
+    "근거": "1저자 2026-09-04: 'B'. 시간 제약 없음이 확인돼 비용 논거가 사라졌다."
+   }
   }
  ]
 }
