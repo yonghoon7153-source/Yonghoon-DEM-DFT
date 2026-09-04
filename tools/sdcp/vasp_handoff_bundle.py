@@ -13707,8 +13707,8 @@ bash run_staged.sh 1     # census → POTCAR 조립+봉인 → 봉인 census →
 bash run_staged.sh 2     # 1단계 통과(STAGE1_PASS.json) 뒤에만""" % (
         manifest_sha, zip_sha, int(getattr(a, "cores", 48) or 48),
         KPAR_VAL, KPAR_VAL,
-        int(((man.get("submission") or {}).get("max_concurrency")) or 8),
-        int(((man.get("submission") or {}).get("max_concurrency")) or 8))
+        int(((man.get("submission") or {}).get("max_concurrency")) or getattr(a, "concurrency", 8) or 8),
+        int(((man.get("submission") or {}).get("max_concurrency")) or getattr(a, "concurrency", 8) or 8))
 
 
 def _kconv_gate_row(man: Dict[str, Any]) -> str:
@@ -13765,9 +13765,33 @@ def _walltime_block(man: Dict[str, Any], a) -> str:
     _cf_w = man.get("cost_frozen") or {}
     _h = round(_cf_w.get("longest_job_h") or 56)
     _h2 = _h * 2
-    _rec = max(24, int(_h2 * 1.1 // 12 + 1) * 12)
+    # 🔴🔴 2026-09-04 — 종전 권장 walltime 은 **모형의 ±2배 외피**만 봤다. 그런데 잡이 실제로
+    #   잘리는 상한은 모형이 아니라 **NELM 천장**(기동 1회가 NELM 전자스텝에서 끊긴다)이다.
+    #   실측: v35 계획에서 외피 58 h → 권장 72 h 였는데 천장은 **76.9 h** 였다.
+    #   즉 우리가 권한 walltime 아래에서 잘릴 수 있는 잡이 있었다. 둘 중 **큰 쪽**을 쓴다.
+    _ceil = _cf_w.get("nelm_ceiling_longest_h")
+    #   ⚠ 여유(×1.1)는 **모형 쪽에만** 붙인다. 천장은 이미 최대값이라 그 위에 또 여유를
+    #     얹으면 큐 상한을 공연히 넘긴다 (76.9 → 96 h 로 91 h 큐를 넘긴 실측이 있다).
+    _basis = max(_h2 * 1.1, _ceil or 0.0)
+    _rec = max(24, int(_basis // 12 + 1) * 12)
+    _why = ("외피 %d h × 1.1 을 12 h 단위로 올림" % _h2 if _basis == _h2 * 1.1 else
+            "**NELM 천장 %.0f h**(NELM %s · 기동 1회의 결정론적 상한)을 12 h 단위로 올림 "
+            "— 모형 외피 %d h × 1.1 보다 이쪽이 크므로 이쪽을 씁니다. 천장은 이미 최대값이라 "
+            "여유를 더 얹지 않습니다"
+            % (_ceil, _cf_w.get("nelm"), _h2))
+    _cap_line = ""
+    if _cf_w.get("queue_cap_h") and _ceil:
+        _cap = float(_cf_w["queue_cap_h"])
+        _cap_line = ("\n⚠ **잘릴 수 있는가 (모형이 아니라 천장으로)** — 한 번의 VASP 기동은 "
+                     "`NELM=%s` 전자스텝에서 끊깁니다. 이 묶음의 최장 천장은 **%.0f h** 이고, "
+                     "알려 주신 큐 상한 %.0f h %s. "
+                     "추정치(%d h)는 모형이라 ±2배지만 이 천장은 결정론입니다 — 둘을 같은 "
+                     "확신으로 읽지 말아 주십시오."
+                     % (_cf_w.get("nelm"), _ceil, _cap,
+                        "안에 들어갑니다 (여유 %.0f h)" % (_cap - _ceil) if _ceil <= _cap
+                        else "**를 넘습니다 — 이 코어 수로는 잘립니다**", _h))
     _cores = int(getattr(a, "cores", 48) or 48)
-    _conc = int(((man.get("submission") or {}).get("max_concurrency")) or 8)
+    _conc = int(((man.get("submission") or {}).get("max_concurrency")) or getattr(a, "concurrency", 8) or 8)
     # 🔴 2026-09-03 — 단계 게이트 반영 전체 일수. 없으면(비 staged) 한 물결 값.
     _mkw = (_cf_w.get("makespan_staged_d") or _cf_w.get("makespan_d") or {})
     _mk_tot = _mkw.get(str(_conc), _mkw.get(_conc))
@@ -13781,12 +13805,13 @@ def _walltime_block(man: Dict[str, Any], a) -> str:
                     % (_stg_l.get("1"), _stg_l.get("2")))
                  + ". 여기에 1단계 반송 뒤 저희 판정 왕복 시간은 포함돼 있지 않습니다.")
     return (f"⚠ **walltime** — 가장 긴 잡의 중앙 추정 **{_h} h** ({_cores}코어/잡 · 모형 불확실성 ±2배 → "
-            f"외피 {_h2} h). 잡당 walltime 은 **{_rec} h** 를 권합니다 (= 외피 × 1.1 을 12 h 단위로 올림 · "
+            f"외피 {_h2} h). 잡당 walltime 은 **{_rec} h** 를 권합니다 (= {_why} · "
             f"그보다 짧으면 잘립니다). 큐 상한이 {_rec} h 보다 짧으면 **제출 전에** 알려 주십시오 — static "
             f"단일점은 나눌 수 없고 재개도 없어, 그 잡은 더 긴 큐/노드 배정이 필요합니다.\n"
             f"⚠ **실행 위치** — `run_staged.sh` 는 **계산 노드 할당 안에서**(로그인 노드 아님) 잡 {_conc}개 × "
             f"VASP_NPROC 랭크를 동시에 띄우므로, 그 할당이 단계 전체(1단계 최장 ≈{_rec} h) 동안 유지돼야 "
             f"합니다. 봉인 프로브도 같은 노드에서 VASP 를 인자 없이 한 번 잠깐 기동합니다."
+            + _cap_line
             + _tot_line
             # 🔴 2026-09-04 — 모형은 ±2배다. 큐 상한이 빠듯하면 **대표 잡 하나를 먼저 재는 것**이
             #   모든 모형보다 싸고 정확하다. 그 한 번이 나머지 15잡의 walltime 을 정한다.
@@ -14269,7 +14294,7 @@ n=$(wc -l < JOBS.txt)
     #   1단계 게이트를 무시해 실제의 절반이 나온다.
     _cf_s = man.get("cost_frozen") or {}
     _mk_d = _cf_s.get("makespan_staged_d") or _cf_s.get("makespan_d") or {}
-    _conc_s = int(((man.get("submission") or {}).get("max_concurrency")) or 8)
+    _conc_s = int(((man.get("submission") or {}).get("max_concurrency")) or getattr(a, "concurrency", 8) or 8)
     _mk_c = _mk_d.get(str(_conc_s), _mk_d.get(_conc_s))
     _crit_txt = ("한 잡의 static→dense 임계경로가 그 하한보다 길면 하한에 도달할 수 없습니다."
                  if _n_dn_sub else
@@ -16369,11 +16394,21 @@ def build_bundle(a, ledger: Optional[Dict[str, Any]] = None) -> Path:
         #   침묵해서, 비용 추정기가 k-point 병렬을 제 마음대로 가정했다 (KPAR 이 없어 실제로는
         #   안 걸리는데 nk≈7.2 배까지 선형이라고 봤다). 랭크 배치의 제약은 계획 정보다.
         "parallelization": {
-            "NCORE": 4, "KPAR": KPAR_VAL,
-            "⛔_VASP_NPROC_제약": ("랭크 수는 KPAR(%d)의 **배수**여야 한다. 아니면 k-그룹을 "
-                                   "고르게 못 나눠 VASP 가 배치를 거부하거나 랭크를 놀린다. "
-                                   "run_staged.sh 가 실행 전에 검사한다." % KPAR_VAL),
-            "쓸_수_있는_랭크_예": [48, 64, 96, 128, 256],
+            "NCORE": NCORE_VAL, "KPAR": KPAR_VAL,
+            # ⛔ 회신 K2 P1-3 — 조건은 KPAR 배수가 **아니라** KPAR × NCORE 배수다.
+            #   랭크 20 은 KPAR 4 로는 나뉘지만 k-그룹당 5 랭크가 NCORE 4 로 안 나뉘어
+            #   VASP 가 조용히 NCORE 를 되돌린다.
+            "⛔_VASP_NPROC_제약": ("랭크 수는 KPAR(%d) × NCORE(%d) = **%d 의 배수**여야 한다. "
+                                   "아니면 k-그룹당 랭크가 NCORE 로 안 나뉘어 VASP 가 배치를 "
+                                   "거부하거나 조용히 NCORE 를 되돌린다. "
+                                   "run_staged.sh 가 실행 전에 검사한다."
+                                   % (KPAR_VAL, NCORE_VAL, KPAR_VAL * NCORE_VAL)),
+            # 🔴 2026-09-04 — 종전엔 하드코딩 [48,64,96,128,256] 이라 **이 묶음이 실제로 쓰는
+            #   192 가 목록에 없었다**. 조건에서 만들고, 이 묶음의 코어 수를 반드시 넣는다.
+            "쓸_수_있는_랭크_예": sorted({
+                c for c in (48, 64, 96, 128, 192, 256, 384, 512, int(a.cores))
+                if c % (KPAR_VAL * NCORE_VAL) == 0}),
+            "이_묶음이_계획한_랭크": int(a.cores),
             "⚠_메모리": ("KPAR 은 k-그룹마다 배열 사본을 들어 **노드당 메모리가 늘어난다**. "
                         "모자라면 랭크를 줄이지 말고 노드를 늘려야 한다 (랭크를 줄이면 "
                         "KPAR 배수 조건이 깨진다)."),
@@ -17555,6 +17590,58 @@ def selftest() -> int:
             chk(_g10 in _sb9, "AS 10: SUBMIT 의 수치 게이트 표에 `%s` 가 있다" % _g10)
         chk("중앙 추정 56 h" not in _sb9,
             "⛔음성 AR P1-11: walltime 이 하드코딩 56 h 가 아니라 cost_frozen 에서 온다")
+        # ══ 2026-09-04 — 권장 walltime 이 **NELM 천장 아래면 안 된다** ═══════════
+        #   실측 사고: v35 초판이 외피 58 h 만 보고 72 h 를 권했는데 천장은 76.9 h 였다.
+        #   즉 우리가 권한 walltime 아래에서 잘릴 수 있는 잡이 있었다.
+        _cf9 = m_st.get("cost_frozen") or {}
+        _ce9 = _cf9.get("nelm_ceiling_longest_h")
+        chk(_ce9 is not None and _cf9.get("nelm"),
+            f"cost_frozen 이 NELM 천장을 담는다 (천장 {_ce9} h · NELM {_cf9.get('nelm')})")
+        if _ce9:
+            _rec9 = re.search(r"walltime 은 \*\*(\d+) h\*\*", _sb9)
+            chk(bool(_rec9), "SUBMIT 이 권장 walltime 을 숫자로 적는다")
+            if _rec9:
+                chk(int(_rec9.group(1)) >= _ce9,
+                    f"⛔음성: 권장 walltime {_rec9.group(1)} h ≥ NELM 천장 {_ce9:.0f} h "
+                    "(모형 외피만 보면 천장 아래를 권하게 된다 — 그러면 잘린다)")
+            chk("NELM" in _sb9 and "결정론" in _sb9,
+                "SUBMIT 이 **천장은 결정론 · 추정은 모형** 임을 구분해 말한다")
+        # ⛔음성 (직접 단위) — **천장이 외피보다 클 때** 권장이 천장을 따라가는가.
+        #   합성 번들은 천장이 작아 위 검사가 자동 통과하므로, 사고 상황을 직접 만든다.
+        class _FakeA:
+            cores, concurrency = 192, 4
+        _man_ce = {"cost_frozen": {"longest_job_h": 29, "nelm": 200,
+                                   "nelm_ceiling_longest_h": 76.9, "queue_cap_h": 91.0,
+                                   "makespan_staged_d": {"4": 3.35},
+                                   "stage_longest_h": {"1": 28.9, "2": 26.0}},
+                   "submission": {"max_concurrency": 4}}
+        _wl = _walltime_block(_man_ce, _FakeA())
+        _m_ce = re.search(r"walltime 은 \*\*(\d+) h\*\*", _wl)
+        chk(bool(_m_ce) and 77 <= int(_m_ce.group(1)) <= 91,
+            f"⛔음성: 외피 58 h < 천장 76.9 h 인 사고 상황에서 권장이 "
+            f"{_m_ce.group(1) if _m_ce else '?'} h — **천장 이상이면서 큐 상한 91 h 이하** "
+            "(종전 산식이면 72 h 를 권해 잘렸고, 천장에 여유를 또 얹으면 96 h 로 넘겼다)")
+        chk("NELM 천장" in _wl and "결정론" in _wl,
+            "⛔음성: 그때 **왜** 그 값인지(천장이라서)를 문서가 말한다")
+        _man_lo = json.loads(json.dumps(_man_ce))
+        _man_lo["cost_frozen"]["nelm_ceiling_longest_h"] = 10.0
+        _wl_lo = _walltime_block(_man_lo, _FakeA())
+        chk("외피 58 h × 1.1" in _wl_lo,
+            "⛔음성: 천장이 작으면 종전대로 **모형 외피**를 근거로 적는다 "
+            "(천장을 만능으로 쓰지 않는다)")
+        chk("들어갑니다 (여유 14 h)" in _wl,
+            "천장 76.9 h 를 큐 상한 91 h 에 대어 **여유를 숫자로** 말한다")
+        # ── 랭크 예시가 이 묶음이 실제로 쓰는 코어 수를 담는가 ────────────────
+        _pz9 = (_sm9.get("parallelization") or {})
+        _rk9 = _pz9.get("쓸_수_있는_랭크_예") or []
+        chk(int(_sm9.get("cores_per_job", 0)) in _rk9,
+            f"⛔음성: 랭크 예시 {_rk9} 가 **이 묶음의 코어 수** "
+            f"{_sm9.get('cores_per_job')} 를 담는다 (종전 하드코딩은 192 를 빠뜨렸다)")
+        chk(all(c % (KPAR_VAL * NCORE_VAL) == 0 for c in _rk9),
+            f"⛔음성: 랭크 예시가 전부 KPAR×NCORE={KPAR_VAL * NCORE_VAL} 의 배수다")
+        chk("KPAR(%d) × NCORE(%d)" % (KPAR_VAL, NCORE_VAL)
+            in str(_pz9.get("⛔_VASP_NPROC_제약")),
+            "⛔음성 K2 P1-3: 제약을 KPAR 배수가 아니라 **KPAR × NCORE 배수**로 적는다")
         chk("잡 사이에 의존성이 있다" in str(_sm9.get("phase_dependencies"))
             and "배열 제출도 쓰지 않는다" in str(_sm9.get("runner_note")),
             "⛔음성 AR P1-11: MANIFEST 가 staged 에서 **의존성 있음 + 단일 경로**를 "
