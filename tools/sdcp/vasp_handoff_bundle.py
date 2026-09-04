@@ -1560,7 +1560,7 @@ else
   echo "     (승인된 PAW dataset 인지 확인 못 함 · 회신 AZ P0-7·Q4)."
   # 🔴🔴 렌즈4 P0-1 (2026-09-03) — post_hoc 이라도 **선택 증서가 있으면 지금 검증한다.**
   #   종전엔 이 분기에서 증서를 보지 않아, 결함 있는 증서(예: 버전 문자열 형식 불일치)가
-  #   1단계 ~111 h 뒤 최종 분석의 potcar_identity 에서 처음 막혔다. "선택" 은 없어도 된다는
+  #   1단계를 다 돌린 **뒤에야** 최종 분석의 potcar_identity 에서 처음 막혔다. "선택" 은 없어도 된다는
   #   뜻이지 틀린 것이 있어도 된다는 뜻이 아니다. 결함이면 여기서 멈춘다 (지우면 돌아간다).
   if [ -s POTCAR_ATTESTATION.json ]; then
     echo "  ⚠ 선택 attestation 이 있습니다 — 생산 전에 봉인·MANIFEST·ZIP 과 대조합니다."
@@ -2756,7 +2756,7 @@ vb = os.environ["VASP_BIN"]
 # 🔴🔴 렌즈4 P0-1 (2026-09-03) — 종전엔 `vasp --version` 의 stdout **전체**를 **번들
 #   루트에서** 받았다. (a) 봉인(SEAL, v34 BH P0-1)은 `vasp.<버전>` 토큰만 담으므로 여러 줄
 #   원문은 토큰의 부분문자열일 수 없어 분석기가 **항상** ATTESTATION_VASP_VERSION_MISMATCH
-#   를 냈다 — 선택 attestation 을 성실히 돌린 외주처가 1단계 ~111 h 뒤 potcar_identity
+#   를 냈다 — 선택 attestation 을 성실히 돌린 외주처가 1단계를 다 돌린 **뒤에야** potcar_identity
 #   에서 막히는 함정. (b) VASP 는 argv 를 해석하지 않고 기동하므로 번들 루트에 OUTCAR 가
 #   남아 SEAL 이 "생산 산출물이 이미 있다" 로 거부할 수 있었다.
 #   ⇒ SEAL 과 **같은 절차**: 임시 폴더 + 빈 INCAR + 출력 전체에서 토큰 regex. 토큰이
@@ -8895,7 +8895,7 @@ def potcar_identity_gates(jobs, man):
         # 🔴🔴 렌즈4 P0-1 (2026-09-03) — 버전은 **토큰끼리** 비교한다. 종전 `raw not in
         #   banner` 는 v34 봉인(BH P0-1)이 `vasp.<버전>` 토큰만 담게 되자, MAKE 가 적은
         #   여러 줄 stdout 원문이 토큰의 부분문자열일 수 없어 **항상** 불일치였다 —
-        #   선택 attestation 을 성실히 돌린 외주처가 1단계 ~111 h 뒤 potcar_identity 에서
+        #   선택 attestation 을 성실히 돌린 외주처가 1단계를 다 돌린 **뒤에야** potcar_identity 에서
         #   막히는 함정. 픽스처는 방향이 반대(banner 쪽이 더 김)여서 425/425 가 통과했다.
         #   토큰이 attestation 쪽에 없으면 그것도 '확인 못 함 = 일치 아님' 이다.
         # 🔴 렌즈1′ P1-1 — 행 앵커 (경로 에코를 버전으로 읽지 않는다) + 앞뒤 공백 제거 후 비교
@@ -11817,7 +11817,7 @@ def main():
             return 2
         # 🔴🔴 렌즈4 P0-1 (2026-09-03) — post_hoc 이라도 **증서가 있으면** 결함을 지금 잡는다.
         #   종전엔 post_hoc 에서 러너가 이 검사를 부르지 않아, 결함 있는 *선택* 증서가
-        #   1단계 ~111 h 뒤 최종 분석의 potcar_identity 에서 처음 드러났다. "선택" 은
+        #   1단계를 다 돌린 **뒤에야** 최종 분석의 potcar_identity 에서 처음 드러났다. "선택" 은
         #   "없어도 된다" 이지 "틀린 것이 있어도 된다" 가 아니다 — 있으면 맞아야 하고,
         #   그것은 지금 확인할 수 있다.
         if (_pol != "require_attestation" and _att_s.get("present")
@@ -16330,6 +16330,13 @@ def build_bundle(a, ledger: Optional[Dict[str, Any]] = None) -> Path:
             "⚠_물결_사슬": ("`__nzmag` 대조 잡은 `PARENT_GEOM` 으로 부모의 최종 기하를 받으므로 "
                             "부모와 **직렬**이다. 종전엔 나란히 돌 수 있는 것처럼 셌다 "
                             "(2026-09-04 정정)."),
+            # ⚠ MANIFEST 안에 숫자가 두 벌 있다. 읽는 사람이 헷갈리지 않게 여기서 못 박는다.
+            "⚠_kconv_pair_의_숫자는_이_계획이_아니다": (
+                "`kconv_pair.why` 는 **비준 사전등록 원문을 그대로 복사**한 것이라 δ_k 를 뺄 때의 "
+                "근거(48코어/잡 기준 · dense 299.6 h · static 최장 111 h · 동시 8잡 8.16일)를 "
+                "말한다. 그건 **결정의 역사**이고 손대면 비준 지문이 깨진다. "
+                "이 묶음이 실제로 계획한 값은 이 `cost_frozen` 이다 — %d코어/잡 · 동시 %d잡."
+                % (a.cores, a.concurrency)),
             "⚠_makespan_d_는_단계를_무시한다": (
                 "makespan_d 는 전 잡을 한 물결로 돌린다고 본 값이다. staged 번들은 1단계가 "
                 "**전부 끝나고 게이트를 통과해야** 2단계가 열리므로 실제 벽시계는 "
@@ -20248,7 +20255,7 @@ def _runner_e2e(bundle: Path, chk) -> bool:
     # 🔴🔴 렌즈4 P0-1 (2026-09-03) e2e — 선택 attestation 을 **문서대로** 만들고 러너를
     #   돌린 뒤, 분석기의 증서↔봉인 대조가 버전에서 막히지 않는지 **실물 경로**로 본다.
     #   v34 까지는 MAKE 가 stdout 전문을, SEAL 이 토큰만 적어 여기서 항상 MISMATCH 였고
-    #   (1단계 ~111 h 뒤 발견), MAKE 가 번들 루트에서 VASP 를 기동해 OUTCAR 를 남길 수
+    #   (1단계를 다 돌린 **뒤에야** 발견), MAKE 가 번들 루트에서 VASP 를 기동해 OUTCAR 를 남길 수
     #   있었다. 단위 픽스처는 방향이 반대라 못 잡았다 — 그래서 e2e 로 관통한다.
     _att_root = _copy("attested")
     _envA2 = dict(env, RELEASE_LABEL="potpaw_PBE.54", SITE="selftest/기관")
