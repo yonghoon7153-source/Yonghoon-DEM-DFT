@@ -418,3 +418,105 @@ SBE / DBE   PTFE 1.0  /  PTFE 0.5 + SDCP 0.5                    ✅
 · 캘린더링 조건(온도·간극·속도) 미기재
 · `stretched and folded five times` 의 정량 지표(연신비 등) 없음
 · C-SUS 코팅 절: 코팅 방법·건조 조건·초음파 펄스 on/off 시간 미기재 (~200 nm 재현 불가)
+
+---
+
+# Methods (우리 파트) 재작성 — 저자 확정본 2026-09-04
+
+## 주간미팅 피드백 (저자 전달, 러프 메모)
+
+```
+A  DEM/MPM 서술 비중 축소 · 실제로 한 것 위주       D ★ "문제가 없다고 모듈러스를 줄였다" 가
+B  DEM/MPM/DFT 파라미터 표는 별도 파일(SI)             포장처럼 읽힌다 → "porosity 타겟에
+C  중요한 것·필요한 수식은 다 유지                      맞춰 보정했다" 로 진행
+E  Simulation 절 안에 reference · 유효 σ_ion·σ_e 문헌 레인지 (금요일)
+```
+
+★ **D 가 핵심이었다.**  옛 문장은 *"강체 구는 소성 평탄화·재배열·입계 미끄러짐을 재현 못 하므로
+E 를 24 → 1.35 GPa 로 낮췄다"* 로 **물리적으로 정당화**했는데, 그것이 변명으로 읽혔다.
+⇒ **"측정 다공도·겹침을 재현하도록 보정했다"** 는 **사실 서술**로 바꾸면 논쟁이 사라진다.
+⚠ 우리 원장의 frame[2](연화 = 빠진 입상 기전의 lumping, 3중 교차검증)는 **여전히 유효**하다 —
+   원고에 그 논거를 **쓰지 않기로** 한 것이지 판정을 뒤집은 것이 아니다.
+
+## ⛔ 고친 P0 둘
+
+**P0-① Methods 가 본문과 다른 규약을 적고 있었다**
+```
+옛 Methods:  "PTFE was not resolved on the conduction grid"
+             = PTFE omitted from the electronic grid  ⇒  σ_e 72.32 / 81.26 · 비 1.1237
+본문:        53.99 / 70.61 · 비 1.3078
+             = PTFE centerline voxels excluded
+```
+⇒ 재현하면 **다른 값이 나온다.**  고친 문장:
+`voxels lying on the centerline of a PTFE fibril were excluded from both grids, so that
+PTFE acts as a blocking phase.`
+⚠ 편집 시트 §2-2 지시는 **SI Table S3 에 두 규약을 다 싣고 어느 쪽도 굵게 하지 않는 것**이다.
+  본문이 한쪽을 쓰는 것은 편집 결정이고 그 사실을 문장이 밝혀야 한다.
+
+**P0-② `standard error` 는 우리가 하지 않은 통계**
+8 origin 은 같은 침대의 완전 half-voxel 조합이라 **복제 자유도 0** ⇒ 표준오차가 정의되지 않는다.
+고친 문장: `Shifting the grid origin resamples the same packing rather than generating a new
+one, so the eight solutions are not independent replicates. Ratios are therefore reported as
+the mean over the eight origin-matched SBE/DBE pairs; the spread across origins is 0.08 %,
+an order of magnitude smaller than the spread of the absolute conductivities.`
+★ `0.08 %` = 쌍대응 산포 실측 (절대값 팔 폭 SBE 1.70 % · DBE 1.33 % 대비 ~20배 작다).
+
+## 그 밖에 확정된 것
+
+· **AM-freeze 한 절 유지** — `the active material was held fixed as a rigid obstacle, so the
+  plastic densification reported here is that of the electrolyte phase.`
+· **접촉 모델 이름만 넣고 수식은 안 넣는다** — `using a Hookean contact model with hysteretic
+  unloading`.  ⚠ **Hertz/hooke 수식을 쓰면 E 가 물성처럼 보여 D 항목 논쟁이 되살아난다.**
+  재현성은 모델 이름으로 충분하고, 요구받으면 그때 넣는다.
+· 두께 **72.5 µm** 명시 · `50 × 50 µm²` 는 **cross-section** 임을 밝힘
+· 파라미터 전부 **Table S2** 로 (입자수·반경·E·ν·σ_y·복셀·σ 배정)
+· 영국식 철자 없음 확인 (`fibers` · `centerline` ✓)
+
+## ⚠ 미해결
+
+· **`reconstructed` 가 Methods 에 남아 있다** — 본문은 `constructed` 로 고쳤다.  **불일치.**
+· `[9, 52]` 문헌 번호가 다공도·겹침 앵커로 맞는지 미확인.
+
+## 길이 대조 (Methods 절별 단어 수, 우리가 실측)
+
+```
+C-SUS coating  92 · Dry electrode fab 149 · Mold cell 121 · Pouch cell 133
+Electrochemical 169 · Material charac 275 ← 실험 최장
+DEM-MPM (ours) 400  ← Methods 전체 1,339 단어의 30 %, 실험 최장의 1.45배
+```
+⇒ **소제목을 둘로 나누면**(`Microstructure generation` / `Effective transport`) 표기상 해소된다
+(195 + 205 단어로 각각 `Material charac` 보다 짧다).  내용은 그대로 둔다.
+
+# Figure 4 — 새 구성 (저자 확정 2026-09-04)
+
+```
+(a) 3D 전자 전도망 + 컬러바 (AM 입자별 CA 접촉수)     ← 본문 ⑤⑥
+(b) CA 접촉수 바이올린 플롯 + 유효 σ_e               ← 본문 ⑦⑧
+(c) Nyquist + TLM R_ele                              (d) SSRM 저항 맵
+```
+
+## ⚠⚠ 갱신 필수 — 현재 그림이 옛 세대다
+
+| | 현재 | 확정 |
+|---|---|---|
+| (a) 컬러바 | `298 – 673` | **42 – 118** (중앙값 74 → 86) |
+| (b) σ_e | `1.98 / 3.00` **S** cm⁻¹ | **53.99 / 70.61 mS cm⁻¹** ← **단위 S → mS** |
+| (b) σ_ion | `0.203 / 0.215` | ⛔ **제거 → SI** |
+| 캡션 | *"ionic and electronic"* | **electronic 만** · `reconstructed` → `constructed` |
+
+★ **`S → mS` 가 가장 위험하다** — 축 라벨을 안 바꾸고 숫자만 바꾸면 1000배 틀린다.
+★ 바이올린에 **중앙값 선**을 넣으면 본문 `74 → 86` 이 그림에서 바로 읽힌다.
+★ 바이올린이 본문 ⑥(`85 %`)을 그림으로 만든다 — 백분위 5 % 58→68 · 95 % 91→104 로
+  **분포 전체가 평행 이동**하는 것이 형태로 드러난다.
+
+## 캡션 문안
+
+```
+Figure 4. (a) DEM–MPM constructed electronic conduction networks of the SBE and DBE, with
+each AM particle colored by its number of conductive-additive contacts. (b) Distribution of
+conductive-additive contacts per AM particle (violin plots; horizontal lines mark the
+medians) and the corresponding effective electronic conductivities. (c) Nyquist plots of
+SBE and DBE cathode symmetric cells with the electronic resistances extracted using the
+TLM-based equivalent circuit. (d) SSRM resistance maps of polished SBE and DBE
+cross-sections.
+```
