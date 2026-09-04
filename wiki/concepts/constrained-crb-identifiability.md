@@ -4,7 +4,7 @@ created: 2026-09-04
 updated: 2026-09-04
 type: concept
 tags: [battery, degradation, research]
-sources: [raw/papers/mohtat2019_electrode-soh-estimability-expansion.md, raw/papers/lin2024_ocv-degradation-mode-identifiability.md]
+sources: [raw/papers/mohtat2019_electrode-soh-estimability-expansion.md, raw/papers/lin2024_ocv-degradation-mode-identifiability.md, raw/papers/lee2020_estimation-error-bound-limited-data-window.md]
 confidence: medium
 explored: false
 verificationStatus: unverified
@@ -53,11 +53,31 @@ gradient 를 특이벡터와 각도로 대조했는데, **그것은 이 기계�
 |---|---|---|---|
 | Mohtat 2019 | 예 (식 32) | `sqrt(diag Σ)` 4개 (Fig. 8) | **아니오** (파라미터 `correlat*` 0회) |
 | Lin & Khoo 2024 | 예 (`C_θ`) | `sqrt(diag C_θ)` (Fig. 8·9) | **아니오** |
+| **Lee et al. 2020** | 예 (식 16·24, 스스로 "the error **covariance** matrix" 라 부름) | 헤드라인은 `sqrt(diag Σ')` (Table II–IV, Fig. 4·5·6·9) | **그림으로만 예** — Fig. 7 이 6개 쌍 전부에 **95 % 오차 타원**(제약 유/무)을 그린다. 단 **수치 ρ 0회**, 창은 DW-deep **하나뿐**, 모드 좌표 전파 없음 |
 
-`[해석]` 즉 두 편 모두 **축퇴의 크기는 재고 방향은 버린다.** 비대각 성분은
-계산 부산물로 이미 손에 있는데 인쇄되지 않는다. 이것이
-[[fitting-degeneracy]] 를 다루는 우리 작업이 이 계보에 공급할 수 있는
-정확한 빈칸이다.
+`[해석]` **2026-09-04 정정**: "이 계보는 `Σ` 를 구해 놓고 대각선만 인쇄한다"
+는 일반화는 Lee 2020 앞에서 예외를 하나 인정해야 한다. 정확한 진술은
+**"비대각을 그림으로 한 번 보였으나 수치로 인쇄한 적이 없고, 모드 좌표로
+전파한 적이 없다"** 이다. Lee 2020 은 산문으로도 상관을 말한다
+(`[인쇄, p.8]` "a **strong correlation** … among the parameters from the same
+electrode … the parameters from the different electrodes do not show any
+correlation") — 그런데 자기 Fig. 7 의 `(e_Cp, e_x₁₀₀)` 패널(다른 전극 쌍)은
+타원이 기울어 있다(`[도표]`, 부호 −). **본문이 그림보다 강하게 말한 자리**다.
+
+그리고 Lee 2020 은 이 계보에서 **비대각을 요구하는 사상을 명시적으로
+인쇄해 놓고 안 쓴** 첫 사례다: 식 (10) `LLI = 1 − (y^a₁₀₀C^a_p + x^a₁₀₀C^a_n) /
+(y^f₁₀₀C^f_p + x^f₁₀₀C^f_n)` 는 네 성분을 섞으므로 **`Σ` 의 비대각 없이는
+분산 계산 자체가 불가능**한데, 식 (10)–(12) 는 §III-A 이후 논문에 다시
+등장하지 않는다. 즉 축퇴의 **크기는 재고 방향은 버린다**는 진단은
+세 편 모두에 대해 여전히 유효하고, 이것이 [[fitting-degeneracy]] 를 다루는
+우리 작업이 이 계보에 공급할 수 있는 정확한 빈칸이다.
+
+**제약이 무엇을 못 하는지의 깨끗한 수치** (Lee 2020, `[인쇄, Table II↔III]`,
+DW-deep·σ = 10 mV·95 %): `V_max` 등식 하나를 걸면 `y₁₀₀` 2.5 → **0.030 %**
+(약 83배), `C_p` 1.3 → 0.9 % 인데 **`x₁₀₀` 3.0 → 3.0, `C_n` 3.9 → 3.9 로
+변화가 없다.** 제약은 `y₁₀₀`·`x₁₀₀` 를 묶지만 `β ≪ α`(식 26
+`σ_y α = σ_x β`) 이므로 이득이 뾰족한 전극 쪽으로만 흐른다 — **제약은 정보를
+만들지 않는다**의 교과서적 사례.
 
 ## 두 가지 처방의 구분 (자주 헷갈린다)
 
@@ -67,6 +87,7 @@ gradient 를 특이벡터와 각도로 대조했는데, **그것은 이 기계�
 |---|---|---|---|
 | **제약 추가** | `𝒪` 를 좁힌다. 정보는 안 늘고 **모르는 방향이 준다**. 대신 제약이 참값에서 성립해야 하고, 안 성립하면 **모델 오차**가 된다 | 컷오프 전압 등식 (Birkl 2017, Mohtat 2019 식 (P)) | Phase 1e/1h — 우리 자료에서는 **손해**. 등식이 참값에서 127 mV/54 mV 폭으로 깨지고, σ_min 은 3~6 % 오를 뿐 (정본: `mode-observability/results/phase1e/`, `.../phase1h/`) |
 | **관측 추가** | `S` 에 **행을 더한다**. 새 행이 기존 행과 선형독립이면 정보가 실제로 는다 | 셀 팽창 `Δt_c` (Mohtat 2019) | **미측정** — 우리가 아직 안 해 본 축 |
+| **창 이동** | `S` 의 **행을 갈아 끼운다**. 개수가 같아도 다른 정보 | 데이터 창 `DW = [Q_s, Q_e]` (Lee 2020) | **미측정** — 상세는 [[data-window-identifiability]] |
 
 **관측 추가가 이득이 되는 조건은 기계적으로 검사할 수 있다** (Mohtat 식 39):
 새 관측 `g(θ)` 의 감도 열이 **0 이 아니어야** 한다. Mohtat 의 팽창은
@@ -113,3 +134,4 @@ gradient 를 특이벡터와 각도로 대조했는데, **그것은 이 기계�
 - [[pvs-sev-lli-lampe-separability]] — "관측을 더하면 갈리는가" 를 추적하는 열린 질문
 - [[birkl-ocv-degradation-diagnostic]] — 컷오프 등식 처방의 앞선 사례
 - [[dubarry-mechanistic-mode-synthesis]] — Mohtat 의 LLI/LAM 어휘 출처
+- [[data-window-identifiability]] — 같은 기계를 **관측 창** 축에서 돌린 자매편(Lee 2020)

@@ -1022,3 +1022,60 @@ Dubarry 계수의 1400분의 1이고 보정 없음의 5분의 1이다.
 [[dubarry-mechanistic-mode-synthesis]] 쪽 `n₁·n₂` 결론(Phase 1m)은 영향받지 않는다.
 
 정본 `mode-observability/results/phase1n/` · `docs/PHASE1N_NOTES.md`.
+
+## [2026-09-04] ingest | Lee et al. 2020 — Estimation Error Bound of Battery Electrode Parameters With Limited Data Window (IEEE TII 16(5) 3376–3386)
+
+Lin & Khoo 2024 가 `[15]` 로 지목한 "Fisher 로 식별 가능성을 정량한 선행자" 의
+나머지 한 편. Mohtat 2019 `[16]` 의 자매편이며 **Mohtat 이 공저자**, 같은 UMich
+그룹 + Samsung SDI 공동연구. digest:
+`raw/papers/lee2020_estimation-error-bound-limited-data-window.md` (821줄).
+그림 10장 크롭 중 8장(Fig. 1–7, 10)을 직접 봤고 Table I–IV 는 래스터라
+쪽 렌더(p.4·7·9)로 읽었다. Fig. 8 은 안 봤다.
+
+**판정 1 (좌표)**: `θ = [y₁₀₀, C_p, x₁₀₀, C_n]` — **전극 파라미터 좌표.
+모드 좌표 아님.** Table II–IV 열 머리가 그대로 이 넷이다. 식 (10)–(12) 로
+`LLI`·`LAM_PE`·`LAM_NE` 사상을 **정식으로 인쇄해 놓고**, 그 좌표의 오차막대는
+논문 전체에 **0개**다.
+
+**판정 2 (비대각)**: **이 계보 최초로 부분 예.** Fig. 7 이 4개 파라미터의
+**6개 쌍 전부에 95 % 오차 타원**(제약 유/무 2종)을 그리고, p.8 이 산문으로
+`[인쇄]` "a **strong correlation** … among the parameters from the same
+electrode … the parameters from the different electrodes do not show any
+correlation" 이라 적으며, 식 (26) `σ_y α = σ_x β` 로 두 막대의 비를 닫는다.
+**단** 수치 ρ 0회 · 창은 DW-deep 하나뿐(가장 좋은 창) · **모드 좌표 전파 없음**.
+→ 위키 문장 정정: "대각선만 인쇄한다" → **"그림으로 한 번 보였으나 수치로
+인쇄한 적 없고 모드 좌표로 전파한 적 없다"**.
+**본문↔그림 어긋남 1건**: `(e_Cp, e_x₁₀₀)`(다른 전극 쌍) 타원이 축 정렬이
+아니다(`[도표]`, 부호 −) — 본문의 단언은 4개 다른-전극 쌍 중 둘만 보고 한 것.
+
+**판정 3 (창)**: **DOD 구간** `DW = [Q_s, Q_e]`, `Q` = 완충에서의 방전 Ah.
+네 창 `[인쇄, Table IV]` shallow `[0.0,0.2]` · medium `[0.3,0.7]` ·
+non-full `[0.1,0.5]` · deep `[0.0,0.9]`. 처방 `[인쇄, p.10]` σ̂ = 10 mV,
+목표 10 %, 95 % → **DOD = [0.35, 0.73]** (Mohtat 의 "DOD 30 %" 는 폭만, 이 편은
+폭+위치).
+
+**판정 4 (어휘 전수, 본문 p.1–10)**: `identifiab*` **16** · `estimab*` **0** ·
+`degenerac*` 0 · `Fisher` 3 · `observab*` **1**(LFP 가정 문장뿐) ·
+`unobservab*` 0 · `uniqu*` 2 · `redundan*` 1 · `ill-condition*` 0 ·
+`condition number` 0 · `sensitivit*` 4 · `Cramer` 3(본문은 악센트 없음) ·
+`covarianc*` 2 · **`correlat*` 3** · `global` **0** · `LLI` 6 · `LAM` 8 ·
+`expansion` 1(Taylor 전개, 셀 팽창 아님).
+**⚠ 새 조판 함정 실측**: IEEE 조판의 `ﬁ` 합자 때문에 정규화 없이 세면
+`identifiab*` 이 **16 → 0** 이 된다 (Mohtat 의 하이픈 함정의 사촌). 두 정규화를
+모두 걸어야 한다.
+
+**판정 5 (LLI·LAM 위치)**: **p.1(인쇄 3376) 서론 각 1회 + p.3(인쇄 3378)
+§III-A 에 LLI 5·LAM 7. 끝.** §IV 결과·§V 검증·§VI 지침·§VII 결론에 **0회**,
+그림·표 라벨에도 0회.
+
+**덤으로 건진 것**: (a) `[인쇄, p.3]` "out of 100 randomly generated start
+points … **55** converged to the same solution" → **다봉성 45 %의 야생 실측**.
+(b) `[인쇄, Table II↔III]` `V_max` 등식은 `y₁₀₀` 를 2.5 → **0.030 %** 로 83배
+줄이는데 **`x₁₀₀` 3.0 → 3.0, `C_n` 3.9 → 3.9 로 NE 는 전혀 안 줄인다** —
+"제약은 정보를 만들지 않는다" 의 깨끗한 수치. (c) `[인쇄, Fig. 9 라벨]`
+DW-shallow 에서 `C_n` 막대 **5e3 %**.
+
+갱신: `concepts/constrained-crb-identifiability.md` (Lee 2020 행 추가 +
+"대각선만" 일반화 정정 + 제약 비대칭 수치 + 창 이동 행) ·
+**신규** `concepts/data-window-identifiability.md` (제약 추가·관측 추가와
+구분되는 셋째 조작) · `index.md`.

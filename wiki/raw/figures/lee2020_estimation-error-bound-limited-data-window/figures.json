@@ -1,0 +1,211 @@
+{
+ "slug": "lee2020_estimation-error-bound-limited-data-window",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-09-04",
+ "sources": [
+  "55c52065-Estimation_Error_Bound_of_Battery_Electrode_Parameters_With_Limited_Data_Window.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 2,
+   "file": "fig_1.png",
+   "caption": "Fig. 1. Half-cell potential of individual electrodes and OCV of a cell with indication of the utilization range [y100, y0], [x100, x0]. (a) Half- cell potential of nickel–manganese–cobalt (NMC) oxide for the positive electrode. (b) Cell OCV with respect to depth of discharge (DOD). (c) Half-cell potential of graphite for the negative electrode. Local slopes of half-cell potential αk, βk are depicted associated with the cell DOD Qk.",
+   "rotated_deg": 0,
+   "bbox": [
+    294.9,
+    61.0,
+    558.0,
+    266.9
+   ],
+   "w": 1098,
+   "h": 859,
+   "dpi": 300,
+   "src": "55c52065-Estimation_Error_Bound_of_Battery_Electrode_Parameters_With_Limited_Data_Window.pdf",
+   "blank": 0.967
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 5,
+   "file": "fig_2.png",
+   "caption": "Fig. 2. Data window DW = [Qs, Qe] of open-circuit voltage (OCV) is illustrated with respect to depth of discharge (DOD) to represent when only partial OCV curve data is available for parameter estimation.",
+   "rotated_deg": 0,
+   "bbox": [
+    36.1,
+    56.1,
+    299.2,
+    164.5
+   ],
+   "w": 1097,
+   "h": 453,
+   "dpi": 300,
+   "src": "55c52065-Estimation_Error_Bound_of_Battery_Electrode_Parameters_With_Limited_Data_Window.pdf",
+   "blank": 0.784
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 5,
+   "file": "fig_3.png",
+   "caption": "Fig. 3. Data windows (DWs) for different battery usage patterns. The peak locations (P1, P2) are also depicted.",
+   "rotated_deg": 0,
+   "bbox": [
+    36.1,
+    208.4,
+    299.2,
+    403.6
+   ],
+   "w": 1097,
+   "h": 814,
+   "dpi": 300,
+   "src": "55c52065-Estimation_Error_Bound_of_Battery_Electrode_Parameters_With_Limited_Data_Window.pdf",
+   "blank": 0.549
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 6,
+   "file": "fig_4.png",
+   "caption": "Fig. 4. Triangular plots for the analytic error bound of each electrode parameter in a logarithm scale. Four predeﬁned data windows are indicated by red dots. Data points are evenly distributed with 0.5% depth of discharge (DOD) intervals and noise standard deviation σ =10 mV. No voltage constraint is considered.",
+   "rotated_deg": 0,
+   "bbox": [
+    31.9,
+    60.8,
+    558.0,
+    320.5
+   ],
+   "w": 2194,
+   "h": 1083,
+   "dpi": 300,
+   "src": "55c52065-Estimation_Error_Bound_of_Battery_Electrode_Parameters_With_Limited_Data_Window.pdf",
+   "blank": 0.815
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 6,
+   "file": "fig_5.png",
+   "caption": "Fig. 5. Analytic error bound of each electrode parameter for various data windows. Results of both unconstrained (solid) and constrained (stripe pattern) cases are shown. Voltage limit constraint improves all the electrode parameters, especially for the positive electrode parameters.",
+   "rotated_deg": 0,
+   "bbox": [
+    31.9,
+    358.8,
+    558.0,
+    577.2
+   ],
+   "w": 2193,
+   "h": 911,
+   "dpi": 300,
+   "src": "55c52065-Estimation_Error_Bound_of_Battery_Electrode_Parameters_With_Limited_Data_Window.pdf",
+   "blank": 0.846
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 7,
+   "file": "fig_6.png",
+   "caption": "Fig. 6. Analytic error bound with respect to depth of discharge (DOD). As the size of data window increases, the error bound decreases with transitions around the peaks (P1, P2).",
+   "rotated_deg": 0,
+   "bbox": [
+    36.1,
+    60.1,
+    299.2,
+    269.5
+   ],
+   "w": 1097,
+   "h": 873,
+   "dpi": 300,
+   "src": "55c52065-Estimation_Error_Bound_of_Battery_Electrode_Parameters_With_Limited_Data_Window.pdf",
+   "blank": 0.931
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 8,
+   "file": "fig_7.png",
+   "caption": "Fig. 7. Scatter plot of the electrode parameter estimation errors from Monte–Carlo simulation for the DW-deep case (i.e., DW = [0, 0.9]). Estimation errors show approximate normal distribution. The 95% conﬁdence-level error bound (solid line) agrees with the simulation results. the unconstrained case, a strong correlation has been observed among the parameters from the same electrode, either from the PE or NE, as shown in the top left (ey100 vs. eCp) and bottom right (ex100 vs. eCn) plots in Fig. 7. However, the parameters from the different electrodes do not show any correlation. Comparing Tables II and III, the parameter dependency in (26) improves the estimation accuracy, especially for the PE parameters.",
+   "rotated_deg": 0,
+   "bbox": [
+    31.9,
+    60.9,
+    558.0,
+    426.7
+   ],
+   "w": 2194,
+   "h": 1526,
+   "dpi": 300,
+   "src": "55c52065-Estimation_Error_Bound_of_Battery_Electrode_Parameters_With_Limited_Data_Window.pdf",
+   "blank": 0.944
+  },
+  {
+   "key": "f8",
+   "kind": "figure",
+   "label": "8",
+   "page": 8,
+   "file": "fig_8.png",
+   "caption": "Fig. 8. Parameter estimation results for the given full-range data of a NMC/graphite cell. (a) Measured data and model ﬁt with an error plot. (b) Decoupled voltage curves for each electrode; utilized range is marked with solid line and full electrode range is represented by dashed line.",
+   "rotated_deg": 0,
+   "bbox": [
+    294.9,
+    455.5,
+    558.0,
+    724.5
+   ],
+   "w": 1098,
+   "h": 1122,
+   "dpi": 300,
+   "src": "55c52065-Estimation_Error_Bound_of_Battery_Electrode_Parameters_With_Limited_Data_Window.pdf",
+   "blank": 0.975
+  },
+  {
+   "key": "f9",
+   "kind": "figure",
+   "label": "9",
+   "page": 9,
+   "file": "fig_9.png",
+   "caption": "Fig. 9. Estimation errors for the electrode parameters under different data windows. Most of the estimation errors are inside the analytic error bounds validating the proposed results (graph is not to scale).",
+   "rotated_deg": 0,
+   "bbox": [
+    36.1,
+    65.6,
+    562.2,
+    369.0
+   ],
+   "w": 2193,
+   "h": 1265,
+   "dpi": 300,
+   "src": "55c52065-Estimation_Error_Bound_of_Battery_Electrode_Parameters_With_Limited_Data_Window.pdf",
+   "blank": 0.974
+  },
+  {
+   "key": "f10",
+   "kind": "figure",
+   "label": "10",
+   "page": 10,
+   "file": "fig_10.png",
+   "caption": "Fig. 10. Flowchart for selecting a proper data window associated with the required estimation error bound for the electrode state of health parameters.",
+   "rotated_deg": 0,
+   "bbox": [
+    31.9,
+    61.2,
+    295.0,
+    212.0
+   ],
+   "w": 1098,
+   "h": 629,
+   "dpi": 300,
+   "src": "55c52065-Estimation_Error_Bound_of_Battery_Electrode_Parameters_With_Limited_Data_Window.pdf",
+   "blank": 0.904
+  }
+ ]
+}
