@@ -1,0 +1,17 @@
+flip_pe,flip_ne,one_where,dx_eoc,dx_eod,x_pe_eoc,x_pe_eod,x_ne_eoc,x_ne_eod,w_pe,w_ne,verdict
+False,False,8,0.0,1.0,0.0,2.0,0.0,1.0,2.0,1.0,"✗ 창이 [0,1] 밖"
+False,False,10,0.0,1.0,0.0,1.0,0.0,2.0,1.0,2.0,"✗ 창이 [0,1] 밖"
+False,False,both,0.0,0.0,0.0,1.0,0.0,1.0,1.0,1.0,pass
+False,False,none,0.0,1.0,0.0,1.0,0.0,1.0,1.0,1.0,pass
+False,True,8,,,,,,,,,no-root
+False,True,10,,,,,,,,,no-root
+False,True,both,,,,,,,,,no-root
+False,True,none,,,,,,,,,no-root
+True,False,8,,,,,,,,,no-root
+True,False,10,,,,,,,,,no-root
+True,False,both,,,,,,,,,no-root
+True,False,none,,,,,,,,,no-root
+True,True,8,1.0,-1.0,1.0,0.0,1.0,-1.0,-1.0,-2.0,"✗ 창이 [0,1] 밖"
+True,True,10,1.0,-1.0,1.0,-1.0,1.0,0.0,-2.0,-1.0,"✗ 창이 [0,1] 밖"
+True,True,both,1.0,-1.0,1.0,0.0,1.0,0.0,-1.0,-1.0,pass
+True,True,none,1.0,0.0,1.0,0.0,1.0,0.0,-1.0,-1.0,pass
