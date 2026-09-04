@@ -24,181 +24,316 @@ filled_from:
 - 추적 키워드: `dem battery`, `dft battery`
 
 > **repo 로 확인한 결과 — 사용자 정정이 맞다.** 두 축은 별개 브랜치에 있고 git 상 **공통 조상이 없다**
-> (`git merge-base` rc=1). 코드도 공유하지 않는다. 다만 **딱 한 군데 접점**이 있다: 두 브랜치가 각각
-> 공저자용 Methods 문서를 낸다 (축 A `docs/manuscript/Methods_simulation_v7_for_coauthors.docx`,
-> 축 B `docs/manuscripts/Methods_simulation_v8_for_coauthors.docx`). 같은 계보의 문서로 보이나
-> **같은 원고인지는 확인하지 못했다 (unknown)** — 파일이 .docx 라 본문 대조를 안 했다.
-> 이것은 "파이프라인" 이 아니라 **같은 학회/원고에 각자 Methods 를 기여**하는 관계다.
+> (`git merge-base` rc=1). 코드·파이프라인·실행 환경을 공유하지 않는다.
+>
+> 다만 **접점이 넷 있다. 전부 "번호 하나" 단위이지 자동 연결이 아니다** — 이것을 파이프라인으로
+> 서술하면 안 되는 이유가 여기 있다. 한쪽 출력이 다른 쪽 입력으로 **흘러가지 않고**, 사람이
+> 값 하나를 골라 옮겨 적는다:
+> 1. **탄성 상수** — 축 B 의 DFT 값(E_VRH 22.06 / 27.66 GPa · B₀ 26.23 GPa · ν 0.360 · μ 8.11)이
+>    축 A 의 DEM/MPM 물성 카드에 **인용**돼 있다 (축 A CLAUDE.md L568·L1131–1141).
+>    ⚠ 축 A 는 그 값을 그대로 쓰지 않는다 — DEM 은 E_SE 를 **1.35 GPa 로 18× 연화**해서 쓴다.
+>    DFT 값은 "실-bulk 축" 의 참조일 뿐이다.
+> 2. **SDCP** — 같은 물질이 양쪽에 있다. 축 B 는 LiNiO₂(104) 위 **흡착에너지**를 계산하고(C-12),
+>    축 A 는 전극 안 **전도성 첨가제**(σ_SDCP 250 mS/cm)로 넣는다. 축 A 의 SDCP 캠페인은
+>    `잔여 = E_bind DFT` 로 **축 B 의 값을 기다리는 중**이다 (`[[anchor-waitlist]]`).
+> 3. **litdb** — 논문 카드 정본은 **축 B 브랜치의 `litdb/` 하나뿐**이다(2026-07-16 결정).
+>    축 A 의 `litdb/` 는 동결 스냅샷이며 추가·수정 금지. 새 카드는 축 B 브랜치에만 넣는다.
+> 4. 공저자용 Methods .docx 를 양쪽이 각각 낸다 (v7 / v8). 같은 원고인지는 **unknown**.
+>
+> ⇒ 정확한 서술: **두 개의 독립 연구 프로그램이 재료(SDCP·LPSCl)와 문헌 서랍을 공유한다.**
+> "DFT→MLIP→DEM→FEM 다중스케일 파이프라인" 은 틀렸다.
 
 ---
 
 ## 축 A (DEM / MPM / voxelization) — 브랜치 `claude/stoic-knuth-NObVQ`
 
-**한 줄**: LIGGGHTS 로 황화물 복합양극을 준정적 압축해 만든 입자 패킹에서 접촉망을 뽑아,
-Kirchhoff 저항망으로 이온·전자·열 세 채널을 풀고, 파괴(Lawn/Auerbach)와 문헌 기반 grain 보정을
-접촉마다 걸어 ASR 까지 가는 파이프라인.
+**한 줄**: 황화물 복합양극을 **DEM(LIGGGHTS)과 MPM(Taichi GPU) 두 독립 모델**로 압밀하고,
+각각에서 나온 미세구조 위에서 **접촉망 Kirchhoff σ** 와 **복셀 유한체적 σ** 두 개의 독립
+수송 해를 구한 뒤, 그것을 전기화학(BV/CV 시간전개)까지 밀어 ASR·율특성을 낸다. 그리고 그
+결과를 **물리로 구조화된 회귀(스케일링 법칙)** 로 압축해, 설계 수치 → 물성 → 2D 미세구조
+합성까지 가는 예측기를 만든다.
 
-### 쓰는 도구·코드 (repo 경로)
-- `dem_scripts/*.liggghts` — LIGGGHTS 준정적 압축 입력. `dem_scripts/oat_sweep/` (OAT 감도 스윕)
-- `scripts/network_conductivity.py` — 접촉망 → Kirchhoff 풀이 (σ_ionic, σ_e, κ)
-- `scripts/run_network_full_corrections.py` — **Stage E** (Lawn 파괴 × grain 보정), Bruggeman fallback
-- `scripts/find_and_rerun_stage_e.py`, `backfill_validation_flags.py`, `audit_validation_flags.py`
-- `scripts/pca_ensemble_variance.py` — 분산 분해 + PCA biplot
-- `scripts/plot_porosity_4panel.py` — porosity 검증 4패널
-- `webapp/app.py` — Flask 케이스 브라우저 + 3D 뷰어
-- `heckel/` (Heckel 압축 해석), `se_curve/`, `machine-learning/`, `pipeline/`, `이종기술/eis/`
-- `skills/dem-analysis-standard.md`, `skills/dem-analysis-bimodal.md`
-- ⚠ **MPM / voxelization 은 이 브랜치에서 1급 코드로 확인되지 않았다.** `docs/codex_dem_mpm_response_20260811.md`
-  같은 리뷰 응답 문서와 litdb digest(`devaucorbeil2020_mpm_after_25_years_review.md`,
-  duquesnoy2020 calendering **voxel** 생성기)로만 나타난다 → **문헌·검토 단계로 보이나 unknown.**
+> ⛔ **이 축의 통제 인식론 (frame[4], FINALIZED 2026-06-07)** — DEM 과 MPM 을 **서로 보정하지
+> 않는다.** 각자 실험에만 독립 보정하고 결과를 비교한다. 일치 = 교차검증, 불일치 = 정량화된
+> 모형 한계(정보이지 실패가 아니다). 한쪽을 다른 쪽에 맞추는 것은 순환논증이다.
+> ⇒ 문헌을 읽을 때도 "DEM 과 FEM/MPM 을 서로 캘리브레이션했다" 는 논문은 **방법론적으로
+> 우리와 반대**이며, 그 점이 비판 포인트다.
+
+### 파이프라인 (축 A 내부 — 이건 하나의 파이프라인이 맞다)
+```
+STEP1 DEM (LIGGGHTS)  →  STEP2 MPM 압밀/payload  →  STEP3 복셀 σ (∇·σ∇φ=0)  →  STEP4 전기화학
+  패킹·접촉·force chain    소성 형상·void-fill·응력장    σ_ion·σ_e·k_thermal      비선형 BV+구형확산
+  Auerbach 파괴            (mpm3d_compaction.py)        (step3_sigma.py)         (step4_dyn.py)
+                                                                                  → STEP6 surrogate
+```
+⚠ **σ 를 내는 솔버가 둘이고 파이프라인이 다르다** — `scripts/network_conductivity.py`
+(DEM 접촉망 · Holm 협착 · **웹앱** 경로) 와 `scripts/voxel_conductivity.py`·`step3_sigma.py`
+(MPM 복셀 FV · **킷 `run_mpm.sh`** 경로). 한쪽이 다른 쪽의 근사가 아니라 **다른 이산화의
+독립 측정**이다. 웹앱 코드리뷰 수정이 STEP3 에 자동 적용되지 않는다.
+
+### 쓰는 도구·코드 (repo 경로 · 크기순)
+- `scripts/generate_comparison_plots.py` (376 KB) — 스케일링 법칙 전역 적합의 본체
+- `scripts/mpm3d_compaction.py` (300 KB) · `scripts/mpm2d_*.py` (8개) · `mpm_webapp_payload.py` (233 KB) — MPM
+- `scripts/step4_dyn.py` (228 KB) — 전기화학 시간전개 · `step4_pybamm_anchor.py` — PyBaMM 대조
+- `scripts/step3_sigma.py` (220 KB) · `voxel_conductivity.py` — 복셀 수송
+- `scripts/sdcp_gain_verdict.py` (201 KB) — SDCP 이득 판정기
+- `scripts/check_method_discipline.py` (185 KB) — 방법 규율 자동 점검
+- `scripts/network_conductivity.py` (85 KB) — DEM 접촉망 Kirchhoff · `run_network_full_corrections.py` — Stage E
+- `scripts/ml_design_structure.py` · `webapp/predictor_engine.py` · `structure_predictor.py` — 설계→구조 ML
+- `scripts/extract_2d_microstructure.py` (69 KB) — **2D 미세구조 합성**(voxelization 산출)
+- `scripts/grade_engine.py` (86 KB) — 파생 지표 ~30종 · `build_comsol_mph.py` (93 KB) — COMSOL
+- `scripts/electronic_nested_cv.py` · `thermal_regression.py` · `nested_cv_sat.py` — 모형 선택
+- `dem_scripts/*.liggghts` · `heckel/input_SE_heckel_{100..400}.liggghts` — DEM 입력
+- `se_curve/xfer_kit_ps_*.json` — P:S 조성별 대조군 침대 전송킷
+- `webapp/app.py` — Flask 케이스 브라우저 + 3D 뷰어 · `wiki/` (21페이지, `wiki/tools/lint.py`)
+- `scripts/` 총 **490개** (screening 53 · physics 29 · plot 25 · electronic 20 · thermal 15 · sr01 12 …)
 
 ### 대상 시스템
-- AM: **NCM811**, bimodal (D12 / D4 — 원고 초록 표기). CSV 필드로는 `r_AM_P_um`, `r_AM_S_um`
-- SE: **Li₆PS₅Cl**, D1 (`r_SE_um`, 관측 0.5 / 500 등 케이스마다 다름)
-- 조성 축: `am_wt` / `se_wt` (관측 62/38 ~ 72/28), P:S 비 (`P_S_ratio` 0:10 ~ 5:5)
-- 캠페인 라벨: `particulate` 등 (`campaign` 열)
+- AM **NCM811** bimodal (AM_P 대입자 poly / AM_S 소입자 single-crystal, 반경문턱 3.5 µm)
+- SE **Li₆PS₅Cl** · 첨가제 **VGCF · SuperP · PTFE · SDCP**(전도성 고분자, σ_SDCP 250 mS/cm 규약)
+- 조성 축 `am_wt`/`se_wt` · P:S 비 0:10 ~ 10:0 · 압력 100–400 MPa · SBE/DBE(단일/이중 바인더)
+- 실험 협업계: AM:SE:VGCF:PTFE = **80:18:1:1**, 4 µm single-crystal(No.1/No.2), poly:small 5:5
 
-### 관심 물리량과 현재 확보된 값의 범위
-`docs/db/section7_10case_sweep.csv` (10 케이스) 기준 —
-| 양 | 범위 | 단위 |
+### 관심 물리량과 현재 확보된 값
+| 양 | 값 / 범위 | 출처 |
 |---|---|---|
-| `porosity_pct` | 15.0 – 18.9 | % |
-| `percolation_pct` | 92.3 – 99.6 | % |
-| `sigma_ionic_mScm` | 0.117 – 0.173 | mS/cm |
-| `sigma_e_mScm` | 3.18 – 4.63 | mS/cm |
-| `sigma_th_mScm` | 3.42 – 4.33 | mS/cm |
-| `AM_percolation_pct` | 92.3 – 99.7 | % |
-| `total_severe_pct` (파괴) | 0.0 – 1.23 | % |
-| `AM_AM_CN_mean` | 2.73 – 3.86 | — |
-| `SE_SE_CN_mean` | 4.39 – 5.24 | — |
-| `tau_Lap_eff` | 1.21 – 4.39 | — |
-| `F_DEM_AM_P_AM_P_mN` | 1.32 – 9.04 | mN |
-`all_dem_porosity.csv` · `validation_all_cases.csv` — **80 케이스**, porosity 실측 vs 예측 + residual
-(관측 porosity 16.4 – 19.7 %, residual −2.91 ~ +1.52 %p)
+| porosity | 15.0 – 19.7 % | `all_dem_porosity.csv` (80케이스) · `docs/db/section7_10case_sweep.csv` |
+| σ_ionic | 0.117 – 0.173 mS/cm | 같은 CSV |
+| σ_electronic | 3.18 – 4.63 mS/cm | 같은 CSV |
+| σ_thermal | 3.42 – 4.33 mS/cm | 같은 CSV |
+| percolation | 92.3 – 99.7 % | 같은 CSV |
+| 배위수 CN | AM–AM 2.73–3.86 · SE–SE 4.39–5.24 | 같은 CSV |
+| τ_Laplace | 1.21 – 4.39 | 같은 CSV |
+| 접촉력 F_DEM | 1.32 – 9.04 mN | 같은 CSV |
+| Heckel (DEM pure-SE) | R² 0.965 · P_y 138 MPa · σ_y_eff 46 MPa | CLAUDE.md frame[3] |
+| MPM 보정값 | E_eff 1.53 GPa · σ_y 0.15 GPa (2D) · pure-SE 항복 ≈86 % | frame[1] |
+| DEM 보정값 | E_SE 24 → **1.35 GPa (18× 연화)** | `docs/esse_calibration_2mAh_real_9.md` |
+| Furnas dip | AM 75–85 wt% (DEM 전용 — MPM 은 재현 못 함) | frame[3]·CORRECTION 2 |
+| 2C CCCV (SBE→DBE) | delivered 88.9 → **89.6 %** · CC ΔV 9.3 mV(옴 4.5 + kin 4.8) | 원장 §5.5 |
 
-### 방법론적 쟁점 (원고 §6 소제목이 곧 쟁점 목록이다)
-- **1000× 연화 탄성계수**에서의 strain-faithful 준정적 압축 — 왜 타당한가
-- **Hooke vs Hertz 접촉모델 등가성** (원고 §6.4)
-- Auerbach + **Lawn** 단계별 파괴 분류기, 접촉별 fracture factor
-- **Stage E grain 보정** — Cronau 2021/2022 (SE 크기 비정질화), Trevisanello 2021 (AM 결정성),
-  Wang 2022 (AM grain 포논 산란)
-- **high-contrast Laplacian** (같은 그래프에서 인자비가 20× 벌어짐) → **7-layer defence**
-  (adaptive boundary conductance → spsolve sanity → CG retry → ratio guard → 이상치 필터 →
-  **Bruggeman EMT fallback** → …), Bruggeman 이 왜 건전한 상한인가 (§6.7)
-- **SE–SE grain-boundary 저항의 처리** (§6.6)
-- **regime 밖 편차를 fit 하지 않는다** (§6.2) — 물리 우선 porosity 예측
-- trust audit: `validation_flags` 자기보고 카드, 케이스별 게이트 통과 여부
+**스케일링 법칙 (production form, 전부 FINALIZED)** — 이게 이 축의 헤드라인 산출물이다:
+- **σ_ionic** (2026-05-28) LOOCV **0.9752** · n=90/k=5 (18:1)
+  `σ = σ_grain·Cronau(r_SE)·φ_eff^½·CN²·cov_Hertz^½·f_p³·exp[a+b·lnτ+c·(lnτ)²+β_P2·P2+β_F·log f_intact]`
+  (σ_grain 3.0 mS/cm · φc_P 0.200 · φc_S 0.195 · δ 0.040 · r_cut 3.5 µm · α 2 — 전부 FROZEN)
+- **σ_electronic** Stage 22.5 (2026-06-03) LOOCV **0.9531** · R² 0.9613 · 8 LIVE OLS + 2 LOCKED (9.5:1)
+- **σ_thermal** Stage T1 (2026-06-04) LOOCV **0.9028** · R² ≈0.96 · Ridge α=0.05 · 14 feature (6:1)
+
+### 방법론적 쟁점
+- **frame[4] 교차보정 금지** (위 ⛔ 참조) — 이 축의 제1 규율
+- E_SE 18× 연화가 무엇을 뭉뚱그리는가 (재배열·GB 미끄러짐·미세파괴) · Hooke vs Hertz 등가성
+- Auerbach + **Lawn** 단계별 파괴 · Stage E grain 보정 (Cronau 2021/22 · Trevisanello 2021 · Wang 2022)
+- high-contrast Laplacian → **7층 방어** · **Bruggeman EMT** 가 왜 건전한 상한인가
+- **격자(voxel) 수렴** — SR-01 의 핵심. vox 0.4→0.15 µm 에서 σ_e 이득이 **단조 증가하며 멈추지 않고**,
+  증분비 1.773 < 이론 하한 2.187 이라 **멱법칙 수렴이 성립하지 않는다** ⇒ Richardson 외삽 무의미.
+  이 하드웨어 한계 = vox 0.115 µm (peak RSS 35.6 GB)
+- **표현 부피** 문제 — 점 스탬프가 섬유를 20.6–75.8 % 조각내고, SDCP 표현부피/참부피가 격자에 따라
+  0.238 ~ 4.311 배(18.1배 변동). `--step3-sdcp-sphere-d` 로 참 직경 구 스탬프 신설
+- 준정적 게이트 `V/c_P ≤ 0.01` — 위반 런은 등급 B(상대비교 전용)
+- **n/k 비율 규율** · "정보이론적 천장 — 항을 더 넣지 마라"
+- 사전등록(`docs/reviews/*_prereg_*.md`) · 인용금지 목록(`claims.json` `quotation_ban`)
 
 ### 진행 중 / 끝난 것
-- 진행: 원고 `docs/paper/main.tex` (§5 Results / §6 Discussion 작성됨, §7 Conclusion 있음),
-  공저자 편집 시트(`docs/reviews/` — 최근 30일 477개 파일 변경), LHS 스윕(8개 미실행 판정),
-  SDCP 전도도 판별 팔 사전등록, litdb 흡수 CL-60~CL-65
-- 끝난 것: 80–82 케이스 porosity 검증, PCA 분산 분해, Stage E 전 케이스 재실행
+- **끝**: Phase 1 수송 삼중(σ_ionic/σ_e/σ_thermal) · frame[4]/[5] 확정 · E_SE 보정 · Heckel ·
+  80–82케이스 porosity 검증 · STEP4-v2 구현 · 2C CCCV 완주 · bimodal R_ct 원장
+- **진행**: 원고 `docs/paper/main.tex` 공저자 편집 시트 · SR-01 격자 수렴(미해결) ·
+  LHS 스윕 8개 · SDCP 전도도 판별 팔 · litdb 흡수 CL-60~65 · R_int 풀셀/사이클 Phase 2
+- **대기 앵커** (`[[anchor-waitlist]]`): Joule ΔT · 코팅 √N · **SDCP E_bind (← 축 B 의 DFT)** ·
+  NCA E175 · EIS C_dl/R_w
+- **큰 목표(사용자 비전)**: 설계 수치 입력 → ML 이 전 물성 예측 → 그 수치에 맞는 2D 미세구조를
+  그리고 → 최종적으로 서로 다른 구성을 **한 복합양극 안의 층**으로 쌓는다 (5단계 중 Phase 1 완료)
 
 ### 이 축과 무관한 논문의 특징 (오탐 감축용)
+- 원자 스케일 전용 계산 (DFT 밴드구조 · NEB 장벽 · AIMD) — **그건 축 B 다**
 - 액체 전해질 슬러리 코팅·건조, 파우치셀 사이클 수명만 보고하는 실험
-- 셀 레벨 BMS·열관리·팩 설계, SOC/SOH 추정
-- 순수 합성·소결 실험 (미세구조 정량 없이 XRD·SEM 사진만)
-- 원자 스케일 전용 계산 (DFT 밴드구조·NEB) — **그건 축 B 다. 축 A 로 채점하지 말 것**
-- 상평형·CALPHAD, 전산유체(CFD), 전극 없는 순수 분말 유동 연구
+- 셀 레벨 BMS·열관리·팩 설계, SOC/SOH 추정, 전산유체(CFD)
+- 순수 합성·소결 (미세구조 정량이나 수송 측정 없이 XRD·SEM 사진만)
+- 상평형·CALPHAD · 전극 없는 순수 분말 유동
 - Zn·Na·K 이온, 슈퍼커패시터, 연료전지
-
----
+- ⚠ **DEM/FEM 을 서로 캘리브레이션한 논문은 무관이 아니라 반례**다 — 관련도는 높게 주되
+  frame[4] 위반으로 **비판 포인트**에 반드시 적는다
 
 ## 축 B (DFT / MLIP) — 브랜치 `claude/friendly-meitner-lldvar`
 
-**한 줄**: 황화물 SE(Li₆PS₅Cl 계열)의 전자구조·탄성·이온수송을 제일원리와 MLIP-MD 로 정량하고,
-LiNiO₂ 계면 위 바인더 조각의 흡착 대비와 SEI 상의 Li 이동 장벽을 **보고량을 먼저 정의하고**
-사전등록·게이트로 관리하며 계산한다.
+**한 줄**: 황화물 SE(Li₆PS₅Cl 계열)의 전자구조·탄성·결합·이온수송을 제일원리와 MLIP-MD 로
+정량하고, LiNiO₂ 계면 위 **바인더 조각의 흡착 대비**와 SEI 분해상의 **Li 이동 장벽**을 낸다.
+그런데 이 축의 정체성은 물리보다 **절차**에 있다 — 계산 전에 보고량을 정의하고, 사전등록하고,
+게이트를 결과 보기 전에 박고, 못 확인한 것을 통과로 세지 않는다.
 
-### 쓰는 도구·코드 (repo 경로)
-- **VASP 외주 번들**: `tools/sdcp/vasp_handoff_bundle.py` (생성기 + 배포 분석기 + 러너 + 봉인,
-  ~20k줄 단일 파일), `tools/sdcp/vasp_cost_estimate.py` (비용·makespan 모형),
-  `tools/sdcp/c12_prereg_amend_kconv.py` · `c12_render_send_mail.py` · `c12_make_identity.py`
-- **QE**: `tools/sei/` (`collect_neb.py`, `watch_qe_relax.sh`) — pw.x relax + neb.x CI-NEB
-- **MLIP**: `tools/modelc_v3/`, `tools/ionic/` — UMA-s-1p1(omat) Langevin NVT MD
-- **BVSE**: `tools/comp1_v3/` — softBV 기반 이온 경로 프록시
-- **ORCA**: `tools/sdcp/run_orca_stage_a.sh` (r2SCAN-3c Opt, SDCP 올리고머 Stage A)
-- **거버넌스**: `db/governance/decisions.json` (보고량·게이트 결정 원장), `db/properties/*_prereg_*.json`
-  (사전등록), `db/properties/canonical_registry.json` (화면 정본값 단일 출처)
-- **위키·문헌**: `kb/` (관리 문서 351개, `tools/kb_wiki.py` 로 index/lint), `litdb/` (digest 208편)
-- `webapp/` (Flask, `webapp/data.py` 가 canonical_registry 에서만 숫자를 읽음)
+> ⛔ **이 축의 통제 규율 (2026-08-28 채택)** — *"admissible state 가 여럿인데 선택·집계 규칙이
+> 없으면 스칼라 보고량은 정의되지 않는다."* 열린 껍질 · 자성 기판 · 산화환원 활성이 그 위험
+> 신호다. 채택 배경이 그대로 이 축의 성격을 말한다: **SDCP 흡착에너지를 여덟 번 계산했고 여덟 번
+> 반려됐다.** 받은 리뷰는 전부 *"제대로 돌렸나"*(무결성·해시·INCAR·게이트)였고 전부 통과했다.
+> *"맞는 양을 재고 있나"* 는 여덟 번째에야 물었고 즉시 P0 가 나왔다.
+> ⇒ 문헌을 읽을 때도 **"이 논문은 무엇을 보고량으로 정의했는가, 상태 선택 규칙이 있는가"**
+> 가 비판 포인트의 1순위다.
+
+### 쓰는 도구·코드 (repo 경로 · 크기순)
+- `tools/sdcp/vasp_handoff_bundle.py` (**1.37 MB · ~21k줄**) — 이 축에서 제일 큰 물건.
+  VASP 외주 **번들 생성기 + 배포 분석기(`analyze_results.py` 템플릿) + 단계 러너
+  (`run_staged.sh`) + POTCAR 루트 봉인(`SEAL_POTCAR_ROOT.sh`) + census** 가 한 파일에 있다.
+  `--selftest` 437건 · verify 30 · e2e 15 (stub VASP 로 census→봉인→1단계 관통)
+- `tools/sdcp/build_v7c_trimer.py` (581 KB) — SDCP 올리고머 빌더 (ORCA 계열)
+- `tools/sdcp/site_screen.py` (178 KB) · `run_orca_stage_a.sh` — 자세·자리 스크리닝, ORCA r2SCAN-3c Opt
+- `tools/sdcp/vasp_cost_estimate.py` — 비용·makespan 모형 (2026-09-04 단계 게이트·KPAR 반영)
+- `tools/sei/symmetric_saddle.py` (175 KB) · `build_neb_inputs.py` (89 KB) · `collect_neb.py` — QE CI-NEB
+- `tools/ionic/msd_diffusive_check.py` (138 KB) · `tools/modelc_v3/` — UMA MLIP-MD, MSD·아레니우스
+- `tools/cascade/build_screening_funnel.py` (94 KB) — 도핑·산화안정성 스크리닝 깔때기
+- `tools/comp1_v3/` — BVSE (softBV) · `tools/electronic/` (37) — fixed-occ nscf 갭·DOS·LOBSTER
+- `tools/oxidation/` (45) · `tools/doping/` (56) · `tools/neb_diffusion/` (32) · `tools/vgcf_hbn/` (19)
+- `tools/litdb/extract_figures.py` (88 KB) — 논문 그림 크로핑 · `tools/figures/` (84) — 하우스 스타일
+- `tools/kb_wiki.py` — kb 위키 index/lint · `tools/convention_check.py` — 물리 규약 복사본 갈림 감시
+- `webapp/` — `canonical.py` 가 `canonical_registry.json` 의 `source_path`+`source_key` 를 따라가
+  원자료와 **대조**한다 (`tools/db/validate_canonical.py`)
 
 ### 대상 조성·계면
-- **Li₆PS₅Cl 계열**: `comp1`~`comp5`, `modelc` (= LPSCl1.6), `+B₂O₃`, `LPSOCl` (+O 치환), Nd 치환
-- **계면**: LiNiO₂(104) 슬랩(192원자) × 바인더 조각 — **SDCP(설폰화 전도성 고분자) vs PTFE(C10)**
-- **SEI 상**: Li metal(bcc), Li₂S, Li₃N–Nd, Li₂O, Li₃P, Li₃PO₄, LiCl
-- **AF-ASSB 원고 쪽**: Li₃N(001), LiC₆(0001) 표면
+- **Li₆PS₅Cl 계열**: comp1–comp5 · `modelc`(=LPSCl1.6) · +B₂O₃ · LPSOCl(+O) · Nd 치환
+- **계면**: LiNiO₂(104) 슬랩 192원자 × 바인더 조각 — **SDCP(설폰화 전도성 고분자) vs PTFE(C10)**
+  (자기 seed 2종 `afm2424_pm1` / `afm2424_net4`, U(Ni d)=6.2, D3 zero-damping)
+- **SEI 분해상**: Li metal(bcc) · Li₂S · Li₃N–Nd · Li₂O · Li₃P · Li₃PO₄(β/γ) · LiCl · LiNdO₂ · Nd₂O₃ · Nd₂S₃
+- **AF-ASSB 원고**: Li₃N(001) · LiC₆(0001) 표면
+- **Zn ALZIB (C1)**: Cu–Zn 상 지문 — 43°±1° 에 8상이 1.47° 폭으로 겹침, Cu–Zn 간격 0.097°
 
 ### 관심 물리량과 현재 확보된 값
-`db/properties/canonical_registry.json` — 정본 항목 **39건**. 기계 판독 가능(JSON, `source_path` +
-`source_key` 로 원자료를 가리키고 `webapp/canonical.py` 가 대조).
-| 양 | 값 / 범위 | 상태 |
-|---|---|---|
-| Band gap (fixed-occ nscf 고유값) | 2.066 (comp1) · 2.099 (modelc) · 1.9671 (+B₂O₃) · 2.2309 (LPSOCl) eV | canonical |
-| B₀ (BM3 EOS) | 21.71 – 26.233 GPa | canonical |
-| 탄성 (relaxed-ion) | 20.03 – 35.04 GPa | canonical |
-| MD 활성화에너지 Ea (멀티시드) | 0.197 eV / (단일시드 앵커) 0.1512 – 0.2867 eV | canonical + provisional |
-| ICOHP (LOBSTER, 결합당) | −5.913 – −6.04 eV | canonical |
-| SDCP wave1 ΔE(site) | 9.265 – 49.767 meV | canonical |
-| SDCP wave1 E_ads (box24) | −0.3302 – −0.7728 eV | provisional |
-| NEB Li 이동 장벽 (`db/properties/sei_neb.json`) | Li metal 0.0806 · Li₃Nd 0.229 · Li₂S 0.305 eV | **전부 `provisional_single_cell` · citable=false** |
-| 표면에너지 γ_SE (`adhesion.json`) | 0.45 – 1.211 J/m² | — |
-- ⚠ **아직 값이 없는 것**: C-12 ΔE_ads (SDCP vs PTFE 조각 대비) — 외주 VASP 16잡이 아직 발송 전이다.
+`db/properties/canonical_registry.json` — 정본 **39항목**. 각 항목이 `source_path`+`source_key` 로
+원자료를 가리키고 `resolve()` 가 따라가 대조한다. **스크립트에 흩어져 있지 않다.**
+`comparison_group` 이 같은 값끼리만 순위·비교·레이더에 올린다.
 
-### 방법론적 쟁점
-- **Band gap 은 fixed-occupations nscf 의 VBM/CBM 고유값만 인정** — DOS-threshold 판독 금지(~0.3 eV 과소)
-- **UMA 를 Li₃N 에 사용 금지** (2026-06 결정론적 편향 판정). LPSCl 계열 MD 에는 검증된 표준
-- MLIP-MD: **MSD 창 2–50 ps 고정**, 아레니우스 600/800/1000 K 3점, Nernst–Einstein(Haven=1),
-  **σ 절대값 인용 금지 · 비율도 멀티시드 판정만** (단일시드 1.33× 철회 사례)
-- BVSE 정량·순위는 **원본 주기셀 값만** (큐빅 박스는 표시용)
-- NEB: 전하 규약이 상의 `electronic_class` 로 갈린다 (insulator = V_Li⁻ + jellium / metal = 중성 공공).
-  **jellium 은 유한셀 근사 — 셀 수렴 확인 전에는 상 사이 비교 전용**
-- **POTCAR 신원**: `post_hoc` 정책이라 이 묶음 결과는 **원고 인용 자격이 없다** (탐색용)
-- **보고량을 계산 전에 정의한다** (`kb/templates/estimand_card.md`) — SDCP 흡착에너지를 여덟 번 계산하고
-  여덟 번 반려된 뒤 채택. admissible state 가 여럿인데 선택·집계 규칙이 없으면 스칼라 보고량은 미정의
-- **마감 조건을 먼저 박는다** (`db/properties/<계>_closed_<날짜>.json`)
-- 계산 조건이 아니라 **상태 선택 정책**을 맞춰야 한다 (NUPDOWN 제약 vs 자유 — 제약된 기준에서
-  자유로운 복합체를 뺀 실측 사고)
+| 물리량 | 값 / 범위 | 상태 |
+|---|---|---|
+| Band gap (fixed-occ nscf 고유값) | comp1 **2.066** · modelc **2.099** · +B₂O₃ **1.9671** · LPSOCl **2.2309** eV | canonical |
+| B₀ (BM3 EOS) | 21.71 – 26.233 GPa | canonical |
+| 탄성 (relaxed-ion) | 20.03 – 35.04 GPa (E_VRH 22.06 / 27.66) | canonical |
+| MD 활성화에너지 (멀티시드) | 0.197 eV | canonical |
+| MD 활성화에너지 (단일시드 앵커) | 0.1512 – 0.2867 eV | provisional |
+| ICOHP (LOBSTER 결합당) | −5.913 – −6.04 eV | canonical |
+| SDCP wave1 ΔE(site) | 9.265 · 36.071 · 36.157 · 49.767 meV | canonical |
+| SDCP wave1 E_ads (box24) | −0.3302 – −0.7728 eV | provisional |
+| NEB Li 이동장벽 | Li metal **0.0806** · LiNdO₂ **0.229** · Li₂S **0.305** eV | **전부 `provisional_single_cell` · citable=false** |
+| 표면에너지 γ_SE | 0.45 – 1.211 J/m² | — |
+| **C-12 ΔE_ads (SDCP vs PTFE)** | **아직 없음 — 외주 VASP 16잡 발송 전** | 미계산 |
+
+### 방법론적 쟁점 (= 데이터 규율. 어기면 값이 무효다)
+- **Band gap 은 fixed-occupations nscf 의 VBM/CBM 고유값만 인정.** DOS-threshold 판독 금지
+  (~0.3 eV 과소). 정본 registry 에 `prohibitions: [dos_threshold_readout]` 로 **기계 집행**된다.
+- **UMA 를 Li₃N 에 사용 금지** (2026-06 결정론적 편향 판정). LPSCl 계열 MD 에는 검증된 표준.
+- MLIP-MD: **MSD 창 2–50 ps 고정** · 아레니우스 600/800/1000 K 3점(400/500 K 제외) ·
+  Nernst–Einstein(Haven=1) · **σ 절대값 인용 금지, 비율도 멀티시드 판정만**
+  (단일시드 1.33× 철회 사례). Ea 오차막대는 600 K 3-시드.
+- **BVSE 정량·순위는 원본 주기셀 값만** (큐빅 박스는 표시용, ±1.3 %p 표본 편차).
+  softBV R₀ = S 2.105 / Cl 2.249 / O 1.466, b=0.37 · ~0.25 Å voxel
+- **NEB 전하 규약이 상의 `electronic_class` 로 갈린다** — 부도체 = V_Li⁻(tot_charge −1) + jellium
+  + gaussian smearing / 금속 = 중성 공공(tot_charge 0) + mv smearing. jellium 은 유한셀 근사라
+  **셀 수렴 확인 전에는 상 사이 비교 전용.** ⛔ BVSE 프록시와 같은 표 금지(단위는 같아도 다른 양).
+- **POTCAR 신원**: `post_hoc` 정책 ⇒ 이 묶음 결과는 **원고 인용 자격이 없다**(탐색용).
+  사후 attestation 으로 승격 불가 — 계산 **전** 외부 앵커(사전 승인 해시 또는 서명)여야 한다.
+- **상태 선택 정책** — "전 계에 같은 NUPDOWN 값" 이 아니라 같은 *state-selection policy* 다.
+  실측 사고: 기체 기준은 `NUPDOWN=0` 으로 **제약**됐는데 복합체는 `−1` 자유라
+  **제약된 기준에서 자유로운 복합체를 뺐다.**
+- **평균류 지표는 그림 표시 창과 동일한 창**(−8..0 eV)으로 계산·인용.
+- 슬랩은 기하 승계(verified-carry: 마지막 ATOMIC_POSITIONS 스플라이스 + 검증) + local-TF/저β 믹싱.
+
+### 거버넌스 기계 (이 축의 진짜 산출물)
+- `db/governance/decisions.json` — 결정 **14건**. `proposed → (사람 ratify) → active` 이고
+  ratification 은 `content_digest`(비준 대상 내용의 sha256)로 결박된다. 내용을 고치면 지문이
+  어긋나 **재승인을 요구**한다. 주요 결정: `estimand-before-compute` · `closure-criteria-first` ·
+  `missing-axis-is-unknown-not-worst` · `source-authority` · `hash-bound-carry` · `no-fallback` ·
+  `sdcp-c12-path`(active) · polaron F_bb / S0 4층 게이트(proposed)
+- `db/properties/*_prereg_*.json` — 사전등록. C-12 는 `3_오차예산` 에 B_num = |Δ_vac|+|δ_gas|+|δ_k|,
+  문턱 5 meV, **"축이 하나라도 없으면 NUMERIC_BUDGET_INCOMPLETE — 확인 못 한 것은 통과가 아니다"**
+- **마감 규율**: `db/properties/<계>_closed_<날짜>.json` 에 확정값·허용 서술·**금지 서술**·재개 조건.
+  순서가 핵심 — 데이터를 보고 닫지 않고, 조건을 먼저 정하고 그게 채워졌으므로 닫는다.
+  선례 `sdcp_neutral_closed_2026_08_28.json` (SDCP 는 조건 없이 두 번 닫았다가 두 번 물렸다)
+- **인용자격 계약** (`citability_contract_2026_08_16`) — 셀 수렴 미시험이면 자동으로
+  `provisional_single_cell` · `citable=false` 로 강등. `sei_neb.json` 은 인용가능 0/9 이라
+  최상위 `retracted: true`
+- `kb/` **관리 문서 351개** — `reviews`(106) · `results`(94) · `methodology`(49) · `seminars`(38) ·
+  `projects`(23) · `papers`(20) · `elements`(118) · `questions`(10) · `syntheses`(6).
+  frontmatter 필수 · `explored` 는 **사람만** true · 근거 하나면 `confidence: high` 금지 ·
+  `kb_wiki.py lint` 0 errors 유지
+- **외부 감사 사슬** — Codex/외부 리뷰어 회신을 `kb/reviews/` 에 원문 보존하고 회신 ID(AI·AO·AR·
+  AT·AV·AZ·BA·BB·BD·BE·BF·BG·BH …)로 코드 주석에 결박한다. 코드에 *"⛔ 회신 BH P0-1"* 처럼
+  **어느 리뷰가 어느 줄을 낳았는지**가 적혀 있다.
 
 ### 진행 중 / 끝난 것
-- 진행: **C-12 외주 VASP 번들** (v34 내부 6렌즈 리뷰 NO-GO → v35 준비 · `runs/sdcp_c12_2026_08_30/`),
-  SDCP polaron Stage A (ORCA gs0–gs2 완료, gs3–gs6 대기), SEI NEB 병합(li_metal CI-NEB 완료),
-  Cu–Zn convex hull 보고량 카드(계산 전), Nd 치환 조사
-- 끝난 것: `db/properties/sdcp_neutral_closed_2026_08_28.json` (마감 선례), LPSCl 밴드갭·탄성·ICOHP 정본화
+- **진행**: **C-12 외주 VASP 번들** — v31→v34 반복, 내부 6렌즈 리뷰가 v34 **NO-GO**
+  (P0: 선택 attestation 이 실물에서 1단계 게이트를 막는다 / δ_k 축 설계 제외가 비준 사전등록과 어긋난다).
+  v35 준비 중이고 **δ_k 재개 조건 1저자 결정이 유일한 블로커**.
+  · SDCP polaron Stage A (ORCA r2SCAN-3c, gs0–gs2 완료 각 10–18 h, gs3–gs6 대기)
+  · SEI NEB 다중 기계 병합 (li_metal CI-NEB 완료) · Cu–Zn convex hull 보고량 카드(계산 전)
+  · Nd 치환 조사 · 산화안정성 cascade
+- **끝**: LPSCl 밴드갭·탄성·ICOHP 정본화 · `sdcp_neutral_closed_2026_08_28` · AF-ASSB SI v6 제출본
+- **자원**: KISTI neuron(Slurm) · kgy RTX3090(QE-GPU + uma) · gabia A6000(pw.x/UMA **동시 실행 금지**)
+  · desktop WSL(ORCA) · **외주 VASP**(슈퍼컴 sbatch, 잡당 walltime 상한 91 h)
 
 ### 이 축과 무관한 논문의 특징 (오탐 감축용)
-- 입자 패킹·압축·DEM·유한요소 미세구조 — **그건 축 A 다**
-- 셀 조립·캘린더링 공정 최적화, 파일럿 라인 스케일업
-- 계산이 전혀 없는 순수 실험 합성·전기화학 (cycling curve 만)
-- 액체·폴리머 전해질 전용, 리튬-공기/황(황화물 SE 아닌 Li–S), Zn/Na/K 이온
+- 입자 패킹·압축·DEM·미세구조 유한요소 — **그건 축 A 다**
+- 셀 조립·캘린더링·건식전극 공정 최적화, 파일럿 스케일업
+- 계산이 전혀 없는 순수 실험 (합성 + cycling curve 만) — **단, EIS·대칭셀은 축 C 다**
+- 액체·폴리머 전해질 전용 · Li–S(황화물 SE 아님) · Zn/Na/K 이온
 - 머신러닝이되 **원자 스케일 퍼텐셜이 아닌** 것 (제조 파라미터 회귀, 이미지 분할 only)
-- DFT 이되 배터리와 무관한 계 (촉매, 태양전지, 열전)
-
----
+- DFT 이되 배터리와 무관한 계 (촉매 · 태양전지 · 열전 · 수소저장)
+- ⚠ **DOS threshold 로 밴드갭을 읽은 논문**, **단일 시드 MD 로 σ 비를 주장한 논문**,
+  **NEB 를 셀 수렴 없이 절대값으로 인용한 논문** 은 무관이 아니라 **비판 대상**이다 —
+  우리가 그 함정을 각각 규율로 닫았기 때문에 세미나 질문·리뷰어 관점에서 값어치가 크다
 
 ## 그 외 축
-- **세미나·발표**: `kb/seminars/`, `kb/papers/lpscl_vs_lpscl16_seminar_v1.pptx` 등 — 축 B 자료로 만든
-  그룹미팅/세미나 산출물. 별도 연구축이라기보다 축 B 의 전달 형태.
-- **실험 협업**: `docs/collab/`, AF-ASSB(AgNO₃–C–PVP) 원고 SI 기여. 계산이 실험 원고의 SI 를 받치는 관계.
-- **웹앱**: 양 브랜치 모두 Flask 웹앱을 갖고 있다 (축 A 케이스 브라우저 / 축 B 정본값 뷰어).
+
+### 축 C — 실험 협업 (`이종기술`, 한양대 이종원 그룹) ★ 별도 축이다
+축 A 브랜치의 `이종기술/` 은 폴더가 아니라 **독립 실험 라인**이다 (README 첫 줄:
+*"Separate experimental line from SDCP"*).
+- **계**: 소립(4 µm single-crystal) NCM 양극 No.1 / No.2 + poly:small **5:5** bimodal 블렌드,
+  **SUS** 집전체. 조성 AM:SE:VGCF:PTFE = **80:18:1:1**.
+  공정: vortex 10 min → PTFE → ball-mill 1 h → Thinky 2000 rpm 5 min → hot-plate rolling → roll-press
+- **셀**: 대칭셀 SUS∣복합양극∣SUS (이온 차단 → σ_e) · 풀셀 SUS∣Li-In∣SE-bulk∣복합양극∣primer-SUS
+  · 대칭 ⌀10 mm(0.785 cm²) · 율특/수명 ⌀13 mm(1.327 cm²)
+- **측정**: BioLogic **VSP-300** (EC-Lab v11.63) EIS — `이종기술/eis/raw/*.mpr` 원자료 +
+  `extracted/*.csv` (freq_Hz, ReZ_ohm, negImZ_ohm, absZ_ohm, phase_deg, Ewe_V, I_mA, cycle)
+  + `eis_catalog.csv` + `fits/` (CNLS 등가회로 R_s / R_int / R_w / R_ion). 도구 `scripts/eis_archive.py`
+- **확보된 값**: 비용량(5:5) No.1 **202.95** · No.2 **206.5** mAh g⁻¹ · 면적용량 목표 3 mAh cm⁻² ·
+  Li-In 음극 · 60 °C · 0.1C 2사이클 → 0.2C
+- **어떻게 축 A 로 들어가나**: 풀셀 EIS → **R_int** 가 STEP4 의 실측 앵커 (V_term = V − I·R_int).
+  ⚠ 이건 SDCP 원고의 SBE/DBE 패널 값과 **다른, 이 프로젝트 자신의 측정값**이다.
+- ⇒ **실험 논문(EIS·대칭셀·율특성·Li-In·SUS 집전체)은 무관이 아니다.** 축 C 로 채점한다.
+
+### 그 밖
+- **세미나·발표**: `kb/seminars/` · `kb/papers/lpscl_vs_lpscl16_seminar_v1.pptx` ·
+  `litdb/papers/*__seminar_5min_qa.md` (5분 Q&A 형식 digest 3건) — 축 B 의 전달 형태.
+- **AF-ASSB 원고 협업**: `docs/collab/` · AgNO₃–C–PVP 원고 SI 기여 (축 B). 계산이 실험 원고 SI 를 받친다.
+- **웹앱**: 양 브랜치 모두 Flask 웹앱 (축 A 케이스 브라우저 + 3D 뷰어 / 축 B 정본값 뷰어).
+- **거버넌스가 그 자체로 산출물이다** — 축 A `docs/reviews/claims.json` (주장 82건: live 53 ·
+  rejected 20 · hold 5 · retired 4 + `quotation_ban` 인용금지 목록) · `findings.json` (결함 123건:
+  claimed_fixed 93 · open 19 · verified 8 · wontfix 3, `check_review_findings.py` 가 자기일관 강제) ·
+  `wiki/` 21페이지 · 사전등록 `docs/reviews/*_prereg_*.md`.
+  축 B `db/governance/decisions.json` · `db/properties/*_prereg_*.json` · `kb/` 351문서.
+  ⇒ **양쪽 다 "결과를 보기 전에 게이트를 박고, 틀린 것을 원장에 남긴다."** 이것이 두 축의
+  진짜 공통점이고, 논문을 읽을 때 **비판 포인트를 잡는 기준**이다.
 
 ---
 
 ## 논문 원고 현황
 
-| 축 | 경로 | 제목 | 섹션 | 진행률 | 타깃 저널 |
-|---|---|---|---|---|---|
-| A | `docs/paper/main.tex` (브랜치 B) | Stage E fracture-aware network solver for all-solid-state battery cathode microstructure: a literature-grounded multi-physics framework with 7-layer defence and Bruggeman fallback | Introduction / Methodology (DEM particle configuration · Contact-network extraction and Kirchhoff solve · Three parallel transport channels) / Stage E literature-grounded grain corrections / 7-Layer defence and Bruggeman fallback / Results (Pipeline self-consistency · Trust audit · Variance decomposition · Cell-level ASR validation · Design rule AM_P fraction vs σ_e loss · Strict physics-first porosity prediction) / Discussion (Two competing densification mechanisms · Why we do not fit out-of-regime deviations · Limitations · Hooke–Hertz equivalence · SE–SE grain boundary · Bruggeman upper bound · Porosity wave-shape sensitivity · Stress-bearing percolation) / Conclusion | 본문 1034행+ 전 섹션 초안 있음 · 공저자 편집 시트 진행 중 | **unknown** (refs.bib 만 있고 저널 지정 문구 없음) |
-| A | `docs/manuscript/Methods_simulation_v7_for_coauthors.docx` | 공저자용 시뮬레이션 Methods v7 | unknown (.docx) | 정본 rev7 | unknown |
-| B | `docs/manuscripts/Methods_DFT_v9_for_coauthors.docx` · `Methods_simulation_v8_for_coauthors.docx` · `Table_S2_DFT_parameters.docx` · `Figure2e_explained_v10.docx` | **AF-ASSB AgNO₃–C–PVP 원고 (v5)** 의 Methods·SI 기여 | SI Table S2 = Li₃N(001)/LiC₆(0001) DFT 파라미터 | SI v6 제출본 형태 확정 (`--nonotes`) | unknown |
-| B | `kb/papers/draft_v1.md`, `computational_methods_draft.md` | 내부 초안 | — | unknown | unknown |
+| 축 | 경로 | 제목 / 무엇 | 진행 | 타깃 저널 |
+|---|---|---|---|---|
+| A | `docs/paper/main.tex` + `refs.bib` (브랜치 stoic-knuth) | *Stage E fracture-aware network solver for all-solid-state battery cathode microstructure: a literature-grounded multi-physics framework with 7-layer defence and Bruggeman fallback* (저자 필드 `Yonghoon Kim`, KAIST — ⚠ 이름 표기 확인 필요) | 본문 1034행+, 전 섹션 초안. 공저자 편집 시트 진행 중 (`docs/reviews/` 최근 30일 477파일) | **unknown** |
+| A | `docs/manuscript_sdcp_sigma_e_mechanism.md` (최종판) + `docs/sdcp_318_base_sbe_dbe_comparison.md`(수치 원장) | SDCP σ_e 기전 원고 | ⚠ **2026-08-13 부로 헤드라인 철회** (격자 미수렴). 잔여 = **E_bind DFT** | unknown |
+| A | `docs/manuscript/Methods_simulation_v7_for_coauthors.docx` · `docs/manuscript_draft/DEM_methodology_and_tables_v1.docx` | 공저자용 시뮬레이션 Methods | 정본 rev7 | unknown |
+| B | `docs/manuscripts/Methods_DFT_v9_for_coauthors.docx` · `Methods_simulation_v8_for_coauthors.docx` · `Table_S2_DFT_parameters.docx` · `Figure2e_explained_v10.docx` | **AF-ASSB AgNO₃–C–PVP 원고(v5)** 의 Methods·SI (Table S2 = Li₃N(001)/LiC₆(0001) DFT 파라미터) | SI v6 제출본 형태 확정(`--nonotes`). 각주 3항목은 리비전에도 안 넣기로 확정 | unknown |
+| B | `kb/papers/draft_v1.md` · `computational_methods_draft.md` · `final_report_v2.md` | 내부 초안 | unknown | unknown |
 
-> `use_in_my_paper` 를 쓸 때: 축 A 는 **main.tex 의 절 이름으로** 지목할 수 있다 (예: "§6.6 SE–SE
-> grain-boundary 문단에 인용"). 축 B 는 원고가 .docx 라 절 지목이 어렵다 — `kb/` 카드나
-> `db/properties/` 항목으로 지목하는 편이 정확하다.
-
----
+**`use_in_my_paper` 를 쓰는 법** — 축마다 지목 단위가 다르다:
+- 축 A: `main.tex` 의 **절 이름으로** 지목할 수 있다. 실제 절 —
+  Introduction / Methodology (DEM particle configuration · Contact-network extraction and Kirchhoff
+  solve · Three parallel transport channels) / Stage E literature-grounded grain corrections /
+  7-Layer defence and Bruggeman fallback / Results (Pipeline self-consistency · Trust audit ·
+  Variance decomposition · Cell-level ASR validation · Design rule AM_P fraction vs σ_e loss ·
+  Strict physics-first porosity prediction) / Discussion (Two competing densification mechanisms ·
+  Why we do not fit out-of-regime deviations · Limitations · Hooke–Hertz equivalence ·
+  SE–SE grain boundary · Bruggeman upper bound · Porosity wave-shape sensitivity ·
+  Stress-bearing percolation) / Conclusion
+  → 예: *"§6.6 SE–SE grain-boundary 문단에 인용"*
+- 축 B: 원고가 .docx 라 절 지목이 어렵다. **`kb/` 카드나 `db/properties/` 항목으로** 지목하는 편이
+  정확하다 → 예: *"`kb/methodology/` 의 NEB 셀 수렴 카드에 반례로 인용"*
+- 축 C: 아직 원고가 없다. **앵커 대기 큐**(`[[anchor-waitlist]]`)의 어느 항목을 채우는지로 지목한다.
 
 ## 관련도 채점 가이드 (구조는 고정, 기준선은 브랜치가 조정)
 | 점수 | 기준 |
@@ -224,20 +359,27 @@ LiNiO₂ 계면 위 바인더 조각의 흡착 대비와 SEI 상의 Li 이동 �
 - 실험 논문이라도 **σ_ionic 의 온도의존성 + 활성화에너지**를 보고하면 축 B 0.7 이상.
 
 ## 채점용 용어 가중치 (규칙 기반 fallback — `research_agent/triage.py` 와 함께 유지)
-- 축 A 핵심: `discrete element`, `DEM`, `LIGGGHTS`, `MPM`, `material point method`, `voxel`,
-  `resistor network`, `percolation`, `Kirchhoff`, `Bruggeman`, `constriction resistance`,
-  `effective medium`, `tortuosity`, `Heckel`, `coordination number`
-- 축 B 핵심: `first-principles`, `DFT`, `density functional`, `ab initio`,
+- **축 A 핵심**: `discrete element`, `DEM`, `LIGGGHTS`, `MPM`, `material point method`, `Taichi`,
+  `voxel`, `resistor network`, `percolation`, `Kirchhoff`, `Bruggeman`, `constriction resistance`,
+  `effective medium`, `tortuosity`, `Heckel`, `coordination number`, `force chain`, `Auerbach`,
+  `cold press`, `uniaxial compaction`, `dry electrode`
+- **축 B 핵심**: `first-principles`, `DFT`, `density functional`, `ab initio`,
   `machine learning potential`, `MLIP`, `AIMD`, `NEB`, `nudged elastic band`, `COHP`, `ICOHP`,
-  `LOBSTER`, `bond valence`, `BVSE`, `band gap`, `VASP`, `Quantum ESPRESSO`
-- 공통 시스템: `all-solid-state`, `sulfide`, `Li6PS5Cl`, `LPSCl`, `argyrodite`, `halide electrolyte`,
-  `composite cathode`, `NCM811`, `NMC811`
-- 물성·공정: `porosity`, `tortuosity`, `compaction`, `calendering`, `contact`, `elastic`, `modulus`,
-  `adhesion`, `interface`, `NCM`, `ASR`, `area specific resistance`, `binder`, `PTFE`, `PVDF`
-- 감점: `supercapacitor`, `zinc-ion`, `sodium-ion`, `fuel cell`, `photocatal`, `perovskite solar`,
-  `redox flow`, `thermoelectric`, `hydrogen storage`, `CALPHAD`, `battery management`,
-  `state of charge estimation`
+  `LOBSTER`, `bond valence`, `BVSE`, `band gap`, `VASP`, `Quantum ESPRESSO`, `PAW`, `DFT+U`,
+  `formation energy`, `convex hull`, `electrochemical stability window`
+- **축 C 핵심** (실험 협업): `impedance`, `EIS`, `symmetric cell`, `blocking electrode`,
+  `Li-In`, `areal capacity`, `single crystal NCM`, `polycrystalline NCM`, `rate capability`,
+  `stack pressure`, `roll press`, `equivalent circuit`, `R_int`, `charge transfer resistance`
+- **공통 시스템**: `all-solid-state`, `sulfide`, `Li6PS5Cl`, `LPSCl`, `argyrodite`,
+  `halide electrolyte`, `composite cathode`, `NCM811`, `NMC811`, `NCM83`
+- **물성·공정**: `porosity`, `tortuosity`, `compaction`, `calendering`, `contact`, `elastic`,
+  `modulus`, `adhesion`, `interface`, `NCM`, `ASR`, `area specific resistance`,
+  `binder`, `PTFE`, `PVDF`, `VGCF`, `carbon additive`, `conductive additive`
+- **감점**: `supercapacitor`, `zinc-ion`, `sodium-ion`, `fuel cell`, `photocatal`,
+  `perovskite solar`, `redox flow`, `thermoelectric`, `hydrogen storage`, `CALPHAD`,
+  `battery management`, `state of charge estimation`, `pack thermal management`
 - 프리프린트(arXiv 등)는 IF 0 — relevance만으로 tier 결정
+- ⚠ `\bNCM\b` 만 쓰면 `NCM811` 이 단어경계에서 안 잡힌다 — 두 형태를 다 넣을 것
 
 ## 심층 분석 시 반드시 채울 항목 (형식은 고정)
 1. 비교 가능한 **수치** — 단위와 조건 포함
