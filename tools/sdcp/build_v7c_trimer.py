@@ -2216,6 +2216,46 @@ def selftest():
                          sym=["C"] * (max(_r0) + 1))[0] is None,
         "⛔음성 U P0-4: canonical 창이 0 이어도 **AO 성격**이 코어를 잡는다 "
         "(창과 성격은 서로의 예비다)")
+    # ── 2026-09-05 내부 P0-2 — 성격 필터를 **선택 안에서** 건다 ──────────────
+    #   실물 재현: 술포네이트 집합에 MO 355(w 103.6, S–O 결합) 와 MO 197(w 102.2,
+    #   순수 O lone pair) 이 있고, 종전 argmax 는 355 를 골라 성격 검사에서 죽었다.
+    _pk_pops = {355: {98: 53.8, 72: 49.8}, 197: {103: 102.2}, 333: {90: 85.0, 70: 17.4}}
+    _pk_occ = {m: 2.0 for m in _pk_pops}
+    _pk_tgt = [70, 72, 90, 98, 103]
+    _onlyO = lambda m: ((m in (197, 333)), "SEED_NOT_O_NONBONDING" if m == 355 else "")
+    chk(pil_pick_seed_mo(_pk_pops, _pk_occ, _pk_tgt, core_window=0)[0] == 355,
+        "회귀: `accept` 없이는 종전대로 가중치 최대(MO 355)를 고른다")
+    _rj = []
+    _m, _w = pil_pick_seed_mo(_pk_pops, _pk_occ, _pk_tgt, core_window=0,
+                              accept=_onlyO, reject_log=_rj)
+    chk(_m == 333 and abs(_w - 102.4) < 1e-6 and len(_rj) == 1 and _rj[0][0] == 355,
+        "2026-09-05: 성격을 만족하는 후보 중 **최대**(MO 333, w 102.4)를 고른다 — "
+        "기각된 355 는 로그로 남고, 더 낮은 197 로 내려가지 않는다")
+    _rj1 = []
+    chk(pil_pick_seed_mo(_pk_pops, _pk_occ, _pk_tgt, core_window=0,
+                         accept=lambda m: ((m == 197), "x"), reject_log=_rj1)[0] == 197
+        and len(_rj1) == 2,
+        "기각이 둘이면 세 번째(197)까지 내려간다 — 순서대로 훑는다")
+    chk(pil_pick_seed_mo(_pk_pops, _pk_occ, _pk_tgt, core_window=0,
+                         accept=lambda m: (False, "x"))[0] is None,
+        "⛔음성: 전부 성격 미달이면 None — `accept` 가 아무거나 통과시키지 않는다")
+    _rj2 = []
+    pil_pick_seed_mo(_pk_pops, _pk_occ, _pk_tgt, core_window=0,
+                     accept=lambda m: (False, "x"), reject_log=_rj2)
+    chk(len(_rj2) == 3,
+        "⛔음성: 전부 기각일 때 **문턱을 넘은 후보 수**가 로그로 남는다 "
+        "(‘후보가 없다’ 와 ‘종류가 없다’ 를 구분해야 한다)")
+    chk(pil_pick_seed_mo({9: {0: 20.0}}, {9: 2.0}, [0], core_window=0,
+                         accept=lambda m: (True, ""))[0] is None,
+        "⛔음성: `accept` 가 통과시켜도 **문턱(40%) 미달은 못 올라온다** — "
+        "성격 필터가 가중치 게이트를 우회하지 않는다")
+    chk(pil_pick_seed_mo({5: {0: 90.0}, 3: {0: 90.0}}, {5: 2.0, 3: 2.0}, [0],
+                         core_window=0)[0] == 3,
+        "동률은 **MO index 사전순**으로 깬다 (난수 없음)")
+    chk("성격으로 먼저 거른" in (pil_pick_seed_mo.__doc__ or "")
+        or "성격으로 먼저" in (pil_pick_seed_mo.__doc__ or ""),
+        "docstring 이 선택 순서 변경과 그 근거(실측 MO 355/197)를 적는다")
+
     chk(pil_parse_mopop("아무 관계 없는 출력", 10) is None,
         "⛔음성: MO 인구 블록이 없으면 None (임의로 고르지 않는다)")
     # ⛔음성 2026-08-31 실측 — ORCA 6.1.1 의 실제 헤더에 **REDUCED 가 없다**.
@@ -6627,8 +6667,23 @@ def pil_mo_is_core(ao_atoms, sym, frac=PIL_CORE_AO_FRAC):
 
 
 def pil_pick_seed_mo(pops, occ, group_idx, kill=None, core_window=None,
-                     aos=None, sym=None):
+                     aos=None, sym=None, accept=None, reject_log=None):
     """목표 집합에 가장 크게 걸린 **점유 원자가** MO. → (mo, weight_pct) 또는 (None, best).
+
+    ⛔⛔ 2026-09-05 (내부 P0-2) — **후보를 성격으로 먼저 거른 뒤 최대를 고른다.**
+      종전은 ① 가중치 argmax → ② 성격 검사 → 실패면 정지 였다. 그런데 사전등록은
+      seed 를 *종류로* 정의한다(`A_sulfonate` = O-nonbonding · `B_ring*` = ring π).
+      "제일 큰 것을 고르고 나서 종류를 확인" 하면 **종류가 다른 것이 이길 수 있다.**
+      실측(L_dminus · 2026-09-05): 술포네이트 집합에 ≥40% 걸린 국재 MO 가 **78개**인데
+        · MO 355  w=103.6 %  O_frac 0.52  (98O 53.8 / 72S 49.8) ← S–O **결합** 궤도. 선택됨→기각
+        · MO 197  w=102.2 %  O_frac 1.00  (103O 102.2)          ← 순수 O lone pair. 1.4 %p 차로 짐
+        · 그 밖에 O_frac 0.83–0.85 인 후보 다수
+      ⇒ 후보가 없어서 실패한 것이 아니라 **고르는 순서**가 정의를 안 지켰다.
+      ⚠ `accept` 가 주어졌을 때만 필터가 걸린다. 안 주면 종전 동작 그대로다.
+      ⚠ **문턱은 하나도 바뀌지 않았다** (`PIL_SEED_MIN_WEIGHT` · `PIL_ONB_MIN` · `PIL_PI_MIN`).
+
+    `accept(mo) -> (ok, 사유)` — 성격 판정. `reject_log` 를 주면 기각 사유를
+    `(mo, weight, 사유)` 로 쌓아 준다 (전부 기각일 때 무엇이 왜 떨어졌는지 보여야 한다).
 
     ⛔ 코어 궤도를 반드시 뺀다 — 링 탄소의 C 1s 는 그 링에 ~100% 걸려 있어서
       배제하지 않으면 **항상** 그게 뽑힌다 (2026-08-31 실측 전 발견).
@@ -6651,7 +6706,7 @@ def pil_pick_seed_mo(pops, occ, group_idx, kill=None, core_window=None,
 
     tgt = {remap(i) for i in group_idx}
     tgt.discard(None)
-    best, bw = None, -1.0
+    cand = []
     for mo, d in pops.items():
         if occ.get(mo, 0.0) < 1.0:
             continue                         # 점유 MO 만
@@ -6661,14 +6716,23 @@ def pil_pick_seed_mo(pops, occ, group_idx, kill=None, core_window=None,
             is_core, _r = pil_mo_is_core(aos.get(mo), sym)
             if is_core:
                 continue                     # ⓑ AO 성격
-        w = sum(v for a, v in d.items() if a in tgt)
-        if w > bw:
-            best, bw = mo, w
-    if best is None:
+        cand.append((sum(v for a, v in d.items() if a in tgt), mo))
+    if not cand:
         return None, -1.0
-    if bw < PIL_SEED_MIN_WEIGHT:
-        return None, bw
-    return best, bw
+    cand.sort(key=lambda t: (-t[0], t[1]))   # 가중치 내림차순 · 동률은 MO index (난수 없음)
+    if cand[0][0] < PIL_SEED_MIN_WEIGHT:
+        return None, cand[0][0]              # 문턱 미달 — 성격을 보기 전에 막힌다
+    if accept is None:
+        return cand[0][1], cand[0][0]        # 종전 동작 (성격 필터 없음)
+    for w, mo in cand:
+        if w < PIL_SEED_MIN_WEIGHT:
+            break                            # ⓒ 문턱 아래는 후보가 아니다
+        ok, why = accept(mo)
+        if ok:
+            return mo, w
+        if reject_log is not None:
+            reject_log.append((mo, w, why))
+    return None, cand[0][0]                  # 문턱은 넘었으나 **성격을 만족하는 후보가 없다**
 
 
 def pilot_seeds(d):
@@ -6941,29 +7005,50 @@ def pilot_seeds(d):
                     raise SystemExit(
                         "⛔ %s/%s: 목표 인덱스 %d 가 이 계의 원자수 %d 를 넘는다 — "
                         "프레임이 어긋났다 (회신 T P0-1)" % (env, sd, max(gi), nat_j))
+                # ⛔⛔ 회신 T P0-2 — **97–99% 국재는 π 의 증거가 아니다.**
+                #   전 원자가 공간에서 가장 국재된 MO 를 고르면 C–H/C–C/C–O σ 나
+                #   O/S lone pair 가 뽑힐 수 있다. 성격을 확인하고, 못 하면 막는다.
+                # ⛔⛔ 2026-09-05 (내부 P0-2) — 그 확인을 **선택 뒤가 아니라 선택 안에서**
+                #   한다. seed 는 사전등록이 *종류로* 정의한 것이므로(onb / pi), 후보 집합이
+                #   처음부터 그 종류여야 한다. 근거·실측은 `pil_pick_seed_mo` docstring.
+                _kind = "onb" if sd == "A_sulfonate" else "pi"
+                _ring_pi = None if _kind == "onb" else list(_rg["core"])
+
+                def _accept(_m, _gi=gi, _rp=_ring_pi, _k=_kind):
+                    _c = pil_mo_character(aos.get(_m), _gi, _sy_j, _po_j, _rp,
+                                          coef_mo=coefs.get(_m))
+                    return pil_character_verdict(_c, _k)
+
+                _rej = []
                 mo, w = pil_pick_seed_mo(pops, occ, gi, None, core_window=core_win,
-                                         aos=aos, sym=_sy_j)
-                if mo is None:
+                                         aos=aos, sym=_sy_j, accept=_accept,
+                                         reject_log=_rej)
+                if mo is None and not _rej:
                     raise SystemExit(
                         "⛔ %s/%s: 목표 집합에 %.1f%% 밖에 안 걸린 MO 가 최대다 "
                         "(문턱 %.0f%%). **국재 seed 가 아니므로 만들지 않는다** — "
                         "국재화가 실패했다는 뜻이다 (MODEL_NONDIAGNOSTIC 후보)"
                         % (env, sd, w, PIL_SEED_MIN_WEIGHT))
-                # ⛔⛔ 회신 T P0-2 — **97–99% 국재는 π 의 증거가 아니다.**
-                #   전 원자가 공간에서 가장 국재된 MO 를 고르면 C–H/C–C/C–O σ 나
-                #   O/S lone pair 가 뽑힐 수 있다. 성격을 확인하고, 못 하면 막는다.
-                _kind = "onb" if sd == "A_sulfonate" else "pi"
-                _ring_pi = None if _kind == "onb" else list(_rg["core"])
+                if mo is None:
+                    raise SystemExit(
+                        "⛔ %s/%s: 문턱 %.0f%% 를 넘은 국재 MO 가 **%d개** 있는데 "
+                        "그중 어느 것도 요구된 성격(%s)이 아니다 — 이 seed 는 "
+                        "MODEL_NONDIAGNOSTIC 후보다 (회신 T P0-2).\n   상위 기각 사유:\n%s"
+                        % (env, sd, PIL_SEED_MIN_WEIGHT, len(_rej), _kind,
+                           "\n".join("     MO %-5d w=%6.1f%%  %s" % r for r in _rej[:5])))
+                # 아래는 이중 확인 — 위 필터를 통과한 것이므로 정상 경로에서 항상 참이다
                 _ch = pil_mo_character(aos.get(mo), gi, _sy_j, _po_j, _ring_pi,
                                        coef_mo=coefs.get(mo))
                 _ok_ch, _why_ch = pil_character_verdict(_ch, _kind)
                 if not _ok_ch:
                     raise SystemExit(
-                        "⛔ %s/%s: 고른 MO %d 가 목표 집합에 %.1f%% 걸리지만 "
-                        "**성격이 아니다** — %s\n"
-                        "   회신 T P0-2: 공간 국재는 π 를 보증하지 않는다. "
-                        "frontier-π subspace 안에서 다시 국재화하거나 이 seed 를 "
-                        "MODEL_NONDIAGNOSTIC 으로 선언할 것." % (env, sd, mo, w, _why_ch))
+                        "⛔ %s/%s: 고른 MO %d 가 성격 필터를 통과했는데 재확인에서 "
+                        "떨어졌다 — %s (내부 모순 · 버그다)" % (env, sd, mo, _why_ch))
+                if _rej:
+                    print("   · %s/%s: 성격 미달 %d개를 건너뛰고 MO %d (w=%.1f%%) 를 "
+                          "골랐다 — 최상위는 MO %d (w=%.1f%%, %s)"
+                          % (env, sd, len(_rej), mo, w, _rej[0][0], _rej[0][1],
+                             _rej[0][2].split("(")[0]))
                 # ⛔⛔ 2026-08-31 실측 — 고른 MO 가 **HOMO 자체**일 수 있다
                 #   (ring5 → mo 480 = HOMO). 그러면 `Rotate {480,480,...}` 이 되어
                 #   자기 자신과 회전한다 — 무의미하거나 ORCA 가 거부한다.
