@@ -15,6 +15,10 @@ ap.add_argument("--zip", required=True)
 ap.add_argument("--commit", required=True)
 ap.add_argument("--out", required=True)
 ap.add_argument("--variant", default="?")
+ap.add_argument("--supersedes", default=None,
+                help="**이미 발송한** 판(예: v35). 주면 메일 맨 앞에 교체 통지가 붙고 "
+                     "변경 절 제목이 그 판 기준으로 바뀐다. ⛔ 안 주면 외주처가 두 판을 "
+                     "다 돌리거나 옛 판을 돌린다.")
 a = ap.parse_args()
 
 B = pathlib.Path(a.bundle)
@@ -60,9 +64,45 @@ mk = _cf.get("makespan_staged_d") or _cf.get("makespan_d") or {}
 conc = int(((man.get("submission") or {}).get("max_concurrency")) or 8)
 mk_c = mk.get(str(conc), mk.get(conc))
 longest = round((man.get("cost_frozen") or {}).get("longest_job_h") or 0)
+_prev = a.supersedes or "v34"
+_has_cs = bool((man.get("refs") or {}).get("clean_slab"))
+_rqn = (man.get("reported_quantity") or {}).get("name") or ""
+if a.supersedes == "v35":
+    # v35 → v36 : **기준계가 늘었다.** 외주처가 알아야 하는 건 이것뿐이다.
+    _changes = f"""- **잡이 {n_jobs}개로 늘었습니다** (v35 는 16잡). 늘어난 셋은 전부 **기준계(clean slab)** 입니다:
+  `refs/clean_slab__afm2424_pm1` · `refs/clean_slab__afm2424_net4` · `vacconv/clean_slab__afm2424_pm1__c2`.
+  복합체와 **같은 셀 · 같은 k · 같은 초기 자기배열**이고, 조각(분자)만 없습니다.
+- **보고량이 늘었습니다** — v35 는 두 조각의 **차**만 냈는데, 이제 각 조각의 **흡착에너지 절대값**도
+  냅니다. 그래서 조각 없는 슬랩 에너지가 필요합니다. 계산 방법·설정은 v35 와 **완전히 같습니다**.
+- 기본 동시 실행을 **{conc}잡**으로 잡았습니다 (v35 는 4잡). 늘어난 잡을 같은 일정 안에 넣기 위함입니다 —
+  {mk_c}일. 할당이 부족하시면 `JOBS_PARALLEL` 로 줄이셔도 됩니다(일정만 늘어납니다).
+- 그 밖의 실행 절차·반송 목록·게이트는 **v35 와 동일**합니다. 새로 익히실 것이 없습니다."""
+else:
+    _changes = f"""- **선택 attestation 함정 제거**: `MAKE_POTCAR_ATTESTATION.sh` 가 VASP stdout 전문을 적고 봉인은
+  토큰만 담아, 돌리면 1단계를 다 돌린 뒤에야 판정이 막히는 결함(렌즈4 P0-1). 둘 다 토큰으로 통일했다.
+- **δ_k 설계 제외의 근거를 비준 사전등록에 둔다** (안 {a.variant}). 재개 조건이 기계 평가 구조로
+  MANIFEST 에 복사되고 분석기가 `reopen_eval` 로 남긴다.
+- `overall_citable_at_0.01eV` 는 δ_k 가 없으면 **False**(None 아님).
+- 반송 목록에 `MANIFEST.json`·`job.json`·`RESULTS.json` 과 "통째로 압축" 을 정본으로 넣었다.
+- walltime 문장 세 문서 통일 · 일정 {mk_c}일(동시 {conc}잡)."""
+
+
+# 🔴 2026-09-04 — **이미 보낸 판을 교체하는 메일**이면 그 사실이 맨 앞에 있어야 한다.
+#   없으면 외주처가 두 판을 다 돌리거나 옛 판을 돌린다. 제목에도 넣는다.
+_subj_pre = ("[교체] " if a.supersedes else "")
+_replace_block = ("" if not a.supersedes else f"""
+> ## ⛔ 먼저 읽어 주십시오 — **이전에 보내 드린 `sdcp_c12_{a.supersedes}.zip` 은 폐기해 주십시오.**
+> 이 메일의 묶음이 그것을 **대체**합니다. 두 개를 같이 돌리지 말아 주십시오.
+> · 아직 시작하지 않으셨다면: 이전 zip 을 지우고 이 묶음으로만 진행해 주십시오.
+> · 이미 시작하셨다면: **멈추고 알려 주십시오.** 지금까지 쓰신 시간은 저희가 부담하겠습니다.
+> · 바뀐 이유: 계산해야 할 기준계(clean slab) 3잡이 빠져 있었습니다. 저희 설계 누락이며
+>   귀측 실행과는 무관합니다.
+""")
+
 cores = int((man.get("submission") or {}).get("cores_per_job") or (man.get("cost_frozen") or {}).get("cores_per_job") or 48)
 
 mail = f"""# C-12 {label.split('_')[-1]} 발송 메일 (그대로 복붙)
+{_replace_block}
 
 > 첨부: `{label}.zip` ({zip_mb:.1f} MB · {n_jobs}잡 · 전부 static)
 > ⚠ 이 파일은 **자동 생성**이다 (tools/sdcp/c12_render_send_mail.py). 실행 블록·반송 목록·walltime
@@ -70,7 +110,7 @@ mail = f"""# C-12 {label.split('_')[-1]} 발송 메일 (그대로 복붙)
 
 ## 제목
 ```
-[DFT 위탁] SDCP/PTFE–LiNiO₂ 계면 단일점 {n_jobs}잡 — 번들 {label.split('_')[-1]}
+{_subj_pre}[DFT 위탁] SDCP/PTFE–LiNiO₂ 계면 단일점 {n_jobs}잡 — 번들 {label.split('_')[-1]}
 ```
 
 ## 본문
@@ -144,18 +184,9 @@ sha256sum MANIFEST.json             # 위 값과 대조
 - [ ] 실행 블록에 `PP`·`POTCAR_ALLOWLIST`·`LAUNCHER_BIN`·`VASP_EXE` 가 살아 있는가
 - [ ] 받는 사람 주소
 
-## 이 판에서 바뀐 것 (v34 → {label.split('_')[-1]})
+## 이 판에서 바뀐 것 ({_prev} → {label.split('_')[-1]})
 
-- **선택 attestation 함정 제거**: `MAKE_POTCAR_ATTESTATION.sh` 가 VASP stdout 전문을 적고 봉인은 토큰만
-  담아, 돌리면 1단계 ~{longest} h 뒤 판정이 막히는 결함(렌즈4 P0-1). 둘 다 토큰으로 통일하고,
-  post_hoc 이라도 증서가 있으면 러너가 **생산 전에** 검증한다.
-- **δ_k 설계 제외의 근거를 비준 사전등록에 둔다**: `3_오차예산.{kp.get('prereg_entry')}` (1저자 비준 · 안 {a.variant}).
-  재개 조건은 문장이 아니라 기계 평가 구조(판정량 `D_raw_eV` · 문턱 {reopen.get('문턱_eV')} eV · 비교 `{reopen.get('비교')}`)
-  로 MANIFEST 에 복사되고, 분석기가 결과에 `reopen_eval` 로 남긴다. 종전 "|ΔE_ads|<50 meV → dense 추가" 는
-  비준 프로토콜 §7·§8 과 반대여서 폐기.
-- `overall_citable_at_0.01eV` 는 δ_k 가 없으면 **False**(None 아님) — 문서와 기계 기록이 같은 말을 한다.
-- 반송 목록에 `MANIFEST.json`·`job.json`·`RESULTS.json` 과 "통째로 압축" 을 정본으로 넣었다.
-- walltime 문장 세 문서 통일 · 종 순서 목록 실물화 · dense 잔존 문구 제거 · 일정 {mk_c}일(동시 {conc}잡).
+{_changes}
 
 🔁 **재개 조건 (비준 사전등록에서 복사 · 결과 보기 전 선언)**
 > {reopen.get('규칙')}
