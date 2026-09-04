@@ -8,14 +8,27 @@
     화면에 보이는 모든 숫자·문장의 정본은 저장소의 파일이다.</p>
 </header>
 
-{# 처음 온 사람은 카탈로그보다 **무엇을 하는 연구인지**가 먼저다. #}
-<a class="hero-pipe" href="/pipeline">
-  <span class="hp-tag">처음이면 여기부터</span>
-  <b>연구 파이프라인 — full-cell 곡선 하나로 두 전극을 가를 수 있는가</b>
-  <span class="hp-d">문제·핵심 아이디어·여섯 단계·지금까지의 답을 모식도와 함께 한 장에.
-    배경 지식 없이 읽도록 썼다.</span>
-  <span class="hp-go" aria-hidden="true">→</span>
-</a>
+{# 처음 온 사람은 카탈로그보다 **무엇을 하는 연구인지**가 먼저다.
+
+   ⚠ 앞문은 **둘**이다. 오래 하나만 두었더니 "무엇을 연구하나" 는 읽히는데
+     "그 숫자를 왜 믿나" 는 사이드바를 뒤져야 나왔다. 이 저장소의 절반이
+     검증층이므로 그쪽도 같은 크기의 문을 준다. #}
+<div class="hero-two">
+  <a class="hero-pipe" href="/pipeline">
+    <span class="hp-tag">처음이면 여기부터 · 1/2</span>
+    <b>무엇을 연구하나 — full-cell 곡선 하나로 두 전극을 가를 수 있는가</b>
+    <span class="hp-d">문제·핵심 아이디어·여섯 단계·지금까지의 답을 모식도와 함께 한 장에.
+      배경 지식 없이 읽도록 썼다.</span>
+    <span class="hp-go" aria-hidden="true">→</span>
+  </a>
+  <a class="hero-pipe hero-trust" href="/trust">
+    <span class="hp-tag">2/2</span>
+    <b>그 숫자를 왜 믿나 — 이 연구는 자기 자신을 어떻게 의심하는가</b>
+    <span class="hp-d">봉인·게이트·적대적 리뷰 세 겹을 <b>쉬운 말과 정확한 말을 나란히</b> 두고
+      설명한다. 실제로 아홉 라운드 걸린 구멍 하나를 예로 든다.</span>
+    <span class="hp-go" aria-hidden="true">→</span>
+  </a>
+</div>
 
 <div class="stats">
   <a class="stat" href="/papers"><b>{{ counts.get('paper', 0) }}</b><span>논문 digest</span></a>

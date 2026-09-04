@@ -1836,3 +1836,18 @@ body.rd-on .reader .doc-body :is(h1, h2, h3, h4) { scroll-margin-top: 14px; }
             color: var(--accent); font-variant-numeric: tabular-nums; }
 .tw-num-k { font-weight: 600; }
 .tw-num-d { color: var(--ink-3); font-size: .86rem; line-height: 1.5; }
+
+/* 앞문 둘 — 넓으면 나란히, 좁으면 쌓인다. 쌓일 때 순서는 DOM 그대로
+   (연구 먼저). `/pipeline` 끝의 다리에도 같은 카드를 쓴다. */
+.hero-two { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin: 0 0 20px; }
+@media (max-width: 900px) { .hero-two { grid-template-columns: 1fr; } }
+.hero-two .hero-pipe { margin: 0; }
+.hero-trust {
+  border-color: color-mix(in srgb, var(--ok) 34%, var(--line));
+  border-left-color: var(--ok);
+  background: color-mix(in srgb, var(--ok) 7%, transparent);
+}
+.hero-trust .hp-tag { color: var(--ok); }
+.pipe-sec > .hero-trust { margin-top: 14px; }
+.ph-more { margin-top: 8px; padding-top: 8px; border-top: 1px dashed var(--line);
+           font-size: var(--fs-xs); color: var(--ink-2); line-height: 1.62; }

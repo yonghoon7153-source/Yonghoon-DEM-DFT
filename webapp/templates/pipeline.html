@@ -396,6 +396,11 @@
       <h3>PVS Jacobian</h3>
       <p>곡선의 봉우리–골 기울기(PVS)를 모드 파라미터로 미분해, 특이값으로
         <b>국소 식별 가능성</b>을 본다. 본 실행 없이 판정 가능하다.</p>
+      <p class="ph-more">이 한 칸이 실제로는 <b>여러 갈래로 자랐다</b> —
+        null 방향의 수치 검증, 무전류 OCV 재계산, 두 <code class="mono">x</code>
+        정규화를 잇는 환산, 오차막대, 팽창 축, 계보의 매개화 이식까지.
+        갈래별 실측과 <b>그 판정이 말하지 않는 것</b>은
+        <a href="/results">Phase 결과</a>에 있다.</p>
     </div>
     <div class="ph">
       <span class="ph-n">Phase 2</span>
@@ -432,4 +437,21 @@
     <a class="pm" href="/entity/mode-observability"><b>mode-observability</b><span>다음 질문을 맡은 satellite</span></a>
   </div>
 </section>
+
+<!-- ══ 이어서 ═════════════════════════════════════════════════════════ -->
+<section class="pipe-sec">
+  <h2 class="pipe-h"><span class="pipe-n">→</span> 이어서 읽을 것</h2>
+  <p class="pipe-p">여기까지가 <b>무엇을 연구하는가</b>다. 나머지 절반은
+    <b>그 숫자를 왜 믿을 수 있는가</b>이고, 이 저장소는 그쪽에 비슷한 양의 공을 들였다 —
+    산출물이 자기를 만든 코드를 적고, 비싼 계산 전에 계획을 확인하고,
+    다른 리뷰어가 그 규칙을 뚫어 본다.</p>
+  <a class="hero-pipe hero-trust" href="/trust">
+    <span class="hp-tag">검증층</span>
+    <b>이 연구는 자기 자신을 어떻게 의심하는가</b>
+    <span class="hp-d">쉬운 말과 정확한 말을 나란히. 실제로 아홉 라운드 걸린 구멍 하나를
+      도서관 비유로 풀고, 그날 변이가 살아남은 이야기까지 적었다.</span>
+    <span class="hp-go" aria-hidden="true">→</span>
+  </a>
+</section>
+
 {% endblock %}
