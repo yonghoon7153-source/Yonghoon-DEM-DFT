@@ -467,3 +467,57 @@ Argument → Counter-arguments **보존** → Gap).
 
 정직 항목: B 판에도 **reference 곡선 자체의** 동역학은 남아 있다. 정확한 문장은
 "12° 가 전류와 무관" 이 아니라 **"모드→곡선 경로의 동역학과 무관"** 이다.
+
+## [2026-09-04] update | Mohtat 2019 을 **구현본으로** 흡수 — 컷오프 등식은 우리 null 을 못 본다 (Phase 1h)
+
+정본은 `mode-observability/results/phase1h/` CSV · 판정문은
+`mode-observability/docs/PHASE1H_NOTES.md`. `degradation-degeneracy/` 는 읽기만 했다.
+
+**먼저 정직 항목 — 원전을 못 읽었다.** `[11] Mohtat et al. 2019` (*J. Power
+Sources* 427, 101–111) 은 Elsevier 유료이고 이 실행 환경의 egress 정책이
+`api.semanticscholar.org`·`docs.pybamm.org` 를 막는다 (실측 CONNECT 403 ·
+`EGRESS_BLOCKED`). 그래서 흡수한 것은 **그 모델의 구현본**이다 — PyBaMM 26.7.1.0
+`models/full_battery_models/lithium_ion/electrode_soh.py` 의 `_ElectrodeSOH`
+(`pybamm.citations.register("Mohtat2019")`), docstring 이 다섯 식을 인쇄한다.
+**Lin 이 선행자로 지목한 근거인 Fisher 식별가능성 분석 자체는 여전히 미독**이고,
+그래서 통합 논지의 Bias Check 1 은 **닫히지 않았다**.
+
+**사전(dictionary) 을 확정했다.** `windowed_curve` 정의에서 Mohtat 좌표
+`(x_100, y_100, x_0, y_0)` ↔ 우리 `[α_PE, β_PE, α_NE, β_NE]` 가 일대일이고,
+Mohtat 의 두 전압 등식은 우리 x 축에서 글자 그대로 `U_full(0)=V_max`,
+`U_full(1)=V_min` 이다. 그리고 `Q_Li = y_100·Q_p + x_100·Q_n` 이 **`src/inventory.py`
+의 LLI 유도 그 자체**다 — 거기 나오는 `(w_PE, w_NE, κ)` 가 "전극 전체" 와 "셀 창"
+두 정규화를 잇는 상수이고, `reference_inventory()` 가 그것을 셀 기하에서 직접
+계산한다. **Phase 1f·1g 가 막힌 환산의 절반이 이미 코드 안에 있었다**
+(다만 그것은 `c_init`, 필요한 것은 `c_max` — 아직 안 쟀다).
+
+**실측 넷**
+
+1. **컷오프 등식은 우리 참값에서 성립하지 않는다.** 1023 조건에서 끝점 전압이
+   `U_full(0)` **127.0 mV**, `U_full(1)` **53.6 mV** 폭으로 흔들린다 (설정 컷오프는
+   4.2 / 2.5 V, 차이는 유한 전류 과전압). 등식으로 얹으면 그만큼이 모델 오차다.
+2. **Lin 의 예언이 pristine 에서 맞는다.** `LLI=LAM_PE=LAM_NE=x` 위에서 SOC 정규화
+   곡선이 통째로 불변이므로 이상적 셀이면 `∇g ⟂ (1,1,1)`. 실측 **83.95°·83.59°** —
+   90° 에서 6° 남짓이고 그 6° 가 유한 전류 + 복합 음극의 몫이다.
+   **22p 에서는 깨진다** (`g₂` 가 **44.16°**).
+3. **그래도 판정은 안 바뀐다.** 끝점 2개를 관측에 얹으면 σ_min 이 **+3.16 %**
+   (pristine) / **+5.95 %** (22p), 조건수 18.24→17.76 / 16.31→15.40. 게다가 그
+   두 점은 새 관측이 아니라 **이미 맞추는 곡선의 양 끝**이다. → Birkl·Mohtat 계열의
+   "등식으로 여분을 죽인다" 처방은 **창 좌표(Phase 1e)와 모드 좌표(Phase 1h)
+   양쪽에서** 우리 문제를 개선하지 않는다.
+4. **★ 22p 동작점에서 `u_min` 이 Lin 의 `(1,1,1)/√3` 와 4.61°** (pristine 12.04°
+   보다 가깝다). `u_min = [0.5686, 0.5225, 0.6354]`, 조건수 16.31.
+   **Phase 1c 의 한계 (a)("22p 에서 방향이 회전할 수 있다")가 닫혔다** — 회전하고,
+   **Lin 쪽으로** 회전한다. **22p 의 축퇴는 Lin 의 닫힌 형태 축퇴와 사실상 같은
+   방향이다.**
+
+**자기 정정 — "12.04°" 는 점이 아니라 띠다.** 동작점 8개 × 전방차분 스텝 2개에서
+각이 **4.61° ~ 21.89°** 에 흩어지고, 같은 pristine 에서 스텝만 0.02 → 0.04 로
+바꿔도 **12.04° → 18.62°** 다 (격자 간격 0.02 라 더 작은 스텝은 이 자료로 못 잡는다).
+Phase 1c 는 이 스텝 의존성을 신고하지 않았다. 앞으로 쓸 문장은 **"이 측정의
+분해능 안에서 Lin 의 방향과 같다"** 이다.
+
+갱신: `comparisons/halfcell-window-parametrization-lineage.md` (Mohtat 행을 구현본·
+Lin 전언 두 줄로 분리 + 처방 1 에 실측 부착) · `syntheses/mode-identifiability-
+unmeasured-lineage.md` (§5 정정 · Gap 2 단서 · Gap 6 신설 · Bias Check 1 갱신) ·
+`questions/22p-physics-or-degeneracy.md` (2026-09-04 항목 4건).

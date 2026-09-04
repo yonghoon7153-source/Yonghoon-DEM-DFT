@@ -2,7 +2,7 @@
 title: 반쪽전지 창 매개화 계보 비교 (자유도와 제약)
 description: "같은 4개 창 좌표를 무엇으로 매개화하고 여분을 어떻게 죽이는가 — Dubarry 2012 부터 우리 파이프라인까지"
 created: 2026-09-03
-updated: 2026-09-03
+updated: 2026-09-04
 type: comparison
 tags: [battery, degradation, research]
 sources: [raw/papers/marongiu2016_lfp-onboard-capacity-halfcell.md, raw/papers/birkl2017_degradation-diagnostics-ocv.md, raw/papers/dubarry2012_synthesize-degradation-modes.md, raw/papers/lin2024_ocv-degradation-mode-identifiability.md, raw/papers/navidi2024_piml-degradation-diagnostics-comparison.md, raw/papers/rhyu2025_systematic-feature-design-formation.md]
@@ -36,7 +36,8 @@ their estimation" 의 구체적 목록이다.
 | **Marongiu 2016 (모델)** | `LLI, LAM_Pe,Li, LAM_Pe,De, LAM_Ne,Li, LAM_Ne,De` | **5** | **0** | **없음 → null 2차원** | 평탄역 길이 3개 (Ah) |
 | **Marongiu 2016 (실행)** | `LLI, LAM_Ne,De` | **2** | 0 | **나머지 3개 = 0 하드 고정** (사전 믿음) | 평탄역 길이 1~3개 |
 | [[birkl-ocv-degradation-diagnostic]] 2017 | `LLI, LAM_PE, LAM_NE` (+`Δx_EoC, Δx_EoD`) | **3** | **2** | **컷오프 전압 등식으로 소거** | full-cell 전압 곡선 |
-| Mohtat 2019 (Lin 이 인용) | 전극 SOC 한계 4개 | **4** | **1** | 등식 | full-cell OCV |
+| Mohtat 2019 (**구현본**: PyBaMM `_ElectrodeSOH`) | `x_100, y_100, x_0, y_0` (+`Q`) | **5** | **2** | 컷오프 전압 등식 2개 → Ah 축 자유도 **3** | full-cell OCV |
+| Mohtat 2019 (Lin 이 전하는 표기) | 전극 SOC 한계 4개 | **4** | **1** | 등식 → **3** | full-cell OCV |
 | [[np-lip-ocv-reparametrization]] (Lin 2024) | `r_N/P`, `z₀⁺` | **2** | 0 | **재매개화로 애초에 안 만든다** | SOC 정규화 OCV **형상** |
 | Navidi 2024 (부록 A1) | `m_p, δ_p, m_n, δ_n` | **4** | **0** | 여분 없음 (전단사) | full-cell 전압 곡선 |
 | [[fused-lasso-feature-design-framework]] SI S11 | `β_c, β_a, Q_rem, V_shift` | **4** | 0 | 여분 없음 | C/20 RPT 곡선 |
@@ -49,6 +50,13 @@ their estimation" 의 구체적 목록이다.
 1. **등식으로 죽인다** (Birkl, Mohtat). 컷오프 전압이 방정식을 준다. 값은
    데이터가 정하지만, **반쪽전지 OCP 의 절대 전압 정확도에 민감**해진다
    (등식이 4.2 V / 2.7 V 같은 절대값을 쓴다).
+   `[실측 2026-09-04]` 이 처방을 우리 자료에 얹으면 **두 좌표계 모두에서 손해**다.
+   창 좌표: 제약 gradient 가 **강한** 특이쌍과 1.5°·2.0° → 여분이 아니라 정보를
+   지운다 (Phase 1e). 모드 좌표: 두 등식이 pristine 에서 null 방향과 거의
+   직교(84°)해 축퇴를 못 보고, 끝점 2개를 관측에 더해도 σ_min 이 3~6 % 오를
+   뿐이다 (Phase 1h). 게다가 **등식이 참값에서 성립하지도 않는다** — 1023 조건에서
+   끝점 전압이 127 mV / 54 mV 흔들린다(유한 전류). 정본:
+   `mode-observability/results/phase1e/`, `.../phase1h/`.
 2. **사전 믿음으로 죽인다** (Marongiu). 5개 모드 중 3개를 0으로 못박는다.
    근거는 데이터가 아니라 **다른 논문의 해체분석**이다. 싸고, 대신 죽인 방향
    위의 값은 **모델러가 고른 값**이 된다 ([[nullspace-coefficient-interpretation]]).
@@ -111,8 +119,15 @@ n₂ = ( +1 , −1 , +1 ,  0 ,  0 )   ⟺  LAM_Pe 를 li→de 로 ε 옮기고 L
 
 - Marongiu 의 `N = Q_Ne,BOL` 은 원전에 **수치가 없다** (`[인쇄]` "normally
   bigger than one" 뿐). 따라서 `n₁` 의 계수는 **기호로만** 안다.
-- Mohtat 2019 행은 **원전을 읽지 않았다** — Lin & Khoo 2024 의 서술을 옮긴
-  것이다. 미검증.
+- Mohtat 2019 행은 **원전을 여전히 읽지 않았다** (Elsevier 유료 + 실행 환경
+  egress 차단). 2026-09-04 에 흡수한 것은 **구현본**이다 — PyBaMM 26.7.1.0
+  `models/full_battery_models/lithium_ion/electrode_soh.py` 의 `_ElectrodeSOH`
+  (`pybamm.citations.register("Mohtat2019")`), docstring 이 다섯 식을 인쇄한다.
+  표에 두 행을 나란히 둔 이유: **장부가 다르고 답이 같다** (구현본 "양 5개 −
+  등식 2개", Lin 이 전하는 "파라미터 4개 + 제약 1개" — 둘 다 Ah 축 자유도 3).
+  어느 쪽이 Mohtat 자신의 표기인지는 **판정 불가**. 그리고 Lin 이 선행자로
+  지목한 근거인 **Fisher 식별가능성 분석 자체는 아직 미독**이다.
+  구현본 대조와 그 위에서 잰 것: `mode-observability/docs/PHASE1H_NOTES.md`.
 - 위 null 계산은 **모델의 성질**이지 데이터의 성질이 아니다. 반쪽전지 곡선이
   노화에 불변이라는 가정 위에 있고, 그 가정은 Marongiu 자신이 LFP 에 대해
   다른 논문을 기각하는 근거로 쓴 것이기도 하다 (raw digest §10 ④).

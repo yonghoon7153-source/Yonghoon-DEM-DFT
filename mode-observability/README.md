@@ -17,6 +17,10 @@
 | 1b | **연속 추적 PVS** — Phase 1 의 비단조가 물리가 아니라 창내 극값 갈아타기였다 | 위와 같음 | ○ `phase1b_tracked_pvs.py` · `docs/PHASE1B_NOTES.md` |
 | **1c** | **Lin 의 해석적 null 방향을 우리 좌표에서 수치 검증** — `JᵀJ` 최소 고유벡터가 `(1,1,1)/√3` 과 **12.04°** 안에서 일치. 조건수는 18.2 뿐이라 **구조적 축퇴가 아니라 잡음 제한 축퇴**다 | 위와 같음 | ○ `phase1c_null_direction.py` · **`docs/PHASE1C_NOTES.md`** |
 | **1d** | **점검 B1 — 우리 4-파라미터 창 모델의 유효 자유도.** σ3/σ1 ≈ 0.05 · σ4/σ1 ≈ 0.03 이고 스텝에 안정. **rank 는 4 이고 2 가 아니다** — Lin 의 redundancy 지적은 틀린 게 아니라 **크기가 과장**된 것으로 읽힌다 | 위와 같음 (정방향이 보간뿐이라 ~5초) | ○ `phase1d_window_dof.py` · **`docs/PHASE1D_NOTES.md`** |
+| **1e** | **컷오프 등식 제약을 창 좌표에서 재다** — 제약 gradient 가 **강한** 특이쌍과 **1.5°·2.0°**. 즉 그 제약은 여분이 아니라 **정보를 지운다** (접공간 잔여 감도가 원래 σ1·σ2 의 0.13~0.49 배) | 위와 같음 | ○ `phase1e_cutoff_constraint.py` · **`docs/PHASE1E_NOTES.md`** |
+| 1f | **Birkl 식 (7)–(12) 를 우리 좌표로** — Phase 1e 의 한계 ②("제약이 대리물") 를 **철회**했다 (식 11·12 는 글자 그대로 `U_full(EoC)=E_high`). 그러나 Table 5 모델로 식 (12) 를 pristine 에서 풀면 **근이 없다** — 두 `x` 정규화 사이 환산이 인쇄돼 있지 않다 | Birkl ref [33] | ◐ **미완 (일부러 실패한 채 남김)** · `phase1f_birkl_exact.py` · `docs/PHASE1F_NOTES.md` |
+| **1g** | **무전류 OCV 로 Phase 1c 재계산** — A(시뮬) → B(순수 창 대수) 가 `12.04° → 10.56°`, **Δ −1.48°**. 모드→곡선 경로에 동역학이 없는데도 null 이 그 자리다 → **12° 는 동역학 산물이 아니다.** C 판(평형 OCP)은 좌표계가 바뀌어 **기각** | 봉인 half-cell 캐시 (fail-closed) | ○ `phase1g_zero_current.py` · **`docs/PHASE1G_NOTES.md`** |
+| **1h** | **Mohtat 의 컷오프 등식을 모드 좌표에서, 참값으로** — 두 등식이 pristine 에서 `(1,1,1)` 과 **83.95°·83.59°** (Lin 의 예언 90° 근처), 끝점을 관측에 얹어도 σ_min **+3~6 %**. 그리고 **22p 에서 `u_min` 이 Lin 방향과 4.61°** — Phase 1c 한계 (a) 를 닫는다. 부수: **12.04° 는 점이 아니라 4.6°~21.9° 의 띠** | PyBaMM 구현본 (`_ElectrodeSOH`) · 원전 PDF 미확보 | ○ `phase1h_mohtat_cutoff.py` · **`docs/PHASE1H_NOTES.md`** |
 | 2 | **SEV 시뮬레이션** — PyBaMM P2D 로 0.2C 전류 차단 프로토콜을 돌려 ΔV(1 s)·SEV 를 합성하고, (PVS, SEV) 2×3 Jacobian 으로 "부호는 같아도 감도 비가 다른가"(H2)를 판정 | 동역학 파라미터 세트 (열역학만으로는 안 됨) | 미착수 — **2026-09-03 실측 대조 층의 제약 확정** (아래) |
 | 3 | **ML 라벨 degeneracy 전파** — fitted 라벨로 학습한 모드 예측 ML 이 라벨의 비식별성을 어떻게 물려받는지, 정답을 아는 합성 데이터로 정량화. 프로토콜 식별자 입력의 기여 분리 (permutation/SHAP) | Phase 1–2 의 feature + RF/GBM (sklearn) | 미착수 |
 

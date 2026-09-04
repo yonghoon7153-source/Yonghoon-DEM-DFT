@@ -2,7 +2,7 @@
 title: 이 계보는 모드 분해를 재면서 그 분해의 유일성은 한 번도 재지 않았다
 description: "Thirteen papers report LLI/LAM decompositions; none measures whether the decomposition is unique — yet the instruments to measure it are already scattered across the same thirteen"
 created: 2026-09-03
-updated: 2026-09-03
+updated: 2026-09-04
 type: synthesis
 tags: [battery, degradation, identifiability, research]
 sources: [raw/papers/birkl2017_degradation-diagnostics-ocv.md, raw/papers/dubarry2012_synthesize-degradation-modes.md, raw/papers/marongiu2016_lfp-onboard-capacity-halfcell.md, raw/papers/lin2024_ocv-degradation-mode-identifiability.md, raw/papers/schaeffer2024_nullspace-regularization-interpretation.md, raw/papers/cui2024_electrode-utilization-formation-cycle-life.md, raw/papers/rhyu2025_systematic-feature-design-formation.md, raw/papers/tao2025_nondestructive-degradation-decoupling.md, raw/papers/wang2025_interpretable-ml-battery-prognosis.md, raw/papers/zhang2020_eis-gpr-capacity-rul.md, raw/papers/su2024_drt-soh-health-features.md, raw/papers/kim2023_graphite-heterogeneity-lifetime.md, raw/papers/2026-09-02-siwon-kim-degradation-mode-ml-seminar.md]
@@ -107,7 +107,7 @@ Lin & Khoo 2024 §2.3: SOC 정규화 OCV 형상은 `(1−LLI):(1−LAM_NE):(1−
 |---|---|
 | 총용량이 `(1−x)` 배인가 | **그렇다** — 상대오차 최대 0.220 % |
 | SOC 정규화 곡선이 불변인가 | **아니다** — `max\|ΔV\|` 가 **0.417 mV per 1 %p**, 한 점(`x_norm` 0.839)에 몰린다 |
-| `JᵀJ` 의 `u_min` 이 Lin 방향인가 | **12.04° 안에서 일치** (`cos = 0.977999`) |
+| `JᵀJ` 의 `u_min` 이 Lin 방향인가 | **12.04° 안에서 일치** (`cos = 0.977999`) — 단 이 값은 **점이 아니라 띠**다, 아래 참조 |
 | 그 방향이 진짜 null 인가 | **아니다 — 조건수 18.2** |
 | 우리 창 좌표 4개의 유효 rank 는 2 인가 | **아니다 — 4** (σ3/σ1 ≈ 0.05, σ4/σ1 ≈ 0.03) |
 
@@ -115,6 +115,15 @@ Lin & Khoo 2024 §2.3: SOC 정규화 OCV 형상은 `(1−LLI):(1−LAM_NE):(1−
 확인됐다. ② 그런데 **평평할 뿐 0 이 아니다.** 그러므로 방어할 수 있는 문장은
 **"구조적으로 불가"** 가 아니라 **"우리 잡음 수준에서 불가"** 다 — σ = 5 mV 에서
 null ray 전체가 x = 20 % 까지 묻히고 σ = 1 mV 에서도 x ≤ 6 % 가 묻힌다.
+
+`[2026-09-04 정정 — Phase 1h]` **"12.04°" 를 점 추정으로 인용하면 안 된다.**
+동작점 8개 × 전방차분 스텝 2개를 훑으니 `∠(u_min, (1,1,1))` 이 **4.61° ~ 21.89°**
+에 흩어진다. 같은 pristine 에서도 스텝만 0.02 → 0.04 로 바꾸면 **12.04° → 18.62°**
+로 움직인다(격자 간격이 0.02 라 더 작은 스텝은 이 자료로 못 잡는다). 그러므로
+앞으로 쓸 문장은 **"이 측정의 분해능 안에서 Lin 의 방향과 같다"** 이다.
+**덤으로 Phase 1c 의 한계 (a)("22p 동작점에서 방향이 회전할 수 있다")가 닫혔다** —
+회전하고, **Lin 쪽으로** 회전한다: 22p 근방 (0.16, 0.12, 0.12) 에서 **4.61°** 로
+pristine 보다 오히려 가깝다. 정본 `mode-observability/results/phase1h/sweep.csv`.
 
 ### 6. 그리고 **재지 않은 대가**가 한 번 실측됐다
 
@@ -194,6 +203,13 @@ Zhang 의 "두 주파수") 유일성이 다시 필요해진다. 논지의 사정
    정규화하는 환산인데 **그것이 정확히 Phase 1f 의 미제다.** 두 Phase 가 하나의
    미제로 수렴했다. (평형 OCP 를 그대로 쓴 판은 좌표계까지 바뀌어 **기각**했다 —
    `LAM_PE` 열 노름이 8.38 → 50.17 V/단위로 뛴다.)
+   `[2026-09-04 단서 — Phase 1h]` 그 환산이 **이미 우리 코드 안에 절반 있다.**
+   `src/inventory.py` 의 LLI 유도는 Mohtat 의 `Q_Li = y_100·Q_p + x_100·Q_n` 을
+   "reference 창" 정규화로 옮긴 것이고, 거기 나오는 `(w_PE, w_NE, κ)` 가 바로
+   두 정규화를 잇는 상수이며 `reference_inventory()` 가 그것을 **셀 기하에서
+   직접 계산한다** (`F·A·c·vf·L/3600`). 다만 그것이 쓰는 것은 `c_init`(재고)이고
+   Phase 1f 가 필요한 것은 `c_max`(총용량)다 — **한 줄 차이로 보이지만 아직 안
+   쟀다.** 이것이 지금 가장 값싼 다음 수다.
 3. **`n₁·n₂` 를 아직 격자에 심지 않았다.** Lin 방향과 **다른** 방향이므로 Phase 1c 의
    반복이 아니라 새 시험이다. 우리는 창 좌표를 직접 맞춰 두 방향을 물려받지 않지만,
    사후 변환이 몫공간으로의 사영이므로 **출력 층에서는 만난다.**
@@ -205,6 +221,16 @@ Zhang 의 "두 주파수") 유일성이 다시 필요해진다. 논지의 사정
    **새로 열린 것 둘**: Birkl 의 등식을 우리 좌표로 **정확히** 옮겨 대리물을
    실물로 바꾸는 일, 그리고 `v₄` 의 "음극 창 왼쪽 끝" 이 Phase 1c 의 잔차가
    몰린 `x_norm = 0.839` 와 같은 자리인지.
+6. **컷오프 등식으로는 축퇴가 안 풀린다 — 닫혔다 (2026-09-04 Phase 1h).**
+   Mohtat 의 두 등식을 **모드 좌표**에서, 재구성 대수가 아니라 **PyBaMM 참값**으로
+   쟀다. pristine 에서 두 gradient 가 `(1,1,1)` 과 **83.95°·83.59°** — Lin 의
+   정리가 예언하는 90° 에 가깝다(그 6° 가 유한 전류 + 복합 음극의 몫). 22p 에서는
+   직교가 깨지지만(`g₂` 가 **44.16°**) 끝점 2개를 관측에 얹어도 σ_min 이
+   **+3.16 % / +5.95 %** 오를 뿐이다. **그리고 그 두 점은 새 관측도 아니다** —
+   이미 맞추는 곡선의 양 끝이다. 게다가 **등식이 참값에서 성립하지도 않는다**:
+   1023 조건에서 끝점 전압이 **127 mV · 54 mV** 흔들린다.
+   **새로 열린 것**: Mohtat 원전(특히 Fisher 분석)은 여전히 미독이다 — 구현본만
+   읽었다 (Bias Check 1).
 
 ## 불확실성 (Bias Check)
 
@@ -216,6 +242,13 @@ Zhang 의 "두 주파수") 유일성이 다시 필요해진다. 논지의 사정
    약동학·지구물리에는 많다 — 이 계보에 없다는 것이지 **분야에 없다는 뜻이 아니다.**
    Lin 이 Mohtat 2019 를 "Fisher 로 정량한 선행자" 로 인정하므로 **최소 한 편은
    우리가 아직 안 읽었다.**
+   `[2026-09-04 갱신]` 그 한 편을 **여전히 못 읽었다.** Elsevier 유료이고 이
+   실행 환경의 egress 정책이 막는다(실측 CONNECT 403 · `EGRESS_BLOCKED`).
+   대신 **구현본**(PyBaMM 26.7.1.0 `_ElectrodeSOH`, `Mohtat2019` 인용)을 읽고
+   우리 좌표와 대조했다 — `mode-observability/docs/PHASE1H_NOTES.md`. 그러나
+   **Mohtat 의 Fisher 분석 자체는 미독이고, 이 자기의심은 닫히지 않았다.**
+   즉 "아무도 안 쟀다" 논지의 가장 위험한 반례가 **아직 검증되지 않은 채로
+   남아 있다.**
 2. **어휘 전수는 문자열 검사다.** Cui 가 `LLI`·`LAM` 을 안 쓰고 `Q_Li`·`Q_PE` 를
    쓰듯, **개념을 다른 이름으로 다루는 논문을 0 으로 셀 수 있다.** §1 표의 "형태"
    열은 그 위험을 줄이려고 본문을 읽고 적은 것이지만, 놓친 편이 없다고 보장 못 한다.

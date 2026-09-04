@@ -2,7 +2,7 @@
 title: 22p 결과는 물리인가 fitting degeneracy 인가
 description: "Is the seminar 22p LLI/LAM decomposition (LAM_PE=LAM_NE=13%, LLI=17%) real physics or an artifact of non-identifiability"
 created: 2026-08-11
-updated: 2026-09-03
+updated: 2026-09-04
 type: research-question
 tags: [battery, degradation, research]
 sources: [raw/repositories/degradation-degeneracy-audit.md, raw/papers/birkl2017_degradation-diagnostics-ocv.md, raw/papers/rhyu2025_systematic-feature-design-formation.md, raw/papers/lin2024_ocv-degradation-mode-identifiability.md, raw/papers/schaeffer2024_nullspace-regularization-interpretation.md, raw/papers/cui2024_electrode-utilization-formation-cycle-life.md, raw/papers/navidi2024_piml-degradation-diagnostics-comparison.md, raw/papers/marongiu2016_lfp-onboard-capacity-halfcell.md]
@@ -706,6 +706,48 @@ LAM_PE ≈ LAM_NE 는 물리가 아니라 **flat valley 방향에서 두 전극�
     "평탄한 화학에서 전압 관측이 얼마나 죽는가" 의 첫 실측 크기로만 등재한다.
   - 우리 쪽 수치는 이 카드에 옮기지 않는다 — 정본은 artifact +
     `docs/RESULTS*.md`.
+
+- [2026-09-04] **active 유지 — 이 카드에 직접 닿는 실측 넷.** 정본은
+  `mode-observability/results/phase1{e,g,h}/` 의 CSV. (`degradation-degeneracy/`
+  는 이번에도 읽기만 했다.)
+
+  1. **★ 22p 동작점에서 `u_min` 이 Lin 의 `(1,1,1)/√3` 와 4.61° 다** (Phase 1h,
+     스텝 0.02). pristine 의 12.04° 보다 **더 가깝다.** `u_min` =
+     `[0.5686, 0.5225, 0.6354]`, 조건수 16.31.
+     `[해석]` **22p 의 축퇴는 Lin 의 닫힌 형태 축퇴와 사실상 같은 방향**이라는
+     뜻이고, 그러므로 Lin 의 정리를 이 카드에 적용할 근거가 pristine 근방
+     분석보다 **강하다.** 위 [2026-09-03 (11)] 이 "국소 분석이라 22p 에서
+     회전할 수 있다" 고 유보한 자리가 닫혔다 — 회전하고, **Lin 쪽으로** 회전한다.
+
+  2. **다만 "12.04°" 를 점 추정으로 인용하면 안 된다** (Phase 1h 훑기). 동작점
+     8개 × 전방차분 스텝 2개에서 각이 **4.61° ~ 21.89°** 에 흩어지고, 같은
+     pristine 에서 스텝만 0.02 → 0.04 로 바꿔도 **12.04° → 18.62°** 다.
+     격자 간격이 0.02 라 더 작은 스텝은 이 자료로 못 잡는다. 위 표의 12.04° 는
+     **한 점 추정**으로 읽어야 한다.
+
+  3. **컷오프 등식을 얹어도 이 카드의 판정은 안 바뀐다** (Phase 1h). Birkl·Mohtat
+     계열이 여분을 죽일 때 쓰는 두 등식 `U_full(x=0)=V_max`, `U_full(x=1)=V_min`
+     의 gradient 가 pristine 에서 `(1,1,1)` 과 **83.95°·83.59°** (Lin 의 정리가
+     예언하는 90° 근처)이고, 22p 에서 직교가 깨져도(`g₂` 44.16°) 두 끝점을
+     관측에 더한 효과가 **σ_min +3.16 % / +5.95 %** 에 그친다. 그리고 그 두
+     점은 애초에 **우리가 이미 맞추는 곡선의 양 끝**이다.
+     덧붙여 **그 등식은 우리 참값에서 성립하지도 않는다** — 1023 조건에서 끝점
+     전압이 **127 mV · 54 mV** 흔들린다(유한 전류 과전압).
+     `[해석]` "제약을 걸어 자유도를 줄이면 22p 가 갈릴 것" 이라는 처방은
+     **이 격자에서 기각**된다. 창 좌표에서도 같은 결론이었다 (Phase 1e: 제약이
+     **강한** 특이쌍과 1.5°·2.0° → 여분이 아니라 정보를 지운다).
+
+  4. **위 [2026-09-03 (11)] 3번의 "무전류 OCV 로 몫을 가른다" — 절반 갈렸다**
+     (Phase 1g). 모드→곡선 변환을 시뮬에서 **순수 창 대수**로 바꿔도 각이
+     `12.04° → 10.56°` 로 **1.48°** 밖에 안 움직인다. 그 경로엔 동역학이 없으므로
+     **12° 는 동역학 산물이 아니라 창 모델의 구조에서 온다.** "음극 제한이 그중
+     얼마인가" 는 여전히 미제이고, 그것을 재려면 평형 OCP 를 **셀 창으로**
+     정규화하는 환산이 필요한데 그것이 Phase 1f 의 미제와 같은 것이다.
+
+  **이 카드에 대한 함의**: 읽기 B("degeneracy 다")를 지지하지도 반박하지도
+  않는다. 대신 **"제약을 더 걸면 갈린다" 는 출구가 하나 닫혔고**, 22p 가 놓인
+  방향이 Lin 의 해석적 null 과 4.61° 라는 것이 새로 확정됐다. 판정을 지배하는
+  것은 여전히 **실제 셀의 잡음 σ** 이고 그 입력은 아직 없다.
 
 ### 이 카드가 속한 논지 (2026-09-03)
 
