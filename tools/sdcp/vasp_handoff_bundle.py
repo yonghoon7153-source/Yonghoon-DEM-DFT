@@ -15245,11 +15245,18 @@ def build_bundle(a, ledger: Optional[Dict[str, Any]] = None) -> Path:
     #   문서(§4)에만 적어 두면 판정기는 여전히 조각별 min 을 골라, SDCP 와 PTFE 가
     #   서로 다른 seed 에서 뽑힐 수 있다. 분석기는 이 필드가 있으면 **그 네 에너지만**
     #   직접 대입한다. net4·대안 자세는 sensitivity 로만 나간다.
-    if _skip_clean and getattr(a, "single_point", False):
+    # 🔴🔴 2026-09-04 회귀 수정 — 종전 조건은 `_skip_clean` 이었다. 그건 "C-12 구성인가" 의
+    #   **대용**이었는데, `--clean_slab` 이 그 값을 뒤집으면서 봉인이 통째로 꺼졌다
+    #   (실측: v36 후보의 estimand_job_keys 가 null → protocol exact map · kconv 축 두 게이트가
+    #    "건너뜀" 으로 바뀌었다. v35 에서는 둘 다 통과였다).
+    #   ⇒ 조건을 **실제 뜻**으로 쓴다: C-12 조각대비 단일점 구성인가.
+    if getattr(a, "refs_minimal", False) and getattr(a, "single_point", False):
         _sd = next((f for f in (man.get("fragments") or []) if "sdcp" in f), None)
         _ct = next((f for f in (man.get("fragments") or []) if f != _sd), None)
         _pri = dict(man.get("_primary_by_frag") or {})
         if _sd and _ct and _pri.get(_sd) and _pri.get(_ct):
+            _cs_key = (("refs/clean_slab__%s" % SEED_MAIN)
+                       if (man.get("refs") or {}).get("clean_slab") else None)
             man["estimand_job_keys"] = {
                 "E_C_sdcp": _pri[_sd], "E_C_control": _pri[_ct],
                 "E_G_sdcp": f"refs/mol__{_sd}__box24",
@@ -15259,6 +15266,18 @@ def build_bundle(a, ledger: Optional[Dict[str, Any]] = None) -> Path:
                 "⛔": ("net4 와 대안 자세(sensitivity·stress_sensitivity)는 **D 에 안 들어간다** "
                        "— 자기 분기·자세 민감도 병기용이다. 조각별 최솟값을 다시 쓰지 않는다"),
             }
+            # clean slab 을 실었으면 **절대 E_ads 도 보고량**이다 (사전등록 §1 2026-09-04 개정).
+            #   D 자체는 E_S 가 소거되므로 위 식 그대로다 — 항을 더하지 않는다.
+            if _cs_key:
+                man["estimand_job_keys"].update({
+                    "E_S": _cs_key,
+                    "formula_absolute": ("E_ads(f) = E_C_f - E_S - E_G_f  "
+                                         "[절대값 — E_S 에 민감하다]"),
+                    "⚠_E_S_는_D_에_안_들어간다": (
+                        "D 는 두 대괄호에서 E_S 가 대수적으로 소거된다. 그래서 D 의 식은 "
+                        "clean slab 유무와 무관하게 같다. E_S 는 **절대값에만** 쓰인다 — "
+                        "clean slab 이 basin 을 어긋나면 절대값만 막고 D 는 살린다."),
+                })
 
             # ⛔⛔ 회신 AO P0-7 (2026-08-31) — net4 를 **별도 직접식**으로 봉인한다.
             #   종전엔 net4 가 같은 조각 집합에 섞여 basin 동종성 검사에 걸렸고,
@@ -17762,6 +17781,27 @@ def selftest() -> int:
         chk("KPAR(%d) × NCORE(%d)" % (KPAR_VAL, NCORE_VAL)
             in str(_pz9.get("⛔_VASP_NPROC_제약")),
             "⛔음성 K2 P1-3: 제약을 KPAR 배수가 아니라 **KPAR × NCORE 배수**로 적는다")
+        # ══ 2026-09-04 — clean slab 을 넣어도 **v35 에서 서던 것이 그대로 서는가** ══
+        #   실측 회귀: `--clean_slab` 이 `_skip_clean` 을 뒤집어 estimand_job_keys 봉인이
+        #   통째로 꺼졌고, protocol exact map · kconv 축 두 게이트가 조용히 "건너뜀" 이 됐다.
+        #   조각 둘 · 단일점 구성이면 clean slab 유무와 **무관하게** 봉인돼야 한다.
+        _ejk9 = m_st.get("estimand_job_keys") or {}
+        _frg9 = m_st.get("fragments") or []
+        if len(_frg9) >= 2 and (m_st.get("submission") or {}).get("n_static"):
+            chk(bool(_ejk9),
+                "⛔음성: 조각 2개 단일점 구성이면 estimand_job_keys 가 **봉인된다** "
+                "(clean slab 유무와 무관 — 종전엔 --clean_slab 이 이걸 껐다)")
+            if _ejk9:
+                chk(_ejk9.get("formula", "").startswith("D = (E_C_sdcp - E_G_sdcp)"),
+                    "⛔음성: D 의 식은 clean slab 유무와 **같다** (E_S 는 D 에서 소거된다)")
+                _cs9b = bool((m_st.get("refs") or {}).get("clean_slab"))
+                chk(bool(_ejk9.get("E_S")) == _cs9b,
+                    f"E_S 키는 clean slab 이 실렸을 때만 있다 (실림 {_cs9b} · 키 "
+                    f"{bool(_ejk9.get('E_S'))})")
+        else:
+            # ⚠ 조용히 죽은 검사는 아무것도 보증하지 못한다 (CLAUDE.md) — 건너뛴 것을 **찍는다**.
+            print("  · estimand 봉인 검사 **건너뜀** (통과 아님): 이 픽스처는 조각 %d개다 — "
+                  "조각 2개 구성은 실물 v36 검수에서 본다" % len(_frg9))
         # ── 실행 블록 산문도 같은 조건을 말하는가 (MANIFEST 만 고치면 문서가 거짓말한다) ──
         _need9 = KPAR_VAL * NCORE_VAL
         for _d9, _n9 in ((_rd9, "README"), (_sb9, "SUBMIT")):
