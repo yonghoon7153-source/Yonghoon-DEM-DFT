@@ -794,3 +794,52 @@ PTFE 10.3 %   VGCF 10.5 %   곧은 막대 L40 22.2 %   ← 윤곽 손실
 1. `additives.py:38` 주석 — *"spanning tens of NMC"* (실측 **NCM 0.8개**) · *"AR≈160 > VGCF 67"*
    (비교 자체가 성립 안 함) **둘 다 수정 대상**.
 2. 경계 wrap 옵션 (`--periodic-seed`) — 씨딩↔STEP3 규약 정합.  ⚠ 사전등록 후.
+
+## ✅ Table S2 최종 확정 (2026-09-04 저녁)
+
+PTFE 기하 2행 **삭제 완료** · `[S6]`·`[S7]` 참고문헌 **삭제 완료** (목록은 `[S5]` 에서 끝난다).
+저자가 각주 ②를 신설해 정보를 **표에서 Methods 성격의 각주로 옮겼다** — 좋은 선택이다:
+표에 치수가 없는 이유를 독자가 묻기 전에 답하고, Methods 의 `centerline voxels of a PTFE
+fibril` 규약 문장을 그 각주가 받쳐준다.
+
+```
+Simulation domain  Lateral 50×50 µm² · Voxel 0.15 µm
+NCM811   r 2.5 (Measured) · E 140 (Ref. S4) · σ_e 1.0×10⁻² (Assumed)
+LPSCl    r 0.5 (Measured) · E_DEM 1.35 · ν_DEM 0.3 · E_MPM 1.53 · ν_MPM 0.49 ·
+         σ_y 0.30 (Calibrated) · σ_ion 3.0×10⁻³ (Ref. S5)
+VGCF     Ø 0.15 (Measured) · E 10 (Assumed) ·
+         σ_e 1.0×10² (compressed powder, Assumed)  ← CL-47 라벨 정정 반영
+         σ_e 78.5 (voxel, diameter-preserving, Calculated)
+PTFE     E 1.8 (Measured) · σ_e/σ_ion 0            ← 기하 2행 없음 (CL-66/67)
+SDCP     Ø 0.30 (Measured) · E 9.0 (Measured) · σ_e 250 (Measured) ·
+         σ_ion 1.0×10⁻³ (Assumed)
+각주 ①  Calibrated = porosity + contact overlap 을 맞추도록 조정.[S5]
+각주 ②  PTFE was seeded as drawn fibrils with lognormally distributed length
+        and constant-volume drawing (d ∝ √(V/L)).
+```
+
+### 남은 미세 항목 둘 (원고 제출 전 선택)
+
+1. **각주 ② 문장 다듬기** — `V`·`L` 이 정의되지 않았고 마침표 뒤 괄호가 떠 있다.  제안:
+   *"PTFE was seeded as drawn fibrils: each fibril conserves its own volume V while being
+   drawn to a lognormally distributed length L, so that its diameter follows d ∝ √(V/L)."*
+2. ⚠ **`Poisson's ratio (DEM contact) 0.3` 의 Source 가 `Calibrated` 로 남아 있다.**
+   각주 ①의 정의(porosity·overlap 에 맞춘 조정)에 **해당하지 않는다** — 덱에
+   `fix m2 all property/global poissonsRatio peratomtype 0.25 0.30` 으로 **고정 입력**이고
+   (type1 AM 0.25 / type2 SE 0.30 — 표의 0.30 은 SE 값으로 **정확**), 우리 DFT ν 0.360 도
+   Bazzoun 0.37 도 아닌 **관례값**이다.  ⇒ `Assumed` 가 맞다.
+   ★ **`ν (MPM continuum) 0.49` 는 `Calibrated` 유지가 맞다** — ν-스윕으로 골랐고
+   (0.45 → porosity 0 % · 0.49 → 6.3 %) K = 25.5 GPa 가 우리 DFT B₀ 26.23 과 −2.8 % 다.
+
+### ✅ 위 둘 다 반영 완료 (같은 날) — **Table S2 최종**
+
+1. 각주 ② 확정: *"PTFE was seeded as drawn fibrils: each fibril conserves its own volume V
+   while being drawn to a lognormally distributed length L, so that its diameter follows
+   d ∝ √(V/L)."*
+2. `Poisson's ratio (DEM contact) 0.3` → **`Assumed`** ✓
+   저자 근거: *"0.3 은 보통 저걸로 설정해서 이걸로 한 거야"* = **DEM 접촉모델의 관례값**.
+   ⇒ 그것이 정확히 `Assumed` 의 뜻이다.  값은 그대로, 라벨만 정직해졌다.
+   (각주 ①의 `Calibrated` 는 *"우리 침대의 porosity·overlap 에 맞춰 조정"* 이라는 **다른 종류의
+   근거**를 가리키므로, 관례값에 그 라벨을 붙이면 각주가 거짓이 된다.)
+
+★ **Table S2 · S3 · Figure 4/S16 캡션 · SI 참고문헌 — 전부 확정.**
