@@ -499,7 +499,7 @@ DEM-MPM (ours) 400  ← Methods 전체 1,339 단어의 30 %, 실험 최장의 1.
 
 | | 현재 | 확정 |
 |---|---|---|
-| (a) 컬러바 | `298 – 673` | **42 – 118** (중앙값 74 → 86) |
+| (a) 컬러바 | `298 – 673` (접촉수, v6) | **SBE 중앙값 정규화 density** (무차원, 1 근처) |
 | (b) σ_e | `1.98 / 3.00` **S** cm⁻¹ | **53.99 / 70.61 mS cm⁻¹** ← **단위 S → mS** |
 | (b) σ_ion | `0.203 / 0.215` | ⛔ **제거 → SI** |
 | 캡션 | *"ionic and electronic"* | **electronic 만** · `reconstructed` → `constructed` |
@@ -509,14 +509,30 @@ DEM-MPM (ours) 400  ← Methods 전체 1,339 단어의 30 %, 실험 최장의 1.
 ★ 바이올린이 본문 ⑥(`85 %`)을 그림으로 만든다 — 백분위 5 % 58→68 · 95 % 91→104 로
   **분포 전체가 평행 이동**하는 것이 형태로 드러난다.
 
-## 캡션 문안
+## 캡션 — ✅ 저자 확정 (2026-09-04)
 
 ```
-Figure 4. (a) DEM–MPM constructed electronic conduction networks of the SBE and DBE, with
-each AM particle colored by its number of conductive-additive contacts. (b) Distribution of
-conductive-additive contacts per AM particle (violin plots; horizontal lines mark the
-medians) and the corresponding effective electronic conductivities. (c) Nyquist plots of
-SBE and DBE cathode symmetric cells with the electronic resistances extracted using the
-TLM-based equivalent circuit. (d) SSRM resistance maps of polished SBE and DBE
-cross-sections.
+Figure 4. (a) DEM-MPM constructed electronic conduction networks of the SBE and DBE, with
+each AM particle colored by the local CA density within 0.3 μm of the particle surface,
+normalized to the SBE median. (b) Distribution of the number of CA contacts per AM particle
+(violin plots; horizontal lines mark the medians) and the corresponding effective electronic
+conductivities. (c) Nyquist plots of SBE and DBE cathode symmetric cells with the electronic
+resistances extracted using the TLM-based equivalent circuit. (d) SSRM resistance maps of
+polished SBE and DBE cross-sections.
 ```
+
+## ⛔⛔ (a) 는 **density** 이지 contacts 가 아니다 — 내가 캡션에서 뭉갰다
+
+원장이 이미 못박아 둔 것 (handoff §3-3, Fig 4a 라벨 사슬):
+> 뷰어 콜러바가 **철회된 "접점" 해석**을 그대로 찍고 있었다.
+> 제목 `Carbon point density near AM` → **`Conductive-additive density near AM`**
+> **`NOT a contact count` 명시** · 눈금은 **정규화된 정량 수치**(low/high 라벨 아님)
+> 밴드 정의(0.3 µm, center)는 **캡션 소관** — 그림 안에 안 적는다
+
+본문도 둘을 나눠 쓴다: **(a) = local CA density (0.3 µm, SBE 중앙값 정규화)** ·
+**(b) = number of CA contacts (0.15 µm 껍질, 개체 단위)**.
+⇒ **두 패널이 다른 반경·다른 양**이라 캡션이 그것을 밝혀야 한다 (확정본에 반영됨).
+
+⚠ **내 앞선 지시 "컬러바 42–118" 은 틀렸다** — 그건 **접촉수** 범위다.
+(a) 는 **SBE 중앙값으로 정규화한 무차원 density** 라 눈금이 1 근처다.
+
