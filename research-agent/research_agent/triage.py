@@ -19,15 +19,32 @@ from .models import Paper
 #   property/method : 비교 가능한 물성·공정·계면 용어
 #   general: 배터리 일반 (약한 신호)
 #   negative: 다른 분야
+#
+# 🔴 2026-09-04 — `db/` 407 · `kb/` 351 전수조사로 축 B 가 **캠페인 11개**임이 드러났고,
+#   그중 ④산화안정성 cascade · ⑤도핑 깔때기 · ⑧Li₃N/LiC₆ · ⑨VGCF/h-BN · ⑪Cu–Zn 은
+#   이 표에 **한 낱말도 없었다**. 아래 campaign/zn_rescue 두 줄이 그 구멍이다.
+#   ⚠ `_TERM_RES[:2]` 가 title_bonus 에 쓰인다 — core/system 두 줄의 **자리를 옮기지 말 것**.
 _TERMS: list[tuple[str, float]] = [
     (r"discrete[- ]element|\bDEM\b|LIGGGHTS|resistor[- ]network|percolat"
      r"|first[- ]principles|\bDFT\b|density functional|ab initio|machine[- ]learning (interatomic )?potential|\bMLIP\b|\bAIMD\b|universal (interatomic )?potential"
+     r"|nudged elastic band|\bNEB\b|LOBSTER|\bI?COHP\b|bond[- ]valence|\bBVSE\b|grand[- ]potential"
+     r"|\bMACE\b|CHGNet|M3GNet|\bVASP\b|Quantum ESPRESSO"
      r"|anode[- ]free|anode[- ]less|zero[- ]excess", 0.35),
     (r"all[- ]solid[- ]state|solid[- ]state|sulfide|Li6PS5Cl|Li₆PS₅Cl|LPSCl|argyrodite|thiophosphate|halide (solid )?electrolyte"
      r"|solid electrolyte(?!\s+interphase)|composite (positive electrode|cathode)", 0.25),
     (r"elastic|modulus|adhesion|interfac|\bNCM\b|\bNMC\b|porosity|calender|compaction|contact|tortuosity|percolation"
      r"|lithium metal|Li metal|current collector|interlayer|coating|microstructure|\bSEI\b|plating|deposition|\bFEM\b|COMSOL|PyBaMM", 0.15),
+    # campaign — 축 B 의 개별 캠페인 계·관측량. 이것만으로는 threshold 를 못 넘긴다(설계).
+    (r"Li3N|Li₃N|lithium nitride|LiC6|LiC₆|\bh-?BN\b|hexagonal boron nitride|\bVGCF\b"
+     r"|LiNiO2|LiNiO₂|sulfonated|polaron|dopant|high[- ]throughput|screening funnel"
+     r"|electrochemical stability window|convex hull|formation energy|decomposition (energy|reaction)"
+     r"|band ?gap|adsorption energy|binding energy|migration barrier|surface diffusion|adatom"
+     r"|Nernst[- ]Einstein|Haven ratio|mean squared displacement|Arrhenius|Van Hove", 0.15),
     (r"batter|electrolyte|cathode|anode|electrode", 0.05),
+    # zn_rescue — ⑪ Zn ALZIB 는 **Cu–Zn 상동정**만 관련이다. 아래 −0.30 을 상쇄할 만큼만
+    #   주고(0.20), 일반 zinc-ion 논문은 상쇄가 안 걸려 감점 그대로 탈락한다.
+    #   ⚠ 0.30 으로 뒀다가 Cu–Zn 논문이 상한 0.95 까지 튀었다 — 상한은 LLM 몫이라 되돌렸다.
+    (r"Cu[- ]Zn|\bbrass\b|Rietveld|phase identification|phase fingerprint", 0.20),
     (r"supercapacitor|zinc[- ]ion|sodium[- ]ion|fuel cell|photocatal|perovskite solar|wind|grid[- ]scale|hydrogen storage|thermoelectric|redox flow", -0.30),
 ]
 _TERM_RES = [(re.compile(p, re.I), w) for p, w in _TERMS]

@@ -185,13 +185,73 @@ STEP1 DEM (LIGGGHTS)  →  STEP2 MPM 압밀/payload  →  STEP3 복셀 σ (∇·
 - `webapp/` — `canonical.py` 가 `canonical_registry.json` 의 `source_path`+`source_key` 를 따라가
   원자료와 **대조**한다 (`tools/db/validate_canonical.py`)
 
-### 대상 조성·계면
-- **Li₆PS₅Cl 계열**: comp1–comp5 · `modelc`(=LPSCl1.6) · +B₂O₃ · LPSOCl(+O) · Nd 치환
-- **계면**: LiNiO₂(104) 슬랩 192원자 × 바인더 조각 — **SDCP(설폰화 전도성 고분자) vs PTFE(C10)**
-  (자기 seed 2종 `afm2424_pm1` / `afm2424_net4`, U(Ni d)=6.2, D3 zero-damping)
-- **SEI 분해상**: Li metal(bcc) · Li₂S · Li₃N–Nd · Li₂O · Li₃P · Li₃PO₄(β/γ) · LiCl · LiNdO₂ · Nd₂O₃ · Nd₂S₃
-- **AF-ASSB 원고**: Li₃N(001) · LiC₆(0001) 표면
-- **Zn ALZIB (C1)**: Cu–Zn 상 지문 — 43°±1° 에 8상이 1.47° 폭으로 겹침, Cu–Zn 간격 0.097°
+### 캠페인 — 이게 실제 목록이다 (11개)
+
+`db/properties/` **407 파일** · `kb/` **351 문서** 전수조사(2026-09-04) 결과. 축 B 는 한 개
+과제가 아니라 **열한 개 캠페인**이고, 논문 관련도는 *"어느 캠페인에 붙는가"* 로 판정한다.
+
+**① LPSCl 계열 벌크 물성** (`b2o3` 36 · `lpsocl` 30 · `comp2` 10 · `modelc` 7 파일)
+comp1–comp5 · `modelc`(=LPSCl1.6) · **+B₂O₃** · **LPSOCl**(O 치환) · **Nd 치환**.
+밴드갭(fixed-occ nscf) · B₀(BM3 EOS) · 탄성(relaxed-ion) · **ICOHP**(LOBSTER) ·
+Bader/Löwdin 전하 · ELF 공유성 · phonon 안정성 · Voronoi 무질서 · convex hull · γ_SE.
+→ 값은 아래 표. 관련 논문: 황화물 SE 의 전자구조·기계물성·결합해석.
+
+**② 이온수송 MLIP-MD** (`msd` 9 · `md` 5 · `uma` 18 · `vanhove` 2 · `beta` 3 파일)
+UMA-s-1p1(omat) Langevin NVT. D₀ 분해 · Van Hove 고원 · β-gate · dualx blocking.
+→ Ea 멀티시드 **0.197 eV**. 관련 논문: MLIP(MACE/CHGNet/M3GNet/UMA) MD 로 σ·Ea 를 낸 것,
+그리고 **AIMD vs MLIP 대조**를 한 것(우리가 UMA 3.3배 과소를 실측했으므로 특히 값어치 있다).
+
+**③ BVSE 이온 경로** (`bvse` 9 · `bv` 5 파일) — softBV. B₂O₃ 채널 **3.32 / 4.74 / 6.73 %**.
+관련 논문: bond-valence 경로 해석, 그리고 BVSE 를 NEB 대용으로 **절대값 인용**한 논문(비판 대상).
+
+**④ 산화안정성 cascade** (`cascade` 53 · `oxidation` 8 파일) — MP grand-potential ESW.
+**host Li₆PS₅Cl: 환원한계 1.242 V · 산화한계 2.14 V · OCV 자가분해 1.717 V · 창 0.898 V**,
+산화 onset 반응 `4 Li₆PS₅Cl → LiS₄ + 4 Li₃PS₄ + 4 LiCl + 7 Li`. 지금 method-comparable 270건.
+★ **`phase_set_id` 계약** = sha256(정렬된 MP entry_ids)[:16] — **같은 phase_set 안에서만**
+후보↔host 비교가 성립한다. ⇒ 문헌의 ESW 값은 **어느 상집합·어느 MP 스냅샷**인지 없으면
+우리 창(0.898 V)과 나란히 못 쓴다. 그 확인이 이 캠페인의 비판 포인트 1순위.
+
+**⑤ 도핑 스크리닝 깔때기** (`doping` 3 · `site` 2 · `codoping_ml` 2 파일)
+**큐레이션 89종** 도펀트를 Xiao 2019 F1–F6 · Sendek 2017 · Kahle 2020 표준 게이트로 재표현.
+waterfall **89 → 89 → 84 → 45 → 28 → 1** (G1 구조안정 → G2 전기화학창 → G3 산화 onset →
+G4 Li 수송 → G5 기계). ⛔ 파일이 스스로 적고 있다: *"게이트 통과 수는 **발견 성능 지표가
+아니다**"* · `_v2` 는 **미검증 진단물**(G3 phase_set_id 미기록 · G4 blocking 이 BVS 를 덮는
+순환 · G5 로스터 상대 median). **순위·통과 수를 결과로 인용 금지.**
+⇒ 문헌의 high-throughput 스크리닝 논문은 여기 직결이고, *"통과 수를 성능으로 보고했는가"*
+가 곧 비판 포인트다.
+
+**⑥ SEI 분해상** (`sei` 14 · `neb` 13 파일) — Li metal(bcc) · Li₂S · Li₃N–Nd · Li₂O · Li₃P ·
+Li₃PO₄(β/γ) · LiCl · LiNdO₂ · Nd₂O₃ · Nd₂S₃ 의 밴드갭(fixed-occ) + MP 형성전위 +
+**QE CI-NEB Li 이동장벽**. 값은 아래 표(전건 `citable=false`).
+
+**⑦ SDCP–PTFE 바인더 계면** (`sdcp` 27 파일 + `runs/sdcp_*` 5개) — **이 축의 주력**.
+LiNiO₂(104) 슬랩 192원자 × 바인더 조각, **SDCP(설폰화 전도성 고분자) vs PTFE(C10)**,
+자기 seed 2종 `afm2424_pm1` / `afm2424_net4` · U(Ni d)=6.2 · D3 zero-damping.
+→ **C-12 외주 VASP 16잡(ΔE_ads)은 아직 값 없음, 발송 전.**
++ SDCP polaron Stage A(ORCA r2SCAN-3c, gs0–gs2 완료 각 10–18 h) · site_screen · v7c trimer 빌더.
+
+**⑧ AF-ASSB 음극 계면 — Li₃N(001) / LiC₆(0001)** (`li3n` 9 파일)
+Li adatom 확산장벽을 **UMA · DFT-SCF · 전 DFT NEB 3중**으로 대조:
+Li₃N(001) path A **UMA 0.054 → DFT SCF 0.0486 → 전 DFT CI-NEB 0.18 eV** ·
+LiC₆(0001) DFT SCF **0.309 eV**. ⇒ **UMA 가 3.3배 과소**였다는 것이 이 캠페인의 소득이고,
+CLAUDE.md 의 *"UMA 를 Li₃N 에 사용 금지"* 가 여기서 나왔다.
+**AgNO₃–C–PVP 원고(v5) SI Table S2** 가 이 파라미터표다.
+
+**⑨ VGCF / h-BN 갤러리** (`vgcf` 7 파일) — 탄소섬유 위 h-BN 층간 Li 이동.
+QE neb.x 7 images · CI auto · PBE-D3BJ · 4×4 · k 3×3×1. 결합 2×2 매트릭스
+(gallery_2L1L **−1.580** · gallery_1L2L **−1.592 eV**). h-BN 단층 위 표면확산 **Ea 0.007 eV**
+= 수치 분해능 이하 ⇒ *"< 0.01 eV, 사실상 무장벽"* 으로만 보고하고 **Shi 2017 의 0.10 eV 와
+일치한다고 쓰지 않는다**(13배 낮다). ★ **층 민감도 −209.4 meV vs E_bind 산포 52 meV**
+⇒ *"장벽은 같은 host 위 site 에너지 차라 층 효과가 상쇄된다"* 는 가정을 **반증**했다.
+
+**⑩ 계면 분해 per-seed** (`interface` 12 파일) — b2o3 / modelc2x / modelc62 / **lpsocl** ×
+seed 2·3·4 (각 500행 CSV). 전압분해 계면 반응성을 시드별로 남긴다(평균만 남기지 않는다).
+
+**⑪ Zn ALZIB (C1, 수계)** (`zn` 2 파일) — Cu–Zn 상 지문. **43°±1° 안에 8상이 1.47° 폭으로
+겹치고 Cu–Zn 간격은 0.097°** ⇒ 회절 기하가 강제하는 것이라 분해능으로 못 푼다.
+DFT 격자상수로 가르려는 시도는 **틀렸다**(DFT 오차 ~1 % = 2θ 0.3–0.4° ≫ 0.097°).
+⇒ DFT 가 기여할 자리는 **convex hull 하나** — 어느 상을 후보에서 뺄 수 있는가.
+⚠ **수계 Zn 계다. 황화물 SE 수치와 같은 표에 놓지 않는다.**
 
 ### 관심 물리량과 현재 확보된 값
 `db/properties/canonical_registry.json` — 정본 **39항목**. 각 항목이 `source_path`+`source_key` 로
@@ -208,8 +268,16 @@ STEP1 DEM (LIGGGHTS)  →  STEP2 MPM 압밀/payload  →  STEP3 복셀 σ (∇·
 | ICOHP (LOBSTER 결합당) | −5.913 – −6.04 eV | canonical |
 | SDCP wave1 ΔE(site) | 9.265 · 36.071 · 36.157 · 49.767 meV | canonical |
 | SDCP wave1 E_ads (box24) | −0.3302 – −0.7728 eV | provisional |
-| NEB Li 이동장벽 | Li metal **0.0806** · LiNdO₂ **0.229** · Li₂S **0.305** eV | **전부 `provisional_single_cell` · citable=false** |
+| NEB Li 이동장벽 (SEI 상, QE) | Li metal **0.0806** · LiNdO₂ **0.229** · Li₂S **0.305** eV | **전부 `provisional_single_cell` · citable=false** (최상위 `retracted: true` = n_citable 0) |
 | 표면에너지 γ_SE | 0.45 – 1.211 J/m² | — |
+| **전기화학 창 (host Li₆PS₅Cl, MP grand-potential)** | 환원 **1.242** · 산화 **2.14** · OCV 자가분해 **1.717** V → 창 **0.898 V** | `phase_set_id` 결박, 같은 상집합 안에서만 비교 |
+| BVSE 채널 분율 (B₂O₃) | **3.32 / 4.74 / 6.73 %** | 원본 주기셀 값만 (큐빅 박스는 표시용) |
+| Li₃N(001) Li adatom 장벽 (path A) | UMA **0.054** → DFT SCF **0.0486** → **전 DFT CI-NEB 0.18 eV** | UMA 3.3배 과소 ⇒ Li₃N 에 UMA 금지 근거 |
+| LiC₆(0001) Li adatom 장벽 | DFT SCF **0.309 eV** | AF-ASSB SI Table S2 |
+| h-BN 위 Li 표면확산 | **0.007 eV** (= 수치 분해능 이하) | *"< 0.01 eV, 사실상 무장벽"* 으로만 서술. Shi 2017 0.10 eV 와 일치 주장 금지 |
+| h-BN 갤러리 결합에너지 | 2L1L **−1.580** · 1L2L **−1.592 eV** (층 민감도 **−209.4 meV** vs E_bind 산포 52 meV) | "층 효과 상쇄" 가정을 **반증**함 |
+| 도핑 깔때기 통과 수 | 89 → 89 → 84 → 45 → 28 → 1 | ⛔ **결과로 인용 금지** — `_v2` 는 미검증 진단물 |
+| Cu–Zn 상 지문 (Zn ALZIB) | 43°±1° 안 **8상 / 1.47° 폭**, Cu–Zn 간격 **0.097°** | 수계 Zn 계 — 황화물 SE 와 같은 표 금지 |
 | **C-12 ΔE_ads (SDCP vs PTFE)** | **아직 없음 — 외주 VASP 16잡 발송 전** | 미계산 |
 
 ### 방법론적 쟁점 (= 데이터 규율. 어기면 값이 무효다)
@@ -269,7 +337,10 @@ STEP1 DEM (LIGGGHTS)  →  STEP2 MPM 압밀/payload  →  STEP3 복셀 σ (∇·
 - 입자 패킹·압축·DEM·미세구조 유한요소 — **그건 축 A 다**
 - 셀 조립·캘린더링·건식전극 공정 최적화, 파일럿 스케일업
 - 계산이 전혀 없는 순수 실험 (합성 + cycling curve 만) — **단, EIS·대칭셀은 축 C 다**
-- 액체·폴리머 전해질 전용 · Li–S(황화물 SE 아님) · Zn/Na/K 이온
+- 액체·폴리머 전해질 전용 · Li–S(황화물 SE 아님) · Na/K 이온
+  ⚠ **Zn 은 예외다** — 캠페인 ⑪(Zn ALZIB, 수계)이 살아 있다. **Cu–Zn 상동정·XRD 상지문·
+  convex hull** 이면 관련(0.5–0.7), 그 밖의 수계 Zn 전기화학은 무관(< 0.35).
+  단, 관련이어도 **황화물 SE 수치와 같은 표에 놓지 않는다**
 - 머신러닝이되 **원자 스케일 퍼텐셜이 아닌** 것 (제조 파라미터 회귀, 이미지 분할 only)
 - DFT 이되 배터리와 무관한 계 (촉매 · 태양전지 · 열전 · 수소저장)
 - ⚠ **DOS threshold 로 밴드갭을 읽은 논문**, **단일 시드 MD 로 σ 비를 주장한 논문**,
@@ -367,6 +438,25 @@ STEP1 DEM (LIGGGHTS)  →  STEP2 MPM 압밀/payload  →  STEP3 복셀 σ (∇·
   `machine learning potential`, `MLIP`, `AIMD`, `NEB`, `nudged elastic band`, `COHP`, `ICOHP`,
   `LOBSTER`, `bond valence`, `BVSE`, `band gap`, `VASP`, `Quantum ESPRESSO`, `PAW`, `DFT+U`,
   `formation energy`, `convex hull`, `electrochemical stability window`
+- **축 B 캠페인별 보강** (전수조사 2026-09-04 — 위 목록만으로는 ④⑤⑧⑨⑪ 이 안 잡혔다)
+  · ②MLIP-MD: `MACE`, `CHGNet`, `M3GNet`, `universal interatomic potential`,
+    `foundation model potential`, `Nernst-Einstein`, `mean squared displacement`, `Arrhenius`,
+    `Haven ratio`, `Van Hove`
+  · ④산화안정성: `grand potential`, `grand canonical`, `Materials Project`, `decomposition energy`,
+    `decomposition reaction`, `pseudo-binary`, `mutual reaction energy`, `oxidation limit`,
+    `reduction limit`
+  · ⑤도핑: `dopant`, `doping strategy`, `high-throughput screening`, `substitutional`,
+    `aliovalent`, `descriptor`, `screening funnel`
+  · ⑦바인더 계면: `adsorption energy`, `binding energy`, `slab`, `surface energy`, `polaron`,
+    `sulfonated`, `conducting polymer`, `LiNiO2`, `van der Waals correction`, `D3`
+  · ⑧음극 계면: `Li3N`, `lithium nitride`, `LiC6`, `graphite intercalation`, `adatom`,
+    `surface diffusion`, `migration barrier`
+    (⚠ `anode-free`/`anode-less` 는 `triage.py` 에 **이미 core 로 들어 있고 그대로 둔다** —
+     캠페인 ⑧ 이 살아 있기 때문이다. 사용자가 2026-09-04 중단시킨 것은 **Scholar alert
+     검색어 등록**(수집)이지 채점이 아니다. ⛔ alert 를 다시 등록하지 말 것)
+  · ⑨VGCF/h-BN: `hexagonal boron nitride`, `h-BN`, `gallery`, `interlayer`, `carbon fiber`
+  · ⑪Zn ALZIB: `Cu-Zn`, `brass`, `phase identification`, `Rietveld`, `XRD pattern`
+    (⚠ 이 다섯만 Zn 감점을 상쇄한다. 일반 `zinc-ion` 은 감점 유지)
 - **축 C 핵심** (실험 협업): `impedance`, `EIS`, `symmetric cell`, `blocking electrode`,
   `Li-In`, `areal capacity`, `single crystal NCM`, `polycrystalline NCM`, `rate capability`,
   `stack pressure`, `roll press`, `equivalent circuit`, `R_int`, `charge transfer resistance`

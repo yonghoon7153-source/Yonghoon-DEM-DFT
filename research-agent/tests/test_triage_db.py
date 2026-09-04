@@ -62,3 +62,53 @@ def test_db_upsert_idempotent(tmp_path, cfg):
     assert db.counts()["total"] == 1
     db.export_jsonl()
     assert len((tmp_path / "t.jsonl").read_text().splitlines()) == 1
+
+
+# ---------------------------------------------------------------------------
+# 캠페인 용어 (2026-09-04) — `db/`·`kb/` 전수조사로 드러난 축 B 캠페인 ④⑤⑧⑨⑪ 이
+# `_TERMS` 에 한 낱말도 없었다. 양성 + **음성** 을 같이 박아 둔다.
+# ---------------------------------------------------------------------------
+
+def test_campaign_papers_are_no_longer_missed():
+    """④⑤⑧⑨ — 이 넷은 예전 표에서 배터리 일반(0.05)까지만 긁혔다."""
+    cases = {
+        "④cascade": Paper(
+            id="c4", title="Grand-potential electrochemical stability window of argyrodite solid electrolytes",
+            snippet="decomposition reaction and oxidation limit from Materials Project convex hull"),
+        "⑤doping": Paper(
+            id="c5", title="High-throughput screening of dopants for sulfide solid electrolytes",
+            snippet="descriptor-based screening funnel, formation energy and band gap gates"),
+        "⑧Li3N": Paper(
+            id="c8", title="Li adatom surface diffusion on Li3N(001) from first-principles NEB",
+            snippet="migration barrier of lithium nitride anode interphase"),
+        "⑨hBN": Paper(
+            id="c9", title="Li intercalation in h-BN galleries on carbon fiber",
+            snippet="nudged elastic band interlayer binding energy VGCF"),
+    }
+    for name, p in cases.items():
+        assert rule_relevance(p)[0] >= 0.45, (name, rule_relevance(p))
+
+
+def test_zn_rescue_is_narrow_not_a_blanket_pardon():
+    """⑪ — Cu–Zn **상동정**만 살린다. 일반 zinc-ion 은 감점 그대로여야 한다."""
+    cu_zn = Paper(id="z1", title="Rietveld phase identification of Cu-Zn intermetallics",
+                  snippet="XRD pattern overlap of brass phases, convex hull from DFT")
+    zn_generic = Paper(id="z2", title="A high-rate zinc-ion battery cathode",
+                       snippet="aqueous zinc-ion electrolyte and electrode cycling")
+    assert rule_relevance(cu_zn)[0] >= 0.35
+    # ⛔음성: 일반 zinc-ion 은 상쇄 없이 여전히 탈락
+    assert rule_relevance(zn_generic)[0] < 0.35
+
+
+def test_campaign_terms_alone_do_not_pass_threshold():
+    """⛔음성: campaign 줄은 **보조**다. 방법도 재료계도 없이 통과시키면 안 된다."""
+    weak = Paper(id="w1", title="Band gap and formation energy of a hypothetical oxide",
+                 snippet="convex hull and Arrhenius fit of an unrelated semiconductor")
+    assert rule_relevance(weak)[0] < 0.35
+
+
+def test_zinc_ion_paper_mentioning_rietveld_still_fails():
+    """⛔음성: 감점 상쇄가 **말 한 마디로** 뚫리면 안 된다."""
+    p = Paper(id="z3", title="Rietveld analysis of a zinc-ion battery cathode",
+              snippet="aqueous zinc-ion electrode cycling and capacity retention")
+    assert rule_relevance(p)[0] < 0.35
