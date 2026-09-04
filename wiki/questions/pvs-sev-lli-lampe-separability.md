@@ -2,10 +2,10 @@
 title: PVS·SEV 는 LLI 와 LAM_PE 를 가르는가
 description: "Do the two physics-inspired features add an independent direction separating LLI from LAM_PE, or do they share one contrast"
 created: 2026-09-03
-updated: 2026-09-03
+updated: 2026-09-04
 type: research-question
 tags: [battery, degradation, research]
-sources: [raw/papers/2026-09-02-siwon-kim-degradation-mode-ml-seminar.md, raw/transcripts/2026-09-03-voice-memo-007-degradation-mode-ml.md, raw/papers/birkl2017_degradation-diagnostics-ocv.md, raw/papers/wang2025_interpretable-ml-battery-prognosis.md, raw/papers/kim2023_graphite-heterogeneity-lifetime.md, raw/papers/su2024_drt-soh-health-features.md, raw/papers/rhyu2025_systematic-feature-design-formation.md, raw/papers/zhang2020_eis-gpr-capacity-rul.md, raw/papers/tao2025_nondestructive-degradation-decoupling.md, raw/papers/lin2024_ocv-degradation-mode-identifiability.md, raw/papers/schaeffer2024_nullspace-regularization-interpretation.md, raw/papers/navidi2024_piml-degradation-diagnostics-comparison.md, raw/papers/marongiu2016_lfp-onboard-capacity-halfcell.md]
+sources: [raw/papers/2026-09-02-siwon-kim-degradation-mode-ml-seminar.md, raw/transcripts/2026-09-03-voice-memo-007-degradation-mode-ml.md, raw/papers/birkl2017_degradation-diagnostics-ocv.md, raw/papers/wang2025_interpretable-ml-battery-prognosis.md, raw/papers/kim2023_graphite-heterogeneity-lifetime.md, raw/papers/su2024_drt-soh-health-features.md, raw/papers/rhyu2025_systematic-feature-design-formation.md, raw/papers/zhang2020_eis-gpr-capacity-rul.md, raw/papers/tao2025_nondestructive-degradation-decoupling.md, raw/papers/lin2024_ocv-degradation-mode-identifiability.md, raw/papers/schaeffer2024_nullspace-regularization-interpretation.md, raw/papers/navidi2024_piml-degradation-diagnostics-comparison.md, raw/papers/marongiu2016_lfp-onboard-capacity-halfcell.md, raw/papers/mohtat2019_electrode-soh-estimability-expansion.md]
 confidence: medium
 explored: false
 verificationStatus: unverified
@@ -188,6 +188,30 @@ H2 가 참일 수 있음에 주의한다 — 부호가 같다고 벡터가 평�
   일어나는가" 를 물을 때의 **정량 답 한 건**이고,
   [[nullspace-coefficient-interpretation]] 의 일반 명제(축퇴 방향 위의 값은
   추정기가 정한다)의 야생 실측이다.
+
+- **[2026-09-04] ★ "관측을 더하면 갈리는가" 에 부호가 붙은 **긍정** 선례 — 단,
+  대상이 모드가 아니라 전극 창이다.** Mohtat et al. 2019 (*J. Power Sources*
+  427, 101–111) 는 `θ = [x₁₀₀, y₁₀₀, C_n, C_p]` 에 대해 **제약 Cramér–Rao 하한**
+  (Stoica–Ng, 식 28–34) 을 계산하고, 관측 벡터에 **셀 팽창 `Δt_c` 를 추가**했을
+  때 파라미터 표준오차가 얼마나 줄어드는지를 데이터 창(DOD) 함수로 보고한다.
+  `[인쇄, Abstract]` "with the addition of the expansion, the parameters are
+  **estimable without the need to discharge the battery to a high Depth of
+  Discharge (>70%)**"; `[인쇄, Highlights]` "With expansion measurement, **DOD
+  required for observability is reduced to 30%**."
+  기전도 인쇄돼 있다 — `[인쇄, p.10]` "graphite has several rate changes while
+  expanding, whereas **LFP expands at a constant rate**", 그래서 이득이
+  **음극 파라미터에 몰린다**.
+  `[해석]` **이 카드에 주는 것은 "검사 절차" 다.** 팽창 감도는
+  `∂Δt_c/∂θ_j ∝ [ΔV'(·_i) − ΔV'(·₁₀₀)]` (식 39) 이므로, **부피변화가 선형인
+  전극에 대해서는 그 감도 열이 정확히 0** 이다. 즉 새 관측이 이득이 되는지는
+  **감도 열이 0 이 아닌가**로 사전 판정할 수 있다. PVS·SEV 를 목적함수에 넣기
+  전에 같은 검사를 할 수 있다 ([[constrained-crb-identifiability]]).
+  **범위 한정 3개**: (a) 대상이 **LLI/LAM 이 아니다** — 논문은 LLI·LAM 을 식
+  (16)·(20) 으로 정의해 놓고 §5 이후 어휘 전수 기준 **0회**로 다시 쓰지 않는다.
+  (b) **추정기를 한 번도 돌리지 않는다** — 참값에서 평가한 CRB 하한이지 복원
+  오차가 아니다. (c) 화학이 graphite/LFP 하나이고 노이즈는 `σ_V=10 mV,
+  σ_t=5 μm` 한 점 고정이다. 근거:
+  `raw/papers/mohtat2019_electrode-soh-estimability-expansion.md`.
 
 ## Evidence Against (H2 지지 / H1 반대)
 - **[2026-09-03 (10)] ★ 잃어버리는 방향은 LLI↔LAM_PE 가 아니다 — 구조적으로는
@@ -774,6 +798,38 @@ H2 가 참일 수 있음에 주의한다 — 부호가 같다고 벡터가 평�
      (`[인쇄]` "The correct determination of all the degradation mechanisms …
      **is out of the goal of this work**"). 어휘가 없는 것과 주장을 절제하는
      것은 다른 축이라는 것을 이 편이 보여 준다.
+
+- **[2026-09-04] ★** `open` 유지 — **Mohtat et al. 2019 원전을 흡수했다**
+  (이 계보 열네 편째). raw:
+  `raw/papers/mohtat2019_electrode-soh-estimability-expansion.md`.
+  이 카드에 준 것 셋:
+  1. **Evidence For 에 1건 추가**(위): 이 계보에서 **처음으로**, 관측을 하나
+     더 넣었을 때의 이득을 **정량 지표(제약 CRB 표준오차)로 재고 판정선까지
+     그은** 사례. 단 대상이 LLI/LAM 이 아니라 전극 창·용량 4개다.
+  2. **"답하는 방법" 3번의 사전검사에 기계적 판정이 하나 생겼다**:
+     새 관측 `g(θ)` 의 **감도 열이 0인지** 를 먼저 본다. Mohtat 식 (39) 는
+     "관측이 파라미터에 대해 **상수 기울기**를 가지면 그 열은 항등적으로 0"
+     을 닫힌 형태로 준다 (LFP 양극 팽창이 실제 그 경우다). 2026-09-03 (13)
+     에서 붙인 "기존 관측과의 상관·유효 rank 를 먼저 본다" 와 짝을 이룬다 —
+     **하나는 새 행이 0인가, 하나는 새 행이 기존 행과 독립인가.**
+     개념 페이지로 분리했다: [[constrained-crb-identifiability]].
+  3. **어휘 전수 (열네 편째)**: `identifiab*` **23** (본문 22) ·
+     `observab*` **11** · `unidentifiab*` **1** · `unobservab*` **1** ·
+     `CRB` **7** · `Fisher` **3** · `sensitivit*` **13** ·
+     `rank deficient` **1** · `linearly dependent` **1** · `nullspace` **1**
+     — 그러나 `degenerac*` **0** · `uniqu*` **0** · `redundan*` **0** ·
+     `collinear*` **0** · `confound*` **0** · `global` **0** ·
+     `Hessian`/`singular value`/`condition number` **각 0** ·
+     파라미터 `correlat*` **0**.
+     `[해석]` **추정 정밀도의 어휘는 완비, 비유일성의 어휘는 여전히 0.**
+     Lin 2024 와 같은 패턴이며 차이는 Mohtat 이 축퇴를 **한 문장으로 지목**
+     한다는 것뿐이다 (`[인쇄, p.8]` "the first and second columns … become
+     **linearly dependent** … rank deficient … unidentifiable").
+  4. **어휘 전수 방법론 정정**: `unobservab*` 는 문자열 검사로는 **0회**로
+     나온다 — 조판 줄바꿈 하이픈(`un-\nobservable`) 때문이다. 하이픈 결합을
+     전처리에 넣으면 1회다. 같은 이유로 `identifiab*` 22→23,
+     `observab*` 10→11, `expansion` 81→87 로 바뀐다. **앞선 열세 편의 0회
+     판정 중 이 함정에 걸린 것이 있는지는 미확인이다.**
 
 ### 이 카드가 속한 논지 (2026-09-03)
 

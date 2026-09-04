@@ -5,7 +5,7 @@ created: 2026-09-03
 updated: 2026-09-04
 type: comparison
 tags: [battery, degradation, research]
-sources: [raw/papers/marongiu2016_lfp-onboard-capacity-halfcell.md, raw/papers/birkl2017_degradation-diagnostics-ocv.md, raw/papers/dubarry2012_synthesize-degradation-modes.md, raw/papers/lin2024_ocv-degradation-mode-identifiability.md, raw/papers/navidi2024_piml-degradation-diagnostics-comparison.md, raw/papers/rhyu2025_systematic-feature-design-formation.md]
+sources: [raw/papers/marongiu2016_lfp-onboard-capacity-halfcell.md, raw/papers/birkl2017_degradation-diagnostics-ocv.md, raw/papers/dubarry2012_synthesize-degradation-modes.md, raw/papers/lin2024_ocv-degradation-mode-identifiability.md, raw/papers/navidi2024_piml-degradation-diagnostics-comparison.md, raw/papers/rhyu2025_systematic-feature-design-formation.md, raw/papers/mohtat2019_electrode-soh-estimability-expansion.md]
 confidence: high
 explored: false
 verificationStatus: unverified
@@ -36,8 +36,8 @@ their estimation" 의 구체적 목록이다.
 | **Marongiu 2016 (모델)** | `LLI, LAM_Pe,Li, LAM_Pe,De, LAM_Ne,Li, LAM_Ne,De` | **5** | **0** | **없음 → null 2차원** | 평탄역 길이 3개 (Ah) |
 | **Marongiu 2016 (실행)** | `LLI, LAM_Ne,De` | **2** | 0 | **나머지 3개 = 0 하드 고정** (사전 믿음) | 평탄역 길이 1~3개 |
 | [[birkl-ocv-degradation-diagnostic]] 2017 | `LLI, LAM_PE, LAM_NE` (+`Δx_EoC, Δx_EoD`) | **3** | **2** | **컷오프 전압 등식으로 소거** | full-cell 전압 곡선 |
-| Mohtat 2019 (**구현본**: PyBaMM `_ElectrodeSOH`) | `x_100, y_100, x_0, y_0` (+`Q`) | **5** | **2** | 컷오프 전압 등식 2개 → Ah 축 자유도 **3** | full-cell OCV |
-| Mohtat 2019 (Lin 이 전하는 표기) | 전극 SOC 한계 4개 | **4** | **1** | 등식 → **3** | full-cell OCV |
+| **Mohtat 2019 (원전 표기 — 2026-09-04 확인)** | `x_100, y_100, C_n, C_p` | **4** | **1** (`U_p(y₁₀₀) − U_n(x₁₀₀) = V_max` 만) | 등식 1개 → **3**. 셀 용량 `C` 는 제약이 아니라 **추정 후** 식 (27) 로 푼다 | full-cell OCV **+ 셀 팽창(μm)** |
+| Mohtat 2019 (구현본: PyBaMM `_ElectrodeSOH`) | `x_100, y_100, x_0, y_0` (+`Q`) | **5** | **2** | 같은 문제의 **다른 장부** → 역시 Ah 축 자유도 **3** | full-cell OCV |
 | [[np-lip-ocv-reparametrization]] (Lin 2024) | `r_N/P`, `z₀⁺` | **2** | 0 | **재매개화로 애초에 안 만든다** | SOC 정규화 OCV **형상** |
 | Navidi 2024 (부록 A1) | `m_p, δ_p, m_n, δ_n` | **4** | **0** | 여분 없음 (전단사) | full-cell 전압 곡선 |
 | [[fused-lasso-feature-design-framework]] SI S11 | `β_c, β_a, Q_rem, V_shift` | **4** | 0 | 여분 없음 | C/20 RPT 곡선 |
@@ -119,15 +119,23 @@ n₂ = ( +1 , −1 , +1 ,  0 ,  0 )   ⟺  LAM_Pe 를 li→de 로 ε 옮기고 L
 
 - Marongiu 의 `N = Q_Ne,BOL` 은 원전에 **수치가 없다** (`[인쇄]` "normally
   bigger than one" 뿐). 따라서 `n₁` 의 계수는 **기호로만** 안다.
-- Mohtat 2019 행은 **원전을 여전히 읽지 않았다** (Elsevier 유료 + 실행 환경
-  egress 차단). 2026-09-04 에 흡수한 것은 **구현본**이다 — PyBaMM 26.7.1.0
-  `models/full_battery_models/lithium_ion/electrode_soh.py` 의 `_ElectrodeSOH`
-  (`pybamm.citations.register("Mohtat2019")`), docstring 이 다섯 식을 인쇄한다.
-  표에 두 행을 나란히 둔 이유: **장부가 다르고 답이 같다** (구현본 "양 5개 −
-  등식 2개", Lin 이 전하는 "파라미터 4개 + 제약 1개" — 둘 다 Ah 축 자유도 3).
-  어느 쪽이 Mohtat 자신의 표기인지는 **판정 불가**. 그리고 Lin 이 선행자로
-  지목한 근거인 **Fisher 식별가능성 분석 자체는 아직 미독**이다.
-  구현본 대조와 그 위에서 잰 것: `mode-observability/docs/PHASE1H_NOTES.md`.
+- ~~Mohtat 2019 행은 원전을 읽지 않았다 — Lin 의 서술을 옮긴 것이다.~~
+  → **2026-09-04 원전으로 닫았다** (*J. Power Sources* **427**, 101–111).
+  **Lin 이 전한 쪽이 Mohtat 자신의 표기다**: `[인쇄]` 문제 (P) 가
+  `θ = [x₁₀₀, y₁₀₀, C_n, C_p]` 를 최소화 대상으로 두고 `subject to,
+  U_p(y₁₀₀) − U_n(x₁₀₀) = V_max` **하나만** 건다. 최소 전압 등식은 제약이 아니고
+  — `[인쇄]` "the capacity is not included in the above formulation. Hence, **only
+  the maximum voltage limit is used in the estimation problem**" — 셀 용량은
+  추정 후 식 (27) 로 따로 푼다. 구현본의 "5 − 2" 는 **같은 문제의 다른 장부**이고
+  둘 다 Ah 축 자유도 3 이다.
+  **정정 하나**: 이 표가 그 4개를 "전극 SOC 한계 4개" 로 적어 온 것은 부정확했다 —
+  SOC 한계는 **2개**(`x₁₀₀, y₁₀₀`)이고 나머지 둘은 **전극 용량**(`C_n, C_p`, Ah)이다.
+  개수와 자유도는 맞았고 **구성이 틀렸다.**
+- **Mohtat 행은 이 표의 축을 하나 벗어난다.** 이 표의 "여분 처리" 세 갈래(등식 /
+  0-고정 / 안 만들기)는 전부 **파라미터 쪽** 처방인데, 그의 실제 기여는 **관측 쪽**이다
+  — 전압에 **셀 팽창**을 둘째 채널로 더한다 (`expansion` 87회). 그래서 표의
+  "관측" 열에만 그 사실을 적고, 처방 분류에는 넣지 않았다.
+  기계와 판정은 [[constrained-crb-identifiability]] 에 있다.
 - 위 null 계산은 **모델의 성질**이지 데이터의 성질이 아니다. 반쪽전지 곡선이
   노화에 불변이라는 가정 위에 있고, 그 가정은 Marongiu 자신이 LFP 에 대해
   다른 논문을 기각하는 근거로 쓴 것이기도 하다 (raw digest §10 ④).

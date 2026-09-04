@@ -521,3 +521,179 @@ Phase 1c 는 이 스텝 의존성을 신고하지 않았다. 앞으로 쓸 문�
 Lin 전언 두 줄로 분리 + 처방 1 에 실측 부착) · `syntheses/mode-identifiability-
 unmeasured-lineage.md` (§5 정정 · Gap 2 단서 · Gap 6 신설 · Bias Check 1 갱신) ·
 `questions/22p-physics-or-degeneracy.md` (2026-09-04 항목 4건).
+
+## [2026-09-04] ingest | Mohtat 2019 원전 — 제약 CRB 로 **전극 창**은 쟀고 **모드**는 안 쟀다
+
+raw: `raw/papers/mohtat2019_electrode-soh-estimability-expansion.md` (Elsevier
+**조판본 11쪽**, *J. Power Sources* 427 (2019) 101–111, DOI
+`10.1016/j.jpowsour.2019.03.104` — **p.1 에 인쇄돼 있어 대조 완료**).
+2026-09-04 오전에 "구현본만 읽고 대리 흡수" 로 남겨 둔 자리를 **원전으로 대체**했다.
+그림 9장 크로핑 → **6장 정독** (`fig_8` 핵심, `fig_1·2·3·4·7`), 2장 미열람
+(`fig_5` 결정구조, `fig_6` 팽창 구간선형), 표 이미지 1장은 텍스트가 정본.
+쪽 인용 규약: **PDF 인덱스 1–11** = 인쇄 쪽 101–111 (i ↔ 100+i).
+
+**세 질문에 대한 답**
+
+1. **Fisher 를 무엇에 세웠나.** 파라미터 `θ = [x₁₀₀, y₁₀₀, C_n, C_p]` (4개),
+   관측 `Y = [OCV, Δt_c]` — **전압만이 아니라 셀 팽창(μm)까지**. 두 시나리오는
+   이 벡터의 둘째 성분을 켜고 끄는 것이다. `𝓘_f = SᵀE⁻¹S` (식 29),
+   `S = ∂Y/∂θ|_θ*` **참값에서 평가**. 스칼라 지표는 **D-최적성도 trace 도
+   조건수도 아니고** `σ_θ = sqrt(diag[Σ])` (식 33) 를 참값으로 나눈 **백분율**
+   (식 34). 제약 처리는 Stoica–Ng 1998: `Σ ≥ 𝒪(𝒪ᵀ𝓘_f𝒪)⁻¹𝒪ᵀ` (식 32), `𝒪` 는
+   제약 gradient nullspace 정규직교기저 (식 31). 판정 기준이 **이분법**으로
+   인쇄된다 — `[인쇄, p.7]` "If 𝒪ᵀ𝓘_f𝒪 is **nonsingular**, then the constrained
+   problem is **identifiable**".
+2. **결론이 무엇인가.** `[인쇄]` "with the addition of the expansion, the
+   parameters are **estimable without the need to discharge the battery to a high
+   Depth of Discharge (>70%)**" (Abstract) · "**DOD required for observability is
+   reduced to 30%**" (Highlights) · "**a threshold of 5% is selected** … the
+   estimation is feasible at **about 30% DOD**" (§6.3).
+   **★ 그러나 "전압만으로는 못 가른다" 는 판정은 인쇄돼 있지 않다.** 결론절이
+   정확히 반대로 적는다 — `[인쇄, §7]` "for the **voltage only** case … the
+   measurements should be taken at a **wider range of SOC spanning at least two
+   phase transitions**, in order to make **all the parameters identifiable**."
+   즉 판정 변수는 **관측 종류가 아니라 데이터 창의 폭**이고, 팽창은 같은
+   정밀도를 **더 얕은 창에서 사게 해 주는 수단**이다.
+3. **매개화 장부.** **"4개 + 등식 1개" 가 Mohtat 자신의 표기다** (문제 (P) 를
+   렌더링해 눈으로 대조: `θ = [x₁₀₀,y₁₀₀,C_n,C_p]`, `subject to,
+   U_p(y₁₀₀) − U_n(x₁₀₀) = V_max`). 최소 전압 등식은 제약이 아니라 **사후에
+   셀 용량 C 를 푸는 식 (27)** 로 쓰인다 — `[인쇄]` "the capacity is not included
+   in the above formulation. Hence, **only the maximum voltage limit is used in
+   the estimation problem**." → 구현본의 "5 − 2" 와 Mohtat 의 "4 − 1 (+C 사후)"
+   은 **같은 문제의 두 장부**이고 둘 다 Ah 축 자유도 3.
+   `[해석]` 다만 위키 비교표의 "Lin 이 전하는 표기" 행이 4개를 "전극 SOC 한계
+   4개" 로 적어 둔 것은 부정확하다 — SOC 한계 **2개**(`x₁₀₀,y₁₀₀`) + 전극
+   **용량 2개**(`C_n,C_p`) 다. 개수·자유도는 맞고 **구성이 다르다**.
+
+**★ 통합 논지에 미치는 영향 (좁혀야 한다)**
+
+| 논지 성분 | 이 논문이 깬 것 | 못 깬 것 |
+|---|---|---|
+| "식별 가능성을 정량한 편이 없다" | **깨진다** (제약 CRB + 판정선) | — |
+| "축퇴를 지목한 편이 없다" | **깨진다 (1회)** — `[인쇄, p.8]` "the first and second columns … become **linearly dependent** … rank deficient … **unidentifiable**" | 그 축퇴를 **수치로 재지 않는다** |
+| "**LLI/LAM 분해**의 유일성을 잰 편이 없다" | — | **못 깬다.** LLI·LAM 은 식 (16)·(20) 으로 정의만 하고 §5 이후 **어휘 전수 0회** |
+| "축퇴의 **방향**을 보고한 편이 없다" | — | **못 깬다.** `Σ` 를 구하고 즉시 `diag` (식 33). 파라미터 `correlat*` 0회 |
+| "추정기로 복원을 검증한 편이 없다" | — | **못 깬다.** 노이즈 실현·복원 오차 전무 |
+| "전역 식별 가능성을 다룬 편이 없다" | — | **못 깬다.** `global` **0회** — Lin 은 최소한 "우리는 국소만" 이라고 인쇄한다 |
+
+`[해석]` 한 문장: **"아무도 재지 않았다" 는 틀렸고, "아무도 모드 좌표에서,
+방향까지, 추정기로 재지 않았다" 는 여전히 옳다.**
+`[해석]` 특히 아픈 지점 — 이 논문은 `Σ` 와 모드 사상(식 16·20)을 **둘 다 손에
+쥐고 있다**. `LAM_ne`·`LAM_pe` 는 `Σ` 의 대각선 하나로, `LLI` 는
+`y₁₀₀C_p + x₁₀₀C_n` 이라 **비대각 성분으로** 곧바로 오차막대가 나온다.
+**계산하지 않는다.** 우리가 채울 칸이 정확히 여기다.
+
+**어휘 전수 (열네 편째)** — `identifiab*` **23**(본문 22) · `observab*` **11** ·
+`unidentifiab*` **1** · `unobservab*` **1** · `CRB` **7** · `Cramer/Cramér` **5** ·
+`Fisher` **3** · `sensitivit*` **13** · `covarianc*` **4**(전부 p.7) ·
+`rank deficient` **1** · `linearly dependent` **1** · `nullspace` **1** ·
+`expansion` **87** · `LLI` **7**(p.2·3·5·6 뿐) · `LAM` **13**(p.3·4·5 뿐) —
+그리고 **`degenerac*` 0 · `uniqu*` 0 · `redundan*` 0 · `collinear*` 0 ·
+`confound*` 0 · `global` 0 · `Bayes*` 0 · `uncertaint*` 0 ·
+`Hessian`/`singular value`/`eigen*`/`condition number` 각 0 ·
+파라미터 `correlat*` 0** (유일한 `correlat*` 1회는 p.3 "inter-correlations of
+these degradation **mechanisms**" — 물리 기작).
+`Fisher` 3회의 자리: p.2 §1 끝 · p.7 §5.2 첫 문장 · p.11 참고문헌 [28] Jauffret.
+`Cramér`(악센트)는 **참고문헌 [27] Stoica & Ng 안에서만** 1회.
+
+**어휘 전수 방법론 정정 (앞선 열세 편에 소급 점검 필요)** — `unobservab*` 는
+문자열 검사로 **0회**로 나온다. 원인은 조판 줄바꿈 하이픈 `un-\nobservable` 이다.
+하이픈 결합을 전처리에 넣으면 1회이고, 같은 이유로 `identifiab*` 22→**23**,
+`observab*` 10→**11**, `expansion` 81→**87** 로 바뀐다. 독립으로 돌린 pypdf 셈과
+**결합 전 아홉 항목이 정확히 일치**했으므로 추출기 차이는 아니고 **전처리 차이**다.
+또한 **그림 속 글자는 세어지지 않는다** — Fig. 8(a) 에 `Unobservable` 라벨이
+그려져 있으나(직접 봄) 래스터라 텍스트 층에 없다.
+
+**논문 자신이 남긴 큰 구멍 (요약)** — (a) **`n_c`(적층 수) 값이 어디에도
+인쇄되지 않는다**. 팽창 감도 스케일 `w_i = n_c t_i⁰ ξ_i` 가 여기 비례하므로
+`σ_t = 5 μm` 의 상대 세기를 알 수 없고 Fig. 8 은 **재현 불가**. (b) 노이즈
+`σ_V=10 mV, σ_t=5 μm` **한 점 고정**, 스윕 없음. (c) CRB 는 **fresh 1점**에서만
+평가 — 열화 상태를 스윕하지 않는다. (d) 판정선 5 % 에 근거 없음. (e) 목적함수
+(P) 는 mV 와 μm 를 **무가중**으로 더하고 CRB 는 `E⁻¹` 로 가중 — **가중이 서로
+다르다**. (f) 저자 자신이 결론의 모형 의존성을 인정한다 — `[인쇄, p.10]`
+"in practice … more non-linearities near the low DODs which results in
+**better-conditioned** sensitivity matrices. Hence, the observability of the
+parameters **should enhance in practice**."
+
+**★ 그림에서만 확인한 어긋남 하나** — `[도표]` Fig. 8(d): `C_p` 는 **전압만**
+시나리오에서 DOD ≈8 % 부터 **≈5.1 %** 로 5 % 판정선 **바로 위에** 붙어 ≈98 %
+까지 유지된다. 본문 §6.1 이 그 98 % 를 인쇄해 놓고도 Abstract 는 ">70 %" 라고만
+쓴다. **전압+팽창**에서도 `C_p` 는 DOD 0–40 % 에서 ≈5.0 % 로 판정선에 얹혀 있다.
+`[해석]` 즉 헤드라인 숫자 **30 % / >70 % 는 네 파라미터 전부가 아니라 음극
+파라미터(`x₁₀₀`, `C_n`)가 정하는 값**이다. Highlights 가 "graphite lithiation
+state" 라고 대상을 좁혀 말한 것이 오히려 정확하고 Abstract 의 "the parameters"
+가 넓다.
+
+신설: `concepts/constrained-crb-identifiability.md` — 제약 CRB 기계(식 28–34)와,
+이 계보가 `Σ` 를 구해 놓고 **대각선만 보고하는 공통 습관**, 그리고
+**제약 추가(모르는 방향을 줄임) ≠ 관측 추가(정보를 늘림)** 의 구분.
+갱신: `questions/pvs-sev-lli-lampe-separability.md` (Evidence For 1건 +
+Status Log 2026-09-04 + sources) · `index.md`.
+**건드리지 않은 것** (사용자가 이어서 고침): `syntheses/mode-identifiability-
+unmeasured-lineage.md` · `comparisons/halfcell-window-parametrization-lineage.md` ·
+`questions/22p-physics-or-degeneracy.md`.
+
+## [2026-09-04] update | Mohtat 2019 원전을 읽고 **통합 논지의 Thesis 를 좁혔다**
+
+사용자가 조판본을 주어 `[11] Mohtat et al. 2019` (*J. Power Sources* **427**,
+101–111, DOI `10.1016/j.jpowsour.2019.03.104` — 1쪽 좌하단 인쇄값으로 대조)을
+읽었다. digest 는 논문 에이전트가 만들었고(`raw/papers/mohtat2019_electrode-soh-
+estimability-expansion.md` + 그림 9장 + 새 개념 `constrained-crb-identifiability`),
+**아래 판정에 쓰인 근거는 이 위키가 원문에서 독립으로 재확인한 것**이다.
+
+**★ 논지가 좁혀졌다.** 원래 Thesis 는 "흡수한 13편 중 그 분해가 **유일한지**를 잰
+논문은 하나도 없다" 였다. **거짓이다.** Mohtat 은
+- 제약 Cramér–Rao 하한을 세운다 (`𝓘_f = SᵀE⁻¹S` 식 29 · `Σ ≥ 𝒪(𝒪ᵀ𝓘_f𝒪)⁻¹𝒪ᵀ` 식 32,
+  Stoica & Ng 1998),
+- 구조 판정을 인쇄한다 (`[인쇄]` "If 𝒪ᵀ𝓘_f𝒪 is nonsingular, then the constrained
+  problem is identifiable"),
+- **축퇴를 방향까지 지목한다** — `[인쇄]` "the **first and second columns** in the
+  sensitivity matrix … become **linearly dependent** … the sensitivity matrix is
+  **rank deficient and the problem is unidentifiable**". 이 계보에서 축퇴의 방향을
+  글자로 지목한 **유일한** 문장이다.
+- 수로 낸다 — `[인쇄]` "a **threshold of 5%** is selected … feasible at about **30% DOD**".
+
+**무너진 성분 둘 / 남은 성분 넷** (Counter-argument (f) 의 표):
+거짓 = "식별 가능성을 정량한 편이 없다" · "축퇴를 지목한 편이 없다".
+참 = "**LLI/LAM 좌표에서** 잰 편이 없다"(`LLI` 6회·`LAM` 13회가 전부 2–5쪽,
+§5·§6·§7 에 **0회** — 파라미터는 `θ = [x₁₀₀, y₁₀₀, C_n, C_p]`) · "축퇴의 **방향을
+수로** 보고한 편이 없다"(`Σ` 를 구하고 곧바로 `sqrt(diag)` 만) · "**추정기로 복원**을
+검증한 편이 없다" · "**전역** 식별 가능성"(`global` **0회**).
+→ 새 Thesis: **"아무도 안 쟀다" 는 틀렸고, "아무도 모드 좌표에서, 방향까지,
+추정기로 재지 않았다" 는 옳다.**
+
+**처방의 축이 다르다.** Birkl·Lin 은 "제약을 걸어라", Marongiu 는 "믿음으로
+못 박아라" 인데 Mohtat 은 **"센서를 하나 더 달아라"** 다 — 전압에 셀 팽창(μm)을
+둘째 채널로 더한다 (`expansion` 87회). Phase 1e·1h 가 앞의 처방을 우리 격자에서
+기각했으므로 **남은 처방은 그의 것이다.** 다만 그 자신의 결론도 "팽창이 있어야
+가능" 이 아니라 `[인쇄, §7]` **"전압만이면 상전이 두 개를 걸치는 넓은 SOC 구간이
+필요하고, 팽창을 더하면 더 얕은 방전심도에서 가능"** 이다 — 판정 변수는 관측
+종류가 아니라 **데이터 창의 폭**이다.
+
+**매개화 장부 판정**: **Lin 이 전한 쪽이 Mohtat 자신의 표기**다. 문제 (P) 가
+`θ = [x₁₀₀, y₁₀₀, C_n, C_p]` 에 `subject to, U_p(y₁₀₀) − U_n(x₁₀₀) = V_max`
+**하나만** 걸고, 셀 용량은 `[인쇄]` "only the maximum voltage limit is used in the
+estimation problem" 이라 **추정 후** 식 (27) 로 푼다. PyBaMM 구현본의 "양 5개 −
+등식 2개" 는 같은 문제의 다른 장부. **그리고 비교표의 정정 하나** — 그 4개를
+"전극 SOC 한계 4개" 로 적어 온 것은 부정확했다: SOC 한계 **2개** + 전극 용량
+**2개**(Ah)다.
+
+**★ 방법론 결함 하나 발견 — 어휘 전수의 소급 감사가 필요하다.** 조판 PDF 의
+줄바꿈 하이픈을 잇지 않으면 낱말이 통째로 사라진다. 실측: `identifiab*` 22 → **23**,
+`observab*` 10 → **11**, **`unobservab*` 0 → 1** (10쪽 `[인쇄]` "the parameters are
+**unobservable** at low DOD regions"). 게다가 **그림 속 글자는 애초에 안 세어진다**
+(Fig. 8(a) 의 `Unobservable` 라벨). **앞선 13편의 "0회" 판정은 이 두 함정을
+통과했는지 확인되지 않았고**, 당시 원본 PDF 가 이 세션에 없어 재검이 불가능하다.
+통합 논지 Bias Check 5 로 신설했다 — "0회" 를 "그 개념이 없다" 로 읽으면 안 되고,
+논지에서 실제로 일하는 것은 개수가 아니라 본문을 읽고 적은 **"형태" 열**이다.
+
+**새 Gap 둘**: (7) `Σ` → 모드 좌표 전파 `σ²_LLI = ∇gᵀΣ∇g` — Mohtat 이 `Σ` 와 모드
+사상을 **둘 다 손에 쥐고** 계산하지 않은 한 줄이고, 우리 격자에서 바로 잴 수 있으며
+Gap 4(모드 오차막대)를 닫는 길이다. (8) 팽창(부피) 축을 우리는 한 번도 안 쟀다.
+
+갱신: `syntheses/mode-identifiability-unmeasured-lineage.md` (Thesis · §1 표에 Mohtat
+행 + 하이픈 경고 · **Counter-argument (f) 신설** · Bias Check 1 닫고 2·4 보강 · **5 신설** ·
+Gap 7·8 신설 · title/description) · `comparisons/halfcell-window-parametrization-lineage.md`
+(Mohtat 두 행을 원전/구현본으로 재작성 + 구성 정정 + 관측 축 예외) ·
+`questions/22p-physics-or-degeneracy.md` (2026-09-04 (2) 항목 4건).
+lint 0 errors.

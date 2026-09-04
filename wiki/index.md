@@ -1,7 +1,7 @@
 # 위키 색인
 
 > 내용 목록. 모든 위키 페이지를 종류별로 한 줄 요약과 함께 싣는다.
-> 마지막 갱신: 2026-09-03 | 전체 페이지: 25
+> 마지막 갱신: 2026-09-04 | 전체 페이지: 26
 
 ## Entities (satellite 프로젝트)
 
@@ -24,6 +24,7 @@
 - [[np-lip-ocv-reparametrization]] — Lin & Khoo 2024 의 `(N/P, Li/P)` 최소 매개화와 **2 자유도 정리**: SOC 정규화 full-cell OCV 형상은 `(1−LLI):(1−LAM_NE):(1−LAM_PE)` 의 **비(比)** 에만 의존한다 → `LLI = LAM_PE = LAM_NE = x` 는 곡선을 전혀 바꾸지 않는 **닫힌 형태 null 방향**. 전극 DV fraction `λ±` 과 네 regime 도 여기.
 - [[nullspace-coefficient-interpretation]] — Schaeffer 2024 의 nullspace 관점: `X(β+w)=Xβ` 이므로 **데이터는 계수를 부분공간 하나만큼 결정하지 못하고 그 안의 점은 정칙화가 고른다**. RR·PCR·PLS 는 그 성분을 0 으로 두고 lasso 계열은 아니다. "계수가 작다 ⇒ 중요하지 않다" 의 그림판 반증, 그리고 **우리 축퇴 방향을 그리는 기계**(식 19 `γ`-완화 사영 + 직교 성분 대조) — 파일·함수 이름까지.
 - [[piml-physics-injection-points]] — 물리가 ML 파이프라인에 들어가는 **여섯** 자리: 표준 4분류(손실항·입력 feature·구조·사후해석)에 **학습 데이터**와 **라벨 그 자체**를 더한다. Navidi 2024 의 ablation 이 준 첫 실측 순위 **① 손실항 ≫ ⑤ 학습 데이터**, 그리고 여섯째 자리(정답이 물리 모형의 적합값)가 **방법 비교로는 원리적으로 검출되지 않는다**는 사각지대.
+- [[constrained-crb-identifiability]] — 등식 제약이 걸린 상태의 Fisher/CRB (Stoica–Ng nullspace 사영, Mohtat 2019 식 28–34): 판정이 **이분법(𝒪ᵀ𝓘_f𝒪 특이 여부) + 정도(sqrt diag Σ)** 두 층이라는 것, 이 계보가 `Σ` 를 구해 놓고 **대각선만 보고하는 공통 습관**, 그리고 **제약 추가(모르는 방향을 줄임) ≠ 관측 추가(정보를 늘림)** 의 구분과 관측 추가가 이득이 되는 기계적 조건(새 감도 열 ≠ 0).
 - [[dv-peak-heterogeneity-descriptor]] — Kim 2023 의 DV `Peak_S2`: 진폭이 아니라 **ridge 절대 높이**이며(진폭은 valley 노이즈로 폐기), LFP‖Gr 에서의 음극 단일 귀속은 PVS 해석과 충돌하지 않는다 — 좌표를 맞추면 오히려 일치.
 
 ## Comparisons (비교)

@@ -5,7 +5,7 @@ created: 2026-08-11
 updated: 2026-09-04
 type: research-question
 tags: [battery, degradation, research]
-sources: [raw/repositories/degradation-degeneracy-audit.md, raw/papers/birkl2017_degradation-diagnostics-ocv.md, raw/papers/rhyu2025_systematic-feature-design-formation.md, raw/papers/lin2024_ocv-degradation-mode-identifiability.md, raw/papers/schaeffer2024_nullspace-regularization-interpretation.md, raw/papers/cui2024_electrode-utilization-formation-cycle-life.md, raw/papers/navidi2024_piml-degradation-diagnostics-comparison.md, raw/papers/marongiu2016_lfp-onboard-capacity-halfcell.md]
+sources: [raw/repositories/degradation-degeneracy-audit.md, raw/papers/birkl2017_degradation-diagnostics-ocv.md, raw/papers/rhyu2025_systematic-feature-design-formation.md, raw/papers/lin2024_ocv-degradation-mode-identifiability.md, raw/papers/schaeffer2024_nullspace-regularization-interpretation.md, raw/papers/cui2024_electrode-utilization-formation-cycle-life.md, raw/papers/navidi2024_piml-degradation-diagnostics-comparison.md, raw/papers/marongiu2016_lfp-onboard-capacity-halfcell.md, raw/papers/mohtat2019_electrode-soh-estimability-expansion.md]
 confidence: medium
 explored: false
 verificationStatus: unverified
@@ -748,6 +748,53 @@ LAM_PE ≈ LAM_NE 는 물리가 아니라 **flat valley 방향에서 두 전극�
   않는다. 대신 **"제약을 더 걸면 갈린다" 는 출구가 하나 닫혔고**, 22p 가 놓인
   방향이 Lin 의 해석적 null 과 4.61° 라는 것이 새로 확정됐다. 판정을 지배하는
   것은 여전히 **실제 셀의 잡음 σ** 이고 그 입력은 아직 없다.
+
+- [2026-09-04 (2)] **active 유지 — Mohtat 2019 원전을 읽었다. 이 카드에 처방 하나가
+  닫히고 하나가 열린다.**
+
+  `wiki/raw/papers/mohtat2019_electrode-soh-estimability-expansion.md` (조판본,
+  *J. Power Sources* **427**, 101–111). Lin 이 `[인쇄]` "use Fisher information to
+  quantify the parametric identifiability" 로 지목한 선행자이고, 위
+  [2026-09-03 (11)] 이 열어 둔 "제약을 더 걸면 22p 가 갈리는가" 의 **원조**다.
+
+  1. **닫힌 것 — "제약을 더 걸어라" 는 그의 처방이 아니었다.** 원전 문제 (P) 는
+     제약을 **하나만**(`U_p(y₁₀₀) − U_n(x₁₀₀) = V_max`) 걸고, 실제 기여는
+     **관측을 늘리는 것**이다 — 전압에 **셀 팽창(μm)** 을 둘째 채널로 더한다.
+     `[인쇄, §7]` "It was shown for the **voltage only case** that the measurements
+     should be taken at a **wider range of SOC spanning at least two phase
+     transitions**, in order to make all the parameters identifiable. However, the
+     addition of expansion measurements made the parameters identifiable **for
+     shallower depth of discharges**."
+     `[해석]` 즉 판정 변수는 **관측 종류가 아니라 데이터 창의 폭**이고, 팽창은
+     "불가능→가능" 이 아니라 **같은 정밀도를 더 얕은 창에서 사게 해 주는 수단**이다.
+     Phase 1e·1h 가 제약 처방을 우리 격자에서 기각했으므로, **이 계보에서 아직
+     기각되지 않은 처방은 관측 추가 하나뿐이다.**
+
+  2. **그런데 그가 잰 것은 우리가 묻는 것이 아니다.** 파라미터는
+     `θ = [x₁₀₀, y₁₀₀, C_n, C_p]` 이고, **`LLI`·`LAM` 은 §5(식별성)·§6(결과)·
+     §7(결론) 에 단 한 번도 안 나온다** (`[재현]` 하이픈 결합 후 전수, 이 위키가
+     독립으로 두 번 셈: `LLI` 6회·`LAM` 13회가 전부 2–5쪽). 모드를 식 (16)(20) 으로
+     **정의만 하고 분석에 넣지 않는다.** 그러므로 **이 카드가 묻는 "22p 삼중항이
+     유일한가" 는 이 논문이 답한 적이 없다.**
+
+  3. **열린 것 — 그가 남긴 곱셈 한 줄이 이 카드에 직접 닿는다.** 그는 제약 CRB 로
+     공분산 하한 `Σ` (식 32) 를 구해 놓고 `sqrt(diag)` (식 33) 만 보고한다.
+     그런데 모드 사상이 같은 논문 안에 있으므로 **`LAM_ne`·`LAM_pe` 는 `Σ` 의 대각
+     하나로, `LLI = y₁₀₀C_p + x₁₀₀C_n` 은 비대각 성분으로** 오차막대가 나온다.
+     `σ²_LLI = ∇gᵀ Σ ∇g` 한 줄이다. **인쇄돼 있지 않다.**
+     `[해석]` 우리 Phase 1c/1h 의 `J` 로 같은 전파를 하면 **22p 삼중항의 모드별
+     오차막대**가 나온다 — 이 카드가 오래 요구해 온 "그래서 13 %·17 % 가 몇 ± 몇인가"
+     에 대한 **가장 값싼 답**이고, 새 시뮬레이션이 필요 없다.
+
+  4. **어휘 전수 방법에 결함이 하나 드러났다** (이 카드의 다른 판정에도 걸린다).
+     조판 PDF 의 줄바꿈 하이픈을 잇지 않으면 낱말이 사라진다 — Mohtat 에서
+     **`unobservab*` 0 → 1** (10쪽 `[인쇄]` "the parameters are **unobservable** at
+     low DOD regions"), `identifiab*` 22 → 23. 그림 속 글자는 아예 안 세어진다.
+     **앞선 13편의 "0회" 판정은 이 함정을 통과했는지 확인되지 않았다.**
+
+  **이 카드에 대한 함의**: 읽기 A/B 어느 쪽도 지지하지 않는다. 대신 **출구 하나가
+  더 닫혔고**(제약 강화), **값싼 다음 수 하나가 열렸다**(`Σ` 전파로 오차막대).
+  판정을 지배하는 것은 여전히 **실제 셀의 잡음 σ** 이고 그 입력은 아직 없다.
 
 ### 이 카드가 속한 논지 (2026-09-03)
 

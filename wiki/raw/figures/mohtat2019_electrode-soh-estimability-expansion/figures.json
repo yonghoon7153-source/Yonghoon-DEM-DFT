@@ -1,0 +1,191 @@
+{
+ "slug": "mohtat2019_electrode-soh-estimability-expansion",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-09-04",
+ "sources": [
+  "978ee242-Towards_better_estimability_of_electrodespecific_state_of_health_Decoding_the_cell_expansion.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 2,
+   "file": "fig_1.png",
+   "caption": "Fig. 1. (a) The schematic drawing of the inner working of a Li-ion battery. (b) The experimental setup, and (c) the voltage and expansion result of an LFP cell vs. state of charge (SOC) at a low c-rate. energy) and cell resistance (power capability). This capacity is defined by the coulombs (=Amperes*time) that can be provided by a battery while operating within an acceptable voltage range. Many studies are concerned with estimating the battery's capacity without the need for a full discharge [2]. These methods estimate capacity by measuring vol- tage, current, and temperature. However, voltage limits alone may not be adequate for managing a battery safely since the limits may come from the anode SOH during charging and the cathode SOH during discharging. For example, irreversible lithium plating, which usually happens at low temperatures or during fast charging, causes Loss of Lithium I",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    51.0,
+    563.7,
+    205.9
+   ],
+   "w": 2218,
+   "h": 646,
+   "dpi": 300,
+   "src": "978ee242-Towards_better_estimability_of_electrodespecific_state_of_health_Decoding_the_cell_expansion.pdf",
+   "blank": 0.603
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 3,
+   "file": "fig_2.png",
+   "caption": "Fig. 2. (a) The half-cell potential of the positive electrode. (b) The Open Circuit Voltage (OCV) of a graphite/LFP cell at two states of life; fresh (blue) and aged (red), and (c) the negative electrode with corresponding utilization window at fresh f( ) and aged a ( ) states. The simulated degradation correspond to 28% negative electrode capacity loss which corresponds to only 5% capacity fade for aged state of cell (middle) but forces the utilization window of the negative electrode deeply in the dangerous zone of lithium plating (bottom). (For in- terpretation of the references to colour in this figure legend, the reader is re- ferred to the Web version of this article.)",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    441.4,
+    294.7,
+    654.7
+   ],
+   "w": 1097,
+   "h": 889,
+   "dpi": 300,
+   "src": "978ee242-Towards_better_estimability_of_electrodespecific_state_of_health_Decoding_the_cell_expansion.pdf",
+   "blank": 0.935
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 3,
+   "file": "fig_3.png",
+   "caption": "Fig. 3. (a) The half-cell expansion of the positive electrode. (b) The expansion of a graphite/LFP cell at two states of life; fresh (blue) and aged (red), and (c) the negative electrode with corresponding utilization window at fresh f( ) and aged a ( ) states. The simulated degradation corresponds to 28% negative elec- trode capacity loss which corresponds to 5% capacity fade for the aged state of the cell. The figure suggests an observable change in the expansion of the fresh and aged cell. (For interpretation of the references to colour in this figure le- gend, the reader is referred to the Web version of this article.)",
+   "rotated_deg": 0,
+   "bbox": [
+    300.6,
+    452.3,
+    563.7,
+    664.3
+   ],
+   "w": 1097,
+   "h": 884,
+   "dpi": 300,
+   "src": "978ee242-Towards_better_estimability_of_electrodespecific_state_of_health_Decoding_the_cell_expansion.pdf",
+   "blank": 0.932
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 5,
+   "file": "fig_4.png",
+   "caption": "Fig. 4. (a) The potential (solid-line) of Li FePO y 4 [20] and its piecewise linear approximation (dashed-line). Furthermore, the potential at y 0.5 = is denoted by V 0, and plateau section is bounded by y y ( , ) + . (b) The potential (solid-line) of Li C x 6 [19] and its piecewise linear approximation (dashed-line).",
+   "rotated_deg": 0,
+   "bbox": [
+    300.6,
+    51.0,
+    563.7,
+    238.0
+   ],
+   "w": 1097,
+   "h": 780,
+   "dpi": 300,
+   "src": "978ee242-Towards_better_estimability_of_electrodespecific_state_of_health_Decoding_the_cell_expansion.pdf",
+   "blank": 0.949
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 6,
+   "file": "fig_5.png",
+   "caption": "Fig. 5. (a) The crystal structure of LiC6 (stage 1) with A A stacking. The li- thium atoms (represented by purple circles) are at the fictitious layer, α, midway the graphene layers [25]. (b) The crystal structure of LiFePO4. The tetrahedra represent PO4., and the octahedra represent FeO6 [26]. (For inter- pretation of the references to colour in this figure legend, the reader is referred to the Web version of this article.)",
+   "rotated_deg": 0,
+   "bbox": [
+    300.6,
+    51.0,
+    563.7,
+    187.2
+   ],
+   "w": 1097,
+   "h": 569,
+   "dpi": 300,
+   "src": "978ee242-Towards_better_estimability_of_electrodespecific_state_of_health_Decoding_the_cell_expansion.pdf",
+   "blank": 0.8
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 7,
+   "file": "fig_6.png",
+   "caption": "Fig. 6. The piecewise linear approximation functions for volume changes of particle for (a) LFP and (b) graphite along with the data from Table 2. and is shown in Table 2. The piecewise linear function for volume changes of LFP is y y ( ) [%] 6.76(1 ). p = V (26)",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    215.4,
+    294.7,
+    408.6
+   ],
+   "w": 1097,
+   "h": 806,
+   "dpi": 300,
+   "src": "978ee242-Towards_better_estimability_of_electrodespecific_state_of_health_Decoding_the_cell_expansion.pdf",
+   "blank": 0.964
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 8,
+   "file": "fig_7.png",
+   "caption": "Fig. 7. (a) The model of potential and expansion of LFP, and (c) graphite. (b) The fitting results of OCV and expansion along with the data.",
+   "rotated_deg": 0,
+   "bbox": [
+    300.6,
+    174.8,
+    563.6,
+    553.7
+   ],
+   "w": 1097,
+   "h": 1580,
+   "dpi": 300,
+   "src": "978ee242-Towards_better_estimability_of_electrodespecific_state_of_health_Decoding_the_cell_expansion.pdf",
+   "blank": 0.938
+  },
+  {
+   "key": "f8",
+   "kind": "figure",
+   "label": "8",
+   "page": 9,
+   "file": "fig_8.png",
+   "caption": "Fig. 8. Parameter error of (a) x100 (b) y100 (c) Cn (d) Cp calculated for different data windows starting from fully charge and ending at DOD, plotted for the case of voltage only and the case of voltage plus expansion measurements. The results show that the estimation error decreases substantially with the addition of expansion measurements compare to the case of voltage only measurements. the data and the fitting result are shown in Fig. 7, which also shows the relationship between electrode potential/expansion and the cell vol- tage/expansion. In this figure, the expansion is normalized with respect to maximum expansion to show the characteristic behavior of a re- presentative cell in the battery. Based on the fitting result, a virtual model is constructed to study the identifiability of the parameters under a variety of data availability scenarios, such as a limited number of measure",
+   "rotated_deg": 0,
+   "bbox": [
+    31.6,
+    51.0,
+    563.7,
+    379.5
+   ],
+   "w": 2218,
+   "h": 1370,
+   "dpi": 300,
+   "src": "978ee242-Towards_better_estimability_of_electrodespecific_state_of_health_Decoding_the_cell_expansion.pdf",
+   "blank": 0.969
+  },
+  {
+   "key": "t2",
+   "kind": "table",
+   "label": "2",
+   "page": 7,
+   "file": "tab_2.png",
+   "caption": "Table 2 Unit cell lattice parameters, unit cell volume, and percentage changes in volume for different phases of graphite and LFP [19,25,26]. Material Phase Structure x y , Unit lattice parameters (Å) Unit lattice volume (Å3) V (%) LFP a b c abc = V LiFePO4 orthorhombic 1.00 10.33 6.01 4.69 291.2 0 FePO4 orthorhombic 0.00 9.810 5.79 4.78 271.5 −6.76 Graphite a 3 d d a 3 3 2 2 = V C hexagonal 0 4.239 3.35 52.13 0 Stage 4 hexagonal 0.13 4.254 3.40 53.28 2.20 Stage 3 hexagonal 0.24 4.255 3.46 54.25 4.06 Stage 2 hexagonal 0.50 4.262 3.51 55.35 6.18 Stage 1 hexagonal 1.00 4.289 3.70 58.94 13.06",
+   "rotated_deg": 0,
+   "bbox": [
+    32.3,
+    32.3,
+    562.7,
+    757.5
+   ],
+   "w": 2189,
+   "h": 2992,
+   "dpi": 297,
+   "src": "978ee242-Towards_better_estimability_of_electrodespecific_state_of_health_Decoding_the_cell_expansion.pdf",
+   "blank": 0.921
+  }
+ ]
+}

@@ -1,11 +1,11 @@
 ---
-title: 이 계보는 모드 분해를 재면서 그 분해의 유일성은 한 번도 재지 않았다
-description: "Thirteen papers report LLI/LAM decompositions; none measures whether the decomposition is unique — yet the instruments to measure it are already scattered across the same thirteen"
+title: 이 계보는 모드 분해를 재면서 그 분해의 유일성은 모드 좌표에서 재지 않았다
+description: "Fourteen papers report LLI/LAM decompositions; one (Mohtat 2019) quantifies identifiability but not in mode coordinates, and none reports the direction of the degeneracy — yet the instruments are already scattered across the same fourteen"
 created: 2026-09-03
 updated: 2026-09-04
 type: synthesis
 tags: [battery, degradation, identifiability, research]
-sources: [raw/papers/birkl2017_degradation-diagnostics-ocv.md, raw/papers/dubarry2012_synthesize-degradation-modes.md, raw/papers/marongiu2016_lfp-onboard-capacity-halfcell.md, raw/papers/lin2024_ocv-degradation-mode-identifiability.md, raw/papers/schaeffer2024_nullspace-regularization-interpretation.md, raw/papers/cui2024_electrode-utilization-formation-cycle-life.md, raw/papers/rhyu2025_systematic-feature-design-formation.md, raw/papers/tao2025_nondestructive-degradation-decoupling.md, raw/papers/wang2025_interpretable-ml-battery-prognosis.md, raw/papers/zhang2020_eis-gpr-capacity-rul.md, raw/papers/su2024_drt-soh-health-features.md, raw/papers/kim2023_graphite-heterogeneity-lifetime.md, raw/papers/2026-09-02-siwon-kim-degradation-mode-ml-seminar.md]
+sources: [raw/papers/birkl2017_degradation-diagnostics-ocv.md, raw/papers/dubarry2012_synthesize-degradation-modes.md, raw/papers/marongiu2016_lfp-onboard-capacity-halfcell.md, raw/papers/lin2024_ocv-degradation-mode-identifiability.md, raw/papers/schaeffer2024_nullspace-regularization-interpretation.md, raw/papers/cui2024_electrode-utilization-formation-cycle-life.md, raw/papers/rhyu2025_systematic-feature-design-formation.md, raw/papers/tao2025_nondestructive-degradation-decoupling.md, raw/papers/wang2025_interpretable-ml-battery-prognosis.md, raw/papers/zhang2020_eis-gpr-capacity-rul.md, raw/papers/su2024_drt-soh-health-features.md, raw/papers/kim2023_graphite-heterogeneity-lifetime.md, raw/papers/2026-09-02-siwon-kim-degradation-mode-ml-seminar.md, raw/papers/mohtat2019_electrode-soh-estimability-expansion.md]
 confidence: high
 explored: false
 verificationStatus: unverified
@@ -14,13 +14,22 @@ evidenceScope: multi-source-primary
 targetVenue: 다음 연구세미나 발표 도입부 + degradation-degeneracy 결과 보고서 §1
 ---
 
-# 이 계보는 모드 분해를 재면서 그 분해의 유일성은 한 번도 재지 않았다
+# 이 계보는 모드 분해를 재면서 그 분해의 유일성은 모드 좌표에서 재지 않았다
 
 ## Thesis
 
-흡수한 13편은 LLI/LAM 분해(또는 그 등가물)를 **보고**하지만 그 분해가 **유일한지**를
-잰 논문은 하나도 없고, 그러면서 **그것을 잴 도구는 이미 이 13편 안에 흩어져 있다** —
-빠진 것은 도구가 아니라 **그 도구를 자기 결과에 겨누는 한 걸음**이다.
+흡수한 14편은 LLI/LAM 분해(또는 그 등가물)를 **보고**하지만 그 분해가 **유일한지**를
+**모드 좌표에서, 축퇴의 방향까지, 추정기로** 잰 논문은 하나도 없고, 그러면서
+**그것을 잴 도구는 이미 이 14편 안에 흩어져 있다** — 빠진 것은 도구가 아니라
+**그 도구를 자기 결과에 겨누는 한 걸음**이다.
+
+> **⚠ 2026-09-04 — 이 Thesis 는 좁혀졌다.** 원래 문장은 "그 분해가 유일한지를 잰
+> 논문은 하나도 없다" 였다. **Mohtat 2019 를 흡수하고 그것이 거짓임을 확인했다** —
+> 그 편은 제약 Cramér–Rao 하한으로 식별 가능성을 **정량하고**, 감도행렬의 두 열이
+> `[인쇄]` "linearly dependent … the sensitivity matrix is **rank deficient and the
+> problem is unidentifiable**" 이라고 **축퇴를 지목까지** 한다. 무너진 성분과 남은
+> 성분의 목록은 **Counter-argument (f)** 에 있다. 위 굵은 글씨 세 정어("모드
+> 좌표에서 · 방향까지 · 추정기로")가 그 반례를 통과하고 남은 것이다.
 
 ## Argument
 
@@ -44,6 +53,22 @@ targetVenue: 다음 연구세미나 발표 도입부 + degradation-degeneracy �
 | Tao 2025 | 0 | 0 | 개념을 **한 번 인정하고** "손실 유형 분리" 로 치환한다 |
 | Lin & Khoo 2024 | **26** | **0** | 개념을 **절반만** 자기 쪽으로 (비유일성을 `redundancy` 라 부른다) |
 | Schaeffer 2024 | **0** | 0 | `nullspace` **69회** — 정면으로 다루되 **자기 어휘를 새로 만든다** |
+| **Mohtat 2019** (2026-09-04 추가) | **23** | **0** | **침묵하지 않는다** — 키워드가 `Identifiability analysis` 이고 제약 CRB 로 정량한다. 대신 **대상이 다르다** (아래) |
+
+`[2026-09-04]` **Mohtat 행이 이 표의 성격을 바꾼다.** `identifiab*` 23회는 Lin 의
+26회에 맞먹고, `Fisher` 3 · `Cramer/Cramér` 5 · `observab*` 11 · `sensitivit*` 13 이
+따라온다. 그런데 **`LLI` 6회·`LAM` 13회가 전부 2–5쪽에 있고 §5(식별성)·§6(결과)·
+§7(결론) 에는 한 번도 안 나온다** (`[재현]` 하이픈 결합 후 전수, 이 위키가 독립으로
+두 번 셈). 즉 **모드를 정의만 하고 식별성 분석에 넣지 않는다.** 이것이 논지가
+무너지지 않고 **좁혀지는** 이유다 — 상세는 Counter-argument (f).
+
+> **⚠ 이 표의 방법론적 결함 하나 (2026-09-04 발견).** 조판 PDF 는 줄 끝에서 낱말을
+> 하이픈으로 자르는데, 텍스트 추출이 그것을 잇지 않으면 **어휘가 통째로 사라진다.**
+> Mohtat 에서 실측: 하이픈을 이으면 `identifiab*` 22 → **23**, `observab*` 10 → **11**,
+> 그리고 **`unobservab*` 0 → 1** (10쪽 `[인쇄]` "the parameters are **unobservable**
+> at low DOD regions"). **0회가 0회가 아니었다.** 게다가 **그림 안의 글자는 애초에
+> 안 세어진다** (Fig. 8(a) 에 `Unobservable` 라벨이 래스터로 그려져 있다).
+> **위 13행의 `0` 판정은 이 두 함정을 통과했는지 감사받지 않았다.** Bias Check 5 참조.
 
 `[해석]` 마지막 두 줄이 결정적이다. **Lin(`identifiab*` 26 / `nullspace` 0)과
 Schaeffer(`nullspace` 69 / `identifiab*` 0)는 같은 수학적 대상을 다루면서 서로를
@@ -190,6 +215,49 @@ Zhang 의 "두 주파수") 유일성이 다시 필요해진다. 논지의 사정
 (평탄역 3개 0.98 % > 2개 0.78 %). 다만 **SEV 는 동역학 축이라 두 논거의 사정권
 밖**이다 — 그쪽은 열려 있다.
 
+**2026-09-04 — Mohtat 2019 가 이 반론에 실측을 하나 준다** (아래 (f) 와 같은 원전).
+그는 전압에 **셀 팽창**(μm)을 둘째 채널로 더해 CRB 를 다시 계산했고, 그것이 필요
+DOD 를 낮춘다고 보고한다. **팽창은 동역학이 아니라 부피 축이라 (e) 의 두 논거를
+비켜 간다** — "같은 정규화 곡선의 파생물" 도 아니고 "상관된 평탄역 관측" 도 아니다.
+`[해석]` 그러므로 (e) 는 **여전히 열린 반론이고, 열린 방향이 두 개가 됐다** (SEV,
+그리고 부피). `[[constrained-crb-identifiability]]` 가 그 둘을 가르는 기계적 판정을
+적어 뒀다 — 새 관측의 감도 열이 **0 이 아닌가**를 먼저 보라는 것.
+
+**★ (f) "분해의 유일성을 잰 편이 하나도 없다" 는 거짓이다 — Mohtat 2019 가 쟀다.**
+2026-09-04 에 원전을 읽고 확인했다. 이 편은 이 계보에서 **유일하게**:
+- 제약 Cramér–Rao 하한을 세운다 — `𝓘_f = SᵀE⁻¹S` (29), 제약 gradient 의 nullspace
+  기저 `𝒪` 로 `Σ ≥ 𝒪(𝒪ᵀ𝓘_f𝒪)⁻¹𝒪ᵀ` (32), Stoica & Ng 1998 의 제약 CRB.
+- **구조적 식별성 판정을 인쇄한다**: `[인쇄]` "If **𝒪ᵀ𝓘_f𝒪 is nonsingular**, then
+  the constrained problem is **identifiable**".
+- **축퇴를 방향까지 지목한다**: `[인쇄]` "if all the measurements are from a single
+  slope the **first and second columns** in the sensitivity matrix … become **linearly
+  dependent** … the sensitivity matrix is **rank deficient and the problem is
+  unidentifiable**" — 즉 `x₁₀₀` 열 ↔ `y₁₀₀` 열. **이 계보에서 축퇴의 방향을 글자로
+  지목한 유일한 문장이다.**
+- 결과를 **수로** 낸다: `[인쇄]` "a **threshold of 5%** is selected as an acceptable
+  amount of estimation error … the estimation is feasible at about **30% DOD**".
+
+→ **논지를 좁힌다.** 무너진 것과 남은 것을 갈라 적는다:
+
+| 논지 성분 | 판정 |
+|---|---|
+| 식별 가능성을 **정량**한 편이 없다 | **거짓** — 제약 CRB 로 정량한다 |
+| **축퇴를 지목**한 편이 없다 | **거짓** — 감도행렬 두 열의 선형종속으로 지목한다 |
+| **LLI/LAM 좌표에서** 유일성을 잰 편이 없다 | **참** — `LLI`·`LAM` 이 §5 이후 **0회**. 파라미터는 `θ = [x₁₀₀, y₁₀₀, C_n, C_p]` 이고 모드는 정의만 된다 |
+| 축퇴의 **방향을 수로** 보고한 편이 없다 | **참** — `Σ` (32) 를 구해 놓고 곧바로 `sqrt(diag)` (33) 만 쓴다. 비대각을 인쇄하지 않는다 |
+| **추정기로 복원**을 검증한 편이 없다 | **참** — CRB 는 하한이지 추정 결과가 아니다 |
+| **전역** 식별 가능성을 다룬 편이 없다 | **참** — `global` **0회** (Lin 은 최소한 "국소만 했다"고 인쇄한다) |
+
+`[해석]` **가장 아픈 지점은 표의 3·4행이 한 논문 안에서 만난다는 것이다.** Mohtat 은
+`Σ` (32) 와 모드 사상 (16)(20) 을 **둘 다 손에 쥐고 있다.** `LAM_ne`·`LAM_pe` 는
+`Σ` 의 대각 성분 하나로, `LLI` 는 `y₁₀₀C_p + x₁₀₀C_n` 이라 **비대각 성분으로** 곧바로
+오차막대가 나온다. **계산하지 않는다.** 우리가 채울 칸이 정확히 거기다 (Gap 7).
+
+`[해석]` 그리고 그의 처방은 이 계보의 다른 처방과 **축이 다르다** — Birkl·Lin 은
+"제약을 걸어 자유도를 줄여라", Marongiu 는 "믿음으로 못 박아라" 인데 Mohtat 은
+**"센서를 하나 더 달아라"** 다. 우리 Phase 1e·1h 가 앞의 처방을 우리 격자에서
+기각했으므로, **남은 처방은 그의 것이다.**
+
 ## Gap
 
 1. **실제 셀의 잡음 σ 를 모른다.** 판정이 여기에 걸려 있는데(§5) 우리 격자는
@@ -229,8 +297,22 @@ Zhang 의 "두 주파수") 유일성이 다시 필요해진다. 논지의 사정
    **+3.16 % / +5.95 %** 오를 뿐이다. **그리고 그 두 점은 새 관측도 아니다** —
    이미 맞추는 곡선의 양 끝이다. 게다가 **등식이 참값에서 성립하지도 않는다**:
    1023 조건에서 끝점 전압이 **127 mV · 54 mV** 흔들린다.
-   **새로 열린 것**: Mohtat 원전(특히 Fisher 분석)은 여전히 미독이다 — 구현본만
-   읽었다 (Bias Check 1).
+   ~~**새로 열린 것**: Mohtat 원전(특히 Fisher 분석)은 여전히 미독이다.~~
+   → **2026-09-04 닫혔다** — 원전을 읽었고 판정은 Counter-argument (f) 에 있다.
+7. **★ Mohtat 의 `Σ` 를 모드 좌표로 전파하는 계산이 비어 있다 (2026-09-04 신설).**
+   그는 `θ = [x₁₀₀, y₁₀₀, C_n, C_p]` 의 공분산 하한 `Σ` (식 32) 를 구해 놓고
+   `sqrt(diag)` 만 보고한다. 그런데 모드 사상이 같은 논문 식 (16)(20) 에 있으므로
+   **`LAM_ne`·`LAM_pe` 는 `Σ` 의 대각 하나로, `LLI = y₁₀₀C_p + x₁₀₀C_n` 은
+   비대각 성분으로** 오차막대가 곧바로 나온다. 선형 전파 `σ²_LLI = ∇gᵀ Σ ∇g` 한 줄이다.
+   **이것이 이 논지가 "빠진 한 걸음" 이라고 말해 온 것의 가장 구체적인 형태다** —
+   도구도 재료도 한 논문 안에 다 있는데 그 곱셈이 인쇄돼 있지 않다.
+   우리 격자에서 먼저 재 볼 수 있다: Phase 1c/1h 의 `J` 로 `Σ` 를 세우고 같은 전파를
+   하면 **모드별 오차막대**가 나오고, 그것이 Gap 4("모드 값의 오차막대를 인쇄한
+   논문이 하나도 없다")를 우리 쪽에서 닫는 길이기도 하다.
+8. **팽창(부피) 축을 우리는 한 번도 안 쟀다 (2026-09-04 신설).** Mohtat 의 처방은
+   제약이 아니라 **관측 추가**이고, Phase 1e·1h 가 제약 처방을 우리 격자에서 기각한
+   이상 **남은 처방이 그것이다.** `[[constrained-crb-identifiability]]` 가 적어 둔
+   기계적 선검사(새 관측의 감도 열이 0 인가)를 PVS·SEV 에 먼저 적용한다.
 
 ## 불확실성 (Bias Check)
 
@@ -242,24 +324,40 @@ Zhang 의 "두 주파수") 유일성이 다시 필요해진다. 논지의 사정
    약동학·지구물리에는 많다 — 이 계보에 없다는 것이지 **분야에 없다는 뜻이 아니다.**
    Lin 이 Mohtat 2019 를 "Fisher 로 정량한 선행자" 로 인정하므로 **최소 한 편은
    우리가 아직 안 읽었다.**
-   `[2026-09-04 갱신]` 그 한 편을 **여전히 못 읽었다.** Elsevier 유료이고 이
-   실행 환경의 egress 정책이 막는다(실측 CONNECT 403 · `EGRESS_BLOCKED`).
-   대신 **구현본**(PyBaMM 26.7.1.0 `_ElectrodeSOH`, `Mohtat2019` 인용)을 읽고
-   우리 좌표와 대조했다 — `mode-observability/docs/PHASE1H_NOTES.md`. 그러나
-   **Mohtat 의 Fisher 분석 자체는 미독이고, 이 자기의심은 닫히지 않았다.**
-   즉 "아무도 안 쟀다" 논지의 가장 위험한 반례가 **아직 검증되지 않은 채로
-   남아 있다.**
+   `[2026-09-04 닫힘 — 그리고 이 의심이 옳았다]` 사용자가 조판본을 주어 읽었다
+   (*J. Power Sources* **427**, 101–111, DOI `10.1016/j.jpowsour.2019.03.104` —
+   1쪽 좌하단에 인쇄된 값으로 대조). **자기의심이 지목한 반례가 실재했고, Thesis 를
+   좁혔다** (Counter-argument (f)). 이 항목은 이제 편향의 *증거*가 아니라 **자기의심이
+   실제로 작동한 사례**로 남긴다.
+   **남은 편향은 그대로다**: 14편은 여전히 우리가 고른 것이 아니라 사용자가 준 것이고,
+   Mohtat 이 인용한 **[15] Lee 2020**(*IEEE TII* 16(5), 3376) 은 아직 미독이다.
+   그리고 이번 한 편이 논지를 좁혔다는 사실 자체가, **아직 안 읽은 편이 더 좁힐 수
+   있음**을 말한다.
 2. **어휘 전수는 문자열 검사다.** Cui 가 `LLI`·`LAM` 을 안 쓰고 `Q_Li`·`Q_PE` 를
    쓰듯, **개념을 다른 이름으로 다루는 논문을 0 으로 셀 수 있다.** §1 표의 "형태"
    열은 그 위험을 줄이려고 본문을 읽고 적은 것이지만, 놓친 편이 없다고 보장 못 한다.
+   **그리고 2026-09-04 에 이 위험이 실현됐다** — Mohtat 은 `degenerac*` 0회이면서
+   축퇴를 `rank deficient` · `linearly dependent` · `unobservable` 로 말한다.
+   문자열이 0 인데 개념은 있었다.
 3. **우리 실측은 한 동작점·한 화학이다.** Phase 1c·1d 는 22p 근방 격자점과
    NMC811‖(Gr+Si) 하나에서 나왔다. 조건수 18.2 와 rank 4 를 **다른 화학·다른
    동작점으로 옮겨 쓰면 안 된다** — Marongiu 의 LFP 는 중간 SoC 에서 열화 전체가
    1–3 mV 였다.
 4. **논지가 우리에게 유리한 방향이다.** "아무도 안 쟀다 → 우리가 잰다" 는 이
    프로젝트의 존재 이유와 일치하므로, 반대 증거를 덜 찾았을 수 있다.
-   Counter-arguments (a)~(e) 를 **삭제하지 않고 보존**하는 이유이고, 특히 (d) 는
+   Counter-arguments (a)~(f) 를 **삭제하지 않고 보존**하는 이유이고, 특히 (d) 는
    **우리 측정이 이 계보의 통념을 반증한** 사례라 논지를 좁히는 데 썼다.
+   `[2026-09-04]` (f) 가 그 편향의 **가장 큰 실물 사례**다 — 원전을 못 구했다는
+   이유로 여덟 달치 논지가 **틀린 문장 위에** 서 있었다. 구하자마자 무너진 성분이
+   둘이다. **논지의 강도는 읽은 편 수가 아니라 못 읽은 편 수가 정한다.**
+
+5. **어휘 전수의 기계적 결함이 감사되지 않았다 (2026-09-04 신설).** 조판 PDF 의
+   줄바꿈 하이픈을 잇지 않으면 낱말이 통째로 사라지고, 그림 속 글자는 애초에 안
+   세어진다. Mohtat 에서 **`unobservab*` 0 → 1** 로 실측됐다. **§1 표 13행의 `0`
+   판정은 이 두 함정을 통과했는지 확인되지 않았다** — 당시 원본 PDF 가 이 세션에
+   없어 재검이 불가능하다. 그러므로 "0회" 를 **"그 논문에 그 개념이 없다" 로 읽으면
+   안 되고**, `[해석]` 이 논지에서 실제로 일하는 것은 개수가 아니라 **"형태" 열**,
+   곧 본문을 읽고 적은 서술이다. 원본을 다시 구할 수 있는 편부터 소급 재검한다.
 
 ## 관련
 
