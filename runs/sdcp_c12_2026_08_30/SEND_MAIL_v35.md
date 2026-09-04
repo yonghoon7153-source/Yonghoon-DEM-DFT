@@ -19,8 +19,8 @@ SDCP·PTFE 바인더 계면 계산 번들을 보내드립니다. **VASP 단일�
 ### 1. 무결성 확인 (먼저)
 
 ```
-EXPECT_ZIP_SHA256      = 7e62c7519b68cf16268311a883ae7f40e766e452d71d9f4fe06130e8d7145b8e
-EXPECT_MANIFEST_SHA256 = c074393b16528f52c08f4a83bb6cf20584243c8580eb7bda21bc98b548ab8ea5
+EXPECT_ZIP_SHA256      = 2bc2f97a10dc1124cee79ddedc685a4e3079413e64e913dc5c8fb082569ee69b
+EXPECT_MANIFEST_SHA256 = 65f9d96737cc3c3ebca92cc4354535722fae582bb7330a2c91cdc9e81a85c244
 ```
 
 ```bash
@@ -58,8 +58,8 @@ export POTCAR_ALLOWLIST=/abs/site_allow.txt
 
 # ── 배포본 결박 (ZIP 밖의 값이 유일한 앵커입니다) ──
 export BUNDLE_ZIP_SHA256=$(sha256sum /경로/받은번들.zip | cut -d" " -f1)
-export EXPECT_MANIFEST_SHA256=c074393b16528f52c08f4a83bb6cf20584243c8580eb7bda21bc98b548ab8ea5
-export EXPECT_ZIP_SHA256=7e62c7519b68cf16268311a883ae7f40e766e452d71d9f4fe06130e8d7145b8e
+export EXPECT_MANIFEST_SHA256=65f9d96737cc3c3ebca92cc4354535722fae582bb7330a2c91cdc9e81a85c244
+export EXPECT_ZIP_SHA256=2bc2f97a10dc1124cee79ddedc685a4e3079413e64e913dc5c8fb082569ee69b
 
 # ── 실행 방식 ──
 # ⛔ 자유형 launcher 문자열(VASP_CMD·VASP_LAUNCHER)은 **폐지됐습니다** (회신 AV P0-2) —
@@ -147,7 +147,7 @@ bash run_staged.sh 2     # 1단계 통과(STAGE1_PASS.json) 뒤에만
 
 ## ⚠ 보내기 전 확인 (1저자)
 
-- [ ] 첨부 zip sha256 == `7e62c7519b68cf…`
+- [ ] 첨부 zip sha256 == `2bc2f97a10dc11…`
 - [ ] 본문에 두 해시가 정확히 들어갔는가
 - [ ] 실행 블록에 `PP`·`POTCAR_ALLOWLIST`·`LAUNCHER_BIN`·`VASP_EXE` 가 살아 있는가
 - [ ] 받는 사람 주소
@@ -174,5 +174,5 @@ bash run_staged.sh 2     # 1단계 통과(STAGE1_PASS.json) 뒤에만
 |---|---|
 | 번들 | `runs/sdcp_c12_2026_08_30/sdcp_c12_v35.zip` |
 | 증서 | `runs/sdcp_c12_2026_08_30/IDENTITY_v35.json` |
-| 생성 커밋 | `11bfb150` (clean · 생성 시점에 origin 에 있던 커밋) |
+| 생성 커밋 | `5c179bcd` (clean · 생성 시점에 origin 에 있던 커밋) |
 | 리뷰 | BH(다중 감사 7렌즈) · v34 6렌즈 — `kb/reviews/` |
