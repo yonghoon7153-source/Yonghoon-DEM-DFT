@@ -759,13 +759,28 @@ def gate_sections(show: int = 3) -> dict:
 # README 의 Phases 표는 **사람이 적은 선언**이고, `docs/PHASE*_NOTES.md` 와
 # `results/phase*/` 는 **실제로 생긴 파일**이다. 둘이 어긋나면 화면이 어느
 # 한쪽을 고르지 않고 **둘 다 보이고 어긋났다고 말한다** (이 저장소는 파일이 정본).
-_PH_ROW = re.compile(r"^\|\s*(\d+)\s*\|(.+?)\|(.+?)\|(.+?)\|\s*$", re.M)
-_PH_NUM = re.compile(r"phase(\d+)", re.I)
+# ★ Phase 번호에는 **글자 꼬리**가 붙는다 (1b · 1c … 1i). 2026-09-04 이전에는
+#   `(\d+)` 로만 읽어서 세 곳이 동시에 틀렸다 (실측):
+#     · README 의 `| **1e** | …` 행이 **아예 파싱되지 않았다** (굵게 표시 + 글자)
+#     · `PHASE1E_NOTES.md` → 1 로 읽혀 **1b~1i 여덟 개가 "Phase 1" 한 줄로 뭉갬**
+#     · `results/phase1e/` 도 같은 이유로 전부 1 로 합쳐짐
+#   그래서 화면에 노트 9개·결과 18개가 "Phase 1" 하나에 달려 있었다.
+#   번호는 이제 **문자열 키**("1", "1b")이고, 정렬은 (숫자, 글자) 로 한다.
+_PH_ROW = re.compile(r"^\|\s*\*{0,2}(\d+[a-z]?)\*{0,2}\s*\|(.+?)\|(.+?)\|(.+?)\|\s*$",
+                     re.M | re.I)
+_PH_NUM = re.compile(r"phase(\d+[a-z]?)", re.I)
+_PH_FILE = re.compile(r"PHASE(\d+[a-z]?)_NOTES\.md$", re.I)
+
+
+def _ph_key(n: str) -> tuple[int, str]:
+    """'1' → (1,'') · '1b' → (1,'b'). 1 < 1b < 1c < 2 순서를 만든다."""
+    m = re.match(r"(\d+)([a-z]?)", n, re.I)
+    return (int(m.group(1)), m.group(2).lower()) if m else (10**6, n)
 
 
 def phase_rail() -> list[dict]:
     readme = MO / "README.md"
-    rows: dict[int, dict] = {}
+    rows: dict[str, dict] = {}
     if readme.is_file():
         text = readme.read_text(encoding="utf-8")
         block = ""
@@ -774,31 +789,33 @@ def phase_rail() -> list[dict]:
                 block = sec["body"]
                 break
         for m in _PH_ROW.finditer(block):
-            n = int(m.group(1))
+            n = m.group(1).lower()
             rows[n] = {"n": n,
                        "what": m.group(2).strip(),
                        "needs": m.group(3).strip(),
                        "declared": m.group(4).strip()}
 
     # 디스크 증거를 모은다 — Phase 번호는 파일 이름에서만 읽는다 (본문 추정 금지).
-    found: dict[int, dict] = {}
+    found: dict[str, dict] = {}
     for f in sorted((MO / "docs").glob("PHASE*_NOTES.md")) if (MO / "docs").is_dir() else []:
-        m = re.match(r"PHASE(\d+)", f.name, re.I)
+        m = _PH_FILE.match(f.name)
         if m:
-            found.setdefault(int(m.group(1)), {"notes": [], "results": []})["notes"].append(
+            found.setdefault(m.group(1).lower(),
+                             {"notes": [], "results": []})["notes"].append(
                 {"name": f.name, "relpath": f.relative_to(ROOT).as_posix()})
     rd = MO / "results"
     for d in sorted(rd.iterdir()) if rd.is_dir() else []:
-        m = _PH_NUM.match(d.name)
+        m = _PH_NUM.fullmatch(d.name)
         if not (m and d.is_dir()):
             continue
         for f in sorted(d.glob("*.csv")):
-            found.setdefault(int(m.group(1)), {"notes": [], "results": []})["results"].append(
+            found.setdefault(m.group(1).lower(),
+                             {"notes": [], "results": []})["results"].append(
                 {"name": f.name, "relpath": f.relative_to(ROOT).as_posix(),
                  "bytes": f.stat().st_size})
 
     out = []
-    for n in sorted(set(rows) | set(found)):
+    for n in sorted(set(rows) | set(found), key=_ph_key):
         row = rows.get(n, {"n": n, "what": "", "needs": "", "declared": ""})
         ev = found.get(n, {"notes": [], "results": []})
         if ev["results"]:
