@@ -601,3 +601,73 @@ omitted for clarity. Both geometries share the same DEM-generated AM/SE skeleton
 ```
 ★ 마지막 문장이 **본문 ④(`differences arise solely from their binder phases`)를 그림으로
 뒷받침**한다 — 지금은 그 연결이 없다.
+
+---
+
+# Table S2 · S3 · SI 참고문헌 — ✅ 최종 확정 (2026-09-04)
+
+## PTFE fibril 기하의 앵커가 확정됐다 — **`Assumed` 가 아니었다**
+
+`scripts/additives.py:38` 주석에 DOI 둘이 이미 있었다 (내가 "출처 없음" 이라 한 것이 **오류**,
+오늘 네 번째 같은 실수).  둘 다 **실재하는 논문**임을 확인했다:
+
+```
+PTFE_D = 0.25 µm  →  [S6]  Energy Environ. Sci. 2025, 18, 8446 (DOI 10.1039/D5EE03240G)
+PTFE_L = 40   µm  →  [S7]  Front. Energy Res. 2024, 11, 1336344 (DOI 10.3389/fenrg.2023.1336344)
+```
+⚠ Google Scholar 가 두 DOI 를 못 찾은 것은 **색인 지연**이었다 (S6 은 2025-08 게재, S7 은 DOI
+연도 2023 인데 게재 2024-01).  **DOI 가 안 뜬다고 없는 문헌이 아니다.**
+
+**SI 참고문헌 (Wiley 서식 — 저널 이탤릭 · 연도 볼드 · 권 이탤릭):**
+```
+[S6]  K.-H. Lee, H. Shim, S. H. Lee, H.-J. Kim, C. Park, J. Choi, S.-J. Lee, Y.-K. Hong,
+      J. Lyu, J. C. Kim, S. Park, H. Cha, W. Jin, J. Kim, S. Choi, S.-Y. Lee, S.-K. Jung,
+      M. De Volder, T.-H. Kim, G. Song, *Energy Environ. Sci.* **2025**, *18*, 8446.
+[S7]  G. A. B. Matthews, S. Wheeler, C. Ramírez-González, P. R. Grant,
+      *Front. Energy Res.* **2024**, *11*, 1336344.
+```
+⚠ [S6] 은 저자 20인 — 저널이 `et al.` 축약을 요구하는지 확인 필요.
+
+## ⏳ 검증 진행 중 — 두 논문 모두 litdb 에이전트에 걸었다
+
+★★ **핵심 미확인**: 그 두 논문이 **정말 `0.25 µm` · `40 µm` 를 주는가.**
+· [S6] 은 **`PTFE fibre`(얇은 실) vs `PTFE rope`(굵은 밧줄) 두 종류**가 논지다
+  ⇒ 우리 단일 굵기 `0.25` 가 **어느 쪽인지, 어느 쪽도 아닌지** 판정돼야 한다.
+  ⚠ 실물이 이중 분포면 **우리 단일 굵기 표현이 그 자체로 한계**다.
+· [S7] 은 제목이 **nano**-fibril 인데 우리 값은 **250 nm** 다 ⇒ **자릿수가 맞는지** 확인해야 한다.
+  ⚠ 수십 nm 급이면 **우리 복셀 0.15 µm 로 원리적 미해상**이고, 그것은 오늘 Koo sheath 에 내린
+  판정(**표현 문제 · 격자로 안 닫힌다**, CL-63)과 **같은 부류**가 된다.
+  ⇒ 그러면 `centerline voxel 제외` 규약 자체의 사정거리가 걸린다.
+⇒ **결과에 따라 Table S2 의 `Ref. S6/S7` 이 유지되거나 `Assumed` 로 되돌아간다.**
+
+## Table S2 — 최종 상태 (✅ 전부 반영)
+
+```
+Simulation domain  Lateral 50×50 µm² · Voxel edge 0.15 µm
+NCM811   r 2.5 µm (Measured) · E 140 GPa (Ref. S4) · σ_e 1.0×10⁻² S/cm (Assumed)
+LPSCl    r 0.5 µm (Measured) · E_DEM 1.35 · ν_DEM 0.3 · E_MPM 1.53 · ν_MPM 0.49 ·
+         σ_y 0.30 GPa (전부 Calibrated) · σ_ion 3.0×10⁻³ (Ref. S5)
+VGCF     Ø 0.15 µm (Measured) · E 10 GPa (Assumed) · σ_e 1.0×10² (Assumed) ·
+         σ_e 78.5 (Calculated, 직경보존 재척도)
+PTFE     Fibril Ø 0.25 µm (Ref. S6) · Fibril L 40 µm (Ref. S7) · E 1.8 GPa (Measured) ·
+         σ_e/σ_ion 0
+SDCP     Ø 0.30 µm (Measured) · E 9.0 GPa (Measured) · σ_e 250 (Measured) ·
+         σ_ion 1.0×10⁻³ (Assumed)
+각주  ※ Parameters marked "Calibrated" were adjusted so that the compacted packing
+      reproduces the porosity and contact overlap measured for cold-pressed LPSCl.[S5]
+```
+✅ `Young's modulus (dense) 24 GPa` **행 삭제**(피드백 D) · `ν` 단위 무차원 정정 ·
+   PTFE 기하 2행 추가 · thickness 를 S3 로 이관 · **σ_e(SDCP) = Measured**(저자 4-probe).
+⛔ **K·G 를 ν 에서 유도해 적지 않는다** — 표에 없다 ✓ (원장이 경고한 자리)
+
+## Table S3 — 최종 상태 (✅ 전부 반영)
+
+```
+Thickness 72.53 / 72.53 µm      Porosity 7.86 / 7.37 %
+SE coverage of AM 86.6 / 86.6 % CA coverage of AM 13.1 / 15.5 %   ← "VGCF" → "CA" 정정 완료
+Median CA contacts per AM 74 / 86 (단위 없음)                     ← "ea" 제거 완료
+Electronic connectivity 100 / 100 %
+σ_ele_eff 54.0 / 70.6 mS cm⁻¹   σ_ion_eff 5.53 / 5.58 ×10⁻⁴ S cm⁻¹
+```
+★ **`Areal capacity` 행이 삭제됐다** — 편집 시트가 *"비용량 미상"* 으로 판정한 값이라 옳다.
+★ 유효숫자 **54.0 / 70.6** 으로 본문·표 통일.  ⚠ **Figure 4b 도 같은 자릿수인지 확인 필요.**
