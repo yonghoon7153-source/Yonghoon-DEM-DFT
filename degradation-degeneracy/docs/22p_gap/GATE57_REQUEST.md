@@ -4,7 +4,12 @@
 
 > **⚠ 2026-09-04 갱신.** 원래 이 줄은 *"그 뒤 커밋은 이 요청문과 `webapp/` 뿐이고 `degradation-degeneracy/` 를 건드리지 않는다"* 였다. **더는 사실이 아니다.** 그 뒤로 `mode-observability/`·`wiki/`·`webapp/` 커밋이 여럿 얹혔고, `degradation-degeneracy/` 안에서도 **두 파일이 바뀌었다** — `tests/test_lifecycle_e2e.py` 와 `docs/08_REVIEW_RESPONSE.md`(§63).
 >
-> **리뷰 시점 HEAD**: `ce497466`. **`source_digest` 는 `ea35ff4f39b97489` 로 `47a2763e` 와 동일하다** — 바뀐 것이 전부 RUN_SCOPE(`src/ tools/ configs/ scripts/ run.sh requirements*.txt`) 밖이기 때문이다. 그러므로 **코드 identity 와 산출물 g12 는 그대로 유효**하고, 이 요청문의 판정 대상 코드도 그대로다.
+> **리뷰 시점 HEAD**: `6ca8abd0`.
+> **⚠ 이 줄은 한 번 틀렸었다 — 정정한다.** 오전에 여기 *"`source_digest` 는 `ea35ff4f39b97489` 로 `47a2763e` 와 동일하다"* 고 적었는데, 그 뒤 같은 날 **P0-8 을 닫으면서 `tools/preserve.py` 를 고쳤다.** 지금 값은 **`2f1e10779368987f`** 이고 `47a2763e` 와 **다르다**.
+>
+> 그래서 이 요청문의 **판정 대상 코드는 `47a2763e` 가 아니라 위 HEAD 다.** 따라오는 증거도 전부 그 코드로 다시 만들었다 — `paired_fixed5_v4` 검증 영수증, 원장의 `verification_receipt_core_sha256`·`validator_identity.source_digest`, 그리고 **변이 12조각 전수**(등록부 170 · 관측 170 · 합집합이 정확히 덮음).
+>
+> **봉인된 산출물 g12 자체는 재생성하지 않았고 유효하다** — validator 의 `코드_재계산` 검사는 같은 commit·clean 일 때만 돌고, 다르면 `_참고_코드재계산불가` 로 사실만 남긴다 (`src/io.py`). 곧 10시간짜리 격자를 다시 돌릴 필요는 없다.
 >
 > **다만 §63 을 먼저 읽어 주기 바란다** — 요청문 작성 뒤 자체 회귀에서 e2e 1건이 빨갰고, 진단·수정·변이 검증을 §63 에 적었다. 그 과정에서 **우리 시험이 난입 3경우를 만들지 못하고 있었다**는 것과 **변이 하나가 살아남았다**는 것이 나왔다.
 **직전 판정**: 56차 **NO-GO** — P0 7건 · P1 4건
@@ -43,7 +48,7 @@
 |---|---|
 | `is_inside_namespace()` 호출처 | **12곳** (`src/grid.py` 1 · `src/fitting.py` 3 · `tools/preserve.py` 5 · `tools/make_results.py` 1 · `tools/archive_bundle.py` 1, 나머지는 정의·주석) |
 | g12 곡선 manifest 의 `source_digest` | `d50295f980ccaa81` (2026-08-13 생성) |
-| 현재 트리 `source_digest` | `ea35ff4f39b97489` — **이미 다르다** (53~57차가 RUN_SCOPE 를 고친 뒤라서) |
+| 현재 트리 `source_digest` | `2f1e10779368987f` — **이미 다르다** (53~57차 + 이번 P0-8 이 RUN_SCOPE 를 고친 뒤라서) |
 | 그런데 g12 가 유효한 이유 | validator 의 `코드_재계산` 검사는 **같은 commit·clean 일 때만** 돈다. 다르면 `_참고_코드재계산불가` 로 사실만 남긴다 (`src/io.py`) |
 
 `[해석]` 그러므로 **RUN_SCOPE 를 고쳐도 봉인된 g12 자체는 무효가 되지 않는다.**
