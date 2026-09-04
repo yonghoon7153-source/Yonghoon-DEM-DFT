@@ -77,5 +77,19 @@
   "P1-2_median_편향": "`dinc_plateau` 의 `med = sorted(vals)[len//2]` 가 짝수 개일 때 **위쪽 중앙값**을 써서 spread 를 작게 만들고 있었다 = **통과 쪽 편향**. 실측 [0.122,0.117,0.107,0.100] → 옛 0.117 vs 진짜 0.112 (spread 18.8 → 19.6 %). 3창(홀수)일 때는 정확해서 **한 번도 안 드러났고, 4창이 되는 순간 드러난다**. ⇒ 400 ps 런 전에 고쳤다 (회귀 4건 · selftest 103 → 107).",
   "P1-1_CI": "문턱 10 % 는 실측 보정값이 아니고, 통과한 800 K 조차 4–9 % 로 1 %p 차다. **block bootstrap CI 를 붙여야** R1/R2/R3 를 확정할 수 있다. 400 ps 실행 자체는 막지 않지만 **판정 확정 전에** 필요하다.",
   "P1-3_화면_이중성": "화면의 창 등급(`~`/`!`)과 판정 창 목록이 다른 기준이라 사람이 '판정은 primary 로만' 으로 읽는다. 실제로 이번 요청문이 그 혼동을 보였다. ⇒ 화면에 **판정에 쓰인 창**과 `n` 을 명시할 것."
+ },
+ "7_실행_계보_2026_09_04": {
+  "⛔_왜_커밋이_아니라_해시인가": "kgy 클론이 origin 과 **공통 조상 없는 머지 충돌 상태**다 (AA 6건 + A 수백 건). 그 상태의 `git rev-parse HEAD` 는 계보로 못 쓴다. ⇒ 결정 D-2026-08-20-hash-bound-carry 에 따라 **파일 해시를 앵커로 삼는다.** 반송된 결과의 재현·감사는 이 해시로 대조한다.",
+  "실행_시각": "2026-09-04 (kgy · esp-Z590-AORUS-MASTER)",
+  "driver_sha256": "1fb5565c3133b1712a2153ae3267059207d8fbccc0d94f0b8fff83099e57343f",
+  "driver_path": "tools/modelc_v3/disorder_ensemble_diffusion.py",
+  "analyzer_sha256": "f26842b7e9273a7527d9910f51e35d0abb9634d0df958ebeaf753b7fd3512ead",
+  "analyzer_path": "tools/ionic/msd_diffusive_check.py",
+  "origin_head_at_launch": "71a571410",
+  "⚠_해시_대조_실측": "실행 기계에서 두 해시가 origin 판과 **일치함을 확인하고** 던졌다 (2026-09-04).",
+  "실행_명령": "for s in 2 3 4: disorder_ensemble_diffusion.py --v0_xyz db/structures/lpsocl_relaxV0_3x3x1.xyz --label lpsocl --temperatures 600 800 1000 --disorder_levels 0.0 --n_configs 1 --equilib_ps 5 --prod_ps 400 --timestep_fs 2 --friction 0.02 --fit_window_ps 2 50 --uma_model uma-s-1p1 --uma_task omat --save_traj --seed $s --out_root ~/work/runs/lpsocl_box331_400ps/s$s",
+  "⚠_기본값에_안_맡긴_것": "`--disorder_levels` 기본이 [0.0, 0.5] 라 안 주면 무질서 0.5 까지 돈다. `--fit_window_ps` 기본이 [5,40] 이라 사전등록 창 2–50 과 다르다. `--supercell` 은 **주지 않았다** — v0_xyz 가 이미 3×3×1(558원자)이라 주면 5022원자가 된다. ⇒ 사전등록이 못박은 값은 전부 명시했다. 기본값이 바뀌면 조용히 다른 계산이 되기 때문이다.",
+  "실측_확인": "[lpsocl] 558 atoms | free-S=18 Cl=72 · d0.00_cfg0 하나만 생성 (무질서 0.5 안 돎)",
+  "⛔_런_중_git_동결": "루프가 시드마다 python 을 **새로** 띄운다. 머지를 abort 하면 tools/ 가 kgy 옛 판으로 돌아가 s3·s4 가 다른 코드로 돈다 — **시드마다 다른 코드로 돈 캠페인**이 된다. 9런이 끝날 때까지 git 은 건드리지 않는다."
  }
 }
