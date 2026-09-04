@@ -202,10 +202,11 @@
   ]
  },
  "duquesnoy2020_calendering_ml_mesostructure_generator": {
-  "figures": 7,
+  "figures": 12,
   "generated": "2026-09-03",
   "pdfs": [
-   "Duquesnoy_2020_JPowerSources_DataDriven_Calendering_ML.pdf"
+   "Duquesnoy_2020_JPowerSources_DataDriven_Calendering_ML.pdf",
+   "1-s2.0-S0378775320313987-mmc1.docx (Supporting Information)"
   ]
  },
  "duquesnoy2023_ml_multiobjective_manufacturing_optimization": {
@@ -571,6 +572,14 @@
    "건식전극 논문/07. Robust interface and reduced operation pressure enabled by co-rolling dry-process for stable all-solid-state batteries.pdf"
   ]
  },
+ "lee2025_dual_fibrous_ptfe_dry_electrode": {
+  "figures": 33,
+  "generated": "2026-09-04",
+  "pdfs": [
+   "Lee_2025_EES_dual_fibrous_PTFE_dry_electrode.pdf",
+   "Lee_2025_EES_dual_fibrous_PTFE_dry_electrode_sup_SI.pdf"
+  ]
+ },
  "lee2026_mechanical_halogen_argyrodite_drycoating": {
   "figures": 33,
   "generated": "2026-08-19",
@@ -711,6 +720,13 @@
   "generated": "2026-08-05",
   "pdfs": [
    "DFT 먹인 논문/22. High performance P-based argyrodite sulfide electrolytes enabled by Sb-based argyrodite doping for all-solid-state lithium metal batteries†.pdf"
+  ]
+ },
+ "matthews2024_ptfe_nanofibril_network": {
+  "figures": 9,
+  "generated": "2026-09-04",
+  "pdfs": [
+   "18480bfb-fenrg111336344.pdf"
   ]
  },
  "mesarovicfleck2000_dissimilar_elastoplastic_indentation": {
