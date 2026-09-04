@@ -45,6 +45,11 @@ def _paper_block(p: Paper, vault: Vault, depth: str) -> str:
             f"*{journal}* {p.year or ''} · IF **{p.journal_if}** · 관련도 **{p.relevance}** · {', '.join(p.keywords_matched)}{doi_md}",
             (f"_{', '.join(p.authors[:3])}{' et al.' if len(p.authors) > 3 else ''}_" if p.authors else "_저자 미확인 (로컬 enrich 필요)_"), ""]
     body: list[str] = []
+    sc = a.get("scooping_alert") or {}
+    if sc.get("hit"):
+        body.append(f"> [!danger] 선점 경보 — {sc.get('target', '')}")
+        body.append(f"> {str(sc.get('why', '')).replace(chr(10), ' ')}")
+        body.append("")
     if a.get("one_liner"):
         body.append(f"> [!abstract] {a['one_liner']}")
         body.append("")
@@ -57,7 +62,7 @@ def _paper_block(p: Paper, vault: Vault, depth: str) -> str:
         body += [f"- {k}" for k in kf[:n_kf]]
         body.append("")
     if depth in ("A", "B"):
-        conn = [("DEM", c.get("dem")), ("DFT/MLIP", c.get("dft")), ("Anode-free", c.get("anode_free"))]
+        conn = [("축 A · DEM/MPM", c.get("dem")), ("축 B · DFT/MLIP", c.get("dft")), ("축 C · 실험", c.get("experimental"))]
         conn = [(k, v) for k, v in conn if v and v.strip("-")]
         if conn or c.get("numbers_to_compare"):
             body.append("**내 연구 연결**")
@@ -133,11 +138,12 @@ def _themes(papers: list[Paper]) -> str:
         parts.append("DEM 쪽은 공정 파라미터(압축·혼합)와 미세구조 지표를 잇는 논문이 계속 나오고 있어, 내 porosity–percolation 결과를 공정 변수로 번역해 두면 인용 지점이 넓어진다")
     if "dft battery" in kws:
         parts.append("DFT/MLIP 쪽은 계산 조건(functional, supercell, 학습 데이터)이 결과를 좌우하므로 Methods에 내 조건을 명시하고 비교표를 만들어 두는 편이 좋다")
-    if "anode-less assb" in kws:
-        parts.append("anode-free 쪽은 계면(집전체·interlayer) 설계가 핵심 변수라, 셀 레벨 시뮬레이션 확장 시 경계조건으로 삼을 수 있다")
     if a_cnt:
         parts.append(f"Tier A {a_cnt}편은 이번 주 안에 SI까지 확인하는 것을 권한다")
-    return " ".join(p + "." for p in parts) if parts else "오늘 논문들은 각자 독립적이라 공통 흐름은 뚜렷하지 않다."
+    n_alert = sum(1 for x in papers if (x.analysis or {}).get("scooping_alert", {}).get("hit"))
+    if n_alert:
+        parts.insert(0, f"**선점 경보 {n_alert}건** — 진행 중 주제와 겹치는 논문이 올라왔으니 먼저 확인하는 편이 좋다")
+    return " ".join(p + "." for p in parts) if parts else "오늘 논문들은 각 축에서 독립적이라 공통 흐름은 뚜렷하지 않다."
 
 
 def polish_with_llm(cfg: Config, llm: LLM, body: str, date: str) -> str:

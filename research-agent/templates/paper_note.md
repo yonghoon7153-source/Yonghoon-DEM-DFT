@@ -43,7 +43,7 @@ ra_id: "{{id}}"
 > [!tip] 내 연구와의 연결
 > **DEM** — {{c_dem}}
 > **DFT/MLIP** — {{c_dft}}
-> **Anode-free** — {{c_anode}}
+> **실험(축 C)** — {{c_exp}}
 
 ### 비교할 수치
 {{numbers_md}}
@@ -56,6 +56,7 @@ ra_id: "{{id}}"
 > [!quote] 인용 문장 초안
 > {{citation_sentence}}
 
+{{scooping_block}}
 > [!warning] 비판 포인트 / 세미나 질문
 {{critique_md}}
 

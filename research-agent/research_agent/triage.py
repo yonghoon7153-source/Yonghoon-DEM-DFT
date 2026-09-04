@@ -24,15 +24,27 @@ from .models import Paper
 #   그중 ④산화안정성 cascade · ⑤도핑 깔때기 · ⑧Li₃N/LiC₆ · ⑨VGCF/h-BN · ⑪Cu–Zn 은
 #   이 표에 **한 낱말도 없었다**. 아래 campaign/zn_rescue 두 줄이 그 구멍이다.
 #   ⚠ `_TERM_RES[:2]` 가 title_bonus 에 쓰인다 — core/system 두 줄의 **자리를 옮기지 말 것**.
+# 🔴 2026-09-04 병합 (Cowork v0.1.3) — 그쪽이 세 축 기준으로 재작성한 표에서 **내게 없던 것**을
+#   보탰다. 겹치면 이쪽(캠페인 실측 기반) 우선. 제일 큰 구멍 셋이었다:
+#     · 축 A 의 **MPM·Taichi·voxel·Kirchhoff·Bruggeman·Holm** — MPM 은 그 브랜치 90일 최다 주제(283회)인데 없었다
+#     · **축 C(실험 협업)가 통째로 없었다** — EIS·대칭셀·Li-In·ASR 로 한 줄 신설
+#     · 축 A 물성 용어(배위수·force chain·fabric tensor·Von Mises·유효전도도)
 _TERMS: list[tuple[str, float]] = [
     (r"discrete[- ]element|\bDEM\b|LIGGGHTS|resistor[- ]network|percolat"
+     r"|material[- ]point method|\bMPM\b|Taichi|voxel|Kirchhoff|Bruggeman|constriction|Holm"
      r"|first[- ]principles|\bDFT\b|density functional|ab initio|machine[- ]learning (interatomic )?potential|\bMLIP\b|\bAIMD\b|universal (interatomic )?potential"
      r"|nudged elastic band|\bNEB\b|LOBSTER|\bI?COHP\b|bond[- ]valence|\bBVSE\b|grand[- ]potential"
      r"|\bMACE\b|CHGNet|M3GNet|\bVASP\b|Quantum ESPRESSO"
      r"|anode[- ]free|anode[- ]less|zero[- ]excess", 0.35),
     (r"all[- ]solid[- ]state|solid[- ]state|sulfide|Li6PS5Cl|Li₆PS₅Cl|LPSCl|argyrodite|thiophosphate|halide (solid )?electrolyte"
-     r"|solid electrolyte(?!\s+interphase)|composite (positive electrode|cathode)", 0.25),
+     r"|solid electrolyte(?!\s+interphase)|composite (positive electrode|cathode)|single[- ]crystal", 0.25),
+    # 축 C — 실험 협업(이종원 그룹). 내 표에 **한 줄도 없었다** (Cowork v0.1.3 이 잡았다).
+    (r"\bEIS\b|electrochemical impedance|equivalent circuit|symmetric cell|\bLi[- ]In\b"
+     r"|areal capacity|rate capability|\bASR\b|area specific resistance", 0.25),
     (r"elastic|modulus|adhesion|interfac|\bNCM\b|\bNMC\b|porosity|calender|compaction|contact|tortuosity|percolation"
+     r"|coordination number|contact number|force chain|fabric tensor|Von Mises"
+     r"|effective conductivity|ionic conductivity|electronic conductivity|thermal conductivity|grain boundary"
+     r"|activation energy|diffusion barrier|binder|\bPTFE\b"
      r"|lithium metal|Li metal|current collector|interlayer|coating|microstructure|\bSEI\b|plating|deposition|\bFEM\b|COMSOL|PyBaMM", 0.15),
     # campaign — 축 B 의 개별 캠페인 계·관측량. 이것만으로는 threshold 를 못 넘긴다(설계).
     (r"Li3N|Li₃N|lithium nitride|LiC6|LiC₆|\bh-?BN\b|hexagonal boron nitride|\bVGCF\b"
@@ -45,7 +57,9 @@ _TERMS: list[tuple[str, float]] = [
     #   주고(0.20), 일반 zinc-ion 논문은 상쇄가 안 걸려 감점 그대로 탈락한다.
     #   ⚠ 0.30 으로 뒀다가 Cu–Zn 논문이 상한 0.95 까지 튀었다 — 상한은 LLM 몫이라 되돌렸다.
     (r"Cu[- ]Zn|\bbrass\b|Rietveld|phase identification|phase fingerprint", 0.20),
-    (r"supercapacitor|zinc[- ]ion|sodium[- ]ion|fuel cell|photocatal|perovskite solar|wind|grid[- ]scale|hydrogen storage|thermoelectric|redox flow", -0.30),
+    (r"supercapacitor|zinc[- ]ion|sodium[- ]ion|potassium[- ]ion|fuel cell|photocatal|perovskite solar"
+     r"|wind|grid[- ]scale|hydrogen storage|thermoelectric|redox flow|CALPHAD"
+     r"|state[- ]of[- ]charge estimation|\bBMS\b", -0.30),
 ]
 _TERM_RES = [(re.compile(p, re.I), w) for p, w in _TERMS]
 

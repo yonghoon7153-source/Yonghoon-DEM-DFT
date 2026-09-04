@@ -1,6 +1,52 @@
 # CHANGELOG
 
+## [0.1.3] — 2026-09-04 · 병합 (Claude Code 측)
+Cowork v0.1.3 tarball 을 브랜치 상태와 병합했다. 회신문 §5 의 정본 지정을 그대로 따랐다.
+- Cowork 정본으로 교체: `cli.py`(dry-run 게이트) · `vault.py`(write_digest 방어 + `_scooping_block`) ·
+  `digest.py`(경보 렌더) · `tests/test_dryrun_safety.py` · `VERSION`/`pyproject.toml`/`__init__.py` ·
+  `prompts/deep_analysis.md` · `templates/paper_note.md` · `hermes/.../deep_analysis_schema.md` · `cowork/README.md`
+- **덮지 않음**(브랜치가 정본): `exporters/litdb.py`(markdown 어댑터) · `config/research_profile.md`(482줄) ·
+  `config/agent.yaml`(`litdb.mode: markdown`) · `tests/test_litdb_markdown.py` · `tests/test_triage_db.py` ·
+  `data/` · `vault/`(복원한 2026-09-04 디제스트 164줄)
+- `triage.py` **머지** — 이쪽 캠페인 용어를 기준으로, Cowork 표에서 빠진 것을 보탰다:
+  · 축 A `MPM`·`Taichi`·`voxel`·`Kirchhoff`·`Bruggeman`·`constriction`·`Holm` (MPM 은 그 브랜치 90일 최다 주제인데 없었다)
+  · **축 C 한 줄 신설** — `EIS`·`symmetric cell`·`Li-In`·`ASR`·`areal capacity` (이쪽 표에 통째로 없었다)
+  · 축 A 물성 — 배위수·force chain·fabric tensor·Von Mises·유효전도도 / 감점에 `CALPHAD`·`potassium-ion`·`BMS`
+  실측: 축A 0.950 · 축B 0.625 · 축C 0.800 · 무관 0.000
+- 테스트 **24 passed** (이쪽 18 + Cowork 6) — 회신문 §5 의 예측치와 일치
+
+
+## [0.1.3] — 2026-09-04
+### Fixed — P1 데이터 손실 (Claude Code 보고, 실측 피해 발생)
+- **`ra morning --dry-run` 이 dry-run 이 아니었다.** `args.dry_run` 이 메일 발송만 막고
+  `_vault_sync`·`_git_commit` 은 게이트 밖에 있었다. 디제스트 창(36 h)이 지나 재생성이 0편을 내자
+  그 빈 결과가 기존 파일을 덮었고, 2026-09-04 디제스트가 164줄 → 22줄로 소실됐다(Claude Code 가 tarball 에서 복원).
+  → dry-run 이면 **메일·vault·git 전부** 건너뛴다.
+- `cmd_noon` 에 `--dry-run` 신설 (이전엔 아예 없어 커밋을 막을 방법이 없었다).
+- **`Vault.write_digest` 가 더 적은 편수로 기존 디제스트를 덮지 않는다.** frontmatter 의 `n_papers` 를
+  비교해 새 결과가 더 적으면 쓰지 않고 이유를 로그로 남긴다. `--force` 로만 덮어쓸 수 있고,
+  덮어쓸 때도 `vault/Digests/.backup/<date>.<타임스탬프>.md` 로 원본을 남긴다.
+  (게이트 하나만으로는 부족하다 — 둘 다 있어야 같은 사고가 재발하지 않는다.)
+- 회귀 테스트 `tests/test_dryrun_safety.py` 6건 — 사고 메커니즘 자체(0편이 5편을 덮는 것)와
+  dry-run 부작용 차단을 각각 검증. 총 14 passed.
+### Added
+- `ra sync` 가 병합 후 **분석이 비어 있는 `triaged` 논문을 자동으로 큐에 넣는다.**
+  클라우드가 초록 수준까지만 본 논문을 로컬(교내망·PDF)에서 `paper-analyst` 로 이어받는 경로.
+
 ## [0.1.2-dev] — 2026-09-04 (진행 중)
+### Added — 브랜치 판정 반영 (Claude Code 2차 보고)
+- `config/research_profile.md` **FILLED** — 두 브랜치 전수 조사 결과로 채움. 축이 **셋**임이 확인됨:
+  A(DEM/MPM/voxelization, `stoic-knuth-NObVQ` 2652커밋) · B(DFT/MLIP, `friendly-meitner-lldvar`) · C(실험 협업, 이종원 그룹)
+- 분석 스키마: `connection_to_my_work.anode_free` → **`.experimental`**(축 C), **`scooping_alert{hit,target,why}`** 신설
+- 디제스트·노트에 **선점 경보** 렌더링 — 경보 논문은 Tier와 무관하게 최상단
+- `triage.py` 용어 가중치를 세 축 기준으로 재작성 (MPM·Taichi·voxel·Kirchhoff·Holm·LOBSTER·ICOHP·BVSE·EIS·Li-In 등 추가)
+- Cowork 트리거 2개를 메모리 `/areas/research-profile.md` 우선 참조로 교체 + 경보·비판 체크리스트 주입
+### Fixed — Cowork 추측 오류 3건 (브랜치가 정정)
+- "DFT→MLIP→DEM→FEM 단일 파이프라인" → 축은 별개 (사용자 명시 금지 사항)
+- "MPM/voxelization은 문헌 단계" → **production**, 최근 90일 최다 주제(283회)
+- "두 litdb 통합 여부 미결" → 2026-07-16 결정 완료. 정본은 `friendly-meitner-lldvar/litdb/`(208장), `stoic-knuth` 것(64장)은 **동결**
+### Changed
+- `sources.scholar_email.enabled: false` — alert 수집은 클라우드 전담(중복 방지). 같은 IMAP 자격증명은 `ra sync`의 handoff 병합에만 사용
 ### Changed — 연구 프로필을 '추측'에서 '브랜치가 채우는 슬롯'으로
 - `config/research_profile.md` 를 **STUB**으로 초기화. Cowork(클라우드)가 추측으로 쓴 연구 내용 전부 제거.
   이 파일은 두 브랜치(`claude/friendly-meitner-lldvar`, `claude/stoic-knuth-NObVQ`)를 읽은 Claude Code가 채운다.

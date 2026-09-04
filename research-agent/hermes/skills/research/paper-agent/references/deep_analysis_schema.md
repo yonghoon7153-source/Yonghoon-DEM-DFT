@@ -23,7 +23,7 @@
   "connection_to_my_work": {
     "dem": "DEM 축과의 연결 (없으면 빈 문자열)",
     "dft": "DFT/MLIP 축과의 연결",
-    "anode_free": "anode-free 축과의 연결",
+    "experimental": "축 C(실험 협업 — EIS·대칭셀·풀셀·Li-In·율특성)와의 연결. 해당 없으면 \"\"",
     "numbers_to_compare": ["내 결과와 직접 비교할 수치들 — '논문 값 vs 내 값(있으면)' 형식"]
   },
   "use_in_my_paper": {
@@ -31,6 +31,11 @@
     "methods": "방법론 근거로 어디에 쓸지",
     "discussion": "비교·해석에서 어떻게 쓸지",
     "suggested_citation_sentence": "실제 논문에 넣을 수 있는 영어 문장 1개 (인용 표시 [ref] 포함)"
+  },
+  "scooping_alert": {
+    "hit": false,
+    "target": "축 A: porosity 예측 | 저항망 σ | Stage E 파괴 보정  /  축 B: 바인더 흡착 DFT | PTFE·폴리머 계면 | NCM 표면 흡착 — 이 중 겹치는 것. 없으면 \"\"",
+    "why": "무엇이 얼마나 겹치는가, 내 차별점은 무엇이 남는가 (hit=true일 때만)"
   },
   "critique": ["비판·한계 포인트 2~4개 (supercell 크기, RVE 반복 수, 검증 부재, 조건 불명 등) — 세미나 질문으로 바로 쓸 수 있게"],
   "follow_up": ["후속 액션 1~3개 (예: 'SI에서 접촉 모델 파라미터 확인', '내 RVE50 케이스와 porosity 비교 그래프')"],

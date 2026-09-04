@@ -255,21 +255,22 @@ def cmd_litdb(cfg: Config, args) -> int:
     return 0
 
 
-def _build_digest(cfg: Config, db: PaperDB, date: str, llm: LLM | None) -> tuple[Path, list[Paper], dict, str]:
+def _build_digest(cfg: Config, db: PaperDB, date: str, llm: LLM | None,
+                  force: bool = False) -> tuple[Path, list[Paper], dict, str]:
     v = Vault(cfg)
     papers = select_for_digest(db, cfg)
     body = render_body(papers, cfg, v, date)
     if llm and cfg.get("digest.llm_polish", False):
         body = polish_with_llm(cfg, llm, body, date)
     stats = digest_stats(db, papers)
-    path = v.write_digest(date, body, stats)
+    path = v.write_digest(date, body, stats, force=force)
     return path, papers, stats, body
 
 
 def cmd_digest(cfg: Config, args) -> int:
     db = _db(cfg)
     date = args.date or today_str(cfg)
-    path, papers, stats, _ = _build_digest(cfg, db, date, _llm(cfg))
+    path, papers, stats, _ = _build_digest(cfg, db, date, _llm(cfg), force=getattr(args, "force", False))
     _log(f"digest written: {path} ({stats['n_papers']} papers)")
     if args.send and not args.dry_run:
         mid = _send_digest(cfg, db, date, path, papers, stats)
@@ -341,6 +342,11 @@ def cmd_noon(cfg: Config, args) -> int:
                     continue
             queue_job(cfg, p); n_q += 1
         summary.update(analyzed=n_an, queued=n_q)
+        if getattr(args, "dry_run", False):
+            summary["dry_run"] = True
+            db.finish_run(run, "ok", summary)
+            _log(f"noon dry-run: {summary} (vault·litdb·commit 생략)")
+            return 0
         _vault_sync(cfg, db)
         try:
             from .exporters.litdb import export
@@ -361,8 +367,13 @@ def cmd_morning(cfg: Config, args) -> int:
     run = db.start_run("morning")
     try:
         date = args.date or today_str(cfg)
-        path, papers, stats, _ = _build_digest(cfg, db, date, _llm(cfg))
-        mid = None if args.dry_run else _send_digest(cfg, db, date, path, papers, stats)
+        path, papers, stats, _ = _build_digest(cfg, db, date, _llm(cfg), force=getattr(args, "force", False))
+        if args.dry_run:
+            # dry-run 은 **아무것도 쓰지 않는다** — 메일도, vault 도, git 도.
+            db.finish_run(run, "ok", {"date": date, "dry_run": True, **stats})
+            _log(f"morning dry-run: {date} {stats} (발송·vault·commit 모두 생략)")
+            return 0
+        mid = _send_digest(cfg, db, date, path, papers, stats)
         _vault_sync(cfg, db, digest_date=date)
         db.finish_run(run, "ok", {"date": date, "sent": bool(mid), **stats})
         _git_commit(cfg, cfg.get("git.commit_message", "ra: {job} {date}").format(job="morning", date=date, n_new=0, n_analyzed=stats["n_papers"]))
@@ -374,9 +385,22 @@ def cmd_morning(cfg: Config, args) -> int:
 
 
 def cmd_sync(cfg: Config, args) -> int:
+    """Merge [RA-HANDOFF] mail, then queue anything the cloud left un-analyzed.
+
+    The cloud analyses what it can reach (abstract-level). Papers it marked `triaged` —
+    Tier C, or anything whose full text it could not fetch — are queued here so the local
+    side (campus network, PDFs) can analyse them properly with `paper-analyst`.
+    """
     from .handoff import sync_from_mail
     db = _db(cfg)
     res = sync_from_mail(cfg, db, int(cfg.get("handoff.lookback_days", 7)))
+    n_q = 0
+    for p in rank(db.list(status="triaged")):
+        if not p.analysis:
+            queue_job(cfg, p); n_q += 1
+    if n_q:
+        _log(f"{n_q}편을 분석 큐에 넣었다 → {cfg.path('storage.analysis_queue')} "
+             f"(paper-analyst 로 채운 뒤 `ra analyze --import-dir`)")
     _vault_sync(cfg, db)
     try:
         from .exporters.litdb import export
@@ -426,9 +450,12 @@ def main(argv: list[str] | None = None) -> int:
     s.add_argument("--direct", action="store_true"); s.add_argument("--queue", action="store_true"); s.add_argument("--limit", type=int)
     sub.add_parser("vault")
     sub.add_parser("litdb")
-    s = sub.add_parser("digest"); s.add_argument("--date"); s.add_argument("--send", action="store_true"); s.add_argument("--dry-run", action="store_true")
+    s = sub.add_parser("digest"); s.add_argument("--date"); s.add_argument("--send", action="store_true")
+    s.add_argument("--dry-run", action="store_true"); s.add_argument("--force", action="store_true", help="더 적은 편수로도 기존 디제스트를 덮어쓴다")
     s = sub.add_parser("noon"); s.add_argument("--no-imap", action="store_true"); s.add_argument("--no-sync", action="store_true")
+    s.add_argument("--dry-run", action="store_true", help="수집·triage·분석만 하고 vault·litdb·commit 은 건너뛴다")
     s = sub.add_parser("morning"); s.add_argument("--date"); s.add_argument("--dry-run", action="store_true")
+    s.add_argument("--force", action="store_true", help="더 적은 편수로도 기존 디제스트를 덮어쓴다")
     sub.add_parser("sync")
     s = sub.add_parser("handoff"); s.add_argument("--job", default="noon"); s.add_argument("--since"); s.add_argument("--digest")
     s.add_argument("--origin", default="local"); s.add_argument("--notes")

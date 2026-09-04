@@ -39,6 +39,14 @@ def _render(template: str, mapping: dict[str, str]) -> str:
     return re.sub(r"\{\{[a-z_]+\}\}", "", out)
 
 
+def _scooping_block(a: dict) -> str:
+    sc = a.get("scooping_alert") or {}
+    if not sc.get("hit"):
+        return ""
+    return ("> [!danger] 선점 경보 — " + str(sc.get("target", "")) + "\n> " +
+            str(sc.get("why", "")).replace("\n", " ") + "\n")
+
+
 class Vault:
     def __init__(self, cfg: Config):
         self.cfg = cfg
@@ -106,7 +114,7 @@ class Vault:
             "m_validation": m.get("validation", ""),
             "c_dem": c.get("dem") or "-",
             "c_dft": c.get("dft") or "-",
-            "c_anode": c.get("anode_free") or "-",
+            "c_exp": c.get("experimental") or "-",
             "numbers_md": _bullets(c.get("numbers_to_compare")),
             "u_intro": u.get("introduction", ""),
             "u_methods": u.get("methods", ""),
@@ -117,6 +125,7 @@ class Vault:
             "abstract_block": ("> " + p.abstract.replace("\n", " ")) if p.abstract else ("> " + p.snippet if p.snippet else "> (초록 없음)"),
             "related_links": ", ".join(f"[[{r}]]" for r in related) or "-",
             "digest_link": f"[[{digest_date}]]" if digest_date else "-",
+            "scooping_block": _scooping_block(a),
         }
         text = _render(self.cfg.load_template("paper_note"), mapping)
         path = self.note_path(p)
@@ -190,11 +199,40 @@ class Vault:
         return self.moc_path
 
     # ------------------------------------------------------------------ digest
-    def write_digest(self, date: str, body: str, stats: dict) -> Path:
+    def write_digest(self, date: str, body: str, stats: dict, force: bool = False) -> Path:
+        """Render a digest. NEVER destroys a richer existing digest.
+
+        A regenerated digest can legitimately come out empty (the selection window moved on),
+        and overwriting a written digest with that empty result loses work irrecoverably.
+        So: refuse to overwrite when the new digest has fewer papers than the existing one,
+        unless `force=True`. A refused write leaves the file untouched and logs why.
+        """
+        path = self.digests_dir / f"{date}.md"
+        n_new = int(stats.get("n_papers", 0) or 0)
+        if path.exists() and not force:
+            n_old = self._digest_n_papers(path)
+            if n_old is not None and n_new < n_old:
+                print(f"[ra] digest 보호: {path.name} 은 {n_old}편인데 새로 만든 것은 {n_new}편 — "
+                      f"덮어쓰지 않았다 (덮어쓰려면 --force).", flush=True)
+                return path
         mapping = {"date": date, "body": body, "version": __version__,
                    "keyword_links": " · ".join(f"[[{k.get('vault_note') or k['name']}]]" for k in self.cfg.keywords),
                    **{k: str(v) for k, v in stats.items()}}
         text = _render(self.cfg.load_template("daily_digest"), mapping)
-        path = self.digests_dir / f"{date}.md"
+        if path.exists() and path.read_text(encoding="utf-8").strip() != text.strip():
+            bak = self.digests_dir / ".backup"
+            bak.mkdir(exist_ok=True)
+            stamp = datetime.now(self.tz).strftime("%Y%m%d-%H%M%S")
+            (bak / f"{date}.{stamp}.md").write_text(path.read_text(encoding="utf-8"), encoding="utf-8")
         path.write_text(text, encoding="utf-8")
         return path
+
+    @staticmethod
+    def _digest_n_papers(path: Path) -> int | None:
+        """Read n_papers from an existing digest's frontmatter; None if unreadable."""
+        try:
+            head = path.read_text(encoding="utf-8")[:600]
+            m = re.search(r"^n_papers:\s*(\d+)", head, re.M)
+            return int(m.group(1)) if m else None
+        except Exception:
+            return None
