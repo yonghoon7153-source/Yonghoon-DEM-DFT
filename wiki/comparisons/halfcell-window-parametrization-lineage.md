@@ -5,7 +5,7 @@ created: 2026-09-03
 updated: 2026-09-04
 type: comparison
 tags: [battery, degradation, research]
-sources: [raw/papers/marongiu2016_lfp-onboard-capacity-halfcell.md, raw/papers/birkl2017_degradation-diagnostics-ocv.md, raw/papers/dubarry2012_synthesize-degradation-modes.md, raw/papers/lin2024_ocv-degradation-mode-identifiability.md, raw/papers/navidi2024_piml-degradation-diagnostics-comparison.md, raw/papers/rhyu2025_systematic-feature-design-formation.md, raw/papers/mohtat2019_electrode-soh-estimability-expansion.md]
+sources: [raw/papers/marongiu2016_lfp-onboard-capacity-halfcell.md, raw/papers/birkl2017_degradation-diagnostics-ocv.md, raw/papers/dubarry2012_synthesize-degradation-modes.md, raw/papers/lin2024_ocv-degradation-mode-identifiability.md, raw/papers/navidi2024_piml-degradation-diagnostics-comparison.md, raw/papers/rhyu2025_systematic-feature-design-formation.md, raw/papers/mohtat2019_electrode-soh-estimability-expansion.md, raw/papers/lee2020_estimation-error-bound-limited-data-window.md]
 confidence: high
 explored: false
 verificationStatus: unverified
@@ -38,6 +38,7 @@ their estimation" 의 구체적 목록이다.
 | [[birkl-ocv-degradation-diagnostic]] 2017 | `LLI, LAM_PE, LAM_NE` (+`Δx_EoC, Δx_EoD`) | **3** | **2** | **컷오프 전압 등식으로 소거** | full-cell 전압 곡선 |
 | **Mohtat 2019 (원전 표기 — 2026-09-04 확인)** | `x_100, y_100, C_n, C_p` | **4** | **1** (`U_p(y₁₀₀) − U_n(x₁₀₀) = V_max` 만) | 등식 1개 → **3**. 셀 용량 `C` 는 제약이 아니라 **추정 후** 식 (27) 로 푼다 | full-cell OCV **+ 셀 팽창(μm)** |
 | Mohtat 2019 (구현본: PyBaMM `_ElectrodeSOH`) | `x_100, y_100, x_0, y_0` (+`Q`) | **5** | **2** | 같은 문제의 **다른 장부** → 역시 Ah 축 자유도 **3** | full-cell OCV |
+| **[[data-window-identifiability]] (Lee 2020)** | `y₁₀₀, C_p, x₁₀₀, C_n` | **4** | **1** (`V_max` 등식 — 무제약/제약 **둘 다** 보고) | 소거하지 않고 **제약 CRB 로 대가를 잰다** | full-cell OCV, **DOD 구간 `[Q_s, Q_e]` 로 잘라서** |
 | [[np-lip-ocv-reparametrization]] (Lin 2024) | `r_N/P`, `z₀⁺` | **2** | 0 | **재매개화로 애초에 안 만든다** | SOC 정규화 OCV **형상** |
 | Navidi 2024 (부록 A1) | `m_p, δ_p, m_n, δ_n` | **4** | **0** | 여분 없음 (전단사) | full-cell 전압 곡선 |
 | [[fused-lasso-feature-design-framework]] SI S11 | `β_c, β_a, Q_rem, V_shift` | **4** | 0 | 여분 없음 | C/20 RPT 곡선 |
@@ -68,6 +69,45 @@ their estimation" 의 구체적 목록이다.
 축퇴뿐이고, *창→관측* 의 조건수 문제는 그대로 남는다. 우리 Phase 1d 가 잰
 것이 후자다 (σ3/σ1 ≈ 0.05, σ4/σ1 ≈ 0.03 — 수치 정본은
 `mode-observability/results/phase1d/`).
+
+## ★ 네 번째 축이 있다 — **관측 창의 위치** (2026-09-04, Lee 2020)
+
+위 "여분을 죽이는 세 처방" 은 전부 **파라미터 쪽** 처방이다.
+[[data-window-identifiability]] 는 파라미터를 그대로 두고 **관측 구간을 바꾼다** —
+`DW = [Q_s, Q_e]`, `Q` 는 `[인쇄]` "the discharge Amp-hours from fully charged
+state obtained by **coulomb counting**", `DOD = Q/C`.
+
+`[인쇄]` **Table IV** — 같은 셀·같은 추정기, 창만 다르다:
+
+| DW | 범위 (DOD) | 폭 | `y₁₀₀` | `C_p` | `x₁₀₀` | `C_n` |
+|---|---|---:|---:|---:|---:|---:|
+| Shallow | `[0.0, 0.2]` | 0.2 | 14.9 | 16.8 | 38.3 | 24.1 |
+| **Medium** | `[0.3, 0.7]` | **0.4** | 0.1 | 0.4 | **4.9** | **14.5** |
+| **Non-full** | `[0.1, 0.5]` | **0.4** | 0.2 | 0.9 | **10.0** | **24.1** |
+| Deep | `[0.0, 0.9]` | 0.9 | 0.0 | 0.8 | 1.6 | 1.8 |
+
+`[해석]` **★ 폭이 같은 두 줄을 나란히 보라.** medium 과 non-full 은 **둘 다 폭
+0.4** 인데 NE 파라미터 오차가 **2배 가까이** 다르다 (`x₁₀₀` 4.9 vs 10.0,
+`C_n` 14.5 vs 24.1). 곧 **"창은 넓을수록 좋다" 가 아니라 위치가 어느 전극을
+보이게 하는지를 고른다.** 원전도 같은 말을 인쇄한다 — `[인쇄]` "the medium case
+shows relatively smaller estimation errors especially for the negative electrode
+parameters … because the utilization range of the electrode becomes more
+informative as the DW gets closer to a deeper discharged area."
+
+`[인쇄]` 그리고 **운용 처방을 수치로** 준다 — p.10(3385): "if the given voltage
+error variance σ̂ = **10 mV** and the target error bound is within **10 %** at a
+95 % confidence level, the OCV range of **DOD = [0.35, 0.73]** can be one possible
+DW." `[해석]` [[constrained-crb-identifiability]] 의 Mohtat 은 **폭**만 준다
+(DOD 30 %). 이 편은 **폭 + 위치**를 준다 (폭 38 %, 저 SOC 쪽으로 치우침).
+
+**우리에게 뜻하는 것 (`[해석]`)**: 우리 격자는 창을 고정하고 모드만 흔든다.
+이 축은 **우리가 아직 안 흔든 축**이고, Phase 1l 이 찾은 "전압이 못 보는 방향"
+과 직교하는 값싼 대안이다 — 센서를 늘리지 않고 **자르는 구간만 바꾼다.**
+
+> **경계 하나 (이 위키가 원문에서 확인).** 이 처방은 **`θ` 좌표의 오차막대**를
+> 겨눈다. 식 (10)–(12) 로 `LLI/LAM` 사상을 인쇄해 놓고 **§III-A 이후 쓰지 않으므로**,
+> 위 표를 "모드 오차가 창에 따라 이렇게 변한다" 로 읽으면 **틀린다.** 그 변환은
+> 아직 아무도 하지 않았다 (`mode-identifiability-unmeasured-lineage` 반론 (g)).
 
 ## ★ Marongiu 식 (2)–(5) 의 null 을 닫힌 형태로 풀었다
 

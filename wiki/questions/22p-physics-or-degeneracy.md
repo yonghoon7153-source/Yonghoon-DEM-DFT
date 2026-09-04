@@ -840,6 +840,23 @@ LAM_PE ≈ LAM_NE 는 물리가 아니라 **flat valley 방향에서 두 전극�
   한계 (d)). 그리고 잡음이 등분산이라는 가정 위에 있다 — Cui 2024 의 실측
   비대칭(PE 1–12 mV / NE 8–93 mV)을 넣으면 다 움직인다.
 
+- **[2026-09-04]** **다봉성의 야생 실측이 인쇄된 것을 찾았다** —
+  [[data-window-identifiability]] (Lee 2020, *IEEE TII* **16**(5) 3376) p.3(3378):
+  `[인쇄]` "out of **100** randomly generated start points, we have observed that
+  **55** start points converged to the same solution providing the minimum
+  function value." (`[재현]` 이 위키가 원문 텍스트에서 직접 확인)
+  **이 카드에 대한 함의**: 같은 문제·같은 데이터에서 **45 %가 다른 해로 갔다.**
+  이것은 `[[fitting-degeneracy]]` 의 **flat valley 가 아니라 multimodal** 쪽
+  증거이고, 우리가 그 둘을 아직 안 갈랐다는 항목(위 미실행)을 **더 급하게**
+  만든다. 그리고 **CRB 는 국소 도구라 그 45 %가 어떤 오차막대에도 안 들어간다** —
+  같은 논문이 자기 Table II·III 로 인쇄한 2.5 % / 0.030 % 는 **한 봉우리 안의
+  숫자**다. `[해석]` 우리 Phase 1i 의 오차막대도 같은 성질을 물려받는다.
+  **경계**: 다른 셀·다른 추정기·다른 좌표(`θ`)의 수치이므로 **우리 22p 삼중항의
+  다봉성을 보인 것이 아니다.** 이 계보에서 그 현상이 **실재한다**는 것까지가 주장이다.
+  ★ 같은 편이 준 두 번째 단서 — **관측 창의 위치가 어느 전극을 보이게 하는지 고른다**
+  (폭이 같은 두 창에서 NE 오차가 2배 차이, Table IV). 우리가 아직 안 흔든 축이고,
+  판별 실험 후보다 (비교표: [[halfcell-window-parametrization-lineage]]).
+
 ### 이 카드가 속한 논지 (2026-09-03)
 
 이 질문이 왜 아직 열려 있는가를 계보 전체로 넓혀 방어한 문서:
