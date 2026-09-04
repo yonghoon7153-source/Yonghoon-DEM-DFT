@@ -242,3 +242,132 @@ a lower bound.
 ```
 ⚠ `444배` 를 본문에 쓸 필요는 없다 — *"~2 orders"* + **이유**(접촉저항 부재)면 충분하고,
 **차이의 이름을 우리가 안다**는 점에서 오히려 강하다.
+
+---
+
+# 문단 5 — 저자 확정본 (2026-09-04 세션에서 문장별 합의)
+
+★ 아래는 **저자와 문장별로 합의해 확정한 것**이다.  제안이 아니라 **결정**이다.
+
+## 확정된 문장
+
+**②** `reconstructed` → **`constructed`** · `coupled with` → **`followed by`**
+```
+To directly evaluate this effect, three-dimensional SBE and DBE microstructures were
+constructed by a discrete element method (DEM) simulation of powder packing followed by a
+material point method (MPM) simulation of plastic densification
+```
+⇒ 잔여 권고(미반영): `powder packing` **`and compaction`** · 뒷절(`Figure S16`/`Table S2`/`[40,41]`) 복원.
+
+**③** `reconstructed microstructures` → **`the resulting microstructures`** (② 와 일관).
+⚠ 저자 결정: **규약 문장은 본문에 안 넣는다.**  (뒤 TLM 문단이 절대값 차이를 다루면 충분)
+
+**④** 저자 검토 후 **원문 유지 결정.**  (권고했던 `By construction` · 두 원인 명시는 미채택)
+
+**⑤** **원문 유지.**  `uniformly dispersed` **넣는 것으로 저자 확정.**
+⚠ 내가 뺄 것을 권했으나 저자가 유지를 택했다 — 결정 존중.
+
+**⑥** `most` → **`85 %`**  ← ★ 원자료에서 새로 계산 (아래 §신규 수치)
+```
+Indeed, 85 % of AM particles in the DBE exhibit CA densities above the SBE median,
+indicating that this enrichment extends throughout the electrode rather than being
+confined to localized regions.
+```
+
+**⑦** `0.15 μm` 뒤에 **`(equal to one voxel edge of the transport grid)`** 삽입 — 확정.
+
+**⑧** 수치는 **`53.99 / 70.61` 유지** (그림에도 같은 값이 들어가 있어 일관성 우선).
+σ_ion 을 **같은 문장에 병기**하고 SI 로 보낸다:
+```
+Consistently, the simulated effective σele increases from 53.99 to 70.61 mS cm−1
+(Figure 4b), whereas the effective σion remains essentially unchanged at 0.553 and
+0.558 mS cm−1 for the SBE and DBE, respectively (Figure S_).
+```
+
+**⑨** 이온 절을 빼고 전자에 집중 (`whereas` 중복 제거) + **핫스팟 완화**를 괄호로:
+```
+The corresponding ionic and electronic current-density fields are presented in Figures S_
+and S_, respectively. The DBE shows a higher electronic current density carried over more
+parallel paths, which relieves rather than intensifies local current hot spots (the
+mean-normalized 99.8th-percentile current density falls from 1447 to 1189).
+```
+⚠ 내가 *"S18 에서 DBE 가 더 흐리다"* 고 한 것은 **썸네일 오독**이었다 — 큰 그림에서는
+DBE 가 더 조밀하고 빨강(핫스팟)이 적다.  **원문 방향이 맞았고 내 P0 경고는 철회**했다.
+
+**⑩** 미확정.  권고: `demonstrate` → `indicate` · `and distributes the electronic current
+more evenly` 추가 (⑨ 를 결론이 받게).
+
+## ★★ 기억할 것 — Table 에 넣을 항목 (저자 지시 2026-09-04)
+
+`σ_ion` 결과(`0.553 / 0.558`)를 실으면 **그 입력이 어딘가 있어야 추적된다.**
+저자 결정: **Table (S2) 에 넣는다.**
+
+```
+The SDCP phase was assigned an ionic conductivity of 1 × 10−3 S cm−1 in the transport
+solver; this is an assumed value.
+```
+
+⚠ 이것이 원장의 옛 판단(*"Table S2 의 SDCP 이온전도도 칸이 비어 있는 것은 옳다"*)을
+**바꾼다** — 그때는 σ_ion 결과를 안 실었기 때문이다.  결과를 실으면 입력도 실어야 한다.
+
+★ **역산값과 혼동하지 말 것** (저자 지적):
+```
+펠릿 RVE 역산   σ_ion(SDCP)* = 0.62×10⁻³ S/cm   (확인 런 2.8655 vs 표적 2.86, 4/4 시드,
+                                                 2026-08-25 동결)
+전극 8팔 입력   1.0×10⁻³ S/cm                    ← 코드 기본값, 가정
+```
+동결 문서 §14-3 이 **이식을 금지**했으므로 전극 런은 `1e-3` 로 돌았다.  ⇒ `assumed` 가 맞다.
+★★ **저자 최종 결정 (2026-09-04)**: **`1.0 × 10⁻³ S cm⁻¹` 을 Table 에 그대로 넣는다.**
+역산값(0.62e-3)은 **본문·표에 쓰지 않는다** — 규약 구속이라 전극 런에 이식되지 않았고,
+그 사실을 원고에서 설명할 이유가 없다.  저자 표현: *"그게 시뮬레이션의 묘미"* —
+**입력을 밝히고 그 입력에서 나온 결과를 보고하면 된다.**
+⇒ Table 행: `σ_ion(SDCP)  1 × 10⁻³ S cm⁻¹  ·  assumed`
+⇒ 역산값·이식금지·네 시나리오는 **우리 원장에만** 남긴다 (이 문서 + 편결 시트 §3-3).
+
+## ★ 신규 수치 — 원자료에서 오늘 계산 (`docs/figures/cbd_contacts.csv`, n=1,271 씩)
+
+```
+SBE 중앙값(74) 초과 비율     DBE 1083/1271 = 85.2 %      SBE 631/1271 = 49.6 %
+
+백분위       SBE   DBE     Δ%          ← 분포 전체가 평행 이동한다
+   5 %        58    68   +17.2         ★ 아래 꼬리가 위 꼬리보다 더 오른다
+  10 %        61    71   +16.4            = CA-빈곤 입자가 우선 구제된다
+  25 %        67    78   +16.4            = "국소가 아니다" 의 진짜 증거
+  50 %        74    86   +16.2
+  75 %        81    93   +14.8
+  90 %        88   100   +13.6
+  95 %        91   104   +14.3
+최소/최대   42–106  55–118
+```
+⚠ 저자는 **⑥ 에 `85 %` 만** 넣기로 했다.  백분위는 SI·캡션 후보로 남긴다.
+
+## ⚠⚠ σ_ion — 원장에 **이미 64팔이 있었다** (내가 "없다"고 한 것은 오류)
+
+`ms_si_v7_edit_sheet_20260901.md` §3-3, **4 시나리오 × 8 origin × 2 침대 = 64 팔 완주**:
+
+| σ_ion(SDCP) 가정 | SBE | DBE | 비 R |
+|---|---:|---:|---:|
+| 0 | 0.5534 | 0.5410 | 0.9776 |
+| 5.52×10⁻⁵ | 0.5534 | 0.5425 | 0.9804 |
+| 5.21×10⁻⁴ | 0.5534 | 0.5518 | 0.9972 |
+| **1.0×10⁻³** | **0.5534** | **0.5580** | **1.0083** | ← 본문이 쓰는 것
+
+등록된 판정: **네 시나리오에서 `|R−1| < 2.3 %`, 방향 미결정** (`r` 을 바꾸면 부호가 뒤집힌다).
+⇒ 저자 결정: **`1×10⁻³` 하나만 보고**하되 문장의 주장은 *"essentially unchanged"* 로 둔다.
+그 주장은 **네 시나리오 전부에서 참**이므로 방어된다.  ⛔ *"SDCP 가 이온 전도를 올린다"* 는
+여전히 **쓸 수 없다**.
+
+★★ **내 오류 기록** — 오늘 같은 실수를 세 번 했다: Patil `0.62` · litdb 인덱스 · 이 σ_ion.
+셋 다 **원장에 있는데 확인 전에 "없다"고 말했다.**  원장 자신이 적어둔 교훈
+*"'모른다' 는 결론도 검증 대상이다"* 를 내가 안 지켰다.
+⇒ **"없다" 를 말하기 전에 `grep` 을 먼저 한다.**
+
+## 다음 문단 (실험 검증 — TLM · SSRM · KPFM) 착수분
+
+**첫 문장**: `experimentally verified` → **`examined experimentally`** 권고.
+`verified` 는 *"시뮬이 예측하고 실험이 확증했다"* 는 약속이라, 절대값 대조를 불러온다.
+저자 방침(*"시뮬은 맞출 필요 없다, 오더와 상대크기만"*)과도 어긋난다.
+
+**셋째 문장**: `predicted by the DEM simulations` → **`the simulations`** 또는
+**`the DEM–MPM simulations`**.  우리 것은 DEM 만이 아니다 (DEM → MPM → 복셀 FV).
+`predicted` 도 `verified` 와 같은 계열 — `consistent with the simulated increase in σele` 권고.
