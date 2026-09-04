@@ -186,6 +186,52 @@ def main():
                      "mean_abs_dv_mV": float(dv.mean()),
                      "max_abs_dv_mV": float(dv.max())})
 
+    # ══ n₂ (PE 쪽) — 프레임 이론의 **예측 시험** ═══════════════════════════
+    #   n₂ = (+1, −1, +1, 0, 0) ⟺ {LAM_Pe,li = ε} ≡ {LAM_Pe,de = ε, LLI = ε}
+    #   Dubarry 의 계수는 **1** 이다 (로딩비가 아니라).
+    #   프레임 이론의 예측: 완방 프레임에서 **양극은 거의 차 있으므로**
+    #   (y₀ = 0.926) 계수가 1 에 가까울 것이다 — NE 와 정반대.
+    li_pe_dis = k * L_pe * d.pe * bb["pe_vf"]
+    coef_pe = li_pe_dis / n_tot
+    print("\n══ n₂ (PE 쪽) — 프레임 이론의 예측 시험 ══")
+    print(f"   완방 프레임에서 양극이 쥔 Li = {li_pe_dis:.4f} Ah / 총 재고 {n_tot:.4f} Ah")
+    print(f"   y₀(완방) = {d.pe/bb['pe_max_conc']:.6f}  ← **양극은 거의 차 있다**")
+    print(f"   ★ 예측 계수 = {coef_pe:.6f}   (Dubarry 의 n₂ 계수는 **1**)")
+    print(f"   → NE 는 계수가 ~0 이었는데 PE 는 ~1 이어야 한다. 시험한다.\n")
+    print(f"   {'ε':>6}{'LLI 등가':>12}{'평균|ΔV|':>12}{'최대|ΔV|':>12}")
+
+    def curve_pe(lli, lam_pe, pe_type):
+        try:
+            ov = build_overrides(lli, lam_pe, 0.0, pe_type, "de", b, d)
+        except InfeasibleConditionError as e:
+            return None, f"infeasible: {e}"
+        r = run_one(cfg, ov, PROTOCOL)
+        if not r.ok:
+            return None, r.error
+        return extract_curves(r.solution), None
+
+    for eps in DELTAS:
+        cA, eA = curve_pe(0.0, eps, "li")
+        if cA is None:
+            print(f"   {eps:>6.2f}  A 실패: {eA}")
+            continue
+        xa_ = np.asarray(cA["x_norm"], float)
+        va_ = np.asarray(cA["v_full"], float)
+        for lli_eq, tag in [(0.0, "0 (보정 없음)"),
+                            (coef_pe * eps, "프레임 예측 ★"),
+                            (1.0 * eps, "Dubarry 계수 1")]:
+            cB, eB = curve_pe(lli_eq, eps, "de")
+            if cB is None:
+                print(f"   {eps:>6.2f}{tag:>12}  B 실패: {eB}")
+                continue
+            dv = np.abs(va_ - np.interp(xa_, np.asarray(cB["x_norm"], float),
+                                        np.asarray(cB["v_full"], float))) * 1e3
+            print(f"   {eps:>6.2f}{tag:>14}{dv.mean():>12.3f}{dv.max():>12.3f}")
+            rows.append({"delta": eps, "status": f"n2 PE · {tag}",
+                         "lli_equiv": float(lli_eq),
+                         "mean_abs_dv_mV": float(dv.mean()),
+                         "max_abs_dv_mV": float(dv.max())})
+
     OUT.mkdir(parents=True, exist_ok=True)
     pd.DataFrame(rows).to_csv(OUT / "pairs.csv", index=False)
     if srows:
