@@ -16,12 +16,12 @@
   "왜_지금_격하하나": "회신 T 의 P0 넷(원자 프레임 · MO 성격 · 국재화 결정론 · seed 중복)이 전부 **판정을 조용히 틀리게 만드는** 것들이었다. 그것들을 고친 코드가 실제로 도는지부터 확인하지 않고 생산을 돌리면 아홉 번째 반려다."
  },
  "0_시각_증거": {
-  "봉인_시점": "2026-09-03",
-  "builder_sha256": "5eac63c6b800043b3676f3ac68c722a5d2ab292cbb98cb6550ae1d743600699d",
-  "⚠_원본과_다른_해시인_이유": "회신 Y + Z + Z-2(내부 2차) 이행으로 빌더가 바뀌었다 (커밋 341e0d7e). 범위·질문·판정어는 그대로고, estimand 형태 대조(단위·결박·소비·계열 class)와 게이트 봉인·smoke 규약 실측이 바뀌었다.",
+  "봉인_시점": "2026-09-04",
+  "builder_sha256": "ba4ef9e3517e03f19312ece4a4641156ee77ad35d626f17810fbb6bc2565303d",
+  "⚠_원본과_다른_해시인_이유": "2026-09-04 내부 P0 — 국재 궤도 인구·계수의 **출처를 옮겼다** (phase L2 → phase L 의 국재 조성 블록 + `.loc`→Molden). 규칙(무엇을 seed 로 고르는가)과 문턱(40%)은 바뀌지 않았다. 자세한 것은 `개정_2026_09_04_국재궤도_출처`.",
   "이_시점의_doped_잡": "0개 — git log 가 그 순서의 증거다. 결과를 보고 규칙을 고치지 않는다.",
-  "이_시점의_ORCA_잡": "0개 — phase L 도 아직 돌리지 않았다 (회신 Y: loccheck 단독만 GO · 그것도 아직 안 돌림)",
-  "builder_last_change_commit": "4b53788bc7b6fda69eb01f6819522e3751773896",
+  "이_시점의_ORCA_잡": "⚠ **0개가 아니다.** phase L 2잡(L_dminus·L_neutral)과 phase L2 2잡이 이미 돌았다 (2026-09-04 15:31~21:10, gabia). 이 개정은 그 산출물을 **보고 나서** 쓴 것이다 — 무엇을 보고 썼는지는 `개정_2026_09_04_국재궤도_출처.⚠_무엇을_이미_보았나` 에 적었다. 측정 잡(phase S)은 **0개**이고 seed 도 아직 하나도 만들어지지 않았다.",
+  "builder_last_change_commit": "e99f54e6596968e5866a69bfd318b7d1f6a60b91",
   "⚠_왜_전체_커밋이_아닌가": "회신 W P0-1 — '이 파일이 들어간 커밋' 은 파일 안에 넣을 수 없다 (커밋 해시가 파일 내용에 의존하므로 순환이다). 종전 판은 그 자리에 placeholder 를 넣었고, 검사가 그것을 실제 커밋과 비교해 **seed 생성이 반드시 막혔다**. ⇒ 봉인하는 것은 ⓐ 빌더 blob SHA ⓑ **빌더를 마지막으로 바꾼 커밋** 둘이다. 전체 커밋 결박은 파일 밖 attestation(tools/review_manifest.py)이 진다.",
   "이전_봉인_이력": [
    {
@@ -45,6 +45,12 @@
     "builder_last_change_commit": "52b0edcdac283086ab54ca636fc02ad26c2f8e73",
     "calib_tool_sha256": "02d9cb38640d9ef07910e068fd6ee2d74537b2821549e25652b43ae4cca06ac7",
     "봉인_시점": "2026-09-03"
+   },
+   {
+    "builder_sha256": "5eac63c6b800043b3676f3ac68c722a5d2ab292cbb98cb6550ae1d743600699d",
+    "builder_last_change_commit": "4b53788bc7b6fda69eb01f6819522e3751773896",
+    "봉인_시점": "2026-09-03",
+    "무효_사유": "이 빌더의 seed 생성기는 국재 궤도 인구를 phase L2 에서 읽었다. L2 는 그것을 담고 있지 않다 (아래 개정 참조)."
    }
   ],
   "calib_tool_sha256": "02d9cb38640d9ef07910e068fd6ee2d74537b2821549e25652b43ae4cca06ac7",
@@ -238,12 +244,13 @@
   "Opt": "**없다** — S0 은 fixed-geometry SP 만이다",
   "재판정_SR": "불안정이 나온 만큼만 (미리 세지 않는다 — 위 총계에 없다)",
   "calibration": "ORCA 추가 실행 **0** — 측정 잡(S 15 + SR)마다 `%plots` 로 cube 를 같은 실행에서 뽑고, `spin_partition_calib.py` 대조를 잡 수만큼 돈다 (ORCA 아님 · 회신 Y P0-2 개정). 종전 '+1 (한 자세)' 는 철회.",
-  "⛔_어떻게_얻었나": "2026-09-02 **버리는 dry-run** 으로 실제 seed plan 을 세었다 (D• 8 seed + P⁺ 7 = 15 · default 를 뺀 probe 13 · 종별 control 1씩 2). ORCA 는 한 잡도 안 돌렸고 산출물은 버렸다 — 숫자를 세는 것이 목적이었다. ⚠ 종전 값 16 은 생성기 자신이 `n_meas` 에 근거 없는 `+1` 을 갖고 있어 나온 수이고, 그것이 사전등록으로 옮겨졌다. 그 `+1` 도 함께 걷었다."
+  "⛔_어떻게_얻었나": "2026-09-02 **버리는 dry-run** 으로 실제 seed plan 을 세었다 (D• 8 seed + P⁺ 7 = 15 · default 를 뺀 probe 13 · 종별 control 1씩 2). ORCA 는 한 잡도 안 돌렸고 산출물은 버렸다 — 숫자를 세는 것이 목적이었다. ⚠ 종전 값 16 은 생성기 자신이 `n_meas` 에 근거 없는 `+1` 을 갖고 있어 나온 수이고, 그것이 사전등록으로 옮겨졌다. 그 `+1` 도 함께 걷었다.",
+  "⚠_orca_2mkl": "`.loc` → Molden 변환 2건이 추가된다. **ORCA 계산이 아니라 변환기**라 총 ORCA 실행 수(34)에 넣지 않는다 (2026-09-04 개정)."
  },
  "실행_순서": [
   "bash run_pilot.sh loccheck  (H₂O 하나로 `%loc` 구문·`.loc` suffix·파서 둘 확인 — **첫 단계이고, L 이 이 증서를 강제한다**)",
   "bash run_pilot.sh L        (SCF + Pipek-Mezey 국재화)",
-  "bash run_pilot.sh L2       (`.loc` MORead · NoIter · 국재 궤도 인구)",
+  "bash run_pilot.sh L2       (**계보 단계** — `.loc` 가 ORCA 로 읽히는지·GuessMode CMatrix·무작위 아님·receipt 확인. ⛔ 국재 궤도 인구의 출처가 **아니다** — 2026-09-04 개정)",
   "bash run_pilot.sh seeds    (판독 → phase S + 1층 probe + 무회전 control 입력 생성, 계산 없음)",
   "bash run_pilot.sh probe    (1층 개입 확인 — 무회전 control 대비 증가를 본다. 여기서 막히면 S 로 안 간다)",
   "bash run_pilot.sh S        (측정 — **리뷰 통과 뒤에만**)",
@@ -359,6 +366,11 @@
    "at": "2026-09-04",
    "state": "ratified",
    "note": "1저자 비준 재확인 — builder_last_change_commit 라벨 정정(341e0d7e→4b53788b) 반영. 봉인한 빌더 SHA 5eac63c6 는 불변이고 라벨만 어긋나 pilot_generate 가 멈췄던 것(실측 2026-09-04). 범위는 여전히 loccheck 까지."
+  },
+  {
+   "at": "2026-09-04",
+   "state": "ratified",
+   "note": "1저자 비준 (scientific_owner) — 내용 변경 없는 **재비준**. 리뷰 이행으로 봉인 대상이 바뀌어 지문이 어긋나 있었다."
   }
  ],
  "회신_U_이행": {
@@ -405,15 +417,73 @@
   "family_tol": 0.1,
   "⚠": "기계용 — `_pil_check_prereg` 가 코드 상수(PIL_CLASS_MIN·PIL_CLASS_MARGIN·PIL_CALIB_MAX_DF·PIL_CUBE_MAX_SPACING_A·PIL_CUBE_SPACING_A·PIL_CUBE_MARGIN_A·PIL_CALIB_FAMILY_TOL)와 manifest `calib_gate` 와 **셋 대조**한다 (회신 Z P0-3ⓑ). 하나라도 다르면 생성·seed·판정 전부 막힌다."
  },
+ "개정_2026_09_04_국재궤도_출처": {
+  "한_줄": "국재 궤도 인구·계수를 **phase L2 에서 읽던 것을 phase L 산출물에서 읽도록** 옮긴다. 규칙도 문턱도 바꾸지 않는다.",
+  "무엇이_틀렸나": {
+   "증상": "seed 생성이 `eps1/A_sulfonate: 목표 집합에 31.7% 밖에 안 걸린 MO 가 최대다 (문턱 40%)` 로 정지했다.",
+   "원인": "phase L2(`MORead + NoIter`)는 국재화를 **보존하지 못한다** — ORCA SCF 가 Fock 을 한 번 대각화하므로 읽어온 국재 궤도가 정준으로 되돌아간다. `GuessMode CMatrix` 는 기저 사상만 통제하지 대각화를 막지 않는다.",
+   "종전_전제가_반쪽만_맞았다": "빌더 주석의 `2026-08-31 실측: phase L 의 LOEWDIN ORBITAL POPULATIONS PER MO 는 정준이다` 는 **옳았다**(줄번호로 재확인: 인구 1,378,227 · 계수 2,329 · 국재화 1,713,348). 틀린 것은 그 다음 문장 — `그래서 L2 가 국재 인구를 다시 찍는다` 다. L2 는 못 찍는다."
+  },
+  "실측_증거_셋": [
+   "국재화 보고서는 `49 strongly local + 270 two center + 0 delocalized` 라고 적는다. 그런데 `단일원자 ≥95%` 인 MO 가 L 출력 0건 · L2 출력 0건이다 — 어느 인구표도 국재가 아니다.",
+   "L2 의 MO 상위원자는 국재화 보고서가 지목한 원자와 **맞지만 인구가 4~6%** 다 (MO 210→113O 3.9% · 205→109O 4.6% · 200→105O 6.2%). 순서는 읽었고 밀도는 퍼졌다.",
+   "`.loc` 를 `orca_2mkl -molden` 으로 뽑아 participation ratio 를 재면 국재 5.9/4.7/6.2/9.2 vs 정준(.gbw) 93.8/50.5/98.6/21.0 (MO 200/300/400/480). ⚠ `Ene=` 로는 못 가른다 — ORCA 가 계수만 바꾸고 에너지 배열은 물려준다."
+  ],
+  "무엇을_바꾸지_않았나": [
+   "`PIL_SEED_MIN_WEIGHT = 40.0` — **그대로다.** 문턱을 옮겨 통과시키지 않는다.",
+   "seed 집합(A 1 + B_ring 6 + default 1 · P⁺ 7) — 그대로다.",
+   "4층 판정 게이트·판정어·중단 규칙 — 그대로다.",
+   "회신 U P0-2(π 판정은 MO 계수가 있어야 회전불변) — **그대로 지킨다.** 계수를 포기하고 인구만으로 판정하는 완화는 하지 않았다.",
+   "phase L 산출물 — 재실행하지 않는다. `.loc` 도 인구도 이미 맞다."
+  ],
+  "무엇을_바꿨나": {
+   "인구_출처": "phase L 출력의 `LOCALIZED MOLECULAR ORBITAL COMPOSITIONS` 블록 (`pil_parse_lmo_comp`).",
+   "계수_출처": "`<tag>.loc` → `orca_2mkl -molden` → `pil_parse_molden`. 국재 MO 계수는 이 바이너리 안에만 있다.",
+   "⚠_분할이_바뀐다": "그 블록은 **Löwdin 이 아니라 Mulliken** 이다. 문턱 40% 는 종전에 Löwdin 을 상정하고 정했다. **이 변경을 여기서 선언한다.**",
+   "⚠_가중치는_하한이다": "그 블록은 MO 당 **최대 2원자**만 준다(strongly local ≥0.95 · two-center ≥0.85). 목표 집합 가중치는 따라서 하한이고, 40% 판정은 **보수적**이 된다 — 통과시킨 seed 는 진짜 값도 그 이상이다. 반대로 **탈락시킨 seed 가 진짜로도 미달인지는 이 블록만으로 말할 수 없다.** 탈락이 나오면 그때 계수 기반 재판정을 별건으로 연다.",
+   "⚠_fail_closed": "`significantly delocalized` 가 1개라도 있으면 ≤2원자 표현이 성립하지 않으므로 파서가 **막는다**. 부분 판독으로 seed 를 만들지 않는다.",
+   "⚠_c²_는_인구가_아니다": "`p_frac`·`O_frac` 비율에는 계수의 c² 를 대용으로 쓴다. `CᵀSC=1` 이라 c² 는 겹침을 버린 값이다(회신 V Q1 이 vvᵀ 에 대해 지적한 것과 같은 성격). 절대 백분율로 인용하지 않는다. π **통과**는 종전대로 계수 기반 `pil_p_matrix` 가 낸다.",
+   "phase_L2_의_새_역할": "궤도의 출처가 **아니다.** `.loc` 가 ORCA 로 실제 읽히는지 · `GuessMode CMatrix` 가 입력에 있는지 · 무작위 국재화가 아닌지 · receipt 계보가 이어지는지를 확인하는 **계보 단계**로 남긴다. 7분이고 지우지 않는다 — 지우면 그 네 검사도 함께 사라진다."
+  },
+  "⚠_무엇을_이미_보았나": {
+   "왜_적나": "이 개정은 phase L 산출물을 **보고 나서** 썼다. 나중에 순서를 재구성할 수 있어야 하므로, 무엇을 알고 썼는지 적는다. 안 적으면 '결과를 보고 규칙을 고쳤나' 를 사후에 가릴 수 없다.",
+   "본_것": [
+    "국재화 보고서의 요약 3줄(49/270/0)",
+    "단중심 목록 일부 — MO 162~210 이 S(67·69·71·73·75·77) 와 O(78~113) 에 ~100%",
+    "이중심 목록 일부 — MO 465~480 이 C–H 결합",
+    "정준 인구표에서 술포네이트 집합 상위값(≤31.7% · 코어 제외 후)"
+   ],
+   "그래서_짐작하는_것": "MO 168~210 중 다수가 술포네이트 O 의 lone pair 이므로 **A_sulfonate 는 통과할 것으로 짐작한다.** 문턱을 옮긴 것이 아니라 출처를 고친 것이므로 규율 위반은 아니지만, 짐작한 상태에서 쓴 개정이라는 사실 자체를 기록에 남긴다.",
+   "아직_모르는_것": [
+    "B_ring0~5 여섯 seed 가 통과하는지 — 첫 seed 에서 멈춰 시험조차 안 됐다",
+    "π 성격 판정(회신 U P0-2)을 통과하는지 — 계수를 이제야 확보했다",
+    "P⁺ positive control 이 backbone 상태를 회수하는지",
+    "어느 basin 이 나오는지 · 몇 개인지"
+   ]
+  },
+  "코드": {
+   "commit": "e99f54e6596968e5866a69bfd318b7d1f6a60b91",
+   "selftest": "370 통과 — 음성 경로 13건 추가(블록 없음 · delocalized>0 · 부분판독 · FOUND 미판독 · 정준표 혼입 · 6D/10F · 표지 없음 · AO 정렬 어긋남 · 헤더 없음 · 파일 없음 · 원자수 초과 · 껍질 번호 분리 · docstring 한계 명시)",
+   "새_함수": [
+    "pil_parse_lmo_comp",
+    "pil_parse_molden",
+    "pil_loc_molden",
+    "pil_coef_to_pseudo_pop",
+    "_pil_fake_lmocomp",
+    "_pil_fake_molden"
+   ]
+  },
+  "게이트가_한_일": "이 결함을 잡은 것은 `PIL_SEED_MIN_WEIGHT = 40.0` 이다. 문턱이 없었으면 31.7% 짜리 **비편재** 궤도로 seed 를 만들어 측정 15잡을 전부 돌리고 그럴듯한 spin share 표를 얻었을 것이다. 결과만 봐서는 알 수 없었다."
+ },
  "ratification": {
   "state": "ratified",
   "role": "scientific_owner",
   "at": "2026-09-04",
   "by": "1저자",
-  "content_digest": "19ae50894df01867f2ee8d6347b9488eb192c17f507d5dd88a422bec796d0fc0",
+  "content_digest": "2dc125c621d79bf00959e929c37a9318c04f10e188718330701986fb2f629869",
   "actor_id": "yonghoon7153@gmail.com",
-  "timestamp": "2026-09-04T06:06:08Z",
-  "commit": "8c555667a8bbb18bf5c04e60d7506dd70a7e74a8",
+  "timestamp": "2026-09-04T13:10:47Z",
+  "commit": "e99f54e6596968e5866a69bfd318b7d1f6a60b91",
   "⛔_무엇에_대한_비준인가": "이 문서에서 `ratification` 을 뺀 내용의 sha256 이다. 한 글자라도 바뀌면 지문이 달라지고 게이트가 재승인을 요구한다 — 비준을 받아 놓고 내용을 고치는 경로를 닫는다.",
   "⚠_base_commit_이_아니다": "`commit` 은 기록일 뿐 앵커가 아니다. 앵커는 위 digest 다."
  }
