@@ -206,6 +206,9 @@ else:
             bad.append("job.json 에 kind 가 없다: " + jp); continue
         if kind == "mol_ref":
             got[d] = "1"
+        elif kind == "clean_ref":
+            # 2026-09-04 — 러너·추정기와 **같은 규칙** (셋이 갈리면 2단계가 안 열린다)
+            got[d] = "1" if (vac or m.get("seed") == "afm2424_pm1") else "2"
         elif kind == "prospective_pose" and role == "primary":
             got[d] = "1" if (vac or m.get("seed") == "afm2424_pm1") else "2"
         else:
@@ -1588,6 +1591,10 @@ for jp in sorted(glob.glob("*/*/job.json")):
         sys.exit("job.json 에 kind 가 없다: " + jp)
     if kind == "mol_ref":
         s = "1"
+    elif kind == "clean_ref":
+        # 2026-09-04 — clean slab 은 기준계다. E_S 가 1단계에 있어야 절대 E_ads 를
+        # 1단계 게이트에서 확인할 수 있다. 부 seed 는 민감도라 2단계.
+        s = "1" if (vac or m.get("seed") == "afm2424_pm1") else "2"
     elif kind == "prospective_pose" and role == "primary":
         s = "1" if (vac or m.get("seed") == "afm2424_pm1") else "2"
     else:
@@ -4315,6 +4322,54 @@ C12_POTCAR_RETURNED = False
 def _strict_true(v):
     """**불리언 True 만** 참으로 본다 — 문자열 "false" 는 파이썬에서 참이다."""
     return v is True
+
+
+def reported_quantity_matches_prereg(man):
+    """MANIFEST 의 보고량이 **비준 사전등록의 §1_보고량과 같은가**. → 위반 목록
+
+    🔴🔴 2026-09-04 신설. 이 캠페인의 존재 이유가 *"맞는 양을 재고 있나"* 인데,
+      정작 **그 양이 바뀌는 것을 보는 기계가 없었다.** clean slab 을 넣고 보고량을
+      "E_ads 절대값" 으로 바꿨더니 preflight 가 dirty tree 만 걸고 통과시켰다.
+
+    무엇을 보나
+      · 이름이 같은가 (공백 정규화 후 정확 일치)
+      · 사전등록이 **금지한 이름**(`⛔_부르면_안_되는_이름`)을 MANIFEST 가 쓰고 있지 않은가
+
+    ⛔ 이 검사가 **못 하는 것**
+      · 식이 물리적으로 옳은지 모른다. 두 문서가 **같은 말을 하는지**만 본다.
+      · 사전등록 자체가 틀렸으면 둘 다 틀린 채로 통과한다. 사람이 볼 몫이다.
+      · 번들에 사전등록 사본이 없으면(구판) 조용히 건너뛴다 — 없는 것을 위반으로 세지 않는다.
+    """
+    import re as _re
+    bad = []
+    _bs = (man.get("governance_binding") or {}).get("bundled_sources") or {}
+    _pre = next((v for k, v in _bs.items() if "claim_prereg" in k), None)
+    if not _pre or not os.path.isfile(_pre):
+        return bad                      # 사본이 없으면 판정하지 않는다
+    try:
+        with open(_pre, encoding="utf-8") as _f:
+            _p = json.load(_f)
+    except (OSError, ValueError) as _e:
+        return ["사전등록 사본을 읽지 못했다 (%s)" % type(_e).__name__]
+    _q = _p.get("1_보고량") or {}
+    _rq = man.get("reported_quantity") or {}
+    _n = lambda s: _re.sub(r"\s+", " ", str(s or "")).strip()
+    if _n(_q.get("이름")) and _n(_rq.get("name")) != _n(_q.get("이름")):
+        bad.append("보고량 이름이 비준 사전등록과 다르다 —\n"
+                   "        사전등록: %s\n"
+                   "        MANIFEST: %s\n"
+                   "        ⇒ 새 보고량이면 §1_보고량 을 개정하고 **다시 비준**해야 한다 "
+                   "(보고량 카드 → decisions.json)." % (_q.get("이름"), _rq.get("name")))
+    # ⚠ 금지는 **부르는 이름**에 대한 것이지 언급이 아니다. 주의문에 "문헌 binding
+    #   energy 와 같은 표에 놓지 않는다" 라고 **금지하려고** 쓴 것까지 잡으면 안 된다
+    #   (실측 2026-09-04 — 초판이 자기 경고문을 물었다). ⇒ 이름 칸만 본다.
+    _named = " | ".join(str(_rq.get(_k) or "") for _k in ("name", "korean", "formula", "기호"))
+    for _f in (_q.get("⛔_부르면_안_되는_이름") or []):
+        _w = str(_f).split("·")[0].split("—")[0].strip()
+        if _w and len(_w) >= 4 and _w.lower() in _named.lower():
+            bad.append("사전등록이 금지한 이름 '%s' 을 MANIFEST 가 **보고량의 이름/식으로** "
+                       "쓰고 있다 (주의문에서 언급하는 것은 걸리지 않는다)" % _w)
+    return bad
 
 
 def _governance_strict(gb):
@@ -11777,6 +11832,13 @@ def main():
         # 🔴 회신 BG P1-4 — 번들만으로 되는 **물리 결박**도 여기서 친다 (≈300 h 뒤가 아니라).
         _sp_bad, _sp_done, _sp_skip = preflight_static_physics(man)
         _bad_g0 += ["[정적 물리] " + _x for _x in _sp_bad]
+        # 🔴🔴 2026-09-04 — **보고량이 비준 사전등록과 같은가.**
+        #   구멍이었다: MANIFEST 의 `reported_quantity.이름` 을 바꿔도 어떤 게이트도
+        #   안 잡았다. 실측 — clean slab 을 넣고 보고량을 "E_ads 절대값" 으로 바꿨더니
+        #   preflight 가 dirty tree 만 걸고 **보고량 변경은 통과**시켰다.
+        #   이 캠페인이 여덟 번 반려당한 이유가 바로 "맞는 양을 재고 있나" 인데,
+        #   정작 그 양이 바뀌는 것을 기계가 안 봤다.
+        _bad_g0 += reported_quantity_matches_prereg(man)
         if _bad_g0:
             print("  ⛔ **거버넌스가 서지 않는다 — 한 잡도 돌리지 않는다:**")
             for _x in _bad_g0[:12]:
@@ -15106,15 +15168,27 @@ def build_bundle(a, ledger: Optional[Dict[str, Any]] = None) -> Path:
     # ⛔ 회신 AJ ② — C-12 에서는 clean slab 을 만들지 않는다. 승인된 estimand 에서
     #   두 조각이 같은 슬랩이라 대비에서 정확히 소거되고, 절대 E_ads 는 새 연구목표다.
     #   ⚠ 대신 자기 판정이 clean 기준에 의존하지 않아야 한다 (아래 direct topology).
-    _skip_clean = bool(getattr(a, "refs_minimal", False))
+    # 🔴🔴 2026-09-04 (1저자 요청) — **절대 E_ads 를 원하면 clean slab 이 필요하다.**
+    #   ⛔ 이걸 `--refs_minimal` 을 끄는 것으로 하면 안 된다 — 실측 확인:
+    #     refs_minimal 을 끄면 `nzmag` 대조가 사라져 `molecular_spin_controls` 가 null 이
+    #     되고(그 잡은 `closure or refs_minimal` 일 때만 난다), 분석기는 그걸 **필수**로
+    #     요구해서 반송 뒤 두 조각을 다 차단한다. 2026-08-31 에 이미 밟은 지뢰다.
+    #   ⇒ C-12 구성(nzmag·box20·dense 없음)은 그대로 두고 clean slab **만** 더하는
+    #     별도 플래그를 둔다.
+    _skip_clean = (bool(getattr(a, "refs_minimal", False))
+                   and not getattr(a, "clean_slab", False))
     for sd in (() if _skip_clean else (SEEDS_FULL if (a.refs or mag_ctl) else ())):
         rel = (f"refs/clean_slab__{sd}" if a.refs else f"controls/clean_slab__{sd}")
         m = _emit_slab_job(out / rel, clean, len(clean), a.freeze, man["fragments"][0],
                            f"clean slab {sd}", sd,
                            {"kind": "clean_ref" if a.refs else "clean_magnetic_control"},
                            ledger, zcut=zcut,
+                           # ⛔ 2026-09-04 — `--no_kconv` 로 δ_k 를 **설계에서 뺀** 묶음에서는
+                           #   clean slab 에도 dense 를 달지 않는다. 달면 문서는 "δ_k 안 잰다"
+                           #   인데 실물엔 dense 잡이 있는 모순이 된다 (프로브에서 실제로 났다).
                            dense=(a.refs and sd == SEED_MAIN
-                                  and not getattr(a, 'no_refs_dense', False)),
+                                  and not getattr(a, 'no_refs_dense', False)
+                                  and not getattr(a, 'no_kconv', False)),
                            prescf=not a.no_prescf, single_point=a.single_point, closure=a.closure,
                            kmesh_over=kover)
         slab_metas.append(m)
@@ -15558,11 +15632,19 @@ def build_bundle(a, ledger: Optional[Dict[str, Any]] = None) -> Path:
         "분석기는 이 사본에서 상태·digest 를 **다시 계산**해 위 주장과 항목마다 대조한다 "
         "(회신 BE P0-4). 사본이 없거나 어긋나면 인용 불가 — manifest 만 고쳐 놓는 경로가 "
         "닫힌다. 사본이 우리 repo 원본과 같은지는 reference_files_sha256 으로 리뷰어가 대조한다.")
+    # 🔴🔴 2026-09-04 — clean slab 이 **실물로 있으면** 보고량이 달라진다.
+    #   ⛔ 잡만 늘리고 선언을 안 바꾸면 문서는 "산출하지 않는다" 라고 말하는데 분석기는
+    #     값을 만드는 모순이 된다. 선언은 **실린 잡에서** 나와야 한다 (하드코딩 금지).
+    _has_cs = bool((man.get("refs") or {}).get("clean_slab"))
     man["reported_quantity"] = {
-        # ⛔ 회신 AZ P0-4 — 보고하는 것은 **ΔE_ads 하나**다. 이름 자리에서부터
-        #   그렇게 적는다 (종전엔 E_ads 를 앞에 세워 개별값이 산출물처럼 읽혔다).
-        "name": "ΔE_ads (두 조각의 흡착에너지 차) — 개별 E_ads 는 산출하지 않는다",
-        "korean": "흡착에너지 차 ΔE_ads · 개별 E_ads 는 E_S 를 안 재서 미산출",
+        # ⛔ 회신 AZ P0-4 — clean slab 이 없으면 보고하는 것은 **ΔE_ads 하나**다.
+        #   이름 자리에서부터 그렇게 적는다 (종전엔 E_ads 를 앞에 세워 개별값이 산출물처럼 읽혔다).
+        "name": ("E_ads(조각) 절대값과 그 차 ΔE_ads — clean slab 을 실었으므로 둘 다 보고한다"
+                 if _has_cs else
+                 "ΔE_ads (두 조각의 흡착에너지 차) — 개별 E_ads 는 산출하지 않는다"),
+        "korean": ("흡착에너지 E_ads 절대값 2건 + 그 차 ΔE_ads"
+                   if _has_cs else
+                   "흡착에너지 차 ΔE_ads · 개별 E_ads 는 E_S 를 안 재서 미산출"),
         # ⛔⛔ 회신 AZ P0-4 (2026-09-01) — **성분 균형이 안 맞았다.**
         #   `E_ads(f) = E_C(f) − E_G(f)` 에는 clean-slab 항 E_S 가 없다. 그건
         #   흡착에너지가 아니라 "복합체 − 기체" 이고, 그 이름으로 부르면 정의가
@@ -15571,17 +15653,36 @@ def build_bundle(a, ledger: Optional[Dict[str, Any]] = None) -> Path:
         #   ⇒ 정의는 균형 잡힌 형태로 적고, **보고하는 것은 ΔE_ads 하나**임을
         #     같은 자리에 박는다. 공통 E_S 는 ΔE_ads 에서 대수적으로 소거되므로
         #     **clean-slab 추가 잡은 필요 없다** (리뷰어 확인).
-        "formula": ("E_ads(f) = E_C(f) − E_S − E_G(f)   [정의 — 이 묶음은 **산출하지 않는다**] ; "
-                    "ΔE_ads = [E_C(sdcp) − E_G(sdcp)] − [E_C(ptfe) − E_G(ptfe)]"
-                    "   [**이것만 보고한다**]"),
-        "formula_note": {
+        "formula": (("E_ads(f) = E_C(f) − E_S − E_G(f)   [**보고한다** — clean slab 을 실었다] ; "
+                     "ΔE_ads = E_ads(sdcp) − E_ads(ptfe)   [**보고한다** · E_S 가 소거되므로 "
+                     "clean slab 의 오차에 둔감하다]")
+                    if _has_cs else
+                    ("E_ads(f) = E_C(f) − E_S − E_G(f)   [정의 — 이 묶음은 **산출하지 않는다**] ; "
+                     "ΔE_ads = [E_C(sdcp) − E_G(sdcp)] − [E_C(ptfe) − E_G(ptfe)]"
+                     "   [**이것만 보고한다**]")),
+        "formula_note": ({
+            "E_S_는_어디서_오나": "`refs/clean_slab__<주seed>` 의 static 에너지. 복합체와 "
+                                  "**같은 셀·같은 k·같은 AFM seed** 다 — 그래야 뺄 수 있다.",
+            "⚠_두_값의_신뢰도가_다르다": (
+                "ΔE_ads 는 E_S 가 소거돼 clean slab 의 오차에 **둔감**하다. "
+                "E_ads 절대값은 E_S 를 직접 빼므로 **민감**하다 — clean slab 이 복합체와 "
+                "다른 자성 basin 에 앉으면 그 차이가 통째로 절대값에 실린다. "
+                "그래서 `BASIN_MISMATCH_SLAB` 게이트가 절대값 쪽에만 걸린다."),
+            "⚠_절대값에만_남는_오염": (
+                "단일점이라 **변형에너지**(조각이 휘는 값 + 표면이 눌리는 값)가 값에 들어간다. "
+                "ΔE_ads 에서는 두 조각·두 표면이 서로 상당 부분 상쇄되지만 **절대값에서는 "
+                "상쇄되지 않는다.** ⇒ 완전 이완으로 계산한 문헌 binding energy 와 "
+                "**같은 표에 놓지 않는다.**"),
+            "⛔_종전_식": "`E_ads(f) = E_C(f) − E_G(f)` 는 **틀렸다** (E_S 누락). "
+                          "v20 까지 이 식이 MANIFEST 에 있었다 — 회신 AZ P0-4 정정.",
+        } if _has_cs else {
             "E_S_는_왜_없나": "공통 clean slab E_S 는 ΔE_ads 의 두 대괄호에서 서로 "
                               "빼지므로 대수적으로 소거된다. 그래서 ΔE_ads 만 보고하는 "
                               "한 clean-slab 잡이 **필요 없다** (회신 AZ P0-4·Q6).",
             "개별_E_ads_는": "E_S 를 재지 않았으므로 **산출 불가**다. 값을 만들지 않고, "
                              "만들 수 있는 것처럼 적지도 않는다.",
             "⛔_종전_식": "`E_ads(f) = E_C(f) − E_G(f)` 는 **틀렸다** (E_S 누락). "
-                          "v20 까지 이 식이 MANIFEST 에 있었다 — 회신 AZ P0-4 정정."},
+                          "v20 까지 이 식이 MANIFEST 에 있었다 — 회신 AZ P0-4 정정."}),
         "⚠_반드시_함께_적는_단서": {
             "ko": "MLIP(UMA-s-1p1) 이완 기하 위의 **단일점** 계산이며 DFT 이온 이완을 "
                   "하지 않았다. 조각·표면 변형에너지와 고정 gas conformer 선택 효과가 "
@@ -21144,6 +21245,12 @@ def main():
     ap.add_argument("--cores", type=int, default=48,
                     help="잡당 코어 수 — MANIFEST·SUBMIT_CONTRACT 에 기록된다 "
                          "(비용 모형 기준선과 같아야 추정이 맞는다)")
+    ap.add_argument("--clean_slab", action="store_true",
+                    help="C-12 구성(--refs_minimal)에 **clean slab 잡을 더한다** — "
+                         "그래야 절대 E_ads = E_C − E_S − E_G 가 나온다 (2026-09-04 1저자 요청). "
+                         "주 seed + 부 seed + 둘째 셀(c2, 절대값의 진공 수렴) 3잡이 늘어난다. "
+                         "⛔ `--refs_minimal` 을 **끄는 것으로 대신하지 말 것** — 그러면 nzmag "
+                         "대조가 사라져 molecular_spin_controls 가 비고 분석기가 전 조각을 막는다.")
     ap.add_argument("--refs_minimal", action="store_true",
                     help="기준계를 **기체 box24 하나씩**으로 줄인다 — clean slab · box20 · "
                          "nzmag 대조를 만들지 않는다 (회신 AJ 의 C-12 구성). "

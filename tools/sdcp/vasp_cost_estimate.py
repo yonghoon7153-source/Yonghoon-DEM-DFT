@@ -314,6 +314,13 @@ def stage_of(rel, meta, seed_main):
     role = (meta or {}).get("role") or "primary"
     if kind == "mol_ref":
         return 1
+    # 🔴 2026-09-04 — clean slab 은 **기준계**다. `kind="clean_ref"` 가 아래 else 로 떨어져
+    #   전부 2단계로 갔는데, 그러면 1단계가 E_S 를 못 받아 **절대 E_ads 를 1단계 게이트에서
+    #   확인할 수 없다** (실측: v36 프로브 stage_jobs 10/9 — 클린 슬랩 3잡이 다 2단계).
+    #   주 seed 와 vacconv 는 1단계(복합체 규칙과 같은 기준), 부 seed 는 2단계(민감도).
+    if kind == "clean_ref":
+        return 1 if ((meta or {}).get("vacconv")
+                     or (meta or {}).get("seed") == seed_main) else 2
     if kind == "prospective_pose" and role == "primary" and (
             (meta or {}).get("vacconv") or (meta or {}).get("seed") == seed_main):
         return 1
