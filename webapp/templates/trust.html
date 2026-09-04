@@ -1,0 +1,255 @@
+{% extends "base.html" %}
+{% block title %}이 연구는 자기를 어떻게 의심하는가{% endblock %}
+{% block content %}
+{# 검증층(봉인·게이트·적대적 리뷰)의 대표 화면.
+
+   ⚠ 규율 셋 — `pipeline.html` 과 같다.
+   1. **숫자를 새로 만들지 않는다.** 전부 `docs/08_REVIEW_RESPONSE.md` 와
+      실행 로그의 사본이고, 화면에 그렇게 적고 인용을 금지한다 (하드룰 4).
+   2. **그림은 인라인 SVG.** CSP 가 `default-src 'self'` 라 바깥 자원을 못 쓴다.
+      `currentColor` + CSS 변수로 색을 받아 다크 모드를 따라간다.
+   3. **쉬운 말과 정확한 말을 나란히 둔다.** 쉬운 말만 두면 틀린 이해를 심고,
+      정확한 말만 두면 아무도 안 읽는다. 둘을 붙여 두고 **어느 쪽이 정본인지**
+      (오른쪽) 를 밝힌다. #}
+<header class="phead phead-pipe">
+  <p class="eyebrow">처음 온 사람을 위한 한 장 · 검증층</p>
+  <h1>이 연구는 자기 자신을 어떻게 의심하는가</h1>
+  <p class="lead">연구 코드에서 진짜 무서운 실수는 <b>계산이 틀리는 것</b>이 아니다.
+    계산은 잘 돌았는데 <b>내가 믿는 그 코드가 그 숫자를 만든 게 아닌</b> 경우다.
+    이 저장소는 그것을 사람의 기억이 아니라 <b>기계가 거부하는 방식</b>으로 막는다.
+    이 화면은 그 층을 설명한다 — 연구 내용 자체는
+    <a href="/pipeline">연구 파이프라인</a>에 있다.</p>
+</header>
+
+<!-- ══ 1 ══════════════════════════════════════════════════════════════ -->
+<section class="pipe-sec">
+  <h2 class="pipe-h"><span class="pipe-n">1</span> 무엇이 무서운가</h2>
+
+  <div class="tw">
+    <div class="tw-easy">
+      <span class="tw-tag tw-tag-e">쉬운 말</span>
+      <p>10시간 걸려 나온 표가 하나 있다. 그 표를 논문에 쓰려는데,
+        <b>그 표를 만든 프로그램이 그 사이에 바뀌었다면?</b> 표는 멀쩡해 보인다.
+        숫자도 그럴듯하다. 그런데 그 숫자는 <b>지금 코드의 결과가 아니다.</b></p>
+      <p>더 나쁜 경우도 있다. 시험 삼아 대충 돌려 본 결과가
+        <b>파일 이름만 그럴싸해서</b> 진짜 결과 자리에 들어가는 것.
+        아무도 거짓말을 안 했는데 보고서에 가짜가 실린다.</p>
+    </div>
+    <div class="tw-exact">
+      <span class="tw-tag tw-tag-x">정확한 말 <b>· 정본</b></span>
+      <p>산출물은 <code class="mono">source_digest</code>(RUN_SCOPE
+        <code class="mono">src/ tools/ configs/ scripts/ run.sh</code> 의 내용 해시),
+        <code class="mono">input_sha256</code>, <code class="mono">run_spec</code>
+        서명을 자기 manifest 에 담는다. 검증기는 그 기록끼리의 <b>자기일관성</b>과
+        입력 파일 <b>재해시</b>를 본다.</p>
+      <p>승격(promotion) 경계 — smoke 실행은 계획 gate 를 면제받으므로
+        (계약 §13.3.3) 그 산출은 <b>인용 대상이 될 수 없다</b>. 면제와 승격 금지는
+        같은 경계여야 하고, 한쪽만 있으면 그것은 경계가 아니라 우회로다.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ══ 2 ══════════════════════════════════════════════════════════════ -->
+<section class="pipe-sec">
+  <h2 class="pipe-h"><span class="pipe-n">2</span> 세 겹으로 막는다</h2>
+
+  <figure class="pipe-fig">
+    <svg class="dg" viewBox="0 0 780 200" role="img"
+         aria-label="봉인, 게이트, 적대적 리뷰 세 겹이 순서대로 놓인 그림">
+      <g class="dg-layer">
+        <rect x="14" y="34" width="228" height="118" rx="10"/>
+        <text class="dg-head" x="128" y="62">① 봉인</text>
+        <text class="dg-t" x="128" y="88">무엇으로 만들었는지를</text>
+        <text class="dg-t" x="128" y="108">산출물 자신이 적는다</text>
+        <text class="dg-mono dg-small" x="128" y="132">source_digest · input_sha256</text>
+      </g>
+      <path class="dg-arrow" d="M246 93 h32"/>
+      <g class="dg-layer">
+        <rect x="282" y="34" width="228" height="118" rx="10"/>
+        <text class="dg-head" x="396" y="62">② 게이트</text>
+        <text class="dg-t" x="396" y="88">비싼 계산 <tspan class="dg-em">직전</tspan>에</text>
+        <text class="dg-t" x="396" y="108">계획에 있는지 확인한다</text>
+        <text class="dg-mono dg-small" x="396" y="132">계획 원장 · 실행권 claim</text>
+      </g>
+      <path class="dg-arrow" d="M514 93 h32"/>
+      <g class="dg-layer">
+        <rect x="550" y="34" width="216" height="118" rx="10"/>
+        <text class="dg-head" x="658" y="62">③ 적대적 리뷰</text>
+        <text class="dg-t" x="658" y="88">다른 리뷰어가 <tspan class="dg-em">뚫어 본다</tspan></text>
+        <text class="dg-t" x="658" y="108">막히면 NO-GO</text>
+        <text class="dg-mono dg-small" x="658" y="132">57 라운드째</text>
+      </g>
+    </svg>
+    <figcaption class="pipe-cite">세 겹은 서로를 대신하지 못한다 —
+      ①은 “무엇이 만들었나”, ②는 “만들어도 되나”, ③은 “①②에 구멍이 있나”를 본다.</figcaption>
+  </figure>
+
+  <div class="pipe-quote pipe-quote-plain">
+    <b>왜 리뷰가 “적대적”인가.</b> 잘 됐는지 물으면 잘 됐다는 답이 온다.
+    그래서 리뷰어에게 맡기는 일은 칭찬이 아니라 <b>반례를 만드는 것</b>이다 —
+    “이 규칙을 <b>어떻게 우회할 수 있나</b>”. 우회로가 나오면 그 라운드는
+    <b>NO-GO</b> 이고, 우리는 그 반례를 <b>회귀 시험으로 고정</b>한 뒤 다시 요청한다.
+  </div>
+</section>
+
+<!-- ══ 3 ══════════════════════════════════════════════════════════════ -->
+<section class="pipe-sec">
+  <h2 class="pipe-h"><span class="pipe-n">3</span> 실제로 있었던 구멍 하나 — 아홉 라운드가 걸렸다</h2>
+
+  <p class="pipe-p">추상적으로 들리니 <b>2026-09-04 에 닫은 구멍</b> 하나를 그대로 보인다.
+    리뷰어가 <b>49차부터 아홉 번</b> 같은 조건을 적었고(<code class="mono">P0-8</code>),
+    아홉 번 다 “미착수”로 넘어갔던 것이다.</p>
+
+  <div class="tw">
+    <div class="tw-easy">
+      <span class="tw-tag tw-tag-e">쉬운 말</span>
+      <p><b>도서관 비유.</b> 어떤 책은 “대출 금지”다. 그런데 그 판단을
+        <b>책이 어느 책장에 꽂혀 있는가</b>로 한다면?</p>
+      <p>책을 <b>옆 책장으로 옮기기만 하면</b> 대출이 된다.
+        책은 그대로인데 규칙이 통과한다. 도장이 <b>책이 아니라 책장</b>에
+        찍혀 있었던 것이다.</p>
+      <p class="tw-fix"><b>고친 방식.</b> 도장을 <b>책 내용 자체</b>에 묶었다.
+        내용이 같으면 어디로 옮겨도 같은 답이 나오고, 내용을 고치면
+        도장도 안 맞는다. 그리고 도장 대장은 <b>사서 옆</b>에 둔다 —
+        책 안에 두면 책을 복사한 사람이 도장까지 같이 고친다.</p>
+    </div>
+    <div class="tw-exact">
+      <span class="tw-tag tw-tag-x">정확한 말 <b>· 정본</b></span>
+      <p>승격 금지 판정이 <code class="mono">is_inside_namespace(path,
+        SMOKE_NAMESPACE)</code> <b>하나</b>였다. 경로는 산출의 성질이 아니라
+        “지금 어디 놓여 있는가”이므로, 그것으로 정본 여부를 정하는 한
+        그것은 경계가 아니라 <b>관례</b>다.</p>
+      <p>판정을 <b>내용</b>으로 옮겼다. 키는
+        <code class="mono">run_content_id()</code> = manifest 의 sha256,
+        등록부는 <code class="mono">&lt;원장&gt;/_exec_class</code> —
+        claim·attempt 와 <b>같은 authority</b> 다. run dir 안에 두면 바이트를
+        복사한 사람이 marker 도 고친다.</p>
+      <p><b>양쪽 분기가 모두 적는다.</b> smoke 면제와 계획 통과가 같은 순간에
+        등록된다. 한쪽만 적으면 등록부가 “smoke 블랙리스트”가 되고,
+        그러면 <b>등록 없음 = 아마 정본</b>이 되어 fail-closed 가 무너진다.</p>
+    </div>
+  </div>
+
+  <figure class="pipe-fig">
+    <svg class="dg" viewBox="0 0 780 268" role="img"
+         aria-label="경로로 판정하면 파일을 옮겼을 때 통과하고, 내용으로 판정하면 옮겨도 거부된다">
+      <text class="dg-head dg-l" x="16" y="24">이전 — <tspan class="dg-warn">경로</tspan>가 정한다</text>
+      <g class="dg-box"><rect x="16" y="36" width="150" height="56" rx="8"/>
+        <text class="dg-t" x="91" y="60">smoke 산출</text>
+        <text class="dg-mono dg-small" x="91" y="80">results/_smoke/…</text></g>
+      <path class="dg-arrow" d="M170 64 h44"/>
+      <text class="dg-mono dg-small" x="192" y="56">cp</text>
+      <g class="dg-box"><rect x="218" y="36" width="168" height="56" rx="8"/>
+        <text class="dg-t" x="302" y="60">같은 바이트</text>
+        <text class="dg-mono dg-small" x="302" y="80">/tmp/looks_canonical</text></g>
+      <path class="dg-arrow" d="M390 64 h44"/>
+      <g class="dg-box dg-out"><rect x="438" y="36" width="176" height="56" rx="8"/>
+        <text class="dg-t dg-t-b" x="526" y="68">승격 통과 ✗</text></g>
+
+      <text class="dg-head dg-l" x="16" y="150">이후 — <tspan class="dg-em">내용</tspan>이 정한다</text>
+      <g class="dg-box"><rect x="16" y="162" width="150" height="56" rx="8"/>
+        <text class="dg-t" x="91" y="186">smoke 산출</text>
+        <text class="dg-mono dg-small" x="91" y="206">내용 id = a1b2…</text></g>
+      <path class="dg-arrow" d="M170 190 h44"/>
+      <text class="dg-mono dg-small" x="192" y="182">cp</text>
+      <g class="dg-box"><rect x="218" y="162" width="168" height="56" rx="8"/>
+        <text class="dg-t" x="302" y="186">같은 바이트</text>
+        <text class="dg-mono dg-small" x="302" y="206">내용 id = a1b2… (그대로)</text></g>
+      <path class="dg-arrow" d="M390 190 h44"/>
+      <g class="dg-box dg-in"><rect x="438" y="162" width="176" height="56" rx="8"/>
+        <text class="dg-t dg-t-b" x="526" y="194">거부 ✓</text></g>
+      <g class="dg-box"><rect x="632" y="150" width="134" height="80" rx="8"/>
+        <text class="dg-t dg-small" x="699" y="176">등록부</text>
+        <text class="dg-mono dg-small" x="699" y="196">a1b2… → smoke</text>
+        <text class="dg-t dg-small" x="699" y="216">(원장 옆)</text></g>
+      <path class="dg-arrow-back" d="M628 190 h-8"/>
+    </svg>
+    <figcaption class="pipe-cite">위: 실측으로 재현한 구멍. 아래: 고친 뒤.
+      두 그림의 차이는 <b>화살표가 아니라 무엇을 보느냐</b>다.</figcaption>
+  </figure>
+
+  <div class="pipe-find">
+    <b>★ 그런데 진짜 어려운 건 “예전 산출물은 어쩌나”였다.</b>
+    이미 만들어 둔 결과에는 새 도장이 없다. 흔한 답은 둘인데 둘 다 나빴다 —
+    <b>전부 거부</b>하면 예전 결과를 못 쓰게 되고,
+    <b>당분간 봐준다</b>(migration 창)를 두면 그동안 <b>옛 경로 판정이 조용히 계속 산다</b>.
+    <br><br>
+    셋째 길을 골랐다: <b>migration 을 “기간”이 아니라 “산출물 한 건당 1회 행위”로 바꿨다.</b>
+    경로를 아예 안 보는 게 아니라 <b>딱 한 번만 보고, 무엇을 보고 정했는지를 영수증에 적는다.</b>
+    그 뒤로는 다시 안 본다. <span class="tw-mini">기간이 아니라 행위라서,
+    “언제 창을 닫나”라는 물음 자체가 사라진다.</span>
+  </div>
+
+  <pre class="tw-code"><code>{
+  "execution_class": "canonical",
+  "evidence": "legacy 분류 (58차 P0-8): 분류 시점 경로 results/grid_fit_v4 가
+               …/results/_smoke 밖이었다"
+}</code></pre>
+</section>
+
+<!-- ══ 4 ══════════════════════════════════════════════════════════════ -->
+<section class="pipe-sec">
+  <h2 class="pipe-h"><span class="pipe-n">4</span> 시험이 “통과”하는 것으로는 부족하다</h2>
+
+  <div class="tw">
+    <div class="tw-easy">
+      <span class="tw-tag tw-tag-e">쉬운 말</span>
+      <p>화재경보기를 달아 놓고 “울린 적 없으니 잘 되네”라고 하면 안 된다.
+        <b>연기를 피워 봐야</b> 안다.</p>
+      <p>그래서 이 저장소는 코드에 <b>일부러 결함을 심고</b> 시험이
+        빨개지는지 본다. 안 빨개지면 그 시험은 <b>지키는 척만</b> 하고 있었던 것이다.</p>
+    </div>
+    <div class="tw-exact">
+      <span class="tw-tag tw-tag-x">정확한 말 <b>· 정본</b></span>
+      <p>변이(mutation) 등록부에 지점을 적고, 12조각으로 나눠 전수 재생한다.
+        조각은 <code class="mono">expect_digest</code>·<code class="mono">runner_digest</code>
+        에 결속되므로 <b>코드가 움직이면 앞선 조각은 그 코드의 증거가 아니다</b>.</p>
+      <p>같은 규율을 <b>사람이 손으로 심는 변이</b>에도 쓴다. 바꾼 시험이 곧바로
+        초록이면 <b>fixture 가 진실을 가리고 있다</b>는 신호로 읽는다 —
+        이 저장소에서 <b>다섯 번</b> 실측된 패턴이다.</p>
+    </div>
+  </div>
+
+  <div class="pipe-quote pipe-quote-plain">
+    <b>바로 그날 실제로 걸렸다.</b> P0-8 을 고치고 새 회귀 7건을 썼더니 전부 초록이었다.
+    믿지 않고 앞단 검사를 무력화하는 변이를 심었더니 — <b>시험이 그대로 통과했다.</b>
+    제품에는 이중 방어가 있어 뒤쪽 층이 잡고 있었는데, 두 층의 오류 문구가
+    앞부분을 공유해서 <b>내 단언이 어느 층이 잡았는지 구분하지 못했던 것</b>이다.
+    문구를 앞단 것으로 못 박고, 변이를 심은 채 <b>빨간 것을 눈으로 본 뒤</b> 복원했다.
+  </div>
+</section>
+
+<!-- ══ 5 ══════════════════════════════════════════════════════════════ -->
+<section class="pipe-sec">
+  <h2 class="pipe-h"><span class="pipe-n">5</span> 대가 — 공짜가 아니다</h2>
+  <p class="pipe-p">이 층은 비용을 물린다. 숨기지 않고 적는다.</p>
+  <ul class="tw-cost">
+    <li><b>코드를 고치면 identity 가 움직인다.</b> RUN_SCOPE 를 한 줄만 고쳐도
+      <code class="mono">source_digest</code> 가 바뀌고, 검증 영수증과 변이 증거를
+      <b>다시 만들어야</b> 한다.</li>
+    <li><b>그러나 봉인된 산출물은 무효가 아니다.</b> 검증기의 재계산 대조는
+      <b>같은 commit·clean 일 때만</b> 돌고, 다르면 “재계산 불가”로 사실만 남긴다.
+      곧 10시간짜리 격자를 다시 돌릴 필요는 없다.</li>
+    <li><b>fail-closed 는 불편하다.</b> 모르면 통과가 아니라 거부다. 그래서
+      예전 산출물에 <b>분류 한 단계</b>가 생겼다 — 그 불편이 곧 경계다.</li>
+    <li><b>느리다.</b> 아홉 라운드 동안 못 닫힌 조건이 실제로 있었다.
+      이 화면이 그 예를 굳이 드는 이유다.</li>
+  </ul>
+</section>
+
+<!-- ══ 6 ══════════════════════════════════════════════════════════════ -->
+<section class="pipe-sec">
+  <h2 class="pipe-h"><span class="pipe-n">6</span> 지금 상태</h2>
+  <div class="tw-nums">
+    {% for k, v, d in nums %}
+    <div class="tw-num"><span class="tw-num-v">{{ v }}</span>
+      <span class="tw-num-k">{{ k }}</span>
+      <span class="tw-num-d">{{ d }}</span></div>
+    {% endfor %}
+  </div>
+  <p class="pipe-caveat"><b>인용 금지.</b> 위 숫자는 사본이다. 정본은
+    <code class="mono">degradation-degeneracy/docs/08_REVIEW_RESPONSE.md</code> 와
+    실행 로그이며, 인용은 거기서 한다 (하드룰 4).
+    라운드별 원문은 <a href="/gate">게이트 원장</a>에 있다.</p>
+</section>
+{% endblock %}

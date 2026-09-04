@@ -1758,3 +1758,81 @@ body.rd-on .reader .doc-body :is(h1, h2, h3, h4) { scroll-margin-top: 14px; }
    보통 화면에서는 문서 아래쪽에 놓여 안 보였을 뿐이고, 리더(고정 상자)에서는
    화면 구석에 그대로 떠 버렸다 — 숨김을 명시한다. */
 .sel-bar[hidden] { display: none; }
+
+/* ─────────────────────────────────────────────────────────────────────
+   /trust — 검증층 대표 화면
+   쉬운 말 ↔ 정확한 말을 **나란히** 둔다. 한쪽만 두면 안 되는 이유는
+   template 주석에 있다. 좁은 화면에서는 세로로 쌓이고, 그때도 **쉬운 말이
+   먼저** 오도록 DOM 순서를 그대로 쓴다 (order 를 건드리지 않는다).
+   ───────────────────────────────────────────────────────────────────── */
+.tw {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+  margin: 18px 0;
+}
+@media (max-width: 860px) { .tw { grid-template-columns: 1fr; } }
+
+.tw-easy, .tw-exact {
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 14px 16px 4px;
+  background: var(--surface);
+}
+.tw-easy  { border-left: 3px solid var(--ok); }
+.tw-exact { border-left: 3px solid var(--accent); }
+.tw-easy p, .tw-exact p { margin: 0 0 12px; line-height: 1.72; }
+
+.tw-tag {
+  display: inline-block;
+  font-size: .74rem;
+  font-weight: 700;
+  letter-spacing: .02em;
+  padding: 2px 8px;
+  border-radius: 999px;
+  margin-bottom: 10px;
+}
+.tw-tag-e { background: color-mix(in srgb, var(--ok) 14%, transparent);
+            color: var(--ok); }
+.tw-tag-x { background: color-mix(in srgb, var(--accent) 14%, transparent);
+            color: var(--accent); }
+
+.tw-fix {
+  border-top: 1px dashed var(--line);
+  padding-top: 10px;
+}
+.tw-mini { color: var(--ink-3); font-size: .93em; }
+
+.tw-code {
+  margin: 14px 0 0;
+  padding: 12px 14px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--surface-2);
+  overflow-x: auto;               /* 좁은 화면에서 본문을 밀지 않는다 */
+  font-size: .86rem;
+  line-height: 1.6;
+}
+
+.tw-cost { margin: 12px 0 0; padding-left: 20px; }
+.tw-cost li { margin: 0 0 10px; line-height: 1.72; }
+
+.tw-nums {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 12px;
+  margin: 16px 0;
+}
+.tw-num {
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 14px 16px;
+  background: var(--surface);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.tw-num-v { font-size: 1.7rem; font-weight: 700; line-height: 1.1;
+            color: var(--accent); font-variant-numeric: tabular-nums; }
+.tw-num-k { font-weight: 600; }
+.tw-num-d { color: var(--ink-3); font-size: .86rem; line-height: 1.5; }

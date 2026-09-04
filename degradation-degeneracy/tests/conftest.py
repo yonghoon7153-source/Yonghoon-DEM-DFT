@@ -107,3 +107,31 @@ def tmp_path(request, tmp_path):
     d.mkdir()
     yield d
     shutil.rmtree(d, ignore_errors=True)
+
+
+@pytest.fixture(scope="session", autouse=True)
+def _exec_class_registry_is_not_polluted_by_tests():
+    """★ 58차 P0-8 후속 — **시험이 저장소의 실행 class 등록부를 늘리지 않는다.**
+
+    P0-8 이 등록부를 만들자마자 이 결함이 생겼다: `_complete_artifact()` 가
+    산출을 합성할 때마다 **실물** `docs/22p_gap/_exec_class/` 에 파일을 하나씩
+    남겼고, 한 번의 전체 회귀로 93건이 쌓여 그대로 커밋됐다 (실측).
+
+    `[해석]` 등록부는 **authority 데이터**다. 시험이 그것을 늘릴 수 있으면
+    "등록돼 있다" 는 사실의 값이 떨어진다 — 누가 언제 왜 넣었는지 모르는
+    항목이 섞이기 때문이다. 그래서 이 저장소에서 등록부에 남을 자격이 있는
+    것은 둘뿐이다: **실제 실행이 게이트를 지난 기록**과 **사람이 한 legacy 분류**.
+
+    세션 시작 때 이름을 찍어 두고 끝나면 **새로 생긴 것을 지운다.** 시험을
+    고치는 대신 여기서 쓸어 담는 이유는, 이 pollution 이 fixture 하나의 문제가
+    아니라 **"시험이 production authority 를 만진다"** 는 부류이기 때문이다 —
+    새 시험이 같은 실수를 해도 여기서 걸린다.
+    """
+    reg = ROOT / "docs" / "22p_gap" / "_exec_class"
+    before = {p.name for p in reg.glob("*.json")} if reg.is_dir() else set()
+    yield
+    if not reg.is_dir():
+        return
+    for p in reg.glob("*.json"):
+        if p.name not in before:
+            p.unlink(missing_ok=True)

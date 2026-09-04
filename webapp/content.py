@@ -1007,3 +1007,59 @@ def search(q: str, limit: int = 60) -> list[dict]:
                      "path": d["path"], "count": n, "snips": snips})
     hits.sort(key=lambda h: -h["count"])
     return hits[:limit]
+
+
+# ─────────────────────────────────────────────────────────────────────────
+# 검증층 요약 숫자 (/trust)
+# ─────────────────────────────────────────────────────────────────────────
+def trust_numbers() -> list[tuple[str, str, str]]:
+    """`/trust` 상단 숫자판.
+
+    ⚠ **여기서 숫자를 지어내지 않는다** (하드룰 4). 셀 수 있는 것만 실물에서
+    세고, 셀 수 없는 것(회귀 통과 수 같은 실행 결과)은 **적지 않는다** — 그런
+    값은 이 앱이 실행을 안 하므로 적는 순간 사본의 사본이 된다.
+
+    돌려주는 것은 `(이름, 값, 설명)` 이고, 못 세면 그 항목을 통째로 뺀다
+    (물음표를 채워 넣는 것보다 없는 편이 낫다).
+    """
+    out: list[tuple[str, str, str]] = []
+
+    # ① 게이트 라운드 수 — 원장의 `## §` 절을 센다
+    try:
+        g = gate_sections(1)
+        if g.get("available") and g.get("count"):
+            # ⚠ 이것은 **라운드 수가 아니다.** 원장의 `## §` 절 수이고, 초기
+            #   라운드는 절로 안 쪼개져 있어 실제 라운드보다 훨씬 작다
+            #   (실측: 절 11 vs 라운드 57+). 이름을 그대로 적는다.
+            out.append(("원장 절", str(g["count"]),
+                        "08_REVIEW_RESPONSE.md 의 §절 수 — 라운드 수가 아니다"))
+    except Exception:                                   # noqa: BLE001
+        pass
+
+    dd = ROOT / "degradation-degeneracy"
+
+    # ② 변이 증거 조각
+    mc = dd / "docs" / "22p_gap" / "mutation_coverage"
+    if mc.is_dir():
+        n = len(list(mc.glob("s*.json")))
+        if n:
+            out.append(("변이 증거 조각", str(n),
+                        "전수 재생을 나눠 담은 파일 (합집합이 등록부를 덮어야 한다)"))
+
+    # ③ 실행 class 등록부 — 이번 라운드에 생긴 것
+    ec = dd / "docs" / "22p_gap" / "_exec_class"
+    if ec.is_dir():
+        n = len(list(ec.glob("*.json")))
+        if n:
+            out.append(("분류된 산출물", str(n),
+                        "내용 해시로 실행 class 가 등록된 건수 (P0-8)"))
+
+    # ④ 회귀 시험 파일 수 — 실행 결과가 아니라 **파일 수**다 (셀 수 있다)
+    td = dd / "tests"
+    if td.is_dir():
+        n = len(list(td.glob("test_*.py")))
+        if n:
+            out.append(("회귀 시험 파일", str(n),
+                        "tests/test_*.py — 통과 수가 아니라 파일 수다"))
+
+    return out
