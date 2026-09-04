@@ -1661,3 +1661,100 @@ mark.hl.is-focus, .rail-i.is-focus {
   padding-top: 9px; border-top: 1px dashed var(--line);
   font-size: var(--fs-xs); color: var(--ink-3);
 }
+
+/* ══ 전체화면 리더 ═══════════════════════════════════════════════════════
+   본문 DOM 을 복제하지 않고 **모드만 바꾼다** (사유는 static/js/reader.js 머리말).
+   그래서 여기 있는 것은 전부 레이아웃이고, 본문 안쪽 규칙은 하나도 안 건드린다 —
+   하이라이트·메모·그림 팝업이 리더 안에서도 그대로 동작하는 이유다. */
+
+.rd-cta { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin: 0 0 14px; }
+.rd-open { font-weight: 600; }
+.rd-open .kbd { margin-left: 2px; }
+.rd-cta-n { font-size: var(--fs-2xs); color: var(--ink-3); }
+@media (max-width: 700px) { .rd-cta-n { display: none; } }
+
+.rd-bar {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 55;
+  background: var(--surface); border-bottom: 1px solid var(--line);
+  box-shadow: var(--shadow-1);
+}
+.rd-bar[hidden] { display: none; }
+.rd-prog { height: 3px; background: var(--line-2); }
+.rd-prog i { display: block; height: 100%; width: 0; background: var(--k, var(--accent)); transition: width .08s linear; }
+.rd-row { display: flex; align-items: center; gap: 8px; padding: 7px clamp(10px, 2.4vw, 20px); }
+.rd-title {
+  flex: 1 1 auto; min-width: 0; font-size: var(--fs-xs); font-weight: 600; color: var(--ink-2);
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.rd-pct { font-size: var(--fs-3xs); color: var(--ink-3); font-variant-numeric: tabular-nums; min-width: 3.2em; text-align: right; }
+.rd-grp { display: inline-flex; align-items: center; gap: 2px; border: 1px solid var(--line); border-radius: var(--r-sm); padding: 1px; }
+.rd-fsn { font-size: var(--fs-3xs); color: var(--ink-3); font-variant-numeric: tabular-nums; min-width: 3.4em; text-align: center; }
+.rd-b {
+  border: 1px solid transparent; border-radius: var(--r-sm); background: transparent;
+  color: var(--ink-2); font: inherit; font-size: var(--fs-2xs); font-weight: 500;
+  padding: 4px 9px; cursor: pointer; white-space: nowrap;
+}
+.rd-b:hover { background: var(--surface-2); border-color: var(--line); }
+.rd-b[aria-pressed="false"] { color: var(--ink-3); opacity: .55; }
+.rd-grp .rd-b { padding: 3px 8px; }
+.rd-close { border-color: var(--line); }
+.rd-close .kbd { margin-left: 5px; }
+@media (max-width: 1000px) { .rd-wide-only { display: none; } }
+
+/* ── 모드가 켜졌을 때 ─────────────────────────────────────────────────── */
+body.rd-on { overflow: hidden; }
+body.rd-on .sidebar,
+body.rd-on .menu-toggle,
+body.rd-on .nav-veil,
+body.rd-on .skip-link { display: none !important; }
+body.rd-on .content::before { display: none; }
+
+/* `.content` 에는 z-index 를 주지 않는다 — 주면 새 쌓임맥락이 생겨 그림 팝업
+   (`.figpane` z 60)과 라이트박스(`.modal` z 80)가 본문 아래로 깔린다. */
+body.rd-on .content {
+  position: fixed; inset: 0; margin: 0; max-width: none;
+  padding: 0; background: var(--bg); overflow: hidden;
+}
+/* 머리글·빵부스러기·범례는 접는다. 본문(.reader)과 선택 도구막대만 남긴다. */
+body.rd-on .content > *:not(.reader):not(.sel-bar) { display: none !important; }
+
+body.rd-on .reader {
+  height: calc(100% - 42px); margin: 42px 0 0; gap: 0;
+  grid-template-columns: 226px minmax(0, 1fr);
+}
+body.rd-on .reader.reader-3 { grid-template-columns: 226px minmax(0, 1fr) 300px; }
+body.rd-on.rd-no-toc  .reader { grid-template-columns: minmax(0, 1fr); }
+body.rd-on.rd-no-toc  .reader.reader-3 { grid-template-columns: minmax(0, 1fr) 300px; }
+body.rd-on.rd-no-rail .reader.reader-3 { grid-template-columns: 226px minmax(0, 1fr); }
+body.rd-on.rd-no-toc.rd-no-rail .reader.reader-3 { grid-template-columns: minmax(0, 1fr); }
+body.rd-on.rd-no-toc  .reader-side { display: none; }
+body.rd-on.rd-no-rail .rail { display: none; }
+
+body.rd-on .reader-side,
+body.rd-on .rail {
+  position: static; top: auto; max-height: none; align-self: stretch;
+  height: 100%; overflow-y: auto; padding: 18px 14px 30vh;
+  border-right: 1px solid var(--line-2); background: var(--bg);
+}
+body.rd-on .rail { border-right: 0; border-left: 1px solid var(--line-2); }
+
+body.rd-on .reader .doc-body {
+  height: 100%; overflow-y: auto;
+  border: 0; border-radius: 0; box-shadow: none;
+  padding: 30px clamp(18px, 4vw, 56px) 34vh;
+  scroll-padding-top: 18px;
+}
+/* 스크롤 통이 바뀌었으니 앵커 여백도 그 통 기준으로 다시 잡는다 */
+body.rd-on .reader .doc-body :is(h1, h2, h3, h4) { scroll-margin-top: 14px; }
+
+@media (max-width: 1000px) {
+  body.rd-on .reader,
+  body.rd-on .reader.reader-3 { grid-template-columns: minmax(0, 1fr); }
+  body.rd-on .reader-side,
+  body.rd-on .rail { display: none; }
+}
+
+/* `.sel-bar` 는 `display:flex` 라 UA 의 `[hidden]{display:none}` 을 이긴다.
+   보통 화면에서는 문서 아래쪽에 놓여 안 보였을 뿐이고, 리더(고정 상자)에서는
+   화면 구석에 그대로 떠 버렸다 — 숨김을 명시한다. */
+.sel-bar[hidden] { display: none; }

@@ -41,6 +41,7 @@ CDN·웹폰트·아이콘 폰트·인라인 `<script>` 를 전부 못 쓴다. �
 | 테마 초기화 | `static/js/boot.js` — `<head>` 에서 **동기** 로드 | 인라인 스크립트를 못 쓰므로 파일로 뺐다. 페인트 전에 `data-theme` 을 정해 FOUC 를 막는다 |
 | 커맨드 팔레트 (⌘K · Ctrl-K · `/`) | `static/js/app.js` + `/api/palette.json` | 목록을 `fetch` 로 받아 **DOM 으로** 채운다 (`innerHTML` 금지 — 제목이 위키 파일에서 온 문자열이다) |
 | 목차 스크롤스파이 | `app.js` · `IntersectionObserver` | 6만 자 digest 에서 "지금 어디" 를 목차에 표시 |
+| **전체화면 리더** | `static/js/reader.js` + `style.css` 의 `body.rd-on` | 논문 digest·개념 문서에서 `F`(또는 본문 위 버튼)로 들어가고 `Esc` 로 나온다. **본문 DOM 을 복제하지 않는다** — 하이라이트·메모(`app.js`)와 그림 팝업(`figref.js`)이 그 노드에 직접 걸려 있어서, 복제하면 같은 문단이 두 벌 생기고 주석이 어느 쪽을 가리키는지 모호해진다. 그래서 모드만 바꾼다 (실측: 리더 안에서 하이라이트·메모 레일이 보통 화면과 **같게** 동작) |
 | 스윕 라인 차트 | `content.sweep_chart()` → 인라인 SVG | 차트 라이브러리를 못 쓴다. 좌표를 **서버가** 계산하고 템플릿은 그리기만 한다. 계열은 색 + 파선 + 점 모양 + 선 끝 직접 라벨 **넷**으로 구분 (색 하나에 안 기댄다) |
 
 ## 실행
@@ -191,7 +192,9 @@ webapp/
   static/css/style.css   토큰 두 벌(라이트/다크) · 타이포 스케일 · 카드/패널 · 본문 격자 ·
                          타임라인 · 차트 · 표 · 팔레트 · 좁은 화면 · 인쇄
   static/js/boot.js      테마 초기화·토글 + 사이드바 서랍 (<head> 동기 로드)
-  static/js/app.js       커맨드 팔레트 + 목차 스크롤스파이 (defer)
+  static/js/app.js       커맨드 팔레트 + 목차 스크롤스파이 + 하이라이트·메모 (defer)
+  static/js/reader.js    전체화면 리더 — 모드 전환·진행률·글자 크기·본문 폭·목차/메모 접기
+                         (읽기 취향만 localStorage 에 남긴다. 저장소에는 아무것도 안 쓴다)
   static/js/figref.js    Fig. N 자동 링크 · 팝업 · 그림 카드 · 라이트박스
 ```
 

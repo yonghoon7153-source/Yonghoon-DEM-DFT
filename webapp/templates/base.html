@@ -121,6 +121,8 @@
 </div>
 
 <script src="{{ url_for('static', filename='js/app.js') }}?v={{ asset_version }}" defer></script>
+{# 전체화면 리더 — `.reader` 가 있는 문서(논문 digest·개념·satellite)에서만 스스로 켜진다 #}
+<script src="{{ url_for('static', filename='js/reader.js') }}?v={{ asset_version }}" defer></script>
 {% block scripts %}{% endblock %}
 </body>
 </html>
