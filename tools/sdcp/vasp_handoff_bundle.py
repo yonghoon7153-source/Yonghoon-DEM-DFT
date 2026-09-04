@@ -13689,8 +13689,10 @@ export EXPECT_ZIP_SHA256=%s
 #    문자열 검사는 우회가 가능해, 종류와 수만 받고 실행 명령은 러너가 조립합니다.
 export VASP_LAUNCHER_KIND=mpirun            # mpirun|mpiexec|srun|none|wrapper
 export LAUNCHER_BIN=/abs/path/to/mpirun     # **필수** — PATH 에서 찾지 않습니다. 없으면 exit 2
-export VASP_NPROC=%d                        # 랭크 수 (잡 하나당) — **KPAR %d 의 배수**여야 합니다
-#    이 묶음의 INCAR 은 k-point 병렬을 KPAR=%d 로 고정했습니다 (48·64·96·128·256 전부 가능).
+export VASP_NPROC=%d                        # 랭크 수 (잡 하나당) — **KPAR × NCORE = %d 의 배수**여야 합니다
+#    이 묶음의 INCAR 은 KPAR=%d · NCORE=%d 로 고정했습니다. 쓸 수 있는 랭크: %s.
+#    ⛔ KPAR 배수만으로는 부족합니다 — k-그룹당 랭크가 NCORE 로 안 나뉘면 VASP 가 조용히
+#      NCORE 를 되돌립니다 (예: 랭크 20 은 KPAR 4 로 나뉘지만 그룹당 5 가 NCORE 4 로 안 나뉩니다).
 #    배수가 아니면 러너가 **첫 VASP 실행 전에** 멈춥니다. INCAR 은 해시로 동결돼 고칠 수 없습니다.
 #    ⚠ KPAR 은 k-그룹마다 배열 사본을 들어 **노드당 메모리가 늘어납니다.** 모자라면 랭크를
 #      줄이지 마시고(배수 조건이 깨집니다) 노드를 늘려 주십시오.
@@ -13706,7 +13708,13 @@ export VASP_EXE=/abs/path/to/vasp_std       # 실행파일 절대경로 (봉인 
 bash run_staged.sh 1     # census → POTCAR 조립+봉인 → 봉인 census → 1단계 → 판정
 bash run_staged.sh 2     # 1단계 통과(STAGE1_PASS.json) 뒤에만""" % (
         manifest_sha, zip_sha, int(getattr(a, "cores", 48) or 48),
-        KPAR_VAL, KPAR_VAL,
+        KPAR_VAL * NCORE_VAL, KPAR_VAL, NCORE_VAL,
+        # 🔴 2026-09-04 — 랭크 예시는 **조건에서 만든다**. 하드코딩 목록은 이 묶음이 실제로
+        #   쓰는 코어 수(192)를 빠뜨리고 있었다.
+        "·".join(str(c) for c in sorted({
+            c for c in (48, 64, 96, 128, 192, 256, 384, 512,
+                        int(getattr(a, "cores", 48) or 48))
+            if c % (KPAR_VAL * NCORE_VAL) == 0})),
         int(((man.get("submission") or {}).get("max_concurrency")) or getattr(a, "concurrency", 8) or 8),
         int(((man.get("submission") or {}).get("max_concurrency")) or getattr(a, "concurrency", 8) or 8))
 
@@ -13809,8 +13817,9 @@ def _walltime_block(man: Dict[str, Any], a) -> str:
             f"그보다 짧으면 잘립니다). 큐 상한이 {_rec} h 보다 짧으면 **제출 전에** 알려 주십시오 — static "
             f"단일점은 나눌 수 없고 재개도 없어, 그 잡은 더 긴 큐/노드 배정이 필요합니다.\n"
             f"⚠ **실행 위치** — `run_staged.sh` 는 **계산 노드 할당 안에서**(로그인 노드 아님) 잡 {_conc}개 × "
-            f"VASP_NPROC 랭크를 동시에 띄우므로, 그 할당이 단계 전체(1단계 최장 ≈{_rec} h) 동안 유지돼야 "
-            f"합니다. 봉인 프로브도 같은 노드에서 VASP 를 인자 없이 한 번 잠깐 기동합니다."
+            f"VASP_NPROC 랭크를 동시에 띄우므로, 그 할당이 **요청 walltime {_rec} h** 동안 유지돼야 "
+            f"합니다 (1단계 최장 잡의 중앙 추정은 {_h} h 지만, 잘리지 않으려면 위 {_rec} h 로 잡아 주십시오). "
+            f"봉인 프로브도 같은 노드에서 VASP 를 인자 없이 한 번 잠깐 기동합니다."
             + _cap_line
             + _tot_line
             # 🔴 2026-09-04 — 모형은 ±2배다. 큐 상한이 빠듯하면 **대표 잡 하나를 먼저 재는 것**이
@@ -17642,6 +17651,17 @@ def selftest() -> int:
         chk("KPAR(%d) × NCORE(%d)" % (KPAR_VAL, NCORE_VAL)
             in str(_pz9.get("⛔_VASP_NPROC_제약")),
             "⛔음성 K2 P1-3: 제약을 KPAR 배수가 아니라 **KPAR × NCORE 배수**로 적는다")
+        # ── 실행 블록 산문도 같은 조건을 말하는가 (MANIFEST 만 고치면 문서가 거짓말한다) ──
+        _need9 = KPAR_VAL * NCORE_VAL
+        for _d9, _n9 in ((_rd9, "README"), (_sb9, "SUBMIT")):
+            chk("KPAR × NCORE = %d 의 배수" % _need9 in _d9,
+                f"⛔음성: {_n9} 실행 블록이 **KPAR × NCORE = {_need9} 배수**를 말한다 "
+                "(종전 산문은 'KPAR 4 의 배수' 라는 더 약한 조건이었다)")
+            chk("KPAR %d 의 배수" % KPAR_VAL not in _d9,
+                f"⛔음성: {_n9} 에 옛 약한 조건 문구가 남아 있지 않다")
+            chk(str(_sm9.get("cores_per_job")) in _d9.split("쓸 수 있는 랭크")[-1][:200]
+                if "쓸 수 있는 랭크" in _d9 else True,
+                f"{_n9} 랭크 예시가 이 묶음의 코어 수를 담는다")
         chk("잡 사이에 의존성이 있다" in str(_sm9.get("phase_dependencies"))
             and "배열 제출도 쓰지 않는다" in str(_sm9.get("runner_note")),
             "⛔음성 AR P1-11: MANIFEST 가 staged 에서 **의존성 있음 + 단일 경로**를 "
