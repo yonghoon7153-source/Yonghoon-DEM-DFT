@@ -121,6 +121,26 @@ print(json.dumps({"n_conditions": len(cond_ids),
                   "source_digest": source_digest()}))
 '''
 
+#: 소유 증명이 **어디에 사는지** 를 그 tree 의 authority 에게 묻는다.
+#:
+#: ★ 2026-09-04 — 여기는 원래 `root / "results" / "_attempts"` 라는 **리터럴**
+#:   이었고, 57차 P0-1 이 자리를 원장에서 유도하도록 바꾼 뒤로 그 리터럴만
+#:   남아 이 시험이 계속 실패했다 (실측: grid 는 rc=0 으로 완주하고 토큰을
+#:   `docs/22p_gap/_attempts/` 에 정상 발급했다).
+#:
+#:   고칠 때 **다른 리터럴로 바꾸지 않는 이유**: 57차 P0-1 의 요지가 "caller 가
+#:   경로를 고르지 못한다" 이므로, 시험이 경로를 적어 두면 그 요지를 시험이
+#:   먼저 어긴다. 다음에 authority 가 또 옮겨도 이 probe 는 따라간다.
+#:   경로가 옳은지는 `attempt_path_for()` 의 단위 시험이 따로 본다 — 여기서
+#:   확인하는 것은 **발급·권한·회수라는 lifecycle** 이다.
+_TOKEN_PATH = r'''
+import json, sys
+from pathlib import Path
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from tools.preserve import attempt_path_for
+print(json.dumps({"path": str(attempt_path_for(sys.argv[1]))}))
+'''
+
 _READ_PLAN = r'''
 import json, sys, yaml
 from pathlib import Path
@@ -218,7 +238,10 @@ def test_grid_then_fit_then_finalize_completes_across_processes(tree):
     made = _py(root, _MAKE_PLAN, _LEG, "configs/_e2e49.yaml", _OUT_REL, "pocv")
     assert made["n_conditions"] == 2, made
 
-    tok = root / "results" / "_attempts" / f"{_LEG}.token"
+    # 자리는 **그 tree 의 authority(원장)** 가 정한다 — 시험이 적어 두지 않는다
+    # (57차 P0-1: caller 는 경로를 고를 수 없다). 위 `_TOKEN_PATH` 주석 참조.
+    tok = Path(_py(root, _TOKEN_PATH, _LEG)["path"])
+    assert not tok.exists(), f"grid 전에 이미 소유 증명이 있다: {tok}"
 
     # ── ① grid process — 실행권을 발급하고 소유 증명을 남긴다
     g = _run(root, "--mode", "grid", "--leg", _LEG,
@@ -233,7 +256,22 @@ def test_grid_then_fit_then_finalize_completes_across_processes(tree):
     assert state["planned"][_LEG] == "running", state["planned"]
 
     # ── ② 난입 셋을 모두 막는다 (crash 뒤 두 번째 시작 방지)
-    #   ②-a shell 을 건너뛰고 모듈을 직접 부른다 — 소유 증명이 아예 없다
+    #
+    # ★ 2026-09-04 재구성 — 셋 다 **57차 P0-1 이전의 구성**이었다. 그때는 소유
+    #   증명의 자리를 caller 가 `--attempt-file` 로 골랐으므로 "그 인자를 안
+    #   준다 / 틀린 파일을 준다 / 없는 파일을 준다" 로 세 경우를 만들 수 있었다.
+    #   57차가 그 인자를 없앴다(자리를 원장에서 유도한다). 그래서 옛 구성은
+    #   **난입을 만들지 못한다** — ②-a 는 정상 실행이 되고 ②-b·②-c 는 없는
+    #   인자를 넘긴다.
+    #
+    #   **완화가 아니다.** 겨누는 성질은 그대로 두고, 그 성질을 지금 credential
+    #   경로 위에서 다시 구성한다: 증명을 **없애거나 위조해** 난입을 만든다.
+    #   (실측으로 셋 다 거부됨을 확인한 뒤 문구를 적었다.)
+    keep_tok = tok.read_bytes()
+
+    #   ②-a shell 을 건너뛰고 모듈을 직접 부른다 + 증명이 **실제로** 없다.
+    #        gate 가 wrapper(run.sh)에만 있으면 여기서 뚫린다.
+    tok.unlink()
     direct = subprocess.run(
         [sys.executable, "-m", "src.fitting", "--leg", _LEG,
          "--in", _OUT_REL, "--objective", "pocv", "--nproc", "2"],
@@ -244,25 +282,32 @@ def test_grid_then_fit_then_finalize_completes_across_processes(tree):
         "모듈을 직접 부르면 소유 증명 없이도 들어간다 — gate 가 wrapper 에만 "
         "있는 것과 같다\n" + (direct.stdout + direct.stderr)[-2000:])
 
-    #   ②-b **틀린** 소유 증명 — 파일은 있는데 내용이 다르다
-    forged = root / "forged.token"
-    # ★ 52차 P0-1 — 소유 증명 파일은 이제 leg·attempt 를 담는 record 다.
-    #   형식은 맞고 **비밀만 틀린** 파일이어야 verifier 검사에 도달한다.
-    forged.write_text(json.dumps(
+    #   ②-c 증명이 없는 채로 정상 경로(run.sh)로 들어와도 막힌다
+    gone = _run(root, "--mode", "fit", "--leg", _LEG, "--in", _OUT_REL,
+                "--objective", "pocv", "--nproc", "2", expect_rc=1)
+    assert "이미 실행 중" in (gone.stdout + gone.stderr), (
+        gone.stdout + gone.stderr)
+
+    #   ②-b **틀린** 소유 증명 — 파일은 제자리에 있는데 비밀이 다르다.
+    #   ★ 52차 P0-1 — 형식은 맞고 **비밀만 틀려야** verifier 검사에 도달한다.
+    tok.write_text(json.dumps(
         {"leg_id": _LEG, "attempt_id": "0" * 32, "token": "0" * 32},
         sort_keys=True) + "\n", encoding="utf-8")
+    os.chmod(tok, 0o600)
     bad = _run(root, "--mode", "fit", "--leg", _LEG, "--in", _OUT_REL,
-               "--attempt-file", str(forged),
                "--objective", "pocv", "--nproc", "2", expect_rc=1)
-    assert "소유 증명이 맞지 않는다" in (bad.stdout + bad.stderr), (
-        bad.stdout + bad.stderr)
+    # ★ 2026-09-04 변이 검증 — 문구를 **앞단 gate 의 것으로** 못 박는다.
+    #   처음엔 "소유 증명이 맞지 않는다" 만 봤는데, 그 접두어는 뒤쪽 층
+    #   (phase 기록 권한 검사)도 쓴다. 그래서 앞단 verifier 를 무력화하는
+    #   변이를 심어도 시험이 **통과했다** (실측). 제품은 이중 방어라 안전하지만
+    #   이 시험은 그 사실 때문에 앞단을 못 지키고 있었다. 뒷문장까지 본다.
+    assert "그 attempt 를 갖고 있지 않다" in (bad.stdout + bad.stderr), (
+        "앞단 claim verifier 가 위조 증명을 잡지 않았다 (뒤쪽 층이 잡았을 수 "
+        "있으나 그것은 이 단언의 대상이 아니다)\n" + bad.stdout + bad.stderr)
 
-    #   ②-c 없는 파일
-    gone = _run(root, "--mode", "fit", "--leg", _LEG, "--in", _OUT_REL,
-                "--attempt-file", str(root / "없는.token"),
-                "--objective", "pocv", "--nproc", "2", expect_rc=1)
-    assert "소유 증명 파일이 없다" in (gone.stdout + gone.stderr), (
-        gone.stdout + gone.stderr)
+    #   원래 증명을 돌려놓는다 — ③ 이 이것으로 이어받아야 한다
+    tok.write_bytes(keep_tok)
+    os.chmod(tok, 0o600)
 
     #   ②-d ★ 49차 P0-5 — grid 가 만든 것이 **아닌** 곡선은 읽지 못한다.
     #        경로만 승인하면 같은 이름 아래 다른 바이트가 들어와도 fit 이
