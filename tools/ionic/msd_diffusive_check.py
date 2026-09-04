@@ -195,7 +195,14 @@ def dinc_plateau(t, y, windows=DINC_WINDOWS, tol=DINC_PLATEAU_TOL):
         return {"per_window": per, "n": len(per), "spread": None,
                 "status": "insufficient", "trend": None}
     vals = [per[k] for k in sorted(per)]
-    med = sorted(vals)[len(vals) // 2]
+    # 🔴 내부리뷰 AX P1-2 (2026-09-04) — 짝수 개일 때 `sorted[n//2]` 는 **위쪽 중앙값**이라
+    #   진짜 median 보다 크고, med 가 크면 spread 가 작게 나와 **통과 쪽으로 편향**된다.
+    #   실측: [0.122,0.117,0.107,0.100] → 옛 0.117 vs 진짜 0.112 (spread 18.8% → 19.6%).
+    #   창이 3개일 때는 정확해서 지금까지 안 드러났고, 생산길이를 늘려 4창이 되는
+    #   순간 드러난다. 그래서 400 ps 런 **전에** 고친다.
+    _sv = sorted(vals)
+    _n = len(_sv)
+    med = _sv[_n // 2] if _n % 2 else (_sv[_n // 2 - 1] + _sv[_n // 2]) / 2.0
     spread = (max(vals) - min(vals)) / abs(med) if med else None
     trend = (vals[-1] - vals[0]) / abs(med) if med else None
     return {"per_window": per, "n": len(per), "spread": spread,
@@ -1564,6 +1571,24 @@ def selftest():
         "[plateau·음성] 창을 못 채우면 'insufficient' — 평평하다고 하지 않는다")
     chk(dinc_plateau(_tt, [0.0] * len(_tt))["status"] == "insufficient",
         "[plateau·음성] 기울기 0 (D_inc≤0) 은 세지 않는다 — 0 으로 '평평' 을 만들지 않는다")
+    # ── 내부리뷰 AX P1-2 (2026-09-04) — **짝수 창** median 편향 회귀 ────────────
+    #   지금까지 실물이 항상 3창(200 ps 라 (50,100) 이 빠졌다)이라 짝수 경로가
+    #   **한 번도 안 돌았다.** 생산길이를 늘려 4창이 되는 순간 드러난다.
+    _ev = [0.122, 0.117, 0.107, 0.100]
+    _sv = sorted(_ev)
+    _med_true = (_sv[1] + _sv[2]) / 2.0
+    _med_old = _sv[2]                       # 옛 구현: 위쪽 중앙값
+    chk(abs(_med_true - 0.112) < 1e-9 and abs(_med_old - 0.117) < 1e-9,
+        f"[plateau·짝수] 옛 med {_med_old} 는 진짜 median {_med_true} 보다 **크다**")
+    chk((max(_ev) - min(_ev)) / _med_true > (max(_ev) - min(_ev)) / _med_old,
+        "[plateau·음성] 옛 median 은 spread 를 **작게** 만든다 = 통과 쪽 편향")
+    # 실제 함수가 짝수 창에서 진짜 median 을 쓰는가 — 4창이 다 차는 t 범위로 친다
+    _t4 = [round(0.5 * k, 2) for k in range(1, 401)]              # 0.5 … 200 ps
+    _f4 = [12.0 + 0.7 * u for u in _t4]
+    _p4 = dinc_plateau(_t4, _f4)
+    chk(_p4["n"] == 4, f"[plateau·짝수] 400 ps 궤적이면 창 4개가 다 찬다 (n={_p4['n']})")
+    chk(_p4["status"] == "plateau" and _p4["spread"] < 1e-9,
+        "[plateau·짝수·양성] 상수 절편은 4창에서도 산포 0")
     chk(run_verdict(_tt, _flat)[0] == CITABLE,
         "[판정·핵심회귀] 상수 절편 = **인용 가능** (β<1 이어도)")
     chk(run_verdict(_tt, _pow)[0] == NO_VALUE,
