@@ -1871,3 +1871,10 @@ body.rd-on .reader .doc-body :is(h1, h2, h3, h4) { scroll-margin-top: 14px; }
 .tw-tag-g { background: color-mix(in srgb, var(--ok) 16%, transparent); color: var(--ok); }
 /* /trust 의 지역 화살촉 — 공용 `.dg-arrow` 는 /pipeline 그림도 쓰므로 안 건드린다 */
 .dg-ah { fill: var(--ink-3); stroke: none; }
+
+/* /trust 의 두 그림은 "글자가 든 도해"다 — 그래프가 아니라 문장이 상자에
+   들어가 있는 형태. `.pipe-fig > svg { width: 100% }` 만 두면 넓은 창에서
+   viewBox(760)가 1.8배까지 늘어나, 상자 안 12px 글자가 21px 이 되어 본문
+   (15px)보다 커지고 상자에는 빈 공간만 남는다. 자연 크기 근처로 묶고
+   가운데 정렬한다 — 좁은 창에서는 여전히 100% 로 줄어든다. */
+.tw-fig > svg { max-width: 800px; margin-inline: auto; }

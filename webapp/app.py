@@ -24,6 +24,26 @@ from markupsafe import Markup
 import content as C
 
 app = Flask(__name__)
+
+# 템플릿·정적파일을 매 요청마다 다시 읽는다.
+#
+# 이 앱은 debug=False 로 뜬다 (아래 app.run). Flask 의 기본값은
+# TEMPLATES_AUTO_RELOAD = app.debug 이므로, 그대로 두면 Jinja 가 첫 렌더에서
+# 컴파일한 템플릿을 프로세스가 죽을 때까지 들고 있는다. 그러면 템플릿을
+# 고치고 브라우저를 새로고침해도 **옛 화면이 그대로 나온다** — 실제로
+# 이 함정에 걸려서 "고쳤는데 똑같다" 를 한 라운드 낭비했다.
+# 정적파일도 같은 이유로 캐시 수명을 0 으로 둔다 (CSS 를 고쳐도 안 바뀌는 문제).
+#
+# 성능 논거는 여기에 없다. 이 앱은 로컬에서 혼자 읽는 창이고, 매 요청 디스크
+# 재확인 비용보다 "화면이 파일과 다르다" 가 훨씬 비싸다.
+#
+# 순서가 중요하다. Flask 는 `app.jinja_env` 에 **처음 접근할 때** Jinja
+# 환경을 만들고 그때 config 를 읽는다. 그래서 config 설정은 jinja_env 를
+# 건드리기 전에 와야 한다 — 아래 trim_blocks 두 줄이 원래 여기 위에 있었고,
+# 그것 때문에 TEMPLATES_AUTO_RELOAD 를 켜도 안 먹었다 (실측으로 확인).
+app.config["TEMPLATES_AUTO_RELOAD"] = True
+app.config["SEND_FILE_MAX_AGE_DEFAULT"] = 0
+
 app.jinja_env.trim_blocks = True
 app.jinja_env.lstrip_blocks = True
 
