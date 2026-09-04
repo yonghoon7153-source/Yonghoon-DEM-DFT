@@ -1878,3 +1878,15 @@ body.rd-on .reader .doc-body :is(h1, h2, h3, h4) { scroll-margin-top: 14px; }
    (15px)보다 커지고 상자에는 빈 공간만 남는다. 자연 크기 근처로 묶고
    가운데 정렬한다 — 좁은 창에서는 여전히 100% 로 줄어든다. */
 .tw-fig > svg { max-width: 800px; margin-inline: auto; }
+
+/* 도해 안의 제목 — 크기·굵기·색만 준다. `text-anchor` 는 **일부러 안 쓴다**.
+   정렬은 `.dg-t`(middle) 와 `.dg-l`(start) 가 정하고, 이 클래스가 anchor 를
+   건드리면 `.dg-l` 로 왼쪽 정렬해 둔 행 제목까지 가운데로 끌려간다.
+
+   왜 이 주석이 있나: `.dg-head`·`.dg-small` 은 색/크기 유틸일 뿐인데
+   (pipeline.html 은 `.dg-head` 를 화살촉 <path> 에 쓴다) 제목 스타일인 줄
+   알고 `.dg-t` 없이 단독으로 썼다. 그러면 `text-anchor` 가 기본값 start 로
+   떨어져, 상자 중심 x 에 놓은 글자가 자기 폭의 절반만큼 오른쪽으로 밀린다 —
+   글자 수마다 밀린 양이 달라서(24·31·48px) 세 상자가 제각각으로 보였다.
+   SVG 텍스트는 클래스에 anchor 가 없으면 조용히 왼쪽 정렬된다. */
+.tw-cap { font-size: 14px; font-weight: 680; fill: var(--ink); }
