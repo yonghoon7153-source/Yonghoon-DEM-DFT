@@ -972,6 +972,69 @@
     "⚠_digest_의_뜻": "이 지문은 `ratification` 을 뺀 결정 내용의 sha256 이다. 비준 뒤 내용을 고치면 지문이 어긋나 검사가 재승인을 요구한다.",
     "근거": "렌즈2·4·5 (2026-09-03) 가 공통으로 '비준 문서 이탈 · 원장 부재' 를 잡았다. 1저자가 안 A 를 택해 비준했다."
    }
+  },
+  {
+   "id": "D-2026-09-04-sdcp-c12-absolute-eads",
+   "schema_version": 2,
+   "kind": "estimand",
+   "scope": "sdcp.c12.reported_quantity",
+   "slot": "absolute_eads_admitted",
+   "decision_state": "active",
+   "status": "active",
+   "applies_to": {
+    "systems": [
+     "sdcp_neutral",
+     "ptfe_c10"
+    ],
+    "tasks": [
+     "fragment_contrast"
+    ],
+    "methods": [
+     "vasp-544__pbe-u62__mlip-geom-sp"
+    ],
+    "use_cases": [
+     "manuscript",
+     "closure"
+    ]
+   },
+   "title": "C-12 보고량에 **절대 E_ads(fixed-geometry adsorption energy)** 를 넣는다",
+   "statement": "E_ads(f) = E_C(f) − E_S − E_G(f)   [**보고한다** — clean slab 을 실었다] ; ΔE_ads = E_ads(sdcp) − E_ads(ptfe_c10)   [**보고한다**]",
+   "rationale": "2026-09-04 1저자 요청. clean slab 3잡(주 seed · 부 seed · vacconv c2)을 실으면 E_S 가 생겨 E_ads(f) = E_C − E_S − E_G 가 산출된다. 종전 §1 은 clean slab 이 없어서 '개별 E_ads 는 산출하지 않는다' 였고, 그건 능력의 서술이지 금지가 아니었다. ⚠ 절대값은 ΔE_ads 보다 신뢰도가 낮다(E_S 민감 · 변형에너지 비상쇄) — §1 의 ★ 절이 그 한계를 문서에 박는다.",
+   "supersedes": [],
+   "depends_on": [
+    "D-2026-08-30-sdcp-c12-path"
+   ],
+   "record": "db/properties/sdcp_c12_claim_prereg_2026_08_31.json#1_보고량",
+   "protocol_ref": "db/properties/sdcp_c12_protocol_2026_08_30.json",
+   "method_ref": "tools/sdcp/vasp_handoff_bundle.py (--clean_slab · reported_quantity_matches_prereg)",
+   "enforcement": "preflight(--check_governance)의 `reported_quantity_matches_prereg` 가 MANIFEST 의 보고량 이름을 이 항과 대조한다. 어긋나면 한 잡도 안 돈다. 금지 이름을 보고량의 이름·식으로 쓰면 같은 게이트가 잡는다. 반송 뒤에는 `BASIN_MISMATCH_SLAB` 가 **절대값만** 차단하고 ΔE_ads 는 살린다.",
+   "citable": "no",
+   "citable_why": "DFT 결과 0잡 시점. 결과가 나오면 시험한 두 축 조건부로만 보고한다.",
+   "date": "2026-09-04",
+   "registered_at": "2026-09-04",
+   "registered_by": "agent (1저자 2026-09-04 결정 반영)",
+   "status_history": [
+    {
+     "at": "2026-09-04",
+     "state": "proposed",
+     "note": "1저자 요청 등록 — 비준은 사람 몫. 종전 이름: ΔE_ads (두 조각의 흡착에너지 차) — 개별 E_ads 는 산출하지 않는다"
+    },
+    {
+     "at": "2026-09-04",
+     "state": "active",
+     "note": "1저자 비준 (scientific_owner). 계산 전에 닫았다."
+    }
+   ],
+   "ratification": {
+    "state": "ratified",
+    "role": "scientific_owner",
+    "actor_id": "yonghoon7153@gmail.com",
+    "timestamp": "2026-09-04T02:17:57Z",
+    "commit": "f9717b63eb4a9d4980d6de27c7adc37ac8c14e0e",
+    "decision_digest": "sha256:5fd40818e034ac16d3807ccd9594d78f4d470248855cfc9b958bd2b221bbe5d7",
+    "⚠_digest_의_뜻": "`ratification` 을 뺀 결정 내용의 sha256 이다.",
+    "근거": "1저자 2026-09-04: '다시 개정안이고 adsorption energy로 해'."
+   }
   }
  ]
 }

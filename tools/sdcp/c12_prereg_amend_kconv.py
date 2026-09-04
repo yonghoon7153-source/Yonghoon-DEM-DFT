@@ -80,6 +80,61 @@ VARIANTS = {
 }
 
 
+# ═══════════════════════════════════════════════════════════════════════════
+# 개정 ② — §1_보고량: 절대 E_ads 를 **보고량에 넣는다** (2026-09-04 1저자 결정)
+# ═══════════════════════════════════════════════════════════════════════════
+#   배경: clean slab 을 실으면 E_S 가 생겨 E_ads(f) = E_C − E_S − E_G 가 산출된다.
+#   종전 §1 은 "개별 E_ads 는 산출하지 않는다" 로 비준돼 있어 그대로면 preflight 가 막는다
+#   (`reported_quantity_matches_prereg`). ⇒ §1 을 개정하고 다시 비준한다.
+#   이름은 사전등록 자신의 2026-09-01 결정("adsorption 을 쓰되 한정어를 붙여 통일")을 따른다.
+EST_KEY = "1_보고량"
+EST_DEC_ID = "D-2026-09-04-sdcp-c12-absolute-eads"
+EST_NEW = {
+    "이름": "E_ads (fixed-geometry adsorption energy) 절대값 2건 + 그 차 ΔE_ads",
+    "한국어": "고정기하 흡착에너지 E_ads 절대값(sdcp·ptfe) 과 그 차 ΔE_ads — 셋 다 보고한다",
+    "식": ("E_ads(f) = E_C(f) − E_S − E_G(f)   [**보고한다** — clean slab 을 실었다] ; "
+           "ΔE_ads = E_ads(sdcp) − E_ads(ptfe_c10)   [**보고한다**]"),
+    "기호": "E_C 복합체 · E_S clean slab · E_G 기체 조각 (전부 같은 셀·k·AFM seed 의 static)",
+    "⛔_부르면_안_되는_이름": [
+        "binding energy · free energy — 평형·고립계 양이 아니다 (이 금지는 **유지**한다)",
+        "⚠ 이름이 아니라 **용법 금지**: 이 E_ads 를 옛 wave1 값과 **같은 표에** 두지 않는다 "
+        "(프로토콜이 다르다 — 그쪽은 별도 마감·보류 상태다)",
+        "⚠ 완전 이완으로 계산한 문헌 adsorption/binding energy 와 **같은 표에 두지 않는다** — "
+        "우리 값은 고정기하다",
+    ],
+    "포함": ["조각 변형에너지", "표면 변형에너지", "고정된 gas conformer 선택 효과"],
+    "제외": ["기하 이완", "영점·열적 기여", "용매·계면 전기장"],
+    "★_두_값의_신뢰도가_다르다": (
+        "ΔE_ads 는 E_S 가 대수적으로 소거돼 clean slab 의 오차에 **둔감**하다. "
+        "E_ads 절대값은 E_S 를 직접 빼므로 **민감**하다 — clean slab 이 복합체와 다른 자성 "
+        "basin 에 앉으면 그 차이가 통째로 절대값에 실린다. ⇒ 원고에서 두 값을 같은 확신으로 "
+        "쓰지 않는다. 순위·부호 주장은 ΔE_ads 로, 절대값은 '규모(order)' 로만."),
+    "★_변형에너지는_절대값에서_상쇄되지_않는다": (
+        "단일점이라 조각·표면 변형에너지가 값에 들어간다. ΔE_ads 에서는 두 조각·두 표면이 "
+        "서로 상당 부분 상쇄되지만 **절대값에서는 상쇄되지 않는다.** 이것이 이름에 "
+        "`fixed-geometry` 한정어를 유지하는 이유다."),
+    "★_E_S_의_요건": (
+        "clean slab 은 복합체와 **같은 셀 · 같은 k · 같은 AFM seed(초기 MAGMOM)** 여야 하고 "
+        "같은 자유도(NUPDOWN=−1)로 돈다 — 같은 *state-selection policy* 다. "
+        "실제로 같은 basin 에 앉았는지는 반송 뒤 `BASIN_MISMATCH_SLAB` 게이트가 판정하며, "
+        "어긋나면 **절대값만** 차단하고 ΔE_ads 는 살린다(E_S 가 소거되므로)."),
+    "★_절대값의_진공_수렴": (
+        "진공 두께 효과는 ΔE_ads 에서는 상쇄되지만 절대값에서는 남는다. ⇒ "
+        "`vacconv/clean_slab__<주seed>__c2` 를 함께 싣고, 절대값은 c1↔c2 차이를 병기한다."),
+    "⚠_개명_2026_09_01": (
+        "1저자 결정: 'adsorption' 을 쓰되 **한정어 'fixed-geometry' 를 붙인 형태로 통일**한다. "
+        "2026-09-04 개정도 그 결정을 그대로 따른다 — 한정어를 떼는 것은 여전히 별도 결정이 필요하다."),
+    "⚠_개정_전_2026_08_31": {
+        "이름": "ΔE_ads (두 조각의 흡착에너지 차) — 개별 E_ads 는 산출하지 않는다",
+        "왜_그랬나": "clean slab 잡을 싣지 않아 E_S 가 없었다. 공통 E_S 는 ΔE_ads 에서 "
+                     "대수적으로 소거되므로 차만 보고하는 한 필요 없었다 (회신 AZ P0-4·Q6).",
+        "무엇이_바뀌었나": "2026-09-04 1저자 요청으로 clean slab 3잡(주 seed · 부 seed · c2)을 "
+                          "싣기로 했다. E_S 가 생기므로 절대값이 산출 가능해졌다.",
+        "⛔": "이 칸은 **이력**이다. 지우지 않는다.",
+    },
+}
+
+
 def prereg_digest(doc):
     c = {k: v for k, v in doc.items() if k != "ratification"}
     return hashlib.sha256(json.dumps(c, sort_keys=True, ensure_ascii=False).encode("utf-8")).hexdigest()
@@ -146,8 +201,130 @@ def _selftest():
         real["ratification"] = {"content_digest": prereg_digest(real)}
         chk(prereg_digest(real) == real["ratification"]["content_digest"],
             "실물 사전등록 사본에서도 성립한다 (repo 는 안 건드린다)")
+    # ── 개정 ② §1_보고량 (2026-09-04) ───────────────────────────────────────
+    chk("fixed-geometry" in EST_NEW["이름"] and "adsorption energy" in EST_NEW["이름"],
+        "새 이름이 사전등록 자신의 2026-09-01 결정(adsorption + 한정어)을 따른다")
+    _forb = " ".join(EST_NEW["⛔_부르면_안_되는_이름"])
+    chk("binding energy" in _forb,
+        "⛔음성: 'binding energy' 금지를 **유지**한다 (개정하면서 슬쩍 풀지 않는다)")
+    _named = " | ".join(str(EST_NEW.get(k) or "") for k in ("이름", "한국어", "식", "기호"))
+    chk("binding energy" not in _named.lower(),
+        "⛔음성: 그 금지어를 **자기 이름 칸에** 쓰지 않는다 (게이트가 자기 문서를 물면 안 된다)")
+    chk("E_C(f) − E_S − E_G(f)" in EST_NEW["식"],
+        "식이 성분 균형(E_S 포함)을 갖췄다 — 회신 AZ P0-4 의 그 실수를 되풀이하지 않는다")
+    chk(EST_NEW.get("⚠_개정_전_2026_08_31", {}).get("이름", "").startswith("ΔE_ads"),
+        "⛔음성: 종전 보고량을 **이력으로 보존**한다 (덮어쓰고 지우지 않는다)")
+    chk(any("신뢰도가_다르다" in k for k in EST_NEW)
+        and any("상쇄되지_않는다" in k for k in EST_NEW),
+        "절대값의 두 한계(E_S 민감 · 변형에너지 비상쇄)가 문서에 박혀 있다")
+    chk(EST_NEW["포함"] == ["조각 변형에너지", "표면 변형에너지", "고정된 gas conformer 선택 효과"],
+        "포함/제외 목록은 개정 전과 같다 (재는 것이 바뀐 게 아니라 **보고 범위**가 넓어진 것)")
+    # ★ 생성기와 **글자 그대로** 같은가. preflight 게이트가 정확 일치를 요구하므로
+    #   둘이 갈리면 v36 은 한 잡도 못 돈다. 문자열을 실제 소스에서 읽어 대조한다.
+    _gen = REPO / "tools/sdcp/vasp_handoff_bundle.py"
+    if _gen.is_file():
+        _txt = _gen.read_text(encoding="utf-8")
+        chk(('"%s"' % EST_NEW["이름"]) in _txt,
+            "생성기 `reported_quantity.name` 이 이 개정안과 **글자 그대로** 같다 "
+            "(갈리면 preflight 가 v36 을 통째로 막는다)")
+        chk(('"%s"' % EST_NEW["한국어"]) in _txt,
+            "생성기 `reported_quantity.korean` 도 같다")
     print("selftest %d/%d · %s" % (n[1], n[0], "PASS" if n[1] == n[0] else "FAIL"))
     return 0 if n[1] == n[0] else 1
+
+
+def _amend_estimand(a):
+    """§1_보고량 을 개정한다 — 절대 E_ads 를 보고량에 넣는다 (2026-09-04).
+
+    ⛔ 이 함수가 **못 하는 것**
+      · 절대값이 물리적으로 쓸 만한지 판단하지 않는다. 그건 §1 의 ★ 절들이 적는 한계다.
+      · §2(허용 서술)를 자동으로 못 고친다 — 새 문장은 §1 안에 넣고 사람이 §2 로 옮긴다.
+      · 이미 발송된 v35 를 무효화하지 않는다. v35 는 ΔE_ads 번들로 유효하다.
+    """
+    today = a.date
+    now = datetime.datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ")
+    head = subprocess.run(["git", "-C", str(REPO), "rev-parse", "HEAD"],
+                          capture_output=True, text=True).stdout.strip()
+    pre = json.loads(PRE.read_text(encoding="utf-8"))
+    _old = (pre.get(EST_KEY) or {}).get("이름")
+    pre[EST_KEY] = dict(EST_NEW)
+    hist = pre.setdefault("status_history", [])
+    hist.append({"at": today, "state": "proposed",
+                 "note": ("§1_보고량 개정 — clean slab 3잡을 실어 E_S 가 생기므로 "
+                          "**절대 E_ads 도 보고량에 넣는다**. 이름은 사전등록 자신의 "
+                          "2026-09-01 결정(adsorption + 한정어 fixed-geometry)을 따른다. "
+                          "'binding energy' 금지는 유지. ⚠ 비준은 사람 몫.")})
+    if a.ratify:
+        hist.append({"at": today, "state": "ratified",
+                     "note": "1저자 비준 (scientific_owner) — 절대 E_ads 보고량 편입. DFT 결과 0잡 시점."})
+        pre["status"] = "ratified"
+        pre.pop("ratification", None)
+        pre["ratification"] = {
+            "state": "ratified", "role": "scientific_owner", "at": today, "by": "1저자",
+            "content_digest": prereg_digest(pre),
+            "actor_id": BY, "timestamp": now, "commit": head,
+            "⛔_무엇에_대한_비준인가": ("이 문서에서 `ratification` 을 뺀 내용의 sha256 이다. "
+                                        "한 글자라도 바뀌면 지문이 달라지고 게이트가 재승인을 요구한다."),
+        }
+        if str(pre["ratification"]["content_digest"]) != prereg_digest(pre):
+            raise SystemExit("⛔ 내부 오류: 기록 digest ≠ 최종 문서 digest")
+    else:
+        pre["status"] = "proposed"
+    PRE.write_text(json.dumps(pre, ensure_ascii=False, indent=1) + "\n", encoding="utf-8")
+
+    dec = json.loads(DEC.read_text(encoding="utf-8"))
+    ds = [d for d in dec["decisions"] if d.get("id") != EST_DEC_ID]
+    d = {
+        "id": EST_DEC_ID, "schema_version": 2, "kind": "estimand",
+        "scope": "sdcp.c12.reported_quantity", "slot": "absolute_eads_admitted",
+        "decision_state": "active" if a.ratify else "proposed",
+        "status": "active" if a.ratify else "proposed",
+        "applies_to": {"systems": ["sdcp_neutral", "ptfe_c10"], "tasks": ["fragment_contrast"],
+                       "methods": ["vasp-544__pbe-u62__mlip-geom-sp"],
+                       "use_cases": ["manuscript", "closure"]},
+        "title": "C-12 보고량에 **절대 E_ads(fixed-geometry adsorption energy)** 를 넣는다",
+        "statement": EST_NEW["식"],
+        "rationale": ("2026-09-04 1저자 요청. clean slab 3잡(주 seed · 부 seed · vacconv c2)을 실으면 "
+                      "E_S 가 생겨 E_ads(f) = E_C − E_S − E_G 가 산출된다. 종전 §1 은 clean slab 이 "
+                      "없어서 '개별 E_ads 는 산출하지 않는다' 였고, 그건 능력의 서술이지 금지가 아니었다. "
+                      "⚠ 절대값은 ΔE_ads 보다 신뢰도가 낮다(E_S 민감 · 변형에너지 비상쇄) — §1 의 ★ 절이 "
+                      "그 한계를 문서에 박는다."),
+        "supersedes": [], "depends_on": ["D-2026-08-30-sdcp-c12-path"],
+        "record": "db/properties/sdcp_c12_claim_prereg_2026_08_31.json#%s" % EST_KEY,
+        "protocol_ref": "db/properties/sdcp_c12_protocol_2026_08_30.json",
+        "method_ref": "tools/sdcp/vasp_handoff_bundle.py (--clean_slab · reported_quantity_matches_prereg)",
+        "enforcement": ("preflight(--check_governance)의 `reported_quantity_matches_prereg` 가 MANIFEST 의 "
+                        "보고량 이름을 이 항과 대조한다. 어긋나면 한 잡도 안 돈다. 금지 이름을 보고량의 "
+                        "이름·식으로 쓰면 같은 게이트가 잡는다. 반송 뒤에는 `BASIN_MISMATCH_SLAB` 가 "
+                        "**절대값만** 차단하고 ΔE_ads 는 살린다."),
+        "citable": "no",
+        "citable_why": "DFT 결과 0잡 시점. 결과가 나오면 시험한 두 축 조건부로만 보고한다.",
+        "date": today, "registered_at": today,
+        "registered_by": "agent (1저자 2026-09-04 결정 반영)",
+        "status_history": [{"at": today, "state": "proposed",
+                            "note": "1저자 요청 등록 — 비준은 사람 몫. 종전 이름: %s" % _old}],
+    }
+    if a.ratify:
+        d["status_history"].append({"at": today, "state": "active",
+                                    "note": "1저자 비준 (scientific_owner). 계산 전에 닫았다."})
+        d["ratification"] = {
+            "state": "ratified", "role": "scientific_owner", "actor_id": BY,
+            "timestamp": now, "commit": head,
+            "decision_digest": "sha256:" + dec_digest(d),
+            "⚠_digest_의_뜻": "`ratification` 을 뺀 결정 내용의 sha256 이다.",
+            "근거": "1저자 2026-09-04: '다시 개정안이고 adsorption energy로 해'.",
+        }
+    ds.append(d)
+    dec["decisions"] = ds
+    DEC.write_text(json.dumps(dec, ensure_ascii=False, indent=1) + "\n", encoding="utf-8")
+    print("→ %s : %s 개정 · status %s" % (PRE.name, EST_KEY, pre["status"]))
+    print("   종전 이름: %s" % _old)
+    print("   새   이름: %s" % EST_NEW["이름"])
+    print("→ %s : %s (%s)" % (DEC.name, EST_DEC_ID, d["decision_state"]))
+    if a.ratify:
+        print("   prereg content_digest =", pre["ratification"]["content_digest"])
+        print("   decision_digest       =", d["ratification"]["decision_digest"])
+    return 0
 
 
 def main():
@@ -155,10 +332,18 @@ def main():
     if "--selftest" in sys.argv:
         raise SystemExit(_selftest())
     ap.add_argument("--selftest", action="store_true")
-    ap.add_argument("--variant", choices=sorted(VARIANTS), required=True)
+    ap.add_argument("--amend", choices=("kconv", "estimand"), default="kconv",
+                    help="kconv = δ_k 축 설계 제외(기본·2026-09-03) · "
+                         "estimand = §1_보고량 에 절대 E_ads 추가(2026-09-04)")
+    ap.add_argument("--variant", choices=sorted(VARIANTS),
+                    help="kconv 개정에서만 필수 (안 A/B)")
     ap.add_argument("--ratify", action="store_true", help="1저자 '비준' 뒤에만")
     ap.add_argument("--date", default=datetime.date.today().isoformat())
     a = ap.parse_args()
+    if a.amend == "kconv" and not a.variant:
+        ap.error("--amend kconv 은 --variant 가 필요하다 (A|B)")
+    if a.amend == "estimand":
+        raise SystemExit(_amend_estimand(a))
     today = a.date
     now = datetime.datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ")
     head = subprocess.run(["git", "-C", str(REPO), "rev-parse", "HEAD"], capture_output=True, text=True).stdout.strip()

@@ -15639,10 +15639,13 @@ def build_bundle(a, ledger: Optional[Dict[str, Any]] = None) -> Path:
     man["reported_quantity"] = {
         # ⛔ 회신 AZ P0-4 — clean slab 이 없으면 보고하는 것은 **ΔE_ads 하나**다.
         #   이름 자리에서부터 그렇게 적는다 (종전엔 E_ads 를 앞에 세워 개별값이 산출물처럼 읽혔다).
-        "name": ("E_ads(조각) 절대값과 그 차 ΔE_ads — clean slab 을 실었으므로 둘 다 보고한다"
+        # ⚠ 이 두 줄은 **비준 사전등록 §1_보고량 의 이름과 글자 그대로 같아야 한다** —
+        #   `reported_quantity_matches_prereg` 가 정확 일치를 요구한다 (2026-09-04).
+        #   고치려면 사전등록을 먼저 개정하고 재비준한 뒤 여기를 맞춘다. 반대 순서 금지.
+        "name": ("E_ads (fixed-geometry adsorption energy) 절대값 2건 + 그 차 ΔE_ads"
                  if _has_cs else
                  "ΔE_ads (두 조각의 흡착에너지 차) — 개별 E_ads 는 산출하지 않는다"),
-        "korean": ("흡착에너지 E_ads 절대값 2건 + 그 차 ΔE_ads"
+        "korean": ("고정기하 흡착에너지 E_ads 절대값(sdcp·ptfe) 과 그 차 ΔE_ads — 셋 다 보고한다"
                    if _has_cs else
                    "흡착에너지 차 ΔE_ads · 개별 E_ads 는 E_S 를 안 재서 미산출"),
         # ⛔⛔ 회신 AZ P0-4 (2026-09-01) — **성분 균형이 안 맞았다.**
