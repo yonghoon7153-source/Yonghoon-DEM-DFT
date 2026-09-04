@@ -156,17 +156,45 @@ def polish_with_llm(cfg: Config, llm: LLM, body: str, date: str) -> str:
     return out.strip() + "\n" if out and "## References" in out else body
 
 
-def digest_stats(db: PaperDB, papers: list[Paper]) -> dict:
+def digest_stats(db: PaperDB, papers: list[Paper], cfg: Config | None = None) -> dict:
+    """Digest counts + the four window-tuning metrics agreed with Claude Code (2026-09-04).
+
+    `mail.digest_window_hours` is currently 36 h, chosen with no evidence. Rather than guess a
+    new value, every morning run records what we agreed to look at, so the decision can be made
+    from data in a few days:
+      weekday / n_papers==0        → 0편 비율과 요일 분포 (월요일에 몰리면 주말 공백이 원인)
+      oldest_selected_age_h        → 창 상한의 실측 근거 (선택된 논문 중 가장 오래된 것)
+      n_redigested                 → 이미 digested 였던 논문이 다시 뽑혔는가
+                                     (있으면 "마지막 발송 이후 전부"로 바꾸는 것은 위험하다)
+    """
     counts = db.counts()
-    week = (datetime.now(timezone.utc) - timedelta(days=7)).isoformat(timespec="seconds")
+    now = datetime.now(timezone.utc)
+    week = (now - timedelta(days=7)).isoformat(timespec="seconds")
+    tz = ZoneInfo(cfg.timezone) if cfg else timezone.utc
+
+    ages = []
+    for p in papers:
+        stamp = p.analyzed_at or p.first_seen
+        try:
+            ages.append((now - datetime.fromisoformat(stamp)).total_seconds() / 3600.0)
+        except (TypeError, ValueError):
+            continue
+
     return {
         "n_papers": len(papers),
         "n_a": sum(1 for p in papers if p.tier == "A"),
         "n_b": sum(1 for p in papers if p.tier == "B"),
         "n_c": sum(1 for p in papers if p.tier == "C"),
+        "n_alerts": sum(1 for p in papers if (p.analysis or {}).get("scooping_alert", {}).get("hit")),
         "db_total": counts.get("total", 0),
         "n_week": len(db.since(week, "first_seen")),
         "n_rejected": counts.get("rejected", 0),
+        # --- window tuning telemetry ---
+        "weekday": datetime.now(tz).strftime("%a"),
+        "is_empty": len(papers) == 0,
+        "oldest_selected_age_h": round(max(ages), 1) if ages else None,
+        "n_redigested": sum(1 for p in papers if p.digested_at),
+        "window_h": int(cfg.get("mail.digest_window_hours", 36)) if cfg else None,
     }
 
 

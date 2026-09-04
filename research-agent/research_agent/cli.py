@@ -262,7 +262,7 @@ def _build_digest(cfg: Config, db: PaperDB, date: str, llm: LLM | None,
     body = render_body(papers, cfg, v, date)
     if llm and cfg.get("digest.llm_polish", False):
         body = polish_with_llm(cfg, llm, body, date)
-    stats = digest_stats(db, papers)
+    stats = digest_stats(db, papers, cfg)
     path = v.write_digest(date, body, stats, force=force)
     return path, papers, stats, body
 

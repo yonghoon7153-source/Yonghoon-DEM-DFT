@@ -1,5 +1,30 @@
 # CHANGELOG
 
+## [0.1.4] — 2026-09-04 · 병합 (Claude Code 측)
+Cowork v0.1.4 의 **신규분만** 가져왔다 (0.1.3→0.1.4 델타는 작다):
+`digest.py`(창 계측) · `cli.py` 한 줄(`digest_stats(db, papers, cfg)`) · VERSION·pyproject·__init__.
+⛔ 그쪽 tarball 은 또 자기 baseline 에서 갈라져 나와 브랜치 정본이 빠져 있다 —
+`config/agent.yaml`(mode: file) · `research_profile.md`(249줄) · `exporters/litdb.py`(markdown 어댑터 없음) ·
+`tests/test_litdb_markdown.py` 없음. **덮지 않았다.** 테스트 24 passed 유지.
+
+## [0.1.4] — 2026-09-04
+### Added — 디제스트 창 튜닝 계측 (Claude Code §3 합의)
+- `mail.digest_window_hours: 36` 은 **근거 없이 정한 값**이다. 추측으로 바꾸는 대신, 판단에 필요한
+  네 지표를 매 morning 실행이 `runs.summary` 에 기록하도록 계측을 넣었다:
+  `weekday` · `is_empty`(n_papers==0) · `oldest_selected_age_h`(선택된 논문 중 가장 오래된 것) ·
+  `n_redigested`(이미 digested 였는데 다시 뽑힌 편수) · `window_h`.
+  판정 기준도 미리 정해 뒀다 — 0편 비율 30 % 초과면 창이 짧다 / 0편이 월요일에 몰리면 주말 공백이
+  원인이라 72 h / `n_redigested` 가 0이 아니면 "마지막 발송 이후 전부"로 바꾸는 것은 위험하다.
+  **데이터를 보고 기준을 만들지 않는다 — 기준을 먼저 정하고 데이터가 채워지면 판단한다.**
+- `digest_stats` 에 `n_alerts`(선점 경보 건수) 추가 — 디제스트 제목·frontmatter 에 노출.
+
+### ⚠ 운영 발견 — Scholar alert 가 이 메일함에 **한 통도 오지 않고 있다**
+- 2026-09-04 12:00 NOON 첫 실전 실행: alert 0건 → `[SILENT]` 로 정상 종료.
+- Gmail `in:anywhere` (스팸·휴지통 포함) 전수 검색 결과 `scholaralerts-noreply@google.com` 발신 메일이
+  **역대 0통**. 파이프라인은 옳게 동작했으나 **입력이 비어 있다.**
+- 원인 후보: (a) alert 가 다른 Google 계정(개인 gmail)으로 발송 (b) 수신 주소 오기 (c) 등록 직후라
+  아직 신규 논문이 없음. → 사용자 확인 필요. 이 문제가 풀리기 전까지 파이프라인은 매일 조용히 돈다.
+
 ## [0.1.3] — 2026-09-04 · 병합 (Claude Code 측)
 Cowork v0.1.3 tarball 을 브랜치 상태와 병합했다. 회신문 §5 의 정본 지정을 그대로 따랐다.
 - Cowork 정본으로 교체: `cli.py`(dry-run 게이트) · `vault.py`(write_digest 방어 + `_scooping_block`) ·
