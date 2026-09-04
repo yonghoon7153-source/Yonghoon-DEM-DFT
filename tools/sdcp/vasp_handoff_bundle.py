@@ -16165,10 +16165,22 @@ def build_bundle(a, ledger: Optional[Dict[str, Any]] = None) -> Path:
     #   ⇒ 정확한 **잡 키 집합**과 **단계 분류**를 manifest 에 박는다.
     #     분류 규칙은 analyze_results.py 의 `_stage_of` · run_staged.sh 와 1:1 이다.
     def _gen_stage_of(pl):
+        """⚠⚠ 단계 규칙의 **네 번째** 복사본이다. 넷이 다 같아야 한다:
+             ① 추정기 `vasp_cost_estimate.stage_of`
+             ② 러너 `run_staged.sh` 의 분류 코드
+             ③ census 검증본 (`got[d] = ...`)
+             ④ **여기** — 선언(`run_census.stage_of`) 을 쓰는 자리
+           실측 2026-09-04: ①②③ 만 고치고 ④ 를 놓쳤더니 러너는 12/7 로 가르는데
+           선언은 10/9 라 census 가 불일치로 죽었다 — `run_staged.sh 1` 이 census 를
+           먼저 부르므로 **외주처가 첫 걸음에서 멈춘다.** v35 는 clean_ref 잡이 없어
+           옛 규칙과 새 규칙이 우연히 같아서 안 드러났다.
+        """
         m = (pl.get("meta") or {})
         kind, role, vac = m.get("kind"), m.get("role"), m.get("vacconv")
         if kind == "mol_ref":
             return "1"
+        if kind == "clean_ref":
+            return "1" if (vac or m.get("seed") == SEED_MAIN) else "2"
         if kind == "prospective_pose" and role == "primary":
             return "1" if (vac or m.get("seed") == SEED_MAIN) else "2"
         return "2"
@@ -17819,6 +17831,26 @@ def selftest() -> int:
             # ⚠ 조용히 죽은 검사는 아무것도 보증하지 못한다 (CLAUDE.md) — 건너뛴 것을 **찍는다**.
             print("  · estimand 봉인 검사 **건너뜀** (통과 아님): 이 픽스처는 조각 %d개다 — "
                   "조각 2개 구성은 실물 v36 검수에서 본다" % len(_frg9))
+        # ══ 2026-09-04 P0 — 단계 규칙 **네 복사본이 같은 답을 내는가** ═══════════
+        #   실측: ①추정기 ②러너 ③census검증 만 고치고 ④선언(_gen_stage_of) 을 놓쳐
+        #   러너 12/7 vs 선언 10/9 로 갈렸고, census 가 죽어 외주처가 첫 걸음에서 멈췄다.
+        #   v35 는 clean_ref 잡이 없어 옛 규칙과 새 규칙이 우연히 같아 안 드러났다.
+        #   ⇒ 선언과 **러너 코드 자신**을 실물 job.json 으로 돌려 대조한다.
+        import importlib.util as _ilu
+        _spec = _ilu.spec_from_file_location(
+            "_ce_st", str(Path(__file__).resolve().parent / "vasp_cost_estimate.py"))
+        _ce = _ilu.module_from_spec(_spec); _spec.loader.exec_module(_ce)
+        _decl = ((m_st.get("run_census") or {}).get("stage_of") or {})
+        _seedm = m_st.get("seed_main")
+        _est = {k: str(_ce.stage_of(k, (v.get("meta") or {}), _seedm))
+                for k, v in (m_st.get("planned") or {}).items()}
+        _dif = sorted(k for k in set(_decl) | set(_est) if _decl.get(k) != _est.get(k))
+        chk(_decl and not _dif,
+            "⛔음성 P0: 선언(run_census.stage_of) == 추정기 stage_of "
+            + (f"— 어긋남 {_dif[:3]}" if _dif else f"(잡 {len(_decl)})"))
+        _rs9 = (_st / "run_staged.sh").read_text(encoding="utf-8")
+        chk('kind == "clean_ref"' in _rs9,
+            "⛔음성 P0: 러너 스크립트도 clean_ref 규칙을 담는다 (네 복사본 중 ②)")
         # ── 실행 블록 산문도 같은 조건을 말하는가 (MANIFEST 만 고치면 문서가 거짓말한다) ──
         _need9 = KPAR_VAL * NCORE_VAL
         for _d9, _n9 in ((_rd9, "README"), (_sb9, "SUBMIT")):
