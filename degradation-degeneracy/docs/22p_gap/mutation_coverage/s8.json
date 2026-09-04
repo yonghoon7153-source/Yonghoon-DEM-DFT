@@ -1,5 +1,5 @@
 {
-  "at": "2026-09-03T11:10:44Z",
+  "at": "2026-09-04T10:14:53Z",
   "binding": {
     "execution": {
       "env": {
@@ -52,7 +52,7 @@
         "certifi": "2026.7.22",
         "cffi": "2.1.1",
         "charset-normalizer": "3.4.9",
-        "click": "8.4.2",
+        "click": "8.5.0",
         "colorama": "0.4.6",
         "comm": "0.2.3",
         "conan": "2.27.0",
@@ -67,6 +67,7 @@
         "executing": "2.2.1",
         "fasteners": "0.20",
         "fastjsonschema": "2.22.1",
+        "flask": "3.1.3",
         "fonttools": "4.63.0",
         "fqdn": "1.5.1",
         "h11": "0.16.0",
@@ -157,6 +158,7 @@
         "pyjwt": "2.7.0",
         "pymupdf": "1.28.2",
         "pyparsing": "3.1.1",
+        "pypdf": "6.16.2",
         "pytest": "9.1.1",
         "pytest-json-report": "1.5.0",
         "pytest-metadata": "3.1.1",
@@ -205,14 +207,14 @@
         "yq": "3.1.0"
       }
     },
-    "execution_digest": "06d658a653c849c115a1cd72391fb5ea1fd742ff44fe714c73fb1c119a5cbe4d",
+    "execution_digest": "7dc60a20702b9dd640d50ede598c4f775f210d6eb14d047c958cb771e002e73a",
     "expect_digest": "cd2077270a27b6f6fed0fb6901843d88a7de9a5d24d2285f87fd46a8a174e4b5",
-    "head": "3620f3b1bc6a8113bb1095654a9551bac9d1ab86",
+    "head": "775a96306acec4c126e6bdf314a1299d02767fce",
     "registry_digest": "40458b8ded26a3fee5f6ab7f55326786c27e830ef47a03edf817569b3bb4f496",
     "reports_dir": "s8",
     "runner_digest": "6780dae4fa351a0cbc0dca9a2c5b31e4876c3d1749cbeffb426c90a23da9e97c",
-    "transcript_digest": "df10c788890588a5eb56a3baa56ea83dd03901649d7bd2a5b896c4b0470b2e0a",
-    "tree_digest": "ae24f50c54efc87a59b89789813e6ce088ec1f6b5722eef163bceadbb0c24e47"
+    "transcript_digest": "3368075d71139e4460f9588fa0882952a17eddbd2d5e6b6269a04a96f3fe84a0",
+    "tree_digest": "ec90767861e1173130ef7a55679d672ac1b8ee078b08563d9b40102af513941a"
   },
   "scenarios": {
     "authority-frozenset": {
@@ -220,7 +222,7 @@
       "class": "executable",
       "kexpr": "frozen_authority_holds_only_immutable",
       "ran": true,
-      "report_sha256": "a6520be58fe0fc055a8230d538db5a17d6730710a75701e92dcfef74a29968bb",
+      "report_sha256": "9c48b667ba01ff723bd99e775379e9b49c701a44faa51c11d6fe2d817f6c02e8",
       "sites": 1
     },
     "claim-write-is-all-or-nothing": {
@@ -228,7 +230,7 @@
       "class": "executable",
       "kexpr": "short_write_does_not_leave_a_truncated_claim",
       "ran": true,
-      "report_sha256": "61e10e12b41ca5612d4222147d60bf2f9d073aec5398c5746cdb0f90478d8f90",
+      "report_sha256": "45fec276cb93bcbc272b526de8e9e3c8273a19c432c12698b5e4597b99611dc2",
       "sites": 1
     },
     "crossed-module-effects-are-seeded": {
@@ -236,7 +238,7 @@
       "class": "executable",
       "kexpr": "module_effects_are_seeded_in_every_crossed_module",
       "ran": true,
-      "report_sha256": "2d42d584fee290499820924ffaced5d29a5dc91c1019e800a1cb33a19c9894a5",
+      "report_sha256": "72638b3436b36e6a7fd505aecda642f8ee59a7cd2a8bc954b995dbaa6086ecea",
       "sites": 1
     },
     "fit-axis-is-the-real-policy": {
@@ -244,7 +246,7 @@
       "class": "executable",
       "kexpr": "fit_axis_seals_every_intent_that_changes_the_answer",
       "ran": true,
-      "report_sha256": "b9d0e4ac9ba0b6bef8340a806bdc4d368364b68b6346e102a0e777f1fab56d57",
+      "report_sha256": "18d3806b895e9b8dc30c9922e3f405feb5cebefb847e426dc334b6a36be8b144",
       "sites": 1
     },
     "freeze-ledger-write-is-atomic": {
@@ -252,7 +254,7 @@
       "class": "executable",
       "kexpr": "partial_write_during_freeze_leaves_the_ledger_readable",
       "ran": true,
-      "report_sha256": "0a536cc3fa9be4e947e1f93f8f41c0a0eac106893d885838ee0ef466e1558a48",
+      "report_sha256": "f6a11fc383839e3571f84bfbfb77b1c29863104eb1506aafb4345d6802ff6f34",
       "sites": 1
     },
     "idempotent-shares-the-validator": {
@@ -267,7 +269,7 @@
       "class": "executable",
       "kexpr": "the_lifecycle_journal_is_a_hash_chain",
       "ran": true,
-      "report_sha256": "d6b0d98d992b007db5b414b8e9dccd2bcc743eaec063eb8144ea74ddcfe707cd",
+      "report_sha256": "a90568779c87d10fd68ab7ce9e3bd41b97ed36e059c4659fc16d407d13523335",
       "sites": 1
     },
     "mount-identity-comes-from-the-kernel": {
@@ -275,7 +277,7 @@
       "class": "executable",
       "kexpr": "a_stacked_mount_is_identified_by_the_kernel_not_by_row_order",
       "ran": true,
-      "report_sha256": "f7d9a51a18a965f6c9a25ec6b4de48f6cef751a53d39a674032fe64cd483bec9",
+      "report_sha256": "7519c2f02ea8ca08a904184f8296721ee6b4984db7d34be0c6882c63c5f15a27",
       "sites": 1
     },
     "pin-is-publication-authority": {
@@ -283,7 +285,7 @@
       "class": "executable",
       "kexpr": "producer_pin_is_part",
       "ran": true,
-      "report_sha256": "c55cb8cd6934f7f486cf7ccba7121f64665f8f0e660e35a95e7f6bed9a7b5fe6",
+      "report_sha256": "bb69971fb304e7a5383fbf8b852dfb0f03c283c8f77650a95b381db2bbf3bd24",
       "sites": 1
     },
     "prelock-digest-check": {
@@ -291,7 +293,7 @@
       "class": "executable",
       "kexpr": "wrong_bytes_are_never_locked",
       "ran": true,
-      "report_sha256": "7356ba2446e516177aa8e42516305a4ccd9da2637606a9ecf4d832338c3310ca",
+      "report_sha256": "2d270cfcb298182064b85f62441685cd724c59bb9050bf8070cda697e8edf9cb",
       "sites": 1
     },
     "producer-normalizes-the-node": {
@@ -299,7 +301,7 @@
       "class": "executable",
       "kexpr": "producer_digest_sees_decorators",
       "ran": true,
-      "report_sha256": "dc9c9e33919df55f3c862d3a5b3940fb506eb3f9ef5d180c02a9f7ebad355ae7",
+      "report_sha256": "50cb1f04247594845ff5d8de5084514b70d1ef8bbcacb1036e3df49df5dc4647",
       "sites": 2
     },
     "release-moves-the-ledger-before-the-claim": {
@@ -307,7 +309,7 @@
       "class": "executable",
       "kexpr": "crash_inside_release_leaves_a_recoverable_state",
       "ran": true,
-      "report_sha256": "6d38cead9c144b0433c3d2c857c7333c71db8c5035f8e165c322d7d34efb48a0",
+      "report_sha256": "89dee7be4224f2ba6e1dc85f929661555f2bc9f33484a304c49b69f4b0e30f36",
       "sites": 1
     },
     "source-reflection-covers-the-loader-protocol": {
@@ -315,7 +317,7 @@
       "class": "executable",
       "kexpr": "producer_cannot_reach_its_own_bytes_through_the_module_loader",
       "ran": true,
-      "report_sha256": "2acc1555801b9eb0327ed51f0ecea8cdda046f5ff2aaa720d3527c3739645fb8",
+      "report_sha256": "3c8f947e6fd7fdda4870cdea11fe2dd567879adf7b407ad9e1eca16550fa11f4",
       "sites": 2
     },
     "trust-boundary-declared": {
@@ -323,7 +325,7 @@
       "class": "executable",
       "kexpr": "publisher_declares_its_trust_boundary",
       "ran": true,
-      "report_sha256": "8672e59d73add32db063932bac0887b7945f0bea616f324a47a7f9a87c88c0cb",
+      "report_sha256": "8f6c599752ad40dca665e892e8a5f14217018f538f4493cda80af588c5dfc0df",
       "sites": 1
     }
   },

@@ -1,5 +1,5 @@
 {
-  "at": "2026-09-03T11:23:19Z",
+  "at": "2026-09-04T10:03:25Z",
   "binding": {
     "execution": {
       "env": {
@@ -52,7 +52,7 @@
         "certifi": "2026.7.22",
         "cffi": "2.1.1",
         "charset-normalizer": "3.4.9",
-        "click": "8.4.2",
+        "click": "8.5.0",
         "colorama": "0.4.6",
         "comm": "0.2.3",
         "conan": "2.27.0",
@@ -67,6 +67,7 @@
         "executing": "2.2.1",
         "fasteners": "0.20",
         "fastjsonschema": "2.22.1",
+        "flask": "3.1.3",
         "fonttools": "4.63.0",
         "fqdn": "1.5.1",
         "h11": "0.16.0",
@@ -157,6 +158,7 @@
         "pyjwt": "2.7.0",
         "pymupdf": "1.28.2",
         "pyparsing": "3.1.1",
+        "pypdf": "6.16.2",
         "pytest": "9.1.1",
         "pytest-json-report": "1.5.0",
         "pytest-metadata": "3.1.1",
@@ -205,14 +207,14 @@
         "yq": "3.1.0"
       }
     },
-    "execution_digest": "06d658a653c849c115a1cd72391fb5ea1fd742ff44fe714c73fb1c119a5cbe4d",
+    "execution_digest": "7dc60a20702b9dd640d50ede598c4f775f210d6eb14d047c958cb771e002e73a",
     "expect_digest": "cd2077270a27b6f6fed0fb6901843d88a7de9a5d24d2285f87fd46a8a174e4b5",
-    "head": "3620f3b1bc6a8113bb1095654a9551bac9d1ab86",
+    "head": "775a96306acec4c126e6bdf314a1299d02767fce",
     "registry_digest": "40458b8ded26a3fee5f6ab7f55326786c27e830ef47a03edf817569b3bb4f496",
     "reports_dir": "s3",
     "runner_digest": "6780dae4fa351a0cbc0dca9a2c5b31e4876c3d1749cbeffb426c90a23da9e97c",
-    "transcript_digest": "9f509359919a72c331c1820d7c6a3767b4a03b3bcd79fe0d3b37ccadac8a4a38",
-    "tree_digest": "ae24f50c54efc87a59b89789813e6ce088ec1f6b5722eef163bceadbb0c24e47"
+    "transcript_digest": "f290d7e4ca728baedef8320702aca39c36cd93a3eb488a712df6a12ddd385dd0",
+    "tree_digest": "ec90767861e1173130ef7a55679d672ac1b8ee078b08563d9b40102af513941a"
   },
   "scenarios": {
     "anchor-repair-holds-the-lifecycle-lock": {
@@ -220,7 +222,7 @@
       "class": "executable",
       "kexpr": "stale_anchor_repair_cannot_rewind_the_head",
       "ran": true,
-      "report_sha256": "46b60288ffd97972c3795cbfd4d517ab9f2cb013f34e3f890c8652755c463343",
+      "report_sha256": "bc7c4323ffc17efab32659bd5e6ed5eba3ad7122ccd4ede44d0f57efd379b66b",
       "sites": 1
     },
     "claim-bytes-are-verified-on-disk": {
@@ -228,7 +230,7 @@
       "class": "executable",
       "kexpr": "lying_write_is_caught_by_reading_the_bytes_back",
       "ran": true,
-      "report_sha256": "b5d95e3f657764c6ed20b920a3624711a52fca758f2986874f2b14246395a850",
+      "report_sha256": "ffbc5ec2c6e224d5cceb5a7a7f1af27757004bee820aba923dc6a68e2bbddb74",
       "sites": 1
     },
     "coverage-checker-derives-from-receipts": {
@@ -236,7 +238,7 @@
       "class": "executable",
       "kexpr": "coverage_receipts_are_verified_independently",
       "ran": true,
-      "report_sha256": "1ccd5a70e2e268344447d7640e524f9efb45cc5c4ec0593393cc5755799dedde",
+      "report_sha256": "12f68dfa5ad4c8ee1e4521f505602afbaa9439d966b1932ce899847967e9ceee",
       "sites": 3
     },
     "evidence-paths-are-repo-relative": {
@@ -244,7 +246,7 @@
       "class": "executable",
       "kexpr": "evidence_tree_digest_does_not_depend_on_the_checkout_path",
       "ran": true,
-      "report_sha256": "a091a2041bc35ad391ba83fddf533b2a0e214afb30fe3d29184fb175803f4fef",
+      "report_sha256": "41dd19fb8646d934d91ee412c86ea64345ed7a2a556f70e0fb9347847bc9f5a8",
       "sites": 1
     },
     "freeze-authority-is-not-caller-selected": {
@@ -252,7 +254,7 @@
       "class": "executable",
       "kexpr": "freeze_cannot_be_pointed_at_an_empty_claims_directory",
       "ran": true,
-      "report_sha256": "66913d88385d9e65160dd1b5555e288353f98dd764dbed295a555cb150cca258",
+      "report_sha256": "991debdab4073d52639a8beabd692979cbe19aabf8d353c16e8f3ecc304722d6",
       "sites": 1
     },
     "generation-namespace-guard": {
@@ -260,7 +262,7 @@
       "class": "executable",
       "kexpr": "current_generation_cannot_be_used_as_its_own_staging",
       "ran": true,
-      "report_sha256": "09995496e183e4e18b6b5f41928f35b58ed1fad94e296a1111a9fc1182fa30ed",
+      "report_sha256": "baa8ad13f12a6497847245e77254cbbe6c646e5c44b0ae18ba725b0c12223909",
       "sites": 1
     },
     "ledger-seal-record": {
@@ -268,7 +270,7 @@
       "class": "executable",
       "kexpr": "same_roster_ledger_change",
       "ran": true,
-      "report_sha256": "992118d65ec8a6ce5a3ce63ae39e3261aef5bb517304a7a0a7b84d3a465760f1",
+      "report_sha256": "9e6a0b4d700316bbe09fffdea27e73c8bee4d3ba01e66058c89df0ccea6db859",
       "sites": 2
     },
     "module-defs-track-import-bindings": {
@@ -276,7 +278,7 @@
       "class": "executable",
       "kexpr": "producer_closure_tracks_mutating_and_import_bindings",
       "ran": true,
-      "report_sha256": "a21513577f40e848b448bfea5d6ae8002c1ac5057a28b92be9025d1d30e8e77a",
+      "report_sha256": "df5c49679433f6c612da3d16cddc84c5f332db2f6d2c70ac5928986554950ae2",
       "sites": 1
     },
     "phase-input-binding": {
@@ -284,7 +286,7 @@
       "class": "executable",
       "kexpr": "fit_refuses_curves_that_its_grid_phase_did_not_produce",
       "ran": true,
-      "report_sha256": "08b5fe6f9d9855bda7dea9fdc91cd963116c34c5edee7d66c37229718dc4738e",
+      "report_sha256": "6efd3adcff7e3833bc98c791fb03cdd3bd77c207372881d95f0f36feb836c8f8",
       "sites": 1
     },
     "pointer-binds-the-ledger": {
@@ -292,7 +294,7 @@
       "class": "executable",
       "kexpr": "expanding_a_roster_over_an_active_cohort_requires_a_new_cohort",
       "ran": true,
-      "report_sha256": "84f667a95941c03ecb5a642c2ba3ec0abd2f87e4d50f9bfd163d5fb3c4c4c087",
+      "report_sha256": "44e07f10041decdb91378de170997a358d3ba4a9eeae985ca166cbadf5e64ce0",
       "sites": 1
     },
     "producer-crossing-is-fail-closed": {
@@ -300,7 +302,7 @@
       "class": "executable",
       "kexpr": "breaking_the_crossing_into_src_scoring_is_fail_closed",
       "ran": true,
-      "report_sha256": "40f1385e10f0b91d3738f7d8d644371bd7f1e3a8bb145b6d501b81cda412a988",
+      "report_sha256": "f503d384a3212cab174b178a6ce20b74b7466bb0d3471b3a1a3926649f01f05a",
       "sites": 1
     },
     "receipt-carries-the-mutant-marker": {
@@ -308,7 +310,7 @@
       "class": "executable",
       "kexpr": "genuine_report_from_another_mutant_is_refused",
       "ran": true,
-      "report_sha256": "9ef44d66414ecd3afae876e8511b7b7289844cd70f6f9a0025efa49dec48abfb",
+      "report_sha256": "2d4cfbe4af2f73d6e75707e36bed0b2e902affcbfe4282f121083c40cf3a0e2c",
       "sites": 1
     },
     "seal-exact-types": {
@@ -316,7 +318,7 @@
       "class": "executable",
       "kexpr": "an_omap_and_a_list_of_lists_do_not_share_a_seal",
       "ran": true,
-      "report_sha256": "63a87e8012821a661fa878cead530c00ae0b06c3fdc05e847a7114dd4795b76c",
+      "report_sha256": "c673a4a5f5d96c2ac3520f65c7d0e86e9e1f386a1bfec45e462fdd735caf126c",
       "sites": 1
     },
     "token-is-written-before-the-claim": {
@@ -324,7 +326,7 @@
       "class": "executable",
       "kexpr": "crash_between_the_claim_and_the_token_leaves_nothing_stranded",
       "ran": true,
-      "report_sha256": "fc6c88ccd4791b74e137dd066b6d67ac23a39a3d1b9452794205e0dfbe959161",
+      "report_sha256": "8268d86cfb56e9c15d2a578d380c154ebc1148e63f0d505d89c9dd86a281702f",
       "sites": 1
     }
   },

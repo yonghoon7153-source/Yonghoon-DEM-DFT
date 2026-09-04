@@ -1,5 +1,5 @@
 {
-  "at": "2026-09-03T11:24:46Z",
+  "at": "2026-09-04T10:05:30Z",
   "binding": {
     "execution": {
       "env": {
@@ -52,7 +52,7 @@
         "certifi": "2026.7.22",
         "cffi": "2.1.1",
         "charset-normalizer": "3.4.9",
-        "click": "8.4.2",
+        "click": "8.5.0",
         "colorama": "0.4.6",
         "comm": "0.2.3",
         "conan": "2.27.0",
@@ -67,6 +67,7 @@
         "executing": "2.2.1",
         "fasteners": "0.20",
         "fastjsonschema": "2.22.1",
+        "flask": "3.1.3",
         "fonttools": "4.63.0",
         "fqdn": "1.5.1",
         "h11": "0.16.0",
@@ -157,6 +158,7 @@
         "pyjwt": "2.7.0",
         "pymupdf": "1.28.2",
         "pyparsing": "3.1.1",
+        "pypdf": "6.16.2",
         "pytest": "9.1.1",
         "pytest-json-report": "1.5.0",
         "pytest-metadata": "3.1.1",
@@ -205,14 +207,14 @@
         "yq": "3.1.0"
       }
     },
-    "execution_digest": "06d658a653c849c115a1cd72391fb5ea1fd742ff44fe714c73fb1c119a5cbe4d",
+    "execution_digest": "7dc60a20702b9dd640d50ede598c4f775f210d6eb14d047c958cb771e002e73a",
     "expect_digest": "cd2077270a27b6f6fed0fb6901843d88a7de9a5d24d2285f87fd46a8a174e4b5",
-    "head": "3620f3b1bc6a8113bb1095654a9551bac9d1ab86",
+    "head": "775a96306acec4c126e6bdf314a1299d02767fce",
     "registry_digest": "40458b8ded26a3fee5f6ab7f55326786c27e830ef47a03edf817569b3bb4f496",
     "reports_dir": "s4",
     "runner_digest": "6780dae4fa351a0cbc0dca9a2c5b31e4876c3d1749cbeffb426c90a23da9e97c",
-    "transcript_digest": "d6c193835aa8aa69aa43366c74e35bd773d55247204db79061e8667bcac7e888",
-    "tree_digest": "ae24f50c54efc87a59b89789813e6ce088ec1f6b5722eef163bceadbb0c24e47"
+    "transcript_digest": "e2d0e2840bd08101025de86e086b0401821272e10108e15c0ad229abb7e11bde",
+    "tree_digest": "ec90767861e1173130ef7a55679d672ac1b8ee078b08563d9b40102af513941a"
   },
   "scenarios": {
     "append-finishes-the-pending-anchor-first": {
@@ -220,7 +222,7 @@
       "class": "executable",
       "kexpr": "two_consecutive_partial_appends_are_still_recoverable",
       "ran": true,
-      "report_sha256": "f3cd97c9dcf40ce398cc06ef0e8478543fd9dd7bb19f755974c565f1a78413ce",
+      "report_sha256": "5d0b05bc8c27647eb9dafb9935da0e9ad947cca7561a696332bd13288303329d",
       "sites": 1
     },
     "claim-checks-the-whole-index": {
@@ -228,7 +230,7 @@
       "class": "executable",
       "kexpr": "whole_index_must_be_consistent_before_any_leg_is_claimed",
       "ran": true,
-      "report_sha256": "cdab3b101c7b22be872aa50dfbce0eb73123ef39c47b8a5b424c58d66672856a",
+      "report_sha256": "34153e0f812a19c1fd2d134119034d50e4ff0fd985ad6e41ebd87a85d88deef9",
       "sites": 1
     },
     "coverage-checks-the-recorded-head": {
@@ -243,7 +245,7 @@
       "class": "executable",
       "kexpr": "external_input_binding_covers_the_whole_package",
       "ran": true,
-      "report_sha256": "453abd7e5ffd494239964f745bde7e3443e99fb90300afc30842e2807a09d447",
+      "report_sha256": "c9e9706345bc0d1d19e80be40b1f6fd44b6961f51e8d5c00662ce0d139eabed0",
       "sites": 1
     },
     "freeze-checks-live-claims-before-recovery": {
@@ -251,7 +253,7 @@
       "class": "executable",
       "kexpr": "freeze_recovery_branch_also_refuses_while_an_execution_is_live",
       "ran": true,
-      "report_sha256": "aa00053e190b0150eaa0d77bcde527674a10329b9bbb7a1e17b43b18596b900a",
+      "report_sha256": "e48647d262aff996e5ba9aacfe6adc14bd9fb87cf35fcdbeda52cfcae9e88e27",
       "sites": 1
     },
     "generation-owns-its-bytes": {
@@ -266,7 +268,7 @@
       "class": "executable",
       "kexpr": "crash_after_the_claim_unlink_can_still_be_finalized",
       "ran": true,
-      "report_sha256": "33c90c698d9ddde25da364903a5cdac7109e0ec7fcaf41be8af36201424d2bf0",
+      "report_sha256": "c265a3d9202a000978257d39e0eb5ba54099d4f8cc9d91f70deb92dcda536bc9",
       "sites": 1
     },
     "module-defs-track-mutating-bindings": {
@@ -274,7 +276,7 @@
       "class": "executable",
       "kexpr": "producer_closure_tracks_mutating_and_import_bindings",
       "ran": true,
-      "report_sha256": "bf2ea55a8d44cebbe7c101c17156361d6f47a68570865388d72eaabdf4e66899",
+      "report_sha256": "f5bb098e500be54c02eb3e02cc7c1519f9c9b836555bb0c5c84434d0f5594f07",
       "sites": 1
     },
     "phase-input-binding-covers-the-package": {
@@ -282,7 +284,7 @@
       "class": "executable",
       "kexpr": "grid_receipt_binds_every_curve_input_not_just_the_parquet",
       "ran": true,
-      "report_sha256": "3a6f8aa68926b72cf7fbe6340c375f6bd0898a00ecc80ab3452b80f3bc4f0832",
+      "report_sha256": "bb15c042f373461d10b30c4f17c4b05db0fc040d310c7c8de71ebfb177621e01",
       "sites": 1
     },
     "pointer-loss-is-terminal": {
@@ -290,7 +292,7 @@
       "class": "executable",
       "kexpr": "losing_the_pointer_of_a_cohort",
       "ran": true,
-      "report_sha256": "2bb3c157a576ba25ef6d9aca79f57ec14e182cbb0eb16547c7f95627859c0871",
+      "report_sha256": "0cd7f6e3cae682193eddea21346cfe8415b91d26b4e1acd92682adae68c0fbd9",
       "sites": 1
     },
     "producer-cut-is-declared": {
@@ -298,7 +300,7 @@
       "class": "executable",
       "kexpr": "producer_semantic_digest_excludes_the_publication_path",
       "ran": true,
-      "report_sha256": "d405ad48f278b0f187eecc99feb26359eaead3f26c3b577e3834412099bcc32e",
+      "report_sha256": "06966721e90d495e65e60383b8de9df965c5d9c656a31ee72e15f9d5f4bed8aa",
       "sites": 1
     },
     "receipt-is-bound-to-the-mutant": {
@@ -306,7 +308,7 @@
       "class": "executable",
       "kexpr": "receipt_is_bound_to_the_exact_mutant",
       "ran": true,
-      "report_sha256": "2dff87bc17f8c319eb4dabb4899152605303b9c4725ff67f58437b6d0ca34ca6",
+      "report_sha256": "e176d895c80146371be8a9ce145037588fb3a7c00add0c3a7d3e819821334b6f",
       "sites": 1
     },
     "seal-finite-floats": {
@@ -314,7 +316,7 @@
       "class": "executable",
       "kexpr": "seal_domain_is_exact_not_isinstance",
       "ran": true,
-      "report_sha256": "c599977f0343af3dce59e53584d1d00073eb677f82f93d5b2d01b747c97cf9f4",
+      "report_sha256": "1ade6c2f6b2a07a7399c872e68bb7d5b95491a6c22768de9a5677933fed42dc5",
       "sites": 1
     },
     "token-path-alias-is-refused": {
@@ -322,7 +324,7 @@
       "class": "executable",
       "kexpr": "symlinked_token_path_cannot_split_the_attempt_lock",
       "ran": true,
-      "report_sha256": "4e91eb2654e707a050c62abee37660e6bce189fdb67b37018e47cbc76a2e4534",
+      "report_sha256": "e8b7c7e6fee09cc751c804ddb6fe987f605b375c36f58bf5f6c61685394ff90d",
       "sites": 1
     }
   },

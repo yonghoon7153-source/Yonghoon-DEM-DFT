@@ -1,5 +1,5 @@
 {
-  "at": "2026-09-03T11:15:26Z",
+  "at": "2026-09-04T10:21:45Z",
   "binding": {
     "execution": {
       "env": {
@@ -52,7 +52,7 @@
         "certifi": "2026.7.22",
         "cffi": "2.1.1",
         "charset-normalizer": "3.4.9",
-        "click": "8.4.2",
+        "click": "8.5.0",
         "colorama": "0.4.6",
         "comm": "0.2.3",
         "conan": "2.27.0",
@@ -67,6 +67,7 @@
         "executing": "2.2.1",
         "fasteners": "0.20",
         "fastjsonschema": "2.22.1",
+        "flask": "3.1.3",
         "fonttools": "4.63.0",
         "fqdn": "1.5.1",
         "h11": "0.16.0",
@@ -157,6 +158,7 @@
         "pyjwt": "2.7.0",
         "pymupdf": "1.28.2",
         "pyparsing": "3.1.1",
+        "pypdf": "6.16.2",
         "pytest": "9.1.1",
         "pytest-json-report": "1.5.0",
         "pytest-metadata": "3.1.1",
@@ -205,14 +207,14 @@
         "yq": "3.1.0"
       }
     },
-    "execution_digest": "06d658a653c849c115a1cd72391fb5ea1fd742ff44fe714c73fb1c119a5cbe4d",
+    "execution_digest": "7dc60a20702b9dd640d50ede598c4f775f210d6eb14d047c958cb771e002e73a",
     "expect_digest": "cd2077270a27b6f6fed0fb6901843d88a7de9a5d24d2285f87fd46a8a174e4b5",
-    "head": "3620f3b1bc6a8113bb1095654a9551bac9d1ab86",
+    "head": "775a96306acec4c126e6bdf314a1299d02767fce",
     "registry_digest": "40458b8ded26a3fee5f6ab7f55326786c27e830ef47a03edf817569b3bb4f496",
     "reports_dir": "s11",
     "runner_digest": "6780dae4fa351a0cbc0dca9a2c5b31e4876c3d1749cbeffb426c90a23da9e97c",
-    "transcript_digest": "12d7a122d288895cd754affb20c49a55a762d1bcf6db49f75b4c5c0fd7919989",
-    "tree_digest": "ae24f50c54efc87a59b89789813e6ce088ec1f6b5722eef163bceadbb0c24e47"
+    "transcript_digest": "2e58b50341eca53348e07fce69dc42600ddcd0a3aa4725942867e8703f1fd839",
+    "tree_digest": "ec90767861e1173130ef7a55679d672ac1b8ee078b08563d9b40102af513941a"
   },
   "scenarios": {
     "caller-stage-safe-read": {
@@ -220,7 +222,7 @@
       "class": "executable",
       "kexpr": "dangling_symlink_in_the_caller",
       "ran": true,
-      "report_sha256": "d18a8321a6827d4810628d59a82a2edf7b35df7e677900317e0f690cde863f67",
+      "report_sha256": "d8f2cf2a7948c3c199f4bdd0d4955ea657da260a2674499c40379fa829a06ec8",
       "sites": 1
     },
     "closure-refuses-dynamic-resolution": {
@@ -228,7 +230,7 @@
       "class": "executable",
       "kexpr": "dynamic_name_resolution_inside_the_closure_is_fail_closed",
       "ran": true,
-      "report_sha256": "ff91a1e1cf522cd1b892976eaeeabccf9d431ccf4c2433c2caf1a576cbddf24c",
+      "report_sha256": "bab44efd35454ad5ba479901d7c6c3439ad2baae7279d3b77bc90c9f9f9191d3",
       "sites": 1
     },
     "dry-run-releases-the-claim": {
@@ -236,7 +238,7 @@
       "class": "executable",
       "kexpr": "dry_run_does_not_strand_the_plan_in_running",
       "ran": true,
-      "report_sha256": "2b44aec36739fb91a24f4a6be5a12096c9146665928ce30f22f13ba4bb883c1e",
+      "report_sha256": "4e88f9552a76021b87f9810ec0b4ca656b9ee7a73667687cac8a231a762287b2",
       "sites": 1
     },
     "fit-axis-seals-the-objective-payload": {
@@ -244,7 +246,7 @@
       "class": "executable",
       "kexpr": "objective_payload_is_inside_the_approval_digest",
       "ran": true,
-      "report_sha256": "93cee1aaa4a7caf82bae15bb7afe23a7826fa8d52bfb3bfbbdbac7865aafb59a",
+      "report_sha256": "c82991777339d0ee9cc62c2d28ee6f4f0274b26f695d07d58ac66720f220c46c",
       "sites": 1
     },
     "freeze-rereads-the-ledger-before-writing": {
@@ -252,7 +254,7 @@
       "class": "executable",
       "kexpr": "freeze_does_not_erase_a_record_written_while_it_ran",
       "ran": true,
-      "report_sha256": "460472019aa20c83a039f83d2954d1e4f91603a00dc6299fee2fde2593cad956",
+      "report_sha256": "b52a3399ffd71c473dc9ba5e74615944ff6d97e726d42e254bf94a3f231a643d",
       "sites": 1
     },
     "interpreter-set-is-pinned": {
@@ -267,7 +269,7 @@
       "class": "executable",
       "kexpr": "deleting_the_journal_does_not_erase_the_freeze",
       "ran": true,
-      "report_sha256": "2358e7af74207dd1bbc230ce1c0c6725e2e3e6d0bd9c1e2bdf87c5056a57cb1c",
+      "report_sha256": "62fa752eeca39b4a36607bb520f34b68af8b6d5071b74a0b5f4705572104d37d",
       "sites": 1
     },
     "namespace-check-rejects-symlinks": {
@@ -275,7 +277,7 @@
       "class": "executable",
       "kexpr": "symlinked_path_is_not_inside_the_smoke_namespace or namespace_check_is_fail_closed_on_a_symlinked_component",
       "ran": true,
-      "report_sha256": "984b16fcb08f6a79b841fa335b73d1d36decd8ac8470b58c8b615b7b621a4a23",
+      "report_sha256": "165a06132dadd6a8b321de08d23488825f73787fa9cac05369636f6584cbdbfe",
       "sites": 1
     },
     "plan-uncertainty-covers-the-whole-critical-section": {
@@ -283,7 +285,7 @@
       "class": "executable",
       "kexpr": "failure_while_leaving_the_ledger_lock_preserves_the_authority or uncertain_ledger_write_never_discards_the_claim",
       "ran": true,
-      "report_sha256": "9986c41798c49e1e3642fd5f6dcc85558ff4892f1d6171385dc5ee028c2c87c9",
+      "report_sha256": "2028dd4f1362f3f3cec27643c420a93b9fb29144701bbdeac2d7865f35a68b24",
       "sites": 1
     },
     "preservation-status-inside-the-contract": {
@@ -291,7 +293,7 @@
       "class": "executable",
       "kexpr": "the_runtime_preservation_enum_is_inside_the_contract",
       "ran": true,
-      "report_sha256": "3cb4ffd4b5ae78392d22477dda1129c9ddbfc2e1bb85d79e539fa6a9ea092a96",
+      "report_sha256": "b3d393b337eea1a8700703250ab83be0630f56ba95bbf963e73cb909d98d6ba6",
       "sites": 1
     },
     "proof-until-equals-lease": {
@@ -306,7 +308,7 @@
       "class": "executable",
       "kexpr": "phase_cannot_be_recorded_without_the_owner_token or crash_after_grid_resumes_and_finalizes or finalize_requires_the_owner_credential",
       "ran": true,
-      "report_sha256": "4856e11c5be6b17b2d4deb64bb773f8156d2bd53f4ba248a02ab62cb33cbcca6",
+      "report_sha256": "c207b079893d92cc21e19de02ecc799040b51138b215bf5014e798d8f1bc8a40",
       "sites": 1
     },
     "thaw-is-refused-before-the-first-write": {
@@ -314,7 +316,7 @@
       "class": "executable",
       "kexpr": "publisher_refuses_a_thawed_cohort_before_the_first_write",
       "ran": true,
-      "report_sha256": "fff7d926cb357bc71608cb0b6d607587b4087d325f92148cc0a93ea330853eb3",
+      "report_sha256": "5fffaa1acb7e3e91e48ab19db60e24e2430f0711c21f1ba47fefb12ffd5a5ce7",
       "sites": 2
     },
     "warm-consumer-wiring": {

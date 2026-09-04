@@ -1,5 +1,5 @@
 {
-  "at": "2026-09-03T11:28:08Z",
+  "at": "2026-09-04T10:10:24Z",
   "binding": {
     "execution": {
       "env": {
@@ -52,7 +52,7 @@
         "certifi": "2026.7.22",
         "cffi": "2.1.1",
         "charset-normalizer": "3.4.9",
-        "click": "8.4.2",
+        "click": "8.5.0",
         "colorama": "0.4.6",
         "comm": "0.2.3",
         "conan": "2.27.0",
@@ -67,6 +67,7 @@
         "executing": "2.2.1",
         "fasteners": "0.20",
         "fastjsonschema": "2.22.1",
+        "flask": "3.1.3",
         "fonttools": "4.63.0",
         "fqdn": "1.5.1",
         "h11": "0.16.0",
@@ -157,6 +158,7 @@
         "pyjwt": "2.7.0",
         "pymupdf": "1.28.2",
         "pyparsing": "3.1.1",
+        "pypdf": "6.16.2",
         "pytest": "9.1.1",
         "pytest-json-report": "1.5.0",
         "pytest-metadata": "3.1.1",
@@ -205,14 +207,14 @@
         "yq": "3.1.0"
       }
     },
-    "execution_digest": "06d658a653c849c115a1cd72391fb5ea1fd742ff44fe714c73fb1c119a5cbe4d",
+    "execution_digest": "7dc60a20702b9dd640d50ede598c4f775f210d6eb14d047c958cb771e002e73a",
     "expect_digest": "cd2077270a27b6f6fed0fb6901843d88a7de9a5d24d2285f87fd46a8a174e4b5",
-    "head": "3620f3b1bc6a8113bb1095654a9551bac9d1ab86",
+    "head": "775a96306acec4c126e6bdf314a1299d02767fce",
     "registry_digest": "40458b8ded26a3fee5f6ab7f55326786c27e830ef47a03edf817569b3bb4f496",
     "reports_dir": "s6",
     "runner_digest": "6780dae4fa351a0cbc0dca9a2c5b31e4876c3d1749cbeffb426c90a23da9e97c",
-    "transcript_digest": "6e2055260cc5e7ff57d2efd2575b81259cbf029ee54900b45879d38671a3c43a",
-    "tree_digest": "ae24f50c54efc87a59b89789813e6ce088ec1f6b5722eef163bceadbb0c24e47"
+    "transcript_digest": "17581f70bdd4f3bb17c3436b7679461c36e3a28bf7115f577a5d8b4be81c7456",
+    "tree_digest": "ec90767861e1173130ef7a55679d672ac1b8ee078b08563d9b40102af513941a"
   },
   "scenarios": {
     "assembled-names-are-exactly-evaluated": {
@@ -220,7 +222,7 @@
       "class": "executable",
       "kexpr": "assembled_dunder_name_is_refused",
       "ran": true,
-      "report_sha256": "e20625f7a79be7a7d92692979b15e5427be9cd13460b308fbf28cc1b6afda7cb",
+      "report_sha256": "53e75a74453a9c24cc0e721d7962e317cae02b9efd6ec0535065edfa5d57921d",
       "sites": 4
     },
     "claim-seals-the-run-spec": {
@@ -228,7 +230,7 @@
       "class": "executable",
       "kexpr": "claim_seals_the_exact_run_spec",
       "ran": true,
-      "report_sha256": "266c22e36a91743c46774451b267d4b306b5545c3704903ff996375ae64a5e23",
+      "report_sha256": "3e3b6e60fda1dea44ed9fd9e7c419bb154b73010dfd7fcb76ed9221a1615f743",
       "sites": 1
     },
     "crash-recovery-is-idempotent": {
@@ -236,7 +238,7 @@
       "class": "executable",
       "kexpr": "finalize_is_idempotent_after_a_crash_before_cleanup",
       "ran": true,
-      "report_sha256": "ba52e1c80abac0d9502f841840c8de2a9b424873b8744aa0d76b54a32de8cbd4",
+      "report_sha256": "3dc31db5a6ab5c8d4ba83e7326c6fc6e62e927672634eec125d3732d28f4c466",
       "sites": 1
     },
     "finalize-rechecks-in-the-ledger-lock": {
@@ -244,7 +246,7 @@
       "class": "executable",
       "kexpr": "finalize_rechecks_the_whole_authority_inside_the_ledger_lock",
       "ran": true,
-      "report_sha256": "ae31844121dd961caf6cbab676455fb788cf307949147583f8324d23d4d9d018",
+      "report_sha256": "c2ebfd643cc6d30dbd0f7f2a991392fb3d0758f94988082fa14d92c3a2bfcc78",
       "sites": 1
     },
     "freeze-completes-a-half-written-transition": {
@@ -252,7 +254,7 @@
       "class": "executable",
       "kexpr": "freeze_is_retryable_after_a_crash_between_its_two_writes",
       "ran": true,
-      "report_sha256": "6117fb9ad256bbc1ec1b770dede0ebc22bb505da24295fadc887436860a93c0a",
+      "report_sha256": "e811a79ed19ffa8a72032cef788432c48f0249bb462b31bb198657e05726e793",
       "sites": 1
     },
     "grid-axis-seals-the-discharged-cache": {
@@ -260,7 +262,7 @@
       "class": "executable",
       "kexpr": "grid_axis_binds_the_discharged_state_cache",
       "ran": true,
-      "report_sha256": "a26215f224d7ca3d2d9d42465aabdb6e30cff376fc92da85249d2681f054ec34",
+      "report_sha256": "8dfe7cfec60131c9ae57d4250c26edf6c911e4c565de6b7ed4f615c8bbd2bc99",
       "sites": 1
     },
     "lifecycle-chain-is-verified": {
@@ -268,7 +270,7 @@
       "class": "executable",
       "kexpr": "the_lifecycle_journal_is_a_hash_chain",
       "ran": true,
-      "report_sha256": "f19328c587bb91458b907abf4f52df03d1da6973f8e333893df3c15214cc5e12",
+      "report_sha256": "a0b3259bb2a58a74cec29d47ca2e8cdc214fdd272a17f36a9291568794c8024a",
       "sites": 1
     },
     "module-expr-binds-its-target": {
@@ -283,7 +285,7 @@
       "class": "executable",
       "kexpr": "forged_claim_object_cannot_write_a_phase",
       "ran": true,
-      "report_sha256": "ff36deb9966eca67ee4a4eae849017b3f10d3bb99a7e15bd1b00f7398713d4dc",
+      "report_sha256": "43646c37b7e733fc658096e52008b00e72b3ee5edd2b38a96f5a18face25587c",
       "sites": 1
     },
     "pre-write-authority": {
@@ -291,7 +293,7 @@
       "class": "executable",
       "kexpr": "frozen_cohort_publish_writes_nothing_before_it_refuses",
       "ran": true,
-      "report_sha256": "f4454a3b348b8dd9c8fe86fdc2b560631e250317393bb5ce3944bd66783b3f6f",
+      "report_sha256": "eb6300618534ff1014735fcdcd09d9daa905e19c8f3c665f88fdb6d74864cc64",
       "sites": 1
     },
     "producer-dunder-is-an-allowlist": {
@@ -299,7 +301,7 @@
       "class": "executable",
       "kexpr": "producer_cannot_reach_its_own_bytes_through_the_module_loader",
       "ran": true,
-      "report_sha256": "69aa60c73222ff95a90220bdb8b5db46d8fa742f2388a40168caeac454f263a0",
+      "report_sha256": "a0910f6d0c71d1c9d83a01bfa1102c352e6656b4d4117ab9a0830a82f92acae2",
       "sites": 1
     },
     "recheck-before-rename": {
@@ -307,7 +309,7 @@
       "class": "executable",
       "kexpr": "rechecked_immediately_before_the_rename",
       "ran": true,
-      "report_sha256": "68002f110d7e2c52ac0d53e3ec2c5c263cef11771dfadcbfea1c0f9c3c9ca306",
+      "report_sha256": "ef63fd623f4332bccc674d201d0398d863fde21174e83a16d9b64668321cf226",
       "sites": 1
     },
     "sink-subset-of-roster": {
@@ -315,7 +317,7 @@
       "class": "executable",
       "kexpr": "complete_undeclared_leg_never_reaches_pending",
       "ran": true,
-      "report_sha256": "82be02aa78562404a2c87d9359456efec3c3c8446fdb06453d8037aed8f1494a",
+      "report_sha256": "63a7f3e6a1f5b8442788dfe1202723b7cdf007eb94cef0bd8d203f31954ec3ab",
       "sites": 1
     },
     "token-unlink-is-generation-scoped": {
@@ -323,7 +325,7 @@
       "class": "executable",
       "kexpr": "late_release_cleanup_cannot_delete_the_next_attempts_token",
       "ran": true,
-      "report_sha256": "ce48447026d570e8624a53f7d0f4a00754fb4f15aee829d09ee8a7cf6fd7c876",
+      "report_sha256": "d515ff88282ac85fcab2969d5a02dbd9b857e717aad31f45a8886d2a60b398e6",
       "sites": 1
     }
   },
