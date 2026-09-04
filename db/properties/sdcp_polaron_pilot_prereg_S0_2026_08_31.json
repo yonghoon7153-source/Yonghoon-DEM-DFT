@@ -1,7 +1,7 @@
 {
  "schema": "estimand_prereg/v2",
  "date": "2026-08-31",
- "status": "proposed",
+ "status": "ratified",
  "⚠_비준": "⏳ **재비준 대기 (2026-09-03).** 회신 Y P0 8건 이행으로 내용이 바뀌었다 — estimand 형태 대조를 비 문턱에서 직접 대조·전 잡으로 바꾸고(P0-1·P0-2), probe 증서·ORCA identity·receipt 결박·원자적 패치를 봉인에 넣었다. 앞선 비준(2026-09-02)은 그 이전 내용에 대한 것이다.",
  "제목": "S0 — ε=1 기술적 적합성 pilot 사전등록 (회신 T 로 격하된 판, P0 4건 이행 반영)",
  "이_문서의_성격": {
@@ -348,6 +348,11 @@
    "at": "2026-09-03",
    "state": "proposed",
    "note": "회신 Z-2(내부 2차 · NO-GO · P0 2) 이행. P0-1 family 대조에 class 동일 조건(CALIB_FAMILY_CLASS_DIFFERS); P0-2 loccheck smoke 가 pil_cube_grid 규칙 상자로 cube 헤더(n·origin·간격)를 실측해 grid_convention_verified 봉인. P1: ORCA 전 옛 cube 삭제 · preflight/receipt 빌더 SHA · receipt builder=실제 빌더 · 원자적 manifest · nested class_candidate · calib_gate 여분 키 위반 · 음성시험 6건. 봉인 builder b92ff52b · last_change 341e0d7e · calib 02d9cb38. 재비준 필요 — 비준 시 ratification.content_digest 재계산 필수(지금 기록은 옛 digest)."
+  },
+  {
+   "at": "2026-09-04",
+   "state": "ratified",
+   "note": "1저자 비준 (scientific_owner) — 회신 Z-3 이행분. 내용 변경 없는 재비준: P0-1 loccheck smoke 의 %plots→%%plots 로 봉인 대상(빌더 SHA)이 바뀌어 지문이 어긋나 있었다. 비준 범위는 **loccheck 까지**다 — seeds 는 LOCCHECK_PASS.json, phase S 는 PROBE_VERDICT_PASS.json 을 강제하고 지금 둘 다 없다(실측 확인). loccheck 결과를 사람이 본 뒤 다음 단계를 판단한다."
   }
  ],
  "회신_U_이행": {
@@ -365,15 +370,6 @@
   "receipt_결박": "receipt 가 봉인하는 xyz 는 glob 첫 파일이 아니라 **입력이 읽는 파일**이다. xyz·%moinp 해시가 빠진 receipt 는 fail-closed. seed 생성은 L receipt 의 out·xyz SHA 를 지금 파일과 대조한다. L2·S0P·SR 행에도 xyz_sha256 이 있다 (회신 Y P0-5).",
   "L2_suffix_패치_원자성": "전건 선검증 → 임시 파일 → os.replace(입력·manifest 둘 다). 검증 단계 거부면 파일 변경 0. apply 중 I/O 실패는 preflight 의 INP_CHANGED 로 fail-closed 된다 — '어떤 경우에도 0' 이 아니다 (회신 Z P1 정직화).",
   "plots_smoke": "loccheck 가 OH•(UKS doublet) 한 잡에 `%plots SpinDens` 를 붙여 실물 cube 를 만들고, calibration 도구가 그것을 끝까지 읽어 ∫Δρ = 1 ± 0.05 · QC 통과 · min/max 단위를 증서 `plots_smoke` 에 봉인해야 phase L·seeds 가 열린다 (회신 Z P0-1). 증서 재발행은 기존 receipt 와 다른 ORCA 면 거부한다 (회신 Z P1). smoke 상자는 production 규칙(pil_cube_grid: extent±5 Å · 0.30 Å)으로 만들고 cube 헤더(n·origin·간격 1e-3)를 pil_run_calib 와 같은 대조로 검증해 `grid_convention_verified` 를 봉인해야 한다 — 없으면 seeds·L 이 열리지 않는다 (회신 Z-2 P0-2)."
- },
- "ratification": {
-  "state": "ratified",
-  "role": "scientific_owner",
-  "at": "2026-09-02",
-  "by": "1저자",
-  "content_digest": "7f7e00fa11142267891401adee486aed2e004b1d8ac9b4a257d134b47189c9a4",
-  "⛔_무엇에_대한_비준인가": "이 문서에서 `ratification` 을 뺀 내용의 sha256 이다. 한 글자라도 바뀌면 게이트가 재승인을 요구한다.",
-  "⚠_base_commit_이_아니다": "비준 시점의 HEAD 는 내용 앵커가 아니다 (회신 BB P0-3). 앵커는 이 digest 이고 게이트가 재계산해 본다."
  },
  "⛔_중단_규칙과_판정_규칙은_다르다_2026_09_02": {
   "왜_적나": "회신 X P0-2 — 사전등록과 판정기가 **다른 규칙을 집행한다**는 지적을 받았다. 실제로는 두 종류의 규칙을 한 칸에 섞어 쓴 것이었다: **중단 규칙**(비용을 더 쓸지)과 **판정 규칙**(값을 보고할지). 둘은 문턱이 달라도 모순이 아니지만, 문서가 구분해 적지 않으면 어느 쪽을 집행하는지 알 수 없다.",
@@ -402,5 +398,17 @@
   "margin_A": 5.0,
   "family_tol": 0.1,
   "⚠": "기계용 — `_pil_check_prereg` 가 코드 상수(PIL_CLASS_MIN·PIL_CLASS_MARGIN·PIL_CALIB_MAX_DF·PIL_CUBE_MAX_SPACING_A·PIL_CUBE_SPACING_A·PIL_CUBE_MARGIN_A·PIL_CALIB_FAMILY_TOL)와 manifest `calib_gate` 와 **셋 대조**한다 (회신 Z P0-3ⓑ). 하나라도 다르면 생성·seed·판정 전부 막힌다."
+ },
+ "ratification": {
+  "state": "ratified",
+  "role": "scientific_owner",
+  "at": "2026-09-04",
+  "by": "1저자",
+  "content_digest": "208c5ac52a9827fa2820d65fd2e1b11600b68222d2ccc08151b85395c33c7893",
+  "actor_id": "yonghoon7153@gmail.com",
+  "timestamp": "2026-09-04T05:52:14Z",
+  "commit": "1a3ad0da8367736e61431f4b04affa992c4b8ac4",
+  "⛔_무엇에_대한_비준인가": "이 문서에서 `ratification` 을 뺀 내용의 sha256 이다. 한 글자라도 바뀌면 지문이 달라지고 게이트가 재승인을 요구한다 — 비준을 받아 놓고 내용을 고치는 경로를 닫는다.",
+  "⚠_base_commit_이_아니다": "`commit` 은 기록일 뿐 앵커가 아니다. 앵커는 위 digest 다."
  }
 }

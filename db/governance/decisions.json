@@ -876,7 +876,7 @@
    "kind": "gate",
    "scope": "sdcp.h_removed_radical.state_realization",
    "slot": "polaron_state_realization_gate",
-   "status": "proposed",
+   "status": "active",
    "applies_to": {
     "systems": [
      "sdcp_dp6_neutral_radical"
@@ -907,7 +907,24 @@
    "review": "kb/reviews/codex_T_reply_polaron_pilot_2026_08_31.md",
    "citable": "no",
    "citable_why": "S0 미실행. 실행해도 ADEQUATE / MODEL_NONDIAGNOSTIC / NO_VALUE / PARTITION_DEPENDENT / THRESHOLD_DEPENDENT / BACKBONE_DEFINITION_DEPENDENT / ETHER_O_CENTERED / LOCALIZATION_DEPENDENT / SEARCH_PROTOCOL_DEPENDENT 중 하나로만 닫히며, 어느 경우에도 에너지 순서·바닥상태·물질 수준 캐리어 위치를 인용하지 않는다.",
-   "date": "2026-08-31"
+   "date": "2026-08-31",
+   "decision_state": "active",
+   "status_history": [
+    {
+     "at": "2026-09-04",
+     "state": "active",
+     "note": "1저자 비준 (scientific_owner). 사전등록 재봉인과 함께."
+    }
+   ],
+   "ratification": {
+    "state": "ratified",
+    "role": "scientific_owner",
+    "actor_id": "yonghoon7153@gmail.com",
+    "timestamp": "2026-09-04T05:52:14Z",
+    "commit": "1a3ad0da8367736e61431f4b04affa992c4b8ac4",
+    "decision_digest": "sha256:809256aab31a1a760e611fcc8b7bc5b4fe53b4f1a258b70192c6a5b6fd3f9c40",
+    "⚠_digest_의_뜻": "`ratification` 을 뺀 결정 내용의 sha256 이다."
+   }
   },
   {
    "id": "D-2026-09-03-sdcp-c12-kconv-axis-excluded",
