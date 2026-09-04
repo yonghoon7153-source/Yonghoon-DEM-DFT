@@ -49,31 +49,113 @@
 
 ### 축 B — DFT / MLIP (브랜치 `claude/friendly-meitner-lldvar`)
 
-황화물 SE 의 전자구조·탄성·결합·이온수송을 제일원리와 MLIP-MD 로 정량하고, LiNiO₂ 계면 위
-바인더 흡착 대비와 SEI 상의 Li 이동장벽을 낸다. **정체성은 물리보다 절차에 있다.**
+황화물 SE 와 그 계면을 제일원리·MLIP 으로 정량한다. **정체성은 물리보다 절차에 있다** —
+계산 전에 보고량을 정의하고, 사전등록하고, 게이트를 결과 보기 전에 박고, 못 확인한 것을
+통과로 세지 않는다. `db/` 407 파일(properties) + `kb/` 351 문서가 그 기록이다.
 
-- 도구: VASP(외주 번들 생성기 1.37 MB/21k줄) · QE CI-NEB · UMA MLIP-MD · ORCA r2SCAN-3c · LOBSTER · BVSE
-- 계: Li₆PS₅Cl 계열(comp1–5 · modelc=LPSCl1.6 · +B₂O₃ · LPSOCl · Nd 치환) · LiNiO₂(104)×바인더
-  조각(**SDCP vs PTFE**) · SEI 상(Li metal·Li₂S·Li₃N–Nd·Li₂O·Li₃P·Li₃PO₄·LiCl) · Li₃N(001)·LiC₆(0001)
-- 확보값(정본 39항목): 밴드갭 **2.066/2.099/1.9671/2.2309 eV**(fixed-occ nscf) · B₀ 21.7–26.2 GPa ·
-  탄성 20.0–35.0 GPa · MD Ea 0.15–0.29 eV · ICOHP −5.91~−6.04 eV ·
-  NEB Li metal **0.0806** / LiNdO₂ **0.229** / Li₂S **0.305** eV (전부 provisional, 인용 불가)
-- **C-12 ΔE_ads(SDCP vs PTFE)는 아직 값이 없다** — 외주 VASP 16잡 발송 전
+**도구**: VASP(외주 번들 생성기 `vasp_handoff_bundle.py` 1.37 MB/21k줄 — 생성기+배포 분석기+
+단계 러너+POTCAR 봉인+census 가 한 파일) · QE(pw.x · **neb.x CI-NEB**) · **UMA-s-1p1(omat)**
+MLIP-MD · ORCA **r2SCAN-3c** · **LOBSTER**(COHP/ICOHP) · **softBV**(BVSE) · pymatgen/MP(grand-potential)
+
+#### 캠페인 — 이게 실제 목록이다 (11개)
+
+**① LPSCl 계열 벌크 물성** (`db/properties/` b2o3 36 · lpsocl 30 · comp2 10 · modelc 7 파일)
+comp1–comp5 · `modelc`(=LPSCl1.6) · **+B₂O₃** · **LPSOCl**(O 치환) · **Nd 치환**.
+밴드갭(fixed-occ nscf) **2.066 / 2.099 / 1.9671 / 2.2309 eV** · B₀(BM3) 21.71–26.233 GPa ·
+탄성(relaxed-ion) 20.03–35.04 GPa · **ICOHP(LOBSTER, 결합당) −5.913 ~ −6.04 eV** ·
+Bader/Löwdin 전하 · ELF 공유성 · phonon 안정성 · Voronoi 무질서 · convex hull · 표면에너지
+γ_SE 0.45–1.211 J/m²
+
+**② 이온수송 MLIP-MD** (`msd` 9 · `md` 5 · `uma` 18 · `vanhove` 2 · `beta` 3 파일)
+UMA Langevin NVT · dt 2 fs · equil 5 ps / prod 200 ps · **MSD 창 2–50 ps 고정** ·
+아레니우스 **600/800/1000 K 3점**(400/500 K 제외 판정) · Nernst–Einstein(Haven=1).
+**Ea 멀티시드 0.197 eV** · 단일시드 앵커 0.1512–0.2867 eV · D₀ 분해 · Van Hove 고원 ·
+β-gate · dualx blocking. ⛔ **σ 절대값 인용 금지, 비율도 멀티시드 판정만**(단일시드 1.33× 철회)
+
+**③ BVSE 이온 경로** (`bvse` 9 · `bv` 5 파일) — softBV R₀ = S 2.105 / Cl 2.249 / O 1.466, b=0.37 ·
+~0.25 Å voxel · BVSE=(BVS−1)² · 채널% = above-min ≤ iso. **정량·순위는 원본 주기셀 값만**
+(큐빅 박스는 표시용, ±1.3 %p). B₂O₃ 채널 3.32 / 4.74 / 6.73 %
+
+**④ 산화안정성 cascade** (`cascade` 53 · `oxidation` 8 파일) — MP grand-potential ESW.
+**host Li₆PS₅Cl: 환원한계 1.242 V · 산화한계 2.14 V · OCV 자가분해 1.717 V · 창 0.898 V**,
+산화 onset 반응 `4 Li₆PS₅Cl → LiS₄ + 4 Li₃PS₄ + 4 LiCl + 7 Li`.
+★ **`phase_set_id` 계약** = sha256(정렬된 MP entry_ids)[:16] — **같은 phase_set 안에서만**
+후보↔host 비교가 성립한다. 지금 method-comparable 270건.
+
+**⑤ 도핑 스크리닝 깔때기** (`doping` 3 · `site` 2 · `codoping_ml` 2 파일)
+**큐레이션 89종** 도펀트를 Xiao 2019 F1–F6 · Sendek 2017 · Kahle 2020 표준 게이트로 재표현.
+waterfall **89 → 89 → 84 → 45 → 28 → 1** (G1 구조안정 → G2 전기화학창 → G3 산화 onset →
+G4 Li 수송 → G5 기계). ⛔ 이 파일이 스스로 적고 있다: *"게이트 통과 수는 **발견 성능 지표가
+아니다**"* · `_v2` 는 **미검증 진단물**(G3 phase_set_id 미기록 · G4 blocking 이 BVS 를 덮는 순환 ·
+G5 로스터 상대 median). 순위·통과 수를 결과로 인용 금지.
+
+**⑥ SEI 분해상** (`sei` 14 파일) — Li₂S·Li₂O·Li₃P·Li₃PO₄(β/γ)·LiCl·LiNdO₂·Nd₂O₃·Nd₂S₃ 의
+밴드갭(fixed-occ) + MP 형성전위 + **QE CI-NEB Li 이동장벽**.
+NEB **Li metal 0.0806 · LiNdO₂ 0.229 · Li₂S 0.305 eV** — ⛔ 전건 `provisional_single_cell` ·
+`citable=false` · 최상위 `retracted: true`. 전하 규약이 상의 `electronic_class` 로 갈린다
+(부도체 V_Li⁻ + jellium + gaussian / 금속 중성공공 + mv). **jellium 은 유한셀 근사 ⇒ 셀 수렴
+전엔 상 사이 비교 전용.** BVSE 프록시와 같은 표 금지.
+
+**⑦ SDCP–PTFE 바인더 계면** (`sdcp` 27 파일 + `runs/sdcp_*` 5개) — **이 축의 주력**.
+LiNiO₂(104) 슬랩 192원자 × 바인더 조각. wave1 ΔE(site) 9.265–49.767 meV ·
+E_ads(box24) −0.3302 ~ −0.7728 eV(provisional). → **C-12 외주 VASP 16잡**(ΔE_ads, SDCP vs PTFE)
+= **아직 값 없음, 발송 전**. + SDCP polaron Stage A(ORCA r2SCAN-3c, gs0–gs2 완료 각 10–18 h) ·
+site_screen · v7c trimer 빌더(581 KB)
+
+**⑧ AF-ASSB 음극 계면 — Li₃N(001) / LiC₆(0001)** (`li3n` 9 파일)
+Li adatom 확산장벽을 **UMA · DFT-SCF · 전 DFT NEB 3중**으로 대조:
+Li₃N(001) path A **UMA 0.054 → DFT SCF 0.0486 → 전 DFT CI-NEB 0.18 eV** ·
+LiC₆(0001) DFT SCF **0.309 eV**. ⇒ **UMA 가 3.3배 과소**였다는 것이 이 캠페인의 소득.
+**AgNO₃–C–PVP 원고(v5) SI Table S2** 가 이 파라미터표다.
+
+**⑨ VGCF / h-BN 갤러리** (`vgcf` 7 파일) — 탄소섬유 위 h-BN 층간 Li 이동.
+QE neb.x 7 images · CI auto · PBE-D3BJ · 4×4 · k 3×3×1. 결합 2×2 매트릭스
+(gallery_2L1L **−1.580** · gallery_1L2L **−1.592 eV**). h-BN 단층 위 표면확산 **Ea 0.007 eV**
+= 수치 분해능 이하 ⇒ *"< 0.01 eV, 사실상 무장벽"* 으로만 보고하고 **Shi2017 0.10 eV 와
+일치한다고 쓰지 않는다**(13배 낮다). ★ **층 민감도 −209.4 meV vs E_bind 산포 52 meV**
+⇒ *"장벽은 같은 host 위 site 에너지 차라 층 효과가 상쇄된다"* 는 가정을 **반증**했다.
+
+**⑩ 계면 분해 per-seed** (`interface` 12 파일) — b2o3 / modelc2x / modelc62 / **lpsocl** ×
+seed 2·3·4 (각 500행 CSV). 전압분해 계면 반응성.
+
+**⑪ Zn ALZIB (C1, 수계)** (`zn` 2 파일) — Cu–Zn 상 지문. **43°±1° 안에 8상이 1.47° 폭으로
+겹치고 Cu–Zn 간격은 0.097°** ⇒ 회절 기하가 강제하는 것이라 분해능으로 못 푼다.
+DFT 격자상수로 가르려는 것은 **틀렸다**(DFT 오차 ~1 % = 2θ 0.3–0.4° ≫ 0.097°).
+⇒ DFT 가 기여할 자리는 **convex hull 하나** — 어느 상을 후보에서 뺄 수 있는가.
+⚠ **수계 Zn 계다. 황화물 SE 수치와 같은 표에 놓지 않는다.**
+
+#### 거버넌스 기계 (이 축의 진짜 산출물)
+- `db/properties/canonical_registry.json` — **정본 39항목**. 각 항목이 `source_path`+`source_key`
+  로 원자료를 가리키고 `webapp/canonical.py resolve()` 가 따라가 **대조**한다.
+  `comparison_group` 이 같은 값끼리만 순위·비교에 올린다. `prohibitions`(예: `dos_threshold_readout`)
+  가 **기계 집행**된다.
+- `db/governance/decisions.json` — 결정 **14건**. `proposed → (사람 ratify) → active`,
+  비준은 `content_digest`(내용 sha256)로 결박 ⇒ 내용을 고치면 **재승인을 요구**한다.
+  주요: `estimand-before-compute` · `closure-criteria-first` ·
+  **`missing-axis-is-unknown-not-worst`** · `source-authority` · `hash-bound-carry` · `no-fallback`
+- 사전등록 `db/properties/*_prereg_*.json` — C-12 는 `3_오차예산` B_num = |Δ_vac|+|δ_gas|+|δ_k|,
+  문턱 5 meV, **"축이 하나라도 없으면 NUMERIC_BUDGET_INCOMPLETE — 확인 못 한 것은 통과가 아니다"**
+- **마감 규율** `db/properties/<계>_closed_<날짜>.json` — 확정값·허용 서술·**금지 서술**·재개 조건.
+  순서가 핵심: 데이터를 보고 닫지 않고 **조건을 먼저 정하고 그게 채워졌으므로** 닫는다
+  (SDCP 는 조건 없이 두 번 닫았다가 두 번 물렸다)
+- **인용자격 계약** — 셀 수렴 미시험이면 자동 `provisional_single_cell` · `citable=false`
+- `kb/` 351문서 — reviews 106 · results 94 · elements 118 · methodology 49 · seminars 38 ·
+  projects 23 · papers 20 · questions 10 · syntheses 6 · physics 6. lint 0 errors 유지,
+  `explored` 는 **사람만** true, 근거 하나면 `confidence: high` 금지
+- **외부 감사 사슬** — 회신 원문을 `kb/reviews/` 에 보존하고 회신 ID(AI·AO·AR·AT·AV·AZ·BA·BB·
+  BD·BE·BF·BG·BH …)를 코드 주석에 결박한다. *"⛔ 회신 BH P0-1"* 처럼 **어느 리뷰가 어느 줄을
+  낳았는지**가 코드에 적혀 있다.
 
 > ★★ **이 축의 통제 규율**: *"admissible state 가 여럿인데 선택·집계 규칙이 없으면 스칼라
-> 보고량은 정의되지 않는다."* 배경 — **SDCP 흡착에너지를 여덟 번 계산했고 여덟 번 반려됐다.**
-> 받은 리뷰는 전부 "제대로 돌렸나" 였고 전부 통과했으며, "맞는 양을 재고 있나" 는 여덟 번째에야
-> 물었고 즉시 P0 가 나왔다. ⇒ 논문을 볼 때 **"이 논문은 무엇을 보고량으로 정의했는가"** 가
+> 보고량은 정의되지 않는다."* 열린 껍질 · 자성 기판 · 산화환원 활성이 위험 신호다.
+> 배경 — **SDCP 흡착에너지를 여덟 번 계산했고 여덟 번 반려됐다.** 받은 리뷰는 전부 *"제대로
+> 돌렸나"*(무결성·해시·INCAR·게이트)였고 전부 통과했으며, *"맞는 양을 재고 있나"* 는 여덟
+> 번째에야 물었고 즉시 P0 가 나왔다.
+> 실측 사고 하나 더 — 기체 기준은 `NUPDOWN=0` 으로 **제약**됐는데 복합체는 `−1` 자유였다.
+> **제약된 기준에서 자유로운 복합체를 뺐다.** 고치는 법은 "전 계에 같은 NUPDOWN" 이 아니라
+> 같은 **state-selection policy** 다.
+> ⇒ 논문을 볼 때 **"이 논문은 무엇을 보고량으로 정의했는가, 상태 선택 규칙이 있는가"** 가
 > 비판 포인트 1순위다.
-
-**데이터 규율 (어기면 값이 무효 — 문헌에서도 이 위반을 잡는다)**
-- 밴드갭은 **fixed-occupations nscf 고유값만**. DOS-threshold 판독 금지(~0.3 eV 과소)
-- **UMA 를 Li₃N 에 금지**(결정론적 편향). LPSCl MD 에는 검증된 표준
-- MLIP-MD: MSD 창 **2–50 ps 고정** · 아레니우스 600/800/1000 K · **σ 절대값 인용 금지,
-  비율도 멀티시드 판정만**(단일시드 1.33× 철회 사례)
-- BVSE 정량은 원본 주기셀 값만
-- NEB 전하 규약이 상의 electronic_class 로 갈린다(부도체 V_Li⁻+jellium / 금속 중성공공).
-  jellium 은 유한셀 근사 ⇒ **셀 수렴 전엔 상 사이 비교 전용**. BVSE 와 같은 표 금지
 
 ### 축 C — 실험 협업 (`이종기술`, 한양대 이종원 그룹) ★ 새로 확인됨
 

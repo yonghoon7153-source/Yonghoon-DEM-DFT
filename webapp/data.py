@@ -1188,6 +1188,15 @@ def sei_axes() -> dict:
             #   그러면 대시보드가 "계산 중" 이라고 **거짓말**을 한다. 철회는 철회라고 말한다.
             neb_retracted = bool(_nj.get("retracted"))
             neb_reason = _nj.get("retraction_reason")
+            # 🔴🔴 2026-09-04 — **`retracted` 가 두 가지를 뜻한다.** 화면이 둘을 섞으면 거짓말을 한다.
+            #   ① 2026-08-11 철회: 전하 규약 오류 + 끝점 미이완 ⇒ 값 자체가 무효,
+            #      results 를 results_OLD_INVALID 로 옮겨서 results 가 **빈다**. → "재계산 대기" 가 맞다.
+            #   ② 인용자격 계약(2026-08-16): 값은 **나와 있는데** 셀 수렴 미시험이라 n_citable=0
+            #      ⇒ 최상위에 retracted 가 박힌다. results 는 **차 있다**. → "재계산 대기" 는 **거짓**이다.
+            #   실측(2026-09-04 li_metal 병합 뒤): ②인데 화면이 ①문구를 냈다 — 값 4개가 있는데
+            #   "전건 철회, 재계산 대기" 라고 적었다. 둘을 results 가 비었는지로 가른다.
+            neb_recalc_pending = neb_retracted and not any(
+                (v or {}).get("Ea_effective_eV") is not None for v in neb.values())
         except (OSError, ValueError):
             neb = {}
     # 🔴 2026-09-04 — 분모를 하드코딩 6 으로 두면 루트가 늘 때마다 화면이 틀린다.
@@ -1206,12 +1215,12 @@ def sei_axes() -> dict:
                         and not v.get("blocking_checks"))
     return {"axes": [
         {"n": "① Li⁺ 확산장벽",
-         "state": ("⛔ 철회 — 재계산 중" if neb_retracted else
+         "state": ("⛔ 철회 — 재계산 중" if neb_recalc_pending else
                    ("완료" if n_neb >= 6 else "진행 중")),
          "done": (not neb_retracted) and n_neb >= 6,
          "detail": ("⛔ 기존 NEB 결과 전건 철회 (2026-08-11) — 재계산 대기. "
                     "협업자 요청 6종: Li₂O · Li₃PO₄γ · LiNdO₂ · LiCl · Li₂S · Li₃P"
-                    if neb_retracted else
+                    if neb_recalc_pending else
                     ((f"DFT CI-NEB — 요청 6종 중 값 나온 것 {len(_req_done)}/6 · "
                       f"셀 수렴 확인 {n_neb}/6 (인용 가능)"
                       + ("  ·  " + " / ".join(
@@ -1220,7 +1229,8 @@ def sei_axes() -> dict:
                       + ("  ·  참조계 " + " / ".join(
                           f"{p} {r['Ea_effective_eV']:.3f}"
                           for p, r in sorted(_extra.items())) if _extra else "")
-                      + "  eV  ⚠ 전건 셀 수렴 미시험 — **상 사이 비교용**")
+                      + "  eV  ⚠ 전건 셀 수렴 미시험 — **상 사이 비교용**"
+                      + ("  ⛔ 인용 자격 없음 (n_citable 0)" if neb_retracted else ""))
                      if neb else
                      "DFT CI-NEB 계산 중 (협업자 요청 6종)")),
          "why": ("BVSE 는 화학계를 넘나드는 비교에 못 쓴다 — 하필 Figure 5 의 주인공 "
