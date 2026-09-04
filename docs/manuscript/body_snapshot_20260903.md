@@ -148,3 +148,15 @@ dissociated / a fraction"* 이라고 쓰는데 우리 문서가 *"doped 가 기�
 · `further verify the ethylenedioxy moiety` → `are consistent with the ethylenedioxy bridge` (약화)
 · `Oxidative polymerization and subsequent ion exchange then yielded the final SDCP.` 문장이
   Figure 2a 문장에 **병합**됨
+
+---
+
+### §2 계속 — ★ 우리 파트 (DEM/MPM + 복셀 수송)  [저자 제공 2026-09-04]
+
+Beyond this mechanical role, the electronically conducting SDCP is expected to modify charge-transport pathways within the composite cathode. To directly evaluate this effect, three-dimensional SBE and DBE microstructures were reconstructed using a discrete element method (DEM) coupled with the material point method (MPM), in which DEM generated the particle packing and MPM resolved its subsequent plastic densification; the model geometries and material parameters are summarized in Figure S16 and Table S2, respectively.[40,41] The effective conductivities of the reconstructed microstructures were subsequently computed using a voxel-based finite-volume transport solver. Because both electrodes share an identical DEM-generated particle skeleton, the differences described below arise solely from their binder phases. Although both electrodes maintain fully percolated electronic networks owing to their identical vapor-grown carbon fiber (VGCF) contents, replacing half of the electronically insulating PTFE with uniformly dispersed, electronically conducting SDCP increases the CA density around the AM particles, as visualized by the local CA density normalized to the SBE median (Figure 4a). Indeed, most AM particles in the DBE exhibit CA densities above the SBE median, indicating that this enrichment extends throughout the electrode rather than being confined to localized regions. Correspondingly, the median number of CA contacts per AM particle, defined as the number of distinct CA entities within a 0.15 μm shell around each particle, increases from 74 for the SBE to 86 for the DBE (Figure 4b), reflecting the additional conductive phase introduced by SDCP.[42] Consistently, the simulated effective σele increases from 53.99 to 70.61 mS cm−1 (Figure 4b). The corresponding ionic and electronic current-density fields are presented in Figures S17 and S18, respectively, revealing comparable ionic current distributions in the two electrodes but an overall higher electronic current density in the DBE. Taken together, these results demonstrate that partially replacing insulating PTFE with conducting SDCP increases the local CA density around the AM particles, thereby reinforcing electronic transport throughout the composite cathode.
+
+**저자 1차 개정 (2026-09-04, 문장 ②)** — `reconstructed` → `constructed` · `coupled with` → `followed by`:
+
+> To directly evaluate this effect, three-dimensional SBE and DBE microstructures were constructed by a discrete element method (DEM) simulation of powder packing followed by a material point method (MPM) simulation of plastic densification
+
+⇒ 잔여 권고: `powder packing` **`and compaction`** 추가 · 뒷절(`Figure S16`/`Table S2`/`[40,41]`) 복원.

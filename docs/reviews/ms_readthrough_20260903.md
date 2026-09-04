@@ -147,3 +147,98 @@ SDCP 투입        0.17 → 0.37        Δ = +0.20   (+117.6 %)
 3. **침대 앵커 명시**: 원고 E = 9.0 인데 격자 스윕 침대는 **23.6** (CL-56).
 4. **Figure 2e DFT** 가 어느 계산인지 확인 (우리 `E_bind` 는 INVALID 상태).
 5. 다음 문단부터 이어 읽기 — **읽기 전에 이 파일과 스냅샷을 먼저 갱신할 것.**
+
+---
+
+# 문단 5 — ★★ 우리 파트 (DEM/MPM + 복셀 수송) — 2026-09-04
+
+원문·개정본은 `body_snapshot_20260903.md` §우리 파트.  **이 문단만 우리가 저자다** — 다른 문단은
+*"넘겨짚지 않기"* 가 목표였지만 여기는 **우리가 정확성을 책임진다**.
+
+## ★★★ 반드시 Methods 에 들어가야 할 문장 — **AM-freeze** (저자 지시로 고정)
+
+본문이 *"plastic densification"* 이라고만 하면 **전체 충전물이 소성 치밀화한 것**으로 읽힌다.
+실제로는 **SE 만** 소성 변형하고 **AM 은 고정 장애물**이다.
+
+```
+In the MPM stage the DEM-derived AM skeleton was held fixed as a rigid obstacle and only
+the solid electrolyte was treated as a deformable material, so that the plastic
+densification reported here is that of the solid electrolyte phase.
+```
+
+★ **이것은 약점이 아니라 설계다.**  AM 을 풀면 강체 AM 이 force chain 으로 하중을 가려
+porosity 가 **36–41 %** 로 튄다 (실측).  AM-freeze 4근거: ① frame[5] — AM load-bearing 은 rigid
+접촉망 현상이라 연속체 MPM 이 표현 불가 ② mobile-rigid AM 은 over-shielding ③ AM-as-material 은
+n_grid ≥ 384 에서 CFL/OOM ④ DEM AM 이 이미 검증된 300 MPa 골격이라 움직이면 drift.
+⇒ **이유를 한 줄 붙이면 오히려 방어가 된다.**
+
+## 검산 — 원고 수치는 우리 정본과 5자리까지 일치한다
+
+```
+원고 비   70.61 / 53.99 = 1.307835
+정본 R (centerline)     = 1.307820      차이 1.5e-5  ⇒ **centerline 규약 확정**
+centerline SBE 53.99    = 생산 규약 73 mS/cm 의 74 %  (−26 %, CL-49 정합)
+CA 접촉수 74 → 86 = +16.2 %   vs   σ_e +30.8 %   ⇒ **비선형**
+```
+
+## 문장별 조치 (우선순위)
+
+| 급 | 문장 | 조치 |
+|---|---|---|
+| **P0** | ⑧ σ_ele | **규약 라벨 필수** — `53.99/70.61` 은 **centerline(PTFE 차단)** 이다.  생산 규약(PTFE 미표현)은 σ_e 가 **73 mS/cm** 로 26 % 높고 **비도 다르다**(그 비는 CL-33 계열이라 여기 적지 않는다 — 정본은 `claims.json`).  ⚠ Methods 가 어느 규약을 적고 있는지 **확인 필요** |
+| **P0** | ⑨ 전류장 | *"overall higher electronic current density"* → **집중도 −17.8 %** 로 교체.  안 고치면 **그림이 문장을 반박**한다 (S18 에서 DBE 가 더 흐리다) |
+| **P1** | ② 방법 | ✅ `constructed`·`followed by` 로 개정됨.  잔여: `powder packing` **`and compaction`** · 뒷절 복원 · Methods 에 AM-freeze |
+| **P1** | ⑧⑩ | **격자 미수렴 + 하한** 한 줄.  ★ 근거를 **원고 자신의 Figure 3a**(PTFE 응집)로 댈 수 있다 |
+| **P1** | ⑦ | `0.15 µm` **= 복셀 한 칸(one voxel edge)** 명시.  자의적 선택이 아니라 격자에서 온 값이라는 게 방어다 |
+| **P2** | ④ `solely` | *"SDCP 추가 + PTFE 절반 감소"* 두 원인을 명시.  앞 문단이 이미 인정하므로 여기서만 뭉뚱그리면 자기모순 |
+| **P2** | ⑥ `most` | 중앙값이 오르면 **정의상 참**이라 약하다 → **실제 분율 + 10-백분위**(가장 CA-빈곤한 입자도 오르는가)가 *"국소가 아니다"* 의 진짜 증거 |
+| **P2** | ⑩ | `demonstrate` → `indicate` (짝 침대 **한 쌍** · 미수렴 격자) |
+| **P2** | ⑧ | `53.99/70.61` → `54.0/70.6` + 비 `1.31` (8팔 SE 0.1–0.35 %p · 미수렴 ⇒ 4자리는 가짜 정밀도) |
+
+## ★ 넣을 수 있는데 안 들어간 우리 수치 다섯
+
+```
+econn 연결률       100 / 100 %          "fully percolated" 를 정량으로
+porosity           7.86 → 7.37 %        Figure 3b "fewer voids" 와 연결
+σ_ion              +0.8 %                "comparable ionic" 을 정량으로
+전류 집중 p99.8    ×1447 → ×1189        프레임 무관 헤드라인 (−17.8 %)
+접촉수 vs σ_e      +16.2 % → +30.8 %     비선형 = 망 위상이 바뀌었다는 신호
+```
+
+## 문장 후보 (그대로 붙여 쓸 수 있게)
+
+**⑤ 퍼콜 + 분산** — *"연결성이 아니라 국소 밀도의 차이"* 가 이 문단의 정확한 요약이다:
+```
+Both electrodes retain fully percolated electronic networks (100 % of the carbon phase
+connected to the current collector in both cases), so the difference is one of local
+density rather than connectivity.
+```
+
+**⑨ 전류장** (프레임 무관으로):
+```
+The ionic distributions are essentially unchanged (sigma_ion differs by 0.8 % between the
+two electrodes), whereas the electronic field is markedly less concentrated in the DBE:
+the 99.8th-percentile current density falls from 1447 to 1189 times the through-plane
+mean, a 17.8 % reduction in current focusing. The DBE panel therefore appears fainter on
+the shared colour scale not because it carries less current, but because the same current
+is carried over more parallel paths.
+```
+
+**⑩ 결론 + 하한**:
+```
+Because the model represents PTFE as uniformly dispersed rather than aggregated into the
+fibril-rich domains observed in Figure 3a, and because the ratio is not grid-converged,
+the reported gain is a conservative estimate.
+```
+
+**Methods 각주 — 절대값 규약**:
+```
+The absolute conductivities are model responses under a stated closure and are not
+directly comparable to the two-terminal TLM values measured on the same electrode, which
+are lower by ~2 orders of magnitude because the voxel representation fuses touching cells
+and therefore carries no explicit particle-particle contact resistance. The ratio is not
+grid-converged: refining the voxel edge raises it monotonically, so the reported value is
+a lower bound.
+```
+⚠ `444배` 를 본문에 쓸 필요는 없다 — *"~2 orders"* + **이유**(접촉저항 부재)면 충분하고,
+**차이의 이름을 우리가 안다**는 점에서 오히려 강하다.
