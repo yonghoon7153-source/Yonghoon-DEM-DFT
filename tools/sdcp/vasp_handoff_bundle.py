@@ -16465,9 +16465,15 @@ def build_bundle(a, ledger: Optional[Dict[str, Any]] = None) -> Path:
                 "**전부 끝나고 게이트를 통과해야** 2단계가 열리므로 실제 벽시계는 "
                 "makespan_staged_d 다 (2026-09-03 정정 — 종전 문서는 절반 값을 실었다)."),
             # 🔴 2026-09-03 — **문서가 인용해야 하는 값.** 1단계 makespan + 2단계 makespan.
+            # 🔴 2026-09-04 — **이 묶음이 실제로 계획한 동시잡을 반드시 넣는다.**
+            #   실측 결함: `--concurrency 5` 로 만들었더니 키가 2/4/6/8/12/20 뿐이라
+            #   `_walltime_block` 의 조회가 None 이 되고 **"전체 일정" 문장이 두 문서에서
+            #   통째로 사라졌다** (외주처가 총 일정을 못 받는다). 랭크 예시가 192 를
+            #   빠뜨렸던 것과 같은 계열이다 — 고정 목록은 자기 설정을 빠뜨린다.
             "makespan_staged_d": ({str(m): round(CE.staged_makespan(
                 _s1, _s2, m, _c1, _c2) / 24, 2)
-                for m in (2, 4, 6, 8, 12, 20)} if (1 in _jst and 2 in _jst) else None),
+                for m in sorted({2, 4, 6, 8, 12, 20, int(a.concurrency)})}
+                if (1 in _jst and 2 in _jst) else None),
             "stage_jobs": {"1": _jst.count(1), "2": _jst.count(2)},
             "stage_longest_h": {
                 "1": round(max([h for h, s in zip(_jh, _jst) if s == 1] or [0]), 1),
@@ -17733,6 +17739,17 @@ def selftest() -> int:
         #   실측 사고: v35 초판이 외피 58 h 만 보고 72 h 를 권했는데 천장은 76.9 h 였다.
         #   즉 우리가 권한 walltime 아래에서 잘릴 수 있는 잡이 있었다.
         _cf9 = m_st.get("cost_frozen") or {}
+        # ⛔음성 2026-09-04 — 이 묶음의 동시잡이 makespan 표에 **있어야** 한다.
+        #   없으면 walltime 블록의 조회가 None 이 되어 "전체 일정" 문장이 통째로 사라진다
+        #   (실측: --concurrency 5 에서 두 문서 모두 그 줄이 없었다).
+        _mkw9 = _cf9.get("makespan_staged_d") or {}
+        _cc9 = (m_st.get("submission") or {}).get("max_concurrency")
+        if _mkw9 and _cc9:
+            chk(str(_cc9) in _mkw9,
+                f"⛔음성: makespan 표가 이 묶음의 동시잡({_cc9})을 담는다 — 없으면 "
+                f"'전체 일정' 문장이 문서에서 사라진다 (키 {sorted(_mkw9)})")
+            chk("전체 일정" in _rd9 and "전체 일정" in _sb9,
+                "⛔음성: README·SUBMIT 둘 다 **전체 일정** 문장을 담는다")
         _ce9 = _cf9.get("nelm_ceiling_longest_h")
         chk(_ce9 is not None and _cf9.get("nelm"),
             f"cost_frozen 이 NELM 천장을 담는다 (천장 {_ce9} h · NELM {_cf9.get('nelm')})")
