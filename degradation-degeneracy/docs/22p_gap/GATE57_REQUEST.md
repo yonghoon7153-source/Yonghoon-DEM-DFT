@@ -1,7 +1,44 @@
 # 57차 게이트 리뷰 요청 — 묶음 9 (실행 전 승인 · 보존 lifecycle)
 
-**대상 커밋**: `47a2763e` (브랜치 `claude/14-gate-code-review-9qkx05`) — 코드·시험·산출물(g12)·변이 전수 증거를 전부 담은 커밋이다. 그 뒤 커밋은 이 요청문과 `webapp/`(위키 열람기) 뿐이고 `degradation-degeneracy/` 를 건드리지 않는다.
+**대상 커밋**: `47a2763e` (브랜치 `claude/14-gate-code-review-9qkx05`) — 코드·시험·산출물(g12)·변이 전수 증거를 전부 담은 커밋이다.
+
+> **⚠ 2026-09-04 갱신.** 원래 이 줄은 *"그 뒤 커밋은 이 요청문과 `webapp/` 뿐이고 `degradation-degeneracy/` 를 건드리지 않는다"* 였다. **더는 사실이 아니다.** 그 뒤로 `mode-observability/`·`wiki/`·`webapp/` 커밋이 여럿 얹혔고, `degradation-degeneracy/` 안에서도 **두 파일이 바뀌었다** — `tests/test_lifecycle_e2e.py` 와 `docs/08_REVIEW_RESPONSE.md`(§63).
+>
+> **리뷰 시점 HEAD**: `ce497466`. **`source_digest` 는 `ea35ff4f39b97489` 로 `47a2763e` 와 동일하다** — 바뀐 것이 전부 RUN_SCOPE(`src/ tools/ configs/ scripts/ run.sh requirements*.txt`) 밖이기 때문이다. 그러므로 **코드 identity 와 산출물 g12 는 그대로 유효**하고, 이 요청문의 판정 대상 코드도 그대로다.
+>
+> **다만 §63 을 먼저 읽어 주기 바란다** — 요청문 작성 뒤 자체 회귀에서 e2e 1건이 빨갰고, 진단·수정·변이 검증을 §63 에 적었다. 그 과정에서 **우리 시험이 난입 3경우를 만들지 못하고 있었다**는 것과 **변이 하나가 살아남았다**는 것이 나왔다.
 **직전 판정**: 56차 **NO-GO** — P0 7건 · P1 4건
+
+
+### §0.1 아직 안 한 둘에 대해 — **설계 갈림을 리뷰어에게 묻는다** (2026-09-04)
+
+`P0-8`(경로 무관 실행 class marker)과 외적타당도 `#50`(`truth_provenance`)은
+**같은 벽**에 걸려 있다. 둘 다 **봉인 산출물에 새 필드를 요구**하는데, 이미 봉인된
+g12 에는 그 필드가 **없다**.
+
+- **fail-closed 로 하면** 필드 없는 예전 산출물이 보고서·보관 sink 에서 거부된다 —
+  곧 **g12 를 다시 만들어야** 한다.
+- **fallback 을 두면** 예전 산출물은 지금처럼 **경로 기반**으로 판정된다 — 그러면
+  P0-8 이 없애려던 바로 그 경로 의존이 **migration 창 동안 살아 있다.**
+
+`[해석]` 우리 판단으로는 이것이 **구현 난이도가 아니라 정책 선택**이다.
+57차 P0-5 가 같은 모양의 문제(Gate55 형태 durable state)를 **버전화 migration** 으로
+풀었으므로 같은 길이 있으나, 그 선택은 "언제까지 경로 판정을 남겨 두는가" 를 정하는
+것이라 **리뷰어가 정해 주는 편이 맞다.**
+
+**우리가 재 둔 사실** (`[재현]`):
+
+| 무엇 | 값 |
+|---|---|
+| `is_inside_namespace()` 호출처 | **12곳** (`src/grid.py` 1 · `src/fitting.py` 3 · `tools/preserve.py` 5 · `tools/make_results.py` 1 · `tools/archive_bundle.py` 1, 나머지는 정의·주석) |
+| g12 곡선 manifest 의 `source_digest` | `d50295f980ccaa81` (2026-08-13 생성) |
+| 현재 트리 `source_digest` | `ea35ff4f39b97489` — **이미 다르다** (53~57차가 RUN_SCOPE 를 고친 뒤라서) |
+| 그런데 g12 가 유효한 이유 | validator 의 `코드_재계산` 검사는 **같은 commit·clean 일 때만** 돈다. 다르면 `_참고_코드재계산불가` 로 사실만 남긴다 (`src/io.py`) |
+
+`[해석]` 그러므로 **RUN_SCOPE 를 고쳐도 봉인된 g12 자체는 무효가 되지 않는다.**
+비용은 "새 실행을 하려면 baseline 캐시(`.cache/discharged_state`)가
+`source_digest` 로 묶여 있어 재생성해야 한다" 쪽이다. **묻는 것은 하나다 —
+새 필드를 fail-closed 로 요구할까, 버전화 fallback 을 둘까.**
 
 ---
 
@@ -14,7 +51,9 @@
 | trusted launcher 의 source 측정 | **미착수** |
 | **P0-4** typed 보존 영수증 **소비** | **부분** |
 | 변이 증거의 **독립 replay** | **미착수** — 57차는 checker 가 영수증을 소비하게 했을 뿐(P1-1), 스스로 재생하지는 않는다 |
-| baseline·sweep1d·wsweep 계획 gate · 실물 object-lock adapter · power-loss 모델 · publisher 전용 OS principal · 외적타당도 #48/#49/#50 | **미착수** |
+| baseline·sweep1d·wsweep 계획 gate · 실물 object-lock adapter · power-loss 모델 · publisher 전용 OS principal | **미착수** |
+| 외적타당도 **#48**(단일 C-rate) · **#49**(셀 간 산포) | **2026-09-04 닫음** — `docs/RESULTS.md` §"이 결론이 말하지 않는 것" 에 한계로 승격했다. 격자 전체가 `c_rate 0.05`·`charge_first`·컷오프 4.2/2.5 **한 점**이고 `parameter_set: Chen2020_composite` **하나**라 3069 조건에 **셀 간 산포가 0** 이다 |
+| 외적타당도 **#50** (`truth_provenance` 를 기계 계약에) | **미착수** — 아래 §0.1 |
 
 55·56차 판정문의 마지막 문단에 동의한다 — 위 항목들은 반례와 **별개의 독립 GO
 전제**로 그대로 남는다.
