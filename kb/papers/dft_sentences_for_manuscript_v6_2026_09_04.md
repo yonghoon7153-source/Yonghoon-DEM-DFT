@@ -8,6 +8,8 @@ kind: manuscript-draft
 system: sdcp
 confidence: high
 verificationStatus: verified
+verifiedAt: 2026-09-04
+verifiedBy: self
 explored: false
 authoredBy: agent
 claimType: prescriptive

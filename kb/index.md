@@ -1,6 +1,6 @@
 # kb 카탈로그 (생성물 — 손으로 고치지 말 것)
 
-> `python3 tools/kb_wiki.py index` 가 만든다 · 2026-09-03 · managed-files: 352
+> `python3 tools/kb_wiki.py index` 가 만든다 · 2026-09-05 · managed-files: 355
 
 규칙: kb/SCHEMA.md · 열린 질문: kb/questions/ · 논지 카드: kb/syntheses/ · 원장: kb/open_items.md · 문헌: litdb/INDEX.md
 
@@ -173,7 +173,7 @@
 - `kb/results/vgcf_hbn_figure_plan.md` — VGCF/h-BN 원고 — 층수 연구를 어디에 둘 것인가 (2026-07-31 결정)
 - `kb/results/vgcf_hbn_gallery_mechanism_2026_07_30.md` — h-BN@VGCF — 209 meV 층수효과의 정체: confinement 확정 (2026-07-30)
 
-## reviews/ (99)
+## reviews/ (100)
 - `kb/reviews/ECERD2600097_review_notes.md` — 📝 리뷰 노트 — ECER-D-26-00097 (Fan 외, *Stability Issues in Sulfide-Based ASSB*)
 - `kb/reviews/INDEX.md` — 리뷰 사슬 색인 — 프롬프트↔회신 (자동 생성) ○미열람
 - `kb/reviews/codex_AA_prompt_stageA_v5_regate_2026_08_29.md` — Codex 재검토 요청 AA — 회신 Z 의 P0 8건 처리 후 Stage A v5 재게이트 ○미열람
@@ -262,6 +262,7 @@
 - `kb/reviews/internal_Z3_reply_polaron_S0_2026_09_03.md` — 회신 Z-3 — 폴라론 S0 내부 적대적 리뷰 3차 (NO-GO · P0 1 · P1 7)
 - `kb/reviews/internal_Z_reply_polaron_S0_2026_09_03.md` — 회신 Z — 폴라론 S0 내부 적대적 리뷰 (NO-GO · P0 4 · P1 12)
 - `kb/reviews/internal_lens_review_c12_v34_2026_09_03.md` — 내부 6렌즈 리뷰 — C-12 v34 (발송 전 마지막 리뷰) · NO-GO → v35
+- `kb/reviews/internal_review_AX_lpsocl_600K_2026_09_04.md` — 내부 리뷰 AX — LPSOCl 600 K 개정 (Codex 대체 · 자체 적대적 리뷰) ○미열람
 - `kb/reviews/section3_review_candidates.md` — 📋 §3 리뷰 코멘트 후보 — 소거법 작업용 (ECER-D-26-00097)
 - `kb/reviews/section3_review_comments_compressed.md` — Comments on Section 3 (Intrinsic Stability of Sulfide SEs) — 압축판 v2
 - `kb/reviews/sei_neb_li3nd_rereview_request_2026_08_11.md` — 재리뷰 요청 — SEI NEB 6종 · Li₃Nd 금속 분기 · P2 범위 축소 (착수 직전)
@@ -331,12 +332,14 @@
 ## descriptors/ (1)
 - `kb/descriptors/coating_descriptor_catalog.md` — 황화물 코팅 소재 Descriptor Catalog
 
-## papers/ (19)
+## papers/ (21)
 - `kb/papers/adhesion_charts_comparison.md` — Adhesion Charts — 20 seeds vs Selected 5 seeds
 - `kb/papers/adhesion_literature_review.md` — Adhesion Interface Modeling — Literature Summary
 - `kb/papers/choi2025_adoption_guide.md` — Choi 2025 — Adoption Guide for Our Paper
 - `kb/papers/computational_methods_draft.md` — Computational Methods — FINAL VERSION (2026-04-16)
+- `kb/papers/dft_sentences_for_manuscript_v6_2026_09_04.md` — 원고 v6 DFT 문장 — 삽입안 + 기존 문장 P0 2건 ○미열람
 - `kb/papers/draft_v1.md` — Beyond Electrochemistry: Tailoring Mechanical Properties of Halogen-Substituted Argyrodites
+- `kb/papers/figure2e_dropin_v7_2026_09_05.md` — 원고 v6→v7 Figure 2e 드롭인 — 본문·캡션·Methods 교체안 (C-12 v36 설계 반영) ○미열람
 - `kb/papers/final_report_v2.md` — LPSCl Manuscript — Final Report v2 (Updated 2026-04-17)
 - `kb/papers/lpscl_vs_lpscl16_20min_script.md` — LPSCl vs LPSCl₁.₆ — 20분 학회 발표 대본 (full)
 - `kb/papers/lpscl_vs_lpscl16_seminar_script_outline.md` — LPSCl vs LPSCl₁.₆ 세미나 — 발표 개요 + 통합 대본 (2026-06-11)
@@ -387,4 +390,4 @@
 ## elements/ — 118개 (생성물/템플릿, 목록 생략)
 ## templates/ — 3개 (생성물/템플릿, 목록 생략)
 
-## litdb/ — digest 209개 (정본 목록: litdb/INDEX.md)
+## litdb/ — digest 216개 (정본 목록: litdb/INDEX.md)
