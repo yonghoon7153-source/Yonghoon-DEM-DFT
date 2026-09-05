@@ -55,43 +55,86 @@
 {% endif %}
 {# 데이터 표는 **설명문 위**에 둔다 — 값 보러 온 사람이 스크롤하지 않게.
    라우트가 data 를 안 넘기면 통째로 빠진다(/methods · /todo 는 영향 없음). #}
+{# ⛔⛔ 회신 AW P0-1 (2/3) 화면 — 2026-09-05.
+   종전 이 절은 데이터층이 만들어 준 `status`/`why` 를 **쓰지 않고** `valid`(basin
+   일치)만 썼고, 그래서 마감된 doped 행이 화면에서 ✓ 로 보였다. 그리고 읽는 법 문장
+   세 개가 **철회된 주장을 현재형으로** 되살리고 있었다:
+     · "ΔE 열이 양수면 그 분자는 Li 자리를 좋아한다"
+     · "더 음수일수록 세게 붙는다"
+     · "자기 초기조건과 무관하게 재현된 것 — 그게 신뢰 근거다"
+   ⇒ 지위를 **행마다** 붙이고(상단 배너 하나로는 부족하다 — AW P0-2),
+     CITABLE 이 아닌 값은 **접힌 역사 절**로 내려보낸다. 지우지는 않는다
+     (지우면 "안 돌린 계산" 으로 보여 3일짜리 배치를 다시 돌리게 된다). #}
+{% macro st_badge(s) -%}
+{%- set c = {'CITABLE':'#0d9488','NO_VERDICT':'#c05621','HOLD':'#c05621','BLOCKED':'#be123c'} -%}
+<span class="mono" style="font-size:.7rem;font-weight:700;color:{{ c.get(s, '#6b7280') }}">{{ s }}</span>
+{%- endmacro %}
 {% if data and data.jobs %}
 <div class="doc">
   <h2>📊 원자료 (db/properties/sdcp_wave1_results.json)</h2>
   <p class="sub">{{ data.meta.code }} · 잡 {{ data.meta.n_jobs }} · OUTCAR {{ data.meta.n_outcar }}
      · 분자 기준 {{ data.meta.molecule_reference_box }}</p>
 
-  <h3>자리 선호 ΔE = E(Ni_top) − E(Li_top) · 양수 = Li 자리 우세</h3>
-  <p class="sub">읽는 법: <b>ΔE 열이 양수면 그 분자는 Li 자리를 좋아한다.</b>
-     "basin" 은 계산이 도착한 자기(스핀) 상태 — 두 자세가 <b>같은</b> basin 이어야
-     뺄셈이 성립한다. 다른 행도 지우지 않고 경고와 함께 보여준다.</p>
-  <table><thead><tr><th>조각</th><th>seed</th><th style="text-align:right">ΔE (meV)</th>
-    <th>basin (Li/Ni)</th><th>판정</th></tr></thead><tbody>
-  {% for r in data.dE %}
-    <tr><td>{{ r.fragment }}</td><td>{{ r.seed }}</td>
-        <td style="text-align:right"><b>{{ '%+.1f'|format(r.dE_meV) }}</b></td>
-        <td>{{ r.basin_pair }}</td>
-        <td>{% if r.valid %}✓ 같은 basin{% else %}⛔ 다른 basin — 이 값은 분자 효과가
-            아니라 basin 차이를 섞어 본다{% endif %}</td></tr>
-  {% endfor %}
-  </tbody></table>
-  <p class="sub">유효 {{ data.n_valid }}/{{ data.n_dE }} — 어긋난 행도 지우지 않는다
-     (숨기면 "안 돌린 계산" 으로 보인다).</p>
+  {% if data.gate and data.gate.source_missing %}
+  <div style="border-left:4px solid #be123c;background:#fef2f2;padding:10px 14px;margin:10px 0">
+    <b>⛔ 인용 원장을 못 읽었다</b> — 지위를 판정할 수 없으므로 <b>전부 BLOCKED</b> 로 잠근다.
+  </div>
+  {% else %}
+  <div style="border-left:4px solid #6b7280;background:#f9fafb;padding:10px 14px;margin:10px 0;font-size:.86rem">
+    <b>인용 지위는 이 화면이 판정하지 않는다</b> — <code>sdcp_wave1_citable.json</code> 과
+    두 마감 문서(<code>sdcp_neutral_closed_2026_08_28</code> ·
+    <code>sdcp_doped_closed_2026_08_28</code>)에서 파생한다.
+    <span class="mono" style="font-size:.72rem">CITABLE {{ data.n_citable_dE }} ·
+    BLOCKED {{ data.n_blocked }} / ΔE {{ data.n_dE }}행</span>
+  </div>
+  {% endif %}
 
-  <h3>흡착에너지 E_ads (eV · 음수 = 잘 붙는다)</h3>
-  <p class="sub">읽는 법: <b>더 음수일수록 세게 붙는다.</b> net4/pm1 두 열이 거의
-     같으면(≤1 meV) 그 값은 자기 초기조건과 무관하게 재현된 것 — 그게 신뢰 근거다.</p>
-  <table><thead><tr><th>잡</th><th>조각</th><th>자세</th><th>seed</th>
-    <th style="text-align:right">E_ads</th><th>basin (잡/슬랩)</th></tr></thead><tbody>
-  {% for j in data.jobs %}
-    <tr{% if not j.basin_consistent %} style="opacity:.72"{% endif %}>
-      <td style="font-size:.85em">{{ j.job }}</td><td>{{ j.fragment }}</td>
-      <td>{{ j.pose }}</td><td>{{ j.seed }}</td>
-      <td style="text-align:right"><b>{{ '%.3f'|format(j.E_ads_eV) }}</b></td>
-      <td>{{ j.basin }}/{{ j.slab_basin }}
-          {% if not j.basin_consistent %} ⛔ 슬랩 기준과 다른 basin{% endif %}</td></tr>
+  <h3>자리 선호 ΔE = E(Ni_top) − E(Li_top)</h3>
+  <p class="sub">읽는 법: 이 열은 <b>두 자세의 전자에너지 차</b>일 뿐이다.
+     그 차를 <b>자리 선호로 읽어도 되는지는 지위 열</b>이 정한다 —
+     <code>NO_VERDICT</code> 는 사전등록 판정바닥(30 meV) 아래라 <b>미해결</b>이라는 뜻이고
+     "무선호" 가 아니다. "basin" 은 계산이 도착한 자기(스핀) 상태다.</p>
+  <table><thead><tr><th>조각</th><th>seed</th><th style="text-align:right">ΔE (meV)</th>
+    <th>basin (Li/Ni)</th><th>지위</th><th>사유</th></tr></thead><tbody>
+  {% for r in data.dE %}
+    <tr{% if r.status != 'CITABLE' %} style="opacity:.7"{% endif %}>
+        <td>{{ r.fragment }}</td><td>{{ r.seed }}</td>
+        <td style="text-align:right">{% if r.status == 'BLOCKED' %}
+            <span class="muted">(비인용)</span>
+          {% else %}<b>{{ '%+.1f'|format(r.dE_meV) }}</b>{% endif %}</td>
+        <td>{{ r.basin_pair }}{% if not r.basin_same %} ⛔{% endif %}</td>
+        <td>{{ st_badge(r.status) }}</td>
+        <td style="font-size:.8rem">{{ r.why }}</td></tr>
   {% endfor %}
   </tbody></table>
+  {% if data.gate and data.gate.caveats %}
+  <p class="sub"><b>값과 함께 반드시 인용할 단서</b></p>
+  <ul style="font-size:.82rem;margin-top:2px">
+    {% for c in data.gate.caveats %}<li>{{ c }}</li>{% endfor %}</ul>
+  {% endif %}
+
+  <h3>흡착에너지 E_ads</h3>
+  <div style="border-left:4px solid #c05621;background:#fffbeb;padding:10px 14px;margin:8px 0;font-size:.86rem">
+    <b>⛔ 절대 E_ads 는 전건 인용 보류다</b> — 분자 기준의 스핀 제약(δ_m)과 LREAL 비대칭
+    (δ_LREAL)이 미해소다(회신 O). <b>doped 는 그 위에 캠페인 마감으로 수치·방향 서술이
+    전부 금지</b>다(2026-08-28). 아래 값은 <b>감사 추적용</b>이라 접어 둔다 —
+    지우면 "안 돌린 계산" 으로 보인다.
+  </div>
+  <details>
+    <summary style="cursor:pointer;font-size:.9rem"><b>원자료 {{ data.jobs|length }}건 펼치기 (비인용)</b></summary>
+    <table style="margin-top:8px"><thead><tr><th>잡</th><th>조각</th><th>자세</th><th>seed</th>
+      <th style="text-align:right">E_ads (eV)</th><th>basin (잡/슬랩)</th><th>지위</th></tr></thead><tbody>
+    {% for j in data.jobs %}
+      <tr style="opacity:.72">
+        <td style="font-size:.85em">{{ j.job }}</td><td>{{ j.fragment }}</td>
+        <td>{{ j.pose }}</td><td>{{ j.seed }}</td>
+        <td style="text-align:right">{{ '%.3f'|format(j.E_ads_eV) }}</td>
+        <td>{{ j.basin }}/{{ j.slab_basin }}
+            {% if not j.basin_consistent %} ⛔ 슬랩 기준과 다른 basin{% endif %}</td>
+        <td>{{ st_badge(j.status) }}<br><span style="font-size:.72rem">{{ j.status_why }}</span></td></tr>
+    {% endfor %}
+    </tbody></table>
+  </details>
 </div>
 {% endif %}
 <div class="doc">{{ content|safe }}</div>

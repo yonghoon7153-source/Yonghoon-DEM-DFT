@@ -184,7 +184,13 @@ def _wave1_gate() -> dict:
     cit = _load_json(DB / "properties" / "sdcp_wave1_citable.json")
     neu = _load_json(DB / "properties" / "sdcp_neutral_closed_2026_08_28.json")
     dop = _load_json(DB / "properties" / "sdcp_doped_closed_2026_08_28.json")
-    g = {"source_missing": not (cit and neu and dop),
+    # ⛔⛔ 2026-09-05 — 종전엔 `_load_json` 이 None 을 돌려주면 아래 `.get` 이
+    #   **AttributeError 로 죽었다.** 즉 "원장이 없으면 전부 BLOCKED" 라는 fail-closed
+    #   설계가 실제로는 **fail-crash** 였고, 화면 전체가 500 이 됐다. 500 은 게이트가
+    #   아니다 — 지위를 못 읽었다는 사실을 화면이 말해야 한다.
+    missing = not (cit and neu and dop)
+    cit, neu, dop = cit or {}, neu or {}, dop or {}
+    g = {"source_missing": missing,
          "citable_dE": set((cit.get("dE_site_meV") or {}).keys()),
          "not_citable": cit.get("not_citable") or [],
          "caveats": cit.get("⚠_caveats_MUST_QUOTE_WITH_VALUES") or [],
@@ -239,9 +245,19 @@ def sdcp_wave1_rows() -> dict:
         ni, li = d2["Nitop"], d2["Litop"]
         same = ni["basin"] == li["basin"]
         st, why = _wave1_status(frag, "dE", gate)
-        if st == "CITABLE" and not same:
-            st, why = "BLOCKED", ("basin 이 갈린 쌍 — 분자 효과가 아니라 슬랩 자기상태 "
-                                  "차이를 섞어 본다")
+        # ⛔⛔ 2026-09-05 — 종전 조건은 `st == "CITABLE" and not same` 이었다.
+        #   그래서 basin 이 갈린 **비-CITABLE** 행은 조각 단위 사유를 그대로 달고 나왔고,
+        #   실측으로 거짓말이 됐다: `sdcp_neutral / net4` 는 **−40.7 meV** 인데 사유가
+        #   "판정바닥 30 meV 아래" 였다. 40.7 > 30 이다 — 그 행이 미해결인 진짜 이유는
+        #   basin 이 B/A 로 갈린 것이지 크기가 아니다. 조각 판정을 행에 복사하면
+        #   **틀린 이유로 옳은 결론**이 되고, 독자는 "30 만 넘기면 되는구나" 로 읽는다.
+        #   ⇒ basin 불일치는 판정바닥보다 **위 계층**이다. BLOCKED 를 제외한 모든 지위를
+        #     덮되(BLOCKED 는 마감이라 그쪽이 지배한다), 조각 판정은 지우지 않고 뒤에 남긴다.
+        if not same and st != "BLOCKED":
+            st, why = "BLOCKED", (
+                f'basin 이 갈린 쌍({li["basin"]}/{ni["basin"]}) — 분자 효과가 아니라 '
+                "슬랩 자기상태 차이를 섞어 본다. 판정바닥과 무관하게 이 행은 "
+                f"**부호도 못 읽는다**. [조각 판정: {why}]")
         dE.append({"fragment": frag, "seed": seed,
                    "dE_meV": round((ni["E_total_eV"] - li["E_total_eV"]) * 1000, 1),
                    "basin_pair": f'{li["basin"]}/{ni["basin"]}',
