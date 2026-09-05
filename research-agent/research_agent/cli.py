@@ -9,6 +9,7 @@
     ra noon                           ingest → triage → analyze(direct or queue) → vault → litdb → git commit
     ra morning                        digest → send → vault → git commit
     ra sync                           [RA-HANDOFF] 메일 가져와 DB/vault/litdb 병합 (로컬 측)
+    ra feedback [--show] [--dry-run]  노트 체크박스 수집 → 선별 품질 보정 보고서
     ra handoff --job noon             클라우드 측: 분석 결과를 handoff JSON으로 내보내기
     ra litdb                          litdb 재수출
     ra schedule --target crontab|hermes|launchd
@@ -78,6 +79,15 @@ def _git_commit(cfg: Config, message: str) -> None:
 
 
 def _vault_sync(cfg: Config, db: PaperDB, digest_date: str | None = None) -> None:
+    from . import feedback as fb
+    # ★ 순서가 중요하다. 노트는 매번 템플릿에서 다시 쓰이므로, 사용자가 체크한 것을 먼저 DB로
+    #   걷어 오지 않으면 그대로 지워진다. harvest → write 순서를 절대 뒤집지 말 것.
+    try:
+        h = fb.harvest(cfg, db)
+        if h.get("updated"):
+            _log(f"피드백 {h['updated']}건 수집 (스캔 {h['scanned']}, 미매칭 {h['unmatched']})")
+    except Exception as e:  # 피드백은 부가 기능 — 실패해도 vault 동기화는 계속된다
+        _log(f"피드백 수집 실패(무시하고 계속): {e}")
     v = Vault(cfg)
     papers = db.list()
     for p in papers:
@@ -256,30 +266,53 @@ def cmd_litdb(cfg: Config, args) -> int:
 
 
 def _build_digest(cfg: Config, db: PaperDB, date: str, llm: LLM | None,
-                  force: bool = False) -> tuple[Path, list[Paper], dict, str]:
+                  force: bool = False, dry_run: bool = False) -> tuple[Path, list[Paper], dict, str]:
+    from . import feedback as fb
     v = Vault(cfg)
     papers = select_for_digest(db, cfg)
-    body = render_body(papers, cfg, v, date)
+    border, fstats = [], {}
+    try:
+        n_border = int(cfg.get("feedback.borderline_per_digest", 2))
+        min_s = int(cfg.get("feedback.min_samples", 8))
+        if papers and n_border:  # 빈 디제스트를 경계선 표본으로 채우지 않는다
+            border = fb.borderline_sample(db, n=n_border,
+                                          threshold=float(cfg.get("triage.relevance_threshold", 0.35)))
+        fstats = fb.stats(db, min_s)
+    except Exception as e:
+        _log(f"피드백 집계 실패(무시하고 계속): {e}")
+    body = render_body(papers, cfg, v, date, borderline=border, fb=fstats)
     if llm and cfg.get("digest.llm_polish", False):
         body = polish_with_llm(cfg, llm, body, date)
     stats = digest_stats(db, papers, cfg)
+    stats["n_borderline"] = len(border)
+    stats["n_feedback"] = fstats.get("n_feedback", 0)
+    if dry_run:
+        # 게이트 3 — dry-run 은 디제스트 파일도 만들지 않는다. 게이트 2(축소 덮어쓰기 거부)가
+        # 피해는 막지만, "아무것도 쓰지 않는다"는 약속은 여기서 지켜야 한다.
+        return v.digests_dir / f"{date}.md", papers, stats, body
     path = v.write_digest(date, body, stats, force=force)
+    if border:
+        fb.mark_asked(db, border)  # 같은 논문을 매일 다시 묻지 않는다
     return path, papers, stats, body
 
 
 def cmd_digest(cfg: Config, args) -> int:
     db = _db(cfg)
     date = args.date or today_str(cfg)
-    path, papers, stats, _ = _build_digest(cfg, db, date, _llm(cfg), force=getattr(args, "force", False))
-    _log(f"digest written: {path} ({stats['n_papers']} papers)")
+    path, papers, stats, body = _build_digest(cfg, db, date, _llm(cfg),
+                                              force=getattr(args, "force", False), dry_run=args.dry_run)
     if args.send and not args.dry_run:
+        _log(f"digest written: {path} ({stats['n_papers']} papers)")
         mid = _send_digest(cfg, db, date, path, papers, stats)
         _log(f"sent: {mid}")
-    else:
-        from .mailer import write_eml_preview
-        prev = write_eml_preview(cfg.path("storage.raw_inbox") / "outgoing" / f"{date}.json", _subject(cfg, date, stats), path.read_text(encoding="utf-8"))
-        _log(f"dry-run preview: {prev}")
-    _vault_sync(cfg, db, digest_date=date)
+        _vault_sync(cfg, db, digest_date=date)
+        return 0
+    from .mailer import write_eml_preview
+    prev = write_eml_preview(cfg.path("storage.raw_inbox") / "outgoing" / f"{date}.json",
+                             _subject(cfg, date, stats), body)
+    _log(f"dry-run preview: {prev} ({stats['n_papers']} papers, vault 미기록)")
+    if not args.dry_run:
+        _vault_sync(cfg, db, digest_date=date)
     return 0
 
 
@@ -367,11 +400,12 @@ def cmd_morning(cfg: Config, args) -> int:
     run = db.start_run("morning")
     try:
         date = args.date or today_str(cfg)
-        path, papers, stats, _ = _build_digest(cfg, db, date, _llm(cfg), force=getattr(args, "force", False))
+        path, papers, stats, _ = _build_digest(cfg, db, date, _llm(cfg),
+                                               force=getattr(args, "force", False), dry_run=args.dry_run)
         if args.dry_run:
-            # dry-run 은 **아무것도 쓰지 않는다** — 메일도, vault 도, git 도.
+            # dry-run 은 **아무것도 쓰지 않는다** — 메일도, vault 도, digest 파일도, git 도.
             db.finish_run(run, "ok", {"date": date, "dry_run": True, **stats})
-            _log(f"morning dry-run: {date} {stats} (발송·vault·commit 모두 생략)")
+            _log(f"morning dry-run: {date} {stats} (발송·vault·digest·commit 모두 생략)")
             return 0
         mid = _send_digest(cfg, db, date, path, papers, stats)
         _vault_sync(cfg, db, digest_date=date)
@@ -409,6 +443,29 @@ def cmd_sync(cfg: Config, args) -> int:
         _log(f"litdb export 실패: {e}")
     _git_commit(cfg, f"ra: sync {today_str(cfg)} ({len(res)} handoff mails)")
     _log(f"sync: {len(res)} handoff mails → {json.dumps(res, ensure_ascii=False)[:400]}")
+    return 0
+
+
+def cmd_feedback(cfg: Config, args) -> int:
+    """노트의 체크박스를 걷어 보정 보고서를 쓴다. 점수 자체는 여기서 바꾸지 않는다."""
+    from . import feedback as fb
+    db = _db(cfg)
+    min_s = int(args.min_samples or cfg.get("feedback.min_samples", 8))
+    h = fb.harvest(cfg, db)
+    _log(f"피드백 수집: 스캔 {h['scanned']} · 체크됨 {h['found']} · 갱신 {h['updated']} · 미매칭 {h['unmatched']}")
+    report = fb.render_report(db, cfg, min_s)
+    out = Vault(cfg).moc_path.parent / "피드백 보정.md"
+    if not args.dry_run:
+        out.write_text(report, encoding="utf-8")
+        _log(f"보고서: {out}")
+    if args.show or args.dry_run:
+        print(report)
+    s = fb.stats(db, min_s)
+    if s["n_feedback"] < min_s:
+        _log(f"표본 {s['n_feedback']}/{min_s} — 아직 점수 보정은 하지 않는다.")
+    else:
+        adj = fb.axis_adjustments(db, min_s)
+        _log(f"축 보정값: {adj or '(표본 부족)'} · 적용={'켜짐' if fb.enabled(cfg) else '꺼짐'}")
     return 0
 
 
@@ -457,6 +514,9 @@ def main(argv: list[str] | None = None) -> int:
     s = sub.add_parser("morning"); s.add_argument("--date"); s.add_argument("--dry-run", action="store_true")
     s.add_argument("--force", action="store_true", help="더 적은 편수로도 기존 디제스트를 덮어쓴다")
     sub.add_parser("sync")
+    s = sub.add_parser("feedback"); s.add_argument("--show", action="store_true", help="보고서를 화면에도 출력")
+    s.add_argument("--dry-run", action="store_true", help="수집만 하고 보고서 파일은 쓰지 않는다")
+    s.add_argument("--min-samples", type=int, help="이 건수 미만이면 보정값을 만들지 않는다 (기본 8)")
     s = sub.add_parser("handoff"); s.add_argument("--job", default="noon"); s.add_argument("--since"); s.add_argument("--digest")
     s.add_argument("--origin", default="local"); s.add_argument("--notes")
     s = sub.add_parser("schedule"); s.add_argument("--target", default="crontab", choices=["crontab", "hermes", "launchd", "systemd"])
@@ -465,7 +525,7 @@ def main(argv: list[str] | None = None) -> int:
     cfg = load_config(Path(args.root) if args.root else None)
     fn = {"status": cmd_status, "ingest": cmd_ingest, "triage": cmd_triage, "analyze": cmd_analyze, "vault": cmd_vault,
           "litdb": cmd_litdb, "digest": cmd_digest, "noon": cmd_noon, "morning": cmd_morning, "sync": cmd_sync,
-          "handoff": cmd_handoff, "schedule": cmd_schedule}[args.cmd]
+          "feedback": cmd_feedback, "handoff": cmd_handoff, "schedule": cmd_schedule}[args.cmd]
     return fn(cfg, args)
 
 

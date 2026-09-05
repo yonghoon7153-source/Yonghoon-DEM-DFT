@@ -16,6 +16,7 @@ source: {{source}}
 date_added: {{date_added}}
 analyzed_at: {{analyzed_at}}
 evidence_level: {{evidence_level}}
+feedback: {{feedback}}
 ra_id: "{{id}}"
 ---
 
@@ -65,6 +66,8 @@ ra_id: "{{id}}"
 
 ## 원문 초록
 {{abstract_block}}
+
+{{feedback_block}}
 
 ---
 *related:* {{related_links}} · *digest:* {{digest_link}}

@@ -179,3 +179,11 @@ handoff:
   subject_tag: "[RA-HANDOFF]"
   outbox: "data/handoff/outbox"          # 클라우드가 만든 payload (메일 첨부 전 사본)
   lookback_days: 7                       # ra sync 가 훑는 기간
+
+feedback:                                # v0.1.6 — 선별 품질 실측 (Cowork 신규 모듈)
+  min_samples: 8                         # 이 밑에서는 축 보정값을 아예 만들지 않는다(0 이 아니라 부재)
+  borderline_per_digest: 2               # threshold 바로 아래에서 물어볼 편수. 0편인 날은 안 붙는다
+  apply_to_scoring: false                # ⛔ 점수 반영은 꺼 둔다 — 표본 쌓인 뒤 Cowork 와 같이 판단
+
+digest:
+  max_backlog: 30                        # 메일이 며칠 실패해도 복구 첫 디제스트가 무한정 커지지 않게

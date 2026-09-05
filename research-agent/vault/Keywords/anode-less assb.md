@@ -8,7 +8,7 @@ n_papers: 2
 # anode-less assb
 
 > [!info] Anode-less / anode-free 전고체전지 (추적 중단, 아카이브) — **추적 중단(아카이브)**
-> Google Scholar alert 검색어 `anode-less assb` · 누적 2편 · 갱신 2026-09-04
+> Google Scholar alert 검색어 `anode-less assb` · 누적 2편 · 갱신 2026-09-05
 
 | Tier | IF | 연도 | 노트 | 한 줄 |
 |---|---|---|---|---|

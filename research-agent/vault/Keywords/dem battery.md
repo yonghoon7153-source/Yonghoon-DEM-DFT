@@ -8,7 +8,7 @@ n_papers: 2
 # dem battery
 
 > [!info] DEM(discrete element method) 기반 전극/복합양극 시뮬레이션
-> Google Scholar alert 검색어 `dem battery` · 누적 2편 · 갱신 2026-09-04
+> Google Scholar alert 검색어 `dem battery` · 누적 2편 · 갱신 2026-09-05
 
 | Tier | IF | 연도 | 노트 | 한 줄 |
 |---|---|---|---|---|

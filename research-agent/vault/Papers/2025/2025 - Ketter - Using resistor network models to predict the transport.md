@@ -16,6 +16,7 @@ source: bootstrap
 date_added: 2026-09-03
 analyzed_at: 2026-09-03
 evidence_level: fulltext
+feedback: none
 ra_id: "doi:10.1038/s41467-025-56514-5"
 ---
 
@@ -47,7 +48,7 @@ DOI: [10.1038/s41467-025-56514-5](https://doi.org/10.1038/s41467-025-56514-5)
 > [!tip] 내 연구와의 연결
 > **DEM** — 내 solver는 DEM 접촉 네트워크(입자–입자 접촉 면적·중첩)를 저항으로 바꾸는 방식이라, 이 논문의 voxel 방식과 '같은 조성에서 같은 유효 전도도를 주는가'를 비교하면 내 접근의 장점(접촉 물리 반영, 압력 의존성)을 정량적으로 주장할 수 있다. 특히 NCM 40 vol%에서 전자·이온 균형이라는 결과는 내 AM:SE 62:38/72:28/82:18 percolation 연구와 직접 맞닿는다.
 > **DFT/MLIP** — 간접 연결. 계면 저항 개념을 내 W_ad(NCM/SE adhesion energy)와 연결해 '계면 접촉 품질 → 저항' 서사를 만들 수 있다.
-> **Anode-free** — -
+> **실험(축 C)** — -
 
 ### 비교할 수치
 - 유효 이온 전도도 10¹~10⁻⁵ mS cm⁻¹ (NCM83 부피분율 스캔) vs 내 resistor-network proxy (같은 AM:SE 비율로 환산)
@@ -63,6 +64,7 @@ DOI: [10.1038/s41467-025-56514-5](https://doi.org/10.1038/s41467-025-56514-5)
 > [!quote] 인용 문장 초안
 > Resistor-network models built on voxelized microstructures reproduce the measured electronic, ionic and thermal conductivities of NCM83–Li6PS5Cl composites without heavy computation [ref], but they do not resolve particle-level contact mechanics, which the present DEM-based network addresses.
 
+
 > [!warning] 비판 포인트 / 세미나 질문
 > - voxel 배정이 확률적이라 실제 압축 후 미세구조(입자 변형, 접촉 면적)를 반영하지 못한다 — 압력 의존성이 없다.
 > - LPSCl 입자를 voxel clustering으로 근사했는데 clustering 규칙이 결과(percolation)에 얼마나 민감한지에 대한 통계(반복 수)가 충분한지 확인 필요.
@@ -77,5 +79,13 @@ DOI: [10.1038/s41467-025-56514-5](https://doi.org/10.1038/s41467-025-56514-5)
 ## 원문 초록
 > Solid-state batteries use composites of solid ion conductors and active materials as electrode materials. The effective transport of charge carriers and heat thereby strongly determines the overall solid-state battery performance and safety. However, the phase space for optimization of the composition of solid electrolyte, active material, additive is too large to cover experimentally. In this work, a resistor network model is presented that successfully describes the transport phenomena in solid-state battery composites, when benchmarked against experimental data of the electronic, ionic, and thermal conductivity of LiNi0.83Co0.11Mn0.06O2-Li6PS5Cl positive electrode composites. To highlight the broadness of the approach, literature data are examined using the proposed model. As the model is easily accessible and expandable, without the need for high computing power, it offers valuable guidance for experimentalists helping to streamline the tedious process of performing a multitude of experiments to understand and optimize the effective transport of composite electrodes.
 
+## 피드백
+> [!question] 읽고 나서 하나만 체크해 주세요 — 다음 선별에 반영됩니다.
+- [ ] 유용함 — 인용하거나 방법을 가져올 것
+- [ ] 무관 — 잘못 골랐음 (선별 기준을 고쳐야 함)
+- [ ] 읽음 — 나쁘지 않지만 당장 쓸 곳은 없음
+- [ ] 안 봄 — 제목만 보고 넘김
+왜: 
+
 ---
-*related:* [[dem battery]], [[2026 - Kissel - Mechanofusion-derived cathode composite microstructures with scalable mixed]] · *digest:* [[2026-09-04]]
+*related:* [[dem battery]], [[2026 - Kissel - Mechanofusion-derived cathode composite microstructures with scalable mixed]] · *digest:* -

@@ -8,7 +8,7 @@ n_papers: 1
 # dft battery
 
 > [!info] DFT/first-principles 기반 배터리 재료·계면 계산
-> Google Scholar alert 검색어 `dft battery` · 누적 1편 · 갱신 2026-09-04
+> Google Scholar alert 검색어 `dft battery` · 누적 1편 · 갱신 2026-09-05
 
 | Tier | IF | 연도 | 노트 | 한 줄 |
 |---|---|---|---|---|

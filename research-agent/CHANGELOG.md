@@ -1,5 +1,77 @@
 # CHANGELOG
 
+## [0.1.6] — 2026-09-05
+### Added — 피드백 루프 (`research_agent/feedback.py`, 신규 파일)
+논문 노트 맨 아래 `## 피드백`에서 **유용함 / 무관 / 읽음 / 안 봄** 중 하나를 체크하면
+선별 품질이 실측된다. `triage.py`(Claude Code 정본)는 건드리지 않았다 — 전부 신규 파일 + 훅.
+
+- **`harvest()` 는 노트를 다시 쓰기 전에 돈다.** `Vault.write_paper_note` 는 매번 템플릿에서
+  노트를 통째로 재생성하므로, 걷어 오기를 먼저 하지 않으면 사용자가 체크한 것이 조용히 지워진다.
+  09-04 디제스트 사고와 **같은 계열의 손실**이라 `_vault_sync` 첫 줄에 고정하고 회귀로 묶었다
+  (`test_feedback_survives_note_regeneration` — harvest 를 빼면 실패하는 것을 확인).
+- 매칭은 파일명이 아니라 frontmatter `ra_id` 로 한다 — 제목·연도 보정으로 파일명이 바뀌어도 안 끊긴다.
+- **표본이 모자라면 학습하지 않는다.** 축별 보정값은 `min_samples`(기본 8) 이상일 때만 생기고,
+  총 보정폭은 ±0.10 으로 묶여 있으며, 적용 자체가 `feedback.apply_to_scoring` 로 **기본 꺼짐**이다.
+  그때까지 이 모듈이 하는 일은 보고뿐이다. n=4 로 만든 가중치는 없느니만 못하다.
+- 보고서 `vault/00_MOC/피드백 보정.md` — Tier별·IF구간별·키워드별·축별 정밀도, threshold 점검.
+  **IF 구간 표가 "IF 우선 정렬"이 옳았는지 실측한다** — 아니라는 답이 나올 수 있게 만들어 뒀다.
+- `ra feedback [--show] [--dry-run] [--min-samples N]` 신설. `ra noon`/`ra morning` 은
+  `_vault_sync` 를 통해 자동으로 수집한다.
+
+### Added — 경계선 표본 (오탈락 측정)
+vault 에는 threshold 를 통과한 논문만 있으므로 정밀도는 보이지만 **오탈락은 영영 안 보인다.**
+5년짜리 시스템에서 이건 읽는 범위를 조용히 좁힌다. 그래서 디제스트에
+`## 경계선 확인` 을 붙여 threshold 바로 아래(기본 0.25–0.35) 논문을 **2편만** 물어본다.
+- 이미 판정한 논문·최근 30일 안에 물어본 논문은 다시 뽑지 않는다 (`borderline_asked_at`).
+- **0편인 날에는 붙이지 않는다** — 빈 디제스트를 경계선 표본으로 채우는 것은 잡음이다.
+
+### Fixed — 게이트 3: dry-run 이 디제스트 파일도 만들지 않는다
+`_build_digest` 가 dry-run 여부와 무관하게 `write_digest` 를 부르고 있었다. 게이트 2(축소
+덮어쓰기 거부)가 피해는 막지만 "dry-run 은 아무것도 쓰지 않는다"는 약속은 지켜지지 않았다.
+이제 dry-run 은 경로만 계산해 돌려주고, `ra digest --dry-run` 미리보기도 **파일이 아니라
+방금 만든 본문**을 쓴다 (게이트 2가 쓰기를 거부하면 미리보기가 옛 파일을 보여주던 문제도 같이 해소).
+
+### Added — Battery Weekly (클라우드 전용, repo 무관)
+논문 디제스트와 **완전히 분리된** 주간 산업·정책 메일. 금요일 17:00 KST.
+뉴스가 없거나 무관한 주에는 **보내지 않는다.** repo 코드가 아니라 Cowork 예약 작업이므로
+Claude Code 쪽에서 할 일은 없다.
+
+### Fixed — Claude Code 리뷰 반영 (2026-09-05, 병합 전 수정)
+- `digest._feedback_footer` — `if not fb` 검사를 `n = int(fb.get(...))` **앞으로** 옮겼다.
+  동작은 같았지만 읽는 순서가 뒤집혀 있었다.
+- `digest.select_for_digest` — 두 번째 루프가 창과 무관하게 `analyzed` 를 전부 담고 있었다.
+  발송이 되는 동안은 `digested` 로 바뀌어 자기제한이지만, **메일이 며칠 실패하면 무한정 쌓이고**
+  복구된 첫 디제스트가 읽을 수 없게 커진다. `digest.max_backlog`(기본 30) 상한을 두고
+  **우선순위 높은 쪽부터** 남긴다. 잘린 논문은 `analyzed` 로 남아 다음 회차 후보가 된다.
+  회귀 2건 추가 → 전체 **38 passed**.
+
+### Changed — 전달 규약 개정 (`cowork/DELIVERY_PROTOCOL.md`)
+v0.1.6 전달에서 9개 중 5개만 도착했고 빠진 쪽에 신규 모듈이 있었다.
+tarball 의 위험은 덮어쓰기, 개별 전달의 위험은 **빠뜨림**이다. 세 항목을 추가했다 —
+① 나눠 보내지 않고 한 번에 ② 신규 모듈을 맨 앞에 ③ CHANGELOG 파일 목록과 첨부를 1:1 대조.
+
+### 파일
+```
+research_agent/feedback.py     ← 신규
+research_agent/cli.py          ← _vault_sync harvest 훅, _build_digest dry_run, cmd_feedback
+research_agent/vault.py        ← feedback_block 매핑, 홈 MOC 링크
+research_agent/digest.py       ← 경계선 블록, 피드백 푸터
+templates/paper_note.md        ← ## 피드백 섹션, frontmatter feedback:
+tests/test_feedback.py         ← 신규 18건
+VERSION · pyproject.toml · research_agent/__init__.py · CHANGELOG.md
+```
+전체 `python -m pytest -q` → **36 passed** (Cowork 트리 기준).
+
+## [0.1.5] — 2026-09-04
+### Changed — 전달 규약 (Claude Code §1 제안 수용)
+- **tarball 전달을 폐기한다.** Cowork 트리는 v0.1.0 에서 갈라진 fork 라, 통째로 보내면 Claude Code 가
+  매번 델타를 손으로 골라내야 하고 목록이 길어지면 하나를 놓친다(v0.1.3·v0.1.4 에서 반복).
+  이제 **바뀐 파일만 개별 전달**한다. 정본 경계는 `cowork/DELIVERY_PROTOCOL.md` 에 명문화.
+- 선점 경보 대상에 **SDCP/전도성 고분자 폴라론 국재·spin share DFT** 추가 (Claude Code §4).
+  C-12 는 v36(19잡)·보고량이 E_ads 절대값+차로 확장돼 "바인더 흡착 DFT" 긴급도 상향.
+- alert 0통은 **알려진 상태**로 두고 다음 주 초 `is_empty` 연속 일수로 재판정 (양쪽 합의).
+  0건으로 끝난 실행은 이미 `runs.status = "ok"` 로 기록되므로 실패로 남지 않는다 — 확인 완료.
+
 ## [0.1.4] — 2026-09-04 · 병합 (Claude Code 측)
 Cowork v0.1.4 의 **신규분만** 가져왔다 (0.1.3→0.1.4 델타는 작다):
 `digest.py`(창 계측) · `cli.py` 한 줄(`digest_stats(db, papers, cfg)`) · VERSION·pyproject·__init__.

@@ -25,10 +25,20 @@ def select_for_digest(db: PaperDB, cfg: Config, since_hours: int | None = None) 
     if last and last.get("sent_at"):
         since_iso = min(since_iso, last["sent_at"])  # never skip papers analyzed between digests
     cands = [p for p in db.since(since_iso, "analyzed_at") if p.status == "analyzed"]
-    # also include anything analyzed but never digested (e.g. first run / failed mail)
-    for p in db.list(status="analyzed"):
-        if p.id not in {c.id for c in cands}:
-            cands.append(p)
+    # Also include anything analyzed but never digested (first run / failed mail). This loop
+    # ignores the window on purpose — a paper analyzed inside a failed run must not be lost.
+    # But it is self-limiting only while sending works: `_send_digest` flips papers to
+    # `digested`, so a mail outage of several days piles the backlog up without bound and the
+    # first successful digest afterwards becomes unreadable. Cap it, highest priority first.
+    seen = {c.id for c in cands}
+    backlog = [p for p in db.list(status="analyzed") if p.id not in seen]
+    backlog.sort(key=lambda x: (x.priority or 0, x.relevance or 0), reverse=True)
+    cap = int(cfg.get("digest.max_backlog", 30))
+    if cap and len(backlog) > cap:
+        print(f"[ra] 미발송 누적 {len(backlog)}편 중 상위 {cap}편만 이번 디제스트에 넣는다 "
+              f"(나머지는 analyzed 로 남아 다음 회차에 다시 후보가 된다).", flush=True)
+        backlog = backlog[:cap]
+    cands += backlog
     cands.sort(key=lambda x: (x.priority or 0, x.relevance or 0), reverse=True)
     return cands
 
@@ -96,7 +106,30 @@ def _reference(i: int, p: Paper, vault: Vault) -> str:
     return f"{i}. {auth}{p.title.rstrip('.')}. *{j}* {p.year or ''}. {link} — [[{vault.note_name(p)}]]"
 
 
-def render_body(papers: list[Paper], cfg: Config, vault: Vault, date: str) -> str:
+def _borderline_block(papers: list[Paper], vault: Vault) -> list[str]:
+    """threshold 바로 아래에서 걸러낸 논문을 물어보는 칸.
+
+    디제스트에 뽑힌 논문만 보면 "고른 것 중 몇 개가 좋았나"만 알 수 있다. 여기 2편은
+    **버린 쪽**을 재기 위한 것이라, 대부분은 정말 무관한 게 맞다. 그게 정상이고,
+    가끔 하나가 걸리면 그때 채점 기준을 고치면 된다.
+    """
+    if not papers:
+        return []
+    out = ["## 경계선 확인 — 걸러낸 것 중에서",
+           "> [!question] 관련도가 기준 바로 아래라 **뺀** 논문입니다. 잘못 뺀 게 있는지만 봐 주세요.",
+           "> 대부분 무관한 게 정상입니다. 판정은 노트 맨 아래 `## 피드백`에 남기면 됩니다.", ""]
+    for p in papers:
+        j = p.journal_canonical or p.venue or "저널 미상"
+        link = f"[DOI](https://doi.org/{p.doi})" if p.doi else (f"[link]({p.url})" if p.url else "")
+        out.append(f"- **{p.title.rstrip('.')}** — *{j}* {p.year or ''} · IF {p.journal_if} · "
+                   f"관련도 {p.relevance} {link}")
+        out.append(f"  - 뺀 이유: {p.relevance_reason}")
+    out.append("")
+    return out
+
+
+def render_body(papers: list[Paper], cfg: Config, vault: Vault, date: str,
+                borderline: list[Paper] | None = None, fb: dict | None = None) -> str:
     tiers = {"A": [], "B": [], "C": []}
     for p in papers:
         tiers.get(p.tier or "C", tiers["C"]).append(p)
@@ -125,9 +158,28 @@ def render_body(papers: list[Paper], cfg: Config, vault: Vault, date: str) -> st
         themes = _themes(papers)
         lines.append(themes)
         lines.append("")
+    lines += _borderline_block(borderline or [], vault)
+    lines += _feedback_footer(fb or {})
     lines.append("## References")
     lines += [_reference(i + 1, p, vault) for i, p in enumerate(papers)] or ["(없음)"]
     return "\n".join(lines).rstrip() + "\n"
+
+
+def _feedback_footer(fb: dict) -> list[str]:
+    """피드백이 얼마나 쌓였는지 한 줄. 표본이 모자라면 그렇다고 적는다 — 억지 결론은 안 낸다."""
+    if not fb:
+        return []
+    n = int(fb.get("n_feedback", 0) or 0)
+    need = int(fb.get("min_samples", 8) or 8)
+    c = fb.get("counts") or {}
+    if n < need:
+        return ["> [!tip] 피드백",
+                f"> 지금까지 {n}건 모였습니다 ({need}건부터 선별 기준을 실측합니다). "
+                "논문 노트 맨 아래 `## 피드백`에서 하나만 체크하면 됩니다.", ""]
+    return ["> [!tip] 피드백",
+            f"> 누적 {n}건 — 유용함 {c.get('useful', 0)} · 무관 {c.get('irrelevant', 0)} · "
+            f"읽음 {c.get('read', 0)} · 안 봄 {c.get('skipped', 0)}. "
+            "보정 근거는 [[피드백 보정]] 에 있습니다.", ""]
 
 
 def _themes(papers: list[Paper]) -> str:

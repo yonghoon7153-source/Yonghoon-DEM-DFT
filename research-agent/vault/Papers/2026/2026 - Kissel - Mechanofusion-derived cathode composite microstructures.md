@@ -16,6 +16,7 @@ source: bootstrap
 date_added: 2026-09-03
 analyzed_at: 2026-09-03
 evidence_level: fulltext
+feedback: none
 ra_id: "doi:10.1038/s41467-026-71305-2"
 ---
 
@@ -47,7 +48,7 @@ Nature Communications(IF 15.7)에 실린 2026년 논문이면서, 내 주축인 
 > [!tip] 내 연구와의 연결
 > **DEM** — 내 LIGGGHTS 압축 시뮬레이션은 '혼합이 끝난 분말'을 초기조건으로 가정한다. 이 논문은 그 초기조건(코팅 두께·피복률·응집)이 혼합 공정 변수에 따라 어떻게 달라지는지를 DEM으로 보여주므로, 내 bimodal AM/SE 초기 packing 생성 논리의 앞단 근거로 삼을 수 있다. coarse-graining DEM에서 SI ∝ n² 스케일링은 내 press_speed·E_eff 스케일 규약과 비교할 만한 무차원 접근이다.
 > **DFT/MLIP** — 직접 연결은 약함. 다만 LIC(할라이드)의 malleability를 근거로 코팅이 형성되는데, 내 argyrodite B₀·G 계산 결과를 '황화물은 LIC보다 어떤 변형 거동을 보이는가'로 대비시켜 Discussion에 쓸 수 있다.
-> **Anode-free** — -
+> **실험(축 C)** — -
 
 ### 비교할 수치
 - 복합전극 공극률 40 → 25 % (코팅 함량·혼합 강도 증가) vs 내 RVE50/SE0.5 압축 케이스의 porosity–압력 곡선
@@ -63,6 +64,7 @@ Nature Communications(IF 15.7)에 실린 2026년 논문이면서, 내 주축인 
 > [!quote] 인용 문장 초안
 > Recent work has linked discrete element method (DEM)-derived stress intensities during high-intensity dry mixing to the resulting coating coverage and composite porosity of NCM/Li3InCl6 cathodes, underscoring that microstructure descriptors must be traced back to processing parameters [ref].
 
+
 > [!warning] 비판 포인트 / 세미나 질문
 > - DEM은 혼합 장치 내 응력 조건(SI, SN)만 계산하고 입자 단위 코팅 형성 자체는 모델링하지 않는다 — 코팅 두께는 실험 상관에 의존한다.
 > - SE가 Li₃InCl₆(할라이드)라 황화물(LPSCl)보다 훨씬 무르고 산화 안정성이 높다. 같은 공정을 argyrodite에 적용하면 입자 파쇄와 계면 반응이 달라질 텐데 이 점은 다루지 않는다.
@@ -77,5 +79,13 @@ Nature Communications(IF 15.7)에 실린 2026년 논문이면서, 내 주축인 
 ## 원문 초록
 > The successful implementation of solid state batteries not only requires the use of high-capacity anodes, but also high-performance composite cathodes. However, the production of solid state battery cathode composites with optimized microstructures remains a significant challenge, especially for large-scale fabrication. Here, we present a scalable high-intensity dry mixing process to create tailored functional coatings on single-crystalline LiNi0.82Mn0.07Co0.11O2 via mechanofusion. We investigate the coating of LiNi0.82Mn0.07Co0.11O2 with the malleable halide solid electrolyte Li3InCl6 under various process conditions, linking process parameters obtained from discrete element method simulations with experimentally accessible morphological properties to offer guidelines for further optimization. In this way nanometer-thin covering coatings as well as thick matrix coatings are successfully produced. Incorporating carbon black into the thick matrix coating results in well-performing mixed conducting matrices that can be used directly as composite cathodes without further treatment. The compositions investigated enable stable cycling with a specific capacity of up to qcomp = 100 mAh g−1 (based on the total mass of the composite cathode) at a C-rate of 1 C (60 min). While higher carbon black content is observed to improve CAM utilization, excessive amounts are detrimental for cell kinetics and chemo-mechanics, emphasizing the importance of the cathode mixing process and composition on overall cell performance.
 
+## 피드백
+> [!question] 읽고 나서 하나만 체크해 주세요 — 다음 선별에 반영됩니다.
+- [ ] 유용함 — 인용하거나 방법을 가져올 것
+- [ ] 무관 — 잘못 골랐음 (선별 기준을 고쳐야 함)
+- [ ] 읽음 — 나쁘지 않지만 당장 쓸 곳은 없음
+- [ ] 안 봄 — 제목만 보고 넘김
+왜: 
+
 ---
-*related:* [[dem battery]], [[2025 - Ketter - Using resistor network models to predict the transport properties of solid-state]] · *digest:* [[2026-09-04]]
+*related:* [[dem battery]], [[2025 - Ketter - Using resistor network models to predict the transport properties of solid-state]] · *digest:* -

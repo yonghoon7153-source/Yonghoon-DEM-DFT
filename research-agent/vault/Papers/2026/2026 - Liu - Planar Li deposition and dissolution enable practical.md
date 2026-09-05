@@ -16,6 +16,7 @@ source: bootstrap
 date_added: 2026-09-03
 analyzed_at: 2026-09-03
 evidence_level: fulltext
+feedback: none
 ra_id: "doi:10.1038/s41586-026-10402-0"
 ---
 
@@ -47,7 +48,7 @@ Nature(IF 48.5)라 IF 순위 최상위지만, 액체 전해질 anode-free 논문
 > [!tip] 내 연구와의 연결
 > **DEM** — -
 > **DFT/MLIP** — SEI 형성 메커니즘(라디칼 선행 생성)은 DFT/AIMD로 검증 가능한 주제라, 내 SEI 형성 에너지(Nd₂O₃ 도핑 LPSCl) 프레임을 액체계 대비 '고체 계면에서는 어떤 상이 먼저 생기는가'로 확장하는 아이디어를 준다.
-> **Anode-free** — 전고체 anode-free에서는 SEI 대신 SE/집전체 계면과 압력이 평면 석출을 결정한다. 이 논문의 '계면의 기계적 유연성 + 빠른 Li⁺ 수송 = 평면 석출' 논리는 황화물 SE 계면 설계(interlayer 연성, 접촉 균일성)에 그대로 옮길 수 있는 설계 원칙이다.
+> **실험(축 C)** — -
 
 ### 비교할 수치
 - 면적 용량 5.6 mAh cm⁻² (액체 anode-free) vs 황화물 anode-free 보고값(보통 1~3 mAh cm⁻², 압력 수 MPa~수십 MPa) — 리뷰 작성 시 대비표
@@ -61,6 +62,7 @@ Nature(IF 48.5)라 IF 순위 최상위지만, 액체 전해질 anode-free 논문
 > [!quote] 인용 문장 초안
 > Even in liquid-electrolyte anode-free cells, planar Li deposition and dissolution are governed by the homogeneity and mechanical compliance of the interphase [ref], a design principle that translates to the solid-electrolyte/current-collector interface in anode-free all-solid-state batteries.
 
+
 > [!warning] 비판 포인트 / 세미나 질문
 > - 액체 전해질 시스템이라 ASSB의 핵심 변수(stack pressure, SE 크리프, 계면 공극)가 아예 없다 — 내 키워드에 잡힌 것은 'anode-free' 용어 때문이며 ASSB 데이터로 인용하면 안 된다.
 > - 100 % DOD 100 사이클, 80 % 유지라는 수치는 anode-free 기준으로는 좋지만 상용 수명(수백~천 사이클)과는 거리가 있다.
@@ -73,5 +75,13 @@ Nature(IF 48.5)라 IF 순위 최상위지만, 액체 전해질 anode-free 논문
 ## 원문 초록
 > Anode-free lithium metal batteries (AFLMBs), which are manufactured without anode active material, offer great potential for high-energy-density, low-cost energy storage. However, AFLMBs face a long-standing challenge of short lifespan because of the harsh conditions of lacking excess Li resource and an anode host. This issue is associated with uneven Li deposition and dissolution, rooted in the micro-heterogeneity and mechanical fragility of solid electrolyte interphase (SEI). (이하 원문 초록은 nature.com 참조 — 첫 단락만 확보)
 
+## 피드백
+> [!question] 읽고 나서 하나만 체크해 주세요 — 다음 선별에 반영됩니다.
+- [ ] 유용함 — 인용하거나 방법을 가져올 것
+- [ ] 무관 — 잘못 골랐음 (선별 기준을 고쳐야 함)
+- [ ] 읽음 — 나쁘지 않지만 당장 쓸 곳은 없음
+- [ ] 안 봄 — 제목만 보고 넘김
+왜: 
+
 ---
-*related:* [[anode-less assb]] · *digest:* [[2026-09-04]]
+*related:* [[anode-less assb]] · *digest:* -

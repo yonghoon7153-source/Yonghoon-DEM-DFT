@@ -16,6 +16,7 @@ source: bootstrap
 date_added: 2026-09-03
 analyzed_at: 2026-09-03
 evidence_level: fulltext
+feedback: none
 ra_id: "doi:10.1038/s41467-025-67982-0"
 ---
 
@@ -46,7 +47,7 @@ Nature Communications(IF 15.7)이고 키워드 'dft battery'에 잡혔지만 대
 > [!tip] 내 연구와의 연결
 > **DEM** — -
 > **DFT/MLIP** — 내 MLIP 단계(UMA/MACE fine-tuning)에서 학습 데이터 편향 문제를 다룰 때, '무작위 조성 + concurrent learning'으로 transferability를 확보한 사례로 인용할 수 있다. 특히 argyrodite 할로겐 치환 계열(Cl/Br 비율, Li 결손)을 스캔할 때 조성 공간을 무작위로 샘플링해 학습하는 전략을 그대로 적용해 볼 수 있다. 힘 RMSE 160 meV Å⁻¹는 액체계 기준이라 내 고체계 목표(수십 meV Å⁻¹)와 비교해 오차 허용 범위를 정하는 참고치가 된다.
-> **Anode-free** — -
+> **실험(축 C)** — -
 
 ### 비교할 수치
 - 힘 RMSE ≈160 meV Å⁻¹, 에너지 RMSE 0.005 eV atom⁻¹ vs 내 UMA/MACE fine-tuning 검증 오차(argyrodite EOS·탄성상수 재현 기준)
@@ -60,6 +61,7 @@ Nature Communications(IF 15.7)이고 키워드 'dft battery'에 잡혔지만 대
 > [!quote] 인용 문장 초안
 > Universal machine-learning potentials trained on randomly composed chemical spaces have recently reached ab initio accuracy across broad electrolyte families [ref], motivating a similar data-diversity strategy for sulfide solid electrolytes.
 
+
 > [!warning] 비판 포인트 / 세미나 질문
 > - 고체 전해질·계면은 학습 범위 밖이라 내 시스템에 바로 쓸 수 없다 — 'universal'의 범위가 액체 유기 전해질에 한정된다.
 > - 힘 RMSE 160 meV Å⁻¹는 고체 탄성상수·포논 계산에는 부족한 정확도다.
@@ -72,5 +74,13 @@ Nature Communications(IF 15.7)이고 키워드 'dft battery'에 잡혔지만 대
 ## 원문 초록
 > Li-ion batteries, widely used in electronic devices, electric vehicles, and aviation, demand high energy density, fast charging capabilities, and broad operating temperature ranges. Computations combined with experiments have gained increasing attention for electrolyte development. However, the inherent complexity of electrolytes poses a significant challenge. Classical molecular dynamics often fails due to inaccuracies in force field parameters, while ab initio calculations are limited by high computational costs. Recently, machine learning molecular dynamics has emerged as an efficient and accurate alternative. However, its application is hindered by limited transferability of machine learning potentials. In this work, we developed a universal machine learning potential for electrolytes using an iterative training approach on randomly composed datasets, enabling the accurate computation of key properties for a broad range of electrolytes via molecular dynamics. Furthermore, coordination dynamics analysis of Li ion, by quantifying the coordination lifetime, provides a direct, quantitative measure of solvation strength. The universal machine learning potential for electrolytes facilitates the prediction and optimization of electrolyte properties, offering a powerful tool for electrolyte design.
 
+## 피드백
+> [!question] 읽고 나서 하나만 체크해 주세요 — 다음 선별에 반영됩니다.
+- [ ] 유용함 — 인용하거나 방법을 가져올 것
+- [ ] 무관 — 잘못 골랐음 (선별 기준을 고쳐야 함)
+- [ ] 읽음 — 나쁘지 않지만 당장 쓸 곳은 없음
+- [ ] 안 봄 — 제목만 보고 넘김
+왜: 
+
 ---
-*related:* [[dft battery]] · *digest:* [[2026-09-04]]
+*related:* [[dft battery]] · *digest:* -

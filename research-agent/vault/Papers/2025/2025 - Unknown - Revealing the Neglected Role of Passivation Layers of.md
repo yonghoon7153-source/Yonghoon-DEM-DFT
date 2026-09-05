@@ -16,6 +16,7 @@ source: bootstrap
 date_added: 2026-09-03
 analyzed_at: 2026-09-03
 evidence_level: snippet
+feedback: none
 ra_id: "doi:10.1002/adma.202513090"
 ---
 
@@ -44,7 +45,7 @@ Advanced Materials(IF 26.8)이고 제목이 내 키워드 'anode-less assb'의 �
 > [!tip] 내 연구와의 연결
 > **DEM** — -
 > **DFT/MLIP** — 집전체 산화막/Li 계면의 열역학은 내 W_ad·SEI 형성 에너지 프레임과 같은 종류의 DFT 문제다. 전문에 DFT가 있으면 계산 조건(slab, functional)을 내 NCM/SE 계면 계산과 비교한다.
-> **Anode-free** — 황화물 anode-free에서 집전체 표면 상태는 Li 핵생성 위치를 결정하는 1차 변수다. 이 논문이 그 변수를 체계적으로 다뤘다면 내 anode-free 리딩 노트의 기준 문헌이 된다.
+> **실험(축 C)** — -
 
 ### 비교할 수치
 - (없음)
@@ -57,6 +58,7 @@ Advanced Materials(IF 26.8)이고 제목이 내 키워드 'anode-less assb'의 �
 > [!quote] 인용 문장 초안
 > The native passivation layer on the current collector has been shown to play a decisive, previously neglected role in solid-state anode-free cells [ref].
 
+
 > [!warning] 비판 포인트 / 세미나 질문
 > - 현재는 제목·서지 정보만 있어 내용 검증이 불가능하다. 로컬(교내망)에서 전문을 받아 `ra analyze --paper-id doi:10.1002/adma.202513090 --direct`로 재분석해야 한다.
 
@@ -67,5 +69,13 @@ Advanced Materials(IF 26.8)이고 제목이 내 키워드 'anode-less assb'의 �
 ## 원문 초록
 > passivation layers of current collectors … solid-state anode-free batteries (Western University / FZ Jülich / Univ. Twente)
 
+## 피드백
+> [!question] 읽고 나서 하나만 체크해 주세요 — 다음 선별에 반영됩니다.
+- [ ] 유용함 — 인용하거나 방법을 가져올 것
+- [ ] 무관 — 잘못 골랐음 (선별 기준을 고쳐야 함)
+- [ ] 읽음 — 나쁘지 않지만 당장 쓸 곳은 없음
+- [ ] 안 봄 — 제목만 보고 넘김
+왜: 
+
 ---
-*related:* [[anode-less assb]] · *digest:* [[2026-09-04]]
+*related:* [[anode-less assb]] · *digest:* -

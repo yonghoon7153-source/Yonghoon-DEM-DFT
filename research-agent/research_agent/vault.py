@@ -9,6 +9,7 @@ from zoneinfo import ZoneInfo
 
 from . import __version__
 from .config import Config
+from .feedback import feedback_block, verdict_of
 from .models import Paper, slugify
 
 _TAG_BY_KEYWORD = {
@@ -102,6 +103,7 @@ class Vault:
             "date_added": p.first_seen[:10],
             "analyzed_at": (p.analyzed_at or "")[:10],
             "evidence_level": a.get("evidence_level", "pending"),
+            "feedback": verdict_of(p) or "none",
             "id": p.id,
             "doi_line": f"DOI: [{p.doi}](https://doi.org/{p.doi})" if p.doi else (f"URL: {p.url}" if p.url else ""),
             "keyword_links": keyword_links,
@@ -126,6 +128,7 @@ class Vault:
             "related_links": ", ".join(f"[[{r}]]" for r in related) or "-",
             "digest_link": f"[[{digest_date}]]" if digest_date else "-",
             "scooping_block": _scooping_block(a),
+            "feedback_block": feedback_block(p),
         }
         text = _render(self.cfg.load_template("paper_note"), mapping)
         path = self.note_path(p)
@@ -186,9 +189,14 @@ class Vault:
             "|---|---|---|---|---|",
             *[f"| {i+1} | {p.tier or '-'} | {p.journal_if} | {p.journal_canonical or p.venue} | [[{self.note_name(p)}]] |" for i, p in enumerate(top[:25])],
             "",
+            "## 선별 품질",
+            f"- [[피드백 보정]] — 판정 {sum(1 for p in papers if verdict_of(p))}건 누적",
+            "- 논문 노트 맨 아래 `## 피드백`에서 하나만 체크하면 반영된다",
+            "",
             "## 사용법",
             "- 12:00 `ra noon` — alert 수집·triage·심층분석·DB·vault 갱신",
             "- 09:00 `ra morning` — 디제스트 생성·메일 발송",
+            "- 주 1회 `ra feedback --show` — 체크박스 수집·보정 보고서 갱신",
             "- 수동: `ra ingest --json file.json`, `ra analyze --paper-id <id> --from-file <json>`, `ra status`",
             "",
             "```dataview",
