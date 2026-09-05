@@ -265,7 +265,7 @@ def enabled(cfg) -> bool:
 
 # --------------------------------------------------------------------------- 경계선 표본
 def borderline_sample(db, n: int = 2, band: float = 0.10, threshold: float = 0.35,
-                      cooldown_days: int = 30) -> list[Paper]:
+                      cooldown_days: int = 30, has_answer_slot=None) -> list[Paper]:
     """threshold 바로 아래에서 걸러진 논문을 n편 뽑는다 — 오탈락률을 재기 위한 표본.
 
     vault 만 보면 "골라낸 것 중 몇 개가 좋았나"만 알 수 있고 "버린 것 중 좋은 게 있었나"는
@@ -282,16 +282,26 @@ def borderline_sample(db, n: int = 2, band: float = 0.10, threshold: float = 0.3
             continue
         asked = (p.extra or {}).get("borderline_asked_at")
         if asked and asked > cutoff:
-            continue
+            # 쿨다운의 전제는 "물어봤으니 답할 자리가 있다" 이다. 그 전제가 깨졌으면
+            # (asked 만 찍히고 노트가 없으면) 쿨다운을 적용하지 않는다 — 안 그러면
+            # 한 달 동안 묻지도 답하지도 못하는 논문이 조용히 생긴다.
+            if has_answer_slot is None or has_answer_slot(p):
+                continue
         cands.append(p)
     cands.sort(key=lambda x: (x.relevance or 0, x.journal_if or 0), reverse=True)
     return cands[:n]
 
 
 def mark_asked(db, papers: list[Paper]) -> None:
+    """물어봤다는 사실을 DB 에 **확정**한다. 반드시 답할 자리(stub)를 만든 뒤에 부른다.
+
+    `setdefault` 인 것이 중요하다 — stub 파일에 찍힌 `asked_at` 과 DB 값이 어긋나면
+    나중에 둘을 대조할 수 없다.
+    """
+    stamp = now_iso()
     for p in papers:
         p.extra = dict(p.extra or {})
-        p.extra["borderline_asked_at"] = now_iso()
+        p.extra.setdefault("borderline_asked_at", stamp)
         db.save(p)
 
 

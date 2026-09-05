@@ -1,5 +1,46 @@
 # CHANGELOG
 
+
+## [0.1.8] — 2026-09-05
+### Fixed — ⚠ P1: 물어봤다는 기록이 답할 자리보다 먼저 확정되고 있었다
+`cmd_morning` 의 순서가 이랬다:
+```
+_build_digest → fb.mark_asked(...)          ← 기록 확정
+_send_digest  → 메일 (IMAP/SMTP)            ← 제일 잘 깨지는 단계
+_vault_sync   → write_borderline_stub(...)  ← 자리 생성
+```
+발송이 예외로 죽으면 `cmd_morning` 이 예외를 올려 `_vault_sync` 가 안 돈다. 그러면 그 논문은
+`borderline_asked_at` 만 찍힌 채 stub 이 없고, 30일 쿨다운에 걸려 다시 뽑히지도 않는다 —
+**한 달 동안 묻지도 답하지도 못하는 논문**이 조용히 생긴다. 09-04 사고도 발송 계열이었으니
+가정이 아니라 실제 경로다.
+
+**ⓐ 채택 — 순서를 뒤집었다.** ①-b 에서 배운 것과 같은 형태다: *순서가 곧 안전장치다.*
+- **`_prepare_borderline(v, border)`** — `_build_digest` 안에서 **렌더보다도 먼저** stub 을 만든다.
+  자리 생성 → (렌더·발송) → `mark_asked` 로 DB 확정.
+- 파일을 못 쓴 논문은 목록에서 **빼서 디제스트에도 안 싣는다.** "물어봤는데 답할 데가 없다" 를
+  아예 만들지 않는다.
+- `mark_asked` 가 `setdefault` 로 바뀌었다 — stub 파일에 찍힌 `asked_at` 과 DB 값이 어긋나면
+  나중에 둘을 대조할 수 없다.
+- dry-run 은 stub 도 안 만든다 (게이트 3 유지).
+
+**두 번째 겹 (ⓒ 를 보조로)** — `borderline_sample(..., has_answer_slot=callable)`:
+쿨다운의 전제는 "물어봤으니 답할 자리가 있다" 이다. 그 전제가 깨졌으면(asked 인데 노트 없음)
+쿨다운을 적용하지 않는다. 순서 보장이 어디선가 또 뚫려도 논문이 영영 묻히지 않는다.
+ⓒ 가 증상 차단이라는 지적은 맞아서 **원인 수정(ⓐ)을 주 방어로 두고 보조로만** 넣었다.
+
+회귀 4건. **뮤테이션 2/2 잡힘** — 순서를 되돌리면
+`test_answer_slot_exists_before_asking_is_committed` · `test_asked_at_is_consistent_between_stub_and_db`,
+두 번째 겹을 무력화하면 `test_asked_without_a_slot_ignores_the_cooldown` 이 실패한다.
+
+### 파일 (6개)
+```
+research_agent/cli.py          ← _prepare_borderline, has_answer_slot 전달
+research_agent/feedback.py     ← borderline_sample(has_answer_slot=), mark_asked setdefault
+tests/test_feedback.py         ← P1 회귀 4건
+VERSION · pyproject.toml · research_agent/__init__.py
+```
+Cowork 트리 **47 passed** (43 → 47).
+
 <!-- CHANGELOG.md 맨 위에 이 절만 붙여 주십시오. 파일 자체는 보내지 않습니다 (규약 개정). -->
 
 ## [0.1.7] — 2026-09-05

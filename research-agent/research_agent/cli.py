@@ -286,6 +286,33 @@ def cmd_litdb(cfg: Config, args) -> int:
     return 0
 
 
+def _prepare_borderline(v: Vault, border: list[Paper]) -> list[Paper]:
+    """물어보기 **전에** 답할 자리를 만든다. 자리를 못 만든 논문은 묻지도 않는다.
+
+    이전 판은 `mark_asked`(물어봤다는 기록)가 `_send_digest` 앞에 있고 stub 생성은
+    그 뒤 `_vault_sync` 안에 있었다. 발송은 이 파이프라인에서 제일 잘 깨지는 단계라
+    (09-04 사고도 발송 계열) 그 사이에서 예외가 나면 논문에 `borderline_asked_at` 만
+    남고 stub 은 없다 — 30일 쿨다운에 걸려 **한 달 동안 묻지도 답하지도 못하는 논문**이
+    조용히 생긴다.
+
+    ⇒ 순서를 뒤집는다. 자리 생성 → (렌더·발송) → 기록 확정.
+    `borderline_asked_at` 은 여기서 메모리에만 얹고, DB 확정은 발송이 끝난 뒤
+    `fb.mark_asked` 가 한다. 파일을 못 쓴 논문은 목록에서 빼서 디제스트에도 안 싣는다 —
+    "물어봤는데 답할 데가 없다" 를 만들지 않기 위해서다.
+    """
+    ok: list[Paper] = []
+    stamp = now_iso()
+    for p in border:
+        p.extra = dict(p.extra or {})
+        p.extra.setdefault("borderline_asked_at", stamp)
+        try:
+            v.write_borderline_stub(p)
+            ok.append(p)
+        except OSError as e:
+            _log(f"경계선 노트 생성 실패 — 이 논문은 묻지 않는다({p.id}): {e}")
+    return ok
+
+
 def _build_digest(cfg: Config, db: PaperDB, date: str, llm: LLM | None,
                   force: bool = False, dry_run: bool = False) -> tuple[Path, list[Paper], dict, str]:
     from . import feedback as fb
@@ -296,8 +323,13 @@ def _build_digest(cfg: Config, db: PaperDB, date: str, llm: LLM | None,
         n_border = int(cfg.get("feedback.borderline_per_digest", 2))
         min_s = int(cfg.get("feedback.min_samples", 8))
         if papers and n_border:  # 빈 디제스트를 경계선 표본으로 채우지 않는다
-            border = fb.borderline_sample(db, n=n_border,
-                                          threshold=float(cfg.get("triage.relevance_threshold", 0.35)))
+            border = fb.borderline_sample(
+                db, n=n_border, threshold=float(cfg.get("triage.relevance_threshold", 0.35)),
+                # 두 번째 겹: asked 로 찍혔는데 답할 노트가 없으면 쿨다운을 무시하고 다시 뽑는다.
+                # 아래 순서 보장이 뚫리는 경로가 또 있어도 논문이 영영 묻히지 않는다.
+                has_answer_slot=lambda p: v.borderline_path(p).exists())
+        if border and not dry_run:
+            border = _prepare_borderline(v, border)
         fstats = fb.stats(db, min_s)
     except Exception as e:
         _log(f"피드백 집계 실패(무시하고 계속): {e}")

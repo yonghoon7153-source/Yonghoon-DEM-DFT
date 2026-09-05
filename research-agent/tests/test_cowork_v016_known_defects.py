@@ -120,8 +120,6 @@ def test_borderline_verdict_reaches_the_db(sandbox):
     assert fb.verdict_of(db.get(b.id)), "stub 판정이 DB 로 안 온다 — 측정이 성립하지 않는다"
 
 
-@pytest.mark.xfail(reason="v0.1.7 P1 — mark_asked 가 발송 전에 커밋되고 stub 은 발송 후에 생긴다",
-                   strict=False)
 def test_asking_is_not_committed_before_the_answer_slot_exists(sandbox):
     """⛔음성 **신규 P1**: 물어봤다는 기록이 답할 자리보다 **먼저** 확정되면 안 된다.
 
@@ -136,25 +134,32 @@ def test_asking_is_not_committed_before_the_answer_slot_exists(sandbox):
     `borderline_sample` 의 30일 쿨다운이 다시 묻는 것을 막는다.
     ⇒ 한 달 동안 조용히, 물어보지도 답하지도 못하는 논문이 된다.
 
-    ⚠ 이 시험은 `_send_digest` 를 부르지 않고 그 사이 상태를 재현한다 — 발송 실패가
-      아니라 **"발송 단계에서 멈췄을 때 남는 상태"** 가 문제이기 때문이다.
+    v0.1.8 이 ⓐ 로 고쳤다 — `_prepare_borderline` 이 **본문 렌더보다도 먼저** stub 을 쓰고,
+    파일을 못 쓴 논문은 목록에서 빼 디제스트에도 안 싣는다.
 
-    고치는 방향(택일):
-      ⓐ stub 생성을 `mark_asked` 와 **같은 자리**로 옮긴다 (물어보기 전에 자리부터 만든다)
-      ⓑ `mark_asked` 를 `_vault_sync` 성공 뒤로 미룬다
-      ⓒ `borderline_sample` 이 "asked 인데 stub 없음" 을 쿨다운에서 제외한다
+    ⚠ 이 시험의 v1 은 `borderline_sample` + `mark_asked` 를 **직접** 불렀다. 그건 실제
+      계약이 아니다 — 순서를 지키는 주체는 `_build_digest` 다. 그래서 v1 은 고쳐진
+      뒤에도 계속 실패했다(내 시험이 틀린 것이지 코드가 틀린 게 아니었다).
+      ⇒ `_build_digest` 를 그대로 부르고, **그 직후**(= 발송이 죽어 `_vault_sync` 가
+        영영 안 도는 시점) 상태를 본다.
     """
     cfg, db = sandbox
+    # ⚠ 실을 논문이 하나는 있어야 한다 — 빈 디제스트는 경계선 블록을 아예 안 붙인다
+    #   (의도된 동작: 빈 디제스트를 경계선 표본으로 채우면 잡음이다).
+    db.save(_paper(1))
     b = _borderline()
     db.save(b)
-    picked = fb.borderline_sample(db, n=2, threshold=0.35)
-    fb.mark_asked(db, picked)                       # ← 디제스트가 여기까지 하고
+    _build_digest(cfg, db, "2026-09-06", None)      # ← 디제스트가 여기까지 하고
     # ← 발송이 죽어 `_vault_sync` 가 안 돈다 (그래서 여기서 부르지 않는다)
-    again = fb.borderline_sample(db, n=2, threshold=0.35)
-    stubs = [p for p in cfg.path("vault.root").rglob("*.md") if "Borderline" in p.name]
-    assert stubs or again, (
-        "물어봤다고 표시됐는데 stub 도 없고 쿨다운에 걸려 다시 묻지도 않는다 — "
-        "30일 동안 답할 방법이 없는 논문이 된다")
+    asked = [p for p in db.list() if (p.extra or {}).get("borderline_asked_at")]
+    stubs = [p.name for p in cfg.path("vault.root").rglob("*.md") if "Borderline" in str(p.parent)]
+    assert asked, "전제: 디제스트가 실제로 경계선 논문을 물어봤다"
+    assert stubs, ("물어봤다고 표시됐는데 답할 자리가 없다 — 발송이 죽으면 "
+                   "30일 쿨다운 동안 묻지도 답하지도 못하는 논문이 된다")
+    again = fb.borderline_sample(db, n=2, threshold=0.35,
+                                 has_answer_slot=lambda p: False)
+    assert again, ("ⓒ 뒷문: 자리가 없는 것으로 판정되면 쿨다운을 무시하고 다시 뽑아야 한다 "
+                   "— 순서 보장이 다른 경로로 뚫려도 논문이 영영 묻히지 않게")
 
 
 def test_the_defect_paths_are_still_reachable(sandbox):

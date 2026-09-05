@@ -352,3 +352,65 @@ def test_digest_links_the_borderline_note(sandbox):
     _, _, _, body = _build_digest(cfg, db, "2026-09-05", None, dry_run=True)
     assert f"[[{Vault(cfg).note_name(b)}]]" in body
     assert "vault/Borderline/" in body
+
+
+# ============================================================ P1 회귀 (Claude Code 회신 ⑤)
+def test_answer_slot_exists_before_asking_is_committed(sandbox):
+    """★ P1 — 발송 단계에서 멈춰도 '물어봤는데 답할 데가 없는' 상태가 남으면 안 된다.
+
+    문제는 발송 실패 자체가 아니라 **그때 남는 상태**다. 그래서 실패를 흉내내지 않고,
+    `_build_digest` 까지만 돌린 뒤(= _send_digest 직전에 멈춘 상태) 남은 것을 본다.
+    """
+    from research_agent.cli import _build_digest
+    cfg, db = sandbox
+    db.upsert(_paper(1))                                             # 디제스트에 실릴 논문
+    b = _paper(2, status="rejected", relevance=0.30, tier="")
+    db.upsert(b)
+
+    _build_digest(cfg, db, "2026-09-05", None)                       # 여기서 예외로 멈췄다고 치자
+
+    stub = Vault(cfg).borderline_path(b)
+    assert stub.exists(), "★ 물어보기 전에 답할 자리가 없다 — 발송이 깨지면 한 달간 묻히는 논문이 된다"
+    assert "## 피드백" in stub.read_text(encoding="utf-8")
+
+
+def test_asked_without_a_slot_ignores_the_cooldown(sandbox):
+    """두 번째 겹 — 순서 보장이 어디선가 뚫려도 논문이 영영 묻히지 않는다."""
+    cfg, db = sandbox
+    p = _paper(1, status="rejected", relevance=0.31, tier="")
+    p.extra = {"borderline_asked_at": now_iso()}                     # 물어봤다고만 찍힌 상태
+    db.upsert(p)
+    v = Vault(cfg)
+
+    assert fb.borderline_sample(db, n=2, threshold=0.35) == [], "노트 유무를 안 보면 쿨다운에 걸린다"
+    got = fb.borderline_sample(db, n=2, threshold=0.35,
+                               has_answer_slot=lambda x: v.borderline_path(x).exists())
+    assert [x.id for x in got] == [p.id], "★ 답할 자리가 없는데 쿨다운이 적용됐다"
+
+    v.write_borderline_stub(p)                                       # 자리가 생기면 다시 조용해진다
+    assert fb.borderline_sample(db, n=2, threshold=0.35,
+                                has_answer_slot=lambda x: v.borderline_path(x).exists()) == []
+
+
+def test_asked_at_is_consistent_between_stub_and_db(sandbox):
+    """stub 에 찍힌 asked_at 과 DB 값이 어긋나면 나중에 둘을 대조할 수 없다."""
+    from research_agent.cli import _build_digest
+    cfg, db = sandbox
+    db.upsert(_paper(1))
+    b = _paper(2, status="rejected", relevance=0.30, tier="")
+    db.upsert(b)
+    _build_digest(cfg, db, "2026-09-05", None)
+    stamp = (db.get(b.id).extra or {}).get("borderline_asked_at")
+    assert stamp and stamp[:10] in Vault(cfg).borderline_path(b).read_text(encoding="utf-8")
+
+
+def test_dry_run_creates_no_borderline_stub(sandbox):
+    """dry-run 은 여전히 아무것도 쓰지 않는다 — stub 도 예외가 아니다."""
+    from research_agent.cli import _build_digest
+    cfg, db = sandbox
+    db.upsert(_paper(1))
+    b = _paper(2, status="rejected", relevance=0.30, tier="")
+    db.upsert(b)
+    _build_digest(cfg, db, "2026-09-05", None, dry_run=True)
+    assert not Vault(cfg).borderline_path(b).exists()
+    assert (db.get(b.id).extra or {}).get("borderline_asked_at") is None
