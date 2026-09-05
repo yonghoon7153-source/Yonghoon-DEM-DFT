@@ -1,5 +1,63 @@
 # CHANGELOG
 
+<!-- CHANGELOG.md 맨 위에 이 절만 붙여 주십시오. 파일 자체는 보내지 않습니다 (규약 개정). -->
+
+## [0.1.7] — 2026-09-05
+### Fixed — ⛔ P0 ①-b: harvest 실패가 사용자 체크를 지우고 있었다 (fail-closed 로 전환)
+`_vault_sync` 가 `fb.harvest` 예외를 삼키고 노트 재생성을 계속했다. 주석에는 *"피드백은
+부가 기능 — 실패해도 vault 동기화는 계속된다"* 라고 적어 뒀는데 **이 모듈에서는 그 판단이
+거꾸로였다.** harvest 실패는 "아직 안 걷었다"는 뜻이고, 그 상태의 재생성이 바로 harvest
+순서가 막으려던 파괴 경로다. sqlite 락 하나로 판정이 전손되고, 사용자는 지워진 걸 모르니
+다시 체크하지도 않는다.
+
+**게이트를 둘 걸었다.** 하나로는 다른 경로로 재발한다 — v0.1.3 에서 배운 것과 같다.
+- **게이트 1 (실행 단계)** — harvest 가 예외로 죽으면 **노트를 한 장도 다시 쓰지 않는다.**
+  MOC·홈은 DB 파생물이라 그대로 갱신한다. `_vault_sync` 가 `{harvest_ok, notes, stubs,
+  harvested}` 를 돌려주고, `runs.status` 가 `"degraded"` 로 남아 조용히 지나가지 않는다.
+- **게이트 2 (파일 단계)** — `Vault.unharvested_feedback()`: 노트에 DB 가 모르는 판정이
+  적혀 있으면 `write_paper_note` 가 **덮어쓰기를 거부**한다. harvest 실패 경로는 예외뿐이
+  아니다(ra_id 파싱 실패, 경로 누락…). `write_digest` 의 축소 덮어쓰기 거부와 같은 계열.
+
+회귀 2건. **뮤테이션으로 각각 확인** — 게이트 1을 되돌리면
+`test_harvest_failure_does_not_regenerate_notes`, 게이트 2를 무력화하면
+`test_note_with_unharvested_check_is_never_overwritten` 이 실패한다.
+
+### Fixed — ⛔ P0 ③: 경계선 표본이 물어보면서 답할 자리를 안 줬다
+`borderline_sample()` 은 `rejected` 에서 뽑는데 그 논문들은 분석이 없어
+`_vault_sync` 의 `if p.status == "rejected" and not p.analysis: continue` 에 걸려
+**노트가 아예 안 만들어졌다.** 그런데 디제스트는 "노트 맨 아래 `## 피드백`에 남기면 됩니다"
+라고 안내했다. 사용자는 Obsidian 을 열고 그 논문을 못 찾는다 → 오탈락 측정치가 구조적으로
+영원히 0이고, 더 나쁘게는 **"물어봤는데 답이 없으니 다 무관한 게 맞구나"** 로 읽힌다.
+v0.1.6 이 경고한 *"좁아진다는 사실 자체가 안 보인다"* 가 그대로 재현됐다.
+
+**A안 채택** — `Vault.write_borderline_stub()`:
+- `vault/Borderline/<노트명>.md` 에 **판정만 받는 최소 노트**. Papers 위계를 안 어지럽힌다.
+- frontmatter 에 `ra_id`(harvest 매칭용)·`relevance`·`asked_at`·`feedback`,
+  본문에 **왜 뺐는지**(`relevance_reason`)와 초록/스니펫, 그리고 `## 피드백`.
+- `_vault_sync` 가 `extra.borderline_asked_at` 이 있는 논문에 stub 을 만든다.
+- `feedback.harvest()` 가 **`Papers/` 와 `Borderline/` 를 둘 다** 훑는다. 여기서 빠지면
+  측정이 영원히 0이라 기본 스캔 대상에 넣었다 (`vault.borderline_dir`, 기본 `Borderline`).
+- 디제스트가 제목이 아니라 **`[[위키링크]]`** 로 노트를 가리킨다.
+
+회귀 3건 — stub 생성 / stub 판정이 DB 까지 오는지 / 디제스트 링크.
+
+### Changed — `CHANGELOG.md` 를 정본 목록에서 제외
+v0.1.6 전달에서 Cowork 판이 Claude Code 의 병합 기록 두 절을 지웠다. 공동 이력이라
+한쪽 정본이 될 수 없다. ⇒ **파일을 보내지 않고 새 절만 조각 파일로 보낸다.**
+
+### 파일 (10개)
+```
+research_agent/cli.py          ← _vault_sync fail-closed + stub 생성 + runs degraded
+research_agent/vault.py        ← unharvested_feedback / write_borderline_stub / borderline_dir
+research_agent/feedback.py     ← harvest 가 Borderline/ 도 훑는다
+research_agent/digest.py       ← 경계선 블록 위키링크
+tests/test_feedback.py         ← P0 회귀 5건 추가
+tests/test_dryrun_safety.py    ← _vault_sync 반환 모양(dict) 반영
+VERSION · pyproject.toml · research_agent/__init__.py
+cowork/DELIVERY_PROTOCOL.md    ← CHANGELOG 규약
+```
+Cowork 트리 **43 passed** (36 → 38 → 43).
+
 ## [0.1.6] — 2026-09-05
 ### Added — 피드백 루프 (`research_agent/feedback.py`, 신규 파일)
 논문 노트 맨 아래 `## 피드백`에서 **유용함 / 무관 / 읽음 / 안 봄** 중 하나를 체크하면

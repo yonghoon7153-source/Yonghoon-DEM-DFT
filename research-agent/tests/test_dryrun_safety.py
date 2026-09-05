@@ -86,7 +86,12 @@ def test_morning_dry_run_writes_nothing(sandbox, monkeypatch):
     db.upsert(p)
 
     called = []
-    monkeypatch.setattr("research_agent.cli._vault_sync", lambda *a, **k: called.append("vault"))
+
+    def fake_vault_sync(*a, **k):  # 실제 반환 모양(dict)을 흉내낸다 — cmd_morning 이 이걸 읽는다
+        called.append("vault")
+        return {"harvest_ok": True, "notes": 0, "stubs": 0, "harvested": 0}
+
+    monkeypatch.setattr("research_agent.cli._vault_sync", fake_vault_sync)
     monkeypatch.setattr("research_agent.cli._git_commit", lambda *a, **k: called.append("git"))
     monkeypatch.setattr("research_agent.cli._send_digest", lambda *a, **k: called.append("mail"))
 

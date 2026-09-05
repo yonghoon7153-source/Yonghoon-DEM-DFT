@@ -78,27 +78,48 @@ def _git_commit(cfg: Config, message: str) -> None:
         _log("git 없음 — 커밋 생략")
 
 
-def _vault_sync(cfg: Config, db: PaperDB, digest_date: str | None = None) -> None:
+def _vault_sync(cfg: Config, db: PaperDB, digest_date: str | None = None) -> dict:
+    """harvest → write. **harvest 가 실패하면 노트를 다시 쓰지 않는다 (fail-closed).**
+
+    이전 판은 harvest 실패를 삼키고 재생성을 계속했다. 주석에는 "피드백은 부가 기능"이라고
+    적어 뒀지만 **이 모듈에서는 그 판단이 거꾸로다.** harvest 실패는 "아직 안 걷었다"는 뜻이고,
+    그 상태의 재생성이 바로 harvest 순서가 막으려던 파괴 경로다. sqlite 락 하나로 사용자가
+    체크한 판정이 전손되고, 지워진 걸 모르니 다시 체크하지도 않는다.
+
+    ⇒ 노트가 하루 낡는 것 < 판정이 사라지는 것. MOC·홈은 DB 파생물이라 그대로 갱신한다.
+    """
     from . import feedback as fb
-    # ★ 순서가 중요하다. 노트는 매번 템플릿에서 다시 쓰이므로, 사용자가 체크한 것을 먼저 DB로
-    #   걷어 오지 않으면 그대로 지워진다. harvest → write 순서를 절대 뒤집지 말 것.
-    try:
-        h = fb.harvest(cfg, db)
-        if h.get("updated"):
-            _log(f"피드백 {h['updated']}건 수집 (스캔 {h['scanned']}, 미매칭 {h['unmatched']})")
-    except Exception as e:  # 피드백은 부가 기능 — 실패해도 vault 동기화는 계속된다
-        _log(f"피드백 수집 실패(무시하고 계속): {e}")
     v = Vault(cfg)
     papers = db.list()
-    for p in papers:
-        if p.status == "rejected" and not p.analysis:
-            continue  # rejected-without-analysis: keep out of vault (DB만 보관)
-        v.write_paper_note(p, digest_date=digest_date)
-        db.save(p)
+    out: dict = {"harvested": 0, "notes": 0, "stubs": 0, "harvest_ok": True}
+    try:
+        h = fb.harvest(cfg, db)
+        out["harvested"] = h.get("updated", 0)
+        if h.get("updated"):
+            _log(f"피드백 {h['updated']}건 수집 (스캔 {h['scanned']}, 미매칭 {h['unmatched']})")
+        papers = db.list()  # harvest 가 갱신한 판정을 노트에 반영해야 한다
+    except Exception as e:
+        out.update({"harvest_ok": False, "error": str(e)})
+        _log(f"⛔ 피드백 수집 실패 — 노트 재생성을 건너뛴다(사용자 체크 보호): {e}")
+        _log("   `ra feedback` 으로 원인을 확인한 뒤 `ra vault` 를 다시 돌리십시오.")
+
+    if out["harvest_ok"]:
+        for p in papers:
+            if (p.extra or {}).get("borderline_asked_at"):
+                v.write_borderline_stub(p)   # 디제스트가 물어본 논문 — 답할 자리를 만든다
+                out["stubs"] += 1
+                db.save(p)
+                continue
+            if p.status == "rejected" and not p.analysis:
+                continue  # 안 물어본 rejected: vault 에서 제외 (DB만 보관)
+            v.write_paper_note(p, digest_date=digest_date)
+            out["notes"] += 1
+            db.save(p)
     v.write_keyword_mocs(papers)
     digests = sorted([d.stem for d in v.digests_dir.glob("*.md")], reverse=True)
     v.write_home(papers, db.counts(), digests)
     db.export_jsonl()
+    return out
 
 
 # --------------------------------------------------------------------------- commands
@@ -380,13 +401,13 @@ def cmd_noon(cfg: Config, args) -> int:
             db.finish_run(run, "ok", summary)
             _log(f"noon dry-run: {summary} (vault·litdb·commit 생략)")
             return 0
-        _vault_sync(cfg, db)
+        summary["vault"] = _vault_sync(cfg, db)
         try:
             from .exporters.litdb import export
             summary["litdb"] = export(cfg, db.list(status=["triaged", "analyzed", "digested"]))
         except Exception as e:
             summary["litdb"] = {"error": str(e)}
-        db.finish_run(run, "ok", summary)
+        db.finish_run(run, "ok" if summary["vault"].get("harvest_ok") else "degraded", summary)
         _git_commit(cfg, cfg.get("git.commit_message", "ra: {job} {date}").format(job="noon", date=today_str(cfg), n_new=n_new, n_analyzed=n_an))
         _log(f"noon done: {summary}")
         return 0
@@ -408,8 +429,9 @@ def cmd_morning(cfg: Config, args) -> int:
             _log(f"morning dry-run: {date} {stats} (발송·vault·digest·commit 모두 생략)")
             return 0
         mid = _send_digest(cfg, db, date, path, papers, stats)
-        _vault_sync(cfg, db, digest_date=date)
-        db.finish_run(run, "ok", {"date": date, "sent": bool(mid), **stats})
+        vs = _vault_sync(cfg, db, digest_date=date)
+        db.finish_run(run, "ok" if vs.get("harvest_ok") else "degraded",
+                      {"date": date, "sent": bool(mid), "vault": vs, **stats})
         _git_commit(cfg, cfg.get("git.commit_message", "ra: {job} {date}").format(job="morning", date=date, n_new=0, n_analyzed=stats["n_papers"]))
         _log(f"morning done: {date} {stats} sent={bool(mid)}")
         return 0

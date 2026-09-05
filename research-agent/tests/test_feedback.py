@@ -253,3 +253,102 @@ def test_feedback_footer_handles_empty_stats():
     from research_agent.digest import _feedback_footer
     assert _feedback_footer({}) == []
     assert _feedback_footer({"n_feedback": 2, "min_samples": 8, "counts": {}})
+
+
+# ============================================================ P0 회귀 (Claude Code 회신 ④)
+# 두 건 다 "정상 경로만 보는 시험" 이 놓친 것이다. 예외 경로와 배관 연결을 직접 고정한다.
+
+def test_harvest_failure_does_not_regenerate_notes(sandbox, monkeypatch):
+    """★ P0 ①-b — harvest 가 예외로 죽으면 노트를 다시 쓰면 안 된다 (fail-closed).
+
+    이전 판은 예외를 삼키고 재생성을 계속했다. sqlite 락 한 번에 사용자 체크가 전손되고,
+    지워진 걸 모르니 다시 체크하지도 않는다.
+    """
+    from research_agent import feedback as fbmod
+    cfg, db = sandbox
+    p = _paper()
+    db.upsert(p)
+    path = Vault(cfg).write_paper_note(p)
+    db.save(p)
+    _check(path, "유용함", "이건 살아남아야 한다")
+    before = path.read_text(encoding="utf-8")
+
+    def boom(*a, **k):
+        raise RuntimeError("sqlite is locked")
+    monkeypatch.setattr(fbmod, "harvest", boom)
+
+    out = _vault_sync(cfg, db)
+
+    assert out["harvest_ok"] is False, "실패를 기록하지 않았다"
+    assert out["notes"] == 0, "harvest 실패인데 노트를 다시 썼다"
+    assert path.read_text(encoding="utf-8") == before, "★ 조용한 전손 — 체크가 지워졌다"
+
+
+def test_note_with_unharvested_check_is_never_overwritten(sandbox):
+    """두 번째 겹 — DB 가 모르는 판정이 노트에 있으면 파일 단계에서 거부한다.
+
+    harvest 실패 경로는 예외뿐이 아니다(ra_id 파싱 실패, 경로 누락…). 게이트 하나로는 모자란다.
+    """
+    cfg, db = sandbox
+    p = _paper()
+    db.upsert(p)
+    v = Vault(cfg)
+    path = v.write_paper_note(p)
+    _check(path, "무관", "잘못 골랐다")
+    before = path.read_text(encoding="utf-8")
+
+    v.write_paper_note(p)  # DB 는 아직 판정을 모른다 → 거부해야 한다
+
+    assert path.read_text(encoding="utf-8") == before
+    assert v.unharvested_feedback(path, p)["verdict"] == "irrelevant"
+
+
+def test_borderline_paper_gets_a_note_to_answer_in(sandbox):
+    """★ P0 ③ — 물어봤으면 답할 자리가 있어야 한다.
+
+    걸러진 논문은 분석이 없어 노트가 안 만들어지는데 디제스트는 "노트에 체크하라"고 안내했다.
+    사용자는 Obsidian 을 열고 그 논문을 못 찾는다 → 오탈락 측정치가 구조적으로 영원히 0.
+    """
+    cfg, db = sandbox
+    p = _paper(1, status="rejected", relevance=0.30, tier="",
+               relevance_reason="규칙 기반: 매칭 용어 약함")
+    p.extra = {"borderline_asked_at": now_iso()}
+    db.upsert(p)
+
+    out = _vault_sync(cfg, db)
+
+    stub = Vault(cfg).borderline_path(p)
+    assert out["stubs"] == 1 and stub.exists(), "물어본 논문의 노트가 없다"
+    text = stub.read_text(encoding="utf-8")
+    assert f'ra_id: "{p.id}"' in text, "ra_id 가 없어 harvest 가 매칭할 수 없다"
+    assert "## 피드백" in text and "- [ ] 무관" in text
+    assert "매칭 용어 약함" in text, "왜 뺐는지가 없으면 판단할 수 없다"
+    assert not (Vault(cfg).papers_dir / f"{Vault(cfg).note_name(p)}.md").exists(), \
+        "Papers 위계를 어지럽히면 안 된다"
+
+
+def test_feedback_on_a_borderline_stub_is_harvested(sandbox):
+    """stub 에 체크한 판정이 실제로 DB 까지 와야 배관이 이어진 것이다."""
+    cfg, db = sandbox
+    p = _paper(1, status="rejected", relevance=0.31, tier="")
+    p.extra = {"borderline_asked_at": now_iso()}
+    db.upsert(p)
+    stub = Vault(cfg).write_borderline_stub(p)
+
+    _check(stub, "유용함", "이건 봤어야 했다")
+    fb.harvest(cfg, db)
+
+    assert fb.verdict_of(db.get(p.id)) == "useful", "경계선 판정이 DB 에 안 들어왔다"
+    assert fb.stats(db)["n_feedback"] == 1
+
+
+def test_digest_links_the_borderline_note(sandbox):
+    """디제스트가 노트를 위키링크로 가리켜야 한다 — 이름만 적으면 못 찾는다."""
+    from research_agent.cli import _build_digest
+    cfg, db = sandbox
+    db.upsert(_paper(1))
+    b = _paper(2, status="rejected", relevance=0.30, tier="")
+    db.upsert(b)
+    _, _, _, body = _build_digest(cfg, db, "2026-09-05", None, dry_run=True)
+    assert f"[[{Vault(cfg).note_name(b)}]]" in body
+    assert "vault/Borderline/" in body

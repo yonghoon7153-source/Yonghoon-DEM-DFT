@@ -117,12 +117,15 @@ def _borderline_block(papers: list[Paper], vault: Vault) -> list[str]:
         return []
     out = ["## 경계선 확인 — 걸러낸 것 중에서",
            "> [!question] 관련도가 기준 바로 아래라 **뺀** 논문입니다. 잘못 뺀 게 있는지만 봐 주세요.",
-           "> 대부분 무관한 게 정상입니다. 판정은 노트 맨 아래 `## 피드백`에 남기면 됩니다.", ""]
+           "> 대부분 무관한 게 정상입니다. 판정은 `vault/Borderline/` 의 노트 맨 아래 "
+           "`## 피드백`에 남기면 됩니다.", ""]
     for p in papers:
         j = p.journal_canonical or p.venue or "저널 미상"
         link = f"[DOI](https://doi.org/{p.doi})" if p.doi else (f"[link]({p.url})" if p.url else "")
-        out.append(f"- **{p.title.rstrip('.')}** — *{j}* {p.year or ''} · IF {p.journal_if} · "
+        # 위키링크는 반드시 걸어 준다 — 물어보면서 답할 자리를 안 주는 것이 P0 ③ 이었다.
+        out.append(f"- [[{vault.note_name(p)}]] — *{j}* {p.year or ''} · IF {p.journal_if} · "
                    f"관련도 {p.relevance} {link}")
+        out.append(f"  - {p.title.rstrip('.')}")
         out.append(f"  - 뺀 이유: {p.relevance_reason}")
     out.append("")
     return out

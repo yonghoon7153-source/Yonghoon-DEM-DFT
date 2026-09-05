@@ -111,17 +111,24 @@ def parse_note(text: str) -> dict[str, Any] | None:
 
 
 def harvest(cfg, db, papers_dir: Path | None = None) -> dict[str, int]:
-    """vault/Papers/**.md 를 훑어 체크된 판정을 DB 로 옮긴다.
+    """vault 의 논문 노트와 경계선 노트를 훑어 체크된 판정을 DB 로 옮긴다.
 
     노트를 다시 쓰기 **전에** 불러야 한다. 매칭은 파일명이 아니라 frontmatter 의 `ra_id` 로
     한다 — 제목·연도가 나중에 보정돼 파일명이 바뀌어도 피드백이 끊기지 않는다.
+
+    `Borderline/` 도 반드시 같이 훑는다. 디제스트가 "잘못 뺀 게 있나" 를 물어보는 곳이
+    거기라, 여기서 빠지면 오탈락 측정이 구조적으로 영원히 0이 된다.
     """
-    root = papers_dir or (cfg.path("vault.root") / cfg.get("vault.papers_dir", "Papers"))
+    vault_root = cfg.path("vault.root")
+    roots = ([papers_dir] if papers_dir else
+             [vault_root / cfg.get("vault.papers_dir", "Papers"),
+              vault_root / cfg.get("vault.borderline_dir", "Borderline")])
     stats = {"scanned": 0, "found": 0, "updated": 0, "unmatched": 0}
-    if not root.exists():
+    paths = [q for root in roots if root.exists() for q in root.rglob("*.md")]
+    if not paths:
         return stats
     by_id = {p.id: p for p in db.list()}
-    for path in sorted(root.rglob("*.md")):
+    for path in sorted(paths):
         stats["scanned"] += 1
         try:
             text = path.read_text(encoding="utf-8")

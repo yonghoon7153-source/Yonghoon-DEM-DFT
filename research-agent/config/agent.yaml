@@ -104,6 +104,7 @@ storage:
   state: "data/state.json"
 
 vault:
+  borderline_dir: Borderline        # v0.1.7 — 경계선 질문에 답할 stub 노트 자리 (Papers 위계 밖)
   root: "vault"                          # Obsidian vault (또는 vault 안의 하위 폴더)로 symlink/복사
   papers_dir: "Papers"
   digests_dir: "Digests"

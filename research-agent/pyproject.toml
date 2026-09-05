@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "research-agent"
-version = "0.1.6"
+version = "0.1.7"
 description = "PhD research assistant: Google Scholar alert → triage (IF/relevance) → deep analysis → Obsidian DB → daily digest mail. Designed to run under Hermes Agent, Claude Code, or plain cron."
 readme = "README.md"
 requires-python = ">=3.11"

@@ -9,7 +9,7 @@ from zoneinfo import ZoneInfo
 
 from . import __version__
 from .config import Config
-from .feedback import feedback_block, verdict_of
+from .feedback import feedback_block, parse_note, verdict_of
 from .models import Paper, slugify
 
 _TAG_BY_KEYWORD = {
@@ -55,9 +55,11 @@ class Vault:
         self.papers_dir = self.root / cfg.get("vault.papers_dir", "Papers")
         self.digests_dir = self.root / cfg.get("vault.digests_dir", "Digests")
         self.keywords_dir = self.root / cfg.get("vault.keywords_dir", "Keywords")
+        self.borderline_dir = self.root / cfg.get("vault.borderline_dir", "Borderline")
         self.moc_path = self.root / cfg.get("vault.moc", "00_MOC/Research Agent Home.md")
         self.tz = ZoneInfo(cfg.timezone)
-        for d in (self.papers_dir, self.digests_dir, self.keywords_dir, self.moc_path.parent):
+        for d in (self.papers_dir, self.digests_dir, self.keywords_dir,
+                  self.borderline_dir, self.moc_path.parent):
             d.mkdir(parents=True, exist_ok=True)
 
     # ------------------------------------------------------------------ names
@@ -71,8 +73,40 @@ class Vault:
         year_dir.mkdir(parents=True, exist_ok=True)
         return year_dir / f"{self.note_name(p)}.md"
 
+    def borderline_path(self, p: Paper) -> Path:
+        return self.borderline_dir / f"{self.note_name(p)}.md"
+
+    # ------------------------------------------------- 피드백 보호 (P0 ①-b, 2026-09-05)
+    def unharvested_feedback(self, path: Path, p: Paper) -> dict | None:
+        """노트에 DB 가 모르는 판정이 적혀 있으면 그것을 돌려준다 (없으면 None).
+
+        `_vault_sync` 는 harvest → write 순서로 돌지만, harvest 가 **어떤 이유로든**
+        실패·누락하면 그 뒤의 재생성이 사용자 체크를 지운다. 실패 경로는 예외뿐이 아니라
+        (sqlite 락, ra_id 파싱 실패, 경로 누락…) 여러 갈래라 **파일 단계에서 한 번 더** 막는다.
+        디제스트의 `write_digest` 축소 덮어쓰기 거부와 같은 계열의 두 번째 겹이다.
+        """
+        if not path.exists():
+            return None
+        try:
+            parsed = parse_note(path.read_text(encoding="utf-8"))
+        except OSError:
+            return None
+        if not parsed:
+            return None
+        stored = (p.extra or {}).get("feedback") or {}
+        if parsed["verdict"] == stored.get("verdict") and parsed.get("note", "") == (stored.get("note") or ""):
+            return None
+        return parsed
+
     # ------------------------------------------------------------------ paper
     def write_paper_note(self, p: Paper, digest_date: str | None = None) -> Path:
+        path = self.note_path(p)
+        pending = self.unharvested_feedback(path, p)
+        if pending:
+            print(f"[ra] 노트 보호: {path.name} 에 아직 안 걷은 피드백('{pending['verdict']}')이 있어 "
+                  f"덮어쓰지 않았다. `ra feedback` 으로 먼저 걷으십시오.", flush=True)
+            p.note_path = str(path.relative_to(self.cfg.root))
+            return path
         a = p.analysis or {}
         m = a.get("methods") or {}
         c = a.get("connection_to_my_work") or {}
@@ -131,9 +165,54 @@ class Vault:
             "feedback_block": feedback_block(p),
         }
         text = _render(self.cfg.load_template("paper_note"), mapping)
-        path = self.note_path(p)
         path.write_text(text, encoding="utf-8")
         p.note_path = str(path.relative_to(self.cfg.root))
+        return path
+
+    # -------------------------------------------------- 경계선 stub (P0 ③, 2026-09-05)
+    def write_borderline_stub(self, p: Paper) -> Path:
+        """디제스트가 "잘못 뺀 게 있나" 를 물어본 논문에 **답할 자리**를 만든다.
+
+        걸러진 논문은 분석이 없어 `_vault_sync` 가 노트를 안 만든다. 그런데 디제스트는
+        "노트 맨 아래 `## 피드백`에 남기면 됩니다" 라고 안내했다 — 사용자는 Obsidian 을 열고
+        그 논문을 못 찾는다. 그러면 오탈락 측정치가 구조적으로 영원히 0이 되고, 더 나쁘게는
+        **"물어봤는데 답이 없으니 다 무관한 게 맞구나"** 로 읽힌다.
+
+        그래서 판정만 받는 최소 노트를 `vault/Borderline/` 에 따로 만든다. Papers MOC 와
+        분리해 논문 노트 위계를 어지럽히지 않는다.
+        """
+        path = self.borderline_path(p)
+        pending = self.unharvested_feedback(path, p)
+        if pending:
+            print(f"[ra] 경계선 노트 보호: {path.name} 에 안 걷은 피드백이 있어 덮어쓰지 않았다.", flush=True)
+            return path
+        j = p.journal_canonical or p.venue or "저널 미상"
+        link = (f"DOI: [{p.doi}](https://doi.org/{p.doi})" if p.doi else (f"URL: {p.url}" if p.url else ""))
+        asked = ((p.extra or {}).get("borderline_asked_at") or "")[:10]
+        body = "\n".join([
+            "---",
+            f'title: "{p.title.replace(chr(34), chr(39))}"',
+            f'journal: "{j}"', f"year: {p.year or ''}", f'doi: "{p.doi or ""}"',
+            f"if: {p.journal_if if p.journal_if is not None else ''}",
+            f"relevance: {p.relevance if p.relevance is not None else ''}",
+            "status: rejected", "tags: [borderline, research-agent]",
+            f"asked_at: {asked}",
+            f"feedback: {verdict_of(p) or 'none'}",
+            f'ra_id: "{p.id}"',
+            "---", "",
+            f"# {p.title}", "",
+            f"*{j}* {p.year or ''} · IF {p.journal_if} · 관련도 **{p.relevance}**",
+            link, "",
+            "> [!question] 이 논문은 관련도가 기준 바로 아래라 **걸러졌습니다.**",
+            "> 잘못 뺀 것인지만 봐 주세요. 대부분 무관한 게 정상입니다 —",
+            "> 이 칸은 걸러내는 기준이 너무 좁아지지 않았는지 재는 용도입니다.", "",
+            "## 뺀 이유", "", p.relevance_reason or "(사유 없음)", "",
+            "## 초록 / 스니펫", "",
+            ("> " + (p.abstract or p.snippet or "(없음)").replace("\n", " ")), "",
+            feedback_block(p), "",
+            "---", f"*이 노트는 판정을 받기 위한 최소 노트입니다. 분석은 하지 않았습니다.*",
+        ])
+        path.write_text(body.rstrip() + "\n", encoding="utf-8")
         return path
 
     # ---------------------------------------------------------------- keyword
