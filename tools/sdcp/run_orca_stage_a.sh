@@ -42,11 +42,30 @@ MAXCORE=${MAXCORE:-6000}
 #   원인은 화학이 아니라 **전송층**이다: 한 대에서 도는데 OpenMPI 가 TCP BTL 로
 #   통신하다 끊겼다. 단일노드는 공유메모리(vader/sm)만 쓰면 되고, 그러면 이 오류
 #   계열이 원천 차단된다.
-#   ⚠ 판본 차이: OpenMPI 4.x = `vader` · 5.x = `sm`. 둘 다 적어 두면 없는 쪽은 무시된다.
+#   ⛔⛔ 2026-09-05 두 번째 실측 — **판본을 감지해서 골라야 한다.**
+#     공유메모리 BTL 이름이 판본마다 다르다: OpenMPI ≤4.x = `vader` · ≥5.x = `sm`.
+#     처음에 `self,vader,sm` 을 넣고 "없는 쪽은 무시된다" 고 적었는데 **틀렸다.**
+#     kgy(OpenMPI 4.1.6)에서 즉사했다:
+#         help-mpi-btl-sm.txt / btl sm is dead
+#         mca_bml_base_open() failed --> Returned "Not found" (-13)
+#         *** An error occurred in MPI_Init
+#     없는 컴포넌트를 목록에 넣으면 OpenMPI 는 **무시하지 않고** 그것을 열려다 실패하고,
+#     그러면 BTL 이 하나도 안 남아 MPI_Init 이 죽는다.
 #   ⚠ 이 설정은 **속도가 아니라 생존**을 위한 것이다 — 결과값을 바꾸지 않는다.
-#   손으로 끄려면 `STAGEA_MPI_BTL=` (빈 값) 으로 부른다.
-export OMPI_MCA_btl=${STAGEA_MPI_BTL-self,vader,sm}
-MPI_BTL_NOTE="${OMPI_MCA_btl:-<unset>}"
+#   ⚠ 판본을 못 읽으면 **아무것도 강제하지 않는다** (기본 동작 유지 · fail-open 이지만
+#     여기서는 그게 맞다 — 잘못된 BTL 을 강제하면 위처럼 즉사한다).
+#   손으로 지정: `STAGEA_MPI_BTL=self,vader` · 끄기: `STAGEA_MPI_BTL=` (빈 값)
+btl_for_ompi(){   # $1 = "4.1.6" 등 · → 공유메모리 BTL 목록 (모르면 빈 문자열)
+  case "${1%%.*}" in
+    ""|*[!0-9]*) echo "" ;;                # 판독 실패 → 강제하지 않는다
+    1|2|3|4)     echo "self,vader" ;;
+    *)           echo "self,sm" ;;         # 5.x 이상
+  esac
+}
+_ompi_ver=$(mpirun --version 2>/dev/null | head -1 | grep -oE '[0-9]+\.[0-9]+\.[0-9]+' | head -1)
+_btl_use=${STAGEA_MPI_BTL-$(btl_for_ompi "$_ompi_ver")}
+[ -n "$_btl_use" ] && export OMPI_MCA_btl="$_btl_use"
+MPI_BTL_NOTE="${_btl_use:-<unset>} (OpenMPI ${_ompi_ver:-미상})"
 
 ts(){ echo "[$(date +%H:%M:%S)] $*"; }
 sha(){ sha256sum "$1" 2>/dev/null | cut -d' ' -f1; }
@@ -98,6 +117,21 @@ EOS
   done
   chk "$(grep -q "Stage B" "$T/w/gs0/receipt.json" && echo 1 || echo 0)" \
       "receipt 에 조건⑥(이 결과로 Stage B 를 열지 않는다) 문구"
+
+  # ── 2026-09-05 MPI BTL 판본 감지 (내가 self,vader,sm 로 kgy 를 죽인 뒤 추가) ──
+  chk "$([ "$(btl_for_ompi 4.1.6)" = "self,vader" ] && echo 1 || echo 0)" \
+      "OpenMPI 4.x -> self,vader"
+  chk "$([ "$(btl_for_ompi 3.1.4)" = "self,vader" ] && echo 1 || echo 0)" \
+      "OpenMPI 3.x -> self,vader"
+  chk "$([ "$(btl_for_ompi 5.0.2)" = "self,sm" ] && echo 1 || echo 0)" \
+      "OpenMPI 5.x -> self,sm"
+  chk "$([ -z "$(btl_for_ompi '')" ] && echo 1 || echo 0)" \
+      "⛔음성: 판본을 못 읽으면 **아무것도 강제하지 않는다** (없는 BTL 을 강제하면 MPI_Init 이 죽는다)"
+  case "$(btl_for_ompi 4.1.6)" in *sm*) _has_sm=1 ;; *) _has_sm=0 ;; esac
+  chk "$([ "$_has_sm" = 0 ] && echo 1 || echo 0)" \
+      "⛔음성: 4.x 목록에 sm 이 **없다** — 2026-09-05 kgy 즉사(btl sm is dead)의 원인"
+  chk "$(grep -q 'mpi_btl' "$T/w/gs0/receipt.json" && echo 1 || echo 0)" \
+      "receipt 에 실제 적용된 BTL 을 남긴다 (숨기지 않는다)"
 
   # 음성: 정본이 실행 후 바뀌면 다음 실행이 멈춘다
   echo "# tampered" >> "$T/a/gs0/dp6_gs0_neutral.inp"
