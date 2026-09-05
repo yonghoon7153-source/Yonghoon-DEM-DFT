@@ -169,3 +169,83 @@ echo
 echo "옛 디렉터리는 손대지 않았다: $OLD"
 echo "1단계 새 디렉터리:          $NEW"
 echo "2단계 대조 사본:            $CMP   (대조용이지 산출물이 아니다 — 확인 후 지워도 된다)"
+
+# ── ⑥ 승격 (PROMOTE=1 일 때만) ────────────────────────────────────────────────
+# ⛔ 기본은 **안 한다.** 대조가 통과해도 승격은 자동이 아니다 — 사람이 켜야 한다.
+#   "봉인만 맞추고 옛 출력을 통과시키지 않는다"(회신 W P0-5)가 규칙이라, 여기서 하는 것은
+#   *봉인 교체* 가 아니라 **바이트 동일성 증거를 붙인 봉인 갱신**이다. 증거가 없으면 거부한다.
+[ "${PROMOTE:-0}" = "1" ] || { echo; echo "승격은 안 했다. 하려면 PROMOTE=1 로 다시 돌린다."; exit 0; }
+
+echo
+echo "=== ⑥ 승격 — 봉인 갱신 + 증서 ==="
+python3 - "$OLD" "$NEW" "$CMP" "$BUILDER" <<'PY'
+import hashlib, json, os, pathlib, subprocess, sys, time
+old, new, cmp_, builder = (pathlib.Path(x) for x in sys.argv[1:5])
+sha = lambda p: hashlib.sha256(p.read_bytes()).hexdigest()
+EXT = (".inp", ".xyz")
+
+def inputs(root, subs=None):
+    it = [root] if subs is None else [root / s for s in subs]
+    out = {}
+    for d in it:
+        if d.is_dir():
+            out.update({p.relative_to(root).as_posix(): sha(p)
+                        for p in sorted(d.rglob("*")) if p.is_file() and p.suffix in EXT})
+    return out
+
+# ⛔ 앞 단계 출력을 믿지 않고 **여기서 다시 센다** — 사람이 중간에 파일을 만졌을 수 있다.
+L_old, L_new = inputs(old, ["L", "L2"]), inputs(new, ["L", "L2"])
+S_old, S_new = inputs(old, ["S", "S0P"]), inputs(cmp_, ["S", "S0P"])
+bad = []
+if not L_new or L_old != L_new:
+    bad.append(f"phase L 입력 불일치 (옛 {len(L_old)} / 새 {len(L_new)})")
+if not S_old or S_old != S_new:
+    bad.append(f"S·S0P 입력 불일치 (옛 {len(S_old)} / 새 {len(S_new)})")
+if bad:
+    print("  ⛔ 승격 거부 —", " · ".join(bad))
+    raise SystemExit(1)
+
+man_p = old / "MANIFEST_PILOT.json"
+man = json.loads(man_p.read_text(encoding="utf-8"))
+root = builder.parent.parent.parent
+pre = root / man["prereg"]
+was, now = man.get("prereg_sha256"), sha(pre)
+if was == now:
+    print("  이미 최신 봉인이다 — 갱신할 것이 없다.")
+    raise SystemExit(0)
+if sha(builder) != man.get("builder_sha256"):
+    print("  ⛔ 승격 거부 — 빌더가 봉인과 다르다. 이건 문서 개정이 아니라 도구 변경이다.")
+    raise SystemExit(1)
+
+# 증서: 무엇을 근거로 봉인을 갈았는지. 없으면 나중에 세탁과 구분이 안 된다.
+digest_of = lambda m: hashlib.sha256(
+    json.dumps(m, sort_keys=True).encode()).hexdigest()
+att = {"schema": "polaron_reseal_attestation/v1",
+       "at": time.strftime("%Y-%m-%dT%H:%M:%S%z"),
+       "why": ("사전등록이 생성 이후 개정됐다. 개정이 생성 규칙을 바꿨는지 "
+               "재생성 후 바이트 대조로 확인했고, 바뀌지 않았으므로 봉인만 갱신한다."),
+       "prereg": man["prereg"], "prereg_sha256_was": was, "prereg_sha256_now": now,
+       "builder_sha256": man.get("builder_sha256"), "builder_unchanged": True,
+       "compared": {"phase_L_files": len(L_new), "phase_L_digest": digest_of(L_new),
+                    "S_S0P_files": len(S_new), "S_S0P_digest": digest_of(S_new)},
+       "regenerated_from": {"stage1": str(new), "stage2": str(cmp_)},
+       "⛔_이_증서가_보증하지_않는_것": [
+           "probe 판정 자체 (개입이 일어났는가는 --polaron_probe_verdict 가 본다)",
+           "사전등록 개정 **내용**의 타당성 — 결박만 봤다",
+           "phase L·probe 의 ORCA 출력이 옳은지"]}
+(old / "RESEAL_ATTESTATION.json").write_text(
+    json.dumps(att, ensure_ascii=False, indent=1), encoding="utf-8")
+man.setdefault("prereg_reseal_history", []).append(
+    {"at": att["at"], "was": was, "now": now, "attestation": "RESEAL_ATTESTATION.json"})
+man["prereg_sha256"] = now
+man_p.write_text(json.dumps(man, ensure_ascii=False, indent=1), encoding="utf-8")
+print(f"  ✅ 봉인 갱신: {was[:16]}… → {now[:16]}…")
+print(f"     증서: {old / 'RESEAL_ATTESTATION.json'}")
+print(f"     대조: phase L {len(L_new)}개 · S/S0P {len(S_new)}개 (여기서 다시 셌다)")
+PY
+rc=$?
+[ "$rc" -eq 0 ] || exit "$rc"
+
+echo
+echo "=== ⑦ probe 판정 ==="
+python3 "$BUILDER" --polaron_probe_verdict "$OLD" 2>&1 | tail -30
