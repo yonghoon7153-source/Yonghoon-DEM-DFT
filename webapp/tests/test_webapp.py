@@ -2253,3 +2253,70 @@ def test_sdcp_closure_consistency():
     v = json.dumps(cl.get("닫는_근거_체크리스트", {}).get("값의_안정성", ""), ensure_ascii=False)
     assert not ("basin-matched" in v and "제거" not in v), \
         "혼합-basin E_ads 시드 비교가 마감 근거로 남아 있다 (회신 M 반려 산술)"
+
+
+# ═══════════════════════════════════════════════════════════════════════════
+# 회신 AW P0-2 — 철회된 값이 **현재-facing 표면**에서 되살아나지 않는가
+# ═══════════════════════════════════════════════════════════════════════════
+#: 감사 대상 표면. AW 가 지목한 넷 + 대시보드.
+#: ⚠ 여기 라우트를 늘리는 것이 이 시험을 강하게 만드는 유일한 방법이다 —
+#:   목록에 없는 화면은 아무리 틀려도 안 잡힌다.
+_RETRACTION_SURFACES = ("/", "/todo", "/log", "/compare", "/glossary", "/sdcp", "/methods")
+
+
+def _visible_text(html: str) -> str:
+    """태그·스크립트를 걷어낸 **사람이 읽는 글**. 속성 안 문자열은 세지 않는다."""
+    body = re.sub(r"<script\b.*?</script>", " ", html, flags=re.S)
+    body = re.sub(r"<style\b.*?</style>", " ", body, flags=re.S)
+    return re.sub(r"<[^>]*>", " ", body)
+
+
+def test_retracted_canonical_values_are_bound_on_every_surface():
+    """⛔음성 AW P0-2: 철회된 정본값이 화면에 **결속 없이** 나오면 안 된다.
+
+    목록을 손으로 적지 않는다 — `canonical.retracted_values()` 가 레지스트리의
+    `status=retracted` 에서 파생한다. 값을 되살리면 이 검사도 같이 풀린다.
+
+    ⛔ 지우라는 뜻이 아니다. 역사는 남기되 **그 숫자 바로 옆**(앞뒤 140자)에
+      철회·보류 표지가 있어야 한다. 상단 배너 하나로는 부족하다 — 스크롤하면
+      배너는 사라지고 숫자만 남는다 (회신 AW P0-2 문구).
+    """
+    rv = C.retracted_values()
+    assert rv, "전제: 철회된 정본값이 실제로 있다 (b2o3 MD_Ea 0.199)"
+    c = A.app.test_client()
+    misses = []
+    for url in _RETRACTION_SURFACES:
+        r = c.get(url)
+        if r.status_code != 200:
+            continue
+        body = _visible_text(r.get_data(as_text=True))
+        for v in rv:
+            i = 0
+            while (i := body.find(v["text"], i)) != -1:
+                # 숫자의 일부(0.1990 / 10.199)로 걸린 것은 세지 않는다
+                nxt = body[i + len(v["text"]): i + len(v["text"]) + 1]
+                prv = body[i - 1: i] if i else " "
+                if nxt.isdigit() or prv.isdigit():
+                    i += len(v["text"])
+                    continue
+                ctx = body[max(0, i - 140): i + len(v["text"]) + 140]
+                if not C.is_prohibition_context(ctx):
+                    misses.append((url, v["metric"], v["system"], v["text"],
+                                   " ".join(ctx.split())[:160]))
+                i += len(v["text"])
+    assert not misses, "철회값이 결속 없이 노출된다:\n" + "\n".join(
+        f"  {u} · {m}/{s} = {t}\n      …{ctx}…" for u, m, s, t, ctx in misses)
+
+
+def test_retraction_binding_check_can_actually_fail():
+    """⛔음성: 위 시험이 **아무것도 안 잡는 상태**로 초록이 되는 것을 막는다.
+
+    `is_prohibition_context` 가 항상 True 를 돌려주거나 `retracted_values()` 가
+    빈 리스트가 되면 위 시험은 통과한다 — 그건 통과가 아니라 검사 소실이다.
+    """
+    assert not C.is_prohibition_context("b2o3 의 MD Ea 는 0.199 eV 다. modelc 와 동급이다.")
+    assert C.is_prohibition_context("⛔ 0.199 는 철회됐다 — 800 K 위에서 굽는다")
+    assert C.is_prohibition_context("MD Ea 0.199 (⚠ 전구간 단일 직선, 인용 불가)")
+    # 파생 경로가 살아 있는가 — 하드코딩이면 레지스트리를 고쳐도 안 바뀐다
+    got = {(v["metric"], v["system"]) for v in C.retracted_values()}
+    assert ("MD_Ea_eV", "b2o3") in got, got

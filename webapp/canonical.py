@@ -204,6 +204,39 @@ _GATE_LABEL = {
 }
 
 
+def _by_id(records, key, what, path) -> dict:
+    """리스트를 {id: record} 로 바꾸되 **중복 ID 를 조용히 덮지 않는다**.
+
+    ⛔⛔ 회신 AW P0-4 (2026-09-01) — 종전 세 원장이 전부 `{d[key]: d for d in raw}` 였다.
+      dict 컴프리헨션은 같은 키가 두 번 나오면 **뒤엣것으로 조용히 덮는다.** 그래서
+      *무승인 `active` 기록 뒤에 같은 ID 의 `proposed` 를 하나 더 두면* validator 가
+      active 기록 자체를 못 보고 통과한다 — 승인 검사를 우회하는 가장 싼 경로다.
+      원장은 append-only 라 이런 중복이 **실수로도** 생긴다(같은 결정을 두 번 등록).
+
+    ⇒ 중복을 만나면 예외를 던진다. "어느 쪽이 맞나" 는 사람이 정할 일이지
+      마지막 줄이 이기게 둘 일이 아니다.
+
+    ⛔ 이 함수가 못 하는 것: 두 기록 중 **어느 쪽이 옳은지** 판정하지 않는다.
+      충돌이 있다는 사실만 알린다.
+    """
+    out, dup = {}, {}
+    for r in records:
+        i = r.get(key)
+        if i is None:
+            raise RuntimeError(f"⛔ {path} 에 {key} 없는 {what} 기록이 있다 (fail-closed)")
+        if i in out:
+            dup.setdefault(i, 1)
+            dup[i] += 1
+        out[i] = r
+    if dup:
+        detail = ", ".join(f"{i}×{n}" for i, n in sorted(dup.items()))
+        raise RuntimeError(
+            f"⛔ {path} 에 {what} ID 가 중복이다 ({detail}) — 조용히 덮으면 "
+            f"승인·게이트 검사가 앞 기록을 통째로 못 본다. 원장에서 하나로 정리할 것 "
+            f"(회신 AW P0-4, fail-closed)")
+    return out
+
+
 ASSESSMENTS_PATH = "db/governance/assessments.json"
 
 
@@ -222,7 +255,7 @@ def assessments(root=None) -> dict:
     except Exception as exc:                        # noqa: BLE001
         raise RuntimeError(f"⛔ {ASSESSMENTS_PATH} 를 못 읽는다 — 판정 원장 없이 지위를 "
                            f"계산하지 않는다 (fail-closed): {exc!r}") from exc
-    return {a["assessment_id"]: a for a in raw.get("assessments", [])}
+    return _by_id(raw.get("assessments", []), "assessment_id", "판정", ASSESSMENTS_PATH)
 
 
 def gate_outcome(e: dict, root=None):
@@ -284,6 +317,49 @@ LINEAGE_BINDING = ("missing", "prose_only", "unverified", "unwired", "wired", "v
 DECISION_STATES = frozenset(("proposed", "active", "superseded", "retracted", "rejected"))
 NUMERIC_REPRO = ("none", "approximate", "exact")
 
+#: 금지·역사 문맥 표지 — 이 중 하나가 주변에 있으면 그 출현은 **주장이 아니라 금지**다.
+#: ⛔ 회신 AW P0-2 (2026-09-05) — 종전엔 이 목록이 시험 파일마다 복사돼 있었다.
+#:   표지를 한쪽에만 더하면 같은 문장이 한 화면에선 통과하고 다른 화면에선 걸린다.
+#:   철회 서술 검사는 **여러 화면이 같은 어휘를 써야** 의미가 있으므로 여기 하나로 둔다.
+PROHIBITION_MARKS = (
+    "⛔", "⚠", "금지", "철회", "보류", "않는다", "가 아니다", "이 아니다", "가 아니라",
+    "이 아니라", "못 쓴다", "안 쓴다", "못 쓰는", "라 쓰지", "라고 쓰지", "쓸 수 없다",
+    "HISTORICAL", "BLOCKED", "SUPERSEDED", "RETRACTED", "미해결", "비인용", "무효",
+    "인용 불가", "굽는다", "단일 직선",
+)
+
+
+def is_prohibition_context(ctx: str) -> bool:
+    """문맥에 금지·역사 표지가 있나. 없으면 그 출현은 **주장으로 읽힌다**.
+
+    ⛔ 이 함수가 못 하는 것
+      · 표지가 **그 값에 대한** 것인지는 못 본다. 옆 문장의 ⚠ 도 표지로 센다 —
+        느슨한 쪽이 맞다(올바른 글을 지우는 실수가 더 비싸다). 정밀도는 창 폭으로 조절한다.
+      · 표지가 없다고 그 문장이 **틀렸다**는 뜻은 아니다. "결속이 없다" 는 뜻이다.
+    """
+    return any(m in ctx for m in PROHIBITION_MARKS)
+
+
+def retracted_values(reg=None, root=None) -> list:
+    """철회된 정본값 목록 — `[{"metric","system","text","why","instead"}...]`.
+
+    화면 검사가 **하드코딩 없이** "이 숫자는 철회됐다" 를 알기 위한 단일 출처다.
+    `status=retracted` 인 레지스트리 항목에서 파생하므로, 값을 되살리면 검사도 같이 풀린다.
+    """
+    reg = reg if reg is not None else registry(root=root)
+    out = []
+    for e in reg.get("entries", []):
+        if e.get("status") != "retracted":
+            continue
+        v = e.get("value")
+        if v is None:
+            continue
+        r = e.get("retracted") or {}
+        out.append({"metric": e.get("metric"), "system": e.get("system"),
+                    "text": f"{float(v):g}", "why": r.get("why", ""),
+                    "instead": r.get("usable_instead", "")})
+    return out
+
 
 def decisions(root=None) -> dict:
     """판례 원장. {decision_id: record}. 없으면 빈 dict."""
@@ -295,7 +371,7 @@ def decisions(root=None) -> dict:
         raw = json.loads(p.read_text(encoding="utf-8"))
     except Exception as exc:                        # noqa: BLE001
         raise RuntimeError(f"⛔ decisions.json 을 못 읽는다 (fail-closed): {exc!r}") from exc
-    return {d["id"]: d for d in raw.get("decisions", [])}
+    return _by_id(raw.get("decisions", []), "id", "결정", "db/governance/decisions.json")
 
 
 def decision_digest(d: dict) -> str:
@@ -333,7 +409,7 @@ def artifacts(root=None) -> dict:
         raw = json.loads(p.read_text(encoding="utf-8"))
     except Exception as exc:                        # noqa: BLE001
         raise RuntimeError(f"⛔ artifacts.json 을 못 읽는다 (fail-closed): {exc!r}") from exc
-    return {a["id"]: a for a in raw.get("artifacts", [])}
+    return _by_id(raw.get("artifacts", []), "id", "산출물", "db/governance/artifacts.json")
 
 
 def validate_artifacts(root=None) -> list:
@@ -530,7 +606,14 @@ def validate_governance(reg: dict = None, root=None) -> list:
 def validate(reg: dict, root=None) -> list:
     """(entry, 문제) 목록. 빈 목록 = 레지스트리가 원자료와 일치한다."""
     bad = []
+    # ⛔ 회신 AW P0-4 — `index()` 가 같은 (metric, system) 을 조용히 덮던 것을 표식으로
+    #   바꿨다. 그 표식을 **여기서 위반으로 내지 않으면** 표식만 달고 아무 일도 안 난다.
+    #   index() 를 여기서 한 번 돌려 충돌을 세운다 (부작용으로 항목에 표식이 붙는다).
+    index(reg)
     for e in reg.get("entries", []):
+        if e.get("_index_conflict"):
+            bad.append((e, f"색인 충돌 — {e['_index_conflict']}. 배지·툴팁이 어느 항목을 "
+                           f"보여줄지 정해져 있지 않다 (회신 AW P0-4)"))
         # ── status=retracted ────────────────────────────────────────────────
         # ⛔ 2026-08-25 — 철회된 값은 **원자료에 살아 있으면 안 된다**(철회하면서 키를
         #   _RETRACTED_… 로 옮기거나 문자열로 바꾼다). 그래서 수치 대조가 성립하지 않는다.
@@ -609,7 +692,20 @@ def canonical_map(reg, metric, group=None, status=("canonical",)) -> dict:
     ⚠ group 을 안 주면 **그 metric 의 모든 프로토콜이 섞인다.** 표시용으로는 괜찮지만
       순위·최저값·레이더에는 반드시 group 을 지정할 것 (MD_Ea 가 정확히 그 사고를 냈다).
     """
-    return {e["system"]: e["value"] for e in entries(reg, metric, group, status)}
+    sel = entries(reg, metric, group, status)
+    # ⛔ 회신 AW P0-4 — 같은 system 이 두 번 나오면 종전엔 **마지막 값이 이겼다.**
+    #   화면·순위·레이더가 전부 이 dict 를 쓰므로, 중복은 조용히 "다른 계산의 값" 을
+    #   정본 자리에 앉힌다. group 을 안 준 호출에서 특히 쉽게 난다(프로토콜 혼입).
+    seen = {}
+    for e in sel:
+        s = e["system"]
+        if s in seen and seen[s] != e["value"]:
+            raise RuntimeError(
+                f"⛔ canonical_map({metric!r}, group={group!r}) 에 system {s!r} 이 값이 다른 채 "
+                f"두 번 있다 ({seen[s]} vs {e['value']}) — 마지막 값이 조용히 이기면 안 된다. "
+                f"comparison_group 을 지정하거나 레지스트리에서 하나로 정리할 것 (회신 AW P0-4)")
+        seen[s] = e["value"]
+    return seen
 
 
 def groups_of(reg, metric) -> dict:
@@ -621,5 +717,25 @@ def groups_of(reg, metric) -> dict:
 
 
 def index(reg) -> dict:
-    """(metric, system) → entry. 배지·툴팁이 상태/출처를 바로 꺼내 쓰기 위한 색인."""
-    return {(e.get("metric"), e.get("system")): e for e in reg.get("entries", [])}
+    """(metric, system) → entry. 배지·툴팁이 상태/출처를 바로 꺼내 쓰기 위한 색인.
+
+    ⛔ 회신 AW P0-4 — 같은 `(metric, system)` 이 둘이면 종전엔 마지막 항목이 덮었다.
+      배지·툴팁이 **다른 항목의 status·출처**를 보여주게 되고, `validate()` 는 그걸
+      문제로 내지 않았다. 색인은 조용히 고르지 않는다 — 충돌을 항목에 적어 둔다.
+
+    ⚠ 여기서는 예외를 던지지 않는다. 색인은 **화면 전체**가 쓰기 때문에 한 항목의 중복이
+      사이트를 통째로 죽이면 안 된다. 대신 `_index_conflict` 를 달아 `validate()` 가
+      위반으로 내고, 배지가 그 사실을 표시할 수 있게 한다.
+    """
+    out = {}
+    for e in reg.get("entries", []):
+        k = (e.get("metric"), e.get("system"))
+        if k in out:
+            prev = out[k]
+            note = (f"같은 (metric, system) 항목이 둘 이상이다 — "
+                    f"group {prev.get('comparison_group')!r} / {e.get('comparison_group')!r}, "
+                    f"값 {prev.get('value')} / {e.get('value')}")
+            prev["_index_conflict"] = note
+            e["_index_conflict"] = note
+        out[k] = e
+    return out

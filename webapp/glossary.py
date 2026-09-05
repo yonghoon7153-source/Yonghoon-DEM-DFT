@@ -187,7 +187,7 @@ GLOSSARY = [
 {"id":"arrhenius", "doc":"md", "doc_sec":"§5 Arrhenius — 활성화에너지","term":"Arrhenius / Ea","full":"활성화에너지 · 전도도","cat":"이온 수송",
  "what":"확산이 온도에 지수적으로 의존: D=D₀·exp(−Ea/kT). log D vs 1/T 직선의 기울기 = <b>활성화에너지 Ea</b>(낮을수록 빠른 전도). σ는 Nernst–Einstein으로 D에서 환산.",
  "how":"3온도(600/800/1000K) D를 log-1/T에 피팅. 저온(400/500K)은 통계부족으로 제외 판정. Ea 오차막대는 시드 분산.",
- "ours":"<b>단일 궤적 deck 앵커</b>: comp1 0.253 / modelc 0.224 (comp1↔modelc 비교 전용, 시드 오차막대 없음). <b>멀티시드</b>: modelc 0.197±0.032 · b2o3 0.199±0.034 (3-seed×3-T) / LPSOCl 0.287±0.024 (4-seed×3-T) / comp2 0.275±0.033 (3-seed). LPSOCl vs modelc = +90 meV(둘 다 멀티시드). comp2는 800K 시드 산포가 커서 300K 외삽 σ 비율 판정 보류(0.12–1.48×, inconclusive). ⚠ 프로토콜이 다른 값끼리 빼면 안 됨."},
+ "ours":"<b>단일 궤적 deck 앵커</b>: comp1 0.253 / modelc 0.224 (comp1↔modelc 비교 전용, 시드 오차막대 없음). <b>멀티시드</b>: modelc 0.197±0.032 (3-seed×3-T) · <s>b2o3 0.199±0.034</s> <b style='color:#be123c'>⛔ 철회 (2026-08-23)</b> — 전구간 단일 직선 적합인데 아레니우스가 800 K 위에서 굽는다(600→800 0.222 / 800→1000 0.077 eV). 저온 구간 Ea 로만 쓴다 / LPSOCl 0.287±0.024 (4-seed×3-T) / comp2 0.275±0.033 (3-seed). LPSOCl vs modelc = +90 meV(둘 다 멀티시드). comp2는 800K 시드 산포가 커서 300K 외삽 σ 비율 판정 보류(0.12–1.48×, inconclusive). ⚠ 프로토콜이 다른 값끼리 빼면 안 됨."},
 
 # ── 계면·안정성 ───────────────────────────────────────
 {"id":"phonon","term":"Phonon","full":"격자 진동 · 동역학 안정성","cat":"계면·안정성",

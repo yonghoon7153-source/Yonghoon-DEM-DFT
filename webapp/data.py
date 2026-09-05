@@ -1245,7 +1245,9 @@ def sei_axes() -> dict:
                       + ("  ·  참조계 " + " / ".join(
                           f"{p} {r['Ea_effective_eV']:.3f}"
                           for p, r in sorted(_extra.items())) if _extra else "")
-                      + "  eV  ⚠ 전건 셀 수렴 미시험 — **상 사이 비교용**"
+                      # ⚠ 이 카드는 **평문**으로 렌더된다 — 마크다운 강조를 쓰면
+                      #   `**` 가 화면에 그대로 찍힌다 (2026-08-07 회귀의 재발).
+                      + "  eV  ⚠ 전건 셀 수렴 미시험 — 상 사이 비교용으로만"
                       + ("  ⛔ 인용 자격 없음 (n_citable 0)" if neb_retracted else ""))
                      if neb else
                      "DFT CI-NEB 계산 중 (협업자 요청 6종)")),

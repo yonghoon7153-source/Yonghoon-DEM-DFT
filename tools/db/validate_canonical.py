@@ -486,6 +486,53 @@ def selftest():
     chk(any("actor_id 가 없다" in v for v in _gov([D_NOWHO], [], [])),
         "[음성] 누가 승인했는지 없으면 잡는다")
 
+    # ── 중복 ID · 중복 색인 (회신 AW P0-4, 2026-09-05) ─────────────────────
+    # 종전 세 원장이 전부 `{r[id]: r for r in ...}` 였다. dict 컴프리헨션은 같은 키를
+    # **마지막 것으로 조용히 덮는다** — 무승인 active 뒤에 같은 ID 의 proposed 를 두면
+    # 승인 검사가 active 기록 자체를 못 보고 통과한다. 셋 다 fail-closed 로 막았다.
+    def _raises(fn, frag):
+        try:
+            fn()
+        except RuntimeError as ex:
+            return frag in str(ex)
+        except Exception:
+            return False
+        return False
+
+    D_DUPA = {"id": "D-dup", "decision_state": "active", "slot": "sd",
+              "ratification": {"state": "ratified", "role": "scientific_owner"}}
+    D_DUPP = {"id": "D-dup", "decision_state": "proposed", "slot": "sd",
+              "ratification": {"state": "proposed"}}
+    chk(_raises(lambda: _gov([D_DUPA, D_DUPP], [], []), "ID 가 중복"),
+        "[음성] ★ 무승인 active 를 같은 ID 의 proposed 로 가리는 경로를 막는다")
+    chk(_raises(lambda: _gov([D_OK], [A_OK, dict(A_OK)], [E_OK]), "ID 가 중복"),
+        "[음성] 판정 원장의 중복 ID 를 잡는다")
+    chk(_raises(lambda: _gov([{**D_OK, "id": None}], [], []), "id 없는"),
+        "[음성] ID 없는 결정 기록을 잡는다")
+
+    # 산출물 원장도 같은 경로다 (artifacts.json 은 위 _gov 가 안 만들므로 직접 쓴다)
+    (gd / "db/governance/artifacts.json").write_text(
+        json.dumps({"artifacts": [{"id": "R-1"}, {"id": "R-1"}]}), encoding="utf-8")
+    chk(_raises(lambda: C.artifacts(root=gd), "ID 가 중복"),
+        "[음성] 산출물 원장의 중복 ID 를 잡는다")
+    (gd / "db/governance/artifacts.json").unlink()
+
+    # canonical 색인 — 같은 (metric, system) 이 둘이면 배지가 어느 쪽인지 정해져 있지 않다
+    _dupreg = {"entries": [
+        {"metric": "M", "system": "sys", "value": 1.0, "status": "canonical",
+         "comparison_group": "g1"},
+        {"metric": "M", "system": "sys", "value": 2.0, "status": "canonical",
+         "comparison_group": "g2"}]}
+    chk(any("색인 충돌" in p for _e, p in C.validate(_dupreg, root=gd)),
+        "[음성] ★ 같은 (metric, system) 두 항목을 validate 가 위반으로 낸다")
+    chk(_raises(lambda: C.canonical_map(_dupreg, "M"), "두 번 있다"),
+        "[음성] canonical_map 이 마지막 값으로 조용히 덮지 않는다")
+    _okreg = {"entries": [
+        {"metric": "M", "system": "a", "value": 1.0, "status": "canonical"},
+        {"metric": "M", "system": "b", "value": 2.0, "status": "canonical"}]}
+    chk(C.canonical_map(_okreg, "M") == {"a": 1.0, "b": 2.0},
+        "[양성] 중복이 없으면 그대로 돌려준다")
+
     import shutil
     shutil.rmtree(td, ignore_errors=True)
     print("selftest PASS" if ok else "selftest FAIL")
