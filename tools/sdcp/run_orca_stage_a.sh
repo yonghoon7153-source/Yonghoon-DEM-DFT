@@ -34,6 +34,20 @@ ORCA=${ORCA:-orca}
 NPROCS=${NPROCS:-8}
 MAXCORE=${MAXCORE:-6000}
 
+# ⛔⛔ 2026-09-05 실측 — gs3 이 **같은 오류로 두 번** 죽었다 (09-05 02:45 · 14:16,
+#   둘 다 `nprocs 8`, 둘 다 2시간을 태운 뒤):
+#       [btl_tcp.c:559] recv(23) failed: Connection reset by peer (104)   × 수십 줄
+#       ORCA finished by error termination in LEANSCF
+#       Calling Command: mpirun -np 8 .../orca_leanscf_mpi
+#   원인은 화학이 아니라 **전송층**이다: 한 대에서 도는데 OpenMPI 가 TCP BTL 로
+#   통신하다 끊겼다. 단일노드는 공유메모리(vader/sm)만 쓰면 되고, 그러면 이 오류
+#   계열이 원천 차단된다.
+#   ⚠ 판본 차이: OpenMPI 4.x = `vader` · 5.x = `sm`. 둘 다 적어 두면 없는 쪽은 무시된다.
+#   ⚠ 이 설정은 **속도가 아니라 생존**을 위한 것이다 — 결과값을 바꾸지 않는다.
+#   손으로 끄려면 `STAGEA_MPI_BTL=` (빈 값) 으로 부른다.
+export OMPI_MCA_btl=${STAGEA_MPI_BTL-self,vader,sm}
+MPI_BTL_NOTE="${OMPI_MCA_btl:-<unset>}"
+
 ts(){ echo "[$(date +%H:%M:%S)] $*"; }
 sha(){ sha256sum "$1" 2>/dev/null | cut -d' ' -f1; }
 
@@ -287,9 +301,9 @@ while read -r d t; do
   [ -f "$SD/${t}_run.xyz" ] && cp "$SD/${t}_run.xyz" "$SD/${t}_final.xyz"
   [ -f "$SD/${t}_final.xyz" ] || { [ -f "$SD/$t.xyz" ] && cp "$SD/$t.xyz" "$SD/${t}_final.xyz"; }
 
-  python3 - "$SD" "$t" "$A/$d" "$BSHA" "$BCOMMIT" "$CMD" "$VER" "$RC" <<'PY'
+  python3 - "$SD" "$t" "$A/$d" "$BSHA" "$BCOMMIT" "$CMD" "$VER" "$RC" "$MPI_BTL_NOTE" <<'PY'
 import hashlib, json, os, sys
-sd, t, adir, bsha, bcommit, cmd, ver, rc = sys.argv[1:9]
+sd, t, adir, bsha, bcommit, cmd, ver, rc, mpibtl = sys.argv[1:10]
 h = lambda p: (hashlib.sha256(open(p,'rb').read()).hexdigest()
                if os.path.isfile(p) else None)
 start, final = f"{sd}/{t}_start.xyz", f"{sd}/{t}_final.xyz"
@@ -306,6 +320,10 @@ r = {
  "out_sha256": h(f"{sd}/{t}.out"),
  "orca_version": ver or None,
  "command": cmd,
+ "mpi_btl": mpibtl,
+ "⚠_mpi_btl_왜_있나": ("단일노드인데 OpenMPI 가 TCP BTL 로 통신하다 끊겨 gs3 이 두 번 죽었다 "
+                       "(2026-09-05 02:45·14:16 · `Connection reset by peer` in orca_leanscf_mpi). "
+                       "공유메모리만 쓰도록 고정한 것이고 **결과값을 바꾸지 않는다**."),
  "builder_sha256": bsha, "repo_commit": bcommit,
  "⛔_조건6": "이 결과로 Stage B 를 열지 않는다 — P0-2~5 수정 후 실제 Stage A 산출물로 재심사 (회신 R4)",
  "⚠": "이 8개는 서로 다른 시작 conformer 이지 통계적으로 독립인 8개 반복측정이 아니다 (회신 R4)",
