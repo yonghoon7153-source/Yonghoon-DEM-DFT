@@ -1,0 +1,3 @@
+! RKS r2SCAN-3c Opt TightSCF Hirshfeld
+%maxcore 6000
+* xyzfile 0 1 dp6_gs1_neutral.xyz
