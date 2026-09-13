@@ -301,3 +301,10 @@ Rc == 0                973,137
 ### 8-3. 코호트 봉인 (`area_s2_cohort.tsv`) — RAW_OK 30 · mono_AM_S 15 + mono_AM_P 15 · bimodal 0
 설계족 정본 = `lhs_design_20260818.csv` (덱 헤더 정규식은 실제 덱에 안 맞아 31건 UNKNOWN → refill).
 해시 열은 사용자 푸시본과 바이트 동일.  bimodal `lhs00_000–099` 원자료는 로컬에 없음 (ibb 미확인).
+
+### 8-4. ρ 도구 (`measure_rho.py`) + 덤프 step 불일치 (SELF-30)
+- ρ: 생산 `solve_network` 를 cg 허용오차 ×0.1 로 두 번.  **실측 규약**: scipy 1.17 에서 `tol=1e-8` 은
+  TypeError → `atol=1e-8`(절대) 로 돈다.  직접해(spsolve, n_nodes ≤ 30000) 경로는 허용오차가 없다(Δ=0 은
+  "잰 0" 아님).  ⬜ 사용자 기계 런 대기.
+- ibb: 마지막 덤프 atom 1~6 MB / contact 9~45 MB, 100건 ≈ 2~3 GB.  ⚠ **atom_995000 ↔ contact_2.4M+**
+  step 불일치 — S0·L1 census 가 이 조합 위에 있다.  995000 뒤 입자 이동 여부 미확정 (SELF-30).

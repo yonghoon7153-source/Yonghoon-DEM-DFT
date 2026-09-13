@@ -168,6 +168,8 @@ run 'plastic_coverage    --selftest' python3 scripts/plastic_coverage.py --selft
 run 'review_before_after --selftest' python3 scripts/build_review_before_after.py --selftest
 #  ★ 2026-09-13 (계약 §5-v3 ③) — S3 코호트 봉인: raw 전수 + sha256, 솔버 성공 여부를 보지 않는다.
 run 'seal_area_cohort   --selftest' python3 scripts/seal_area_cohort.py --selftest
+#  ★ 2026-09-13 (계약 §5-v3 ①) — ρ 측정: 생산 솔버를 허용오차 ×0.1 로 두 번, 실제 경로·kwarg 기록.
+run 'measure_rho        --selftest' python3 scripts/measure_rho.py --selftest
 run 'check_doc_refs          --selftest' python3 scripts/check_doc_refs.py --selftest
 run 'check_cohort_packages  (커밋된 패키지 ↔ 원장)' python3 scripts/check_cohort_packages.py
 run 'audit_adjudication   (원시 감사 ↔ 판정 원장)' python3 scripts/check_audit_adjudication.py
