@@ -467,6 +467,11 @@ def compare_frames(ref, new, li_symbol='Li', cutoff=3.0):
             changed.append({'atom_index': k, 'lost': sorted(sr - sn), 'gained': sorted(sn - sr)})
         for jj in sr & sn:
             dmax = max(dmax, abs(nr[k][jj] - nn[k][jj]))
+    # Li 변위 **분포**. 서술이지 판정이 아니다 — 전체 RMSD 가 한 원자의 이동을 숨기므로
+    # "얼마나 많은 Li 가 얼마나 움직였나" 를 그대로 낸다. ⛔ 어떤 칸도 골짜기 문턱이 아니다.
+    _edges = (0.1, 0.25, 0.5, 1.0, 2.0)
+    out['Li_disp_count_above_A'] = {f'{e:g}': int((mag[is_li] > e).sum()) for e in _edges}
+    out['⚠_분포는_판정이_아니다'] = '칸 경계는 서술용이다. 어떤 칸도 "같은/다른 골짜기" 를 뜻하지 않는다'
     out.update({'n_Li_with_neighbor_set_changed': len(changed),
                 'Li_neighbor_changes': changed[:20],
                 'Li_CN_ref_mean': (float(np.mean(cn_r)) if cn_r else None),
@@ -499,6 +504,154 @@ def _select_nearest_converged(frames, conv, V0):
     return {'index': i, 'fraction': conv[i].get('fraction'), 'abs_dV_A3': float(dv),
             'V_point_A3': float(frames[i].get_volume()), 'atoms': frames[i],
             'tie_rule': '|ΔV| 동률이면 낮은 인덱스(작은 분율)'}
+
+
+def _frame_meta(atoms, path):
+    """프레임 한 장에서 짝짓기에 필요한 것만 뽑는다. **info 가 정본이고 파일명은 대조용**이다.
+
+    ⛔ 파일명에서 파싱하지 않는다 — 구조 이름에 밑줄이 있어(`P1_Al2O3_A`) 조용히 어긋난다.
+      대신 파일명이 info 와 **다르면 그 사실을 적어서 내보낸다**(`name_mismatch`).
+    """
+    i = atoms.info
+    m = {'file': Path(path).name,
+         'run_tag': (str(i.get('run_tag')) if i.get('run_tag') is not None else None),
+         'structure': (str(i.get('structure')) if i.get('structure') is not None else None),
+         'direction': (str(i.get('direction')) if i.get('direction') is not None else None),
+         'point_index': (int(i['point_index']) if i.get('point_index') is not None else None),
+         'fraction': (float(i['fraction']) if i.get('fraction') is not None else None),
+         'point_id': (str(i.get('point_id')) if i.get('point_id') is not None else None),
+         'energy_eV': (float(i['energy_eV']) if i.get('energy_eV') is not None else None),
+         'V_actual_A3': (float(i['V_actual_A3']) if i.get('V_actual_A3') is not None else None),
+         'converged': (bool(i['converged']) if i.get('converged') is not None else None),
+         'final_fmax_eV_A': (float(i['final_fmax_eV_A'])
+                             if i.get('final_fmax_eV_A') is not None else None)}
+    mm = []
+    st = m['file']
+    if m['run_tag'] and not st.startswith(m['run_tag'] + '__'):
+        mm.append('run_tag')
+    if m['direction'] and f"_{m['direction']}_" not in st:
+        mm.append('direction')
+    if m['fraction'] is not None and f"_f{m['fraction']:.4f}" not in st:
+        mm.append('fraction')
+    if mm:
+        m['name_mismatch'] = mm          # 조용히 넘기지 않는다 — 파일명이 뜻을 잃었다는 신호
+    return m
+
+
+def pair_branch_frames(paths, li_symbol='Li', cutoff=3.0, max_changes=20):
+    """저장된 점별 프레임에서 **같은 부피점의 상승/하강 갈래를 짝지어** 비교한다 (회신 BQ-2 Q1·Q3).
+
+    한다: `_save_point_frame` 이 남긴 extxyz 를 읽어 `(run_tag, structure, fraction)` 으로 짝을
+      만들고 `compare_frames(ref=up, new=down)` 를 돌린다. 점마다 `dE = E_up − E_down` 도 적는다
+      — `_eos_sweep_core` 의 `_d` 와 **같은 부호 규약**이라 기록된 이력현상 벡터와 대조된다.
+
+    ⛔ **못 하는 것 · 하지 않는 것**
+      · 골짜기 이동을 판정하지 않는다. `continuity` 는 이웃 ID 집합의 사실 진술이고,
+        끝점 두 장의 비교는 *중간 경로에 전환이 없었다는 증명이 아니다*
+        (회신 BQ-3 Q5-3 에서 `RMSD < 0.1 Å = 같은 골짜기` 문턱 **불승인**).
+      · 미수렴 점을 버리지 않는다 — `either_unconverged` 로 표시하고 **줄은 남긴다**.
+      · 짝이 없는 점을 조용히 넘기지 않는다 — `unpaired` 에 분율과 함께 적는다.
+      · 왜 갈렸는지(모형·완화기·창) 를 가리지 못한다. 갈렸다는 **사실만** 낸다.
+    """
+    from ase.io import read as _ase_read
+    files = []
+    import glob as _g
+    for pat in ([paths] if isinstance(paths, (str, Path)) else list(paths)):
+        p = Path(pat)
+        files.extend(sorted(p.glob('*.extxyz')) if p.is_dir() else
+                     [Path(x) for x in sorted(_g.glob(str(pat)))])
+    groups, bad = {}, []
+    for f in files:
+        try:
+            a = _ase_read(str(f), format='extxyz')
+        except Exception as e:                        # 읽기 실패도 사실이다 — 세어서 낸다
+            bad.append({'file': Path(f).name, 'error': f'{type(e).__name__}: {e}'})
+            continue
+        m = _frame_meta(a, f)
+        if m['direction'] not in ('up', 'down') or m['fraction'] is None:
+            bad.append({'file': m['file'], 'error': 'direction/fraction 이 프레임에 없다'})
+            continue
+        groups.setdefault((m['run_tag'], m['structure']), {}).setdefault(
+            m['direction'], {})[round(m['fraction'], 6)] = (a, m)
+
+    rows = []
+    for (tag, name), dirs in sorted(groups.items(), key=lambda kv: (str(kv[0][0]), str(kv[0][1]))):
+        up, dn = dirs.get('up', {}), dirs.get('down', {})
+        common = sorted(set(up) & set(dn))
+        unpaired = ([{'fraction': f, 'have': 'up_only'} for f in sorted(set(up) - set(dn))] +
+                    [{'fraction': f, 'have': 'down_only'} for f in sorted(set(dn) - set(up))])
+        pts, dEs = [], []
+        for f in common:
+            a_u, m_u = up[f]
+            a_d, m_d = dn[f]
+            cmp_ = compare_frames(a_u, a_d, li_symbol=li_symbol, cutoff=cutoff)
+            if isinstance(cmp_.get('Li_neighbor_changes'), list):
+                cmp_['Li_neighbor_changes'] = cmp_['Li_neighbor_changes'][:max_changes]
+            dE = (None if (m_u['energy_eV'] is None or m_d['energy_eV'] is None)
+                  else float(m_u['energy_eV'] - m_d['energy_eV']))
+            if dE is not None:
+                dEs.append((f, dE))
+            pts.append({'fraction': f, 'dE_up_minus_down_eV': dE,
+                        'V_up_A3': m_u['V_actual_A3'], 'V_down_A3': m_d['V_actual_A3'],
+                        'converged_up': m_u['converged'], 'converged_down': m_d['converged'],
+                        'either_unconverged': not (m_u['converged'] is True
+                                                   and m_d['converged'] is True),
+                        'fmax_up_eV_A': m_u['final_fmax_eV_A'],
+                        'fmax_down_eV_A': m_d['final_fmax_eV_A'],
+                        'point_id_up': m_u['point_id'], 'point_id_down': m_d['point_id'],
+                        'name_mismatch_up': m_u.get('name_mismatch'),
+                        'name_mismatch_down': m_d.get('name_mismatch'),
+                        'compare': cmp_})
+        row = {'run_tag': tag, 'structure': name,
+               'n_up': len(up), 'n_down': len(dn), 'n_paired': len(common),
+               'unpaired': unpaired, 'points': pts}
+        cont = [p['compare'].get('continuity') for p in pts]
+        row['continuity_counts'] = {k: cont.count(k) for k in
+                                    ('neighbor_sets_identical', 'neighbor_sets_changed',
+                                     'continuity_unknown') if cont.count(k)}
+        _rl = [p['compare'].get('rmsd_Li_A') for p in pts
+               if p['compare'].get('rmsd_Li_A') is not None]
+        _md = [p['compare'].get('max_disp_A') for p in pts
+               if p['compare'].get('max_disp_A') is not None]
+        row['max_rmsd_Li_A'] = (max(_rl) if _rl else None)
+        row['max_max_disp_A'] = (max(_md) if _md else None)
+        row['n_points_unconverged_either'] = sum(1 for p in pts if p['either_unconverged'])
+        if dEs and len(dEs) == len(common):
+            _v = np.array([d for _, d in dEs], dtype=float)
+            _sh = _v - _v.mean()
+            _i = int(np.abs(_sh).argmax())
+            row['from_frames'] = {
+                'level_offset_eV': float(_v.mean()),
+                'shape_max_abs_dE_eV': float(np.abs(_sh).max()),
+                'max_abs_dE_eV': float(np.abs(_v).max()),
+                'shape_max_at_fraction': float(dEs[_i][0]),
+                'shape_max_point_continuity': pts[_i]['compare'].get('continuity'),
+                '⚠_읽는_법': ('프레임에서 다시 센 값이다. 기록된 hysteresis 와 **대조용**이지 '
+                              '새 판정이 아니다 — 어긋나면 프레임과 기록이 다른 실행이라는 뜻이다')}
+        rows.append(row)
+    return {'rows': rows, 'unreadable': bad, 'n_files': len(files),
+            'cutoff_A': float(cutoff), 'li_symbol': li_symbol,
+            '⛔_이_기록이_말하지_않는_것': (
+                '골짜기 이동 여부. continuity 는 이웃 ID 집합의 사실 진술이고, 끝점 두 장은 '
+                '중간 경로를 증명하지 않는다 (회신 BQ-3 Q5-3 — RMSD 문턱 불승인)')}
+
+
+def print_pair_frames(res):
+    """짝 비교 요약. 목록은 숨기고 **줄당 한 줄**만 (도구 출력은 기본이 요약이다)."""
+    print(f"\n  프레임 {res['n_files']} 장 · 읽기실패 {len(res['unreadable'])}")
+    print(f"  {'조건':<10}{'구조':<14}{'짝':>4}{'미수렴':>7}  "
+          f"{'이웃집합':<22}{'RMSD_Li':>9}{'최대변위':>9}")
+    for r in res['rows']:
+        cc = r['continuity_counts']
+        s = ' '.join(f"{k.replace('neighbor_sets_', '').replace('continuity_', '')}×{v}"
+                     for k, v in cc.items())
+        _f = lambda x: ('—' if x is None else f'{x:.3f}')   # ⛔ 없는 값을 0 으로 그리지 않는다
+        print(f"  {str(r['run_tag'] or '?'):<10}{str(r['structure'] or '?'):<14}"
+              f"{r['n_paired']:>4}{r['n_points_unconverged_either']:>7}  "
+              f"{s:<22}{_f(r['max_rmsd_Li_A']):>9}{_f(r['max_max_disp_A']):>9}")
+        if r['unpaired']:
+            print(f"      ⚠ 짝없음 {len(r['unpaired'])}: {r['unpaired'][:4]}")
+    print("  ⛔ continuity 는 사실 진술이다 — '같은 골짜기' 로 읽지 마라 (회신 BQ-3 Q5-3)")
 
 
 def _eos_branch(atoms_ref, calc, fractions, fmax, relax_steps, continuation,
@@ -2328,8 +2481,85 @@ def _selftest():
         _bad = _ref.copy(); _bad.set_cell(_bad.cell.array * 1.01, scale_atoms=True)
         chk(compare_frames(_ref, _bad)['continuity'] == 'continuity_unknown',
             "⛔음성 Q5-3: 셀이 다르면 비교하지 않는다 (continuity_unknown)")
+        chk(_c2['Li_disp_count_above_A']['1'] == 1 and _c2['Li_disp_count_above_A']['2'] == 0
+            and _c0['Li_disp_count_above_A']['0.1'] == 0,
+            "⛔음성 Q5-3: Li 변위 **분포**가 실제 변위를 따른다 (1.2 Å 하나 → >1 Å 칸 1, >2 Å 칸 0)")
         chk('골짜기 판정이 아니다' in _c2.get('⛔_읽는_법', ''),
             "Q5-3: 문턱으로 '같은 골짜기' 를 선언하지 않는다는 문구가 박혀 있다")
+
+        # ── 짝 비교 (회신 BQ-2 Q1·Q3) — 저장된 프레임에서 갈래를 짝짓는다
+        # ⚠ 전용 폴더를 쓴다 — `_r3/'frames'` 에는 위 Q5-2 의 cu 프레임 10 장이 이미 있다.
+        #   같은 폴더를 재사용하면 줄 수가 2 가 되어 시험이 **엉뚱한 것을 잰다**.
+        _pd = _r3 / 'pairtest'
+        from ase.calculators.lj import LennardJones as _LJ   # EMT 는 Li 를 모른다 → 에너지가 안 남는다
+        def _mkf(tag, name, direction, idx, frac, atoms, conv=True):
+            a = atoms.copy(); a.calc = _LJ()
+            _cv = {'final_fmax_eV_A': 0.001, 'fmax_target_eV_A': 0.02,
+                   'optimizer_returned': True, 'n_steps': 3,
+                   'converged': conv, 'hit_step_limit': False}
+            _mt = {'structure': name, 'run_tag': tag, 'direction': direction,
+                   'point_index': idx, 'fraction': float(frac),
+                   'point_id': f'{direction}:{idx:02d}:f{frac:.4f}'}
+            return _P(_save_point_frame(a, _cv, _pd /
+                      f'{tag}__{name}_{direction}_{idx:02d}_f{frac:.4f}.extxyz', _mt))
+        _fracs = (0.98, 1.00, 1.02)
+        for _i, _f in enumerate(_fracs):
+            _mkf('T1', 'S_a', 'up', _i, _f, _ref)
+            _mkf('T1', 'S_a', 'down', len(_fracs) - 1 - _i, _f, _ref)
+        _pr = pair_branch_frames(_pd)
+        _row = _pr['rows'][0]
+        chk(len(_pr['rows']) == 1 and _row['n_paired'] == 3
+            and _row['continuity_counts'].get('neighbor_sets_identical') == 3
+            and _row['max_rmsd_Li_A'] < 1e-9,
+            "Q1/Q3 양성: 같은 구조로 쓴 상승·하강이 분율로 짝지어지고 이웃 집합이 같다")
+        chk(_row['unpaired'] == [] and _row['n_points_unconverged_either'] == 0,
+            "Q1/Q3 양성: 짝없음 0 · 미수렴 0")
+        # ⚠ 위 양성만으로는 **짝을 분율로 지었는지** 모른다 — 프레임이 전부 같으면
+        #   엉뚱하게 짝지어도 RMSD 0 이라 통과한다. 점 ID 로 직접 친다.
+        chk(all(f"f{p['fraction']:.4f}" in (p['point_id_up'] or '')
+                and f"f{p['fraction']:.4f}" in (p['point_id_down'] or '')
+                for p in _row['points']),
+            "⛔음성 Q1/Q3: 짝의 두 점 ID 가 **같은 분율**을 가리킨다 (점 번호로 짝짓지 않는다)")
+        _mkf('T1', 'S_a', 'up', 3, 1.04, _ref)                 # 하강 짝이 없는 점
+        _up1 = pair_branch_frames(_pd)['rows'][0]
+        chk(_up1['n_paired'] == 3 and len(_up1['unpaired']) == 1
+            and _up1['unpaired'][0]['have'] == 'up_only'
+            and abs(_up1['unpaired'][0]['fraction'] - 1.04) < 1e-9,
+            "⛔음성 Q1/Q3: 짝 없는 점을 조용히 넘기지 않는다 (unpaired 에 분율과 함께)")
+        _mkf('T1', 'S_a', 'down', 0, 1.02, _ref, conv=False)   # 같은 점을 미수렴으로 덮어쓴다
+        _un = pair_branch_frames(_pd)['rows'][0]
+        chk(_un['n_paired'] == 3 and _un['n_points_unconverged_either'] == 1,
+            "⛔음성 Q1/Q3: 미수렴 점을 **버리지 않는다** (줄은 남고 세어진다)")
+        _mv2 = _ref.copy(); _mv2.positions[0] += np.array([1.2, 0.0, 0.0])
+        _mkf('T1', 'S_a', 'down', 1, 1.00, _mv2)               # Li 하나 1.2 Å 이동
+        _ch = pair_branch_frames(_pd)['rows'][0]
+        _p100 = [p for p in _ch['points'] if abs(p['fraction'] - 1.00) < 1e-9][0]
+        chk(_p100['compare']['continuity'] == 'neighbor_sets_changed'
+            and _p100['compare']['n_Li_with_neighbor_set_changed'] >= 1
+            and _ch['continuity_counts'].get('neighbor_sets_changed') == 1,
+            "⛔음성 Q1/Q3: 한 점에서만 Li 가 움직이면 **그 점만** 이웃 집합 변화로 찍힌다")
+        _eu = read(str(_pd / 'T1__S_a_up_01_f1.0000.extxyz'), format='extxyz').info['energy_eV']
+        _ed = read(str(_pd / 'T1__S_a_down_01_f1.0000.extxyz'), format='extxyz').info['energy_eV']
+        chk(abs(_eu - _ed) > 1e-6
+            and abs(_p100['dE_up_minus_down_eV'] - (_eu - _ed)) < 1e-9,
+            "⛔음성 Q1/Q3: dE 부호 규약이 `E_up − E_down` 이다 (_eos_sweep_core 의 _d 와 같다)")
+        _bad_nm = _pd / 'T1__S_a_up_00_f9.9999.extxyz'
+        (_pd / 'T1__S_a_up_00_f0.9800.extxyz').rename(_bad_nm)
+        _nm = pair_branch_frames(_pd)['rows'][0]
+        _p98 = [p for p in _nm['points'] if abs(p['fraction'] - 0.98) < 1e-9]
+        chk(len(_p98) == 1 and 'fraction' in (_p98[0]['name_mismatch_up'] or []),
+            "⛔음성 Q1/Q3: 파일명이 info 와 어긋나면 **말한다** — 짝은 info 로 짓는다(파일명 파싱 아님)")
+        _bad_nm.rename(_pd / 'T1__S_a_up_00_f0.9800.extxyz')
+        _mkf('T1', 'S_b', 'up', 0, 1.00, _ref); _mkf('T1', 'S_b', 'down', 0, 1.00, _ref)
+        chk(len(pair_branch_frames(_pd)['rows']) == 2,
+            "⛔음성 Q1/Q3: 구조가 다르면 **섞지 않는다** (구조별로 줄이 갈린다)")
+        chk('골짜기' in _pr.get('⛔_이_기록이_말하지_않는_것', ''),
+            "Q1/Q3: 기록 자체가 '골짜기 판정이 아니다' 를 달고 나간다")
+        _real = pair_branch_frames(_r3 / 'frames')            # 진짜 eos_sweep 이 쓴 프레임
+        chk(len(_real['rows']) == 1 and _real['rows'][0]['n_paired'] == 5
+            and _real['rows'][0]['unpaired'] == []
+            and _real['rows'][0].get('from_frames') is not None,
+            "Q1/Q3 end-to-end: **생산 경로가 쓴** 양방향 5점 프레임이 그대로 짝지어진다")
 
         # 폴더 재사용 거부 (BQ-3 P0-3 잔여)
         write(str(_r3 / 'cu.xyz'), bulk('Cu', 'fcc', a=3.6, cubic=True) * (2, 2, 2))
@@ -2424,6 +2654,12 @@ def main():
                    help='수렴 재판정에 쓸 fmax. 생략하면 디렉터리 이름(_f02)에서 되찾고, '
                         '그것도 없으면 **수렴을 다시 세지 않는다**')
     p.add_argument('--regate_out', help='재판정 결과 JSON 경로')
+    p.add_argument('--pair_frames', nargs='+', metavar='PATH',
+                   help='점별 프레임 디렉터리/글롭 — 같은 부피점의 상승/하강 갈래를 짝지어 비교 '
+                        '(회신 BQ-2 Q1·Q3). ⛔ 골짜기 판정이 아니라 사실 진술이다')
+    p.add_argument('--pair_frames_out', help='짝 비교 결과 JSON 경로')
+    p.add_argument('--pair_frames_cutoff', type=float, default=3.0,
+                   help='이웃 판정 반경 Å (기본 3.0). 바꾸면 이웃 집합 정의가 바뀐다')
     p.add_argument('--selftest', action='store_true',
                    help='셀 정책 로직만 검사 (UMA 없이 ASE EMT 로 — 음성 경로 포함)')
     p.add_argument('--limit', type=int, default=None,
@@ -2450,6 +2686,14 @@ def main():
             Path(args.regate_out).write_text(json.dumps(_rows, indent=2,
                                                      default=str, ensure_ascii=False))
             print(f"  → {args.regate_out}")
+        sys.exit(0)
+    if args.pair_frames:
+        _pf = pair_branch_frames(args.pair_frames, cutoff=args.pair_frames_cutoff)
+        print_pair_frames(_pf)
+        if args.pair_frames_out:
+            Path(args.pair_frames_out).write_text(json.dumps(_pf, indent=2,
+                                                  default=str, ensure_ascii=False))
+            print(f"  → {args.pair_frames_out}")
         sys.exit(0)
     if not args.out:
         p.error('--out 이 필요하다 (--selftest 제외)')
