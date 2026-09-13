@@ -107,6 +107,12 @@ def main():
             "⛔음성: 기록이 없으면 '—' 이지 '0/0' 이 아니다")
         chk(conv_cell([{"converged": "True"}]) == "0/1",
             "⛔음성: 문자열 'True' 를 참으로 세지 않는다")
+        # ⛔음성: 조건 이름을 잘라먹지 않는다 (2026-09-13 실측: W3_f02 → f02)
+        def _cond(b):
+            return b[4:] if b.startswith("fix_") else b
+        chk(_cond("fix_W6_f02") == "W6_f02" and _cond("W3_f02") == "W3_f02"
+            and _cond("W3_f005") == "W3_f005",
+            "⛔음성: `fix_` 접두만 뗀다 — 창 이름(W3)을 잘라먹지 않는다")
         # 수렴 집계가 **문자열 True 에 속지 않는가** (json default=str 사고)
         rows = [{"converged": True}, {"converged": "False"}, {"converged": False}]
         n = sum(1 for r in rows if r.get("converged") is True)
@@ -143,7 +149,12 @@ def main():
           f"{'r2':>8}{'Bp':>7}  판정")
     print("─" * 96)
     for d in dirs:
-        cond = os.path.basename(d).split("_", 1)[-1] if "_" in os.path.basename(d) else os.path.basename(d)
+        # ⛔ 2026-09-13 — 종전엔 첫 "_" 앞을 무조건 뗐다. `fix_W6_f02` → `W6_f02` 를 노린
+        #   것인데, 10스윕 폴더 `W3_f02` 에서는 **`W3` 이 날아가 `f02`** 로 찍혔다.
+        #   `fix_` 접두만 떼고 나머지는 건드리지 않는다.
+        cond = os.path.basename(d)
+        if cond.startswith("fix_"):
+            cond = cond[4:]
         recs = []
         s = os.path.join(d, "postproc_summary.json")
         if os.path.exists(s):
