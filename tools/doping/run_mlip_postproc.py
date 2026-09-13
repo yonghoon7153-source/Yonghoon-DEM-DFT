@@ -81,6 +81,35 @@ def light_anneal(atoms, T=300, time_ps=20, dt_fs=2.0, relax_steps=500,
                    'E_post_atom': atoms.get_potential_energy() / len(atoms)}
 
 
+def _conv_verdict(opt, atoms, fmax, relax_steps, ret=None):
+    """완화 하나의 수렴 판정. **한 곳에만 둔다** — 두 벌이면 두 판정이 갈린다.
+
+    ⛔ 회신 BQ-2 Q1a (2026-09-13) — 옛 정의
+      `converged = (final_fmax <= fmax) and (n_steps < relax_steps)` 는
+      **마지막 허용 스텝에서 수렴한 경우를 오탐**했다. 리뷰어 실측: 최종힘 1.96 <
+      기준 1.99 이고 ASE 반환값도 True 였는데 `n_steps == limit` 라 False 로 찍혔다.
+      ASE 도 마지막 스텝 **뒤에** 수렴을 검사한다.
+      · `converged`       : 실제 최종 힘 + 옵티마이저 반환값으로 판단
+      · `hit_step_limit`  : 한도 도달을 **별도로** 기록 — 둘은 동시에 참일 수 있다
+
+    ⛔ 이 함수가 **못 하는 것**: 가지 전환을 판정하지 않는다. 힘·스텝만으로는
+      다른 골짜기인지 알 수 없다 — 그건 점별 셀·좌표가 있어야 한다 (BQ-2 Q1).
+    """
+    fm = float(np.linalg.norm(atoms.get_forces(), axis=1).max())
+    ns = int(opt.get_number_of_steps())
+    by_force = bool(fm <= fmax)
+    conv = bool(by_force or ret is True)
+    out = {'n_steps': ns, 'final_fmax_eV_A': fm,
+           'fmax_target_eV_A': float(fmax),
+           'optimizer_returned': (None if ret is None else bool(ret)),
+           'converged': conv,
+           'hit_step_limit': bool(ns >= relax_steps)}
+    if ret is not None and by_force != bool(ret):
+        out['⚠_불일치'] = (f'힘 기준({fm:.5f} vs {fmax:.5f})과 옵티마이저 반환값'
+                           f'({bool(ret)})이 엇갈린다 — 수렴으로 읽되 사실을 남긴다')
+    return out
+
+
 def _bm3(V, E0, V0, B0, Bp):
     """3차 Birch-Murnaghan E(V). 모듈 전역이다 — 라이브 적합과 소급 재판정이
     **같은 식**을 써야 두 판정이 갈리지 않는다."""
@@ -139,18 +168,15 @@ def _eos_branch(atoms_ref, calc, fractions, fmax, relax_steps, continuation):
             atoms.set_cell(atoms.cell.array * f ** (1 / 3), scale_atoms=True)
         atoms.calc = calc
         opt = FIRE(atoms, logfile=None)              # 고정셀 · 원자만
-        opt.run(fmax=fmax, steps=relax_steps)
+        _ret = opt.run(fmax=fmax, steps=relax_steps)
         # ⛔⛔ 회신 BQ P0-1 (2026-09-13) — 종전에는 `opt.run(...)` 의 결과를 **버렸다.**
         #   그래서 점마다 **수렴했는지·최종 최대힘이 얼마인지** 기록이 없었고,
         #   두 갈래의 에너지 차이를 보고 *"다른 국소최소"* 라고 말할 근거가 없었다
         #   (셋 다 미수렴이어도 같은 모양이 나온다). 이제 남긴다 — 이 기록이 없으면
         #   이 곡선으로 **아무 기전 판정도 하지 않는다.**
-        _fm = float(np.linalg.norm(atoms.get_forces(), axis=1).max())
-        _ns = int(opt.get_number_of_steps())
-        conv.append({'fraction': float(f), 'n_steps': _ns,
-                     'final_fmax_eV_A': _fm,
-                     'converged': bool(_fm <= fmax and _ns < relax_steps),
-                     'hit_step_limit': bool(_ns >= relax_steps)})
+        _cv = _conv_verdict(opt, atoms, fmax, relax_steps, _ret)
+        _cv['fraction'] = float(f)
+        conv.append(_cv)
         V.append(atoms.get_volume())
         E.append(atoms.get_potential_energy())
         prev, prev_f = atoms, f
@@ -158,7 +184,7 @@ def _eos_branch(atoms_ref, calc, fractions, fmax, relax_steps, continuation):
     return np.array(V), np.array(E), conv, final
 
 
-def eos_sweep(atoms_ref, calc, fractions=(0.94, 0.96, 0.98, 1.00, 1.02, 1.04, 1.06),
+def _eos_sweep_core(atoms_ref, calc, fractions=(0.94, 0.96, 0.98, 1.00, 1.02, 1.04, 1.06),
              fmax=0.05, relax_steps=500, continuation=False, hysteresis_tol=0.01,
              hysteresis_span_tol=0.10):
     """Volume sweep + Birch-Murnaghan 3rd-order fit. atoms_ref is the
@@ -352,11 +378,15 @@ def eos_ensemble(atoms_ref, calc, n_seeds=5, perturb=0.1,
                                  continuation=continuation,
                                  hysteresis_tol=hysteresis_tol,
                                  hysteresis_span_tol=hysteresis_span_tol))
-    physical = [r for r in results
+    # ⛔⛔ 회신 BQ-2 P0-1 — **자격을 가장 앞에 둔다.** 종전 선택은 `fit_quality_ok`
+    #   (회귀 지표) 만 봤으므로, 점이 하나도 수렴하지 않은 시드도 r² 만 높으면 뽑혔다.
+    eligible = [r for r in results if r.get('downstream_eligible') is True]
+    physical = [r for r in (eligible or results)
                 if r.get('fit_quality_ok') and r.get('B0_GPa') is not None
                 and r.get('Bp') is not None and 0.0 < r['Bp'] < 15.0]
     pool = physical or [r for r in results if r.get('B0_GPa') is not None] or results
     best = dict(max(pool, key=lambda r: r.get('r2', -1.0)))
+    _n_elig = len(eligible)
     b0s = [r['B0_GPa'] for r in results if r.get('B0_GPa') is not None]
     _nfit = int(sum(1 for r in results if r.get('fit_quality_ok')))
     # ⛔⛔ 2026-09-13 — `std` 가 **거짓 정밀도**를 낸다. 살아남은 값이 하나면
@@ -376,8 +406,13 @@ def eos_ensemble(atoms_ref, calc, n_seeds=5, perturb=0.1,
                                 f'B0 를 낸 시드가 {len(b0s)}개뿐이라 산포를 잴 수 없다. '
                                 f'0.0 이 아니다 — 0.0 은 일치를 뜻하는데 그게 아니다'),
         'B0_GPa_median': float(np.median(b0s)) if b0s else None,
-        'selection': ('max_r2_physical_Bp' if physical
-                      else ('max_r2_any' if b0s else 'all_failed')),
+        'n_downstream_eligible': _n_elig,
+        'selection': (('max_r2_eligible_physical_Bp' if _n_elig else 'max_r2_physical_Bp')
+                      if physical else ('max_r2_any' if b0s else 'all_failed')),
+        '⛔_자격_경고': (None if _n_elig == int(n_seeds) else
+                      f'시드 {n_seeds}개 중 **후속 사용 자격을 갖춘 것은 {_n_elig}개**다 '
+                      f'(자격 = 적합 품질 ∧ 보고 가지 전 점 수렴). 0개면 아래 값은 '
+                      f'회귀 지표일 뿐이고 **다음 계산에 쓰면 안 된다**'),
         '⛔_선택_경고': (None if _nfit == int(n_seeds) else
                      f'시드 {n_seeds}개 중 **{int(n_seeds)-_nfit}개가 적합 실패**했고 '
                      f'아래 값은 살아남은 것 중 r² 최대를 **고른 것**이다. '
@@ -385,7 +420,10 @@ def eos_ensemble(atoms_ref, calc, n_seeds=5, perturb=0.1,
                      f'적합이 시드에 민감하면 골짜기 이동(basin hopping)을 의심해라'),
         'per_seed': [{'B0_GPa': r.get('B0_GPa'), 'V0_per_atom': r.get('V0_per_atom'),
                       'Bp': r.get('Bp'), 'r2': r.get('r2'),
-                      'fit_quality_ok': r.get('fit_quality_ok')} for r in results],
+                      'fit_quality_ok': r.get('fit_quality_ok'),
+                      'downstream_eligible': r.get('downstream_eligible'),
+                      'convergence_summary': r.get('convergence_summary')}
+                     for r in results],
     }
     return best
 
@@ -435,6 +473,62 @@ def stress_report(atoms):
             '⚠': '목표 평균압 0 과 별개로 **실제** 값이다. 영응력 판정 아님'}
 
 
+def attach_eligibility(out):
+    """EOS 결과에 **후속 사용 자격**을 붙인다 (회신 BQ-2 P0-1).
+
+    ⛔⛔ 왜 새 필드인가 — `fit_quality_ok` 는 **회귀 지표**다(적합이 잘 됐나).
+      *이 결과를 다음 계산에 써도 되는가* 는 다른 질문인데 종전에는 같은 것으로
+      취급했다. 리뷰어 실측(2026-09-13): 굶겨서 **수렴 0/14**, 점별 최종힘
+      0.0403–0.1448 eV/Å 인데도 `fit_quality_ok=True` 로 V₀ 가 나왔다.
+      수렴을 **기록만** 하고 게이트에 배선하지 않았던 것이다.
+
+    자격 = 적합 품질 ∧ **보고 가지의 모든 점이 수렴**.
+    반대 가지의 수렴은 진단으로 따로 싣는다 — 이력현상은 두 갈래 **사이**의 양이라
+    한쪽만 보고 판단하면 안 된다 (2026-09-13 에 내가 그렇게 틀렸다).
+
+    ⛔ 이 함수가 **못 하는 것**
+      · 없는 기록을 있다고 하지 않는다. 수렴 기록이 아예 없으면 자격을 **거부**한다
+        — 모르는 것은 통과가 아니다.
+      · 가지 전환(골짜기 이동)을 판정하지 않는다. 그건 점별 좌표가 있어야 한다.
+    """
+    hy = out.get('hysteresis') or {}
+    up = hy.get('convergence_up') or out.get('convergence') or []
+    dn = hy.get('convergence_down') or []
+
+    def _cnt(rows):
+        return sum(1 for r in rows if r.get('converged') is True), len(rows)
+
+    n_up, m_up = _cnt(up)
+    n_dn, m_dn = _cnt(dn)
+    out['convergence_summary'] = {
+        'reported_branch': hy.get('reported_branch', 'single'),
+        'n_converged_reported': n_up, 'n_points_reported': m_up,
+        'n_converged_other': n_dn, 'n_points_other': m_dn,
+        '⚠_나눠_센다': ('보고 가지와 반대 가지를 **따로** 센다. 화면에 한 숫자만 띄우면 '
+                        '양방향 수렴으로 오독한다 (2026-09-13 실측 사고)')}
+    why = []
+    if m_up == 0:
+        why.append('수렴 기록이 없다 — 모르는 것은 통과가 아니다')
+    elif n_up < m_up:
+        _bad = [f"f={r.get('fraction')}: |F|max={r.get('final_fmax_eV_A', float('nan')):.4f}"
+                for r in up if r.get('converged') is not True]
+        why.append(f'보고 가지 {m_up}점 중 **{m_up - n_up}점 미수렴** (' +
+                   ' · '.join(_bad[:4]) + (' …' if len(_bad) > 4 else '') + ')')
+    if out.get('fit_quality_ok') is not True:
+        why.append('적합 품질 불통과: ' + str(out.get('fit_quality_reason')))
+    out['downstream_eligible'] = bool(not why)
+    out['downstream_block_reason'] = (None if not why else ' · '.join(why))
+    out['⛔_자격과_적합품질은_다르다'] = (
+        'fit_quality_ok 는 회귀 지표(적합이 잘 됐나)이고 downstream_eligible 은 '
+        '이 결과를 다음 계산에 써도 되는가다. V₀ 승계·탄성·MD 의 조건은 **후자**다')
+    return out
+
+
+def eos_sweep(*a, **k):
+    """`_eos_sweep_core` + **사용 자격**(회신 BQ-2 P0-1). 호출부는 이걸 쓴다."""
+    return attach_eligibility(_eos_sweep_core(*a, **k))
+
+
 def apply_v0_fixed_shape(atoms_ref, V0, calc, fmax=0.05, relax_steps=500):
     """**셀 각도·길이비를 고정한 채** 부피만 V₀ 로 맞추고 원자만 완화한다.
 
@@ -445,6 +539,8 @@ def apply_v0_fixed_shape(atoms_ref, V0, calc, fmax=0.05, relax_steps=500):
       · 셀 형상을 최적화하지 않는다 (그것이 금지된 vc-relax 다).
       · 편차응력을 없애지 않는다 — 없애려면 형상을 풀어야 한다. 남은 값을 **보고**한다.
       · V₀ 가 None 이면 아무것도 하지 않고 그대로 돌려준다 (BM 적합 실패 시).
+      · **`applied` 는 '완화를 돌렸다' 는 뜻이지 '수렴했다' 가 아니다.**
+        쓸 자격은 `converged` 가 정한다 (회신 BQ-2 P0-1).
     """
     if V0 is None:
         return atoms_ref, {'applied': False, 'reason': 'V0 is None (BM 적합 실패)'}
@@ -453,13 +549,17 @@ def apply_v0_fixed_shape(atoms_ref, V0, calc, fmax=0.05, relax_steps=500):
     a.set_cell(a.cell.array * f ** (1.0 / 3.0), scale_atoms=True)
     a.calc = calc
     opt = FIRE(a, logfile=None)                 # ← 고정셀: CellFilter 를 쓰지 않는다
-    opt.run(fmax=fmax, steps=relax_steps)
+    _ret = opt.run(fmax=fmax, steps=relax_steps)
+    # ⛔⛔ 회신 BQ-2 P0-1 — 옛 판정은 `n_steps < relax_steps` 뿐이라 **힘을 아예 안 봤다.**
+    #   한도 전에 멈추기만 하면 잔여힘이 얼마든 '수렴' 이었다.
+    _cv = _conv_verdict(opt, a, fmax, relax_steps, _ret)
     rep = {'applied': True, 'V0_target_A3': float(V0),
            'V_before_A3': float(atoms_ref.get_volume()),
            'V_after_A3': float(a.get_volume()),
            'scale_factor': f,
-           'n_relax_steps': opt.get_number_of_steps(),
-           'converged': opt.get_number_of_steps() < relax_steps}
+           'n_relax_steps': _cv['n_steps'],
+           '⚠_applied_의_뜻': "완화를 돌렸다는 뜻이다. 쓸 자격은 'converged' 가 정한다"}
+    rep.update(_cv)
     try:
         rep['residual_stress'] = stress_report(a)
     except Exception as e:                       # 계산기가 응력을 못 내는 경우
@@ -485,25 +585,55 @@ def maybe_apply_eos_v0(atoms, record, args, calc):
     }
     no_eos = bool(getattr(args, 'no_eos', False))
     if getattr(args, 'apply_eos_v0', False) and not no_eos:
-        v0 = (record.get('eos') or {}).get('V0')
-        # ⛔⛔ 회신 BQ P0-3 (2026-09-13) — 종전에는 **원본 구조**에서 다시 완화했다.
-        #   V₀ 라는 **숫자**는 넘어가도 그 V₀ 를 정의한 **상태**(어느 가지의 어느 배치인가)는
-        #   승계되지 않았다. 무질서계에서는 그 상태가 곧 골짜기라, 숫자만 맞추고 다른
-        #   골짜기에서 완화하면 V₀ 를 적용했다고 말할 수 없다.
-        #   ⇒ 보고 곡선의 마지막 구조에서 출발한다. 없으면 **그 사실을 적고** 원본을 쓴다.
-        _bs = (record.get('eos') or {}).get('_branch_atoms')
-        _start = _bs if _bs is not None else atoms
-        pol['v0_start_state'] = ('EOS 보고 가지의 마지막 구조 (승계함)' if _bs is not None
-                                 else '⚠ 원본 구조 — EOS 가지 구조가 없다(연쇄 미사용 또는 적합 실패). '
-                                      'V₀ 를 정의한 상태를 승계하지 못했다')
-        atoms, rep = apply_v0_fixed_shape(_start, v0, calc,
-                                          fmax=getattr(args, 'eos_fmax', 0.05),
-                                          relax_steps=getattr(args, 'relax_steps', 500))
-        pol['eos_v0_applied'] = bool(rep.get('applied'))
+        _eos = record.get('eos') or {}
+        v0 = _eos.get('V0')
+        _bs = _eos.get('_branch_atoms')
+        _orig = atoms                      # ← 차단하면 **원본으로 되돌린다**
+        # ⛔⛔ 회신 BQ-2 P0-3 (2026-09-13) — 내 P0-3 '상태 승계' 수정이 만든 **회귀**를 막는다.
+        #   종전에는 v0 가 None 이어도 `_start = _bs` 를 골랐고, apply 는 V0=None 이면
+        #   `atoms_ref` 를 **그대로** 돌려주므로 실패한 EOS 의 **마지막 팽창점**이 최종
+        #   구조로 승격됐다. 리뷰어 실측: 원본 100 → 실패 EOS 끝점 106 이
+        #   final_v0_applied.xyz 와 탄성에 그대로 들어갔다 (fit_quality_ok=False 인데도).
+        _block = None
+        if v0 is None:
+            _block = 'BM3 적합이 V₀ 를 내지 못했다'
+        elif _eos.get('downstream_eligible') is not True:
+            _block = ('EOS 결과가 후속 사용 자격 미달 — %s'
+                      % (_eos.get('downstream_block_reason')
+                         or '자격 필드가 없다(구버전 기록) — 모르는 것은 통과가 아니다'))
+        elif _bs is None:
+            _block = ('V₀ 를 정의한 **상태**(보고 가지의 구조)가 없다 — 연쇄 미사용 또는 '
+                      '기록 유실. 숫자만 맞추고 다른 골짜기에서 완화하는 것은 승계가 아니다')
+        if _block is not None:
+            pol['eos_v0_applied'] = False
+            pol['downstream_blocked'] = True
+            pol['block_reason'] = _block
+            pol['⛔차단'] = ('V₀ 적용을 요청했으나 **차단**했다: %s. 최종 구조 승격과 '
+                             '후속 계산(탄성·MD)을 하지 않는다. 구조가 있으면 진단용으로만 '
+                             '남긴다 (회신 BQ-2 P0-3).' % _block)
+            pol['_diagnostic_atoms'] = _bs
+            return _orig, pol
+
+        pol['v0_start_state'] = 'EOS 보고 가지의 마지막 구조 (승계함)'
+        _new, rep = apply_v0_fixed_shape(_bs, v0, calc,
+                                         fmax=getattr(args, 'eos_fmax', 0.05),
+                                         relax_steps=getattr(args, 'relax_steps', 500))
         pol['apply_report'] = rep
-        if not rep.get('applied'):
-            pol['⛔경고'] = ('V₀ 적용을 요청했으나 적용하지 못했다 (%s). 아래 elastic 은 '
-                             'V₀ 가 아닌 부피에서 계산된 값이다.' % rep.get('reason', '?'))
+        if not rep.get('converged'):
+            # ⛔ 회신 BQ-2 P0-1 — 최종 V₀ 완화가 미수렴이면 그 구조도 자격이 없다.
+            pol['eos_v0_applied'] = False
+            pol['downstream_blocked'] = True
+            pol['block_reason'] = '최종 V₀ 완화 미수렴'
+            pol['⛔차단'] = ('최종 V₀ 완화가 **미수렴**이다 (|F|max=%.5f > 기준 %.5f eV/Å, '
+                             'steps=%s). 승격과 후속 계산을 차단한다 (회신 BQ-2 P0-1).'
+                             % (rep.get('final_fmax_eV_A', float('nan')),
+                                rep.get('fmax_target_eV_A', float('nan')),
+                                rep.get('n_steps')))
+            pol['_diagnostic_atoms'] = _new
+            return _orig, pol
+        pol['eos_v0_applied'] = True
+        pol['downstream_blocked'] = False
+        atoms = _new
     elif not no_eos and not bool(getattr(args, 'no_elastic', False)):
         pol['⛔경고'] = (
             'EOS 가 낸 V₀ 를 **적용하지 않았다**. 아래 elastic 은 V₀ 가 아니라 '
@@ -659,16 +789,44 @@ def process_one(xyz_path, calc, out_dir, args):
     atoms, record['cell_policy'] = maybe_apply_eos_v0(atoms, record, args, calc)
     # ⛔ 회신 BQ P0-3 — Atoms 는 직렬화 불가. **V₀ 적용에 쓴 뒤** 기록에서 뺀다.
     (record.get('eos') or {}).pop('_branch_atoms', None)
-    # MD·후속이 집어갈 구조는 **이것**이다 (V₀ 적용 후).
-    write(work / 'final_v0_applied.xyz', atoms)
-    record['structures_written'] = {
-        'stage1_before_eos.xyz': '⚠ EOS·V₀ 적용 **전** 구조. 하류가 집어가면 안 된다',
-        'final_v0_applied.xyz': '✅ 셀 정책이 적용된 최종 구조 — MD·탄성이 실제로 쓴 것',
-        'eos_v0_applied': bool((record.get('cell_policy') or {}).get('eos_v0_applied')),
-    }
+    _pol = record.get('cell_policy') or {}
+    _diag = _pol.pop('_diagnostic_atoms', None)
+    _blocked = bool(_pol.get('downstream_blocked'))
+    _applied = bool(_pol.get('eos_v0_applied'))
+    # ⛔⛔ 회신 BQ-2 P0-3 (2026-09-13) — **이름이 곧 주장이다.**
+    #   실패·차단된 구조에 `final_v0_applied` 와 ✅ 를 붙이면 하류가 그것을 믿는다.
+    #   차단되면 최종 파일을 **만들지 않고** 진단본만 남긴다.
+    _written = {'stage1_before_eos.xyz': '⚠ EOS·V₀ 적용 **전** 구조. 하류가 집어가면 안 된다'}
+    if _blocked:
+        if _diag is not None:
+            write(work / 'DIAGNOSTIC_blocked_not_for_downstream.xyz', _diag)
+            _written['DIAGNOSTIC_blocked_not_for_downstream.xyz'] = (
+                '⛔ 진단 전용. 차단된 경로의 구조다 — MD·탄성·하류 입력으로 쓰지 않는다 (%s)'
+                % _pol.get('block_reason', '?'))
+        _written['⛔_최종_구조_없음'] = (
+            '셀 정책이 차단됐으므로 하류가 집어갈 최종 구조를 **만들지 않았다** (%s)'
+            % _pol.get('block_reason', '?'))
+        _downstream_file = None
+    else:
+        _name = 'final_v0_applied.xyz' if _applied else 'final_no_v0_applied.xyz'
+        write(work / _name, atoms)
+        _written[_name] = ('✅ V₀ 가 실제로 적용되고 **수렴한** 최종 구조 — 탄성이 쓴 것'
+                           if _applied else
+                           '⚠ V₀ 를 적용하지 **않은** 구조(요청 안 함). post-anneal 부피다 — '
+                           'V₀ 에서의 값이라고 읽으면 틀린다 (GAP-3)')
+        _downstream_file = _name
+    _written['eos_v0_applied'] = _applied
+    _written['downstream_blocked'] = _blocked
+    _written['downstream_input'] = _downstream_file
+    record['structures_written'] = _written
 
     # 3. Elastic
-    if not args.no_elastic:
+    if _blocked:
+        record['elastic'] = {
+            'skipped': True,
+            '⛔_이유': ('셀 정책이 차단돼 기준 구조가 없다 — 탄성을 계산하지 않는다. '
+                       '사유: %s (회신 BQ-2 P0-1·P0-3)' % _pol.get('block_reason', '?'))}
+    elif not args.no_elastic:
         t0 = time.time()
         try:
             record['cell_policy']['stress_at_elastic_ref'] = stress_report(atoms)
@@ -727,17 +885,83 @@ def _selftest():
         "⛔음성: V₀=None → 미적용 + 구조 불변")
 
     # ③ ★ 갈림길 — 같은 record 로 두 갈래가 **다른 부피**를 탄성에 넘긴다
-    rec = {'eos': {'V0': V0}}
+    #   ⛔⛔ 2026-09-13 회신 BQ-2 P0-3 — 이 시험도 **옛 동작을 방어하고 있었다.**
+    #     fixture 가 `{'eos': {'V0': V0}}` 뿐이라 수렴 근거도 가지 구조도 없는데
+    #     승격을 기대했다. 이제 자격을 갖춘 record 라야 통과한다.
+    def _mk_eos(v0, vol_branch=None, eligible=True, rattle=0.0):
+        """자격을 갖춘(또는 일부러 못 갖춘) EOS 기록 하나를 만든다.
+
+        ⚠ `rattle` 이 필요한 이유: 완화는 **가지 구조**(`_branch_atoms`)에서 출발한다.
+          완벽한 Cu 결정은 대칭 때문에 힘이 정확히 0 이라, 굶겨도 '수렴' 이 된다.
+        """
+        _b = bulk('Cu', 'fcc', a=3.6, cubic=True) * (2, 2, 2)
+        if vol_branch is not None:
+            _b.set_cell(_b.cell.array * (vol_branch / _b.get_volume()) ** (1 / 3),
+                        scale_atoms=True)
+        if rattle:
+            _b.rattle(stdev=rattle, seed=7)
+        _b.calc = EMT()
+        return {'V0': v0, '_branch_atoms': _b,
+                'downstream_eligible': bool(eligible),
+                'downstream_block_reason': (None if eligible else '시험용 미달'),
+                'fit_quality_ok': bool(eligible)}
+
+    rec = {'eos': _mk_eos(V0)}
     at_on = bulk('Cu', 'fcc', a=3.6, cubic=True) * (2, 2, 2); at_on.calc = EMT()
     a_on, pol_on = maybe_apply_eos_v0(at_on, rec, A(apply_eos_v0=True), EMT())
     at_off = bulk('Cu', 'fcc', a=3.6, cubic=True) * (2, 2, 2); at_off.calc = EMT()
-    a_off, pol_off = maybe_apply_eos_v0(at_off, rec, A(apply_eos_v0=False), EMT())
+    a_off, pol_off = maybe_apply_eos_v0(at_off, {'eos': _mk_eos(V0)},
+                                        A(apply_eos_v0=False), EMT())
     chk(pol_on['eos_v0_applied'] and abs(a_on.get_volume() - V0) / V0 < 1e-9,
-        "갈림길 ON: 탄성이 V₀ 를 받는다")
+        "갈림길 ON: 탄성이 V₀ 를 받는다 (자격을 갖춘 record)")
     chk((not pol_off['eos_v0_applied']) and abs(a_off.get_volume() - V_post) < 1e-9,
         "⛔음성: 갈림길 OFF → 탄성이 **post-anneal 부피**를 받는다 (= GAP-3 의 실제 모습)")
     chk(abs(a_on.get_volume() - a_off.get_volume()) > 1e-6,
         "⛔음성: 두 갈래가 실제로 **다른 구조**를 넘긴다 (같으면 이 시험은 아무것도 안 본 것이다)")
+
+    # ③-b ⛔⛔음성 — **리뷰어가 재현한 회귀 그 자체** (회신 BQ-2 P0-3)
+    #   적합이 실패(V0=None)했는데 가지 구조(실패 EOS 의 마지막 팽창점)가 있으면
+    #   종전에는 그 팽창점이 최종 구조로 승격됐다: 원본 100 → 106.
+    _at_f = bulk('Cu', 'fcc', a=3.6, cubic=True) * (2, 2, 2); _at_f.calc = EMT()
+    _v_orig = _at_f.get_volume()
+    _rec_f = {'eos': _mk_eos(None, vol_branch=_v_orig * 1.06)}
+    _a_f, _pol_f = maybe_apply_eos_v0(_at_f, _rec_f, A(apply_eos_v0=True), EMT())
+    chk(abs(_a_f.get_volume() - _v_orig) < 1e-9,
+        "⛔⛔음성: 적합 실패 시 **마지막 팽창점이 승격되지 않는다** (원본 부피 그대로)")
+    chk(_pol_f.get('downstream_blocked') is True and '⛔차단' in _pol_f,
+        "⛔음성: 차단 사실이 기록에 박힌다 (조용히 원본으로 되돌아가지 않는다)")
+    chk(_pol_f.get('eos_v0_applied') is False,
+        "⛔음성: 차단이면 eos_v0_applied 는 거짓")
+    chk(_pol_f.get('_diagnostic_atoms') is not None,
+        "차단해도 진단 구조는 남긴다 (버리지 않는다)")
+
+    # ③-c ⛔음성 — 자격 미달(수렴 근거 없음)이면 V₀ 가 있어도 차단한다
+    _at_e = bulk('Cu', 'fcc', a=3.6, cubic=True) * (2, 2, 2); _at_e.calc = EMT()
+    _a_e, _pol_e = maybe_apply_eos_v0(_at_e, {'eos': _mk_eos(V0, eligible=False)},
+                                      A(apply_eos_v0=True), EMT())
+    chk(_pol_e.get('downstream_blocked') is True
+        and abs(_a_e.get_volume() - _at_e.get_volume()) < 1e-9,
+        "⛔음성: V₀ 가 있어도 **자격 미달이면 차단** (fit_quality_ok 만으로 안 된다)")
+
+    # ③-d ⛔음성 — 자격 필드가 **아예 없는** 구버전 기록도 차단한다 (모르는 것 ≠ 통과)
+    _at_o = bulk('Cu', 'fcc', a=3.6, cubic=True) * (2, 2, 2); _at_o.calc = EMT()
+    _a_o, _pol_o = maybe_apply_eos_v0(_at_o, {'eos': {'V0': V0}},
+                                      A(apply_eos_v0=True), EMT())
+    chk(_pol_o.get('downstream_blocked') is True,
+        "⛔음성: 자격 필드 없는 구버전 기록 → 차단 (모르는 것은 통과가 아니다)")
+
+    # ③-e ⛔음성 — **최종 V₀ 완화가 미수렴**이면 차단한다 (회신 BQ-2 P0-1)
+    _at_u = bulk('Cu', 'fcc', a=3.6, cubic=True) * (2, 2, 2); _at_u.calc = EMT()
+    _v_u = _at_u.get_volume()
+    # 완화는 **가지 구조**에서 출발하므로 그쪽을 흔든다 (완벽 결정은 힘이 0 이다)
+    _a_u, _pol_u = maybe_apply_eos_v0(_at_u, {'eos': _mk_eos(V0, rattle=0.08)},
+                                      A(apply_eos_v0=True, eos_fmax=1e-9, relax_steps=1),
+                                      EMT())
+    chk(_pol_u.get('downstream_blocked') is True
+        and '미수렴' in (_pol_u.get('block_reason') or ''),
+        "⛔음성: 최종 V₀ 완화가 미수렴이면 차단 (굶기면 잡힌다)")
+    chk(abs(_a_u.get_volume() - _v_u) < 1e-9,
+        "⛔음성: 미수렴 차단 시 구조도 원본으로 되돌린다")
 
     # ④ 적용 안 했으면 **경고가 박힌다** — 조용히 지나가지 않는가
     chk('⛔경고' in pol_off and 'GAP-3' in pol_off['⛔경고'],
@@ -910,6 +1134,37 @@ def _selftest():
     chk(_sl and all(r['hit_step_limit'] for r in _sl),
         "⛔음성: 스텝 한도에 걸린 사실이 따로 기록된다")
 
+    # ⛔⛔ 회신 BQ-2 P0-1 — **여기가 NO-GO 의 핵심이었다.**
+    #   옛 시험은 "수렴이 기록되는가" 만 봤고 "차단하는가" 는 본 적이 없다.
+    #   리뷰어는 그 틈으로 굶긴 0/14 (점별 최종힘 0.0403–0.1448 eV/Å) 를
+    #   `fit_quality_ok=True` 로 통과시켜 V₀ 를 받아냈다.
+    chk(_starved.get('downstream_eligible') is False,
+        "⛔⛔음성: 굶긴 EOS 는 **후속 사용 자격이 없다** (기록만으로 끝내지 않는다)")
+    chk('미수렴' in (_starved.get('downstream_block_reason') or ''),
+        "⛔음성: 차단 사유에 미수렴 점이 명시된다")
+    chk((_starved.get('convergence_summary') or {}).get('n_points_other', 0) > 0,
+        "두 갈래를 **나눠** 센다 — 한 숫자로 합치면 양방향 수렴으로 오독한다")
+
+    # 자격과 적합품질이 **독립**임을 직접 친다 (합성 기록으로 경로만 본다)
+    _fk = lambda cv: attach_eligibility(
+        {'fit_quality_ok': True, 'fit_quality_reason': 'OK', 'convergence': cv})
+    chk(_fk([{'fraction': 1.0, 'converged': False, 'final_fmax_eV_A': 0.14}]
+            )['downstream_eligible'] is False,
+        "⛔음성: fit_quality_ok=True 라도 미수렴 점이 있으면 자격 거부")
+    chk(_fk([])['downstream_eligible'] is False,
+        "⛔음성: 수렴 기록이 **없으면** 자격 거부 (모르는 것은 통과가 아니다)")
+    chk(_fk([{'fraction': 1.0, 'converged': 'True', 'final_fmax_eV_A': 0.001}]
+            )['downstream_eligible'] is False,
+        "⛔음성: 문자열 'True' 를 참으로 세지 않는다 (json default=str 오염 대비)")
+    chk(_fk([{'fraction': 1.0, 'converged': True, 'final_fmax_eV_A': 0.001}]
+            )['downstream_eligible'] is True,
+        "양성 대조: 적합 OK + 전 점 수렴이면 자격 있음 (무조건 떨구는 게 아니다)")
+    chk(attach_eligibility({'fit_quality_ok': False, 'fit_quality_reason': 'r2 낮음',
+                            'convergence': [{'fraction': 1.0, 'converged': True,
+                                             'final_fmax_eV_A': 0.001}]}
+                           )['downstream_eligible'] is False,
+        "⛔음성: 전 점 수렴이어도 적합이 불통과면 자격 거부 (둘 다 필요하다)")
+
     # P0-2 — 보고 곡선이 **한 갈래**인가 (min 섞기가 아닌가)
     chk(_h.get('reported_branch') == 'up'
         and _bq['E_points'] == _h['E_up'],
@@ -930,9 +1185,15 @@ def _selftest():
     chk('승계함' in (_pol.get('v0_start_state') or ''),
         "P0-3: 승계 여부가 기록에 남는다 (승계함)")
     _rec2 = {'eos': {k: v for k, v in _bq.items() if k != '_branch_atoms'}}
+    _v_at = at.get_volume()
     _a3, _pol2 = maybe_apply_eos_v0(at, _rec2, A(apply_eos_v0=True, fixed_shape_relax=True), EMT())
-    chk('⚠' in (_pol2.get('v0_start_state') or '') and '승계하지 못했다' in _pol2['v0_start_state'],
-        "⛔음성: 가지 구조가 없으면 **원본을 썼다고 경고**한다 (조용히 넘어가지 않는다)")
+    # ⛔⛔ 회신 BQ-2 P0-3 — 종전에는 가지 구조가 없으면 **원본으로 대체하고 경고만** 했다.
+    #   리뷰어: "원본 대체도 경고만으로 승계 조건을 충족하지는 않아요." 이제 차단한다.
+    chk(_pol2.get('downstream_blocked') is True
+        and '승계가 아니다' in (_pol2.get('block_reason') or ''),
+        "⛔음성: 가지 구조가 없으면 **차단**한다 (원본 대체 + 경고로 때우지 않는다)")
+    chk(abs(_a3.get_volume() - _v_at) < 1e-9,
+        "⛔음성: 가지 부재 차단 시 구조는 원본 그대로")
 
     # ⑫ 회신 BQ Q2 — 빠져 있던 기본 확인 둘
     _g = eos_sweep(_cu, EMT(), fractions=_fr, fmax=0.05, relax_steps=30,
@@ -960,6 +1221,58 @@ def _selftest():
                    continuation=True, hysteresis_tol=1.0, hysteresis_span_tol=1.0)
     chk(_r.get('fit_quality_ok') or '보수적 선택' in (_r.get('fit_quality_reason') or ''),
         "B0' 게이트가 떨굴 때는 '보수적 선택' 임을 문구가 밝힌다")
+
+    # ⑨ ★ process_one 산출 파일 — **이름이 곧 주장이다** (회신 BQ-2 P0-3)
+    #   리뷰어 실측: 실패한 EOS 의 마지막 팽창점(원본 100 → 106)이
+    #   `final_v0_applied.xyz` 로 나가고 탄성까지 전달됐다. 여기가 그 회귀의 현장이다.
+    import tempfile as _tf
+    from pathlib import Path as _P
+
+    class _Args(A):
+        def __init__(self, **kw):
+            super().__init__()
+            self.no_anneal = True; self.anneal_T = 300; self.anneal_ps = 1
+            self.eos_fractions = [0.98, 0.99, 1.00, 1.01, 1.02]
+            self.n_eos_seeds = 1; self.eos_perturb = 0.1
+            self.eos_continuation = False
+            self.eos_hysteresis_tol = 1.0; self.eos_hysteresis_span_tol = 1.0
+            self.elastic_eps = 0.005; self.elastic_fmax = 0.2
+            self.apply_eos_v0 = True; self.fixed_shape_relax = True
+            self.eos_fmax = 0.05; self.relax_steps = 30
+            self.__dict__.update(kw)
+
+    with _tf.TemporaryDirectory() as _td:
+        _root = _P(_td)
+        write(str(_root / 'cu.xyz'), bulk('Cu', 'fcc', a=3.6, cubic=True) * (2, 2, 2))
+        # ⚠ 픽스처 함정 — **완벽한 Cu 결정은 대칭 때문에 힘이 정확히 0** 이라
+        #   굶겨도(fmax 1e-9) '수렴' 이 된다. 차단 경로를 보려면 대칭을 깨야 한다.
+        #   (같은 함정을 2026-09-13 에 rattle 로 한 번 겪었다 — 여기선 공공으로 깬다)
+        _vac = bulk('Cu', 'fcc', a=3.6, cubic=True) * (2, 2, 2)
+        del _vac[0]
+        write(str(_root / 'cuvac.xyz'), _vac)
+        # (a) 차단되는 경우 — EOS 점을 굶긴다
+        _rb = process_one(_root / 'cuvac.xyz', EMT(), _root / 'blocked',
+                          _Args(eos_fmax=1e-9, relax_steps=1))
+        _wb = _rb.get('structures_written') or {}
+        _db = _root / 'blocked' / 'cuvac'
+        chk(_wb.get('downstream_blocked') is True and _wb.get('downstream_input') is None,
+            "⛔⛔음성: 차단되면 하류가 집어갈 최종 구조가 **없다**")
+        chk(not (_db / 'final_v0_applied.xyz').exists(),
+            "⛔⛔음성: 차단된 경로에 `final_v0_applied.xyz` 를 **쓰지 않는다** (이름이 곧 주장이다)")
+        chk((_db / 'DIAGNOSTIC_blocked_not_for_downstream.xyz').exists(),
+            "차단해도 진단 구조는 남긴다 (버리지 않는다)")
+        chk((_rb.get('elastic') or {}).get('skipped') is True,
+            "⛔음성: 차단되면 **탄성을 계산하지 않는다** (후속 계산 차단)")
+        # (b) 양성 대조 — 무조건 막는 게 아니다
+        _rp = process_one(_root / 'cu.xyz', EMT(), _root / 'ok', _Args())
+        _wp = _rp.get('structures_written') or {}
+        chk(_wp.get('downstream_blocked') is False
+            and _wp.get('downstream_input') == 'final_v0_applied.xyz',
+            "양성 대조: 자격을 갖추면 final_v0_applied.xyz 가 나온다")
+        chk((_root / 'ok' / 'cu' / 'final_v0_applied.xyz').exists(),
+            "양성 대조: 그 파일이 실제로 존재한다")
+        chk((_rp.get('elastic') or {}).get('skipped') is not True,
+            "양성 대조: 탄성이 실제로 돌았다 (차단 경로와 갈린다)")
 
     print(f"  selftest: ⭕ {ok} · ⛔ {fail}")
     return 0 if fail == 0 else 1
