@@ -293,14 +293,34 @@ fi
 
 # --- 이미 있는 것을 말없이 덮지 않는다 (Codex #6) -----------------------------
 
+#: 우리가 쓴 파일임을 알아보는 표.  첫 줄에 그대로 넣고 그대로 찾는다.
+#:
+#: 이 관문이 막으려던 것은 **남의 설정**이다.  그런데 처음에는 "파일이 있으면
+#: 멈춘다" 로만 되어 있어서, 이 스크립트가 5분 전에 자기가 쓰다 만 파일에도
+#: 걸렸다.  설치가 중간에 멎을 수 있는 한(그리고 이 설치본은 실제로 두 번
+#: 멎었다) 다시 돌리는 것이 정상 경로인데, 그 정상 경로가 매번
+#: `BML_REPLACE=1` 을 요구하면 그 플래그가 습관이 된다 — 그러면 정작 남의
+#: 설정을 덮는 날에도 손이 먼저 그것을 친다.
+BML_SITE_MARK='# bml-managed: vps-setup.sh'
+
 if [ -e "$SITE" ] || [ -e "$LINK" ]; then
-  if [ "${BML_REPLACE:-}" != "1" ]; then
+  if [ -f "$SITE" ] && head -1 "$SITE" | grep -Fx "$BML_SITE_MARK" >/dev/null; then
+    cp -a "$SITE" "$SITE.bak.$(date +%s)"
+    echo "▸ 지난 설치가 남긴 $DOMAIN 설정을 다시 씁니다 (.bak 으로 떠 뒀습니다)"
+  elif [ "${BML_REPLACE:-}" != "1" ]; then
     echo "이미 $DOMAIN 설정이 있습니다 — 덮지 않고 멈춥니다." >&2
+    echo "  우리가 쓴 파일이 아닙니다 (첫 줄에 우리 표가 없습니다)." >&2
     echo "  정말 바꾸려면:  sudo BML_REPLACE=1 bash vps-setup.sh $DOMAIN $EMAIL" >&2
     echo "  (바꾸기 전에 .bak 으로 복사해 둡니다)" >&2
     exit 3
+  else
+    # `[ -f ... ] && cp ...` 를 이 자리의 마지막 명령으로 두면 안 된다.
+    # $LINK 만 있고 $SITE 가 없을 때 그 줄이 1 을 내고, `set -e` 가 그것을
+    # 설치 실패로 읽어 아무 말 없이 여기서 끝난다.
+    if [ -f "$SITE" ]; then
+      cp -a "$SITE" "$SITE.bak.$(date +%s)"
+    fi
   fi
-  [ -f "$SITE" ] && cp -a "$SITE" "$SITE.bak.$(date +%s)"
 fi
 
 echo "▸ 패키지"
@@ -405,6 +425,7 @@ echo "▸ nginx — 먼저 80 만 (인증서를 아직 안 받았습니다)"
 # `listen 443 ssl` 을 인증서보다 먼저 쓰면 nginx 가 그 설정을 거절하고
 # (`no "ssl_certificate" is defined ...`) certbot 이 제 검사에서 멎는다.
 cat > "$SITE" <<CONF
+$BML_SITE_MARK
 # bml — 랩 PC 가 ssh -R 로 넘겨 준 $PORT 를 그대로 넘긴다 (ADR 0034).
 server {
     listen 80;

@@ -134,5 +134,36 @@ expect_none "주석 처리된 default_server 는 안 센다"
 printf 'server {\n    listen 80 default_server;\n}\n' > "$DIR/zz-real"
 expect_finds "주석과 진짜가 섞여 있으면 진짜를 찾는다" zz-real
 
+# --- 6. 우리가 쓴 설정을 우리가 알아보는가 -------------------------------------
+#
+# 덮어쓰기 관문이 막으려던 것은 **남의 설정**이다.  그런데 처음에는 "파일이
+# 있으면 멈춘다" 뿐이라, 이 스크립트가 자기가 5분 전에 쓰다 만 파일에도 걸렸다
+# (실측: nginx 가 멎은 뒤 그대로 다시 돌렸더니 exit 3).
+#
+# 그래서 첫 줄에 표를 남기고 그 표를 찾는다.  아래 셋은 **표를 쓰는 자리와 찾는
+# 자리가 어긋나지 않는 것**만 잰다 -- 그 어긋남은 조용하다.  설치 전체가 도는
+# 것은 실제 기계에서만 알 수 있고, 그것이 ADR 0034 의 승격 조건이다.
+mark_uses="$(grep -c 'BML_SITE_MARK' "$SCRIPT")"
+if [ "$mark_uses" -ge 3 ]; then
+  ok "표를 정의하고, 찾고, 쓴다 (BML_SITE_MARK $mark_uses 곳)"
+else
+  bad "BML_SITE_MARK 이 $mark_uses 곳뿐이다 — 쓰는 자리나 찾는 자리가 빠졌다"
+fi
+
+# 찾는 쪽이 `head -1` 이므로, 표는 **첫 줄**에 쓰여야 한다.  한 줄이라도
+# 앞에 끼면 다시 돌릴 때마다 남의 설정 취급을 받는다.
+if grep -F 'head -1 "$SITE"' "$SCRIPT" >/dev/null; then
+  ok "표를 첫 줄에서 찾는다"
+else
+  bad "표를 첫 줄에서 찾지 않는다 — 아래 단언의 전제가 사라졌다"
+fi
+
+written_first="$(grep -A1 -F 'cat > "$SITE" <<CONF' "$SCRIPT" | tail -1)"
+if [ "$written_first" = '$BML_SITE_MARK' ]; then
+  ok "설정을 쓸 때 표가 첫 줄에 나간다"
+else
+  bad "설정의 첫 줄이 표가 아니다 (실제: '$written_first')"
+fi
+
 printf '\n  %d 통과, %d 실패\n' "$pass" "$fail"
 [ "$fail" -eq 0 ]
