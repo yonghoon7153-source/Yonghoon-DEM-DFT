@@ -1,5 +1,5 @@
 # 인입 대기 — `pranami2015_estimating_error_diffusion_coefficients_md`
-> ⚠ **2026-09-13 확인: 이 파일의 ① 은 INDEX 행이 아니라 `comparison_vs_ours.md` 방법 원전 표다 — INDEX.md 에 넣을 행이 없다.** 큐레이터가 INDEX 행을 따로 써야 한다. 미병합.
+> ✅ **①②③ 병합 완료 2026-09-13** (조율 세션) — INDEX.md: ① 병합됨 (⚠ pranami 는 INDEX 행 없음) · comparison_vs_ours.md: ② → J-7. ⏳ **남은 것**: ⚠ ① INDEX 행은 여전히 없음 · ③ kb 후속 제안.
 
 > 생성 2026-09-09 · litdb-curator. **동시 실행 충돌 회피**로 `INDEX.md` · `comparison_vs_ours.md` 를 직접
 > 건드리지 않았다. 아래 두 조각을 사람(또는 다음 큐레이터)이 옮겨 붙인다.

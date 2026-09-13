@@ -702,7 +702,9 @@ D_rel 이 들어오면 그 파일의 `성공기준_사전확정` **그대로** �
    ⛔ 에이전트가 고르지 않는다. ⛔ `closed: false` 인 채로 active 로 올리면 `validate_canonical` 이 거부한다(배선됨).
 2. H0 최종 파일(`final_v0_applied.xyz`)을 **쓸 때** V100 에서 회수해 기록의 `final_sha256` 과 대조 (리뷰어 Q1 — 파일 자체는 미대조).
 3. ~~litdb 백로그 36건~~ → **INDEX.md 병합 완료 (2026-09-13 심야)**: `_pending_index_*.md` 30건 중 28건의 ① 행을 `INDEX.md` 에 옮김(Digest 완료 23 · MLIP 방법론 5, 4열 행 3건은 3·4열을 합쳐 3열로 — 내용 손실 없음) + ren2026 3차 패스 문단 삽입. `build_index.py --check` 33 → **5** (pranami2015 는 ① 이 INDEX 행이 아니라 comparison 블록이라 행 없음 · 나머지 4 는 `_INDEX_proposals.md` 의 뼈대 — 실물 대기, 등재 안 하는 게 맞다).
-   ⏳ **남은 것 = ②③ `comparison_vs_ours.md` 블록 30건** — 절 번호 충돌(두 파일이 J-12 신설, 한 파일이 이미 있는 J-11 신설), fang2022 는 기존 판정 J9-e **개정** 요청, jiang2022 는 §B 4축 표 행 — 큐레이터 판단 필요. 각 pending 파일 2행에 상태 표기함.
+   ✅ **②③ 도 병합 완료 (2026-09-13 심야, 지시 '2,3번도 같이')** — `comparison_vs_ours.md` 2053 → 3861 줄. Reference key +10 · J-0 +8 · §A 행 +14 & 끝 블록 6 · §B +4 · §C 블록 2 · §D 1 · §F +2 · §H +3 · **J-7 +21 항목** · J-9c–f 4 소절 · J9-e′ 개정 행(원문 보존) · 신설 **J-12…J-19** 8 절.
+   번호 충돌은 §J 머리의 📎 배정표대로 풀었다 (초안 J-11/J-12/J-13 → J-12…J-17, UQ 축 J-18, GB 축 J-19; J-9c ×4 → c·d·e·f 슬러그순). `--check` comparison 미편입 33 → **4**(뼈대).
+   ⏳ **미처리 = ④ 이후 항목**: properties/·db/ 갱신 4건(liu_finetuning·maginn·ou·wilson — **db 규율상 원장 경로로만**), talk 역링크 초안 2건, 도구 버그 보고 2건(aqib ⑤ pdf_text 파일명 충돌 · basu ⑤ extract_figures), inbox 확보 후보(zaby·muy·he·zhao), jang ② Reference key 행(표 형식 아님), pranami ① INDEX 행. 각 pending 파일 2행 참조.
 4. (선택) 골짜기 표 webapp 결속 — 웹앱은 **로컬 전용**이다 (2026-08-07 `79fd69503` 클라우드 배포 폐지 · `dem-analyzer.onrender.com` 은 그때도 `/` 404). 우리 브랜치의 `render.yaml` 은 죽은 배포를 가리키는 잔재 — 지울지 1저자 결정.
 
 **★ 회신 BQ-4 가 깎은 내 서술 여섯** (`cascade_pilot_4b_blocked_2026_09_13.json` → `⛔⛔⛔_회신BQ4`)

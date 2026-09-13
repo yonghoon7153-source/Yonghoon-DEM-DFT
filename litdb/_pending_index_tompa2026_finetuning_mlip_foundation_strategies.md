@@ -1,5 +1,5 @@
 # ⏳ pending — `tompa2026_finetuning_mlip_foundation_strategies` 의 INDEX / comparison 반영분
-> ✅ **① INDEX.md 병합 2026-09-13** (조율 세션). ⏳ **②③ `comparison_vs_ours.md` 블록은 미병합** — 절 번호 충돌(J-11/J-12)·기존 판정 개정 요청이 섞여 있어 큐레이터 판단이 필요하다.
+> ✅ **①②③ 병합 완료 2026-09-13** (조율 세션) — INDEX.md: ① 병합됨 · comparison_vs_ours.md: ② → J-0 · ③ → J-7. ⏳ **남은 것**: ④ 정정 후보 · ⑤.
 
 > 2026-09-09, litdb-curator. **동시작업 충돌 회피**로 `INDEX.md` · `comparison_vs_ours.md` 를 직접 안 고쳤다.
 > 아래 블록을 **사람이(또는 조율 담당 세션이) 그대로 옮겨 붙이면 된다.**

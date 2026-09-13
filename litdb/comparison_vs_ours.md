@@ -111,6 +111,16 @@
 | **[Makino26Rev]** ⭐⭐ MLIP 방법론 지도 · ★ **우리 "정적 RMSE → 동역학 환산 금지" 판정의 문헌 근거** | **Keisuke Makino**¹/T. Kato¹/S. Terashima¹/Y. Matsuoka¹/**So Takamoto**²/**Chikashi Shinagawa**²/**Yusuke Asano**³/**Masanobu Nakayama**¹ (¹**나고야공업대 Advanced Ceramics** · ²**Preferred Networks** · ³**Matlantis**) 2026 ***Phys. Chem. Chem. Phys.* Accepted Manuscript** (공개 2026-09-10, CC-BY 4.0, **DOI 미부여** — 정식판 나오면 갱신; inbox #117 본문 번호 62 pp + SI xlsx; refs **216** · 그림 **10** · 표 **2**) — "**Machine-Learned Interatomic Potentials for Battery Materials: From Fundamental Methodology to Emerging Applications in Electrodes, Electrolytes, and Interfaces**". ⚠ **서지 주의 2건**: 파일명 `MACHIN1` 은 구글 알리미 토막 · 표지 1쪽의 *"Volume 19, 2017"* 은 **RSC 범용 커버 템플릿**(둘 다 서지 아님). **자체 DFT 0 · 자체 MLIP 학습 0 · 자체 실험 0 · 물성값 0** ⇒ **물성 4축 금지, `J-7` 전용**. 신규 산출 3개 = **분류 격자**(`Fig. 3`: A1 선형/A2 커널/A3 NN × B1 local-NN/B2 GNN, **우리 UMA = `B2/E(3)-equivariant`** 칸이나 **UMA 는 전문 0회**) · **주관 등급표 2개**(`Table 1`·`Table 2`) · **문헌 census 147편**(`Table S1`). ★★ 핵심 = **§3.5–3.7**: *"안정한 MD 를 보증하는 **균일한 힘-오차 문턱은 없다**"* · *"R²·RMSE = **내삽 정확도**뿐"* · uMLIP 힘 RMSE **0.12–0.17**(TM 없음) vs **0.4–0.5 eV/Å**(일부 TM) ⛔**정의(성분/벡터) 미표기** · *"uMLIP 은 전이상태 학습이 없어 **Ea 를 과소평가**"* · **전자수 고정 ⇒ 분해 개시전위 추출 불가**. 🔴 **`Fig. 9c`**: 같은 MLIP·같은 LLZO 에서 **결함 모델만으로 Ea 0.334→1.227 eV, σ(300 K) 10¹⁰ 배** ⇒ 우리 `absolute_sigma` 금지의 최강 근거. 🔴 **`Fig. 9f`**: `Li₆₋ₓPS₅₋ₓCl₁₊ₓ` × `S/Cl inversion %` 지도, 최대 ≈27 at x 0.4–0.5·inv 70–80 %, **문턱 `figure-read ≈ x 0.58`**(우리 modelc = x 0.6) ⛔**단위 미표기 + 캡션↔그림 방향 불일치 ⇒ 수치 이식 금지**. 🔴 **`Fig. 9a`**: eSNAP 이 α-Li₃N **−3 THz soft mode 를 놓침**(본문은 *"재현 양호"*). 🔴 **`Fig. 9b`**: β-Li₃PS₄ 결정 MSD 가 **1 μs 에 계단 4–5개**(비정질 대비 ≈300배 차) ⇒ 우리 comp1 확산영역 게이트 6/6 탈락의 물리적 설명. ⚠ **벤더 공저**(`Fig. 6a,b` 4칸 전부 PFP; UMA·SevenNet·MACE 정량 0). **본문↔그림↔SI 어긋남 7건**(🔴 `Fig. 7c` 가 `Fig. 7b`·SI(각 135편)와 불일치, **Electrolyte 26편 결손** — 우리 SI 147행 전수집계로 검출 · **없는 패널 `Fig. 5e`·`Fig. 9h` 인용**). ★ **SI `Table S1` 147편 중 우리 보유 4편(2.7 %)** | ✅ `papers/makino2026_mlip_battery_materials_review.md` (2026-09-13, **본문 그림 10/10 전부 실독** + 7패널 900 dpi 2차판독 · 표 2장은 관례대로 PDF 텍스트 복원 · **SI 147행 전수 재집계**) | **[외부] 리뷰 (자체 계산 0 · 자체 실험 0 · 물성값 0) — ⛔ 물성 4축 제외, `J-7 방법 원전` 전용** |
 | **[Li26NaRev]** ⛔⛔ **Na 계 — 물성 4축 진입 금지** · ⭐ *"functionally partitioned architecture"* 어휘의 출처 · ★ `Fig. 13e–g` 에 **우리 `Li₆PS₅Cl`** 이 나온다(단 재인용) | **Lin Li**^{a,b}/Wenqian Tian^b/**Siwu Li\***^a/Miao Deng^b/Ziyu Lu^b/**Chuang Yu\***^{a,b} (^a 西安电子科技大 **Xidian University** 信息机电工程学院 · ^b 华中科技大 **HUST** 化学与化工学院) 2026 ***Chem. Sci.* Accepted Manuscript** (온라인 2026-09-08 · CC-BY 4.0 · ⛔ **DOI 미발급** — AM 자리표시자 `10.1039/x0xx00000x` · 본문 36 pp · **refs 147** · Fig 1–13 · Table 1–2 · **SI 없음**) — "**Interfacial Chemistry of Sulfide and Halide Solid Electrolytes in All Solid-State Sodium Batteries: From Single Electrolytes to Functionally Partitioned Architectures**". **⛔ 무대가 나트륨이다** — 전압은 전부 **vs Na⁺/Na**, 캐리어는 Na⁺(1.02 Å vs Li⁺ 0.76 Å). **자체 계산 0·자체 실험 0**(데이터가용성 문구 명시) ⇒ 모든 수치가 **재인용**. **핵심 명제**: 단일 무기 골격이 *"산화저항용 깊은 VBM 과 환원저항용 높은 CBM"* 을 동시에 못 가지므로 → **기능을 공간에 분할**(수송·산화저항·환원보호·**기계수용** 4기능). 근거 3편 = **ref 53 Goodwin 2024 ACS AMI**(같은 양극에 황화물 7–15 mAh/g vs 할라이드 이론용량 근접) · **ref 17 Wu 2021 *Nat. Commun.* 12, 1256**(NYZC0.75 1000+ 사이클) · **ref 51 Deysher 2022 ACS AMI**(염화물 계면상 ≈90 μm vs `Na₃PS₄` ≈10 μm). ★ **`Table 2` 19행 전부가 이미 분할구조**(음극쪽 황화물/NASICON 중간층 + 합금음극, 순수 Na 직접접촉 0건) ⇒ 리뷰의 기여는 발명이 아니라 **명명·원리화**. 🟢 **전이 가능**: 4기능 분해 · **산물 갭→자기부동태 vs MIEC 규칙**(`NaF` 11 / `Na₃P` 0.4 / `Na₃Sb` 0.68 eV ↔ 우리 `LiCl` 6.65 / `Li₂S` 3.90 / `Li₃P` 0.70 `conductor-LEAK`) · **음이온 동결 대조 MD**(`Fig. 6a`) · 중간층 사양(σ_ion>10⁻⁴ · σ_e<10⁻⁸ S/cm) · BVEL=우리 BVSE · DFT+VRH=우리 E_VRH · *"접합은 경계가 아니라 계면상 영역"*. 🔴 **전이 금지**: 모든 σ·Ea·전압창·탄성 GPa·D·산물갭·셀성능 — **특히 `Na₃PS₄` 1.2–2.5 V 를 우리 2.256/1.242 V 옆에**(우연 일치는 면제가 아니라 **부인 선언** 대상)와 **할라이드 15.31–29.57 GPa 를 우리 22.06/27.66 GPa 옆에**(⚠ 후처리가 VRH 로 같아서 제일 위험). ⛔⛔ *"Cl-rich 가 산화한계를 3.8 V 로 올린다"* **절대 금지** — 리뷰의 Cl 은 **골격**, 우리 Cl 은 **S 골격 부분치환**(우리 VBM 은 Cl 증가에도 S 3p, onset 2.256 V 불변). 🔴 **자기 그림이 본문을 부분 반증**: `Fig. 9d` 에서 3족·란타나이드 염화물 환원한계 **≈0.50–0.75 V < `Na₃PS₄` 1.15 V** 인데 리뷰는 족 간 분화를 언급하지 않는다(§10-6). ⚠ **본문↔그림 불일치 4건**(§10): `Y`↔`Yb` 혼동 · `Fig. 4a` 캡션이 2D 화학퍼텐셜 상도를 "stability window" 로 호명 · α-`Na₃PS₄` "impedance 10⁻⁶ Ω cm⁻¹" 단위오류 · ref 53 양극조성 2가지. ★ **후속 필수**: `Fig. 13e–g` 의 원출처 **ref 146 = H. Zhang et al., *Adv. Funct. Mater.* 2025, e10497**(`Li₄ZrCl₄O₂`\|`Li₆PS₅Cl` → `Li₃PO₄`+`Li₂S` 계면상) 을 **별도 digest** 해야 정량 인용 가능 | ✅ `papers/li2026_na_sulfide_halide_interface_review.md` (2026-09-13, 크로핑 **15장 중 7장 실독** — `Fig. 1`·`3`·`4`(+4a 1100 dpi 재렌더)·`6`·`8`·`9`(+9c·9d 재렌더)·`13`; ⛔ 안 본 것 `Fig. 2`·`5`·`7`·`10`·`11`·`12` · `Table 1`·`2` 는 **PDF 좌표 판독으로 전 셀 복원**) | **[외부]** 리뷰 · **Na 계** · 자체 계산 0 · 자체 실험 0 · **⛔ 물성 4축 수치 비교 제외** |
 | **[Wang26LRM]** ⛔ **양극(Li-rich Mn) 리뷰 — 물성 4축 진입 금지** · 🔧 **스크리닝 문턱·대조군 설계 원전** · ★ 우리 `Li₆PS₅Cl` 이 실명으로 3회 나온다(단 전부 재인용) | **Xinru Wang**/**Keke Gao**/**Chunwen Sun\*** (中国矿业大学(北京) 化学与环境工程学院; Sun = IOP-CAS 박사 → TUM·NRC → **UT Austin Goodenough 포닥 2010–11** → 中西班牙能源材料联合实验室 소장) 2026 ***Chem. Commun.* Review Article** (DOI `10.1039/d6cc03421g`; 접수 2026-06-01/수리 2026-08-27/게재 2026-09-09; NSFC 52472271 + 2023YFE0115800; inbox #118 본문 **31 pp** · **refs 132** · Fig **1–15** · Table **1–2** · **SI 없음**) — "**Recent progress and perspectives of lithium-rich manganese-based cathodes for high-energy-density solid-state batteries**". **자체 DFT 0 · 자체 실험 0** (데이터가용성 *"No new data were generated or analysed in this study"*) ⇒ **전 수치 재인용**. ⛔ **주인공이 양극 `xLi₂MnO₃·(1−x)LiTMO₂` 다** — 31쪽 중 우리 축에 닿는 것은 **§3.2·§3.3·§4 의 ≈8쪽**뿐. 🟢 **전이 3건**: ① **`Fig. 15b` 깔때기 문턱 4개**(`E_hull=0` / `E_d≤2.8 V & E_c≥4.3 V` / `\|ΔE\|<100 meV/atom` / `E_a<0.5 eV`; 920→68→19→10) = **우리 A–D 4축과 1:1** ② **`Fig. 9c` 대조 양극 설계**(Ga-LLZO 를 LRM·NMC811 **양쪽에** 소결 → LRM 쪽만 `La(Ni,Mn)O₃` **26–30 %**·`Li₂ZrO₃` **10 %**, NMC811 쪽 단일산물 **8–16 %**; LLZO 잔존 **35→22 %** vs **25→26 %**) ③ **`Table 2` 열화 3분류**(기계/화학/전기화학 × 족별 severe–mild) — 우리 축 B 4분할과 **직교**. ★ 우리 계 언급 3건(**전부 재인용·방법 미표기 ⇒ 축 B① 데이터점 아님**): `Li₆PS₅Cl` **≈2.5 V 가역 산화분해 / 폴리설파이드 2.3 V 아래 환원**(ref 42 = **Du 2022 *ACS Energy Lett.* 7, 3006** — **별도 digest 필요**) · `Li₂MnO₃`\|`Li₆PS₅Cl` **3722 Ω**(ref 93, 면적 미정규화) · 산물 **`SO₄²⁻`·`SO₃²⁻`·`P₂Sₓ`**, **>4.4 V 생성·2.0 V 방전 후 잔존**(ref 94, `Fig. 13c` 실독). 🔴🔴 **§4.3 SCL 부호 오류 + 자기 그림과 모순**(본문 *"양극쪽 μ_Li 가 높아 Li⁺ 가 전해질→양극"* ↔ 두 문단 뒤 *"황화물 전해질의 μ_Li 가 높다"* ↔ `Fig. 13e` 는 **전해질쪽 Li 축적**) ⇒ 인용은 원출처 **ref 95 Nomura 2019 Angew.** 로. 🔴 **산화물 창 ">6 V"(§4.2, ref 없음)가 우리 [Xiao20Rev] LLZO `0.09–2.97 V`·[Zhu15] `0.05–2.91 V` 와 정면 충돌** ⇒ `Table 2` 창 4칸(ref 0건) **전부 인용 불가**. ⛔ **함정 2개**: 황화물 영률 **≈20 GPa**(+`Li₃YCl₆` 36.89·`Li₃InCl₆` 18.24, 전부 중문 ref 99 하나·방법 미표기)가 우리 **E_VRH 22.06/27.66** 와 우연 근접 · `Li₂MnO₃` **gap 1.89 eV**(functional 미표기)가 우리 **2.066/2.099** 와 우연 근접 — **둘 다 부인 선언 대상**. ⛔ **"Cl-rich 산화안정" 오용 금지**(리뷰 Cl = 골격 `Li₃InCl₆`, 우리 Cl = S 골격 부분치환 → VBM 여전히 S 3p, onset 2.256 V 불변). ⚠ **불일치 12건**: `Table 1` 이 **ref 66 행에 ref 42 값**(244.5·83 %/1000)을 넣고 ref 42 는 행이 없다 · ref 69 본문 221/0.1C ↔ 표 185.0/0.05C · **ICE 102 %** · **ref 64=82 중복** · **`Fig. 15b` 캡션이 그림과 전혀 다름** · ref 124(**B. Liu**)를 **"Aykol et al."** 로 오기(우리 `aykol2014`·`aykol2016` 보유로 즉시 검출) · ref 43(**C. Y. Chang**)을 **"Chen"** 으로 오기 · **`Fig. 4a` 캡션이 530.5 eV 성분 누락** · **초록 900 ↔ 서론 1000 Wh kg⁻¹** · **`Fig. 15d` 는 ML 아님(FDMNES 정방향)**. ⭐ **본문에 없고 그림에만 있는 값**: `Fig. 7c` LRM 자체 **σ_ion 6×10⁻⁸→6×10⁻⁶ · σ_e 7×10⁻⁷→7×10⁻⁵ S/cm**(각 ≈100배, `C2/m` 38→28 wt%) ⇒ **SE(≈10⁻³)보다 2–5 자릿수 낮다** · `Fig. 7e` **83 cyc 에 O 기여 128→58 · Mn 12→70 mAh/g** · `Fig. 14c` **무코팅 O2 대조군 61.07 %**(본문 미언급) ⇒ 격자 **+48.2 %p**/코팅 **+19.0 %p** · `Fig. 13d` `ClO⁻` 상한 **3.0→50**, `InO⁻` **2.5→60** · `Fig. 5c,d` **경로 B 만 1.21 Å 자유 O₂ 도달, 경로 A 는 1.30 Å `O₂⁻` 정지**(본문은 둘 다 O₂) | ✅ `papers/wang2026_lirich_mn_cathode_solid_state_review.md` (2026-09-13, 크로핑 **17장 중 8장 실독** — `Fig. 4`·`5`·`7`·`9`·`12`·`13`·`14`·`15`; ⛔ 안 본 것 `Fig. 1`·`2`·`3`·`6`·`8`·`10`·`11`; 표 2장은 **PDF 텍스트 전 셀 복원**) | **[외부]** 리뷰 · **양극계** · 자체 계산 0 · 자체 실험 0 · **⛔ 물성 4축 수치 비교 제외, `J-7 방법 원전` 전용** |
+| **[Carrete23UQ]** ★ | **Jesús Carrete\***/H. Montes-Campos/R. Wanzenböck/**E. Heid**/**G. K. H. Madsen** 2023 ***J. Chem. Phys.* 158, 204801** (TU Wien + Univ. Santiago de Compostela + Univ. Porto; DOI 10.1063/5.0146905; **OA CC BY**; 데이터·코드 **Zenodo 10.5281/zenodo.7643625**) — "**Deep ensembles vs committees for uncertainty estimation in neural-network force fields**". NNFF(NeuralIL, Behler–Parrinello + spherical Bessel, r_cut 3.5 Å) 위에 **committee / bootstrap / deep ensemble** 3종을 같은 코드로 구현·대결. **결론이 저자에게 불리하다 — 같은 양을 잴 땐 committee 로 충분**(Spearman 0.90 vs 0.91). deep ensemble 의 유일한 승리 = **학습셋 품질 혼합 판별**(그것도 힘 채널). **Appendix = 힘 분산의 미분 불가능성 증명.** ⛔ **재료계 = EAN 이온성 액체 + SrTiO₃** — 우리와 공유 원소 O 하나뿐, **물성값 이전 0건** | ✅ `papers/carrete2023_deep_ensembles_vs_committees.md` | **MLIP 방법론 (계산 100 %) · 참조 DFT = GPAW LCAO/PBE/Γ-only** — **방법 원전 전용, 축 A–I 제외** |
+| **[dK18MD]** ★★ | **N. J. J. de Klerk** / E. van der Maas / **M. Wagemaker\*** 2018 ***ACS Appl. Energy Mater.* 1, 3230−3242** (TU Delft; DOI 10.1021/acsaem.8b00457; CC-BY-NC-ND) — "**Analysis of Diffusion in Solid-State Electrolytes through MD Simulations, Improvement of the Li-Ion Conductivity in β-Li₃PS₄ as an Example**". **MD 궤적에서 확산 관련 8종을 뽑는 절차의 원전.** 우리에게 걸리는 축 = **H_R=1 선언 · tracer/jump 확산계수 분리 · 상관인자 f · 집단점프 정량 · 점프별·온도별 Ea(비아레니우스) · D 추정량 정의**. ⚠ **[dK16Arg] 와 다른 논문**(형제편). ⛔ **물질은 β-Li₃PS₄(Pnma) — argyrodite 아님 → 값 이식 전면 금지** | ✅ `papers/deklerk2018_diffusion_analysis_md_beta_li3ps4.md` | **방법 원전 (값은 있으나 다른 상) — 축 A–I 제외, J-7 로** |
+| **[Liang26IF]** | **S. Liang**/Z.Xu/M.Sun/Q.Lu/T.Wu/B.Chen/Z.Li/Z.Zhou/L.Lu/**O.Minchukova**/**G.Rymski**/**A.Zhaludkevich**/**Bolong Huang\*** 2026 ***Battery Energy* 5, e70137** (홍콩城市大 화학 + 벨라루스 과학아카데미 재료연; DOI 10.1002/bte2.70137, CC-BY; 접수 2026-06-03/수락 2026-06-18) — "**Overcoming the Interface Bottleneck in Solid-State Batteries: Electrolyte Design, Interface Engineering, and Computational Discovery**", 본문 18 pp·Fig 1–6·Table 0·SI 없음·refs 110. **자체 계산·실험 0 → 전 수치가 소환값(2차 인용).** ⚠ **교신저자가 이 저널 편집장**(자진 공개·편집 배제). ⚠ **결함 8건/18 pp**(무출처 정량 다수 · `Fig. 5b` ↔ 본문 σ 비 1.6× vs 2.7× · `Fig. 4a` 비단조 침묵 · `Fig. 6l` "interfacial energy" 오귀속 · Ω cm³ 단위). **쓰는 곳 = 축 J-12(계면·개관) 하나.** ★ 소득 3: ① **Scholar 스니펫 "aliovalent doping 이 σ 를 낮춘다"는 이 논문에 없는 문장**(LLZO 절 + 황화물 절 + 할라이드 절 3곳 접합) ② **σ-하락 주장은 무출처 논평이고 숫자가 0개** ③ **슬랩·W_ad·strain 배분 규약 전수 0회** ⇒ B2 정의 안 줌 | ✅ `papers/liang2026_interface_bottleneck_solid_state_batteries.md` | **review · 소환값 전용 — ⛔ 물성 4축(A–D) 수치 비교 제외.** 축 정의·관행 확인·gap 문장 재료로만 |
+| **[Liu26AB]** ⭐⭐ **"자리(site)를 선언하는 법"의 외부 선례**·cascade 재설계 §15 근거 | **Guangchen Liu**/**S. Yang**/**Yan Zhong\*** (**Worcester Polytechnic Institute**, IMPD Group — docx `Company` + 앱 About; gliu4@wpi.edu / yzhong@wpi.edu) — "**Substitutional Effects at A- and B-Sites in High-Entropy ABO₃ Perovskites: Insights from Machine Learning-Accelerated Simulations and Active Learning**". ⚠ **본문 PDF 미확보 — SI(9 pp·Fig S1–S5·Table S1–S3) + source-data csv(192행) + 코드저장소(`IMPDGroup/HEP-Explorer` @`e1003f2`, MIT, Zenodo 10.5281/zenodo.20075788) 만으로 작성.** 서지(화면 소환: *Sustain. Mater. Technol.* 2026)는 **미확인**이고 저장소 BibTeX 는 `journal={}`·`year={2025}`. **설계**: LaCoO₃ 기준으로 **A자리 = (La,A2..A5)CoO₃ / B자리 = La(Co,B2..B5)O₃** 두 화학식을 못박고 **host(La/Co)를 코드가 런타임 강제**(`app.py:342,356`), 후보집합은 **A{Ca,Sr,Ba,Ce,Pr,Nd,Sm,Gd} ∩ B{Ti,V,Cr,Mn,Fe,Ni,Cu,Zn} = ∅** 로 **자리 모호성을 사전 제거**. **400원자 SQS**(자리당 80) · 15–40 at.%(=12–32원자) · ΔS_conf>1.5R · **192 조성 × 5 SQS = 960 prototype/자리**. 라벨 = **Matlantis(PFP)**, 보고량 **4개 동일**(Ef eV/atom · Δ_lattice % · Δ_atomic Å · D cm²/s, D 는 **−D 로 저장**해 4목표 전부 minimize). 대리 = **Pyro BNN**(13→4, 2층, posterior 1000샘플), HPO = **Optuna 500 trial**(A 225/B 215 완료), 획득 = **EI·HVI·ParEGO·Pareto**, 구조생성 = **icet MC/SA**. 🔴 **convex hull·경쟁상·분해반응 0건 — "별도 상으로 빠지는 경우"를 판정에서 안 걸렀다**(requirements 에 pymatgen 없음, `y_train` 4열). 🔴 **Ef 의 기준상태(reference) 불명** · **자기·스핀 상태 선언 0** · **random arm/enrichment 0건** · Fig. S3 벤치마크는 **정연 17종 총에너지 parity**(동적범위 3 eV/atom)로 **타깃 Ef(산포 0.13/0.23)를 검증한 셈** · 5-fold 가 **행 단위**(1점 = 25행)라 그룹 누수 의심. **[재구성]** 학습셋 = **610점/자리**(초기 **420** = 6조성×70원소조 + **AL 190**), host 최소농도 점이 균등 대비 **3.35×/3.53×** 편중, **D 는 5 SQS 복제본이 610/610 전부 동일**(Ef·Δ 는 610/610 전부 다름) | ✅ `papers/liu2026_ab_site_substitution_high_entropy_perovskite_al.md` | **[EXTERNAL] MLIP(PFP)+BNN 능동학습, 실험 0회 · 산화물 페로브스카이트 — 물성 4축 수치 비교 제외.** 축 **J-9c**(방법론·설계문법) 전용 |
+| **[Maginn19MD]** ★★ | **E. J. Maginn\***/**R. A. Messerly\***/D. J. Carlson/D. R. Roe/**J. R. Elliott** 2019 ***Living J. Comp. Mol. Sci.* 1(1), 6324** (Notre Dame + **NIST** + BYU + NIH + Akron; DOI 10.33011/livecoms.1.1.6324; **[Article v1.0], 2019-01-06**; LiveCoMS **living document** — 인용 시 버전 필수) — "**Best Practices for Computing Transport Properties 1. Self-Diffusivity and Viscosity from Equilibrium MD**". **EMD 로 D·η 를 뽑을 때의 체크리스트 원전.** 우리에게 걸리는 축 = **MSD 적합 구간 · 독립 복제 수 · 부트스트랩 CI · 확산영역 게이트 · 유한크기 · thermostat 선택**. ⛔ **고전 force field 기준 · 분자 액체 예제만 · 힘장 오차는 명시적 범위 밖 · 이온전도도는 후속편 예고** | ✅ `papers/maginn2019_best_practices_transport_selfdiffusivity_viscosity.md` | **규약 원전 (물성값 0건) — 방법 원전 전용, 축 A–I 제외** |
+| **[Muy25Dop]** | **Sokseiha Muy\***/T. Le Mercier/M. Dufour/M.-D. Braida/A. A. Emery/**Nicola Marzari\*** 2025 ***Chem. Mater.* 37, 2395–2403** (**EPFL THEOS/MARVEL + Syensqo R&I**; DOI 10.1021/acs.chemmater.4c01049, **CC-BY 4.0**, CSCS s1073) — "**Optimizing Ionic Conductivity of Lithium in Li₇PS₆ Argyrodite via Dopant Engineering**". **⭐⭐ 우리 계열 정면**(황화물 argyrodite 도펀트 엔지니어링)이되 **모상이 할로겐 없는 Li₇PS₆** 다. QE-**PBEsol** + **AiiDA-defects** 로 고유결함 6 + 치환 24종 + 공도핑 144조합의 **300 K 평형 결함농도**(자기무결 Fermi 준위·안정영역 centroid μ·112원자 셀·k 2×2×2) → **DeePMD**(9조성 학습) 로 (Mg,Cl)·(Si,Cl) **≈91조성** σ·Ea 지도 → **Mg–Cl 4조성 합성·EIS**. **실험 Ea 0.36–0.38 eV**(⚠ 냉간압축 미소결 펠릿 total). **계산 σ·Ea 는 본문에 숫자가 0개** — 전부 `Fig. 5` 색지도이고 digest 가 컬러바 역변환으로 복원(`figure-read`). ⛔ **MSD 창·궤적길이·시드 수·앙상블·thermostat·dt·셀크기·오차막대가 전부 없다** ⇒ **σ·Ea 절대값 우리 표와 대조 금지**, 쓰는 것은 **방향과 방법**뿐 | ✅ `papers/muy2025_li7ps6_dopant_engineering_conductivity.md` | **DFT 결함열역학 + MLIP-MD(DeePMD) + exp(합성·XRD-FullProf·EIS)** — 값 이식 금지, 방향·방법 원전 |
+| **[Ou26MS]** ⭐⭐⭐ | **Y. Ou**\*/L. Scholz\*/S. Keshav/Y. Ikeda/M. Kraft/S. Divinski/**R. Gómez-Bombarelli**/**W. G. Zeier**/**F. Fritzen**\*/**B. Grabowski**\* 2026 ***Nat. Commun.* 17, 8726** (U. Stuttgart + MIT + U. Münster + FZ Jülich; DOI 10.1038/s41467-026-76216-w; **OA CC BY**; 데이터 DaRUS 10.18419/DARUS-5959; 솔버 **LGPL-3.0**) — "**Microstructural insights into fast ion transport in solid electrolytes via multiscale modeling**". **Li₆PS₅X(X=Cl,Br,I) 다결정 Li 수송을 DFT→AIMD→local-AL MTP→MD(5.2만 원자)→FEM 으로 잇는다.** 실험 0. **우리와 재료계가 정확히 같은 유일한 "MLIP 학습 AL + 입계" 편**이고, **σ=Λ(ze)²D/k_BT 의 Λ 를 조성마다 다르게 잡는다**(Cl 2.181×10⁻² ↔ I 1.590×10⁻¹ Li Å⁻³, 7.29×) — 우리 NE(H_R=1) 규약의 외부 앵커이자 반례. **저자 배포 코드·TikZ 소스를 열어 본문과 대조한 결과 정정 10건**(digest §10) | ✅ `papers/ou2026_microstructural_multiscale_fast_ion_transport.md` | **MLIP(MTP)+DFT/AIMD+FEM (계산 100 %)** — 축 **A** · **J-9** · **신설 입계 축** |
+| **[Wilson22BAL]** ★ | **N. Wilson**/D. Willhelm/**Xiaoning Qian**/**R. Arróyave\***/**Xiaofeng Qian\*** 2022 ***Comput. Mater. Sci.* 208, 111330** (Texas A&M 단일기관; DOI 10.1016/j.commatsci.2022.111330; **⛔ 비-OA · 코드·데이터 비공개**) — "**Batch active learning for accelerating the development of interatomic potentials**". **풀 기반(pool-based) 배치 능동학습**: 13,006 구조 풀에서 **에너지 불확실도(10-멤버 bagging) + 특징거리**의 가중합으로 **greedy 조건부**로 배치(10개)를 채운다. **⭐ D-optimality/leverage 를 쓰지 않는 model-agnostic 처방** — MTP γ 가 UMA 로 안 넘어가는 문제의 **유일한 우회로 원전**. ⛔ **재료계 = 단층 GeSe**(Li·P·S·Cl 0), **자체 DFT 0회**(라벨은 Yang 2021 DB 재활용), **물성값 이전 0건**, **비용 절감 실측 0건** | ✅ `papers/wilson2022_batch_active_learning_interatomic_potentials.md` | **MLIP 방법론 (계산 100 %) · 참조 DFT = VASP/PBE (남이 돌린 것)** — **방법 원전 전용, 축 A–I 제외** |
+| **[Fang22PW]** ★★Haven 외부앵커·⚠조성 반대 | **Hong Fang\*** & **Puru Jena\*** 2022 ***Nat. Commun.* 13, 2078** (Virginia Commonwealth Univ. 물리, 2인) — "Argyrodite-type advanced lithium conductors and transport mechanisms **beyond paddle-wheel effect**", DOI `10.1038/s41467-022-29769-5`. **순수 계산**(CALYPSO PSO + VASP PBE/HSE06 + AIMD + NEB, 실험 0). 계: **Li₆POS₄(SH)** · **Li₆PS₅(BH₄)** · **Li₆.₂₅PS₅.₂₅(BH₄)₀.₇₅** · 기준 **Li₆.₂₅PS₅.₂₅Cl₀.₇₅**. digest `papers/fang2022_argyrodite_transport_beyond_paddlewheel.md` | ✅ `papers/fang2022_argyrodite_transport_beyond_paddlewheel.md` (2026-09-13 병합) | **[외부]** 계산(AIMD) · 자체 실험 0 · ⚠ 3·4열은 병합자 기입 |
+| **[Jeon26Con]** | `jeon2026_concerted_li_motion_argyrodite_assi` — **argyrodite 협동 이동 + tracer/charge D 분리** (*JMCA* 2026, DOI 10.1039/d6ta04898f). 계 = **Li₆₊ₓAs₁₋ₓSiₓS₅I (As/Si + I, anion-ordered)** ⇒ 우리 comp1/modelc 와 **양이온·음이온·무질서 상태가 전부 다르다**. **값 이식 금지, 기전·방법만.** Haven 비는 **§J-7 방법 원전** 으로 간다 | ✅ `papers/jeon2026_concerted_li_motion_argyrodite_assi.md` (2026-09-13 병합) | **[외부]** 계산(AIMD/MLIP) · ⚠ 3·4열은 병합자 기입 |
 
 ---
 
@@ -319,6 +329,20 @@
 | **A ⚠ HT 스크리닝이 쓰는 *이동장벽 프록시*(softBV)는 우리 Ea 와 같은 표에 못 놓는다 — 그리고 폴리모프로 2.1× 흔들린다** | (규율 — 우위 아님) | **[Honrao21]** `Table S1`·`Table 4`·`Fig. S8` | 그들 값은 **경험적 softBV**(BV 미스매치 → Morse 환산, **구조 완화 없음**, 단일 폴리모프)이고 논문 자신이 *"softBV barriers should not be used to directly estimate the ionic conductivity"* · *"tend to be overestimated"* 라고 적는다. ⇒ 우리 `Ea`(**comp1 0.253 / modelc 0.224 eV**, UMA-s-1p1 MLIP-MD 600/800/1000 K, MSD 2–50 ps)와 **다른 양**. ★ **결정적 실측**: 같은 `LiCl` 이 **0.349 eV**(mp-1185319, `Table S1`) ↔ **0.735 eV**(mp-22905, `Table 4`) = **2.11×** — 그런데 그들 SE 게이트가 **0.5 eV** 라 **구조 선택이 통과/탈락을 가른다**. ⇒ 우리 BVSE 규율(*"정량·순위는 원본 주기셀 값만"*)의 **외부 실증**. `Fig. S8` parity 는 0–0.5 eV 구름이 **y=x 위**(저장벽 양의 편향, figure-read)로, SHAP `f(x)` > softBV 관계와 같은 방향(0.198>0.185 · 0.134>0.122 · 0.127>0.109) |
 | **A ⛔⛔ 문헌 HT 깔때기가 *우리 계와 현대 할라이드 SE 를 잃는 두 지점* — 이유가 전도도가 아니다** | **우리 우위(범위)** | **[Honrao21]** 본문 Screening 절 · `Table 4` #6 | ① **`E_hull ≤ 30 meV/atom` 게이트**: *"the argyrodite `Li₆PS₅I` is identified, but **`Li₆PS₅Br` and `Li₆PS₅Cl` are excluded due to their higher E_hull values**"* (LGPS 도 **32 meV** 로 탈락, `Li₁₀SiP₂S₁₂` 는 통과) ⇒ **`comp1`·`modelc` 가 후보 목록에 없다** — 물질이 나빠서가 아니라 **아지로다이트가 본질적으로 Cl/S 자리무질서 물질**이라 정렬 근사가 hull 위로 올라가기 때문. ② **`0.5 eV` softBV 문턱**(본문 표현 *"arbitrary cutoff"*): `Li₃YBr₆` **0.55** · `Li₃ScCl₆` **0.56** · `Li₃InCl₆` **0.59** 가 전부 *"just above"* 로 탈락 — **`Li₃InCl₆` 는 같은 논문 `Table 4` 에서 DFT-MD 가 σ>10⁻⁴ S/cm 로 판정한 물질**이다(**자기 데이터 안의 위음성**). ⇒ 원고의 *"문헌 스크리닝이 우리 물질을 빠뜨린다"* 를 쓸 때 **이 두 원인을 이름으로 댄다**: 무질서를 못 담는 `E_hull` · 완화를 못 담는 BV 프록시 |
 | **A ✅ 계보 안에서 전도도 축을 *1차 게이트*로 세운 유일한 편 — [Aykol16]·[Nolan21] 의 함정을 둘 다 피한다** | (계보 판정 — 우위 아님) | **[Honrao21]** SE `3D ≤0.5 eV` · 코팅 `3D ≤1 eV` | **[Aykol16]** 은 `−E_c>3.5 V` 로 **전도체를 잘랐고**(`Li₂ZrO₃`·`LiAlO₂`), **[Nolan21]** 은 **전도도를 아예 안 봤다**(`Table S4` 가 스스로 `10⁻¹⁵`~`10⁻¹⁸` S/cm 를 싣고 방어는 *"nm 두께면 된다"* 한 줄). **[Honrao21]** 은 전도도를 **요구**한다 — ⇒ *"게이트가 Li 전도체를 배제하는가"* 의 답은 **편마다 다르고, 세 가지 서로 다른 함정이 있다**: ⓐ 전도체 절단 ⓑ 전도도 무시 ⓒ **전도도는 봤는데 프록시·준안정성으로 잃음**(본 편) |
+| **★★ "Li 가 많이 움직인다" 는 σ 의 대리지표가 아니다 — 총 점프 수는 그대로인데 σ 가 2×10³ 배 달라진다** — AIMD 700 K 기준 총 기본점프 수가 x=0 (≈60) 과 x=0.75 (≈65 Å⁻³ns⁻¹, `Fig. 6b` figure-read) 로 거의 같고, 케이지 **안** 점프(T5↔T5·T5↔T2)가 x=0 에서 전체의 **>98 %** 다. σ 를 만드는 것은 **케이지 경계를 넘는 극소수 점프**뿐이며 그 300 K 빈도만 **2.0×10⁶ 배**(digest 검산 ✓) 바뀐다 | **[Jeon26Con]** `Fig. 6a–c` · `Table 4` · `Table S7` | 우리 표준 보고는 **MSD·D·Ea** 뿐이지만, 도구는 이미 있다 — `tools/ionic/aimd_jump_stats.py` 가 **케이지 중심(자유 음이온) 기준 inter-cage hop 율**과 van Hove Gs(r,Δt) 를, `cage_jump_descriptors.py` 가 intra/inter-cage 48h–48h 거리를 낸다. ⚠ 다만 **"총 점프 수 대비 케이지간 비율" 로 묶어서 보고한 적이 없고**, BVSE 채널%(`tools/comp1_v3/`)와 **짝지어진 적도 없다** | 🔑 **규율로 채택 후보.** MSD 총량·확률밀도 부피·BVSE above-min 부피는 **연결성(percolation) 지표가 아니다.** `Fig. 6a` 의 "끊어진 케이지 → 연결된 3D 망" 이 그 시각화 — 우리 BVSE 그림과 같은 메시지의 MD 판 |
+| **★ 협동 이동은 "빈도"만 도펀트로 조절되고 "성질"은 안 바뀐다 (⇒ cascade 축이 하나 생긴다)** — 700 K, x = 0→0.75 전 구간에서 참여 Li 수 **2–6**(평균 3.31–4.50)·지속시간 **0.03–3.40 ps** 가 x 에 **거의 무관**하고, 바뀌는 것은 **사건 빈도**(T5→T4→T5 3.7×10⁻³ → 0.25 Å⁻³ns⁻¹)와 **성공률(10 % → 37.4–41.9 %)** 이다. 지렛대는 **국소 음이온 전하**(S₁₆ₑ −0.93 → −1.45 e; 확산 경로 주변 S 가 0.49–0.62 e 더 보유) | **[Jeon26Con]** `Table S8` · `Table S9` · `Fig. 2a` · `Fig. S10/S11`(본문 인용) | 우리 도핑 캠페인(Nd/O·B₂O₃ 등)은 **Ea·D 만 본다** — "성공률"·"협동 사건 빈도" 를 관측량으로 쓴 적 없다. Bader·ICOHP 는 이미 낸다 | 🔶 **방향만 이식.** 값은 As/Si+I 계라 금지. 우리 쪽 번역 = *"도펀트는 협동을 만들지 않는다 — 이미 있는 협동 사건의 성공률을 올린다"* ⛔ 단, 이 논문의 참여 Li 수·지속시간은 **그룹화 문턱이 SI 에 없어 재현 불가** ⇒ 관측량으로 채택하려면 **우리가 문턱을 정의해야 한다** |
+| **★★★ Li 함량을 고정해도 Cl 이 많을수록 빠르다 — "전도도를 올리는 것은 Li 개수가 아니라 음이온 부격자다"** — DeePMD-MD ≈91조성 지도의 **등-Li 선(Li = 7 − 2·Mg − Cl)** 을 따라 읽으면, **Li = 5.5 로 고정한 세 점** (Cl 1.5/Mg 0) · (Cl 1.0/Mg 0.25) · (Cl 0.5/Mg 0.5) 에서 **σ(300 K) = 44.0 → 29.7 → 7.7 mS/cm (5.7×)**, **Ea = 0.191 → 0.202 → 0.238 eV (+47 meV)** (`figure-read`, digest 가 `Fig. 5` 컬러바를 픽셀 역변환). 실험도 같은 방향 — Mg 도핑 4조성에서 Cl 1.0 → 1.5 로 갈수록 σT 가 올라간다(`Fig. 6`) | **[Muy25Dop]** `Fig. 5`(Mg–Cl 패널) · `Fig. 6` · digest §3.2 | 우리는 comp1(Cl 1.0) → modelc(Cl 1.6) 에서 **D 2.6×↑ · Ea↓** 를 본다. ⚠ 우리 두 조성은 **Li 함량이 같지 않다**(6.0 vs 5.4) ⇒ 우리 데이터만으로는 "Li 수 효과"와 "Cl 효과"가 **분리돼 있지 않다** | ✅ **방향 일치 + 우리가 못 한 분해를 대신 해 준다.** 🔑 **이식 1건**: 우리도 **등-Li 조성쌍**(예: Li 5.4 를 고정한 Cl/Mg 또는 Cl/vacancy 짝)을 한 쌍이라도 계산하면 *"Cl-rich 가 빠른 것은 Li 를 빼서가 아니다"* 를 **우리 손으로** 말할 수 있다. ⛔ σ 절대값(7.7–44 mS/cm)은 소환값이고 규약 부재라 우리 표와 같은 칸에 넣지 않는다 |
+| **⚠ Cl 상한 1.5 — 그 위는 "이차상이 생기기 시작하는" 영역이다** — MD 조성 격자의 Cl 상한을 **1.5 로 잘랐고**, 근거로 Gautam 2021(`Li₇₋ₓPS₆₋ₓClₓ` 중성자회절)을 든다. 하한도 잘랐다 — **Cl ≥ 0.25(Mg 계) / 0.5(Si 계)**, 이유는 *"순수 Li₇PS₆ 의 입방상은 RT 에서 불안정"* | **[Muy25Dop]** 본문 §3.3 | **우리 modelc = Li₅.₄PS₄.₄Cl₁.₆ 은 Cl = 1.6 으로 이 범위 밖이다** | ⚠ **경계 정보로 반드시 기록.** 이 논문의 σ·Ea 지도를 우리 조성까지 **외삽하지 않는다.** 그리고 우리 modelc 를 "단상" 으로 전제하는 서술이 있다면 **외부 근거가 필요**하다(우리 XRD 없음) |
+| **★★ 우리와 *같은 규약*의 Haven 비를 낸 유일한 argyrodite-계 AIMD — 그리고 저자도 그 보정을 σ 에 적용하지 않았다** — 본문 *"The inverse of Haven ratios … are **1.3 and 1.5**"* (Li₆POS₄(SH) / Li₆.₂₅PS₅.₂₅(BH₄)₀.₇₅) ⇒ **H_R = 0.769 / 0.667**, **σ_true = 1.30× / 1.50× σ_NE** (digest 계산). Methods 의 σ 식은 **tracer D 를 그대로** NE 에 넣는다 = **H_R = 1 규약**. ⛔ **Li₆.₂₅PS₅.₂₅Cl₀.₇₅ 의 H_R 은 보고 안 됨** ⇒ *"우리 계에서 σ 가 몇 배 틀리나"* 는 **이 논문으로 답할 수 없다** | **[Fang22PW]** 본문 p4 + Methods (`D_c` 정의식) | 우리 **NE, H_R = 1 고정** · 자체 실측 **0.84 ± 0.06**(⚠`citable:false`) | **✓ 규약 동일 · 값 같은 대역** |
+| **⚠ Ea·D 대비 — real difference 아님(조성 *방향*·힘계산 둘 다 다름)** — [Fang22PW] **Li₆.₂₅PS₅.₂₅Cl₀.₇₅ (S-rich, Cl 0.75)**: Ea **0.210 eV**(700/600/500 K **3점**), σ₃₀₀K **14 mS/cm**(3점 외삽), **figure-read D(600 K) ≈ 5×10⁻⁶ cm²/s**. 그들은 **AIMD(VASP PBE)**, 우리는 **MLIP-MD(UMA-s-1p1)** | **[Fang22PW]** `Fig. 1C` (표 + Arrhenius, figure-read) | 우리 comp1 **0.253 eV / 3.09×10⁻⁶** · modelc **0.224 eV(단일궤적) / 0.197±0.032(3-seed) / 7.90×10⁻⁶** cm²/s | **~ 자릿수 일치, 일치 주장 금지** |
+| **★ "billiard-ball" — 국소(intra-cage) 확산이 Li–Li 반발로 릴레이돼 장거리 전도를 만든다. 클러스터 없이 *할로겐 argyrodite 에서도* 성립** — `Fig. S11`(Li₆.₂₅PS₅.₂₅Cl₀.₇₅ @500 K) 결합 Event 3개가 **전부 S_d(할로겐 자리의 S²⁻) 주변**에서 발생, 연쇄 간격 **~0.6–3 ps**. ⛔ **트리거가 S_d 라는 점이 우리와 반대다** — modelc 는 Cl 을 S 자리에 넣은 계라 **S_d 가 원리적으로 없다**. 기전 자체(Li–Li 반발 릴레이)는 도관 종류와 무관하므로 **우리 궤적에서 따로 확인할 문제** | **[Fang22PW]** `Fig. S11` + Discussion 4요인 | 우리 `aimd_jump_stats.py`·`cage_jump_descriptors.py` 로 확장 검출 가능 (Eq.(1) 3-파라미터 필터 미구현) | **미검증 (우리 축으로 안 재봄)** |
+| **★★★ A-Jiang-1. MD 로 뽑은 Ea 는 힘 엔진과 무관하게 실험보다 0.05–0.09 eV 낮다 — 그리고 그건 입계 탓이 아니다** — Jiang **AIMD(DFT 힘)** Li₆PS₅Cl **0.282** vs 실험 0.34 (**−0.058**) · Li₅.₅PS₄.₅Cl₁.₅ **0.244** vs 0.29 (**−0.046**). [Wang25DPA] 전용 MLIP −0.084. **Adeli 의 PFG-NMR(벌크·무전극) Ea 가 EIS 와 오차 내 일치**(0.35 vs 0.34 · 0.29 vs 0.29) ⇒ **GB 로 설명 불가** | **[Jiang22Se]** `Fig. 3` + 본문 §3.2.1 · 실험은 **[Adeli]** Table (EIS·PFG) | comp1 **0.2532 eV**(⚠ provisional · `blocking_gate=diffusive_regime_gate`, **gate_outcome = not_assessed** · `cite_until_beta_gate_passes`) vs 실험 0.34 ⇒ **−0.087**; modelc **0.2235**(단일시드 앵커) / **0.197 ± 0.032**(3-seed) vs 0.29 ⇒ **−0.067 / −0.093** | ✅✅ **다섯 추정치가 전부 같은 방향·같은 크기.** ⇒ **힘 엔진(DFT / 전용 MLIP / 범용 MLIP)이 아니라 *프로토콜* 이 원인**이라는 가설을 이 편이 크게 밀어 준다(Wang25 digest 가 제기한 그 질문의 답 쪽). **용의자**: 고온 외삽 · 짧은 궤적 · 단일 무질서 배열 · 비확산 저온점 포함 · 단일 아레니우스 직선 |
+| **★★ A-Jiang-2. σ 가 실험과 5 % 내로 맞는 것은 검증이 아니라 두 편향의 상쇄** `digest 계산 (원논문 미보고)` — ① Ea 0.05 eV 저평가 ⇒ 298 K σ **×7.0 과대** ② Haven=1 (Adeli 실측 **H_R 0.23–0.30**) ⇒ σ **0.23–0.30× 과소**. 곱 ≈ **×1.8**, 나머지는 AIMD 산포 안 | **[Jiang22Se]** σ 2.592/8.916 vs **[Adeli]** 2.5/9.4 · H_R 은 **[Adeli]** ⁷Li PFG | 우리도 **Nernst–Einstein Haven=1** · σ 절대값 **인용 금지**(CLAUDE.md) | ✅ **우리 금지 규율의 정량 근거.** 그리고 **Haven=1 가정의 크기가 3.3–4.3배**라는 숫자를 처음 확보 ⇒ 앞으로 σ 를 낼 일이 생기면 **H_R 을 보고량 카드에 명시**한다 |
+| **★★ A-Jiang-3. Cl-rich 가 빠른 이유의 시각적 증거 = inter-cage 연결** — `Fig. S4` 500 K · 120 ps Li 궤적밀도: **Li₆PS₅Cl 은 서로 끊긴 케이지형 3덩어리**(inter-cage 미연결), **Li₅.₅PS₄.₅Cl₁.₅ 는 셀 관통 연결망**. MSD 도 정합(`Fig. S2a` 500/600 K 평탄 vs `Fig. S3a` 600 K부터 선형) | **[Jiang22Se]** `Fig. S4a,b` · `Fig. S2a` · `Fig. S3a` | 우리 BVSE 채널% · percolating bottleneck · comp1→modelc D 2.6×↑ | ✅✅ **우리 서사와 같은 물리, 더 좋은 그림.** ⇒ **우리도 같은 형식을 낸다**(궤적은 이미 있다). **[Liu]**(AdvFM 2022, intra→inter-cage 활성화)·**[deklerk2016]** 와 3중 정합 |
+| **★★ A-Jiang-4. 그런데 바로 그 그림이 저들의 아레니우스를 무너뜨린다** — `Fig. S4a` 가 500 K 에서 Li₆PS₅Cl 이 **확산영역이 아님**을 보여주는데, 500 K 와 600 K 가 6점 아레니우스에 **그대로 들어간다** | **[Jiang22Se]** `Fig. S4a` ↔ `Fig. S2f` | 우리 **확산영역 게이트**(D_inc plateau · 창 안정성 · 홉 수; β 하드게이트는 2026-08-27 폐기) · 600/800/1000 K 3점(400/500 K 제외 판정) | ✅✅ **우리 게이트의 존재 이유를 외부 논문이 실물로 보여준다.** 우리가 400/500 K 를 뺀 판정이 옳았다는 근거 |
+| **★ A-Jiang-5. Se 는 σ 를 올린다 — 그러나 크기는 방어되지 않는다** — Li₆ 계열 2.592→15.397 (**5.94×**, ⛔ 논문은 "7-fold"), Li₅.₅ 계열 8.916→19.286 (**2.16×**); Ea 0.282→0.203 / 0.244→0.144 eV | **[Jiang22Se]** `Fig. 3a,b` (값이 그림에 인쇄됨) | comp2 실측: `MD_Ea_eV_ordered` **0.2755 ± 0.0327**(3 seed) vs anion-disorder 앙상블(3 config) = ⚠ **정밀 인용 금지**, *"ordered 보다 낮다"* 까지 · **config 산포 45 %** | 🔶 **부호는 신뢰, 크기는 불가.** 저들 Se 전체 효과(Li₆ 계열 **0.079 eV**)가 **우리가 잰 배열 효과와 같은 자릿수이거나 그보다 작다** ⇒ 조성별 Ea 추세에 **Se 효과 + 배열 효과가 분리 안 된 채 섞여 있다** |
+| ⛔ **A-Jiang-6. Ea 0.144 eV / 0.203 eV 는 인용 금지** — `Fig. S3e` 픽셀 측정: 파랑(Li₅.₅PS₁.₅Se₃Cl₁.₅, 범례 0.144)이 초록(무도핑, 0.244)보다 1000 K 에서 **0.45 decade 위** → 500 K 에서 **0.14 decade 위** ⇒ **기울기가 더 급하다 = Ea 가 ~0.06 eV 더 커야 한다**(축 보정 불필요한 상대 읽기). `Fig. S2f` 의 Li₆PSSe₄Cl(0.203)도 같은 반전 | **[Jiang22Se]** `Fig. S2f` · `Fig. S3e` (digest §10-9 픽셀 측정) | — | ⛔ **자기 그림과 범례가 어긋난다.** 다른 계산에서 온 값인지, 피팅 구간이 다른지 논문이 말하지 않는다 |
+| ⚠ **A-Jiang-7. AIMD 규약 미기재 목록** — timestep · Nosé 질량 · **MSD 창** · 피팅 구간 · 절편 자유/강제 · 시드 수 · 오차막대 정의 · Haven 비 **전부 없다**. 있는 것: NVT-Nosé · 6온도(500–1000 K, `Fig. S2f`/`S3e` 마커로 확정) · 120 ps · Γ · 300 eV · 1 K/fs 가열 | **[Jiang22Se]** 본문 §2 + `Fig. S2f`/`S3e` | **MSD 창 2–50 ps 고정 · 자유절편 · 600/800/1000 K · equilib 5 ps + prod 200 ps · modelc 3-seed** | ⛔ **이 한 줄이 위 표 전체를 "추세·부호" 로 제한한다.** 단 **A-Jiang-1 의 Ea 결손은 규약 미기재와 무관하게 성립**한다(그들 값 vs 그들이 인용한 실험값의 차이라서) |
 > 인사이트: 우리 AIMD가 실험·문헌 trend 재현 → 신뢰. 절대 σ는 RT 외삽이라 Arrhenius로 비교. **[KimICCF]: 같은 그룹 실험이 "σ 병목은 bulk가 아니라 미세구조(공동)" 를 직접 보여줘 우리 'lever=interphase' 결론을 실험으로 보강** (GeoDict σ 1.96/2.10 sim ≈ 1.95/2.17 exp). **[KimCA]: 같은 그룹이 양극 측에서 "device σ_e·성능은 코팅 형상·도전재 차원(미세구조)이 지배, bulk 아님" 을 직접 보여줘 같은 결론을 cathode-side로 확장** (CA 양 아니라 분포·연결성; Super P 과잉이 오히려 σ_e 3,000배↓). → **[KimICCF](sheet/anode) + [KimCA](cathode σ_e) + [Cha](cathode 계면 호환성) = 우리 'lever=interphase/microstructure, not bulk σ' 결론에 *세 우리 그룹 실험*이 수렴** (특히 [Cha]는 σ와 성능이 *역경향*인 가장 깨끗한 반례: σ 1등 LIC가 성능 꼴찌).**
 
 > 🧭 **Framework note — *수송이론 어휘* (transport-theory vocabulary, NOT a materials comparison)** [외부/theory `papers/dyre2004_hopping_models_ion_conduction_noncrystals.md`]: **Dyre & Schrøder hopping-model 리뷰**(비결정질 유리·고분자; **argyrodite 아님 — 결정질**). 위 표 *어느 행에도 수치로 들어가지 않음*, "일치" 금지. **site-percolation 논문의 *수송 짝*** — "Li가 *어떻게 hop하나*(σ(ω)·Arrhenius Ea·Haven)"의 표준 vocabulary만 제공. 핵심 어휘 4개: **(1) inter-cage hop = percolation 병목 = dc Ea 율속** (Dyre §3·Fig 2: "무한히 멀리 가려면 percolation cluster 위 *최대 병목 장벽*을 넘어야"; intra-cage는 빠름·non-limiting) — 우리 D(600K) comp1 3.09→modelc 7.90e-6·Ea 0.253→0.224을 "Cl-rich disorder가 inter-cage 병목을 낮춤"으로 *서술*. **(2) 우리 Haven H_R≈0.3–0.7<1 = correlated/concerted hopping = RBM이 *비상호작용으로 끈* 영역**(Dyre §6 한계 #1: "Coulomb+self-exclusion 넣으면?") — RBM=independent baseline, 우리=correlated 보정. **(3) Nd σ-drop 0.52×(D 0.62×)을 hopping 언어로 = "*Ea(0.224→0.227, 사실상 불변)가 아니라* percolation 경로/prefactor를 좁히는 blocking"** (우리 prefactor-dominant 분해 D0 0.65×와 정합; Liu2013 `dopant_blocking_fraction`="창 좁힘"과 같은 방향). **(4) disorder→Arrhenius성** (우리 disorder_ensemble: ordered=600–800K frozen→Ea artifact 1.17; disordered Ea=0.177) ↔ Dyre "*넓은* 장벽 분포일 때*만* percolation이 단일 병목 골라 Arrhenius dc"(분포 좁으면=ordered 오히려 Arrhenius 붕괴). ⚠ **검증 0·수치 전이 0**: argyrodite=결정질 vs 논문=noncrystals; RBM=비상호작용 최소모델(우리 Li⁺=correlated). "disorder→Ea↓"는 Dyre가 증명 안 함(Arrhenius*성*만; Ea*값* 하강은 Minafra/Kraft 추가물리). σ_NE over-experiment는 Haven *반대부호*(설명 안 됨). 무차원 σ̃ vs 우리 eV·S/cm — **절대 같은 표·"일치" 금지**. 순수 해석 어휘.
@@ -331,6 +355,81 @@
 
 > 📐 **methods 레퍼런스 note — *재료 비교 아님* (NOT a materials comparison)** [`papers/whitten2023_ups_practical_best_practices.md`]: **Whitten 2023 = UPS(자외선 광전자분광) 실전 best-practice 튜토리얼** (외부·단독·*재료결과無·계산無*). 위/아래 어느 물성축 표에도 *행으로 넣지 않는다*, 재료 수치 대조 금지. **단 하나의 연결 = "우리 계산값을 *어떻게 측정하나*"**: UPS는 우리 DFT가 내놓는 **VBM(S 3p)·일함수 Φ·이온화에너지 IE**를 *실험으로 재는 바로 그 기법*. **🔑 PRIMARY = 산화안정성 valence-side 관측량**: 산화=가전자 전자 빼기 → **깊은 VBM/IE(IE 큼)↔높은 산화 onset**. UPS가 그 밴드엣지 관측량(VBM/IE)을 측정 → 우리 **grand-potential 산화 onset·VBM-vs-grand-potential 분석**(`kb/results/oxidation_stability_VBM_vs_grandpotential_report_2026_06_18.md` §6)의 *valence-side 짝*. **단 위계 명시**: UPS 밴드엣지 = 상한(분해창을 2–3배 과대) ≫ CV/LSV(우리 2.14 V 실험짝) ≥ grand-potential(진짜 분해 onset, S²⁻-limited). 우리 자체증거(보고서 §8): comp1/modelc는 **VBM 달라도 onset 동일(2.14 V)** → UPS-VBM 단독을 "산화창"으로 읽으면 틀림(band alignment로만). dopant 스크리닝(`oxidation_stability_cascade.csv`: 대부분 2.14 V S²⁻-limited, B2O3만 2.317 V로 limiting reaction 이동) test에 UPS(VBM/IE)+CV(onset)가 "VBM 깊이↔onset"이 *언제* 연동하나 판별. **referencing 미묘함**(`concepts/dos_vbm_efermi_methods.md`): DFT 절대 VBM은 셀-기준(절연체 E_F=smearing artifact)이라 비교불가 → **UPS는 분광기 E_F/진공준위 절대기준** 제공 → 우리 **slab-IP 보정 VBM**의 외부 앵커. **XPS(코어=화학상태, 우리 ORCA ΔSCF)와 상보**: XPS=무슨 상, UPS=그 상의 VBM/Φ=밴드정렬/전자이동(같은 장비서 He 램프 추가). Φ/VBM=밴드정렬·정공주입장벽 = 우리 "wide-gap 절연 SEI가 전자차단" 서사의 실험 관측량(단 σ_e 절대값은 별도). ⚠ UPS=표면민감(~1–2 nm)·수직이온화·절연체 직접불가(도전기판 박막+바이어스 필요)·VBM만(CBM은 IPES). **methods 논문이므로 "우리 재료와 일치" 주장 금지 — 연결은 측정-방법 매핑뿐.**
 
+
+**📎 [Wang25DPA] §A 보강 표 (2026-09-13 병합)**
+> 📎 병합 2026-09-13 병합 — 초안 `_pending_index_wang2025_pretrained_deep_potential_sulfide_sse.md` §②.
+
+**[Wang25DPA] `wang2025_pretrained_deep_potential_sulfide_sse` — MLIP-MD 로 낸 소환값 (Fig. 6c,d / S10 / S11)**
+
+| 항목 | [Wang25DPA] (MLIP-MD, DPA-SSE) | 우리 (UMA-s-1p1 MLIP-MD) | 판정 |
+|---|---|---|---|
+| **Ea, Li₆PS₅Cl** | `figure-read ≈ 0.24 eV` (실험 `≈0.324`) | comp1 **0.253 eV** ⚠단일궤적 | 🔵 **0.013 eV 차 — 놀랍게 가깝다.** 그런데 **둘 다 실험보다 0.07–0.08 eV 낮다** ⇒ **같은 방향·같은 크기의 빗나감.** 모델 공통 결함일 수도, **MLIP-MD 로 Ea 를 뽑는 방식(짧은 궤적·NE·Haven=1)의 공통 결함**일 수도 있다. 후자면 **모델을 바꿔도 안 낫는다** — 별도 조사 항목 |
+| **Cl-rich σ 추세** | Li₆₋ₓPS₅₋ₓCl₁₊ₓ x=0→0.7 에서 7.8→15.7 mS/cm (**≈2.0×↑**) | comp1→modelc **D 2.6×↑**, Ea↓ | ✅ **방향 일치, 같은 자릿수.** ⚠ **D 비와 σ 비는 다른 양**(V·T 인자) — 직접 등치 금지 |
+| **우리 modelc 조성(x=0.6)** | 논문이 안 찍음. 0.5(11.8)–0.7(15.7) 보간 **≈13.7 mS/cm** `digest 계산 (원논문 미보고)` | ⛔ 우리는 σ 절대값 인용 금지 | ⛔ **참고만.** db 미등록 |
+| **Br 치환** | 같은 x 에서 Cl 보다 σ 높음(x=0.7: 18.6 vs 15.7). 논문 설명 = 배열 엔트로피(*"possibly"*) | 우리 Br 계 없음 | 🔵 미탐색 축 |
+| **★ O 도핑** | `Fig. S11` Li₅.₅PS₄.₅₋ₓOₓCl₁.₅: σ **단조 감소** 11.8→7.0 (x 0→0.30, **−41%**); 실험 9.5→6.0 (x 0→0.25, **−37%**) | LPSOCl 은 **전자구조(gap 2.2309 eV)가 정본**, MD 전도도는 별도 | 🔴 **경고.** **문헌은 O 도핑이 전도도에 불리하다고 말한다**(계산·실험 합치). 우리 +O/+B₂O₃ 를 "개선"으로 쓰려면 **어느 축인지 반드시 명시** — 수분/산화 안정성이지 이온전도가 아니다. `Fig. S11` 캡션이 그 트레이드오프를 그대로 씀 |
+| **무질서 = 수송 on/off** | `Fig. 6b`: LPSCl 질서상 MSD 가 `≈11.5 Å²` 에서 **포화**(D→0), 무질서상만 선형(5 ns 에 `≈38 Å²`). 무질서가 `≈7.5 meV/atom` **더 안정** | 우리도 무질서 배열 사용 | ✅ **정성 일치.** ⚠ 논문은 **무질서 배열 생성법을 안 밝힌다**(`50%@4c` 라벨뿐) ⇒ **우리 처리와 정량 대조 불가** |
+| **MSD 창** | **미기재** (`D = lim MSD/6t` 정의만) | **2–50 ps 고정·자유절편** | ⛔ **이 한 줄이 위 표 전체를 "추세만" 으로 제한한다** |
+| **σ 산출** | Nernst–Einstein, **Haven=1**, `σ₀T^m`, m=−1 | 동일(NE, Haven=1) | ✅ 같은 관례 — 그래서 **같은 방향으로 틀릴 수 있다**(digest §13-10) |
+
+**⛔ [Wang25DPA] 에서 축 A 로 옮기면 안 되는 것**
+1. **σ·D 절대값** — 셀·궤적·시드·MSD 창 미기재.
+2. *"DPA-SSE 는 실험을 정확히 재현한다"* — `Fig. 6c` 는 5계 중 4계에서 **1.6–2.8× 과대**다.
+3. **LGPS 계열 값 전부** — 우리 계가 아니다.
+4. `Fig. S5a` 의 개별 분해에너지 — **범례 10색 순환으로 점 특정 불가**.
+
+**📎 [Ou26MS] §A 보강 표 (2026-09-13 병합)**
+> 📎 병합 2026-09-13 병합 — 초안 `_pending_index_ou2026_microstructural_multiscale_fast_ion_transport.md` §2-b.
+
+| 항목 | **[Ou26MS]** | 우리 | 판정 |
+|---|---|---|---|
+| Ea (Li₆PS₅Cl 벌크) | **0.3843**(질서) / **0.1985**(25 %) / **0.2162**(50 %) / 0.2158(75 %) / 0.3407(100 %) eV — MTP-MD, α≡1 강제, 3–5 ns 창 | **comp1 0.253 eV** (UMA-MD, 단일 궤적, 2–50 ps 자유절편) | 🔶 **같은 자릿수, 정량비교 금지.** 우리 0.253 이 그들 25 %(0.198)~50 %(0.216) 위·질서(0.384) 아래 ⇒ 우리 comp1 배열이 **부분 무질서처럼 거동**한다는 정성 해석까지만. 힘장·창·추정기 전부 다르다 |
+| Ea (Cl-rich) | ⛔ **대응 조성 없음** (그들 축은 화학량론 고정 S↔Cl 교환) | modelc 0.224 (3-seed 0.197±0.032) | 🔴 **비교 불가.** ⚠ 우리 3-seed 산포 ±0.032 가 그들 25 %↔50 % 차이(0.018)보다 크다 |
+| D (600 K, 질서 Li₆PS₅Cl 벌크) | **1.724×10⁻⁶ cm²/s** | comp1 **3.09×10⁻⁶** / modelc 7.90×10⁻⁶ | 🔶 우리 comp1 이 그들 **질서** 벌크의 1.8× (그들 50 % 무질서 600 K 벌크값은 미공개) |
+| **D_GB / D_bulk** | 질서 Cl **8.79↑** · 25/50/75 % **0.19/0.44/0.38↓** · 100 % 2.85↑ · 질서 Br **64.06↑** · 질서 I **59.25↑** · (LLZO 소환 **9.29×10⁻⁴**) | 🔴 **없다** | 🔴 **우리에게 없는 양.** ⚠ 이식하려면 **GB 폭 2.5 nm 가정**이 딸려온다 |
+| **D_macro / D_bulk (입도 의존)** | 50 % 무질서 Cl 300 K: **0.568(5.9 nm) / 0.788(23 nm) / 0.942(100 nm) / 0.993(1 µm) / 0.999(5 µm)** | 🔴 없다 | ⭐⭐ **우리 "벌크 상한" 주석을 정밀화하는 값.** ⇒ *"우리 D 는 **치밀 µm-다결정 상한**(입계 손실 <1 %)"* |
+| σ (RT, 50 % 무질서 Li₆PS₅Cl) | 예측 **29.47 mS/cm**(치밀,∞) · QENS 31.01(1.07×) · EIS 최대 4.73(6.2×)·중앙값 0.77(38×) | ⛔ **σ 절대값 인용 금지**(우리 규약) | 🔴 **한 표에 올리지 않는다.** 그들 값도 Λ 가정이 들어간 유도값 |
+| Ea vs 음이온 반경 | **질서 벌크 0.799 eV/Å, R²=0.998** (⚠ GB 는 비선형) | 해당 없음 | ⭕ **설계 규칙으로 인용 가능** — 단 "질서 벌크에서만" |
+| Meyer–Neldel | **ln D₀ = 8.4605 Ea + 7.1184, R²=0.93, E_MN=118.2 meV** (그림 주석) | 🔴 없다 | ⭕ **기존 궤적 후처리로 즉시 계산 가능** (T1 이식) |
+| 격자상수 a (Li₆PS₅Cl) | 본문 **10.28 Å** ↔ 배포 MD 셀 **10.044 Å** (2.4 % 불일치) | comp1 ≈ 10.04–10.055 Å (PBE-D3) | 🟰 **배포 셀과 우리가 사실상 같다.** ⛔ 본문 10.28 을 인용하지 않는다 |
+
+**📎 [Liu26FIRE] §A 보강 표 (5열 별표) (2026-09-13 병합)**
+> 📎 병합 2026-09-13 병합 — 초안 `_pending_index_liu2026_ai_ready_finetuning_solid_solid_interfaces.md` §②-a.
+
+| 문헌 | 계 | 문헌값 | 우리값 | 판정 |
+|---|---|---|---|---|
+| **[Liu26FIRE]** `liu2026_ai_ready_finetuning_solid_solid_interfaces` ⚠preprint | **LPSCl 벌크** (계면 아님) | MLIP-MD **σ 0.75 mS/cm** / 자체 EIS **0.89 mS/cm** · **D 4.29×10⁻¹¹ m²/s** · MSD 창 **50–200 ps** · **온도 미기재** · 오차막대 0 | ⛔ 우리 절대 σ 인용 금지 규율 · D 3.09×10⁻⁶ cm²/s **@600 K** · MSD 창 **2–50 ps** · 600 K **3-seed** | 🔴 **직접 비교 불가**. ① 저쪽 MD 온도 미상 ② 창이 다름 ③ 인쇄 D↔인쇄 σ 가 NE 로 **89배** 어긋남(우리 검산) ⇒ **소환값으로도 이식 금지**. ✅ 얻을 것은 **σ_MD vs σ_EIS 를 같은 논문에서 −16 % 로 맞춘 워크플로**뿐 |
+
+**📎 [dK18MD] §A 주석 (값 없음) (2026-09-13 병합)**
+> 📎 병합 2026-09-13 병합 — 초안 `_pending_index_deklerk2018_diffusion_analysis_md_beta_li3ps4.md` §2-c.
+
+> ⚠ **[dK18MD] 는 이 표에 값을 넣지 않는다** (β-Li₃PS₄, 다른 상). 다만 이 축의 서술 규율 하나를 문헌으로 고정한다:
+> **"도핑 개선 배율(D_rel)은 온도의 함수다"** — 같은 설계가 450 K 14× · 600 K 3.2× · 750 K 1.3× 로 무너진 실측이 있다([dK18MD] `Fig. 6` + digest 계산).
+
+**📎 [Jang25As] §A 각주 (표 행 아님) (2026-09-13 병합)**
+> 📎 병합 2026-09-13 병합 — 초안 `_pending_index_jang2025_thioarsenate_argyrodite_mlip_mechanism.md` §④.
+
+> **[Jang25As] 각주 — Li₆PS₅Cl 의 무질서 열역학** (`Fig. 2b`, 전부 `figure-read ≈`, 판독오차 ±2 meV/atom):
+> Ehull(반전 0/25/50/75/100 %) ≈ **24.5 / 23 / 28 / 33 / 34.5 meV/atom**.
+> **9조성 중 Li₆PS₅Cl 만 25 % 가 0 % 보다 낮다** — *"적당한 무질서가 열역학적으로 유리"* 의 계산 근거이고,
+> `adeli2019` 실측 4d-Cl 점유(0.834)·`deklerk2016` 75 % 최적과 같은 방향이다.
+> ⚠ **소환값**: 상도 DB·pymatgen 사용 여부 **미기재**, 그리고 **Li₆PS₅Cl 이 어느 배열에서도 ≈23 meV/atom
+> 아래로 안 내려간다**(실제로는 상용 재료) ⇒ **계통 오프셋이 있다.** 절대값 인용 시 이 단서를 붙인다.
+
+**📎 [Fang22PW] BH₄ 계열과 묶어 읽으라는 주석 (2026-09-13 병합)**
+> 📎 병합 2026-09-13 병합 — 초안 `_pending_index_fang2022_argyrodite_transport_beyond_paddlewheel.md` §5.
+
+§A 에는 이미 `shin2026` 발(**BH₄⁻ 회전이 Li 수송에 기여**, 회전구속 MD 에서 **D 2.0–3.0배 감소**, 31 hop 중 28개가 ±0.2 ps 동반) 행들이 있다.
+그 옆에 다음 주석을 붙이면 좋다:
+
+> 🧭 **paddle-wheel 축은 우리 litdb 안에서 갈려 있다 (2026-09-09).**
+> **[Fang22PW]**(AIMD, 관찰) = *"회전은 Li 운동의 **반응**이지 원인이 아니다"* ↔ **`shin2026`**(NMR + AIMD, **개입**) = *"회전이 hop 과 인과적으로 맞물린다"*.
+> **개입 실험을 한 쪽(shin)의 증거가 더 강하다** (digest §12.4 우리 평가).
+> 단 **두 결론이 반드시 모순은 아니다** — Fang 의 *responsive* 성분(Li 통과 시 클러스터가 비켜 주며 장벽↓)은
+> **회전을 구속하면 사라지므로** shin 의 "구속 시 D 2–3배 감소" 를 그대로 설명한다.
+> 진짜 쟁점은 *"회전이 있어야 빠른가"*(둘 다 예)가 아니라 **"회전이 hop 을 *개시*하는가"** 다.
+> ⚠ 서지 확인 필요: `shin2026` digest §2.2 참조표의 **"[50] Fang & Jena 2020 Nat. Commun."** 은
+> 제목 서술이 이 논문(**2022**)과 정확히 일치한다 — **연도가 어긋났을 가능성**.
 ## B. 산화안정성 — **4축 분리 (축 명명 없이 말하면 틀림)**
 | 축 | 우위 | 출처 | 우리 값 / 재현 |
 |---|---|---|---|
@@ -455,6 +554,10 @@
 | **B② ⛔ 그들 `Li₃PS₄` 창(1.702–2.360 V)을 우리 2.256 V 옆에 놓으면 안 된다 — phase set 이 다르다** | (경계 규율 — 우위 아님) | **[Honrao21]** `Fig. S2` 산화 첫 구간 활자 | 그들 산화 첫 산물이 **`LiS₄` + P₂S₇** 다 — **우리가 Gil-González 2022 phase set 을 따라 명시적으로 제외하는 바로 그 MP 상**(제외 시 우리 onset **2.256**, 포함 시 **2.14 V**). ⇒ *"phase set 선택이 anodic limit 을 바꾼다"* 는 우리 규율의 **문헌 실물 사례**. 조성도 다르다(Li₃PS₄ vs LPSCl) ⇒ **같은 표 금지, 정의·산물 순서 대조까지만** |
 | **B③ ⚠ [Aykol14] 의 *산물 물리상태 게이트*는 6편 연속 미복원 — 게다가 본 편은 `LiS₄` 까지 산물로 인쇄한다** | **[Aykol14] 우위(방법)** | **[Honrao21]** 방법 전체(물리상태 언급 0) | 계보 답안 확정: #2 미복원 · #4 미복원(`O₂`) · #5 미복원(`O₂` + **`Li` 금속**) · **#6 미복원**(언급 자체가 0; 15,446종에 산화물·질화물이 대다수인데 `O₂`·`N₂` 취급을 한 줄도 안 적는다). ⇒ 우리 `interface_reactivity` 산물 파싱에 붙일 열은 계속 **ⓐ 기체·저융점 표시 ⓑ Li 소모 몰수 ⓒ 저장조상 제외** 셋이고, 여기에 **ⓓ 의심 MP 상 플래그**(`LiS₄` 류)가 추가된다 |
 | **B③ ⚠ 계보의 *숨은 필터*가 #6 에서도 반복 — 이번엔 원소 필터와 목록 비공개 둘 다** | (재현성 비판 — 우위 아님) | **[Honrao21]** Screening 절 · `Fig. S3`–`S6` | ① *"we filter out **most** compounds with d- and f-block elements"* — **"most" 의 규칙이 없다**. 실제로 **Ti·Sc·Zn·Y·Zr·Hf·Ta·La·Pr·Tb·Er·Bi 가 살아남는다**(`Table S1` 에 `Li₈HfO₆`·`LiErO₂`·`Li₇La₃Hf₂O₁₂`·`Li₆Hf₂O₇`; `Fig. S4` 에 `Li₂Ta₂(OF₂)₃`·`Li₄ZrF₈`·`Cs₂LiPrI₆`) ⇒ **깔때기 재현 불가**. ② 본문 *"over 250"* ↔ `Fig. S3–S6` 마커 **137개**(본 digest 계수) — *"expanded results"* 가 **절반 남짓**. ③ **기계판독 데이터 공개 0본**(*"available upon request"*) — [Aykol16] CSV 2본·[Nolan19]/[Nolan21] XLSX 와 정면 대비. ⇒ 계보 패턴([Aykol16] `Fig. 1`·[Nolan21] `Fig. 1`)의 **세 번째 사례**이고 **가장 심하다** |
+| **B③ ★★★ 독립 pseudo-binary 구현이 우리 `interface_reactivity` 를 값까지 재현한다 (vs LiCoO₂)** — Jiang: Li₆PS₅Cl **−302.12** · Li₅.₅PS₄.₅Cl₁.₅ **−308.41 meV/atom**, 산물 `LiCl + Li₃PO₄ + Co₉S₈ + Li₂SO₄ + Li₂S`. 탈리튬 Li₀.₅CoO₂ 에서 −434.98 / −443.75 | (우위 아님 — **교차검증**) | **[Jiang22Se]** Tables S8·S9 (x_m 포함) | 우리 `db/properties/oxidation_stability.json` → `/nd2o3_interface_reactivity_2026_06_17/min_dE_rxn_eV_per_atom_vs_LiCoO2`: **comp1 −0.3227 · modelc −0.3308 eV/atom**, 산물 `Co₉S₈ + Li₃PO₄ + Li₂S + LiCl + Li₂SO₄`. ⇒ **산물집합 완전 일치 · 값 7 %(20 meV/atom) 이내 · Cl-rich 페널티 크기까지 일치(+6.3 vs +8.1 meV/atom)**. ⚠ 우리 값은 **`canonical_registry` 미등록** — 인용 시 그 사실을 밝힌다. ⚠ 우리 caveat 유지(LiCoO₂ 는 NCM 대용, 열역학만, CEI 부동태 속도론 미포함) |
+| **B③ ★ 접촉 상대가 바뀌면 Cl-rich 의 순위가 뒤집힌다** — LiCoO₂ 에서는 Cl-rich 가 더 반응적(−308.41 < −302.12)인데 **LiFePO₄ 에서는 확실히 유리**(−87.52 vs −99.75). FePO₄ 에서도 Cl-rich 유리(−177.68 vs −196.86) | **양극에 따라 다름** | **[Jiang22Se]** Tables S10·S11 · `Fig. 6` | 우리는 **LiCoO₂ 하나만** 봤다 ⇒ **우리 "Cl-rich 가 양극 계면에 약간 불리" 결론은 LCO 조건부**다. **[Zuo]** CV 서사와도 LCO 조건부로만 정합. ⇒ ★ **cascade S6 단에 "접촉 상대를 먼저 고정하고 상대별 문턱을 둔다" 를 넣는 근거** |
+| **B③ ⚠ Se 도핑은 계면을 *악화*시킨다 — 제목과 반대** | **무도핑 호스트 우위** | **[Jiang22Se]** Tables S8–S11: LCO −302→−328 · LFP −100→−119 · FePO₄ −197→−215 (Li₀.₅CoO₂ 만 −435.0→−432.7 로 평평 = 잡음) | 우리 축과 직접 겹치지 않음(우리는 Se 를 안 봄). ⇒ **"σ 만 보는 스크리닝의 위험" 교보재로 사용.** 제목의 "improved interfacial compatibility" 는 **LGPS 340·Li₃PS₄ 405 meV/atom 대비**일 뿐이고 **무도핑 호스트도 그 비교를 통과**한다 |
+| **B② ⚠ 이 논문은 축① · 축② 를 전혀 안 준다 (기록용)** | — | **[Jiang22Se]** — **ESW 0건 · Li 금속(음극) 계산 0건 · σ_e 0건 · E_above_hull 0건 · 계면 슈퍼셀 0건**. 계면은 **조성 수준 열역학**뿐 | 우리 onset(comp1·modelc 동일 **2.256 V**, S²⁻-limited)과 대조 불가. ⇒ ⛔ **이 편으로 "Se 가 산화안정성을 어떻게 한다" 를 말할 수 없다** |
 
 > 🖼 **프레임 주석 (수치 비교 아님 · 축 B)** — **[Miao23]** `Fig. 4c` = **μ_c ↔ HOMO 정렬 도식**: 양극 화학퍼텐셜 μ_c 가 황화물 **HOMO 위**면 안정, **아래**면 산화 → CEI 생성; 그 **CEI(또는 코팅)의 HOMO 가 μ_c 보다 낮아야** 자기제한("Stable"), 높으면 "Unstable"(연속 반응). **이 리뷰에 무기 SE 의 ESW 수치는 0개**(유일한 ESW 값은 폴리머 버퍼층의 **5.1 V vs Li/Li⁺**) → **B 축 수치 행 없음**. 우리 grand-potential 계단(onset **2.256 V** S²⁻-limited → 2.385 → 3.326 V)이 **같은 물리의 정량판**이며, 발표에서 두 장을 나란히 놓으면 "단일 준위 만화 → 상 경계 계단"의 전환을 한 컷으로 보여줄 수 있다. ⚠ 두 가지 규율: ① **HOMO/LUMO 는 분자 용어** — 고체는 VBM/CBM(축 D 주석 참조) ② 이 리뷰는 **열역학/속도론을 안 가른다**(후속 `fan2026` §3.4 는 가른다) → "Cl-rich 산화안정"은 **축 명시 필수** 규율 그대로.
 
@@ -505,6 +608,22 @@
 > 이 축(C)에 값으로 편입하지 않는 이유: W_ad 규약이 우리 `adhesion` 계열(z-scan 결합곡선, phase1/v30u)과
 > 달라 **같은 표에 놓으면 규약이 섞인다.** 방법·서사 참조용으로만 둔다.
 
+
+**📎 [Jiang22Se] §C 보강 표 (2026-09-13 병합)**
+> 📎 병합 2026-09-13 병합 — 초안 `_pending_index_jiang2022_se_doped_lpscl_high_throughput_dft.md` §④.
+
+| 항목 | **[Jiang22Se]** | 우리 | 판정 |
+|---|---|---|---|
+| Cl 증가 시 **체적탄성률** | 28.63 → **16.16 GPa (−44 %)** | B₀ 26.233 → 21.71 GPa (**−17 %**, 같은 `comparison_group: b0-dft-bm3-v1`) | 🔶 **부호 일치, 크기 2.6배 차.** ⚠ 저들은 **탄성 계산법을 아예 안 밝혔다**(응력-변형? VRH? relaxed vs clamped ion?) ⇒ **다른 양일 수 있다.** 게다가 단일 배열·자유완화 삼사정계 셀(각 87–92°) |
+| Cl 증가 시 **Young** | 28.60 → 26.47 GPa (−7 %) | E_VRH 22.06 → 27.66 GPa (+25 %) | ⛔ **비교 금지** — 우리 두 값이 **다른 `comparison_group`** 이다(`…comp1comp2-v1` vs `…modelc-standalone`). 레지스트리 note: *"네 조성을 한 묶음으로 자동 순위화하면 안 된다"* |
+| 전단 G / Li 금속 대비 | 10.72 / 10.78 GPa, *"Li 금속의 2배 ⇒ 덴드라이트 억제"* | (VRH G 는 이 표에 안 올린다) | ⚠ 논문 내부 모순: Tatsumisago 를 인용해 *"E 는 작아야 좋다"* 해 놓고 결론은 *"B 가 큰 Li₆PS₅Cl 이 역학적으로 적합"* — 두 기준이 반대 방향인데 정리하지 않는다 |
+
+**📎 [Liu26FIRE] §C 보강 표 (5열 별표) (2026-09-13 병합)**
+> 📎 병합 2026-09-13 병합 — 초안 `_pending_index_liu2026_ai_ready_finetuning_solid_solid_interfaces.md` §②-b.
+
+| 문헌 | 계 | 문헌값 | 우리값 | 판정 |
+|---|---|---|---|---|
+| **[Liu26FIRE]** ⚠preprint | **LPSCl 벌크** | **E_MLIP ≈ 26 GPa** (figure-read, `Fig. 4` B) vs **E_AFM ≈ 40 GPa** · **ν 0.34** vs ref 0.37 | **E_VRH(comp1) 22.06 GPa** (DFT relaxed-ion) · modelc 27.66 | 🟠 **우리 DFT(22.1) 와 저쪽 파인튜닝 MLIP(26) 이 서로 가깝고, 저쪽 "실험"(40) 만 둘 다에서 멀다** ⇒ 차이의 주범은 모델이 아니라 **측정량**: AFM 공간평균은 **다결정 펠릿의 기공·입계 + 접촉모델(Hertz/DMT)** 을 타므로 **단결정 DFT C_ij 와 같은 양이 아니다**. ⛔ *"우리 E 가 실험보다 낮다"* 를 이 논문으로 논증 금지. ✅ **실측 앵커는 계속 `lee2026`(AFM-FS, 우리 랩) 이 정본** |
 ## D. 전자구조 / band gap — *방법 의존, 절대 비교 금지*
 | 주장 | 출처 | 우리 | 비고 |
 |---|---|---|---|
@@ -545,6 +664,16 @@
 
 > 🔤 **용어 규율 주석 (수치 비교 아님 · 축 D)** — **[Miao23]** 은 고체 황화물 SE 의 밴드엣지를 **HOMO/LUMO**(분자 용어)로 부른다(`Fig. 4c` + 본문 10회). 고체는 **VBM/CBM** 이며 밴드폭·상태밀도가 있다. 단일 준위 만화는 (i) **무질서로 밴드엣지가 흔들리는 효과** (ii) 산화가 특정 **자리**에서 먼저 일어나는 효과를 원리적으로 표현할 수 없다 — 우리 자리분해 mean-3p(**free-S −1.14 < B–S −2.15 ≈ PS₄-S −2.23 < Cl −2.99 eV**)가 정확히 그 자리를 채운다. 🔑 **심사 함의**: `fan2026` §4.1.3 의 HOMO 용법은 오타가 아니라 **이 2023 리뷰에서 확립된 그룹 관례**다 → 리뷰어 노트 **B2** 는 *"틀렸다"* 가 아니라 *"고체 절에서는 VBM/CBM 으로 쓰고, 분자 유래 틀을 쓸 때 그 사실을 한 번 명시해 달라"* 로 써야 한다.
 
+
+**📎 [Jiang22Se] §D 보강 표 (2026-09-13 병합)**
+> 📎 병합 2026-09-13 병합 — 초안 `_pending_index_jiang2022_se_doped_lpscl_high_throughput_dft.md` §④.
+
+| 항목 | **[Jiang22Se]** | 우리 | 판정 |
+|---|---|---|---|
+| PBE 갭 (밴드 고유값) | Li₆PS₅Cl **2.16** · Li₅.₅PS₄.₅Cl₁.₅ **1.99 eV** (`Fig. 1c,d`, E_F=VBM) | comp1 **2.066** · modelc **2.099 eV**(⚠ `method_integrity_flag` 미해소) | 🔶 **절대값 0.09–0.11 eV 차 = 방법·셀·배열 잡음 안.** **Cl 증가 시 부호가 반대**(저들 −0.17, 우리 +0.033)지만 **둘 다 우리 baseline 이 정한 ±0.2–0.3 eV 창 안** ⇒ **"둘 다 2 eV 급 wide-gap" 까지만.** ✅ 방법 종류는 같다(DOS-threshold 아님) |
+| **★ Se 가 갭을 1 eV 깎는다** | Li₆ 계열 2.16 → **1.14** (x=4, **−1.02 eV**) · Li₅.₅ 계열 1.99 → **1.22** (x=3, −0.77 eV) | 우리 무질서/방법 잡음 ±0.2–0.3 eV | ✅ **잡음의 3–4배 = 실질 효과로 읽어도 된다.** ⇒ **우리 도펀트 스크리닝의 "전자절연 유지" 단(S4)에 문턱을 걸 실물 근거.** 논문은 이 함의를 **전혀 다루지 않는다**(σ_e·ESW·환원 전부 없음) — 우리가 다루면 차별점 |
+| VBM 성격 | `Fig. 5a`: Li₅.₅PS₄.₅Cl₁.₅ 의 **VBM = S 압도적**, Cl·Li 미미. CB 하단 S/P 혼합, Li 는 5 eV 위 | modelc PDOS v2: **VBM = S 3p (1.84)**, CBM = S 3p(반결합)+P 3s, **Li 무시가능** | ✅✅ **다른 코드·다른 셀·다른 배열에서 같은 그림.** **[Banik]**(VBM=자유 S²⁻+PS₄ 비결합 S 3p)·**[WangYO]** 와 함께 3중 확증 |
+| Bader (Li) | Li₆PS₅Cl 0.856 → Li₅.₅PS₄.₅Cl₁.₅ **0.864 (+0.008)**. Se 4개 넣으면 0.856→0.853 (**0.003 \|e\|**) | v2: comp1 0.877 → modelc **0.883 (+0.006)** | ✅ **Cl-rich 가 Li 를 더 이온적으로 만든다 — 방향·크기 일치.** ⛔ 다만 **저들이 0.003 \|e\| 를 "Coulomb 인력 약화" 근거로 쓴 것은 인용 금지**(Bader 잡음 수준) |
 ## E. 환원 / 음극(Li 금속) 계면 — **⚠ Cl-rich 유불리 문헌 충돌 (자리 점유가 변수)**
 | 주장 | 출처 | 우리 | 일치 |
 |---|---|---|---|
@@ -640,6 +769,8 @@
 | **BH₄⁻ 도핑: CCD 2.6→7.3 mA/cm², 얇은 tri-layer SEI(Li₃P/LiBH₄/Li₂S) 기계순응·전자절연** | **[Kang]** §5.1(a) Fig13a,b (ref127) | (우리 미계산) — doping cascade 47종 스크리닝의 동기 | 우리 cascade가 "어떤 도판트가 전자절연 SEI를 주나" 예측하는 방향성 동기 |
 | **"한 변수 고치면 다른 변수 바뀐다 → 통합 설계 필요"** (도핑이 σ·기계·ECW·SEI 동시 변경) | **[Kang]** §6 트렌드3 | 우리 **cascade v23**: stability↔Li-mobility blocking trade-off, 기계+안정성 동시 스크리닝(47 dopant) | **🔑 방법 일치** — 우리 cascade의 trade-off 설계가 곧 리뷰 "modifying one parameter alters others"의 계산 구현 |
 | **HT 게이트 스크리닝 방법 원전 + "V_ox↔Li 함량" trade-off 정량**: 깔때기(104,082→184→3종)·게이트 임계값(Eg 0.5/E_hull 5 meV/V_ox 4.0·V_red 2.7/ΔE_rxt 100 meV)·**Li분율↑⇔V_ox↓**(V_ox≥5 V→Li분율≤0.20, Fig 7)·O-공유결합 위계(meta>pyro>ortho·B–O 806 kJ/mol) | **[Xiao19]** ⭐ (코팅 *물질* 스크리닝 — 도핑 아님) | **우리 cascade의 게이트 골격 원전**(§B 🧬 note·digest §7c 1:1 표): 계승=상안정·grand-potential ESW·전도 프록시 / 우리 추가=기계 35 %·테마 조합·co-doping ML·UMA-상대 / 우리 공백=양극 반응성 게이트·10⁵ 풀. **그들 "V_ox↔Li분율" trade-off = 우리 stability↔blocking trade-off의 동형 구조**(레버만: 조성 Li분율 vs 도판트 blocking). ⚠ [Sundar]와 같은 규율 — 코팅≠도핑, 랭킹/수치 force-fit 금지; **붕산염 3축 분리**(산화·계면 화학안정↑[Xiao 코팅물질 한정 — ⛔ **우리 B₂O₃ +0.18 V 는 2026-08-16 철회**, 같은 자리 plain 조성은 2.034 V 로 host 아래] / Li 이동성↓ 위험[Xiao LiBa(B₃O₅)₃ E_m 1.96 eV] / 가수분해 최악급[Zhu20]) 없이 "B가 좋다" 금지 |
+| **★★ RE³⁺ 도핑의 *계산* 선례 — [Xu26NdO]·[Yang25]·[WangYO] 가 전부 계산 0건인 자리를 이 편이 유일하게 채운다. 단 계가 다르다(할라이드)**: RE³⁺(Er/Nd) 를 **Zr 8면체 자리**에 넣고(`Fig. 2a` 다면체 갤러리 4개 전부 8면체), 전하보상은 **화학식에 Li 원자를 도펀트당 1개 실제 추가 → 중성 셀**(N_Li=8(2+x), 우리 σ 역산 11/11 재현으로 확정). **배경전하·공공 스킴·결함형성E·전하보정 0건.** ⛔ **보상 Li 를 어느 자리에 넣었는지는 미기재** — 배열 열거·SQS·선택규칙 없이 조성당 배열 1개 | **[Ren26]** §21.1 (⛔프리프린트·⚠할라이드 Li₂ZrCl₆) | **우리 `ndo_lpscl16` 과 회계 방식이 같다**: `Cl₆Li₂₆Nd₂O₃P₂S₁₅`(+42/−42) · `Cl₈Li₃₁Nd₂O₃P₃S₁₉`(+52/−52) 둘 다 **정확히 중성**, 모(母) 대비 **P 2개↓·Li 4개↑ = +2 Li/Nd**(그들은 +1 Li/도펀트). ⇒ **"중성 셀 + 명시 Li 추가"는 문헌 표준이고 이 편이 외부 선례다.** ⛔ **자리 논쟁은 이 편이 해결해 주지 않는다** — 그들의 Zr 8면체는 우리 argyrodite 의 P(4b, **사면체**) 나 Li(24g/48h) 어느 쪽과도 등가가 아니다. `doping_cascade_trivalent_M3.json`(M³⁺ 26/26 = Li_24g, P_4b 0건) vs Rietveld `Nd8@(½,½,½)=P자리` 의 충돌은 **여전히 우리 DFT 로만 판정된다** |
+| **⚠⚠ 그 계산 선례가 *반례 카탈로그*이기도 하다 — RE³⁺ 도핑 계산을 설계할 때 피해야 할 4가지**: ①보상 Li 자리 미문서화 → **matched-x 에서 Er↔Nd 우열이 통째로 뒤집힌다**(x≤0.375 Nd ×4.9–21.0 압승 / x≥0.5 Er ×10–16 압승, 한 계열 σ 진동 Er 34.8배·Nd 14.7배; 50 ps·Li 16–21개·단일시드·배열 1개) ②**open-4f + DFT+U 인데 U 값·스핀·점유행렬 정책 전부 미기재** → 조성 선택 근거인 E_coh 가 **비단조**(Er 계단 −0.46/−0.45/−0.41/**−1.46**/+0.51, 튀는 계단이 곧 선택된 조성) ③**VDOS 3패널이 정규화가 달라 비교 불가**(모드 수 5.6 % 차인데 진폭 4.2–4.6배, 지지구간은 도핑계가 더 넓다 = ∫g=3N 과 모순) + **Cl 밴드 상단 ≈5.0–5.1 (arb.) 불변** ④**질량 효과 미분리**(Zr→Er/Nd 는 k 불변이어도 M-투영 모드 −26.1 %/−20.5 %) | **[Ren26]** §21.3 · §21.5 · §21.6 (재분석은 **우리 것**) | **우리 `ndo_lpscl16` 보고량 카드가 이미 이 4개를 막고 있다 — 유지 근거로 쓴다**: ①→ **G1(6점 전부)·G2(두 셀이 다른 배열이면 *선택 실패로 보고*)·G3(<50 meV 면 "구별 불가")** ②→ **frozen-4f**(`Nd.pbe-spdn-kjpaw_psl.1.0.0.UPF`, z=11) + "Nd 4f 주장 전면 금지" ③④→ 우리는 아직 VDOS 축이 없다. **열 때 질량 정규화를 처음부터 넣는다** — 우리 계는 **P(30.97)→Nd(144.24), ω ×0.463 (−53.7 %)** 로 그들보다 질량 항이 훨씬 크다 |
 
 ## G. ✅ 우리 계산이 문헌을 *검증*하는 지점 (강점)
 | 우리 결과 | = 문헌 | 출처 |
@@ -705,6 +836,9 @@
 | **γ_SE(표면에너지) 외부 검증 — 우리 `adhesion.json` γ_SE는 UMA melt-quench 비정질 표면, 외부 대조군 0이었음** | **[Qian26]** ⭐ **부분 해소** — VASP PBE 520 eV·pymatgen 슬랩으로 **LPSCl 저지수 표면E 6종 공개**(Table S2): **(010) Li₅SCl 0.40 J/m²(최저)** · 010-Li 0.44 · 011-Li₄S₂ 0.48 · 010-S 0.70 · 010-Li₇SCl 0.72 | 우리 γ_SE **comp1 1.211 / comp2 1.189 / comp3 0.565 / comp4 0.450 / comp5 0.470 J/m²** — **Li-결손(Cl-rich) 조성이 그들 0.40–0.5 밴드에 안착**(comp1만 3× 높음), 그들도 **Li 과잉 종단(Li₇SCl 0.72) > Li 결손(Li₅SCl 0.40)** = 우리 "공공이 표면E를 낮춘다"와 **같은 부호**. **보강책**: `adhesion_v5`(crystalline slab MQA, in_progress)에 **(010) Li₅SCl 종단 명시 포함** → 우리 비정질 표면이 결정질 최저면보다 비싼 게 물리인지 방법 artifact인지 판정. ⚠ 방법 3중 상이(PBE-DFT 결정질 vs UMA 비정질·종단 정의·비화학량론 μ 처리 유무) → **"검증됨" 금지, 같은 자릿수·같은 방향까지만** |
 | **Zr 포함 hull (할라이드 코팅 LIC/LYC/LZC dual-compatibility 정량)** | **[Cha]** ⭐ (LZC=Li₂ZrCl₆ vs NCM/LPSCl 6계면) | Zr 추가 chemsys(Cl-Li-Zr-…)로 `GrandPotentialInterfacialReactivity` voltage-resolved — 왜 Zr⁴⁺만 견디고 In/Y는 분해하나 in-silico 재현 |
 | **양극(NCM/LCO) 반응성 게이트 — cascade에 ΔE_rxt(vs 양극) 열 없음** (만충/반충 SOC-resolved 포함) | **[Xiao19]** Filter 4(&#124;ΔE_rxt&#124;<0.1 eV/atom vs LPS+만충 NCM)·Table S2/S3, **[Rich16]** eq 2/4, [Cha] dual-compat | pymatgen InterfaceReactions로 cascade CSV에 **ΔE_rxt(vs LCO) 열 추가**(우리 hull 내 즉시 가능; 정답지=Xiao LPSCl/LCO **−339/−493 meV/atom** 재현) → 이후 Ni/Co/Mn chemsys 확장으로 NCM·만충/반충까지 — 도핑이 양극 반응성을 개선/악화하는지 cascade 축으로 편입 |
+| **⭐ D 의 확산영역 게이트가 없다** (β 폐기 후 공백) | **[Maginn19MD]** §5.2.2 — **log-log MSD 기울기 ≈ 1** 과 **√MSD > L/2** 를 확산영역 판정의 조건으로 요구 | **비용 0.** 기존 `tools/ionic/msd_diffusive_check.py` 에 `slope_2_50ps` 한 열 추가(새 파일 금지). 이게 없으면 "2–50 ps 가 확산영역이다" 라는 **전제 자체가 미검증**이고, 그 위의 Ea·D_rel 은 전부 그 전제에 얹혀 있다 |
+| **⭐ MSD 창 선택이 만드는 D_rel 변동폭을 보고하지 않는다** | **[Maginn19MD]** §4.2.2·§5.2.3 — *"critical to quantify the degree of variability … that arises from assumptions in the data analysis, e.g., the time interval over which the Einstein slope is computed"* | 우리는 **절대 Ea 의 창 효과 242 meV** 를 안다(원장). **그런데 보고량인 `D_rel` 의 창 민감도는 잰 적이 없다** — 242 meV 는 D_rel 에 그대로 옮겨오지 않는다(비에서 상쇄될 수 있다). ⇒ **시간구간 부트스트랩(§6.3.1 이식)으로 `D_rel` 의 창 CI 를 내는 것이 최우선**. 새 MD 0회 |
+| **⭐ D 의 유한크기 의존을 한 번도 안 봤다** | **[Maginn19MD]** §5.1.2 — D 의 크기 효과는 **"significant … must be accounted for"**, CO₂ 에서 ≈10 %(figure-read 로는 최소 셀이 D∞ 를 **≈15 % 과소**) | ⛔ **YH 식 이식 금지**(η 요구 + 유체역학 backflow 전제 → 고체 골격계에 전제 불성립). ⭕ 논문의 **첫 번째 방법**은 그대로 유효: 600 K 에서 host·design 을 **2×2×2 / 3×3×3** 두 크기로. 목표는 D∞ 가 아니라 **`D_rel` 이 크기에 둔감함을 보이는 것** — 그것만 보이면 우리 보고량이 방어된다 |
 
 ---
 
@@ -741,6 +875,12 @@
 
 ## J. 🤖 MLIP·ML 방법론 — *우리 모델을 재는 축* (2026-08-19 신설)
 
+> 📎 **번호 배정 2026-09-13 병합** — 2026-09-09 초안 9건이 J-11/J-12/J-13 을 서로 겹쳐 요구했다 (J-11 은 09-12 에 [Honrao21] 이 선점).
+> 배정: **J-12** [Basu26MFB](초안 J-11) · **J-13** [Aqib26MFAL](초안 J-12) · **J-14** [Muy25Dop](초안 J-12) · **J-15** [Liang26IF](초안 J-12) ·
+> **J-16** [Wang25DPA](초안 J-11) · **J-17** [Zhao21HECS](초안 J-13) · **J-18** UQ 축(초안 [Carrete23UQ] "J-11 신설"+[Maginn19MD] 2-d) · **J-19** GB 축(초안 [Ou26MS] 2-d).
+> J-9 소절: **J-9c** [Hu26ICAL] · **J-9d** [Liu26AB] · **J-9e** [Ou26MS] · **J-9f** [Wilson22BAL] (초안 4건 전부 "J-9c").
+> ⚠ 절 순서는 번호순이 아니다 (J-8 이 J-7 앞, J-11 이 J-9 앞 — 종전부터). 각 신설 절 머리의 📎 줄이 초안 출처다.
+
 > A–I 는 **물성 값**을 문헌과 맞대는 축이다. 이 축은 다르다 — **우리 계산기 자체**를 잰다.
 > 값이 아니라 **방법의 신뢰구간**을 다루므로, 여기 숫자를 물성 표로 옮기면 안 된다.
 > 신설 이유: 2026-08-19 에 MLIP 방법론 논문 3편 + ML 방법론 학위논문 1편이 한꺼번에 들어왔고,
@@ -757,6 +897,14 @@
 | **[Kauwe 2021]** | `kauwe2021_ml_materials_properties_dissertation_sparks` |
 | **[Shapeev16]** 🔧 | `shapeev2016_moment_tensor_potentials` — **MTP 수학 원전** (Multiscale Model. Simul. 14, 1153). ⚠ **물성값 0 · 텅스텐 전용** → 아래 **J-7** 에만 등장, A–D 축 금지 |
 | **[Park24]** 🔧 | `park2024_sevennet_parallel_gnn_md` — **SevenNet 원전 · GNN-IP 공간분할 병렬화** (JCTC 20, 4857). **우리 UMA 와 같은 등변 GNN 계열 = T1b 대조군**. ⚠ **물성값 0 · SiO₂/Si₃N₄ 전용** → 아래 **J-7** 에만 등장, A–D 축 금지 |
+| **[Chang26Sel]** 🔧 | `chang2026_performance_based_mlip_selection_sse` — **argyrodite 에서 직접 잰 사전학습 MLIP 선정 벤치마크** (*Chem. Mater.* **38**, 3133 (2026) · Solid Power Inc.). 피고 5종 = EqV2·DPA3·ORB v2·**SevenNet**·MACE, **전부 MPtrj/PBE** · ⛔ **UMA 없음**. ⚠ **물성값 인용 불가**(σ·D 는 PBE 편향 + 400 K 외삽 + 단일시드, Ea 는 단위 오기) → 아래 **J-7** 에만, A–D 축 금지. ★ **우리 계(Li₆PS₅Cl)로 직접 잰 몇 안 되는 방법론 편** |
+| **[Hu26ICAL]** 🔧 | `hu2026_foundation_model_surrogates_active_learning` — **능동학습 대리모형 벤치마크(ICAL / TabPFN)** (**arXiv:2603.12567v3**, 2026-03-24, **동료심사 전**). 🔴 **"foundation model" = TabPFN(표 데이터용 in-context 트랜스포머)이지 MLIP 이 아니다** — 원자·구조·힘·DFT **전무**. ⚠ **물성값 0**(σ·Ea·ESW·탄성·gap 전무; 이 논문의 "electrical conductivity" 는 **Cu 합금 %IACS**) → 아래 **J-9c** 와 **J-7** 에만 등장, A–D 축 금지. 모델 원전은 우리가 이미 보유 → `hollmann2025_tabpfn_tabular_foundation_model` |
+| **[Kurn26UQ]** 🔧 | `kurniawan2025_comparative_ensemble_uq_nnip` — **MLIP 앙상블 UQ 벤치마크** (*MLST* 2026, in press, DOI 10.1088/2632-2153/ae9fb4). ⚠ **물성값 0 · 탄소 동소체 전용** → 아래 **J-7** 에만 등장, A–D 축 금지. ⚠ slug 의 `2025` 는 오기 — **인용은 2026** |
+| **[Tompa26FT]** 🔧 | `tompa2026_finetuning_mlip_foundation_strategies` — **MLIP 파운데이션 fine-tuning 전략 벤치마크** (**arXiv:2606.12704v1**, 2026-06-10, **동료심사 전**). Tompa/Varga-Umbrich/**Batatia**/Elena/Bernstein/**Csányi** = **MACE 그룹 본인**, 구현이 `mace ≥3.15` 에 머지됨. ⚠ **물성값 0**(σ·Ea·ESW·탄성·gap 전무) → 아래 **J-7** 에만 등장, A–D 축 금지. ★ **벤치마크 5계 중 #1 이 Li₆PS₅Cl** — 우리 계로 직접 잰 수치가 있는 드문 방법론 편 |
+| **[Zaby26σ]** 🔧 | `zaby2026_reliable_conductivity_estimates_md` — **MD 로 σ 를 낼 때의 통계 원전** (*ChemPhysChem* 2026, 27:e70477, DOI 10.1002/cphc.70477, OA). ⚠ **계가 이온액체·에테르 액체전해질 · 황화물 0회 · 물성값 0** → 아래 **J-7** 에만 등장, A–D 축 금지. ⚠ **NE 오차의 부호가 [Adeli19] 와 반대** — §J-7 의 부호 경고를 반드시 같이 인용 |
+| **[Aqib26MFAL]** | `papers/aqib2026_multifidelity_active_learning_alloy_design.md` — **다중충실도 능동학습(MTGP-ICM + 비용가중 EI/KG/LCB)** (M. Aqib/K. Ravikiran/L. Li/**V. Prasad**, Univ. of Alberta, ***Mater. Des.* 263, 115520 (2026)**, CC BY-NC). 계 = **Fe-Ni-Co-Cr-V-Cu 합금 717 조성**(Rao 2022 *Science* 데이터 재사용), 목표 = **CTE 최소화 단일 스칼라**. ⚠ **자체 DFT·MD·실험 0회 — 순수 알고리즘 벤치마크.** ⛔ **황화물 아님·물성값 0개 ⇒ 물성 4축(A–D)에 수치로 넣지 않는다.** 쓰는 곳은 **§J-12 하나**. ★ **공개 코드(`github.com/aqibm08/MFAL_HEA`)로 논문 서술을 검증한 유일한 편이고, 9건이 안 맞았다** |
+| **[Basu26MFB]** | `basu2026_multifidelity_bandit_dopant_screening_funnel` — **다중충실도 밴딧 + 3단 DFT 검증 깔때기** (**arXiv:2604.10157v1**, 2026, 단독저자·미심사). 계 = **산화물 반도체 5종(ZnO·TiO₂·SrTiO₃·SnO₂·MgO) 격자 치환 도핑**, 목표물성 = **밴드갭 2.0 eV**. ⛔ **황화물 아님 — 물성 4축(A–D)에 수치로 넣지 않는다.** 쓰는 곳은 **§J-11(파이프라인 구조·다중충실도) 하나**. 자체 DFT **583계산 1차 근거**(J-10 `[Jain26Rev]` 의 2차 인용과 층위가 다르다) |
+| **[Imbalzano21]** 🔧 | `imbalzano2021_committee_uq_md_thermodynamic_averages` — **committee UQ → 열역학 평균 전파 원전** (EPFL COSMO, ⚠ **PDF 에 저널·DOI 없음**). ⚠ **물성값 0 · 물/펩타이드/페놀/Ga 전용** → 아래 **J-7** 에만 등장, A–D 축 금지. 🔴 **동역학량(D·수송) 0회 — 우리 D 인용 금지** |
 
 ### J-0b. ★★ [UMA] 우리 계산기의 사양서 — 원논문 대조 (2026-08-25 신설)
 
@@ -1392,6 +1540,812 @@ preflight 이 알리바이로 쓰던 문구를 **철회한다.**
 **② ref 94 = Y. Yang *et al.*, *ACS Appl. Mater. Interfaces* 2023, 15, 30060** (S/P K-edge XAS — 우리 산물 목록의 실험 앵커, **`SO₃²⁻` 의 출처**).
 차순위 **ref 83 = N. Hu *et al.*, *Adv. Energy Mater.* 2024, 14, 2303797** ("공간적 비동기 활성화" + LRM/VGCF/LPSCl 분산).
 
+
+> 📎 **2026-09-13 병합 이하 21 항목** — 2026-09-09 큐레이터 8개 동시 실행분의 `_pending_index_*.md` ②③ 블록을 조율 세션이 옮겼다. 항목 순서는 슬러그 알파벳순이지 중요도가 아니다.
+
+
+**[Alg26FT] `alghamdi2026_finetuning_strategies_li_diffusion_mace` — "fine-tune 이 D 를 실제로 개선하나"의 정량 원본 (코드 실물 확보)**
+(⛔ 물성값은 **LiF** 침입형 Li 의 D·Ea 뿐. A–D 4축 행 금지. 아래는 **판정**과 **우리 위치**뿐이다.
+⚠ 전부 **소환값** — MACE·LiF·300–500 K 의 값이다. 우리 UMA·LPSCl 수치와 섞지 않는다.)
+
+| 항목 | [Alg26FT] 가 보이는 것 | 우리 현재 | 판정 |
+|---|---|---|---|
+| **파운데이션 모델을 그대로 쓸 때 D** | **450 K −49 % · 500 K −42 %** (기준=DeePMD 4만점) | **UMA-s-1p1 고정, fine-tune 없음** | 🔴 **우리가 정확히 그 자리에 있다.** ⇒ **우리 D 절대값은 배(倍) 단위 계통불확실도를 안는다** ⚠ 다른 모델·다른 물질이므로 *"우리도 2배 틀린다"* 로 옮겨 쓰지 말 것 |
+| **같은 상황의 Ea** | **0.22 vs 0.24 eV (−0.02, 8 %)** — 오차막대와 겹침 | modelc **0.224 eV** (단일 궤적) / 3-seed **0.197±0.032** | 🔴 **"Ea 가 잘 맞으니 모델이 좋다"가 깨진다.** Ea 8 % 안에 들면서 D 는 2배 틀린 실측 사례 |
+| **오차가 실리는 자리** | **D₀** — 두 MACE 모델 모두 기준의 **정확히 1/3**. 장벽항이 반대로 1.7–2.8배 ⇒ **상쇄** (digest 계산) | — | 🔵 **D₀ 계통오차는 같은 모델 분자/분모에서 상쇄될 여지가 있다** = 우리 `D_rel` 에 유리한 유일한 정황 |
+| **★ 비(ratio) 둔감성** | ⛔ **대조 자체가 없다.** 계가 끝까지 LiF 하나 — host/design 쌍 부재 | 보고량 `D_rel(design,host)` @600 K (비준) | ⚠ **지지도 반박도 없음.** 우리가 직접 시험해야 한다. **비관 요인**: 기준 대비 비가 300 K 1.57 → 500 K 0.84 로 **1.9배 움직이고 423 K 에서 부호가 바뀐다** ⇒ **D_rel 이 자동으로 안전하지 않다** |
+| **fine-tune 이 D 를 바꾸는 폭** | **1.26–2.17배** (온도 의존, digest 계산). 전략까지 바꾸면 같은 물질에서 **≈6배** | — | 🔴 **"MACE 계열"이라는 이름만으로 D 를 인용하면 5배가 흔들린다.** 우리 **σ 절대값 비인용 규율의 외부 근거** |
+| **아키텍처 이식성** | MACE (equivariant MPNN, r_max 6.0 · L=1 · 128 ch) | **UMA-s-1p1 (omat)** | ⚠ **경계 명확히**: 데이터 전략 결론(조성 > 양, 리플레이 수확체감, 라벨 150–300점)은 **아키텍처 무관하게 이식 가능**. **수치(49 %·1/3 D₀·423 K)는 이식 불가** |
+| **omat 계열 단서** | 본문 한 줄: **MACE-OMAT-0 이 기준 D 에 더 가깝다** (비평형 구조 多) | 우리 체크포인트가 **omat** | 🟢 **우리에게 유리한 유일한 단서.** ⛔ 그러나 **수치가 `Fig. S7`(SI)에만 있고 우리는 SI 미확보** ⇒ **정량 인용 불가, "그런 보고가 있다"까지** |
+| **thermostat** | **Nosé–Hoover τ=0.1 ps** | **Langevin τ≈0.51 ps** | 🔴 **여기서 우리가 진다.** [Mag19] §4.1.1 기준 NH 는 **속도 스케일링 계열 = 0.1–10 ps 전 범위 안전**, Langevin 은 **속도 무작위화 계열 = τ 0.1–1 ps 에서 D 를 극적으로 낮춤**. ⛔ *"저들 τ 가 0.1 ps 라 위험"* 은 **틀린 비판** |
+| **MSD 창 규율** | **없다.** 논문·repo 어디에도 창·시간원점·절편 규약이 없다 (`compute msd` 0건, 분석 코드 0개) | **2–50 ps 고정 · 자유절편 OLS** | ✅ **우리가 낫다.** ⛔ 그래서 **`Table 3` 의 ± 를 우리 ± 와 같은 등급으로 나란히 놓지 마라** |
+| **복제의 성격** | **서로 다른 초기구조** (NH 결정론적, `velocity create` 없음 — repo 실측) | **Langevin 난수 시드 3** | 🔵 **다른 것을 재고 있다.** 초기조건 앙상블 vs 열욕 난수 앙상블. 둘 다 필요 |
+| **궤적 길이** | **3–9 ns × 2–4 복제** | **200 ps × 3 시드** | ⚠ **직접 비교 금지.** 저쪽은 1001원자에 **이동 이온 1개**(희박 결함), 우리는 Li 수십 개. [McC25D] 기준 유효통계 = 입자수 × 창수라 원자 수가 상당 부분 벌충 |
+| **라벨 예산 (우리가 하려면)** | FT1 **156** / FT2 **144** 구조 + **동수 검증셋** ⇒ **DFT 288–312회**. 학습 4.5 h(A100×8, 1800점) / 6 s per epoch(300점) | 0 | 🔵 **견적이 나왔다.** ⚠ 경로 A(남의 DeePMD 데이터 재사용, 새 DFT 0회)는 **우리 계에 해당 공개 데이터가 없어 불가** → **경로 B 뿐** |
+| **데이터 설계 원칙** | **조성 > 양**: 침입형 700 동일, **bulk 10 → 100 만으로** 기준의 1.5–3.8배 → 일치. bulk 부족 시 **리플레이 10,000점도 무효** | — | 🟢 **이식 가능한 결론.** 우리가 fine-tune 한다면 **"host bulk 구조를 충분히 넣어라"** 가 첫 규칙 |
+| **망각 대책** | **multi-head + MPtrj 리플레이**(원소 85종 범용 — repo 실측). pt 100–1000 이 최적, **10000 에서 후퇴** | 해당 없음 (fine-tune 안 함) | 🔵 **하게 되면 pt≈1000 에서 시작.** ⚠ 논문은 망각을 **D 하나로만** 측정 — 원 도메인 성능 미측정이라 **정칙화와 구분 안 됨** |
+| **Haven** | knock-off 로 **전하변위 = 원자변위 2배** → **H_r ≠ 1 인정하고 계산은 미룸** | **NE, Haven=1 가정 · σ 절대값 비인용** | ✅ **우리 규율이 옳다는 또 하나의 외부 근거.** LPSCl 도 협동 뜀 계 ([Jeon26]·[Ish25]) |
+| **긴 궤적 안정성 검증** | 3–9 ns 에서 **에너지 드리프트·불안정 없음**을 명시 검사 | b2o3 **골격 creep** 로 MD 전도도 축 마감 | 🔵 **같은 종류의 검사.** 우리가 200 ps 에서 잡은 것을 저들은 9 ns 에서 확인 |
+
+**⛔ 이 논문에서 인용하면 안 되는 것 (요약)**
+1. `Fig. 2` **범례의 D₀·부호** — 오류 2건 확정. `Table 3` 만.
+2. *"fine-tuning 이 D 를 DFT 에 가깝게 만든다"* — **D 의 DFT 기준값이 이 논문에 없다.**
+3. *"fine-tuning 이 D 를 개선한다"* 를 **온도 단서 없이** — 300–350 K 에서는 악화된다.
+4. *"이 논문이 힘 MAE–D 해리를 보고했다"* — 힘 MAE 를 **하나도 보고하지 않았다.**
+5. `Fig. 3` 의 **미세한 순위차**(pt=1000 vs 10000 등) — 복제 2개, 상대오차 ~50 %.
+
+<sub>> 📎 병합 2026-09-13 병합 — 초안 `_pending_index_alghamdi2026_finetuning_strategies_li_diffusion_mace.md` ## ② .</sub>
+
+
+**[Carrete23UQ] `carrete2023_deep_ensembles_vs_committees` — 불확실도 추정기의 정의 원본 + 우리에게 없는 양의 이름**
+
+> ⛔ **σ·Ea·D·ESW·탄성·gap 이 0건**이다. 여기 있는 것은 **우리가 "불확실도"라고 부르는 것이 무엇인지**를 정의하는 원본이다.
+
+| 항목 | [Carrete23UQ] | 우리 | 판정 |
+|---|---|---|---|
+| 불확실도의 층위 | **모델 앙상블 분산** (committee 10 / bootstrap 10 / deep ensemble 10) | **단일 모델(UMA-s-1p1) · 멀티시드 MD 3-seed** | 🔴 **다른 양이다.** 우리 `Ea 0.197 ± 0.032 eV`(modelc 600 K 3-seed) 의 ±0.032 는 **열적 샘플링 산포**이고 [Carrete23UQ] 의 σ 는 **epistemic(모델) 분산**이다. ⇒ **우리에겐 epistemic 불확실도 추정치가 아예 없다** — 이 문장을 축 J 에 명시적으로 박아 둔다 |
+| 힘 불확실도를 얻는 법 | ① 앙상블 멤버들의 힘 분산 ② 전용 σ²_f 헤드 | 없음 | **Appendix 가 지름길이 없음을 증명**: `σ²_f = ∂²⟨δE(X)δE(Y)⟩/∂X∂Y|_{X=Y}` — **두 점 공분산**이 필요한데 set-pooling 구조는 한 점만 낸다. ⇒ 우리가 σ_f 를 원하면 **committee 를 만드는 길뿐** |
+| 가장 싼 실행안 | — | **UMA 체크포인트 복수(1.1 / 1.2 / 크기 다른 것)를 committee 로 묶어 같은 구조의 힘 분산 측정** | ⭕ **이식 후보 (T1)** — **DFT 0회 · 추가 학습 0회**. `uma2026` digest §⑥ 의 *"1.2 를 committee 멤버로 추가"* 와 같은 방향이고 **이 논문이 그 형식의 원전** |
+| 전역 힘 불확실도 집계 | `σ_f = √(n⁻¹ Σ_atoms σ²_f)` — **RMS 집계**. 최댓값·softmax·90 백분위수를 전부 시험했으나 **이긴 사례 없음** | 해당 없음 | ⭕ **정의 채택 후보** — 우리가 committee 를 만들면 이 집계식을 그대로 쓴다 (최댓값 쓰지 않기) |
+| 공간분해 진단 | **층별 오차/불확실도 violin**(`Fig. 10`) — 표면↔중심 **6 자릿수** 스팬 | 셀 전체 평균만 | ⭕ **이식 후보 (T2)** — 계면 슬랩에서 "MLIP 가 어느 층에서 틀리나". ⚠ **원자 단위로는 못 짚는다**(`Fig. 11`: 오차 최악 원자 ≠ 불확실도 최악 원자) |
+| 능동학습 획득함수 | `L_adv = σ²_f · exp(−E_pot/k_BT)`, T=500 K, **Powell 국소 최대화**, 초기 Gaussian 변위 σ=0.1 Å | Stage 00–12 **순차 게이트**(싼 것 먼저) | 🔶 **다른 형식** — 탐색×타당성을 **곱 하나**로. §J-10 이 비판한 가중합 스칼라의 대안. ⚠ **국소 최적화라 전역 탐색을 대체 못 한다**(2회차 수확체감 — 출발점 다양성 필수) |
+| rattle 데이터 생성 | 질량가중 Gaussian, θ_D = 418.5 K, T = 500 / 1000 K | 해당 없음 | ⭕ **처방 채택 시 주의**: **논문 인쇄식 `분산 = 3T/(k_Bθ_D)` 는 차원 불성립**. 실제로 쓰인 것은 **`⟨u²⟩ = 3ħ²T/(m k_Bθ_D²)`** (digest 재계산으로 0.5 % 확인). **논문 식을 그대로 코딩하면 안 된다** |
+| 참조 DFT 등급 | **GPAW LCAO, PBE, Γ-only** | QE, PBE, PAW, k-mesh 수렴 | ⚠ **우리 기준으로 성긴 참조.** 이 논문의 "DFT ground truth" 를 우리 정본과 같은 등급으로 놓지 않는다 |
+| MD 열욕 | **Nosé–Hoover chain(5)**, τ=100 fs, Δt **1 fs**, 298 K, 80 ps | **Langevin**, friction 0.02, Δt **2 fs**, equilib 5 ps / prod 200 ps | ⚠ 결정론적 chain ↔ 확률적 Langevin. **80 ps 내내 σ 가 단조 증가**(=평형이 아니라 탐색 지속)라는 관찰이 **우리 5 ps 평형화를 다시 보게 만든다** — 단 이건 **가설이지 판정이 아니다**(계·열욕·온도 전부 다름). 확인은 무료: 우리 궤적에 골격 MSD/σ 시계열 |
+
+<sub>> 📎 병합 2026-09-13 병합 — 초안 `_pending_index_carrete2023_deep_ensembles_vs_committees.md` ### 2-b..</sub>
+
+
+**[Chang26Sel] `chang2026_performance_based_mlip_selection_sse` — *어떤 사전학습 MLIP 를 골라야 하나* 의 argyrodite 실측**
+(*Chem. Mater.* **2026**, 38, 3133–3144 · DOI 10.1021/acs.chemmater.5c02352 · **Solid Power Operating Inc.** 3인 ·
+⛔ 코드·데이터 미공개 · **물성값 인용 불가**)
+
+> 🔑 **이 편에서 가져오는 것은 값이 아니라 "판정축"이다.**
+> 그리고 그 판정축이 **우리 UMA 선택을 부분적으로 방어해 준다** — 다만 **UMA 자체는 이 논문에 없다.**
+
+| 항목 | [Chang26Sel] | 우리 (UMA-s-1p1 omat) | 판정 |
+|---|---|---|---|
+| **피고 목록** | EqV2(direct) · DPA3(cons.) · ORB v2(direct) · **SevenNet-l3i5(cons.)** · MACE(cons.) | **UMA-s-1p1** | ⛔ **UMA 없음.** 가장 가까운 `eqV2 S DeNS` 도 **MPtrj + direct** ⇒ 우리와 양쪽이 다르다 |
+| **사전학습 코퍼스** | **전부 MPtrj** (ORB v2 만 +Alexandria) | **OMat24** | ⚠ `wang2025` 때와 **같은 세대 문제**. OMat24 가 MPtrj softening 을 개선했다는 우리 기록(`db/external/omat24/README.md`)이 있으므로 **결론 직수입 금지** |
+| **★ 참조 범함수** | **PBE** (VASP 520 eV, MP 설정) | DFT 정본 **PBE**(QE/USPP) / MLIP 벤치 라벨 **PBEsol**(PET-MAD) | 🟡 DFT 축은 같은 계열이라 **정성** 비교 가능 · 🔴 **MLIP 벤치는 라벨이 달라 수치 비교 불가** |
+| **★★ 1차 판정축 = 힘의 보존성** | 비보존(ORB v2·EqV2) → 1100 K 10 ps **+425 / +590 meV/atom 드리프트** (`Fig. S3`, `figure-read ≈`) · 보존(SevenNet·DPA3) → **≈0** | **UMA-S = 보존적**, NVE ✓ (`uma2026…` Table 1/4/16) + 우리 **유한차분 프로브 0.198% @ δ=0.005** | ⭕⭕ **우리가 합격 쪽이다.** *"우리는 이 논문이 탈락시킨 범주가 아니다"* 는 **정당한 방어** |
+| **정적 지표의 변별력** | ⛔ **없다.** 5모델 전부 MAE < 10 meV/atom | 우리 J-1 = 힘 MAE 30.0 meV/Å | ⚠ **"MAE 가 낮으니 안전" 논증은 이 논문이 직접 부정한다.** 우리 J-1 도 같은 한계를 이미 적어 놨다(장벽·응력 미측정) |
+| **평가설계** | **거친 Li₇PS₆ 프로토타입 → 전이완 → 채점**. 이완된 MP 구조로 채점하면 리더보드 재현일 뿐 | 우리 벤치는 **주어진 구조에 단일점 힘/에너지** | ⭕ **이식할 가치 있음** — 우리 벤치에 없는 축 |
+| **MD 온도창** | **700 / 900 / 1100 / 1300 K**, 300 K 는 **외삽** | **600 / 800 / 1000 K** | 🟡 우리가 더 낮다 = caging 위험이 더 크다 |
+| **★★ MSD 피팅 창** | **τ > 100 ps**. 근거 = `Fig. S1b` 에서 **700 K 완전정렬 배열이 τ≈10–70 ps 에 평탄부** | **2–50 ps 고정** | 🔴 **정면 충돌.** 단 그쪽은 **가장 느린 배열**이고 우리 modelc 는 빠르다 ⇒ **"확인할 것"이지 "이미 틀린 것"이 아니다.** **comp1 600 K 가 최고 위험 조합** |
+| σ 산출 | pymatgen NE, **Haven = 1** (우리 역산 2% 이내 확인) | NE, Haven=1 | ⭕ **동일** |
+| 시드·오차막대 | **시드 1** · MSD 의 x,y,z **3성분 SEM**(독립표본 아님) | modelc 600 K **3-시드** (Ea 0.197±0.032) | ⭕ **우리가 낫다.** `mccluskey2025`·`pranami2015`·`maginn2019` 가 3성분 SEM 의 과소평가를 지적 |
+| **자리무질서(4a/4c) DFT 정답** | `Table 3` ΔE meV/atom: **100%4a = 0** · 75% = **3.28** · 50% = 24.73/27.52 · 25% = 22.48 · **0%4a = 39.72** | ⛔ **우리는 안 쟀다** | 🔴 **A1 — DFT 0회로 UMA 를 채점할 수 있는 외부 정답** |
+| **추론 비용** (52원자, 1100 K) | ORB v2 462 ATS / SevenNet 117 / DPA3 80 / EqV2 51 atom-steps/s ⇒ **ORB v2 가 SevenNet 의 4.0배** | — | ⚠ 이 논문은 **4배 느린 쪽을 물리적 일관성 때문에 골랐다.** 하드웨어 미기재라 절대값 인용 금지 |
+| **학습 범함수 ↔ σ** | ref 53(r2SCAN 학습 SevenNet) **~5 mS/cm** vs ref 52(PBE 학습 같은 아키텍처) **~44 mS/cm @350 K** | 우리 규율: **σ 절대값 인용 금지** | ⭕⭕ **우리 `mlip_committee.py` 규율의 독립 재확인** |
+
+**⛔ 이 편에서 인용하면 안 되는 것**
+1. **`14.67 mS/cm` 앙상블 평균** 및 *"실험 ~5 mS/cm 와 3배 이내"* — **Boltzmann 가중이 per-atom** 이다.
+   우리 재현: per-atom → **14.666**(정확 일치) · 셀당(×52) → **0.065 mS/cm**. **225배.**
+2. **`Table 3` 의 Ea 를 meV 단위로** — **eV 다** (`Fig. 3b` 인쇄값 0.41 ± 0.02 eV 가 증거).
+3. **σ·D 절대값 전부** (PBE 편향 + 700 K→300 K 외삽 + 단일시드).
+4. *"모든 MLIP 이 10 meV/atom 안"* 을 **UMA 로 확장** — UMA 는 시험되지 않았다.
+5. *"MACE 는 argyrodite 부적합"* — **MACE 는 MD 시험을 안 받았다**.
+6. **`Fig. 1a`/`Fig. S2a` 의 표본수 209/206** — 실제 158(`Table 1`) / 282(`Table S4`).
+7. **`Fig. 3a` 의 절대 세로 오프셋** — 참조보정이 없어 해석 불가(우리 `bench_against_dft.py` docstring 참조).
+
+**⇒ 우리가 지금 할 수 있는 것 (전부 DFT 0회)**
+
+| # | 할 것 | 근거 | 비용 |
+|---|---|---|---|
+| **A1** | UMA 로 `Table 3` 6배열 ΔE 재현 → **UMA 가 Cl 4a 선호를 맞추나** | 논문 DFT 값이 인쇄돼 있다 | UMA relax 6회 |
+| **A2** | UMA NVT 10 ps @1100 K, Li₆PS₅Cl 52원자 **총에너지 드리프트** | `Fig. S3` 와 직접 겹치는 시험 | 낮음 |
+| **A3** | 기존 궤적으로 **log-log MSD** → 2–50 ps 가 확산영역인지 | `Fig. S1b` 가 제기한 유일한 실질 위협 | **재분석만** |
+
+⛔ **A1–A3 는 기존 도구 확장으로 한다**(`tools/mlip/bench_against_dft.py` · `tools/ionic/`) — 새 파일 금지(코드 규율).
+⛔ **A5(6배열 UMA-MD σ 비율) 같은 새 물리량은 `kb/templates/estimand_card.md` 를 먼저 채운다.**
+
+<sub>> 📎 병합 2026-09-13 병합 — 초안 `_pending_index_chang2026_performance_based_mlip_selection_sse.md` ## ③ .</sub>
+
+
+**[dK18MD] `deklerk2018_diffusion_analysis_md_beta_li3ps4` — 우리 `σ = NE(H_R=1)` 이 *무엇을 버리는가*를 이름 붙여 주는 원본**
+
+> ⛔ **물성값은 있으나 β-Li₃PS₄(Pnma) 값이다.** argyrodite 4축에 수치로 넣지 않는다.
+> ⛔ **이 편은 H_R 을 정량하지 않는다.** 여기 있는 것은 *"H_R=1 이 무엇을 가정하는 것인지"* 와 *"그 가정이 나쁠 이유의 간접 증거"* 다.
+> ⛔ **`f = D*/D_J` 를 Haven 비로 옮겨 적으면 틀린 인용이다** — Murch 표준표기로 `H_R = f / f_I` 이고, 이 논문 `Fig. 9` 가 바로 `f_I ≠ 1`(집단성 30–80 %)이라고 말한다.
+
+| 항목 | [dK18MD] | 우리 | 판정 |
+|---|---|---|---|
+| **σ 환산 가정** | eq 2 + *"assuming that the Haven ratio is equal to one"* + 출처(Marcolongo–Marzari 2017) | 같은 가정, **문장·출처 없음** | ✅ **형식으로는 살아남는다.** 이 편을 **선언 선례**로 달 수 있다. ⛔ 정량 정당화로는 못 쓴다 |
+| **charge(집단) D_σ** | ⛔ **계산 안 함.** 식도 없다 | ⛔ 계산 안 함 | ⛔ **양쪽 다 구멍.** 채우려면 우리가 `⟨\|Σ_i Δr_i\|²⟩/(2dNt)` 를 돌려야 한다 (비용은 D\* 와 동일, **비싼 것은 통계**) |
+| **상관인자 f = D\*/D_J** | 정의(eq 7)만, **β-Li₃PS₄ 값 미보고** | 없음 | 🟡 **형제편 [dK16Arg] 에 우리 물질계 실측이 있다: Li₆PS₅Cl 600 K σ\*/σ_J = 1.01/4.66 → f ≈ 0.22.** 우리도 낼 수 있다(홉 계수 확장) |
+| **집단성 정량** | `Fig. 9` 450 K 6–24 % / **600 K 30–55 %** / 750 K 65–80 % (figure-read). ⚠ 정의(4.5 Å, 1/ν\*) 의존 — 저자 스스로 경고 | 없음 | ✅ **가져온다 (조건부 인용).** 우리 운영온도에서 교차항 무시가 나쁘다는 **간접** 근거. ⛔ 부호·배율은 못 준다 |
+| **D 추정량** | **전 궤적 단일점** MSD(t_tot)/(2dt_tot), 원점강제 | **2–50 ps 창 자유절편 OLS** | ⛔ **다른 양이다.** digest 계산: 같은 600 K 궤적에서 **≈1.7배** 차이(3.2e-6 vs 1.9e-6). **한 표에 병치 금지**, 병치해야 하면 열 이름에 추정량을 적는다 |
+| **확산영역 게이트** | 문장 1줄(*"displacement significantly larger than the vibration amplitude"*), **수치·적용 0** | `D_inc` plateau + 창 안정성 + 홉 수, `MSD_MIN_A2 = 3.0 Å²` | ✅ **우리가 더 엄격하고, 저자 데이터가 우리 게이트에 걸린다** (450 K β-Li₃PS₄ 총 MSD ≈ 3.3 Å², 면간 점프 0건) |
+| **방향분해 MSD** | ✅ `Fig. S1` (1계·1온도). **a·c 는 ~230 ps 뒤 완전 평평**, 총 96 Å² 중 **33 %가 죽은 방향** | ⛔ 총 MSD 만 | ⛔ **우리가 진다.** 표준 출력에 넣을 것 (비용 0) |
+| **골격 진단** | ⛔ **0건.** 종별 MSD 없음 · COM/drift 언급만 · 750 K "Li 부격자 melting" 을 알면서 게이트로 안 씀 | ✅ `--framework` β(경보) + b2o3 마감 선례 | ✅ **우리가 압도적으로 앞선다.** 이 논문에는 b2o3 를 잡을 장치가 하나도 없다 |
+| **Ea 의 온도의존** | ✅ **정량**(`Fig. S4`·`S5`): Li₃PS₄ 4b–4c **0.240→0.185→0.124 eV(−48 %)** · **Li 공공 조성만 율속 장벽 평평**(0.286/0.290/0.295) | 600/800/1000 K **3점 아레니우스 단일 Ea** | ⛔ **우리 방식이 이 논문 §2.5 에 정면 비판당한다.** ⇒ `modelc 0.197 ± 0.032 eV` 는 **"600–1000 K 구간의 유효 Ea"** 로만 서술. ★ 부수 판정: **Ea 의 온도의존 자체는 이상한 게 아니다** — b2o3 를 죽인 것은 구간 Ea 비단조가 아니라 **골격 β** 였다 |
+| **thermostat** | 100 fs 마다 **속도 재조정** | **Langevin friction 0.02 (τ ≈ 0.51 ps)** | ⛔ **우리가 불리하다.** [Maginn19MD] §4.1.1 이 속도스케일링 계열은 NVE 구분불가, **Langevin/Andersen 은 강결합(0.1–1 ps)에서 D 를 극적으로 낮춘다**고 이름을 대서 경고 |
+| **시드/복제** | (조성,온도)당 **궤적 1개**, 오차는 같은 궤적 **10등분 블록**(무상관 가정 미검증). **D\* 는 오차막대 없음** | 시드 3 | 🟡 우리가 낫지만 [Maginn19MD] 문턱(≥20)에는 둘 다 미달 |
+| **무질서 처리** | ⛔ 조성당 **단일 배열** (실험 점유를 "최대한 근사" + Li–Li 거리 최대화) | comp2 disorder ensemble (라벨스왑 d-level · cfg 0/1/2) | ✅ **우리가 앞선다** |
+| **보고량 `D_rel` @600 K** | 개념상 동일. **digest 계산 D_rel: Br 14×(450 K) → 3.2×(600 K) → 1.3×(750 K)** · O 750 K **0.87×** | 비준 보고량, cell-conditioned | ✅ **살아남고, 경고를 받는다**: **비 자체가 온도의 함수**다. ⇒ ① 600 K D_rel 을 상온 σ 비로 읽지 않는다(우리 규율과 일치, 문헌 근거 확보) ② **한 온도의 도펀트 순위를 다른 온도로 옮기지 않는다** ③ 무너지는 이유 = 고온에서 Li 부격자가 녹아 **설계로 만든 사이트 정렬이 사라진다** |
+
+**⛔⛔ b2o3 축 — 이 편이 하는 일과 하지 않는 일**
+
+> **하지 않는 일**: `db/properties/b2o3_md_closed_retrospective_2026_08_25.json`(비준 `D-2026-09-07-b2o3-md-closure-retrospective`)의 판정을 **건드리지 않는다.** 이 편에는 골격 게이트도, 문턱값도, MLIP 편향 진단도, 궤적 보존 규약도 **없다.** 재개 경로는 여전히 **전향적 사전등록 카드 하나뿐**이다.
+> **하는 일**: 그 카드가 요구할 수 있는 **후보 항목 4개**를 제안한다 (digest §8.3) —
+> **+D1** `f = D*/D_J` 를 **골격 오염의 직접 지표**로 (Li 가 골격과 함께 병진하면 변위는 늘고 홉은 안 느니 **f 가 위로 튄다**; 골격 MSD 게이트와 **논리적으로 독립**, 추가 계산 0)
+> **+D2** 고정 사이트 격자에서 **사이트 할당률이 시간에 따라 단조 감소하면 골격이 움직인 것** (이진 시험)
+> **+D3** **방향분해 MSD 필수 제출** — 세 방향 모두 `D_inc` plateau 를 보여야 3D D 를 보고 (b2o3 는 면내 7 Å 슬랩이라 이방성이 구조적)
+> **+D4** 골격 원자(P·S·B·O)에 **진동진폭 분포**를 돌려 비-Gaussian 꼬리 검사 (미검증 — 우리가 시험해야 함)
+> ⛔ 넷 다 *"이 논문의 도구를 우리 문제에 돌려 쓴다"* 이지 *"이 논문이 우리 결과를 검증한다"* 가 아니다.
+
+<sub>> 📎 병합 2026-09-13 병합 — 초안 `_pending_index_deklerk2018_diffusion_analysis_md_beta_li3ps4.md` ### 2-b..</sub>
+
+
+**[Gra25UQ] `grasselli2025_uncertainty_era_ml_atomistic` — 불확실도 어휘·판정선의 정의 원본**
+(⛔ 물성값 0건. A–D 4축 행 금지. 아래는 **정의**와 **우리 위치 판정**뿐이다.)
+
+| 항목 | [Gra25UQ] 가 정의하는 것 | 우리 현재 | 판정 |
+|---|---|---|---|
+| **불확실도 4겹** | ①epistemic ②aleatoric ③**오설정**(§2.9) ④**표집/통계**(§2.8) | 축 2개(모델 / 시드·궤적) | 🔵 **재라벨 필요** — 아래 두 행 |
+| **시드·궤적 축** | ④ *"the statistical one due to a poor sampling (i.e. too short trajectories)"* (§2.8) | 600 K **3-seed**, MSD 2–50 ps, `Ea 0.197±0.032 eV` | ✅ **깨끗이 일치.** 이름표 그대로 채택 |
+| **모델 축 (`force_contrast`)** | §2.2 앙상블은 멤버가 **"equivalent models"**(같은 데이터 부분표집 / **훈련 시드**·MC dropout)여야 한다 | UMA(OMat24) · MACE-MP-0(MPtrj) · SevenNet-0(MPtrj) = **아키텍처도 훈련셋도 다름**, **M=3** | 🔴 **①epistemic 이 아니다.** 실질 **③오설정 대조 + §3.2 위원회 OOD 프록시** ⇒ ⛔ *"epistemic uncertainty"* 로 부르지 말 것 |
+| **캘리브레이션 하한** | 식 (27) 편향보정 ⇒ **최소 M = 4** (`(M−3)/(M−1)`=0 at M=3 → `α²=−1/3<0`) | **M = 3** | 🔴 **단위 있는 σ 원리적 불가.** 우리 "절대 σ 인용 금지"의 **식 근거 확보**(종전엔 경험 관례) |
+| **aleatoric 칸** | 잡음 없는 관측(=DFT 라벨)에서는 모든 편차가 **모델 편향** (Heid ref 34) | DFT 라벨 = 결정론적 | ✅ **우리 계엔 ② 칸이 없다.** `Fig. 3a` 빨간 상자 해당 없음 |
+| **"시드"의 의미** | §2.2 의 시드 = **훈련 시드**(앙상블 멤버 생성) | 우리 시드 = **MD 초기속도 시드** | ⚠ **다른 것.** 섞어 쓰면 §2.2 와 §2.8 이 뒤엉킨다. UMA 는 고정 체크포인트라 **훈련시드 축이 원리적으로 없다** |
+| **관측량 전파 도달점** | 힘/E → **차이량**(상관 덕에 작음) → **정적·열역학 평균**(식 31 reweighting, 궤적 1개) | — | ✅ **정적 지표(RDF·배위수·⟨E⟩)에는 지금 당장 위원회 오차막대 가능** |
+| **수송계수 전파** | 🔴 *"rigorous theory"* **부재**. 현재는 **멀티궤적 brute-force 뿐** | `D_rel` = 확산계수 비 = **수송계수** | 🔴 **우리 3-seed 가 문헌이 아는 전부.** 뒤처진 게 아니라 **분야 한계**. 단 그것은 ④만 재고 **①은 시드를 늘려도 안 채워진다** |
+| **`D_rel` 이 비(ratio)인 것** | §2.8(c): ML 오차는 가까운 배치에 **고도로 상관** ⇒ **차이의 불확실도 ≪ 절대값** | 설계/host 를 **같은 모델**로 | ✅ **설계 정당화.** ⚠ 저자 논증 대상은 **에너지 차이**이고 수송계수 비가 아니다 — **유추임을 밝히고 인용** |
+| **단일 uMLIP UQ 처방** | **마지막층 Laplace, 식 (14)**, 추론 부담 거의 0 (§4.1, ref 142) | 없음 | 🔵 **다음 계산 1순위.** 라벨 검증셋 후보 = `db/properties/mlip_bench_li3ps4_uma.json` (PET-MAD Li₃PS₄ 243구조 PBEsol) ⚠ **Cl 부재 = "critical subdomain underrepresented"** |
+| **UMA = MoE 분류** | §2.3.2 가 **ref 40 (Wood et al., UMA)** 을 MoE 사례로 인용, 식 (25) 제공 | UMA-s-1p1 | ⛔ **식 (25) 를 UMA 에 적용 금지** — 식은 전문가별 독립 데이터셋·`G⁽ᵏ⁾`·`α⁽ᵏ⁾` + Zeni 라우팅 전제. **UMA 라우팅 구조를 이 리뷰가 확인해 주지 않는다** |
+| **오설정 = 우리 봉인 논증** | 앙상블 전원이 같은 틀린 예측에 합의 → **인위적으로 낮은 σ**, **전역 캘리브레이션으로 불가** | 봉인 `mlip_applicability`: *"점수와 검증이 같은 퍼텐셜이라 함께 틀리면 상관은 오히려 좋아진다"* | ✅ **독립 도달 확인.** 우리 논증이 문헌 표준과 동일 |
+| **전이성 3분류** | Phase / Temperature(**고온→저온 일반화 양호**) / Compositional(**새 원소 외삽은 맞춤기법 없이 어렵다**) | 상(결정↔무질서) · 600–1000 K · 도판트 30종 | ⚠ **세 갈래 동시**. 세 번째가 저자들이 어렵다고 한 그것 ⇒ 봉인의 *"UMA 내부 순위로만"* 이 옳다 |
+| **OOD 판정법** | ⛔ convex hull(고차원 붕괴 + **비볼록 구멍 오판**, `Fig. 4`) / ✅ **적응 k-NN 밀도(식 32)+TwoNN 내재차원** · GMM NLL · 하우스도르프 | 없음 | 🔵 후보 — cascade 조성공간이 비볼록일 위험 |
+| **γ(외삽등급) 원전** | §3.5.2: *"original paper by **Podryabinkin and Shapeev**"* (ref 108, *CMS* 140, 171, 2017) | `talks/lee2026_skku…` §99-10 3b′ 의 재귀속 후보 | ✅ **같은 방향의 외부 증언** ⚠ **리뷰 경유** — 1차 근거 아님 |
+| **γ 비선형 일반화 귀속** | **Gubaev 2018, *JCP* 148, 241727** (ref 113) | `tools/ionic/mlip_committee.py` = **Gubaev 2019, *CMS* 156, 148** | ⚠ **서로 다른 논문.** 원문 미확인 ⇒ **도구 귀속 안 바꾼다** |
+
+**⛔ [Gra25UQ] 에서 인용하면 안 되는 것**
+1. 리뷰가 요약한 **2차 수치** 전부 — 전이성 관행 문턱(**10 meV/atom · 100 meV/Å**), γ 문턱(**≲1 / ≫1**),
+   앙상블 통상 크기(**5–10**), Kellner–Ceriotti 물의 **N·√N**, DeePMD **3층×240**. 전부 `[리뷰경유]`.
+   → 원 논문 확인 전 **우리 표의 1차 근거 금지**.
+2. *"이 리뷰가 방법 A 가 B 보다 낫다고 했다"* — **저자 자신의 정량 비교가 0건**이다.
+3. `Fig. 6`·`Fig. 7` 의 축 값(eV/atom 등) — **합성 데이터로 판단**(확인은 못 함).
+4. **이 논문으로 "우리 UMA 결과가 신뢰할 만하다"를 주장** — 이 논문은 재는 법을 말하지 우리 점수를
+   말하지 않는다. **오히려 우리가 ①을 안 재고 있다는 것을 드러낸다.**
+
+<sub>> 📎 병합 2026-09-13 병합 — 초안 `_pending_index_grasselli2025_uncertainty_era_ml_atomistic.md` ## ② .</sub>
+
+
+**[He23Hal] `he2023_halogen_chemistry_solid_electrolytes` — 우리가 쓰는 argyrodite 용어·프레임의 표준 서술**
+
+| 항목 | [He23Hal] 의 정의/서술 | 우리 | 판정 |
+|---|---|---|---|
+| **free-anion 자리 표기** | **4a / 4d**, **케이지 중심 = 4d** (`Fig. 4b` 범례 + `Fig. 4c`) | 우리·`deklerk2016` digest = **4a / 4c(=4d)** | ✅ **매핑 확정.** 원고·발표는 **4a/4d 로 통일**(Nat. Rev./Kraft/Wang P. 관례). ⛔ 한 문장에 4c 와 4d 를 섞지 말 것 |
+| **점프 3종 정의** | **doublet(48h–24g–48h) · intra-cage(48h–48h) · inter-cage(48h–48h)**, inter-cage 가 거시 수송 지배 (`Fig. 4d`, 본문-refs 132–134) | 동일 정의(de Klerk 계보) | ✅ 용어 일치 — 우리 MSD/점프 분석의 표준 어휘로 채택 |
+| **무질서 → 수송 on/off** | all-Cl@4a → inter-cage **0** / all-Cl@4d → doublet 급락 / 최적 **4a:4d = 1:3** (본문-ref 135) | comp2 ordered(d=0) frozen 아티팩트가 같은 물리; disorder ensemble d-level 스캔 | ✅✅ **우리 comp2 설계의 문헌 프레임.** ⚠ **"최적 %" 숫자는 인용 금지** — 원전은 분포당 단일 배열·단위셀·100 ps 이고 2024 MTP-MLIP 재검은 25 % 를 보고한다. 안전 인용 = *"중간 무질서에 최적이 존재(양 끝은 나쁘다)"* |
+| **Cl-rich 가 빠른 이유** | **에너지 지형(무질서·4d 음전하↓·24g 점유↑)** — *"not caused by Li deficiency"* (본문-refs 138·162) | 우리는 지금 **disorder + vacancy** 로 서술 | ⚠ **서사 교정 권고**: "무질서가 주, vacancy 는 동반" 으로. 문헌 표준은 vacancy 설명을 **명시적으로 배제**한다 |
+| **Cl/S 무질서의 구조적 근거** | **Cl⁻ 167 pm vs S²⁻ 170 pm (3 pm)** / Br +12 / I +36 pm (`Fig. 2a`) | 우리 comp1·modelc 의 S/Cl 자리교환 decorate | ✅ **한 줄 근거 확보** (⚠ Shannon 반경 — 리뷰가 출처를 안 밝힘) |
+| **24g 점유율** | `Fig. 5a` 가 **σ 의 중간 지표로 명시** | 미측정 | ⭕ **이식 후보 (T1)** — UMA 궤적에서 싸게 뽑히는 양. **문헌 기전을 우리 데이터로 직접 시험** |
+| **산화 onset** | **수치 0건.** 정성 서술의 비교쌍은 **LPS vs LPSX**(argyrodite 내부 Cl 1.0↔1.6 아님) | comp1·modelc **동일 2.256 V (S²⁻-limited)** | 🔴 **표면상 상충 — 실제로는 다른 비교쌍.** 섞지 말 것. 우리 편은 **[Banik]**(S 가 VBM pin)이 지지하고, 리뷰 스스로 본문-ref 167(=**[Yun23]**)로 ESW 확장 주장을 되돌린다 |
+| **수분/공기** | argyrodite 정량 **0건**. F@Li₃InCl₆ 의 **σ↓ + 수분보호↑** 사례만(본문-112) | LPSOCl / +B₂O₃ 축 | ⚠ **[Wang25DPA] `Fig. S11`(O 도핑 σ −41 %)과 상충하지 않지만 지지도 안 한다.** 같은 *모양*의 트레이드오프를 다른 화학에서 제공 ⇒ **간접 지지**. 근거로 쓸 것은 **본문-ref 154(Li G. 2022 AFM, `Li₅.₅(P₀.₉Sn₀.₁)(S₄.₂O₀.₂)Cl₁.₆`)** |
+| **Li 금속 계면** | `Fig. 7d` `Li₆PS₅Cl→Li₁₁PS₅Cl→{Li₂S,LiCl,S}→{Li₃P,LiCl,Li₂S}` + **전자 차단(자기제한)** vs `Fig. 7c` Li₃MX₆ **혼합전도 폭주** | grand-potential 환원한계 1.242 V / OCV 1.717 V | ✅ **정성 정합**(산물 계열 동일). ⛔ 전압 대 전압 비교 불가(리뷰에 수치 없음) |
+| **modelc 의 물리적 정체** | 본문-ref 185(Zeng 2022): **과잉 Cl 의 다수는 입계 LiCl 나노쉘**, 격자 치환은 소수 | modelc = Cl 1.6 **전량 격자 치환** 단결정 셀 | 🔴 **모델 한계 명시 의무.** *"실험 Cl-rich 시료의 모델"* ❌ → *"a fully lattice-substituted Cl-rich model / the bulk-lattice limit"* ⭕ |
+| **희토류 도핑** | *"still at an early stage … roles of the different rare earths need to be further explored"* (p838) | `ndo_lpscl16`(Nd·O) | ✅ **우리 gap 문장의 외부 근거.** 원고 서론에 거의 원문 인용 가능 |
+| 밴드갭 / 기계 | **0건 / 0건**("deformability" 정성) | comp1 2.066 · modelc 2.099 eV / E_VRH 22.06→27.66 GPa | **n/a — 비교 대상 없음** |
+
+**⛔ [He23Hal] 에서 우리 쪽으로 옮기면 안 되는 것**
+1. **`Table S1` 의 σ·Ea 값 전부** — 압력 44행 미기재, 조건 미상. **ML 학습 라벨로도 금지.**
+2. **"4a:4d = 1:3 최적"의 숫자** — 방법 의존(2024 MTP-MLIP 는 25 %). 정성 문장까지만.
+3. **`Fig. 6` 의 어떤 점도** — 양극·음극·로딩이 전부 다른 14개 셀. 전해질 순위를 말할 수 없다.
+4. **"할로겐이 ESW 를 넓힌다"** 를 **argyrodite 내부 Cl 조성 효과로 옮기는 것** — 비교쌍이 다르다.
+5. **본문 ref 번호로 `Table S1` 값을 인용하는 것** — SI 는 별도 번호 체계다.
+6. 🔴 **본문 p832 의 "Li₆PS₅I ≈ 10⁻⁶ S cm⁻¹"** — 자기 `Table S1`(2.2×10⁻⁴)과 **220× 모순**.
+   Li₆PS₅X 의 σ 대비가 필요하면 **`Table S1` 값만** 쓰고, **기전은 `deklerk2016`(all-4a → inter-cage 0)로** 인용한다.
+
+<sub>> 📎 병합 2026-09-13 병합 — 초안 `_pending_index_he2023_halogen_chemistry_solid_electrolytes.md` ## ② .</sub>
+
+
+**[Imbalzano21] `imbalzano2021_committee_uq_md_thermodynamic_averages` — committee 불확실도를 궤적 평균까지 전파하는 통계 원전**
+(EPFL COSMO, Grasselli & Ceriotti 교신 · ⚠ **PDF 에 저널·DOI·arXiv 없음**, pdfTeX 2020-11-10 preprint ·
+계: 물·삼펩타이드·메탄술폰산/페놀·액체 Ga — **Li·황화물·아르지로다이트 0건, 물성값 0건**)
+
+> ★ **왜 이 편이 MLIP 불확실도 축 3편 중 제일 중요한가**: 다른 UQ 논문이 **힘·에너지 오차**에서 멈추는데
+> 이 편은 그걸 **궤적 평균까지 전파**한다. 우리 D 는 MSD 기울기 = 궤적 평균이라 겉보기 구조가 같다.
+> **그런데 겉보기만 같다** — 아래 표 마지막 두 행이 그 이유다.
+
+| 항목 | [Imbalzano21] | 우리 (UMA-s-1p1 단일 모델) | 판정 |
+|---|---|---|---|
+| committee 구성 | 전체 훈련셋을 **복원 없이 부분표집** → M 모델 독립학습 (⚠ 실제로는 계마다 다름: Ga DOS 는 300/394 부분표집, 삼펩타이드는 **초기화 시드 + 90/10 CV 분할만**) | **단일 파운데이션 모델. committee 자체가 없다** | 🔴 **σ_V·α·재가중 전부 실행 불가** |
+| committee 크기 M | 4(펩타이드·물·Ga PM) · 5(산/페놀) · **64**(Ga DOS OM) · 16(부록 α 분석) | 이종 3종(UMA/MACE-MP-0/SevenNet-0) = **M=3** · 시드 3 | 🔴 **`E[1/ς²]=(M−1)/(M−3)` 이 M=3 에서 발산 ⇒ 우리는 하한 미달** |
+| 최소 M | **4 하드 하한**, 비선형 전파 시 **6 권고** (Appendix A) | — | ⇒ **PET-MAD/UMA-1.2 4번째 투입은 "권장" 이 아니라 "하한 도달"** (§J-5 처방의 정량 근거) |
+| 교정 α | 로그우도 최대화. **α = 2.1**(물) · **4.08**(산/페놀) · 1.0(펩타이드). **전부 ≥1 ⇒ raw 산포는 참오차를 2–4배 과소추정** | **α 를 잴 수 없다** — 참조 DFT 검증셋도, UMA 훈련분포(OMat24)도 우리에게 없다 | ⚠ **우리 committee 불일치는 "하한" 으로만 말한다.** *"불일치가 작았으니 안전하다"* 는 결론을 **이 논문이 지지하지 않는다** (`b2o3_committee_2026_09_07.json` 허용선과 정확히 양립) |
+| 전파 방식 | `Eq. 22` 재가중(정확) → 계 크기에 **지수적**으로 통계효율 붕괴 ⇒ **`Eq. 24` CEA 선형화** | — | ⭕ **개념만 이식.** CEA 는 `⟨a⟩_{V^(i)} ≈ ⟨a⟩_V̄ − β⟨a(V^(i)−V̄)⟩_V̄` — **선형화이지 재가중이 아니다** |
+| 분산 분해 | **`σ̃² ≈ σ_a² + σ_V²`** — 관측량모델(OM) + 퍼텐셜모델(PM). `σ_V ≈ β·std_i[Cov(a, V^(i)−V̄)]` | 우리 D 에는 **σ_a 항이 없다**(D 는 학습된 관측량이 아니라 궤적의 범함수) ⇒ 모델 불확실도는 **전부 σ_V 형** | 🔴 **그런데 그게 정확히 못 재는 항이다** |
+| 비교 대상 | `Fig. 8` 액체 Ga DOS 에서 σ_a 가 σ_V 를 지배 (figure-read: 원자가띠에서 σ_V ≈ σ_a 의 1/3–1/2) — 그래도 저자는 *"σ_V is sizeable"* | — | ⇒ **관측량 모델을 아무리 잘 학습해도 퍼텐셜 쪽 항이 남는다**. 우리는 그 항만 있는데 못 잰다 |
+| **관측량 종류** | **정적 배위평균뿐** — g(r) · Δμ/T_m · 자유에너지 프로파일 · 유한온도 DOS | **D = MSD 기울기 (동역학량)** | 🔴🔴 **여기서 갈라진다.** 전문 grep: `diffusion`·`transport`·`MSD`·`mean square`·`Green–Kubo`·`time-correlation`·`conductivity`·`viscosity` **전부 0회**. "correlation function" 6회는 전부 **radial** |
+| **동역학 확장 가능성** | 논의 없음 | — | 🔴 **원리적으로 불가.** 재가중은 *"어떤 배열을 얼마나 자주 보나"* 를 고치지 *"그 배열에서 다음 순간 어디로 가나"* 를 못 고친다. `V` 를 바꾸면 힘이 바뀌어 **궤적 자체가 갈라진다** ⇒ ⛔ *"Imbalzano 를 따라 D 에 committee 불확실도를 붙였다"* 는 문장 **금지** |
+| 시드/궤적 통계 축 | ⛔ **형식화 없음.** 정성 언급 3회뿐 (*"comparable"* · *"larger than the statistical error"* · *"somewhat scattered"*) | modelc Ea 3시드 **0.197±0.032 eV** · 단일시드 1.33× 철회(SEMIFINAL 2026-07-09) | ⇒ **우리 시드축을 이 논문이 도와주지 않는다.** 우리 규율이 이 논문보다 이 축에서 **앞서 있다** |
+| 비선형 유도량 | `Fig. 6` T_m = 선형적합의 **근**(=계수의 비) → **멤버별 적합 → 멤버별 T_m^(i) → 산포**. `Fig. 7` 대칭 Δp → `−kT log` → **비대칭 구간** | 우리 Ea = Arrhenius **로그 기울기**, D_rel = **비** | ⭕ **절차만 이식**: 멤버별로 끝까지 계산 후 산포. ⚠ **M=1 이라 모델축에선 실행 불가**, 시드축 짝짓기는 **정당화되지 않는다**(다른 계·다른 궤적. 시드번호가 같은 것은 난수열이 같을 뿐 물리적 상관이 아니다) |
+| 온도 의존 | `Eq. 28` 에 **β = 1/k_BT 가 앞에 붙는다** — 같은 공분산이면 고온일수록 σ_V 가 작다 | 600/800/1000 K | ⚠ 우리 온도가 이 방향으로는 유리하다. 단 **공분산 자체가 고온에서 커질 수 있어 순효과는 미정** (내 관찰, 논문 미논의) |
+
+**🔴 이 축에서 제일 중요한 두 줄**
+
+1. **우리 D 오차막대의 이름이 틀렸다.** 이 논문이 형식화한 분해(`σ_a` + `σ_V` vs 통계)로 재면,
+   우리가 지금 낼 수 있는 것은 **통계(시드/블록) 오차막대**이고 **모델 불확실도가 아니다**.
+   ⇒ `db/properties/` 와 원고 캡션의 *"uncertainty"* 를 **`seed/statistical spread`** 로 명시한다
+   (우리 **Q7** 판정 — *"창 4개의 max−min 은 불확도가 아니다"* — 과 같은 계열의 정정).
+2. **이 논문의 통계를 우리 이종 committee 에 이식하면 안 된다.** 가정 셋이 다 깨진다:
+   (i) **같은 `y_ref`** — OMat24 vs MPtrj 로 훈련셋·DFT 설정이 달라 세 모델의 target 이 같은 함수가 아니다.
+   (ii) **교환가능** — MACE-MP-0 과 SevenNet-0 이 **둘 다 MPtrj** 라 상관, 실질 표본은 3이 아니라 ≈2 클러스터
+        (§J-5 가 이미 지적한 것과 같은 얘기).
+   (iii) **가우시안** — 참조라벨이 없어 검증 불가.
+   ⇒ 남는 것은 **순서적 신호**(이 배열이 다른 배열보다 합의 밖이다)뿐이고, 그게 정확히
+   `tools/ionic/mlip_committee.py analyze` 가 하는 일이다. **이 논문은 그 도구를 정당화해 주지 않는다** —
+   오히려 M=3 · 상관 · 비교환성을 **전부 지적하는 쪽**이다.
+   ⭕ 다만 **한 가지는 우리 편**: α 논리가 *"committee 산포는 절대오차가 아니라 교정이 필요한 대리지표"* 라고
+   말하므로, 문턱을 **상대적으로만** 쓰고 기준선을 **별도 표본**에서 잡는 우리 방식이 이 논문 정신과 맞다.
+
+**⚠ 우리 도구 표기 정정 (2026-09-09, 코드 재독)**
+`tools/ionic/mlip_committee.py` 의 **`force_contrast` 는 이종 committee 가 아니다.**
+`cmd_force_contrast`/`contrast_from_forces` 는 **한 엔진(기본 UMA)의 예측을 파일 안 DFT 라벨과 비교**해
+골격 힘오차를 내고 그것을 **test 계 / control 계의 비 R** 로 만든다
+(카드 `db/properties/b2o3_uma_vs_dft_force_prereg_2026_09_08.json`).
+**이종 3종 committee 는 `sample` → `predict --engine {uma,mace,sevennet}` → `analyze` 경로**이고,
+[Imbalzano21] 과 대응하는 것은 **`analyze`** 쪽이다. 위 표는 `analyze` 기준으로 읽는다.
+
+**🔧 우리 산술 (논문 주장 아님)**
+- 편향 배율 `√[(M−1)/(M−3)]`: M=4 **1.73** · 5 1.41 · 6 **1.29** · 8 1.18 · 16 1.07.
+- M 표본 SD 의 상대오차 `1/√(2(M−1))`: M=3 **50 %** · 4 40.8 % · 6 31.6 %.
+  ⇒ **3점으로 낸 ± 는 그 자신이 ±50 % 다.**
+- `Fig. 9` 자체검산: figure-read M=16 무편향 α ≈ 2.77 을 참값으로 `Eq. A1` 에 넣으면
+  M=4 편향판 4.88 (그림 4.6), 역변환 무편향 2.61 (그림 2.62) — **식과 눈금 판독이 자기일관적**.
+
+<sub>> 📎 병합 2026-09-13 병합 — 초안 `_pending_index_imbalzano2021_committee_uq_md_thermodynamic_averages.md` ## ③ .</sub>
+
+
+**[Jang25As] `jang2025_thioarsenate_argyrodite_mlip_mechanism` — 음이온 무질서에 좌표를 붙이는 법 (ΔS_conf)**
+(*J. Mater. Chem. A* **13**, 33203–33211, 2025 · **As/Br 계**라 우리 물성값과 겹치는 칸 0개 · Ea·D **논문에 없음**)
+
+> ⛔ **σ 를 우리 db 옆에 놓지 않는다** — 참조 PES(**optB88-vdW** vs 우리 PBE 계열)·**MSD 창 미기재**(vs 우리 2–50 ps)·
+> 셀(**3,328** vs 62원자)이 **세 겹으로** 다르다. 그리고 CLAUDE.md 가 우리 σ 절대값 인용을 금지한다.
+> 아래는 **방법·좌표계·설계**만 옮긴 것이다.
+
+| 항목 | [Jang25As] | 우리 (`tools/modelc_v3/disorder_ensemble_diffusion.py` + `pipeline_v2`) | 판정 |
+|---|---|---|---|
+| **무질서 파라미터** | **f = 4d 의 할로겐 분율** — **자리 점유수 = 상태변수** | **d = 2·n_swaps / n_free_sites** — 기준 배열로부터의 **거리**, 상태변수 아님 | 🔴 **개념이 다르다.** modelc 에서 `d = 0.4` 하나에 **ΔS 0.673R 46 % + 1.001R 54 %** 가 섞인다 ⇒ **라벨을 `(f, ΔS_conf)` 로 바꿔야 한다** |
+| **정량 지표** | **ΔS_conf = −R{Σ_4a x lnx + Σ_4d x lnx}** (식 4). 계산비용 0(해석식) | ⛔ **없다** | ⭕ **즉시 이식 (T0, 계산 0회).** **우리 축 최초의 정량 지표** |
+| **우리 셀 좌표** (신규) | — | **modelc f = 0.60 · ΔS = 0.673R = 5.60 J mol⁻¹K⁻¹** / **comp1 f = 0 · 0.000R** `digest 계산` | 🔵 최근접-P 거리로 자유음이온 10자리를 **5:5 로 이분**(간격 0.33 Å), 자유 S²⁻ 둘이 근거리 무리 = 4d |
+| **우리 셀의 도달범위** | — | 62원자 셀은 **3준위뿐**: f 0.6/0.8/1.0 → ΔS **0.673 / 1.001 / 0.673R**, 배열 **10/25/10 = 45** | ✅ **45 = `modelc.json` `halogen_screening.n_configs` 와 정확히 일치** ⇒ 전수열거는 이미 끝났고 **44개를 버렸을 뿐** |
+| **엔트로피 최적 반전율** | x=0 에서 **50 %** | 일반해 **f\* = (1+x)/2** ⇒ **modelc(x=0.6) 은 80 %** `digest 계산 (원논문 미보고)` | 🔴 **50 % 를 우리 계로 이식 금지.** 논문의 50 % 는 x=0 특수해다 |
+| **실험 기준점** | — | `adeli2019` 중성자(Cl1.5, 4a-Cl 0.615/4d-Cl 0.834) → **ΔS = 1.116R = 그 조성 최대의 95–99 %** `digest 계산` | 🔴🔴 **우리 셀은 자기 최대의 67 %.** **계산 셀이 실제 물질보다 훨씬 정렬돼 있다.** ⚠ 조성이 Cl1.5 vs Cl1.6 로 다르다는 단서 병기. ⛔ *"그래서 우리 σ 가 과소다"* 는 **아직 못 하는 말** |
+| **배열 선택 규칙** | Ehull 축 = 단위셀 전수 + **최저에너지 1개** / MD 축 = **⛔ 미기재** | **45개 전수 → 최저에너지 1개** (`best_s_indices=[1,4]`) | ⚠ **같은 규칙, 같은 편향** — 최저에너지는 **저무질서 끝**이다. 저들은 그래도 MD 축을 33준위로 벌렸고 **우리는 안 벌렸다** |
+| **배열당 반복** | **1런, 오차막대 0** | **3-시드** (600 K 3-seed Ea 0.197±0.032 eV) | 🔵 **우리가 낫다.** 단 **배열은 셋이 공유**(`--v0_xyz` 공유·`--disorder_levels 0.0`) ⇒ **우리 오차막대는 "한 배열 안의 산포"** |
+| **★ 산포 죽이는 지렛대** | **셀크기** (`Fig. S4`: 52원자 5런 MSD `≈55–107 Å²` **2×** → 3,328원자 `≈70–73` **4 %**) | **시드** (62원자에 3-시드) | 🔴 **우리 62원자가 정확히 그 2× 영역이다.** ⇒ **우리 3-시드 산포가 물리인지 유한크기 잡음인지 지금은 구분 불가.** ⚠ 저들은 300 K·우리는 600 K 라 **이 논문이 우리 산포 크기를 정하지는 않는다** — `modelc_2x_V0.xyz`(558원자)로 우리가 직접 재야 한다 |
+| **MSD → D** | 식 `D = ⟨Δr²⟩/(2dt)`, **창·절편·다중원점 전부 미기재**. D 값 자체를 **한 번도 안 적음** | **2–50 ps 고정 · 자유절편 · `msd_multi_origin`** | ⛔ **정량 대조 원천 봉쇄** |
+| **확산영역 게이트** | ⛔ 없음 (`Fig. 6a` 는 10 ns 케이지간 점프 0 인데 σ 0.9 보고) | `tools/ionic/msd_diffusive_check.py` (미통과 시 HOLD) | 🔵 **우리가 확실히 낫다** |
+| **σ 산출** | NE, **Haven = 1 (암묵)** | NE, **Haven = 1 (명시)** | ✅ 같은 관례 ⇒ **같은 방향으로 틀릴 수 있다** (`adeli2019` 실측 Haven 0.3→0.23) |
+| **MTP R_cut** | **6 Å** | — | ✅ **§J-7 [Shapeev16] 블록의 *"Lee 랩 argyrodite MTP 는 6 Å"* 와 같은 값** — 아르지로다이트 MTP 관행 6 Å 의 두 번째 데이터점 |
+| **학습셋 설계** | 결정(4 T × 3 strain) + **비정질 융해-급랭** + 전구체 4종 = 12,390 | 사전학습 UMA 그대로 | 🔵 **fine-tune 을 하게 되면 이 구성이 참고표**(비정질·변형을 일부러 넣는다) |
+
+**⭕ [Jang25As] 에서 이식할 것 (T0 = 계산 0회)**
+1. **ΔS_conf 좌표계** — `disorder_ensemble_diffusion.py` 에 `--report-sconf` 플래그로 붙인다
+   (새 스크립트 금지, 기존 도구 확장). config 레코드에 **`f`·`dS_conf_over_R`·`n_Cl_4d`** 기록.
+2. **`Fig. 2a` 바이올린 표현법** — 배열 45개의 Ehull/D 를 점 하나가 아니라 **분포**로 그린다.
+3. **`Fig. 7a` 형식의 (반전 × 조성) 등고선** — 우리 Cl-rich 계열도 같은 지도를 그릴 수 있다.
+
+**🔴 [Jang25As] 대조로 드러난 우리 도구 결함 3건** (digest §9-1 · §16-5)
+| # | 무엇 | 크기 |
+|---|---|---|
+| 1 | `make_disordered()` 의 `c_pick` 이 **모든 Cl 8개**에서 뽑는다 → **자유-S(4d) ↔ Cl(4d) 스왑은 항등연산** | 단일 스왑의 **3/8 = 37.5 %** 가 무효 |
+| 2 | `d` 라벨 하나에 물리적으로 다른 상태가 섞인다 | `d=0.4` 에서 ΔS 0.673R **46 %** + 1.001R **54 %** |
+| 3 | docstring *"modelc only 1/8 anti-site"* | 실제는 **8 Cl 중 3개가 4d** 이고 그건 무질서가 아니라 **화학량론 강제 최소반전 f = x = 0.6** (4a 5자리에 Cl 8개는 안 들어간다) |
+
+**⛔ 이 축에서 인용하면 안 되는 것**
+1. **σ 절대값을 우리 db 옆에** — 참조 PES·MSD 창·셀 세 겹 차이 + CLAUDE.md 금지.
+2. *"엔트로피가 전도도를 결정한다"* — **인과 미검증**. `Fig. 5c` 는 두 갈래이고 상관계수가 없다.
+3. *"최적 반전율은 50 %"* — **x=0 특수해**이고, 같은 P/Cl 계 문헌이 25/50/75 %, 실험 실측은 83 % 로 갈린다.
+4. *"계산이 실험과 잘 맞는다"* — 겹치는 두 조성에서 **3.3×·6.3× 과대**.
+5. *"Br(→Cl) 을 더 넣으면 빨라진다"* — **반전율과 교란**된 진술.
+6. 이 논문의 **"안정성"을 우리 산화안정 4축과 섞는 것** — 여기서 안정성은 **오직 열역학 Ehull** 이다.
+
+<sub>> 📎 병합 2026-09-13 병합 — 초안 `_pending_index_jang2025_thioarsenate_argyrodite_mlip_mechanism.md` ## ③ .</sub>
+
+
+#### J-7-N. ★★★ **[Jeon26Con] — Haven 비를 궤적에서 직접 재는 법 (규약 자유) + 묶음 3편 재정렬** (2026-09-09 신설)
+
+**(a) 이 편이 채우는 빈칸**
+우리 σ 는 **NE, Haven H_R = 1 고정**이다. 그 오차를 재려고 모은 3편 중 **유일하게 (i) 우리와 같은 argyrodite 골격이고
+(ii) tracer 와 charge D 를 *같은 궤적에서 직접* 분리**한 편이다.
+
+| 출처 | 계 | 방법 | 원 보고 H_R | 캐리어 수 규약 |
+|---|---|---|---|---|
+| **[Adeli19]** | Li₆₋ₓPS₅₋ₓCl₁₊ₓ | 실험 PFG-NMR + EIS 역산 | 0.23–0.3 | ⚠ **c = 4 Li/cell (저자 명시 하한)** |
+| **[Zaby26σ]** | IL·LiFSI 액체 | 고전 MD (EH·GK) | 1.3–2.1 | 전 이온 (모호성 없음) |
+| **[Jeon26Con]** | Li₆₊ₓAs₁₋ₓSiₓS₅I | **AIMD, 집단 MSD 직접** | **1.83 / 0.53 / 0.64 / 0.77** | **없음 (H 에서 n 약분)** |
+
+**(b) 재현에 필요한 규격 전부** (`Table S10` · SI "Tracer and collective diffusion")
+- `MSD_σ(τ) = 1/[N(N_t−n)] · Σ_j |Σ_i (r_i(t_j+τ) − r_i(t_j))|²` — **합을 먼저, 제곱을 나중에.** 정규화는 **1/N** (1/N² 아님)
+- `MSD_tr` 도 **같은 multi-time-origin** 으로 다시 계산 (본문 `Fig. 5`/`Table 3` 의 단일 origin 값과 다르다)
+- `D = MSD(τ)/6τ` — **원점 통과 현(chord)**. ⚠ **우리는 자유절편 기울기 2–50 ps** ⇒ **추정자가 다르다**
+- `τ_max = 총 시뮬 시간의 1/2` (여기선 250 ps / 500 ps)
+- **unwrapped 좌표 필수** (wrap 되면 벡터합이 깨진다)
+- 도구 `pymatgen-analysis-diffusion` (ref 48 Deng 2017) · multi-origin 근거 ref 58 (He/Mo 2018)
+- `H = D_tr/D_σ = σ_NE/σ_col`, `σ_col = n q² D_σ/(k_B T)`
+
+**(c) ★★ digest 계산 — 규약을 맞추면 묶음의 그림이 바뀐다** *(원논문 미보고 · 우리 대조)*
+[Adeli19] 는 `D_σ = k_B T·σ/(c q²)` 이므로 `H_R ∝ c`. c: 4 → 전 Li(22–24/cell) 로 옮기면 **H_R 이 5.5–6배**:
+
+| | 원 보고 | **전-Li 규약 환산** | NE 는 |
+|---|---|---|---|
+| [Adeli19] x=0 (Li₆PS₅Cl) | ~0.3 | **≈1.8** | 과대 |
+| [Adeli19] x=0.5 | 0.23 | **≈1.3** | 과대 |
+| [Zaby26σ] | 1.3–2.1 | 1.3–2.1 | 과대 |
+| [Jeon26Con] x=0 | 1.83 | 1.83 | 과대 |
+| **[Jeon26Con] x=0.25–0.75** | **0.53–0.77** | 0.53–0.77 | **과소** |
+
+⇒ **규약을 맞추면 4개 중 3개가 H_R ≈ 1.3–2.1 (NE 과대) 로 모이고**, 유일한 이탈자가 [Jeon26Con] 의 Si-치환 조성인데
+그것이 하필 **집단 MSD 통계가 가장 미심쩍은 값들**이다.
+
+⚠⚠ **과신 금지 3**: ① [Adeli19] σ 는 cold-press **total** 이라 GB 가 σ 를 깎으면 H_R 이 **부풀려진다** ⇒ 진짜 bulk 는 1.3–1.8 **미만**
+(다만 Ea(EIS)≈Ea(PFG) 이므로 GB 가 *장벽*은 안 건드린다 — 앞지수만) ② [Adeli19] 의 c=4 는 임의값이 아니라 저자의 물리 논거
+(케이지간 점프가 장거리 수송을 지배) ⇒ 전-Li 가 **더 옳다는 뜻이 아니라 같은 자를 써야 한다는 뜻** ③ 온도가 다르다(1000 K vs 270–340 K).
+
+**⇒ 판정 (변경 없음)**: **"H_R = 1 은 근사가 아니라 미측정이고, 오차의 부호조차 우리 계에서 확정돼 있지 않다."**
+다만 **약한 사전(prior)** 이 생겼다 — *규약을 맞추면 argyrodite 에서도 H_R > 1 쪽 증거가 더 많다*. **인용할 결론이 아니라 직접 잴 이유다.**
+
+**(d) ⛔ [Jeon26Con] 에서 인용 금지**
+- "argyrodite 의 Haven 비는 0.53–0.77 이다" — **1000 K 1점 · 오차막대 0 · 단일 궤적 · Li 24–27개**
+- `Fig. S14` 에서 **x=0 의 charge MSD 는 150 ps 이후 포화**(확산 아님)한데, **H>1 을 만드는 유일한 점이 그것**
+- 저자 자신이 **계산한 H 를 300 K σ 에 반영하지 않았다** (digest 계산: 반영 시 12.9 → 16.8 mS/cm 로 실험 8.1–10.4 에서 **멀어진다**)
+- σ·D·Ea **절대값 전부** (As/Si+I·anion-ordered 계). ⚠ Ea 0.219 eV 가 우리 modelc 0.224 와 가까운 것은 **우연** — 방법도 계도 다르다
+
+**(e) ✅ 우리가 할 것 — 도구가 이미 거의 다 있다 (digest §12 와 동일)**
+> 🔎 **기존 도구 조사 결과 (CLAUDE.md 코드 규율 사다리 ②)**: `tools/ionic/` 에 이미 있다 —
+> `msd_origin.py`(MSD→Arrhenius, **최소상 언랩 `df -= np.round(df)` 내장**, `T*/traj.xyz` 를 직접 읽음) ·
+> `msd_diffusive_check.py`(**확산영역 인용 게이트**, `no-value`/`HOLD` 2층 판정) ·
+> `msd_refit_window.py`(재계산 없이 창 스윕) · `aimd_jump_stats.py`(**케이지 중심 기준 inter-cage hop 율** + van Hove Gs) ·
+> `cage_jump_descriptors.py`(intra/inter-cage 48h–48h 거리). ⇒ **새 파일을 만들 이유가 없다.**
+
+1. **보고량 카드 먼저** (`kb/templates/estimand_card.md`): 추정자(현 vs 자유절편)·τ 창·시드 집계·**폐기 기준**을 **결과 보기 전에** 못박는다.
+   폐기 기준은 새로 정의할 필요 없다 — **`msd_diffusive_check.py` 의 `no-value`/`HOLD` 2층 판정을 MSD_σ 에 그대로 적용**한다.
+   (**[Jeon26Con] `Fig. S14` 의 x=0 곡선이 정확히 그 도구의 `no-value` 사례다** — 좋은 시험 표본)
+2. **`tools/ionic/msd_origin.py` 에 `--collective` 플래그** 추가 (MSD_σ = (1/N)⟨\|ΣΔr\|²⟩, multi-origin, τ_max = T/2).
+   ⚠ **`msd.json` 으로는 안 된다** — 거기엔 tracer MSD 시계열만 있고 좌표가 없다. **집단 MSD 는 반드시 `T*/traj.xyz` 에서.**
+3. 파일럿(무료): 기존 comp1·modelc **1000 K 궤적**으로 MSD_σ 를 그려 `Fig. S14` 식 포화가 나오는지 본다 → 나오면 1번 게이트 발동
+4. 추정자 두 벌(현 / 자유절편 2–50 ps)로 H 를 다 내서 **추정자 의존성**부터 보고
+5. 본계산: **배열 시드 + 속도 시드 8–16개 × 500 ps–1 ns**. ⚠ 우리 현행 3-seed 는 **속도 시드만·배열 고정**이라 집단항엔 부족
+   🔑 **H_R 의 병목은 힘 정확도가 아니라 독립 궤적 수다 ⇒ 이 논문이 AIMD 로 못 한 것(조성당 500 ps × 1개)을 UMA 로 살 수 있다**
+6. (별건, 값싸다) **§A 의 "총 점프 수는 그대로, 케이지간만 바뀐다"를 우리 계에서 재현** — `aimd_jump_stats.py` 가 이미 inter-cage hop 율을 낸다
+7. (사용자 승인 후) `adeli2019` digest §3c 에 **전-Li 규약 환산 ≈1.3–1.8** 을 각주로 추가
+
+<sub>> 📎 병합 2026-09-13 병합 — 초안 `_pending_index_jeon2026_concerted_li_motion_argyrodite_assi.md` ## ④ .</sub>
+
+
+**[Kurn26UQ] `kurniawan2025_comparative_ensemble_uq_nnip` — UQ 를 *채점하는 지표* 의 원전**
+(*Mach. Learn.: Sci. Technol.* **2026**, in press · Kurniawan/Wen/**Tadmor**/Transtrum · **탄소 동소체 전용 · 물성값 0**)
+
+> 🔑 **우리가 이 편에서 가져오는 것은 값이 아니라 "채점표"다.** 지금 우리에게는
+> **committee 불일치를 채점할 지표가 하나도 없다** — 이 논문이 그 다섯 개를 준다.
+
+| 항목 | [Kurn26UQ] | 우리 (`tools/ionic/mlip_committee.py`) | 판정 |
+|---|---|---|---|
+| **σ(불확실도)의 정의** | **동일 아키텍처·동일 데이터** 앙상블 100멤버의 표준편차 (bootstrap/dropout/random-init/snapshot 4종) | **이종 3모델**(UMA-OMat24 / MACE-MP-0-MPtrj / SevenNet-0-MPtrj) 프레임별 원자당 힘 RMS 불일치의 **쌍별 최댓값**, 평균 힘 크기로 정규화 | ⚠ **부류가 다르다** — 우리 것은 ③ random-init 의 **일반화판**(변동 출처 = 아키텍처+훈련셋). ⇒ 우리 σ 는 **epistemic + 훈련셋 계통차의 혼합**이고 이 논문에는 그 항이 없다. **σ 해석 직수입 금지** |
+| **잔차(정확도)의 정의** | DFT 라벨 대비 에너지·힘 residual/MAE/RMSE | `force_contrast`: UMA vs DFT 라벨, 골격 `dF_frame`·상대 `dF/F_ref`·`cos θ` | ⭕ **같은 축이다** |
+| **M1 패리티 도식** | `Fig. 6`: y=|오차|, x=σ, **log-log**, KDE 등고, **회색 삼각 = underconfident** | ⛔ **없다** | ⭕⭕ **T1 이식 1순위** — `analyze` 와 `force_contrast` 산출 JSON 을 **프레임 키로 조인**하면 새 도구 없이 그려진다 |
+| **M2 순서 지표** | `Pearson(residual, σ)`. **all-data: bootstrap 0.76 / dropout 0.40 / random-init 0.32 / snapshot 0.30** | ⛔ **없다** | ⭕⭕ **우리 값의 눈금이 생긴다.** 우리 committee 가 0.3 대면 *"이 논문의 약한 방법들과 동급"*, 0.7 대면 *"bootstrap 급"* |
+| **M3 크기(보정) 지표** | `MAE` vs `⟨σ⟩` 병렬. bootstrap 힘 **⟨σ⟩ ≈ MAE/3 = 과소확신**, dropout **⟨σ⟩ ≥ MAE = 보정 양호** | ⛔ **없다** | ⭕⭕ **M2 와 우승자가 반대로 나온다** ⇒ 우리도 **둘 다** 봐야 한다. 하나만 보고 *"우리 σ 는 쓸 만하다"* 라고 쓰면 이 논문이 이미 반증한 종류의 주장 |
+| **M4 coverage** | DFT 참값이 ±1σ 안인가 (`Fig. 8`, 정성) | ⛔ 없다 | 🟡 우리는 참값이 드물어 적용 제한 |
+| **M5 외삽 추적** | ★ **오차곡선 vs σ띠를 외삽좌표에 겹치고 PCA 내삽영역을 음영** (`Fig. 11`·`Fig. 13`) | ⛔ 없다 | ⭕⭕⭕ **우리 판 = x축을 온도(600/800/1000 K) 또는 PCA 거리로.** *"σ 가 고온 외삽을 따라가는가"* — **§J-2 [Zhang npj] 1050 K 골격융해 경고의 감시 지표** |
+| **사후 보정** | **일부러 안 함** (raw ensemble spread) | 해당 없음 | ⚠ 우리도 raw 로 시작하되 **"보정 안 했다"를 명시** |
+| **비용 보고** | ⛔ 벽시계·GPU 시간 **0건**. 정성 결론 하나: **snapshot ≈ random-init 인데 학습 1회 vs 100회** | 추론 3회(3모델) | ⭕ **fine-tune 하면 snapshot 이 공짜** — 체크포인트 저장 한 줄 |
+| **단일 파운데이션 모델 적용성** | 논외(4종 다 자체 학습) | **UMA 단일** | 🔴 **bootstrap·random-init 불가**(OMat24 훈련셋 부재) · **MC dropout 조건 불일치**(UMA 는 dropout 학습 아님) · **snapshot = fine-tune 시 가능** · **PCA 외삽 진단 = DFT 0회로 지금 가능** |
+
+**🔴 이 편이 닫지 못하는 것 — 반드시 같이 인용**
+1. **계가 탄소 단일원소**다. 다원소·이온성·**부분점유 무질서**계로의 전이는 **시험된 적 없다**.
+2. **훈련셋 4,788구성**으로 좁다 ⇒ 파운데이션 모델의 내삽영역과 **자릿수가 다르다**.
+   기구(외삽하면 σ 가 먹통)는 전이 가능성이 있어도 **빈도·문턱은 전이되지 않는다**.
+3. **MD 를 안 돌린다** ⇒ **궤적 시간평균 `D`·`Ea`·NE `σ_ionic` 의 UQ 를 다루지 않는다.**
+   → **`imbalzano2021_committee_uq_md_thermodynamic_averages` 가 그 층위의 정본.**
+   ⚠ 부분 다리: diamond **포논**에서 *"wide uncertainty bounds fail to capture the true values"*
+   = *"힘 σ 가 괜찮아도 유도량에서 깨진다"* — **정성 경고로만**, 정량 이식 금지.
+4. **OOD 프로브가 부피 스캔 한 축**뿐. **우리 위험(고온 무질서·Li 도약 안장점·계면)을 대표하지 않는다**
+   ⇒ `E(a)` 스캔을 LPSCl 로 그대로 베끼면 안 된다(그리고 무질서계는 **배열 선택·집계 규칙을 카드에 먼저** 선언).
+5. **오차막대가 없다.** `Fig. 7a` 의 0.31 vs 0.34 차이는 유의성 불명. **0.76 vs 0.30–0.40 만 인용한다.**
+6. **테스트셋으로 모델을 선택하고 그 테스트셋으로 채점**했다(검증셋 없음) ⇒ ID 성능에 낙관편향.
+
+**⛔ 이 축에서 인용하면 안 되는 것 (→ §J-6 에도 추가)**
+- ⛔ *"이 논문이 committee(단순 앙상블)가 제일 낫다고 했다"* — **아니다. 승자를 못 정했다.**
+  *"복잡한 추정기가 단순 committee 를 일관되게 못 이긴다"* 는 **[37] Carrete 2023** (*J. Chem. Phys.* 158, 204801)
+  의 결론이고 이 논문은 그걸 **인용**했을 뿐이다.
+- ⛔ *"이 논문이 GP·conformal 과 비교했다"* — **앙상블 4종만.**
+- ⛔ *"이 논문이 D·이온전도도의 UQ 를 다뤘다"* — **MD 를 안 돌린다.**
+- ⛔ **힘 RMSE 3.35–5.56 meV/Å**(탄소·ACSF-MLP·PBE)를 **우리 UMA Li₃PS₄ 30.0 meV/Å**(황화물·등변 GNN·PBEsol)
+  와 같은 표에 놓는 것 — **단위만 같고 계·기술자·functional 이 전부 다르다.**
+
+<sub>> 📎 병합 2026-09-13 병합 — 초안 `_pending_index_kurniawan2025_comparative_ensemble_uq_nnip.md` ## ③ .</sub>
+
+
+**[Liu26FIRE] `liu2026_ai_ready_finetuning_solid_solid_interfaces` — 계면 MLIP 파인튜닝 레시피**
+(⚠ **arXiv preprint, 동료심사 안 됨** · **SI 미확보** · **계면 물성 검증 0건**)
+
+| 항목 | [Liu26FIRE] 가 답하는가 | 우리 현재 | 판정 |
+|---|---|---|---|
+| **★★ 계면 구조를 어떻게 만드나** (격자정합·변형률·종단·배향·gap·표본수) | ❌ **본문에 0줄** (`strain`/`lattice`/`termination`/`slab`/`vacuum` 전부 0회) | `run_cathode_interface.py` — SE 를 NCM xy 에 **한쪽 몰빵 변형**, `GAP=2.5 Å` 고정, `VACUUM=30 Å`, xy-shift 5 seeds, strain 0.2/1.1/3.3 % | 🔴 **B2 에 이식할 항목 0개.** 이 편은 *"계면을 어떻게 짓나"* 가 아니라 *"지어진 계면에서 프레임을 어떻게 고르나"* 를 푼다 |
+| **B2 미정의(회신 BJ) 를 닫아 주나** | ❌ | `X_B2(M) = W_ad(NCM‖LPSCl:M) − W_ad(NCM‖LPSCl)` = 🔴 **미정의** (admissible state 다수·선택규칙 없음·`rng` 미지정으로 `Wad_std` 재현 불가) | 🔴 **안 닫힌다.** 🔵 단 **"고르지 말고 분포로 정의"** 방향은 얻는다 → `median{W_ad} ± MAD, n=k` + strain 배분·gap·종단을 **결과 보기 전에 선언** |
+| **★★ 계면에서 무엇을 검증하나** | 🔴 **힘·에너지 RMSE 에서 멈춘다.** W_ad·계면저항·계면 Li 이동 전부 0. **계면층/벌크층 분리 RMSE 도 없다** | `adhesion.json` γ_SE 1.211 J/m² · Wad v2 1.107±0.027 | 🔴 **대조군 없음.** ⇒ **우리가 계면 MLIP 을 하면 `RMSE(계면층)/RMSE(벌크층)` 분리 보고를 반드시 넣는다** (이 편의 최대 결함을 우리가 피하는 방법) |
+| **★ 계면 fine-tune 이 필요한가 / UMA 를 그냥 믿어도 되나** | 🔴 **답 없음.** **UMA·fairchem·OMat 0회**. 게다가 **MACE-MP-0 zero-shot 의 계면 오차 자체를 안 쟀다** (`Reference` 막대는 **문헌의 다른 전용 MLIP** 값) | UMA-s-1p1(omat) — **벌크 규약으로만** 검증, 계면 미검증 | ⛔ *"파인튜닝 없이는 계면에서 못 쓴다"* 인용 불가. 🔵 **약한 방향 신호**: 6계 중 **황화물 2계가 파인튜닝 후에도 최악**(43·54 meV/Å) ⇒ 황화물 계면이 이 종류 모델에 어렵다. **우리 계는 직접 재는 수밖에**: `force_contrast`(UMA/MACE/SevenNet M=3)를 **계면 구조에서** 돌리는 것이 GPU 0 에 가장 가까운 진단 (⚠ grasselli2025 판정대로 **epistemic 이 아니라 오설정 대조**) |
+| **★ 필요한 라벨 수** | ✅ **여기는 답이 있다**: 종잣값 **20–50** perturbed → 후보 풀 **~20,000**(라벨 불필요) → 최종 **500–4,000 프레임**. 수렴은 계 의존(단순 500 / 다상 1000–2000) | 계면 라벨 캠페인 없음 | ✅ **실무 수치 확보**: **DFT 라벨 500–2,000점 + 종잣값 20–50점** |
+| **★ GPU 비용** | 🔴 **답 없음** — 하드웨어 미기재, **DFT 라벨링 비용 부재**. 있는 것은 파인튜닝 **13–18 h @ n=4000** 과 표본추출 **2–3 min**(=**0.3–0.4 %**) 뿐 | — | 🔴 **예산 산정 불가.** ✅ 얻는 것: **표본추출은 공짜** |
+| **능동학습** | ❌ 안 씀. 결론의 미래과제 한 문장뿐 | `force_contrast` M=3 | ✅ **우리가 오히려 앞선다** (grasselli2025 §4.1 축) |
+| **replay (이 편의 유일한 알고리즘 신규성)** | ✅ **6계 전부에서 vanilla 보다 낫다** (E 1.2–3.4× · F 1.2–2.0×), 통제된 A/B | 파인튜닝 안 함 | 🔵 **우리가 언젠가 파인튜닝하면 replay 는 기본값으로 넣는다** ⚠ **replay 비율이 논문에 없다**(SI) |
+| **SOAP→PCA→K-means 표본추출** | ✅ 레시피 명확 · 비용 0.3–0.4 % · ⚠ 하이퍼(r_cut/n_max/l_max/PC수/k) **전부 미기재** | 없음 | 🔵 **바로 이식 가능**(의존성 `dscribe` 1개). **커버리지 그림(전체 풀 회색 + 선택 표본 색)** 은 우리도 즉시 그릴 수 있는 유일한 "학습셋 대표성" 시각화 |
+| **규모 상한 (우리가 인용 가능한 유일한 정량)** | ✅ MLIP **3456 원자** / DFT-MD **~576–600 원자**(메모리) · MACE 1.3→1.4 s/step vs VASP 1.0→195 | 우리 계면 슬랩 300–624 원자 | ✅ **우리 셀 크기가 DFT 한계 바로 위**라는 것을 외부 수치로 방어 가능 ⚠ 16 원자에선 VASP 가 더 빠르다(교차 30–60) |
+| **우리 계와의 겹침** | Li‖Li₆PS₅Cl(우리 comp1 + Li 금속) · Li₃PS₄‖Li₃B₁₁O₁₈(황화물‖**붕산염 코팅** = 우리 B₂O₃ 축) | Stage 11 = **황화물 SE ‖ 산화물 양극(LiNiO₂)** | 🔴 **우리 주축(SE‖NCM)은 이 논문에 없다** |
+
+<sub>> 📎 병합 2026-09-13 병합 — 초안 `_pending_index_liu2026_ai_ready_finetuning_solid_solid_interfaces.md` ### ②-c.</sub>
+
+
+**[Liu26FT] `liu2026_finetuning_umlip_tutorial` — U-MLIP fine-tuning 절차의 실무 원전 (MACE 전용)**
+(⛔ 우리 계 물성값 0건. A–D 4축 행 금지. 아래는 **절차·수치 규모·판정**뿐이다.)
+
+| 항목 | [Liu26FT] 가 주는 것 | 우리 현재 | 판정 |
+|---|---|---|---|
+| **다루는 모델** | MACE-MP-0b3 · MACE-MPA-0 · MACE-OMAT-0 (**셋뿐**) | **UMA-s-1p1 (omat), fairchem, 고정 체크포인트** | 🔴 **아키텍처 불일치.** `UMA` 는 Table I 한 줄, 실험 0건. ⚠ **MACE-OMAT-0 ≠ UMA** |
+| **fine-tune 실행 가능성** | `run_train.py` 가 `model_foundation.r_max`·`.interactions[0]` 를 읽고 MACE 블록에 가중치 복사 | UMA = eSEN 체크포인트 | 🔴 **아키텍처 하드락. 이 도구로 UMA fine-tune 불가** (repo 실측) |
+| **옮길 수 있는 것** | 데이터 준비(extxyz·90/10·`IsolatedAtom` E0s·rattle 0.1–1.0 Å+MC 필터·2단계 부트스트랩·1–2원자 셀로 반발영역) · **힘 가중을 크게** · lr 1e-3 근처 U자 · batch ≤20 · **RMSE 로 끝내지 말고 물성으로 재검증** | — | ✅ **레시피는 전부 이식 가능** |
+| **못 옮기는 것** | `--swa_*`·`--freeze`·`--lora*`·`--pt_train_file`·`--num_samples_pt`·`start_swa=max_epochs//4*3` 자동규칙 | — | 🔴 MACE 종속. fairchem 쪽을 **따로 확인해야 한다**(이 논문은 무언) |
+| **힘 RMSE 규모** | LGPS **fine-tune 후 14.88–16.15 meV/Å** (Table IV, 소환값) | `mlip_bench_li3ps4_uma.json`: **44.58 meV/Å**(zero-shot, Li₃PS₄ 243구조) | ⚠ **직접 비교 금지**(계·DFT설정·테스트셋 전부 다름). 자릿수만: **44.58/15.3 ≈ 2.9×** (digest 계산) |
+| **zero-shot 출발점** | Si OOD **126.07** · LiCl/GaF₃ **179.2** · C/cBN **171.3** meV/Å | 우리 **44.58** meV/Å | ✅ **우리 출발점이 그들보다 훨씬 좋다** ⇒ 🔴 **그들의 9–10× 개선을 우리에게 기대하면 안 된다.** 상한은 **≈3×** |
+| **fine-tune 이득의 조건** | 에너지: 전 구간 ✅ / **힘: 데이터 ≲30% 일 때만** — 75·100% 에선 **scratch 가 이긴다**(Fig. 4b figure-read) | — | 🔴 **본문 주장(*consistently*)이 자기 그림에 반증됨.** 갈라 인용 |
+| **필요 라벨 규모** | ≈590 프레임(풀의 10%)에서 힘 RMSE ≈18.3 meV/Å; 5895 프레임(100%)에서 ≈14.85 = **10× 데이터로 19%** | Cl 라벨 **0** | 🔵 **파일럿 규모 근거 확보.** ⛔ **우리는 Cl 라벨이 없어 시작선에도 못 서 있다** |
+| **탄성 연화 (PES softening)** | 파운데이션 **C₁₁ −45%·C₄₄ −52%·B −20%**(Mo, Table VI) → FT 로 회복 | 우리 E_VRH·B₀ 는 **DFT** 산출 | ✅ **DFT 값은 fine-tune 과 무관 — 안 끊긴다.** 이 행은 *MLIP 의* 연화 경고로만 |
+| **연화 교정의 방향** | GSFE: 파운데이션 −60% → **FT 는 +12~14% 과대**(figure-read, Fig. 7) | — | 🔴 **"되돌린다"가 아니라 "지나쳐 되돌린다".** 슬 8 A1 인용문 수정 필요 |
+| **일반화 저하(=우리 3번 질문)** | ⛔ **재지 않았다.** Si "OOD" 는 **구조** OOD(훈련·테스트 모두 Si). 사전학습 분포 되돌림 평가 **0건** | +B₂O₃ · Nd–O 공도핑 결과 다수 | 🔴 **우리에게 제일 치명적인 결측.** B/O/Nd 는 진짜 **화학** OOD ⇒ **대가를 우리가 직접 재야 한다** |
+| **대가 측정기** | 없음 | `mlip_bench_li3ps4_uma.json` 243구조(Cl 없음) | 🔵 **우리는 이미 갖고 있다** — fine-tune 후 이 셋으로 되돌려 재면 그게 곧 forgetting 계측 |
+| **M ≥ 4 committee** | 파일 최대 150개 가능하나 **EMA 평활 · 100-epoch 간격(→최대 2개) · stage1/2 목적함수 불일치 · 순환 LR 부재** 로 준독립성 4중 위반 | `force_contrast` M=3 (이종) | 🔴 **`grasselli` 식 (27) 의 M≥4 출구가 이 문서로는 안 열린다.** 400+ epoch·EMA off·순환 LR 이라는 **별도 설계**가 필요 |
+| **학습 비용** | ⛔ **wall-clock 0줄.** step 수만 digest 계산 ≈2.2×10⁵ | — | 🔵 파일럿 첫 측정항목 = **우리 GPU 의 1 step 시간** |
+| **MD 추론 가속** | cuEquivariance: 2900원자 **1.94×**(5084→2619 s/10k step), scaling 0.76→0.41. **128원자에선 더 느림** | 우리 셀 400–1000원자 | ✅ **이득 구간 안**. ⚠ 논문 본문의 *"3–10×"* 는 자기 표와 안 맞음 |
+| **비교군 보존** | Table IV 에 **zero-shot 행이 없어** LGPS 개선폭을 알 수 없다 | — | 🔵 **우리는 반복하지 않는다** — fine-tune 전 대조 잡을 먼저 돌린다 |
+
+**⛔ [Liu26FT] 에서 인용하면 안 되는 것**
+1. **절대 에너지 RMSE 전부** — Fig. 2(2.4–3.2 meV/atom)와 Table IV/V/X(0.25–0.35)가 **정확히 10× 어긋나고**
+   PDF 로 어느 쪽이 옳은지 확정 불가. **상대 개선폭(10.7% 등)만** 쓴다.
+   (특히 LiCl/GaF₃ 의 **0.09 meV/atom** 은 DFT 수렴오차보다 작아 물리적으로 의심스럽다.)
+2. *"이 튜토리얼로 UMA 를 fine-tune 할 수 있다"* — **UMA 실험 0건 + 아키텍처 하드락**.
+3. *"fine-tuning 은 항상 scratch 보다 낫다"* — **Fig. 4b 가 75·100% 힘 RMSE 에서 반증**.
+4. *"fine-tuning 이 일반화를 향상시킨다"를 우리 B₂O₃/Nd 계열에 적용* — 그 근거는 **동일 원소 내 구조 OOD**뿐이다.
+5. Table VI 의 **본문 퍼센트**(45.91/56.88/48.27→2.58/14.77/3.45) — 기준(실험)이 표(DFT)와 다르고
+   **표에 실험 열이 없으며** C₄₄ 는 오타로 보인다. 인용하려면 **표의 DFT 기준 열**을 쓴다.
+6. Table VII 의 GSFE 오차를 **"개선"으로만** 서술 — 부호가 뒤집혀 **과대평가로 넘어간 것**이다.
+7. 논문의 *"cuEquivariance 가 3–10× 빠르다"* — 자기 Table VIII 실측은 **최대 1.94×**.
+
+<sub>> 📎 병합 2026-09-13 병합 — 초안 `_pending_index_liu2026_finetuning_umlip_tutorial.md` ## ② .</sub>
+
+
+**[Maginn19MD] `maginn2019_best_practices_transport_selfdiffusivity_viscosity` — 우리 D 의 *통계* 불확실도를 정의하는 원본**
+
+> ⛔ **σ·Ea·D·ESW·탄성·gap 0건.** 여기 있는 것은 우리 `Ea 0.197 ± 0.032 eV` 의 **±0.032 가 무엇인가**를 정의하는 원본이다.
+> ⛔ **형제 4편(#78–81)과 재는 양이 다르다**: 저 넷은 **모델(epistemic)** 분산, 이 편은 **궤적 유한성(random)** 분산.
+> **복제를 무한히 늘려도 모델 편향은 안 줄어든다** — 논문 §4.2.3 첫 문단이 힘장에 대해 직접 그렇게 쓴다.
+
+| 항목 | [Maginn19MD] | 우리 | 판정 |
+|---|---|---|---|
+| **MSD 적합 구간** | *"only the **middle**"* · 단시간(케이지)·장시간(잡음) 배제. **⛔ 수치 기준 없음** — *"we are unaware of an objective approach"*. 대신 **보고 3종**: 선택법 · **그 선택이 만드는 D 변동폭** · 기울기 적합 불확실도 | **2–50 ps 고정 · 자유절편 OLS** | 🟡 **절반**. 취지 일치·자유절편 ✅. 그러나 **변동폭을 안 보고한다** — 우리는 그 값을 이미 안다(**창 효과 Ea 242 meV**, `tools/convention_check.py` · `kb/concepts/msd_reading.md`) ⇒ **242 meV > 주장 효과 90 meV** 인데 규약 고정으로 처리했다. ⛔ **논문을 우리 창의 근거로 인용하면 오독** |
+| **자유절편 vs 원점강제** | `Table 1`: `D = (1/2d_α) lim (d/dt)⟨MSD⟩` — **미분형** | 자유절편 OLS `MSD = c + 6Dt` | ✅ **직접 방어된다.** 도함수는 절편을 안 본다 ⇒ `MSD/(6t)` 원점강제가 규약 위반 (2026-08-11 β 게이트 사태의 뿌리와 같은 병) |
+| **독립 복제 수** | 부트스트랩 **N_reps ≥ 20** 에서 최신뢰 · SEM ∝ 1/√N · **10 ≈ 단일 장기런** · **30–40 ≡ 100**(점도) | **시드 3** | ⛔ **미달.** 산술 결정타: **시드 3 → 복원추출 다중집합 10가지** ⇒ "수백 회 반복" 해도 분포가 아니라 이산 점 10개. **논문식 복제 부트스트랩은 시드 3에서 실행 불가.** ⚠ 완화: 저자가 *"even if only a few"* 를 허용(단 *rough estimate* 로 부를 것) + D 는 **N 분자 평균**이 가능해 η 보다 정밀(§4.2.1) — ⛔ 그래도 **분자 평균은 복제를 대체 못 한다**(같은 궤적·같은 열욕·같은 무질서 배열 = 독립 표본 아님) |
+| **확산영역 진입 판정** | ① **log-log MSD 기울기 ≈ 1** ② **√MSD > r_G(하한) · > L/2(상한)** (⚠ 문서 내 세 곳이 L/2 · "~L" 로 불일치) ③ 점점 긴 런 계열로 D 변화 확인. **"ergodicity" 단어 0회** | **β 게이트 폐기 후 공백** | ⛔ **가장 큰 구멍이자 가장 싼 수리.** ①은 **비용 0** — 기존 MSD 로그에서 계산. ⭕ **처방(T1)**: `tools/ionic/msd_diffusive_check.py` 에 `slope_2_50ps` 한 열 추가 (**새 파일 금지** — 기존 도구 확장). ②는 r_G 가 단원자 Li 에 없어 **그대로 못 온다** → 하한을 Li–Li 최근접/점프거리로, 상한을 L/2 로 치환 ⚠ **이 치환은 우리 판단이지 논문 권고가 아니다** |
+| **유한크기 효과** | **"significant … must be accounted for"**. CO₂ ≈10 %. ① D vs N^(−1/3) 외삽 ② **YH `D∞ = D(L)+k_BTξ/(6πηL)`, ξ=2.837298** (입방 + η 별도) | **점검 0회** | ⛔ **명시적 결손.** 단 **YH 직접이식 ❌**: 식이 η 를 요구하는데 결정성 SE 의 "전단점도" 는 잘 정의되지 않고, 보정의 물리가 **유체역학 backflow** 라 골격이 운동량을 흡수하는 우리 계에 전제가 안 선다. ⭕ **처방(T2)**: 600 K 에서 host·design 각각 **2×2×2 / 3×3×3** 두 크기만 → 목표는 D∞ 가 아니라 **D_rel 이 크기에 둔감한지** 확인 |
+| **thermostat** | **NVE > NVT ≫ NPT.** 속도 스케일링(Berendsen·SR·NH)은 τ 0.1/1/10 ps 전 범위에서 NVE 와 구분 불가. ⛔ **속도 무작위화(Andersen·Langevin) + 강결합(τ = 0.1 및 1 ps) → D 극적 감소·η 증가** | **Langevin NVT, `friction=0.02`(ASE 단위) ⇒ τ ≈ 0.51 ps** | ⛔⛔ **이름을 대서 경고받은 조합.** ⚠ 근거는 **분자 액체** 기준이라 고체 hopping 으로의 전이는 미검증. ⚠ 우리 보고량이 **비**라 곱셈 편향이 상쇄될 여지가 있으나 **증명된 적 없다**. ⭕ **처방(T3, 최저비용)**: 600 K 에서 γ = 0.002/0.02/0.2 **대조 잡** — D 는 움직이는데 **D_rel 이 안 움직이면** 상쇄 가정이 실측으로 뒷받침된다 |
+| **런 길이** | §4.3: **점점 긴 런의 계열**로 D 가 변하는지 본다. `Fig. 4`: **느린(저온) 계일수록 창을 늘려야** | prod 200 ps(600 K) / 100 ps(800·1000 K), 창은 **양쪽 다 2–50 ps** | 🟡 **판정 불가 — 점검을 안 했다.** ⚠ 800/1000 K 에서 상한 50 ps 는 **런의 T/2** (⚠ `lag ≤ T/4` 는 **우리 kb 관례**이지 이 논문 규칙이 아니다 — 논문의 "절반 이하"는 §5.3.2 의 *GK 시간원점 lag* 얘기다) |
+| **시간원점 다중화** | 식 정의의 일부(`⟨…⟩_{t₀}`). 전제: **δt₀ > 상관시간** | 하고 있다 (`msd_origin.py`) | ✅ 축은 있다. ⚠ **δt₀ > 상관시간 확인 기록이 없다** |
+| **3차원 평균의 덤 진단** | `D = ⅓(D_xx+D_yy+D_zz)`, **세 성분 산포 = crude 불확실도**, 비대각 ≈ 0 확인 | 평균은 하되 **산포를 안 본다** | ⭕ **공짜 진단 미수확 (T0)** — 후처리만으로 시드 3에서도 즉시 얻는 불확실도 하한 |
+| **비(ratio) 의 불확실도** | ⛔ **다루지 않는다** (비·상대확산 언급 0건) | 보고량 = `D_rel = D*(design)/D*(host)` @600 K | ⚪ **논문 밖.** digest §9 의 **paired bootstrap**(design·host 에 같은 시드 집합 `S_b` 를 적용해 매 반복 `R_b` 를 만들고 2.5/97.5 백분위) 은 **§4.2.3+§6.3.1 의 우리 확장**이며 그렇게 표기해야 한다. 독립 가정 오차전파는 **공통 성분을 두 번 세어 CI 를 과대추정**한다. ⚠ 짝짓기 전제 = design 시드 k ↔ host 시드 k 대응 (`aimd_mlip.py` 는 `seed = args.seed + T_K` — 같은 `--seed` 로 돌렸는지 **미확인**) |
+| **창 민감도 × 복제 수** | `Fig. 13` figure-read: N_reps 1 → 30 에서 **창이 만드는 산포 ≈0.8 → ≈0.06 ×10⁻³ Pa·s (≈13배 축소)**. 단일런에서는 **음의 점도**까지 나온다 | 창 고정 + 시드 3 | ★★ **이 논문의 최대 소득.** *"창을 어떻게 고르나"* 와 *"복제를 몇 개 돌리나"* 는 **한 질문**이다. ⭕ **처방(T4)**: 창 자체는 두고 **시간구간 부트스트랩**(§6.3.1) 을 MSD 에 이식 — start ∈ [1,10] ps, end ∈ [30,60] ps 를 수백 회 무작위 추출해 **D_rel 분포**를 내고 2.5/97.5 백분위 보고. **새 MD 0회, 후처리만.** ⚠ 그 CI 는 "통계 + 창 선택" 합산폭이므로 그렇게 이름 붙일 것 |
+
+**⛔ 이 축에서 인용하면 안 되는 것 (`J-6` 에도 반영 권장)**
+- *"Maginn et al. 이 2–50 ps 창을 권고한다"* / *"우리 창은 Maginn 규약을 따른다"* — **거짓.** 논문은 창 수치를 주지 않는다.
+- §6.3.1 의 *"5 to 50 ps"* 를 우리 2–50 ps 의 방증으로 쓰기 — **점도(Einstein η)** 얘기이고 저자가 *"less theoretically rigorous"* 라 깎은 관행이다. 숫자 일치는 물리적 관련이 없다.
+- *"YH 보정을 적용했다"* — 우리 계에 적용 불가(위 표 참조).
+- *"Maginn 규약대로 σ 를 냈다"* — **이온전도도는 이 편에 없다** (후속편 예고만).
+- 시드를 늘려 CI 가 좁아진 것을 *"D 가 정확해졌다"* 로 쓰기 — 좁아지는 건 **통계 축뿐**이다.
+
+<sub>> 📎 병합 2026-09-13 병합 — 초안 `_pending_index_maginn2019_best_practices_transport_selfdiffusivity_viscosity.md` ### 2-b..</sub>
+
+
+**[McC25D] `mccluskey2025_accurate_diffusion_coefficients_uncertainties` — D\* 추정기·오차막대의 정의 원본 (코드 실물 확보)**
+(⛔ 물성값 LLZO D\* 1건뿐. A–D 4축 행 금지. 아래는 **절차**와 **우리 위치 판정**뿐이다.)
+
+| 항목 | [McC25D] 가 정하는 것 | 우리 현재 | 판정 |
+|---|---|---|---|
+| **적합 모델** | 직선 + **자유 절편** (`fit_intercept=True` 기본) | 직선 + **자유 절편** | ✅ **일치** |
+| **회귀** | **근사 베이지안(≈GLS)**, Σ′ 사용 | **OLS** | 🔴 **핵심 격차** |
+| **D 값의 편향** | OLS/WLS/GLS **중심값 동일** (`Fig. 1`·`Fig. S6`) | — | ✅ **우리 D 는 안 틀린다.** ⛔ *"우리 D 가 과대/과소"* 서술 금지 |
+| **OLS 오차막대** | 자기 σ 를 **1/9–1/26** 로 보고 | 우리는 `stderr` 를 **안 쓴다** — 오차막대는 **시드 3개 산포** | ✅ **관행은 무사.** 시드 산포 = 논문이 *"정직하지만 비싸다"* 고 부른 그 방법 |
+| **정밀도(효율)** | GLS 가 OLS 보다 σ 3.9–4.6배 좁음 | — | 🔴 **여기서 진다** (아래 두 행) |
+| **MSD 시간원점** | **multi-origin 기본** (모든 원점 평균) | **single-origin** (정본 `msd_per_elem_A2`, `aimd_mlip.py::compute_msd_per_element`) | 🔴 **분산 8.7× 손실**(digest 계산). **MD 0 스텝으로 회수 가능** — `msd_multi_origin` 이 이미 있다 |
+| **N′ᵢ (독립 관측 수)** | **겹치지 않는** 창 수 × 입자 수 = **N_atoms·N_t/i** | `msd_multi_origin` 이 저장하는 `norig = nt−L` = **겹치는 원점 수** | ⚠ **가중에 쓰면 짧은 lag 에서 독립성 최대 L배 과대계상.** 지금은 가중에 안 쓰므로 사고는 없다 — **쓰기 전에 고쳐라** |
+| **총 손실** | — | (single-origin + OLS) | 🔴 **var 비 87×** ⇒ **우리 D 한 점 = kinisi 한 점의 1/87** (digest 계산, N=48 합성. **한 자릿수로만**) |
+| **시드 수 — 정밀도** | 궤적 1개로 충분 | **3** | 🔴 **kinisi 1회의 1/29.** multi-origin 만 켜도 3 → *10 상당*. **정밀도 목적의 시드 증설은 가장 비싼 길** |
+| **시드 수 — 추정** | 다루지 않음 | **3** | 🔴 [Gra25UQ] 식 (27) 이 **M≥4** 요구 + 3개의 sd 는 상대오차 **50 %** ⇒ `Ea 0.197±0.032` 의 `±0.032` 는 **±50 % 짜리 숫자**. **3 → 5 권고**(정밀도가 아니라 추정 때문) |
+| **적합 창 하한** | LLZO **10 ps** (ballistic·subdiffusive 제거). **선택 규율은 안 준다** | **2 ps** | ⚠ **근거 약함.** `Fig. 3` 이 **i,j ≲ 5–10 에서 Σ′ 이 분산을 2배 이상 과대**함을 보인다 = 우리 하한이 그 구역. 우리 LPSOCl 600 K 절편은 **MSD@50 의 18.2 %** 인데 이 모델은 **절편 없는 자유확산** 전제 ⇒ **`start_dt` 2/5/10 ps 스캔 필요** |
+| **적합 창 상한** | **없음**(궤적 끝까지). 논의도 없음 | **50 ps** | ✅ **정당하다 (우리가 메운 공백).** digest 계산: 같은 200 ps 궤적에서 kinisi 2–50 sd 1.63e-7 vs 2–200 1.77e-7 → **±11 % 안에서 구별 불가.** 단 **보고 σ̂ 는 좁은 창에서 더 보수적**(3.05× vs 1.46×) |
+| **창 고정 규율** | *"set by the user"* — **규율 없음** | **전 계·전 온도 2–50 ps 고정** | ✅ **우리가 낫다.** [Kahle20] 의 물질별 custom 이 본문↔SI 불일치를 낳은 선례 |
+| **분산 추정법** | **재스케일 채택 / 블록 재규격화 기각** (SI S-II: 블록은 잡음↑·**체계적 과소**) | (해당 없음 — 우리는 분산을 안 낸다) | 🔵 **[Kahle20] 이식 후보 강등**: 우리가 적어둔 *"블록 수 4/8/16 감도 점검"* 은 **애초에 열등한 추정기의 감도**를 재는 일 |
+| **복제 궤적 합치기** | `dtype='identical'` → **N′ᵢ 합산** | 시드별 개별 적합 후 산포 | 🔵 **둘 다 내라.** 합산 = 정밀도, 산포 = 통계오차 추정. **서로 다른 것** |
+| **Arrhenius** | `kinisi.arrhenius` — **D 분포 → Ea 분포**, `extrapolate(T)`, Arrhenius vs super-Arrhenius **베이지안 evidence** | 600/800/1000 K **3점 선형회귀** | 🔵 **이식 후보 1순위.** [Kahle20] 의 *"Bayesian Ea 오차"* 와 같은 방향이고 **여기엔 코드가 있다** |
+| **σ(이온전도도)** | **안 한다** (D\* 만) | NE(Haven=1), **절대값 비인용** | ✅ **정신 일치.** ⚠ σ 로 넘어가면 Haven 계통오차가 통계오차를 압도 → **비인용 규율 그대로 유효** |
+| **비(ratio) 전파** | 🔴 **안 다룬다** (*"ratio"* 는 `Fig. 3` 캡션 1회) | **보고량이 `D_rel`** | 🔴 **우리가 붙여야 한다.** ↓ 아래 별도 블록 |
+| **불확실도 축** | [Gra25UQ] 분류의 **④ 표집/통계만** | `D_rel` 오차막대 | ⚠ **축 명시 필수.** ⛔ *"kinisi 썼으니 우리 D 가 믿을 만하다"* 는 오용 — **궤적이 옳다는 전제 위의 통계**다 |
+| **이식 가능성** | MIT · pip · **from_ase** · numpy<2 · 5.2 s/궤적 | 기존 궤적 파일 존재 | ✅ **MD 0 스텝으로 즉시 가능.** 차단요소 2건은 회피법 확인됨 |
+
+**★ 비(ratio) 전파 — 논문이 안 주므로 우리가 정의한다 (digest 계산으로 검증)**
+
+design 과 host 는 **다른 궤적 = 독립** ⇒ 1차 전파는 **상대 표준편차의 제곱합**:
+> **(σ[D_rel]/D_rel)² = (σ[D\*_des]/D\*_des)² + (σ[D\*_host]/D\*_host)²**
+
+더 나은 방법 = **사후표본 나눗셈**(kinisi 가 D 를 3200 표본으로 준다. 각각 무작위 치환 후
+원소별 나눗셈 → 비의 사후분포. 정규근사 불필요, 비대칭 꼬리 보존).
+
+검증 (참 비 1.60, 독립 궤적쌍 12회, digest 계산):
+
+| 항목 | 값 |
+|---|---|
+| 평균 r̂ | 1.6091 (편향 **+0.57 %**) |
+| 진짜 산포 sd(r̂) | **0.0449 (2.79 %)** |
+| 표본나눗셈 사후 sd | 0.0580 (3.6 %) → 보고/진짜 **1.29**(보수적, ±0.27) |
+| 제곱합 검산 | 1.88 % ⊕ 2.28 % = **2.96 %** vs 관측 **2.79 %** ✅ |
+
+**우리가 추가로 붙여야 할 것**
+1. **`P(D_rel > 1)` 을 사후분포에서 직접 보고** — 비준 판정이 "1보다 큰가"이므로 이게 가장 정직한 보고량
+2. **cell-conditioned 유지** — 같은 무질서 배열 안에서만 비를 만든다
+3. **모델오차 축은 분리 표기** — `force_contrast` 를 이 σ 와 **합치지 마라**(다른 축, 상관 구조 미지)
+4. **Arrhenius 는 `StandardArrhenius` 에 D 분포를 넘긴다**
+5. ⚠ **σ(NE) 로 가면 이 오차막대는 무의미** — Haven=1 계통오차 지배
+
+**⛔ [McC25D] 에서 인용하면 안 되는 것**
+1. **LLZO D\* ≈0.9×10⁻⁵ cm²/s 를 우리 값과 나란히** — 다른 물질·다른 T(700 K)·**고전 힘장**(DIPPIM)이다.
+2. **"부트스트랩"** — 논문에 그 단어가 0회. `MSDBootstrap` 은 레거시 작명이고 기본값은 리샘플링 없음.
+3. **"AIMD/DFT"** — LLZO 는 **고전 MD**(METALWALLS+DIPPIM). 이 논문에 DFT 는 한 줄도 없다.
+4. **`Fig. 6` 의 WLS/GLS 선을 "실무 성능"으로** — 512회 반복의 **수치 분산/공분산**을 쓴 **이상적 참조선**이다.
+   실무 비교는 **OLS vs kinisi(초록)** 만 정당하다.
+5. **σ̂/σ ≈1 을 우리 계에 그대로** — 검증계 2개가 **둘 다 Σ′ 가정에 유리**(격자 RW=가정 그 자체,
+   LLZO=700 K 얕은 cage). **caged·느린 계 미검증.**
+6. **digest 계산의 87× 를 "우리 실측"으로** — **합성 브라운 걸음** 값이다. 실제 cage 상관에서는
+   multi-origin 이득(8.7×)이 줄 수 있다. **"수십 배"가 안전한 서술.**
+
+<sub>> 📎 병합 2026-09-13 병합 — 초안 `_pending_index_mccluskey2025_accurate_diffusion_coefficients_uncertainties.md` ## ② .</sub>
+
+
+**[Ren26] `ren2026_li2zrcl6_low_ion_potential_doping` §21 — aliovalent RE³⁺ 도핑 계산의 설계 규약 (⛔프리프린트·⚠할라이드, 값 이식 금지)**
+
+| 항목 | [Ren26] 이 한 것 | 우리 `ndo_lpscl16` 규약 | 판정 |
+|---|---|---|---|
+| **치환 자리** | Zr⁴⁺(8면체) → Er³⁺/Nd³⁺, `Fig. 2a` 로만 제시 | Rietveld `Nd8@(½,½,½)` = **P⁵⁺(사면체) 자리**. ⚠ UMA 어닐 후 Nd 는 사면체를 못 지키고 **S 4–6 + Cl 케이지**로 풀린다 | ⚠ **비교 불가** — 배위수(6 vs 4)·반경비(1.36× vs **5.78×**)가 다르다. cf. `kb/methodology/name_vs_substance_2026_09_09.md` |
+| **전하보상** | **화학식에 Li 추가, 중성 셀** (+1 Li/도펀트). 배경전하 없음 | **동일 방식** (+2 Li/Nd). 전하합 6구조 전부 0 | ⭕ **선례 성립 — 우리 스킴 유지** |
+| **보상 Li 자리** | ⛔ **미기재.** 열거·SQS·선택규칙 0 | ⚠ **우리도 카드에 안 적혀 있다** (§3 위험요인은 O 배열 3종만 열거) | 🔧 **우리 할 일 (A)** — "Li 배치는 열거하지 않은 자유도"를 한계로 명시 |
+| **4f 처리** | **open-4f + DFT+U**, U 값·스핀·NUPDOWN·점유행렬 정책 **전부 미기재** | **frozen-4f** (4f in core, z_valence 11) + **"Nd 4f 주장 전면 금지"** | ⭕ **우리 쪽이 방어 가능** — 같은 셀 안 ΔE 라 얼린 4f 가 상쇄된다. 그들 방식은 배열별 4f basin 차가 ΔE 에 수백 meV 가짜 신호를 넣어 **G3 컷(50 meV)을 무의미하게** 만든다 |
+| **자성 상태 선언** | ⛔ 없음 | ⚠ 카드 §3 **"미판정 — nspin 을 못 박지 않았다"**(자칭 가장 약한 자리) | 🔧 **우리 할 일 (B)** — `scf.in` 6점의 `nspin`/`starting_magnetization` 동일성 확인 후 카드 기입. cf. SDCP phaseB "제약된 기준 ↔ 자유로운 대상" 사고 |
+| **배열 선택 규칙** | ⛔ 없음 ("structural optimization" 한 줄) | **G1 6점 전부 · G2 두 셀 불일치 시 선택 실패 보고 · G3 <50 meV 구별 불가** | ⭕ **우리 장치가 정확히 그 공백을 막는다.** 이 편은 **G2·G3 의 존재 이유를 보여주는 외부 실증 사례** |
+| **σ 파이프라인** | AIMD 50 ps · 600–900 K 4점 · **단일시드·배열 1개** · MSD 창 미기재 · 절편 미기재 · NE(Haven=1) → 300 K 외삽 | prod 200 ps · 600/800/1000 K 3점 · **멀티시드 판정** · **MSD 창 2–50 ps 고정** · **자유절편** · NE(Haven=1) | ⭕ Haven 규약만 같고 나머지는 우리가 엄격. **매 항목이 §21.6 의 순위 뒤집힘에 기여한다** |
+| **⟨ω⟩ / VDOS** | 식만 정의, **값 0**. 3패널 정규화 불일치 · 질량 효과 미분리 | **축 자체가 없다** | 🔧 **채택 후보(중기)** — `tools/ionic/` UMA-MD 궤적에 **VACF→VDOS→⟨ω⟩**. ⛔ **질량 정규화를 처음부터** (우리는 P→Nd 로 ω ×0.463) + UMA 포논 검증용 QE-DFPT 스팟체크 1건 |
+
+<sub>> 📎 병합 2026-09-13 병합 — 초안 `_pending_index_ren2026_li2zrcl6_low_ion_potential_doping.md` ### 2-2..</sub>
+
+
+**[Tompa26FT] `tompa2026_finetuning_mlip_foundation_strategies` — *파운데이션 MLIP 를 어떻게 fine-tune 하는가* 의 원전**
+(**arXiv 2606.12704v1** · 2026-06-10 · **preprint, 동료심사 전** · Cambridge MACE 그룹 + STFC + US NRL · **물성값 0**)
+
+> 🔑 **우리가 이 편에서 가져오는 것은 값이 아니라 "레시피와 그 대가"다.**
+> 그리고 **벤치마크 5계 중 첫 번째가 Li₆PS₅Cl** 이라서, 드물게 **우리 계로 직접 잰 방법론 수치**가 있다.
+> ⚠ 다만 §2.1 이 *"LPSC 는 OMat24 에 흔한 종류라 이 계만으로는 방법 간 구분이 어려울 것"* 이라고 **미리 못박는다**
+> — **우리 계는 이 논문에서 "차이가 제일 안 보이는 자리"** 다.
+
+| 항목 | [Tompa26FT] | 우리 (UMA-s-1p1 omat, 고정 체크포인트) | 판정 |
+|---|---|---|---|
+| **엔진** | MACE (등변 MPNN), 4.7–9.1 M 파라미터 | **UMA-s-1p1**, fairchem | ⚠ **아키텍처가 다르다.** 저자 명시: *"모든 실험이 MACE … 타 아키텍처 일반화는 미검증"* ⇒ **결론 직수입 금지** |
+| **사전학습 도메인** | **OMat24**(주) vs MPTraj(비교군) | **OMat24 계열**(omat task) | ⭕⭕ **우리가 좋은 쪽에 있다.** `Fig. 3a`: 우리 계에서 MPTraj계 F MAE ≈0.105 vs OMat계 ≈0.045 eV/Å (`figure-read ≈`, **2–3배**) |
+| **fine-tune 여부** | 7전략 비교 | **0회** | 🔴 우리는 `Fig. 17` 의 **`OMat (found.)` 회색 violin** 자리. **이 논문 권고 #1 을 이미 충족** |
+| **fine-tune 의 이득 (우리 계)** | argyrodite OOD **F MAE ≈0.043 → ≈0.030 (30%)** · **E MAE ≈1.8 → ≈1.6 meV/atom (거의 0)** | — | 🔴 **이득이 작다.** 500 PBE 점을 써서 30% |
+| **fine-tune 의 대가 (우리 계)** | **비-argyrodite F MAE ≈0.045 → naive ≈0.075 (1.7배 악화), 꼬리 0.08→0.24** | 우리 **+B₂O₃ · Nd–O** 가 그 방향 | 🔴🔴 **"기존 결과와 비교가 끊긴다"의 정량.** ⇒ **plain LPSCl 로만 fine-tune 하면 도핑계가 나빠질 수 있다** |
+| 그 대가를 없애는 법 | **pseudolabel replay** → 비-argyrodite ≈0.042 로 **파운데이션 수준 유지** | — | ⭕ **replay 면 끊김 ≈0.** 비용 = 학습 compute **3–15배** |
+| **replay 데이터 조달** | `Fig. 15`·Appendix E: **원소일치 OMat24 / 무작위 MPTraj 10k / 결합 = 전부 동일**, 라벨은 파운데이션이 자체 생성 | OMat24 원본 미보유 | ⭕⭕ **원 사전학습 데이터 없이 된다.** 우리에게 결정적 |
+| **필요 라벨 수** | **LPSC 500(PBE, 단일조성)** · ice MD안정 **25** · NaCl RDF **96 에서 포화** · Sɴ2 **60** | `mlip_bench_li3ps4_uma.json` = **243 구조** (⚠ `elements: [Li,P,S]` — **Cl 없음**) | 🟡 **자릿수가 같다.** 단 **Cl 포함 라벨을 새로 만들어야** 한다 (새 계산 ⇒ **보고량 카드 먼저**) |
+| **E₀ (원자기준에너지)** | **model-aware reestimation** (식 6) 필수. **averaging 금지** — force RMSE 2–3배 악화, 게다가 **단일조성이면 rank-deficient** | `mlip_bench_li3ps4_uma.json` 이 **선형 원소보정**(Li 0.09312 / P 0.03104 / S 0.12416 eV/atom, **fit R² 0.620**) 사용 = **바로 그 averaging** | 🔴 **우리가 지금 쓰는 방식이 이 논문이 금지한 것.** ⭕ **식 (6)은 아키텍처 무관 ⇒ UMA 에 즉시 이식 가능** — **이 논문에서 우리가 바로 쓸 수 있는 유일한 수식** |
+| **MD 안정성 판정** | ①정온 **250 ps** 완주 ②**50→800 K 램프 50 ps** (`Table 1`) | MSD 창 **2–50 ps**, 600/800/1000 K | ⭕⭕ **우리보다 훨씬 긴 완주시험.** `Table 1` 은 *"검증 RMSE 정상 + MD 붕괴"* 를 E₀ 하나로 만들어낸 사례 ⇒ **b₂o₃ creep 과 같은 계열** |
+| **PES 병리 진단 (RSS)** | PyXtal 10조성×50 = **500구조**, relax–rattle **3회**, 4기준. 파운데이션 **0.1 GPa 8.6% · 50 GPa 10.0%** | ⛔ **없다** | ⭕⭕⭕ **DFT 0회로 지금 실행 가능한 최우선 이식 항목** |
+| **"더 학습하면 더 낫다"** | ⛔ **틀린다.** replay 없는 방법은 **데이터↑ 이면 PES hole↑** (naive 50 GPa 9.4→34.4%, LoRA 7.8→**57.4%**) — **in-domain 정확도는 개선되는 와중에** | — | 🔴 **우리 직관과 반대. 규율로 박을 것** |
+| **ZBL pair repulsion** | **전 모델에 명시적으로 들어 있는데도** 구멍 발생 ⇒ **many-body 반발 기여의 붕괴** | — | ⚠ *"단거리 항 넣었으니 안전"* 이 성립 안 함 |
+| **UQ / 앙상블** | ⛔ **전혀 없다** (`snapshot` 0 · `uncertainty` 0 · `committee` = 참고문헌 제목만) | 이종 committee **M=3** | 🔴 **이 편은 UQ 논문이 아니다.** M≥4 경로는 우리가 **유도**한 것 (아래) |
+| **수송계수(D·Ea·σ)** | ⛔ **없다.** MD 를 돌리지만 안정성·RDF 만 | 우리 보고량 본체 | 🔴 **층위가 다르다** → `imbalzano2021_…` 가 그 층위 정본 |
+
+**🔗 UQ 3편과의 접속 — 우리가 유도한 것 (논문 주장 아님)**
+
+| 물음 | [Tompa26FT] 가 주는 것 | 판정 |
+|---|---|---|
+| **M≥4 를 채울 재료가 생기나** | 🟡 **간접**. 학습이 **수백~1000 epoch**(`Fig. 12` 2단계 전환 = epoch 500) ⇒ 100-epoch 간격이면 5–10 스냅샷. **aq. NaCl 에서 seed 1–3 이 실제로 돌아갔다**(`Table 4`) | **시드 다중 fine-tune 이 가장 방어 가능** |
+| 시드 산포는 얼마인가 | `Table 4` NaCl F RMSE: **42.44±5.28 / 43.79±5.03 / 41.54±4.76 meV/Å** ⇒ **std ≈ 평균의 10–12%** | ⚠ 이건 **재현성 산포**이지 UQ 용 σ 가 아니다 |
+| 🔴 **방해 요소는 없나** | **있다 — EMA.** `Table 7` EMA decay **0.999(naive) / 0.9999(multihead)**. 0.9999 ≈ 최근 10⁴ 스텝 평균 ⇒ **스냅샷들이 서로 거의 같아진다(유효 M→1)**. 그런데 논문은 **EMA 를 올리는 것이 안정적 fine-tuning 에 필수**라고 한다 | 🔴🔴 **"정확도용 설정"과 "UQ용 설정"이 충돌한다.** 이 긴장은 **tompa 에도 UQ 3편에도 없다 — 우리가 새로 세운 것** |
+| Grasselli 식 (27) 의 독립추출 조건을 만족하나 | ⛔ **어느 논문도 판정 안 함** | 🔴 **열린 질문으로 남긴다** |
+
+**🔴 이 편이 닫지 못하는 것 — 반드시 같이 인용**
+1. 🔴 **동료심사 안 됐다** (arXiv v1). 게재본에서 수치·그림이 바뀔 수 있다.
+2. 🔴 **전 실험이 MACE 다.** 저자 스스로 한계로 적음 ⇒ **UMA 이전성 미검증**.
+   그리고 **LoRA·pseudolabel replay·E₀ reestimation 의 구현은 `ACEsuit/mace` 3.15+ 전용**,
+   **fairchem 대응물은 이 세션에서 확인 못 했다.**
+3. 🔴 **`Fig. 10` 의 축 단위가 패널 간 1000배 어긋난다**(a: meV/Å · b: eV/Å, 두 값 모두 알려진 MACE-OMat
+   힘오차와 안 맞음) ⇒ **forgetting 은 "파운데이션 대비 배율"로만 인용**.
+4. 🔴 **`Freeze (5)`/`Freeze (6)` 라벨이 §2.3 의 두 정의와 매핑되지 않는다.** 한쪽은 `Fig. 11` 최악(+40.8%p)인데
+   본문은 *"readout-only 는 반발벽을 보존한다"* 고 쓴다 ⇒ **Freeze 계열은 이 논문으로 선택할 수 없다.**
+5. 🔴 **우리 계(LPSC)의 RSS hole% 가 없다.** *"LPSC 에도 적용했다"* 는 서술만 있고 `Fig. 11`·`Fig. 16` 은 **NaCl 뿐**.
+6. 🔴 **오차막대가 aq. NaCl 에만 있다.** Sɴ2 는 명시적 *"single run"*, **LPSC·ice·SPICE 는 시드 반복 0**
+   ⇒ `Fig. 7b` 의 "naive ≈0.075 vs pseudolabel ≈0.042" 가 시드 노이즈보다 큰지 **논문이 보증하지 않는다**
+   (violin 은 *평가구조 간* 산포이지 *시드 간* 산포가 아니다).
+7. 🔴 **LPSC 500 구성의 샘플링·온도·Cl/S 부분점유 처리가 전부 미기재.** 우리 계의 본질적 자유도(무질서)가 통째로 빠짐.
+8. 🔴 **비-argyrodite 평가셋의 N·조성 미기재** — 우리가 제일 무겁게 쓰는 숫자가 거기서 나온다.
+9. 🔴 **GPU 시간·epoch 수·batch 크기 어디에도 없다.** compute 보고 = *"multihead 는 naive 대비 3–15배"* 한 줄.
+   ⇒ **"UMA fine-tune 에 몇 시간 드나"에 이 논문은 답하지 않는다.**
+   유추 가능한 것 하나: *"Li 모델은 **NVIDIA A100** 에서 학습"*(나머지는 GH200/MI300A) = **A100 1장 규모**.
+10. **RSS 는 단거리 반발벽만 본다.** 저자 명시 — *"경쟁 상들의 상대안정성이 틀리는 종류의 PES artefact 는
+    다른 진단이 필요하다."* 🔴 **우리 b₂o₃ 골격 creep 은 오히려 그쪽에 가깝다** ⇒ `Fig. 11` 이 우리 creep 을
+    예측한다고 쓰면 안 된다.
+
+**⛔ 이 축에서 인용하면 안 되는 것 (→ §J-6 에도 추가)**
+- ⛔ *"이 논문이 fine-tuning 이 이온전도도/확산장벽 예측을 개선한다고 보였다"* — **σ·D·Ea 를 한 번도 계산하지 않는다.**
+- ⛔ *"이 논문이 snapshot ensemble / UQ 를 다뤘다"* — **한 번도 안 다룬다.** 우리 §12-F 는 **유도**다.
+- ⛔ *"naive fine-tuning 은 catastrophic forgetting 을 일으키지 않는다"* — **정반대다.**
+  논문의 주장은 *"초기 실패의 원인이 naive 의 본질적 결함이 아니라 약한 파운데이션·잘못된 E₀·불안정 학습이었다"* 이고,
+  **SPICE forgetting 은 naive 가 여전히 ≈4×10³ 배로 최악**이다.
+- ⛔ **`Fig. 10` 의 절대 force RMSE 값** (축 단위 불일치 — 위 3번).
+- ⛔ **LPSC F RMSE 18.4 meV/Å**(MACE-OMat-0-medium · PBE · Li₆PS₅Cl · fine-tune 후)를
+  **우리 UMA Li₃PS₄ F MAE 30.0 / RMSE 44.6 meV/Å**(UMA-s-1p1 · PET-MAD 라벨 · **Cl 없음** · zero-shot)와
+  같은 표에 놓는 것 — **모델·계·라벨·평가셋이 전부 다르다.** *"자릿수가 같다"* 까지만.
+- ⛔ **`figure-read ≈` 값을 본문 명시값처럼 쓰는 것.** `Fig. 3a`·`Fig. 4a`·`Fig. 7b`·`Fig. 17`·`Fig. 10` 의 숫자는
+  **전부 violin 중앙부 판독**이고 본문에 숫자가 없다(순위·정성 서술만). **±10–20% 오차 가정.**
+  **인쇄된 숫자는 `Fig. 11` 과 `Table 1–9` 뿐이다.**
+
+<sub>> 📎 병합 2026-09-13 병합 — 초안 `_pending_index_tompa2026_finetuning_mlip_foundation_strategies.md` ## ③ .</sub>
+
+
+**[Wilson22BAL] `wilson2022_batch_active_learning_interatomic_potentials` — 배치 능동학습 획득함수의 정의 원본**
+
+> ⛔ **σ·Ea·D·ESW·탄성·gap 이 0건**이고 재료계도 겹치지 않는다(GeSe). 여기 있는 것은
+> **"배치를 어떻게 고르는가"의 식**이고, 그것 하나가 이 편의 전부다.
+> ⭐ **`[Shapeev16]` 블록 바로 아래 놓는 것이 맞다** — `[Shapeev16]` 이 *"우리가 못 쓰는 길(선형 설계행렬)"*
+> 을 정의하고, 이 편이 *"그 가정 없이 가는 길"* 을 정의한다. 두 블록을 붙여 놓아야 축이 보인다.
+
+| 항목 | [Wilson22BAL] | 우리 (`tools/ionic/mlip_committee.py` · cascade Stage 07/08) | 판정 |
+|---|---|---|---|
+| **불확실도 정의** | **query-by-bagging** — 같은 모델을 라벨셋 **80 % 부표본**으로 `N_M`=10회 재학습, 예측 에너지의 **표본표준편차**(식 1, Bessel `N_M−1`) | **이종 committee** UMA-s-1p1(OMat24) / MACE-MP-0(MPtrj) / SevenNet-0(MPtrj), **M=3** | 🔴 **재는 것이 다르다.** 배깅 = **데이터 표집 분산**, 우리 = **아키텍처+훈련셋 편향**이 섞인 것. **숫자를 나란히 못 놓는다** |
+| **선형 설계행렬 `X` 의존** | ⛔ **없다.** 저자 명시 *"model-agnostic … estimates the uncertainty internally by using the predictions from multiple models"*. Podryabinkin 2017[28]·Gubaev 2019[27] 은 **인용만 하고 미채택** | 쓸 수 없음(`X` 부재 — `[Shapeev16]` 블록) | ⭕⭕ **이 축에서 제일 큰 소득.** `mlip_committee.py` docstring 의 장벽이 **이 처방엔 존재하지 않는다** ⇒ **UMA 이식 가능** |
+| **획득함수** | `S_i = α(U_i/Ū) + β(D_i/D̄)`, **α=0.9 / β=0.1**, Ū·D̄ = 미라벨 전체 평균 | 없음 (순차 게이트만) | ⭕ **이식 후보 (T1, 계산 0회).** 평균정규화 덕에 α·β 가 단위 없이 의미를 갖는다 |
+| **배치 다양성** | **greedy 조건부** — 하나 뽑을 때마다 **D 만** 재계산(U 는 배치 내 고정). ⇒ **top-k 아님** ✔ | 없음 | ⭕ 이식하되 **🔴 식을 고쳐서**: `D_i = Σ_j‖·‖`(합) → **`min_j‖·‖`**. 합은 배치 후반에 중복 페널티가 **1/j** 로 희석된다(digest §10-①) |
+| **배치 크기 k** | **10 고정.** 근거 = *"DFT 를 병렬로 던지려고"* 정성 동기뿐, **민감도 시험 없음** | 정의 안 돼 있음 | 🔶 **논문의 10 을 베끼지 않는다** — 우리는 **KISTI QOS 동시제출 한도**로 정하는 것이 정직하다 |
+| **특징공간 χ⃗** | **수제 121차원, 라운드 간 고정**(AGNI 2체 24 + 3체 96 + 상수 1) | 없음 | 🔴 **UMA 임베딩은 fine-tune 마다 좌표계가 바뀐다** ⇒ **동결 서술자**(SOAP 또는 고정 readout)를 따로 둬야 라운드 간 거리가 비교된다 |
+| **특징의 입도** | **원자평균**(digest 추론: 표적 = 원자당 에너지 + 구조당 121차원) | — | 🔴 **국소 희소 사건이 묻힌다.** 도펀트/계면은 `[Ou26MS]` 의 **`--al_mode=nbh`(원자환경 AL)** 쪽이 맞다 |
+| **불확실도 채널** | **에너지만.** 힘 불확실도는 계산조차 안 한다 | 우리 보고량은 **D·Ea**(힘/궤적) | 🔴 간극. 에너지 산포가 힘·D 오차의 대리인지 **이 논문이 답하지 않는다** → `[Carrete23UQ]` 축 |
+| **재학습 경제성** | `N_M × N_B` = **시드당 3,000회 KRR 피팅**이 무료 | UMA 재학습 = **fine-tune 필요** | 🔴 **진짜 이식 장벽은 알고리즘이 아니라 비용이다.** 저자도 §4 에서 *"NN 은 비싸진다"* 인정 |
+| **시드 반복 보고** | ⭕ **`N_S`=10, 모든 그림에 산포** | 🔴 단일 궤적(Ea 3-seed 뿐) | ⭕⭕ **형식 이식 1순위** (`our_dft_baseline.md` 의 상시 약점) |
+| 힘 RMSE 눈금 | **0.157–0.255 eV/Å** | MTP 자체학습 0.073 · SevenNet-0 0.070 | 🔴 **그들 모델이 2–4× 부정확** ⇒ AL 이득이 파운데이션 정확도 영역에서도 남는지 **미검증** |
+
+<sub>> 📎 병합 2026-09-13 병합 — 초안 `_pending_index_wilson2022_batch_active_learning_interatomic_potentials.md` ### 2-b..</sub>
+
+
+**[Zaby26σ] `zaby2026_reliable_conductivity_estimates_md` — σ 를 *추정하는 절차* 의 원전**
+(*ChemPhysChem* **27**, e70477, 2026 · Zaby/Ingenmey/Lourenço/Zhang/Da Silva/Brehm/**Maginn**/**Kirchner** ·
+계 = **[EMIm][DCA] 이온액체 + LiFSI/DME 에테르 전해질** · **황화물·고체전해질 0회 · 온도 1점 · DFT 0회 · 물성값 0**)
+
+> 🔑 **우리가 이 편에서 가져오는 것은 σ 값이 아니라 "σ 를 보고량으로 성립시키는 조건" 이다.**
+> 그리고 그 조건 대비 **우리 Stage 10 σ 파이프라인이 어디서 죽는지**의 눈금.
+
+| 항목 | [Zaby26σ] | 우리 (`tools/doping/run_md_sigma.py` · `tools/ionic/run_comp1_seeds.sh`) | 판정 |
+|---|---|---|---|
+| **σ 의 정의** | **집단**: EH(집단 MSD 기울기) 또는 GK(전하전류 ACF 적분). NE 는 **근사**로만 | **NE 단독**, `σ = n q² D /(k_B T)`, **H_R = 1** | 🔴 **부류가 다르다.** 우리 것은 그들 분류의 `σ_NE` 이고 **cross 항이 0으로 가정돼 있다** |
+| **NE 오차의 크기** | ionicity **0.48–0.76** ⇒ NE **1.31–2.08× 과대** (cross 가 self 의 30–52 %) | 미측정 | 🔴 **크기는 이식 금지** (액체 값). 🟡 **"미측정" 이라는 사실만 이식** |
+| **NE 오차의 부호** | **과대** (cross < 0) | 미측정 | 🔴🔴 **[Adeli19] 실측 H_R 0.23–0.3 은 반대 부호**(σ_실측 > σ_NE) ⇒ **부호조차 우리 계에서 미확정.** *"NE 라서 과대"* 라고 쓰면 틀린다 |
+| **적합창** | 로그기울기 자동 검출(MSDiff v0.2.0). **고정 tail 은 σ 를 1.6–2.8× 낮춘다** (1.0 M: 자동 60 ps–24 ns → 2.03 vs tail 15–30 ns → 0.73 S m⁻¹) | **`fit_start = n_frames//2`**(도핑/σ 경로) / `--fit_window_ps 2 50`(이온 경로) | 🔴 **도핑 경로가 직격.** ⛔ **2.8× 는 집단 MSD 값이라 우리 self-MSD 로 못 옮긴다** — **방향(과소)만**. ⚠ 부수 발견: **한 repo 에 D 정의가 둘** |
+| **시간원점** | **다중 원점 + 그 산포를 적합 가중치로** (§2.3.1) | **단일 원점** (`⟨‖r(t)−r(0)‖²⟩`) | 🔴 **정량 페널티는 이 논문에 없다**(원점 스캔 실험 0건). 판정 근거는 구조적 — **ΔMSD(τ) 가 없어 오차가중·자동창·χ²_red 를 실행할 수 없다** |
+| **replica 정의** | **새 PACKMOL 박스 10개**(배열+속도 모두 다름, 밀도는 통일) | ✅확인 **동일 `--v0_xyz` + 속도 시드만** (`--n_configs 1 --disorder_levels 0.0`) | 🟡 §2.3.1 의 *"and/or"* 로는 통과하나, `Fig. 7`·`Table 3` 의 **위상공간 피복 논거는 배열 다양성에서 온다** ⇒ 우리 오차막대는 **within-replica 쪽** |
+| **replica 수** | **10**. ⛔ 최소치를 처방하지 않음(*"defined independently for every simulated material"*) | **3** (600 K 만) | 🟡 self 량이면 부분 생존 · 🔴 집단 σ 면 부족 |
+| **불확실도 산출** | **역분산 가중평균 + χ²_red 재조정**(Eq. 27) + **부트스트랩**. 단일 궤적 분할은 SE 를 **1.33–1.52× 과소**(6/6) | `linregress` 의 SE (점들이 상관 → 무의미) | 🔴 **죽는다.** ⭕ **χ²_red 재조정은 계산 0회로 이식 가능** — 시드 3개 σ_r 만 있으면 된다 |
+| **궤적 길이** | EH **100 ns**, GK **0.1 ns + 1 fs 속도 저장**(이상적 비교 궤적 **900 GB**) | **200 ps** | 🔴 **집단 σ 는 우리 자원에서 열지 않는다** (판정) |
+| **써모스탯** | Nosé–Hoover 계열(TGNH)만 | **Langevin (friction 0.02)** | ⚠ **이 논문이 다루지 않는 위험.** Langevin 은 운동량 비보존 ⇒ 집단 전하전류에 열욕이 개입한다. **⚠ 우리 가설이지 논문 주장 아님.** self MSD 영향은 훨씬 작다 |
+| **셀 크기** | self D **+9–10 %**(125→1000쌍), YH 보정 **+12–41 %**. **total σ 는 cross 상쇄로 검출 불가** | 계마다 원자 수 통일 규약 **없음** | 🔴 **새 제약**: D_tr 랭킹으로 가면 **후보계 원자수를 고정**해야 한다 |
+| **좌표계** | σ_tot·self 는 무관(self 는 열역학 극한에서), **cross·수송수는 의존**(t(Li⁺) 부호 반전) | 해당 없음(단일 가동종) | 🟡 우리가 cross 를 재기 시작하면 그때 필요 |
+| **온도 의존 / Ea** | **0건** (단일 온도) | 600/800/1000 K Arrhenius | 중립 — **이 논문은 우리 Ea 축에 대해 아무 말도 하지 않는다** |
+| **MLIP 검증** | 서론 언급뿐, 실험 0건 | UMA-s-1p1 | 중립 — ⛔ *"MLIP σ 가 검증됐다"* 의 근거로 쓸 수 없다 |
+
+**★★★ Stage 10 판정 (Q10 — σ 를 랭킹 축에서 뺄 것인가)**
+
+> **조건부 지지.** 이 논문은 *"σ 를 쓰지 마라"* 가 아니라 *"σ 는 집단량이라 이만큼의 통계 예산을 요구한다"* 를 말한다.
+
+- **지지 ①** `Fig. 8`·`Fig. 9`: **self 기반 양의 SE 가 집단 양의 1/10.** σ_NE 는 상관깊이 1→30 ns 에서 **−1.8 %·SE 평평**,
+  σ_EH 는 **−8 %·SE ×3.1**. self 항은 크기 추세를 **판정할 수 있고** total 은 **판정할 수 없다** ⇒ *"랭킹은 판정 가능한 양으로"*.
+- **지지 ②** ionicity 가 **같은 물질계 안에서 1.4배 범위**(IL 0.542–0.760 / LiFSI 0.480–0.610)로 움직인다.
+  = **[Adeli19] 의 *"Cl 함량 x=0→0.5 에서 H_R 1.34배 변동"* 과 같은 논증을 계산 쪽에서 반복**한 것.
+  ⇒ H_R=1 고정 σ 로 도펀트를 줄 세우면 순위 안에 **미지의 조성 의존 인자**가 들어간다.
+  (⚠ 1.4배·1.34배는 각각 그 논문의 계 값 — **논증 구조만** 가져온다.)
+- **지지 ③** 우리 예산은 그들 요구의 **1/500(200 ps vs 100 ns) · 1/10(replica 1 vs 10)** 이고,
+  게다가 **반증된 tail 적합 + 단일 시간원점**을 쓴다 ⇒ 보고량 규율 언어로 **집계 규칙 없는 스칼라 σ**.
+- **반대/중립** — ① 이 논문은 σ 를 **살리려고** 쓴 논문이다 ② **D_tr 도 공짜가 아니다**(크기 9–10 %, YH 12–41 %)
+  ⇒ 원자수 통일이라는 새 제약 ③ 재료계가 다르다 — 액체에서는 반대 부호 이온이 함께 움직여 σ 를 깎지만
+  argyrodite 에서는 Li–Li 협동 이동이 σ 를 **키울** 수 있다(= [Adeli19] H_R<1).
+
+⇒ **인용 문장은 *"NE 가 틀려서"* 가 아니라 *"우리 계산 예산에서 σ 는 정의된 보고량이 아니고, 같은 궤적에서 D_tr 은 정의된다"*.**
+
+**⛔ [Zaby26σ] 에서 인용하면 안 되는 것**
+- **어떤 σ·D 절대값의 이식** — 고전 CL&P(ol) 액체, 353/333 K.
+- **"NE 는 σ 를 과대평가한다" 를 argyrodite 에 적용** — [Adeli19] 실측이 **반대 부호**.
+- **"2.8× 과소" 를 우리 self-MSD D 에 적용** — 그 수치는 **집단 MSD** 값이다.
+- **"replica 10개 필요" 를 규칙화** — 저자가 계마다 다르다고 명시.
+- **"권고 상관깊이 10 %" 를 우리 2–50 ps 창의 근거로** — 100 ns 기준 비율이다. 200 ps 에 곱하면 20 ps 인데 그 산술에 물리적 근거가 없다.
+- **ionicity 0.48–0.76 을 "액체의 보편값" 으로** — 계 2종·온도 1점.
+- **이 편을 "MLIP σ 의 검증" 으로** — MLIP 실험 0건.
+
+**⚠ 우리가 실측한 논문 내부의 미봉합** (digest §16-B): 실험 기준선이 있는 **5개 비교 중 3개에서 NE 가 실험에 더 가깝다**
+(IL CL&P Δ+0.49 vs EH Δ−1.70 / IL CL&Pol Δ+1.96 vs Δ−2.08 / LiFSI 3.5 M Δ−0.17 vs Δ−0.54).
+저자는 **3.5 M 에서만** 오차상쇄를 인정하고 `Fig. 2` 상단의 같은 현상에는 침묵한다.
+⇒ 이 논문의 주장은 **정확도 논증이 아니라 추정량 논증**이다. 그 구분을 흐리고 인용하면 데이터가 안 받쳐준다.
+
+<sub>> 📎 병합 2026-09-13 병합 — 초안 `_pending_index_zaby2026_reliable_conductivity_estimates_md.md` ## ③ .</sub>
+
+
+**[Hu26ICAL] `hu2026_foundation_model_surrogates_active_learning`** — 능동학습 **대리모형·획득함수·UQ 캘리브레이션 지표**의
+방법 원전. **물성값 0.** 본문 판정은 **§J-9c** 에 있다(AL 축이라 그쪽이 본진). 여기서는 두 가지만 남긴다:
+① **`AUSE`** = σ 의 **순서**만 쓰는 스케일 불변 UQ 품질 지표 ⇒ 우리 committee(M=3, 절대 σ 금지)에 **적용 가능한 유일한 것**.
+② **획득함수 6종의 수식**(`Table 1`, β·ξ 포함)은 **두세 줄짜리라 직접 구현**한다 — 저자 코드는 미공개다.
+
+<sub>> 📎 병합 2026-09-13 병합 — 초안 `_pending_index_hu2026_foundation_model_surrogates_active_learning.md` ## ④ .</sub>
+
+
+**[Liang26IF] `liang2026_interface_bottleneck_solid_state_batteries` — 계면 슬랩 규약 ⛔ 전무 (음성 결과)**
+
+18 pp 전수 키워드 스캔: `slab` **0** · `vacuum` **0** · `termination` **0** · `mismatch` **0** ·
+`adhesion`/`work of adhesion`/`W_ad` **0** · `surface energy` **0** · `supercell`/`k-point`/`cutoff` **0** ·
+`strain` 실질 **2**(둘 다 계면규약 아님) · `interfacial energy` **2**(⚠ **둘 다 `Fig. 6l` 의 "phase-separation
+energy" 를 잘못 부른 것**). ⇒ **2026년 계면 전문 종설이 슬랩 구성 규약을 한 줄도 다루지 않는다.**
+**우리 B2 미정의는 우리 게으름이 아니라 분야의 공백**이라는 세 번째 증거
+([Wang26IF] 계면 12개를 만들고도 W_ad 미산출 · [Qian26] γ_SE 0.40–0.72 J/m² 가 유일 DFT 앵커 · 여기).
+
+**반대로 이 리뷰가 B2 에 주는 것 1개 (그림에서 읽은 우리 판단)**: `Fig. 6b–f` 는 **같은 코팅재**를
+**상대(LPSCl/NCM) × 전위(0/2.8/4.3 V) 6조합**에서 각각 계산하고, 최소 반응에너지가
+**−43 ~ −395 meV/atom (8배)** 로 흩어지며 **산물 조성도 매번 바뀐다**
+(원전값 = `qian2025_lipo2f2_coating_stable_cei`). ⇒ **"코팅재 X 의 계면 안정성"은 스칼라로 정의되지 않는다.**
+`kb/templates/estimand_card.md` 의 판정기준(*admissible state 가 여럿인데 선택·집계 규칙이 없으면
+스칼라 보고량은 정의되지 않는다*)에 그대로 걸린다 ⇒ **B2 는 `ΔE_rxn(상대, 전위)` 로 인자를 선언한 뒤에야
+보고량이 된다.** (리뷰가 이 말을 하지는 않는다.)
+
+<sub>> 📎 병합 2026-09-13 병합 — 초안 `_pending_index_liang2026_interface_bottleneck_solid_state_batteries.md` ## ④ .</sub>
+
+
+#### 🔧 방법 원전 — 시드 · 독립궤적 · MSD 오차 추정
+
+**`pranami2015_estimating_error_diffusion_coefficients_md`** (JCTC 2015) — LJ 유체 + 프랙탈 응집체, 물성값 없음.
+
+| 이 논문이 요구하는 것 | 우리 현행 | 판정 |
+|---|---|---|
+| δ 를 R_SD(τ,δ) 로 측정, **δ ≥ τ** (겹치지 않는 시간원점) | δ = 저장간격 **0.1 ps** 고정, τ ≤ 50 ps → **겹침 500배** | ❌ 미준수 |
+| MSD~τ 회귀가 뱉는 D 오차는 **무효** (정규성 W=0.87 p<1e-4 · 등분산 위반) | 오차막대를 **시드**에서 낸다 (600 K 3-시드) | ✅ 준수 |
+| 오차는 **MIS(다중 독립 시뮬레이션)** 의 D 표본에서 t-CI | 시드 3 | ⚠ 목적별 (아래) |
+| D 표본의 **정규성 검정** 후 t-CI | 한 적 없음 (3점으론 불가) | ❌ 불가 |
+| 등분산 깨지면 **WLS** | MSD 창 2–50 ps **등가중 OLS** | ❌ 미준수 |
+| 유한크기 **D vs 1/L** 외삽 | 셀 크기 **1개** → 보정 불가 | ❌ 불가 |
+
+**시드 산포 비교** (CV = σ/μ):
+| 계 | CV | 출처 |
+|---|---|---|
+| LJ 유체 N=1000 (100 시드) | **0.11 %** | 논문 SI §2 (소환값) |
+| LJ 유체 N=125 (100 시드) | **0.20 %** | 논문 SI §2 (소환값) |
+| 프랙탈 응집체 1개 (10 시드) | **2.7–4.1 %** | Table 3 역산 *(digest 계산)* |
+| **우리 MLIP-MD (Li in argyrodite)** | **≈ 22 %** | 3-seed×3-T 재시드 *(digest 계산)* |
+
+**🔴 우리 시드 3개 판정** *(digest 계산 — 이 논문의 Step 5 식 + 우리 실측 CV 22.1 %)*:
+- 단일 D 의 3시드 95 % CI 반폭 = **±63 %** (LPSCl1.6 600 K 실측)
+- 비(ratio)의 3시드 95 % CI = **×[0.61, 1.65]** (폭 2.7배)
+- ⇒ **R ≥ 2 (자릿수·2배급) 주장 → 3시드로 충분**
+- ⇒ **R ≈ 1.33 급 주장 → 계당 6–8 시드 필요**
+- ⇒ **"동등하다" 주장 → 수십 개 필요** ⇒ 반드시 **"구별되지 않는다(not distinguished)"** 로 표현
+- ⇒ 철회된 **단일시드 1.33× 는 0.91 σ** (= 순수 시드 잡음). 2026-07-09 철회가 **사전에 계산 가능했다.**
+- ⛔ 이 논문은 **비(ratio)의 오차를 다루지 않는다** — 위 비 계산은 우리가 붙인 로그공간 전파다.
+- ⛔ 유한크기 보정식은 **hydrodynamic** 기원이라 고체 전해질 Li 홉핑에 **이식 금지**.
+
+<sub>> 📎 병합 2026-09-13 병합 — 초안 `_pending_index_pranami2015_estimating_error_diffusion_coefficients_md.md` ## ② .</sub>
+
 ### J-11. ★★★ **해석가능 ML 감사 — [Honrao21] SHAP·PFI vs 우리 cascade predictor** (2026-09-12 신설)
 
 > ⚠ **[Honrao21] 자체는 축 A·B·E 에 이미 행이 있다**(softBV 장벽·grand-potential 창). 여기는 **ML 방법 부분만** 따로 둔 것이다.
@@ -1569,6 +2523,291 @@ preflight 이 알리바이로 쓰던 문구를 **철회한다.**
 
 ---
 
+
+> 📎 2026-09-13 병합 — J-9c–f 는 초안 4건이 **전부 "J-9c" 를 요구**해 슬러그 알파벳순으로 c·d·e·f 를 배정했다.
+
+#### J-9c. [Hu26ICAL] — TabPFN 대리모형 AL 벤치마크 (2026-09-09 신설)
+
+> 🔴🔴 **먼저 층위를 못박는다.** 이 편의 *"foundation model"* 은 **UMA·MACE 가 아니라 `TabPFN`** 이다.
+> **UMA 는 오라클(라벨 생산자), TabPFN 은 설계표 위 대리모형** — 둘은 경쟁하지 않고 위아래로 겹친다.
+> ⇒ ***"UMA 를 AL 대리모형으로 쓰자"는 이 논문으로 정당화되지 않는다. 기각.***
+>
+> 🔑 **그런데 우리에게 유리한 사실이 있다** — **TabPFN 원전 digest 를 이미 갖고 있고**
+> (`hollmann2025_tabpfn_tabular_foundation_model`, *Nature* 637, 319–326), **우리 랩 BML 에 실사용 경험이 있다**
+> (`talks/yang2026_ncm_radial_microstructure_ml` — ⛔ `citable=no`, 여기서는 "역량 존재"만 쓴다).
+> ⇒ **새 기법 도입이 아니라 다른 층에 재사용하는 것**이다.
+
+| 항목 | [Hu26ICAL] | 우리 cascade (`cascade_d_rel_estimand_2026_09_08.json`, active) | 판정 |
+|---|---|---|---|
+| **오라클** | **데이터셋 조회** — 비용 0 · 잡음 0 · 결정론 | **UMA-MD** — 설계당 GPU 수시간 · **시드 잡음 있음** | 🔴🔴 **가장 큰 차이.** 이 논문 세계에는 라벨 잡음 모델이 아예 없다 |
+| 탐색 공간 | 495–3,148 (라벨 이미 전부 있음) | **227 설계** → front **39** (30 dopant) | 🟡 우리가 1자릿수 작다 |
+| **보고량** | **전역최적 발견까지의 추가 평가 수** (극단값 탐색) | **`D_rel(600 K, 2–50 ps, cell-conditioned)` 의 값·CI · 순위 안정성 · ρ̂+CI+유효표본수** | 🔴 **다른 양이다.** 이 지표를 우리 카드에 넣을 수 없다 |
+| 초기셋 | **물성 최저 K%**(결정론적) ⇒ **순수 외삽 과제** | front 39 = **점수 상위**(예측기가 고른 것) | 🔴 **정반대 방향** |
+| 목표 | **Top-1 단일목적** | **4축** (행별 `score = 3m+b` 후 집계) | 🔴 **다목적을 안 한다**(저자 future work) ⇒ [Jain26Rev] 의 스칼라화 비판은 **그대로 남는다** |
+| **batch** | **1** (`Fig. 2` 캡션 G) · 배치 확장 **0** · 다양성 **선언만** | **병렬 GPU 큐** (배치가 자연) | 🔴 **안 맞는다.** 배치 AL 근거는 다른 문헌에서 |
+| 대리모형 σ | **TabPFN 분위수** `(q97.5−q2.5)/3.92` — 단일 모델 | ⛔ **설계표 위 대리모형 자체가 없다.** 우리 σ 는 **힘 층위** 이종 committee **M=3** | ⚠ **층위가 다르다** — 서로 대체하지 않는다 |
+| **M≥4 (Grasselli 식 27)** | ⭕ **이 층위에선 제약이 발생하지 않는다** (앙상블이 아니므로 M 이 정의되지 않음) | 힘 층위 M=3 문제는 **그대로 남는다** | ⚠ **우회가 아니라 다른 σ.** "M 문제를 풀었다"고 쓰면 안 된다 |
+| UQ 지표 | **NLL · PICP · MPIW · AUSE** | ⛔ 없음 (절대 σ 금지라 캘리브레이션을 못 잰다) | ⭕⭕ **`AUSE` 는 스케일 불변 ⇒ 우리도 잴 수 있다** (아래) |
+| 예측기 품질 문턱 | **R² 0.18 로도 굴러갔다** (`Table 6`) | **LODO −0.1805** / 쌍 LOOCV 0.0892 | ⭕ **착수를 막는 이유가 못 된다** — [Ma25AL] 과 **독립 두 번째 증거** |
+| 통계 규율 | ⛔ 검정·CI·부트스트랩 **0건** · TabPFN 반복 **1회**(오차막대 없음) | ρ̂ + **Fisher 95% CI** + **블록 부트스트랩** + 유효표본수 + **사전 검정력 고지** | ⭕⭕ **우리 규율이 더 엄격하다.** 이 논문은 우리 카드 §7 무효조건 여러 개에 걸린다 |
+| **순환 검증** | 없음 (라벨이 참값) | 🔴 점수도 UMA, 검증 D 도 UMA-MD | 🔴 **이 논문은 그 문제를 다루지 않는다** |
+| 랜덤 팔 | ⛔ **없다** | — | 🔴🔴 **[Cho25AL]·[Ma25AL] 에 이어 세 편 연속 결손** |
+
+**🔑 우리가 실제로 가져오는 것 (값이 아니라 지표와 설계 규칙)**
+
+| # | 가져올 것 | 근거 | 강도 |
+|---|---|---|---|
+| 1 | **AUSE 를 우리 committee 에 이식** — σ 내림차순으로 5%씩 버리며 남은 평균 힘오차 곡선 vs oracle 곡선의 면적. **σ 의 순서만 쓰고 절대 크기를 안 쓴다** ⇒ *"절대 σ 인용 금지"*·*"M=3 캘리브레이션 불가"* 를 **둘 다 우회** | `Table 5`·`Table 6` 의 지표 정의 | ⭕⭕⭕ **오늘 실행 가능. DFT 새 계산 0회** (⚠ 값을 원고에 실을 거면 보고량 카드 먼저) |
+| 2 | **획득함수는 문헌 이식 금지 — 우리 계에서 스윕**. 단 **보고 지표 밖에서** 고른다 | §4.3(6종이 계마다 뒤집힘) + §12-4(이 논문의 selection-on-test) | ⭕ 강함 |
+| 3 | **`LODO −0.1805` 는 AL 착수를 막지 않는다** | `Table 6`(R² 0.18) + [Ma25AL] | ⭕ 강함 (독립 2편) |
+| 4 | **초기 라벨 = 풀의 10–20%** (227설계면 23–45; 우리 front 39 = 17%) | §3.1·§4 저자 명시 | 🟡 중간 (다른 재료계) |
+| 5 | **랜덤 팔 필수** | §12-5 | ⭕⭕ 가장 강함 (세 편 연속 결손) |
+| 6 | **bracketing 을 설계변수로** — 초기셋이 목표 영역을 괄호로 감싸는지 | 원전 `hollmann2025` §3 *"외삽 취약"* + `Fig. 5a` 506→111 급전환 | 🟡 **우리 해석.** 논문은 무작위 초기화 대조를 **안 했다** |
+
+**🔴 이 편이 닫지 못하는 것 — 반드시 같이 인용**
+1. 🔴 **동료심사 안 됐다** (arXiv v3, DOI 자리표시자 잔존).
+2. 🔴🔴 **"8 out of 10 datasets" 가 자기 `Table 4` 와 안 맞는다 — 세면 7/10** (TabPFN 7 · Gauss 2 · RF 1).
+3. 🔴🔴 **헤드라인 52% / 29.77% 는 "TabPFN 이 이긴 4개" 평균**이다 (역산 확인: 52.00% / 29.775%).
+   **10개 전체면 vs GP ≈39.0% · vs RF ≈12.8%** (우리 계산). 초록·결론에는 그 단서가 없다.
+4. 🔴 **본문 AUSE(GP, Cu) `15.58` vs `Table 5` `5.58` 불일치** ⇒ 그 값 인용 금지.
+5. 🔴 **랜덤 팔 0건** ⇒ *"AL 이 무작위보다 X배"* 를 이 논문으로 말할 수 없다.
+6. 🔴 **문제 인스턴스가 데이터셋당 사실상 1개** (초기셋 결정론적 + init_ratio 증가 시 중첩)
+   ⇒ *"승률 90%"* 는 독립 20시행이 아니라 **강상관 20비교**. 우리 카드가 금지한 계수 방식이다.
+7. 🔴 **획득함수를 보고 지표 위에서 선택** + hybrid 2종이 TabPFN 전용이라 **비대칭 다중비교**.
+8. 🔴 **기전 검증이 이긴 데이터셋 2개에서만** — 진 3개의 NLL·AUSE 없음.
+9. 🔴 **TabPFN 오차막대 부재를 *"tight error bars"* 라고 서술** (1회 실행이라 산포를 잴 수 없다 — 순환).
+10. 🔴 **재현 불가**: 코드 미공개 · LTC 데이터 비공개 · GP 커널/RF 하이퍼파라미터/라이브러리 버전/**라이선스 전부 미기재**.
+11. 🔴 **초기화 규칙이 논문 안에서 자기모순** (*"bottom K%"* ↔ *"randomly"*).
+12. 🔴 **초록의 *"electrolyte materials"* 데이터셋이 논문에 없다** · §2.3 의 **ChEMBL 10종도 결과에 0회**.
+
+**⛔ 이 축에서 인용하면 안 되는 것 (→ §J-6 에도 추가)**
+- ⛔ *"파운데이션 모델이 AL 대리모형으로 검증됐으니 **UMA 를 대리모형으로** 쓰자"* — **층위가 다르다.**
+  UMA 는 조성 벡터를 받지 않고, σ 를 내지 않으며, `D_rel` 을 단일 forward 로 못 낸다.
+- ⛔ *"52% 절감"* 을 단서 없이 — **TabPFN 이 이긴 4개 데이터셋 평균**이다.
+- ⛔ *"8/10 에서 이겼다"* — **7/10 이다**.
+- ⛔ *"AL 이 무작위보다 낫다"* 를 이 논문 근거로 — **랜덤 팔이 없다**.
+- ⛔ *"전해질 AL 논문"* — **전해질 데이터셋이 없다**.
+- ⛔ *"배치 다양성 전략을 제시했다"* — **선언 한 줄뿐, 구현·평가 0**. batch=1 이라 구조적으로도 불가.
+- ⛔ *"거짓음성이 없음을 보였다"* — **거짓음성이 발생할 수 없는 설정**이다.
+- ⛔ *"M≥4 문제를 풀었다"* — **다른 층위의 다른 σ** 다. 힘 층위 M=3 은 그대로 남는다.
+- ⛔ 이 논문의 **"electrical conductivity"(Cu 합금 %IACS)** 를 우리 **이온전도도(mS/cm)** 와 같은 표에 놓기.
+- ⛔ `figure-read ≈` 값을 본문 명시값처럼 쓰기 — `Fig. 3–5` 곡선 값은 전부 눈금 판독(±10–15%).
+
+<sub>> 📎 병합 2026-09-13 병합 — 초안 `_pending_index_hu2026_foundation_model_surrogates_active_learning.md` §③.</sub>
+
+---
+
+#### J-9d. [Liu26AB] — **다목적 AL (EI/HVI/ParEGO) + "자리 선언" 의 외부 선례** (2026-09-09 신설)
+
+> **왜 이 블록이 있나**: §J-9a·b 는 *"AL 루프를 어떻게 도는가"* 였다. **[Liu26AB] 는 그 앞 칸**
+> — *"애초에 무엇을 바꾸는 질문인가"* 를 우리보다 엄격하게 선언한 편이다.
+> 2026-09-09 회신 BJ 가 우리 cascade 에 **NO-GO** 를 내면서 사유 1번으로 지목한 것이
+> *"'도핑' 데이터가 사실은 **코팅 후보 자체의 hull** 이었다"* 였고, 회신이 권한 방향은
+> *"**실제 치환 조성·농도·자리·전하보상과 접촉 상대를 먼저 고정**"* 이다.
+> **[Liu26AB] 는 그중 '자리·농도' 를 화학식과 코드로 못박은 실물 사례다.**
+>
+> ⚠ **재료계가 다르다** — 산화물 ABO₃ 페로브스카이트의 **O²⁻ 확산**, 1000–2000 K.
+> **물성값은 한 줄도 넘어오지 않는다.** 넘어오는 것은 **설계 문법과 보고 서식**뿐이다.
+> ⚠ **본문 PDF 미확보.** 아래 `[재구성]` 은 저자 공개 `x/y_train_*.pkl` 을 우리가 역변환한 값이다.
+> 상세는 `papers/liu2026_ab_site_substitution_high_entropy_perovskite_al.md` §3·§5·§6·§15.
+
+| 항목 | **[Liu26AB]** | 우리 cascade (v2 재설계 중) | 판정 |
+|---|---|---|---|
+| **자리(site) 선언** | ⭕⭕ **화학식으로 못박음** — `(La,A2..A5)CoO₃` / `La(Co,B2..B5)O₃`. 코드가 host 를 런타임 강제(`app.py:342,356`) | ⛔ **없다** — 회신 BJ 반려 사유 1번 | 🔴 **저들이 압도. 이 한 칸이 배울 전부다** |
+| **자리 모호성 해소** | ⭕ **후보집합 교집합 ∅** (A: Ca·Sr·Ba·란타넘족 / B: 3d TM) — 사후 판정이 아니라 **설계로 발생을 막음** | ⛔ 미정의 (예: O 는 S_16e·S_4a4c 양쪽 후보) | 🔶 **우리는 분할이 불가능** ⇒ `design_id` 분기로 풀어야 함 (§15.2) |
+| **묻는 질문 유형** | **격자 치환(단상)** 하나로 고정 | ⛔ 선언 안 함 → 실데이터는 **별도 상** 반응 | 🔴 우리 P0 |
+| **별도 상 배제 게이트** | ⛔ **없음** — hull·경쟁상·분해반응 **0건**(requirements 에 pymatgen 없음) | ⛔ 없음 | ⚠ **양쪽 다 없다 — 저들을 따라 해도 안 풀린다** |
+| **형성E 기준상태** | 🔴 **불명.** Ef 평균 A −1.629 / B −2.203 eV/atom 인데 정의식이 자료 어디에도 없다 | 🔴 v1 이 바로 이것 때문에 죽었다 | ⚠ **같은 병** |
+| **농도창 정당화** | ⭕ 15–40 at.%, ΔS_conf>1.5R, `Fig. S1` 로 그림 정당화 + **192조성 전수 검증**(우리 재확인: 최저 1.50479R) | 🔶 조성별 임의 | ⭕ **서식 이식 대상 (L-1)** |
+| **후보공간 동결** | ⭕ `data_all.pkl` **10,626** ordered 조성 아티팩트 | ⭕ `cascade_all_302_*.json` | 양쪽 다 |
+| **무질서 처리** | ⭕ **SQS 조성당 5개** (자리당 960 prototype) | 🔴 **설계당 구조 1개** | 🔴 저들이 낫다 |
+| ↳ 그 앙상블을 확산에 썼나 | 🔴 **[재구성]** D 는 5복제본이 **610/610 전부 동일**(1회 계산 후 복사). Ef·Δ_lattice 는 610/610 전부 다름 | — | ⚠ **저들도 확산에서는 우리와 같은 병** |
+| **보고량** | ⭕ **4개를 두 자리에 동일 적용**, 모델만 분리(`model_A`/`model_B`) | ⭕ `D_rel` 단일 | ⭕ **양쪽 다 옳다 — 이 원칙을 명문화할 것** |
+| 방향 정규화 | ⭕ 4목표 전부 **minimize**(D 는 −D 로 저장) | 🔶 미정 | ⭕ **이식 (L-3)** |
+| **보고량 카드** | ⛔ 없음 (Ef 기준·자기상태 미선언) | ⭕ `cascade_d_rel_estimand_2026_09_08.json` **active** | ⭕⭕ **우리가 낫다** |
+| **자기/스핀 상태 선언** | ⛔ **0건** — B pool 이 Mn·Fe·Co·Ni·Cu, A pool 에 Ce·Pr·Nd·Sm·Gd(f전자), 모체는 스핀전이로 유명한 LaCoO₃ | ⭕ 카드 §3 가 강제 | ⭕⭕ **우리가 낫다** — *"admissible state 여럿 + 집계규칙 없음 ⇒ 스칼라 보고량 미정의"* 의 교과서적 위반 |
+| **대리모델·불확실도** | ⭕ **Pyro BNN** posterior 1000샘플 mean±std, `σ~Gamma(0.5,1)` 로 aleatoric 분리 | 🔶 ridge + LODO 재적합 산포 ε | 🔶 **저들 방식이 낫다 — 30줄 이식 대상 (L-4)** |
+| **획득함수** | ⭕ **EI · HVI · ParEGO** + Pareto (다목적) ⛔ 조합·전환 규칙 본문 미확보 | ⛔ 없음(사후 랭킹) | 🔴 우리 공백 (§J-9 와 동일 결론) |
+| **초기집합 / 배치 / 라운드** | **[재구성]** 초기 **420점/자리**(= 등몰 + 5코너, 6조성 × 70원소조; SI `Table S1` 미리보기 6행과 일치) · 최종 **610점** · **AL 추가 190점(31.1 %)**. ⛔ 배치·라운드·중단조건 **본문 미확보** | 273 후보 1회 통과(라운드 개념 없음) | 🔶 **초기집합 = 코너 설계** 는 훔칠 가치 있음 |
+| **탐색 비율** | 610 / (70×10,626 = 743,820) = **0.082 %** | 계획 6.5×10⁻² | 🔵 체제 다름 |
+| **random arm / enrichment** | ⛔ **0건** | ⭕ ordering 3.35× (p=0.010) · discovery 1.22× (p=0.426) | ⭕⭕ **우리가 낫다** — §J-9 의 세 번째 같은 사례 |
+| **CV 규약** | 🔴 랜덤 **5-fold(행 단위)** — 1점 = 25행(5 SQS×5 T) ⇒ 그룹 누수 의심. val MSE **7.43e-2(A)/6.70e-2(B)** (표준화 단위) | ⭕ **LODO / L2DO** | ⭕⭕ **우리가 낫다** (§J-8 판정 승계 — **반례 사례로 인용 가능**) |
+| **적용범위 선언** | ⛔ 없음. **[재구성]** host 최소농도(15 at.%) 점이 균등 대비 **3.35×(A)/3.53×(B)** 편중인데 앱은 **10,626 전역**에 예측 | 🔶 `d≤2, ε` 규칙 | ⭕ 우리가 낫다 |
+| **오라클 검증** | 🔴 `Fig. S3` **정연 17종 총에너지 parity** (동적범위 3 eV/atom) 로 **타깃 Ef(산포 0.13/0.23 eV/atom)** 를 정당화. **MAE/RMSE 0건 · SQS 검증 0건 · D 검증 0건** | 🔴 `force_contrast` M=3 | ⚠ **양쪽 다 얇다.** 단 *"검증량 = 사용량"* 원칙 위반은 저들이 더 크다 |
+| **라벨의 정체** | MLIP(PFP) 대리값 | UMA MLIP-MD 대리값 | ⚠ **양쪽 다 같은 병** |
+| **코드·데이터 공개** | 🔶 **추론 앱만** (MIT, 커밋 1개, 테스트 0). 시뮬레이션·AL·학습 코드 **0줄** | ⭕ CSV + provenance + sha256 | 🔶 |
+
+> ### 🔑 판정
+> **[Liu26AB] 는 "무엇을 바꾸는가" 를 우리보다 훨씬 엄격하게 선언했고, "그것이 존재하는가" 는
+> 우리만큼 안 물었다.** 두 게이트는 독립이다.
+> ⇒ **`G-site-1`(자리 선언) 만 저들에게서 베끼고, `G-site-2`(치환체 존재 판정) 는 우리가 새로 만든다.**
+> 그 게이트가 요구하는 것은 계산이 아니라 **선언 하나**다 — *"μ_M 의 저장소(reservoir)가 무엇인가."*
+> 그것을 안 적으면 E_subst 는 정의되지 않고, 그것이 정확히 **[Liu26AB] 의 Ef 기준상태 불명**이며
+> 정확히 **우리 v1 이 죽은 이유**다.
+
+**이식 항목 (계산 0회 — 전부 설계·보고 서식)**
+
+| # | 항목 | 근거 |
+|---|---|---|
+| **L-1** | ⭐⭐ **농도창을 그림 하나로 정당화하고, 창 안 전부가 조건을 만족함을 전수 검증** | `Fig. S1` + 우리 재검증 192/192 |
+| **L-2** | ⭐⭐ **후보공간을 아티팩트로 동결** — 나중에 "공간이 몇 개였나" 로 다투지 않는다 | `data_all.pkl` 10,626 |
+| **L-3** | ⭐⭐ **다목적을 전부 minimize 로 정규화**(우리는 −D_rel) 후 Pareto | `app.py:151` |
+| **L-4** | ⭐⭐ **posterior predictive std 를 대리모델 출력에 포함**(BNN 30줄) — ridge 의 ε 대체 | `app.py:16–60,145–150` |
+| **L-5** | ⭐⭐⭐ **host 강제 검증을 런타임 계약으로** — 선언과 다르면 **잡을 던지지 않는다** | `app.py:342,356` → 우리 `substitute_compound.py` |
+| **L-6** | ⭐⭐⭐ **`substitution_mode: lattice \| separate_phase \| additive` 를 보고량 카드 필수 필드로** | §5.3 대응표 |
+| **L-7** | ⭐ **자리마다 다른 보고량을 쓰지 않는다 — 양은 같게, 모델만 나눈다** | `model_A`/`model_B` |
+| **L-8** | ⭐ **초기집합을 "코너 + 등몰" 로 설계**(6조성×원소조) — AL 이 내부를 채우게 | §6.3 `[재구성]` |
+
+**⛔ 이 축에서 인용하면 안 되는 것 (J-6 에 추가)**
+
+- ⛔ **[Liu26AB] 를 "고엔트로피 페로브스카이트 조성을 발견했다" 로 인용** — **hull·별도상 판정 0건**이므로
+  존재성 주장이 논문에 **없다**. 정확한 서술은 *"조성-물성 대리모델을 만들었다"*.
+- ⛔ **[Liu26AB] 의 Ef·Δ_lattice·Δ_atomic·D·Ea 절대값 전량** — 산화물 페로브스카이트 O²⁻,
+  1000–2000 K. **argyrodite A–D 물성 4축 표에 넣지 않는다.** 특히 **[재구성] Ea (A 0.304 / B 0.219 eV)**
+  는 우리 600/800/1000 K 3점 Ea 와 캐리어·온도창·MSD 규약이 전부 다르다 (B자리에는 **Ea < 0 인 점도 있다**).
+- ⛔ **[Liu26AB] 앱의 `C (S/cm)`** — `D2C`(`app.py:217–222`)가 Nernst–Einstein 의 **캐리어 농도 c 를 빠뜨리고
+  `/100` 을 넣어** c = 0.01 mol/cm³ 로 고정한 값이다. **조성 의존성이 없다.** 어떤 형태로도 인용 금지.
+- ⛔ **[Liu26AB] 를 "MLIP 가 DFT 대비 N배 빠르다" 의 근거로 인용** — `Fig. S2` 는 **128원자 초과가 외삽(점선)**,
+  하드웨어 미기재, 벤치 계가 **Cu₄Mg₄ 금속**(목표계 아님), VASP 설정이 매우 빡빡(ENCUT 1.75×·5000 pra).
+- ⛔ **[Liu26AB] 의 val MSE 를 일반화 성능으로 인용** — 랜덤 5-fold 가 **행 단위**이고 1점 = 25행이다.
+  out-of-composition / out-of-quartet 성능은 **보고되지 않았다**.
+- ⛔ **[Liu26AB] 를 "AL 이 랜덤보다 N배" 의 근거로 인용** — random arm·enrichment·hit-rate **0건**
+  (`[Cho25AL]`·`[Ma25AL]` 과 정확히 같은 공백).
+- ⛔ **서지 인용 자체를 조심** — **본문 PDF 미확보**. 저널·권·페이지·DOI 미확정이고 저장소 BibTeX 는 비어 있다.
+  원고 reference list 에 넣기 전에 **본문 확보 필수**.
+
+**⚠ 우리 재계산임을 반드시 병기해야 하는 수치** (원논문·SI 에 없다 — 전부 공개 pkl/csv 재분석)
+`초기집합 420 / 최종 610 / AL 190 점(31.1 %)` · `host 최소농도 편중 3.35×·3.53×` ·
+`D 가 5 SQS 복제본에서 610/610 동일` · `Ef 평균±sd A −1.6286±0.1285 / B −2.2030±0.2255 eV/atom` ·
+`Δ_lattice A 4.471±2.842 / B 5.913±2.950 %` · `Δ_atomic A 1.1244±0.8260 / B 1.4254±0.8751 Å` ·
+`D@1000K 중앙 A 8.06e-7 / B 6.68e-7 cm²/s (A/B 1.21)` · `Arrhenius Ea A 0.304±0.114 / B 0.219±0.092 eV` ·
+`원소별 주변효과 8×2 표` · `T 수준 {1000,1250,1500,1750,2000} K` · `Z 오름차순 15250/15250` ·
+`csv 192행 = 전수 열거 · 최저 ΔS_conf 1.50479R` · `ordered 공간 10,626`
+
+<sub>> 📎 병합 2026-09-13 병합 — 초안 `_pending_index_liu2026_ab_site_substitution_high_entropy_perovskite_al.md` §② (초안 J-9c → J-9d).</sub>
+
+#### J-9e. [Ou26MS] — MLIP 학습 AL (물질탐색 AL 아님) (2026-09-09 초안 · 2026-09-13 병합, 초안 J-9c → J-9e)
+
+> **왜 여기 놓나**: J-9a([Cho25AL])·J-9b([Ma25AL])는 **물질 발굴** AL 이고,
+> [Ou26MS]·[Carrete23UQ]는 **퍼텐셜 학습** AL 이다. **둘은 다른 종(種)이다** —
+> 앞의 둘은 *후보를 랭킹*하고, 뒤의 둘은 *라벨을 어디에 쓸지*를 고른다.
+> ⛔ **우리 `discovery enrichment 1.22× (p=0.426)` 를 이 편과 같은 표에 놓지 마라** — 분모가 다르다.
+> **[Ou26MS] 가 특별한 이유 하나: 재료계가 우리와 정확히 같다(Li₆PS₅X).** [Carrete23UQ]는 EAN·SrTiO₃다.
+
+| 항목 | [Ou26MS] | [Carrete23UQ] | 우리 |
+|---|---|---|---|
+| 불확실도 | **D-optimality 외삽등급 γ (단일 모델)** | **앙상블 분산** (committee/bootstrap/DE) | 🔴 없음 |
+| acquisition | MaxVol `select_add`, γ_select **1.4**, 채택 임계 γ>**1.7** | `σ²_f·exp(−E/k_BT)`, Powell | 순차 게이트 |
+| 오라클 | **DFT (VASP/PBE)**, 저정밀 이완 + 고정밀 단일점 2단계 | DFT (GPAW) | UMA-MD (대리) |
+| 배치 | **라운드당 MD 샘플러 4개(독립 시드)**, level 당 최대 100 반복 | — | — |
+| **중단조건** | ⭐ **①** MD 에서 더 이상 샘플이 안 나오면 **②** **목표 물성(GB 에너지·D)이 충분히 정확하면 level 상승 중지** | 오차 수렴 | 예산 |
+| 대조군 | ⭕ **global-AL, 각 5회 반복** | ⭕ 추정기 3종 | ⛔ 없음 |
+| **라벨 절감 (digest 재계산)** | **총 DFT 라벨 441 vs 2372 = 5.4×** (사전학습 6.4× · AL 획득 1.8×) · AL 라운드 6.2 vs 51.2 = **8.3×** · **level 6 에서 94 % 획득** | — | — |
+| 일반화 시험 | ⭕ **Table S1** — 🔴 **할라이드 간 전이 실패**(Br 27.71 meV/atom vs 자체 기준 <10) | 표면 확장 | LODO R² −0.1805 |
+| 사전등록 | ⛔ 없음 | ⛔ 없음 | ⛔ 없음 |
+
+**⇒ J-9 에 추가할 판정 2줄**
+- **J9-h ⭐⭐ 중단조건을 "보고량 수렴"으로 잡는 형식의 외부 선례가 생겼다.**
+  *"optimized … guided directly by the target material properties rather than fitting or validation error"*
+  — 우리 **보고량 카드**(`kb/templates/estimand_card.md`) 규율과 같은 철학에 독립적으로 도달했다.
+- **J9-i ⭐ 국소구조 추출 라벨링(30 000 원자 → >200 원자 주기셀)** = 우리가 계면/도핑 슬랩 DFT 라벨이
+  필요해질 때 비용을 2자릿수 줄이는 처방. **정확한 알고리즘이 `cut2box.py` 에 있다**
+  (box 16 Å 시작 +0.2 증가 · 보호영역 6.5 Å · 화학량론 맞을 때까지 **최근접거리가 짧은 경계원자부터 삭제** ·
+  d≥1.6 Å · 저정밀 DFT 이완 후 고정밀 단일점 1회).
+  ⚠ 재사용 시 확인: `box_final` 이 16 Å 고정인데 `box_length` 는 커질 수 있어 PBC 되접힘 가능(clamp 코드가 주석 처리돼 있다).
+
+**⛔ 이 축에서 [Ou26MS] 로 하면 안 되는 것**
+- ⛔ **"AL 이 랜덤 대비 N배" 근거로 인용** — 랜덤 arm 이 없다. 대조군은 **global-AL** 이지 랜덤이 아니다.
+- ⛔ **γ 임계 1.4/1.7/5 를 UMA 에 이식** — D-optimality 활성집합은 **MTP 같은 선형-파라미터 모델 전용**이다.
+- ⛔ **"5.4× 절감"을 우리 캠페인 예산에 그대로 적용** — 그건 **local-AL vs global-AL** 비교이지 AL vs 무작위가 아니다.
+
+<sub>> 📎 병합 2026-09-13 병합 — 초안 `_pending_index_ou2026_microstructural_multiscale_fast_ion_transport.md` §2-c.</sub>
+
+#### J-9f. [Wilson22BAL] — 풀 기반 배치 AL (선형모형 가정 없음) (2026-09-09 초안 · 2026-09-13 병합, 초안 J-9c → J-9f)
+
+> **왜 여기 놓나 (네 번째 형식)**: J-9a `[Cho25AL]` = 실험 PSO(대리모델 없음) · J-9b `[Ma25AL]` = GP-EI
+> 순차 · `[Ou26MS]` = MTP γ 기반 **생성형** local-AL. **이 편은 풀 기반 *선택형* 배치 AL** 이다.
+> ⭐ **우리 도펀트 cascade 는 구조적으로 이 형식에 가장 가깝다** — 후보 풀을 먼저 만들어 놓고 시작한다.
+
+| 항목 | **[Wilson22BAL]** | [Ou26MS] | [Carrete23UQ] | 우리 |
+|---|---|---|---|---|
+| AL 종류 | **풀 기반 선택형(batch)** | 생성형 on-the-fly(local) | 생성형 적대적 | 순차 게이트 |
+| 불확실도 | **bagging 앙상블 σ_E, M=10** | **D-optimality γ (단일 모델)** | 앙상블 분산 | 🔴 없음 |
+| **선형모형 의존** | ⛔ **없음 (model-agnostic)** | ⭕ **있음 (MTP 전용)** | ⛔ 없음 | — |
+| acquisition | `0.9·U/Ū + 0.1·D/D̄` | MaxVol, γ_select 1.4 / 채택 >1.7 | `σ²_f·exp(−E/k_BT)` | 없음 |
+| **배치 다양성** | ⭐ **greedy 조건부 + 가산형 거리 보상** (top-k 아님) | 배치 개념 대신 라운드당 4 독립시드 | — | — |
+| 배치 크기 | **10**, 근거·민감도 **없음** | — | — | — |
+| 오라클 | **DFT(PBE)** — ⚠ **이미 라벨된 풀에서 꺼냄** | DFT(VASP) 실제 실행 | DFT(GPAW) | **UMA-MD 대리값** |
+| **중단조건** | 🔴 **고정 예산 3,000 구조** | ⭐ **목표 물성 수렴** | 오차 수렴 | 예산 |
+| **무작위 대조군** | ⭕⭕ **있다 — AL·random 각 10 시드** | ⛔ 없음(대조군 = global-AL) | ⛔ 없음 | ⛔ 없음 |
+| **top-k 대조군(β=0)** | 🔴 **없다** | — | — | — |
+| 절감 배수 | 🔴 **논문에 없다.** digest 도출 **≥3×**(힘 RMSE, `Fig. 4a`) | 5.4×(사전학습 6.4 × 획득 1.8) | — | — |
+| 거짓음성 시험 | 🔴 없음 (미표집 RMSE·parity 이상치 부재 = **간접 증거만**) | — | — | — |
+| 시드 반복 | ⭕ **10** | 5(MTP 산포) | 12(MD 궤적) | 3(Ea 600 K) |
+
+**⇒ J-9 에 추가할 판정 3줄**
+
+- **J9-j ⭕⭕ "AL 이 랜덤보다 낫다"를 실제로 대조한 첫 편이다.** J-9 머리의 판정
+  *"두 편 다 AL 이 랜덤보다 낫다를 증명하지 않았다"* 의 **첫 예외**. 다만 이겨 낸 것은
+  **평균 정확도가 아니라 시드 재현성**이다(digest §10-②) — **인용할 때 그 단서를 뗄 수 없다.**
+- **J9-k ⭐⭐ 배치 다양성 강제의 최소 처방을 얻었고, 그 결함까지 같이 얻었다.**
+  greedy 조건부는 가져오되 **거리항을 합 → min 으로 바꾼다.** 그리고 **`β=0`(top-k) arm 을
+  우리가 넣어야 한다** — 논문에 없어서 *"다양성 항이 값을 하는가"* 가 미해결이다.
+- **J9-l 🔴 중단조건은 이 편에서 가져오지 않는다.** 고정 예산은 우리가 이미 하는 것이고,
+  `[Ou26MS]` 의 목표물성 수렴 + 우리 **보고량 카드**(`kb/templates/estimand_card.md` §4:
+  검증 게이트를 **결과 보기 전에** 박는다)가 둘 다보다 앞선다.
+
+**J-9f-M. M 판정 한 덩이 (초안 2-d — 큐레이터 1순위 위치가 J-9 였다)**
+
+> ⚠ **먼저 정직하게: 이 논문은 우리 M 문제를 풀어 주지 않는다.** M=10 을 **근거 없이** 썼고
+> (선택 이유가 논문에 **없다**), **M 민감도 실험도 없다**. 아래는 이 편 + 기존 판정을 겹쳐 세운 것이다.
+
+**M-1. 질문을 둘로 쪼갠다 — 이 편이 그 구분을 실물로 보여준다.**
+
+| 용도 | M=3 이 되는가 | 근거 |
+|---|---|---|
+| **(a) 랭킹** (argmax 로 다음 라벨 고르기) | 🔶 **된다, 단 잡음이 크다** | [Wilson22BAL] 이 하는 것이 정확히 이것 — **캘리브레이션 0**. **Grasselli 식 (27) 의 `M≥4` 는 캘리브레이션 요건이지 랭킹 요건이 아니다** |
+| **(b) 정량 보고** (σ 를 값으로 쓰거나 오차와 대조) | ⛔ **안 된다** | 식 (27) 에서 `(M−3)/(M−1)=0` → `α² = −1/3 < 0`. **기존 판정 유지** |
+
+**M-2. 판정 초안 3줄**
+
+1. **⭕ M=3 으로 지금 진행해도 되는 용도가 있다 — 배치 랭킹.**
+   ⛔ 단 **σ 값을 문장에 쓰지 않고**(기존 인용금지 유지), **근소차는 무작위로 처리**하며
+   그 자리를 **다양성 항(2-b 의 min 거리)** 에 맡긴다. M 이 작을수록 거리항의 상대 가치가 커진다.
+2. **🔶 올린다면 목표는 `M≥4` 가 아니라 "잡음 절반"이다.**
+   🔎 digest 계산(가우시안 잔차, 표본표준편차의 상대표준오차 `1/√(2(M−1))`):
+   **M=3 → 50.0 % · M=4 → 40.8 % · M=10 → 23.6 %.**
+   ⇒ **3→4 는 9 %p 뿐** — *"M=4 로 올려 캘리브레이션한다"* 는 형식만 만족하고 실익이 적다.
+   할 거면 **M ≈ 8–10**(= Wilson 자리)까지 가야 의미가 있다.
+3. **⭐ 이 편이 연 것은 M 의 숫자가 아니라 *멤버 제조법* 이다 — bagging.**
+   우리 M=3 은 **이종 파운데이션이 3개뿐**이라서 3 이다. Wilson 의 M=10 은 **같은 모델을
+   데이터 80 % 부표본으로 10번 학습**해 만든다 — **새 아키텍처가 필요 없다.**
+   ⇒ `[Tompa26]` 으로 UMA fine-tune 경로가 열리면 **부표본 M개 fine-tune** 으로 M 을 늘릴 수 있고,
+   **⭐ 이 경로는 "높은 EMA(0.999~0.9999)가 snapshot ensemble 을 죽인다"는 우리 긴장을 우회한다** —
+   배깅 멤버는 **독립 학습런**이라 EMA 평균이 멤버 간 차이를 지울 수 없다.
+   **snapshot 이 아니라 bagging 이 답이다.**
+   ⚠ 대가 = 라운드마다 M회 fine-tune(재학습 비용이 새 병목). 절충안 = **N 배치마다 한 번만 committee 갱신**
+   — ⛔ **이 절충의 타당성은 논문에 없다. 우리가 시험해야 한다.**
+
+**M-3. ⛔ 이 편으로 답할 수 없는 것 (명시해서 남긴다)**
+- M 을 몇으로 해야 하는가 → **논문에 없다.**
+- 에너지 앙상블 산포가 **힘·D** 오차의 좋은 대리인가 → **논문에 없다**(에너지만 쓴다).
+- 파운데이션 정확도 영역(0.07 eV/Å)에서도 AL 이득이 남는가 → **논문 밖**(그들 모델은 0.157–0.255).
+- **committee 가 조밀하면 정확한가 → 아니다.** `Fig. 5` 가 반례다(digest §10-③):
+  **시드 산포는 이미 사라졌는데 평균 포논은 아직 이동 중**(`figure-read` ≈1.2 → ≈1.35 THz).
+  ⇒ ⛔ **"우리 3개 모델이 일치했다"를 정확도 근거로 쓰지 않는다** — 기존 규율 재확인.
+
+**J-9f-⛔. 이 편으로 하면 안 되는 것 (초안 2-e)**
+
+- ⛔ **"AL 로 DFT 를 N배 아꼈다" 근거로 인용** — 그 배수가 논문에 **없고**, **DFT 를 실제로 돌리지도 않았다**
+  (라벨을 기존 DB 에서 꺼냈다). core-hour·wall-clock **0건**.
+- ⛔ **"배치 다양성 항이 top-k 보다 낫다"로 인용** — `β=0` ablation 이 **없다**.
+- ⛔ **"AL 퍼텐셜이 더 정확하다"** → **"더 재현적이다"** 로만. `Fig. 3b` 에서 **random 상위 시드가 이긴다.**
+- ⛔ **DFT 세팅(k-mesh·ecut·PAW) 근거로 인용** — 이 논문에 **없다**(Yang 2021 을 봐야 한다).
+- ⛔ **물성 4축(A/B/C/D) 표에 행 만들기** — 물성값 **0건**이라 전부 `n/a` 가 된다.
+
+<sub>> 📎 병합 2026-09-13 병합 — 초안 `_pending_index_wilson2022_batch_active_learning_interatomic_potentials.md` §2-c·2-d·2-e.</sub>
+
 ### J-10. ★★★ 파이프라인 구조 판정 — **[Jain26Rev] 문헌 깔때기 vs 우리 Stage 00–12** (2026-09-09 신설)
 
 > ⚠ **왜 J-9 가 아니라 J-10 인가**: J-9 는 **능동학습 루프**(오라클을 어떻게 고르나) 축이고,
@@ -1627,6 +2866,7 @@ preflight 이 알리바이로 쓰던 문구를 **철회한다.**
 | **J9-c** | **MD 검출하한을 He 2018 형식으로 선언** — TMSD ≥ **450 Å²**(RSD ~50 %) / > **4150 Å²**(RSD ~20 %), ~50 / ~460 유효 hop. Ea 0.2–0.3 eV → 450–700 K, Ea > 0.5 eV → >1150 K. **기존 200 ps 궤적 후처리, 계산 0** | digest §3.3·§8-④ |
 | **J9-d** | **surrogate hit rate 보고** — Stage 02 순위 4분위 × Stage 10 결과. 문헌 유일 선례가 **Maevskiy 상위 10 중 8**. **계산 0** | digest §6.4·§8 |
 | **J9-e** | **Haven=1 라벨링** — Dai2022 `H_R 0.1–0.4` + Gigli2024 `NE 가 σ 를 2배 넘게 과소평가` + adeli2019 `H_R 0.235–0.315` **3중 반증**. 규약을 바꾸는 게 아니라 우리 σ 에 "H_R=1 가정" 을 **라벨로 단다** | digest §6.7·§7 |
+| **J9-e′** 🆕 | **★★ Haven 문헌이 갈리는 것은 *규약*이지 물리가 아니다 (2026-09-09, [Fang22PW] 로 판정 보강)** — **[Fang22PW]** 는 **우리와 동일 규약**(H_R ≡ D\*/D_σ, D_σ = 집단좌표, **캐리어 = 셀 내 전 Li**)의 AIMD 로 **1/H_R = 1.3·1.5 ⇒ H_R = 0.77·0.67** 을 보고한다 (본문 4쪽 한 문장). **우리 gen1 실측 0.84 ± 0.06 과 같은 대역**이다. 반면 **[Adeli] 의 0.23–0.3 은 캐리어를 c = 4 Li/셀(저자가 "하한"이라 명시)로 잡은 값**이고, Li₆PS₅Cl 관용셀의 Li 는 **24개**다 — `D_σ = k_BT σ/(c q²)` 이므로 **c 규약 하나로 H_R 이 6배 움직인다**(digest 계산: 0.23 → ~1.4). ⇒ **[Adeli] 0.23 과 [Fang22PW] 0.67–0.77 을 "문헌이 갈린다" 로 병치하면 안 된다 — 비교 자체가 성립하지 않는다.** ⇒ **MD 규약(캐리어=전 Li)으로 좁히면 문헌·우리 실측이 모두 H_R ≈ 0.7–0.85, 즉 보정 20–50 %** 이고, 이는 **300 K 외삽 밴드(6–14배)·펠릿 GB(1.3–3배)보다 훨씬 작다**. ⛔ 그래도 **"H_R=1 이라서 상한" 은 여전히 틀렸다** — 방향은 **과소** 쪽이다 (2026-09-07 부호 정정 유지). ⛔ **σ_NE 에 1/H_R 을 곱해 "보정된 σ" 를 만들지 않는다** (σ 절대값 인용 금지 불변) | [Fang22PW] digest §13.2 · 초안 `_pending_index_fang2022…` §3 (2026-09-13 병합) — ⚠ J9-e 원문은 위 행 그대로 보존 |
 | **J9-f** | **무질서 배열 선택 근거로 Ataya[150] 인용** — Coulomb 배열선택이 DFT 완화 후 최저에너지를 놓쳐 **ESW 3.1 vs 정답 2.5 V**, 오차 **최대 0.67 eV**. 해법 = SOAP-KRR **DFT 완화 40구조**. 우리 Stage 03 per-group Top-1 문제를 문헌 언어로 말해 준다 | digest §6.4·§8-⑤ |
 | **J9-g** | **능동학습은 게이트가 아니라 "비싼 라벨" 에 붙인다** — 문헌 3건 전부 그렇다. 우리 07+08(예산 75–85 %)이 그 자리 | digest §6.9·§8-⑥ |
 
@@ -1657,6 +2897,574 @@ preflight 이 알리바이로 쓰던 문구를 **철회한다.**
 | 6 | **[159] Wan et al., *J. Energy Chem.* 88, 28 (2024)** | **LGPS 2,208 치환 도펀트 캐스케이드** — 우리 273 의 직접 비교군 |
 | 7 | **[163] Gigli, Tisi, Grasselli, Ceriotti, *Chem. Mater.* 36, 1482 (2024)** | **NE 가 σ 를 2배 넘게 과소평가** + paddle-wheel 반박 — 우리 Haven=1 규약 반증 |
 | 8 | **[148] Maevskiy et al., *Phys. Rev. Res.* 7, 023167 (2025)** | 문헌 유일 hit rate(상위 10 중 8) + frozen-framework 서술자 |
+
+
+### J-12. ★★★ 깔때기 **판정 계약** 과 다중충실도 전환 — **[Basu26MFB] 1차 근거** (2026-09-09 신설)
+
+> 📎 병합 2026-09-13 병합 — 초안 `_pending_index_basu2026_multifidelity_bandit_dopant_screening_funnel.md` §③. 초안 번호 `J-11` → **`J-12`** 배정. 본문 안의 옛 번호 자기참조는 초안 번호다.
+
+> ⚠ **왜 J-10 이 아니라 J-11 인가**: J-10 `[Jain26Rev]` 는 **깔때기의 *모양***(어떤 단을 어떤 순서로)
+> 축이고, 이 절은 **각 단의 *판정 계약***(무엇을 재서 어떤 문턱으로 누구를 버리나) + **두 fidelity
+> 사이 전환 규칙** 축이다. 그리고 결정적으로 **층위가 다르다** — J-10 은 226편 리뷰라 2차 인용이고,
+> **[Basu26MFB] 는 자체 DFT 583계산을 가진 1차 근거**다 (단 preprint·단독저자).
+>
+> **왜 이 블록이 있나**: `kb/reviews/codex_BJ_prompt_cascade_redesign_2026_09_09.md` 가 **NO-GO** 를
+> 냈고 반려사유 #3 이 *"깔때기의 각 단이 무엇을 판정하고 무엇을 통과시키는지 선언돼 있지 않다"* 였다.
+> [Basu26MFB] 는 제목에 *three-tier DFT validation funnel* 을 달고 나온 **가장 가까운 외부 선례**다.
+> 상세는 `papers/basu2026_multifidelity_bandit_dopant_screening_funnel.md` §12.
+
+**J-11-a. 🔴 판정 — 이 논문의 깔때기도 아무도 탈락시키지 않는다**
+
+| | Tier 1 | Tier 2 | Tier 3 | (Tier 4, 이름 없음) |
+|---|---|---|---|---|
+| **질문** | 이 후보의 갭이 대략 얼마인가 | d-전자 국재화를 빼서 정성적으로 틀렸나 | 미완화 기하가 만든 가짜 준위인가 | PBE+U 가 맞나 |
+| **입력** | 풀 전체 (16~2,256) | Tier 1 중 **d-electrons > 0** | Tier 1 중 **radius mismatch > 20 %** | 재분류 5계 |
+| **방법** | PBE-SCF 40 Ry, 2×2×2 k | PBE+U(Dudarev) 45 Ry, SCF-only | 이온완화 45 Ry, 3×3×3 k, F<5e-3 | HSE06 |
+| **판정량** | E_g → reward(식 1) | ΔE_g (0.5 eV 금속선 교차) | ΔE_g (완화 전후) | ΔE_g |
+| **문턱** | 금속 `E_g≤0.01`→r=−5 · 목표창 2.0±0.6 eV | ⛔ **없음** (재라벨) | ⛔ **없음** (재라벨) | 없음 |
+| **탈락 수** | ⛔ **0** (93.9 %는 SCF 수렴률) | ⛔ **0** (5계 중 3계 재라벨) | ⛔ **0** (14/34 수렴, 1계 재라벨) | 0 |
+| **단당 비용** | 8–120 분(4코어) | 64코어 VPS 8 ranks | **≤3 h 타임아웃**(실패도 3 h 소모) | ≤6 h 타임아웃 |
+| **라우팅 비용** | — | **0** (표값 d-전자 수) | **0** (Shannon 반경) | — |
+
+> **[Basu26MFB] 의 funnel 은 selection(선별)이 아니라 re-scoring(재채점)이다.**
+> 비용을 줄이는 것은 깔때기가 아니라 **bandit** 이다.
+> `kb/methodology/name_vs_substance_2026_09_09.md` 의 **여섯 번째 사례**이고, 이번엔 외부 논문이다.
+> ⇒ **우리 규율로 승격 제안**: 깔때기의 각 단은 `(판정량, 문턱, 입력수, 탈락수, GPU-h)` **5칸을 채운다.**
+> 못 채우면 그 단은 게이트가 아니라 **주석(annotation)** 이므로 그렇게 부른다.
+
+**J-11-b. ✅ 이 편에서 1차 근거로 쓸 수 있는 것 4**
+
+| # | 항목 | 근거 | 우리 쪽 자리 |
+|---|---|---|---|
+| **B-1** | **PBE 단독이 10계 중 4계(40 %)를 정성 오분류**하고, 그 오류가 **d-전자 비국재화(PBE+U 로만)** 와 **기하 왜곡(완화로만)** 이라는 **서로 못 잡는 두 부류**로 갈린다 | Table S7 · Fig. 3 · Fig. 4 — ZnO:V +3.693 / ZnO:Cu −2.832 / SrTiO₃:Fe −1.993 / SrTiO₃:In 0.81→3.48 | 우리 host 에는 열린껍질 TM 이 없어 U 를 안 썼다. **도펀트로 TM(Fe·Co·Ni·Mn·Cr·Cu)을 넣는 순간 같은 문제가 생긴다** — 현재 우리 캐스케이드에 그 단이 없다 |
+| **B-2** | **비용 0 라우팅** — `d-electron count > 0` · `ionic radius mismatch > 20 %` 가 표값이라 **DFT 이전에 계산 가능** | Fig. 1 · §2.2 | 우리 대응물 3개(전부 GPU 0): **(a) 열린껍질/산화환원 활성** → spin-pol + U 필요 여부 · **(b) 반경 부정합** vs 치환 대상(Shannon: P⁵⁺ 0.17 / Li⁺ 0.76 / S²⁻ 1.84 / Cl⁻ 1.81 Å) → 완화 필수 여부 · **(c) 이가원자가 여부** → **전하보상 계약** 필요 여부 |
+| **B-3** | **같은 다중충실도 전환 로직을 GP+EI 에 붙이면 절감이 정확히 0** (MF-BO-EI **DFT분율 1.00**, surrogate 호출 **0**). 기전: **GP 불확실성은 국소**라 EI 가 고르는 후보의 σ 가 항상 문턱 위 / **선형 밴딧 불확실성만 V_t 축적으로 전역 감소** | Fig. S6b · Table S11 · §2.4 | **우리에게 직격이다.** UMA(싼 것)와 DFT(비싼 것)를 섞으려면 acquisition 이 **국소 불확실성**을 보면 안 된다 — 안 그러면 UMA 가 **발동조차 안 한다** |
+| **B-4** | **범용 NNP 는 밴드갭 순위를 못 준다** — MACE-MP-0 단일점 25구조가 QE 갭과 **host 내 Spearman ρ≈0, p>0.4** | §"Relationship to NNPs" | 우리 J-2·J-3 의 *"UMA 로 전자구조를 판정하지 않는다"* 규율에 **외부 실측 방증**. 표본 25구조라 약하지만 방향은 명확 |
+
+**J-11-c. ⚠ 이 편에서 인용하면 안 되는 것 (J-6 에 추가)**
+
+- ⛔ **밴드갭 절대값 전면 인용 금지** — 다른 계·다른 코드·**k-grid 2×2×2**. Table S12 실측으로
+  **ZnO:Al 이 2³ 3.397 → 4³ 1.243 eV (Δ2.15 eV)**. 우리 canonical gap(comp1 2.066 / modelc 2.099,
+  fixed-occ nscf 고유값)과 **같은 표에 놓지 않는다.** 게다가 이 논문의 갭 판독은 `pw.out` 파싱이라
+  우리 규율(DOS-threshold 금지, fixed-occ nscf VBM/CBM)과 **판독 방식 자체가 다르다.**
+- ⛔ **"81 % DFT 절감" 을 우리 캐스케이드 비용 근거로 인용 금지** — ① **밴드갭 한 축**에서 나온 수치고
+  ② DFT 분율이 계·풀에 따라 **15–64 %** 로 흩어지며(Table S13: MgO 24 % ~ TiO₂ 64 %)
+  ③ **최소 예산 아래에서는 이득이 0 이거나 음수**다(Table 3 8 % 예산: MF-OFUL SR **0.723** vs
+  Random **0.308** — Random 이 이긴다).
+- ⛔ **"밴딧이 GP-BO 보다 낫다" 로 인용 금지** — Table S11 의 **MF-MES SR 0.035 vs MF-OFUL 0.043,
+  p = 0.57 동률**이다. 남는 우위는 **성능이 아니라 비용**(O(d²) vs O(n³); 실측 275 s vs 6 s per run).
+  헤드라인 Fig. 2 는 **MF-MES 를 빼고 그렸다.**
+- ⛔ **Lyapunov 안정성 보장을 "대리모델 오차 누적이 없다" 의 근거로 인용 금지** —
+  Fig. 5a 에서 **L(t) 가 0→≈133 단조증가**하고 Φ(t)도 t≈20 최소 ≈1 에서 ≈24 로 되올라간다
+  (둘 다 figure-read). **ΔL 을 그린 그림이 논문에 없다.** 그리고 조건 `ε² < 5.0` 은
+  **대리모델 MAE ≈1.3 이 보상 목표창 폭(0→1)보다 큰데도 통과**시키므로 사실상 vacuous.
+- ⛔ **"HSE06 가 PBE+U 를 검증했다" 로 인용 금지** — MAD 0.15 eV 는 **SrTiO₃:Fe(Δ1.34 eV)를 뺀
+  2계 평균**이고, Fig. 4b 는 x축이 PBE+U 인데 5점 중 2점이 `(no U)` = **PBE 값과 섞여 있다.**
+  그리고 **Tier 3 유일 재분류(SrTiO₃:In)를 HSE06 이 부인한다**(금속, gap 미검출).
+- ⛔ **"Cu 계가 목표 밴드갭 창으로 모인다" 인용 금지** — Fig. 7 실측으로 **Cu 함유 마커 최소 6개가
+  E_g < 0.4 eV 의 near-metallic 바닥**에 있고(figure-read), 목표창 안 점은 **하나(Sc₁Cu₁ 1.50 eV)** 뿐이다.
+  게다가 **본문 최적 Y₂Cu₂(1.84)·2위 Al₁Cu₂(2.40)가 그 그림에 없다** (제목은 "96 unique candidates",
+  캡션은 529 캠페인 — **그림과 캡션이 다른 데이터셋**으로 보인다).
+- ⚠ **Tier 2 계산 수를 인용하지 말 것** — Fig. 1 **7** / Methods **16** / Table S10 **14계 나열** /
+  본문 *"9 doped + 2 undoped = 11 전부 수렴"* (†표시는 9개). **어느 것도 서로 안 맞는다.**
+- ⚠ **금속 문턱이 두 개다** — reward 식은 `E_g ≤ 0.01 eV`, 그림 판정선은 **0.5 eV**.
+  *"insulator → metallic 재분류"* 서술은 **그림 기준**이지 알고리즘 기준이 아니다
+  (ZnO:Cu PBE+U 0.36 eV 는 reward 상 금속이 아니다).
+
+**J-11-d. 🔑 우리 cascade 재설계 T0–T3 초안 (이 편 + Codex BJ 반려사유에서 유도)**
+
+> 설계 원칙: **각 단은 `(판정량, 문턱, 입력수, 탈락수, GPU-h)` 5칸을 채운다.**
+> 못 채우면 그 단은 게이트가 아니라 주석이므로 그렇게 부른다. ([Basu26MFB] 가 이걸 안 해서
+> funnel 이 아닌 것을 funnel 이라 불렀다.)
+
+| 단 | 묻는 질문 | 판정량 · 문턱 | 비용 | 근거 |
+|---|---|---|---|---|
+| **T0** | *"이 후보는 격자 치환인가, 별도 코팅상인가, 첨가 2상인가"* | `estimand_card.md` §1–3 통과 = §3 여섯 물음에 "아마" 가 **0개**. 명시 필수: **자리**(Li 24g/48h · P · S 4a/4d/16e · Cl) · **농도 x 의 실측 정의**(라벨 아님 — 우리 F1) · **전하보상 계약**(실패 시 구조 폐기 — 현재 `substitute_compound.py:365` 는 불균형 구조를 남긴다, Codex P0-Q8) · **집계 규칙** | **0** | Codex BJ 반려사유 #1 · CLAUDE.md §계산 규율 |
+| **T1** | *"열역학적으로 애초에 자리가 있나"* + 라우팅 | 게이트①: grand-potential **`window_V < 0.05 V` → 탈락** · 게이트②: **산화 onset < host 2.14 V → 탈락**(⚠ **축① S-limited onset** 이라고 축 이름을 붙여 말한다). ⛔ **hull 게이트는 넣지 않는다**(우리 실측 kill 0 = vacuous; [Basu26MFB] 도 hull 을 게이트로 안 쓴다) — 대신 **"vacuous 임을 결과로 보고"**. 라우팅 플래그 3종(B-2) 동시 산출 | **0** | [Basu26MFB] B-2 · 우리 `build_screening_funnel.py` G2/G3 |
+| **T2** | *"싼 물리로 순위를 매길 수 있나"* | **D_rel(600 K) = D\*(design)/D\*(host)** (비준 `D-2026-09-08-cascade-d-rel-estimand`) + 정본 R0 **BVSE 채널%**. 문턱은 **결과 보기 전에** 박는다. **선행조건**: 우리 계에서 **UMA 오차가 판정 마진보다 작은지 먼저 잰다** ([Basu26MFB] 는 이걸 안 하고 썼다 — MAE 1.3 > 마진 1.0) | GPU 소량 | [Basu26MFB] §10.3 의 반면교사 |
+| **T3** | *"비싼 물리가 그 순위를 지지하나"* | 대상 = T2 통과분의 **top-K + 불확실성 상위 K′** — **양방향**이다([Basu26MFB] 결론: *"검증은 위양성(top-K)과 위음성(고불확실) 양쪽"*). 판정량은 카드에서 선언한 것(B1 산물 Li 장벽 등). **타임아웃·수렴률을 결과로 보고**하고, **수렴 실패가 특정 계열에 몰리면 거짓 음성으로 별도 보고**(Ni 사례 = 우리 F2) | 비싸다, 소수만 | [Basu26MFB] §2.2·§2.6 · Codex BJ F2 |
+
+**전 축 금지 (재확인)**
+- ⛔ 3축을 **가중합 스칼라**로 집계하지 않는다(`combine_rankings.py`, 이미 🔴). **[Basu26MFB] 는
+  단일 축이라 이 문제를 만난 적이 없다 — 이 편을 근거로 스칼라 집계를 정당화할 수 없다.**
+  (논문 Discussion 도 multi-output bandit 을 *future work* 로 남겼다.)
+- ⛔ σ 를 순위 지표로 쓰지 않는다 (Haven 비 계통편차 1.34배, J-7).
+- ⛔ 서로 다른 종 집합(47 / 89)의 집계를 섞지 않는다 (Codex BJ 반려사유 #2).
+- ⛔ **UMA 가 UMA 를 검증하는 경로 금지** — 라운드마다 DFT 재채점을 섞는다.
+  [Basu26MFB] 의 Ridge 는 최소한 **DFT 라벨로 적합**했다. **우리 UMA↔UMA 는 그보다 나쁘다**(Codex Q3).
+
+**J-11-e. ⭐ 원문 확보 우선순위 (이 편 경유로만 아는 것)**
+
+| 순위 | 원 논문 | 왜 |
+|---|---|---|
+| 1 | **[13] Takeno et al., *PMLR* 119, 9334 (2020) — MF-MES** | 이 논문에서 **MF-OFUL 과 동률(p=0.57)로 나온 유일한 GP 방법**. 우리가 UMA↔DFT 를 섞으려면 *"acquisition 이 국소가 아니라 **전역 최대값에 대한 정보**를 보게 하는 법"* 의 원전 |
+| 2 | **[10] Baird & Sparks, *Digital Discovery* (2024) — MF-BO best practices** | 우리 T2↔T3 전환 규칙의 규범 문헌 |
+| 3 | **[29] Freysoldt et al., *Rev. Mod. Phys.* 86, 253 (2014)** | **하전 결함 보정** 원전. [Basu26MFB] 가 인용만 하고 **안 쓴** 바로 그 문헌이고, **우리는 반드시 써야 한다**(이가원자가 도핑 = Li 빈자리 변화 = 전도 기구) |
+
+
+### J-13. ★★★ 다중충실도 AL — **층 정의의 근거** 를 묻는다 · `[Basu26MFB]` 의 독립 견제 (2026-09-09 신설)
+
+> 📎 병합 2026-09-13 병합 — 초안 `_pending_index_aqib2026_multifidelity_active_learning_alloy_design.md` §③. 초안 번호 `J-12` → **`J-13`** 배정. 본문 안의 옛 번호 자기참조는 초안 번호다. [Basu26MFB] 는 **J-12** 다.
+
+> **왜 이 절이 있나**: `kb/reviews/codex_BJ_prompt_cascade_redesign_2026_09_09.md` 가 **NO-GO** 를
+> 냈고, 우리는 재설계 뼈대로 `[Basu26MFB]`(J-11)를 받았다. **한 논문 위에 캠페인을 통째로 짓는 것이
+> 우리가 반복해 온 실패**이므로, **독립된 두 번째 multi-fidelity AL 사례**를 붙여 대조했다.
+> **결과: `[Aqib26MFAL]` 은 `[Basu26MFB]` 를 확인해 주지 않는다.** 두 편은 서로 독립적으로
+> **같은 것을 빠뜨렸고**, 갈리는 지점에서는 **`[Basu26MFB]` 가 옳다.** 상세는
+> `papers/aqib2026_multifidelity_active_learning_alloy_design.md` §12.
+
+**J-12-a. 🔴 판정 — "층 감소" 가 알고리즘의 결정이 아니라 손으로 박은 스케줄이다**
+
+| | 논문의 서술 | **공개 코드의 실제** |
+|---|---|---|
+| 점(후보) 선택 | `α = w_EI·EI + w_KG·KG + w_LCB·LCB` | 동일 ✅ (부호만 `−lcb`) |
+| **층(fidelity) 선택** | *"비용가중 획득함수로 **(x, t)** 를 선택"* (§2.5.3) | ⛔ **`p_HF = 0.7 − 0.4·progress` 난수 추첨** (`MFAL.py:180-208`, progress<0.1 · >0.9 에 각각 +0.15) |
+| 결과로 보고된 HF 비율 | **0.55–0.65** (`Fig. S15`) | = **그 스케줄의 기대값**(평균 ≈0.60, figure-read) |
+| 저자 자신의 검증 통계 | *"이론 전략 vs 관측 전략 상관 **0.0874** ⇒ 적응형 비용 기전의 효율을 확인"* | **무상관은 확인이 아니라 부인**이다 |
+
+> ⇒ **`[Aqib26MFAL]` 의 "multi-fidelity" 는 배분 학습이 아니라 배분 처방이다.**
+> `kb/methodology/name_vs_substance_2026_09_09.md` 에 **일곱 번째 사례**로 올릴 만하다
+> (J-11 의 *funnel = re-scoring* 에 이어, 여기서는 *cost-aware selection = fixed schedule*).
+
+**J-12-b. 🔴 이득의 분해 — 논문은 안 했고, 우리가 하면 획득 몫이 ≈0 이다**
+
+| 성분 | 크기 | 근거 |
+|---|---|---|
+| (a) **MF 구조 자체**(층 간 정보 전이 덕) | **≈ 0** | 저자 숫자: 개선/단위비용 **HF 0.007508 vs LF 0.007103 = 1.06** ⇒ **무차별**. 무차별이면 어떤 혼합비든 예산당 결과가 같다 |
+| (b) **싼 층을 스케줄로 많이 쓴 것** | **절감 전부** | J-12-a |
+| (c) **회계 방식** | 56.4 % → 실제 **53.6 %** | **56.4 = 100 − 43.6** = 저정확도를 **공짜**로 셌다. 1:20 을 실제 적용하면 평가당 0.436×20+0.564×1 = 9.284 vs 20 |
+
+> ⚠ **`[Ou26MS]` 선례보다 극단적이다** — 그쪽은 **총 라벨 절감 5.4× 중 AL 이 새로 획득한 몫이 1.8×**
+> (`papers/ou2026_…md` §9-B: 평균 획득 100 vs 179 = 1.8× / 총 라벨 441 vs 2372 = 5.4×) 로 **분해가 되지만**,
+> 여기서는 **획득 몫이 사실상 0** 이고 애초에 분해할 표가 논문에 없다.
+> ⇒ **우리 규율로 승격 제안**: 캐스케이드 이득을 보고할 때 **(a)/(b) 를 분리한 표를 함께 낸다.**
+> **(a) 를 재려면 "같은 층 비율을 무작위로 배분한 대조군" 이 필요하다 — 두 논문 어느 쪽에도 없다.**
+
+**J-12-c. ⚖ `[Basu26MFB]` 대조 — 일치하는 것 5 / 갈리는 것 6**
+
+**일치 (⇒ 우리가 새로 해야 한다는 뜻이지, 믿어도 된다는 뜻이 아니다)**
+1. **둘 다 싼 층이 비싼 층의 라벨로 학습된 회귀다** (Basu: Ridge / Aqib: GP-on-30%). **독립 물리가 아니다.**
+   ⇒ **우리 UMA↔DFT 는 두 편과 성격이 다르다.** UMA 는 독립 물리라 **계통오차가 DFT 와 무상관일 수 있고, 그 경우를 두 편 다 다루지 않는다.**
+2. **둘 다 아무 후보도 탈락시키지 않는다** (Basu = 재채점, Aqib = 학습셋 증강). ⇒ Codex BJ 반려사유 #2 가 **흔한 병**임은 확인되지만 **해법은 둘 다 안 준다.**
+3. **둘 다 거짓 음성 감사를 안 한다.**
+4. **둘 다 단일 스칼라 목적** ⇒ 우리 4축 trade-off 의 답은 어느 쪽에도 없다.
+5. **둘 다 순차(batch=1)** ⇒ 배치 다양성 강제 설계를 어느 쪽도 안 준다.
+6. **둘 다 전수(exhaustive)를 대조군에 안 넣는다** — Aqib 의 공간은 **717점**이고 **무작위도 432회면 최적을 찾는다**(`Fig. S6`, figure-read). **우리 풀(47/89/273)은 더 작다.**
+
+**갈리는 것 (⇒ 우리가 골라야 한다. 6개 중 5개에서 `[Basu26MFB]` 가 옳다)**
+
+| 쟁점 | `[Basu26MFB]` | `[Aqib26MFAL]` | 우리 채택 |
+|---|---|---|---|
+| 층 전환 트리거 | **불확실도 폭 > 문턱**(측정 기반) + 주기적 강제 | **확률 스케줄**(손) | **Basu** — 측정 기반이어야 사후 감사가 된다 |
+| acquisition 종류 | 선형 밴딧 UCB — **절감이 실제로 난다** | EI/KG/LCB 혼합 — **절감이 acquisition 에서 안 난다** | **Basu.** 그리고 Basu 의 음성 대조(**MF-BO-EI DFT분율 1.00**)가 **Aqib 의 결과를 설명한다** — EI 계열은 국소 불확실도를 보므로 싼 층이 발동 안 하거나, 발동시키려면 **스케줄로 강제**해야 한다. **Aqib 이 후자를 했다** |
+| 비용비 | **실측 벽시계** 10⁶–10⁷ | **가정 상수 5:1 / 20:1** | **Basu** — 비용은 재는 것이지 정하는 것이 아니다 |
+| top-K 재검증 | ✅ 있고 실제로 잡았다(`Table S8` step 18–20) | ⛔ 없다 | **Basu** |
+| 코드↔논문 일치 | 미검증(프록시 403) | **9건 불일치**(digest §10.2) | ⚠ **Aqib 의 알고리즘 서술을 그대로 이식 금지** |
+| 대리모델 오차 vs 판정 마진 | 오차 > 마진인데도 **게이트에 씀** | 오차 R² 0.55 인데 **게이트로 안 써서 사고를 피함** | **Aqib 의 "안 쓴 것" 이 결과적으로 안전했다** → J-12-d |
+
+**J-12-d. ✅ 이 편에서만 나오는 것 — "꼬리 해상도 사전시험" (우리 T2 게이트 전제조건)**
+
+> `Fig. S7` 이 가르친 것: **R² 0.5526 짜리 저정확도 층이 목표 구간에서는 완전히 눈이 멀 수 있다.**
+> figure-read — **예측값이 ≈2.2 아래로 사실상 내려가지 않는다. 목표는 0.1 이다.**
+> 이 층을 게이트로 썼다면 **진짜 최적을 확실히 버렸다.** 논문이 사고를 피한 것은 설계가 좋아서가
+> 아니라 **게이트를 안 만들었기 때문**이다.
+
+**⇒ 우리 규율로 신설 제안 (T2 를 켜기 전 1회, GPU 소량):**
+1. 이미 **DFT 로 판정한 후보 N개**(10–20 으로 충분)를 고른다.
+2. 같은 후보를 **싼 층(UMA 이완 / UMA-MD D_rel)** 으로 잰다.
+3. parity plot 을 그리되 **R² 를 보지 않는다.** 두 가지만 본다:
+   - **(a) 해상도** — 싼 층의 예측이 **우리 문턱 근방까지 실제로 값을 만드는가.** 안 만들면 **게이트 자격 없음.**
+   - **(b) 상위 K 안의 Spearman ρ** — ⚠ **전체 ρ 가 아니라 목표 영역 상위 K 안에서.**
+     (전체 ρ 로 속은 사례가 둘 있다: 이 편의 **GP σ ρ = −0.072 인데 AL 은 이겼다**, `[Basu26MFB]` 의 **MACE-MP-0 ρ ≈ 0**.)
+4. **(a) 실패 → 그 층은 게이트가 아니라 주석(annotation)** 으로 격하하고 그렇게 부른다. **(b) 실패 → 순위용으로도 못 쓴다.**
+5. 시험 결과를 **결과 보기 전에** 문턱과 함께 `kb/templates/estimand_card.md` §4 에 적는다.
+
+> ⚠ **이 절차는 두 논문 어느 쪽에도 없다.** Aqib 은 우연히 피했고, Basu 는 게이트가 없어 문제를 못 만났다.
+> **우리가 새로 넣는 것이다.**
+
+**J-12-e. ✅ 부수적으로 1차 근거로 쓸 수 있는 것 2**
+
+| # | 항목 | 근거 | 우리 쪽 자리 |
+|---|---|---|---|
+| **A-1** | **대리모델의 불확실도 보정과 AL 성능은 분리될 수 있다** — GP 사후분산 vs 실제오차 **Spearman ρ = −0.072**(RF 는 +0.673, coverage gap 7.1 vs 3.6)인데도 **GP 기반 AL 이 100 독립런 내내 RF 기반보다 우수**(표준편차 0.009 vs 0.126, 누적regret 81.38 vs 111.62) | `Fig. S8` + §3.2.3 (figure-read + 본문) | J-7(σ 를 순위 지표로 쓰지 않는다) 을 **강화**한다. 단 저자 해명(*"보정보다 순서"*)은 **자기모순**이므로 인용하지 않는다 — ρ 자체가 순서 통계량인데 ≈0 이다. **우위의 원천은 σ 가 아니라 μ 로 보는 게 옳다** |
+| **A-2** | **최적화 진단 지표 5종 세트** — simple regret(S6) · cumulative regret(S7) · spatial diversity(S8) · convergence speed `T_p`(S9, 10/5/1 %) · half-life λ. 코드 `AL_GPR.py:232 additional_metrics()` 에 한 함수로 구현 | SI §CMA-ES + repo | 우리 캐스케이드 성능 보고 양식. ⚠ **전부 후향(true optimum 을 안다) 전제**다 — 우리는 전향이므로 **"예산별 최고값 곡선 + 사후 top-K 재검증"** 으로 개작해야 한다 |
+
+**J-12-f. ⛔ 이 축에서 인용하면 안 되는 것 (J-6 에 추가)**
+
+- ⛔ **CTE 값 전면 인용 금지** — 우리 계와 무관하고, **논문이 CTE 의 온도조차 명시하지 않는다**(Rao 2022 원전이 300 K 라고 서론에서 인용할 뿐). 조성 단위도 `Table S2`(atomic fraction) ↔ `Table S4`(wt.%) 가 **충돌**한다.
+- ⛔ **"theoretical minimum CTE" / "True Optimum 0.100" 표현 금지** — 코드 `true_min = np.min(y)` 이고 `y` 는 **CTE<0 을 버린 뒤**의 풀이다(원 데이터 최소 −1.07). **필터링된 데이터셋 최솟값**이지 이론값이 아니다.
+- ⛔ **"55–65 % HF 로 동등 성능" 을 우리 예산 근거로 인용 금지** — 그 비율은 결과가 아니라 **코드에 박힌 스케줄**이다(J-12-a).
+- ⛔ **"56.4 % 비용 절감" 인용 금지** — 저정확도를 공짜로 센 회계다. 실제 53.6 %(J-12-b).
+- ⛔ **"five-fold 속도 향상" 인용 금지** — 산출식이 어느 판본에도 없고, 유일한 근거 그림(`Fig. S6` random search)이 **본문에서 한 번도 인용되지 않으며** 스크립트도 미공개다.
+- ⛔ **"MFAL 이 단일정확도와 동등한 해 품질" 인용 금지** — **MFAL 의 최종 simple regret 도 표준편차도 논문에 없다.** 단일정확도 4조합은 `Table S13` 에 전부 있는데 MFAL 만 없다. 게다가 `Fig. 6` 평균 곡선은 **iteration ≈71 에서 ≈0.3–0.35 로 끊긴다**(figure-read) — 단일정확도 GPR-LCB 의 0.105 와 3배 차이다.
+- ⛔ **`Fig. 8` 캡션의 "nearly identical trajectories" 인용 금지** — figure-read 로 **적색(단일정확도)이 iter 10–75 에서 일관되게 아래**다(iter 25 ≈2.2 vs ≈2.9, iter 50 ≈0.55 vs ≈0.85).
+- ⛔ **ML 모델 R²/RMSE 5종 인용 금지** — 게재본과 preprint 사이에서 **SVR(0.877→0.8663) 과 RFR(0.866→0.8773) 이 사실상 맞바뀐다.** 반올림으로 설명되지 않는다.
+- ⚠ **식 (17) 을 그대로 옮기지 말 것** — 최소화 문제에서 **LCB 항 부호가 틀렸다**(코드 `−lcb` 가 옳다).
+- ⚠ **"RBF 커널" 로 인용하지 말 것** — MFAL 코드는 **Matérn 5/2 ARD** 다.
+- ⚠ **`Fig. 3` 을 "GPR-LCB 가 가장 빠르다" 의 근거로 쓰지 말 것** — figure-read 로 **그 스케일에서 EI/LCB 평균 곡선이 구별 불가**다. 그 주장을 지탱하는 것은 `Table S10`(43 vs 60 iter) 이다.
+
+
+### J-14. ★★★ 깔때기 판정계약 — **[Muy25Dop] = 우리 물질계에서의 1차 근거** (2026-09-09 신설)
+
+> 📎 병합 2026-09-13 병합 — 초안 `_pending_index_muy2025_li7ps6_dopant_engineering_conductivity.md` §④. 초안 번호 `J-12` → **`J-14`** 배정. 본문 안의 옛 번호 자기참조는 초안 번호다.
+
+> **J-11 `[Basu26MFB]` 과의 층위 차이**: Basu 는 **산화물 반도체·밴드갭 한 축·arXiv preprint·단독저자** 다.
+> **[Muy25Dop] 는 황화물 argyrodite·이온전도·Chem. Mater. 심사통과·EPFL+기업 6인** 이고,
+> 무엇보다 **도핑을 실제로 격자 치환으로 다룬다.** 우리 반려사유 ①·②를 **같은 물질계에서** 잰다.
+> 상세는 `papers/muy2025_li7ps6_dopant_engineering_conductivity.md` §12.
+
+**J-12-a. ✅ 반려사유 ①(격자치환 vs 별도상) — 이 편이 정답 형태다**
+
+| | [Muy25Dop] | 우리가 반려당한 것 |
+|---|---|---|
+| 대상 | **112원자 supercell 안의 Wyckoff 자리 치환** (Li 24g/48h · P 4b · S 16e/4a/4d) | **코팅 화합물 자체의 hull** (`0.5714 Sc₂O₃ + 0.4286 Li₆PS₅Cl → …` = 별도 상 반응) |
+| 농도 | **출력**(형성에너지 + 자기무결 E_F → Boltzmann). 입력은 "결함 1개" | **라벨**이었고 실측 정의 없음 (Codex F1) |
+| 전하보상 | **가정하지 않는다** — 모든 결함 × 모든 q 를 놓고 전하중성(eq 2)으로 E_F 를 푼다 | `substitute_compound.py:365` 가 **불균형 구조를 그대로 남긴다** (Codex P0-Q8) |
+| 자리 분해 | S 자리를 **16e(S1·S2·S3) / 4a(oct) / 4d(tet) 5개로 분해**해 보고(`Fig. S6`) | 자리 선언 자체가 없었다 |
+
+🔑 **T0 로 승격**: 도펀트 항목은 **(자리 Wyckoff, 농도의 실측 정의, 전하보상 계약, 계약 위반 시 처분)**
+4칸을 채운다. 전하보상 계약은 **① 자기무결 E_F(비싸다)** 또는 **② 선언된 화학량(싸다)** 중 하나를
+T0 에서 고르고 **단마다 바꾸지 않는다.**
+
+**J-12-b. ⛔ 반려사유 ②(단별 판정계약) — 이 편도 실패한다**
+
+| | 단 1 고유결함 | 단 2 단일치환 | 단 3 공도핑 | 단 4 수송(MD) | 단 5 실험 |
+|---|---|---|---|---|---|
+| 판정량 | 300 K 평형농도 | 300 K 평형농도 | 300 K 평형농도(공도펀트 하) | σ(300 K), Ea | σ(T), Ea, XRD |
+| **문턱** | ⛔ 없음 | ⛔ 없음 | ⛔ 없음 | ⛔ 없음 | ⛔ 없음 |
+| 입력 수 | 6 | **24** | **108 + 36** | **≈91 조성** | ≥5 조성 |
+| **탈락 수** | 0 | **11** (막대가 축 아래 — **문턱이 아니라 그림 판독**) | **0** | 0 | 0 |
+| 다음 단으로 | — | **3종**(Mg·Si·Cl) — ⚠ **순위 1등이 아니다** | **0 — 아래로 안 흐른다** | 4조성 | — |
+| 비용 | ⛔ 안 밝힘 | ⛔ 안 밝힘 | ≈0 (단일도펀트 에너지 재사용) | ⛔ 안 밝힘 | — |
+
+> **Basu 와 병이 다르다**: Basu = *"탈락 0, 실체는 재채점"*.
+> **Muy = "탈락은 있는데 문턱이 없고, 계산한 단 하나(공도핑 144칸)가 아래로 안 흐른다."**
+> ⇒ **R4 로 승격**: *계산한 단이 아래로 안 흐르면 그 단은 결론이 아니라 부록이다. 흐르는 경로를 도식에 그린다.*
+
+**J-12-c. 🔴🔴 R2 — 판정량의 눈금이 목표 도핑량과 자릿수가 다르면 그것은 "순위표" 다**
+
+a = 9.87 Å · Z = 4 ⇒ **1/f.u. = 4.16×10²¹ cm⁻³**. `Fig. 3` 픽셀 실측 vs 실제 합성 조성:
+
+| 종 | 계산 평형농도 | 실제 조성 | 간극 | 논문의 서술 |
+|---|---|---|---|---|
+| Cl_S | 10^4.6 | Li₆PS₅Cl, x=1 | **17.0 decade** | *"쉽게 치환된다"* |
+| Mg_Li | 10^4.9 | x=0.125 (**자기가 합성**) | **15.8 decade** | *"쉽게 Li 를 대체"* |
+| Ge_P | 10^−13.9 | x≈0.3 (인용) | **35.0 decade** | *"합성 보고와 **일치**"* |
+| Ca_Li | 10^−8.0 | x=0.1 (인용, σ 10.2 mS/cm) | **28.6 decade** | *"**실용 농도로 도핑 가능**"* |
+| F_S(+Si) | 10^−3.2 | (제안) | **23.8 decade** | *"**최초의 F-도핑 argyrodite** 가능"* |
+
+**112원자 셀에 결함 1개가 이미 10^20.7 cm⁻³** 이다 ⇒ 보고된 모든 농도(최대 10^14)는
+**모델이 표현할 수 있는 최소치보다 6–34 decade 아래**다. 이 수들은 **형성에너지 순위**이지 농도가 아니다.
+그런데 본문은 같은 크기의 수를 **정반대로 읽는다**(Ge −13.9 "일치" ↔ F −11.5 "불가", 2.4 decade 차).
+
+> **R2**: 새 게이트를 만들 때 **판정량의 눈금과 목표 도핑량(우리는 x = 0.05–0.3 = 10^20–10^21 cm⁻³)이
+> 같은 자릿수인지** 먼저 확인한다. 아니면 그 단은 게이트가 아니라 **순위표**라고 부른다.
+
+**J-12-d. 🔴 R3 — 전하보상 계약을 파이프라인 전 단에서 하나로 고정한다**
+
+[Muy25Dop] 의 두 반쪽이 **정반대 규약**을 쓴다:
+- **결함 절반**: 전하보상을 가정하지 않는다. §1 전체가 *"Cl 하나당 Li 하나"* 가정을 반박하는 논증이다.
+- **MD 절반**: `Li₇₋₂ₓ₋ᵧMgₓPS₆₋ᵧClᵧ` — **바로 그 가정을 하드코딩한다.** 저자는 이 충돌을 언급하지 않는다.
+
+⇒ 결함 절반의 결론이 전도도 절반에 **되먹임되지 않았다.** 우리 T0 카드가 막아야 할 정확한 실패 모드다.
+
+**J-12-e. ✅ 방법으로만 가져오는 것 3 + ⛔ 금지 목록**
+
+| # | 가져오는 것 | 근거 | 우리 자리 |
+|---|---|---|---|
+| **M-1** | **공도핑을 O(N) 으로 푸는 트릭** — 결함끼리 직접 상호작용하지 않는다고 두면, 공도핑 효과가 **전부 자기무결 E_F 이동**에 담긴다 ⇒ **두 도펀트가 든 supercell 을 계산할 필요가 없다** | §3.2.3 · `Fig. 4` | 우리 이중도핑 후보 조합이 폭발할 때 **단일 도펀트 에너지만으로 조합을 스캔**할 수 있다. ⚠ 가정(직접상호작용 무시)을 반드시 명시 |
+| **M-2** | **MLIP 참조 범함수를 NPT 격자상수 vs 실험으로 먼저 검증**한다 (싸다) | `Fig. S7` — PBEsol ≈0 % · **PBE-no-vdW +1.89 %(부피 +5.8 %)** · PBE-D3 +0.04 % | 우리는 안 하고 있다. UMA 의 유효 격자상수를 우리 계에서 한 번 재는 것만으로 **부피 편향 크기**를 안다 |
+| **M-3** | **자기무결 Fermi 준위 + 안정영역 centroid μ** 로 결함농도를 내는 틀 (AiiDA-defects, 오픈소스) | §2.2 · eq 1–5 | 우리 이가원자가 도펀트(Mg·Ca·Zn on Li)의 **전하보상 계약을 계산으로 정하고 싶을 때** 쓸 수 있는 유일한 정론. ⚠ 비싸고, **우리 x 범위(희석극한 밖)에서는 부적합**(J-12-c) |
+
+**⛔ 금지 (J-6 에 추가)**
+- ⛔ **계산 σ·Ea 절대값 인용 금지** — **MSD 창·궤적길이·시드 수·앙상블·thermostat·dt·MD 셀크기·오차막대**가
+  전부 없다. 게다가 논문에 **숫자가 인쇄돼 있지 않아** 전부 `figure-read` 다.
+- ⛔ **결함농도 절대값 인용 금지** — 순위로만. 근거는 J-12-c (13–36 decade 간극).
+- ⛔ **"Si 를 낮게 유지하면 빠르다" 인용 금지** — `Fig. 5` 역변환 실측으로 **Cl=1.5 면 σ 가 Si 에 거의 무관**
+  (Si 0 → 0.5 에서 58.1 → 61.6 mS/cm), 저-Cl 에서는 **Si 가 많을수록 빠르다**(15.1 → 40.4).
+  헤드라인은 **Mg 에서만** 성립한다.
+- ⛔ **"Si–F 공도핑으로 F-도핑 argyrodite" 인용 금지** — 근거 농도가 **10^−3.2 cm⁻³** 다.
+- ⛔ **"할로겐은 8면체(4a) 자리만 차지한다" 를 우리 무질서 서사에 쓰지 않는다** — 저자 스스로
+  실험과 안 맞는다고 적고 *"동결된 준안정"* 으로 설명한다. 그리고 **자기 MD 구조모델은
+  Cl 을 tet 에 더 많이 놓는다**(`Fig. S5`, Cl=1.0 에서 tet ≈0.62 > oct ≈0.375, `figure-read`).
+- ⛔ **AiiDA 재현성 주장을 이 논문으로 인용 금지** — **provenance DB 가 공개되지 않았고
+  Data availability 문 자체가 없다.** 도구(AiiDA-defects)는 오픈소스이고 그건 별개다.
+- ⚠ **blind prediction 사례로 인용 금지** — Mg 조성은 **2023년 특허**(WO 2023110697 A1 /
+  WO 023111083 A1, 발명자에 Muy·Marzari)로 선행 출원돼 있다.
+- ⚠ **실험 Ea 0.36–0.38 eV 를 bulk Ea 로 인용 금지** — **미소결 냉간압축 펠릿 + EIS 상한 1 MHz**,
+  bulk/GB 분리 서술 없음 ⇒ **total** 이다.
+
+**J-12-f. ★★ MLIP Ea 가 실험보다 낮은 방향 — 세 번째 점 (J-7·§A 와 연결)**
+
+| 계산 | Ea | 대조 실험 | 차 |
+|---|---|---|---|
+| **[Wang25DP]** DPA-SSE (DeePMD, PBEsol) | `figure-read ≈0.24` | ≈0.324 (문헌) | −0.084 |
+| **우리 comp1** (UMA-s-1p1) | **0.2532** (⚠ provisional·1시드·게이트 not_assessed) | ≈0.324 (문헌) | −0.071 |
+| **[Muy25Dop]** 자체학습 DeePMD (PBEsol) | `figure-read ≈0.209` | **0.38 (자기 실험, total)** | −0.171 |
+
+> ⚠ **세 번째 점을 앞의 둘과 같은 줄에 놓지 않는다**: ① 대조 실험이 다르다(자기 미소결 펠릿 total 0.38
+> vs 문헌 ≈0.324 — 0.324 에 대면 −0.115 로 줄어든다) ② **적합창이 다르다**(계산 625–1250 K vs 실험 253–333 K;
+> `[Zhou26]` 실측으로 **창 하나에 0.06 eV** 가 움직인다) ③ 계산값이 `figure-read` 다.
+> **말할 수 있는 것**: *"argyrodite MLIP-MD 의 Ea 가 실험보다 낮게 나오는 사례가 서로 다른 세 모델
+> (UMA · DPA-SSE · 자체학습 DeePMD)에서 반복되고, 세 경우 모두 **Nernst–Einstein + Haven = 1** 이며
+> 세 경우 모두 **저온 실측창 바깥에서 적합**했다."*
+> ⇒ **모델 문제가 아니라 규약 문제일 수 있다**는 가설을 강화한다. `kb/questions/` 카드 후보.
+
+
+### J-15. ★★★ **순위의 기준점 — [Liang26IF] "도핑이 σ 를 낮출 수 있다" vs 우리 G3/G4 앵커 비대칭** (2026-09-09 신설)
+
+> 📎 병합 2026-09-13 병합 — 초안 `_pending_index_liang2026_interface_bottleneck_solid_state_batteries.md` §③. 초안 번호 `J-12` → **`J-15`** 배정. 본문 안의 옛 번호 자기참조는 초안 번호다.
+
+> 발주 질문: *"우리 cascade 는 '도핑=개선'을 암묵 전제한다. 이 리뷰가 그 반증인가?"*
+> **답: 스니펫이 시사한 만큼은 아니다. 그러나 우리 게이트에 실재하는 구조적 결함 하나를 정확히 비춘다.**
+
+#### J-15-1. 리뷰가 실제로 말한 것 (⛔ 스니펫과 다르다)
+
+| 스니펫 조각 | 실제 절 | 물질계 | σ 방향 | 숫자 |
+|---|---|---|---|---|
+| "exquisitely sensitive to aliovalent doping" | **§2.1 (p.2)** | **LLZO 가넷** | ⬆ **올린다** | 1–2 × 10⁻³ S cm⁻¹ |
+| "lowering the ionic conductivity relative to pristine Li₆PS₅Cl" | **§2.2 (p.4)** | **Y-도핑 LPSCl** | ⬇ 내린다 | ⛔ **없음** |
+| "high-throughput screening rapidly explored" | **§2.3 (p.5)** | 반-페로브스카이트 | — | ⛔ 없음 |
+
+- **σ↑ 사례 9건 : σ↓ 사례 1건**, 그리고 **숫자는 올리는 쪽에만 있다.**
+- σ↓ 주장은 **인용이 없다** — `[32]`(Wang, *Angew* 2025)는 앞 문장(사이클 성능)에 붙어 있다.
+- ⇒ ⛔ **"도핑이 σ 를 낮추니 후보를 줄이자"는 이 리뷰로 정당화되지 않는다.**
+
+#### J-15-2. 🔴 그래도 남는 것 — 우리 게이트의 **앵커 비대칭**
+
+| 게이트 | 정의 | host 앵커 |
+|---|---|---|
+| G3 oxidation | `ox_V ≥ **2.14 V (host)**` (`build_screening_funnel.py: HOST_OX_V`) | ✅ **있다** |
+| **G4 li_transport** | `norm > 0.30`, norm = `("bvs_x005", **+1**)` 의 **도펀트 풀 내 min-max** (`build_cascade_themes.py:295`) | ❌ **없다** |
+
+⇒ **깔때기는 host 앵커를 쓸 줄 안다. 이온수송 축만 안 쓴다.**
+전원이 host 보다 나빠도 최상위는 norm 1.0 을 받는다. **리뷰의 Y 사례가 정확히 그 사각지대다.**
+그리고 리뷰가 지목한 기구 — *"Li⁺ 확산채널 주변 **국소 배위환경의 수축**"* — 은
+**우리 BVS proxy 가 재는 바로 그 양**이다. **관측량은 맞고 기준점이 없다.**
+
+#### J-15-3. 요구 3가지 (근거 있는 것만)
+
+| # | 요구 | 근거 | ⛔ 안 하는 것 |
+|---|---|---|---|
+| ① | G4 에 **host 참조 부호**를 넣어 `bvs_x005(dopant) < bvs_x005(host)` 인 후보에 **`σ-regression` 플래그** | ★1 (문헌에 σ 하락 사례 존재, 정성) | **탈락시키지 않는다** — 리뷰의 Y 사례도 4800 h 라는 이득을 같이 보고한다. 필요한 건 탈락이 아니라 **가시성**. **문턱 제안 안 함**(리뷰에 크기 없음) |
+| ② | 도펀트마다 **`intent: ionic \| electronic \| mechanical \| interfacial`** 선언 → intent 축 이득과 타 축 손실을 같은 화면에 | ★4 (σ↑ 9건은 캐리어/무질서/bottleneck 겨냥, σ↓ 1건은 전자구조 겨냥). 우리 `combine` 은 기하평균이라 **부호 뒤집힌 trade-off 를 지운다** | **교환율 제안 안 함** (리뷰에 근거 0) |
+| ③ | 농도 3점(x=0.02/0.05/0.10)을 **평균하기 전에 단조성 검사**, 비단조면 `argmax` 병기 | **문헌 실측**: `Fig. 4a` **ALO5 0.25 → ALO10 0.45 → ALO20 0.35 mA cm⁻²** 비단조 + 본문이 침묵. ★1 의 *"insufficient ↔ excessive Y"* 창 | 이미 `audit_label_scatter.py` 가 재는 것 — **이 리뷰는 문헌 사례를 준다** |
+
+#### J-15-4. ⛔ 이 축에서 인용하면 안 되는 것
+
+- LPSCl **3–5** / LPSBr **6–8** / LPSI **~1 mS cm⁻¹** — **무출처**이고 **LPSI 가 통상치보다 2–3 자릿수 높다**
+- LLZTO GB 개질 **×2.7** — 그림(`Fig. 5b`)이 **1.6×** 를 보이고 절대값이 3 자릿수 어긋난다
+- "Y 도핑이 σ 를 N배 낮춘다" 류 — **숫자가 리뷰에 없다**
+- 이 리뷰의 어떤 값도 `canonical_registry.json` · `cascade_stability_axes.csv` 에 **넣지 않는다**
+- ⚠ **`cascade_stability_axes.csv` 는 코팅 후보 데이터이지 도핑체가 아니다**
+  (`codex_BJ_prompt_cascade_redesign_2026_09_09.md` 철회블록) — **이 리뷰의 도핑 논의를 그 CSV 에 연결하지 않는다**
+
+#### J-15-5. ✅ 반대로 이 축에서 **쓸 수 있는** 것
+
+- *"DFT 2.1–2.5 V vs 실셀 3.5–4.2 V = 속도론적 부동태화"* **[28]** ← **우리 onset 2.256 V 가 이 대역 안**
+  (⚠ *"같은 값"* 아니라 *"같은 대역"*. 리뷰는 상집합·압력·함수형을 안 밝힌다)
+- *"high electronic conductivity, rather than mechanical properties, is the root cause of internal dendrite
+  formation"* **[72]** Han 2019 ← **우리 modelc PDOS(CBM 에 Li 부재)의 so-what 받침**
+- *"grand potential phase diagram 이 계면 열역학의 **the standard** 도구"* **[91]** ← **우리 T9 선택의 관행 근거**
+- ★ gap 문장 재료 12건 (digest §14) — 특히 *"interface-centric paradigm demands continued investment in the
+  **first-principles modeling of interface thermodynamics**"* = **우리 B2 작업의 정당화**
+
+
+### J-16. ★★★ **황화물 전용 사전학습 MLIP — UMA 의 대체·committee·대조군 판정** ([Wang25DPA], 2026-09-09 신설)
+
+> 📎 병합 2026-09-13 병합 — 초안 `_pending_index_wang2025_pretrained_deep_potential_sulfide_sse.md` §③. 초안 번호 `J-11` → **`J-16`** 배정. 본문 안의 옛 번호 자기참조는 초안 번호다.
+
+> 계기: UQ 3편(Grasselli / Carrete / Kurniawan)이 공통으로 *"단일 파운데이션 모델로는 committee 를
+> 못 만든다"*(Grasselli 식 27 은 **M ≥ 4**)를 짚었고, 우리 이종 committee(UMA / MACE / SevenNet)는
+> **훈련 코퍼스가 달라 §2.2 "equivalent models" 전제가 깨진다**(§J-1 · [Gra25UQ]).
+> **[Wang25DPA] 는 그 빈칸을 메우는가?** — 세 갈래로 나눠 판정한다.
+
+**갈래 ①: UMA 의 대체인가** → 🔵 **조건부 후보. 단 그 판정을 이 논문이 해 주지 않는다.**
+
+| 근거 | 내용 |
+|---|---|
+| ⛔ **UMA 는 이 논문에서 시험되지 않았다** | 피고는 **DPA-2-MP · MACE-MP-0a(small) · M3GNet-MP-2021.2.8 · CHGNet · ORB-v2** = **전부 MPtrj 세대**. ⇒ *"범용 MLIP 가 장벽을 1/3 로 본다"* 는 **말할 수 있고**, *"따라서 UMA 도"* 는 **말할 수 없다** |
+| ✅ 커버리지는 우리 계에 유리 | `Fig. 1` 1층에 **Li₆PS₅Cl 포함** · `Fig. S10a` 가 **우리 modelc 조성계열**(x=0.6 이 0.5–0.7 사이) · `Fig. S11` 이 **우리 O 도핑계** |
+| ⚠ **b2o3 는 반대다** | **B–O 결합이 41계 어디에도 없다**(B 는 B–S 만, O 는 Li₂O 만). `Fig. 4a` 는 **Li–B–S 삼원(Li₂B₂S₅)조차 zero-shot 162.65 meV/atom 로 무너짐**을 보인다 ⇒ **b2o3 에 zero-shot 으로 들이대면 UMA 보다 나쁠 공산이 크다** |
+| ❌ **Nd 는 범위 밖** | 란탄족이 15원소에 없다. type map 확장 가능 여부는 이 논문 밖 |
+| ⚠ **비용이 판을 지배한다** | 사전학습 원본 `≈8.6×10⁻³` s/step·atom = **MACE-ft 보다도 46× 느림**. 우리 558원자 셀 환산 **200 ps 1런 ≈5.6일 · 9런 ≈50일** (`digest 계산`, 교차 하드웨어) ⇒ **규약에 그대로 못 꽂는다.** 증류하면 **≈18.8 ns/day = 9런 ≈2.3시간**, 즉 **UMA(252 ps/day) 대비 ~75× 처리량** |
+
+**갈래 ②: committee 네 번째 멤버인가** → ⛔ **부적격.**
+
+| Grasselli §2.2 전제 | UMA-s-1p1(omat) | DPA-SSE | 깨지나 |
+|---|---|---|---|
+| 같은 아키텍처 | equivariant 계열 | **DPA-2 (attention)** | ⛔ |
+| 같은 훈련 분포 | OMat24 (범용) | **황화물 전용 54,771 프레임** | ⛔ |
+| **같은 참조 PES** | **PBE 계열** | **PBEsol** | ⛔⛔ **결정적** |
+
+> **한 줄 판정**: 두 모델이 **서로 다른 참조 PES 를 향해** 학습됐으므로 **둘의 불일치는 epistemic
+> uncertainty 가 아니라 PBE−PBEsol 계통 오프셋을 포함한다.** committee spread 를 오차막대로 환산하는
+> 순간 그 오프셋이 "불확실도"로 둔갑한다 ⇒ **우리 이종 committee 문제가 완화되는 게 아니라 축이 하나 는다.**
+> ⚠ 저자 반론(*"PBE↔PBEsol 은 moderate shift 이고 fine-tune 이 흡수"*, 근거 `Fig. 5a,b` 의 두 범함수
+> NEB 경로 일치)은 **fine-tune 하는 경우에만** 유효하다. 그리고 그 근거는 **LGPS 두 경로**에서만 확인됐다.
+
+> ✅ **그러나 합법적 길이 하나 열린다**: 훈련 데이터가 **공개**돼 있으므로(AIS Square dataset id 217,
+> 54,771 프레임) **같은 데이터·같은 아키텍처로 시드만 바꿔 M ≥ 4** 를 학습하면 Grasselli 전제를
+> **정확히 만족하는 committee** 다. 값싼 변형: **증류 학생 모델을 시드만 바꿔 4–8개**(교사가 라벨을
+> 공짜로 찍으므로 **DFT 추가 0**). ⚠ **그 committee 가 재는 것은 "학생이 교사를 못 따라간 분산"이지
+> "교사가 DFT 에서 틀린 오차"가 아니다** — 두 층을 절대 섞어 부르지 않는다.
+
+**갈래 ③: UMA 검증의 독립 기준인가** → ✅ **최적. 이것이 이 논문의 우리에 대한 실사용처다.**
+
+| 우리 계 | DPA-SSE 를 심판으로 | 이유 |
+|---|---|---|
+| **comp1 / modelc** | ✅ **적격** | Li₆PS₅Cl 은 훈련 1층, Cl-rich 는 `Fig. S10a` 로 일반화 실증 |
+| **LPSOCl (O 도핑)** | ✅ **적격** | `Fig. S11` 에 직접 대응 계가 있다 |
+| **+B₂O₃** | ⛔ **부적격** | **B–O 결합 미커버.** ⚠ 특히 `db/properties/b2o3_uma_vs_dft_force_prereg_2026_09_08.json`(**봉인 2026-09-08, results_seen=false**)에 DPA-SSE 를 세 번째 심판으로 넣고 싶어질 텐데 — **넣으면 안 된다.** UMA(OMat24)는 B₂O₃ 를 봤을 공산이 크고 DPA-SSE 는 확실히 못 봤으므로, 둘의 불일치가 *"누가 맞나"*가 아니라 *"누가 그 결합을 봤나"*를 잰다. **⛔ 그 봉인 카드는 어떤 경우에도 수정하지 않는다** — DPA-SSE 는 **별도 카드**로 붙인다 |
+| **Nd–O** | ❌ **범위 밖** | 란탄족 없음 |
+
+**⇒ 실행 사다리 (digest §11-4 전문)**
+
+| 단계 | 내용 | 비용 | 전제 |
+|---|---|---|---|
+| **0** | AIS Square model **id 266** / dataset `Solid_State_Electrolyte` **id 217** / Bohrium 노트북 **71679486918** 접근·라이선스·**type map 에 Cl·O·B 실재** 확인 | 반나절 · 계산 0 | ⛔ 못 받으면 아래 전부 무의미 |
+| **0.5** ★★ | **§J-1 의 PET-MAD Li₃PS₄ test 243구조**(`db/properties/mlip_bench_li3ps4_uma.json`, 도구 `tools/mlip/bench_against_dft.py`)에 **DPA-SSE 를 그냥 태운다**. **라벨이 PBEsol = DPA-SSE 모국어** | 몇 시간 · **DFT 0회** | ⚠ **공정한 대결 아님** — `Fig. 1` 2층에 Li₃PS₄ 로 보이는 항목이 있어 **DPA-SSE 에겐 훈련 근처, UMA 에겐 외부**. *"훈련셋 안이면 얼마나 좋은가"* 를 잴 뿐. ⛔ **§J-1 의 30.0 과 논문의 30.28 을 나란히 놓지 마라 — test set 이 완전히 다르다** |
+| **1** | 우리 궤적 스냅샷에 UMA·DPA-SSE 단일점. **표본 규칙은 b2o3 봉인 카드 §4 의 결정적 규칙 재사용**(700 K, s2·s3, 2–50 ps 창 등간격 5프레임). 보고량은 **절대 \|ΔF\| 가 아니라 비** | 하루 | ⛔ **b2o3 제외.** ⛔ **봉인 카드 수정 금지 — 새 카드로** |
+| **2** | Step 1 에서 가장 갈린 **20–40 프레임에 PBE·PBEsol 단일점을 둘 다** | 1–2일 (kgy CPU) | 이게 없으면 **PBEsol 모델을 PBE 자로 재는 것** |
+| **3** | ① `Fig. 5a,b` 형식 **NEB 3자 대결**(UMA · DPA-SSE · 우리 DFT) → *UMA 가 base 무리(1/3 장벽)인가* 한 장 판정 ② `Fig. S3` 형식 **500 K NVE 100 ps 드리프트** → **우리 UMA 가 보존형 힘을 쓰는가** | 2–3일 | ★ ②는 **지금 당장 할 수 있는 최저비용·최고가치**. Langevin NVT 는 비보존성을 **가려 준다** |
+| **4** | 증류 → 우리 규약 재실행 | 1–2주 | ⚠ **두 개의 σ·Ea 가 생긴다.** `comparison_group` 과 정본 규율을 **결과 보기 전에** 정한다 |
+| **5** | 시드만 바꾼 학생 M ≥ 4 = 합법 committee | 선택 | ⚠ 증류 분산 ≠ 모델 오차, 카드에 먼저 명시 |
+
+**🔴 [Wang25DPA] 가 §J-1 에 주는 직접 소득**
+> §J-1 의 명시적 한계 **#3 — *"Cl 이 없다 … 아르지로다이트·Cl 무질서로의 전이를 이 벤치가 보증하지
+> 않는다"*** 를 이 논문이 **정면으로 메운다**: Li₆PS₅Cl/Br/I 가 훈련 1층이고, **Cl-rich 시리즈**(`Fig. S10a`)와
+> **O 도핑 시리즈**(`Fig. S11`)까지 시험됐다. ⚠ 단 *"Cl 이 있다"* 와 *"Cl 이 충분하다"* 는 다르다 —
+> `Fig. 1` heatmap 의 **Cl 칸이 옅고**, `Fig. S1` 에서 **LPSCl 만 두 개의 이상 신호**를 낸다(§13-3).
+
+**⛔ 이 축에서 인용하면 안 되는 것**
+1. *"이 논문이 UMA 를 시험해서 나쁘게 나왔다"* — **UMA 는 시험 대상이 아니다.**
+2. `Fig. 7` 의 속도값을 **우리 하드웨어 약속으로** 쓰는 것 — V100+12코어 vs A6000, **자릿수 판정용**.
+3. 논문 σ·D 를 **우리 db 절대값과 같은 표에** 놓는 것 — MSD 창·시드·셀 미기재.
+4. *"DPA-SSE 가 UMA 보다 정확하다"* — **아무도 그 비교를 하지 않았다.** Step 0.5–3 이 그 시험이다.
+5. `Fig. S2` 를 *"호핑 장벽 에너지 과소평가의 증거"* 로 — **eV/atom 축이라 장벽 스케일을 못 담는다.**
+   그 증거는 **`Fig. 5a,b`** 다.
+
+
+### J-17. 🔧 방법 원전 — **descriptor 표현(representation)** · argyrodite 전용 (2026-09-09 신설)
+
+> 📎 병합 2026-09-13 병합 — 초안 `_pending_index_zhao2021_hecs_descriptors_argyrodite_activation_energy.md` §②③. 초안 번호 `J-13` → **`J-17`** 배정. 본문 안의 옛 번호 자기참조는 초안 번호다.
+
+> ⛔ **A–D 물성 4축 표에 넣지 않는다.** σ·ESW·탄성·gap **0건**, Ea 는 **BVSE 라벨**이라 우리 MLIP-MD Ea 와
+> 다른 양이고 조성 귀속조차 논문에 없다. 여기 있는 것은 **"argyrodite 를 무엇으로 기술할 것인가" 의 정의 원본**이다.
+> 짝 블록: **J-11 `[Basu26MFB]`** = *예산을 어디에 쓰나(탐색)*, **여기 `[Zhao21HECS]`** = *무엇으로 기술하나(표현)*.
+
+**[Zhao21HECS] `zhao2021_hecs_descriptors_argyrodite_activation_energy`** — Q. Zhao / M. Avdeev / L. Chen / **S. Shi\*** (Shanghai Univ MGI + ANSTO), *Sci. Bull.* **66**, 1401–1408 (2021), DOI `10.1016/j.scib.2021.04.029`. **입방 Li-argyrodite 50종 · 32 descriptor · PLS 4성분 · 라벨 = BVSE(SPSE)**. ⛔ DFT·AIMD·NEB·실험 **전부 0건**.
+
+| 항목 | [Zhao21HECS] | 우리 (현행 / 계획) | 판정 |
+|---|---|---|---|
+| **표현 골격** | **Global(셀: 조성·구조) ⊃ Local(케이지: 전도경로·이온분포·특수이온)** 2층 × 5범주 → 32 스칼라 (`Fig. 1`·`Fig. 2b`) | cascade 는 **descriptor 를 하나도 안 정했다** (Codex BJ NO-GO 반려사유와 별개로 표현 자체가 공백) | ⭕⭕ **이식 후보 — 이 골격을 v0 로 채택 제안** (digest §13.2) |
+| **argyrodite 자리 라벨** | **A=4a 음이온 · B=4b 양이온 · C=4c(=4d) 자유음이온 · E=16e (BE₄ 의 음이온) · Li=48h/24g** — 4a·4c 를 **`special ions` 독립 범주로 승격**(r_A·EN_A·r_C·EN_C, **4개 전부 VIP>0.8**, r_C 공동4위 1.29) | 우리 O-모티프 실측(`ndo_lpscl16_o_motif_estimand_2026_09_09.json` ⑨): **P–O 결합 3/3 = E(16e)** vs **P–O 0/3, Li/Nd 케이지 = A/C** | ⭕⭕ **1:1 대응 성립.** HECS 표현이 우리 두 O-모티프를 **구분할 수 있다** — 조성-only descriptor 는 불가 |
+| **무질서 처리** | ⭐ **초격자를 안 만든다.** 부분점유 CIF 를 그대로 두고 **점유율·배위엔트로피 스칼라로 압축**(OCC×3, Sconf×4) | **실제 배열을 만든다** (단일배열 또는 disorder ensemble, 예: `comp2_disorder_ensemble` d=0.50 3config) | ⚠ **정반대 노선.** 섞으면 안 된다 — 배열마다 계산해 앙상블로 낼지, 점유율에서 직접 낼지 **보고량 카드에 먼저 못박아야** 한다 |
+| **입력 구조** | **실험 정련 CIF** (본문 *"to preserve the experimentally determined structure information"*) | **DFT-이완 V0 셀** (comp1_V0_k444 등) | ⛔ **다른 축.** 같은 descriptor 라도 값이 다르다 ⇒ 논문 값과 직접 비교 금지 |
+| **중요도 측정** | **PLS 의 VIP**, 컷 **0.8 (JMP 기본값)**. SHAP·permutation 아님 | (미정) | ⚠ **컷 1.0(표준)을 쓰면 Sconf 3인방이 탈락** — 헤드라인이 컷 선택에 걸려 있다. 우리가 쓸 땐 **컷을 결과 보기 전에** 정한다 |
+| **다중공선성** | 심각 (`Fig. S2`: **a↔v = 1.00** · r_anion↔a/v ≈0.95 · r_anion↔D_Li-B ≈0.92) → 그래서 PLS 를 골랐다고 밝힘 | — | ⚠ **VIP 를 개별 descriptor 의 인과 기여로 읽으면 안 된다.** 상위 4개가 사실상 한 변수 |
+| **BN(병목 크기) 정의** | 🔴 **계산식이 없다.** 논문 서사의 중심(전략 ①"broaden bottleneck size")인데 Table S2 는 이름만. 축 범위 `figure-read` intra ≈0.44–0.72 Å · inter ≈0.487–0.62 Å (Li⁺ 반경보다 작아 **여유반경**으로 보임 — 우리 해석) | **BVSE 채널 %** (above-min ≤ iso, 0.25 Å voxel, **원본 주기셀만**, `tools/comp1_v3/`) — **정의가 문서화돼 있다** | ⭕ **우리 쪽이 낫다.** BN 자리를 우리 채널% 로 대체 |
+| **Sconf 정의** | 🔴 **식·단위 규약 없음.** `figure-read` 축 0–33 J/(K·mol) 인데 per site / per f.u. / per cell 불명 | (미정) | 🔴 **우리가 못박아야** — `−R Σ pᵢ ln pᵢ` × 자리당 원자수, 규약 기록 |
+| **반경·EN·분극률 표** | 🟡 **어느 표인지 안 밝힘** ("Pauling EN" 만 명시) | (미정) | ⚠ 우리가 정하면 **논문 값과 절대 비교 불가** ⇒ 내부 일관성만 |
+| **검증** | 80/20 hold-out **1회**(40/10) + LOOCV(성분수 선택용). **group-out 없음 · 반복분할 없음 · 외삽 검증 0건 · 시드 미기재** | 우리 실측: **쌍 LOOCV 0.0892 → LODO −0.1805 → L2DO −0.2548** (group-out 낙차 0.27) | ⛔ **우리가 앞선다.** 그들 0.82 는 무작위 분할값이고 group-out 이면 크게 내려갈 것으로 보아야 한다 |
+| **보고 성능** | R² 훈련 0.887 / 시험 **0.820** · RMSE 0.02 eV | — | ⛔ **시험 0.820 은 논문 자신의 Eq.(5) 정의를 안 지킨다 — 정정 0.7661** (0.820 = Pearson r²). **자기 LOOCV Q² = 0.65877** 이 가장 정직한 값인데 성능으로 안 쓴다 |
+| **라벨** | **BVSE (SPSE)** — 파라미터 전부 미기재 | **MLIP-MD Ea** (UMA-s-1p1, 600/800/1000 K, MSD 2–50 ps) + 별도 **BVSE(bvlain)** | ⛔⛔ **여기가 결정적 결렬점** — 아래 |
+
+**⛔⛔ 결정타 — 이 논문의 타깃이 우리 조성축에서 이미 뒤집혀 있다**
+
+| 계 | BVSE(bvlain) E_3D | MLIP-MD Ea | 방향 |
+|---|---|---|---|
+| comp1 `Li₆PS₅Cl` | **0.2734 eV** | 0.2532 eV (단일시드) | |
+| modelc `Li₅.₄PS₄.₄Cl₁.₆` | **0.4785 eV** | 0.197 ± 0.032 eV (3시드) | **완전 역전** |
+
+출처 `db/properties/bvse_bvlain_ev_4sys.json` · **`⚠_VERDICT_ranking_forbidden`**: *"가족 내 랭킹은 MD와 역전 … vacancy paradox(점유-무관 지도)가 eV 단위에서도 그대로 재현된 것. → σ/Ea 순위 인용 금지."* 그리고 `kb/concepts/bvse.md` §9: **comp1→modelc 는 "채널부피 −15 % 인데 σ ×4 ↑"** 이고 원인은 **vacancy/무질서 = 점유-무관 지도의 원리적 사각**.
+⇒ Zhao 의 VIP 가 **Li 관련 8개를 전부 컷 아래로 떨어뜨린 것**은 물리 발견이 아니라 **이 사각의 지문**이다.
+⇒ **판정: descriptor 표현은 채택 후보, 라벨(BVSE)과 학습된 모델은 우리 Cl-rich 랭킹에 사용 금지.**
+
+**⭕ 유일하게 방법론적으로 정당한 숫자 대조 — BVSE ↔ BVSE**
+우리 comp1 BVSE E_3D **0.2734 eV** vs 이 논문 Li₆PS₅Cl BVSE **≈0.322 eV**(⚠ **우리 추론** — `Fig. 7` 상한 0.322 가 Table S1 라벨 격자값 0.322265625 와 정확 일치). 차이 **≈49 meV**. ⚠ 코드(bvlain vs SPSE)·파라미터·구조(DFT-이완 vs 실험정련)·percolation 차원 정의가 전부 달라 **"같은 자릿수" 까지만**. ⛔ 이 값을 우리 MLIP-MD Ea 와 같은 표에 넣지 않는다.
+
+**★ 설계 추천이 우리 조성족을 이름 그대로 지목한다**
+`Fig. 7` 전략 ①"작은 음이온 치환" 의 1번 예시가 **`Li₆₋ₓPS₅₋ₓCl₁₊ₓ` (Ea < 0.322 eV)** — 우리 modelc `Li₅.₄PS₄.₄Cl₁.₆` 와 **같은 족**이다. ⚠ 단 **예측 Ea 숫자는 논문에 없고**(상한은 모체 라벨값), **`r_anion` 축에서 우리 조성이 그들 훈련 범위 왼쪽 경계 밖**이다(digest §7.1) ⇒ **"문헌이 우리 조성을 유망하다고 예측했다" 는 문장은 쓸 수 없다.** 쓸 수 있는 것은 *"같은 설계 방향(Cl 증가 → r_anion 감소)을 독립적으로 제안한다"* 까지.
+
+**축 J 안의 상호참조 (초안 ③ — 번호는 초안 당시: J-11=[Basu26MFB]→지금 J-12, J-13=이 편→지금 J-17)**
+
+- **J-9 `[Cho25AL]`·`[Ma25AL]`** = 능동학습 루프 — **오라클(라벨)을 어떻게 고르나**
+- **J-10 `[Jain26Rev]`** = 깔때기 모양 — **무엇을 어떤 순서로 자르나** (⚠ 리뷰라 2차 인용)
+- **J-11 `[Basu26MFB]`** = 각 단의 판정 계약 + fidelity 전환 규칙 (⚠ preprint·단독저자)
+- **J-13 `[Zhao21HECS]`(이 편)** = ⭐ **표현(representation) — 후보를 무엇으로 기술하나.**
+  argyrodite 전용 descriptor 목록으로는 **우리 corpus 유일**이고, **자리(4a/4b/4c/16e/48h) 분해**가 있는 것도 이것뿐이다.
+  ⚠ 단 **DFT 0건 · 라벨이 BVSE · 재현 불가** — "원전" 은 *표현*에 한정된다.
+
+**확보 후보 (이 논문의 참고문헌, 우리 미보유)**
+
+| ref | 서지 | 왜 필요한가 |
+|---|---|---|
+| **[28]** | He B, Chi S, Ye A, et al., **"High-throughput screening platform for solid electrolytes combining hierarchical ion transport prediction algorithms"**, *Sci. Data* **7**, 151 (2020) | ⭐⭐ **이 논문 라벨 50개 전부의 출처.** BVSE 설정(R₀·b·voxel·percolation 정의)이 여기 있을 가능성이 높다 — Zhao 본문에는 **하나도 없다**. 공개 웹 `matgen.nscc-gz.cn/solidElectrolyte/` |
+| **[30]** | Farrés M, Platikanov S, Tsakovski S, et al., **"Comparison of the variable importance in projection (VIP) and of the selectivity ratio (SR) methods"**, *J. Chemometr.* **29**, 528 (2015) | VIP 컷오프(0.8 vs 1.0)와 상관군 안 중요도 분배의 규범 문헌. 우리가 VIP 를 쓸 거면 **컷을 결과 전에 정하는** 근거로 필요 |
+| **[38]** | Wang Z, Shao G, **"Theoretical design of solid electrolytes with superb ionic conductivity: alloying effect on Li⁺ transportation in cubic Li₆PA₅X chalcogenides"**, *J. Mater. Chem. A* **5**, 21846 (2017) | argyrodite 합금화의 **계산(DFT) 축** — Zhao 가 BVSE 로만 다룬 같은 조성공간을 DFT 로 본 편 |
+
+**이미 보유한 인용 관계 (역링크만 걸면 됨)**
+
+| ref | 우리 digest |
+|---|---|
+| [20] Fujimura 2013 | `papers/fujimura2013_ml_conductivity_origin.md` |
+| [25] Sendek 2017 | `papers/sendek2017_ml_screening_12k_conductors.md` (⭐ 소표본 방어 절차는 Sendek 이 우월 — Zhao 는 X-randomization·부트스트랩 **0건**) |
+| [34] Deiseroth 2008 | (미보유 — argyrodite 원전) |
+| [35] Kraft 2017 | `papers/kraft2017_lattice_polarizability_argyrodite_Li6PS5X.md` (⭐ `PL_anion` descriptor 의 물리 근거) |
+
+
+### J-18. 🔧 불확실도(UQ) 축 — **통계(random) 축과 모델(epistemic) 축은 다르다** (2026-09-13 병합 신설 · 초안 [Carrete23UQ] 2-c "J-11 신설 제안" + [Maginn19MD] 2-d)
+
+> 📎 병합 2026-09-13 병합 — 초안 `_pending_index_carrete2023_deep_ensembles_vs_committees.md` §2-c. + `_pending_index_maginn2019_…` §2-d. 초안이 "J-11" 로 부른 절이 이것이다 (J-11 은 2026-09-12 에 [Honrao21] 이 먼저 가져갔다). 정본 목록: 통계 축 [Maginn19MD]·[Pranami15]·[McC25D]·[Zaby26σ] · 모델 축 [Imbalzano21]·[Carrete23UQ]·[Kurn26UQ]·[Gra25UQ] — 각 편의 본문은 J-7.
+
+형제 4편 pending 이 이미 제안한 대로 `J-11. 불확실도` 를 만든다면, 절 머리에 **두 축 분리 선언**을 박아 둘 것:
+
+> **J-11 은 두 축이다. 섞으면 틀린다.**
+> · **통계(random) 축** — 궤적이 유한해서 생기는 요동. 정본 = **[Maginn19MD]**. **복제·시간원점·창 선택**으로 줄어든다.
+> · **모델(epistemic) 축** — MLIP 가 틀려서 생기는 편향. 정본 = **[Imbalzano21] · [Carrete23UQ] · [Kurniawan25] · [Grasselli25]**. **복제로는 안 줄어든다.**
+> 우리 `Ea 0.197 ± 0.032 eV`(modelc 600 K 3-seed) 의 **±0.032 는 통계 축이고, 모델 축 추정치는 우리에게 아예 없다.**
+
+> 오늘 들어온 불확실도 4편(#78 · **#79 = 이 편** · #80 · #81)이 하나의 축을 이룬다.
+> 이 편이 그중 **유일하게 end-to-end**(추정기 구현 → MD 감시 → 재학습 → 능동학습 → 표면 확장)라
+> **축의 뼈대로 삼기 적합**하다. 형제 에이전트가 #78/#80/#81 을 넣을 자리를 여기로 모을 것.
+
+**J-11 이 답해야 하는 질문 = "우리는 UMA 가 이 계에서 얼마나 확신하는지 재고 있나?" → 지금은 아니다.**
+
+| 우리가 지금 가진 것 | 이 축이 말하는 이름 | 빈 칸 |
+|---|---|---|
+| 3-seed MD 산포 `Ea 0.197 ± 0.032 eV` | **열적 샘플링 산포** (aleatoric 도 epistemic 도 아님) | — |
+| 없음 | **epistemic σ** (모델 앙상블 분산) | 🔴 **비어 있다** |
+| 없음 | **σ_f 공간분해** (층·원자별) | 🔴 **비어 있다** |
+| UMA 힘 MAE 30.0 meV/Å (§J-1) | **평균 정확도** | ⭕ 있음 — 단 [Carrete23UQ]·[Zhang26] 둘 다 *"평균이 좋아도 특정 양은 틀린다"* 를 보인다 |
+
+**이 축에서 ⛔ 하면 안 되는 것**
+- **σ 를 신뢰구간으로 읽기.** `Fig. 7` 에서 학습범위 밖 실제 오차 **≈40 eV Å⁻¹** 를 띠(**±4–6**)가 전혀 못 감싼다. *"몇 σ 안에 참값"* 문장을 이 논문으로 지지할 수 없다.
+- **서로 다른 퍼텐셜을 σ 로 비교하기.** AL 이 돌면 **σ 가 실제 오차보다 빨리 준다**(저자 자인) ⇒ comp1 과 modelc 를 UMA σ 로 비교하면 안 된다. **우리 기존 규율(σ 절대값 인용 금지·비율도 멀티시드 판정만)의 외부 근거가 바로 이것.**
+- **원자 단위로 "고σ 원자만 보강" 전략 쓰기** (`Fig. 11` 반례).
+- **[Carrete23UQ] 의 어떤 물성값도 우리 표에 올리기** — 재료계가 다르다.
+
+
+### J-19. 🆕 미세구조·입계(GB) 축 — [Ou26MS] (2026-09-13 병합 신설 · 초안 ou 2-d "J-12 후보")
+
+> 📎 병합 2026-09-13 병합 — 초안 `_pending_index_ou2026_microstructural_multiscale_fast_ion_transport.md` §2-d. 절 번호는 병합자가 배정했다 (초안: "J-12 후보").
+
+> **우리에게 통째로 없는 축이고, 이 편 하나로 열 수 있다.**
+> 질문: *"우리 D_bulk 와 실험 σ 사이의 격차 중 입계 몫은 얼마인가?"* → **답: µm 입도에서 1 % 미만.**
+
+| 우리가 지금 가진 것 | 이 축의 이름 | 빈 칸 |
+|---|---|---|
+| D_bulk (comp1 3.09e-6 / modelc 7.90e-6 @600 K) | **벌크 자기확산** | ⭕ 있음 |
+| 없음 | **D_GB (입계 확산)** | 🔴 비어 있음 (이식하면 폭 2.5 nm 가정이 딸려온다) |
+| 없음 | **D_macro (다결정 유효)** | 🔴 비어 있음 — **`PolycrystalDiffusion`(LGPL-3.0)으로 라벨 0개 sweep 가능** |
+| 없음 | **공극·접촉 항** | 🔴 비어 있음 — 이 논문도 FE 로 안 풀고 후보정 배수(3모델이 10× 갈린다) |
+| DEM 펠릿 축 (별도 repo 축) | **분말 압축·공극률** | 🔶 있으나 DFT 축과 연결 안 돼 있음 ← **여기가 다리다** |
+
+**이 축의 판정 3줄 (지금 바로 원고에 쓸 수 있는 것)**
+1. **입계는 µm 입도에서 무시해도 된다** (D_macro/D_bulk = 0.993 @1 µm, 0.942 @100 nm).
+2. **벌크 예측이 QENS 와는 1.07× 로 맞고 EIS 와는 6–38× 어긋난다** ⇒ 격차의 주인은 **펠릿**이다.
+3. ⛔ **"GB 가 없으니 우리 D 를 실험 σ 와 직접 비교해도 된다"로 읽으면 안 된다** — 공극·접촉 항이 남아 있고,
+   그 항의 크기는 이 논문에서도 모델에 따라 **10× 갈린다**.
 
 ## K. 🧪 **수계 Zn 축 (신규, 2026-09-03)** — ⛔ 물성 4축과 *수치로* 섞지 않는다
 

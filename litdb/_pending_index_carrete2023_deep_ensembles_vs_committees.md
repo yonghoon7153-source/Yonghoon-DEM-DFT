@@ -1,5 +1,5 @@
 # 📥 PENDING — `carrete2023_deep_ensembles_vs_committees` 인덱스/비교 반영 대기
-> ✅ **① INDEX.md 병합 2026-09-13** (조율 세션) — 변형: `|F|` → `\|F\|` 이스케이프; 4열 → 3열 (3·4열을 " · " 로 합침, 내용 손실 없음). ⏳ **②③ `comparison_vs_ours.md` 블록은 미병합** — 절 번호 충돌(J-11/J-12)·기존 판정 개정 요청이 섞여 있어 큐레이터 판단이 필요하다.
+> ✅ **①②③ 병합 완료 2026-09-13** (조율 세션) — INDEX.md: ① 병합됨 · comparison_vs_ours.md: 2-a → Reference key · 2-b → J-7 · 2-c → **J-18 UQ 축** (초안 "J-11 신설"). ⏳ **남은 것**: 3. 그 밖의 갱신 미처리.
 
 > 작성 2026-09-09 · litdb-curator (동시 4개 실행 중이라 `INDEX.md`·`comparison_vs_ours.md` 직접 편집 금지)
 > **이 파일을 사람이 확인한 뒤 아래 3덩이를 각각 옮겨 붙이고, 이 파일을 지운다.**
