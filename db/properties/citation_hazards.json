@@ -461,6 +461,20 @@
       "forbidden_phrases": [
         "26배·247배"
       ]
+    },
+    {
+      "file": "db/properties/sei_products.json",
+      "level": "CONDITIONAL",
+      "what": "SEI 산물 밴드갭 — 2026-09-13 이전 값 (Li2O 5.24 · Li2S 3.90 · Li3PO4 5.73 · Nd2O3 3.81 · NdPO4 5.55 · Nd2S3 1.79)",
+      "why": "생성 도구가 `x.energy_above_hull or 9e9` 로 정렬해 **최소 E_hull 항목을 구조적으로 배제**했다 (파이썬에서 0.0 은 거짓). 준안정 다형의 갭이 실렸다 — Li2O 는 Pnma(E_hull 0.084), Li2S 는 Pnma(0.062). 2026-09-13 재조회로 정정했다.",
+      "fix": "정정본을 쓴다 (Li2O 4.90 Fm-3m · Li2S 3.39 Fm-3m · Li3PO4 5.82 Pmn2_1 · Nd2O3 3.71 Ia-3 · NdPO4 5.68 P2_1/c · Nd2S3 0.76 Pnma). ⭐ **역할 분류(insulator/marginal/conductor)는 10개 중 하나도 바뀌지 않았다** — 역할을 인용하는 서술은 그대로 유효하다. 숫자를 인용할 때만 정정본을 쓴다.",
+      "id": "HZ-sei-gaps-pre-20260913-nonground-polymorph",
+      "binding_scope": "partial",
+      "binding_scope_why": "옛 값이 레지스트리에 등록돼 있지 않고(sei_products.json 자체가 원장) 화면도 숫자를 읽지 않는다 — 화면은 kb 문서 링크만 건다. 덮을 claim 이 없어 id 로 이름만 댄다.",
+      "forbidden_phrases": [
+        "Li2O 5.24",
+        "Li2S 3.90"
+      ]
     }
   ],
   "_history": [

@@ -82,7 +82,13 @@
 **litdb — 5편 전부 들어왔다**
 - #114 Yu · #115 Li-FDI · #116 Li-NaRev · #117 Makino · #118 Wang(Li-rich Mn, 945행).
   전부 digest + INDEX + 그림. webapp 265편.
-- 🔴 **미해소: Li₃P 4자 충돌.** 우리 `sei_products.json` gap 0.70 eV=`conductor-LEAK` ↔
+- ✅ **Li₃N 등재 완료 (2026-09-13)** — MP α P6/mmm **0.984 eV** · β 1.218 → **둘 다 `conductor-LEAK`**.
+  [Li26FDI] 의 대체재가 우리 기준으론 개선이 아니다 ⇒ 그들은 **다른 축(이온수송)** 을 말하는 게 맞다.
+  ⛔ 그 조회 중 **더 큰 것**을 찾았다: `sei_product_gaps.py` 가 `E_hull or 9e9` 때문에
+  **최소 E_hull 항목을 구조적으로 배제**하고 있었다(0.0 은 파이썬에서 거짓). 2026-06-24 이래 전 값이
+  준안정 다형의 갭이었다. 재조회로 10개 전부 정정 — **역할 분류는 하나도 안 바뀌었다**(칸 유지).
+  `HZ-sei-gaps-pre-20260913-nonground-polymorph` 등록.
+- 🔴 **여전히 미해소: Li₃P 4자 충돌 자체.** 우리 `sei_products.json` gap 0.70 eV=`conductor-LEAK` ↔
   `[Xiao20Rev]` *"passivating"* ↔ `[Li26FDI]` *"이온수송이 문제"* ↔ `[Zhu15]` 산화한계 0.85 V.
   그리고 **[Li26FDI] 가 고른 대체재 Li₃N 이 자기 Fig.1g 최협갭**(figure-read ≈1.1 eV)인데
   우리 표에 **Li₃N 이 없다**. ⇒ 결정 실험 1건: **Li₃N 밴드갭을 DFT 로** 재서 등재.
