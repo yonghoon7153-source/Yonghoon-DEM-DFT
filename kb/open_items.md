@@ -696,6 +696,7 @@ D_rel 이 들어오면 그 파일의 `성공기준_사전확정` **그대로** �
 > MD·탄성 진입 NO-GO 유지 · 추가 계산은 종결 조건 아님. 지금 막고 있는 것은 **1저자 비준 하나**다.
 
 **⏭ 바로 다음 (순서대로)**
+0. **BQ-5 발송** — `kb/reviews/codex_BQ5_prompt_eprime_card_2026_09_13.md`: 길 ②(공통 총부피 E′) 보고량 카드 v5 §1–3 심사. 카드 `db/properties/cascade_rebuild_estimand_card_v5_Eprime_2026_09_13.json` · 결정 `D-2026-09-13-cascade-pilot-estimand-v5-eprime` (proposed, v4 supersede 예정). **계산 0건.** 회신 → 1저자 비준 → 비용 상한 GPU-h 기입 → 실행 스크립트(상수 동결) → 직접 완화 5 + MD ≤30. ⛔ 이건 여전히 **파일럿**(UMA 내부 진단)이지 본 cascade 가 아니다.
 1. ~~1저자 비준~~ → **✅ 비준 2026-09-13** (지시 '1번 해결', 리뷰어 문구 그대로). 카드 `closed: true` · 결정 active(digest 결속) · validate_canonical ✅. 원래 항목: `db/properties/cascade_pilot_4b_closed_2026_09_13.json` 의
    `종료_문구.proposed_value_from_BQ4` 를 `value` 로 승인(또는 수정). 승인되면
    결정 원장 `D-2026-09-13-cascade-pilot-4b-cell-policy-closure` 를 active 로 올리고 카드 `closed: true`.

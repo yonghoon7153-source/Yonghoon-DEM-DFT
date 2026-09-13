@@ -1961,6 +1961,60 @@
         "_note": "1저자 비준 2026-09-13 (세션 지시 '1번 해결' — 리뷰어 BQ-4 제안 문구 그대로, agent 대필). 재개 조건 = BQ-4 Q6 두 범주. 카드 closed:true 와 동시.",
         "decision_digest": "sha256:0295311bca51d2d0fa0f4eebbf6e6c2c80db14eae3c17d33724c76aa2a17b32a"
       }
+    },
+    {
+      "id": "D-2026-09-13-cascade-pilot-estimand-v5-eprime",
+      "schema_version": 2,
+      "kind": "estimand",
+      "scope": "cascade.pilot_o_substitution.common_volume",
+      "slot": "cascade_pilot_estimand",
+      "applies_to": {
+        "systems": [
+          "lpscl*"
+        ],
+        "tasks": [
+          "transport_pilot",
+          "cell_policy"
+        ],
+        "methods": [
+          "uma-s-1p1-omat__langevin-nvt"
+        ],
+        "use_cases": [
+          "diagnostic",
+          "closure"
+        ]
+      },
+      "title": "cascade 파일럿 보고량 v5 — 공통 총부피 E′ 에서의 조건부 수송 응답 (탄성 보류 · UMA 내부 진단 한정)",
+      "statement": "파일럿이 재는 것은 **공통 총부피 V = 4066.48 Å³·공통 셀 형상·같은 준비 절차(고정셀 이온 완화) 아래에서, Al 2 + Li 공공 4 를 공유하는 두 처방 P1/P2 사이에 16e S₃→O₃ 치환이 만드는 UMA 의 조건부 수송 응답** — 1차 보고량 D_rel(600 K) = D*(P1_k)/D*(P2_k) (부모 k ∈ {A,B}, 같은 부모 안 쌍), 2차 ΔEa. 허용 서술: '공통 셀 부피·형상과 명시된 준비 절차 아래에서 P1/P2의 UMA 수송 응답을 비교한다. 영압 평형부피 변화의 기여와 실제 재료의 치환 효과는 판정하지 않는다.' 영압 평형부피 변화의 기여는 의도적으로 제외한 항이고, 탄성은 보류한다(계산하지 않는다 — '이 계에 탄성법이 안 맞는다' 가 아니다). 준비 상태는 '빌더 배열에서 직접 완화한 종료 구조' 하나로 선언하며 집계하지 않는다(완화 상태 다수성은 §4b 실측). 모든 값에 부피·잔류 평균압 조건을 붙인다. 이 결정은 보고량과 허용 서술 범위만 정하며 캠페인 실행을 승인하지 않는다.",
+      "decision_state": "proposed",
+      "evidence": [
+        "회신 BQ 길 ② — '공통 총부피 E′ + 탄성 보류 + 조건부 수송 보고량' (kb/reviews/codex_BQ_reply_eos_v0_disordered_2026_09_13.md)",
+        "§4b 마감 '준비 미확보' + 재개 조건 ② (db/properties/cascade_pilot_4b_closed_2026_09_13.json)",
+        "다섯 입력 셀 동일(20.1102×20.1102×10.0551 Å, 4066.480 Å³) — 10스윕 프레임 Lattice 대조 2026-09-13",
+        "완화 상태 다수성 실측 — 무질서 넷 56/56 쌍 이웃 집합 변화 (cascade_pilot_4b_basin_2026_09_13.json)"
+      ],
+      "method_ref": "db/properties/cascade_rebuild_estimand_card_v5_Eprime_2026_09_13.json",
+      "card": "kb/reviews/codex_BQ5_prompt_eprime_card_2026_09_13.md",
+      "created": "2026-09-13",
+      "created_by": "agent",
+      "supersedes": [
+        "D-2026-09-13-cascade-pilot-estimand-v4"
+      ],
+      "reopen_criteria": [
+        "비용 상한(GPU-h)이 채워지기 전에는 실행 불가",
+        "리뷰 BQ-5 가 §3 상태 선택 규칙을 반려하면 카드 재작성",
+        "정의를 바꾸려면 개정문을 따로 쓰고 재비준"
+      ],
+      "enforcement": "없음 (proposed). 실행 스크립트는 카드의 V_common·fmax·창·시드를 상수로 동결하고 CLI 로 바꿀 수 없게 만든다 (run_eos_10sweep.py 방식) — 카드 비준 뒤 작성",
+      "ratification": {
+        "state": "proposed",
+        "required_role": "scientific_owner",
+        "blockers": [
+          "리뷰 BQ-5 회신",
+          "1저자 비준",
+          "비용 상한 GPU-h 기입 (method_ref `6_예산_중단_종결.비용_상한`)"
+        ]
+      }
     }
   ]
 }

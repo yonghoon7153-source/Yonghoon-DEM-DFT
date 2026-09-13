@@ -87,7 +87,8 @@ evidenceScope: multi-source-primary
 | BQ2 | 2026-09-13 | `codex_BQ2_prompt_fix_verification_2026_09_13.md` | `codex_BQ2_reply_fix_verification_2026_09_13.md` | (frontmatter 없음) | 같은 라벨 · 주제 토큰 일치 ['fix', 'verification'] |
 | BQ3 | 2026-09-13 | `codex_BQ3_prompt_sweep_complete_2026_09_13.md` | `codex_BQ3_reply_sweep_complete_2026_09_13.md` | 발송 대기 | 같은 라벨 · 주제 토큰 일치 ['complete', 'sweep'] |
 | BQ4 | 2026-09-13 | `codex_BQ4_prompt_10sweep_basin_2026_09_13.md` | `codex_BQ4_reply_10sweep_basin_2026_09_13.md` | 회신됨-종결GO | 같은 라벨 · 주제 토큰 일치 ['10sweep', 'basin'] |
-| BQ | 2026-09-13 | `codex_BQ_prompt_eos_v0_disordered_2026_09_13.md` | `codex_BQ_reply_eos_v0_disordered_2026_09_13.md` | (frontmatter 없음) | 같은 라벨 · 주제 토큰 일치 ['disordered', 'eos', 'v0']; 판정 인용 4회 |
+| BQ5 | 2026-09-13 | `codex_BQ5_prompt_eprime_card_2026_09_13.md` | — | 발송 대기 | — |
+| BQ | 2026-09-13 | `codex_BQ_prompt_eos_v0_disordered_2026_09_13.md` | `codex_BQ_reply_eos_v0_disordered_2026_09_13.md` | (frontmatter 없음) | 같은 라벨 · 주제 토큰 일치 ['disordered', 'eos', 'v0']; 판정 인용 16회 |
 
 ## 🔴 모순 (status 는 대기인데 증거는 회신 수령)
 
