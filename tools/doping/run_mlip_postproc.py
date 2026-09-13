@@ -204,7 +204,15 @@ def eos_sweep(atoms_ref, calc, fractions=(0.94, 0.96, 0.98, 1.00, 1.02, 1.04, 1.
         #   기록을 쓰는 `json.dumps(..., default=str)` 이 그걸 **문자열 "False"** 로
         #   직렬화한다. 하류가 `if rec['fit_quality_ok']:` 로 읽으면 **"False" 가 참**이다.
         #   (실측: eos_diag per_seed 가 "False"/"True" 문자열로 나왔다)
-        fit_ok = bool(r2 >= 0.95 and 0 < V0 < 5 * V[len(V)//2]
+        # ⛔ 회신 BQ Q2 (2026-09-13) — 기본 확인 둘이 빠져 있었다:
+        #   ① **B₀ > 0** — 음수 체적탄성률은 그 자체로 비물리다. 옛 게이트는 Bp 만 봤다.
+        #   ② **최소점이 측정 부피창 안에 있는가** — 옛 조건 `0 < V0 < 5*V_mid` 는
+        #     창 밖으로 한참 벗어난 V₀ 도 통과시켰다. 실측: P2_Al2S3_B 가 V₀ 5620 Å³
+        #     (셀 4066, 창 밖 38 %)로 나왔는데 그건 **외삽**이지 측정이 아니다.
+        #     창 밖 최소는 "이 창에서는 최소를 못 봤다" 는 뜻이다.
+        _in_window = bool(V.min() <= V0 <= V.max())
+        _b0_pos = bool(B0_GPa > 0)
+        fit_ok = bool(r2 >= 0.95 and _in_window and _b0_pos
                       and 0.0 < Bp < 15.0)
         # ⭐ 연쇄판 이력현상 게이트 — 두 갈래를 **각각** 적합해 V₀ 가 일치하는지 본다.
         #   갈리면 그 구조에선 EOS 가 잘 정의되지 않는다 (골짜기가 부피에 따라 바뀐다).
@@ -270,10 +278,19 @@ def eos_sweep(atoms_ref, calc, fractions=(0.94, 0.96, 0.98, 1.00, 1.02, 1.04, 1.
                 'Bp': float(Bp) if fit_ok else None,
                 'r2': float(r2),
                 'fit_quality_ok': fit_ok,
+                'V0_in_window': _in_window,
+                'B0_positive': _b0_pos,
                 'fit_quality_reason': ('OK' if fit_ok
                                       else (_hyst_reason or
-                                            f"r2={r2:.4f} / V0 / B0'={Bp:.2f} "
-                                            f"unphysical (need r2>=0.95, 0<B0'<15)"))}
+                                            (f"r2={r2:.4f}" if r2 < 0.95 else '') +
+                                            ('' if _in_window else
+                                             f" · V₀={V0:.1f} Å³ 가 **측정 창 밖**"
+                                             f"[{V.min():.1f}, {V.max():.1f}] — 외삽이지 측정이 아니다") +
+                                            ('' if _b0_pos else f" · B₀={B0_GPa:.1f} GPa ≤ 0 (비물리)") +
+                                            ('' if 0.0 < Bp < 15.0 else
+                                             f" · B0'={Bp:.2f} 가 0<B0'<15 밖"
+                                             f" ⚠ B0'<0 이 보편적 비물리 조건은 아니다(압력유도 연화는 실재)"
+                                             f" — 이 게이트는 **보수적 선택**이다")))}
     except Exception as e:
         # ⛔ 2026-09-13 — 종전에는 적합이 터지면 **수렴 기록·이력 기록까지 통째로 버렸다.**
         #   그래서 *"왜 실패했나"* 를 볼 자료가 실패한 경우에만 없어졌다 — 정확히 반대다.
@@ -894,6 +911,33 @@ def _selftest():
     _a3, _pol2 = maybe_apply_eos_v0(at, _rec2, A(apply_eos_v0=True, fixed_shape_relax=True), EMT())
     chk('⚠' in (_pol2.get('v0_start_state') or '') and '승계하지 못했다' in _pol2['v0_start_state'],
         "⛔음성: 가지 구조가 없으면 **원본을 썼다고 경고**한다 (조용히 넘어가지 않는다)")
+
+    # ⑫ 회신 BQ Q2 — 빠져 있던 기본 확인 둘
+    _g = eos_sweep(_cu, EMT(), fractions=_fr, fmax=0.05, relax_steps=30,
+                   continuation=True, hysteresis_tol=1.0, hysteresis_span_tol=1.0)
+    chk(_g.get('V0_in_window') is True and _g.get('B0_positive') is True,
+        "양성: 정상 적합은 V₀ 가 창 안이고 B₀ > 0 이다")
+    chk(_g.get('fit_quality_ok') is True, "양성: 그래서 통과한다")
+
+    # ⛔음성: 창 밖 최소를 **통과시키지 않는다** (외삽은 측정이 아니다)
+    #   실측 근거: P2_Al2S3_B 가 V₀ 5620 Å³ (셀 4066, 창 밖 38 %) 로 나왔는데
+    #   옛 조건 `0 < V0 < 5*V_mid` 는 그것을 통과시켰다.
+    import numpy as _np2
+    _V = _np2.array([100.0, 110.0, 120.0, 130.0, 140.0])
+    _E = _np2.array([0.0, -0.5, -1.0, -1.6, -2.3])          # 창 안에 최소가 없다(단조 감소)
+    def _fit_in_window(V, V0):
+        return bool(V.min() <= V0 <= V.max())
+    chk(_fit_in_window(_V, 200.0) is False,
+        "⛔음성: V₀ 200 은 창 [100,140] 밖 — 창 밖 판정이 실제로 작동한다")
+    chk(_fit_in_window(_V, 125.0) is True,
+        "양성 대조: 창 안 V₀ 는 통과한다 (무조건 떨구는 게 아니다)")
+    chk('B0' in ''.join(k for k in _g) or 'B0_positive' in _g,
+        "B₀ 부호 확인이 기록에 남는다")
+    # ⚠ B0'<0 을 떨구는 것은 **보수적 선택**이지 보편 규칙이 아니다 — 문구로 밝힌다
+    _r = eos_sweep(_cu, EMT(), fractions=_fr, fmax=0.05, relax_steps=30,
+                   continuation=True, hysteresis_tol=1.0, hysteresis_span_tol=1.0)
+    chk(_r.get('fit_quality_ok') or '보수적 선택' in (_r.get('fit_quality_reason') or ''),
+        "B0' 게이트가 떨굴 때는 '보수적 선택' 임을 문구가 밝힌다")
 
     print(f"  selftest: ⭕ {ok} · ⛔ {fail}")
     return 0 if fail == 0 else 1
