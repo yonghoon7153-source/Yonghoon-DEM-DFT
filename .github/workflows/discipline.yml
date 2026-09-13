@@ -192,6 +192,9 @@ jobs:
       - name: 리뷰 비포/애프터 생성기 (원장 앵커 · 집계 · SHA · 스윕 범위)
         run: python scripts/build_review_before_after.py --selftest
 
+      - name: S3 코호트 봉인 (raw 전수 · sha256 · 솔버 무관)
+        run: python scripts/seal_area_cohort.py --selftest
+
       #  ★ 2026-09-09 (Codex Q2-3 · AUD-07) — 원시 감사 finding 에 판정 상태가 없어
       #    후속 집계자가 후보와 확정을 합쳐 읽는다.  원본은 박제로 두고 별도 원장에 단다.
       - name: 감사 판정 원장 (후보 ↔ 확정 분리)

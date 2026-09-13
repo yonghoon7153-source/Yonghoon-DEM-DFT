@@ -166,6 +166,8 @@ run 'plastic_coverage    --selftest' python3 scripts/plastic_coverage.py --selft
 #  ★ 2026-09-13 — 리뷰 비포/애프터 페이지는 손으로 적지 않고 원장에서 **생성**한다 (규율 ④).
 #    서술의 인용 숫자는 해당 원장 항목 note 에 실재해야 하고, 생성 HTML 은 ban-sweep 범위 안이다.
 run 'review_before_after --selftest' python3 scripts/build_review_before_after.py --selftest
+#  ★ 2026-09-13 (계약 §5-v3 ③) — S3 코호트 봉인: raw 전수 + sha256, 솔버 성공 여부를 보지 않는다.
+run 'seal_area_cohort   --selftest' python3 scripts/seal_area_cohort.py --selftest
 run 'check_doc_refs          --selftest' python3 scripts/check_doc_refs.py --selftest
 run 'check_cohort_packages  (커밋된 패키지 ↔ 원장)' python3 scripts/check_cohort_packages.py
 run 'audit_adjudication   (원시 감사 ↔ 판정 원장)' python3 scripts/check_audit_adjudication.py
