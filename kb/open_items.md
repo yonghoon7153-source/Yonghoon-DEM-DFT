@@ -23,9 +23,9 @@
 > **25줄 원자료를 repo 로 가져오는 것** 둘이다.
 
 **⏭ 바로 다음 (순서대로)**
-1. **25줄 원자료 회수** — `runs/cascade_pilot/fix_*/*/postproc.json` 25개 + `/tmp/regate_full.json` 을
-   `db/properties/cascade_pilot_4b_raw/` 로. 리뷰어가 요약값만 보고 재적합·양방향 수렴·판정변경을
-   **독립 재현하지 못했다** (회신 BQ-3 머리). V100 에서 커밋·푸시 → 여기서 pull.
+1. ~~25줄 원자료 회수~~ **완료 (커밋 `214cbcf5d`)** — `db/properties/cascade_pilot_4b_raw/` 26개.
+   repo 안에서 재판정 재현: 판정 0/25 · 사유 16/25 · V100 결과와 줄별 **0 차이** ·
+   새 규칙(양방향 수렴) 조건별 자격 2/1/3/1/1 — 옛 규칙과 같다. `regate_inrepo_<commit>.json`.
 2. **10스윕 실행** — `tools/doping/run_eos_10sweep.py` (동결: 5구조 × W3_f02/W3_f005 · ±3 % 7점 ·
    relax 3000 · `--apply_eos_v0 --fixed_shape_relax --no_anneal --no_elastic`). 한 라운드 고정,
    CLI 로 조건·분율 변경 불가, MD·탄성 자동 진행 없음. ⚠ **선언된 차이**: 25줄 스윕은
