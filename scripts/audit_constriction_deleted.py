@@ -345,10 +345,19 @@ def main() -> int:
         print(f'\n⛔ 그런 폴더가 없다: {_SED.WEBAPP}')
         return 2
     subs = [d for d in ('results', 'archive') if (_SED.WEBAPP / d).is_dir()]
+    flat = False
     if not subs:
-        print(f'\n⛔ {_SED.WEBAPP} 안에 results/ 도 archive/ 도 없다')
-        return 2
-    print(f'  하위: {", ".join(subs)}')
+        #  results/·archive/ 층이 없으면 **폴더 자체**가 케이스들을 담고 있는지 본다
+        #  (`~/lhs_local/lhs00_100/atoms.csv` 같은 로컬 보관 폴더).  없으면 **왜** 못 찾았는지
+        #  실제 파일 목록을 찍는다 — 경로를 두 번 물어보지 않기 위해 (2026-09-13 실사고).
+        flat = bool(_SED.discover_cases(flat=True))
+        if not flat:
+            print(f'\n⛔ {_SED.WEBAPP} 안에 results/ 도 archive/ 도 없고, 직접 담긴 케이스도 없다')
+            print(_SED.case_layout_report(_SED.WEBAPP))
+            return 2
+        print('  하위: (없음 — 폴더가 케이스를 직접 담고 있다: flat 모드)')
+    else:
+        print(f'  하위: {", ".join(subs)}')
 
     chans = tuple(c.strip() for c in a.channels.split(',') if c.strip())
     bad = [c for c in chans if c not in CHANNELS]
@@ -356,7 +365,7 @@ def main() -> int:
         print(f'⛔ 모르는 채널: {bad}')
         return 2
 
-    cases = _SED.discover_cases()
+    cases = _SED.discover_cases(flat=flat)
     if a.limit:
         cases = cases[:a.limit]
     print(f'케이스 {len(cases)}개 · contact_mode={a.contact_mode} · 채널 {",".join(chans)}')
@@ -620,6 +629,25 @@ def _selftest() -> int:
                                                             'delta': 0.05 * R / 2.0}])]
     chk('⑩e 대조: 1 m 구 픽스처는 volume 이 안 결속한다 (규모 없는 검사는 공허하다)',
         c5['n_exact_avail'] == 1 and c5['n_a_eff_changed'] == 0)
+
+    # ── ⑪ flat 폴더 발견 + 진단 (2026-09-13 실사고: `--webapp ~/lhs_local` 이 rc=2) ─
+    fdir = Path(_tf.mkdtemp())
+    case = fdir / 'lhs00_900'
+    case.mkdir()
+    (case / 'atoms.csv').write_text('id,type,radius,x,y,z\n1,1,0.5,0,0,0\n')
+    (case / 'contacts.csv').write_text('id1,id2,contact_area,delta\n')
+    (case / 'meta.json').write_text('{}')
+    (fdir / 'not_a_case').mkdir()
+    saved = _SED.WEBAPP
+    try:
+        _SED.WEBAPP = fdir
+        chk('⑪a results/·archive/ 없는 폴더: 기본 발견은 0개', _SED.discover_cases() == [])
+        chk('⑪b 같은 폴더를 flat 으로 보면 케이스 1개', [d.name for d in _SED.discover_cases(flat=True)] == ['lhs00_900'])
+        rep = _SED.case_layout_report(fdir)
+        chk('⑪c 진단이 실제 하위 폴더와 필요한 파일을 찍는다',
+            'lhs00_900/' in rep and 'not_a_case/' in rep and 'atoms.csv + contacts.csv' in rep)
+    finally:
+        _SED.WEBAPP = saved
 
     print('협착 삭제 census SELFTEST', 'PASS' if ok else 'FAIL')
     return 0 if ok else 1

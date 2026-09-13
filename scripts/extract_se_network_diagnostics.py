@@ -99,15 +99,35 @@ def _pair_digest(d: Path) -> str:
     return h.hexdigest()
 
 
-def discover_cases() -> list[Path]:
+CASE_REQUIRED = ('atoms.csv', 'contacts.csv', ('input_params.json', 'meta.json'))
+
+
+def case_layout_report(root: Path, limit: int = 3) -> str:
+    """`root` 아래 첫 몇 하위 폴더의 파일 목록 — **왜 케이스를 못 찾았는지**를 사용자가
+    그대로 붙일 수 있게 찍는다 (경로를 두 번 물어보지 않기 위해)."""
+    lines = [f'  {root} 의 하위 폴더 (처음 {limit}개):']
+    subs = sorted([d for d in root.iterdir() if d.is_dir()])[:limit] if root.is_dir() else []
+    if not subs:
+        lines.append('    (하위 폴더 없음)')
+    for d in subs:
+        names = sorted(x.name for x in d.iterdir())[:12]
+        lines.append(f'    {d.name}/  →  {", ".join(names)}{" …" if len(list(d.iterdir())) > 12 else ""}')
+    lines.append('  필요한 것: 케이스 폴더마다 atoms.csv + contacts.csv + (input_params.json | meta.json)')
+    return '\n'.join(lines)
+
+
+def discover_cases(flat: bool = False) -> list[Path]:
     """Walk both results/ and archive/, dedup by the **content digest** of
     (atoms.csv, contacts.csv).  Prefer NAMED case_ids (input_*, etc.) over
     timestamp-style IDs when both exist for the same analysis.
+
+    `flat=True` — `WEBAPP` 자체가 케이스 폴더들을 **직접** 담고 있을 때 (예: `~/lhs_local/
+    lhs00_100/atoms.csv`).  results/·archive/ 층이 없는 로컬 보관 폴더용.
     """
     # Pass 1: collect every candidate dir
     cands = []
-    for base in ('results', 'archive'):
-        root = WEBAPP / base
+    for base in (('.',) if flat else ('results', 'archive')):
+        root = WEBAPP if base == '.' else WEBAPP / base
         if not root.exists():
             continue
         for atoms_p in root.rglob('atoms.csv'):
