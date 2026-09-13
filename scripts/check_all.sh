@@ -148,6 +148,17 @@ run 'audit_coverage      --selftest' python3 scripts/audit_coverage.py --selftes
 #    원본은 박제라 안 고치고(해시로 못박는다) 별도 판정 원장에만 상태를 단다.
 run 'audit_adjudication  --selftest' python3 scripts/check_audit_adjudication.py --selftest
 run 'audit_validation_flags --selftest' python3 scripts/audit_validation_flags.py --selftest
+#  ★★ 2026-09-13 (AREA-09 STEP 4 · AREA-11) — 협착저항의 **독립 기준해**.
+#    축대칭 flux tube 를 직접 풀어 ψ 를 곱하는지 나누는지를 문헌 인용이 아니라 계산으로
+#    가른다.  ⓪ 정규화 검사가 요점 — 초판이 conductance 의 **2π 를 통째로 빠뜨려** 모든
+#    저항이 2π 배였는데 단조·수렴·극한 검사는 **전부 초록**이었다 (일률 배수라 안 깨진다).
+#    배수를 실제로 재는 검사 하나만이 그것을 잡는다 = 규율 ⑤ 의 false-green.
+run 'constriction_reference --selftest' python3 scripts/constriction_reference.py --selftest
+#  ★★ 2026-09-13 (AREA-12) — 면적 계약의 S2 가 솔버에 **항등**임을 고정한다.
+#    clamp `a_eff = min(a_contact, r_min_real)` 가 이미 수송 원판 상한을 강제하므로 cap 을
+#    2πR² → πR² 로 바꿔도 `a_eff` 가 안 바뀐다.  ② 가 `A_physics` 는 실제로 바뀜을 확인해
+#    검사가 공허하지 않게 하고 ③ 이 clamp 를 빼면 달라짐을 보여 판별력을 증명한다.
+run 'transport_cap_equivalence --selftest' python3 scripts/audit_transport_cap_equivalence.py --selftest
 run 'check_doc_refs          --selftest' python3 scripts/check_doc_refs.py --selftest
 run 'check_cohort_packages  (커밋된 패키지 ↔ 원장)' python3 scripts/check_cohort_packages.py
 run 'audit_adjudication   (원시 감사 ↔ 판정 원장)' python3 scripts/check_audit_adjudication.py

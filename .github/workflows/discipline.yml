@@ -173,6 +173,17 @@ jobs:
       - name: 자기신고 감사의 자기일관 (L4-03 — 타입·conjunction·분모)
         run: python scripts/audit_validation_flags.py --selftest
 
+      #  ★★ 2026-09-13 (AREA-09 STEP 4 · AREA-11) — 협착저항 독립 기준해.
+      #    ⓪ 정규화가 요점: 초판이 conductance 의 2π 를 통째로 빠뜨렸는데 단조·수렴·극한은
+      #    전부 초록이었다 (일률 배수).  배수를 실제로 재는 검사만이 잡는다.
+      - name: 협착 기준해 (ψ 배치 · 이종쌍 직렬 · 2π 판별력)
+        run: python scripts/constriction_reference.py --selftest
+
+      #  ★★ 2026-09-13 (AREA-12) — 면적 계약 S2 가 솔버에 항등임을 고정한다.
+      #    clamp 가 이미 수송 원판 상한을 강제하므로 cap 을 바꿔도 a_eff 가 안 움직인다.
+      - name: 수송 cap 동치 (S2 항등 · clamp 판별력)
+        run: python scripts/audit_transport_cap_equivalence.py --selftest
+
       #  ★ 2026-09-09 (Codex Q2-3 · AUD-07) — 원시 감사 finding 에 판정 상태가 없어
       #    후속 집계자가 후보와 확정을 합쳐 읽는다.  원본은 박제로 두고 별도 원장에 단다.
       - name: 감사 판정 원장 (후보 ↔ 확정 분리)
