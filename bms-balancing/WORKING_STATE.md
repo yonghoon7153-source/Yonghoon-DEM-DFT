@@ -56,7 +56,7 @@ bytecode 만 막았고(C08·C09), `rc 0` 인데 승격 불가인 상태를 런�
 
 | 트랙 | 판정 | 지금 상태 |
 |---|---|---|
-| ① mph 마이크로 쇼츠 | NO-GO ×2 (v1·v2) → **6.3 재구축 제한 검증 '뒷받침됨'** (Codex 독립 검토 2026-09-13, 원문 `reviews/r14_repros/codex63/`) | M1 전제는 깨진 채(`cEeqref_mat = from_mat`). 재구축은 §0-a 대로 — §5 검산값 `x_NCM 0.924064`·`x_Gr 0.0117207` 이 독립 산술로 재현됐고 초기 OCV 2.1653 V 는 MCMB 표 가파른 구간(오류 아님). **전체 프로토콜은 보류**: 4.25 V CV 가 양극 OCP 표 하한(x=0.2229 → 평형 4.1856 V)과 충돌 → OCP 범위 중단조건·phase 별 cutoff·시간간격·mesh 비교 (`docs/COMSOL_REBUILD_SPEC.md` §8). 원본 `cEeqref` 실효값(`COMSOL_CHECK_REQUEST.md`)은 원본 동등성 물음으로 남음 |
+| ① mph 마이크로 쇼츠 | NO-GO ×2 (v1·v2) → **6.3 재구축 제한 검증 '뒷받침됨'** (Codex 독립 검토 2026-09-13, 원문 `reviews/r14_repros/codex63/`) | **문서 v3: M1 철회** (`cEeqref_mat = from_mat` — 값 칸의 사용자 식은 선택되지 않았다; `MPH_R1_RESPONSE.md` §6). 재구축은 §0-a 대로 — §5 검산값 `x_NCM 0.924064`·`x_Gr 0.0117207` 이 독립 산술로 재현됐고 초기 OCV 2.1653 V 는 MCMB 표 가파른 구간(오류 아님). **전체 프로토콜은 보류**: 4.25 V CV 가 양극 OCP 표 하한(x=0.2229 → 평형 4.1856 V)과 충돌 → OCP 범위 중단조건·phase 별 cutoff·시간간격·mesh 비교 (`docs/COMSOL_REBUILD_SPEC.md` §8). 원본 `cEeqref` 실효값(`COMSOL_CHECK_REQUEST.md`)은 원본 동등성 물음으로 남음 |
 | ② R13 하네스 | NO-GO (P1 4 · P2 5) | **P1-1~P2-5 · §5 Q6 전부 닫음** (262 passed). 남은 것: 실데이터로 shape 재생성(사용자 기계, 아래 U18 4 단계) · 단일 회신 `reviews/R13_RESPONSE.md` |
 | ③ BML α·β 난간 | NO-GO (B1~B5 전부 미증명/반박) | **주장 사슬 전부 철회** → 원인은 `rng(0)` 오염(§9) → **우리가 다시 뽑는다** (전권, `BML_R1_RESPONSE.md` §10): (a) `matlab/fit_cycles_driver.m` · (b) `scripts/fit_cycles.py` · 난간 `scripts/check_rails.py` (받은 xlsx 4 개에서 §6 재현). **닫힘 (§11)**: 같은 입력(HD_knee)에서 규진팀 표만 반복 패턴, 그들 파이프라인 rng 없이(a)·우리 포팅(b) 둘 다 경고 0 이고 서로 ~1e-3 (= scale 표본 크기) 안에서 일치 · 시작점 의존 1e-7. 원인 = `rng(0)` 오염 확정. 받은 L_* 표 4 개는 근거로 쓰지 않는다 |
 
@@ -65,7 +65,7 @@ bytecode 만 막았고(C08·C09), `rc 0` 인데 승격 불가인 상태를 런�
 경계를 매 라운드 다시 그어야 한다.
 
 **①·③ 이 요구하는 외부 자료** — 이것 없이는 더 못 닫는다:
-- COMSOL: `liion.pce*.pin1.cEeqref` 실효값 (현재 설정으로 새로 초기화한 것. 저장 해는 설정이 다르다)
+- ~~COMSOL: `liion.pce*.pin1.cEeqref` 실효값~~ → 불필요해짐 (XML 선택자 `from_mat` 이 답, 문서 v3). 남는 외부 자료는 **없다** — ① 은 재구축 모델의 §8-5 순서, ③ 은 닫힘
 - ~~MATLAB: 자유/고정 변수 · lb/ub · …~~ → 원본 확보로 닫힘 (§8). 이제 필요한 것은 **네 셀(ref1·ref2·PE1·PE5)의 원시
   사이클 워크북 + 그 셀들의 기준 반쪽전지** — 결과표에는 없다. 형식은 `<cycle>_capacity/<cycle>_voltage`.
 
@@ -148,7 +148,7 @@ Codex 를 다시 쓸 수 있게 되어 요청문 셋을 썼다. **보내는 순�
 ① baseline 보존, 같은 dataset 에서 Eeq_N/Eeq_P 분해·표면/평균 조성·과전압·Li 재고 OCV 곡선 export 로 검토 산술 현지 확인
 → ② OCP 범위/농도/phase 별 cutoff 중단조건 + CDC 별도 모델 + 짧은 mesh·시간간격 비교
 → ③ 범위 감시 있는 `sigma_short=1e-20` 단일 프로토콜 진단 승인 여부
-→ ④ 본 계산·유한 sigma·sweep 은 원본/실험 OCP 대조 뒤. 원본 모델 쪽(`cEeqref` 실효값 · 문서 v3 정정)은 별도 물음.
+→ ④ 본 계산·유한 sigma·sweep 은 원본/실험 OCP 대조 뒤. 원본 모델 쪽은 문서 v3 로 정리됐고(M1 철회) `COMSOL_CHECK_REQUEST.md` 의 확인은 불필요해졌다.
 
 검증 재실행 (2026-09-13, `26c477c`): `236 passed in 200.29s` · `git diff c7217c0 HEAD -- '*.py' '*.sh'` **0 개** ·
 `replay_codex_r7.py --expected-head 26c477c…` rc 0 · `evidence_eligible: true` · `closed: true` ·
@@ -340,15 +340,19 @@ rm -rf out_u14_smoke
 OUT=out_u14 STATES='100 200 300_0009 300_0147' ./scripts/run_states.sh 2>&1 | tee out_u14.log
 
 # ── 3. 대조 — 새 스키마 + 정본과 같은 숫자인가 ───────────────────────────────────────────────────
-python3 scripts/check_u14.py --new out_u14        # 0 = 승격 가능 · 1 = 숫자가 다름 · 2 = 계약 위반 · 3 = 부분 · 4 = 승격 불가
+python3 scripts/check_u14.py --new out_u18 --old out   # 0 = 승격 가능 · 1 = 숫자가 다름 · 2 = 계약 위반 · 3 = 부분 · 4 = 승격 불가
 #    ⚠ 자체 리뷰 C11: **rc 만 보고 승격하지 말 것.** 정본이 옛 스키마라 입력 identity 를 댈 수 없으면 계약은 안
-#      깨졌지만 승격 자격이 없다 (지금 `out/` 이 정확히 그 상태다). 정본은 마지막 줄의 `PROMOTION` JSON 이다:
-#         python3 scripts/check_u14.py --new out_u14 --old out | tail -1 \
+#      깨졌지만 승격 자격이 없다 (지금 `out/` 이 정확히 그 상태다 → 이번 U18 은 rc **4** 가 정상 결과다). 판정은
+#      마지막 줄의 `PROMOTION` JSON 이다 — 붙여 줄 것은 그 줄과 `■` 블록 전부:
+#         python3 scripts/check_u14.py --new out_u18 --old out | tail -1 \
 #           | sed 's/^PROMOTION //' | python3 -c "import json,sys;d=json.load(sys.stdin);print(d['promotion_eligible'], d['blocked_by'])"
+#    승격 조건 (이번 U18 한정 — 옛 정본에 receipt 가 없어 gate 가 true 를 낼 수 없으므로 **기록된 결정**으로 한다):
+#      numbers 0 · schema 0 · provenance_cols 0 · content 0 · unit 0 · controls 0 · env 0 · stale 0 ·
+#      provenance 0 (dirty 면 안 된다 — out_u18/ 자체는 산출 root 라 무관) · inputs 0 · inputs_uncomparable 만 > 0
 #    out/ 을 이미 덮었으면 정본을 git 에서 읽는다 (손으로 `git show` 를 엮지 말 것 — `--name-only` 는 트리가 아니다):
 #      python3 scripts/check_u14.py --new out --old-rev <재실행 커밋>^
 #    ★ 1 이면 그것이 발견이다. 계산 경로는 안 고쳤으니 같아야 한다. 출력과 함께 이것도 붙여 줘:
-python3 -c "import json;print(json.load(open('out_u14/matrix_100.csv.meta.json'))['env'])"
+python3 -c "import json;print(json.load(open('out_u18/matrix_100.csv.meta.json'))['env'])"
 
 # ── 3b. U14-01 뒷수습 (2026-09-12 실행에서 드러남) — 줄끝 때문에 서명이 깨진 산출을 다시 서명 ──────
 #    writer 가 CRLF 를 썼고 git 은 LF 로 저장한다 → fresh clone 에서 meta 의 sha256 이 안 맞고, reader(F07)가
@@ -356,13 +360,18 @@ python3 -c "import json;print(json.load(open('out_u14/matrix_100.csv.meta.json')
 #    bytes 의 줄끝 변형과 맞을 때만 다시 서명하고(=내용이 같다는 증명), 아니면 손대지 않는다.
 python3 scripts/check_u14.py --new out --renormalize
 
-# ── 4. `promotion_eligible: true` 였을 때만 정본 교체 (rc 0 **이면서** 그 줄이 true, 자체 리뷰 C11) ──────
-for f in out_u14/*; do mv "$f" out/; done && rmdir out_u14
-python3 scripts/ne_shape.py                       # 소비 입력이 바뀌었으니 (d) 표도 다시 (초 단위)
-#    ⚠ R13 §Q6 뒤: shape 도 U14 계약이다 — 아래가 shape 줄 없이 나와야 정본이다 (남는 것은 degeneracy digest 4 뿐)
-python3 scripts/check_u14.py --new out --schema-only | grep -c ne_shape   # 0 이어야 한다
-python3 scripts/compare_states.py out             # §1-10 표 재생 — '묶음 불일치' 경고가 없어야 한다
-git add out/ && git commit -m "U14 — 새 게시·서명 스키마로 네 상태 재실행 (숫자 동일)" && git push
+# ── 4. 승격 — 위 조건을 다 만족했을 때만. 옛 정본은 **보존**한다 (Codex R13 조건 7: "기존 provenance-incomplete
+#      out/ 는 보존하고 별도 출력에 실제 재실행") — git 이력만이 아니라 트리 안 archive 로. 새 묶음이 out/ 을 대신한다
+#      (도구 기본값 `out/` 은 그대로). 이 절차는 `promotion_eligible` 이 아니라 3 단계 출력을 붙인 커밋 메시지가 근거다.
+mkdir -p out/archive/legacy_r6_u14
+git mv out/*.csv out/*.json out/archive/legacy_r6_u14/          # 13 산출 + sidecar (meta.json 도 *.json 에 든다)
+mv out_u18/*.csv out_u18/*.json out/                            # 새 정본 (ne_shape_GITT_Li.csv + meta 포함 — run_states.sh 끝의 shape_step 이 만든 것)
+ls out_u18/                                                     # 로그만 남아야 한다; 남은 로그는 out_u18.log 와 함께 커밋하지 않는다
+python3 scripts/check_u14.py --new out --schema-only            # ★ 계약 위반 0 이어야 한다 — degeneracy digest 4 도 shape 4 도 사라진다
+python3 scripts/check_u14.py --new out --old-rev HEAD           # 정본(git) 대 새 out/: 3 단계와 같은 판정이어야 한다
+python3 scripts/compare_states.py out                           # §1-10 표 재생 — '묶음 불일치' 경고가 없어야 한다
+git add out/ && git commit -m "U18 — 새 게시·서명 스키마로 네 상태 + shape 재실행 (숫자 동일; 옛 정본은 out/archive/legacy_r6_u14/)" && git push
+#    커밋 메시지 본문에 3 단계의 PROMOTION 줄을 그대로 붙인다 (승격의 근거는 그것이다).
 
 # ── 5. ~~MATLAB 한 줄씩~~ → **닫힘 (U15, 2026-09-11)**: 둘 다 Python 과 일치 ────────────────────
 #      sprintf('%.2f', 0.125)  → '0.12'                    (half-to-even, Python 과 같다)
