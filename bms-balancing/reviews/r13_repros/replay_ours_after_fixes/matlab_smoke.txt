@@ -77,7 +77,7 @@ OK   data/half_cell/step_005C/:Li:pristine   max rel dev = 5.540e-14   (허용 1
 OK   data/half_cell/step_005C/:Kunz:100   max rel dev = 7.776e-14   (허용 1e-12)
 OK   data/half_cell/step_005C/:Li:300_0147   max rel dev = 4.996e-14   (허용 1e-12)
 ----
-7/7 통과   (작업디렉터리 /tmp/bmsverify.AVxeyp/e2e)
+7/7 통과   (작업디렉터리 /tmp/bmsverify.KlLZaJ/e2e)
 
 [1m== 4. --compare 이분 판정이 갈린 단계를 짚는가 ==[0m
   OK   동일 입력 → 일치
@@ -142,4 +142,4 @@ PASS — 0 개 실패
 PASS — 실패 0: []
 
 =====================================
-전부 통과   (작업디렉터리 /tmp/bmsverify.AVxeyp)
+전부 통과   (작업디렉터리 /tmp/bmsverify.KlLZaJ)

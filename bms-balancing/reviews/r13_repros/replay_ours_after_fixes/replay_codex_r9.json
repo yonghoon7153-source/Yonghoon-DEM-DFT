@@ -1,12 +1,14 @@
 {
-  "target_head": "d5d143f03f06ddc38abc8776f513881d259c3014",
-  "expected_head": "d5d143f03f06ddc38abc8776f513881d259c3014",
-  "expected_tree": "6c978e8d5ec8d116d628fc567beabf50e45bf0b9",
+  "target_head": "ef8e8f681050ee649783a8d85a9d584880c8aa80",
+  "expected_head": "ef8e8f681050ee649783a8d85a9d584880c8aa80",
+  "expected_tree": "2f4743517c8b0f302532a6f3d3646133f66ccd36",
   "head_ok": true,
   "dirty": true,
   "dirty_allowed": false,
   "dirty_paths": [
-    "?? bms-balancing/reviews/r13_repros/replay_ours_after_fixes/"
+    " M bms-balancing/reviews/r13_repros/replay_ours_after_fixes/codex_r6_mutation_audit.txt",
+    " M bms-balancing/reviews/r13_repros/replay_ours_after_fixes/replay_codex_r6_adapted.json",
+    " M bms-balancing/reviews/r13_repros/replay_ours_after_fixes/replay_codex_r7.json"
   ],
   "evidence_eligible": true,
   "instrument_sealed": true,
@@ -15,8 +17,8 @@
     "reviews/evidence_gate.py": "ok"
   },
   "materialized": {
-    "path": "/tmp/evidence-snap-kvufnmkj/snap/bms-balancing",
-    "head": "d5d143f03f06ddc38abc8776f513881d259c3014",
+    "path": "/tmp/evidence-snap-21f1u_m4/snap/bms-balancing",
+    "head": "ef8e8f681050ee649783a8d85a9d584880c8aa80",
     "mode": "sparse detached worktree",
     "kept": false
   },
@@ -247,7 +249,7 @@
       "멈춘_곳": "pytest tests/test_r9_codex.py::test_d9_10_matrix_sidecar_seals_the_exact_roster_and_argv → rc 0 · '1 passed'",
       "세부": {
         "node": "tests/test_r9_codex.py::test_d9_10_matrix_sidecar_seals_the_exact_roster_and_argv",
-        "summary": "1 passed in 3.39s",
+        "summary": "1 passed in 3.28s",
         "rc": 0,
         "passed": true
       }
@@ -266,7 +268,7 @@
         },
         "test": {
           "node": "tests/test_r9_codex.py::test_d9_11_zero_pair_and_partial_are_distinct_typed_states",
-          "summary": "1 passed in 1.13s",
+          "summary": "1 passed in 1.11s",
           "rc": 0,
           "passed": true,
           "closure_assert": "pytest tests/test_r9_codex.py::test_d9_11_zero_pair_and_partial_are_distinct_typed_states → rc 0 · '1 passed'"

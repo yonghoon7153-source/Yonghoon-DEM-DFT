@@ -1,12 +1,13 @@
 {
-  "target_head": "d5d143f03f06ddc38abc8776f513881d259c3014",
-  "expected_head": "d5d143f03f06ddc38abc8776f513881d259c3014",
-  "expected_tree": "6c978e8d5ec8d116d628fc567beabf50e45bf0b9",
+  "target_head": "ef8e8f681050ee649783a8d85a9d584880c8aa80",
+  "expected_head": "ef8e8f681050ee649783a8d85a9d584880c8aa80",
+  "expected_tree": "2f4743517c8b0f302532a6f3d3646133f66ccd36",
   "head_ok": true,
   "dirty": true,
   "dirty_allowed": false,
   "dirty_paths": [
-    "?? bms-balancing/reviews/r13_repros/replay_ours_after_fixes/"
+    " M bms-balancing/reviews/r13_repros/replay_ours_after_fixes/codex_r6_mutation_audit.txt",
+    " M bms-balancing/reviews/r13_repros/replay_ours_after_fixes/replay_codex_r6_adapted.json"
   ],
   "evidence_eligible": true,
   "instrument_sealed": true,
@@ -15,8 +16,8 @@
     "reviews/evidence_gate.py": "ok"
   },
   "materialized": {
-    "path": "/tmp/evidence-snap-q4vyjhtf/snap/bms-balancing",
-    "head": "d5d143f03f06ddc38abc8776f513881d259c3014",
+    "path": "/tmp/evidence-snap-6arpxtra/snap/bms-balancing",
+    "head": "ef8e8f681050ee649783a8d85a9d584880c8aa80",
     "mode": "sparse detached worktree",
     "kept": false
   },
@@ -67,7 +68,7 @@
       "적응": false,
       "도달": false,
       "상태": "전제 변경",
-      "멈춘_곳": "FileNotFoundError: [Errno 2] No such file or directory: '/tmp/bms-r7-ref-iq9y6ki5/A.csv'",
+      "멈춘_곳": "FileNotFoundError: [Errno 2] No such file or directory: '/tmp/bms-r7-ref-x2kkbimt/A.csv'",
       "세부": "Codex R11 P1-2 뒤: 원본 probe 의 fixture 는 한 조합만 도는 **좁힌** matrix 실행이라 이제 subset 이고 canonical(`A.csv`) 자리에 파일이 없다 — 원본은 그 파일을 무조건 열어 죽는다. 같은 축(행이 기준 입력 서명을 담는가)은 회귀 `test_d7_03` 이 `publish_target` 로 자리를 맞춰 본다"
     },
     "R7-04": {
@@ -99,7 +100,7 @@
       "세부": {
         "rc": 1,
         "tail": [
-          "restored: 0 7 passed, 45 deselected in 3.22s",
+          "restored: 0 7 passed, 45 deselected in 3.24s",
           "MISSED: 1"
         ]
       }

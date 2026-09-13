@@ -1,7 +1,7 @@
 {
-  "target_head": "d5d143f03f06ddc38abc8776f513881d259c3014",
-  "expected_head": "d5d143f03f06ddc38abc8776f513881d259c3014",
-  "expected_tree": "6c978e8d5ec8d116d628fc567beabf50e45bf0b9",
+  "target_head": "ef8e8f681050ee649783a8d85a9d584880c8aa80",
+  "expected_head": "ef8e8f681050ee649783a8d85a9d584880c8aa80",
+  "expected_tree": "2f4743517c8b0f302532a6f3d3646133f66ccd36",
   "pinned_sha": "bd6ba4749a92f8d441b4d9176eb876bfc6cc287c",
   "pin_bypassed": true,
   "dirty": true,
@@ -13,8 +13,8 @@
     "reviews/evidence_gate.py": "ok"
   },
   "materialized": {
-    "path": "/tmp/evidence-snap-q_i4ajmn/snap/bms-balancing",
-    "head": "d5d143f03f06ddc38abc8776f513881d259c3014",
+    "path": "/tmp/evidence-snap-122rek2m/snap/bms-balancing",
+    "head": "ef8e8f681050ee649783a8d85a9d584880c8aa80",
     "kept": false
   },
   "ran_in": "격리 snapshot",
@@ -79,25 +79,25 @@
       "도달": true,
       "상태": "반례 소멸",
       "멈춘_곳": "r10_u18_shape_repros.py:78: assert p.returncode == 0 and result[\"claims_all_same\"], result",
-      "세부": "{'case': 'candidate_and_baseline_can_be_the_same_directory', 'rc': 2, 'same_resolved_directory': True, 'claims_all_same': False, 'stdout': '! `--new` 와 `--old` 가 **같은 디렉터리**다 (/tmp/r10-u18-same-root-6o40lw6e/candidate) — 독립 baseline 이 아니면 승격 판정이 성립하지 않는다 (자기대조). 재실행은 별도 destination 으로 받고 정본은 그대로 두거나 `--old-rev` 로 커밋에서 읽을 것 (Codex R10 P1-8)\\n'}"
+      "세부": "{'case': 'candidate_and_baseline_can_be_the_same_directory', 'rc': 2, 'same_resolved_directory': True, 'claims_all_same': False, 'stdout': '! `--new` 와 `--old` 가 **같은 디렉터리**다 (/tmp/r10-u18-same-root-3b_zz12h/candidate) — 독립 baseline 이 아니면 승격 판정이 성립하지 않는다 (자기대조). 재실행은 별도 destination 으로 받고 정본은 그대로 두거나 `--old-rev` 로 커밋에서 읽을 것 (Codex R10 P1-8)\\n'}"
     },
     "u18:receipt_roles": {
       "도달": true,
       "상태": "반례 소멸",
       "멈춘_곳": "r10_u18_shape_repros.py:104: assert p.returncode == 0 and result[\"claims_schema_complete\"] and result[\"claims_all_same\"], result",
-      "세부": "{'case': 'receipt_accepts_a_decoy_instead_of_required_input_roles', 'rc': 2, 'recorded_roles': ['decoy'], 'missing_producer_roles': ['half_cell', 'full_cell', 'literature.gr', 'literature.si'], 'claims_schema_complete': False, 'claims_all_same': False, 'stdout': '산출 1 개 점검 (/tmp/r10-u18-receipt-jnjl1fwz/new)\\n  정본 선택 정책: **current** — 현행 디렉터리 — 정본은 unversioned 이름 하나, 판 번호가 붙은 형제는 쓰지 않는다 (Codex R6-"
+      "세부": "{'case': 'receipt_accepts_a_decoy_instead_of_required_input_roles', 'rc': 2, 'recorded_roles': ['decoy'], 'missing_producer_roles': ['half_cell', 'full_cell', 'literature.gr', 'literature.si'], 'claims_schema_complete': False, 'claims_all_same': False, 'stdout': '산출 1 개 점검 (/tmp/r10-u18-receipt-f4ieszvh/new)\\n  정본 선택 정책: **current** — 현행 디렉터리 — 정본은 unversioned 이름 하나, 판 번호가 붙은 형제는 쓰지 않는다 (Codex R6-"
     },
     "u18:controls": {
       "도달": true,
       "상태": "반례 소멸",
       "멈춘_곳": "r10_u18_shape_repros.py:127: assert p.returncode == 0 and records[mode][\"claims_all_same\"], records[mode]",
-      "세부": "{'rc': 2, 'claims_all_same': False, 'reports_control_mismatch': False, 'stdout': '산출 1 개 점검 (/tmp/r10-u18-controls-zprq2o25/environment_changed/new)\\n  정본 선택 정책: **current** — 현행 디렉터리 — 정본은 unversioned 이름 하나, 판 번호가 붙은 형제는 쓰지 않는다 (Codex R6-04·R7-04)\\n  명부(roster): 정본 1 · 새 산출 1 · 대조 1\\n  새 스키마: 전부 갖췄다 (열·키 이름 + 필수 셀·숫자·receipt·중복 key — `bms_balancing/schema.py` 정본)\\n\\n■ **환경(env) 불일치** 5 — 정본을 만든 기"
+      "세부": "{'rc': 2, 'claims_all_same': False, 'reports_control_mismatch': False, 'stdout': '산출 1 개 점검 (/tmp/r10-u18-controls-ys9ly34t/environment_changed/new)\\n  정본 선택 정책: **current** — 현행 디렉터리 — 정본은 unversioned 이름 하나, 판 번호가 붙은 형제는 쓰지 않는다 (Codex R6-04·R7-04)\\n  명부(roster): 정본 1 · 새 산출 1 · 대조 1\\n  새 스키마: 전부 갖췄다 (열·키 이름 + 필수 셀·숫자·receipt·중복 key — `bms_balancing/schema.py` 정본)\\n\\n■ **환경(env) 불일치** 5 — 정본을 만든 기"
     },
     "u18:error_bypass": {
       "도달": true,
       "상태": "반례 소멸",
       "멈춘_곳": "r10_u18_shape_repros.py:155: assert p.returncode == 0 and result[\"claims_schema_complete\"] and result[\"claims_all_same\"], result",
-      "세부": "{'case': 'extra_error_column_skips_all_required_cell_and_receipt_checks', 'rc': 2, 'provenance_cells_blank': True, 'claims_schema_complete': False, 'claims_all_same': False, 'stdout': '산출 1 개 점검 (/tmp/r10-u18-error-bypass-_jhaqpv0/new)\\n  정본 선택 정책: **current** — 현행 디렉터리 — 정본은 unversioned 이름 하나, 판 번호가 붙은 형제는 쓰지 않는다 (Codex R6-04·R7-04)\\n  명부(roster): 정본 1 · 새 산출 1 · 대조 1\\n\\n■ 내용 검사 실패 1 — 열은 있는데 값이 "
+      "세부": "{'case': 'extra_error_column_skips_all_required_cell_and_receipt_checks', 'rc': 2, 'provenance_cells_blank': True, 'claims_schema_complete': False, 'claims_all_same': False, 'stdout': '산출 1 개 점검 (/tmp/r10-u18-error-bypass-0wh_o039/new)\\n  정본 선택 정책: **current** — 현행 디렉터리 — 정본은 unversioned 이름 하나, 판 번호가 붙은 형제는 쓰지 않는다 (Codex R6-04·R7-04)\\n  명부(roster): 정본 1 · 새 산출 1 · 대조 1\\n\\n■ 내용 검사 실패 1 — 열은 있는데 값이 "
     },
     "u18:shape_subset": {
       "도달": true,
@@ -131,7 +131,7 @@
       "멈춘_곳": "false_clean = False",
       "세부": {
         "direct_git_status_rc": 128,
-        "direct_git_status_stderr": "fatal: /tmp/r10-index-dir-y83zo6v_: unable to map index file: No such device",
+        "direct_git_status_stderr": "fatal: /tmp/r10-index-dir-7b9dvyd1: unable to map index file: No such device",
         "runner_rc": 2,
         "runner_reports_dirty": null,
         "closed": null,
@@ -184,7 +184,7 @@
       "세부": {
         "mutation_site_count": 0,
         "regression_pytest_rc": 0,
-        "regression_pytest_tail": "1 passed in 37.18s",
+        "regression_pytest_tail": "1 passed in 36.26s",
         "corrupted_file_status": "mismatch",
         "runner_package_digest_ok": false,
         "runner_closed": null,
@@ -199,7 +199,7 @@
       "멈춘_곳": "claim_gap = False",
       "세부": {
         "named_test_rc": 0,
-        "named_test_tail": "1 passed in 1.92s",
+        "named_test_tail": "1 passed in 1.91s",
         "production_wrapper_consumers": [
           "run_states.sh"
         ],
