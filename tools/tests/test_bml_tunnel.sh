@@ -790,7 +790,12 @@ check "요청을 쌓아 두지 않는다" "$(grep -c 'proxy_request_buffering of
 # 512 MiB 인 파일이 boundary 때문에 문 앞에서 먼저 막히면 안 된다.
 check "업로드 상한에 여유를 둔다" "$(grep -c 'client_max_body_size 520m' "$SETUP")" "2"
 # 있는 설정을 말없이 덮지 않고, default 도 지우지 않는다 (Codex #6 · #22).
-check "있는 것을 덮지 않는다"   "$(grep -c 'BML_REPLACE' "$SETUP")" "2"
+# 2 -> 3: 판정 근거가 "파일이 있으면" 에서 "우리 표가 없는 파일이 있으면" 으로
+# 바뀌었고, **왜 그렇게 바꿨는지**를 그 자리 주석에 적었다 (그 주석이 세 번째
+# 등장이다).  이 관문이 자기가 쓰다 만 파일에도 걸리면 다시 돌리는 것이 매번
+# BML_REPLACE=1 을 요구하게 되고, 그러면 그 플래그가 손버릇이 되어 정작 남의
+# 설정을 덮는 날에도 손이 먼저 그것을 친다 -- 관문이 있으나 마나가 된다.
+check "있는 것을 덮지 않는다"   "$(grep -c 'BML_REPLACE' "$SETUP")" "3"
 check "default 를 지우지 않는다" "$(grep -c 'rm -f /etc/nginx/sites-enabled/default' "$SETUP")" "0"
 check "모르는 Host 는 거절한다" "$(grep -c 'return 444' "$SETUP")" "1"
 # 도메인·포트를 아무것도 바꾸기 전에 검증한다 (Codex #5).
