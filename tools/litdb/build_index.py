@@ -127,6 +127,10 @@ def build(dry=False):
 
 
 _AXIS_RE = re.compile(r"^>.*?\baxis:\s*[`*]*([a-z0-9_\-]+)", re.I)
+#: axis 태그를 읽는 **메타 블록 창**. 정책이지 우연이 아니다 (위 _talk_axis 주석).
+_AXIS_WINDOW = 20
+#: 창 **밖**에서 발견된 axis 태그 — 조용히 버리지 않고 여기 모아 보고한다.
+LATE_AXIS_TAGS: list = []
 
 
 def _talk_axis(slug):
@@ -142,10 +146,22 @@ def _talk_axis(slug):
     """
     f = LITDB / "talks" / f"{slug}.md"
     try:
-        for line in f.read_text(encoding="utf-8", errors="ignore").splitlines()[:20]:
+        # ⚠ 2026-09-13 검토 — 이 20줄은 `list_papers` 의 18줄과 **겉만 같고 다르다.**
+        #   저기는 우연이었지만(넓혀서 고침) 여기는 **정책**이다: axis 는 *덱 머리의
+        #   메타 블록* 에서만 읽는다. 산문 오탐 방어는 `^>` 가 하지만(음성①), `^>` 만으로는
+        #   본문 깊은 곳의 인용줄과 메타 블록을 못 가른다 — 창이 그 역할을 한다.
+        #   ⇒ 넓히지 않는다. 대신 **창 밖 태그를 조용히 버리지 않고 보고**한다 (아래).
+        _lines = f.read_text(encoding="utf-8", errors="ignore").splitlines()
+        for line in _lines[:_AXIS_WINDOW]:
             m = _AXIS_RE.match(line)
             if m:
                 return m.group(1).lower()
+        # 창 밖에 태그가 있으면 **그 사실을 남긴다.** "태그 없음" 과 구분되어야
+        #   사람이 "메타 블록으로 옮겨라" 를 판단할 수 있다 (조용히 버리면 못 한다).
+        for i, line in enumerate(_lines[_AXIS_WINDOW:], start=_AXIS_WINDOW + 1):
+            if _AXIS_RE.match(line):
+                LATE_AXIS_TAGS.append((slug, i, _AXIS_RE.match(line).group(1).lower()))
+                break
     except Exception:
         pass
     return ""
@@ -177,7 +193,15 @@ def selftest():
             chk("음성①: **산문 속 axis: 는 태그가 아니다** (통합 stub 오탐 재발 방지)",
                 _talk_axis("neg_prose") == "")
             chk("음성②: 태그가 없으면 ''", _talk_axis("neg_none") == "")
-            chk("음성③: 21줄 이후는 안 본다", _talk_axis("neg_late") == "")
+            LATE_AXIS_TAGS.clear()
+            chk("음성③: 메타 블록 창(20줄) 밖은 태그로 안 읽는다 — **정책**이다",
+                _talk_axis("neg_late") == "")
+            chk("음성③-b: 그러나 **조용히 버리지 않는다** — 창 밖 태그를 기록한다",
+                len(LATE_AXIS_TAGS) == 1 and LATE_AXIS_TAGS[0][0] == "neg_late")
+            LATE_AXIS_TAGS.clear()
+            _talk_axis("neg_none")
+            chk("음성③-c: 진짜로 태그가 없으면 기록도 없다 (없음 ≠ 창 밖)",
+                LATE_AXIS_TAGS == [])
             chk("음성④: 파일이 없으면 '' (예외 안 터짐)", _talk_axis("no_such_slug") == "")
         finally:
             LITDB = keep

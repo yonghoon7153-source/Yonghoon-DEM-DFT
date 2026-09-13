@@ -1,12 +1,13 @@
 # kb 카탈로그 (생성물 — 손으로 고치지 말 것)
 
-> `python3 tools/kb_wiki.py index` 가 만든다 · 2026-09-13 · managed-files: 411
+> `python3 tools/kb_wiki.py index` 가 만든다 · 2026-09-13 · managed-files: 412
 
 규칙: kb/SCHEMA.md · 코드 체계: kb/CODES.md · 열린 질문: kb/questions/ · 논지 카드: kb/syntheses/ · 원장: kb/open_items.md · 문헌: litdb/INDEX.md
 
 값 = `db/properties/canonical_registry.json` · 금지 = `db/properties/citation_hazards.json` · 판정 = `db/governance/decisions.json` · 리뷰 = `kb/reviews/INDEX.md`
 
-## 최근 갱신 상위 20 (frontmatter `updated` 기준 · 전체 210건)
+## 최근 갱신 상위 20 (frontmatter `updated` 기준 · 전체 211건)
+- 2026-09-13 · `kb/methodology/silent_wrong_path_2026_09_13.md` — 조용히 틀린 경로 — 하루에 여섯 번 나온 한 부류 · 채택
 - 2026-09-13 · `kb/reviews/codex_BP_prompt_static_pair_result_2026_09_13.md` — 회신 BP 요청 — 정적대조 2 SCF 실행 결과 (BO 조건 1 이행) · 파일럿 보고량 재질의 · 발송대기
 - 2026-09-13 · `kb/reviews/codex_BP_reply_static_pair_result_2026_09_13.md` — 회신 BP 접수 — 조건 1 이행 인정 · 파일럿 조건부 GO (셀 정책 구현 불일치로 즉시 실행 승인은 아님) · 접수
 - 2026-09-13 · `kb/reviews/codex_BQ2_reply_fix_verification_2026_09_13.md` — 회신 BQ-2 — 수정본 검증 (NO-GO) · 회신됨-NO-GO
@@ -26,7 +27,6 @@
 - 2026-09-11 · `kb/reviews/codex_BL_reply_lpsocl_gate_ambiguity_2026_09_11.md` — codex_BL_reply_lpsocl_gate_ambiguity_2026_09_11 · 진행
 - 2026-09-11 · `kb/reviews/codex_BL_response_lpsocl_gate_ambiguity_2026_09_11.md` — 회신 BL 대응 — NO-GO 수용(추가 MD·C3 실행 0), 감사 GO 항목 전부 착수: 개정안(post-hoc)·C3 도구 2판·C6 원장 등록 · 진행
 - 2026-09-09 · `kb/methodology/beta_gate_seed_policy.md` — 확산영역 게이트(β)와 시드 정책 — 문턱은 폐기, 시드 규율은 유효 · SUPERSEDED (문턱) / 유효 (시드·정지 규칙)
-- 2026-09-09 · `kb/methodology/name_vs_substance_2026_09_09.md` — 이름과 실체가 갈린다 — 하루에 여섯 번 (2026-09-09) · 진행
 
 ⚠ frontmatter 없는 레거시 문서는 이 목록에 안 뜬다 (날짜를 기계로 읽을 수 없다 — SCHEMA 상 소급하지 않는다).
 
@@ -53,7 +53,7 @@
 - `kb/physics/vacancy_effects.md` — Vacancy Effects in Argyrodite
 - `kb/physics/vacancy_mechanism_corrected_2026_05_08.md` — Vacancy + Halogen Distribution → Adhesion: Corrected Mechanism
 
-## methodology/ (54)
+## methodology/ (55)
 - `kb/methodology/PHASE1_QUICKSTART_doping.md` — Phase 1 Quickstart Guide
 - `kb/methodology/adhesion_calibration_decision_2026_05_17.md` — Adhesion Calibration Decision — 2026-05-17
 - `kb/methodology/adhesion_energy.md` — Adhesion Energy (Wad) Calculation
@@ -104,6 +104,7 @@
 - `kb/methodology/ps4_libration_dopant_2026_08_28.md` — T16 — PS₄ 는 안 돈다(재확인). 그런데 **+O 가 흔들림 원뿔을 좁힌다**(신규)  (2026-08-28 · 채택)
 - `kb/methodology/qe_disk_reclaim_2026_09_12.md` — QE 디스크 회수 절차 — 파동함수는 스크래치, 정본은 텍스트 (kgy 2026-09-12, 306 GB)  (2026-09-12 · 채택)
 - `kb/methodology/selftest_blind_spots_2026_08_28.md` — selftest 를 통과한 채 나간 버그 9건 — 우리 테스트가 못 보는 네 곳  (2026-08-28 · 채택)
+- `kb/methodology/silent_wrong_path_2026_09_13.md` — 조용히 틀린 경로 — 하루에 여섯 번 나온 한 부류  (2026-09-13 · 채택)
 - `kb/methodology/site_preference_protocol_2026_08_11.md` — LiNiO₂(104) 자리 선호 · 자세 스크리닝 프로토콜 v1  (2026-08-11 · 실행 대기 (도구 검증 완료 · 입력 2종 회수 필요))
 - `kb/methodology/terminology_register.md` — 🗣 용어 대장 — 우리 말 → 필드 표준어 → 근거
 - `kb/methodology/vanhove_plateau_70traj_2026_08_28.md` — van Hove 70궤적 — 고원은 세 계 공통이고, 고원 안 온도차는 대부분 못 읽는다  (2026-08-28 · 채택)

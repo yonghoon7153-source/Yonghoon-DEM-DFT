@@ -4090,3 +4090,97 @@ def test_recent_digests_are_on_every_litdb_surface():
     assert not bad, (
         f"⛔ 최신 digest({newest})가 litdb 표면에서 빠졌다 — digest 만 있고 화면 연결이 없다:\n  "
         + "\n  ".join(bad))
+
+
+def test_talk_header_markers_are_actually_parsed():
+    """⛔음성 (2026-09-13): `list_talks` 는 `list_papers` 의 **쌍둥이**다 — 같은 병을 앓는다.
+
+    papers 쪽은 머리말 창이 18줄이라 `digested` 표기를 놓쳐 논문 7편이 목록 맨 뒤로
+    가라앉았다(같은 날 60줄로 수정). talks 쪽도 14줄이었다. 지금 7편은 창 안에 다
+    있지만(실측) 머리말이 길어지는 날 조용히 터진다 — 이 시험이 그 날을 잡는다.
+
+    ⛔ 이 시험이 못 하는 것: 제목·발표일이 **맞는지**는 못 본다. 파일에 있는 것을
+      목록이 집어가는지만 본다.
+    """
+    import re as _re
+    from pathlib import Path as _P
+    td = _P(D.LITDB) / "talks"
+    if not td.exists():
+        import pytest
+        pytest.skip("litdb/talks 가 없다")
+    talks = {t["id"]: t for t in D.list_talks()}
+    pat = _re.compile(r"발표 (\d{4}-\d{2}-\d{2}) \(([^)]+)\)")
+    missed, checked = [], 0
+    for f in sorted(td.glob("*.md")):
+        if f.stem.startswith("_") or f.stem.upper() == "README" or f.stem not in talks:
+            continue
+        body = f.read_text(encoding="utf-8", errors="ignore")
+        t = talks[f.stem]
+        if any(l.startswith("#") for l in body.splitlines()) and \
+                t.get("title", "") == f.stem.replace("_", " "):
+            missed.append(f"{f.stem}: 제목(#)이 파일에 있는데 목록은 슬러그를 쓴다")
+        checked += 1
+        if pat.search(body) and not t.get("session"):
+            missed.append(f"{f.stem}: 발표일이 파일에 있는데 목록이 못 읽었다")
+    assert checked >= 1, "전제 붕괴: 대조할 talk digest 가 없다"
+    assert not missed, (
+        "⛔ 파일에 있는 머리말 표기를 목록이 못 읽었다 — 머리말 스캔 창을 넓혀라 "
+        "(data.list_talks):\n  " + "\n  ".join(missed))
+
+
+def test_late_axis_tags_are_reported_not_silently_dropped():
+    """⛔음성 (2026-09-13): `axis:` 태그가 메타 블록 창 밖에 있으면 **버리되 알린다.**
+
+    ⚠ 이 창(20줄)은 `list_papers` 의 18줄과 **겉만 같고 다르다**. 저기는 우연이라
+      넓혀서 고쳤고, 여기는 *"axis 는 덱 머리의 메타 블록에서만 읽는다"* 는 **정책**이다
+      (산문 오탐 방어는 `^>` 가 하지만, `^>` 만으로는 본문 깊은 인용줄과 메타 블록을
+      못 가른다). 그래서 넓히지 않는다 — 대신 창 밖 태그를 `LATE_AXIS_TAGS` 에 남겨
+      "태그 없음" 과 구분한다.
+
+    ⛔ 이 시험이 못 하는 것: 태그를 메타 블록으로 옮겨주지 않는다. 사람이 판단할
+      자료를 남기는지만 본다.
+    """
+    import importlib.util as _ilu
+    from pathlib import Path as _P
+    spec = _ilu.spec_from_file_location("_bi", _P("tools/litdb/build_index.py"))
+    bi = _ilu.module_from_spec(spec)
+    try:
+        spec.loader.exec_module(bi)
+    except SystemExit:
+        pass
+    assert hasattr(bi, "LATE_AXIS_TAGS"), (
+        "⛔ 창 밖 태그 보고 채널(LATE_AXIS_TAGS)이 사라졌다 — 다시 조용히 버리고 있다")
+    assert getattr(bi, "_AXIS_WINDOW", None) == 20, (
+        "⚠ axis 메타 블록 창이 바뀌었다. 이것은 **정책**이라 바꾸려면 그 사실을 명시해야 "
+        "한다 (list_papers 의 우연한 창과 다르다)")
+
+    # ⚠ 채널이 **존재하는지**가 아니라 **채워지는지**를 친다. 처음 쓴 판은 hasattr 만
+    #   봐서, append 를 pass 로 끊어도 통과했다 (2026-09-13, 오늘 세 번째 같은 실수).
+    import tempfile as _tf
+    from pathlib import Path as _P2
+    _orig = bi.LITDB
+    with _tf.TemporaryDirectory() as _td:
+        (_P2(_td) / "talks").mkdir()
+        (_P2(_td) / "talks" / "late.md").write_text(
+            "# T\n" + "\n" * 25 + "> axis: dem-microstructure\n", encoding="utf-8")
+        (_P2(_td) / "talks" / "none.md").write_text("# T\n\n> slug `x`\n", encoding="utf-8")
+        (_P2(_td) / "talks" / "ok.md").write_text(
+            "# T\n\n> axis: dem-microstructure\n", encoding="utf-8")
+        bi.LITDB = _P2(_td)
+        try:
+            bi.LATE_AXIS_TAGS.clear()
+            assert bi._talk_axis("late") == "", "창 밖 태그를 값으로 읽으면 안 된다"
+            assert [r[0] for r in bi.LATE_AXIS_TAGS] == ["late"], (
+                "⛔⛔ 창 밖 태그가 **기록되지 않았다** — 조용히 버리고 있다. "
+                f"LATE_AXIS_TAGS={bi.LATE_AXIS_TAGS}")
+            assert bi.LATE_AXIS_TAGS[0][1] > 20 and bi.LATE_AXIS_TAGS[0][2] == "dem-microstructure", \
+                "기록에 줄 번호와 태그 값이 있어야 사람이 옮길 수 있다"
+            bi.LATE_AXIS_TAGS.clear()
+            assert bi._talk_axis("none") == "" and bi.LATE_AXIS_TAGS == [], (
+                "⛔음성: 진짜로 태그가 없으면 기록도 없어야 한다 (없음 ≠ 창 밖)")
+            bi.LATE_AXIS_TAGS.clear()
+            assert bi._talk_axis("ok") == "dem-microstructure" and bi.LATE_AXIS_TAGS == [], \
+                "양성 대조: 메타 블록 안 태그는 읽히고 late 기록도 안 남는다"
+        finally:
+            bi.LITDB = _orig
+            bi.LATE_AXIS_TAGS.clear()

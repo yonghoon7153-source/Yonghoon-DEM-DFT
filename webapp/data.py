@@ -2577,7 +2577,10 @@ def cohp_curves_for(cid: str):
             continue
         meta = _load_json(f.with_suffix(".meta.json")) or {}
         if not meta:                       # 사이드카가 없으면 CSV 머리말에서 긁는다
-            head = f.read_text(encoding="utf-8", errors="ignore").splitlines()[:8]
+            # ⛔ 2026-09-13 — CSV 머리말(# 주석)이 8줄을 넘으면 메타를 못 읽고 조용히
+            #   빈 dict 로 간다. 주석 줄만 보므로 넓혀도 오탐이 늘지 않는다.
+            head = [l for l in f.read_text(encoding="utf-8", errors="ignore").splitlines()[:40]
+                    if l.lstrip().startswith("#") or l.lstrip().startswith("{")]
             for ln in head:
                 s = ln.lstrip("# ").strip()
                 if s.startswith("{"):
@@ -3518,7 +3521,10 @@ def list_talks() -> list:
         title, speaker, session, digested = f.stem.replace("_", " "), "", "", ""
         got_title = False
         try:
-            head = f.read_text(encoding="utf-8", errors="ignore").splitlines()[:14]
+            # ⛔ 2026-09-13 — list_papers 와 **같은 부류**다 (첫 18줄만 읽어 논문 7편이
+            #   목록 뒤로 가라앉았다). 지금 talks 7편은 창 안에 다 있지만, 머리말이
+            #   길어지는 날 조용히 터진다. 넓히고, 시험이 그 날을 잡는다.
+            head = f.read_text(encoding="utf-8", errors="ignore").splitlines()[:60]
         except Exception:
             head = []
         for line in head:

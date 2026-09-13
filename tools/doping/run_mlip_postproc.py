@@ -1338,11 +1338,15 @@ def print_regate(rows):
         nch += bool(r.get('verdict_changed'))
         nrs += bool(r.get('reason_changed'))
         nel += bool(r.get('eligibility_changed'))
+        # ⛔ 2026-09-13 — 종전엔 `or 0.0` 라 **없는 값이 0.0 으로 찍혔다.** V₀ 가 None 인데
+        #   화면에 0.0 이 뜨면 "부피 0" 으로 읽힌다. 없는 것은 '—' 다.
+        def _n2(v, w, f):
+            return ('—'.rjust(w) if v is None else format(float(v), f).rjust(w))
         print(f"{(r.get('name') or '?')[:15]:<16}"
               f"{('✅' if _o is True else '⛔'):>4}{('✅' if _n is True else '⛔'):>4}"
               f"{('✅' if _e is True else '⛔'):>5}"
-              f"{(_raw.get('r2') or 0.0):>9.4f}{(_raw.get('V0') or 0.0):>11.1f}"
-              f"{(_raw.get('Bp') or 0.0):>7.2f}  {(r.get('fit_quality_reason') or '')[:44]}")
+              f"{_n2(_raw.get('r2'), 9, '.4f')}{_n2(_raw.get('V0'), 11, '.1f')}"
+              f"{_n2(_raw.get('Bp'), 7, '.2f')}  {(r.get('fit_quality_reason') or '')[:44]}")
     print(f"\n  판정이 바뀐 줄: {nch}/{len(rows)} · **사유**가 바뀐 줄: {nrs}/{len(rows)} · "
           f"**자격**이 바뀐 줄: {nel}/{len(rows)}")
     print("  · 판정(fit_quality_ok)과 자격(downstream_eligible)은 다른 것이다 — 따로 센다 (회신 BQ-3)")
