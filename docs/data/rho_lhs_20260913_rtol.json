@@ -1,0 +1,78 @@
+{
+ "scipy": "1.18.1",
+ "python": "3.12.3",
+ "tighten": 0.1,
+ "git_head": "7c553dff3",
+ "date": "2026-09-13",
+ "channels": {
+  "ionic": {
+   "n_cases": 30,
+   "n_ok": 23,
+   "n_iterative": 10,
+   "n_direct": 13,
+   "n_no_network": 0,
+   "n_solve_none": 7,
+   "rho_pct_max_iterative": 5.921028751468648e-07,
+   "rho_pct_max_all": 5.921028751468648e-07,
+   "paths": [
+    "cg",
+    "spsolve"
+   ],
+   "kwargs": [
+    "atol"
+   ],
+   "binding": [
+    "rtol"
+   ],
+   "rtol_A": [
+    1e-05
+   ],
+   "rtol_B": [
+    1.0000000000000002e-06
+   ]
+  },
+  "electronic": {
+   "n_cases": 30,
+   "n_ok": 30,
+   "n_iterative": 0,
+   "n_direct": 30,
+   "n_no_network": 0,
+   "n_solve_none": 0,
+   "rho_pct_max_iterative": null,
+   "rho_pct_max_all": 0.0,
+   "paths": [
+    "spsolve"
+   ],
+   "kwargs": [],
+   "binding": [],
+   "rtol_A": [],
+   "rtol_B": []
+  },
+  "thermal": {
+   "n_cases": 30,
+   "n_ok": 30,
+   "n_iterative": 12,
+   "n_direct": 18,
+   "n_no_network": 0,
+   "n_solve_none": 0,
+   "rho_pct_max_iterative": 1.107819075567533e-05,
+   "rho_pct_max_all": 1.107819075567533e-05,
+   "paths": [
+    "cg",
+    "spsolve"
+   ],
+   "kwargs": [
+    "atol"
+   ],
+   "binding": [
+    "rtol"
+   ],
+   "rtol_A": [
+    1e-05
+   ],
+   "rtol_B": [
+    1.0000000000000002e-06
+   ]
+  }
+ }
+}
