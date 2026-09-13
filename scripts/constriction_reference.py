@@ -63,6 +63,8 @@ from scipy.sparse.linalg import spsolve as _spsolve
 
 PSI_EXP = 1.5
 LIT_VALID_MAX = 0.3          # (1−s)^1.5 근사의 통상 인용 상한 (0 < a/b ≤ 0.3)
+BAND_EPS = 1e-9              # ⚠ P2-R2-03: a_eff = k·dr 가 0.30000000000000004 로 나와 s=0.3 이
+                             #   '범위 밖' 으로 분류됐다.  구간 경계는 이 허용오차로 비교한다.
 TWO_PI = 2.0 * math.pi
 
 
@@ -142,11 +144,18 @@ def solve_flux_tube(s: float, nr: int = 300, nz: int = 600,
 
     ★ 구멍은 **격자 면에 스냅**한다 (`a_eff = k·dr`) — 그러지 않으면 a 의 이산화 오차가
       비 R_c/R_Holm(a) 에 1차로 그대로 들어온다.  보고·정규화는 전부 `a_eff` 기준.
-    ★ `R_bulk` 는 **유도하지 않고 같은 솔버로 측정**한다 (격막 없는 런).  그래야 이산화
-      오차가 상쇄되고 `R_c` 만 남는다.  해석값과의 대조는 검사 ⓪ 이 따로 한다.
+    ★ `R_bulk` 는 **유도하지 않고 같은 솔버로 측정**한다 (격막 없는 런).  그래야 **bulk
+      성분의** 이산화 오차가 상쇄되고 `R_c` 만 남는다.  ⚠ 구멍 가장자리의 이산화 오차는
+      **상쇄되지 않는다** (P2-R2-04: s=.05 · nr120 에서 nz 240→480→960 에 R_c 10.312 → 9.912 →
+      9.774 로 계속 움직인다).  정량 인용에는 a_eff 고정 r/z 독립 세분화 증거가 따로 필요하다.
+      해석값과의 대조는 검사 ⓪ 이 따로 한다.
     """
     if not (0.0 < s < 1.0):
         raise ValueError(f's = a/b 는 (0,1) 이어야 한다: {s}')
+    if nz % 2:
+        #  ⚠ 홀수 nz 면 격막(jmid = nz//2 − 1)이 정확한 중간이 아니라 두 재료의 길이가 달라진다 —
+        #    Codex 재현: nz=81, σ 1:8 에서 측정 R_bulk 가 R_bulk_exact 와 −0.9602194787 % 어긋남.
+        raise ValueError(f'nz 는 짝수여야 한다 (격막이 정확한 중간에 오도록): {nz}')
     L = float(aspect)
     dr = 1.0 / nr
     dz = 2.0 * L / nz
@@ -200,7 +209,7 @@ def sweep(ss, nr, nz, aspect, sigma=1.0):
         rows.append(dict(d, psi=ps, R_lit=R_lit, R_code=R_code,
                          ratio_holm=R_c / R_H, ratio_lit=R_c / R_lit,
                          ratio_code=R_c / R_code if math.isfinite(R_code) else 0.0))
-        mark = '' if se <= LIT_VALID_MAX else '  ⚠(1−s)^1.5 통상 인용범위 밖'
+        mark = '' if se <= LIT_VALID_MAX + BAND_EPS else '  ⚠(1−s)^1.5 통상 인용범위 밖'
         print(f'{s:10.3f} {se:8.4f} {d["n_cells_across"]:4d} {R_c:12.6f} {R_H:10.6f} '
               f'{R_lit:10.6f} {R_code:11.6f} | {R_c/R_H:8.4f} {R_c/R_lit:10.4f} '
               f'{(R_c/R_code if math.isfinite(R_code) else 0.0):10.4f}{mark}')
@@ -212,8 +221,8 @@ def _verdict(rows):
     print()
     print('판정 (|ln 비| 가 작을수록 가깝다 — 1.0 이 완전 일치):')
     print(f'{"구간":>22} {"n":>3} {"ψ 를 곱함":>12} {"ψ 로 나눔":>12} {"보정 없음":>12}')
-    bands = [('s ≤ 0.3 (통상 인용범위)', lambda r: r['s_eff'] <= LIT_VALID_MAX),
-             ('s > 0.3 (범위 밖)',       lambda r: r['s_eff'] > LIT_VALID_MAX)]
+    bands = [('s ≤ 0.3 (통상 인용범위)', lambda r: r['s_eff'] <= LIT_VALID_MAX + BAND_EPS),
+             ('s > 0.3 (범위 밖)',       lambda r: r['s_eff'] > LIT_VALID_MAX + BAND_EPS)]
     for name, sel in bands:
         sub = [r for r in rows if sel(r)]
         if not sub:
@@ -281,12 +290,16 @@ def _selftest() -> int:
     chk('② 단조: a 가 커지면 협착 저항이 **작아진다**',
         vals[0] > vals[1] > vals[2], f'{[round(v, 4) for v in vals]}')
 
-    # ③ 작은 s 에서 Holm 스케일 1/(2σa) 에 접근.
+    # ③ 작은 s 에서 Holm 스케일 1/(2σa) 에 접근 — **규모·정규화 smoke** 다.
     #    ⚠ 이 검사는 **어느 ψ 배치도 전제하지 않는다** — s→0 에서 ψ→1 이라 세 공식이
     #      전부 Holm 으로 모인다.  판정은 sweep 이 하고 여기는 솔버만 본다.
+    #    ⚠⚠ P2-R2-04: 밴드 0.7~1.3 은 **20 % 국소 오류를 통과시킨다** (Codex 변이: s=.05 의
+    #      R_c ×1.20 → 비 1.2279, 여전히 PASS; ×1.30 → 1.3303 은 FAIL).  2π 배수는 잡지만
+    #      수 % 정확도는 **보증하지 않는다** — 그 보증은 별도 세분화 증거의 몫이다.
     d = solve_flux_tube(0.05, nr=240, nz=480, aspect=4.0)
     ratio = d['R_c'] / d['R_Holm']
-    chk('③ 작은 s 에서 R_c/R_Holm 이 1 근처 (0.7~1.3)', 0.7 < ratio < 1.3, f'{ratio:.4f}')
+    chk('③ [smoke] 작은 s 에서 R_c/R_Holm 이 1 근처 (0.7~1.3; ×1.2 오류는 못 잡는다)',
+        0.7 < ratio < 1.3, f'{ratio:.4f}')
 
     # ④ 격자 수렴 — 해상도를 올려도 값이 크게 안 움직인다
     a1 = solve_flux_tube(0.3, nr=120, nz=240, aspect=3.0)['R_c']
@@ -315,7 +328,18 @@ def _selftest() -> int:
     r_min = d['R_c'] / (psi(d['s_eff']) * d['R_Holm_min'])
     chk('⑧ 이종쌍(σ 1:8): 수치해가 **직렬** ψ(1/4a)(1/σ1+1/σ2) 에 붙는다',
         abs(r_ser - 1.0) < 0.10 and abs(r_min - 1.0) > 0.25,
-        f'직렬비 {r_ser:.4f} · min(σ)비 {r_min:.4f} (min 규약은 {1/r_min*r_ser:.3f}배 과대)')
+        f'직렬비 {r_ser:.4f} · min(σ)비 {r_min:.4f} · **min식/수치해 {1/r_min:.4f}배** '
+        f'(⚠ 직렬비/min비 = 16/9 는 수치해가 소거되는 계수비라 독립 증거가 아니다 — P2-R2-07)')
+    # ⑧b 짝수 nz 요구 — 홀수면 거부한다 (부록 P2-R2-04)
+    try:
+        solve_flux_tube(0.3, nr=40, nz=81, aspect=2.0); odd_ok = False
+    except ValueError:
+        odd_ok = True
+    chk('⑧b 홀수 nz 는 거부 (격막이 중간에 안 온다 — Codex: −0.96 % R_bulk 어긋남)', odd_ok)
+    # ⑧c s=0.3 이 인용 구간 **안**에 분류된다 (P2-R2-03: 0.30000000000000004 가 밖으로 갔었다)
+    d3 = solve_flux_tube(0.3, nr=300, nz=600, aspect=2.0)
+    chk('⑧c s=0.3 요청이 s≤0.3 구간에 들어간다 (a_eff 부동소수 반올림 허용)',
+        d3['s_eff'] <= LIT_VALID_MAX + BAND_EPS, f"s_eff={d3['s_eff']!r}")
 
     # ⑨ 동종쌍에서는 두 규약이 **같다** (⑧ 이 σ 비대칭만 잡는지 확인)
     d = solve_flux_tube(0.1, nr=200, nz=400, aspect=3.0, sigma=1.0, sigma2=1.0)

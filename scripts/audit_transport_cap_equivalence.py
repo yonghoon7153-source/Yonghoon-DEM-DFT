@@ -119,6 +119,38 @@ def run(n, seed, verbose=True):
     return st
 
 
+NC_SRC = SCRIPTS / 'network_conductivity.py'
+PC_ONLY_ANCHOR = "from plastic_coverage import film_area_from_overlap"
+
+
+def _load_nc(name: str, pc_mod, nc_subs=()):
+    """`network_conductivity.py` 를 격리 로드하되 그 안의 `_film_area` 를 **주어진 plastic 모듈**의
+    함수로 바꿔 끼운다 → cap 을 바꾼 plastic 판을 실제 솔버에 물릴 수 있다.  (P2-R2-06: 감사가
+    clamp/ψ 를 다시 구현하면 솔버 호출부의 변이를 못 본다 — 그래서 **솔버 자신**을 부른다.)"""
+    src = NC_SRC.read_text(encoding='utf-8')
+    for old_, new_ in nc_subs:
+        if src.count(old_) != 1:
+            raise SystemExit(f'솔버 치환 대상이 유일하지 않다 ({src.count(old_)}건): {old_!r}')
+        src = src.replace(old_, new_, 1)
+    mod = types.ModuleType(name)
+    mod.__file__ = str(NC_SRC)
+    sys.path.insert(0, str(SCRIPTS))
+    exec(compile(src, str(NC_SRC), 'exec'), mod.__dict__)
+    mod._film_area = pc_mod.film_area_from_overlap          # 솔버가 쓰는 이름
+    return mod
+
+
+def real_solver_edges(nc_mod, r1_um=0.5, r2_um=6.0, delta_um=0.2, native_um2=0.04, scale=1000.0):
+    """실제 `build_network` 한 쌍 — Codex 대조 조건 (r .5/6 µm · δ .2 µm · native A .04 µm²)."""
+    atoms = {1: {'type': 1, 'radius': r1_um / scale, 'x': 0.0, 'y': 0.0, 'z': 0.0},
+             2: {'type': 3, 'radius': r2_um / scale, 'x': (r1_um + r2_um - delta_um) / scale, 'y': 0.0, 'z': 0.0}}
+    rows = [{'id1': 1, 'id2': 2, 'contact_area': native_um2 / scale ** 2, 'delta': delta_um / scale}]
+    tm = {1: 'AM_P', 3: 'SE'}
+    n = nc_mod.build_network(atoms, rows, {1, 3}, scale, 10.0, box_x=1e3, box_y=1e3,
+                             mode='thermal', type_map=tm, contact_mode='physics')
+    return n['edges'] if isinstance(n, dict) else n[1]
+
+
 def _psi(a_eff, r_min):
     """`network_conductivity.py:396` 과 같은 식."""
     return max(1.0 - a_eff / r_min, 0.0) ** 1.5
@@ -216,6 +248,28 @@ def _selftest() -> int:
         abs(A0 - 2 * math.pi * r * r) < 1e-12 and abs(A1 - math.pi * r * r) < 1e-12
         and a0 == a1 == r,
         f'A {A0:.10g} → {A1:.10g} · a_eff {a0:.10g} = {a1:.10g}')
+
+    # ⑥ ★ P2-R2-06 — **실제 솔버**로 대조한다 (감사의 ψ 재구현이 아니라 build_network 자신).
+    #    cap 2π→π 를 plastic 에 물린 솔버와 원판 솔버가 같은 Rc·R_total 을 내야 한다.
+    pc_base = _load('_pc_s6b'); pc_s2 = _load('_pc_s6s', [(CAP_LINE, CAP_LINE_S2)])
+    e0 = real_solver_edges(_load_nc('_nc_base', pc_base))[0]
+    e1 = real_solver_edges(_load_nc('_nc_s2', pc_s2))[0]
+    chk('⑥ 실제 build_network: cap 전환 전후 Rc·R_total 동일 (Codex 대조 조건 r .5/6 · δ .2 · A .04)',
+        e0['R_constriction'] == e1['R_constriction'] and e0['R_total'] == e1['R_total'],
+        f"Rc {e0['R_constriction']!r} → {e1['R_constriction']!r} · R_total {e0['R_total']!r} → {e1['R_total']!r}")
+    chk('⑥b 그러나 진단 필드는 변한다 — A_physics 절반 · R_Maxwell 은 √2배 (σ 불변 ≠ 전 출력 불변)',
+        abs(e1['A_physics'] / e0['A_physics'] - 0.5) < 1e-12
+        and abs(e1['R_Maxwell'] / e0['R_Maxwell'] - math.sqrt(2.0)) < 1e-12,
+        f"A {e0['A_physics']!r} → {e1['A_physics']!r} · R_Maxwell {e0['R_Maxwell']!r} → {e1['R_Maxwell']!r}")
+    # ⑥c 판별력 — 솔버 호출부(Rc=0 분기)를 변이시키면 **이 대조가** 반드시 빨간불이 된다.
+    #     Codex: 옛 감사는 이 변이에도 n_bad=0 이었다 (감사가 ψ 를 다시 구현했으므로).
+    mut = [('                R_constriction = 0.0\n', '                R_constriction = R_Maxwell\n')]
+    m0 = real_solver_edges(_load_nc('_nc_mb', pc_base, mut))[0]
+    m1 = real_solver_edges(_load_nc('_nc_ms', pc_s2, mut))[0]
+    chk('⑥c 판별력: 솔버의 Rc=0 분기를 R_Maxwell 로 바꾸면 cap 전환이 **실제로** 값을 움직인다 '
+        '(Codex: Rc 0.7071 → 1.0)',
+        m0['R_constriction'] != m1['R_constriction'],
+        f"변이판 Rc {m0['R_constriction']!r} → {m1['R_constriction']!r}")
 
     print('수송 cap 동치 SELFTEST', 'PASS' if ok else 'FAIL')
     return 0 if ok else 1

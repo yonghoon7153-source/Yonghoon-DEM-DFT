@@ -357,10 +357,33 @@ def audit_case(case_dir, contact_mode='physics', channels=('ionic', 'electronic'
 def _l1_counters():
     return {'n_ladder': 0, 'n_cap_conflict': 0, 'n_vol_neg': 0,
             'n_exact_avail': 0, 'n_A_final_changed': 0, 'n_a_eff_changed': 0,
-            'n_rc_branch_changed': 0}
+            'n_rc_branch_changed': 0,
+            #  P2-R2-08 — 협착 항 삭제(Rc==0)를 **두 부류**로 가른다:
+            #    floor_only  = ψ ≤ 1e-4 인데 s_clamped < 1  (모델의 양수를 floor 가 지운다)
+            #    clamp_zero  = s_raw ≥ 1 → clamp 로 s = 1, ψ = 0 (A_surface 를 원판으로 읽어 강제된 0)
+            #  ⚠ binding=geom/tabor 로 나누면 틀린다 — δ=.12 는 tabor 결속인데 이미 s_raw 1.124 (Codex).
+            'n_rc0': 0, 'n_rc0_floor_only': 0, 'n_rc0_clamp_zero': 0}
+
+
+def _s_raw_clamped(e):
+    """솔버가 쓴 a = √(A_contact/π) 와 r_min 에서 (s_raw, s_clamped).  `network_conductivity.py:323·386·395`."""
+    A = e.get('A_contact') or 0.0
+    r_min = min(e['r1'], e['r2'])
+    a = math.sqrt(A / math.pi) if A > 0 else 0.0
+    if r_min <= 0:
+        return 0.0, 0.0
+    return a / r_min, min(a, r_min) / r_min
 
 
 def _l1_tally(c, e):
+    #  삭제 부류 (사다리 도달 여부와 무관하게 Rc==0 인 간선 전부)
+    if e.get('R_constriction') == 0.0:
+        c['n_rc0'] += 1
+        s_raw, s_cl = _s_raw_clamped(e)
+        if s_raw >= 1.0:
+            c['n_rc0_clamp_zero'] += 1
+        elif s_cl < 1.0:
+            c['n_rc0_floor_only'] += 1
     comp = e.get('A_components')
     if not comp or comp.get('cap_conflict') is None:
         return                                # 탄성 조기반환 / no_delta — 사다리에 안 옴
@@ -512,6 +535,13 @@ def main() -> int:
         print(f'  정확 lens 로 ψ 분기(R_c=0)가 바뀜    : {tot["n_rc_branch_changed"]:>10,d} = {pc("n_rc_branch_changed", ne):7.3f} %')
         print('  ⚠ a_eff 가 바뀐 간선 수는 σ 변화량이 아니다 (I²R 기여도 미측정).')
         print('  ⚠ 값은 안 바꿨다 — 저자 결정(전체 lens 인가 상별 몫인가) 뒤에 세대 2 로.')
+        n0 = tot['n_rc0']
+        print('\n═══ 삭제(Rc=0)의 두 부류 — P2-R2-08 (전 간선) ═══')
+        print(f'  Rc == 0 간선                         : {n0:>10,d}')
+        print(f'    clamp_zero (s_raw ≥ 1 → s=1, ψ=0)   : {tot["n_rc0_clamp_zero"]:>10,d} = {pc("n_rc0_clamp_zero", n0):7.3f} %')
+        print(f'    floor_only (ψ ≤ 1e-4 이고 s < 1)    : {tot["n_rc0_floor_only"]:>10,d} = {pc("n_rc0_floor_only", n0):7.3f} %')
+        print('  ⚠ clamp_zero 는 a=b 의 독립 측정이 아니다 — A_surface 를 원판으로 읽어 강제된 s=1 이다.')
+        print('  ⚠ floor_only 만이 "모델의 양수를 floor 가 지운" 부류다 (올바른 ψ 배치에서도 양수).')
 
     if a.out_csv:
         p = Path(a.out_csv)
@@ -822,6 +852,30 @@ def _selftest() -> int:
     chk('⑫d expect-csv: 같으면 불일치 0 · 삭제 수 하나를 바꾸면 **반드시** 잡힌다',
         ncmp == 1 and mism == [] and len(mism2) == 1 and mism2[0][1] == 'thermal_n_deleted',
         f'{mism2}')
+
+    # ── ⑬ P2-R2-08: 삭제 부류가 결속 라벨이 아니라 s_raw/s_clamped 로 갈린다 ────────
+    #    r_SE .5 / r_AM 6 µm · scale 1000 · ligg 0 (Codex 경계: floor 시작 0.10233796 · s=1 시작
+    #    0.10263268 · geom 시작 0.16291922).  δ=.1025 → floor_only · δ=.12 → clamp_zero (tabor 결속!)
+    def net_pair(delta_um):
+        sc = 1000.0
+        atoms = {1: {'type': 3, 'radius': 0.5 / sc, 'x': 0.0, 'y': 0.0, 'z': 0.0},
+                 2: {'type': 1, 'radius': 6.0 / sc, 'x': (6.5 - delta_um) / sc, 'y': 0.0, 'z': 0.0}}
+        rows = [{'id1': 1, 'id2': 2, 'contact_area': 0.0, 'delta': delta_um / sc}]
+        n = _NC.build_network(atoms, rows, {1, 3}, sc, 10.0, box_x=1e3, box_y=1e3,
+                              mode='thermal', type_map={1: 'AM_P', 3: 'SE'}, contact_mode='physics')
+        return (n['edges'] if isinstance(n, dict) else n[1])[0]
+    e_f = net_pair(0.1025); e_c = net_pair(0.12); e_p = net_pair(0.10)
+    cf = _l1_counters(); _l1_tally(cf, e_f)
+    cc = _l1_counters(); _l1_tally(cc, e_c)
+    cp = _l1_counters(); _l1_tally(cp, e_p)
+    chk('⑬a δ=.1025: Rc=0 · s<1 → floor_only (ψ ≤ 1e-4 가 모델의 양수를 지운다)',
+        cf['n_rc0'] == 1 and cf['n_rc0_floor_only'] == 1 and cf['n_rc0_clamp_zero'] == 0,
+        f"s_raw={_s_raw_clamped(e_f)[0]:.6f} binding={e_f['A_components']['binding']}")
+    chk('⑬b δ=.12: **tabor 결속인데** s_raw > 1 → clamp_zero (Codex: 1.1244)',
+        cc['n_rc0'] == 1 and cc['n_rc0_clamp_zero'] == 1 and cc['n_rc0_floor_only'] == 0
+        and e_c['A_components']['binding'] == 'tabor' and _s_raw_clamped(e_c)[0] > 1.1,
+        f"s_raw={_s_raw_clamped(e_c)[0]:.6f} binding={e_c['A_components']['binding']}")
+    chk('⑬c 대조: δ=.10 은 Rc > 0 (어느 부류도 아님)', cp['n_rc0'] == 0 and e_p['R_constriction'] > 0)
 
     print('협착 삭제 census SELFTEST', 'PASS' if ok else 'FAIL')
     return 0 if ok else 1

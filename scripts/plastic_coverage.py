@@ -211,10 +211,19 @@ def radii_from_rstar_rmin(R_star: float, R_min: float):
     """
     if not (R_star and R_min) or R_star <= 0 or R_min <= 0:
         return None
+    #  ⚠ P2-R2-05 부록: `r_max ≥ r_min` 이므로 `R* = r_min·r_max/(r_min+r_max) ≥ R_min/2` 가
+    #    **필요조건**이다.  이 guard 가 없으면 (R*=.1, R_min=.5) 가 (.5, .125) 를 돌려준다 —
+    #    r_max < r_min 인 불가능 쌍.  지원 범위: `R_min/2 ≤ R* < R_min`, 반경비 ≲ 1e6
+    #    (반경비 5e14 에서는 역산 반경의 lens 부피가 고정밀 대비 1.553배 어긋난다 — 보증 밖).
+    if R_star < 0.5 * R_min * (1.0 - 1e-12):
+        return None
     den = R_min - R_star
     if den <= 1e-15 * R_min:
         return None
-    return float(R_min), float(R_star * R_min / den)
+    r_max = float(R_star * R_min / den)
+    if r_max / R_min > 1e6:
+        return None
+    return float(R_min), r_max
 
 
 def lens_volume(r1: float, r2: float, delta: float) -> float:
@@ -999,6 +1008,10 @@ def _selftest() -> int:
     chk('⑥b R_min ≤ R* 는 기하 불가 ⇒ None',
         radii_from_rstar_rmin(0.5, 0.5) is None
         and radii_from_rstar_rmin(0.6, 0.5) is None)
+    chk('⑥c R* < R_min/2 도 기하 불가 ⇒ None (Codex: (.1,.5) 가 (.5,.125) 를 돌려줬다)',
+        radii_from_rstar_rmin(0.1, 0.5) is None and radii_from_rstar_rmin(0.25, 0.5) == (0.5, 0.5))
+    chk('⑥d 지원 반경비 밖(> 1e6)은 None (반경비 5e14 에서 lens 1.553배 어긋남 — 보증 밖)',
+        radii_from_rstar_rmin(0.5 * (1 - 1e-8), 0.5) is None)
 
     # ⑦ L1-01 재현 — 얕은 겹침에서 하한 > 상한인데 정상 Physics 면적이 나온다
     r = 0.5e-6
