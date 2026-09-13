@@ -1,18 +1,20 @@
 # kb 카탈로그 (생성물 — 손으로 고치지 말 것)
 
-> `python3 tools/kb_wiki.py index` 가 만든다 · 2026-09-13 · managed-files: 412
+> `python3 tools/kb_wiki.py index` 가 만든다 · 2026-09-13 · managed-files: 413
 
 규칙: kb/SCHEMA.md · 코드 체계: kb/CODES.md · 열린 질문: kb/questions/ · 논지 카드: kb/syntheses/ · 원장: kb/open_items.md · 문헌: litdb/INDEX.md
 
 값 = `db/properties/canonical_registry.json` · 금지 = `db/properties/citation_hazards.json` · 판정 = `db/governance/decisions.json` · 리뷰 = `kb/reviews/INDEX.md`
 
-## 최근 갱신 상위 20 (frontmatter `updated` 기준 · 전체 211건)
+## 최근 갱신 상위 20 (frontmatter `updated` 기준 · 전체 212건)
 - 2026-09-13 · `kb/methodology/silent_wrong_path_2026_09_13.md` — 조용히 틀린 경로 — 하루에 여섯 번 나온 한 부류 · 채택
+- 2026-09-13 · `kb/reviews/INDEX.md` — 리뷰 사슬 색인 — 프롬프트↔회신 (자동 생성) · 자동생성
 - 2026-09-13 · `kb/reviews/codex_BP_prompt_static_pair_result_2026_09_13.md` — 회신 BP 요청 — 정적대조 2 SCF 실행 결과 (BO 조건 1 이행) · 파일럿 보고량 재질의 · 발송대기
 - 2026-09-13 · `kb/reviews/codex_BP_reply_static_pair_result_2026_09_13.md` — 회신 BP 접수 — 조건 1 이행 인정 · 파일럿 조건부 GO (셀 정책 구현 불일치로 즉시 실행 승인은 아님) · 접수
 - 2026-09-13 · `kb/reviews/codex_BQ2_reply_fix_verification_2026_09_13.md` — 회신 BQ-2 — 수정본 검증 (NO-GO) · 회신됨-NO-GO
 - 2026-09-13 · `kb/reviews/codex_BQ3_prompt_sweep_complete_2026_09_13.md` — 회신 BQ-3 프롬프트 — 스윕 완결 · §4b 판정과 다음 런 사양 · 발송 대기
 - 2026-09-13 · `kb/reviews/codex_BQ3_reply_sweep_complete_2026_09_13.md` — 회신 BQ-3 — 스윕 완결 판정 (NO-GO 유지 · 10스윕 조건부 GO) · 회신됨-NO-GO-조건부GO
+- 2026-09-13 · `kb/reviews/codex_BQ4_prompt_10sweep_basin_2026_09_13.md` — 회신 BQ-4 프롬프트 — 10스윕 완결 · 골짜기 비교 · §4b 최종 판정 · 발송 대기
 - 2026-09-13 · `kb/projects/cascade_rebuild_log_2026_09.md` — cascade 재건 일지 — 2026-09 (누적) · open
 - 2026-09-13 · `kb/questions/coating_lineage_sibling_conflicts_2026_09_13.md` — 코팅 계보 #6·#7·#8 digest 가 서로 다른 말을 하는 세 자리 — 우리 값이 문헌의 어느 양인가 · open [open]
 - 2026-09-13 · `kb/questions/esw_reduction_limit_field_2026_08_28.md` — `reduction_limit_V` 는 환원한계가 아닌 것 같다 — breakpoint 하나 아래를 가리킨다 · open [open]
@@ -22,11 +24,9 @@
 - 2026-09-12 · `kb/reviews/codex_BN_reply_cascade_rebuild_2026_09_12.md` — 회신 BN 접수 — NO-GO. 재건 방향 찬성, 카드 P0 5건 · 접수
 - 2026-09-12 · `kb/reviews/codex_BO_reply_cascade_rebuild_v2_2026_09_12.md` — 회신 BO 접수 — 조건부 GO (정적대조 2 SCF · 파일럿 30 런). 실행 전 수정 5 조건 · 접수
 - 2026-09-12 · `kb/syntheses/cathode_coating_computational_lineage.md` — 양극 코팅 계산 계보 — Wolverton → Ceder → Mo 라인과 우리 LPSCl 산화축의 관계 · 진행
-- 2026-09-11 · `kb/reviews/INDEX.md` — 리뷰 사슬 색인 — 프롬프트↔회신 (자동 생성) · 자동생성
 - 2026-09-11 · `kb/reviews/codex_BL_prompt_lpsocl_gate_ambiguity_2026_09_11.md` — codex_BL_prompt_lpsocl_gate_ambiguity_2026_09_11 · 진행
 - 2026-09-11 · `kb/reviews/codex_BL_reply_lpsocl_gate_ambiguity_2026_09_11.md` — codex_BL_reply_lpsocl_gate_ambiguity_2026_09_11 · 진행
 - 2026-09-11 · `kb/reviews/codex_BL_response_lpsocl_gate_ambiguity_2026_09_11.md` — 회신 BL 대응 — NO-GO 수용(추가 MD·C3 실행 0), 감사 GO 항목 전부 착수: 개정안(post-hoc)·C3 도구 2판·C6 원장 등록 · 진행
-- 2026-09-09 · `kb/methodology/beta_gate_seed_policy.md` — 확산영역 게이트(β)와 시드 정책 — 문턱은 폐기, 시드 규율은 유효 · SUPERSEDED (문턱) / 유효 (시드·정지 규칙)
 
 ⚠ frontmatter 없는 레거시 문서는 이 목록에 안 뜬다 (날짜를 기계로 읽을 수 없다 — SCHEMA 상 소급하지 않는다).
 
@@ -207,9 +207,9 @@
 - `kb/results/vgcf_hbn_figure_plan.md` — VGCF/h-BN 원고 — 층수 연구를 어디에 둘 것인가 (2026-07-31 결정)
 - `kb/results/vgcf_hbn_gallery_mechanism_2026_07_30.md` — h-BN@VGCF — 209 meV 층수효과의 정체: confinement 확정 (2026-07-30)
 
-## reviews/ (132)
+## reviews/ (133)
 - `kb/reviews/ECERD2600097_review_notes.md` — 📝 리뷰 노트 — ECER-D-26-00097 (Fan 외, *Stability Issues in Sulfide-Based ASSB*)
-- `kb/reviews/INDEX.md` — 리뷰 사슬 색인 — 프롬프트↔회신 (자동 생성)  (2026-09-11 · 자동생성)
+- `kb/reviews/INDEX.md` — 리뷰 사슬 색인 — 프롬프트↔회신 (자동 생성)  (2026-09-13 · 자동생성)
 - `kb/reviews/_superseded_BN_replan_2026_09_12.md` — 회신 BN 요청 — cascade 재실행 계획의 **선(先)심사**: go / no-go
 - `kb/reviews/cascade_preflight_audit_2026_09_09.md` — cascade_preflight_audit_2026_09_09  (2026-09-09 · 진행)
 - `kb/reviews/codex_AA_prompt_stageA_v5_regate_2026_08_29.md` — Codex 재검토 요청 AA — 회신 Z 의 P0 8건 처리 후 Stage A v5 재게이트  (2026-08-29 · 발송 완료 — 회신 AA 접수, 후속은 codex_AB_prompt_…)
@@ -273,6 +273,7 @@
 - `kb/reviews/codex_BQ2_reply_fix_verification_2026_09_13.md` — 회신 BQ-2 — 수정본 검증 (NO-GO)  (2026-09-13 · 회신됨-NO-GO)
 - `kb/reviews/codex_BQ3_prompt_sweep_complete_2026_09_13.md` — 회신 BQ-3 프롬프트 — 스윕 완결 · §4b 판정과 다음 런 사양  (2026-09-13 · 발송 대기)
 - `kb/reviews/codex_BQ3_reply_sweep_complete_2026_09_13.md` — 회신 BQ-3 — 스윕 완결 판정 (NO-GO 유지 · 10스윕 조건부 GO)  (2026-09-13 · 회신됨-NO-GO-조건부GO)
+- `kb/reviews/codex_BQ4_prompt_10sweep_basin_2026_09_13.md` — 회신 BQ-4 프롬프트 — 10스윕 완결 · 골짜기 비교 · §4b 최종 판정  (2026-09-13 · 발송 대기)
 - `kb/reviews/codex_BQ_prompt_eos_v0_disordered_2026_09_13.md` — 회신 BQ — 무질서 초격자에서 **per-구조 EOS V₀ 가 성립하는가** (§4b 차단)
 - `kb/reviews/codex_BQ_reply_eos_v0_disordered_2026_09_13.md` — 회신 BQ — 예비 판정 (원문)
 - `kb/reviews/codex_B_neb_md_tools_2026_08_20.md` — 교차리뷰 B — NEB · MD · 도구 (codex 작업지시서)  (2026-08-20 · 리뷰대기)
