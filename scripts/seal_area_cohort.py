@@ -77,6 +77,7 @@ def seal_case(case_dir: Path, deck_dir: Path | None) -> dict:
         if a and c and a.endswith('.liggghts') and c.endswith('.liggghts'):
             hit = (Path(a), Path(c)); break
     problems = []
+    row['design_family'] = 'UNKNOWN'          # 덱이 없거나 헤더가 없으면 UNKNOWN (빈 문자열 금지)
     if dk is None:
         problems.append('DECK_MISSING')
     else:
@@ -158,7 +159,7 @@ def _selftest() -> int:
     out = t / 'cohort.tsv'; write_tsv(rows, out, t)
     txt = out.read_text(encoding='utf-8')
     chk('⑥ TSV 헤더에 설계족 분포와 "솔버를 부르지 않았다" 가 있다',
-        '설계족 분포: bimodal 1 · mono_AM_S 3' in txt and '솔버를 부르지 않았다' in txt)
+        '설계족 분포: UNKNOWN 1 · bimodal 1 · mono_AM_S 3' in txt and '솔버를 부르지 않았다' in txt)
     print('코호트 봉인 SELFTEST', 'PASS' if ok else 'FAIL')
     return 0 if ok else 1
 
