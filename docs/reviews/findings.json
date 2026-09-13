@@ -2884,6 +2884,142 @@
     "scripts/plastic_coverage.py",
     "docs/data/case_master.csv"
    ]
+  },
+  {
+   "id": "AREA-01",
+   "severity": "P1",
+   "status": "open",
+   "owner": "claude",
+   "found_by": "codex",
+   "opened_in": "docs/reviews/codex_verdict_area_contract_20260913.md",
+   "title": "S0 가 **δ 부재/0 의 native 면적 fallback** 을 누락했다 (0 % ↔ 솔버 100 %)",
+   "note": "`audit_constriction_deleted.py:127`(초판) 이 분모를 올린 뒤 δ≤0 이면 건너뛴다.  솔버 `network_conductivity.py:317` 는 **양의 native contact_area** 를 쓴다.\n★ Codex 반례 (반경 각 1 µm, `A_ligg = 0.998·π r²` = 새 원판 상한 **이내**): δ 열 부재 · δ=0 · δ<0 **세 경우 모두** S0 0/1 = **0 %** ↔ 실제 builder 의 `Rc = 0` 간선 1/1 = **100 %** (실제 `A_contact = 3.1353094683 µm²`).\n⇒ 무너지는 결론: *'S0 가 모든 생산 간선의 삭제를 센다'*.\n처방: δ 결손을 **보고만 하는 것으로는 복원되지 않는다** — no_delta 면적 fallback · invalid · unknown 을 구분해야 한다.",
+   "evidence_tests": [
+    "scripts/audit_constriction_deleted.py"
+   ]
+  },
+  {
+   "id": "AREA-02",
+   "severity": "P1",
+   "status": "open",
+   "owner": "claude",
+   "found_by": "codex",
+   "opened_in": "docs/reviews/codex_verdict_area_contract_20260913.md",
+   "title": "S0 는 **raw 행**, 솔버는 **채택된 unique pair** 를 센다 (90 % ↔ 0 %)",
+   "note": "S0 `:117`(초판) 대 솔버 `network_conductivity.py:240`.  솔버는 정렬 ID쌍을 key 로 **마지막 채택 행**만 남긴다.\n★ Codex 반례 (같은 ID쌍):\n· deep 9행 + 마지막 shallow → S0 **90 %** 삭제 ↔ 실제 unique edge **0 %**\n· shallow 9행 + 마지막 deep → S0 **10 %** ↔ 실제 **100 %**\n· deep + area=δ=0 행 → S0 **50 %** ↔ 실제 **100 %**\n⇒ **분모뿐 아니라 분자도** 달라진다.  같은 helper 를 부른다는 사실이 이 차이를 없애지 않는다.\n★ 더 큰 문제 — **채널별 모집단**: 실제 채택 간선은 이온=SE–SE · 전자=AM–AM · 열=전부다.  ⇒ **AM–SE 13.84 % 는 이온망 삭제율의 하한이 아니다**.  같은 raw AM–SE 모집단에서 geom 결속이 삭제의 **충분조건**이라는 뜻으로 제한해야 한다.\n⚠ *'이온망에는 결함이 없다'* 는 뜻이 **아니다** — SE–SE 에도 같은 Physics 분기가 걸린다.\n⛔ 감사 과정에서 last-write 를 임의의 평균/최댓값 정책으로 **바꾸지 않는다**.",
+   "evidence_tests": [
+    "scripts/audit_constriction_deleted.py"
+   ]
+  },
+  {
+   "id": "AREA-03",
+   "severity": "P1",
+   "status": "open",
+   "owner": "claude",
+   "found_by": "codex",
+   "opened_in": "docs/reviews/codex_verdict_area_contract_20260913.md",
+   "title": "계약의 **새 하한**과 *\"A_surface 완전 불변\"* 이 정상 탄성 접촉에서 충돌한다 (1.99995배)",
+   "note": "`docs/area_contract_20260913.md:86` 은 양쪽 면적에 `max(A_hertz, A_ligg)` 하한을, `:94` 는 `A_surface` 의 **완전 불변**을 요구한다.  둘은 동시에 못 지킨다.\n★ Codex 반례 (반경 1 µm 두 구, δ=0.0001 µm, 구 교차 원판을 `A_ligg` 로):\n  A_Hertz **0.0001570796326795** · A_ligg **0.0003141514113767** · 현재 Physics 반환 **0.0001570796326795** · 새 표의 하한 **0.0003141514113767** = **1.99995배**.\n  δ/R* = 0.0002 는 yield threshold **0.001131480151** 보다 작아 `plastic_coverage.py:273` 의 탄성 가지가 `A_ligg` 보다 작아도 `elastic_area` 를 돌려준다 ⇒ **정상 탄성 반례**다.\n⇒ 무너지는 결론: *'피복 불변과 표의 하한을 동시에 강제할 수 있다'*.\n처방: 표면 물리를 몰래 고치지 말고 **'현행 legacy 표면 지표 보존'** 과 **'새 수송 patch 계약'** 을 분리해 쓴다.  기존 함수가 이미 새 하한·상한을 전 구간에서 만족한다고 **선언하지 않는다**.",
+   "evidence_tests": [
+    "docs/area_contract_20260913.md"
+   ]
+  },
+  {
+   "id": "AREA-04",
+   "severity": "P1",
+   "status": "claimed_fixed",
+   "owner": "claude",
+   "found_by": "codex",
+   "opened_in": "docs/reviews/codex_verdict_area_contract_20260913.md",
+   "title": "영향 표가 **이온 T1 타깃을 Hertz 우선으로 잘못 분류**했다 (실제는 Physics 우선)",
+   "note": "`docs/area_contract_20260913.md:120` 의 *'Hertz Stage E 우선'* 은 소스와 **반대**다.\n★ **이 리포에서 재현 (판정문과 일치)** — `generate_comparison_plots.py:4244` 의 사슬은 `('sigma_full_mScm_stage_e_physics', 'sigma_full_mScm_physics', 'sigma_full_mScm_stage_e', 'sigma_full_mScm')` = **Physics Stage E → raw Physics → Hertz Stage E → raw Hertz**.  생산 getter 를 수정 없이 실행: Physics 0.7 · Hertz 0.2 → y = **0.7** · Physics 0.35 → y = **0.35**.\n⇒ 내가 `cov_Hertz`(**설명변수**)와 σ_ionic **타깃**을 섞었다.  **이온은 전환의 직접 영향 대상**이고 영향 평가에서 빼면 안 된다.\n★ 열 T1 쪽도 정정 — 14 특징 중 physics 이름은 **9·11·12** 다 (10 은 fallback flag, 14 는 `e_se_eff_gpa`).  내가 *'10·12·14'* 라고 적은 것은 틀렸다.\n⚠ `A_surface` 를 보존한다면 **11·12 의 legacy 피복 면적도 이 전환만으로 변하면 안 된다** — physics 접미사가 같다고 전부 `A_transport` 로 바꾸지 않는다.  target · resistance-derived feature · legacy surface feature 를 따로 추적한다.",
+   "evidence_tests": [
+    "docs/area_contract_20260913.md",
+    "scripts/generate_comparison_plots.py"
+   ],
+   "claimed_fixed_sha": "467341fdf392bdf6a5a1df8699a08ab3abe6d0d3"
+  },
+  {
+   "id": "AREA-05",
+   "severity": "P2",
+   "status": "claimed_fixed",
+   "owner": "claude",
+   "found_by": "codex",
+   "opened_in": "docs/reviews/codex_verdict_area_contract_20260913.md",
+   "title": "S0 **selftest 에 판별력이 0** 이었다 — 솔버의 `Rc=0` 분기를 바꿔도 13/13 PASS",
+   "note": "Codex: `audit_constriction_deleted.py:253`(초판) 이 **소스 문자열 두 개의 존재만** 봤다.  격리 메모리에서 `R_constriction = 0` 대입을 `R_Maxwell` 로 바꾸면 실제 Rc 가 **0 → 0.20771261697** 인데 **13개 모두 PASS** 였다.\n⇒ `SELF-25`(엉성한 필터로 판정하지 않는다)·`L4-03`(검사기가 거짓말한다)과 **같은 부류**이고 이번엔 **내가 만든 계측기**에서 났다.\n**수정**: 2판은 helper 를 다시 구현하지 않고 **솔버 `build_network` 를 부른다** ⇒ 판별력이 구조적으로 생긴다.  회귀 ⑥b 가 소스를 실제로 변이시켜 *'변이판에서는 같은 접촉이 삭제되지 않는다'* 를 확인한다 (실측 변이 Rc = **0.29404419136066245**).",
+   "evidence_tests": [
+    "scripts/audit_constriction_deleted.py"
+   ],
+   "claimed_fixed_sha": "7fc29330b219e12808abd2b72e938674251789c7"
+  },
+  {
+   "id": "AREA-06",
+   "severity": "P2",
+   "status": "claimed_fixed",
+   "owner": "claude",
+   "found_by": "codex",
+   "opened_in": "docs/reviews/codex_verdict_area_contract_20260913.md",
+   "title": "계약의 **ψ=0 등가식이 두 문턱을 섞었다**",
+   "note": "`docs/area_contract_20260913.md:54`.  Codex:\n· **ψ 정확 0**: `A/(πr²) ≥ 1`\n· **현 Physics 의 Rc=0 분기**: `A/(πr²) ≥ 0.9956957722087699` (ψ ≤ 1e-4)\n· 그 사다리에서 **Rc 삭제 시작 δ = 0.102337961053 µm** · **ψ 정확 0 시작 δ = 0.102632675670 µm**\n⇒ 내가 적은 0.10234 는 **Rc 삭제**의 근사값이지 ψ 정확 0 의 시작점이 아니다.\n★ geom 결속 시작 δ = **0.162919217325 µm** 는 판정문이 원 helper 이분탐색으로 재현했다 (내 0.16292 근사는 맞다).\n**수정**: 계약 §1-2 와 S0 헤더에 두 문턱을 **분리해** 적었다.",
+   "evidence_tests": [
+    "docs/area_contract_20260913.md",
+    "scripts/audit_constriction_deleted.py"
+   ],
+   "claimed_fixed_sha": "7fc29330b219e12808abd2b72e938674251789c7"
+  },
+  {
+   "id": "AREA-07",
+   "severity": "P2",
+   "status": "open",
+   "owner": "claude",
+   "found_by": "codex",
+   "opened_in": "docs/reviews/codex_verdict_area_contract_20260913.md",
+   "title": "SELF-28 의 **정수 접촉수는 확정할 수 없다** (저장이 소수 첫째 자리 반올림)",
+   "note": "`coverage_physics_vs_hertzian.py:407`·`:413` 이 비율을 **소수 첫째 자리로 반올림**해 저장한다.  CSV 에 geom 원시 정수 계수가 없다.\n★ Codex 의 Decimal 재계산: 접촉 가중률 **3.966493089 %** · **13.843331248 %** (내 값과 일치).  그러나 정수 **1,513,533 · 1,243,608** 은 그 소수값의 반올림이다.  반올림 호환 범위는 전체 **1,494,532–1,532,534** (3.916696–4.016287 %) · AM–SE **1,239,196–1,248,017** (13.794221–13.892413 %) — **통계적 CI 가 아니라 저장 반올림의 정보 손실 범위**다.\n★ **`volume`·`hertzian` 163건 0.0 도 '실제 0회' 의 증거가 아니다** — 각 0.0 % 는 0.05 % 미만을 숨길 수 있고 그 열만으로는 전체 합 **18,994회** 까지 배제하지 못한다 (실제로 그만큼 있다는 뜻은 아니다).  게다가 `hertzian` 은 **결속 라벨**이고 `plastic_coverage.py:273` 의 탄성 가지는 Hertz 면적을 돌려주면서 `binding=elastic` 이라 쓴다 (elastic>0 이 전체 148/163 · AM–SE 119/163) ⇒ *'Hertz 가 작동하지 않았다'* 고 결론 낼 수 없다.\n처방: **정수는 인용하지 않는다**.  '약 3.97 % · 13.84 %' 로만 쓰고 하한에 근사 중앙값을 그대로 쓰지 않는다.",
+   "evidence_tests": [
+    "docs/data/case_master.csv",
+    "docs/reviews/findings.json"
+   ]
+  },
+  {
+   "id": "AREA-08",
+   "severity": "P2",
+   "status": "open",
+   "owner": "claude",
+   "found_by": "codex",
+   "opened_in": "docs/reviews/codex_verdict_area_contract_20260913.md",
+   "title": "*\"16/49 % 가 hemisphere cap 을 검증했다\"* 는 성립하지 않는다",
+   "note": "Codex 가 real14 원 AM 457 · SE 32,832 좌표에 `mpm_webapp_payload.py:244` 의 `geometric_coverage` 를 그대로 실행: band 0 → AM_P **16.0 %** · AM_S **16.5 %**, 0.14 → **48.2 / 49.6 %**, 0.13 → 45.9 / 47.3, 0.26 → 70.2 / 70.8.  근사값은 나온다.\n⛔ 그러나 그 함수는 **구 중심·반경과 band 만** 읽는다 — `A_physics`·cap·힘·막 부피·MPM 변형 SE 를 읽지 않는다.  **cap 을 바꿔도 출력이 그대로다** ⇒ 특정 cap 의 타당성을 **식별하는 시험이 아니다**.  기본 band 는 0.13/0.26 이고 16/49 는 0/0.14 를 지정한 결과다.\n★ 더 근본적으로: `A_Hertz = πR*δ` · 교차 원판 · `A_tabor = F/H` 에 2πr² 상한을 붙였다고 min/max 결과가 **구면의 실제 덮인 면적**이 되지는 않는다.  a=0.8r 이면 구면 넓이는 투영 원판의 **1.25배** — 구면 cap → 원판에는 **별도 사상**이 필요하다.\n⇒ *'2πR_min² 은 반구 면적'* 은 맞다.  *'우리 피복 모델의 cap 은 검증됐다'* 는 **나오지 않는다**.  legacy 지표 보존과 물리 정본 승인을 구별한다.",
+   "evidence_tests": [
+    "docs/area_contract_20260913.md"
+   ]
+  },
+  {
+   "id": "AREA-09",
+   "severity": "P2",
+   "status": "open",
+   "owner": "claude",
+   "found_by": "codex",
+   "opened_in": "docs/reviews/codex_verdict_area_contract_20260913.md",
+   "title": "계약이 L2 §1 의 **2–4 단계에 답하지 않았다** · 원판 상한만으로 삭제가 안 닫힌다",
+   "note": "Codex: **1단계(estimand 선택)에는 답했다.**  남은 것 —\n2. patch 생성식 · 어느 구 표면의 어떤 투영인지 · 원형/연결성 · `a` 와 flux-tube `b` · 재료쌍 저항/bulk 분할: **명시 부족**\n3. 단위·겹침·하한/상한 충돌 해석: 표만으로 기존 L1 조건이 안 닫힘\n4. 독립 두 입자/neck 기준해·유효 영역·극한 검증: **없음** (16/49 비교는 수송 기준해가 아니다)\n★ **원판 상한의 충분성에 실제 함수 반례**: a/r = 0.998 이 되게 δ 를 이분탐색하면 δ = **0.102359079804 µm**, A = **0.996004·πr² < πr²**, ψ = **8.94427191e-05 > 0**, **Rc = 0**.  상한값 `A = πr²` 자체도 Rc = 0.\n⇒ *'협착 복원 → σ 하향'* 은 **검증할 가설**이지 면적 분리에서 나오는 정리가 아니다.\n★ Yovanovich 1982 p.86 식(1)–(3): `b` 는 contact spot 에 대응하는 **flux-tube 반경**이고 ψ 근사는 **0 < a/b ≤ 0.3** 에 제한된다.  `r_min` 을 `b` 로 놓고 `a/r ≤ 1` 을 지켰다고 **원문 유효 영역을 만족하지 않는다** (L2 수식 결함의 재등재가 아니라 **새 계약의 적용 범위가 비어 있다**는 근거).",
+   "evidence_tests": [
+    "docs/area_contract_20260913.md"
+   ]
+  },
+  {
+   "id": "AREA-10",
+   "severity": "P2",
+   "status": "open",
+   "owner": "claude",
+   "found_by": "codex",
+   "opened_in": "docs/reviews/codex_verdict_area_contract_20260913.md",
+   "title": "사전등록 §5 의 **판정 단위(통계량·모집단·미정 상태)가 열려 있다**",
+   "note": "Codex: 방향 가설은 **반증 가능**하고 반대 부호는 등록 실패가 아니라 가설의 반증이다 (그 이유로 등록을 무효화하거나 창을 다시 고르면 안 된다).  그러나 163건의 **어떤 요약량**을 3 %/10 % 와 비교하는지가 안 정해졌다 — 최대 변화 · 중앙값 · |Δ| 평균 · pooled σ 는 전부 다르고, 양/음이 상쇄되면 **평균 0 인데 모든 케이스가 크게 움직일** 수 있다.\nS2 전에 고정할 것: ① 코호트(case ID·원자료 지문·포함할 solver 상태; **S0 를 본 뒤 조성을 고르지 않기**) ② 전환(생성식·단위·영역·commit; **S2 와 S3 분리**) ③ 주 지표(예 `Δ_i = 100(σ_new−σ_old)/σ_old` 의 **사전에 택한 하나의 |Δ| 요약량**; signed Δ 와 분포도 보고) ④ 0·미정(old=0 을 나누지 말고 별도 상태/절대차; cap conflict·비수렴을 0 이나 case 제외로 바꾸지 않기; **미완결 코호트에서 전체 판정 발행 금지**) ⑤ 문턱(<3 / 3–<10 / ≥10 은 기술적 구간으로 고정 가능하나 **통계적 '기각'으로 읽히게 하지 말 것**; ⚠ **분해능 5 % 가 수치 오차 한계라면 <3 % 를 식별할 수 없다** — 5 % 의 뜻과 측정법을 따로 명시) ⑥ **망별 S0** (SE–SE→이온 · AM–AM→전자 · 전체→열; 삭제 간선 **개수** 비율은 I²R 기여도가 아니다) ⑦ 음성 대조(같은 원자료/key/정밀도/환경; §2-1 하한 충돌 먼저 해소; 반올림된 표의 일치를 **내부 bitwise 불변으로 읽지 않기**).\n★ *'삭제됐던 직렬 항을 되살리면 전도도는 안 오른다'* 는 **그 단순 조건이 성립할 때만**이다 — 이번 전환은 A · 다른 간선 저항 · bulk/contact 분할 · 거부 상태도 바꾼다 ⇒ **일괄 하향을 수학적 보장으로 쓰지 말 것**.",
+   "evidence_tests": [
+    "docs/area_contract_20260913.md"
+   ]
   }
  ]
 }
