@@ -75,6 +75,83 @@ def _load(name: str, path: Path):
 _SED = _load('_sed_loader', SCRIPTS / 'extract_se_network_diagnostics.py')
 #  ★★ 2판의 핵심 — 면적 helper 를 다시 구현하지 않고 **솔버를 부른다** (AREA-01/02).
 _NC = _load('_nc_solver', SCRIPTS / 'network_conductivity.py')
+#  ★ 원본 덤프(`post_*/atom_*.liggghts` + `contact_*.liggghts`) 파서는 리포에 이미 있다 —
+#    `plastic_coverage.py` 의 `_find_case_files` · `parse_atoms_auto` · `parse_contacts_auto`
+#    (규율 ①: 다시 짜지 않는다).  지난 S0 는 `parse_liggghts.py` 가 변환한 CSV 를 읽었고,
+#    이 경로는 그 변환을 건너뛴다.  두 경로가 같은 간선을 내는지는 ⑫ 와 `--expect-csv` 가 본다.
+_PC = _load('_pc_parsers', SCRIPTS / 'plastic_coverage.py')
+
+#  LHS 덱 규약: `variable r_SE equal 0.001` = 1 µm ⇒ sim 단위 = mm ⇒ sim→µm 배율 1000
+#  (`lhs_ext_materialize.py` · `design_performance_dataset.py` 의 `'scale': 1000`).
+#  ⚠ 이 도구의 **모든 집계는 scale 에 불변**이다 — ψ 는 a_eff/r_min 비이고 L1 집계도 같은
+#    간선 안의 비교라 배율이 상쇄된다 (selftest ⑫c 가 1000 ↔ 1e6 으로 확인).  µm 값 표기에만 쓴다.
+RAW_SCALE_UM_PER_SIM = 1000.0
+
+
+def _raw_dump_dir(case_dir: Path):
+    """`case_dir` 자체 또는 `post_*/` 에서 (atom, contact) 원본 덤프 → (dir, atom, contact) | None."""
+    cands = [case_dir] + sorted(q for q in case_dir.glob('post_*') if q.is_dir())
+    for d in cands:
+        a, c = _PC._find_case_files(str(d))
+        if a and c and a.endswith('.liggghts') and c.endswith('.liggghts'):
+            return d, a, c
+    return None
+
+
+def discover_raw_cases(root: Path) -> list[Path]:
+    """`root/<case>/post_*/` 에 원본 덤프가 있는 케이스 폴더들 (이름순).  CSV 층 없음."""
+    out = []
+    if not root.is_dir():
+        return out
+    for d in sorted(q for q in root.iterdir() if q.is_dir()):
+        if _raw_dump_dir(d):
+            out.append(d)
+    return out
+
+
+def load_case_any(case_dir: Path):
+    """→ (atoms, type_map, scale, meta, contacts, source).  CSV 층이 있으면 `_SED` 그대로,
+    없으면 원본 덤프.  두 경로의 **출력 형태는 같다** (⑫a 가 동일 자료로 대조)."""
+    if (case_dir / 'atoms.csv').exists() and (case_dir / 'contacts.csv').exists():
+        atoms, tm, scale, meta = _SED.load_case(case_dir)
+        return atoms, tm, scale, meta, _SED.load_contacts(case_dir), 'csv'
+    hit = _raw_dump_dir(case_dir)
+    if not hit:
+        raise ValueError(f'{case_dir.name}: atoms.csv/contacts.csv 도, post_*/ 원본 덤프도 없다')
+    d, af, cf = hit
+    ra = _PC.parse_atoms_auto(af)
+    rc = _PC.parse_contacts_auto(cf)
+    if not ra or not rc:
+        raise ValueError(f'{case_dir.name}: 덤프 파싱 결과가 비었다 (atoms {len(ra)} · contacts {len(rc)})')
+    atoms = {aid: {'type': int(v['type']), 'radius': float(v['r']),
+                   'x': float(v['pos'][0]), 'y': float(v['pos'][1]), 'z': float(v['pos'][2])}
+             for aid, v in ra.items()}
+    contacts = [{'id1': int(c['id1']), 'id2': int(c['id2']),
+                 'contact_area': float(c['contactArea']), 'delta': float(c['delta'])}
+                for c in rc]
+    meta = {'source': 'raw_dump', 'atom_file': af, 'contact_file': cf,
+            'scale': RAW_SCALE_UM_PER_SIM}
+    return atoms, {}, RAW_SCALE_UM_PER_SIM, meta, contacts, 'raw'
+
+
+def compare_to_expect(rows, expect_csv: Path, chans):
+    """지난 S0 CSV 와 케이스별 대조 → (mismatches, n_compared, missing_here, extra_here).
+    보는 열: n_contact_rows · type_hist · 채널별 n_edges/n_deleted.  **어느 하나라도** 다르면
+    mismatch 다 — 새 경로(원본 덤프)가 옛 경로(CSV)를 재현하지 못한다는 뜻이다."""
+    with expect_csv.open(encoding='utf-8') as f:
+        exp = {r['case']: r for r in csv.DictReader(f)}
+    here = {r['case']: r for r in rows}
+    keys = ['n_contact_rows', 'type_hist'] + [f'{c}_{k}' for c in chans for k in ('n_edges', 'n_deleted')]
+    mism = []
+    for name in sorted(set(exp) & set(here)):
+        for k in keys:
+            if k not in exp[name]:
+                continue
+            a, b = str(exp[name][k]).strip(), str(here[name][k]).strip()
+            if a != b:
+                mism.append((name, k, a, b))
+    return mism, len(set(exp) & set(here)), sorted(set(exp) - set(here)), sorted(set(here) - set(exp))
+
 
 #  기록용 문턱 (판정에 쓰지 않는다 — 판정은 솔버의 `R_constriction` 이 한다)
 PSI_FLOOR = 1e-4
@@ -193,10 +270,12 @@ def audit_case(case_dir, contact_mode='physics', channels=('ionic', 'electronic'
     ⚠ 예외를 **비삭제로 만들지 않는다** — 실패는 `error` 로 올리고 `None` 을 돌려준다
     (옛 판은 helper 예외를 삼켜 분모에는 남기고 삭제는 0 으로 셌다).
     """
-    atoms, type_map, scale, _meta = _SED.load_case(case_dir)
+    atoms, type_map, scale, _meta, contacts, source = load_case_any(case_dir)
     #  ★ 덱이 있으면 **그것이 정본**이다 — meta.json 의 손으로 적은 지도보다 우선한다
     #    (케이스마다 type 구성이 다르다는 것을 실측으로 확인했다).
     deck_used = ''
+    if source == 'raw' and not deck_dir:
+        raise ValueError(f'{case_dir.name}: 원본 덤프 경로에는 type_map 이 없다 — --deck-dir 필수')
     if deck_dir:
         cands = [Path(deck_dir) / case_dir.name / f'input_{case_dir.name}.liggghts',
                  Path(deck_dir) / f'input_{case_dir.name}.liggghts']
@@ -205,7 +284,6 @@ def audit_case(case_dir, contact_mode='physics', channels=('ionic', 'electronic'
             raise ValueError(f'덱을 못 찾았다: {[str(p) for p in cands]}')
         type_map, _src = type_map_from_deck(dk)
         deck_used = str(dk)
-    contacts = _SED.load_contacts(case_dir)
     if not contacts:
         raise ValueError('접촉 행이 0개')
     plate_z = _SED.estimate_plate_z(atoms)
@@ -218,7 +296,7 @@ def audit_case(case_dir, contact_mode='physics', channels=('ionic', 'electronic'
     from collections import Counter as _C
     type_hist = _C(a['type'] for a in atoms.values())
     all_types = sorted(type_hist)
-    row = {'case': case_dir.name, 'contact_mode': contact_mode,
+    row = {'case': case_dir.name, 'contact_mode': contact_mode, 'source': source,
            'n_contact_rows': len(contacts),
            'type_hist': ';'.join(f'{t}:{type_hist[t]}' for t in all_types),
            'type_map': ';'.join(f'{k}={v}' for k, v in sorted(type_map.items())),
@@ -331,6 +409,9 @@ def main() -> int:
     ap.add_argument('--deck-dir', default='',
                     help='LIGGGHTS 덱이 있는 폴더 — `<deck-dir>/<case>/input_<case>.liggghts`.  '
                          '주면 **덱에서 type_map 을 유도**한다 (meta.json 보다 우선).')
+    ap.add_argument('--expect-csv', default='',
+                    help='지난 S0 산출 CSV — 케이스별 n_contact_rows·type_hist·n_edges·n_deleted 를 '
+                         '대조한다.  하나라도 다르면 rc=4 (새 경로가 옛 경로를 재현하지 못함).')
     ap.add_argument('--selftest', action='store_true')
     a = ap.parse_args()
     if a.selftest:
@@ -351,12 +432,16 @@ def main() -> int:
         #  (`~/lhs_local/lhs00_100/atoms.csv` 같은 로컬 보관 폴더).  없으면 **왜** 못 찾았는지
         #  실제 파일 목록을 찍는다 — 경로를 두 번 물어보지 않기 위해 (2026-09-13 실사고).
         flat = bool(_SED.discover_cases(flat=True))
-        if not flat:
+        raw = [] if flat else discover_raw_cases(_SED.WEBAPP)
+        if not flat and not raw:
             print(f'\n⛔ {_SED.WEBAPP} 안에 results/ 도 archive/ 도 없고, 직접 담긴 케이스도 없다')
             print(_SED.case_layout_report(_SED.WEBAPP))
+            print('  (또는 케이스 폴더마다 post_*/atom_*.liggghts + contact_*.liggghts + input_<case>.liggghts)')
             return 2
-        print('  하위: (없음 — 폴더가 케이스를 직접 담고 있다: flat 모드)')
+        print('  하위: (없음 — 폴더가 케이스를 직접 담고 있다: '
+              + ('flat CSV 모드)' if flat else f'**원본 덤프 모드**, {len(raw)}개 · scale={RAW_SCALE_UM_PER_SIM:g})'))
     else:
+        raw = []
         print(f'  하위: {", ".join(subs)}')
 
     chans = tuple(c.strip() for c in a.channels.split(',') if c.strip())
@@ -365,7 +450,7 @@ def main() -> int:
         print(f'⛔ 모르는 채널: {bad}')
         return 2
 
-    cases = _SED.discover_cases(flat=flat)
+    cases = raw if raw else _SED.discover_cases(flat=flat)
     if a.limit:
         cases = cases[:a.limit]
     print(f'케이스 {len(cases)}개 · contact_mode={a.contact_mode} · 채널 {",".join(chans)}')
@@ -435,6 +520,17 @@ def main() -> int:
             w = csv.DictWriter(f, fieldnames=list(rows[0].keys()))
             w.writeheader(); w.writerows(rows)
         print(f'\n→ {p}')
+
+    if a.expect_csv:
+        mism, n_cmp, missing, extra = compare_to_expect(rows, Path(a.expect_csv), chans)
+        print(f'\n═══ 지난 S0 CSV 와 대조 ({a.expect_csv}) ═══')
+        print(f'  겹치는 케이스 {n_cmp} · 지난 CSV 에만 {len(missing)} · 이번에만 {len(extra)}')
+        if mism:
+            print(f'  ⛔ 불일치 {len(mism)}건 — **새 경로가 옛 경로를 재현하지 못한다**:')
+            for name, k, va, vb in mism[:20]:
+                print(f'    {name:14s} {k:26s} 지난={va}  이번={vb}')
+            return 4
+        print('  ✓ 겹치는 케이스 전부에서 n_contact_rows · type_hist · 채널별 n_edges/n_deleted 일치')
     return 0
 
 
@@ -648,6 +744,84 @@ def _selftest() -> int:
             'lhs00_900/' in rep and 'not_a_case/' in rep and 'atoms.csv + contacts.csv' in rep)
     finally:
         _SED.WEBAPP = saved
+
+    # ── ⑫ 원본 덤프 경로 == CSV 경로 (같은 자료, 두 형식) · scale 불변 · expect-csv 판별력 ─
+    #    2026-09-13 실사고: `~/lhs_local` 은 post_*/ 원본 덤프만 있고 CSV 층이 없었다.
+    rdir = Path(_tf.mkdtemp())
+    #  (i) 원본 덤프 케이스  rdir/lhs00_901/post_lhs00_901/{atom,contact}_100.liggghts + 덱
+    rc_ = rdir / 'lhs00_901'; pdir = rc_ / 'post_lhs00_901'; pdir.mkdir(parents=True)
+    (rc_ / 'input_lhs00_901.liggghts').write_text(
+        '# lhs00_901: mono_AM_S (2-type) | LHS design\n'
+        'variable r_AM equal 0.0005\nvariable r_SE equal 0.0005\n'
+        'fix m1 all property/global youngsModulus peratomtype 1.4e8 0.135e7\n'
+        'fix pts1 all particletemplate/sphere 15485863 atom_type 1 density constant 4800 '
+        'radius constant ${r_AM}\n'
+        'fix pts2 all particletemplate/sphere 32452843 atom_type 2 density constant 2000 '
+        'radius constant ${r_SE}\n')
+    #  세 입자: AM(1) · SE(2) · SE(3).  접촉 1–2 (깊음, geom 결속 → 삭제) · 2–3 (얕음)
+    (pdir / 'atom_100.liggghts').write_text(
+        'ITEM: TIMESTEP\n100\nITEM: NUMBER OF ATOMS\n3\n'
+        'ITEM: BOX BOUNDS pp pp ff\n0 1\n0 1\n0 1\n'
+        'ITEM: ATOMS id type radius x y z\n'
+        '1 1 0.0005 0 0 0.0005\n2 2 0.0005 0.0008 0 0.0005\n3 2 0.0005 0.0017995 0 0.0005\n')
+    def _crow(i1, i2, area, dlt):
+        v = ['0'] * 26
+        v[6], v[7], v[21], v[22] = str(i1), str(i2), repr(area), repr(dlt)
+        return ' '.join(v)
+    (pdir / 'contact_100.liggghts').write_text(
+        'ITEM: TIMESTEP\n100\nITEM: NUMBER OF ENTRIES\n2\n'
+        'ITEM: BOX BOUNDS pp pp ff\n0 1\n0 1\n0 1\n'
+        'ITEM: ENTRIES ' + ' '.join(f'c_cpl[{k}]' for k in range(1, 27)) + '\n'
+        + _crow(1, 2, 0.998 * math.pi * 0.0005 ** 2, 0.0002) + '\n'
+        + _crow(2, 3, 1e-9, 5e-7) + '\n')
+    #  (ii) 같은 자료를 CSV 층으로  rdir_csv/lhs00_901/{atoms,contacts}.csv + meta.json + 덱
+    cdir = Path(_tf.mkdtemp()); cc = cdir / 'lhs00_901'; cc.mkdir()
+    (cc / 'atoms.csv').write_text('id,type,radius,x,y,z\n1,1,0.0005,0,0,0.0005\n'
+                                  '2,2,0.0005,0.0008,0,0.0005\n3,2,0.0005,0.0017995,0,0.0005\n')
+    (cc / 'contacts.csv').write_text('id1,id2,contact_area,delta\n'
+                                     f'1,2,{0.998 * math.pi * 0.0005 ** 2!r},0.0002\n2,3,1e-09,5e-07\n')
+    (cc / 'meta.json').write_text('{"scale": 1000}')
+    (cc / 'input_lhs00_901.liggghts').write_text((rc_ / 'input_lhs00_901.liggghts').read_text())
+
+    A_r = load_case_any(rc_); A_c = load_case_any(cc)
+    chk('⑫a 원본 덤프 경로와 CSV 경로가 **같은 atoms·contacts** 를 낸다',
+        A_r[5] == 'raw' and A_c[5] == 'csv' and A_r[0] == A_c[0] and A_r[4] == A_c[4]
+        and A_r[2] == A_c[2] == 1000.0,
+        f'raw {len(A_r[0])} atoms/{len(A_r[4])} contacts · csv {len(A_c[0])}/{len(A_c[4])}')
+    chk('⑫a′ 원본 덤프 발견: post_*/ 를 가진 케이스만 (CSV 층 없는 폴더)',
+        [d.name for d in discover_raw_cases(rdir)] == ['lhs00_901']
+        and discover_raw_cases(cdir) == [])
+    r_raw = audit_case(rc_, channels=('ionic', 'thermal'), deck_dir=str(rdir))
+    r_csv = audit_case(cc, channels=('ionic', 'thermal'), deck_dir=str(cdir))
+    same = {k: v for k, v in r_raw.items() if k not in ('source', 'deck')} == \
+           {k: v for k, v in r_csv.items() if k not in ('source', 'deck')}
+    chk('⑫b 두 경로의 census 행이 동일 (source·deck 제외) — 삭제·L1 집계 포함', same,
+        f"thermal 삭제 {r_raw.get('thermal_n_deleted')}/{r_raw.get('thermal_n_edges')} · "
+        f"cap_conflict {r_raw.get('l1_n_cap_conflict')}")
+    chk('⑫b′ 그 픽스처에 판별력이 있다 (삭제 1 · 비삭제 1)',
+        r_raw.get('thermal_n_edges') == 2 and r_raw.get('thermal_n_deleted') == 1)
+    #  (iii) scale 불변 — 같은 자료를 1000 과 1e6 으로 풀어도 집계가 같다
+    def _counts(scale_):
+        atoms_, _tm, _sc, _m, cts, _src = load_case_any(rc_)
+        tm = {1: 'AM', 2: 'SE'}
+        n = _NC.build_network(atoms_, cts, set(tm), scale_, _SED.estimate_plate_z(atoms_),
+                              box_x=1e3, box_y=1e3, mode='thermal', type_map=tm,
+                              contact_mode='physics')
+        es = n['edges'] if isinstance(n, dict) else n[1]
+        c = _l1_counters(); [_l1_tally(c, e_) for e_ in es]
+        return sum(1 for e_ in es if e_['R_constriction'] == 0.0), c
+    chk('⑫c 집계는 scale 에 불변 (1000 ↔ 1e6: 삭제 수 · L1 집계 동일)',
+        _counts(1000.0) == _counts(1e6), f'{_counts(1000.0)}')
+    #  (iv) expect-csv 판별력 — 한 숫자를 바꾸면 반드시 잡힌다
+    ecsv = rdir / 'expect.csv'
+    with ecsv.open('w', newline='') as f:
+        w = csv.DictWriter(f, fieldnames=list(r_csv.keys())); w.writeheader(); w.writerow(r_csv)
+    mism, ncmp, _mi, _ex = compare_to_expect([r_raw], ecsv, ('ionic', 'thermal'))
+    bad_row = dict(r_raw); bad_row['thermal_n_deleted'] = int(bad_row['thermal_n_deleted']) + 1
+    mism2, _n2, _a, _b = compare_to_expect([bad_row], ecsv, ('ionic', 'thermal'))
+    chk('⑫d expect-csv: 같으면 불일치 0 · 삭제 수 하나를 바꾸면 **반드시** 잡힌다',
+        ncmp == 1 and mism == [] and len(mism2) == 1 and mism2[0][1] == 'thermal_n_deleted',
+        f'{mism2}')
 
     print('협착 삭제 census SELFTEST', 'PASS' if ok else 'FAIL')
     return 0 if ok else 1
