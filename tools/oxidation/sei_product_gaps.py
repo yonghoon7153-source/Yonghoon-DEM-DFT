@@ -21,10 +21,28 @@ import argparse, json, os
 from pathlib import Path
 
 DEFAULT = ["Li3PO4", "Li4P2O7", "NdPO4", "Nd2O3", "Nd2S3", "NdCl3",
-           "Li2S", "LiCl", "Li3P", "Li3PS4", "Li2O", "S"]
+           "Li2S", "LiCl", "Li3P", "Li3PS4", "Li2O", "S",
+           # ⛔ 2026-09-13 추가 — 원장에 **Li3N 이 없었다.** 우리는 "Li3P 는 전자를
+           #   샌다" 고 쓰면서, [Li26FDI] 가 그 대체재로 고른 Li3N 에 대해선 아무 말도
+           #   안 하고 있었다 (그 논문 Fig.1g 에서 Li3N 이 최협갭이다).
+           "Li3N"]
 # rough experimental gaps for the key wide-gap insulators (sanity anchor, eV)
 EXP_ANCHOR = {"Li3PO4": "~8 (exp)", "Li2O": "~7.99 (exp)", "LiCl": "~9.4 (exp)",
-              "Nd2O3": "~4.7 (exp)", "NdCl3": "~5 (exp)", "NdPO4": "wide (monazite)"}
+              "Nd2O3": "~4.7 (exp)", "NdCl3": "~5 (exp)", "NdPO4": "wide (monazite)",
+              # ⛔ 값을 **지어내지 않는다** — 원전 확인 전까지 빈칸으로 둔다.
+              "Li3N": "⚠ 미확인 — 원전 확인 후 채운다 (다형·측정법에 따라 갈린다)"}
+
+
+def _row(d):
+    """MP doc 하나 → 기록 한 줄. 공간군까지 남긴다 (어느 다형인지 적으려면 필요하다)."""
+    sym = getattr(d, "symmetry", None)
+    return {"material_id": str(d.material_id),
+            "formula": d.formula_pretty,
+            "band_gap_MP_eV": round(float(d.band_gap), 3),
+            "e_above_hull": round(float(d.energy_above_hull or 0), 4),
+            "is_stable": bool(d.is_stable),
+            "spacegroup_symbol": str(getattr(sym, "symbol", "?")),
+            "spacegroup_number": int(getattr(sym, "number", 0) or 0)}
 
 
 # ── 반응식에서 생성물 뽑기 (2026-08-19 신설) ─────────────────────────────────
@@ -121,6 +139,8 @@ def main():
     ap.add_argument("--formulas", nargs="+", default=DEFAULT)
     ap.add_argument("--from_reactions", nargs="+",
                     help="CSV(rxn_* 열) / JSONL(reaction) 에서 산물을 뽑아 쓴다")
+    ap.add_argument("--all_polymorphs", action="store_true",
+                    help="조성마다 **모든 다형**을 같이 기록한다 (α/β 처럼 갭이 갈리는 계에 필요)")
     ap.add_argument("--out", default="sei_product_gaps.json")
     if "--selftest" in __import__("sys").argv:
         raise SystemExit(_selftest())
@@ -152,26 +172,33 @@ def main():
                 docs = mpr.materials.summary.search(
                     formula=f,
                     fields=["material_id", "formula_pretty",
-                            "energy_above_hull", "band_gap", "is_stable"])
+                            "energy_above_hull", "band_gap", "is_stable",
+                            # ⛔ 2026-09-13 — 공간군이 없으면 **어느 다형인지 못 적는다.**
+                            #   Li3N 은 α(P6/mmm) 와 β(P6₃/mmc) 가 있고, 갭이 다르다.
+                            #   "Li3N gap" 이라고만 쓰면 두 값 중 뭔지 알 수 없다.
+                            "symmetry"])
                 if not docs:
                     rows[f] = {"error": "no MP entry"}
                     continue
                 # pick the ground state (lowest e_above_hull)
                 d = min(docs, key=lambda x: (x.energy_above_hull or 9e9))
                 has_nd = "Nd" in f
-                rows[f] = {
-                    "material_id": str(d.material_id),
-                    "formula": d.formula_pretty,
-                    "band_gap_MP_eV": round(float(d.band_gap), 3),
-                    "e_above_hull": round(float(d.energy_above_hull or 0), 4),
-                    "is_stable": bool(d.is_stable),
-                    "Nd_bearing_gap_is_LOWER_BOUND": has_nd,
-                    "exp_anchor": EXP_ANCHOR.get(f, ""),
-                }
+                rows[f] = {**_row(d), "Nd_bearing_gap_is_LOWER_BOUND": has_nd,
+                           "exp_anchor": EXP_ANCHOR.get(f, ""),
+                           "selection": "lowest_e_above_hull",
+                           "n_polymorphs_in_MP": len(docs)}
+                if args.all_polymorphs:
+                    # ⛔ 다형을 **전부** 남긴다 — 바닥상만 적으면 "다른 다형은 갭이 다르다" 를
+                    #   나중에 확인할 수 없다. 어느 것을 골랐는지는 selection 이 말한다.
+                    rows[f]["polymorphs"] = sorted(
+                        (_row(x) for x in docs),
+                        key=lambda r: (r["e_above_hull"], r["material_id"]))
                 tag = "  (Nd: LOWER BOUND)" if has_nd else ""
                 print(f"  {f:10s}  {d.formula_pretty:12s}  "
+                      f"{rows[f]['spacegroup_symbol']:10s} "
                       f"gap_MP={float(d.band_gap):5.2f} eV  "
-                      f"E_hull={float(d.energy_above_hull or 0):.3f}{tag}")
+                      f"E_hull={float(d.energy_above_hull or 0):.3f}  "
+                      f"다형 {len(docs)}개{tag}")
             except Exception as e:
                 rows[f] = {"error": str(e)[:160]}
                 print(f"  {f:10s}  [error] {str(e)[:80]}")
