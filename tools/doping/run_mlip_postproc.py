@@ -258,6 +258,23 @@ def _fit_bm3(V, E):
     return float(E0), float(V0), float(B0), float(B0 * 160.21766208), float(Bp), float(r2)
 
 
+def _compose_reason(hy_ok, hy_reason, gate_ok, gate_reason):
+    """실패 사유를 **전부** 잇는다. 한 곳에만 둔다 (라이브 · --regate 공용).
+
+    ⛔⛔ 회신 BQ-4 Q2 (2026-09-13) — 종전 `hy_reason or gate_reason` 은 이력현상이 실패하면
+      적합 게이트의 실패(B₀′·r²)를 **덮었다.** 실측: W3_f02/P1_A 는 B₀′ = −55.94 로 B₀′ 기준도
+      실패했는데 상위 사유에는 이력현상만 보여서, 내가 *"모양 기준이 없었으면 통과했을 줄"* 이라고
+      **틀리게** 썼다. 상위 사유가 다른 실패 원인을 가리는 구조 자체가 원인이었다.
+    ⛔ 못 하는 것: 어느 사유가 "주된" 것인지 정하지 않는다. 순서는 이력현상 → 적합이고 둘 다 사실이다.
+    """
+    parts = []
+    if not hy_ok and hy_reason:
+        parts.append(str(hy_reason))
+    if not gate_ok and gate_reason and gate_reason != 'OK':
+        parts.append('적합 게이트: ' + str(gate_reason))
+    return ' ‖ '.join(parts) if parts else 'OK'
+
+
 def _hysteresis_gate(hyst, V, hysteresis_tol=0.01, hysteresis_span_tol=0.10,
                      hysteresis_shape_tol=0.10):
     """두 갈래 이력현상 판정. **한 곳에만 둔다.**
@@ -822,8 +839,9 @@ def _eos_sweep_core(atoms_ref, calc, fractions=(0.94, 0.96, 0.98, 1.00, 1.02, 1.
                 'V0_in_window': _in_window,
                 'B0_positive': _b0_pos,
                 'gate_detail': _gi,
-                'fit_quality_reason': ('OK' if fit_ok
-                                      else (_hyst_reason or _gate_reason))}
+                'fit_quality_reason': ('OK' if fit_ok else _compose_reason(
+                                          _hyst_ok, _hyst_reason,
+                                          _gi['fit_quality_ok'], _gate_reason))}
     except Exception as e:
         # ⛔ 2026-09-13 — 종전에는 적합이 터지면 **수렴 기록·이력 기록까지 통째로 버렸다.**
         #   그래서 *"왜 실패했나"* 를 볼 자료가 실패한 경우에만 없어졌다 — 정확히 반대다.
@@ -1158,10 +1176,24 @@ def maybe_apply_eos_v0(atoms, record, args, calc):
                 or _eos.get('convergence') or [])
         _sel = _select_nearest_converged(_frames, _cup, v0) if _frames else None
         if _sel is None:
-            _start = _bs
-            pol['v0_start_state'] = ('⚠ EOS 보고 가지의 **마지막 구조** (점별 프레임 없음 — '
-                                     '최근접 수렴점을 고를 수 없어 끝점을 썼다)')
-            pol['v0_start_selection'] = {'method': 'last_point_fallback'}
+            # ⛔⛔ 회신 BQ-4 Q1 P1-① (2026-09-13) — 종전에는 여기서 `_start = _bs`
+            #   (`last_point_fallback`) 로 **끝점을 썼다.** 함수 `_select_nearest_converged`
+            #   는 None 을 돌려주며 "끝점으로 때우지 않는다" 고 적어 놓고, **호출부가** 때웠다.
+            #   BQ-4 §1 에 "끝점으로 때우지 않는다" 고 쓴 것은 함수에는 참, 호출부에는 거짓이었다
+            #   (2026-09-13 여섯 번째 조용한 오경로와 같은 꼴 — 호출부만 다른 일을 한다).
+            #   리뷰어 재현: 정상 EMT EOS 에서 프레임만 빼면 끝점이 승격됐다.
+            #   ⇒ 승계 출발점을 정할 수 없으면 **차단**한다. 이유를 두 갈래로 적는다.
+            _why = ('점별 프레임이 없다 (연쇄 미사용 · 구버전 기록 · 프레임 유실)'
+                    if not _frames else '상승 가지에 수렴점이 하나도 없다')
+            pol['eos_v0_applied'] = False
+            pol['downstream_blocked'] = True
+            pol['block_reason'] = f'V₀ 승계 출발점을 정할 수 없다 — {_why}'
+            pol['v0_start_selection'] = {'method': 'none_blocked', 'why': _why}
+            pol['⛔차단'] = ('최근접 수렴점을 고를 수 없어 V₀ 적용을 **차단**했다: %s. '
+                             '끝점으로 대체하지 않는다 (회신 BQ-3 Q5-4 · BQ-4 Q1 P1-①). '
+                             '진단용 구조만 남긴다.' % _why)
+            pol['_diagnostic_atoms'] = _bs
+            return _orig, pol
         else:
             _start = _sel['atoms']
             pol['v0_start_state'] = (f"EOS 상승 가지 **최근접 수렴점** (index {_sel['index']}, "
@@ -1190,6 +1222,19 @@ def maybe_apply_eos_v0(atoms, record, args, calc):
             _cmp = compare_frames(_scaled, _new)
         except Exception as _e:                                  # noqa: BLE001
             _cmp = {'continuity': 'continuity_unknown', 'why_unknown': f'비교 실패: {_e}'}
+        # ⛔ 회신 BQ-4 Q4 (2026-09-13) — 0 스텝이면 `_new == _scaled` 라 위 비교는
+        #   자기 자신과의 비교다(변위 0·이웃 동일이 **무조건** 나온다). 수렴은 유효하다 —
+        #   ASE 는 첫 이동 전에 새 부피에서 힘을 평가하고 기준을 확인한다 (실측: H0 선택점
+        #   0.00469 → 적용 후 0.00462 eV/Å, 힘이 실제로 바뀌었다). 무효가 되는 것은
+        #   *"같은 골짜기의 독립 검증"* 으로 세는 것뿐이다. 그래서 수렴 판정은 건드리지 않고
+        #   이 검사에만 꼬리표를 단다. 억지로 한 스텝 더 움직이지 않는다.
+        _zero = int(rep.get('n_steps') or 0) == 0
+        _cmp['update'] = 'zero_update' if _zero else 'nonaffine_update'
+        _cmp['counts_as_continuity_evidence'] = (not _zero) and _cmp.get('continuity') != 'continuity_unknown'
+        if _zero:
+            _cmp['⚠_zero_update'] = ('완화가 0 스텝이라 스케일 출발점과 결과가 같은 구조다. '
+                                     '변위 0·이웃 동일은 **검사 결과가 아니라 항등식**이다 — '
+                                     '같은 골짜기의 독립 증거로 세지 마라 (회신 BQ-4 Q4)')
         pol['succession_checks']['4_displacement_vs_scaled_start'] = _cmp
         pol['succession_checks']['⚠_순서'] = ('①대응·셀·부피 ②유한 최종힘·수렴 ③E·σ·P=−tr/3 '
                                               '④등방 제외 변위·배위 ⑤그 결과에 연결된 파일만 후속 후보 '
@@ -1397,7 +1442,8 @@ def regate_eos(eos, fmax=None, hysteresis_tol=0.01, hysteresis_span_tol=0.10,
     hy_ok, hy_reason = _hysteresis_gate(out['hysteresis'], V, hysteresis_tol,
                                         hysteresis_span_tol, hysteresis_shape_tol)
     if not hy_ok:
-        fit_ok, reason = False, (hy_reason or reason)
+        fit_ok = False
+    reason = _compose_reason(hy_ok, hy_reason, gi['fit_quality_ok'], reason)
     out.update({'gate_detail': gi, 'r2': r2, 'fit_quality_ok': fit_ok,
                 'fit_quality_reason': ('OK' if fit_ok else reason),
                 'V0': V0 if fit_ok else None,
@@ -1805,7 +1851,7 @@ def _selftest():
     #   ⛔⛔ 2026-09-13 회신 BQ-2 P0-3 — 이 시험도 **옛 동작을 방어하고 있었다.**
     #     fixture 가 `{'eos': {'V0': V0}}` 뿐이라 수렴 근거도 가지 구조도 없는데
     #     승격을 기대했다. 이제 자격을 갖춘 record 라야 통과한다.
-    def _mk_eos(v0, vol_branch=None, eligible=True, rattle=0.0):
+    def _mk_eos(v0, vol_branch=None, eligible=True, rattle=0.0, frames=True):
         """자격을 갖춘(또는 일부러 못 갖춘) EOS 기록 하나를 만든다.
 
         ⚠ `rattle` 이 필요한 이유: 완화는 **가지 구조**(`_branch_atoms`)에서 출발한다.
@@ -1818,7 +1864,11 @@ def _selftest():
         if rattle:
             _b.rattle(stdev=rattle, seed=7)
         _b.calc = EMT()
+        # 회신 BQ-4 P1-① 이후: 승계는 **점별 프레임의 최근접 수렴점**에서만 출발한다.
+        #   프레임이 없으면 차단이 정답이므로, 양성 fixture 는 프레임을 갖춰야 한다.
         return {'V0': v0, '_branch_atoms': _b,
+                '_branch_frames': ([] if frames is False else [_b.copy()]),
+                'convergence': [{'converged': True, 'fraction': 1.0}],
                 'downstream_eligible': bool(eligible),
                 'downstream_block_reason': (None if eligible else '시험용 미달'),
                 'fit_quality_ok': bool(eligible)}
@@ -1851,6 +1901,52 @@ def _selftest():
         "⛔음성: 차단이면 eos_v0_applied 는 거짓")
     chk(_pol_f.get('_diagnostic_atoms') is not None,
         "차단해도 진단 구조는 남긴다 (버리지 않는다)")
+
+    # ③-c ⛔⛔음성 — 회신 BQ-4 Q1 P1-① **리뷰어 재현 그대로**: 정상 EOS 에서 프레임만 빼면
+    #   종전 호출부는 `last_point_fallback` 으로 끝점을 승격했다. 이제는 차단이다.
+    _at_nf = bulk('Cu', 'fcc', a=3.6, cubic=True) * (2, 2, 2); _at_nf.calc = EMT()
+    _v_nf = _at_nf.get_volume()
+    _rec_nf = {'eos': _mk_eos(V0, vol_branch=_v_nf * 1.06, frames=False)}
+    _a_nf, _pol_nf = maybe_apply_eos_v0(_at_nf, _rec_nf, A(apply_eos_v0=True), EMT())
+    chk(_pol_nf.get('downstream_blocked') is True
+        and _pol_nf.get('v0_start_selection', {}).get('method') == 'none_blocked'
+        and abs(_a_nf.get_volume() - _v_nf) < 1e-9,
+        "⛔⛔음성 BQ-4 P1-①: 프레임이 없으면 **끝점으로 대체하지 않고 차단**한다 (원본 부피 그대로)")
+    chk('last_point_fallback' not in json.dumps(_pol_nf, default=str),
+        "⛔음성 BQ-4 P1-①: `last_point_fallback` 이라는 경로가 기록에 **더는 나오지 않는다**")
+    _rec_nc = {'eos': dict(_mk_eos(V0), convergence=[{'converged': False, 'fraction': 1.0}])}
+    _at_nc = bulk('Cu', 'fcc', a=3.6, cubic=True) * (2, 2, 2); _at_nc.calc = EMT()
+    _, _pol_nc = maybe_apply_eos_v0(_at_nc, _rec_nc, A(apply_eos_v0=True), EMT())
+    chk(_pol_nc.get('downstream_blocked') is True and '수렴점이 하나도' in
+        _pol_nc.get('block_reason', ''),
+        "⛔음성 BQ-4 P1-①: 프레임은 있는데 수렴점이 없어도 차단 — 사유가 두 갈래로 구분된다")
+
+    # ④ 회신 BQ-4 Q4 — 0 스텝은 수렴 유효 · 연속성 증거 아님
+    _sc = pol_on['succession_checks']['4_displacement_vs_scaled_start']
+    chk(pol_on['apply_report'].get('n_steps') == 0 and _sc.get('update') == 'zero_update'
+        and _sc.get('counts_as_continuity_evidence') is False
+        and pol_on['eos_v0_applied'] is True,
+        "BQ-4 Q4: 완벽 결정은 0 스텝 → zero_update · 연속성 증거 아님 · **수렴·적용은 유효**")
+    _at_r = bulk('Cu', 'fcc', a=3.6, cubic=True) * (2, 2, 2); _at_r.calc = EMT()
+    _, _pol_r = maybe_apply_eos_v0(_at_r, {'eos': _mk_eos(V0, rattle=0.03)},
+                                   A(apply_eos_v0=True), EMT())
+    _sr = _pol_r['succession_checks']['4_displacement_vs_scaled_start']
+    chk(_pol_r['apply_report'].get('n_steps', 0) > 0 and _sr.get('update') == 'nonaffine_update'
+        and _sr.get('counts_as_continuity_evidence') is True,
+        "⛔음성 BQ-4 Q4: 실제로 움직인 완화는 nonaffine_update 이고 증거로 센다 (꼬리표가 항상 False 가 아니다)")
+
+    # ⑤ 회신 BQ-4 Q2 — 실패 사유를 **덮지 않는다** (한 helper 를 두 경로가 쓴다)
+    _r_both = _compose_reason(False, '이력현상 — 갈린다', False, "B0'=-55.94 가 0<B0'<15 밖")
+    chk('이력현상' in _r_both and "B0'=-55.94" in _r_both,
+        "⛔음성 BQ-4 Q2: 이력현상 **과** 적합 게이트가 같이 실패하면 둘 다 사유에 남는다 (가림 없음)")
+    chk(_compose_reason(False, '이력현상', True, 'OK') == '이력현상'
+        and _compose_reason(True, None, False, 'r2=0.80') == '적합 게이트: r2=0.80'
+        and _compose_reason(True, None, True, 'OK') == 'OK',
+        "BQ-4 Q2: 한쪽만 실패하면 그쪽만 · 둘 다 통과면 OK")
+    import inspect as _insp
+    chk('_compose_reason(' in _insp.getsource(_eos_sweep_core)
+        and '_compose_reason(' in _insp.getsource(regate_eos),
+        "BQ-4 Q2: 라이브(_eos_sweep_core)와 소급(regate_eos) **둘 다** 같은 helper 를 부른다 (두 벌 금지)")
 
     # ③-c ⛔음성 — 자격 미달(수렴 근거 없음)이면 V₀ 가 있어도 차단한다
     _at_e = bulk('Cu', 'fcc', a=3.6, cubic=True) * (2, 2, 2); _at_e.calc = EMT()

@@ -510,6 +510,51 @@ def selftest():
     chk(_raises(lambda: _gov([{**D_OK, "id": None}], [], []), "id 없는"),
         "[음성] ID 없는 결정 기록을 잡는다")
 
+    # ── 뼈대 마감 카드로 마감을 선언하는 길 (2026-09-13) ─────────────────
+    #   §4b 마감 기록은 종료 문구·재개 조건을 비운 채 먼저 만들었다. 그 상태로
+    #   결정이 active 가 되면 빈 재개 조건이 '재개 사유 없음' 으로 읽힌다.
+    #   ⚠ 격리 root 를 따로 쓴다 — gd 에 카드를 남기면 **뒤 검사들이 오염**된다.
+    ck = td / "closedcard"
+    (ck / "db" / "governance").mkdir(parents=True, exist_ok=True)
+    (ck / "db" / "properties").mkdir(parents=True, exist_ok=True)
+
+    def _gov_card(card, dec):
+        (ck / "db/properties/x_closed_2026_09_13.json").write_text(
+            json.dumps(card), encoding="utf-8")
+        (ck / "db/governance/decisions.json").write_text(
+            json.dumps({"decisions": dec}), encoding="utf-8")
+        (ck / "db/governance/assessments.json").write_text(
+            json.dumps({"assessments": []}), encoding="utf-8")
+        return C.validate_governance({"entries": []}, root=ck)
+
+    _REF = "db/properties/x_closed_2026_09_13.json"
+    _DA = {"id": "D-c", "kind": "closure", "decision_state": "active", "slot": "sc",
+           "method_ref": _REF,
+           "ratification": {"state": "ratified", "role": "scientific_owner",
+                            "actor_id": "y", "timestamp": "t", "commit": "0" * 40}}
+    _hits = lambda v: [x for x in v if "뼈대 카드로는 마감을 선언할 수 없다" in x]
+    chk(len(_hits(_gov_card({"closed": False}, [_DA]))) == 1,
+        "[음성] ★ 뼈대 카드(closed:false)를 참조하는 active 마감 결정을 잡는다")
+    chk(not _hits(_gov_card({"closed": True}, [_DA])),
+        "닫힌 카드(closed:true)는 active 마감을 막지 않는다")
+    chk(not _hits(_gov_card({}, [_DA])),
+        "`closed` 키가 **없는** 옛 카드는 뼈대로 보지 않는다 (이 필드보다 먼저 생겼다)")
+    chk(not _hits(_gov_card({"closed": False},
+                            [{**_DA, "decision_state": "proposed",
+                              "ratification": {"state": "proposed"}}])),
+        "proposed 면 막지 않는다 — 뼈대 카드를 **제안으로** 올리는 것이 정상 경로다")
+    _DE = {**_DA, "method_ref": "tools/x.py --flag", "evidence": [_REF]}
+    chk(len(_hits(_gov_card({"closed": False}, [_DE]))) == 1,
+        "[음성] ★ method_ref 가 아니라 **evidence** 로 참조해도 잡는다 "
+        "(실측: active 마감 4건 중 3건의 method_ref 는 카드 경로가 아니었다)")
+    (ck / "db/properties/x_closed_2026_09_13.json").write_text("{ not json",
+                                                               encoding="utf-8")
+    (ck / "db/governance/decisions.json").write_text(
+        json.dumps({"decisions": [_DA]}), encoding="utf-8")
+    chk(any("못 읽음은" in x for x in
+            C.validate_governance({"entries": []}, root=ck)),
+        "[음성] 못 읽는 마감 카드를 '뼈대 아님' 으로 넘기지 않는다 (fail-closed)")
+
     # 산출물 원장도 같은 경로다 (artifacts.json 은 위 _gov 가 안 만들므로 직접 쓴다)
     (gd / "db/governance/artifacts.json").write_text(
         json.dumps({"artifacts": [{"id": "R-1"}, {"id": "R-1"}]}), encoding="utf-8")

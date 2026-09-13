@@ -85,8 +85,30 @@ def manifest(out_root, plan):
             "⛔": "이 파일은 판정하지 않는다. 종료 문구는 사람이 고른다 (회신 BQ-3 Q6)"}
 
 
+def prepared(rec):
+    """한 기록이 **준비됐는가** — EOS 자격만이 아니라 최종 적용·수렴·후속 입력까지.
+
+    ⛔⛔ 회신 BQ-4 Q1 P1-② (2026-09-13) — 종전 tally 는 `eos.downstream_eligible` 만 셌다.
+      EOS 는 통과했지만 최종 V₀ 완화가 **차단**된 기록 다섯 개를 넣어도 `all_five=true` 가
+      나왔다. "준비 확보" 는 후속 입력 파일이 실제로 있어야 성립한다.
+    ⛔ 못 하는 것: 파일의 해시를 원본과 대조하지 않는다 — 기록에 적힌 이름과 플래그만 본다.
+      (리뷰어도 최종 파일의 해시·부재까지는 확인하지 않았다고 적었다.)
+    반환: True / False / None(기록을 못 읽음 — 없는 것을 있다고도 없다고도 하지 않는다)
+    """
+    if not isinstance(rec, dict):
+        return None
+    e = rec.get("eos") or {}
+    cp = rec.get("cell_policy") or {}
+    sw = rec.get("structures_written") or {}
+    return bool(e.get("downstream_eligible") is True
+                and cp.get("eos_v0_applied") is True
+                and cp.get("downstream_blocked") is False
+                and (cp.get("apply_report") or {}).get("converged") is True
+                and "final_v0_applied.xyz" in sw)
+
+
 def tally(out_root):
-    """조건별 자격 집계 — 판정이 아니라 **세기**다."""
+    """조건별 **준비** 집계 — 판정이 아니라 **세기**다. 무엇을 세는지는 `prepared()`."""
     res = {}
     for cond in CONDITIONS:
         rows = {}
@@ -96,8 +118,7 @@ def tally(out_root):
                 rows[s] = None
                 continue
             try:
-                e = (json.loads(f.read_text()).get("eos") or {})
-                rows[s] = bool(e.get("downstream_eligible") is True)
+                rows[s] = prepared(json.loads(f.read_text()))
             except Exception:                                # noqa: BLE001
                 rows[s] = None
         n_ok = sum(1 for v in rows.values() if v is True)
@@ -129,14 +150,42 @@ def _selftest():
         root = Path(td) / "diag"
         root.mkdir()
         (root / "W3_f02" / "H0_host").mkdir(parents=True)
-        (root / "W3_f02" / "H0_host" / "postproc.json").write_text(
-            json.dumps({"eos": {"downstream_eligible": True}}))
+        # ⚠ 회신 BQ-4 P1-② 이후 fixture 는 **준비 완료** 기록이어야 1 로 센다 —
+        #   종전 fixture(`eos.downstream_eligible` 만)는 옛 집계의 구멍을 방어하고 있었다.
+        (root / "W3_f02" / "H0_host" / "postproc.json").write_text(json.dumps(
+            {"eos": {"downstream_eligible": True},
+             "cell_policy": {"eos_v0_applied": True, "downstream_blocked": False,
+                             "apply_report": {"converged": True}},
+             "structures_written": {"final_v0_applied.xyz": "x"}}))
         t = tally(root)
         chk(t["W3_f02"]["n_eligible"] == 1 and t["W3_f02"]["all_five"] is False
             and t["W3_f005"]["n_eligible"] == 0,
             "집계: 1/5 는 all_five=False, 없는 조건은 0 (없는 것을 있다고 안 한다)")
         chk(t["W3_f02"]["eligible"]["P1_Al2O3_A"] is None,
             "⛔음성: 결과 없는 구조는 None 이지 False 가 아니다")
+        # 회신 BQ-4 Q1 P1-② — EOS 자격만으로 all_five 가 되면 안 된다
+        _full = {"eos": {"downstream_eligible": True},
+                 "cell_policy": {"eos_v0_applied": True, "downstream_blocked": False,
+                                 "apply_report": {"converged": True}},
+                 "structures_written": {"final_v0_applied.xyz": "x"}}
+        _eos_only = {"eos": {"downstream_eligible": True},
+                     "cell_policy": {"eos_v0_applied": False, "downstream_blocked": True},
+                     "structures_written": {"DIAGNOSTIC_blocked_not_for_downstream.xyz": "x"}}
+        for s in STRUCTURES:
+            (root / "W3_f005" / s).mkdir(parents=True)
+            (root / "W3_f005" / s / "postproc.json").write_text(json.dumps(_eos_only))
+        t2 = tally(root)
+        chk(t2["W3_f005"]["n_eligible"] == 0 and t2["W3_f005"]["all_five"] is False,
+            "⛔음성 BQ-4 P1-②: EOS 자격은 있는데 최종 V₀ 적용이 차단된 5줄은 **0/5** 다 (all_five 아님)")
+        for s in STRUCTURES:
+            (root / "W3_f005" / s / "postproc.json").write_text(json.dumps(_full))
+        chk(tally(root)["W3_f005"]["all_five"] is True,
+            "양성: 적용·수렴·최종 파일까지 갖춘 5줄은 all_five")
+        chk(prepared({"eos": {"downstream_eligible": True}}) is False and prepared("x") is None,
+            "⛔음성: 자격 필드만 있는 기록은 False · 기록이 아닌 것은 None")
+        _nofile = json.loads(json.dumps(_full)); _nofile["structures_written"] = {}
+        chk(prepared(_nofile) is False,
+            "⛔음성: 플래그가 다 참이어도 final_v0_applied.xyz 가 기록에 없으면 준비 아님")
         try:
             _refuse_existing(root); r = False
         except SystemExit:

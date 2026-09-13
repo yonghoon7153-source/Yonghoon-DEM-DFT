@@ -1456,6 +1456,38 @@ def validate_governance(reg: dict = None, root=None) -> list:
             if rat.get("commit") and len(str(rat["commit"])) != 40:
                 bad.append(f"결정 {d['id']} 의 승인 commit 이 40-hex 가 아니다 "
                            f"(짧은 해시 금지)")
+    # ⛔ 2026-09-13 — **뼈대 마감 카드로 마감을 선언하는 길**을 막는다.
+    #   §4b 마감 기록은 종료 문구·재개 조건을 비운 채 먼저 만들었다(1저자 결정 · 회신 대기).
+    #   그 상태에서 결정만 active 로 올라가면 "재개 조건이 비어 있다" 가 *아무 때나 재개* 로도
+    #   *절대 재개 불가* 로도 읽힌다 — 둘 다 우리 규율이 아니다.
+    #   ⚠ 방향을 **카드 → 결정** 으로 본다. `method_ref` 를 키로 삼으면 조용히 빗나간다:
+    #     실측으로 active 마감 결정 4건 중 **3건의 method_ref 가 카드 경로가 아니었다**
+    #     (도구+플래그 · 산문 · 리스트). 그래서 카드 쪽에서 역참조를 찾는다.
+    #   ⚠ `closed` 키가 **없는** 카드는 뼈대가 아니다 — 이 필드보다 먼저 만들어진 카드들이다.
+    #     "못 찾음" 과 "없음" 을 구분한다: 못 읽은 카드는 아래에서 **위반으로** 낸다.
+    try:
+        _b3 = Path(root) if root else Path(__file__).resolve().parent.parent
+        for _cf in sorted((_b3 / "db" / "properties").glob("*closed*.json")):
+            try:
+                _cd = json.loads(_cf.read_text(encoding="utf-8"))
+            except (OSError, ValueError) as _e:
+                bad.append(f"마감 카드를 못 읽었다: {_cf.name} — {type(_e).__name__} "
+                           f"(못 읽음은 '뼈대 아님' 이 아니다)")
+                continue
+            if not isinstance(_cd, dict) or _cd.get("closed") is not False:
+                continue
+            _rel = _cf.relative_to(_b3).as_posix()
+            for _d in dec.values():
+                if _dstate(_d) != "active":
+                    continue
+                if _rel in json.dumps(_d, ensure_ascii=False):
+                    bad.append(
+                        f"결정 {_d['id']} 이 active 인데 참조한 마감 카드 {_rel} 가 "
+                        f"`closed: false` 다 — 뼈대 카드로는 마감을 선언할 수 없다 "
+                        f"(빈 재개 조건은 '재개 사유 없음' 이 아니다)")
+    except OSError as _e:                      # db/properties 가 없는 격리 시험용 root
+        bad.append(f"마감 카드 디렉터리를 못 열었다: {type(_e).__name__}: {_e}")
+
     # slot 유일성 — 같은 slot 에 active 가 둘이면 어느 쪽이 이기는지 알 수 없다.
     # ⚠ 2026-09-07 — 종전 구현은 **slot 이름만** 봤는데, 원장 `_rules` 는
     #   *"유일성은 scope 가 아니라 **slot + 겹치는 applicability** 에서 검사한다"* 라고
