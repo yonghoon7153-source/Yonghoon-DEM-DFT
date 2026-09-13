@@ -175,6 +175,128 @@ def _fit_gate(r2, V0, B0_GPa, Bp, V_points):
                f" — 이 게이트는 **보수적 선택**이다"))
     info['fit_quality_reason'] = reason.strip().lstrip('· ').strip()
     return info
+def _fit_bm3(V, E):
+    """BM3 적합 하나. **한 곳에만 둔다** — 라이브와 `--regate` 가 같은 초기값·같은 식.
+
+    반환 `(E0, V0, B0_eV_A3, B0_GPa, Bp, r2)`. 실패하면 예외를 그대로 올린다
+    (조용히 0 을 돌려주지 않는다).
+    """
+    from scipy.optimize import curve_fit
+    V = np.asarray(V, dtype=float)
+    E = np.asarray(E, dtype=float)
+    p0 = [E.min(), V[E.argmin()], 0.1, 4.0]      # B0 in eV/Å³ ≈ 0.1 = 16 GPa
+    popt, _ = curve_fit(_bm3, V, E, p0=p0, maxfev=10000)
+    E0, V0, B0, Bp = popt
+    E_pred = _bm3(V, *popt)
+    ss_res = float(np.sum((E - E_pred) ** 2))
+    ss_tot = float(np.sum((E - E.mean()) ** 2))
+    r2 = 1 - ss_res / ss_tot if ss_tot > 0 else 0.0
+    return float(E0), float(V0), float(B0), float(B0 * 160.21766208), float(Bp), float(r2)
+
+
+def _hysteresis_gate(hyst, V, hysteresis_tol=0.01, hysteresis_span_tol=0.10,
+                     hysteresis_shape_tol=0.10):
+    """두 갈래 이력현상 판정. **한 곳에만 둔다.**
+
+    라이브 경로(`_eos_sweep_core`)와 소급 재판정(`--regate`)이 **같은 코드**를 써야
+    두 판정이 갈리지 않는다. 종전에는 이 논리가 `eos_sweep` 안에 박혀 있었다.
+
+    `hyst` 를 **제자리에서 채운다** (V0_up/V0_down/shape_over_span/…).
+    반환 `(ok, reason)` — ok 가 False 면 호출부가 적합을 떨군다.
+
+    ⛔ 이 함수가 **못 하는 것**
+      · 골짜기 이동을 판정하지 않는다. 두 갈래가 갈렸다는 **사실만** 잰다 —
+        왜 갈렸는지는 점별 구조가 있어야 안다 (회신 BQ-2 Q1·Q3).
+      · 창이 다른 조건끼리 비교하지 않는다. 분모(곡선 폭)가 창에 딸려간다.
+    """
+    if hyst is None:
+        return True, None
+    from scipy.optimize import curve_fit
+    bm3 = _bm3
+    V = np.asarray(V, dtype=float)
+    ok, reason = True, None
+    try:
+        _vs = []
+        for _EE in (np.array(hyst['E_up']), np.array(hyst['E_down'])):
+            _p, _ = curve_fit(bm3, V, _EE,
+                              p0=[_EE.min(), V[_EE.argmin()], 0.1, 4.0],
+                              maxfev=10000)
+            _vs.append(float(_p[1]))
+        hyst['V0_up'], hyst['V0_down'] = _vs
+        _rel = abs(_vs[0] - _vs[1]) / max(abs(np.mean(_vs)), 1e-12)
+        hyst['V0_rel_diff'] = float(_rel)
+        # ⛔⛔ 2026-09-13 — **V₀ 만 보면 구멍이 난다.** 두 갈래가 곡선 자체만큼
+        #   달라도 최소 **위치**는 우연히 겹칠 수 있다. 실측: P2_Al2S3_A 가
+        #   maxdE/span = **95 %** 인데 V₀ 차 0.949 % 로 **통과했다.**
+        #   ⇒ 곡선이 얼마나 갈렸는지를 **곡선 자신의 크기로 재서** 같이 건다.
+        #   문턱 10 % 의 근거: 질서 H0 는 0.46 %, 무질서 넷은 25.4–94.8 % 로
+        #   **55배 갈려 있어 1 %~25 % 어디에 둬도 판정이 같다.**
+        #   문턱이 결과를 만들지 않는다는 뜻이고, 그래서 방어 가능하다.
+        _span = max(float(hyst.get('E_span_eV') or 0.0), 1e-12)
+        _dspan = float(hyst['max_abs_dE_eV']) / _span
+        hyst['dE_over_span'] = _dspan
+        hyst['tol_span'] = float(hysteresis_span_tol)
+        # ⛔⛔ 회신 BQ-2 Q2 (2026-09-13) — 높이·모양 분리가 **기록에만** 있었고
+        #   게이트는 여전히 원시 max_abs_dE/span 을 봤다. 리뷰어 실측: 정확한
+        #   BM3 두 곡선을 0.04 eV **평행이동**하면 shape=0 이고 양방향 V₀ 가
+        #   같은데도 탈락하며 "EOS 가 한 골짜기로 정의되지 않는다" 를 출력했다.
+        #   ⇒ 세 기준을 **따로** 세우고, 각각의 뜻을 다르게 적는다.
+        _shape = float(hyst.get('shape_max_abs_dE_eV') or 0.0)
+        _lvl = abs(float(hyst.get('level_offset_eV') or 0.0))
+        _shspan = _shape / _span
+        hyst['shape_over_span'] = _shspan
+        hyst['level_over_span'] = _lvl / _span
+        hyst['tol_shape'] = float(hysteresis_shape_tol)
+        # 문턱이 결과를 만드는가 — **보여준다**. 주장하지 않는다.
+        hyst['shape_verdict_vs_tol'] = {
+            f'{t:g}': bool(_shspan <= t) for t in (0.01, 0.02, 0.05, 0.10, 0.25)}
+        hyst['⚠_문턱_의존'] = ('위 표에서 판정이 갈리면 그 문턱이 결과를 만들고 있다는 뜻이다. '
+                               '전부 같으면 문턱은 일을 하지 않는다')
+        _v0_ok = _rel <= hysteresis_tol
+        _shape_ok = _shspan <= hysteresis_shape_tol
+        _sp_ok = _dspan <= hysteresis_span_tol          # 레거시 운영 기준
+        # **물리 판정**은 V₀ 일치 ∧ 모양 일치다 (평행이동은 여기에 안 들어간다)
+        hyst['ok'] = bool(_v0_ok and _shape_ok)
+        hyst['operational_hold'] = bool(not _sp_ok)
+        hyst['⚠_세_기준의_뜻'] = {
+            'V₀ 일치': '두 갈래의 최소 위치가 같은가 — 갈리면 V₀ 가 경로에 딸린다',
+            '모양 일치(shape)': '평행이동 성분을 뺀 곡선 차이 — 갈리면 **보고 곡선의 곡률**이 의심된다',
+            '높이차(level)': '두 갈래가 **다른 에너지의 상태**로 끝났다는 뜻이다. '
+                             'V₀·곡률을 무효로 만들지는 않는다 — 상태 선택 문제다',
+            '레거시 dE/span': '원시 최대차를 곡선 폭으로 나눈 값. 평행이동에도 커진다. '
+                              '**운영상 보류**에만 쓰고 V₀ 존재 불가나 기전 확정의 근거로 쓰지 않는다'}
+        if not (hyst['ok'] and _sp_ok):
+            ok = False
+            _why = []
+            if not _v0_ok:
+                _why.append(f"V₀ 가 갈린다 — 올라가는 갈래 {_vs[0]:.1f} vs "
+                            f"내려오는 갈래 {_vs[1]:.1f} Å³ ({_rel*100:.2f} % "
+                            f"> 허용 {hysteresis_tol*100:.2f} %)")
+            if not _shape_ok:
+                _why.append(f"**모양이 갈린다** — 평행이동을 뺀 곡선 차 "
+                            f"{_shape:.3f} eV 가 곡선 폭 {_span:.3f} eV 의 "
+                            f"{_shspan*100:.0f} % (> 허용 {hysteresis_shape_tol*100:.0f} %). "
+                            f"V₀ 가 겹쳐도 같은 곡선이 아니다")
+            if _sp_ok is False and _shape_ok and _v0_ok:
+                _why.append(f"⚠ **운영상 보류** — 원시 최대차 {hyst['max_abs_dE_eV']:.3f} eV "
+                            f"가 곡선 폭의 {_dspan*100:.0f} % (> {hysteresis_span_tol*100:.0f} %) "
+                            f"지만 그 대부분이 **평행이동**이다 (높이차 {_lvl:.3f} eV, "
+                            f"모양차 {_shape:.3f} eV). 두 갈래가 다른 에너지의 상태로 끝났다는 "
+                            f"뜻이지 **V₀ 가 존재하지 않는다는 뜻이 아니다** (회신 BQ-2 Q2)")
+            elif not _sp_ok:
+                _why.append(f"레거시 dE/span {_dspan*100:.0f} % (> {hysteresis_span_tol*100:.0f} %) "
+                            f"— 운영상 보류. 분모가 부피창에 딸려가므로 창이 다른 조건끼리 "
+                            f"같은 문턱으로 비교하지 마라")
+            reason = ("이력현상 — " + " · ".join(_why) +
+                            ". 이 구조에선 EOS 가 한 골짜기로 정의되지 않는다")
+    except Exception as _e:                                  # noqa: BLE001
+        hyst['ok'] = False
+        hyst['error'] = str(_e)
+        ok = False
+        reason = f"이력현상 검사 자체가 실패했다 ({type(_e).__name__}) — 통과로 읽지 않는다"
+    return ok, reason
+
+
 def _eos_branch(atoms_ref, calc, fractions, fmax, relax_steps, continuation):
     """한 갈래의 E(V). `continuation` 이면 **앞 점의 완화 결과**에서 이어간다.
 
@@ -272,16 +394,7 @@ def _eos_sweep_core(atoms_ref, calc, fractions=(0.94, 0.96, 0.98, 1.00, 1.02, 1.
     try:
         from scipy.optimize import curve_fit
         bm3 = _bm3                    # ⭐ 전역 — `--regate` 와 **같은 식**을 쓴다
-        p0 = [E.min(), V[E.argmin()], 0.1, 4.0]  # B0 in eV/Å³ ≈ 0.1 = 16 GPa
-        popt, _ = curve_fit(bm3, V, E, p0=p0, maxfev=10000)
-        E0, V0, B0, Bp = popt
-        # B0 in GPa: 1 eV/Å³ = 160.218 GPa
-        B0_GPa = B0 * 160.21766208
-        # R²
-        E_pred = bm3(V, *popt)
-        ss_res = np.sum((E - E_pred) ** 2)
-        ss_tot = np.sum((E - E.mean()) ** 2)
-        r2 = 1 - ss_res / ss_tot if ss_tot > 0 else 0
+        E0, V0, B0, B0_GPa, Bp, r2 = _fit_bm3(V, E)
         # A-3 fix: r² gate. Diverged BM3 fits (r²<0.95) shouldn't poison
         # downstream rankings; flag B0_GPa as None and set fit_quality_ok=False
         # so combine_rankings can drop them.
@@ -304,87 +417,10 @@ def _eos_sweep_core(atoms_ref, calc, fractions=(0.94, 0.96, 0.98, 1.00, 1.02, 1.
         _gate_reason = _gi['fit_quality_reason']
         # ⭐ 연쇄판 이력현상 게이트 — 두 갈래를 **각각** 적합해 V₀ 가 일치하는지 본다.
         #   갈리면 그 구조에선 EOS 가 잘 정의되지 않는다 (골짜기가 부피에 따라 바뀐다).
-        _hyst_reason = None
-        if hyst is not None:
-            try:
-                _vs = []
-                for _EE in (np.array(hyst['E_up']), np.array(hyst['E_down'])):
-                    _p, _ = curve_fit(bm3, V, _EE,
-                                      p0=[_EE.min(), V[_EE.argmin()], 0.1, 4.0],
-                                      maxfev=10000)
-                    _vs.append(float(_p[1]))
-                hyst['V0_up'], hyst['V0_down'] = _vs
-                _rel = abs(_vs[0] - _vs[1]) / max(abs(np.mean(_vs)), 1e-12)
-                hyst['V0_rel_diff'] = float(_rel)
-                # ⛔⛔ 2026-09-13 — **V₀ 만 보면 구멍이 난다.** 두 갈래가 곡선 자체만큼
-                #   달라도 최소 **위치**는 우연히 겹칠 수 있다. 실측: P2_Al2S3_A 가
-                #   maxdE/span = **95 %** 인데 V₀ 차 0.949 % 로 **통과했다.**
-                #   ⇒ 곡선이 얼마나 갈렸는지를 **곡선 자신의 크기로 재서** 같이 건다.
-                #   문턱 10 % 의 근거: 질서 H0 는 0.46 %, 무질서 넷은 25.4–94.8 % 로
-                #   **55배 갈려 있어 1 %~25 % 어디에 둬도 판정이 같다.**
-                #   문턱이 결과를 만들지 않는다는 뜻이고, 그래서 방어 가능하다.
-                _span = max(float(hyst.get('E_span_eV') or 0.0), 1e-12)
-                _dspan = float(hyst['max_abs_dE_eV']) / _span
-                hyst['dE_over_span'] = _dspan
-                hyst['tol_span'] = float(hysteresis_span_tol)
-                # ⛔⛔ 회신 BQ-2 Q2 (2026-09-13) — 높이·모양 분리가 **기록에만** 있었고
-                #   게이트는 여전히 원시 max_abs_dE/span 을 봤다. 리뷰어 실측: 정확한
-                #   BM3 두 곡선을 0.04 eV **평행이동**하면 shape=0 이고 양방향 V₀ 가
-                #   같은데도 탈락하며 "EOS 가 한 골짜기로 정의되지 않는다" 를 출력했다.
-                #   ⇒ 세 기준을 **따로** 세우고, 각각의 뜻을 다르게 적는다.
-                _shape = float(hyst.get('shape_max_abs_dE_eV') or 0.0)
-                _lvl = abs(float(hyst.get('level_offset_eV') or 0.0))
-                _shspan = _shape / _span
-                hyst['shape_over_span'] = _shspan
-                hyst['level_over_span'] = _lvl / _span
-                hyst['tol_shape'] = float(hysteresis_shape_tol)
-                # 문턱이 결과를 만드는가 — **보여준다**. 주장하지 않는다.
-                hyst['shape_verdict_vs_tol'] = {
-                    f'{t:g}': bool(_shspan <= t) for t in (0.01, 0.02, 0.05, 0.10, 0.25)}
-                hyst['⚠_문턱_의존'] = ('위 표에서 판정이 갈리면 그 문턱이 결과를 만들고 있다는 뜻이다. '
-                                       '전부 같으면 문턱은 일을 하지 않는다')
-                _v0_ok = _rel <= hysteresis_tol
-                _shape_ok = _shspan <= hysteresis_shape_tol
-                _sp_ok = _dspan <= hysteresis_span_tol          # 레거시 운영 기준
-                # **물리 판정**은 V₀ 일치 ∧ 모양 일치다 (평행이동은 여기에 안 들어간다)
-                hyst['ok'] = bool(_v0_ok and _shape_ok)
-                hyst['operational_hold'] = bool(not _sp_ok)
-                hyst['⚠_세_기준의_뜻'] = {
-                    'V₀ 일치': '두 갈래의 최소 위치가 같은가 — 갈리면 V₀ 가 경로에 딸린다',
-                    '모양 일치(shape)': '평행이동 성분을 뺀 곡선 차이 — 갈리면 **보고 곡선의 곡률**이 의심된다',
-                    '높이차(level)': '두 갈래가 **다른 에너지의 상태**로 끝났다는 뜻이다. '
-                                     'V₀·곡률을 무효로 만들지는 않는다 — 상태 선택 문제다',
-                    '레거시 dE/span': '원시 최대차를 곡선 폭으로 나눈 값. 평행이동에도 커진다. '
-                                      '**운영상 보류**에만 쓰고 V₀ 존재 불가나 기전 확정의 근거로 쓰지 않는다'}
-                if not (hyst['ok'] and _sp_ok):
-                    fit_ok = False
-                    _why = []
-                    if not _v0_ok:
-                        _why.append(f"V₀ 가 갈린다 — 올라가는 갈래 {_vs[0]:.1f} vs "
-                                    f"내려오는 갈래 {_vs[1]:.1f} Å³ ({_rel*100:.2f} % "
-                                    f"> 허용 {hysteresis_tol*100:.2f} %)")
-                    if not _shape_ok:
-                        _why.append(f"**모양이 갈린다** — 평행이동을 뺀 곡선 차 "
-                                    f"{_shape:.3f} eV 가 곡선 폭 {_span:.3f} eV 의 "
-                                    f"{_shspan*100:.0f} % (> 허용 {hysteresis_shape_tol*100:.0f} %). "
-                                    f"V₀ 가 겹쳐도 같은 곡선이 아니다")
-                    if _sp_ok is False and _shape_ok and _v0_ok:
-                        _why.append(f"⚠ **운영상 보류** — 원시 최대차 {hyst['max_abs_dE_eV']:.3f} eV "
-                                    f"가 곡선 폭의 {_dspan*100:.0f} % (> {hysteresis_span_tol*100:.0f} %) "
-                                    f"지만 그 대부분이 **평행이동**이다 (높이차 {_lvl:.3f} eV, "
-                                    f"모양차 {_shape:.3f} eV). 두 갈래가 다른 에너지의 상태로 끝났다는 "
-                                    f"뜻이지 **V₀ 가 존재하지 않는다는 뜻이 아니다** (회신 BQ-2 Q2)")
-                    elif not _sp_ok:
-                        _why.append(f"레거시 dE/span {_dspan*100:.0f} % (> {hysteresis_span_tol*100:.0f} %) "
-                                    f"— 운영상 보류. 분모가 부피창에 딸려가므로 창이 다른 조건끼리 "
-                                    f"같은 문턱으로 비교하지 마라")
-                    _hyst_reason = ("이력현상 — " + " · ".join(_why) +
-                                    ". 이 구조에선 EOS 가 한 골짜기로 정의되지 않는다")
-            except Exception as _e:                                  # noqa: BLE001
-                hyst['ok'] = False
-                hyst['error'] = str(_e)
-                fit_ok = False
-                _hyst_reason = f"이력현상 검사 자체가 실패했다 ({type(_e).__name__}) — 통과로 읽지 않는다"
+        _hyst_ok, _hyst_reason = _hysteresis_gate(
+            hyst, V, hysteresis_tol, hysteresis_span_tol, hysteresis_shape_tol)
+        if not _hyst_ok:
+            fit_ok = False
         return {'V_points': V.tolist(), 'E_points': E.tolist(),
                 'fractions': list(fractions),
                 'continuation': bool(continuation),
@@ -797,6 +833,202 @@ def winner_name(xyz_path):
     if p.stem in ('post_relax', 'post_md'):
         return p.parent.name
     return p.stem
+
+
+def _fmax_from_name(name):
+    """조건 디렉터리 이름에서 fmax 를 되찾는다 (`..._f02` → 0.02, `_f005` → 0.005).
+
+    ⚠ 이것은 **지어내는 것이 아니라 되찾는 것**이다 — 옛 기록이 fmax 목표값을
+      저장하지 않아서(40ffa697) 실행 당시 이름에 박아둔 값을 읽는다.
+      되찾지 못하면 None 을 주고, 호출부는 **수렴을 다시 세지 않는다.**
+    """
+    import re
+    m = re.search(r'_f(\d+)(?:$|[_/])', str(name))
+    if not m:
+        return None
+    try:
+        return float('0.' + m.group(1))
+    except ValueError:                                       # noqa: BLE001
+        return None
+
+
+def regate_eos(eos, fmax=None, hysteresis_tol=0.01, hysteresis_span_tol=0.10,
+               hysteresis_shape_tol=0.10):
+    """저장된 EOS 기록 하나에 **지금의 게이트**를 다시 매긴다.
+
+    회신 BQ-2 지시: *"저장된 E(V)와 실제 수렴 기록으로 가능한 재적합·재판정은
+    후처리로 하세요. 없는 좌표·수렴 기록은 사후에 있다고 간주하면 안 돼요."*
+
+    왜 **다시 적합**하나 — 옛 기록은 게이트에 걸리면 `V0`/`B0_GPa`/`Bp` 를
+    **None 으로 지운다**. 저장된 스칼라만으로는 재판정이 불가능하므로
+    `V_points`/`E_points` 에서 `_fit_bm3` 로 다시 적합한다 (라이브와 같은 식).
+    두 갈래 지표도 저장된 `E_up`/`E_down` 에서 **다시 계산**한다 — 옛 코드가
+    계산한 파생값을 믿지 않고 원자료에서 다시 만든다.
+
+    ⛔ 이 함수가 **못 하는 것**
+      · **점별 구조를 복원하지 못한다** → 골짜기 이동 판정은 여전히 불가 (BQ-2 Q1·Q3).
+      · 옵티마이저 반환값이 기록에 없어 **힘 기준만으로** 수렴을 다시 센다.
+        `fmax` 를 못 받으면 아예 다시 세지 않고 옛 판정을 그대로 둔다.
+      · 창이 다른 조건끼리 비교하지 않는다.
+      · 없는 기록을 지어내지 않는다 — 수렴 기록이 없으면 자격을 **거부**한다.
+    """
+    V, E = eos.get('V_points'), eos.get('E_points')
+    if not V or not E or len(V) != len(E) or len(V) < 4:
+        return {'regate_skipped': ('V_points/E_points 가 없거나 점이 4개 미만 — '
+                                   'BM3 4모수를 맞출 수 없다'),
+                'stored': {'fit_quality_ok': eos.get('fit_quality_ok'),
+                           'V0': eos.get('V0'), 'Bp': eos.get('Bp'),
+                           'r2': eos.get('r2')}}
+    V = np.asarray(V, dtype=float)
+    out = {'V_points': V.tolist(), 'E_points': list(E),
+           'fractions': eos.get('fractions'),
+           'continuation': eos.get('continuation')}
+
+    def _recount(rows):
+        """힘 기준으로 수렴을 다시 센다. fmax 를 모르면 **손대지 않는다.**"""
+        res = []
+        for r in (rows or []):
+            d = dict(r)
+            _fm = d.get('final_fmax_eV_A')
+            if fmax is not None and _fm is not None:
+                d['converged'] = bool(float(_fm) <= float(fmax))
+                d['fmax_target_eV_A'] = float(fmax)
+                d['⚠_재판정'] = ('힘 기준만으로 다시 셌다 — 옵티마이저 반환값이 '
+                                 '기록에 없다 (회신 BQ-2 Q1a)')
+            res.append(d)
+        return res
+
+    _oh = eos.get('hysteresis') or {}
+    if _oh.get('E_up') and _oh.get('E_down'):
+        _up, _dn = np.asarray(_oh['E_up'], float), np.asarray(_oh['E_down'], float)
+        _d = _up - _dn
+        _sh = _d - _d.mean()
+        hy = {'E_up': _up.tolist(), 'E_down': _dn.tolist(),
+              'reported_branch': _oh.get('reported_branch', 'up'),
+              'max_abs_dE_eV': float(np.abs(_d).max()),
+              'level_offset_eV': float(_d.mean()),
+              'shape_max_abs_dE_eV': float(np.abs(_sh).max()),
+              'E_span_eV': float(max(_up.max() - _up.min(), _dn.max() - _dn.min())),
+              'convergence_up': _recount(_oh.get('convergence_up')),
+              'convergence_down': _recount(_oh.get('convergence_down'))}
+        out['hysteresis'] = hy
+    else:
+        out['hysteresis'] = None
+        out['convergence'] = _recount(eos.get('convergence'))
+
+    try:
+        E0, V0, B0, B0_GPa, Bp, r2 = _fit_bm3(V, out['E_points'])
+    except Exception as e:                                   # noqa: BLE001
+        out.update({'fit_quality_ok': False, 'V0': None, 'B0_GPa': None, 'Bp': None,
+                    'r2': None,
+                    'fit_quality_reason': f'재적합이 예외로 실패했다: {type(e).__name__}: {e}'})
+        return attach_eligibility(out)
+    gi = _fit_gate(r2, V0, B0_GPa, Bp, V)
+    fit_ok, reason = gi['fit_quality_ok'], gi['fit_quality_reason']
+    hy_ok, hy_reason = _hysteresis_gate(out['hysteresis'], V, hysteresis_tol,
+                                        hysteresis_span_tol, hysteresis_shape_tol)
+    if not hy_ok:
+        fit_ok, reason = False, (hy_reason or reason)
+    out.update({'gate_detail': gi, 'r2': r2, 'fit_quality_ok': fit_ok,
+                'fit_quality_reason': ('OK' if fit_ok else reason),
+                'V0': V0 if fit_ok else None,
+                'E0': E0 if fit_ok else None,
+                'B0_eV_per_A3': B0 if fit_ok else None,
+                'B0_GPa': B0_GPa if fit_ok else None,
+                'Bp': Bp if fit_ok else None,
+                'V0_in_window': gi['V0_in_window'], 'B0_positive': gi['B0_positive'],
+                # 게이트와 무관하게 **날값**을 같이 남긴다 (떨궈도 숫자는 보여야 한다)
+                'raw_refit': {'V0': V0, 'B0_GPa': B0_GPa, 'Bp': Bp, 'r2': r2},
+                'fmax_used_for_recount': fmax})
+    attach_eligibility(out)
+    out['stored'] = {'fit_quality_ok': eos.get('fit_quality_ok'), 'V0': eos.get('V0'),
+                     'B0_GPa': eos.get('B0_GPa'), 'Bp': eos.get('Bp'),
+                     'r2': eos.get('r2'),
+                     'fit_quality_reason': eos.get('fit_quality_reason')}
+    out['verdict_changed'] = bool(out['fit_quality_ok'] != eos.get('fit_quality_ok'))
+    # ⛔ 판정이 그대로여도 **사유**가 바뀌면 그게 회신 BQ-2 Q2 의 실익이다:
+    #   평행이동을 "곡선 자체가 갈린다" 로 적던 것이 "운영상 보류" 로 내려간다.
+    #   판정만 보면 안 보이므로 따로 센다.
+    out['reason_changed'] = bool((out.get('fit_quality_reason') or '')
+                                 != (eos.get('fit_quality_reason') or ''))
+    return out
+
+
+def regate_paths(patterns, fmax=None, hysteresis_tol=0.01, hysteresis_span_tol=0.10,
+                 hysteresis_shape_tol=0.10):
+    """glob 들을 받아 `postproc.json` / `postproc_summary.json` 을 전부 재판정한다.
+
+    ⛔ 못 하는 것: 파일을 고치지 않는다. **원본은 그대로 두고** 보고만 만든다
+      (회신 BQ-2 Q4 의 원칙 — 원본 보존 + 정정 파생 기록).
+    """
+    import glob as _g
+    files = []
+    for pat in patterns:
+        files.extend(sorted(_g.glob(pat)) if any(c in pat for c in '*?[') else [pat])
+    rows = []
+    for f in files:
+        fp = Path(f)
+        if fp.is_dir():
+            files.extend(sorted(str(x) for x in fp.rglob('postproc*.json')))
+            continue
+        try:
+            d = json.loads(fp.read_text())
+        except Exception as e:                               # noqa: BLE001
+            rows.append({'file': f, 'error': f'{type(e).__name__}: {e}'})
+            continue
+        recs = d['records'] if isinstance(d, dict) and isinstance(d.get('records'), list) else [d]
+        _fm = fmax if fmax is not None else _fmax_from_name(f)
+        for rec in recs:
+            if not isinstance(rec, dict):
+                continue
+            eos = rec.get('eos') or {}
+            name = rec.get('name') or fp.parent.name
+            seeds = eos.get('per_seed')
+            targets = ([(f'{name}#seed{i}', s) for i, s in enumerate(seeds)]
+                       if isinstance(seeds, list) and seeds and 'V_points' in (seeds[0] or {})
+                       else [(name, eos)])
+            for nm, e in targets:
+                if not e:
+                    continue
+                r = regate_eos(e, fmax=_fm, hysteresis_tol=hysteresis_tol,
+                               hysteresis_span_tol=hysteresis_span_tol,
+                               hysteresis_shape_tol=hysteresis_shape_tol)
+                r.update({'file': f, 'name': nm,
+                          'fmax_source': ('explicit' if fmax is not None
+                                          else ('dirname' if _fm is not None else 'unknown'))})
+                rows.append(r)
+    return rows
+
+
+def print_regate(rows):
+    """한 화면 요약. ⛔ **판정하지 않는다** — 옛 판정과 새 판정을 나란히 놓을 뿐이다."""
+    print(f"\n{'구조':<16}{'옛':>4}{'새':>4}{'자격':>5}{'r2':>9}{'V0':>11}{'Bp':>7}  사유")
+    print('─' * 108)
+    nch = nrs = 0
+    for r in rows:
+        if r.get('error') or r.get('regate_skipped'):
+            print(f"{(r.get('name') or r.get('file') or '?')[:15]:<16}"
+                  f"{'—':>4}{'—':>4}{'—':>5}{'':>9}{'':>11}{'':>7}  "
+                  f"{r.get('error') or r.get('regate_skipped')}")
+            continue
+        _o = r['stored'].get('fit_quality_ok')
+        _n = r.get('fit_quality_ok')
+        _e = r.get('downstream_eligible')
+        _raw = r.get('raw_refit') or {}
+        nch += bool(r.get('verdict_changed'))
+        nrs += bool(r.get('reason_changed'))
+        print(f"{(r.get('name') or '?')[:15]:<16}"
+              f"{('✅' if _o is True else '⛔'):>4}{('✅' if _n is True else '⛔'):>4}"
+              f"{('✅' if _e is True else '⛔'):>5}"
+              f"{(_raw.get('r2') or 0.0):>9.4f}{(_raw.get('V0') or 0.0):>11.1f}"
+              f"{(_raw.get('Bp') or 0.0):>7.2f}  {(r.get('fit_quality_reason') or '')[:44]}")
+    print(f"\n  판정이 바뀐 줄: {nch}/{len(rows)} · **사유**가 바뀐 줄: {nrs}/{len(rows)}")
+    print("  · 판정이 그대로여도 사유가 바뀌면 의미가 있다 — 평행이동을 '곡선 자체가")
+    print("    갈린다' 로 적던 것이 '운영상 보류' 로 내려간다 (회신 BQ-2 Q2)")
+    print("  · '옛' 은 파일에 저장된 판정, '새' 는 지금 게이트. '자격' 은 후속 사용 가능 여부다")
+    print("  · r2·V0·Bp 는 **게이트와 무관한 날값**(재적합 결과)이다 — 떨궈도 숫자는 보인다")
+    print("  ⛔ 이 표는 파일을 고치지 않는다. 그리고 **점별 구조가 없어** 골짜기 이동은")
+    print("     여전히 판정할 수 없다 (회신 BQ-2 Q1·Q3)")
 
 
 def process_one(xyz_path, calc, out_dir, args):
@@ -1402,6 +1634,49 @@ def _selftest():
         chk((_rp.get('elastic') or {}).get('skipped') is not True,
             "양성 대조: 탄성이 실제로 돌았다 (차단 경로와 갈린다)")
 
+        # ⑩ ★ --regate — 저장된 E(V) 로 **같은 판정**이 재현되는가
+        #   라이브와 소급이 갈리면 소급 재판정은 아무 의미가 없다.
+        _rows = regate_paths([str(_root / 'ok' / 'cu' / 'postproc.json')], fmax=0.05)
+        chk(len(_rows) == 1 and _rows[0].get('fit_quality_ok') is True,
+            "regate: 통과한 기록은 소급해도 통과한다")
+        chk(_rows[0].get('verdict_changed') is False,
+            "⛔음성: 같은 잣대면 판정이 **안 바뀐다** (바뀌면 두 경로가 갈린 것이다)")
+        _lv = ((_rp.get('eos') or {}).get('V0'))
+        _rv = (_rows[0].get('raw_refit') or {}).get('V0')
+        chk(_lv and _rv and abs(_lv - _rv) / _lv < 1e-6,
+            "regate: 재적합 V₀ 가 라이브 V₀ 와 일치한다 (같은 식·같은 초기값)")
+        _rb2 = regate_paths([str(_root / 'blocked' / 'cuvac' / 'postproc.json')], fmax=1e-9)
+        chk(_rb2 and _rb2[0].get('downstream_eligible') is False,
+            "⛔음성: 굶긴 기록은 소급해도 **자격 없음**")
+
+    # ⑪ regate 보조 — 이름에서 fmax 되찾기 · 없는 자료 처리
+    chk(_fmax_from_name('runs/x/fix_W6_f02') == 0.02
+        and _fmax_from_name('fix_W3_f005') == 0.005,
+        "regate: 조건 이름에서 fmax 를 되찾는다 (_f02 → 0.02, _f005 → 0.005)")
+    chk(_fmax_from_name('runs/x/whatever') is None,
+        "⛔음성: 못 되찾으면 None — 아무 값이나 지어내지 않는다")
+    chk('regate_skipped' in regate_eos({'V_points': [1.0, 2.0], 'E_points': [0.0, 1.0]}),
+        "⛔음성: 점이 4개 미만이면 **건너뛴다** (BM3 4모수를 못 맞춘다)")
+    chk('regate_skipped' in regate_eos({}),
+        "⛔음성: V_points 가 없으면 건너뛴다 (없는 자료를 지어내지 않는다)")
+
+    # ⛔⛔ 회신 BQ-2 Q1a 소급 — 마지막 스텝 수렴을 **옛 정의가 오탐**한 것을 되돌린다
+    _oldrec = {'V_points': [100.0, 105.0, 110.0, 115.0, 120.0],
+               'E_points': [0.20, 0.05, 0.00, 0.05, 0.20],
+               'convergence': [{'fraction': f, 'n_steps': 30, 'final_fmax_eV_A': 0.018,
+                                'converged': False, 'hit_step_limit': True}
+                               for f in (0.94, 0.97, 1.0, 1.03, 1.06)]}
+    _rg = regate_eos(_oldrec, fmax=0.02)
+    chk(all(c['converged'] is True for c in _rg['convergence']),
+        "⛔음성: 잔여힘 0.018 ≤ 기준 0.02 면 **한도에 걸렸어도 수렴**이다 (옛 정의의 오탐)")
+    _rg2 = regate_eos(_oldrec, fmax=None)
+    chk(all(c['converged'] is False for c in _rg2['convergence']),
+        "⛔음성: fmax 를 모르면 수렴을 **다시 세지 않는다** (옛 판정 그대로)")
+    _rg3 = regate_eos(_oldrec, fmax=0.01)
+    chk(all(c['converged'] is False for c in _rg3['convergence'])
+        and _rg3['downstream_eligible'] is False,
+        "⛔음성: 기준을 더 조이면 미수렴이고 자격도 없다")
+
     print(f"  selftest: ⭕ {ok} · ⛔ {fail}")
     return 0 if fail == 0 else 1
 
@@ -1459,6 +1734,13 @@ def main():
                         '(기본 미적용 = GAP-3 그대로, 단 record 에 경고가 박힌다)')
     p.add_argument('--fixed_shape_relax', action='store_true',
                    help='0단계 relax 를 CellFilter 없이 고정셀로 한다 (각도·길이비 보존)')
+    p.add_argument('--regate', nargs='+', metavar='PATH',
+                   help='저장된 postproc*.json 에 **지금의 게이트**를 다시 매긴다 '
+                        '(파일/디렉터리/glob). 원본은 고치지 않는다')
+    p.add_argument('--regate_fmax', type=float, default=None,
+                   help='수렴 재판정에 쓸 fmax. 생략하면 디렉터리 이름(_f02)에서 되찾고, '
+                        '그것도 없으면 **수렴을 다시 세지 않는다**')
+    p.add_argument('--regate_out', help='재판정 결과 JSON 경로')
     p.add_argument('--selftest', action='store_true',
                    help='셀 정책 로직만 검사 (UMA 없이 ASE EMT 로 — 음성 경로 포함)')
     p.add_argument('--limit', type=int, default=None,
@@ -1466,6 +1748,17 @@ def main():
     args = p.parse_args()
     if args.selftest:
         sys.exit(_selftest())
+    if args.regate:
+        _rows = regate_paths(args.regate, fmax=args.regate_fmax,
+                             hysteresis_tol=args.eos_hysteresis_tol,
+                             hysteresis_span_tol=args.eos_hysteresis_span_tol,
+                             hysteresis_shape_tol=args.eos_hysteresis_shape_tol)
+        print_regate(_rows)
+        if args.regate_out:
+            Path(args.regate_out).write_text(json.dumps(_rows, indent=2,
+                                                     default=str, ensure_ascii=False))
+            print(f"  → {args.regate_out}")
+        sys.exit(0)
     if not args.out:
         p.error('--out 이 필요하다 (--selftest 제외)')
 
