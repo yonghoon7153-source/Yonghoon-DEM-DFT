@@ -71,7 +71,17 @@
         "shape_max_abs_dE_eV": 0.0002,
         "max_abs_dE_eV": 0.0003,
         "shape_max_at_fraction": 0.97
-      }
+      },
+      "max_disp_atom_symbol_per_point": [
+        "Li",
+        "Li",
+        "Li",
+        "Li",
+        "Li",
+        "Li",
+        "Li"
+      ],
+      "rmsd_Li_over_framework": 2.3
     },
     "W3_f005__P1_Al2O3_A": {
       "n_paired": 7,
@@ -104,7 +114,17 @@
         "shape_max_abs_dE_eV": 0.1339,
         "max_abs_dE_eV": 0.1095,
         "shape_max_at_fraction": 0.97
-      }
+      },
+      "max_disp_atom_symbol_per_point": [
+        "Li",
+        "Li",
+        "Li",
+        "Li",
+        "Li",
+        "Li",
+        "Li"
+      ],
+      "rmsd_Li_over_framework": 3.3
     },
     "W3_f005__P1_Al2O3_B": {
       "n_paired": 7,
@@ -137,7 +157,17 @@
         "shape_max_abs_dE_eV": 0.2116,
         "max_abs_dE_eV": 0.2271,
         "shape_max_at_fraction": 0.99
-      }
+      },
+      "max_disp_atom_symbol_per_point": [
+        "Li",
+        "Li",
+        "Li",
+        "Li",
+        "Li",
+        "Li",
+        "Li"
+      ],
+      "rmsd_Li_over_framework": 2.7
     },
     "W3_f005__P2_Al2S3_A": {
       "n_paired": 7,
@@ -170,7 +200,17 @@
         "shape_max_abs_dE_eV": 0.1353,
         "max_abs_dE_eV": 0.58,
         "shape_max_at_fraction": 1.03
-      }
+      },
+      "max_disp_atom_symbol_per_point": [
+        "Li",
+        "Li",
+        "Li",
+        "Li",
+        "Li",
+        "Li",
+        "Li"
+      ],
+      "rmsd_Li_over_framework": 4.4
     },
     "W3_f005__P2_Al2S3_B": {
       "n_paired": 7,
@@ -203,7 +243,17 @@
         "shape_max_abs_dE_eV": 0.7354,
         "max_abs_dE_eV": 0.9363,
         "shape_max_at_fraction": 0.97
-      }
+      },
+      "max_disp_atom_symbol_per_point": [
+        "Li",
+        "Li",
+        "Li",
+        "Li",
+        "Li",
+        "Li",
+        "Li"
+      ],
+      "rmsd_Li_over_framework": 3.2
     },
     "W3_f02__H0_host": {
       "n_paired": 7,
@@ -236,7 +286,17 @@
         "shape_max_abs_dE_eV": 0.0069,
         "max_abs_dE_eV": 0.0079,
         "shape_max_at_fraction": 0.97
-      }
+      },
+      "max_disp_atom_symbol_per_point": [
+        "Cl",
+        "Li",
+        "Li",
+        "S",
+        "S",
+        "S",
+        "Li"
+      ],
+      "rmsd_Li_over_framework": 1.6
     },
     "W3_f02__P1_Al2O3_A": {
       "n_paired": 7,
@@ -269,7 +329,17 @@
         "shape_max_abs_dE_eV": 0.082,
         "max_abs_dE_eV": 0.1288,
         "shape_max_at_fraction": 1.0
-      }
+      },
+      "max_disp_atom_symbol_per_point": [
+        "Li",
+        "Li",
+        "Li",
+        "Li",
+        "Li",
+        "Li",
+        "Li"
+      ],
+      "rmsd_Li_over_framework": 3.7
     },
     "W3_f02__P1_Al2O3_B": {
       "n_paired": 7,
@@ -302,7 +372,17 @@
         "shape_max_abs_dE_eV": 0.7299,
         "max_abs_dE_eV": 0.7301,
         "shape_max_at_fraction": 0.97
-      }
+      },
+      "max_disp_atom_symbol_per_point": [
+        "Li",
+        "Li",
+        "Li",
+        "Li",
+        "Li",
+        "Li",
+        "Li"
+      ],
+      "rmsd_Li_over_framework": 2.8
     },
     "W3_f02__P2_Al2S3_A": {
       "n_paired": 7,
@@ -335,7 +415,17 @@
         "shape_max_abs_dE_eV": 0.4803,
         "max_abs_dE_eV": 0.72,
         "shape_max_at_fraction": 0.97
-      }
+      },
+      "max_disp_atom_symbol_per_point": [
+        "Li",
+        "Li",
+        "Li",
+        "Li",
+        "Li",
+        "Li",
+        "Li"
+      ],
+      "rmsd_Li_over_framework": 4.5
     },
     "W3_f02__P2_Al2S3_B": {
       "n_paired": 7,
@@ -368,7 +458,17 @@
         "shape_max_abs_dE_eV": 0.0712,
         "max_abs_dE_eV": 0.1388,
         "shape_max_at_fraction": 1.02
-      }
+      },
+      "max_disp_atom_symbol_per_point": [
+        "Li",
+        "Li",
+        "Li",
+        "Li",
+        "Li",
+        "Li",
+        "Li"
+      ],
+      "rmsd_Li_over_framework": 3.3
     }
   },
   "★_한_줄_요약": "질서 H0 는 두 조건 모두 **일곱 점 전부** 이웃 집합이 같고 0.1 Å 넘게 움직인 Li 가 **0 개**다. 무질서 넷은 두 조건 모두 **일곱 점 전부** 이웃 집합이 달라졌고, 90 개 중 **22–45 개**의 Li 가 이웃을 바꿨으며 0.1 Å 초과가 53–81 개다. 힘 문턱을 4 배 조여도(0.02→0.005) 이 그림은 안 바뀐다.",
@@ -12885,5 +12985,19 @@
     "cutoff_A": 3.0,
     "li_symbol": "Li",
     "⛔_이_기록이_말하지_않는_것": "골짜기 이동 여부. continuity 는 이웃 ID 집합의 사실 진술이고, 끝점 두 장은 중간 경로를 증명하지 않는다 (회신 BQ-3 Q5-3 — RMSD 문턱 불승인)"
+  },
+  "움직이는_것은_Li_인가": {
+    "질문": "두 갈래의 끝점 차이가 **Li 재배치**인가, 아니면 골격까지 다르게 완화된 것인가",
+    "최대변위_원자_원소_70점_집계": {
+      "Li": 66,
+      "Cl": 1,
+      "S": 3
+    },
+    "비-Li_가_최대인_점": [
+      "W3_f02__H0_host f=0.97 (Cl 0.006 Å) · f=1.00·1.01·1.02 (S ≤0.010 Å) — 질서 H0 는 전체가 0.01 Å 이하라 **어느 원자가 최대인지 뜻이 없다**(잡음 수준)"
+    ],
+    "무질서_넷": "여덟 줄 56 점 **전부** 최대변위 원자가 Li 다",
+    "RMSD_비율": "무질서 넷에서 RMSD(Li)/RMSD(골격) = 2.7–4.5 배 — 골격도 움직이지만 Li 가 더 크다",
+    "⛔_그래도_말하지_않는_것": "이것이 '골짜기가 달라졌다' 를 뜻하지 않는다. Li 가 더 크게 움직였다는 **서술**이고, 골격 변위 0.12–0.20 Å 도 0 이 아니다 — 골격이 따라 움직인 것인지 원인인지 구분 못 한다"
   }
 }
