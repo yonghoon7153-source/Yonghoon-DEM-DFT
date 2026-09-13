@@ -81,6 +81,42 @@ def light_anneal(atoms, T=300, time_ps=20, dt_fs=2.0, relax_steps=500,
                    'E_post_atom': atoms.get_potential_energy() / len(atoms)}
 
 
+def _bm3(V, E0, V0, B0, Bp):
+    """3차 Birch-Murnaghan E(V). 모듈 전역이다 — 라이브 적합과 소급 재판정이
+    **같은 식**을 써야 두 판정이 갈리지 않는다."""
+    eta = (V0 / V) ** (2 / 3)
+    return (E0 + (9 * V0 * B0 / 16) *
+            ((eta - 1) ** 3 * Bp + (eta - 1) ** 2 * (6 - 4 * eta)))
+
+
+def _fit_gate(r2, V0, B0_GPa, Bp, V_min, V_max):
+    """BM3 적합 하나를 받아 **판정만** 한다 (회신 BQ Q2).
+
+    게이트를 한 곳에만 둔다 — 두 벌이면 라이브 경로와 `--regate` 가 다른 답을 낸다.
+    반환 `(ok, in_window, b0_positive, reason)`.
+
+    ⚠ `0 < B0' < 15` 는 **보수적 선택**이다. B0'<0 이 보편적 비물리 조건은 아니다
+      (압력유도 연화는 실재한다). 떨굴 때 문구로 밝힌다.
+    """
+    in_window = bool(V_min <= V0 <= V_max)
+    b0_pos = bool(B0_GPa > 0)
+    r2_ok = bool(r2 >= 0.95)
+    bp_ok = bool(0.0 < Bp < 15.0)
+    ok = bool(r2_ok and in_window and b0_pos and bp_ok)
+    if ok:
+        return True, in_window, b0_pos, 'OK'
+    reason = ((f"r2={r2:.4f}" if not r2_ok else '') +
+              ('' if in_window else
+               f" · V\u2080={V0:.1f} \u00c5\u00b3 가 **측정 창 밖**"
+               f"[{V_min:.1f}, {V_max:.1f}] — 외삽이지 측정이 아니다") +
+              ('' if b0_pos else f" · B\u2080={B0_GPa:.1f} GPa \u2264 0 (비물리)") +
+              ('' if bp_ok else
+               f" · B0'={Bp:.2f} 가 0<B0'<15 밖"
+               f" \u26a0 B0'<0 이 보편적 비물리 조건은 아니다(압력유도 연화는 실재)"
+               f" — 이 게이트는 **보수적 선택**이다"))
+    return False, in_window, b0_pos, reason.strip().lstrip('\u00b7 ').strip()
+
+
 def _eos_branch(atoms_ref, calc, fractions, fmax, relax_steps, continuation):
     """한 갈래의 E(V). `continuation` 이면 **앞 점의 완화 결과**에서 이어간다.
 
@@ -180,10 +216,7 @@ def eos_sweep(atoms_ref, calc, fractions=(0.94, 0.96, 0.98, 1.00, 1.02, 1.04, 1.
     # 3rd-order Birch-Murnaghan fit
     try:
         from scipy.optimize import curve_fit
-        def bm3(V, E0, V0, B0, Bp):
-            eta = (V0 / V) ** (2/3)
-            return (E0 + (9 * V0 * B0 / 16) *
-                    ((eta - 1) ** 3 * Bp + (eta - 1) ** 2 * (6 - 4 * eta)))
+        bm3 = _bm3                    # ⭐ 전역 — `--regate` 와 **같은 식**을 쓴다
         p0 = [E.min(), V[E.argmin()], 0.1, 4.0]  # B0 in eV/Å³ ≈ 0.1 = 16 GPa
         popt, _ = curve_fit(bm3, V, E, p0=p0, maxfev=10000)
         E0, V0, B0, Bp = popt
@@ -210,10 +243,8 @@ def eos_sweep(atoms_ref, calc, fractions=(0.94, 0.96, 0.98, 1.00, 1.02, 1.04, 1.
         #     창 밖으로 한참 벗어난 V₀ 도 통과시켰다. 실측: P2_Al2S3_B 가 V₀ 5620 Å³
         #     (셀 4066, 창 밖 38 %)로 나왔는데 그건 **외삽**이지 측정이 아니다.
         #     창 밖 최소는 "이 창에서는 최소를 못 봤다" 는 뜻이다.
-        _in_window = bool(V.min() <= V0 <= V.max())
-        _b0_pos = bool(B0_GPa > 0)
-        fit_ok = bool(r2 >= 0.95 and _in_window and _b0_pos
-                      and 0.0 < Bp < 15.0)
+        fit_ok, _in_window, _b0_pos, _gate_reason = _fit_gate(
+            r2, V0, B0_GPa, Bp, float(V.min()), float(V.max()))
         # ⭐ 연쇄판 이력현상 게이트 — 두 갈래를 **각각** 적합해 V₀ 가 일치하는지 본다.
         #   갈리면 그 구조에선 EOS 가 잘 정의되지 않는다 (골짜기가 부피에 따라 바뀐다).
         _hyst_reason = None
@@ -281,16 +312,7 @@ def eos_sweep(atoms_ref, calc, fractions=(0.94, 0.96, 0.98, 1.00, 1.02, 1.04, 1.
                 'V0_in_window': _in_window,
                 'B0_positive': _b0_pos,
                 'fit_quality_reason': ('OK' if fit_ok
-                                      else (_hyst_reason or
-                                            (f"r2={r2:.4f}" if r2 < 0.95 else '') +
-                                            ('' if _in_window else
-                                             f" · V₀={V0:.1f} Å³ 가 **측정 창 밖**"
-                                             f"[{V.min():.1f}, {V.max():.1f}] — 외삽이지 측정이 아니다") +
-                                            ('' if _b0_pos else f" · B₀={B0_GPa:.1f} GPa ≤ 0 (비물리)") +
-                                            ('' if 0.0 < Bp < 15.0 else
-                                             f" · B0'={Bp:.2f} 가 0<B0'<15 밖"
-                                             f" ⚠ B0'<0 이 보편적 비물리 조건은 아니다(압력유도 연화는 실재)"
-                                             f" — 이 게이트는 **보수적 선택**이다")))}
+                                      else (_hyst_reason or _gate_reason))}
     except Exception as e:
         # ⛔ 2026-09-13 — 종전에는 적합이 터지면 **수렴 기록·이력 기록까지 통째로 버렸다.**
         #   그래서 *"왜 실패했나"* 를 볼 자료가 실패한 경우에만 없어졌다 — 정확히 반대다.
