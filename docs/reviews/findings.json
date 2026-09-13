@@ -2878,38 +2878,41 @@
    "found_by": "claude (사용자가 \"2πR_min² 에 걸리는 값이 없다\" 고 해서 코퍼스로 확인하다 발견)",
    "opened_in": "docs/reviews/codex_verdict_dem_stack_L2_20260913.md",
    "title": "`geom` cap 이 결속하면 **ψ = 0 이 되어 협착저항이 삭제**된다 (AM–SE 접촉의 13.84 %)",
-   "note": "L2-01 은 ψ 절벽을 `s* = 0.99784556531` 이라는 **극단 좌표**로 보였고, L2-10 은 `R_c = 0` 간선이 지워진다는 것을 보였다.  그런데 **생산에서 그 0 이 어떻게 만들어지는지**는 어느 판정문도 적지 않았다 — 극단이 아니라 **구조적**이다.\n★ **결정론적 연쇄** (산술): `binding == 'geom'` ⇒ `A_final = 2π·r_min²` ⇒ `a = sqrt(A/π) = √2·r_min` (`network_conductivity.py:323`) ⇒ `a > r_min` 이라 clamp 발동 (`:395`) ⇒ `a_eff = r_min` **정확히** ⇒ `ψ = (1 − 1)^1.5 = 0` (`:396`) ⇒ `ψ ≤ 1e-4` 분기로 **`R_constriction = 0`** (`:399-401`).  반지름에 무관하게 **항상** 그렇다 (`r_min_real = min(r1,r2)` `:386` 이 `A_geom` 의 `R_min` 과 같은 양).\n★ **실측 (코퍼스 `docs/data/case_master.csv`, 163 케이스)**: `geom` 결속이 **163/163 케이스 전부에서 > 0** 이다.  접촉 가중으로 전체 접촉의 **3.966 %** (1,513,533 / 38,157,976), **AM–SE 접촉의 13.843 %** (1,243,608 / 8,983,443).  케이스별 범위: 전체 0.1~17.0 % · AM–SE **1.4~42.5 %**.\n⇒ 옛 인식 *'2πR_min² 는 명목상 cap 이라 걸리는 값이 없다'* 는 **반증**된다.  ★ 다만 **정말 명목뿐인 cap 은 따로 있다** — `A_volume` 과 `hertzian` 은 **0/163** 이다 (최대 0.000 %).  기억이 이 둘과 섞인 것으로 보인다.\n★ **실제 함수로 사다리 재현** (r_SE 0.5 ↔ r_AM 6.0 µm, ligg_area = 0): δ = 0.02 → `R = 5.9403496296` (binding volume) · 0.05 → `6.3713479493` (tabor) · 0.10 → **`380.2740936428`** (tabor, ψ = 0.0026814364) · 0.20 → **`0`** (geom, ψ = 0).  ⇒ 접촉이 커지는 동안 저항이 **5.94 → 6.37 → 380.27 → 0** 으로 간다 = L2-01 의 비단조 R(A) 가 합성 좌표가 아니라 **실제 SE↔AM 접촉 크기에서** 나타난다.\n⚠ **적용 범위**: Physics 가지 전용이다 (`contact_mode == 'physics'`; Hertz-명명 가지에는 이 clamp 자체가 없다).  그러나 **σ_thermal Stage T1 의 타깃이 바로 그 가지**이고(`thermal_sigma_full_mScm_stage_e_physics`), 특징 10·12·14 도 `*_physics` 다.\n⚠ 두 산출 경로가 **같은 인자로** 같은 함수를 부른다 — `network_conductivity.py:299-302` 와 `coverage_physics_vs_hertzian.py:230-232` 가 `(delta, R_star, R_min=, ligg_area=, mode='physics')` 로 동일 ⇒ 위 결속 비율이 곧 솔버가 보는 비율이다.\n⇒ **E 결정(‘L2 에 넘길 면적 A 가 무엇인가’)이 장식이 아니다**: 지금 규약에서는 접촉이 충분히 커지면 협착 항이 **근사되는 것이 아니라 사라진다** = 그 간선이 국소적으로 `CONTACT_FREE` 가 된다 (CL-81 의 구조와 같은 방향).\n처방은 L2-01·L1-01 과 같다 — 숫자 패치가 아니라 **A 의 정의 먼저**.  그 전까지 Physics 가지의 σ 절대값 옆에는 *'협착 항이 일부 접촉에서 0 으로 삭제됨'* 을 적는다.",
+   "note": "L2-01 은 ψ 절벽을 `s* = 0.99784556531` 이라는 **극단 좌표**로 보였고, L2-10 은 `R_c = 0` 간선이 지워진다는 것을 보였다.  그런데 **생산에서 그 0 이 어떻게 만들어지는지**는 어느 판정문도 적지 않았다 — 극단이 아니라 **구조적**이다.\n★ **결정론적 연쇄** (산술): `binding == 'geom'` ⇒ `A_final = 2π·r_min²` ⇒ `a = sqrt(A/π) = √2·r_min` (`network_conductivity.py:323`) ⇒ `a > r_min` 이라 clamp 발동 (`:395`) ⇒ `a_eff = r_min` **정확히** ⇒ `ψ = (1 − 1)^1.5 = 0` (`:396`) ⇒ `ψ ≤ 1e-4` 분기로 **`R_constriction = 0`** (`:399-401`).  반지름에 무관하게 **항상** 그렇다 (`r_min_real = min(r1,r2)` `:386` 이 `A_geom` 의 `R_min` 과 같은 양).\n★ **실측 (코퍼스 `docs/data/case_master.csv`, 163 케이스)**: `geom` 결속이 **163/163 케이스 전부에서 > 0** 이다.  접촉 가중으로 전체 접촉의 **3.966 %** (1,513,533 / 38,157,976), **AM–SE 접촉의 13.843 %** (1,243,608 / 8,983,443).  케이스별 범위: 전체 0.1~17.0 % · AM–SE **1.4~42.5 %**.\n⇒ 옛 인식 *'2πR_min² 는 명목상 cap 이라 걸리는 값이 없다'* 는 **반증**된다.  ★ 다만 **정말 명목뿐인 cap 은 따로 있다** — `A_volume` 과 `hertzian` 은 **0/163** 이다 (최대 0.000 %).  기억이 이 둘과 섞인 것으로 보인다.\n★ **실제 함수로 사다리 재현** (r_SE 0.5 ↔ r_AM 6.0 µm, ligg_area = 0): δ = 0.02 → `R = 5.9403496296` (binding volume) · 0.05 → `6.3713479493` (tabor) · 0.10 → **`380.2740936428`** (tabor, ψ = 0.0026814364) · 0.20 → **`0`** (geom, ψ = 0).  ⇒ 접촉이 커지는 동안 저항이 **5.94 → 6.37 → 380.27 → 0** 으로 간다 = L2-01 의 비단조 R(A) 가 합성 좌표가 아니라 **실제 SE↔AM 접촉 크기에서** 나타난다.\n⚠ **적용 범위**: Physics 가지 전용이다 (`contact_mode == 'physics'`; Hertz-명명 가지에는 이 clamp 자체가 없다).  그러나 **σ_thermal Stage T1 의 타깃이 바로 그 가지**이고(`thermal_sigma_full_mScm_stage_e_physics`), 특징 10·12·14 도 `*_physics` 다.\n⚠ 두 산출 경로가 **같은 인자로** 같은 함수를 부른다 — `network_conductivity.py:299-302` 와 `coverage_physics_vs_hertzian.py:230-232` 가 `(delta, R_star, R_min=, ligg_area=, mode='physics')` 로 동일 ⇒ 위 결속 비율이 곧 솔버가 보는 비율이다.\n⇒ **E 결정(‘L2 에 넘길 면적 A 가 무엇인가’)이 장식이 아니다**: 지금 규약에서는 접촉이 충분히 커지면 협착 항이 **근사되는 것이 아니라 사라진다** = 그 간선이 국소적으로 `CONTACT_FREE` 가 된다 (CL-81 의 구조와 같은 방향).\n처방은 L2-01·L1-01 과 같다 — 숫자 패치가 아니라 **A 의 정의 먼저**.  그 전까지 Physics 가지의 σ 절대값 옆에는 *'협착 항이 일부 접촉에서 0 으로 삭제됨'* 을 적는다.\n\n★★ **실측 완료 2026-09-13 (S0 2판, LHS 코퍼스 30 케이스 `lhs00_100`~`129`, 실패 0)** — 산출 CSV `docs/data/constriction_deleted_lhs_20260913.csv` (⚠ **사용자 머신에서 생성, 리포 푸시 대기**).  덱에서 케이스별 type_map 유도, `build_network` 를 직접 불러 `R_constriction == 0` 을 센 **간선 가중** 집계:\n```\nionic       SE–SE   469,249 / 2,263,802 = 20.728 %\nelectronic  AM–AM         0 /   256,441 =  0.000 %\nthermal             973,137 / 3,624,410 = 26.850 %\n   AM–SE      503,888 / 1,104,167 = 45.635 %\n   SE–SE      469,249 / 2,263,802 = 20.728 %\n```\n★ 케이스별 이온 삭제율 **2.96 % ~ 36.12 %** (12배 산포) — 침대 구조에 강하게 걸린다.\n★★ **전자망은 무영향** — AM–AM 이 **256,441 간선에서 정확히 0** 이다.  30 침대 전부에서 0 이라 잡음이 아니다.  ⇒ σ_e 축(SDCP 계열)은 이 결함에 **안 걸린다**.\n⚠ **기전 가설 (미검정)**: AM `E = 1.4e8` 은 단단하고 SE 는 `0.135e7` = **18배 연화**다.  연화된 SE 가 깊게 겹쳐 `a/r → 1` 로 밀리고 단단한 AM 끼리는 안 밀린다 ⇒ SE 가 낀 접촉만 걸린다 (SE–SE 20.7 · AM–SE 45.6 · AM–AM 0).  **상관이지 인과 검정이 아니다.**\n⚠ **코퍼스가 다르다** — 이 30건은 **LHS**(2·3-type 설계)이고, `case_master.csv` 의 약 13.84 % 는 **legacy 169**다.  두 수를 직접 비교하지 않는다.  legacy 는 원자료가 유실돼 (`scripts/backup_webapp_data.sh` 헤더) **영구 재계산 불가**다.\n⚠ 이것은 **협착 항** 삭제다 — `R_bulk` 는 남는다.  간선 삭제·총저항 0 과 다르다 (`L2-10`).",
    "evidence_tests": [
     "scripts/network_conductivity.py",
     "scripts/plastic_coverage.py",
-    "docs/data/case_master.csv"
+    "docs/data/case_master.csv",
+    "scripts/audit_constriction_deleted.py"
    ]
   },
   {
    "id": "AREA-01",
    "severity": "P1",
-   "status": "open",
+   "status": "claimed_fixed",
    "owner": "claude",
    "found_by": "codex",
    "opened_in": "docs/reviews/codex_verdict_area_contract_20260913.md",
    "title": "S0 가 **δ 부재/0 의 native 면적 fallback** 을 누락했다 (0 % ↔ 솔버 100 %)",
-   "note": "`audit_constriction_deleted.py:127`(초판) 이 분모를 올린 뒤 δ≤0 이면 건너뛴다.  솔버 `network_conductivity.py:317` 는 **양의 native contact_area** 를 쓴다.\n★ Codex 반례 (반경 각 1 µm, `A_ligg = 0.998·π r²` = 새 원판 상한 **이내**): δ 열 부재 · δ=0 · δ<0 **세 경우 모두** S0 0/1 = **0 %** ↔ 실제 builder 의 `Rc = 0` 간선 1/1 = **100 %** (실제 `A_contact = 3.1353094683 µm²`).\n⇒ 무너지는 결론: *'S0 가 모든 생산 간선의 삭제를 센다'*.\n처방: δ 결손을 **보고만 하는 것으로는 복원되지 않는다** — no_delta 면적 fallback · invalid · unknown 을 구분해야 한다.",
+   "note": "`audit_constriction_deleted.py:127`(초판) 이 분모를 올린 뒤 δ≤0 이면 건너뛴다.  솔버 `network_conductivity.py:317` 는 **양의 native contact_area** 를 쓴다.\n★ Codex 반례 (반경 각 1 µm, `A_ligg = 0.998·π r²` = 새 원판 상한 **이내**): δ 열 부재 · δ=0 · δ<0 **세 경우 모두** S0 0/1 = **0 %** ↔ 실제 builder 의 `Rc = 0` 간선 1/1 = **100 %** (실제 `A_contact = 3.1353094683 µm²`).\n⇒ 무너지는 결론: *'S0 가 모든 생산 간선의 삭제를 센다'*.\n처방: δ 결손을 **보고만 하는 것으로는 복원되지 않는다** — no_delta 면적 fallback · invalid · unknown 을 구분해야 한다.\n\n**수정** `b54ad28a`: S0 2판이 helper 를 다시 구현하지 않고 `build_network` 를 **직접 부른다** ⇒ δ 부재/0 의 native 면적 fallback 이 **솔버의 것**이 된다.  회귀 ①a·①b 가 판정문의 반례를 고정한다 (δ=0 · A=0.998πr² → `Rc = 0.0`).\n★ **실행 검증 완료** — LHS 30 케이스에서 실패 0 으로 완주했다 (`SELF-28` 의 실측 절 참조).",
    "evidence_tests": [
     "scripts/audit_constriction_deleted.py"
-   ]
+   ],
+   "claimed_fixed_sha": "b54ad28a7"
   },
   {
    "id": "AREA-02",
    "severity": "P1",
-   "status": "open",
+   "status": "claimed_fixed",
    "owner": "claude",
    "found_by": "codex",
    "opened_in": "docs/reviews/codex_verdict_area_contract_20260913.md",
    "title": "S0 는 **raw 행**, 솔버는 **채택된 unique pair** 를 센다 (90 % ↔ 0 %)",
-   "note": "S0 `:117`(초판) 대 솔버 `network_conductivity.py:240`.  솔버는 정렬 ID쌍을 key 로 **마지막 채택 행**만 남긴다.\n★ Codex 반례 (같은 ID쌍):\n· deep 9행 + 마지막 shallow → S0 **90 %** 삭제 ↔ 실제 unique edge **0 %**\n· shallow 9행 + 마지막 deep → S0 **10 %** ↔ 실제 **100 %**\n· deep + area=δ=0 행 → S0 **50 %** ↔ 실제 **100 %**\n⇒ **분모뿐 아니라 분자도** 달라진다.  같은 helper 를 부른다는 사실이 이 차이를 없애지 않는다.\n★ 더 큰 문제 — **채널별 모집단**: 실제 채택 간선은 이온=SE–SE · 전자=AM–AM · 열=전부다.  ⇒ **AM–SE 13.84 % 는 이온망 삭제율의 하한이 아니다**.  같은 raw AM–SE 모집단에서 geom 결속이 삭제의 **충분조건**이라는 뜻으로 제한해야 한다.\n⚠ *'이온망에는 결함이 없다'* 는 뜻이 **아니다** — SE–SE 에도 같은 Physics 분기가 걸린다.\n⛔ 감사 과정에서 last-write 를 임의의 평균/최댓값 정책으로 **바꾸지 않는다**.",
+   "note": "S0 `:117`(초판) 대 솔버 `network_conductivity.py:240`.  솔버는 정렬 ID쌍을 key 로 **마지막 채택 행**만 남긴다.\n★ Codex 반례 (같은 ID쌍):\n· deep 9행 + 마지막 shallow → S0 **90 %** 삭제 ↔ 실제 unique edge **0 %**\n· shallow 9행 + 마지막 deep → S0 **10 %** ↔ 실제 **100 %**\n· deep + area=δ=0 행 → S0 **50 %** ↔ 실제 **100 %**\n⇒ **분모뿐 아니라 분자도** 달라진다.  같은 helper 를 부른다는 사실이 이 차이를 없애지 않는다.\n★ 더 큰 문제 — **채널별 모집단**: 실제 채택 간선은 이온=SE–SE · 전자=AM–AM · 열=전부다.  ⇒ **AM–SE 13.84 % 는 이온망 삭제율의 하한이 아니다**.  같은 raw AM–SE 모집단에서 geom 결속이 삭제의 **충분조건**이라는 뜻으로 제한해야 한다.\n⚠ *'이온망에는 결함이 없다'* 는 뜻이 **아니다** — SE–SE 에도 같은 Physics 분기가 걸린다.\n⛔ 감사 과정에서 last-write 를 임의의 평균/최댓값 정책으로 **바꾸지 않는다**.\n\n**수정** `b54ad28a`: 같은 이유로 dedup·채택 정책이 **솔버의 것**이 된다.  회귀 ③a-c 가 *'raw 10행 → 간선 1개, 마지막이 이긴다'* 를 고정한다.\n★ **채널 분리 완료** — 판정문이 요구한 대로 SE–SE(이온)·AM–AM(전자)·전부(열)를 **따로** 센다.  필터는 `mode` 가 아니라 `target_types` 가 걸며(`network_conductivity.py:251`), 생산 `main` 과 같은 선택자를 쓴다.  처음에 셋 다 전체 type 을 넘겨 ionic 이 AM–SE 를 받은 것을 회귀 ⑤a·⑤b 가 잡았다.\n★ **케이스별 type_map** — LHS 는 케이스마다 type 구성이 다르다 (`lhs00_000` 3-type vs `lhs00_100` 2-type, `${r_AM}`).  덱에서 두 신호(템플릿 이름 ↔ 연화 영률) 교차확인으로 유도하고 어긋나면 거부한다 (회귀 ⑨a-d).  하나를 박아 두면 이 지적을 그대로 재생산한다.\n★ **실측 결과**: `SELF-28` 참조 — 이온 20.728 % · 전자 **0.000 %** · 열 26.850 %.",
    "evidence_tests": [
     "scripts/audit_constriction_deleted.py"
-   ]
+   ],
+   "claimed_fixed_sha": "b54ad28a7"
   },
   {
    "id": "AREA-03",
