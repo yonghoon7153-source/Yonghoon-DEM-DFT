@@ -7472,3 +7472,43 @@ Oracle 의 idle 회수는 이제 더 중요해졌다 (없어지면 밖에서 아
 바로 그것을 알려 줬다. 이미 push 한 커밋이라 amend 하지 않고 여기서 고친다.
 
 같이: ADR 0036 에 `## 결과` 절을 붙였다 (wiki-lint 권장).
+
+## [2026-09-13] fix | 우리 것으로 못 알아본 https 에 LAN 점검표를 줬다
+
+우리 VPS 를 세운 뒤 클라이언트 기계(`DESKTOP-L60RV2M`)에서:
+
+    bml use https://test.bmlwork.kr
+    curl: (35) Recv failure: Connection reset by peer
+        HTTP 000  (0.050855s)
+
+    중추 서버 쪽에서 순서대로
+      3. 네트워크에 열었는가  .bml/env 에 WORKBENCH_HOST=0.0.0.0
+      4. 방화벽              New-NetFirewallRule ... -LocalPort 5003 ...
+
+**넷 다 이 주소와 아무 상관이 없다.** 워크벤치는 평문 HTTP 를 한 포트에 내므로
+`https://` 주소는 앞에 반드시 무언가(우리 nginx)가 있다는 뜻이고, 중추 서버의
+방화벽도 `WORKBENCH_HOST` 도 WSL NAT 도 그 경로에 없다.
+
+`server_unreachable_help` 이 `is_our_tunnel_url` 하나로 두 갈래만 갈랐는데,
+그 함수는 `tunnel_domain` 을 본다 — **도메인을 아는 것은 여는 기계 하나뿐이다**
+(`bml share domain` 은 중추 서버에서만 친다). 정작 이 안내가 필요한 것은 붙으러
+온 기계고, 그 기계는 도메인을 모른다.
+
+`is_our_tunnel_url` 에 https 를 넣는 것으로 고치려다 되돌렸다. 그 함수가 yes 면
+화면이 "bml share stop 후 다시 bml share" 를 시키는데, 오타로 여기까지 온
+사람에게 **열지도 않은 터널을 닫으라는 말**이 된다 — `test_bml_tunnel.sh` 의
+"아무 https 나 터널로 보면 안 된다" 절이 예전에 같은 시도를 되돌린 기록이었다.
+읽고 접었다.
+
+대신 갈래를 셋으로 했다. https 인데 우리 것으로 못 알아본 주소는 LAN 안내도
+안 주고 터널을 다시 열라고도 안 하고, **어디서 끊겼는지만** 짚는다 — 그리고
+`tls`/`tcp` 면 위 갈래와 같은 말을 한다: 이 망의 장비가 도메인을 보고 끊는
+신호이고, IP 를 줘도 같은 이름으로 TLS 를 걸므로 `bmlonly` 도 안 되며, 같은
+랩 안이면 `bmlin` 이 답이다.
+
+시험 여섯: 방화벽 안내가 안 나오는 것, `WORKBENCH_HOST` 가 안 나오는 것,
+층을 짚는 것, `bmlin` 을 주는 것, **`bml share stop` 을 안 시키는 것**,
+그리고 LAN 주소는 여전히 LAN 점검표를 받는 것.
+
+`'도 안 됩니다'` 등장 수를 1 에서 2 로 올렸다. 두 곳에 있는 것이 맞다 —
+도메인을 아는 기계와 모르는 기계가 같은 증상에서 같은 안내를 받아야 한다.

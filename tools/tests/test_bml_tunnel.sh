@@ -353,6 +353,35 @@ check "LAN 주소는 당연히 아니다"   "$(is_our_tunnel_url http://192.168.
 check "이름만 비슷한 것은 아니다"  "$(is_our_tunnel_url https://evil-lhr.life.example.com && echo yes || echo no)" "no"
 
 echo
+echo "우리 것으로 못 알아본 https 에 LAN 점검표를 주지 않는다"
+# 2026-09-13, 우리 VPS 를 세운 날.  클라이언트 기계에서
+# `bml use https://test.bmlwork.kr` 이 TLS reset 으로 막혔는데 화면이
+# "중추 서버의 Windows 방화벽에서 5003 을 여세요" 를 시켰다.  그 기계에는
+# `bml share domain` 을 한 적이 없어 `tunnel_domain` 이 비어 있었기 때문이다 --
+# **도메인을 아는 것은 여는 기계 하나뿐인데, 이 안내가 필요한 것은 붙으러 온
+# 기계다.**  워크벤치는 평문 HTTP 를 한 포트에 내므로 https 주소에는 방화벽도
+# WORKBENCH_HOST 도 WSL NAT 도 아무 상관이 없다.
+#
+# 그렇다고 https 를 전부 "우리 터널" 로 보지도 않는다 (바로 위 절).  오타로 온
+# 사람에게 열지도 않은 터널을 닫으라고 시키게 된다.  그래서 갈래가 셋이다.
+HTTPS_HELP="$( explain_unreachable() { :; }
+               tunnel_block_layer() { printf 'tls'; }
+               http_code_of() { printf '000'; }
+               server_unreachable_help https://test.bmlwork.kr 2>&1 )"
+check "방화벽 안내를 안 준다"   "$(printf '%s\n' "$HTTPS_HELP" | grep -c 'New-NetFirewallRule')" "0"
+check "WORKBENCH_HOST 도 안 준다" "$(printf '%s\n' "$HTTPS_HELP" | grep -c 'WORKBENCH_HOST=0.0.0.0')" "0"
+check "어디서 끊겼는지 짚는다"   "$(printf '%s\n' "$HTTPS_HELP" | grep -c '이 망의 장비가 도메인을 보고 끊는')" "1"
+check "같은 랩이면 bmlin 을 준다" "$(printf '%s\n' "$HTTPS_HELP" | grep -c 'bmlin')" "1"
+# 우리 것이라고 단정하지 않으므로, 열지도 않은 터널을 닫으라고 하지 않는다.
+check "터널을 다시 열라고 안 한다" "$(printf '%s\n' "$HTTPS_HELP" | grep -c 'bml share stop')" "0"
+
+# LAN 주소는 그대로 LAN 점검표를 받아야 한다 -- 위 갈래가 그것까지 삼키면 안 된다.
+LAN_HELP="$( explain_unreachable() { :; }
+             http_code_of() { printf '000'; }
+             server_unreachable_help http://192.168.0.40:5003 2>&1 )"
+check "LAN 주소에는 방화벽 안내" "$(printf '%s\n' "$LAN_HELP" | grep -c 'New-NetFirewallRule')" "1"
+
+echo
 echo "503 은 확정 신호지만, 무엇이 끊겼는지까지는 아니다"
 # 두 번 겪었고 원인이 서로 달랐다.
 #   1차: 중추 서버의 터널이 정말 끊겨 있었다.
@@ -694,8 +723,11 @@ BC="$HERE/../bml"
 # 끊긴 것인데, 두 줄이 정반대를 말하면 사람은 어느 쪽도 못 믿는다.
 check "curl 이 본 층을 먼저 본다" \
   "$(grep -c 'seen_layer="\$(tunnel_block_layer' "$BC")" "1"
+# 1 -> 2: 우리 터널로 못 알아본 https 갈래가 생기면서 같은 말을 한 번 더 한다.
+# 두 곳에 있는 것이 맞다 -- 도메인을 아는 기계(위)와 모르는 기계(아래)가 같은
+# 증상에서 같은 안내를 받아야 한다.  한쪽만 고치면 붙으러 온 기계는 못 듣는다.
 check "그때 bmlonly 도 안 된다고 말한다" \
-  "$(grep -c '도 안 됩니다' "$BC")" "1"
+  "$(grep -c '도 안 됩니다' "$BC")" "2"
 # curl 은 실패해도 -w 를 이미 찍는다.  뒤에 `|| printf '000'` 을 붙이면 둘이
 # 이어져 `HTTP 000000` 이 된다 — 화면에 실제로 그렇게 나왔다.
 PB="$(awk '/^tunnel_probe_by_ip\(\) \{/,/^\}/' "$BC")"

@@ -3070,6 +3070,56 @@ server_unreachable_help() {
       return 0
   fi
 
+  # **https 인데 우리 터널로 못 알아본 주소.**  아래 LAN 점검표를 주면 안 된다.
+  # 워크벤치 자신은 TLS 를 하지 않는다 -- 평문 HTTP 를 한 포트에 낸다.  그러므로
+  # https 로 적힌 주소는 앞에 반드시 무언가가 있고, `WORKBENCH_HOST=0.0.0.0` 도
+  # Windows 방화벽 5003 도 WSL NAT 도 그 주소와 아무 상관이 없다.
+  #
+  # 그렇다고 이것을 `is_our_tunnel_url` 에 넣지는 않는다.  그 함수가 yes 라고
+  # 하면 화면이 "bml share stop 후 다시 bml share" 를 시키는데, 오타 하나로
+  # 여기까지 온 사람에게 **열지도 않은 터널을 닫으라고 하는 말**이 된다 --
+  # 예전에 그렇게 했다가 되돌린 자리다 (test_bml_tunnel.sh 의 "아무 https 나
+  # 터널로 보면 안 된다").  그래서 갈래를 하나 더 둔다: LAN 안내는 안 주고,
+  # 터널을 다시 열라고도 안 하고, **어디서 끊겼는지만** 짚는다.
+  #
+  # 2026-09-13 에 이 자리가 비어 있어서 이런 일이 있었다.  우리 VPS 를 세운 뒤
+  # 클라이언트 기계에서 `bml use https://test.bmlwork.kr` 이 TLS reset 으로
+  # 막혔는데, 그 기계에는 `bml share domain` 을 한 적이 없어 -- **도메인을 아는
+  # 것은 여는 기계 하나뿐이다** -- 화면이 중추 서버의 Windows 방화벽을 열라고
+  # 시켰다.  정작 필요한 말("이 망의 장비가 도메인을 보고 끊는 신호입니다,
+  # 같은 랩 안이면 bmlin")은 위 갈래에 이미 있었는데 거기까지 못 갔다.
+  case "$url" in
+    https://*)
+      explain_unreachable "$url"
+      say ""
+      local xhost xlayer=""
+      xhost="$(url_host "$url" 2>/dev/null)" || xhost=""
+      [ -n "$xhost" ] && xlayer="$(tunnel_block_layer "$url")"
+      case "$xlayer" in
+        tls|tcp)
+          say "  ${B}이름은 풀렸는데 그 뒤에서 끊깁니다${OFF} ${DIM}($(block_layer_meaning "$xlayer"))${OFF}"
+          say "  ${DIM}이 망의 장비가 도메인을 보고 끊는 신호입니다 — 이름을 IP 로 바꿔 줘도${OFF}"
+          say "  ${DIM}같은 이름으로 TLS 를 걸기 때문에${OFF} ${GREEN}bmlonly${OFF} ${DIM}도 안 됩니다.${OFF}"
+          say "  ${DIM}같은 랩 안이면${OFF} ${GREEN}bmlin${OFF} ${DIM}— 랜으로 중추 서버에 직접 갑니다 (ADR 0034).${OFF}"
+          ;;
+        dns)
+          say "  ${B}이름을 못 찾습니다.${OFF} ${DIM}주소를 잘못 적었거나, 이 망의 DNS 가 그 도메인을 거릅니다.${OFF}"
+          ;;
+        *)
+          say "  ${DIM}어디서 끊겼는지는 짚지 못했습니다.${OFF}"
+          ;;
+      esac
+      say ""
+      say "  ${DIM}이 주소는 LAN 주소가 아닙니다 (https 입니다) — 워크벤치는 평문 HTTP 를 한 포트에${OFF}"
+      say "  ${DIM}냅니다. 중추 서버의 방화벽도${OFF} ${GREEN}WORKBENCH_HOST${OFF} ${DIM}도 여기엔 상관이 없습니다.${OFF}"
+      say "  ${DIM}주소를 한 글자씩 확인하고 (오타면 여기까지 옵니다), 맞다면 위를 보세요.${OFF}"
+      say ""
+      say "  ${DIM}지금 이 기계만의 데이터로 띄우려면${OFF}  ${GREEN}bml use off${OFF} ${DIM}후${OFF} ${GREEN}bml${OFF}"
+      say "  ${DIM}(현재 설정: ${url})${OFF}"
+      return 0
+      ;;
+  esac
+
   explain_unreachable "$url"
   say ""
   say "  ${B}중추 서버 쪽에서 순서대로${OFF}"
