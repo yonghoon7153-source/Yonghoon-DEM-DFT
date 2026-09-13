@@ -1223,8 +1223,11 @@ def test_c6_04_reader_uses_the_unversioned_canon_and_flags_versioned_siblings(tm
     assert got["100"]["file"] == "degeneracy_100_Li.json" and got["100"]["j"]["LLI_percent"]["span"] == 111.0, got["100"]["file"]
     assert mx["100"]["file"] == "matrix_100.csv" and mx["100"]["per"]["GITT"]["LLI"] == 3.0, mx["100"]["file"]
     assert "_v2" in err and "archive" in err, err
-    # 실제 out/ 에는 `_vN` 이 없어야 한다 (U14 가 v2 를 비트 단위로 재현했으므로 옛 판은 archive 로)
-    assert not [p.name for p in (ROOT / "out").glob("*_v[0-9]*")], [p.name for p in (ROOT / "out").glob("*_v[0-9]*")]
+    # 실제 out/ 에는 `_vN` **산출**이 없어야 한다 (U14 가 v2 를 비트 단위로 재현했으므로 옛 판은 archive 로).
+    # ⚠ 산출은 .csv/.json 뿐이다 (`check_u14.ARTIFACT_SUFFIXES`) — 사용자 기계의 gitignored `out/matrix_v2.log` 가 이 glob 에
+    #   잡혀 이 테스트가 깨졌고, 변이 감사가 이 테스트를 case 로 쓰므로 R7-06(no-op 변이 → MISSED 기대)까지 연쇄로 깨졌다.
+    stale = [p.name for p in (ROOT / "out").glob("*_v[0-9]*") if p.suffix.lower() in (".csv", ".json")]
+    assert not stale, stale
     assert (ROOT / "out" / "archive" / "degeneracy_300_0009_Li_v2.json").is_file()
 
 
