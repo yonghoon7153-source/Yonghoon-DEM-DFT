@@ -118,34 +118,63 @@ def _bm3(V, E0, V0, B0, Bp):
             ((eta - 1) ** 3 * Bp + (eta - 1) ** 2 * (6 - 4 * eta)))
 
 
-def _fit_gate(r2, V0, B0_GPa, Bp, V_min, V_max):
-    """BM3 적합 하나를 받아 **판정만** 한다 (회신 BQ Q2).
+def _fit_gate(r2, V0, B0_GPa, Bp, V_points):
+    """BM3 적합 하나를 받아 **판정만** 한다 (회신 BQ Q2 · BQ-2 Q5).
 
     게이트를 한 곳에만 둔다 — 두 벌이면 라이브 경로와 `--regate` 가 다른 답을 낸다.
-    반환 `(ok, in_window, b0_positive, reason)`.
+    반환은 **dict** 다 (판정 + 그 판정을 만든 사실들).
 
-    ⚠ `0 < B0' < 15` 는 **보수적 선택**이다. B0'<0 이 보편적 비물리 조건은 아니다
-      (압력유도 연화는 실재한다). 떨굴 때 문구로 밝힌다.
+    ⚠ `0 < B0' < 15` 는 **보수적 운영 기준**이지 V₀ 의 물리적 필수조건이 아니다.
+      회신 BQ-2 Q5: *"B₀′는 곡선의 더 높은 차수 변화에 민감해서, 최소 위치보다
+      먼저 불안정해질 수 있어요."* 기존 판정은 **보존**하되, B₀′ 를 뺀
+      V₀ 중심 기준(`v0_centric_ok`)을 **같이 보고**해 무엇이 달라지는지 보이게 한다.
+
+    ⛔ 이 함수가 **못 하는 것**
+      · 수렴을 보지 않는다. 사용 자격은 `attach_eligibility` 가 정한다.
+      · 창을 넓히라고 말하지 않는다. 경계에 붙었다는 **사실만** 적는다.
     """
+    V = np.asarray(V_points, dtype=float)
+    V_min, V_max = float(V.min()), float(V.max())
+    span = max(V_max - V_min, 1e-12)
     in_window = bool(V_min <= V0 <= V_max)
+    # ⛔ 회신 BQ-2 Q5 — **창 경계에 붙은 최소는 양쪽을 관측한 최소와 다르다.**
+    bracketed = bool(bool((V < V0).any()) and bool((V > V0).any()))
+    edge_margin = float(min(V0 - V_min, V_max - V0) / span) if in_window else 0.0
+    n_int = max(len(V) - 1, 1)
+    at_edge = bool(in_window and edge_margin < 1.0 / n_int)   # 최외곽 구간 안이다
     b0_pos = bool(B0_GPa > 0)
     r2_ok = bool(r2 >= 0.95)
     bp_ok = bool(0.0 < Bp < 15.0)
     ok = bool(r2_ok and in_window and b0_pos and bp_ok)
+    info = {'fit_quality_ok': ok, 'V0_in_window': in_window,
+            'V0_bracketed': bracketed, 'V0_edge_margin_frac': edge_margin,
+            'V0_at_window_edge': at_edge, 'B0_positive': b0_pos,
+            'r2_ok': r2_ok, 'Bp_ok': bp_ok,
+            # 회신 BQ-2 Q5 — B₀′ 를 뺀 V₀ 중심 기준. **판정을 바꾸지 않고 보이기만** 한다
+            'v0_centric_ok': bool(r2_ok and in_window and b0_pos),
+            '⚠_v0_centric_의_뜻': ("B0′ 조건을 뺀 기준이다. 현재 판정(fit_quality_ok)은 "
+                                   "이것을 쓰지 않는다 — 바꾸려면 그 사실을 명시해야 "
+                                   "한다 (회신 BQ-2 Q5)")}
+    if at_edge:
+        info['⚠_경계_최소'] = (f"V₀ 가 측정 창의 **최외곽 구간**에 있다 "
+                               f"(경계까지 창 폭의 {edge_margin*100:.1f} %). "
+                               f"양쪽을 넉넉히 관측한 최소와 같은 등급으로 쓰지 마라")
     if ok:
-        return True, in_window, b0_pos, 'OK'
+        info['fit_quality_reason'] = 'OK' + (' ⚠ 단 V₀ 가 창 경계에 붙어 있다' if at_edge else '')
+        return info
     reason = ((f"r2={r2:.4f}" if not r2_ok else '') +
               ('' if in_window else
-               f" · V\u2080={V0:.1f} \u00c5\u00b3 가 **측정 창 밖**"
+               f" · V₀={V0:.1f} Å³ 가 **측정 창 밖**"
                f"[{V_min:.1f}, {V_max:.1f}] — 외삽이지 측정이 아니다") +
-              ('' if b0_pos else f" · B\u2080={B0_GPa:.1f} GPa \u2264 0 (비물리)") +
+              ('' if bracketed or not in_window else
+               " · V₀ 양쪽에 측정점이 없다 (내삽이 아니다)") +
+              ('' if b0_pos else f" · B₀={B0_GPa:.1f} GPa ≤ 0 (비물리)") +
               ('' if bp_ok else
                f" · B0'={Bp:.2f} 가 0<B0'<15 밖"
-               f" \u26a0 B0'<0 이 보편적 비물리 조건은 아니다(압력유도 연화는 실재)"
+               f" ⚠ B0'<0 이 보편적 비물리 조건은 아니다(압력유도 연화는 실재)"
                f" — 이 게이트는 **보수적 선택**이다"))
-    return False, in_window, b0_pos, reason.strip().lstrip('\u00b7 ').strip()
-
-
+    info['fit_quality_reason'] = reason.strip().lstrip('· ').strip()
+    return info
 def _eos_branch(atoms_ref, calc, fractions, fmax, relax_steps, continuation):
     """한 갈래의 E(V). `continuation` 이면 **앞 점의 완화 결과**에서 이어간다.
 
@@ -186,7 +215,7 @@ def _eos_branch(atoms_ref, calc, fractions, fmax, relax_steps, continuation):
 
 def _eos_sweep_core(atoms_ref, calc, fractions=(0.94, 0.96, 0.98, 1.00, 1.02, 1.04, 1.06),
              fmax=0.05, relax_steps=500, continuation=False, hysteresis_tol=0.01,
-             hysteresis_span_tol=0.10):
+             hysteresis_span_tol=0.10, hysteresis_shape_tol=0.10):
     """Volume sweep + Birch-Murnaghan 3rd-order fit. atoms_ref is the
     relaxed reference at V0; we scale its lattice by f^(1/3) per point.
 
@@ -269,8 +298,10 @@ def _eos_sweep_core(atoms_ref, calc, fractions=(0.94, 0.96, 0.98, 1.00, 1.02, 1.
         #     창 밖으로 한참 벗어난 V₀ 도 통과시켰다. 실측: P2_Al2S3_B 가 V₀ 5620 Å³
         #     (셀 4066, 창 밖 38 %)로 나왔는데 그건 **외삽**이지 측정이 아니다.
         #     창 밖 최소는 "이 창에서는 최소를 못 봤다" 는 뜻이다.
-        fit_ok, _in_window, _b0_pos, _gate_reason = _fit_gate(
-            r2, V0, B0_GPa, Bp, float(V.min()), float(V.max()))
+        _gi = _fit_gate(r2, V0, B0_GPa, Bp, V)
+        fit_ok = _gi['fit_quality_ok']
+        _in_window, _b0_pos = _gi['V0_in_window'], _gi['B0_positive']
+        _gate_reason = _gi['fit_quality_reason']
         # ⭐ 연쇄판 이력현상 게이트 — 두 갈래를 **각각** 적합해 V₀ 가 일치하는지 본다.
         #   갈리면 그 구조에선 EOS 가 잘 정의되지 않는다 (골짜기가 부피에 따라 바뀐다).
         _hyst_reason = None
@@ -296,21 +327,57 @@ def _eos_sweep_core(atoms_ref, calc, fractions=(0.94, 0.96, 0.98, 1.00, 1.02, 1.
                 _dspan = float(hyst['max_abs_dE_eV']) / _span
                 hyst['dE_over_span'] = _dspan
                 hyst['tol_span'] = float(hysteresis_span_tol)
+                # ⛔⛔ 회신 BQ-2 Q2 (2026-09-13) — 높이·모양 분리가 **기록에만** 있었고
+                #   게이트는 여전히 원시 max_abs_dE/span 을 봤다. 리뷰어 실측: 정확한
+                #   BM3 두 곡선을 0.04 eV **평행이동**하면 shape=0 이고 양방향 V₀ 가
+                #   같은데도 탈락하며 "EOS 가 한 골짜기로 정의되지 않는다" 를 출력했다.
+                #   ⇒ 세 기준을 **따로** 세우고, 각각의 뜻을 다르게 적는다.
+                _shape = float(hyst.get('shape_max_abs_dE_eV') or 0.0)
+                _lvl = abs(float(hyst.get('level_offset_eV') or 0.0))
+                _shspan = _shape / _span
+                hyst['shape_over_span'] = _shspan
+                hyst['level_over_span'] = _lvl / _span
+                hyst['tol_shape'] = float(hysteresis_shape_tol)
+                # 문턱이 결과를 만드는가 — **보여준다**. 주장하지 않는다.
+                hyst['shape_verdict_vs_tol'] = {
+                    f'{t:g}': bool(_shspan <= t) for t in (0.01, 0.02, 0.05, 0.10, 0.25)}
+                hyst['⚠_문턱_의존'] = ('위 표에서 판정이 갈리면 그 문턱이 결과를 만들고 있다는 뜻이다. '
+                                       '전부 같으면 문턱은 일을 하지 않는다')
                 _v0_ok = _rel <= hysteresis_tol
-                _sp_ok = _dspan <= hysteresis_span_tol
-                hyst['ok'] = bool(_v0_ok and _sp_ok)
-                if not hyst['ok']:
+                _shape_ok = _shspan <= hysteresis_shape_tol
+                _sp_ok = _dspan <= hysteresis_span_tol          # 레거시 운영 기준
+                # **물리 판정**은 V₀ 일치 ∧ 모양 일치다 (평행이동은 여기에 안 들어간다)
+                hyst['ok'] = bool(_v0_ok and _shape_ok)
+                hyst['operational_hold'] = bool(not _sp_ok)
+                hyst['⚠_세_기준의_뜻'] = {
+                    'V₀ 일치': '두 갈래의 최소 위치가 같은가 — 갈리면 V₀ 가 경로에 딸린다',
+                    '모양 일치(shape)': '평행이동 성분을 뺀 곡선 차이 — 갈리면 **보고 곡선의 곡률**이 의심된다',
+                    '높이차(level)': '두 갈래가 **다른 에너지의 상태**로 끝났다는 뜻이다. '
+                                     'V₀·곡률을 무효로 만들지는 않는다 — 상태 선택 문제다',
+                    '레거시 dE/span': '원시 최대차를 곡선 폭으로 나눈 값. 평행이동에도 커진다. '
+                                      '**운영상 보류**에만 쓰고 V₀ 존재 불가나 기전 확정의 근거로 쓰지 않는다'}
+                if not (hyst['ok'] and _sp_ok):
                     fit_ok = False
                     _why = []
                     if not _v0_ok:
                         _why.append(f"V₀ 가 갈린다 — 올라가는 갈래 {_vs[0]:.1f} vs "
                                     f"내려오는 갈래 {_vs[1]:.1f} Å³ ({_rel*100:.2f} % "
                                     f"> 허용 {hysteresis_tol*100:.2f} %)")
-                    if not _sp_ok:
-                        _why.append(f"**곡선 자체가 갈린다** — 두 갈래 최대차 "
-                                    f"{hyst['max_abs_dE_eV']:.3f} eV 가 곡선 폭 {_span:.3f} eV 의 "
-                                    f"{_dspan*100:.0f} % (> 허용 {hysteresis_span_tol*100:.0f} %). "
+                    if not _shape_ok:
+                        _why.append(f"**모양이 갈린다** — 평행이동을 뺀 곡선 차 "
+                                    f"{_shape:.3f} eV 가 곡선 폭 {_span:.3f} eV 의 "
+                                    f"{_shspan*100:.0f} % (> 허용 {hysteresis_shape_tol*100:.0f} %). "
                                     f"V₀ 가 겹쳐도 같은 곡선이 아니다")
+                    if _sp_ok is False and _shape_ok and _v0_ok:
+                        _why.append(f"⚠ **운영상 보류** — 원시 최대차 {hyst['max_abs_dE_eV']:.3f} eV "
+                                    f"가 곡선 폭의 {_dspan*100:.0f} % (> {hysteresis_span_tol*100:.0f} %) "
+                                    f"지만 그 대부분이 **평행이동**이다 (높이차 {_lvl:.3f} eV, "
+                                    f"모양차 {_shape:.3f} eV). 두 갈래가 다른 에너지의 상태로 끝났다는 "
+                                    f"뜻이지 **V₀ 가 존재하지 않는다는 뜻이 아니다** (회신 BQ-2 Q2)")
+                    elif not _sp_ok:
+                        _why.append(f"레거시 dE/span {_dspan*100:.0f} % (> {hysteresis_span_tol*100:.0f} %) "
+                                    f"— 운영상 보류. 분모가 부피창에 딸려가므로 창이 다른 조건끼리 "
+                                    f"같은 문턱으로 비교하지 마라")
                     _hyst_reason = ("이력현상 — " + " · ".join(_why) +
                                     ". 이 구조에선 EOS 가 한 골짜기로 정의되지 않는다")
             except Exception as _e:                                  # noqa: BLE001
@@ -337,6 +404,7 @@ def _eos_sweep_core(atoms_ref, calc, fractions=(0.94, 0.96, 0.98, 1.00, 1.02, 1.
                 'fit_quality_ok': fit_ok,
                 'V0_in_window': _in_window,
                 'B0_positive': _b0_pos,
+                'gate_detail': _gi,
                 'fit_quality_reason': ('OK' if fit_ok
                                       else (_hyst_reason or _gate_reason))}
     except Exception as e:
@@ -357,7 +425,8 @@ def _eos_sweep_core(atoms_ref, calc, fractions=(0.94, 0.96, 0.98, 1.00, 1.02, 1.
 def eos_ensemble(atoms_ref, calc, n_seeds=5, perturb=0.1,
                  fractions=(0.94, 0.96, 0.98, 1.00, 1.02, 1.04, 1.06),
                  fmax=0.05, relax_steps=500, continuation=False,
-                 hysteresis_tol=0.01, hysteresis_span_tol=0.10):
+                 hysteresis_tol=0.01, hysteresis_span_tol=0.10,
+                 hysteresis_shape_tol=0.10):
     """Run eos_sweep on N rattled copies of atoms_ref and keep the BEST BM3 fit.
 
     MLIP single-curve EOS is basin-sensitive: a stray Li/ion rearrangement at one
@@ -377,7 +446,8 @@ def eos_ensemble(atoms_ref, calc, n_seeds=5, perturb=0.1,
                                  relax_steps=relax_steps,
                                  continuation=continuation,
                                  hysteresis_tol=hysteresis_tol,
-                                 hysteresis_span_tol=hysteresis_span_tol))
+                                 hysteresis_span_tol=hysteresis_span_tol,
+                                 hysteresis_shape_tol=hysteresis_shape_tol))
     # ⛔⛔ 회신 BQ-2 P0-1 — **자격을 가장 앞에 둔다.** 종전 선택은 `fit_quality_ok`
     #   (회귀 지표) 만 봤으므로, 점이 하나도 수렴하지 않은 시드도 r² 만 높으면 뽑혔다.
     eligible = [r for r in results if r.get('downstream_eligible') is True]
@@ -774,7 +844,8 @@ def process_one(xyz_path, calc, out_dir, args):
                                          relax_steps=args.relax_steps,
                                          continuation=getattr(args, 'eos_continuation', False),
                                          hysteresis_tol=getattr(args, 'eos_hysteresis_tol', 0.01),
-                                         hysteresis_span_tol=getattr(args, 'eos_hysteresis_span_tol', 0.10))
+                                         hysteresis_span_tol=getattr(args, 'eos_hysteresis_span_tol', 0.10),
+                                         hysteresis_shape_tol=getattr(args, 'eos_hysteresis_shape_tol', 0.10))
         else:
             record['eos'] = eos_sweep(atoms, calc,
                                       fractions=tuple(args.eos_fractions),
@@ -782,7 +853,8 @@ def process_one(xyz_path, calc, out_dir, args):
                                       relax_steps=args.relax_steps,
                                       continuation=getattr(args, 'eos_continuation', False),
                                       hysteresis_tol=getattr(args, 'eos_hysteresis_tol', 0.01),
-                                      hysteresis_span_tol=getattr(args, 'eos_hysteresis_span_tol', 0.10))
+                                      hysteresis_span_tol=getattr(args, 'eos_hysteresis_span_tol', 0.10),
+                                         hysteresis_shape_tol=getattr(args, 'eos_hysteresis_shape_tol', 0.10))
         record['eos']['t_s'] = time.time() - t0
 
     # 2b. EOS V₀ 를 **실제로** 적용한다 (GAP-3). 기본은 과거 동작 유지.
@@ -1086,16 +1158,47 @@ def _selftest():
     #   span 기준을 0 으로 조이면 **V₀ 기준은 널널해도** 떨어져야 한다.
     _hole = eos_sweep(_cu, EMT(), fractions=_fr, fmax=0.05, relax_steps=30,
                       continuation=True, hysteresis_tol=1.0,   # V₀ 는 사실상 무제한
-                      hysteresis_span_tol=0.0)                 # 곡선 기준만 조인다
+                      hysteresis_span_tol=0.0, hysteresis_shape_tol=0.0)   # 곡선 기준만 조인다
     chk(_hole.get('fit_quality_ok') is False,
         "⛔음성: V₀ 기준을 풀어도 **곡선 기준**만으로 떨어진다 (구멍이 막혔다)")
-    chk('곡선 자체가 갈린다' in (_hole.get('fit_quality_reason') or ''),
-        "⛔음성: 떨어진 이유가 **곡선이 갈렸다**고 적힌다 (V₀ 탓으로 안 돌린다)")
+    chk('모양이 갈린다' in (_hole.get('fit_quality_reason') or ''),
+        "⛔음성: 떨어진 이유가 **모양이 갈렸다**고 적힌다 (V₀ 탓으로 안 돌린다)")
+
+    # ⛔⛔ 회신 BQ-2 Q2 — **리뷰어가 재현한 거짓 양성 그 자체.**
+    #   두 갈래가 정확히 평행이동(모양차 0)이면 V₀·곡률은 같다. 종전 게이트는
+    #   원시 max_abs_dE/span 만 보고 "EOS 가 한 골짜기로 정의되지 않는다" 로 떨어뜨렸다.
+    #   이제는 **운영상 보류**로 내려가고, 사유가 평행이동임을 밝혀야 한다.
+    _V = np.array([100.0, 105.0, 110.0, 115.0, 120.0, 125.0, 130.0])
+    _Ebase = 0.02 * (_V - 115.0) ** 2 / 100.0
+    _hy = {'E_up': _Ebase.tolist(), 'E_down': (_Ebase + 0.04).tolist(),
+           'reported_branch': 'up', 'max_abs_dE_eV': 0.04,
+           'level_offset_eV': -0.04, 'shape_max_abs_dE_eV': 0.0,
+           'E_span_eV': float(_Ebase.max() - _Ebase.min())}
+    _shp = _hy['shape_max_abs_dE_eV'] / max(_hy['E_span_eV'], 1e-12)
+    _raw = _hy['max_abs_dE_eV'] / max(_hy['E_span_eV'], 1e-12)
+    chk(_shp <= 0.10 < _raw,
+        "픽스처 확인: 평행이동은 모양 기준을 통과하고 원시 기준만 넘긴다 "
+        f"(shape {_shp*100:.1f}% · raw {_raw*100:.1f}%)")
+
+    # 실제 경로로도 친다 — 모양 기준은 널널하고 레거시 기준만 조인다
+    _par = eos_sweep(_cu, EMT(), fractions=_fr, fmax=0.05, relax_steps=30,
+                     continuation=True, hysteresis_tol=1.0,
+                     hysteresis_span_tol=0.0, hysteresis_shape_tol=1.0)
+    _ph = _par.get('hysteresis') or {}
+    chk(_ph.get('ok') is True and _ph.get('operational_hold') is True,
+        "⛔음성: 모양은 통과인데 레거시 기준만 걸리면 **물리 판정은 ok, 운영 보류**로 갈린다")
+    chk('운영상 보류' in (_par.get('fit_quality_reason') or '')
+        and 'V₀ 가 존재하지 않는다는 뜻이 아니다' in (_par.get('fit_quality_reason') or ''),
+        "⛔⛔음성: 평행이동 보류의 사유가 **V₀ 존재 불가로 적히지 않는다** (회신 BQ-2 Q2)")
+    chk(isinstance(_ph.get('shape_verdict_vs_tol'), dict)
+        and len(set((_ph.get('shape_verdict_vs_tol') or {}).values())) >= 1,
+        "문턱 의존성을 **표로 보여준다** (주장하지 않는다)")
     chk('dE_over_span' in (_hole.get('hysteresis') or {}),
         "곡선 갈림 비율(dE/span)이 기록에 남는다")
     # 양성 대조: 두 기준 다 널널하면 통과 — 즉 **기준이 판정을 만든다**
     _loose = eos_sweep(_cu, EMT(), fractions=_fr, fmax=0.05, relax_steps=30,
-                       continuation=True, hysteresis_tol=1.0, hysteresis_span_tol=1.0)
+                       continuation=True, hysteresis_tol=1.0, hysteresis_span_tol=1.0,
+                       hysteresis_shape_tol=1.0)
     chk(_loose.get('fit_quality_ok') is True,
         "양성 대조: 같은 자료도 기준을 풀면 통과한다 — 판정을 만드는 것은 **기준**이다")
 
@@ -1114,7 +1217,8 @@ def _selftest():
 
     # ⑪ 회신 BQ P0-1 · P0-2 · P0-3 (2026-09-13)
     _bq = eos_sweep(_cu, EMT(), fractions=_fr, fmax=0.05, relax_steps=30,
-                    continuation=True, hysteresis_tol=1.0, hysteresis_span_tol=1.0)
+                    continuation=True, hysteresis_tol=1.0, hysteresis_span_tol=1.0,
+                       hysteresis_shape_tol=1.0)
     _h = _bq.get('hysteresis') or {}
 
     # P0-1 — 점마다 수렴·최종 최대힘이 남는가
@@ -1127,7 +1231,8 @@ def _selftest():
     #     '수렴' 으로 찍힌다. 흔들어서 실제 힘을 만들어야 이 시험이 뜻을 갖는다.
     _rough = _cu.copy(); _rough.rattle(stdev=0.08, seed=11)
     _starved = eos_sweep(_rough, EMT(), fractions=_fr, fmax=1e-9, relax_steps=1,
-                         continuation=True, hysteresis_tol=1.0, hysteresis_span_tol=1.0)
+                         continuation=True, hysteresis_tol=1.0, hysteresis_span_tol=1.0,
+                       hysteresis_shape_tol=1.0)
     _sl = (_starved.get('hysteresis') or {}).get('convergence_up') or []
     chk(_sl and all(not r['converged'] for r in _sl),
         "⛔음성: fmax 1e-9·steps 1 로 굶기면 **전부 미수렴**으로 찍힌다")
@@ -1197,7 +1302,8 @@ def _selftest():
 
     # ⑫ 회신 BQ Q2 — 빠져 있던 기본 확인 둘
     _g = eos_sweep(_cu, EMT(), fractions=_fr, fmax=0.05, relax_steps=30,
-                   continuation=True, hysteresis_tol=1.0, hysteresis_span_tol=1.0)
+                   continuation=True, hysteresis_tol=1.0, hysteresis_span_tol=1.0,
+                       hysteresis_shape_tol=1.0)
     chk(_g.get('V0_in_window') is True and _g.get('B0_positive') is True,
         "양성: 정상 적합은 V₀ 가 창 안이고 B₀ > 0 이다")
     chk(_g.get('fit_quality_ok') is True, "양성: 그래서 통과한다")
@@ -1208,17 +1314,39 @@ def _selftest():
     import numpy as _np2
     _V = _np2.array([100.0, 110.0, 120.0, 130.0, 140.0])
     _E = _np2.array([0.0, -0.5, -1.0, -1.6, -2.3])          # 창 안에 최소가 없다(단조 감소)
-    def _fit_in_window(V, V0):
-        return bool(V.min() <= V0 <= V.max())
-    chk(_fit_in_window(_V, 200.0) is False,
+    # ⛔ 종전에는 여기서 **시험 전용 복제 함수**(`_fit_in_window`)를 만들어 쳤다.
+    #   실물이 아니라 복제를 치면 실물이 바뀌어도 시험은 초록이다 — 실물을 친다.
+    chk(_fit_gate(0.999, 200.0, 100.0, 4.0, _V)['V0_in_window'] is False,
         "⛔음성: V₀ 200 은 창 [100,140] 밖 — 창 밖 판정이 실제로 작동한다")
-    chk(_fit_in_window(_V, 125.0) is True,
+    chk(_fit_gate(0.999, 125.0, 100.0, 4.0, _V)['V0_in_window'] is True,
         "양성 대조: 창 안 V₀ 는 통과한다 (무조건 떨구는 게 아니다)")
+
+    # ⛔⛔ 회신 BQ-2 Q5 — **창 경계에 붙은 최소를 내부 최소와 구분하는가**
+    _mid = _fit_gate(0.999, 120.0, 100.0, 4.0, _V)       # 한가운데
+    _edg = _fit_gate(0.999, 102.0, 100.0, 4.0, _V)       # 최외곽 구간 안
+    chk(_mid['V0_at_window_edge'] is False and _edg['V0_at_window_edge'] is True,
+        "⛔음성: 창 **경계에 붙은** V₀ 를 한가운데 V₀ 와 구분한다")
+    chk(_edg['fit_quality_ok'] is True and '경계' in _edg['fit_quality_reason'],
+        "경계 최소는 **떨구지 않고 표시**한다 (구분하라는 것이지 버리라는 게 아니다)")
+    chk(_mid['V0_bracketed'] is True
+        and _fit_gate(0.999, 200.0, 100.0, 4.0, _V)['V0_bracketed'] is False,
+        "⛔음성: V₀ 양쪽에 측정점이 있는지(내삽인지)를 따로 센다")
+
+    # ⛔⛔ 회신 BQ-2 Q5 — B₀′ 만 어긋난 경우 **V₀ 중심 기준은 살아 있다**고 보인다
+    #   (판정은 바꾸지 않는다 — 바꾸려면 그 사실을 명시해야 한다)
+    _bponly = _fit_gate(0.999, 120.0, 100.0, -1.94, _V)
+    chk(_bponly['fit_quality_ok'] is False and _bponly['v0_centric_ok'] is True,
+        "⛔음성: B0'=-1.94 로 떨어져도 v0_centric_ok 는 참 — 무엇이 떨어뜨렸는지 보인다")
+    chk('보수적 선택' in _bponly['fit_quality_reason'],
+        "그 사유가 **보수적 선택**임을 문구가 밝힌다 (물리적 필수조건이 아니다)")
+    chk(_fit_gate(0.999, 120.0, -5.0, 4.0, _V)['v0_centric_ok'] is False,
+        "⛔음성: B₀ 가 음수면 v0_centric_ok 도 거짓 (B₀ 양수는 진짜 필수조건이다)")
     chk('B0' in ''.join(k for k in _g) or 'B0_positive' in _g,
         "B₀ 부호 확인이 기록에 남는다")
     # ⚠ B0'<0 을 떨구는 것은 **보수적 선택**이지 보편 규칙이 아니다 — 문구로 밝힌다
     _r = eos_sweep(_cu, EMT(), fractions=_fr, fmax=0.05, relax_steps=30,
-                   continuation=True, hysteresis_tol=1.0, hysteresis_span_tol=1.0)
+                   continuation=True, hysteresis_tol=1.0, hysteresis_span_tol=1.0,
+                       hysteresis_shape_tol=1.0)
     chk(_r.get('fit_quality_ok') or '보수적 선택' in (_r.get('fit_quality_reason') or ''),
         "B0' 게이트가 떨굴 때는 '보수적 선택' 임을 문구가 밝힌다")
 
@@ -1304,6 +1432,9 @@ def main():
                         '무질서계에서 골짜기 이동을 막는다. 양방향으로 돌고 두 갈래 V₀ 가 '
                         '--eos_hysteresis_tol 넘게 갈리면 **적합을 떨군다**. '
                         '⚠ V₀ 의 뜻이 달라진다 — "연속으로 이어진 가지 위의 최소"다. 기본은 꺼짐')
+    p.add_argument('--eos_hysteresis_shape_tol', type=float, default=0.10,
+                   help='두 갈래 **모양** 차(평행이동 제거)의 곡선폭 대비 허용치. '
+                        '이것이 물리 판정이다 (회신 BQ-2 Q2)')
     p.add_argument('--eos_hysteresis_span_tol', type=float, default=0.10,
                    help='두 갈래 E(V) 최대차를 **곡선 자신의 폭**으로 나눈 값의 허용치 '
                         '(기본 0.10 = 10 %%). ⛔ V₀ 만 보면 구멍이 난다 — 곡선이 95 %% 갈려도 '
