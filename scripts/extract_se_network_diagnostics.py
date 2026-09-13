@@ -32,13 +32,29 @@ FIG_DIR  = ROOT / 'docs' / 'figures'
 sys.path.insert(0, str(SCRIPTS))
 
 import numpy as np
-import matplotlib
-matplotlib.use('Agg')
-import matplotlib.pyplot as plt
 
-from viewer3d_data import compute_se_network_diagnostics
+#  ★★ 지연 import — 이 모듈의 **로더**(discover_cases · load_case · load_contacts)를
+#     쓰려고 import 하는 소비자가 matplotlib · networkx(viewer3d_data) 까지 끌고 오지
+#     않게 한다.  그 둘은 `analyze_case`(진단 솔브)와 `make_figure`(그림)에만 필요하다.
+#     ⚠ 실제 계기: S0 도구(`audit_constriction_deleted.py`)를 **kgy 에서** 돌려야 하는데
+#     그 머신엔 pip install 이 금지다 — 무거운 의존이 import 단계에서 죽으면 로더까지
+#     못 쓴다.  로더는 stdlib + numpy 만으로 돈다.
+_plt = None
 
-plt.rcParams.update({
+
+def _get_plt():
+    """matplotlib 을 그림 그릴 때만 가져온다 (Agg 고정)."""
+    global _plt
+    if _plt is None:
+        import matplotlib
+        matplotlib.use('Agg')
+        import matplotlib.pyplot as plt
+        plt.rcParams.update(_RC)
+        _plt = plt
+    return _plt
+
+
+_RC = {
     'font.family': 'DejaVu Serif',
     'font.size': 10,
     'axes.labelsize': 11,
@@ -51,7 +67,7 @@ plt.rcParams.update({
     'legend.fontsize': 8.5,
     'savefig.dpi': 300,
     'savefig.bbox': 'tight',
-})
+}
 
 
 _TS_PAT = __import__('re').compile(r'^\d{6}_\d{6}_[0-9a-f]{6,}$')
@@ -319,6 +335,7 @@ def analyze_case(case_dir: Path, debug: bool = False) -> dict | None:
             print(f'           z range: [{zmin:.5f}, {zmax:.5f}], '
                    f'z@99%={zp99:.5f}, plate_z(max)={plate_z:.5f}')
             print(f'           scale={scale}, type_map={type_map}')
+        from viewer3d_data import compute_se_network_diagnostics
         diag = compute_se_network_diagnostics(
             contacts, atoms, type_map, plate_z=plate_z, scale=scale,
             verbose=debug)
@@ -415,6 +432,7 @@ def make_figure(rows: list[dict], out_path: Path):
     camp_lab = {'particulate': 'particulate', '박막(1mAh)': 'thin 1mAh',
                 '후막(6mAh)': 'thick 6mAh', '후막(8mAh)': 'thick 8mAh'}
 
+    plt = _get_plt()
     fig = plt.figure(figsize=(13, 9))
     gs = fig.add_gridspec(2, 2, hspace=0.32, wspace=0.28,
                           left=0.07, right=0.985, top=0.93, bottom=0.07)
