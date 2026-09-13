@@ -192,10 +192,14 @@ def _full_row(agg, rid, gamma):
            "literature": ci["literature"]}
     row = {k: "1.0" for k in _S.MATRIX_ROW}
     # 자체 리뷰 C05: matrix 도 모집단을 행에 봉인한다 (이 fixture 는 행이 곧 모집단이다)
-    row["combo_roster"] = json.dumps({"authority": 1, "requested": 1, "succeeded": 1,
-                                      "missing_input": [], "failed": [], "absent": []})
+    # ⚠ Codex R13 (열한 번째 fixture 감사): 전 판은 `authority: 1` 로 **1 행이 canonical 을 주장**했고 감사는
+    #   `"{}"` 였다 — 구성원·감사 내용 검사가 생기자 이 fixture 가 먼저 거부돼 R9-05 가 반례에 닿지 못했다.
+    #   정직한 subset(요청 1 / 정본 32) + 열과 결속된 실제 감사로 만든다.
+    row["combo_roster"] = json.dumps({"authority": len(_S.canonical_combo_keys("100")), "requested": 1,
+                                      "succeeded": 1, "missing_input": [], "failed": [], "absent": []})
+    _audit = json.dumps({m: {"n": 50, "n_finite": 50, "n_inf": 0, "n_nan": 0, "n_exception": 0, "raw_lower_half_mean": 1.0, "scale": 1.0, "eps_rel": 1e-15, "equivalent_within_rel": True} for m in ("pocv", "dvdq", "dqdv")})
     row.update(half_cell="GITT", si="Li", w_dqdv="0", run_id=rid, bounds="-", ref_bounds="-",
-               gamma_Si=gamma, ref_gamma_Si="0.2", scale_audit_target="{}", scale_audit_ref="{}",
+               gamma_Si=gamma, ref_gamma_Si="0.2", scale_audit_target=_audit, scale_audit_ref=_audit,
                consumed_inputs=json.dumps(ci), ref_consumed_inputs=json.dumps(rci),
                inputs_sha=_S.inputs_digest(ci), ref_inputs_sha=_S.inputs_digest(rci))
     return {k: row[k] for k in _S.MATRIX_ROW}
@@ -211,7 +215,11 @@ def r9_05_adapted(agg, _shape_harness, _pair):
             #   (`agg.matrix_row`)는 열의 부분집합이라 중복 판정에 닿기 전에 스키마에서 멈춘다 — 그것은 이 발견의
             #   닫힘이 아니라 "이 fixture 로는 더 못 잰다" 이다. 중복 key(γ 0.10 ↔ 0.40)는 그대로, 열만 온전히 쓴다.
             rows = [_full_row(agg, "shape-dup", "0.10"), _full_row(agg, "shape-dup", "0.40")]
-            combo = json.dumps({"authority": 2, "requested": 2, "succeeded": 2,
+            # ⚠ Codex R13 P1-1 뒤: `authority: 2` 는 2 행짜리가 **canonical 을 주장**하는 거짓이라 구성원 검사가
+            #   중복 판정보다 먼저 막았다 (probe 가 자기 반례에 못 닿았다). 정직한 subset 으로 봉인한다 —
+            #   정본 자리 규칙은 reader 가 거르고, 남는 content 문제는 중복 key 하나뿐이어야 이 probe 가 그 축을 잰다.
+            from bms_balancing import schema as _S
+            combo = json.dumps({"authority": len(_S.canonical_combo_keys("100")), "requested": 2, "succeeded": 2,
                                 "missing_input": [], "failed": [], "absent": []})
             rows = [dict(r, combo_roster=combo) for r in rows]     # 행 수와 맞춘다 (자체 리뷰 C05)
             if order == "reversed":
@@ -473,9 +481,8 @@ def main() -> int:
     if snapshot is not None and not a.keep_materialized:
         cleanup()
     statuses = {pid: r["상태"] for pid, r in R.items()}
-    out["closed"] = list(R) == want and all(s == "반례 소멸" for s in statuses.values())
-    out["rc_reason"] = ("모든 요청 probe 가 자기 반례 assertion 에서 멈췄다 / positive closure 가 섰다" if out["closed"]
-                        else f"닫히지 않음: { {p: s for p, s in statuses.items() if s != '반례 소멸'} }")
+    # ⚠ Codex R13 P1-3: 공용 집계 (r9 는 원래 엄격했지만 필드 계약을 넷이 같게 맞춘다).
+    out.update(gate.summarize_verdicts(R, requested=list(want)))
     text = json.dumps(out, ensure_ascii=False, indent=2, default=str)
     print(text)
     if a.output:
@@ -484,7 +491,7 @@ def main() -> int:
     #   ("payload 를 읽기 전에 rc 를 본다")을 러너 자신이 어긴 것이다. 증거가 아닌 실행은 성공 코드로 끝나지 않는다.
     if not out["evidence_eligible"]:
         return 3
-    return 0 if out["closed"] else 1
+    return 0 if out["report_complete"] else 1   # rc 0 = 보고 완료 (closed 아님)
 
 
 if __name__ == "__main__":

@@ -283,10 +283,13 @@ def _full_matrix(path, gamma, ref=.15, rid="synthetic-matrix"):
            "literature": ci["literature"]}
     row = {k: "1.0" for k in _S.MATRIX_ROW}
     # 자체 리뷰 C05: matrix 도 모집단을 행에 봉인한다 (이 fixture 는 행이 곧 모집단이다)
-    row["combo_roster"] = json.dumps({"authority": 1, "requested": 1, "succeeded": 1,
-                                      "missing_input": [], "failed": [], "absent": []})
+    # ⚠ Codex R13 (열한 번째 fixture 감사): 1 행이 canonical 을 주장하던 것을 정직한 subset 으로, 감사는 실물로.
+    from bms_balancing import schema as _S2
+    row["combo_roster"] = json.dumps({"authority": len(_S2.canonical_combo_keys("100")), "requested": 1,
+                                      "succeeded": 1, "missing_input": [], "failed": [], "absent": []})
+    _audit = json.dumps({m: {"n": 50, "n_finite": 50, "n_inf": 0, "n_nan": 0, "n_exception": 0, "raw_lower_half_mean": 1.0, "scale": 1.0, "eps_rel": 1e-15, "equivalent_within_rel": True} for m in ("pocv", "dvdq", "dqdv")})
     row.update(half_cell="GITT", si="Li", w_dqdv="0", run_id=rid, bounds="-", ref_bounds="-",
-               gamma_Si=str(gamma), ref_gamma_Si=str(ref), scale_audit_target="{}", scale_audit_ref="{}",
+               gamma_Si=str(gamma), ref_gamma_Si=str(ref), scale_audit_target=_audit, scale_audit_ref=_audit,
                consumed_inputs=json.dumps(ci), ref_consumed_inputs=json.dumps(rci),
                inputs_sha=_S.inputs_digest(ci), ref_inputs_sha=_S.inputs_digest(rci))
     path.parent.mkdir(parents=True, exist_ok=True)

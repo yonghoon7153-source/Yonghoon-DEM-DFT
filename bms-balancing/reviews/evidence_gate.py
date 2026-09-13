@@ -230,3 +230,52 @@ def tree_of(target, head: str) -> str:
 
 
 
+
+
+EXCLUSION_KINDS = ("전제 변경", "환경상 불가", "우리 코드 밖", "미실행 (그룹 중단)")
+
+
+def summarize_verdicts(records: dict, requested, substitutes: dict | None = None) -> dict:
+    """러너 넷이 **같은** 규칙으로 종결을 적는다 (Codex R13 P1-3).
+
+    전 판은 러너마다 집계가 따로였고, 셋은 전제 변경·환경상 불가·우리 코드 밖을 `unresolved` 에서 빼고는
+    `closed: true` · "모든 case 가 닫혔다" 라고 적었다 — 요청문의 "닫힘으로 세지 않았다" 와 기계용 결론이 달랐다.
+    이제 네 가지를 **별도 필드**로 둔다:
+
+      report_complete         요청한 leaf 마다 판정이 있고 `오류` 가 없다        ← rc 0 의 뜻
+      closed                  요청한 leaf 가 **전부** `반례 소멸`                  ← 엄격
+      closed_with_substitutes 제외된 leaf 마다 대체 증거의 **이름**이 있고 나머지는 반례 소멸
+      excluded                제외 leaf 와 그 이유·대체 증거
+
+    미실행/전제 변경은 대체 증거 없이는 `closed` 의 근거가 아니다. GO 소비자는 rc 가 아니라 `closed` 를 읽는다.
+    """
+    substitutes = dict(substitutes or {})
+    requested = list(requested)
+    statuses = {k: (r or {}).get("상태") for k, r in records.items()}
+    leaf = {k: statuses.get(k, "미실행") for k in requested}
+    missing = [k for k in requested if k not in statuses]
+    excluded = {k: {"상태": s, "대체": substitutes.get(k), "세부": (records[k] or {}).get("세부")}
+                for k, s in statuses.items() if s in EXCLUSION_KINDS}
+    errors = {k: s for k, s in statuses.items() if s != "반례 소멸" and s not in EXCLUSION_KINDS}
+    gone = [k for k, s in statuses.items() if s == "반례 소멸"]
+    unsubstituted = [k for k, v in excluded.items() if not v["대체"]]
+    report_complete = not missing and not errors
+    kinds = {}
+    for v in excluded.values():
+        kinds[v["상태"]] = kinds.get(v["상태"], 0) + 1
+    kinds_txt = " · ".join(f"{k} {n}" for k, n in kinds.items()) or "없음"
+    if report_complete:
+        reason = (f"보고 완료 — 반례 소멸 {len(gone)}/{len(requested)} · 제외 {len(excluded)} ({kinds_txt}). "
+                  f"closed 는 반례 소멸만 센다; closed_with_substitutes 는 대체 증거가 이름 붙은 제외까지 센다"
+                  + (f"; 대체 증거 없는 제외 {unsubstituted}" if unsubstituted else ""))
+    else:
+        reason = f"보고 미완 — 오류 {errors} · 미실행 {missing}"
+    return {
+        "leaf_cases": leaf,
+        "counts": {"반례 소멸": len(gone), "제외": len(excluded), "오류": len(errors), "미실행": len(missing)},
+        "excluded": excluded, "errors": errors, "missing": missing,
+        "report_complete": report_complete,
+        "closed": report_complete and not excluded,
+        "closed_with_substitutes": report_complete and not unsubstituted,
+        "rc_reason": reason,
+    }

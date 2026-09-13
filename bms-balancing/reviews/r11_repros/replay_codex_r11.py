@@ -174,10 +174,26 @@ DATA_CASES = ("receipt_identity", "receipt_shape", "allowlist", "matrix_subset",
 EVIDENCE_CASES = ("early-gate-pyc", "abbreviated-head", "skip-worktree", "materialize-smudge",
                   "r10-assertion-alias", "r10-child-rc", "u18-dirty-meta", "untracked-sitecustomize")
 #: 이 환경에서 **실행 자체가 불가능한** case — 무엇이 대신 보는지 같이 적는다 (닫힘으로 세지 않는다).
+# ⚠ Codex R13 P2-5: 전 판 값은 괄호만 있고 쉼표가 없는 **문자열**이라 `[0]` 이 첫 글자("원")를 냈다. 구조로 두고,
+#   환경상 불가는 `FileNotFoundError` 접두어가 아니라 **구체적 의존성**(`wsl.exe`) 이 fingerprint 에 있을 때만이다.
 ENVIRONMENT_LIMITED = {
-    "data:shape_wrapper": ("원본이 `wsl.exe` 로 wrapper 를 부른다 (리뷰어는 Windows). 같은 축은 "
-                           "`publish:shape_step` 이 native 로 재생하고 회귀는 `test_e11_14` 가 고정한다"),
+    "data:shape_wrapper": {
+        "why": ("원본이 `wsl.exe` 로 wrapper 를 부른다 (리뷰어는 Windows). 같은 축은 "
+                "`publish:shape_step` 이 native 로 재생하고 회귀는 `test_e11_14` 가 고정한다"),
+        "substitute": "publish:shape_step",
+        "fingerprint": ("FileNotFoundError", "wsl.exe"),
+    },
 }
+#: publication 그룹의 leaf — 그룹이 첫 case 에서 중단돼도 **각 leaf 를 남긴다** (35 record 가 아니라 37 leaf).
+PUBLICATION_LEAVES = ["publish:matrix_filtered_canonical", "publish:profile_grid1_canonical", "publish:profile_partial_stdout"]
+#: 제외 case 의 대체 증거 이름. 없는 것은 없다고 둔다 — 지어내지 않는다.
+SUBSTITUTES = {
+    "data:shape_wrapper": "publish:shape_step",
+    "publish:matrix_filtered_canonical": "data:matrix_subset",
+    "publish:profile_grid1_canonical": "data:profile_grid",
+    "root:profile_grid": "data:profile_grid (canonical_written False) + test_d10_03 (회귀)",
+}
+EXPECTED_LEAVES = ["root:schema_only", "root:input_bytes", "root:dirty_code", "root:invalid_numeric", "root:matrix_authority", "root:profile_grid", "data:receipt_identity", "data:receipt_shape", "data:allowlist", "data:matrix_subset", "data:profile_grid", "data:shape_reader", "data:shape_wrapper", "check:schema_only_no_baseline", "check:schema_only_skips_env_controls_argv", "check:full_compare_missing_argv_and_roster", "check:changed_git_state_promoted", "check:artifact_env_disagrees_with_meta_promoted", "check:per_file_alias_self_comparison", "check:matrix_inf_promoted", "check:degeneracy_infinity_promoted", "check:profile_gamma_roster_not_validated", "check:changed_valid_input_digests_promoted", "check:duplicate_receipt_direct", "check:changed_equivocal_receipt_promoted", "publish:matrix_filtered_canonical", "publish:profile_grid1_canonical", "publish:profile_partial_stdout", "publish:shape_step", "evidence:early-gate-pyc", "evidence:abbreviated-head", "evidence:skip-worktree", "evidence:materialize-smudge", "evidence:r10-assertion-alias", "evidence:r10-child-rc", "evidence:u18-dirty-meta", "evidence:untracked-sitecustomize"]
 
 
 #: 수정이 원본 probe 의 **전제를 무너뜨려** 그 자리에서 죽는 case — 무엇이 죽어야 하는지 fingerprint 로 봉인한다.
@@ -345,8 +361,9 @@ def main() -> int:
                            "--target", str(target), "--case", case], target)
             payload = _payload(proc)
             rec = (payload or {}).get("results", {}).get(case)
-            if key in ENVIRONMENT_LIMITED and (rec or {}).get("error", "").startswith("FileNotFoundError"):
-                R[key] = _record("환경상 불가", (rec or {}).get("error"), ENVIRONMENT_LIMITED[key][0],
+            env_lim = ENVIRONMENT_LIMITED.get(key)
+            if env_lim and all(w in (rec or {}).get("error", "") for w in env_lim["fingerprint"]):
+                R[key] = _record("환경상 불가", (rec or {}).get("error"), env_lim["why"],
                                  note="이 환경에서 실행할 수 없다 — 닫힘으로 세지 않는다")
                 continue
             if rec is None:
@@ -377,13 +394,19 @@ def main() -> int:
                         got = fn()
                     except BaseException as e:            # noqa: BLE001
                         prefix = "publish" if group == "publication" else "check"
-                        R[f"{prefix}:*"] = _record(
-                            "전제 변경", f"{type(e).__name__}: {str(e)[:200]}",
+                        # ⚠ Codex R13 P2-5: 그룹이 첫 case 에서 중단돼도 **leaf 마다** 기록한다 — 첫 leaf 만
+                        #   fingerprint 로 전제 변경, 나머지는 `미실행 (그룹 중단)`. 후속 leaf 의 전제가 바뀌었다고
+                        #   추정하지 않는다.
+                        leaves = PUBLICATION_LEAVES if group == "publication" else [k for k in EXPECTED_LEAVES if k.startswith("check:")]
+                        hit = _premise_matches(f"{prefix}:*", e)
+                        first = leaves[0]
+                        R[first] = _record(
+                            "전제 변경" if hit else "오류", f"{type(e).__name__}: {str(e)[:200]}",
                             PREMISE_CHANGED.get(f"{prefix}:*", "원본 probe 가 수정 전 상태를 전제한다")
-                            if _premise_matches(f"{prefix}:*", e) else
-                            f"기대한 전제 변경 fingerprint 가 아니다 — 닫힘으로 세지 않는다: {str(e)[:200]}")
-                        if not _premise_matches(f"{prefix}:*", e):
-                            R[f"{prefix}:*"]["상태"] = "오류"
+                            if hit else f"기대한 전제 변경 fingerprint 가 아니다 — 닫힘으로 세지 않는다: {str(e)[:200]}")
+                        for k in leaves[1:]:
+                            R[k] = _record("미실행 (그룹 중단)", f"{first} 에서 그룹이 중단됐다",
+                                           "이 leaf 는 돌지 않았다 — 전제가 바뀌었다고 추정하지 않는다", note="개별 판정 미완")
                         continue
                     for name, rec in (got or {}).items():
                         k = ("publish:" if group == "publication" else "check:") + name
@@ -426,10 +449,8 @@ def main() -> int:
             where = str(rec.get("멈춘_곳") or "")
             if all(w in where for w in PREMISE_FINGERPRINT.get(key, ("\0",))):
                 R[key] = {**rec, "상태": "전제 변경", "세부": why}
-    statuses = {k: v["상태"] for k, v in R.items()}
-    unresolved = {k: s for k, s in statuses.items() if s not in ("반례 소멸", "환경상 불가", "전제 변경")}
-    out["closed"] = not unresolved
-    out["rc_reason"] = "모든 case 가 닫혔다" if out["closed"] else f"닫히지 않음: {unresolved}"
+    # ⚠ Codex R13 P1-3: 공용 집계 — 제외는 대체 증거 이름과 함께 적고 closed 에서 뺀다.
+    out.update(gate.summarize_verdicts(R, requested=EXPECTED_LEAVES, substitutes=SUBSTITUTES))
     text = json.dumps(out, ensure_ascii=False, indent=2, default=str)
     print(text)
     if a.output:
@@ -438,7 +459,7 @@ def main() -> int:
     #   ("payload 를 읽기 전에 rc 를 본다")을 러너 자신이 어긴 것이다. 증거가 아닌 실행은 성공 코드로 끝나지 않는다.
     if not out["evidence_eligible"]:
         return 3
-    return 0 if out["closed"] else 1
+    return 0 if out["report_complete"] else 1   # rc 0 = 보고 완료 (closed 아님)
 
 
 if __name__ == "__main__":

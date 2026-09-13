@@ -81,6 +81,18 @@ PREMISE_CHANGED = {
     "u18:shape_duplicates": ("중복 요청은 이제 rc 2 로 거부되고 **아무것도 게시하지 않는다** — 원본은 게시된 meta 를 "
                              "읽으려다 TypeError 로 죽는다. 닫힘은 적응 probe `adapted:duplicate-states` 가 본다"),
 }
+#: ⚠ Codex R13 P2-5: 전제 변경은 **봉인한 fingerprint 와 맞을 때만** — 전 판은 그 case 의 아무 `오류` 나 바꿨다.
+PREMISE_FINGERPRINT = {
+    "u18:shape_duplicates": ("TypeError", "'NoneType' object is not subscriptable"),
+}
+#: 제외 case 의 대체 증거 — 이름이 없으면 closed_with_substitutes 도 참이 될 수 없다.
+SUBSTITUTES = {
+    "u18:shape_duplicates": "adapted:duplicate-states",
+    "snapshot:argv": "adapted:argv-vector",
+    "snapshot:argv-flatten-collision": "adapted:argv-vector",
+}
+#: 기대하는 leaf 명부 (Codex R13 P2-5) — 기록에 없으면 `미실행` 으로 남는다.
+EXPECTED_LEAVES = ["snapshot:eval-self-overwrite", "snapshot:profile-partial", "snapshot:matrix-errors", "snapshot:stdout-invalid", "snapshot:receipt-roles", "snapshot:error-skip", "snapshot:argv", "u18:same_root", "u18:receipt_roles", "u18:controls", "u18:error_bypass", "u18:shape_subset", "u18:shape_duplicates", "evidence:optimized-assertions", "evidence:git-status-error", "evidence:assume-unchanged", "evidence:ignored-pyc", "evidence:argv-binding-mutant", "evidence:package-enforcement-mutant", "evidence:wrapper-coverage", "adapted:argv-vector", "adapted:duplicate-states"]
 KNOWN_PROBES = ("snapshot", "u18", "evidence", "adapted")
 
 
@@ -308,12 +320,15 @@ def main() -> int:
             cleanup()
 
     for key, why in PREMISE_CHANGED.items():
-        if key in R and R[key]["상태"] == "오류":
-            R[key] = {**R[key], "상태": "전제 변경", "세부": why}
-    statuses = {k: v["상태"] for k, v in R.items()}
-    unresolved = {k: s for k, s in statuses.items() if s not in ("반례 소멸", "우리 코드 밖", "전제 변경")}
-    out["closed"] = not unresolved
-    out["rc_reason"] = "모든 case 가 닫혔다" if out["closed"] else f"닫히지 않음: {unresolved}"
+        rec = R.get(key)
+        if rec and rec["상태"] == "오류":
+            where = str(rec.get("멈춘_곳") or "")
+            if all(w in where for w in PREMISE_FINGERPRINT.get(key, ("\0",))):      # fingerprint 일치만
+                R[key] = {**rec, "상태": "전제 변경", "세부": why}
+            else:
+                R[key] = {**rec, "세부": f"기대한 전제 변경 fingerprint 가 아니다 — 오류로 남긴다: {where[:200]}"}
+    # ⚠ Codex R13 P1-3: 공용 집계 — 제외는 대체 증거 이름과 함께 적고 closed 에서 뺀다.
+    out.update(gate.summarize_verdicts(R, requested=EXPECTED_LEAVES, substitutes=SUBSTITUTES))
     text = json.dumps(out, ensure_ascii=False, indent=2, default=str)
     print(text)
     if a.output:
@@ -322,7 +337,7 @@ def main() -> int:
     #   ("payload 를 읽기 전에 rc 를 본다")을 러너 자신이 어긴 것이다. 증거가 아닌 실행은 성공 코드로 끝나지 않는다.
     if not out["evidence_eligible"]:
         return 3
-    return 0 if out["closed"] else 1
+    return 0 if out["report_complete"] else 1   # rc 0 = 보고 완료 (closed 아님)
 
 
 def _run_adapted(fn):

@@ -297,3 +297,117 @@ def test_g12_bom_json_is_a_structured_schema_error_not_a_crash(tmp_path):
     assert "PROMOTION" in p.stdout, (f"BOM JSON 에서 PROMOTION 이 안 나왔다 — 구조화된 결과가 아니다 "
                                      f"(Codex R13 P2-3)\nrc={p.returncode}\n{p.stderr[-400:]}")
     assert p.returncode != 1, f"숫자 불일치(rc 1)로 분류됐다 — 스키마 오류여야 한다: rc={p.returncode}"
+
+
+# ---------------------------------------------------------------- P1-3
+
+def test_g13_closure_summary_separates_report_completion_from_closure():
+    """보관 증거는 전제 변경·환경상 불가·우리 코드 밖이 있는데 `closed: true` · "모든 case 가 닫혔다" 였다.
+
+    리뷰어 조건: 실행 유효성 · 개별 판정 · 적용 제외 · 전체 종결을 **별도 필드**로 둔다. 미실행/전제 변경은
+    대체 증거 없이 `closed:true` 의 근거가 될 수 없다. rc 0 이 "보고 완료" 라면 `rc_reason` 도 그 뜻이어야 한다.
+    """
+    import importlib.util
+
+    root = pathlib.Path(__file__).resolve().parents[1]
+    spec = importlib.util.spec_from_file_location("gate", root / "reviews" / "evidence_gate.py")
+    gate = importlib.util.module_from_spec(spec); spec.loader.exec_module(gate)
+
+    rec = lambda s, **k: {"상태": s, "멈춘_곳": None, "세부": k.get("why", "")}   # noqa: E731
+    R = {"a": rec("반례 소멸"), "b": rec("전제 변경", why="원본이 전제한 파일이 없다"),
+         "c": rec("환경상 불가", why="wsl.exe"), "d": rec("우리 코드 밖", why="bash $*")}
+    s = gate.summarize_verdicts(R, requested=["a", "b", "c", "d"],
+                                substitutes={"b": "test_x", "c": "publish:shape_step"})
+    assert s["report_complete"] is True
+    assert s["closed"] is False, "전제 변경·환경상 불가가 있는데 closed 가 참이다 (Codex R13 P1-3)"
+    assert s["closed_with_substitutes"] is False, "대체 증거 없는 제외(d)가 있는데 참이다"
+    assert set(s["excluded"]) == {"b", "c", "d"} and s["excluded"]["b"]["대체"] == "test_x"
+    assert "모든 case 가 닫혔다" not in s["rc_reason"] and "반례 소멸 1/4" in s["rc_reason"], s["rc_reason"]
+
+    # 대체 증거가 전부 이름 붙으면 closed_with_substitutes 만 참, closed 는 여전히 거짓
+    s2 = gate.summarize_verdicts(R, requested=["a", "b", "c", "d"],
+                                 substitutes={"b": "test_x", "c": "publish:shape_step", "d": "adapted:argv-vector"})
+    assert s2["closed"] is False and s2["closed_with_substitutes"] is True
+
+    # 요청한 leaf 가 기록에 없으면 보고 미완
+    s3 = gate.summarize_verdicts({"a": rec("반례 소멸")}, requested=["a", "z"])
+    assert s3["report_complete"] is False and s3["leaf_cases"]["z"] == "미실행"
+
+    # 오류가 하나라도 있으면 보고 미완
+    s4 = gate.summarize_verdicts({"a": rec("오류")}, requested=["a"])
+    assert s4["report_complete"] is False and s4["closed"] is False
+
+
+def test_g14_runners_use_the_shared_summary_and_never_claim_all_closed():
+    import ast
+
+    root = pathlib.Path(__file__).resolve().parents[1] / "reviews"
+    for rel in RUNNERS:
+        src = (root / rel).read_text(encoding="utf-8")
+        assert "summarize_verdicts(" in src, f"{rel}: 공용 집계를 안 쓴다 (네 벌이면 갈린다)"
+        for bad in ('"모든 case 가 닫혔다"', "모든 요청 probe 가 자기 반례 assertion 에서 멈췄다"):
+            assert bad not in src, f"{rel}: 제외를 종결로 세는 문구가 남아 있다 — {bad}"
+        # rc 0 이 closed 가 아니라 report_complete 에 묶여야 한다
+        tree = ast.parse(src)
+        rets = [ast.unparse(n) for n in ast.walk(tree) if isinstance(n, ast.Return)]
+        assert not any('out["closed"]' in r for r in rets), f"{rel}: rc 가 closed 를 본다 — report_complete 여야 한다"
+
+
+# ---------------------------------------------------------------- P2-5
+
+def test_g15_r10_premise_change_requires_a_fingerprint():
+    """r10 은 `PREMISE_CHANGED` 의 case 가 `오류` 면 **아무 예외나** 전제 변경으로 바꿨다."""
+    import importlib.util
+
+    root = pathlib.Path(__file__).resolve().parents[1] / "reviews"
+    spec = importlib.util.spec_from_file_location("r10", root / "r10_repros" / "replay_codex_r10.py")
+    m = importlib.util.module_from_spec(spec); spec.loader.exec_module(m)
+    assert hasattr(m, "PREMISE_FINGERPRINT"), "r10 에 fingerprint 표가 없다 (Codex R13 P2-5)"
+    assert set(m.PREMISE_CHANGED) <= set(m.PREMISE_FINGERPRINT), "fingerprint 없는 전제 변경 case"
+    for key, fp in m.PREMISE_FINGERPRINT.items():
+        assert isinstance(fp, tuple) and fp and all(isinstance(x, str) and x for x in fp), (key, fp)
+
+
+def test_g16_r11_environment_limited_is_structured_and_leaves_are_enumerated():
+    """`ENVIRONMENT_LIMITED[key][0]` 이 문자열의 첫 글자("원")를 냈다. 값은 구조여야 하고
+    환경상 불가는 **구체적 의존성**(`wsl.exe`)에만 붙어야 한다. 그리고 leaf 명부는 37 이다."""
+    import importlib.util
+
+    root = pathlib.Path(__file__).resolve().parents[1] / "reviews"
+    spec = importlib.util.spec_from_file_location("r11", root / "r11_repros" / "replay_codex_r11.py")
+    m = importlib.util.module_from_spec(spec); spec.loader.exec_module(m)
+    for key, v in m.ENVIRONMENT_LIMITED.items():
+        assert isinstance(v, dict) and {"why", "substitute", "fingerprint"} <= set(v), (key, v)
+        assert isinstance(v["fingerprint"], tuple) and any("wsl" in x for x in v["fingerprint"]), (key, v)
+    assert hasattr(m, "EXPECTED_LEAVES") and len(m.EXPECTED_LEAVES) == 37, getattr(m, "EXPECTED_LEAVES", None)
+    for leaf in ("publish:matrix_filtered_canonical", "publish:profile_grid1_canonical", "publish:profile_partial_stdout"):
+        assert leaf in m.EXPECTED_LEAVES, leaf
+    assert "publish:*" not in m.EXPECTED_LEAVES
+
+
+# ---------------------------------------------------------------- 러너 안 fixture (열한 번째 감사)
+
+def test_g17_runner_inline_fixtures_pass_the_content_contract():
+    """R7-05 · R9-05 가 `오류` 로 바뀐 원인 — 러너 안 fixture 가 `scale_audit_*="{}"` · `authority:1` 이었다."""
+    import importlib.util
+
+    root = pathlib.Path(__file__).resolve().parents[1] / "reviews"
+
+    def load(name, rel):
+        spec = importlib.util.spec_from_file_location(name, root / rel)
+        m = importlib.util.module_from_spec(spec); spec.loader.exec_module(m); return m
+
+    def content(rows):
+        return [q for q in S.check_rows("matrix", rows, list(S.MATRIX_ROW), name="matrix_100.csv")
+                if not q.startswith(S.CANONICAL_SLOT_PREFIX)]
+
+    r9 = load("r9", "r9_repros/replay_codex_r9.py")
+    assert not content([r9._full_row(None, "rid", "0.3")]), content([r9._full_row(None, "rid", "0.3")])
+
+    r6 = load("r6a", "r6_repros/codex/replay_codex_r6_adapted.py")
+    import tempfile
+    p = pathlib.Path(tempfile.mkdtemp()) / "matrix_100.csv"
+    r6._full_matrix(p, 0.16)
+    import csv
+    rows = list(csv.DictReader(p.open(encoding="utf-8")))
+    assert not content(rows), content(rows)

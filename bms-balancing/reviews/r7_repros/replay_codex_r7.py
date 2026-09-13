@@ -269,12 +269,9 @@ def main() -> int:
         rec = out["probes"].get(pid)
         if rec and rec["상태"] == "오류" and all(w in str(rec.get("멈춘_곳") or "") for w in fingerprint):
             out["probes"][pid] = {**rec, "상태": "전제 변경", "세부": why}
-    statuses = {pid: r["상태"] for pid, r in out["probes"].items()}
-    ok = ("반례 소멸", "전제 변경")
-    out["closed"] = list(out["probes"]) == want and all(s in ok for s in statuses.values())
-    out["rc_reason"] = ("모든 요청 probe 가 자기 반례 assertion 에서 멈췄다 (전제가 바뀐 것은 그렇게 적었다)"
-                        if out["closed"]
-                        else f"닫히지 않음: { {p: s for p, s in statuses.items() if s not in ok} }")
+    # ⚠ Codex R13 P1-3: 종결은 공용 규칙으로 — 전제 변경은 대체 증거의 이름과 함께 **제외**로 적고 closed 에서 뺀다.
+    out.update(gate.summarize_verdicts(out["probes"], requested=list(want),
+                                       substitutes={"R7-03": "test_d7_03 (회귀)"}))
     text = json.dumps(out, ensure_ascii=False, indent=2)
     print(text)
     if a.output:
@@ -283,7 +280,7 @@ def main() -> int:
     #   ("payload 를 읽기 전에 rc 를 본다")을 러너 자신이 어긴 것이다. 증거가 아닌 실행은 성공 코드로 끝나지 않는다.
     if not out["evidence_eligible"]:
         return 3
-    return 0 if out["closed"] else 1
+    return 0 if out["report_complete"] else 1   # rc 0 = 보고 완료 (closed 아님)
 
 
 if __name__ == "__main__":
