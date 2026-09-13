@@ -17,6 +17,23 @@ Codex R9 P2-1·2 의 계약을 그대로 적용한다: `--expected-head` 필수(
     python3 reviews/r9_repros/replay_codex_r9.py --target <bms-balancing> --expected-head <sha> [--probes R9-01,…] [--output x.json]
 """
 from __future__ import annotations
+
+# ⚠ Codex R13 P1-4: 재실행은 **어떤 앱 의존성 import 보다 앞**이다. 전 판은 아래 `import argparse, …`
+#   가 먼저 돌았고 `sys.path[0]` 이 저장소 안이라 untracked 모듈 하나가 봉인 앞에서 실행될 수 있었다
+#   (C08 의 남은 절반). `os`·`sys` 는 인터프리터 시작 때 이미 로드돼 sys.path 로 가로챌 수 없다.
+import os
+import sys
+
+if globals().get("__name__") == "__main__" and not sys.flags.safe_path:
+    # ⚠ `-E` 는 `PYTHONOPTIMIZE` 도 무시한다 — 그냥 재실행하면 R10 P2-4 의 "`-O` 에서는 증거를 만들지 않는다" 가
+    #   **조용히 사라진다** (거부도 준수도 아닌 정규화). 재실행 **전에** 그 요청을 보고 거부한다.
+    if sys.flags.optimize or os.environ.get("PYTHONOPTIMIZE"):
+        print("! 이 러너는 `python -O`(PYTHONOPTIMIZE) 에서 증거를 만들지 않는다 — 보관한 probe 의 반례는 "
+              "`assert` 로 쓰여 있고 optimize 모드는 그것을 통째로 지운다 (Codex R10 P2-4)", file=sys.stderr)
+        raise SystemExit(2)
+    os.environ.pop("PYTHONPATH", None)
+    os.execv(sys.executable, [sys.executable, "-P", "-E", "-B", os.path.abspath(__file__), *sys.argv[1:]])
+
 import argparse, contextlib, csv, hashlib, importlib.util, io, json, os, pathlib, shutil, subprocess, sys, tempfile, traceback
 
 # ⚠ Codex R11 P1-10 반례 A: gate 를 **import 하기 전에** bytecode 캐시를 돌린다. 전 판은 gate 안에서
@@ -31,15 +48,7 @@ import argparse, contextlib, csv, hashlib, importlib.util, io, json, os, pathlib
 # ⚠ 재실행은 **스크립트로 직접 돌 때만** 한다. 회귀(`test_e11_11`·`test_e11_12`)는 이 파일을 `exec` 해서
 #   `child_ok`·`_classify` 를 직접 부르는데, module level 에서 `execv` 하면 **그 테스트 프로세스가 갈아치워진다**
 #   (실측: pytest 가 26 번째 항목에서 조용히 죽었다).
-if globals().get("__name__") == "__main__" and not sys.flags.safe_path:
-    # ⚠ `-E` 는 `PYTHONOPTIMIZE` 도 무시한다 — 그냥 재실행하면 R10 P2-4 의 "`-O` 에서는 증거를 만들지 않는다" 가
-    #   **조용히 사라진다** (거부도 준수도 아닌 정규화). 재실행 **전에** 그 요청을 보고 거부한다.
-    if sys.flags.optimize or os.environ.get("PYTHONOPTIMIZE"):
-        print("! 이 러너는 `python -O`(PYTHONOPTIMIZE) 에서 증거를 만들지 않는다 — 보관한 probe 의 반례는 "
-              "`assert` 로 쓰여 있고 optimize 모드는 그것을 통째로 지운다 (Codex R10 P2-4)", file=sys.stderr)
-        raise SystemExit(2)
-    os.environ.pop("PYTHONPATH", None)
-    os.execv(sys.executable, [sys.executable, "-P", "-E", "-B", os.path.abspath(__file__), *sys.argv[1:]])
+
 _PYC = tempfile.mkdtemp(prefix="evidence-pycache-")
 sys.pycache_prefix = _PYC
 os.environ["PYTHONPYCACHEPREFIX"] = _PYC

@@ -18,7 +18,7 @@ import pytest                                                             # noqa
 from bms_balancing import verify                                          # noqa: E402
 from test_r6_internal import _synth_root, _prov, _cs, _hook_open          # noqa: E402
 from test_r7_codex import _args, _deg, _sign, _compare_states, _doc, _live  # noqa: E402
-from test_review_findings import _load_script, matrix_row                 # noqa: E402
+from test_review_findings import _load_script, audit_json, matrix_row      # noqa: E402
 
 
 def _mod(name, path):
@@ -89,7 +89,7 @@ def _full_matrix_rows(rid, lli=1.0):
         v = dict(half_cell=hc, si=s, w_dqdv=repr(w), run_id=rid, inputs_sha=S.inputs_digest(ci), ref_inputs_sha=S.inputs_digest(rci),
                  consumed_inputs=json.dumps(ci), ref_consumed_inputs=json.dumps(rci), scale_seed="0", n_scale_samples="50",
                  scale_pocv_target="1.0", scale_dvdq_target="1.0", scale_dqdv_target="1.0", scale_pocv_ref="1.0",
-                 scale_dvdq_ref="1.0", scale_dqdv_ref="1.0", scale_audit_target="{}", scale_audit_ref="{}", obj="0.01",
+                 scale_dvdq_ref="1.0", scale_dqdv_ref="1.0", scale_audit_target=audit_json(), scale_audit_ref=audit_json(), obj="0.01",
                  rmse_pocv="0.002", a_PE="1.0", b_PE="0.0", a_NE="1.1", b_NE="0.0", gamma_Si="0.3", c_cell="1.0", bounds="-",
                  ref_a_PE="1.0", ref_b_PE="0.0", ref_a_NE="1.0", ref_b_NE="0.0", ref_gamma_Si="0.2", ref_obj="0.01",
                  ref_rmse_pocv="0.002", ref_c_cell="1.0", ref_bounds="-", LAM_PE_pct="1.0", LAM_NE_pct="2.0", LLI_pct=str(lli + i),

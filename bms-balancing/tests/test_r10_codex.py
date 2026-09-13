@@ -23,6 +23,9 @@ from test_r8_codex import _mod, _cli, _full_matrix_rows, _shape_harness, _pair  
 from test_r9_codex import _read_shape                                     # noqa: E402
 
 
+from test_review_findings import audit_json  # noqa: E402
+
+
 def _receipt(seed="1"):
     d = {"half_cell": {"path": "half.xlsx", "sha256": seed * 64},
          "full_cell": {"path": "full.xlsx", "sha256": "2" * 64},
@@ -261,7 +264,7 @@ def test_d10_05_an_error_cell_cannot_switch_off_row_validation(tmp_path):
                consumed_inputs=json.dumps(ci), ref_consumed_inputs=json.dumps(ci),
                # 자체 리뷰 C33: `scale_audit_*` 는 더 이상 빈 칸이 허용되지 않는다 (`MAY_BE_EMPTY` 와 `ROW_SKIP`
                #   양쪽에 있어서 정본에 있고 재실행에 없어도 "전부 같다" 였다 — 감사 없이 돌면 그것이 문제다)
-               scale_audit_target="{}", scale_audit_ref="{}", bounds="-", ref_bounds="-")
+               scale_audit_target=audit_json(), scale_audit_ref=audit_json(), bounds="-", ref_bounds="-")
     ok = {k: row[k] for k in S.MATRIX_ROW}
     assert not S.check_rows("matrix", [ok], list(S.MATRIX_ROW)), "대조군(정상 행)은 통과해야 한다"
     attacked = dict(ok, error="skip all validation", inputs_sha="", ref_inputs_sha="",

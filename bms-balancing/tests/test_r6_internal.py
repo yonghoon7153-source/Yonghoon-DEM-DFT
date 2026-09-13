@@ -13,7 +13,7 @@ import pytest
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 from bms_balancing import verify                                      # noqa: E402
-from test_review_findings import _r2_base, _r2_csv, _r2_run          # noqa: E402
+from test_review_findings import _r2_base, _r2_csv, _r2_run, audit_json   # noqa: E402
 
 
 def _prov():
@@ -675,7 +675,7 @@ def _u14_dirs(tmp_path, *, schema=True, bump=None):
                      scale_seed="0", n_scale_samples="50", scale_pocv_target="1.0", scale_dvdq_target="1.0",
                      scale_dqdv_target="1.0", scale_pocv_ref="1.0", scale_dvdq_ref="1.0", scale_dqdv_ref="1.0",
                      # 자체 리뷰 C33: `scale_audit_*` 는 빈 칸이 허용되지 않는다 (감사 없이 돌면 그것이 문제다)
-                     scale_audit_target="{}", scale_audit_ref="{}", obj="1.5", rmse_pocv="0.002", a_PE="1.0", b_PE="0.0",
+                     scale_audit_target=audit_json(), scale_audit_ref=audit_json(), obj="1.5", rmse_pocv="0.002", a_PE="1.0", b_PE="0.0",
                      a_NE="1.1", b_NE="0.0", gamma_Si="0.3", c_cell="1.0", bounds="-", ref_a_PE="1.0", ref_b_PE="0.0",
                      ref_a_NE="1.0", ref_b_NE="0.0", ref_gamma_Si="0.2", ref_obj="1.0", ref_rmse_pocv="0.002",
                      ref_c_cell="1.0", ref_bounds="-", LAM_PE_pct="1.0", LAM_NE_pct="2.0",

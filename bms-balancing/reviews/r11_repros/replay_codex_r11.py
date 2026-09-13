@@ -13,14 +13,13 @@ R11 의 네 스크립트는 assert 하지 않고 **field 로** 보고한다 — 
     python3 reviews/r11_repros/replay_codex_r11.py --target . --expected-head <40-hex> [--output x.json]
 """
 from __future__ import annotations
-import argparse, contextlib, importlib.util, io, json, os, pathlib, shutil, subprocess, sys, tempfile, traceback
 
-# ⚠ Codex R11 P1-10 반례 A: gate 를 **import 하기 전에** bytecode 캐시를 돌린다.
-# ⚠ 자체 리뷰 C08: 그것은 bytecode 만 막았다 — `sys.path[0]`(이 러너가 든 저장소 안 디렉터리)에 놓인 untracked
-#   `traceback.py` 하나가 gate 보다 먼저 실행되고 `INSTRUMENT` 밖이라 봉인에 안 걸렸다. `-P -E` 로 재실행한다.
-# ⚠ 재실행은 **스크립트로 직접 돌 때만** 한다. 회귀(`test_e11_11`·`test_e11_12`)는 이 파일을 `exec` 해서
-#   `child_ok`·`_classify` 를 직접 부르는데, module level 에서 `execv` 하면 **그 테스트 프로세스가 갈아치워진다**
-#   (실측: pytest 가 26 번째 항목에서 조용히 죽었다).
+# ⚠ Codex R13 P1-4: 재실행은 **어떤 앱 의존성 import 보다 앞**이다. 전 판은 아래 `import argparse, …`
+#   가 먼저 돌았고 `sys.path[0]` 이 저장소 안이라 untracked 모듈 하나가 봉인 앞에서 실행될 수 있었다
+#   (C08 의 남은 절반). `os`·`sys` 는 인터프리터 시작 때 이미 로드돼 sys.path 로 가로챌 수 없다.
+import os
+import sys
+
 if globals().get("__name__") == "__main__" and not sys.flags.safe_path:
     # ⚠ `-E` 는 `PYTHONOPTIMIZE` 도 무시한다 — 그냥 재실행하면 R10 P2-4 의 "`-O` 에서는 증거를 만들지 않는다" 가
     #   **조용히 사라진다** (거부도 준수도 아닌 정규화). 재실행 **전에** 그 요청을 보고 거부한다.
@@ -30,6 +29,16 @@ if globals().get("__name__") == "__main__" and not sys.flags.safe_path:
         raise SystemExit(2)
     os.environ.pop("PYTHONPATH", None)
     os.execv(sys.executable, [sys.executable, "-P", "-E", "-B", os.path.abspath(__file__), *sys.argv[1:]])
+
+import argparse, contextlib, importlib.util, io, json, os, pathlib, shutil, subprocess, sys, tempfile, traceback
+
+# ⚠ Codex R11 P1-10 반례 A: gate 를 **import 하기 전에** bytecode 캐시를 돌린다.
+# ⚠ 자체 리뷰 C08: 그것은 bytecode 만 막았다 — `sys.path[0]`(이 러너가 든 저장소 안 디렉터리)에 놓인 untracked
+#   `traceback.py` 하나가 gate 보다 먼저 실행되고 `INSTRUMENT` 밖이라 봉인에 안 걸렸다. `-P -E` 로 재실행한다.
+# ⚠ 재실행은 **스크립트로 직접 돌 때만** 한다. 회귀(`test_e11_11`·`test_e11_12`)는 이 파일을 `exec` 해서
+#   `child_ok`·`_classify` 를 직접 부르는데, module level 에서 `execv` 하면 **그 테스트 프로세스가 갈아치워진다**
+#   (실측: pytest 가 26 번째 항목에서 조용히 죽었다).
+
 _PYC = tempfile.mkdtemp(prefix="evidence-pycache-")
 sys.pycache_prefix = _PYC
 os.environ["PYTHONPYCACHEPREFIX"] = _PYC

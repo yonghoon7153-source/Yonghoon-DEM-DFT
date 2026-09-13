@@ -20,7 +20,7 @@ sys.path.insert(0, str(pathlib.Path(__file__).resolve().parents[1]))
 from bms_balancing import data as D          # noqa: E402
 from bms_balancing import schema as S        # noqa: E402
 from test_review_findings import matrix_row, seal_combo   # noqa: E402
-from test_r12_selfreview import _receipt                  # noqa: E402
+from test_r12_selfreview import _meta, _receipt           # noqa: E402
 
 
 # ---------------------------------------------------------------- helpers
@@ -196,3 +196,104 @@ def test_g09_required_env_axes_are_checked_without_a_baseline():
     probs = S.check_degeneracy(_deg(env={"python": "3.11.0"}))
     assert probs, "필수 env 축이 빠졌는데 schema 검사가 통과했다 (Codex R13 P2-4)"
     assert any("env" in p for p in probs), probs
+
+
+# ---------------------------------------------------------------- P1-4
+
+RUNNERS = ("r7_repros/replay_codex_r7.py", "r9_repros/replay_codex_r9.py",
+           "r10_repros/replay_codex_r10.py", "r11_repros/replay_codex_r11.py")
+
+
+def test_g10_reexec_comes_before_any_hijackable_import():
+    """격리 재실행이 **앱 의존성 import 보다 앞**이어야 한다.
+
+    전 판은 `import argparse, contextlib, …, traceback` 이 먼저 돌았다 — `sys.path[0]` 이
+    저장소 안이라 untracked `traceback.py` 하나가 봉인 앞에서 실행될 수 있었다 (C08 의 남은 절반).
+    `os`·`sys` 는 인터프리터 시작 때 이미 로드돼 `sys.path` 로 가로챌 수 없으므로 예외다.
+    """
+    import ast
+
+    root = pathlib.Path(__file__).resolve().parents[1] / "reviews"
+    safe = {"os", "sys", "__future__"}
+    for rel in RUNNERS:
+        tree = ast.parse((root / rel).read_text(encoding="utf-8"))
+        reexec_at = None
+        for node in tree.body:
+            if isinstance(node, ast.If) and "execv" in ast.dump(node):
+                reexec_at = node.lineno
+                break
+        assert reexec_at is not None, f"{rel}: 최상위에 재실행 블록이 없다"
+        early = [n for n in tree.body
+                 if isinstance(n, (ast.Import, ast.ImportFrom)) and n.lineno < reexec_at]
+        names = set()
+        for n in early:
+            names |= ({a.name.split(".")[0] for a in n.names} if isinstance(n, ast.Import)
+                      else {(n.module or "").split(".")[0]})
+        assert names <= safe, (f"{rel}: 재실행({reexec_at}행) **앞**에 가로챌 수 있는 import 가 있다 "
+                               f"{sorted(names - safe)} (Codex R13 P1-4)")
+
+
+# ---------------------------------------------------------------- P2-2
+
+def _audit(**over):
+    m = {"n": 50, "n_finite": 50, "n_inf": 0, "n_nan": 0, "n_exception": 0,
+         "raw_lower_half_mean": 0.5, "scale": 0.5, "eps_rel": 1e-15, "equivalent_within_rel": True}
+    a = {k: dict(m) for k in ("pocv", "dvdq", "dqdv")}
+    a.update(over)
+    return json.dumps(a)
+
+
+def test_g11_scale_audit_content_is_validated():
+    """`candidate_audit_empty_object` — 감사 두 열을 `{}` 로 바꿔도 rc 0 · promotion true 였다.
+
+    빈 **문자열**은 막았지만 빈 **객체**는 감사로 인정했다. 표본·유한성·eps 근거가
+    사라져도 차이를 기록하지 않았다.
+    """
+    ok = [matrix_row(scale_audit_target=_audit(), scale_audit_ref=_audit(),
+                     scale_pocv_target="0.5", scale_dvdq_target="0.5", scale_dqdv_target="0.5",
+                     scale_pocv_ref="0.5", scale_dvdq_ref="0.5", scale_dqdv_ref="0.5")]
+    def _content(rows):
+        # 정본 **자리** 규칙(1 행 subset)은 이 시험의 축이 아니다 — reader 처럼 걸러 낸다.
+        return [q for q in S.check_rows("matrix", rows, list(S.MATRIX_ROW))
+                if not q.startswith(S.CANONICAL_SLOT_PREFIX)]
+
+    assert not _content(ok), _content(ok)
+
+    for label, over in (("빈 객체", {"scale_audit_target": "{}"}),
+                        ("metric 누락", {"scale_audit_target": _audit(dqdv={})}),
+                        ("표본 산술 불일치", {"scale_audit_target": _audit(
+                            pocv={"n": 50, "n_finite": 40, "n_inf": 0, "n_nan": 0, "n_exception": 0,
+                                  "raw_lower_half_mean": 0.5, "scale": 0.5, "eps_rel": 1e-15,
+                                  "equivalent_within_rel": True})}),
+                        ("열과 결속 안 됨", {"scale_audit_target": _audit(
+                            pocv={"n": 50, "n_finite": 50, "n_inf": 0, "n_nan": 0, "n_exception": 0,
+                                  "raw_lower_half_mean": 0.5, "scale": 9.9, "eps_rel": 1e-15,
+                                  "equivalent_within_rel": True})})):
+        bad = [matrix_row(**(dict(ok[0]) | over))]
+        assert _content(bad), f"{label} 인 감사가 통과했다 (Codex R13 P2-2)"
+
+
+# ---------------------------------------------------------------- P2-3
+
+def test_g12_bom_json_is_a_structured_schema_error_not_a_crash(tmp_path):
+    """`bom_json_schema_only` — 정상 JSON 에 UTF-8 BOM 을 붙이면 CLI 가 rc 1 로 죽었다.
+
+    `JSONDecodeError` 가 그대로 올라와 `PROMOTION` 도 안 찍혔다 — 자동 소비자가 실패 원인을
+    분류할 수 없다. 스키마 오류의 구조화된 rc 2 여야 한다.
+    """
+    import subprocess
+
+    root = pathlib.Path(__file__).resolve().parents[1]
+    new = tmp_path / "new"
+    new.mkdir()
+    art = new / "degeneracy_100_Li.json"
+    # ⚠ 처음 쓴 판은 meta 없이 데이터만 두어 "묶음 미완" 으로 **먼저** 거부됐다 — BOM 파싱 경로에
+    #   닿지도 않으면서 통과했다 (아홉 번 반복된 fixture 패턴). 온전한 묶음으로 만든다.
+    art.write_bytes(b"\xef\xbb\xbf" + json.dumps(_deg()).encode("utf-8"))
+    _meta(art, run_id="rid")
+    p = subprocess.run([sys.executable, str(root / "scripts" / "check_u14.py"),
+                        "--new", str(new), "--schema-only"],
+                       capture_output=True, text=True, timeout=120)
+    assert "PROMOTION" in p.stdout, (f"BOM JSON 에서 PROMOTION 이 안 나왔다 — 구조화된 결과가 아니다 "
+                                     f"(Codex R13 P2-3)\nrc={p.returncode}\n{p.stderr[-400:]}")
+    assert p.returncode != 1, f"숫자 불일치(rc 1)로 분류됐다 — 스키마 오류여야 한다: rc={p.returncode}"

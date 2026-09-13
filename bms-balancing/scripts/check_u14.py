@@ -190,7 +190,7 @@ def _receipts_of(kind: str, data: bytes) -> dict:
       행 **순서만** 바뀐 정당한 재실행은 거짓 불일치로 막혔다. 행 key 로 담아 key 끼리 댄다.
     """
     if kind == "degeneracy":
-        j = json.loads(data.decode("utf-8"))
+        j = S.json_bytes(data)
         return {"target": {None: S.receipt_map(j.get("consumed_inputs"))},
                 "ref": {None: S.receipt_map(j.get("ref_consumed_inputs"))}}
     rows, _ = _csv_rows(data)
@@ -328,7 +328,16 @@ def check(new: pathlib.Path, old: pathlib.Path | None, schema_only=False, policy
         kind = _kind(f)
         j = rows = hdr = None
         if kind == "degeneracy":
-            j = json.loads(data.decode("utf-8"))
+            # ⚠ Codex R13 P2-3: 전 판은 `decode("utf-8")` + 맨 `json.loads` 라 BOM 하나에
+            #   `JSONDecodeError` 가 그대로 올라가 rc 1 로 죽었다 — `PROMOTION` 도 안 찍혀
+            #   자동 소비자가 실패 원인을 분류할 수 없었다. CSV 쪽은 이미 `utf-8-sig` 를 쓰는데
+            #   JSON 만 비대칭이었다. 읽기는 같은 규칙으로, 파싱 실패는 **구조화된 스키마 오류**로.
+            try:
+                j = S.json_bytes(data)
+            except (UnicodeDecodeError, ValueError) as e:
+                R["content"].append(f"{f.name}: JSON 을 읽을 수 없다 ({type(e).__name__}: {e}) "
+                                    f"— 스키마 오류다 (Codex R13 P2-3)")
+                continue
             R["missing"] += [f"{f.name}: {k}" for k in JSON_KEYS if j.get(k) in (None, "")]
             R["content"] += [f"{f.name}: {p}" for p in S.check_degeneracy(j) if not p.startswith("키 없음")]
         else:
@@ -406,7 +415,7 @@ def check(new: pathlib.Path, old: pathlib.Path | None, schema_only=False, policy
         R["inputs"] += _mismatch
         R["inputs_uncomparable"] += _uncomparable
         if kind == "degeneracy":
-            a = json.loads(odata.decode("utf-8"))
+            a = S.json_bytes(odata)
             for k in S.DEGENERACY_CONTROLS:
                 if k in a and k in j and _num_diff(a[k], j[k]):
                     R["controls"].append((f"{f.name}:{k}", a[k], j[k]))

@@ -54,6 +54,62 @@ DEGENERACY_VECTORS = {"best_p": 5, "ref_p": 5}          # 5-파라미터 모델 
 DEGENERACY_STATS = ("LAM_PE_percent", "LAM_NE_percent", "LLI_percent")
 DEGENERACY_STAT_KEYS = ("min", "max")
 
+#: ⚠ Codex R13 P2-2: 빈 **문자열**은 막았지만 빈 **객체**는 감사로 인정했다 — 표본·유한성·eps 근거가
+#: 사라져도 차이를 기록하지 않았다. 감사는 (a) 세 metric 이 다 있고 (b) 표본 산술이 맞고
+#: (c) `scale` 이 같은 행의 `scale_*` 열과 **결속**돼야 감사다.
+#: ⚠ Codex R13 P2-3: JSON bytes 를 읽는 자리가 네 군데였고 전부 `decode("utf-8")` 이라 BOM 하나에
+#: `JSONDecodeError` 가 그대로 올라갔다 (CSV 쪽은 이미 `utf-8-sig`). **한 자리로 모은다.**
+def json_bytes(data: bytes):
+    """산출 JSON 을 읽는 **하나의** 규칙 — BOM 허용 (CSV reader 와 같다)."""
+    return json.loads(data.decode("utf-8-sig"))
+
+
+AUDIT_METRICS = ("pocv", "dvdq", "dqdv")
+AUDIT_FIELDS = ("n", "n_finite", "n_inf", "n_nan", "n_exception", "raw_lower_half_mean", "scale")
+
+
+def check_scale_audit(row: dict, where: str = "") -> list:
+    """`scale_audit_target` · `scale_audit_ref` 의 내용과 열 결속."""
+    p = []
+    for side in ("target", "ref"):
+        col = f"scale_audit_{side}"
+        if col not in row:
+            continue
+        raw = row.get(col)
+        if raw in (None, ""):
+            p.append(f"{where}{col} 이 비어 있다 — 감사 없이 돈 것이 문제다"); continue
+        try:
+            a = json.loads(raw) if isinstance(raw, str) else raw
+        except (TypeError, ValueError) as e:
+            p.append(f"{where}{col} 이 JSON 이 아니다 ({e})"); continue
+        if not isinstance(a, dict):
+            p.append(f"{where}{col} 이 객체가 아니다"); continue
+        miss = [m for m in AUDIT_METRICS if not isinstance(a.get(m), dict) or not a.get(m)]
+        if miss:
+            p.append(f"{where}{col} 에 metric 이 없거나 비었다 ({miss}) — 요구: {' · '.join(AUDIT_METRICS)}")
+            continue
+        for m in AUDIT_METRICS:
+            d = a[m]
+            lack = [k for k in AUDIT_FIELDS if k not in d]
+            if lack:
+                p.append(f"{where}{col}.{m} 에 필수 칸이 없다 ({lack})"); continue
+            if not all(_is_num(d[k]) for k in AUDIT_FIELDS):
+                p.append(f"{where}{col}.{m} 에 유한 숫자가 아닌 칸이 있다"); continue
+            if d["n_finite"] + d["n_inf"] + d["n_nan"] + d["n_exception"] != d["n"]:
+                p.append(f"{where}{col}.{m} 표본 산술이 안 맞는다 — "
+                         f"{d['n_finite']}+{d['n_inf']}+{d['n_nan']}+{d['n_exception']} ≠ {d['n']}")
+            scale_col = f"scale_{m}_{side}"
+            if scale_col in row and str(row.get(scale_col) or "").strip():
+                try:
+                    want = float(row[scale_col])
+                except ValueError:
+                    continue
+                if not math.isclose(float(d["scale"]), want, rel_tol=1e-9, abs_tol=0.0):
+                    p.append(f"{where}{col}.{m}.scale {d['scale']!r} 가 열 {scale_col} {want!r} 와 다르다 "
+                             f"— 감사가 그 행의 값을 설명하지 못한다")
+    return p
+
+
 
 def _is_num(x) -> bool:
     """bool 은 숫자가 아니다 (`isinstance(True, int)` 가 참이라 개수·값으로 새는 통로였다)."""
@@ -382,6 +438,8 @@ def check_rows(kind: str, rows: list, header: list, name: str = "") -> list:
                     p.append(f"행 {i}: {c} 가 숫자가 아니다 ({r[c]!r})"); continue
                 if not math.isfinite(x):
                     p.append(f"행 {i}: {c} 가 유한한 값이 아니다 ({r[c]!r}) — 과학 값이 아니다")
+        if kind == "matrix" and any(c in header for c in ("scale_audit_target", "scale_audit_ref")):
+            p += check_scale_audit(r, f"행 {i} ")
         if all(c in header for c in ("consumed_inputs", "inputs_sha")):
             p += validate_receipt(r.get("consumed_inputs"), r.get("inputs_sha"), f"행 {i} consumed_inputs")
         if all(c in header for c in ("ref_consumed_inputs", "ref_inputs_sha")):
@@ -404,7 +462,7 @@ def body_roster(name: str, data: bytes) -> dict:
     """산출 **본문**에서 유도한 exact 명부 (Codex R9 P2-4). sidecar 의 singular 필드는 wrapper 의 환경값이지 본문의
     명부가 아니다. `run_states.sh` 의 `write_meta` 와 `check_u14` 가 **같은 함수**를 쓴다 — 두 벌로 두면 갈린다."""
     if name.endswith(".json"):
-        j = json.loads(data.decode("utf-8"))
+        j = json_bytes(data)
         return {"kind": "degeneracy", "state": j.get("state"),
                 "half_cell": [j["half_cell"]] if j.get("half_cell") else [],
                 "si": [j["si_source"]] if j.get("si_source") else [],

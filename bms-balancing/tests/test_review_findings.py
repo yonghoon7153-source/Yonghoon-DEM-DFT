@@ -2729,6 +2729,18 @@ def _r5_ne_shape_real_pairs(tmp_path, monkeypatch, cwd, truth=0.45, reference=0.
     return row, meta
 
 
+def audit_json(scale=1.0, n=50):
+    """producer 모양의 `scale_audit_*` (Codex R13 P2-2).
+
+    ⚠ 전 판 fixture 는 `"{}"` 였다 — 빈 **객체**가 감사로 인정되던 시절의 유물이고,
+      그래서 이 회귀들이 감사 내용 축을 한 번도 재지 않았다.
+    """
+    m = {"n": n, "n_finite": n, "n_inf": 0, "n_nan": 0, "n_exception": 0,
+         "raw_lower_half_mean": scale, "scale": scale, "eps_rel": 1e-15,
+         "equivalent_within_rel": True}
+    return json.dumps({k: dict(m) for k in ("pocv", "dvdq", "dqdv")})
+
+
 def matrix_row(**over):
     """`schema.MATRIX_ROW` 를 **전부** 채운 한 행 (진짜 역할 receipt 포함).
 
@@ -2744,7 +2756,7 @@ def matrix_row(**over):
     v.update(half_cell="GITT", si="Li", w_dqdv="0", run_id="fixture-run", bounds="-", ref_bounds="-",
              consumed_inputs=json.dumps(ci), ref_consumed_inputs=json.dumps(rci),
              inputs_sha=S.inputs_digest(ci), ref_inputs_sha=S.inputs_digest(rci),
-             scale_audit_target="{}", scale_audit_ref="{}")
+             scale_audit_target=audit_json(), scale_audit_ref=audit_json())
     # ⚠ Codex R13 P1-1: 전 판은 한 행짜리가 `authority=requested=1` 로 **canonical 을 주장**했고, 그때는
     #   구성원을 아무도 안 봐서 통과했다. 한 행은 정본 모집단이 아니라 **subset** 이다 — 그렇게 선언한다.
     #   canonical 주장을 일부러 하려는 fixture 는 `seal_combo(rows, authority=...)` 로 명시한다.
