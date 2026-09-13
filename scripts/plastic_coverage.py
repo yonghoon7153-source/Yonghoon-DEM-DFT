@@ -1027,12 +1027,16 @@ def _selftest() -> int:
     #    ⚠ 이 핀들은 **추측이 아니라 실측**이다 — `git show HEAD:scripts/plastic_coverage.py`
     #      를 격리 로드해 찍었다.  초판에서 내가 값을 눈대중으로 적었다가 ⑨ 가 빨간불을
     #      냈다 (π/2 꼴을 그럴듯하게 적은 것).  **회귀 핀을 손으로 짓지 않는다.**
-    #      다섯 핀은 결속을 전부 덮는다: hertzian · tabor(양쪽 비대칭) · elastic · transition.
+    #      일곱 핀이 결속을 전부 덮는다: hertzian · tabor(양쪽 비대칭) · elastic · transition · **volume ×2**.
+    #    ⚠ 2차 정정: 처음 다섯 핀에 **volume 결속 핀이 없었다** — L1-02 가 건드리는 바로 그
+    #      자리를 ⑨ 가 안 보고 있었다 (Codex 요청서 §5 에 적고 바로 고쳤다).  두 개 추가.
     pins = [((1.0e-6, 1.0e-6, 0.010), 7.853981633974482e-15),    # hertzian · plastic
             ((0.5e-6, 6.0e-6, 0.200), 6.699127524369602e-13),    # tabor · plastic
             ((2.0e-6, 2.0e-6, 0.001), 3.141592653589793e-15),    # elastic · elastic
             ((0.5e-6, 6.0e-6, 0.002), 1.338430006263107e-15),    # hertzian · transition
-            ((3.0e-6, 0.8e-6, 0.050), 1.568078326341361e-13)]    # tabor · plastic (역순 반경)
+            ((3.0e-6, 0.8e-6, 0.050), 1.568078326341361e-13),    # tabor · plastic (역순 반경)
+            ((0.5e-6, 0.5e-6, 0.050), 1.2067315531367042e-14),   # **volume** · plastic (동일 반경)
+            ((0.5e-6, 6.0e-6, 0.030), 2.7520180051856025e-14)]   # **volume** · plastic (SE↔AM)
     bad = []
     for (ra, rb, dratio), want in pins:
         Rs_ = ra * rb / (ra + rb)

@@ -85,6 +85,9 @@
 - `plastic_coverage.py` 물리 분기가 여전히 `legacy_v_overlap` 을 쓴다는 내 주장 — `A_final`
   불변 핀 5개가 **결속 5가지를 전부 덮는가** (`volume` 결속 핀이 없다: hertzian·tabor·elastic·
   transition 뿐).  volume 이 결속하는 핀이 없으면 ⑨ 는 L1-02 자리를 **안 본 것**이다.
+  → **이 요청서를 쓰다 발견해 바로 고쳤다**: volume 결속 핀 2개(동일 반경 · SE↔AM)를 계측
+  추가 전 코드에서 실측해 추가 (7핀).  그래도 공격해 달라 — 핀이 덮지 못하는 결속 조합이
+  또 있는가 (`liggghts` 결속 핀도 없다: `ligg_area=None` 으로만 찍었다).
 - 합성 스윕의 `cap_conflict 55.3 %` — 이 숫자를 원장에 적은 것이 (코퍼스 아님이라 표시했어도)
   나중에 인용 누수를 만들 위험.  적지 말았어야 하는가.
 
