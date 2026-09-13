@@ -109,6 +109,7 @@
 - [[bml-command]] — `bml` 한 줄로 최신화 + 실행. 협력자 설치 방법 포함
 - [[wsl-setup]] — Windows/WSL 에서 쓰는 법. 막히는 지점과 해결까지
 - [[central-server]] — 한 대를 중추 서버로. 공유·원본 되받기·백업
+- [[vps-rollout]] — 고정 주소를 세우는 순서. `bmlonly` 를 없애는 길 (ADR 0034)
 - [[vps-first-run]] — **고정 주소 만들기.** 버릴 수 있는 VPS 로 열 단계를 먼저 통과시키고, 그 다음에 실제 이름을 건다
 - [[extension-roadmap]] — 충방전 다음에 붙일 분석(dQ/dV, EIS, DRT)과 그 순서
 
@@ -127,4 +128,4 @@
 
 `.claude/commands/` — `/sync` `/check` `/wrap` `/adr` `/verify` `/status`
 
-Total pages: 6
+Total pages: 7
