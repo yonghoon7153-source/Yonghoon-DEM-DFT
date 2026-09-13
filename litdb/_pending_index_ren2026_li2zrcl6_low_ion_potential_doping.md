@@ -1,4 +1,5 @@
 # 대기 초안 — `ren2026_li2zrcl6_low_ion_potential_doping` **3차 패스** (2026-09-09)
+> ✅ **1. INDEX.md 병합 2026-09-13** (99번 행에 3차 패스 문단 + 꼬리 태그 삽입). ⏳ **2. `comparison_vs_ours.md` F축 행 2개 + 방법 원전 블록은 미병합.**
 
 > ⛔ **이 파일은 초안이다.** 이번 세션의 경계 지시에 따라 `litdb/INDEX.md` 와
 > `litdb/comparison_vs_ours.md` 를 **직접 고치지 않았다.** 아래 두 블록을 1저자(또는 다음 큐레이터)가

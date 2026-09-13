@@ -1,4 +1,5 @@
 # ⏸ 병합 대기 — `wang2025_pretrained_deep_potential_sulfide_sse`
+> ✅ **① INDEX.md 병합 2026-09-13** (조율 세션). ⏳ **②③ `comparison_vs_ours.md` 블록은 미병합** — 절 번호 충돌(J-11/J-12)·기존 판정 개정 요청이 섞여 있어 큐레이터 판단이 필요하다.
 
 > 2026-09-09 · litdb-curator 다중 동시 실행으로 **`INDEX.md`·`comparison_vs_ours.md` 직접 수정 금지**를
 > 받아, 넣어야 할 내용을 여기 적어 둔다. 충돌이 풀리면 **아래 블록을 옮기고 이 파일을 지운다.**

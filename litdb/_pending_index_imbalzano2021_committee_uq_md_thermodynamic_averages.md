@@ -1,4 +1,5 @@
 # 📥 병합 대기 — `imbalzano2021_committee_uq_md_thermodynamic_averages`
+> ✅ **① INDEX.md 병합 2026-09-13** (조율 세션). ⏳ **②③ `comparison_vs_ours.md` 블록은 미병합** — 절 번호 충돌(J-11/J-12)·기존 판정 개정 요청이 섞여 있어 큐레이터 판단이 필요하다.
 
 > 2026-09-09, litdb-curator. **동시 4편 작업 중이라 `INDEX.md`·`comparison_vs_ours.md` 를 직접 안 건드렸다.**
 > 아래 3덩이를 사용자가 병합한다. digest 원본: `litdb/papers/imbalzano2021_committee_uq_md_thermodynamic_averages.md`
