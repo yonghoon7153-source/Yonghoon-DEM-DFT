@@ -265,10 +265,13 @@
     직접 시험은 하나다 — <b>부피창과 힘 문턱을 바꾸면 V₀ 가 움직이는가.</b>
   </p>
   <div class="muted" style="font-size:.8rem;margin-bottom:8px">{{ p4b.why_not_window_dependent }}</div>
+  {% if p4b.summary %}
+  <div class="callout cal-warn" style="font-size:.85rem;margin:8px 0">{{ p4b.summary }}</div>
+  {% endif %}
 
   <table class="tbl" style="font-size:.84rem">
     <thead><tr><th>구조</th><th class="num">조건 수</th><th class="num">V₀ 폭 (Å³)</th>
-      <th class="num">V₀ 폭 %</th><th>B₀′ 범위</th></tr></thead>
+      <th class="num">V₀ 폭 %</th><th class="num">자격</th><th>B₀′ 범위</th></tr></thead>
     <tbody>
     {% for r in p4b.spread %}
       <tr{% if r.ordered %} style="background:#fef9c3"{% endif %}>
@@ -276,6 +279,7 @@
         <td class="num">{{ r.n_conditions }}</td>
         <td class="num">{{ '%.1f'|format(r.V0_range_A3) }}</td>
         <td class="num"><b>{{ '%.2f'|format(r.V0_range_pct) }} %</b></td>
+        <td class="num"><b>{{ r.n_eligible }}/{{ r.n_conditions }}</b></td>
         <td class="num">{{ '%.2f'|format(r.Bp_min) }} … {{ '%.2f'|format(r.Bp_max) }}</td>
       </tr>
     {% endfor %}

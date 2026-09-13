@@ -2356,6 +2356,8 @@ def cascade_pilot_4b() -> dict:
     order = sorted(sp.items(), key=lambda kv: kv[1].get("V0_range_pct", 1e9))
     return {"ok": True,
             "citable": bool(rec.get("citable")),
+            "summary": rec.get("★_한_줄_요약"),
+            "sweep_complete": bool(rec.get("sweep_complete")),
             "why_not_citable": rec.get("⛔_왜_citable_false_인가"),
             "why_not_window_dependent": rec.get("왜_이_비교는_창_의존이_아닌가"),
             "spread": [{"structure": k, **v} for k, v in order],

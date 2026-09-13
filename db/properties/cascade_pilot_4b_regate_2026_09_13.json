@@ -2,19 +2,21 @@
   "schema": 1,
   "property": "cascade_pilot_4b_regate",
   "date": "2026-09-13",
-  "status": "preliminary",
+  "status": "complete_sweep_preliminary_verdict",
   "citable": false,
-  "⛔_왜_citable_false_인가": "① 스윕이 **미완**이다 — 5조건 중 W3_f005 는 2/5 구조, W6_f005 는 0/5 다. ② 생성 코드는 회신 BQ-2 이전 세대(`40ffa697`)이고 아래 값은 `--regate` 로 지금 게이트를 **소급 적용**한 것이다. ③ 점별 셀·좌표가 없어 이 런으로는 골짜기 이동 여부를 **판정할 수 없다**(회신 BQ-2 Q1·Q3).",
+  "⛔_왜_citable_false_인가": "① 생성 코드는 회신 BQ-2 **이전** 세대(`40ffa697`)이고 아래 값은 `--regate` 로 지금 게이트를 **소급 적용**한 것이다. ② 점별 셀·좌표가 없어 이 런으로는 **골짜기 이동 여부를 판정할 수 없다**(회신 BQ-2 Q1·Q3). ③ 1저자 비준 전이다.",
   "왜_이_기록이_있나": "§4b '무질서 초격자에서 per-구조 EOS V₀ 가 성립하는가' 에 대한 **직접 시험**이다 — 재는 방법(부피창·힘 문턱)을 바꾸면 V₀ 가 움직이는가. 화면이 이 숫자를 자체 보관하지 않도록 여기에 둔다 (webapp 은 이 파일만 읽는다).",
   "왜_이_비교는_창_의존이_아닌가": "회신 BQ Q2 가 친 것은 **분모가 부피창에 딸려가는 지표**(dE/span)였다. V₀ 는 Å³ 단위 물리량이라 분모가 없다 — 같은 양을 다른 창에서 재서 흩어지는지 보는 것이고, 그것이 well-defined 의 정의다.",
   "method": {
     "generated_by": "tools/doping/run_mlip_postproc.py @ 40ffa697927c3633 (커밋 5d9aeac4)",
-    "regated_by": "동 도구 @ 74aefa4c `--regate` (P0-1·Q1a·Q2·Q5 게이트 적용)",
+    "regated_by": "동 도구 @ fd2aaafc `--regate` (selftest 110) · 25/25 줄",
     "machine": "V100-32GB · ~/lldvar · UMA uma-s-1p1 · omat · device cuda",
     "protocol": "고정셀 원자완화 · 연쇄(continuation) 양방향 · relax_steps 3000",
     "regate_summary": {
-      "verdict_changed": "0/17",
-      "reason_changed": "10/17"
+      "verdict_changed": "0/25",
+      "reason_changed": "16/25",
+      "n_eligible": 8,
+      "n_rows": 25
     }
   },
   "conditions": {
@@ -26,80 +28,69 @@
   },
   "V0_spread_by_structure": {
     "H0_host": {
-      "n_conditions": 4,
+      "n_conditions": 5,
       "V0_min_A3": 4071.1,
       "V0_max_A3": 4073.1,
       "V0_range_A3": 2.0,
       "V0_range_pct": 0.05,
       "Bp_min": 4.12,
       "Bp_max": 8.72,
+      "n_eligible": 5,
       "ordered": true
     },
     "P1_Al2O3_A": {
-      "n_conditions": 4,
+      "n_conditions": 5,
       "V0_min_A3": 4007.7,
-      "V0_max_A3": 4137.8,
-      "V0_range_A3": 130.1,
-      "V0_range_pct": 3.21,
+      "V0_max_A3": 4145.0,
+      "V0_range_A3": 137.3,
+      "V0_range_pct": 3.38,
       "Bp_min": -39.82,
       "Bp_max": 2.79,
+      "n_eligible": 1,
       "ordered": false
     },
     "P1_Al2O3_B": {
-      "n_conditions": 3,
-      "V0_min_A3": 4009.9,
+      "n_conditions": 5,
+      "V0_min_A3": 3996.3,
       "V0_max_A3": 4025.1,
-      "V0_range_A3": 15.2,
-      "V0_range_pct": 0.38,
+      "V0_range_A3": 28.8,
+      "V0_range_pct": 0.72,
       "Bp_min": -1.14,
-      "Bp_max": 8.59,
+      "Bp_max": 9.51,
+      "n_eligible": 2,
       "ordered": false
     },
     "P2_Al2S3_A": {
-      "n_conditions": 3,
-      "V0_min_A3": 4054.8,
-      "V0_max_A3": 4098.6,
-      "V0_range_A3": 43.8,
-      "V0_range_pct": 1.07,
+      "n_conditions": 5,
+      "V0_min_A3": 4019.3,
+      "V0_max_A3": 4101.3,
+      "V0_range_A3": 82.0,
+      "V0_range_pct": 2.01,
       "Bp_min": -25.09,
       "Bp_max": 4156.55,
+      "n_eligible": 0,
       "ordered": false
     },
     "P2_Al2S3_B": {
-      "n_conditions": 3,
-      "V0_min_A3": 4072.3,
+      "n_conditions": 5,
+      "V0_min_A3": 4060.7,
       "V0_max_A3": 5496.9,
-      "V0_range_A3": 1424.6,
-      "V0_range_pct": 31.32,
+      "V0_range_A3": 1436.2,
+      "V0_range_pct": 32.98,
       "Bp_min": -4.25,
-      "Bp_max": -0.06,
+      "Bp_max": 6.8,
+      "n_eligible": 0,
       "ordered": false
     }
   },
   "rows_by_structure": {
     "H0_host": [
       {
-        "condition": "W6_f02",
-        "r2": 1.0,
-        "V0_A3": 4073.1,
-        "Bp": 4.12,
-        "fit_quality_ok": true,
-        "reason": "OK"
-      },
-      {
-        "condition": "W3_f02",
-        "r2": 1.0,
-        "V0_A3": 4071.3,
-        "Bp": 5.82,
-        "fit_quality_ok": true,
-        "reason": "OK"
-      },
-      {
         "condition": "W2_f02",
         "r2": 0.9999,
         "V0_A3": 4071.1,
         "Bp": 8.72,
-        "fit_quality_ok": true,
+        "downstream_eligible": true,
         "reason": "OK"
       },
       {
@@ -107,17 +98,49 @@
         "r2": 1.0,
         "V0_A3": 4072.4,
         "Bp": 4.34,
-        "fit_quality_ok": true,
+        "downstream_eligible": true,
+        "reason": "OK"
+      },
+      {
+        "condition": "W3_f02",
+        "r2": 1.0,
+        "V0_A3": 4071.3,
+        "Bp": 5.82,
+        "downstream_eligible": true,
+        "reason": "OK"
+      },
+      {
+        "condition": "W6_f005",
+        "r2": 1.0,
+        "V0_A3": 4072.4,
+        "Bp": 4.38,
+        "downstream_eligible": true,
+        "reason": "OK"
+      },
+      {
+        "condition": "W6_f02",
+        "r2": 1.0,
+        "V0_A3": 4073.1,
+        "Bp": 4.12,
+        "downstream_eligible": true,
         "reason": "OK"
       }
     ],
     "P1_Al2O3_A": [
       {
-        "condition": "W6_f02",
-        "r2": 0.9811,
-        "V0_A3": 4039.6,
-        "Bp": -0.1,
-        "fit_quality_ok": false,
+        "condition": "W2_f02",
+        "r2": 0.9993,
+        "V0_A3": 4010.6,
+        "Bp": -1.94,
+        "downstream_eligible": false,
+        "reason": "B0'=-1.94 가 0<B0'<15 밖 (보수적 운영 기준)"
+      },
+      {
+        "condition": "W3_f005",
+        "r2": 0.8566,
+        "V0_A3": 4137.8,
+        "Bp": -39.82,
+        "downstream_eligible": false,
         "reason": "이력현상 — V₀ 가 갈린다"
       },
       {
@@ -125,33 +148,41 @@
         "r2": 0.9999,
         "V0_A3": 4007.7,
         "Bp": 2.79,
-        "fit_quality_ok": true,
+        "downstream_eligible": true,
         "reason": "OK"
       },
       {
-        "condition": "W2_f02",
-        "r2": 0.9993,
-        "V0_A3": 4010.6,
-        "Bp": -1.94,
-        "fit_quality_ok": false,
-        "reason": "B0'=-1.94 가 0<B0'<15 밖 (보수적 선택)"
+        "condition": "W6_f005",
+        "r2": 0.938,
+        "V0_A3": 4145.0,
+        "Bp": -13.87,
+        "downstream_eligible": false,
+        "reason": "이력현상 — V₀ 가 갈린다 (⚠ 상승 갈래 6/7 미수렴, 잔여힘 0.0579)"
       },
       {
-        "condition": "W3_f005",
-        "r2": 0.8566,
-        "V0_A3": 4137.8,
-        "Bp": -39.82,
-        "fit_quality_ok": false,
+        "condition": "W6_f02",
+        "r2": 0.9811,
+        "V0_A3": 4039.6,
+        "Bp": -0.1,
+        "downstream_eligible": false,
         "reason": "이력현상 — V₀ 가 갈린다"
       }
     ],
     "P1_Al2O3_B": [
       {
-        "condition": "W6_f02",
-        "r2": 0.9937,
-        "V0_A3": 4025.1,
-        "Bp": -1.14,
-        "fit_quality_ok": false,
+        "condition": "W2_f02",
+        "r2": 0.9998,
+        "V0_A3": 4011.8,
+        "Bp": 8.59,
+        "downstream_eligible": true,
+        "reason": "OK"
+      },
+      {
+        "condition": "W3_f005",
+        "r2": 0.9756,
+        "V0_A3": 3996.3,
+        "Bp": 9.51,
+        "downstream_eligible": false,
         "reason": "이력현상 — V₀ 가 갈린다"
       },
       {
@@ -159,75 +190,117 @@
         "r2": 1.0,
         "V0_A3": 4009.9,
         "Bp": 7.88,
-        "fit_quality_ok": true,
+        "downstream_eligible": true,
         "reason": "OK"
       },
       {
-        "condition": "W2_f02",
-        "r2": 0.9998,
-        "V0_A3": 4011.8,
-        "Bp": 8.59,
-        "fit_quality_ok": true,
-        "reason": "OK"
+        "condition": "W6_f005",
+        "r2": 0.9919,
+        "V0_A3": 4018.1,
+        "Bp": 7.19,
+        "downstream_eligible": false,
+        "reason": "이력현상 — V₀ 가 갈린다"
+      },
+      {
+        "condition": "W6_f02",
+        "r2": 0.9937,
+        "V0_A3": 4025.1,
+        "Bp": -1.14,
+        "downstream_eligible": false,
+        "reason": "이력현상 — V₀ 가 갈린다"
       }
     ],
     "P2_Al2S3_A": [
       {
-        "condition": "W6_f02",
-        "r2": 0.9965,
-        "V0_A3": 4054.8,
-        "Bp": 6.68,
-        "fit_quality_ok": false,
-        "reason": "이력현상 — 모양이 갈린다 (0.444 eV)"
+        "condition": "W2_f02",
+        "r2": 0.7773,
+        "V0_A3": 4083.6,
+        "Bp": 4156.55,
+        "downstream_eligible": false,
+        "reason": "이력현상 — 모양이 갈린다 (0.113 eV)"
+      },
+      {
+        "condition": "W3_f005",
+        "r2": 0.9358,
+        "V0_A3": 4101.3,
+        "Bp": 22.07,
+        "downstream_eligible": false,
+        "reason": "이력현상 검사 자체가 RuntimeError — 통과로 읽지 않는다"
       },
       {
         "condition": "W3_f02",
         "r2": 0.9307,
         "V0_A3": 4098.6,
         "Bp": -25.09,
-        "fit_quality_ok": false,
+        "downstream_eligible": false,
         "reason": "이력현상 — 모양이 갈린다 (0.391 eV)"
       },
       {
-        "condition": "W2_f02",
-        "r2": 0.7773,
-        "V0_A3": 4083.6,
-        "Bp": 4156.55,
-        "fit_quality_ok": false,
-        "reason": "이력현상 — 모양이 갈린다 (0.113 eV)"
+        "condition": "W6_f005",
+        "r2": 0.9992,
+        "V0_A3": 4019.3,
+        "Bp": 5.51,
+        "downstream_eligible": false,
+        "reason": "이력현상 — 모양이 갈린다 (0.236 eV)"
+      },
+      {
+        "condition": "W6_f02",
+        "r2": 0.9965,
+        "V0_A3": 4054.8,
+        "Bp": 6.68,
+        "downstream_eligible": false,
+        "reason": "이력현상 — 모양이 갈린다 (0.444 eV)"
       }
     ],
     "P2_Al2S3_B": [
       {
-        "condition": "W6_f02",
-        "r2": 0.9927,
-        "V0_A3": 4072.3,
-        "Bp": -0.06,
-        "fit_quality_ok": false,
-        "reason": "이력현상 — V₀ 가 갈린다"
+        "condition": "W2_f02",
+        "r2": 0.9949,
+        "V0_A3": 4075.5,
+        "Bp": -4.25,
+        "downstream_eligible": false,
+        "reason": "이력현상 — 모양이 갈린다 (0.017 eV)"
+      },
+      {
+        "condition": "W3_f005",
+        "r2": 1.0,
+        "V0_A3": 4060.7,
+        "Bp": 6.8,
+        "downstream_eligible": false,
+        "reason": "이력현상 — 모양이 갈린다 (0.100 eV)"
       },
       {
         "condition": "W3_f02",
         "r2": 0.81,
         "V0_A3": 5496.9,
         "Bp": -0.16,
-        "fit_quality_ok": false,
-        "reason": "이력현상 — V₀ 가 갈린다 (창 밖 외삽)"
+        "downstream_eligible": false,
+        "reason": "이력현상 — V₀ 가 갈린다 (5496.9, 창 밖 외삽)"
       },
       {
-        "condition": "W2_f02",
-        "r2": 0.9949,
-        "V0_A3": 4075.5,
-        "Bp": -4.25,
-        "fit_quality_ok": false,
-        "reason": "이력현상 — 모양이 갈린다 (0.017 eV)"
+        "condition": "W6_f005",
+        "r2": 0.9972,
+        "V0_A3": 4071.4,
+        "Bp": 2.1,
+        "downstream_eligible": false,
+        "reason": "이력현상 — 모양이 갈린다 (0.292 eV)"
+      },
+      {
+        "condition": "W6_f02",
+        "r2": 0.9927,
+        "V0_A3": 4072.3,
+        "Bp": -0.06,
+        "downstream_eligible": false,
+        "reason": "이력현상 — V₀ 가 갈린다"
       }
     ]
   },
   "⚠_읽는_법": [
-    "r² 가 낮은 줄(0.78·0.81·0.86)의 V₀ 는 **나쁜 적합의 산물**이다. 다만 '조건을 바꾸면 적합 자체가 깨진다' 도 같은 현상의 일부라 빼지 않았다.",
-    "P2_Al2S3_B 의 31 % 는 창 밖 외삽(V₀ 5496.9)이 섞인 값이다. 그 줄을 빼면 0.08 % 로 붙는다 — 회신 BQ-2 Q5 의 `V0_in_window` 가 왜 필요했는지가 여기서 보인다.",
-    "B₀′ 는 이 계에서 **보고 가능한 양이 아니다**. 질서 H0 조차 조건에 따라 4.12→8.72 로 2배 움직인다 (회신 BQ-2 Q5 의 예언 그대로)."
+    "P2_Al2S3_B 의 32.98 % 는 W3_f02 의 V₀ 5496.9(셀 4066 · **창 밖 외삽**)가 섞인 값이다. 그 한 줄을 빼면 4조건에서 **0.36 %** 로 붙는다 — 회신 BQ-2 Q5 의 `V0_in_window` 가 왜 필요했는지가 여기서 보인다.",
+    "r² 가 낮은 줄(0.7773·0.8100·0.8566·0.9307·0.9358·0.9380)의 V₀ 는 나쁜 적합의 산물이다. 다만 \"조건을 바꾸면 적합 자체가 깨진다\" 도 같은 현상의 일부라 빼지 않았다.",
+    "B₀′ 는 조건에 극도로 민감하다(−39.8 … 4156.6). ⚠ 단 **질서 H0 는 힘을 조이면 안정된다** — fmax 0.02 에서 4.12/5.82/8.72 로 2.1배 흔들리던 것이 fmax 0.005 에서 4.34/4.38 로 붙는다(창이 ±3 % ↔ ±6 % 로 2배 다른데도). f02 의 B₀′ 창 민감도는 물리가 아니라 **완화 부족**이었다.",
+    "⚠ 25줄 중 미수렴은 W6_f005 의 P1_Al2O3_A **한 줄뿐**이다(상승 갈래 6/7, 잔여힘 0.0579 = 요청 0.005 의 11.6배). 나머지 24줄은 상승 갈래 7/7 이다 — 즉 이 표의 갈림은 **대체로 미수렴 탓이 아니다**. ⛔ 단 하강 갈래 수렴은 옛 화면에 없었다.",
+    "조임(fmax 0.02→0.005)의 효과가 무질서에서는 **창에 따라 반대**다: ±3 % 에서는 P1 둘이 69배·37배 악화했는데 ±6 % 에서는 3/4 가 개선했다. 규칙성이 안 보인다 — 아직 못 본 규칙이 있을 수 있으므로 이것으로 결론짓지 않는다."
   ],
   "⛔_이_기록이_말하지_않는_것": [
     "골짜기 이동(basin hopping)이 원인이라고 말하지 않는다 — 점별 구조가 없다.",
@@ -242,5 +315,14 @@
     "db/properties/cascade_pilot_4b_blocked_2026_09_13.json",
     "kb/reviews/codex_BQ2_reply_fix_verification_2026_09_13.md",
     "kb/projects/cascade_rebuild_log_2026_09.md §12"
-  ]
+  ],
+  "sweep_complete": true,
+  "★_한_줄_요약": "질서 H0 는 **5조건 전부** 자격을 통과하고 V₀ 가 0.05 % 안에 모인다. 무질서 넷은 최대 2/5 이고 둘은 0/5 다.",
+  "eligibility_by_structure": {
+    "H0_host": "5/5",
+    "P1_Al2O3_A": "1/5",
+    "P1_Al2O3_B": "2/5",
+    "P2_Al2S3_A": "0/5",
+    "P2_Al2S3_B": "0/5"
+  }
 }
