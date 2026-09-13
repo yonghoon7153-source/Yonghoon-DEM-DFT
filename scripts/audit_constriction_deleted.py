@@ -247,6 +247,7 @@ def audit_case(case_dir, contact_mode='physics', channels=('ionic', 'electronic'
         edges = net['edges'] if isinstance(net, dict) else net[1]
         n = d = 0
         by_kind = {}
+        l1 = _l1_counters()
         for e in edges:
             kd = _pair_kind(type_map.get(e['type1'], '?'), type_map.get(e['type2'], '?'))
             n += 1
@@ -255,6 +256,7 @@ def audit_case(case_dir, contact_mode='physics', channels=('ionic', 'electronic'
             s_ = by_kind.setdefault(kd, [0, 0])
             s_[0] += 1
             s_[1] += 1 if dele else 0
+            _l1_tally(l1, e)
         row[f'{ch}_n_edges'] = n
         row[f'{ch}_n_deleted'] = d
         row[f'{ch}_deleted_pct'] = round(100.0 * d / n, 4) if n else 0.0
@@ -262,7 +264,54 @@ def audit_case(case_dir, contact_mode='physics', channels=('ionic', 'electronic'
             nn, dd = by_kind.get(kd, (0, 0))
             row[f'{ch}_{kd}_n'] = nn
             row[f'{ch}_{kd}_deleted'] = dd
+        #  L1-01 · L1-02 는 채널 무관 간선 성질이라 **전 간선 채널(thermal)** 에서만 적는다.
+        #  (같은 간선을 세 번 세지 않는다.)
+        if ch == 'thermal':
+            for k, v in l1.items():
+                row[f'l1_{k}'] = v
     return row
+
+
+# ── L1-01 · L1-02 — 실제 간선에서 (i) 하한>상한 (ii) 정확 lens 가 a_eff 를 바꾸는가 ──
+#    `plastic_coverage.py` 가 계측만 붙이고 값은 안 바꿨다 (저자 결정 선행).  여기서는
+#    솔버가 만든 간선의 `A_components` 를 읽어 **코퍼스 크기**를 잰다.  합성 스윕
+#    (`plastic_coverage.py --audit-l1`) 은 코퍼스 발생률이 아니다 — 이것이 그 값이다.
+def _l1_counters():
+    return {'n_ladder': 0, 'n_cap_conflict': 0, 'n_vol_neg': 0,
+            'n_exact_avail': 0, 'n_A_final_changed': 0, 'n_a_eff_changed': 0,
+            'n_rc_branch_changed': 0}
+
+
+def _l1_tally(c, e):
+    comp = e.get('A_components')
+    if not comp or comp.get('cap_conflict') is None:
+        return                                # 탄성 조기반환 / no_delta — 사다리에 안 옴
+    c['n_ladder'] += 1
+    if comp['cap_conflict']:
+        c['n_cap_conflict'] += 1
+    vl = comp.get('V_overlap_legacy_um3')
+    if vl is not None and vl < 0:
+        c['n_vol_neg'] += 1
+    ave = comp.get('A_volume_exact_um2')
+    if ave is None or comp.get('A_tabor_um2') is None or comp.get('A_geom_um2') is None:
+        return
+    c['n_exact_avail'] += 1
+    lower = comp['A_lower_um2']
+    A_exact = max(lower, min(comp['A_tabor_um2'], ave, comp['A_geom_um2']))
+    A_legacy = comp['A_final_um2']
+    if A_exact != A_legacy:
+        c['n_A_final_changed'] += 1
+    r_min = min(e['r1'], e['r2'])
+    a_l = min(math.sqrt(A_legacy / math.pi) if A_legacy > 0 else 0.0, r_min)
+    a_e = min(math.sqrt(A_exact / math.pi) if A_exact > 0 else 0.0, r_min)
+    if a_e != a_l:
+        c['n_a_eff_changed'] += 1
+    #  ψ 분기 (≤1e-4 → R_c=0) 가 갈리는가 — `network_conductivity.py:396-401` 과 같은 식
+    def _branch(a):
+        psi = max(1.0 - a / r_min, 0.0) ** 1.5 if r_min > 0 else 0.0
+        return psi > 1e-4
+    if _branch(a_e) != _branch(a_l):
+        c['n_rc_branch_changed'] += 1
 
 
 def main() -> int:
@@ -354,6 +403,21 @@ def main() -> int:
                 print(f'      {kd:8s} {dd:>10,d} / {nn:>10,d} = {100.0*dd/nn:7.3f} %')
     print('\n⚠ 이것은 **협착 항** 삭제다 (R_bulk 는 보통 남는다).  간선 삭제·총저항 0 과 다르다.')
     print('⚠ 채널별로 따로 읽을 것 — AM–SE 비율을 이온망 하한으로 쓰지 않는다 (AREA-02).')
+
+    if 'thermal' in chans and any('l1_n_ladder' in r for r in rows):
+        tot = {k: sum(r.get(f'l1_{k}', 0) for r in rows) for k in _l1_counters()}
+        nl = tot['n_ladder']; ne = tot['n_exact_avail']
+        pc = lambda k, den: (100.0 * tot[k] / den) if den else 0.0
+        print('\n═══ L1-01 · L1-02 (전 간선, 사다리 도달분) ═══')
+        print(f'  사다리 도달 간선                     : {nl:>10,d}')
+        print(f'  L1-01 cap_conflict (하한 > 상한)     : {tot["n_cap_conflict"]:>10,d} = {pc("n_cap_conflict", nl):7.3f} %')
+        print(f'  L1-02 legacy V_overlap < 0           : {tot["n_vol_neg"]:>10,d} = {pc("n_vol_neg", nl):7.3f} %')
+        print(f'  정확 lens 계산 가능                  : {ne:>10,d}')
+        print(f'  정확 lens 로 A_final 이 바뀜         : {tot["n_A_final_changed"]:>10,d} = {pc("n_A_final_changed", ne):7.3f} %')
+        print(f'  정확 lens 로 **a_eff** 가 바뀜       : {tot["n_a_eff_changed"]:>10,d} = {pc("n_a_eff_changed", ne):7.3f} %')
+        print(f'  정확 lens 로 ψ 분기(R_c=0)가 바뀜    : {tot["n_rc_branch_changed"]:>10,d} = {pc("n_rc_branch_changed", ne):7.3f} %')
+        print('  ⚠ a_eff 가 바뀐 간선 수는 σ 변화량이 아니다 (I²R 기여도 미측정).')
+        print('  ⚠ 값은 안 바꿨다 — 저자 결정(전체 lens 인가 상별 몫인가) 뒤에 세대 2 로.')
 
     if a.out_csv:
         p = Path(a.out_csv)
@@ -505,6 +569,57 @@ def _selftest() -> int:
     doc = ROOT / 'docs' / 'area_contract_20260913.md'
     ver = ROOT / 'docs' / 'reviews' / 'codex_verdict_area_contract_20260913.md'
     chk('⑧ 계약·판정문 둘 다 있다', doc.exists() and ver.exists())
+
+    # ── ⑩ L1-01 · L1-02 집계가 실제 간선에서 **판별력 있게** 돈다 ──────────
+    #    (a) 얕은 겹침 + 큰 native 면적 → 하한 > 상한 → cap_conflict 가 세어진다
+    #    (b) 깊은 겹침 → cap_conflict 아님 (검사가 "항상 켜짐" 이 아니다)
+    #    (c) 정확 lens 가 a_eff 를 실제로 바꾸는 간선 / 안 바꾸는 간선이 **둘 다** 있다
+    #  ⚠ 위 `net()` 은 R = 1 sim 단위 = **1 m 구**다 (SI 상수 앞에서 volume cap 이
+    #    천문학적으로 커져 절대 결속하지 않는다).  L1-02 는 **실제 규모**(R = 0.5 µm,
+    #    sim = m, scale = 1e6)에서만 볼 수 있다 — 첫 판이 여기서 빨간불을 냈다.
+    R_si = 0.5e-6
+    Rs_ = R_si / 2.0
+
+    def net_si(rows, cm='physics'):
+        atoms = {1: {'type': 1, 'radius': R_si, 'x': 0.0, 'y': 0.0, 'z': 0.0},
+                 2: {'type': 3, 'radius': R_si, 'x': 2 * R_si, 'y': 0.0, 'z': 0.0}}
+        tm = {1: 'AM_P', 3: 'SE'}
+        tt = CHANNELS['thermal'][1](tm)
+        n = _NC.build_network(atoms, rows, tt, 1e6, 10.0,
+                              box_x=1.0, box_y=1.0, mode='thermal', type_map=tm,
+                              contact_mode=cm)
+        return n['edges'] if isinstance(n, dict) else n[1]
+
+    conf = {'id1': 1, 'id2': 2, 'contact_area': 2.0 * math.pi * Rs_ * (0.01 * Rs_),
+            'delta': 0.01 * Rs_}                       # ligg ≈ 2×Hertz > Tabor (얕음)
+    c1 = _l1_counters(); [_l1_tally(c1, e_) for e_ in net_si([conf])]
+    chk('⑩a L1-01: 얕은 겹침 + 큰 native 면적 → cap_conflict 1/1',
+        c1['n_ladder'] == 1 and c1['n_cap_conflict'] == 1, str(c1))
+    deep2 = {'id1': 1, 'id2': 2, 'contact_area': 0.0, 'delta': 0.5 * Rs_}
+    c2 = _l1_counters(); [_l1_tally(c2, e_) for e_ in net_si([deep2])]
+    chk('⑩b 대조: 깊은 겹침은 cap_conflict 0/1', c2['n_ladder'] == 1 and c2['n_cap_conflict'] == 0,
+        str(c2))
+    #  (c) volume 이 결속하는 중간 겹침 — 정확 lens(≈2배) 가 a_eff 를 바꾼다
+    mid = {'id1': 1, 'id2': 2, 'contact_area': 0.0, 'delta': 0.05 * Rs_}
+    c3 = _l1_counters(); [_l1_tally(c3, e_) for e_ in net_si([mid])]
+    lower_wins = {'id1': 1, 'id2': 2, 'contact_area': 0.9 * math.pi * R_si * R_si,
+                  'delta': 0.05 * Rs_}
+    c4 = _l1_counters(); [_l1_tally(c4, e_) for e_ in net_si([lower_wins])]
+    chk('⑩c L1-02 판별력: volume 결속 간선은 a_eff 가 바뀌고, 하한이 이기는 간선은 안 바뀐다',
+        c3['n_exact_avail'] == 1 and c3['n_a_eff_changed'] == 1
+        and c4['n_exact_avail'] == 1 and c4['n_a_eff_changed'] == 0,
+        f'volume결속 {c3["n_a_eff_changed"]}/1 · 하한승 {c4["n_a_eff_changed"]}/1 · '
+        f'mid binding={net_si([mid])[0]["A_components"]["binding"]}')
+    chk('⑩d 계측 키가 솔버 간선의 A_components 에 실린다',
+        all(k in net_si([mid])[0]['A_components'] for k in
+            ('cap_conflict', 'A_lower_um2', 'A_upper_um2', 'V_overlap_legacy_um3',
+             'V_lens_exact_um3', 'A_volume_exact_um2')))
+    #  (e) 1 m 구 픽스처에서는 volume 이 **절대** 안 결속한다 — 위 경고의 실증
+    c5 = _l1_counters(); [_l1_tally(c5, e_) for e_ in net([{'id1': 1, 'id2': 2,
+                                                            'contact_area': 0.0,
+                                                            'delta': 0.05 * R / 2.0}])]
+    chk('⑩e 대조: 1 m 구 픽스처는 volume 이 안 결속한다 (규모 없는 검사는 공허하다)',
+        c5['n_exact_avail'] == 1 and c5['n_a_eff_changed'] == 0)
 
     print('협착 삭제 census SELFTEST', 'PASS' if ok else 'FAIL')
     return 0 if ok else 1

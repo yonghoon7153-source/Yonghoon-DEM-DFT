@@ -159,6 +159,10 @@ run 'constriction_reference --selftest' python3 scripts/constriction_reference.p
 #    2πR² → πR² 로 바꿔도 `a_eff` 가 안 바뀐다.  ② 가 `A_physics` 는 실제로 바뀜을 확인해
 #    검사가 공허하지 않게 하고 ③ 이 clamp 를 빼면 달라짐을 보여 판별력을 증명한다.
 run 'transport_cap_equivalence --selftest' python3 scripts/audit_transport_cap_equivalence.py --selftest
+#  ★ 2026-09-13 (L1-01 · L1-02) — Physics 면적 사다리의 두 결함을 **계측만** 붙였다.
+#    하한>상한(feasibility)과 V_overlap(lens 가 아니라 단일 cap 공식, 얕으면 절반·깊으면
+#    음수).  값은 저자 결정 전까지 안 바꾼다 — ⑨ 가 실측 핀으로 A_final 불변을 강제한다.
+run 'plastic_coverage    --selftest' python3 scripts/plastic_coverage.py --selftest
 run 'check_doc_refs          --selftest' python3 scripts/check_doc_refs.py --selftest
 run 'check_cohort_packages  (커밋된 패키지 ↔ 원장)' python3 scripts/check_cohort_packages.py
 run 'audit_adjudication   (원시 감사 ↔ 판정 원장)' python3 scripts/check_audit_adjudication.py

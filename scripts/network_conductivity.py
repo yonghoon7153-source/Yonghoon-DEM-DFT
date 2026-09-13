@@ -310,6 +310,18 @@ def build_network(atoms_raw, contacts_raw, target_types, scale,
                     'A_geom_um2':     None if comp['A_geom'] is None else comp['A_geom'] * scale**2,
                     'A_final_um2':    A_physics,
                     'binding':        comp['binding'],
+                    # ── L1-01 · L1-02 계측 (2026-09-13).  ⛔ A_physics 는 **안 바꾼다** ──
+                    #    cap_conflict = 하한 > 상한 (만족하는 A 가 없다)
+                    #    V_lens_exact = 정확한 두 구 교집합 (legacy 는 얕으면 절반, 깊으면 음수)
+                    'cap_conflict':   comp.get('cap_conflict'),
+                    'A_lower_um2':    None if comp.get('A_lower') is None else comp['A_lower'] * scale**2,
+                    'A_upper_um2':    None if comp.get('A_upper') is None else comp['A_upper'] * scale**2,
+                    'V_overlap_legacy_um3': None if comp.get('V_overlap_legacy') is None
+                                            else comp['V_overlap_legacy'] * scale**3,
+                    'V_lens_exact_um3':     None if comp.get('V_lens_exact') is None
+                                            else comp['V_lens_exact'] * scale**3,
+                    'A_volume_exact_um2':   None if comp.get('A_volume_exact') is None
+                                            else comp['A_volume_exact'] * scale**2,
                 }
             else:
                 A_physics = A_hertzian  # fallback if import failed
