@@ -56,7 +56,7 @@ bytecode 만 막았고(C08·C09), `rc 0` 인데 승격 불가인 상태를 런�
 
 | 트랙 | 판정 | 지금 상태 |
 |---|---|---|
-| ① mph 마이크로 쇼츠 | NO-GO ×2 (v1·v2) → **6.3 재구축 제한 검증 '뒷받침됨'** (Codex 독립 검토 2026-09-13, 원문 `reviews/r14_repros/codex63/`) | **문서 v3: M1 철회** (`cEeqref_mat = from_mat` — 값 칸의 사용자 식은 선택되지 않았다; `MPH_R1_RESPONSE.md` §6). 재구축은 §0-a 대로 — §5 검산값 `x_NCM 0.924064`·`x_Gr 0.0117207` 이 독립 산술로 재현됐고 초기 OCV 2.1653 V 는 MCMB 표 가파른 구간(오류 아님). **전체 프로토콜은 보류**: 4.25 V CV 가 양극 OCP 표 하한(x=0.2229 → 평형 4.1856 V)과 충돌 → OCP 범위 중단조건·phase 별 cutoff·시간간격·mesh 비교 (`docs/COMSOL_REBUILD_SPEC.md` §8). 원본 `cEeqref` 실효값(`COMSOL_CHECK_REQUEST.md`)은 원본 동등성 물음으로 남음 |
+| ① mph 마이크로 쇼츠 | NO-GO ×2 (v1·v2) → **6.3 재구축 제한 검증 '뒷받침됨'** (Codex 독립 검토 2026-09-13, 원문 `reviews/r14_repros/codex63/`) | **문서 v3: M1 철회** (`cEeqref_mat = from_mat` — 값 칸의 사용자 식은 선택되지 않았다; `MPH_R1_RESPONSE.md` §6). 재구축은 §0-a 대로 — §5 검산값 `x_NCM 0.924064`·`x_Gr 0.0117207` 이 독립 산술로 재현됐고 초기 OCV 2.1653 V 는 MCMB 표 가파른 구간(오류 아님). **전체 프로토콜은 보류**: 4.25 V CV 가 양극 OCP 표 하한(x=0.2229 → 평형 4.1856 V)과 충돌 → OCP 범위 중단조건·phase 별 cutoff·시간간격·mesh 비교 (`docs/COMSOL_REBUILD_SPEC.md` §8). **현지 사전 진단 (§9, 2026-09-13 밤)**: 초기 Eeq 3.578387/1.413053 V (차 2.165333 V, 보정 안 함) · 표 내부 평형 OCV 상한 4.185562 V · 표면 조성 표 이탈을 실제 감지해 `INCOMPLETE_RANGE_STOP` 으로 보존 · 2.7 V cutoff 가 첫 충전 안 막음 · 축소 조건 CC→CV→휴지→방전 전이 확인(eventtol 1e-6, 2 s → 2.000002 s). **미완**: 메시 수렴(150/20→300/40 최대 2.041557 mV > 1 mV) · 저전류 CV 완료 · 전해질 양수 검사는 후처리뿐 · 원본/실험 OCP·물성 출처 대조 · 전체 프로토콜·유한 누설·sweep. **전체 운전 보류 유지 — GO 아님** |
 | ② R13 하네스 | NO-GO (P1 4 · P2 5) | **P1-1~P2-5 · §5 Q6 전부 닫음** (262 passed). 남은 것: 실데이터로 shape 재생성(사용자 기계, 아래 U18 4 단계) · 단일 회신 `reviews/R13_RESPONSE.md` |
 | ③ BML α·β 난간 | NO-GO (B1~B5 전부 미증명/반박) | **주장 사슬 전부 철회** → 원인은 `rng(0)` 오염(§9) → **우리가 다시 뽑는다** (전권, `BML_R1_RESPONSE.md` §10): (a) `matlab/fit_cycles_driver.m` · (b) `scripts/fit_cycles.py` · 난간 `scripts/check_rails.py` (받은 xlsx 4 개에서 §6 재현). **닫힘 (§11)**: 같은 입력(HD_knee)에서 규진팀 표만 반복 패턴, 그들 파이프라인 rng 없이(a)·우리 포팅(b) 둘 다 경고 0 이고 서로 ~1e-3 (= scale 표본 크기) 안에서 일치 · 시작점 의존 1e-7. 원인 = `rng(0)` 오염 확정. 받은 L_* 표 4 개는 근거로 쓰지 않는다 |
 
@@ -145,9 +145,10 @@ Codex 를 다시 쓸 수 있게 되어 요청문 셋을 썼다. **보내는 순�
 `--self-test` 로 그 반례를 고정하고 태어났다 — `evidence_gate` 규율을 분석 스크립트에도 적용한다.
 
 **mph 트랙 다음 순서** (2026-09-13 저녁, 6.3 재구축 검토 뒤 갱신 — `COMSOL_REBUILD_SPEC.md` §8-5):
-① baseline 보존, 같은 dataset 에서 Eeq_N/Eeq_P 분해·표면/평균 조성·과전압·Li 재고 OCV 곡선 export 로 검토 산술 현지 확인
-→ ② OCP 범위/농도/phase 별 cutoff 중단조건 + CDC 별도 모델 + 짧은 mesh·시간간격 비교
-→ ③ 범위 감시 있는 `sigma_short=1e-20` 단일 프로토콜 진단 승인 여부
+① ~~baseline 보존, Eeq 분해·표면/평균 조성 export 로 검토 산술 현지 확인~~ → **됨** (§9-1: Eeq 3.578387/1.413053 V, 상한 4.185562 V)
+→ ② 중단조건·CDC: 표면 조성 이탈 중단 **실제 발생**(`INCOMPLETE_RANGE_STOP`) · 2.7 V cutoff · 전이 확인됨(축소 조건). **메시 수렴은 미완**
+   (2.041557 mV > 1 mV) → 다음 진단: 같은 초기 시간표에서 **300/40 · 300/80 · 600/40** 5 초 비교로 두 메시 축 분리 (계획, 결과 아님)
+→ ③ 범위 감시 있는 `sigma_short=1e-20` 단일 프로토콜 진단 승인 여부 — ② 의 메시 결과가 1 mV 안이어야 논한다
 → ④ 본 계산·유한 sigma·sweep 은 원본/실험 OCP 대조 뒤. 원본 모델 쪽은 문서 v3 로 정리됐고(M1 철회) `COMSOL_CHECK_REQUEST.md` 의 확인은 불필요해졌다.
 
 검증 재실행 (2026-09-13, `26c477c`): `236 passed in 200.29s` · `git diff c7217c0 HEAD -- '*.py' '*.sh'` **0 개** ·
