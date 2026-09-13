@@ -40,7 +40,7 @@ def test_cy_01_cycles_is_a_registered_artifact_kind():
     assert {"cell", "cycle", "C_cell", "x_cell", "a_PE", "b_PE", "a_NE", "b_NE", "gamma_Si", "c_lit",
             "LAM_PE", "LAM_NE", "LLI", "run_id", "inputs_sha", "consumed_inputs"} <= set(S.CYCLES_ROW)
     assert S.row_key("cycles")({"cycle": "3"}) == 3 and S.row_key("cycles")({"cycle": 3.0}) == 3
-    assert S.meta_controls("cycles") == ("cell", "si_source", "starts", "seed")
+    assert S.meta_controls("cycles") == ("cell", "si_source", "starts", "seed", "scale_seed")
     assert S.receipt_roles("cycles") == S.REQUIRED_ROLES
 
 
@@ -114,3 +114,33 @@ def test_cy_04_producer_refuses_a_workbook_without_cycle_zero(tmp_path):
                        cwd=ROOT, capture_output=True, text=True, timeout=300)
     assert r.returncode == 2 and "cycle 0" in (r.stdout + r.stderr), (r.returncode, (r.stdout + r.stderr)[-600:])
     assert not (tmp_path / "o" / "cycles_L_x_Li.csv").exists()
+
+
+def test_cy_05_start_seed_and_scale_seed_are_separate_controls(tmp_path):
+    """결정 실험의 둘째 절반은 "시작점이 정한 적합인가" 다 — 그러려면 `--seed` 는 **시작점만** 움직여야 하고
+    목적함수 scale(50 표본, R5-07)은 `--scale-seed` 로 따로 고정해야 한다. 사용자 기계 첫 실행(HD_knee, seed 0/1)에서
+    두 축이 한 인자에 묶여 있어 값 차이(~1e-3)가 시작점 탓인지 scale 탓인지 가를 수 없었다."""
+    src = _synth_root(tmp_path)
+    wb = _cycle_workbook(src, tmp_path / "L_syn_cycles.xlsx", n_cycles=2)
+
+    def run(seed, scale_seed, dest):
+        r = subprocess.run([sys.executable, str(ROOT / "scripts/fit_cycles.py"), "--data-root", str(src),
+                            "--half-cell", str(src / "data/half_cell/GITT/pristine.xlsx"), "--full-cell", str(wb),
+                            "--cell", "L_syn", "--si-source", "Li", "--starts", "1", "--seed", str(seed),
+                            "--scale-seed", str(scale_seed), "--out", str(dest)],
+                           cwd=ROOT, capture_output=True, text=True, timeout=600)
+        assert r.returncode == 0, (r.stdout[-1200:], r.stderr[-1200:])
+        art = dest / "cycles_L_syn_Li.csv"
+        rows = list(csv.DictReader(art.open(encoding="utf-8")))
+        meta = json.loads(art.with_name(art.name + ".meta.json").read_text(encoding="utf-8"))
+        return rows, meta
+
+    a, ma = run(0, 0, tmp_path / "a")
+    b, mb = run(1, 0, tmp_path / "b")                      # 시작점만 다르다
+    c, mc = run(0, 1, tmp_path / "c")                      # scale 만 다르다
+    for col in ("scale_pocv", "scale_dvdq", "scale_dqdv", "scale_seed"):
+        assert col in S.CYCLES_ROW and [r[col] for r in a] == [r[col] for r in b], col
+    assert any(a[i]["scale_pocv"] != c[i]["scale_pocv"] for i in range(len(a)))
+    assert ma["scale_seed"] == 0 and mc["scale_seed"] == 1 and mb["seed"] == 1
+    assert "scale_seed" in S.meta_controls("cycles") and "seed" in S.meta_controls("cycles")
+    assert ma["run_id"] != mb["run_id"]

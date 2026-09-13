@@ -44,6 +44,8 @@ SHAPE_ROW = (
 #: 규진팀 `result_L_*.xlsx` 의 11 열(`rails.RESULT_COLUMNS`) + 적합 근거(obj·rmse·시작점) + 하네스 출처(행별 receipt).
 CYCLES_ROW = ("cell", "cycle", "C_cell", "x_cell", "a_PE", "b_PE", "a_NE", "b_NE", "gamma_Si", "c_lit",
               "LAM_PE", "LAM_NE", "LLI", "obj", "rmse_pocv", "rmse_dvdq", "rmse_dqdv", "n_starts", "n_accepted",
+              #: scale 은 행이 스스로 말한다 (R5-07) — 시작점 seed 실험은 이 네 열이 같아야 성립한다
+              "scale_seed", "scale_pocv", "scale_dvdq", "scale_dqdv",
               "bounds", "run_id", "inputs_sha", "consumed_inputs")
 DEGENERACY_KEYS = (
     "state", "si_source", "half_cell", "w_dqdv", "tol_percent_of_best", "n_starts", "seed", "n_grid", "n_samples",
@@ -185,7 +187,7 @@ META_CONTROLS = ("state", "half_cell_source", "si_source", "starts", "seed")
 #: shape 의 실행 조건 — solver 가 없으니 starts/seed 가 아니고, 상태는 본문(roster)에 여럿이라 조건이 아니다 (Codex R13 §Q6)
 SHAPE_META_CONTROLS = ("half_cell_source", "si_source", "grid_n", "grid_range", "gamma_grid")
 #: cycles 의 실행 조건 — 셀 라벨 · Si 소스 · 시작점 수 · seed (상태는 없다; 사이클은 본문 roster 다)
-CYCLES_META_CONTROLS = ("cell", "si_source", "starts", "seed")
+CYCLES_META_CONTROLS = ("cell", "si_source", "starts", "seed", "scale_seed")
 
 
 def meta_controls(kind: str) -> tuple:

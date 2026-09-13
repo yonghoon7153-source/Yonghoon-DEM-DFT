@@ -273,3 +273,47 @@ LLI     = (c_lit_i-c_lit)/c_lit_i;
   `electrode_balancing_blend` 는 exitflag/fval 을 돌려주지 않아 3 층의 종료 상태는 (a) 에서 비어 있다 (원본을
   안 고치는 대가; 고치려면 반환값 두 개 추가).
 - (b) 는 합성 원자료로만 완주했다 (`tests/test_cycles.py`). 실데이터 첫 실행은 사용자 기계.
+
+### 10-4. 첫 실측 — 사용자 기계, `degradation mode` 폴더 (2026-09-13 밤)
+
+폴더 전수 조사(파일 111 개, 헤더까지) 결과와 결정 실험의 첫 절반:
+
+**찾은 것 / 못 찾은 것**
+
+| 항목 | 결과 |
+|---|---|
+| `result_L_{ref1,ref2,PE1,PE5}` 결과표 | 한 단계 위 폴더에 원본 있음 (`result_L_ref#1 _0.1C 12h__charge.xlsx` 등 — 이름의 `#`) |
+| 그 네 셀의 **원시 사이클 데이터** | **없음** (Documents·Desktop·Downloads 전수 검색: 결과표 4 개와 무관한 `Dcell55…_12h_057_DC.txt` 뿐) |
+| 11 열 표를 만든 스크립트 | **없음** — `x_cell`·`c_lit` 를 쓰는 .m 은 `main_blend_final.m`(6 열 trend)·`report_reruns/build_*.m` 뿐. 11 열 표에는 `gamma_Si` 가 없으므로 **4 파라미터 비블렌드 파이프라인**(`main.m` + `electrode_balancing.m`, `data/README.txt` 가 "기존 스크립트" 로 언급) 산출이다. 그 둘도 폴더에 없다 |
+| 같은 규칙의 다른 세트 | `experiment/HD_ICA/300cycle knee point large cell.xlsx` (cycle 0·1·2, 77,610 행) ↔ `results/result_300cycle knee point large cell.xlsx` (11 열 + capacity loss) ↔ 반쪽전지 `data/half_cell/GITT/pristine.xlsx` (= `half cell ocv/HD_ICA_pristine_GITT_OCV_v2.xlsx`) — **입력·결과표·반쪽전지가 셋 다 있는 유일한 세트** |
+| `개선 로그.txt` | 2026-05-29 "**어떤 방식으로 피팅하든 같은 결과가 나오는 문제** → 고정된 초기값 해제" — 같은 증상의 첫 기록. 2026-07-13 scale 계산을 하위 50 % 평균으로 변경 (= `lower_half_mean_local`) |
+
+→ L_* 네 셀은 **재현할 수 없다** (원자료도, 만든 파이프라인도 없다). 결정 실험은 HD_knee 세트에서 한다.
+
+**규진팀 표 `result_300cycle knee point large cell.xlsx` 에 난간** (`check_rails.py`, 설정 = lb5/ub5):
+계약 위반 0 · `a_PE` 기준행과 비트 동일 1/2 · **`a_NE` 파일 내부 상수** (1.0237 — lb 접촉 아님, 거리 2.4e-2) ·
+LAM_PE ≈ LAM_NE 1/2 · LLI−(1−x) 0.0376 ~ 0.0534. **L_* 와 같은 반복 패턴이 이 표에도 있다.**
+
+**우리 포팅 `fit_cycles.py` 로 같은 입력 재적합** (GITT pristine · Li · 20 시작점):
+
+| cycle | seed 0: a_PE · b_PE · a_NE · b_NE · γ | seed 1: a_PE · b_PE · a_NE · b_NE · γ |
+|---|---|---|
+| 0 | 1.072137 · −0.019251 · 1.004309 · 0.000366 · 0.2995 | 1.073104 · −0.019935 · 1.004306 · 0.000372 · 0.2995 |
+| 1 | 1.167569 · −0.133513 · 1.080010 · −0.000702 · 0.2397 | 1.168269 · −0.133943 · 1.080096 · −0.000697 · 0.2396 |
+| 2 | 1.099467 · −0.062583 · 1.049149 · 0.000073 · 0.3122 | 1.099201 · −0.062409 · 1.049176 · 0.000073 · 0.3122 |
+
+난간: 두 산출 다 계약 위반 0 · **경고 0** — 반복값 없음, `a_NE` 사이클마다 다름(1.004 / 1.080 / 1.049), LAM 일치 0/2, lb/ub 접촉 0.
+`check_u14 --new seed1 --old seed0`: controls 1(seed — 조건이 다르니 당연) · numbers 38 · provenance 2
+(트리에 untracked `out_u18/` — U18 실행 중이라 생긴 정직한 dirty; 이 실험엔 무관).
+
+**읽기 (10-2 기준)**:
+1. **같은 입력**에서 독립 optimizer 는 사이클마다 다른 파라미터를 낸다 — 규진팀 표의 상수 `a_NE`·반복 `a_PE` 는 데이터가
+   아니라 **적합 절차**가 만든 것이라는 §9 의 읽기와 부합한다. (다만 optimizer 가 다르다 — L-BFGS-B vs fmincon-sqp,
+   Track B γ 초기값 없음 — 이므로 *그들의* 파이프라인이 rng(0) 없이 같은 결과를 내는지는 (a) 가 답한다.)
+2. seed 0 → 1 의 차이는 `a_PE` ~1e-3 · `a_NE` ~1e-5 · γ ~1e-4 — 시작점이 정하는 적합이 **아니다**. 단, 이 첫 실행은
+   `--seed` 가 시작점과 scale 표본을 **같이** 움직였다 (`obj` 0.379 vs 0.401 은 scale 이 달라서다). 그래서 `--scale-seed`
+   를 분리했고 (`fit_cycles.py`, 행에 `scale_*` 네 열), 깨끗한 판정은 `--scale-seed 0` 고정으로 다시 돌린 뒤 적는다.
+3. 우리 LLI−(1−x) 는 0.0136 ~ 0.0146, 규진팀 표는 0.0376 ~ 0.0534 — 모델(5 vs 4 파라미터)·절차가 달라 **숫자 비교는 하지 않는다**.
+   비교하는 것은 패턴뿐이다.
+
+남은 것: (a) MATLAB `fit_cycles_driver` 를 HD_knee 에 (그들의 블렌드 파이프라인, rng(0) 없이) · `--scale-seed 0` 재실행.

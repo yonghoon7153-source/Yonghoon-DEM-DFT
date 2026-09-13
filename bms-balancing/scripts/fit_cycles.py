@@ -10,7 +10,8 @@
 `python3 scripts/check_u14.py --new <DIR> --schema-only`.
 
 종료 코드: 0 게시 · 2 입력/인자 문제 (cycle 0 없음 · 모르는 cycle · 파일 없음) · 1 적합 실패.
-`--seed` 를 바꿔 두 번 돌려 비교하는 것이 결정 실험의 두 번째 절반이다 (시작점이 정한 적합인가).
+`--seed` 만 바꿔 두 번 돌려 비교하는 것이 결정 실험의 두 번째 절반이다 (시작점이 정한 적합인가) — `--scale-seed` 는
+고정한다 (기본 0). 두 산출의 `scale_*` 열이 같아야 그 차이가 시작점의 것이다.
 """
 from __future__ import annotations
 
@@ -42,7 +43,8 @@ def main(argv=None) -> int:
     ap.add_argument("--si-source", default="Li", choices=D.SI_SOURCES)
     ap.add_argument("--cycles", default="", help="쉼표 목록 — 비우면 워크북의 전부")
     ap.add_argument("--starts", type=int, default=20, help="MultiStart 시작점 수 (원본 electrode_balancing_blend 은 20)")
-    ap.add_argument("--seed", type=int, default=0)
+    ap.add_argument("--seed", type=int, default=0, help="MultiStart 시작점 seed — 이것만 바꿔 두 번 돌리면 '시작점이 정한 적합인가' 를 묻는다")
+    ap.add_argument("--scale-seed", type=int, default=0, help="목적함수 scale 표본 seed (R5-07) — 시작점 실험에서는 고정한다")
     ap.add_argument("--w-dqdv", type=float, default=0.0, help='dQ/dV 항 가중 (원본 기본 0 = "방법3")')
     ap.add_argument("--out", required=True, type=pathlib.Path, help="산출 디렉터리")
     ap.add_argument("--run-id", default=None)
@@ -61,7 +63,7 @@ def main(argv=None) -> int:
     rid = a.run_id or os.environ.get("BMS_RUN_ID") or uuid.uuid4().hex
     try:
         res = C.fit_cycles(root, a.half_cell, a.full_cell, a.si_source, cell=a.cell, cycles=cycles,
-                           n_starts=a.starts, seed=a.seed, w_dqdv=a.w_dqdv, run_id=rid,
+                           n_starts=a.starts, seed=a.seed, scale_seed=a.scale_seed, w_dqdv=a.w_dqdv, run_id=rid,
                            log=lambda s: print(s, flush=True))
     except (ValueError, KeyError) as e:
         print(f"! {e} → 종료 코드 2"); return 2
@@ -76,6 +78,7 @@ def main(argv=None) -> int:
         pv = git_provenance(cwd=str(REPO_DIR), artifact=str(art), output_roots=(str(a.out), "out"))
         meta = sidecar_dict(art.name, data, run_id=rid, started=started, argv=list(sys.argv), pv=pv, extra={
             "cell": a.cell, "si_source": a.si_source, "starts": int(a.starts), "seed": int(a.seed),
+            "scale_seed": int(a.scale_seed),
             "w_dqdv": float(a.w_dqdv), "cycles": res["cycles"], "status": "complete",
             "data_root": str(root), "half_cell_path": str(a.half_cell), "full_cell_path": str(a.full_cell),
             "consumed_inputs": res["consumed"], **res["settings"]})

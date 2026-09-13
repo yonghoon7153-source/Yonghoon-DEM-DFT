@@ -51,12 +51,16 @@ def load_cycle(df: pd.DataFrame, cycle: int):
 
 
 def fit_cycles(root, half_cell, full_cell, si_source: str, *, cell: str, cycles=None,
-               n_starts: int = 20, seed: int = 0, w_dqdv: float = 0.0, run_id: str = "",
+               n_starts: int = 20, seed: int = 0, scale_seed: int = 0, w_dqdv: float = 0.0, run_id: str = "",
                log=None) -> dict:
     """사이클마다 적합 → {"rows": [CYCLES_ROW dict …], "consumed": 공통 receipt, "settings": 기록된 optimizer 설정}.
 
     입력 셋(기준 반쪽전지 · 풀셀 워크북 · 문헌 Si/Gr)은 한 번 읽은 bytes 로 파싱하고 그 bytes 를 해시한다.
     행마다 receipt 는 같은 셋 + 그 행의 cycle 이다 (`REQUIRED_ROLES` 그대로).
+
+    ⚠ `seed` 는 **MultiStart 시작점**만, `scale_seed` 는 **목적함수 scale 표본**(50 개, R5-07)만 움직인다. 둘을 한 인자에
+      묶으면 seed 를 바꿨을 때의 값 차이가 시작점 탓인지 scale 탓인지 가를 수 없다 (사용자 기계 HD_knee 첫 실행이 그랬다).
+      "시작점이 정한 적합인가" 는 `scale_seed` 고정 · `seed` 변경으로 묻는다; scale 의존은 `verify scale-noise` 의 축이다.
     """
     say = log or (lambda *a, **k: None)
     hb = D.read_input(half_cell)
@@ -76,12 +80,13 @@ def fit_cycles(root, half_cell, full_cell, si_source: str, *, cell: str, cycles=
     consumed = {"half_cell": hb.identity(), "full_cell": fb.identity(), "literature": lit_id}
     settings = {"lb": [float(x) for x in LB5], "ub": [float(x) for x in UB5], "initial": list(INITIAL5),
                 "free": ["a_PE", "b_PE", "a_NE", "b_NE", "gamma_Si"], "n_multistart": int(n_starts),
-                "seed": int(seed), "w_pocv": 1.0, "w_dvdq": 1.0, "w_dqdv": float(w_dqdv), "optimizer": "L-BFGS-B (scipy)"}
+                "seed": int(seed), "scale_seed": int(scale_seed), "w_pocv": 1.0, "w_dvdq": 1.0, "w_dqdv": float(w_dqdv),
+                "optimizer": "L-BFGS-B (scipy)"}
     fits = {}
     for k in want:
         c, v = load_cycle(df, k)
         obj = Objective(half, blend, c, v, window=11, poly_order=3, w_pocv=1.0, w_dvdq=1.0, w_dqdv=w_dqdv,
-                        use_peak_weight=True, scale_seed=seed)
+                        use_peak_weight=True, scale_seed=scale_seed)
         best, val, _ = multistart(obj, n_starts=n_starts, seed=seed, x0=np.asarray(INITIAL5, dtype=float))
         if best is None:
             raise RuntimeError(f"cycle {k}: 채택된 적합이 없다 ({multistart.last_stats})")
@@ -102,6 +107,9 @@ def fit_cycles(root, half_cell, full_cell, si_source: str, *, cell: str, cycles=
             "LAM_PE": m["LAM_PE"], "LAM_NE": m["LAM_NE"], "LLI": m["LLI"],
             "obj": val, "rmse_pocv": o.rmse_pocv(p), "rmse_dvdq": o.rmse_dvdq(p), "rmse_dqdv": o.rmse_dqdv(p),
             "n_starts": int(n_starts), "n_accepted": int(st.get("accepted", 0)),
+            # ⚠ scale 은 행이 스스로 말한다 (R5-07) — 두 seed 실행의 scale 열이 같아야 그 차이가 시작점의 것이다
+            "scale_seed": int(scale_seed), "scale_pocv": o.scales.get("pocv"), "scale_dvdq": o.scales.get("dvdq"),
+            "scale_dqdv": o.scales.get("dqdv"),
             "bounds": ",".join(active_bounds(p)) or "-", "run_id": run_id,
             "inputs_sha": inputs_digest(rec), "consumed_inputs": json.dumps(rec, ensure_ascii=False, sort_keys=True),
         })

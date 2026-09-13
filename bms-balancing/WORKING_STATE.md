@@ -58,7 +58,7 @@ bytecode 만 막았고(C08·C09), `rc 0` 인데 승격 불가인 상태를 런�
 |---|---|---|
 | ① mph 마이크로 쇼츠 | NO-GO ×2 (v1·v2) → **6.3 재구축 제한 검증 '뒷받침됨'** (Codex 독립 검토 2026-09-13, 원문 `reviews/r14_repros/codex63/`) | M1 전제는 깨진 채(`cEeqref_mat = from_mat`). 재구축은 §0-a 대로 — §5 검산값 `x_NCM 0.924064`·`x_Gr 0.0117207` 이 독립 산술로 재현됐고 초기 OCV 2.1653 V 는 MCMB 표 가파른 구간(오류 아님). **전체 프로토콜은 보류**: 4.25 V CV 가 양극 OCP 표 하한(x=0.2229 → 평형 4.1856 V)과 충돌 → OCP 범위 중단조건·phase 별 cutoff·시간간격·mesh 비교 (`docs/COMSOL_REBUILD_SPEC.md` §8). 원본 `cEeqref` 실효값(`COMSOL_CHECK_REQUEST.md`)은 원본 동등성 물음으로 남음 |
 | ② R13 하네스 | NO-GO (P1 4 · P2 5) | **P1-1~P2-5 · §5 Q6 전부 닫음** (262 passed). 남은 것: 실데이터로 shape 재생성(사용자 기계, 아래 U18 4 단계) · 단일 회신 `reviews/R13_RESPONSE.md` |
-| ③ BML α·β 난간 | NO-GO (B1~B5 전부 미증명/반박) | **주장 사슬 전부 철회** → 원인은 `rng(0)` 오염(§9) → **우리가 다시 뽑는다** (전권, `BML_R1_RESPONSE.md` §10): (a) `matlab/fit_cycles_driver.m` · (b) `scripts/fit_cycles.py` · 난간 `scripts/check_rails.py` (받은 xlsx 4 개에서 §6 재현). 남은 것: 사용자 기계 실행 (아래) |
+| ③ BML α·β 난간 | NO-GO (B1~B5 전부 미증명/반박) | **주장 사슬 전부 철회** → 원인은 `rng(0)` 오염(§9) → **우리가 다시 뽑는다** (전권, `BML_R1_RESPONSE.md` §10): (a) `matlab/fit_cycles_driver.m` · (b) `scripts/fit_cycles.py` · 난간 `scripts/check_rails.py` (받은 xlsx 4 개에서 §6 재현). 첫 실측 §10-4: 규진팀 표에도 반복 패턴, 우리 재적합엔 없음. 남은 것: `--scale-seed 0` 재실행 · (a) MATLAB HD_knee |
 
 **세 라운드 공통 교훈**: 정정이 또 다른 단정이 됐다. "세 모드 붕괴" 를 고치며 "LLI 는 독립"
 이라 했는데 `c_lit = C_cell·(a_PE+b_PE−b_NE)` 항등식이 그것도 무너뜨렸다. 관측과 해석의
@@ -72,17 +72,20 @@ bytecode 만 막았고(C08·C09), `rc 0` 인데 승격 불가인 상태를 런�
 **③ BML 다음 — 사용자 기계에서** (둘 다 `git pull` 뒤, `BMS_DATA_ROOT` 는 data/literature 가 있는 루트):
 
 ```bash
-# (b) Python 포팅 — 셀 하나, seed 둘 (두 산출이 갈리면 시작점이 정한 적합이다: §10-2)
-python3 scripts/fit_cycles.py --half-cell "$BMS_DATA_ROOT/data/half_cell/GITT/pristine.xlsx" \
-    --full-cell <L_ref1 사이클 워크북.xlsx> --cell L_ref1 --si-source Li --starts 20 --seed 0 --out out_cycles/seed0
-python3 scripts/fit_cycles.py ... --seed 1 --out out_cycles/seed1
-python3 scripts/check_rails.py out_cycles/seed0/cycles_L_ref1_Li.csv out_cycles/seed1/cycles_L_ref1_Li.csv
-python3 scripts/check_u14.py --new out_cycles/seed1 --old out_cycles/seed0     # 조건 같고 숫자 다르면 rc 1 = 그것이 발견
-# (a) MATLAB — 규진팀 원본 폴더에서 (rng( 가 남아 있으면 드라이버가 거부한다)
-#   cfg = struct('pipeline_dir',pwd,'data_root',pwd,'half_cell_file','data\half_cell\GITT\pristine.xlsx', ...
-#                'full_cell_file','<L_ref1 사이클 워크북>','cycles',[],'si_source','Li','label','L_ref1','out_dir','results_refit');
-#   fit_cycles_driver(cfg)      % → results_refit/result_L_ref1_Li.xlsx + .settings.json
-python3 scripts/check_rails.py results_refit/result_L_ref1_Li.xlsx           # 2 층 repeated_values 가 사라졌는가
+# 세트는 HD_knee (L_* 원자료는 없다 — BML_R1_RESPONSE §10-4). D = 규진팀 'degradation mode' 폴더, H = 하네스
+# (b) 첫 실행은 끝났다 (§10-4 표). 깨끗한 시작점 실험은 scale 고정으로 다시:
+python3 $H/scripts/fit_cycles.py --data-root "$D" --half-cell "$D/data/half_cell/GITT/pristine.xlsx" \
+  --full-cell "$D/experiment/HD_ICA/300cycle knee point large cell.xlsx" --cell HD_knee --si-source Li \
+  --starts 20 --seed 1 --scale-seed 0 --out ~/out_cycles/seed1s0
+python3 $H/scripts/fit_cycles.py ... --seed 0 --scale-seed 0 --out ~/out_cycles/seed0s0
+python3 $H/scripts/check_rails.py ~/out_cycles/seed0s0/cycles_HD_knee_Li.csv ~/out_cycles/seed1s0/cycles_HD_knee_Li.csv
+python3 $H/scripts/check_u14.py --new ~/out_cycles/seed1s0 --old ~/out_cycles/seed0s0   # scale_* 같고 numbers 만 다르면 그 차이가 시작점의 것
+# (a) MATLAB — D 폴더에서 (rng( 가 남아 있으면 드라이버가 거부한다). fit_cycles_driver.m 을 D 로 복사한 뒤:
+#   cfg = struct('pipeline_dir',pwd,'data_root',pwd,'half_cell_file',fullfile(pwd,'data\half_cell\GITT\pristine.xlsx'), ...
+#     'full_cell_file',fullfile(pwd,'experiment\HD_ICA\300cycle knee point large cell.xlsx'),'cycles',[], ...
+#     'si_source','Li','label','HD_knee','out_dir','results_refit');
+#   fit_cycles_driver(cfg)      % → results_refit/result_HD_knee_Li.xlsx + .settings.json
+python3 $H/scripts/check_rails.py "$D/results_refit/result_HD_knee_Li.xlsx"   # 2 층 repeated_values 가 사라졌는가
 ```
 
 ### R13 §5 Q6 닫음 — shape 전용 kind · schema · sidecar 계약 (2026-09-13)
@@ -324,7 +327,7 @@ U14 가 드러낸 다섯 건(U14-01 줄끝로 서명이 fresh clone 에서 깨�
 # ── 0. 받기 · 확인 (몇 분) ────────────────────────────────────────────────────────────────────────
 cd ~/dd/bms-balancing && git pull --rebase origin claude/bms-alpha-beta-verify
 source .venv/bin/activate && export BMS_DATA_ROOT='/mnt/d/가형 관련/degradation mode'
-python3 -m pytest tests/ -q                       # 273 passed 기대 (원자료 불필요)
+python3 -m pytest tests/ -q                       # 274 passed 기대 (원자료 불필요)
 
 # ── 1. 배관 확인 — 새 스키마가 붙는지만 (몇 분, STARTS=6 이라 수치는 못 쓴다) ─────────────────────
 STARTS=6 STATES=100 OUT=out_u14_smoke ./scripts/run_states.sh
