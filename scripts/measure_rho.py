@@ -52,6 +52,8 @@ def _load(name, path, subs=()):
 
 _S0 = _load('_s0_for_rho', SCRIPTS / 'audit_constriction_deleted.py')   # 로더·채널·덱 지도 재사용
 TIGHTEN = 0.1
+RTOL_DEFAULT = 1e-5      # scipy ≥ 1.12 `cg` 기본 rtol — 생산이 안 넘기므로 이것이 실제 판정 기준
+import numpy as np
 
 
 class _Recorder:
@@ -67,8 +69,14 @@ class _Recorder:
         def cg(A, b, **kw):
             kwarg = 'tol' if 'tol' in kw else ('atol' if 'atol' in kw else 'rtol' if 'rtol' in kw else '')
             used = dict(kw)
-            if rec.factor is not None and kwarg:
+            #  ★ SELF-31: scipy ≥ 1.12 의 정지 조건은 max(rtol·‖b‖, atol) 이고 생산은 rtol 을 안 넘긴다
+            #    → 기본 rtol=1e-5 가 지배, atol=1e-8 은 **안 걸린다** (‖b‖~1).  그래서 조임은 **rtol** 에 건다.
+            #    (atol 만 조인 첫 판은 σ 가 비트 동일 = 거짓 0 이었다.)
+            if rec.factor is not None and kwarg == 'atol' and 'rtol' not in kw:
+                used['rtol'] = RTOL_DEFAULT * rec.factor
+            elif rec.factor is not None and kwarg:
                 used[kwarg] = kw[kwarg] * rec.factor
+            rec.bnorm = float(np.linalg.norm(b))
             try:
                 V, info = rec._cg(A, b, **used)
             except TypeError:
@@ -77,7 +85,9 @@ class _Recorder:
                 rec.calls.append({'fn': 'cg', 'kwarg': kwarg, 'value': used.get(kwarg), 'result': 'TypeError'})
                 raise
             rec.calls.append({'fn': 'cg', 'kwarg': kwarg, 'value': used.get(kwarg), 'info': int(info),
-                              'M': 'M' in kw, 'maxiter': kw.get('maxiter')})
+                              'M': 'M' in kw, 'maxiter': kw.get('maxiter'),
+                              'rtol_used': used.get('rtol', RTOL_DEFAULT), 'atol_used': used.get('atol', 0.0),
+                              'binding': ('rtol' if used.get('rtol', RTOL_DEFAULT) * rec.bnorm >= used.get('atol', 0.0) else 'atol')})
             return V, info
 
         def spsolve(A, b, *a, **kw):
@@ -107,6 +117,13 @@ class _Recorder:
                 return c['kwarg'], c['value'], c.get('info')
         return '', None, None
 
+    def criterion(self):
+        """실제 정지 기준 → (rtol_used, atol_used, binding) — 첫 유효 cg 호출 기준."""
+        for c in self.calls:
+            if c['fn'] == 'cg' and c.get('result') != 'TypeError':
+                return c['rtol_used'], c['atol_used'], c['binding']
+        return None, None, ''
+
 
 def solve_pair(nc, net):
     """→ (σ_A, σ_B, pathA, pathB, kwargA, valueA, infoA, kwargB, valueB, n_nodes)."""
@@ -118,8 +135,10 @@ def solve_pair(nc, net):
         with _Recorder(nc, factor=TIGHTEN) as rb:
             gB, sB = nc.solve_network(net, mode='full')
     ka, va, ia = ra.kwarg(); kb, vb, _ib = rb.kwarg()
+    rA, aA, bindA = ra.criterion(); rB, aB, _bB = rb.criterion()
     return dict(sigma_A=sA, sigma_B=sB, path_A=ra.path(), path_B=rb.path(),
-                kwarg=ka, tol_A=va, tol_B=vb, info_A=ia, n_nodes=n_nodes)
+                kwarg=ka, tol_A=va, tol_B=vb, info_A=ia, n_nodes=n_nodes,
+                rtol_A=rA, rtol_B=rB, atol_A=aA, binding_A=bindA)
 
 
 def measure_case(case_dir: Path, deck_dir, channels):
@@ -156,6 +175,7 @@ def measure_case(case_dir: Path, deck_dir, channels):
         rows.append({'case': case_dir.name, 'channel': ch, 'status': status, 'rho_kind': kind,
                      'n_nodes': r['n_nodes'], 'path_A': r['path_A'], 'path_B': r['path_B'],
                      'kwarg': r['kwarg'], 'tol_A': r['tol_A'], 'tol_B': r['tol_B'], 'cg_info_A': r['info_A'],
+                     'rtol_A': r['rtol_A'], 'rtol_B': r['rtol_B'], 'atol_A': r['atol_A'], 'binding_A': r['binding_A'],
                      'sigma_ratio_A': sA, 'sigma_ratio_B': sB, 'delta_pct': delta})
     return rows
 
@@ -179,19 +199,22 @@ def summarize(rows, channels):
             'rho_pct_max_all': (max(r['delta_pct'] for r in ok) if ok else None),
             'paths': sorted({r['path_A'] for r in ok}),
             'kwargs': sorted({r['kwarg'] for r in ok if r['kwarg']}),
+            'binding': sorted({r.get('binding_A', '') for r in it if r.get('binding_A')}),
+            'rtol_A': sorted({r.get('rtol_A') for r in it if r.get('rtol_A') is not None}),
+            'rtol_B': sorted({r.get('rtol_B') for r in it if r.get('rtol_B') is not None}),
         }
     return out
 
 
 def _print_summary(sm):
-    print(f"\n═══ ρ (수치 민감도, cg 허용오차 ×{sm['tighten']}) — scipy {sm['scipy']} · HEAD {sm['git_head']} ═══")
+    print(f"\n═══ ρ (수치 민감도, cg **rtol** ×{sm['tighten']} — atol 은 안 걸린다) — scipy {sm['scipy']} · HEAD {sm['git_head']} ═══")
     for ch, c in sm['channels'].items():
         rho_it = c['rho_pct_max_iterative']; rho_all = c['rho_pct_max_all']
         print(f"  {ch:11s} 케이스 {c['n_cases']:>3} · OK {c['n_ok']:>3} (반복해 {c['n_iterative']} · 직접해 {c['n_direct']}) "
               f"· 망없음 {c['n_no_network']} · 해없음 {c['n_solve_none']}")
         print(f"      ρ(반복해 max) = {('%.6f %%' % rho_it) if rho_it is not None else '—'}   "
               f"ρ(전체 max) = {('%.6f %%' % rho_all) if rho_all is not None else '—'}   "
-              f"경로 {c['paths']} · kwarg {c['kwargs']}")
+              f"경로 {c['paths']} · kwarg {c['kwargs']} · 실제 기준 {c.get('binding')} rtol {c.get('rtol_A')}→{c.get('rtol_B')}")
     print('  ⚠ ρ 는 수치 민감도 진단이지 오차 상한이 아니다.  직접해 케이스의 0 은 "경로에 허용오차가 없다" 는 뜻.')
     print('  ⚠ §5-v3 ①: ρ > 3 % 인 채널은 h0 를 발행하지 않는다 (UNRESOLVED_NUMERIC).')
 
@@ -236,9 +259,21 @@ def _selftest() -> int:
     chk('② CG 강제 경로: path 가 cg 계열, kwarg 기록 (scipy 1.17 은 tol→TypeError→atol)',
         r2['path_A'].startswith('cg') and r2['kwarg'] in ('tol', 'atol'),
         f"path={r2['path_A']} kwarg={r2['kwarg']} tol_A={r2['tol_A']} info={r2['info_A']}")
-    chk('②b 조임이 실제로 들어갔다 (tol_B = tol_A × 0.1)',
-        r2['tol_A'] is not None and r2['tol_B'] is not None and abs(r2['tol_B'] / r2['tol_A'] - TIGHTEN) < 1e-12,
-        f"{r2['tol_A']} → {r2['tol_B']}")
+    chk('②b 조임이 **rtol** 에 들어갔다 (rtol_B = 1e-5 × 0.1) · 실제 기준 = rtol (atol 1e-8 은 안 걸린다)',
+        r2['rtol_A'] == RTOL_DEFAULT and abs(r2['rtol_B'] / RTOL_DEFAULT - TIGHTEN) < 1e-12 and r2['binding_A'] == 'rtol',
+        f"rtol {r2['rtol_A']} → {r2['rtol_B']} · atol {r2['atol_A']} · binding {r2['binding_A']}")
+    # ②d ★ 판별력 (SELF-31): atol 만 조이면 σ 가 **비트 동일**(거짓 0), rtol 을 조이면 움직인다
+    from scipy.sparse.linalg import cg as _cg
+    import numpy as _np
+    from scipy import sparse as _sp
+    n_ = 3000; rng = _np.random.default_rng(1)
+    A_ = _sp.diags([_np.full(n_-1, -1.0), _np.full(n_, 2.0) + rng.uniform(0, .5, n_), _np.full(n_-1, -1.0)], [-1, 0, 1]).tocsr()
+    b_ = _np.zeros(n_); b_[0] = 1.0; b_[-1] = -1.0
+    xa, _ = _cg(A_, b_, atol=1e-8, maxiter=10000); xb, _ = _cg(A_, b_, atol=1e-9, maxiter=10000)
+    xr, _ = _cg(A_, b_, rtol=1e-6, maxiter=10000)
+    chk('②d 판별력: atol 1e-8→1e-9 는 해가 비트 동일(안 걸림), rtol 1e-5→1e-6 은 해가 움직인다',
+        _np.array_equal(xa, xb) and not _np.array_equal(xa, xr),
+        f"atol 동일={_np.array_equal(xa, xb)} · rtol 차 max={float(_np.max(_np.abs(xa - xr))):.3e}")
     chk('②c 두 경로(직접·반복)의 σ 가 같은 망에서 서로 근접 (상대차 < 1e-4) — 래퍼가 해를 망치지 않는다',
         r['sigma_A'] and r2['sigma_A'] and abs(r2['sigma_A'] - r['sigma_A']) / r['sigma_A'] < 1e-4,
         f"direct {r['sigma_A']!r} vs cg {r2['sigma_A']!r}")
@@ -302,7 +337,7 @@ def main() -> int:
     if a.out_csv:
         p = Path(a.out_csv); p.parent.mkdir(parents=True, exist_ok=True)
         keys = ['case', 'channel', 'status', 'rho_kind', 'n_nodes', 'path_A', 'path_B', 'kwarg', 'tol_A', 'tol_B',
-                'cg_info_A', 'sigma_ratio_A', 'sigma_ratio_B', 'delta_pct']
+                'cg_info_A', 'rtol_A', 'rtol_B', 'atol_A', 'binding_A', 'sigma_ratio_A', 'sigma_ratio_B', 'delta_pct']
         with p.open('w', newline='', encoding='utf-8') as f:
             w = csv.DictWriter(f, fieldnames=keys, extrasaction='ignore'); w.writeheader(); w.writerows(rows)
         print(f'→ {p}')
