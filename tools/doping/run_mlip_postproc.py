@@ -154,16 +154,23 @@ def _conv_verdict(opt, atoms, fmax, relax_steps, ret=None):
     """
     fm = float(np.linalg.norm(atoms.get_forces(), axis=1).max())
     ns = int(opt.get_number_of_steps())
-    by_force = bool(fm <= fmax)
-    conv = bool(by_force or ret is True)
+    # ⛔⛔ 회신 BQ-3 P1-a (2026-09-13) — 종전 `by_force or ret is True` 는 반환값 True 면
+    #   최종힘 0.14 도, **NaN 도** 기준 0.02 에 수렴으로 처리했다. 소급 판정(--regate)은
+    #   힘만 보므로 라이브와 소급이 **다른 답**을 냈다.
+    #   ⇒ 유한한 실제 힘 기준이 **필수**다. 반환값은 기록만 하고 판정을 덮지 않는다.
+    _finite = bool(np.isfinite(fm))
+    by_force = bool(_finite and fm <= fmax)
+    conv = by_force
     out = {'n_steps': ns, 'final_fmax_eV_A': fm,
            'fmax_target_eV_A': float(fmax),
            'optimizer_returned': (None if ret is None else bool(ret)),
            'converged': conv,
            'hit_step_limit': bool(ns >= relax_steps)}
+    if not _finite:
+        out['⛔_비유한_힘'] = f'최종힘이 {fm!r} — 수렴이 아니다 (반환값과 무관)'
     if ret is not None and by_force != bool(ret):
         out['⚠_불일치'] = (f'힘 기준({fm:.5f} vs {fmax:.5f})과 옵티마이저 반환값'
-                           f'({bool(ret)})이 엇갈린다 — 수렴으로 읽되 사실을 남긴다')
+                           f'({bool(ret)})이 엇갈린다 — **힘 기준이 이긴다**. 반환값으로 덮지 않는다')
     return out
 
 
@@ -344,8 +351,9 @@ def _hysteresis_gate(hyst, V, hysteresis_tol=0.01, hysteresis_span_tol=0.10,
                 _why.append(f"레거시 dE/span {_dspan*100:.0f} % (> {hysteresis_span_tol*100:.0f} %) "
                             f"— 운영상 보류. 분모가 부피창에 딸려가므로 창이 다른 조건끼리 "
                             f"같은 문턱으로 비교하지 마라")
-            reason = ("이력현상 — " + " · ".join(_why) +
-                            ". 이 구조에선 EOS 가 한 골짜기로 정의되지 않는다")
+            # ⛔ 회신 BQ-3 — "이 구조에선 EOS 가 한 골짜기로 정의되지 않는다" 를 **삭제**했다.
+            #   그것은 관측이 아니라 결론이고, 평행이동 보류에도 붙어 나갔다.
+            reason = "이력현상 — " + " · ".join(_why)
     except Exception as _e:                                  # noqa: BLE001
         hyst['ok'] = False
         hyst['error'] = str(_e)
@@ -354,7 +362,147 @@ def _hysteresis_gate(hyst, V, hysteresis_tol=0.01, hysteresis_span_tol=0.10,
     return ok, reason
 
 
-def _eos_branch(atoms_ref, calc, fractions, fmax, relax_steps, continuation):
+def _save_point_frame(atoms, cv, path, meta):
+    """점별 최종 프레임을 extxyz 로 남긴다 (회신 BQ-3 Q5-2 사양).
+
+    남기는 것 — 셀 3×3·PBC·원자 ID/원소/순서·좌표 · **힘 벡터·에너지·전체 응력(단위)** ·
+    구조/조건/방향/점 ID·직전 점 ID·목표/실제 부피 · 최대힘/목표힘/반환값/스텝/수렴 ·
+    코드/모델/추론 식별. **미수렴점도 저장한다** (실패 자료를 지우면 왜 실패했는지 못 본다).
+
+    ⛔ 못 하는 것: FIRE 매 스텝을 저장하지 않는다. 끝점만이다 — 그래서 이 프레임은
+      *구조 차이를 확인하는 자료*이지 *중간 경로에서 전환이 없었다는 증명*이 아니다.
+    """
+    a = atoms.copy()
+    if 'atom_id' not in a.arrays:
+        a.new_array('atom_id', np.arange(len(a), dtype=int))
+    try:
+        a.new_array('forces_eV_A', np.asarray(atoms.get_forces(), dtype=float))
+    except Exception as e:                                   # noqa: BLE001
+        a.info['forces_error'] = str(e)
+    try:
+        a.info['energy_eV'] = float(atoms.get_potential_energy())
+    except Exception as e:                                   # noqa: BLE001
+        a.info['energy_error'] = str(e)
+    try:
+        _st = np.asarray(atoms.get_stress(voigt=True), dtype=float)
+        a.info['stress_voigt_eV_A3'] = _st.tolist()
+        a.info['stress_units'] = 'eV/A^3 (ASE voigt xx yy zz yz xz xy, tension positive)'
+        a.info['P_mean_GPa'] = float(-_st[:3].mean() * EV_A3_TO_GPA)
+    except Exception as e:                                   # noqa: BLE001
+        a.info['stress_error'] = str(e)
+    a.info.update({k: (v if isinstance(v, (int, float, str, bool)) or v is None else str(v))
+                   for k, v in (meta or {}).items()})
+    a.info.update({'V_actual_A3': float(atoms.get_volume()),
+                   'final_fmax_eV_A': float(cv.get('final_fmax_eV_A', float('nan'))),
+                   'fmax_target_eV_A': float(cv.get('fmax_target_eV_A', float('nan'))),
+                   'optimizer_returned': str(cv.get('optimizer_returned')),
+                   'n_steps': int(cv.get('n_steps', -1)),
+                   'converged': bool(cv.get('converged') is True),
+                   'hit_step_limit': bool(cv.get('hit_step_limit') is True)})
+    a.calc = None                                # 계산기를 떼야 extxyz 가 깨끗이 나간다
+    Path(path).parent.mkdir(parents=True, exist_ok=True)
+    write(str(path), a, format='extxyz')
+    return str(path)
+
+
+def compare_frames(ref, new, li_symbol='Li', cutoff=3.0):
+    """같은 셀 위의 두 프레임을 **원자 ID 를 유지한 채** 비교한다 (회신 BQ-3 Q5-3).
+
+    한다: 비-Li 골격의 공통 병진 제거 → ASE 일반 최소영상(MIC) 변위 → Li / 골격 RMSD 분리 +
+    최대 변위(원자 ID) → 배위수뿐 아니라 **이웃 ID 집합·거리 변화**.
+
+    ⛔ **판정하지 않는다.** "RMSD < 0.1 Å 이면 같은 골짜기" 같은 문턱은 리뷰어가 불승인했다 —
+      배위 경계의 작은 왕복도 CN 을 바꾸고, 전체 RMSD 는 한 원자의 이동을 숨긴다.
+      `continuity` 는 사실 진술이다: 이웃 ID 집합이 전부 같으면 'neighbor_sets_identical',
+      하나라도 다르면 'neighbor_sets_changed', 비교 자체가 안 되면 'continuity_unknown'.
+    ⛔ 원자를 재정렬하지 않는다 — 재정렬하면 Li 교환이 지워진다.
+    ⛔ 셀이 다르면 비교하지 않는다 (등방 스케일 차이도 포함). 같은 셀에서만 뜻이 있다.
+    """
+    from ase.geometry import find_mic
+    out = {'continuity': 'continuity_unknown'}
+    if len(ref) != len(new):
+        out['why_unknown'] = f'원자 수가 다르다 ({len(ref)} vs {len(new)})'
+        return out
+    if list(ref.get_chemical_symbols()) != list(new.get_chemical_symbols()):
+        out['why_unknown'] = '원소 순서가 다르다 — 재정렬 없이 대응할 수 없다'
+        return out
+    if not np.allclose(ref.cell.array, new.cell.array, atol=1e-6):
+        out['why_unknown'] = '셀이 다르다 — 같은 셀에서만 비교한다'
+        return out
+    ids_r = ref.arrays.get('atom_id'); ids_n = new.arrays.get('atom_id')
+    if ids_r is not None and ids_n is not None and not np.array_equal(ids_r, ids_n):
+        out['why_unknown'] = 'atom_id 순서가 다르다'
+        return out
+    sym = np.array(ref.get_chemical_symbols())
+    is_li = sym == li_symbol
+    d_raw, _ = find_mic(new.positions - ref.positions, ref.cell, pbc=True)
+    fw = ~is_li
+    shift = d_raw[fw].mean(axis=0) if fw.any() else np.zeros(3)
+    d = d_raw - shift                                        # 골격 공통 병진 제거
+    mag = np.linalg.norm(d, axis=1)
+    def _rms(m):
+        return float(np.sqrt((mag[m] ** 2).mean())) if m.any() else None
+    imax = int(mag.argmax())
+    out.update({'framework_translation_removed_A': shift.tolist(),
+                'rmsd_Li_A': _rms(is_li), 'rmsd_framework_A': _rms(fw),
+                'max_disp_A': float(mag[imax]), 'max_disp_atom_index': imax,
+                'max_disp_atom_symbol': str(sym[imax]),
+                'n_Li': int(is_li.sum()), 'n_framework': int(fw.sum()),
+                'cutoff_A': float(cutoff)})
+    # 이웃 — ID 집합과 거리. 배위수만 보면 경계 왕복을 놓친다.
+    from ase.neighborlist import neighbor_list
+    def _nbrs(a):
+        i, j, dist = neighbor_list('ijd', a, cutoff)
+        m = {}
+        for ii, jj, dd in zip(i, j, dist):
+            m.setdefault(int(ii), {})[int(jj)] = float(dd)
+        return m
+    nr, nn = _nbrs(ref), _nbrs(new)
+    changed, cn_r, cn_n, dmax = [], [], [], 0.0
+    for k in np.where(is_li)[0]:
+        k = int(k)
+        sr, sn = set(nr.get(k, {})), set(nn.get(k, {}))
+        cn_r.append(len(sr)); cn_n.append(len(sn))
+        if sr != sn:
+            changed.append({'atom_index': k, 'lost': sorted(sr - sn), 'gained': sorted(sn - sr)})
+        for jj in sr & sn:
+            dmax = max(dmax, abs(nr[k][jj] - nn[k][jj]))
+    out.update({'n_Li_with_neighbor_set_changed': len(changed),
+                'Li_neighbor_changes': changed[:20],
+                'Li_CN_ref_mean': (float(np.mean(cn_r)) if cn_r else None),
+                'Li_CN_new_mean': (float(np.mean(cn_n)) if cn_n else None),
+                'max_common_neighbor_distance_change_A': float(dmax),
+                'continuity': ('neighbor_sets_identical' if not changed else 'neighbor_sets_changed'),
+                '⛔_읽는_법': ('continuity 는 이웃 ID 집합의 사실 진술이지 골짜기 판정이 아니다. '
+                              '문턱을 걸어 "같은 골짜기" 라고 쓰지 마라 (회신 BQ-3 Q5-3)')})
+    return out
+
+
+def _select_nearest_converged(frames, conv, V0):
+    """자격 있는 상승 가지에서 |Vᵢ − V₀| 가 가장 작은 **수렴점**을 고른다 (회신 BQ-3 Q5-4).
+
+    동률 규칙(고정): |ΔV| 가 같으면 **낮은 인덱스**(작은 분율). 수렴점이 하나도 없으면 None.
+    ⛔ 못 하는 것: 끝점을 금지하지 않는다. 끝점이 최근접이면 끝점이다.
+    """
+    if not frames or not conv or V0 is None:
+        return None
+    best = None
+    for i, (fr, cv) in enumerate(zip(frames, conv)):
+        if cv.get('converged') is not True:
+            continue
+        dv = abs(float(fr.get_volume()) - float(V0))
+        if best is None or dv < best[1] - 1e-12:
+            best = (i, dv)
+    if best is None:
+        return None
+    i, dv = best
+    return {'index': i, 'fraction': conv[i].get('fraction'), 'abs_dV_A3': float(dv),
+            'V_point_A3': float(frames[i].get_volume()), 'atoms': frames[i],
+            'tie_rule': '|ΔV| 동률이면 낮은 인덱스(작은 분율)'}
+
+
+def _eos_branch(atoms_ref, calc, fractions, fmax, relax_steps, continuation,
+                save_dir=None, meta=None, direction='up'):
     """한 갈래의 E(V). `continuation` 이면 **앞 점의 완화 결과**에서 이어간다.
 
     ⛔ 왜 이게 필요한가 (2026-09-13 실측). 독립 완화판은 부피점마다
@@ -364,10 +512,14 @@ def _eos_branch(atoms_ref, calc, fractions, fmax, relax_steps, continuation):
       실측: P2_Al2S3_B 시드 3개에서 r² 0.79 / 0.998 / 0.90.
       질서 있는 H0 만 r² 0.99997 로 깨끗했다 — 무질서가 원인이라는 증거다.
     """
-    V, E, conv = [], [], []
+    V, E, conv, frames = [], [], [], []
     prev = None
     final = None
-    for f in fractions:
+    prev_id = None
+    if 'atom_id' not in atoms_ref.arrays:
+        atoms_ref = atoms_ref.copy()
+        atoms_ref.new_array('atom_id', np.arange(len(atoms_ref), dtype=int))
+    for _i, f in enumerate(fractions):
         if continuation and prev is not None:
             atoms = prev.copy()                      # 앞 점의 **완화된** 구조에서
             atoms.set_cell(atoms.cell.array * (f / prev_f) ** (1 / 3), scale_atoms=True)
@@ -384,17 +536,30 @@ def _eos_branch(atoms_ref, calc, fractions, fmax, relax_steps, continuation):
         #   이 곡선으로 **아무 기전 판정도 하지 않는다.**
         _cv = _conv_verdict(opt, atoms, fmax, relax_steps, _ret)
         _cv['fraction'] = float(f)
+        _pid = f"{direction}:{_i:02d}:f{float(f):.4f}"
+        _cv['point_id'] = _pid
+        _cv['prev_point_id'] = prev_id
+        if save_dir is not None:
+            _m = dict(meta or {})
+            _m.update({'direction': direction, 'point_index': _i, 'fraction': float(f),
+                       'point_id': _pid, 'prev_point_id': str(prev_id),
+                       'V_target_A3': float(atoms_ref.get_volume() * float(f)),
+                       'continuation': bool(continuation)})
+            _cv['frame_path'] = _save_point_frame(
+                atoms, _cv, Path(save_dir) / f"{_m.get('structure', 'x')}_{_pid.replace(':', '_')}.extxyz", _m)
         conv.append(_cv)
         V.append(atoms.get_volume())
         E.append(atoms.get_potential_energy())
-        prev, prev_f = atoms, f
+        frames.append(atoms)
+        prev, prev_f, prev_id = atoms, f, _pid
         final = atoms
-    return np.array(V), np.array(E), conv, final
+    return np.array(V), np.array(E), conv, final, frames
 
 
 def _eos_sweep_core(atoms_ref, calc, fractions=(0.94, 0.96, 0.98, 1.00, 1.02, 1.04, 1.06),
              fmax=0.05, relax_steps=500, continuation=False, hysteresis_tol=0.01,
-             hysteresis_span_tol=0.10, hysteresis_shape_tol=0.10):
+             hysteresis_span_tol=0.10, hysteresis_shape_tol=0.10,
+             save_dir=None, meta=None):
     """Volume sweep + Birch-Murnaghan 3rd-order fit. atoms_ref is the
     relaxed reference at V0; we scale its lattice by f^(1/3) per point.
 
@@ -415,10 +580,13 @@ def _eos_sweep_core(atoms_ref, calc, fractions=(0.94, 0.96, 0.98, 1.00, 1.02, 1.
     fr = list(fractions)
     hyst = None
     branch_state = None
+    branch_frames = None
     conv_log = None
     if continuation:
-        V_up, E_up, c_up, s_up = _eos_branch(atoms_ref, calc, fr, fmax, relax_steps, True)
-        V_dn, E_dn, c_dn, _ = _eos_branch(atoms_ref, calc, fr[::-1], fmax, relax_steps, True)
+        V_up, E_up, c_up, s_up, f_up = _eos_branch(atoms_ref, calc, fr, fmax, relax_steps, True,
+                                                   save_dir=save_dir, meta=meta, direction='up')
+        V_dn, E_dn, c_dn, _, f_dn = _eos_branch(atoms_ref, calc, fr[::-1], fmax, relax_steps, True,
+                                                save_dir=save_dir, meta=meta, direction='down')
         V_dn, E_dn = V_dn[::-1], E_dn[::-1]          # 오름차순으로 되돌린다
         # ⛔⛔ 회신 BQ P0-2 (2026-09-13) — 종전에는 점마다 `min(E_up, E_down)` 을 골라
         #   적합했다. 그건 **하나의 연속된 가지가 아니다** — 두 곡선이 교차하면 서로 다른
@@ -444,9 +612,11 @@ def _eos_sweep_core(atoms_ref, calc, fractions=(0.94, 0.96, 0.98, 1.00, 1.02, 1.
                 'convergence_up': c_up, 'convergence_down': c_dn}
         V, E = V_up, E_up                            # **한 갈래만** 보고한다
         branch_state = s_up
+        branch_frames = f_up
     else:
-        V, E, conv_log, branch_state = _eos_branch(atoms_ref, calc, fr, fmax,
-                                                    relax_steps, False)
+        V, E, conv_log, branch_state, branch_frames = _eos_branch(
+            atoms_ref, calc, fr, fmax, relax_steps, False,
+            save_dir=save_dir, meta=meta, direction='up')
     # 3rd-order Birch-Murnaghan fit
     try:
         from scipy.optimize import curve_fit
@@ -487,6 +657,7 @@ def _eos_sweep_core(atoms_ref, calc, fractions=(0.94, 0.96, 0.98, 1.00, 1.02, 1.
                 #   보고 곡선(올라가는 갈래)의 마지막 구조를 같이 돌려준다.
                 #   ⚠ JSON 직렬화 전에 `process_one` 이 pop 한다 (Atoms 는 직렬화 불가).
                 '_branch_atoms': branch_state,
+                '_branch_frames': branch_frames,     # 최근접 수렴점 승계용 (직렬화 전 pop)
                 'V0': float(V0) if fit_ok else None,
                 'V0_per_atom': float(V0) / n if fit_ok else None,
                 'E0': float(E0) if fit_ok else None,
@@ -510,6 +681,7 @@ def _eos_sweep_core(atoms_ref, calc, fractions=(0.94, 0.96, 0.98, 1.00, 1.02, 1.
                 'hysteresis': hyst,
                 'convergence': conv_log,
                 '_branch_atoms': branch_state,
+                '_branch_frames': branch_frames,     # 최근접 수렴점 승계용 (직렬화 전 pop)
                 'fit_quality_ok': False,
                 'fit_quality_reason': f'BM3 적합이 예외로 실패했다: {type(e).__name__}: {e}',
                 'fit_error': str(e)}
@@ -519,7 +691,7 @@ def eos_ensemble(atoms_ref, calc, n_seeds=5, perturb=0.1,
                  fractions=(0.94, 0.96, 0.98, 1.00, 1.02, 1.04, 1.06),
                  fmax=0.05, relax_steps=500, continuation=False,
                  hysteresis_tol=0.01, hysteresis_span_tol=0.10,
-                 hysteresis_shape_tol=0.10):
+                 hysteresis_shape_tol=0.10, save_dir=None, meta=None):
     """Run eos_sweep on N rattled copies of atoms_ref and keep the BEST BM3 fit.
 
     MLIP single-curve EOS is basin-sensitive: a stray Li/ion rearrangement at one
@@ -540,7 +712,9 @@ def eos_ensemble(atoms_ref, calc, n_seeds=5, perturb=0.1,
                                  continuation=continuation,
                                  hysteresis_tol=hysteresis_tol,
                                  hysteresis_span_tol=hysteresis_span_tol,
-                                 hysteresis_shape_tol=hysteresis_shape_tol))
+                                 hysteresis_shape_tol=hysteresis_shape_tol,
+                                 save_dir=(None if save_dir is None else Path(save_dir) / f'seed{s}'),
+                                 meta=(None if meta is None else {**meta, 'seed': s})))
     # ⛔⛔ 회신 BQ-2 P0-1 — **자격을 가장 앞에 둔다.** 종전 선택은 `fit_quality_ok`
     #   (회귀 지표) 만 봤으므로, 점이 하나도 수렴하지 않은 시드도 r² 만 높으면 뽑혔다.
     eligible = [r for r in results if r.get('downstream_eligible') is True]
@@ -636,6 +810,26 @@ def stress_report(atoms):
             '⚠': '목표 평균압 0 과 별개로 **실제** 값이다. 영응력 판정 아님'}
 
 
+def _records_match_points(rows, fractions, n_points):
+    """수렴 기록이 부피점과 **1:1** 인가 (회신 BQ-3 P1-b).
+
+    개수가 같고, 기록의 분율 집합이 요청 분율 집합과 같아야 한다 (방향은 무관 —
+    하강 갈래는 역순이다). 분율이 없으면 개수만 본다 (구버전 기록 호환).
+
+    ⛔ 못 하는 것: 기록의 **값**이 맞는지는 못 본다. 자리가 다 있는지만 본다.
+    """
+    rows = rows or []
+    if len(rows) != int(n_points) or int(n_points) == 0:
+        return False
+    if not fractions:
+        return True
+    got = sorted(float(r.get('fraction')) for r in rows if r.get('fraction') is not None)
+    want = sorted(float(f) for f in fractions)
+    if len(got) != len(want):
+        return False
+    return all(abs(a - b) < 1e-9 for a, b in zip(got, want))
+
+
 def attach_eligibility(out):
     """EOS 결과에 **후속 사용 자격**을 붙인다 (회신 BQ-2 P0-1).
 
@@ -657,12 +851,19 @@ def attach_eligibility(out):
     hy = out.get('hysteresis') or {}
     up = hy.get('convergence_up') or out.get('convergence') or []
     dn = hy.get('convergence_down') or []
+    _two_way = bool(hy) and ('E_down' in hy)
 
     def _cnt(rows):
         return sum(1 for r in rows if r.get('converged') is True), len(rows)
 
     n_up, m_up = _cnt(up)
     n_dn, m_dn = _cnt(dn)
+    # ⛔⛔ 회신 BQ-3 P1-b — 종전에는 **기록 개수만** 셌다. 에너지 7점에 수렴 기록 1개를
+    #   남겨도 1/1 로 통과했다. 기록이 부피점과 **빠짐없이 1:1** 대응해야 한다.
+    _frac = list(out.get('fractions') or [])
+    _nV = len(out.get('V_points') or [])
+    _match_up = _records_match_points(up, _frac, len(hy.get('E_up') or []) if _two_way else _nV)
+    _match_dn = _records_match_points(dn, _frac, len(hy.get('E_down') or [])) if _two_way else True
     out['convergence_summary'] = {
         'reported_branch': hy.get('reported_branch', 'single'),
         'n_converged_reported': n_up, 'n_points_reported': m_up,
@@ -672,11 +873,31 @@ def attach_eligibility(out):
     why = []
     if m_up == 0:
         why.append('수렴 기록이 없다 — 모르는 것은 통과가 아니다')
+    elif not _match_up:
+        why.append(f'보고 가지 수렴 기록({m_up}개)이 부피점과 **1:1 대응하지 않는다** '
+                   f'(부피점 {len(hy.get("E_up") or []) if _two_way else _nV}개 · 분율 {_frac}) — '
+                   f'개수만 맞는 기록은 전수가 아니다')
     elif n_up < m_up:
         _bad = [f"f={r.get('fraction')}: |F|max={r.get('final_fmax_eV_A', float('nan')):.4f}"
                 for r in up if r.get('converged') is not True]
         why.append(f'보고 가지 {m_up}점 중 **{m_up - n_up}점 미수렴** (' +
                    ' · '.join(_bad[:4]) + (' …' if len(_bad) > 4 else '') + ')')
+    # ⛔⛔ 회신 BQ-3 P0-1 잔여 — 이력현상 게이트는 **하강 에너지도 판정에 쓴다**. 그런데 자격은
+    #   상승 수렴만 요구했다. 리뷰어 재현: 상승 7/7·하강 0/7 → eligible=True, 하강 기록을
+    #   없애도 통과. **판정에 쓴 양방향 점의 수렴이 필요하다.** 하강 미수렴은 "이력현상이
+    #   없다" 가 아니라 "그 검사가 미확정" 이다.
+    #   (하강을 참고자료로만 쓰려면 승격 조건에서도 분리해야 하고 그건 **정책 변경**이다 —
+    #    지금 정책은 두 갈래를 다 쓴다.)
+    if _two_way:
+        if m_dn == 0:
+            why.append('하강 갈래 수렴 기록이 없다 — 이력현상 판정에 쓴 점인데 수렴을 모른다')
+        elif not _match_dn:
+            why.append(f'하강 갈래 수렴 기록({m_dn}개)이 부피점과 1:1 대응하지 않는다')
+        elif n_dn < m_dn:
+            _badd = [f"f={r.get('fraction')}: |F|max={r.get('final_fmax_eV_A', float('nan')):.4f}"
+                     for r in dn if r.get('converged') is not True]
+            why.append(f'하강 갈래 {m_dn}점 중 **{m_dn - n_dn}점 미수렴** — 이력현상 검사가 '
+                       f'**미확정**이다 (' + ' · '.join(_badd[:4]) + (' …' if len(_badd) > 4 else '') + ')')
     if out.get('fit_quality_ok') is not True:
         why.append('적합 품질 불통과: ' + str(out.get('fit_quality_reason')))
     out['downstream_eligible'] = bool(not why)
@@ -777,11 +998,49 @@ def maybe_apply_eos_v0(atoms, record, args, calc):
             pol['_diagnostic_atoms'] = _bs
             return _orig, pol
 
-        pol['v0_start_state'] = 'EOS 보고 가지의 마지막 구조 (승계함)'
-        _new, rep = apply_v0_fixed_shape(_bs, v0, calc,
+        # ⭐ 회신 BQ-3 Q5-4 — 끝점이 아니라 **자격 있는 상승 가지에서 |Vᵢ−V₀| 최소 수렴점**에서
+        #   출발한다. 끝점은 V₀ 를 지나 팽창하는 동안 가지가 바뀌었을 수 있다 (BQ-2 Q3).
+        _frames = _eos.get('_branch_frames')
+        _cup = ((_eos.get('hysteresis') or {}).get('convergence_up')
+                or _eos.get('convergence') or [])
+        _sel = _select_nearest_converged(_frames, _cup, v0) if _frames else None
+        if _sel is None:
+            _start = _bs
+            pol['v0_start_state'] = ('⚠ EOS 보고 가지의 **마지막 구조** (점별 프레임 없음 — '
+                                     '최근접 수렴점을 고를 수 없어 끝점을 썼다)')
+            pol['v0_start_selection'] = {'method': 'last_point_fallback'}
+        else:
+            _start = _sel['atoms']
+            pol['v0_start_state'] = (f"EOS 상승 가지 **최근접 수렴점** (index {_sel['index']}, "
+                                     f"f={_sel['fraction']}, |ΔV|={_sel['abs_dV_A3']:.2f} Å³)")
+            pol['v0_start_selection'] = {k: v for k, v in _sel.items() if k != 'atoms'}
+            pol['v0_start_selection']['method'] = 'nearest_converged_up_branch'
+        # ① 원자 대응·셀 형상·목표 부피 확인 (등방 스케일 **전**에 기록)
+        _scaled = _start.copy()
+        _scaled.set_cell(_scaled.cell.array * (float(v0) / _scaled.get_volume()) ** (1 / 3),
+                         scale_atoms=True)
+        pol['succession_checks'] = {
+            '1_atom_correspondence': {'n_atoms': len(_start),
+                                      'has_atom_id': bool('atom_id' in _start.arrays)},
+            '1_cell_shape_preserved': bool(
+                np.allclose(_start.cell.angles(), _scaled.cell.angles(), atol=1e-9)
+                and np.allclose(_start.cell.lengths() / _start.cell.lengths()[0],
+                                _scaled.cell.lengths() / _scaled.cell.lengths()[0], atol=1e-9)),
+            '1_V_target_A3': float(v0), '1_V_scaled_A3': float(_scaled.get_volume())}
+        _new, rep = apply_v0_fixed_shape(_start, v0, calc,
                                          fmax=getattr(args, 'eos_fmax', 0.05),
                                          relax_steps=getattr(args, 'relax_steps', 500))
         pol['apply_report'] = rep
+        # ② 유한 최종힘·수렴 (rep) · ③ E·σ·P (rep.residual_stress) ·
+        # ④ 등방 변형을 **제외한** 변위·배위 변화 — 스케일한 출발 프레임 vs 재완화 결과 (같은 셀)
+        try:
+            _cmp = compare_frames(_scaled, _new)
+        except Exception as _e:                                  # noqa: BLE001
+            _cmp = {'continuity': 'continuity_unknown', 'why_unknown': f'비교 실패: {_e}'}
+        pol['succession_checks']['4_displacement_vs_scaled_start'] = _cmp
+        pol['succession_checks']['⚠_순서'] = ('①대응·셀·부피 ②유한 최종힘·수렴 ③E·σ·P=−tr/3 '
+                                              '④등방 제외 변위·배위 ⑤그 결과에 연결된 파일만 후속 후보 '
+                                              '(회신 BQ-3 Q5-4). 낮은 압력은 힘 수렴을 대신하지 않는다')
         if not rep.get('converged'):
             # ⛔ 회신 BQ-2 P0-1 — 최종 V₀ 완화가 미수렴이면 그 구조도 자격이 없다.
             pol['eos_v0_applied'] = False
@@ -1003,6 +1262,10 @@ def regate_eos(eos, fmax=None, hysteresis_tol=0.01, hysteresis_span_tol=0.10,
                      'r2': eos.get('r2'),
                      'fit_quality_reason': eos.get('fit_quality_reason')}
     out['verdict_changed'] = bool(out['fit_quality_ok'] != eos.get('fit_quality_ok'))
+    # ⛔ 회신 BQ-3 — verdict_changed 는 fit_quality_ok 만 본다. **자격**이 바뀌었는지는
+    #   따로 세야 한다 (구버전 기록엔 자격 필드가 없으므로 None ≠ False 로 잡힌다).
+    out['eligibility_changed'] = bool(out.get('downstream_eligible')
+                                      != eos.get('downstream_eligible'))
     # ⛔ 판정이 그대로여도 **사유**가 바뀌면 그게 회신 BQ-2 Q2 의 실익이다:
     #   평행이동을 "곡선 자체가 갈린다" 로 적던 것이 "운영상 보류" 로 내려간다.
     #   판정만 보면 안 보이므로 따로 센다.
@@ -1061,7 +1324,7 @@ def print_regate(rows):
     """한 화면 요약. ⛔ **판정하지 않는다** — 옛 판정과 새 판정을 나란히 놓을 뿐이다."""
     print(f"\n{'구조':<16}{'옛':>4}{'새':>4}{'자격':>5}{'r2':>9}{'V0':>11}{'Bp':>7}  사유")
     print('─' * 108)
-    nch = nrs = 0
+    nch = nrs = nel = 0
     for r in rows:
         if r.get('error') or r.get('regate_skipped'):
             print(f"{(r.get('name') or r.get('file') or '?')[:15]:<16}"
@@ -1074,12 +1337,15 @@ def print_regate(rows):
         _raw = r.get('raw_refit') or {}
         nch += bool(r.get('verdict_changed'))
         nrs += bool(r.get('reason_changed'))
+        nel += bool(r.get('eligibility_changed'))
         print(f"{(r.get('name') or '?')[:15]:<16}"
               f"{('✅' if _o is True else '⛔'):>4}{('✅' if _n is True else '⛔'):>4}"
               f"{('✅' if _e is True else '⛔'):>5}"
               f"{(_raw.get('r2') or 0.0):>9.4f}{(_raw.get('V0') or 0.0):>11.1f}"
               f"{(_raw.get('Bp') or 0.0):>7.2f}  {(r.get('fit_quality_reason') or '')[:44]}")
-    print(f"\n  판정이 바뀐 줄: {nch}/{len(rows)} · **사유**가 바뀐 줄: {nrs}/{len(rows)}")
+    print(f"\n  판정이 바뀐 줄: {nch}/{len(rows)} · **사유**가 바뀐 줄: {nrs}/{len(rows)} · "
+          f"**자격**이 바뀐 줄: {nel}/{len(rows)}")
+    print("  · 판정(fit_quality_ok)과 자격(downstream_eligible)은 다른 것이다 — 따로 센다 (회신 BQ-3)")
     print("  · 판정이 그대로여도 사유가 바뀌면 의미가 있다 — 평행이동을 '곡선 자체가")
     print("    갈린다' 로 적던 것이 '운영상 보류' 로 내려간다 (회신 BQ-2 Q2)")
     print("  · '옛' 은 파일에 저장된 판정, '새' 는 지금 게이트. '자격' 은 후속 사용 가능 여부다")
@@ -1194,11 +1460,33 @@ def audit_pressure_sign(patterns, out_path=None):
 def process_one(xyz_path, calc, out_dir, args):
     name = winner_name(xyz_path)
     work = out_dir / name
+    # ⛔⛔ 회신 BQ-3 P0-3 잔여 — 같은 폴더에서 성공 → 실패 순으로 돌리면 이전
+    #   final_v0_applied.xyz 가 **동일 바이트로 남는다**. 이번 호출의 탄성은 막혀도, 파일을
+    #   직접 집어가는 다음 작업이 옛 파일을 받는다. ⇒ **기존 결과 폴더 재사용 거부.**
+    #   (재개 로직은 done 목록으로 이 함수를 아예 안 부르므로 충돌하지 않는다.)
+    _prior = ([str(x.name) for x in work.glob('*') if x.is_file()
+               and (x.name == 'postproc.json' or x.name.startswith('final_')
+                    or x.name.startswith('DIAGNOSTIC_'))] if work.exists() else [])
+    if _prior:
+        raise RuntimeError(
+            f"⛔ 결과 폴더 재사용 거부: {work} 에 이전 결과가 있다 {_prior}. "
+            f"새 --out 을 써라. 이전 결과는 지우지 않는다 (회신 BQ-3 P0-3).")
     work.mkdir(parents=True, exist_ok=True)
+    import secrets as _sec
+    _run_id = time.strftime('%Y%m%dT%H%M%S') + '-' + _sec.token_hex(3)
+    try:
+        _code = (get_provenance() or {}).get('git_commit')
+    except Exception:                                        # noqa: BLE001
+        _code = None
+    _meta = {'structure': name, 'run_id': _run_id, 'run_tag': getattr(args, 'run_tag', '') or '',
+             'code_id': str(_code), 'model': 'uma-s-1p1',
+             'inference_mode': str(getattr(args, 'uma_mode', None)),
+             'relax_steps': int(getattr(args, 'relax_steps', 0))}
 
     atoms = read(str(xyz_path))
     atoms.calc = calc
-    record = {'name': name, 'xyz_input': str(xyz_path),
+    record = {'name': name, 'xyz_input': str(xyz_path), 'run_id': _run_id,
+              'run_tag': _meta['run_tag'], 'code_id': _meta['code_id'],
               'n_atoms': len(atoms),
               'composition': {el: int(c) for el, c in
                               zip(*np.unique(atoms.get_chemical_symbols(),
@@ -1246,13 +1534,16 @@ def process_one(xyz_path, calc, out_dir, args):
                                       continuation=getattr(args, 'eos_continuation', False),
                                       hysteresis_tol=getattr(args, 'eos_hysteresis_tol', 0.01),
                                       hysteresis_span_tol=getattr(args, 'eos_hysteresis_span_tol', 0.10),
-                                         hysteresis_shape_tol=getattr(args, 'eos_hysteresis_shape_tol', 0.10))
+                                      hysteresis_shape_tol=getattr(args, 'eos_hysteresis_shape_tol', 0.10),
+                                      # 회신 BQ-3 Q5-2 — 점별 프레임을 여기 남긴다 (미수렴점 포함)
+                                      save_dir=(work / 'eos_frames'), meta=_meta)
         record['eos']['t_s'] = time.time() - t0
 
     # 2b. EOS V₀ 를 **실제로** 적용한다 (GAP-3). 기본은 과거 동작 유지.
     atoms, record['cell_policy'] = maybe_apply_eos_v0(atoms, record, args, calc)
     # ⛔ 회신 BQ P0-3 — Atoms 는 직렬화 불가. **V₀ 적용에 쓴 뒤** 기록에서 뺀다.
     (record.get('eos') or {}).pop('_branch_atoms', None)
+    (record.get('eos') or {}).pop('_branch_frames', None)    # Atoms 목록 — 직렬화 불가
     _pol = record.get('cell_policy') or {}
     _diag = _pol.pop('_diagnostic_atoms', None)
     _blocked = bool(_pol.get('downstream_blocked'))
@@ -1274,6 +1565,11 @@ def process_one(xyz_path, calc, out_dir, args):
     else:
         _name = 'final_v0_applied.xyz' if _applied else 'final_no_v0_applied.xyz'
         write(work / _name, atoms)
+        # ⛔ 회신 BQ-3 P0-3 — 후속 입력은 **이 실행의 자격 기록에 연결된 파일만** 읽는다.
+        #   파일 해시와 run_id 를 기록에 박아 둔다. 해시가 다르면 이 기록의 파일이 아니다.
+        import hashlib as _hl
+        _written['final_sha256'] = _hl.sha256((work / _name).read_bytes()).hexdigest()
+        _written['run_id'] = _run_id
         _written[_name] = ('✅ V₀ 가 실제로 적용되고 **수렴한** 최종 구조 — 탄성이 쓴 것'
                            if _applied else
                            '⚠ V₀ 를 적용하지 **않은** 구조(요청 안 함). post-anneal 부피다 — '
@@ -1643,8 +1939,12 @@ def _selftest():
         "두 갈래를 **나눠** 센다 — 한 숫자로 합치면 양방향 수렴으로 오독한다")
 
     # 자격과 적합품질이 **독립**임을 직접 친다 (합성 기록으로 경로만 본다)
+    # ⚠ 합성 기록도 **진짜 기록 모양**이어야 한다 — V_points/fractions 가 없으면 1:1 대응
+    #   검사(회신 BQ-3 P1-b)가 거부한다. 그게 맞는 동작이다.
     _fk = lambda cv: attach_eligibility(
-        {'fit_quality_ok': True, 'fit_quality_reason': 'OK', 'convergence': cv})
+        {'fit_quality_ok': True, 'fit_quality_reason': 'OK', 'convergence': cv,
+         'V_points': [1.0] * len(cv), 'E_points': [0.0] * len(cv),
+         'fractions': [r.get('fraction', 1.0) for r in cv]})
     chk(_fk([{'fraction': 1.0, 'converged': False, 'final_fmax_eV_A': 0.14}]
             )['downstream_eligible'] is False,
         "⛔음성: fit_quality_ok=True 라도 미수렴 점이 있으면 자격 거부")
@@ -1657,10 +1957,61 @@ def _selftest():
             )['downstream_eligible'] is True,
         "양성 대조: 적합 OK + 전 점 수렴이면 자격 있음 (무조건 떨구는 게 아니다)")
     chk(attach_eligibility({'fit_quality_ok': False, 'fit_quality_reason': 'r2 낮음',
+                            'V_points': [1.0], 'E_points': [0.0], 'fractions': [1.0],
                             'convergence': [{'fraction': 1.0, 'converged': True,
                                              'final_fmax_eV_A': 0.001}]}
                            )['downstream_eligible'] is False,
         "⛔음성: 전 점 수렴이어도 적합이 불통과면 자격 거부 (둘 다 필요하다)")
+
+    # ⛔⛔ 회신 BQ-3 재현 넷 — 리뷰어가 실제 함수로 뚫은 구멍을 그대로 시험으로
+    _fr7 = [0.97, 0.98, 0.99, 1.00, 1.01, 1.02, 1.03]
+    _ok7 = [{'fraction': f, 'converged': True, 'final_fmax_eV_A': 0.001} for f in _fr7]
+    _bad7 = [{'fraction': f, 'converged': False, 'final_fmax_eV_A': 0.2} for f in _fr7[::-1]]
+    _two = lambda up, dn: attach_eligibility(
+        {'fit_quality_ok': True, 'fit_quality_reason': 'OK',
+         'V_points': [1.0] * 7, 'E_points': [0.0] * 7, 'fractions': _fr7,
+         'hysteresis': {'E_up': [0.0] * 7, 'E_down': [0.0] * 7, 'reported_branch': 'up',
+                        'convergence_up': up, 'convergence_down': dn}})
+    chk(_two(_ok7, _bad7)['downstream_eligible'] is False,
+        "⛔⛔음성 (BQ-3 P0-1): 상승 7/7·하강 0/7 → **자격 없음** (판정에 쓴 양방향 점이 수렴해야 한다)")
+    chk(_two(_ok7, [])['downstream_eligible'] is False,
+        "⛔⛔음성 (BQ-3 P0-1): 하강 기록을 **없애도** 통과하지 않는다")
+    chk(_two(_ok7, _ok7[::-1])['downstream_eligible'] is True,
+        "양성 대조: 양방향 전 점 수렴이면 자격 있음")
+    chk(_two(_ok7[:1], _ok7[::-1])['downstream_eligible'] is False,
+        "⛔⛔음성 (BQ-3 P1-b): 에너지 7점에 상승 기록 **1개**면 1/1 이 아니라 **거부**다")
+    _wrongf = [dict(r, fraction=r['fraction'] + 0.5) for r in _ok7]
+    chk(_two(_wrongf, _ok7[::-1])['downstream_eligible'] is False,
+        "⛔음성 (BQ-3 P1-b): 개수는 7인데 분율이 다른 기록 → 거부 (자리가 아니라 대응을 본다)")
+    chk('1:1' in (_two(_ok7[:1], _ok7[::-1]).get('downstream_block_reason') or ''),
+        "P1-b: 사유에 '1:1 대응' 이 적힌다")
+
+    # ⛔⛔ BQ-3 P1-a — 반환값 True 로 힘 판정을 덮지 않는다 · 비유한 힘은 수렴이 아니다
+    class _FakeOpt:
+        def __init__(self, n): self._n = n
+        def get_number_of_steps(self): return self._n
+    class _FakeAtoms:
+        def __init__(self, fmax_val):
+            self._f = fmax_val
+        def get_forces(self):
+            import numpy as _n
+            return _n.array([[self._f, 0.0, 0.0], [0.0, 0.0, 0.0]])
+    _v = _conv_verdict(_FakeOpt(10), _FakeAtoms(0.14), 0.02, 500, ret=True)
+    chk(_v['converged'] is False and '이긴다' in _v.get('⚠_불일치', ''),
+        "⛔⛔음성 (BQ-3 P1-a): 반환값 True 여도 최종힘 0.14 > 0.02 면 **미수렴** — 힘 기준이 이긴다")
+    _v2 = _conv_verdict(_FakeOpt(10), _FakeAtoms(float('nan')), 0.02, 500, ret=True)
+    chk(_v2['converged'] is False and '⛔_비유한_힘' in _v2,
+        "⛔⛔음성 (BQ-3 P1-a): **NaN** 힘은 반환값과 무관하게 미수렴")
+    _v3 = _conv_verdict(_FakeOpt(10), _FakeAtoms(0.01), 0.02, 500, ret=False)
+    chk(_v3['converged'] is True,
+        "양성 대조: 힘이 기준 안이면 반환값 False 여도 수렴 (힘 기준이 이긴다 — 양쪽 다)")
+    _v4 = _conv_verdict(_FakeOpt(500), _FakeAtoms(0.01), 0.02, 500, ret=True)
+    chk(_v4['converged'] is True and _v4['hit_step_limit'] is True,
+        "Q1a 유지: 마지막 허용 스텝에서 수렴한 경우를 오탐하지 않는다")
+
+    # 문구 — "한 골짜기로 정의되지 않는다" 가 더는 안 나온다
+    chk('한 골짜기로 정의되지 않는다' not in (_hole.get('fit_quality_reason') or ''),
+        "⛔음성 (BQ-3): 결론 문구 '한 골짜기로 정의되지 않는다' 삭제됨")
 
     # P0-2 — 보고 곡선이 **한 갈래**인가 (min 섞기가 아닌가)
     chk(_h.get('reported_branch') == 'up'
@@ -1679,7 +2030,7 @@ def _selftest():
         "P0-3: 보고 가지의 **마지막 구조**가 같이 돌아온다 (숫자만 넘기지 않는다)")
     _rec = {'eos': dict(_bq)}
     _a2, _pol = maybe_apply_eos_v0(at, _rec, A(apply_eos_v0=True, fixed_shape_relax=True), EMT())
-    chk('승계함' in (_pol.get('v0_start_state') or ''),
+    chk((_pol.get('v0_start_selection') or {}).get('method') == 'nearest_converged_up_branch',
         "P0-3: 승계 여부가 기록에 남는다 (승계함)")
     _rec2 = {'eos': {k: v for k, v in _bq.items() if k != '_branch_atoms'}}
     _v_at = at.get_volume()
@@ -1891,6 +2242,111 @@ def _selftest():
     chk((_up.get('fairchem_version') is not None) or ('⛔_불완전' in _up),
         "⛔음성: 못 읽은 항목을 기본값으로 채우지 않고 **불완전하다고 표시**한다")
 
+    # ⑭ ★ 회신 BQ-3 실행 전 최소조건 ② — 점별 저장 · 최근접점 승계 · 저장→재독 · 폴더 거부
+    import tempfile as _tf3
+    with _tf3.TemporaryDirectory() as _td3:
+        _r3 = _P(_td3)
+        _cuf = bulk('Cu', 'fcc', a=3.6, cubic=True) * (2, 2, 2)
+        _cuf.rattle(stdev=0.03, seed=3)
+        _m3 = {'structure': 'cu', 'run_id': 'test', 'run_tag': 'T', 'code_id': 'x',
+               'model': 'emt', 'inference_mode': 'None', 'relax_steps': 30}
+        _fr5 = (0.98, 0.99, 1.00, 1.01, 1.02)
+        _sw = eos_sweep(_cuf, EMT(), fractions=_fr5, fmax=0.05, relax_steps=30,
+                        continuation=True, hysteresis_tol=1.0, hysteresis_span_tol=1.0,
+                        hysteresis_shape_tol=1.0, save_dir=_r3 / 'frames', meta=_m3)
+        _up = _sw['hysteresis']['convergence_up']; _dn = _sw['hysteresis']['convergence_down']
+        _paths = [c.get('frame_path') for c in _up + _dn]
+        chk(len(_paths) == 10 and all(p_ and _P(p_).exists() for p_ in _paths),
+            "Q5-2: 양방향 5점 = **프레임 10개**가 전부 파일로 남는다")
+        chk(all(c.get('point_id') and (i == 0) == (c.get('prev_point_id') is None)
+                for i, c in enumerate(_up)),
+            "Q5-2: 점 ID 와 **직전 점 ID** 가 기록된다 (첫 점만 None)")
+        # 저장 → 재독 보존 기준 (좌표 ≤1e-8 Å · ID · PBC · 응력 · 메타)
+        _f0 = _sw['_branch_frames'][2]
+        _rd = read(_up[2]['frame_path'], format='extxyz')
+        _err = float(np.abs(_rd.positions - _f0.positions).max())
+        chk(_err <= 1e-8, f"Q5-2 보존: 저장→재독 좌표 오차 {_err:.2e} Å ≤ 1e-8")
+        chk(np.array_equal(_rd.arrays.get('atom_id'), np.arange(len(_f0)))
+            and all(_rd.pbc) and 'stress_voigt_eV_A3' in _rd.info
+            and 'forces_eV_A' in _rd.arrays and _rd.info.get('structure') == 'cu'
+            and _rd.info.get('direction') == 'up' and 'energy_eV' in _rd.info,
+            "Q5-2 보존: atom_id · PBC · 응력(단위) · 힘 벡터 · 에너지 · 구조/방향 메타 전부 남는다")
+        # 미수렴점도 저장하는가 — 굶긴 런
+        _st = eos_sweep(_cuf, EMT(), fractions=_fr5, fmax=1e-9, relax_steps=1,
+                        continuation=True, hysteresis_tol=1.0, hysteresis_span_tol=1.0,
+                        hysteresis_shape_tol=1.0, save_dir=_r3 / 'starved', meta=_m3)
+        _stu = _st['hysteresis']['convergence_up']
+        chk(all(c.get('converged') is False for c in _stu)
+            and all(_P(c['frame_path']).exists() for c in _stu)
+            and read(_stu[0]['frame_path'], format='extxyz').info.get('converged') is False,
+            "⛔음성 Q5-2: **미수렴점도 저장**되고 프레임 안에 converged=False 가 박힌다")
+
+        # 최근접 수렴점 선택 + 동률 규칙
+        _fk_frames = []
+        for v in (90.0, 100.0, 110.0, 120.0, 130.0):
+            _a = bulk('Cu', 'fcc', a=3.6, cubic=True)
+            _a.set_cell(_a.cell.array * (v / _a.get_volume()) ** (1 / 3), scale_atoms=True)
+            _fk_frames.append(_a)
+        _cvT = [{'converged': True, 'fraction': f} for f in (0.9, 1.0, 1.1, 1.2, 1.3)]
+        _s1 = _select_nearest_converged(_fk_frames, _cvT, 112.0)
+        chk(_s1 and _s1['index'] == 2, "Q5-4: |Vᵢ−V₀| 최소 수렴점을 고른다 (112 → 110)")
+        _s2 = _select_nearest_converged(_fk_frames, _cvT, 115.0)
+        chk(_s2 and _s2['index'] == 2, "Q5-4 동률: 110 과 120 이 같은 거리면 **낮은 인덱스**")
+        _cvX = [dict(c, converged=(i != 2)) for i, c in enumerate(_cvT)]
+        _s3 = _select_nearest_converged(_fk_frames, _cvX, 112.0)
+        chk(_s3 and _s3["index"] == 3, "⛔음성 Q5-4: 최근접점(110)이 **미수렴**이면 건너뛰고 다음 최근접 수렴점(120, |8| < |12|)을 고른다")
+        chk(_select_nearest_converged(_fk_frames, [dict(c, converged=False) for c in _cvT], 112.0) is None,
+            "⛔음성 Q5-4: 수렴점이 하나도 없으면 None (끝점으로 때우지 않는다)")
+
+        # 구조 비교 — 판정하지 않고 사실만
+        _ref = bulk('Cu', 'fcc', a=3.6, cubic=True) * (2, 2, 2)
+        _ref.symbols[:8] = 'Li'                       # 앞 8개를 Li 로 — 골격/Li 분리 시험
+        _ref.new_array('atom_id', np.arange(len(_ref)))
+        _same = _ref.copy()
+        _c0 = compare_frames(_ref, _same, cutoff=3.0)
+        chk(_c0['continuity'] == 'neighbor_sets_identical' and _c0['max_disp_A'] < 1e-12,
+            "Q5-3 양성 대조: 같은 프레임 → 이웃 집합 동일 · 변위 0")
+        _sh = _ref.copy(); _sh.positions += np.array([0.3, 0.0, 0.0])    # 전체 병진
+        _c1 = compare_frames(_ref, _sh, cutoff=3.0)
+        chk(_c1['max_disp_A'] < 1e-9 and abs(_c1['framework_translation_removed_A'][0] - 0.3) < 1e-9,
+            "Q5-3: **골격 공통 병진**은 제거된다 (병진은 변위가 아니다)")
+        _mv = _ref.copy(); _mv.positions[0] += np.array([1.2, 0.0, 0.0])  # Li 하나 이동
+        _c2 = compare_frames(_ref, _mv, cutoff=3.0)
+        chk(_c2['continuity'] == 'neighbor_sets_changed' and _c2['max_disp_atom_index'] == 0
+            and _c2['max_disp_atom_symbol'] == 'Li' and _c2['n_Li_with_neighbor_set_changed'] >= 1,
+            "Q5-3: Li 하나가 1.2 Å 움직이면 이웃 집합 변화 + 최대변위 원자가 그 Li 로 찍힌다")
+        chk(_c2['rmsd_Li_A'] > _c2['rmsd_framework_A'],
+            "Q5-3: Li 와 골격 RMSD 가 **분리**되고 움직인 쪽이 크다")
+        _sw2 = _ref.copy(); _sw2.positions[[0, 1]] = _sw2.positions[[1, 0]]  # Li 둘 자리 교환
+        _c3 = compare_frames(_ref, _sw2, cutoff=3.0)
+        chk(_c3['max_disp_A'] > 1.0,
+            "⛔음성 Q5-3: Li 자리 교환을 **재정렬로 지우지 않는다** (ID 유지 → 변위로 잡힌다)")
+        _bad = _ref.copy(); _bad.set_cell(_bad.cell.array * 1.01, scale_atoms=True)
+        chk(compare_frames(_ref, _bad)['continuity'] == 'continuity_unknown',
+            "⛔음성 Q5-3: 셀이 다르면 비교하지 않는다 (continuity_unknown)")
+        chk('골짜기 판정이 아니다' in _c2.get('⛔_읽는_법', ''),
+            "Q5-3: 문턱으로 '같은 골짜기' 를 선언하지 않는다는 문구가 박혀 있다")
+
+        # 폴더 재사용 거부 (BQ-3 P0-3 잔여)
+        write(str(_r3 / 'cu.xyz'), bulk('Cu', 'fcc', a=3.6, cubic=True) * (2, 2, 2))
+        _o1 = process_one(_r3 / 'cu.xyz', EMT(), _r3 / 'run1', _Args())
+        chk((_r3 / 'run1' / 'cu' / 'final_v0_applied.xyz').exists()
+            and len((_o1.get('structures_written') or {}).get('final_sha256', '')) == 64
+            and (_o1.get('structures_written') or {}).get('run_id') == _o1.get('run_id'),
+            "P0-3: 최종 파일이 sha256 와 run_id 로 **자격 기록에 결속**된다")
+        try:
+            process_one(_r3 / 'cu.xyz', EMT(), _r3 / 'run1', _Args(eos_fmax=1e-9, relax_steps=1))
+            _refused = False
+        except RuntimeError as _e:
+            _refused = '재사용 거부' in str(_e)
+        chk(_refused, "⛔⛔음성 P0-3: 같은 폴더에 다시 돌리면 **거부**한다 (이전 최종 파일이 남는 경로 차단)")
+        chk((_r3 / 'run1' / 'cu' / 'final_v0_applied.xyz').exists(),
+            "P0-3: 거부해도 이전 결과를 **지우지 않는다**")
+        chk((_o1.get('cell_policy') or {}).get('v0_start_selection', {}).get('method')
+            == 'nearest_converged_up_branch'
+            and '4_displacement_vs_scaled_start' in (_o1.get('cell_policy') or {}).get('succession_checks', {}),
+            "Q5-4: 실제 process_one 경로에서 최근접점 승계 + 확인 순서 ①~④ 가 기록된다")
+
     print(f"  selftest: ⭕ {ok} · ⛔ {fail}")
     return 0 if fail == 0 else 1
 
@@ -1948,6 +2404,8 @@ def main():
                         '(기본 미적용 = GAP-3 그대로, 단 record 에 경고가 박힌다)')
     p.add_argument('--fixed_shape_relax', action='store_true',
                    help='0단계 relax 를 CellFilter 없이 고정셀로 한다 (각도·길이비 보존)')
+    p.add_argument('--run_tag', default='',
+                   help='조건 이름 등 실행 식별 태그 — 점별 프레임과 기록에 박힌다 (예: W3_f02)')
     p.add_argument('--uma_mode', default=None,
                    help="UMA 추론 설정을 **선언적으로** 지정 (예: default / turbo). "
                         "생략하면 라이브러리 기본값 — 다만 실제 설정은 기록된다 (회신 BQ-2 Q6)")
