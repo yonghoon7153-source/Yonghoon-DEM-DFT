@@ -44,6 +44,61 @@ REQUIRED_ROLES = ("full_cell", "half_cell", "literature.gr", "literature.si")
 #: ⚠ 자체 리뷰 C18: 전 판은 pandas 를 서명에는 적고 비교 축에서 뺐다. 과학 입력이 전부 `pd.read_excel` 로
 #:   읽히므로 pandas 는 입력 파싱을 바꿀 수 있는 축이다 — 적고 안 대면 그 서명은 무엇을 고정하는지 말할 수 없다.
 ENV_KEYS = ("python", "numpy", "scipy", "pandas", "platform")
+
+#: ⚠ Codex R13 P2-1: 유한성 검사 **앞에** 타입·모양 계약이 없었다. `best_obj=true` 는 `float(True)==1.0`
+#: 이라 정상 scalar 1.0 인 정본과 "같다" 로 읽혔고, `best_p=[]`·`LLI_percent={}` 도 문제 0 이었다.
+#: 과학 값의 계약은 (a) 무엇인지 (b) 몇 개인지 (c) 유한한지 — 셋 다다.
+DEGENERACY_NUMERIC = ("w_dqdv", "tol_percent_of_best", "n_starts", "seed", "n_grid",
+                      "n_samples", "n_accepted", "best_obj")
+DEGENERACY_VECTORS = {"best_p": 5, "ref_p": 5}          # 5-파라미터 모델 (model.LB5/UB5)
+DEGENERACY_STATS = ("LAM_PE_percent", "LAM_NE_percent", "LLI_percent")
+DEGENERACY_STAT_KEYS = ("min", "max")
+
+
+def _is_num(x) -> bool:
+    """bool 은 숫자가 아니다 (`isinstance(True, int)` 가 참이라 개수·값으로 새는 통로였다)."""
+    return isinstance(x, (int, float)) and not isinstance(x, bool) and math.isfinite(x)
+
+
+def check_degeneracy_shape(j: dict) -> list:
+    """degeneracy JSON 의 **타입·모양** 계약 (Codex R13 P2-1 · P2-4). 유한성보다 앞이다."""
+    p = []
+    for k in DEGENERACY_NUMERIC:
+        if k in j and not _is_num(j[k]):
+            p.append(f"{k} 가 유한 숫자가 아니다 ({j[k]!r}) — bool·문자열·비유한은 과학 값이 아니다")
+    for k, n in DEGENERACY_VECTORS.items():
+        if k not in j:
+            continue
+        v = j[k]
+        if not isinstance(v, list) or len(v) != n or not all(_is_num(x) for x in v):
+            p.append(f"{k} 가 유한 숫자 {n} 개의 목록이 아니다 ({v!r})")
+    for k in DEGENERACY_STATS:
+        if k not in j:
+            continue
+        v = j[k]
+        if not isinstance(v, dict):
+            p.append(f"{k} 가 객체가 아니다 ({v!r})"); continue
+        miss = [q for q in DEGENERACY_STAT_KEYS if q not in v]
+        if miss:
+            p.append(f"{k} 에 필수 칸이 없다 ({miss}) — 빈 객체는 통계가 아니다")
+        p += [f"{k}.{q} 가 유한 숫자가 아니다 ({v[q]!r})"
+              for q in DEGENERACY_STAT_KEYS if q in v and not _is_num(v[q])]
+    if "best_modes_percent" in j:
+        v = j["best_modes_percent"]
+        if not isinstance(v, dict) or not v or not all(_is_num(x) for x in v.values()):
+            p.append(f"best_modes_percent 가 유한 숫자 객체가 아니다 ({v!r})")
+    # ⚠ Codex R13 P2-4: 필수 env 축의 **존재**는 baseline 없이도 candidate 혼자 지켜야 하는 계약이다.
+    #   전 판은 "비어 있지 않은 dict 인가" 만 보고 필수 key 는 비교 모드에서만 봤다.
+    if "env" in j:
+        e = j["env"]
+        if not isinstance(e, dict):
+            p.append(f"env 가 객체가 아니다 ({e!r})")
+        else:
+            miss = [k for k in ENV_KEYS if not str(e.get(k) or "").strip()]
+            if miss:
+                p.append(f"env 에 필수 축이 없다 ({miss}) — 요구: {' · '.join(ENV_KEYS)}")
+    return p
+
 #: sidecar 가 반드시 담아야 하는 실행 조건 — **양쪽에 있어야** 비교가 성립한다 (Codex R10 P1-7: 지우면 검사가 잠들었다)
 META_CONTROLS = ("state", "half_cell_source", "si_source", "starts", "seed")
 #: success 행에는 없어야 하는 열 — 있으면 그 행은 error 행이고 묶음은 승격 대상이 아니다 (Codex R10 P1-5)
@@ -524,13 +579,24 @@ def _finite_problems(x, where: str) -> list:
 
 
 def check_degeneracy(j: dict) -> list:
-    p = [f"키 없음: {k}" for k in DEGENERACY_KEYS if j.get(k) in (None, "")]
+    # ⚠ Codex R13 P1-2: 전 판은 `in (None, "")` 이라 **빈 컨테이너**(`{}`·`[]`)가 "있음" 으로 셌다 —
+    #   `ref_consumed_inputs: {}` 가 필수 키 검사도, 아래 truthy 가지도 둘 다 빠져나갔다.
+    p = [f"키 없음: {k}" for k in DEGENERACY_KEYS
+         if j.get(k) is None or (isinstance(j.get(k), (str, dict, list, tuple)) and len(j[k]) == 0)]
+    p += check_degeneracy_shape(j)
     p += _finite_problems({k: v for k, v in j.items() if k not in ("env", "consumed_inputs", "ref_consumed_inputs")},
                           "degeneracy")
     if "consumed_inputs" in j:
         p += validate_receipt(j.get("consumed_inputs"), j.get("inputs_sha"), "consumed_inputs")
-    if "ref_consumed_inputs" in j and j.get("ref_consumed_inputs"):
-        ref = j["ref_consumed_inputs"]
-        if isinstance(ref, dict):
+    # ⚠ Codex R13 P1-2: reference 는 **키가 있으면 언제나** 검증한다. 전 판은 (a) truthy 일 때만,
+    #   (b) dict 일 때만 봤다 — 같은 불완전 reference 가 dict 면 걸리고 JSON 문자열이면 통과했다
+    #   (`consumed_inputs` 쪽은 `receipt_text` 로 정규화하는데 여기만 비대칭이었다). candidate 의
+    #   자기 계약은 baseline 의 나이와 무관하다.
+    if "ref_consumed_inputs" in j:
+        ref = receipt_text(j["ref_consumed_inputs"])
+        if not ref:
+            p.append("ref_consumed_inputs: 기준 실행의 입력 출처가 비어 있다 — 새 산출의 계약 위반이다 "
+                     "(baseline 이 옛 스키마인 것과 별개다, Codex R13 P1-2)")
+        else:
             p += [x for x in validate_receipt(ref, inputs_digest(ref), "ref_consumed_inputs") if "digest" not in x]
     return p

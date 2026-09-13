@@ -268,8 +268,12 @@ def test_f08_a_candidate_that_omits_its_own_receipt_is_not_amnestied(tmp_path):
     old, new = tmp_path / "old", tmp_path / "new"
     _degeneracy(old, run_id="R1")
     _, j = _degeneracy(new, run_id="R2", ref_consumed_inputs={})
-    assert S.check_degeneracy(j) == [] or all("ref_consumed_inputs" not in x for x in S.check_degeneracy(j)), \
-        "fixture: 스키마가 먼저 막으면 이 축을 못 잰다"
+    # ⚠ Codex R13 P1-2: 전 판은 "스키마가 먼저 막으면 이 축을 못 잰다" 를 **fixture 조건으로 고정**했다 —
+    #   그 전제 자체가 구멍이었다 (빈 reference 를 스키마가 안 막았다). 이제 스키마가 **먼저** 막고,
+    #   그 뒤에 CLI 도 같은 판정을 내는지 둘 다 본다.
+    schema_says = S.check_degeneracy(j)
+    assert any("ref_consumed_inputs" in x for x in schema_says), \
+        f"빈 reference 를 스키마가 안 막는다 (Codex R13 P1-2): {schema_says}"
     rc, text, promo = _check_u14("--new", new, "--old", old)
     assert rc == 2, f"새 산출이 자기 receipt 를 안 적었는데 rc {rc} 다:\n{text[-900:]}"
     assert promo and promo["promotion_eligible"] is False

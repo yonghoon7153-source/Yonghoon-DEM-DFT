@@ -123,3 +123,76 @@ def test_g05_canonical_contract_is_shared_with_producer():
     src = inspect.getsource(V.cmd_matrix) + inspect.getsource(V.cmd_profile)
     assert "canonical_combo_keys" in src, "producer 가 matrix 모집단을 따로 만든다 (두 벌이면 갈린다)"
     assert "canonical_gamma_grid" in src, "producer 가 γ 격자를 따로 만든다"
+
+
+# ---------------------------------------------------------------- P1-2
+
+def _deg(**over):
+    """producer 모양의 degeneracy JSON 한 벌."""
+    ci = _receipt()
+    j = {"state": "100", "si_source": "Li", "half_cell": "GITT", "w_dqdv": 0.0,
+         "tol_percent_of_best": 1.0, "n_starts": 24, "seed": 0, "n_grid": 21, "n_samples": 400,
+         "run_id": "rid", "env": {"python": "3.11.0", "numpy": "1.26.0", "scipy": "1.11.0",
+                                  "pandas": "2.0.0", "platform": "linux-x"},
+         "consumed_inputs": ci, "ref_consumed_inputs": _receipt("5", "6", "7", "8"),
+         "inputs_sha": S.inputs_digest(ci), "n_accepted": 5,
+         "best_obj": 1.5, "best_p": [1.0, 2.0, 3.0, 4.0, 5.0], "ref_p": [1.0, 2.0, 3.0, 4.0, 5.0],
+         "best_modes_percent": {"LLI": 1.5},
+         "LAM_PE_percent": {"min": 0.0, "max": 1.0, "is_lower_bound": True},
+         "LAM_NE_percent": {"min": 0.0, "max": 1.0, "is_lower_bound": True},
+         "LLI_percent": {"min": 1.0, "max": 2.0, "is_lower_bound": True}}
+    j.update(over)
+    return j
+
+
+def test_g06_empty_reference_receipt_is_a_candidate_violation():
+    """`both_reference_receipts_empty` — 양쪽 `{}` 면 candidate 계약 검사까지 사라졌다.
+
+    전 판: `check_degeneracy` 가 `j.get("ref_consumed_inputs")` truthy 일 때만 검증했고
+    (빈 dict 는 falsy), 필수 키 검사도 `in (None, "")` 이라 `{}` 를 통과시켰다.
+    """
+    assert not S.check_degeneracy(_deg()), S.check_degeneracy(_deg())
+    probs = S.check_degeneracy(_deg(ref_consumed_inputs={}))
+    assert probs, "빈 reference receipt 가 candidate 계약 검사를 통째로 건너뛰었다 (Codex R13 P1-2)"
+
+
+def test_g07_string_reference_receipt_is_validated_like_a_dict():
+    """`reference_receipt_string_missing_locator` — JSON **문자열** reference 는 검증을 생략했다.
+
+    같은 불완전 reference 가 dict 면 path 누락을 보고하고 문자열이면 아무 말도 안 했다 (비대칭).
+    """
+    bad = _receipt()
+    del bad["half_cell"]["path"]                      # locator 누락
+    as_dict = S.check_degeneracy(_deg(ref_consumed_inputs=bad))
+    as_text = S.check_degeneracy(_deg(ref_consumed_inputs=json.dumps(bad)))
+    assert as_dict, "dict 쪽 대조군이 안 걸린다"
+    assert as_text, "같은 결함이 JSON 문자열이면 검증을 건너뛰었다 (Codex R13 P1-2)"
+
+
+# ---------------------------------------------------------------- P2-1
+
+def test_g08_numeric_fields_reject_bool_and_wrong_shape():
+    """`degeneracy_boolean_vs_numeric_baseline` — 정상 `best_obj=1.0` 을 `true` 로 바꿔도 통과했다.
+
+    `float(True) == 1.0` 이라 비교기도 같다고 읽는다. 유한성 검사 **앞에** 타입·모양 계약이 필요하다.
+    """
+    assert not S.check_degeneracy(_deg())
+    for label, over in (("bool objective", {"best_obj": True}),
+                        ("non-numeric string", {"best_obj": "not-computed"}),
+                        ("empty parameter vector", {"best_p": []}),
+                        ("short parameter vector", {"best_p": [1.0, 2.0]}),
+                        ("empty statistics object", {"LLI_percent": {}})):
+        assert S.check_degeneracy(_deg(**over)), f"{label} 이 과학 값으로 통과했다 (Codex R13 P2-1)"
+
+
+# ---------------------------------------------------------------- P2-4
+
+def test_g09_required_env_axes_are_checked_without_a_baseline():
+    """`schema_only_missing_env_fields` — env 에서 numpy/scipy/pandas/platform 을 지워도 schema 0 이었다.
+
+    필수 env 축의 존재는 baseline 없이도 candidate 혼자 만족해야 하는 계약이다.
+    """
+    assert not S.check_degeneracy(_deg())
+    probs = S.check_degeneracy(_deg(env={"python": "3.11.0"}))
+    assert probs, "필수 env 축이 빠졌는데 schema 검사가 통과했다 (Codex R13 P2-4)"
+    assert any("env" in p for p in probs), probs

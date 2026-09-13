@@ -60,7 +60,7 @@ def _deg(state, rid, spans, schema=False):
         ci = {"half_cell": {"path": "h.xlsx", "sha256": "1" * 64}, "full_cell": {"path": "f.xlsx", "sha256": "2" * 64},
               "literature": {"gr": {"path": "g.xlsx", "sha256": "3" * 64}, "si": {"path": "s.csv", "sha256": "4" * 64}}}
         rci = {"half_cell": {"path": "p.xlsx", "sha256": "5" * 64}, "full_cell": ci["full_cell"], "literature": ci["literature"]}
-        obj |= {"w_dqdv": 0.0, "tol_percent_of_best": 1.0, "seed": 0, "n_grid": 21, "n_samples": 400, "env": {"numpy": "2"},
+        obj |= {"w_dqdv": 0.0, "tol_percent_of_best": 1.0, "seed": 0, "n_grid": 21, "n_samples": 400, "env": {"python": "3.11.0", "numpy": "2.0", "scipy": "1.11.0", "pandas": "2.0.0", "platform": "linux-x"},
                 "consumed_inputs": ci, "ref_consumed_inputs": rci, "inputs_sha": S.inputs_digest(ci),
                 "n_accepted": 5, "best_obj": 1.5, "best_p": [1.0, 0.0, 1.0, 0.0, 0.2], "ref_p": [1.0, 0.0, 1.0, 0.0, 0.2]}
     return obj

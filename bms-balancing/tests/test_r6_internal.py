@@ -657,13 +657,15 @@ def _u14_dirs(tmp_path, *, schema=True, bump=None):
           "literature": {"gr": {"path": "g.xlsx", "sha256": "3" * 64}, "si": {"path": "s.csv", "sha256": "4" * 64}}}
     rci = {"half_cell": {"path": "p.xlsx", "sha256": "5" * 64}, "full_cell": ci["full_cell"], "literature": ci["literature"]}
     for d, is_new in ((old, False), (new, True)):
-        j = {"state": "100", "n_accepted": 5, "best_obj": 1.5, "best_p": [1.0, 2.0],
+        # ⚠ Codex R13 P2-1: `best_p` 는 5-파라미터 벡터다 (전 판 fixture 는 2 개였고, 모양 계약이
+        #   없던 시절엔 통과했다 — 그래서 이 회귀가 모양 축을 한 번도 재지 않았다).
+        j = {"state": "100", "n_accepted": 5, "best_obj": 1.5, "best_p": [1.0, 2.0, 3.0, 4.0, 5.0],
              "LLI_percent": {"min": 1.0, "max": 2.0 + (bump or 0.0) * is_new, "is_lower_bound": True}}
         if is_new and schema:
             j |= {"run_id": "rid", "si_source": "Li", "half_cell": "GITT", "w_dqdv": 0.0, "tol_percent_of_best": 1.0,
-                  "n_starts": 24, "seed": 0, "n_grid": 21, "n_samples": 400, "env": {"numpy": "2.0"},
+                  "n_starts": 24, "seed": 0, "n_grid": 21, "n_samples": 400, "env": {"python": "3.11.0", "numpy": "2.0", "scipy": "1.11.0", "pandas": "2.0.0", "platform": "linux-x"},
                   "consumed_inputs": ci, "ref_consumed_inputs": rci, "inputs_sha": S.inputs_digest(ci),
-                  "ref_p": [1.0, 2.0], "best_modes_percent": {"LLI": 1.5},
+                  "ref_p": [1.0, 2.0, 3.0, 4.0, 5.0], "best_modes_percent": {"LLI": 1.5},
                   "LAM_PE_percent": {"min": 0.0, "max": 1.0}, "LAM_NE_percent": {"min": 0.0, "max": 1.0}}
         (d / "degeneracy_100_Li.json").write_text(json.dumps(j), encoding="utf-8")
         if is_new and schema:
@@ -871,10 +873,10 @@ def test_i6w_03_check_u14_uses_the_versioned_baseline_and_separates_new_fields(t
           "literature": {"gr": {"path": "g.xlsx", "sha256": "3" * 64}, "si": {"path": "s.csv", "sha256": "4" * 64}}}
     (new / "degeneracy_300_0009_Li.json").write_text(json.dumps(      # 재실행 = v2 재현 + 새 필드 (producer 스키마 전부)
         base | {"run_id": "r", "si_source": "Li", "half_cell": "GITT", "w_dqdv": 0.0, "tol_percent_of_best": 1.0,
-                "n_starts": 24, "seed": 0, "n_grid": 21, "n_samples": 400, "env": {"numpy": "2"},
+                "n_starts": 24, "seed": 0, "n_grid": 21, "n_samples": 400, "env": {"python": "3.11.0", "numpy": "2.0", "scipy": "1.11.0", "pandas": "2.0.0", "platform": "linux-x"},
                 "consumed_inputs": ci, "ref_consumed_inputs": ci,
                 "inputs_sha": __import__("bms_balancing.schema", fromlist=["x"]).inputs_digest(ci),
-                "best_p": [1.0], "ref_p": [1.0], "best_modes_percent": {"LLI": 1.5},
+                "best_p": [1.0] * 5, "ref_p": [1.0] * 5, "best_modes_percent": {"LLI": 1.5},
                 "LAM_PE_percent": {"min": 0.0, "max": 1.0}, "LAM_NE_percent": {"min": 0.0, "max": 1.0},
                 "LLI_percent": {"min": 1.0, "max": 2.0, "is_lower_bound": True, "grid_pct": [1.0, 2.0]}}),
         encoding="utf-8")
