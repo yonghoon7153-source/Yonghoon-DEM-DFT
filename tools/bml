@@ -3810,6 +3810,26 @@ tunnel_via_vps() {
     bash "$(write_vps_keepalive "$target")"
 }
 
+#: ssh 두드림의 종료 코드를 판정 한 단어로 바꾼다.
+#:
+#:   shell        붙고 셸도 있다
+#:   noshell      **인증은 끝났고** 원격이 셸을 안 줬다 (nologin) — 전용 터널
+#:                계정이면 이것이 정상이다
+#:   unreachable  ssh 가 제 문제로 끝났다 (연결·인증·호스트키)
+#:
+#: 가르는 것은 255 다.  ssh 는 제 문제에 255 를 내고, 원격 명령까지 갔으면 그
+#: 명령의 값을 그대로 넘긴다.  `vps-setup.sh` 가 만드는 `bml-tunnel` 은 셸이
+#: `/usr/sbin/nologin` 이라(Codex #7) `ssh ... true` 가 1 로 끝난다 —
+#: 그것을 실패로 읽으면 **제대로 세워 둔 사람에게 키를 다시 올리라고 시킨다.**
+#: 실제로 그렇게 시켰다 (2026-09-13, 첫 실제 VPS).
+probe_verdict() {
+  case "${1:-255}" in
+    0)   printf 'shell\n' ;;
+    255) printf 'unreachable\n' ;;
+    *)   printf 'noshell\n' ;;
+  esac
+}
+
 #: `bml share vps <사용자@호스트[:포트]|off>` — 우리 VPS 를 적어 둔다.
 cmd_share_vps() {
   local raw="${1:-}" dom
@@ -3847,15 +3867,34 @@ cmd_share_vps() {
   ok "우리 VPS → ${B}${raw}${OFF}"
   # 여기서 한 번 두드려 본다.  적어 두기만 하고 다음 `bml share` 에서 처음
   # 실패하면, 그때는 무엇이 문제인지(키·방화벽·이름) 갈라 보기 어렵다.
+  #
+  # **셸이 없는 계정을 실패로 읽지 않는다.**  `vps-setup.sh` 가 만드는
+  # `bml-tunnel` 은 셸이 `/usr/sbin/nologin` 이다 (Codex #7 -- 키가 새도 할 수
+  # 있는 일이 127.0.0.1:5003 하나뿐이게).  그래서 `ssh ... true` 는 인증까지
+  # 다 되고 나서 `This account is currently not available.` 를 내며 끝난다.
+  # 예전에는 그것을 "공개키가 저쪽에 없거나 사용자 이름이 다릅니다" 로 적었다 --
+  # **제대로 세워 둔 사람에게 키를 다시 올리라고 시키는 화면**이고, 실제로
+  # 그렇게 시켰다 (2026-09-13, 첫 실제 VPS).
+  #
+  # 가르는 것은 종료 코드다.  ssh 는 제 문제(연결·인증)에 255 를 내고, 원격
+  # 명령까지 갔으면 그 명령의 값을 그대로 넘긴다.  nologin 은 1 이다.
+  # 그러므로 255 가 아닌 값은 **인증이 끝났다는 뜻**이다.
   if command -v ssh >/dev/null 2>&1; then
+    local probe_rc=0
     step "붙어 보는 중"
-    if ssh -o BatchMode=yes -o StrictHostKeyChecking=accept-new \
-           -o ConnectTimeout=10 "${raw%%:*}" true 2>/dev/null; then
-      ok "키로 붙습니다."
-    else
-      warn "아직 안 붙습니다 — 공개키가 저쪽에 없거나 사용자 이름이 다릅니다."
-      say "  ${GREEN}ssh-copy-id ${raw%%:*}${OFF}"
-    fi
+    ssh -o BatchMode=yes -o StrictHostKeyChecking=accept-new \
+        -o ConnectTimeout=10 "${raw%%:*}" true >/dev/null 2>&1 || probe_rc=$?
+    case "$(probe_verdict "$probe_rc")" in
+      shell)
+        ok "키로 붙습니다." ;;
+      noshell)
+        ok "키로 붙습니다. ${DIM}(셸은 없습니다 — 전용 터널 계정이면 그것이 정상입니다)${OFF}" ;;
+      *)
+        warn "아직 안 붙습니다 — 공개키가 저쪽에 없거나 사용자 이름이 다릅니다."
+        say "  ${GREEN}ssh-copy-id ${raw%%:*}${OFF}"
+        say "  ${DIM}셸이 없는 전용 계정(bml-tunnel)이면 ssh-copy-id 가 안 먹습니다 —${OFF}"
+        say "  ${DIM}저쪽에서 authorized_keys 에 직접 붙이세요 (vps-setup.sh 가 그 줄을 적어 줍니다).${OFF}" ;;
+    esac
   fi
   if ! dom="$(tunnel_domain)"; then
     warn "이제 이름이 필요합니다 — VPS 만으로는 어느 주소로 나갔는지 알 수 없습니다."

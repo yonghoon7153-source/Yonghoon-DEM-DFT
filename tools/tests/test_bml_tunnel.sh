@@ -789,6 +789,28 @@ check "요청을 쌓아 두지 않는다" "$(grep -c 'proxy_request_buffering of
 # 파일 상한(512 MiB)에 multipart 머리말 몫을 더한다 (Codex #19) -- 정확히
 # 512 MiB 인 파일이 boundary 때문에 문 앞에서 먼저 막히면 안 된다.
 check "업로드 상한에 여유를 둔다" "$(grep -c 'client_max_body_size 520m' "$SETUP")" "2"
+# --- 셸 없는 전용 계정을 "키가 없다" 로 읽지 않는다 ---------------------------
+#
+# 2026-09-13, 첫 실제 VPS.  `vps-setup.sh` 가 시킨 그대로 authorized_keys 에
+# 키를 넣었는데 `bml share vps` 가 이렇게 답했다:
+#
+#     This account is currently not available.
+#     ! 아직 안 붙습니다 — 공개키가 저쪽에 없거나 사용자 이름이 다릅니다.
+#       ssh-copy-id bml-tunnel@...
+#
+# 키는 멀쩡했다.  그 문장은 `/usr/sbin/nologin` 이 내는 것이고, 그 셸은 우리가
+# **일부러** 준 것이다 (Codex #7 — 키가 새도 할 수 있는 일이 127.0.0.1:5003
+# 하나뿐이게).  즉 화면이 제대로 세워 둔 사람에게 다시 세우라고 시켰다.
+# 게다가 시킨 `ssh-copy-id` 는 셸이 없어 애초에 안 먹는다.
+check "붙고 셸도 있으면 shell"     "$(probe_verdict 0)"   "shell"
+check "셸이 없으면 noshell (인증은 됐다)" "$(probe_verdict 1)" "noshell"
+check "nologin 말고 다른 값도 인증은 된 것" "$(probe_verdict 126)" "noshell"
+# 255 는 ssh 가 **제 문제**로 끝났다는 뜻이다 — 연결·인증·호스트키.  이때만
+# 키를 의심한다.
+check "255 만 진짜 실패"           "$(probe_verdict 255)" "unreachable"
+# 값이 없으면 "됐다" 쪽으로 기울지 않는다 (§0.4 — 모르면 통과시키지 않는다).
+check "값이 없으면 실패로 본다"     "$(probe_verdict)"     "unreachable"
+
 # 있는 설정을 말없이 덮지 않고, default 도 지우지 않는다 (Codex #6 · #22).
 # 2 -> 3: 판정 근거가 "파일이 있으면" 에서 "우리 표가 없는 파일이 있으면" 으로
 # 바뀌었고, **왜 그렇게 바꿨는지**를 그 자리 주석에 적었다 (그 주석이 세 번째
