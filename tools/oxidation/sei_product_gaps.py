@@ -33,6 +33,15 @@ EXP_ANCHOR = {"Li3PO4": "~8 (exp)", "Li2O": "~7.99 (exp)", "LiCl": "~9.4 (exp)",
               "Li3N": "⚠ 미확인 — 원전 확인 후 채운다 (다형·측정법에 따라 갈린다)"}
 
 
+def _hull_key(v):
+    """E_hull 정렬 키. **None 만** 뒤로 보낸다 — 0.0 은 바닥상이지 결측이 아니다.
+
+    ⛔ `v or 9e9` 를 쓰면 안 된다: 파이썬에서 `0.0` 은 거짓이라 바닥상이 밀린다
+      (2026-09-13 실측 버그).
+    """
+    return 9e9 if v is None else float(v)
+
+
 def _row(d):
     """MP doc 하나 → 기록 한 줄. 공간군까지 남긴다 (어느 다형인지 적으려면 필요하다)."""
     sym = getattr(d, "symmetry", None)
@@ -130,6 +139,16 @@ def _selftest():
                                        "by_voltage": {"4.30": {"reaction": "A -> B + C"}}}) + "\n")
         r = reactions_in(p)
         chk(r == [("MgO|LCO|4.30V", "A -> B + C")], f"[양성] JSONL 의 전압별 반응식 ({r})")
+    # ⛔⛔음성 (2026-09-13) — 바닥상(E_hull=0.0)이 선택되는가. `or 9e9` 가 돌아오면 잡힌다.
+    _docs = [("Pnma", 0.084), ("Fm-3m", 0.0), ("P6_3mc", 0.004)]
+    _pick = min(_docs, key=lambda x: _hull_key(x[1]))
+    _c = _pick[0] == "Fm-3m"
+    print(("  ✓ " if _c else "  ⛔ ") + "⛔⛔음성: E_hull=0.0 인 **바닥상**이 선택된다 "
+          f"(고른 것: {_pick[0]} {_pick[1]})")
+    ok = ok and _c
+    _c2 = min([("A", None), ("B", 0.5)], key=lambda x: _hull_key(x[1]))[0] == "B"
+    print(("  ✓ " if _c2 else "  ⛔ ") + "⛔음성: E_hull 이 None 인 항목만 뒤로 간다 (0.0 과 구분)")
+    ok = ok and _c2
     print("selftest PASS" if ok else "selftest FAIL")
     return 0 if ok else 1
 
@@ -181,7 +200,14 @@ def main():
                     rows[f] = {"error": "no MP entry"}
                     continue
                 # pick the ground state (lowest e_above_hull)
-                d = min(docs, key=lambda x: (x.energy_above_hull or 9e9))
+                # ⛔⛔ 2026-09-13 — `x.energy_above_hull or 9e9` 였다. **파이썬에서 0.0 은
+                #   거짓**이라 `0.0 or 9e9` → 9e9 다. 즉 E_hull == 0 인 **바닥상이 항상
+                #   꼴찌로 밀려 한 번도 선택되지 않았다.** 이 파일의 _method 는
+                #   "ground-state (lowest e_above_hull) entry" 라고 적혀 있었는데 코드는
+                #   정확히 그 반대를 했다. 다형이 하나뿐인 조성만 우연히 맞았다.
+                #   실측: Li2O → Pnma(0.084) · Li2S → Pnma(0.062) · LiCl → P6_3mc(0.004) ·
+                #        Li3N → P6_3/mmc(β, 0.004)  전부 바닥상이 아니다.
+                d = min(docs, key=lambda x: _hull_key(x.energy_above_hull))
                 has_nd = "Nd" in f
                 rows[f] = {**_row(d), "Nd_bearing_gap_is_LOWER_BOUND": has_nd,
                            "exp_anchor": EXP_ANCHOR.get(f, ""),
