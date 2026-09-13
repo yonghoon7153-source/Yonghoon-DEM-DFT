@@ -38,8 +38,10 @@ def _load(name, path):
 
 _PC = _load('_pc_seal', SCRIPTS / 'plastic_coverage.py')
 
-COLS = ['case', 'status', 'design_family', 'n_types', 'deck', 'deck_sha256',
+COLS = ['case', 'status', 'design_family', 'family_source', 'n_types', 'deck', 'deck_sha256',
         'atom_file', 'atom_sha256', 'contact_file', 'contact_sha256', 'reason']
+DESIGN_CSV = ROOT / 'docs' / 'data' / 'lhs_design_20260818.csv'   # 설계족의 **정본** (`block` 열)
+BLOCK_NTYPES = {'bimodal': '3', 'mono_AM_S': '2', 'mono_AM_P': '2'}
 HEAD_RE = re.compile(r'^#\s*(\S+):\s*(\S+)\s*\((\d+)-type\)')
 
 
@@ -49,6 +51,17 @@ def sha256(p: Path) -> str:
         for chunk in iter(lambda: f.read(1 << 20), b''):
             h.update(chunk)
     return h.hexdigest()
+
+
+def load_design(csv_path: Path | None):
+    """설계 CSV → {case_id: block}.  ★ 실측 (2026-09-13): 실제 `lhs00_1xx` 덱의 첫 줄은 내 정규식과
+    안 맞아 31건 전부 UNKNOWN 이 됐다.  설계족의 정본은 이 CSV 의 `block` 열이다 (Codex 도 이것으로
+    mono 15+15 를 냈다).  덱 헤더는 **보조**로만 쓴다."""
+    import csv as _csv
+    if not csv_path or not Path(csv_path).is_file():
+        return {}
+    with Path(csv_path).open(encoding='utf-8') as f:
+        return {r['case_id']: r.get('block', '') for r in _csv.DictReader(f) if r.get('case_id')}
 
 
 def design_family(deck: Path):
@@ -61,7 +74,7 @@ def design_family(deck: Path):
     return (m.group(2), m.group(3)) if m else ('UNKNOWN', '')
 
 
-def seal_case(case_dir: Path, deck_dir: Path | None) -> dict:
+def seal_case(case_dir: Path, deck_dir: Path | None, design: dict | None = None) -> dict:
     """한 케이스 — **거부하지 않는다**.  없는 것은 status 로 적는다."""
     row = {k: '' for k in COLS}
     row['case'] = case_dir.name
@@ -77,12 +90,20 @@ def seal_case(case_dir: Path, deck_dir: Path | None) -> dict:
         if a and c and a.endswith('.liggghts') and c.endswith('.liggghts'):
             hit = (Path(a), Path(c)); break
     problems = []
-    row['design_family'] = 'UNKNOWN'          # 덱이 없거나 헤더가 없으면 UNKNOWN (빈 문자열 금지)
+    row['design_family'] = 'UNKNOWN'          # 정본(설계 CSV)에도 덱 헤더에도 없으면 UNKNOWN (빈 문자열 금지)
+    row['family_source'] = ''
     if dk is None:
         problems.append('DECK_MISSING')
     else:
         row['deck'] = str(dk); row['deck_sha256'] = sha256(dk)
-        row['design_family'], row['n_types'] = design_family(dk)
+        fam_hdr, nt_hdr = design_family(dk)
+        if fam_hdr != 'UNKNOWN':
+            row['design_family'], row['n_types'], row['family_source'] = fam_hdr, nt_hdr, 'deck_header'
+    blk = (design or {}).get(case_dir.name, '')
+    if blk:
+        if row['family_source'] == 'deck_header' and row['design_family'] != blk:
+            problems.append('FAMILY_CONFLICT')        # 덱 헤더 ↔ 설계 CSV 가 다르면 거부하지 않고 기록
+        row['design_family'], row['n_types'], row['family_source'] = blk, BLOCK_NTYPES.get(blk, ''), 'design_csv'
     if hit is None:
         a = _PC._pick_latest(str(case_dir), 'atom_*.liggghts')
         for d in sorted(q for q in case_dir.glob('post_*') if q.is_dir()):
@@ -91,16 +112,53 @@ def seal_case(case_dir: Path, deck_dir: Path | None) -> dict:
     else:
         row['atom_file'], row['contact_file'] = str(hit[0]), str(hit[1])
         row['atom_sha256'], row['contact_sha256'] = sha256(hit[0]), sha256(hit[1])
-    row['status'] = 'RAW_OK' if not problems else '+'.join(problems)
-    row['reason'] = ('포함: 원자료·덱 실재 (솔버 성공 여부는 보지 않았다)' if not problems
-                     else '제외 사유 = ' + ', '.join(problems) + ' (기술적 결손; 솔버 이전)')
+    fatal = [x for x in problems if x != 'FAMILY_CONFLICT']
+    row['status'] = ('RAW_OK' if not problems else '+'.join(problems))
+    if fatal and dk is None and hit is None:
+        row['reason'] = '케이스 폴더 아님 — 덱도 원자료도 없다 (행은 남긴다)'
+    elif fatal:
+        row['reason'] = '제외 사유 = ' + ', '.join(fatal) + ' (기술적 결손; 솔버 이전)'
+    else:
+        row['reason'] = '포함: 원자료·덱 실재 (솔버 성공 여부는 보지 않았다)'
+    if 'FAMILY_CONFLICT' in problems:
+        row['reason'] += ' · ⚠ 덱 헤더와 설계 CSV 의 설계족이 다르다 (CSV 채택)'
     return row
 
 
-def seal(root: Path, deck_dir: Path | None):
-    rows = [seal_case(d, deck_dir) for d in sorted(q for q in root.iterdir() if q.is_dir())
-            if d.name != 'done.txt']
-    return rows
+def refill_family(tsv: Path, design: dict) -> tuple[int, int]:
+    """이미 봉인된 TSV 의 `design_family`/`n_types`/`family_source` 만 설계 CSV 로 채운다.
+    ★ 해시 열은 **바이트 단위로 손대지 않는다** — 원자료를 다시 읽지도 않는다.  → (채운 수, 전체)"""
+    lines = tsv.read_text(encoding='utf-8').splitlines()
+    hdr_i = next(i for i, ln in enumerate(lines) if not ln.startswith('#'))
+    cols = lines[hdr_i].split('\t')
+    if 'family_source' not in cols:                    # 옛 판 TSV (열 없음) → 열 삽입
+        k = cols.index('design_family') + 1
+        cols.insert(k, 'family_source')
+        rows = []
+        for ln in lines[hdr_i + 1:]:
+            v = ln.split('\t'); v.insert(k, ''); rows.append(v)
+    else:
+        rows = [ln.split('\t') for ln in lines[hdr_i + 1:]]
+    ix = {c: i for i, c in enumerate(cols)}
+    n = 0
+    for v in rows:
+        blk = design.get(v[ix['case']], '')
+        if blk:
+            v[ix['design_family']] = blk; v[ix['n_types']] = BLOCK_NTYPES.get(blk, ''); v[ix['family_source']] = 'design_csv'; n += 1
+        elif not v[ix['design_family']]:
+            v[ix['design_family']] = 'UNKNOWN'
+    fam = {}
+    for v in rows:
+        fam[v[ix['design_family']]] = fam.get(v[ix['design_family']], 0) + 1
+    head = [ln for ln in lines[:hdr_i] if not ln.startswith('# 설계족 분포')]
+    head.append('# 설계족 분포: ' + ' · '.join(f'{k} {c}' for k, c in sorted(fam.items()))
+                + '   (출처: docs/data/lhs_design_20260818.csv `block` 열; 해시 열은 refill 에서 불변)')
+    tsv.write_text('\n'.join(head + ['\t'.join(cols)] + ['\t'.join(v) for v in rows]) + '\n', encoding='utf-8')
+    return n, len(rows)
+
+
+def seal(root: Path, deck_dir: Path | None, design: dict | None = None):
+    return [seal_case(d, deck_dir, design) for d in sorted(q for q in root.iterdir() if q.is_dir())]
 
 
 def write_tsv(rows, out: Path, root: Path):
@@ -160,6 +218,31 @@ def _selftest() -> int:
     txt = out.read_text(encoding='utf-8')
     chk('⑥ TSV 헤더에 설계족 분포와 "솔버를 부르지 않았다" 가 있다',
         '설계족 분포: UNKNOWN 1 · bimodal 1 · mono_AM_S 3' in txt and '솔버를 부르지 않았다' in txt)
+    # ⑦ 설계 CSV 가 정본 — 덱 헤더가 없어도(실제 lhs00_1xx) 채워지고, 충돌은 기록된다
+    dcsv = t / 'design.csv'
+    dcsv.write_text('case_id,block\nlhs00_900,mono_AM_P\nlhs00_903,bimodal\nlhs00_901,mono_AM_S\n')
+    design = load_design(dcsv)
+    r2 = {r['case']: r for r in seal(t, t, design)}
+    chk('⑦a 설계 CSV 가 덱 헤더를 이긴다 (source=design_csv)', r2['lhs00_900']['design_family'] == 'mono_AM_P'
+        and r2['lhs00_900']['family_source'] == 'design_csv' and r2['lhs00_900']['n_types'] == '2')
+    chk('⑦b 덱 없는 케이스도 CSV 로 채워진다', r2['lhs00_903']['design_family'] == 'bimodal'
+        and r2['lhs00_903']['status'].startswith('DECK_MISSING'))
+    chk('⑦c 덱 헤더 ↔ CSV 충돌은 거부가 아니라 기록 (FAMILY_CONFLICT, CSV 채택)',
+        'FAMILY_CONFLICT' in r2['lhs00_901']['status'] and r2['lhs00_901']['design_family'] == 'mono_AM_S')
+    chk('⑦d CSV 에 없는 케이스는 덱 헤더 (source=deck_header)', r2['lhs00_902']['family_source'] == 'deck_header')
+    # ⑧ refill — 옛 TSV 의 해시는 바이트 불변, 설계족만 채워진다
+    before = {ln.split('\t')[0]: ln for ln in out.read_text(encoding='utf-8').splitlines() if not ln.startswith('#')}
+    n, tot = refill_family(out, design)
+    after_lines = [ln for ln in out.read_text(encoding='utf-8').splitlines() if not ln.startswith('#')]
+    cols = after_lines[0].split('\t'); ix = {c: i for i, c in enumerate(cols)}
+    after = {ln.split('\t')[0]: ln.split('\t') for ln in after_lines[1:]}
+    same_hash = all(before[k].split('\t')[COLS.index('atom_sha256')] == after[k][ix['atom_sha256']]
+                    and before[k].split('\t')[COLS.index('deck_sha256')] == after[k][ix['deck_sha256']]
+                    for k in after)
+    chk('⑧ refill: 해시 열 바이트 불변 · 설계족 3/5 채움 · 헤더 분포 갱신', n == 3 and tot == 5 and same_hash
+        and after['lhs00_900'][ix['design_family']] == 'mono_AM_P'
+        and '설계족 분포: bimodal 1 · mono_AM_P 1 · mono_AM_S 3' in out.read_text(encoding='utf-8'),
+        f'{n}/{tot} same_hash={same_hash}')
     print('코호트 봉인 SELFTEST', 'PASS' if ok else 'FAIL')
     return 0 if ok else 1
 
@@ -169,15 +252,23 @@ def main() -> int:
     ap.add_argument('--webapp', default='', help='케이스 폴더들을 담은 root (예: ~/lhs_local)')
     ap.add_argument('--deck-dir', default='')
     ap.add_argument('--out', default=str(ROOT / 'docs' / 'data' / 'area_s2_cohort.tsv'))
+    ap.add_argument('--design-csv', default=str(DESIGN_CSV), help='설계족 정본 (`case_id`,`block`)')
+    ap.add_argument('--refill-family', default='', metavar='TSV',
+                    help='이미 봉인된 TSV 의 설계족만 설계 CSV 로 채운다 (해시 불변, 원자료 불필요)')
     ap.add_argument('--selftest', action='store_true')
     a = ap.parse_args()
     if a.selftest:
         return _selftest()
+    design = load_design(Path(a.design_csv))
+    if a.refill_family:
+        n, tot = refill_family(Path(a.refill_family), design)
+        print(f'설계족 채움 {n}/{tot} (출처 {a.design_csv}) → {a.refill_family}')
+        return 0 if n else 1
     if not a.webapp:
         print('⛔ --webapp 이 필요하다'); return 2
     root = Path(a.webapp).expanduser().resolve()
     deck = Path(a.deck_dir).expanduser().resolve() if a.deck_dir else None
-    rows = seal(root, deck)
+    rows = seal(root, deck, design)
     if not rows:
         print(f'⛔ {root} 에 케이스 폴더가 없다'); return 2
     write_tsv(rows, Path(a.out), root)
