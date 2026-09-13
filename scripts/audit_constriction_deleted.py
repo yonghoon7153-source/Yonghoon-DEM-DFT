@@ -1,44 +1,51 @@
 #!/usr/bin/env python3
-"""S0 — **협착 항이 삭제된 접촉이 몇 개인가** (면적 계약 §4, 계산 불변).
+"""S0 — **협착 항이 삭제된 간선이 몇 개인가** (면적 계약 §4, 계산 불변).
 
-정본 계약 = `docs/area_contract_20260913.md`.  원장 = `SELF-28`.
+정본 계약 = `docs/area_contract_20260913.md`.  원장 = `SELF-28` · `AREA-01`~`AREA-04`.
+적대 검토 = `docs/reviews/codex_verdict_area_contract_20260913.md`.
 
-★ 왜 이 도구가 필요한가
-`network_conductivity.py` 의 Physics 가지는 면적을 **평면 원판**으로 읽는다
-(`:323` `a = sqrt(A/pi)`).  그런데 `A_physics` 는 **구 표면** 공간에서 만들어진 양이라
-(`A_geom = 2*pi*R_min**2` = 반구), 원판으로 환산하면 `a > R_min` 이 나온다.  그러면
-`:395` 가 `a_eff = min(a, R_min)` 으로 자르고, 그 순간
+⛔⛔ **초판(커밋 9392860a8)은 HOLD 였다** — Codex 가 네 P1 을 냈다.  초판은 helper 를
+**다시 구현**해 세었고 그래서 생산 솔버와 모집단·입력 경로가 갈렸다:
+  · `AREA-01` δ 부재/0 을 건너뛰었다.  솔버는 **native contact_area** 를 쓴다
+    ⇒ 합성 반례에서 S0 **0 %** ↔ 솔버 **100 %**.
+  · `AREA-02` S0 는 **raw 행**, 솔버는 정렬 ID쌍 key 의 **마지막 채택 행**만 센다
+    ⇒ **90 %** ↔ **0 %** (반대 방향도 재현).
+  · Hertz 대조가 생산 Hertz 가 아니었다 (생산 Hertz 가지엔 ψ 삭제가 **없다**)
+    ⇒ S0 100 % ↔ 실제 `Rc = 5.206583187 > 0`.
+  · helper 예외가 **비삭제**로 집계됐고 오류 카운터가 없었다.
+  · `_pair_kind` 가 *"AM 이 아니면 SE"* 였다 (미등록 type9 가 AM_SE 로).
+  · ★ selftest 가 **판별력 0** 이었다 — 소스 문자열 존재만 봐서, `R_constriction = 0`
+    대입을 `R_Maxwell` 로 바꿔 실제 Rc 가 **0 → 0.20771261697** 이 돼도 **13/13 PASS**.
+    (`SELF-25`·`L4-03` 과 같은 부류이고 이번엔 **내가 만든 계측기**에서 났다.)
 
-    psi = (1 - a_eff/R_min)**1.5 = (1 - 1)**1.5 = 0
+★★ **2판의 설계 = 다시 구현하지 않는다.  솔버를 부른다.**
+`network_conductivity.build_network(..., contact_mode=...)` 를 **그대로 호출**하고 돌려받은
+간선에서 `R_constriction == 0` 을 센다.  그러면
+  · δ 부재/0 의 native 면적 fallback  (AREA-01)
+  · 정렬 ID쌍 dedup 과 마지막-채택  (AREA-02)
+  · 채널별 상 필터 (ionic=SE–SE · electronic=AM–AM · thermal=전부)
+  · Hertz-명명 가지에 ψ 삭제가 없다는 사실
+이 **전부 솔버의 것**이 된다 — 우리가 흉내 낼 여지가 없다.
+⇒ selftest 도 구조적으로 판별력을 갖는다: 솔버의 `Rc = 0` 분기를 바꾸면 이 수가 **반드시**
+움직인다 (회귀 ⑥ 이 그것을 강제한다).
 
-이 되어 `:399-401` 의 `psi <= 1e-4` 분기가 **R_constriction = 0** 을 준다.
-= 그 간선의 협착 항이 근사되는 것이 아니라 **삭제**된다 (국소적으로 CONTACT_FREE).
+★ 문턱 자체는 기록으로만 남긴다 (판정용 아님):
+    Rc = 0 분기  <=>  psi <= 1e-4  <=>  a/r_min >= 0.99784556531
+                <=>  A >= 0.9956957722087699 * pi * r_min^2
+⚠ **문서의 옛 등가식은 틀렸다** (Codex [P2]) — `psi` **정확히 0** 은 `A/(pi r^2) >= 1` 이고
+  `Rc = 0` 분기는 그보다 **낮은** 0.99570 에서 이미 켜진다.  둘은 다른 문턱이다.
 
-★ 이미 아는 것은 **하한뿐**이다
-`case_master.csv` 의 `A_binding_share_*_pct.geom` 은 **`geom` cap 이 결속한** 접촉만 센다
-(163/163 케이스에서 > 0, 접촉 가중 전체 3.966 % · AM-SE 13.843 %).  그러나 실측 사다리가
-보여주듯 **`tabor` 가 먼저 문턱을 넘는다** — r_SE 0.5 <-> r_AM 6.0 에서 psi->0 은
-delta = 0.10234 um (binding=tabor) 부터이고 `geom` 결속은 delta = 0.16292 um 부터다.
-⇒ geom 결속률은 삭제율의 **하한**이고, 진짜 값은 **아직 아무도 재지 않았다**.
-
-★ 이 도구가 재는 것 (판정 문턱은 하나다)
-
-    삭제 <=> a >= s_star * R_min,  s_star = 1 - (1e-4)**(2/3) = 0.99784556531
-          <=> A_final >= (s_star**2) * pi * R_min**2   (= 0.99570 * pi * R_min**2)
-
-어느 cap 이 결속했는지와 **무관**하다.  결속 라벨은 진단용으로 같이 센다.
-
-⚠ **계산을 바꾸지 않는다** — 읽기 전용 후처리다.  솔버도 코퍼스도 건드리지 않는다.
-⚠ **Physics 가지 전용**이다.  Hertz-명명 가지에는 이 clamp 자체가 없다
-   (`contact_mode == 'physics'` 안에만 있다) -> `--mode hertzian` 은 대조용이다.
-⚠ 이 컨테이너에는 `contacts.csv` 가 없다 (webapp/results 에 reports 만).
-   **코퍼스가 있는 머신에서** 돌린다.
+⚠ **계산을 바꾸지 않는다** — 읽기 전용이다.  솔버도 코퍼스도 건드리지 않는다.
+⚠ `Rc = 0` 은 **협착 항** 삭제다.  보통 `R_bulk` 는 남는다 — 간선 삭제나 총저항 0 과
+  섞지 말 것 (그것은 `L2-10` 의 다른 양이다).
+⚠ box_x/box_y 는 `d_ij` → `R_bulk` 에만 들어가고 `R_constriction` 에는 안 들어간다
+  ⇒ 삭제 집계는 상자 크기에 **불변**이다 (그래서 넉넉히 준다).
+⚠ 이 컨테이너에는 원 접촉 자료가 없다 — **코퍼스가 있는 머신에서** 돌린다.
 
 사용:
-  python3 scripts/audit_constriction_deleted.py                 # 전 케이스
   python3 scripts/audit_constriction_deleted.py --webapp ~/Yonghoon-DEM-DFT/webapp
-  python3 scripts/audit_constriction_deleted.py --limit 5
-  python3 scripts/audit_constriction_deleted.py --out-csv docs/data/constriction_deleted.csv
+  python3 scripts/audit_constriction_deleted.py --webapp <경로> --limit 5
+  python3 scripts/audit_constriction_deleted.py --webapp <경로> --out-csv docs/data/s0.csv
   python3 scripts/audit_constriction_deleted.py --selftest
 """
 from __future__ import annotations
@@ -66,122 +73,111 @@ def _load(name: str, path: Path):
 #  `extract_se_network_diagnostics` 의 로더는 2026-09-13 에 L4-06(내용 지문 중복제거)·
 #  L4-07(메타 병합)로 고쳐졌으므로 그 수정을 그대로 물려받는다.
 _SED = _load('_sed_loader', SCRIPTS / 'extract_se_network_diagnostics.py')
-_PC = _load('_pc_area', SCRIPTS / 'plastic_coverage.py')
+#  ★★ 2판의 핵심 — 면적 helper 를 다시 구현하지 않고 **솔버를 부른다** (AREA-01/02).
+_NC = _load('_nc_solver', SCRIPTS / 'network_conductivity.py')
 
-#  psi <= 1e-4 분기가 켜지는 지점 (network_conductivity.py:397 의 리터럴과 한 출처)
+#  기록용 문턱 (판정에 쓰지 않는다 — 판정은 솔버의 `R_constriction` 이 한다)
 PSI_FLOOR = 1e-4
 S_STAR = 1.0 - PSI_FLOOR ** (2.0 / 3.0)          # 0.99784556531
-AREA_FRAC = S_STAR ** 2                           # 0.99570...  (A / (pi R_min^2))
+AREA_FRAC = S_STAR ** 2                           # 0.9956957722087699
+
+#: 채널 → (build_network mode, target_types 선택자).
+#  ⚠ 채널 필터는 `mode` 가 아니라 **`target_types`** 로 걸린다 (`network_conductivity.py:251`).
+#    생산 `main` 이 그렇게 만든다:
+#      ionic      target_types = [k for k,v in type_map.items() if v == 'SE']
+#      electronic am_types     = [k for k,v in type_map.items() if 'AM' in v]
+#      thermal    전부 (thermal 가지는 `:246` 에서 필터를 건너뛴다)
+#    처음에 셋 다 전체 type 을 넘겼더니 ionic·electronic 이 AM–SE 를 **받아 버렸다**
+#    (selftest ⑤a·⑤b 가 빨간불).  그 반례를 그대로 검사로 남긴다.
+CHANNELS = {
+    'ionic':      ('ionic',      lambda tm: {k for k, v in tm.items() if v == 'SE'}),
+    'electronic': ('electronic', lambda tm: {k for k, v in tm.items() if 'AM' in str(v)}),
+    'thermal':    ('thermal',    lambda tm: set(tm)),
+}
+
+#: 허용 상 이름 — 미등록 type 을 조용히 SE 로 만들지 않는다 (Codex [P2])
+_AM = frozenset({'AM_P', 'AM_S', 'AM'})
+_SE = frozenset({'SE'})
 
 
-def constriction_deleted(A_final: float, r_min: float) -> bool:
-    """이 접촉의 협착 항이 삭제되는가 (원판 환산 후 psi <= 1e-4).
+def _pair_kind(t1, t2):
+    """상 쌍 분류.  **모르는 상은 `UNKNOWN`** 이다 (옛 판은 "AM 이 아니면 SE" 였다)."""
+    def k(t):
+        if t in _AM:
+            return 'AM'
+        if t in _SE:
+            return 'SE'
+        return '?'
+    a, b = k(t1), k(t2)
+    if '?' in (a, b):
+        return 'UNKNOWN'
+    return {('AM', 'AM'): 'AM_AM', ('SE', 'SE'): 'SE_SE'}.get((a, b), 'AM_SE')
 
-    `network_conductivity.py:323`·`:395-397` 과 **같은 산술**이다:
-        a = sqrt(A/pi);  a_eff = min(a, r_min);  psi = (1 - a_eff/r_min)**1.5
+
+def audit_case(case_dir, contact_mode='physics', channels=('ionic', 'electronic', 'thermal')):
+    """한 케이스 — **솔버가 만든 간선**에서 `R_constriction == 0` 을 센다.
+
+    ⚠ 예외를 **비삭제로 만들지 않는다** — 실패는 `error` 로 올리고 `None` 을 돌려준다
+    (옛 판은 helper 예외를 삼켜 분모에는 남기고 삭제는 0 으로 셌다).
     """
-    if r_min <= 0 or A_final <= 0:
-        return False
-    a = math.sqrt(A_final / math.pi)
-    a_eff = min(a, r_min)
-    psi = max(1.0 - a_eff / r_min, 0.0) ** 1.5
-    return psi <= PSI_FLOOR
-
-
-def _pair_kind(t1: str, t2: str) -> str:
-    am = {'AM_P', 'AM_S', 'AM'}
-    a1, a2 = t1 in am, t2 in am
-    if a1 and a2:
-        return 'AM_AM'
-    if a1 != a2:
-        return 'AM_SE'
-    return 'SE_SE'
-
-
-def audit_case(case_dir: Path, mode: str = 'physics') -> dict | None:
-    """한 케이스의 접촉을 전수로 훑어 삭제율을 낸다."""
-    try:
-        atoms, type_map, scale, _meta = _SED.load_case(case_dir)
-        contacts = _SED.load_contacts(case_dir)
-    except Exception as e:
-        print(f'  [{case_dir.name}] SKIP — {type(e).__name__}: {e}')
-        return None
+    atoms, type_map, scale, _meta = _SED.load_case(case_dir)
+    contacts = _SED.load_contacts(case_dir)
     if not contacts:
-        return None
+        raise ValueError('접촉 행이 0개')
+    plate_z = _SED.estimate_plate_z(atoms)
+    #  box: 최소영상이 절대 안 걸리게 넉넉히 (삭제 집계는 상자에 불변 — 헤더 참조)
+    span = max((max(a['x'] for a in atoms.values()) - min(a['x'] for a in atoms.values()),
+                max(a['y'] for a in atoms.values()) - min(a['y'] for a in atoms.values()),
+                1e-9))
+    box = span * 1000.0
 
-    n_by_kind = Counter()
-    del_by_kind = Counter()
-    bind_by_kind = defaultdict(Counter)
-    del_bind = Counter()
-    n_no_delta = 0
-
-    for c in contacts:
-        a1 = atoms.get(c['id1'])
-        a2 = atoms.get(c['id2'])
-        if a1 is None or a2 is None:
-            continue
-        r1, r2 = a1['radius'], a2['radius']
-        delta = c['delta']
-        if not (r1 > 0 and r2 > 0):
-            continue
-        kind = _pair_kind(type_map.get(a1['type'], '?'), type_map.get(a2['type'], '?'))
-        n_by_kind[kind] += 1
-        if delta <= 0:
-            n_no_delta += 1
-            continue
-        R_star = (r1 * r2) / (r1 + r2)
-        R_min = min(r1, r2)
-        try:
-            A, _regime, comp = _PC.film_area_from_overlap(
-                delta, R_star, R_min=R_min, ligg_area=c['contact_area'],
-                mode=mode, return_components=True)
-        except Exception:
-            continue
-        b = (comp or {}).get('binding') or 'none'
-        bind_by_kind[kind][b] += 1
-        if constriction_deleted(A, R_min):
-            del_by_kind[kind] += 1
-            del_bind[b] += 1
-
-    tot_n = sum(n_by_kind.values())
-    tot_d = sum(del_by_kind.values())
-    row = {
-        'case': case_dir.name,
-        'mode': mode,
-        'n_contacts': tot_n,
-        'n_no_delta': n_no_delta,
-        'n_deleted': tot_d,
-        'deleted_pct': round(100.0 * tot_d / tot_n, 4) if tot_n else 0.0,
-    }
-    for k in ('AM_AM', 'AM_SE', 'SE_SE'):
-        n, dd = n_by_kind[k], del_by_kind[k]
-        row[f'n_{k}'] = n
-        row[f'deleted_{k}'] = dd
-        row[f'deleted_{k}_pct'] = round(100.0 * dd / n, 4) if n else 0.0
-    #  삭제된 접촉이 **어느 cap 으로** 거기 갔는가 — geom 만이 아니라는 것이 요점
-    for b in ('tabor', 'volume', 'geom', 'liggghts', 'hertzian', 'elastic'):
-        row[f'deleted_via_{b}'] = del_bind[b]
+    row = {'case': case_dir.name, 'contact_mode': contact_mode,
+           'n_contact_rows': len(contacts)}
+    all_types = sorted({a['type'] for a in atoms.values()})
+    for ch in channels:
+        mode, pick = CHANNELS[ch]
+        tt = pick(type_map) or set(all_types)
+        net = _NC.build_network(atoms, contacts, tt, scale,
+                                plate_z, box_x=box, box_y=box,
+                                mode=mode, type_map=type_map,
+                                contact_mode=contact_mode)
+        edges = net['edges'] if isinstance(net, dict) else net[1]
+        n = d = 0
+        by_kind = {}
+        for e in edges:
+            kd = _pair_kind(type_map.get(e['type1'], '?'), type_map.get(e['type2'], '?'))
+            n += 1
+            dele = (e['R_constriction'] == 0.0)
+            d += 1 if dele else 0
+            s_ = by_kind.setdefault(kd, [0, 0])
+            s_[0] += 1
+            s_[1] += 1 if dele else 0
+        row[f'{ch}_n_edges'] = n
+        row[f'{ch}_n_deleted'] = d
+        row[f'{ch}_deleted_pct'] = round(100.0 * d / n, 4) if n else 0.0
+        for kd in ('AM_AM', 'AM_SE', 'SE_SE', 'UNKNOWN'):
+            nn, dd = by_kind.get(kd, (0, 0))
+            row[f'{ch}_{kd}_n'] = nn
+            row[f'{ch}_{kd}_deleted'] = dd
     return row
 
 
 def main() -> int:
     ap = argparse.ArgumentParser(
-        description='협착 항이 삭제된 접촉 비율 (면적 계약 S0)')
-    ap.add_argument('--mode', default='physics',
-                    choices=['physics', 'hertzian', 'liggghts', 'capped'],
-                    help='면적 모드.  기본 physics = 생산 Physics 가지.')
-    ap.add_argument('--limit', type=int, default=0, help='앞에서 N 케이스만')
+        description='협착 항이 삭제된 **간선** 비율 (면적 계약 S0, 2판 — 솔버 호출)')
+    ap.add_argument('--contact-mode', default='physics',
+                    choices=['physics', 'hertzian'],
+                    help='솔버의 contact_mode.  생산 Physics 가지가 기본. '
+                         'hertzian 은 ψ 삭제 가지를 **타지 않는다** (대조용).')
+    ap.add_argument('--channels', default='ionic,electronic,thermal',
+                    help='채널 — ionic=SE–SE · electronic=AM–AM · thermal=전부')
+    ap.add_argument('--limit', type=int, default=0)
     ap.add_argument('--out-csv', default='')
-    #  ⚠ CLAUDE.md 가 경고한 자리 — **코드 폴더 ≠ 데이터 폴더**다
-    #    ("코드=stoic-knuth worktree(dem-web), 데이터=~/Yonghoon-DEM-DFT/webapp/*").
-    #    로더의 `WEBAPP` 은 코드 트리 기준이라, 다른 체크아웃에서 돌리면 사례를 0개 찾고
-    #    **조용히 빈 집계**를 낸다 = 규율 ⑤ 의 false-green.  그래서 명시적으로 받는다.
+    #  ⚠ CLAUDE.md 가 경고한 자리 — **코드 폴더 ≠ 데이터 폴더**.
     ap.add_argument('--webapp', default='',
-                    help='webapp 폴더 경로 (results/ · archive/ 가 있는 곳).  '
-                         '기본 = 이 코드 트리의 webapp/.  env AUDIT_WEBAPP 도 가능.')
+                    help='results/ · archive/ 가 있는 폴더.  env AUDIT_WEBAPP 도 가능.')
     ap.add_argument('--selftest', action='store_true')
     a = ap.parse_args()
-
     if a.selftest:
         return _selftest()
 
@@ -191,75 +187,82 @@ def main() -> int:
         _SED.WEBAPP = Path(wp).expanduser().resolve()
     print(f'webapp = {_SED.WEBAPP}')
     if not _SED.WEBAPP.is_dir():
-        print(f'\n⛔ 그런 폴더가 없다: {_SED.WEBAPP}\n'
-              '   --webapp 로 results/ · archive/ 가 있는 폴더를 직접 주세요.')
+        print(f'\n⛔ 그런 폴더가 없다: {_SED.WEBAPP}')
         return 2
-    _subs = [d for d in ('results', 'archive') if (_SED.WEBAPP / d).is_dir()]
-    if not _subs:
-        print(f'\n⛔ {_SED.WEBAPP} 안에 results/ 도 archive/ 도 없다 — 데이터 폴더가 맞나?')
+    subs = [d for d in ('results', 'archive') if (_SED.WEBAPP / d).is_dir()]
+    if not subs:
+        print(f'\n⛔ {_SED.WEBAPP} 안에 results/ 도 archive/ 도 없다')
         return 2
-    print(f'  하위: {", ".join(_subs)}')
+    print(f'  하위: {", ".join(subs)}')
+
+    chans = tuple(c.strip() for c in a.channels.split(',') if c.strip())
+    bad = [c for c in chans if c not in CHANNELS]
+    if bad:
+        print(f'⛔ 모르는 채널: {bad}')
+        return 2
 
     cases = _SED.discover_cases()
     if a.limit:
         cases = cases[:a.limit]
-    print(f'케이스 {len(cases)}개 · mode={a.mode}')
-    print(f'판정 문턱: A >= {AREA_FRAC:.8f} * pi * R_min^2   '
-          f'(<=> a/R_min >= {S_STAR:.11f})')
+    print(f'케이스 {len(cases)}개 · contact_mode={a.contact_mode} · 채널 {",".join(chans)}')
+    print(f'기록용 문턱: A >= {AREA_FRAC:.16f} · π · r_min²   '
+          f'(판정은 솔버의 R_constriction 이 한다)')
     if not cases:
-        print(f'\n⛔ {_SED.WEBAPP} 아래에서 접촉 자료를 못 찾았다.\n'
-              '   필요한 것 = 한 케이스 폴더 안에 atoms.csv + contacts.csv +\n'
-              '   (input_params.json 또는 meta.json).  빈 집계를 내지 않고 여기서 멈춘다.')
+        print('\n⛔ 접촉 자료를 못 찾았다 — atoms.csv + contacts.csv + (input_params|meta).json')
         return 1
 
-    rows = []
+    rows, errs = [], []
     for i, d in enumerate(cases):
-        r = audit_case(d, mode=a.mode)
-        if r is None:
+        try:
+            r = audit_case(d, contact_mode=a.contact_mode, channels=chans)
+        except Exception as e:                      # ⚠ 실패를 **비삭제로 만들지 않는다**
+            errs.append((d.name, f'{type(e).__name__}: {e}'))
+            print(f'  [{i+1:>3}/{len(cases)}] {d.name[:34]:34s}  ⛔ {type(e).__name__}')
             continue
         rows.append(r)
+        pc = r.get(f'{chans[0]}_deleted_pct', 0.0)
         print(f'  [{i+1:>3}/{len(cases)}] {r["case"][:34]:34s} '
-              f'n={r["n_contacts"]:>8,d}  삭제 {r["deleted_pct"]:>6.2f} %  '
-              f'(AM-SE {r["deleted_AM_SE_pct"]:>6.2f} %)')
+              f'{chans[0]} {r.get(chans[0]+"_n_edges",0):>8,d} edge  삭제 {pc:>6.2f} %')
 
+    if errs:
+        print(f'\n⛔ 실패 {len(errs)}건 — **집계를 발행하지 않는다** (부분 census 금지):')
+        for nm, msg in errs[:10]:
+            print(f'    {nm}: {msg}')
+        return 3
     if not rows:
         print('집계할 행이 없다.')
         return 1
 
-    tn = sum(r['n_contacts'] for r in rows)
-    td = sum(r['n_deleted'] for r in rows)
-    print('\n═══ 접촉 가중 집계 ═══')
-    print(f'  케이스 {len(rows)} · 접촉 {tn:,d}')
-    print(f'  협착 삭제 = {td:,d} / {tn:,d} = {100.0*td/tn:.3f} %')
-    for k in ('AM_AM', 'AM_SE', 'SE_SE'):
-        n = sum(r[f'n_{k}'] for r in rows)
-        dd = sum(r[f'deleted_{k}'] for r in rows)
-        if n:
-            print(f'    {k:6s} {dd:>10,d} / {n:>10,d} = {100.0*dd/n:6.3f} %')
-    print('  삭제된 접촉이 거쳐간 cap:')
-    for b in ('tabor', 'volume', 'geom', 'liggghts', 'hertzian', 'elastic'):
-        v = sum(r[f'deleted_via_{b}'] for r in rows)
-        if v:
-            print(f'    via {b:9s} {v:>10,d}  ({100.0*v/max(td,1):5.2f} % of deleted)')
-    print('\n⚠ `geom` 만 세면 하한이다 — 위 표의 `via tabor` 가 그 차이다 (SELF-28).')
-    print('⚠ 계산을 바꾸지 않았다.  이 값은 면적 계약 §4 의 S0 이고, S2 전환의 **사전** 기록이다.')
+    print('\n═══ 간선 가중 집계 ═══')
+    print(f'  케이스 {len(rows)} (실패 0)')
+    for ch in chans:
+        n = sum(r[f'{ch}_n_edges'] for r in rows)
+        d = sum(r[f'{ch}_n_deleted'] for r in rows)
+        print(f'  {ch:11s} 삭제 {d:>10,d} / {n:>10,d} = '
+              f'{(100.0*d/n if n else 0.0):7.3f} %')
+        for kd in ('AM_AM', 'AM_SE', 'SE_SE', 'UNKNOWN'):
+            nn = sum(r[f'{ch}_{kd}_n'] for r in rows)
+            dd = sum(r[f'{ch}_{kd}_deleted'] for r in rows)
+            if nn:
+                print(f'      {kd:8s} {dd:>10,d} / {nn:>10,d} = {100.0*dd/nn:7.3f} %')
+    print('\n⚠ 이것은 **협착 항** 삭제다 (R_bulk 는 보통 남는다).  간선 삭제·총저항 0 과 다르다.')
+    print('⚠ 채널별로 따로 읽을 것 — AM–SE 비율을 이온망 하한으로 쓰지 않는다 (AREA-02).')
 
     if a.out_csv:
         p = Path(a.out_csv)
         p.parent.mkdir(parents=True, exist_ok=True)
         with p.open('w', newline='', encoding='utf-8') as f:
             w = csv.DictWriter(f, fieldnames=list(rows[0].keys()))
-            w.writeheader()
-            w.writerows(rows)
+            w.writeheader(); w.writerows(rows)
         print(f'\n→ {p}')
     return 0
 
 
 def _selftest() -> int:
-    """★ 판정식이 **솔버와 같은 산술**인가 + 대조.
+    """★ **판별력**이 핵심이다 — 초판은 소스 문자열 존재만 봐서 Rc=0 분기를 바꿔도 13/13 PASS 였다.
 
-    ⚠ 대조가 요점이다 — `constriction_deleted` 를 `return True` 로 만들어도 (1)(2) 는
-    통과한다.  그래서 (3) 이 *'얕은 접촉은 삭제되지 않는다'* 를 잡는다.
+    2판은 실제 `build_network` 를 돌려 그 출력을 세므로, ⑥ 이 *"솔버 분기를 바꾸면 이 수가
+    움직인다"* 를 **직접** 확인한다.
     """
     ok = True
 
@@ -268,59 +271,93 @@ def _selftest() -> int:
         print(('  ✓ ' if cond else '  ✗ ') + name + (f'   {extra}' if extra else ''))
         ok = ok and bool(cond)
 
-    print('협착 삭제 판정 (면적 계약 S0)')
+    print('협착 삭제 census (S0 2판 — 솔버 호출)')
 
-    # ── (1) 문턱 상수가 솔버 리터럴에서 유도되는가 ─────────────────────────
-    chk('① s* = 1 − (1e-4)^(2/3) = 0.99784556531 (판정문 값과 일치)',
-        abs(S_STAR - 0.99784556531) < 1e-11, f'{S_STAR:.11f}')
-    chk('① 면적 문턱 = s*² · πR² = 0.99570 · πR²',
-        abs(AREA_FRAC - 0.9957) < 1e-4, f'{AREA_FRAC:.8f}')
+    R = 1.0                                    # sim 반경
+    scale = 1.0
+
+    def net(rows, mode='thermal', cm='physics'):
+        atoms = {1: {'type': 1, 'radius': R, 'x': 0.0, 'y': 0.0, 'z': 0.0},
+                 2: {'type': 3, 'radius': R, 'x': 2 * R, 'y': 0.0, 'z': 0.0}}
+        tm = {1: 'AM_P', 3: 'SE'}
+        #  ⚠ 생산과 같은 방식 — 채널 필터는 target_types 가 건다
+        tt = CHANNELS[{'ionic': 'ionic', 'electronic': 'electronic'}.get(mode, 'thermal')][1](tm)
+        n = _NC.build_network(atoms, rows, tt, scale, 10.0,
+                              box_x=1e4, box_y=1e4, mode=mode, type_map=tm,
+                              contact_mode=cm)
+        e = n['edges'] if isinstance(n, dict) else n[1]
+        return e
+
+    deep = {'id1': 1, 'id2': 2, 'contact_area': 0.998 * math.pi * R * R, 'delta': 0.0}
+    shallow = {'id1': 1, 'id2': 2, 'contact_area': 1e-6, 'delta': 1e-6}
+
+    # ── ① AREA-01: δ=0 인데 native 면적이 크면 **솔버는 삭제**한다 ──────────
+    e = net([deep])
+    chk('①a AREA-01: δ=0 · native 면적 0.998πr² → 간선 1개', len(e) == 1)
+    chk('①b AREA-01: 그 간선의 R_constriction 이 **0** (옛 S0 는 이걸 0 %로 셌다)',
+        len(e) == 1 and e[0]['R_constriction'] == 0.0,
+        f"Rc={e[0]['R_constriction'] if e else '—'}")
+
+    # ── ② 대조: 얕은 접촉은 삭제되지 않는다 (게이트가 "항상 삭제" 가 아니다) ─
+    e = net([shallow])
+    chk('② 대조: 얕은 접촉은 Rc > 0',
+        len(e) == 1 and e[0]['R_constriction'] > 0.0,
+        f"Rc={e[0]['R_constriction'] if e else '—'}")
+
+    # ── ③ AREA-02: 같은 ID쌍 여러 행 → **간선 1개**, 마지막 행이 이긴다 ─────
+    e = net([deep] * 9 + [shallow])
+    chk('③a AREA-02: raw 10행 → 간선 **1개** (옛 S0 는 10행을 셌다)', len(e) == 1)
+    chk('③b AREA-02: 마지막이 shallow 이면 **삭제 아님** (옛 S0 는 90 % 삭제)',
+        len(e) == 1 and e[0]['R_constriction'] > 0.0)
+    e = net([shallow] * 9 + [deep])
+    chk('③c AREA-02: 마지막이 deep 이면 **삭제** (옛 S0 는 10 %)',
+        len(e) == 1 and e[0]['R_constriction'] == 0.0)
+
+    # ── ④ Hertz-명명 가지에는 ψ 삭제가 없다 ────────────────────────────────
+    e = net([deep], cm='hertzian')
+    chk('④ 생산 Hertz 가지는 같은 접촉에서 Rc > 0 (옛 S0 는 100 % 삭제로 셌다)',
+        len(e) == 1 and e[0]['R_constriction'] > 0.0,
+        f"Rc={e[0]['R_constriction'] if e else '—'}")
+
+    # ── ⑤ 채널 필터가 솔버의 것이다 ────────────────────────────────────────
+    chk('⑤a ionic 은 AM–SE 를 안 받는다', len(net([deep], mode='ionic')) == 0)
+    chk('⑤b electronic 도 AM–SE 를 안 받는다', len(net([deep], mode='electronic')) == 0)
+    chk('⑤c thermal 은 받는다', len(net([deep], mode='thermal')) == 1)
+    chk('⑤d 상 분류가 "AM 이 아니면 SE" 가 아니다 — 미등록은 UNKNOWN',
+        _pair_kind('AM_P', 'type9') == 'UNKNOWN' and _pair_kind('?', '?') == 'UNKNOWN'
+        and _pair_kind('AM_P', 'SE') == 'AM_SE')
+
+    # ── ⑥ ★★ 판별력: 솔버의 Rc=0 분기를 바꾸면 이 census 가 **반드시** 움직인다 ─
     src = (SCRIPTS / 'network_conductivity.py').read_text(encoding='utf-8')
-    chk('① 솔버가 아직 같은 분기를 쓴다 (`psi > 1e-4`)',
-        'psi > 1e-4' in src)
-    chk('① 솔버가 아직 원판으로 읽는다 (`sqrt(A_contact / np.pi)`)',
-        'np.sqrt(A_contact / np.pi)' in src)
+    mutated = src.replace('                R_constriction = 0.0\n',
+                          '                R_constriction = R_Maxwell\n', 1)
+    chk('⑥a 변이 지점이 실재한다 (소스가 바뀌었다)', mutated != src)
+    import types as _t
+    m = _t.ModuleType('_nc_mut')
+    m.__file__ = str(SCRIPTS / 'network_conductivity.py')
+    sys.path.insert(0, str(SCRIPTS))
+    exec(compile(mutated, m.__file__, 'exec'), m.__dict__)
+    atoms = {1: {'type': 1, 'radius': R, 'x': 0.0, 'y': 0.0, 'z': 0.0},
+             2: {'type': 3, 'radius': R, 'x': 2 * R, 'y': 0.0, 'z': 0.0}}
+    em = m.build_network(atoms, [deep], {1, 3}, scale, 10.0, box_x=1e4, box_y=1e4,
+                         mode='thermal', type_map={1: 'AM_P', 3: 'SE'},
+                         contact_mode='physics')
+    em = em['edges'] if isinstance(em, dict) else em[1]
+    chk('⑥b ★ 변이판에서는 같은 접촉이 **삭제되지 않는다** — 이 검사에 판별력이 있다 '
+        '(초판은 이 변이에도 13/13 PASS 였다)',
+        len(em) == 1 and em[0]['R_constriction'] != 0.0,
+        f"변이 Rc={em[0]['R_constriction'] if em else '—'}")
 
-    # ── (2) geom cap 이 결속하면 **반드시** 삭제 (반지름 무관) ─────────────
-    for r in (0.1, 0.5, 1.5, 6.0):
-        A_geom = 2.0 * math.pi * r * r
-        if not constriction_deleted(A_geom, r):
-            chk(f'② geom cap (r={r}) 이 삭제로 판정되지 않았다', False)
-            break
-    else:
-        chk('② geom cap = 2πR² 는 **모든 반지름에서** 삭제로 판정된다', True)
-    chk('② 대조: 원판 상한 πR² 의 **절반**은 삭제가 아니다',
-        not constriction_deleted(0.5 * math.pi * 0.25, 0.5))
+    # ── ⑦ 문턱 기록값 (판정용 아님) ────────────────────────────────────────
+    chk('⑦ 기록 문턱 A/(πr²) = 0.9956957722087699 (ψ 정확 0 인 1 과 **다르다**)',
+        abs(AREA_FRAC - 0.9956957722087699) < 1e-15, f'{AREA_FRAC!r}')
 
-    # ── (3) 대조: tabor 가 먼저 문턱을 넘는다 (geom 만 세면 하한) ──────────
-    r_se, r_am = 0.5, 6.0
-    R_star = (r_se * r_am) / (r_se + r_am)
-    got = {}
-    for delta in (0.05, 0.12, 0.20):
-        A, _reg, comp = _PC.film_area_from_overlap(
-            delta * 1e-6, R_star * 1e-6, R_min=r_se * 1e-6, ligg_area=0.0,
-            mode='physics', return_components=True)
-        got[delta] = (comp['binding'], constriction_deleted(A * 1e12, r_se))
-    chk('③ δ=0.05 은 삭제 아님 (얕은 접촉 — "항상 True" 가 아니다)',
-        got[0.05] == ('tabor', False), str(got[0.05]))
-    chk('③ ★ δ=0.12 은 **binding=tabor 인데 삭제** (geom 만 세면 놓친다)',
-        got[0.12] == ('tabor', True), str(got[0.12]))
-    chk('③ δ=0.20 은 binding=geom 이고 삭제', got[0.20] == ('geom', True),
-        str(got[0.20]))
-
-    # ── (4) 경계가 예리한가 ────────────────────────────────────────────────
-    r = 0.5
-    A_on = AREA_FRAC * math.pi * r * r
-    chk('④ 문턱 바로 위는 삭제', constriction_deleted(A_on * (1 + 1e-9), r))
-    chk('④ 문턱 바로 아래는 삭제 아님', not constriction_deleted(A_on * (1 - 1e-6), r))
-
-    # ── (5) 계약 문서가 실재하고 이 도구를 가리키는가 ─────────────────────
+    # ── ⑧ 계약·판정문이 실재하고 서로를 가리키는가 ─────────────────────────
     doc = ROOT / 'docs' / 'area_contract_20260913.md'
-    chk('⑤ 면적 계약 문서가 있다', doc.exists())
-    chk('⑤ 계약이 이 도구를 S0 으로 지목한다',
-        doc.exists() and 'audit_constriction_deleted.py' in doc.read_text(encoding='utf-8'))
+    ver = ROOT / 'docs' / 'reviews' / 'codex_verdict_area_contract_20260913.md'
+    chk('⑧ 계약·판정문 둘 다 있다', doc.exists() and ver.exists())
 
-    print('협착 삭제 판정 SELFTEST', 'PASS' if ok else 'FAIL')
+    print('협착 삭제 census SELFTEST', 'PASS' if ok else 'FAIL')
     return 0 if ok else 1
 
 
