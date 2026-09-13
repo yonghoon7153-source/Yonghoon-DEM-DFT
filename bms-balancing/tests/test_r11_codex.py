@@ -566,7 +566,8 @@ def test_e11_16_gamma_roster_is_parsed_not_just_non_empty(tmp_path):
     #   (전 판은 1 행에 "21 성공" 을 적어 두고 통과했고, 그 사실이 이 시험에 가려져 있었다).
     n = S.CANONICAL_GAMMA_GRID_N
     full = json.dumps({"authority": n, "requested": n, "succeeded": n, "missing": []})
-    rows_ok = [dict(base, gamma_Si=str(i / (n - 1)), gamma_roster=full) for i in range(n)]
+    # ⚠ Codex R13 P1-1: 전 판은 `i/(n-1)` = 0~1 이었다 (정본은 0~0.5).
+    rows_ok = [dict(base, gamma_Si=repr(g), gamma_roster=full) for g in S.canonical_gamma_grid()]
     assert not S.check_rows("profile", rows_ok, list(S.PROFILE_ROW)), S.check_rows("profile", rows_ok, list(S.PROFILE_ROW))
     bad = [dict(r, gamma_roster="not-json") for r in rows_ok]
     assert S.check_rows("profile", bad, list(S.PROFILE_ROW)), "JSON 이 아닌 roster 를 통과시켰다"

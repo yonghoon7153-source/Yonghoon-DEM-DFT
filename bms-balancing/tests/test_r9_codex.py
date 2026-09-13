@@ -313,7 +313,13 @@ def test_d9_10_matrix_sidecar_seals_the_exact_roster_and_argv(tmp_path):
     meta = json.loads(art.with_name(art.name + ".meta.json").read_text(encoding="utf-8"))
     assert meta["argv"][:4] == ["python3", "-m", "bms_balancing.verify", "matrix"], meta.get("argv")
     roster = meta["roster"]
-    assert roster["rows"] == 2 and roster["half_cell"] == ["GITT"] and roster["si"] == ["Kunz", "Li"], roster
+    # ⚠ Codex R13 P1-1: 기대치를 손으로 적지 않고 **정본 모집단에서 유도**한다 (fixture 가 2 행이던 시절의
+    #   하드코딩은 모집단이 틀려도 통과했다).
+    from bms_balancing import schema as S
+    keys = sorted(S.canonical_combo_keys("100"))
+    assert roster["rows"] == len(keys), roster
+    assert roster["half_cell"] == sorted({k[0] for k in keys}), roster
+    assert roster["si"] == sorted({k[1] for k in keys}), roster
     assert meta["si_source"] != "Li" or "roster" in meta                    # singular 가 본문을 대신하지 않는다
 
 

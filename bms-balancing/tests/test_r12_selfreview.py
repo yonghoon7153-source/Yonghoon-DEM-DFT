@@ -314,7 +314,9 @@ def test_f09_gamma_roster_is_bound_to_the_body_not_just_self_consistent(tmp_path
     `missing` 이 본문 γ 와 겹치지 않음 · bool 은 개수가 아니다.
     """
     n = S.CANONICAL_GAMMA_GRID_N
-    ok = _prof_rows([i / (n - 1) for i in range(n)],
+    # ⚠ Codex R13 P1-1: 전 판의 "정직한 전수" 는 `i/(n-1)` = 0~1 이었다. 정본 격자는 0~0.5 다 —
+    #   개수만 맞는 가짜 대조군이었고, 그래서 구성원 검사가 없다는 사실이 이 시험에 가려져 있었다.
+    ok = _prof_rows(S.canonical_gamma_grid(),
                     {"authority": n, "requested": n, "succeeded": n, "missing": []})
     assert not S.check_rows("profile", ok, list(S.PROFILE_ROW)), "대조군(정직한 전수)이 막혔다"
 

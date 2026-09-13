@@ -253,7 +253,7 @@ U14 가 드러낸 다섯 건(U14-01 줄끝로 서명이 fresh clone 에서 깨�
 # ── 0. 받기 · 확인 (몇 분) ────────────────────────────────────────────────────────────────────────
 cd ~/dd/bms-balancing && git pull --rebase origin claude/bms-alpha-beta-verify
 source .venv/bin/activate && export BMS_DATA_ROOT='/mnt/d/가형 관련/degradation mode'
-python3 -m pytest tests/ -q                       # 236 passed 기대 (원자료 불필요)
+python3 -m pytest tests/ -q                       # 241 passed 기대 (원자료 불필요)
 
 # ── 1. 배관 확인 — 새 스키마가 붙는지만 (몇 분, STARTS=6 이라 수치는 못 쓴다) ─────────────────────
 STARTS=6 STATES=100 OUT=out_u14_smoke ./scripts/run_states.sh

@@ -678,14 +678,22 @@ def _u14_dirs(tmp_path, *, schema=True, bump=None):
                      ref_a_NE="1.0", ref_b_NE="0.0", ref_gamma_Si="0.2", ref_obj="1.0", ref_rmse_pocv="0.002",
                      ref_c_cell="1.0", ref_bounds="-", LAM_PE_pct="1.0", LAM_NE_pct="2.0",
                      LLI_pct=str(3.0 + (bump or 0.0) * is_new),
-                     # 자체 리뷰 C05: matrix 도 모집단을 행에 봉인한다 (한 행 묶음 → authority 1)
-                     combo_roster=json.dumps({"authority": 1, "requested": 1, "succeeded": 1,
-                                              "missing_input": [], "failed": [], "absent": []}))
-            verify.atomic_write_csv(d / "matrix_100.csv", [{k: v[k] for k in S.MATRIX_ROW}], list(S.MATRIX_ROW))
+                     combo_roster="")
+            # ⚠ Codex R13 P1-1: 전 판은 **한 행**에 `authority=1` 을 적어 canonical 을 주장했다 — 구성원 검사가
+            #   없던 시절엔 통과했고, 그래서 U14 회귀가 정본 모집단을 한 번도 밟지 않았다. 정본 32 조합으로 만든다.
+            keys = sorted(S.canonical_combo_keys("100"))
+            roster = json.dumps({"authority": len(keys), "requested": len(keys), "succeeded": len(keys),
+                                 "missing_input": [], "failed": [], "absent": []})
+            mrows = [{k: v[k] for k in S.MATRIX_ROW} | {"half_cell": hc, "si": si, "w_dqdv": repr(w),
+                                                        "combo_roster": roster} for hc, si, w in keys]
+            verify.atomic_write_csv(d / "matrix_100.csv", mrows, list(S.MATRIX_ROW))
         else:
+            # ⚠ Codex R13 P1-1: 옛 정본 쪽도 같은 정본 모집단을 담아야 "숫자는 같고 스키마만 다르다" 가 된다
+            #   (전 판은 old 1 행 vs new 1 행이라 우연히 맞았다).
             cols = ["half_cell", "si", "w_dqdv", "obj", "LLI_pct"]
-            row = ["GITT", "Li", "0", "1.5", str(3.0 + (bump or 0.0) * is_new)]
-            (d / "matrix_100.csv").write_text(",".join(cols) + "\n" + ",".join(row) + "\n", encoding="utf-8")
+            body = [",".join([hc, si, repr(w), "1.5", str(3.0 + (bump or 0.0) * is_new)])
+                    for hc, si, w in sorted(S.canonical_combo_keys("100"))]
+            (d / "matrix_100.csv").write_text(",".join(cols) + "\n" + "\n".join(body) + "\n", encoding="utf-8")
         if is_new and schema:
             # ⚠ Codex R8-02 뒤: meta 는 **진짜** 묶음이어야 한다 (전 판 fixture 는 sha256="v" 인 가짜 meta 였고, 그것이
             #   "data 와 meta 를 따로 읽는" checker 를 가려 주고 있었다 — fixture 가 진실을 가린 통로)

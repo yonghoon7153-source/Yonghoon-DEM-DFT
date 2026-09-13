@@ -80,9 +80,13 @@ def _full_matrix_rows(rid, lli=1.0):
     ci = {"half_cell": {"path": "h.xlsx", "sha256": "1" * 64}, "full_cell": {"path": "f.xlsx", "sha256": "2" * 64},
           "literature": {"gr": {"path": "g.xlsx", "sha256": "3" * 64}, "si": {"path": "s.csv", "sha256": "4" * 64}}}
     rci = {"half_cell": {"path": "p.xlsx", "sha256": "5" * 64}, "full_cell": ci["full_cell"], "literature": ci["literature"]}
+    # ⚠ Codex R13 P1-1 / Q1: 전 판은 **2 행**(Li, Kunz)을 만들고 `authority=requested=2` 로 봉인했다 —
+    #   2/32 짜리가 "정상 전수 대조군" 이었다. 구성원 검사가 없던 시절엔 통과했고, 그래서 승격 경로
+    #   회귀 전체가 정본 모집단을 한 번도 밟지 않았다. 이제 정본 조합 집합 그대로 만든다.
     rows = []
-    for i, s in enumerate(("Li", "Kunz")):
-        v = dict(half_cell="GITT", si=s, w_dqdv="0", run_id=rid, inputs_sha=S.inputs_digest(ci), ref_inputs_sha=S.inputs_digest(rci),
+    keys = sorted(S.canonical_combo_keys("100"))
+    for i, (hc, s, w) in enumerate(keys):
+        v = dict(half_cell=hc, si=s, w_dqdv=repr(w), run_id=rid, inputs_sha=S.inputs_digest(ci), ref_inputs_sha=S.inputs_digest(rci),
                  consumed_inputs=json.dumps(ci), ref_consumed_inputs=json.dumps(rci), scale_seed="0", n_scale_samples="50",
                  scale_pocv_target="1.0", scale_dvdq_target="1.0", scale_dqdv_target="1.0", scale_pocv_ref="1.0",
                  scale_dvdq_ref="1.0", scale_dqdv_ref="1.0", scale_audit_target="{}", scale_audit_ref="{}", obj="0.01",
@@ -90,7 +94,8 @@ def _full_matrix_rows(rid, lli=1.0):
                  ref_a_PE="1.0", ref_b_PE="0.0", ref_a_NE="1.0", ref_b_NE="0.0", ref_gamma_Si="0.2", ref_obj="0.01",
                  ref_rmse_pocv="0.002", ref_c_cell="1.0", ref_bounds="-", LAM_PE_pct="1.0", LAM_NE_pct="2.0", LLI_pct=str(lli + i),
                  # 자체 리뷰 C05: matrix 도 모집단을 행에 봉인한다 — 주장이 본문(행 수)과 맞아야 한다
-                 combo_roster=json.dumps({"authority": 2, "requested": 2, "succeeded": 2,
+                 combo_roster=json.dumps({"authority": len(keys), "requested": len(keys),
+                                          "succeeded": len(keys),
                                           "missing_input": [], "failed": [], "absent": []}))
         assert set(v) == set(S.MATRIX_ROW), set(v) ^ set(S.MATRIX_ROW)
         rows.append({k: v[k] for k in S.MATRIX_ROW})
@@ -256,7 +261,9 @@ def test_d8_05_check_u14_rejects_duplicate_row_keys_instead_of_collapsing_them(t
     f_old = old / "matrix_100.csv"; verify.atomic_write_csv(f_old, rows, list(rows[0])); _sign(f_old, "r8-rows-A", "100", full=True)
     changed = [dict(r) for r in rows]
     original = dict(changed[0])
-    changed[0]["LLI_pct"] = str(float(changed[0]["LLI_pct"]) + 5.0)          # 폭이 실제로 움직이게 (1,2 → 6,2,1)
+    # ⚠ Codex R13 P1-1 뒤 fixture 가 2 행 → 정본 32 행이다. 최솟값 행에 +5 를 하면 폭이 오히려 **줄어**
+    #   방향이 뒤집힌다 — 모집단 크기와 무관하게 폭이 커지도록 그 행을 최댓값 위로 올린다.
+    changed[0]["LLI_pct"] = str(float(changed[0]["LLI_pct"]) + 50.0)
     changed.append(original)                                             # 마지막에 원본 중복행
     for r in changed:
         r["run_id"] = "r8-rows-B"
