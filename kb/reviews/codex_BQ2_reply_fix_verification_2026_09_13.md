@@ -1,7 +1,9 @@
 ---
 title: 회신 BQ-2 — 수정본 검증 (NO-GO)
 kind: review-reply
-created: 2026-09-13
+date: 2026-09-13
+status: 회신됨-NO-GO
+tags: [cascade, eos, cell-policy, review, codex, bq2]
 explored: false
 confidence: high
 ---
