@@ -249,7 +249,7 @@
    ⛔ 표식은 CSS content 가 아니라 **텍스트 노드**(.claim-mark)다. #}
 {% if p4b and p4b.ok %}
 <div class="card" style="border-left:4px solid #be123c">
-  <h3 style="margin-top:0">§4b 셀 정책 — <b>V₀ 가 재는 방법에 따라 움직이는가</b>
+  <h3 style="margin-top:0">§4b 셀 정책 — <b>{{ p4b.table_title }}</b>
     <span class="lv lv-a">심화</span>
     {% if not p4b.citable %}<span class="claim-mark" style="color:#be123c">[⛔미완·인용금지]</span>{% endif %}
   </h3>
@@ -261,9 +261,18 @@
   {% endif %}
 
   <p style="font-size:.86rem;margin:10px 0 4px">
-    §4b 가 묻는 것은 <b>“무질서 초격자에서 per-구조 EOS V₀ 가 성립하는가”</b> 다.
-    직접 시험은 하나다 — <b>부피창과 힘 문턱을 바꾸면 V₀ 가 움직이는가.</b>
+    카드 v4 §4b ① 은 <b>“H0·P1·P2 에 같은 형상 정책”</b> 이고, 이어서 V₀ 실제 적용 → 고정셀 완화 →
+    응력 기록 → 후속 연결을 요구한다. 아래 표는 그 준비가 <b>어느 설정에서 되는가</b>를 세는 것이지,
+    “조건 독립인 유일한 EOS” 의 증명이 아니다 (회신 BQ-3 Q3).
   </p>
+  {% if p4b.not_this %}<div class="muted" style="font-size:.8rem;margin-bottom:6px">{{ p4b.not_this }}</div>{% endif %}
+  {% if p4b.by_condition %}
+  <div style="font-size:.82rem;margin:6px 0">
+    <b>조건별 자격</b>:
+    {% for c, v in p4b.by_condition.items() %}<span style="margin-right:10px"><code>{{ c }}</code> {{ v }}</span>{% endfor %}
+    — <b>다섯 구조가 모두 준비된 공통 설정은 없다.</b>
+  </div>
+  {% endif %}
   <div class="muted" style="font-size:.8rem;margin-bottom:8px">{{ p4b.why_not_window_dependent }}</div>
   {% if p4b.summary %}
   <div class="callout cal-warn" style="font-size:.85rem;margin:8px 0">{{ p4b.summary }}</div>
