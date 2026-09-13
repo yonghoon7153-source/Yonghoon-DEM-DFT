@@ -3286,6 +3286,34 @@ PI_REGISTRY = [
 PI_BY_KEY = {p["key"]: p for p in PI_REGISTRY}
 
 
+def _alias_hit(head: str, alias: str) -> bool:
+    """PI 별칭이 **한국어 낱말 안에 박힌 경우**를 거른다.
+
+    ⛔ 2026-09-13 실측 — 별칭 `이종원` 이 **`이종원자가`**(heterovalent) 안에 들어 있다.
+      `li2026_na_sulfide_halide_interface_review` 본문의 배치엔트로피 도핑 설명에 나온다.
+      지금은 그 줄이 저자 줄 모양이 아니라 `INCLUDE` 필터가 막지만, **저자 줄에 같은
+      낱말이 들어오는 순간** 이종원 교수님 논문으로 오분류된다(합성 시험으로 확인).
+
+    규칙: 별칭 바로 뒤에 **한글 음절**이 오면 다른 낱말로 본다.
+    라틴 별칭(Ceder·Zeier…)은 뒤에 한글이 올 일이 없어 동작이 바뀌지 않는다.
+
+    ⛔ 이 함수가 **못 하는 것**
+      · 별칭 **앞**에 한글이 붙는 경우는 보지 않는다 (실측 사례가 없다).
+      · 라틴 별칭의 부분문자열 충돌(예: 성이 다른 이름의 일부)은 못 막는다.
+      · 동명이인을 구분하지 않는다.
+    """
+    i = 0
+    while True:
+        i = head.find(alias, i)
+        if i < 0:
+            return False
+        j = i + len(alias)
+        nxt = head[j] if j < len(head) else ""
+        if not ("\uac00" <= nxt <= "\ud7a3"):     # 뒤가 한글 음절이 아니면 진짜 히트
+            return True
+        i = j
+
+
 def _paper_pis(slug: str) -> list:
     """digest 앞부분(저자·소속 블록)에서 PI 이름을 찾는다.
 
@@ -3337,7 +3365,8 @@ def _paper_pis(slug: str) -> list:
         if ln.startswith("#") or any(x in ln for x in INCLUDE) or "University" in ln or "대학" in ln:
             cand.append(ln)
     head = "\n".join(cand)
-    return [pi["key"] for pi in PI_REGISTRY if any(a in head for a in pi["alias"])]
+    return [pi["key"] for pi in PI_REGISTRY
+            if any(_alias_hit(head, a) for a in pi["alias"])]
 
 
 @lru_cache(maxsize=512)

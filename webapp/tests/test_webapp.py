@@ -4012,3 +4012,81 @@ def test_recent_digests_rank_near_the_top():
     assert not bad, (
         f"⛔ 가장 최근 digest({newest})가 상위 10 % 밖에 있다 — 최신순 정렬이 "
         f"날짜를 안 쓰고 있다: " + ", ".join(f"{b}({pos[b]+1}위/{len(ps)})" for b in bad))
+
+
+def test_pi_alias_does_not_match_inside_a_korean_word():
+    """⛔음성 (2026-09-13): PI 별칭 `이종원` 이 **`이종원자가`**(heterovalent) 안에 박혀 있다.
+
+    `litdb/papers/li2026_na_sulfide_halide_interface_review.md` 본문의 배치엔트로피 도핑
+    설명에 나온다. **기전을 직접 친다** — 저자 줄 모양의 합성 문자열로 `_alias_hit` 를 부른다.
+
+    ⚠ 처음 쓴 시험은 digest 파일 전체에 `paper_pis` 를 돌려 'jwlee 가 안 붙는다' 만 봤다.
+      그것은 **엉뚱한 것을 재고 있었다** — 그 줄은 저자 줄 모양이 아니라 `INCLUDE` 필터가
+      막는 것이고, 머리말 창을 35 → 400 으로 넓혀도 그 시험은 **통과했다**.
+      즉 통과해도 아무것도 보증하지 못했다. 그래서 아래처럼 기전을 직접 친다.
+
+    ⛔ 이 시험이 못 하는 것: 다른 별칭의 부분문자열 충돌은 못 본다. 별칭을 추가할 때는
+      **한국어 낱말 안에 박히지 않는지** 직접 확인해라.
+    """
+    # ⛔음성 — 낱말 안에 박힌 별칭은 잡히면 안 된다
+    assert D._alias_hit("> **저자**: 배치엔트로피 + 이종원자가 도핑", "이종원") is False, (
+        "⛔ PI 별칭 '이종원' 이 '이종원자가'(heterovalent) 안에서 잡혔다 — "
+        "_alias_hit 의 한글 경계 판정이 깨졌다 (webapp/data.py)")
+    # 양성 대조 — 진짜 이름은 잡혀야 한다 (무조건 떨구는 게 아니다)
+    assert D._alias_hit("> **저자**: 이종원 교수", "이종원") is True, \
+        "양성 대조 실패: 진짜 이름을 놓친다"
+    assert D._alias_hit("> **저자**: 이종원", "이종원") is True, \
+        "양성 대조 실패: 줄 끝의 이름을 놓친다"
+    # 라틴 별칭은 동작이 바뀌지 않는다
+    assert D._alias_hit("Xiao/Ceder, Nat Rev Mater", "Ceder") is True, \
+        "라틴 별칭 동작이 바뀌었다"
+
+    # 실물 대조 — 그 digest 에 실제로 태그가 안 붙는지
+    from pathlib import Path as _P
+    f = _P(D.LITDB) / "papers" / "li2026_na_sulfide_halide_interface_review.md"
+    if f.exists() and "이종원자가" in f.read_text(encoding="utf-8", errors="ignore"):
+        assert "jwlee" not in D.paper_pis("li2026_na_sulfide_halide_interface_review"), \
+            "⛔ 실물 digest 에서 'jwlee' 오탐이 났다"
+
+
+def test_recent_digests_are_on_every_litdb_surface():
+    """⛔음성: digest 파일만 만들고 **INDEX·비교표·그림을 안 채우면** 화면에서 반쪽이다.
+
+    2026-09-13 에 5편을 넣으면서 이 조합을 손으로 확인했다. 손 확인은 다음에 안 한다.
+    가장 최근 digest 등록일의 논문들에 대해 네 표면이 다 있는지 본다.
+
+    ⛔ 이 시험이 못 하는 것: 내용이 **맞는지**는 못 본다. 자리가 비었는지만 본다.
+    """
+    import io as _io
+    from pathlib import Path as _P
+    ps = [p for p in D.list_papers() if p.get("digested")]
+    assert ps, "전제: 날짜가 있는 digest 가 있다"
+    newest = max(p["digested"] for p in ps)
+    targets = [p["id"] for p in ps if p["digested"] == newest]
+    idx = ""
+    for name in ("INDEX.md", "INDEX_DEM.md"):
+        f = _P(D.LITDB) / name
+        if f.exists():
+            idx += f.read_text(encoding="utf-8", errors="ignore")
+    cmp_ = ""
+    for name in ("comparison_vs_ours.md", "comparison_vs_ours_DEM.md"):
+        f = _P(D.LITDB) / name
+        if f.exists():
+            cmp_ += f.read_text(encoding="utf-8", errors="ignore")
+    bad = []
+    for t in targets:
+        fig = _P(D.LITDB) / "figures" / t
+        miss = []
+        if t not in idx:
+            miss.append("INDEX")
+        if t not in cmp_:
+            miss.append("comparison_vs_ours")
+        if not fig.exists() or not list(fig.glob("*.png")):
+            miss.append("figures/*.png")
+        elif not (fig / "figures.json").exists():
+            miss.append("figures.json")
+        if miss:
+            bad.append(f"{t}: {', '.join(miss)}")
+    assert not bad, (
+        f"⛔ 최신 digest({newest})가 litdb 표면에서 빠졌다 — digest 만 있고 화면 연결이 없다:\n  "
+        + "\n  ".join(bad))
