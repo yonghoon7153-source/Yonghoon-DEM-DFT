@@ -111,3 +111,27 @@ python3 scripts/plastic_coverage.py --selftest                     # 11/11
 python3 scripts/plastic_coverage.py --audit-l1
 python3 scripts/audit_constriction_deleted.py --selftest           # ⑩a–e 가 오늘 것
 ```
+
+## 8. 추가 (요청서 작성 뒤 코퍼스 실측이 들어왔다) — 같이 공격해 달라
+
+LHS 30 케이스 · 원본 덤프 경로 · 지난 S0 CSV 와 **30/30 일치** (`--expect-csv`):
+
+```
+사다리 도달 간선                              3,619,759
+L1-01 cap_conflict (하한 > 상한)                189,674 = 5.240 %
+L1-02 정확 lens → A_final / a_eff / ψ분기 변화        0 = 0.000 %
+```
+
+- §5 의 걱정(*합성 55.3 % 를 원장에 적은 것*)은 실측으로 닫혔다 — 합성값은 **10.6배 과대**였고
+  이제 인용하지 않는다.  ⚠ 그러나 **"합성 스윕을 원장에 적는 관행 자체"** 가 문제였는지는 여전히
+  묻는다.
+- **새 주장**: L1-02 의 코퍼스 효과 0 은 물리가 아니라 **`DESC-03` 이 가려서**다 — 사다리가 sim 길이
+  (mm)를 m 로 읽어 `A_volume = V/h_film_min` 이 다른 면적 항보다 **1000배** 부풀어 volume cap 이
+  **원리적으로 결속 불가**.  ⇒ `case_master.csv` 의 `volume` 0/163 도 같은 이유.
+  **공격해 달라**: ① 그 1000배 산술 (`V ∝ L³` 1e9배 vs `A ∝ L²` 1e6배) ② DESC-03 을 고쳤을 때
+  volume 이 실제로 결속할 δ/R* 구간이 코퍼스 분포 안에 있는가 — 없다면 "가려져 있다" 는 서술은
+  과하고 L1-02 는 그냥 무해하다 ③ 5.240 % 가 정말 단위 무관한지 (`A_ligg` 는 LIGGGHTS 가 sim 단위로
+  준 값이라 `scale²` 만 곱해지는데, `A_tabor` 는 sim 을 m 로 읽은 힘에서 나온다 — 두 항의 **비**가
+  정말 무차원인지 다시 봐 달라).
+- **로더 대조의 한계**: `--expect-csv` 가 보는 것은 n_contact_rows · type_hist · n_edges · n_deleted
+  뿐이다.  두 경로가 **같은 δ·면적을 넘겼는지**는 간접 증거(n_deleted 일치)로만 본다 — 충분한가.
