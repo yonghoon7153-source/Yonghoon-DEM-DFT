@@ -3147,12 +3147,13 @@
    "opened_in": "docs/reviews/codex_verdict_area_round2_20260913.md",
    "id": "R2-06",
    "severity": "P2",
-   "status": "open",
+   "status": "claimed_fixed",
    "title": "cap 감사가 clamp/ψ 를 **다시 구현**해 솔버 호출부의 변이를 못 봤다",
    "evidence_tests": [
     "scripts/audit_transport_cap_equivalence.py"
    ],
-   "note": "(Codex 라벨: **P2-R2-06**)  감사는 실제 plastic 함수를 부르지만 `network_conductivity` 의 clamp/ψ 는 재구현한다.  `NC:413` 의 `Rc=0` 을 격리 메모리에서 `R_Maxwell` 로 바꾸면 실제 cap 전후가 Rc 0.7071067811865475 → 1.0 · R_total 4.745663462143392 → 5.0385566809568445 로 **달라지는데** 감사 4,000점은 n_bad=0 · 분기 차 0.  ⇒ 무너지는 것은 현재 항등식이 아니라 *\"이 감사가 이후에도 솔버 항등을 강제한다\"* 는 **보증**.\n**대응 (같은 커밋)**: 감사 ⑥ 이 `network_conductivity.py` 를 격리 로드해 `_film_area` 만 cap 판으로 바꿔 끼운 뒤 **실제 `build_network`** 로 전후를 대조한다 (Codex 조건 r .5/6 · δ .2 · A .04: Rc 0→0 · R_total 동일) · ⑥b 진단 필드는 변함(A_physics ½ · R_Maxwell √2배 = Codex 의 0.7071→1.0 과 같은 비) · ⑥c **판별력**: 같은 Rc=0→R_Maxwell 변이에서 cap 전환이 실제로 값을 움직임을 확인 (0.4154 → 0.5875).\n⚠ ULP 분해 19,943/57 vs Codex 19,944/56 — **플랫폼 의존**이라 봉인하지 않는다.  ⚠ δ≤0 · 정확 동률 · fallback 경계 시험은 **별도**로 남아 있다."
+   "note": "(Codex 라벨: **P2-R2-06**)  감사는 실제 plastic 함수를 부르지만 `network_conductivity` 의 clamp/ψ 는 재구현한다.  `NC:413` 의 `Rc=0` 을 격리 메모리에서 `R_Maxwell` 로 바꾸면 실제 cap 전후가 Rc 0.7071067811865475 → 1.0 · R_total 4.745663462143392 → 5.0385566809568445 로 **달라지는데** 감사 4,000점은 n_bad=0 · 분기 차 0.  ⇒ 무너지는 것은 현재 항등식이 아니라 *\"이 감사가 이후에도 솔버 항등을 강제한다\"* 는 **보증**.\n**대응 (같은 커밋)**: 감사 ⑥ 이 `network_conductivity.py` 를 격리 로드해 `_film_area` 만 cap 판으로 바꿔 끼운 뒤 **실제 `build_network`** 로 전후를 대조한다 (Codex 조건 r .5/6 · δ .2 · A .04: Rc 0→0 · R_total 동일) · ⑥b 진단 필드는 변함(A_physics ½ · R_Maxwell √2배 = Codex 의 0.7071→1.0 과 같은 비) · ⑥c **판별력**: 같은 Rc=0→R_Maxwell 변이에서 cap 전환이 실제로 값을 움직임을 확인 (0.4154 → 0.5875).\n⚠ ULP 분해 19,943/57 vs Codex 19,944/56 — **플랫폼 의존**이라 봉인하지 않는다.  ⚠ δ≤0 · 정확 동률 · fallback 경계 시험은 **별도**로 남아 있다.",
+   "claimed_fixed_sha": "64ca04d14"
   },
   {
    "owner": "claude",
