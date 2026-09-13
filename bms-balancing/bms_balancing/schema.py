@@ -40,6 +40,11 @@ SHAPE_ROW = (
     "legal_dgamma_neg", "legal_dgamma_pos", "gamma_family_max_mV",
     "gamma_at_family_max", "gamma_witness", "gamma_witness_delta",
     "run_id", "inputs_sha", "consumed_inputs")
+#: `scripts/fit_cycles.py` — 사이클별 α·β 적합 (BML_R1_RESPONSE §9 결정 실험). 행 key 는 `cycle`(정수).
+#: 규진팀 `result_L_*.xlsx` 의 11 열(`rails.RESULT_COLUMNS`) + 적합 근거(obj·rmse·시작점) + 하네스 출처(행별 receipt).
+CYCLES_ROW = ("cell", "cycle", "C_cell", "x_cell", "a_PE", "b_PE", "a_NE", "b_NE", "gamma_Si", "c_lit",
+              "LAM_PE", "LAM_NE", "LLI", "obj", "rmse_pocv", "rmse_dvdq", "rmse_dqdv", "n_starts", "n_accepted",
+              "bounds", "run_id", "inputs_sha", "consumed_inputs")
 DEGENERACY_KEYS = (
     "state", "si_source", "half_cell", "w_dqdv", "tol_percent_of_best", "n_starts", "seed", "n_grid", "n_samples",
     "run_id", "env", "consumed_inputs", "ref_consumed_inputs", "inputs_sha",
@@ -179,11 +184,13 @@ def check_degeneracy_shape(j: dict) -> list:
 META_CONTROLS = ("state", "half_cell_source", "si_source", "starts", "seed")
 #: shape 의 실행 조건 — solver 가 없으니 starts/seed 가 아니고, 상태는 본문(roster)에 여럿이라 조건이 아니다 (Codex R13 §Q6)
 SHAPE_META_CONTROLS = ("half_cell_source", "si_source", "grid_n", "grid_range", "gamma_grid")
+#: cycles 의 실행 조건 — 셀 라벨 · Si 소스 · 시작점 수 · seed (상태는 없다; 사이클은 본문 roster 다)
+CYCLES_META_CONTROLS = ("cell", "si_source", "starts", "seed")
 
 
 def meta_controls(kind: str) -> tuple:
     """종류별 sidecar 실행 조건 — 양쪽에 있고 같아야 "같은 실행" 이다 (Codex R10 P1-7)."""
-    return SHAPE_META_CONTROLS if kind == "shape" else META_CONTROLS
+    return {"shape": SHAPE_META_CONTROLS, "cycles": CYCLES_META_CONTROLS}.get(kind, META_CONTROLS)
 
 #: success 행에는 없어야 하는 열 — 있으면 그 행은 error 행이고 묶음은 승격 대상이 아니다 (Codex R10 P1-5)
 ERROR_COL = "error"
@@ -213,6 +220,8 @@ MATRIX_NUMERIC = tuple(c for c in MATRIX_ROW if c not in MATRIX_NON_NUMERIC)
 PROFILE_NUMERIC = tuple(c for c in PROFILE_ROW if c not in PROFILE_NON_NUMERIC)
 SHAPE_NON_NUMERIC = ("state", "run_id", "inputs_sha", "consumed_inputs")
 SHAPE_NUMERIC = tuple(c for c in SHAPE_ROW if c not in SHAPE_NON_NUMERIC)
+CYCLES_NON_NUMERIC = ("cell", "bounds", "run_id", "inputs_sha", "consumed_inputs")
+CYCLES_NUMERIC = tuple(c for c in CYCLES_ROW if c not in CYCLES_NON_NUMERIC)
 #: 숫자 대조에서 뺄 열 (출처·감사 문자열 — 숫자가 아니다)
 ROW_SKIP = frozenset({"run_id", "inputs_sha", "ref_inputs_sha", "consumed_inputs", "ref_consumed_inputs",
                       "scale_audit_target", "scale_audit_ref"})
@@ -378,9 +387,10 @@ def env_problems(old: dict | None, new: dict | None, where: str = "env") -> list
 
 
 # ── 산출 종류 (kind) — 이름 → 종류는 **한 함수**가 정하고, 모르면 예외다 (Codex R13 §Q6) ─────────────────────
-KINDS = ("matrix", "profile", "degeneracy", "shape")
+KINDS = ("matrix", "profile", "degeneracy", "shape", "cycles")
 _KIND_BY_NAME = (("matrix_", ".csv", "matrix"), ("profile_gamma_", ".csv", "profile"),
-                 ("degeneracy_", ".json", "degeneracy"), ("ne_shape_", ".csv", "shape"))
+                 ("degeneracy_", ".json", "degeneracy"), ("ne_shape_", ".csv", "shape"),
+                 ("cycles_", ".csv", "cycles"))
 
 
 def kind_of(name: str) -> str:
@@ -396,11 +406,17 @@ def kind_of(name: str) -> str:
         if low.startswith(pre) and low.endswith(suf):
             return kind
     raise ValueError(f"모르는 산출 종류: {stem!r} — 정본 이름은 matrix_<state>.csv · profile_gamma_<state>_<si>.csv · "
-                     f"degeneracy_<state>_<si>.json · ne_shape_<source>_<si>.csv (`bms_balancing/schema.py` 가 정본)")
+                     f"degeneracy_<state>_<si>.json · ne_shape_<source>_<si>.csv · cycles_<cell>_<si>.csv "
+                     f"(`bms_balancing/schema.py` 가 정본)")
 
 
 def required_columns(kind: str) -> tuple:
-    return {"matrix": MATRIX_ROW, "profile": PROFILE_ROW, "shape": SHAPE_ROW}[kind]
+    return {"matrix": MATRIX_ROW, "profile": PROFILE_ROW, "shape": SHAPE_ROW, "cycles": CYCLES_ROW}[kind]
+
+
+def cycles_key(row: dict) -> int:
+    """cycles 의 행 key 는 **정수 cycle** 이다 ("3" 과 "3.0" 은 같은 행)."""
+    return int(float(row.get("cycle")))
 
 
 def shape_key(row: dict) -> str:
@@ -410,7 +426,7 @@ def shape_key(row: dict) -> str:
 
 def row_key(kind: str):
     """종류별 행 key — reader 와 checker 가 같은 함수를 쓴다 (R8-05 · R9-05)."""
-    return {"matrix": matrix_key, "profile": profile_key, "shape": shape_key}[kind]
+    return {"matrix": matrix_key, "profile": profile_key, "shape": shape_key, "cycles": cycles_key}[kind]
 
 
 def shape_source_of(name: str) -> tuple:
@@ -513,7 +529,7 @@ def check_rows(kind: str, rows: list, header: list, name: str = "") -> list:
     unknown = [c for c in header if c not in need and c != ERROR_COL]
     if unknown:
         p.append(f"모르는 열 {unknown} — producer 스키마에 없는 열이다 (`bms_balancing/schema.py` 가 정본)")
-    numeric = {"matrix": MATRIX_NUMERIC, "profile": PROFILE_NUMERIC, "shape": SHAPE_NUMERIC}[kind]
+    numeric = {"matrix": MATRIX_NUMERIC, "profile": PROFILE_NUMERIC, "shape": SHAPE_NUMERIC, "cycles": CYCLES_NUMERIC}[kind]
     empty_ok = may_be_empty(kind)
     n_error = 0
     for i, r in enumerate(rows):
@@ -574,9 +590,11 @@ def body_roster(name: str, data: bytes) -> dict:
     import csv as _csv, io as _io
     rows = list(_csv.DictReader(_io.StringIO(data.decode("utf-8-sig"))))
     r = {"kind": kind, "rows": len(rows)}
-    for c in ("half_cell", "si", "w_dqdv", "profile_scale", "state"):
+    for c in ("half_cell", "si", "w_dqdv", "profile_scale", "state", "cell"):
         if rows and c in rows[0]:
             r[c] = sorted({row.get(c) or "" for row in rows})
+    if kind == "cycles" and rows and "cycle" in rows[0]:
+        r["cycles"] = sorted({cycles_key(row) for row in rows if str(row.get("cycle") or "").strip()})
     if rows and "gamma_Si" in rows[0]:
         g = [float(row["gamma_Si"]) for row in rows if row.get("gamma_Si") not in (None, "")]
         r["gamma_Si"] = [min(g), max(g), len(g)] if g else []

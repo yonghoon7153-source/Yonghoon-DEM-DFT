@@ -17,7 +17,7 @@ hdr() { printf '\n\033[1m== %s ==\033[0m\n' "$1"; }
 
 if [ "$have_octave" -eq 1 ]; then
   hdr "1. 구문 검사 — Octave 파서가 네 파일을 읽는가"
-  for f in dd_eval dd_verify; do
+  for f in dd_eval dd_verify fit_cycles_driver; do
     if octave-cli --no-init-file --path "$T/.." \
          --eval "nargin('$f');" >/dev/null 2>&1; then echo "  OK   $f.m"
     else echo "  FAIL $f.m"; octave-cli --no-init-file --path "$T/.." \

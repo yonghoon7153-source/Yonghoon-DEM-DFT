@@ -114,6 +114,48 @@ def git_provenance(cwd: str | None = None, artifact=None, output_roots=("out",))
             "git_modified_outputs": sorted(outputs), "git_modified_code": sorted(code)}
 
 
+def sidecar_dict(name: str, data: bytes, *, run_id: str, started, argv, pv: dict, extra: dict | None = None) -> dict:
+    """U14 sidecar 의 **공통** 축 — 산출 이름 · run_id · 지금 bytes 의 sha256 · 본문에서 유도한 roster · 끝 git 상태 ·
+    시작 git 상태와 그 차이 · 시작/작성 시각 · env · argv. `run_states.sh write_meta`(heredoc) 가 matrix·profile·degeneracy
+    에 적는 것과 같은 키다 (Codex R13 §Q6 뒤 shape 가 같은 계약을 갖게 됐고, `fit_cycles` 가 셋째 producer 라 한 자리로).
+
+    `started` 는 `{"utc": iso, "git": git_provenance() 결과}` (계산 **전** — R6 내부 F04) 또는 None,
+    `pv` 는 끝 상태의 `git_provenance(artifact=…)`. `extra` 는 종류별 필드 (실행 조건·pairing 등) — 공통 키를 덮지 않는다.
+    roster 는 `bms_balancing.schema.body_roster` 로 **같은 bytes** 에서 유도한다; 패키지를 못 찾으면 None 과 이유를 적는다
+    (지어내지 않는다 — 승격 gate 가 막는다). 등록되지 않은 이름은 ValueError 그대로 (fail-closed, Codex R13 §Q6).
+    """
+    import datetime, hashlib, pathlib as _pl, sys as _sys
+    pre = (started or {}).get("git") or {}
+    try:
+        from bms_balancing.schema import body_roster
+    except ModuleNotFoundError:
+        _sys.path.insert(0, str(_pl.Path(__file__).resolve().parents[1]))
+        try:
+            from bms_balancing.schema import body_roster
+        except ModuleNotFoundError as e:                       # 합성 fixture 트리 — 명부를 지어내지 않는다
+            body_roster, roster_err = None, f"bms_balancing 를 못 찾았다: {e}"
+    meta = {
+        "artifact": name, "run_id": run_id, "sha256": hashlib.sha256(data).hexdigest(),
+        "roster": (body_roster(name, data) if body_roster else None),
+        "git_commit": pv.get("git_commit"), "git_dirty": pv.get("git_dirty"),
+        "git_modified_outputs": pv.get("git_modified_outputs"), "git_modified_code": pv.get("git_modified_code"),
+        "git_commit_at_start": pre.get("git_commit"), "git_dirty_at_start": pre.get("git_dirty"),
+        "git_modified_code_at_start": pre.get("git_modified_code"),
+        "git_state_changed_during_run": bool(pre) and (
+            pre.get("git_commit") != pv.get("git_commit") or pre.get("git_dirty") != pv.get("git_dirty")
+            or pre.get("git_modified_code") != pv.get("git_modified_code")),
+        "started_utc": (started or {}).get("utc"),
+        "env": env_signature(),
+        "argv": list(argv if argv is not None else _sys.argv),
+        "created_utc": datetime.datetime.now(datetime.timezone.utc).isoformat(),
+    }
+    if body_roster is None:
+        meta["roster_error"] = roster_err
+    for k, v in (extra or {}).items():
+        meta.setdefault(k, v)
+    return meta
+
+
 def sha256_file(path) -> str:
     import hashlib, pathlib
     return hashlib.sha256(pathlib.Path(path).read_bytes()).hexdigest()

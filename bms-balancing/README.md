@@ -62,6 +62,16 @@ pip install -r requirements.txt
 | `profile` | γ_Si 를 고정하고 나머지 넷을 재적합 — γ ↔ α_NE 축퇴 |
 | `scale-noise` | 목적함수 scale 의 난수 seed 가 답을 얼마나 흔드나 |
 
+### 사이클별 재적합과 난간 — `scripts/fit_cycles.py` · `scripts/check_rails.py`
+
+규진팀 결과표(`result_L_*.xlsx`, 11 열)를 **우리가 다시 뽑고 같은 자로 잰다** (`reviews/BML_R1_RESPONSE.md` §10).
+
+| 도구 | 무엇 |
+|---|---|
+| `scripts/fit_cycles.py` | `main_blend_final.m` 의 사이클 루프를 하네스로 — 같은 모델·경계·수출 공식, 원자료는 `<cycle>_capacity/<cycle>_voltage` 워크북 + pristine 반쪽전지. 산출 `cycles_<cell>_<si>.csv` (+ sidecar) 는 `check_u14` 의 등록된 종류다. `--seed` 를 바꿔 두 번 돌리는 것이 결정 실험의 절반 |
+| `scripts/check_rails.py` | 결과표 난간 4 층 (계약 → `error` · 패턴 → `warning` · 기록된 optimizer 설정 → 접촉 거리 · 잔차 존재). MATLAB xlsx 든 우리 CSV 든 **같은 검사**. rc 0/2/3 |
+| `matlab/fit_cycles_driver.m` | 규진팀 파이프라인을 수정 없이 사이클별로 부르는 MATLAB 드라이버 — `rng(` 고정이 남아 있으면 거부, 결과 + `.settings.json` |
+
 ### 여러 상태를 한 번에 — `scripts/run_states.sh`
 
 `300_0009` 에서 한 것을 다른 상태에도 **같은 설정으로** 돌린다.

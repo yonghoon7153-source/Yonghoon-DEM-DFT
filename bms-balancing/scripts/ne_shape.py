@@ -203,10 +203,10 @@ def _write_csv(d: pathlib.Path, a, rows, cap, base_cap, cwhere, headroom=None, c
     값이라 용량이 크게 변한 상태에서는 순수한 OCP 모양 변화로 읽으면 안 된다.
     그 한정어가 CSV 에서 떨어지면 숫자만 인용된다.
     """
-    import datetime, hashlib, json, os, tempfile, uuid
+    import json, os, tempfile, uuid
     from bms_balancing import schema as S
     from bms_balancing.verify import publish_lock
-    from provenance import env_signature, git_provenance
+    from provenance import git_provenance, sidecar_dict
     d.mkdir(parents=True, exist_ok=True)
     roots = (str(d), str(getattr(a, "out_dir", "") or ""), "out")   # 산출 자리·matrix 입력 자리는 코드가 아니다
     if started is None:          # 직접 호출(리뷰 repro·테스트) — 시작점은 writer 진입이다; `main` 은 입력을 읽기 전 시각을 준다
@@ -254,10 +254,9 @@ def _write_csv(d: pathlib.Path, a, rows, cap, base_cap, cwhere, headroom=None, c
             w.writerow([cells[k] for k in header])
     # 산출물 자신의 재작성은 dirty 가 아니다 (R4-07); 저장소는 cwd 무관 (R6 F7); 산출 자리는 코드가 아니다 (R11 P1-9)
     pv = git_provenance(cwd=str(REPO_DIR), artifact=str(art), output_roots=roots)
-    sha, dirty = pv["git_commit"], pv["git_dirty"]
-    pre = started["git"]
-    meta = {
-        "artifact": art.name, "half_cell_source": a.source,
+    # shape 고유 필드 — 공통 축(run_id·sha256·roster·git 전/후·env·argv·시각)은 `provenance.sidecar_dict` 가 붙인다
+    extra = {
+        "half_cell_source": a.source,
         "si_source": a.si_source, "grid_n": int(GRID.size),
         "grid_range": [float(GRID[0]), float(GRID[-1])],
         "gamma_from": f"{a.out_dir}/matrix_<state>.csv 의 gamma_Si(대상)·ref_gamma_Si(기준)",
@@ -265,8 +264,6 @@ def _write_csv(d: pathlib.Path, a, rows, cap, base_cap, cwhere, headroom=None, c
         "gamma_grid": [float(GAMMA_GRID[0]), float(GAMMA_GRID[-1]), int(GAMMA_GRID.size)],
         "headroom_note": "gamma_witness 는 (a) 이상의 진폭을 내는 합법 γ 의 존재 증인(격자)이지 "
                          "모양 일치가 아니다; 빈 칸 = 격자에서 없음 (R3-03)",
-        "git_commit": sha, "git_dirty": dirty,
-        "git_modified_outputs": pv["git_modified_outputs"], "git_modified_code": pv["git_modified_code"],
         # ⚠ Codex R5-05: "코드가 commit 과 같다" 와 "이 입력에서 이 결과가 나왔다" 는 다른 물음이다 —
         #   실제 소비한 matrix 파일(경로·sha256·행)·반쪽전지·문헌 입력의 identity 를 tracked 여부와 무관하게 남긴다.
         "consumed_inputs": consumed or {},
@@ -275,26 +272,14 @@ def _write_csv(d: pathlib.Path, a, rows, cap, base_cap, cwhere, headroom=None, c
         "pairing": pairing or {},
         # ⚠ Codex R9-06 · P2-5: typed 완전성 — complete 만 canonical 에, none/partial 은 `<write>/partial/` 에 (호출부가 정한다)
         "status": status,
-        "run_id": rid,
-        # ⚠ Codex R13 §Q6: U14 sidecar 계약 — `run_states.sh write_meta` 가 matrix·profile·degeneracy 에 적는 것과 같은 축
-        #   (env · 시작 시각 · 시작 git 상태 · 실행 중 변경 · argv · 본문에서 유도한 roster). shape 는 producer 가 자기
-        #   sidecar 를 쓰므로 같은 것을 여기서 적는다 (전 판은 이 중 하나도 없어 gate 가 전부 "누락" 이었다).
-        "git_commit_at_start": pre.get("git_commit"), "git_dirty_at_start": pre.get("git_dirty"),
-        "git_modified_code_at_start": pre.get("git_modified_code"),
-        "git_state_changed_during_run": bool(pre) and (
-            pre.get("git_commit") != pv["git_commit"] or pre.get("git_dirty") != pv["git_dirty"]
-            or pre.get("git_modified_code") != pv["git_modified_code"]),
-        "started_utc": started["utc"],
-        "env": env_signature(),                                       # R6 내부 F3
-        "argv": list(argv if argv is not None else sys.argv),
-        "created_utc": datetime.datetime.now(datetime.timezone.utc).isoformat(),
     }
     try:
         with publish_lock(art):                   # 게시와 meta 가 같은 잠금 안 (R5-04 규약)
             os.replace(fh.name, art)
             data = art.read_bytes()               # 잠금 안 **한 번** 읽은 bytes — sha256 과 roster 가 같은 bytes 의 것
-            meta["sha256"] = hashlib.sha256(data).hexdigest()
-            meta["roster"] = S.body_roster(art.name, data)   # checker 가 같은 함수로 다시 유도해 댄다 (Codex R9 P2-4)
+            # ⚠ Codex R13 §Q6: U14 sidecar 계약 — `write_meta` 가 세 종류에 적는 것과 같은 축을 `sidecar_dict` 한 자리가 붙인다
+            #   (run_id · sha256 · roster(같은 bytes) · git 전/후 · env · argv · 시각). 전 판은 이 중 하나도 없어 gate 가 전부 "누락".
+            meta = sidecar_dict(art.name, data, run_id=rid, started=started, argv=argv, pv=pv, extra=extra)
             fd, tmp = tempfile.mkstemp(dir=d, prefix=art.name + ".meta.", suffix=".part")
             with os.fdopen(fd, "w", encoding="utf-8") as mf:
                 mf.write(json.dumps(meta, ensure_ascii=False, indent=2) + "\n")

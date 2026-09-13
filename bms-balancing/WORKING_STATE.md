@@ -58,15 +58,32 @@ bytecode 만 막았고(C08·C09), `rc 0` 인데 승격 불가인 상태를 런�
 |---|---|---|
 | ① mph 마이크로 쇼츠 | NO-GO ×2 (v1·v2) | **M1 전제가 깨졌다.** `cEeqref_mat = from_mat` — 선택자가 재료값이고 사용자 식 `cs_max*dm` 은 안 쓰인다. 문서 v3 정정은 **COMSOL 값 받은 뒤**. 요청서 `docs/COMSOL_CHECK_REQUEST.md` 대기 중 |
 | ② R13 하네스 | NO-GO (P1 4 · P2 5) | **P1-1~P2-5 · §5 Q6 전부 닫음** (262 passed). 남은 것: 실데이터로 shape 재생성(사용자 기계, 아래 U18 4 단계) · 단일 회신 `reviews/R13_RESPONSE.md` |
-| ③ BML α·β 난간 | NO-GO (B1~B5 전부 미증명/반박) | **주장 사슬 전부 철회.** `REQ_FIT_RAILS.md` v2 로 재작성, 원장 `reviews/BML_R1_RESPONSE.md` |
+| ③ BML α·β 난간 | NO-GO (B1~B5 전부 미증명/반박) | **주장 사슬 전부 철회** → 원인은 `rng(0)` 오염(§9) → **우리가 다시 뽑는다** (전권, `BML_R1_RESPONSE.md` §10): (a) `matlab/fit_cycles_driver.m` · (b) `scripts/fit_cycles.py` · 난간 `scripts/check_rails.py` (받은 xlsx 4 개에서 §6 재현). 남은 것: 사용자 기계 실행 (아래) |
 
 **세 라운드 공통 교훈**: 정정이 또 다른 단정이 됐다. "세 모드 붕괴" 를 고치며 "LLI 는 독립"
 이라 했는데 `c_lit = C_cell·(a_PE+b_PE−b_NE)` 항등식이 그것도 무너뜨렸다. 관측과 해석의
 경계를 매 라운드 다시 그어야 한다.
 
-**②·③ 이 요구하는 외부 자료** — 이것 없이는 더 못 닫는다:
+**①·③ 이 요구하는 외부 자료** — 이것 없이는 더 못 닫는다:
 - COMSOL: `liion.pce*.pin1.cEeqref` 실효값 (현재 설정으로 새로 초기화한 것. 저장 해는 설정이 다르다)
-- MATLAB: 자유/고정 변수 · lb/ub · 정규화 · 초기값/restart · **export 변환 코드** · 잔차/profile
+- ~~MATLAB: 자유/고정 변수 · lb/ub · …~~ → 원본 확보로 닫힘 (§8). 이제 필요한 것은 **네 셀(ref1·ref2·PE1·PE5)의 원시
+  사이클 워크북 + 그 셀들의 기준 반쪽전지** — 결과표에는 없다. 형식은 `<cycle>_capacity/<cycle>_voltage`.
+
+**③ BML 다음 — 사용자 기계에서** (둘 다 `git pull` 뒤, `BMS_DATA_ROOT` 는 data/literature 가 있는 루트):
+
+```bash
+# (b) Python 포팅 — 셀 하나, seed 둘 (두 산출이 갈리면 시작점이 정한 적합이다: §10-2)
+python3 scripts/fit_cycles.py --half-cell "$BMS_DATA_ROOT/data/half_cell/GITT/pristine.xlsx" \
+    --full-cell <L_ref1 사이클 워크북.xlsx> --cell L_ref1 --si-source Li --starts 20 --seed 0 --out out_cycles/seed0
+python3 scripts/fit_cycles.py ... --seed 1 --out out_cycles/seed1
+python3 scripts/check_rails.py out_cycles/seed0/cycles_L_ref1_Li.csv out_cycles/seed1/cycles_L_ref1_Li.csv
+python3 scripts/check_u14.py --new out_cycles/seed1 --old out_cycles/seed0     # 조건 같고 숫자 다르면 rc 1 = 그것이 발견
+# (a) MATLAB — 규진팀 원본 폴더에서 (rng( 가 남아 있으면 드라이버가 거부한다)
+#   cfg = struct('pipeline_dir',pwd,'data_root',pwd,'half_cell_file','data\half_cell\GITT\pristine.xlsx', ...
+#                'full_cell_file','<L_ref1 사이클 워크북>','cycles',[],'si_source','Li','label','L_ref1','out_dir','results_refit');
+#   fit_cycles_driver(cfg)      % → results_refit/result_L_ref1_Li.xlsx + .settings.json
+python3 scripts/check_rails.py results_refit/result_L_ref1_Li.xlsx           # 2 층 repeated_values 가 사라졌는가
+```
 
 ### R13 §5 Q6 닫음 — shape 전용 kind · schema · sidecar 계약 (2026-09-13)
 
@@ -304,7 +321,7 @@ U14 가 드러낸 다섯 건(U14-01 줄끝로 서명이 fresh clone 에서 깨�
 # ── 0. 받기 · 확인 (몇 분) ────────────────────────────────────────────────────────────────────────
 cd ~/dd/bms-balancing && git pull --rebase origin claude/bms-alpha-beta-verify
 source .venv/bin/activate && export BMS_DATA_ROOT='/mnt/d/가형 관련/degradation mode'
-python3 -m pytest tests/ -q                       # 262 passed 기대 (원자료 불필요)
+python3 -m pytest tests/ -q                       # 273 passed 기대 (원자료 불필요)
 
 # ── 1. 배관 확인 — 새 스키마가 붙는지만 (몇 분, STARTS=6 이라 수치는 못 쓴다) ─────────────────────
 STARTS=6 STATES=100 OUT=out_u14_smoke ./scripts/run_states.sh

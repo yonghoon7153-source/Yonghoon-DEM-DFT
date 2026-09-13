@@ -14,6 +14,7 @@ degradation mode/                ← 여기가 루트 (여기서 실행)
 ├── averageDuplicates.m
 ├── dd_verify.m                  ← 복사
 ├── dd_eval.m                    ← 복사
+├── fit_cycles_driver.m          ← 복사 (사이클별 재적합 드라이버 — BML_R1_RESPONSE §10, MATLAB+GADS 필요)
 ├── dd_shims/                    ← 폴더째 복사 (sgolayfilt.m · quantile.m · findpeaks.m)
 └── data/
     ├── half_cell/{GITT,step_005C}/
