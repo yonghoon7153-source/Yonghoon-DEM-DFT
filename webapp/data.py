@@ -2337,6 +2337,35 @@ METHOD_LINEAGE = {
 }
 
 
+def cascade_pilot_4b() -> dict:
+    """`/cascade` §4b 패널 — **V₀ 가 조건에 따라 움직이는가** (2026-09-13).
+
+    화면이 숫자를 자체 보관하지 않는다 — `db/properties/cascade_pilot_4b_regate_*.json`
+    하나만 읽는다 (화면·claim 결속 규율).
+
+    ⛔ 이 함수가 **못 하는 것**
+      · 판정하지 않는다. 원장의 문장과 숫자를 **옮길 뿐**이다.
+      · `citable` 을 스스로 올리지 않는다. 원장이 False 면 화면도 미완으로 뜬다.
+      · 스윕이 끝났는지 확인하지 않는다 — 원장이 '미완' 이라고 적으면 그대로 옮긴다.
+    """
+    rec = _load_json(DB / "properties" / "cascade_pilot_4b_regate_2026_09_13.json")
+    if not rec:
+        return {"ok": False, "why": "cascade_pilot_4b_regate_2026_09_13.json 을 못 읽었다"}
+    sp = rec.get("V0_spread_by_structure") or {}
+    # 폭이 작은 것부터 — 질서(H0)가 맨 위에 오도록 두지 않고 **값으로** 세운다
+    order = sorted(sp.items(), key=lambda kv: kv[1].get("V0_range_pct", 1e9))
+    return {"ok": True,
+            "citable": bool(rec.get("citable")),
+            "why_not_citable": rec.get("⛔_왜_citable_false_인가"),
+            "why_not_window_dependent": rec.get("왜_이_비교는_창_의존이_아닌가"),
+            "spread": [{"structure": k, **v} for k, v in order],
+            "conditions": rec.get("conditions") or {},
+            "method": rec.get("method") or {},
+            "read_notes": rec.get("⚠_읽는_법") or [],
+            "not_saying": rec.get("⛔_이_기록이_말하지_않는_것") or [],
+            "date": rec.get("date")}
+
+
 def cascade_rows_for(dopant: str) -> dict:
     """특정 도펀트(예: Nd2O3)의 캐스케이드 행만 추림 — 조성 심층페이지용."""
     if not dopant:
@@ -3620,7 +3649,12 @@ def list_papers() -> list:
         title, type_str, digested = f.stem.replace("_", " "), "", ""
         got_title = False
         try:
-            head = f.read_text(encoding="utf-8", errors="ignore").splitlines()[:18]
+            # ⛔ 2026-09-13 실측 — 종전 18줄이었다. 머리말이 긴 digest 는
+            #   `digested` 표기가 창 밖(22·25행)으로 나가 **날짜 없음**으로 읽혔고,
+            #   최신순 정렬에서 264편 중 258·259·261위로 **조용히 가라앉았다**.
+            #   1저자가 "논문이 아직 안 떴다" 고 한 것이 이것이다. 정규식이
+            #   `digested <날짜>` 로 구체적이라 넓혀도 오탐 위험이 낮다.
+            head = f.read_text(encoding="utf-8", errors="ignore").splitlines()[:60]
         except Exception:
             head = []
         for line in head:

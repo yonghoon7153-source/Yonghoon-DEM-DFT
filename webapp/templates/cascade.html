@@ -241,6 +241,95 @@
    `data.cascade_campaign_band()` 가 비준 카드·봉인 파일에서 읽어 온다. #}
 {% include "_campaign_band.html" %}
 
+{# ══ §4b 셀 정책 — V₀ 가 조건에 따라 움직이는가 (2026-09-13, 회신 BQ·BQ-2) ═══════
+   ⛔ 숫자는 **화면이 보관하지 않는다** — data.cascade_pilot_4b() 가 원장
+     db/properties/cascade_pilot_4b_regate_2026_09_13.json 하나만 읽는다.
+   ⛔ 철회한 두 해석은 citation_hazards 의 id 를 단 요소 **안**에 있다 (data-claim).
+     근처에 ⛔ 표지를 두는 것은 결속이 아니다 — 값이 복사될 때 표지가 안 따라간다.
+   ⛔ 표식은 CSS content 가 아니라 **텍스트 노드**(.claim-mark)다. #}
+{% if p4b and p4b.ok %}
+<div class="card" style="border-left:4px solid #be123c">
+  <h3 style="margin-top:0">§4b 셀 정책 — <b>V₀ 가 재는 방법에 따라 움직이는가</b>
+    <span class="lv lv-a">심화</span>
+    {% if not p4b.citable %}<span class="claim-mark" style="color:#be123c">[⛔미완·인용금지]</span>{% endif %}
+  </h3>
+
+  {% if not p4b.citable %}
+  <div class="callout cal-danger" style="font-size:.82rem">
+    <b>이 표는 아직 인용할 수 없다.</b> {{ p4b.why_not_citable }}
+  </div>
+  {% endif %}
+
+  <p style="font-size:.86rem;margin:10px 0 4px">
+    §4b 가 묻는 것은 <b>“무질서 초격자에서 per-구조 EOS V₀ 가 성립하는가”</b> 다.
+    직접 시험은 하나다 — <b>부피창과 힘 문턱을 바꾸면 V₀ 가 움직이는가.</b>
+  </p>
+  <div class="muted" style="font-size:.8rem;margin-bottom:8px">{{ p4b.why_not_window_dependent }}</div>
+
+  <table class="tbl" style="font-size:.84rem">
+    <thead><tr><th>구조</th><th class="num">조건 수</th><th class="num">V₀ 폭 (Å³)</th>
+      <th class="num">V₀ 폭 %</th><th>B₀′ 범위</th></tr></thead>
+    <tbody>
+    {% for r in p4b.spread %}
+      <tr{% if r.ordered %} style="background:#fef9c3"{% endif %}>
+        <td>{{ r.structure }}{% if r.ordered %} <b>(질서)</b>{% endif %}</td>
+        <td class="num">{{ r.n_conditions }}</td>
+        <td class="num">{{ '%.1f'|format(r.V0_range_A3) }}</td>
+        <td class="num"><b>{{ '%.2f'|format(r.V0_range_pct) }} %</b></td>
+        <td class="num">{{ '%.2f'|format(r.Bp_min) }} … {{ '%.2f'|format(r.Bp_max) }}</td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+
+  <div class="muted" style="font-size:.8rem;margin-top:8px">
+    {% for n in p4b.read_notes %}<div style="margin-top:3px">· {{ n }}</div>{% endfor %}
+  </div>
+
+  <h4 style="margin:14px 0 4px">리뷰 두 번이 잡아낸 것은 물리가 아니었다</h4>
+  <p style="font-size:.84rem;margin:0 0 6px">
+    회신 BQ → BQ-2 가 <b>NO-GO</b> 를 낸 이유는 같은 병이 <b>세 군데</b>에 있었기 때문이다 —
+    <b>계산해서 기록은 하는데 그 결과가 판정에 연결돼 있지 않았다.</b>
+    셋 다 selftest 53건을 통과하고 있었다. <b>양성 시험만으로는 이것을 못 잡는다.</b>
+  </p>
+  <table class="tbl" style="font-size:.82rem">
+    <thead><tr><th>어디</th><th>기록은 했다</th><th>그런데 판정은</th></tr></thead>
+    <tbody>
+      <tr><td>P0-1 수렴</td><td>점마다 <code>converged</code>·<code>final_fmax</code></td>
+          <td><b><code>fit_quality_ok</code> 가 안 본다</b></td></tr>
+      <tr><td>Q2 높이/모양</td><td><code>shape_max</code>·<code>level_offset</code></td>
+          <td><b>게이트는 원시 <code>dE/span</code> 을 본다</b></td></tr>
+      <tr><td>P0-3 상태 승계</td><td>가지 구조를 돌려줬다</td>
+          <td><b>실패해도 그대로 승격된다</b></td></tr>
+    </tbody>
+  </table>
+
+  <h4 style="margin:14px 0 4px">⛔ 이 캠페인에서 <b>철회된 해석</b> — 인용 금지</h4>
+  <div style="font-size:.83rem">
+    <div data-claim="HZ-4b-updown-convergence-misread" style="margin:4px 0">
+      <b>“세 구조 다 7/7 수렴 → 미수렴 가설은 죽는다”</b><span class="claim-mark">[⛔철회·인용금지]</span>
+      — 화면의 7/7 은 <b>올라가는 갈래뿐</b>이었다. 이력현상은 두 갈래 <b>사이</b>의 양이다.
+    </div>
+    <div data-claim="HZ-4b-cross-window-shape-ratio" style="margin:4px 0">
+      <b>“창을 좁히니 모양차가 26배·247배 줄었다 (H0 는 1.7배) → 창 효과로 설명 안 된다”</b><span class="claim-mark">[⛔철회·인용금지]</span>
+      — 창별 비교는 <b>공통 부피점</b>에서 해야 한다. 모양차 수치 자체는 실측이고 살아 있다;
+      철회된 것은 <b>그 비율로 기전을 가르는 추론</b>이다.
+    </div>
+  </div>
+
+  <div class="muted" style="font-size:.79rem;margin-top:10px">
+    <b>이 패널이 말하지 않는 것</b>
+    {% for n in p4b.not_saying %}<div>· {{ n }}</div>{% endfor %}
+  </div>
+  <div class="muted" style="font-size:.78rem;margin-top:6px">
+    생성 {{ p4b.method.generated_by }} · 재판정 {{ p4b.method.regated_by }}<br>
+    {{ p4b.method.machine }} · {{ p4b.method.protocol }} ·
+    재판정 요약 판정변경 {{ p4b.method.regate_summary.verdict_changed }} ·
+    <b>사유변경 {{ p4b.method.regate_summary.reason_changed }}</b>
+  </div>
+</div>
+{% endif %}
+
 {# ⚠ verified 서브셋 최상위에 _CONFLICT_UNRESOLVED_* 가 있는데 화면 어디에도 안 떴다.
    모든 verdict 가 "⚠ 잠정(값 충돌 미해소)" 로 시작하는데 대시보드는 그 도펀트를 1위로
    올린다 — 충돌을 띄우지 않으면 사이트가 스스로 모순된다 (2026-07-29 감사).

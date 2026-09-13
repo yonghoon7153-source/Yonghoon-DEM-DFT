@@ -1,465 +1,491 @@
 {
- "property": "citation_hazards",
- "purpose": "db 파일마다 붙어 있는 **인용 금지·보류·조건부** 단서를 한 곳에 모은다. 각 파일 안에 흩어져 있어 원고·그림을 쓸 때 놓친다 — 2026-08-12 provenance 전수조사에서 파일을 열어 보고서야 발견한 것들이다.",
- "how_to_use": "원고나 그림에 db 값을 넣기 전에 이 표를 먼저 본다. level=BLOCKED 는 어떤 형태로도 인용 금지, CONDITIONAL 은 단서와 함께만.",
- "collected": "2026-08-12",
- "hazards": [
-  {
-   "file": "db/properties/sei_neb.json",
-   "level": "BLOCKED",
-   "what": "전량 철회 (retracted=true, n_citable=0)",
-   "why": "tot_charge=+1 부호 오류 + 끝점 미이완",
-   "fix": "tools/sei/build_neb_inputs.py 로 재계산",
-   "id": "HZ-sei-neb-retracted",
-   "binding_scope": "partial",
-   "binding_scope_why": "sei_neb.json 전량 철회라 덮을 수치가 레지스트리에 없다(등록 0건) — `claim` 을 걸 자리가 없고, 산문 형태('Li3N NEB 장벽 …')는 문구로 열거되지 않았다. 화면은 id 로 이름만 댈 수 있다."
-  },
-  {
-   "file": "db/properties/doping_cascade_verified.json",
-   "level": "RESOLVED",
-   "what": "[해소] Sc2O3_x002 · Al2O3_x005 5개 값 — gabia FINAL_RANKING.json 으로 trivalent_M3 가 전부 맞음이 확정. verified 파일을 정정했다.",
-   "why": "doping_cascade_trivalent_M3.json 과 값 충돌 미해소 (E 18.7 vs 42.1)",
-   "fix": "[2026-08-13 해소] '최연질 = Sc2O3 18.7 GPa' 는 실제 **42.082** 이므로 E_VRH 순위표를 다시 매겨야 한다 (2.2배 오차). → 재정렬 완료.",
-   "resolved": "2026-08-12",
-   "id": "HZ-cascade-evrh-value-conflict",
-   "binding_scope": "not_applicable",
-   "binding_scope_why": "level=RESOLVED — hazard_claims 가 제외한다(HAZARD_INACTIVE). 살아 있는 금지가 아니라 이력이다."
-  },
-  {
-   "file": "db/properties/sdcp_phaseB_dftu_v1.json",
-   "level": "BLOCKED",
-   "what": "E_ads 델타 (−32 meV)",
-   "why": "자세 불일치 + 보정 누락",
-   "fix": "⛔ **아무것도 인용하지 않는다.** 종전 fix 였던 'dE_extract(+0.3356 eV)만 인용' 은 틀렸다 — `sdcp_doped_closed_2026_08_28.json`(active·ratified)이 회신 P P0 로 그 추출 부호를 **철회**하고 citable:no 로 강등했다 (두 endpoint 총자화 2.378/0.518 μB 불일치 · basin 동등성 미입증). geometry_audit 의 O···Li 2.094 Å 도 회신 T P0-1 로 철회됐다.",
-   "updated": "2026-08-31",
-   "id": "HZ-sdcp-phaseb-dftu-eads",
-   "binding_scope": "partial",
-   "binding_scope_why": "금지 대상이 '이 파일의 아무 값도' 라 열거가 불가능하다. −32 meV·+0.3356 eV·2.094 Å 세 수치는 레지스트리에 없어 숫자 결속이 안 되고, 문구로도 안 덮인다."
-  },
-  {
-   "file": "db/properties/vgcf_hbn_binding_matrix.json",
-   "level": "BLOCKED",
-   "what": "headline 의 '1L 모델로 NEB 정당' 절",
-   "why": "CI-NEB 결과가 뒤집음 (2026-07-27 자기철회)",
-   "fix": "vgcf_hbn_neb.json 참조",
-   "id": "HZ-vgcf-hbn-1l-neb-justification",
-   "binding_scope": "partial",
-   "binding_scope_why": "금지 대상이 문서의 한 절(주장)이라 수치 결속이 성립하지 않는다. 문구 후보('1L 모델로 NEB 정당')는 전 표면 실측 0건이지만 표현 변형을 못 덮는다."
-  },
-  {
-   "file": "db/properties/lpsocl_md_arrhenius.json",
-   "level": "HOLD",
-   "what": "Ea",
-   "why": "⚠_DIFFUSIVE_GATE_2026_08_01 — 확산영역 β 게이트 미통과",
-   "fix": "tools/ionic/msd_diffusive_check.py 통과 후 해제",
-   "id": "HZ-lpsocl-Ea-diffusive-gate",
-   "forbidden_phrases": [],
-   "binding_scope": "partial",
-   "binding_scope_why": "`claim` 으로 MD_Ea_eV@lpsocl 숫자는 덮이지만, 'Ea 게이트 통과' 류 산문은 안 덮인다 (forbidden_phrases 가 빈 배열이다).",
-   "claim": "MD_Ea_eV@lpsocl"
-  },
-  {
-   "file": "db/properties/li_transport.json",
-   "level": "HOLD",
-   "what": "Ea",
-   "why": "같은 확산영역 게이트",
-   "fix": "동일",
-   "id": "HZ-comp1-Ea-diffusive-gate",
-   "binding_scope": "partial",
-   "binding_scope_why": "`claim` 으로 MD_Ea_eV_singleseed@comp1 숫자는 덮인다. li_transport.json 안의 다른 Ea 표기와 산문은 안 덮인다.",
-   "claim": "MD_Ea_eV_singleseed@comp1"
-  },
-  {
-   "file": "db/properties/b2o3_md_arrhenius.json",
-   "level": "BLOCKED",
-   "what": "Ea — 축 전체 마감 (D · Ea · σ · 구간 Ea 전부 인용 불가)",
-   "why": "D-2026-09-07-b2o3-md-closure-retrospective (1저자 비준). 골격 게이트 실측으로 b2o3 UMA-MD 전도도 축이 통째로 닫혔다 — 인용 가능한 수 0개. 종전 사유('중간판이 아직 파일에 남아 있다')는 헤드라인 교체 얘기였고 마감을 반영하지 못했다.",
-   "fix": "**대체값 없음.** 이 축의 어떤 수도 인용하지 않는다 (0.222 eV 구간 Ea 포함). 말할 수 있는 것은 마감 카드의 허용_서술 4문장뿐 — db/properties/b2o3_md_closed_retrospective_2026_08_25.json 허용_서술_이대로만.",
-   "claim": "MD_Ea_eV@b2o3",
-   "id": "HZ-b2o3-md-ea",
-   "⛔_정정_2026_09_08": "종전 fix 는 `FINAL_for_paper.Ea_eV_PAPER 만 인용` 이었는데 그 키는 db/properties/b2o3_md_arrhenius.json 에 **존재하지 않는다**(실재 키는 Ea_eV_PAPER_SUPERSEDED_600K_only · Ea_eV_PAPER_RETRACTED_2026_08_23). 죽은 키를 3주 동안 '이것만 인용하라' 고 가리켰다 — Codex BI P0-1 (2026-09-08). level 도 CONDITIONAL 이라 화면이 파란 배지로 그렸다.",
-   "decision": "D-2026-09-07-b2o3-md-closure-retrospective",
-   "updated": "2026-09-08",
-   "binding_scope": "axis",
-   "binding_scope_why": "⛔ 2026-09-09 개정 — 종전 'partial' 이었고 사유가 '같은 축의 D·σ·구간 Ea 는 레지스트리에 없어 안 덮인다' 였다. `prohibition_axis` 로 그 구멍을 닫았다: 계=b2o3 · 방법=UMA-MD · 보고량군={D, Ea, σ, 구간 Ea, 파생량} 안이면 **레지스트리에 없어도** 금지가 상속된다 (canonical.axis_blocked · tools/db/policy.py). 남는 사각은 매처가 못 잡는 산문 표기다 — 축이 아니라 매처의 한계다.",
-   "prohibition_axis": {
-    "system": "b2o3",
-    "method": "UMA-MD",
-    "quantity_group": [
-     "d",
-     "ea",
-     "sigma",
-     "σ",
-     "ratio",
-     "구간ea",
-     "singleseed"
-    ],
-    "use": [
-     "물질값 인용",
-     "수송 비교",
-     "300 K 외삽",
-     "순위",
-     "동등·보존 주장"
-    ],
-    "why": "금지가 **양의 종류**로 선언되는데 스캐너는 (metric, system) 쌍만 안다. 이 행의 binding_scope_why 자신이 '같은 축의 D·σ·구간 Ea 는 레지스트리에 없어 안 덮인다' 고 적어 두었다 — 그 구멍을 축으로 닫는다.",
-    "decision": "D-2026-09-07-b2o3-md-closure-retrospective",
-    "added": "2026-09-09 (Codex BI-4 Q5)",
-    "⛔_이_축이_못_하는_것": "claim id 규약(`{metric}@{system}`)에 의존한다. 산문 속 자유표기(`0.2241` · `.199` · `199 meV`)는 여전히 매처가 못 잡으면 축도 못 잡는다 — 축은 **claim 을 대신하지 않고 상속시킨다**."
-   }
-  },
-  {
-   "file": "db/properties/vgcf_hbn_neb.json",
-   "level": "CONDITIONAL",
-   "what": "표면 확산 배리어 7 meV",
-   "why": "수치 분해능(20–46 meV) **아래**다",
-   "fix": "'< 0.01 eV, 사실상 barrierless' 로만 서술 — 숫자로 인용 금지",
-   "id": "HZ-vgcf-hbn-barrier-below-resolution",
-   "binding_scope": "partial",
-   "binding_scope_why": "7 meV 는 레지스트리에 없어 숫자 결속 불가. 허용 서술('< 0.01 eV, 사실상 barrierless')과 금지 서술이 같은 수를 말해서 문구로 가르기 어렵다."
-  },
-  {
-   "file": "db/properties/nd_icohp.json · bonds.json",
-   "level": "CONDITIONAL",
-   "what": "comp1 P–S ICOHP −5.944",
-   "why": "2026-06-03 낡은 요약값 (drift)",
-   "fix": "정본 −5.9381 (per_bond_json/bonds_comp1_k444.json)",
-   "id": "HZ-comp1-icohp-ps-stale-5944",
-   "binding_scope": "partial",
-   "binding_scope_why": "`claim` 은 정본 ICOHP_PS@comp1(−5.9381) 을 가리키지만, 위험한 것은 **낡은 −5.944** 다 — 그 수는 레지스트리에 없어 자동으로 안 걸린다. 문구로 넣으면 정본 −5.9381 과 헷갈리지 않으므로 다음 판에서 −5.944 를 forbidden_phrases 후보로 재도.",
-   "claim": "ICOHP_PS@comp1"
-  },
-  {
-   "file": "db/properties/nd_gap_reference_mp.json",
-   "level": "CONDITIONAL",
-   "what": "Nd 상 갭",
-   "why": "우리 계산 아님 (MP 소환값)",
-   "fix": "우리 db 갭 표와 같은 표/플롯에 섞지 말 것. Nd 3종은 sei_electronic 의 *_frozen4f 가 우리 값",
-   "id": "HZ-nd-gap-mp-summoned",
-   "binding_scope": "partial",
-   "binding_scope_why": "'우리 값과 같은 표에 섞지 말 것' 은 **배치**에 대한 금지라 문자열로 못 잡는다. 소환값 자체도 레지스트리 밖이다."
-  },
-  {
-   "file": "db/properties/external_benchmarks_symposium_2026.json",
-   "level": "CONDITIONAL",
-   "what": "전 항목",
-   "why": "외부 발표 소환값",
-   "fix": "우리 db 절대값과 같은 표/플롯 금지",
-   "id": "HZ-symposium-benchmarks-summoned",
-   "binding_scope": "partial",
-   "binding_scope_why": "같은 이유 — 금지 대상이 '같은 표/플롯' 이라는 배치 조건이다. 검사기는 배치를 못 본다."
-  },
-  {
-   "file": "db/properties/cascade_v23_themes.json",
-   "level": "CONDITIONAL",
-   "what": "gap_lit_eV · 가격등급 · air_stability",
-   "why": "문헌 전형값 큐레이션 — 우리 계산 아님",
-   "fix": "curation_disclaimer 와 함께만",
-   "id": "HZ-cascade-themes-lit-curation",
-   "binding_scope": "partial",
-   "binding_scope_why": "gap_lit_eV·가격등급·air_stability 는 레지스트리 밖 큐레이션이라 숫자 결속이 없다. 'curation_disclaimer 와 함께만' 이라는 조건도 검사기가 못 본다."
-  },
-  {
-   "file": "db/properties/anode_interface_b2o3.json",
-   "level": "CONDITIONAL",
-   "what": "전 항목",
-   "why": "MP API 직접 조회인데 **스냅샷 버전 미기록** — 재현 불가",
-   "fix": "재실행 시 값이 달라도 어느 쪽이 맞는지 알 수 없다. 앞으로 MP 치는 도구는 버전 기록 필수",
-   "id": "HZ-anode-b2o3-mp-unversioned",
-   "binding_scope": "partial",
-   "binding_scope_why": "재현 불가 사유(MP 스냅샷 미기록)는 값마다가 아니라 **파일 전체**에 걸린다. 그 파일 값은 레지스트리에 없다."
-  },
-  {
-   "file": "db/properties/eos.json",
-   "level": "CONDITIONAL",
-   "what": "V0_A3",
-   "why": "extensive 량",
-   "fix": "셀 크기 다른 계끼리 직접 비교 금지",
-   "id": "HZ-eos-v0-extensive",
-   "binding_scope": "partial",
-   "binding_scope_why": "V0_A3 는 레지스트리에 없다. 금지는 '셀 크기 다른 계끼리 비교' 라는 조건부라 문구로 못 덮는다."
-  },
-  {
-   "file": "db/properties/elastic.json",
-   "level": "CONDITIONAL",
-   "what": "조성 간 비교",
-   "why": "조성별 pseudo/ecut/k 가 다르다",
-   "fix": "kb/methodology/elastic_constants.md 확인 후",
-   "id": "HZ-elastic-cross-composition",
-   "binding_scope": "partial",
-   "binding_scope_why": "E_VRH_GPa 는 4계가 등록돼 있어 `claim` 하나로는 못 가리킨다. 금지 대상도 값이 아니라 **계간 비교**라는 행위다."
-  },
-  {
-   "file": "db/properties/cascade_v23_eos_refit.json",
-   "level": "CONDITIONAL",
-   "what": "MnO_x002",
-   "why": "r²=0.946 — 파일 자체가 low-confidence 표시",
-   "fix": "등급 표기와 함께만",
-   "id": "HZ-cascade-eos-refit-mno-lowr2",
-   "binding_scope": "partial",
-   "binding_scope_why": "MnO_x002 refit 값은 레지스트리 밖이다. '등급 표기와 함께만' 도 배치 조건이다."
-  },
-  {
-   "file": "db/properties/li3n_adsorption.json",
-   "level": "CONDITIONAL",
-   "what": "v1 값 (−3.439 / −3.321)",
-   "why": "미수렴 bare slab — 파일이 SUPERSEDES 로 철회",
-   "fix": "v2 값만 유효",
-   "id": "HZ-li3n-adsorption-v1-superseded",
-   "binding_scope": "partial",
-   "binding_scope_why": "v1 값 −3.439/−3.321 은 레지스트리에 없어 숫자 결속이 안 된다. 두 수를 forbidden_phrases 로 올릴 수 있으나 오탐 실측 전이라 이번 판에서는 넣지 않았다."
-  },
-  {
-   "file": "db/properties/doping_cascade_verified.json",
-   "level": "RESOLVED",
-   "what": "coating_candidates_ranked_by_E_VRH 순위표",
-   "why": "rank1 의 E_VRH 가 18.7 → 42.082 로 정정돼 **순위 자체가 무효**",
-   "fix": "완료 — 40 챔피언 전체 재정렬. 새 1~3위 Li2O_x005 32.4 / MnO_x005 32.6 / NiO_x010 33.9. Sc2O3_x002 18위(42.082), Al2O3_x005 28위(47.018). 옛 순위표는 doping_cascade_verified.json `_superseded_ranking_2026_08_12` 에 보존.",
-   "resolved": "2026-08-13",
-   "id": "HZ-cascade-evrh-ranking",
-   "binding_scope": "not_applicable",
-   "binding_scope_why": "level=RESOLVED — hazard_claims 가 제외한다(HAZARD_INACTIVE). 재정렬이 끝난 이력이다."
-  },
-  {
-   "file": "db/properties/lpsocl_md_arrhenius.json",
-   "level": "BLOCKED",
-   "what": "계간 Ea 직접 비교 (`vs_modelc` +90 meV 2.3σ · `vs_modelc_SUPERSEDED_mixed` · `anchors_same_window_singleseed` 의 계간 대조) — citable:no",
-   "why": "세 계(LPSOCl·modelc·b2o3)가 각자 다른 셀·다른 수렴상태다. 회신 AK(2026-08-30) Q2=C 판정: 세 계 Ea 직접 비교는 철회·보류",
-   "fix": "계별 셀·VRAM·finite-size 감사를 포함한 **별도 캠페인**으로 재설계. 계 내부 값(62원자 4시드×3T Ea 0.287±0.024)은 cell-specific 보고량 로는 유효",
-   "added": "2026-08-30",
-   "근거": "db/properties/lpsocl_box331_estimand_2026_08_30.json",
-   "id": "HZ-cross-system-Ea",
-   "forbidden_phrases": [
-    "90 meV",
-    "+90 meV"
-   ],
-   "binding_scope": "partial",
-   "binding_scope_why": "forbidden_phrases 두 개('90 meV'·'+90 meV')가 그 계간 비교의 대표 표기를 덮는다. 다른 표기(0.09 eV·2.3σ·'LPSOCl 이 더 높다')는 안 덮인다."
-  },
-  {
-   "file": "tools/ionic/msd_diffusive_check.py (규약)",
-   "level": "SUPERSEDED",
-   "what": "β ≥ 0.80 하드게이트 — **판정으로 인용 금지**. β 는 경보로만",
-   "why": "kb/concepts/beta-gate.md §7-5(2026-08-26)·§7-8b(회신 F, 2026-08-27)에서 폐기. 우리 운영점에서 고정문턱 0.8 은 거짓탈락률 50 %",
-   "fix": "판정축은 D_inc plateau · 창 안정성 · 홉 수. 도구는 2026-08-30 에 맞췄다 (그 전 나흘간 도구가 폐기된 문턱을 강제했고 회신 AK 가 그걸 근거로 인용했다)",
-   "added": "2026-08-30",
-   "id": "HZ-beta-hard-gate",
-   "forbidden_phrases": [
-    "β ≥ 0.80",
-    "베타 하드게이트",
-    "β 하드게이트"
-   ],
-   "binding_scope": "phrase",
-   "binding_scope_why": "⛔ **2026-09-09 정정 (Codex BI-3 P0-1).** 종전 문구는 *\"level=SUPERSEDED — hazard_claims 가 제외한다. forbidden_phrases 는 이력으로 남기되 **집행되지 않는다**\"* 였다. **틀렸다.** 폐기된 것은 통과·탈락 **규칙**이고, 이 행의 `what` 이 말하는 *\"판정으로 인용 금지\"* 는 **살아 있는 금지**다 — 규칙이 죽었으니 오히려 더 살아 있다. 실측 반례: 화면에 \"판정은 β ≥ 0.80 하드게이트를 통과하면 된다\" 를 넣으면 탐지·미결속·suspect 가 전부 0 이었다. 이제 `prohibition_state` 로 집행하고 `level` 은 규칙 상태 표시로만 쓴다. 이력·반증 목적의 언급은 화면이 `data-claim-use=\"historical\"|\"refutation\"` 으로 선언한다.",
-   "prohibition_state": "active",
-   "rule_state_note": "level=SUPERSEDED 는 **규칙 상태**다 — β 0.80 고정문턱을 통과·탈락 판정으로 쓰는 것이 폐기됐다는 뜻(거짓탈락률 50 %). 판정축은 D_inc plateau · 창 안정성 · 홉 수."
-  },
-  {
-   "file": "docs/manuscripts/figure2e_explained_v10.md",
-   "level": "STALE",
-   "what": "42잡 · holdout 8자세 · 조각당 12자세 · clean slab 계산 · 완화 방식 — **전부 인용 금지**. 2부 영문 문장도 마찬가지",
-   "why": "회신 AN(NO-GO) 이전 설계다. ⚠ 2026-08-31 갱신: 그 뒤 캠페인이 Stage A → **C-12** 로 개명되고 v13→v18 로 갔다. 실물은 **v18 · 16잡**(단계 1:10, 2:6)이고 회신 **AV 가 NO-GO**(P0 4 · P1 1). 종전 문구의 'v13 은 14잡' 도 이미 낡았다.",
-   "fix": "문서 상단 STALE 배너 유지. 잡수·자세수·프로토콜 문장은 번들 MANIFEST 와 `runs/sdcp_c12_2026_08_30/IDENTITY_v18.json` 을 본다. ⚠ `sdcp_c12_protocol_2026_08_30.json` 의 잡 수(12·19)는 실물 16 과 다르므로 그 파일을 잡 수의 정본으로 쓰지 않는다.",
-   "added": "2026-08-31",
-   "updated": "2026-08-31",
-   "id": "HZ-figure2e-v10-stale",
-   "binding_scope": "partial",
-   "binding_scope_why": "금지 대상이 문서 한 편의 잡수·자세수·프로토콜 서술 전체다. 42/8/12/16 같은 맨숫자를 문구로 넣으면 전 화면 오탐이라 넣지 않았다."
-  },
-  {
-   "file": "db/properties/lpsocl_box331_two_point_2026_08_31.json",
-   "level": "PREVIEW",
-   "what": "'3×3×1 Ea = 0.170 eV' — **인용 금지**. 두 점(600/1000 K)이고 직선성 미검증이다",
-   "why": "T800 3시드 미완(~57 h). 시드 조합 9개가 0.151–0.187 eV 로 흩어진다(sd 0.012). 62원자 셀 0.2855 eV 와의 −116 meV 차이는 '셀 효과가 Ea 에서 상쇄되지 않는다'는 정성 결론까지만 지지한다",
-   "fix": "T800 완료 → msd_diffusive_check.py --mto --scan 로 D_inc plateau 판정 → 가중 3점 피팅. 그 결과만 Ea(3×3×1 cell-conditioned) 로 인용",
-   "added": "2026-08-31",
-   "id": "HZ-lpsocl-box331-two-point-ea",
-   "binding_scope": "partial",
-   "binding_scope_why": "0.170 eV 는 레지스트리에 없어 숫자 결속이 안 된다. '3×3×1 Ea' 표기 변형도 안 덮는다."
-  },
-  {
-   "file": "db/properties/sdcp_wave1_citable.json",
-   "level": "BLOCKED",
-   "what": "절대 흡착에너지 4종과 0.346 eV 헤드라인",
-   "why": "기준 비대칭 — 기준 분자는 NUPDOWN 고정·LREAL=F 인데 복합체는 자유·LREAL=T 다 (δ_m + δ_LREAL 미측정, 회신 P). 조각 내 자리대비에서는 소거되지만 절대값과 조각 간 차에는 남는다",
-   "fix": "reference-equivalence 복구 전까지 절대값·0.346 eV·부등호 방향 서술 전부 인용 금지. 자리대비(c10 49.8 meV · dimer 36.1 meV)와 상자 수렴은 영향 없다",
-   "added": "2026-08-31",
-   "id": "HZ-sdcp-wave1-absolute-eads",
-   "binding_scope": "partial",
-   "binding_scope_why": "절대 E_ads 는 SDCP_Eads_eV__* 로 4건이 등록돼 있어 `claim` 하나로 못 가리킨다. 0.346 eV 헤드라인은 레지스트리 밖이다."
-  },
-  {
-   "file": "db/properties/sdcp_neutral_closed_2026_08_28.json",
-   "level": "CONDITIONAL",
-   "what": "술폰산 접촉 기전 — **양방향 모두**",
-   "why": "wave1 자세에서 산성 H 가 7.08–7.17 Å 라 '술포네이트가 앵커링한다' 는 철회됐고(회신 T P0-1), 신규 동결 후보의 최저 자세는 산성 O–H···표면 O 1.83 Å 수소결합이라 '상호작용하지 않는다' 도 못 쓴다. 후자는 **MLIP 기하**이고 DFT 확인 전이다",
-   "fix": "기전 문장을 쓰지 않는다. C-12 가 회수되면 그 DFT 로 판정한다",
-   "added": "2026-08-31",
-   "id": "HZ-sdcp-sulfonate-mechanism",
-   "binding_scope": "partial",
-   "binding_scope_why": "**양방향 모두** 금지라 문자열이 두 배로 늘어난다('앵커링한다'·'상호작용하지 않는다' 양쪽). 표현 변형이 많아 이번 판에서는 열거하지 않았다."
-  },
-  {
-   "file": "db/properties/sdcp_c12_protocol_2026_08_30.json",
-   "level": "STALE",
-   "what": "잡 수(§0 '12잡' · §12 '19잡') · §3 잡 목록 · §11 clean slab 3잡 · §1 보고량 이름",
-   "why": "실물 v18 은 **16잡**이고 clean slab 은 제거됐다(커밋 57cfcdea · 회신 AV Q6 '추가 불필요'). §3 의 job key 네임스페이스 `main/` 은 생성기에 존재하지 않는다(실물은 `prospective/`). §1 의 이름 'adsorption energy' 는 `sdcp_c12_claim_prereg_2026_08_31.json` 이 **금지어로 지정**했다 — 같은 번들에 모순되는 사전등록 둘이 달려 있다",
-   "fix": "보고량 이름·허용서술은 claim_prereg 를 정본으로 본다. 잡 수는 MANIFEST/IDENTITY_v18. 프로토콜은 §2b(D 정의)와 §4(C1~C4 문턱)만 유효하다",
-   "added": "2026-08-31",
-   "id": "HZ-sdcp-c12-protocol-jobcount-stale",
-   "binding_scope": "partial",
-   "binding_scope_why": "잡 수(12·19·16)는 맨숫자라 문구로 넣으면 전 화면 오탐이다. 화면은 id 로만 이름을 댈 수 있다."
-  },
-  {
-   "file": "db/properties/b2o3_vs_lpscl16_conductivity.csv",
-   "level": "BLOCKED",
-   "what": "b2o3 ↔ LPSCl1.6 의 σ 비(600/800/1000 K = 1.08/0.82/1.15)로 **동등·보존·순위·기전**을 말하는 것 — 어떤 형태로도 인용 금지. 300 K 외삽도 금지.",
-   "why": "원자료 CSV 가 FORBIDDEN phrasings 로 'statistically EQUIVALENT transport' · 'conductivity PRESERVED' · 'equivalent sigma' · 순위·기전 주장을 축자 금지한다. 사유 셋이 모두 미해소다 — ① 골격 MSD 게이트 NOT ASSESSED(required_artifact_set_incomplete) ② 고온 원궤적 미보존(800/1000 K × s2/s3/s4 = 6런, run_highT_reseed.sh 가 --save_traj 미전달) ③ 계보 UNWIRED. 미평가 쌍의 '같음' 은 동등이 아니라 **구분 실패**다.",
-   "fix": "CSV 의 ALLOWED sentence 축자만 쓴다 — 같은 3시드×3온도 집계에서 ΔEa 는 +0.002 eV 였고 시드조합 산포 ±0.047 eV 가 두 추정치를 구분하지 못했다; 고온 원궤적이 보존되지 않아 비-Li 구조 상태는 평가되지 않았다. 레지스트리 allowed_sentence 와 같은 문장이다.",
-   "claim": "MD_sigma_ratio_600K@b2o3_vs_modelc",
-   "id": "HZ-sigma-ratio-non-citable",
-   "forbidden_phrases": [
-    "statistically_equivalent_transport",
-    "conductivity_preserved",
-    "통계적으로 동등",
-    "전도도 동등",
-    "전도도가 동등",
-    "전도도 보존",
-    "σ 동등",
-    "σ를 깎지 않는",
-    "σ 를 깎지 않는"
-   ],
-   "binding_scope": "partial",
-   "binding_scope_why": "`claim` 은 600 K 항목 하나만 가리킨다 — 같은 금지가 걸린 800/1000 K (MD_sigma_ratio_800K@b2o3_vs_modelc · MD_sigma_ratio_1000K@b2o3_vs_modelc) 는 이 필드에 못 담는다. 문구 9개는 32개 표면 실측 **오탐 0** 을 확인하고 고른 것이다. 정작 실제 원고가 쓸 법한 짧은 표기('동등'·'보존'·'σ 비'·'σ300')는 오탐이 커서 **거부**했다 — rejected_phrases 참조. ⇒ 산문 새는 구멍이 남아 있다.",
-   "added": "2026-09-09",
-   "근거": "db/properties/canonical_registry.json (MD_sigma_ratio_* 3항목 citable:false) · Codex BH P0-1 (2026-09-07)",
-   "rejected_phrases": {
-    "why": "⛔ **거부** — 켤 수 없다. 32개 표면 실측(문구를 원장에 넣고 재렌더)에서 걸린 4건 중 3건이 다른 계이거나 원장 자신이었다. 오탐이 분모를 부풀리면 '미결속 0' 이 더 그럴듯하게 틀린 수가 된다.",
-    "phrases": {
-     "σ 비": "미결속 4건 — /glossary ×2(**comp2 vs comp1** σ 비율이다, 다른 계 = 오탐) · / ×1(마감 카드가 금지 서술을 **열거**하는 자리) · /governance ×1(이 원장의 다른 위험 행 본문. 행마다 자기 id 로만 결속되므로 남의 문구는 미결속으로 뜬다)",
-     "σ300": "미결속 1건 — /glossary(comp2 σ300 중앙 0.41× comp1). 다른 계라 오탐이다",
-     "동등": "미결속 25건 · \"보존\" 32건 (넣기 전 캐시 실측). 흔한 낱말이라 전 화면이 빨개진다"
+  "property": "citation_hazards",
+  "purpose": "db 파일마다 붙어 있는 **인용 금지·보류·조건부** 단서를 한 곳에 모은다. 각 파일 안에 흩어져 있어 원고·그림을 쓸 때 놓친다 — 2026-08-12 provenance 전수조사에서 파일을 열어 보고서야 발견한 것들이다.",
+  "how_to_use": "원고나 그림에 db 값을 넣기 전에 이 표를 먼저 본다. level=BLOCKED 는 어떤 형태로도 인용 금지, CONDITIONAL 은 단서와 함께만.",
+  "collected": "2026-08-12",
+  "hazards": [
+    {
+      "file": "db/properties/sei_neb.json",
+      "level": "BLOCKED",
+      "what": "전량 철회 (retracted=true, n_citable=0)",
+      "why": "tot_charge=+1 부호 오류 + 끝점 미이완",
+      "fix": "tools/sei/build_neb_inputs.py 로 재계산",
+      "id": "HZ-sei-neb-retracted",
+      "binding_scope": "partial",
+      "binding_scope_why": "sei_neb.json 전량 철회라 덮을 수치가 레지스트리에 없다(등록 0건) — `claim` 을 걸 자리가 없고, 산문 형태('Li3N NEB 장벽 …')는 문구로 열거되지 않았다. 화면은 id 로 이름만 댈 수 있다."
     },
-    "대신": "레지스트리 금지어 토큰(statistically_equivalent_transport · conductivity_preserved)과 계를 특정한 한국어 표기 7개만 켰다 — 실측 오탐 0."
-   }
-  },
-  {
-   "file": "db/properties/b2o3_vs_lpscl16_conductivity.csv",
-   "level": "BLOCKED",
-   "what": "단일시드 σ 비 **1.33×** ('B₂O₃ 가 σ 를 올린다' · D0-driven 향상 서사) — 철회됨",
-   "why": "2026-07-09 SEMIFINAL 멀티시드 판정에서 철회됐다. 1.33× 는 단일시드 800 K 쌍 (b2o3 3.009 고이상치 vs modelc 2.054 저이상치)에 얹혀 있었고, 재시드 평균은 2.163 vs 2.845 다. CLAUDE.md 가 이름으로 부르는 철회 사례인데 원장에 항목이 없어 스캐너가 못 잡고 있었다.",
-   "fix": "**대체값 없음.** 멀티시드 비(1.08/0.82/1.15)로 갈아타는 것도 답이 아니다 — 그 비는 HZ-sigma-ratio-non-citable 로 통째로 인용 불가다. 이 축에서 인용 가능한 수는 0개다.",
-   "id": "HZ-singleseed-sigma-1p33x",
-   "forbidden_phrases": [
-    "1.33× 빠르",
-    "1.33배 빠르",
-    "1.33× 우세하",
-    "1.33× 더 빠"
-   ],
-   "binding_scope": "partial",
-   "binding_scope_why": "덮는 것은 **주장형 표기 4개**(‘1.33× 빠르’ 류)뿐이다. 정작 표면에 있는 것은 전부 *철회를 가르치는* 문장이라 문구로 가르면 그 교훈까지 미결속으로 뜬다 — 실측 4건, pending_forbidden_phrases 참조. 레지스트리에 1.33 항목이 없어 숫자 결속도 없다.",
-   "pending_forbidden_phrases": {
-    "why": "이 문구들은 **진짜로 걸린다**(오탐 아님). 걸리는 자리가 전부 '이 주장은 철회됐다' 는 교육 문장이라 지우면 안 되고, 그 요소가 data-claim=\"HZ-singleseed-sigma-1p33x\" 로 이름을 대면 그 순간 결속이 성립한다. 지금 켜면 무관용 결속 시험이 4건으로 깨진다. ⚠ 마크다운 경로(/concept · /requests · /todo)는 _bind_claims 가 자동 결속해 이미 빠졌다 — 남은 넷은 자동 결속을 안 타는 화면이다.",
-    "measured": "2026-09-09 · 문구를 원장에 넣고 32개 표면 재렌더 후 scan_claim_bindings",
-    "phrases": {
-     "1.33×": "미결속 2건 — /glossary ×1 · /seminar ×1",
-     "1.33배": "미결속 1건 — /seminar",
-     "σ비율 1.33×": "미결속 1건 — /log"
+    {
+      "file": "db/properties/doping_cascade_verified.json",
+      "level": "RESOLVED",
+      "what": "[해소] Sc2O3_x002 · Al2O3_x005 5개 값 — gabia FINAL_RANKING.json 으로 trivalent_M3 가 전부 맞음이 확정. verified 파일을 정정했다.",
+      "why": "doping_cascade_trivalent_M3.json 과 값 충돌 미해소 (E 18.7 vs 42.1)",
+      "fix": "[2026-08-13 해소] '최연질 = Sc2O3 18.7 GPa' 는 실제 **42.082** 이므로 E_VRH 순위표를 다시 매겨야 한다 (2.2배 오차). → 재정렬 완료.",
+      "resolved": "2026-08-12",
+      "id": "HZ-cascade-evrh-value-conflict",
+      "binding_scope": "not_applicable",
+      "binding_scope_why": "level=RESOLVED — hazard_claims 가 제외한다(HAZARD_INACTIVE). 살아 있는 금지가 아니라 이력이다."
     },
-    "누가": "화면 소유 묶음(A 온보딩·G 원장·H 기록·I 문헌)에 넘긴다. /seminar 는 md_to_html 이 _bind_claims 를 안 타는 유일한 경로라 그 배선을 고치면 2건이 자동으로 해소된다."
-   },
-   "added": "2026-09-09",
-   "근거": "kb/results/b2o3_SEMIFINAL_report_2026_07_09.md · db/properties/b2o3_md_closed_retrospective_2026_08_25.json (철회 목록) · CLAUDE.md"
-  },
-  {
-   "file": "db/structures/ndo_lpscl16_rietveld_2026_09_07/anneal_2026_09_07/anneal_results.json",
-   "level": "PREVIEW",
-   "what": "Nd/O 공치환 O-모티프 6셀의 **UMA 어닐 순위**(distributed < free_s < bo4) 와 그 meV/atom 간격 — DFT 재채점 전이라 인용 금지",
-   "why": "UMA-s-1p1 500 K 20 ps + relax 로만 매긴 순위다. 같은 repo 의 cascade 봉인 규약이 'MLIP 로 만든 순위는 MLIP 내부 순위로만 서술한다' 를 못박았는데 이 축에는 그 딱지가 없었다. 결과 JSON 이 db/structures 아래에만 있어 db/properties 를 grep 하는 사람에게는 이 캠페인이 보이지 않는다.",
-   "fix": "'UMA 내부 순위' 라고 밝히고 순위 방향만 쓴다. 절대 에너지·meV/atom 간격은 쓰지 않는다. DFT 재채점(커밋 51b5dec21 --from_xyz scf 4셀)이 끝나면 그 결과로 재판정한다.",
-   "id": "HZ-nd-anneal-uma-rank",
-   "forbidden_phrases": [
-    "UMA 순위 distributed",
-    "distributed 가 가장 안정"
-   ],
-   "binding_scope": "partial",
-   "binding_scope_why": "레지스트리에 이 캠페인 항목이 0건이라 숫자 결속이 없다. 실제 표면 표기 'distributed < free_s < bo4' 는 오탐이 아니라 **진짜 미결속 4건**인데(/ ×3 · /log ×1) 지금 켜면 결속 시험이 깨져서 pending 으로 미뤘다 — 이 위험은 **화면이 선언만 달면 complete 에 가장 가까워진다**.",
-   "pending_forbidden_phrases": {
-    "why": "**가장 값어치 있는 미결속**이다 — 오탐이 하나도 없고, 걸리는 자리가 전부 DFT 재채점 전 UMA 순위를 그대로 찍는 곳이다. 지금 켜면 결속 시험이 4건으로 깨진다.",
-    "measured": "2026-09-09 · 문구를 원장에 넣고 32개 표면 재렌더 후 scan_claim_bindings",
-    "phrases": {
-     "distributed < free_s < bo4": "미결속 2건 — / (대시보드 Nd 어닐 카드) · /log",
-     "distributed < free_s": "미결속 2건 더 — / 의 간격 표기 '(+34) < bo4 (+52)' · '(+29) < bo4 (+39)'"
+    {
+      "file": "db/properties/sdcp_phaseB_dftu_v1.json",
+      "level": "BLOCKED",
+      "what": "E_ads 델타 (−32 meV)",
+      "why": "자세 불일치 + 보정 누락",
+      "fix": "⛔ **아무것도 인용하지 않는다.** 종전 fix 였던 'dE_extract(+0.3356 eV)만 인용' 은 틀렸다 — `sdcp_doped_closed_2026_08_28.json`(active·ratified)이 회신 P P0 로 그 추출 부호를 **철회**하고 citable:no 로 강등했다 (두 endpoint 총자화 2.378/0.518 μB 불일치 · basin 동등성 미입증). geometry_audit 의 O···Li 2.094 Å 도 회신 T P0-1 로 철회됐다.",
+      "updated": "2026-08-31",
+      "id": "HZ-sdcp-phaseb-dftu-eads",
+      "binding_scope": "partial",
+      "binding_scope_why": "금지 대상이 '이 파일의 아무 값도' 라 열거가 불가능하다. −32 meV·+0.3356 eV·2.094 Å 세 수치는 레지스트리에 없어 숫자 결속이 안 되고, 문구로도 안 덮인다."
     },
-    "누가": "대시보드 카드는 묶음 B, /log 는 묶음 H 소유다. 그 두 요소에 data-claim=\"HZ-nd-anneal-uma-rank\" 만 달면 4건이 한 번에 결속된다."
-   },
-   "added": "2026-09-09",
-   "근거": "db/properties/cascade_seal_v2_2026_09_08.json (MLIP 순위 서술 규약) · kb/methodology/cascade_lessons_transfer_2026_09_08.md"
-  },
-  {
-   "file": "db/interphases/li3n.json",
-   "level": "BLOCKED",
-   "what": "UMA 로 만든 **Li₃N 확산 장벽·흡착값 전부** — thin-slab 경로의 0.054 eV / 0.049 eV, bridge 흡착 −0.032 eV, proper-slab UMA 0.237 eV 를 포함해 인용 금지",
-   "why": "CLAUDE.md: 'UMA 는 Li₃N 에 사용 금지 (2026-06 결정론적 편향 판정)'. db/properties/diffusion.json 이 같은 값을 CAVEAT_2026-06-06 으로 철회했고 (thin-slab 인공물 · UMA 가 위상을 뒤집는다), db/_index.json 도 그 헤드라인을 _RETRACTED_ 접두사로 격리했다. li3n.json 만 표시 없이 살아 있었다.",
-   "fix": "Li₃N 확산은 **db/properties/diffusion.json 기준으로만** 인용한다 (full-DFT-NEB 0.12 eV · 2.4× · ~660×). UMA 는 이 계에서 기하 정찰에도 쓰지 않는다 — 범위 확정은 1저자 판단 대기(장벽 절대값만인가, 구속 PES 도인가, path-finder 는 허용인가).",
-   "id": "HZ-uma-li3n-banned",
-   "forbidden_phrases": [
-    "0.054 eV (UMA)",
-    "0.049 eV (DFT SCF)",
-    "0.049/0.054"
-   ],
-   "binding_scope": "partial",
-   "binding_scope_why": "금지 대상이 값이 아니라 **방법**(UMA × Li₃N)이라 문자열로 다 못 덮는다. 지금 덮는 것은 철회된 세 수치의 축자 표기뿐이고, 앞으로 UMA 로 새로 뽑는 Li₃N 수는 자동으로 안 걸린다. 레지스트리에 Li₃N 항목이 0건이라 숫자 결속도 없다.",
-   "added": "2026-09-09",
-   "근거": "CLAUDE.md (UMA-Li₃N 금지) · db/properties/diffusion.json CAVEAT_2026-06-06 · kb/projects/li_neb_anode_free.md ('인용은 항상 diffusion.json 기준')"
-  },
-  {
-   "file": "db/properties/oxidation_stability.json",
-   "source_path": "db/properties/oxidation_stability.json",
-   "level": "CONDITIONAL",
-   "what": "`reduction_limit_V` 1.242 V · `oxidation_limit_V` 2.14 V · `window_V` 0.898 V — **문헌의 reduction/cathodic limit 옆에 단서 없이 놓지 않는다**",
-   "why": "pymatgen `PhaseDiagram` 의 `get_element_profile` 이 각 경계의 **Li-rich(저전압) 쪽 facet** 을 보고한다(임계조성에 Li 를 1e-5 더해 chempot 을 잰다 — gabia 소스 확인 2026-08-28). 그래서 우리 값은 경계가 아니라 **경계 한 칸 아래**를 집는다. 문헌 세 점이 전부 우리 다음 breakpoint(1.72) 쪽에 있고 1.24 근처에는 아무도 없다: Zhu 2015 1.71 · Wang 2026 1.78 · **Nolan 2018 p. 2031 이 `Li₆PS₅Cl` 를 이름으로 들어 1.7/2.4 V**. 산화 쪽도 같은 방향이다(우리 2.14 → 다음 2.36 vs 문헌 2.30–2.4) — **양쪽이 같은 방향인 것이 규약 차이의 증거**다.",
-   "fix": "① 인용할 때 규약을 밝힌다 — *'grand-potential 경계의 Li-rich facet 값'*. ② 문헌 대응을 말해야 하면 **다음 breakpoint(환원 1.72 · 산화 2.36)** 를 나란히 적고 두 수가 같은 경계의 양끝임을 밝힌다. ③ `window_V` 0.898 V 를 *'우리 ESW 폭'* 으로 단독 인용하지 않는다 (같은 규약으로 재면 0.42 V, 문헌 0.52–0.70 V). ④ 필드 개명·분할은 **1저자 승인 전 금지** — cascade 하류(`tools/cascade/rebuild_pool_inputs.py:131` 의 `red_V`)가 이 필드를 쓴다.",
-   "id": "HZ-esw-reduction-limit-facet-convention",
-   "added": "2026-09-13",
-   "binding_scope": "partial",
-   "binding_scope_why": "`reduction_limit_V`·`ocv_self_decomposition_V`·`oxidation_limit_V` 는 **canonical_registry 에 없다**(43항목 전부 gap/V/Ea/E_coh/sdcp 계열). 그래서 `claim` 을 걸 자리가 없고 `prohibition_axis` 도 레지스트리의 무엇도 못 덮어 죽은 선언이 된다 — 둘 다 비웠다. 지금은 id 로 이름만 댈 수 있다. ⇒ **이 값들을 레지스트리에 올리는 것이 결속의 선결조건**이다.",
-   "pending_forbidden_phrases": [
-    "1.242",
-    "0.898",
-    "환원한계 1.24"
-   ],
-   "⚠_pending_인_이유": "집행 안 함. 표면 실측(소스 grep, 2026-09-13): `1.242` 8파일 17회 · `1.717` 13파일 25회 — 전부 kb 마크다운이고 아직 data-claim 을 안 단다. 지금 forbidden_phrases 로 켜면 무관용 결속 시험이 깨진다. ⚠ 이 수는 **렌더 전 소스 grep** 이라 원장 규약(렌더 후 세기)을 못 지켰다 — 이 컨테이너에 flask 가 없다. 화면이 선언을 달 때 렌더해서 다시 세고 옮긴다.",
-   "관련": [
-    "kb/questions/esw_reduction_limit_field_2026_08_28.md (원 카드 · 코드·소스 확인 완료 · 필드 분할 제안 3안)",
-    "kb/questions/coating_lineage_sibling_conflicts_2026_09_13.md 충돌 1",
-    "litdb/papers/nolan2018_computation_accelerated_design_review.md §7b (1.717 함정)",
-    "litdb/papers/honrao2021_interpretable_ml_sse_anode_coatings.md (Fig. S2 Li-uptake=0 정의)"
-   ]
+    {
+      "file": "db/properties/vgcf_hbn_binding_matrix.json",
+      "level": "BLOCKED",
+      "what": "headline 의 '1L 모델로 NEB 정당' 절",
+      "why": "CI-NEB 결과가 뒤집음 (2026-07-27 자기철회)",
+      "fix": "vgcf_hbn_neb.json 참조",
+      "id": "HZ-vgcf-hbn-1l-neb-justification",
+      "binding_scope": "partial",
+      "binding_scope_why": "금지 대상이 문서의 한 절(주장)이라 수치 결속이 성립하지 않는다. 문구 후보('1L 모델로 NEB 정당')는 전 표면 실측 0건이지만 표현 변형을 못 덮는다."
+    },
+    {
+      "file": "db/properties/lpsocl_md_arrhenius.json",
+      "level": "HOLD",
+      "what": "Ea",
+      "why": "⚠_DIFFUSIVE_GATE_2026_08_01 — 확산영역 β 게이트 미통과",
+      "fix": "tools/ionic/msd_diffusive_check.py 통과 후 해제",
+      "id": "HZ-lpsocl-Ea-diffusive-gate",
+      "forbidden_phrases": [],
+      "binding_scope": "partial",
+      "binding_scope_why": "`claim` 으로 MD_Ea_eV@lpsocl 숫자는 덮이지만, 'Ea 게이트 통과' 류 산문은 안 덮인다 (forbidden_phrases 가 빈 배열이다).",
+      "claim": "MD_Ea_eV@lpsocl"
+    },
+    {
+      "file": "db/properties/li_transport.json",
+      "level": "HOLD",
+      "what": "Ea",
+      "why": "같은 확산영역 게이트",
+      "fix": "동일",
+      "id": "HZ-comp1-Ea-diffusive-gate",
+      "binding_scope": "partial",
+      "binding_scope_why": "`claim` 으로 MD_Ea_eV_singleseed@comp1 숫자는 덮인다. li_transport.json 안의 다른 Ea 표기와 산문은 안 덮인다.",
+      "claim": "MD_Ea_eV_singleseed@comp1"
+    },
+    {
+      "file": "db/properties/b2o3_md_arrhenius.json",
+      "level": "BLOCKED",
+      "what": "Ea — 축 전체 마감 (D · Ea · σ · 구간 Ea 전부 인용 불가)",
+      "why": "D-2026-09-07-b2o3-md-closure-retrospective (1저자 비준). 골격 게이트 실측으로 b2o3 UMA-MD 전도도 축이 통째로 닫혔다 — 인용 가능한 수 0개. 종전 사유('중간판이 아직 파일에 남아 있다')는 헤드라인 교체 얘기였고 마감을 반영하지 못했다.",
+      "fix": "**대체값 없음.** 이 축의 어떤 수도 인용하지 않는다 (0.222 eV 구간 Ea 포함). 말할 수 있는 것은 마감 카드의 허용_서술 4문장뿐 — db/properties/b2o3_md_closed_retrospective_2026_08_25.json 허용_서술_이대로만.",
+      "claim": "MD_Ea_eV@b2o3",
+      "id": "HZ-b2o3-md-ea",
+      "⛔_정정_2026_09_08": "종전 fix 는 `FINAL_for_paper.Ea_eV_PAPER 만 인용` 이었는데 그 키는 db/properties/b2o3_md_arrhenius.json 에 **존재하지 않는다**(실재 키는 Ea_eV_PAPER_SUPERSEDED_600K_only · Ea_eV_PAPER_RETRACTED_2026_08_23). 죽은 키를 3주 동안 '이것만 인용하라' 고 가리켰다 — Codex BI P0-1 (2026-09-08). level 도 CONDITIONAL 이라 화면이 파란 배지로 그렸다.",
+      "decision": "D-2026-09-07-b2o3-md-closure-retrospective",
+      "updated": "2026-09-08",
+      "binding_scope": "axis",
+      "binding_scope_why": "⛔ 2026-09-09 개정 — 종전 'partial' 이었고 사유가 '같은 축의 D·σ·구간 Ea 는 레지스트리에 없어 안 덮인다' 였다. `prohibition_axis` 로 그 구멍을 닫았다: 계=b2o3 · 방법=UMA-MD · 보고량군={D, Ea, σ, 구간 Ea, 파생량} 안이면 **레지스트리에 없어도** 금지가 상속된다 (canonical.axis_blocked · tools/db/policy.py). 남는 사각은 매처가 못 잡는 산문 표기다 — 축이 아니라 매처의 한계다.",
+      "prohibition_axis": {
+        "system": "b2o3",
+        "method": "UMA-MD",
+        "quantity_group": [
+          "d",
+          "ea",
+          "sigma",
+          "σ",
+          "ratio",
+          "구간ea",
+          "singleseed"
+        ],
+        "use": [
+          "물질값 인용",
+          "수송 비교",
+          "300 K 외삽",
+          "순위",
+          "동등·보존 주장"
+        ],
+        "why": "금지가 **양의 종류**로 선언되는데 스캐너는 (metric, system) 쌍만 안다. 이 행의 binding_scope_why 자신이 '같은 축의 D·σ·구간 Ea 는 레지스트리에 없어 안 덮인다' 고 적어 두었다 — 그 구멍을 축으로 닫는다.",
+        "decision": "D-2026-09-07-b2o3-md-closure-retrospective",
+        "added": "2026-09-09 (Codex BI-4 Q5)",
+        "⛔_이_축이_못_하는_것": "claim id 규약(`{metric}@{system}`)에 의존한다. 산문 속 자유표기(`0.2241` · `.199` · `199 meV`)는 여전히 매처가 못 잡으면 축도 못 잡는다 — 축은 **claim 을 대신하지 않고 상속시킨다**."
+      }
+    },
+    {
+      "file": "db/properties/vgcf_hbn_neb.json",
+      "level": "CONDITIONAL",
+      "what": "표면 확산 배리어 7 meV",
+      "why": "수치 분해능(20–46 meV) **아래**다",
+      "fix": "'< 0.01 eV, 사실상 barrierless' 로만 서술 — 숫자로 인용 금지",
+      "id": "HZ-vgcf-hbn-barrier-below-resolution",
+      "binding_scope": "partial",
+      "binding_scope_why": "7 meV 는 레지스트리에 없어 숫자 결속 불가. 허용 서술('< 0.01 eV, 사실상 barrierless')과 금지 서술이 같은 수를 말해서 문구로 가르기 어렵다."
+    },
+    {
+      "file": "db/properties/nd_icohp.json · bonds.json",
+      "level": "CONDITIONAL",
+      "what": "comp1 P–S ICOHP −5.944",
+      "why": "2026-06-03 낡은 요약값 (drift)",
+      "fix": "정본 −5.9381 (per_bond_json/bonds_comp1_k444.json)",
+      "id": "HZ-comp1-icohp-ps-stale-5944",
+      "binding_scope": "partial",
+      "binding_scope_why": "`claim` 은 정본 ICOHP_PS@comp1(−5.9381) 을 가리키지만, 위험한 것은 **낡은 −5.944** 다 — 그 수는 레지스트리에 없어 자동으로 안 걸린다. 문구로 넣으면 정본 −5.9381 과 헷갈리지 않으므로 다음 판에서 −5.944 를 forbidden_phrases 후보로 재도.",
+      "claim": "ICOHP_PS@comp1"
+    },
+    {
+      "file": "db/properties/nd_gap_reference_mp.json",
+      "level": "CONDITIONAL",
+      "what": "Nd 상 갭",
+      "why": "우리 계산 아님 (MP 소환값)",
+      "fix": "우리 db 갭 표와 같은 표/플롯에 섞지 말 것. Nd 3종은 sei_electronic 의 *_frozen4f 가 우리 값",
+      "id": "HZ-nd-gap-mp-summoned",
+      "binding_scope": "partial",
+      "binding_scope_why": "'우리 값과 같은 표에 섞지 말 것' 은 **배치**에 대한 금지라 문자열로 못 잡는다. 소환값 자체도 레지스트리 밖이다."
+    },
+    {
+      "file": "db/properties/external_benchmarks_symposium_2026.json",
+      "level": "CONDITIONAL",
+      "what": "전 항목",
+      "why": "외부 발표 소환값",
+      "fix": "우리 db 절대값과 같은 표/플롯 금지",
+      "id": "HZ-symposium-benchmarks-summoned",
+      "binding_scope": "partial",
+      "binding_scope_why": "같은 이유 — 금지 대상이 '같은 표/플롯' 이라는 배치 조건이다. 검사기는 배치를 못 본다."
+    },
+    {
+      "file": "db/properties/cascade_v23_themes.json",
+      "level": "CONDITIONAL",
+      "what": "gap_lit_eV · 가격등급 · air_stability",
+      "why": "문헌 전형값 큐레이션 — 우리 계산 아님",
+      "fix": "curation_disclaimer 와 함께만",
+      "id": "HZ-cascade-themes-lit-curation",
+      "binding_scope": "partial",
+      "binding_scope_why": "gap_lit_eV·가격등급·air_stability 는 레지스트리 밖 큐레이션이라 숫자 결속이 없다. 'curation_disclaimer 와 함께만' 이라는 조건도 검사기가 못 본다."
+    },
+    {
+      "file": "db/properties/anode_interface_b2o3.json",
+      "level": "CONDITIONAL",
+      "what": "전 항목",
+      "why": "MP API 직접 조회인데 **스냅샷 버전 미기록** — 재현 불가",
+      "fix": "재실행 시 값이 달라도 어느 쪽이 맞는지 알 수 없다. 앞으로 MP 치는 도구는 버전 기록 필수",
+      "id": "HZ-anode-b2o3-mp-unversioned",
+      "binding_scope": "partial",
+      "binding_scope_why": "재현 불가 사유(MP 스냅샷 미기록)는 값마다가 아니라 **파일 전체**에 걸린다. 그 파일 값은 레지스트리에 없다."
+    },
+    {
+      "file": "db/properties/eos.json",
+      "level": "CONDITIONAL",
+      "what": "V0_A3",
+      "why": "extensive 량",
+      "fix": "셀 크기 다른 계끼리 직접 비교 금지",
+      "id": "HZ-eos-v0-extensive",
+      "binding_scope": "partial",
+      "binding_scope_why": "V0_A3 는 레지스트리에 없다. 금지는 '셀 크기 다른 계끼리 비교' 라는 조건부라 문구로 못 덮는다."
+    },
+    {
+      "file": "db/properties/elastic.json",
+      "level": "CONDITIONAL",
+      "what": "조성 간 비교",
+      "why": "조성별 pseudo/ecut/k 가 다르다",
+      "fix": "kb/methodology/elastic_constants.md 확인 후",
+      "id": "HZ-elastic-cross-composition",
+      "binding_scope": "partial",
+      "binding_scope_why": "E_VRH_GPa 는 4계가 등록돼 있어 `claim` 하나로는 못 가리킨다. 금지 대상도 값이 아니라 **계간 비교**라는 행위다."
+    },
+    {
+      "file": "db/properties/cascade_v23_eos_refit.json",
+      "level": "CONDITIONAL",
+      "what": "MnO_x002",
+      "why": "r²=0.946 — 파일 자체가 low-confidence 표시",
+      "fix": "등급 표기와 함께만",
+      "id": "HZ-cascade-eos-refit-mno-lowr2",
+      "binding_scope": "partial",
+      "binding_scope_why": "MnO_x002 refit 값은 레지스트리 밖이다. '등급 표기와 함께만' 도 배치 조건이다."
+    },
+    {
+      "file": "db/properties/li3n_adsorption.json",
+      "level": "CONDITIONAL",
+      "what": "v1 값 (−3.439 / −3.321)",
+      "why": "미수렴 bare slab — 파일이 SUPERSEDES 로 철회",
+      "fix": "v2 값만 유효",
+      "id": "HZ-li3n-adsorption-v1-superseded",
+      "binding_scope": "partial",
+      "binding_scope_why": "v1 값 −3.439/−3.321 은 레지스트리에 없어 숫자 결속이 안 된다. 두 수를 forbidden_phrases 로 올릴 수 있으나 오탐 실측 전이라 이번 판에서는 넣지 않았다."
+    },
+    {
+      "file": "db/properties/doping_cascade_verified.json",
+      "level": "RESOLVED",
+      "what": "coating_candidates_ranked_by_E_VRH 순위표",
+      "why": "rank1 의 E_VRH 가 18.7 → 42.082 로 정정돼 **순위 자체가 무효**",
+      "fix": "완료 — 40 챔피언 전체 재정렬. 새 1~3위 Li2O_x005 32.4 / MnO_x005 32.6 / NiO_x010 33.9. Sc2O3_x002 18위(42.082), Al2O3_x005 28위(47.018). 옛 순위표는 doping_cascade_verified.json `_superseded_ranking_2026_08_12` 에 보존.",
+      "resolved": "2026-08-13",
+      "id": "HZ-cascade-evrh-ranking",
+      "binding_scope": "not_applicable",
+      "binding_scope_why": "level=RESOLVED — hazard_claims 가 제외한다(HAZARD_INACTIVE). 재정렬이 끝난 이력이다."
+    },
+    {
+      "file": "db/properties/lpsocl_md_arrhenius.json",
+      "level": "BLOCKED",
+      "what": "계간 Ea 직접 비교 (`vs_modelc` +90 meV 2.3σ · `vs_modelc_SUPERSEDED_mixed` · `anchors_same_window_singleseed` 의 계간 대조) — citable:no",
+      "why": "세 계(LPSOCl·modelc·b2o3)가 각자 다른 셀·다른 수렴상태다. 회신 AK(2026-08-30) Q2=C 판정: 세 계 Ea 직접 비교는 철회·보류",
+      "fix": "계별 셀·VRAM·finite-size 감사를 포함한 **별도 캠페인**으로 재설계. 계 내부 값(62원자 4시드×3T Ea 0.287±0.024)은 cell-specific 보고량 로는 유효",
+      "added": "2026-08-30",
+      "근거": "db/properties/lpsocl_box331_estimand_2026_08_30.json",
+      "id": "HZ-cross-system-Ea",
+      "forbidden_phrases": [
+        "90 meV",
+        "+90 meV"
+      ],
+      "binding_scope": "partial",
+      "binding_scope_why": "forbidden_phrases 두 개('90 meV'·'+90 meV')가 그 계간 비교의 대표 표기를 덮는다. 다른 표기(0.09 eV·2.3σ·'LPSOCl 이 더 높다')는 안 덮인다."
+    },
+    {
+      "file": "tools/ionic/msd_diffusive_check.py (규약)",
+      "level": "SUPERSEDED",
+      "what": "β ≥ 0.80 하드게이트 — **판정으로 인용 금지**. β 는 경보로만",
+      "why": "kb/concepts/beta-gate.md §7-5(2026-08-26)·§7-8b(회신 F, 2026-08-27)에서 폐기. 우리 운영점에서 고정문턱 0.8 은 거짓탈락률 50 %",
+      "fix": "판정축은 D_inc plateau · 창 안정성 · 홉 수. 도구는 2026-08-30 에 맞췄다 (그 전 나흘간 도구가 폐기된 문턱을 강제했고 회신 AK 가 그걸 근거로 인용했다)",
+      "added": "2026-08-30",
+      "id": "HZ-beta-hard-gate",
+      "forbidden_phrases": [
+        "β ≥ 0.80",
+        "베타 하드게이트",
+        "β 하드게이트"
+      ],
+      "binding_scope": "phrase",
+      "binding_scope_why": "⛔ **2026-09-09 정정 (Codex BI-3 P0-1).** 종전 문구는 *\"level=SUPERSEDED — hazard_claims 가 제외한다. forbidden_phrases 는 이력으로 남기되 **집행되지 않는다**\"* 였다. **틀렸다.** 폐기된 것은 통과·탈락 **규칙**이고, 이 행의 `what` 이 말하는 *\"판정으로 인용 금지\"* 는 **살아 있는 금지**다 — 규칙이 죽었으니 오히려 더 살아 있다. 실측 반례: 화면에 \"판정은 β ≥ 0.80 하드게이트를 통과하면 된다\" 를 넣으면 탐지·미결속·suspect 가 전부 0 이었다. 이제 `prohibition_state` 로 집행하고 `level` 은 규칙 상태 표시로만 쓴다. 이력·반증 목적의 언급은 화면이 `data-claim-use=\"historical\"|\"refutation\"` 으로 선언한다.",
+      "prohibition_state": "active",
+      "rule_state_note": "level=SUPERSEDED 는 **규칙 상태**다 — β 0.80 고정문턱을 통과·탈락 판정으로 쓰는 것이 폐기됐다는 뜻(거짓탈락률 50 %). 판정축은 D_inc plateau · 창 안정성 · 홉 수."
+    },
+    {
+      "file": "docs/manuscripts/figure2e_explained_v10.md",
+      "level": "STALE",
+      "what": "42잡 · holdout 8자세 · 조각당 12자세 · clean slab 계산 · 완화 방식 — **전부 인용 금지**. 2부 영문 문장도 마찬가지",
+      "why": "회신 AN(NO-GO) 이전 설계다. ⚠ 2026-08-31 갱신: 그 뒤 캠페인이 Stage A → **C-12** 로 개명되고 v13→v18 로 갔다. 실물은 **v18 · 16잡**(단계 1:10, 2:6)이고 회신 **AV 가 NO-GO**(P0 4 · P1 1). 종전 문구의 'v13 은 14잡' 도 이미 낡았다.",
+      "fix": "문서 상단 STALE 배너 유지. 잡수·자세수·프로토콜 문장은 번들 MANIFEST 와 `runs/sdcp_c12_2026_08_30/IDENTITY_v18.json` 을 본다. ⚠ `sdcp_c12_protocol_2026_08_30.json` 의 잡 수(12·19)는 실물 16 과 다르므로 그 파일을 잡 수의 정본으로 쓰지 않는다.",
+      "added": "2026-08-31",
+      "updated": "2026-08-31",
+      "id": "HZ-figure2e-v10-stale",
+      "binding_scope": "partial",
+      "binding_scope_why": "금지 대상이 문서 한 편의 잡수·자세수·프로토콜 서술 전체다. 42/8/12/16 같은 맨숫자를 문구로 넣으면 전 화면 오탐이라 넣지 않았다."
+    },
+    {
+      "file": "db/properties/lpsocl_box331_two_point_2026_08_31.json",
+      "level": "PREVIEW",
+      "what": "'3×3×1 Ea = 0.170 eV' — **인용 금지**. 두 점(600/1000 K)이고 직선성 미검증이다",
+      "why": "T800 3시드 미완(~57 h). 시드 조합 9개가 0.151–0.187 eV 로 흩어진다(sd 0.012). 62원자 셀 0.2855 eV 와의 −116 meV 차이는 '셀 효과가 Ea 에서 상쇄되지 않는다'는 정성 결론까지만 지지한다",
+      "fix": "T800 완료 → msd_diffusive_check.py --mto --scan 로 D_inc plateau 판정 → 가중 3점 피팅. 그 결과만 Ea(3×3×1 cell-conditioned) 로 인용",
+      "added": "2026-08-31",
+      "id": "HZ-lpsocl-box331-two-point-ea",
+      "binding_scope": "partial",
+      "binding_scope_why": "0.170 eV 는 레지스트리에 없어 숫자 결속이 안 된다. '3×3×1 Ea' 표기 변형도 안 덮는다."
+    },
+    {
+      "file": "db/properties/sdcp_wave1_citable.json",
+      "level": "BLOCKED",
+      "what": "절대 흡착에너지 4종과 0.346 eV 헤드라인",
+      "why": "기준 비대칭 — 기준 분자는 NUPDOWN 고정·LREAL=F 인데 복합체는 자유·LREAL=T 다 (δ_m + δ_LREAL 미측정, 회신 P). 조각 내 자리대비에서는 소거되지만 절대값과 조각 간 차에는 남는다",
+      "fix": "reference-equivalence 복구 전까지 절대값·0.346 eV·부등호 방향 서술 전부 인용 금지. 자리대비(c10 49.8 meV · dimer 36.1 meV)와 상자 수렴은 영향 없다",
+      "added": "2026-08-31",
+      "id": "HZ-sdcp-wave1-absolute-eads",
+      "binding_scope": "partial",
+      "binding_scope_why": "절대 E_ads 는 SDCP_Eads_eV__* 로 4건이 등록돼 있어 `claim` 하나로 못 가리킨다. 0.346 eV 헤드라인은 레지스트리 밖이다."
+    },
+    {
+      "file": "db/properties/sdcp_neutral_closed_2026_08_28.json",
+      "level": "CONDITIONAL",
+      "what": "술폰산 접촉 기전 — **양방향 모두**",
+      "why": "wave1 자세에서 산성 H 가 7.08–7.17 Å 라 '술포네이트가 앵커링한다' 는 철회됐고(회신 T P0-1), 신규 동결 후보의 최저 자세는 산성 O–H···표면 O 1.83 Å 수소결합이라 '상호작용하지 않는다' 도 못 쓴다. 후자는 **MLIP 기하**이고 DFT 확인 전이다",
+      "fix": "기전 문장을 쓰지 않는다. C-12 가 회수되면 그 DFT 로 판정한다",
+      "added": "2026-08-31",
+      "id": "HZ-sdcp-sulfonate-mechanism",
+      "binding_scope": "partial",
+      "binding_scope_why": "**양방향 모두** 금지라 문자열이 두 배로 늘어난다('앵커링한다'·'상호작용하지 않는다' 양쪽). 표현 변형이 많아 이번 판에서는 열거하지 않았다."
+    },
+    {
+      "file": "db/properties/sdcp_c12_protocol_2026_08_30.json",
+      "level": "STALE",
+      "what": "잡 수(§0 '12잡' · §12 '19잡') · §3 잡 목록 · §11 clean slab 3잡 · §1 보고량 이름",
+      "why": "실물 v18 은 **16잡**이고 clean slab 은 제거됐다(커밋 57cfcdea · 회신 AV Q6 '추가 불필요'). §3 의 job key 네임스페이스 `main/` 은 생성기에 존재하지 않는다(실물은 `prospective/`). §1 의 이름 'adsorption energy' 는 `sdcp_c12_claim_prereg_2026_08_31.json` 이 **금지어로 지정**했다 — 같은 번들에 모순되는 사전등록 둘이 달려 있다",
+      "fix": "보고량 이름·허용서술은 claim_prereg 를 정본으로 본다. 잡 수는 MANIFEST/IDENTITY_v18. 프로토콜은 §2b(D 정의)와 §4(C1~C4 문턱)만 유효하다",
+      "added": "2026-08-31",
+      "id": "HZ-sdcp-c12-protocol-jobcount-stale",
+      "binding_scope": "partial",
+      "binding_scope_why": "잡 수(12·19·16)는 맨숫자라 문구로 넣으면 전 화면 오탐이다. 화면은 id 로만 이름을 댈 수 있다."
+    },
+    {
+      "file": "db/properties/b2o3_vs_lpscl16_conductivity.csv",
+      "level": "BLOCKED",
+      "what": "b2o3 ↔ LPSCl1.6 의 σ 비(600/800/1000 K = 1.08/0.82/1.15)로 **동등·보존·순위·기전**을 말하는 것 — 어떤 형태로도 인용 금지. 300 K 외삽도 금지.",
+      "why": "원자료 CSV 가 FORBIDDEN phrasings 로 'statistically EQUIVALENT transport' · 'conductivity PRESERVED' · 'equivalent sigma' · 순위·기전 주장을 축자 금지한다. 사유 셋이 모두 미해소다 — ① 골격 MSD 게이트 NOT ASSESSED(required_artifact_set_incomplete) ② 고온 원궤적 미보존(800/1000 K × s2/s3/s4 = 6런, run_highT_reseed.sh 가 --save_traj 미전달) ③ 계보 UNWIRED. 미평가 쌍의 '같음' 은 동등이 아니라 **구분 실패**다.",
+      "fix": "CSV 의 ALLOWED sentence 축자만 쓴다 — 같은 3시드×3온도 집계에서 ΔEa 는 +0.002 eV 였고 시드조합 산포 ±0.047 eV 가 두 추정치를 구분하지 못했다; 고온 원궤적이 보존되지 않아 비-Li 구조 상태는 평가되지 않았다. 레지스트리 allowed_sentence 와 같은 문장이다.",
+      "claim": "MD_sigma_ratio_600K@b2o3_vs_modelc",
+      "id": "HZ-sigma-ratio-non-citable",
+      "forbidden_phrases": [
+        "statistically_equivalent_transport",
+        "conductivity_preserved",
+        "통계적으로 동등",
+        "전도도 동등",
+        "전도도가 동등",
+        "전도도 보존",
+        "σ 동등",
+        "σ를 깎지 않는",
+        "σ 를 깎지 않는"
+      ],
+      "binding_scope": "partial",
+      "binding_scope_why": "`claim` 은 600 K 항목 하나만 가리킨다 — 같은 금지가 걸린 800/1000 K (MD_sigma_ratio_800K@b2o3_vs_modelc · MD_sigma_ratio_1000K@b2o3_vs_modelc) 는 이 필드에 못 담는다. 문구 9개는 32개 표면 실측 **오탐 0** 을 확인하고 고른 것이다. 정작 실제 원고가 쓸 법한 짧은 표기('동등'·'보존'·'σ 비'·'σ300')는 오탐이 커서 **거부**했다 — rejected_phrases 참조. ⇒ 산문 새는 구멍이 남아 있다.",
+      "added": "2026-09-09",
+      "근거": "db/properties/canonical_registry.json (MD_sigma_ratio_* 3항목 citable:false) · Codex BH P0-1 (2026-09-07)",
+      "rejected_phrases": {
+        "why": "⛔ **거부** — 켤 수 없다. 32개 표면 실측(문구를 원장에 넣고 재렌더)에서 걸린 4건 중 3건이 다른 계이거나 원장 자신이었다. 오탐이 분모를 부풀리면 '미결속 0' 이 더 그럴듯하게 틀린 수가 된다.",
+        "phrases": {
+          "σ 비": "미결속 4건 — /glossary ×2(**comp2 vs comp1** σ 비율이다, 다른 계 = 오탐) · / ×1(마감 카드가 금지 서술을 **열거**하는 자리) · /governance ×1(이 원장의 다른 위험 행 본문. 행마다 자기 id 로만 결속되므로 남의 문구는 미결속으로 뜬다)",
+          "σ300": "미결속 1건 — /glossary(comp2 σ300 중앙 0.41× comp1). 다른 계라 오탐이다",
+          "동등": "미결속 25건 · \"보존\" 32건 (넣기 전 캐시 실측). 흔한 낱말이라 전 화면이 빨개진다"
+        },
+        "대신": "레지스트리 금지어 토큰(statistically_equivalent_transport · conductivity_preserved)과 계를 특정한 한국어 표기 7개만 켰다 — 실측 오탐 0."
+      }
+    },
+    {
+      "file": "db/properties/b2o3_vs_lpscl16_conductivity.csv",
+      "level": "BLOCKED",
+      "what": "단일시드 σ 비 **1.33×** ('B₂O₃ 가 σ 를 올린다' · D0-driven 향상 서사) — 철회됨",
+      "why": "2026-07-09 SEMIFINAL 멀티시드 판정에서 철회됐다. 1.33× 는 단일시드 800 K 쌍 (b2o3 3.009 고이상치 vs modelc 2.054 저이상치)에 얹혀 있었고, 재시드 평균은 2.163 vs 2.845 다. CLAUDE.md 가 이름으로 부르는 철회 사례인데 원장에 항목이 없어 스캐너가 못 잡고 있었다.",
+      "fix": "**대체값 없음.** 멀티시드 비(1.08/0.82/1.15)로 갈아타는 것도 답이 아니다 — 그 비는 HZ-sigma-ratio-non-citable 로 통째로 인용 불가다. 이 축에서 인용 가능한 수는 0개다.",
+      "id": "HZ-singleseed-sigma-1p33x",
+      "forbidden_phrases": [
+        "1.33× 빠르",
+        "1.33배 빠르",
+        "1.33× 우세하",
+        "1.33× 더 빠"
+      ],
+      "binding_scope": "partial",
+      "binding_scope_why": "덮는 것은 **주장형 표기 4개**(‘1.33× 빠르’ 류)뿐이다. 정작 표면에 있는 것은 전부 *철회를 가르치는* 문장이라 문구로 가르면 그 교훈까지 미결속으로 뜬다 — 실측 4건, pending_forbidden_phrases 참조. 레지스트리에 1.33 항목이 없어 숫자 결속도 없다.",
+      "pending_forbidden_phrases": {
+        "why": "이 문구들은 **진짜로 걸린다**(오탐 아님). 걸리는 자리가 전부 '이 주장은 철회됐다' 는 교육 문장이라 지우면 안 되고, 그 요소가 data-claim=\"HZ-singleseed-sigma-1p33x\" 로 이름을 대면 그 순간 결속이 성립한다. 지금 켜면 무관용 결속 시험이 4건으로 깨진다. ⚠ 마크다운 경로(/concept · /requests · /todo)는 _bind_claims 가 자동 결속해 이미 빠졌다 — 남은 넷은 자동 결속을 안 타는 화면이다.",
+        "measured": "2026-09-09 · 문구를 원장에 넣고 32개 표면 재렌더 후 scan_claim_bindings",
+        "phrases": {
+          "1.33×": "미결속 2건 — /glossary ×1 · /seminar ×1",
+          "1.33배": "미결속 1건 — /seminar",
+          "σ비율 1.33×": "미결속 1건 — /log"
+        },
+        "누가": "화면 소유 묶음(A 온보딩·G 원장·H 기록·I 문헌)에 넘긴다. /seminar 는 md_to_html 이 _bind_claims 를 안 타는 유일한 경로라 그 배선을 고치면 2건이 자동으로 해소된다."
+      },
+      "added": "2026-09-09",
+      "근거": "kb/results/b2o3_SEMIFINAL_report_2026_07_09.md · db/properties/b2o3_md_closed_retrospective_2026_08_25.json (철회 목록) · CLAUDE.md"
+    },
+    {
+      "file": "db/structures/ndo_lpscl16_rietveld_2026_09_07/anneal_2026_09_07/anneal_results.json",
+      "level": "PREVIEW",
+      "what": "Nd/O 공치환 O-모티프 6셀의 **UMA 어닐 순위**(distributed < free_s < bo4) 와 그 meV/atom 간격 — DFT 재채점 전이라 인용 금지",
+      "why": "UMA-s-1p1 500 K 20 ps + relax 로만 매긴 순위다. 같은 repo 의 cascade 봉인 규약이 'MLIP 로 만든 순위는 MLIP 내부 순위로만 서술한다' 를 못박았는데 이 축에는 그 딱지가 없었다. 결과 JSON 이 db/structures 아래에만 있어 db/properties 를 grep 하는 사람에게는 이 캠페인이 보이지 않는다.",
+      "fix": "'UMA 내부 순위' 라고 밝히고 순위 방향만 쓴다. 절대 에너지·meV/atom 간격은 쓰지 않는다. DFT 재채점(커밋 51b5dec21 --from_xyz scf 4셀)이 끝나면 그 결과로 재판정한다.",
+      "id": "HZ-nd-anneal-uma-rank",
+      "forbidden_phrases": [
+        "UMA 순위 distributed",
+        "distributed 가 가장 안정"
+      ],
+      "binding_scope": "partial",
+      "binding_scope_why": "레지스트리에 이 캠페인 항목이 0건이라 숫자 결속이 없다. 실제 표면 표기 'distributed < free_s < bo4' 는 오탐이 아니라 **진짜 미결속 4건**인데(/ ×3 · /log ×1) 지금 켜면 결속 시험이 깨져서 pending 으로 미뤘다 — 이 위험은 **화면이 선언만 달면 complete 에 가장 가까워진다**.",
+      "pending_forbidden_phrases": {
+        "why": "**가장 값어치 있는 미결속**이다 — 오탐이 하나도 없고, 걸리는 자리가 전부 DFT 재채점 전 UMA 순위를 그대로 찍는 곳이다. 지금 켜면 결속 시험이 4건으로 깨진다.",
+        "measured": "2026-09-09 · 문구를 원장에 넣고 32개 표면 재렌더 후 scan_claim_bindings",
+        "phrases": {
+          "distributed < free_s < bo4": "미결속 2건 — / (대시보드 Nd 어닐 카드) · /log",
+          "distributed < free_s": "미결속 2건 더 — / 의 간격 표기 '(+34) < bo4 (+52)' · '(+29) < bo4 (+39)'"
+        },
+        "누가": "대시보드 카드는 묶음 B, /log 는 묶음 H 소유다. 그 두 요소에 data-claim=\"HZ-nd-anneal-uma-rank\" 만 달면 4건이 한 번에 결속된다."
+      },
+      "added": "2026-09-09",
+      "근거": "db/properties/cascade_seal_v2_2026_09_08.json (MLIP 순위 서술 규약) · kb/methodology/cascade_lessons_transfer_2026_09_08.md"
+    },
+    {
+      "file": "db/interphases/li3n.json",
+      "level": "BLOCKED",
+      "what": "UMA 로 만든 **Li₃N 확산 장벽·흡착값 전부** — thin-slab 경로의 0.054 eV / 0.049 eV, bridge 흡착 −0.032 eV, proper-slab UMA 0.237 eV 를 포함해 인용 금지",
+      "why": "CLAUDE.md: 'UMA 는 Li₃N 에 사용 금지 (2026-06 결정론적 편향 판정)'. db/properties/diffusion.json 이 같은 값을 CAVEAT_2026-06-06 으로 철회했고 (thin-slab 인공물 · UMA 가 위상을 뒤집는다), db/_index.json 도 그 헤드라인을 _RETRACTED_ 접두사로 격리했다. li3n.json 만 표시 없이 살아 있었다.",
+      "fix": "Li₃N 확산은 **db/properties/diffusion.json 기준으로만** 인용한다 (full-DFT-NEB 0.12 eV · 2.4× · ~660×). UMA 는 이 계에서 기하 정찰에도 쓰지 않는다 — 범위 확정은 1저자 판단 대기(장벽 절대값만인가, 구속 PES 도인가, path-finder 는 허용인가).",
+      "id": "HZ-uma-li3n-banned",
+      "forbidden_phrases": [
+        "0.054 eV (UMA)",
+        "0.049 eV (DFT SCF)",
+        "0.049/0.054"
+      ],
+      "binding_scope": "partial",
+      "binding_scope_why": "금지 대상이 값이 아니라 **방법**(UMA × Li₃N)이라 문자열로 다 못 덮는다. 지금 덮는 것은 철회된 세 수치의 축자 표기뿐이고, 앞으로 UMA 로 새로 뽑는 Li₃N 수는 자동으로 안 걸린다. 레지스트리에 Li₃N 항목이 0건이라 숫자 결속도 없다.",
+      "added": "2026-09-09",
+      "근거": "CLAUDE.md (UMA-Li₃N 금지) · db/properties/diffusion.json CAVEAT_2026-06-06 · kb/projects/li_neb_anode_free.md ('인용은 항상 diffusion.json 기준')"
+    },
+    {
+      "file": "db/properties/oxidation_stability.json",
+      "source_path": "db/properties/oxidation_stability.json",
+      "level": "CONDITIONAL",
+      "what": "`reduction_limit_V` 1.242 V · `oxidation_limit_V` 2.14 V · `window_V` 0.898 V — **문헌의 reduction/cathodic limit 옆에 단서 없이 놓지 않는다**",
+      "why": "pymatgen `PhaseDiagram` 의 `get_element_profile` 이 각 경계의 **Li-rich(저전압) 쪽 facet** 을 보고한다(임계조성에 Li 를 1e-5 더해 chempot 을 잰다 — gabia 소스 확인 2026-08-28). 그래서 우리 값은 경계가 아니라 **경계 한 칸 아래**를 집는다. 문헌 세 점이 전부 우리 다음 breakpoint(1.72) 쪽에 있고 1.24 근처에는 아무도 없다: Zhu 2015 1.71 · Wang 2026 1.78 · **Nolan 2018 p. 2031 이 `Li₆PS₅Cl` 를 이름으로 들어 1.7/2.4 V**. 산화 쪽도 같은 방향이다(우리 2.14 → 다음 2.36 vs 문헌 2.30–2.4) — **양쪽이 같은 방향인 것이 규약 차이의 증거**다.",
+      "fix": "① 인용할 때 규약을 밝힌다 — *'grand-potential 경계의 Li-rich facet 값'*. ② 문헌 대응을 말해야 하면 **다음 breakpoint(환원 1.72 · 산화 2.36)** 를 나란히 적고 두 수가 같은 경계의 양끝임을 밝힌다. ③ `window_V` 0.898 V 를 *'우리 ESW 폭'* 으로 단독 인용하지 않는다 (같은 규약으로 재면 0.42 V, 문헌 0.52–0.70 V). ④ 필드 개명·분할은 **1저자 승인 전 금지** — cascade 하류(`tools/cascade/rebuild_pool_inputs.py:131` 의 `red_V`)가 이 필드를 쓴다.",
+      "id": "HZ-esw-reduction-limit-facet-convention",
+      "added": "2026-09-13",
+      "binding_scope": "partial",
+      "binding_scope_why": "`reduction_limit_V`·`ocv_self_decomposition_V`·`oxidation_limit_V` 는 **canonical_registry 에 없다**(43항목 전부 gap/V/Ea/E_coh/sdcp 계열). 그래서 `claim` 을 걸 자리가 없고 `prohibition_axis` 도 레지스트리의 무엇도 못 덮어 죽은 선언이 된다 — 둘 다 비웠다. 지금은 id 로 이름만 댈 수 있다. ⇒ **이 값들을 레지스트리에 올리는 것이 결속의 선결조건**이다.",
+      "pending_forbidden_phrases": [
+        "1.242",
+        "0.898",
+        "환원한계 1.24"
+      ],
+      "⚠_pending_인_이유": "집행 안 함. 표면 실측(소스 grep, 2026-09-13): `1.242` 8파일 17회 · `1.717` 13파일 25회 — 전부 kb 마크다운이고 아직 data-claim 을 안 단다. 지금 forbidden_phrases 로 켜면 무관용 결속 시험이 깨진다. ⚠ 이 수는 **렌더 전 소스 grep** 이라 원장 규약(렌더 후 세기)을 못 지켰다 — 이 컨테이너에 flask 가 없다. 화면이 선언을 달 때 렌더해서 다시 세고 옮긴다.",
+      "관련": [
+        "kb/questions/esw_reduction_limit_field_2026_08_28.md (원 카드 · 코드·소스 확인 완료 · 필드 분할 제안 3안)",
+        "kb/questions/coating_lineage_sibling_conflicts_2026_09_13.md 충돌 1",
+        "litdb/papers/nolan2018_computation_accelerated_design_review.md §7b (1.717 함정)",
+        "litdb/papers/honrao2021_interpretable_ml_sse_anode_coatings.md (Fig. S2 Li-uptake=0 정의)"
+      ]
+    },
+    {
+      "file": "kb/projects/cascade_rebuild_log_2026_09.md",
+      "level": "BLOCKED",
+      "what": "§4b 스윕 화면의 '7/7 수렴' 을 **양방향 수렴**으로 읽는 것",
+      "why": "watch_eos_sweep.py 의 conv_of() 가 convergence_up 만 꺼냈다 — 화면의 7/7 은 **올라가는 갈래뿐**이다. 이력현상은 두 갈래 **사이**의 양이라 한쪽만 보고 미수렴을 배제할 수 없다. 2026-09-13 에 이 오독으로 1저자에게 '미수렴 가설은 죽는다' 고 말했고 철회했다 (회신 BQ-2 추가 P1).",
+      "fix": "도구는 고쳤다(상승/하강 분리 표시 + 자격 열). 옛 화면 캡처·옛 대화의 '7/7' 은 상승 갈래 값으로만 읽어라.",
+      "id": "HZ-4b-updown-convergence-misread",
+      "binding_scope": "full",
+      "binding_scope_why": "금지 문구를 등록해 **스캐너가 실제로 찾는다** — 문구 없이 id 만 두면 text=None 이라 화면에서 data-claim 을 지워도 음성시험이 안 잡는다 (2026-09-13 실측: 선언을 지우고 돌렸는데 통과했다).",
+      "forbidden_phrases": [
+        "미수렴 가설은 죽는다"
+      ]
+    },
+    {
+      "file": "kb/projects/cascade_rebuild_log_2026_09.md",
+      "level": "BLOCKED",
+      "what": "창을 좁히면 모양차가 26배·247배 줄었다는 **비율로 기전을 가르는 추론** (H0 1.7배와 대비한 것)",
+      "why": "창별 비교는 **공통 부피점·동일 비교구간**에서 해야 한다 (회신 BQ-2 Q2). '절대 eV 라 창 의존성이 없다' 는 내 전제가 틀렸고, 'span ∝ (ΔV)² 니까 ≈4배' 는 어림이지 공통점 비교가 아니다. 2026-09-13 철회.",
+      "fix": "W6 {0.94…1.06} 와 W3 {0.97…1.03} 의 **공통 분율 {0.98, 1.00, 1.02}** 세 점에서 |E_up − E_dn| 을 직접 비교한다 (3점이라 BM3 재적합은 불가 — 차이만 본다).",
+      "id": "HZ-4b-cross-window-shape-ratio",
+      "binding_scope": "full",
+      "binding_scope_why": "금지 문구를 등록해 **스캐너가 실제로 찾는다** — 문구 없이 id 만 두면 text=None 이라 화면에서 data-claim 을 지워도 음성시험이 안 잡는다 (2026-09-13 실측: 선언을 지우고 돌렸는데 통과했다).",
+      "forbidden_phrases": [
+        "26배·247배"
+      ]
+    }
+  ],
+  "_history": [
+    "2026-08-13: E_VRH 순위표 재계산 완료 — HOLD 해소. 최연질이 Sc2O3 → Li2O_x005 로 바뀌었고, Sc2O3 는 형성에너지 1위 · 연질 18위로 두 축이 분리됐다.",
+    "2026-08-12: doping_cascade 값 충돌 해소 (BLOCKED→RESOLVED). 순위표 재계산이 새 HOLD 로 승계.",
+    "2026-08-30 — 회신 AK 반영: 계간 Ea 비교 citable:no 잠금 + β=0.80 하드게이트 폐기를 레지스트리에 명시",
+    {
+      "date": "2026-08-31",
+      "change": "figure2e v10 STALE(AN 이전 설계) · LPSOCl 3×3×1 두 점 Ea PREVIEW 등록"
+    },
+    {
+      "at": "2026-08-31",
+      "note": "전수 조사 — 인용 게이트 자체의 오류 2건 정정(phaseB dE_extract 를 '인용하라'고 적고 있었다 · figure2e 의 v13/14잡 표기), 미등재 위험 3건 추가"
+    },
+    {
+      "at": "2026-09-09",
+      "note": "묶음 J — 25행 전부에 영구 id(HZ-…)와 binding_scope 부여, 새 위험 4건 등재 (σ 비 non_citable · 단일시드 1.33× 철회 · Nd 어닐 UMA 순위 · UMA-Li₃N 금지). complete 는 0건이다 — 오늘 그 자격이 있는 행이 없다. 새 forbidden_phrases 는 전 표면 스캔에서 미결속 0 을 확인한 것만 켰고, 진짜로 걸리는 문구는 pending_forbidden_phrases 에 건수와 함께 남겼다. 미결속 실측(문구를 넣고 32개 표면 재렌더): 1.33× 4건 · Nd 순위 4건 — 둘 다 오탐이 아니라 화면이 선언을 안 단 것이다. σ 짧은 표기 4건은 오탐이라 거부했다."
+    }
+  ],
+  "updated": "2026-09-13",
+  "_schema_note": {
+    "claim": "화면 결속용 claim id (`<metric>@<system>`, canonical_registry 파생). 이 위험이 **어느 정본 주장**에 대한 것인지 이름을 대면, /governance 표에서 근접성 없이 결속이 성립한다 (회신 BG ②).",
+    "id": "안정 hazard 식별자. 화면·handoff 가 `data-claim=\"<id>\"` 로 이 위험을 선언한다 (회신 BG ②).",
+    "forbidden_phrases": "이 위험에 걸리는 **비수치 주장**을 기계가 찾기 위한 문자열. 숫자 결속(canonical_registry 파생)이 못 잡는 산문을 여기서 잡는다. ⛔ 문구를 지우는 것으로 검사를 통과시키지 않는다 — 위험이 풀리면 level 을 RESOLVED 로 올린다. ⚠ **교차행 누출**: /governance 는 위험 행 하나를 `data-claim=\"<claim> <id>\"` 가 달린 <tr> 로 그린다 — 그래서 그 행의 what/why/fix 는 자기 id 로 결속되지만, **다른 행의** forbidden_phrase 가 우연히 들어 있으면 미결속으로 뜬다. 문구를 새로 켤 때는 이 원장 **자신의 다른 25행 본문**도 같이 훑어라. ⚠ **측정 방법**: 넣기 전 캐시로 세면 과대추정이다 — 마크다운 표면은 `_bind_claims` 가 자동 결속하므로, 문구를 실제로 원장에 넣고 표면을 **다시 렌더한 뒤** 세야 맞는 수가 나온다.",
+    "binding_scope": "이 행의 금지가 **기계 결속으로 얼마나 덮이는가**. complete = 이 위험이 화면에 나올 수 있는 모든 형태(수치·산문)가 claim 또는 forbidden_phrases 로 덮인다 / partial = id 로 이름은 댈 수 있으나 안 덮이는 형태가 남아 있다(사유에 무엇이 안 덮이는지 적는다) / not_applicable = 살아 있는 금지가 아니다(level 이 RESOLVED·SUPERSEDED 라 hazard_claims 가 제외한다). ⛔ 2026-09-09 첫 판에 complete 는 **0건**이다 — 결속 가능성을 낙관해서 적는 칸이 아니다.",
+    "pending_forbidden_phrases": "⚠ **집행되지 않는다.** 실제로 걸리지만 지금 forbidden_phrases 에 넣으면 무관용 결속 시험이 깨지는 문구를, 실측 건수와 함께 적어 둔다(화면이 아직 data-claim 을 안 단다). hazard_claims() 는 이 키를 읽지 않는다 — 화면 쪽이 선언을 달면 forbidden_phrases 로 옮긴다."
   }
- ],
- "_history": [
-  "2026-08-13: E_VRH 순위표 재계산 완료 — HOLD 해소. 최연질이 Sc2O3 → Li2O_x005 로 바뀌었고, Sc2O3 는 형성에너지 1위 · 연질 18위로 두 축이 분리됐다.",
-  "2026-08-12: doping_cascade 값 충돌 해소 (BLOCKED→RESOLVED). 순위표 재계산이 새 HOLD 로 승계.",
-  "2026-08-30 — 회신 AK 반영: 계간 Ea 비교 citable:no 잠금 + β=0.80 하드게이트 폐기를 레지스트리에 명시",
-  {
-   "date": "2026-08-31",
-   "change": "figure2e v10 STALE(AN 이전 설계) · LPSOCl 3×3×1 두 점 Ea PREVIEW 등록"
-  },
-  {
-   "at": "2026-08-31",
-   "note": "전수 조사 — 인용 게이트 자체의 오류 2건 정정(phaseB dE_extract 를 '인용하라'고 적고 있었다 · figure2e 의 v13/14잡 표기), 미등재 위험 3건 추가"
-  },
-  {
-   "at": "2026-09-09",
-   "note": "묶음 J — 25행 전부에 영구 id(HZ-…)와 binding_scope 부여, 새 위험 4건 등재 (σ 비 non_citable · 단일시드 1.33× 철회 · Nd 어닐 UMA 순위 · UMA-Li₃N 금지). complete 는 0건이다 — 오늘 그 자격이 있는 행이 없다. 새 forbidden_phrases 는 전 표면 스캔에서 미결속 0 을 확인한 것만 켰고, 진짜로 걸리는 문구는 pending_forbidden_phrases 에 건수와 함께 남겼다. 미결속 실측(문구를 넣고 32개 표면 재렌더): 1.33× 4건 · Nd 순위 4건 — 둘 다 오탐이 아니라 화면이 선언을 안 단 것이다. σ 짧은 표기 4건은 오탐이라 거부했다."
-  }
- ],
- "updated": "2026-09-13",
- "_schema_note": {
-  "claim": "화면 결속용 claim id (`<metric>@<system>`, canonical_registry 파생). 이 위험이 **어느 정본 주장**에 대한 것인지 이름을 대면, /governance 표에서 근접성 없이 결속이 성립한다 (회신 BG ②).",
-  "id": "안정 hazard 식별자. 화면·handoff 가 `data-claim=\"<id>\"` 로 이 위험을 선언한다 (회신 BG ②).",
-  "forbidden_phrases": "이 위험에 걸리는 **비수치 주장**을 기계가 찾기 위한 문자열. 숫자 결속(canonical_registry 파생)이 못 잡는 산문을 여기서 잡는다. ⛔ 문구를 지우는 것으로 검사를 통과시키지 않는다 — 위험이 풀리면 level 을 RESOLVED 로 올린다. ⚠ **교차행 누출**: /governance 는 위험 행 하나를 `data-claim=\"<claim> <id>\"` 가 달린 <tr> 로 그린다 — 그래서 그 행의 what/why/fix 는 자기 id 로 결속되지만, **다른 행의** forbidden_phrase 가 우연히 들어 있으면 미결속으로 뜬다. 문구를 새로 켤 때는 이 원장 **자신의 다른 25행 본문**도 같이 훑어라. ⚠ **측정 방법**: 넣기 전 캐시로 세면 과대추정이다 — 마크다운 표면은 `_bind_claims` 가 자동 결속하므로, 문구를 실제로 원장에 넣고 표면을 **다시 렌더한 뒤** 세야 맞는 수가 나온다.",
-  "binding_scope": "이 행의 금지가 **기계 결속으로 얼마나 덮이는가**. complete = 이 위험이 화면에 나올 수 있는 모든 형태(수치·산문)가 claim 또는 forbidden_phrases 로 덮인다 / partial = id 로 이름은 댈 수 있으나 안 덮이는 형태가 남아 있다(사유에 무엇이 안 덮이는지 적는다) / not_applicable = 살아 있는 금지가 아니다(level 이 RESOLVED·SUPERSEDED 라 hazard_claims 가 제외한다). ⛔ 2026-09-09 첫 판에 complete 는 **0건**이다 — 결속 가능성을 낙관해서 적는 칸이 아니다.",
-  "pending_forbidden_phrases": "⚠ **집행되지 않는다.** 실제로 걸리지만 지금 forbidden_phrases 에 넣으면 무관용 결속 시험이 깨지는 문구를, 실측 건수와 함께 적어 둔다(화면이 아직 data-claim 을 안 단다). hazard_claims() 는 이 키를 읽지 않는다 — 화면 쪽이 선언을 달면 forbidden_phrases 로 옮긴다."
- }
 }

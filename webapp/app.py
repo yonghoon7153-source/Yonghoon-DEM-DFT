@@ -673,6 +673,8 @@ def cascade_page():
                            lineage=D.METHOD_LINEAGE, lit_have=have,
                            # 캠페인 지위 밴드 — 대시보드와 **같은 원장 파일**에서 읽는다
                            band=D.cascade_campaign_band(),
+                           # §4b 재판정 패널 — 숫자는 원장 하나에서만 온다 (2026-09-13)
+                           p4b=D.cascade_pilot_4b(),
                            mo_db=D.load_molecular_orbitals())
 
 

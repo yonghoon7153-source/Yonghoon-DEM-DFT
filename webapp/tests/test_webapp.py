@@ -3959,3 +3959,56 @@ def test_note_bold_is_lenient_about_one_sided_space():
     # 안쪽 공백은 **지우지 말고 태그 밖으로** — 지우면 낱말이 붙는다
     h = str(A._mdlite("suggests** low x**"))
     assert "suggests <strong>low x</strong>" in h, f"공백이 사라져 낱말이 붙었다: {h!r}"
+
+
+def test_digest_date_marker_is_actually_parsed():
+    """⛔음성 (2026-09-13 실측): 파일에 `digested <날짜>` 가 있는데 목록이 **못 읽으면**
+    그 논문은 최신순 정렬에서 **조용히 맨 뒤로 가라앉는다**.
+
+    실측: 머리말이 긴 digest 3편이 `digested` 를 22·25행에 뒀는데 파서는 첫 **18줄**만
+      읽었다. 264편 중 258·259·261위로 밀렸고, 1저자는 *"논문이 아직 안 떴다"* 고 했다.
+      값이 틀린 게 아니라 **순서가 틀렸고**, 아무도 오류를 안 봤다.
+
+    ⛔ 이 시험이 못 하는 것: 날짜가 **맞는지**는 못 본다. 파일에 있는 표기를 목록이
+      집어가는지만 본다. 표기 자체가 없는 digest 는 여기 대상이 아니다.
+    """
+    import re as _re
+    from pathlib import Path as _P
+    papers = {p["id"]: p for p in D.list_papers()}
+    pdir = _P(D.LITDB) / "papers"
+    missed, checked = [], 0
+    for f in sorted(pdir.glob("*.md")):
+        if "__seminar" in f.stem or f.stem not in papers:
+            continue
+        m = _re.search(r"digest(?:ed)?\s*`?(\d{4}-\d{2}-\d{2})`?",
+                       f.read_text(encoding="utf-8", errors="ignore"), _re.I)
+        if not m:
+            continue
+        checked += 1
+        if not papers[f.stem].get("digested"):
+            missed.append((f.stem, m.group(1)))
+    assert checked >= 200, (
+        f"전제 붕괴: 날짜 표기를 가진 digest 가 {checked}편뿐이다 — 이 시험이 "
+        f"아무것도 안 보고 있다 (경로나 표기 규약이 바뀌었는지 봐라)")
+    assert not missed, (
+        "⛔ 파일에 날짜가 있는데 목록이 못 읽었다 — 이 논문들은 최신순에서 맨 뒤로 "
+        "가라앉는다. 파서의 머리말 스캔 창을 넓혀라 (data.list_papers):\n"
+        + "\n".join(f"  {s}: 파일에는 {d}" for s, d in missed[:10]))
+
+
+def test_recent_digests_rank_near_the_top():
+    """⛔음성: 오늘 들어온 digest 가 목록 **뒤쪽**에 있으면 화면에서 안 보인다.
+
+    위 시험이 '날짜를 읽었는가' 를 본다면, 이것은 '읽은 날짜가 **정렬에 실제로
+    쓰이는가**' 를 본다. 파서가 날짜를 읽어도 정렬이 그것을 안 쓰면 결과는 같다.
+    """
+    ps = D.list_papers()
+    dated = [(i, p) for i, p in enumerate(ps) if p.get("digested")]
+    assert dated, "전제: 날짜가 있는 digest 가 존재한다"
+    newest = max(p["digested"] for _, p in dated)
+    top = [p["id"] for _, p in dated if p["digested"] == newest]
+    pos = {p["id"]: i for i, p in enumerate(ps)}
+    bad = [t for t in top if pos[t] > len(ps) * 0.1]
+    assert not bad, (
+        f"⛔ 가장 최근 digest({newest})가 상위 10 % 밖에 있다 — 최신순 정렬이 "
+        f"날짜를 안 쓰고 있다: " + ", ".join(f"{b}({pos[b]+1}위/{len(ps)})" for b in bad))
