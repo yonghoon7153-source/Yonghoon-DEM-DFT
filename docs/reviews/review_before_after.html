@@ -1,0 +1,288 @@
+<title>DEM 스택 적대 리뷰</title>
+<title>DEM 스택 적대 리뷰</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans+KR:wght@300;400;500;600&family=IBM+Plex+Serif:ital,wght@0,500;0,600;1,400&display=swap">
+<style>
+:root{
+  --ground:#F5F6F3;  --panel:#FCFCFB;  --sunk:#ECEEE9;
+  --ink:#15191A;     --ink-2:#4A524F;  --ink-3:#79817D;
+  --rule:#D9DDD6;    --rule-2:#C3C9BF;
+  --accent:#2F5D50;  --accent-soft:#E3EDE8;
+  --p1:#9E3225;      --p1-soft:#F6E5E2;
+  --p2:#856317;      --p2-soft:#F4EDDD;
+  --fixed:#2F5D50;   --fixed-soft:#E3EDE8;
+  --serif:"IBM Plex Serif",Georgia,serif;
+  --sans:"IBM Plex Sans KR","IBM Plex Sans",system-ui,-apple-system,sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --ground:#111513; --panel:#181D1A; --sunk:#1E2421;
+    --ink:#E7EAE6;    --ink-2:#AEB6B1; --ink-3:#7E8782;
+    --rule:#2A312D;   --rule-2:#3A433E;
+    --accent:#86BCA8; --accent-soft:#1C2B26;
+    --p1:#E08475;     --p1-soft:#2D1E1B;
+    --p2:#D8B25E;    --p2-soft:#2B2415;
+    --fixed:#86BCA8; --fixed-soft:#1C2B26;
+  }
+}
+:root[data-theme="dark"]{
+  --ground:#111513; --panel:#181D1A; --sunk:#1E2421;
+  --ink:#E7EAE6;    --ink-2:#AEB6B1; --ink-3:#7E8782;
+  --rule:#2A312D;   --rule-2:#3A433E;
+  --accent:#86BCA8; --accent-soft:#1C2B26;
+  --p1:#E08475;     --p1-soft:#2D1E1B;
+  --p2:#D8B25E;     --p2-soft:#2B2415;
+  --fixed:#86BCA8;  --fixed-soft:#1C2B26;
+}
+*{box-sizing:border-box}
+body{
+  margin:0; background:var(--ground); color:var(--ink);
+  font-family:var(--sans); font-weight:300; line-height:1.7;
+  font-size:16px; -webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:1080px; margin:0 auto; padding-inline:22px; padding-block:0}
+h1,h2,h3{text-wrap:balance; margin:0}
+code,.m{font-family:var(--mono); font-variant-numeric:tabular-nums}
+
+/* ── 머리 ── */
+header{padding-block:64px 40px; border-bottom:1px solid var(--rule-2)}
+.eyebrow{font-family:var(--mono); font-size:11.5px; letter-spacing:.14em;
+  text-transform:uppercase; color:var(--ink-3); margin-bottom:18px}
+h1{font-family:var(--serif); font-weight:600; font-size:clamp(34px,6vw,52px);
+  line-height:1.1; letter-spacing:-.015em}
+.sub{margin-top:16px; max-width:62ch; color:var(--ink-2); font-size:17px}
+.sub em{font-family:var(--serif); font-style:italic; color:var(--ink)}
+
+.tally{display:flex; flex-wrap:wrap; gap:0; margin-top:34px;
+  border:1px solid var(--rule-2); border-radius:2px; background:var(--panel); overflow:hidden}
+.tally div{flex:1 1 118px; padding:14px 16px; border-right:1px solid var(--rule)}
+.tally div:last-child{border-right:0}
+.tally .n{font-family:var(--mono); font-size:26px; font-weight:500; line-height:1.2}
+.tally .k{font-size:11.5px; color:var(--ink-3); letter-spacing:.04em; margin-top:2px}
+.tally .p1 .n{color:var(--p1)} .tally .fx .n{color:var(--fixed)}
+
+/* ── 절 ── */
+section{padding-block:52px; border-bottom:1px solid var(--rule)}
+section:last-of-type{border-bottom:0}
+h2{font-family:var(--serif); font-size:26px; font-weight:600; letter-spacing:-.01em}
+.lede{margin-top:12px; max-width:64ch; color:var(--ink-2)}
+
+/* ── 층 사슬 ── */
+.chain{display:grid; gap:2px; margin-top:28px;
+  grid-template-columns:repeat(auto-fit,minmax(150px,1fr))}
+.link{background:var(--panel); border:1px solid var(--rule);
+  padding:14px 15px 16px; position:relative}
+.link .lv{font-family:var(--mono); font-size:12px; font-weight:600;
+  color:var(--accent); letter-spacing:.06em}
+.link .nm{font-size:13.5px; margin-top:5px; color:var(--ink-2); line-height:1.5}
+.link .st{font-family:var(--mono); font-size:10.5px; letter-spacing:.1em;
+  margin-top:10px; color:var(--p1); text-transform:uppercase}
+
+/* ── before → after ── */
+.ba{margin-top:26px; border-top:1px solid var(--rule-2)}
+.row{border-bottom:1px solid var(--rule); padding-block:22px}
+.rid{display:flex; align-items:baseline; gap:10px; flex-wrap:wrap; margin-bottom:12px}
+.rid .tag{font-family:var(--mono); font-size:11px; font-weight:600; letter-spacing:.05em;
+  padding:2px 7px; border-radius:2px}
+.tag.P1{background:var(--p1-soft); color:var(--p1)}
+.tag.P2{background:var(--p2-soft); color:var(--p2)}
+.tag.FIX{background:var(--fixed-soft); color:var(--fixed)}
+.rid .ttl{font-size:15.5px; font-weight:500; color:var(--ink)}
+.pair{display:grid; grid-template-columns:1fr 1fr; gap:2px}
+.cell{padding:14px 16px; border:1px solid var(--rule); background:var(--panel)}
+.cell.before{background:var(--sunk); border-color:var(--rule)}
+.cell.after{border-left:2px solid var(--accent)}
+.cell .lbl{font-family:var(--mono); font-size:10.5px; letter-spacing:.12em;
+  text-transform:uppercase; color:var(--ink-3); margin-bottom:8px}
+.cell.after .lbl{color:var(--accent)}
+.cell p{margin:0; font-size:14.5px; line-height:1.65; color:var(--ink-2)}
+.cell.after p{color:var(--ink)}
+.num{font-family:var(--mono); font-size:15px; font-weight:500; color:var(--ink);
+  display:block; margin-top:9px; line-height:1.75; word-break:break-word}
+.num s{color:var(--ink-3); text-decoration-thickness:1px}
+.arrow{color:var(--accent); padding:0 3px}
+.note{margin-top:11px; font-size:13px; color:var(--ink-3); line-height:1.6}
+.note b{color:var(--ink-2); font-weight:500}
+
+/* ── 고친 것 ── */
+.fixed-list{margin-top:24px; display:grid; gap:2px}
+.fx-row{display:grid; grid-template-columns:96px 1fr 108px; gap:0;
+  border:1px solid var(--rule); background:var(--panel); align-items:start}
+.fx-row > *{padding:13px 15px}
+.fx-row .id{font-family:var(--mono); font-size:12.5px; font-weight:600;
+  color:var(--fixed); border-right:1px solid var(--rule)}
+.fx-row .wt{font-size:14px; color:var(--ink-2); line-height:1.6}
+.fx-row .wt b{color:var(--ink); font-weight:500}
+.fx-row .sha{font-family:var(--mono); font-size:12px; color:var(--ink-3);
+  border-left:1px solid var(--rule); text-align:right}
+
+/* ── 남은 결정 ── */
+.decide{margin-top:24px; border:1px solid var(--rule-2); background:var(--panel)}
+.decide ol{margin:0; padding:8px 22px 20px 40px}
+.decide li{margin-top:12px; font-size:14.5px; color:var(--ink-2); line-height:1.65}
+.decide li b{color:var(--ink); font-weight:500}
+.decide .hd{padding:16px 22px 6px; font-family:var(--serif); font-weight:600;
+  font-size:17px; border-bottom:1px solid var(--rule); margin-bottom:6px}
+
+footer{padding-block:40px 64px; color:var(--ink-3); font-size:13px; line-height:1.7}
+footer .m{color:var(--ink-2)}
+.caveat{margin-top:20px; padding:14px 16px; border-left:2px solid var(--p2);
+  background:var(--p2-soft); font-size:13.5px; color:var(--ink-2); line-height:1.65}
+.caveat b{color:var(--ink); font-weight:500}
+
+@media (max-width:640px){
+  .pair{grid-template-columns:1fr}
+  .fx-row{grid-template-columns:1fr}
+  .fx-row .id{border-right:0; border-bottom:1px solid var(--rule)}
+  .fx-row .sha{border-left:0; border-top:1px solid var(--rule); text-align:left}
+}
+@media (prefers-reduced-motion:no-preference){
+  .cell.after{transition:border-color .2s}
+}
+</style><div class="wrap">
+<header>
+  <div class="eyebrow">Codex 적대 리뷰 · L1~L5 + 면적 계약 · 원장 findings.json @ bde4cbfd8</div>
+  <h1>DEM 스택 적대 리뷰</h1>
+  <p class="sub">웹앱의 계산 스택을 다섯 층으로 나눠 독립 검토에 부쳤고, 그 대응이 다시 <em>면적 계약</em> 한 장을 낳았다. 아래는 우리가 믿고 있던 것과, 실제 함수·코퍼스·독립 기준해가 보여준 것이다 — 모든 숫자는 원장에 있고 이 페이지는 거기서 생성된다.</p>
+  <div class="tally">
+    <div><div class="n">48</div><div class="k">L1~L5 등재</div></div>
+    <div class="p1"><div class="n">19</div><div class="k">P1</div></div>
+    <div><div class="n">29</div><div class="k">P2·P3</div></div>
+    <div class="fx"><div class="n">17</div><div class="k">고침</div></div>
+    <div><div class="n">31</div><div class="k">열림</div></div>
+    <div><div class="n">12</div><div class="k">면적 계약(AREA)</div></div>
+    <div class="fx"><div class="n">10</div><div class="k">고침</div></div>
+    <div><div class="n">2</div><div class="k">열림</div></div>
+  </div>
+</header>
+<section>
+  <h2>왜 한 층만 고쳐선 안 닫히나</h2>
+  <p class="lede">다섯 판정문이 각각 같은 말을 했다 — 앞 층을 고쳐도 뒤 층이 값을 다시 바꾼다. 그래서 이 다섯은 독립 항목이 아니라 <strong>하나의 사슬</strong>이고, 순서가 곧 처방이다.</p>
+  <div class="chain">
+    <div class="link"><div class="lv">L1</div><div class="nm">접촉 기하 · 피복률<br>면적을 무엇으로 세나</div><div class="st">Hold · P1 4 열림</div><div class="nm" style="margin-top:6px">고침 1 / 8</div></div>
+    <div class="link"><div class="lv">L2</div><div class="nm">접촉망 수송<br>그 면적을 저항으로</div><div class="st">Hold · P1 6 열림</div><div class="nm" style="margin-top:6px">고침 2 / 10</div></div>
+    <div class="link"><div class="lv">L3</div><div class="nm">스케일링법칙<br>그 σ 를 타깃으로</div><div class="st">Hold · P1 3 열림</div><div class="nm" style="margin-top:6px">고침 5 / 12</div></div>
+    <div class="link"><div class="lv">L4</div><div class="nm">등급 · 검증 플래그<br>그 값을 판정으로</div><div class="st">Hold · P1 2 열림</div><div class="nm" style="margin-top:6px">고침 6 / 11</div></div>
+    <div class="link"><div class="lv">L5</div><div class="nm">구조 ML<br>그 코퍼스를 학습으로</div><div class="st">Hold · P1 2 열림</div><div class="nm" style="margin-top:6px">고침 3 / 7</div></div>
+  </div>
+  <div class="caveat"><b>단, 전면 재작성은 아니다.</b> 판정문: <i>"선형대수 엔진 자체의 전면 재작성 근거는 없다 — 분산된 getter·feature·설명 생성부가 문제다."</i>  그리고 오늘 그 엔진 옆에 <b>독립 기준해</b>가 하나 생겼다 — 협착 저항을 문헌 인용이 아니라 직접 풀어서 가른다.</div>
+</section>
+<section>
+  <h2>믿은 것 → 잰 것</h2>
+  <p class="lede">왼쪽은 우리가 코드·문서·계약에 적어 둔 것이다. 오른쪽은 같은 함수에 실제 입력을 넣거나, 코퍼스를 세거나, 기준해를 풀어 나온 값이다.</p>
+  <div class="ba">
+    <div class="row">
+      <div class="rid"><span class="tag P1">L1-01</span><span class="tag P2">열림</span><span class="ttl">체적·Tabor 상한이 비물리 면적을 차단한다</span></div>
+      <div class="pair">
+        <div class="cell before"><div class="lbl">믿은 것</div><p>세 cap 의 min 이 상한이고 Hertz/LIGGGHTS 가 하한이니, 면적은 언제나 물리적으로 가능한 구간 안에 있다.</p></div>
+        <div class="cell after"><div class="lbl">잰 것</div><p>얕은 겹침에서 하한 &gt; 상한인데 <b>거부하지 않고 하한을 돌려준다</b>.  코퍼스(LHS 30, 간선 3,619,759)에서 그 접촉이 <b>5.240 %</b>.</p></div>
+      </div>
+      <p class="note">값은 안 바꿨다 — 판정문의 최소 방어(기록하고 승격하지 않기) 중 <b>기록</b>만 했다.  하류가 아직 그 플래그를 안 읽는다.</p>
+    </div>
+    <div class="row">
+      <div class="rid"><span class="tag P1">L1-02</span><span class="tag P2">열림</span><span class="ttl">V_overlap 은 두 구의 겹침 부피다</span></div>
+      <div class="pair">
+        <div class="cell before"><div class="lbl">믿은 것</div><p>체적 보존 cap 이 실제 lens 부피로 면적을 제한한다.</p></div>
+        <div class="cell after"><div class="lbl">잰 것</div><p>단일 구면 cap 공식에 R* 를 넣은 것이라 얕으면 참값의 <b>0.493724배</b>, 깊으면 <b>음수</b>.  그런데 정확 lens 로 바꿔도 코퍼스에서 <b>0 / 3,619,759</b> 간선이 바뀐다.</p></div>
+      </div>
+      <p class="note">항등인 이유가 물리가 아니다 — <b>DESC-03</b>(mm 를 m 로 읽음)이 A_volume 을 1000배 부풀려 volume cap 이 <b>원리적으로 결속 불가</b>.  "무해" 로 닫지 않았다.</p>
+    </div>
+    <div class="row">
+      <div class="rid"><span class="tag P1">L2-01</span><span class="tag P2">열림</span><span class="ttl">협착저항이 문헌식을 구현한다</span></div>
+      <div class="pair">
+        <div class="cell before"><div class="lbl">믿은 것</div><p>코드 주석 "Mikić 1974" — 보정계수 ψ 를 적용한 Holm 협착 저항.</p></div>
+        <div class="cell after"><div class="lbl">잰 것</div><p>문헌은 ψ 를 <b>곱하고</b> 코드는 <b>나눈다</b>.  독립 기준해(축대칭 flux tube 직접 풀이)로 확정: 비 (1−s)<sup>−3</sup>, s=0.9 에서 <b>1,620배</b>.  코드가 자기 주석과도 어긋난다.</p></div>
+      </div>
+      <p class="note">기하평균 |ln 비|: s≤0.3 에서 곱함 <b>1.0296</b> vs 나눔 1.4200 · s&gt;0.3 에서 곱함 1.1618 vs 나눔 <b>29.9924</b>.  이 정정은 σ 를 <b>올린다</b>.</p>
+    </div>
+    <div class="row">
+      <div class="rid"><span class="tag P1">AREA-12</span><span class="tag P2">열림</span><span class="ttl">면적을 둘로 쪼개면 삭제된 협착 항이 되살아난다</span></div>
+      <div class="pair">
+        <div class="cell before"><div class="lbl">믿은 것</div><p>피복용 A_surface(상한 2πR²)와 수송용 A_transport(상한 πR²)를 분리하면 σ 가 하향한다 — 계약의 전제.</p></div>
+        <div class="cell after"><div class="lbl">잰 것</div><p>솔버의 clamp <span class="m">a_eff = min(a, r_min)</span> 이 <b>이미 같은 상한</b>이다.  무작위 20,000 접촉에서 A 는 <b>15.56 %</b> 바뀌는데 a_eff 는 설명 안 되는 차이 <b>0</b>.</p></div>
+      </div>
+      <p class="note">S2 의 σ 변화는 <b>산술적으로 0</b>.  살아남는 건 타입 분리의 구조적 가치뿐이고, σ 를 움직이는 축은 S3(ψ 배치) 하나다.</p>
+    </div>
+    <div class="row">
+      <div class="rid"><span class="tag P2">AREA-11</span><span class="tag P2">열림</span><span class="ttl">min(σ₁,σ₂) 는 이종쌍의 보수적 협착 규약이다</span></div>
+      <div class="pair">
+        <div class="cell before"><div class="lbl">믿은 것</div><p>두 재료가 만나는 접촉에서 낮은 σ 를 쓰면 안전하다.</p></div>
+        <div class="cell after"><div class="lbl">잰 것</div><p>참값은 두 반공간의 <b>직렬</b> ψ/(4a)(1/σ₁+1/σ₂).  기준해(σ 1:8)에서 min 규약이 <b>1.778배 과대</b> = 16/9.  생산 AM_P 6 µm 에서 <b>1.722074배</b>.</p></div>
+      </div>
+      <p class="note">방향은 보수적이 맞다 — <b>크기가 정량이 아니다</b>.  전자 모드 AM_P–AM_S 간선만 해당, σ_e 의 배수가 아니라 간선 하나당 배수.</p>
+    </div>
+    <div class="row">
+      <div class="rid"><span class="tag P1">SELF-28</span><span class="tag P2">열림</span><span class="ttl">geom cap 은 명목상이라 걸리는 값이 없다</span></div>
+      <div class="pair">
+        <div class="cell before"><div class="lbl">믿은 것</div><p>2πR_min² 상한은 실제로 도달하지 않는다.</p></div>
+        <div class="cell after"><div class="lbl">잰 것</div><p><b>반대였다</b> — 163/163 케이스에서 결속하고, 결속하면 ψ=0 으로 협착 항이 <b>삭제</b>된다.  S0 실측: 이온 <b>20.728 %</b> · 전자 <b>0.000 %</b> · 열 <b>26.850 %</b> 간선.</p></div>
+      </div>
+      <p class="note">★ 해석은 하향됐다 — 올바른 ψ 배치에서 s→1 이면 참값이 0 이라 <b>삭제 자체는 물리 오류가 아니다</b>.  진짜 결함은 삭제되지 않은 쪽의 (1−s)<sup>−3</sup> 팽창.</p>
+    </div>
+    <div class="row">
+      <div class="rid"><span class="tag P2">L3-08</span><span class="tag FIX">고침</span><span class="ttl">적합 함수는 데이터가 없으면 멈춘다</span></div>
+      <div class="pair">
+        <div class="cell before"><div class="lbl">믿은 것</div><p>EXCL 로 다 걸러지면 적합이 실패하고 그 사실이 보인다.</p></div>
+        <div class="cell after"><div class="lbl">잰 것</div><p>n=12 전부 EXCL 이어도 <span class="m">n_fit 0 · r2 0.0 · loocv 0.0</span> 으로 <b>정상처럼</b> 돌아오고 예측값 <b>0.07688995743054786</b> 을 낸다.</p></div>
+      </div>
+      <p class="note">행 수·LIVE 랭크·LOO 폴드 랭크에서 <b>fail-closed</b> 로 고쳤다 (None 반환, 호출자 4곳 처리).</p>
+    </div>
+    <div class="row">
+      <div class="rid"><span class="tag P2">L4-11</span><span class="tag FIX">고침</span><span class="ttl">porosity 단위는 자명하다</span></div>
+      <div class="pair">
+        <div class="cell before"><div class="lbl">믿은 것</div><p>0~1 분율이든 % 든 함수가 알아서 읽는다.</p></div>
+        <div class="cell after"><div class="lbl">잰 것</div><p>porosity <b>1</b> → R_ct <b>128462895.60746863</b> · <b>1.000001</b> → <b>4.805944515715439</b>.  1 에서 불연속 — 단위 계약이 없었다.</p></div>
+      </div>
+      <p class="note">명시적 단위 계약(<span class="m">porosity_to_fraction(unit=)</span>)으로 고쳤다.  수정 후 1 % = 4.805944467170544 로 판정문 값과 일치.</p>
+    </div>
+  </div>
+</section>
+<section>
+  <h2>고친 것 — 원장이 claimed_fixed 로 적은 것</h2>
+  <p class="lede">전부 <span class="m">claimed_fixed</span> 다 — "정말 고쳐졌는가" 는 회귀와 독립 검증자의 몫이고, <span class="m">verified</span> 는 구현자와 다른 검증자가 있어야 붙는다.  SHA 는 리포에 실재하는 커밋이다.</p>
+  <div class="fixed-list">
+    <div class="fx-row"><div class="id">AREA-01</div><div class="wt">S0 가 **δ 부재/0 의 native 면적 fallback** 을 누락했다 (0 % ↔ 솔버 100 %)</div><div class="sha">b54ad28a7</div></div>
+    <div class="fx-row"><div class="id">AREA-02</div><div class="wt">S0 는 **raw 행**, 솔버는 **채택된 unique pair** 를 센다 (90 % ↔ 0 %)</div><div class="sha">b54ad28a7</div></div>
+    <div class="fx-row"><div class="id">AREA-03</div><div class="wt">계약의 **새 하한**과 *&quot;A_surface 완전 불변&quot;* 이 정상 탄성 접촉에서 충돌한다 (1.99995배)</div><div class="sha">052acbe4a</div></div>
+    <div class="fx-row"><div class="id">AREA-04</div><div class="wt">영향 표가 **이온 T1 타깃을 Hertz 우선으로 잘못 분류**했다 (실제는 Physics 우선)</div><div class="sha">467341fdf</div></div>
+    <div class="fx-row"><div class="id">AREA-05</div><div class="wt">S0 **selftest 에 판별력이 0** 이었다 — 솔버의 `Rc=0` 분기를 바꿔도 13/13 PASS</div><div class="sha">7fc29330b</div></div>
+    <div class="fx-row"><div class="id">AREA-06</div><div class="wt">계약의 **ψ=0 등가식이 두 문턱을 섞었다**</div><div class="sha">7fc29330b</div></div>
+    <div class="fx-row"><div class="id">AREA-07</div><div class="wt">SELF-28 의 **정수 접촉수는 확정할 수 없다** (저장이 소수 첫째 자리 반올림)</div><div class="sha">052acbe4a</div></div>
+    <div class="fx-row"><div class="id">AREA-08</div><div class="wt">*&quot;16/49 % 가 hemisphere cap 을 검증했다&quot;* 는 성립하지 않는다</div><div class="sha">052acbe4a</div></div>
+    <div class="fx-row"><div class="id">AREA-09</div><div class="wt">계약이 L2 §1 의 **2–4 단계에 답하지 않았다** · 원판 상한만으로 삭제가 안 닫힌다</div><div class="sha">052acbe4a</div></div>
+    <div class="fx-row"><div class="id">AREA-10</div><div class="wt">사전등록 §5 의 **판정 단위(통계량·모집단·미정 상태)가 열려 있다**</div><div class="sha">052acbe4a</div></div>
+    <div class="fx-row"><div class="id">L1-04</div><div class="wt">`contact_area` 는 **기하 교차면적**인데 `hertz` 채널로 읽힌다 (1.9875배)</div><div class="sha">62e67e020</div></div>
+    <div class="fx-row"><div class="id">L2-07</div><div class="wt">`CONTACT_FREE/FULL` 을 **Bruggeman 대 실측**으로 설명한다 (다른 비다)</div><div class="sha">62e67e020</div></div>
+    <div class="fx-row"><div class="id">L2-08</div><div class="wt">**&quot;협착이 전체 저항의 45 %&quot;** 는 전력 기여도가 아니다 (실제 8.1818 %)</div><div class="sha">62e67e020</div></div>
+    <div class="fx-row"><div class="id">L3-06</div><div class="wt">**EXCL 이 23 이 아니라 25개**다 (문서·report 가 낡음)</div><div class="sha">ea11cdaf7</div></div>
+    <div class="fx-row"><div class="id">L3-08</div><div class="wt">EXCL 후 **n_fit = 0 인데 유한 예측·R² = LOO = 0** 을 반환한다</div><div class="sha">63d17bd5f</div></div>
+    <div class="fx-row"><div class="id">L3-10</div><div class="wt">열 plot CLI 가 **PNG 를 만든 뒤 KeyError 로 rc=1** (desc ↔ description)</div><div class="sha">03a5ddecc</div></div>
+    <div class="fx-row"><div class="id">L3-11</div><div class="wt">**설명 세대가 셋**이다 — 그림·CSV·report 를 전사하면 다른 모델을 보고하게 된다</div><div class="sha">6b00e6e5c</div></div>
+    <div class="fx-row"><div class="id">L3-12</div><div class="wt">이온 bootstrap **캐시 키가 중간 y 를 안 본다** (동일 프로세스 한정)</div><div class="sha">63d17bd5f</div></div>
+    <div class="fx-row"><div class="id">L4-03</div><div class="wt">audit 가 **자기신고의 모순을 통과**시킨다 (3/3 trustworthy)</div><div class="sha">03a5ddecc</div></div>
+    <div class="fx-row"><div class="id">L4-04</div><div class="wt">τ 의 **분모·온도·라벨이 소비자마다 다르다** (grade 가 σ_grain 3.0 고정)</div><div class="sha">62e67e020</div></div>
+    <div class="fx-row"><div class="id">L4-06</div><div class="wt">진단 코퍼스 **중복제거가 바이트 수만 본다**</div><div class="sha">63d17bd5f</div></div>
+    <div class="fx-row"><div class="id">L4-07</div><div class="wt">`input_params` 가 있으면 **meta 의 명시적 상 지도를 무시**한다</div><div class="sha">63d17bd5f</div></div>
+    <div class="fx-row"><div class="id">L4-09</div><div class="wt">`Q_gravimetric` 의 **표시식이 실제 175 를 190 으로** 설명한다</div><div class="sha">62e67e020</div></div>
+    <div class="fx-row"><div class="id">L4-11</div><div class="wt">`porosity` 를 **값 크기로 %/fraction 추측**해 1 에서 불연속</div><div class="sha">63d17bd5f</div></div>
+    <div class="fx-row"><div class="id">L5-03</div><div class="wt">**금지 target `use_porosity_pct` 를 학습하고 추천에 쓴다**</div><div class="sha">335247212</div></div>
+    <div class="fx-row"><div class="id">L5-05</div><div class="wt">**대조 전용 `--derived-products` 산물이 일반 배포 모델로** 들어간다</div><div class="sha">335247212</div></div>
+    <div class="fx-row"><div class="id">L5-07</div><div class="wt">**비유한 입력이 정상 배포 표지**로 반환된다 (NaN 이 가드를 통과)</div><div class="sha">03a5ddecc</div></div>
+  </div>
+</section>
+<section>
+  <h2>원장이 못 정하는 것 — 저자 결정</h2>
+  <p class="lede">아래는 값이 아니라 <strong>정의</strong>가 비어 있는 자리다.  정해지기 전에는 코드가 "계측만" 한다 — 기본 동작은 비트 단위로 불변이고, 회귀 핀이 그것을 강제한다.</p>
+  <div class="decide"><div class="hd">결정 대기</div><ol>
+    <li><b>caps 의 뜻</b> — <b>전체 접촉면적의 한계</b>인가 <b>추가로 퍼진 막의 한계</b>인가 — 정해지기 전에는 cap_conflict 5.24 % 를 값으로 바꿀 수 없다 (L1-01).</li>
+    <li><b>lens 의 몫</b> — 정확 교집합을 <b>전체</b>로 쓰나, <b>한 상에 할당된 몫</b>으로 쓰나 (L1-02).  DESC-03 을 고치면 σ 에 들어가는 자리다.</li>
+    <li><b>flux-tube b</b> — 현행 <span class="m">b = r_min</span> 은 배위수 <b>Z ≈ 4</b> 가정이다.  <span class="m">2r/√Z</span> 로 갈지 — 별도 축, S3 와 섞지 않는다 (AREA-09 7-1c).</li>
+    <li><b>S3 런</b> — ψ 배치 정정은 <b>세대 2</b> 다.  런 전에 수치 재현성 바닥 ρ 를 재고(prereg v2 ⑤) median(|Δ|) 로 세 채널 판정.  예상 부호 <b>상향</b>.</li>
+    <li><b>DESC-03</b> — 단위 교란(mm→m)은 σ 를 움직이는 수정이다 — <b>자체 사전등록</b> 뒤에 고치고, 고친 직후 L1-02 를 같은 L1 블록으로 재측정.</li>
+  </ol></div>
+  <div class="caveat"><b>오늘 내가 세 번 틀린 자리.</b> 기준해에서 축대칭 면적의 2π 를 통째로 빠뜨렸는데 단조·수렴·극한 검사가 전부 초록이었다(일률 배수는 비를 안 바꾼다) · 회귀 핀을 재지 않고 추측해 적었다 · 감사가 "최종 결속 라벨" 과 "가장 작은 cap" 을 섞어 불가능한 결과를 냈다.  셋 다 <b>결과가 그럴듯해서</b> 넘어갈 뻔했고, 셋 다 배수·핀·단조성을 <b>실제로 재는</b> 검사 하나가 잡았다.</div>
+</section>
+<footer>이 페이지는 <span class="m">scripts/build_review_before_after.py</span> 가 <span class="m">docs/reviews/findings.json</span> 에서 생성한다 (HEAD <span class="m">bde4cbfd8</span>).  집계·고친 목록·SHA 는 원장 값이고, 서술이 인용하는 숫자는 selftest 가 해당 항목의 note 에서 찾는다.  인용 금지값 스윕(<span class="m">check_review_findings.py --ban-sweep</span>)이 이 파일을 포함한다.</footer>
+</div>

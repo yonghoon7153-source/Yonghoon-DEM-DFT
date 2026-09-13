@@ -188,6 +188,10 @@ jobs:
       - name: Physics 면적 사다리 (feasibility · lens 계측 · A_final 불변)
         run: python scripts/plastic_coverage.py --selftest
 
+      #  ★ 2026-09-13 — 리뷰 페이지 생성기: 인용이 원장에 닻을 내리고, HTML 이 스윕 범위 안이다.
+      - name: 리뷰 비포/애프터 생성기 (원장 앵커 · 집계 · SHA · 스윕 범위)
+        run: python scripts/build_review_before_after.py --selftest
+
       #  ★ 2026-09-09 (Codex Q2-3 · AUD-07) — 원시 감사 finding 에 판정 상태가 없어
       #    후속 집계자가 후보와 확정을 합쳐 읽는다.  원본은 박제로 두고 별도 원장에 단다.
       - name: 감사 판정 원장 (후보 ↔ 확정 분리)

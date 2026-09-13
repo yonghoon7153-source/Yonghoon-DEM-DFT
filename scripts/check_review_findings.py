@@ -103,6 +103,9 @@ CLAIMS_DEFAULT = os.path.join('docs', 'reviews', 'claims.json')
 #:   막아도 **체크인된 바이너리 자체**는 열면 그대로 보인다 — 그리고 발표에 쓰이는 것은 그쪽이다.
 #:   ⇒ 리더 층(`_ban_read_lines`)을 둬서 Office zip 을 문단당 한 줄로 펼친다.
 BAN_SCAN_GLOBS = ('CLAUDE.md', 'docs/**/*.md', 'wiki/**/*.md',
+                  #  ★ 2026-09-13 — 생성된 리뷰 페이지(docs/reviews/*.html)가 스윕 밖이었다.
+                  #    "스윕은 자기가 못 읽는 매체에서 조용히 초록이 된다" (규율 ⑤) 의 재발 방지.
+                  'docs/**/*.html',
                   'webapp/templates/*.html', 'webapp/static/js/*.js',
                   'scripts/seminar_deck/*.js',
                   'docs/**/*.json', 'webapp/**/*.json', 'scripts/*.sh',
