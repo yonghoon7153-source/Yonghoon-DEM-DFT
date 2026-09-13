@@ -252,6 +252,90 @@ def run_verdict(t, y, beta=None, windows=DINC_WINDOWS):
     return CITABLE, [f"D_inc plateau (산포 {pl['spread']:.0%}) · 홉 "
                      + (f"{n_hop:.1f}/이온" if n_hop is not None else "—")]
 
+# ── 집계 자격 (2026-09-13, 회신 BQ-6 P0-1·P0-2) ─────────────────────────────
+#: 부창 선형성 — 2–50 ps 를 셋으로 나눠 각 기울기 / 전체 기울기 (v4 카드 규칙)
+SUB_WINDOWS = ((2, 18), (18, 34), (34, 50))
+SUB_RATIO_OK = (0.80, 1.20)
+#: 선언한 변위 사건 수 하한 (런당). ⚠ '독립성이 입증된 사건' 이 아니라 **선언한 변위 사건**
+#:   (|r_i(t) − r_i(t_ref)| > 2.5 Å 첫 발생 → 1, t_ref 갱신) 이다 — 시간원점 중복만 피한다.
+EVENTS_MIN_PER_RUN = 50
+
+
+def sub_window_ratios(t, y, lo=2.0, hi=50.0, subs=SUB_WINDOWS):
+    """부창 기울기 / 전체창 기울기. 어느 창이든 못 맞추면 **None** (검사 불가 — 통과 아님)."""
+    full = lin_fit(t, y, lo, hi)
+    if full is None or abs(full[0]) < 1e-30:
+        return None
+    out = []
+    for a, b in subs:
+        f = lin_fit(t, y, a, b)
+        if f is None:
+            return None
+        out.append(f[0] / full[0])
+    return out
+
+
+def aggregation_eligible(t, y, events_per_run, windows=DINC_WINDOWS,
+                         subs=SUB_WINDOWS, ratio_ok=SUB_RATIO_OK, events_min=EVENTS_MIN_PER_RUN):
+    """한 런이 **집계에 들어갈 자격**이 있는가 → (bool, 사유들, 세부). ⛔ `run_verdict` 의 CITABLE 하나를
+    전체 통과로 승격하지 않는다 (회신 BQ-6 P0-2).
+
+    자격 = ① `run_verdict` ≠ NO_VALUE (D_inc plateau)
+        ∧ ② 부창 기울기 비 셋이 전부 [0.8, 1.2] (`sub_window_ratios`) — run_verdict 는 이걸 **안 본다**.
+            리뷰어 합성 사례: D_inc 창 끝점만 지키고 중간을 흔들면 plateau 산포 0 · CITABLE 인데
+            부창 비는 전부 기준 밖이었다.
+        ∧ ③ 선언한 변위 사건 수 ≥ events_min — 호출자가 궤적에서 센 값을 **넘겨야** 한다.
+            None 이면 '검사 불가' 이고 **통과가 아니다**.
+    ⛔ `hops_per_ion_msd` (max MSD / d²) 는 **자격에 안 들어간다.** 그것은 MSD 규모의 운영 경보다 —
+       절편만 27 Å² 올려도 1.1 → 4.1 로 바뀐다 (리뷰어 합성 사례 ①). 실제 홉·독립 표본수·정밀도의
+       증거로 쓰지 않는다. 결과에는 `msd_magnitude_alarm` 으로만 남긴다.
+    ⛔ 못 하는 것: 사건의 통계적 독립성을 보증하지 않는다 · 상·기전 혼합은 못 본다 · 평형 표집을 증명하지 않는다.
+    """
+    code, why = run_verdict(t, y, windows=windows)
+    reasons, ok = list(why), True
+    if code == NO_VALUE:
+        ok = False
+    ratios = sub_window_ratios(t, y, subs=subs)
+    if ratios is None:
+        ok = False
+        reasons.append("부창 기울기 비 검사 불가 (창을 못 맞춤) — 통과 아님")
+    else:
+        bad = [f"{a}-{b}: {r:.3f}" for (a, b), r in zip(subs, ratios) if not (ratio_ok[0] <= r <= ratio_ok[1])]
+        if bad:
+            ok = False
+            reasons.append("부창 기울기 비 기준 밖 " + ", ".join(bad) + f" (허용 {ratio_ok})")
+    if events_per_run is None:
+        ok = False
+        reasons.append("선언한 변위 사건 수가 없다 — 검사 불가 (통과 아님)")
+    elif events_per_run < events_min:
+        ok = False
+        reasons.append(f"선언한 변위 사건 {events_per_run} < {events_min}/런")
+    n_hop = hops_per_ion_msd(y)
+    return ok, reasons, {"run_verdict": code, "sub_window_ratios": ratios, "events_per_run": events_per_run,
+                         "msd_magnitude_alarm": (n_hop is not None and n_hop < HOPS_MIN_PER_ION),
+                         "msd_magnitude_value": n_hop,
+                         "⛔": "msd_magnitude_* 는 경보다. 자격 판정에 쓰이지 않았다"}
+
+
+def framework_alarm(json_path, save_fs=None):
+    """골격 이동 **경보** — `framework_com_split` 의 얇은 껍질. → dict(state ∈ unavailable · framework_static · ok · alarm)
+
+    ⛔ 범위 (회신 BQ-6 P1): 원소 수 < FRAMEWORK_MIN_N(8) 인 종은 판정 평균에서 **빠진다** (Al₂·O₃ 는 안 본다) ·
+       첫 프레임 대비 마지막 프레임 MSD 다 (시간원점 평균·2–50 ps 창이 아니다) · 전역 COM 하나만 뺀다.
+       전체 비-Li 연결성·이동을 인증하지 않는다. 결합 재배열을 확정하지 않는다.
+    ⛔ `framework_com_split` 이 None 이면 **'경보 없음' 이 아니라 '검사 불가'(unavailable)** 다.
+    """
+    r = framework_com_split(json_path, save_fs=save_fs)
+    if r is None:
+        return {"state": "unavailable", "why": "궤적/분해 도구 없음 또는 판정 가능한 종(n≥8) 없음 — 검사 불가",
+                "excluded_species_note": f"n < {FRAMEWORK_MIN_N} 인 종은 판정에서 빠진다 (예: Al₂·O₃)"}
+    v = r.get("verdict")
+    state = ("framework_static" if v == "framework_static" else
+             "alarm" if v in ("rearrangement", "mixed") else "ok")
+    return {"state": state, **r, "excluded_species_note": f"n < {FRAMEWORK_MIN_N} 인 종은 판정에서 빠진다 (예: Al₂·O₃)",
+            "measure": "첫↔마지막 프레임 MSD (원자수 가중), 전역 COM 제거 — 시간원점 평균 아님"}
+
+
 def loglog_slope(t, y, lo, hi):
     """[lo,hi] ps 구간의 log-log 기울기. 점이 3개 미만이면 None."""
     pts = [(math.log(a), math.log(b)) for a, b in zip(t, y)
@@ -1360,6 +1444,44 @@ def selftest():
         else:
             n_bad += 1
             print(f"  ✗ {msg}")
+
+    # ── 집계 자격 (회신 BQ-6) — 리뷰어 합성 사례 두 개를 그대로 시험으로 ────────
+    _t = [float(i) for i in range(1, 101)]
+    _y1 = [0.1 * x for x in _t]; _y2 = [27 + 0.1 * x for x in _t]
+    _e1 = aggregation_eligible(_t, _y1, 60); _e2 = aggregation_eligible(_t, _y2, 60)
+    chk(run_verdict(_t, _y1)[0] == HOLD and run_verdict(_t, _y2)[0] == CITABLE,
+        "[재현 BQ-6 ①] 절편 27 Å² 만 다른 두 곡선에서 run_verdict 가 hold ↔ citable 로 갈린다 (MSD 대용값 1.1 → 4.1)")
+    chk(_e1[0] == _e2[0] and _e1[2]["msd_magnitude_alarm"] != _e2[2]["msd_magnitude_alarm"],
+        "[음성 BQ-6 P0-1] 집계 자격은 절편에 **안 갈린다** — MSD 대용값은 경보로만 남고 자격을 안 정한다")
+    _yp = [30 + 0.5 * x for x in _t]
+    # 섭동은 2–50 ps 안에서만, D_inc 창 끝점 2·10·25·50 에서 0 (창 밖 100 도 건드리지 않는다)
+    #   ⚠ 첫 판은 전 구간 5차식을 전역 최대로 정규화해서 2–50 안 진폭이 거의 0 이었다 → 시험이 초록 (헛것)
+    def _bump(x):
+        if not (2.0 <= x <= 50.0):
+            return 0.0
+        return (x - 2.0) * (x - 10.0) * (x - 25.0) * (x - 50.0)
+    _m = max(abs(_bump(x)) for x in _t)
+    _yq = [yy + 12.0 * _bump(x) / _m for yy, x in zip(_yp, _t)]
+    _pl = dinc_plateau(_t, _yq); _rv = run_verdict(_t, _yq)[0]; _rat = sub_window_ratios(_t, _yq)
+    _eq = aggregation_eligible(_t, _yq, 60)
+    chk(_pl["status"] == "plateau" and _pl["spread"] < 1e-9 and _rv == CITABLE,
+        "[재현 BQ-6 ②] D_inc 창 끝점만 지키고 중간을 흔들면 plateau 산포 0 · run_verdict CITABLE")
+    chk(_rat is not None and any(not (0.8 <= r <= 1.2) for r in _rat) and _eq[0] is False
+        and any("부창" in s for s in _eq[1]),
+        "[음성 BQ-6 P0-2] 그 곡선은 부창 기울기 비가 기준 밖이고 **집계 자격이 없다** — CITABLE 하나가 통과로 승격되지 않는다")
+    chk(aggregation_eligible(_t, _yp, 60)[0] is True,
+        "[양성] 직선 + 사건 60 → 자격 있음")
+    _en = aggregation_eligible(_t, _yp, None)
+    chk(_en[0] is False and any("검사 불가" in s for s in _en[1]),
+        "[음성] 사건 수 None 은 '검사 불가' 이지 통과가 아니다")
+    chk(aggregation_eligible(_t, _yp, 49)[0] is False,
+        "[음성] 선언 사건 49 < 50 → 자격 없음")
+    _yd = [0.5 * x + 0.02 * x * x for x in _t]
+    chk(run_verdict(_t, _yd)[0] == NO_VALUE and aggregation_eligible(_t, _yd, 60)[0] is False,
+        "[음성] D_inc 가 움직이면(NO_VALUE) 사건이 충분해도 자격 없음")
+    _fa = framework_alarm("/nonexistent/dir/msd.json")
+    chk(_fa["state"] == "unavailable" and _fa["state"] != "ok",
+        "[음성 BQ-6 P1] 골격 분해가 None 이면 'unavailable' — '경보 없음(ok)' 으로 읽지 않는다")
 
     def run(files_json, *argv):
         """임시 msd.json 들을 만들고 main() 을 돌려 **출력 전체**를 돌려준다."""
