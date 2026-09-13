@@ -1,0 +1,28 @@
+{
+  "tally": {
+    "W3_f02": {
+      "eligible": {
+        "H0_host": true,
+        "P1_Al2O3_A": false,
+        "P1_Al2O3_B": false,
+        "P2_Al2S3_A": false,
+        "P2_Al2S3_B": false
+      },
+      "n_eligible": 1,
+      "all_five": false
+    },
+    "W3_f005": {
+      "eligible": {
+        "H0_host": true,
+        "P1_Al2O3_A": false,
+        "P1_Al2O3_B": false,
+        "P2_Al2S3_A": false,
+        "P2_Al2S3_B": false
+      },
+      "n_eligible": 1,
+      "all_five": false
+    }
+  },
+  "finished": "2026-09-13T20:03:42",
+  "⛔": "판정 아님 — 종료 문구는 사람이 고른다: 준비 확보 (어느 한 조건에서 5/5 자격) / 정한 준비법·비용 안에서 v4 파일럿 준비 미확보"
+}

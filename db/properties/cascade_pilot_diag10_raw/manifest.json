@@ -1,0 +1,61 @@
+{
+  "schema": 1,
+  "kind": "eos_10sweep_round",
+  "created": "2026-09-13T19:06:42",
+  "frozen": {
+    "fractions": [
+      0.97,
+      0.98,
+      0.99,
+      1.0,
+      1.01,
+      1.02,
+      1.03
+    ],
+    "conditions": {
+      "W3_f02": 0.02,
+      "W3_f005": 0.005
+    },
+    "relax_steps": 3000,
+    "fixed_flags": [
+      "--no_anneal",
+      "--no_elastic",
+      "--eos_continuation",
+      "--apply_eos_v0",
+      "--fixed_shape_relax"
+    ],
+    "structures": [
+      "H0_host",
+      "P1_Al2O3_A",
+      "P1_Al2O3_B",
+      "P2_Al2S3_A",
+      "P2_Al2S3_B"
+    ]
+  },
+  "inputs_sha256": {
+    "H0_host": "5bca9a4f1d9bc119000ac93b48b7e1524490a4bc109d53f9ed4e99f849398d96",
+    "P1_Al2O3_A": "a2191fb738a1bbb75307da345dbb262c40d85a344901f2e4ab63559c4f2d82cb",
+    "P1_Al2O3_B": "7a1cbb11d6199c95288d54a7b13fbda867c763b0dbe979cbc7aaaa1be7a100da",
+    "P2_Al2S3_A": "76987138d77d9e630df05375786db16aa6048b023086eb422fdf3915fb00381c",
+    "P2_Al2S3_B": "98c16677d8f0a1994f03c8a19ced42f0bfb84d6f9239644053a70b0a9817f6ed"
+  },
+  "code_git": "214cbcf5decbd8915127f871bebae6242ff908c1",
+  "postproc_sha256": "0810a65112de594f9552db7a98a1417ad9d4b0f07b1aa49bed1c9f33467e49cd",
+  "out_root": "runs/cascade_pilot/diag10_0913_190642",
+  "stop_rules": [
+    "한 라운드로 고정 — 조건·분율·창 CLI 변경 불가",
+    "구조별 유리한 조건 골라 섞지 않음 — 집계는 조건별 5/5",
+    "실패 시 창·시드·문턱 자동 확대 없음",
+    "MD·탄성 자동 진행 없음"
+  ],
+  "declared_differences_from_25row_sweep": {
+    "--fixed_shape_relax": "25줄 스윕(40ffa697)은 이 플래그가 **없었다** — 0단계 완화가 형상 무제한 CellFilter(GAP-2)였다. 카드 v4 §4b ①③ 은 고정셀을 요구하므로 이번 라운드는 켠다. ⇒ 25줄과 **직접 비교 불가** 축이다",
+    "--apply_eos_v0": "25줄 스윕은 V₀ 를 적용하지 않았다. 이번엔 최근접 수렴점 승계까지 돈다",
+    "code": "회신 BQ-2·BQ-3 이행본 (자격·양방향 수렴·1:1 대응·유한 힘·점별 프레임)"
+  },
+  "closure_options": [
+    "준비 확보 (어느 한 조건에서 5/5 자격)",
+    "정한 준비법·비용 안에서 v4 파일럿 준비 미확보"
+  ],
+  "⛔": "이 파일은 판정하지 않는다. 종료 문구는 사람이 고른다 (회신 BQ-3 Q6)"
+}

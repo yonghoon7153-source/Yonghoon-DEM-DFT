@@ -1,0 +1,401 @@
+{
+  "name": "H0_host",
+  "xyz_input": "db/structures/cascade_pilot/H0_host.xyz",
+  "run_id": "20260913T190702-2066ea",
+  "run_tag": "W3_f02",
+  "code_id": "214cbcf5decbd8915127f871bebae6242ff908c1",
+  "n_atoms": 208,
+  "composition": {
+    "Cl": 16,
+    "Li": 96,
+    "P": 16,
+    "S": 80
+  },
+  "E_pre_anneal_per_atom": -4.151815731334159,
+  "E_post_anneal_per_atom": -4.151815731334159,
+  "eos": {
+    "V_points": [
+      3944.485304486262,
+      3985.1501014397304,
+      4025.8148983931987,
+      4066.479695346664,
+      4107.144492300126,
+      4147.80928925359,
+      4188.474086207055
+    ],
+    "E_points": [
+      -863.2517355002858,
+      -863.4400550086102,
+      -863.5470426589129,
+      -863.5800332645148,
+      -863.5448531134233,
+      -863.4453924461837,
+      -863.2856516970592
+    ],
+    "fractions": [
+      0.97,
+      0.98,
+      0.99,
+      1.0,
+      1.01,
+      1.02,
+      1.03
+    ],
+    "continuation": true,
+    "hysteresis": {
+      "E_up": [
+        -863.2517355002858,
+        -863.4400550086102,
+        -863.5470426589129,
+        -863.5800332645148,
+        -863.5448531134233,
+        -863.4453924461837,
+        -863.2856516970592
+      ],
+      "E_down": [
+        -863.2596498179468,
+        -863.4341141428871,
+        -863.5422490016465,
+        -863.5792299535406,
+        -863.5473304072711,
+        -863.4508351474619,
+        -863.288210526942
+      ],
+      "reported_branch": "up",
+      "max_abs_dE_eV": 0.007914317660947745,
+      "level_offset_eV": 0.0009793298151440208,
+      "shape_max_abs_dE_eV": 0.006934987845803724,
+      "E_span_eV": 0.32829776422897794,
+      "tol_V0_rel": 0.01,
+      "\u26a0_dE_over_span_\ub294_\ucc3d\uc5d0_\uc758\uc874\ud55c\ub2e4": "\ubd84\ubaa8(E_span)\uac00 \ubd80\ud53c\ucc3d\uc5d0 \ub538\ub824 \uc904\uc5b4\ub4e0\ub2e4. \ucc3d\uc774 \ub2e4\ub978 \uc870\uac74\ub07c\ub9ac \uac19\uc740 \ubb38\ud131\uc73c\ub85c \ube44\uad50\ud558\uc9c0 \ub9c8\ub77c \u2014 \ud68c\uc2e0 BQ Q2. \ucc3d \ube44\uad50\ub294 \uc808\ub300\uac12(shape_max_abs_dE_eV)\uc73c\ub85c \ud55c\ub2e4",
+      "convergence_up": [
+        {
+          "n_steps": 21,
+          "final_fmax_eV_A": 0.018654944375157356,
+          "fmax_target_eV_A": 0.02,
+          "optimizer_returned": true,
+          "converged": true,
+          "hit_step_limit": false,
+          "fraction": 0.97,
+          "point_id": "up:00:f0.9700",
+          "prev_point_id": null,
+          "frame_path": "runs/cascade_pilot/diag10_0913_190642/W3_f02/H0_host/eos_frames/H0_host_up_00_f0.9700.extxyz"
+        },
+        {
+          "n_steps": 9,
+          "final_fmax_eV_A": 0.017030278220772743,
+          "fmax_target_eV_A": 0.02,
+          "optimizer_returned": true,
+          "converged": true,
+          "hit_step_limit": false,
+          "fraction": 0.98,
+          "point_id": "up:01:f0.9800",
+          "prev_point_id": "up:00:f0.9700",
+          "frame_path": "runs/cascade_pilot/diag10_0913_190642/W3_f02/H0_host/eos_frames/H0_host_up_01_f0.9800.extxyz"
+        },
+        {
+          "n_steps": 9,
+          "final_fmax_eV_A": 0.013341177254915237,
+          "fmax_target_eV_A": 0.02,
+          "optimizer_returned": true,
+          "converged": true,
+          "hit_step_limit": false,
+          "fraction": 0.99,
+          "point_id": "up:02:f0.9900",
+          "prev_point_id": "up:01:f0.9800",
+          "frame_path": "runs/cascade_pilot/diag10_0913_190642/W3_f02/H0_host/eos_frames/H0_host_up_02_f0.9900.extxyz"
+        },
+        {
+          "n_steps": 9,
+          "final_fmax_eV_A": 0.016945719718933105,
+          "fmax_target_eV_A": 0.02,
+          "optimizer_returned": true,
+          "converged": true,
+          "hit_step_limit": false,
+          "fraction": 1.0,
+          "point_id": "up:03:f1.0000",
+          "prev_point_id": "up:02:f0.9900",
+          "frame_path": "runs/cascade_pilot/diag10_0913_190642/W3_f02/H0_host/eos_frames/H0_host_up_03_f1.0000.extxyz"
+        },
+        {
+          "n_steps": 10,
+          "final_fmax_eV_A": 0.014369205571711063,
+          "fmax_target_eV_A": 0.02,
+          "optimizer_returned": true,
+          "converged": true,
+          "hit_step_limit": false,
+          "fraction": 1.01,
+          "point_id": "up:04:f1.0100",
+          "prev_point_id": "up:03:f1.0000",
+          "frame_path": "runs/cascade_pilot/diag10_0913_190642/W3_f02/H0_host/eos_frames/H0_host_up_04_f1.0100.extxyz"
+        },
+        {
+          "n_steps": 10,
+          "final_fmax_eV_A": 0.017078395932912827,
+          "fmax_target_eV_A": 0.02,
+          "optimizer_returned": true,
+          "converged": true,
+          "hit_step_limit": false,
+          "fraction": 1.02,
+          "point_id": "up:05:f1.0200",
+          "prev_point_id": "up:04:f1.0100",
+          "frame_path": "runs/cascade_pilot/diag10_0913_190642/W3_f02/H0_host/eos_frames/H0_host_up_05_f1.0200.extxyz"
+        },
+        {
+          "n_steps": 10,
+          "final_fmax_eV_A": 0.019376665353775024,
+          "fmax_target_eV_A": 0.02,
+          "optimizer_returned": true,
+          "converged": true,
+          "hit_step_limit": false,
+          "fraction": 1.03,
+          "point_id": "up:06:f1.0300",
+          "prev_point_id": "up:05:f1.0200",
+          "frame_path": "runs/cascade_pilot/diag10_0913_190642/W3_f02/H0_host/eos_frames/H0_host_up_06_f1.0300.extxyz"
+        }
+      ],
+      "convergence_down": [
+        {
+          "n_steps": 21,
+          "final_fmax_eV_A": 0.019019531086087227,
+          "fmax_target_eV_A": 0.02,
+          "optimizer_returned": true,
+          "converged": true,
+          "hit_step_limit": false,
+          "fraction": 1.03,
+          "point_id": "down:00:f1.0300",
+          "prev_point_id": null,
+          "frame_path": "runs/cascade_pilot/diag10_0913_190642/W3_f02/H0_host/eos_frames/H0_host_down_00_f1.0300.extxyz"
+        },
+        {
+          "n_steps": 8,
+          "final_fmax_eV_A": 0.019091088324785233,
+          "fmax_target_eV_A": 0.02,
+          "optimizer_returned": true,
+          "converged": true,
+          "hit_step_limit": false,
+          "fraction": 1.02,
+          "point_id": "down:01:f1.0200",
+          "prev_point_id": "down:00:f1.0300",
+          "frame_path": "runs/cascade_pilot/diag10_0913_190642/W3_f02/H0_host/eos_frames/H0_host_down_01_f1.0200.extxyz"
+        },
+        {
+          "n_steps": 3,
+          "final_fmax_eV_A": 0.018860021606087685,
+          "fmax_target_eV_A": 0.02,
+          "optimizer_returned": true,
+          "converged": true,
+          "hit_step_limit": false,
+          "fraction": 1.01,
+          "point_id": "down:02:f1.0100",
+          "prev_point_id": "down:01:f1.0200",
+          "frame_path": "runs/cascade_pilot/diag10_0913_190642/W3_f02/H0_host/eos_frames/H0_host_down_02_f1.0100.extxyz"
+        },
+        {
+          "n_steps": 10,
+          "final_fmax_eV_A": 0.01456508133560419,
+          "fmax_target_eV_A": 0.02,
+          "optimizer_returned": true,
+          "converged": true,
+          "hit_step_limit": false,
+          "fraction": 1.0,
+          "point_id": "down:03:f1.0000",
+          "prev_point_id": "down:02:f1.0100",
+          "frame_path": "runs/cascade_pilot/diag10_0913_190642/W3_f02/H0_host/eos_frames/H0_host_down_03_f1.0000.extxyz"
+        },
+        {
+          "n_steps": 10,
+          "final_fmax_eV_A": 0.015959732234477997,
+          "fmax_target_eV_A": 0.02,
+          "optimizer_returned": true,
+          "converged": true,
+          "hit_step_limit": false,
+          "fraction": 0.99,
+          "point_id": "down:04:f0.9900",
+          "prev_point_id": "down:03:f1.0000",
+          "frame_path": "runs/cascade_pilot/diag10_0913_190642/W3_f02/H0_host/eos_frames/H0_host_down_04_f0.9900.extxyz"
+        },
+        {
+          "n_steps": 10,
+          "final_fmax_eV_A": 0.01888073794543743,
+          "fmax_target_eV_A": 0.02,
+          "optimizer_returned": true,
+          "converged": true,
+          "hit_step_limit": false,
+          "fraction": 0.98,
+          "point_id": "down:05:f0.9800",
+          "prev_point_id": "down:04:f0.9900",
+          "frame_path": "runs/cascade_pilot/diag10_0913_190642/W3_f02/H0_host/eos_frames/H0_host_down_05_f0.9800.extxyz"
+        },
+        {
+          "n_steps": 17,
+          "final_fmax_eV_A": 0.018166081979870796,
+          "fmax_target_eV_A": 0.02,
+          "optimizer_returned": true,
+          "converged": true,
+          "hit_step_limit": false,
+          "fraction": 0.97,
+          "point_id": "down:06:f0.9700",
+          "prev_point_id": "down:05:f0.9800",
+          "frame_path": "runs/cascade_pilot/diag10_0913_190642/W3_f02/H0_host/eos_frames/H0_host_down_06_f0.9700.extxyz"
+        }
+      ],
+      "V0_up": 4065.269901757805,
+      "V0_down": 4068.3628854233257,
+      "V0_rel_diff": 0.0007605417521172386,
+      "dE_over_span": 0.024107132375801813,
+      "tol_span": 0.1,
+      "shape_over_span": 0.021124078813301864,
+      "level_over_span": 0.0029830535624999484,
+      "tol_shape": 0.1,
+      "shape_verdict_vs_tol": {
+        "0.01": false,
+        "0.02": false,
+        "0.05": true,
+        "0.1": true,
+        "0.25": true
+      },
+      "\u26a0_\ubb38\ud131_\uc758\uc874": "\uc704 \ud45c\uc5d0\uc11c \ud310\uc815\uc774 \uac08\ub9ac\uba74 \uadf8 \ubb38\ud131\uc774 \uacb0\uacfc\ub97c \ub9cc\ub4e4\uace0 \uc788\ub2e4\ub294 \ub73b\uc774\ub2e4. \uc804\ubd80 \uac19\uc73c\uba74 \ubb38\ud131\uc740 \uc77c\uc744 \ud558\uc9c0 \uc54a\ub294\ub2e4",
+      "ok": true,
+      "operational_hold": false,
+      "\u26a0_\uc138_\uae30\uc900\uc758_\ub73b": {
+        "V\u2080 \uc77c\uce58": "\ub450 \uac08\ub798\uc758 \ucd5c\uc18c \uc704\uce58\uac00 \uac19\uc740\uac00 \u2014 \uac08\ub9ac\uba74 V\u2080 \uac00 \uacbd\ub85c\uc5d0 \ub538\ub9b0\ub2e4",
+        "\ubaa8\uc591 \uc77c\uce58(shape)": "\ud3c9\ud589\uc774\ub3d9 \uc131\ubd84\uc744 \ube80 \uace1\uc120 \ucc28\uc774 \u2014 \uac08\ub9ac\uba74 **\ubcf4\uace0 \uace1\uc120\uc758 \uace1\ub960**\uc774 \uc758\uc2ec\ub41c\ub2e4",
+        "\ub192\uc774\ucc28(level)": "\ub450 \uac08\ub798\uac00 **\ub2e4\ub978 \uc5d0\ub108\uc9c0\uc758 \uc0c1\ud0dc**\ub85c \ub05d\ub0ac\ub2e4\ub294 \ub73b\uc774\ub2e4. V\u2080\u00b7\uace1\ub960\uc744 \ubb34\ud6a8\ub85c \ub9cc\ub4e4\uc9c0\ub294 \uc54a\ub294\ub2e4 \u2014 \uc0c1\ud0dc \uc120\ud0dd \ubb38\uc81c\ub2e4",
+        "\ub808\uac70\uc2dc dE/span": "\uc6d0\uc2dc \ucd5c\ub300\ucc28\ub97c \uace1\uc120 \ud3ed\uc73c\ub85c \ub098\ub208 \uac12. \ud3c9\ud589\uc774\ub3d9\uc5d0\ub3c4 \ucee4\uc9c4\ub2e4. **\uc6b4\uc601\uc0c1 \ubcf4\ub958**\uc5d0\ub9cc \uc4f0\uace0 V\u2080 \uc874\uc7ac \ubd88\uac00\ub098 \uae30\uc804 \ud655\uc815\uc758 \uadfc\uac70\ub85c \uc4f0\uc9c0 \uc54a\ub294\ub2e4"
+      }
+    },
+    "convergence": null,
+    "V0": 4065.269901757805,
+    "V0_per_atom": 19.544566835374063,
+    "E0": -863.5805084537478,
+    "B0_eV_per_A3": 0.1699585684854076,
+    "B0_GPa": 27.230364493195573,
+    "Bp": 6.426342996289757,
+    "r2": 0.9999931764120256,
+    "fit_quality_ok": true,
+    "V0_in_window": true,
+    "B0_positive": true,
+    "gate_detail": {
+      "fit_quality_ok": true,
+      "V0_in_window": true,
+      "V0_bracketed": true,
+      "V0_edge_margin_frac": 0.495041601583807,
+      "V0_at_window_edge": false,
+      "B0_positive": true,
+      "r2_ok": true,
+      "Bp_ok": true,
+      "v0_centric_ok": true,
+      "\u26a0_v0_centric_\uc758_\ub73b": "B0\u2032 \uc870\uac74\uc744 \ube80 \uae30\uc900\uc774\ub2e4. \ud604\uc7ac \ud310\uc815(fit_quality_ok)\uc740 \uc774\uac83\uc744 \uc4f0\uc9c0 \uc54a\ub294\ub2e4 \u2014 \ubc14\uafb8\ub824\uba74 \uadf8 \uc0ac\uc2e4\uc744 \uba85\uc2dc\ud574\uc57c \ud55c\ub2e4 (\ud68c\uc2e0 BQ-2 Q5)",
+      "fit_quality_reason": "OK"
+    },
+    "fit_quality_reason": "OK",
+    "convergence_summary": {
+      "reported_branch": "up",
+      "n_converged_reported": 7,
+      "n_points_reported": 7,
+      "n_converged_other": 7,
+      "n_points_other": 7,
+      "\u26a0_\ub098\ub220_\uc13c\ub2e4": "\ubcf4\uace0 \uac00\uc9c0\uc640 \ubc18\ub300 \uac00\uc9c0\ub97c **\ub530\ub85c** \uc13c\ub2e4. \ud654\uba74\uc5d0 \ud55c \uc22b\uc790\ub9cc \ub744\uc6b0\uba74 \uc591\ubc29\ud5a5 \uc218\ub834\uc73c\ub85c \uc624\ub3c5\ud55c\ub2e4 (2026-09-13 \uc2e4\uce21 \uc0ac\uace0)"
+    },
+    "downstream_eligible": true,
+    "downstream_block_reason": null,
+    "\u26d4_\uc790\uaca9\uacfc_\uc801\ud569\ud488\uc9c8\uc740_\ub2e4\ub974\ub2e4": "fit_quality_ok \ub294 \ud68c\uadc0 \uc9c0\ud45c(\uc801\ud569\uc774 \uc798 \ub410\ub098)\uc774\uace0 downstream_eligible \uc740 \uc774 \uacb0\uacfc\ub97c \ub2e4\uc74c \uacc4\uc0b0\uc5d0 \uc368\ub3c4 \ub418\ub294\uac00\ub2e4. V\u2080 \uc2b9\uacc4\u00b7\ud0c4\uc131\u00b7MD \uc758 \uc870\uac74\uc740 **\ud6c4\uc790**\ub2e4",
+    "t_s": 9.099298477172852
+  },
+  "cell_policy": {
+    "step0_relax": "FIRE(atoms) \u2014 \uace0\uc815\uc140(\uac01\ub3c4\u00b7\uae38\uc774\ube44 \ubcf4\uc874)",
+    "eos_v0_applied": true,
+    "\ud45c\ud604": "\uc140 \uac01\ub3c4\uc640 \uae38\uc774\ube44\ub97c \uace0\uc815\ud558\uace0 \ub4f1\ubc29 E(V) \uacbd\ub85c\uc5d0\uc11c \ubd80\ud53c\ub97c \ucd5c\uc801\ud654\ud55c\ub2e4. \ubaa9\ud45c \ud3c9\uade0\uc555\uc740 0 GPa \uc774\uba70, \uc2e4\uc81c \uc794\ub958 \ud3c9\uade0\uc555\uacfc \ud3b8\ucc28\uc751\ub825\uc744 \ubcc4\ub3c4\ub85c \ubcf4\uace0\ud55c\ub2e4",
+    "v0_start_state": "EOS \uc0c1\uc2b9 \uac00\uc9c0 **\ucd5c\uadfc\uc811 \uc218\ub834\uc810** (index 3, f=1.0, |\u0394V|=1.21 \u00c5\u00b3)",
+    "v0_start_selection": {
+      "index": 3,
+      "fraction": 1.0,
+      "abs_dV_A3": 1.2097935888587017,
+      "V_point_A3": 4066.479695346664,
+      "tie_rule": "|\u0394V| \ub3d9\ub960\uc774\uba74 \ub0ae\uc740 \uc778\ub371\uc2a4(\uc791\uc740 \ubd84\uc728)",
+      "method": "nearest_converged_up_branch"
+    },
+    "succession_checks": {
+      "1_atom_correspondence": {
+        "n_atoms": 208,
+        "has_atom_id": true
+      },
+      "1_cell_shape_preserved": true,
+      "1_V_target_A3": 4065.269901757805,
+      "1_V_scaled_A3": 4065.2699017578057,
+      "4_displacement_vs_scaled_start": {
+        "continuity": "neighbor_sets_identical",
+        "framework_translation_removed_A": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "rmsd_Li_A": 0.0,
+        "rmsd_framework_A": 0.0,
+        "max_disp_A": 0.0,
+        "max_disp_atom_index": 0,
+        "max_disp_atom_symbol": "P",
+        "n_Li": 96,
+        "n_framework": 112,
+        "cutoff_A": 3.0,
+        "n_Li_with_neighbor_set_changed": 0,
+        "Li_neighbor_changes": [],
+        "Li_CN_ref_mean": 5.0,
+        "Li_CN_new_mean": 5.0,
+        "max_common_neighbor_distance_change_A": 0.0,
+        "\u26d4_\uc77d\ub294_\ubc95": "continuity \ub294 \uc774\uc6c3 ID \uc9d1\ud569\uc758 \uc0ac\uc2e4 \uc9c4\uc220\uc774\uc9c0 \uace8\uc9dc\uae30 \ud310\uc815\uc774 \uc544\ub2c8\ub2e4. \ubb38\ud131\uc744 \uac78\uc5b4 \"\uac19\uc740 \uace8\uc9dc\uae30\" \ub77c\uace0 \uc4f0\uc9c0 \ub9c8\ub77c (\ud68c\uc2e0 BQ-3 Q5-3)"
+      },
+      "\u26a0_\uc21c\uc11c": "\u2460\ub300\uc751\u00b7\uc140\u00b7\ubd80\ud53c \u2461\uc720\ud55c \ucd5c\uc885\ud798\u00b7\uc218\ub834 \u2462E\u00b7\u03c3\u00b7P=\u2212tr/3 \u2463\ub4f1\ubc29 \uc81c\uc678 \ubcc0\uc704\u00b7\ubc30\uc704 \u2464\uadf8 \uacb0\uacfc\uc5d0 \uc5f0\uacb0\ub41c \ud30c\uc77c\ub9cc \ud6c4\uc18d \ud6c4\ubcf4 (\ud68c\uc2e0 BQ-3 Q5-4). \ub0ae\uc740 \uc555\ub825\uc740 \ud798 \uc218\ub834\uc744 \ub300\uc2e0\ud558\uc9c0 \uc54a\ub294\ub2e4"
+    },
+    "apply_report": {
+      "applied": true,
+      "V0_target_A3": 4065.269901757805,
+      "V_before_A3": 4066.479695346664,
+      "V_after_A3": 4065.2699017578057,
+      "scale_factor": 0.999702496095027,
+      "n_relax_steps": 0,
+      "\u26a0_applied_\uc758_\ub73b": "\uc644\ud654\ub97c \ub3cc\ub838\ub2e4\ub294 \ub73b\uc774\ub2e4. \uc4f8 \uc790\uaca9\uc740 'converged' \uac00 \uc815\ud55c\ub2e4",
+      "n_steps": 0,
+      "final_fmax_eV_A": 0.019255895167589188,
+      "fmax_target_eV_A": 0.02,
+      "optimizer_returned": true,
+      "converged": true,
+      "hit_step_limit": false,
+      "residual_stress": {
+        "sigma_GPa": [
+          [
+            -1.3333569681659658,
+            -4.993381753840731e-06,
+            -7.348440315866748e-06
+          ],
+          [
+            -4.993381753840731e-06,
+            0.6564764191541235,
+            -1.0837030915267962
+          ],
+          [
+            -7.348440315866748e-06,
+            -1.0837030915267962,
+            0.6489797067006192
+          ]
+        ],
+        "P_mean_GPa": 0.009300280770407713,
+        "trace_over_3_GPa": -0.009300280770407713,
+        "\u26a0_\ubd80\ud638": "P = \u2212trace(\u03c3)/3 (\uc555\ucd95 \uc591\uc218). ASE \ub294 \uc778\uc7a5 \uc591\uc218 \uaddc\uc57d\uc774\ub2e4",
+        "deviatoric_max_abs_GPa": 1.3240566873955582,
+        "\u26a0": "\ubaa9\ud45c \ud3c9\uade0\uc555 0 \uacfc \ubcc4\uac1c\ub85c **\uc2e4\uc81c** \uac12\uc774\ub2e4. \uc601\uc751\ub825 \ud310\uc815 \uc544\ub2d8"
+      }
+    },
+    "downstream_blocked": false
+  },
+  "structures_written": {
+    "stage1_before_eos.xyz": "\u26a0 EOS\u00b7V\u2080 \uc801\uc6a9 **\uc804** \uad6c\uc870. \ud558\ub958\uac00 \uc9d1\uc5b4\uac00\uba74 \uc548 \ub41c\ub2e4",
+    "final_sha256": "1aaea94b11811289d6fa322f38ff46c45d64f965000592db713a0da3c1f3761a",
+    "run_id": "20260913T190702-2066ea",
+    "final_v0_applied.xyz": "\u2705 V\u2080 \uac00 \uc2e4\uc81c\ub85c \uc801\uc6a9\ub418\uace0 **\uc218\ub834\ud55c** \ucd5c\uc885 \uad6c\uc870 \u2014 \ud0c4\uc131\uc774 \uc4f4 \uac83",
+    "eos_v0_applied": true,
+    "downstream_blocked": false,
+    "downstream_input": "final_v0_applied.xyz"
+  }
+}
