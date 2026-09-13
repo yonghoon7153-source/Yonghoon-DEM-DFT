@@ -53,9 +53,66 @@ sys.path.insert(0, str(Path(__file__).parent))
 from _provenance import get_provenance
 
 
-def load_uma(device='cuda', task='omat'):
+def uma_inference_provenance(mode=None):
+    """UMA 추론 설정을 **실제 환경에서 읽어** 기록한다 (회신 BQ-2 Q6).
+
+    ⛔⛔ 리뷰어 지적 — 종전 로더는 `get_predict_unit(...)` 에 모드를 **생략**하고
+      라이브러리 기본값에 의존했다. 그러면 기록에 남는 것은 "default" 라는
+      **이름뿐**이고 실제로 무엇이 쓰였는지 알 수 없다. 이름이 아니라
+      **버전·체크포인트·추론 설정**을 남겨야 한다.
+
+    ⚠ **정정 (2026-09-13)**: 내가 *"turbo 는 bf16/TF32 가 필요하다"* 고 쓴 것은
+      부정확하다. 공식 문서상 **turbo 의 핵심 차이는 TF32** 다.
+
+    ⛔ 이 함수가 **못 하는 것**
+      · 없는 것을 지어내지 않는다. 못 읽은 항목은 `null` 로 남긴다.
+      · 모드를 바꾸지 않는다. 무엇이 걸려 있는지 **읽기만** 한다.
+      · 이 기록만으로 두 기계의 수치를 섞어도 된다고 말하지 않는다 —
+        회신 BQ-2 Q6 은 파일럿 **내부를 같은 설정으로 완결**하라는 조건이다.
+    """
+    info = {'requested_mode': mode,
+            '⚠_turbo_의_뜻': ('공식 문서상 turbo 의 핵심 차이는 **TF32** 다. '
+                              '"turbo = bf16" 은 부정확한 설명이다 (회신 BQ-2 Q6 정정)'),
+            'model_name': 'uma-s-1p1'}
+    try:
+        import torch
+        info['torch_version'] = str(torch.__version__)
+        info['cuda_available'] = bool(torch.cuda.is_available())
+        info['torch_arch_list'] = list(getattr(torch.cuda, 'get_arch_list', lambda: [])())
+        # ⚠ is_available() 이 True 라도 이 GPU 의 커널이 없을 수 있다 (2026-09-13 V100/sm_70)
+        info['tf32_matmul'] = bool(getattr(torch.backends.cuda.matmul, 'allow_tf32', False))
+        info['tf32_cudnn'] = bool(getattr(torch.backends.cudnn, 'allow_tf32', False))
+        info['default_dtype'] = str(torch.get_default_dtype())
+        if torch.cuda.is_available():
+            info['gpu_name'] = torch.cuda.get_device_name(0)
+            info['gpu_capability'] = list(torch.cuda.get_device_capability(0))
+    except Exception as e:                                   # noqa: BLE001
+        info['torch_error'] = f'{type(e).__name__}: {e}'
+    try:
+        import fairchem.core as _fc
+        info['fairchem_version'] = str(getattr(_fc, '__version__', None))
+    except Exception as e:                                   # noqa: BLE001
+        info['fairchem_error'] = f'{type(e).__name__}: {e}'
+    _miss = [k for k in ('torch_version', 'fairchem_version', 'tf32_matmul')
+             if info.get(k) is None]
+    if _miss or 'torch_error' in info or 'fairchem_error' in info:
+        info['⛔_불완전'] = ('일부 항목을 읽지 못했다 — **읽은 것만** 기록한다. '
+                            '못 읽은 값을 기본값으로 채우지 않는다')
+    return info
+
+
+def load_uma(device='cuda', task='omat', mode=None):
+    """UMA 계산기. `mode` 를 주면 **선언적으로** 넘긴다 (회신 BQ-2 Q6).
+
+    ⛔ mode 를 생략하면 종전과 같이 라이브러리 기본값을 쓴다 — 과거 명령의
+      재현성을 깨지 않기 위해서다. 다만 무엇이 쓰였는지는
+      `uma_inference_provenance()` 가 **실제 환경에서 읽어** 기록한다.
+    """
     from fairchem.core import pretrained_mlip, FAIRChemCalculator
-    predictor = pretrained_mlip.get_predict_unit('uma-s-1p1', device=device)
+    kw = {'device': device}
+    if mode is not None:
+        kw['inference_settings'] = mode
+    predictor = pretrained_mlip.get_predict_unit('uma-s-1p1', **kw)
     return FAIRChemCalculator(predictor, task_name=task)
 
 
@@ -1031,6 +1088,109 @@ def print_regate(rows):
     print("     여전히 판정할 수 없다 (회신 BQ-2 Q1·Q3)")
 
 
+def audit_pressure_sign(patterns, out_path=None):
+    """저장된 기록의 압력 부호를 **증거로** 판정하고 정정 파생 기록을 만든다.
+
+    회신 BQ-2 Q4 — *"원본은 보존하고, 정정된 파생 기록을 추가하는 쪽에 찬성이에요.
+    원본 파일·생성 버전·필드와 연결해서 올바른 압력을 제공하고, 이후 표와 판정은
+    정정본을 읽게 하세요. '당시 규약' 이라는 주석만 붙인 채 잘못된 P_mean_GPa 를
+    계속 사용하면 부족해요."*
+
+    ⛔⛔ **일괄 반전하지 않는다.** 저장된 σ 텐서로 −tr(σ)/3 을 직접 계산해
+      저장값과 맞춰본다 — 추측이 아니라 산술로 판정한다:
+        · P == −tr/3 → `already_correct`  손대지 않는다
+        · P == +tr/3 → `corrected`        이 버그의 산물이다
+        · 둘 다 아님  → `unknown`          **표시만** 하고 손대지 않는다
+      (리뷰어: *"이 버그가 있던 생성 경로만 정정해야 하며, 다른 도구가 만든
+       압력을 일괄 반전하면 안 돼요."*)
+
+    ⛔ **편차응력은 그대로다** — σ − (trσ/3)I 는 부호를 뒤집지 않는다.
+
+    ⛔ 이 함수가 **못 하는 것**
+      · 원본 파일을 고치지 않는다. 파생 기록만 만든다.
+      · σ 가 없으면 판정하지 않는다 (`no_sigma`). 부호를 짐작하지 않는다.
+      · 압력이 물리적으로 맞는지 말하지 않는다. **규약 부호**만 본다.
+    """
+    import glob as _g
+    import hashlib
+
+    def _walk(node, path=''):
+        """σ 와 P 를 함께 든 dict 를 재귀로 찾는다."""
+        if isinstance(node, dict):
+            if 'P_mean_GPa' in node:
+                yield path, node
+            for k, v in node.items():
+                yield from _walk(v, f'{path}.{k}' if path else str(k))
+        elif isinstance(node, list):
+            for i, v in enumerate(node):
+                yield from _walk(v, f'{path}[{i}]')
+
+    files = []
+    for pat in patterns:
+        files.extend(sorted(_g.glob(pat)) if any(c in pat for c in '*?[') else [pat])
+    rows = []
+    for f in list(files):
+        fp = Path(f)
+        if fp.is_dir():
+            files.extend(sorted(str(x) for x in fp.rglob('*.json')))
+            continue
+        try:
+            raw = fp.read_bytes()
+            d = json.loads(raw)
+        except Exception as e:                               # noqa: BLE001
+            rows.append({'file': f, 'error': f'{type(e).__name__}: {e}'})
+            continue
+        _sha = hashlib.sha256(raw).hexdigest()
+        for path, node in _walk(d):
+            stored = node.get('P_mean_GPa')
+            sig = node.get('sigma_GPa')
+            row = {'file': f, 'source_sha256': _sha, 'field_path': path,
+                   'stored_P_mean_GPa': stored,
+                   'has_sign_note': bool('⚠_부호' in node),
+                   'deviatoric_max_abs_GPa': node.get('deviatoric_max_abs_GPa'),
+                   '⚠_편차응력': '편차는 부호를 뒤집지 않는다 — 그대로 쓴다'}
+            if sig is None or stored is None:
+                row.update({'verdict': 'no_sigma',
+                            'why': 'σ 텐서나 P 가 없어 산술로 판정할 수 없다 — 짐작하지 않는다'})
+                rows.append(row)
+                continue
+            try:
+                tr3 = float(np.trace(np.asarray(sig, dtype=float)) / 3.0)
+            except Exception as e:                           # noqa: BLE001
+                row.update({'verdict': 'unknown', 'why': f'σ 를 못 읽었다: {e}'})
+                rows.append(row)
+                continue
+            row['trace_over_3_GPa'] = tr3
+            tol = max(1e-6, abs(tr3) * 1e-6)
+            if abs(float(stored) - (-tr3)) <= tol:
+                row.update({'verdict': 'already_correct',
+                            'corrected_P_mean_GPa': float(stored),
+                            'why': 'P = −tr(σ)/3 이 이미 맞다'})
+            elif abs(float(stored) - tr3) <= tol:
+                row.update({'verdict': 'corrected',
+                            'corrected_P_mean_GPa': -tr3,
+                            'why': ('저장값이 +tr(σ)/3 이다 — 2026-09-13 이전 '
+                                    '`stress_report` 의 부호 버그가 만든 값이다')})
+            else:
+                row.update({'verdict': 'unknown', 'corrected_P_mean_GPa': None,
+                            'why': ('저장값이 ±tr(σ)/3 어느 쪽도 아니다 — 다른 도구가 '
+                                    '만들었거나 다른 정의다. **손대지 않는다**')})
+            rows.append(row)
+    rec = {'schema': 1, 'kind': 'pressure_sign_correction', 'date': '2026-09-13',
+           '왜_이_기록이_있나': ('회신 BQ-2 Q4 — 원본을 보존하고 정정된 파생 기록을 '
+                                '원본 파일·해시·필드 경로와 **연결해서** 추가한다. '
+                                '이후 표와 판정은 이 정정본을 읽는다'),
+           '판정_방법': ('저장된 σ 로 −tr(σ)/3 을 계산해 저장값과 산술 대조한다. '
+                         '일괄 반전이 아니다 — verdict 가 corrected 인 줄만 정정된다'),
+           '⛔_편차응력': 'σ − (trσ/3)I 는 부호를 뒤집지 않는다. 편차는 그대로다',
+           'counts': {k: sum(1 for r in rows if r.get('verdict') == k)
+                      for k in ('already_correct', 'corrected', 'unknown', 'no_sigma')},
+           'rows': rows}
+    if out_path:
+        Path(out_path).write_text(json.dumps(rec, indent=2, ensure_ascii=False))
+    return rec
+
+
 def process_one(xyz_path, calc, out_dir, args):
     name = winner_name(xyz_path)
     work = out_dir / name
@@ -1677,6 +1837,60 @@ def _selftest():
         and _rg3['downstream_eligible'] is False,
         "⛔음성: 기준을 더 조이면 미수렴이고 자격도 없다")
 
+    # ⑫ ★ 압력 부호 감사 (회신 BQ-2 Q4) — **산술로** 판정하는가, 일괄 반전이 아닌가
+    import tempfile as _tf2
+    _sig = [[-3.0, 0.1, 0.0], [0.1, -3.0, 0.0], [0.0, 0.0, -3.6]]
+    _tr3 = float(np.trace(np.asarray(_sig)) / 3.0)          # = -3.2
+    with _tf2.TemporaryDirectory() as _td2:
+        _q4 = Path(_td2)
+        _mk = lambda nm, node: (_q4 / nm).write_text(
+            json.dumps({'name': nm, 'cell_policy': {'residual_stress': node}}))
+        _mk('good.json', {'sigma_GPa': _sig, 'P_mean_GPa': -_tr3,
+                          'deviatoric_max_abs_GPa': 0.4, '⚠_부호': 'x'})
+        _mk('bug.json', {'sigma_GPa': _sig, 'P_mean_GPa': _tr3,
+                         'deviatoric_max_abs_GPa': 0.4})
+        _mk('other.json', {'sigma_GPa': _sig, 'P_mean_GPa': 99.0})
+        _mk('nosig.json', {'P_mean_GPa': 1.0})
+        _before = {f.name: f.read_text() for f in _q4.glob('*.json')}
+        _ap = audit_pressure_sign([str(_q4 / '*.json')])
+        _by = {Path(r['file']).name: r for r in _ap['rows']}
+        chk(_by['good.json']['verdict'] == 'already_correct',
+            "Q4: P = −tr(σ)/3 인 기록은 **손대지 않는다**")
+        chk(_by['bug.json']['verdict'] == 'corrected'
+            and abs(_by['bug.json']['corrected_P_mean_GPa'] - (-_tr3)) < 1e-9,
+            "Q4: P = +tr(σ)/3 인 기록만 정정한다 (부호 버그의 산물)")
+        chk(_by['other.json']['verdict'] == 'unknown'
+            and _by['other.json']['corrected_P_mean_GPa'] is None,
+            "⛔⛔음성: ±tr/3 어느 쪽도 아니면 **손대지 않는다** (일괄 반전 금지)")
+        chk(_by['nosig.json']['verdict'] == 'no_sigma',
+            "⛔음성: σ 가 없으면 판정하지 않는다 (부호를 짐작하지 않는다)")
+        chk(all(_by[k]['deviatoric_max_abs_GPa'] == 0.4 for k in
+                ('good.json', 'bug.json')),
+            "⛔음성: **편차응력은 그대로다** (부호를 뒤집지 않는다)")
+        chk({f.name: f.read_text() for f in _q4.glob('*.json')} == _before,
+            "⛔⛔음성: 원본 파일이 **한 글자도 안 바뀐다** (파생 기록만 만든다)")
+        chk(_ap['counts'] == {'already_correct': 1, 'corrected': 1,
+                              'unknown': 1, 'no_sigma': 1},
+            "Q4: 네 갈래가 실제로 갈린다 (전부 같은 판정이면 시험이 아무것도 안 본 것이다)")
+        # 실물 stress_report 의 출력이 already_correct 로 읽히는가 (규약 왕복)
+        _sr2 = stress_report(at)
+        (_q4 / 'live.json').write_text(json.dumps({'x': _sr2}))
+        _lv = [r for r in audit_pressure_sign([str(_q4 / 'live.json')])['rows']][0]
+        chk(_lv['verdict'] == 'already_correct',
+            "Q4 왕복: 지금 stress_report 가 낸 값은 감사에서 **이미 맞다**로 읽힌다")
+
+    # ⑬ UMA 추론 설정 기록 (회신 BQ-2 Q6)
+    _up = uma_inference_provenance('turbo')
+    chk(_up.get('requested_mode') == 'turbo' and _up.get('model_name') == 'uma-s-1p1',
+        "Q6: 요청한 모드와 체크포인트 이름이 기록된다")
+    chk('TF32' in _up.get('⚠_turbo_의_뜻', '')
+        and 'bf16' in _up.get('⚠_turbo_의_뜻', ''),
+        "Q6 정정: turbo 의 핵심 차이는 **TF32** 이고 'turbo=bf16' 은 부정확하다고 적힌다")
+    chk(('fairchem_version' in _up) or ('fairchem_error' in _up),
+        "Q6: fairchem 버전을 읽거나, 못 읽었다는 사실을 남긴다")
+    chk((_up.get('fairchem_version') is not None) or ('⛔_불완전' in _up),
+        "⛔음성: 못 읽은 항목을 기본값으로 채우지 않고 **불완전하다고 표시**한다")
+
     print(f"  selftest: ⭕ {ok} · ⛔ {fail}")
     return 0 if fail == 0 else 1
 
@@ -1734,6 +1948,13 @@ def main():
                         '(기본 미적용 = GAP-3 그대로, 단 record 에 경고가 박힌다)')
     p.add_argument('--fixed_shape_relax', action='store_true',
                    help='0단계 relax 를 CellFilter 없이 고정셀로 한다 (각도·길이비 보존)')
+    p.add_argument('--uma_mode', default=None,
+                   help="UMA 추론 설정을 **선언적으로** 지정 (예: default / turbo). "
+                        "생략하면 라이브러리 기본값 — 다만 실제 설정은 기록된다 (회신 BQ-2 Q6)")
+    p.add_argument('--audit_pressure', nargs='+', metavar='PATH',
+                   help='저장된 기록의 압력 부호를 **증거로** 판정하고 정정 파생 기록을 만든다. '
+                        '원본은 고치지 않는다 (회신 BQ-2 Q4)')
+    p.add_argument('--audit_pressure_out', help='압력 정정 파생 기록 JSON 경로')
     p.add_argument('--regate', nargs='+', metavar='PATH',
                    help='저장된 postproc*.json 에 **지금의 게이트**를 다시 매긴다 '
                         '(파일/디렉터리/glob). 원본은 고치지 않는다')
@@ -1748,6 +1969,15 @@ def main():
     args = p.parse_args()
     if args.selftest:
         sys.exit(_selftest())
+    if args.audit_pressure:
+        _ap = audit_pressure_sign(args.audit_pressure, args.audit_pressure_out)
+        print(f"\n  압력 부호 감사: {_ap['counts']}")
+        for _r in _ap['rows'][:40]:
+            print(f"   {_r.get('verdict', 'error'):<16}{(_r.get('field_path') or '')[:40]:<42}"
+                  f"{_r.get('file', '')[-40:]}")
+        if args.audit_pressure_out:
+            print(f"  → {args.audit_pressure_out}")
+        sys.exit(0)
     if args.regate:
         _rows = regate_paths(args.regate, fmax=args.regate_fmax,
                              hysteresis_tol=args.eos_hysteresis_tol,
@@ -1790,7 +2020,13 @@ def main():
     print(f"To process: {len(todo)}/{len(xyz_paths)}")
 
     print(f"Loading UMA-s-1p1 ({args.device})...")
-    calc = load_uma(args.device, args.task)
+    calc = load_uma(args.device, args.task, mode=getattr(args, 'uma_mode', None))
+    _uma_prov = uma_inference_provenance(getattr(args, 'uma_mode', None))
+    print(f"  UMA 추론: mode={_uma_prov.get('requested_mode')} · "
+          f"torch={_uma_prov.get('torch_version')} · "
+          f"fairchem={_uma_prov.get('fairchem_version')} · "
+          f"TF32(matmul)={_uma_prov.get('tf32_matmul')} · "
+          f"GPU={_uma_prov.get('gpu_name')}")
 
     records = list(done.values())
     t_start = time.time()
@@ -1818,6 +2054,8 @@ def main():
         if (i + 1) % 3 == 0 or (i + 1) == len(todo):
             summary_path.write_text(json.dumps({
                 'provenance': get_provenance(),
+                # ⛔ 회신 BQ-2 Q6 — "default" 라는 **이름**이 아니라 실제 환경을 남긴다
+                'uma_inference': _uma_prov,
                 'cli_args': vars(args),
                 'n_done': len(records),
                 'records': records,
