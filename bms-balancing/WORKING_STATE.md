@@ -62,6 +62,20 @@ Codex 를 다시 쓸 수 있게 되어 요청문 셋을 썼다. **보내는 순�
 
 `reviews/R12_REQUEST.md` 는 **보내지 못한 문서**로 배너를 달아 보관했다 (R13 이 대신한다).
 
+**1차 결과 (mph 트랙, 2026-09-13): NO-GO.** "M1 은 확정 버그이므로 `cEeqref` 두 줄부터 고친다" 가
+당시 증거로 성립하지 않았다. 패키지는 `reviews/r14_repros/codex/` 에 원본 보존(zip sha256
+`e2d74fb8390e…`), 대응 원장은 `reviews/MPH_R1_RESPONSE.md`, 문서는 v2 로 재작성했다.
+**바뀐 결론 다섯**: (1) M1 은 조건부 진단 — 조건은 `liion.pce2.pin1.soc` t=0 값 한 번으로 끝난다
+(2) 붕괴하는 것은 **두 LAM** 뿐, LLI 는 독립 (3) 휴지 후반 기울기는 쇼츠 전용축이 **아니다**
+(`C_diff` 가 LLI/LAM 에 의존) (4) **Events 인터페이스 자체가 DISABLED** 였다 (5) `tau_short` 차원 오류.
+
+**교훈**: v1 §7 의 정규식 추출기가 자식 flags 를 부모로 전파해 (4)를 틀리게 만들었다. 리뷰어가
+원본 파일 없이 정적 반례만으로 잡았다. 교정 도구 `reviews/r14_repros/mph_dump.py` 는
+`--self-test` 로 그 반례를 고정하고 태어났다 — `evidence_gate` 규율을 분석 스크립트에도 적용한다.
+
+**mph 트랙 다음 순서**: ① `liion.pce2.pin1.soc` t=0 확인(30초) → ② LAM 계약 정의 → ③ M8 정리
++ MPH sha256/study/solution 기록 → ④ M3 곡선 겹쳐 그리기. ①·② 전에는 `cEeqref` 를 건드리지 않는다.
+
 검증 재실행 (2026-09-13, `26c477c`): `236 passed in 200.29s` · `git diff c7217c0 HEAD -- '*.py' '*.sh'` **0 개** ·
 `replay_codex_r7.py --expected-head 26c477c…` rc 0 · `evidence_eligible: true` · `closed: true` ·
 `check_u14 --schema-only` rc 2 (59 · 27 · 5 · 1, 보관 증거와 일치).

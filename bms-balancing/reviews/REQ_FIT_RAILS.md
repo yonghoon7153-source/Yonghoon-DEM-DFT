@@ -3,7 +3,12 @@
 대상은 규진팀 α·β 적합 출력 `result_L_{ref1,ref2,PE1,PE5}__0.1C_12h__charge.xlsx` (총 37 행)에 대한
 **우리 분석**이다. 물음 하나:
 
-> **"세 열화모드(LAM_PE·LAM_NE·LLI)가 대부분의 사이클에서 용량 감소율 하나로 붕괴한다" 가 성립하는가.**
+> **"LAM_PE 와 LAM_NE 가 대부분의 사이클에서 서로 구분되지 않게 붕괴한다" 가 성립하는가.**
+
+> ⚠ **v1 정정 (1차 외부 리뷰).** 이 요청문의 전 판은 "**세** 열화모드가 붕괴한다" 고 적었다.
+> **틀렸다.** `LLI = 1 - c_lit/c_lit₀` 는 `c_lit` 에서 오고 `x_cell` 과 다른 양이다.
+> ref1 난간 행에서 `LLI - (1-x_cell)` 은 **0.0216 ~ 0.0355** 로 붕괴하지 않는다.
+> 붕괴하는 것은 **두 LAM**, 즉 **전극 사이의 구분**이다. LLI 축은 살아 있다.
 
 성립하면 그 값을 입력으로 쓰는 모든 것 — `bms-balancing/` 의 결론, `docs/MICROSHORT_MPH_REVIEW.md`
 의 COMSOL 모델, 규진팀 파이프라인 — 이 같은 축퇴 위에 서 있다.
@@ -57,7 +62,8 @@ LLI    = 1 - c_lit  / c_lit[cycle 0]
 LAM_PE = LAM_NE = 1 - x_cell = 1 - C_cell/C_cell[0]
 ```
 
-이 되고, 세 열화모드가 **용량 감소율 하나를 세 번 이름만 바꿔 부른 것**이 된다.
+이 되고, **전극별 LAM 을 가르는 정보가 사라진다** (두 LAM 이 같은 수가 된다).
+**LLI 는 붕괴하지 않는다** — 실측: ref1 난간 행에서 `LLI - (1-x_cell)` = 0.0216 ~ 0.0355.
 `a_PE` 난간 행과 `LAM_PE ≈ LAM_NE` 행이 네 파일 모두 **정확히 일치**한다 (인과의 직접 증거).
 
 ## 3. 우리 해석 (= 깨야 할 주장)
@@ -67,8 +73,8 @@ LAM_PE = LAM_NE = 1 - x_cell = 1 - C_cell/C_cell[0]
 | B1 | `a_NE` 는 적합의 자유변수가 아니다 (고정 또는 사이클 0 에서만 정함) | 네 파일 전부 전 사이클 **비트 동일**. 부동소수 최적화가 37 번 같은 비트를 낼 확률은 없다 | 강함 |
 | B2 | `b_NE` 는 0 에 고정 또는 하한 | cycle 0 외 전부 정확히 0 (PE5 cycle 4 는 `-1.76e-16` = 수치 0) | 강함 |
 | B3 | `a_PE` 에 **상한**이 있고 그 값이 `a_PE[cycle 0]` 이다 | argmax 가 네 파일 모두 cycle 0 · 30/37 행이 그 값과 비트 동일 | **중간 — MATLAB 의 bound 설정을 못 봤다** |
-| B4 | B1+B3 → 난간 행에서 **전극 구분 정보가 0** | §1 의 닫힌 형태에서 따라옴 | B3 에 의존 |
-| B5 | 따라서 열화모드 값을 forward model 에 주입하는 작업은 **축퇴점 하나를 반복 주입**하는 것 | B4 | B3 에 의존 |
+| B4 | B1+B3 → 난간 행에서 **두 LAM 사이의 구분 정보가 0** (LLI 는 별개 축으로 남는다) | §1 의 닫힌 형태에서 따라옴 | B3 에 의존 |
+| B5 | 따라서 열화모드 값을 forward model 에 주입하는 작업은 난간 행에서 **LAM 축이 1 차원으로 눌린 점**을 주입하는 것 | B4 | B3 에 의존 |
 
 **B3 가 이 사슬의 유일한 약점이다.** 대안 설명 후보:
 
@@ -80,7 +86,7 @@ LAM_PE = LAM_NE = 1 - x_cell = 1 - C_cell/C_cell[0]
 | (d) 우리가 파일을 잘못 읽음 | 네 파일 독립 확인. 낮음 |
 
 **(a) 와 (c) 가 맞아도 결론 B4·B5 는 살아남는다** — 이유가 bound 든 설계든, 난간 행에서
-`LAM_PE = LAM_NE` 인 것은 사실이고 전극 구분 정보는 없다. 다만 **"버그" 가 아니라 "모델 선택의 귀결"**
+`LAM_PE = LAM_NE` 인 것은 사실이고 두 LAM 사이의 구분 정보는 없다. 다만 **"버그" 가 아니라 "모델 선택의 귀결"**
 이 되므로 규진팀에 말하는 방식이 완전히 달라진다.
 
 ## 4. 이 결과가 걸리는 곳
@@ -93,24 +99,31 @@ LAM_PE = LAM_NE = 1 - x_cell = 1 - C_cell/C_cell[0]
 
 ## 5. 재현
 
+> ⚠ **`np.allclose` 기본 허용오차(rtol 1e-5)는 머신 엡실론 증명이 아니다** (1차 리뷰 지적).
+> 0.1 과 0.1000009 도 통과한다. 최대 절대오차를 직접 찍는다.
+
 ```python
 import pandas as pd, numpy as np
 d = pd.read_excel('result_L_ref1__0.1C_12h__charge.xlsx')
 x = d.C_cell / d.C_cell.iloc[0]
-assert np.allclose(d.x_cell, x)
-assert np.allclose(d.LAM_PE, 1 - x*d.a_PE/d.a_PE.iloc[0])
-assert np.allclose(d.LAM_NE, 1 - x*d.a_NE/d.a_NE.iloc[0])
-assert np.allclose(d.LLI,    1 - d.c_lit/d.c_lit.iloc[0])
+for lbl, err in (('x_cell', d.x_cell - x),
+                 ('LAM_PE', d.LAM_PE - (1 - x*d.a_PE/d.a_PE.iloc[0])),
+                 ('LAM_NE', d.LAM_NE - (1 - x*d.a_NE/d.a_NE.iloc[0])),
+                 ('LLI',    d.LLI    - (1 - d.c_lit/d.c_lit.iloc[0]))):
+    print(f'{lbl:7s} max|err| = {np.abs(err).max():.3e}')
 print('a_PE 난간:', [int(c) for c, v in zip(d.cycle, d.a_PE) if v == d.a_PE.iloc[0]])
 print('a_NE 고유값:', sorted(set(d.a_NE.values)))
 print('b_NE == 0 행수:', int((np.abs(d.b_NE.values) < 1e-15).sum()), '/', len(d))
 print('LAM_PE≈LAM_NE:', [int(c) for c, e in
       zip(d.cycle, np.isclose(d.LAM_PE, d.LAM_NE, rtol=1e-9, atol=0)) if e])
+print('LLI-(1-x_cell) 범위:', float((d.LLI-(1-x)).min()), float((d.LLI-(1-x)).max()))
 ```
 
 **우리가 실행해 확인했다** (2026-09-13). ref1 출력:
+`x_cell max|err| = 0.000e+00` · `LAM_PE 1.388e-16` · `LAM_NE 5.551e-17` · `LLI 4.163e-17` ·
 `a_PE 난간: [0, 3, 4, 5, 6, 7, 8, 9]` · `a_NE 고유값: [1]` · `b_NE == 0 행수: 9/10` ·
-`LAM_PE≈LAM_NE: [0, 3, 4, 5, 6, 7, 8, 9]`.
+`LAM_PE≈LAM_NE: [0, 3, 4, 5, 6, 7, 8, 9]` · `LLI-(1-x_cell) 범위: 0.0 ~ 0.0355`
+(0.0 은 cycle 0. 난간이면서 cycle>0 인 행에서는 0.0216 ~ 0.0355).
 
 ## 6. 우리가 못 한 것
 
