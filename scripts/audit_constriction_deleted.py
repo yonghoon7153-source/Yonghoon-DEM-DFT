@@ -88,12 +88,32 @@ _PC = _load('_pc_parsers', SCRIPTS / 'plastic_coverage.py')
 RAW_SCALE_UM_PER_SIM = 1000.0
 
 
+MATCH_STEPS = False     # True 면 atom 덤프를 **마지막 contact 덤프와 같은 step** 으로 고른다 (SELF-30)
+
+
+def _step_of(path) -> int:
+    return int(''.join(ch for ch in Path(path).name if ch.isdigit()) or '0')
+
+
 def _raw_dump_dir(case_dir: Path):
-    """`case_dir` 자체 또는 `post_*/` 에서 (atom, contact) 원본 덤프 → (dir, atom, contact) | None."""
+    """`case_dir` 자체 또는 `post_*/` 에서 (atom, contact) 원본 덤프 → (dir, atom, contact) | None.
+
+    기본 = 생산과 같은 규칙 (`_find_case_files`: atom·contact 각각 **마지막**).  LHS 실측(ibb `lhs00_000`):
+    atom 은 5000 간격 405개(마지막 2,425,000), contact 는 마지막 `run 100000` 동안 10000 간격 10개(마지막
+    2,420,000) ⇒ 생산은 **5,000 스텝 어긋난 쌍**을 읽는다 (같은 정지 단계).  `MATCH_STEPS` 면 contact 의
+    마지막 step 과 **같은 step 의 atom 덤프**를 고른다 — 그 차이가 census 를 움직이는지 재는 용도.
+    """
     cands = [case_dir] + sorted(q for q in case_dir.glob('post_*') if q.is_dir())
     for d in cands:
         a, c = _PC._find_case_files(str(d))
         if a and c and a.endswith('.liggghts') and c.endswith('.liggghts'):
+            if MATCH_STEPS:
+                want = _step_of(c)
+                same = [q for q in Path(d).glob('atom_*.liggghts') if _step_of(q) == want]
+                if same:
+                    a = str(same[0])
+                else:
+                    raise ValueError(f'{case_dir.name}: contact step {want} 과 같은 atom 덤프가 없다 (--match-steps)')
             return d, a, c
     return None
 
@@ -297,6 +317,8 @@ def audit_case(case_dir, contact_mode='physics', channels=('ionic', 'electronic'
     type_hist = _C(a['type'] for a in atoms.values())
     all_types = sorted(type_hist)
     row = {'case': case_dir.name, 'contact_mode': contact_mode, 'source': source,
+           'atom_step': _step_of(_meta.get('atom_file', '')) if _meta.get('atom_file') else '',
+           'contact_step': _step_of(_meta.get('contact_file', '')) if _meta.get('contact_file') else '',
            'n_contact_rows': len(contacts),
            'type_hist': ';'.join(f'{t}:{type_hist[t]}' for t in all_types),
            'type_map': ';'.join(f'{k}={v}' for k, v in sorted(type_map.items())),
@@ -435,10 +457,16 @@ def main() -> int:
     ap.add_argument('--expect-csv', default='',
                     help='지난 S0 산출 CSV — 케이스별 n_contact_rows·type_hist·n_edges·n_deleted 를 '
                          '대조한다.  하나라도 다르면 rc=4 (새 경로가 옛 경로를 재현하지 못함).')
+    ap.add_argument('--match-steps', action='store_true',
+                    help='atom 덤프를 마지막 contact 덤프와 같은 step 으로 고른다 (기본은 생산과 같이 각각 마지막; SELF-30)')
     ap.add_argument('--selftest', action='store_true')
     a = ap.parse_args()
     if a.selftest:
         return _selftest()
+    global MATCH_STEPS
+    MATCH_STEPS = bool(a.match_steps)
+    if MATCH_STEPS:
+        print('⚠ --match-steps: atom 덤프를 contact 의 마지막 step 에 맞춘다 (생산 규칙과 다르다 — 민감도 측정용)')
 
     import os as _os
     wp = a.webapp or _os.environ.get('AUDIT_WEBAPP', '')
@@ -823,8 +851,9 @@ def _selftest() -> int:
         and discover_raw_cases(cdir) == [])
     r_raw = audit_case(rc_, channels=('ionic', 'thermal'), deck_dir=str(rdir))
     r_csv = audit_case(cc, channels=('ionic', 'thermal'), deck_dir=str(cdir))
-    same = {k: v for k, v in r_raw.items() if k not in ('source', 'deck')} == \
-           {k: v for k, v in r_csv.items() if k not in ('source', 'deck')}
+    _skip = ('source', 'deck', 'atom_step', 'contact_step')     # 경로별로 당연히 다른 메타 열
+    same = {k: v for k, v in r_raw.items() if k not in _skip} == \
+           {k: v for k, v in r_csv.items() if k not in _skip}
     chk('⑫b 두 경로의 census 행이 동일 (source·deck 제외) — 삭제·L1 집계 포함', same,
         f"thermal 삭제 {r_raw.get('thermal_n_deleted')}/{r_raw.get('thermal_n_edges')} · "
         f"cap_conflict {r_raw.get('l1_n_cap_conflict')}")
@@ -876,6 +905,19 @@ def _selftest() -> int:
         and e_c['A_components']['binding'] == 'tabor' and _s_raw_clamped(e_c)[0] > 1.1,
         f"s_raw={_s_raw_clamped(e_c)[0]:.6f} binding={e_c['A_components']['binding']}")
     chk('⑬c 대조: δ=.10 은 Rc > 0 (어느 부류도 아님)', cp['n_rc0'] == 0 and e_p['R_constriction'] > 0)
+
+    # ── ⑫e --match-steps: contact 의 마지막 step 과 같은 atom 을 고른다 (SELF-30) ───────
+    (pdir / 'atom_105.liggghts').write_text((pdir / 'atom_100.liggghts').read_text())   # 더 늦은 atom 덤프
+    global MATCH_STEPS
+    d_def = _raw_dump_dir(rc_)
+    MATCH_STEPS = True
+    try:
+        d_mat = _raw_dump_dir(rc_)
+    finally:
+        MATCH_STEPS = False
+    chk('⑫e 기본은 각각 마지막(atom 105 · contact 100), --match-steps 는 같은 step(atom 100)',
+        _step_of(d_def[1]) == 105 and _step_of(d_def[2]) == 100 and _step_of(d_mat[1]) == 100,
+        f'기본 atom {_step_of(d_def[1])} / match atom {_step_of(d_mat[1])}')
 
     print('협착 삭제 census SELFTEST', 'PASS' if ok else 'FAIL')
     return 0 if ok else 1
