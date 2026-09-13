@@ -133,7 +133,10 @@ def fitted_pair_info(out_dir: pathlib.Path, state: str, src: str, si: str):
         # ⚠ Codex R11 P1-7: 공용 validator 가 **실패로 판정한 묶음**을 production reader 가 소비하고 있었다 —
         #   `error="optimizer failed"` 인 서명 행의 (γ, γ_ref) 를 정상 과학 입력으로 돌려줬다. 같은 검사를 여기서도.
         header = list(rows[0]) if rows else []
-        problems = S.check_rows("matrix", rows, header)
+        # ⚠ Codex R13 P1-1 후속: **정본 자리** 규칙(좁힌 실행이 canonical 이름에 앉음)은 산출 내용의 결함이
+        #   아니다 — 정직한 subset 도 과학 입력이다. 그 판정은 승격 gate(`check_u14`)가 한다.
+        problems = [q for q in S.check_rows("matrix", rows, header, name=f.name)
+                    if not q.startswith(S.CANONICAL_SLOT_PREFIX)]
         if problems:
             raise RuntimeError(f"{f.name}: 공용 스키마 검증 실패 {problems[:3]} — 이 묶음은 과학 입력이 아니다 "
                                f"(checker 와 같은 validator 다, Codex R11 P1-7)")

@@ -335,7 +335,8 @@ def check(new: pathlib.Path, old: pathlib.Path | None, schema_only=False, policy
             rows, hdr = _csv_rows(data)
             R["missing"] += [f"{f.name}: {c}" for c in S.required_columns(kind) if c not in hdr]
             # ⚠ Codex R9-03: 열 이름 다음은 **값**이다 — 필수 셀 nonempty · 숫자 파싱 · receipt · 중복 key (schema-only 에서도)
-            R["content"] += [f"{f.name}: {p}" for p in S.check_rows(kind, rows, hdr) if not p.startswith("열 없음")]
+            R["content"] += [f"{f.name}: {p}" for p in S.check_rows(kind, rows, hdr, name=f.name)
+                             if not p.startswith("열 없음")]
         if meta is None:
             R["missing"].append(f"{f.name}: .meta.json 없음")
         else:

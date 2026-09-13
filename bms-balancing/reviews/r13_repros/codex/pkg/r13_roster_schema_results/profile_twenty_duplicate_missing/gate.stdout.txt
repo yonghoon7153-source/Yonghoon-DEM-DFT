@@ -1,0 +1,6 @@
+산출 1 개 점검 (/mnt/c/Users/Administrator/Documents/Codex/2026-08-24/claude-14-gate-code-review-9qkx05-2/outputs/r13_roster_schema_results/profile_twenty_duplicate_missing/new)
+  정본 선택 정책: **current** — 현행 디렉터리 — 정본은 unversioned 이름 하나, 판 번호가 붙은 형제는 쓰지 않는다 (Codex R6-04·R7-04)
+  명부(roster): 정본 1 · 새 산출 1 · 대조 1
+  새 스키마: 전부 갖췄다 (열·키 이름 + 필수 셀·숫자·receipt·중복 key — `bms_balancing/schema.py` 정본)
+  숫자: 정본(/mnt/c/Users/Administrator/Documents/Codex/2026-08-24/claude-14-gate-code-review-9qkx05-2/outputs/r13_roster_schema_results/profile_twenty_duplicate_missing/old)과 전부 같다 — 게시·서명만 바뀌었다
+PROMOTION {"promotion_eligible": true, "rc": 0, "subset": false, "roster": {"old": 1, "new": 1, "compared": 1, "missing_in_new": [], "extra_in_new": []}, "blocked_by": {"schema": 0, "provenance_cols": 0, "content": 0, "unit": 0, "controls": 0, "env": 0, "numbers": 0, "alias": 0, "provenance": 0, "inputs": 0, "inputs_uncomparable": 0, "stale": 0, "baseline_absent": 0}, "policy": "current", "new": "/mnt/c/Users/Administrator/Documents/Codex/2026-08-24/claude-14-gate-code-review-9qkx05-2/outputs/r13_roster_schema_results/profile_twenty_duplicate_missing/new", "old": "/mnt/c/Users/Administrator/Documents/Codex/2026-08-24/claude-14-gate-code-review-9qkx05-2/outputs/r13_roster_schema_results/profile_twenty_duplicate_missing/old"}

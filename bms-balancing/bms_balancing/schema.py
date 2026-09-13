@@ -72,6 +72,71 @@ ROW_SKIP = frozenset({"run_id", "inputs_sha", "ref_inputs_sha", "consumed_inputs
 #: 게시했다; 모든 span 이 0 인 것은 당연하다). 다른 격자는 진단이고 canonical 이 아니다.
 CANONICAL_GAMMA_GRID_N = 21
 
+#: 정본 **자리** 규칙 위반(좁힌 실행이 canonical 이름에 앉음)은 산출 내용의 결함이 아니다.
+#: reader 는 정직한 subset 을 소비할 수 있어야 하고, 승격 gate 만 이것을 막는다.
+CANONICAL_SLOT_PREFIX = "canonical 자리: "
+
+#: γ 격자·조합 모집단의 **정본은 여기 한 곳**이다 (Codex R13 P1-1).
+#: 전 판은 `authority` 를 `CANONICAL_GAMMA_GRID_N` 과 **숫자끼리** 댔다 — 그래서 γ 21 개를 0~0.4 로
+#: 잘못 깔아도, 32 조합 중 하나를 미등록 Si 로 바꿔도, 1 행이 "authority=1" 이라 스스로 적어도 전부
+#: 통과했다 (모집단 주장이 산출 안에서만 닫혀 있었다). 이제 producer 와 checker 가 **같은 함수**로
+#: 구성원 집합을 만들고, checker 는 본문의 key 집합을 그것과 **exact** 로 댄다.
+#: (lazy import — `schema` 는 stdlib 만 top-level 로 쓴다. `data`·`model` 은 `schema` 를 import 하지
+#:  않으므로 순환은 없다.)
+
+def canonical_gamma_grid() -> list:
+    """정본 γ 격자의 **값** (개수가 아니라). producer 의 `np.linspace(LB5[4], UB5[4], N)` 과 같은 식."""
+    import numpy as _np
+
+    from .model import LB5, UB5
+    return [float(x) for x in _np.linspace(LB5[4], UB5[4], CANONICAL_GAMMA_GRID_N)]
+
+
+def canonical_combo_keys(state: str) -> set:
+    """그 상태의 정본 조합 집합 `{(half_cell, si, w_dqdv)}` — caller 옵션 밖이다 (Codex R11 P1-2 와 같은 축).
+
+    알려진 부재(`HALF_CELL_ABSENT`)만 빠진다. 상태를 모르면 **빈 집합이 아니라 예외**다 —
+    모집단을 말할 수 없으면 canonical 주장을 검증할 수 없고, 그때는 fail-closed 여야 한다.
+    """
+    from . import data as D
+    if not state:
+        raise ValueError("상태 없이 정본 조합 모집단을 말할 수 없다")
+    out = set()
+    for hc in D.HALF_FILE:
+        if state not in D.HALF_FILE.get(hc, {}):
+            continue
+        if (hc, state) in D.HALF_CELL_ABSENT:
+            continue
+        out |= {(hc, si, float(w)) for si in D.SI_SOURCES for w in (0.0, 1.0)}
+    return out
+
+
+def state_of(name: str) -> str:
+    """산출 파일 이름 → 상태. `matrix_<state>.csv` · `profile_gamma_<state>_<si>.csv`."""
+    stem = (name or "").rsplit("/", 1)[-1]
+    for pre in ("matrix_", "profile_gamma_", "degeneracy_"):
+        if stem.startswith(pre):
+            rest = stem[len(pre):].rsplit(".", 1)[0]
+            if pre == "matrix_":
+                return rest
+            from . import data as D
+            for st in sorted(D.STATES if hasattr(D, "STATES") else [], key=len, reverse=True):
+                if rest == st or rest.startswith(st + "_"):
+                    return st
+            return rest.rsplit("_", 1)[0] if "_" in rest else rest
+    return ""
+
+
+def _gamma_set(rows: list) -> list:
+    return [float(r["gamma_Si"]) for r in rows if r.get("gamma_Si") not in (None, "")]
+
+
+def _same_grid(a: list, b: list, tol: float = 1e-9) -> bool:
+    if len(a) != len(b):
+        return False
+    return all(abs(x - y) <= tol * max(1.0, abs(y)) for x, y in zip(sorted(a), sorted(b)))
+
+
 _HEX64 = re.compile(r"^[0-9a-f]{64}$")
 _HEX12 = re.compile(r"^[0-9a-f]{12}$")
 
@@ -227,7 +292,7 @@ def validate_receipt(text, digest, where="", roles=REQUIRED_ROLES) -> list:
     return p
 
 
-def check_rows(kind: str, rows: list, header: list) -> list:
+def check_rows(kind: str, rows: list, header: list, name: str = "") -> list:
     """CSV 산출 한 파일의 exact schema 검사 → 문제 목록.
 
     **success / error 는 exact tagged union 이다** (Codex R10 P1-5). 전 판은 truthy `error` 한 칸이 그 행의 필수 셀·
@@ -272,7 +337,8 @@ def check_rows(kind: str, rows: list, header: list) -> list:
     if kind == "profile" and "gamma_roster" in header:
         p += check_gamma_roster([r for r in rows if not str(r.get(ERROR_COL) or "").strip()])
     if kind == "matrix" and "combo_roster" in header:            # 자체 리뷰 C05 — profile 과 같은 축
-        p += check_combo_roster([r for r in rows if not str(r.get(ERROR_COL) or "").strip()])
+        p += check_combo_roster([r for r in rows if not str(r.get(ERROR_COL) or "").strip()],
+                                state=state_of(name))
     _, dup, _ = unique_rows([r for r in rows if not str(r.get(ERROR_COL) or "").strip()],
                             matrix_key if kind == "matrix" else profile_key)
     p += [f"중복 key {k}" for k in dup]
@@ -300,7 +366,7 @@ def body_roster(name: str, data: bytes) -> dict:
     return r
 
 
-def check_combo_roster(rows: list) -> list:
+def check_combo_roster(rows: list, state: str = "") -> list:
     """matrix 의 `combo_roster` — `gamma_roster` 와 같은 계약 (자체 리뷰 C05).
 
     exact key · 개수는 정수(bool 아님) · 산술(`succeeded + |missing_input| + |failed| == requested`) ·
@@ -329,13 +395,48 @@ def check_combo_roster(rows: list) -> list:
         seen.add(json.dumps(d, sort_keys=True))
     if len(seen) > 1:
         p.append(f"combo_roster 가 행마다 다르다 ({len(seen)} 가지) — 한 실행의 모집단은 하나다")
+    # ⚠ Codex R13 P1-1: 아래까지가 전 판이다 — 전부 **산출이 스스로 적은 수끼리**의 대조라,
+    #   32 행 중 하나를 미등록 Si 로 바꾸거나 1 행이 "authority=1" 이라고 적으면 그대로 통과했다.
+    #   구성원을 독립적으로 정하지 않으면 개수 검사는 모집단을 지키지 못한다.
+    from . import data as D
+    bad_member = []
+    for i, r in enumerate(rows):
+        hc, si, w = r.get("half_cell"), r.get("si"), r.get("w_dqdv")
+        try:
+            wf = float(w) if w not in (None, "") else None
+        except (TypeError, ValueError):
+            wf = None
+        if hc not in D.HALF_FILE or si not in D.SI_SOURCES or wf not in (0.0, 1.0):
+            bad_member.append(f"행 {i}: 선언되지 않은 조합 ({hc!r}, {si!r}, {w!r}) — "
+                              f"half_cell ∈ {sorted(D.HALF_FILE)} · si ∈ {D.SI_SOURCES} · w_dqdv ∈ {{0.0, 1.0}}")
+    p += bad_member
+
     if seen and len(seen) == 1 and not p:
         d = json.loads(next(iter(seen)))
         if d["succeeded"] != len(rows):
             p.append(f"combo_roster.succeeded {d['succeeded']} ≠ 실제 행 수 {len(rows)} — 모집단 주장이 본문과 다르다")
         if d["requested"] != d["authority"]:
-            p.append(f"combo_roster.requested {d['requested']} ≠ authority {d['authority']} — 좁힌 실행은 정본이 "
-                     f"아니다 (subset 이고 canonical 자리에 있으면 안 된다)")
+            p.append(f"{CANONICAL_SLOT_PREFIX}combo_roster.requested {d['requested']} ≠ authority "
+                     f"{d['authority']} — 좁힌 실행은 정본이 아니다 (subset 이고 canonical 자리에 있으면 안 된다)")
+        elif not p:
+            # canonical 주장 → 본문 key 집합을 **독립 유도한 정본 집합**과 exact 로 댄다.
+            try:
+                want = canonical_combo_keys(state)
+            except ValueError:
+                # 상태는 **파일 이름**에서 온다. gate(`check_u14`)와 reader 는 언제나 이름을 넘기므로 여기 오지
+                # 않는다 (`test_g06` 이 그것을 고정한다). 이름 없이 부른 content-only 호출에서는 구성원 집합을
+                # 댈 근거가 없으므로 그 검사만 건너뛴다 — 위의 구성원 유효성 검사는 이미 돌았다.
+                return p
+            got = {matrix_key(r) for r in rows}
+            if d["authority"] != len(want):
+                p.append(f"combo_roster.authority {d['authority']} ≠ 상태 {state!r} 의 정본 조합 수 {len(want)} "
+                         f"(Codex R13 P1-1)")
+            extra, lack = sorted(got - want), sorted(want - got)
+            if extra:
+                p.append(f"본문에 정본 모집단 밖 조합이 있다 ({extra[:4]}{' 외' if len(extra) > 4 else ''})")
+            if lack:
+                p.append(f"canonical 주장인데 본문에 정본 조합이 빠졌다 ({lack[:4]}{' 외' if len(lack) > 4 else ''}) — "
+                         f"{len(got)}/{len(want)}")
     return p
 
 
@@ -376,12 +477,26 @@ def check_gamma_roster(rows: list) -> list:
         if d["succeeded"] != len(rows):
             p.append(f"gamma_roster.succeeded {d['succeeded']} ≠ 실제 행 수 {len(rows)} — 모집단 주장이 본문과 다르다")
         if d["requested"] != d["authority"]:
-            p.append(f"gamma_roster.requested {d['requested']} ≠ authority {d['authority']} — 좁힌 격자는 정본이 "
-                     f"아니다 (그 실행은 subset 이고 canonical 자리에 있으면 안 된다)")
+            p.append(f"{CANONICAL_SLOT_PREFIX}gamma_roster.requested {d['requested']} ≠ authority "
+                     f"{d['authority']} — 좁힌 격자는 정본이 아니다 (subset 이고 canonical 자리에 있으면 안 된다)")
         body = {float(r["gamma_Si"]) for r in rows if r.get("gamma_Si") not in (None, "")}
-        ghost = sorted(body & {float(x) for x in d["missing"]})
+        miss = [float(x) for x in d["missing"]]
+        ghost = sorted(body & set(miss))
         if ghost:
             p.append(f"gamma_roster.missing 이 본문에 있는 γ 를 누락이라 한다 ({ghost}) — 둘 중 하나가 거짓이다")
+        # ⚠ Codex R13 P1-1: 여기까지가 전 판이다 — `authority` 를 **개수**하고만 댔으므로 γ 21 개를
+        #   0~0.4 로 깔아도 정본이었고, `missing` 20 개가 전부 같은 값이어도 산술(1+20=21)만 맞으면 통과했다.
+        if len(set(miss)) != len(miss):
+            dup = sorted({x for x in miss if miss.count(x) > 1})
+            p.append(f"gamma_roster.missing 에 중복이 있다 ({dup}) — 누락은 격자의 서로 다른 점이다 (Codex R13 P1-1)")
+        want = canonical_gamma_grid()
+        if d["requested"] == d["authority"]:          # canonical 주장
+            union = sorted(body | set(miss))
+            if not _same_grid(union, want):
+                p.append(f"canonical 주장인데 본문 ∪ missing 이 정본 γ 격자가 아니다 — "
+                         f"{len(union)} 점 [{min(union) if union else float('nan'):.4g}, "
+                         f"{max(union) if union else float('nan'):.4g}] ≠ 정본 {len(want)} 점 "
+                         f"[{want[0]:.4g}, {want[-1]:.4g}] (Codex R13 P1-1)")
     return p
 
 

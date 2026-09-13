@@ -2745,23 +2745,31 @@ def matrix_row(**over):
              consumed_inputs=json.dumps(ci), ref_consumed_inputs=json.dumps(rci),
              inputs_sha=S.inputs_digest(ci), ref_inputs_sha=S.inputs_digest(rci),
              scale_audit_target="{}", scale_audit_ref="{}")
-    v["combo_roster"] = json.dumps({"authority": 1, "requested": 1, "succeeded": 1,
-                                    "missing_input": [], "failed": [], "absent": []})
+    # ⚠ Codex R13 P1-1: 전 판은 한 행짜리가 `authority=requested=1` 로 **canonical 을 주장**했고, 그때는
+    #   구성원을 아무도 안 봐서 통과했다. 한 행은 정본 모집단이 아니라 **subset** 이다 — 그렇게 선언한다.
+    #   canonical 주장을 일부러 하려는 fixture 는 `seal_combo(rows, authority=...)` 로 명시한다.
+    v["combo_roster"] = json.dumps({"authority": len(S.canonical_combo_keys("100")), "requested": 1,
+                                    "succeeded": 1, "missing_input": [], "failed": [], "absent": []})
     v.update({k: str(x) for k, x in over.items()})
     assert set(v) == set(S.MATRIX_ROW), set(v) ^ set(S.MATRIX_ROW)
     return {k: v[k] for k in S.MATRIX_ROW}
 
 
-def seal_combo(rows, authority=None):
+def seal_combo(rows, authority=None, state="100"):
     """행 목록에 **일관된** `combo_roster` 를 찍는다 — 같은 dict 를 전 행에.
 
     ⚠ 자체 리뷰 C05 뒤로 matrix 도 profile 처럼 모집단을 행에 봉인하고, 그 주장이 본문과 맞아야 한다
       (성공 수 = 행 수, canonical 주장이면 requested == authority). 한 행짜리 기본값을 그대로 쓰면 여러 행
       fixture 가 "성공 1인데 행 3" 으로 깨진다 — 그것이 정상이고, 여기서 맞춰 준다.
     """
+    from bms_balancing import schema as S
     n = len(rows)
-    d = json.dumps({"authority": authority if authority is not None else n,
-                    "requested": authority if authority is not None else n,
+    # ⚠ Codex R13 P1-1: 기본값은 **정직한 subset** 이다 (authority = 그 상태의 정본 조합 수, requested = 실제 행 수).
+    #   전 판 기본값은 `authority = requested = n` 이라 2 행짜리도 canonical 을 주장했고, 구성원 검사가 없어
+    #   통과했다. canonical 을 주장하려면 행이 정본 집합 **그대로**여야 한다 (그러면 n == authority 라 자동으로 맞는다).
+    auth = authority if authority is not None else len(S.canonical_combo_keys(state))
+    req = authority if authority is not None else n
+    d = json.dumps({"authority": auth, "requested": req,
                     "succeeded": n, "missing_input": [], "failed": [], "absent": []})
     return [dict(r, combo_roster=d) for r in rows]
 

@@ -1453,7 +1453,10 @@ def cmd_matrix(args):
     #   정본 roster 를 먼저 세고, 진단 selector 가 그것을 줄이면 그 실행은 `subset` 이다 (canonical 아님).
     # ⚠ Codex R11 P1-4: 부재 선언(`HALF_CELL_ABSENT`)과 **실제 파일이 모순**이면 조용히 빼지 않고 실패한다 —
     #   오래된 선언이 새로 생긴 측정을 숨기면 32 개짜리 실행이 16 개로 줄어든 채 complete 가 된다.
-    authority, contradictions = [], []
+    # ⚠ Codex R13 P1-1: 모집단 **구성원**의 정본은 `S.canonical_combo_keys` 한 곳이다. 전 판은 여기서 만든 집합이
+    #   산출에 **개수로만** 실렸고 checker 는 그 개수끼리만 댔다 — 32 행 중 하나를 미등록 Si 로 바꾸거나 1 행이
+    #   "authority=1" 이라 적으면 통과했다. 이제 producer 와 checker 가 **같은 함수**를 쓴다.
+    contradictions = []
     for hc in D.HALF_FILE:
         if args.state not in D.HALF_FILE.get(hc, {}):
             continue
@@ -1461,7 +1464,7 @@ def cmd_matrix(args):
             if D.half_cell_path(root, hc, args.state).is_file():
                 contradictions.append(f"{hc}/{args.state}")
             continue                                     # 알려진 부재 — 요청 자체가 아니다
-        authority += [(hc, si, w) for si in D.SI_SOURCES for w in (0.0, 1.0)]
+    authority = sorted(S.canonical_combo_keys(args.state))
     if contradictions:
         print(f"! 부재 선언과 실제 파일이 모순이다 — `D.HALF_CELL_ABSENT` 는 {contradictions} 를 없다고 선언했는데 "
               f"파일이 있다. 선언을 고치기 전에는 이 상태의 모집단을 말할 수 없다 (Codex R11 P1-4) → 종료 코드 2",
@@ -1648,8 +1651,11 @@ def cmd_profile(args):
 
     # ⚠ Codex R11 P1-3: γ 격자는 **계약**이다 (`S.CANONICAL_GAMMA_GRID_N`). `--grid 1` 은 1 점짜리 산출을 냈고 모든
     #   span 이 0 인 채 complete·canonical·rc 0 이었다. 다른 격자는 진단이고 canonical 이 아니다.
-    gammas = np.linspace(LB5[4], UB5[4], args.grid)
+    # ⚠ Codex R13 P1-1: 정본 격자의 **값**도 `S.canonical_gamma_grid` 한 곳에서 나온다 — 전 판은 개수만 계약이라
+    #   21 점을 0~0.4 로 깔아도 canonical 로 통과했다. 다른 격자 수는 진단이고 canonical 이 아니다.
     grid_subset = int(args.grid) != S.CANONICAL_GAMMA_GRID_N
+    gammas = (np.array(S.canonical_gamma_grid()) if not grid_subset
+              else np.linspace(LB5[4], UB5[4], args.grid))
     per_gamma_scale = getattr(args, "profile_scale", "global") == "per-gamma"
     global_scales = dict(obj.scales)
     rows, skipped = [], []
