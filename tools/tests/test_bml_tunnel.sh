@@ -353,6 +353,24 @@ check "LAN 주소는 당연히 아니다"   "$(is_our_tunnel_url http://192.168.
 check "이름만 비슷한 것은 아니다"  "$(is_our_tunnel_url https://evil-lhr.life.example.com && echo yes || echo no)" "no"
 
 echo
+echo "이름으로 열 자격을 셀 때 VPS 를 빠뜨리지 않는다"
+# 2026-09-13.  우리 VPS 로 test.bmlwork.kr 이 잘 열려 있는데 `bml status` 가
+# 이렇게 적었다:
+#
+#   ! 터널 이름  test.bmlwork.kr — 그런데 붙을 자격이 없습니다 (랜덤 주소로 열립니다).
+#     bml share cf <토큰> 또는 bml share key <키 경로>
+#
+# 그리고 **두 줄 아래에서 스스로를 반박했다**: "공유 주소 https://test.bmlwork.kr
+# ... 터널은 살아 있습니다".  자격을 세는 곳(cf 토큰·ssh 키 둘만 봤다)이 갈래를
+# 고르는 곳(VPS 를 제일 먼저 본다)을 안 보고 있었다.  순서까지 같아야 한다 --
+# 다르면 화면이 실제로 열리는 길과 다른 길을 안내한다.
+check "VPS 가 있으면 vps"       "$(tunnel_vps() { true; }; tunnel_cf_token() { false; }; tunnel_ssh_key() { false; }; domain_credential)" "vps"
+check "VPS 가 먼저다"           "$(tunnel_vps() { true; }; tunnel_cf_token() { true; }; tunnel_ssh_key() { true; }; domain_credential)" "vps"
+check "VPS 가 없으면 cf"        "$(tunnel_vps() { false; }; tunnel_cf_token() { true; }; tunnel_ssh_key() { true; }; domain_credential)" "cf"
+check "둘 다 없으면 key"        "$(tunnel_vps() { false; }; tunnel_cf_token() { false; }; tunnel_ssh_key() { true; }; domain_credential)" "key"
+check "셋 다 없어야 none"       "$(tunnel_vps() { false; }; tunnel_cf_token() { false; }; tunnel_ssh_key() { false; }; domain_credential)" "none"
+
+echo
 echo "우리 것으로 못 알아본 https 에 LAN 점검표를 주지 않는다"
 # 2026-09-13, 우리 VPS 를 세운 날.  클라이언트 기계에서
 # `bml use https://test.bmlwork.kr` 이 TLS reset 으로 막혔는데 화면이
@@ -871,7 +889,10 @@ check "? 도 실패로 끝난다"      "$(grep -c 'VERIFY_FAIL=1' "$SETUP")" "2"
 # 여기서 못 재는 셋을 이름으로 남긴다 -- 조용히 빼면 통과한 것처럼 보인다.
 check "못 재는 것을 밝힌다"     "$(grep -c '여기서 못 재는 것이 셋' "$SETUP")" "1"
 # 회색 구름이어야 한다 — 주황 구름은 올리는 파일을 100 MB 로 막는다.
-check "회색 구름을 안내한다"    "$(grep -c '회색 구름' "$BV")" "1"
+# 1 -> 2: `bml share domain` 의 VPS 갈래에서도 같은 말을 한다.  이름을 적는
+# 그 자리가 A 레코드를 만지는 자리라, 거기서 안 말하면 주황 구름으로 만들고
+# 넘어간다 -- 그러면 랩 안에서 되던 업로드가 밖에서만 413 으로 죽는다.
+check "회색 구름을 안내한다"    "$(grep -c '회색 구름' "$BV")" "2"
 
 echo
 echo "7844 이 막힌 것과 이름을 못 구한 것은 다르다"
@@ -977,7 +998,10 @@ check "저쪽 계정 안내를 안 띄운다" \
 # 티가 안 난다.
 ST="$(awk '/^cmd_status\(\) \{/,/^\}/' "$BMLF")"
 check "status 가 고정 이름을 적는다" "$(printf '%s' "$ST" | grep -c '고정 — 열어도 안 바뀝니다')" "1"
-check "반쪽 설정을 status 가 잡는다" "$(printf '%s' "$ST" | grep -c '토큰만 있고 이름이 없습니다')" "1"
+# 문구가 "토큰만 있고" 에서 "여는 길은 있는데" 로 바뀌었다.  여는 길이 셋이
+# 되면서(VPS·토큰·키) 토큰만 짚는 말이 나머지 둘에는 거짓이 되기 때문이다.
+# 재는 것은 그대로다: **반쪽 설정을 열어 보기 전에 잡는가.**
+check "반쪽 설정을 status 가 잡는다" "$(printf '%s' "$ST" | grep -c '여는 길은 있는데 이름이 없습니다')" "1"
 
 echo
 echo "이름이 막힌 기계 — hosts 대신 중계기로"

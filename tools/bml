@@ -3847,6 +3847,24 @@ KEEPALIVE
 }
 
 #: 우리 VPS 로 여는 길.  주소는 우리 도메인이고 안 바뀐다 (ADR 0034).
+#: 적어 둔 이름으로 **실제로 열 수 있는 자격**이 이 기계에 무엇이 있는가.
+#:
+#:   vps   우리 VPS (ADR 0034)      cf   Cloudflare 토큰
+#:   key   localhost.run 등록 키    none 없음 -- 이름이 있어도 랜덤으로 열린다
+#:
+#: **순서가 `bml share` 의 갈래 순서와 같아야 한다.** 다르면 화면이 실제로
+#: 열리는 길과 다른 길을 안내한다.  2026-09-13 에 그렇게 갈렸다: 우리 VPS 로
+#: 잘 열려 있는데 `bml status` 가 "붙을 자격이 없습니다 — bml share cf <토큰>
+#: 또는 bml share key <키 경로>" 라고 적었다.  그 화면은 **두 줄 아래에서
+#: 스스로를 반박한다** ("공유 주소 https://test.bmlwork.kr ... 터널은 살아
+#: 있습니다").  자격을 세는 곳이 갈래를 고르는 곳을 안 보고 있었다.
+domain_credential() {
+  tunnel_vps      >/dev/null 2>&1 && { printf 'vps\n'; return 0; }
+  tunnel_cf_token >/dev/null 2>&1 && { printf 'cf\n';  return 0; }
+  tunnel_ssh_key  >/dev/null 2>&1 && { printf 'key\n'; return 0; }
+  printf 'none\n'
+}
+
 tunnel_via_vps() {
   local keep="${1:-0}" target dom
   target="$(tunnel_vps)" || return 1
@@ -4074,6 +4092,16 @@ cmd_share_domain() {
   # 이름만으로는 못 연다.  붙을 자격이 있어야 하고, 그것이 토큰(Cloudflare)이나
   # 등록한 키(localhost.run)다.  둘 다 없으면 다음 `bml share` 가 그냥 랜덤
   # 주소로 열리는데, 사람은 방금 이름을 적었으니 그 이름이 열린 줄 안다.
+  # VPS 가 먼저다 -- `bml share` 의 갈래 순서와 같아야 한다.  안 그러면 실제로
+  # 열리는 길과 다른 길을 안내한다 (실측: VPS 로 열리는데 localhost.run 에
+  # 도메인을 등록하라고 했다).
+  if tunnel_vps >/dev/null; then
+    say "  ${DIM}우리 VPS ($(tunnel_vps))의 nginx 가 이 이름을 받습니다 (ADR 0034).${OFF}"
+    say "  ${DIM}그 기계에서${OFF} ${GREEN}sudo bash tools/vps-setup.sh ${dom} <메일>${OFF} ${DIM}을 돌렸고,${OFF}"
+    say "  ${DIM}DNS 의 A 레코드가 그 기계를 가리켜야 합니다 (회색 구름).${OFF}"
+    say "  ${GREEN}bml share stop${OFF} ${DIM}후${OFF} ${GREEN}bml share${OFF} ${DIM}— 그 이름이 진짜 열리는지 그 자리에서 확인합니다.${OFF}"
+    return 0
+  fi
   if tunnel_cf_token >/dev/null; then
     say "  ${DIM}대시보드의 Public Hostname 이 이 이름이어야 합니다 (→ HTTP localhost:${PORT}).${OFF}"
     say "  ${GREEN}bml share stop${OFF} ${DIM}후${OFF} ${GREEN}bml share${OFF} ${DIM}— 그 이름이 진짜 열리는지 그 자리에서 확인합니다.${OFF}"
@@ -5343,16 +5371,21 @@ cmd_status() {
   # 주소로 열리는데, 이름을 적어 둔 사람은 그 이름이 열린 줄 안다.  그 어긋남은
   # 열어 보기 전에는 안 보이므로 여기서 말한다.
   local cf_dom=""; cf_dom="$(tunnel_domain 2>/dev/null || true)"
-  if tunnel_cf_token >/dev/null; then
-    if [ -n "$cf_dom" ]; then
-      say "터널 이름   ${B}https://${cf_dom}${OFF}  ${DIM}(고정 — 열어도 안 바뀝니다)${OFF}"
-    else
-      warn "터널 이름   토큰만 있고 이름이 없습니다 — 랜덤 주소로 열립니다."
-      say "  ${GREEN}bml share domain bml.<우리도메인>${OFF}"
-    fi
+  local cred; cred="$(domain_credential)"
+  if [ -n "$cf_dom" ] && [ "$cred" != "none" ]; then
+    local how
+    case "$cred" in
+      vps) how="우리 VPS $(tunnel_vps 2>/dev/null)" ;;
+      cf)  how="Cloudflare 토큰" ;;
+      *)   how="localhost.run 등록 키" ;;
+    esac
+    say "터널 이름   ${B}https://${cf_dom}${OFF}  ${DIM}(고정 — 열어도 안 바뀝니다 · ${how})${OFF}"
+  elif [ -z "$cf_dom" ] && [ "$cred" != "none" ]; then
+    warn "터널 이름   여는 길은 있는데 이름이 없습니다 — 랜덤 주소로 열립니다."
+    say "  ${GREEN}bml share domain bml.<우리도메인>${OFF}"
   elif [ -n "$cf_dom" ]; then
     warn "터널 이름   ${cf_dom} — 그런데 붙을 자격이 없습니다 (랜덤 주소로 열립니다)."
-    say "  ${GREEN}bml share cf <토큰>${OFF} ${DIM}또는${OFF} ${GREEN}bml share key <키 경로>${OFF}"
+    say "  ${GREEN}bml share vps <사용자@호스트>${OFF} ${DIM}(ADR 0034) ·${OFF} ${GREEN}bml share cf <토큰>${OFF} ${DIM}·${OFF} ${GREEN}bml share key <키 경로>${OFF}"
   fi
   # 터널이 **스스로 죽은** 경우.  주소 파일은 남고 프로세스만 없다 (SSH 가
   # 끊기거나 랩 망이 그 연결을 자르면 그렇게 된다).
