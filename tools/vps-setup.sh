@@ -24,6 +24,21 @@
 
 set -euo pipefail
 
+# **이 파일에서는 파이프 뒤에 `grep -q` 를 쓰지 않는다.**
+#
+# `grep -q` 는 첫 일치에서 곧바로 끝나며 파이프를 닫는다.  왼쪽이 아직 쓸 것을
+# 남겨 뒀으면 SIGPIPE 로 죽고, `pipefail` 이 그 141 을 파이프라인의 값으로
+# 삼는다 — **찾았는데 못 찾은 것으로 읽힌다.**
+#
+# 실측(Oracle Ubuntu 22.04, 첫 실제 실행): `sshd -T` 는 백 줄 남짓을 내는데
+# `gatewayports` 는 그 앞쪽에 있다.  값이 `no` 인데도 설치가
+# "실효 GatewayPorts 가 no 가 아닙니다 — 멈춥니다" 로 멎었다.  같은 함정이
+# `ss`·`systemctl list-timers`·`nginx -T` 를 읽는 자리에도 그대로 있었다 —
+# 그쪽은 멈추지 않고 **통과한 것을 실패로 적는다.**
+#
+# 대신 `grep ... >/dev/null` 을 쓴다.  입력을 끝까지 읽으므로 SIGPIPE 가 없고
+# 종료 코드는 그대로다.
+
 # --- 인자 -------------------------------------------------------------------
 
 CHECK_ONLY=0
@@ -51,7 +66,7 @@ usage() {
 # 하나 더 생기는 것과 같다.
 valid_domain() {
   # 라벨은 영숫자로 시작·끝나고, 가운데만 하이픈.  마지막 라벨은 글자만.
-  printf '%s' "$1" | grep -qE '^([A-Za-z0-9]([A-Za-z0-9-]*[A-Za-z0-9])?\.)+[A-Za-z]{2,}$'
+  printf '%s' "$1" | grep -E '^([A-Za-z0-9]([A-Za-z0-9-]*[A-Za-z0-9])?\.)+[A-Za-z]{2,}$' >/dev/null
 }
 valid_port() {
   case "$1" in ''|*[!0-9]*) return 1 ;; esac
@@ -86,7 +101,7 @@ check_ports() {
   echo "▸ 이 기계의 공인 IP: ${ip:-못 구했습니다}"
   echo "▸ DNS 가 가리키는 곳:  $(getent hosts "$DOMAIN" | awk '{print $1}' | tr '\n' ' ')"
   for p in 80 443; do
-    if ss -H -ltn "sport = :$p" | grep -q .; then
+    if ss -H -ltn "sport = :$p" | grep . >/dev/null; then
       echo "  :$p  이 기계 안에서는 열려 있습니다"
     else
       echo "  :$p  이 기계 안에서 아무도 안 듣고 있습니다"
@@ -179,7 +194,7 @@ verify_all() {
   # 5. 인증서.  없으면 https 가 아예 없고, 있으면 갱신이 도는지가 다음 질문이다.
   if [ -s "/etc/letsencrypt/live/$DOMAIN/fullchain.pem" ]; then
     say_pass "인증서가 있습니다 (/etc/letsencrypt/live/$DOMAIN)"
-    if systemctl list-timers --all 2>/dev/null | grep -q certbot \
+    if systemctl list-timers --all 2>/dev/null | grep certbot >/dev/null \
        || systemctl is-enabled certbot.timer >/dev/null 2>&1; then
       say_pass "갱신 타이머가 있습니다 (그래도 --dry-run 은 한 번 돌려 보세요)"
     else
@@ -193,16 +208,16 @@ verify_all() {
   if command -v nginx >/dev/null 2>&1 && nginx -T >/dev/null 2>&1; then
     local dumped
     dumped="$(nginx -T 2>/dev/null)"
-    printf '%s' "$dumped" | grep -q 'client_max_body_size 520m' \
+    printf '%s' "$dumped" | grep 'client_max_body_size 520m' >/dev/null \
       && say_pass "업로드 상한 520m 이 실효 설정에 있습니다" \
       || say_fail "업로드 상한이 실효 설정에 없습니다 (HTTPS 에서만 413 이 납니다)"
-    printf '%s' "$dumped" | grep -q 'proxy_request_buffering off' \
+    printf '%s' "$dumped" | grep 'proxy_request_buffering off' >/dev/null \
       && say_pass "요청을 쌓아 두지 않습니다" \
       || say_fail "proxy_request_buffering 이 기본(on)입니다"
-    printf '%s' "$dumped" | grep -q 'proxy_read_timeout 75s' \
+    printf '%s' "$dumped" | grep 'proxy_read_timeout 75s' >/dev/null \
       && say_pass "/api/events 가 75s 로 잡혀 있습니다" \
       || say_fail "SSE timeout 이 안 잡혀 있습니다"
-    printf '%s' "$dumped" | grep -qE 'listen[[:space:]]+443' \
+    printf '%s' "$dumped" | grep -E 'listen[[:space:]]+443' >/dev/null \
       && say_pass "443 이 서 있습니다" \
       || say_fail "443 블록이 없습니다 (certbot 이 안 붙였습니다)"
   else say_unknown "nginx -T 를 못 읽었습니다"; fi
@@ -304,7 +319,7 @@ CONF
 sshd -t
 # **실효값을 확인하고서야 넘어간다.**  못 읽으면 멈춘다 — 모르면서 열지 않는다.
 if ! sshd -T -C "user=$TUNNEL_USER,host=localhost,addr=127.0.0.1" \
-     2>/dev/null | grep -qi '^gatewayports no$'; then
+     2>/dev/null | grep -i '^gatewayports no$' >/dev/null; then
   echo "sshd 의 실효 GatewayPorts 가 no 가 아닙니다 — 멈춥니다." >&2
   echo "  sudo sshd -T -C user=$TUNNEL_USER,host=localhost,addr=127.0.0.1 | grep -i gatewayports" >&2
   exit 4

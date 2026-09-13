@@ -7190,3 +7190,62 @@ wrdkit 9건 + API 3건. 파이썬 전체·웹 708건 통과.
 
 일부러 안 한 것: 여기서 새 장치를 만들지 않았다. 반쪽짜리 자동 재연결을
 붙이면 ADR 0034 를 흐릴 뿐이다.
+
+## [2026-09-13] fix | pipefail 과 grep -q 가 짝을 이뤄, 맞는 값을 틀렸다고 읽었다
+
+`tools/vps-setup.sh` 가 **처음으로 실제 기계에서 돌았고** (Oracle Cloud
+Always Free AMD micro, Ubuntu 22.04.5, 도쿄) sshd 검사에서 멎었다:
+
+    ▸ sshd — 그 사용자만, 127.0.0.1:5003 만
+    sshd 의 실효 GatewayPorts 가 no 가 아닙니다 — 멈춥니다.
+
+그런데 그 기계에서 손으로 재면 값이 맞다:
+
+    $ sudo /usr/sbin/sshd -T -C user=bml-tunnel,host=localhost,addr=127.0.0.1 \
+        | grep -i gatewayports
+    gatewayports no
+
+원인은 sshd 도 도메인도 아니고 **셸**이다. `grep -q` 는 첫 일치에서 곧바로
+끝나며 파이프를 닫는다. `sshd -T` 는 백 줄 남짓을 내는데 `gatewayports` 가 그
+앞쪽에 있어서, 아직 쓸 것이 남은 sshd 가 SIGPIPE 로 죽는다. 그리고 이 파일은
+`set -euo pipefail` 이라 그 141 이 파이프라인 전체의 값이 된다 — **찾았는데 못
+찾은 것으로 읽힌다.** 최소 재현:
+
+    $ bash -c 'set -euo pipefail; seq 1 200000 | grep -q "^5$"'; echo $?
+    1
+    $ bash -c 'set -euo pipefail; seq 1 200000 | grep "^5$" >/dev/null'; echo $?
+    0
+
+같은 함정이 일곱 곳 더 있었다: `--check` 의 `ss`, `--verify` 의
+`systemctl list-timers` 와 `nginx -T` 검사 넷, `valid_domain` 의 `printf`.
+**멎은 자리는 그나마 나은 쪽이다** — 사람이 본다. `--verify` 쪽은 멈추지 않고
+**통과한 것을 실패로 적는다**. 다 세워 놓고 "업로드 상한이 실효 설정에
+없습니다 · 443 블록이 없습니다" 를 보며 nginx 를 뒤지게 된다.
+
+전부 `grep ... >/dev/null` 로 바꿨다. 입력을 끝까지 읽으므로 SIGPIPE 가 없고
+종료 코드는 같다.
+
+**일부러 안 고친 것**: 파일을 직접 읽는 `grep -q pattern file` 두 곳
+(`authorized_keys` 의 permitlisten, `$SITE` 의 include). 상류 프로세스가 없어
+SIGPIPE 가 날 수 없다. 규칙을 "파이프 뒤" 로 한정한 이유다.
+
+`tools/tests/test_vps_setup.sh` 가 이걸 고정한다. 규칙만 적으면 다음 사람이
+"왜 -q 를 못 쓰지" 로 읽고 되돌리므로, **함정 자체를 먼저 재현해 보이고** 나서
+규칙을 잰다. `bash -n` 과 LF(§0.5)도 같이 본다. 되돌리면 잡히는 것을 확인했다
+— `-q` 를 하나 되살리니 줄 번호까지 짚어 실패했다.
+
+### 그 기계 (0단계 완료, 아직 버릴 것)
+
+- Oracle Always Free AMD micro `VM.Standard.E2.1.Micro`, Ubuntu 22.04, 도쿄
+- 공인 IP `193.123.161.75` (ephemeral), 사설 `10.0.0.51`
+- 콘솔 방화벽: Quick action 이 만든 NSG `ig-quick-action-NSG` 에 ingress
+  TCP 22·80·443. **Security List 는 안 건드렸다** — NSG 와 Security List 는
+  합집합이라 한쪽만 열어도 통과한다. 5003 은 열지 않았다.
+- 기계 안 iptables: `REJECT` 가 5번이어서 그 앞에 443·80 을 끼웠다
+  (스크립트 주석의 `6` 은 예시다 — 이미지마다 다르니 꼭 재고 넣는다).
+  `netfilter-persistent save` 로 ip4/ip6 둘 다 저장.
+- DNS: `test.bmlwork.kr` A → 그 IP, **회색 구름**. `bmlwork.kr` 의 NS 는
+  `laura/cory.ns.cloudflare.com` 로 살아 있다.
+- 걸려 있는 것 하나: `bml.bmlwork.kr` 에 **Cloudflare Tunnel 레코드가 이미
+  있다** (ADR 0031 에서 접은 `cloudflared` 의 흔적). 2단계에서 실제 이름을
+  걸 때 그것부터 지워야 한다.
