@@ -1,0 +1,57 @@
+{
+ "scipy": "1.18.1",
+ "python": "3.12.3",
+ "tighten": 0.1,
+ "git_head": "83c7041a8",
+ "date": "2026-09-13",
+ "channels": {
+  "ionic": {
+   "n_cases": 30,
+   "n_ok": 23,
+   "n_iterative": 10,
+   "n_direct": 13,
+   "n_no_network": 0,
+   "n_solve_none": 7,
+   "rho_pct_max_iterative": 0.0,
+   "rho_pct_max_all": 0.0,
+   "paths": [
+    "cg",
+    "spsolve"
+   ],
+   "kwargs": [
+    "atol"
+   ]
+  },
+  "electronic": {
+   "n_cases": 30,
+   "n_ok": 30,
+   "n_iterative": 0,
+   "n_direct": 30,
+   "n_no_network": 0,
+   "n_solve_none": 0,
+   "rho_pct_max_iterative": null,
+   "rho_pct_max_all": 0.0,
+   "paths": [
+    "spsolve"
+   ],
+   "kwargs": []
+  },
+  "thermal": {
+   "n_cases": 30,
+   "n_ok": 30,
+   "n_iterative": 12,
+   "n_direct": 18,
+   "n_no_network": 0,
+   "n_solve_none": 0,
+   "rho_pct_max_iterative": 0.0,
+   "rho_pct_max_all": 0.0,
+   "paths": [
+    "cg",
+    "spsolve"
+   ],
+   "kwargs": [
+    "atol"
+   ]
+  }
+ }
+}
