@@ -1027,25 +1027,38 @@ def _selftest() -> int:
     #    ⚠ 이 핀들은 **추측이 아니라 실측**이다 — `git show HEAD:scripts/plastic_coverage.py`
     #      를 격리 로드해 찍었다.  초판에서 내가 값을 눈대중으로 적었다가 ⑨ 가 빨간불을
     #      냈다 (π/2 꼴을 그럴듯하게 적은 것).  **회귀 핀을 손으로 짓지 않는다.**
-    #      일곱 핀이 결속을 전부 덮는다: hertzian · tabor(양쪽 비대칭) · elastic · transition · **volume ×2**.
+    #      열한 핀이 결속 여섯 가지를 전부 덮는다 — ⑨b 가 집합으로 강제한다.
     #    ⚠ 2차 정정: 처음 다섯 핀에 **volume 결속 핀이 없었다** — L1-02 가 건드리는 바로 그
     #      자리를 ⑨ 가 안 보고 있었다 (Codex 요청서 §5 에 적고 바로 고쳤다).  두 개 추가.
-    pins = [((1.0e-6, 1.0e-6, 0.010), 7.853981633974482e-15),    # hertzian · plastic
-            ((0.5e-6, 6.0e-6, 0.200), 6.699127524369602e-13),    # tabor · plastic
-            ((2.0e-6, 2.0e-6, 0.001), 3.141592653589793e-15),    # elastic · elastic
-            ((0.5e-6, 6.0e-6, 0.002), 1.338430006263107e-15),    # hertzian · transition
-            ((3.0e-6, 0.8e-6, 0.050), 1.568078326341361e-13),    # tabor · plastic (역순 반경)
-            ((0.5e-6, 0.5e-6, 0.050), 1.2067315531367042e-14),   # **volume** · plastic (동일 반경)
-            ((0.5e-6, 6.0e-6, 0.030), 2.7520180051856025e-14)]   # **volume** · plastic (SE↔AM)
+    #    3차: **liggghts 결속 핀**도 없었다 (Codex 요청서 §5 에 스스로 적어 둔 구멍) — 교차원판을
+    #      `ligg_area` 로 넣은 얕은 겹침 2개 추가.  핀 값은 역시 계측 전 코드에서 실측.
+    #      ⇒ 열한 핀이 결속 **여섯 가지 전부**를 덮는다 (⑨b 가 집합으로 강제): hertzian · tabor ·
+    #         elastic · volume · liggghts · geom.
+    pins = [((1.0e-6, 1.0e-6, 0.010, None), 7.853981633974482e-15),    # hertzian · plastic
+            ((0.5e-6, 6.0e-6, 0.200, None), 6.699127524369602e-13),    # tabor · plastic
+            ((2.0e-6, 2.0e-6, 0.001, None), 3.141592653589793e-15),    # elastic · elastic
+            ((0.5e-6, 6.0e-6, 0.002, None), 1.338430006263107e-15),    # hertzian · transition
+            ((3.0e-6, 0.8e-6, 0.050, None), 1.568078326341361e-13),    # tabor · plastic (역순 반경)
+            ((0.5e-6, 0.5e-6, 0.050, None), 1.2067315531367042e-14),   # **volume** · plastic (동일 반경)
+            ((0.5e-6, 6.0e-6, 0.030, None), 2.7520180051856025e-14),   # **volume** · plastic (SE↔AM)
+            ((0.5e-6, 0.5e-6, 0.010, 3.9220820784660005e-15), 3.9220820784660005e-15),  # **liggghts** · plastic
+            ((0.5e-6, 6.0e-6, 0.005, 6.678979268489997e-15), 6.678979268489997e-15),   # **liggghts** · transition
+            ((0.5e-6, 0.5e-6, 0.900, None), 1.5707963267948965e-12),   # **geom** · plastic (= 2πR_min²)
+            ((0.5e-6, 6.0e-6, 0.500, None), 1.5707963267948965e-12)]   # **geom** · plastic (SE↔AM)
     bad = []
-    for (ra, rb, dratio), want in pins:
+    seen_bindings = set()
+    for (ra, rb, dratio, lg), want in pins:
         Rs_ = ra * rb / (ra + rb)
         got_A, _g, _gc = film_area_from_overlap(dratio * Rs_, Rs_, R_min=min(ra, rb),
-                                                ligg_area=None, mode='physics',
+                                                ligg_area=lg, mode='physics',
                                                 return_components=True)
+        seen_bindings.add(_gc['binding'])
         if abs(got_A - want) > 1e-12 * max(abs(want), 1e-30):
             bad.append((ra, rb, dratio, got_A, want))
     chk('⑨ 기본 동작 불변: A_final 이 계측 추가 전 값과 같다', not bad, f'{bad}')
+    chk('⑨b 핀이 결속 여섯 가지를 **전부** 덮는다 (덮지 않는 결속은 ⑨ 가 안 본 자리다)',
+        seen_bindings == {'hertzian', 'tabor', 'elastic', 'volume', 'liggghts', 'geom'},
+        f'{sorted(seen_bindings)}')
 
     # ⑩ 판별력 — 계측이 **실제로 다른 값**을 들고 있다 (legacy ≠ exact)
     Rs_ = 0.25e-6
