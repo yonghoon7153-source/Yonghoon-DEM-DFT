@@ -114,13 +114,97 @@ def _pair_kind(t1, t2):
     return {('AM', 'AM'): 'AM_AM', ('SE', 'SE'): 'SE_SE'}.get((a, b), 'AM_SE')
 
 
-def audit_case(case_dir, contact_mode='physics', channels=('ionic', 'electronic', 'thermal')):
+def type_map_from_deck(deck_path):
+    """LIGGGHTS 덱에서 **type → 상** 지도를 유도한다.  두 신호를 교차확인한다.
+
+    ★ 왜 필요한가 (실측): LHS 코퍼스는 **케이스마다 type 구성이 다르다**.
+      `lhs00_000` 은 헤더가 `bimodal (3-type)` 인데 `lhs00_100` 의 원자 분포는
+      `{1: 796, 2: 30315}` 로 **type 3 이 0개**다.  하나를 박아 두면 채널 분류가 통째로
+      틀린다 — `AREA-02`(모집단이 조용히 달라진다)를 재생산하는 자리다.
+
+    신호 ①  `fix pts<N> ... particletemplate/sphere ... atom_type <T> ... radius constant ${VAR}`
+             → VAR 이름(`r_AM_P` · `r_AM_S` · `r_SE`)이 상을 말한다.
+    신호 ②  `fix m1 ... youngsModulus peratomtype E1 E2 ...`
+             → **연화된 값**(<1e7 sim)이 SE 다 (AM 은 1.4e8).
+
+    ⛔ 둘이 어긋나거나 어느 하나라도 못 읽으면 **거부**한다 (추측하지 않는다).
+    """
+    txt = Path(deck_path).read_text(errors='replace')
+    tm, src = {}, {}
+    for raw in txt.split('\n'):
+        line = raw.split('#', 1)[0].strip()
+        if 'particletemplate/sphere' not in line:
+            continue
+        toks = line.split()
+        t = var = None
+        for i, w in enumerate(toks):
+            if w == 'atom_type' and i + 1 < len(toks):
+                try:
+                    t = int(toks[i + 1])
+                except ValueError:
+                    pass
+            if w == 'radius' and i + 2 < len(toks) and toks[i + 1] == 'constant':
+                var = toks[i + 2]
+        if t is None or not var:
+            continue
+        u = var.upper().strip('${}')
+        #  ⚠ 순서가 중요하다 — mono 케이스는 `${r_AM}` 로 **접미사가 없다**
+        #    (`lhs00_100: mono_AM_S (2-type)` 의 덱이 그렇다).  AM_P/AM_S 를 먼저 보고
+        #    그 다음 SE, 마지막에 맨 AM.
+        ph = ('AM_P' if 'AM_P' in u else
+              'AM_S' if 'AM_S' in u else
+              'SE'   if 'SE'   in u else
+              'AM'   if 'AM'   in u else None)
+        if ph is None:
+            raise ValueError(f'{deck_path}: atom_type {t} 의 반경 변수 {var!r} 에서 '
+                             f'상을 못 읽는다 (AM_P·AM_S·AM·SE 중 하나여야 한다)')
+        if t in tm and tm[t] != ph:
+            raise ValueError(f'{deck_path}: atom_type {t} 가 {tm[t]} 와 {ph} 로 중복 정의')
+        tm[t] = ph
+        src[t] = var
+    if not tm:
+        raise ValueError(f'{deck_path}: particletemplate/sphere 를 못 찾았다')
+
+    #  ── 신호 ② 로 **교차확인** ────────────────────────────────────────────
+    es = []
+    for raw in txt.split('\n'):
+        line = raw.split('#', 1)[0].strip()
+        if 'youngsModulus' in line and 'peratomtype' in line:
+            for p in line.split('peratomtype')[-1].split():
+                try:
+                    es.append(float(p))
+                except ValueError:
+                    break
+            break
+    if es:
+        soft = {i + 1 for i, e in enumerate(es) if e < 1e7}
+        declared_se = {t for t, v in tm.items() if v == 'SE'}
+        if soft and declared_se and soft != declared_se:
+            raise ValueError(
+                f'{deck_path}: 두 신호가 어긋난다 — 템플릿이 말하는 SE={sorted(declared_se)} '
+                f'인데 youngsModulus 의 연화 type={sorted(soft)} (E={es}).  추측하지 않는다.')
+    return tm, src
+
+
+def audit_case(case_dir, contact_mode='physics', channels=('ionic', 'electronic', 'thermal'),
+               deck_dir=None):
     """한 케이스 — **솔버가 만든 간선**에서 `R_constriction == 0` 을 센다.
 
     ⚠ 예외를 **비삭제로 만들지 않는다** — 실패는 `error` 로 올리고 `None` 을 돌려준다
     (옛 판은 helper 예외를 삼켜 분모에는 남기고 삭제는 0 으로 셌다).
     """
     atoms, type_map, scale, _meta = _SED.load_case(case_dir)
+    #  ★ 덱이 있으면 **그것이 정본**이다 — meta.json 의 손으로 적은 지도보다 우선한다
+    #    (케이스마다 type 구성이 다르다는 것을 실측으로 확인했다).
+    deck_used = ''
+    if deck_dir:
+        cands = [Path(deck_dir) / case_dir.name / f'input_{case_dir.name}.liggghts',
+                 Path(deck_dir) / f'input_{case_dir.name}.liggghts']
+        dk = next((p for p in cands if p.is_file()), None)
+        if dk is None:
+            raise ValueError(f'덱을 못 찾았다: {[str(p) for p in cands]}')
+        type_map, _src = type_map_from_deck(dk)
+        deck_used = str(dk)
     contacts = _SED.load_contacts(case_dir)
     if not contacts:
         raise ValueError('접촉 행이 0개')
@@ -137,7 +221,8 @@ def audit_case(case_dir, contact_mode='physics', channels=('ionic', 'electronic'
     row = {'case': case_dir.name, 'contact_mode': contact_mode,
            'n_contact_rows': len(contacts),
            'type_hist': ';'.join(f'{t}:{type_hist[t]}' for t in all_types),
-           'type_map': ';'.join(f'{k}={v}' for k, v in sorted(type_map.items()))}
+           'type_map': ';'.join(f'{k}={v}' for k, v in sorted(type_map.items())),
+           'deck': deck_used}
     for ch in channels:
         mode, pick = CHANNELS[ch]
         tt = pick(type_map)
@@ -194,6 +279,9 @@ def main() -> int:
     #  ⚠ CLAUDE.md 가 경고한 자리 — **코드 폴더 ≠ 데이터 폴더**.
     ap.add_argument('--webapp', default='',
                     help='results/ · archive/ 가 있는 폴더.  env AUDIT_WEBAPP 도 가능.')
+    ap.add_argument('--deck-dir', default='',
+                    help='LIGGGHTS 덱이 있는 폴더 — `<deck-dir>/<case>/input_<case>.liggghts`.  '
+                         '주면 **덱에서 type_map 을 유도**한다 (meta.json 보다 우선).')
     ap.add_argument('--selftest', action='store_true')
     a = ap.parse_args()
     if a.selftest:
@@ -232,7 +320,8 @@ def main() -> int:
     rows, errs = [], []
     for i, d in enumerate(cases):
         try:
-            r = audit_case(d, contact_mode=a.contact_mode, channels=chans)
+            r = audit_case(d, contact_mode=a.contact_mode, channels=chans,
+                           deck_dir=(a.deck_dir or None))
         except Exception as e:                      # ⚠ 실패를 **비삭제로 만들지 않는다**
             errs.append((d.name, f'{type(e).__name__}: {e}'))
             print(f'  [{i+1:>3}/{len(cases)}] {d.name[:34]:34s}  ⛔ {type(e).__name__}')
@@ -369,6 +458,48 @@ def _selftest() -> int:
     # ── ⑦ 문턱 기록값 (판정용 아님) ────────────────────────────────────────
     chk('⑦ 기록 문턱 A/(πr²) = 0.9956957722087699 (ψ 정확 0 인 1 과 **다르다**)',
         abs(AREA_FRAC - 0.9956957722087699) < 1e-15, f'{AREA_FRAC!r}')
+
+    # ── ⑨ 덱에서 type_map 유도 — **케이스마다 다르다** (실측 두 종류) ──────
+    import tempfile as _tf
+    tdir = Path(_tf.mkdtemp())
+    bi = tdir / 'input_bi.liggghts'
+    bi.write_text(
+        '# lhs00_000: bimodal (3-type) | LHS design\n'
+        'fix m1 all property/global youngsModulus peratomtype 1.4e8 1.4e8 0.135e7\n'
+        'fix pts1 all particletemplate/sphere 15485863 atom_type 1 density constant 4800 '
+        'radius constant ${r_AM_P}\n'
+        'fix pts2 all particletemplate/sphere 15485867 atom_type 2 density constant 4800 '
+        'radius constant ${r_AM_S}\n'
+        'fix pts3 all particletemplate/sphere 32452843 atom_type 3 density constant 2000 '
+        'radius constant ${r_SE}\n')
+    mo = tdir / 'input_mono.liggghts'
+    mo.write_text(
+        '# lhs00_100: mono_AM_S (2-type) | LHS design\n'
+        'fix m1 all property/global youngsModulus peratomtype 1.4e8 0.135e7\n'
+        'fix pts1 all particletemplate/sphere 15485863 atom_type 1 density constant 4800 '
+        'radius constant ${r_AM}\n'
+        'fix pts2 all particletemplate/sphere 32452843 atom_type 2 density constant 2000 '
+        'radius constant ${r_SE}\n')
+    chk('⑨a 3-type 덱 → {1:AM_P, 2:AM_S, 3:SE}',
+        type_map_from_deck(bi)[0] == {1: 'AM_P', 2: 'AM_S', 3: 'SE'},
+        str(type_map_from_deck(bi)[0]))
+    chk('⑨b ★ 2-type mono 덱 → {1:AM, 2:SE} (접미사 없는 `${r_AM}` — 실측 반례)',
+        type_map_from_deck(mo)[0] == {1: 'AM', 2: 'SE'},
+        str(type_map_from_deck(mo)[0]))
+    chk('⑨c 그 둘이 **다르다** — 하나를 박아 두면 채널 분류가 틀린다',
+        type_map_from_deck(bi)[0] != type_map_from_deck(mo)[0])
+    bad = tdir / 'input_bad.liggghts'
+    bad.write_text(
+        'fix m1 all property/global youngsModulus peratomtype 0.135e7 1.4e8\n'
+        'fix pts1 all particletemplate/sphere 1 atom_type 1 density constant 4800 '
+        'radius constant ${r_AM}\n'
+        'fix pts2 all particletemplate/sphere 2 atom_type 2 density constant 2000 '
+        'radius constant ${r_SE}\n')
+    try:
+        type_map_from_deck(bad); raised = False
+    except ValueError:
+        raised = True
+    chk('⑨d 대조: 두 신호(템플릿 이름 ↔ 연화 영률)가 어긋나면 **거부**한다', raised)
 
     # ── ⑧ 계약·판정문이 실재하고 서로를 가리키는가 ─────────────────────────
     doc = ROOT / 'docs' / 'area_contract_20260913.md'
