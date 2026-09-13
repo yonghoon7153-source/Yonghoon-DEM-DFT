@@ -696,7 +696,7 @@ D_rel 이 들어오면 그 파일의 `성공기준_사전확정` **그대로** �
 > MD·탄성 진입 NO-GO 유지 · 추가 계산은 종결 조건 아님. 지금 막고 있는 것은 **1저자 비준 하나**다.
 
 **⏭ 바로 다음 (순서대로)**
-1. **1저자 비준** — `db/properties/cascade_pilot_4b_closed_2026_09_13.json` 의
+1. ~~1저자 비준~~ → **✅ 비준 2026-09-13** (지시 '1번 해결', 리뷰어 문구 그대로). 카드 `closed: true` · 결정 active(digest 결속) · validate_canonical ✅. 원래 항목: `db/properties/cascade_pilot_4b_closed_2026_09_13.json` 의
    `종료_문구.proposed_value_from_BQ4` 를 `value` 로 승인(또는 수정). 승인되면
    결정 원장 `D-2026-09-13-cascade-pilot-4b-cell-policy-closure` 를 active 로 올리고 카드 `closed: true`.
    ⛔ 에이전트가 고르지 않는다. ⛔ `closed: false` 인 채로 active 로 올리면 `validate_canonical` 이 거부한다(배선됨).

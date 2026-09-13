@@ -1926,9 +1926,9 @@
           "manuscript"
         ]
       },
-      "title": "§4b 셀 정책 — 이번 준비 라운드를 '준비 미확보' 로 종결 (회신 BQ-4 종결 GO · 1저자 비준 대기)",
-      "statement": "지정한 다섯 입력 구조와 UMA 설정에서 두 힘 문턱(0.02 · 0.005 eV/Å) 모두 H0 만 사용 자격을 얻어, 다섯 구조의 공통 준비 조건을 확보하지 못했다. 따라서 정한 준비법·비용 안에서 v4 파일럿 준비 미확보로 이번 라운드를 종결한다. 무질서계의 EOS 비존재나 고정셀 정책의 단독 인과효과는 판정하지 않는다. §4b 를 충족해서 해제하는 것이 아니라 이번 준비 라운드를 미확보로 종결하는 것이다. 허용·금지 서술과 재개 조건은 method_ref 에 있다. ⛔ 1저자 비준 전에는 proposed 다 — 비준되면 method_ref 의 `closed` 를 true 로 올린다.",
-      "decision_state": "proposed",
+      "title": "§4b 셀 정책 — 이번 준비 라운드를 '준비 미확보' 로 종결 (회신 BQ-4 종결 GO · 1저자 비준 2026-09-13)",
+      "statement": "지정한 다섯 입력 구조와 UMA 설정에서 두 힘 문턱 모두 H0만 사용 자격을 얻어, 다섯 구조의 공통 준비 조건을 확보하지 못했습니다. 따라서 정한 준비법·비용 안에서 v4 파일럿 준비 미확보로 이번 라운드를 종결합니다. 무질서계의 EOS 비존재나 고정셀 정책의 단독 인과효과는 판정하지 않습니다. §4b 를 충족해서 해제하는 것이 아니라 이번 준비 라운드를 미확보로 종결하는 것이다. 허용·금지 서술과 재개 조건은 method_ref 에 있다. MD·탄성 진입은 NO-GO 유지.",
+      "decision_state": "active",
       "evidence": [
         "10스윕 한 라운드 집계 (db/properties/cascade_pilot_diag10_raw/round_closed.json — W3_f02 1/5 · W3_f005 1/5)",
         "차단 사유 전수 = 이력현상 (동 폴더 *.postproc.json 의 fit_quality_reason)",
@@ -1946,14 +1946,20 @@
         "② 독립된 과학적 근거를 갖춘 준비 정책·모델·보고량 변경을 새로 승인할 때 — 이유·영향·비용 상한·판정·중단 규칙을 먼저 고정, 별도 라운드, 기존 종결 기록 보존",
         "⛔ 아닌 것: 새 자세 하나 · 더 많은 GPU · 원인이 궁금함 · 통과할 때까지 창·문턱 변경 (회신 BQ-4 Q6)"
       ],
-      "enforcement": "없음 — 이 결정이 proposed 인 동안 코드가 강제하는 것은 없다. 실제로 차단하고 있는 것은 `run_mlip_postproc.py` 의 `downstream_eligible` 로, 자격 미달 줄에 `final_v0_applied.xyz` 를 만들지 않고 `DIAGNOSTIC_blocked_not_for_downstream.xyz` 만 남긴다 (10스윕 8줄에서 실제 작동 확인). 그 게이트는 이 결정과 **독립**이다",
+      "enforcement": "① tools/db/policy.py 가 db/properties/*closed*.json 을 마감 카드로 읽는다 (근거_파일 없음 → 원자료 차단은 없다). ② run_mlip_postproc.py downstream_eligible 이 자격 미달 줄에 final_v0_applied.xyz 를 만들지 않는다 (이 결정과 독립). ③ validate_governance 가 closed:false 카드를 참조하는 active 결정을 거부한다 — 이 결정은 카드 closed:true 와 함께 active 다.",
       "ratification": {
-        "state": "proposed",
-        "required_role": "scientific_owner",
-        "blockers": [
-          "1저자 비준 — 종료 문구 선택 (method_ref `종료_문구.proposed_value_from_BQ4` 를 `value` 로 승인)"
+        "state": "ratified",
+        "actor_id": "yonghoon",
+        "role": "scientific_owner",
+        "timestamp": "2026-09-13T12:27:55Z",
+        "commit": "b83709524b1ab080da0ac0dacebbca6deab1a0d3",
+        "max_release_status": "approved",
+        "max_allowed_uses": [
+          "closure",
+          "manuscript"
         ],
-        "_note": "회신 BQ-4 종결 GO (2026-09-13). 재개 조건은 Q6 로 채워졌다. 남은 blocker 는 1저자 비준 하나."
+        "_note": "1저자 비준 2026-09-13 (세션 지시 '1번 해결' — 리뷰어 BQ-4 제안 문구 그대로, agent 대필). 재개 조건 = BQ-4 Q6 두 범주. 카드 closed:true 와 동시.",
+        "decision_digest": "sha256:0295311bca51d2d0fa0f4eebbf6e6c2c80db14eae3c17d33724c76aa2a17b32a"
       }
     }
   ]
