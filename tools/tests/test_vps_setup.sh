@@ -79,5 +79,60 @@ else
   ok "LF 로만 저장돼 있다"
 fi
 
+# --- 5. 기본 서버가 이미 있는지 세는 함수 -------------------------------------
+#
+# 두 번째로 이 설치본을 실제 기계에서 돌렸을 때 나온 것:
+#
+#   nginx: [emerg] a duplicate default server for 0.0.0.0:80
+#                  in /etc/nginx/sites-enabled/default:22
+#
+# 기본 서버는 listen 주소마다 하나뿐인데 배포판 nginx 가 이미 하나를 세워 둔다.
+# 이 함수가 "이미 있나" 를 판정하고, 있으면 우리 것을 안 세운다.
+#
+# 함수만 떼어 와서 임시 폴더에 가짜 사이트를 깔고 잰다 -- 설치본을 통째로
+# source 하면 apt 부터 돌아 버린다.
+eval "$(sed -n '/^existing_default_server() {$/,/^}$/p' "$SCRIPT")"
+
+DIR="$(mktemp -d)"
+trap 'rm -rf "$DIR"' EXIT
+
+expect_finds() {
+  local what="$1" want="$2" got
+  if got="$(existing_default_server "$DIR")" && [ "$got" = "$DIR/$want" ]; then
+    ok "$what"
+  else
+    bad "$what (기대 $want, 실제 '${got:-없음}')"
+  fi
+}
+expect_none() {
+  if existing_default_server "$DIR" >/dev/null; then
+    bad "$1 (있다고 했다)"
+  else
+    ok "$1"
+  fi
+}
+
+expect_none "빈 폴더에서는 아무것도 못 찾는다"
+
+printf 'server {\n    listen 80 default_server;\n    server_name _;\n}\n' \
+  > "$DIR/default"
+expect_finds "배포판 default 를 찾는다" default
+
+# 이것이 그 버그였다.  우리 링크는 지난 실행이 남긴 것이고, 그걸 세면
+# "이미 있으니 됐다" 로 읽으면서 정작 충돌은 그대로 남는다.
+rm -f "$DIR/default"
+printf 'server {\n    listen 80 default_server;\n    server_name _;\n    return 444;\n}\n' \
+  > "$DIR/000-bml-default"
+expect_none "우리 것만 있으면 못 찾는다 (우리 것은 세지 않는다)"
+
+printf 'server {\n    listen 80;\n    server_name a.example.com;\n}\n' > "$DIR/plain"
+expect_none "default_server 없는 사이트는 안 센다"
+
+printf 'server {\n    # listen 80 default_server;\n    listen 80;\n}\n' > "$DIR/commented"
+expect_none "주석 처리된 default_server 는 안 센다"
+
+printf 'server {\n    listen 80 default_server;\n}\n' > "$DIR/zz-real"
+expect_finds "주석과 진짜가 섞여 있으면 진짜를 찾는다" zz-real
+
 printf '\n  %d 통과, %d 실패\n' "$pass" "$fail"
 [ "$fail" -eq 0 ]

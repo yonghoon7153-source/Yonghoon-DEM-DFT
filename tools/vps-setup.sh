@@ -73,6 +73,36 @@ valid_port() {
   [ "$1" -ge 1 ] && [ "$1" -le 65535 ]
 }
 
+#: 이미 켜져 있는 :80 기본 서버가 있으면 그 파일 경로를 낸다 (없으면 빈 출력).
+#:
+#: 기본 서버는 **listen 주소마다 하나만** 설 수 있다.  배포판 nginx 는
+#: `sites-enabled/default` 로 이미 하나를 세워 두므로, 우리 것을 또 세우면
+#: nginx 가 설정 전체를 거절한다:
+#:
+#:     nginx: [emerg] a duplicate default server for 0.0.0.0:80
+#:                    in /etc/nginx/sites-enabled/default:22
+#:
+#: (실측: Oracle Ubuntu 22.04, 이 설치본의 첫 실제 실행.)
+#:
+#: 우리 것은 세는 데서 뺀다.  안 그러면 지난 실행이 남긴 우리 링크를 보고
+#: "이미 있으니 됐다" 로 읽어서, 정작 충돌은 그대로 남는다.
+existing_default_server() {
+  local dir="${1:-/etc/nginx/sites-enabled}" f
+  for f in "$dir"/*; do
+    [ -e "$f" ] || continue
+    case "${f##*/}" in 000-bml-default) continue ;; esac
+    # 주석 줄은 안 센다.  `# listen 80 default_server;` 를 세면 우리 것을
+    # 안 세우고 넘어가는데, 실제로는 기본 서버가 없어 모르는 Host 가 갈 곳이
+    # 첫 server 블록 -- 즉 우리 사이트가 된다.
+    if grep -E '^[[:space:]]*[^#]*listen[^;#]*[[:space:]]default_server' "$f" \
+       >/dev/null 2>&1; then
+      printf '%s\n' "$f"
+      return 0
+    fi
+  done
+  return 1
+}
+
 [ -n "$DOMAIN" ] || usage
 valid_domain "$DOMAIN" || { echo "도메인 모양이 아닙니다: $DOMAIN" >&2; exit 2; }
 valid_port "$PORT" || { echo "포트가 1–65535 가 아닙니다: $PORT" >&2; exit 2; }
@@ -387,8 +417,33 @@ ln -sfn "$SITE" "$LINK"
 
 # **default 를 지우지 않는다** (Codex #6 · #22).  전용 기계라는 계약이 없고,
 # 지우면 모르는 Host 로 온 요청이 이 사이트로 떨어져 `$host` 로 301 하는
-# open redirect 가 된다.  대신 모르는 이름을 거절하는 기본 서버를 둔다.
-cat > /etc/nginx/sites-available/000-bml-default <<'CONF'
+# open redirect 가 된다.
+#
+# 지켜야 하는 성질은 그 하나 — **모르는 Host 가 우리 사이트로 떨어지지 않는
+# 것**이고, 그건 기본 서버가 *누구 것이든* 하나 서 있으면 지켜진다.  그래서
+# 이미 있으면 그대로 두고 우리 것을 세우지 않는다.  배포판 것을 밀어내면서까지
+# 444 를 받아야 할 이유가 없다 — 그리고 밀어내면 nginx 가 아예 안 뜬다.
+BML_DEFAULT=/etc/nginx/sites-available/000-bml-default
+BML_DEFAULT_LINK=/etc/nginx/sites-enabled/000-bml-default
+if standing="$(existing_default_server)" && [ "${BML_TAKE_DEFAULT:-}" != "1" ]; then
+  # 지난 실행이 남긴 우리 링크가 있으면 그것부터 뺀다 — 이것이 그 emerg 다.
+  rm -f "$BML_DEFAULT_LINK"
+  echo "  기본 서버가 이미 있습니다: $standing"
+  echo "  모르는 Host 는 거기서 끝납니다 — 우리 사이트로 떨어지지 않습니다."
+  echo "  굳이 444 로 끊으려면:  sudo BML_TAKE_DEFAULT=1 bash vps-setup.sh $DOMAIN $EMAIL"
+else
+  if [ -n "${standing:-}" ]; then
+    # 넘겨받더라도 **파일은 안 지운다.**  sites-enabled 의 링크만 뺀다 —
+    # 실체는 sites-available 에 그대로 남아 언제든 되돌릴 수 있다.
+    if [ ! -L "$standing" ]; then
+      echo "$standing 이 심볼릭 링크가 아닙니다 — 손대지 않고 멈춥니다." >&2
+      echo "  그 파일이 무엇인지 보고, 직접 정리한 뒤 다시 돌려 주세요." >&2
+      exit 6
+    fi
+    echo "  기본 서버를 넘겨받습니다 — $standing 링크만 뺍니다 (파일은 그대로)."
+    rm -f "$standing"
+  fi
+  cat > "$BML_DEFAULT" <<'CONF'
 # bml 이 만든 파일입니다.  모르는 Host 는 여기서 끝난다.
 server {
     listen 80 default_server;
@@ -397,7 +452,8 @@ server {
     return 444;
 }
 CONF
-ln -sfn /etc/nginx/sites-available/000-bml-default /etc/nginx/sites-enabled/000-bml-default
+  ln -sfn "$BML_DEFAULT" "$BML_DEFAULT_LINK"
+fi
 
 nginx -t
 systemctl reload nginx
