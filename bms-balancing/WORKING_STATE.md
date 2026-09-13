@@ -56,7 +56,7 @@ bytecode 만 막았고(C08·C09), `rc 0` 인데 승격 불가인 상태를 런�
 
 | 트랙 | 판정 | 지금 상태 |
 |---|---|---|
-| ① mph 마이크로 쇼츠 | NO-GO ×2 (v1·v2) | **M1 전제가 깨졌다.** `cEeqref_mat = from_mat` — 선택자가 재료값이고 사용자 식 `cs_max*dm` 은 안 쓰인다. 문서 v3 정정은 **COMSOL 값 받은 뒤**. 요청서 `docs/COMSOL_CHECK_REQUEST.md` 대기 중 |
+| ① mph 마이크로 쇼츠 | NO-GO ×2 (v1·v2) → **6.3 재구축 제한 검증 '뒷받침됨'** (Codex 독립 검토 2026-09-13, 원문 `reviews/r14_repros/codex63/`) | M1 전제는 깨진 채(`cEeqref_mat = from_mat`). 재구축은 §0-a 대로 — §5 검산값 `x_NCM 0.924064`·`x_Gr 0.0117207` 이 독립 산술로 재현됐고 초기 OCV 2.1653 V 는 MCMB 표 가파른 구간(오류 아님). **전체 프로토콜은 보류**: 4.25 V CV 가 양극 OCP 표 하한(x=0.2229 → 평형 4.1856 V)과 충돌 → OCP 범위 중단조건·phase 별 cutoff·시간간격·mesh 비교 (`docs/COMSOL_REBUILD_SPEC.md` §8). 원본 `cEeqref` 실효값(`COMSOL_CHECK_REQUEST.md`)은 원본 동등성 물음으로 남음 |
 | ② R13 하네스 | NO-GO (P1 4 · P2 5) | **P1-1~P2-5 · §5 Q6 전부 닫음** (262 passed). 남은 것: 실데이터로 shape 재생성(사용자 기계, 아래 U18 4 단계) · 단일 회신 `reviews/R13_RESPONSE.md` |
 | ③ BML α·β 난간 | NO-GO (B1~B5 전부 미증명/반박) | **주장 사슬 전부 철회** → 원인은 `rng(0)` 오염(§9) → **우리가 다시 뽑는다** (전권, `BML_R1_RESPONSE.md` §10): (a) `matlab/fit_cycles_driver.m` · (b) `scripts/fit_cycles.py` · 난간 `scripts/check_rails.py` (받은 xlsx 4 개에서 §6 재현). 남은 것: 사용자 기계 실행 (아래) |
 
@@ -141,8 +141,11 @@ Codex 를 다시 쓸 수 있게 되어 요청문 셋을 썼다. **보내는 순�
 원본 파일 없이 정적 반례만으로 잡았다. 교정 도구 `reviews/r14_repros/mph_dump.py` 는
 `--self-test` 로 그 반례를 고정하고 태어났다 — `evidence_gate` 규율을 분석 스크립트에도 적용한다.
 
-**mph 트랙 다음 순서**: ① `liion.pce2.pin1.soc` t=0 확인(30초) → ② LAM 계약 정의 → ③ M8 정리
-+ MPH sha256/study/solution 기록 → ④ M3 곡선 겹쳐 그리기. ①·② 전에는 `cEeqref` 를 건드리지 않는다.
+**mph 트랙 다음 순서** (2026-09-13 저녁, 6.3 재구축 검토 뒤 갱신 — `COMSOL_REBUILD_SPEC.md` §8-5):
+① baseline 보존, 같은 dataset 에서 Eeq_N/Eeq_P 분해·표면/평균 조성·과전압·Li 재고 OCV 곡선 export 로 검토 산술 현지 확인
+→ ② OCP 범위/농도/phase 별 cutoff 중단조건 + CDC 별도 모델 + 짧은 mesh·시간간격 비교
+→ ③ 범위 감시 있는 `sigma_short=1e-20` 단일 프로토콜 진단 승인 여부
+→ ④ 본 계산·유한 sigma·sweep 은 원본/실험 OCP 대조 뒤. 원본 모델 쪽(`cEeqref` 실효값 · 문서 v3 정정)은 별도 물음.
 
 검증 재실행 (2026-09-13, `26c477c`): `236 passed in 200.29s` · `git diff c7217c0 HEAD -- '*.py' '*.sh'` **0 개** ·
 `replay_codex_r7.py --expected-head 26c477c…` rc 0 · `evidence_eligible: true` · `closed: true` ·
