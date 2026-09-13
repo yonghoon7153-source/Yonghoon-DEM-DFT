@@ -53,6 +53,17 @@ def _load(name, path, subs=()):
 _S0 = _load('_s0_for_rho', SCRIPTS / 'audit_constriction_deleted.py')   # 로더·채널·덱 지도 재사용
 TIGHTEN = 0.1
 RTOL_DEFAULT = 1e-5      # scipy ≥ 1.12 `cg` 기본 rtol — 생산이 안 넘기므로 이것이 실제 판정 기준
+
+
+def set_tighten(factor):
+    """조임 배수를 정한다 (`--tighten`).  0 < factor < 1 만 — 1 이상은 느슨하게 하는 것이라 ρ 가 아니다.
+    사다리(SELF-31 크기 실측) = 0.1 → 0.01 → 0.001 (rtol 1e-6 → 1e-7 → 1e-8 = 옛 `tol=1e-8` 의 의도값)."""
+    global TIGHTEN
+    f = float(factor)
+    if not (0.0 < f < 1.0):
+        raise ValueError(f'--tighten 은 (0, 1) 사이여야 한다: {factor!r}')
+    TIGHTEN = f
+    return f
 import numpy as np
 
 
@@ -285,6 +296,36 @@ def _selftest() -> int:
     c = sm['channels']['ionic']
     chk('③ 요약: 직접해 1 · 반복해 1 · 망없음 1 · ρ(반복해)=0.42', c['n_direct'] == 1 and c['n_iterative'] == 1
         and c['n_no_network'] == 1 and c['rho_pct_max_iterative'] == 0.42)
+    #  ⑤ --tighten 사다리: setter 가 실제 solve 의 rtol_B 를 옮긴다 (0.001 → rtol 1e-8) · 범위 밖 거부 · 원상복구
+    _saved = TIGHTEN
+    try:
+        set_tighten('0.001')
+        r5 = solve_pair(nc2, net2)
+        sm5 = summarize([], ('ionic',))
+        chk('⑤ --tighten 0.001: rtol_B = 1e-8 (의도값) · rtol_A 불변 · 요약에 tighten 기록  (64-노드 픽스처는 1e-6 에서 이미 기계정밀이라 σ_B 동일이 정상)',
+            abs(r5['rtol_B'] - 1e-8) < 1e-20 and sm5['tighten'] == 0.001 and r5['rtol_A'] == RTOL_DEFAULT
+            and r5['sigma_B'] is not None,
+            f"rtol_B={r5['rtol_B']} tighten={sm5['tighten']} σ_B(×0.1)={r2['sigma_B']!r} σ_B(×0.001)={r5['sigma_B']!r}")
+        # ⑤d 사다리 판별력 — 같은 래퍼(atol 만 넘기는 생산 호출 형태)로 ②d 의 3000-노드 toy 를 ×0.1 / ×0.001 로 풀면
+        #    기록된 rtol 이 1e-6 / 1e-8 이고 해가 **다르다** (조임이 실제로 더 깊이 들어간다)
+        with _Recorder(nc2, factor=0.1) as w1:
+            x1, i1 = nc2.cg(A_, b_, atol=1e-8, maxiter=10000)
+        with _Recorder(nc2, factor=0.001) as w3:
+            x3, i3 = nc2.cg(A_, b_, atol=1e-8, maxiter=10000)
+        rt1, rt3 = w1.criterion()[0], w3.criterion()[0]
+        chk('⑤d 사다리 판별력 (3000-노드 toy, 생산 호출 형태 atol=1e-8): 기록 rtol 1e-6 / 1e-8 · 둘 다 수렴 · 해가 다르다',
+            abs(rt1 - 1e-6) < 1e-18 and abs(rt3 - 1e-8) < 1e-20 and i1 == 0 and i3 == 0 and not _np.array_equal(x1, x3),
+            f"rtol {rt1} / {rt3} · info {i1}/{i3} · max|Δx| = {float(_np.max(_np.abs(x1 - x3))):.3e}")
+        bad = []
+        for v in ('1', '0', '-0.1', '10', 'abc'):
+            try:
+                set_tighten(v); bad.append(v)
+            except ValueError:
+                pass
+        chk('⑤b 범위 밖 거부: 1 · 0 · 음수 · 10 · 문자 전부 ValueError', not bad, f'통과해 버린 값={bad}')
+    finally:
+        set_tighten(_saved)
+    chk('⑤c 원상복구: TIGHTEN 이 기본값으로 돌아왔다', TIGHTEN == _saved == 0.1)
     #  ④ 래퍼가 빠져나가면 모듈의 cg/spsolve 가 원상복구된다
     chk('④ 래퍼 원상복구', nc.cg is _S0._NC.cg and callable(nc.spsolve))
     print('ρ 측정 SELFTEST', 'PASS' if ok else 'FAIL')
@@ -299,10 +340,17 @@ def main() -> int:
     ap.add_argument('--limit', type=int, default=0)
     ap.add_argument('--out-csv', default='')
     ap.add_argument('--out-json', default='')
+    ap.add_argument('--tighten', default=None,
+                    help='cg rtol 조임 배수 (기본 0.1 = rtol 1e-5→1e-6).  사다리: 0.01 · 0.001 (→1e-7 · 1e-8)')
     ap.add_argument('--selftest', action='store_true')
     a = ap.parse_args()
     if a.selftest:
         return _selftest()
+    if a.tighten is not None:
+        try:
+            set_tighten(a.tighten)
+        except ValueError as e:
+            print(f'⛔ {e}'); return 2
     if not a.webapp:
         print('⛔ --webapp 이 필요하다'); return 2
     root = Path(a.webapp).expanduser().resolve()
