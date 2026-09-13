@@ -2400,7 +2400,13 @@ def _shell_helpers():
             + "\n" + sh[sh.index("say ()"):sh.index("\nfail=0")])
 
 
-def _fixture_repo(root, outputs=("out/100.csv", "out/200.csv")):
+def _fixture_repo(root, outputs=("out/matrix_100.csv", "out/matrix_200.csv")):
+    """production `write_meta` 를 도는 fixture 저장소.
+
+    ⚠ 열두 번째 fixture 감사 (Codex R13 §Q6): 전 판의 산출 이름은 `out/100.csv`·`out/old.csv`·`out/profile.csv` 였다 —
+      production 이 만들지 않는 이름인데 `body_roster` 가 모르는 이름을 조용히 profile 로 읽어서 통과했다. `kind_of` 가
+      fail-closed 가 되자 세 테스트가 깨졌다. 이름은 등록된 종류(`matrix_*.csv` · `profile_gamma_*.csv`)여야 한다.
+    """
     import shutil, subprocess
     (root / "scripts").mkdir(parents=True); (root / "out").mkdir(exist_ok=True)
     shutil.copyfile(ROOT / "scripts" / "provenance.py", root / "scripts" / "provenance.py")
@@ -2430,8 +2436,8 @@ def test_r4_06_run_helper_binds_the_artifact_to_the_attempt_not_to_mtime(tmp_pat
     `write_meta` 는 같은 id 를 meta 에 적고 파일에 없으면 거부한다.
     """
     import json as _json, os, subprocess, time
-    root = tmp_path / "repo"; _fixture_repo(root, outputs=("out/old.csv",))
-    art, log = root / "out" / "old.csv", tmp_path / "run.log"
+    root = tmp_path / "repo"; _fixture_repo(root, outputs=("out/matrix_old.csv",))
+    art, log = root / "out" / "matrix_old.csv", tmp_path / "run.log"
     old = time.time() - 60; os.utime(art, (old, old))
     env = dict(os.environ, STARTS="1", SI="Li", BMS_DATA_ROOT="synthetic")
     def sh(body):
@@ -2445,11 +2451,11 @@ def test_r4_06_run_helper_binds_the_artifact_to_the_attempt_not_to_mtime(tmp_pat
                '&& write_meta "$1" 100 GITT && echo "META_OK"')
     assert bound.returncode == 0 and "OK" in bound.stderr and "META_OK" in bound.stdout, (bound.stdout, bound.stderr)
     rid = art.read_text(encoding="utf-8").strip().splitlines()[-1].split(",")[-1]
-    meta = _json.loads((root / "out" / "old.csv.meta.json").read_text(encoding="utf-8"))
+    meta = _json.loads((root / "out" / "matrix_old.csv.meta.json").read_text(encoding="utf-8"))
     assert len(rid) >= 8 and meta["run_id"] == rid, (rid, meta)
-    (root / "out" / "old.csv.meta.json").unlink()
+    (root / "out" / "matrix_old.csv.meta.json").unlink()
     refused = sh('LAST_RUN_ID=not-in-file write_meta "$1" 100 GITT')
-    assert refused.returncode != 0 and not (root / "out" / "old.csv.meta.json").exists(), refused.stderr
+    assert refused.returncode != 0 and not (root / "out" / "matrix_old.csv.meta.json").exists(), refused.stderr
 
 
 def test_r4_07_metadata_separates_code_dirty_from_modified_outputs(tmp_path):
@@ -2466,13 +2472,13 @@ def test_r4_07_metadata_separates_code_dirty_from_modified_outputs(tmp_path):
                            cwd=root, env=env, capture_output=True, text=True, encoding="utf-8")
         assert r.returncode == 0, r.stderr
         return _json.loads((root / (rel + ".meta.json")).read_text(encoding="utf-8"))
-    m100 = write_meta("out/100.csv", "rid-100")
-    m200 = write_meta("out/200.csv", "rid-200")
+    m100 = write_meta("out/matrix_100.csv", "rid-100")
+    m200 = write_meta("out/matrix_200.csv", "rid-200")
     assert m100["git_dirty"] is False and m200["git_dirty"] is False, (m100, m200)
-    assert m100["git_modified_outputs"] == [] and m200["git_modified_outputs"] == ["out/100.csv"], (m100, m200)
+    assert m100["git_modified_outputs"] == [] and m200["git_modified_outputs"] == ["out/matrix_100.csv"], (m100, m200)
     (root / "code.py").write_text("value = 2\n", encoding="utf-8")
-    m200b = write_meta("out/200.csv", "rid-200b")
-    assert m200b["git_dirty"] is True and m200b["git_modified_outputs"] == ["out/100.csv"], m200b
+    m200b = write_meta("out/matrix_200.csv", "rid-200b")
+    assert m200b["git_dirty"] is True and m200b["git_modified_outputs"] == ["out/matrix_100.csv"], m200b
 
 
 def test_r4_docs_direction_sentence_precision_order_and_line_endings():
@@ -2654,7 +2660,7 @@ def test_r5_04_result_and_metadata_are_published_as_one_attempt(tmp_path):
     import hashlib, json as _json, os, subprocess, sys as _s, time
     root = tmp_path / "repo"; _fixture_repo(root, outputs=())
     worker, pauser = _r5_meta_race_scripts(tmp_path)
-    out = root / "out" / "profile.csv"
+    out = root / "out" / "profile_gamma_100_Li.csv"
     # ⚠ 자체 리뷰 C09 뒤 production heredoc 은 `python3 -I -P -` 다 (cwd 에서 import 하지 않으려고).
     #   `$1 = "-"` 로만 보던 전 판 shim 은 그 순간을 놓쳐 A 가 멈추지 않았다 — 인자 어디에든 `-` 하나가
     #   오면 그것이 heredoc 이다.
@@ -2684,7 +2690,7 @@ python3 () {
     (tmp_path / "B.done").write_text("done")
     ao, ae = a.communicate(timeout=60)
     rows = list(csv.DictReader(out.open(encoding="utf-8")))
-    meta = _json.loads((root / "out" / "profile.csv.meta.json").read_text(encoding="utf-8"))
+    meta = _json.loads((root / "out" / "profile_gamma_100_Li.csv.meta.json").read_text(encoding="utf-8"))
     aid, bid = a_rows[0]["run_id"], rows[0]["run_id"]
     assert aid != bid and b.returncode == 0 and "WRITER_OK B" in b.stdout, (b.stdout, b.stderr[-600:])
     assert meta["run_id"] == bid, (meta["run_id"], aid, bid)                   # 묶음이 섞이지 않았다
@@ -2930,14 +2936,14 @@ def test_r5_08_one_run_id_per_command_and_helpers_check_the_field_not_a_substrin
         assert rc == 0 and len(rows) == verify.S.CANONICAL_GAMMA_GRID_N and ids == {printed}, (ids, printed)
     finally:
         mp.undo()
-    root = tmp_path / "repo"; _fixture_repo(root, outputs=("out/old.csv",))
-    art, log = root / "out" / "old.csv", tmp_path / "run.log"
+    root = tmp_path / "repo"; _fixture_repo(root, outputs=("out/matrix_old.csv",))
+    art, log = root / "out" / "matrix_old.csv", tmp_path / "run.log"
     env = dict(os.environ, STARTS="1", SI="Li", BMS_DATA_ROOT="synthetic", OUT=str(root / "out"))
     producer = ("import csv,os,sys; f=open(sys.argv[1],'w',newline=''); w=csv.writer(f); "
                 "w.writerow(['gamma_Si','obj','run_id','note']); w.writerow([0,1,'previous-attempt',os.environ['BMS_RUN_ID']]); f.close()")
     r = subprocess.run(["bash", "-c", _shell_helpers() + '\nrun "probe" "$1" - "$2" "$3" -c "$4" "$1" && write_meta "$1" 100 GITT\n',
                         "r5", str(art), str(log), _s.executable, producer], cwd=root, env=env, capture_output=True, text=True)
-    assert r.returncode != 0 and not (root / "out" / "old.csv.meta.json").exists(), (r.stdout, r.stderr[-500:])
+    assert r.returncode != 0 and not (root / "out" / "matrix_old.csv.meta.json").exists(), (r.stdout, r.stderr[-500:])
 
 
 def test_r5_10_auto_scale_counts_each_sample_once_even_when_a_metric_raises():

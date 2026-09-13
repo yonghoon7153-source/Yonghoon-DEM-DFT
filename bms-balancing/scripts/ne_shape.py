@@ -166,18 +166,51 @@ def raw_ne_capacity(path: pathlib.Path) -> float:
     return float(c.max()) if c.size else float("nan")
 
 
+def run_started(roots=("out",)) -> dict:
+    """계산 **시작** 시각과 그때의 git 상태 — `run_states.sh` 의 `LAST_STARTED_UTC`·`LAST_PRE_PV` 와 같은 역할 (R6 내부
+    F04: 뒤에서 한 번 샘플한 값은 "돌린 코드가 commit 과 같았나" 에 거짓 답을 줄 수 있다). `_write_csv` 가 끝 상태와 댄다.
+    `roots` 는 산출 자리(코드가 아닌 곳) — 빈 것은 뺀다."""
+    import datetime
+    from provenance import git_provenance
+    return {"utc": datetime.datetime.now(datetime.timezone.utc).isoformat(),
+            "git": git_provenance(cwd=str(REPO_DIR), output_roots=tuple(str(r) for r in roots if r))}
+
+
+def _row_receipt(consumed, state):
+    """행 하나의 receipt — sidecar 의 상태별 dict 를 checker 가 요구하는 **역할** 모양(`schema.SHAPE_ROLES`)으로.
+
+    ⚠ Codex R13 §Q6: shape 의 입력 identity 는 sidecar 에만 상태별로 있었다 — checker 의 receipt 계약(행 key 별 역할·sha,
+      R11 P1-1)과 모양이 달라 대조 대상이 아니었다. 역할: matrix(그 상태의 γ 짝) · half_cell(그 상태) · half_cell_pristine
+      (기준) · literature.gr · literature.si. 짝 없는 행은 None — receipt 를 지어내지 않는다 (빈 칸은 content 로 막힌다;
+      partial 은 success 가 아니다).
+    """
+    c = consumed if isinstance(consumed, dict) else {}
+    mine = c.get(state)
+    if not isinstance(mine, dict) or not isinstance(mine.get("matrix"), dict):
+        return None
+    m = mine["matrix"]
+    return {"matrix": {"path": m.get("path") or m.get("file") or "", "sha256": m.get("sha256", ""), "row": m.get("row")},
+            "half_cell": mine.get("half_cell"),
+            "half_cell_pristine": (c.get("pristine") or {}).get("half_cell"),
+            "literature": c.get("literature")}
+
+
 def _write_csv(d: pathlib.Path, a, rows, cap, base_cap, cwhere, headroom=None, consumed=None,
-               pairing=None, status="complete") -> pathlib.Path:
+               pairing=None, status="complete", started=None, argv=None) -> pathlib.Path:
     """표를 그대로 CSV 로. 옆에 `.meta.json` 을 같이 둔다 (run_states.sh 와 같은 규약).
 
     `cap_delta_pct` 를 **반드시 같이** 남긴다 — `(a) 측정변화` 는 정규화 뒤
     값이라 용량이 크게 변한 상태에서는 순수한 OCP 모양 변화로 읽으면 안 된다.
     그 한정어가 CSV 에서 떨어지면 숫자만 인용된다.
     """
-    import datetime, json, os, tempfile, uuid
+    import datetime, hashlib, json, os, tempfile, uuid
+    from bms_balancing import schema as S
     from bms_balancing.verify import publish_lock
-    from provenance import sha256_file
+    from provenance import env_signature, git_provenance
     d.mkdir(parents=True, exist_ok=True)
+    roots = (str(d), str(getattr(a, "out_dir", "") or ""), "out")   # 산출 자리·matrix 입력 자리는 코드가 아니다
+    if started is None:          # 직접 호출(리뷰 repro·테스트) — 시작점은 writer 진입이다; `main` 은 입력을 읽기 전 시각을 준다
+        started = run_started(roots)
     art = d / f"ne_shape_{a.source}_{a.si_source}.csv"
     # ⚠ R6 내부 F02: 전 판은 최종 경로에 `open("w")` 로 직접 쓰고(비원자) git 조회 뒤 meta 를 따로 썼다 — 잠금·
     #   run_id·sha256 이 없어 두 시도가 끼어들면 CSV=B · meta(consumed_inputs)=A 가 남고 verify_unit 은 '옛 meta'.
@@ -188,32 +221,41 @@ def _write_csv(d: pathlib.Path, a, rows, cap, base_cap, cwhere, headroom=None, c
                                      newline="", encoding="utf-8")
     with fh as f:
         w = csv.writer(f, lineterminator="\n")
-        w.writerow(["state", "cap_delta_pct", "gamma_target", "gamma_ref",
-                    "measured_shape_mV", "gamma_shape_mV", "ratio_b_over_a",
-                    "blend_vs_meas_max_mV", "blend_vs_meas_rms_mV",
-                    "max_at_x", "frac_over_50mV", "pe_shape_max_mV", "pe_shape_rms_mV",
-                    # (d) γ 여유 (R3-03) — witness 가 빈 칸이면 '격자에서 (a) 를 내는 합법 γ 없음'
-                    "legal_dgamma_neg", "legal_dgamma_pos", "gamma_family_max_mV",
-                    "gamma_at_family_max", "gamma_witness", "gamma_witness_delta", "run_id"])
+        # ⚠ Codex R13 §Q6: 열 이름의 정본은 `schema.SHAPE_ROW` 다 — 전 판은 여기 literal 20 개였고 checker 는 shape 라는
+        #   종류를 몰라 profile 로 읽었다 (열 19 개가 "모르는 열"). producer 와 checker 가 같은 tuple 을 쓴다.
+        header = list(S.SHAPE_ROW)
+        w.writerow(header)
         for s_, da, db, ratio, cmax, crms, g, gr, *rest in rows:
             pe_max, pe_rms = (list(rest) + [float("nan"), float("nan")])[:2]
             c = cwhere.get(s_)
             h = (headroom or {}).get(s_)
+            rec = _row_receipt(consumed, s_)
             # ⚠ Codex R2-10: 전 판은 `gamma_ref` 열에 **대상** γ 를 썼다. 두 역할을 따로.
-            w.writerow([s_, f"{100*(cap[s_]/base_cap-1):.4f}",
-                        f"{g:.6f}" if g is not None else "",
-                        f"{gr:.6f}" if gr is not None else "",
-                        f"{da:.6f}", f"{db:.6f}", f"{ratio:.6f}",
-                        f"{cmax:.6f}", f"{crms:.6f}",
-                        f"{c[1]:.4f}" if c else "", f"{c[2]:.4f}" if c else "",
-                        f"{pe_max:.6f}", f"{pe_rms:.6f}",
-                        f"{h['dneg']:.6f}" if h else "", f"{h['dpos']:.6f}" if h else "",
-                        f"{h['fam_max']:.6f}" if h else "", f"{h['g_at_max']:.4f}" if h else "",
-                        f"{h['witness']:.4f}" if h and h["witness"] is not None else "",
-                        f"{h['wdelta']:+.4f}" if h and h["witness"] is not None else "", rid])
-    from provenance import git_provenance     # scripts/ 가 sys.path 에 있다
-    pv = git_provenance(cwd=str(REPO_DIR), artifact=str(art))   # 산출물 자신의 재작성은 dirty 가 아니다 (R4-07); 저장소는 cwd 무관 (R6 F7)
+            cells = {
+                "state": s_, "cap_delta_pct": f"{100*(cap[s_]/base_cap-1):.4f}",
+                "gamma_target": f"{g:.6f}" if g is not None else "",
+                "gamma_ref": f"{gr:.6f}" if gr is not None else "",
+                "measured_shape_mV": f"{da:.6f}", "gamma_shape_mV": f"{db:.6f}", "ratio_b_over_a": f"{ratio:.6f}",
+                "blend_vs_meas_max_mV": f"{cmax:.6f}", "blend_vs_meas_rms_mV": f"{crms:.6f}",
+                "max_at_x": f"{c[1]:.4f}" if c else "", "frac_over_50mV": f"{c[2]:.4f}" if c else "",
+                "pe_shape_max_mV": f"{pe_max:.6f}", "pe_shape_rms_mV": f"{pe_rms:.6f}",
+                # (d) γ 여유 (R3-03) — witness 가 빈 칸이면 '격자에서 (a) 를 내는 합법 γ 없음' (delta 와 함께 빈다)
+                "legal_dgamma_neg": f"{h['dneg']:.6f}" if h else "", "legal_dgamma_pos": f"{h['dpos']:.6f}" if h else "",
+                "gamma_family_max_mV": f"{h['fam_max']:.6f}" if h else "",
+                "gamma_at_family_max": f"{h['g_at_max']:.4f}" if h else "",
+                "gamma_witness": f"{h['witness']:.4f}" if h and h["witness"] is not None else "",
+                "gamma_witness_delta": f"{h['wdelta']:+.4f}" if h and h["witness"] is not None else "",
+                "run_id": rid,
+                # ⚠ Codex R13 §Q6: 행마다 **자기** receipt (역할 `schema.SHAPE_ROLES`) — `check_u14` 가 두 실행의 입력
+                #   identity 를 행 key(state)별로 댄다 (R11 P1-1). 짝 없는 행은 빈 칸 (receipt 를 지어내지 않는다).
+                "inputs_sha": S.inputs_digest(rec) if rec else "",
+                "consumed_inputs": json.dumps(rec, ensure_ascii=False, sort_keys=True) if rec else "",
+            }
+            w.writerow([cells[k] for k in header])
+    # 산출물 자신의 재작성은 dirty 가 아니다 (R4-07); 저장소는 cwd 무관 (R6 F7); 산출 자리는 코드가 아니다 (R11 P1-9)
+    pv = git_provenance(cwd=str(REPO_DIR), artifact=str(art), output_roots=roots)
     sha, dirty = pv["git_commit"], pv["git_dirty"]
+    pre = started["git"]
     meta = {
         "artifact": art.name, "half_cell_source": a.source,
         "si_source": a.si_source, "grid_n": int(GRID.size),
@@ -234,12 +276,25 @@ def _write_csv(d: pathlib.Path, a, rows, cap, base_cap, cwhere, headroom=None, c
         # ⚠ Codex R9-06 · P2-5: typed 완전성 — complete 만 canonical 에, none/partial 은 `<write>/partial/` 에 (호출부가 정한다)
         "status": status,
         "run_id": rid,
+        # ⚠ Codex R13 §Q6: U14 sidecar 계약 — `run_states.sh write_meta` 가 matrix·profile·degeneracy 에 적는 것과 같은 축
+        #   (env · 시작 시각 · 시작 git 상태 · 실행 중 변경 · argv · 본문에서 유도한 roster). shape 는 producer 가 자기
+        #   sidecar 를 쓰므로 같은 것을 여기서 적는다 (전 판은 이 중 하나도 없어 gate 가 전부 "누락" 이었다).
+        "git_commit_at_start": pre.get("git_commit"), "git_dirty_at_start": pre.get("git_dirty"),
+        "git_modified_code_at_start": pre.get("git_modified_code"),
+        "git_state_changed_during_run": bool(pre) and (
+            pre.get("git_commit") != pv["git_commit"] or pre.get("git_dirty") != pv["git_dirty"]
+            or pre.get("git_modified_code") != pv["git_modified_code"]),
+        "started_utc": started["utc"],
+        "env": env_signature(),                                       # R6 내부 F3
+        "argv": list(argv if argv is not None else sys.argv),
         "created_utc": datetime.datetime.now(datetime.timezone.utc).isoformat(),
     }
     try:
         with publish_lock(art):                   # 게시와 meta 가 같은 잠금 안 (R5-04 규약)
             os.replace(fh.name, art)
-            meta["sha256"] = sha256_file(art)
+            data = art.read_bytes()               # 잠금 안 **한 번** 읽은 bytes — sha256 과 roster 가 같은 bytes 의 것
+            meta["sha256"] = hashlib.sha256(data).hexdigest()
+            meta["roster"] = S.body_roster(art.name, data)   # checker 가 같은 함수로 다시 유도해 댄다 (Codex R9 P2-4)
             fd, tmp = tempfile.mkstemp(dir=d, prefix=art.name + ".meta.", suffix=".part")
             with os.fdopen(fd, "w", encoding="utf-8") as mf:
                 mf.write(json.dumps(meta, ensure_ascii=False, indent=2) + "\n")
@@ -267,6 +322,8 @@ def main() -> int:
                          "이 옵션은 그것을 **좁히기만** 한다 — 축소 실행은 status `subset` 이라 canonical 에 가지 않고 "
                          "종료 코드 3 이다 (Codex R10 P1-2). 중복·정본에 없는 상태는 거부한다")
     a = ap.parse_args()
+    # ⚠ Codex R13 §Q6 (R6 내부 F04 와 같은 축): 시작 시각·git 상태는 **입력을 읽기 전**에 잡는다 — sidecar 가 끝 상태와 댄다.
+    started = run_started((a.write, a.out_dir, "out"))
 
     root = D.data_root(a.data_root)
     out_dir = pathlib.Path(a.out_dir)
@@ -277,7 +334,8 @@ def main() -> int:
     #   통째로 갈아치워 1 행 산출이 status `complete` 로 2 행 canonical 을 덮었고, `--states 100,100` 은 중복을 2/2
     #   complete 로 셌다. 이제 authority = `D.declared_states(source)` (선언 − 알려진 부재) 이고 `--states` 는 그
     #   부분집합만 고를 수 있다 — 축소 실행은 `subset` 이라 canonical 승격 대상이 아니다.
-    authority = D.declared_states(a.source)
+    from bms_balancing import schema as S
+    authority = S.canonical_shape_states(a.source)     # checker 와 같은 함수 (= `D.declared_states`, Codex R13 §Q6)
     subset = False
     if a.states:
         requested = [s.strip() for s in a.states.split(",") if s.strip()]
@@ -446,7 +504,8 @@ def main() -> int:
     published = None
     if a.write:
         dest = pathlib.Path(a.write) if status == "complete" else pathlib.Path(a.write) / "partial"   # subset 포함
-        art = _write_csv(dest, a, rows, cap, base_cap, {c[0]: c for c in cwhere}, headroom, consumed, pairing, status=status)
+        art = _write_csv(dest, a, rows, cap, base_cap, {c[0]: c for c in cwhere}, headroom, consumed, pairing,
+                         status=status, started=started, argv=list(sys.argv))
         published = art
         print(f"\n→ {art}" + ("" if status == "complete" else
                               f"  [{status} — canonical {pathlib.Path(a.write) / art.name} 은 건드리지 않았다 (Codex R9-06)]"))

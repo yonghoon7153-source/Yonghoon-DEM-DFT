@@ -92,12 +92,18 @@ with open(art + ".lock", "a+") as lock:
     if not ok:
         print(f"run id 재확인 실패: {why}", file=sys.stderr); sys.exit(1)
     pv = git_provenance(artifact=art, output_roots=(out_dir, "out"))
+    roster = None
+    if roster_of:
+        try:
+            roster = roster_of(pathlib.Path(art).name, data)
+        except ValueError as e:      # Codex R13 §Q6: 등록되지 않은 산출 이름 — 명부를 지어내지 않고 meta 도 쓰지 않는다 (fail-closed)
+            print(f"산출 이름이 등록된 종류가 아니다 ({e}) — meta 를 쓰지 않는다", file=sys.stderr); sys.exit(1)
     meta = {
         "artifact": pathlib.Path(art).name, "state": st, "half_cell_source": src,
         "si_source": si, "starts": int(starts), "seed": 0, "w_dqdv_note": "명령별",
         "data_root": root, "run_id": rid, "sha256": hashlib.sha256(data).hexdigest(),
         # Codex R9 P2-4: 실제 argv 와 본문에서 유도한 exact 명부 — `si_source`(SI 환경값)·`starts` 는 명부가 아니다
-        "argv": argv, "roster": (roster_of(pathlib.Path(art).name, data) if roster_of else None),
+        "argv": argv, "roster": roster,
         **({"roster_error": roster_err} if roster_err else {}),
         "si_source_note": "wrapper 의 SI 환경값 — 본문의 exact 명부는 roster (matrix 는 Si 전부를 돈다)",
         "git_commit": pv["git_commit"], "git_dirty": pv["git_dirty"],

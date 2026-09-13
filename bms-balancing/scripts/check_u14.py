@@ -42,7 +42,8 @@ MATRIX_COLS = S.MATRIX_ROW
 PROFILE_COLS = S.PROFILE_ROW
 META_KEYS = ("run_id", "sha256", "artifact", "env", "started_utc",
              "git_commit_at_start", "git_state_changed_during_run")
-#: meta 에서 "같은 실행" 이려면 **양쪽에 있고 같아야** 하는 조건 — schema.py 가 정본 (Codex R9-03 C · R10 P1-7)
+#: meta 에서 "같은 실행" 이려면 **양쪽에 있고 같아야** 하는 조건 — schema.py 가 정본 (Codex R9-03 C · R10 P1-7).
+#: 종류별로 다르다 (shape 는 `S.meta_controls("shape")`, Codex R13 §Q6) — 검사는 `S.meta_controls(kind)` 를 부른다.
 META_CONTROLS = S.META_CONTROLS
 #: 승격되려면 meta 가 담아야 하는 값 (있기만 한 것이 아니라 **그 값**이어야 한다, Codex R11 P1-9). 전 판은 candidate 가
 #: `git_dirty: true` · 바뀐 코드 목록 · bogus start commit · `git_state_changed_during_run: true` 를 **명시해도**
@@ -108,7 +109,10 @@ def _same_dir(a: pathlib.Path, b: pathlib.Path) -> bool:
 
 
 def _kind(f: pathlib.Path) -> str:
-    return "degeneracy" if f.suffix == ".json" else ("matrix" if f.name.startswith("matrix_") else "profile")
+    """산출 종류 — `schema.kind_of` 한 자리 (Codex R13 §Q6). ⚠ 전 판은 "json 이면 degeneracy · `matrix_` 면 matrix ·
+    아니면 profile" 이라 `ne_shape_*.csv` 도 모르는 이름도 profile 로 읽었다. 모르는 이름은 ValueError — 호출부가
+    구조화된 스키마 오류로 센다."""
+    return S.kind_of(f.name)
 
 
 def canonical_names(d: pathlib.Path, policy: str = "current", stale: list | None = None) -> set:
@@ -194,7 +198,7 @@ def _receipts_of(kind: str, data: bytes) -> dict:
         return {"target": {None: S.receipt_map(j.get("consumed_inputs"))},
                 "ref": {None: S.receipt_map(j.get("ref_consumed_inputs"))}}
     rows, _ = _csv_rows(data)
-    key = S.matrix_key if kind == "matrix" else S.profile_key
+    key = S.row_key(kind)
     out: dict = {"target": {}, "ref": {}}
     for r in rows:
         try:
@@ -325,7 +329,10 @@ def check(new: pathlib.Path, old: pathlib.Path | None, schema_only=False, policy
         ok, why, data, meta = _unit(f)
         if ok is False:
             R["broken"].append(f"{f.name}: 묶음 불일치/미완 — {why}"); continue
-        kind = _kind(f)
+        try:
+            kind = _kind(f)
+        except ValueError as e:
+            R["content"].append(f"{f.name}: 모르는 산출 종류 — {e} (Codex R13 §Q6)"); continue
         j = rows = hdr = None
         if kind == "degeneracy":
             # ⚠ Codex R13 P2-3: 전 판은 `decode("utf-8")` + 맨 `json.loads` 라 BOM 하나에
@@ -352,7 +359,7 @@ def check(new: pathlib.Path, old: pathlib.Path | None, schema_only=False, policy
             R["missing"] += [f"{f.name}.meta: {k}" for k in META_KEYS if meta.get(k) is None]
             # ⚠ Codex R11 P1-6: 실행 조건·argv·roster 는 **묶음의 스키마**다 — 비교 모드에서만 보면 schema-only 가
             #   그 축을 통째로 건너뛴다 (전 판은 지워도 통과했다).
-            R["missing"] += [f"{f.name}.meta: {k}" for k in (*META_CONTROLS, *META_REQUIRED)
+            R["missing"] += [f"{f.name}.meta: {k}" for k in (*S.meta_controls(kind), *META_REQUIRED)
                              if meta.get(k) in (None, "")]
             if not (isinstance(meta.get("env"), dict) and meta["env"]):
                 R["missing"].append(f"{f.name}.meta: env 가 비어 있다")
@@ -372,6 +379,9 @@ def check(new: pathlib.Path, old: pathlib.Path | None, schema_only=False, policy
                 want_roster = None
             if want_roster is not None and meta.get("roster") not in (None, "") and meta["roster"] != want_roster:
                 R["content"].append(f"{f.name}.meta:roster 가 본문에서 유도한 명부와 다르다 — {meta['roster']} ≠ {want_roster}")
+            # ⚠ Codex R13 §Q6: shape 의 typed status·pairing 은 sidecar 에만 있다 — 정본 모집단·본문과 여기서 댄다
+            if kind == "shape" and rows is not None:
+                R["content"] += [f"{f.name}: {q}" for q in S.check_shape_meta(meta, rows, f.name)]
             start = str(meta.get("git_commit_at_start") or "")
             if start and not re.fullmatch(r"[0-9a-f]{40}", start):
                 R["provenance"].append(f"{f.name}.meta:git_commit_at_start 가 40-hex 커밋이 아니다 ({start!r})")
@@ -402,7 +412,7 @@ def check(new: pathlib.Path, old: pathlib.Path | None, schema_only=False, policy
         # ⚠ Codex R10 P1-7: 전 판은 **양쪽에 key 가 있을 때만** 댔다 — candidate 에서 `state`·`starts` 를 지우면
         #   검사가 잠들고 rc 0 "전부 같다" 였다. 필수 control 은 **있어야** 하고, `env` 는 존재가 아니라 **값**을 댄다.
         if meta and ometa:
-            for k in META_CONTROLS:
+            for k in S.meta_controls(kind):
                 if k not in ometa or k not in meta:
                     R["controls"].append((f"{f.name}.meta:{k}", ometa.get(k, "(없음)"), meta.get(k, "(없음)")))
                 elif _num_diff(ometa[k], meta[k]):
@@ -428,7 +438,7 @@ def check(new: pathlib.Path, old: pathlib.Path | None, schema_only=False, policy
         else:
             # ⚠ Codex R8-05: dict comprehension 은 같은 key 의 앞 행을 **조용히** 지운다 — 변환 전에 유일성을 센다.
             #   reader(ne_shape)·checker 가 같은 typed validator 를 쓴다 (Codex R9-05: w_dqdv 는 숫자 key).
-            key = S.matrix_key if kind == "matrix" else S.profile_key
+            key = S.row_key(kind)
             orows, _ = _csv_rows(odata)
             A, dupA, nA = S.unique_rows(orows, key)
             B, dupB, nB = S.unique_rows(rows, key)

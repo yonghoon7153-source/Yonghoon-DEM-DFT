@@ -57,7 +57,7 @@ bytecode 만 막았고(C08·C09), `rc 0` 인데 승격 불가인 상태를 런�
 | 트랙 | 판정 | 지금 상태 |
 |---|---|---|
 | ① mph 마이크로 쇼츠 | NO-GO ×2 (v1·v2) | **M1 전제가 깨졌다.** `cEeqref_mat = from_mat` — 선택자가 재료값이고 사용자 식 `cs_max*dm` 은 안 쓰인다. 문서 v3 정정은 **COMSOL 값 받은 뒤**. 요청서 `docs/COMSOL_CHECK_REQUEST.md` 대기 중 |
-| ② R13 하네스 | NO-GO (P1 4 · P2 5) | **P1-1 닫음** (241 passed). P1-2~P2-5 · §5 Q6 열림 |
+| ② R13 하네스 | NO-GO (P1 4 · P2 5) | **P1-1~P2-5 · §5 Q6 전부 닫음** (262 passed). 남은 것: 실데이터로 shape 재생성(사용자 기계, 아래 U18 4 단계) · 단일 회신 `reviews/R13_RESPONSE.md` |
 | ③ BML α·β 난간 | NO-GO (B1~B5 전부 미증명/반박) | **주장 사슬 전부 철회.** `REQ_FIT_RAILS.md` v2 로 재작성, 원장 `reviews/BML_R1_RESPONSE.md` |
 
 **세 라운드 공통 교훈**: 정정이 또 다른 단정이 됐다. "세 모드 붕괴" 를 고치며 "LLI 는 독립"
@@ -67,6 +67,34 @@ bytecode 만 막았고(C08·C09), `rc 0` 인데 승격 불가인 상태를 런�
 **②·③ 이 요구하는 외부 자료** — 이것 없이는 더 못 닫는다:
 - COMSOL: `liion.pce*.pin1.cEeqref` 실효값 (현재 설정으로 새로 초기화한 것. 저장 해는 설정이 다르다)
 - MATLAB: 자유/고정 변수 · lb/ub · 정규화 · 초기값/restart · **export 변환 코드** · 잔차/profile
+
+### R13 §5 Q6 닫음 — shape 전용 kind · schema · sidecar 계약 (2026-09-13)
+
+리뷰어 실측을 그대로 RED 로 옮겼다 (`test_g25`: 실제 `ne_shape.py` → 실제 `shape_step` → `check_u14 --schema-only`):
+**schema 27 · provenance_cols 3 · content 1** — 리뷰어 숫자 그대로 재현됐다. 원인은 `check_u14._kind` 와
+`schema.body_roster` 가 각자 "matrix 아니면 profile" 이라 `ne_shape_*.csv` 도 모르는 이름도 profile 로 읽힌 것.
+"PROFILE_ROW 에 열 19 개를 허용" 이 아니라 **종류를 하나 더 만든다**:
+
+| 축 | 어디 | 무엇 |
+|---|---|---|
+| kind 라우팅 | `schema.kind_of(name)` | 한 함수 · 모르는 이름은 `ValueError` (fail-closed). `check_u14._kind`·`body_roster` 가 이것만 쓴다; gate 는 모르는 이름을 "모르는 산출 종류" content 로 센다 |
+| 열 정본 | `schema.SHAPE_ROW` (22) | 기존 20 + `inputs_sha`·`consumed_inputs`. producer 의 header 가 이 tuple 에서 나온다 |
+| 행 key | `schema.shape_key` = `state` · `row_key(kind)` | 중복 상태는 중복 key |
+| receipt | 행마다 역할 `SHAPE_ROLES` = matrix · half_cell · half_cell_pristine · literature.gr · literature.si | `_row_receipt` 가 sidecar 의 상태별 dict 를 역할 모양으로. 짝 없는 행은 빈 칸(receipt 를 지어내지 않는다) |
+| 빈 칸 허용 | `SHAPE_MAY_BE_EMPTY` = witness 둘 | R3-03 의 "격자에서 증인 없음" — 둘이 **함께** 비어야 한다 |
+| coverage | `check_shape_coverage` | 본문 상태 집합 ↔ `canonical_shape_states(source)` (= `data.declared_states`, producer 와 같은 함수). 선언 밖 상태 = content · 부분집합 = 자리 규칙(`CANONICAL_SLOT_PREFIX`) |
+| sidecar | `check_shape_meta` | typed `status` · `pairing` 산술(available ⊎ missing_input = requested · paired ⊎ missing = available) · 본문 결속 · authority = 정본 · status = producer 판정식 |
+| meta 계약 | `_write_csv` | env · started_utc · git_commit_at_start · git_state_changed_during_run · argv · roster(잠금 안 같은 bytes) — `write_meta` 와 같은 축. 실행 조건은 `meta_controls("shape")` = half_cell_source · si_source · grid_n · grid_range · gamma_grid (state/starts/seed 가 아니다) |
+
+회귀 `test_g18~g25`. g25 가 producer→wrapper→U14 완주(합성 원자료 + fixture matrix)와 **두 번째 독립 실행의
+승격 자격**(숫자·입력 identity·조건 동일, clean 트리면 `promotion_eligible: true`)까지 잰다.
+리뷰어 스크립트의 `consumed={"synthetic": True}` 는 receipt 가 아니라 **receipt 축에서만** 막힌다 (g21) — 그 호출이
+통과하지 않는 것이 맞다.
+
+정본 `out/` 의 blocked_by 는 59·27·5·1 → **40·25·6·1**: 옛 shape 가 이제 제 종류로 읽혀 "열 19 개 모름 + profile 열
+21 개 누락" 이 사라지고, 대신 `inputs_sha`·`consumed_inputs` 누락 2 · `status`·`pairing` 없음 2 로 잡힌다.
+**숫자는 여전히 하나도 안 움직였다.** 옛 sidecar 를 소급 보수하지 않는다 (리뷰어 §Q6 답 그대로) — 실데이터
+재생성은 사용자 기계에서 아래 U18 4 단계로.
 
 ---
 
@@ -273,7 +301,7 @@ U14 가 드러낸 다섯 건(U14-01 줄끝로 서명이 fresh clone 에서 깨�
 # ── 0. 받기 · 확인 (몇 분) ────────────────────────────────────────────────────────────────────────
 cd ~/dd/bms-balancing && git pull --rebase origin claude/bms-alpha-beta-verify
 source .venv/bin/activate && export BMS_DATA_ROOT='/mnt/d/가형 관련/degradation mode'
-python3 -m pytest tests/ -q                       # 253 passed 기대 (원자료 불필요)
+python3 -m pytest tests/ -q                       # 262 passed 기대 (원자료 불필요)
 
 # ── 1. 배관 확인 — 새 스키마가 붙는지만 (몇 분, STARTS=6 이라 수치는 못 쓴다) ─────────────────────
 STARTS=6 STATES=100 OUT=out_u14_smoke ./scripts/run_states.sh
@@ -305,6 +333,8 @@ python3 scripts/check_u14.py --new out --renormalize
 # ── 4. `promotion_eligible: true` 였을 때만 정본 교체 (rc 0 **이면서** 그 줄이 true, 자체 리뷰 C11) ──────
 for f in out_u14/*; do mv "$f" out/; done && rmdir out_u14
 python3 scripts/ne_shape.py                       # 소비 입력이 바뀌었으니 (d) 표도 다시 (초 단위)
+#    ⚠ R13 §Q6 뒤: shape 도 U14 계약이다 — 아래가 shape 줄 없이 나와야 정본이다 (남는 것은 degeneracy digest 4 뿐)
+python3 scripts/check_u14.py --new out --schema-only | grep -c ne_shape   # 0 이어야 한다
 python3 scripts/compare_states.py out             # §1-10 표 재생 — '묶음 불일치' 경고가 없어야 한다
 git add out/ && git commit -m "U14 — 새 게시·서명 스키마로 네 상태 재실행 (숫자 동일)" && git push
 

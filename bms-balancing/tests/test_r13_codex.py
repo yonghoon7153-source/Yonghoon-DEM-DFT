@@ -411,3 +411,319 @@ def test_g17_runner_inline_fixtures_pass_the_content_contract():
     import csv
     rows = list(csv.DictReader(p.open(encoding="utf-8")))
     assert not content(rows), content(rows)
+
+
+# ---------------------------------------------------------------- §5 Q6 — shape 전용 kind · schema · sidecar 계약
+#
+# 리뷰어 실측(`r13_roster_schema_checks.py::fresh_shape_producer`): 현행 `ne_shape._write_csv` 를 선언된 GITT 상태
+# 전부의 유한 합성 측정 + complete pairing 으로 부른 산출이 `check_u14 --schema-only` 에서 **rc 2, schema 27,
+# provenance_cols 3, content 1, provenance 1** — `check_u14._kind` 가 matrix 아닌 CSV 를 전부 profile 로 읽어 shape 의
+# 열 19 개가 "모르는 열" 이고 profile 의 γ/적합 열을 요구했으며, sidecar 도 U14 meta 계약(env·시작 provenance·argv·
+# roster)에 안 맞았다. "과거 shape 만 낡은 것이 아니다 — 재생성만으로는 안 닫힌다."
+#
+# 닫힘 조건 (리뷰어 §Q6): shape 전용 kind · 행 key(state) · receipt/pairing/coverage 계약 · sidecar 요구를 **먼저**
+# 배선하고, 그 다음 실제 producer→wrapper→U14 로 재생성. PROFILE_ROW 에 열 19 개를 허용하는 것은 답이 아니다.
+
+def _shape_ns():
+    from test_review_findings import _load_script
+    return _load_script("ne_shape")
+
+
+def _prov_shared():
+    """`ne_shape` 가 함수 안에서 `from provenance import …` 로 쓰는 **바로 그** 모듈 객체 (`sys.modules`)."""
+    import importlib
+    root = pathlib.Path(__file__).resolve().parents[1] / "scripts"
+    if str(root) not in sys.path:
+        sys.path.insert(0, str(root))
+    return importlib.import_module("provenance")
+
+
+def _clean_git(monkeypatch):
+    """작업트리 상태와 무관하게 writer 의 provenance 를 clean 으로 — 검사하는 축은 계약이지 이 트리의 dirty 여부가 아니다."""
+    prov = _prov_shared()
+    monkeypatch.setattr(prov, "git_provenance", lambda *a, **k: {
+        "git_commit": "0" * 40, "git_dirty": False, "git_modified_outputs": [], "git_modified_code": []})
+
+
+def _shape_consumed(states):
+    """production `main()` 이 만드는 모양 그대로 — 상태별 {matrix, half_cell} + pristine + literature."""
+    import hashlib
+    def hc(s):
+        return {"path": f"data/half_cell/GITT/{s}.xlsx", "sha256": hashlib.sha256(f"hc{s}".encode()).hexdigest()}
+    c = {s: {"matrix": {"file": f"synthetic-matrix/matrix_{s}.csv",
+                        "sha256": hashlib.sha256(f"m{s}".encode()).hexdigest(),
+                        "row": {"index": 8, "half_cell": "GITT", "si": "Li", "w_dqdv": "0.0", "run_id": "m"}},
+             "half_cell": hc(s)} for s in states}
+    c["pristine"] = {"half_cell": hc("pristine")}
+    c["literature"] = {"gr": {"path": "gr.xlsx", "sha256": "3" * 64}, "si": {"path": "si.csv", "sha256": "4" * 64}}
+    return c
+
+
+def _pairing(states, authority=None, paired=None, missing_input=()):
+    a = list(authority if authority is not None else states)
+    r = list(states)
+    avail = [s for s in r if s not in missing_input]
+    p = list(paired if paired is not None else avail)
+    return {"authority": a, "requested": r, "requested_from": "test", "available": avail,
+            "missing_input": list(missing_input), "paired": p, "missing": [s for s in avail if s not in p],
+            "rejected_matrix": {}, "note": "test"}
+
+
+def _fresh_shape(d, states, *, consumed="auto", pairing=None, status="complete", **kw):
+    """리뷰어 `fresh_shape_producer` 그대로 — **실제 writer**, 유한 합성 측정, solver 없음."""
+    from types import SimpleNamespace
+    shape = _shape_ns()
+    rows = [(s, 12.0, 6.0, 0.5, 10.0, 5.0, 0.25, 0.2, 1.0, 0.5) for s in states]
+    cap = {s: 99.0 for s in states}
+    cwhere = {s: (s, 0.3, 10.0) for s in states}
+    headroom = {s: {"dneg": -0.25, "dpos": 0.25, "fam_max": 20.0, "g_at_max": 0.5, "witness": 0.3, "wdelta": 0.1}
+                for s in states}
+    return shape._write_csv(d, SimpleNamespace(source="GITT", si_source="Li", out_dir="synthetic-matrix"),
+                            rows, cap, 100.0, cwhere, headroom=headroom,
+                            consumed=(_shape_consumed(states) if consumed == "auto" else consumed),
+                            pairing=(pairing if pairing is not None else _pairing(states)), status=status, **kw)
+
+
+def _u14(new, old=None):
+    import subprocess
+    root = pathlib.Path(__file__).resolve().parents[1]
+    args = ["--new", str(new)] + (["--old", str(old)] if old is not None else ["--schema-only"])
+    r = subprocess.run([sys.executable, str(root / "scripts/check_u14.py"), *args],
+                       cwd=root, capture_output=True, text=True, timeout=180)
+    line = next((l for l in r.stdout.splitlines() if l.startswith("PROMOTION ")), None)
+    assert line, (r.returncode, r.stdout[-1500:], r.stderr[-1500:])
+    return r.returncode, r.stdout + r.stderr, json.loads(line[len("PROMOTION "):])
+
+
+def _shape_unit(art):
+    import csv
+    rows = list(csv.DictReader(art.open(encoding="utf-8")))
+    meta = json.loads(art.with_name(art.name + ".meta.json").read_text(encoding="utf-8"))
+    return rows, (list(rows[0]) if rows else []), meta
+
+
+def test_g18_kind_routing_is_one_fail_closed_function():
+    """`check_u14._kind` 와 `schema.body_roster` 가 각자 "matrix 아니면 profile" 이었다 — 모르는 이름이 profile 로
+    읽혔다. 종류는 한 함수가 정하고, 모르면 **예외**다 (조용히 profile 이 아니라)."""
+    from test_review_findings import _load_script
+    for name, kind in (("matrix_100.csv", "matrix"), ("matrix_300_0009_v2.csv", "matrix"),
+                       ("profile_gamma_100_Li.csv", "profile"), ("degeneracy_100_Li.json", "degeneracy"),
+                       ("ne_shape_GITT_Li.csv", "shape"), ("out/ne_shape_step_005C_Li.csv", "shape")):
+        assert S.kind_of(name) == kind, name
+    for bad in ("foo.csv", "matrix_100.json", "ne_shape_GITT_Li.json", "notes.txt", ""):
+        with pytest.raises(ValueError):
+            S.kind_of(bad)
+    with pytest.raises(ValueError):
+        S.body_roster("foo.csv", b"state,run_id\n100,r\n")
+    U = _load_script("check_u14")
+    assert U._kind(pathlib.Path("x/ne_shape_GITT_Li.csv")) == "shape"
+    with pytest.raises(ValueError):
+        U._kind(pathlib.Path("foo.csv"))
+    assert S.required_columns("shape") == S.SHAPE_ROW and "state" in S.SHAPE_ROW and "consumed_inputs" in S.SHAPE_ROW
+    with pytest.raises(KeyError):
+        S.required_columns("degeneracy")
+
+
+def test_g19_unknown_artifact_name_is_a_structured_problem_not_a_profile(tmp_path):
+    """디렉터리에 모르는 이름의 CSV 가 있으면 gate 는 그것을 profile 로 읽어 열 21 개를 요구하는 대신 **종류를
+    모른다고** 말해야 한다."""
+    import hashlib
+    d = tmp_path / "u"; d.mkdir()
+    f = d / "foo.csv"
+    f.write_text("state,run_id\n100,R\n", encoding="utf-8")
+    f.with_name("foo.csv.meta.json").write_text(json.dumps(
+        {"artifact": "foo.csv", "run_id": "R", "sha256": hashlib.sha256(f.read_bytes()).hexdigest()}),
+        encoding="utf-8")
+    rc, out, promo = _u14(d)
+    assert rc == 2 and "foo.csv: 모르는 산출 종류" in out, out[-1200:]
+    assert "foo.csv: gamma_Si" not in out and "foo.csv: obj_ratio_to_best" not in out, out[-1200:]
+
+
+def test_g20_fresh_shape_writer_output_passes_the_schema_gate(tmp_path, monkeypatch):
+    """리뷰어 반례 그대로 (receipt 만 production 모양으로): 실제 writer 의 산출이 `--schema-only` 에서
+    schema 0 · provenance_cols 0 · content 0 · unit 0 · provenance 0 이어야 한다."""
+    _clean_git(monkeypatch)
+    states = D.declared_states("GITT")
+    d = tmp_path / "fresh"
+    art = _fresh_shape(d, states)
+    assert art.name == "ne_shape_GITT_Li.csv" and art.parent == d
+    rc, out, promo = _u14(d)
+    b = promo["blocked_by"]
+    assert rc == 0 and promo["promotion_eligible"] is False and b["baseline_absent"] == 1, (rc, out[-2000:])
+    assert all(b[k] == 0 for k in ("schema", "provenance_cols", "content", "unit", "provenance", "stale")), (b, out[-2000:])
+    rows, header, meta = _shape_unit(art)
+    assert header == list(S.SHAPE_ROW), header
+    assert not S.check_rows("shape", rows, header, name=art.name)
+    assert not S.check_shape_meta(meta, rows, art.name)
+
+
+def test_g21_reviewer_literal_repro_is_rejected_only_for_its_missing_receipts(tmp_path, monkeypatch):
+    """리뷰어 스크립트는 `consumed={"synthetic": True}` 를 넘긴다 — 그것은 receipt 가 아니다. 그 호출은 **receipt
+    축에서만** 막혀야 한다 (열·sidecar·provenance 는 이제 맞는다)."""
+    _clean_git(monkeypatch)
+    states = D.declared_states("GITT")
+    d = tmp_path / "lit"
+    _fresh_shape(d, states, consumed={"synthetic": True})
+    rc, out, promo = _u14(d)
+    b = promo["blocked_by"]
+    assert b["schema"] == 0 and b["provenance_cols"] == 0 and b["provenance"] == 0 and b["unit"] == 0, (b, out[-2000:])
+    assert rc == 2 and b["content"] >= len(states), (b, out[-2000:])
+    words = ("consumed_inputs", "inputs_sha", "receipt", "출처", "역할")
+    lines = [l.strip() for l in out.splitlines() if l.strip().startswith("- ne_shape_GITT_Li.csv:")]
+    assert lines and all(any(w in l for w in words) for l in lines), lines
+
+
+def test_g22_shape_coverage_and_pairing_are_bound_to_the_declared_roster(tmp_path, monkeypatch):
+    """모집단은 산출 안에서 닫히지 않는다 (P1-1 과 같은 축): 본문의 상태 집합은 `D.declared_states(source)` 와
+    exact 로 대고, sidecar 의 pairing 은 그 명부·본문·typed status 와 산술적으로 맞아야 한다."""
+    _clean_git(monkeypatch)
+    states = D.declared_states("GITT")
+    assert len(states) >= 2
+    # (a) 좁힌 실행이 자기 authority 를 스스로 적고 complete 로 canonical 이름에 앉음
+    sub = states[:1]
+    art = _fresh_shape(tmp_path / "a", sub, pairing=_pairing(sub, authority=sub))
+    rows, header, meta = _shape_unit(art)
+    p = S.check_rows("shape", rows, header, name=art.name)
+    assert any(q.startswith(S.CANONICAL_SLOT_PREFIX) for q in p), p        # 자리 규칙 (내용 결함이 아니다)
+    assert not [q for q in p if not q.startswith(S.CANONICAL_SLOT_PREFIX)], p  # 내용은 멀쩡하다
+    pm = S.check_shape_meta(meta, rows, art.name)
+    assert any("authority" in q for q in pm), pm                             # 자기 선언 authority 는 정본이 아니다
+    rc, out, promo = _u14(tmp_path / "a")
+    assert rc == 2 and promo["blocked_by"]["content"] >= 2, out[-1500:]
+    # (b) 선언에 없는 상태
+    art = _fresh_shape(tmp_path / "b", states + ["999"], pairing=_pairing(states + ["999"], authority=states + ["999"]))
+    rows, header, meta = _shape_unit(art)
+    p = S.check_rows("shape", rows, header, name=art.name)
+    assert any("999" in q and not q.startswith(S.CANONICAL_SLOT_PREFIX) for q in p), p
+    # (c) pairing 이 본문과 다르다: paired 에 있는 상태의 행에 γ 짝이 없다 · status 가 pairing 의 뜻과 다르다
+    art = _fresh_shape(tmp_path / "c", states)
+    rows, header, meta = _shape_unit(art)
+    assert not S.check_shape_meta(meta, rows, art.name)
+    rows2 = [dict(r, gamma_target="", gamma_ref="") if r["state"] == states[0] else r for r in rows]
+    assert any("paired" in q for q in S.check_shape_meta(meta, rows2, art.name))
+    meta2 = dict(meta, status="partial")
+    assert any("status" in q for q in S.check_shape_meta(meta2, rows, art.name))
+    meta3 = dict(meta, pairing=dict(meta["pairing"], missing=[states[0]]))
+    assert S.check_shape_meta(meta3, rows, art.name)
+    meta4 = dict(meta); meta4.pop("pairing")
+    assert any("pairing" in q for q in S.check_shape_meta(meta4, rows, art.name))
+    # (d) 그리고 gate 가 sidecar 의 pairing 을 실제로 읽는다 — 파일에서 지우면 content 로 막힌다
+    m = art.with_name(art.name + ".meta.json")
+    j = json.loads(m.read_text(encoding="utf-8")); j["pairing"]["paired"] = []
+    m.write_text(json.dumps(j, ensure_ascii=False), encoding="utf-8")
+    rc, out, promo = _u14(tmp_path / "c")
+    assert rc == 2 and "paired" in out, out[-1500:]
+
+
+def test_g23_shape_sidecar_carries_the_u14_meta_contract(tmp_path, monkeypatch):
+    """sidecar 는 U14 가 요구하는 전부를 담는다 — env · started_utc · git_commit_at_start ·
+    git_state_changed_during_run · argv · roster(본문에서 유도) · shape 의 실행 조건 (state/starts/seed 가 아니라
+    half_cell_source · si_source · grid_n · grid_range · gamma_grid)."""
+    import re
+    from test_review_findings import _load_script
+    _clean_git(monkeypatch)
+    U = _load_script("check_u14")
+    states = D.declared_states("GITT")
+    art = _fresh_shape(tmp_path / "m", states)
+    rows, header, meta = _shape_unit(art)
+    for k in (*U.META_KEYS, *U.META_REQUIRED, *S.meta_controls("shape")):
+        assert meta.get(k) not in (None, ""), (k, sorted(meta))
+    assert all(str(meta["env"].get(k) or "").strip() for k in S.ENV_KEYS), meta["env"]
+    assert meta["git_state_changed_during_run"] is False and re.fullmatch(r"[0-9a-f]{40}", meta["git_commit_at_start"])
+    assert meta["started_utc"] <= meta["created_utc"]
+    assert isinstance(meta["argv"], list) and meta["argv"]
+    assert meta["roster"] == S.body_roster(art.name, art.read_bytes())
+    assert meta["roster"]["kind"] == "shape" and meta["roster"]["rows"] == len(states)
+    assert meta["roster"]["state"] == sorted(states) and meta["roster"]["paired"] == sorted(states)
+    assert S.meta_controls("shape") == ("half_cell_source", "si_source", "grid_n", "grid_range", "gamma_grid")
+    for kind in ("matrix", "profile", "degeneracy"):
+        assert S.meta_controls(kind) == S.META_CONTROLS
+    # roster 를 바꾸면 gate 가 "본문에서 유도한 명부와 다르다" 로 막는다 (matrix·profile 과 같은 규칙)
+    m = art.with_name(art.name + ".meta.json")
+    j = json.loads(m.read_text(encoding="utf-8")); j["roster"]["paired"] = []
+    m.write_text(json.dumps(j, ensure_ascii=False), encoding="utf-8")
+    rc, out, promo = _u14(tmp_path / "m")
+    assert rc == 2 and "roster" in out and promo["blocked_by"]["content"] >= 1, out[-1500:]
+
+
+def test_g24_witness_columns_are_empty_together_and_science_cells_are_finite(tmp_path, monkeypatch):
+    """R3-03: `gamma_witness`·`gamma_witness_delta` 의 빈 칸은 "격자에서 증인 없음" 이라 **둘이 함께** 비어야
+    뜻이 있다. 나머지 과학 열은 비면 안 되고 유한해야 한다 (짝 없는 행의 nan 은 partial 의 증거지 success 가 아니다)."""
+    _clean_git(monkeypatch)
+    states = D.declared_states("GITT")
+    art = _fresh_shape(tmp_path / "w", states)
+    rows, header, _ = _shape_unit(art)
+    ok = lambda rs: [q for q in S.check_rows("shape", rs, header, name=art.name)]   # noqa: E731
+    assert not ok(rows)
+    both = [dict(r, gamma_witness="", gamma_witness_delta="") for r in rows]
+    assert not ok(both), ok(both)
+    one = [dict(r, gamma_witness="") for r in rows]
+    assert any("gamma_witness" in q for q in ok(one)), ok(one)
+    unpaired = [dict(rows[0], gamma_target="", gamma_ref="", gamma_shape_mV="nan", ratio_b_over_a="nan")] + rows[1:]
+    p = ok(unpaired)
+    assert any("gamma_target" in q for q in p) and any("gamma_shape_mV" in q for q in p), p
+    bad = [dict(rows[0], measured_shape_mV="inf")] + rows[1:]
+    assert any("measured_shape_mV" in q for q in ok(bad))
+    dup = rows + [rows[0]]
+    assert any("중복" in q for q in ok(dup))
+
+
+def test_g25_real_producer_through_the_wrapper_then_u14_and_a_second_run_reproduces(tmp_path):
+    """producer→wrapper→U14 완주 (합성 원자료·fixture matrix, 실제 `ne_shape.py` · `shape_step` · `check_u14`):
+    (1) 산출이 canonical 에 게시되고 schema-only 에서 계약 위반 0, (2) 두 번째 독립 실행은 첫 실행과 숫자·입력
+    identity·조건이 같아 승격 자격(트리가 clean 이면)."""
+    from test_r6_internal import _synth_root, _prov
+    from test_r10_codex import _shell
+    from test_r8_codex import _pair
+    src = _synth_root(tmp_path)
+    matrix = tmp_path / "matrix"; matrix.mkdir()
+    for s in D.declared_states("GITT"):
+        _pair(matrix, s)
+    root = pathlib.Path(__file__).resolve().parents[1]
+
+    def run(write):
+        cmd = (f'shape_step "{write}" env PYTHONUNBUFFERED=1 {sys.executable} scripts/ne_shape.py --data-root "{src}" '
+               f'--out-dir "{matrix}" --write "{write}" --source GITT --si-source Li; echo "STEP_RC=$?"')
+        p = _shell(cmd, {"OUT": str(write)})
+        text = p.stdout + p.stderr
+        assert "STEP_RC=0" in text and "complete" in text, text[-2500:]
+        assert (write / "ne_shape_GITT_Li.csv").is_file() and not (write / "partial").exists(), text[-800:]
+        return text
+
+    A, B = tmp_path / "A", tmp_path / "B"
+    run(A); run(B)
+    pv = _prov().git_provenance(cwd=str(root))
+    dirty = 2 if pv["git_dirty"] else 0                   # SAFE_PROVENANCE 의 git_dirty · git_modified_code
+    rc, out, promo = _u14(A)
+    b = promo["blocked_by"]
+    assert all(b[k] == 0 for k in ("schema", "provenance_cols", "content", "unit", "stale")), (b, out[-2500:])
+    assert b["provenance"] == dirty, (b, out[-1500:])
+    rc, out, promo = _u14(B, A)
+    b = promo["blocked_by"]
+    assert all(b[k] == 0 for k in ("schema", "provenance_cols", "content", "unit", "controls", "env", "numbers",
+                                   "alias", "inputs", "inputs_uncomparable", "stale")), (b, out[-2500:])
+    assert promo["roster"] == {"old": 1, "new": 1, "compared": 1, "missing_in_new": [], "extra_in_new": []}, promo
+    if not pv["git_dirty"]:
+        assert rc == 0 and promo["promotion_eligible"] is True, (rc, out[-1500:])
+
+
+def test_g26_write_meta_refuses_an_unregistered_artifact_name(tmp_path):
+    """production `write_meta` 는 명부를 `body_roster` 로 유도한다 — 등록되지 않은 이름이면 명부를 지어내지 않고
+    **meta 도 쓰지 않는다** (fail-closed). 전 판은 `out/100.csv` 같은 이름을 profile 로 읽어 봉인했다 (열두 번째
+    fixture 감사: `test_review_findings` 의 세 fixture 가 정확히 그 이름을 쓰고 있었다)."""
+    import os, subprocess
+    from test_review_findings import _fixture_repo, _shell_helpers
+    root = tmp_path / "repo"; _fixture_repo(root, outputs=("out/foo.csv",))
+    (root / "out" / "foo.csv").write_text("a,b,run_id\n3,4,rid-x\n", encoding="utf-8")
+    env = dict(os.environ, STARTS="1", SI="Li", BMS_DATA_ROOT="synthetic")
+    r = subprocess.run(["bash", "-c", _shell_helpers() + '\nLAST_RUN_ID=rid-x write_meta "$1" 100 GITT', "g26", "out/foo.csv"],
+                       cwd=root, env=env, capture_output=True, text=True, encoding="utf-8")
+    assert r.returncode != 0 and "등록된 종류" in r.stderr, (r.returncode, r.stderr[-600:])
+    assert not (root / "out" / "foo.csv.meta.json").exists()
+    # 등록된 이름은 같은 경로로 봉인된다 (대조군)
+    (root / "out" / "matrix_100.csv").write_text("a,b,run_id\n3,4,rid-y\n", encoding="utf-8")
+    r = subprocess.run(["bash", "-c", _shell_helpers() + '\nLAST_RUN_ID=rid-y write_meta "$1" 100 GITT', "g26", "out/matrix_100.csv"],
+                       cwd=root, env=env, capture_output=True, text=True, encoding="utf-8")
+    assert r.returncode == 0, r.stderr[-600:]
+    meta = json.loads((root / "out" / "matrix_100.csv.meta.json").read_text(encoding="utf-8"))
+    assert meta["roster"] == {"kind": "matrix", "rows": 1}, meta["roster"]

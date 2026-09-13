@@ -27,6 +27,19 @@ PROFILE_ROW = (
     #: ⚠ Codex R10 P1-3: 실패한 γ 는 행에서 빠지므로 **행만 보면 모집단을 알 수 없다**. 요청·성공·누락을 행마다
     #:   봉인한다 — 사라지는 stdout 요약이 아니라 검증되는 묶음이 스스로 말한다 (R8-04 와 같은 축).
     "gamma_roster")
+#: `ne_shape` 의 shape 산출 — 상태마다 한 행 (행 key 는 `state`). ⚠ Codex R13 §Q6: 전 판은 이 열들이 producer 의
+#: literal 에만 있었고 checker 는 shape 라는 종류를 몰라 profile 로 읽었다 — 열 19 개가 "모르는 열" 이고 profile 의
+#: γ/적합 열이 "누락" 이었다 (리뷰어 `fresh_shape_producer` 실측: schema 27 · provenance_cols 3 · content 1).
+#: `inputs_sha`·`consumed_inputs` 는 행마다 **자기** receipt (역할 `SHAPE_ROLES`) — sidecar 의 상태별 dict 는 checker 의
+#: receipt 계약(R11 P1-1: 행 key 별 역할·sha)과 모양이 달라 대조 대상이 아니었다.
+SHAPE_ROW = (
+    "state", "cap_delta_pct", "gamma_target", "gamma_ref",
+    "measured_shape_mV", "gamma_shape_mV", "ratio_b_over_a",
+    "blend_vs_meas_max_mV", "blend_vs_meas_rms_mV",
+    "max_at_x", "frac_over_50mV", "pe_shape_max_mV", "pe_shape_rms_mV",
+    "legal_dgamma_neg", "legal_dgamma_pos", "gamma_family_max_mV",
+    "gamma_at_family_max", "gamma_witness", "gamma_witness_delta",
+    "run_id", "inputs_sha", "consumed_inputs")
 DEGENERACY_KEYS = (
     "state", "si_source", "half_cell", "w_dqdv", "tol_percent_of_best", "n_starts", "seed", "n_grid", "n_samples",
     "run_id", "env", "consumed_inputs", "ref_consumed_inputs", "inputs_sha",
@@ -39,6 +52,13 @@ PROVENANCE_COLS = ("ref_inputs_sha", "consumed_inputs", "ref_consumed_inputs")
 #: receipt 가 반드시 담아야 하는 **역할** — `build()` 가 소비하는 입력 전부 (Codex R10 P1-6). 역할이 빠지거나 모르는
 #: 역할이 끼면 그것은 다른 계산이다; decoy 하나로 provenance 를 참칭할 수 없다.
 REQUIRED_ROLES = ("full_cell", "half_cell", "literature.gr", "literature.si")
+#: shape 행의 receipt 역할 — 그 상태의 γ 짝(matrix) · 그 상태의 반쪽전지 · 기준(pristine) 반쪽전지 · 문헌 둘 (Codex R13 §Q6)
+SHAPE_ROLES = ("matrix", "half_cell", "half_cell_pristine", "literature.gr", "literature.si")
+
+
+def receipt_roles(kind: str) -> tuple:
+    return SHAPE_ROLES if kind == "shape" else REQUIRED_ROLES
+
 #: 승격 판정에서 **같아야 하는** 환경 축 (R6 내부 F3: scipy 1.11↔1.17 에서 최적점이 갈린다)
 #: 비교하는 실행 환경 축 — `provenance.env_signature()` 가 **적는 것 전부**여야 한다.
 #: ⚠ 자체 리뷰 C18: 전 판은 pandas 를 서명에는 적고 비교 축에서 뺐다. 과학 입력이 전부 `pd.read_excel` 로
@@ -157,6 +177,14 @@ def check_degeneracy_shape(j: dict) -> list:
 
 #: sidecar 가 반드시 담아야 하는 실행 조건 — **양쪽에 있어야** 비교가 성립한다 (Codex R10 P1-7: 지우면 검사가 잠들었다)
 META_CONTROLS = ("state", "half_cell_source", "si_source", "starts", "seed")
+#: shape 의 실행 조건 — solver 가 없으니 starts/seed 가 아니고, 상태는 본문(roster)에 여럿이라 조건이 아니다 (Codex R13 §Q6)
+SHAPE_META_CONTROLS = ("half_cell_source", "si_source", "grid_n", "grid_range", "gamma_grid")
+
+
+def meta_controls(kind: str) -> tuple:
+    """종류별 sidecar 실행 조건 — 양쪽에 있고 같아야 "같은 실행" 이다 (Codex R10 P1-7)."""
+    return SHAPE_META_CONTROLS if kind == "shape" else META_CONTROLS
+
 #: success 행에는 없어야 하는 열 — 있으면 그 행은 error 행이고 묶음은 승격 대상이 아니다 (Codex R10 P1-5)
 ERROR_COL = "error"
 #: 산출 version — digest 규칙이 바뀌면 올린다 (옛 digest 와 새 digest 가 섞여 보이지 않게)
@@ -166,6 +194,14 @@ RECEIPT_SCHEMA_VERSION = "r10.1"
 #:   감사가 있고 재실행에는 빈 칸이어도 "전부 같다 · rc 0 · promotion true" 였다. 한쪽 carve-out 은 이유가 있어도
 #:   둘 다면 그 열은 존재하지 않는 것과 같다. 빈 칸 허용을 뺀다 — producer 가 감사 없이 돌면 그것이 문제다.
 MAY_BE_EMPTY: frozenset = frozenset()
+#: shape 만의 예외 — `gamma_witness`·`gamma_witness_delta` 의 빈 칸은 "격자에서 (a) 를 내는 합법 γ 없음" 이라는 **값**이다
+#: (R3-03). 둘은 함께 비거나 함께 차야 한다 (`check_rows` 가 센다).
+SHAPE_MAY_BE_EMPTY: frozenset = frozenset({"gamma_witness", "gamma_witness_delta"})
+
+
+def may_be_empty(kind: str) -> frozenset:
+    return SHAPE_MAY_BE_EMPTY if kind == "shape" else MAY_BE_EMPTY
+
 #: 숫자가 **아닌** 열 (라벨·출처·감사 문자열). 나머지는 전부 유한한 숫자여야 한다 — 목록을 반대로 두면 새 숫자 열이
 #: 생겼을 때 검사에서 조용히 빠진다 (Codex R11 P1-8: `a_NE="not-a-number"` 가 통과했다).
 MATRIX_NON_NUMERIC = ("half_cell", "si", "run_id", "inputs_sha", "ref_inputs_sha", "consumed_inputs",
@@ -175,6 +211,8 @@ PROFILE_NON_NUMERIC = ("bounds", "run_id", "profile_scale", "inputs_sha", "ref_i
                        "consumed_inputs", "ref_consumed_inputs", "gamma_roster")
 MATRIX_NUMERIC = tuple(c for c in MATRIX_ROW if c not in MATRIX_NON_NUMERIC)
 PROFILE_NUMERIC = tuple(c for c in PROFILE_ROW if c not in PROFILE_NON_NUMERIC)
+SHAPE_NON_NUMERIC = ("state", "run_id", "inputs_sha", "consumed_inputs")
+SHAPE_NUMERIC = tuple(c for c in SHAPE_ROW if c not in SHAPE_NON_NUMERIC)
 #: 숫자 대조에서 뺄 열 (출처·감사 문자열 — 숫자가 아니다)
 ROW_SKIP = frozenset({"run_id", "inputs_sha", "ref_inputs_sha", "consumed_inputs", "ref_consumed_inputs",
                       "scale_audit_target", "scale_audit_ref"})
@@ -339,8 +377,64 @@ def env_problems(old: dict | None, new: dict | None, where: str = "env") -> list
     return p
 
 
+# ── 산출 종류 (kind) — 이름 → 종류는 **한 함수**가 정하고, 모르면 예외다 (Codex R13 §Q6) ─────────────────────
+KINDS = ("matrix", "profile", "degeneracy", "shape")
+_KIND_BY_NAME = (("matrix_", ".csv", "matrix"), ("profile_gamma_", ".csv", "profile"),
+                 ("degeneracy_", ".json", "degeneracy"), ("ne_shape_", ".csv", "shape"))
+
+
+def kind_of(name: str) -> str:
+    """산출 파일 이름 → 종류.
+
+    ⚠ Codex R13 §Q6: 전 판은 `check_u14._kind` 와 `body_roster` 가 **각자** "json 이면 degeneracy · `matrix_` 면 matrix ·
+      아니면 profile" 이었다 — `ne_shape_*.csv` 도, 모르는 이름도 profile 로 읽혔다 (리뷰어 실측: shape 의 열 19 개가
+      "모르는 열" · profile 의 γ/적합 열 21 개 "누락"). 종류를 모르면 조용히 고르지 않는다.
+    """
+    stem = (name or "").replace("\\", "/").rsplit("/", 1)[-1]
+    low = stem.lower()
+    for pre, suf, kind in _KIND_BY_NAME:
+        if low.startswith(pre) and low.endswith(suf):
+            return kind
+    raise ValueError(f"모르는 산출 종류: {stem!r} — 정본 이름은 matrix_<state>.csv · profile_gamma_<state>_<si>.csv · "
+                     f"degeneracy_<state>_<si>.json · ne_shape_<source>_<si>.csv (`bms_balancing/schema.py` 가 정본)")
+
+
 def required_columns(kind: str) -> tuple:
-    return {"matrix": MATRIX_ROW, "profile": PROFILE_ROW}[kind]
+    return {"matrix": MATRIX_ROW, "profile": PROFILE_ROW, "shape": SHAPE_ROW}[kind]
+
+
+def shape_key(row: dict) -> str:
+    """shape 의 행 key 는 **상태**다 — 한 파일에 상태마다 한 행 (γ 도 조합도 아니다)."""
+    return str(row.get("state") if row.get("state") is not None else "")
+
+
+def row_key(kind: str):
+    """종류별 행 key — reader 와 checker 가 같은 함수를 쓴다 (R8-05 · R9-05)."""
+    return {"matrix": matrix_key, "profile": profile_key, "shape": shape_key}[kind]
+
+
+def shape_source_of(name: str) -> tuple:
+    """`ne_shape_<source>_<si>.csv` → (source, si). 소스 이름에 `_` 가 있어(`step_005C`) **등록된 이름**으로만 가른다;
+    못 가르면 ("", "")."""
+    from . import data as D
+    stem = (name or "").replace("\\", "/").rsplit("/", 1)[-1]
+    if not stem.startswith("ne_shape_") or not stem.endswith(".csv"):
+        return "", ""
+    rest = stem[len("ne_shape_"):-len(".csv")]
+    for src in sorted(D.HALF_FILE, key=len, reverse=True):
+        for si in D.SI_SOURCES:
+            if rest == f"{src}_{si}":
+                return src, si
+    return "", ""
+
+
+def canonical_shape_states(source: str) -> list:
+    """shape 의 정본 모집단 — 그 반쪽전지 소스의 선언 상태에서 알려진 부재를 뺀 것 (`data.declared_states`).
+    producer(`ne_shape.main` 의 authority)와 checker 가 **같은 함수**를 쓴다 (Codex R13 P1-1 과 같은 축)."""
+    from . import data as D
+    if not source:
+        raise ValueError("반쪽전지 소스 없이 shape 의 정본 모집단을 말할 수 없다")
+    return list(D.declared_states(source))
 
 
 def matrix_key(row: dict) -> tuple:
@@ -419,14 +513,15 @@ def check_rows(kind: str, rows: list, header: list, name: str = "") -> list:
     unknown = [c for c in header if c not in need and c != ERROR_COL]
     if unknown:
         p.append(f"모르는 열 {unknown} — producer 스키마에 없는 열이다 (`bms_balancing/schema.py` 가 정본)")
-    numeric = MATRIX_NUMERIC if kind == "matrix" else PROFILE_NUMERIC
+    numeric = {"matrix": MATRIX_NUMERIC, "profile": PROFILE_NUMERIC, "shape": SHAPE_NUMERIC}[kind]
+    empty_ok = may_be_empty(kind)
     n_error = 0
     for i, r in enumerate(rows):
         if str(r.get(ERROR_COL) or "").strip():
             n_error += 1
             continue                                                       # 실패한 조합의 행 — 아래 union 규칙이 센다
         for c in need:
-            if c in header and c not in MAY_BE_EMPTY and (r.get(c) is None or str(r.get(c)) == ""):
+            if c in header and c not in empty_ok and (r.get(c) is None or str(r.get(c)) == ""):
                 p.append(f"행 {i}: 필수 셀 {c} 이 비어 있다")
         for c in numeric:
             if c in header and str(r.get(c) or "") != "":
@@ -441,7 +536,14 @@ def check_rows(kind: str, rows: list, header: list, name: str = "") -> list:
         if kind == "matrix" and any(c in header for c in ("scale_audit_target", "scale_audit_ref")):
             p += check_scale_audit(r, f"행 {i} ")
         if all(c in header for c in ("consumed_inputs", "inputs_sha")):
-            p += validate_receipt(r.get("consumed_inputs"), r.get("inputs_sha"), f"행 {i} consumed_inputs")
+            p += validate_receipt(r.get("consumed_inputs"), r.get("inputs_sha"), f"행 {i} consumed_inputs",
+                                  roles=receipt_roles(kind))
+        if kind == "shape" and all(c in header for c in SHAPE_MAY_BE_EMPTY):
+            # R3-03: 빈 칸은 "격자에서 증인 없음" 이라는 값이므로 둘이 **함께** 비어야 뜻이 있다
+            wit, delta = (str(r.get(c) or "").strip() for c in ("gamma_witness", "gamma_witness_delta"))
+            if bool(wit) != bool(delta):
+                p.append(f"행 {i}: gamma_witness 와 gamma_witness_delta 는 함께 비거나 함께 차야 한다 "
+                         f"(R3-03: 빈 칸 = 격자에서 증인 없음) — {wit!r} · {delta!r}")
         if all(c in header for c in ("ref_consumed_inputs", "ref_inputs_sha")):
             p += validate_receipt(r.get("ref_consumed_inputs"), r.get("ref_inputs_sha"), f"행 {i} ref_consumed_inputs")
     if n_error:
@@ -452,8 +554,9 @@ def check_rows(kind: str, rows: list, header: list, name: str = "") -> list:
     if kind == "matrix" and "combo_roster" in header:            # 자체 리뷰 C05 — profile 과 같은 축
         p += check_combo_roster([r for r in rows if not str(r.get(ERROR_COL) or "").strip()],
                                 state=state_of(name))
-    _, dup, _ = unique_rows([r for r in rows if not str(r.get(ERROR_COL) or "").strip()],
-                            matrix_key if kind == "matrix" else profile_key)
+    if kind == "shape":                                          # 본문의 상태 집합 ↔ 정본 모집단 (Codex R13 §Q6)
+        p += check_shape_coverage([r for r in rows if not str(r.get(ERROR_COL) or "").strip()], name)
+    _, dup, _ = unique_rows([r for r in rows if not str(r.get(ERROR_COL) or "").strip()], row_key(kind))
     p += [f"중복 key {k}" for k in dup]
     return p
 
@@ -461,7 +564,8 @@ def check_rows(kind: str, rows: list, header: list, name: str = "") -> list:
 def body_roster(name: str, data: bytes) -> dict:
     """산출 **본문**에서 유도한 exact 명부 (Codex R9 P2-4). sidecar 의 singular 필드는 wrapper 의 환경값이지 본문의
     명부가 아니다. `run_states.sh` 의 `write_meta` 와 `check_u14` 가 **같은 함수**를 쓴다 — 두 벌로 두면 갈린다."""
-    if name.endswith(".json"):
+    kind = kind_of(name)                           # 모르는 이름은 예외 — 명부를 지어내지 않는다 (Codex R13 §Q6)
+    if kind == "degeneracy":
         j = json_bytes(data)
         return {"kind": "degeneracy", "state": j.get("state"),
                 "half_cell": [j["half_cell"]] if j.get("half_cell") else [],
@@ -469,13 +573,16 @@ def body_roster(name: str, data: bytes) -> dict:
                 "w_dqdv": [j["w_dqdv"]] if j.get("w_dqdv") is not None else []}
     import csv as _csv, io as _io
     rows = list(_csv.DictReader(_io.StringIO(data.decode("utf-8-sig"))))
-    r = {"kind": "matrix" if name.startswith("matrix_") else "profile", "rows": len(rows)}
+    r = {"kind": kind, "rows": len(rows)}
     for c in ("half_cell", "si", "w_dqdv", "profile_scale", "state"):
         if rows and c in rows[0]:
             r[c] = sorted({row.get(c) or "" for row in rows})
     if rows and "gamma_Si" in rows[0]:
         g = [float(row["gamma_Si"]) for row in rows if row.get("gamma_Si") not in (None, "")]
         r["gamma_Si"] = [min(g), max(g), len(g)] if g else []
+    if kind == "shape":
+        # γ 짝이 있는 상태 — sidecar `pairing.paired` 와 같은 뜻이고 checker 는 본문에서 다시 유도해 댄다
+        r["paired"] = sorted({row.get("state") or "" for row in rows if str(row.get("gamma_target") or "").strip()})
     return r
 
 
@@ -550,6 +657,84 @@ def check_combo_roster(rows: list, state: str = "") -> list:
             if lack:
                 p.append(f"canonical 주장인데 본문에 정본 조합이 빠졌다 ({lack[:4]}{' 외' if len(lack) > 4 else ''}) — "
                          f"{len(got)}/{len(want)}")
+    return p
+
+
+SHAPE_STATUSES = ("complete", "partial", "none", "subset")
+SHAPE_PAIRING_LISTS = ("authority", "requested", "available", "missing_input", "paired", "missing")
+
+
+def check_shape_coverage(rows: list, name: str = "") -> list:
+    """shape 본문의 상태 집합 ↔ 정본 모집단 (Codex R13 §Q6 — P1-1 과 같은 축: 모집단은 산출 안에서 닫히지 않는다).
+
+    선언에 없는 상태는 내용 결함이다. 정본의 **부분집합**은 내용 결함이 아니라 자리 규칙 위반이다 (`CANONICAL_SLOT_PREFIX`
+    — partial/subset 산출은 `<write>/partial/` 에 같은 이름으로 앉으므로 reader 는 소비할 수 있어야 하고 승격 gate 만
+    막는다). 이름에서 소스를 못 읽으면 모집단을 말할 수 없어 검사하지 않는다 — `check_u14` 는 언제나 이름을 준다.
+    """
+    src, _ = shape_source_of(name)
+    if not src:
+        return []
+    canon = canonical_shape_states(src)
+    got = [str(r.get("state") or "") for r in rows]
+    p = []
+    unknown = sorted({s for s in got if s not in canon})
+    if unknown:
+        p.append(f"선언되지 않은 상태 {unknown} — 정본 모집단은 {canon} (`data.declared_states({src!r})`)")
+    missing = [s for s in canon if s not in got]
+    if missing:
+        p.append(f"{CANONICAL_SLOT_PREFIX}본문 상태 {sorted(set(got))} 가 정본 모집단 {canon} 의 부분집합이다 — 누락 {missing}; "
+                 f"partial/subset 은 canonical 자리에 앉지 않는다 (Codex R9-06 · R10 P1-2)")
+    return p
+
+
+def check_shape_meta(meta, rows: list, name: str = "") -> list:
+    """shape sidecar 의 typed `status`·`pairing` ↔ 정본 모집단 ↔ 본문 (Codex R13 §Q6).
+
+    `pairing` 은 R8-03 의 "어느 부분집합 위의 진술인가", `status` 는 R9-06 의 typed 완전성이다 — 둘 다 sidecar 에만 있었고
+    어떤 checker 도 본문과 대지 않았다. 규칙: authority 는 정본(`canonical_shape_states`) 그대로 · requested ⊆ authority ·
+    available ⊎ missing_input = requested · paired ⊎ missing = available · 본문 상태 = available · 본문의 γ 짝 있는 행 =
+    paired · status 는 producer 의 판정식 그대로 (none → subset → complete → partial).
+    """
+    if not isinstance(meta, dict):
+        return ["sidecar 가 객체가 아니다"]
+    p = []
+    status = meta.get("status")
+    if status not in SHAPE_STATUSES:
+        p.append(f"status 가 typed 값이 아니다 ({status!r}; 요구: {' · '.join(SHAPE_STATUSES)})")
+    pr = meta.get("pairing")
+    if not isinstance(pr, dict) or not pr:
+        p.append("pairing 이 없다 — 어느 모집단 위의 진술인지 산출이 말하지 않는다 (Codex R8-03)")
+        return p
+    bad = [k for k in SHAPE_PAIRING_LISTS
+           if not isinstance(pr.get(k), list) or not all(isinstance(x, str) for x in pr[k])]
+    if bad:
+        p.append(f"pairing.{bad} 가 문자열 목록이 아니다")
+        return p
+    A, R, V, MI, P, M = (sorted(pr[k]) for k in SHAPE_PAIRING_LISTS)
+    for k, v in zip(SHAPE_PAIRING_LISTS, (A, R, V, MI, P, M)):
+        if len(set(v)) != len(v):
+            p.append(f"pairing.{k} 에 중복이 있다 ({v})")
+    src, _ = shape_source_of(name)
+    if src:
+        canon = sorted(canonical_shape_states(src))
+        if A != canon:
+            p.append(f"pairing.authority {A} 가 정본 모집단 {canon} 와 다르다 — 모집단은 산출 안에서 닫히지 않는다 "
+                     f"(Codex R13 P1-1)")
+    if not set(R) <= set(A):
+        p.append(f"pairing.requested {R} ⊄ authority {A}")
+    if sorted(V + MI) != R:
+        p.append(f"pairing: available {V} ⊎ missing_input {MI} ≠ requested {R}")
+    if sorted(P + M) != V:
+        p.append(f"pairing: paired {P} ⊎ missing {M} ≠ available {V}")
+    body = sorted(str(r.get("state") or "") for r in rows)
+    body_paired = sorted(str(r.get("state") or "") for r in rows if str(r.get("gamma_target") or "").strip())
+    if body != V:
+        p.append(f"본문의 상태 {body} ≠ pairing.available {V}")
+    if body_paired != P:
+        p.append(f"본문에서 γ 짝이 있는 상태 {body_paired} ≠ pairing.paired {P}")
+    want = "none" if not P else ("subset" if R != A else ("complete" if not MI and not M else "partial"))
+    if status in SHAPE_STATUSES and status != want:
+        p.append(f"status {status!r} 인데 pairing 은 {want!r} 를 뜻한다 (producer 의 판정식: none → subset → complete → partial)")
     return p
 
 
