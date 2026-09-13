@@ -131,16 +131,34 @@ def audit_case(case_dir, contact_mode='physics', channels=('ionic', 'electronic'
                 1e-9))
     box = span * 1000.0
 
+    from collections import Counter as _C
+    type_hist = _C(a['type'] for a in atoms.values())
+    all_types = sorted(type_hist)
     row = {'case': case_dir.name, 'contact_mode': contact_mode,
-           'n_contact_rows': len(contacts)}
-    all_types = sorted({a['type'] for a in atoms.values()})
+           'n_contact_rows': len(contacts),
+           'type_hist': ';'.join(f'{t}:{type_hist[t]}' for t in all_types),
+           'type_map': ';'.join(f'{k}={v}' for k, v in sorted(type_map.items()))}
     for ch in channels:
         mode, pick = CHANNELS[ch]
-        tt = pick(type_map) or set(all_types)
+        tt = pick(type_map)
+        #  ⚠ 빈 선택을 **전체로 대체하지 않는다** — 그러면 채널 필터가 조용히 사라진다.
+        if not tt:
+            raise ValueError(
+                f'채널 {ch}: type_map 에서 고른 target_types 가 비었다.  '
+                f'type_map={dict(sorted(type_map.items()))} · '
+                f'원자 type 분포={dict(type_hist)}')
         net = _NC.build_network(atoms, contacts, tt, scale,
                                 plate_z, box_x=box, box_y=box,
                                 mode=mode, type_map=type_map,
                                 contact_mode=contact_mode)
+        #  `build_network:196` 은 `target_ids` 가 비면 **None** 을 돌려준다.
+        if net is None:
+            n_hit = sum(type_hist[t] for t in tt if t in type_hist)
+            raise ValueError(
+                f'채널 {ch}: build_network 가 None (해당 상의 입자가 없다).  '
+                f'target_types={sorted(tt)} · 그 type 의 원자 {n_hit}개 · '
+                f'원자 type 분포={dict(type_hist)} · '
+                f'type_map={dict(sorted(type_map.items()))}')
         edges = net['edges'] if isinstance(net, dict) else net[1]
         n = d = 0
         by_kind = {}
