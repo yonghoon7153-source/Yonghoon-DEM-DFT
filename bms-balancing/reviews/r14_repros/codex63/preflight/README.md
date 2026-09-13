@@ -7,7 +7,7 @@
 | 파일 (패키지 경로) | bytes | manifest sha256 | 여기 사본 |
 |---|---|---|---|
 | `outputs/NEXT_RUN_PLAN.md` | 9224 | `d7dd6b644f8cd6a2a07109802de22e28a291f5c7be5c356d8a03f195c334b2d1` | **바이트 일치** (`NEXT_RUN_PLAN.md`) |
-| `outputs/preflight/PREFLIGHT_RESULTS_KO.md` | 11639 | `a4303b87e3b4191dfa8fb637ef35825aabfa57eed02314ffe19575e456ffa8a0` | `PREFLIGHT_RESULTS_KO.md` — **불일치** (사본 sha256 `87ba751b…`; 붙여넣기 전사 오차, 숫자는 대조 확인. 원본 파일 업로드 시 교체) |
+| `outputs/preflight/PREFLIGHT_RESULTS_KO.md` | 11639 | `a4303b87e3b4191dfa8fb637ef35825aabfa57eed02314ffe19575e456ffa8a0` | `PREFLIGHT_RESULTS_KO.md` — **줄끝만 다르다**: 원본은 CRLF (115 줄, 11639 B), 이 저장소는 `.gitattributes` 로 LF 정규화 (11524 B, sha `87ba751b…`). `sed 's/$/\r/' PREFLIGHT_RESULTS_KO.md \| sha256sum` → `a4303b87…` **일치 확인** (2026-09-13). 내용은 바이트 단위로 원문이다 |
 | `outputs/MODEL_DECISIONS.md` | 11780 | `a9f9a0aa…` | 미보존 |
 | `outputs/preflight/INDEPENDENT_PREFLIGHT_AUDIT.md` | 13792 | `d276780a…` | 미보존 |
 | `outputs/preflight/NEXT_RUN_PLAN_before_preflight.md` | 1819 | `645e599c…` | 미보존 |
