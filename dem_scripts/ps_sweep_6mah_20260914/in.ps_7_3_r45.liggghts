@@ -7,6 +7,9 @@
 #   시드(큰 소수, 케이스마다 독립): 27000011, 28300001, 29600003, 30900013, 32200031
 #   원본 덱에서 **조성·시드·태그·AM_P 반지름만** 변경.  재료(E_SE 포함) · 접촉법칙 ·
 #   dt · press_speed · target_press · volumefraction · RVE · run 스텝수 전부 불변.
+#   ⚠ 예외 하나 — `maxattempt` 15,000 → 400,000 (원본과 다르다).
+#     원본 값으로는 이 빌드에서 **입자가 0 개 삽입**된다 (원장 `PS-01`).
+#     예산은 입자당이 아니라 삽입 **전체**라 예상 입자수 160,422 에 비례해야 한다.
 #   이종기술 6 mAh/cm² 재런 (2026-09-14 랩 사양표) — 4/21 세대 대비 AM_P 반지름 6.0 → 4.5 µm 만 변경.
 
 # ============================================================
@@ -109,7 +112,7 @@ region reg_mix block 0.0 0.05 0.0 0.05 0.005 0.30 units box
 
 print "====== INSERTING PARTICLES (PS_7_3_R45: P:S=7:3, 81.6:18.4, 6mAh) ====="
 fix ins_mix all insert/pack seed 32200031 distributiontemplate pdd_mix &
-    maxattempt 15000 insert_every once overlapcheck yes all_in no &
+    maxattempt 400000 insert_every once overlapcheck yes all_in no &
     vel constant 0.0 0.0 -0.5 &
     region reg_mix &
     volumefraction_region 0.321

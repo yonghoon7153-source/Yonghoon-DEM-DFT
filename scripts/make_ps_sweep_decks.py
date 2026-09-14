@@ -52,6 +52,26 @@ RE_REGMIX = re.compile(r'^\s*region\s+\S+\s+block\s+([0-9.eE+-]+)\s+([0-9.eE+-]+
                        r'([0-9.eE+-]+)\s+([0-9.eE+-]+)\s+([0-9.eE+-]+)\s+([0-9.eE+-]+)', re.M)
 RE_DENS = re.compile(r'density\s+constant\s+([0-9.eE+-]+)')
 RE_RAD = re.compile(r'radius\s+constant\s+\$\{(\w+)\}')
+RE_MAXATT = re.compile(r'(maxattempt\s+)(\d+)')
+
+#: ★★ 2026-09-15 (`PS-01`) — `maxattempt` 는 **입자당이 아니라 삽입 전체의 시도 예산**이다.
+#   원본 덱의 15,000 으로 159,167 개를 넣으라고 하면 입자당 0.094 회 — 한 번씩 시도해 볼
+#   수조차 없어서 LIGGGHTS 가 배치를 통째로 포기하고 **0 개**를 넣는다.  그러면 뒤에서
+#   `compute reduce max z` 가 빈 그룹에 `-1e20` 을 돌려주고 플래튼이 거기 생겨 죽는다.
+#   실측 (ibb, LIGGGHTS-PUBLIC 3.8.0 / 2026-03-26 빌드, `ps_10_0_r45`):
+#       maxattempt  15,000 · 요청 159,167 →        0 개  ⛔
+#       maxattempt  15,000 · 요청     100 →      100 개  ✓   (기계는 멀쩡하다)
+#       maxattempt 200,000 · 요청 159,167 →  159,167 개  ✓
+#   ⇒ 예상 입자수에 **비례**해 잡는다.  아래 둘이 규약이다.
+#   ⚠ **참 문턱은 모른다.**  아는 것은 두 점뿐이다 —
+#       0.094배 (15,000 / 159,167)  → 실패
+#       1.2566배 (200,000 / 159,167) → 성공
+#     금지선은 **통과가 확인된 비보다 낮게** 둔다 (알려진-정상을 거부하지 않기 위해).
+#     실제로 방출하는 값은 기본 3배라 여유가 따로 있다.  ⛔ 1.2 를 *"충분 조건"* 으로
+#     읽지 말 것 — 그 아래가 확실히 실패라는 뜻이지, 그 위가 확실히 성공이라는 뜻이 아니다.
+MAXATT_MIN_FACTOR = 1.2      # 방출 금지선 — 이 배수 미만이면 **거부**한다 (증거 기반 하한)
+MAXATT_DEFAULT_FACTOR = 3.0  # 지정 안 했을 때 쓰는 배수 (10만 단위로 올림)
+MAXATT_FLOOR = 200_000       # 실측으로 통과가 확인된 절대값보다 낮게 내려가지 않는다
 
 #: 시드 = 8자리 소수.  LAMMPS/LIGGGHTS RNG(RanPark)가 9자리(9e8) 위를 거부하는 판이 있어
 #: 원본 덱과 같은 자릿수 대역(1e7~1e8)에 둔다.  ⚠ 아래 세 상수를 바꾸면 시드가 전부 바뀐다
@@ -160,7 +180,8 @@ def _sub_line(text: str, fn):
                      for ln in text.split('\n'))
 
 
-def make_deck(text, tag_old, tag_new, p, s, seeds, r_am_p='', am_mass=0.816, note=''):
+def make_deck(text, tag_old, tag_new, p, s, seeds, r_am_p='', am_mass=0.816, note='',
+              maxattempt=None):
     tpl, ent = read_deck(text)
     by_type = {v['atype']: k for k, v in tpl.items()}
     want = {1: 'AM_P', 2: 'AM_S', 3: 'SE'}
@@ -221,6 +242,22 @@ def make_deck(text, tag_old, tag_new, p, s, seeds, r_am_p='', am_mass=0.816, not
 
     # ── 5) 생성본 헤더 ──
     cnt = predict_counts(out, tpl, keep, radii)
+    n_tot = sum(cnt.values())
+
+    #  ★ `maxattempt` — 예상 입자수에 비례해 잡고, 못 미치면 **덱을 내보내지 않는다** (`PS-01`).
+    m_old = RE_MAXATT.search(out)
+    att_old = int(m_old.group(2)) if m_old else 0
+    att = int(maxattempt) if maxattempt else max(
+        MAXATT_FLOOR, -(-int(MAXATT_DEFAULT_FACTOR * n_tot) // 100_000) * 100_000)
+    if m_old:
+        out = RE_MAXATT.sub(lambda m: f'{m.group(1)}{att}', out, count=1)
+    if n_tot and att < MAXATT_MIN_FACTOR * n_tot:
+        sys.exit(f'⛔ maxattempt {att:,} 가 예상 입자수 {n_tot:,} 의 '
+                 f'{MAXATT_MIN_FACTOR:g}배({int(MAXATT_MIN_FACTOR * n_tot):,}) 미만이다 — '
+                 f'덱을 내보내지 않는다.\n'
+                 f'   `maxattempt` 는 입자당이 아니라 **삽입 전체의 시도 예산**이라, '
+                 f'모자라면 LIGGGHTS 가 배치를 통째로 포기하고 0 개를 넣는다 (PS-01).\n'
+                 f'   → --maxattempt 로 올리거나 조성을 줄일 것.')
     rline = ' · '.join(f'{want[tpl[n]["atype"]]} r={radii.get(tpl[n]["rvar"], 0) * 1e3:g}µm'
                        for n, _ in ent)
     head = [f'# ===== P:S 스윕 생성본 (make_ps_sweep_decks.py) =====',
@@ -236,6 +273,11 @@ def make_deck(text, tag_old, tag_new, p, s, seeds, r_am_p='', am_mass=0.816, not
             f'#   원본 덱에서 **조성·시드·태그' + ('·AM_P 반지름' if r_am_p else '') +
             '만** 변경.  재료(E_SE 포함) · 접촉법칙 ·',
             f'#   dt · press_speed · target_press · volumefraction · RVE · run 스텝수 전부 불변.']
+    if m_old and att != att_old:
+        head.append(f'#   ⚠ 예외 하나 — `maxattempt` {att_old:,} → {att:,} (원본과 다르다).')
+        head.append(f'#     원본 값으로는 이 빌드에서 **입자가 0 개 삽입**된다 (원장 `PS-01`).')
+        head.append(f'#     예산은 입자당이 아니라 삽입 **전체**라 예상 입자수 {n_tot:,} 에 '
+                    f'비례해야 한다.')
     if note:
         head.append(f'#   {note}')
     return '\n'.join(head) + '\n' + out
@@ -255,6 +297,10 @@ def main(argv=None):
                     help='다섯 케이스가 같은 시드를 쓴다 (기본: 케이스마다 독립)')
     ap.add_argument('--note', default='', help='헤더에 한 줄 덧붙인다')
     ap.add_argument('--out', default='psweep', help='덱을 쓸 디렉터리')
+    ap.add_argument('--maxattempt', type=int, default=0,
+                    help='삽입 시도 예산 (기본 = 예상 입자수 × %g, 하한 %d).  '
+                         '예상 입자수의 %g배 미만이면 거부한다 — PS-01'
+                         % (MAXATT_DEFAULT_FACTOR, MAXATT_FLOOR, MAXATT_MIN_FACTOR))
     ap.add_argument('--mpi', type=int, default=10, help='실행 명령에 찍을 MPI 랭크 수')
     ap.add_argument('--selftest', action='store_true')
     a = ap.parse_args(argv)
@@ -278,7 +324,8 @@ def main(argv=None):
         seeds = seeds_for(0 if a.shared_seeds else i)
         tag_new = f'{a.tag_prefix}_{p}_{s}{a.tag_suffix}'
         path = os.path.join(a.out, f'in.{tag_new}.liggghts')
-        deck = make_deck(text, tag, tag_new, p, s, seeds, a.r_am_p, a.am_mass, a.note)
+        deck = make_deck(text, tag, tag_new, p, s, seeds, a.r_am_p, a.am_mass, a.note,
+                         a.maxattempt)
         with open(path, 'w') as f:
             f.write(deck)
         head = [l for l in deck.split('\n') if '예상 입자수' in l]
@@ -297,6 +344,23 @@ def main(argv=None):
 
 def _selftest():
     ok, fail = 0, []
+
+    def _rejects(text, **kw):
+        """그 설정으로 덱을 만들면 **거부되는가** (SystemExit)."""
+        try:
+            make_deck(text, 'real_4', 'ps_7_3_r45', 7, 3, seeds_for(1),
+                      r_am_p='4.5e-3', **kw)
+            return False
+        except SystemExit:
+            return True
+
+    def _reject_msg(text, **kw):
+        try:
+            make_deck(text, 'real_4', 'ps_7_3_r45', 7, 3, seeds_for(1),
+                      r_am_p='4.5e-3', **kw)
+            return ''
+        except SystemExit as e:
+            return str(e)
 
     def chk(name, cond):
         nonlocal ok
@@ -346,6 +410,8 @@ def _selftest():
         '\n'                                                     # ← 회귀 재현용 빈 줄
         'region reg_mix block 0.0 0.05 0.0 0.05 0.005 0.30 units box\n'
         'fix ins_mix all insert/pack seed 80363 distributiontemplate pdd_mix &\n'
+        #  ★ 실덱과 같은 모양 — `maxattempt` 가 여기 있어야 게이트가 실물을 문다 (`PS-01`)
+        '    maxattempt 15000 insert_every once overlapcheck yes all_in no &\n'
         '    volumefraction_region 0.321\n'
         'shell mkdir post_real_4\n'
         'restart 50000 restart_real_4/restart_settling_*.bin\n'
@@ -376,8 +442,11 @@ def _selftest():
         'pts1 0.5712 pts2 0.2448 pts3 0.184' in d73)
     #  ★ 회귀: 분포 정규식의 `\s*$` 가 **뒤의 빈 줄을 삼켜** 의도 밖 diff 를 냈었다.
     #    의도한 변경만 diff 에 남아야 검산이 되므로 줄 수가 보존돼야 한다.
+    #  ⚠ 헤더 길이를 **세어서** 쓴다 — 하드코딩 9 는 헤더가 한 줄만 늘어도 거짓 실패를 낸다
+    #    (`PS-01` 로 maxattempt 정정 3줄이 붙자 실제로 그랬다).  검사의 뜻은 **본문** 보존이다.
+    _hdr = d73.split('\n').index(deck.split('\n')[0])
     chk('★ 본문 줄 수 보존 (생성기가 빈 줄을 삼키지 않는다)',
-        len(d73.split('\n')) - 9 == len(deck.split('\n')))
+        len(d73.split('\n')) - _hdr == len(deck.split('\n')))
     chk('★ 분포 줄 뒤의 빈 줄이 살아 있다',
         re.search(r'particledistribution/discrete[^\n]*\n\n', d73) is not None)
     chk('시드가 전부 갈렸다 (원본 시드가 하나도 안 남는다)',
@@ -427,6 +496,29 @@ def _selftest():
     c45 = predict_counts(dr, t2, e2, {'r_AM_P': 4.5e-3, 'r_AM_S': 2.0e-3, 'r_SE': 0.5e-3})
     chk('★ 반지름 6→4.5 이면 AM_P 개수가 (6/4.5)³ = 2.37배',
         abs(c45['pts1'] / c6['pts1'] - (6.0 / 4.5) ** 3) < 0.03)
+
+    # ── ★★ `maxattempt` 게이트 (`PS-01`, 2026-09-15) ──────────────────────────
+    #    실사고: 원본의 15,000 으로 159,167 개를 요청해 **0 개**가 들어갔고, 그 결과
+    #    `compute reduce max z` 가 `-1e20` 을 돌려줘 플래튼이 도메인 밖에 생겨 죽었다.
+    #    ⇒ 예산은 **입자당이 아니라 삽입 전체**다.  생성기가 그걸 강제한다.
+    n_tot = sum(c45.values())
+    chk('★★ maxattempt 가 예상 입자수의 2배 미만이면 **덱을 안 내보낸다** (옛 15,000 이 여기서 죽는다)',
+        _rejects(deck, maxattempt=15_000))
+    chk('★ 거부 메시지가 원인을 말한다 (입자당이 아니라 전체 예산)',
+        '전체의 시도 예산' in _reject_msg(deck, maxattempt=15_000))
+    chk('★ 기본값은 예상 입자수에 **비례**한다 (하한 200,000 · 금지선의 2배 이상)',
+        int(RE_MAXATT.search(dr).group(2)) >= MAXATT_MIN_FACTOR * n_tot
+        and int(RE_MAXATT.search(dr).group(2)) >= MAXATT_FLOOR)
+    d400 = make_deck(deck, 'real_4', 'ps_7_3_r45', 7, 3, seeds_for(1),
+                     r_am_p='4.5e-3', maxattempt=400_000)
+    chk('★ 명시한 값이 금지선을 넘으면 그대로 쓰인다 (400,000)',
+        'maxattempt 400000' in d400 and 'maxattempt 15000' not in d400)
+    chk('★★ 헤더가 **원본과 다르다는 것**을 적는다 (거짓 "전부 불변" 금지)',
+        'maxattempt' in d400.split('# ======')[0] or '`maxattempt`' in d400[:2000])
+    chk('★★ 음성 대조 — **실측으로 통과한** 200,000 은 거부되지 않는다 (금지선이 과조임이면 여기서 죽는다)',
+        not _rejects(deck, maxattempt=200_000))
+    chk('★ 금지선 바로 아래(150,000 ≈ 0.94배)는 거부된다 — 게이트가 공허하지 않다',
+        _rejects(deck, maxattempt=150_000))
     chk('AM_S·SE 개수는 불변', c45['pts2'] == c6['pts2'] and c45['pts3'] == c6['pts3'])
 
     # ── 가드가 실제로 죽는가 ──
