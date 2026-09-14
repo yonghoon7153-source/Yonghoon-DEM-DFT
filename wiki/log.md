@@ -1393,3 +1393,18 @@ to the C-rate" 인데 Fig. 15(a) `[도표]` SOH 79.4 % 에서 C/3 ≈18 % vs C/2
 3:1)에 따른 Peak C 편향.
 
 `python3 wiki/tools/lint.py` → **0 errors, 0 warnings** 확인 (pages 31, raw files 26).
+
+## [2026-09-14] create | 근최적 집합 폭 측정법 + 서브 브랜치 인수인계 3건 반영
+- 서브 브랜치(`bms-balancing/`)가 `HANDOFF_TO_GATE.md` §3 에서 "위키에 올릴 후보"
+  로 넘긴 세 건을 본체가 채택해 반영. 원문은 `raw/transcripts/2026-09-14-bms-handoff-width-and-wiki-candidates.md`
+  에 보존 (§2 폭 측정법 · §3 위키 후보, sha256 봉인).
+- 새 페이지 [[near-optimal-set-width-measurement]] — 등방 표집이 참 폭 40 %p 를
+  0.00 %p 로 보고한 반례, Hessian 의 같은 국소성 한계, 제약 최적화 + mode 등식
+  프로파일의 합집합, 한계 넷. 본체 적용 여부는 **미정**으로 명시.
+- [[halfcell-ocp-shape-invariance]] — Schmitt 2022 가 재지 않은 자리의 첫 숫자
+  (12 mV 문턱 안 LAM_NE 17.4 %p · LLI 1.14 %p) 와 문턱 의존성 경고 추가.
+- [[halfcell-window-parametrization-lineage]] — 규진팀 MATLAB 의 chain rule
+  결함(dV/dQ 에 `1/α` 누락, 7~15 % 계통 오차) 기록. **본체에는 없음을 오늘
+  실측으로 확인** (수치미분 경로라 `1/α` 가 자동으로 들어간다; α=0.80 대조에서
+  오차 6.4e-06 vs 7.9e-01). 닫힌 신고.
+- lint 0 errors / 0 warnings.

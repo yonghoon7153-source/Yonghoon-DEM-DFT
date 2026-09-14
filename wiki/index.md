@@ -1,7 +1,7 @@
 # 위키 색인
 
 > 내용 목록. 모든 위키 페이지를 종류별로 한 줄 요약과 함께 싣는다.
-> 마지막 갱신: 2026-09-11 | 전체 페이지: 31
+> 마지막 갱신: 2026-09-14 | 전체 페이지: 32
 
 ## Entities (satellite 프로젝트)
 
@@ -12,6 +12,7 @@
 
 - [[fitting-degeneracy]] — full-cell 곡선 하나로 LLI/LAM_PE/LAM_NE 를 가를 수 있는가: flat valley(데이터 한계) vs multimodal(최적화 난이도) 구분.
 - [[provenance-fail-closed-verification]] — 13 라운드 게이트 리뷰에서 증류된 재현성 설계 원칙 7가지 (서명·재계산 렌더·봉인 읽기·fail-closed·신뢰 경계).
+- [[near-optimal-set-width-measurement]] — 근최적 집합 위에서 유도량이 훑는 범위를 직접 미는 법: 등방 표집이 참 폭 40 %p 를 0.00 %p 로 보고한 반례, Hessian 의 같은 국소성 한계, 제약 최적화 + 등식 프로파일의 합집합과 그 한계 넷 (하한 · tol 은 통계가 아님 · 비용 · provenance).
 - [[agent-harness-patterns]] — ponytail·caveman·superpowers 에서 무엇을 채택·각색·기각했는가와 그 근거 (결과: 루트 CLAUDE.md + 커맨드 4종).
 - [[llm-wiki-pattern]] — Karpathy 식 LLM wiki: raw 불변층 + frontmatter progressive disclosure + wikilink 그래프 + mothership/satellite (이 위키의 근거 패턴).
 - [[pvs-sev-degradation-mode-features]] — ICA 할선 기울기(PVS)와 스케일링 EOC 전압강하(SEV): 정의·물리 귀속·모드별 부호 구조, 그리고 두 부호 패턴이 같다는 관측.

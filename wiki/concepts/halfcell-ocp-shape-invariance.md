@@ -2,10 +2,10 @@
 title: 반쪽전지 OCP 형상 불변 가정과 그 파괴 (blend 전극)
 description: "The α·β affine-rescaling premise behind every electrode-balancing diagnostic, where it breaks for Si/graphite blends, and the directional bias it leaves in LLI/LAM"
 created: 2026-09-10
-updated: 2026-09-10
+updated: 2026-09-14
 type: concept
 tags: [battery, degradation, research]
-sources: [raw/papers/schmitt2022_sic-ocp-shape-change-degradation-modes.md, raw/papers/birkl2017_degradation-diagnostics-ocv.md, raw/papers/dubarry2012_synthesize-degradation-modes.md, raw/papers/lin2024_ocv-degradation-mode-identifiability.md]
+sources: [raw/papers/schmitt2022_sic-ocp-shape-change-degradation-modes.md, raw/papers/birkl2017_degradation-diagnostics-ocv.md, raw/papers/dubarry2012_synthesize-degradation-modes.md, raw/papers/lin2024_ocv-degradation-mode-identifiability.md, raw/transcripts/2026-09-14-bms-handoff-width-and-wiki-candidates.md]
 confidence: medium
 explored: false
 verificationStatus: unverified
@@ -114,6 +114,28 @@ Schmitt 가 "validity 가 개선된다" 고 말할 때 근거는 (i) RMSE 1.7 mV
 4. **검증 체크리스트**: 실셀 데이터에 electrode balancing 을 적용할 때
    (a) 음극이 blend 인가, (b) 그렇다면 `γ_Si` 를 자유롭게 뒀는가,
    (c) 뒀다면 `γ_Si` ↔ `α_NE` 상관을 뽑았는가. (c) 를 한 논문은 아직 없다.
+
+## ★ 원전이 재지 않은 자리의 첫 숫자 (2026-09-14, `bms-balancing/` 실측)
+
+Schmitt 2022 는 본문에서 `γ_Si` 와 `α_an` 이 **같은 서명을 남긴다**고 적어 놓고
+그 폭을 **재지 않았다** (논문에 identifiability · degeneracy · confidence region
+이라는 단어가 없다). 서브 브랜치가 그 자리의 첫 숫자를 냈다.
+
+논문이 "좋은 재구성" 이라 부른 **pOCV RMSE 12 mV** 문턱 안에서:
+
+| 유도량 | 폭 |
+|---|---|
+| LAM_NE | −4.38 % ~ +13.00 % → **17.4 %p** |
+| LLI | **1.14 %p** |
+
+⚠ **문턱을 떼고 인용하면 안 된다.** 그 12 mV 는 **다른 셀·다른 목적함수**에서
+온 값이고, 문턱을 8 / 10 / 11 / 12 mV 로 옮기면 폭이
+7.25 / 13.59 / 16.00 / 17.38 %p 로 변한다. 12 mV 가 받아들이는 점 중에는 이
+연구 자신의 결합 목적함수에서 최적보다 **42.9 % 나쁜** 것이 있다.
+
+이 폭이 어떻게 측정됐는지(그리고 왜 등방 표집이나 Hessian 으로는 못 재는지)는
+[[near-optimal-set-width-measurement]]. 수치의 정본은
+`bms-balancing/reviews/BML_R1_RESPONSE.md` 이고 이 줄들은 사본이다.
 
 ## 반대 해석 / 데이터 공백
 

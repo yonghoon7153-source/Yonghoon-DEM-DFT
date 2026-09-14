@@ -2,10 +2,10 @@
 title: 반쪽전지 창 매개화 계보 비교 (자유도와 제약)
 description: "같은 4개 창 좌표를 무엇으로 매개화하고 여분을 어떻게 죽이는가 — Dubarry 2012 부터 우리 파이프라인까지"
 created: 2026-09-03
-updated: 2026-09-11
+updated: 2026-09-14
 type: comparison
 tags: [battery, degradation, research]
-sources: [raw/papers/schmitt2022_sic-ocp-shape-change-degradation-modes.md, raw/papers/marongiu2016_lfp-onboard-capacity-halfcell.md, raw/papers/birkl2017_degradation-diagnostics-ocv.md, raw/papers/dubarry2012_synthesize-degradation-modes.md, raw/papers/lin2024_ocv-degradation-mode-identifiability.md, raw/papers/navidi2024_piml-degradation-diagnostics-comparison.md, raw/papers/rhyu2025_systematic-feature-design-formation.md, raw/papers/mohtat2019_electrode-soh-estimability-expansion.md, raw/papers/lee2020_estimation-error-bound-limited-data-window.md, raw/papers/wang2025_aging-induced-rate-independent-li-plating.md, raw/papers/cui2026_direct-diagnosis-lfp-degradation-modes.md]
+sources: [raw/papers/schmitt2022_sic-ocp-shape-change-degradation-modes.md, raw/papers/marongiu2016_lfp-onboard-capacity-halfcell.md, raw/papers/birkl2017_degradation-diagnostics-ocv.md, raw/papers/dubarry2012_synthesize-degradation-modes.md, raw/papers/lin2024_ocv-degradation-mode-identifiability.md, raw/papers/navidi2024_piml-degradation-diagnostics-comparison.md, raw/papers/rhyu2025_systematic-feature-design-formation.md, raw/papers/mohtat2019_electrode-soh-estimability-expansion.md, raw/papers/lee2020_estimation-error-bound-limited-data-window.md, raw/papers/wang2025_aging-induced-rate-independent-li-plating.md, raw/papers/cui2026_direct-diagnosis-lfp-degradation-modes.md, raw/transcripts/2026-09-14-bms-handoff-width-and-wiki-candidates.md]
 confidence: high
 explored: false
 verificationStatus: unverified
@@ -259,6 +259,40 @@ n₂ = ( +1 , −1 , +1 ,  0 ,  0 )   ⟺  LAM_Pe 를 li→de 로 ε 옮기고 L
 > 미분되는 신호(7.66 mV)보다 8배 컸다. 그러므로 ② 가 지지하는 것은
 > **"u_min 이 (1,1,1) 근방인가" 라는 이분법뿐**이며 각도의 정확한 값은 아니다.
 > 정본 `mode-observability/results/phase1n/` · `docs/PHASE1N_NOTES.md`.
+
+## ★ 구현 계보의 함정 — 좌표를 바꿔 놓고 도함수에 `1/α` 를 안 붙인다 (2026-09-14)
+
+계보의 모든 구현이 전극 좌표를 `sto = (x − β)/α` 로 바꾼다. `dV/dQ` 항을
+**해석적으로** 쓰면 연쇄법칙의 `1/α` 가 따라와야 한다.
+
+규진팀 `electrode_balancing_blend.m` 실물 (서브 브랜치가 원본 MATLAB 을 받아 확인):
+
+```matlab
+E_cell_model  = @(p, x) E_PE((x - p(2)) / p(1)) - E_NE_blend((x - p(4)) / p(3), p(5));
+dv_cell_model = @(p, x) dv_PE((x - p(2)) / p(1)) - dv_NE_blend((x - p(4)) / p(3), p(5));
+```
+
+둘째 줄에 `1/p(1)` · `1/p(3)` 이 **없다**. 적합값에서 `α` 가 1.0~1.18 이므로
+dV/dQ 항에 **7~15 % 계통 오차**다. 서브의 포팅도 모델을 고치지 않는 원칙에 따라
+**일부러 똑같이** 옮겼다.
+
+**`degradation-degeneracy` 에는 이 결함이 없다 — 오늘 실측으로 확인했다.**
+본체는 도함수를 해석적으로 쓰지 않는다. `src/objective.py` 가 합성된 곡선을
+셀 좌표로 **수치미분**하고 (`np.gradient(smooth(v), x)`), `src/curves.py`
+`to_dvdq()` 도 같은 모양이다. 수치미분은 좌표변환을 **이미 통과한** 곡선을
+미분하므로 `1/α` 가 자동으로 들어간다.
+
+검증 (α = 0.80, 해석 도함수를 아는 매끈한 `f_ref` 로 대조):
+
+| 대조 대상 | 최대 오차 |
+|---|---:|
+| `f'(sto)/α` — `1/α` 포함 (옳은 것) | 6.4e-06 |
+| `f'(sto)` — `1/α` 누락 (규진팀 모양) | 7.9e-01 |
+
+즉 본체의 `dvdq` 는 `1/α` 를 담고 있다. 이 항목은 **닫힌 신고**다.
+`[해석]` 다만 이것이 말해 주는 것은 계보의 일반 교훈이다 — **해석 도함수를
+직접 쓰는 구현은 이 자리를 반드시 확인해야 한다.** 원전들은 도함수 식을
+인쇄하지 않으므로 논문만 읽어서는 이 결함이 안 보인다.
 
 ## 결론
 
