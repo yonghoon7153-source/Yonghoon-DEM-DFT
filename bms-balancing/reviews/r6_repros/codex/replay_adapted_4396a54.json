@@ -1,0 +1,102 @@
+{
+  "target_head": "4396a548cfa66d3c4531947999a45f459a7db1e5",
+  "probes": {
+    "R6-01a 독자는 자기가 검증한 묶음만 (degeneracy)": {
+      "상태": "닫힘",
+      "세부": {
+        "검증_중_게시": {
+          "consumed": null,
+          "disk_unit": [
+            true,
+            "일치"
+          ],
+          "why": "읽은 bytes 와 meta 가 안 맞아 표에서 뺐다"
+        },
+        "검증_후_게시": {
+          "data_run_id": "attempt-A",
+          "meta_run_id": "attempt-A",
+          "value": 1.0,
+          "disk_unit": [
+            true,
+            "일치"
+          ]
+        }
+      }
+    },
+    "R6-01b 검증 뒤 게시된 B 를 안 읽는다 (matrix)": {
+      "상태": "닫힘",
+      "세부": {
+        "A_verified_span": 3.0,
+        "consumed_span": 3.0,
+        "consumed_run_id": "attempt-A",
+        "unit_after_publication": [
+          false,
+          "meta 의 run_id 가 산출물과 다르다: 다른 run_id 행 2/2: ['attempt-B', 'attempt-B']"
+        ]
+      }
+    },
+    "R6-02 현행 산출 + meta 없음 = 미완 거절": {
+      "상태": "닫힘",
+      "세부": {
+        "modern_json_check": [
+          false,
+          "현행 산출(run_id 있음)인데 meta 가 없다 — 게시가 중단됐거나 write_meta 를 안 거쳤다: 미완 (Codex R6-02)"
+        ],
+        "modern_csv_check": [
+          false,
+          "현행 산출(run_id 있음)인데 meta 가 없다 — 게시가 중단됐거나 write_meta 를 안 거쳤다: 미완 (Codex R6-02)"
+        ],
+        "readers_excluded": true,
+        "ne_shape_refused": "matrix_100.csv: 묶음 불일치/미완 (현행 산출(run_id 있음)인데 meta 가 없다 — 게시가 중단됐거나 write_meta 를 안 거쳤다: 미완 (Codex R6-02)) — 섞인 산출을 소비하지 않는다 (R6 내부 F07 · Codex R6-01·02)",
+        "legacy_without_run_id_still_read": true
+      }
+    },
+    "R6-03a 반쪽전지: A값이면 A서명": {
+      "상태": "닫힘",
+      "세부": {
+        "A_value_PE_change_mV": 0.0,
+        "B_value_PE_change_mV": 20.0,
+        "recorded_sha_is_A": true,
+        "A_hash": "b79dca963afa6a65",
+        "disk_now": "ca178112beb7db6d"
+      }
+    },
+    "R6-03b 풀셀 build: A값이면 A서명": {
+      "상태": "닫힘",
+      "세부": {
+        "raced_arrays_match_A": true,
+        "recorded_full_cell_is_A": true,
+        "A_hash": "94229a325046f598",
+        "disk_now": "50d2f7f661177bc5",
+        "inputs_sha_raced": "66d758707d2e",
+        "inputs_sha_B": "3053c8aebbf5"
+      }
+    },
+    "R6-04 inference 닫힘 확인(정본 이름으로)": {
+      "상태": "닫힘",
+      "세부": {
+        "rc": 0,
+        "cases": [
+          "R5_INFERENCE_CLOSURE",
+          "SCALE_DOMAIN_AND_EXCEPTION_CLOSURE",
+          "MATRIX_INDEPENDENT_AUDIT_AXIS",
+          "MATRIX_INDEPENDENT_AUDIT_AXIS",
+          "U13_REPORTED_SCOPE",
+          "U13_AXIS_NEGATIVE_CONTROL",
+          "U13_AXIS_NEGATIVE_CONTROL",
+          "U13_AXIS_NEGATIVE_CONTROL",
+          "U13_AXIS_NEGATIVE_CONTROL",
+          "DESIGN_NOTE_SCALE_BOUND_NOT_ARGMIN_BOUND",
+          "DF01_AND_DERIVED_CLOSURE",
+          "U14_SECTION_5_1_THRESHOLDS",
+          "U14_12_ARTIFACT_NUMERIC_COMPARISON",
+          "U14_PROFILE_BUDGET_FACT",
+          "CURRENT_SECTION_5_PRINTED_TABLE",
+          "R6_FINAL_INFERENCE_CHECKS_PASSED"
+        ],
+        "baseline_used": true,
+        "note": "한 줄 적응: 없는 `_vN` 이름은 건너뛴다"
+      }
+    }
+  }
+}

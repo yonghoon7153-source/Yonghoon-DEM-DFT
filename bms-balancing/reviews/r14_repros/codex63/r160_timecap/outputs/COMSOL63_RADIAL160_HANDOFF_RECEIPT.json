@@ -1,0 +1,19 @@
+{
+  "identity_scope": "Locally generated archive only; new received archive identity has not been observed",
+  "generated_archive_path": "outputs/COMSOL63_RADIAL160_HANDOFF.zip",
+  "generated_archive_bytes": 226198096,
+  "generated_archive_sha256": "39ded591a29568d58b57791bf68147292a9cef06660de40b1c5e45ed16b434bc",
+  "payload_count_excluding_manifest": 160,
+  "zip_entries_including_manifest": 161,
+  "payload_manifest_sha256": "6ab54917edbec8eda5d19b4add2233c3daf09ff55ee2a9ef98dbb84f67cc584b",
+  "all_crc_ok": true,
+  "all_payload_size_and_sha256_match": true,
+  "historical333_verified_from_final_archive": true,
+  "local_current_preservation_separate_count": 663,
+  "new_COMSOL_runs": 1,
+  "additional_COMSOL_runs": 0,
+  "new_job_id": "450b46add79c439bbce5886454c4328a",
+  "reference_jobs_rerun": false,
+  "new_received_archive_bytes": null,
+  "new_received_archive_sha256": null
+}

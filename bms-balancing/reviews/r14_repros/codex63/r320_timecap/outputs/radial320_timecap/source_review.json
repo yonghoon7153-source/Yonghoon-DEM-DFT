@@ -1,0 +1,24 @@
+{
+  "new_name": "Caps300R320H0125",
+  "source_sha256": "8d35be8fab513f5e2def316c4d00e0fdc19983a5dd3bf492f4ffe47a58248be3",
+  "baseline_identity": {
+    "name": "Caps300R320H0250",
+    "source_path": "outputs/comsol63/radial320/Caps300R320H0250.java",
+    "source_sha256": "837f8b03ff3381bb1aea6397935d0079b032f5e4aea007b32d1ebf7c40775b2e",
+    "job_id": "f0db6d080ad04045a2b43dc5a51d89b2"
+  },
+  "reverse_transform_exact_equal": true,
+  "only_changes": [
+    "Java class/model label identifier (2)",
+    "early-cap expression actual setting and printed log (2)"
+  ],
+  "runAll_calls": 1,
+  "physical_seconds": 5,
+  "external_runtime_inputs": [],
+  "all_mesh_parameters_OCP_inventory_radius_initialization_scales_times_profiles_guards_unchanged": true,
+  "execution_resources": {
+    "cores": 2,
+    "worker_timeout_seconds": 1200,
+    "same_as_baseline": true
+  }
+}

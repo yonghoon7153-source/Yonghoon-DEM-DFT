@@ -1,0 +1,37 @@
+# R6 내부 적대적 리뷰 — 렌즈: validator 우회 (대상 `1049894`, 범위 `bms-balancing/`)
+
+재현 스크립트: `repro_validator.py` (같은 디렉터리; 발견마다 함수 하나, 잘못된 결과가 재현되면 assert 통과 → 수정 뒤엔 실패해야 정상).
+실행: `python3 repro_validator.py` (전부) · `--case v01…v09|controls`. CLI 는 `test_r3_07` 방식 mock 으로 `verify.main(["eval","--compare",…])` 를
+별도 프로세스에서 돈다 (cwd=`bms-balancing`). 공통 fixture: 앵커 16 정상 · 격자 8 행 · MATLAB rmse = Python + 0.0002 (**상대차 1.7 %** = `MODEL_REL` 의 1.7e7 배,
+그러나 `%.2g` 로는 둘 다 `0.012`). tracked 파일 수정 없음 (`git status` 깨끗).
+
+**요약: 발견 9 — 결론이_바뀜 4 · 숫자가_바뀜 1 · 서술만_바뀜 2 · 사소 2.** R5-01~11 반례는 반복하지 않았다 (모두 그 옆의 빈틈).
+
+## 발견
+
+| ID | 주장 | 파일:행 | 재현 (`repro_validator.py`) | 실측 출력 | 심각도 | R5 와의 차이 · 수정 힌트 |
+|---|---|---|---|---|---|---|
+| **V6-01** | 헤더 줄이 데이터 행 **뒤**에 있으면 audit 의 행별 검사(선언 형식 재출력 R5-01 · 열 수 R4-04)가 전부 건너뛰어진다 — 두 검사가 `header is not None` 에 걸려 있고 header 는 스캔 순서로 정해진다. 비교기는 헤더 위치와 무관하게 `m_header.index` 로 열을 찾으므로 판정은 정상 진행. 선언 `%.2g` + 17 자리 토큰(헤더 위면 invalid)이 헤더 아래면 **complete·0**, 1.7 % 차이가 "적힌 자리수 안" | `verify.py:611,618,624-625` (audit) · `:1064-1078` (비교기) | `--case v01` | `header top -> rc=2 invalid ("행 0 rmse_pocv 토큰 '0.0118' 이 선언 형식(.2g)으로 찍은 '0.012' 와 다르다")` / `header bottom -> rc=0 "앵커 16개와 rmse 32개가 적힌 자리수 안에서 전부 일치" 종료 코드 0 (complete)` / 헤더 앞 10 칸 행: `audit=[]` | **결론이_바뀜** | R5-01 은 재출력 검사를 **추가**했고, 이건 그 검사가 **실행되지 않는 순서**다. 힌트: 원문 행을 모아 두고 헤더 확정 **뒤**에 열 수·토큰 검사를 한 번 더 돌리거나, 헤더 앞의 데이터 행 자체를 invalid 로 |
+| **V6-02** | `--precision` **옵션**은 토큰과 대조되지 않는다 (`dd_eval_csv_audit(…, spec=policy["declared_spec"])` — 옵션 spec 은 안 넘긴다; "옵션이 느슨" 판정(`precision_override_looser`)은 `policy["conflict"]` 즉 **해석 가능한 선언이 있을 때만**). 선언 없음 / 해석 불가 `%.17e` (README 의 R5 Q1 예외) / 숫자 `17` 인 파일의 17 자리 토큰에 `--precision sig:2` → **complete·0** (`fixed:0` 도 0). 대조군: 선언 `%.17g` + 같은 옵션 → partial·3 | `verify.py:1020` · `:1116-1118` · `resolve_precision :856-892` | `--case v02` | `no declaration --precision sig:2 -> rc=0 (complete)` · `%.17e -> rc=0` · `'17' -> rc=0` · `fixed:0 -> rc=0` · `CONTROL %.17g -> rc=3 (partial … 옵션이 파일 선언보다 느슨하다)` | **결론이_바뀜** | R4-02/Q3 는 "옵션이 **선언**보다 느슨하면 complete 아님" 을 닫았다; 선언이 없거나 못 읽는 파일이 선언된 파일보다 **더 관대**해지는 역전이 남았다. 힌트: audit 을 **유효 spec**(`policy["spec"] or declared_spec`)으로 돌리고, 옵션 아래에서 토큰이 재출력되지 않으면 invalid(최소 partial "옵션이 토큰보다 느슨") |
+| **V6-03** | 헤더 없는 파일은 audit 의 토큰·열 수·파라미터 열(R5-03) 검사가 **전부** 없고 비교기는 앞 두 열을 위치로 rmse 로 본다("헤더 없는 아주 옛 산출"). 그러나 `dd_eval.m` 은 **첫 판(56a35a8)부터** 헤더를 썼다 — 존재한 적 없는 스키마를 위한 통로. 선언 `%.2g` + 17 자리 토큰 → partial·3 → `--allow-partial` 로 **0** (열 2/4 만, 1.7 % 차이) | `verify.py:1064-1065` · audit `:611-625` | `--case v03` | `no header -> rc=3 (partial)` / `+ --allow-partial -> rc=0 "rmse 16개가 적힌 자리수 안에서 전부 일치"` / `audit=[]` | **결론이_바뀜** (`--allow-partial` 시; 아니면 3≠2 로 숫자가_바뀜) | R5-03 은 헤더 **이름**을 검사했고, 헤더가 **없으면** 그 검사 자체가 없다. 힌트: 헤더 없음 = invalid (역사상 그런 산출이 없다), 최소한 위치 기반으로 같은 audit 을 돌릴 것 |
+| **V6-04** | `--allow-partial` 의 "스키마 누락" 에 하한이 없다. rmse 열이 **0 개**(헤더 = 파라미터 다섯뿐)여도 partial → `--allow-partial` 로 **0**; 앵커까지 없으면 `"앵커 0개와 rmse 0개가 적힌 자리수 안에서 전부 일치"` 로 0 — 아무것도 비교하지 않은 파일이 성공. `expected=0, compared=0` 이 통과 조건을 만족한다 | `verify.py:1074-1078` · `cmd_eval :963-967` | `--case v04` | `params+anchors, 0 rmse cols + --allow-partial -> rc=0` / `params only(no anchors) -> rc=0 "판정(부분 — 앵커 0/16 · 열 0/4): 앵커 0개와 rmse 0개가 … 전부 일치"` / `compared=0/0 anchors=0/16` | **결론이_바뀜** (`--allow-partial` 시) | R2-01 은 "비교 안 한 셀을 인증" 을 셀 단위로 닫았고, R4-02 는 `--allow-partial` 을 스키마 누락으로 **한정**했다 — 누락이 **전부**여도 스키마 누락으로 분류된다. 힌트: 허용되는 옛 스키마를 명시(`{rmse_pocv, rmse_dvdq}` 필수, 누락 가능 집합 열거)하고 `expected == 0` 또는 `anchors_compared == 0` 이면 invalid |
+| **V6-05** | `verify_unit` 은 meta 의 `run_id`·`sha256` 만 본다. 산출물+meta 를 **다른 상태의 파일 이름**으로 복사하면(`cp out_test/* out/` 류) meta 는 `artifact=matrix_100.csv, state=100` 이라 말하는데 `--verify-unit matrix_200.csv` 가 **0 (일치)**. matrix CSV 행에는 `state` 열이 없어(`verify.py:1247`; `state` 는 stdout SUMMARY 에만) 파일 이름·meta 가 상태 identity 의 전부다 | `provenance.py:118-137` | `--case v05` | `--verify-unit matrix_200.csv -> rc=0 '일치'; meta says 'matrix_100.csv'` | **숫자가_바뀜** | R5-04 는 "CSV 와 meta 가 **한 시도**" 를 잠갔고, 그 묶음이 **맞는 이름 아래** 있는지는 안 본다. 힌트: `m["artifact"] == p.name` 필수, shell 이 state 를 넘겨 `m["state"]` 도 대조 |
+| **V6-06** | `# printed_format,17` (숫자 값): audit 는 선언으로 센다(`n_decl`)지만 `read_dd_eval_meta` 는 숫자 값을 버려 `resolve_precision` 이 **"선언 없음"** 으로 간다 → 추정(partial) 이지 invalid 가 아니고, `--precision` 을 주면 선언이 있었다는 말 없이 옵션이 대체(V6-02 의 통로). README: "해석 못 하는 선언 = invalid" | `verify.py:595-596` vs `:726-740` · `:856-892` | `--case v06` | `resolve_precision: source='inferred' declared_raw=None` / `auto -> rc=1 (model_mismatch, 정밀도 추정)` — 2 가 아님 | 서술만_바뀜 | R5-02 는 "역할은 값 변환 **전에** 이름으로" 를 audit 에 넣었는데 meta 리더는 여전히 값의 숫자 여부로 역할을 정한다. 힌트: `printed_format` 키는 값과 무관하게 meta 로 읽고, 해석 실패 → invalid |
+| **V6-07** | `--compare` 경로가 없거나 디렉터리면 `read_text` 의 OSError 가 어디서도 안 잡혀 traceback → **종료 1** = README 의 "1 갈림(앵커/목적함수)". `cmd_eval` 은 ValueError 만 잡는다 | `verify.py:952-957` · `:544-551` | `--case v07` | `missing file -> rc=1 FileNotFoundError` / `directory -> rc=1 IsADirectoryError` (판정 줄 없음) | 서술만_바뀜 | R3-07 은 판정→종료 코드 매핑을 만들었고, 매핑 **밖**(예외)이 1 로 샌다. 힌트: OSError → 2 (미완) 로 |
+| V6-08 | `check_run_id` CSV 분기는 `csv.DictReader` — `run_id` 열이 **둘**이면 마지막 열만 본다. 첫 열이 다른 시도의 id 여도 `전 행 일치` | `provenance.py:104-109` | `--case v08` | `check_run_id -> (True, '전 행 일치'); first column = bbbbbbbb…` | 사소 | R5-08 은 grep → 필드로 옮겼고, 필드 이름의 유일성은 안 본다(dd_eval audit 의 "중복 열" 과 비대칭). 힌트: 헤더 Counter 로 중복 → False |
+| V6-09 | 부호 있는 0: 토큰 `0.000000` 과 Python `-1e-20` (또는 `-0.000000` 과 `+1e-20`)은 같은 문자열로 안 찍혀 이분법이 부호 경계에서 멈춤 → `excess=1e-20`, `eff = excess/abs(pv) = 1` → "모델 차이". 0 근방에서 구간 논리와 **pv 기준 상대 정규화**가 충돌 (fail-closed: 거짓 거절) | `verify.py:775-800` · `:1121` | `--case v09` | `excess=1e-20 eff=1 (MODEL_REL=1e-09)` | 사소 | R5-01 이 "0 은 정확히 0 만" 으로 `%g` 를 고정했는데 `%f` 의 ±0 두 토큰은 같은 구간 `[-½ulp, ½ulp]` 여야 한다. 힌트: `%f` 에서 `-0`/`0` 토큰을 한 구간으로, 또는 `eff` 분모를 `max(abs(mv), abs(pv), 절대 하한)` 으로 |
+
+## 시도했지만 fail-closed 였던 것 (발견 아님 — `--case controls` 가 기록)
+
+- `--allow-partial` + invalid → 2 · 앵커 mismatch + malformed → invalid(2) · partial(옛 스키마) + 1.7 % 갈림 → model_mismatch(1) · 종료 코드 매핑에 빠진 status 없음(기본 2).
+- 선언 `%.17e` (auto) → invalid · `%.10f` 선언 아래 `1e-05` 토큰 → invalid · `Inf`/`NaN` 토큰은 재출력 검사만 건너뛰고 비교기가 incomplete · 앵커 이름 대소문자 변형(`#C_cell , 2`)은 별도 키로 무해 · 알려지지 않은 숫자 앵커 중복 → invalid.
+- `check_run_id`: `run_id` 값 빈 문자열 / 헤더만 있고 행 0 / JSON list / `.json.log` / JSON `run_id` int / BOM 헤더 → 전부 False. `verify_unit`: meta sha256 가 다른 파일 → False · 옛 meta → None(CLI 1) · symlink 는 링크 옆 meta 만 본다(복사된 meta 면 통과 — 같은 bytes·id 라 의미상 맞음).
+- `%.17g` 왕복: 무작위 double 100k(스크립트)·200k(탐색) 전부 원값 복원 — exact 전제는 Python 이 찍은 토큰에 대해 성립. `%.99999999999f` 선언 → `format` ValueError → `cmd_eval` 의 `except ValueError` 가 잡아 2 (메시지 "! precision too big" 는 오해 소지, fail-closed).
+- 격자 파라미터 5e-7 차이는 같은 행으로 잡힌다 — `%.6f` 반올림 폭이라 설계대로. 파라미터 토큰은 형식 audit 대상이 아니지만 수치로 대조된다.
+- **검증 못 한 전제 (주장 아님)**: R5-01 의 "Python format = MATLAB sprintf" — 반올림 타이(`0.125→%.2f`)·지수 자릿수(`e-05` vs `e-005`)가 MATLAB 판·플랫폼에 따라 다를 수 있고 그러면 **거짓 invalid**(fail-closed) 다. 이 트리에 MATLAB 이 없어 실측 불가 — 사용자 기계에서 `sprintf('%.2f',0.125)`·`sprintf('%.17g',1e-5)` 한 줄씩 받으면 닫힌다.
+
+## 가장 센 셋 (수정 순서 제안)
+
+1. **V6-02** — 옵션이 토큰과 대조되지 않는다: 코드 한 줄(`spec=policy["spec"] or policy["declared_spec"]`)이 V6-02 와 V6-06 의 통로를 같이 막는다.
+2. **V6-01 + V6-03** — audit 가 헤더 **위치**에 의존한다: 헤더 확정 뒤 재검사(또는 헤더 앞 데이터 행·헤더 없음 = invalid). V6-04 는 같은 자리에서 "허용되는 옛 스키마" 를 열거하면 닫힌다.
+3. **V6-05** — `verify_unit` 에 `artifact`(·`state`) 대조 한 줄.

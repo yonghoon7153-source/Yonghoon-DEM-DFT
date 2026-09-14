@@ -1,0 +1,79 @@
+{
+  "checked_at_utc": "2026-09-14T04:02:37.826841+00:00",
+  "scope": "Archive identity, payload integrity and historical-byte coverage; no numerical revalidation or COMSOL execution",
+  "helper_source_sha256": "b9848d2108c035b9feb0da4d5112ee4eb97d7a9b678153f629e1b0c5ef74d4ac",
+  "locally_observed_archive": {
+    "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\outputs\\COMSOL63_TIME_CAPS_HANDOFF.zip",
+    "bytes": 325347218,
+    "sha256": "beac1f1df18c2a2613cc5b9da711f1f742aced4f13b79d44d03ca084463f0268",
+    "zip_entries": 202,
+    "directory_entries": 0,
+    "compression_methods": {
+      "8": 202
+    },
+    "compressed_member_bytes": 325304228,
+    "uncompressed_member_bytes": 673256474,
+    "archive_comment_hex": "",
+    "all_member_crc_reads_completed": true,
+    "unchanged_during_read": true
+  },
+  "local_manifest": {
+    "path": "outputs/time_caps/package_manifest.json",
+    "bytes": 42396,
+    "sha256": "e7646aedf322195545744ee718275ae2cfaa3e5c0bf92bd15115896f99732a3f",
+    "payload_records": 201,
+    "payload_hashes_and_sizes_verified": 201
+  },
+  "historical_333_from_local_outer_archive": {
+    "verified": 333,
+    "inner_zip_members": 330,
+    "outer_loose_members": 3,
+    "four_inputs_read_directly_from_outer_zip": true,
+    "old_loose_payload_files_used": false,
+    "historical_bytes": 191105291
+  },
+  "user_reported_received_archive": {
+    "evidence_level": "User-reported; not directly inspected in this audit",
+    "bytes": 325367172,
+    "sha256": "74aa78d2659ed0f4a915a9a4150ccacf4a7f8976a5ad4dd4d38e48c6ace6d0b7",
+    "user_reports_201_payload_plus_manifest_integrity_pass": true,
+    "user_reports_independent_333_historical_byte_check_pass": true,
+    "raw_received_zip_located": false
+  },
+  "raw_identity_comparison": {
+    "reported_size_difference_bytes": 19954,
+    "two_raw_archives_directly_compared": false,
+    "compression_or_metadata_cause": "UNDETERMINED",
+    "payload_corruption_claim": "Not established; local validation passes and recipient reports a pass"
+  },
+  "search_scope": {
+    "roots": [
+      "Workspace outputs",
+      "Documents excluding workspace/work/temp/.git",
+      "Downloads",
+      "Desktop"
+    ],
+    "method": "rg ZIP names including hidden files, then candidate sizes; unrelated personal document contents not read",
+    "reported_size_candidate_found": false,
+    "limit": "Bounded local search only; no claim about other directories/devices or remote attachments"
+  },
+  "locally_observed_extracted_folder": {
+    "root": "C:\\Users\\BML\\Desktop\\COMSOL63_TIME_CAPS_HANDOFF",
+    "manifest_raw_identical_to_local_zip": true,
+    "manifest_bytes": 42396,
+    "manifest_sha256": "e7646aedf322195545744ee718275ae2cfaa3e5c0bf92bd15115896f99732a3f",
+    "payload_verified_count": 201,
+    "mismatches": [],
+    "originating_raw_zip_sha256": "Unknown; extracted bytes do not establish the source raw ZIP identity",
+    "inner_333_implication": "Four required inputs are among the 201 checked files; when all match, their historical byte streams match the directly checked local archive inputs"
+  },
+  "current_local_preservation": {
+    "ledger": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\outputs\\radial160\\preserved_before.json",
+    "ledger_sha256": "97c10f122e2c5bc073526d37c684af4d3badb14c68952667b6f6ce54946a0dc1",
+    "records": 663,
+    "verified": 663,
+    "mismatches": [],
+    "scope_limit": "Local verification only; not a statement that all these bytes occur in a new recipient package"
+  },
+  "local_archive_unchanged_after_audit": true
+}

@@ -1,0 +1,13 @@
+{
+  "artifact": "matrix_100.csv",
+  "state": "100",
+  "half_cell_source": "GITT",
+  "si_source": "Li",
+  "starts": 24,
+  "seed": 0,
+  "w_dqdv_note": "명령별",
+  "data_root": "/home/yonghoon71/dd/cells/pouch_fixedhc",
+  "git_commit": "1d671ce2a0cae59fbd71616eb5b8cfb39c477ebb",
+  "git_dirty": true,
+  "created_utc": "2026-09-10T16:35:39.927916+00:00"
+}

@@ -1,0 +1,815 @@
+{
+  "scope": "Independent read-only evidence verification; no new solve, no spatial or temporal interpolation",
+  "three_jobs_completed": true,
+  "all_core_time_settings_identical": true,
+  "all_transient_field_scale_settings_identical": true,
+  "source_configs_sha256": "f90eea31380c6a65ed6c8a0e72c7d4f59997f811aa3ad423abdb7d53a37ea5e5",
+  "jobs_sha256": "6dc668034feea90f4dbd4c95c3a7cda14ead30edf54c1d5c5b7b9ee0c35de760",
+  "comparison_contract_sha256": "4e57a8be54a263aa7ed915ae5de061e937e066267bedd8c4445045190655f85d",
+  "jobs": [
+    {
+      "name": "Axes300R40",
+      "job_id": "f211901885774793ab39e89ebee0144f",
+      "source_sha256": "b4298feb95a6dd2306967fad44c55ab668450633c0a0ec7760681c3b76047e44",
+      "mph_sha256": "8be66085dc14475d768e203e459b7286e974b29b99431db2c1663f92580abe69",
+      "mph_bytes": 46737803,
+      "worker_state": "completed",
+      "source_and_submitted_copy_hash_match": true,
+      "export_ok": true,
+      "decoded_csv_count": 14,
+      "stored_times": 215,
+      "requested_times_exactly_present_once": 187,
+      "first_second_requested_count": 107,
+      "first_time_s": "0.0",
+      "last_time_s": "5.0",
+      "physical_mesh_readback": [
+        [
+          "mesh1",
+          "300",
+          "301"
+        ]
+      ],
+      "physical_elements_by_domain": {
+        "1": 120,
+        "2": 60,
+        "3": 120
+      },
+      "native_batch_mesh_counts": [
+        300,
+        40,
+        40
+      ],
+      "native_dof_counts": [
+        1202,
+        11725
+      ],
+      "profile": {
+        "N": {
+          "rows": 51815,
+          "coordinates_each_time": 241,
+          "max_coordinate_error_m": 6.776263578034403e-21,
+          "all_stored_times_exact": true,
+          "all_finite": true,
+          "domain": 1
+        },
+        "P": {
+          "rows": 51815,
+          "coordinates_each_time": 241,
+          "max_coordinate_error_m": 1.3552527156068805e-20,
+          "all_stored_times_exact": true,
+          "all_finite": true,
+          "domain": 3
+        }
+      },
+      "minimum_stored_ce_mol_m3": 1194.4372376491106,
+      "at_time_s_of_minimum_ce": "5.0",
+      "stored_surface_guard_all_zero": true,
+      "time_core_settings": {
+        "rtol": [
+          "Double",
+          "[1.0E-6]"
+        ],
+        "initialstepbdf": [
+          "Double",
+          "[1.0E-5]"
+        ],
+        "initialstepbdfactive": [
+          "Boolean",
+          "[true]"
+        ],
+        "maxstepconstraintbdf": [
+          "String",
+          "[const]"
+        ],
+        "maxstepbdf": [
+          "Double",
+          "[0.1]"
+        ],
+        "tstepsbdf": [
+          "String",
+          "[strict]"
+        ],
+        "tout": [
+          "String",
+          "[tsteps]"
+        ],
+        "tstepsstore": [
+          "Int",
+          "[1]"
+        ],
+        "consistent": [
+          "String",
+          "[bweuler]"
+        ],
+        "atolglobalmethod": [
+          "String",
+          "[scaled]"
+        ],
+        "atolglobalvaluemethod": [
+          "String",
+          "[factor]"
+        ],
+        "atolglobalfactor": [
+          "Double",
+          "[0.1]"
+        ],
+        "atolglobal": [
+          "Double",
+          "[0.001]"
+        ],
+        "atolmethod": [
+          "StringArray",
+          "[[comp1_cl, global, comp1_liion_pce1_cs, global, comp1_liion_pce2_cs, global, comp1_phil, global, comp1_phis, global]]"
+        ],
+        "atolvaluemethod": [
+          "StringArray",
+          "[[comp1_cl, factor, comp1_liion_pce1_cs, factor, comp1_liion_pce2_cs, factor, comp1_phil, factor, comp1_phis, factor]]"
+        ],
+        "atolfactor": [
+          "StringArray",
+          "[[comp1_cl, 0.1, comp1_liion_pce1_cs, 0.1, comp1_liion_pce2_cs, 0.1, comp1_phil, 0.1, comp1_phis, 0.1]]"
+        ],
+        "atol": [
+          "StringArray",
+          "[[comp1_cl, 1e-3, comp1_liion_pce1_cs, 1e-3, comp1_liion_pce2_cs, 1e-3, comp1_phil, 1e-3, comp1_phis, 1e-3]]"
+        ],
+        "eventtol": [
+          "Double",
+          "[0.01]"
+        ],
+        "eventout": [
+          "Boolean",
+          "[true]"
+        ]
+      },
+      "transient_field_scale_settings": {
+        "sol1/v2/scalemethod": [
+          "String",
+          "[auto]"
+        ],
+        "sol1/v2/scaleval": [
+          "Double",
+          "[1.0]"
+        ],
+        "sol1/v2/resscalemethod": [
+          "String",
+          "[auto]"
+        ],
+        "sol1/v2/resscaleval": [
+          "Double",
+          "[1.0]"
+        ],
+        "sol1/v2/comp1_cl/scalemethod": [
+          "String",
+          "[manual]"
+        ],
+        "sol1/v2/comp1_cl/scaleval": [
+          "Double",
+          "[1000.0]"
+        ],
+        "sol1/v2/comp1_cl/resscalemethod": [
+          "String",
+          "[parent]"
+        ],
+        "sol1/v2/comp1_cl/resscaleval": [
+          "Double",
+          "[1.0]"
+        ],
+        "sol1/v2/comp1_liion_pce1_cs/scalemethod": [
+          "String",
+          "[manual]"
+        ],
+        "sol1/v2/comp1_liion_pce1_cs/scaleval": [
+          "Double",
+          "[10000.0]"
+        ],
+        "sol1/v2/comp1_liion_pce1_cs/resscalemethod": [
+          "String",
+          "[parent]"
+        ],
+        "sol1/v2/comp1_liion_pce1_cs/resscaleval": [
+          "Double",
+          "[1.0]"
+        ],
+        "sol1/v2/comp1_liion_pce2_cs/scalemethod": [
+          "String",
+          "[manual]"
+        ],
+        "sol1/v2/comp1_liion_pce2_cs/scaleval": [
+          "Double",
+          "[10000.0]"
+        ],
+        "sol1/v2/comp1_liion_pce2_cs/resscalemethod": [
+          "String",
+          "[parent]"
+        ],
+        "sol1/v2/comp1_liion_pce2_cs/resscaleval": [
+          "Double",
+          "[1.0]"
+        ],
+        "sol1/v2/comp1_phil/scalemethod": [
+          "String",
+          "[manual]"
+        ],
+        "sol1/v2/comp1_phil/scaleval": [
+          "Double",
+          "[1.0]"
+        ],
+        "sol1/v2/comp1_phil/resscalemethod": [
+          "String",
+          "[parent]"
+        ],
+        "sol1/v2/comp1_phil/resscaleval": [
+          "Double",
+          "[1.0]"
+        ],
+        "sol1/v2/comp1_phis/scalemethod": [
+          "String",
+          "[manual]"
+        ],
+        "sol1/v2/comp1_phis/scaleval": [
+          "Double",
+          "[1.0]"
+        ],
+        "sol1/v2/comp1_phis/resscalemethod": [
+          "String",
+          "[parent]"
+        ],
+        "sol1/v2/comp1_phis/resscaleval": [
+          "Double",
+          "[1.0]"
+        ]
+      },
+      "logged_property_count": 1143,
+      "property_read_error_count": 0,
+      "native_scale_lines": [
+        "Electrolyte Potential (comp1.phil): 1",
+        "Electric Potential (comp1.phis): 1",
+        "Electrolyte Salt Concentration (comp1.cl): 1e+03",
+        "Solid Phase Concentration (comp1.liion.pce1.cs): 1e+04",
+        "Solid Phase Concentration (comp1.liion.pce2.cs): 1e+04",
+        "Electrolyte Potential (comp1.phil): 1",
+        "Electric Potential (comp1.phis): 1"
+      ],
+      "runtime_readback": {
+        "solution_tag": "sol1",
+        "time_tag": "t1",
+        "study_tlist": "0 0.0001 0.0002 0.0005 0.001 0.002 0.005 0.01 0.02 0.03 0.04 0.05 0.06 0.07 0.08 0.09 0.1 0.11 0.12 0.13 0.14 0.15 0.16 0.17 0.18 0.19 0.2 0.21 0.22 0.23 0.24 0.25 0.26 0.27 0.28 0.29 0.3 0.31 0.32 0.33 0.34 0.35 0.36 0.37 0.38 0.39 0.4 0.41 0.42 0.43 0.44 0.45 0.46 0.47 0.48 0.49 0.5 0.51 0.52 0.53 0.54 0.55 0.56 0.57 0.58 0.59 0.6 0.61 0.62 0.63 0.64 0.65 0.66 0.67 0.68 0.69 0.7 0.71 0.72 0.73 0.74 0.75 0.76 0.77 0.78 0.79 0.8 0.81 0.82 0.83 0.84 0.85 0.86 0.87 0.88 0.89 0.9 0.91 0.92 0.93 0.94 0.95 0.96 0.97 0.98 0.99 1 1.05 1.1 1.15 1.2 1.25 1.3 1.35 1.4 1.45 1.5 1.55 1.6 1.65 1.7 1.75 1.8 1.85 1.9 1.95 2 2.05 2.1 2.15 2.2 2.25 2.3 2.35 2.4 2.45 2.5 2.55 2.6 2.65 2.7 2.75 2.8 2.85 2.9 2.95 3 3.05 3.1 3.15 3.2 3.25 3.3 3.35 3.4 3.45 3.5 3.55 3.6 3.65 3.7 3.75 3.8 3.85 3.9 3.95 4 4.05 4.1 4.15 4.2 4.25 4.3 4.35 4.4 4.45 4.5 4.55 4.6 4.65 4.7 4.75 4.8 4.85 4.9 4.95 5",
+        "geometry_length_unit": "m",
+        "geometry_dimension": "1",
+        "rtol": "1.0E-6",
+        "initialstepbdf": "1.0E-5",
+        "initialstepbdfactive": "on",
+        "maxstepconstraintbdf": "const",
+        "maxstepbdf": "0.1",
+        "tstepsbdf": "strict",
+        "tout": "tsteps",
+        "consistent": "bweuler",
+        "atolglobalmethod": "scaled",
+        "atolglobalvaluemethod": "factor",
+        "atolglobalfactor": "0.1",
+        "atolglobal": "0.001",
+        "eventtol": "0.01",
+        "electrolyte_positive_check": "POSTPROCESSING_ONLY; not a StopCondition",
+        "profile_time_interpolation": "off; all stored solnum; no t property set",
+        "profile_spatial_evaluation": "domain-selected FE Interp; recover off; ext 0; 241 common coordinates"
+      }
+    },
+    {
+      "name": "Axes300R80",
+      "job_id": "a4d58eb7f97c48cc9109657d4a8f0ba3",
+      "source_sha256": "f2745f4a157ab5102ff69a980da177060d2323722ab0f79079e3c531212dd2f2",
+      "mph_sha256": "6f9c498f952832d2921c8427230c3dfe8c2201f6659bbb152fc05abf8daa65de",
+      "mph_bytes": 87538355,
+      "worker_state": "completed",
+      "source_and_submitted_copy_hash_match": true,
+      "export_ok": true,
+      "decoded_csv_count": 14,
+      "stored_times": 235,
+      "requested_times_exactly_present_once": 187,
+      "first_second_requested_count": 107,
+      "first_time_s": "0.0",
+      "last_time_s": "5.0",
+      "physical_mesh_readback": [
+        [
+          "mesh1",
+          "300",
+          "301"
+        ]
+      ],
+      "physical_elements_by_domain": {
+        "1": 120,
+        "2": 60,
+        "3": 120
+      },
+      "native_batch_mesh_counts": [
+        300,
+        80,
+        80
+      ],
+      "native_dof_counts": [
+        1202,
+        21405
+      ],
+      "profile": {
+        "N": {
+          "rows": 56635,
+          "coordinates_each_time": 241,
+          "max_coordinate_error_m": 6.776263578034403e-21,
+          "all_stored_times_exact": true,
+          "all_finite": true,
+          "domain": 1
+        },
+        "P": {
+          "rows": 56635,
+          "coordinates_each_time": 241,
+          "max_coordinate_error_m": 1.3552527156068805e-20,
+          "all_stored_times_exact": true,
+          "all_finite": true,
+          "domain": 3
+        }
+      },
+      "minimum_stored_ce_mol_m3": 1194.4372193572083,
+      "at_time_s_of_minimum_ce": "5.0",
+      "stored_surface_guard_all_zero": true,
+      "time_core_settings": {
+        "rtol": [
+          "Double",
+          "[1.0E-6]"
+        ],
+        "initialstepbdf": [
+          "Double",
+          "[1.0E-5]"
+        ],
+        "initialstepbdfactive": [
+          "Boolean",
+          "[true]"
+        ],
+        "maxstepconstraintbdf": [
+          "String",
+          "[const]"
+        ],
+        "maxstepbdf": [
+          "Double",
+          "[0.1]"
+        ],
+        "tstepsbdf": [
+          "String",
+          "[strict]"
+        ],
+        "tout": [
+          "String",
+          "[tsteps]"
+        ],
+        "tstepsstore": [
+          "Int",
+          "[1]"
+        ],
+        "consistent": [
+          "String",
+          "[bweuler]"
+        ],
+        "atolglobalmethod": [
+          "String",
+          "[scaled]"
+        ],
+        "atolglobalvaluemethod": [
+          "String",
+          "[factor]"
+        ],
+        "atolglobalfactor": [
+          "Double",
+          "[0.1]"
+        ],
+        "atolglobal": [
+          "Double",
+          "[0.001]"
+        ],
+        "atolmethod": [
+          "StringArray",
+          "[[comp1_cl, global, comp1_liion_pce1_cs, global, comp1_liion_pce2_cs, global, comp1_phil, global, comp1_phis, global]]"
+        ],
+        "atolvaluemethod": [
+          "StringArray",
+          "[[comp1_cl, factor, comp1_liion_pce1_cs, factor, comp1_liion_pce2_cs, factor, comp1_phil, factor, comp1_phis, factor]]"
+        ],
+        "atolfactor": [
+          "StringArray",
+          "[[comp1_cl, 0.1, comp1_liion_pce1_cs, 0.1, comp1_liion_pce2_cs, 0.1, comp1_phil, 0.1, comp1_phis, 0.1]]"
+        ],
+        "atol": [
+          "StringArray",
+          "[[comp1_cl, 1e-3, comp1_liion_pce1_cs, 1e-3, comp1_liion_pce2_cs, 1e-3, comp1_phil, 1e-3, comp1_phis, 1e-3]]"
+        ],
+        "eventtol": [
+          "Double",
+          "[0.01]"
+        ],
+        "eventout": [
+          "Boolean",
+          "[true]"
+        ]
+      },
+      "transient_field_scale_settings": {
+        "sol1/v2/scalemethod": [
+          "String",
+          "[auto]"
+        ],
+        "sol1/v2/scaleval": [
+          "Double",
+          "[1.0]"
+        ],
+        "sol1/v2/resscalemethod": [
+          "String",
+          "[auto]"
+        ],
+        "sol1/v2/resscaleval": [
+          "Double",
+          "[1.0]"
+        ],
+        "sol1/v2/comp1_cl/scalemethod": [
+          "String",
+          "[manual]"
+        ],
+        "sol1/v2/comp1_cl/scaleval": [
+          "Double",
+          "[1000.0]"
+        ],
+        "sol1/v2/comp1_cl/resscalemethod": [
+          "String",
+          "[parent]"
+        ],
+        "sol1/v2/comp1_cl/resscaleval": [
+          "Double",
+          "[1.0]"
+        ],
+        "sol1/v2/comp1_liion_pce1_cs/scalemethod": [
+          "String",
+          "[manual]"
+        ],
+        "sol1/v2/comp1_liion_pce1_cs/scaleval": [
+          "Double",
+          "[10000.0]"
+        ],
+        "sol1/v2/comp1_liion_pce1_cs/resscalemethod": [
+          "String",
+          "[parent]"
+        ],
+        "sol1/v2/comp1_liion_pce1_cs/resscaleval": [
+          "Double",
+          "[1.0]"
+        ],
+        "sol1/v2/comp1_liion_pce2_cs/scalemethod": [
+          "String",
+          "[manual]"
+        ],
+        "sol1/v2/comp1_liion_pce2_cs/scaleval": [
+          "Double",
+          "[10000.0]"
+        ],
+        "sol1/v2/comp1_liion_pce2_cs/resscalemethod": [
+          "String",
+          "[parent]"
+        ],
+        "sol1/v2/comp1_liion_pce2_cs/resscaleval": [
+          "Double",
+          "[1.0]"
+        ],
+        "sol1/v2/comp1_phil/scalemethod": [
+          "String",
+          "[manual]"
+        ],
+        "sol1/v2/comp1_phil/scaleval": [
+          "Double",
+          "[1.0]"
+        ],
+        "sol1/v2/comp1_phil/resscalemethod": [
+          "String",
+          "[parent]"
+        ],
+        "sol1/v2/comp1_phil/resscaleval": [
+          "Double",
+          "[1.0]"
+        ],
+        "sol1/v2/comp1_phis/scalemethod": [
+          "String",
+          "[manual]"
+        ],
+        "sol1/v2/comp1_phis/scaleval": [
+          "Double",
+          "[1.0]"
+        ],
+        "sol1/v2/comp1_phis/resscalemethod": [
+          "String",
+          "[parent]"
+        ],
+        "sol1/v2/comp1_phis/resscaleval": [
+          "Double",
+          "[1.0]"
+        ]
+      },
+      "logged_property_count": 1143,
+      "property_read_error_count": 0,
+      "native_scale_lines": [
+        "Electrolyte Potential (comp1.phil): 1",
+        "Electric Potential (comp1.phis): 1",
+        "Electrolyte Salt Concentration (comp1.cl): 1e+03",
+        "Solid Phase Concentration (comp1.liion.pce1.cs): 1e+04",
+        "Solid Phase Concentration (comp1.liion.pce2.cs): 1e+04",
+        "Electrolyte Potential (comp1.phil): 1",
+        "Electric Potential (comp1.phis): 1"
+      ],
+      "runtime_readback": {
+        "solution_tag": "sol1",
+        "time_tag": "t1",
+        "study_tlist": "0 0.0001 0.0002 0.0005 0.001 0.002 0.005 0.01 0.02 0.03 0.04 0.05 0.06 0.07 0.08 0.09 0.1 0.11 0.12 0.13 0.14 0.15 0.16 0.17 0.18 0.19 0.2 0.21 0.22 0.23 0.24 0.25 0.26 0.27 0.28 0.29 0.3 0.31 0.32 0.33 0.34 0.35 0.36 0.37 0.38 0.39 0.4 0.41 0.42 0.43 0.44 0.45 0.46 0.47 0.48 0.49 0.5 0.51 0.52 0.53 0.54 0.55 0.56 0.57 0.58 0.59 0.6 0.61 0.62 0.63 0.64 0.65 0.66 0.67 0.68 0.69 0.7 0.71 0.72 0.73 0.74 0.75 0.76 0.77 0.78 0.79 0.8 0.81 0.82 0.83 0.84 0.85 0.86 0.87 0.88 0.89 0.9 0.91 0.92 0.93 0.94 0.95 0.96 0.97 0.98 0.99 1 1.05 1.1 1.15 1.2 1.25 1.3 1.35 1.4 1.45 1.5 1.55 1.6 1.65 1.7 1.75 1.8 1.85 1.9 1.95 2 2.05 2.1 2.15 2.2 2.25 2.3 2.35 2.4 2.45 2.5 2.55 2.6 2.65 2.7 2.75 2.8 2.85 2.9 2.95 3 3.05 3.1 3.15 3.2 3.25 3.3 3.35 3.4 3.45 3.5 3.55 3.6 3.65 3.7 3.75 3.8 3.85 3.9 3.95 4 4.05 4.1 4.15 4.2 4.25 4.3 4.35 4.4 4.45 4.5 4.55 4.6 4.65 4.7 4.75 4.8 4.85 4.9 4.95 5",
+        "geometry_length_unit": "m",
+        "geometry_dimension": "1",
+        "rtol": "1.0E-6",
+        "initialstepbdf": "1.0E-5",
+        "initialstepbdfactive": "on",
+        "maxstepconstraintbdf": "const",
+        "maxstepbdf": "0.1",
+        "tstepsbdf": "strict",
+        "tout": "tsteps",
+        "consistent": "bweuler",
+        "atolglobalmethod": "scaled",
+        "atolglobalvaluemethod": "factor",
+        "atolglobalfactor": "0.1",
+        "atolglobal": "0.001",
+        "eventtol": "0.01",
+        "electrolyte_positive_check": "POSTPROCESSING_ONLY; not a StopCondition",
+        "profile_time_interpolation": "off; all stored solnum; no t property set",
+        "profile_spatial_evaluation": "domain-selected FE Interp; recover off; ext 0; 241 common coordinates"
+      }
+    },
+    {
+      "name": "Axes600R40",
+      "job_id": "7e78bebd745e437da5bb8fe77a01ef84",
+      "source_sha256": "8ad0b8b31f47896bc8dbc46e80cc61373278edd8efd8ee21c8ed56312a5d1448",
+      "mph_sha256": "e3e87359e14cc278076ed503925ad97d6cc4107a21aae5aa295f9cec0dc50a9e",
+      "mph_bytes": 87513387,
+      "worker_state": "completed",
+      "source_and_submitted_copy_hash_match": true,
+      "export_ok": true,
+      "decoded_csv_count": 14,
+      "stored_times": 215,
+      "requested_times_exactly_present_once": 187,
+      "first_second_requested_count": 107,
+      "first_time_s": "0.0",
+      "last_time_s": "5.0",
+      "physical_mesh_readback": [
+        [
+          "mesh1",
+          "600",
+          "601"
+        ]
+      ],
+      "physical_elements_by_domain": {
+        "1": 240,
+        "2": 120,
+        "3": 240
+      },
+      "native_batch_mesh_counts": [
+        600,
+        40,
+        40
+      ],
+      "native_dof_counts": [
+        2402,
+        23365
+      ],
+      "profile": {
+        "N": {
+          "rows": 51815,
+          "coordinates_each_time": 241,
+          "max_coordinate_error_m": 6.776263578034403e-21,
+          "all_stored_times_exact": true,
+          "all_finite": true,
+          "domain": 1
+        },
+        "P": {
+          "rows": 51815,
+          "coordinates_each_time": 241,
+          "max_coordinate_error_m": 0.0,
+          "all_stored_times_exact": true,
+          "all_finite": true,
+          "domain": 3
+        }
+      },
+      "minimum_stored_ce_mol_m3": 1194.4372374390439,
+      "at_time_s_of_minimum_ce": "5.0",
+      "stored_surface_guard_all_zero": true,
+      "time_core_settings": {
+        "rtol": [
+          "Double",
+          "[1.0E-6]"
+        ],
+        "initialstepbdf": [
+          "Double",
+          "[1.0E-5]"
+        ],
+        "initialstepbdfactive": [
+          "Boolean",
+          "[true]"
+        ],
+        "maxstepconstraintbdf": [
+          "String",
+          "[const]"
+        ],
+        "maxstepbdf": [
+          "Double",
+          "[0.1]"
+        ],
+        "tstepsbdf": [
+          "String",
+          "[strict]"
+        ],
+        "tout": [
+          "String",
+          "[tsteps]"
+        ],
+        "tstepsstore": [
+          "Int",
+          "[1]"
+        ],
+        "consistent": [
+          "String",
+          "[bweuler]"
+        ],
+        "atolglobalmethod": [
+          "String",
+          "[scaled]"
+        ],
+        "atolglobalvaluemethod": [
+          "String",
+          "[factor]"
+        ],
+        "atolglobalfactor": [
+          "Double",
+          "[0.1]"
+        ],
+        "atolglobal": [
+          "Double",
+          "[0.001]"
+        ],
+        "atolmethod": [
+          "StringArray",
+          "[[comp1_cl, global, comp1_liion_pce1_cs, global, comp1_liion_pce2_cs, global, comp1_phil, global, comp1_phis, global]]"
+        ],
+        "atolvaluemethod": [
+          "StringArray",
+          "[[comp1_cl, factor, comp1_liion_pce1_cs, factor, comp1_liion_pce2_cs, factor, comp1_phil, factor, comp1_phis, factor]]"
+        ],
+        "atolfactor": [
+          "StringArray",
+          "[[comp1_cl, 0.1, comp1_liion_pce1_cs, 0.1, comp1_liion_pce2_cs, 0.1, comp1_phil, 0.1, comp1_phis, 0.1]]"
+        ],
+        "atol": [
+          "StringArray",
+          "[[comp1_cl, 1e-3, comp1_liion_pce1_cs, 1e-3, comp1_liion_pce2_cs, 1e-3, comp1_phil, 1e-3, comp1_phis, 1e-3]]"
+        ],
+        "eventtol": [
+          "Double",
+          "[0.01]"
+        ],
+        "eventout": [
+          "Boolean",
+          "[true]"
+        ]
+      },
+      "transient_field_scale_settings": {
+        "sol1/v2/scalemethod": [
+          "String",
+          "[auto]"
+        ],
+        "sol1/v2/scaleval": [
+          "Double",
+          "[1.0]"
+        ],
+        "sol1/v2/resscalemethod": [
+          "String",
+          "[auto]"
+        ],
+        "sol1/v2/resscaleval": [
+          "Double",
+          "[1.0]"
+        ],
+        "sol1/v2/comp1_cl/scalemethod": [
+          "String",
+          "[manual]"
+        ],
+        "sol1/v2/comp1_cl/scaleval": [
+          "Double",
+          "[1000.0]"
+        ],
+        "sol1/v2/comp1_cl/resscalemethod": [
+          "String",
+          "[parent]"
+        ],
+        "sol1/v2/comp1_cl/resscaleval": [
+          "Double",
+          "[1.0]"
+        ],
+        "sol1/v2/comp1_liion_pce1_cs/scalemethod": [
+          "String",
+          "[manual]"
+        ],
+        "sol1/v2/comp1_liion_pce1_cs/scaleval": [
+          "Double",
+          "[10000.0]"
+        ],
+        "sol1/v2/comp1_liion_pce1_cs/resscalemethod": [
+          "String",
+          "[parent]"
+        ],
+        "sol1/v2/comp1_liion_pce1_cs/resscaleval": [
+          "Double",
+          "[1.0]"
+        ],
+        "sol1/v2/comp1_liion_pce2_cs/scalemethod": [
+          "String",
+          "[manual]"
+        ],
+        "sol1/v2/comp1_liion_pce2_cs/scaleval": [
+          "Double",
+          "[10000.0]"
+        ],
+        "sol1/v2/comp1_liion_pce2_cs/resscalemethod": [
+          "String",
+          "[parent]"
+        ],
+        "sol1/v2/comp1_liion_pce2_cs/resscaleval": [
+          "Double",
+          "[1.0]"
+        ],
+        "sol1/v2/comp1_phil/scalemethod": [
+          "String",
+          "[manual]"
+        ],
+        "sol1/v2/comp1_phil/scaleval": [
+          "Double",
+          "[1.0]"
+        ],
+        "sol1/v2/comp1_phil/resscalemethod": [
+          "String",
+          "[parent]"
+        ],
+        "sol1/v2/comp1_phil/resscaleval": [
+          "Double",
+          "[1.0]"
+        ],
+        "sol1/v2/comp1_phis/scalemethod": [
+          "String",
+          "[manual]"
+        ],
+        "sol1/v2/comp1_phis/scaleval": [
+          "Double",
+          "[1.0]"
+        ],
+        "sol1/v2/comp1_phis/resscalemethod": [
+          "String",
+          "[parent]"
+        ],
+        "sol1/v2/comp1_phis/resscaleval": [
+          "Double",
+          "[1.0]"
+        ]
+      },
+      "logged_property_count": 1143,
+      "property_read_error_count": 0,
+      "native_scale_lines": [
+        "Electrolyte Potential (comp1.phil): 1",
+        "Electric Potential (comp1.phis): 1",
+        "Electrolyte Salt Concentration (comp1.cl): 1e+03",
+        "Solid Phase Concentration (comp1.liion.pce1.cs): 1e+04",
+        "Solid Phase Concentration (comp1.liion.pce2.cs): 1e+04",
+        "Electrolyte Potential (comp1.phil): 1",
+        "Electric Potential (comp1.phis): 1"
+      ],
+      "runtime_readback": {
+        "solution_tag": "sol1",
+        "time_tag": "t1",
+        "study_tlist": "0 0.0001 0.0002 0.0005 0.001 0.002 0.005 0.01 0.02 0.03 0.04 0.05 0.06 0.07 0.08 0.09 0.1 0.11 0.12 0.13 0.14 0.15 0.16 0.17 0.18 0.19 0.2 0.21 0.22 0.23 0.24 0.25 0.26 0.27 0.28 0.29 0.3 0.31 0.32 0.33 0.34 0.35 0.36 0.37 0.38 0.39 0.4 0.41 0.42 0.43 0.44 0.45 0.46 0.47 0.48 0.49 0.5 0.51 0.52 0.53 0.54 0.55 0.56 0.57 0.58 0.59 0.6 0.61 0.62 0.63 0.64 0.65 0.66 0.67 0.68 0.69 0.7 0.71 0.72 0.73 0.74 0.75 0.76 0.77 0.78 0.79 0.8 0.81 0.82 0.83 0.84 0.85 0.86 0.87 0.88 0.89 0.9 0.91 0.92 0.93 0.94 0.95 0.96 0.97 0.98 0.99 1 1.05 1.1 1.15 1.2 1.25 1.3 1.35 1.4 1.45 1.5 1.55 1.6 1.65 1.7 1.75 1.8 1.85 1.9 1.95 2 2.05 2.1 2.15 2.2 2.25 2.3 2.35 2.4 2.45 2.5 2.55 2.6 2.65 2.7 2.75 2.8 2.85 2.9 2.95 3 3.05 3.1 3.15 3.2 3.25 3.3 3.35 3.4 3.45 3.5 3.55 3.6 3.65 3.7 3.75 3.8 3.85 3.9 3.95 4 4.05 4.1 4.15 4.2 4.25 4.3 4.35 4.4 4.45 4.5 4.55 4.6 4.65 4.7 4.75 4.8 4.85 4.9 4.95 5",
+        "geometry_length_unit": "m",
+        "geometry_dimension": "1",
+        "rtol": "1.0E-6",
+        "initialstepbdf": "1.0E-5",
+        "initialstepbdfactive": "on",
+        "maxstepconstraintbdf": "const",
+        "maxstepbdf": "0.1",
+        "tstepsbdf": "strict",
+        "tout": "tsteps",
+        "consistent": "bweuler",
+        "atolglobalmethod": "scaled",
+        "atolglobalvaluemethod": "factor",
+        "atolglobalfactor": "0.1",
+        "atolglobal": "0.001",
+        "eventtol": "0.01",
+        "electrolyte_positive_check": "POSTPROCESSING_ONLY; not a StopCondition",
+        "profile_time_interpolation": "off; all stored solnum; no t property set",
+        "profile_spatial_evaluation": "domain-selected FE Interp; recover off; ext 0; 241 common coordinates"
+      }
+    }
+  ]
+}

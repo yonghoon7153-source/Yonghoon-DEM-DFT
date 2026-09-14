@@ -1,0 +1,71 @@
+{
+  "scope": "One authorized new 300/R160 H0250 5 s run versus fixed existing 300/R160 H0500. Prior same-cap R80-to-R160 results are magnitude context only. No COMSOL execution by this analyzer.",
+  "temporal_interpolation": false,
+  "external_spatial_interpolation": false,
+  "difference_convention": "H0250 minus H0500",
+  "requested_time_counts_0_to_1_and_0_to_5": [
+    107,
+    187
+  ],
+  "exact_common_time_counts_0_to_1_and_0_to_5": [
+    282,
+    363
+  ],
+  "time_cap_max_abs_voltage_difference_V": 2.175461073e-06,
+  "voltage_peak_time_s_exact": "0.005",
+  "surface_maximum": {
+    "electrode": "P",
+    "time_s_exact": "0.002",
+    "sample_index": 240,
+    "coordinate_first_m": 0.000121,
+    "coordinate_second_m": 0.000121,
+    "x_surface_first": 0.9240499558036168,
+    "x_surface_second": 0.9240499988068328,
+    "signed_difference_second_minus_first_x": 4.3003216e-08,
+    "absolute_difference_x": 4.3003216e-08
+  },
+  "electrode_bounds_um_from_profile_coordinates": {
+    "N": [
+      0.0,
+      52.0
+    ],
+    "P": [
+      77.0,
+      121.0
+    ]
+  },
+  "separator_bounds_um_from_profile_coordinates": [
+    52.0,
+    77.0
+  ],
+  "prior_same_cap_radial_max_abs_voltage_difference_V": 0.0012482181141973,
+  "ratio_of_different_time_maxima_percent": 0.17428533108566432,
+  "ratio_interpretation": "Magnitude context only; not an order or error-bound estimate.",
+  "accepted_step_counts_existing_and_new": [
+    387,
+    585
+  ],
+  "input_sha256": {
+    "outputs/radial160_timecap/results/analysis.json": "d50d2b437d6e3792c6f8790e1cde9f556893b704da381985e5f1262d35b687e6",
+    "outputs/radial160_timecap/results/Caps300R160H0500_vs_Caps300R160H0250_requested_grid_0_to_5s.csv": "15647bd7db20ef972797ef3533da38723c16c79119ccda1f19817c261fc668c9",
+    "outputs/radial160_timecap/results/Caps300R160H0500_vs_Caps300R160H0250_all_exact_common_stored_0_to_5s.csv": "891ed210833828de93872b7ba9ea9bed00b4cc810ade7302727c87d215be7f2b",
+    "outputs/radial160_timecap/results/Caps300R160H0500_vs_Caps300R160H0250_requested_grid_0_to_5s_profile_at_surface_peak.csv": "a9ec8e279913dc43dd615958fb62462a762117991e478bf07b81bd36ae446629",
+    "outputs/radial160_timecap/native_steps_summary.json": "d44196067ff72a7f1bda15264b59beb42506506139727bdf2869f78b2fe4839a",
+    "outputs/radial160/native_steps_summary.json": "2917a7c9c339f1d741af8f1611bc87f77ba6ed8f18dc31f63c25f640f1da7936",
+    "outputs/radial160/Caps300R160H0500_accepted_steps.csv": "94f4b32ce4ecc6d33e40c8d5382e37057b82a35f8cd80c23c7230ad7d6a51eff",
+    "outputs/radial160_timecap/Caps300R160H0250_accepted_steps.csv": "2f88f9d61e80104e1e086daccd2be8e0f38c04e298d6f64cbdd21ed05a321d4c"
+  },
+  "all_tracked_inputs_unchanged_after_plot": true,
+  "artifacts": [
+    {
+      "path": "outputs/radial160_timecap/figures/timecap160_comparison.png",
+      "sha256": "ff04a6e4f66e0903873c30028c1cd05e7b18100323b244e7ea96cb8b1d774544",
+      "bytes": 449411
+    },
+    {
+      "path": "outputs/radial160_timecap/figures/timecap160_comparison.pdf",
+      "sha256": "46f9fd73a4f9abcff3df6d78131d79e8948e803bbfe825fc7708b8222e51ba99",
+      "bytes": 45580
+    }
+  ]
+}

@@ -1,0 +1,66 @@
+{
+  "scope": "Three authorized completed 5-second jobs only",
+  "jobs": [
+    {
+      "name": "Axes300R40",
+      "job_id": "f211901885774793ab39e89ebee0144f",
+      "state": "completed",
+      "eta_etaMid_checks": [
+        {
+          "input_path": "outputs/model_audit/f211901885774793ab39e89ebee0144f/preflight_boundary1.csv",
+          "input_sha256": "a4940a171cb5f89912b6e2a1f4dd3f8539603588ba8d22eb5f4b27231fee2fdf",
+          "stored_rows": 215,
+          "max_absolute_difference_V_exact": "0E-18"
+        },
+        {
+          "input_path": "outputs/model_audit/f211901885774793ab39e89ebee0144f/preflight_boundary4.csv",
+          "input_sha256": "6500f099d7d472f7742ac8f47f696bc63da1aa9bc643f679da453e8c99c9405d",
+          "stored_rows": 215,
+          "max_absolute_difference_V_exact": "0E-17"
+        }
+      ]
+    },
+    {
+      "name": "Axes300R80",
+      "job_id": "a4d58eb7f97c48cc9109657d4a8f0ba3",
+      "state": "completed",
+      "eta_etaMid_checks": [
+        {
+          "input_path": "outputs/model_audit/a4d58eb7f97c48cc9109657d4a8f0ba3/preflight_boundary1.csv",
+          "input_sha256": "c019b81649b75a5699aae5b0e0430c053a5ea932f1a01eb60409edbfabea3e40",
+          "stored_rows": 235,
+          "max_absolute_difference_V_exact": "0E-18"
+        },
+        {
+          "input_path": "outputs/model_audit/a4d58eb7f97c48cc9109657d4a8f0ba3/preflight_boundary4.csv",
+          "input_sha256": "98327c51e8af2e6bc732384adaac577abde43d7f1f73eb315be7b88e10cb0490",
+          "stored_rows": 235,
+          "max_absolute_difference_V_exact": "0E-18"
+        }
+      ]
+    },
+    {
+      "name": "Axes600R40",
+      "job_id": "7e78bebd745e437da5bb8fe77a01ef84",
+      "state": "completed",
+      "eta_etaMid_checks": [
+        {
+          "input_path": "outputs/model_audit/7e78bebd745e437da5bb8fe77a01ef84/preflight_boundary1.csv",
+          "input_sha256": "55b2994bcde06c0668b3d8701f323333bd128f2d9ea4f393ea006f1cf05e6c28",
+          "stored_rows": 215,
+          "max_absolute_difference_V_exact": "0E-17"
+        },
+        {
+          "input_path": "outputs/model_audit/7e78bebd745e437da5bb8fe77a01ef84/preflight_boundary4.csv",
+          "input_sha256": "097ffc9fa47990fb6be2d72f6e32b9fcf90427d75ea429e11a38bbd8e47b1164",
+          "stored_rows": 215,
+          "max_absolute_difference_V_exact": "0E-18"
+        }
+      ]
+    }
+  ],
+  "preserved_prior_files": 333,
+  "all_prior_sha256_and_sizes_unchanged": true,
+  "prior_range_native_state": "failed",
+  "prior_range_classification": "INCOMPLETE_RANGE_STOP (retained classification; no new failure reclassification)"
+}

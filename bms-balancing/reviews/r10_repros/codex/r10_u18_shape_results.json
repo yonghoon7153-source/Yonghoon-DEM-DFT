@@ -1,0 +1,134 @@
+{
+  "target": "bd6ba4749a92f8d441b4d9176eb876bfc6cc287c",
+  "same_root": {
+    "case": "candidate_and_baseline_can_be_the_same_directory",
+    "rc": 0,
+    "same_resolved_directory": true,
+    "claims_all_same": true,
+    "stdout": "산출 1 개 점검 (/tmp/r10-u18-same-root-07vwnkiy/candidate)\n  정본 선택 정책: **current** — 현행 디렉터리 — 정본은 unversioned 이름 하나, 판 번호가 붙은 형제는 쓰지 않는다 (Codex R6-04·R7-04)\n  명부(roster): 정본 1 · 새 산출 1 · 대조 1\n  새 스키마: 전부 갖췄다 (열·키 이름 + 필수 셀·숫자·receipt·중복 key — `bms_balancing/schema.py` 정본)\n  숫자: 정본(/tmp/r10-u18-same-root-07vwnkiy/candidate)과 전부 같다 — 게시·서명만 바뀌었다\n"
+  },
+  "receipt_roles": {
+    "case": "receipt_accepts_a_decoy_instead_of_required_input_roles",
+    "rc": 0,
+    "recorded_roles": [
+      "decoy"
+    ],
+    "missing_producer_roles": [
+      "half_cell",
+      "full_cell",
+      "literature.gr",
+      "literature.si"
+    ],
+    "claims_schema_complete": true,
+    "claims_all_same": true,
+    "stdout": "산출 1 개 점검 (/tmp/r10-u18-receipt-s70so1lx/new)\n  정본 선택 정책: **current** — 현행 디렉터리 — 정본은 unversioned 이름 하나, 판 번호가 붙은 형제는 쓰지 않는다 (Codex R6-04·R7-04)\n  명부(roster): 정본 1 · 새 산출 1 · 대조 1\n  새 스키마: 전부 갖췄다 (열·키 이름 + 필수 셀·숫자·receipt·중복 key — `bms_balancing/schema.py` 정본)\n  숫자: 정본(/tmp/r10-u18-receipt-s70so1lx/old)과 전부 같다 — 게시·서명만 바뀌었다\n"
+  },
+  "controls": {
+    "case": "environment_can_change_and_controls_can_disappear",
+    "environment_changed": {
+      "rc": 0,
+      "claims_all_same": true,
+      "reports_control_mismatch": false,
+      "stdout": "산출 1 개 점검 (/tmp/r10-u18-controls-87aen99x/environment_changed/new)\n  정본 선택 정책: **current** — 현행 디렉터리 — 정본은 unversioned 이름 하나, 판 번호가 붙은 형제는 쓰지 않는다 (Codex R6-04·R7-04)\n  명부(roster): 정본 1 · 새 산출 1 · 대조 1\n  새 스키마: 전부 갖췄다 (열·키 이름 + 필수 셀·숫자·receipt·중복 key — `bms_balancing/schema.py` 정본)\n  숫자: 정본(/tmp/r10-u18-controls-87aen99x/environment_changed/old)과 전부 같다 — 게시·서명만 바뀌었다\n"
+    },
+    "controls_removed": {
+      "rc": 0,
+      "claims_all_same": true,
+      "reports_control_mismatch": false,
+      "stdout": "산출 1 개 점검 (/tmp/r10-u18-controls-87aen99x/controls_removed/new)\n  정본 선택 정책: **current** — 현행 디렉터리 — 정본은 unversioned 이름 하나, 판 번호가 붙은 형제는 쓰지 않는다 (Codex R6-04·R7-04)\n  명부(roster): 정본 1 · 새 산출 1 · 대조 1\n  새 스키마: 전부 갖췄다 (열·키 이름 + 필수 셀·숫자·receipt·중복 key — `bms_balancing/schema.py` 정본)\n  숫자: 정본(/tmp/r10-u18-controls-87aen99x/controls_removed/old)과 전부 같다 — 게시·서명만 바뀌었다\n"
+    }
+  },
+  "error_bypass": {
+    "case": "extra_error_column_skips_all_required_cell_and_receipt_checks",
+    "rc": 0,
+    "provenance_cells_blank": true,
+    "claims_schema_complete": true,
+    "claims_all_same": true,
+    "stdout": "산출 1 개 점검 (/tmp/r10-u18-error-bypass-wog2fjai/new)\n  정본 선택 정책: **current** — 현행 디렉터리 — 정본은 unversioned 이름 하나, 판 번호가 붙은 형제는 쓰지 않는다 (Codex R6-04·R7-04)\n  명부(roster): 정본 1 · 새 산출 1 · 대조 1\n  새 스키마: 전부 갖췄다 (열·키 이름 + 필수 셀·숫자·receipt·중복 key — `bms_balancing/schema.py` 정본)\n\n  정본에 없던 필드 1 — 스키마 추가분이다 (숫자가 움직인 것이 아니다): error\n  숫자: 정본(/tmp/r10-u18-error-bypass-wog2fjai/old)과 전부 같다 — 게시·서명만 바뀌었다\n"
+  },
+  "shape_subset": {
+    "case": "states_option_narrows_roster_then_publishes_as_complete_canonical",
+    "declared_states": [
+      "100",
+      "200"
+    ],
+    "first": {
+      "rc": 0,
+      "rows": [
+        "100",
+        "200"
+      ],
+      "pairing": {
+        "requested": [
+          "100",
+          "200"
+        ],
+        "requested_from": "D.HALF_FILE[GITT] ∩ D.STATES (pristine 제외)",
+        "available": [
+          "100",
+          "200"
+        ],
+        "missing_input": [],
+        "paired": [
+          "100",
+          "200"
+        ],
+        "missing": [],
+        "note": "measured_* 는 available(입력 있는 requested) 전부에서, gamma_*·ratio 는 paired 에서만 계산한 값이다; missing_input 은 측정조차 없다 (Codex R8-03 · R9-04)"
+      },
+      "status": "complete"
+    },
+    "narrowed": {
+      "rc": 0,
+      "rows": [
+        "100"
+      ],
+      "pairing": {
+        "requested": [
+          "100"
+        ],
+        "requested_from": "--states",
+        "available": [
+          "100"
+        ],
+        "missing_input": [],
+        "paired": [
+          "100"
+        ],
+        "missing": [],
+        "note": "measured_* 는 available(입력 있는 requested) 전부에서, gamma_*·ratio 는 paired 에서만 계산한 값이다; missing_input 은 측정조차 없다 (Codex R8-03 · R9-04)"
+      },
+      "status": "complete",
+      "stdout": "반쪽전지 GITT · 문헌 Si Li · requested 1 개 (--states) · 입력 있음 1\n기준은 pristine. 격자 x=0.02~0.98 (400점)\n\nstate         용량 Δ%       γ     (a) 측정변화    (b) γ변화  (b)/(a)       (c) |블렌드−측정|\n                                  max mV     max mV                max mVrms mV\npristine       0.00  0.2000            —          —        —          0.0   0.0\n100            0.00  0.2500        10.00       8.86     0.89         18.9  16.2\n\n(PE 축 — 목적함수가 실제로 소비하는 반쪽전지 곡선) E_PE(state) − E_PE(pristine):\n    100        max    0.00 mV   rms   0.00 mV\n\n(d) γ 여유 — 기준 γ_ref 에서 합법 [0.00, 0.50] 까지 (γ 격자 501 점 · x 격자 400 점):\n    state       γ_ref               합법 Δγ   (a) mV        합법 γ 최대변화 mV (γ)            (a) 를 내는 가장 가까운 합법 γ\n    100        0.2000    [-0.200, +0.300]    10.00           53.88 (0.500)                0.143 (Δ -0.057)\n    ⚠ 증인은 진폭 크기의 존재이지 모양 일치가 아니다. secant 외삽으로 '필요 Δγ' 를 구하지 않는다.\n\n→ /tmp/r10-shape-subset-3aydz3pj/shape/ne_shape_GITT_Li.csv\n\nγ 짝: requested 1 · 입력 있음 1 · paired 1/1 · status **complete**\n측정된 음극 모양 변화 최대 10.00 mV (입력 있는 1 개 전부에서),\nγ 가 만들어 낸 모델 변화 최대 8.86 mV (paired 1 개에서).\n\n→ 두 변화가 같은 규모다 (최대 0.9 배). 크기만의 비교다 — 방향과\n  모양이 같은지는 따로 봐야 한다.\n\n(c) **절대 일치** — `Blend(x, γ_적합)` 이 측정 음극과 얼마나 맞나\n    max |Δ| 18.9 ~ 18.9 mV   rms 16.2 ~ 16.2 mV\n    state        max 위치 x      |Δ|>50mV 인 격자 비율\n    100             0.388                  0.0 %\n\n    → 어긋남이 곡선 전체에 고르다. rms 를 대표값으로 쓸 것.\n\n⚠ (a) 는 **정규화 뒤** 변화다. 음극 용량이 줄면(위 '용량 Δ%') 곡선이\n   가로로 늘어나 그것만으로도 모양이 바뀐 것처럼 보인다. 용량 변화가\n   큰 상태에서는 (a) 를 순수한 OCP 모양 변화로 읽으면 안 된다.\n⚠ 이것은 **크기 비교**다. 방향이 같은지는 따로 봐야 한다.\n"
+    },
+    "canonical_replaced": true
+  },
+  "shape_duplicates": {
+    "case": "duplicate_requested_states_count_twice_and_publish_complete",
+    "rc": 0,
+    "rows": [
+      "100",
+      "100"
+    ],
+    "pairing": {
+      "requested": [
+        "100",
+        "100"
+      ],
+      "requested_from": "--states",
+      "available": [
+        "100",
+        "100"
+      ],
+      "missing_input": [],
+      "paired": [
+        "100",
+        "100"
+      ],
+      "missing": [],
+      "note": "measured_* 는 available(입력 있는 requested) 전부에서, gamma_*·ratio 는 paired 에서만 계산한 값이다; missing_input 은 측정조차 없다 (Codex R8-03 · R9-04)"
+    },
+    "status": "complete",
+    "stdout": "반쪽전지 GITT · 문헌 Si Li · requested 2 개 (--states) · 입력 있음 2\n기준은 pristine. 격자 x=0.02~0.98 (400점)\n\nstate         용량 Δ%       γ     (a) 측정변화    (b) γ변화  (b)/(a)       (c) |블렌드−측정|\n                                  max mV     max mV                max mVrms mV\npristine       0.00  0.2000            —          —        —          0.0   0.0\n100            0.00  0.2500        10.00       8.86     0.89         18.9  16.2\n100            0.00  0.2500        10.00       8.86     0.89         18.9  16.2\n\n(PE 축 — 목적함수가 실제로 소비하는 반쪽전지 곡선) E_PE(state) − E_PE(pristine):\n    100        max    0.00 mV   rms   0.00 mV\n    100        max    0.00 mV   rms   0.00 mV\n\n(d) γ 여유 — 기준 γ_ref 에서 합법 [0.00, 0.50] 까지 (γ 격자 501 점 · x 격자 400 점):\n    state       γ_ref               합법 Δγ   (a) mV        합법 γ 최대변화 mV (γ)            (a) 를 내는 가장 가까운 합법 γ\n    100        0.2000    [-0.200, +0.300]    10.00           53.88 (0.500)                0.143 (Δ -0.057)\n    100        0.2000    [-0.200, +0.300]    10.00           53.88 (0.500)                0.143 (Δ -0.057)\n    ⚠ 증인은 진폭 크기의 존재이지 모양 일치가 아니다. secant 외삽으로 '필요 Δγ' 를 구하지 않는다.\n\n→ /tmp/r10-shape-duplicates-f_livcpm/shape/ne_shape_GITT_Li.csv\n\nγ 짝: requested 2 · 입력 있음 2 · paired 2/2 · status **complete**\n측정된 음극 모양 변화 최대 10.00 mV (입력 있는 2 개 전부에서),\nγ 가 만들어 낸 모델 변화 최대 8.86 mV (paired 2 개에서).\n\n→ 두 변화가 같은 규모다 (최대 0.9 배). 크기만의 비교다 — 방향과\n  모양이 같은지는 따로 봐야 한다.\n\n(c) **절대 일치** — `Blend(x, γ_적합)` 이 측정 음극과 얼마나 맞나\n    max |Δ| 18.9 ~ 18.9 mV   rms 16.2 ~ 16.2 mV\n    state        max 위치 x      |Δ|>50mV 인 격자 비율\n    100             0.388                  0.0 %\n    100             0.388                  0.0 %\n\n    → 어긋남이 곡선 전체에 고르다. rms 를 대표값으로 쓸 것.\n\n⚠ (a) 는 **정규화 뒤** 변화다. 음극 용량이 줄면(위 '용량 Δ%') 곡선이\n   가로로 늘어나 그것만으로도 모양이 바뀐 것처럼 보인다. 용량 변화가\n   큰 상태에서는 (a) 를 순수한 OCP 모양 변화로 읽으면 안 된다.\n⚠ 이것은 **크기 비교**다. 방향이 같은지는 따로 봐야 한다.\n"
+  }
+}

@@ -1,0 +1,112 @@
+{
+  "target_head_expected": "29ef5058e68c0c64dba840ecc5a7495644cb092e",
+  "u18_gate": {
+    "current_out_schema": {
+      "argv": [
+        "/usr/local/bin/python3",
+        "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/a45978e3-3a6e-5e3d-af55-7c9b61e0d809/scratchpad/r9ws/work/harness-r9-target-wsl/bms-balancing/scripts/check_u14.py",
+        "--new",
+        "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/a45978e3-3a6e-5e3d-af55-7c9b61e0d809/scratchpad/r9ws/work/harness-r9-target-wsl/bms-balancing/out",
+        "--old",
+        "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/a45978e3-3a6e-5e3d-af55-7c9b61e0d809/scratchpad/r9ws/work/harness-r9-target-wsl/bms-balancing/out",
+        "--schema-only"
+      ],
+      "returncode": 2,
+      "stdout": "산출 12 개 점검 (/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/a45978e3-3a6e-5e3d-af55-7c9b61e0d809/scratchpad/r9ws/work/harness-r9-target-wsl/bms-balancing/out)\n\n■ 기준/대상 입력 **출처 열** 누락 24 — 이 산출은 **provenance-incomplete** 다 (R7-03·R8-04 스키마 이전 실행). 수치는 그대로 인용할 수 있으나 기준 입력의 출처는 그 묶음에서 회수되지 않는다; 실제 재실행(U18)으로 별도 위치에 만들어 비교·승격한다 — 현재 pathname 해시로 소급 채우지 않는다\n  - matrix_100.csv: ref_inputs_sha\n  - matrix_100.csv: consumed_inputs\n  - matrix_100.csv: ref_consumed_inputs\n  - matrix_200.csv: ref_inputs_sha\n  - matrix_200.csv: consumed_inputs\n  - matrix_200.csv: ref_consumed_inputs\n  - matrix_300_0009.csv: ref_inputs_sha\n  - matrix_300_0009.csv: consumed_inputs\n  - matrix_300_0009.csv: ref_consumed_inputs\n  - matrix_300_0147.csv: ref_inputs_sha\n  - matrix_300_0147.csv: consumed_inputs\n  - matrix_300_0147.csv: ref_consumed_inputs\n  - profile_gamma_100_Li.csv: ref_inputs_sha\n  - profile_gamma_100_Li.csv: consumed_inputs\n  - profile_gamma_100_Li.csv: ref_consumed_inputs\n  - profile_gamma_200_Li.csv: ref_inputs_sha\n  - profile_gamma_200_Li.csv: consumed_inputs\n  - profile_gamma_200_Li.csv: ref_consumed_inputs\n  - profile_gamma_300_0009_Li.csv: ref_inputs_sha\n  - profile_gamma_300_0009_Li.csv: consumed_inputs\n  … 외 4\n",
+      "stderr": ""
+    },
+    "one_of_twelve": {
+      "argv": [
+        "/usr/local/bin/python3",
+        "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/a45978e3-3a6e-5e3d-af55-7c9b61e0d809/scratchpad/r9ws/work/harness-r9-target-wsl/bms-balancing/scripts/check_u14.py",
+        "--new",
+        "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/a45978e3-3a6e-5e3d-af55-7c9b61e0d809/scratchpad/r9ws/outputs/r9_provenance_artifacts/u18_one_of_twelve",
+        "--old",
+        "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/a45978e3-3a6e-5e3d-af55-7c9b61e0d809/scratchpad/r9ws/work/harness-r9-target-wsl/bms-balancing/out"
+      ],
+      "returncode": 0,
+      "stdout": "산출 1 개 점검 (/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/a45978e3-3a6e-5e3d-af55-7c9b61e0d809/scratchpad/r9ws/outputs/r9_provenance_artifacts/u18_one_of_twelve)\n  정본 선택 정책: **current** — 현행 디렉터리 — 정본은 unversioned 이름 하나, 판 번호가 붙은 형제는 쓰지 않는다 (Codex R6-04·R7-04)\n  새 스키마: 전부 갖췄다 (run_id·sha256·env·inputs_sha·시작 시점 git·인자 필드)\n  숫자: 정본(/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/a45978e3-3a6e-5e3d-af55-7c9b61e0d809/scratchpad/r9ws/work/harness-r9-target-wsl/bms-balancing/out)과 전부 같다 — 게시·서명만 바뀌었다\n",
+      "stderr": ""
+    },
+    "one_of_twelve_files": [
+      "degeneracy_100_Li.json",
+      "degeneracy_100_Li.json.meta.json"
+    ],
+    "blank_receipts": {
+      "argv": [
+        "/usr/local/bin/python3",
+        "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/a45978e3-3a6e-5e3d-af55-7c9b61e0d809/scratchpad/r9ws/work/harness-r9-target-wsl/bms-balancing/scripts/check_u14.py",
+        "--new",
+        "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/a45978e3-3a6e-5e3d-af55-7c9b61e0d809/scratchpad/r9ws/outputs/r9_provenance_artifacts/u18_blank_receipts",
+        "--old",
+        "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/a45978e3-3a6e-5e3d-af55-7c9b61e0d809/scratchpad/r9ws/work/harness-r9-target-wsl/bms-balancing/out"
+      ],
+      "returncode": 0,
+      "stdout": "산출 12 개 점검 (/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/a45978e3-3a6e-5e3d-af55-7c9b61e0d809/scratchpad/r9ws/outputs/r9_provenance_artifacts/u18_blank_receipts)\n  정본 선택 정책: **current** — 현행 디렉터리 — 정본은 unversioned 이름 하나, 판 번호가 붙은 형제는 쓰지 않는다 (Codex R6-04·R7-04)\n  새 스키마: 전부 갖췄다 (run_id·sha256·env·inputs_sha·시작 시점 git·인자 필드)\n  숫자: 정본(/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/a45978e3-3a6e-5e3d-af55-7c9b61e0d809/scratchpad/r9ws/work/harness-r9-target-wsl/bms-balancing/out)과 전부 같다 — 게시·서명만 바뀌었다\n",
+      "stderr": ""
+    },
+    "blank_unit_verified_by_production_reader": [
+      true,
+      "일치"
+    ],
+    "blank_artifact_count": 12,
+    "blank_first_row": {
+      "ref_inputs_sha": "",
+      "consumed_inputs": "",
+      "ref_consumed_inputs": ""
+    },
+    "config_mismatch": {
+      "argv": [
+        "/usr/local/bin/python3",
+        "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/a45978e3-3a6e-5e3d-af55-7c9b61e0d809/scratchpad/r9ws/work/harness-r9-target-wsl/bms-balancing/scripts/check_u14.py",
+        "--new",
+        "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/a45978e3-3a6e-5e3d-af55-7c9b61e0d809/scratchpad/r9ws/outputs/r9_provenance_artifacts/u18_config_mismatch",
+        "--old",
+        "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/a45978e3-3a6e-5e3d-af55-7c9b61e0d809/scratchpad/r9ws/work/harness-r9-target-wsl/bms-balancing/out"
+      ],
+      "returncode": 0,
+      "stdout": "산출 1 개 점검 (/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/a45978e3-3a6e-5e3d-af55-7c9b61e0d809/scratchpad/r9ws/outputs/r9_provenance_artifacts/u18_config_mismatch)\n  정본 선택 정책: **current** — 현행 디렉터리 — 정본은 unversioned 이름 하나, 판 번호가 붙은 형제는 쓰지 않는다 (Codex R6-04·R7-04)\n  새 스키마: 전부 갖췄다 (run_id·sha256·env·inputs_sha·시작 시점 git·인자 필드)\n  숫자: 정본(/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/a45978e3-3a6e-5e3d-af55-7c9b61e0d809/scratchpad/r9ws/work/harness-r9-target-wsl/bms-balancing/out)과 전부 같다 — 게시·서명만 바뀌었다\n",
+      "stderr": ""
+    },
+    "config_before": {
+      "n_starts": 24,
+      "seed": 0,
+      "n_grid": 21,
+      "n_samples": 400,
+      "tol_percent_of_best": 1.0
+    },
+    "config_after": {
+      "n_starts": 1,
+      "seed": 731,
+      "n_grid": 999,
+      "n_samples": 1,
+      "tol_percent_of_best": 50.0
+    }
+  },
+  "dd_eval_reread": {
+    "control_same_malformed_bytes": "invalid",
+    "raced_status": "complete",
+    "read_count": 3,
+    "read_sha256": [
+      "058dd23c4337384618db771025ca18bcee89a67b195f7499366708db41db8f44",
+      "e942d2310d77387f4bd823c249c531d967b6f833f876dcf63016bac291f46500",
+      "e942d2310d77387f4bd823c249c531d967b6f833f876dcf63016bac291f46500"
+    ],
+    "first_read_was_malformed": true,
+    "later_reads_were_valid": true,
+    "raced_compared": 32,
+    "raced_expected": 32
+  },
+  "production_paths": {
+    "profile_rc": 0,
+    "profile_rows": 3,
+    "profile_receipts_survive_empty_log": true,
+    "profile_target_half_hash_matches": true,
+    "profile_ref_half_hash_matches": true,
+    "matrix_rc": null,
+    "matrix_rows": 1,
+    "shared_full_cell_ref_sha": "ee457ec94f314cfff282ca909eb1d4767ec3c12ce0f27fa5f3b0176a9874d48f",
+    "shared_full_cell_target_sha": "54b005d74dba0da83c3792411bcbb973311e9a77bef0e6d2fb8e54ce4a2c1af2",
+    "shared_full_cell_mismatch_accepted": true
+  }
+}

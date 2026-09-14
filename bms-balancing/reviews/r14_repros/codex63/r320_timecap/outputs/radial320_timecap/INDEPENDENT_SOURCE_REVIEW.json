@@ -1,0 +1,66 @@
+{
+  "status": "PASS_SOURCE_AND_PROVENANCE",
+  "recorded_at_utc": "2026-09-14T10:30:06.533948+00:00",
+  "baseline_identity": {
+    "name": "Caps300R320H0250",
+    "source_path": "outputs/comsol63/radial320/Caps300R320H0250.java",
+    "source_sha256": "837f8b03ff3381bb1aea6397935d0079b032f5e4aea007b32d1ebf7c40775b2e",
+    "job_id": "f0db6d080ad04045a2b43dc5a51d89b2"
+  },
+  "new_identity": {
+    "name": "Caps300R320H0125",
+    "source_path": "outputs/comsol63/radial320_timecap/Caps300R320H0125.java",
+    "source_sha256": "8d35be8fab513f5e2def316c4d00e0fdc19983a5dd3bf492f4ffe47a58248be3",
+    "job_id": "18a00b03e38d4694b9ba30d88e7008f4"
+  },
+  "full_source_bytes_equal_after_only_name2_and_expression2_changes": true,
+  "baseline_expression": "if(t<0.1[s],0.00025[s],0.1[s])",
+  "new_expression": "if(t<0.1[s],0.000125[s],0.1[s])",
+  "changes": [
+    "Class/model-label identifier twice",
+    "Early-cap expression setting and corresponding printed diagnostic"
+  ],
+  "unchanged": {
+    "physical_elements_by_domain": [
+      120,
+      60,
+      120
+    ],
+    "particle_elements_each": 320,
+    "requested_time_count": 187,
+    "requested_times_in_0_to_1s": 107,
+    "physical_end_time_s": 5,
+    "later_configured_cap_s": 0.1,
+    "rtol": 1e-06,
+    "initial_step_s": 1e-05,
+    "all_other_Time_Variables_setting_code": true,
+    "all_material_table_and_parameter_bytes": true,
+    "current_C": 0.1,
+    "separator_sigma_S_m": 1e-20,
+    "initial_Li_inventory": true,
+    "OCP_entropy_extrap_none_function_count": 4,
+    "surface_StopCondition_code": true,
+    "spatial_profile_points_each_electrode": 241,
+    "temporal_interpolation": false
+  },
+  "execution_resources_both": {
+    "cores": 2,
+    "worker_timeout_seconds": 1200
+  },
+  "new_execution_count_in_jobs_file": 1,
+  "reference_reexecution": false,
+  "metadata": {
+    "baseline_atomic_and_flat_aliases_match": true,
+    "config_job_actual_source_hashes_match": true,
+    "baseline_creation_ancestor_preserved_separately": true,
+    "contract_sha256": "32fa9ff401b2e6e4138df8b9ac128134e785c63a922967be945b970a0d8136c9",
+    "source_configs_sha256": "12109fbddf3977517f12a676acb766df25d3a076c62defe9c1f77520d28ae3b5"
+  },
+  "limits": [
+    "This source audit does not assert native solve completion or numerical validity; a separate native audit follows.",
+    "Surface/OCP StopCondition is checked after solver steps, not a proof of every Newton trial state.",
+    "Electrolyte positivity is postprocessing only, not a live StopCondition.",
+    "The tighter cap only applies before0.1s; it does not independently control later-time error or establish full convergence."
+  ],
+  "COMSOL_calls_by_this_auditor": 0
+}

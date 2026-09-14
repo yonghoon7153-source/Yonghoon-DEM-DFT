@@ -1,0 +1,15 @@
+Traceback (most recent call last):
+  File "/home/user/Yonghoon-DEM-DFT/bms-balancing/reviews/r9_repros/codex/r9_root_repros.py", line 271, in <module>
+    raise SystemExit(main())
+                     ^^^^^^
+  File "/home/user/Yonghoon-DEM-DFT/bms-balancing/reviews/r9_repros/codex/r9_root_repros.py", line 257, in main
+    records["shape_roster"] = shape_missing_halfcell(target, _shape_harness, _pair)
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/Yonghoon-DEM-DFT/bms-balancing/reviews/r9_repros/codex/r9_root_repros.py", line 170, in shape_missing_halfcell
+    rows = list(csv.DictReader(art.open(encoding="utf-8")))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.11/pathlib.py", line 1044, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/tmp/r9-shape-roster-u3wln7uh/shape/ne_shape_GITT_Li.csv'
+rc=1

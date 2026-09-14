@@ -1,0 +1,11 @@
+{
+  "schema_version": 1,
+  "job_id": "b6752f9caed845f88551386132051aa8",
+  "kind": "reviewed_java",
+  "source_name": "Caps300R40H0500.java",
+  "source_sha256": "369918b44fa911f97d840a8922b90e810c3f46c48905325e8b97a6e491b469b2",
+  "comsol_root": "C:\\Program Files\\COMSOL\\COMSOL63\\Multiphysics",
+  "cores": 2,
+  "timeout_seconds": 600,
+  "created_at": "2026-09-13T13:33:59.634894+00:00"
+}

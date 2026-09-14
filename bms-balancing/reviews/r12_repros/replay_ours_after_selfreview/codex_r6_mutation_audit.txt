@@ -1,0 +1,11 @@
+baseline: 0 7 passed, 45 deselected in 3.32s
+CAUGHT | R6-01 read_unit 이 검증 뒤 경로를 다시 읽는다 | c6_01 | 1 failed, 51 deselected in 1.17s
+CAUGHT | R6-02 현행 산출 + meta 없음 → 옛 산출로 | c6_02 | 1 failed, 51 deselected in 1.15s
+CAUGHT | R6-03 build: 파싱 뒤 경로를 다시 열어 해시 | c6_03 | 1 failed, 51 deselected in 2.66s
+CAUGHT | R6-03 ne_shape: 반쪽전지 identity 를 다시 열어 해시 | c6_03 | 1 failed, 51 deselected in 3.04s
+CAUGHT | R6-04 옛 규칙: 가장 높은 _vN 을 정본으로 (값으로 잡힌다) | c6_04 | 1 failed, 51 deselected in 1.16s
+CAUGHT | R6-05 -z 경로를 ' -> ' 로 쪼갬 | c6_05 | 1 failed, 51 deselected in 1.29s
+CAUGHT | R6-06 원장이 '적은 시작' 을 산 문장으로 | c6_06 | 1 failed, 51 deselected in 1.21s
+CAUGHT | Q3 §1-8 이 '충돌은 항상 partial' 로 | c6_q3 | 1 failed, 51 deselected in 1.21s
+restored: 0 7 passed, 45 deselected in 3.34s
+MISSED: 0

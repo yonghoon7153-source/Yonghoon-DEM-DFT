@@ -1,0 +1,98 @@
+{
+  "target_head_expected": "29ef5058e68c0c64dba840ecc5a7495644cb092e",
+  "u18_gate": {
+    "one_of_twelve": {
+      "argv": [
+        "/home/yonghoon71/ddvenv/bin/python",
+        "/mnt/c/Users/Administrator/Documents/Codex/2026-08-24/claude-14-gate-code-review-9qkx05-2/work/harness-r9-target-wsl/bms-balancing/scripts/check_u14.py",
+        "--new",
+        "/mnt/c/Users/Administrator/Documents/Codex/2026-08-24/claude-14-gate-code-review-9qkx05-2/outputs/r9_provenance_artifacts/u18_one_of_twelve",
+        "--old",
+        "/mnt/c/Users/Administrator/Documents/Codex/2026-08-24/claude-14-gate-code-review-9qkx05-2/work/harness-r9-target-wsl/bms-balancing/out"
+      ],
+      "returncode": 0,
+      "stdout": "산출 1 개 점검 (/mnt/c/Users/Administrator/Documents/Codex/2026-08-24/claude-14-gate-code-review-9qkx05-2/outputs/r9_provenance_artifacts/u18_one_of_twelve)\n  정본 선택 정책: **current** — 현행 디렉터리 — 정본은 unversioned 이름 하나, 판 번호가 붙은 형제는 쓰지 않는다 (Codex R6-04·R7-04)\n  새 스키마: 전부 갖췄다 (run_id·sha256·env·inputs_sha·시작 시점 git·인자 필드)\n  숫자: 정본(/mnt/c/Users/Administrator/Documents/Codex/2026-08-24/claude-14-gate-code-review-9qkx05-2/work/harness-r9-target-wsl/bms-balancing/out)과 전부 같다 — 게시·서명만 바뀌었다\n",
+      "stderr": ""
+    },
+    "one_of_twelve_files": [
+      "degeneracy_100_Li.json",
+      "degeneracy_100_Li.json.meta.json"
+    ],
+    "blank_receipts": {
+      "argv": [
+        "/home/yonghoon71/ddvenv/bin/python",
+        "/mnt/c/Users/Administrator/Documents/Codex/2026-08-24/claude-14-gate-code-review-9qkx05-2/work/harness-r9-target-wsl/bms-balancing/scripts/check_u14.py",
+        "--new",
+        "/mnt/c/Users/Administrator/Documents/Codex/2026-08-24/claude-14-gate-code-review-9qkx05-2/outputs/r9_provenance_artifacts/u18_blank_receipts",
+        "--old",
+        "/mnt/c/Users/Administrator/Documents/Codex/2026-08-24/claude-14-gate-code-review-9qkx05-2/work/harness-r9-target-wsl/bms-balancing/out"
+      ],
+      "returncode": 0,
+      "stdout": "산출 12 개 점검 (/mnt/c/Users/Administrator/Documents/Codex/2026-08-24/claude-14-gate-code-review-9qkx05-2/outputs/r9_provenance_artifacts/u18_blank_receipts)\n  정본 선택 정책: **current** — 현행 디렉터리 — 정본은 unversioned 이름 하나, 판 번호가 붙은 형제는 쓰지 않는다 (Codex R6-04·R7-04)\n  새 스키마: 전부 갖췄다 (run_id·sha256·env·inputs_sha·시작 시점 git·인자 필드)\n  숫자: 정본(/mnt/c/Users/Administrator/Documents/Codex/2026-08-24/claude-14-gate-code-review-9qkx05-2/work/harness-r9-target-wsl/bms-balancing/out)과 전부 같다 — 게시·서명만 바뀌었다\n",
+      "stderr": ""
+    },
+    "blank_unit_verified_by_production_reader": [
+      true,
+      "일치"
+    ],
+    "blank_artifact_count": 12,
+    "blank_first_row": {
+      "ref_inputs_sha": "",
+      "consumed_inputs": "",
+      "ref_consumed_inputs": ""
+    },
+    "config_mismatch": {
+      "argv": [
+        "/home/yonghoon71/ddvenv/bin/python",
+        "/mnt/c/Users/Administrator/Documents/Codex/2026-08-24/claude-14-gate-code-review-9qkx05-2/work/harness-r9-target-wsl/bms-balancing/scripts/check_u14.py",
+        "--new",
+        "/mnt/c/Users/Administrator/Documents/Codex/2026-08-24/claude-14-gate-code-review-9qkx05-2/outputs/r9_provenance_artifacts/u18_config_mismatch",
+        "--old",
+        "/mnt/c/Users/Administrator/Documents/Codex/2026-08-24/claude-14-gate-code-review-9qkx05-2/work/harness-r9-target-wsl/bms-balancing/out"
+      ],
+      "returncode": 0,
+      "stdout": "산출 1 개 점검 (/mnt/c/Users/Administrator/Documents/Codex/2026-08-24/claude-14-gate-code-review-9qkx05-2/outputs/r9_provenance_artifacts/u18_config_mismatch)\n  정본 선택 정책: **current** — 현행 디렉터리 — 정본은 unversioned 이름 하나, 판 번호가 붙은 형제는 쓰지 않는다 (Codex R6-04·R7-04)\n  새 스키마: 전부 갖췄다 (run_id·sha256·env·inputs_sha·시작 시점 git·인자 필드)\n  숫자: 정본(/mnt/c/Users/Administrator/Documents/Codex/2026-08-24/claude-14-gate-code-review-9qkx05-2/work/harness-r9-target-wsl/bms-balancing/out)과 전부 같다 — 게시·서명만 바뀌었다\n",
+      "stderr": ""
+    },
+    "config_before": {
+      "n_starts": 24,
+      "seed": 0,
+      "n_grid": 21,
+      "n_samples": 400,
+      "tol_percent_of_best": 1.0
+    },
+    "config_after": {
+      "n_starts": 1,
+      "seed": 731,
+      "n_grid": 999,
+      "n_samples": 1,
+      "tol_percent_of_best": 50.0
+    }
+  },
+  "dd_eval_reread": {
+    "control_same_malformed_bytes": "invalid",
+    "raced_status": "complete",
+    "read_count": 3,
+    "read_sha256": [
+      "058dd23c4337384618db771025ca18bcee89a67b195f7499366708db41db8f44",
+      "e942d2310d77387f4bd823c249c531d967b6f833f876dcf63016bac291f46500",
+      "e942d2310d77387f4bd823c249c531d967b6f833f876dcf63016bac291f46500"
+    ],
+    "first_read_was_malformed": true,
+    "later_reads_were_valid": true,
+    "raced_compared": 32,
+    "raced_expected": 32
+  },
+  "production_paths": {
+    "profile_rc": 0,
+    "profile_rows": 3,
+    "profile_receipts_survive_empty_log": true,
+    "profile_target_half_hash_matches": true,
+    "profile_ref_half_hash_matches": true,
+    "matrix_rc": null,
+    "matrix_rows": 1,
+    "shared_full_cell_ref_sha": "55c26da830ba89b1b967b930542025673d7bc08ffafeed76280878a5793eb586",
+    "shared_full_cell_target_sha": "5e1a57b4197d22c0cd11bd11c955083c76f1c35f2da24fab1fdf0421e38db148",
+    "shared_full_cell_mismatch_accepted": true
+  }
+}

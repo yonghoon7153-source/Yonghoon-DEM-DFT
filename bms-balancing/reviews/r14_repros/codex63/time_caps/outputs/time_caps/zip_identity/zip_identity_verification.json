@@ -1,0 +1,88 @@
+{
+  "checked_at_utc": "2026-09-13T13:36:34.493980+00:00",
+  "scope": "Historical file identity and archive packaging only; no numerical validation or COMSOL execution",
+  "observed_local_archive": {
+    "path": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\outputs\\COMSOL63_PREFLIGHT_HANDOFF.zip",
+    "bytes": 46999470,
+    "sha256": "3bc4e4e4d14ff815a710998ac3e538712343933cef6d460eb5845f21e7235018",
+    "zip_entries": 332,
+    "directory_entries": 0,
+    "compression_methods": {
+      "8": 332
+    },
+    "compressed_member_bytes": 46926572,
+    "uncompressed_member_bytes": 144113099,
+    "archive_comment_hex": "",
+    "all_member_crc_reads_completed": true,
+    "unchanged_during_read": true
+  },
+  "portable_333_verification": {
+    "historical_ledger": "outputs/mesh_axes/preserved_before.json",
+    "historical_ledger_sha256": "2326bcbae80657bfb6dccce56f1272366af8fe8f9bbbc71dd57daa4c905748bb",
+    "verified_count": 333,
+    "zip_member_count": 330,
+    "loose_file_count": 3,
+    "verified_historical_bytes": 191105291,
+    "all_333_verified": true,
+    "internal_manifest_payload_count": 331,
+    "excluded_from_333": [
+      "outputs/NEXT_RUN_PLAN.md"
+    ],
+    "internal_external_manifest_json_equal": true,
+    "internal_manifest_bytes": 68579,
+    "internal_manifest_sha256": "f8de24351dd424c5e34136cdbd690e73902a05d4deb7e1db6b9513c722f9ac27",
+    "external_manifest_bytes": 70239,
+    "external_manifest_sha256": "f5bd6cca465337692c81953412d446846349d5a98356796aeb8e70fdee0f4c25",
+    "source_mode": "330 historical payload byte streams from ZIP + 3 original loose files; no old extracted payload files required"
+  },
+  "second_archive_claim": {
+    "provenance": "User-reported via parent task; raw bytes not available unless --second-zip provided",
+    "reported_bytes": 47006147,
+    "reported_sha256_abbreviated": "097d4b65...c3b51",
+    "full_reported_sha256_available_to_this_audit": false,
+    "second_raw_archive_observed": false
+  },
+  "extracted_folder": {
+    "checked": true,
+    "root": "C:\\Users\\BML\\Desktop\\COMSOL63_PREFLIGHT_HANDOFF",
+    "manifest_bytes": 68579,
+    "manifest_sha256": "f8de24351dd424c5e34136cdbd690e73902a05d4deb7e1db6b9513c722f9ac27",
+    "manifest_raw_equal_to_local_zip": true,
+    "manifest_payload_count": 331,
+    "payload_verified_count": 331,
+    "failures": [],
+    "raw_source_zip_provenance": "Unknown; extracted files do not prove originating ZIP SHA or ZIP metadata"
+  },
+  "two_raw_archive_comparison": {
+    "both_raw_archives_observed": false,
+    "status": "NOT_VERIFIABLE_WITHOUT_SECOND_RAW_ARCHIVE",
+    "reason": "No actual second ZIP supplied; repackaging/metadata/compression cause and raw archive equivalence are not established"
+  },
+  "previous_mesh_axes_delivery_coverage": {
+    "archive": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\outputs\\COMSOL63_MESH_AXES_HANDOFF.zip",
+    "archive_sha256": "7bd3757472fcb352cc09f9ff9ee70d90938263f5abe471c270fb7ee37365f1ae",
+    "historical_same_path_bytes_verified": 7,
+    "total_historical_count": 333,
+    "covered_paths": [
+      "outputs/comsol63/.comsol-jobs/08e0fc5d41e147678f3940e98100ec12/batch.log",
+      "outputs/comsol63/.comsol-jobs/08e0fc5d41e147678f3940e98100ec12/console.log",
+      "outputs/comsol63/.comsol-jobs/08e0fc5d41e147678f3940e98100ec12/request.json",
+      "outputs/comsol63/.comsol-jobs/08e0fc5d41e147678f3940e98100ec12/status.json",
+      "outputs/comsol63/preflight/PreflightMeshFine5s.java",
+      "outputs/preflight/results/analysis.json",
+      "work/decode_comsol_audit.py"
+    ],
+    "mismatches": [],
+    "contains_old_archive": false,
+    "contains_ledger": true,
+    "not_independently_reverifiable_from_that_zip_alone": 326
+  },
+  "current_local_preservation": {
+    "ledger": "C:\\Users\\BML\\Documents\\Codex\\2026-09-13\\files-mentioned-by-the-user-comsol63\\outputs\\time_caps\\preserved_before.json",
+    "ledger_sha256": "ea7ddca2d048a4c08e334200a712e3fa42ca2cab29ed033b7f959e2d6b793aa9",
+    "records": 468,
+    "matching_records": 468,
+    "mismatches": [],
+    "scope_limit": "Local source bytes checked; this does not imply every byte is included in a future recipient package"
+  }
+}

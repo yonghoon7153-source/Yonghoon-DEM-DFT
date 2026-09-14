@@ -1,0 +1,21 @@
+## U12 — 실제 자료의 scale 표본에 비유한 값이 있었나 (2026-09-11, 사용자 기계 실측, 터미널 출력 사본)
+## 코드: 274f1f8 (R4 대응) 의 `python3 -m bms_balancing.verify eval --state <st> --si-source Li | grep scale_audit`
+## 순서: BMS_DATA_ROOT=파우치 원자료 × (pristine 100 200 300_0009) → ~/dd/cells/c168 × 4 → c171 × 4 → pouch_fixedhc × 4
+## 조건: 반쪽전지 GITT · Si 문헌 Li · scale seed 0 · 표본 50 (eval 기본값). 다른 Si 소스·step_005C 는 이 실측에 없다.
+## 각 줄: 항:n=표본/finite=유한/inf=Inf/nan=NaN — `Objective.scale_audit` (R4-05). 줄에는 루트·상태 이름이 없다 (grep 으로 줄만 남김).
+# scale_audit,pocv:n=50/finite=50/inf=0/nan=0; dvdq:n=50/finite=50/inf=0/nan=0; dqdv:n=50/finite=50/inf=0/nan=0
+# scale_audit,pocv:n=50/finite=50/inf=0/nan=0; dvdq:n=50/finite=50/inf=0/nan=0; dqdv:n=50/finite=50/inf=0/nan=0
+# scale_audit,pocv:n=50/finite=50/inf=0/nan=0; dvdq:n=50/finite=50/inf=0/nan=0; dqdv:n=50/finite=50/inf=0/nan=0
+# scale_audit,pocv:n=50/finite=50/inf=0/nan=0; dvdq:n=50/finite=50/inf=0/nan=0; dqdv:n=50/finite=50/inf=0/nan=0
+# scale_audit,pocv:n=50/finite=50/inf=0/nan=0; dvdq:n=50/finite=50/inf=0/nan=0; dqdv:n=50/finite=50/inf=0/nan=0
+# scale_audit,pocv:n=50/finite=50/inf=0/nan=0; dvdq:n=50/finite=50/inf=0/nan=0; dqdv:n=50/finite=50/inf=0/nan=0
+# scale_audit,pocv:n=50/finite=50/inf=0/nan=0; dvdq:n=50/finite=50/inf=0/nan=0; dqdv:n=50/finite=50/inf=0/nan=0
+# scale_audit,pocv:n=50/finite=50/inf=0/nan=0; dvdq:n=50/finite=50/inf=0/nan=0; dqdv:n=50/finite=50/inf=0/nan=0
+# scale_audit,pocv:n=50/finite=50/inf=0/nan=0; dvdq:n=50/finite=50/inf=0/nan=0; dqdv:n=50/finite=50/inf=0/nan=0
+# scale_audit,pocv:n=50/finite=50/inf=0/nan=0; dvdq:n=50/finite=50/inf=0/nan=0; dqdv:n=50/finite=50/inf=0/nan=0
+# scale_audit,pocv:n=50/finite=50/inf=0/nan=0; dvdq:n=50/finite=50/inf=0/nan=0; dqdv:n=50/finite=50/inf=0/nan=0
+# scale_audit,pocv:n=50/finite=50/inf=0/nan=0; dvdq:n=50/finite=50/inf=0/nan=0; dqdv:n=50/finite=50/inf=0/nan=0
+# scale_audit,pocv:n=50/finite=50/inf=0/nan=0; dvdq:n=50/finite=50/inf=0/nan=0; dqdv:n=50/finite=50/inf=0/nan=0
+# scale_audit,pocv:n=50/finite=50/inf=0/nan=0; dvdq:n=50/finite=50/inf=0/nan=0; dqdv:n=50/finite=50/inf=0/nan=0
+# scale_audit,pocv:n=50/finite=50/inf=0/nan=0; dvdq:n=50/finite=50/inf=0/nan=0; dqdv:n=50/finite=50/inf=0/nan=0
+# scale_audit,pocv:n=50/finite=50/inf=0/nan=0; dvdq:n=50/finite=50/inf=0/nan=0; dqdv:n=50/finite=50/inf=0/nan=0

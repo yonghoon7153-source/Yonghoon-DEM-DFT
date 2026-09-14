@@ -1,0 +1,110 @@
+{
+  "target_head": "c7217c04f939889e88b915575fce6997005072aa",
+  "expected_head": "c7217c04f939889e88b915575fce6997005072aa",
+  "expected_tree": "ae9e484798051fa67e99aab76cbfd8450e68d139",
+  "head_ok": true,
+  "dirty": true,
+  "dirty_allowed": false,
+  "dirty_paths": [
+    "?? bms-balancing/reviews/r12_repros/"
+  ],
+  "evidence_eligible": true,
+  "instrument_sealed": true,
+  "instrument": {
+    "reviews/r7_repros/replay_codex_r7.py": "ok",
+    "reviews/evidence_gate.py": "ok"
+  },
+  "materialized": {
+    "path": "/tmp/evidence-snap-kg2l5xnj/snap/bms-balancing",
+    "head": "c7217c04f939889e88b915575fce6997005072aa",
+    "mode": "sparse detached worktree",
+    "kept": false
+  },
+  "ran_in": "격리 snapshot",
+  "package_digest_ok": true,
+  "package_digest": {
+    "HARNESS_R7_521BE85_CODEX_REVIEW.md": "ok",
+    "harness_r7_replay.py": "ok",
+    "harness_r7_replay_results.json": "ok",
+    "harness_r7_execution_repros.py": "ok",
+    "harness_r7_claims_repros.py": "ok",
+    "harness_r7_claims_review.md": "ok",
+    "harness_r7_inference_repros.py": "ok",
+    "harness_r7_inference_review.md": "ok",
+    "harness_r7_port_repros.py": "ok",
+    "harness_r7_port_review.md": "ok"
+  },
+  "pinned_sha": "521be85e74acef80feec45bd147dd339e25b8d0a",
+  "pin_bypassed": true,
+  "설명": "원본 probe 함수를 직접 불러 SHA pin 을 우회한다 — 도달·상태·멈춘_곳을 따로 적는다 (Codex R8-07); 요청 집합·대상 SHA·clean·패키지 digest 를 대조한다 (Codex R9 P2-1·2)",
+  "requested": [
+    "R7-01",
+    "R7-02",
+    "R7-03",
+    "R7-04",
+    "R7-05",
+    "R7-06"
+  ],
+  "probes": {
+    "R7-01": {
+      "probe": "aggregate_completeness",
+      "적응": false,
+      "도달": true,
+      "상태": "반례 소멸",
+      "멈춘_곳": "harness_r7_execution_repros.py:201: assert partial[\"rc\"] == 0 and partial[\"conclusion\"].rstrip().endswith(\"예\")",
+      "세부": "자기 반례 assertion 에서 멈췄다"
+    },
+    "R7-02": {
+      "probe": "noise_reopen",
+      "적응": false,
+      "도달": true,
+      "상태": "반례 소멸",
+      "멈춘_곳": "harness_r7_claims_repros.py:226: assert A[\"sigma_at_k1_V\"]!=mixed[\"sigma_at_k1_V\"]",
+      "세부": "자기 반례 assertion 에서 멈췄다"
+    },
+    "R7-03": {
+      "probe": "matrix_reference_omission",
+      "적응": false,
+      "도달": false,
+      "상태": "전제 변경",
+      "멈춘_곳": "FileNotFoundError: [Errno 2] No such file or directory: '/tmp/bms-r7-ref-ffgn6gi1/A.csv'",
+      "세부": "Codex R11 P1-2 뒤: 원본 probe 의 fixture 는 한 조합만 도는 **좁힌** matrix 실행이라 이제 subset 이고 canonical(`A.csv`) 자리에 파일이 없다 — 원본은 그 파일을 무조건 열어 죽는다. 같은 축(행이 기준 입력 서명을 담는가)은 회귀 `test_d7_03` 이 `publish_target` 로 자리를 맞춰 본다"
+    },
+    "R7-04": {
+      "probe": "r7_baseline_policy_split",
+      "적응": false,
+      "도달": true,
+      "상태": "반례 소멸",
+      "멈춘_곳": "harness_r7_inference_repros.py:490: assert p.returncode == 0, (p.returncode, p.stdout, p.stderr)",
+      "세부": "자기 반례 assertion 에서 멈췄다"
+    },
+    "R7-05": {
+      "probe": "adapted_runs(적응)",
+      "적응": true,
+      "도달": true,
+      "상태": "반례 소멸",
+      "멈춘_곳": "assert r.returncode == 0 and mode.startswith(\"부분\")",
+      "세부": {
+        "rc": 0,
+        "mode": "부분 (R6_OLD_OUT 미지정 — `R6_OLD_OUT=<bfc4623^ 의 out>` 을 주면 full)",
+        "baseline": null
+      }
+    },
+    "R7-06": {
+      "probe": "missed_exit_control(적응)",
+      "적응": true,
+      "도달": true,
+      "상태": "반례 소멸",
+      "멈춘_곳": "assert \"MISSED: 1\" in r.stdout and r.returncode != 0",
+      "세부": {
+        "rc": 1,
+        "tail": [
+          "restored: 0 7 passed, 45 deselected in 3.20s",
+          "MISSED: 1"
+        ]
+      }
+    }
+  },
+  "closed": true,
+  "rc_reason": "모든 요청 probe 가 자기 반례 assertion 에서 멈췄다 (전제가 바뀐 것은 그렇게 적었다)"
+}

@@ -1,0 +1,268 @@
+{
+  "target": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/a45978e3-3a6e-5e3d-af55-7c9b61e0d809/scratchpad/r11clean/bms-balancing",
+  "expected_head": "2add074cf0c3ebfaa02b22d2311dd4330f0879b0",
+  "code_head": "665c87e1",
+  "results": {
+    "receipt_identity": {
+      "command": [
+        "/usr/local/bin/python3",
+        "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/a45978e3-3a6e-5e3d-af55-7c9b61e0d809/scratchpad/r11clean/bms-balancing/scripts/check_u14.py",
+        "--new",
+        "/tmp/r11-receipt-h9i1h9n9/new",
+        "--old",
+        "/tmp/r11-receipt-h9i1h9n9/old"
+      ],
+      "returncode": 0,
+      "promotion": {
+        "promotion_eligible": true,
+        "rc": 0,
+        "subset": false,
+        "roster": {
+          "old": 1,
+          "new": 1,
+          "compared": 1,
+          "missing_in_new": [],
+          "extra_in_new": []
+        },
+        "blocked_by": {
+          "schema": 0,
+          "content": 0,
+          "unit": 0,
+          "controls": 0,
+          "env": 0,
+          "numbers": 0
+        },
+        "policy": "current",
+        "new": "/tmp/r11-receipt-h9i1h9n9/new",
+        "old": "/tmp/r11-receipt-h9i1h9n9/old"
+      },
+      "old_target_digest": "9d6ace08c3d4",
+      "new_target_digest": "48cf03a6b6b8",
+      "old_ref_digest": "d789ce826bcd",
+      "new_ref_digest": "e9a7ac3dea7c",
+      "all_four_digests_changed": true,
+      "stdout_tail": [
+        "산출 1 개 점검 (/tmp/r11-receipt-h9i1h9n9/new)",
+        "  정본 선택 정책: **current** — 현행 디렉터리 — 정본은 unversioned 이름 하나, 판 번호가 붙은 형제는 쓰지 않는다 (Codex R6-04·R7-04)",
+        "  명부(roster): 정본 1 · 새 산출 1 · 대조 1",
+        "  새 스키마: 전부 갖췄다 (열·키 이름 + 필수 셀·숫자·receipt·중복 key — `bms_balancing/schema.py` 정본)",
+        "  숫자: 정본(/tmp/r11-receipt-h9i1h9n9/old)과 전부 같다 — 게시·서명만 바뀌었다",
+        "PROMOTION {\"promotion_eligible\": true, \"rc\": 0, \"subset\": false, \"roster\": {\"old\": 1, \"new\": 1, \"compared\": 1, \"missing_in_new\": [], \"extra_in_new\": []}, \"blocked_by\": {\"schema\": 0, \"content\": 0, \"unit\": 0, \"controls\": 0, \"env\": 0, \"numbers\": 0}, \"policy\": \"current\", \"new\": \"/tmp/r11-receipt-h9i1h9n9/new\", \"old\": \"/tmp/r11-receipt-h9i1h9n9/old\"}"
+      ],
+      "stderr": ""
+    },
+    "receipt_shape": {
+      "base_digest": "9d6ace08c3d4",
+      "path_swapped_digest": "9d6ace08c3d4",
+      "path_swap_validate_problems": [],
+      "duplicate_flattened_role_leaves": [
+        "full_cell",
+        "half_cell",
+        "literature.gr",
+        "literature.si",
+        "literature.gr"
+      ],
+      "duplicate_role_validate_problems": []
+    },
+    "allowlist": {
+      "returncode": 0,
+      "canonical_written": true,
+      "canonical_path": "/tmp/r11-matrix-ij2aqfc6/matrix_300_0147.csv",
+      "rows": 16,
+      "half_cell_sources_in_rows": [
+        "step_005C"
+      ],
+      "input_files_present_during_run": [
+        "/tmp/r11-matrix-ij2aqfc6/data-root/data/half_cell/GITT/300_0147.xlsx",
+        "/tmp/r11-matrix-ij2aqfc6/data-root/data/half_cell/step_005C/300_0147_005C.xlsx"
+      ],
+      "summary": {
+        "state": "300_0147",
+        "n_combinations": 16,
+        "status": "complete",
+        "combo_roster": {
+          "requested": 16,
+          "available": 16,
+          "missing_input": [],
+          "failed": [],
+          "succeeded": 16
+        },
+        "n_ok": 16,
+        "n_with_active_bound": 16,
+        "n_negative_LAM": 0,
+        "LAM_PE_pct": {
+          "min": 1.0,
+          "max": 1.0,
+          "span": 0.0,
+          "median": 1.0
+        },
+        "LAM_NE_pct": {
+          "min": 2.0,
+          "max": 2.0,
+          "span": 0.0,
+          "median": 2.0
+        },
+        "LLI_pct": {
+          "min": 3.0,
+          "max": 3.0,
+          "span": 0.0,
+          "median": 3.0
+        },
+        "axes_with_denominator": {
+          "step_005C_dqdv_off_all_Si": {
+            "n": 8,
+            "si_sources": [
+              "Baggetto",
+              "Friedrich",
+              "Jiang",
+              "Kunz",
+              "Li",
+              "Lu",
+              "Sethuraman",
+              "Wetjen"
+            ],
+            "LLI_span_pct": 0.0,
+            "LAM_NE_span_pct": 0.0,
+            "LAM_PE_span_pct": 0.0
+          }
+        },
+        "dqdv_paired_contrast": {
+          "all_pairs": {
+            "n": 8,
+            "n_positive": 0,
+            "n_negative": 0,
+            "median_pct": 0.0,
+            "min_pct": 0.0,
+            "max_pct": 0.0
+          },
+          "both_endpoints_interior": {
+            "n": 0,
+            "rows": [],
+            "delta_range_pct": null
+          },
+          "note": "비대응 비교는 부호가 섞인다 — 대응쌍으로만 말할 것"
+        }
+      },
+      "stdout_key_lines": [
+        "SUMMARY {\"state\": \"300_0147\", \"n_combinations\": 16, \"status\": \"complete\", \"combo_roster\": {\"requested\": 16, \"available\": 16, \"missing_input\": [], \"failed\": [], \"succeeded\": 16}, \"n_ok\": 16, \"n_with_active_bound\": 16, \"n_negative_LAM\": 0, \"LAM_PE_pct\": {\"min\": 1.0, \"max\": 1.0, \"span\": 0.0, \"median\": 1.0}, \"LAM_NE_pct\": {\"min\": 2.0, \"max\": 2.0, \"span\": 0.0, \"median\": 2.0}, \"LLI_pct\": {\"min\": 3.0, \"max\": 3.0, \"span\": 0.0, \"median\": 3.0}, \"axes_with_denominator\": {\"step_005C_dqdv_off_all_Si\": {\"n\": 8, \"si_sources\": [\"Baggetto\", \"Friedrich\", \"Jiang\", \"Kunz\", \"Li\", \"Lu\", \"Sethuraman\", \"Wetjen\"], \"LLI_span_pct\": 0.0, \"LAM_NE_span_pct\": 0.0, \"LAM_PE_span_pct\": 0.0}}, \"dqdv_paired_contrast\": {\"all_pairs\": {\"n\": 8, \"n_positive\": 0, \"n_negative\": 0, \"median_pct\": 0.0, \"min_pct\": 0.0, \"max_pct\": 0.0}, \"both_endpoints_interior\": {\"n\": 0, \"rows\": [], \"delta_range_pct\": null}, \"note\": \"비대응 비교는 부호가 섞인다 — 대응쌍으로만 말할 것\"}}",
+        "wrote /tmp/r11-matrix-ij2aqfc6/matrix_300_0147.csv"
+      ],
+      "allowlist_entry_present": true,
+      "declared_states": [
+        "100",
+        "200",
+        "300_0009"
+      ],
+      "present_but_excluded": true,
+      "full_population_if_both_present": 32
+    },
+    "matrix_subset": {
+      "returncode": 0,
+      "canonical_written": true,
+      "canonical_path": "/tmp/r11-matrix-k23bx5jb/matrix_100.csv",
+      "rows": 8,
+      "half_cell_sources_in_rows": [
+        "GITT"
+      ],
+      "input_files_present_during_run": [
+        "/tmp/r11-matrix-k23bx5jb/data-root/data/half_cell/GITT/100.xlsx",
+        "/tmp/r11-matrix-k23bx5jb/data-root/data/half_cell/step_005C/100_005C.xlsx"
+      ],
+      "summary": {
+        "state": "100",
+        "n_combinations": 8,
+        "status": "complete",
+        "combo_roster": {
+          "requested": 8,
+          "available": 8,
+          "missing_input": [],
+          "failed": [],
+          "succeeded": 8
+        },
+        "n_ok": 8,
+        "n_with_active_bound": 8,
+        "n_negative_LAM": 0,
+        "LAM_PE_pct": {
+          "min": 1.0,
+          "max": 1.0,
+          "span": 0.0,
+          "median": 1.0
+        },
+        "LAM_NE_pct": {
+          "min": 2.0,
+          "max": 2.0,
+          "span": 0.0,
+          "median": 2.0
+        },
+        "LLI_pct": {
+          "min": 3.0,
+          "max": 3.0,
+          "span": 0.0,
+          "median": 3.0
+        },
+        "axes_with_denominator": {
+          "GITT_dqdv_off_all_Si": {
+            "n": 8,
+            "si_sources": [
+              "Baggetto",
+              "Friedrich",
+              "Jiang",
+              "Kunz",
+              "Li",
+              "Lu",
+              "Sethuraman",
+              "Wetjen"
+            ],
+            "LLI_span_pct": 0.0,
+            "LAM_NE_span_pct": 0.0,
+            "LAM_PE_span_pct": 0.0
+          }
+        }
+      },
+      "stdout_key_lines": [
+        "SUMMARY {\"state\": \"100\", \"n_combinations\": 8, \"status\": \"complete\", \"combo_roster\": {\"requested\": 8, \"available\": 8, \"missing_input\": [], \"failed\": [], \"succeeded\": 8}, \"n_ok\": 8, \"n_with_active_bound\": 8, \"n_negative_LAM\": 0, \"LAM_PE_pct\": {\"min\": 1.0, \"max\": 1.0, \"span\": 0.0, \"median\": 1.0}, \"LAM_NE_pct\": {\"min\": 2.0, \"max\": 2.0, \"span\": 0.0, \"median\": 2.0}, \"LLI_pct\": {\"min\": 3.0, \"max\": 3.0, \"span\": 0.0, \"median\": 3.0}, \"axes_with_denominator\": {\"GITT_dqdv_off_all_Si\": {\"n\": 8, \"si_sources\": [\"Baggetto\", \"Friedrich\", \"Jiang\", \"Kunz\", \"Li\", \"Lu\", \"Sethuraman\", \"Wetjen\"], \"LLI_span_pct\": 0.0, \"LAM_NE_span_pct\": 0.0, \"LAM_PE_span_pct\": 0.0}}}",
+        "wrote /tmp/r11-matrix-k23bx5jb/matrix_100.csv"
+      ],
+      "full_authority_rows": 32
+    },
+    "profile_grid": {
+      "returncode": 0,
+      "canonical_written": true,
+      "rows": 1,
+      "gamma_roster": {
+        "requested": 1,
+        "succeeded": 1,
+        "missing": []
+      },
+      "summary_status": "complete",
+      "default_grid_in_wrapper": 21,
+      "stdout_key_lines": [
+        "SUMMARY {\"state\": \"100\", \"si_source\": \"Li\", \"half_cell\": \"GITT\", \"best_obj\": 1.0, \"consumed_inputs\": {\"full_cell\": {\"path\": \"profile/full.xlsx\", \"sha256\": \"2222222222222222222222222222222222222222222222222222222222222222\"}, \"half_cell\": {\"path\": \"profile/half.xlsx\", \"sha256\": \"3333333333333333333333333333333333333333333333333333333333333333\"}, \"literature\": {\"gr\": {\"path\": \"profile/gr.xlsx\", \"sha256\": \"4444444444444444444444444444444444444444444444444444444444444444\"}, \"si\": {\"path\": \"profile/si.csv\", \"sha256\": \"5555555555555555555555555555555555555555555555555555555555555555\"}}}, \"ref_consumed_inputs\": {\"full_cell\": {\"path\": \"profile/full.xlsx\", \"sha256\": \"2222222222222222222222222222222222222222222222222222222222222222\"}, \"half_cell\": {\"path\": \"profile/half.xlsx\", \"sha256\": \"3333333333333333333333333333333333333333333333333333333333333333\"}, \"literature\": {\"gr\": {\"path\": \"profile/gr.xlsx\", \"sha256\": \"4444444444444444444444444444444444444444444444444444444444444444\"}, \"si\": {\"path\": \"profile/si.csv\", \"sha256\": \"5555555555555555555555555555555555555555555555555555555555555555\"}}}, \"inputs_sha\": \"a3ab7cf668d1\", \"ref_inputs_sha\": \"a3ab7cf668d1\", \"profile_scale\": \"global\", \"ratio_comparable_across_rows\": true, \"scale_note\": \"global: 모든 행이 같은 목적함수라 비교는 되지만, MATLAB 검증기는 γ 를 묶은 경계를 넘긴다 [리뷰 A1 — 미결].\", \"best_gamma\": 0.2, \"tol_percent\": 1.0, \"gamma_inside_tol\": [0.0, 0.0], \"n_inside\": 1, \"status\": \"complete\", \"gamma_roster\": {\"requested\": 1, \"succeeded\": 1, \"missing\": []}, \"gamma_all_failed\": [], \"a_NE_span_inside_tol\": 0.0, \"LAM_NE_pct_span_inside_tol\": 0.0, \"LAM_PE_pct_span_inside_tol\": 0.0, \"LLI_pct_span_inside_tol\": 0.0}",
+        "wrote /tmp/r11-profile-9fjb9osf/profile_gamma_100_Li.csv [status complete] (run_id profile-r11)"
+      ]
+    },
+    "shape_reader": {
+      "shared_validator_rejected": true,
+      "validator_problems": [
+        "`error` 행 1/1 — 이 묶음은 success 가 아니다 (부분/실패이고 승격 대상이 아니다; success 행에 `error` 칸이 있으면 그것도 error 행이다, Codex R10 P1-5)"
+      ],
+      "production_reader_returned": {
+        "gamma_target": 0.4,
+        "gamma_ref": 0.2,
+        "file": "/tmp/r11-reader-fmxuknus/matrix_100.csv",
+        "sha256": "d577b2c7499fe1e551c19ecdbfe31cd2883629c00c690cd61754e4eecb2fb905",
+        "row": {
+          "index": 0,
+          "half_cell": "GITT",
+          "si": "Li",
+          "w_dqdv": "0",
+          "run_id": "reader-r11"
+        }
+      },
+      "reader_used_error_row": true
+    },
+    "shape_wrapper": {
+      "error": "FileNotFoundError: [Errno 2] No such file or directory: 'wsl.exe'"
+    }
+  }
+}

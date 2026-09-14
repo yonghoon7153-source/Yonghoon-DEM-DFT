@@ -1,0 +1,4 @@
+rc=0
+rc=0
+[data] 풀셀 워크북 후보가 2개다 — 이름순 첫 것을 쓴다: fullcell_states.xlsx (나머지: replacement.xlsx)
+rc=0

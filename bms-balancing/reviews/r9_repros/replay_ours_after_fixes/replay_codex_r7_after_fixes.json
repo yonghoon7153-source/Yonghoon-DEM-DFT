@@ -1,0 +1,94 @@
+{
+  "target_head": "554dad66af057fcc318989c11affb8b03f8385a3",
+  "expected_head": "554dad66af057fcc318989c11affb8b03f8385a3",
+  "head_ok": true,
+  "dirty": false,
+  "dirty_allowed": false,
+  "dirty_paths": [],
+  "package_digest_ok": true,
+  "package_digest": {
+    "HARNESS_R7_521BE85_CODEX_REVIEW.md": "ok",
+    "harness_r7_replay.py": "ok",
+    "harness_r7_replay_results.json": "ok",
+    "harness_r7_execution_repros.py": "ok",
+    "harness_r7_claims_repros.py": "ok",
+    "harness_r7_claims_review.md": "ok",
+    "harness_r7_inference_repros.py": "ok",
+    "harness_r7_inference_review.md": "ok",
+    "harness_r7_port_repros.py": "ok",
+    "harness_r7_port_review.md": "ok"
+  },
+  "pinned_sha": "521be85e74acef80feec45bd147dd339e25b8d0a",
+  "pin_bypassed": true,
+  "설명": "원본 probe 함수를 직접 불러 SHA pin 을 우회한다 — 도달·상태·멈춘_곳을 따로 적는다 (Codex R8-07); 요청 집합·대상 SHA·clean·패키지 digest 를 대조한다 (Codex R9 P2-1·2)",
+  "requested": [
+    "R7-01",
+    "R7-02",
+    "R7-03",
+    "R7-04",
+    "R7-05",
+    "R7-06"
+  ],
+  "probes": {
+    "R7-01": {
+      "probe": "aggregate_completeness",
+      "적응": false,
+      "도달": true,
+      "상태": "반례 소멸",
+      "멈춘_곳": "harness_r7_execution_repros.py:201: assert partial[\"rc\"] == 0 and partial[\"conclusion\"].rstrip().endswith(\"예\")",
+      "세부": "자기 반례 assertion 에서 멈췄다"
+    },
+    "R7-02": {
+      "probe": "noise_reopen",
+      "적응": false,
+      "도달": true,
+      "상태": "반례 소멸",
+      "멈춘_곳": "harness_r7_claims_repros.py:226: assert A[\"sigma_at_k1_V\"]!=mixed[\"sigma_at_k1_V\"]",
+      "세부": "자기 반례 assertion 에서 멈췄다"
+    },
+    "R7-03": {
+      "probe": "matrix_reference_omission",
+      "적응": false,
+      "도달": true,
+      "상태": "반례 소멸",
+      "멈춘_곳": "harness_r7_claims_repros.py:194: assert not any(\"ref\" in k and (\"inputs\" in k or \"sha\" in k or \"consumed\" in k) for k in A)",
+      "세부": "자기 반례 assertion 에서 멈췄다"
+    },
+    "R7-04": {
+      "probe": "r7_baseline_policy_split",
+      "적응": false,
+      "도달": true,
+      "상태": "반례 소멸",
+      "멈춘_곳": "harness_r7_inference_repros.py:490: assert p.returncode == 0, (p.returncode, p.stdout, p.stderr)",
+      "세부": "자기 반례 assertion 에서 멈췄다"
+    },
+    "R7-05": {
+      "probe": "adapted_runs(적응)",
+      "적응": true,
+      "도달": true,
+      "상태": "반례 소멸",
+      "멈춘_곳": "assert r.returncode == 0 and mode.startswith(\"부분\")",
+      "세부": {
+        "rc": 0,
+        "mode": "부분 (R6_OLD_OUT 미지정 — `R6_OLD_OUT=<bfc4623^ 의 out>` 을 주면 full)",
+        "baseline": null
+      }
+    },
+    "R7-06": {
+      "probe": "missed_exit_control(적응)",
+      "적응": true,
+      "도달": true,
+      "상태": "반례 소멸",
+      "멈춘_곳": "assert \"MISSED: 1\" in r.stdout and r.returncode != 0",
+      "세부": {
+        "rc": 1,
+        "tail": [
+          "restored: 0 7 passed, 45 deselected in 3.14s",
+          "MISSED: 1"
+        ]
+      }
+    }
+  },
+  "closed": true,
+  "rc_reason": "모든 요청 probe 가 자기 반례 assertion 에서 멈췄다"
+}

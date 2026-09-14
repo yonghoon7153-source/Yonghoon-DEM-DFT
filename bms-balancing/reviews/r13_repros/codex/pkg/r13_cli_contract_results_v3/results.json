@@ -1,0 +1,446 @@
+{
+  "current_out_schema_only": {
+    "command": [
+      "/home/yonghoon71/ddvenv/bin/python",
+      "-B",
+      "/mnt/c/Users/Administrator/Documents/Codex/2026-08-24/claude-14-gate-code-review-9qkx05-2/work/harness-r13-target-wsl/bms-balancing/scripts/check_u14.py",
+      "--new",
+      "/mnt/c/Users/Administrator/Documents/Codex/2026-08-24/claude-14-gate-code-review-9qkx05-2/work/harness-r13-target-wsl/bms-balancing/out",
+      "--schema-only"
+    ],
+    "rc": 2,
+    "promotion": {
+      "promotion_eligible": false,
+      "rc": 2,
+      "subset": false,
+      "roster": {
+        "old": 0,
+        "new": 13,
+        "compared": 0,
+        "missing_in_new": [],
+        "extra_in_new": []
+      },
+      "blocked_by": {
+        "schema": 59,
+        "provenance_cols": 27,
+        "content": 5,
+        "unit": 0,
+        "controls": 0,
+        "env": 0,
+        "numbers": 0,
+        "alias": 0,
+        "provenance": 1,
+        "inputs": 0,
+        "inputs_uncomparable": 0,
+        "stale": 0,
+        "baseline_absent": 1
+      },
+      "policy": "current",
+      "new": "/mnt/c/Users/Administrator/Documents/Codex/2026-08-24/claude-14-gate-code-review-9qkx05-2/work/harness-r13-target-wsl/bms-balancing/out",
+      "old": null
+    },
+    "stderr_tail": []
+  },
+  "control_comparison": {
+    "command": [
+      "/home/yonghoon71/ddvenv/bin/python",
+      "-B",
+      "/mnt/c/Users/Administrator/Documents/Codex/2026-08-24/claude-14-gate-code-review-9qkx05-2/work/harness-r13-target-wsl/bms-balancing/scripts/check_u14.py",
+      "--new",
+      "/mnt/c/Users/Administrator/Documents/Codex/2026-08-24/claude-14-gate-code-review-9qkx05-2/outputs/r13_cli_contract_results_v3/control_comparison/new",
+      "--old",
+      "/mnt/c/Users/Administrator/Documents/Codex/2026-08-24/claude-14-gate-code-review-9qkx05-2/outputs/r13_cli_contract_results_v3/control_comparison/old"
+    ],
+    "rc": 0,
+    "promotion": {
+      "promotion_eligible": true,
+      "rc": 0,
+      "subset": false,
+      "roster": {
+        "old": 1,
+        "new": 1,
+        "compared": 1,
+        "missing_in_new": [],
+        "extra_in_new": []
+      },
+      "blocked_by": {
+        "schema": 0,
+        "provenance_cols": 0,
+        "content": 0,
+        "unit": 0,
+        "controls": 0,
+        "env": 0,
+        "numbers": 0,
+        "alias": 0,
+        "provenance": 0,
+        "inputs": 0,
+        "inputs_uncomparable": 0,
+        "stale": 0,
+        "baseline_absent": 0
+      },
+      "policy": "current",
+      "new": "/mnt/c/Users/Administrator/Documents/Codex/2026-08-24/claude-14-gate-code-review-9qkx05-2/outputs/r13_cli_contract_results_v3/control_comparison/new",
+      "old": "/mnt/c/Users/Administrator/Documents/Codex/2026-08-24/claude-14-gate-code-review-9qkx05-2/outputs/r13_cli_contract_results_v3/control_comparison/old"
+    },
+    "stderr_tail": []
+  },
+  "control_schema_only": {
+    "command": [
+      "/home/yonghoon71/ddvenv/bin/python",
+      "-B",
+      "/mnt/c/Users/Administrator/Documents/Codex/2026-08-24/claude-14-gate-code-review-9qkx05-2/work/harness-r13-target-wsl/bms-balancing/scripts/check_u14.py",
+      "--new",
+      "/mnt/c/Users/Administrator/Documents/Codex/2026-08-24/claude-14-gate-code-review-9qkx05-2/outputs/r13_cli_contract_results_v3/control_schema_only/new",
+      "--schema-only"
+    ],
+    "rc": 0,
+    "promotion": {
+      "promotion_eligible": false,
+      "rc": 0,
+      "subset": false,
+      "roster": {
+        "old": 0,
+        "new": 1,
+        "compared": 0,
+        "missing_in_new": [],
+        "extra_in_new": []
+      },
+      "blocked_by": {
+        "schema": 0,
+        "provenance_cols": 0,
+        "content": 0,
+        "unit": 0,
+        "controls": 0,
+        "env": 0,
+        "numbers": 0,
+        "alias": 0,
+        "provenance": 0,
+        "inputs": 0,
+        "inputs_uncomparable": 0,
+        "stale": 0,
+        "baseline_absent": 1
+      },
+      "policy": "current",
+      "new": "/mnt/c/Users/Administrator/Documents/Codex/2026-08-24/claude-14-gate-code-review-9qkx05-2/outputs/r13_cli_contract_results_v3/control_schema_only/new",
+      "old": null
+    },
+    "stderr_tail": []
+  },
+  "both_reference_receipts_empty": {
+    "command": [
+      "/home/yonghoon71/ddvenv/bin/python",
+      "-B",
+      "/mnt/c/Users/Administrator/Documents/Codex/2026-08-24/claude-14-gate-code-review-9qkx05-2/work/harness-r13-target-wsl/bms-balancing/scripts/check_u14.py",
+      "--new",
+      "/mnt/c/Users/Administrator/Documents/Codex/2026-08-24/claude-14-gate-code-review-9qkx05-2/outputs/r13_cli_contract_results_v3/both_reference_receipts_empty/new",
+      "--old",
+      "/mnt/c/Users/Administrator/Documents/Codex/2026-08-24/claude-14-gate-code-review-9qkx05-2/outputs/r13_cli_contract_results_v3/both_reference_receipts_empty/old"
+    ],
+    "rc": 0,
+    "promotion": {
+      "promotion_eligible": true,
+      "rc": 0,
+      "subset": false,
+      "roster": {
+        "old": 1,
+        "new": 1,
+        "compared": 1,
+        "missing_in_new": [],
+        "extra_in_new": []
+      },
+      "blocked_by": {
+        "schema": 0,
+        "provenance_cols": 0,
+        "content": 0,
+        "unit": 0,
+        "controls": 0,
+        "env": 0,
+        "numbers": 0,
+        "alias": 0,
+        "provenance": 0,
+        "inputs": 0,
+        "inputs_uncomparable": 0,
+        "stale": 0,
+        "baseline_absent": 0
+      },
+      "policy": "current",
+      "new": "/mnt/c/Users/Administrator/Documents/Codex/2026-08-24/claude-14-gate-code-review-9qkx05-2/outputs/r13_cli_contract_results_v3/both_reference_receipts_empty/new",
+      "old": "/mnt/c/Users/Administrator/Documents/Codex/2026-08-24/claude-14-gate-code-review-9qkx05-2/outputs/r13_cli_contract_results_v3/both_reference_receipts_empty/old"
+    },
+    "stderr_tail": []
+  },
+  "candidate_reference_receipt_empty": {
+    "command": [
+      "/home/yonghoon71/ddvenv/bin/python",
+      "-B",
+      "/mnt/c/Users/Administrator/Documents/Codex/2026-08-24/claude-14-gate-code-review-9qkx05-2/work/harness-r13-target-wsl/bms-balancing/scripts/check_u14.py",
+      "--new",
+      "/mnt/c/Users/Administrator/Documents/Codex/2026-08-24/claude-14-gate-code-review-9qkx05-2/outputs/r13_cli_contract_results_v3/candidate_reference_receipt_empty/new",
+      "--old",
+      "/mnt/c/Users/Administrator/Documents/Codex/2026-08-24/claude-14-gate-code-review-9qkx05-2/outputs/r13_cli_contract_results_v3/candidate_reference_receipt_empty/old"
+    ],
+    "rc": 2,
+    "promotion": {
+      "promotion_eligible": false,
+      "rc": 2,
+      "subset": false,
+      "roster": {
+        "old": 1,
+        "new": 1,
+        "compared": 1,
+        "missing_in_new": [],
+        "extra_in_new": []
+      },
+      "blocked_by": {
+        "schema": 0,
+        "provenance_cols": 0,
+        "content": 0,
+        "unit": 0,
+        "controls": 0,
+        "env": 0,
+        "numbers": 0,
+        "alias": 0,
+        "provenance": 0,
+        "inputs": 1,
+        "inputs_uncomparable": 0,
+        "stale": 0,
+        "baseline_absent": 0
+      },
+      "policy": "current",
+      "new": "/mnt/c/Users/Administrator/Documents/Codex/2026-08-24/claude-14-gate-code-review-9qkx05-2/outputs/r13_cli_contract_results_v3/candidate_reference_receipt_empty/new",
+      "old": "/mnt/c/Users/Administrator/Documents/Codex/2026-08-24/claude-14-gate-code-review-9qkx05-2/outputs/r13_cli_contract_results_v3/candidate_reference_receipt_empty/old"
+    },
+    "stderr_tail": []
+  },
+  "baseline_reference_receipt_empty": {
+    "command": [
+      "/home/yonghoon71/ddvenv/bin/python",
+      "-B",
+      "/mnt/c/Users/Administrator/Documents/Codex/2026-08-24/claude-14-gate-code-review-9qkx05-2/work/harness-r13-target-wsl/bms-balancing/scripts/check_u14.py",
+      "--new",
+      "/mnt/c/Users/Administrator/Documents/Codex/2026-08-24/claude-14-gate-code-review-9qkx05-2/outputs/r13_cli_contract_results_v3/baseline_reference_receipt_empty/new",
+      "--old",
+      "/mnt/c/Users/Administrator/Documents/Codex/2026-08-24/claude-14-gate-code-review-9qkx05-2/outputs/r13_cli_contract_results_v3/baseline_reference_receipt_empty/old"
+    ],
+    "rc": 4,
+    "promotion": {
+      "promotion_eligible": false,
+      "rc": 4,
+      "subset": false,
+      "roster": {
+        "old": 1,
+        "new": 1,
+        "compared": 1,
+        "missing_in_new": [],
+        "extra_in_new": []
+      },
+      "blocked_by": {
+        "schema": 0,
+        "provenance_cols": 0,
+        "content": 0,
+        "unit": 0,
+        "controls": 0,
+        "env": 0,
+        "numbers": 0,
+        "alias": 0,
+        "provenance": 0,
+        "inputs": 0,
+        "inputs_uncomparable": 1,
+        "stale": 0,
+        "baseline_absent": 0
+      },
+      "policy": "current",
+      "new": "/mnt/c/Users/Administrator/Documents/Codex/2026-08-24/claude-14-gate-code-review-9qkx05-2/outputs/r13_cli_contract_results_v3/baseline_reference_receipt_empty/new",
+      "old": "/mnt/c/Users/Administrator/Documents/Codex/2026-08-24/claude-14-gate-code-review-9qkx05-2/outputs/r13_cli_contract_results_v3/baseline_reference_receipt_empty/old"
+    },
+    "stderr_tail": []
+  },
+  "reference_receipt_string_missing_locator": {
+    "command": [
+      "/home/yonghoon71/ddvenv/bin/python",
+      "-B",
+      "/mnt/c/Users/Administrator/Documents/Codex/2026-08-24/claude-14-gate-code-review-9qkx05-2/work/harness-r13-target-wsl/bms-balancing/scripts/check_u14.py",
+      "--new",
+      "/mnt/c/Users/Administrator/Documents/Codex/2026-08-24/claude-14-gate-code-review-9qkx05-2/outputs/r13_cli_contract_results_v3/reference_receipt_string_missing_locator/new",
+      "--old",
+      "/mnt/c/Users/Administrator/Documents/Codex/2026-08-24/claude-14-gate-code-review-9qkx05-2/outputs/r13_cli_contract_results_v3/reference_receipt_string_missing_locator/old"
+    ],
+    "rc": 0,
+    "promotion": {
+      "promotion_eligible": true,
+      "rc": 0,
+      "subset": false,
+      "roster": {
+        "old": 1,
+        "new": 1,
+        "compared": 1,
+        "missing_in_new": [],
+        "extra_in_new": []
+      },
+      "blocked_by": {
+        "schema": 0,
+        "provenance_cols": 0,
+        "content": 0,
+        "unit": 0,
+        "controls": 0,
+        "env": 0,
+        "numbers": 0,
+        "alias": 0,
+        "provenance": 0,
+        "inputs": 0,
+        "inputs_uncomparable": 0,
+        "stale": 0,
+        "baseline_absent": 0
+      },
+      "policy": "current",
+      "new": "/mnt/c/Users/Administrator/Documents/Codex/2026-08-24/claude-14-gate-code-review-9qkx05-2/outputs/r13_cli_contract_results_v3/reference_receipt_string_missing_locator/new",
+      "old": "/mnt/c/Users/Administrator/Documents/Codex/2026-08-24/claude-14-gate-code-review-9qkx05-2/outputs/r13_cli_contract_results_v3/reference_receipt_string_missing_locator/old"
+    },
+    "stderr_tail": []
+  },
+  "complete_audit_control": {
+    "command": [
+      "/home/yonghoon71/ddvenv/bin/python",
+      "-B",
+      "/mnt/c/Users/Administrator/Documents/Codex/2026-08-24/claude-14-gate-code-review-9qkx05-2/work/harness-r13-target-wsl/bms-balancing/scripts/check_u14.py",
+      "--new",
+      "/mnt/c/Users/Administrator/Documents/Codex/2026-08-24/claude-14-gate-code-review-9qkx05-2/outputs/r13_cli_contract_results_v3/candidate_audit_empty_object/new",
+      "--old",
+      "/mnt/c/Users/Administrator/Documents/Codex/2026-08-24/claude-14-gate-code-review-9qkx05-2/outputs/r13_cli_contract_results_v3/candidate_audit_empty_object/old"
+    ],
+    "rc": 0,
+    "promotion": {
+      "promotion_eligible": true,
+      "rc": 0,
+      "subset": false,
+      "roster": {
+        "old": 1,
+        "new": 1,
+        "compared": 1,
+        "missing_in_new": [],
+        "extra_in_new": []
+      },
+      "blocked_by": {
+        "schema": 0,
+        "provenance_cols": 0,
+        "content": 0,
+        "unit": 0,
+        "controls": 0,
+        "env": 0,
+        "numbers": 0,
+        "alias": 0,
+        "provenance": 0,
+        "inputs": 0,
+        "inputs_uncomparable": 0,
+        "stale": 0,
+        "baseline_absent": 0
+      },
+      "policy": "current",
+      "new": "/mnt/c/Users/Administrator/Documents/Codex/2026-08-24/claude-14-gate-code-review-9qkx05-2/outputs/r13_cli_contract_results_v3/candidate_audit_empty_object/new",
+      "old": "/mnt/c/Users/Administrator/Documents/Codex/2026-08-24/claude-14-gate-code-review-9qkx05-2/outputs/r13_cli_contract_results_v3/candidate_audit_empty_object/old"
+    },
+    "stderr_tail": []
+  },
+  "candidate_audit_empty_object": {
+    "command": [
+      "/home/yonghoon71/ddvenv/bin/python",
+      "-B",
+      "/mnt/c/Users/Administrator/Documents/Codex/2026-08-24/claude-14-gate-code-review-9qkx05-2/work/harness-r13-target-wsl/bms-balancing/scripts/check_u14.py",
+      "--new",
+      "/mnt/c/Users/Administrator/Documents/Codex/2026-08-24/claude-14-gate-code-review-9qkx05-2/outputs/r13_cli_contract_results_v3/candidate_audit_empty_object/new",
+      "--old",
+      "/mnt/c/Users/Administrator/Documents/Codex/2026-08-24/claude-14-gate-code-review-9qkx05-2/outputs/r13_cli_contract_results_v3/candidate_audit_empty_object/old"
+    ],
+    "rc": 0,
+    "promotion": {
+      "promotion_eligible": true,
+      "rc": 0,
+      "subset": false,
+      "roster": {
+        "old": 1,
+        "new": 1,
+        "compared": 1,
+        "missing_in_new": [],
+        "extra_in_new": []
+      },
+      "blocked_by": {
+        "schema": 0,
+        "provenance_cols": 0,
+        "content": 0,
+        "unit": 0,
+        "controls": 0,
+        "env": 0,
+        "numbers": 0,
+        "alias": 0,
+        "provenance": 0,
+        "inputs": 0,
+        "inputs_uncomparable": 0,
+        "stale": 0,
+        "baseline_absent": 0
+      },
+      "policy": "current",
+      "new": "/mnt/c/Users/Administrator/Documents/Codex/2026-08-24/claude-14-gate-code-review-9qkx05-2/outputs/r13_cli_contract_results_v3/candidate_audit_empty_object/new",
+      "old": "/mnt/c/Users/Administrator/Documents/Codex/2026-08-24/claude-14-gate-code-review-9qkx05-2/outputs/r13_cli_contract_results_v3/candidate_audit_empty_object/old"
+    },
+    "stderr_tail": []
+  },
+  "bom_json_schema_only": {
+    "command": [
+      "/home/yonghoon71/ddvenv/bin/python",
+      "-B",
+      "/mnt/c/Users/Administrator/Documents/Codex/2026-08-24/claude-14-gate-code-review-9qkx05-2/work/harness-r13-target-wsl/bms-balancing/scripts/check_u14.py",
+      "--new",
+      "/mnt/c/Users/Administrator/Documents/Codex/2026-08-24/claude-14-gate-code-review-9qkx05-2/outputs/r13_cli_contract_results_v3/bom_json_schema_only/new",
+      "--schema-only"
+    ],
+    "rc": 1,
+    "promotion": null,
+    "stderr_tail": [
+      "  File \"/usr/lib/python3.12/json/__init__.py\", line 335, in loads",
+      "    raise JSONDecodeError(\"Unexpected UTF-8 BOM (decode using utf-8-sig)\",",
+      "json.decoder.JSONDecodeError: Unexpected UTF-8 BOM (decode using utf-8-sig): line 1 column 1 (char 0)"
+    ]
+  },
+  "schema_only_missing_env_fields": {
+    "command": [
+      "/home/yonghoon71/ddvenv/bin/python",
+      "-B",
+      "/mnt/c/Users/Administrator/Documents/Codex/2026-08-24/claude-14-gate-code-review-9qkx05-2/work/harness-r13-target-wsl/bms-balancing/scripts/check_u14.py",
+      "--new",
+      "/mnt/c/Users/Administrator/Documents/Codex/2026-08-24/claude-14-gate-code-review-9qkx05-2/outputs/r13_cli_contract_results_v3/schema_only_missing_env_fields/new",
+      "--schema-only"
+    ],
+    "rc": 0,
+    "promotion": {
+      "promotion_eligible": false,
+      "rc": 0,
+      "subset": false,
+      "roster": {
+        "old": 0,
+        "new": 1,
+        "compared": 0,
+        "missing_in_new": [],
+        "extra_in_new": []
+      },
+      "blocked_by": {
+        "schema": 0,
+        "provenance_cols": 0,
+        "content": 0,
+        "unit": 0,
+        "controls": 0,
+        "env": 0,
+        "numbers": 0,
+        "alias": 0,
+        "provenance": 0,
+        "inputs": 0,
+        "inputs_uncomparable": 0,
+        "stale": 0,
+        "baseline_absent": 1
+      },
+      "policy": "current",
+      "new": "/mnt/c/Users/Administrator/Documents/Codex/2026-08-24/claude-14-gate-code-review-9qkx05-2/outputs/r13_cli_contract_results_v3/schema_only_missing_env_fields/new",
+      "old": null
+    },
+    "stderr_tail": []
+  }
+}

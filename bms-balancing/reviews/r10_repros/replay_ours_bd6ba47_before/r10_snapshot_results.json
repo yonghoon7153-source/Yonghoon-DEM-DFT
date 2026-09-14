@@ -1,0 +1,137 @@
+{
+  "eval-self-overwrite": {
+    "ok": true,
+    "result": {
+      "case": "eval_self_overwrite",
+      "rc": 0,
+      "original_sha256": "c3dabc9d75d4d5e3173d808de370da45106fb7df899e601ee29913b65f973f50",
+      "after_sha256": "ad4fed0255b1a365468672d02e5521af445db3bec40e6aad2391ef0ca3e2f327",
+      "original_destroyed": true,
+      "reports_complete": true,
+      "tail": [
+        "  6                  0.00e+00              0.00e+00              0.00e+00              0.00e+00   적힌 자리수 안",
+        "  7                  0.00e+00              0.00e+00              0.00e+00              0.00e+00   적힌 자리수 안",
+        "",
+        "판정: 앵커 16개와 rmse 32개가 **적힌 자리수 안에서 전부 일치**.",
+        "      남은 차이는 전부 토큰의 반올림 반 단위 안이다 —",
+        "      이 파일로는 그보다 정밀하게 비교할 수 없다.",
+        "      같은 p 에서 두 구현이 같은 목적함수를 낸다 = 포팅이 그들 모델이다.",
+        "종료 코드 0 (complete)"
+      ]
+    }
+  },
+  "profile-partial": {
+    "ok": true,
+    "result": {
+      "case": "profile_partial_promoted",
+      "rc": 0,
+      "requested_gamma_count": 2,
+      "published_gamma_count": 1,
+      "schema_problems": [],
+      "real_wrapper_signed_and_verified": true,
+      "wrapper_stdout": [
+        "일치"
+      ],
+      "wrapper_stderr": [],
+      "previous_canonical_destroyed": true,
+      "stdout_mentions_skipped": true,
+      "tail": [
+        "{\"gamma_Si\": 0.0, \"obj\": 1.0, \"obj_ratio_to_best\": 1.0, \"rmse_pocv\": 1.0, \"a_PE\": 1.0, \"b_PE\": 0.0, \"a_NE\": 1.0, \"b_NE\": 0.0, \"bounds\": \"a_PE=lb,b_PE=ub,a_NE=lb,gamma_Si=lb\", \"LAM_PE_pct\": 10.0, \"LAM_NE_pct\": 20.0, \"LLI_pct\": 30.0, \"n_ok\": 1, \"n_tried\": 1, \"run_id\": \"r10-profile\", \"profile_scale\": \"global\", \"inputs_sha\": \"76be1dcab00e\", \"ref_inputs_sha\": \"76be1dcab00e\", \"consumed_inputs\": \"{\\\"half_cell\\\": {\\\"path\\\": \\\"half.xlsx\\\", \\\"sha256\\\": \\\"1111111111111111111111111111111111111111111111111111111111111111\\\"}, \\\"full_cell\\\": {\\\"path\\\": \\\"full.xlsx\\\", \\\"sha256\\\": \\\"2222222222222222222222222222222222222222222222222222222222222222\\\"}, \\\"literature\\\": {\\\"gr\\\": {\\\"path\\\": \\\"gr.xlsx\\\", \\\"sha256\\\": \\\"3333333333333333333333333333333333333333333333333333333333333333\\\"}, \\\"si\\\": {\\\"path\\\": \\\"si.csv\\\", \\\"sha256\\\": \\\"4444444444444444444444444444444444444444444444444444444444444444\\\"}}}\", \"ref_consumed_inputs\": \"{\\\"half_cell\\\": {\\\"path\\\": \\\"half.xlsx\\\", \\\"sha256\\\": \\\"1111111111111111111111111111111111111111111111111111111111111111\\\"}, \\\"full_cell\\\": {\\\"path\\\": \\\"full.xlsx\\\", \\\"sha256\\\": \\\"2222222222222222222222222222222222222222222222222222222222222222\\\"}, \\\"literature\\\": {\\\"gr\\\": {\\\"path\\\": \\\"gr.xlsx\\\", \\\"sha256\\\": \\\"3333333333333333333333333333333333333333333333333333333333333333\\\"}, \\\"si\\\": {\\\"path\\\": \\\"si.csv\\\", \\\"sha256\\\": \\\"4444444444444444444444444444444444444444444444444444444444444444\\\"}}}\"}",
+        "[profile] γ=0.5000: 시작점 1개 전부 실패 (not_success/비유한) — 이 γ 는 저장하지 않는다 (skipped)",
+        "",
+        "SUMMARY {\"state\": \"100\", \"si_source\": \"Li\", \"half_cell\": \"GITT\", \"best_obj\": 1.0, \"consumed_inputs\": {\"half_cell\": {\"path\": \"half.xlsx\", \"sha256\": \"1111111111111111111111111111111111111111111111111111111111111111\"}, \"full_cell\": {\"path\": \"full.xlsx\", \"sha256\": \"2222222222222222222222222222222222222222222222222222222222222222\"}, \"literature\": {\"gr\": {\"path\": \"gr.xlsx\", \"sha256\": \"3333333333333333333333333333333333333333333333333333333333333333\"}, \"si\": {\"path\": \"si.csv\", \"sha256\": \"4444444444444444444444444444444444444444444444444444444444444444\"}}}, \"ref_consumed_inputs\": {\"half_cell\": {\"path\": \"half.xlsx\", \"sha256\": \"1111111111111111111111111111111111111111111111111111111111111111\"}, \"full_cell\": {\"path\": \"full.xlsx\", \"sha256\": \"2222222222222222222222222222222222222222222222222222222222222222\"}, \"literature\": {\"gr\": {\"path\": \"gr.xlsx\", \"sha256\": \"3333333333333333333333333333333333333333333333333333333333333333\"}, \"si\": {\"path\": \"si.csv\", \"sha256\": \"4444444444444444444444444444444444444444444444444444444444444444\"}}}, \"inputs_sha\": \"76be1dcab00e\", \"ref_inputs_sha\": \"76be1dcab00e\", \"profile_scale\": \"global\", \"ratio_comparable_across_rows\": true, \"scale_note\": \"global: 모든 행이 같은 목적함수라 비교는 되지만, MATLAB 검증기는 γ 를 묶은 경계를 넘긴다 [리뷰 A1 — 미결].\", \"best_gamma\": 0.2, \"tol_percent\": 1.0, \"gamma_inside_tol\": [0.0, 0.0], \"n_inside\": 1, \"gamma_all_failed\": [0.5], \"a_NE_span_inside_tol\": 0.0, \"LAM_NE_pct_span_inside_tol\": 0.0, \"LAM_PE_pct_span_inside_tol\": 0.0, \"LLI_pct_span_inside_tol\": 0.0}",
+        "wrote /tmp/r10-profile-yx8cimtc/profile_gamma_100_Li.csv (run_id r10-profile)"
+      ]
+    }
+  },
+  "matrix-errors": {
+    "ok": true,
+    "result": {
+      "case": "matrix_all_errors_overwrite",
+      "python_return": null,
+      "effective_process_rc": 0,
+      "published_rows": 16,
+      "header": [
+        "error",
+        "half_cell",
+        "si",
+        "w_dqdv"
+      ],
+      "schema_problem_count": 36,
+      "schema_problem_sample": [
+        "열 없음: run_id",
+        "열 없음: inputs_sha",
+        "열 없음: ref_inputs_sha",
+        "열 없음: consumed_inputs",
+        "열 없음: ref_consumed_inputs"
+      ],
+      "previous_canonical_destroyed": true
+    }
+  },
+  "stdout-invalid": {
+    "ok": true,
+    "result": {
+      "case": "stdout_invalid_success",
+      "python_return": null,
+      "effective_process_rc": 0,
+      "schema_problems": [
+        "키 없음: consumed_inputs",
+        "키 없음: ref_consumed_inputs",
+        "키 없음: inputs_sha",
+        "consumed_inputs: 출처(receipt)가 비어 있다"
+      ],
+      "stderr_warning": "# schema 경고 (stdout 모드 — 게시 아님): ['키 없음: consumed_inputs', '키 없음: ref_consumed_inputs', '키 없음: inputs_sha', 'consumed_inputs: 출처(receipt)가 비어 있다']",
+      "stdout_is_json_object": true
+    }
+  },
+  "receipt-roles": {
+    "ok": true,
+    "result": {
+      "case": "receipt_role_permutation",
+      "original_digest": "76be1dcab00e",
+      "swapped_digest": "76be1dcab00e",
+      "same_aggregate": true,
+      "validator_original": [],
+      "validator_swapped": [],
+      "roles_changed": true
+    }
+  },
+  "error-skip": {
+    "ok": true,
+    "result": {
+      "case": "error_column_bypasses_provenance",
+      "rc": 0,
+      "direct_schema_problems": [],
+      "blank_provenance": true,
+      "says_schema_complete": true,
+      "says_numbers_equal": true,
+      "tail": [
+        "산출 1 개 점검 (/tmp/r10-error-skip-itwxornn/new)",
+        "  정본 선택 정책: **current** — 현행 디렉터리 — 정본은 unversioned 이름 하나, 판 번호가 붙은 형제는 쓰지 않는다 (Codex R6-04·R7-04)",
+        "  명부(roster): 정본 1 · 새 산출 1 · 대조 1",
+        "  새 스키마: 전부 갖췄다 (열·키 이름 + 필수 셀·숫자·receipt·중복 key — `bms_balancing/schema.py` 정본)",
+        "",
+        "  정본에 없던 필드 1 — 스키마 추가분이다 (숫자가 움직인 것이 아니다): error",
+        "  숫자: 정본(/tmp/r10-error-skip-itwxornn/old)과 전부 같다 — 게시·서명만 바뀌었다"
+      ]
+    }
+  },
+  "argv": {
+    "ok": true,
+    "result": {
+      "case": "argv_flattening",
+      "records": [
+        {
+          "flat": "python3 -c import sys;print(sys.argv[1]) A B C",
+          "observed": "A B"
+        },
+        {
+          "flat": "python3 -c import sys;print(sys.argv[1]) A B C",
+          "observed": "A"
+        }
+      ],
+      "same_recorded_argv": true,
+      "different_execution": true
+    }
+  }
+}

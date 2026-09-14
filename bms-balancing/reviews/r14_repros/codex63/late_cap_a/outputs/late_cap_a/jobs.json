@@ -1,0 +1,25 @@
+{
+  "scope": "Candidate A: exactly one new five-second late time-cap sensitivity solve; Candidate B unapproved",
+  "jobs": [
+    {
+      "name": "Caps300R320H0125",
+      "job_id": "18a00b03e38d4694b9ba30d88e7008f4",
+      "source_sha256": "8d35be8fab513f5e2def316c4d00e0fdc19983a5dd3bf492f4ffe47a58248be3",
+      "early_cap_s": 0.000125,
+      "cores": 2,
+      "timeout_seconds": 1200,
+      "max_physical_time_s": 5,
+      "role": "existing_reference"
+    },
+    {
+      "name": "Caps300R320LateCapA5s",
+      "job_id": "c40c05d3cfb643a4b706345637b00f57",
+      "source_sha256": "a03abb905454de63b34b55e314ed09f3cb6414d58444e8b605962166a872531f",
+      "early_cap_s": 0.000125,
+      "cores": 16,
+      "timeout_seconds": 1800,
+      "max_physical_time_s": 5,
+      "role": "new_authorized_run"
+    }
+  ]
+}

@@ -1,0 +1,1062 @@
+{
+  "target_head": "c7217c04f939889e88b915575fce6997005072aa",
+  "expected_head": "c7217c04f939889e88b915575fce6997005072aa",
+  "expected_tree": "ae9e484798051fa67e99aab76cbfd8450e68d139",
+  "pinned_sha": "2add074cf0c3ebfaa02b22d2311dd4330f0879b0",
+  "pin_bypassed": true,
+  "dirty": true,
+  "dirty_allowed": false,
+  "dirty_paths": [
+    "?? bms-balancing/reviews/r12_repros/"
+  ],
+  "evidence_eligible": true,
+  "instrument_sealed": true,
+  "instrument": {
+    "reviews/r11_repros/replay_codex_r11.py": "ok",
+    "reviews/evidence_gate.py": "ok"
+  },
+  "materialized": {
+    "path": "/tmp/evidence-snap-pzvhhl7o/snap/bms-balancing",
+    "head": "c7217c04f939889e88b915575fce6997005072aa",
+    "mode": "sparse detached worktree",
+    "kept": false
+  },
+  "ran_in": "격리 snapshot",
+  "package_digest_ok": true,
+  "package_digest": {
+    "HARNESS_R11_2ADD074_CODEX_REVIEW.md": "ok",
+    "HARNESS_R11_VALIDATION.txt": "ok",
+    "r11_root_repros.py": "ok",
+    "r11_root_results.json": "ok",
+    "r11_data_contract_repros.py": "ok",
+    "r11_data_contract_results.json": "ok",
+    "r11_data_contract_review.md": "ok",
+    "r11_publish_schema_repros.py": "ok",
+    "r11_publish_schema_results.json": "ok",
+    "r11_publish_schema_review.md": "ok",
+    "r11_evidence_gate_repros.py": "ok",
+    "r11_evidence_gate_results.json": "ok",
+    "r11_evidence_gate_review.md": "ok"
+  },
+  "설명": "R11 네 스크립트를 자식으로 그대로 돌리고 case 마다 **봉인한 술어**로 닫힘을 판정한다 — 술어가 표에 없으면 닫힘으로 세지 않는다 (Codex R11 P1-12)",
+  "probes": {
+    "root:schema_only": {
+      "도달": true,
+      "상태": "반례 소멸",
+      "멈춘_곳": "r11_root_repros.py:141: assert got[\"rc\"] == 0 and got[\"promotion\"][\"promotion_eligible\"] is True, got",
+      "세부": "{'rc': 2, 'promotion': {'promotion_eligible': False, 'rc': 2, 'subset': False, 'roster': {'old': 0, 'new': 1, 'compared': 0, 'missing_in_new': [], 'extra_in_new': []}, 'blocked_by': {'schema': 2, 'provenance_cols': 0, 'content': 1, 'unit': 0, 'controls': 0, 'env': 0, 'numbers': 0, 'alias': 0, 'provenance': 1, 'inputs': 0, 'inputs_uncomparable': 0, 'stale': 0, 'baseline_absent': 1}, 'policy': 'current', 'new': '/tmp/r11-schema-only-i02zbjk7/new', 'old': None}, 'tail': ['  (`--schema-only`: baseline 도 대조도 없다 — **승격 증명서가 아니다**. 스키마·내용·조건만 본다, Codex R11 P1-6)', '', '■ 새 스키마 누락 2 — 옛 코드로 만든 산출이거나 묶"
+    },
+    "root:input_bytes": {
+      "도달": true,
+      "상태": "반례 소멸",
+      "멈춘_곳": "r11_root_repros.py:152: assert got[\"rc\"] == 0 and got[\"promotion\"][\"promotion_eligible\"] is True, got",
+      "세부": "{'rc': 2, 'promotion': {'promotion_eligible': False, 'rc': 2, 'subset': False, 'roster': {'old': 1, 'new': 1, 'compared': 1, 'missing_in_new': [], 'extra_in_new': []}, 'blocked_by': {'schema': 2, 'provenance_cols': 0, 'content': 1, 'unit': 0, 'controls': 0, 'env': 0, 'numbers': 0, 'alias': 0, 'provenance': 1, 'inputs': 8, 'inputs_uncomparable': 0, 'stale': 0, 'baseline_absent': 0}, 'policy': 'current', 'new': '/tmp/r11-input-drift-dp4dldky/new', 'old': '/tmp/r11-input-drift-dp4dldky/old'}, 'tail': ['  - profile_gamma_100_Li.csv:0.2: target 입력 half_cell 의 identity 가 다르다 — 정본 222222222222… → 새 6"
+    },
+    "root:dirty_code": {
+      "도달": true,
+      "상태": "반례 소멸",
+      "멈춘_곳": "r11_root_repros.py:177: assert got[\"rc\"] == 0 and got[\"promotion\"][\"promotion_eligible\"] is True, got",
+      "세부": "{'rc': 2, 'promotion': {'promotion_eligible': False, 'rc': 2, 'subset': False, 'roster': {'old': 1, 'new': 1, 'compared': 1, 'missing_in_new': [], 'extra_in_new': []}, 'blocked_by': {'schema': 2, 'provenance_cols': 0, 'content': 1, 'unit': 0, 'controls': 0, 'env': 0, 'numbers': 0, 'alias': 0, 'provenance': 4, 'inputs': 0, 'inputs_uncomparable': 0, 'stale': 0, 'baseline_absent': 0}, 'policy': 'current', 'new': '/tmp/r11-dirty-meta-3u_yjbz9/new', 'old': '/tmp/r11-dirty-meta-3u_yjbz9/old'}, 'tail': ['  - profile_gamma_100_Li.csv.meta: roster', '', '■ 내용 검사 실패 1 — 열은 있는데 값이 스키마가 아니다 (빈 필수 셀 · 숫자 아"
+    },
+    "root:invalid_numeric": {
+      "도달": true,
+      "상태": "반례 소멸",
+      "멈춘_곳": "r11_root_repros.py:190: assert not problems and got[\"rc\"] == 0 and got[\"promotion\"][\"promotion_eligible\"] is True, (problems, got)",
+      "세부": "([\"행 0: obj 가 유한한 값이 아니다 ('inf') — 과학 값이 아니다\", \"행 0: gamma_roster 의 key 가 계약과 다르다 — ['missing', 'requested', 'succeeded'] (요구: authority · requested · succeeded · missing)\"], {'rc': 2, 'promotion': {'promotion_eligible': False, 'rc': 2, 'subset': False, 'roster': {'old': 1, 'new': 1, 'compared': 1, 'missing_in_new': [], 'extra_in_new': []}, 'blocked_by': {'schema': 2, 'provenance_cols': 0, 'content': 2, 'unit': 0, 'controls': 0, 'env': 0, 'numbers': 0, 'alias': 0, 'provenance': 1, 'inputs': 0, 'inputs_uncomparable': 0, 'stale': 0, 'baseline_absent': 0}, 'policy': 'current', 'new': '/tmp/r11-no"
+    },
+    "root:matrix_authority": {
+      "도달": true,
+      "상태": "반례 소멸",
+      "멈춘_곳": "r11_root_repros.py:259: assert rc_full == rc_small == 0 and n_full == 8 and len(rows_small) == 2 and not problems, result",
+      "세부": "{'case': 'matrix_only_flags_shrink_complete_authority', 'full_rc': 0, 'full_rows': 8, 'narrow_rc': 3, 'narrow_rows': 8, 'narrow_schema_problems': ['행 0: 필수 셀 scale_audit_target 이 비어 있다', '행 0: 필수 셀 scale_audit_ref 이 비어 있다', '행 1: 필수 셀 scale_audit_target 이 비어 있다', '행 1: 필수 셀 scale_audit_ref 이 비어 있다', '행 2: 필수 셀 scale_audit_target 이 비어 있다', '행 2: 필수 셀 scale_audit_ref 이 비어 있다', '행 3: 필수 셀 scale_audit_target 이 비어 있다', '행 3: 필수 셀 scale_audit_ref 이 비어 있다', '행 4: 필수 셀 scale_audit_target 이 비어 있다', '행 4: 필수 셀 scale_audit_ref 이 비어 있다', '행 5: 필수 셀 scale_audit_target 이 비어 있다', '행 5: 필수 셀 scale_audit_ref 이"
+    },
+    "root:profile_grid": {
+      "도달": false,
+      "상태": "전제 변경",
+      "멈춘_곳": "FileNotFoundError: [Errno 2] No such file or directory: '/tmp/r11-profile-authority-s6m17emr/profile_gamma_100_Li.csv'",
+      "세부": "원본의 '완전' 대조군이 `--grid 3` 이다 — 정본 격자(21)가 아니면 그것도 subset 이라 canonical 자리에 파일이 없다. 원본은 그 파일을 열다 죽는다. 같은 축은 `data:profile_grid`(canonical_written False) 와 회귀 `test_d10_03` 이 본다"
+    },
+    "data:receipt_identity": {
+      "도달": true,
+      "상태": "반례 소멸",
+      "멈춘_곳": "네 digest 가 다르면 check_u14 가 막는다 (P1-1)",
+      "세부": {
+        "command": [
+          "/usr/local/bin/python3",
+          "/tmp/evidence-snap-pzvhhl7o/snap/bms-balancing/scripts/check_u14.py",
+          "--new",
+          "/tmp/r11-receipt-ebj4e2r0/new",
+          "--old",
+          "/tmp/r11-receipt-ebj4e2r0/old"
+        ],
+        "returncode": 2,
+        "promotion": {
+          "promotion_eligible": false,
+          "rc": 2,
+          "subset": false,
+          "roster": {
+            "old": 1,
+            "new": 1,
+            "compared": 1,
+            "missing_in_new": [],
+            "extra_in_new": []
+          },
+          "blocked_by": {
+            "schema": 2,
+            "provenance_cols": 0,
+            "content": 3,
+            "unit": 0,
+            "controls": 0,
+            "env": 1,
+            "numbers": 0,
+            "alias": 1,
+            "provenance": 2,
+            "inputs": 8,
+            "inputs_uncomparable": 0,
+            "stale": 0,
+            "baseline_absent": 0
+          },
+          "policy": "current",
+          "new": "/tmp/r11-receipt-ebj4e2r0/new",
+          "old": "/tmp/r11-receipt-ebj4e2r0/old"
+        },
+        "old_target_digest": "9d6ace08c3d4",
+        "new_target_digest": "48cf03a6b6b8",
+        "old_ref_digest": "d789ce826bcd",
+        "new_ref_digest": "e9a7ac3dea7c",
+        "all_four_digests_changed": true,
+        "stdout_tail": [
+          "  - matrix_100.csv:('GITT', 'Li', 0.0): ref 입력 half_cell 의 identity 가 다르다 — 정본 666666666666… → 새 dddddddddddd… (같은 입력이 아니면 재현이 아니다)",
+          "  - matrix_100.csv:('GITT', 'Li', 0.0): ref 입력 literature.gr 의 identity 가 다르다 — 정본 777777777777… → 새 eeeeeeeeeeee… (같은 입력이 아니면 재현이 아니다)",
+          "  - matrix_100.csv:('GITT', 'Li', 0.0): ref 입력 literature.si 의 identity 가 다르다 — 정본 888888888888… → 새 ffffffffffff… (같은 입력이 아니면 재현이 아니다)",
+          "",
+          "■ **provenance 가 안전하지 않다** 2 — 산출 스스로 신고한 위험이다 (git_dirty · 실행 중 상태 변경 · 바뀐 코드 · 시작 커밋). 승격은 safe 값 자체를 요구한다 (Codex R11 P1-9)",
+          "  - matrix_100.csv.meta:git_dirty = '(없음)' (승격 조건은 False)",
+          "  - matrix_100.csv.meta:git_modified_code = '(없음)' (승격 조건은 [])",
+          "",
+          "■ **환경(env) 불일치** 1 — 정본을 만든 기계와 다른 조합이다 (R6 내부 F3: scipy 1.11↔1.17 에서 savgol 이 ULP 로 갈리고 L-BFGS-B 최적점이 달라진다). 숫자가 같아도 같은 실행의 재현이 아니다 (Codex R10 P1-7)",
+          "  - matrix_100.csv.meta:env.pandas: 환경 축이 비어 있다 (정본 None · 새 산출 None)",
+          "  숫자: 대조 **미완** — 명부/묶음/스키마/내용/조건/환경 문제를 뺀 나머지만 같다 (전체를 말할 수 없다)",
+          "PROMOTION {\"promotion_eligible\": false, \"rc\": 2, \"subset\": false, \"roster\": {\"old\": 1, \"new\": 1, \"compared\": 1, \"missing_in_new\": [], \"extra_in_new\": []}, \"blocked_by\": {\"schema\": 2, \"provenance_cols\": 0, \"content\": 3, \"unit\": 0, \"controls\": 0, \"env\": 1, \"numbers\": 0, \"alias\": 1, \"provenance\": 2, \"inputs\": 8, \"inputs_uncomparable\": 0, \"stale\": 0, \"baseline_absent\": 0}, \"policy\": \"current\", \"new\": \"/tmp/r11-receipt-ebj4e2r0/new\", \"old\": \"/tmp/r11-receipt-ebj4e2r0/old\"}"
+        ],
+        "stderr": ""
+      },
+      "child_rc": 0
+    },
+    "data:receipt_shape": {
+      "도달": true,
+      "상태": "반례 소멸",
+      "멈춘_곳": "path 뒤바꿈은 role→path 로 드러나고, 평탄화 중복 역할은 거부된다 (P1-6 · P2-3)",
+      "세부": {
+        "base_digest": "9d6ace08c3d4",
+        "path_swapped_digest": "9d6ace08c3d4",
+        "path_swap_validate_problems": [],
+        "duplicate_flattened_role_leaves": [
+          "full_cell",
+          "half_cell",
+          "literature.gr",
+          "literature.si",
+          "literature.gr"
+        ],
+        "duplicate_role_validate_problems": [
+          "top-level 역할 이름에 점이 있다: 'literature.gr' — 역할은 중첩으로 쓴다 (Codex R11 P2-3)",
+          "논리 역할 'literature.gr' 이 2 번 나온다 — 역할마다 정확히 하나여야 한다 (Codex R11 P2-3)"
+        ]
+      },
+      "child_rc": 0
+    },
+    "data:allowlist": {
+      "도달": true,
+      "상태": "반례 소멸",
+      "멈춘_곳": "부재 allowlist 가 실제 파일과 모순되면 hard-fail (P1-4)",
+      "세부": {
+        "returncode": 2,
+        "canonical_written": false,
+        "canonical_path": "/tmp/r11-matrix-uit_3lgi/matrix_300_0147.csv",
+        "rows": 0,
+        "half_cell_sources_in_rows": [],
+        "input_files_present_during_run": [
+          "/tmp/r11-matrix-uit_3lgi/data-root/data/half_cell/GITT/300_0147.xlsx",
+          "/tmp/r11-matrix-uit_3lgi/data-root/data/half_cell/step_005C/300_0147_005C.xlsx"
+        ],
+        "summary": null,
+        "stdout_key_lines": [],
+        "allowlist_entry_present": true,
+        "declared_states": [
+          "100",
+          "200",
+          "300_0009"
+        ],
+        "present_but_excluded": true,
+        "full_population_if_both_present": 32
+      },
+      "child_rc": 0
+    },
+    "data:matrix_subset": {
+      "도달": true,
+      "상태": "반례 소멸",
+      "멈춘_곳": "caller 가 좁힌 matrix 는 canonical 이 아니다 (P1-2)",
+      "세부": {
+        "returncode": 3,
+        "canonical_written": false,
+        "canonical_path": "/tmp/r11-matrix-bkulot3g/matrix_100.csv",
+        "rows": 0,
+        "half_cell_sources_in_rows": [],
+        "input_files_present_during_run": [
+          "/tmp/r11-matrix-bkulot3g/data-root/data/half_cell/GITT/100.xlsx",
+          "/tmp/r11-matrix-bkulot3g/data-root/data/half_cell/step_005C/100_005C.xlsx"
+        ],
+        "summary": {
+          "state": "100",
+          "n_combinations": 8,
+          "status": "subset",
+          "combo_roster": {
+            "authority": 32,
+            "requested": 8,
+            "succeeded": 8,
+            "missing_input": [],
+            "failed": [],
+            "absent": [],
+            "available": 8
+          },
+          "n_ok": 8,
+          "n_with_active_bound": 8,
+          "n_negative_LAM": 0,
+          "LAM_PE_pct": {
+            "min": 1.0,
+            "max": 1.0,
+            "span": 0.0,
+            "median": 1.0
+          },
+          "LAM_NE_pct": {
+            "min": 2.0,
+            "max": 2.0,
+            "span": 0.0,
+            "median": 2.0
+          },
+          "LLI_pct": {
+            "min": 3.0,
+            "max": 3.0,
+            "span": 0.0,
+            "median": 3.0
+          },
+          "axes_with_denominator": {
+            "GITT_dqdv_off_all_Si": {
+              "n": 8,
+              "si_sources": [
+                "Baggetto",
+                "Friedrich",
+                "Jiang",
+                "Kunz",
+                "Li",
+                "Lu",
+                "Sethuraman",
+                "Wetjen"
+              ],
+              "LLI_span_pct": 0.0,
+              "LAM_NE_span_pct": 0.0,
+              "LAM_PE_span_pct": 0.0
+            }
+          }
+        },
+        "stdout_key_lines": [
+          "SUMMARY {\"state\": \"100\", \"n_combinations\": 8, \"status\": \"subset\", \"combo_roster\": {\"authority\": 32, \"requested\": 8, \"succeeded\": 8, \"missing_input\": [], \"failed\": [], \"absent\": [], \"available\": 8}, \"n_ok\": 8, \"n_with_active_bound\": 8, \"n_negative_LAM\": 0, \"LAM_PE_pct\": {\"min\": 1.0, \"max\": 1.0, \"span\": 0.0, \"median\": 1.0}, \"LAM_NE_pct\": {\"min\": 2.0, \"max\": 2.0, \"span\": 0.0, \"median\": 2.0}, \"LLI_pct\": {\"min\": 3.0, \"max\": 3.0, \"span\": 0.0, \"median\": 3.0}, \"axes_with_denominator\": {\"GITT_dqdv_off_all_Si\": {\"n\": 8, \"si_sources\": [\"Baggetto\", \"Friedrich\", \"Jiang\", \"Kunz\", \"Li\", \"Lu\", \"Sethuraman\", \"Wetjen\"], \"LLI_span_pct\": 0.0, \"LAM_NE_span_pct\": 0.0, \"LAM_PE_span_pct\": 0.0}}}",
+          "wrote /tmp/r11-matrix-bkulot3g/partial/matrix_100.csv  [subset — canonical /tmp/r11-matrix-bkulot3g/matrix_100.csv 은 건드리지 않았다 (Codex R10 P1-4)]"
+        ],
+        "full_authority_rows": 32
+      },
+      "child_rc": 0
+    },
+    "data:profile_grid": {
+      "도달": true,
+      "상태": "반례 소멸",
+      "멈춘_곳": "`--grid 1` 은 canonical 이 아니다 (P1-3)",
+      "세부": {
+        "returncode": 3,
+        "canonical_written": false,
+        "rows": 0,
+        "gamma_roster": null,
+        "summary_status": "subset",
+        "default_grid_in_wrapper": 21,
+        "stdout_key_lines": [
+          "SUMMARY {\"state\": \"100\", \"si_source\": \"Li\", \"half_cell\": \"GITT\", \"best_obj\": 1.0, \"consumed_inputs\": {\"full_cell\": {\"path\": \"profile/full.xlsx\", \"sha256\": \"2222222222222222222222222222222222222222222222222222222222222222\"}, \"half_cell\": {\"path\": \"profile/half.xlsx\", \"sha256\": \"3333333333333333333333333333333333333333333333333333333333333333\"}, \"literature\": {\"gr\": {\"path\": \"profile/gr.xlsx\", \"sha256\": \"4444444444444444444444444444444444444444444444444444444444444444\"}, \"si\": {\"path\": \"profile/si.csv\", \"sha256\": \"5555555555555555555555555555555555555555555555555555555555555555\"}}}, \"ref_consumed_inputs\": {\"full_cell\": {\"path\": \"profile/full.xlsx\", \"sha256\": \"2222222222222222222222222222222222222222222222222222222222222222\"}, \"half_cell\": {\"path\": \"profile/half.xlsx\", \"sha256\": \"3333333333333333333333333333333333333333333333333333333333333333\"}, \"literature\": {\"gr\": {\"path\": \"profile/gr.xlsx\", \"sha256\": \"4444444444444444444444444444444444444444444444444444444444444444\"}, \"si\": {\"path\": \"profile/si.csv\", \"sha256\": \"5555555555555555555555555555555555555555555555555555555555555555\"}}}, \"inputs_sha\": \"a3ab7cf668d1\", \"ref_inputs_sha\": \"a3ab7cf668d1\", \"profile_scale\": \"global\", \"ratio_comparable_across_rows\": true, \"scale_note\": \"global: 모든 행이 같은 목적함수라 비교는 되지만, MATLAB 검증기는 γ 를 묶은 경계를 넘긴다 [리뷰 A1 — 미결].\", \"best_gamma\": 0.2, \"tol_percent\": 1.0, \"gamma_inside_tol\": [0.0, 0.0], \"n_inside\": 1, \"status\": \"subset\", \"gamma_roster\": {\"authority\": 21, \"requested\": 1, \"succeeded\": 1, \"missing\": []}, \"gamma_all_failed\": [], \"a_NE_span_inside_tol\": 0.0, \"LAM_NE_pct_span_inside_tol\": 0.0, \"LAM_PE_pct_span_inside_tol\": 0.0, \"LLI_pct_span_inside_tol\": 0.0}",
+          "wrote /tmp/r11-profile-co3p8m1f/partial/profile_gamma_100_Li.csv [status subset] (run_id profile-r11)  — canonical /tmp/r11-profile-co3p8m1f/profile_gamma_100_Li.csv 은 건드리지 않았다"
+        ]
+      },
+      "child_rc": 0
+    },
+    "data:shape_reader": {
+      "도달": true,
+      "상태": "반례 소멸",
+      "멈춘_곳": "production reader 가 공용 validator 를 거쳐 error 행을 안 먹는다 (P1-7)",
+      "세부": {
+        "error": "RuntimeError: matrix_100.csv: 공용 스키마 검증 실패 ['`error` 행 1/1 — 이 묶음은 success 가 아니다 (부분/실패이고 승격 대상이 아니다; success 행에 `error` 칸이 있으면 그것도 error 행이다, Codex R10 P1-5)'] — 이 묶음은 과학 입력이 아니다 (checker 와 같은 validator 다, Codex R11 P1-7)"
+      },
+      "child_rc": 1
+    },
+    "data:shape_wrapper": {
+      "도달": true,
+      "상태": "환경상 불가",
+      "멈춘_곳": "FileNotFoundError: [Errno 2] No such file or directory: 'wsl.exe'",
+      "세부": "원",
+      "비고": "이 환경에서 실행할 수 없다 — 닫힘으로 세지 않는다"
+    },
+    "publish:*": {
+      "도달": true,
+      "상태": "전제 변경",
+      "멈춘_곳": "FileNotFoundError: [Errno 2] No such file or directory: '/tmp/r11-replay-publish-hx5zx195/publish/matrix_100.csv'",
+      "세부": "좁힌 matrix 는 이제 canonical 자리에 안 쓴다 — 원본 probe 는 그 파일을 무조건 열어 죽는다 (같은 축은 `data:matrix_subset`·`data:profile_grid`·`root:matrix_authority` 가 따로 본다)"
+    },
+    "check:schema_only_no_baseline": {
+      "도달": true,
+      "상태": "반례 소멸",
+      "멈춘_곳": "schema-only 는 승격 증명서가 아니다 (P1-6)",
+      "세부": {
+        "rc": 2,
+        "promotion": {
+          "promotion_eligible": false,
+          "rc": 2,
+          "subset": false,
+          "roster": {
+            "old": 0,
+            "new": 1,
+            "compared": 0,
+            "missing_in_new": [],
+            "extra_in_new": []
+          },
+          "blocked_by": {
+            "schema": 0,
+            "provenance_cols": 0,
+            "content": 1,
+            "unit": 0,
+            "controls": 0,
+            "env": 0,
+            "numbers": 0,
+            "alias": 0,
+            "provenance": 3,
+            "inputs": 0,
+            "inputs_uncomparable": 0,
+            "stale": 0,
+            "baseline_absent": 1
+          },
+          "policy": "current",
+          "new": "/tmp/r11-replay-publish-hx5zx195/schema-only",
+          "old": null
+        },
+        "stdout_tail": [
+          "■ 내용 검사 실패 1 — 열은 있는데 값이 스키마가 아니다 (빈 필수 셀 · 숫자 아님 · receipt 의 역할/path/64-hex/재계산 digest · 중복 key) (Codex R9-03)",
+          "  - degeneracy_100_Li.json.meta:roster 가 본문에서 유도한 명부와 다르다 — {'kind': 'degeneracy', 'state': '100'} ≠ {'kind': 'degeneracy', 'state': '100', 'half_cell': ['GITT'], 'si': ['Li'], 'w_dqdv': [0.0]}",
+          "",
+          "■ **provenance 가 안전하지 않다** 3 — 산출 스스로 신고한 위험이다 (git_dirty · 실행 중 상태 변경 · 바뀐 코드 · 시작 커밋). 승격은 safe 값 자체를 요구한다 (Codex R11 P1-9)",
+          "  - degeneracy_100_Li.json.meta:git_dirty = '(없음)' (승격 조건은 False)",
+          "  - degeneracy_100_Li.json.meta:git_modified_code = '(없음)' (승격 조건은 [])",
+          "  - degeneracy_100_Li.json.meta:git_commit_at_start 가 40-hex 커밋이 아니다 ('665c87e')",
+          "PROMOTION {\"promotion_eligible\": false, \"rc\": 2, \"subset\": false, \"roster\": {\"old\": 0, \"new\": 1, \"compared\": 0, \"missing_in_new\": [], \"extra_in_new\": []}, \"blocked_by\": {\"schema\": 0, \"provenance_cols\": 0, \"content\": 1, \"unit\": 0, \"controls\": 0, \"env\": 0, \"numbers\": 0, \"alias\": 0, \"provenance\": 3, \"inputs\": 0, \"inputs_uncomparable\": 0, \"stale\": 0, \"baseline_absent\": 1}, \"policy\": \"current\", \"new\": \"/tmp/r11-replay-publish-hx5zx195/schema-only\", \"old\": null}"
+        ],
+        "stderr": ""
+      }
+    },
+    "check:schema_only_skips_env_controls_argv": {
+      "도달": true,
+      "상태": "반례 소멸",
+      "멈춘_곳": "같음 (P1-6)",
+      "세부": {
+        "rc": 2,
+        "promotion": {
+          "promotion_eligible": false,
+          "rc": 2,
+          "subset": false,
+          "roster": {
+            "old": 0,
+            "new": 1,
+            "compared": 0,
+            "missing_in_new": [],
+            "extra_in_new": []
+          },
+          "blocked_by": {
+            "schema": 8,
+            "provenance_cols": 0,
+            "content": 0,
+            "unit": 0,
+            "controls": 0,
+            "env": 0,
+            "numbers": 0,
+            "alias": 0,
+            "provenance": 3,
+            "inputs": 0,
+            "inputs_uncomparable": 0,
+            "stale": 0,
+            "baseline_absent": 1
+          },
+          "policy": "current",
+          "new": "/tmp/r11-replay-publish-hx5zx195/schema-only-weak-meta",
+          "old": null
+        },
+        "stdout_tail": [
+          "  - degeneracy_100_Li.json.meta: roster",
+          "  - degeneracy_100_Li.json.meta: env 가 비어 있다",
+          "",
+          "■ **provenance 가 안전하지 않다** 3 — 산출 스스로 신고한 위험이다 (git_dirty · 실행 중 상태 변경 · 바뀐 코드 · 시작 커밋). 승격은 safe 값 자체를 요구한다 (Codex R11 P1-9)",
+          "  - degeneracy_100_Li.json.meta:git_dirty = '(없음)' (승격 조건은 False)",
+          "  - degeneracy_100_Li.json.meta:git_modified_code = '(없음)' (승격 조건은 [])",
+          "  - degeneracy_100_Li.json.meta:git_commit_at_start 가 40-hex 커밋이 아니다 ('665c87e')",
+          "PROMOTION {\"promotion_eligible\": false, \"rc\": 2, \"subset\": false, \"roster\": {\"old\": 0, \"new\": 1, \"compared\": 0, \"missing_in_new\": [], \"extra_in_new\": []}, \"blocked_by\": {\"schema\": 8, \"provenance_cols\": 0, \"content\": 0, \"unit\": 0, \"controls\": 0, \"env\": 0, \"numbers\": 0, \"alias\": 0, \"provenance\": 3, \"inputs\": 0, \"inputs_uncomparable\": 0, \"stale\": 0, \"baseline_absent\": 1}, \"policy\": \"current\", \"new\": \"/tmp/r11-replay-publish-hx5zx195/schema-only-weak-meta\", \"old\": null}"
+        ],
+        "stderr": ""
+      }
+    },
+    "check:full_compare_missing_argv_and_roster": {
+      "도달": true,
+      "상태": "반례 소멸",
+      "멈춘_곳": "argv·roster 가 없으면 승격 못 한다 (P1-6 · P2-3)",
+      "세부": {
+        "rc": 2,
+        "promotion": {
+          "promotion_eligible": false,
+          "rc": 2,
+          "subset": false,
+          "roster": {
+            "old": 1,
+            "new": 1,
+            "compared": 1,
+            "missing_in_new": [],
+            "extra_in_new": []
+          },
+          "blocked_by": {
+            "schema": 2,
+            "provenance_cols": 0,
+            "content": 0,
+            "unit": 0,
+            "controls": 0,
+            "env": 1,
+            "numbers": 0,
+            "alias": 0,
+            "provenance": 3,
+            "inputs": 0,
+            "inputs_uncomparable": 0,
+            "stale": 0,
+            "baseline_absent": 0
+          },
+          "policy": "current",
+          "new": "/tmp/r11-replay-publish-hx5zx195/argv-new",
+          "old": "/tmp/r11-replay-publish-hx5zx195/argv-old"
+        },
+        "stdout_tail": [
+          "  - degeneracy_100_Li.json.meta:git_dirty = '(없음)' (승격 조건은 False)",
+          "  - degeneracy_100_Li.json.meta:git_modified_code = '(없음)' (승격 조건은 [])",
+          "  - degeneracy_100_Li.json.meta:git_commit_at_start 가 40-hex 커밋이 아니다 ('665c87e')",
+          "",
+          "■ **환경(env) 불일치** 1 — 정본을 만든 기계와 다른 조합이다 (R6 내부 F3: scipy 1.11↔1.17 에서 savgol 이 ULP 로 갈리고 L-BFGS-B 최적점이 달라진다). 숫자가 같아도 같은 실행의 재현이 아니다 (Codex R10 P1-7)",
+          "  - degeneracy_100_Li.json.meta:env.pandas: 환경 축이 비어 있다 (정본 None · 새 산출 None)",
+          "  숫자: 대조 **미완** — 명부/묶음/스키마/내용/조건/환경 문제를 뺀 나머지만 같다 (전체를 말할 수 없다)",
+          "PROMOTION {\"promotion_eligible\": false, \"rc\": 2, \"subset\": false, \"roster\": {\"old\": 1, \"new\": 1, \"compared\": 1, \"missing_in_new\": [], \"extra_in_new\": []}, \"blocked_by\": {\"schema\": 2, \"provenance_cols\": 0, \"content\": 0, \"unit\": 0, \"controls\": 0, \"env\": 1, \"numbers\": 0, \"alias\": 0, \"provenance\": 3, \"inputs\": 0, \"inputs_uncomparable\": 0, \"stale\": 0, \"baseline_absent\": 0}, \"policy\": \"current\", \"new\": \"/tmp/r11-replay-publish-hx5zx195/argv-new\", \"old\": \"/tmp/r11-replay-publish-hx5zx195/argv-old\"}"
+        ],
+        "stderr": ""
+      }
+    },
+    "check:changed_git_state_promoted": {
+      "도달": true,
+      "상태": "반례 소멸",
+      "멈춘_곳": "실행 중 git 상태가 바뀐 산출은 승격 못 한다 (P1-9)",
+      "세부": {
+        "rc": 2,
+        "promotion": {
+          "promotion_eligible": false,
+          "rc": 2,
+          "subset": false,
+          "roster": {
+            "old": 1,
+            "new": 1,
+            "compared": 1,
+            "missing_in_new": [],
+            "extra_in_new": []
+          },
+          "blocked_by": {
+            "schema": 0,
+            "provenance_cols": 0,
+            "content": 1,
+            "unit": 0,
+            "controls": 0,
+            "env": 1,
+            "numbers": 0,
+            "alias": 0,
+            "provenance": 4,
+            "inputs": 0,
+            "inputs_uncomparable": 0,
+            "stale": 0,
+            "baseline_absent": 0
+          },
+          "policy": "current",
+          "new": "/tmp/r11-replay-publish-hx5zx195/changed-new",
+          "old": "/tmp/r11-replay-publish-hx5zx195/changed-old"
+        },
+        "stdout_tail": [
+          "  - degeneracy_100_Li.json.meta:git_state_changed_during_run = True (승격 조건은 False)",
+          "  - degeneracy_100_Li.json.meta:git_modified_code = '(없음)' (승격 조건은 [])",
+          "  - degeneracy_100_Li.json.meta:git_commit_at_start 가 40-hex 커밋이 아니다 ('attacker-commit')",
+          "",
+          "■ **환경(env) 불일치** 1 — 정본을 만든 기계와 다른 조합이다 (R6 내부 F3: scipy 1.11↔1.17 에서 savgol 이 ULP 로 갈리고 L-BFGS-B 최적점이 달라진다). 숫자가 같아도 같은 실행의 재현이 아니다 (Codex R10 P1-7)",
+          "  - degeneracy_100_Li.json.meta:env.pandas: 환경 축이 비어 있다 (정본 None · 새 산출 None)",
+          "  숫자: 대조 **미완** — 명부/묶음/스키마/내용/조건/환경 문제를 뺀 나머지만 같다 (전체를 말할 수 없다)",
+          "PROMOTION {\"promotion_eligible\": false, \"rc\": 2, \"subset\": false, \"roster\": {\"old\": 1, \"new\": 1, \"compared\": 1, \"missing_in_new\": [], \"extra_in_new\": []}, \"blocked_by\": {\"schema\": 0, \"provenance_cols\": 0, \"content\": 1, \"unit\": 0, \"controls\": 0, \"env\": 1, \"numbers\": 0, \"alias\": 0, \"provenance\": 4, \"inputs\": 0, \"inputs_uncomparable\": 0, \"stale\": 0, \"baseline_absent\": 0}, \"policy\": \"current\", \"new\": \"/tmp/r11-replay-publish-hx5zx195/changed-new\", \"old\": \"/tmp/r11-replay-publish-hx5zx195/changed-old\"}"
+        ],
+        "stderr": ""
+      }
+    },
+    "check:artifact_env_disagrees_with_meta_promoted": {
+      "도달": true,
+      "상태": "반례 소멸",
+      "멈춘_곳": "본문과 meta 의 조건이 어긋나면 막는다 (P1-9)",
+      "세부": {
+        "rc": 2,
+        "promotion": {
+          "promotion_eligible": false,
+          "rc": 2,
+          "subset": false,
+          "roster": {
+            "old": 1,
+            "new": 1,
+            "compared": 1,
+            "missing_in_new": [],
+            "extra_in_new": []
+          },
+          "blocked_by": {
+            "schema": 0,
+            "provenance_cols": 0,
+            "content": 1,
+            "unit": 0,
+            "controls": 0,
+            "env": 1,
+            "numbers": 0,
+            "alias": 0,
+            "provenance": 3,
+            "inputs": 0,
+            "inputs_uncomparable": 0,
+            "stale": 0,
+            "baseline_absent": 0
+          },
+          "policy": "current",
+          "new": "/tmp/r11-replay-publish-hx5zx195/artifact-env-new",
+          "old": "/tmp/r11-replay-publish-hx5zx195/artifact-env-old"
+        },
+        "stdout_tail": [
+          "  - degeneracy_100_Li.json.meta:git_dirty = '(없음)' (승격 조건은 False)",
+          "  - degeneracy_100_Li.json.meta:git_modified_code = '(없음)' (승격 조건은 [])",
+          "  - degeneracy_100_Li.json.meta:git_commit_at_start 가 40-hex 커밋이 아니다 ('665c87e')",
+          "",
+          "■ **환경(env) 불일치** 1 — 정본을 만든 기계와 다른 조합이다 (R6 내부 F3: scipy 1.11↔1.17 에서 savgol 이 ULP 로 갈리고 L-BFGS-B 최적점이 달라진다). 숫자가 같아도 같은 실행의 재현이 아니다 (Codex R10 P1-7)",
+          "  - degeneracy_100_Li.json.meta:env.pandas: 환경 축이 비어 있다 (정본 None · 새 산출 None)",
+          "  숫자: 대조 **미완** — 명부/묶음/스키마/내용/조건/환경 문제를 뺀 나머지만 같다 (전체를 말할 수 없다)",
+          "PROMOTION {\"promotion_eligible\": false, \"rc\": 2, \"subset\": false, \"roster\": {\"old\": 1, \"new\": 1, \"compared\": 1, \"missing_in_new\": [], \"extra_in_new\": []}, \"blocked_by\": {\"schema\": 0, \"provenance_cols\": 0, \"content\": 1, \"unit\": 0, \"controls\": 0, \"env\": 1, \"numbers\": 0, \"alias\": 0, \"provenance\": 3, \"inputs\": 0, \"inputs_uncomparable\": 0, \"stale\": 0, \"baseline_absent\": 0}, \"policy\": \"current\", \"new\": \"/tmp/r11-replay-publish-hx5zx195/artifact-env-new\", \"old\": \"/tmp/r11-replay-publish-hx5zx195/artifact-env-old\"}"
+        ],
+        "stderr": ""
+      }
+    },
+    "check:per_file_alias_self_comparison": {
+      "도달": true,
+      "상태": "반례 소멸",
+      "멈춘_곳": "파일 단위 hardlink 자기대조는 승격 근거가 아니다 (P1-5)",
+      "세부": {
+        "rc": 2,
+        "promotion": {
+          "promotion_eligible": false,
+          "rc": 2,
+          "subset": false,
+          "roster": {
+            "old": 1,
+            "new": 1,
+            "compared": 1,
+            "missing_in_new": [],
+            "extra_in_new": []
+          },
+          "blocked_by": {
+            "schema": 0,
+            "provenance_cols": 0,
+            "content": 1,
+            "unit": 0,
+            "controls": 0,
+            "env": 1,
+            "numbers": 0,
+            "alias": 3,
+            "provenance": 3,
+            "inputs": 0,
+            "inputs_uncomparable": 0,
+            "stale": 0,
+            "baseline_absent": 0
+          },
+          "policy": "current",
+          "new": "/tmp/r11-replay-publish-hx5zx195/alias-new",
+          "old": "/tmp/r11-replay-publish-hx5zx195/alias-old"
+        },
+        "stdout_tail": [
+          "  - degeneracy_100_Li.json.meta:git_dirty = '(없음)' (승격 조건은 False)",
+          "  - degeneracy_100_Li.json.meta:git_modified_code = '(없음)' (승격 조건은 [])",
+          "  - degeneracy_100_Li.json.meta:git_commit_at_start 가 40-hex 커밋이 아니다 ('665c87e')",
+          "",
+          "■ **환경(env) 불일치** 1 — 정본을 만든 기계와 다른 조합이다 (R6 내부 F3: scipy 1.11↔1.17 에서 savgol 이 ULP 로 갈리고 L-BFGS-B 최적점이 달라진다). 숫자가 같아도 같은 실행의 재현이 아니다 (Codex R10 P1-7)",
+          "  - degeneracy_100_Li.json.meta:env.pandas: 환경 축이 비어 있다 (정본 None · 새 산출 None)",
+          "  숫자: 대조 **미완** — 명부/묶음/스키마/내용/조건/환경 문제를 뺀 나머지만 같다 (전체를 말할 수 없다)",
+          "PROMOTION {\"promotion_eligible\": false, \"rc\": 2, \"subset\": false, \"roster\": {\"old\": 1, \"new\": 1, \"compared\": 1, \"missing_in_new\": [], \"extra_in_new\": []}, \"blocked_by\": {\"schema\": 0, \"provenance_cols\": 0, \"content\": 1, \"unit\": 0, \"controls\": 0, \"env\": 1, \"numbers\": 0, \"alias\": 3, \"provenance\": 3, \"inputs\": 0, \"inputs_uncomparable\": 0, \"stale\": 0, \"baseline_absent\": 0}, \"policy\": \"current\", \"new\": \"/tmp/r11-replay-publish-hx5zx195/alias-new\", \"old\": \"/tmp/r11-replay-publish-hx5zx195/alias-old\"}"
+        ],
+        "stderr": "",
+        "directories_samefile": false,
+        "artifacts_samefile": true,
+        "metas_samefile": true
+      }
+    },
+    "check:matrix_inf_promoted": {
+      "도달": true,
+      "상태": "반례 소멸",
+      "멈춘_곳": "matrix 의 inf 는 스키마 문제다 (P1-8)",
+      "세부": {
+        "rc": 2,
+        "promotion": {
+          "promotion_eligible": false,
+          "rc": 2,
+          "subset": false,
+          "roster": {
+            "old": 1,
+            "new": 1,
+            "compared": 1,
+            "missing_in_new": [],
+            "extra_in_new": []
+          },
+          "blocked_by": {
+            "schema": 0,
+            "provenance_cols": 0,
+            "content": 5,
+            "unit": 0,
+            "controls": 0,
+            "env": 1,
+            "numbers": 0,
+            "alias": 0,
+            "provenance": 3,
+            "inputs": 0,
+            "inputs_uncomparable": 0,
+            "stale": 0,
+            "baseline_absent": 0
+          },
+          "policy": "current",
+          "new": "/tmp/r11-replay-publish-hx5zx195/inf-new",
+          "old": "/tmp/r11-replay-publish-hx5zx195/inf-old"
+        },
+        "stdout_tail": [
+          "  - matrix_100.csv.meta:git_dirty = '(없음)' (승격 조건은 False)",
+          "  - matrix_100.csv.meta:git_modified_code = '(없음)' (승격 조건은 [])",
+          "  - matrix_100.csv.meta:git_commit_at_start 가 40-hex 커밋이 아니다 ('665c87e')",
+          "",
+          "■ **환경(env) 불일치** 1 — 정본을 만든 기계와 다른 조합이다 (R6 내부 F3: scipy 1.11↔1.17 에서 savgol 이 ULP 로 갈리고 L-BFGS-B 최적점이 달라진다). 숫자가 같아도 같은 실행의 재현이 아니다 (Codex R10 P1-7)",
+          "  - matrix_100.csv.meta:env.pandas: 환경 축이 비어 있다 (정본 None · 새 산출 None)",
+          "  숫자: 대조 **미완** — 명부/묶음/스키마/내용/조건/환경 문제를 뺀 나머지만 같다 (전체를 말할 수 없다)",
+          "PROMOTION {\"promotion_eligible\": false, \"rc\": 2, \"subset\": false, \"roster\": {\"old\": 1, \"new\": 1, \"compared\": 1, \"missing_in_new\": [], \"extra_in_new\": []}, \"blocked_by\": {\"schema\": 0, \"provenance_cols\": 0, \"content\": 5, \"unit\": 0, \"controls\": 0, \"env\": 1, \"numbers\": 0, \"alias\": 0, \"provenance\": 3, \"inputs\": 0, \"inputs_uncomparable\": 0, \"stale\": 0, \"baseline_absent\": 0}, \"policy\": \"current\", \"new\": \"/tmp/r11-replay-publish-hx5zx195/inf-new\", \"old\": \"/tmp/r11-replay-publish-hx5zx195/inf-old\"}"
+        ],
+        "stderr": ""
+      }
+    },
+    "check:degeneracy_infinity_promoted": {
+      "도달": true,
+      "상태": "반례 소멸",
+      "멈춘_곳": "degeneracy 의 Infinity 는 스키마 문제다 (P1-8)",
+      "세부": {
+        "rc": 2,
+        "promotion": {
+          "promotion_eligible": false,
+          "rc": 2,
+          "subset": false,
+          "roster": {
+            "old": 1,
+            "new": 1,
+            "compared": 1,
+            "missing_in_new": [],
+            "extra_in_new": []
+          },
+          "blocked_by": {
+            "schema": 0,
+            "provenance_cols": 0,
+            "content": 2,
+            "unit": 0,
+            "controls": 0,
+            "env": 1,
+            "numbers": 0,
+            "alias": 0,
+            "provenance": 3,
+            "inputs": 0,
+            "inputs_uncomparable": 0,
+            "stale": 0,
+            "baseline_absent": 0
+          },
+          "policy": "current",
+          "new": "/tmp/r11-replay-publish-hx5zx195/jinf-new",
+          "old": "/tmp/r11-replay-publish-hx5zx195/jinf-old"
+        },
+        "stdout_tail": [
+          "  - degeneracy_100_Li.json.meta:git_dirty = '(없음)' (승격 조건은 False)",
+          "  - degeneracy_100_Li.json.meta:git_modified_code = '(없음)' (승격 조건은 [])",
+          "  - degeneracy_100_Li.json.meta:git_commit_at_start 가 40-hex 커밋이 아니다 ('665c87e')",
+          "",
+          "■ **환경(env) 불일치** 1 — 정본을 만든 기계와 다른 조합이다 (R6 내부 F3: scipy 1.11↔1.17 에서 savgol 이 ULP 로 갈리고 L-BFGS-B 최적점이 달라진다). 숫자가 같아도 같은 실행의 재현이 아니다 (Codex R10 P1-7)",
+          "  - degeneracy_100_Li.json.meta:env.pandas: 환경 축이 비어 있다 (정본 None · 새 산출 None)",
+          "  숫자: 대조 **미완** — 명부/묶음/스키마/내용/조건/환경 문제를 뺀 나머지만 같다 (전체를 말할 수 없다)",
+          "PROMOTION {\"promotion_eligible\": false, \"rc\": 2, \"subset\": false, \"roster\": {\"old\": 1, \"new\": 1, \"compared\": 1, \"missing_in_new\": [], \"extra_in_new\": []}, \"blocked_by\": {\"schema\": 0, \"provenance_cols\": 0, \"content\": 2, \"unit\": 0, \"controls\": 0, \"env\": 1, \"numbers\": 0, \"alias\": 0, \"provenance\": 3, \"inputs\": 0, \"inputs_uncomparable\": 0, \"stale\": 0, \"baseline_absent\": 0}, \"policy\": \"current\", \"new\": \"/tmp/r11-replay-publish-hx5zx195/jinf-new\", \"old\": \"/tmp/r11-replay-publish-hx5zx195/jinf-old\"}"
+        ],
+        "stderr": ""
+      }
+    },
+    "check:profile_gamma_roster_not_validated": {
+      "도달": true,
+      "상태": "반례 소멸",
+      "멈춘_곳": "gamma_roster 는 parse 해서 본다 (P2-4)",
+      "세부": {
+        "gamma_roster": "not-json",
+        "problems": [
+          "행 0: gamma_roster 가 JSON 이 아니다 (Expecting value: line 1 column 1 (char 0))"
+        ]
+      }
+    },
+    "check:changed_valid_input_digests_promoted": {
+      "도달": true,
+      "상태": "반례 소멸",
+      "멈춘_곳": "유효하지만 다른 입력 digest 는 막는다 (P1-1)",
+      "세부": {
+        "rc": 2,
+        "promotion": {
+          "promotion_eligible": false,
+          "rc": 2,
+          "subset": false,
+          "roster": {
+            "old": 1,
+            "new": 1,
+            "compared": 1,
+            "missing_in_new": [],
+            "extra_in_new": []
+          },
+          "blocked_by": {
+            "schema": 0,
+            "provenance_cols": 0,
+            "content": 1,
+            "unit": 0,
+            "controls": 0,
+            "env": 1,
+            "numbers": 0,
+            "alias": 0,
+            "provenance": 3,
+            "inputs": 8,
+            "inputs_uncomparable": 0,
+            "stale": 0,
+            "baseline_absent": 0
+          },
+          "policy": "current",
+          "new": "/tmp/r11-replay-publish-hx5zx195/changed-rec-new",
+          "old": "/tmp/r11-replay-publish-hx5zx195/changed-rec-old"
+        },
+        "stdout_tail": [
+          "  - degeneracy_100_Li.json.meta:git_dirty = '(없음)' (승격 조건은 False)",
+          "  - degeneracy_100_Li.json.meta:git_modified_code = '(없음)' (승격 조건은 [])",
+          "  - degeneracy_100_Li.json.meta:git_commit_at_start 가 40-hex 커밋이 아니다 ('665c87e')",
+          "",
+          "■ **환경(env) 불일치** 1 — 정본을 만든 기계와 다른 조합이다 (R6 내부 F3: scipy 1.11↔1.17 에서 savgol 이 ULP 로 갈리고 L-BFGS-B 최적점이 달라진다). 숫자가 같아도 같은 실행의 재현이 아니다 (Codex R10 P1-7)",
+          "  - degeneracy_100_Li.json.meta:env.pandas: 환경 축이 비어 있다 (정본 None · 새 산출 None)",
+          "  숫자: 대조 **미완** — 명부/묶음/스키마/내용/조건/환경 문제를 뺀 나머지만 같다 (전체를 말할 수 없다)",
+          "PROMOTION {\"promotion_eligible\": false, \"rc\": 2, \"subset\": false, \"roster\": {\"old\": 1, \"new\": 1, \"compared\": 1, \"missing_in_new\": [], \"extra_in_new\": []}, \"blocked_by\": {\"schema\": 0, \"provenance_cols\": 0, \"content\": 1, \"unit\": 0, \"controls\": 0, \"env\": 1, \"numbers\": 0, \"alias\": 0, \"provenance\": 3, \"inputs\": 8, \"inputs_uncomparable\": 0, \"stale\": 0, \"baseline_absent\": 0}, \"policy\": \"current\", \"new\": \"/tmp/r11-replay-publish-hx5zx195/changed-rec-new\", \"old\": \"/tmp/r11-replay-publish-hx5zx195/changed-rec-old\"}"
+        ],
+        "stderr": ""
+      }
+    },
+    "check:duplicate_receipt_direct": {
+      "도달": true,
+      "상태": "반례 소멸",
+      "멈춘_곳": "평탄화된 중복 논리 역할은 거부된다 (P2-3)",
+      "세부": {
+        "flattened_roles": [
+          "full_cell",
+          "half_cell",
+          "literature.gr",
+          "literature.gr",
+          "literature.si"
+        ],
+        "problems": [
+          "top-level 역할 이름에 점이 있다: 'literature.gr' — 역할은 중첩으로 쓴다 (Codex R11 P2-3)",
+          "논리 역할 'literature.gr' 이 2 번 나온다 — 역할마다 정확히 하나여야 한다 (Codex R11 P2-3)"
+        ]
+      }
+    },
+    "check:changed_equivocal_receipt_promoted": {
+      "도달": true,
+      "상태": "반례 소멸",
+      "멈춘_곳": "모호한 receipt 로 바뀐 입력은 막는다 (P1-1 · P2-3)",
+      "세부": {
+        "rc": 2,
+        "promotion": {
+          "promotion_eligible": false,
+          "rc": 2,
+          "subset": false,
+          "roster": {
+            "old": 1,
+            "new": 1,
+            "compared": 1,
+            "missing_in_new": [],
+            "extra_in_new": []
+          },
+          "blocked_by": {
+            "schema": 0,
+            "provenance_cols": 0,
+            "content": 5,
+            "unit": 0,
+            "controls": 0,
+            "env": 1,
+            "numbers": 0,
+            "alias": 0,
+            "provenance": 3,
+            "inputs": 8,
+            "inputs_uncomparable": 0,
+            "stale": 0,
+            "baseline_absent": 0
+          },
+          "policy": "current",
+          "new": "/tmp/r11-replay-publish-hx5zx195/receipt-new",
+          "old": "/tmp/r11-replay-publish-hx5zx195/receipt-old"
+        },
+        "stdout_tail": [
+          "  - degeneracy_100_Li.json.meta:git_dirty = '(없음)' (승격 조건은 False)",
+          "  - degeneracy_100_Li.json.meta:git_modified_code = '(없음)' (승격 조건은 [])",
+          "  - degeneracy_100_Li.json.meta:git_commit_at_start 가 40-hex 커밋이 아니다 ('665c87e')",
+          "",
+          "■ **환경(env) 불일치** 1 — 정본을 만든 기계와 다른 조합이다 (R6 내부 F3: scipy 1.11↔1.17 에서 savgol 이 ULP 로 갈리고 L-BFGS-B 최적점이 달라진다). 숫자가 같아도 같은 실행의 재현이 아니다 (Codex R10 P1-7)",
+          "  - degeneracy_100_Li.json.meta:env.pandas: 환경 축이 비어 있다 (정본 None · 새 산출 None)",
+          "  숫자: 대조 **미완** — 명부/묶음/스키마/내용/조건/환경 문제를 뺀 나머지만 같다 (전체를 말할 수 없다)",
+          "PROMOTION {\"promotion_eligible\": false, \"rc\": 2, \"subset\": false, \"roster\": {\"old\": 1, \"new\": 1, \"compared\": 1, \"missing_in_new\": [], \"extra_in_new\": []}, \"blocked_by\": {\"schema\": 0, \"provenance_cols\": 0, \"content\": 5, \"unit\": 0, \"controls\": 0, \"env\": 1, \"numbers\": 0, \"alias\": 0, \"provenance\": 3, \"inputs\": 8, \"inputs_uncomparable\": 0, \"stale\": 0, \"baseline_absent\": 0}, \"policy\": \"current\", \"new\": \"/tmp/r11-replay-publish-hx5zx195/receipt-new\", \"old\": \"/tmp/r11-replay-publish-hx5zx195/receipt-old\"}"
+        ],
+        "stderr": ""
+      }
+    },
+    "publish:shape_step": {
+      "도달": true,
+      "상태": "반례 소멸",
+      "멈춘_곳": "rc 0 인데 meta 가 partial 이면 모순으로 막고, stale canonical 을 안 읽는다 (P2-2)",
+      "세부": {
+        "process_rc": 0,
+        "stdout": [
+          "SHAPE_STEP_RC=1"
+        ],
+        "stderr": [
+          "",
+          "   ne_shape: producer 가 SHAPE_RESULT 를 내지 않았다 — 무엇을 읽어야 하는지 모르는 채로 넘기지 않는다 (Codex R11 P2-2)"
+        ]
+      }
+    },
+    "evidence:early-gate-pyc": {
+      "도달": true,
+      "상태": "반례 소멸",
+      "멈춘_곳": "gate import 전에 bytecode 를 격리한다 (P1-10 A)",
+      "세부": {
+        "source_sha256": "0cbaeffcbc3336936bd5d09010123ca36f67f6c0c98b90a6f8ec6fd0faee5e3e",
+        "head_blob": "3f758f0aad61198c92efc3d37233fe558a1c6953",
+        "git_status_porcelain": "",
+        "ignored_pyc": "reviews/__pycache__/evidence_gate.cpython-311.pyc",
+        "marker_executed": false,
+        "runner_rc": 0,
+        "runner_stderr_tail": "",
+        "dirty": false,
+        "instrument_sealed": true,
+        "package_digest_ok": true,
+        "evidence_eligible": true,
+        "closed": true,
+        "false_identity": false
+      }
+    },
+    "evidence:abbreviated-head": {
+      "도달": true,
+      "상태": "반례 소멸",
+      "멈춘_곳": "짧은 expected head 를 거부한다 (P2-6)",
+      "세부": {
+        "full_head": "c7217c04f939889e88b915575fce6997005072aa",
+        "supplied_expected_head": "c7217c0",
+        "runner_rc": 2,
+        "recorded_expected_head": null,
+        "evidence_eligible": null,
+        "closed": null,
+        "abbreviated_identity_accepted": false
+      }
+    },
+    "evidence:skip-worktree": {
+      "도달": true,
+      "상태": "반례 소멸",
+      "멈춘_곳": "대문자 `S` skip-worktree 를 잡는다 (P2-5)",
+      "세부": {
+        "ls_files_v": "S reviews/evidence_gate.py",
+        "gate_index_skip_flags": [
+          "reviews/evidence_gate.py"
+        ],
+        "runner_rc": 2,
+        "instrument_sealed": null,
+        "evidence_eligible": null,
+        "closed": null,
+        "skip_flag_accepted": false
+      }
+    },
+    "evidence:materialize-smudge": {
+      "도달": true,
+      "상태": "반례 소멸",
+      "멈춘_곳": "풀린 bytes 를 blob 과 재대조한다 (P1-10 B)",
+      "세부": {
+        "head": "96d4d77c47600bcb9d9cb9951d65849d29ab6418",
+        "committed_verify_blob": "2403147d8ebd94831751dec31ea226314ff139db",
+        "source_git_status": "",
+        "source_worktree_clean": true,
+        "smudged_production_executed": false,
+        "runner_rc": 2,
+        "runner_stderr_tail": "! snapshot 의 bytes 가 expected commit 의 blob 과 다르다 (checkout filter/smudge?): ['bms_balancing/verify.py: bytes 가 blob 과 다르다 (d15a7ca31b63 ≠ 2403147d8ebd)']\n",
+        "instrument_sealed": null,
+        "package_digest_ok": null,
+        "evidence_eligible": null,
+        "closed": null,
+        "materialized_bytes_not_commit_bytes": false
+      }
+    },
+    "evidence:r10-assertion-alias": {
+      "도달": true,
+      "상태": "반례 소멸",
+      "멈춘_곳": "무관한 AssertionError 를 닫힘으로 읽지 않는다 (P1-12)",
+      "세부": {
+        "process_rc": 0,
+        "record": {
+          "도달": true,
+          "상태": "오류",
+          "멈춘_곳": "r10_snapshot_repros.py:57: return d, S.inputs_digest(d)",
+          "세부": "case None 의 반례 fingerprint 가 봉인 표에 없다 — 닫힘으로 세지 않는다"
+        },
+        "unrelated_assertion_certified_closed": false
+      }
+    },
+    "evidence:r10-child-rc": {
+      "도달": true,
+      "상태": "반례 소멸",
+      "멈춘_곳": "자식 rc 0 을 강제한다 (P1-11)",
+      "세부": {
+        "disposable_commit": "cbd58f6275bec9d810a977765ed632d223209862",
+        "direct_child_rc": 7,
+        "direct_child_json": {
+          "cases": {
+            "optimized-assertions": {
+              "false_positive": false,
+              "sentinel": "child-exits-7"
+            }
+          }
+        },
+        "parent_rc": 1,
+        "parent_stderr_tail": "",
+        "instrument_sealed": true,
+        "package_digest_ok": true,
+        "evidence_eligible": true,
+        "closed": false,
+        "evidence_records": {
+          "evidence:optimized-assertions": {
+            "도달": false,
+            "상태": "오류",
+            "멈춘_곳": "child rc 7 — 이 실행은 증거가 아니다 (R11 P1-11)",
+            "세부": "{\"cases\": {\"optimized-assertions\": {\"false_positive\": false, \"sentinel\": \"child-exits-7\"}}}\n"
+          },
+          "evidence:git-status-error": {
+            "도달": false,
+            "상태": "오류",
+            "멈춘_곳": "child rc 7 — 이 실행은 증거가 아니다 (R11 P1-11)",
+            "세부": "{\"cases\": {\"git-status-error\": {\"false_clean\": false, \"sentinel\": \"child-exits-7\"}}}\n"
+          },
+          "evidence:assume-unchanged": {
+            "도달": false,
+            "상태": "오류",
+            "멈춘_곳": "child rc 7 — 이 실행은 증거가 아니다 (R11 P1-11)",
+            "세부": "{\"cases\": {\"assume-unchanged\": {\"false_identity\": false, \"sentinel\": \"child-exits-7\"}}}\n"
+          },
+          "evidence:ignored-pyc": {
+            "도달": false,
+            "상태": "오류",
+            "멈춘_곳": "child rc 7 — 이 실행은 증거가 아니다 (R11 P1-11)",
+            "세부": "{\"cases\": {\"ignored-pyc\": {\"false_identity\": false, \"sentinel\": \"child-exits-7\"}}}\n"
+          },
+          "evidence:argv-binding-mutant": {
+            "도달": false,
+            "상태": "오류",
+            "멈춘_곳": "child rc 7 — 이 실행은 증거가 아니다 (R11 P1-11)",
+            "세부": "{\"cases\": {\"argv-binding-mutant\": {\"mutant_survived\": false, \"sentinel\": \"child-exits-7\"}}}\n"
+          },
+          "evidence:package-enforcement-mutant": {
+            "도달": false,
+            "상태": "오류",
+            "멈춘_곳": "child rc 7 — 이 실행은 증거가 아니다 (R11 P1-11)",
+            "세부": "{\"cases\": {\"package-enforcement-mutant\": {\"corrupt_package_accepted\": false, \"sentinel\": \"child-exits-7\"}}}\n"
+          },
+          "evidence:wrapper-coverage": {
+            "도달": false,
+            "상태": "오류",
+            "멈춘_곳": "child rc 7 — 이 실행은 증거가 아니다 (R11 P1-11)",
+            "세부": "{\"cases\": {\"wrapper-coverage\": {\"claim_gap\": false, \"sentinel\": \"child-exits-7\"}}}\n"
+          }
+        },
+        "nonzero_children_certified_closed": false
+      }
+    },
+    "evidence:u18-dirty-meta": {
+      "도달": true,
+      "상태": "반례 소멸",
+      "멈춘_곳": "unsafe git meta 는 승격 못 한다 (P1-9)",
+      "세부": {
+        "process_rc": 0,
+        "rc": 2,
+        "promotion": {
+          "promotion_eligible": false,
+          "rc": 2,
+          "subset": false,
+          "roster": {
+            "old": 1,
+            "new": 1,
+            "compared": 1,
+            "missing_in_new": [],
+            "extra_in_new": []
+          },
+          "blocked_by": {
+            "schema": 0,
+            "provenance_cols": 0,
+            "content": 0,
+            "unit": 0,
+            "controls": 0,
+            "env": 0,
+            "numbers": 0,
+            "alias": 0,
+            "provenance": 3,
+            "inputs": 0,
+            "inputs_uncomparable": 0,
+            "stale": 0,
+            "baseline_absent": 0
+          },
+          "policy": "current",
+          "new": "/tmp/r11-u18-dirty-meta-f96gr13f/new",
+          "old": "/tmp/r11-u18-dirty-meta-f96gr13f/old"
+        },
+        "stdout_tail": "r): 정본 1 · 새 산출 1 · 대조 1\n  새 스키마: 전부 갖췄다 (열·키 이름 + 필수 셀·숫자·receipt·중복 key — `bms_balancing/schema.py` 정본)\n\n■ **provenance 가 안전하지 않다** 3 — 산출 스스로 신고한 위험이다 (git_dirty · 실행 중 상태 변경 · 바뀐 코드 · 시작 커밋). 승격은 safe 값 자체를 요구한다 (Codex R11 P1-9)\n  - matrix_100.csv.meta:git_dirty = True (승격 조건은 False)\n  - matrix_100.csv.meta:git_state_changed_during_run = True (승격 조건은 False)\n  - matrix_100.csv.meta:git_modified_code = ['bms_balancing/verify.py'] (승격 조건은 [])\n  숫자: 대조 **미완** — 명부/묶음/스키마/내용/조건/환경 문제를 뺀 나머지만 같다 (전체를 말할 수 없다)\nPROMOTION {\"promotion_eligible\": false, \"rc\": 2, \"subset\": false, \"roster\": {\"old\": 1, \"new\": 1, \"compared\": 1, \"missing_in_new\": [], \"extra_in_new\": []}, \"blocked_by\": {\"schema\": 0, \"provenance_cols\": 0, \"content\": 0, \"unit\": 0, \"controls\": 0, \"env\": 0, \"numbers\": 0, \"alias\": 0, \"provenance\": 3, \"inputs\": 0, \"inputs_uncomparable\": 0, \"stale\": 0, \"baseline_absent\": 0}, \"policy\": \"current\", \"new\": \"/tmp/r11-u18-dirty-meta-f96gr13f/new\", \"old\": \"/tmp/r11-u18-dirty-meta-f96gr13f/old\"}\n",
+        "unsafe_git_meta_promoted": false
+      }
+    },
+    "evidence:untracked-sitecustomize": {
+      "도달": true,
+      "상태": "반례 소멸",
+      "멈춘_곳": "산출 root 밖 untracked 는 코드로 센다 (P1-9)",
+      "세부": {
+        "normal_git_status": "?? bms-balancing/sitecustomize.py",
+        "process_rc": 0,
+        "sitecustomize_executed": true,
+        "provenance": {
+          "git_commit": "c7217c04f939889e88b915575fce6997005072aa",
+          "git_dirty": true,
+          "git_modified_outputs": [],
+          "git_modified_code": [
+            "bms-balancing/sitecustomize.py"
+          ]
+        },
+        "untracked_code_reported_clean": false
+      }
+    }
+  },
+  "closed": true,
+  "rc_reason": "모든 case 가 닫혔다"
+}

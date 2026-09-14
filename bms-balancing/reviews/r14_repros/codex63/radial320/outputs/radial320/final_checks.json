@@ -1,0 +1,42 @@
+{
+  "new_name": "Caps300R320H0250",
+  "new_job_id": "f0db6d080ad04045a2b43dc5a51d89b2",
+  "new_source_sha256": "837f8b03ff3381bb1aea6397935d0079b032f5e4aea007b32d1ebf7c40775b2e",
+  "new_MPH_sha256": "ef41f8befdb8f3551986823e05df858a7b4fd846ca8df1c19a2d42c5553fcc43",
+  "new_MPH_bytes": 765316927,
+  "new_native_state": "completed",
+  "exactly_one_new_authorized_job": true,
+  "existing_reference_jobs_rerun": false,
+  "baseline_atomic_identity_verified": {
+    "name": "Caps300R160H0250",
+    "source_path": "outputs/comsol63/radial160_timecap/Caps300R160H0250.java",
+    "source_sha256": "4b4ff66bca7a161f6acffd5b125ddf695fee95fb82cdb4ded1e8b63391e1e5f0",
+    "job_id": "15e5d7433a6a4956b820cf6952330735"
+  },
+  "all_Time_and_Variables_properties_equal_to_R160H0250": true,
+  "property_count": 1143,
+  "property_differences": {},
+  "native_step_cap_compliance": true,
+  "R320_time_accuracy_established": false,
+  "true_error_or_overall_convergence_established": false,
+  "temporal_limit": "Same cap does not imply same adaptivehistory. R160timehalving does not validateR320timeaccuracy; no furtherhalvingperformed.",
+  "local_inventory_before_count": 867,
+  "unchanged_current_bytes_count": 866,
+  "authorized_changes_with_before_bytes_preserved": [
+    {
+      "path": "outputs/NEXT_RUN_PLAN.md",
+      "before_bytes": 3244,
+      "before_sha256": "399a5ee7eada4b465f98b6261557e0b080d8294b9fd3f90cafdb97766a1edda0",
+      "after_bytes": 2422,
+      "after_sha256": "d7a0b5ea71937199120418d6ac0472c447e287ccec5074b49a6e4cfb595ba732",
+      "before_backup_path": "outputs/radial320/NEXT_RUN_PLAN_before_radial320.md"
+    }
+  ],
+  "preservation_limit": "Current local-byte inventory, not external validation of all867/currentfiles. Recipient priorR160TIMECAP rawSHA/267payload/manifest/CRC confirmation is separate.",
+  "historical_range_job_state": "failed",
+  "historical_range_classification": "INCOMPLETE_RANGE_STOP preserved; no other failure classification",
+  "electrolyte_positive_check": "POSTPROCESSING_ONLY",
+  "execution_wall_clock_allowance_seconds": 1200,
+  "physical_time_seconds": 5,
+  "additional_runs": 0
+}

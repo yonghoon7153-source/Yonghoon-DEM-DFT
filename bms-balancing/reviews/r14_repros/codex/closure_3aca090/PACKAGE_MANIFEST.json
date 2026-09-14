@@ -1,0 +1,79 @@
+{
+  "scope": "Package integrity, not independent execution attestation",
+  "target_head": "3aca0906dcf0e8690ab534f0bef3abf6a02cdb9a",
+  "target_tree": "84a4bac041643fb4dd9b5885ffa57f3f83eaefd8",
+  "focused_pytest_passes": 9,
+  "full_suite_rerun": false,
+  "payloads": [
+    {
+      "path": "R14_3ACA_CLOSURE_REVIEW.md",
+      "bytes": 5419,
+      "sha256": "688c33f76cc47a65a2725b822a54f5f3c29f4856e0e07d844ec302437d9d4400"
+    },
+    {
+      "path": "R14_3ACA_REPRO_README.md",
+      "bytes": 2440,
+      "sha256": "d4165d8a6ed91b6201b6f5bd083268b634ad7cf6dd4f7c1adf67a435a373d66e"
+    },
+    {
+      "path": "R14_3ACA_targeted_pytest.xml",
+      "bytes": 1243,
+      "sha256": "31e77d30d36a496692691d3941c1a822533374ee33da37e3d052cf88be1e9ab9"
+    },
+    {
+      "path": "R14_3ACA_related_pytest.xml",
+      "bytes": 512,
+      "sha256": "b86c88a0dc11ebc58b72b35fd8d9bd4a54a0d936ff7be188eeb679ecdd9923df"
+    },
+    {
+      "path": "r14_env_value_checks_f21cb648.py",
+      "bytes": 2463,
+      "sha256": "28bfce6533568291af1154243aa27e94aafb479bf2650eaabe97472afff5a701"
+    },
+    {
+      "path": "r14_env_value_results_3aca090.json",
+      "bytes": 14171,
+      "sha256": "0cc5a80882fbeec9d3ad36c7a1213347218e3e4ec939dd76a0d1f18b2507fa4c"
+    },
+    {
+      "path": "r14_close_checks.py",
+      "bytes": 1984,
+      "sha256": "f4f71e8f08b5583e003d26d60412f08121cc63246e3c3a78aa9a55aec54ec8a2"
+    },
+    {
+      "path": "r14_3aca_cli_checks/current_schema.stdout.txt",
+      "bytes": 744,
+      "sha256": "0ac625dba8ebbc5a8fa17c82c4711da3ebc45f38221761c4c77385bc795b348c"
+    },
+    {
+      "path": "r14_3aca_cli_checks/current_schema.stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "r14_3aca_cli_checks/legacy_schema.stdout.txt",
+      "bytes": 4062,
+      "sha256": "c72883b390da63a154f6dcae2bbbed362d37a76951788e834c204ece410ba3eb"
+    },
+    {
+      "path": "r14_3aca_cli_checks/legacy_schema.stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "r14_3aca_cli_checks/new_vs_legacy.stdout.txt",
+      "bytes": 4279,
+      "sha256": "0d5ce0c2d6b343ff9fe3c9b1df665a0bbbe724def6faeb66d1479319d3a1e0f1"
+    },
+    {
+      "path": "r14_3aca_cli_checks/new_vs_legacy.stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "r14_3aca_cli_checks/results.json",
+      "bytes": 3727,
+      "sha256": "81035ea2bbe9f10d7f74d93c131eebf8a297e504f4e55d48a925052d4777ce2d"
+    }
+  ]
+}

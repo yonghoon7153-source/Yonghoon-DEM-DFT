@@ -1,0 +1,31 @@
+# ⚠ 자체 리뷰 C10: 아래 확장자별 규칙은 `.md`·codex 밖 `.txt`·이 파일 자신을 안 덮었고, `core.autocrlf=true`
+#   (git for Windows 설치 기본값) 체크아웃에서 **121/415 파일**이 CRLF 로 풀렸다. R11 P1-10 B 의
+#   `verify_snapshot_bytes` 가 그것을 잡아 닫힘 재생기 **넷이 전부 rc 2** 였다 — `git status` 는 0 줄인데
+#   증거가 하나도 안 나온다. catch-all 로 전 파일의 줄끝을 고정한다 (아래 `-text` 예외는 뒤라서 그대로 이긴다).
+* text=auto eol=lf
+
+# shell 은 LF 로 고정 — 리뷰어의 Windows 작업사본(autocrlf)에서 CRLF 로 구문 오류가 났다 (R4)
+*.sh text eol=lf
+*.py text eol=lf
+# ⚠ U14-01 (2026-09-12): 산출 CSV/JSON 은 meta 의 sha256 이 서명한다. git 이 줄끝을 정규화하면 디스크 bytes 와
+#   커밋 bytes 가 갈려 fresh clone 에서 `--verify-unit` 이 깨지고, reader(R6 내부 F07)가 그 상태를 표에서 뺀다.
+#   writer 도 LF 로 쓴다 (`atomic_write_csv`) — 둘을 같게 두는 것이 서명이 사는 조건이다.
+*.csv text eol=lf
+*.json text eol=lf
+
+# ⚠ Codex R11: 보관한 리뷰 패키지(`reviews/*/codex/`)는 **원문 bytes 그대로**다 — 옆의 `HARNESS_*_SHA256SUMS.txt`
+#   가 정확히 그 bytes 를 서명하고 러너가 매번 대조한다. git 이 줄끝을 정규화하면 fresh clone 에서 digest 가
+#   깨진다 (실측: R11 패키지의 `r11_data_contract_results.json` 은 CRLF 로 왔다). 그래서 여기만 변환을 끈다.
+reviews/*/codex/** -text
+
+# ⚠ 2026-09-14: 6.3 재구축 handoff 원문(`reviews/r14_repros/codex63/mesh_axes/`)도 **bytes 그대로** — 옆의
+#   `package_manifest.json` 이 항목별 sha256 을 갖고 있어 그것과 대조한다. preflight 사본은 이 규칙이 없어 CRLF→LF 로
+#   저장됐다 (`reviews/r14_repros/codex63/preflight/README.md` 가 그 차이를 적는다).
+reviews/r14_repros/codex63/mesh_axes/** -text
+reviews/r14_repros/codex63/time_caps/** -text
+reviews/r14_repros/codex63/radial160/** -text
+reviews/r14_repros/codex63/r160_timecap/** -text
+reviews/r14_repros/codex63/radial320/** -text
+reviews/r14_repros/codex63/r320_timecap/** -text
+reviews/r14_repros/codex63/late_cap_a/** -text
+reviews/r14_repros/codex63/core16_control/** -text

@@ -1,0 +1,12 @@
+{
+  "job_id": "fa3657582d2a480c9e7d36180e3c6a89",
+  "state": "failed",
+  "phase": "running_batch",
+  "worker_started_at": "2026-09-13T09:40:48.595476+00:00",
+  "updated_epoch": 1789292471.326809,
+  "updated_at": "2026-09-13T09:41:11.326808+00:00",
+  "child_pid": 10532,
+  "compile_returncode": 0,
+  "batch_returncode": 0,
+  "error": "RuntimeError: Batch returned success without a nonempty result.mph"
+}

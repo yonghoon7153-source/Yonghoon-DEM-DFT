@@ -1,0 +1,8 @@
+Traceback (most recent call last):
+  File "/home/user/Yonghoon-DEM-DFT/bms-balancing/reviews/r8_repros/codex/r8_port_repros.py", line 231, in <module>
+    sys.exit(main())
+             ^^^^^^
+  File "/home/user/Yonghoon-DEM-DFT/bms-balancing/reviews/r8_repros/codex/r8_port_repros.py", line 194, in main
+    assert head["returncode"] == 0 and head["stdout"].strip() == REV, head
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: {'argv': ['git', '-C', '/home/user/Yonghoon-DEM-DFT/bms-balancing', 'rev-parse', 'HEAD'], 'cwd': '/home/user/Yonghoon-DEM-DFT/bms-balancing', 'returncode': 0, 'stdout': '29ef5058e68c0c64dba840ecc5a7495644cb092e\n', 'stderr': ''}

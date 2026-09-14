@@ -1,0 +1,35 @@
+{
+  "scope": "Exactly one new 300/160 five-second run; existing 300/80H0500 primary baseline and 300/40H0500 same-time trend only",
+  "jobs": [
+    {
+      "name": "Caps300R160H0500",
+      "job_id": "450b46add79c439bbce5886454c4328a",
+      "source_sha256": "874e70a9d6531a2a83ebd05f439d514c324b3ca79875494b1cf304797cc90e26",
+      "early_cap_s": 0.0005,
+      "cores": 2,
+      "timeout_seconds": 600,
+      "max_physical_time_s": 5,
+      "role": "new_authorized_run"
+    },
+    {
+      "name": "Caps300R40H0500",
+      "job_id": "b6752f9caed845f88551386132051aa8",
+      "source_sha256": "369918b44fa911f97d840a8922b90e810c3f46c48905325e8b97a6e491b469b2",
+      "early_cap_s": 0.0005,
+      "cores": 2,
+      "timeout_seconds": 600,
+      "max_physical_time_s": 5,
+      "role": "existing_reference"
+    },
+    {
+      "name": "Caps300R80H0500",
+      "job_id": "72c9c6b5210a4e0d96b74290e4392423",
+      "source_sha256": "6ab32b93310657265906cc858af3847d662923cf7dd8964feb74ed6cbe86f2b1",
+      "early_cap_s": 0.0005,
+      "cores": 2,
+      "timeout_seconds": 600,
+      "max_physical_time_s": 5,
+      "role": "existing_reference"
+    }
+  ]
+}

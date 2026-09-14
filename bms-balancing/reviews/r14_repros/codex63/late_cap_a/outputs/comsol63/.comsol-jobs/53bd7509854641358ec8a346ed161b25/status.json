@@ -1,0 +1,12 @@
+{
+  "job_id": "53bd7509854641358ec8a346ed161b25",
+  "state": "failed",
+  "phase": "running_batch",
+  "worker_started_at": "2026-09-13T10:17:09.180102+00:00",
+  "updated_epoch": 1789294645.8340373,
+  "updated_at": "2026-09-13T10:17:25.834037+00:00",
+  "child_pid": 3376,
+  "compile_returncode": 0,
+  "batch_returncode": 0,
+  "error": "RuntimeError: Batch returned success without exactly one nonempty result.mph or result_Model.mph; unexpected or multiple MPH outputs"
+}

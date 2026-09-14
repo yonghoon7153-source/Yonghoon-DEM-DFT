@@ -1,0 +1,106 @@
+{
+  "source_head": "a22da3380338f97b8eed2f600ffefad1e398c6c3",
+  "target": "/home/user/Yonghoon-DEM-DFT/bms-balancing",
+  "old_baseline": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/a45978e3-3a6e-5e3d-af55-7c9b61e0d809/scratchpad/baseline/bms-balancing/out",
+  "reviewer_script_sha256": "bfaccaba32707a944897c716c52505b1db79713940d53541fc5f85cc0a06a8b6",
+  "source_sha256": {
+    "reviews/r6_repros/codex_r6_mutation_audit.py": "1b98562ccdb841985ae4397efe47699e8fe70887be5f475c3ad69324b16d27c6",
+    "reviews/r6_repros/codex/mutation_adapted.py": "3fde8e84ab06ac1571366bd93ae172cfb7a543e19228db3f4b0fce742de4610e",
+    "reviews/r6_repros/codex/replay_codex_r6_adapted.py": "0d6919ebd2913920b1c50c5db7cb27698a49d48f0e3eb9c05b31314f441b30b6",
+    "tests/test_r6_internal.py": "da95ced9aefba01a727800a9bf095671c2f3f162fee03ef9515b61caf5b45f98",
+    "tests/test_r7_codex.py": "72bc8904938d8811bd743bbb4292dfdc55d0c298744ec2ee3a71565255fbb1d4",
+    "reviews/r7_repros/codex/harness_r7_port_repros.py": "29555e973f52450201c7a249ab0974b8e8dcd24176c5a4c224c71d5c450d6e6d"
+  },
+  "cases": {
+    "r7_package_exact_command": {
+      "argv": [
+        "/usr/local/bin/python3",
+        "reviews/r7_repros/codex/harness_r7_port_repros.py",
+        "--target",
+        ".",
+        "--case",
+        "controls"
+      ],
+      "cwd": "/home/user/Yonghoon-DEM-DFT/bms-balancing",
+      "returncode": 1,
+      "stdout": "",
+      "stderr": "Traceback (most recent call last):\n  File \"/home/user/Yonghoon-DEM-DFT/bms-balancing/reviews/r7_repros/codex/harness_r7_port_repros.py\", line 187, in <module>\n    sys.exit(main())\n             ^^^^^^\n  File \"/home/user/Yonghoon-DEM-DFT/bms-balancing/reviews/r7_repros/codex/harness_r7_port_repros.py\", line 163, in main\n    assert head[\"returncode\"] == 0 and head[\"stdout\"].strip() == REV, head\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: {'argv': ['git', '-c', 'safe.directory=/home/user/Yonghoon-DEM-DFT', '-C', '/home/user/Yonghoon-DEM-DFT/bms-balancing', 'rev-parse', 'HEAD'], 'returncode': 0, 'stdout': 'a22da3380338f97b8eed2f600ffefad1e398c6c3\\n', 'stderr': ''}\n"
+    },
+    "audit_controls": {
+      "selected_noop_is_missed": {
+        "argv": [
+          "/usr/local/bin/python3",
+          "-c",
+          "import importlib.util,sys\np='/tmp/r8-port-review-oqo3fryx/review-copy/bms-balancing/reviews/r6_repros/codex_r6_mutation_audit.py'\ns=importlib.util.spec_from_file_location('audit_control',p)\nm=importlib.util.module_from_spec(s);s.loader.exec_module(m)\nold='MODES = (\"LAM_PE\", \"LAM_NE\", \"LLI\")'\nnew=old+'  # harmless audit control'\nm.MUTATIONS=[('semantic no-op fixture','c6_04','scripts/compare_states.py',old,new)]\nsys.exit(m.main())\n"
+        ],
+        "cwd": "/tmp/r8-port-review-oqo3fryx/review-copy/bms-balancing",
+        "returncode": 1,
+        "stdout": "baseline: 0 7 passed, 45 deselected in 9.55s\nMISSED | semantic no-op fixture | c6_04 | 1 passed, 51 deselected in 1.24s\nrestored: 0 7 passed, 45 deselected in 5.19s\nMISSED: 1\n",
+        "stderr": ""
+      },
+      "no_selected_tests_is_caught": {
+        "argv": [
+          "/usr/local/bin/python3",
+          "-c",
+          "import importlib.util,sys\np='/tmp/r8-port-review-oqo3fryx/review-copy/bms-balancing/reviews/r6_repros/codex_r6_mutation_audit.py'\ns=importlib.util.spec_from_file_location('audit_control',p)\nm=importlib.util.module_from_spec(s);s.loader.exec_module(m)\nold='MODES = (\"LAM_PE\", \"LAM_NE\", \"LLI\")'\nnew=old+'  # harmless audit control'\nm.MUTATIONS=[('semantic no-op fixture','c6_DOES_NOT_EXIST','scripts/compare_states.py',old,new)]\nsys.exit(m.main())\n"
+        ],
+        "cwd": "/tmp/r8-port-review-oqo3fryx/review-copy/bms-balancing",
+        "returncode": 0,
+        "stdout": "baseline: 0 7 passed, 45 deselected in 3.22s\nCAUGHT | semantic no-op fixture | c6_DOES_NOT_EXIST | 52 deselected in 1.15s\nrestored: 0 7 passed, 45 deselected in 3.58s\nMISSED: 0\n",
+        "stderr": ""
+      },
+      "empty_selection_pytest": {
+        "argv": [
+          "/usr/local/bin/python3",
+          "-m",
+          "pytest",
+          "tests/test_r6_internal.py",
+          "-q",
+          "-p",
+          "no:cacheprovider",
+          "-k",
+          "c6_DOES_NOT_EXIST"
+        ],
+        "cwd": "/tmp/r8-port-review-oqo3fryx/review-copy/bms-balancing",
+        "returncode": 5,
+        "stdout": "\n52 deselected in 1.19s\n",
+        "stderr": ""
+      }
+    },
+    "disabled_schedule": {
+      "argv": [
+        "/usr/local/bin/python3",
+        "-m",
+        "pytest",
+        "tests/test_r6_internal.py",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "-k",
+        "c6_01"
+      ],
+      "cwd": "/tmp/r8-port-review-oqo3fryx/review-copy/bms-balancing",
+      "returncode": 1,
+      "stdout": "F                                                                        [100%]\n=================================== FAILURES ===================================\n__________ test_c6_01_readers_consume_only_the_snapshot_they_verified __________\n\ntmp_path = PosixPath('/tmp/pytest-of-root/pytest-292/test_c6_01_readers_consume_onl0')\nmonkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7fbd09882e10>\n\n    def test_c6_01_readers_consume_only_the_snapshot_they_verified(tmp_path, monkeypatch):\n        \"\"\"[Codex R6-01 · P1] `load_degeneracy` 가 A 의 JSON bytes 를 읽은 뒤 다른 정상 시도 B 가 B/B 를 게시하면, 독자는\n        pathname 의 B/B 를 검증하고 **A 데이터에 B meta** 를 붙였다. matrix 는 반대 순서 — A/A 를 검증한 직후 B 의 CSV 만\n        게시되면 B 의 폭 79 를 읽어 표에 넣었다 (그 순간 디스크 묶음은 B/A 라 false). 검사는 \"이 경로가 검사할 때\n        맞았는가\" 만 말하고 따로 읽은 bytes 를 보증하지 않는다.\n    \n        독자는 data bytes 와 meta 를 **한 번씩** 읽어 그 둘을 서로 대조하고 그것만 소비한다 — 게시가 어느 읽기 경계에\n        끼든 결과는 A/A · B/B · 명시적 미완 뿐이어야 한다 (A/B 나 검증 안 한 B 의 성공 소비 금지).\n        \"\"\"\n        W_DEG = {\"attempt-A\": 1.0, \"attempt-B\": 20.0}; W_MAT = {\"attempt-A\": 3.0, \"attempt-B\": 79.0}\n    \n        def setup(out, kind, how):\n            if kind == \"deg\":\n                _c6_deg(out, \"attempt-A\", W_DEG[\"attempt-A\"])\n                return lambda: _c6_deg(out, \"attempt-B\", W_DEG[\"attempt-B\"], meta=True)\n            _c6_matrix(out, \"attempt-A\", W_MAT[\"attempt-A\"])\n            return lambda: _c6_matrix(out, \"attempt-B\", W_MAT[\"attempt-B\"], meta=(how == \"full\"))\n    \n        def read(out, kind):\n            m = _cs()\n            return m.load_degeneracy(out) if kind == \"deg\" else m.load_matrix_axis(out)\n    \n        # ⚠ Codex R7 §4: 전 판은 k 를 1~4 로 **가정**했는데 degeneracy 데이터는 한 번만 열린다 — k≥2 인 건들은 훅이\n        #   아예 안 걸린 채 통과했다. 경계 수를 먼저 **세고** 그 수만큼만 돈다 (그리고 매 건 주입을 확인한다).\n        cases = []\n        for kind, target, how in ((\"deg\", \"degeneracy_100_Li.json\", \"full\"),\n                                  (\"mat\", \"matrix_100.csv\", \"csv-only\"), (\"mat\", \"matrix_100.csv\", \"full\"),\n                                  (\"deg\", \"degeneracy_100_Li.json.meta.json\", \"full\"),\n                                  (\"mat\", \"matrix_100.csv.meta.json\", \"full\")):\n            probe = tmp_path / f\"probe-{len(cases)}\"; probe.mkdir()\n            setup(probe, kind, how)\n            with monkeypatch.context() as mp:\n                counter = _hook_open(mp, target, 10 ** 6, lambda: None)\n                read(probe, kind)\n            n_reads = counter[\"v\"]\n            assert n_reads >= 1, (kind, target, how)\n            cases += [(kind, target, k, how) for k in range(1, n_reads + 1)]\n        seen = set()\n        for i, (kind, target, k, how) in enumerate(cases):\n            out = tmp_path / f\"c{i}\"; out.mkdir()\n            pub_b = setup(out, kind, how)\n            with monkeypatch.context() as mp:\n                fired = _hook_open(mp, target, k, pub_b)\n                got = read(out, kind)\n            # 주입이 실제로 일어났는지 **건별로** 확인한다 — 안 그러면 훅을 꺼도 통과한다 (Codex R7 §4)\n            assert fired[\"v\"] >= k, (kind, target, k, how, fired[\"v\"])\n            if \"100\" not in got:\n                seen.add(\"미완\"); continue                                   # 명시적 미완 — 허용\n            e = got[\"100\"]\n            rid = e[\"j\"][\"run_id\"] if kind == \"deg\" else e[\"run_id\"]\n            width = e[\"j\"][\"LLI_percent\"][\"span\"] if kind == \"deg\" else e[\"per\"][\"GITT\"][\"LLI\"]\n            assert e.get(\"meta\") and e[\"meta\"][\"run_id\"] == rid, (kind, target, k, how, rid, e.get(\"meta\"))\n            assert width == (W_DEG if kind == \"deg\" else W_MAT)[rid], (kind, target, k, how, rid, width)\n            seen.add(rid)\n        # 주입 지점은 전부 **읽기 직전**이라 이 묶음에서 살아남는 것은 B/B 아니면 명시적 미완이다. A/A 는 (a) 아무도\n        # 안 끼어든 대조군과 (b) 검증이 **끝난 뒤** 게시하는 순서에서 나온다 — 후자는 적응판 replay 의 `검증_후_게시`.\n>       assert {\"attempt-B\", \"미완\"} <= seen, seen\nE       AssertionError: {'attempt-A'}\nE       assert {'attempt-B', '미완'} <= {'attempt-A'}\nE         \nE         Extra items in the left set:\nE         '미완'\nE         'attempt-B'\n\ntests/test_r6_internal.py:1028: AssertionError\n=========================== short test summary info ============================\nFAILED tests/test_r6_internal.py::test_c6_01_readers_consume_only_the_snapshot_they_verified\n1 failed, 51 deselected in 1.37s\n",
+      "stderr": ""
+    },
+    "partially_disabled_schedule": {
+      "argv": [
+        "/usr/local/bin/python3",
+        "-m",
+        "pytest",
+        "tests/test_r6_internal.py",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "-k",
+        "c6_01"
+      ],
+      "cwd": "/tmp/r8-port-review-oqo3fryx/review-copy/bms-balancing",
+      "returncode": 0,
+      "stdout": ".                                                                        [100%]\n1 passed, 51 deselected in 1.28s\n",
+      "stderr": ""
+    }
+  },
+  "tracked_scratch_status_after_restore": ""
+}

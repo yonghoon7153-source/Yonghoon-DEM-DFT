@@ -1,0 +1,335 @@
+{
+  "target": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/a45978e3-3a6e-5e3d-af55-7c9b61e0d809/scratchpad/r9ws/work/harness-r9-target-wsl/bms-balancing",
+  "case_root": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/a45978e3-3a6e-5e3d-af55-7c9b61e0d809/scratchpad/r9ws/outputs/r9_aggregation_cases_mem7ay2v",
+  "compare_duplicate_label": {
+    "command": [
+      "/usr/local/bin/python3",
+      "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/a45978e3-3a6e-5e3d-af55-7c9b61e0d809/scratchpad/r9ws/work/harness-r9-target-wsl/bms-balancing/scripts/compare_states.py",
+      "same=/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/a45978e3-3a6e-5e3d-af55-7c9b61e0d809/scratchpad/r9ws/outputs/r9_aggregation_cases_mem7ay2v/compare/missing",
+      "same=/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/a45978e3-3a6e-5e3d-af55-7c9b61e0d809/scratchpad/r9ws/outputs/r9_aggregation_cases_mem7ay2v/compare/good"
+    ],
+    "rc": 0,
+    "stdout": "==============================================================================\nA. 근최적 집합 위의 폭 — **모델을 고정**했을 때 데이터가 못 가르는 만큼\n==============================================================================\n\n[same] /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/a45978e3-3a6e-5e3d-af55-7c9b61e0d809/scratchpad/r9ws/outputs/r9_aggregation_cases_mem7ay2v/compare/good\n  state       src           LAM_PE best [min,max]                   LAM_NE                      LLI  최광      파일\n  100         GITT              1.00 [0.00, 2.00]        2.00 [0.00, 3.00]        3.00 [0.00, 1.00]  LAM_NE  degeneracy_100_Li.json\n\n==============================================================================\nB. 모델 선택(Si 8 종)이 만드는 폭 — **다른 축**이다. 위와 합치지 말 것\n==============================================================================\n\n[same] matrix 산출 없음\n\n==============================================================================\n판정\n==============================================================================\n  대조에 쓴 degeneracy 산출: **1/1** (제외 0)\n  요청한 root 1 개 roster:\n    - same: 있음 · 후보 1 · 검증 1 · 제외 0\n  A 축에서 LLI 가 **항상 가장 좁은가**: 예\n  ⚠ 상대 불확실성(폭/최적값)은 열화가 쌓이면 분모가 커져 작아진다.\n     상태를 가로질러 말할 때는 **절대 폭(%p)** 으로 말할 것.\n",
+    "stderr": ""
+  },
+  "compare_unique_label_control": {
+    "command": [
+      "/usr/local/bin/python3",
+      "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/a45978e3-3a6e-5e3d-af55-7c9b61e0d809/scratchpad/r9ws/work/harness-r9-target-wsl/bms-balancing/scripts/compare_states.py",
+      "missing=/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/a45978e3-3a6e-5e3d-af55-7c9b61e0d809/scratchpad/r9ws/outputs/r9_aggregation_cases_mem7ay2v/compare/missing",
+      "good=/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/a45978e3-3a6e-5e3d-af55-7c9b61e0d809/scratchpad/r9ws/outputs/r9_aggregation_cases_mem7ay2v/compare/good"
+    ],
+    "rc": 2,
+    "stdout": "==============================================================================\nA. 근최적 집합 위의 폭 — **모델을 고정**했을 때 데이터가 못 가르는 만큼\n==============================================================================\n\n[missing] /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/a45978e3-3a6e-5e3d-af55-7c9b61e0d809/scratchpad/r9ws/outputs/r9_aggregation_cases_mem7ay2v/compare/missing — **디렉터리가 없다** (요청한 root 인데 관측 0)\n\n[good] /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/a45978e3-3a6e-5e3d-af55-7c9b61e0d809/scratchpad/r9ws/outputs/r9_aggregation_cases_mem7ay2v/compare/good\n  state       src           LAM_PE best [min,max]                   LAM_NE                      LLI  최광      파일\n  100         GITT              1.00 [0.00, 2.00]        2.00 [0.00, 3.00]        3.00 [0.00, 1.00]  LAM_NE  degeneracy_100_Li.json\n\n==============================================================================\nB. 모델 선택(Si 8 종)이 만드는 폭 — **다른 축**이다. 위와 합치지 말 것\n==============================================================================\n\n[missing] matrix 산출 없음\n\n[good] matrix 산출 없음\n\n==============================================================================\n판정\n==============================================================================\n  대조에 쓴 degeneracy 산출: **1/1** (제외 0)\n  요청한 root 2 개 roster:\n    - missing: **없음** · 후보 0 · 검증 0 · 제외 0  ← 관측 0\n    - good: 있음 · 후보 1 · 검증 1 · 제외 0\n  A 축에서 LLI 가 **항상 가장 좁은가**: **미완** — 관측 0 인 요청 root ['missing'] 이 있어 전체 조건을 말할 수 없다. 관측한 1/1 개 안에서는 LLI 가 항상 가장 좁았다 (그 범위의 진술이다).\n  미완을 닫는 법: 제외된 산출의 게시를 끝내거나(meta 포함) 다시 돌린 뒤 이 명령을 다시 부른다.\n  ⚠ 상대 불확실성(폭/최적값)은 열화가 쌓이면 분모가 커져 작아진다.\n     상태를 가로질러 말할 때는 **절대 폭(%p)** 으로 말할 것.\n",
+    "stderr": ""
+  },
+  "u14_missing_new_artifact": {
+    "command": [
+      "/usr/local/bin/python3",
+      "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/a45978e3-3a6e-5e3d-af55-7c9b61e0d809/scratchpad/r9ws/work/harness-r9-target-wsl/bms-balancing/scripts/check_u14.py",
+      "--new",
+      "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/a45978e3-3a6e-5e3d-af55-7c9b61e0d809/scratchpad/r9ws/outputs/r9_aggregation_cases_mem7ay2v/u14_roster/new",
+      "--old",
+      "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/a45978e3-3a6e-5e3d-af55-7c9b61e0d809/scratchpad/r9ws/outputs/r9_aggregation_cases_mem7ay2v/u14_roster/old"
+    ],
+    "rc": 0,
+    "stdout": "산출 1 개 점검 (/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/a45978e3-3a6e-5e3d-af55-7c9b61e0d809/scratchpad/r9ws/outputs/r9_aggregation_cases_mem7ay2v/u14_roster/new)\n  정본 선택 정책: **current** — 현행 디렉터리 — 정본은 unversioned 이름 하나, 판 번호가 붙은 형제는 쓰지 않는다 (Codex R6-04·R7-04)\n  새 스키마: 전부 갖췄다 (run_id·sha256·env·inputs_sha·시작 시점 git·인자 필드)\n  숫자: 정본(/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/a45978e3-3a6e-5e3d-af55-7c9b61e0d809/scratchpad/r9ws/outputs/r9_aggregation_cases_mem7ay2v/u14_roster/old)과 전부 같다 — 게시·서명만 바뀌었다\n",
+    "stderr": ""
+  },
+  "u14_dropped_numeric_column": {
+    "command": [
+      "/usr/local/bin/python3",
+      "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/a45978e3-3a6e-5e3d-af55-7c9b61e0d809/scratchpad/r9ws/work/harness-r9-target-wsl/bms-balancing/scripts/check_u14.py",
+      "--new",
+      "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/a45978e3-3a6e-5e3d-af55-7c9b61e0d809/scratchpad/r9ws/outputs/r9_aggregation_cases_mem7ay2v/u14_dropped_column/new",
+      "--old",
+      "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/a45978e3-3a6e-5e3d-af55-7c9b61e0d809/scratchpad/r9ws/outputs/r9_aggregation_cases_mem7ay2v/u14_dropped_column/old"
+    ],
+    "rc": 0,
+    "stdout": "산출 1 개 점검 (/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/a45978e3-3a6e-5e3d-af55-7c9b61e0d809/scratchpad/r9ws/outputs/r9_aggregation_cases_mem7ay2v/u14_dropped_column/new)\n  정본 선택 정책: **current** — 현행 디렉터리 — 정본은 unversioned 이름 하나, 판 번호가 붙은 형제는 쓰지 않는다 (Codex R6-04·R7-04)\n  새 스키마: 전부 갖췄다 (run_id·sha256·env·inputs_sha·시작 시점 git·인자 필드)\n  숫자: 정본(/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/a45978e3-3a6e-5e3d-af55-7c9b61e0d809/scratchpad/r9ws/outputs/r9_aggregation_cases_mem7ay2v/u14_dropped_column/old)과 전부 같다 — 게시·서명만 바뀌었다\n",
+    "stderr": ""
+  },
+  "u14_blank_provenance": {
+    "command": [
+      "/usr/local/bin/python3",
+      "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/a45978e3-3a6e-5e3d-af55-7c9b61e0d809/scratchpad/r9ws/work/harness-r9-target-wsl/bms-balancing/scripts/check_u14.py",
+      "--new",
+      "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/a45978e3-3a6e-5e3d-af55-7c9b61e0d809/scratchpad/r9ws/outputs/r9_aggregation_cases_mem7ay2v/u14_blank_provenance/new",
+      "--old",
+      "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/a45978e3-3a6e-5e3d-af55-7c9b61e0d809/scratchpad/r9ws/outputs/r9_aggregation_cases_mem7ay2v/u14_blank_provenance/old"
+    ],
+    "rc": 0,
+    "stdout": "산출 1 개 점검 (/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/a45978e3-3a6e-5e3d-af55-7c9b61e0d809/scratchpad/r9ws/outputs/r9_aggregation_cases_mem7ay2v/u14_blank_provenance/new)\n  정본 선택 정책: **current** — 현행 디렉터리 — 정본은 unversioned 이름 하나, 판 번호가 붙은 형제는 쓰지 않는다 (Codex R6-04·R7-04)\n  새 스키마: 전부 갖췄다 (run_id·sha256·env·inputs_sha·시작 시점 git·인자 필드)\n  숫자: 정본(/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/a45978e3-3a6e-5e3d-af55-7c9b61e0d809/scratchpad/r9ws/outputs/r9_aggregation_cases_mem7ay2v/u14_blank_provenance/old)과 전부 같다 — 게시·서명만 바뀌었다\n",
+    "stderr": ""
+  },
+  "u14_duplicate_schema_only": {
+    "command": [
+      "/usr/local/bin/python3",
+      "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/a45978e3-3a6e-5e3d-af55-7c9b61e0d809/scratchpad/r9ws/work/harness-r9-target-wsl/bms-balancing/scripts/check_u14.py",
+      "--new",
+      "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/a45978e3-3a6e-5e3d-af55-7c9b61e0d809/scratchpad/r9ws/outputs/r9_aggregation_cases_mem7ay2v/u14_duplicate/new",
+      "--schema-only"
+    ],
+    "rc": 0,
+    "stdout": "산출 1 개 점검 (/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/a45978e3-3a6e-5e3d-af55-7c9b61e0d809/scratchpad/r9ws/outputs/r9_aggregation_cases_mem7ay2v/u14_duplicate/new)\n  새 스키마: 전부 갖췄다 (run_id·sha256·env·inputs_sha·시작 시점 git·인자 필드)\n",
+    "stderr": ""
+  },
+  "u14_duplicate_compare_control": {
+    "command": [
+      "/usr/local/bin/python3",
+      "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/a45978e3-3a6e-5e3d-af55-7c9b61e0d809/scratchpad/r9ws/work/harness-r9-target-wsl/bms-balancing/scripts/check_u14.py",
+      "--new",
+      "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/a45978e3-3a6e-5e3d-af55-7c9b61e0d809/scratchpad/r9ws/outputs/r9_aggregation_cases_mem7ay2v/u14_duplicate/new",
+      "--old",
+      "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/a45978e3-3a6e-5e3d-af55-7c9b61e0d809/scratchpad/r9ws/outputs/r9_aggregation_cases_mem7ay2v/u14_duplicate/old"
+    ],
+    "rc": 1,
+    "stdout": "산출 1 개 점검 (/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/a45978e3-3a6e-5e3d-af55-7c9b61e0d809/scratchpad/r9ws/outputs/r9_aggregation_cases_mem7ay2v/u14_duplicate/new)\n  정본 선택 정책: **current** — 현행 디렉터리 — 정본은 unversioned 이름 하나, 판 번호가 붙은 형제는 쓰지 않는다 (Codex R6-04·R7-04)\n  새 스키마: 전부 갖췄다 (run_id·sha256·env·inputs_sha·시작 시점 git·인자 필드)\n\n■ 정본과 **다른 숫자** 3 — 계산 경로는 안 고쳤으므로 같아야 한다.\n   먼저 볼 축: meta 의 `env`(python·numpy·scipy) 가 정본을 만든 기계와 같은가 (R6 내부 F3:\n   scipy 1.11↔1.17 에서 savgol 이 ULP 로 갈리고 L-BFGS-B 최적점이 달라진다).\n  - matrix_100.csv:('GITT', 'Li', '0'): 정본 새 산출에 중복 key → 새 행을 셀 수 없다 (Codex R8-05)\n  - matrix_100.csv: 정본 정본 행 1 → 새 새 산출 행 2\n  - matrix_100.csv:('GITT', 'Li', '0'):gamma_Si: 정본 0.25 → 새 0.10\n",
+    "stderr": ""
+  },
+  "shape_missing_input_state": {
+    "rc": 0,
+    "stdout": "반쪽전지 GITT · 문헌 Si Li · 상태 2개\n기준은 pristine. 격자 x=0.02~0.98 (400점)\n\nstate         용량 Δ%       γ     (a) 측정변화    (b) γ변화  (b)/(a)       (c) |블렌드−측정|\n                                  max mV     max mV                max mVrms mV\npristine       0.00  0.2000            —          —        —          0.0   0.0\n100            0.00  0.2500        10.00       8.86     0.89         18.9  16.2\n\n(PE 축 — 목적함수가 실제로 소비하는 반쪽전지 곡선) E_PE(state) − E_PE(pristine):\n    100        max    0.00 mV   rms   0.00 mV\n\n(d) γ 여유 — 기준 γ_ref 에서 합법 [0.00, 0.50] 까지 (γ 격자 501 점 · x 격자 400 점):\n    state       γ_ref               합법 Δγ   (a) mV        합법 γ 최대변화 mV (γ)            (a) 를 내는 가장 가까운 합법 γ\n    100        0.2000    [-0.200, +0.300]    10.00           53.88 (0.500)                0.143 (Δ -0.057)\n    ⚠ 증인은 진폭 크기의 존재이지 모양 일치가 아니다. secant 외삽으로 '필요 Δγ' 를 구하지 않는다.\n\n→ /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/a45978e3-3a6e-5e3d-af55-7c9b61e0d809/scratchpad/r9ws/outputs/r9_aggregation_cases_mem7ay2v/shape_missing_input/out/ne_shape_GITT_Li.csv\n\nγ 짝: requested 1 · paired 1/1\n측정된 음극 모양 변화 최대 10.00 mV (requested 1 개 전부에서),\nγ 가 만들어 낸 모델 변화 최대 8.86 mV (paired 1 개에서).\n\n→ 두 변화가 같은 규모다 (최대 0.9 배). 크기만의 비교다 — 방향과\n  모양이 같은지는 따로 봐야 한다.\n\n(c) **절대 일치** — `Blend(x, γ_적합)` 이 측정 음극과 얼마나 맞나\n    max |Δ| 18.9 ~ 18.9 mV   rms 16.2 ~ 16.2 mV\n    state        max 위치 x      |Δ|>50mV 인 격자 비율\n    100             0.388                  0.0 %\n\n    → 어긋남이 곡선 전체에 고르다. rms 를 대표값으로 쓸 것.\n\n⚠ (a) 는 **정규화 뒤** 변화다. 음극 용량이 줄면(위 '용량 Δ%') 곡선이\n   가로로 늘어나 그것만으로도 모양이 바뀐 것처럼 보인다. 용량 변화가\n   큰 상태에서는 (a) 를 순수한 OCP 모양 변화로 읽으면 안 된다.\n⚠ 이것은 **크기 비교**다. 방향이 같은지는 따로 봐야 한다.\n",
+    "pairing": {
+      "requested": [
+        "100"
+      ],
+      "paired": [
+        "100"
+      ],
+      "missing": [],
+      "note": "measured_* 는 requested 전부에서, gamma_*·ratio 는 paired 에서만 계산한 값이다 (Codex R8-03)"
+    },
+    "consumed_inputs": {
+      "100": {
+        "matrix": {
+          "file": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/a45978e3-3a6e-5e3d-af55-7c9b61e0d809/scratchpad/r9ws/outputs/r9_aggregation_cases_mem7ay2v/shape_missing_input/matrix/matrix_100.csv",
+          "sha256": "e2f4e21e8ab62a539b52d135d4a3325813240ee8d0da000d8916ff285972a83d",
+          "row": {
+            "index": 0,
+            "half_cell": "GITT",
+            "si": "Li",
+            "w_dqdv": "0",
+            "run_id": "shape-100"
+          }
+        },
+        "half_cell": {
+          "path": "100",
+          "sha256": "ad57366865126e55649ecb23ae1d48887544976efea46a48eb5d85a6eeb4d306"
+        }
+      },
+      "pristine": {
+        "half_cell": {
+          "path": "pristine",
+          "sha256": "9f2235c7754a56a9f0bc89dc2eb821ba0e52189db6dba93ee03d22337ae9739c"
+        }
+      },
+      "literature": {
+        "si": {
+          "path": "si.csv",
+          "sha256": "3333333333333333333333333333333333333333333333333333333333333333"
+        },
+        "gr": {
+          "path": "gr.xlsx",
+          "sha256": "4444444444444444444444444444444444444444444444444444444444444444"
+        }
+      }
+    }
+  },
+  "shape_partial_pair_control": {
+    "rc": 3,
+    "stdout": "반쪽전지 GITT · 문헌 Si Li · 상태 3개\n기준은 pristine. 격자 x=0.02~0.98 (400점)\n\nstate         용량 Δ%       γ     (a) 측정변화    (b) γ변화  (b)/(a)       (c) |블렌드−측정|\n                                  max mV     max mV                max mVrms mV\npristine       0.00  0.2000            —          —        —          0.0   0.0\n100            0.00  0.2500        10.00       8.86     0.89         18.9  16.2\n200            0.00       —       100.00        nan      nan          nan   nan\n\n(PE 축 — 목적함수가 실제로 소비하는 반쪽전지 곡선) E_PE(state) − E_PE(pristine):\n    100        max    0.00 mV   rms   0.00 mV\n    200        max    0.00 mV   rms   0.00 mV\n\n(d) γ 여유 — 기준 γ_ref 에서 합법 [0.00, 0.50] 까지 (γ 격자 501 점 · x 격자 400 점):\n    state       γ_ref               합법 Δγ   (a) mV        합법 γ 최대변화 mV (γ)            (a) 를 내는 가장 가까운 합법 γ\n    100        0.2000    [-0.200, +0.300]    10.00           53.88 (0.500)                0.143 (Δ -0.057)\n    ⚠ 증인은 진폭 크기의 존재이지 모양 일치가 아니다. secant 외삽으로 '필요 Δγ' 를 구하지 않는다.\n\n→ /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/a45978e3-3a6e-5e3d-af55-7c9b61e0d809/scratchpad/r9ws/outputs/r9_aggregation_cases_mem7ay2v/shape_partial_control/out/ne_shape_GITT_Li.csv\n\nγ 짝: requested 2 · paired 1/2 · **missing ['200']** (matrix_<state>.csv 없음/짝 없음 — 미계산이지 '증인 없음' 이 아니다)\n측정된 음극 모양 변화 최대 100.00 mV (requested 2 개 전부에서),\nγ 가 만들어 낸 모델 변화 최대 8.86 mV (paired 1 개에서).\n\n→ 두 변화가 같은 규모다 (최대 0.9 배). 크기만의 비교다 — 방향과\n  모양이 같은지는 따로 봐야 한다.\n\n(c) **절대 일치** — `Blend(x, γ_적합)` 이 측정 음극과 얼마나 맞나\n    max |Δ| 18.9 ~ 18.9 mV   rms 16.2 ~ 16.2 mV\n    state        max 위치 x      |Δ|>50mV 인 격자 비율\n    100             0.388                  0.0 %\n\n    → 어긋남이 곡선 전체에 고르다. rms 를 대표값으로 쓸 것.\n\n⚠ (a) 는 **정규화 뒤** 변화다. 음극 용량이 줄면(위 '용량 Δ%') 곡선이\n   가로로 늘어나 그것만으로도 모양이 바뀐 것처럼 보인다. 용량 변화가\n   큰 상태에서는 (a) 를 순수한 OCP 모양 변화로 읽으면 안 된다.\n⚠ 이것은 **크기 비교**다. 방향이 같은지는 따로 봐야 한다.\n⚠ **부분** — γ 짝이 없는 상태 ['200']: 위 γ 통계는 paired ['100'] 위의 진술이다 → 종료 코드 3\n",
+    "pairing": {
+      "requested": [
+        "100",
+        "200"
+      ],
+      "paired": [
+        "100"
+      ],
+      "missing": [
+        "200"
+      ],
+      "note": "measured_* 는 requested 전부에서, gamma_*·ratio 는 paired 에서만 계산한 값이다 (Codex R8-03)"
+    },
+    "consumed_inputs": {
+      "100": {
+        "matrix": {
+          "file": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/a45978e3-3a6e-5e3d-af55-7c9b61e0d809/scratchpad/r9ws/outputs/r9_aggregation_cases_mem7ay2v/shape_partial_control/matrix/matrix_100.csv",
+          "sha256": "23a44356a39e2cd3b97d3df04b9df3f5c4359123ab458a807d782bef04c22d8f",
+          "row": {
+            "index": 0,
+            "half_cell": "GITT",
+            "si": "Li",
+            "w_dqdv": "0",
+            "run_id": "shape-partial"
+          }
+        },
+        "half_cell": {
+          "path": "100",
+          "sha256": "ad57366865126e55649ecb23ae1d48887544976efea46a48eb5d85a6eeb4d306"
+        }
+      },
+      "200": {
+        "matrix": null,
+        "half_cell": {
+          "path": "200",
+          "sha256": "27badc983df1780b60c2b3fa9d3a19a00e46aac798451f0febdca52920faaddf"
+        }
+      },
+      "pristine": {
+        "half_cell": {
+          "path": "pristine",
+          "sha256": "9f2235c7754a56a9f0bc89dc2eb821ba0e52189db6dba93ee03d22337ae9739c"
+        }
+      },
+      "literature": {
+        "si": {
+          "path": "si.csv",
+          "sha256": "3333333333333333333333333333333333333333333333333333333333333333"
+        },
+        "gr": {
+          "path": "gr.xlsx",
+          "sha256": "4444444444444444444444444444444444444444444444444444444444444444"
+        }
+      }
+    }
+  },
+  "shape_duplicate_matrix_rows": {
+    "rc": 0,
+    "stdout": "반쪽전지 GITT · 문헌 Si Li · 상태 2개\n기준은 pristine. 격자 x=0.02~0.98 (400점)\n\nstate         용량 Δ%       γ     (a) 측정변화    (b) γ변화  (b)/(a)       (c) |블렌드−측정|\n                                  max mV     max mV                max mVrms mV\npristine       0.00  0.2000            —          —        —          0.0   0.0\n100            0.00  0.1000        10.00      17.59     1.76          9.0   5.3\n\n(PE 축 — 목적함수가 실제로 소비하는 반쪽전지 곡선) E_PE(state) − E_PE(pristine):\n    100        max    0.00 mV   rms   0.00 mV\n\n(d) γ 여유 — 기준 γ_ref 에서 합법 [0.00, 0.50] 까지 (γ 격자 501 점 · x 격자 400 점):\n    state       γ_ref               합법 Δγ   (a) mV        합법 γ 최대변화 mV (γ)            (a) 를 내는 가장 가까운 합법 γ\n    100        0.2000    [-0.200, +0.300]    10.00           53.88 (0.500)                0.143 (Δ -0.057)\n    ⚠ 증인은 진폭 크기의 존재이지 모양 일치가 아니다. secant 외삽으로 '필요 Δγ' 를 구하지 않는다.\n\n→ /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/a45978e3-3a6e-5e3d-af55-7c9b61e0d809/scratchpad/r9ws/outputs/r9_aggregation_cases_mem7ay2v/shape_duplicate_matrix/out/ne_shape_GITT_Li.csv\n\nγ 짝: requested 1 · paired 1/1\n측정된 음극 모양 변화 최대 10.00 mV (requested 1 개 전부에서),\nγ 가 만들어 낸 모델 변화 최대 17.59 mV (paired 1 개에서).\n\n→ 두 변화가 같은 규모다 (최대 1.8 배). 크기만의 비교다 — 방향과\n  모양이 같은지는 따로 봐야 한다.\n\n(c) **절대 일치** — `Blend(x, γ_적합)` 이 측정 음극과 얼마나 맞나\n    max |Δ| 9.0 ~ 9.0 mV   rms 5.3 ~ 5.3 mV\n    state        max 위치 x      |Δ|>50mV 인 격자 비율\n    100             0.980                  0.0 %\n\n    → 어긋남이 곡선 전체에 고르다. rms 를 대표값으로 쓸 것.\n\n⚠ (a) 는 **정규화 뒤** 변화다. 음극 용량이 줄면(위 '용량 Δ%') 곡선이\n   가로로 늘어나 그것만으로도 모양이 바뀐 것처럼 보인다. 용량 변화가\n   큰 상태에서는 (a) 를 순수한 OCP 모양 변화로 읽으면 안 된다.\n⚠ 이것은 **크기 비교**다. 방향이 같은지는 따로 봐야 한다.\n",
+    "pairing": {
+      "requested": [
+        "100"
+      ],
+      "paired": [
+        "100"
+      ],
+      "missing": [],
+      "note": "measured_* 는 requested 전부에서, gamma_*·ratio 는 paired 에서만 계산한 값이다 (Codex R8-03)"
+    },
+    "consumed_inputs": {
+      "100": {
+        "matrix": {
+          "file": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/a45978e3-3a6e-5e3d-af55-7c9b61e0d809/scratchpad/r9ws/outputs/r9_aggregation_cases_mem7ay2v/shape_duplicate_matrix/matrix/matrix_100.csv",
+          "sha256": "76eaf6f4469fd02f4523cfb97a7a062c407f66483900e6bc4f1f929aa7f02c6f",
+          "row": {
+            "index": 0,
+            "half_cell": "GITT",
+            "si": "Li",
+            "w_dqdv": "0",
+            "run_id": "shape-dup"
+          }
+        },
+        "half_cell": {
+          "path": "100",
+          "sha256": "ad57366865126e55649ecb23ae1d48887544976efea46a48eb5d85a6eeb4d306"
+        }
+      },
+      "pristine": {
+        "half_cell": {
+          "path": "pristine",
+          "sha256": "9f2235c7754a56a9f0bc89dc2eb821ba0e52189db6dba93ee03d22337ae9739c"
+        }
+      },
+      "literature": {
+        "si": {
+          "path": "si.csv",
+          "sha256": "3333333333333333333333333333333333333333333333333333333333333333"
+        },
+        "gr": {
+          "path": "gr.xlsx",
+          "sha256": "4444444444444444444444444444444444444444444444444444444444444444"
+        }
+      }
+    }
+  },
+  "shape_duplicate_matrix_rows_reversed": {
+    "rc": 0,
+    "stdout": "반쪽전지 GITT · 문헌 Si Li · 상태 2개\n기준은 pristine. 격자 x=0.02~0.98 (400점)\n\nstate         용량 Δ%       γ     (a) 측정변화    (b) γ변화  (b)/(a)       (c) |블렌드−측정|\n                                  max mV     max mV                max mVrms mV\npristine       0.00  0.2000            —          —        —          0.0   0.0\n100            0.00  0.4000        10.00      35.73     3.57         45.7  35.6\n\n(PE 축 — 목적함수가 실제로 소비하는 반쪽전지 곡선) E_PE(state) − E_PE(pristine):\n    100        max    0.00 mV   rms   0.00 mV\n\n(d) γ 여유 — 기준 γ_ref 에서 합법 [0.00, 0.50] 까지 (γ 격자 501 점 · x 격자 400 점):\n    state       γ_ref               합법 Δγ   (a) mV        합법 γ 최대변화 mV (γ)            (a) 를 내는 가장 가까운 합법 γ\n    100        0.2000    [-0.200, +0.300]    10.00           53.88 (0.500)                0.143 (Δ -0.057)\n    ⚠ 증인은 진폭 크기의 존재이지 모양 일치가 아니다. secant 외삽으로 '필요 Δγ' 를 구하지 않는다.\n\n→ /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/a45978e3-3a6e-5e3d-af55-7c9b61e0d809/scratchpad/r9ws/outputs/r9_aggregation_cases_mem7ay2v/shape_duplicate_matrix_reversed/out/ne_shape_GITT_Li.csv\n\nγ 짝: requested 1 · paired 1/1\n측정된 음극 모양 변화 최대 10.00 mV (requested 1 개 전부에서),\nγ 가 만들어 낸 모델 변화 최대 35.73 mV (paired 1 개에서).\n\n→ 적합이 고른 γ 쌍이 만든 변화가 측정 변화의 **3.6 배** (100).\n  γ 가 측정된 모양 변화 밖의 것을 흡수했을 가능성이 있다 — 무엇인지는 이 비로\n  판정하지 않는다.\n\n(c) **절대 일치** — `Blend(x, γ_적합)` 이 측정 음극과 얼마나 맞나\n    max |Δ| 45.7 ~ 45.7 mV   rms 35.6 ~ 35.6 mV\n    state        max 위치 x      |Δ|>50mV 인 격자 비율\n    100             0.350                  0.0 %\n\n    → 어긋남이 곡선 전체에 고르다. rms 를 대표값으로 쓸 것.\n\n⚠ (a) 는 **정규화 뒤** 변화다. 음극 용량이 줄면(위 '용량 Δ%') 곡선이\n   가로로 늘어나 그것만으로도 모양이 바뀐 것처럼 보인다. 용량 변화가\n   큰 상태에서는 (a) 를 순수한 OCP 모양 변화로 읽으면 안 된다.\n⚠ 이것은 **크기 비교**다. 방향이 같은지는 따로 봐야 한다.\n",
+    "pairing": {
+      "requested": [
+        "100"
+      ],
+      "paired": [
+        "100"
+      ],
+      "missing": [],
+      "note": "measured_* 는 requested 전부에서, gamma_*·ratio 는 paired 에서만 계산한 값이다 (Codex R8-03)"
+    },
+    "consumed_inputs": {
+      "100": {
+        "matrix": {
+          "file": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/a45978e3-3a6e-5e3d-af55-7c9b61e0d809/scratchpad/r9ws/outputs/r9_aggregation_cases_mem7ay2v/shape_duplicate_matrix_reversed/matrix/matrix_100.csv",
+          "sha256": "d278bb88873a3ba6fa0de6551cf1ba1256ec10eb4b08744197f1360c7c3ac6f7",
+          "row": {
+            "index": 0,
+            "half_cell": "GITT",
+            "si": "Li",
+            "w_dqdv": "0",
+            "run_id": "shape-dup"
+          }
+        },
+        "half_cell": {
+          "path": "100",
+          "sha256": "ad57366865126e55649ecb23ae1d48887544976efea46a48eb5d85a6eeb4d306"
+        }
+      },
+      "pristine": {
+        "half_cell": {
+          "path": "pristine",
+          "sha256": "9f2235c7754a56a9f0bc89dc2eb821ba0e52189db6dba93ee03d22337ae9739c"
+        }
+      },
+      "literature": {
+        "si": {
+          "path": "si.csv",
+          "sha256": "3333333333333333333333333333333333333333333333333333333333333333"
+        },
+        "gr": {
+          "path": "gr.xlsx",
+          "sha256": "4444444444444444444444444444444444444444444444444444444444444444"
+        }
+      }
+    }
+  },
+  "shape_all_pairs_missing_rc": {
+    "rc": 1,
+    "stdout": "반쪽전지 GITT · 문헌 Si Li · 상태 2개\n기준은 pristine. 격자 x=0.02~0.98 (400점)\n\nstate         용량 Δ%       γ     (a) 측정변화    (b) γ변화  (b)/(a)       (c) |블렌드−측정|\n                                  max mV     max mV                max mVrms mV\n100            0.00       —        10.00        nan      nan          nan   nan\n\n(PE 축 — 목적함수가 실제로 소비하는 반쪽전지 곡선) E_PE(state) − E_PE(pristine):\n    100        max    0.00 mV   rms   0.00 mV\n\n→ /tmp/claude-0/-home-user-Yonghoon-DEM-DFT/a45978e3-3a6e-5e3d-af55-7c9b61e0d809/scratchpad/r9ws/outputs/r9_aggregation_cases_mem7ay2v/shape_no_pairs/out/ne_shape_GITT_Li.csv\n\nγ 짝: requested 1 · paired 0/1 · **missing ['100']** (matrix_<state>.csv 없음/짝 없음 — 미계산이지 '증인 없음' 이 아니다)\n측정된 음극 모양 변화 최대 10.00 mV (requested 1 개 전부에서),\nγ 짝을 못 찾았다 — `--out-dir` 에 `ref_gamma_Si` 열이 있는\nmatrix_<state>.csv 가 있어야 한다 (v2 이후 산출).\n",
+    "pairing": {
+      "requested": [
+        "100"
+      ],
+      "paired": [],
+      "missing": [
+        "100"
+      ],
+      "note": "measured_* 는 requested 전부에서, gamma_*·ratio 는 paired 에서만 계산한 값이다 (Codex R8-03)"
+    },
+    "consumed_inputs": {
+      "100": {
+        "matrix": null,
+        "half_cell": {
+          "path": "100",
+          "sha256": "ad57366865126e55649ecb23ae1d48887544976efea46a48eb5d85a6eeb4d306"
+        }
+      },
+      "pristine": {
+        "half_cell": {
+          "path": "pristine",
+          "sha256": "9f2235c7754a56a9f0bc89dc2eb821ba0e52189db6dba93ee03d22337ae9739c"
+        }
+      },
+      "literature": {
+        "si": {
+          "path": "si.csv",
+          "sha256": "3333333333333333333333333333333333333333333333333333333333333333"
+        },
+        "gr": {
+          "path": "gr.xlsx",
+          "sha256": "4444444444444444444444444444444444444444444444444444444444444444"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,1223 @@
+{
+  "source_head": "a22da3380338f97b8eed2f600ffefad1e398c6c3",
+  "target": "/mnt/c/Users/Administrator/Documents/Codex/2026-08-24/claude-14-gate-code-review-9qkx05-2/work/harness-r8-target-wsl/bms-balancing",
+  "old_baseline": "/mnt/c/Users/Administrator/Documents/Codex/2026-08-24/claude-14-gate-code-review-9qkx05-2/work/harness-r6-baseline-bfc-parent/bms-balancing/out",
+  "reviewer_script_sha256": "bfaccaba32707a944897c716c52505b1db79713940d53541fc5f85cc0a06a8b6",
+  "source_sha256": {
+    "reviews/r6_repros/codex_r6_mutation_audit.py": "1b98562ccdb841985ae4397efe47699e8fe70887be5f475c3ad69324b16d27c6",
+    "reviews/r6_repros/codex/mutation_adapted.py": "3fde8e84ab06ac1571366bd93ae172cfb7a543e19228db3f4b0fce742de4610e",
+    "reviews/r6_repros/codex/replay_codex_r6_adapted.py": "0d6919ebd2913920b1c50c5db7cb27698a49d48f0e3eb9c05b31314f441b30b6",
+    "tests/test_r6_internal.py": "da95ced9aefba01a727800a9bf095671c2f3f162fee03ef9515b61caf5b45f98",
+    "tests/test_r7_codex.py": "72bc8904938d8811bd743bbb4292dfdc55d0c298744ec2ee3a71565255fbb1d4",
+    "reviews/r7_repros/codex/harness_r7_port_repros.py": "29555e973f52450201c7a249ab0974b8e8dcd24176c5a4c224c71d5c450d6e6d"
+  },
+  "cases": {
+    "r7_package_exact_command": {
+      "argv": [
+        "/home/yonghoon71/ddvenv/bin/python",
+        "reviews/r7_repros/codex/harness_r7_port_repros.py",
+        "--target",
+        ".",
+        "--case",
+        "controls"
+      ],
+      "cwd": "/mnt/c/Users/Administrator/Documents/Codex/2026-08-24/claude-14-gate-code-review-9qkx05-2/work/harness-r8-target-wsl/bms-balancing",
+      "returncode": 1,
+      "stdout": "",
+      "stderr": "Traceback (most recent call last):\n  File \"/mnt/c/Users/Administrator/Documents/Codex/2026-08-24/claude-14-gate-code-review-9qkx05-2/work/harness-r8-target-wsl/bms-balancing/reviews/r7_repros/codex/harness_r7_port_repros.py\", line 187, in <module>\n    sys.exit(main())\n             ^^^^^^\n  File \"/mnt/c/Users/Administrator/Documents/Codex/2026-08-24/claude-14-gate-code-review-9qkx05-2/work/harness-r8-target-wsl/bms-balancing/reviews/r7_repros/codex/harness_r7_port_repros.py\", line 163, in main\n    assert head[\"returncode\"] == 0 and head[\"stdout\"].strip() == REV, head\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: {'argv': ['git', '-c', 'safe.directory=/mnt/c/Users/Administrator/Documents/Codex/2026-08-24/claude-14-gate-code-review-9qkx05-2/work/harness-r8-target-wsl', '-C', '/mnt/c/Users/Administrator/Documents/Codex/2026-08-24/claude-14-gate-code-review-9qkx05-2/work/harness-r8-target-wsl/bms-balancing', 'rev-parse', 'HEAD'], 'returncode': 0, 'stdout': 'a22da3380338f97b8eed2f600ffefad1e398c6c3\\n', 'stderr': ''}\n"
+    },
+    "audit_controls": {
+      "selected_noop_is_missed": {
+        "argv": [
+          "/home/yonghoon71/ddvenv/bin/python",
+          "-c",
+          "import importlib.util,sys\np='/tmp/r8-port-review-jtlwdsp5/review-copy/bms-balancing/reviews/r6_repros/codex_r6_mutation_audit.py'\ns=importlib.util.spec_from_file_location('audit_control',p)\nm=importlib.util.module_from_spec(s);s.loader.exec_module(m)\nold='MODES = (\"LAM_PE\", \"LAM_NE\", \"LLI\")'\nnew=old+'  # harmless audit control'\nm.MUTATIONS=[('semantic no-op fixture','c6_04','scripts/compare_states.py',old,new)]\nsys.exit(m.main())\n"
+        ],
+        "cwd": "/tmp/r8-port-review-jtlwdsp5/review-copy/bms-balancing",
+        "returncode": 1,
+        "stdout": "baseline: 0 7 passed, 45 deselected in 2.08s\nMISSED | semantic no-op fixture | c6_04 | 1 passed, 51 deselected in 0.78s\nrestored: 0 7 passed, 45 deselected in 1.91s\nMISSED: 1\n",
+        "stderr": ""
+      },
+      "no_selected_tests_is_caught": {
+        "argv": [
+          "/home/yonghoon71/ddvenv/bin/python",
+          "-c",
+          "import importlib.util,sys\np='/tmp/r8-port-review-jtlwdsp5/review-copy/bms-balancing/reviews/r6_repros/codex_r6_mutation_audit.py'\ns=importlib.util.spec_from_file_location('audit_control',p)\nm=importlib.util.module_from_spec(s);s.loader.exec_module(m)\nold='MODES = (\"LAM_PE\", \"LAM_NE\", \"LLI\")'\nnew=old+'  # harmless audit control'\nm.MUTATIONS=[('semantic no-op fixture','c6_DOES_NOT_EXIST','scripts/compare_states.py',old,new)]\nsys.exit(m.main())\n"
+        ],
+        "cwd": "/tmp/r8-port-review-jtlwdsp5/review-copy/bms-balancing",
+        "returncode": 0,
+        "stdout": "baseline: 0 7 passed, 45 deselected in 1.81s\nCAUGHT | semantic no-op fixture | c6_DOES_NOT_EXIST | 52 deselected in 0.82s\nrestored: 0 7 passed, 45 deselected in 1.81s\nMISSED: 0\n",
+        "stderr": ""
+      },
+      "empty_selection_pytest": {
+        "argv": [
+          "/home/yonghoon71/ddvenv/bin/python",
+          "-m",
+          "pytest",
+          "tests/test_r6_internal.py",
+          "-q",
+          "-p",
+          "no:cacheprovider",
+          "-k",
+          "c6_DOES_NOT_EXIST"
+        ],
+        "cwd": "/tmp/r8-port-review-jtlwdsp5/review-copy/bms-balancing",
+        "returncode": 5,
+        "stdout": "\n52 deselected in 0.77s\n",
+        "stderr": ""
+      }
+    },
+    "disabled_schedule": {
+      "argv": [
+        "/home/yonghoon71/ddvenv/bin/python",
+        "-m",
+        "pytest",
+        "tests/test_r6_internal.py",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "-k",
+        "c6_01"
+      ],
+      "cwd": "/tmp/r8-port-review-jtlwdsp5/review-copy/bms-balancing",
+      "returncode": 1,
+      "stdout": "F                                                                        [100%]\n=================================== FAILURES ===================================\n__________ test_c6_01_readers_consume_only_the_snapshot_they_verified __________\n\ntmp_path = PosixPath('/tmp/pytest-of-yonghoon71/pytest-86/test_c6_01_readers_consume_onl0')\nmonkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x706fe5060770>\n\n    def test_c6_01_readers_consume_only_the_snapshot_they_verified(tmp_path, monkeypatch):\n        \"\"\"[Codex R6-01 · P1] `load_degeneracy` 가 A 의 JSON bytes 를 읽은 뒤 다른 정상 시도 B 가 B/B 를 게시하면, 독자는\n        pathname 의 B/B 를 검증하고 **A 데이터에 B meta** 를 붙였다. matrix 는 반대 순서 — A/A 를 검증한 직후 B 의 CSV 만\n        게시되면 B 의 폭 79 를 읽어 표에 넣었다 (그 순간 디스크 묶음은 B/A 라 false). 검사는 \"이 경로가 검사할 때\n        맞았는가\" 만 말하고 따로 읽은 bytes 를 보증하지 않는다.\n    \n        독자는 data bytes 와 meta 를 **한 번씩** 읽어 그 둘을 서로 대조하고 그것만 소비한다 — 게시가 어느 읽기 경계에\n        끼든 결과는 A/A · B/B · 명시적 미완 뿐이어야 한다 (A/B 나 검증 안 한 B 의 성공 소비 금지).\n        \"\"\"\n        W_DEG = {\"attempt-A\": 1.0, \"attempt-B\": 20.0}; W_MAT = {\"attempt-A\": 3.0, \"attempt-B\": 79.0}\n    \n        def setup(out, kind, how):\n            if kind == \"deg\":\n                _c6_deg(out, \"attempt-A\", W_DEG[\"attempt-A\"])\n                return lambda: _c6_deg(out, \"attempt-B\", W_DEG[\"attempt-B\"], meta=True)\n            _c6_matrix(out, \"attempt-A\", W_MAT[\"attempt-A\"])\n            return lambda: _c6_matrix(out, \"attempt-B\", W_MAT[\"attempt-B\"], meta=(how == \"full\"))\n    \n        def read(out, kind):\n            m = _cs()\n            return m.load_degeneracy(out) if kind == \"deg\" else m.load_matrix_axis(out)\n    \n        # ⚠ Codex R7 §4: 전 판은 k 를 1~4 로 **가정**했는데 degeneracy 데이터는 한 번만 열린다 — k≥2 인 건들은 훅이\n        #   아예 안 걸린 채 통과했다. 경계 수를 먼저 **세고** 그 수만큼만 돈다 (그리고 매 건 주입을 확인한다).\n        cases = []\n        for kind, target, how in ((\"deg\", \"degeneracy_100_Li.json\", \"full\"),\n                                  (\"mat\", \"matrix_100.csv\", \"csv-only\"), (\"mat\", \"matrix_100.csv\", \"full\"),\n                                  (\"deg\", \"degeneracy_100_Li.json.meta.json\", \"full\"),\n                                  (\"mat\", \"matrix_100.csv.meta.json\", \"full\")):\n            probe = tmp_path / f\"probe-{len(cases)}\"; probe.mkdir()\n            setup(probe, kind, how)\n            with monkeypatch.context() as mp:\n                counter = _hook_open(mp, target, 10 ** 6, lambda: None)\n                read(probe, kind)\n            n_reads = counter[\"v\"]\n            assert n_reads >= 1, (kind, target, how)\n            cases += [(kind, target, k, how) for k in range(1, n_reads + 1)]\n        seen = set()\n        for i, (kind, target, k, how) in enumerate(cases):\n            out = tmp_path / f\"c{i}\"; out.mkdir()\n            pub_b = setup(out, kind, how)\n            with monkeypatch.context() as mp:\n                fired = _hook_open(mp, target, k, pub_b)\n                got = read(out, kind)\n            # 주입이 실제로 일어났는지 **건별로** 확인한다 — 안 그러면 훅을 꺼도 통과한다 (Codex R7 §4)\n            assert fired[\"v\"] >= k, (kind, target, k, how, fired[\"v\"])\n            if \"100\" not in got:\n                seen.add(\"미완\"); continue                                   # 명시적 미완 — 허용\n            e = got[\"100\"]\n            rid = e[\"j\"][\"run_id\"] if kind == \"deg\" else e[\"run_id\"]\n            width = e[\"j\"][\"LLI_percent\"][\"span\"] if kind == \"deg\" else e[\"per\"][\"GITT\"][\"LLI\"]\n            assert e.get(\"meta\") and e[\"meta\"][\"run_id\"] == rid, (kind, target, k, how, rid, e.get(\"meta\"))\n            assert width == (W_DEG if kind == \"deg\" else W_MAT)[rid], (kind, target, k, how, rid, width)\n            seen.add(rid)\n        # 주입 지점은 전부 **읽기 직전**이라 이 묶음에서 살아남는 것은 B/B 아니면 명시적 미완이다. A/A 는 (a) 아무도\n        # 안 끼어든 대조군과 (b) 검증이 **끝난 뒤** 게시하는 순서에서 나온다 — 후자는 적응판 replay 의 `검증_후_게시`.\n>       assert {\"attempt-B\", \"미완\"} <= seen, seen\nE       AssertionError: {'attempt-A'}\nE       assert {'attempt-B', '미완'} <= {'attempt-A'}\nE         \nE         Extra items in the left set:\nE         '미완'\nE         'attempt-B'\n\ntests/test_r6_internal.py:1028: AssertionError\n=========================== short test summary info ============================\nFAILED tests/test_r6_internal.py::test_c6_01_readers_consume_only_the_snapshot_they_verified\n1 failed, 51 deselected in 1.19s\n",
+      "stderr": ""
+    },
+    "partially_disabled_schedule": {
+      "argv": [
+        "/home/yonghoon71/ddvenv/bin/python",
+        "-m",
+        "pytest",
+        "tests/test_r6_internal.py",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "-k",
+        "c6_01"
+      ],
+      "cwd": "/tmp/r8-port-review-jtlwdsp5/review-copy/bms-balancing",
+      "returncode": 0,
+      "stdout": ".                                                                        [100%]\n1 passed, 51 deselected in 0.83s\n",
+      "stderr": ""
+    },
+    "selected_regressions": {
+      "argv": [
+        "/home/yonghoon71/ddvenv/bin/python",
+        "-m",
+        "pytest",
+        "tests/test_r6_internal.py",
+        "tests/test_r7_codex.py",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "-k",
+        "c6_01 or c6_04 or c6_q3 or d7_05 or d7_06"
+      ],
+      "cwd": "/tmp/r8-port-review-jtlwdsp5/review-copy/bms-balancing",
+      "returncode": 0,
+      "stdout": ".....                                                                    [100%]\n5 passed, 54 deselected in 0.87s\n",
+      "stderr": ""
+    },
+    "adapted": {
+      "without_baseline": {
+        "argv": [
+          "/home/yonghoon71/ddvenv/bin/python",
+          "/tmp/r8-port-review-jtlwdsp5/review-copy/bms-balancing/reviews/r6_repros/codex/replay_codex_r6_adapted.py",
+          "--target",
+          "/tmp/r8-port-review-jtlwdsp5/review-copy/bms-balancing"
+        ],
+        "cwd": "/tmp/r8-port-review-jtlwdsp5/review-copy/bms-balancing",
+        "returncode": 0,
+        "stdout": "{\n  \"target_head\": \"c9b757043c9a1cf6e88eabd62e837ce5ac6ad1b5\",\n  \"probes\": {\n    \"R6-01a 독자는 자기가 검증한 묶음만 (degeneracy)\": {\n      \"상태\": \"닫힘\",\n      \"세부\": {\n        \"검증_중_게시\": {\n          \"consumed\": null,\n          \"disk_unit\": [\n            true,\n            \"일치\"\n          ],\n          \"why\": \"읽은 bytes 와 meta 가 안 맞아 표에서 뺐다\"\n        },\n        \"검증_후_게시\": {\n          \"data_run_id\": \"attempt-A\",\n          \"meta_run_id\": \"attempt-A\",\n          \"value\": 1.0,\n          \"disk_unit\": [\n            true,\n            \"일치\"\n          ]\n        }\n      }\n    },\n    \"R6-01b 검증 뒤 게시된 B 를 안 읽는다 (matrix)\": {\n      \"상태\": \"닫힘\",\n      \"세부\": {\n        \"A_verified_span\": 3.0,\n        \"consumed_span\": 3.0,\n        \"consumed_run_id\": \"attempt-A\",\n        \"unit_after_publication\": [\n          false,\n          \"meta 의 run_id 가 산출물과 다르다: 다른 run_id 행 2/2: ['attempt-B', 'attempt-B']\"\n        ]\n      }\n    },\n    \"R6-02 현행 산출 + meta 없음 = 미완 거절\": {\n      \"상태\": \"닫힘\",\n      \"세부\": {\n        \"modern_json_check\": [\n          false,\n          \"현행 산출(run_id 있음)인데 meta 가 없다 — 게시가 중단됐거나 write_meta 를 안 거쳤다: 미완 (Codex R6-02)\"\n        ],\n        \"modern_csv_check\": [\n          false,\n          \"현행 산출(run_id 있음)인데 meta 가 없다 — 게시가 중단됐거나 write_meta 를 안 거쳤다: 미완 (Codex R6-02)\"\n        ],\n        \"readers_excluded\": true,\n        \"ne_shape_refused\": \"matrix_100.csv: 묶음 불일치/미완 (현행 산출(run_id 있음)인데 meta 가 없다 — 게시가 중단됐거나 write_meta 를 안 거쳤다: 미완 (Codex R6-02)) — 섞인 산출을 소비하지 않는다 (R6 내부 F07 · Codex R6-01·02)\",\n        \"legacy_without_run_id_still_read\": true\n      }\n    },\n    \"R6-03a 반쪽전지: A값이면 A서명\": {\n      \"상태\": \"닫힘\",\n      \"세부\": {\n        \"A_value_PE_change_mV\": 0.0,\n        \"B_value_PE_change_mV\": 20.0,\n        \"recorded_sha_is_A\": true,\n        \"A_hash\": \"82db46d99702cfb4\",\n        \"disk_now\": \"19c988268c207cf2\"\n      }\n    },\n    \"R6-03b 풀셀 build: A값이면 A서명\": {\n      \"상태\": \"닫힘\",\n      \"세부\": {\n        \"raced_arrays_match_A\": true,\n        \"recorded_full_cell_is_A\": true,\n        \"A_hash\": \"68b0f0c7b90e3418\",\n        \"disk_now\": \"3aceeb6664431680\",\n        \"inputs_sha_raced\": \"d2f959805680\",\n        \"inputs_sha_B\": \"1849906172ea\"\n      }\n    },\n    \"R6-04 inference 닫힘 확인(정본 이름으로)\": {\n      \"상태\": \"부분\",\n      \"세부\": {\n        \"rc\": 0,\n        \"cases\": [\n          \"DF01_AND_DERIVED_CLOSURE\",\n          \"R6_FINAL_INFERENCE_CHECKS_PASSED\"\n        ],\n        \"baseline_used\": false,\n        \"partial\": true,\n        \"note\": \"한 줄 적응 + **부분 재생** — `R6_OLD_OUT=<bfc4623^ 의 out>` 이 없어 derived 만 돌렸다 (full 6/6 이 아니다, Codex R7-05)\"\n      }\n    }\n  },\n  \"baseline\": null,\n  \"mode\": \"부분 (R6_OLD_OUT 미지정 — `R6_OLD_OUT=<bfc4623^ 의 out>` 을 주면 full)\"\n}\n",
+        "stderr": "",
+        "report": {
+          "target_head": "c9b757043c9a1cf6e88eabd62e837ce5ac6ad1b5",
+          "probes": {
+            "R6-01a 독자는 자기가 검증한 묶음만 (degeneracy)": {
+              "상태": "닫힘",
+              "세부": {
+                "검증_중_게시": {
+                  "consumed": null,
+                  "disk_unit": [
+                    true,
+                    "일치"
+                  ],
+                  "why": "읽은 bytes 와 meta 가 안 맞아 표에서 뺐다"
+                },
+                "검증_후_게시": {
+                  "data_run_id": "attempt-A",
+                  "meta_run_id": "attempt-A",
+                  "value": 1.0,
+                  "disk_unit": [
+                    true,
+                    "일치"
+                  ]
+                }
+              }
+            },
+            "R6-01b 검증 뒤 게시된 B 를 안 읽는다 (matrix)": {
+              "상태": "닫힘",
+              "세부": {
+                "A_verified_span": 3.0,
+                "consumed_span": 3.0,
+                "consumed_run_id": "attempt-A",
+                "unit_after_publication": [
+                  false,
+                  "meta 의 run_id 가 산출물과 다르다: 다른 run_id 행 2/2: ['attempt-B', 'attempt-B']"
+                ]
+              }
+            },
+            "R6-02 현행 산출 + meta 없음 = 미완 거절": {
+              "상태": "닫힘",
+              "세부": {
+                "modern_json_check": [
+                  false,
+                  "현행 산출(run_id 있음)인데 meta 가 없다 — 게시가 중단됐거나 write_meta 를 안 거쳤다: 미완 (Codex R6-02)"
+                ],
+                "modern_csv_check": [
+                  false,
+                  "현행 산출(run_id 있음)인데 meta 가 없다 — 게시가 중단됐거나 write_meta 를 안 거쳤다: 미완 (Codex R6-02)"
+                ],
+                "readers_excluded": true,
+                "ne_shape_refused": "matrix_100.csv: 묶음 불일치/미완 (현행 산출(run_id 있음)인데 meta 가 없다 — 게시가 중단됐거나 write_meta 를 안 거쳤다: 미완 (Codex R6-02)) — 섞인 산출을 소비하지 않는다 (R6 내부 F07 · Codex R6-01·02)",
+                "legacy_without_run_id_still_read": true
+              }
+            },
+            "R6-03a 반쪽전지: A값이면 A서명": {
+              "상태": "닫힘",
+              "세부": {
+                "A_value_PE_change_mV": 0.0,
+                "B_value_PE_change_mV": 20.0,
+                "recorded_sha_is_A": true,
+                "A_hash": "82db46d99702cfb4",
+                "disk_now": "19c988268c207cf2"
+              }
+            },
+            "R6-03b 풀셀 build: A값이면 A서명": {
+              "상태": "닫힘",
+              "세부": {
+                "raced_arrays_match_A": true,
+                "recorded_full_cell_is_A": true,
+                "A_hash": "68b0f0c7b90e3418",
+                "disk_now": "3aceeb6664431680",
+                "inputs_sha_raced": "d2f959805680",
+                "inputs_sha_B": "1849906172ea"
+              }
+            },
+            "R6-04 inference 닫힘 확인(정본 이름으로)": {
+              "상태": "부분",
+              "세부": {
+                "rc": 0,
+                "cases": [
+                  "DF01_AND_DERIVED_CLOSURE",
+                  "R6_FINAL_INFERENCE_CHECKS_PASSED"
+                ],
+                "baseline_used": false,
+                "partial": true,
+                "note": "한 줄 적응 + **부분 재생** — `R6_OLD_OUT=<bfc4623^ 의 out>` 이 없어 derived 만 돌렸다 (full 6/6 이 아니다, Codex R7-05)"
+              }
+            }
+          },
+          "baseline": null,
+          "mode": "부분 (R6_OLD_OUT 미지정 — `R6_OLD_OUT=<bfc4623^ 의 out>` 을 주면 full)"
+        },
+        "baseline_env": null
+      },
+      "with_baseline": {
+        "argv": [
+          "/home/yonghoon71/ddvenv/bin/python",
+          "/tmp/r8-port-review-jtlwdsp5/review-copy/bms-balancing/reviews/r6_repros/codex/replay_codex_r6_adapted.py",
+          "--target",
+          "/tmp/r8-port-review-jtlwdsp5/review-copy/bms-balancing"
+        ],
+        "cwd": "/tmp/r8-port-review-jtlwdsp5/review-copy/bms-balancing",
+        "returncode": 0,
+        "stdout": "{\n  \"target_head\": \"c9b757043c9a1cf6e88eabd62e837ce5ac6ad1b5\",\n  \"probes\": {\n    \"R6-01a 독자는 자기가 검증한 묶음만 (degeneracy)\": {\n      \"상태\": \"닫힘\",\n      \"세부\": {\n        \"검증_중_게시\": {\n          \"consumed\": null,\n          \"disk_unit\": [\n            true,\n            \"일치\"\n          ],\n          \"why\": \"읽은 bytes 와 meta 가 안 맞아 표에서 뺐다\"\n        },\n        \"검증_후_게시\": {\n          \"data_run_id\": \"attempt-A\",\n          \"meta_run_id\": \"attempt-A\",\n          \"value\": 1.0,\n          \"disk_unit\": [\n            true,\n            \"일치\"\n          ]\n        }\n      }\n    },\n    \"R6-01b 검증 뒤 게시된 B 를 안 읽는다 (matrix)\": {\n      \"상태\": \"닫힘\",\n      \"세부\": {\n        \"A_verified_span\": 3.0,\n        \"consumed_span\": 3.0,\n        \"consumed_run_id\": \"attempt-A\",\n        \"unit_after_publication\": [\n          false,\n          \"meta 의 run_id 가 산출물과 다르다: 다른 run_id 행 2/2: ['attempt-B', 'attempt-B']\"\n        ]\n      }\n    },\n    \"R6-02 현행 산출 + meta 없음 = 미완 거절\": {\n      \"상태\": \"닫힘\",\n      \"세부\": {\n        \"modern_json_check\": [\n          false,\n          \"현행 산출(run_id 있음)인데 meta 가 없다 — 게시가 중단됐거나 write_meta 를 안 거쳤다: 미완 (Codex R6-02)\"\n        ],\n        \"modern_csv_check\": [\n          false,\n          \"현행 산출(run_id 있음)인데 meta 가 없다 — 게시가 중단됐거나 write_meta 를 안 거쳤다: 미완 (Codex R6-02)\"\n        ],\n        \"readers_excluded\": true,\n        \"ne_shape_refused\": \"matrix_100.csv: 묶음 불일치/미완 (현행 산출(run_id 있음)인데 meta 가 없다 — 게시가 중단됐거나 write_meta 를 안 거쳤다: 미완 (Codex R6-02)) — 섞인 산출을 소비하지 않는다 (R6 내부 F07 · Codex R6-01·02)\",\n        \"legacy_without_run_id_still_read\": true\n      }\n    },\n    \"R6-03a 반쪽전지: A값이면 A서명\": {\n      \"상태\": \"닫힘\",\n      \"세부\": {\n        \"A_value_PE_change_mV\": 0.0,\n        \"B_value_PE_change_mV\": 20.0,\n        \"recorded_sha_is_A\": true,\n        \"A_hash\": \"11e2e4217b6230cd\",\n        \"disk_now\": \"6936c55b797e9378\"\n      }\n    },\n    \"R6-03b 풀셀 build: A값이면 A서명\": {\n      \"상태\": \"닫힘\",\n      \"세부\": {\n        \"raced_arrays_match_A\": true,\n        \"recorded_full_cell_is_A\": true,\n        \"A_hash\": \"79da5a90d8332973\",\n        \"disk_now\": \"53c5395f8afbcea4\",\n        \"inputs_sha_raced\": \"7cf015bf1b22\",\n        \"inputs_sha_B\": \"5d0cd8fbfafd\"\n      }\n    },\n    \"R6-04 inference 닫힘 확인(정본 이름으로)\": {\n      \"상태\": \"닫힘\",\n      \"세부\": {\n        \"rc\": 0,\n        \"cases\": [\n          \"R5_INFERENCE_CLOSURE\",\n          \"SCALE_DOMAIN_AND_EXCEPTION_CLOSURE\",\n          \"MATRIX_INDEPENDENT_AUDIT_AXIS\",\n          \"MATRIX_INDEPENDENT_AUDIT_AXIS\",\n          \"U13_REPORTED_SCOPE\",\n          \"U13_AXIS_NEGATIVE_CONTROL\",\n          \"U13_AXIS_NEGATIVE_CONTROL\",\n          \"U13_AXIS_NEGATIVE_CONTROL\",\n          \"U13_AXIS_NEGATIVE_CONTROL\",\n          \"DESIGN_NOTE_SCALE_BOUND_NOT_ARGMIN_BOUND\",\n          \"DF01_AND_DERIVED_CLOSURE\",\n          \"U14_SECTION_5_1_THRESHOLDS\",\n          \"U14_12_ARTIFACT_NUMERIC_COMPARISON\",\n          \"U14_PROFILE_BUDGET_FACT\",\n          \"CURRENT_SECTION_5_PRINTED_TABLE\",\n          \"R6_FINAL_INFERENCE_CHECKS_PASSED\"\n        ],\n        \"baseline_used\": true,\n        \"partial\": false,\n        \"note\": \"두 줄 적응: 없는 `_vN` 이름은 건너뛴다 · 옛 리비전 baseline 은 historical 정책으로 짝짓는다\"\n      }\n    }\n  },\n  \"baseline\": \"/mnt/c/Users/Administrator/Documents/Codex/2026-08-24/claude-14-gate-code-review-9qkx05-2/work/harness-r6-baseline-bfc-parent/bms-balancing/out\",\n  \"mode\": \"full\"\n}\n",
+        "stderr": "",
+        "report": {
+          "target_head": "c9b757043c9a1cf6e88eabd62e837ce5ac6ad1b5",
+          "probes": {
+            "R6-01a 독자는 자기가 검증한 묶음만 (degeneracy)": {
+              "상태": "닫힘",
+              "세부": {
+                "검증_중_게시": {
+                  "consumed": null,
+                  "disk_unit": [
+                    true,
+                    "일치"
+                  ],
+                  "why": "읽은 bytes 와 meta 가 안 맞아 표에서 뺐다"
+                },
+                "검증_후_게시": {
+                  "data_run_id": "attempt-A",
+                  "meta_run_id": "attempt-A",
+                  "value": 1.0,
+                  "disk_unit": [
+                    true,
+                    "일치"
+                  ]
+                }
+              }
+            },
+            "R6-01b 검증 뒤 게시된 B 를 안 읽는다 (matrix)": {
+              "상태": "닫힘",
+              "세부": {
+                "A_verified_span": 3.0,
+                "consumed_span": 3.0,
+                "consumed_run_id": "attempt-A",
+                "unit_after_publication": [
+                  false,
+                  "meta 의 run_id 가 산출물과 다르다: 다른 run_id 행 2/2: ['attempt-B', 'attempt-B']"
+                ]
+              }
+            },
+            "R6-02 현행 산출 + meta 없음 = 미완 거절": {
+              "상태": "닫힘",
+              "세부": {
+                "modern_json_check": [
+                  false,
+                  "현행 산출(run_id 있음)인데 meta 가 없다 — 게시가 중단됐거나 write_meta 를 안 거쳤다: 미완 (Codex R6-02)"
+                ],
+                "modern_csv_check": [
+                  false,
+                  "현행 산출(run_id 있음)인데 meta 가 없다 — 게시가 중단됐거나 write_meta 를 안 거쳤다: 미완 (Codex R6-02)"
+                ],
+                "readers_excluded": true,
+                "ne_shape_refused": "matrix_100.csv: 묶음 불일치/미완 (현행 산출(run_id 있음)인데 meta 가 없다 — 게시가 중단됐거나 write_meta 를 안 거쳤다: 미완 (Codex R6-02)) — 섞인 산출을 소비하지 않는다 (R6 내부 F07 · Codex R6-01·02)",
+                "legacy_without_run_id_still_read": true
+              }
+            },
+            "R6-03a 반쪽전지: A값이면 A서명": {
+              "상태": "닫힘",
+              "세부": {
+                "A_value_PE_change_mV": 0.0,
+                "B_value_PE_change_mV": 20.0,
+                "recorded_sha_is_A": true,
+                "A_hash": "11e2e4217b6230cd",
+                "disk_now": "6936c55b797e9378"
+              }
+            },
+            "R6-03b 풀셀 build: A값이면 A서명": {
+              "상태": "닫힘",
+              "세부": {
+                "raced_arrays_match_A": true,
+                "recorded_full_cell_is_A": true,
+                "A_hash": "79da5a90d8332973",
+                "disk_now": "53c5395f8afbcea4",
+                "inputs_sha_raced": "7cf015bf1b22",
+                "inputs_sha_B": "5d0cd8fbfafd"
+              }
+            },
+            "R6-04 inference 닫힘 확인(정본 이름으로)": {
+              "상태": "닫힘",
+              "세부": {
+                "rc": 0,
+                "cases": [
+                  "R5_INFERENCE_CLOSURE",
+                  "SCALE_DOMAIN_AND_EXCEPTION_CLOSURE",
+                  "MATRIX_INDEPENDENT_AUDIT_AXIS",
+                  "MATRIX_INDEPENDENT_AUDIT_AXIS",
+                  "U13_REPORTED_SCOPE",
+                  "U13_AXIS_NEGATIVE_CONTROL",
+                  "U13_AXIS_NEGATIVE_CONTROL",
+                  "U13_AXIS_NEGATIVE_CONTROL",
+                  "U13_AXIS_NEGATIVE_CONTROL",
+                  "DESIGN_NOTE_SCALE_BOUND_NOT_ARGMIN_BOUND",
+                  "DF01_AND_DERIVED_CLOSURE",
+                  "U14_SECTION_5_1_THRESHOLDS",
+                  "U14_12_ARTIFACT_NUMERIC_COMPARISON",
+                  "U14_PROFILE_BUDGET_FACT",
+                  "CURRENT_SECTION_5_PRINTED_TABLE",
+                  "R6_FINAL_INFERENCE_CHECKS_PASSED"
+                ],
+                "baseline_used": true,
+                "partial": false,
+                "note": "두 줄 적응: 없는 `_vN` 이름은 건너뛴다 · 옛 리비전 baseline 은 historical 정책으로 짝짓는다"
+              }
+            }
+          },
+          "baseline": "/mnt/c/Users/Administrator/Documents/Codex/2026-08-24/claude-14-gate-code-review-9qkx05-2/work/harness-r6-baseline-bfc-parent/bms-balancing/out",
+          "mode": "full"
+        },
+        "baseline_env": "/mnt/c/Users/Administrator/Documents/Codex/2026-08-24/claude-14-gate-code-review-9qkx05-2/work/harness-r6-baseline-bfc-parent/bms-balancing/out"
+      }
+    },
+    "original_mutation_audit": {
+      "argv": [
+        "/home/yonghoon71/ddvenv/bin/python",
+        "/tmp/r8-port-review-jtlwdsp5/review-copy/bms-balancing/reviews/r6_repros/codex_r6_mutation_audit.py"
+      ],
+      "cwd": "/tmp/r8-port-review-jtlwdsp5/review-copy/bms-balancing",
+      "returncode": 0,
+      "stdout": "baseline: 0 7 passed, 45 deselected in 1.80s\nCAUGHT | R6-01 read_unit 이 검증 뒤 경로를 다시 읽는다 | c6_01 | 1 failed, 51 deselected in 1.07s\nCAUGHT | R6-02 현행 산출 + meta 없음 → 옛 산출로 | c6_02 | 1 failed, 51 deselected in 1.23s\nCAUGHT | R6-03 build: 파싱 뒤 경로를 다시 열어 해시 | c6_03 | 1 failed, 51 deselected in 2.02s\nCAUGHT | R6-03 ne_shape: 반쪽전지 identity 를 다시 열어 해시 | c6_03 | 1 failed, 51 deselected in 2.25s\nCAUGHT | R6-04 옛 규칙: 가장 높은 _vN 을 정본으로 (이름은 unversioned 로 환원) | c6_04 | 1 failed, 51 deselected in 1.18s\nCAUGHT | R6-05 -z 경로를 ' -> ' 로 쪼갬 | c6_05 | 1 failed, 51 deselected in 1.35s\nCAUGHT | R6-06 원장이 '적은 시작' 을 산 문장으로 | c6_06 | 1 failed, 51 deselected in 1.16s\nCAUGHT | Q3 §1-8 이 '충돌은 항상 partial' 로 | c6_q3 | 1 failed, 51 deselected in 1.20s\nrestored: 0 7 passed, 45 deselected in 2.13s\nMISSED: 0\n",
+      "stderr": "",
+      "pytest_calls": [
+        {
+          "selection": "c6_0 or c6_q3",
+          "rc": 0,
+          "stdout": ".......                                                                  [100%]\n7 passed, 45 deselected in 1.80s\n",
+          "stderr": ""
+        },
+        {
+          "selection": "c6_01",
+          "rc": 1,
+          "stdout": "F                                                                        [100%]\n=================================== FAILURES ===================================\n__________ test_c6_01_readers_consume_only_the_snapshot_they_verified __________\n\ntmp_path = PosixPath('/tmp/pytest-of-yonghoon71/pytest-90/test_c6_01_readers_consume_onl0')\nmonkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7b8e7fd37350>\n\n    def test_c6_01_readers_consume_only_the_snapshot_they_verified(tmp_path, monkeypatch):\n        \"\"\"[Codex R6-01 · P1] `load_degeneracy` 가 A 의 JSON bytes 를 읽은 뒤 다른 정상 시도 B 가 B/B 를 게시하면, 독자는\n        pathname 의 B/B 를 검증하고 **A 데이터에 B meta** 를 붙였다. matrix 는 반대 순서 — A/A 를 검증한 직후 B 의 CSV 만\n        게시되면 B 의 폭 79 를 읽어 표에 넣었다 (그 순간 디스크 묶음은 B/A 라 false). 검사는 \"이 경로가 검사할 때\n        맞았는가\" 만 말하고 따로 읽은 bytes 를 보증하지 않는다.\n    \n        독자는 data bytes 와 meta 를 **한 번씩** 읽어 그 둘을 서로 대조하고 그것만 소비한다 — 게시가 어느 읽기 경계에\n        끼든 결과는 A/A · B/B · 명시적 미완 뿐이어야 한다 (A/B 나 검증 안 한 B 의 성공 소비 금지).\n        \"\"\"\n        W_DEG = {\"attempt-A\": 1.0, \"attempt-B\": 20.0}; W_MAT = {\"attempt-A\": 3.0, \"attempt-B\": 79.0}\n    \n        def setup(out, kind, how):\n            if kind == \"deg\":\n                _c6_deg(out, \"attempt-A\", W_DEG[\"attempt-A\"])\n                return lambda: _c6_deg(out, \"attempt-B\", W_DEG[\"attempt-B\"], meta=True)\n            _c6_matrix(out, \"attempt-A\", W_MAT[\"attempt-A\"])\n            return lambda: _c6_matrix(out, \"attempt-B\", W_MAT[\"attempt-B\"], meta=(how == \"full\"))\n    \n        def read(out, kind):\n            m = _cs()\n            return m.load_degeneracy(out) if kind == \"deg\" else m.load_matrix_axis(out)\n    \n        # ⚠ Codex R7 §4: 전 판은 k 를 1~4 로 **가정**했는데 degeneracy 데이터는 한 번만 열린다 — k≥2 인 건들은 훅이\n        #   아예 안 걸린 채 통과했다. 경계 수를 먼저 **세고** 그 수만큼만 돈다 (그리고 매 건 주입을 확인한다).\n        cases = []\n        for kind, target, how in ((\"deg\", \"degeneracy_100_Li.json\", \"full\"),\n                                  (\"mat\", \"matrix_100.csv\", \"csv-only\"), (\"mat\", \"matrix_100.csv\", \"full\"),\n                                  (\"deg\", \"degeneracy_100_Li.json.meta.json\", \"full\"),\n                                  (\"mat\", \"matrix_100.csv.meta.json\", \"full\")):\n            probe = tmp_path / f\"probe-{len(cases)}\"; probe.mkdir()\n            setup(probe, kind, how)\n            with monkeypatch.context() as mp:\n                counter = _hook_open(mp, target, 10 ** 6, lambda: None)\n                read(probe, kind)\n            n_reads = counter[\"v\"]\n            assert n_reads >= 1, (kind, target, how)\n            cases += [(kind, target, k, how) for k in range(1, n_reads + 1)]\n        seen = set()\n        for i, (kind, target, k, how) in enumerate(cases):\n            out = tmp_path / f\"c{i}\"; out.mkdir()\n            pub_b = setup(out, kind, how)\n            with monkeypatch.context() as mp:\n                fired = _hook_open(mp, target, k, pub_b)\n                got = read(out, kind)\n            # 주입이 실제로 일어났는지 **건별로** 확인한다 — 안 그러면 훅을 꺼도 통과한다 (Codex R7 §4)\n            assert fired[\"v\"] >= k, (kind, target, k, how, fired[\"v\"])\n            if \"100\" not in got:\n                seen.add(\"미완\"); continue                                   # 명시적 미완 — 허용\n            e = got[\"100\"]\n            rid = e[\"j\"][\"run_id\"] if kind == \"deg\" else e[\"run_id\"]\n            width = e[\"j\"][\"LLI_percent\"][\"span\"] if kind == \"deg\" else e[\"per\"][\"GITT\"][\"LLI\"]\n>           assert e.get(\"meta\") and e[\"meta\"][\"run_id\"] == rid, (kind, target, k, how, rid, e.get(\"meta\"))\nE           AssertionError: ('deg', 'degeneracy_100_Li.json', 2, 'full', 'attempt-B', {'artifact': 'degeneracy_100_Li.json', 'state': '100', 'run_id': 'attempt-A', 'sha256': '4488ff01784ee393c61977eefb0803d21155e430ec7dcbcdcbe6b19a8b6bf0a1', ...})\nE           assert ({'artifact': 'degeneracy_100_Li.json', 'state': '100', 'run_id': 'attempt-A', 'sha256': '4488ff01784ee393c61977eefb0803d21155e430ec7dcbcdcbe6b19a8b6bf0a1', ...} and 'attempt-A' == 'attempt-B'\nE            +  where {'artifact': 'degeneracy_100_Li.json', 'state': '100', 'run_id': 'attempt-A', 'sha256': '4488ff01784ee393c61977eefb0803d21155e430ec7dcbcdcbe6b19a8b6bf0a1', ...} = <built-in method get of dict object at 0x7b8e7fd3aa40>('meta')\nE            +    where <built-in method get of dict object at 0x7b8e7fd3aa40> = {'si': 'Li', 'j': {'run_id': 'attempt-B', 'state': '100', 'si_source': 'Li', 'half_cell': 'GITT', ...}, 'file': 'degen... '100', 'run_id': 'attempt-A', 'sha256': '4488ff01784ee393c61977eefb0803d21155e430ec7dcbcdcbe6b19a8b6bf0a1', ...}, ...}.get\nE             \nE             - attempt-B\nE             ?         ^\nE             + attempt-A\nE             ?         ^)\n\ntests/test_r6_internal.py:1023: AssertionError\n=========================== short test summary info ============================\nFAILED tests/test_r6_internal.py::test_c6_01_readers_consume_only_the_snapshot_they_verified\n1 failed, 51 deselected in 1.07s\n",
+          "stderr": ""
+        },
+        {
+          "selection": "c6_02",
+          "rc": 1,
+          "stdout": "F                                                                        [100%]\n=================================== FAILURES ===================================\n_______ test_c6_02_modern_artifact_without_meta_is_incomplete_not_legacy _______\n\ntmp_path = PosixPath('/tmp/pytest-of-yonghoon71/pytest-91/test_c6_02_modern_artifact_wit0')\n\n    def test_c6_02_modern_artifact_without_meta_is_incomplete_not_legacy(tmp_path):\n        \"\"\"[Codex R6-02 · P1] 빈 out/ 에 `run_id` 가 있는 **현행** 산출을 게시하고 첫 write_meta 전에 중단하면 `verify_unit`\n        이 `(None, \"meta 없음\")` 을 주고 세 독자가 전부 소비에 성공했다 — \"옛 파일 허용\" 예외가 현행 생산자의 미완을\n        못 가렸다. 현행 schema(run_id 있음)에는 현행 meta 가 필수고, legacy 호환은 진짜 legacy(run_id 없음)에만.\"\"\"\n        prov = _prov(); m = _cs(); ne = _load_script(\"ne_shape\")\n        out = tmp_path / \"out\"; out.mkdir()\n        fj = _c6_deg(out, \"rid-x\", 5.0, meta=False); fm = _c6_matrix(out, \"rid-x\", 4.0, meta=False)\n        for f in (fj, fm):\n            ok, why = prov.verify_unit(f)\n>           assert ok is False and (\"미완\" in why or \"현행\" in why), (f.name, ok, why)\nE           AssertionError: ('degeneracy_100_Li.json', None, 'meta 없음 (옛 산출, run_id 없음 — 호환 경로)')\nE           assert (None is False)\n\ntests/test_r6_internal.py:1049: AssertionError\n=========================== short test summary info ============================\nFAILED tests/test_r6_internal.py::test_c6_02_modern_artifact_without_meta_is_incomplete_not_legacy\n1 failed, 51 deselected in 1.23s\n",
+          "stderr": ""
+        },
+        {
+          "selection": "c6_03",
+          "rc": 1,
+          "stdout": "F                                                                        [100%]\n=================================== FAILURES ===================================\n_______ test_c6_03_build_and_ne_shape_hash_the_bytes_they_computed_with ________\n\ntmp_path = PosixPath('/tmp/pytest-of-yonghoon71/pytest-92/test_c6_03_build_and_ne_shape_0')\nmonkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x723e0a2fb020>\n\n    def test_c6_03_build_and_ne_shape_hash_the_bytes_they_computed_with(tmp_path, monkeypatch):\n        \"\"\"[Codex R6-03 · P1] `build` 는 풀셀 워크북 A 를 읽고 **나중에** 경로를 다시 열어 해시했다 — 그 사이 같은 이름으로\n        +20 mV 인 B 가 재-export 되면 Objective 는 A 로 만들고 `consumed_inputs`·`inputs_sha` 는 B 를 적는다.\n        `ne_shape.main` 도 반쪽전지를 HalfCell·raw_ne_capacity·identity 로 세 번 열어 같은 자리가 있다. 입력마다 bytes\n        snapshot 을 한 번 잡고 그 bytes 로 파싱과 해시를 함께 한다 — A값/A서명 · B값/B서명 · 중단만 허용.\"\"\"\n        import hashlib\n        src = _synth_root(tmp_path)\n        wb = src / \"data/full_cell/large_cell_033C/fullcell_states.xlsx\"\n        a_bytes = wb.read_bytes(); sha_a = hashlib.sha256(a_bytes).hexdigest()   # A 의 bytes 를 한 번 잡아 둔다 (합성 재생성은 byte-결정적이지 않다)\n        ref = verify.build(src, \"GITT\", \"100\", \"Li\")                          # 깨끗한 A 로 만든 기준\n        for k in (1, 2, 3):\n            # 훅이 실제로 B 를 쓰면 이후 반복은 B 를 읽으므로 매번 A 로 되돌린다\n            wb.write_bytes(a_bytes)\n            assert hashlib.sha256(wb.read_bytes()).hexdigest() == sha_a\n            with monkeypatch.context() as mp:\n                _hook_open(mp, wb.name, k, lambda: _bump_xlsx(wb))\n                obj = verify.build(src, \"GITT\", \"100\", \"Li\")\n            got = obj.consumed_inputs[\"full_cell\"][\"sha256\"]; v_same = bool((obj.voltage == ref.voltage).all()) if obj.voltage.shape == ref.voltage.shape else False\n            sha_now = hashlib.sha256(wb.read_bytes()).hexdigest()\n            # 허용: (A값, A서명) 또는 (B값, B서명). 금지: A값에 B서명\n>           assert (v_same and got == sha_a) or (not v_same and got == sha_now and got != sha_a), (k, v_same, got[:12], sha_a[:12], sha_now[:12])\nE           AssertionError: (2, True, '6368f80275c7', 'f3cc735e33d7', '6368f80275c7')\nE           assert ((True and '6368f80275c7...7ae417997f6ad' == 'f3cc735e33d7...f0660d8923c5b'\nE             \nE             - f3cc735e33d712602090b78846ca97c7c7b01dfef22b8f097b3f0660d8923c5b\nE             + 6368f80275c7dfce6cca62ee4b6407ce84dc7571ff87a9534837ae417997f6ad) or (not True))\n\ntests/test_r6_internal.py:1102: AssertionError\n=========================== short test summary info ============================\nFAILED tests/test_r6_internal.py::test_c6_03_build_and_ne_shape_hash_the_bytes_they_computed_with\n1 failed, 51 deselected in 2.02s\n",
+          "stderr": ""
+        },
+        {
+          "selection": "c6_03",
+          "rc": 1,
+          "stdout": "F                                                                        [100%]\n=================================== FAILURES ===================================\n_______ test_c6_03_build_and_ne_shape_hash_the_bytes_they_computed_with ________\n\ntmp_path = PosixPath('/tmp/pytest-of-yonghoon71/pytest-93/test_c6_03_build_and_ne_shape_0')\nmonkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x79415aeff830>\n\n    def test_c6_03_build_and_ne_shape_hash_the_bytes_they_computed_with(tmp_path, monkeypatch):\n        \"\"\"[Codex R6-03 · P1] `build` 는 풀셀 워크북 A 를 읽고 **나중에** 경로를 다시 열어 해시했다 — 그 사이 같은 이름으로\n        +20 mV 인 B 가 재-export 되면 Objective 는 A 로 만들고 `consumed_inputs`·`inputs_sha` 는 B 를 적는다.\n        `ne_shape.main` 도 반쪽전지를 HalfCell·raw_ne_capacity·identity 로 세 번 열어 같은 자리가 있다. 입력마다 bytes\n        snapshot 을 한 번 잡고 그 bytes 로 파싱과 해시를 함께 한다 — A값/A서명 · B값/B서명 · 중단만 허용.\"\"\"\n        import hashlib\n        src = _synth_root(tmp_path)\n        wb = src / \"data/full_cell/large_cell_033C/fullcell_states.xlsx\"\n        a_bytes = wb.read_bytes(); sha_a = hashlib.sha256(a_bytes).hexdigest()   # A 의 bytes 를 한 번 잡아 둔다 (합성 재생성은 byte-결정적이지 않다)\n        ref = verify.build(src, \"GITT\", \"100\", \"Li\")                          # 깨끗한 A 로 만든 기준\n        for k in (1, 2, 3):\n            # 훅이 실제로 B 를 쓰면 이후 반복은 B 를 읽으므로 매번 A 로 되돌린다\n            wb.write_bytes(a_bytes)\n            assert hashlib.sha256(wb.read_bytes()).hexdigest() == sha_a\n            with monkeypatch.context() as mp:\n                _hook_open(mp, wb.name, k, lambda: _bump_xlsx(wb))\n                obj = verify.build(src, \"GITT\", \"100\", \"Li\")\n            got = obj.consumed_inputs[\"full_cell\"][\"sha256\"]; v_same = bool((obj.voltage == ref.voltage).all()) if obj.voltage.shape == ref.voltage.shape else False\n            sha_now = hashlib.sha256(wb.read_bytes()).hexdigest()\n            # 허용: (A값, A서명) 또는 (B값, B서명). 금지: A값에 B서명\n            assert (v_same and got == sha_a) or (not v_same and got == sha_now and got != sha_a), (k, v_same, got[:12], sha_a[:12], sha_now[:12])\n        # ne_shape: 반쪽전지 100.xlsx 의 세 번째 열기(옛 코드의 identity 읽기) 직전에 PE +20 mV 재-export\n        wb.write_bytes(a_bytes)\n        hc = src / \"data/half_cell/GITT/100.xlsx\"; hc_a = hashlib.sha256(hc.read_bytes()).hexdigest()\n        ne = _load_script(\"ne_shape\")\n        import contextlib\n        def run_ne(outd, hook):\n            outd.mkdir()\n            with monkeypatch.context() as mp:\n                if hook:\n                    _hook_open(mp, hc.name, hook, lambda: _bump_xlsx(hc, header=0))\n                mp.setattr(sys, \"argv\", [\"ne_shape\", \"--data-root\", str(src), \"--out-dir\", str(outd), \"--write\", str(outd)])\n                with contextlib.redirect_stdout(_io.StringIO()):\n                    ne.main()\n            meta = json.loads((outd / \"ne_shape_GITT_Li.csv.meta.json\").read_text(encoding=\"utf-8\"))\n            rows = {r[\"state\"]: r for r in csv.DictReader((outd / \"ne_shape_GITT_Li.csv\").open(encoding=\"utf-8\"))}\n            return meta[\"consumed_inputs\"][\"100\"][\"half_cell\"][\"sha256\"], float(rows[\"100\"][\"pe_shape_max_mV\"])\n        hc_a_bytes = hc.read_bytes()\n        rec_a, pe_a = run_ne(tmp_path / \"ne_out_a\", hook=False)              # 깨끗한 A 의 기준 (합성 100 은 자체 PE 편차가 있다)\n        assert rec_a == hc_a\n        # 두 번째·세 번째 open 직전에 재-export: 옛 코드는 세 번(HalfCell·raw_ne_capacity·identity), \"파싱 뒤 다시 열어\n        # 해시\" 류의 변이는 두 번 연다. 올바른 코드는 한 번만 열어 어느 훅도 안 맞는다.\n        for k in (2, 3):\n            hc.write_bytes(hc_a_bytes)\n            rec, pe = run_ne(tmp_path / f\"ne_out_{k}\", hook=k)\n            hc_now = hashlib.sha256(hc.read_bytes()).hexdigest()\n            # 허용: (A값, A서명) 또는 (B값 = +20 mV, B서명). 금지: A값에 B서명\n>           assert (rec == hc_a and abs(pe - pe_a) < 1e-9) or (rec == hc_now and rec != hc_a and pe > pe_a + 15.0), \\\n                (k, rec[:12], hc_a[:12], hc_now[:12], pe, pe_a)\nE           AssertionError: (2, '8dcf26aa2a15', '47c61be1a50f', '8dcf26aa2a15', 4.0, 4.0)\nE           assert (('8dcf26aa2a15...f99db3b127452' == '47c61be1a50f...d7a8f4dc71812'\nE             \nE             - 47c61be1a50f22a2e1b2a652e86ece97e85dc7578674126fa8ad7a8f4dc71812\nE             + 8dcf26aa2a150c613911d2bb8efb2b8d510f810c262a2d67f85f99db3b127452) or ('8dcf26aa2a15...f99db3b127452' == '8dcf26aa2a15...f99db3b127452'\nE             \nE             Skipping 53 identical leading characters in diff, use -v to show\nE               9db3b127452 and '8dcf26aa2a150c613911d2bb8efb2b8d510f810c262a2d67f85f99db3b127452' != '47c61be1a50f22a2e1b2a652e86ece97e85dc7578674126fa8ad7a8f4dc71812' and 4.0 > (4.0 + 15.0)))\n\ntests/test_r6_internal.py:1129: AssertionError\n=========================== short test summary info ============================\nFAILED tests/test_r6_internal.py::test_c6_03_build_and_ne_shape_hash_the_bytes_they_computed_with\n1 failed, 51 deselected in 2.25s\n",
+          "stderr": ""
+        },
+        {
+          "selection": "c6_04",
+          "rc": 1,
+          "stdout": "F                                                                        [100%]\n=================================== FAILURES ===================================\n__ test_c6_04_reader_uses_the_unversioned_canon_and_flags_versioned_siblings ___\n\ntmp_path = PosixPath('/tmp/pytest-of-yonghoon71/pytest-94/test_c6_04_reader_uses_the_unv0')\ncapsys = <_pytest.capture.CaptureFixture object at 0x7519b580fec0>\n\n    def test_c6_04_reader_uses_the_unversioned_canon_and_flags_versioned_siblings(tmp_path, capsys):\n        \"\"\"[Codex R6-04 · P2] \"가장 높은 `_vN`\" 규칙 때문에 U14 가 정본을 다시 만든 뒤에도 독자는 옛 `_v2`(meta 없음)를\n        골랐다 — 새 서명·환경 필드가 소비 경로에 안 실린다. 정본은 **unversioned 이름 하나**이고 `_vN` 은 역사 자료라\n        `out/archive/` 에 있어야 한다; out/ 에 남은 `_vN` 은 시끄럽게 건너뛴다.\"\"\"\n        m = _cs(); d = tmp_path / \"out\"; d.mkdir()\n        _c6_deg(d, \"rid-new\", 111.0)\n        (d / \"degeneracy_100_Li_v2.json\").write_text(json.dumps({\"state\": \"100\", \"best_modes_percent\": {},\n            **{f\"{k}_percent\": {\"span\": 222.0} for k in (\"LAM_PE\", \"LAM_NE\", \"LLI\")}}), encoding=\"utf-8\")\n        _c6_matrix(d, \"rid-new\", 3.0)\n        _c6_matrix(d, \"rid-old\", 50.0, meta=False, name=\"matrix_100_v2.csv\")\n        got = m.load_degeneracy(d); mx = m.load_matrix_axis(d); err = capsys.readouterr().err\n>       assert got[\"100\"][\"file\"] == \"degeneracy_100_Li.json\" and got[\"100\"][\"j\"][\"LLI_percent\"][\"span\"] == 111.0, got[\"100\"][\"file\"]\n               ^^^^^^^^^^\nE       KeyError: '100'\n\ntests/test_r6_internal.py:1144: KeyError\n=========================== short test summary info ============================\nFAILED tests/test_r6_internal.py::test_c6_04_reader_uses_the_unversioned_canon_and_flags_versioned_siblings\n1 failed, 51 deselected in 1.18s\n",
+          "stderr": ""
+        },
+        {
+          "selection": "c6_05",
+          "rc": 1,
+          "stdout": "F                                                                        [100%]\n=================================== FAILURES ===================================\n_____ test_c6_05_git_provenance_keeps_a_path_containing_the_arrow_notation _____\n\ntmp_path = PosixPath('/tmp/pytest-of-yonghoon71/pytest-95/test_c6_05_git_provenance_keep0')\n\n    def test_c6_05_git_provenance_keeps_a_path_containing_the_arrow_notation(tmp_path):\n        \"\"\"[Codex R6-05 · P2] `-z` 레코드로 정확히 읽은 경로를 후단의 `.split(\" -> \")[-1].strip()` 이 다시 훼손했다 —\n        rename 이 아닌 정상 파일명 `out/a -> b.csv` 의 수치 하나를 고치면 `git_modified_code=[\"b.csv\"]`, dirty=True.\n        NUL 레코드의 path 필드를 그대로 쓴다 (사람용 rename 표기로 분해하거나 공백을 깎지 않는다).\"\"\"\n        root = tmp_path / \"repo\"; git = _fixture_repo(root, outputs=(\"out/a -> b.csv\",))\n        (root / \"out\" / \"a -> b.csv\").write_text(\"a,b\\n1,3\\n\", encoding=\"utf-8\")\n        pv = _prov().git_provenance(cwd=str(root), output_roots=(\"out\",))\n>       assert pv[\"git_modified_outputs\"] == [\"out/a -> b.csv\"], pv\nE       AssertionError: {'git_commit': 'c14856cb801b9a249ce2c2ebb5aad4c645e194ff', 'git_dirty': True, 'git_modified_outputs': [], 'git_modified_code': ['b.csv']}\nE       assert [] == ['out/a -> b.csv']\nE         \nE         Right contains one more item: 'out/a -> b.csv'\nE         Use -v to get more diff\n\ntests/test_r6_internal.py:1159: AssertionError\n=========================== short test summary info ============================\nFAILED tests/test_r6_internal.py::test_c6_05_git_provenance_keeps_a_path_containing_the_arrow_notation\n1 failed, 51 deselected in 1.35s\n",
+          "stderr": ""
+        },
+        {
+          "selection": "c6_06",
+          "rc": 1,
+          "stdout": "F                                                                        [100%]\n=================================== FAILURES ===================================\n_______________ test_c6_06_profile_budget_is_stated_as_it_is_run _______________\n\n    def test_c6_06_profile_budget_is_stated_as_it_is_run():\n        \"\"\"[Codex R6-06 · P2] U14 판정문이 \"γ profile 은 적은 시작으로 풀어서\" 움직였다고 설명했는데 실제 경로는\n        `best[:4] + 무작위 24` = **γ당 25 회** 4변수 L-BFGS-B 다 (SLSQP 등식 프로파일의 3 시작과 섞었다). 산출의\n        `n_tried` 와 코드가 그렇게 말하고, 문서는 그 예산을 적되 \"적은 시작 때문\" 을 말하지 않는다.\"\"\"\n        import inspect\n        src = inspect.getsource(verify.cmd_profile)\n        assert \"rng.random((args.starts, 4))\" in src and \"[best[:4]]\" in src\n        n = 0\n        for f in (ROOT / \"out\").glob(\"profile_gamma_*.csv\"):\n            for r in csv.DictReader(f.open(encoding=\"utf-8\")):\n                if r.get(\"n_tried\"):\n                    assert int(r[\"n_tried\"]) == 25 and int(r[\"n_ok\"]) <= 25, (f.name, r[\"gamma_Si\"], r[\"n_tried\"]); n += 1\n        assert n >= 80, n                                                    # U14 네 상태 84 행\n        for name in (\"reviews/R6_LEDGER.md\", \"reviews/R6_REQUEST.md\", \"WORKING_STATE.md\", \"FINDINGS.md\"):\n            live = _live(_doc(name))\n>           assert \"적은 시작\" not in live, name\nE           AssertionError: reviews/R6_LEDGER.md\nE           assert '적은 시작' not in '# R6 라운드 원장...다시 써야 한다).\\n'\nE             \nE             '적은 시작' is contained here:\nE               ` 25)\nE               돈다. 적은 시작으로 푸는 구조라 움직였다.  는 SLSQP 등식 프로파일(`_profile_mode`, 3 시작)과 섞은 오기였다.\nE             ?     +++++\nE               \nE               여기까지가 사실이고, **원인은 여기서 멈춘다**: 두 산출의 γ profile 은 둘 다 25 회 시작을 썼다. 같은 예산 아래 일부...\nE             \nE             ...Full output truncated (153 lines hidden), use '-vv' to show\n\ntests/test_r6_internal.py:1178: AssertionError\n=========================== short test summary info ============================\nFAILED tests/test_r6_internal.py::test_c6_06_profile_budget_is_stated_as_it_is_run\n1 failed, 51 deselected in 1.16s\n",
+          "stderr": ""
+        },
+        {
+          "selection": "c6_q3",
+          "rc": 1,
+          "stdout": "F                                                                        [100%]\n=================================== FAILURES ===================================\n_ test_c6_q3_precision_conflict_is_partial_only_when_the_option_absorbed_a_difference _\n\ntmp_path = PosixPath('/tmp/pytest-of-yonghoon71/pytest-96/test_c6_q3_precision_conflict_0')\n\n    def test_c6_q3_precision_conflict_is_partial_only_when_the_option_absorbed_a_difference(tmp_path):\n        \"\"\"[Codex R6 Q3] \"충돌이면 항상 partial\" 은 코드와 다르다. `%.17g` 선언 + `--precision fixed:1` 에서 `.125` 와 `.125`\n        는 conflict=true 지만 complete/0 이고, `.125` 와 `.126` 은 partial/3 이다 — partial 은 **옵션이 선언은 못 흡수하는\n        차이를 흡수한 셀이 있을 때만** 이다 (`precision_override_looser`). 문서(§1-8)는 그 실제 의미를 적는다.\"\"\"\n        anchors, cols, P, py, rows = _r2_base()\n        for r in rows:\n            r[5] = 0.125\n        loose = _r2_csv(tmp_path, anchors, cols, rows, name=\"loose.csv\")            # 기본 head = %.17g 선언\n        same = {c: list(v) for c, v in py.items()}; same[\"rmse_pocv\"] = [0.125] * len(P)\n        res, txt = _r2_run(anchors, P, same, loose, precision=\"fixed:1\")\n        assert res[\"precision_conflict\"] and not res[\"precision_override_looser\"], (res, txt)\n        assert res[\"status\"] == \"complete\", (res[\"status\"], txt)                   # 같은 값: 충돌은 기록되고 complete\n        diff = {c: list(v) for c, v in py.items()}; diff[\"rmse_pocv\"] = [0.125] * len(P); diff[\"rmse_pocv\"][3] = 0.126\n        res, txt = _r2_run(anchors, P, diff, loose, precision=\"fixed:1\")\n        assert res[\"precision_conflict\"] and res[\"precision_override_looser\"], (res, txt)\n        assert res[\"status\"] == \"partial\", (res[\"status\"], txt)                    # 옵션이 흡수한 차이: partial\n        sec = _live(_section(_doc(\"FINDINGS.md\"), \"### 1-8\"))\n>       assert \"못 흡수하는 차이를 흡수한 셀이 있을 때만\" in sec and \"충돌은 R4-02 Q3 대로 partial\" not in sec\nE       AssertionError: assert ('못 흡수하는 차이를 흡수한 셀이 있을 때만' in '. MATLAB ↔ Python 192값 대조 — 그리고 **내 대조기가 이번엔 너무 관대했다**\\n\\n툴박스가 깔린 뒤 새 `dd_eval` 로 네 조합을 다시 받아 Python 과 댔다.\\n조합당 앵커 16... 경로들이다 (`tests/test_r6_internal.py`).\\n제외 하나: `%f` 의 ±0 토큰 경계(V6-09)는 rmse 가 sqrt(mean(r²)) 라 음수·-0 이 생산 불가 — 도달 불가.\\n')\n\ntests/test_r6_internal.py:1199: AssertionError\n=========================== short test summary info ============================\nFAILED tests/test_r6_internal.py::test_c6_q3_precision_conflict_is_partial_only_when_the_option_absorbed_a_difference\n1 failed, 51 deselected in 1.20s\n",
+          "stderr": ""
+        },
+        {
+          "selection": "c6_0 or c6_q3",
+          "rc": 0,
+          "stdout": ".......                                                                  [100%]\n7 passed, 45 deselected in 2.13s\n",
+          "stderr": ""
+        }
+      ]
+    },
+    "adapted_mutation_audit": {
+      "returncode": 0,
+      "stdout": "baseline: {\"R6-01a\": \"닫힘\", \"R6-01b\": \"닫힘\", \"R6-02\": \"닫힘\", \"R6-03a\": \"닫힘\", \"R6-03b\": \"닫힘\", \"R6-04\": \"닫힘\"}\nCAUGHT | R6-01 read_unit 이 검증 뒤 경로를 다시 읽는다 | R6-01a → 열림\nCAUGHT | R6-01 독자가 스냅샷 뒤 행을 다시 읽는다 | R6-01b → 열림\nCAUGHT | R6-02 현행 산출 + meta 없음 → 옛 산출로 | R6-02 → 열림\nCAUGHT | R6-03 ne_shape 이 반쪽전지를 다시 열어 해시 | R6-03a → 열림\nCAUGHT | R6-03 build 가 로더 뒤에 경로로 해시 | R6-03b → 열림\nrestored: {\"R6-01a\": \"닫힘\", \"R6-01b\": \"닫힘\", \"R6-02\": \"닫힘\", \"R6-03a\": \"닫힘\", \"R6-03b\": \"닫힘\", \"R6-04\": \"닫힘\"}\nMISSED: 0\n",
+      "probe_runs": [
+        {
+          "argv": [
+            "/home/yonghoon71/ddvenv/bin/python",
+            "/tmp/r8-port-review-jtlwdsp5/review-copy/bms-balancing/reviews/r6_repros/codex/replay_codex_r6_adapted.py",
+            "--target",
+            "/tmp/r8-port-review-jtlwdsp5/review-copy/bms-balancing",
+            "--output",
+            "/tmp/r8-probe-report-856u40yn/report.json"
+          ],
+          "cwd": "/tmp/r8-port-review-jtlwdsp5/review-copy/bms-balancing",
+          "returncode": 0,
+          "stdout": "{\n  \"target_head\": \"c9b757043c9a1cf6e88eabd62e837ce5ac6ad1b5\",\n  \"probes\": {\n    \"R6-01a 독자는 자기가 검증한 묶음만 (degeneracy)\": {\n      \"상태\": \"닫힘\",\n      \"세부\": {\n        \"검증_중_게시\": {\n          \"consumed\": null,\n          \"disk_unit\": [\n            true,\n            \"일치\"\n          ],\n          \"why\": \"읽은 bytes 와 meta 가 안 맞아 표에서 뺐다\"\n        },\n        \"검증_후_게시\": {\n          \"data_run_id\": \"attempt-A\",\n          \"meta_run_id\": \"attempt-A\",\n          \"value\": 1.0,\n          \"disk_unit\": [\n            true,\n            \"일치\"\n          ]\n        }\n      }\n    },\n    \"R6-01b 검증 뒤 게시된 B 를 안 읽는다 (matrix)\": {\n      \"상태\": \"닫힘\",\n      \"세부\": {\n        \"A_verified_span\": 3.0,\n        \"consumed_span\": 3.0,\n        \"consumed_run_id\": \"attempt-A\",\n        \"unit_after_publication\": [\n          false,\n          \"meta 의 run_id 가 산출물과 다르다: 다른 run_id 행 2/2: ['attempt-B', 'attempt-B']\"\n        ]\n      }\n    },\n    \"R6-02 현행 산출 + meta 없음 = 미완 거절\": {\n      \"상태\": \"닫힘\",\n      \"세부\": {\n        \"modern_json_check\": [\n          false,\n          \"현행 산출(run_id 있음)인데 meta 가 없다 — 게시가 중단됐거나 write_meta 를 안 거쳤다: 미완 (Codex R6-02)\"\n        ],\n        \"modern_csv_check\": [\n          false,\n          \"현행 산출(run_id 있음)인데 meta 가 없다 — 게시가 중단됐거나 write_meta 를 안 거쳤다: 미완 (Codex R6-02)\"\n        ],\n        \"readers_excluded\": true,\n        \"ne_shape_refused\": \"matrix_100.csv: 묶음 불일치/미완 (현행 산출(run_id 있음)인데 meta 가 없다 — 게시가 중단됐거나 write_meta 를 안 거쳤다: 미완 (Codex R6-02)) — 섞인 산출을 소비하지 않는다 (R6 내부 F07 · Codex R6-01·02)\",\n        \"legacy_without_run_id_still_read\": true\n      }\n    },\n    \"R6-03a 반쪽전지: A값이면 A서명\": {\n      \"상태\": \"닫힘\",\n      \"세부\": {\n        \"A_value_PE_change_mV\": 0.0,\n        \"B_value_PE_change_mV\": 20.0,\n        \"recorded_sha_is_A\": true,\n        \"A_hash\": \"6dc040fd75cb665b\",\n        \"disk_now\": \"9c4d0fb07399f273\"\n      }\n    },\n    \"R6-03b 풀셀 build: A값이면 A서명\": {\n      \"상태\": \"닫힘\",\n      \"세부\": {\n        \"raced_arrays_match_A\": true,\n        \"recorded_full_cell_is_A\": true,\n        \"A_hash\": \"edfb0c22287a90ce\",\n        \"disk_now\": \"3aaba76bec0830a7\",\n        \"inputs_sha_raced\": \"f17ef92df071\",\n        \"inputs_sha_B\": \"7bf85c652754\"\n      }\n    },\n    \"R6-04 inference 닫힘 확인(정본 이름으로)\": {\n      \"상태\": \"닫힘\",\n      \"세부\": {\n        \"rc\": 0,\n        \"cases\": [\n          \"R5_INFERENCE_CLOSURE\",\n          \"SCALE_DOMAIN_AND_EXCEPTION_CLOSURE\",\n          \"MATRIX_INDEPENDENT_AUDIT_AXIS\",\n          \"MATRIX_INDEPENDENT_AUDIT_AXIS\",\n          \"U13_REPORTED_SCOPE\",\n          \"U13_AXIS_NEGATIVE_CONTROL\",\n          \"U13_AXIS_NEGATIVE_CONTROL\",\n          \"U13_AXIS_NEGATIVE_CONTROL\",\n          \"U13_AXIS_NEGATIVE_CONTROL\",\n          \"DESIGN_NOTE_SCALE_BOUND_NOT_ARGMIN_BOUND\",\n          \"DF01_AND_DERIVED_CLOSURE\",\n          \"U14_SECTION_5_1_THRESHOLDS\",\n          \"U14_12_ARTIFACT_NUMERIC_COMPARISON\",\n          \"U14_PROFILE_BUDGET_FACT\",\n          \"CURRENT_SECTION_5_PRINTED_TABLE\",\n          \"R6_FINAL_INFERENCE_CHECKS_PASSED\"\n        ],\n        \"baseline_used\": true,\n        \"partial\": false,\n        \"note\": \"두 줄 적응: 없는 `_vN` 이름은 건너뛴다 · 옛 리비전 baseline 은 historical 정책으로 짝짓는다\"\n      }\n    }\n  },\n  \"baseline\": \"/mnt/c/Users/Administrator/Documents/Codex/2026-08-24/claude-14-gate-code-review-9qkx05-2/work/harness-r6-baseline-bfc-parent/bms-balancing/out\",\n  \"mode\": \"full\"\n}\n",
+          "stderr": "",
+          "report": {
+            "target_head": "c9b757043c9a1cf6e88eabd62e837ce5ac6ad1b5",
+            "probes": {
+              "R6-01a 독자는 자기가 검증한 묶음만 (degeneracy)": {
+                "상태": "닫힘",
+                "세부": {
+                  "검증_중_게시": {
+                    "consumed": null,
+                    "disk_unit": [
+                      true,
+                      "일치"
+                    ],
+                    "why": "읽은 bytes 와 meta 가 안 맞아 표에서 뺐다"
+                  },
+                  "검증_후_게시": {
+                    "data_run_id": "attempt-A",
+                    "meta_run_id": "attempt-A",
+                    "value": 1.0,
+                    "disk_unit": [
+                      true,
+                      "일치"
+                    ]
+                  }
+                }
+              },
+              "R6-01b 검증 뒤 게시된 B 를 안 읽는다 (matrix)": {
+                "상태": "닫힘",
+                "세부": {
+                  "A_verified_span": 3.0,
+                  "consumed_span": 3.0,
+                  "consumed_run_id": "attempt-A",
+                  "unit_after_publication": [
+                    false,
+                    "meta 의 run_id 가 산출물과 다르다: 다른 run_id 행 2/2: ['attempt-B', 'attempt-B']"
+                  ]
+                }
+              },
+              "R6-02 현행 산출 + meta 없음 = 미완 거절": {
+                "상태": "닫힘",
+                "세부": {
+                  "modern_json_check": [
+                    false,
+                    "현행 산출(run_id 있음)인데 meta 가 없다 — 게시가 중단됐거나 write_meta 를 안 거쳤다: 미완 (Codex R6-02)"
+                  ],
+                  "modern_csv_check": [
+                    false,
+                    "현행 산출(run_id 있음)인데 meta 가 없다 — 게시가 중단됐거나 write_meta 를 안 거쳤다: 미완 (Codex R6-02)"
+                  ],
+                  "readers_excluded": true,
+                  "ne_shape_refused": "matrix_100.csv: 묶음 불일치/미완 (현행 산출(run_id 있음)인데 meta 가 없다 — 게시가 중단됐거나 write_meta 를 안 거쳤다: 미완 (Codex R6-02)) — 섞인 산출을 소비하지 않는다 (R6 내부 F07 · Codex R6-01·02)",
+                  "legacy_without_run_id_still_read": true
+                }
+              },
+              "R6-03a 반쪽전지: A값이면 A서명": {
+                "상태": "닫힘",
+                "세부": {
+                  "A_value_PE_change_mV": 0.0,
+                  "B_value_PE_change_mV": 20.0,
+                  "recorded_sha_is_A": true,
+                  "A_hash": "6dc040fd75cb665b",
+                  "disk_now": "9c4d0fb07399f273"
+                }
+              },
+              "R6-03b 풀셀 build: A값이면 A서명": {
+                "상태": "닫힘",
+                "세부": {
+                  "raced_arrays_match_A": true,
+                  "recorded_full_cell_is_A": true,
+                  "A_hash": "edfb0c22287a90ce",
+                  "disk_now": "3aaba76bec0830a7",
+                  "inputs_sha_raced": "f17ef92df071",
+                  "inputs_sha_B": "7bf85c652754"
+                }
+              },
+              "R6-04 inference 닫힘 확인(정본 이름으로)": {
+                "상태": "닫힘",
+                "세부": {
+                  "rc": 0,
+                  "cases": [
+                    "R5_INFERENCE_CLOSURE",
+                    "SCALE_DOMAIN_AND_EXCEPTION_CLOSURE",
+                    "MATRIX_INDEPENDENT_AUDIT_AXIS",
+                    "MATRIX_INDEPENDENT_AUDIT_AXIS",
+                    "U13_REPORTED_SCOPE",
+                    "U13_AXIS_NEGATIVE_CONTROL",
+                    "U13_AXIS_NEGATIVE_CONTROL",
+                    "U13_AXIS_NEGATIVE_CONTROL",
+                    "U13_AXIS_NEGATIVE_CONTROL",
+                    "DESIGN_NOTE_SCALE_BOUND_NOT_ARGMIN_BOUND",
+                    "DF01_AND_DERIVED_CLOSURE",
+                    "U14_SECTION_5_1_THRESHOLDS",
+                    "U14_12_ARTIFACT_NUMERIC_COMPARISON",
+                    "U14_PROFILE_BUDGET_FACT",
+                    "CURRENT_SECTION_5_PRINTED_TABLE",
+                    "R6_FINAL_INFERENCE_CHECKS_PASSED"
+                  ],
+                  "baseline_used": true,
+                  "partial": false,
+                  "note": "두 줄 적응: 없는 `_vN` 이름은 건너뛴다 · 옛 리비전 baseline 은 historical 정책으로 짝짓는다"
+                }
+              }
+            },
+            "baseline": "/mnt/c/Users/Administrator/Documents/Codex/2026-08-24/claude-14-gate-code-review-9qkx05-2/work/harness-r6-baseline-bfc-parent/bms-balancing/out",
+            "mode": "full"
+          }
+        },
+        {
+          "argv": [
+            "/home/yonghoon71/ddvenv/bin/python",
+            "/tmp/r8-port-review-jtlwdsp5/review-copy/bms-balancing/reviews/r6_repros/codex/replay_codex_r6_adapted.py",
+            "--target",
+            "/tmp/r8-port-review-jtlwdsp5/review-copy/bms-balancing",
+            "--output",
+            "/tmp/r8-probe-report-srktw9aj/report.json"
+          ],
+          "cwd": "/tmp/r8-port-review-jtlwdsp5/review-copy/bms-balancing",
+          "returncode": 1,
+          "stdout": "{\n  \"target_head\": \"c9b757043c9a1cf6e88eabd62e837ce5ac6ad1b5\",\n  \"probes\": {\n    \"R6-01a 독자는 자기가 검증한 묶음만 (degeneracy)\": {\n      \"상태\": \"열림\",\n      \"세부\": {\n        \"error\": \"AssertionError: attempt-A\",\n        \"stdio\": \"  ! degeneracy_100_Li.json: 묶음 불일치/미완 (meta 의 run_id 가 산출물과 다르다: JSON run_id='attempt-A') — 표에서 뺀다 (R6 내부 F07 · Codex R6-01·02)\\n\"\n      }\n    },\n    \"R6-01b 검증 뒤 게시된 B 를 안 읽는다 (matrix)\": {\n      \"상태\": \"닫힘\",\n      \"세부\": {\n        \"A_verified_span\": 3.0,\n        \"consumed_span\": 3.0,\n        \"consumed_run_id\": \"attempt-A\",\n        \"unit_after_publication\": [\n          false,\n          \"meta 의 run_id 가 산출물과 다르다: 다른 run_id 행 2/2: ['attempt-B', 'attempt-B']\"\n        ]\n      }\n    },\n    \"R6-02 현행 산출 + meta 없음 = 미완 거절\": {\n      \"상태\": \"닫힘\",\n      \"세부\": {\n        \"modern_json_check\": [\n          false,\n          \"현행 산출(run_id 있음)인데 meta 가 없다 — 게시가 중단됐거나 write_meta 를 안 거쳤다: 미완 (Codex R6-02)\"\n        ],\n        \"modern_csv_check\": [\n          false,\n          \"현행 산출(run_id 있음)인데 meta 가 없다 — 게시가 중단됐거나 write_meta 를 안 거쳤다: 미완 (Codex R6-02)\"\n        ],\n        \"readers_excluded\": true,\n        \"ne_shape_refused\": \"matrix_100.csv: 묶음 불일치/미완 (현행 산출(run_id 있음)인데 meta 가 없다 — 게시가 중단됐거나 write_meta 를 안 거쳤다: 미완 (Codex R6-02)) — 섞인 산출을 소비하지 않는다 (R6 내부 F07 · Codex R6-01·02)\",\n        \"legacy_without_run_id_still_read\": true\n      }\n    },\n    \"R6-03a 반쪽전지: A값이면 A서명\": {\n      \"상태\": \"닫힘\",\n      \"세부\": {\n        \"A_value_PE_change_mV\": 0.0,\n        \"B_value_PE_change_mV\": 20.0,\n        \"recorded_sha_is_A\": true,\n        \"A_hash\": \"e7a878406b238cf6\",\n        \"disk_now\": \"8ea2d8a7fb31c75a\"\n      }\n    },\n    \"R6-03b 풀셀 build: A값이면 A서명\": {\n      \"상태\": \"닫힘\",\n      \"세부\": {\n        \"raced_arrays_match_A\": true,\n        \"recorded_full_cell_is_A\": true,\n        \"A_hash\": \"e3a19452d226acb6\",\n        \"disk_now\": \"8dd2524baf576fd6\",\n        \"inputs_sha_raced\": \"9bb89044a3f1\",\n        \"inputs_sha_B\": \"0c80b798a571\"\n      }\n    },\n    \"R6-04 inference 닫힘 확인(정본 이름으로)\": {\n      \"상태\": \"닫힘\",\n      \"세부\": {\n        \"rc\": 0,\n        \"cases\": [\n          \"R5_INFERENCE_CLOSURE\",\n          \"SCALE_DOMAIN_AND_EXCEPTION_CLOSURE\",\n          \"MATRIX_INDEPENDENT_AUDIT_AXIS\",\n          \"MATRIX_INDEPENDENT_AUDIT_AXIS\",\n          \"U13_REPORTED_SCOPE\",\n          \"U13_AXIS_NEGATIVE_CONTROL\",\n          \"U13_AXIS_NEGATIVE_CONTROL\",\n          \"U13_AXIS_NEGATIVE_CONTROL\",\n          \"U13_AXIS_NEGATIVE_CONTROL\",\n          \"DESIGN_NOTE_SCALE_BOUND_NOT_ARGMIN_BOUND\",\n          \"DF01_AND_DERIVED_CLOSURE\",\n          \"U14_SECTION_5_1_THRESHOLDS\",\n          \"U14_12_ARTIFACT_NUMERIC_COMPARISON\",\n          \"U14_PROFILE_BUDGET_FACT\",\n          \"CURRENT_SECTION_5_PRINTED_TABLE\",\n          \"R6_FINAL_INFERENCE_CHECKS_PASSED\"\n        ],\n        \"baseline_used\": true,\n        \"partial\": false,\n        \"note\": \"두 줄 적응: 없는 `_vN` 이름은 건너뛴다 · 옛 리비전 baseline 은 historical 정책으로 짝짓는다\"\n      }\n    }\n  },\n  \"baseline\": \"/mnt/c/Users/Administrator/Documents/Codex/2026-08-24/claude-14-gate-code-review-9qkx05-2/work/harness-r6-baseline-bfc-parent/bms-balancing/out\",\n  \"mode\": \"실패\"\n}\n",
+          "stderr": "",
+          "report": {
+            "target_head": "c9b757043c9a1cf6e88eabd62e837ce5ac6ad1b5",
+            "probes": {
+              "R6-01a 독자는 자기가 검증한 묶음만 (degeneracy)": {
+                "상태": "열림",
+                "세부": {
+                  "error": "AssertionError: attempt-A",
+                  "stdio": "  ! degeneracy_100_Li.json: 묶음 불일치/미완 (meta 의 run_id 가 산출물과 다르다: JSON run_id='attempt-A') — 표에서 뺀다 (R6 내부 F07 · Codex R6-01·02)\n"
+                }
+              },
+              "R6-01b 검증 뒤 게시된 B 를 안 읽는다 (matrix)": {
+                "상태": "닫힘",
+                "세부": {
+                  "A_verified_span": 3.0,
+                  "consumed_span": 3.0,
+                  "consumed_run_id": "attempt-A",
+                  "unit_after_publication": [
+                    false,
+                    "meta 의 run_id 가 산출물과 다르다: 다른 run_id 행 2/2: ['attempt-B', 'attempt-B']"
+                  ]
+                }
+              },
+              "R6-02 현행 산출 + meta 없음 = 미완 거절": {
+                "상태": "닫힘",
+                "세부": {
+                  "modern_json_check": [
+                    false,
+                    "현행 산출(run_id 있음)인데 meta 가 없다 — 게시가 중단됐거나 write_meta 를 안 거쳤다: 미완 (Codex R6-02)"
+                  ],
+                  "modern_csv_check": [
+                    false,
+                    "현행 산출(run_id 있음)인데 meta 가 없다 — 게시가 중단됐거나 write_meta 를 안 거쳤다: 미완 (Codex R6-02)"
+                  ],
+                  "readers_excluded": true,
+                  "ne_shape_refused": "matrix_100.csv: 묶음 불일치/미완 (현행 산출(run_id 있음)인데 meta 가 없다 — 게시가 중단됐거나 write_meta 를 안 거쳤다: 미완 (Codex R6-02)) — 섞인 산출을 소비하지 않는다 (R6 내부 F07 · Codex R6-01·02)",
+                  "legacy_without_run_id_still_read": true
+                }
+              },
+              "R6-03a 반쪽전지: A값이면 A서명": {
+                "상태": "닫힘",
+                "세부": {
+                  "A_value_PE_change_mV": 0.0,
+                  "B_value_PE_change_mV": 20.0,
+                  "recorded_sha_is_A": true,
+                  "A_hash": "e7a878406b238cf6",
+                  "disk_now": "8ea2d8a7fb31c75a"
+                }
+              },
+              "R6-03b 풀셀 build: A값이면 A서명": {
+                "상태": "닫힘",
+                "세부": {
+                  "raced_arrays_match_A": true,
+                  "recorded_full_cell_is_A": true,
+                  "A_hash": "e3a19452d226acb6",
+                  "disk_now": "8dd2524baf576fd6",
+                  "inputs_sha_raced": "9bb89044a3f1",
+                  "inputs_sha_B": "0c80b798a571"
+                }
+              },
+              "R6-04 inference 닫힘 확인(정본 이름으로)": {
+                "상태": "닫힘",
+                "세부": {
+                  "rc": 0,
+                  "cases": [
+                    "R5_INFERENCE_CLOSURE",
+                    "SCALE_DOMAIN_AND_EXCEPTION_CLOSURE",
+                    "MATRIX_INDEPENDENT_AUDIT_AXIS",
+                    "MATRIX_INDEPENDENT_AUDIT_AXIS",
+                    "U13_REPORTED_SCOPE",
+                    "U13_AXIS_NEGATIVE_CONTROL",
+                    "U13_AXIS_NEGATIVE_CONTROL",
+                    "U13_AXIS_NEGATIVE_CONTROL",
+                    "U13_AXIS_NEGATIVE_CONTROL",
+                    "DESIGN_NOTE_SCALE_BOUND_NOT_ARGMIN_BOUND",
+                    "DF01_AND_DERIVED_CLOSURE",
+                    "U14_SECTION_5_1_THRESHOLDS",
+                    "U14_12_ARTIFACT_NUMERIC_COMPARISON",
+                    "U14_PROFILE_BUDGET_FACT",
+                    "CURRENT_SECTION_5_PRINTED_TABLE",
+                    "R6_FINAL_INFERENCE_CHECKS_PASSED"
+                  ],
+                  "baseline_used": true,
+                  "partial": false,
+                  "note": "두 줄 적응: 없는 `_vN` 이름은 건너뛴다 · 옛 리비전 baseline 은 historical 정책으로 짝짓는다"
+                }
+              }
+            },
+            "baseline": "/mnt/c/Users/Administrator/Documents/Codex/2026-08-24/claude-14-gate-code-review-9qkx05-2/work/harness-r6-baseline-bfc-parent/bms-balancing/out",
+            "mode": "실패"
+          }
+        },
+        {
+          "argv": [
+            "/home/yonghoon71/ddvenv/bin/python",
+            "/tmp/r8-port-review-jtlwdsp5/review-copy/bms-balancing/reviews/r6_repros/codex/replay_codex_r6_adapted.py",
+            "--target",
+            "/tmp/r8-port-review-jtlwdsp5/review-copy/bms-balancing",
+            "--output",
+            "/tmp/r8-probe-report-54y_z05p/report.json"
+          ],
+          "cwd": "/tmp/r8-port-review-jtlwdsp5/review-copy/bms-balancing",
+          "returncode": 1,
+          "stdout": "{\n  \"target_head\": \"c9b757043c9a1cf6e88eabd62e837ce5ac6ad1b5\",\n  \"probes\": {\n    \"R6-01a 독자는 자기가 검증한 묶음만 (degeneracy)\": {\n      \"상태\": \"닫힘\",\n      \"세부\": {\n        \"검증_중_게시\": {\n          \"consumed\": null,\n          \"disk_unit\": [\n            true,\n            \"일치\"\n          ],\n          \"why\": \"읽은 bytes 와 meta 가 안 맞아 표에서 뺐다\"\n        },\n        \"검증_후_게시\": {\n          \"data_run_id\": \"attempt-A\",\n          \"meta_run_id\": \"attempt-A\",\n          \"value\": 1.0,\n          \"disk_unit\": [\n            true,\n            \"일치\"\n          ]\n        }\n      }\n    },\n    \"R6-01b 검증 뒤 게시된 B 를 안 읽는다 (matrix)\": {\n      \"상태\": \"열림\",\n      \"세부\": {\n        \"error\": \"AssertionError: {'per': {'GITT': {'n': 2, 'n_free': 2, 'LAM_PE': 1.0, 'LAM_NE': 2.0, 'LLI': 79.0, 'LAM_PE_free': 1.0, 'LAM_NE_free': 2.0, 'LLI_free': 79.0}}, 'file': 'matrix_100.csv', 'meta': {'artifact': 'matrix_100.csv', 'state': '100', 'half_cell_source': 'GITT', 'si_source': 'Li', 'starts': 24, 'seed': 0, 'w_dqdv_note': '명령별', 'data_root': 'synthetic', 'run_id': 'attempt-A', 'sha256': '49c44bb\",\n        \"stdio\": \"\"\n      }\n    },\n    \"R6-02 현행 산출 + meta 없음 = 미완 거절\": {\n      \"상태\": \"닫힘\",\n      \"세부\": {\n        \"modern_json_check\": [\n          false,\n          \"현행 산출(run_id 있음)인데 meta 가 없다 — 게시가 중단됐거나 write_meta 를 안 거쳤다: 미완 (Codex R6-02)\"\n        ],\n        \"modern_csv_check\": [\n          false,\n          \"현행 산출(run_id 있음)인데 meta 가 없다 — 게시가 중단됐거나 write_meta 를 안 거쳤다: 미완 (Codex R6-02)\"\n        ],\n        \"readers_excluded\": true,\n        \"ne_shape_refused\": \"matrix_100.csv: 묶음 불일치/미완 (현행 산출(run_id 있음)인데 meta 가 없다 — 게시가 중단됐거나 write_meta 를 안 거쳤다: 미완 (Codex R6-02)) — 섞인 산출을 소비하지 않는다 (R6 내부 F07 · Codex R6-01·02)\",\n        \"legacy_without_run_id_still_read\": true\n      }\n    },\n    \"R6-03a 반쪽전지: A값이면 A서명\": {\n      \"상태\": \"닫힘\",\n      \"세부\": {\n        \"A_value_PE_change_mV\": 0.0,\n        \"B_value_PE_change_mV\": 20.0,\n        \"recorded_sha_is_A\": true,\n        \"A_hash\": \"1547dea3299233ca\",\n        \"disk_now\": \"e2405de26a931317\"\n      }\n    },\n    \"R6-03b 풀셀 build: A값이면 A서명\": {\n      \"상태\": \"닫힘\",\n      \"세부\": {\n        \"raced_arrays_match_A\": true,\n        \"recorded_full_cell_is_A\": true,\n        \"A_hash\": \"f024429bf4ae51cf\",\n        \"disk_now\": \"7315c834a557350d\",\n        \"inputs_sha_raced\": \"2dbc4f0eba86\",\n        \"inputs_sha_B\": \"7d57c20830fb\"\n      }\n    },\n    \"R6-04 inference 닫힘 확인(정본 이름으로)\": {\n      \"상태\": \"닫힘\",\n      \"세부\": {\n        \"rc\": 0,\n        \"cases\": [\n          \"R5_INFERENCE_CLOSURE\",\n          \"SCALE_DOMAIN_AND_EXCEPTION_CLOSURE\",\n          \"MATRIX_INDEPENDENT_AUDIT_AXIS\",\n          \"MATRIX_INDEPENDENT_AUDIT_AXIS\",\n          \"U13_REPORTED_SCOPE\",\n          \"U13_AXIS_NEGATIVE_CONTROL\",\n          \"U13_AXIS_NEGATIVE_CONTROL\",\n          \"U13_AXIS_NEGATIVE_CONTROL\",\n          \"U13_AXIS_NEGATIVE_CONTROL\",\n          \"DESIGN_NOTE_SCALE_BOUND_NOT_ARGMIN_BOUND\",\n          \"DF01_AND_DERIVED_CLOSURE\",\n          \"U14_SECTION_5_1_THRESHOLDS\",\n          \"U14_12_ARTIFACT_NUMERIC_COMPARISON\",\n          \"U14_PROFILE_BUDGET_FACT\",\n          \"CURRENT_SECTION_5_PRINTED_TABLE\",\n          \"R6_FINAL_INFERENCE_CHECKS_PASSED\"\n        ],\n        \"baseline_used\": true,\n        \"partial\": false,\n        \"note\": \"두 줄 적응: 없는 `_vN` 이름은 건너뛴다 · 옛 리비전 baseline 은 historical 정책으로 짝짓는다\"\n      }\n    }\n  },\n  \"baseline\": \"/mnt/c/Users/Administrator/Documents/Codex/2026-08-24/claude-14-gate-code-review-9qkx05-2/work/harness-r6-baseline-bfc-parent/bms-balancing/out\",\n  \"mode\": \"실패\"\n}\n",
+          "stderr": "",
+          "report": {
+            "target_head": "c9b757043c9a1cf6e88eabd62e837ce5ac6ad1b5",
+            "probes": {
+              "R6-01a 독자는 자기가 검증한 묶음만 (degeneracy)": {
+                "상태": "닫힘",
+                "세부": {
+                  "검증_중_게시": {
+                    "consumed": null,
+                    "disk_unit": [
+                      true,
+                      "일치"
+                    ],
+                    "why": "읽은 bytes 와 meta 가 안 맞아 표에서 뺐다"
+                  },
+                  "검증_후_게시": {
+                    "data_run_id": "attempt-A",
+                    "meta_run_id": "attempt-A",
+                    "value": 1.0,
+                    "disk_unit": [
+                      true,
+                      "일치"
+                    ]
+                  }
+                }
+              },
+              "R6-01b 검증 뒤 게시된 B 를 안 읽는다 (matrix)": {
+                "상태": "열림",
+                "세부": {
+                  "error": "AssertionError: {'per': {'GITT': {'n': 2, 'n_free': 2, 'LAM_PE': 1.0, 'LAM_NE': 2.0, 'LLI': 79.0, 'LAM_PE_free': 1.0, 'LAM_NE_free': 2.0, 'LLI_free': 79.0}}, 'file': 'matrix_100.csv', 'meta': {'artifact': 'matrix_100.csv', 'state': '100', 'half_cell_source': 'GITT', 'si_source': 'Li', 'starts': 24, 'seed': 0, 'w_dqdv_note': '명령별', 'data_root': 'synthetic', 'run_id': 'attempt-A', 'sha256': '49c44bb",
+                  "stdio": ""
+                }
+              },
+              "R6-02 현행 산출 + meta 없음 = 미완 거절": {
+                "상태": "닫힘",
+                "세부": {
+                  "modern_json_check": [
+                    false,
+                    "현행 산출(run_id 있음)인데 meta 가 없다 — 게시가 중단됐거나 write_meta 를 안 거쳤다: 미완 (Codex R6-02)"
+                  ],
+                  "modern_csv_check": [
+                    false,
+                    "현행 산출(run_id 있음)인데 meta 가 없다 — 게시가 중단됐거나 write_meta 를 안 거쳤다: 미완 (Codex R6-02)"
+                  ],
+                  "readers_excluded": true,
+                  "ne_shape_refused": "matrix_100.csv: 묶음 불일치/미완 (현행 산출(run_id 있음)인데 meta 가 없다 — 게시가 중단됐거나 write_meta 를 안 거쳤다: 미완 (Codex R6-02)) — 섞인 산출을 소비하지 않는다 (R6 내부 F07 · Codex R6-01·02)",
+                  "legacy_without_run_id_still_read": true
+                }
+              },
+              "R6-03a 반쪽전지: A값이면 A서명": {
+                "상태": "닫힘",
+                "세부": {
+                  "A_value_PE_change_mV": 0.0,
+                  "B_value_PE_change_mV": 20.0,
+                  "recorded_sha_is_A": true,
+                  "A_hash": "1547dea3299233ca",
+                  "disk_now": "e2405de26a931317"
+                }
+              },
+              "R6-03b 풀셀 build: A값이면 A서명": {
+                "상태": "닫힘",
+                "세부": {
+                  "raced_arrays_match_A": true,
+                  "recorded_full_cell_is_A": true,
+                  "A_hash": "f024429bf4ae51cf",
+                  "disk_now": "7315c834a557350d",
+                  "inputs_sha_raced": "2dbc4f0eba86",
+                  "inputs_sha_B": "7d57c20830fb"
+                }
+              },
+              "R6-04 inference 닫힘 확인(정본 이름으로)": {
+                "상태": "닫힘",
+                "세부": {
+                  "rc": 0,
+                  "cases": [
+                    "R5_INFERENCE_CLOSURE",
+                    "SCALE_DOMAIN_AND_EXCEPTION_CLOSURE",
+                    "MATRIX_INDEPENDENT_AUDIT_AXIS",
+                    "MATRIX_INDEPENDENT_AUDIT_AXIS",
+                    "U13_REPORTED_SCOPE",
+                    "U13_AXIS_NEGATIVE_CONTROL",
+                    "U13_AXIS_NEGATIVE_CONTROL",
+                    "U13_AXIS_NEGATIVE_CONTROL",
+                    "U13_AXIS_NEGATIVE_CONTROL",
+                    "DESIGN_NOTE_SCALE_BOUND_NOT_ARGMIN_BOUND",
+                    "DF01_AND_DERIVED_CLOSURE",
+                    "U14_SECTION_5_1_THRESHOLDS",
+                    "U14_12_ARTIFACT_NUMERIC_COMPARISON",
+                    "U14_PROFILE_BUDGET_FACT",
+                    "CURRENT_SECTION_5_PRINTED_TABLE",
+                    "R6_FINAL_INFERENCE_CHECKS_PASSED"
+                  ],
+                  "baseline_used": true,
+                  "partial": false,
+                  "note": "두 줄 적응: 없는 `_vN` 이름은 건너뛴다 · 옛 리비전 baseline 은 historical 정책으로 짝짓는다"
+                }
+              }
+            },
+            "baseline": "/mnt/c/Users/Administrator/Documents/Codex/2026-08-24/claude-14-gate-code-review-9qkx05-2/work/harness-r6-baseline-bfc-parent/bms-balancing/out",
+            "mode": "실패"
+          }
+        },
+        {
+          "argv": [
+            "/home/yonghoon71/ddvenv/bin/python",
+            "/tmp/r8-port-review-jtlwdsp5/review-copy/bms-balancing/reviews/r6_repros/codex/replay_codex_r6_adapted.py",
+            "--target",
+            "/tmp/r8-port-review-jtlwdsp5/review-copy/bms-balancing",
+            "--output",
+            "/tmp/r8-probe-report-e195ol5v/report.json"
+          ],
+          "cwd": "/tmp/r8-port-review-jtlwdsp5/review-copy/bms-balancing",
+          "returncode": 1,
+          "stdout": "{\n  \"target_head\": \"c9b757043c9a1cf6e88eabd62e837ce5ac6ad1b5\",\n  \"probes\": {\n    \"R6-01a 독자는 자기가 검증한 묶음만 (degeneracy)\": {\n      \"상태\": \"닫힘\",\n      \"세부\": {\n        \"검증_중_게시\": {\n          \"consumed\": null,\n          \"disk_unit\": [\n            true,\n            \"일치\"\n          ],\n          \"why\": \"읽은 bytes 와 meta 가 안 맞아 표에서 뺐다\"\n        },\n        \"검증_후_게시\": {\n          \"data_run_id\": \"attempt-A\",\n          \"meta_run_id\": \"attempt-A\",\n          \"value\": 1.0,\n          \"disk_unit\": [\n            true,\n            \"일치\"\n          ]\n        }\n      }\n    },\n    \"R6-01b 검증 뒤 게시된 B 를 안 읽는다 (matrix)\": {\n      \"상태\": \"닫힘\",\n      \"세부\": {\n        \"A_verified_span\": 3.0,\n        \"consumed_span\": 3.0,\n        \"consumed_run_id\": \"attempt-A\",\n        \"unit_after_publication\": [\n          false,\n          \"meta 의 run_id 가 산출물과 다르다: 다른 run_id 행 2/2: ['attempt-B', 'attempt-B']\"\n        ]\n      }\n    },\n    \"R6-02 현행 산출 + meta 없음 = 미완 거절\": {\n      \"상태\": \"열림\",\n      \"세부\": {\n        \"error\": \"AssertionError: ((None, 'meta 없음 (옛 산출, run_id 없음 — 호환 경로)'), (None, 'meta 없음 (옛 산출, run_id 없음 — 호환 경로)'))\",\n        \"stdio\": \"\"\n      }\n    },\n    \"R6-03a 반쪽전지: A값이면 A서명\": {\n      \"상태\": \"닫힘\",\n      \"세부\": {\n        \"A_value_PE_change_mV\": 0.0,\n        \"B_value_PE_change_mV\": 20.0,\n        \"recorded_sha_is_A\": true,\n        \"A_hash\": \"2379860a9379f26f\",\n        \"disk_now\": \"55364ae8324a6a2b\"\n      }\n    },\n    \"R6-03b 풀셀 build: A값이면 A서명\": {\n      \"상태\": \"닫힘\",\n      \"세부\": {\n        \"raced_arrays_match_A\": true,\n        \"recorded_full_cell_is_A\": true,\n        \"A_hash\": \"e4e8df97e515a386\",\n        \"disk_now\": \"5470d68cd976f158\",\n        \"inputs_sha_raced\": \"a69bfefdd958\",\n        \"inputs_sha_B\": \"5399dcce0bb1\"\n      }\n    },\n    \"R6-04 inference 닫힘 확인(정본 이름으로)\": {\n      \"상태\": \"닫힘\",\n      \"세부\": {\n        \"rc\": 0,\n        \"cases\": [\n          \"R5_INFERENCE_CLOSURE\",\n          \"SCALE_DOMAIN_AND_EXCEPTION_CLOSURE\",\n          \"MATRIX_INDEPENDENT_AUDIT_AXIS\",\n          \"MATRIX_INDEPENDENT_AUDIT_AXIS\",\n          \"U13_REPORTED_SCOPE\",\n          \"U13_AXIS_NEGATIVE_CONTROL\",\n          \"U13_AXIS_NEGATIVE_CONTROL\",\n          \"U13_AXIS_NEGATIVE_CONTROL\",\n          \"U13_AXIS_NEGATIVE_CONTROL\",\n          \"DESIGN_NOTE_SCALE_BOUND_NOT_ARGMIN_BOUND\",\n          \"DF01_AND_DERIVED_CLOSURE\",\n          \"U14_SECTION_5_1_THRESHOLDS\",\n          \"U14_12_ARTIFACT_NUMERIC_COMPARISON\",\n          \"U14_PROFILE_BUDGET_FACT\",\n          \"CURRENT_SECTION_5_PRINTED_TABLE\",\n          \"R6_FINAL_INFERENCE_CHECKS_PASSED\"\n        ],\n        \"baseline_used\": true,\n        \"partial\": false,\n        \"note\": \"두 줄 적응: 없는 `_vN` 이름은 건너뛴다 · 옛 리비전 baseline 은 historical 정책으로 짝짓는다\"\n      }\n    }\n  },\n  \"baseline\": \"/mnt/c/Users/Administrator/Documents/Codex/2026-08-24/claude-14-gate-code-review-9qkx05-2/work/harness-r6-baseline-bfc-parent/bms-balancing/out\",\n  \"mode\": \"실패\"\n}\n",
+          "stderr": "",
+          "report": {
+            "target_head": "c9b757043c9a1cf6e88eabd62e837ce5ac6ad1b5",
+            "probes": {
+              "R6-01a 독자는 자기가 검증한 묶음만 (degeneracy)": {
+                "상태": "닫힘",
+                "세부": {
+                  "검증_중_게시": {
+                    "consumed": null,
+                    "disk_unit": [
+                      true,
+                      "일치"
+                    ],
+                    "why": "읽은 bytes 와 meta 가 안 맞아 표에서 뺐다"
+                  },
+                  "검증_후_게시": {
+                    "data_run_id": "attempt-A",
+                    "meta_run_id": "attempt-A",
+                    "value": 1.0,
+                    "disk_unit": [
+                      true,
+                      "일치"
+                    ]
+                  }
+                }
+              },
+              "R6-01b 검증 뒤 게시된 B 를 안 읽는다 (matrix)": {
+                "상태": "닫힘",
+                "세부": {
+                  "A_verified_span": 3.0,
+                  "consumed_span": 3.0,
+                  "consumed_run_id": "attempt-A",
+                  "unit_after_publication": [
+                    false,
+                    "meta 의 run_id 가 산출물과 다르다: 다른 run_id 행 2/2: ['attempt-B', 'attempt-B']"
+                  ]
+                }
+              },
+              "R6-02 현행 산출 + meta 없음 = 미완 거절": {
+                "상태": "열림",
+                "세부": {
+                  "error": "AssertionError: ((None, 'meta 없음 (옛 산출, run_id 없음 — 호환 경로)'), (None, 'meta 없음 (옛 산출, run_id 없음 — 호환 경로)'))",
+                  "stdio": ""
+                }
+              },
+              "R6-03a 반쪽전지: A값이면 A서명": {
+                "상태": "닫힘",
+                "세부": {
+                  "A_value_PE_change_mV": 0.0,
+                  "B_value_PE_change_mV": 20.0,
+                  "recorded_sha_is_A": true,
+                  "A_hash": "2379860a9379f26f",
+                  "disk_now": "55364ae8324a6a2b"
+                }
+              },
+              "R6-03b 풀셀 build: A값이면 A서명": {
+                "상태": "닫힘",
+                "세부": {
+                  "raced_arrays_match_A": true,
+                  "recorded_full_cell_is_A": true,
+                  "A_hash": "e4e8df97e515a386",
+                  "disk_now": "5470d68cd976f158",
+                  "inputs_sha_raced": "a69bfefdd958",
+                  "inputs_sha_B": "5399dcce0bb1"
+                }
+              },
+              "R6-04 inference 닫힘 확인(정본 이름으로)": {
+                "상태": "닫힘",
+                "세부": {
+                  "rc": 0,
+                  "cases": [
+                    "R5_INFERENCE_CLOSURE",
+                    "SCALE_DOMAIN_AND_EXCEPTION_CLOSURE",
+                    "MATRIX_INDEPENDENT_AUDIT_AXIS",
+                    "MATRIX_INDEPENDENT_AUDIT_AXIS",
+                    "U13_REPORTED_SCOPE",
+                    "U13_AXIS_NEGATIVE_CONTROL",
+                    "U13_AXIS_NEGATIVE_CONTROL",
+                    "U13_AXIS_NEGATIVE_CONTROL",
+                    "U13_AXIS_NEGATIVE_CONTROL",
+                    "DESIGN_NOTE_SCALE_BOUND_NOT_ARGMIN_BOUND",
+                    "DF01_AND_DERIVED_CLOSURE",
+                    "U14_SECTION_5_1_THRESHOLDS",
+                    "U14_12_ARTIFACT_NUMERIC_COMPARISON",
+                    "U14_PROFILE_BUDGET_FACT",
+                    "CURRENT_SECTION_5_PRINTED_TABLE",
+                    "R6_FINAL_INFERENCE_CHECKS_PASSED"
+                  ],
+                  "baseline_used": true,
+                  "partial": false,
+                  "note": "두 줄 적응: 없는 `_vN` 이름은 건너뛴다 · 옛 리비전 baseline 은 historical 정책으로 짝짓는다"
+                }
+              }
+            },
+            "baseline": "/mnt/c/Users/Administrator/Documents/Codex/2026-08-24/claude-14-gate-code-review-9qkx05-2/work/harness-r6-baseline-bfc-parent/bms-balancing/out",
+            "mode": "실패"
+          }
+        },
+        {
+          "argv": [
+            "/home/yonghoon71/ddvenv/bin/python",
+            "/tmp/r8-port-review-jtlwdsp5/review-copy/bms-balancing/reviews/r6_repros/codex/replay_codex_r6_adapted.py",
+            "--target",
+            "/tmp/r8-port-review-jtlwdsp5/review-copy/bms-balancing",
+            "--output",
+            "/tmp/r8-probe-report-86_uc8gy/report.json"
+          ],
+          "cwd": "/tmp/r8-port-review-jtlwdsp5/review-copy/bms-balancing",
+          "returncode": 1,
+          "stdout": "{\n  \"target_head\": \"c9b757043c9a1cf6e88eabd62e837ce5ac6ad1b5\",\n  \"probes\": {\n    \"R6-01a 독자는 자기가 검증한 묶음만 (degeneracy)\": {\n      \"상태\": \"닫힘\",\n      \"세부\": {\n        \"검증_중_게시\": {\n          \"consumed\": null,\n          \"disk_unit\": [\n            true,\n            \"일치\"\n          ],\n          \"why\": \"읽은 bytes 와 meta 가 안 맞아 표에서 뺐다\"\n        },\n        \"검증_후_게시\": {\n          \"data_run_id\": \"attempt-A\",\n          \"meta_run_id\": \"attempt-A\",\n          \"value\": 1.0,\n          \"disk_unit\": [\n            true,\n            \"일치\"\n          ]\n        }\n      }\n    },\n    \"R6-01b 검증 뒤 게시된 B 를 안 읽는다 (matrix)\": {\n      \"상태\": \"닫힘\",\n      \"세부\": {\n        \"A_verified_span\": 3.0,\n        \"consumed_span\": 3.0,\n        \"consumed_run_id\": \"attempt-A\",\n        \"unit_after_publication\": [\n          false,\n          \"meta 의 run_id 가 산출물과 다르다: 다른 run_id 행 2/2: ['attempt-B', 'attempt-B']\"\n        ]\n      }\n    },\n    \"R6-02 현행 산출 + meta 없음 = 미완 거절\": {\n      \"상태\": \"닫힘\",\n      \"세부\": {\n        \"modern_json_check\": [\n          false,\n          \"현행 산출(run_id 있음)인데 meta 가 없다 — 게시가 중단됐거나 write_meta 를 안 거쳤다: 미완 (Codex R6-02)\"\n        ],\n        \"modern_csv_check\": [\n          false,\n          \"현행 산출(run_id 있음)인데 meta 가 없다 — 게시가 중단됐거나 write_meta 를 안 거쳤다: 미완 (Codex R6-02)\"\n        ],\n        \"readers_excluded\": true,\n        \"ne_shape_refused\": \"matrix_100.csv: 묶음 불일치/미완 (현행 산출(run_id 있음)인데 meta 가 없다 — 게시가 중단됐거나 write_meta 를 안 거쳤다: 미완 (Codex R6-02)) — 섞인 산출을 소비하지 않는다 (R6 내부 F07 · Codex R6-01·02)\",\n        \"legacy_without_run_id_still_read\": true\n      }\n    },\n    \"R6-03a 반쪽전지: A값이면 A서명\": {\n      \"상태\": \"열림\",\n      \"세부\": {\n        \"error\": \"AssertionError: ('63cd8ddfddc5', '0a4bcc3a8c9d')\",\n        \"stdio\": \"\"\n      }\n    },\n    \"R6-03b 풀셀 build: A값이면 A서명\": {\n      \"상태\": \"닫힘\",\n      \"세부\": {\n        \"raced_arrays_match_A\": true,\n        \"recorded_full_cell_is_A\": true,\n        \"A_hash\": \"faac46b7b30c32ce\",\n        \"disk_now\": \"a6ffea55ab18e3bb\",\n        \"inputs_sha_raced\": \"2110521fef8c\",\n        \"inputs_sha_B\": \"919b9479155a\"\n      }\n    },\n    \"R6-04 inference 닫힘 확인(정본 이름으로)\": {\n      \"상태\": \"닫힘\",\n      \"세부\": {\n        \"rc\": 0,\n        \"cases\": [\n          \"R5_INFERENCE_CLOSURE\",\n          \"SCALE_DOMAIN_AND_EXCEPTION_CLOSURE\",\n          \"MATRIX_INDEPENDENT_AUDIT_AXIS\",\n          \"MATRIX_INDEPENDENT_AUDIT_AXIS\",\n          \"U13_REPORTED_SCOPE\",\n          \"U13_AXIS_NEGATIVE_CONTROL\",\n          \"U13_AXIS_NEGATIVE_CONTROL\",\n          \"U13_AXIS_NEGATIVE_CONTROL\",\n          \"U13_AXIS_NEGATIVE_CONTROL\",\n          \"DESIGN_NOTE_SCALE_BOUND_NOT_ARGMIN_BOUND\",\n          \"DF01_AND_DERIVED_CLOSURE\",\n          \"U14_SECTION_5_1_THRESHOLDS\",\n          \"U14_12_ARTIFACT_NUMERIC_COMPARISON\",\n          \"U14_PROFILE_BUDGET_FACT\",\n          \"CURRENT_SECTION_5_PRINTED_TABLE\",\n          \"R6_FINAL_INFERENCE_CHECKS_PASSED\"\n        ],\n        \"baseline_used\": true,\n        \"partial\": false,\n        \"note\": \"두 줄 적응: 없는 `_vN` 이름은 건너뛴다 · 옛 리비전 baseline 은 historical 정책으로 짝짓는다\"\n      }\n    }\n  },\n  \"baseline\": \"/mnt/c/Users/Administrator/Documents/Codex/2026-08-24/claude-14-gate-code-review-9qkx05-2/work/harness-r6-baseline-bfc-parent/bms-balancing/out\",\n  \"mode\": \"실패\"\n}\n",
+          "stderr": "",
+          "report": {
+            "target_head": "c9b757043c9a1cf6e88eabd62e837ce5ac6ad1b5",
+            "probes": {
+              "R6-01a 독자는 자기가 검증한 묶음만 (degeneracy)": {
+                "상태": "닫힘",
+                "세부": {
+                  "검증_중_게시": {
+                    "consumed": null,
+                    "disk_unit": [
+                      true,
+                      "일치"
+                    ],
+                    "why": "읽은 bytes 와 meta 가 안 맞아 표에서 뺐다"
+                  },
+                  "검증_후_게시": {
+                    "data_run_id": "attempt-A",
+                    "meta_run_id": "attempt-A",
+                    "value": 1.0,
+                    "disk_unit": [
+                      true,
+                      "일치"
+                    ]
+                  }
+                }
+              },
+              "R6-01b 검증 뒤 게시된 B 를 안 읽는다 (matrix)": {
+                "상태": "닫힘",
+                "세부": {
+                  "A_verified_span": 3.0,
+                  "consumed_span": 3.0,
+                  "consumed_run_id": "attempt-A",
+                  "unit_after_publication": [
+                    false,
+                    "meta 의 run_id 가 산출물과 다르다: 다른 run_id 행 2/2: ['attempt-B', 'attempt-B']"
+                  ]
+                }
+              },
+              "R6-02 현행 산출 + meta 없음 = 미완 거절": {
+                "상태": "닫힘",
+                "세부": {
+                  "modern_json_check": [
+                    false,
+                    "현행 산출(run_id 있음)인데 meta 가 없다 — 게시가 중단됐거나 write_meta 를 안 거쳤다: 미완 (Codex R6-02)"
+                  ],
+                  "modern_csv_check": [
+                    false,
+                    "현행 산출(run_id 있음)인데 meta 가 없다 — 게시가 중단됐거나 write_meta 를 안 거쳤다: 미완 (Codex R6-02)"
+                  ],
+                  "readers_excluded": true,
+                  "ne_shape_refused": "matrix_100.csv: 묶음 불일치/미완 (현행 산출(run_id 있음)인데 meta 가 없다 — 게시가 중단됐거나 write_meta 를 안 거쳤다: 미완 (Codex R6-02)) — 섞인 산출을 소비하지 않는다 (R6 내부 F07 · Codex R6-01·02)",
+                  "legacy_without_run_id_still_read": true
+                }
+              },
+              "R6-03a 반쪽전지: A값이면 A서명": {
+                "상태": "열림",
+                "세부": {
+                  "error": "AssertionError: ('63cd8ddfddc5', '0a4bcc3a8c9d')",
+                  "stdio": ""
+                }
+              },
+              "R6-03b 풀셀 build: A값이면 A서명": {
+                "상태": "닫힘",
+                "세부": {
+                  "raced_arrays_match_A": true,
+                  "recorded_full_cell_is_A": true,
+                  "A_hash": "faac46b7b30c32ce",
+                  "disk_now": "a6ffea55ab18e3bb",
+                  "inputs_sha_raced": "2110521fef8c",
+                  "inputs_sha_B": "919b9479155a"
+                }
+              },
+              "R6-04 inference 닫힘 확인(정본 이름으로)": {
+                "상태": "닫힘",
+                "세부": {
+                  "rc": 0,
+                  "cases": [
+                    "R5_INFERENCE_CLOSURE",
+                    "SCALE_DOMAIN_AND_EXCEPTION_CLOSURE",
+                    "MATRIX_INDEPENDENT_AUDIT_AXIS",
+                    "MATRIX_INDEPENDENT_AUDIT_AXIS",
+                    "U13_REPORTED_SCOPE",
+                    "U13_AXIS_NEGATIVE_CONTROL",
+                    "U13_AXIS_NEGATIVE_CONTROL",
+                    "U13_AXIS_NEGATIVE_CONTROL",
+                    "U13_AXIS_NEGATIVE_CONTROL",
+                    "DESIGN_NOTE_SCALE_BOUND_NOT_ARGMIN_BOUND",
+                    "DF01_AND_DERIVED_CLOSURE",
+                    "U14_SECTION_5_1_THRESHOLDS",
+                    "U14_12_ARTIFACT_NUMERIC_COMPARISON",
+                    "U14_PROFILE_BUDGET_FACT",
+                    "CURRENT_SECTION_5_PRINTED_TABLE",
+                    "R6_FINAL_INFERENCE_CHECKS_PASSED"
+                  ],
+                  "baseline_used": true,
+                  "partial": false,
+                  "note": "두 줄 적응: 없는 `_vN` 이름은 건너뛴다 · 옛 리비전 baseline 은 historical 정책으로 짝짓는다"
+                }
+              }
+            },
+            "baseline": "/mnt/c/Users/Administrator/Documents/Codex/2026-08-24/claude-14-gate-code-review-9qkx05-2/work/harness-r6-baseline-bfc-parent/bms-balancing/out",
+            "mode": "실패"
+          }
+        },
+        {
+          "argv": [
+            "/home/yonghoon71/ddvenv/bin/python",
+            "/tmp/r8-port-review-jtlwdsp5/review-copy/bms-balancing/reviews/r6_repros/codex/replay_codex_r6_adapted.py",
+            "--target",
+            "/tmp/r8-port-review-jtlwdsp5/review-copy/bms-balancing",
+            "--output",
+            "/tmp/r8-probe-report-13035ai2/report.json"
+          ],
+          "cwd": "/tmp/r8-port-review-jtlwdsp5/review-copy/bms-balancing",
+          "returncode": 1,
+          "stdout": "{\n  \"target_head\": \"c9b757043c9a1cf6e88eabd62e837ce5ac6ad1b5\",\n  \"probes\": {\n    \"R6-01a 독자는 자기가 검증한 묶음만 (degeneracy)\": {\n      \"상태\": \"닫힘\",\n      \"세부\": {\n        \"검증_중_게시\": {\n          \"consumed\": null,\n          \"disk_unit\": [\n            true,\n            \"일치\"\n          ],\n          \"why\": \"읽은 bytes 와 meta 가 안 맞아 표에서 뺐다\"\n        },\n        \"검증_후_게시\": {\n          \"data_run_id\": \"attempt-A\",\n          \"meta_run_id\": \"attempt-A\",\n          \"value\": 1.0,\n          \"disk_unit\": [\n            true,\n            \"일치\"\n          ]\n        }\n      }\n    },\n    \"R6-01b 검증 뒤 게시된 B 를 안 읽는다 (matrix)\": {\n      \"상태\": \"닫힘\",\n      \"세부\": {\n        \"A_verified_span\": 3.0,\n        \"consumed_span\": 3.0,\n        \"consumed_run_id\": \"attempt-A\",\n        \"unit_after_publication\": [\n          false,\n          \"meta 의 run_id 가 산출물과 다르다: 다른 run_id 행 2/2: ['attempt-B', 'attempt-B']\"\n        ]\n      }\n    },\n    \"R6-02 현행 산출 + meta 없음 = 미완 거절\": {\n      \"상태\": \"닫힘\",\n      \"세부\": {\n        \"modern_json_check\": [\n          false,\n          \"현행 산출(run_id 있음)인데 meta 가 없다 — 게시가 중단됐거나 write_meta 를 안 거쳤다: 미완 (Codex R6-02)\"\n        ],\n        \"modern_csv_check\": [\n          false,\n          \"현행 산출(run_id 있음)인데 meta 가 없다 — 게시가 중단됐거나 write_meta 를 안 거쳤다: 미완 (Codex R6-02)\"\n        ],\n        \"readers_excluded\": true,\n        \"ne_shape_refused\": \"matrix_100.csv: 묶음 불일치/미완 (현행 산출(run_id 있음)인데 meta 가 없다 — 게시가 중단됐거나 write_meta 를 안 거쳤다: 미완 (Codex R6-02)) — 섞인 산출을 소비하지 않는다 (R6 내부 F07 · Codex R6-01·02)\",\n        \"legacy_without_run_id_still_read\": true\n      }\n    },\n    \"R6-03a 반쪽전지: A값이면 A서명\": {\n      \"상태\": \"닫힘\",\n      \"세부\": {\n        \"A_value_PE_change_mV\": 0.0,\n        \"B_value_PE_change_mV\": 20.0,\n        \"recorded_sha_is_A\": true,\n        \"A_hash\": \"93b54183c6f7685e\",\n        \"disk_now\": \"5104f9f87cc315d6\"\n      }\n    },\n    \"R6-03b 풀셀 build: A값이면 A서명\": {\n      \"상태\": \"열림\",\n      \"세부\": {\n        \"error\": \"AssertionError\",\n        \"stdio\": \"\"\n      }\n    },\n    \"R6-04 inference 닫힘 확인(정본 이름으로)\": {\n      \"상태\": \"닫힘\",\n      \"세부\": {\n        \"rc\": 0,\n        \"cases\": [\n          \"R5_INFERENCE_CLOSURE\",\n          \"SCALE_DOMAIN_AND_EXCEPTION_CLOSURE\",\n          \"MATRIX_INDEPENDENT_AUDIT_AXIS\",\n          \"MATRIX_INDEPENDENT_AUDIT_AXIS\",\n          \"U13_REPORTED_SCOPE\",\n          \"U13_AXIS_NEGATIVE_CONTROL\",\n          \"U13_AXIS_NEGATIVE_CONTROL\",\n          \"U13_AXIS_NEGATIVE_CONTROL\",\n          \"U13_AXIS_NEGATIVE_CONTROL\",\n          \"DESIGN_NOTE_SCALE_BOUND_NOT_ARGMIN_BOUND\",\n          \"DF01_AND_DERIVED_CLOSURE\",\n          \"U14_SECTION_5_1_THRESHOLDS\",\n          \"U14_12_ARTIFACT_NUMERIC_COMPARISON\",\n          \"U14_PROFILE_BUDGET_FACT\",\n          \"CURRENT_SECTION_5_PRINTED_TABLE\",\n          \"R6_FINAL_INFERENCE_CHECKS_PASSED\"\n        ],\n        \"baseline_used\": true,\n        \"partial\": false,\n        \"note\": \"두 줄 적응: 없는 `_vN` 이름은 건너뛴다 · 옛 리비전 baseline 은 historical 정책으로 짝짓는다\"\n      }\n    }\n  },\n  \"baseline\": \"/mnt/c/Users/Administrator/Documents/Codex/2026-08-24/claude-14-gate-code-review-9qkx05-2/work/harness-r6-baseline-bfc-parent/bms-balancing/out\",\n  \"mode\": \"실패\"\n}\n",
+          "stderr": "",
+          "report": {
+            "target_head": "c9b757043c9a1cf6e88eabd62e837ce5ac6ad1b5",
+            "probes": {
+              "R6-01a 독자는 자기가 검증한 묶음만 (degeneracy)": {
+                "상태": "닫힘",
+                "세부": {
+                  "검증_중_게시": {
+                    "consumed": null,
+                    "disk_unit": [
+                      true,
+                      "일치"
+                    ],
+                    "why": "읽은 bytes 와 meta 가 안 맞아 표에서 뺐다"
+                  },
+                  "검증_후_게시": {
+                    "data_run_id": "attempt-A",
+                    "meta_run_id": "attempt-A",
+                    "value": 1.0,
+                    "disk_unit": [
+                      true,
+                      "일치"
+                    ]
+                  }
+                }
+              },
+              "R6-01b 검증 뒤 게시된 B 를 안 읽는다 (matrix)": {
+                "상태": "닫힘",
+                "세부": {
+                  "A_verified_span": 3.0,
+                  "consumed_span": 3.0,
+                  "consumed_run_id": "attempt-A",
+                  "unit_after_publication": [
+                    false,
+                    "meta 의 run_id 가 산출물과 다르다: 다른 run_id 행 2/2: ['attempt-B', 'attempt-B']"
+                  ]
+                }
+              },
+              "R6-02 현행 산출 + meta 없음 = 미완 거절": {
+                "상태": "닫힘",
+                "세부": {
+                  "modern_json_check": [
+                    false,
+                    "현행 산출(run_id 있음)인데 meta 가 없다 — 게시가 중단됐거나 write_meta 를 안 거쳤다: 미완 (Codex R6-02)"
+                  ],
+                  "modern_csv_check": [
+                    false,
+                    "현행 산출(run_id 있음)인데 meta 가 없다 — 게시가 중단됐거나 write_meta 를 안 거쳤다: 미완 (Codex R6-02)"
+                  ],
+                  "readers_excluded": true,
+                  "ne_shape_refused": "matrix_100.csv: 묶음 불일치/미완 (현행 산출(run_id 있음)인데 meta 가 없다 — 게시가 중단됐거나 write_meta 를 안 거쳤다: 미완 (Codex R6-02)) — 섞인 산출을 소비하지 않는다 (R6 내부 F07 · Codex R6-01·02)",
+                  "legacy_without_run_id_still_read": true
+                }
+              },
+              "R6-03a 반쪽전지: A값이면 A서명": {
+                "상태": "닫힘",
+                "세부": {
+                  "A_value_PE_change_mV": 0.0,
+                  "B_value_PE_change_mV": 20.0,
+                  "recorded_sha_is_A": true,
+                  "A_hash": "93b54183c6f7685e",
+                  "disk_now": "5104f9f87cc315d6"
+                }
+              },
+              "R6-03b 풀셀 build: A값이면 A서명": {
+                "상태": "열림",
+                "세부": {
+                  "error": "AssertionError",
+                  "stdio": ""
+                }
+              },
+              "R6-04 inference 닫힘 확인(정본 이름으로)": {
+                "상태": "닫힘",
+                "세부": {
+                  "rc": 0,
+                  "cases": [
+                    "R5_INFERENCE_CLOSURE",
+                    "SCALE_DOMAIN_AND_EXCEPTION_CLOSURE",
+                    "MATRIX_INDEPENDENT_AUDIT_AXIS",
+                    "MATRIX_INDEPENDENT_AUDIT_AXIS",
+                    "U13_REPORTED_SCOPE",
+                    "U13_AXIS_NEGATIVE_CONTROL",
+                    "U13_AXIS_NEGATIVE_CONTROL",
+                    "U13_AXIS_NEGATIVE_CONTROL",
+                    "U13_AXIS_NEGATIVE_CONTROL",
+                    "DESIGN_NOTE_SCALE_BOUND_NOT_ARGMIN_BOUND",
+                    "DF01_AND_DERIVED_CLOSURE",
+                    "U14_SECTION_5_1_THRESHOLDS",
+                    "U14_12_ARTIFACT_NUMERIC_COMPARISON",
+                    "U14_PROFILE_BUDGET_FACT",
+                    "CURRENT_SECTION_5_PRINTED_TABLE",
+                    "R6_FINAL_INFERENCE_CHECKS_PASSED"
+                  ],
+                  "baseline_used": true,
+                  "partial": false,
+                  "note": "두 줄 적응: 없는 `_vN` 이름은 건너뛴다 · 옛 리비전 baseline 은 historical 정책으로 짝짓는다"
+                }
+              }
+            },
+            "baseline": "/mnt/c/Users/Administrator/Documents/Codex/2026-08-24/claude-14-gate-code-review-9qkx05-2/work/harness-r6-baseline-bfc-parent/bms-balancing/out",
+            "mode": "실패"
+          }
+        },
+        {
+          "argv": [
+            "/home/yonghoon71/ddvenv/bin/python",
+            "/tmp/r8-port-review-jtlwdsp5/review-copy/bms-balancing/reviews/r6_repros/codex/replay_codex_r6_adapted.py",
+            "--target",
+            "/tmp/r8-port-review-jtlwdsp5/review-copy/bms-balancing",
+            "--output",
+            "/tmp/r8-probe-report-gan5al9q/report.json"
+          ],
+          "cwd": "/tmp/r8-port-review-jtlwdsp5/review-copy/bms-balancing",
+          "returncode": 0,
+          "stdout": "{\n  \"target_head\": \"c9b757043c9a1cf6e88eabd62e837ce5ac6ad1b5\",\n  \"probes\": {\n    \"R6-01a 독자는 자기가 검증한 묶음만 (degeneracy)\": {\n      \"상태\": \"닫힘\",\n      \"세부\": {\n        \"검증_중_게시\": {\n          \"consumed\": null,\n          \"disk_unit\": [\n            true,\n            \"일치\"\n          ],\n          \"why\": \"읽은 bytes 와 meta 가 안 맞아 표에서 뺐다\"\n        },\n        \"검증_후_게시\": {\n          \"data_run_id\": \"attempt-A\",\n          \"meta_run_id\": \"attempt-A\",\n          \"value\": 1.0,\n          \"disk_unit\": [\n            true,\n            \"일치\"\n          ]\n        }\n      }\n    },\n    \"R6-01b 검증 뒤 게시된 B 를 안 읽는다 (matrix)\": {\n      \"상태\": \"닫힘\",\n      \"세부\": {\n        \"A_verified_span\": 3.0,\n        \"consumed_span\": 3.0,\n        \"consumed_run_id\": \"attempt-A\",\n        \"unit_after_publication\": [\n          false,\n          \"meta 의 run_id 가 산출물과 다르다: 다른 run_id 행 2/2: ['attempt-B', 'attempt-B']\"\n        ]\n      }\n    },\n    \"R6-02 현행 산출 + meta 없음 = 미완 거절\": {\n      \"상태\": \"닫힘\",\n      \"세부\": {\n        \"modern_json_check\": [\n          false,\n          \"현행 산출(run_id 있음)인데 meta 가 없다 — 게시가 중단됐거나 write_meta 를 안 거쳤다: 미완 (Codex R6-02)\"\n        ],\n        \"modern_csv_check\": [\n          false,\n          \"현행 산출(run_id 있음)인데 meta 가 없다 — 게시가 중단됐거나 write_meta 를 안 거쳤다: 미완 (Codex R6-02)\"\n        ],\n        \"readers_excluded\": true,\n        \"ne_shape_refused\": \"matrix_100.csv: 묶음 불일치/미완 (현행 산출(run_id 있음)인데 meta 가 없다 — 게시가 중단됐거나 write_meta 를 안 거쳤다: 미완 (Codex R6-02)) — 섞인 산출을 소비하지 않는다 (R6 내부 F07 · Codex R6-01·02)\",\n        \"legacy_without_run_id_still_read\": true\n      }\n    },\n    \"R6-03a 반쪽전지: A값이면 A서명\": {\n      \"상태\": \"닫힘\",\n      \"세부\": {\n        \"A_value_PE_change_mV\": 0.0,\n        \"B_value_PE_change_mV\": 20.0,\n        \"recorded_sha_is_A\": true,\n        \"A_hash\": \"0c4dbe0b7c122790\",\n        \"disk_now\": \"aa0adbbf108a4f72\"\n      }\n    },\n    \"R6-03b 풀셀 build: A값이면 A서명\": {\n      \"상태\": \"닫힘\",\n      \"세부\": {\n        \"raced_arrays_match_A\": true,\n        \"recorded_full_cell_is_A\": true,\n        \"A_hash\": \"2756389941f293d2\",\n        \"disk_now\": \"3cbfdef4fb4a58af\",\n        \"inputs_sha_raced\": \"d77c59973f7d\",\n        \"inputs_sha_B\": \"c5617356b46b\"\n      }\n    },\n    \"R6-04 inference 닫힘 확인(정본 이름으로)\": {\n      \"상태\": \"닫힘\",\n      \"세부\": {\n        \"rc\": 0,\n        \"cases\": [\n          \"R5_INFERENCE_CLOSURE\",\n          \"SCALE_DOMAIN_AND_EXCEPTION_CLOSURE\",\n          \"MATRIX_INDEPENDENT_AUDIT_AXIS\",\n          \"MATRIX_INDEPENDENT_AUDIT_AXIS\",\n          \"U13_REPORTED_SCOPE\",\n          \"U13_AXIS_NEGATIVE_CONTROL\",\n          \"U13_AXIS_NEGATIVE_CONTROL\",\n          \"U13_AXIS_NEGATIVE_CONTROL\",\n          \"U13_AXIS_NEGATIVE_CONTROL\",\n          \"DESIGN_NOTE_SCALE_BOUND_NOT_ARGMIN_BOUND\",\n          \"DF01_AND_DERIVED_CLOSURE\",\n          \"U14_SECTION_5_1_THRESHOLDS\",\n          \"U14_12_ARTIFACT_NUMERIC_COMPARISON\",\n          \"U14_PROFILE_BUDGET_FACT\",\n          \"CURRENT_SECTION_5_PRINTED_TABLE\",\n          \"R6_FINAL_INFERENCE_CHECKS_PASSED\"\n        ],\n        \"baseline_used\": true,\n        \"partial\": false,\n        \"note\": \"두 줄 적응: 없는 `_vN` 이름은 건너뛴다 · 옛 리비전 baseline 은 historical 정책으로 짝짓는다\"\n      }\n    }\n  },\n  \"baseline\": \"/mnt/c/Users/Administrator/Documents/Codex/2026-08-24/claude-14-gate-code-review-9qkx05-2/work/harness-r6-baseline-bfc-parent/bms-balancing/out\",\n  \"mode\": \"full\"\n}\n",
+          "stderr": "",
+          "report": {
+            "target_head": "c9b757043c9a1cf6e88eabd62e837ce5ac6ad1b5",
+            "probes": {
+              "R6-01a 독자는 자기가 검증한 묶음만 (degeneracy)": {
+                "상태": "닫힘",
+                "세부": {
+                  "검증_중_게시": {
+                    "consumed": null,
+                    "disk_unit": [
+                      true,
+                      "일치"
+                    ],
+                    "why": "읽은 bytes 와 meta 가 안 맞아 표에서 뺐다"
+                  },
+                  "검증_후_게시": {
+                    "data_run_id": "attempt-A",
+                    "meta_run_id": "attempt-A",
+                    "value": 1.0,
+                    "disk_unit": [
+                      true,
+                      "일치"
+                    ]
+                  }
+                }
+              },
+              "R6-01b 검증 뒤 게시된 B 를 안 읽는다 (matrix)": {
+                "상태": "닫힘",
+                "세부": {
+                  "A_verified_span": 3.0,
+                  "consumed_span": 3.0,
+                  "consumed_run_id": "attempt-A",
+                  "unit_after_publication": [
+                    false,
+                    "meta 의 run_id 가 산출물과 다르다: 다른 run_id 행 2/2: ['attempt-B', 'attempt-B']"
+                  ]
+                }
+              },
+              "R6-02 현행 산출 + meta 없음 = 미완 거절": {
+                "상태": "닫힘",
+                "세부": {
+                  "modern_json_check": [
+                    false,
+                    "현행 산출(run_id 있음)인데 meta 가 없다 — 게시가 중단됐거나 write_meta 를 안 거쳤다: 미완 (Codex R6-02)"
+                  ],
+                  "modern_csv_check": [
+                    false,
+                    "현행 산출(run_id 있음)인데 meta 가 없다 — 게시가 중단됐거나 write_meta 를 안 거쳤다: 미완 (Codex R6-02)"
+                  ],
+                  "readers_excluded": true,
+                  "ne_shape_refused": "matrix_100.csv: 묶음 불일치/미완 (현행 산출(run_id 있음)인데 meta 가 없다 — 게시가 중단됐거나 write_meta 를 안 거쳤다: 미완 (Codex R6-02)) — 섞인 산출을 소비하지 않는다 (R6 내부 F07 · Codex R6-01·02)",
+                  "legacy_without_run_id_still_read": true
+                }
+              },
+              "R6-03a 반쪽전지: A값이면 A서명": {
+                "상태": "닫힘",
+                "세부": {
+                  "A_value_PE_change_mV": 0.0,
+                  "B_value_PE_change_mV": 20.0,
+                  "recorded_sha_is_A": true,
+                  "A_hash": "0c4dbe0b7c122790",
+                  "disk_now": "aa0adbbf108a4f72"
+                }
+              },
+              "R6-03b 풀셀 build: A값이면 A서명": {
+                "상태": "닫힘",
+                "세부": {
+                  "raced_arrays_match_A": true,
+                  "recorded_full_cell_is_A": true,
+                  "A_hash": "2756389941f293d2",
+                  "disk_now": "3cbfdef4fb4a58af",
+                  "inputs_sha_raced": "d77c59973f7d",
+                  "inputs_sha_B": "c5617356b46b"
+                }
+              },
+              "R6-04 inference 닫힘 확인(정본 이름으로)": {
+                "상태": "닫힘",
+                "세부": {
+                  "rc": 0,
+                  "cases": [
+                    "R5_INFERENCE_CLOSURE",
+                    "SCALE_DOMAIN_AND_EXCEPTION_CLOSURE",
+                    "MATRIX_INDEPENDENT_AUDIT_AXIS",
+                    "MATRIX_INDEPENDENT_AUDIT_AXIS",
+                    "U13_REPORTED_SCOPE",
+                    "U13_AXIS_NEGATIVE_CONTROL",
+                    "U13_AXIS_NEGATIVE_CONTROL",
+                    "U13_AXIS_NEGATIVE_CONTROL",
+                    "U13_AXIS_NEGATIVE_CONTROL",
+                    "DESIGN_NOTE_SCALE_BOUND_NOT_ARGMIN_BOUND",
+                    "DF01_AND_DERIVED_CLOSURE",
+                    "U14_SECTION_5_1_THRESHOLDS",
+                    "U14_12_ARTIFACT_NUMERIC_COMPARISON",
+                    "U14_PROFILE_BUDGET_FACT",
+                    "CURRENT_SECTION_5_PRINTED_TABLE",
+                    "R6_FINAL_INFERENCE_CHECKS_PASSED"
+                  ],
+                  "baseline_used": true,
+                  "partial": false,
+                  "note": "두 줄 적응: 없는 `_vN` 이름은 건너뛴다 · 옛 리비전 baseline 은 historical 정책으로 짝짓는다"
+                }
+              }
+            },
+            "baseline": "/mnt/c/Users/Administrator/Documents/Codex/2026-08-24/claude-14-gate-code-review-9qkx05-2/work/harness-r6-baseline-bfc-parent/bms-balancing/out",
+            "mode": "full"
+          }
+        }
+      ]
+    }
+  },
+  "tracked_scratch_status_after_restore": ""
+}

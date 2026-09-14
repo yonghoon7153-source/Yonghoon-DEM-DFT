@@ -1,0 +1,59 @@
+산출 13 개 점검 (out)
+  (`--schema-only`: baseline 도 대조도 없다 — **승격 증명서가 아니다**. 스키마·내용·조건만 본다, Codex R11 P1-6)
+
+■ 새 스키마 누락 59 — 옛 코드로 만든 산출이거나 묶음이 미완이다 (재실행이 이 트리에서 돌았는지 확인)
+  - degeneracy_100_Li.json.meta: argv
+  - degeneracy_100_Li.json.meta: roster
+  - degeneracy_200_Li.json.meta: argv
+  - degeneracy_200_Li.json.meta: roster
+  - degeneracy_300_0009_Li.json.meta: argv
+  - degeneracy_300_0009_Li.json.meta: roster
+  - degeneracy_300_0147_Li.json.meta: argv
+  - degeneracy_300_0147_Li.json.meta: roster
+  - matrix_100.csv: combo_roster
+  - matrix_100.csv.meta: argv
+  - matrix_100.csv.meta: roster
+  - matrix_200.csv: combo_roster
+  - matrix_200.csv.meta: argv
+  - matrix_200.csv.meta: roster
+  - matrix_300_0009.csv: combo_roster
+  - matrix_300_0009.csv.meta: argv
+  - matrix_300_0009.csv.meta: roster
+  - matrix_300_0147.csv: combo_roster
+  - matrix_300_0147.csv.meta: argv
+  - matrix_300_0147.csv.meta: roster
+  … 외 39
+
+■ 기준/대상 입력 **출처 열** 누락 27 — 이 산출은 **provenance-incomplete** 다 (R7-03·R8-04 스키마 이전 실행). 수치는 그대로 인용할 수 있으나 기준 입력의 출처는 그 묶음에서 회수되지 않는다; 실제 재실행(U18)으로 별도 위치에 만들어 비교·승격한다 — 현재 pathname 해시로 소급 채우지 않는다
+  - matrix_100.csv: ref_inputs_sha
+  - matrix_100.csv: consumed_inputs
+  - matrix_100.csv: ref_consumed_inputs
+  - matrix_200.csv: ref_inputs_sha
+  - matrix_200.csv: consumed_inputs
+  - matrix_200.csv: ref_consumed_inputs
+  - matrix_300_0009.csv: ref_inputs_sha
+  - matrix_300_0009.csv: consumed_inputs
+  - matrix_300_0009.csv: ref_consumed_inputs
+  - matrix_300_0147.csv: ref_inputs_sha
+  - matrix_300_0147.csv: consumed_inputs
+  - matrix_300_0147.csv: ref_consumed_inputs
+  - ne_shape_GITT_Li.csv: ref_inputs_sha
+  - ne_shape_GITT_Li.csv: consumed_inputs
+  - ne_shape_GITT_Li.csv: ref_consumed_inputs
+  - profile_gamma_100_Li.csv: ref_inputs_sha
+  - profile_gamma_100_Li.csv: consumed_inputs
+  - profile_gamma_100_Li.csv: ref_consumed_inputs
+  - profile_gamma_200_Li.csv: ref_inputs_sha
+  - profile_gamma_200_Li.csv: consumed_inputs
+  … 외 7
+
+■ 내용 검사 실패 5 — 열은 있는데 값이 스키마가 아니다 (빈 필수 셀 · 숫자 아님 · receipt 의 역할/path/64-hex/재계산 digest · 중복 key) (Codex R9-03)
+  - degeneracy_100_Li.json: consumed_inputs: aggregate digest 불일치 — 재계산 8b16c07f3388 ≠ 기록 47c82adb7e97
+  - degeneracy_200_Li.json: consumed_inputs: aggregate digest 불일치 — 재계산 481f1e92c531 ≠ 기록 817db5423038
+  - degeneracy_300_0009_Li.json: consumed_inputs: aggregate digest 불일치 — 재계산 3fe476bcdd50 ≠ 기록 0b1bf4e04eb5
+  - degeneracy_300_0147_Li.json: consumed_inputs: aggregate digest 불일치 — 재계산 4581f9558b3e ≠ 기록 9cebc0bf4cd5
+  - ne_shape_GITT_Li.csv: 모르는 열 ['state', 'cap_delta_pct', 'gamma_target', 'gamma_ref', 'measured_shape_mV', 'gamma_shape_mV', 'ratio_b_over_a', 'blend_vs_meas_max_mV', 'blend_vs_meas_rms_mV', 'max_at_x', 'frac_over_50mV', 'pe_shape_max_mV', 'pe_shape_rms_mV', 'legal_dgamma_neg', 'legal_dgamma_pos', 'gamma_family_max_mV', 'gamma_at_family_max', 'gamma_witness', 'gamma_witness_delta'] — producer 스키마에 없는 열이다 (`bms_balancing/schema.py` 가 정본)
+
+■ **provenance 가 안전하지 않다** 1 — 산출 스스로 신고한 위험이다 (git_dirty · 실행 중 상태 변경 · 바뀐 코드 · 시작 커밋). 승격은 safe 값 자체를 요구한다 (Codex R11 P1-9)
+  - ne_shape_GITT_Li.csv.meta:git_state_changed_during_run = '(없음)' (승격 조건은 False)
+PROMOTION {"promotion_eligible": false, "rc": 2, "subset": false, "roster": {"old": 0, "new": 13, "compared": 0, "missing_in_new": [], "extra_in_new": []}, "blocked_by": {"schema": 59, "provenance_cols": 27, "content": 5, "unit": 0, "controls": 0, "env": 0, "numbers": 0, "alias": 0, "provenance": 1, "inputs": 0, "inputs_uncomparable": 0, "stale": 0, "baseline_absent": 1}, "policy": "current", "new": "out", "old": null}

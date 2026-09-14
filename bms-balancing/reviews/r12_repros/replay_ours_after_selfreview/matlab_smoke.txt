@@ -1,0 +1,147 @@
+
+[1m== 1. 구문 검사 — Octave 파서가 네 파일을 읽는가 ==[0m
+  OK   dd_eval.m
+  OK   dd_verify.m
+  OK   dd_shims/sgolayfilt.m
+  OK   dd_shims/quantile.m
+  OK   dd_shims/findpeaks.m
+
+[1m== 2. dd_shims 수치 — 우리 shim vs Octave 내장 vs Python 포팅 ==[0m
+=== 1. quantile ===
+  shim(MATLAB용) vs Python matlab_quantile: n=88  max|Δ|=0.000e+00  max rel=0.000e+00
+  shim vs Octave core quantile(method 5): n=88  max|Δ|=8.882e-16  max rel=1.576e-16
+=== 2. sgolayfilt ===
+  n50_rand    order=3 f=11: max|Δ|=9.770e-15  (가장자리 3.553e-15 / 내부 9.770e-15)
+  n101_ramp   order=3 f=11: max|Δ|=1.066e-14  (가장자리 4.441e-15 / 내부 1.066e-14)
+  n500_ocv    order=3 f=11: max|Δ|=8.882e-15  (가장자리 3.997e-15 / 내부 8.882e-15)
+  n500_ocv    order=1 f= 9: max|Δ|=1.776e-15  (가장자리 1.776e-15 / 내부 1.776e-15)
+  n500_ocv    order=3 f=31: max|Δ|=1.545e-13  (가장자리 2.665e-15 / 내부 1.545e-13)
+  n50_rand    order=1 f= 5: max|Δ|=1.776e-15  (가장자리 1.332e-15 / 내부 1.776e-15)
+  n101_ramp   order=2 f= 7: max|Δ|=7.994e-15  (가장자리 3.553e-15 / 내부 7.994e-15)
+  n500_ocv    order=4 f=21: max|Δ|=5.898e-13  (가장자리 4.441e-15 / 내부 5.898e-13)
+=== 3. findpeaks (shim vs scipy — 제3 구현 없음) ===
+  simple   prom=0     n=5    일치
+  simple   prom=0.1   n=5    일치
+  simple   prom=0.5   n=5    일치
+  simple   prom=1     n=5    일치
+  simple   prom=2     n=3    일치
+  plateau  prom=0     n=3    일치
+  plateau  prom=0.1   n=3    일치
+  plateau  prom=0.5   n=3    일치
+  plateau  prom=1     n=3    일치
+  plateau  prom=2     n=2    일치
+  flat     prom=0     n=0    일치
+  flat     prom=0.1   n=0    일치
+  flat     prom=0.5   n=0    일치
+  flat     prom=1     n=0    일치
+  flat     prom=2     n=0    일치
+  mono     prom=0     n=0    일치
+  mono     prom=0.1   n=0    일치
+  mono     prom=0.5   n=0    일치
+  mono     prom=1     n=0    일치
+  mono     prom=2     n=0    일치
+  noisy    prom=0     n=41   일치
+  noisy    prom=0.1   n=8    일치
+  noisy    prom=0.5   n=3    일치
+  noisy    prom=1     n=3    일치
+  noisy    prom=2     n=2    일치
+  dqdv     prom=0     n=19   일치
+  dqdv     prom=0.1   n=11   일치
+  dqdv     prom=0.5   n=3    일치
+  dqdv     prom=1     n=3    일치
+  dqdv     prom=2     n=2    일치
+  edge     prom=0     n=0    일치
+  edge     prom=0.1   n=0    일치
+  edge     prom=0.5   n=0    일치
+  edge     prom=1     n=0    일치
+  edge     prom=2     n=0    일치
+  two      prom=0     n=2    일치
+  two      prom=0.1   n=2    일치
+  two      prom=0.5   n=2    일치
+  two      prom=1     n=2    일치
+  two      prom=2     n=2    일치
+  → 40/40 조합 일치
+
+WORST quantile shim-vs-python : 0.000e+00
+WORST quantile shim-vs-octave : 8.882e-16
+WORST sgolay  shim-vs-python  : 5.898e-13
+findpeaks shim-vs-scipy      : 40/40 조합 일치
+RESULT: PASS
+
+[1m== 3. dd_eval.m 배관 e2e — Octave 전사본 vs Python 전사본 (합성 데이터) ==[0m
+OK   data/half_cell/GITT/:Li:pristine   max rel dev = 5.540e-14   (허용 1e-12)
+OK   data/half_cell/GITT/:Li:300_0009   max rel dev = 4.008e-14   (허용 1e-12)
+OK   data/half_cell/GITT/:Kunz:200   max rel dev = 5.512e-14   (허용 1e-12)
+OK   data/half_cell/GITT/:Kunz:300_0147   max rel dev = 5.624e-14   (허용 1e-12)
+OK   data/half_cell/step_005C/:Li:pristine   max rel dev = 5.540e-14   (허용 1e-12)
+OK   data/half_cell/step_005C/:Kunz:100   max rel dev = 7.776e-14   (허용 1e-12)
+OK   data/half_cell/step_005C/:Li:300_0147   max rel dev = 4.996e-14   (허용 1e-12)
+----
+7/7 통과   (작업디렉터리 /tmp/bmsverify.76Cw26/e2e)
+
+[1m== 4. --compare 이분 판정이 갈린 단계를 짚는가 ==[0m
+  OK   동일 입력 → 일치
+  OK   c_cell 어긋남 → 「풀셀 적재 + averageDuplicate…」
+  OK   dv_lo 어긋남 → 「풀셀 differential + quanti…」
+  OK   dv_hi 어긋남 → 「풀셀 differential + quanti…」
+  OK   dv_n 어긋남 → 「dV/dQ 창 마스크가 먹은 격자점 수…」
+  OK   dq_lo 어긋남 → 「풀셀 differential + quanti…」
+  OK   dq_hi 어긋남 → 「풀셀 differential + quanti…」
+  OK   dq_n 어긋남 → 「dQ/dV 창 마스크가 먹은 격자점 수…」
+  OK   n_peaks 어긋남 → 「findpeaks(prominence=0.1…」
+  OK   w_peak_sum 어긋남 → 「피크 가중 합 — peak_weight·si…」
+  OK   w_peak_max 어긋남 → 「피크 가중 최댓값 — 가중 봉우리가 겹쳤는지…」
+  OK   dq_nuniq_p1 어긋남 → 「첫 행 p 에서 unique(v_smooth…」
+  OK   dq_nin_p1 어긋남 → 「첫 행 p 에서 보간 범위에 든 실측 점 (…」
+  OK   E_PE_0p5 어긋남 → 「반쪽전지 적재 (electrode_ocv) …」
+  OK   E_NE_0p5_0p25 어긋남 → 「문헌 적재 + build_blend_func…」
+  OK   dv_PE_0p5 어긋남 → 「반쪽전지 differential — PE d…」
+  OK   dv_NE_0p5_0p25 어긋남 → 「블렌드 differential — NE dV…」
+  OK   rmse_pocv 만 어긋남 → 목적함수 산술
+  OK   rmse_dvdq 만 어긋남 → 목적함수 산술
+  OK   rmse_dqdv 만 어긋남 → 목적함수 산술
+  OK   rmse_dqdv_w 만 어긋남 → 목적함수 산술
+  OK   p 격자 어긋남 감지 → 성공 아님
+  OK   행 누락 → 성공 아님
+  OK   앵커 없는 옛 CSV 도 처리
+  OK   옛 2열 산출 → 있는 열만 대조하고 일치
+  OK   옛 2열 산출에서도 불일치는 잡는다
+  OK   BOM 붙은 CSV 파싱 (앵커 16, 행 8, 열 ['rmse_pocv', 'rmse_dvdq', 'rmse_dqdv', 'rmse_dqdv_w'])
+
+PASS — 0 개 실패
+
+[1m== 5. Python verify eval 배관 스모크 (합성 xlsx) ==[0m
+  OK   적재 GITT/pristine
+  OK   적재 GITT/100
+  OK   적재 GITT/200
+  OK   적재 GITT/300_0009
+  OK   적재 GITT/300_0147
+  OK   적재 step_005C/pristine
+  OK   적재 step_005C/100
+  OK   적재 step_005C/200
+  OK   적재 step_005C/300_0009
+  OK   적재 step_005C/300_0147
+  OK   Si 소스 Baggetto
+  OK   Si 소스 Friedrich
+  OK   Si 소스 Jiang
+  OK   Si 소스 Kunz
+  OK   Si 소스 Li
+  OK   Si 소스 Lu
+  OK   Si 소스 Sethuraman
+  OK   Si 소스 Wetjen
+  OK   γ 가 rmse_pocv 를 움직인다 (폭 9.549e-03)
+  OK   γ 가 rmse_dvdq 를 움직인다 (폭 1.420e-01)
+  OK   γ 가 rmse_dqdv 를 움직인다 (폭 3.038e-02)
+  OK   rmse_dqdv 가 1e6 으로 죽지 않는다
+  OK   피크 가중이 무가중과 다르다
+  OK   앵커 이름·순서가 ANCHOR_STAGE 와 일치
+  OK   CSV 왕복: 앵커 16개 보존
+  OK   CSV 왕복: 파라미터 8행 보존
+[data] 풀셀 워크북 후보가 2개다 — 이름순 첫 것을 쓴다: aaa_decoy.xlsx (나머지: fullcell_states.xlsx)
+[data] 풀셀 워크북 후보가 2개다 — 이름순 첫 것을 쓴다: aaa_decoy.xlsx (나머지: fullcell_states.xlsx)
+  OK   워크북 후보 여럿 → 이름순 첫 것
+
+PASS — 실패 0: []
+
+=====================================
+전부 통과   (작업디렉터리 /tmp/bmsverify.76Cw26)

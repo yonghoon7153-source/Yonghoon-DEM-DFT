@@ -1,0 +1,110 @@
+{
+  "target_head_expected": "29ef5058e68c0c64dba840ecc5a7495644cb092e",
+  "u18_gate": {
+    "current_out_schema": {
+      "argv": [
+        "/usr/local/bin/python3",
+        "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/a45978e3-3a6e-5e3d-af55-7c9b61e0d809/scratchpad/r9ws/work/harness-r9-target-wsl/bms-balancing/scripts/check_u14.py",
+        "--new",
+        "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/a45978e3-3a6e-5e3d-af55-7c9b61e0d809/scratchpad/r9ws/work/harness-r9-target-wsl/bms-balancing/out",
+        "--old",
+        "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/a45978e3-3a6e-5e3d-af55-7c9b61e0d809/scratchpad/r9ws/work/harness-r9-target-wsl/bms-balancing/out",
+        "--schema-only"
+      ],
+      "returncode": 2,
+      "stdout": "산출 12 개 점검 (/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/a45978e3-3a6e-5e3d-af55-7c9b61e0d809/scratchpad/r9ws/work/harness-r9-target-wsl/bms-balancing/out)\n\n■ 기준/대상 입력 **출처 열** 누락 24 — 이 산출은 **provenance-incomplete** 다 (R7-03·R8-04 스키마 이전 실행). 수치는 그대로 인용할 수 있으나 기준 입력의 출처는 그 묶음에서 회수되지 않는다; 실제 재실행(U18)으로 별도 위치에 만들어 비교·승격한다 — 현재 pathname 해시로 소급 채우지 않는다\n  - matrix_100.csv: ref_inputs_sha\n  - matrix_100.csv: consumed_inputs\n  - matrix_100.csv: ref_consumed_inputs\n  - matrix_200.csv: ref_inputs_sha\n  - matrix_200.csv: consumed_inputs\n  - matrix_200.csv: ref_consumed_inputs\n  - matrix_300_0009.csv: ref_inputs_sha\n  - matrix_300_0009.csv: consumed_inputs\n  - matrix_300_0009.csv: ref_consumed_inputs\n  - matrix_300_0147.csv: ref_inputs_sha\n  - matrix_300_0147.csv: consumed_inputs\n  - matrix_300_0147.csv: ref_consumed_inputs\n  - profile_gamma_100_Li.csv: ref_inputs_sha\n  - profile_gamma_100_Li.csv: consumed_inputs\n  - profile_gamma_100_Li.csv: ref_consumed_inputs\n  - profile_gamma_200_Li.csv: ref_inputs_sha\n  - profile_gamma_200_Li.csv: consumed_inputs\n  - profile_gamma_200_Li.csv: ref_consumed_inputs\n  - profile_gamma_300_0009_Li.csv: ref_inputs_sha\n  - profile_gamma_300_0009_Li.csv: consumed_inputs\n  … 외 4\n",
+      "stderr": ""
+    },
+    "one_of_twelve": {
+      "argv": [
+        "/usr/local/bin/python3",
+        "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/a45978e3-3a6e-5e3d-af55-7c9b61e0d809/scratchpad/r9ws/work/harness-r9-target-wsl/bms-balancing/scripts/check_u14.py",
+        "--new",
+        "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/a45978e3-3a6e-5e3d-af55-7c9b61e0d809/scratchpad/r9ws/outputs/r9_provenance_artifacts/u18_one_of_twelve",
+        "--old",
+        "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/a45978e3-3a6e-5e3d-af55-7c9b61e0d809/scratchpad/r9ws/work/harness-r9-target-wsl/bms-balancing/out"
+      ],
+      "returncode": 2,
+      "stdout": "산출 1 개 점검 (/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/a45978e3-3a6e-5e3d-af55-7c9b61e0d809/scratchpad/r9ws/outputs/r9_provenance_artifacts/u18_one_of_twelve)\n  정본 선택 정책: **current** — 현행 디렉터리 — 정본은 unversioned 이름 하나, 판 번호가 붙은 형제는 쓰지 않는다 (Codex R6-04·R7-04)\n  명부(roster): 정본 12 · 새 산출 1 · 대조 1\n\n■ 명부(roster) 불일치 — 정본에 있는데 새 산출에 **없음** 11/12 (Codex R9-02). 부분 재실행이면 `--subset` 으로 계약을 명시할 것 — 그래도 승격 대상은 명부 전부(12 개)를 다시 만든 묶음뿐이다\n  - degeneracy_200_Li.json: 새 산출에 없음\n  - degeneracy_300_0009_Li.json: 새 산출에 없음\n  - degeneracy_300_0147_Li.json: 새 산출에 없음\n  - matrix_100.csv: 새 산출에 없음\n  - matrix_200.csv: 새 산출에 없음\n  - matrix_300_0009.csv: 새 산출에 없음\n  - matrix_300_0147.csv: 새 산출에 없음\n  - profile_gamma_100_Li.csv: 새 산출에 없음\n  - profile_gamma_200_Li.csv: 새 산출에 없음\n  - profile_gamma_300_0009_Li.csv: 새 산출에 없음\n  - profile_gamma_300_0147_Li.csv: 새 산출에 없음\n  새 스키마: 전부 갖췄다 (열·키 이름 + 필수 셀·숫자·receipt·중복 key — `bms_balancing/schema.py` 정본)\n  숫자: 대조 **미완** — 명부/묶음/조건 문제를 뺀 나머지만 같다 (전체를 말할 수 없다)\n",
+      "stderr": ""
+    },
+    "one_of_twelve_files": [
+      "degeneracy_100_Li.json",
+      "degeneracy_100_Li.json.meta.json"
+    ],
+    "blank_receipts": {
+      "argv": [
+        "/usr/local/bin/python3",
+        "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/a45978e3-3a6e-5e3d-af55-7c9b61e0d809/scratchpad/r9ws/work/harness-r9-target-wsl/bms-balancing/scripts/check_u14.py",
+        "--new",
+        "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/a45978e3-3a6e-5e3d-af55-7c9b61e0d809/scratchpad/r9ws/outputs/r9_provenance_artifacts/u18_blank_receipts",
+        "--old",
+        "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/a45978e3-3a6e-5e3d-af55-7c9b61e0d809/scratchpad/r9ws/work/harness-r9-target-wsl/bms-balancing/out"
+      ],
+      "returncode": 2,
+      "stdout": "산출 12 개 점검 (/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/a45978e3-3a6e-5e3d-af55-7c9b61e0d809/scratchpad/r9ws/outputs/r9_provenance_artifacts/u18_blank_receipts)\n  정본 선택 정책: **current** — 현행 디렉터리 — 정본은 unversioned 이름 하나, 판 번호가 붙은 형제는 쓰지 않는다 (Codex R6-04·R7-04)\n  명부(roster): 정본 12 · 새 산출 12 · 대조 12\n\n■ 내용 검사 실패 980 — 열은 있는데 값이 스키마가 아니다 (빈 필수 셀 · 숫자 아님 · receipt 의 역할/path/64-hex/재계산 digest · 중복 key) (Codex R9-03)\n  - matrix_100.csv: 행 0: 필수 셀 ref_inputs_sha 이 비어 있다\n  - matrix_100.csv: 행 0: 필수 셀 consumed_inputs 이 비어 있다\n  - matrix_100.csv: 행 0: 필수 셀 ref_consumed_inputs 이 비어 있다\n  - matrix_100.csv: 행 0 consumed_inputs: 출처(receipt)가 비어 있다\n  - matrix_100.csv: 행 0 ref_consumed_inputs: 출처(receipt)가 비어 있다\n  - matrix_100.csv: 행 1: 필수 셀 ref_inputs_sha 이 비어 있다\n  - matrix_100.csv: 행 1: 필수 셀 consumed_inputs 이 비어 있다\n  - matrix_100.csv: 행 1: 필수 셀 ref_consumed_inputs 이 비어 있다\n  - matrix_100.csv: 행 1 consumed_inputs: 출처(receipt)가 비어 있다\n  - matrix_100.csv: 행 1 ref_consumed_inputs: 출처(receipt)가 비어 있다\n  - matrix_100.csv: 행 2: 필수 셀 ref_inputs_sha 이 비어 있다\n  - matrix_100.csv: 행 2: 필수 셀 consumed_inputs 이 비어 있다\n  - matrix_100.csv: 행 2: 필수 셀 ref_consumed_inputs 이 비어 있다\n  - matrix_100.csv: 행 2 consumed_inputs: 출처(receipt)가 비어 있다\n  - matrix_100.csv: 행 2 ref_consumed_inputs: 출처(receipt)가 비어 있다\n  - matrix_100.csv: 행 3: 필수 셀 ref_inputs_sha 이 비어 있다\n  - matrix_100.csv: 행 3: 필수 셀 consumed_inputs 이 비어 있다\n  - matrix_100.csv: 행 3: 필수 셀 ref_consumed_inputs 이 비어 있다\n  - matrix_100.csv: 행 3 consumed_inputs: 출처(receipt)가 비어 있다\n  - matrix_100.csv: 행 3 ref_consumed_inputs: 출처(receipt)가 비어 있다\n  … 외 960\n  숫자: 정본(/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/a45978e3-3a6e-5e3d-af55-7c9b61e0d809/scratchpad/r9ws/work/harness-r9-target-wsl/bms-balancing/out)과 전부 같다 — 게시·서명만 바뀌었다\n",
+      "stderr": ""
+    },
+    "blank_unit_verified_by_production_reader": [
+      true,
+      "일치"
+    ],
+    "blank_artifact_count": 12,
+    "blank_first_row": {
+      "ref_inputs_sha": "",
+      "consumed_inputs": "",
+      "ref_consumed_inputs": ""
+    },
+    "config_mismatch": {
+      "argv": [
+        "/usr/local/bin/python3",
+        "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/a45978e3-3a6e-5e3d-af55-7c9b61e0d809/scratchpad/r9ws/work/harness-r9-target-wsl/bms-balancing/scripts/check_u14.py",
+        "--new",
+        "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/a45978e3-3a6e-5e3d-af55-7c9b61e0d809/scratchpad/r9ws/outputs/r9_provenance_artifacts/u18_config_mismatch",
+        "--old",
+        "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/a45978e3-3a6e-5e3d-af55-7c9b61e0d809/scratchpad/r9ws/work/harness-r9-target-wsl/bms-balancing/out"
+      ],
+      "returncode": 2,
+      "stdout": "산출 1 개 점검 (/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/a45978e3-3a6e-5e3d-af55-7c9b61e0d809/scratchpad/r9ws/outputs/r9_provenance_artifacts/u18_config_mismatch)\n  정본 선택 정책: **current** — 현행 디렉터리 — 정본은 unversioned 이름 하나, 판 번호가 붙은 형제는 쓰지 않는다 (Codex R6-04·R7-04)\n  명부(roster): 정본 12 · 새 산출 1 · 대조 1\n\n■ 명부(roster) 불일치 — 정본에 있는데 새 산출에 **없음** 11/12 (Codex R9-02). 부분 재실행이면 `--subset` 으로 계약을 명시할 것 — 그래도 승격 대상은 명부 전부(12 개)를 다시 만든 묶음뿐이다\n  - degeneracy_200_Li.json: 새 산출에 없음\n  - degeneracy_300_0009_Li.json: 새 산출에 없음\n  - degeneracy_300_0147_Li.json: 새 산출에 없음\n  - matrix_100.csv: 새 산출에 없음\n  - matrix_200.csv: 새 산출에 없음\n  - matrix_300_0009.csv: 새 산출에 없음\n  - matrix_300_0147.csv: 새 산출에 없음\n  - profile_gamma_100_Li.csv: 새 산출에 없음\n  - profile_gamma_200_Li.csv: 새 산출에 없음\n  - profile_gamma_300_0009_Li.csv: 새 산출에 없음\n  - profile_gamma_300_0147_Li.csv: 새 산출에 없음\n  새 스키마: 전부 갖췄다 (열·키 이름 + 필수 셀·숫자·receipt·중복 key — `bms_balancing/schema.py` 정본)\n\n■ 실행 조건 불일치 5 — 같은 실행의 재현이 아니다 (n_starts · seed · n_grid · n_samples · tol · state · 소스; Codex R9-03). 숫자가 같아도 승격 대상이 아니다\n  - degeneracy_100_Li.json:tol_percent_of_best: 정본 1.0 → 새 50.0\n  - degeneracy_100_Li.json:n_starts: 정본 24 → 새 1\n  - degeneracy_100_Li.json:seed: 정본 0 → 새 731\n  - degeneracy_100_Li.json:n_grid: 정본 21 → 새 999\n  - degeneracy_100_Li.json:n_samples: 정본 400 → 새 1\n  숫자: 대조 **미완** — 명부/묶음/조건 문제를 뺀 나머지만 같다 (전체를 말할 수 없다)\n",
+      "stderr": ""
+    },
+    "config_before": {
+      "n_starts": 24,
+      "seed": 0,
+      "n_grid": 21,
+      "n_samples": 400,
+      "tol_percent_of_best": 1.0
+    },
+    "config_after": {
+      "n_starts": 1,
+      "seed": 731,
+      "n_grid": 999,
+      "n_samples": 1,
+      "tol_percent_of_best": 50.0
+    }
+  },
+  "dd_eval_reread": {
+    "control_same_malformed_bytes": "invalid",
+    "raced_status": "invalid",
+    "read_count": 1,
+    "read_sha256": [
+      "058dd23c4337384618db771025ca18bcee89a67b195f7499366708db41db8f44"
+    ],
+    "first_read_was_malformed": true,
+    "later_reads_were_valid": true,
+    "raced_compared": 0,
+    "raced_expected": 0
+  },
+  "production_paths": {
+    "profile_rc": 0,
+    "profile_rows": 3,
+    "profile_receipts_survive_empty_log": true,
+    "profile_target_half_hash_matches": true,
+    "profile_ref_half_hash_matches": true,
+    "matrix_rc": null,
+    "matrix_rows": 1,
+    "shared_full_cell_ref_sha": "f435ab76cc07578537463eed738559d3faa6779f201ca4c98b4c0e60833c3290",
+    "shared_full_cell_target_sha": "b5b520a8b536472c0e610cfe093e853b6d21057518d3bcc6c21770850f6388d5",
+    "shared_full_cell_mismatch_accepted": true
+  }
+}

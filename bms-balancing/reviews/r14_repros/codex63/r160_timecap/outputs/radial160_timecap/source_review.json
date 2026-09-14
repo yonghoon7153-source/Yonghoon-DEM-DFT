@@ -1,0 +1,25 @@
+{
+  "new_name": "Caps300R160H0250",
+  "source_sha256": "4b4ff66bca7a161f6acffd5b125ddf695fee95fb82cdb4ded1e8b63391e1e5f0",
+  "baseline_identity": {
+    "name": "Caps300R160H0500",
+    "source_path": "outputs/comsol63/radial160/Caps300R160H0500.java",
+    "source_sha256": "874e70a9d6531a2a83ebd05f439d514c324b3ca79875494b1cf304797cc90e26",
+    "job_id": "450b46add79c439bbce5886454c4328a"
+  },
+  "reverse_transform_exact_equal": true,
+  "only_changes": [
+    "Java class and model label name",
+    "maxstepexpressionbdf early0.0005 to0.00025 seconds and matching log echo"
+  ],
+  "external_runtime_inputs": [],
+  "parameters_materials_OCP_Li_mesh_radii_initialization_scales_requested_times_profiles_guard_unchanged": true,
+  "runAll_calls": 1,
+  "seconds": 5,
+  "physical_elements_by_domain": [
+    120,
+    60,
+    120
+  ],
+  "particle_elements_each": 160
+}

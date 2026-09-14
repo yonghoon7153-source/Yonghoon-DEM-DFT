@@ -1,0 +1,26 @@
+{
+  "new_control_runs_authorized": 1,
+  "new_name": "Caps300R320H0125C16",
+  "baseline_identity": {
+    "name": "Caps300R320H0125",
+    "source_path": "outputs/comsol63/radial320_timecap/Caps300R320H0125.java",
+    "source_sha256": "8d35be8fab513f5e2def316c4d00e0fdc19983a5dd3bf492f4ffe47a58248be3",
+    "job_id": "18a00b03e38d4694b9ba30d88e7008f4",
+    "cores": 2
+  },
+  "execution_resources": {
+    "cores": 16,
+    "worker_timeout_seconds": 1800,
+    "physical_seconds": 5,
+    "start_from_t0_same_initialization": true,
+    "mid_state_restart": false
+  },
+  "overwrite_existing_H0125_or_A": false,
+  "retry_after_failure_authorized": false,
+  "B_authorized": false,
+  "additional_runs_authorized": false,
+  "failure_rule": "Preserve solver failure or mandatory-check incomplete and report; no automatic retry or setting change. Unrelated failures are not INCOMPLETE_RANGE_STOP.",
+  "electrolyte_positive": "POSTPROCESSING_ONLY",
+  "overall_convergence_complete": false,
+  "long_run_GO": false
+}

@@ -1,0 +1,145 @@
+{
+  "roots": {
+    "case": "root_argument_identity_collapse",
+    "missing_first_then_good": {
+      "rc": 0,
+      "roster": [
+        "  요청한 root 1 개 roster:",
+        "    - out: 있음 · 후보 1 · 검증 1 · 제외 0"
+      ],
+      "verdict": [
+        "  A 축에서 LLI 가 **항상 가장 좁은가**: 예"
+      ]
+    },
+    "good_first_then_missing": {
+      "rc": 2,
+      "roster": [
+        "  요청한 root 1 개 roster:",
+        "    - out: 있음 · 후보 0 · 검증 0 · 제외 0  ← 관측 0"
+      ],
+      "verdict": [
+        "  A 축에서 LLI 가 **항상 가장 좁은가**: **미완** — 검증된 관측이 0 개다 (빈 디렉터리이거나 전부 제외됐다)."
+      ]
+    },
+    "duplicate_explicit_label": {
+      "rc": 0,
+      "roster": [
+        "  요청한 root 1 개 roster:",
+        "    - same: 있음 · 후보 1 · 검증 1 · 제외 0"
+      ],
+      "verdict": [
+        "  A 축에서 LLI 가 **항상 가장 좁은가**: 예"
+      ]
+    }
+  },
+  "provenance": {
+    "case": "provenance_headers_without_values",
+    "read_unit": [
+      true,
+      "일치"
+    ],
+    "checker_rc": 0,
+    "checker_stdout": "산출 1 개 점검 (/tmp/r9-blank-prov-if7jx6td/out)\n  새 스키마: 전부 갖췄다 (run_id·sha256·env·inputs_sha·시작 시점 git·인자 필드)\n",
+    "all_provenance_cells_blank": true,
+    "bogus_promotion": {
+      "rc": 0,
+      "stdout": "산출 1 개 점검 (/tmp/r9-blank-prov-if7jx6td/out)\n  정본 선택 정책: **current** — 현행 디렉터리 — 정본은 unversioned 이름 하나, 판 번호가 붙은 형제는 쓰지 않는다 (Codex R6-04·R7-04)\n  새 스키마: 전부 갖췄다 (run_id·sha256·env·inputs_sha·시작 시점 git·인자 필드)\n  숫자: 정본(/tmp/r9-blank-prov-if7jx6td/old)과 전부 같다 — 게시·서명만 바뀌었다\n",
+      "ref_inputs_sha": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+      "consumed_inputs": "{}",
+      "new_artifacts": [
+        "matrix_200.csv"
+      ],
+      "old_artifacts": [
+        "matrix_100.csv",
+        "matrix_200.csv"
+      ]
+    }
+  },
+  "shape_roster": {
+    "case": "missing_expected_halfcell_removed_before_requested_roster",
+    "rc": 0,
+    "stdout": "반쪽전지 GITT · 문헌 Si Li · 상태 2개\n기준은 pristine. 격자 x=0.02~0.98 (400점)\n\nstate         용량 Δ%       γ     (a) 측정변화    (b) γ변화  (b)/(a)       (c) |블렌드−측정|\n                                  max mV     max mV                max mVrms mV\npristine       0.00  0.2000            —          —        —          0.0   0.0\n100            0.00  0.2500        10.00       8.86     0.89         18.9  16.2\n\n(PE 축 — 목적함수가 실제로 소비하는 반쪽전지 곡선) E_PE(state) − E_PE(pristine):\n    100        max    0.00 mV   rms   0.00 mV\n\n(d) γ 여유 — 기준 γ_ref 에서 합법 [0.00, 0.50] 까지 (γ 격자 501 점 · x 격자 400 점):\n    state       γ_ref               합법 Δγ   (a) mV        합법 γ 최대변화 mV (γ)            (a) 를 내는 가장 가까운 합법 γ\n    100        0.2000    [-0.200, +0.300]    10.00           53.88 (0.500)                0.143 (Δ -0.057)\n    ⚠ 증인은 진폭 크기의 존재이지 모양 일치가 아니다. secant 외삽으로 '필요 Δγ' 를 구하지 않는다.\n\n→ /tmp/r9-shape-roster-bf9vfzbm/shape/ne_shape_GITT_Li.csv\n\nγ 짝: requested 1 · paired 1/1\n측정된 음극 모양 변화 최대 10.00 mV (requested 1 개 전부에서),\nγ 가 만들어 낸 모델 변화 최대 8.86 mV (paired 1 개에서).\n\n→ 두 변화가 같은 규모다 (최대 0.9 배). 크기만의 비교다 — 방향과\n  모양이 같은지는 따로 봐야 한다.\n\n(c) **절대 일치** — `Blend(x, γ_적합)` 이 측정 음극과 얼마나 맞나\n    max |Δ| 18.9 ~ 18.9 mV   rms 16.2 ~ 16.2 mV\n    state        max 위치 x      |Δ|>50mV 인 격자 비율\n    100             0.388                  0.0 %\n\n    → 어긋남이 곡선 전체에 고르다. rms 를 대표값으로 쓸 것.\n\n⚠ (a) 는 **정규화 뒤** 변화다. 음극 용량이 줄면(위 '용량 Δ%') 곡선이\n   가로로 늘어나 그것만으로도 모양이 바뀐 것처럼 보인다. 용량 변화가\n   큰 상태에서는 (a) 를 순수한 OCP 모양 변화로 읽으면 안 된다.\n⚠ 이것은 **크기 비교**다. 방향이 같은지는 따로 봐야 한다.\n",
+    "rows": [
+      {
+        "state": "100",
+        "cap_delta_pct": "0.0000",
+        "gamma_target": "0.250000",
+        "gamma_ref": "0.200000",
+        "measured_shape_mV": "10.000000",
+        "gamma_shape_mV": "8.862178",
+        "ratio_b_over_a": "0.886218",
+        "blend_vs_meas_max_mV": "18.862178",
+        "blend_vs_meas_rms_mV": "16.237590",
+        "max_at_x": "0.3881",
+        "frac_over_50mV": "0.0000",
+        "pe_shape_max_mV": "0.000000",
+        "pe_shape_rms_mV": "0.000000",
+        "legal_dgamma_neg": "-0.200000",
+        "legal_dgamma_pos": "0.300000",
+        "gamma_family_max_mV": "53.882456",
+        "gamma_at_family_max": "0.5000",
+        "gamma_witness": "0.1430",
+        "gamma_witness_delta": "-0.0570",
+        "run_id": "da296d018b434566ae4c2de16ce656b3"
+      }
+    ],
+    "pairing": {
+      "requested": [
+        "100"
+      ],
+      "paired": [
+        "100"
+      ],
+      "missing": [],
+      "note": "measured_* 는 requested 전부에서, gamma_*·ratio 는 paired 에서만 계산한 값이다 (Codex R8-03)"
+    },
+    "declared_states": [
+      "pristine",
+      "100",
+      "200"
+    ]
+  },
+  "shape_overwrite": {
+    "case": "partial_run_replaces_prior_complete_canonical_unit",
+    "complete_rc": 0,
+    "complete_pairing": {
+      "requested": [
+        "100",
+        "200"
+      ],
+      "paired": [
+        "100",
+        "200"
+      ],
+      "missing": [],
+      "note": "measured_* 는 requested 전부에서, gamma_*·ratio 는 paired 에서만 계산한 값이다 (Codex R8-03)"
+    },
+    "partial_rc": 3,
+    "partial_pairing": {
+      "requested": [
+        "100",
+        "200"
+      ],
+      "paired": [
+        "100"
+      ],
+      "missing": [
+        "200"
+      ],
+      "note": "measured_* 는 requested 전부에서, gamma_*·ratio 는 paired 에서만 계산한 값이다 (Codex R8-03)"
+    },
+    "prior_complete_bytes_replaced": true,
+    "partial_unit_verifies": [
+      true,
+      "일치"
+    ],
+    "partial_stdout_tail": "        (a) 를 내는 가장 가까운 합법 γ\n    100        0.2000    [-0.200, +0.300]    10.00           53.88 (0.500)                0.143 (Δ -0.057)\n    ⚠ 증인은 진폭 크기의 존재이지 모양 일치가 아니다. secant 외삽으로 '필요 Δγ' 를 구하지 않는다.\n\n→ /tmp/r9-shape-overwrite-lhmyhl2d/shape/ne_shape_GITT_Li.csv\n\nγ 짝: requested 2 · paired 1/2 · **missing ['200']** (matrix_<state>.csv 없음/짝 없음 — 미계산이지 '증인 없음' 이 아니다)\n측정된 음극 모양 변화 최대 100.00 mV (requested 2 개 전부에서),\nγ 가 만들어 낸 모델 변화 최대 8.86 mV (paired 1 개에서).\n\n→ 두 변화가 같은 규모다 (최대 0.9 배). 크기만의 비교다 — 방향과\n  모양이 같은지는 따로 봐야 한다.\n\n(c) **절대 일치** — `Blend(x, γ_적합)` 이 측정 음극과 얼마나 맞나\n    max |Δ| 18.9 ~ 18.9 mV   rms 16.2 ~ 16.2 mV\n    state        max 위치 x      |Δ|>50mV 인 격자 비율\n    100             0.388                  0.0 %\n\n    → 어긋남이 곡선 전체에 고르다. rms 를 대표값으로 쓸 것.\n\n⚠ (a) 는 **정규화 뒤** 변화다. 음극 용량이 줄면(위 '용량 Δ%') 곡선이\n   가로로 늘어나 그것만으로도 모양이 바뀐 것처럼 보인다. 용량 변화가\n   큰 상태에서는 (a) 를 순수한 OCP 모양 변화로 읽으면 안 된다.\n⚠ 이것은 **크기 비교**다. 방향이 같은지는 따로 봐야 한다.\n⚠ **부분** — γ 짝이 없는 상태 ['200']: 위 γ 통계는 paired ['100'] 위의 진술이다 → 종료 코드 3\n"
+  },
+  "replay_vacuity": {
+    "case": "closure_replay_accepts_empty_unknown_selection",
+    "rc": 0,
+    "requested": "DOES_NOT_EXIST",
+    "reported_probes": {}
+  }
+}
+R9_ROOT_REPROS_PASSED

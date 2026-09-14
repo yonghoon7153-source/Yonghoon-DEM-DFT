@@ -1,0 +1,137 @@
+{
+  "scope": "Analytic checks only; no COMSOL or original private data execution",
+  "M1": {
+    "soc_ne": 0.01203011999593299,
+    "soc_pe": 0.9522895817921959,
+    "ne_ocp_delta_mV": -4.539982104490581,
+    "pe_ocp_delta_mV": -18.814867138443603,
+    "cell_ocp_nominal_V": 3.0523651707429,
+    "cell_ocp_rescaled_V": 3.038090285708947,
+    "cell_delta_mV": -14.274885033952689,
+    "lost_host_fraction_ne": 0.0507823385757461,
+    "lost_host_fraction_pe": 0.05840112514588036,
+    "both_occupancies_admissible": true,
+    "nLi0_mol_per_m2": 1.2283234157082805,
+    "nLi_target_conditional_mol_per_m2": 1.1882256827420736,
+    "implied_dLi_mol_per_m2": 0.04009773296620689,
+    "extra_Li_removed_if_only_csinit_multiplied_by_dm_mol_per_m2": 0.035172528113739165,
+    "extra_Li_removed_percent_of_target": 2.9600881907022383,
+    "xp_independently_reproduced": false,
+    "xp_missing_inputs": [
+      "LLI",
+      "C_lit0_ref1",
+      "original XML parameter evaluation"
+    ]
+  },
+  "M2": {
+    "bruggeman_factor_if_b_1_5": 0.3018691769624716,
+    "inverse_factor": 3.3126932999996885,
+    "literal_epss_plus_epsl_after_recommendation": 1.45,
+    "qarea_Ah_per_m2": 25.035995286543443,
+    "leakage": [
+      {
+        "sigma_S_per_m": 1e-20,
+        "R_ohm": 5.379914803361887e+19,
+        "I_at_4V_A": 7.435061978119832e-20,
+        "fraction_of_01C": 1.929185069784529e-16
+      },
+      {
+        "sigma_S_per_m": 1.4e-06,
+        "R_ohm": 384279.62881156337,
+        "I_at_4V_A": 1.0409086769367765e-05,
+        "fraction_of_01C": 0.027008590976983406
+      },
+      {
+        "sigma_S_per_m": 4.67e-06,
+        "R_ohm": 115201.6017850511,
+        "I_at_4V_A": 3.4721739437819624e-05,
+        "fraction_of_01C": 0.09009294275893753
+      },
+      {
+        "sigma_S_per_m": 1.4e-05,
+        "R_ohm": 38427.96288115634,
+        "I_at_4V_A": 0.00010409086769367765,
+        "fraction_of_01C": 0.2700859097698341
+      }
+    ]
+  },
+  "Q5_countermodels": {
+    "no_short_relaxation": [
+      {
+        "t_h": 4,
+        "voltage_excess_mV": 13.406400920712787,
+        "slope_mV_per_h": -1.3406400920712787
+      },
+      {
+        "t_h": 6,
+        "voltage_excess_mV": 10.976232721880528,
+        "slope_mV_per_h": -1.0976232721880528
+      },
+      {
+        "t_h": 8,
+        "voltage_excess_mV": 8.986579282344431,
+        "slope_mV_per_h": -0.8986579282344431
+      },
+      {
+        "t_h": 12,
+        "voltage_excess_mV": 6.023884238244043,
+        "slope_mV_per_h": -0.6023884238244043
+      }
+    ],
+    "same_conductance_slope_ratio_if_Cdiff_halves": 2.0,
+    "same_short_repeated_cycles": "same nonzero slope with unchanged initial state and conductance",
+    "tau_claim_units": "(Ah)*V/A = V*h, not h",
+    "local_voltage_tau_units": "(Ah/V)*V/A = h",
+    "charge_depletion_time_units": "Ah/A = h"
+  },
+  "regex_countermodel": {
+    "reported": [
+      {
+        "tag": "pce1",
+        "reported_disabled": true,
+        "reported_params": [
+          [
+            "csinit",
+            "child_init"
+          ]
+        ]
+      },
+      {
+        "tag": "pin1",
+        "reported_disabled": true,
+        "reported_params": [
+          [
+            "csinit",
+            "child_init"
+          ]
+        ]
+      }
+    ],
+    "direct_xml_parent": {
+      "tag": "pce1",
+      "own_disabled": false,
+      "own_params": [
+        [
+          "epss",
+          "parent_eps"
+        ]
+      ]
+    }
+  },
+  "rails_logical_countermodel": {
+    "x_cell": 0.9,
+    "a_PE_ratio": 1.0,
+    "a_NE_ratio": 1.0,
+    "c_lit_ratio": 0.98,
+    "LAM_PE": 0.1,
+    "LAM_NE": 0.1,
+    "LLI": 0.02
+  },
+  "allclose_tolerance_countermodel": {
+    "a": 0.1,
+    "b": 0.1000009,
+    "abs_error": 8.999999999981245e-07,
+    "numpy_default_rule_accepts": true,
+    "machine_epsilon": 2.220446049250313e-16
+  }
+}

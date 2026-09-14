@@ -1,0 +1,232 @@
+{
+  "target_head": "665c87e195007fb72f55f58f4c71ada81275c0c6",
+  "expected_head": "665c87e195007fb72f55f58f4c71ada81275c0c6",
+  "pinned_sha": "bd6ba4749a92f8d441b4d9176eb876bfc6cc287c",
+  "pin_bypassed": true,
+  "dirty": false,
+  "dirty_allowed": false,
+  "evidence_eligible": true,
+  "instrument_sealed": true,
+  "instrument": {
+    "reviews/r10_repros/replay_codex_r10.py": "ok",
+    "reviews/evidence_gate.py": "ok"
+  },
+  "materialized": {
+    "path": "/tmp/evidence-snap-m5kfkcvc/snap/bms-balancing",
+    "head": "665c87e195007fb72f55f58f4c71ada81275c0c6",
+    "kept": false
+  },
+  "ran_in": "격리 snapshot",
+  "package_digest_ok": true,
+  "package_digest": {
+    "HARNESS_R10_BD6BA474_CODEX_REVIEW.md": "ok",
+    "r10_snapshot_review.md": "ok",
+    "r10_snapshot_repros.py": "ok",
+    "r10_snapshot_results.json": "ok",
+    "r10_u18_shape_report.md": "ok",
+    "r10_u18_shape_repros.py": "ok",
+    "r10_u18_shape_results.json": "ok",
+    "r10_evidence_review.md": "ok",
+    "r10_evidence_repros.py": "ok",
+    "r10_evidence_results.json": "ok"
+  },
+  "설명": "원본 case 함수를 직접 불러 SHA pin 을 우회한다. assert 하는 두 스크립트는 자기 반례 assertion 에서 멈추면 닫힘, field 로 말하는 evidence 스크립트는 그 flag 가 False 면 닫힘",
+  "probes": {
+    "snapshot:eval-self-overwrite": {
+      "도달": true,
+      "상태": "반례 소멸",
+      "멈춘_곳": "r10_snapshot_repros.py:111: assert rc == 0 and result[\"original_destroyed\"] and result[\"reports_complete\"], result",
+      "세부": "{'case': 'eval_self_overwrite', 'rc': 2, 'original_sha256': 'c3dabc9d75d4d5e3173d808de370da45106fb7df899e601ee29913b65f973f50', 'after_sha256': 'c3dabc9d75d4d5e3173d808de370da45106fb7df899e601ee29913b65f973f50', 'original_destroyed': False, 'reports_complete': False, 'tail': ['1.181472,-0.141171,1.080759,-0.000775,0.239466,1.0118147200000001,1.99858829,3.0108075900000002,4.0108075899999998', '1.08"
+    },
+    "snapshot:profile-partial": {
+      "도달": true,
+      "상태": "반례 소멸",
+      "멈춘_곳": "r10_snapshot_repros.py:201: assert rc == 0 and len(rows) == 1 and not problems and result[\"previous_canonical_destroyed\"] \\",
+      "세부": "{'case': 'profile_partial_promoted', 'rc': 3, 'requested_gamma_count': 2, 'published_gamma_count': 0, 'schema_problems': ['열 없음: gamma_Si', '열 없음: obj', '열 없음: obj_ratio_to_best', '열 없음: rmse_pocv', '열 없음: a_PE', '열 없음: b_PE', '열 없음: a_NE', '열 없음: b_NE', '열 없음: bounds', '열 없음: LAM_PE_pct', '열 없음: LAM_NE_pct', '열 없음: LLI_pct', '열 없음: n_ok', '열 없음: n_tried', '열 없음: run_id', '열 없음: profile_scale', '열"
+    },
+    "snapshot:matrix-errors": {
+      "도달": true,
+      "상태": "반례 소멸",
+      "멈춘_곳": "r10_snapshot_repros.py:247: assert rc_obj is None and rows and problems and result[\"previous_canonical_destroyed\"], result",
+      "세부": "{'case': 'matrix_all_errors_overwrite', 'python_return': 1, 'effective_process_rc': 1, 'published_rows': 0, 'header': [], 'schema_problem_count': 39, 'schema_problem_sample': ['열 없음: half_cell', '열 없음: si', '열 없음: w_dqdv', '열 없음: run_id', '열 없음: inputs_sha'], 'previous_canonical_destroyed': False}"
+    },
+    "snapshot:stdout-invalid": {
+      "도달": true,
+      "상태": "반례 소멸",
+      "멈춘_곳": "r10_snapshot_repros.py:295: assert rc_obj is None and problems and isinstance(j, dict), result",
+      "세부": "{'case': 'stdout_invalid_success', 'python_return': 2, 'effective_process_rc': 2, 'schema_problems': ['키 없음: si_source', '키 없음: half_cell', '키 없음: w_dqdv', '키 없음: tol_percent_of_best', '키 없음: n_starts', '키 없음: seed', '키 없음: n_grid', '키 없음: n_samples', '키 없음: env', '키 없음: consumed_inputs', '키 없음: ref_consumed_inputs', '키 없음: inputs_sha', '키 없음: n_accepted', '키 없음: best_obj', '키 없음: best_p', '키 없음: "
+    },
+    "snapshot:receipt-roles": {
+      "도달": true,
+      "상태": "반례 소멸",
+      "멈춘_곳": "r10_snapshot_repros.py:315: assert result[\"same_aggregate\"] and not result[\"validator_swapped\"] and result[\"roles_changed\"], result",
+      "세부": "{'case': 'receipt_role_permutation', 'original_digest': 'd74d13a27989', 'swapped_digest': '9d6ace08c3d4', 'same_aggregate': False, 'validator_original': [], 'validator_swapped': [], 'roles_changed': True}"
+    },
+    "snapshot:error-skip": {
+      "도달": true,
+      "상태": "반례 소멸",
+      "멈춘_곳": "r10_snapshot_repros.py:375: assert p.returncode == 0 and not result[\"direct_schema_problems\"] and result[\"blank_provenance\"], result",
+      "세부": "{'case': 'error_column_bypasses_provenance', 'rc': 2, 'direct_schema_problems': ['`error` 행 1/1 — 이 묶음은 success 가 아니다 (부분/실패이고 승격 대상이 아니다; success 행에 `error` 칸이 있으면 그것도 error 행이다, Codex R10 P1-5)'], 'blank_provenance': True, 'says_schema_complete': False, 'says_numbers_equal': False, 'tail': ['  - matrix_100.csv: `error` 행 1/1 — 이 묶음은 success 가 아니다 (부분/실패이고 승격 대상이 아니다; success 행에 `error` 칸이 있으면 그것"
+    },
+    "snapshot:argv": {
+      "도달": true,
+      "상태": "우리 코드 밖",
+      "멈춘_곳": null,
+      "세부": "bash 의 `$*` 의미 자체를 보이는 case — 우리 쪽 닫힘은 적응 probe `argv-vector` 가 본다"
+    },
+    "u18:same_root": {
+      "도달": true,
+      "상태": "반례 소멸",
+      "멈춘_곳": "r10_u18_shape_repros.py:78: assert p.returncode == 0 and result[\"claims_all_same\"], result",
+      "세부": "{'case': 'candidate_and_baseline_can_be_the_same_directory', 'rc': 2, 'same_resolved_directory': True, 'claims_all_same': False, 'stdout': '! `--new` 와 `--old` 가 **같은 디렉터리**다 (/tmp/r10-u18-same-root-bacprpzj/candidate) — 독립 baseline 이 아니면 승격 판정이 성립하지 않는다 (자기대조). 재실행은 별도 destination 으로 받고 정본은 그대로 두거나 `--old-rev` 로 커밋에서 읽을 것 (Codex R10 P1-8)\\n'}"
+    },
+    "u18:receipt_roles": {
+      "도달": true,
+      "상태": "반례 소멸",
+      "멈춘_곳": "r10_u18_shape_repros.py:104: assert p.returncode == 0 and result[\"claims_schema_complete\"] and result[\"claims_all_same\"], result",
+      "세부": "{'case': 'receipt_accepts_a_decoy_instead_of_required_input_roles', 'rc': 2, 'recorded_roles': ['decoy'], 'missing_producer_roles': ['half_cell', 'full_cell', 'literature.gr', 'literature.si'], 'claims_schema_complete': False, 'claims_all_same': False, 'stdout': '산출 1 개 점검 (/tmp/r10-u18-receipt-wdfeuesd/new)\\n  정본 선택 정책: **current** — 현행 디렉터리 — 정본은 unversioned 이름 하나, 판 번호가 붙은 형제는 쓰지 않는다 (Codex R6-"
+    },
+    "u18:controls": {
+      "도달": true,
+      "상태": "반례 소멸",
+      "멈춘_곳": "r10_u18_shape_repros.py:127: assert p.returncode == 0 and records[mode][\"claims_all_same\"], records[mode]",
+      "세부": "{'rc': 2, 'claims_all_same': False, 'reports_control_mismatch': False, 'stdout': '산출 1 개 점검 (/tmp/r10-u18-controls-d1e6vggl/environment_changed/new)\\n  정본 선택 정책: **current** — 현행 디렉터리 — 정본은 unversioned 이름 하나, 판 번호가 붙은 형제는 쓰지 않는다 (Codex R6-04·R7-04)\\n  명부(roster): 정본 1 · 새 산출 1 · 대조 1\\n  새 스키마: 전부 갖췄다 (열·키 이름 + 필수 셀·숫자·receipt·중복 key — `bms_balancing/schema.py` 정본)\\n\\n■ **환경(env) 불일치** 4 — 정본을 만든 기"
+    },
+    "u18:error_bypass": {
+      "도달": true,
+      "상태": "반례 소멸",
+      "멈춘_곳": "r10_u18_shape_repros.py:155: assert p.returncode == 0 and result[\"claims_schema_complete\"] and result[\"claims_all_same\"], result",
+      "세부": "{'case': 'extra_error_column_skips_all_required_cell_and_receipt_checks', 'rc': 2, 'provenance_cells_blank': True, 'claims_schema_complete': False, 'claims_all_same': False, 'stdout': '산출 1 개 점검 (/tmp/r10-u18-error-bypass-x14b_869/new)\\n  정본 선택 정책: **current** — 현행 디렉터리 — 정본은 unversioned 이름 하나, 판 번호가 붙은 형제는 쓰지 않는다 (Codex R6-04·R7-04)\\n  명부(roster): 정본 1 · 새 산출 1 · 대조 1\\n\\n■ 내용 검사 실패 1 — 열은 있는데 값이 "
+    },
+    "u18:shape_subset": {
+      "도달": true,
+      "상태": "반례 소멸",
+      "멈춘_곳": "r10_u18_shape_repros.py:194: assert rc2 == 0 and [r[\"state\"] for r in rows2] == [\"100\"], result",
+      "세부": "{'case': 'states_option_narrows_roster_then_publishes_as_complete_canonical', 'declared_states': ['100', '200'], 'first': {'rc': 0, 'rows': ['100', '200'], 'pairing': {'authority': ['100', '200'], 'requested': ['100', '200'], 'requested_from': 'D.declared_states(GITT) — 선언 − 알려진 부재', 'available': ['100', '200'], 'missing_input': [], 'paired': ['100', '200'], 'missing': [], 'note': 'measured_* 는 av"
+    },
+    "u18:shape_duplicates": {
+      "도달": false,
+      "상태": "전제 변경",
+      "멈춘_곳": "TypeError: 'NoneType' object is not subscriptable",
+      "세부": "중복 요청은 이제 rc 2 로 거부되고 **아무것도 게시하지 않는다** — 원본은 게시된 meta 를 읽으려다 TypeError 로 죽는다. 닫힘은 적응 probe `adapted:duplicate-states` 가 본다"
+    },
+    "evidence:optimized-assertions": {
+      "도달": true,
+      "상태": "반례 소멸",
+      "멈춘_곳": "false_positive = False",
+      "세부": {
+        "runner_rc": 2,
+        "closed": null,
+        "dirty": null,
+        "package_digest_ok": null,
+        "reported_status": null,
+        "delegated_summary": null,
+        "false_positive": false
+      }
+    },
+    "evidence:git-status-error": {
+      "도달": true,
+      "상태": "반례 소멸",
+      "멈춘_곳": "false_clean = False",
+      "세부": {
+        "direct_git_status_rc": 128,
+        "direct_git_status_stderr": "fatal: /tmp/r10-index-dir-qmwhoyxm: unable to map index file: No such device",
+        "runner_rc": 2,
+        "runner_reports_dirty": null,
+        "closed": null,
+        "false_clean": false
+      }
+    },
+    "evidence:assume-unchanged": {
+      "도달": true,
+      "상태": "반례 소멸",
+      "멈춘_곳": "false_identity = False",
+      "세부": {
+        "git_status_rc": 0,
+        "runner_rc": 2,
+        "runner_target_head": null,
+        "runner_reports_dirty": null,
+        "closed": null,
+        "modified_module_executed": false,
+        "false_identity": false
+      }
+    },
+    "evidence:ignored-pyc": {
+      "도달": true,
+      "상태": "반례 소멸",
+      "멈춘_곳": "false_identity = False",
+      "세부": {
+        "pyc": "bms_balancing/__pycache__/verify.cpython-311.pyc",
+        "runner_rc": 0,
+        "runner_reports_dirty": false,
+        "closed": true,
+        "modified_bytecode_executed": false,
+        "false_identity": false
+      }
+    },
+    "evidence:argv-binding-mutant": {
+      "도달": true,
+      "상태": "반례 소멸",
+      "멈춘_곳": "mutant_survived = False",
+      "세부": {
+        "mutation_site_count": 0,
+        "pytest_rc": 0,
+        "pytest_tail": "1 passed in 2.12s",
+        "mutant_survived": false,
+        "reason": "test calls write_meta directly after assigning LAST_ARGV; production run() is never called"
+      }
+    },
+    "evidence:package-enforcement-mutant": {
+      "도달": true,
+      "상태": "반례 소멸",
+      "멈춘_곳": "corrupt_package_accepted = False",
+      "세부": {
+        "mutation_site_count": 0,
+        "regression_pytest_rc": 0,
+        "regression_pytest_tail": "1 passed in 28.38s",
+        "corrupted_file_status": "mismatch",
+        "runner_package_digest_ok": false,
+        "runner_closed": null,
+        "runner_rc": 2,
+        "mutant_survived_test": false,
+        "corrupt_package_accepted": false
+      }
+    },
+    "evidence:wrapper-coverage": {
+      "도달": true,
+      "상태": "반례 소멸",
+      "멈춘_곳": "claim_gap = False",
+      "세부": {
+        "named_test_rc": 0,
+        "named_test_tail": "1 passed in 1.72s",
+        "production_wrapper_consumers": [
+          "run_states.sh"
+        ],
+        "claim_gap": false,
+        "reason": "the test calls ne_shape.main directly and checks meta+documentation; no wrapper is invoked"
+      }
+    },
+    "adapted:argv-vector": {
+      "적응": true,
+      "도달": true,
+      "상태": "반례 소멸",
+      "멈춘_곳": "assert not `LAST_ARGV=\"$*\"` and one `LAST_ARGV_JSON=\"$(\"",
+      "세부": {
+        "flat_form_gone": true,
+        "vector_form": true
+      }
+    },
+    "adapted:duplicate-states": {
+      "적응": true,
+      "도달": true,
+      "상태": "반례 소멸",
+      "멈춘_곳": "assert rc == 2 and \"중복\" in text and 게시 없음",
+      "세부": {
+        "rc": 2,
+        "published": []
+      }
+    }
+  },
+  "closed": true,
+  "rc_reason": "모든 case 가 닫혔다"
+}

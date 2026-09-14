@@ -1,0 +1,13 @@
+{
+  "artifact": "profile_gamma_200_Li.csv",
+  "state": "200",
+  "half_cell_source": "GITT",
+  "si_source": "Li",
+  "starts": 24,
+  "seed": 0,
+  "w_dqdv_note": "명령별",
+  "data_root": "/home/yonghoon71/dd/cells/c171",
+  "git_commit": "d471e6262208beb44293369b69c46b699b32fc3f",
+  "git_dirty": true,
+  "created_utc": "2026-09-10T15:22:09.898760+00:00"
+}

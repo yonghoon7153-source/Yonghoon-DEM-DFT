@@ -1,0 +1,68 @@
+{
+  "target_head": "4396a548cfa66d3c4531947999a45f459a7db1e5",
+  "probes": {
+    "R6-01a snapshot_metadata_mix": {
+      "상태": "안 재현",
+      "세부": {
+        "error": "AssertionError",
+        "at": "File \"/home/user/Yonghoon-DEM-DFT/bms-balancing/reviews/r6_repros/codex/harness_r6_final_execution_repros.py\", line 92, in metadata_sample_mix"
+      }
+    },
+    "R6-01b matrix_after_verification": {
+      "상태": "안 재현",
+      "세부": {
+        "error": "AttributeError: module 'r6_reader' has no attribute '_unit_ok'",
+        "at": "File \"/home/user/Yonghoon-DEM-DFT/bms-balancing/reviews/r6_repros/codex/harness_r6_final_execution_repros.py\", line 109, in matrix_after_verification"
+      }
+    },
+    "R6-02 missing_modern_metadata": {
+      "상태": "안 재현",
+      "세부": {
+        "error": "RuntimeError: matrix_100.csv: 묶음 불일치/미완 (현행 산출(run_id 있음)인데 meta 가 없다 — 게시가 중단됐거나 write_meta 를 안 거쳤다: 미완 (Codex R6-02)) — 섞인 산출을 소비하지 않는다 (R6 내부 F07 · Codex R6-01·02)",
+        "at": "File \"/home/user/Yonghoon-DEM-DFT/bms-balancing/scripts/ne_shape.py\", line 107, in fitted_pair_info"
+      }
+    },
+    "R6-04 old_version_selected": {
+      "상태": "안 재현",
+      "세부": {
+        "error": "AssertionError",
+        "at": "File \"/home/user/Yonghoon-DEM-DFT/bms-balancing/reviews/r6_repros/codex/harness_r6_final_execution_repros.py\", line 167, in old_version_selected"
+      }
+    },
+    "R6-03a shape_and_matrix": {
+      "상태": "안 재현",
+      "세부": {
+        "error": "RuntimeError: matrix_100.csv: 묶음 불일치/미완 (현행 산출(run_id 있음)인데 meta 가 없다 — 게시가 중단됐거나 write_meta 를 안 거쳤다: 미완 (Codex R6-02)) — 섞인 산출을 소비하지 않는다 (R6 내부 F07 · Codex R6-01·02)",
+        "at": "File \"/home/user/Yonghoon-DEM-DFT/bms-balancing/scripts/ne_shape.py\", line 107, in fitted_pair_info"
+      }
+    },
+    "R6-03b fullcell_build_signature": {
+      "상태": "안 재현",
+      "세부": {
+        "error": "TypeError: fullcell_build_signature.<locals>.finish_new_fullcell_export() got an unexpected keyword argument 'identity'",
+        "at": "File \"/usr/lib/python3.11/unittest/mock.py\", line 1189, in _execute_mock_call"
+      }
+    },
+    "R6-05 role_checks": {
+      "상태": "안 재현",
+      "세부": {
+        "error": "AssertionError",
+        "at": "File \"/home/user/Yonghoon-DEM-DFT/bms-balancing/reviews/r6_repros/codex/harness_r6_final_claims_repros.py\", line 213, in role_checks"
+      }
+    },
+    "port(닫힘 확인)": {
+      "상태": "기대대로",
+      "세부": {
+        "rc": 0,
+        "error": ""
+      }
+    },
+    "inference(닫힘 확인)": {
+      "상태": "달라짐",
+      "세부": {
+        "rc": 1,
+        "error": "FileNotFoundError: [Errno 2] No such file or directory: '/home/user/Yonghoon-DEM-DFT/bms-balancing/out/degeneracy_300_0009_Li_v2.json'"
+      }
+    }
+  }
+}

@@ -66,10 +66,34 @@ def _pchip(xq_src: np.ndarray, y_src: np.ndarray, xq: np.ndarray) -> np.ndarray:
 
 
 def _interp_lin_extrap(xs: np.ndarray, ys: np.ndarray, xq):
-    """MATLAB interp1(...,'linear','extrap')."""
+    """MATLAB interp1(...,'linear','extrap').
+
+    ⚠ 2026-09-10: MATLAB `interp1` 은 x 가 **단조 증가든 단조 감소든** 받는다.
+      `np.interp` 는 증가를 **가정만 하고 검사하지 않는다** — 감소하는 x 를
+      주면 조용히 틀린 값을 낸다 (범위 안 점까지 전부).
+
+      드러난 경위: 원통형 셀(#168)을 붙였더니 `E_PE(0.5)` 가 **29.96 V** 로
+      나왔다. 그 셀 양극 반쪽전지가 파우치와 반대 방향으로 측정돼서, 방향
+      정규화(`pe_c = 1 - pe_c/pe_c[-1]`)를 지나면 x 가 내림차순이 된다.
+      파우치 자료는 오름차순이라 이 자리가 여태 안 드러났다.
+
+      파우치 결과는 영향이 없다 — 그 경로는 오름차순이고, 아래 뒤집기는
+      내림차순일 때만 걸린다. (그리고 파우치 값들은 MATLAB 과 1e-13 에서
+      맞춰 놓은 것이라, 만약 내림차순이었다면 그 대조가 진작 깨졌다.)
+    """
     xs = np.asarray(xs, dtype=float)
     ys = np.asarray(ys, dtype=float)
     xq = np.atleast_1d(np.asarray(xq, dtype=float))
+    if xs.size >= 2 and xs[0] > xs[-1]:
+        xs, ys = xs[::-1], ys[::-1]
+    # ⚠ 2026-09-11 (R2 후속, L0-7): MATLAB `interp1` 은 x 가 단조가 아니면(중복 포함)
+    #   에러다. `np.interp` 는 조용히 값을 낸다. 원통형 워크북은 우리가 썼으므로 중복
+    #   용량점이 들어올 수 있고, 그러면 조용한 쓰레기가 "넓은 띠" 로 보인다. 죽인다.
+    if xs.size >= 2 and np.any(np.diff(xs) <= 0):
+        bad = int(np.argmax(np.diff(xs) <= 0))
+        raise ValueError(
+            f"interp1: x 가 단조 증가/감소가 아니다 (index {bad}: {xs[bad]!r} → {xs[bad+1]!r}). "
+            "MATLAB interp1 은 여기서 에러다 — 중복·비단조 용량점을 적재 단계에서 걸러라.")
     out = np.interp(xq, xs, ys)
     # 범위 밖은 양 끝 기울기로 선형 외삽 (np.interp 는 끝값을 유지한다)
     if xs.size >= 2:
@@ -208,6 +232,81 @@ class HalfCell:
 
 # ── build_blend_functions.m ─────────────────────────────────────────────
 
+class GammaFit(SimpleNamespace if False else object):
+    """`fit_gamma_si` 의 반환값 — 원본 `result` 구조체와 같은 이름."""
+
+    __slots__ = ("gamma_Si_fit", "rmse", "gamma_scan", "rmse_scan")
+
+    def __init__(self, gamma_Si_fit, rmse, gamma_scan, rmse_scan):
+        self.gamma_Si_fit, self.rmse = float(gamma_Si_fit), float(rmse)
+        self.gamma_scan, self.rmse_scan = gamma_scan, rmse_scan
+
+    def __repr__(self):
+        return f"GammaFit(gamma_Si_fit={self.gamma_Si_fit:.6f}, rmse={self.rmse:.6g})"
+
+
+def fit_gamma_si(ne_capacity, ne_voltage, si_capacity_lit, si_voltage_lit, gr_capacity_lit, gr_voltage_lit,
+                 *, gamma_range=(0.02, 0.5), use_dv: bool = True, window: int = 9, poly_order: int = 1):
+    """`fit_gamma_si.m` 포팅 — 측정된 pristine 블렌드와 **독립** 문헌 Si/Gr 로 γ 를 1 차원 최적화한다.
+
+    `Q_blend(U; γ) = γ·Q_Si(U) + (1−γ)·Q_Gr(U)` 를 세 곡선의 **공통 전압 구간**에서 만들고, 그 모델이 실측
+    블렌드와 가장 잘 맞는 γ 를 찾는다 (Schmitt 2022 §3.2 의 DV 매칭). `generate_si_ocp` 류의 역산과 다른 점은
+    문헌 곡선이 γ 와 **무관하게 고정**이라 γ 자체가 추정 대상이 된다는 것이다.
+
+    원본 그대로: 전압으로 unique → 세 곡선의 겹치는 구간 → 1000 점 pchip → **각각** 0~1 재정규화 →
+    (use_dv 면) `differential` 의 `dvdq` 를 실측 격자에 linear/extrap 으로 얹어 RMSE → 60 점 스캔 + `fminbnd`.
+    모델 쪽 `differential` 이 실패하면 그 γ 의 값은 1e6 이다 (원본의 `catch`).
+
+    ⚠ `Blend` 와 합치지 않는다: `Blend` 는 Si·Gr **둘**의 구간에서 2000 점을 쓰고, 여기는 **측정 곡선까지 셋**의
+      구간에서 1000 점을 쓴다. 두 규약을 한 클래스에 욱여넣으면 어느 쪽도 원본과 같지 않게 된다.
+    """
+    lb, ub = float(gamma_range[0]), float(gamma_range[1])
+    ne_v, ne_c = _unique_first(np.asarray(ne_voltage, float), np.asarray(ne_capacity, float))
+    si_v, si_c = _unique_first(np.asarray(si_voltage_lit, float), np.asarray(si_capacity_lit, float))
+    gr_v, gr_c = _unique_first(np.asarray(gr_voltage_lit, float), np.asarray(gr_capacity_lit, float))
+    v_min = max(ne_v.min(), si_v.min(), gr_v.min())
+    v_max = min(ne_v.max(), si_v.max(), gr_v.max())
+    if v_min >= v_max:
+        raise ValueError("블렌드/Si/Gr 문헌 데이터의 전압 구간이 겹치지 않는다")
+    v_common = np.linspace(v_min, v_max, 1000)
+
+    def norm01(a):
+        lo, hi = a.min(), a.max()
+        return (a - lo) / (hi - lo)
+
+    q_meas = norm01(_pchip(ne_v, ne_c, v_common))
+    q_si = norm01(_pchip(si_v, si_c, v_common))
+    q_gr = norm01(_pchip(gr_v, gr_c, v_common))
+
+    dv_meas_x = dv_meas_y = None
+    if use_dv:
+        d = differential(q_meas, v_common, window, poly_order)
+        dv_meas_x, dv_meas_y = d.capacity_uniform2, d.dvdq
+
+    def objective(gamma: float) -> float:
+        q = norm01(gamma * q_si + (1.0 - gamma) * q_gr)
+        if not use_dv:
+            return float(np.sqrt(np.mean((q_meas - q) ** 2)))
+        try:
+            dm = differential(q, v_common, window, poly_order)
+            fit = _interp_lin_extrap(dm.capacity_uniform2, dm.dvdq, dv_meas_x)
+        except Exception:                                  # noqa: BLE001 — 원본의 catch
+            return 1e6
+        return float(np.sqrt(np.mean((dv_meas_y - fit) ** 2)))
+
+    gamma_scan = np.linspace(lb, ub, 60)
+    rmse_scan = np.array([objective(g) for g in gamma_scan], dtype=float)
+    from scipy.optimize import minimize_scalar
+    r = minimize_scalar(objective, bounds=(lb, ub), method="bounded", options={"xatol": 1e-6})
+    g_fit, v_fit = float(r.x), float(r.fun)
+    # ⚠ `fminbnd` 는 국소 최소다 — 스캔이 더 좋은 점을 찾았으면 그것을 쓴다 (원본은 진단용으로만 두지만,
+    #   그때 보고값과 스캔이 어긋나면 "무엇이 최적인가" 를 두 벌로 말하게 된다).
+    j = int(np.argmin(rmse_scan))
+    if rmse_scan[j] < v_fit:
+        g_fit, v_fit = float(gamma_scan[j]), float(rmse_scan[j])
+    return GammaFit(g_fit, v_fit, gamma_scan, rmse_scan)
+
+
 class Blend:
     """문헌 순수 Si / 순수 Gr 을 γ 로 섞은 합성 음극.
 
@@ -254,6 +353,10 @@ class Blend:
 
 
 # ── electrode_balancing_blend.m — 목적함수 ──────────────────────────────
+
+#: scale 의 "원본 설명식과 같다" 는 이 상대 허용오차 안의 **근사**다 (Codex R5-06). eps/하위절반평균 이 이보다 크면
+#: +eps 가드가 결과를 바꾼다. 비교기의 MODEL_REL(1e-9)과 같은 크기.
+SCALE_EQUIV_REL = 1e-9
 
 LB5 = np.array([1.0, -0.5, 1.0, -0.5, 0.00])
 UB5 = np.array([1.4, 0.0, 1.4, 0.1, 0.50])
@@ -351,6 +454,9 @@ class Objective:
         w = np.ones_like(dq)
         prom = 0.1 * (dq.max() - dq.min())
         locs, _ = find_peaks(dq, prominence=prom)
+        # 몇 개를 찾았는지 남긴다 — dd_eval.m 대조의 `n_peaks` 앵커가 이것이다
+        # (같은 규칙을 verify.py 에 다시 쓰지 않으려고 여기 둔다).
+        self.peak_locs = locs
         if locs.size == 0:
             return w
         sigma = sigma_ratio * (vol.max() - vol.min())
@@ -358,28 +464,67 @@ class Objective:
             w = w + (peak_weight - 1.0) * np.exp(-((vol - vol[k]) ** 2) / (2 * sigma ** 2))
         return w
 
-    def _auto_scales(self, seed, n_samples):
+    #: ⚠ Codex R4-05: 원본 `lower_half_mean_local` 은 **NaN 만** 지운다 (`vals(~isnan(vals))`) — Inf 는 남아
+    #:   정렬 뒤 하위 절반에 들면 scale 이 Inf 가 된다. 이 포팅은 **NaN 과 ±Inf 를 전부** 지운다. 그러므로 두
+    #:   구현은 raw RMSE 표본이 전부 유한한 영역에서만 같다. 평탄부(dV/dQ=0)가 있는 forward 는 유한·연속이어도
+    #:   `rmse_dqdv` 에 Inf 를 만들 수 있고, `__call__` 의 1e6 가드는 여기 raw 호출을 감싸지 않는다.
+    #:   그래서 표본의 개수(n·유한·Inf·NaN)를 `scale_audit` 에 남긴다 — Inf 표본이 0 이면 그 실행에서 동치.
+    NONFINITE_SCALE_POLICY = ("Python: NaN 과 ±Inf 표본을 모두 제거한 뒤 정렬·하위 절반 평균 (+eps). "
+                              "원본 설명식: NaN 만 제거 — Inf 표본이 있으면 두 scale 이 다르다 (R4-05). "
+                              "그리고 +eps 는 하위 절반 평균이 eps 에 비해 클 때만 무시된다 (R5-06): "
+                              "동치 flag = 전부 유한 · 예외 없음 · eps/평균 ≤ SCALE_EQUIV_REL (상대 근사, 정확 동치 아님).")
+
+    def _auto_scales(self, seed, n_samples, lb=None, ub=None):
+        """목적함수 항의 scale. 원본은 `samples = lb + rand(n,5).*(ub-lb)`.
+
+        ⚠ 2026-09-10 리뷰 [A1]: `lb`/`ub` 를 받게 열어 둔 이유는, MATLAB
+          검증기의 고정-γ 프로파일이 `lb(5)=ub(5)=g` 를 **넘겨서** fit 을
+          부르기 때문이다. 원 scale 식이 넘겨받은 경계에서 표본을 만들면
+          MATLAB 은 γ 마다 다른 scale 을 쓰고, 전역 경계로 한 번 뽑아 재사용하는
+          우리 프로파일과 **다른 목적함수**를 최적화하게 된다.
+          기본값(전역)은 그대로 두되 선택할 수 있게 한다 — 어느 쪽이 그들
+          절차인지는 그들 소스를 봐야 정해진다.
+        """
+        lb = LB5 if lb is None else np.asarray(lb, dtype=float)
+        ub = UB5 if ub is None else np.asarray(ub, dtype=float)
         rng = np.random.default_rng(seed)
-        s = LB5 + rng.random((n_samples, 5)) * (UB5 - LB5)
+        s = lb + rng.random((n_samples, 5)) * (ub - lb)
         vals = {"pocv": [], "dvdq": [], "dqdv": []}
+        n_exc = {k: 0 for k in vals}
+        metrics = {"pocv": lambda row: self.rmse_pocv(row),
+                   "dvdq": lambda row: self.rmse_dvdq(row),
+                   "dqdv": lambda row: self.rmse_dqdv(row, self.use_peak_weight)}
         for row in s:
-            try:
-                vals["pocv"].append(self.rmse_pocv(row))
-                vals["dvdq"].append(self.rmse_dvdq(row))
-                vals["dqdv"].append(self.rmse_dqdv(row, self.use_peak_weight))
-            except Exception:                          # noqa: BLE001 — 원본도 삼킨다
-                for k in vals:
-                    vals[k].append(np.nan)
-        out = {}
+            # ⚠ Codex R5-10: 항마다 표본당 정확히 한 기록. 전 판은 둘째 항의 예외가 세 배열 모두에 NaN 을
+            #   **다시** 넣어 첫째 항이 n=100 이 됐다. 예외는 따로 센다 (원본은 삼킨다 — 값은 NaN 으로).
+            for k, fn in metrics.items():
+                try:
+                    vals[k].append(float(fn(row)))
+                except Exception:                      # noqa: BLE001
+                    vals[k].append(np.nan); n_exc[k] += 1
+        eps = float(np.finfo(float).eps)
+        out, audit = {}, {}
         for k, v in vals.items():
             a = np.array(v, dtype=float)
+            rec = {"n": int(a.size), "n_finite": int(np.isfinite(a).sum()),
+                   "n_inf": int(np.isinf(a).sum()), "n_nan": int(np.isnan(a).sum()), "n_exception": n_exc[k]}
             a = a[np.isfinite(a)]
             if a.size == 0:
-                out[k] = np.finfo(float).eps
-                continue
-            a.sort()
-            half = max(1, a.size // 2)
-            out[k] = float(a[:half].mean()) + np.finfo(float).eps
+                out[k] = eps
+                rec.update(raw_lower_half_mean=None, scale=eps, eps_rel=float("inf"), equivalent_within_rel=False)
+            else:
+                a.sort()
+                half = max(1, a.size // 2)
+                raw = float(a[:half].mean())
+                out[k] = raw + eps
+                # ⚠ Codex R5-06: "전부 유한" 은 충분조건이 아니다 — +eps 의 상대 영향 eps/raw 가 커지면
+                #   (raw ~ 1e-20 이면 22205 배) 원본 설명식과 갈린다. 동치는 상대 SCALE_EQUIV_REL 안의 근사로만.
+                eps_rel = float("inf") if raw <= 0 else eps / raw
+                rec.update(raw_lower_half_mean=raw, scale=out[k], eps_rel=eps_rel,
+                           equivalent_within_rel=bool(rec["n_inf"] == 0 and rec["n_nan"] == 0
+                                                      and n_exc[k] == 0 and eps_rel <= SCALE_EQUIV_REL))
+            audit[k] = rec
+        self.scale_audit = audit                      # R4-05/R5-06: 표본 개수·raw 평균·eps 영향·동치 flag
         return out
 
     # -- 합 -------------------------------------------------------------

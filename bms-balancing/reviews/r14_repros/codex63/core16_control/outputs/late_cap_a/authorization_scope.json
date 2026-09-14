@@ -1,0 +1,31 @@
+{
+  "candidate_A_new_runs_authorized": 1,
+  "candidate_B_authorized": false,
+  "baseline_rerun_authorized": false,
+  "retry_or_settings_change_after_failure_authorized": false,
+  "additional_runs_authorized": false,
+  "baseline_identity": {
+    "name": "Caps300R320H0125",
+    "source_path": "outputs/comsol63/radial320_timecap/Caps300R320H0125.java",
+    "source_sha256": "8d35be8fab513f5e2def316c4d00e0fdc19983a5dd3bf492f4ffe47a58248be3",
+    "job_id": "18a00b03e38d4694b9ba30d88e7008f4"
+  },
+  "approved_cap_expression": "if(t<0.1[s],0.000125[s],if(t<1[s],0.005[s],0.025[s]))",
+  "execution_resources": {
+    "cores": 16,
+    "baseline_worker_timeout_seconds": 1200,
+    "new_worker_timeout_seconds": 1800,
+    "reason": "Baseline total processing1043.867s; additional late accepted steps/output need host cancellation allowance. No COMSOL numerical or physical-time setting change.",
+    "physical_time_seconds": 5,
+    "baseline_cores": 2,
+    "user_authorized_increased_CPU": true,
+    "user_reported_logical_CPUs": 20,
+    "python_os_cpu_count": 20,
+    "parallel_arithmetic_limit": "Parallel floating-point reductions may differ from the two-core baseline. No claim that machine-arithmetic execution resources are identical. Same COMSOL source conditions except the authorized cap and identifiers.",
+    "requested20_rejected_before_job_creation": "Native tool accepts integer1..16; verified all30 jobIDs unchanged after validation rejection. No COMSOL compile or solve was submitted."
+  },
+  "failure_rule": "Preserve failure/incomplete checks and report before retry/settings changes/additional runs. Other failures are not INCOMPLETE_RANGE_STOP automatically.",
+  "electrolyte_positive": "POSTPROCESSING_ONLY",
+  "overall_convergence_complete": false,
+  "long_run_GO": false
+}

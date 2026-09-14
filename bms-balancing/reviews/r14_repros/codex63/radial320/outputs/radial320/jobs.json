@@ -1,0 +1,25 @@
+{
+  "scope": "Exactly one new300/R320H0250 5-second radial refinement against fixedexisting300/R160H0250",
+  "jobs": [
+    {
+      "name": "Caps300R160H0250",
+      "job_id": "15e5d7433a6a4956b820cf6952330735",
+      "source_sha256": "4b4ff66bca7a161f6acffd5b125ddf695fee95fb82cdb4ded1e8b63391e1e5f0",
+      "early_cap_s": 0.00025,
+      "cores": 2,
+      "timeout_seconds": 600,
+      "max_physical_time_s": 5,
+      "role": "existing_reference"
+    },
+    {
+      "name": "Caps300R320H0250",
+      "job_id": "f0db6d080ad04045a2b43dc5a51d89b2",
+      "source_sha256": "837f8b03ff3381bb1aea6397935d0079b032f5e4aea007b32d1ebf7c40775b2e",
+      "early_cap_s": 0.00025,
+      "cores": 2,
+      "timeout_seconds": 1200,
+      "max_physical_time_s": 5,
+      "role": "new_authorized_run"
+    }
+  ]
+}

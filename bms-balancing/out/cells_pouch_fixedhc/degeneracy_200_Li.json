@@ -1,0 +1,130 @@
+{
+  "state": "200",
+  "si_source": "Li",
+  "half_cell": "GITT",
+  "w_dqdv": 0.0,
+  "tol_percent_of_best": 1.0,
+  "n_accepted": 56,
+  "best_obj": 0.36903085390726653,
+  "best_p": [
+    1.075258369412016,
+    -0.04034692396156756,
+    1.0306810613174335,
+    7.532994200919684e-05,
+    0.31263477577508014
+  ],
+  "best_active_bounds": [],
+  "ref_p": [
+    1.0760730855413911,
+    -0.022128221908264453,
+    1.0012793882126771,
+    0.00029934138984327496,
+    0.29529879364528394
+  ],
+  "ref_active_bounds": [],
+  "best_modes_percent": {
+    "LAM_PE": 6.900501633161736,
+    "LAM_NE": 4.094105944753242,
+    "LLI": 8.493208149960202
+  },
+  "LAM_PE_percent_observed_cloud": {
+    "min": 6.70848582269231,
+    "max": 7.030230396207809,
+    "span": 0.3217445735154989,
+    "median": 6.903957418191627,
+    "warning": "무작위 표집의 관측 폭 — 근최적 집합의 폭이 아니다"
+  },
+  "LAM_NE_percent_observed_cloud": {
+    "min": 2.3688679343357566,
+    "max": 4.69385098220889,
+    "span": 2.324983047873133,
+    "median": 4.092952791539533,
+    "warning": "무작위 표집의 관측 폭 — 근최적 집합의 폭이 아니다"
+  },
+  "LLI_percent_observed_cloud": {
+    "min": 8.3519977924088,
+    "max": 8.660530330958633,
+    "span": 0.30853253854983187,
+    "median": 8.493262052543919,
+    "warning": "무작위 표집의 관측 폭 — 근최적 집합의 폭이 아니다"
+  },
+  "LAM_PE_percent": {
+    "min": 5.5728983840195285,
+    "max": 8.153908423087076,
+    "span": 2.5810100390675474,
+    "is_lower_bound": true,
+    "from_constrained_extrema": {
+      "min": 5.5728983840195285,
+      "max": 8.153908423087076,
+      "span": 2.5810100390675474,
+      "n_points": 70,
+      "is_lower_bound": true
+    },
+    "from_mode_profile": {
+      "min": 5.5728983840195285,
+      "max": 8.153908423087074,
+      "span": 2.5810100390675457,
+      "n_grid_attainable": 12,
+      "n_grid": 22,
+      "grid_range_pct": [
+        4.282393364485754,
+        9.44441344262085
+      ],
+      "grid_from_hint": true,
+      "is_lower_bound": true
+    }
+  },
+  "LAM_NE_percent": {
+    "min": 2.1628466104124167,
+    "max": 5.450102082092556,
+    "span": 3.2872554716801394,
+    "is_lower_bound": true,
+    "from_constrained_extrema": {
+      "min": 2.1628466104124167,
+      "max": 5.450102082092556,
+      "span": 3.2872554716801394,
+      "n_points": 64,
+      "is_lower_bound": true
+    },
+    "from_mode_profile": {
+      "min": 2.363061718917867,
+      "max": 5.436133126160401,
+      "span": 3.073071407242534,
+      "n_grid_attainable": 12,
+      "n_grid": 22,
+      "grid_range_pct": [
+        0.519218874572347,
+        6.6653616890574146
+      ],
+      "grid_from_hint": true,
+      "is_lower_bound": true
+    }
+  },
+  "LLI_percent": {
+    "min": 8.021255252476472,
+    "max": 8.940228026191555,
+    "span": 0.9189727737150832,
+    "is_lower_bound": true,
+    "from_constrained_extrema": {
+      "min": 8.021255252476472,
+      "max": 8.940228026191555,
+      "span": 0.9189727737150832,
+      "n_points": 61,
+      "is_lower_bound": true
+    },
+    "from_mode_profile": {
+      "min": 8.021255252476472,
+      "max": 8.940228026191555,
+      "span": 0.9189727737150832,
+      "n_grid_attainable": 12,
+      "n_grid": 22,
+      "grid_range_pct": [
+        7.561768865618931,
+        9.399714413049095
+      ],
+      "grid_from_hint": true,
+      "is_lower_bound": true
+    }
+  },
+  "span_method": "근최적 집합 {obj ≤ best·(1+tol)} 위에서 (a) mode 등식 제약 프로파일과 (b) 직접 제약 최적화를 둘 다 돌려 **합집합**을 취한다. 둘 다 국소 해법이므로 결과는 여전히 **하한**이다 — 정확한 폭도, 신뢰구간도 아니다."
+}

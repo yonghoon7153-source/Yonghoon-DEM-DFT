@@ -1,0 +1,75 @@
+{
+  "target": "C:/Users/Administrator/Documents/Codex/2026-08-24/claude-14-gate-code-review-9qkx05-2/work/harness-r10-target-wsl/bms-balancing",
+  "head": "bd6ba4749a92f8d441b4d9176eb876bfc6cc287c",
+  "target_unchanged_after_replay": true,
+  "cases": {
+    "optimized-assertions": {
+      "runner_rc": 0,
+      "closed": true,
+      "dirty": false,
+      "package_digest_ok": true,
+      "reported_status": "반례 소멸",
+      "delegated_summary": "arguments: --definitely-invalid-option; pytest usage error rather than 1 passed",
+      "false_positive": true
+    },
+    "git-status-error": {
+      "direct_git_status_rc": 128,
+      "direct_git_status_stderr": "fatal: <directory>: unable to map index file: No such device",
+      "runner_rc": 0,
+      "runner_reports_dirty": false,
+      "closed": true,
+      "false_clean": true
+    },
+    "assume-unchanged": {
+      "git_status_rc": 0,
+      "git_status_porcelain": "",
+      "runner_rc": 0,
+      "runner_reports_dirty": false,
+      "closed": true,
+      "modified_module_executed": true,
+      "false_identity": true
+    },
+    "ignored-pyc": {
+      "pyc": "bms_balancing/__pycache__/verify.cpython-312.pyc",
+      "git_status_porcelain": "",
+      "runner_rc": 0,
+      "runner_reports_dirty": false,
+      "closed": true,
+      "modified_bytecode_executed": true,
+      "false_identity": true
+    },
+    "argv-binding-mutant": {
+      "mutation": "run_states.sh: LAST_ARGV=\"$*\" -> LAST_ARGV=\"FORGED-BY-MUTANT\"",
+      "mutation_site_count": 1,
+      "pytest_rc": 0,
+      "pytest_tail": "1 passed in 1.44s",
+      "mutant_survived": true
+    },
+    "argv-flatten-collision": {
+      "vector_a": ["cmd", "a b", "c"],
+      "vector_b": ["cmd", "a", "b c"],
+      "serialized_a": "cmd a b c",
+      "serialized_b": "cmd a b c",
+      "collision": true
+    },
+    "package-enforcement-mutant": {
+      "mutation": "replay_codex_r7.package_digest returns True even on mismatch",
+      "mutation_site_count": 1,
+      "regression_pytest_rc": 0,
+      "regression_pytest_tail": "1 passed in 9.19s",
+      "corrupted_file_status": "mismatch",
+      "runner_package_digest_ok": true,
+      "runner_closed": true,
+      "runner_rc": 0,
+      "mutant_survived_test": true,
+      "corrupt_package_accepted": true
+    },
+    "wrapper-coverage": {
+      "named_test_rc": 0,
+      "named_test_tail": "1 passed in 1.39s",
+      "production_shell_wrapper_consumers": [],
+      "claim_gap": true,
+      "reason": "test_d9_11 calls ne_shape.main directly and checks meta plus documentation; no wrapper is invoked"
+    }
+  }
+}

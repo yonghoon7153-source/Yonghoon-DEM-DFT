@@ -1,0 +1,11 @@
+{
+  "schema_version": 1,
+  "job_id": "9c4e20d8cdc04435a2a822aa40efb5cc",
+  "kind": "reviewed_java",
+  "source_name": "MicroshortNoLoad5s.java",
+  "source_sha256": "41f6806d1add4f6c3026abf759fbd0c4d26e55ff1123591194447b8f2b3d293b",
+  "comsol_root": "C:\\Program Files\\COMSOL\\COMSOL63\\Multiphysics",
+  "cores": 2,
+  "timeout_seconds": 600,
+  "created_at": "2026-09-13T10:44:13.192199+00:00"
+}

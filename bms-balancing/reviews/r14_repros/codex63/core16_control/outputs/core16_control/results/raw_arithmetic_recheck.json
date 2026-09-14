@@ -1,0 +1,403 @@
+{
+  "status": "PASS",
+  "method": "Independent raw CSV and Decimal arithmetic; no analyzer import, interpolation or COMSOL; exact raw text verified separately from derived differences.",
+  "jobs": {
+    "Caps300R320H0125": "18a00b03e38d4694b9ba30d88e7008f4",
+    "Caps300R320H0125C16": "5d1a87652ed54e6a945d4f2af4aeda70",
+    "Caps300R320LateCapA5s": "c40c05d3cfb643a4b706345637b00f57"
+  },
+  "windows": [
+    {
+      "comparison_kind": "core_control_2_to_16",
+      "time_basis": "requested_grid",
+      "start_s_exact": "0.1",
+      "end_s_exact": "1",
+      "count": 91,
+      "voltage_peak_time_s_exact": "0.34",
+      "signed_voltage_difference_V_exact": "4E-15",
+      "same_time_decomposition_V_exact": [
+        "-8E-16",
+        "8.89E-16",
+        "4.0E-15"
+      ],
+      "surface_peak": {
+        "time_s_exact": "0.14",
+        "electrode": "P",
+        "coordinate_m_exact": "0.00011146666666666667",
+        "first_x_raw": "0.9239613821014901",
+        "second_x_raw": "0.9239613821014881",
+        "signed_difference_x_exact": "-2.0E-15",
+        "abs_difference_x_exact": "2.0E-15"
+      },
+      "matched_profile_rows": 43862
+    },
+    {
+      "comparison_kind": "core_control_2_to_16",
+      "time_basis": "requested_grid",
+      "start_s_exact": "1",
+      "end_s_exact": "5",
+      "count": 81,
+      "voltage_peak_time_s_exact": "1.35",
+      "signed_voltage_difference_V_exact": "-4.0E-15",
+      "same_time_decomposition_V_exact": [
+        "1.0E-15",
+        "-8.88E-16",
+        "-4.3E-15"
+      ],
+      "surface_peak": {
+        "time_s_exact": "1.0",
+        "electrode": "P",
+        "coordinate_m_exact": "0.00009056666666666665",
+        "first_x_raw": "0.9238425232903514",
+        "second_x_raw": "0.9238425232903528",
+        "signed_difference_x_exact": "1.4E-15",
+        "abs_difference_x_exact": "1.4E-15"
+      },
+      "matched_profile_rows": 39042
+    },
+    {
+      "comparison_kind": "core_control_2_to_16",
+      "time_basis": "requested_grid",
+      "start_s_exact": "0",
+      "end_s_exact": "1",
+      "count": 107,
+      "voltage_peak_time_s_exact": "0.34",
+      "signed_voltage_difference_V_exact": "4E-15",
+      "same_time_decomposition_V_exact": [
+        "-8E-16",
+        "8.89E-16",
+        "4.0E-15"
+      ],
+      "surface_peak": {
+        "time_s_exact": "0.08",
+        "electrode": "P",
+        "coordinate_m_exact": "0.0001144",
+        "first_x_raw": "0.9239824885374802",
+        "second_x_raw": "0.9239824885374782",
+        "signed_difference_x_exact": "-2.0E-15",
+        "abs_difference_x_exact": "2.0E-15"
+      },
+      "matched_profile_rows": 51574
+    },
+    {
+      "comparison_kind": "core_control_2_to_16",
+      "time_basis": "requested_grid",
+      "start_s_exact": "0",
+      "end_s_exact": "5",
+      "count": 187,
+      "voltage_peak_time_s_exact": "0.34",
+      "signed_voltage_difference_V_exact": "4E-15",
+      "same_time_decomposition_V_exact": [
+        "-8E-16",
+        "8.89E-16",
+        "4.0E-15"
+      ],
+      "surface_peak": {
+        "time_s_exact": "0.08",
+        "electrode": "P",
+        "coordinate_m_exact": "0.0001144",
+        "first_x_raw": "0.9239824885374802",
+        "second_x_raw": "0.9239824885374782",
+        "signed_difference_x_exact": "-2.0E-15",
+        "abs_difference_x_exact": "2.0E-15"
+      },
+      "matched_profile_rows": 90134
+    },
+    {
+      "comparison_kind": "core_control_2_to_16",
+      "time_basis": "all_exact_common_stored",
+      "start_s_exact": "0.1",
+      "end_s_exact": "1",
+      "count": 99,
+      "voltage_peak_time_s_exact": "0.34",
+      "signed_voltage_difference_V_exact": "4E-15",
+      "same_time_decomposition_V_exact": [
+        "-8E-16",
+        "8.89E-16",
+        "4.0E-15"
+      ],
+      "surface_peak": {
+        "time_s_exact": "0.100375",
+        "electrode": "P",
+        "coordinate_m_exact": "0.00011146666666666667",
+        "first_x_raw": "0.9239772344307864",
+        "second_x_raw": "0.9239772344307844",
+        "signed_difference_x_exact": "-2.0E-15",
+        "abs_difference_x_exact": "2.0E-15"
+      },
+      "matched_profile_rows": 47718
+    },
+    {
+      "comparison_kind": "core_control_2_to_16",
+      "time_basis": "all_exact_common_stored",
+      "start_s_exact": "1",
+      "end_s_exact": "5",
+      "count": 82,
+      "voltage_peak_time_s_exact": "1.35",
+      "signed_voltage_difference_V_exact": "-4.0E-15",
+      "same_time_decomposition_V_exact": [
+        "1.0E-15",
+        "-8.88E-16",
+        "-4.3E-15"
+      ],
+      "surface_peak": {
+        "time_s_exact": "1.0",
+        "electrode": "P",
+        "coordinate_m_exact": "0.00009056666666666665",
+        "first_x_raw": "0.9238425232903514",
+        "second_x_raw": "0.9238425232903528",
+        "signed_difference_x_exact": "1.4E-15",
+        "abs_difference_x_exact": "1.4E-15"
+      },
+      "matched_profile_rows": 39524
+    },
+    {
+      "comparison_kind": "core_control_2_to_16",
+      "time_basis": "all_exact_common_stored",
+      "start_s_exact": "0",
+      "end_s_exact": "1",
+      "count": 906,
+      "voltage_peak_time_s_exact": "0.044625000000000005",
+      "signed_voltage_difference_V_exact": "4.8E-15",
+      "same_time_decomposition_V_exact": [
+        "5E-16",
+        "8.87E-16",
+        "3.6E-15"
+      ],
+      "surface_peak": {
+        "time_s_exact": "0.084875",
+        "electrode": "P",
+        "coordinate_m_exact": "0.0001144",
+        "first_x_raw": "0.9239800255041201",
+        "second_x_raw": "0.9239800255041177",
+        "signed_difference_x_exact": "-2.4E-15",
+        "abs_difference_x_exact": "2.4E-15"
+      },
+      "matched_profile_rows": 436692
+    },
+    {
+      "comparison_kind": "core_control_2_to_16",
+      "time_basis": "all_exact_common_stored",
+      "start_s_exact": "0",
+      "end_s_exact": "5",
+      "count": 987,
+      "voltage_peak_time_s_exact": "0.044625000000000005",
+      "signed_voltage_difference_V_exact": "4.8E-15",
+      "same_time_decomposition_V_exact": [
+        "5E-16",
+        "8.87E-16",
+        "3.6E-15"
+      ],
+      "surface_peak": {
+        "time_s_exact": "0.084875",
+        "electrode": "P",
+        "coordinate_m_exact": "0.0001144",
+        "first_x_raw": "0.9239800255041201",
+        "second_x_raw": "0.9239800255041177",
+        "signed_difference_x_exact": "-2.4E-15",
+        "abs_difference_x_exact": "2.4E-15"
+      },
+      "matched_profile_rows": 475734
+    },
+    {
+      "comparison_kind": "late_cap_at_16_cores",
+      "time_basis": "requested_grid",
+      "start_s_exact": "0.1",
+      "end_s_exact": "1",
+      "count": 91,
+      "voltage_peak_time_s_exact": "0.22",
+      "signed_voltage_difference_V_exact": "-0.0000020165373344",
+      "same_time_decomposition_V_exact": [
+        "-0.0000020491910253",
+        "3.3127883330E-8",
+        "-4.741927E-10"
+      ],
+      "surface_peak": {
+        "time_s_exact": "0.22",
+        "electrode": "N",
+        "coordinate_m_exact": "0.000052",
+        "first_x_raw": "0.01213390665896419",
+        "second_x_raw": "0.01213387296863272",
+        "signed_difference_x_exact": "-3.369033147E-8",
+        "abs_difference_x_exact": "3.369033147E-8"
+      },
+      "matched_profile_rows": 43862
+    },
+    {
+      "comparison_kind": "late_cap_at_16_cores",
+      "time_basis": "requested_grid",
+      "start_s_exact": "1",
+      "end_s_exact": "5",
+      "count": 81,
+      "voltage_peak_time_s_exact": "1.7",
+      "signed_voltage_difference_V_exact": "-0.0000023442301413",
+      "same_time_decomposition_V_exact": [
+        "-0.0000023893734297",
+        "4.5904621436E-8",
+        "-7.613331E-10"
+      ],
+      "surface_peak": {
+        "time_s_exact": "1.7",
+        "electrode": "N",
+        "coordinate_m_exact": "0.000052",
+        "first_x_raw": "0.012872545019936123",
+        "second_x_raw": "0.012872506317301118",
+        "signed_difference_x_exact": "-3.8702635005E-8",
+        "abs_difference_x_exact": "3.8702635005E-8"
+      },
+      "matched_profile_rows": 39042
+    },
+    {
+      "comparison_kind": "late_cap_at_16_cores",
+      "time_basis": "requested_grid",
+      "start_s_exact": "0",
+      "end_s_exact": "1",
+      "count": 107,
+      "voltage_peak_time_s_exact": "0.22",
+      "signed_voltage_difference_V_exact": "-0.0000020165373344",
+      "same_time_decomposition_V_exact": [
+        "-0.0000020491910253",
+        "3.3127883330E-8",
+        "-4.741927E-10"
+      ],
+      "surface_peak": {
+        "time_s_exact": "0.22",
+        "electrode": "N",
+        "coordinate_m_exact": "0.000052",
+        "first_x_raw": "0.01213390665896419",
+        "second_x_raw": "0.01213387296863272",
+        "signed_difference_x_exact": "-3.369033147E-8",
+        "abs_difference_x_exact": "3.369033147E-8"
+      },
+      "matched_profile_rows": 51574
+    },
+    {
+      "comparison_kind": "late_cap_at_16_cores",
+      "time_basis": "requested_grid",
+      "start_s_exact": "0",
+      "end_s_exact": "5",
+      "count": 187,
+      "voltage_peak_time_s_exact": "1.7",
+      "signed_voltage_difference_V_exact": "-0.0000023442301413",
+      "same_time_decomposition_V_exact": [
+        "-0.0000023893734297",
+        "4.5904621436E-8",
+        "-7.613331E-10"
+      ],
+      "surface_peak": {
+        "time_s_exact": "1.7",
+        "electrode": "N",
+        "coordinate_m_exact": "0.000052",
+        "first_x_raw": "0.012872545019936123",
+        "second_x_raw": "0.012872506317301118",
+        "signed_difference_x_exact": "-3.8702635005E-8",
+        "abs_difference_x_exact": "3.8702635005E-8"
+      },
+      "matched_profile_rows": 90134
+    },
+    {
+      "comparison_kind": "late_cap_at_16_cores",
+      "time_basis": "all_exact_common_stored",
+      "start_s_exact": "0.1",
+      "end_s_exact": "1",
+      "count": 99,
+      "voltage_peak_time_s_exact": "0.22",
+      "signed_voltage_difference_V_exact": "-0.0000020165373344",
+      "same_time_decomposition_V_exact": [
+        "-0.0000020491910253",
+        "3.3127883330E-8",
+        "-4.741927E-10"
+      ],
+      "surface_peak": {
+        "time_s_exact": "0.22",
+        "electrode": "N",
+        "coordinate_m_exact": "0.000052",
+        "first_x_raw": "0.01213390665896419",
+        "second_x_raw": "0.01213387296863272",
+        "signed_difference_x_exact": "-3.369033147E-8",
+        "abs_difference_x_exact": "3.369033147E-8"
+      },
+      "matched_profile_rows": 47718
+    },
+    {
+      "comparison_kind": "late_cap_at_16_cores",
+      "time_basis": "all_exact_common_stored",
+      "start_s_exact": "1",
+      "end_s_exact": "5",
+      "count": 81,
+      "voltage_peak_time_s_exact": "1.7",
+      "signed_voltage_difference_V_exact": "-0.0000023442301413",
+      "same_time_decomposition_V_exact": [
+        "-0.0000023893734297",
+        "4.5904621436E-8",
+        "-7.613331E-10"
+      ],
+      "surface_peak": {
+        "time_s_exact": "1.7",
+        "electrode": "N",
+        "coordinate_m_exact": "0.000052",
+        "first_x_raw": "0.012872545019936123",
+        "second_x_raw": "0.012872506317301118",
+        "signed_difference_x_exact": "-3.8702635005E-8",
+        "abs_difference_x_exact": "3.8702635005E-8"
+      },
+      "matched_profile_rows": 39042
+    },
+    {
+      "comparison_kind": "late_cap_at_16_cores",
+      "time_basis": "all_exact_common_stored",
+      "start_s_exact": "0",
+      "end_s_exact": "1",
+      "count": 906,
+      "voltage_peak_time_s_exact": "0.22",
+      "signed_voltage_difference_V_exact": "-0.0000020165373344",
+      "same_time_decomposition_V_exact": [
+        "-0.0000020491910253",
+        "3.3127883330E-8",
+        "-4.741927E-10"
+      ],
+      "surface_peak": {
+        "time_s_exact": "0.22",
+        "electrode": "N",
+        "coordinate_m_exact": "0.000052",
+        "first_x_raw": "0.01213390665896419",
+        "second_x_raw": "0.01213387296863272",
+        "signed_difference_x_exact": "-3.369033147E-8",
+        "abs_difference_x_exact": "3.369033147E-8"
+      },
+      "matched_profile_rows": 436692
+    },
+    {
+      "comparison_kind": "late_cap_at_16_cores",
+      "time_basis": "all_exact_common_stored",
+      "start_s_exact": "0",
+      "end_s_exact": "5",
+      "count": 986,
+      "voltage_peak_time_s_exact": "1.7",
+      "signed_voltage_difference_V_exact": "-0.0000023442301413",
+      "same_time_decomposition_V_exact": [
+        "-0.0000023893734297",
+        "4.5904621436E-8",
+        "-7.613331E-10"
+      ],
+      "surface_peak": {
+        "time_s_exact": "1.7",
+        "electrode": "N",
+        "coordinate_m_exact": "0.000052",
+        "first_x_raw": "0.012872545019936123",
+        "second_x_raw": "0.012872506317301118",
+        "signed_difference_x_exact": "-3.8702635005E-8",
+        "abs_difference_x_exact": "3.8702635005E-8"
+      },
+      "matched_profile_rows": 475252
+    }
+  ],
+  "three_case_common_time_count": 986,
+  "three_case_surface_positions_checked": 475252,
+  "max_abs_surface_identity_residual_x_exact": "0",
+  "component_values_csv_rows_checked": 36,
+  "raw_boundary_rows_verified": 72,
+  "raw_surface_snapshot_rows_verified": 5784,
+  "arithmetic_is_not_physical_validation": true,
+  "comparison_pass_separate_from_arithmetic": true
+}

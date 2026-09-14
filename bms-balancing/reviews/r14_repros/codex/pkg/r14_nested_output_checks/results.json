@@ -1,0 +1,45 @@
+[
+  {
+    "case": "shallow_output_only",
+    "output_root": "out_alt",
+    "expected_git_dirty": false,
+    "observed": {
+      "git_commit": "4b7154e4d2255d6298efa69af74900b4cd8d744a",
+      "git_dirty": false,
+      "git_modified_outputs": [],
+      "git_modified_code": []
+    },
+    "fixture": "/mnt/c/Users/Administrator/Documents/Codex/2026-08-24/claude-14-gate-code-review-9qkx05-2/outputs/r14_nested_output_checks/shallow_output_only",
+    "git_status": "?? out_alt/\n"
+  },
+  {
+    "case": "nested_output_only",
+    "output_root": "reports/out_u18",
+    "expected_git_dirty": false,
+    "observed": {
+      "git_commit": "4b7154e4d2255d6298efa69af74900b4cd8d744a",
+      "git_dirty": true,
+      "git_modified_outputs": [],
+      "git_modified_code": [
+        "reports/"
+      ]
+    },
+    "fixture": "/mnt/c/Users/Administrator/Documents/Codex/2026-08-24/claude-14-gate-code-review-9qkx05-2/outputs/r14_nested_output_checks/nested_output_only",
+    "git_status": "?? reports/\n"
+  },
+  {
+    "case": "nested_with_sibling",
+    "output_root": "reports/out_u18",
+    "expected_git_dirty": true,
+    "observed": {
+      "git_commit": "845962e0f5442aa76b95a22788eae92f80957096",
+      "git_dirty": true,
+      "git_modified_outputs": [],
+      "git_modified_code": [
+        "reports/"
+      ]
+    },
+    "fixture": "/mnt/c/Users/Administrator/Documents/Codex/2026-08-24/claude-14-gate-code-review-9qkx05-2/outputs/r14_nested_output_checks/nested_with_sibling",
+    "git_status": "?? reports/\n"
+  }
+]

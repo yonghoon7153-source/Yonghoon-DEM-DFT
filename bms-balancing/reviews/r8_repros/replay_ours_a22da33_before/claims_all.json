@@ -1,0 +1,143 @@
+{
+  "noise_closure": {
+    "real_optimizer": true,
+    "raced_full_JSON_equals_A": true,
+    "A": {
+      "misfit_rmse_pocv_V": 0.02887622626372643,
+      "sigma_at_k1_V": 1.334727534677551e-05,
+      "misfit_over_sigma_if_raw_data": 2163.4547511378396,
+      "inputs_sha": "25c0b4398d82"
+    },
+    "raced": {
+      "misfit_rmse_pocv_V": 0.02887622626372643,
+      "sigma_at_k1_V": 1.334727534677551e-05,
+      "misfit_over_sigma_if_raw_data": 2163.4547511378396,
+      "inputs_sha": "25c0b4398d82"
+    },
+    "B": {
+      "misfit_rmse_pocv_V": 0.025939192306329108,
+      "sigma_at_k1_V": 0.018195773977771966,
+      "misfit_over_sigma_if_raw_data": 1.425561360457463,
+      "inputs_sha": "ad65a11548a2"
+    }
+  },
+  "reference_closure": {
+    "real_optimizer": true,
+    "target_ref_identity_matches_actual_builds": true,
+    "A": {
+      "inputs_sha": "4be5bca91eac",
+      "ref_inputs_sha": "5ceb27596911",
+      "LAM_NE_pct": "2.8496705445839683"
+    },
+    "mixed_exports_explicit": {
+      "inputs_sha": "e00fe1a59c4f",
+      "ref_inputs_sha": "5ceb27596911",
+      "LAM_NE_pct": "2.8496705445839683"
+    },
+    "B": {
+      "inputs_sha": "e00fe1a59c4f",
+      "ref_inputs_sha": "b57f648b35be",
+      "LAM_NE_pct": "5.367830840120684"
+    }
+  },
+  "profile_identity_log_loss": {
+    "real_optimizer": true,
+    "profile_rows": 3,
+    "summary_had_both_input_identities": true,
+    "profile_rows_contain_only_aggregate_target_ref_hashes": true,
+    "retry_rc": 1,
+    "old_csv_and_meta_unchanged": true,
+    "old_unit_after_retry": [
+      true,
+      "일치"
+    ],
+    "old_identity_summary_remaining": false,
+    "retry_log": "/tmp/bms-r8-profile-u02_uv2e/input-export-not-mounted 아래에 data/literature 가 없다 — 경로가 맞나?\n",
+    "retry_stderr": "\n\u001b[1m== profile 200\u001b[0m\n   \u001b[31mFAIL\u001b[0m (1 초) — 로그: /tmp/bms-r8-profile-u02_uv2e/out/profile_gamma_200_Li.csv.log\n"
+  },
+  "shape_fit_export_policy": {
+    "real_matrix_optimizer": true,
+    "ne_shape_refits": false,
+    "rc_A": 0,
+    "rc_B": 0,
+    "same_matrix_gamma_pair": [
+      "0.0",
+      "0.0"
+    ],
+    "matrix_input_literature_gr_sha": "a8dff02ef6ccbe97fbf038bb1133a3e3c2b55eece99728d8f21e25b9f33cce5f",
+    "current_shape_gr_sha": "25316152228da4b26d5b08e40f607239b9090b6ffdb86aebbdeac78af3d91eb2",
+    "both_direct_inputs_recorded_but_no_fit_export_consistency_check": true,
+    "state200_changes": {
+      "blend_vs_meas_max_mV": [
+        "462.929878",
+        "463.694386"
+      ],
+      "blend_vs_meas_rms_mV": [
+        "248.674214",
+        "247.792133"
+      ],
+      "frac_over_50mV": [
+        "65.2500",
+        "62.2500"
+      ],
+      "gamma_family_max_mV": [
+        "227.662346",
+        "228.022038"
+      ]
+    },
+    "stdout_after_reexport": "반쪽전지 GITT · 문헌 Si Li · 상태 5개\n기준은 pristine. 격자 x=0.02~0.98 (400점)\n\nstate         용량 Δ%       γ     (a) 측정변화    (b) γ변화  (b)/(a)       (c) |블렌드−측정|\n                                  max mV     max mV                max mVrms mV\npristine       0.00  0.0000            —          —        —        457.7 243.8\n100            0.00  0.0000         3.00       0.00     0.00        460.7 245.8\n200            0.00  0.0000         6.00       0.00     0.00        463.7 247.8\n300_0009       0.00  0.0000         9.00       0.00     0.00        466.7 249.8\n300_0147       0.00  0.0000        12.00       0.00     0.00        469.7 251.9\n\n(PE 축 — 목적함수가 실제로 소비하는 반쪽전지 곡선) E_PE(state) − E_PE(pristine):\n    100        max    4.00 mV   rms   4.00 mV\n    200        max    8.00 mV   rms   8.00 mV\n    300_0009   max   12.00 mV   rms  12.00 mV\n    300_0147   max   16.00 mV   rms  16.00 mV\n\n(d) γ 여유 — 기준 γ_ref 에서 합법 [0.00, 0.50] 까지 (γ 격자 501 점 · x 격자 400 점):\n    state       γ_ref               합법 Δγ   (a) mV        합법 γ 최대변화 mV (γ)            (a) 를 내는 가장 가까운 합법 γ\n    100        0.0000    [+0.000, +0.500]     3.00          228.02 (0.500)                0.004 (Δ +0.004)\n    200        0.0000    [+0.000, +0.500]     6.00          228.02 (0.500)                0.007 (Δ +0.007)\n    300_0009   0.0000    [+0.000, +0.500]     9.00          228.02 (0.500)                0.011 (Δ +0.011)\n    300_0147   0.0000    [+0.000, +0.500]    12.00          228.02 (0.500)                0.014 (Δ +0.014)\n    ⚠ 증인은 진폭 크기의 존재이지 모양 일치가 아니다. secant 외삽으로 '필요 Δγ' 를 구하지 않는다.\n\n→ /tmp/bms-r8-shape-pey2_b2i/out/ne_shape_GITT_Li.csv\n\n측정된 음극 모양 변화 최대 12.00 mV,\nγ 가 만들어 낸 모델 변화 최대 0.00 mV.\n\n→ **적합이 고른 γ 쌍**이 만든 변화가 측정 변화의 0.00 배다 (100).\n  이 비는 적합이 γ 를 얼마나 움직였나이지, γ 의 표현력이나 측정 음극이 블렌드\n  모양인지의 판정이 아니다 (Codex R2-08 · R3-02: 정확히 표현 가능한 곡선에서도\n  같은 비가 나온다). 표현력은 측정 곡선에 γ 를 직접 제약 적합한 잔차로 재야\n  한다 — 미구현. 원인은 이 스크립트가 판정하지 않는다. (a) 크기를 내는 합법 γ 가\n  있는지는 위 (d) 의 증인 열이 말한다.\n\n(c) **절대 일치** — `Blend(x, γ_적합)` 이 측정 음극과 얼마나 맞나\n    max |Δ| 460.7 ~ 469.7 mV   rms 245.8 ~ 251.9 mV\n    state        max 위치 x      |Δ|>50mV 인 격자 비율\n    100             0.046                 70.0 %\n    200             0.046                 62.3 %\n    300_0009        0.046                 62.7 %\n    300_0147        0.046                 63.2 %\n\n    → 선택된 γ 에서 격자의 70 % 가 50 mV 이상 벌어진다 (max 469.7 ·\n      rms 251.9 mV). 이것은 **그 γ 에서의** 잔차 기술이다 — 다른 γ 에서도 남는지는\n      위 (d) 의 증인 열이, 어느 파라미터로 새는지는 별도 실험이 말한다 (R4-01).\n\n⚠ (a) 는 **정규화 뒤** 변화다. 음극 용량이 줄면(위 '용량 Δ%') 곡선이\n   가로로 늘어나 그것만으로도 모양이 바뀐 것처럼 보인다. 용량 변화가\n   큰 상태에서는 (a) 를 순수한 OCP 모양 변화로 읽으면 안 된다.\n⚠ 이것은 **크기 비교**다. 방향이 같은지는 따로 봐야 한다.\n"
+  },
+  "build_closures": [
+    {
+      "input": "full",
+      "pathname_read_count": 1,
+      "raced_hash_is_A": true,
+      "raced_arrays_match_A": true,
+      "B_hash_changed": true,
+      "B_max_rmse_difference_V": 0.01424704410442132
+    },
+    {
+      "input": "half",
+      "pathname_read_count": 1,
+      "raced_hash_is_A": true,
+      "raced_arrays_match_A": true,
+      "B_hash_changed": true,
+      "B_max_rmse_difference_V": 0.015507340852541879
+    },
+    {
+      "input": "si",
+      "pathname_read_count": 1,
+      "raced_hash_is_A": true,
+      "raced_arrays_match_A": true,
+      "B_hash_changed": true,
+      "B_max_rmse_difference_V": 0.0013621508717585606
+    },
+    {
+      "input": "gr",
+      "pathname_read_count": 1,
+      "raced_hash_is_A": true,
+      "raced_arrays_match_A": true,
+      "B_hash_changed": true,
+      "B_max_rmse_difference_V": 0.006831702837433201
+    }
+  ],
+  "shape_same_bytes_closure": {
+    "read_count": 1,
+    "same_bytes_for_half_capacity_identity": true,
+    "A": {
+      "cap_delta_pct": "0.0000",
+      "pe_shape_max_mV": "8.000000",
+      "measured_shape_mV": "6.000000"
+    },
+    "raced": {
+      "cap_delta_pct": "0.0000",
+      "pe_shape_max_mV": "8.000000",
+      "measured_shape_mV": "6.000000"
+    },
+    "normal_B": {
+      "cap_delta_pct": "-20.0000",
+      "pe_shape_max_mV": "12.000000",
+      "measured_shape_mV": "6.000000"
+    }
+  }
+}

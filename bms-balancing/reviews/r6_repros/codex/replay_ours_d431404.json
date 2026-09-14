@@ -1,0 +1,171 @@
+{
+  "target_head": "d4314048c63605fb4613f8b0a91859271fddda98",
+  "probes": {
+    "R6-01a snapshot_metadata_mix": {
+      "상태": "재현",
+      "세부": {
+        "actual_reader": "compare_states.load_degeneracy",
+        "loaded_value": 1.0,
+        "loaded_data_run_id": "attempt-A",
+        "loaded_meta_run_id": "attempt-B",
+        "loaded_meta_starts": 24,
+        "disk_value": 20.0,
+        "disk_unit": [
+          true,
+          "일치"
+        ],
+        "scope": "Both publishers have distinct IDs and valid metadata; no copied ID and no malformed record."
+      }
+    },
+    "R6-01b matrix_after_verification": {
+      "상태": "재현",
+      "세부": {
+        "actual_reader": "compare_states.load_matrix_axis",
+        "A_verified_span": 3.0,
+        "B_consumed_span": 79.0,
+        "unit_after_publication": [
+          false,
+          "meta 의 run_id 가 산출물과 다르다: 다른 run_id 행 2/2: ['attempt-B', 'attempt-B']"
+        ],
+        "scope": "Reader passes real check on A, then a normal B data publication precedes B metadata."
+      }
+    },
+    "R6-02 missing_modern_metadata": {
+      "상태": "재현",
+      "세부": {
+        "modern_json_check": [
+          null,
+          "meta 없음"
+        ],
+        "modern_csv_check": [
+          null,
+          "meta 없음"
+        ],
+        "modern_record_has_run_id": true,
+        "degeneracy_accepted": true,
+        "matrix_accepted": true,
+        "fitted_pair_accepted": true,
+        "mismatching_present_meta_control_rejected": true,
+        "scope": "No metadata deleted: new output committed by actual atomic writers before initial metadata exists."
+      }
+    },
+    "R6-04 old_version_selected": {
+      "상태": "재현",
+      "세부": {
+        "degeneracy_selected": "degeneracy_300_0009_Li_v2.json",
+        "matrix_selected": "matrix_300_0009_v2.csv",
+        "selected_degeneracy_unit": [
+          null,
+          "meta 없음"
+        ],
+        "selected_matrix_unit": [
+          null,
+          "meta 없음"
+        ],
+        "new_degeneracy_unit": [
+          true,
+          "일치"
+        ],
+        "new_matrix_unit": [
+          true,
+          "일치"
+        ],
+        "numerical_difference_claim": false
+      }
+    },
+    "R6-03a shape_and_matrix": {
+      "상태": "재현",
+      "세부": {
+        "R5_static_v2_recording_closed": {
+          "gamma_before": "0.160000",
+          "gamma_after": "0.450000",
+          "before_input": {
+            "file": "out/matrix_100.csv",
+            "sha256": "f99260bf1514e57dff1c59b83b0020925bf0119c9e371d45d0e05cae7a1f2cbb",
+            "row": {
+              "index": 0,
+              "half_cell": "GITT",
+              "si": "Li",
+              "w_dqdv": "0",
+              "run_id": "synthetic-matrix"
+            }
+          },
+          "after_input": {
+            "file": "out/matrix_100_v2.csv",
+            "sha256": "f743d4e28a69323a9cd8b8fc735bec008c96b0b85f8b83e9bfaadc59025569e3",
+            "row": {
+              "index": 0,
+              "half_cell": "GITT",
+              "si": "Li",
+              "w_dqdv": "0",
+              "run_id": "synthetic-matrix"
+            }
+          }
+        },
+        "internal_F03_matrix_read_hash_closed": {
+          "consumed_gamma": 0.16,
+          "hash_matches_consumed_A": true,
+          "path_now_B": true
+        },
+        "half_cell_late_identity": {
+          "output_A_PE_change_mV": "0.000000",
+          "output_for_recorded_B_PE_change_mV": "20.000000",
+          "same_recorded_half_identity": true,
+          "A_hash": "0458d83e67e7f64206d5e7753feab3e5cf01b0bbdf85336d018787f8627a0ae7",
+          "recorded_B": {
+            "path": "/tmp/bms-r6-final-shape-ngpi2aun/data-root/data/half_cell/GITT/100.xlsx",
+            "sha256": "4670d23084db7f121071f15f1d80590e2eac8b55f80692456da9f677ed00af4c"
+          }
+        },
+        "full_cell_directory_not_needed_by_shape": true
+      }
+    },
+    "R6-03b fullcell_build_signature": {
+      "상태": "재현",
+      "세부": {
+        "actual_build_and_Objective": true,
+        "optimizer_not_run": true,
+        "same_inputs_sha_for_different_consumed_arrays": "aa9a664589cb",
+        "same_consumed_input_records": true,
+        "recorded_full_cell": {
+          "path": "/tmp/bms-r6-final-build-q0bwug8v/data/full_cell/large_cell_033C/fullcell_states.xlsx",
+          "sha256": "7f964353d426b1e545b61f5cf3dee0c498f5ab03a0a1561cde1481a87a91212b"
+        },
+        "full_cell_consumed_voltage_difference_V": 0.020000000000000018,
+        "max_rmse_pocv_difference_over_8_points_V": 0.01424704410442132,
+        "raced_arrays_match_original_A_exactly": true
+      }
+    },
+    "R6-05 role_checks": {
+      "상태": "재현",
+      "세부": {
+        "R5_unicode_path_closed": true,
+        "actual_additional_changed_output": "out/a -> b.csv",
+        "reported": {
+          "git_commit": "81c7df14780b3e6738ebdcb46d31daeb7755ce08",
+          "git_dirty": true,
+          "git_modified_outputs": [
+            "out/측정.csv"
+          ],
+          "git_modified_code": [
+            "b.csv"
+          ]
+        }
+      }
+    },
+    "port(닫힘 확인)": {
+      "상태": "기대대로",
+      "세부": {
+        "rc": 0,
+        "error": ""
+      }
+    },
+    "inference(닫힘 확인)": {
+      "상태": "기대대로",
+      "세부": {
+        "rc": 0,
+        "error": ""
+      }
+    }
+  }
+}

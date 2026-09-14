@@ -1,0 +1,79 @@
+{
+  "scope": "Nine current corrected metadata and reproducibility files only; not the original archive payload manifest or a full current-tree manifest.",
+  "self_excluded": true,
+  "original_archive": [
+    {
+      "path": "outputs/COMSOL63_RADIAL160_HANDOFF.zip",
+      "bytes": 226198096,
+      "sha256": "39ded591a29568d58b57791bf68147292a9cef06660de40b1c5e45ed16b434bc",
+      "verified_unchanged": true
+    },
+    {
+      "path": "outputs/radial160/package_manifest.json",
+      "bytes": 33348,
+      "sha256": "6ab54917edbec8eda5d19b4add2233c3daf09ff55ee2a9ef98dbb84f67cc584b",
+      "verified_unchanged": true
+    },
+    {
+      "path": "outputs/COMSOL63_RADIAL160_HANDOFF_RECEIPT.json",
+      "bytes": 907,
+      "sha256": "56f7c0afc70232dea270f1543f732a6b840abf27b551ac38eb812a5ef5bcc591",
+      "verified_unchanged": true
+    },
+    {
+      "path": "outputs/COMSOL63_RADIAL160_HANDOFF.zip.sha256",
+      "bytes": 98,
+      "sha256": "8f59f5dcebb470359159f4f287280b264fdfca5cbddca12a73045f3465668176",
+      "verified_unchanged": true
+    }
+  ],
+  "original_archive_manifest_interpretation": "Immutable historical manifest describes original ZIP bytes, including the original pre-correction contract.",
+  "correction_ledger_path": "outputs/radial160_timecap/corrections/before_after_sha256.json",
+  "entries": [
+    {
+      "path": "work/radial160/prepare_source.py",
+      "bytes": 5411,
+      "sha256": "25c2ad1226852b68d5f6301e9ae9d6f15fd36b4127d6149541b28226a3a3f022"
+    },
+    {
+      "path": "work/radial160/analyze_results.py",
+      "bytes": 34392,
+      "sha256": "a0f7f20e7f20e116c160c7dc44b4f847a8a7fad12b5ecc798ae6a6a608494b99"
+    },
+    {
+      "path": "outputs/radial160/comparison_contract.json",
+      "bytes": 6462,
+      "sha256": "e0fb7662ff0e053fe1ef93568526692835c66c30e6367b26cf5d5b84540f6ef5"
+    },
+    {
+      "path": "outputs/radial160/results/analysis.json",
+      "bytes": 375575,
+      "sha256": "9e3ea502b57df4ca43520010a7763b14a1d0ec6a3115ae04838b7f02a87af2c8"
+    },
+    {
+      "path": "outputs/radial160/figures/radial160_comparison_summary.json",
+      "bytes": 4942,
+      "sha256": "a4024967cd8ee541a12330946fe4d9b3bb604f738c0cc30394f69aa4009afd2f"
+    },
+    {
+      "path": "outputs/radial160/README_PACKAGE_KO.md",
+      "bytes": 5124,
+      "sha256": "59a5dab9cf4f094f4eb129e6c926d303cf1bbdb5b9d588928dc729d4995db3a4"
+    },
+    {
+      "path": "work/radial160/baseline_metadata.py",
+      "bytes": 3572,
+      "sha256": "eb2e8c6456bbb23653800de72b730e1bbb4ca1e9944faa9725705081db012893"
+    },
+    {
+      "path": "work/radial160/test_baseline_metadata.py",
+      "bytes": 9487,
+      "sha256": "168ab041c8db03ce12c4d2989998de6e96e2869fb9b9ecf610875f0fb60a9b8c"
+    },
+    {
+      "path": "work/radial160/correct_current_metadata.py",
+      "bytes": 3651,
+      "sha256": "5c01b8c6b3cd173a26ff158ee2ac0d878f8cbfe10e8393b000323130860339ed"
+    }
+  ]
+}

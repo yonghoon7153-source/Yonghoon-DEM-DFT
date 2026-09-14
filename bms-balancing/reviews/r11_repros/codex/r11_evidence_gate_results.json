@@ -1,0 +1,188 @@
+{
+  "target": "/tmp/r11-evidence-gate-clean/bms-balancing",
+  "head_after": "2add074cf0c3ebfaa02b22d2311dd4330f0879b0",
+  "cases": {
+    "early-gate-pyc": {
+      "source_sha256": "c2093142c99763e9f331b5c820829af4c420c908331a01cda407a2bd898b3d7c",
+      "head_blob": "e84be47b36ff288b4b7a8c64806a4771b926d2bd",
+      "git_status_porcelain": "",
+      "ignored_pyc": "reviews/__pycache__/evidence_gate.cpython-312.pyc",
+      "marker_executed": true,
+      "runner_rc": 0,
+      "runner_stderr_tail": "",
+      "dirty": false,
+      "instrument_sealed": true,
+      "package_digest_ok": true,
+      "evidence_eligible": true,
+      "closed": true,
+      "false_identity": true
+    },
+    "abbreviated-head": {
+      "full_head": "2add074cf0c3ebfaa02b22d2311dd4330f0879b0",
+      "supplied_expected_head": "2add074",
+      "runner_rc": 0,
+      "recorded_expected_head": "2add074",
+      "evidence_eligible": true,
+      "closed": true,
+      "abbreviated_identity_accepted": true
+    },
+    "skip-worktree": {
+      "ls_files_v": "S reviews/evidence_gate.py",
+      "gate_index_skip_flags": [],
+      "runner_rc": 0,
+      "instrument_sealed": true,
+      "evidence_eligible": true,
+      "closed": true,
+      "skip_flag_accepted": true
+    },
+    "materialize-smudge": {
+      "head": "8f03a5381b84881b7b05902267fc55bf4965825a",
+      "committed_verify_blob": "ed99207d3701628a1f4d391e5c0fa722d11e4b86",
+      "source_git_status": "",
+      "source_worktree_clean": true,
+      "smudged_production_executed": true,
+      "runner_rc": 0,
+      "runner_stderr_tail": "",
+      "instrument_sealed": true,
+      "package_digest_ok": true,
+      "evidence_eligible": true,
+      "closed": true,
+      "materialized_bytes_not_commit_bytes": true
+    },
+    "r10-assertion-alias": {
+      "process_rc": 0,
+      "record": {
+        "도달": true,
+        "상태": "반례 소멸",
+        "멈춘_곳": "r10_snapshot_repros.py:57: return d, S.inputs_digest(d)",
+        "세부": "UNRELATED production invariant"
+      },
+      "unrelated_assertion_certified_closed": true
+    },
+    "u18-dirty-meta": {
+      "process_rc": 0,
+      "rc": 0,
+      "promotion": {
+        "promotion_eligible": true,
+        "rc": 0,
+        "subset": false,
+        "roster": {
+          "old": 1,
+          "new": 1,
+          "compared": 1,
+          "missing_in_new": [],
+          "extra_in_new": []
+        },
+        "blocked_by": {
+          "schema": 0,
+          "content": 0,
+          "unit": 0,
+          "controls": 0,
+          "env": 0,
+          "numbers": 0
+        },
+        "policy": "current",
+        "new": "/tmp/r11-u18-dirty-meta-751w46f9/new",
+        "old": "/tmp/r11-u18-dirty-meta-751w46f9/old"
+      },
+      "stdout_tail": "산출 1 개 점검 (/tmp/r11-u18-dirty-meta-751w46f9/new)\n  정본 선택 정책: **current** — 현행 디렉터리 — 정본은 unversioned 이름 하나, 판 번호가 붙은 형제는 쓰지 않는다 (Codex R6-04·R7-04)\n  명부(roster): 정본 1 · 새 산출 1 · 대조 1\n  새 스키마: 전부 갖췄다 (열·키 이름 + 필수 셀·숫자·receipt·중복 key — `bms_balancing/schema.py` 정본)\n  숫자: 정본(/tmp/r11-u18-dirty-meta-751w46f9/old)과 전부 같다 — 게시·서명만 바뀌었다\nPROMOTION {\"promotion_eligible\": true, \"rc\": 0, \"subset\": false, \"roster\": {\"old\": 1, \"new\": 1, \"compared\": 1, \"missing_in_new\": [], \"extra_in_new\": []}, \"blocked_by\": {\"schema\": 0, \"content\": 0, \"unit\": 0, \"controls\": 0, \"env\": 0, \"numbers\": 0}, \"policy\": \"current\", \"new\": \"/tmp/r11-u18-dirty-meta-751w46f9/new\", \"old\": \"/tmp/r11-u18-dirty-meta-751w46f9/old\"}\n",
+      "unsafe_git_meta_promoted": true
+    },
+    "untracked-sitecustomize": {
+      "normal_git_status": "?? bms-balancing/sitecustomize.py",
+      "process_rc": 0,
+      "sitecustomize_executed": true,
+      "provenance": {
+        "git_commit": "2add074cf0c3ebfaa02b22d2311dd4330f0879b0",
+        "git_dirty": false,
+        "git_modified_outputs": [],
+        "git_modified_code": []
+      },
+      "untracked_code_reported_clean": true
+    },
+    "r10-child-rc": {
+      "disposable_commit": "754fc6469877ba1a77e9caa84c97b89adba615ca",
+      "direct_child_rc": 7,
+      "direct_child_json": {
+        "cases": {
+          "optimized-assertions": {
+            "false_positive": false,
+            "sentinel": "child-exits-7"
+          }
+        }
+      },
+      "parent_rc": 0,
+      "parent_stderr_tail": "",
+      "instrument_sealed": true,
+      "package_digest_ok": true,
+      "evidence_eligible": true,
+      "closed": true,
+      "evidence_records": {
+        "evidence:optimized-assertions": {
+          "도달": true,
+          "상태": "반례 소멸",
+          "멈춘_곳": "false_positive = False",
+          "세부": {
+            "false_positive": false,
+            "sentinel": "child-exits-7"
+          }
+        },
+        "evidence:git-status-error": {
+          "도달": true,
+          "상태": "반례 소멸",
+          "멈춘_곳": "false_clean = False",
+          "세부": {
+            "false_clean": false,
+            "sentinel": "child-exits-7"
+          }
+        },
+        "evidence:assume-unchanged": {
+          "도달": true,
+          "상태": "반례 소멸",
+          "멈춘_곳": "false_identity = False",
+          "세부": {
+            "false_identity": false,
+            "sentinel": "child-exits-7"
+          }
+        },
+        "evidence:ignored-pyc": {
+          "도달": true,
+          "상태": "반례 소멸",
+          "멈춘_곳": "false_identity = False",
+          "세부": {
+            "false_identity": false,
+            "sentinel": "child-exits-7"
+          }
+        },
+        "evidence:argv-binding-mutant": {
+          "도달": true,
+          "상태": "반례 소멸",
+          "멈춘_곳": "mutant_survived = False",
+          "세부": {
+            "mutant_survived": false,
+            "sentinel": "child-exits-7"
+          }
+        },
+        "evidence:package-enforcement-mutant": {
+          "도달": true,
+          "상태": "반례 소멸",
+          "멈춘_곳": "corrupt_package_accepted = False",
+          "세부": {
+            "corrupt_package_accepted": false,
+            "sentinel": "child-exits-7"
+          }
+        },
+        "evidence:wrapper-coverage": {
+          "도달": true,
+          "상태": "반례 소멸",
+          "멈춘_곳": "claim_gap = False",
+          "세부": {
+            "claim_gap": false,
+            "sentinel": "child-exits-7"
+          }
+        }
+      },
+      "nonzero_children_certified_closed": true
+    }
+  }
+}

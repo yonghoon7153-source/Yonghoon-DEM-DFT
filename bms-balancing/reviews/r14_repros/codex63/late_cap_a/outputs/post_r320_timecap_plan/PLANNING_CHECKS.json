@@ -1,0 +1,28 @@
+{
+  "checked_at_utc": "2026-09-14T11:22:01.995600+00:00",
+  "scope": "Planning and analysis of saved results only; no simulation approval inferred",
+  "status": "PASS",
+  "new_COMSOL_jobs": 0,
+  "native_job_ids_unchanged": 30,
+  "protected_prior_paths": 191,
+  "unchanged_protected_paths": 190,
+  "authorized_plan_change_with_before_bytes_preserved": [
+    {
+      "path": "outputs/NEXT_RUN_PLAN.md",
+      "before_sha256": "e0e2fc6ce8bf636a27ac3a328d59e18f16d9c63def38f374e86df96abbccb7f7",
+      "after_sha256": "70a031f51f1796c02cedbe4da7f100ab7827f136b222340b59d9b690cab839bb",
+      "before_backup_path": "outputs/post_r320_timecap_plan/NEXT_RUN_PLAN_before_planning.md"
+    }
+  ],
+  "original_generated_receipt_unchanged": true,
+  "original_zip_unchanged": true,
+  "baseline_source_sha_verified": "8d35be8fab513f5e2def316c4d00e0fdc19983a5dd3bf492f4ffe47a58248be3",
+  "all986_saved_intervals_independently_verified": true,
+  "boundary_crossings": 0,
+  "links_checked": 12,
+  "receiver_scope": "User-reported 160payload+manifest and historical333. Of old967current inventory paths, direct56 only:55unchanged plus matching beforebackup for changed plan. Not external verification of all967.",
+  "candidate_A_approved": false,
+  "candidate_B_approved": false,
+  "overall_convergence_complete": false,
+  "long_run_GO": false
+}

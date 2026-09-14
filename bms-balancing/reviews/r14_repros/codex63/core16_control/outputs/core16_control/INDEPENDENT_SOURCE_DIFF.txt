@@ -1,0 +1,12 @@
+--- outputs/comsol63/radial320_timecap/Caps300R320H0125.java
++++ outputs/comsol63/core16_control/Caps300R320H0125C16.java
+@@ -13,3 +13,3 @@
+  */
+-public class Caps300R320H0125 {
++public class Caps300R320H0125C16 {
+     static final String LIBRARY = "C:/Users/BML/Documents/Codex/2026-09-13/files-mentioned-by-the-user-comsol63/outputs/comsol63/inputs/battery_lib_63.mph";
+@@ -503,3 +503,3 @@
+         Model m=ModelUtil.create("Model");
+-        m.label("Caps300R320H0125 - fresh common dense time grid, 5 seconds only");
++        m.label("Caps300R320H0125C16 - fresh common dense time grid, 5 seconds only");
+         String[][] params={

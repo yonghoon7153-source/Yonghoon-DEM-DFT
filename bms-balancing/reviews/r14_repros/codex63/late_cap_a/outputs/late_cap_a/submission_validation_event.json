@@ -1,0 +1,15 @@
+{
+  "event": "Requested20core tool argument rejected before native job creation",
+  "tool": "comsol_start_java",
+  "requested_cores": 20,
+  "error_verbatim": "Error executing tool comsol_start_java: cores must be an integer from 1 to 16",
+  "native_job_created_for_rejected_request": false,
+  "observed_native_directory_count_after_rejection_before_valid_submission": 30,
+  "observed_native_ids_matched_duplicate_before_ledger": true,
+  "evidence": "Root read all native directory names immediately after the tool validation rejection; all30 matched DUPLICATE_CHECK_BEFORE.json. Exactly one subsequent16core job exists and final provenance independently checks that set difference.",
+  "user_notified_before_valid_submission": true,
+  "valid_submission_cores": 16,
+  "valid_native_job_id": "c40c05d3cfb643a4b706345637b00f57",
+  "COMSOL_solve_retried": false,
+  "classification": "PRE_SUBMISSION_ARGUMENT_REJECTION; not a solver failure and not INCOMPLETE_RANGE_STOP"
+}

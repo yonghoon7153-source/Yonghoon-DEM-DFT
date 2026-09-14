@@ -1,0 +1,106 @@
+{
+  "name": "Axes300R40",
+  "job_id": "f211901885774793ab39e89ebee0144f",
+  "config": {
+    "name": "Axes300R40",
+    "physical_elements_total": 300,
+    "physical_elements_by_domain": [
+      120,
+      60,
+      120
+    ],
+    "particle_elements_each": 40,
+    "seconds": 5,
+    "source_sha256": "b4298feb95a6dd2306967fad44c55ab668450633c0a0ec7760681c3b76047e44",
+    "relative_path": "mesh_axes/Axes300R40.java",
+    "parameters_unchanged": true
+  },
+  "shape": [
+    300,
+    40
+  ],
+  "status": "analyzed",
+  "native_status": {
+    "state": "completed",
+    "compile_returncode": 0,
+    "batch_returncode": 0,
+    "error": null
+  },
+  "source_sha256": "b4298feb95a6dd2306967fad44c55ab668450633c0a0ec7760681c3b76047e44",
+  "source_hash_matches_config": true,
+  "source_hash_matches_job_record": true,
+  "rows": 215,
+  "first_time_s_exact": "0.0",
+  "last_time_s_exact": "5.0",
+  "checks": {
+    "voltage_identity": true,
+    "total_Li_conservation": true,
+    "positive_electrolyte": true,
+    "guard_never_true": true,
+    "sampled_surface_N_inside_range": true,
+    "Eeq_N_equals_surface_function": true,
+    "reaction_input_N_equals_surface": true,
+    "fixed_grid_surface_N_inside_range": true,
+    "sampled_surface_P_inside_range": true,
+    "Eeq_P_equals_surface_function": true,
+    "reaction_input_P_equals_surface": true,
+    "fixed_grid_surface_P_inside_range": true
+  },
+  "physical_checks_pass": true,
+  "metrics": {
+    "max_abs_identity_residual_V": 5.42e-16,
+    "max_relative_total_Li_drift": 2.6776554803591635e-15,
+    "ce_min_mol_m3": 1194.4372376491106,
+    "max_abs_Eeq_surface_residual_N_V": 0.0,
+    "max_abs_reaction_input_surface_residual_N_x": 0.0,
+    "max_abs_Eeq_surface_residual_P_V": 0.0,
+    "max_abs_reaction_input_surface_residual_P_x": 0.0
+  },
+  "profile_validation": {
+    "N": {
+      "rows": 51815,
+      "unique_times": 215,
+      "points_per_time": 241,
+      "max_coordinate_error_from_prescribed_grid_m": 1.333333333333e-20
+    },
+    "P": {
+      "rows": 51815,
+      "unique_times": 215,
+      "points_per_time": 241,
+      "max_coordinate_error_from_prescribed_grid_m": 3e-20
+    }
+  },
+  "runtime_settings": {
+    "solution_tag": "sol1",
+    "time_tag": "t1",
+    "study_tlist": "0 0.0001 0.0002 0.0005 0.001 0.002 0.005 0.01 0.02 0.03 0.04 0.05 0.06 0.07 0.08 0.09 0.1 0.11 0.12 0.13 0.14 0.15 0.16 0.17 0.18 0.19 0.2 0.21 0.22 0.23 0.24 0.25 0.26 0.27 0.28 0.29 0.3 0.31 0.32 0.33 0.34 0.35 0.36 0.37 0.38 0.39 0.4 0.41 0.42 0.43 0.44 0.45 0.46 0.47 0.48 0.49 0.5 0.51 0.52 0.53 0.54 0.55 0.56 0.57 0.58 0.59 0.6 0.61 0.62 0.63 0.64 0.65 0.66 0.67 0.68 0.69 0.7 0.71 0.72 0.73 0.74 0.75 0.76 0.77 0.78 0.79 0.8 0.81 0.82 0.83 0.84 0.85 0.86 0.87 0.88 0.89 0.9 0.91 0.92 0.93 0.94 0.95 0.96 0.97 0.98 0.99 1 1.05 1.1 1.15 1.2 1.25 1.3 1.35 1.4 1.45 1.5 1.55 1.6 1.65 1.7 1.75 1.8 1.85 1.9 1.95 2 2.05 2.1 2.15 2.2 2.25 2.3 2.35 2.4 2.45 2.5 2.55 2.6 2.65 2.7 2.75 2.8 2.85 2.9 2.95 3 3.05 3.1 3.15 3.2 3.25 3.3 3.35 3.4 3.45 3.5 3.55 3.6 3.65 3.7 3.75 3.8 3.85 3.9 3.95 4 4.05 4.1 4.15 4.2 4.25 4.3 4.35 4.4 4.45 4.5 4.55 4.6 4.65 4.7 4.75 4.8 4.85 4.9 4.95 5",
+    "geometry_length_unit": "m",
+    "geometry_dimension": "1",
+    "rtol": "1.0E-6",
+    "initialstepbdf": "1.0E-5",
+    "initialstepbdfactive": "on",
+    "maxstepconstraintbdf": "const",
+    "maxstepbdf": "0.1",
+    "tstepsbdf": "strict",
+    "tout": "tsteps",
+    "consistent": "bweuler",
+    "atolglobalmethod": "scaled",
+    "atolglobalvaluemethod": "factor",
+    "atolglobalfactor": "0.1",
+    "atolglobal": "0.001",
+    "eventtol": "0.01",
+    "electrolyte_positive_check": "POSTPROCESSING_ONLY; not a StopCondition",
+    "profile_time_interpolation": "off; all stored solnum; no t property set",
+    "profile_spatial_evaluation": "domain-selected FE Interp; recover off; ext 0; 241 common coordinates"
+  },
+  "csv_sha256": {
+    "preflight_global.csv": "7bbe3793610ed9db0a78ef8ffa0e9f4d6779d22a7bd47d43178437dcfddfdaac",
+    "preflight_boundary1.csv": "a4940a171cb5f89912b6e2a1f4dd3f8539603588ba8d22eb5f4b27231fee2fdf",
+    "preflight_boundary4.csv": "6500f099d7d472f7742ac8f47f696bc63da1aa9bc643f679da453e8c99c9405d",
+    "preflight_MinLine_ce.csv": "12efe3d02297e50dd433c673fd7a6d5e8aa0d50ec9cdf4fda93c61a269f2794f",
+    "preflight_MaxLine_ce.csv": "1ba5532065f279b84d54a7c2ac62fd54afd60001964df5ad1f12e2b551db668c",
+    "axes_profile_N.csv": "5d265c66c9307faab7d3cd70fa5167d25b42f307f564510ea72338dfa7a5c250",
+    "axes_profile_P.csv": "3ffbc6caaffce435ce0c5efec3b4c9fdb74035688af4ece9e1274787662a0f66",
+    "axes_runtime_settings.csv": "e7a57ce2ec28392a9500a8154661f0e71a5a0d32511a06db0b24351472260b44"
+  }
+}

@@ -1,0 +1,160 @@
+{
+  "difference_convention": "CandidateA minus existingH0125",
+  "temporal_interpolation": false,
+  "voltage_peaks_recomputed_from_full_comparison_csvs": {
+    "requested": {
+      "time_s_exact": "1.7",
+      "V_first_V": "2.3005995217649353",
+      "V_second_V": "2.300597177534794",
+      "difference_V_second_minus_first_V": "-0.0000023442301413",
+      "difference_delta_Eeq_V": "-0.0000023893734290",
+      "difference_delta_etaMid_V": "4.5904620328E-8",
+      "difference_delta_phiL_V": "-7.613328E-10",
+      "difference_decomposition_residual_V": "1.72E-16"
+    },
+    "exact_common": {
+      "time_s_exact": "1.7",
+      "V_first_V": "2.3005995217649353",
+      "V_second_V": "2.300597177534794",
+      "difference_V_second_minus_first_V": "-0.0000023442301413",
+      "difference_delta_Eeq_V": "-0.0000023893734290",
+      "difference_delta_etaMid_V": "4.5904620328E-8",
+      "difference_delta_phiL_V": "-7.613328E-10",
+      "difference_decomposition_residual_V": "1.72E-16"
+    }
+  },
+  "requested_common_peak_identical": true,
+  "surface_maximum_exact_common": {
+    "electrode": "N",
+    "time_s_exact": "1.7",
+    "sample_index": 240,
+    "coordinate_first_m": 5.2e-05,
+    "coordinate_second_m": 5.2e-05,
+    "x_surface_first": 0.012872545019936121,
+    "x_surface_second": 0.012872506317301118,
+    "signed_difference_second_minus_first_x": -3.8702635003e-08,
+    "absolute_difference_x": 3.8702635003e-08
+  },
+  "surface_profile_peak_verified": true,
+  "surface_axis_exponent": -8,
+  "electrode_bounds_um": {
+    "N": [
+      0.0,
+      52.0
+    ],
+    "P": [
+      77.0,
+      121.0
+    ]
+  },
+  "separator_bounds_um": [
+    52.0,
+    77.0
+  ],
+  "same_time_voltage_decomposition": {
+    "time_s_exact": "1.7",
+    "V_first_V": "2.3005995217649353",
+    "V_second_V": "2.300597177534794",
+    "difference_V_second_minus_first_V": "-0.0000023442301413",
+    "difference_delta_Eeq_V": "-0.0000023893734290",
+    "difference_delta_etaMid_V": "4.5904620328E-8",
+    "difference_delta_phiL_V": "-7.613328E-10",
+    "difference_decomposition_residual_V": "1.72E-16"
+  },
+  "window_order_s": [
+    [
+      0.1,
+      1
+    ],
+    [
+      1,
+      5
+    ],
+    [
+      0,
+      1
+    ],
+    [
+      0,
+      5
+    ]
+  ],
+  "window_time_counts": {
+    "requested_grid": [
+      91,
+      81,
+      107,
+      187
+    ],
+    "all_exact_common_stored": [
+      99,
+      81,
+      906,
+      986
+    ]
+  },
+  "native_interval_counts_by_region": {
+    "H0125 (existing)": {
+      "0..0.1": 807,
+      "0.1..1": 98,
+      "1..5": 81
+    },
+    "Late-cap A (new)": {
+      "0..0.1": 807,
+      "0.1..1": 185,
+      "1..5": 162
+    }
+  },
+  "native_boundary_arrival_departure": {
+    "H0125 (existing)": {
+      "0.1": {
+        "arrival_h_s": "0.000125",
+        "departure_h_s": "0.000125"
+      },
+      "1": {
+        "arrival_h_s": "0.01",
+        "departure_h_s": "0.02"
+      }
+    },
+    "Late-cap A (new)": {
+      "0.1": {
+        "arrival_h_s": "0.000125",
+        "departure_h_s": "0.000125"
+      },
+      "1": {
+        "arrival_h_s": "0.005",
+        "departure_h_s": "0.005"
+      }
+    }
+  },
+  "parallel_execution_cores": [
+    2,
+    16
+  ],
+  "limitations": [
+    "State carryover across1s",
+    "Parallel floating-point execution changed",
+    "Not a true-error/order/full-convergence claim"
+  ],
+  "input_sha256": {
+    "outputs/late_cap_a/results/analysis.json": "40d26dcc7fc893f565ca83d8b6712b088aeb07507859302278e102da661f7957",
+    "outputs/late_cap_a/results/Caps300R320H0125_vs_Caps300R320LateCapA5s_requested_grid_0_to_5s.csv": "c7ee9fba970dbf4d847a2f2736f4e780dcdd2d3da5baab5e03becab28d54b5e9",
+    "outputs/late_cap_a/results/Caps300R320H0125_vs_Caps300R320LateCapA5s_all_exact_common_stored_0_to_5s.csv": "ffcd21e6e381351fd64ed1c84d4154944e114ca02e6dfc072574e208682b0a69",
+    "outputs/late_cap_a/results/Caps300R320H0125_vs_Caps300R320LateCapA5s_all_exact_common_stored_0_to_5s_profile_at_surface_peak.csv": "289996c623ca7004a8483c6e41e757604e26dc9243c8af5d79dbc97a8b26e52a",
+    "outputs/model_audit/18a00b03e38d4694b9ba30d88e7008f4/preflight_global.csv": "b8976f4b484097a49bdd3295a4e683ded181a794ad297f55784587dbad499585",
+    "outputs/model_audit/c40c05d3cfb643a4b706345637b00f57/preflight_global.csv": "4c056066413af113658b875cdb77e06984aeb6f2ac15279d24c0a4334cb9e522"
+  },
+  "all_tracked_inputs_unchanged_after_plot": true,
+  "artifacts": [
+    {
+      "path": "outputs/late_cap_a/figures/late_cap_a_comparison.png",
+      "bytes": 520121,
+      "sha256": "021979e9572315289b01aa1450766979806be3abd5b7dade54507cdf425040e3"
+    },
+    {
+      "path": "outputs/late_cap_a/figures/late_cap_a_comparison.pdf",
+      "bytes": 60975,
+      "sha256": "e62bdac4b3513ca2559e1f8a9297bd3529510ced8447ea6df6e8e0b2106a16c7"
+    }
+  ]
+}

@@ -1,0 +1,12 @@
+Traceback (most recent call last):
+  File "/home/user/Yonghoon-DEM-DFT/bms-balancing/reviews/r9_repros/codex/r9_root_repros.py", line 271, in <module>
+    raise SystemExit(main())
+                     ^^^^^^
+  File "/home/user/Yonghoon-DEM-DFT/bms-balancing/reviews/r9_repros/codex/r9_root_repros.py", line 253, in main
+    records["roots"] = root_alias(target, verify, _deg, _sign)
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/Yonghoon-DEM-DFT/bms-balancing/reviews/r9_repros/codex/r9_root_repros.py", line 70, in root_alias
+    assert missing_first.returncode == 0, result
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: {'case': 'root_argument_identity_collapse', 'missing_first_then_good': {'rc': 2, 'roster': [], 'verdict': []}, 'good_first_then_missing': {'rc': 2, 'roster': [], 'verdict': []}, 'duplicate_explicit_label': {'rc': 2, 'roster': [], 'verdict': []}}
+rc=1

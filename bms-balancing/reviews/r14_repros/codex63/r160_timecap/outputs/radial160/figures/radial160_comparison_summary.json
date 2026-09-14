@@ -1,0 +1,108 @@
+{
+  "scope": "One new R160 run; existing R40 and R80 results reused without rerun",
+  "temporal_interpolation": false,
+  "external_spatial_interpolation": false,
+  "convergence_order_computed": false,
+  "prescribed_stored_times_each_voltage_comparison": 187,
+  "comparisons": [
+    {
+      "first": "Caps300R40H0500",
+      "second": "Caps300R80H0500",
+      "at_maximum_voltage_difference": {
+        "time_s_exact": "0.04",
+        "V_first_V": 2.2377940937996006,
+        "V_second_V": 2.2403000748868878,
+        "difference_V_second_minus_first_V": 0.0025059810872872,
+        "difference_delta_Eeq_V": 0.0025513010196297,
+        "difference_delta_etaMid_V": -4.577803802097e-05,
+        "difference_delta_phiL_V": 4.581056781e-07,
+        "difference_decomposition_residual_V": 3.7e-16
+      },
+      "maximum_pointwise_surface_difference": {
+        "electrode": "N",
+        "time_s_exact": "0.04",
+        "sample_index": 240,
+        "coordinate_first_m": 5.2e-05,
+        "coordinate_second_m": 5.2e-05,
+        "x_surface_first": 0.01184073886082281,
+        "x_surface_second": 0.011882574283142029,
+        "signed_difference_second_minus_first_x": 4.1835422319219e-05,
+        "absolute_difference_x": 4.1835422319219e-05
+      },
+      "within_sampled_limits": false
+    },
+    {
+      "first": "Caps300R80H0500",
+      "second": "Caps300R160H0500",
+      "at_maximum_voltage_difference": {
+        "time_s_exact": "0.01",
+        "V_first_V": 2.2342028442195754,
+        "V_second_V": 2.2354510623337727,
+        "difference_V_second_minus_first_V": 0.0012482181141973,
+        "difference_delta_Eeq_V": 0.0012688514702157,
+        "difference_delta_etaMid_V": -2.0902710440976e-05,
+        "difference_delta_phiL_V": 2.693544225e-07,
+        "difference_decomposition_residual_V": 7.6e-17
+      },
+      "maximum_pointwise_surface_difference": {
+        "electrode": "N",
+        "time_s_exact": "0.01",
+        "sample_index": 240,
+        "coordinate_first_m": 5.2e-05,
+        "coordinate_second_m": 5.2e-05,
+        "x_surface_first": 0.01178080970851107,
+        "x_surface_second": 0.011801721547531858,
+        "signed_difference_second_minus_first_x": 2.0911839020788e-05,
+        "absolute_difference_x": 2.0911839020788e-05
+      },
+      "within_sampled_limits": false
+    }
+  ],
+  "same_time_voltage_trends": [
+    {
+      "time_s_exact": "0.01",
+      "R40_V": 2.232680100644896,
+      "R80_V": 2.2342028442195754,
+      "R160_V": 2.2354510623337727,
+      "difference_R80_minus_R40_V": "0.0015227435746794",
+      "difference_R160_minus_R80_V": "0.0012482181141973"
+    },
+    {
+      "time_s_exact": "0.04",
+      "R40_V": 2.2377940937996006,
+      "R80_V": 2.2403000748868878,
+      "R160_V": 2.2409903610181456,
+      "difference_R80_minus_R40_V": "0.0025059810872872",
+      "difference_R160_minus_R80_V": "0.0006902861312578"
+    }
+  ],
+  "native_step_display": [
+    {
+      "radial_elements": 80,
+      "total_intervals": 387,
+      "early_intervals": 209,
+      "early_interval_definition": "Ends at or before 0.1 s, including the interval arriving at 0.1 s",
+      "displayed_intervals": 218
+    },
+    {
+      "radial_elements": 160,
+      "total_intervals": 387,
+      "early_intervals": 210,
+      "early_interval_definition": "Ends at or before 0.1 s, including the interval arriving at 0.1 s",
+      "displayed_intervals": 218
+    }
+  ],
+  "input_sha256": {
+    "outputs\\radial160\\results\\analysis.json": "9e3ea502b57df4ca43520010a7763b14a1d0ec6a3115ae04838b7f02a87af2c8",
+    "outputs\\radial160\\jobs.json": "bd1d89bed9c12bfd3e773f24aa2efb6d532f255e7e0e41a5025c745172458d4b",
+    "outputs\\radial160\\native_steps_summary.json": "2917a7c9c339f1d741af8f1611bc87f77ba6ed8f18dc31f63c25f640f1da7936",
+    "outputs\\radial160\\results\\Caps300R80H0500_vs_Caps300R160H0500_0_to_5s.csv": "9b6fe666185cd5c620c2d4421b8f0f3163c895e5c85a59a008f869212648aadb",
+    "outputs\\radial160\\results\\Caps300R40H0500_vs_Caps300R80H0500_0_to_5s.csv": "519da6cd29fa903015132533eaf2b042cfddaea5b9e9e73abde36d5beddd58a5",
+    "outputs\\radial160\\results\\three_level_primary_0_to_5s_voltage_peak_scalar.csv": "81b16244904fb4f98c7130ebf649d2deae9dd0f09e70ace439e3b16b59912eb9",
+    "outputs\\radial160\\results\\three_level_0p04s_scalar.csv": "1b4066502afd60430aaffaeab97cade5efadab4f21ad139715add1128d9ed3bd",
+    "outputs\\radial160\\results\\Caps300R80H0500_vs_Caps300R160H0500_0_to_5s_profile_at_surface_peak.csv": "5842bb8702bf4032e23947e245b1229025018fdbad9e0171a0a64524dbcbca7d",
+    "outputs\\time_caps\\Caps300R80H0500_accepted_steps.csv": "e868673f6040ceff191a4d7093b8fe23ebc0e76de293591599b2bd7dad1c7938",
+    "outputs\\radial160\\Caps300R160H0500_accepted_steps.csv": "94f4b32ce4ecc6d33e40c8d5382e37057b82a35f8cd80c23c7230ad7d6a51eff"
+  },
+  "all_tracked_inputs_unchanged_after_plot": true
+}

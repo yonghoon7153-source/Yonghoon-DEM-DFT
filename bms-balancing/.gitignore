@@ -1,2 +1,24 @@
 # 규진팀 원자료·중간 산출은 저장소에 넣지 않는다 (README 경계 항목)
 out/*.log
+out/*.err
+out/.*.part
+# R6 내부 F06: 잠금 파일과 시도별 임시 이름 — `git clean -fd` 가 보유 중인 잠금 파일을 지우면 다음 시도가
+#   새 inode 를 잠가 배타가 사라진다. 추적하지도 지우지도 않는다.
+out/**/*.lock
+out/**/*.part
+
+# 셀 자료 루트 — `prepare_cell.py` · `fixed_hc.py` 가 만드는 트리에는
+# **규진팀 원자료 xlsx 사본**이 들어간다. 저장소는 public 이다.
+# ⚠ 저장소 루트 바로 아래 `cells/` 는 여기서 못 막는다 (상위 디렉터리).
+#   그쪽은 루트 `.gitignore` 가 막아야 하고, 본체 소유다 —
+#   `HANDOFF_TO_GATE.md` §2b 에 신고해 뒀다.
+cells/
+
+# 재생 스크립트가 만드는 스크래치 (toctou 렌즈는 임시 저장소·산출을 여기에 만든다)
+reviews/r6_repros/*/tmp/
+reviews/r6_repros/*/work/
+reviews/r6_repros/*/__pycache__/
+
+# R11 닫힘 재생기가 **그 단계에서만** 만드는 자리 — 보관 패키지가 `../work/harness-r11-target-wsl/bms-balancing`
+# 를 대상 트리로 본다 (리뷰어 워크스페이스 경로). 트리에 남으면 다른 probe 의 copytree 가 무한히 돈다.
+reviews/r11_repros/work/

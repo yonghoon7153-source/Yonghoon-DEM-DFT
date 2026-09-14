@@ -1,0 +1,60 @@
+{
+  "설명": "8차 패키지의 probe 를 **수정 뒤** 트리에서 돌린 결과 — 각 probe 가 자기 반례 assertion 에서 멈춘다 (= 반례 소멸). inference 는 첫 case 에서 멈추므로 case 별로 따로 돌렸다.",
+  "probes": {
+    "R8-01 aggregate": {
+      "rc": 1,
+      "멈춘_곳": {
+        "file": "r8_inference_repros.py",
+        "line": 97,
+        "probe": "aggregate",
+        "assertion": "assert selected[\"100\"][\"si\"] == \"Li\" and not exc"
+      }
+    },
+    "R8-02 unit": {
+      "rc": 1,
+      "멈춘_곳": {
+        "file": "r8_inference_repros.py",
+        "line": 139,
+        "probe": "unit_check",
+        "assertion": "assert unit[0] is False and during[\"rc\"] == 0"
+      }
+    },
+    "R8-03 shape": {
+      "rc": 1,
+      "멈춘_곳": {
+        "file": "r8_inference_repros.py",
+        "line": 236,
+        "probe": "shape",
+        "assertion": "assert partial[0] == 0 and partial[3][0] is True"
+      }
+    },
+    "R8-04 profile": {
+      "rc": 1,
+      "멈춘_곳": {
+        "file": "r8_claims_repros.py",
+        "line": 115,
+        "probe": "profile_identity_log_loss",
+        "assertion": "assert \"consumed_inputs\" not in rows[0] and \"consumed_inputs\" not in json.loads(original_meta)"
+      }
+    },
+    "R8-05 rows": {
+      "rc": 1,
+      "멈춘_곳": {
+        "file": "r8_inference_repros.py",
+        "line": 173,
+        "probe": "duplicate_rows",
+        "assertion": "assert p[\"rc\"] == 0 and \"전부 같다\" in p[\"stdout\"]"
+      }
+    },
+    "R8-06 controls": {
+      "rc": 1,
+      "멈춘_곳": {
+        "file": "r8_port_repros.py",
+        "line": 130,
+        "probe": "audit_controls",
+        "assertion": "assert bad[\"returncode\"] == 0 and \"CAUGHT \" in bad[\"stdout\"] and \"deselected\" in bad[\"stdout\"], records"
+      },
+      "note": "selected_noop_is_missed 는 그대로 MISSED·rc 1; no_selected_tests 가 이제 '오류'·rc 1 이라 원본의 CAUGHT 기대가 깨진다"
+    }
+  }
+}

@@ -1,0 +1,142 @@
+=== PhysicsFeature 트리 (own = 자기 flags, inh = 조상 사슬) ===
+/liion                                               LithiumIonBatteryMPH             active                 Lithium-Ion Battery
+/liion/socicd1                                       SOCAndInitialChargeDistribution  DISABLED(own)          SOC and Initial Charge Distribution 1
+/liion/socicd1/neges1                                NegElectrodeSelection            disabled(inherited)    Negative Electrode Selection 1
+/liion/socicd1/poses1                                PosElectrodeSelection            disabled(inherited)    Positive Electrode Selection 1
+/liion/socicd1/negebs1                               NegElectrodeBoundarySelection    DISABLED(own)          Negative Electrode Boundary Selection 1
+/liion/socicd1/posebs1                               PosElectrodeBoundarySelection    DISABLED(own)          Positive Electrode Boundary Selection 1
+/liion/sep1                                          Separator                        active                 Separator 1
+      epss                       = 1|1,'0.4'
+      epsl                       = 1|1,'epsl_sep'
+      ElectricCorrModel          = 1|1,'Bruggeman'
+      IonicCorrModel             = 1|1,'Bruggeman'
+/liion/sep1/nfr1                                     NonFaradaicReactions             DISABLED(own)          Nonfaradaic Reactions 1
+/liion/nf1                                           NoFlux                           active                 No Flux 1
+/liion/ins1                                          Insulation                       active                 Insulation 1
+/liion/init1                                         init                             active                 Initial Values 1
+/liion/dcont1                                        Continuity                       DISABLED(own)          Continuity 1
+/liion/pcb1                                          PorousConductiveBinder           active                 Porous Conductive Binder 1
+      epss                       = 1|1,'epsl_sep'
+      epsl                       = 1|1,'epsl_sep'
+      sigma                      = 9|1,'sigma_short'|1,'0'|1,'0'|1,'0'|1,'sigma_short'|1,'0'|1,'0'|1,'0'|1,'sigma_short'
+      ElectricCorrModel          = 1|1,'Bruggeman'
+      IonicCorrModel             = 1|1,'Bruggeman'
+/liion/init2                                         init                             active                 Initial Values 2
+/liion/pce1                                          PorousElectrode                  active                 Porous Electrode 1 - Graphite
+      epss                       = 1|1,'epss_Gr'
+      epsl                       = 1|1,'epsl_el'
+      sigma                      = 9|1,'K_gr'|1,'0'|1,'0'|1,'0'|1,'K_gr'|1,'0'|1,'0'|1,'0'|1,'K_gr'
+      ElectricCorrModel          = 1|1,'userdef'
+      IonicCorrModel             = 1|1,'userdef'
+/liion/pce1/pin1                                     ParticleIntercalation            active                 Particle Intercalation 1
+      csinit                     = 1|1,'x_Gr_init*cs_Gr_max'
+      cEeqref                    = 1|1,'cs_Gr_max*dm_fNE'
+      cEeqref_mat                = 1|1,'from_mat'
+      rp                         = 1|1,'rp_Gr'
+      Ds                         = 1|1,'D_g'
+      Eeq                        = 1|1,'0'
+      Eeq_mat                    = 1|1,'from_mat'
+      ParticleConcentrationType  = 1|1,'SolveinExtraDimension'
+      ParticleMaterial           = 1|1,'mat1'
+/liion/pce1/per1                                     PorousElectrodeReaction          active                 Porous Electrode Reaction 1
+      cEeqref                    = 1|1,'2.5e4[mol/m^3]'
+      cEeqref_mat                = 1|1,'from_mat'
+      rp                         = 1|1,'10e-6[m]'
+      Eeq                        = 1|1,'0[V]'
+      Eeq_mat                    = 1|1,'from_mat'
+      MaterialOption             = 1|1,'mat1'
+      EeqrefType                 = 1|1,'builtin'
+      ElectrodeKinetics          = 1|1,'LithiumInsertion'
+/liion/addm1                                         IntercalatingMaterial            DISABLED(own)          Additional Porous Electrode Material 1 - Silicon
+      epssadd                    = 1|1,'epss_Si'
+/liion/addm1/pin1                                    ParticleIntercalation            disabled(inherited)    Particle Intercalation 1
+      csinit                     = 1|1,'cs_Si_init'
+      cEeqref                    = 1|1,'cs_Si_max'
+      cEeqref_mat                = 1|1,'userdef'
+      rp                         = 1|1,'rp_Si'
+      Ds                         = 1|1,'D_si'
+      Eeq                        = 1|1,'0'
+      Eeq_mat                    = 1|1,'from_mat'
+      ParticleConcentrationType  = 1|1,'SolveinExtraDimension'
+      ParticleMaterial           = 1|1,'dommat'
+/liion/addm1/per1                                    PorousElectrodeReaction          disabled(inherited)    Porous Electrode Reaction 1
+      cEeqref                    = 1|1,'2.5e4[mol/m^3]'
+      cEeqref_mat                = 1|1,'from_mat'
+      rp                         = 1|1,'10e-6[m]'
+      Eeq                        = 1|1,'Eeq_Si'
+      Eeq_mat                    = 1|1,'userdef'
+      MaterialOption             = 1|1,'dommat'
+      EeqrefType                 = 1|1,'builtin'
+      ElectrodeKinetics          = 1|1,'LithiumInsertion'
+/liion/es1                                           ElectrodeSurface                 DISABLED(own)          Electrode Surface 1
+/liion/es1/er1                                       ElectrodeReaction                disabled(inherited)    Electrode Reaction 1
+      cEeqref                    = 1|1,'2.5e4[mol/m^3]'
+      cEeqref_mat                = 1|1,'from_mat'
+      Eeq                        = 1|1,'0'
+      Eeq_mat                    = 1|1,'from_mat'
+      MaterialOption             = 1|1,'dommat'
+      EeqrefType                 = 1|1,'builtin'
+      ElectrodeKinetics          = 1|1,'LithiumMetal'
+/liion/es1/lc1                                       LoadCycle                        DISABLED(own)          Load Cycle 1
+/liion/pce2                                          PorousElectrode                  active                 Porous Electrode 2 - NCM811
+      epss                       = 1|1,'epss_pos'
+      epsl                       = 1|1,'epsl_pos'
+      sigma                      = 9|1,'K_NCM'|1,'0'|1,'0'|1,'0'|1,'K_NCM'|1,'0'|1,'0'|1,'0'|1,'K_NCM'
+      ElectricCorrModel          = 1|1,'userdef'
+      IonicCorrModel             = 1|1,'userdef'
+/liion/pce2/pin1                                     ParticleIntercalation            active                 Particle Intercalation 1
+      csinit                     = 1|1,'x_NCM_init*cs_NCM_max'
+      cEeqref                    = 1|1,'cs_NCM_max*dm_fPE'
+      cEeqref_mat                = 1|1,'from_mat'
+      rp                         = 1|1,'10e-6[m]'
+      Ds                         = 1|1,'1e-13[m^2/s]'
+      Eeq                        = 1|1,'0'
+      Eeq_mat                    = 1|1,'from_mat'
+      ParticleConcentrationType  = 1|1,'SolveinExtraDimension'
+      ParticleMaterial           = 1|1,'dommat'
+/liion/pce2/per1                                     PorousElectrodeReaction          active                 Porous Electrode Reaction 1
+      cEeqref                    = 1|1,'2.5e4[mol/m^3]'
+      cEeqref_mat                = 1|1,'from_mat'
+      rp                         = 1|1,'10e-6[m]'
+      Eeq                        = 1|1,'0[V]'
+      Eeq_mat                    = 1|1,'from_mat'
+      MaterialOption             = 1|1,'dommat'
+      EeqrefType                 = 1|1,'builtin'
+      ElectrodeKinetics          = 1|1,'LithiumInsertion'
+/liion/egnd1                                         ElectricGround                   active                 Electric Ground 1
+/liion/ecd1                                          ElectrodeNormalCurrentDensity    DISABLED(own)          Electrode Current Density 1
+/liion/cdc1                                          ChargeDischargeCycling           active                 Charge-Discharge Cycling 1
+/c                                                   CoefficientFormPDE               active                 Coefficient Form PDE
+/c/cfeq1                                             CoefficientFormPDE               active                 Coefficient Form PDE 1
+/c/zflx1                                             ZeroFluxBoundary                 active                 Zero Flux 1
+/c/init1                                             init                             active                 Initial Values 1
+/c/dcont1                                            Continuity                       DISABLED(own)          Continuity 1
+/ev                                                  Events                           DISABLED(own)          Events - Charge -Discharge Control
+/ev/ds1                                              DiscreteStates                   disabled(inherited)    Discrete States 1
+/ev/is1                                              IndicatorStates                  disabled(inherited)    Indicator States 1
+/ev/impl1                                            ImplicitEvent                    disabled(inherited)    Implicit Event 1
+/ev/impl2                                            ImplicitEvent                    disabled(inherited)    Implicit Event 2
+/ge                                                  GlobalEquations                  active                 Global ODEs and DAEs - Charge Integration
+/ge/ge1                                              GlobalEquations                  active                 Global Equations 1
+/ge2                                                 GlobalEquations                  active                 Global ODEs and DAEs - Energy Integration
+/ge2/ge1                                             GlobalEquations                  active                 Global Equations 1
+
+=== live 참조 그래프 (<actions> 이력 제외) ===
+
+### dPE: live 참조 0 건
+
+### dNE: live 참조 0 건
+
+### cs_NCM_init: live 참조 0 건
+
+### cs_Gr_init: live 참조 0 건
+
+### E_end: live 참조 0 건
+
+### x_NCM_max: live 참조 0 건
+
+### x_NCM_min: live 참조 0 건
+
+### i_app: live 참조 2 건
+   /physics/liion/feature/ecd1/param                            <param value> 1|1,'-i_app'
+   /physics/ge2/feature/ge1/param                               <param value> 2|1,'d(E_lith\,t)-if(CurrentDirection==-1\, i_app*(E_cell-E_max_el)\,0)'|1,'d(E_

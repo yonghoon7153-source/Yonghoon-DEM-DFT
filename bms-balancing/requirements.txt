@@ -1,0 +1,23 @@
+# bms-balancing 검증 하네스 의존성
+#
+# 이 목록이 왜 있나: 2026-09-10 에 사용자 WSL 에서 `ModuleNotFoundError: numpy`
+# 로 대조가 멈췄다. 그때까지 이 디렉터리에는 의존성을 적은 파일이 아예 없었고,
+# 무엇을 깔아야 하는지가 사람 기억에만 있었다.
+#
+# `openpyxl` 은 직접 import 하지 않지만 **반드시 필요하다** — pandas 가
+# `.xlsx` 를 읽을 때 쓰는 엔진이고, 없으면 적재 단계에서 죽는다.
+#
+# 아래 하한은 이 저장소가 실제로 돌아간 것을 확인한 조합보다 낮게 잡았다.
+# 검증이 돈 조합 (컨테이너, 2026-09-10):
+#     python 3.11.15 · numpy 2.4.6 · pandas 3.0.5 · scipy 1.17.1 · openpyxl 3.1.5
+#
+# ⚠ 이 파일은 `degradation-degeneracy` 의 RUN_SCOPE 밖이다. 저쪽 게이트
+#   리뷰의 code identity(`source_digest`)에는 영향이 없다.
+
+numpy>=1.24
+pandas>=2.0
+scipy>=1.10
+openpyxl>=3.1
+
+# 테스트용
+pytest>=7.0

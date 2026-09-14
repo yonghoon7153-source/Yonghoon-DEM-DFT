@@ -1,0 +1,56 @@
+{
+  "review": "R13 bms-balancing scientific harness",
+  "target_head": "94add7b5d48ad5d19448d562a0909b15ce4dc056",
+  "target_tree": "10541cf460c0fe4a7a93f8faa67268f420a7bf78",
+  "code_authority": "c7217c04f939889e88b915575fce6997005072aa",
+  "request_sha256": "1b352e3eb0abc18d2986329ce8269a4b770b14c269712e80b97edd57f3f42b34",
+  "verdict": "NO-GO",
+  "evidence_type": "Review summary of observed tool outputs, not an independent execution attestation",
+  "target_git_status_short": "",
+  "python_shell_diff_code_to_head": [],
+  "pytest": {
+    "passed": 226,
+    "deselected": 10,
+    "duration_seconds": 117.63,
+    "exit_code": 0,
+    "observed_tail": "226 passed, 10 deselected in 117.63s (0:01:57)",
+    "full_236_run": false,
+    "selection": "not d10_12 and not d10_13 and not d10_14 and not e11_09 and not e11_10 and not e11_17 and not e11_18 and not d8_07 and not d9_08 and not d7_05"
+  },
+  "matlab_helper": {
+    "wrapper_exit_code": 0,
+    "executed_stages": [4, 5],
+    "unexecuted_stages": [1, 2, 3],
+    "reason": "octave-cli not installed",
+    "matlab_or_octave_execution_claimed": false
+  },
+  "current_out_schema_only": {
+    "exit_code": 2,
+    "promotion_eligible": false,
+    "schema": 59,
+    "provenance_cols": 27,
+    "content": 5,
+    "provenance": 1,
+    "baseline_absent": 1
+  },
+  "runtime": {
+    "python": "3.12.3",
+    "numpy": "2.5.3",
+    "scipy": "1.18.1",
+    "pandas": "3.0.5",
+    "pytest": "9.1.1",
+    "openpyxl": "3.1.5",
+    "platform": "Linux-6.18.33.2-microsoft-standard-WSL2-x86_64-with-glibc2.39"
+  },
+  "not_performed": [
+    "Historical security exploit/injection replay",
+    "Original workbook and MATLAB scientific reproduction",
+    "Target code, canonical output, commit or push changes"
+  ],
+  "result_locations": {
+    "scientific_population": "r13_roster_schema_results/results.json",
+    "cli_final": "r13_cli_contract_results_v3/results.json",
+    "row_receipts": "r13_receipt_identity_results.json",
+    "passive_stored_evidence": "r13_passive_evidence_results.json"
+  }
+}

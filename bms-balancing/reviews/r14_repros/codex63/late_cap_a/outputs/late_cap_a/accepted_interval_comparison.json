@@ -1,0 +1,275 @@
+{
+  "segments": [
+    {
+      "start_s": "0",
+      "end_s": "0.1",
+      "baseline": {
+        "count": 807,
+        "sum_h_s_exact": "0.10000000000000000000",
+        "min_h_s_exact": "0.00001000",
+        "median_h_s_exact": "0.00012500000000000",
+        "mean_h_s_decimal_40_digits": "0.0001239157372986369268897149938042131350682",
+        "max_h_s_exact": "0.00012500000000001",
+        "p10_nearest_rank_h_s_exact": "0.000125000000000000",
+        "p90_nearest_rank_h_s_exact": "0.000125",
+        "at_configured_cap_within_1e_12_s": 792,
+        "over_cap_beyond_1e_12_s": 0,
+        "nominal_1e_12_s_bins": [
+          {
+            "h_s": "0.000010000000",
+            "count": 1
+          },
+          {
+            "h_s": "0.000010020000",
+            "count": 1
+          },
+          {
+            "h_s": "0.000020000000",
+            "count": 1
+          },
+          {
+            "h_s": "0.000029990000",
+            "count": 2
+          },
+          {
+            "h_s": "0.000050000000",
+            "count": 2
+          },
+          {
+            "h_s": "0.000100000000",
+            "count": 8
+          },
+          {
+            "h_s": "0.000125000000",
+            "count": 792
+          }
+        ],
+        "start_s": "0",
+        "end_s": "0.1",
+        "cap_s": "0.000125"
+      },
+      "new": {
+        "count": 807,
+        "sum_h_s_exact": "0.10000000000000000000",
+        "min_h_s_exact": "0.00001000",
+        "median_h_s_exact": "0.00012500000000000",
+        "mean_h_s_decimal_40_digits": "0.0001239157372986369268897149938042131350682",
+        "max_h_s_exact": "0.00012500000000001",
+        "p10_nearest_rank_h_s_exact": "0.000125000000000000",
+        "p90_nearest_rank_h_s_exact": "0.000125",
+        "at_configured_cap_within_1e_12_s": 792,
+        "over_cap_beyond_1e_12_s": 0,
+        "nominal_1e_12_s_bins": [
+          {
+            "h_s": "0.000010000000",
+            "count": 1
+          },
+          {
+            "h_s": "0.000010020000",
+            "count": 1
+          },
+          {
+            "h_s": "0.000020000000",
+            "count": 1
+          },
+          {
+            "h_s": "0.000029990000",
+            "count": 2
+          },
+          {
+            "h_s": "0.000050000000",
+            "count": 2
+          },
+          {
+            "h_s": "0.000100000000",
+            "count": 8
+          },
+          {
+            "h_s": "0.000125000000",
+            "count": 792
+          }
+        ],
+        "start_s": "0",
+        "end_s": "0.1",
+        "cap_s": "0.000125"
+      },
+      "actual_max_reduced": false,
+      "mean_reduced": false
+    },
+    {
+      "start_s": "0.1",
+      "end_s": "1",
+      "baseline": {
+        "count": 98,
+        "sum_h_s_exact": "0.90000000000000000",
+        "min_h_s_exact": "0.000125",
+        "median_h_s_exact": "0.01",
+        "mean_h_s_decimal_40_digits": "0.009183673469387755102040816326530612244898",
+        "max_h_s_exact": "0.01",
+        "p10_nearest_rank_h_s_exact": "0.005",
+        "p90_nearest_rank_h_s_exact": "0.01",
+        "at_configured_cap_within_1e_12_s": 0,
+        "over_cap_beyond_1e_12_s": 0,
+        "nominal_1e_12_s_bins": [
+          {
+            "h_s": "0.000125000000",
+            "count": 1
+          },
+          {
+            "h_s": "0.000250000000",
+            "count": 1
+          },
+          {
+            "h_s": "0.000500000000",
+            "count": 1
+          },
+          {
+            "h_s": "0.001000000000",
+            "count": 1
+          },
+          {
+            "h_s": "0.002000000000",
+            "count": 1
+          },
+          {
+            "h_s": "0.003062500000",
+            "count": 2
+          },
+          {
+            "h_s": "0.005000000000",
+            "count": 4
+          },
+          {
+            "h_s": "0.010000000000",
+            "count": 87
+          }
+        ],
+        "start_s": "0.1",
+        "end_s": "1",
+        "cap_s": "0.1"
+      },
+      "new": {
+        "count": 185,
+        "sum_h_s_exact": "0.90000000000000000",
+        "min_h_s_exact": "0.000125",
+        "median_h_s_exact": "0.005",
+        "mean_h_s_decimal_40_digits": "0.004864864864864864864864864864864864864865",
+        "max_h_s_exact": "0.00500000000000003",
+        "p10_nearest_rank_h_s_exact": "0.005",
+        "p90_nearest_rank_h_s_exact": "0.005",
+        "at_configured_cap_within_1e_12_s": 178,
+        "over_cap_beyond_1e_12_s": 0,
+        "nominal_1e_12_s_bins": [
+          {
+            "h_s": "0.000125000000",
+            "count": 1
+          },
+          {
+            "h_s": "0.000250000000",
+            "count": 1
+          },
+          {
+            "h_s": "0.000500000000",
+            "count": 1
+          },
+          {
+            "h_s": "0.001000000000",
+            "count": 1
+          },
+          {
+            "h_s": "0.002000000000",
+            "count": 1
+          },
+          {
+            "h_s": "0.003062500000",
+            "count": 2
+          },
+          {
+            "h_s": "0.005000000000",
+            "count": 178
+          }
+        ],
+        "start_s": "0.1",
+        "end_s": "1",
+        "cap_s": "0.005"
+      },
+      "actual_max_reduced": true,
+      "mean_reduced": true
+    },
+    {
+      "start_s": "1",
+      "end_s": "5",
+      "baseline": {
+        "count": 81,
+        "sum_h_s_exact": "4.00",
+        "min_h_s_exact": "0.02",
+        "median_h_s_exact": "0.05",
+        "mean_h_s_decimal_40_digits": "0.04938271604938271604938271604938271604938",
+        "max_h_s_exact": "0.05",
+        "p10_nearest_rank_h_s_exact": "0.05",
+        "p90_nearest_rank_h_s_exact": "0.05",
+        "at_configured_cap_within_1e_12_s": 0,
+        "over_cap_beyond_1e_12_s": 0,
+        "nominal_1e_12_s_bins": [
+          {
+            "h_s": "0.020000000000",
+            "count": 1
+          },
+          {
+            "h_s": "0.030000000000",
+            "count": 1
+          },
+          {
+            "h_s": "0.050000000000",
+            "count": 79
+          }
+        ],
+        "start_s": "1",
+        "end_s": "5",
+        "cap_s": "0.1"
+      },
+      "new": {
+        "count": 162,
+        "sum_h_s_exact": "4.0000000000000000",
+        "min_h_s_exact": "0.005",
+        "median_h_s_exact": "0.025",
+        "mean_h_s_decimal_40_digits": "0.02469135802469135802469135802469135802469",
+        "max_h_s_exact": "0.025000000000001",
+        "p10_nearest_rank_h_s_exact": "0.0249999999999997",
+        "p90_nearest_rank_h_s_exact": "0.0250000000000002",
+        "at_configured_cap_within_1e_12_s": 158,
+        "over_cap_beyond_1e_12_s": 0,
+        "nominal_1e_12_s_bins": [
+          {
+            "h_s": "0.005000000000",
+            "count": 1
+          },
+          {
+            "h_s": "0.010000000000",
+            "count": 1
+          },
+          {
+            "h_s": "0.017500000000",
+            "count": 2
+          },
+          {
+            "h_s": "0.025000000000",
+            "count": 158
+          }
+        ],
+        "start_s": "1",
+        "end_s": "5",
+        "cap_s": "0.025"
+      },
+      "actual_max_reduced": true,
+      "mean_reduced": true
+    }
+  ],
+  "boundaries_s": [
+    "0.1",
+    "1"
+  ],
+  "new_all_caps_pass": true,
+  "both_later_actual_maxima_reduced": true,
+  "limits": "Actual interval shortening verified separately from storage controls. Later errors include prior-state carryover; parallel resource differs baseline2/new16."
+}

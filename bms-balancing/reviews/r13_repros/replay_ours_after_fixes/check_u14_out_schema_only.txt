@@ -1,0 +1,4 @@
+산출 13 개 점검 (out)
+  (`--schema-only`: baseline 도 대조도 없다 — **승격 증명서가 아니다**. 스키마·내용·조건만 본다, Codex R11 P1-6)
+  새 스키마: 전부 갖췄다 (열·키 이름 + 필수 셀·숫자·receipt·중복 key — `bms_balancing/schema.py` 정본)
+PROMOTION {"promotion_eligible": false, "rc": 0, "subset": false, "roster": {"old": 0, "new": 13, "compared": 0, "missing_in_new": [], "extra_in_new": []}, "blocked_by": {"schema": 0, "provenance_cols": 0, "content": 0, "unit": 0, "controls": 0, "env": 0, "numbers": 0, "alias": 0, "provenance": 0, "inputs": 0, "inputs_uncomparable": 0, "env_uncomparable": 0, "stale": 0, "baseline_absent": 1}, "policy": "current", "new": "out", "old": null}

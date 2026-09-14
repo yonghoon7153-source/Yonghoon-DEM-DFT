@@ -1,0 +1,11 @@
+{
+  "schema_version": 1,
+  "job_id": "08e0fc5d41e147678f3940e98100ec12",
+  "kind": "reviewed_java",
+  "source_name": "PreflightOcpBoundary1s.java",
+  "source_sha256": "50f14bdd5a9bc387ed2fa30423ab0f29ed76fe7fa08f522877c89b26dea35640",
+  "comsol_root": "C:\\Program Files\\COMSOL\\COMSOL63\\Multiphysics",
+  "cores": 2,
+  "timeout_seconds": 300,
+  "created_at": "2026-09-13T11:50:34.573321+00:00"
+}

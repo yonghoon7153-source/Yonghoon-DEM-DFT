@@ -1,0 +1,2 @@
+[data] 풀셀 워크북 후보가 2개다 — 이름순 첫 것을 쓴다: aaa_decoy.xlsx (나머지: fullcell_states.xlsx)
+[data] 풀셀 워크북 후보가 2개다 — 이름순 첫 것을 쓴다: aaa_decoy.xlsx (나머지: fullcell_states.xlsx)

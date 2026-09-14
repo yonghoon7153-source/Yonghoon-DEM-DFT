@@ -1,0 +1,89 @@
+/* ── 쉬운 말 칸 · 용어 목록 (2026-09-14) ────────────────────────────────
+   `/alphabeta` 가 쓴다. 원문은 전문 용어를 그대로 두고, 절마다 아래에
+   `.plain` 칸을 달아 같은 내용을 다시 적는 구조다.
+
+   ⚠ 왜 색을 죽여 두나: 이 칸은 **덧붙인 설명**이지 본문이 아니다. 경고
+     (`.pipe-note`, 주황)나 인용 금지(`.pipe-cite`, 빨강)보다 눈에 덜 띄어야
+     읽는 순서가 본문 → 쉬운 말 로 간다. 그래서 테두리는 왼쪽 한 줄
+     (`--ok`, 초록)만 쓰고 바탕은 한 단계 낮은 면(`--surface-2`)에 둔다.
+
+   모든 색은 토큰이다 — 라이트/다크가 `:root` 재정의로 같이 따라온다. */
+
+.plain {
+  margin: 18px 0 0;
+  padding: 15px 18px 13px;
+  border: 1px solid var(--line);
+  border-left: 3px solid var(--ok);
+  border-radius: var(--r);
+  background: var(--surface-2);
+}
+
+.plain-t {
+  margin: 0 0 9px;
+  font-size: var(--fs-3xs, .75rem);
+  font-weight: 700;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--ok);
+}
+
+.plain p {
+  margin: 0 0 10px;
+  font-size: var(--fs-sm);
+  line-height: 1.78;
+  color: var(--ink-2);
+  word-break: keep-all;
+}
+.plain p:last-child { margin-bottom: 0; }
+.plain b { color: var(--ink); }
+
+.plain-l {
+  margin: 0 0 10px;
+  padding-left: 20px;
+  display: grid;
+  gap: 7px;
+}
+.plain-l:last-child { margin-bottom: 0; }
+.plain-l li {
+  font-size: var(--fs-sm);
+  line-height: 1.74;
+  color: var(--ink-2);
+  word-break: keep-all;
+}
+.plain-l li b { color: var(--ink); }
+
+/* ── 용어 목록 (§0) ─────────────────────────────────────────────────── */
+.gloss {
+  margin: 0 0 16px;
+  display: grid;
+  gap: 0;
+  border: 1px solid var(--line);
+  border-radius: var(--r);
+  background: var(--surface);
+  overflow: hidden;
+}
+.gloss dt {
+  padding: 12px 16px 4px;
+  font-size: var(--fs-sm);
+  font-weight: 700;
+  color: var(--ink);
+  word-break: keep-all;
+}
+.gloss dd {
+  margin: 0;
+  padding: 0 16px 12px;
+  font-size: var(--fs-sm);
+  line-height: 1.74;
+  color: var(--ink-2);
+  word-break: keep-all;
+  border-bottom: 1px solid var(--line-2);
+}
+.gloss dd:last-child { border-bottom: 0; }
+.gloss dd b { color: var(--ink); }
+
+/* 좁은 화면에서도 가로 스크롤이 안 생기게 — 본문 폭 규율 그대로 */
+@media (max-width: 560px) {
+  .plain { padding: 13px 14px 11px; }
+  .gloss dt { padding: 11px 13px 4px; }
+  .gloss dd { padding: 0 13px 11px; }
+}

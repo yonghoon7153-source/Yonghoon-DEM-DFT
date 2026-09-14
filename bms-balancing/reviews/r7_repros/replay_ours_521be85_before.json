@@ -1,0 +1,143 @@
+{
+  "target_head": "521be85e74acef80feec45bd147dd339e25b8d0a",
+  "설명": "받은 R7 재현 패키지를 **수정 전 우리 HEAD** 에서 그대로 돌린 결과 — 여섯 probe 전부 재현.",
+  "probes": {
+    "R7-01 aggregate_incomplete_counterexample": {
+      "상태": "재현",
+      "세부": {
+        "complete": {
+          "command": [
+            "/usr/local/bin/python3",
+            "/home/user/Yonghoon-DEM-DFT/bms-balancing/scripts/compare_states.py",
+            "case=/tmp/harness-r7-execution-iakpjn64/aggregate_incomplete_counterexample/out"
+          ],
+          "rc": 0,
+          "conclusion": "  A 축에서 LLI 가 **항상 가장 좁은가**: **아니오** — 상태에 따라 뒤집힌다",
+          "stdout": "==============================================================================\nA. 근최적 집합 위의 폭 — **모델을 고정**했을 때 데이터가 못 가르는 만큼\n==============================================================================\n\n[case] /tmp/harness-r7-execution-iakpjn64/aggregate_incomplete_counterexample/out\n  state       src           LAM_PE best [min,max]                   LAM_NE                      LLI  최광      파일\n  100         GITT              0.00 [0.00, 2.00]        0.00 [0.00, 3.00]        0.00 [0.00, 1.00]  LAM_NE  degeneracy_100_Li.json\n  200         GITT              0.00 [0.00, 1.00]        0.00 [0.00, 2.00]        0.00 [0.00, 9.00]  LLI     degeneracy_200_Li.json\n\n==============================================================================\nB. 모델 선택(Si 8 종)이 만드는 폭 — **다른 축**이다. 위와 합치지 말 것\n==============================================================================\n\n[case] matrix 산출 없음\n\n==============================================================================\n판정\n==============================================================================\n  A 축에서 LLI 가 **항상 가장 좁은가**: **아니오** — 상태에 따라 뒤집힌다\n  ⚠ 상대 불확실성(폭/최적값)은 열화가 쌓이면 분모가 커져 작아진다.\n     상태를 가로질러 말할 때는 **절대 폭(%p)** 으로 말할 것.\n",
+          "stderr": ""
+        },
+        "counterexample_unit_rejected": [
+          false,
+          "meta 의 run_id 가 산출물과 다르다: JSON run_id='state200-B'"
+        ],
+        "interrupted": {
+          "command": [
+            "/usr/local/bin/python3",
+            "/home/user/Yonghoon-DEM-DFT/bms-balancing/scripts/compare_states.py",
+            "case=/tmp/harness-r7-execution-iakpjn64/aggregate_incomplete_counterexample/out"
+          ],
+          "rc": 0,
+          "conclusion": "  A 축에서 LLI 가 **항상 가장 좁은가**: 예",
+          "stdout": "==============================================================================\nA. 근최적 집합 위의 폭 — **모델을 고정**했을 때 데이터가 못 가르는 만큼\n==============================================================================\n\n[case] /tmp/harness-r7-execution-iakpjn64/aggregate_incomplete_counterexample/out\n  state       src           LAM_PE best [min,max]                   LAM_NE                      LLI  최광      파일\n  100         GITT              0.00 [0.00, 2.00]        0.00 [0.00, 3.00]        0.00 [0.00, 1.00]  LAM_NE  degeneracy_100_Li.json\n\n==============================================================================\nB. 모델 선택(Si 8 종)이 만드는 폭 — **다른 축**이다. 위와 합치지 말 것\n==============================================================================\n\n[case] matrix 산출 없음\n\n==============================================================================\n판정\n==============================================================================\n  A 축에서 LLI 가 **항상 가장 좁은가**: 예\n  ⚠ 상대 불확실성(폭/최적값)은 열화가 쌓이면 분모가 커져 작아진다.\n     상태를 가로질러 말할 때는 **절대 폭(%p)** 으로 말할 것.\n",
+          "stderr": "  ! degeneracy_200_Li.json: 묶음 불일치/미완 (meta 의 run_id 가 산출물과 다르다: JSON run_id='state200-B') — 표에서 뺀다 (R6 내부 F07 · Codex R6-01·02)\n"
+        },
+        "finalized_again": {
+          "command": [
+            "/usr/local/bin/python3",
+            "/home/user/Yonghoon-DEM-DFT/bms-balancing/scripts/compare_states.py",
+            "case=/tmp/harness-r7-execution-iakpjn64/aggregate_incomplete_counterexample/out"
+          ],
+          "rc": 0,
+          "conclusion": "  A 축에서 LLI 가 **항상 가장 좁은가**: **아니오** — 상태에 따라 뒤집힌다",
+          "stdout": "==============================================================================\nA. 근최적 집합 위의 폭 — **모델을 고정**했을 때 데이터가 못 가르는 만큼\n==============================================================================\n\n[case] /tmp/harness-r7-execution-iakpjn64/aggregate_incomplete_counterexample/out\n  state       src           LAM_PE best [min,max]                   LAM_NE                      LLI  최광      파일\n  100         GITT              0.00 [0.00, 2.00]        0.00 [0.00, 3.00]        0.00 [0.00, 1.00]  LAM_NE  degeneracy_100_Li.json\n  200         GITT              0.00 [0.00, 1.00]        0.00 [0.00, 2.00]        0.00 [0.00, 9.00]  LLI     degeneracy_200_Li.json\n\n==============================================================================\nB. 모델 선택(Si 8 종)이 만드는 폭 — **다른 축**이다. 위와 합치지 말 것\n==============================================================================\n\n[case] matrix 산출 없음\n\n==============================================================================\n판정\n==============================================================================\n  A 축에서 LLI 가 **항상 가장 좁은가**: **아니오** — 상태에 따라 뒤집힌다\n  ⚠ 상대 불확실성(폭/최적값)은 열화가 쌓이면 분모가 커져 작아진다.\n     상태를 가로질러 말할 때는 **절대 폭(%p)** 으로 말할 것.\n",
+          "stderr": ""
+        },
+        "empty": {
+          "command": [
+            "/usr/local/bin/python3",
+            "/home/user/Yonghoon-DEM-DFT/bms-balancing/scripts/compare_states.py",
+            "case=/tmp/harness-r7-execution-iakpjn64/aggregate_incomplete_counterexample/empty"
+          ],
+          "rc": 0,
+          "conclusion": "  A 축에서 LLI 가 **항상 가장 좁은가**: 예",
+          "stdout": "==============================================================================\nA. 근최적 집합 위의 폭 — **모델을 고정**했을 때 데이터가 못 가르는 만큼\n==============================================================================\n\n[case] /tmp/harness-r7-execution-iakpjn64/aggregate_incomplete_counterexample/empty — degeneracy 산출 없음\n\n==============================================================================\nB. 모델 선택(Si 8 종)이 만드는 폭 — **다른 축**이다. 위와 합치지 말 것\n==============================================================================\n\n[case] matrix 산출 없음\n\n==============================================================================\n판정\n==============================================================================\n  A 축에서 LLI 가 **항상 가장 좁은가**: 예\n  ⚠ 상대 불확실성(폭/최적값)은 열화가 쌓이면 분모가 커져 작아진다.\n     상태를 가로질러 말할 때는 **절대 폭(%p)** 으로 말할 것.\n",
+          "stderr": ""
+        },
+        "scope": "Normal distinct-ID publishers; reader rejects incomplete unit correctly. The aggregate still asserts yes."
+      }
+    },
+    "R7-02 noise_reopen": {
+      "상태": "재현",
+      "세부": {
+        "real_optimizer": true,
+        "inputs_at_build": {
+          "path": "/tmp/bms-r7-noise-ed9wstwi/data/full_cell/large_cell_033C/fullcell_states.xlsx",
+          "sha256": "562fbf6c76bd1499f2ce5f37313d30753b0a4f3524a5366f8c704a84f3057ee7"
+        },
+        "raw_reopened_hash_B": "8c4521c60ba44ab99691f67d616ea3f38bbd5a0fccc992e0bb8be0ebaa6d5154",
+        "A": {
+          "misfit_rmse_pocv_V": 0.02887622626372643,
+          "sigma_meas_from_raw_V": 8.181303640093645e-05,
+          "sigma_at_k1_V": 1.334727534677551e-05,
+          "misfit_over_sigma_if_raw_data": 2163.4547511378396,
+          "verdict": "**원자료라면** 부적합이 잡음보다 2163 배 크다. 목적함수를 likelihood 로 바꿔 신뢰구간을 만들면 χ² 이 자유도보다 2163² 배 커서 **거짓으로 좁은** 구간이 나온다. 그러므로 '1 % 띠' 는 오차막대가 아니라 **분석자 선택 민감도**로만 읽어야 한다 — 이것은 잡음을 못 재서가 아니라, 재고 나서 내린 결론이다."
+        },
+        "mixed_A_misfit_B_noise": {
+          "misfit_rmse_pocv_V": 0.02887622626372643,
+          "sigma_meas_from_raw_V": 0.01834387978190313,
+          "sigma_at_k1_V": 0.018195773977771966,
+          "misfit_over_sigma_if_raw_data": 1.5869743325566557,
+          "verdict": "부적합이 잡음과 같은 규모다 (1.6 배). 이 경우에는 likelihood 기반 구간을 논의할 여지가 있다."
+        },
+        "normal_B": {
+          "misfit_rmse_pocv_V": 0.025939192306329108,
+          "sigma_meas_from_raw_V": 0.01834387978190313,
+          "sigma_at_k1_V": 0.018195773977771966,
+          "misfit_over_sigma_if_raw_data": 1.425561360457463,
+          "verdict": "부적합이 잡음과 같은 규모다 (1.4 배). 이 경우에는 likelihood 기반 구간을 논의할 여지가 있다."
+        }
+      }
+    },
+    "R7-03 matrix_reference": {
+      "상태": "재현",
+      "세부": {
+        "real_optimizer": true,
+        "restricted_fixture": "one GITT/Li/w=0 combination; starts=2",
+        "A": {
+          "inputs_sha": "15607a668c80",
+          "ref_a_PE": "1.388970710914743",
+          "ref_b_PE": "0.0",
+          "ref_a_NE": "1.0111329045785145",
+          "ref_b_NE": "-0.08261061833536988",
+          "ref_gamma_Si": "0.0",
+          "ref_rmse_pocv": "0.015049834539705905",
+          "LAM_PE_pct": "10.358586495033416",
+          "LAM_NE_pct": "2.8496705445839683",
+          "LLI_pct": "9.909817045143956"
+        },
+        "B": {
+          "inputs_sha": "15607a668c80",
+          "ref_a_PE": "1.4",
+          "ref_b_PE": "0.0",
+          "ref_a_NE": "1.0216285410212305",
+          "ref_b_NE": "-0.07150689385018794",
+          "ref_gamma_Si": "0.0",
+          "ref_rmse_pocv": "0.023013786694329595",
+          "LAM_PE_pct": "11.06478725471723",
+          "LAM_NE_pct": "3.847738332739994",
+          "LLI_pct": "9.905259880766698"
+        },
+        "observed_reference_inputs_sha_A": "55a99b55ae92",
+        "observed_reference_inputs_sha_B": "241a9b77f7e1",
+        "reference_input_signature_in_csv": false
+      }
+    },
+    "R7-04 baseline policy": {
+      "상태": "재현",
+      "세부": {
+        "stdout_tail": [
+          "R7_CURRENT_BASELINE_POLICY_SPLIT {\"current_reader_file\": \"degeneracy_100_Li.json\", \"current_span\": 0.5736895850554351, \"rerun_span\": 1.573689585055435, \"historical_helper_file\": \"degeneracy_100_Li_v2.json\", \"cli_rc\": 0, \"cli_stdout\": \"산출 1 개 점검 (/tmp/r7-current-old-policy-6s0jnote/rerun)\\n  정본 선택: d",
+          "R7_CURRENT_BASELINE_NEGATIVE_CONTROL {\"numbered_sibling_removed\": true, \"unchanged_rerun_vs_current_cli_rc\": 1, \"stdout\": \"산출 1 개 점검 (/tmp/r7-current-old-policy-6s0jnote/rerun)\\n  새 스키마: 전부 갖췄다 (run_id·sha256·env·inputs_sha·시작 시점 git·인자 필드)\\n\\n■ 정본과 **다른 숫자** 2 — 계산 경로는 안 고쳤으므로 같아야 한다.\\n   먼저 볼 축: m",
+          "R7_INFERENCE_CHECKS_PASSED"
+        ]
+      }
+    },
+    "R7-05·06 port(controls·adapted)": {
+      "상태": "재현",
+      "세부": {
+        "rc": 0,
+        "note": "port 스크립트 rc 0 = 예상 반례 관측 (MISSED 1 에 rc 0 · 기본 호출 5/6)"
+      }
+    }
+  }
+}

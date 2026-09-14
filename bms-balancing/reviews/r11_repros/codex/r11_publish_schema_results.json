@@ -1,0 +1,100 @@
+{
+  "target": {
+    "worktree": "work/harness-r11-target-wsl/bms-balancing",
+    "head": "2add074cf0c3ebfaa02b22d2311dd4330f0879b0",
+    "code_commit": "665c87e",
+    "target_written_by_reviewer": false
+  },
+  "named_r10_regressions": {
+    "selection": "test_d10_02 through test_d10_11 (P1-2..P1-8, P2-1..P2-3)",
+    "result": "10 passed, 6 deselected in 4.59s",
+    "returncode": 0
+  },
+  "new_executable_counterexamples": {
+    "matrix_filtered_canonical": {
+      "returncode": 0,
+      "canonical_exists": true,
+      "rows": 8,
+      "canonical_authority_rows": 32,
+      "half_cells": ["GITT"],
+      "w_dqdv": ["0.0"]
+    },
+    "profile_grid1_canonical": {
+      "returncode": 0,
+      "canonical_exists": true,
+      "rows": 1,
+      "default_grid_rows": 21,
+      "published_gamma_roster": {"requested": 1, "succeeded": 1, "missing": []}
+    },
+    "schema_only_promotes_without_baseline": {
+      "returncode": 0,
+      "promotion_eligible": true,
+      "old": null,
+      "old_roster": 0,
+      "compared": 0
+    },
+    "per_file_hardlink_self_comparison": {
+      "directories_samefile": false,
+      "artifacts_samefile": true,
+      "metas_samefile": true,
+      "returncode": 0,
+      "promotion_eligible": true
+    },
+    "matrix_infinity": {
+      "field": "obj",
+      "value": "inf",
+      "returncode": 0,
+      "content_problems": 0,
+      "numeric_differences": 0,
+      "promotion_eligible": true
+    },
+    "degeneracy_infinity": {
+      "field": "best_obj",
+      "value": "Infinity",
+      "returncode": 0,
+      "content_problems": 0,
+      "numeric_differences": 0,
+      "promotion_eligible": true
+    },
+    "profile_partial_stdout": {
+      "out": null,
+      "reported_status": "partial",
+      "gamma_roster": {"requested": 2, "succeeded": 1, "missing": [0.5]},
+      "returncode": 0
+    },
+    "shape_step_rc_meta_mismatch": {
+      "available_artifact": "partial/ne_shape_GITT_Li.csv",
+      "meta_status": "partial",
+      "producer_shim_returncode": 0,
+      "wrapper_message": "ne_shape: **complete** (meta status partial)",
+      "shape_step_returncode": 0
+    }
+  },
+  "supplemental_counterexamples": {
+    "schema_only_weak_meta": {
+      "meta_env": {},
+      "missing": ["state", "half_cell_source", "si_source", "starts", "seed", "argv", "roster"],
+      "returncode": 0,
+      "promotion_eligible": true
+    },
+    "full_compare_missing_argv_roster": {"returncode": 0, "promotion_eligible": true},
+    "changed_git_state": {
+      "git_state_changed_during_run": true,
+      "git_commit_at_start": "attacker-commit",
+      "returncode": 0,
+      "promotion_eligible": true
+    },
+    "artifact_meta_env_disagree": {
+      "artifact_env": "alien",
+      "meta_env": "matches baseline",
+      "returncode": 0,
+      "promotion_eligible": true
+    },
+    "changed_valid_input_digests": {"returncode": 0, "promotion_eligible": true},
+    "duplicate_flattened_receipt_role": {
+      "roles": ["full_cell", "half_cell", "literature.gr", "literature.gr", "literature.si"],
+      "validation_problems": []
+    },
+    "invalid_profile_gamma_roster": {"value": "not-json", "validation_problems": []}
+  }
+}

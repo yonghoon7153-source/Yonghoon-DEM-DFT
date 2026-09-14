@@ -1,0 +1,40 @@
+{
+  "dd_eval_reread.raced_compared": {
+    "before": 32,
+    "after": 0
+  },
+  "dd_eval_reread.raced_expected": {
+    "before": 32,
+    "after": 0
+  },
+  "dd_eval_reread.raced_status": {
+    "before": "complete",
+    "after": "invalid"
+  },
+  "dd_eval_reread.read_count": {
+    "before": 3,
+    "after": 1
+  },
+  "dd_eval_reread.read_sha256": {
+    "before": [
+      "058dd23c4337384618db771025ca18bcee89a67b195f7499366708db41db8f44",
+      "e942d2310d77387f4bd823c249c531d967b6f833f876dcf63016bac291f46500",
+      "e942d2310d77387f4bd823c249c531d967b6f833f876dcf63016bac291f46500"
+    ],
+    "after": [
+      "058dd23c4337384618db771025ca18bcee89a67b195f7499366708db41db8f44"
+    ]
+  },
+  "u18_gate.blank_receipts.returncode": {
+    "before": 0,
+    "after": 2
+  },
+  "u18_gate.config_mismatch.returncode": {
+    "before": 0,
+    "after": 2
+  },
+  "u18_gate.one_of_twelve.returncode": {
+    "before": 0,
+    "after": 2
+  }
+}

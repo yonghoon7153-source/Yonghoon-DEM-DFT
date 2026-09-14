@@ -1,0 +1,71 @@
+{
+  "artifact": "degeneracy_300_0147_Li.json",
+  "state": "300_0147",
+  "half_cell_source": "step_005C",
+  "si_source": "Li",
+  "starts": 24,
+  "seed": 0,
+  "w_dqdv_note": "명령별",
+  "data_root": "/mnt/d/가형 관련/degradation mode",
+  "run_id": "4a562f40a20849018b17c1fba76ec9cd",
+  "sha256": "f830c042d4c8c94f54515633cae6a9fda8043dad0e6ba9965b953e1cd54c0a4d",
+  "argv": [
+    "env",
+    "PYTHONUNBUFFERED=1",
+    "python3",
+    "-m",
+    "bms_balancing.verify",
+    "degeneracy",
+    "--state",
+    "300_0147",
+    "--si-source",
+    "Li",
+    "--source",
+    "step_005C",
+    "--w-dqdv",
+    "0",
+    "--tol",
+    "0.01",
+    "--starts",
+    "24",
+    "--seed",
+    "0",
+    "--grid",
+    "21",
+    "--samples",
+    "400",
+    "--out",
+    "out_u18b/degeneracy_300_0147_Li.json"
+  ],
+  "roster": {
+    "kind": "degeneracy",
+    "state": "300_0147",
+    "half_cell": [
+      "step_005C"
+    ],
+    "si": [
+      "Li"
+    ],
+    "w_dqdv": [
+      0.0
+    ]
+  },
+  "si_source_note": "wrapper 의 SI 환경값 — 본문의 exact 명부는 roster (matrix 는 Si 전부를 돈다)",
+  "git_commit": "419c1abaeec9fa981d7f5829d5803167288f7f1e",
+  "git_dirty": false,
+  "git_modified_outputs": [],
+  "git_modified_code": [],
+  "git_commit_at_start": "419c1abaeec9fa981d7f5829d5803167288f7f1e",
+  "git_dirty_at_start": false,
+  "git_modified_code_at_start": [],
+  "git_state_changed_during_run": false,
+  "started_utc": "2026-09-14T04:26:09.213676+00:00",
+  "env": {
+    "python": "3.12.3",
+    "numpy": "2.5.3",
+    "scipy": "1.18.1",
+    "pandas": "3.0.5",
+    "platform": "Linux-6.18.33.2-microsoft-standard-WSL2-x86_64-with-glibc2.39"
+  },
+  "created_utc": "2026-09-14T04:31:12.630417+00:00"
+}

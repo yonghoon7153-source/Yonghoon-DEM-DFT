@@ -1,0 +1,20 @@
+{
+  "local_named_inventory_count": 1247,
+  "local_unchanged_count": 1246,
+  "local_changed_plan_with_matching_before_bytes": 1,
+  "direct_package_members_from_current_inventory": 93,
+  "unchanged_direct_inventory_members": 92,
+  "matching_before_copy_for_changed_plan": 1,
+  "all_current_inventory_externally_verified": false,
+  "prior_A_receiver_report": {
+    "inventory_count": 1099,
+    "direct_members": 57,
+    "unchanged": 56,
+    "matching_plan_before_copy": 1,
+    "other_current_bytes_not_directly_verified": 1042
+  },
+  "historical333_is_separate_archived_scope": true,
+  "prior_A_original_receipt_unchanged": true,
+  "prior_TIME_CAPS_raw_difference_cause": "UNRESOLVED",
+  "new_receiver_raw_identity_confirmed": false
+}

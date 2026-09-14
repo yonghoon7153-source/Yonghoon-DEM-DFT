@@ -1,0 +1,411 @@
+{
+  "target": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/a45978e3-3a6e-5e3d-af55-7c9b61e0d809/scratchpad/r11ws/work/harness-r11-target-wsl/bms-balancing",
+  "publication": {
+    "matrix_filtered_canonical": {
+      "rc": 0,
+      "canonical_exists": true,
+      "rows": 8,
+      "full_authority_rows": 32,
+      "only_half_cells": [
+        "GITT"
+      ],
+      "only_weights": [
+        "0.0"
+      ]
+    },
+    "profile_grid1_canonical": {
+      "rc": 0,
+      "canonical_exists": true,
+      "rows": 1,
+      "gamma_roster": {
+        "requested": 1,
+        "succeeded": 1,
+        "missing": []
+      }
+    },
+    "profile_partial_stdout": {
+      "rc": 0,
+      "reported_status": "partial",
+      "gamma_roster": {
+        "requested": 2,
+        "succeeded": 1,
+        "missing": [
+          0.5
+        ]
+      },
+      "out_was_none": true
+    }
+  },
+  "checker": {
+    "schema_only_no_baseline": {
+      "rc": 0,
+      "promotion": {
+        "promotion_eligible": true,
+        "rc": 0,
+        "subset": false,
+        "roster": {
+          "old": 0,
+          "new": 1,
+          "compared": 0,
+          "missing_in_new": [],
+          "extra_in_new": []
+        },
+        "blocked_by": {
+          "schema": 0,
+          "content": 0,
+          "unit": 0,
+          "controls": 0,
+          "env": 0,
+          "numbers": 0
+        },
+        "policy": "current",
+        "new": "/tmp/r11-publish-schema-_gz4pfyz/schema-only",
+        "old": null
+      },
+      "stdout_tail": [
+        "산출 1 개 점검 (/tmp/r11-publish-schema-_gz4pfyz/schema-only)",
+        "  새 스키마: 전부 갖췄다 (열·키 이름 + 필수 셀·숫자·receipt·중복 key — `bms_balancing/schema.py` 정본)",
+        "PROMOTION {\"promotion_eligible\": true, \"rc\": 0, \"subset\": false, \"roster\": {\"old\": 0, \"new\": 1, \"compared\": 0, \"missing_in_new\": [], \"extra_in_new\": []}, \"blocked_by\": {\"schema\": 0, \"content\": 0, \"unit\": 0, \"controls\": 0, \"env\": 0, \"numbers\": 0}, \"policy\": \"current\", \"new\": \"/tmp/r11-publish-schema-_gz4pfyz/schema-only\", \"old\": null}"
+      ],
+      "stderr": ""
+    },
+    "schema_only_skips_env_controls_argv": {
+      "rc": 0,
+      "promotion": {
+        "promotion_eligible": true,
+        "rc": 0,
+        "subset": false,
+        "roster": {
+          "old": 0,
+          "new": 1,
+          "compared": 0,
+          "missing_in_new": [],
+          "extra_in_new": []
+        },
+        "blocked_by": {
+          "schema": 0,
+          "content": 0,
+          "unit": 0,
+          "controls": 0,
+          "env": 0,
+          "numbers": 0
+        },
+        "policy": "current",
+        "new": "/tmp/r11-publish-schema-_gz4pfyz/schema-only-weak-meta",
+        "old": null
+      },
+      "stdout_tail": [
+        "산출 1 개 점검 (/tmp/r11-publish-schema-_gz4pfyz/schema-only-weak-meta)",
+        "  새 스키마: 전부 갖췄다 (열·키 이름 + 필수 셀·숫자·receipt·중복 key — `bms_balancing/schema.py` 정본)",
+        "PROMOTION {\"promotion_eligible\": true, \"rc\": 0, \"subset\": false, \"roster\": {\"old\": 0, \"new\": 1, \"compared\": 0, \"missing_in_new\": [], \"extra_in_new\": []}, \"blocked_by\": {\"schema\": 0, \"content\": 0, \"unit\": 0, \"controls\": 0, \"env\": 0, \"numbers\": 0}, \"policy\": \"current\", \"new\": \"/tmp/r11-publish-schema-_gz4pfyz/schema-only-weak-meta\", \"old\": null}"
+      ],
+      "stderr": ""
+    },
+    "full_compare_missing_argv_and_roster": {
+      "rc": 0,
+      "promotion": {
+        "promotion_eligible": true,
+        "rc": 0,
+        "subset": false,
+        "roster": {
+          "old": 1,
+          "new": 1,
+          "compared": 1,
+          "missing_in_new": [],
+          "extra_in_new": []
+        },
+        "blocked_by": {
+          "schema": 0,
+          "content": 0,
+          "unit": 0,
+          "controls": 0,
+          "env": 0,
+          "numbers": 0
+        },
+        "policy": "current",
+        "new": "/tmp/r11-publish-schema-_gz4pfyz/argv-new",
+        "old": "/tmp/r11-publish-schema-_gz4pfyz/argv-old"
+      },
+      "stdout_tail": [
+        "산출 1 개 점검 (/tmp/r11-publish-schema-_gz4pfyz/argv-new)",
+        "  정본 선택 정책: **current** — 현행 디렉터리 — 정본은 unversioned 이름 하나, 판 번호가 붙은 형제는 쓰지 않는다 (Codex R6-04·R7-04)",
+        "  명부(roster): 정본 1 · 새 산출 1 · 대조 1",
+        "  새 스키마: 전부 갖췄다 (열·키 이름 + 필수 셀·숫자·receipt·중복 key — `bms_balancing/schema.py` 정본)",
+        "  숫자: 정본(/tmp/r11-publish-schema-_gz4pfyz/argv-old)과 전부 같다 — 게시·서명만 바뀌었다",
+        "PROMOTION {\"promotion_eligible\": true, \"rc\": 0, \"subset\": false, \"roster\": {\"old\": 1, \"new\": 1, \"compared\": 1, \"missing_in_new\": [], \"extra_in_new\": []}, \"blocked_by\": {\"schema\": 0, \"content\": 0, \"unit\": 0, \"controls\": 0, \"env\": 0, \"numbers\": 0}, \"policy\": \"current\", \"new\": \"/tmp/r11-publish-schema-_gz4pfyz/argv-new\", \"old\": \"/tmp/r11-publish-schema-_gz4pfyz/argv-old\"}"
+      ],
+      "stderr": ""
+    },
+    "changed_git_state_promoted": {
+      "rc": 0,
+      "promotion": {
+        "promotion_eligible": true,
+        "rc": 0,
+        "subset": false,
+        "roster": {
+          "old": 1,
+          "new": 1,
+          "compared": 1,
+          "missing_in_new": [],
+          "extra_in_new": []
+        },
+        "blocked_by": {
+          "schema": 0,
+          "content": 0,
+          "unit": 0,
+          "controls": 0,
+          "env": 0,
+          "numbers": 0
+        },
+        "policy": "current",
+        "new": "/tmp/r11-publish-schema-_gz4pfyz/changed-new",
+        "old": "/tmp/r11-publish-schema-_gz4pfyz/changed-old"
+      },
+      "stdout_tail": [
+        "산출 1 개 점검 (/tmp/r11-publish-schema-_gz4pfyz/changed-new)",
+        "  정본 선택 정책: **current** — 현행 디렉터리 — 정본은 unversioned 이름 하나, 판 번호가 붙은 형제는 쓰지 않는다 (Codex R6-04·R7-04)",
+        "  명부(roster): 정본 1 · 새 산출 1 · 대조 1",
+        "  새 스키마: 전부 갖췄다 (열·키 이름 + 필수 셀·숫자·receipt·중복 key — `bms_balancing/schema.py` 정본)",
+        "  숫자: 정본(/tmp/r11-publish-schema-_gz4pfyz/changed-old)과 전부 같다 — 게시·서명만 바뀌었다",
+        "PROMOTION {\"promotion_eligible\": true, \"rc\": 0, \"subset\": false, \"roster\": {\"old\": 1, \"new\": 1, \"compared\": 1, \"missing_in_new\": [], \"extra_in_new\": []}, \"blocked_by\": {\"schema\": 0, \"content\": 0, \"unit\": 0, \"controls\": 0, \"env\": 0, \"numbers\": 0}, \"policy\": \"current\", \"new\": \"/tmp/r11-publish-schema-_gz4pfyz/changed-new\", \"old\": \"/tmp/r11-publish-schema-_gz4pfyz/changed-old\"}"
+      ],
+      "stderr": ""
+    },
+    "artifact_env_disagrees_with_meta_promoted": {
+      "rc": 0,
+      "promotion": {
+        "promotion_eligible": true,
+        "rc": 0,
+        "subset": false,
+        "roster": {
+          "old": 1,
+          "new": 1,
+          "compared": 1,
+          "missing_in_new": [],
+          "extra_in_new": []
+        },
+        "blocked_by": {
+          "schema": 0,
+          "content": 0,
+          "unit": 0,
+          "controls": 0,
+          "env": 0,
+          "numbers": 0
+        },
+        "policy": "current",
+        "new": "/tmp/r11-publish-schema-_gz4pfyz/artifact-env-new",
+        "old": "/tmp/r11-publish-schema-_gz4pfyz/artifact-env-old"
+      },
+      "stdout_tail": [
+        "산출 1 개 점검 (/tmp/r11-publish-schema-_gz4pfyz/artifact-env-new)",
+        "  정본 선택 정책: **current** — 현행 디렉터리 — 정본은 unversioned 이름 하나, 판 번호가 붙은 형제는 쓰지 않는다 (Codex R6-04·R7-04)",
+        "  명부(roster): 정본 1 · 새 산출 1 · 대조 1",
+        "  새 스키마: 전부 갖췄다 (열·키 이름 + 필수 셀·숫자·receipt·중복 key — `bms_balancing/schema.py` 정본)",
+        "  숫자: 정본(/tmp/r11-publish-schema-_gz4pfyz/artifact-env-old)과 전부 같다 — 게시·서명만 바뀌었다",
+        "PROMOTION {\"promotion_eligible\": true, \"rc\": 0, \"subset\": false, \"roster\": {\"old\": 1, \"new\": 1, \"compared\": 1, \"missing_in_new\": [], \"extra_in_new\": []}, \"blocked_by\": {\"schema\": 0, \"content\": 0, \"unit\": 0, \"controls\": 0, \"env\": 0, \"numbers\": 0}, \"policy\": \"current\", \"new\": \"/tmp/r11-publish-schema-_gz4pfyz/artifact-env-new\", \"old\": \"/tmp/r11-publish-schema-_gz4pfyz/artifact-env-old\"}"
+      ],
+      "stderr": ""
+    },
+    "per_file_alias_self_comparison": {
+      "rc": 0,
+      "promotion": {
+        "promotion_eligible": true,
+        "rc": 0,
+        "subset": false,
+        "roster": {
+          "old": 1,
+          "new": 1,
+          "compared": 1,
+          "missing_in_new": [],
+          "extra_in_new": []
+        },
+        "blocked_by": {
+          "schema": 0,
+          "content": 0,
+          "unit": 0,
+          "controls": 0,
+          "env": 0,
+          "numbers": 0
+        },
+        "policy": "current",
+        "new": "/tmp/r11-publish-schema-_gz4pfyz/alias-new",
+        "old": "/tmp/r11-publish-schema-_gz4pfyz/alias-old"
+      },
+      "stdout_tail": [
+        "산출 1 개 점검 (/tmp/r11-publish-schema-_gz4pfyz/alias-new)",
+        "  정본 선택 정책: **current** — 현행 디렉터리 — 정본은 unversioned 이름 하나, 판 번호가 붙은 형제는 쓰지 않는다 (Codex R6-04·R7-04)",
+        "  명부(roster): 정본 1 · 새 산출 1 · 대조 1",
+        "  새 스키마: 전부 갖췄다 (열·키 이름 + 필수 셀·숫자·receipt·중복 key — `bms_balancing/schema.py` 정본)",
+        "  숫자: 정본(/tmp/r11-publish-schema-_gz4pfyz/alias-old)과 전부 같다 — 게시·서명만 바뀌었다",
+        "PROMOTION {\"promotion_eligible\": true, \"rc\": 0, \"subset\": false, \"roster\": {\"old\": 1, \"new\": 1, \"compared\": 1, \"missing_in_new\": [], \"extra_in_new\": []}, \"blocked_by\": {\"schema\": 0, \"content\": 0, \"unit\": 0, \"controls\": 0, \"env\": 0, \"numbers\": 0}, \"policy\": \"current\", \"new\": \"/tmp/r11-publish-schema-_gz4pfyz/alias-new\", \"old\": \"/tmp/r11-publish-schema-_gz4pfyz/alias-old\"}"
+      ],
+      "stderr": "",
+      "directories_samefile": false,
+      "artifacts_samefile": true,
+      "metas_samefile": true
+    },
+    "matrix_inf_promoted": {
+      "rc": 0,
+      "promotion": {
+        "promotion_eligible": true,
+        "rc": 0,
+        "subset": false,
+        "roster": {
+          "old": 1,
+          "new": 1,
+          "compared": 1,
+          "missing_in_new": [],
+          "extra_in_new": []
+        },
+        "blocked_by": {
+          "schema": 0,
+          "content": 0,
+          "unit": 0,
+          "controls": 0,
+          "env": 0,
+          "numbers": 0
+        },
+        "policy": "current",
+        "new": "/tmp/r11-publish-schema-_gz4pfyz/inf-new",
+        "old": "/tmp/r11-publish-schema-_gz4pfyz/inf-old"
+      },
+      "stdout_tail": [
+        "산출 1 개 점검 (/tmp/r11-publish-schema-_gz4pfyz/inf-new)",
+        "  정본 선택 정책: **current** — 현행 디렉터리 — 정본은 unversioned 이름 하나, 판 번호가 붙은 형제는 쓰지 않는다 (Codex R6-04·R7-04)",
+        "  명부(roster): 정본 1 · 새 산출 1 · 대조 1",
+        "  새 스키마: 전부 갖췄다 (열·키 이름 + 필수 셀·숫자·receipt·중복 key — `bms_balancing/schema.py` 정본)",
+        "  숫자: 정본(/tmp/r11-publish-schema-_gz4pfyz/inf-old)과 전부 같다 — 게시·서명만 바뀌었다",
+        "PROMOTION {\"promotion_eligible\": true, \"rc\": 0, \"subset\": false, \"roster\": {\"old\": 1, \"new\": 1, \"compared\": 1, \"missing_in_new\": [], \"extra_in_new\": []}, \"blocked_by\": {\"schema\": 0, \"content\": 0, \"unit\": 0, \"controls\": 0, \"env\": 0, \"numbers\": 0}, \"policy\": \"current\", \"new\": \"/tmp/r11-publish-schema-_gz4pfyz/inf-new\", \"old\": \"/tmp/r11-publish-schema-_gz4pfyz/inf-old\"}"
+      ],
+      "stderr": ""
+    },
+    "degeneracy_infinity_promoted": {
+      "rc": 0,
+      "promotion": {
+        "promotion_eligible": true,
+        "rc": 0,
+        "subset": false,
+        "roster": {
+          "old": 1,
+          "new": 1,
+          "compared": 1,
+          "missing_in_new": [],
+          "extra_in_new": []
+        },
+        "blocked_by": {
+          "schema": 0,
+          "content": 0,
+          "unit": 0,
+          "controls": 0,
+          "env": 0,
+          "numbers": 0
+        },
+        "policy": "current",
+        "new": "/tmp/r11-publish-schema-_gz4pfyz/jinf-new",
+        "old": "/tmp/r11-publish-schema-_gz4pfyz/jinf-old"
+      },
+      "stdout_tail": [
+        "산출 1 개 점검 (/tmp/r11-publish-schema-_gz4pfyz/jinf-new)",
+        "  정본 선택 정책: **current** — 현행 디렉터리 — 정본은 unversioned 이름 하나, 판 번호가 붙은 형제는 쓰지 않는다 (Codex R6-04·R7-04)",
+        "  명부(roster): 정본 1 · 새 산출 1 · 대조 1",
+        "  새 스키마: 전부 갖췄다 (열·키 이름 + 필수 셀·숫자·receipt·중복 key — `bms_balancing/schema.py` 정본)",
+        "  숫자: 정본(/tmp/r11-publish-schema-_gz4pfyz/jinf-old)과 전부 같다 — 게시·서명만 바뀌었다",
+        "PROMOTION {\"promotion_eligible\": true, \"rc\": 0, \"subset\": false, \"roster\": {\"old\": 1, \"new\": 1, \"compared\": 1, \"missing_in_new\": [], \"extra_in_new\": []}, \"blocked_by\": {\"schema\": 0, \"content\": 0, \"unit\": 0, \"controls\": 0, \"env\": 0, \"numbers\": 0}, \"policy\": \"current\", \"new\": \"/tmp/r11-publish-schema-_gz4pfyz/jinf-new\", \"old\": \"/tmp/r11-publish-schema-_gz4pfyz/jinf-old\"}"
+      ],
+      "stderr": ""
+    },
+    "profile_gamma_roster_not_validated": {
+      "gamma_roster": "not-json",
+      "problems": []
+    },
+    "changed_valid_input_digests_promoted": {
+      "rc": 0,
+      "promotion": {
+        "promotion_eligible": true,
+        "rc": 0,
+        "subset": false,
+        "roster": {
+          "old": 1,
+          "new": 1,
+          "compared": 1,
+          "missing_in_new": [],
+          "extra_in_new": []
+        },
+        "blocked_by": {
+          "schema": 0,
+          "content": 0,
+          "unit": 0,
+          "controls": 0,
+          "env": 0,
+          "numbers": 0
+        },
+        "policy": "current",
+        "new": "/tmp/r11-publish-schema-_gz4pfyz/changed-rec-new",
+        "old": "/tmp/r11-publish-schema-_gz4pfyz/changed-rec-old"
+      },
+      "stdout_tail": [
+        "산출 1 개 점검 (/tmp/r11-publish-schema-_gz4pfyz/changed-rec-new)",
+        "  정본 선택 정책: **current** — 현행 디렉터리 — 정본은 unversioned 이름 하나, 판 번호가 붙은 형제는 쓰지 않는다 (Codex R6-04·R7-04)",
+        "  명부(roster): 정본 1 · 새 산출 1 · 대조 1",
+        "  새 스키마: 전부 갖췄다 (열·키 이름 + 필수 셀·숫자·receipt·중복 key — `bms_balancing/schema.py` 정본)",
+        "  숫자: 정본(/tmp/r11-publish-schema-_gz4pfyz/changed-rec-old)과 전부 같다 — 게시·서명만 바뀌었다",
+        "PROMOTION {\"promotion_eligible\": true, \"rc\": 0, \"subset\": false, \"roster\": {\"old\": 1, \"new\": 1, \"compared\": 1, \"missing_in_new\": [], \"extra_in_new\": []}, \"blocked_by\": {\"schema\": 0, \"content\": 0, \"unit\": 0, \"controls\": 0, \"env\": 0, \"numbers\": 0}, \"policy\": \"current\", \"new\": \"/tmp/r11-publish-schema-_gz4pfyz/changed-rec-new\", \"old\": \"/tmp/r11-publish-schema-_gz4pfyz/changed-rec-old\"}"
+      ],
+      "stderr": ""
+    },
+    "duplicate_receipt_direct": {
+      "flattened_roles": [
+        "full_cell",
+        "half_cell",
+        "literature.gr",
+        "literature.gr",
+        "literature.si"
+      ],
+      "problems": []
+    },
+    "changed_equivocal_receipt_promoted": {
+      "rc": 0,
+      "promotion": {
+        "promotion_eligible": true,
+        "rc": 0,
+        "subset": false,
+        "roster": {
+          "old": 1,
+          "new": 1,
+          "compared": 1,
+          "missing_in_new": [],
+          "extra_in_new": []
+        },
+        "blocked_by": {
+          "schema": 0,
+          "content": 0,
+          "unit": 0,
+          "controls": 0,
+          "env": 0,
+          "numbers": 0
+        },
+        "policy": "current",
+        "new": "/tmp/r11-publish-schema-_gz4pfyz/receipt-new",
+        "old": "/tmp/r11-publish-schema-_gz4pfyz/receipt-old"
+      },
+      "stdout_tail": [
+        "산출 1 개 점검 (/tmp/r11-publish-schema-_gz4pfyz/receipt-new)",
+        "  정본 선택 정책: **current** — 현행 디렉터리 — 정본은 unversioned 이름 하나, 판 번호가 붙은 형제는 쓰지 않는다 (Codex R6-04·R7-04)",
+        "  명부(roster): 정본 1 · 새 산출 1 · 대조 1",
+        "  새 스키마: 전부 갖췄다 (열·키 이름 + 필수 셀·숫자·receipt·중복 key — `bms_balancing/schema.py` 정본)",
+        "  숫자: 정본(/tmp/r11-publish-schema-_gz4pfyz/receipt-old)과 전부 같다 — 게시·서명만 바뀌었다",
+        "PROMOTION {\"promotion_eligible\": true, \"rc\": 0, \"subset\": false, \"roster\": {\"old\": 1, \"new\": 1, \"compared\": 1, \"missing_in_new\": [], \"extra_in_new\": []}, \"blocked_by\": {\"schema\": 0, \"content\": 0, \"unit\": 0, \"controls\": 0, \"env\": 0, \"numbers\": 0}, \"policy\": \"current\", \"new\": \"/tmp/r11-publish-schema-_gz4pfyz/receipt-new\", \"old\": \"/tmp/r11-publish-schema-_gz4pfyz/receipt-old\"}"
+      ],
+      "stderr": ""
+    }
+  },
+  "shape_step": {
+    "process_rc": 0,
+    "stdout": [
+      "SHAPE_STEP_RC=0"
+    ],
+    "stderr": [
+      "   ne_shape: **complete** (meta status partial) → "
+    ]
+  }
+}

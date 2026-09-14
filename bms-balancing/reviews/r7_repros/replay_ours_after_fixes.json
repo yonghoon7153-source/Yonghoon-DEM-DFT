@@ -1,0 +1,46 @@
+{
+  "target_head": "(이 커밋)",
+  "설명": "같은 probe 를 **수정 뒤** 트리에서 돌린 결과 — 각 probe 가 자기 반례 assertion 에서 멈춘다 (= 반례 소멸).",
+  "probes": {
+    "R7-01 execution": {
+      "상태": "안 재현",
+      "멈춘_곳": [
+        "assert partial[\"rc\"] == 0 and partial[\"conclusion\"].rstrip().endswith(\"예\")",
+        "^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^",
+        "AssertionError"
+      ]
+    },
+    "R7-02 noise": {
+      "상태": "안 재현",
+      "멈춘_곳": [
+        "^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^",
+        "AssertionError",
+        "rc=1"
+      ]
+    },
+    "R7-03 matrix": {
+      "상태": "안 재현",
+      "멈춘_곳": [
+        "^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^",
+        "AssertionError",
+        "rc=1"
+      ]
+    },
+    "R7-04 baseline": {
+      "상태": "안 재현",
+      "멈춘_곳": [
+        "^^^^^^^^^^^^^^^^^",
+        "AssertionError: (1, '산출 1 개 점검 (/tmp/r7-current-old-policy-qzc_ouyt/rerun)\\n  정본 선택 정책: **current** — 현행 디렉터리 — 정본은 unversioned 이름 하나, 판 번호가 붙은 형제는 쓰지 않는다 (Codex R6-04·R7-04)\\n  ! 정본 디렉터리에 판 번호가 붙은 형제 1 개 — 쓰지 않았다 (`out/archive/` 로 옮길 것): degeneracy_100_Li_v2.json\\n  새 스키마: 전부 갖췄다 (run_id·sha256·env",
+        "rc=1"
+      ]
+    },
+    "R7-05·06 port": {
+      "상태": "안 재현",
+      "멈춘_곳": [
+        "assert records[\"default_environment\"][\"returncode\"] == 1, records",
+        "^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^",
+        "AssertionError: {'default_environment': {'argv': ['/usr/local/bin/python3', '/tmp/r7-port-review-mnt41a6y/review-copy/bms-balancing/reviews/r6_repros/codex/replay_codex_r6_adapted.py', '--target', '/tmp/r7-port-review-mnt41a6y/review-copy/bms-balancing'], 'returncode': 0, 'stdout': '{\\n  \"target_hea"
+      ]
+    }
+  }
+}

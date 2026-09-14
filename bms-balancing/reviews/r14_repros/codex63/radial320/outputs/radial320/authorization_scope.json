@@ -1,0 +1,18 @@
+{
+  "user_confirmation": "User explicitly confirmed attached instructions with ㅇㅇ in this conversation.",
+  "approved_request_file": "C:\\Users\\BML\\Desktop\\KakaoTalk_Longtxt_20260914_1651_11_424.txt",
+  "approved_request_sha256": "4cb2b5922137b88d28564a3a8d324fde69d5da1ae09618f138376c37bb46dd7e",
+  "new_COMSOL_runs_authorized": 1,
+  "new_name": "Caps300R320H0250",
+  "physical_seconds": 5,
+  "baseline_name": "Caps300R160H0250",
+  "baseline_job_id": "15e5d7433a6a4956b820cf6952330735",
+  "prohibited_auto_extensions": [
+    "additionaltimehalving",
+    "finer mesh",
+    "fullprotocol",
+    "12hrest",
+    "finite sigma",
+    "sweep"
+  ]
+}

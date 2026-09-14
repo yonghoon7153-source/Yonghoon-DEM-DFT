@@ -1,0 +1,230 @@
+{
+  "target_head": "f21cb6480fc27857c7aac67e823cae62b1443830",
+  "target_tree": "8365e7ef2646fb3c9d1f6ad3aa2a213a0c81ff10",
+  "checks": {
+    "current_schema": {
+      "command": [
+        "/home/yonghoon71/ddvenv/bin/python",
+        "-B",
+        "scripts/check_u14.py",
+        "--new",
+        "out",
+        "--schema-only"
+      ],
+      "child_exit_code": 0,
+      "promotion": {
+        "promotion_eligible": false,
+        "rc": 0,
+        "subset": false,
+        "roster": {
+          "old": 0,
+          "new": 13,
+          "compared": 0,
+          "missing_in_new": [],
+          "extra_in_new": []
+        },
+        "blocked_by": {
+          "schema": 0,
+          "provenance_cols": 0,
+          "content": 0,
+          "unit": 0,
+          "controls": 0,
+          "env": 0,
+          "numbers": 0,
+          "alias": 0,
+          "provenance": 0,
+          "inputs": 0,
+          "inputs_uncomparable": 0,
+          "env_uncomparable": 0,
+          "stale": 0,
+          "baseline_absent": 1
+        },
+        "policy": "current",
+        "new": "out",
+        "old": null
+      },
+      "stdout_sha256": "0ac625dba8ebbc5a8fa17c82c4711da3ebc45f38221761c4c77385bc795b348c",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "legacy_schema": {
+      "command": [
+        "/home/yonghoon71/ddvenv/bin/python",
+        "-B",
+        "scripts/check_u14.py",
+        "--new",
+        "out/archive/legacy_r6_u14",
+        "--schema-only"
+      ],
+      "child_exit_code": 2,
+      "promotion": {
+        "promotion_eligible": false,
+        "rc": 2,
+        "subset": false,
+        "roster": {
+          "old": 0,
+          "new": 13,
+          "compared": 0,
+          "missing_in_new": [],
+          "extra_in_new": []
+        },
+        "blocked_by": {
+          "schema": 40,
+          "provenance_cols": 25,
+          "content": 6,
+          "unit": 0,
+          "controls": 0,
+          "env": 0,
+          "numbers": 0,
+          "alias": 0,
+          "provenance": 1,
+          "inputs": 0,
+          "inputs_uncomparable": 0,
+          "env_uncomparable": 0,
+          "stale": 0,
+          "baseline_absent": 1
+        },
+        "policy": "current",
+        "new": "out/archive/legacy_r6_u14",
+        "old": null
+      },
+      "stdout_sha256": "c72883b390da63a154f6dcae2bbbed362d37a76951788e834c204ece410ba3eb",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "new_vs_legacy": {
+      "command": [
+        "/home/yonghoon71/ddvenv/bin/python",
+        "-B",
+        "scripts/check_u14.py",
+        "--new",
+        "out",
+        "--old",
+        "out/archive/legacy_r6_u14"
+      ],
+      "child_exit_code": 4,
+      "promotion": {
+        "promotion_eligible": false,
+        "rc": 4,
+        "subset": false,
+        "roster": {
+          "old": 13,
+          "new": 13,
+          "compared": 13,
+          "missing_in_new": [],
+          "extra_in_new": []
+        },
+        "blocked_by": {
+          "schema": 0,
+          "provenance_cols": 0,
+          "content": 0,
+          "unit": 0,
+          "controls": 0,
+          "env": 0,
+          "numbers": 0,
+          "alias": 0,
+          "provenance": 0,
+          "inputs": 0,
+          "inputs_uncomparable": 17,
+          "env_uncomparable": 1,
+          "stale": 0,
+          "baseline_absent": 0
+        },
+        "policy": "current",
+        "new": "out",
+        "old": "out/archive/legacy_r6_u14"
+      },
+      "stdout_sha256": "0d5ce0c2d6b343ff9fe3c9b1df665a0bbbe724def6faeb66d1479319d3a1e0f1",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "new_vs_current_head": {
+      "command": [
+        "/home/yonghoon71/ddvenv/bin/python",
+        "-B",
+        "scripts/check_u14.py",
+        "--new",
+        "out",
+        "--old-rev",
+        "HEAD"
+      ],
+      "child_exit_code": 2,
+      "promotion": {
+        "promotion_eligible": false,
+        "rc": 2,
+        "subset": false,
+        "roster": {
+          "old": 13,
+          "new": 13,
+          "compared": 13,
+          "missing_in_new": [],
+          "extra_in_new": []
+        },
+        "blocked_by": {
+          "schema": 0,
+          "provenance_cols": 0,
+          "content": 0,
+          "unit": 0,
+          "controls": 0,
+          "env": 0,
+          "numbers": 0,
+          "alias": 13,
+          "provenance": 0,
+          "inputs": 0,
+          "inputs_uncomparable": 0,
+          "env_uncomparable": 0,
+          "stale": 0,
+          "baseline_absent": 0
+        },
+        "policy": "historical",
+        "new": "out",
+        "old": "/tmp/tmpmvuap45g"
+      },
+      "stdout_sha256": "7addfe2445d2a4fd5c97938df474a8b98e7d8304dddce54a262cf22b8028c98f",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "new_vs_prepromotion": {
+      "command": [
+        "/home/yonghoon71/ddvenv/bin/python",
+        "-B",
+        "scripts/check_u14.py",
+        "--new",
+        "out",
+        "--old-rev",
+        "42314198e0beee59834d394cdba2757183503b59"
+      ],
+      "child_exit_code": 4,
+      "promotion": {
+        "promotion_eligible": false,
+        "rc": 4,
+        "subset": false,
+        "roster": {
+          "old": 13,
+          "new": 13,
+          "compared": 13,
+          "missing_in_new": [],
+          "extra_in_new": []
+        },
+        "blocked_by": {
+          "schema": 0,
+          "provenance_cols": 0,
+          "content": 0,
+          "unit": 0,
+          "controls": 0,
+          "env": 0,
+          "numbers": 0,
+          "alias": 0,
+          "provenance": 0,
+          "inputs": 0,
+          "inputs_uncomparable": 17,
+          "env_uncomparable": 1,
+          "stale": 0,
+          "baseline_absent": 0
+        },
+        "policy": "historical",
+        "new": "out",
+        "old": "/tmp/tmp0xmdg5j6"
+      },
+      "stdout_sha256": "97e6c3ed26e44c11fbb973c107ac91af3cd00d322206a6a81d01b321e5dc6dc1",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  },
+  "target_status_after": ""
+}

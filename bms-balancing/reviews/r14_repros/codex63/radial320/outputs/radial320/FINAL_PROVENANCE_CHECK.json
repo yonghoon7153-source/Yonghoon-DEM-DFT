@@ -1,0 +1,17 @@
+{
+  "status": "PASS",
+  "recorded_at_utc": "2026-09-14T08:21:08.451178+00:00",
+  "prior_native_job_ids": 28,
+  "prior_native_job_files_rehashed_unchanged": 189,
+  "prior_status_files_unchanged": 28,
+  "new_native_job_ids": [
+    "f0db6d080ad04045a2b43dc5a51d89b2"
+  ],
+  "new_worker_state": "completed",
+  "new_compile_returncode": 0,
+  "new_batch_returncode": 0,
+  "new_runs": 1,
+  "reference_runs_repeated": false,
+  "old_failed_classification_unchanged": "See independent native audit; no state rewritten",
+  "scope": "Final native-job provenance check. Full local867 preservation is a separate root final check."
+}

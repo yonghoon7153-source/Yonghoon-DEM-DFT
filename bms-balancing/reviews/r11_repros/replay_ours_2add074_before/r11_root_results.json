@@ -1,0 +1,212 @@
+{
+  "target": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/a45978e3-3a6e-5e3d-af55-7c9b61e0d809/scratchpad/r11clean/bms-balancing",
+  "cases": [
+    {
+      "case": "schema_only_without_baseline_promotes",
+      "rc": 0,
+      "promotion": {
+        "promotion_eligible": true,
+        "rc": 0,
+        "subset": false,
+        "roster": {
+          "old": 0,
+          "new": 1,
+          "compared": 0,
+          "missing_in_new": [],
+          "extra_in_new": []
+        },
+        "blocked_by": {
+          "schema": 0,
+          "content": 0,
+          "unit": 0,
+          "controls": 0,
+          "env": 0,
+          "numbers": 0
+        },
+        "policy": "current",
+        "new": "/tmp/r11-schema-only-q3sf6peo/new",
+        "old": null
+      },
+      "tail": [
+        "산출 1 개 점검 (/tmp/r11-schema-only-q3sf6peo/new)",
+        "  새 스키마: 전부 갖췄다 (열·키 이름 + 필수 셀·숫자·receipt·중복 key — `bms_balancing/schema.py` 정본)",
+        "PROMOTION {\"promotion_eligible\": true, \"rc\": 0, \"subset\": false, \"roster\": {\"old\": 0, \"new\": 1, \"compared\": 0, \"missing_in_new\": [], \"extra_in_new\": []}, \"blocked_by\": {\"schema\": 0, \"content\": 0, \"unit\": 0, \"controls\": 0, \"env\": 0, \"numbers\": 0}, \"policy\": \"current\", \"new\": \"/tmp/r11-schema-only-q3sf6peo/new\", \"old\": null}"
+      ],
+      "stderr": ""
+    },
+    {
+      "case": "different_consumed_input_bytes_promote",
+      "old_inputs_sha": "9d6ace08c3d4",
+      "new_inputs_sha": "d789ce826bcd",
+      "rc": 0,
+      "promotion": {
+        "promotion_eligible": true,
+        "rc": 0,
+        "subset": false,
+        "roster": {
+          "old": 1,
+          "new": 1,
+          "compared": 1,
+          "missing_in_new": [],
+          "extra_in_new": []
+        },
+        "blocked_by": {
+          "schema": 0,
+          "content": 0,
+          "unit": 0,
+          "controls": 0,
+          "env": 0,
+          "numbers": 0
+        },
+        "policy": "current",
+        "new": "/tmp/r11-input-drift-nl46yxqm/new",
+        "old": "/tmp/r11-input-drift-nl46yxqm/old"
+      },
+      "tail": [
+        "산출 1 개 점검 (/tmp/r11-input-drift-nl46yxqm/new)",
+        "  정본 선택 정책: **current** — 현행 디렉터리 — 정본은 unversioned 이름 하나, 판 번호가 붙은 형제는 쓰지 않는다 (Codex R6-04·R7-04)",
+        "  명부(roster): 정본 1 · 새 산출 1 · 대조 1",
+        "  새 스키마: 전부 갖췄다 (열·키 이름 + 필수 셀·숫자·receipt·중복 key — `bms_balancing/schema.py` 정본)",
+        "  숫자: 정본(/tmp/r11-input-drift-nl46yxqm/old)과 전부 같다 — 게시·서명만 바뀌었다",
+        "PROMOTION {\"promotion_eligible\": true, \"rc\": 0, \"subset\": false, \"roster\": {\"old\": 1, \"new\": 1, \"compared\": 1, \"missing_in_new\": [], \"extra_in_new\": []}, \"blocked_by\": {\"schema\": 0, \"content\": 0, \"unit\": 0, \"controls\": 0, \"env\": 0, \"numbers\": 0}, \"policy\": \"current\", \"new\": \"/tmp/r11-input-drift-nl46yxqm/new\", \"old\": \"/tmp/r11-input-drift-nl46yxqm/old\"}"
+      ],
+      "stderr": ""
+    },
+    {
+      "case": "dirty_and_changed_code_meta_promotes",
+      "rc": 0,
+      "promotion": {
+        "promotion_eligible": true,
+        "rc": 0,
+        "subset": false,
+        "roster": {
+          "old": 1,
+          "new": 1,
+          "compared": 1,
+          "missing_in_new": [],
+          "extra_in_new": []
+        },
+        "blocked_by": {
+          "schema": 0,
+          "content": 0,
+          "unit": 0,
+          "controls": 0,
+          "env": 0,
+          "numbers": 0
+        },
+        "policy": "current",
+        "new": "/tmp/r11-dirty-meta-0e3nf9cg/new",
+        "old": "/tmp/r11-dirty-meta-0e3nf9cg/old"
+      },
+      "tail": [
+        "산출 1 개 점검 (/tmp/r11-dirty-meta-0e3nf9cg/new)",
+        "  정본 선택 정책: **current** — 현행 디렉터리 — 정본은 unversioned 이름 하나, 판 번호가 붙은 형제는 쓰지 않는다 (Codex R6-04·R7-04)",
+        "  명부(roster): 정본 1 · 새 산출 1 · 대조 1",
+        "  새 스키마: 전부 갖췄다 (열·키 이름 + 필수 셀·숫자·receipt·중복 key — `bms_balancing/schema.py` 정본)",
+        "  숫자: 정본(/tmp/r11-dirty-meta-0e3nf9cg/old)과 전부 같다 — 게시·서명만 바뀌었다",
+        "PROMOTION {\"promotion_eligible\": true, \"rc\": 0, \"subset\": false, \"roster\": {\"old\": 1, \"new\": 1, \"compared\": 1, \"missing_in_new\": [], \"extra_in_new\": []}, \"blocked_by\": {\"schema\": 0, \"content\": 0, \"unit\": 0, \"controls\": 0, \"env\": 0, \"numbers\": 0}, \"policy\": \"current\", \"new\": \"/tmp/r11-dirty-meta-0e3nf9cg/new\", \"old\": \"/tmp/r11-dirty-meta-0e3nf9cg/old\"}"
+      ],
+      "stderr": ""
+    },
+    {
+      "case": "invalid_scientific_numeric_values_promote",
+      "subcases": {
+        "nonfinite_obj": {
+          "schema_problems": [],
+          "rc": 0,
+          "promotion": {
+            "promotion_eligible": true,
+            "rc": 0,
+            "subset": false,
+            "roster": {
+              "old": 1,
+              "new": 1,
+              "compared": 1,
+              "missing_in_new": [],
+              "extra_in_new": []
+            },
+            "blocked_by": {
+              "schema": 0,
+              "content": 0,
+              "unit": 0,
+              "controls": 0,
+              "env": 0,
+              "numbers": 0
+            },
+            "policy": "current",
+            "new": "/tmp/r11-nonfinite_obj-tmr385gs/new",
+            "old": "/tmp/r11-nonfinite_obj-tmr385gs/old"
+          },
+          "tail": [
+            "산출 1 개 점검 (/tmp/r11-nonfinite_obj-tmr385gs/new)",
+            "  정본 선택 정책: **current** — 현행 디렉터리 — 정본은 unversioned 이름 하나, 판 번호가 붙은 형제는 쓰지 않는다 (Codex R6-04·R7-04)",
+            "  명부(roster): 정본 1 · 새 산출 1 · 대조 1",
+            "  새 스키마: 전부 갖췄다 (열·키 이름 + 필수 셀·숫자·receipt·중복 key — `bms_balancing/schema.py` 정본)",
+            "  숫자: 정본(/tmp/r11-nonfinite_obj-tmr385gs/old)과 전부 같다 — 게시·서명만 바뀌었다",
+            "PROMOTION {\"promotion_eligible\": true, \"rc\": 0, \"subset\": false, \"roster\": {\"old\": 1, \"new\": 1, \"compared\": 1, \"missing_in_new\": [], \"extra_in_new\": []}, \"blocked_by\": {\"schema\": 0, \"content\": 0, \"unit\": 0, \"controls\": 0, \"env\": 0, \"numbers\": 0}, \"policy\": \"current\", \"new\": \"/tmp/r11-nonfinite_obj-tmr385gs/new\", \"old\": \"/tmp/r11-nonfinite_obj-tmr385gs/old\"}"
+          ],
+          "stderr": ""
+        },
+        "nonnumeric_a_NE": {
+          "schema_problems": [],
+          "rc": 0,
+          "promotion": {
+            "promotion_eligible": true,
+            "rc": 0,
+            "subset": false,
+            "roster": {
+              "old": 1,
+              "new": 1,
+              "compared": 1,
+              "missing_in_new": [],
+              "extra_in_new": []
+            },
+            "blocked_by": {
+              "schema": 0,
+              "content": 0,
+              "unit": 0,
+              "controls": 0,
+              "env": 0,
+              "numbers": 0
+            },
+            "policy": "current",
+            "new": "/tmp/r11-nonnumeric_a_NE-a5w25f77/new",
+            "old": "/tmp/r11-nonnumeric_a_NE-a5w25f77/old"
+          },
+          "tail": [
+            "산출 1 개 점검 (/tmp/r11-nonnumeric_a_NE-a5w25f77/new)",
+            "  정본 선택 정책: **current** — 현행 디렉터리 — 정본은 unversioned 이름 하나, 판 번호가 붙은 형제는 쓰지 않는다 (Codex R6-04·R7-04)",
+            "  명부(roster): 정본 1 · 새 산출 1 · 대조 1",
+            "  새 스키마: 전부 갖췄다 (열·키 이름 + 필수 셀·숫자·receipt·중복 key — `bms_balancing/schema.py` 정본)",
+            "  숫자: 정본(/tmp/r11-nonnumeric_a_NE-a5w25f77/old)과 전부 같다 — 게시·서명만 바뀌었다",
+            "PROMOTION {\"promotion_eligible\": true, \"rc\": 0, \"subset\": false, \"roster\": {\"old\": 1, \"new\": 1, \"compared\": 1, \"missing_in_new\": [], \"extra_in_new\": []}, \"blocked_by\": {\"schema\": 0, \"content\": 0, \"unit\": 0, \"controls\": 0, \"env\": 0, \"numbers\": 0}, \"policy\": \"current\", \"new\": \"/tmp/r11-nonnumeric_a_NE-a5w25f77/new\", \"old\": \"/tmp/r11-nonnumeric_a_NE-a5w25f77/old\"}"
+          ],
+          "stderr": ""
+        }
+      }
+    },
+    {
+      "case": "matrix_only_flags_shrink_complete_authority",
+      "full_rc": 0,
+      "full_rows": 8,
+      "narrow_rc": 0,
+      "narrow_rows": 2,
+      "narrow_schema_problems": [],
+      "canonical_replaced_by_narrow_run": true
+    },
+    {
+      "case": "profile_grid_one_shrinks_complete_authority",
+      "full_rc": 0,
+      "full_rows": 3,
+      "narrow_rc": 0,
+      "narrow_rows": 1,
+      "narrow_roster": {
+        "requested": 1,
+        "succeeded": 1,
+        "missing": []
+      },
+      "narrow_schema_problems": [],
+      "canonical_replaced_by_narrow_run": true
+    }
+  ]
+}

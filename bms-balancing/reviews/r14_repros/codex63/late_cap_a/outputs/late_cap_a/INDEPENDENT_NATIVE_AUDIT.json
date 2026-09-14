@@ -1,0 +1,465 @@
+{
+  "reviewer_scope": "Independent source/native audit; no COMSOL invocation",
+  "started_at": "2026-09-14T20:53:55.227511+09:00",
+  "source": {
+    "pass": true,
+    "baseline_identity": {
+      "name": "Caps300R320H0125",
+      "source_path": "outputs/comsol63/radial320_timecap/Caps300R320H0125.java",
+      "source_sha256": "8d35be8fab513f5e2def316c4d00e0fdc19983a5dd3bf492f4ffe47a58248be3",
+      "job_id": "18a00b03e38d4694b9ba30d88e7008f4"
+    },
+    "new_identity": {
+      "name": "Caps300R320LateCapA5s",
+      "source_path": "outputs/comsol63/late_cap_a/Caps300R320LateCapA5s.java",
+      "source_sha256": "a03abb905454de63b34b55e314ed09f3cb6414d58444e8b605962166a872531f",
+      "job_id": "c40c05d3cfb643a4b706345637b00f57"
+    },
+    "allowed_transform_full_text_equal": true,
+    "identifier_occurrences_changed": 2,
+    "Nel_occurrences_changed": 0,
+    "expression_occurrences_changed": 2,
+    "OCP_extrap_none_count": 4,
+    "runAll_count": 1,
+    "physical_elements": [
+      120,
+      60,
+      120
+    ],
+    "radial_elements_each": 320,
+    "requested_time_count": 187,
+    "first_second_requested_time_count": 107,
+    "all_other_source_bytes_equal_after_line_ending_normalization": true,
+    "external_read_process_network_additions": false,
+    "contract_config_job_identity_checks_pass": true
+  },
+  "historical_range": {
+    "job_id": "08e0fc5d41e147678f3940e98100ec12",
+    "native_state": "failed",
+    "batch_returncode": 0,
+    "classification": "INCOMPLETE_RANGE_STOP",
+    "status_sha256": "78f99a8ee35fe743c44f9cc6b41f94e699d7bb3c59174f28b510db27ce111aba",
+    "status_and_classification_match_preserved_ledger": true
+  },
+  "native": {
+    "pass": true,
+    "job_id": "c40c05d3cfb643a4b706345637b00f57",
+    "native_state": "completed",
+    "compile_returncode": 0,
+    "batch_returncode": 0,
+    "matching_exact_source_job_requests": [
+      "c40c05d3cfb643a4b706345637b00f57"
+    ],
+    "actual_mesh_elements": [
+      300,
+      320,
+      320
+    ],
+    "degrees_of_freedom_and_internal": [
+      [
+        "1202",
+        "12"
+      ],
+      [
+        "79485",
+        "12"
+      ]
+    ],
+    "actual_element_domain_counts": {
+      "1": 120,
+      "2": 60,
+      "3": 120
+    },
+    "Time_and_Variables_property_count": 1143,
+    "unread_properties": 0,
+    "property_differences": {
+      "sol1/t1/maxstepexpressionbdf": {
+        "baseline": "String|[if(t<0.1[s],0.000125[s],0.1[s])]",
+        "new": "String|[if(t<0.1[s],0.000125[s],if(t<1[s],0.005[s],0.025[s]))]"
+      }
+    },
+    "runtime_setting_differences": {
+      "maxstepexpressionbdf": [
+        "if(t<0.1[s],0.000125[s],0.1[s])",
+        "if(t<0.1[s],0.000125[s],if(t<1[s],0.005[s],0.025[s]))"
+      ]
+    },
+    "stored_rows_including_t0": 1155,
+    "accepted_intervals": 1154,
+    "all_187_requested_times_stored_exactly": true,
+    "cap_interval_definition": "Initial end<=0.1; middle start>=0.1 and end<=1; final start>=1. Arrivals use the preceding stage cap; t0 is excluded.",
+    "stage_summaries": {
+      "initial_to_0p1": {
+        "interval_count": 807,
+        "at_cap_count": 792,
+        "cap_s_exact": "0.000125",
+        "max_h_s_exact": "0.00012500000000001",
+        "min_h_s_exact": "0.00001000",
+        "all_within_cap": true
+      },
+      "middle_0p1_to_1": {
+        "interval_count": 185,
+        "at_cap_count": 178,
+        "cap_s_exact": "0.005",
+        "max_h_s_exact": "0.00500000000000003",
+        "min_h_s_exact": "0.000125",
+        "all_within_cap": true
+      },
+      "final_1_to_5": {
+        "interval_count": 162,
+        "at_cap_count": 158,
+        "cap_s_exact": "0.025",
+        "max_h_s_exact": "0.025000000000001",
+        "min_h_s_exact": "0.005",
+        "all_within_cap": true
+      }
+    },
+    "boundary_arrival_departure": {
+      "0.1": {
+        "arriving": {
+          "step_index": 807,
+          "start_time_s_exact": "0.099875",
+          "end_time_s_exact": "0.1",
+          "actual_step_s_exact": "0.000125",
+          "stage": "initial_to_0p1",
+          "region": "arrives_at_0.1",
+          "interval_required_cap_s_exact": "0.000125",
+          "at_cap": true,
+          "native_time": "0.1",
+          "native_step": "0.000125"
+        },
+        "departing": {
+          "step_index": 808,
+          "start_time_s_exact": "0.1",
+          "end_time_s_exact": "0.100125",
+          "actual_step_s_exact": "0.000125",
+          "stage": "middle_0p1_to_1",
+          "region": "between_0.1_and_1",
+          "interval_required_cap_s_exact": "0.005",
+          "at_cap": false,
+          "native_time": "0.10013",
+          "native_step": "0.000125"
+        }
+      },
+      "1": {
+        "arriving": {
+          "step_index": 992,
+          "start_time_s_exact": "0.995",
+          "end_time_s_exact": "1.0",
+          "actual_step_s_exact": "0.005",
+          "stage": "middle_0p1_to_1",
+          "region": "arrives_at_1",
+          "interval_required_cap_s_exact": "0.005",
+          "at_cap": true,
+          "native_time": "1",
+          "native_step": "0.005"
+        },
+        "departing": {
+          "step_index": 993,
+          "start_time_s_exact": "1.0",
+          "end_time_s_exact": "1.005",
+          "actual_step_s_exact": "0.005",
+          "stage": "final_1_to_5",
+          "region": "after_1",
+          "interval_required_cap_s_exact": "0.025",
+          "at_cap": false,
+          "native_time": "1.005",
+          "native_step": "0.005"
+        }
+      }
+    },
+    "requested_cores": 16,
+    "actual_core_log_values": [
+      16,
+      16
+    ],
+    "baseline_actual_core_log_values": [
+      2,
+      2
+    ],
+    "execution_difference_limit": "Core count changed from 2 to 16; parallel arithmetic may affect rounding. This is not a cap-only controlled execution comparison.",
+    "profile_evidence": {
+      "N": {
+        "rows": 278355,
+        "stored_times": 1155,
+        "coordinates_per_time": 241,
+        "finite_and_time_domain_coordinate_checks_pass": true
+      },
+      "P": {
+        "rows": 278355,
+        "stored_times": 1155,
+        "coordinates_per_time": 241,
+        "finite_and_time_domain_coordinate_checks_pass": true
+      }
+    },
+    "boundary_crossings": 0,
+    "all_intervals_within_cap": true,
+    "roundoff_tolerance_s_exact": "1E-12",
+    "native_printed_rows_and_rounding_match": true,
+    "derived_accepted_csv_independently_matched": true,
+    "boundary_intervals": [
+      {
+        "step_index": 803,
+        "start_time_s_exact": "0.099375",
+        "end_time_s_exact": "0.0995",
+        "actual_step_s_exact": "0.000125",
+        "stage": "initial_to_0p1",
+        "region": "before_0.1",
+        "interval_required_cap_s_exact": "0.000125",
+        "at_cap": true,
+        "native_time": "0.0995",
+        "native_step": "0.000125"
+      },
+      {
+        "step_index": 804,
+        "start_time_s_exact": "0.0995",
+        "end_time_s_exact": "0.099625",
+        "actual_step_s_exact": "0.000125",
+        "stage": "initial_to_0p1",
+        "region": "before_0.1",
+        "interval_required_cap_s_exact": "0.000125",
+        "at_cap": true,
+        "native_time": "0.099625",
+        "native_step": "0.000125"
+      },
+      {
+        "step_index": 805,
+        "start_time_s_exact": "0.099625",
+        "end_time_s_exact": "0.09975",
+        "actual_step_s_exact": "0.000125",
+        "stage": "initial_to_0p1",
+        "region": "before_0.1",
+        "interval_required_cap_s_exact": "0.000125",
+        "at_cap": true,
+        "native_time": "0.09975",
+        "native_step": "0.000125"
+      },
+      {
+        "step_index": 806,
+        "start_time_s_exact": "0.09975",
+        "end_time_s_exact": "0.099875",
+        "actual_step_s_exact": "0.000125",
+        "stage": "initial_to_0p1",
+        "region": "before_0.1",
+        "interval_required_cap_s_exact": "0.000125",
+        "at_cap": true,
+        "native_time": "0.099875",
+        "native_step": "0.000125"
+      },
+      {
+        "step_index": 807,
+        "start_time_s_exact": "0.099875",
+        "end_time_s_exact": "0.1",
+        "actual_step_s_exact": "0.000125",
+        "stage": "initial_to_0p1",
+        "region": "arrives_at_0.1",
+        "interval_required_cap_s_exact": "0.000125",
+        "at_cap": true,
+        "native_time": "0.1",
+        "native_step": "0.000125"
+      },
+      {
+        "step_index": 808,
+        "start_time_s_exact": "0.1",
+        "end_time_s_exact": "0.100125",
+        "actual_step_s_exact": "0.000125",
+        "stage": "middle_0p1_to_1",
+        "region": "between_0.1_and_1",
+        "interval_required_cap_s_exact": "0.005",
+        "at_cap": false,
+        "native_time": "0.10013",
+        "native_step": "0.000125"
+      },
+      {
+        "step_index": 809,
+        "start_time_s_exact": "0.100125",
+        "end_time_s_exact": "0.100375",
+        "actual_step_s_exact": "0.000250",
+        "stage": "middle_0p1_to_1",
+        "region": "between_0.1_and_1",
+        "interval_required_cap_s_exact": "0.005",
+        "at_cap": false,
+        "native_time": "0.10038",
+        "native_step": "0.00025"
+      },
+      {
+        "step_index": 810,
+        "start_time_s_exact": "0.100375",
+        "end_time_s_exact": "0.100875",
+        "actual_step_s_exact": "0.000500",
+        "stage": "middle_0p1_to_1",
+        "region": "between_0.1_and_1",
+        "interval_required_cap_s_exact": "0.005",
+        "at_cap": false,
+        "native_time": "0.10088",
+        "native_step": "0.0005"
+      },
+      {
+        "step_index": 811,
+        "start_time_s_exact": "0.100875",
+        "end_time_s_exact": "0.10187500000000001",
+        "actual_step_s_exact": "0.00100000000000001",
+        "stage": "middle_0p1_to_1",
+        "region": "between_0.1_and_1",
+        "interval_required_cap_s_exact": "0.005",
+        "at_cap": false,
+        "native_time": "0.10188",
+        "native_step": "0.001"
+      },
+      {
+        "step_index": 990,
+        "start_time_s_exact": "0.985",
+        "end_time_s_exact": "0.99",
+        "actual_step_s_exact": "0.005",
+        "stage": "middle_0p1_to_1",
+        "region": "between_0.1_and_1",
+        "interval_required_cap_s_exact": "0.005",
+        "at_cap": true,
+        "native_time": "0.99",
+        "native_step": "0.005"
+      },
+      {
+        "step_index": 991,
+        "start_time_s_exact": "0.99",
+        "end_time_s_exact": "0.995",
+        "actual_step_s_exact": "0.005",
+        "stage": "middle_0p1_to_1",
+        "region": "between_0.1_and_1",
+        "interval_required_cap_s_exact": "0.005",
+        "at_cap": true,
+        "native_time": "0.995",
+        "native_step": "0.005"
+      },
+      {
+        "step_index": 992,
+        "start_time_s_exact": "0.995",
+        "end_time_s_exact": "1.0",
+        "actual_step_s_exact": "0.005",
+        "stage": "middle_0p1_to_1",
+        "region": "arrives_at_1",
+        "interval_required_cap_s_exact": "0.005",
+        "at_cap": true,
+        "native_time": "1",
+        "native_step": "0.005"
+      },
+      {
+        "step_index": 993,
+        "start_time_s_exact": "1.0",
+        "end_time_s_exact": "1.005",
+        "actual_step_s_exact": "0.005",
+        "stage": "final_1_to_5",
+        "region": "after_1",
+        "interval_required_cap_s_exact": "0.025",
+        "at_cap": false,
+        "native_time": "1.005",
+        "native_step": "0.005"
+      },
+      {
+        "step_index": 994,
+        "start_time_s_exact": "1.005",
+        "end_time_s_exact": "1.015",
+        "actual_step_s_exact": "0.010",
+        "stage": "final_1_to_5",
+        "region": "after_1",
+        "interval_required_cap_s_exact": "0.025",
+        "at_cap": false,
+        "native_time": "1.015",
+        "native_step": "0.01"
+      },
+      {
+        "step_index": 995,
+        "start_time_s_exact": "1.015",
+        "end_time_s_exact": "1.0325",
+        "actual_step_s_exact": "0.0175",
+        "stage": "final_1_to_5",
+        "region": "after_1",
+        "interval_required_cap_s_exact": "0.025",
+        "at_cap": false,
+        "native_time": "1.0325",
+        "native_step": "0.0175"
+      },
+      {
+        "step_index": 996,
+        "start_time_s_exact": "1.0325",
+        "end_time_s_exact": "1.05",
+        "actual_step_s_exact": "0.0175",
+        "stage": "final_1_to_5",
+        "region": "after_1",
+        "interval_required_cap_s_exact": "0.025",
+        "at_cap": false,
+        "native_time": "1.05",
+        "native_step": "0.0175"
+      }
+    ],
+    "interval_arriving_at_0p01": [
+      {
+        "step_index": 87,
+        "start_time_s_exact": "0.009875000000000002",
+        "end_time_s_exact": "0.01",
+        "actual_step_s_exact": "0.000124999999999998",
+        "stage": "initial_to_0p1",
+        "region": "before_0.1",
+        "interval_required_cap_s_exact": "0.000125",
+        "at_cap": true,
+        "native_time": "0.01",
+        "native_step": "0.000125"
+      }
+    ],
+    "interval_arriving_at_0p04": [
+      {
+        "step_index": 327,
+        "start_time_s_exact": "0.03987500000000001",
+        "end_time_s_exact": "0.04",
+        "actual_step_s_exact": "0.00012499999999999",
+        "stage": "initial_to_0p1",
+        "region": "before_0.1",
+        "interval_required_cap_s_exact": "0.000125",
+        "at_cap": true,
+        "native_time": "0.04",
+        "native_step": "0.000125"
+      }
+    ],
+    "baseline_early_intervals": 807,
+    "full_baseline_and_new_stored_time_histories_equal": false,
+    "all_numeric_scalar_tables_finite_and_time_aligned": true,
+    "nonzero_guard_rows": 0,
+    "OCP_surface_and_physical_concentration_bounds_pass": true,
+    "minimum_electrolyte_concentration_mol_m3_exact": "1194.4372089762865",
+    "electrolyte_check_scope": "Postprocessing only; not real-time stopping",
+    "solver_expression_evaluation_point": "Not inferred; observed interval compliance only",
+    "early_cap_s_exact": "0.000125",
+    "accuracy_claim": "Cap compliance does not establish true time error or full convergence; changed cores and state carryover prevent isolated segment/cap-only causal claims",
+    "root_step_summary_total_counts_independently_matched": true
+  },
+  "input_sha256": {
+    "outputs/comsol63/radial320_timecap/Caps300R320H0125.java": "8d35be8fab513f5e2def316c4d00e0fdc19983a5dd3bf492f4ffe47a58248be3",
+    "outputs/comsol63/late_cap_a/Caps300R320LateCapA5s.java": "a03abb905454de63b34b55e314ed09f3cb6414d58444e8b605962166a872531f",
+    "outputs/late_cap_a/comparison_contract.json": "9a069a4e44b77918ba69125cd1944d6e9f76f52cd6ebaf4c54608ab39a134232",
+    "outputs/late_cap_a/source_configs.json": "68c1844e4a52e771b300a2b8cbb2d4b1b1ff40132d3a17638c97485c3f422045",
+    "outputs/late_cap_a/jobs.json": "f4cae3dcf3a2b9955d7e936a316bf5f482aecd594d160641ad58d46e19f6d95c",
+    "outputs/comsol63/.comsol-jobs/08e0fc5d41e147678f3940e98100ec12/status.json": "78f99a8ee35fe743c44f9cc6b41f94e699d7bb3c59174f28b510db27ce111aba",
+    "outputs/late_cap_a/preserved_before.json": "28056f27f28641701e8d430e931e551112e74c089d4fdc32d85628bec5a1625e",
+    "outputs/preflight/results/analysis.json": "abfa9fc57f6600e9218b60cf24ab4e69a439be5e5819992d350965484444d6b8",
+    "outputs/comsol63/.comsol-jobs/c40c05d3cfb643a4b706345637b00f57/status.json": "6347db13d1b93d77045c1b7fb53530d0d3f244a9d3f6ce2e058f537cb54295cd",
+    "outputs/comsol63/.comsol-jobs/c40c05d3cfb643a4b706345637b00f57/request.json": "dc58243ad6f798b5d34f8b562465442abf4e4db65e8040f926c577703c6ef90b",
+    "outputs/comsol63/.comsol-jobs/c40c05d3cfb643a4b706345637b00f57/Caps300R320LateCapA5s.java": "a03abb905454de63b34b55e314ed09f3cb6414d58444e8b605962166a872531f",
+    "outputs/comsol63/.comsol-jobs/c40c05d3cfb643a4b706345637b00f57/batch.log": "47098f8c705f2082685fe2360f25372a694ef43faeac97b4c6e689f6973d3236",
+    "outputs/comsol63/.comsol-jobs/c40c05d3cfb643a4b706345637b00f57/console.log": "7568b0b1ca0663b1997af5e3f6af38ca777b7389eb670039034d72f7b742b8ee",
+    "outputs/comsol63/.comsol-jobs/18a00b03e38d4694b9ba30d88e7008f4/console.log": "79ceb24699f5e069ab6f27d27eb68a3eff72b58fd96b8d4fa5740b28e4d41b81",
+    "outputs/comsol63/.comsol-jobs/18a00b03e38d4694b9ba30d88e7008f4/batch.log": "3fd2a7698b61fb4ca647cc5b7bd7662020d6f275ce85319cd8dd6ff51903ccb8",
+    "outputs/model_audit/c40c05d3cfb643a4b706345637b00f57/axes_runtime_settings.csv": "a33b7bcc06dcf5ca35ad568f02c395a705ab9a73bf6d4d84e4d11e6c6f204910",
+    "outputs/model_audit/18a00b03e38d4694b9ba30d88e7008f4/axes_runtime_settings.csv": "7a6e8461e965c1d3643d5c1e027250526b9d6069337ae67cd0fcc5cb80634ddd",
+    "outputs/model_audit/c40c05d3cfb643a4b706345637b00f57/preflight_global.csv": "4c056066413af113658b875cdb77e06984aeb6f2ac15279d24c0a4334cb9e522",
+    "outputs/late_cap_a/Caps300R320LateCapA5s_accepted_steps.csv": "e2cabd932a41141a986fb1c413f26ec525eace48e76c2c382b5802f42146ccdb",
+    "outputs/model_audit/c40c05d3cfb643a4b706345637b00f57/preflight_boundary1.csv": "ccb7f4795963d067945961cdab1fd75c4ba2c0e3e7b49bf1e428cf6fc31b2ecf",
+    "outputs/model_audit/c40c05d3cfb643a4b706345637b00f57/preflight_boundary4.csv": "8312ebc664b34f8581a2bc2efc7e8c1c29cc48db0bc160905a14618e3514c509",
+    "outputs/model_audit/c40c05d3cfb643a4b706345637b00f57/preflight_MinLine_ce.csv": "31b13c9ac8a275e4f1a5889994a7a8ebc7070a3dcd88a7d8d283cb090374d2b8",
+    "outputs/model_audit/c40c05d3cfb643a4b706345637b00f57/preflight_MaxLine_ce.csv": "36ba3ccaeb1b5d0914abf93a05226715f4373a397dd15bc26ee17ea606fe1910",
+    "outputs/model_audit/c40c05d3cfb643a4b706345637b00f57/axes_profile_N.csv": "31f6c55a07146c152fe5d2d348ba0bdfde3d26c7a44313a8f6514cbe4427ed93",
+    "outputs/model_audit/c40c05d3cfb643a4b706345637b00f57/axes_profile_P.csv": "ca9c32ad9ab433635e68fd9b8ba199bdd511d75a80c354176675216963e640c3",
+    "outputs/model_audit/18a00b03e38d4694b9ba30d88e7008f4/preflight_global.csv": "b8976f4b484097a49bdd3295a4e683ded181a794ad297f55784587dbad499585",
+    "outputs/late_cap_a/Caps300R320LateCapA5s_step_summary.json": "b1ff031ce2a7ce4d4b5fa6d62018f7d993f8b8339f880bf6ae197b4819bdc978"
+  },
+  "all_tracked_inputs_unchanged_during_audit": true,
+  "finished_at": "2026-09-14T20:54:05.320019+09:00"
+}

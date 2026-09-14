@@ -1,0 +1,48 @@
+{
+  "artifact": "ne_shape_GITT_Li.csv",
+  "half_cell_source": "GITT",
+  "si_source": "Li",
+  "grid_n": 400,
+  "grid_range": [
+    0.02,
+    0.98
+  ],
+  "gamma_from": "synthetic-matrix/matrix_<state>.csv 의 gamma_Si(대상)·ref_gamma_Si(기준)",
+  "note": "measured_shape_mV 는 정규화 뒤 값 — cap_delta_pct 와 함께 읽을 것",
+  "gamma_grid": [
+    0.0,
+    0.5,
+    501
+  ],
+  "headroom_note": "gamma_witness 는 (a) 이상의 진폭을 내는 합법 γ 의 존재 증인(격자)이지 모양 일치가 아니다; 빈 칸 = 격자에서 없음 (R3-03)",
+  "git_commit": "94add7b5d48ad5d19448d562a0909b15ce4dc056",
+  "git_dirty": false,
+  "git_modified_outputs": [],
+  "git_modified_code": [],
+  "consumed_inputs": {
+    "synthetic": true
+  },
+  "pairing": {
+    "authority": [
+      "100",
+      "200",
+      "300_0009"
+    ],
+    "requested": [
+      "100",
+      "200",
+      "300_0009"
+    ],
+    "paired": [
+      "100",
+      "200",
+      "300_0009"
+    ],
+    "missing": [],
+    "missing_input": []
+  },
+  "status": "complete",
+  "run_id": "16614fb6f9324b19a0dde57f7023427f",
+  "created_utc": "2026-09-13T07:01:31.962859+00:00",
+  "sha256": "a2258a051eb6e2b6f52e871d99c0ad94962fb4f93d1eb02093caadbb198dbd44"
+}

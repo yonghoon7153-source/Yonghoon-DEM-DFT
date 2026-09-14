@@ -83,6 +83,18 @@ function dd_verify(mode, varargin)
         local_save(o.Out, {'si_source,w_dqdv,a_PE,b_PE,a_NE,b_NE,gamma_Si,rmse_pocv,rmse_dvdq,LAM_PE_pct,LAM_NE_pct,LLI_pct,bounds'}, rows);
 
     case 'profile'
+        % ⚠ 2026-09-10: 이 모드는 lbg(5)=ubg(5)=g 를 넘겨 γ 를 묶는데,
+        %   electrode_balancing_blend.m 의 scale 표본이
+        %       samples = lb + rand(50,5) .* (ub - lb)
+        %   로 **넘겨받은 경계**를 쓴다 (원본 확인함). 그래서 γ 를 묶으면
+        %   행마다 scale 이 달라지고 **행마다 다른 목적함수를 최소화**하게
+        %   된다. 원 파이프라인(main_blend_final.m)은 고정-γ 프로파일을 하지
+        %   않으므로 이건 그들 절차가 아니라 이 모드의 부작용이다.
+        %   → 행끼리 목적함수 값을 비교하지 마라. 파라미터 추세만 읽어라.
+        %   (그래서 이 모드는 rmse_pocv 만 찍는다 — 목적함수 비율은 안 찍는다.)
+        fprintf(['[경고] profile 모드는 γ 를 경계로 묶으므로 행마다 목적함수의 ' ...
+                 'scale 이 달라진다.\n        행끼리 목적함수 비교 금지 — ' ...
+                 '파라미터 추세만 읽을 것.\n']);
         rng(0, 'twister');
         r0 = local_fit(o.RefState, o, lit, initial5, lb5, ub5, diff_params, fit_params);
         rows = {};
@@ -150,9 +162,17 @@ function local_check(o, diff_params)
           'quantile','Statistics and Machine Learning Toolbox'};
     fprintf('\n');
     for k = 1:size(tb,1)
-        if isempty(which(tb{k,1}))
+        w = which(tb{k,1});
+        if isempty(w)
             fprintf('[FAIL] %-18s 없음 → %s 가 필요하다\n', tb{k,1}, tb{k,2});
             fails = fails + 1;
+        elseif ~isempty(strfind(w, 'dd_shims'))
+            % ⚠ 전 판은 which() 가 비었는지만 봤다. 그러면 dd_shims 의 대체
+            %   구현을 **툴박스가 있다**고 잘못 보고한다. 어느 파일이 잡혔는지
+            %   찍어야 그 착각이 안 생긴다.
+            fprintf('[shim] %-18s ← %s\n', tb{k,1}, w);
+            fprintf('       (MathWorks 구현이 아니다 — 우리 대체품이 잡혔다)\n');
+            warns = warns + 1;
         else
             fprintf('[ ok ] %-18s (%s)\n', tb{k,1}, tb{k,2});
         end
@@ -249,7 +269,7 @@ function local_check(o, diff_params)
     else
         fprintf('위 [FAIL] 을 먼저 고칠 것. 지금 dump 를 돌리면 도중에 죽는다.\n');
         fprintf('툴박스가 없다면: 적합은 못 하지만 **목적함수 평가**는 된다 —\n');
-        fprintf("  addpath('dd_shims'); dd_eval()\n");
+        fprintf("  addpath('dd_shims','-end'); dd_eval()\n");
         fprintf('  (dd_shims 는 sgolayfilt·quantile 의 우리 대체 구현이다. MathWorks 것이 아니다.)\n\n');
     end
 end

@@ -1,0 +1,11 @@
+{
+  "schema_version": 1,
+  "job_id": "f211901885774793ab39e89ebee0144f",
+  "kind": "reviewed_java",
+  "source_name": "Axes300R40.java",
+  "source_sha256": "b4298feb95a6dd2306967fad44c55ab668450633c0a0ec7760681c3b76047e44",
+  "comsol_root": "C:\\Program Files\\COMSOL\\COMSOL63\\Multiphysics",
+  "cores": 2,
+  "timeout_seconds": 600,
+  "created_at": "2026-09-13T12:40:06.630019+00:00"
+}

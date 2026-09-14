@@ -1,0 +1,29 @@
+{
+  "prior_RADIAL160_archive": {
+    "path": "outputs/COMSOL63_RADIAL160_HANDOFF.zip",
+    "locally_observed_bytes": 226198096,
+    "locally_observed_sha256": "39ded591a29568d58b57791bf68147292a9cef06660de40b1c5e45ed16b434bc",
+    "local_crc_and_all160_payload_and_manifest_verified": true,
+    "original_manifest_sha256": "6ab54917edbec8eda5d19b4add2233c3daf09ff55ee2a9ef98dbb84f67cc584b",
+    "recipient_reported_bytes": 226198096,
+    "recipient_reported_sha256": "39ded591a29568d58b57791bf68147292a9cef06660de40b1c5e45ed16b434bc",
+    "recipient_reported_160payload_and_manifest_verified": true,
+    "recipient_reported_historical333_archived_bytes_verified": true,
+    "generated_and_reported_received_identity_equal": true
+  },
+  "verification_levels": {
+    "local_current663_external_verification": false,
+    "current_local_inventory_path": "outputs/radial160_timecap/preserved_before.json",
+    "local_inventory_is_external_verification": false,
+    "metadata_correction": "Original rawZIP/manifest/receipt immutable; current corrected contract and derived metadata have before/after provenance separately."
+  },
+  "prior_TIME_CAPS_raw_archives": {
+    "generated_bytes": 325347218,
+    "generated_sha256": "beac1f1df18c2a2613cc5b9da711f1f742aced4f13b79d44d03ca084463f0268",
+    "recipient_reported_bytes": 325367172,
+    "recipient_reported_sha256": "74aa78d2659ed0f4a915a9a4150ccacf4a7f8976a5ad4dd4d38e48c6ace6d0b7",
+    "raw_difference_cause": "UNRESOLVED",
+    "content_corruption_claim": false
+  },
+  "new_delivery_identity": "Only the generated new ZIP can be verified locally at packaging; no new recipient raw identity observed yet."
+}

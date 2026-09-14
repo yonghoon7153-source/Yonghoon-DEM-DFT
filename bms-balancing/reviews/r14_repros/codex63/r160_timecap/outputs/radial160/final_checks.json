@@ -1,0 +1,27 @@
+{
+  "new_name": "Caps300R160H0500",
+  "new_job_id": "450b46add79c439bbce5886454c4328a",
+  "new_source_sha256": "874e70a9d6531a2a83ebd05f439d514c324b3ca79875494b1cf304797cc90e26",
+  "new_MPH_sha256": "b5e6ea140d9367851d967ebabfccf9b5b76761c19f009fb9ee0a2ce0c8088b89",
+  "new_MPH_bytes": 261505529,
+  "new_native_state": "completed",
+  "exactly_one_new_authorized_job": true,
+  "existing_reference_jobs_rerun": false,
+  "recorded_Time_and_Variables_properties_exactly_match_80_baseline": true,
+  "property_differences": {},
+  "early_stored_times_including_zero_80_160": [
+    210,
+    211
+  ],
+  "early_stored_times_exactly_equal": false,
+  "maximum_matching_index_time_difference_s_exact": null,
+  "native_step_cap_compliance": true,
+  "new160_time_accuracy_established": false,
+  "temporal_limit": "No160 time-cap comparison was performed.80 time-halving evidence is not160 time accuracy evidence. Later-time accuracy is not guaranteed by the early cap.",
+  "locally_preserved_current_file_count": 663,
+  "current_local_bytes_match_before_ledger": true,
+  "preservation_limit": "Local current-byte check; not remote validation of all468 or663 files. Recipient historical333 archive-byte validation is a separate claim.",
+  "historical_range_job_state": "failed",
+  "historical_range_classification": "INCOMPLETE_RANGE_STOP preserved; no new failure classification",
+  "additional320_or_other_cap_or60080_or_long_runs": 0
+}

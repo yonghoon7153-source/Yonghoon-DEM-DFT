@@ -1,0 +1,276 @@
+{
+  "target_head": "665c87e195007fb72f55f58f4c71ada81275c0c6",
+  "expected_head": "665c87e195007fb72f55f58f4c71ada81275c0c6",
+  "head_ok": true,
+  "dirty": false,
+  "dirty_allowed": false,
+  "dirty_paths": [],
+  "evidence_eligible": true,
+  "instrument_sealed": true,
+  "instrument": {
+    "reviews/r9_repros/replay_codex_r9.py": "ok",
+    "reviews/evidence_gate.py": "ok"
+  },
+  "materialized": {
+    "path": "/tmp/evidence-snap-n7brip0m/snap/bms-balancing",
+    "head": "665c87e195007fb72f55f58f4c71ada81275c0c6",
+    "mode": "sparse detached worktree",
+    "kept": false
+  },
+  "ran_in": "격리 snapshot",
+  "package_digest_ok": true,
+  "package_digest": {
+    "HARNESS_R9_29EF5058_CODEX_REVIEW.md": "ok",
+    "r9_root_repros.py": "ok",
+    "r9_root_results.json": "ok",
+    "r9_aggregation_review.md": "ok",
+    "r9_aggregation_repros.py": "ok",
+    "r9_aggregation_results.json": "ok",
+    "r9_provenance_report.md": "ok",
+    "r9_provenance_repro.py": "ok",
+    "r9_provenance_repro_results.json": "ok",
+    "r9_evidence_review.md": "ok",
+    "r9_evidence_classify_probe.py": "ok"
+  },
+  "pinned_sha": "29ef5058e68c0c64dba840ecc5a7495644cb092e",
+  "pin_bypassed": true,
+  "설명": "원본 probe 함수를 직접 불러 SHA pin 을 우회한다 — 도달·상태·멈춘_곳을 따로 적는다; 옛 게시 위치/옛 러너 출력을 전제한 probe 는 hook 만 현행 계약으로 옮긴 적응판(적응 True)",
+  "requested": [
+    "R9-01",
+    "R9-02",
+    "R9-03",
+    "R9-04",
+    "R9-05",
+    "R9-06",
+    "R9-07",
+    "P2-1",
+    "P2-2",
+    "P2-3",
+    "P2-4",
+    "P2-5"
+  ],
+  "probes": {
+    "R9-01": {
+      "probe": "root_alias",
+      "적응": false,
+      "도달": true,
+      "상태": "반례 소멸",
+      "멈춘_곳": "r9_root_repros.py:70: assert missing_first.returncode == 0, result",
+      "세부": "자기 반례 assertion 에서 멈췄다"
+    },
+    "R9-02": {
+      "probe": "u18_roster_and_receipt + aggregation u14 cases (적응: 패키지 helper 그대로, 판정만 뒤집음)",
+      "적응": true,
+      "도달": true,
+      "상태": "반례 소멸",
+      "멈춘_곳": "u18 gate 3 case rc≠0 ∧ aggregation 4 case rc≠0 이고 결함 이름을 찍는다",
+      "세부": {
+        "provenance": {
+          "rc": {
+            "one_of_twelve": 2,
+            "blank_receipts": 2,
+            "config_mismatch": 2
+          },
+          "current_out_schema_rc": 2,
+          "closure_assert": "assert all(rc != 0 for rc in got.values())"
+        },
+        "aggregation": {
+          "cases": {
+            "u14_missing_new_artifact": {
+              "rc": 2,
+              "names_the_defect": true
+            },
+            "u14_dropped_numeric_column": {
+              "rc": 2,
+              "names_the_defect": true
+            },
+            "u14_blank_provenance": {
+              "rc": 2,
+              "names_the_defect": true
+            },
+            "u14_duplicate_schema_only": {
+              "rc": 2,
+              "names_the_defect": true
+            }
+          },
+          "closure_assert": "assert all(rc != 0 and msg for rc, msg in cases.values())"
+        }
+      }
+    },
+    "R9-03": {
+      "probe": "blank_provenance",
+      "적응": false,
+      "도달": true,
+      "상태": "반례 소멸",
+      "멈춘_곳": "r9_root_repros.py:135: assert checked.returncode == 0 and \"전부 갖췄다\" in checked.stdout, result",
+      "세부": "자기 반례 assertion 에서 멈췄다"
+    },
+    "R9-04": {
+      "probe": "shape_missing_halfcell(적응: partial 위치)",
+      "적응": true,
+      "도달": true,
+      "상태": "반례 소멸",
+      "멈춘_곳": "assert rc == 3 and not canon.exists() and pr[\"requested\"] == [\"100\",\"200\"] and pr[\"missing_input\"] == [\"200\"] and pr[\"paired\"] == [\"100\"]",
+      "세부": {
+        "rc": 3,
+        "status": "partial",
+        "pairing": {
+          "requested": [
+            "100",
+            "200"
+          ],
+          "available": [
+            "100"
+          ],
+          "missing_input": [
+            "200"
+          ],
+          "paired": [
+            "100"
+          ],
+          "missing": []
+        },
+        "artifact": "shape/partial/ne_shape_GITT_Li.csv"
+      }
+    },
+    "R9-05": {
+      "probe": "shape_duplicate_matrix_rows(+reversed)(적응: 예외를 닫힘으로)",
+      "적응": true,
+      "도달": true,
+      "상태": "반례 소멸",
+      "멈춘_곳": "assert all(\"중복\" in v for v in results.values())",
+      "세부": {
+        "orders": {
+          "forward": "RuntimeError: matrix_100.csv: 중복 key [('GITT', 'Li', 0.0)] — 같은 (half_cell, si, w_dqdv) 행이 둘 이상이다; 첫 행을 고르지 않는다 (Codex R9-05). 재실행으로 유",
+          "reversed": "RuntimeError: matrix_100.csv: 중복 key [('GITT', 'Li', 0.0)] — 같은 (half_cell, si, w_dqdv) 행이 둘 이상이다; 첫 행을 고르지 않는다 (Codex R9-05). 재실행으로 유"
+        }
+      }
+    },
+    "R9-06": {
+      "probe": "shape_partial_overwrites_complete",
+      "적응": false,
+      "도달": true,
+      "상태": "반례 소멸",
+      "멈춘_곳": "r9_root_repros.py:217: assert rc2 == 3 and meta2[\"pairing\"][\"missing\"] == [\"200\"], result",
+      "세부": "자기 반례 assertion 에서 멈췄다"
+    },
+    "R9-07": {
+      "probe": "eval_verified_bytes_race(적응: 패키지 함수 그대로, 판정만 뒤집음)",
+      "적응": true,
+      "도달": true,
+      "상태": "반례 소멸",
+      "멈춘_곳": "assert d[\"read_count\"] == 1 and d[\"raced_status\"] == \"invalid\" and d[\"control_same_malformed_bytes\"] == \"invalid\"",
+      "세부": {
+        "control_same_malformed_bytes": "invalid",
+        "raced_status": "invalid",
+        "read_count": 1,
+        "first_read_was_malformed": true,
+        "later_reads_were_valid": true,
+        "raced_compared": 0,
+        "raced_expected": 0
+      }
+    },
+    "P2-1": {
+      "probe": "replay_vacuity(적응: 거부 rc·JSON 없음)",
+      "적응": true,
+      "도달": true,
+      "상태": "반례 소멸",
+      "멈춘_곳": "assert all(v[\"rc\"] != 0 and not v[\"stdout_json\"] for v in out.values())",
+      "세부": {
+        "cases": {
+          "DOES_NOT_EXIST": {
+            "rc": 2,
+            "stdout_json": false,
+            "stderr": "! --probes 거부: 모르는 probe ['DOES_NOT_EXIST'] (아는 것: ['R7-01', 'R7-02', 'R7-03', 'R7-04', 'R7-05', 'R7-06']) — 아무것도 돌리지 않았다 (Codex R9 P2-1)"
+          },
+          "<빈>": {
+            "rc": 2,
+            "stdout_json": false,
+            "stderr": "! --probes 거부: 빈 probe 이름 — 아무것도 돌리지 않았다 (Codex R9 P2-1)"
+          },
+          "R7-01,R7-01": {
+            "rc": 2,
+            "stdout_json": false,
+            "stderr": "! --probes 거부: 중복 probe ['R7-01'] — 아무것도 돌리지 않았다 (Codex R9 P2-1)"
+          },
+          "R7-01,NOPE": {
+            "rc": 2,
+            "stdout_json": false,
+            "stderr": "! --probes 거부: 모르는 probe ['NOPE'] (아는 것: ['R7-01', 'R7-02', 'R7-03', 'R7-04', 'R7-05', 'R7-06']) — 아무것도 돌리지 않았다 (Codex R9 P2-1)"
+          }
+        }
+      }
+    },
+    "P2-2": {
+      "probe": "runner identity(적응)",
+      "적응": true,
+      "도달": true,
+      "상태": "반례 소멸",
+      "멈춘_곳": "assert no_head rc != 0 and \"expected-head\" in msg; wrong rc != 0 and \"mismatch\" in msg; dirty rc != 0 (if dirty); digest recorded",
+      "세부": {
+        "no_expected_head": {
+          "rc": 2,
+          "msg": "                [--keep-materialized DIR] [--output OUTPUT]\nreplay_codex_r7.py: error: the following arguments are required: --expected-head"
+        },
+        "wrong_head": {
+          "rc": 2,
+          "msg": "EAD mismatch — expected 0000000000000000000000000000000000000000, 실제 665c87e195007fb72f55f58f4c71ada81275c0c6: 이 트리는 요청한 대상이 아니다 (다르다) — 돌리지 않았다 (Codex R9 P2-2)"
+        },
+        "records_package_digest": true
+      }
+    },
+    "P2-3": {
+      "probe": "r9_evidence_classify_probe(적응: 판정만 뒤집음)",
+      "적응": true,
+      "도달": true,
+      "상태": "반례 소멸",
+      "멈춘_곳": "assert got == {1: \"CAUGHT\", 2: \"오류\", 3: \"오류\", 4: \"오류\", 5: \"오류\", \"0 passed-summary\": \"MISSED\"}",
+      "세부": {
+        "classify": {
+          "1": "CAUGHT",
+          "2": "오류",
+          "3": "오류",
+          "4": "오류",
+          "5": "오류",
+          "0 passed-summary": "MISSED"
+        }
+      }
+    },
+    "P2-4": {
+      "probe": "delegated → tests/test_r9_codex.py::test_d9_10",
+      "적응": true,
+      "도달": true,
+      "상태": "반례 소멸",
+      "멈춘_곳": "pytest tests/test_r9_codex.py::test_d9_10_matrix_sidecar_seals_the_exact_roster_and_argv → rc 0 · '1 passed'",
+      "세부": {
+        "node": "tests/test_r9_codex.py::test_d9_10_matrix_sidecar_seals_the_exact_roster_and_argv",
+        "summary": "1 passed in 2.20s",
+        "rc": 0,
+        "passed": true
+      }
+    },
+    "P2-5": {
+      "probe": "zero-pair typed none(적응) + test_d9_11",
+      "적응": true,
+      "도달": true,
+      "상태": "반례 소멸",
+      "멈춘_곳": "짝 0 → rc 1 · status none · canonical 없음 ∧ test_d9_11 passed",
+      "세부": {
+        "none": {
+          "rc": 1,
+          "status": "none",
+          "closure_assert": "assert rc == 1 and not canon.exists() and meta[\"status\"] == \"none\" and meta[\"pairing\"][\"paired\"] == []"
+        },
+        "test": {
+          "node": "tests/test_r9_codex.py::test_d9_11_zero_pair_and_partial_are_distinct_typed_states",
+          "summary": "1 passed in 1.05s",
+          "rc": 0,
+          "passed": true,
+          "closure_assert": "pytest tests/test_r9_codex.py::test_d9_11_zero_pair_and_partial_are_distinct_typed_states → rc 0 · '1 passed'"
+        }
+      }
+    }
+  },
+  "closed": true,
+  "rc_reason": "모든 요청 probe 가 자기 반례 assertion 에서 멈췄다 / positive closure 가 섰다"
+}

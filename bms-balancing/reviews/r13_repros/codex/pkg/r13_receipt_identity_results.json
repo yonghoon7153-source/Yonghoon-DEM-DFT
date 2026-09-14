@@ -1,0 +1,72 @@
+{
+  "target_head": "94add7b5d48ad5d19448d562a0909b15ce4dc056",
+  "code_authority": "c7217c04f939889e88b915575fce6997005072aa",
+  "scope": "In-memory scientific schema and row-keyed identity checks only; no artifact or sidecar publication; target remains read-only.",
+  "python": "WSL Ubuntu /home/yonghoon71/ddvenv/bin/python -B; Python 3.12.3",
+  "exit_code": 0,
+  "results": {
+    "matrix_control_schema": [],
+    "matrix_reorder_identity": [
+      [],
+      []
+    ],
+    "matrix_first_row_alternate_input": [
+      [
+        "matrix_synthetic.csv:('GITT', 'Baggetto', 0.0): target 입력 literature.si 의 identity 가 다르다 — 정본 988c146f9455… → 새 decc9182d840… (같은 입력이 아니면 재현이 아니다)"
+      ],
+      []
+    ],
+    "matrix_first_row_alternate_reference_input": [
+      [
+        "matrix_synthetic.csv:('GITT', 'Baggetto', 0.0): ref 입력 literature.si 의 identity 가 다르다 — 정본 988c146f9455… → 새 decc9182d840… (같은 입력이 아니면 재현이 아니다)"
+      ],
+      []
+    ],
+    "profile_control_schema": [],
+    "profile_reorder_identity": [
+      [],
+      []
+    ],
+    "profile_first_row_alternate_input": [
+      [
+        "profile_synthetic.csv:0.0: target 입력 literature.si 의 identity 가 다르다 — 정본 5941699ba33a… → 새 decc9182d840… (같은 입력이 아니면 재현이 아니다)"
+      ],
+      []
+    ],
+    "receipt_dict_and_json_string_agree": true,
+    "degeneracy_control_schema": [],
+    "degeneracy_empty_reference_schema": [],
+    "degeneracy_reference_missing_locator_dict": [
+      "ref_consumed_inputs: half_cell 의 path 가 비어 있다"
+    ],
+    "degeneracy_reference_missing_locator_json_string": [],
+    "degeneracy_both_empty_reference_comparison": [
+      [],
+      []
+    ],
+    "degeneracy_candidate_empty_reference_comparison": [
+      [
+        "degeneracy_synthetic.json: ref 입력 identity 를 **새 산출이** 안 적었다 — 자기가 먹은 입력을 신고하지 않은 묶음은 승격 대상이 아니다"
+      ],
+      []
+    ],
+    "degeneracy_baseline_empty_reference_comparison": [
+      [],
+      [
+        "degeneracy_synthetic.json: ref 입력 identity 를 정본이 안 적었다 — 같은 입력을 먹었다고 말할 수 없다 (승격 불가)"
+      ]
+    ],
+    "matrix_scale_audit_empty_string_schema": [
+      "행 0: 필수 셀 scale_audit_target 이 비어 있다"
+    ],
+    "matrix_scale_audit_empty_json_object_schema": [],
+    "matrix_scale_audit_comparison_excluded": true,
+    "pandas_version_change": [
+      "env.pandas: 환경이 다르다 — 정본 'synthetic-version' → 새 'synthetic-version-2'"
+    ],
+    "pandas_version_missing": [
+      "env.pandas: 환경 축이 비어 있다 (정본 'synthetic-version' · 새 산출 None)"
+    ],
+    "openpyxl_is_comparison_axis": false
+  }
+}
