@@ -310,7 +310,14 @@ python3 tools/convention_check.py            # 물리 규약 복사본 갈라짐
 python3 tools/kb_wiki.py index && python3 tools/kb_wiki.py lint   # 0 errors
 python3 tools/doping/run_eprime_pilot.py --selftest                # 23/23
 python3 tools/doping/watch_eprime.py --selftest                    # 32/32
+python3 -m pytest webapp/tests/ -q                                 # ⚠ 2026-09-15 추가 — 아래 참조
 ```
+
+> ⚠ **2026-09-15 추가 (§4.1 병합 실행 중 발견).** 위 사다리 초판에 **webapp 시험이 빠져 있었다.**
+> 그래서 `/cascade` §4b 패널(09-13, `e6ad796e7`)이 `p4b.*` 6슬롯을 `|bold` 없이 찍어
+> `test_no_literal_markdown_asterisks` 3건이 **병합 전부터** 떨어져 있었는데 아무도 못 봤다
+> (`da12372c1` 에서 실측 3 failed). 병합 커밋 뒤 고쳤다. **사다리에 없는 검사는 안 돌아간 검사다** —
+> 시험 묶음이 여럿이면 전부 적는다.
 
 그리고 우리 `CLAUDE.md` 의 규율 중 **병합이 깨뜨리기 쉬운 것**:
 

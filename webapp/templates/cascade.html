@@ -256,7 +256,7 @@
 
   {% if not p4b.citable %}
   <div class="callout cal-danger" style="font-size:.82rem">
-    <b>이 표는 아직 인용할 수 없다.</b> {{ p4b.why_not_citable }}
+    <b>이 표는 아직 인용할 수 없다.</b> {{ p4b.why_not_citable|bold }}
   </div>
   {% endif %}
 
@@ -265,7 +265,7 @@
     응력 기록 → 후속 연결을 요구한다. 아래 표는 그 준비가 <b>어느 설정에서 되는가</b>를 세는 것이지,
     “조건 독립인 유일한 EOS” 의 증명이 아니다 (회신 BQ-3 Q3).
   </p>
-  {% if p4b.not_this %}<div class="muted" style="font-size:.8rem;margin-bottom:6px">{{ p4b.not_this }}</div>{% endif %}
+  {% if p4b.not_this %}<div class="muted" style="font-size:.8rem;margin-bottom:6px">{{ p4b.not_this|bold }}</div>{% endif %}
   {% if p4b.by_condition %}
   <div style="font-size:.82rem;margin:6px 0">
     <b>조건별 자격</b>:
@@ -273,9 +273,9 @@
     — <b>다섯 구조가 모두 준비된 공통 설정은 없다.</b>
   </div>
   {% endif %}
-  <div class="muted" style="font-size:.8rem;margin-bottom:8px">{{ p4b.why_not_window_dependent }}</div>
+  <div class="muted" style="font-size:.8rem;margin-bottom:8px">{{ p4b.why_not_window_dependent|bold }}</div>
   {% if p4b.summary %}
-  <div class="callout cal-warn" style="font-size:.85rem;margin:8px 0">{{ p4b.summary }}</div>
+  <div class="callout cal-warn" style="font-size:.85rem;margin:8px 0">{{ p4b.summary|bold }}</div>
   {% endif %}
 
   <table class="tbl" style="font-size:.84rem">
@@ -296,7 +296,7 @@
   </table>
 
   <div class="muted" style="font-size:.8rem;margin-top:8px">
-    {% for n in p4b.read_notes %}<div style="margin-top:3px">· {{ n }}</div>{% endfor %}
+    {% for n in p4b.read_notes %}<div style="margin-top:3px">· {{ n|bold }}</div>{% endfor %}
   </div>
 
   <h4 style="margin:14px 0 4px">리뷰 두 번이 잡아낸 것은 물리가 아니었다</h4>
@@ -332,7 +332,7 @@
 
   <div class="muted" style="font-size:.79rem;margin-top:10px">
     <b>이 패널이 말하지 않는 것</b>
-    {% for n in p4b.not_saying %}<div>· {{ n }}</div>{% endfor %}
+    {% for n in p4b.not_saying %}<div>· {{ n|bold }}</div>{% endfor %}
   </div>
   <div class="muted" style="font-size:.78rem;margin-top:6px">
     생성 {{ p4b.method.generated_by }} · 재판정 {{ p4b.method.regated_by }}<br>

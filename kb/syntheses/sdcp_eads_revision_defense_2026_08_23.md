@@ -1,7 +1,7 @@
 ---
 title: "SDCP E_ads — 리비전 방어 카드 (원고 v5, SI 미기재분)"
 date: 2026-08-23
-updated: 2026-08-23
+updated: 2026-09-14
 tags: [sdcp, linio2, e-ads, revision, manuscript, dft, wave1]
 status: 확정 — 2026-08-23 사용자 결정: 이 두 항목은 SI 에 넣지 않는다(내부 보관)
 confidence: medium
@@ -13,6 +13,32 @@ claimType: mixed
 evidenceScope: single-source
 targetVenue: "SDCP 원고 v5 (Bae/Kang/An/Jin/Lee) 리비전 회신 — Figure 2e · SI Table S1"
 ---
+
+> ## ⚠ 2026-09-14 회수 표식 — 08-23 카드다. **반론 절은 그대로, 대체된 것만 여기 적는다**
+>
+> `claude/windows-reinstall-backup-oducnh` 에서 병합 회수(`47e080690`). 이 카드가 쓰인 뒤
+> SDCP 판정이 여러 번 바뀌었다 — 마감 08-28 · 회신 N/O/P(08-28) · 회신 T(08-29) · Table S1 개정(09-08).
+>
+> - ⛔ **Thesis 의 *"결론(SDCP 가 더 세게 붙는다)은 흔들리지 않는다"* — 지금은 그 결론 자체를
+>   쓰지 않는다.** `HZ-sdcp-wave1-absolute-eads` (BLOCKED). 마감 카드 허용_서술.비교 = *보류*,
+>   격차의_보수성 = *"부등호 방향 서술도 쓰지 않는다 — 절대 E_ads 자체가 보류라서"*.
+>   따라서 **§회신용 문장의 둘째 문장** (*"full DFT relaxation would deepen both values without
+>   changing their order"*) 은 **reference-equivalence 복구 전에는 못 쓴다.** 순서 주장이다.
+> - ⛔ 이 카드가 몰랐던 **새 제약 둘** (회신 O · 마감 카드 status_history 08-28e):
+>   ① **스핀 기준 비대칭** — 기준 분자는 `NUPDOWN=0` 고정, 복합체·슬랩은 자유(`−1`). δ_m 이 절대
+>   E_ads 와 0.346 헤드라인에 남는다(자세차에는 소거). ② **LREAL** — 분자 F vs 복합체 T 혼용(δ_LREAL).
+>   해제는 spin-equivalence 짝검사(free-spin + LREAL=F 기준 재실행) 뒤다.
+> - ⛔ **접촉 기전** — 이 카드는 언급하지 않지만 같은 리비전 맥락이라 적는다: *"술포네이트 O 가
+>   표면 Li 에 배위(O···Li 2.09 Å)"* 는 **철회**(회신 T, 실측 4.88–5.39 Å · 최단 접촉은 C-결합 H 2.44 Å).
+>   `HZ-sdcp-sulfonate-mechanism` (CONDITIONAL, 양방향). 회신문에 기전을 쓰지 않는다.
+> - `sdcp_doped` 는 **원고·Table S1 에서 제외**됐다 (2026-09-08). 이 카드의 *"self-doped SDCP systems
+>   … verified directly"* 는 k-검증 사실로는 남지만 **원고 대상이 아니다**.
+> - **Gap 의 *"E_ads 실측값이 아직 없다"*** — 값은 회수됐으나 BLOCKED. A2 를 *"실제 여유(meV)로
+>   다시 쓴다"* 는 복구 뒤로 미룬다.
+>
+> 살아 있는 것: **A1**(본문이 단일점을 숨기지 않았다) · **A3/C2**(`K_TRANSFER_SCREENED` — "k-point
+> converged" 금지) · **C3**(본문 두 곳이 유일한 방어선) · **곁가지의 U 출처 닫힘**.
+> 현행 원고 문단은 `kb/papers/self_doping_dft_paragraph_2026_09_08.md`.
 
 ## Thesis
 

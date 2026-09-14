@@ -11,6 +11,7 @@
 - 2026-09-14 · `kb/reviews/codex_BR_prompt_li2s_layer1_g2_density_2026_09_14.md` — 리뷰 BR 프롬프트 — 1층 g2 seed1: NPT 는 수렴했는데 밀도가 −17.9 %. 게이트를 어디에 결박하나 · 발송됨
 - 2026-09-14 · `kb/reviews/codex_BR_reply_li2s_layer1_g2_density_2026_09_14.md` — 리뷰 BR 회신 — G4 는 합격선이 아니라 경보. '셀 문제 배제' 는 받아들일 수 없다 · 회신됨
 - 2026-09-14 · `kb/reports/weekly_2026_09_14.md` — 주간 정리 2026-09-07 ~ 09-13 (주간보고 초안) · 완료 (2026-09-14 · 다음 주 문서는 새 파일)
+- 2026-09-14 · `kb/syntheses/sdcp_eads_revision_defense_2026_08_23.md` — SDCP E_ads — 리비전 방어 카드 (원고 v5, SI 미기재분) · 확정 — 2026-08-23 사용자 결정: 이 두 항목은 SI 에 넣…
 - 2026-09-14 · `kb/platforms/v100_uma_setup_2026_09_14.md` — 임대 V100 에 UMA 를 올리는 레시피 — 함정 일곱과 순서 · 완료
 - 2026-09-13 · `kb/methodology/silent_wrong_path_2026_09_13.md` — 조용히 틀린 경로 — 하루에 여섯 번 나온 한 부류 · 채택
 - 2026-09-13 · `kb/reviews/codex_BP_prompt_static_pair_result_2026_09_13.md` — 회신 BP 요청 — 정적대조 2 SCF 실행 결과 (BO 조건 1 이행) · 파일럿 보고량 재질의 · 발송대기
@@ -26,7 +27,6 @@
 - 2026-09-13 · `kb/reviews/codex_BQ6_reply_eprime_v51_2026_09_13.md` — 회신 BQ-6 — ①③ 해제 · ② 미해제 (도구가 검사하는 것 ≠ 카드가 선언한 것) · 회신됨-②미해제
 - 2026-09-13 · `kb/reviews/codex_BQ7_prompt_eprime_v52_2026_09_13.md` — 회신 BQ-7 프롬프트 — 카드 v5.2: ② 를 도구 실검사와 맞췄다 (aggregation_eligible) · 발송 대기
 - 2026-09-13 · `kb/projects/cascade_rebuild_log_2026_09.md` — cascade 재건 일지 — 2026-09 (누적) · open
-- 2026-09-13 · `kb/questions/coating_lineage_sibling_conflicts_2026_09_13.md` — 코팅 계보 #6·#7·#8 digest 가 서로 다른 말을 하는 세 자리 — 우리 값이 문헌의 어느 양인가 · open [open]
 
 ⚠ frontmatter 없는 레거시 문서는 이 목록에 안 뜬다 (날짜를 기계로 읽을 수 없다 — SCHEMA 상 소급하지 않는다).
 
@@ -404,7 +404,7 @@
 - `kb/syntheses/li3n_barrier_revision_defense_2026_08_12.md` — Li3N(001) 장벽 — 리비전 방어 카드 (AF-ASSB 원고 v5)  (2026-08-13 · 확정 — 2026-08-12: 0.118 로 통일 · 궤적 패널 제외…)
 - `kb/syntheses/md_sampling_variance_defense_2026_08_25.md` — 왜 3시드·200 ps·β 게이트인가 — 짧은 단일 런은 산포를 없애지 않고 가린다  (2026-08-25 · 방어논지)
 - `kb/syntheses/nd_doping_two_axis_verdict.md` — Nd₂O₃ 도핑 — 열역학 창과 전자구조가 **같은 방향으로** 진다  (2026-08-12 · 진행)
-- `kb/syntheses/sdcp_eads_revision_defense_2026_08_23.md` — SDCP E_ads — 리비전 방어 카드 (원고 v5, SI 미기재분)  (2026-08-23 · 확정 — 2026-08-23 사용자 결정: 이 두 항목은 SI 에 넣…)
+- `kb/syntheses/sdcp_eads_revision_defense_2026_08_23.md` — SDCP E_ads — 리비전 방어 카드 (원고 v5, SI 미기재분)  (2026-09-14 · 확정 — 2026-08-23 사용자 결정: 이 두 항목은 SI 에 넣…)
 - `kb/syntheses/why_so3h_not_deprotonated_2026_08_29.md` — 왜 SO₃H 만 계산했나 — 원고에 그대로 쓸 근거 5  (2026-08-29 · 초안 — 1저자·공저자 확인 대기 (2026-08-29 all-sto…)
 - `kb/syntheses/xu2026_li_nd_rebuttal.md` — Xu 2026 의 "Li–Nd alloy SEI" 주장은 열역학·전자구조로 기각된다  (2026-08-13 · 방어 중 — Li₃Nd c→c NEB **완료·인용 가능** (0.2…)
 

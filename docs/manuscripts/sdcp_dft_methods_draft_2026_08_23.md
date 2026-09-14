@@ -1,5 +1,24 @@
 # SDCP 원고 v5 — DFT 파트 근거 (2026-08-23)
 
+> ## ⚠ 2026-09-14 회수 표식 — 이 문서는 **08-23 판**이고, 아래는 그 뒤 바뀐 것
+>
+> `claude/windows-reinstall-backup-oducnh` 에서 병합해 회수했다(`47e080690`). **본문은 안 고친다** —
+> 08-23 에 무엇을 근거로 썼는지가 이력이다. 대신 그 뒤 판정에서 **대체·철회된 것**을 여기 단다.
+>
+> | 이 문서가 말하는 것 | 지금 상태 (2026-09-14) |
+> |---|---|
+> | §1 결론 *"SDCP 가 PTFE 보다 더 강하게 흡착"* | ⛔ **인용 보류.** `HZ-sdcp-wave1-absolute-eads` (BLOCKED) — 절대 E_ads 4종과 0.346 eV 헤드라인. 마감 카드 `db/properties/sdcp_neutral_closed_2026_08_28.json` 의 허용_서술.비교 = *"보류 중 — 지금은 쓰지 않는다"*. **부등호 방향 서술도 보류**(reference-equivalence 복구 전). 회신 O·P |
+> | §2 조각 4종 중 `sdcp_doped` | ⛔ **원고 Table S1 에서 뺐다** (2026-09-08, 1저자 발견 P0) — `sdcp_doped_closed` 가 표면 흡착 수치 전부를 닫았다. 현행 표는 **중성만** |
+> | §4-1 *"E_ads 수치 — wave1 회수 대기"* | 회수됐다. 그러나 위 BLOCKED 라 **원고에 넣지 않는다**. 1저자: *"값은 나중에 고친다"* (2026-09-09) |
+> | §4-3 U(Ni 3d) 6.2 eV 출처 | ✅ 닫힘 (08-23 당일, §7) — 현행 Table S1 도 Jain 2011 을 단다 (`Ref. S2, 49`) |
+> | 산출물 `SDCP_DFT_methods_TableS1.docx` · `sdcp_dft_methods_build.js` | **대체됨** → `Table_S1_DFT_parameters.docx` · `table_s1_build.js` (2026-09-08, `c5c2cc120`): 제목 좁힘 · 자가도핑 행 제거 · 분자 계산 각주(Supplementary Note 2) · 참조 번호 본문 계열(48/49/S1–S3) |
+> | 본문 문단 초안 | **대체됨** → `kb/papers/self_doping_dft_paragraph_2026_09_08.md` (분자 ORCA 문단 신설 · 흡착 문단은 보류 초안 A/B 로 분리) |
+> | §6 *"원고는 QE 로 기술한다 … 숫자를 낸 코드와 Methods 가 다르면 사실과 어긋난다"* | ⏳ **아직 열려 있다.** 현행 원고·Table S1(09-08) 은 QE 표기, `methods_dft_v9_for_coauthors.md`(08-30) 는 VASP 표기. wave1 값이 BLOCKED 인 지금은 충돌이 표면화되지 않지만, 값을 복구해 넣는 시점에 **코드 표기 = 값을 낸 코드** 를 맞춰야 한다. 1저자 결정 사항 |
+> | 접촉 기전 서술 (이 문서엔 없음) | 참고: *"술포네이트 O 가 표면 Li 에 배위"* 는 2026-08-29 회신 T 로 **철회** (실측 4.88–5.39 Å). 리비전 회신에 쓰지 말 것 |
+>
+> 살아 있는 것: **§2 계산 조건표**(INCAR·KPOINTS·POSCAR 실측 — 방법 사실이라 그대로 유효) ·
+> **§3 문구 제약 3개** · **§6 VASP↔QE 변환표** · **§6b 참고문헌 매핑** · **§7 U 출처 확인**.
+
 원고: **"Integrated binder and current-collector engineering with a self-doped conducting
 polymer for high-rate, low-pressure dry-processed all-solid-state battery cathodes"**
 (Bae, Kang, **An**, Jin, Lee) — Manuscript/SI v5.

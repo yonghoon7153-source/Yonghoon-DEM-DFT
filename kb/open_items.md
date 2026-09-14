@@ -18,7 +18,7 @@
 | **E′ 파일럿** | 🟢 **실행 중** — V100 tmux `eprime`. out_root `$STORE/runs/eprime_2026_09_14`, 로그 `$STORE/runs/eprime_2026_09_14.log`. 준비 5 + MD 11 호출 = **30런**, 상한 10 / 120 GPU-h (비준). code_id `634da438b`. 감시는 `tools/doping/watch_eprime.py --out_root …` |
 | **G1 (Li₂S 1층)** | ⏸ kgy 의 modelc 끝나고. GPU OOM 이력 있음 — 사다리 ② `diago_david_ndim=2` → ③ CPU NP=8 → ④ KISTI (`db/properties/li2s_layer1_g1_prereg_2026_09_14.json` §6c) |
 | **회신 BR 후속** | ⏸ 300 K hold 연장(동역학 갇힘 진단 ②)은 G1 뒤. 나머지 4시드 보류 유지 |
-| **브랜치 병합** | 🆕 origin 토큰 열림 → 23개 브랜치 전수 조사 완료 (`docs/handoff_merge_from_lldvar_20260915.md`). **우리 계보의 포크 셋** 발견 — 그중 `claude/windows-reinstall-backup-oducnh` 12커밋에 **SDCP 원고 v5 DFT methodology·Table S1** 이 있고 우리에겐 파일 5개가 없다. 원고 마감 9/16 |
+| **브랜치 병합** | ✅ **§4.1 병합 완료 (2026-09-15 새벽, `47e080690`)** — `claude/windows-reinstall-backup-oducnh` 12커밋 3-way merge. 충돌은 `kb/index.md` 만(재생성). 검증 사다리 통과 — 단 **webapp 시험은 병합 전부터 3건 떨어져 있었다**(`/cascade` §4b 패널 `p4b.*` 6슬롯이 `|bold` 없이 db 문자열을 찍어 `**` 노출 · 09-13 `e6ad796e7` 부터 · 인계 문서 §7 사다리에 webapp 시험이 빠져 있어 아무도 못 봤다) → 이 커밋에서 고침. ⚠ **정정: "파일 5개가 없다" 는 이름 기준이었다 — 실체는 08-23 판이고 우리 쪽에 더 새 판이 있었다** (`Table_S1_DFT_parameters.docx` 09-08 · `methods_dft_v9` 08-30 · 문단 카드 09-08). **9/16 마감 위협 아님.** 회수본 머리에 대체 표식을 달았다(`docs/manuscripts/README.md` · 두 md 머리). 건진 것: `tools/sdcp/check_ldauu_provenance.py`(U 6.2 = MP 세트, 7/7) · 리비전 방어 카드 · VASP↔QE 변환표. ⏳ **1저자 결정 남음: 원고 코드 표기(QE) vs 값을 낸 코드(VASP)** — 값 복구 시 맞춘다. §4.2 는 §4.1 부분집합(안 함) · §4.3 rescue 잔여 2건 키 대조 미착수 · §6-2 main 병합 금지 범위 미판정 |
 
 **바로 볼 것 (순서)**
 1. **첫 prep 이 rc=0 인가.** `torch 2.14 + fairchem 2.22` 는 공식 조합이 아니고, 확인된 것은
