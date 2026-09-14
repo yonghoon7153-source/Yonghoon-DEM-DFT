@@ -5035,6 +5035,14 @@ def _promotion_content_id(d: Path, dir_fd=None) -> tuple:
         `sealed` 면 거부한다 (봉인 파일을 지운 것이지 legacy 가 아니다 —
         판정은 호출자 `resolve_execution_class(for_promotion=True)` 가 한다).
 
+    **범위 (62차 자체 리뷰 실측)**: 봉인에는 서명이 없다. 그러므로 이 규칙이
+    막는 것은 "**등록되지 않은** 상태로 되돌아가는 것" 이고, 과거에 봉인·등록된
+    **어느** 상태든 그 member 집합과 바이트를 그대로 되살리면(예: fit member
+    를 지우고 grid 시점의 봉인을 복원) 그 상태의 class 로 승격된다. 그것은
+    grid commit 이 실제로 봉인·등록한 상태이므로 세탁이 아니라 그 상태 자체다
+    — 방어선은 봉인이 아니라 **원장 등록**이고, 등록되지 않은 조합은 여전히
+    거부다.
+
     반환: `(content_id, had_seal)`.
     """
     body = _read_member(d, RUN_SEAL_NAME, dir_fd)

@@ -230,3 +230,16 @@ site 1) + g62 신설 **22**: β′γ′ 10 · α′ 3 · ζ′ 1 (`ARCHIVE` 상�
 sealed-record scan + fit resume 단계 (smoke_e2e.sh) → 전체 회귀 결과 처리 →
 커밋 → strict smoke → EXPECT(`--emit-expect`)/12조각/영수증/g17 → `/self-review`
 → 요청문 (pyDMA 증거 포함) → push.
+
+## 자체 리뷰 (`/self-review`, 렌즈 4 — 커밋 `449fcc7` 의 diff)
+
+### 렌즈 승격 vs 전이 — 결론이_바뀜 0 · 서술만_바뀜 2 · §0 신고 후보 2
+
+| # | 공격 (실측) | 판정 |
+|---|---|---|
+| 1 | fit member 삭제 + grid 시점 봉인 복원 → grid 의 canonical id 로 승격 | 정당한 grid 상태 (원장에 `phase=grid` 로 등록된 바이트 그대로). 봉인엔 서명이 없으므로 이 층이 막는 것은 **미등록 상태**뿐 — `_promotion_content_id` docstring 에 범위를 적었다 |
+| 2 | manifest(+seal)만 복사하고 `fits.parquet` 을 바꿈 → identity 층은 통과 | `archive_bundle.bundle()` 의 `_seal_conflicts` (`manifest.fits_seal.file_sha256` ↔ 실물) 가 거부. **F68 이전** manifest(`fits_seal` 없음)는 direct bundle 창이 남는다 → §0 신고 |
+| 3 | sink 열거: `make_results.py:1703` 보고서 sink 는 `assert_not_smoke_provenance` 직접 (for_promotion 은 내부에서 지남) · derived freshness 는 배너 정책(F77) | 요청문에 "보고서 sink 는 배너, archive 는 거부" 를 명시 |
+| 3b | nested `wsweep/` 은 등록 자체가 없다 (`weight_sweep.py` 가 issue/commit 을 안 부름) → 부모 승격이 nested 를 판정 안 함 | §0 신고 후보 |
+| 4 | 봉인 형식 edge (non-JSON · 빈 목록 · 파생 이름 · 중복 항목 · 두 번 읽는 사이 삭제) | 전부 fail-closed |
+| 5 | 가용성: grid commit → fit 시작만(거부 ✔) → fit commit + 파생 + nested + attempts → resume 중(거부 ✔) → resume commit + report 갱신 → 승격 | 살아 있음 |
