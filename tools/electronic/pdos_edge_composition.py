@@ -36,8 +36,8 @@ REPO = Path(__file__).resolve().parents[2]
 #: DOS 문턱 — 총 DOS 최대값 대비 비율. 판독이 이 값에 딸리므로 결과에 같이 적는다.
 DOS_THRESH_FRAC = 0.02
 #: 기본 창 (가장자리에서 안쪽으로). 2026-06 Nd 카드가 VBM 을 −2~−0.6 으로 봤다 — 그 관례를 따른다.
-VBM_WINDOW = (-2.0, 0.0)
-CBM_WINDOW = (0.0, 2.0)
+VBM_WINDOW_eV = (-2.0, 0.0)
+CBM_WINDOW_eV = (0.0, 2.0)
 
 
 def read_pdos(path):
@@ -108,7 +108,7 @@ def composition(rows, els, lo, hi):
 
 
 def analyze(path, label=None, thresh_frac=DOS_THRESH_FRAC,
-            vbm_window=VBM_WINDOW, cbm_window=CBM_WINDOW):
+            vbm_window=VBM_WINDOW_eV, cbm_window=CBM_WINDOW_eV):
     rows, els, ecol = read_pdos(path)
     vbm, cbm, thresh = find_edges(rows, els, thresh_frac=thresh_frac)
     out = {
