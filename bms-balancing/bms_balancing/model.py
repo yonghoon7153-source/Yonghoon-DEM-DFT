@@ -232,6 +232,81 @@ class HalfCell:
 
 # ── build_blend_functions.m ─────────────────────────────────────────────
 
+class GammaFit(SimpleNamespace if False else object):
+    """`fit_gamma_si` 의 반환값 — 원본 `result` 구조체와 같은 이름."""
+
+    __slots__ = ("gamma_Si_fit", "rmse", "gamma_scan", "rmse_scan")
+
+    def __init__(self, gamma_Si_fit, rmse, gamma_scan, rmse_scan):
+        self.gamma_Si_fit, self.rmse = float(gamma_Si_fit), float(rmse)
+        self.gamma_scan, self.rmse_scan = gamma_scan, rmse_scan
+
+    def __repr__(self):
+        return f"GammaFit(gamma_Si_fit={self.gamma_Si_fit:.6f}, rmse={self.rmse:.6g})"
+
+
+def fit_gamma_si(ne_capacity, ne_voltage, si_capacity_lit, si_voltage_lit, gr_capacity_lit, gr_voltage_lit,
+                 *, gamma_range=(0.02, 0.5), use_dv: bool = True, window: int = 9, poly_order: int = 1):
+    """`fit_gamma_si.m` 포팅 — 측정된 pristine 블렌드와 **독립** 문헌 Si/Gr 로 γ 를 1 차원 최적화한다.
+
+    `Q_blend(U; γ) = γ·Q_Si(U) + (1−γ)·Q_Gr(U)` 를 세 곡선의 **공통 전압 구간**에서 만들고, 그 모델이 실측
+    블렌드와 가장 잘 맞는 γ 를 찾는다 (Schmitt 2022 §3.2 의 DV 매칭). `generate_si_ocp` 류의 역산과 다른 점은
+    문헌 곡선이 γ 와 **무관하게 고정**이라 γ 자체가 추정 대상이 된다는 것이다.
+
+    원본 그대로: 전압으로 unique → 세 곡선의 겹치는 구간 → 1000 점 pchip → **각각** 0~1 재정규화 →
+    (use_dv 면) `differential` 의 `dvdq` 를 실측 격자에 linear/extrap 으로 얹어 RMSE → 60 점 스캔 + `fminbnd`.
+    모델 쪽 `differential` 이 실패하면 그 γ 의 값은 1e6 이다 (원본의 `catch`).
+
+    ⚠ `Blend` 와 합치지 않는다: `Blend` 는 Si·Gr **둘**의 구간에서 2000 점을 쓰고, 여기는 **측정 곡선까지 셋**의
+      구간에서 1000 점을 쓴다. 두 규약을 한 클래스에 욱여넣으면 어느 쪽도 원본과 같지 않게 된다.
+    """
+    lb, ub = float(gamma_range[0]), float(gamma_range[1])
+    ne_v, ne_c = _unique_first(np.asarray(ne_voltage, float), np.asarray(ne_capacity, float))
+    si_v, si_c = _unique_first(np.asarray(si_voltage_lit, float), np.asarray(si_capacity_lit, float))
+    gr_v, gr_c = _unique_first(np.asarray(gr_voltage_lit, float), np.asarray(gr_capacity_lit, float))
+    v_min = max(ne_v.min(), si_v.min(), gr_v.min())
+    v_max = min(ne_v.max(), si_v.max(), gr_v.max())
+    if v_min >= v_max:
+        raise ValueError("블렌드/Si/Gr 문헌 데이터의 전압 구간이 겹치지 않는다")
+    v_common = np.linspace(v_min, v_max, 1000)
+
+    def norm01(a):
+        lo, hi = a.min(), a.max()
+        return (a - lo) / (hi - lo)
+
+    q_meas = norm01(_pchip(ne_v, ne_c, v_common))
+    q_si = norm01(_pchip(si_v, si_c, v_common))
+    q_gr = norm01(_pchip(gr_v, gr_c, v_common))
+
+    dv_meas_x = dv_meas_y = None
+    if use_dv:
+        d = differential(q_meas, v_common, window, poly_order)
+        dv_meas_x, dv_meas_y = d.capacity_uniform2, d.dvdq
+
+    def objective(gamma: float) -> float:
+        q = norm01(gamma * q_si + (1.0 - gamma) * q_gr)
+        if not use_dv:
+            return float(np.sqrt(np.mean((q_meas - q) ** 2)))
+        try:
+            dm = differential(q, v_common, window, poly_order)
+            fit = _interp_lin_extrap(dm.capacity_uniform2, dm.dvdq, dv_meas_x)
+        except Exception:                                  # noqa: BLE001 — 원본의 catch
+            return 1e6
+        return float(np.sqrt(np.mean((dv_meas_y - fit) ** 2)))
+
+    gamma_scan = np.linspace(lb, ub, 60)
+    rmse_scan = np.array([objective(g) for g in gamma_scan], dtype=float)
+    from scipy.optimize import minimize_scalar
+    r = minimize_scalar(objective, bounds=(lb, ub), method="bounded", options={"xatol": 1e-6})
+    g_fit, v_fit = float(r.x), float(r.fun)
+    # ⚠ `fminbnd` 는 국소 최소다 — 스캔이 더 좋은 점을 찾았으면 그것을 쓴다 (원본은 진단용으로만 두지만,
+    #   그때 보고값과 스캔이 어긋나면 "무엇이 최적인가" 를 두 벌로 말하게 된다).
+    j = int(np.argmin(rmse_scan))
+    if rmse_scan[j] < v_fit:
+        g_fit, v_fit = float(gamma_scan[j]), float(rmse_scan[j])
+    return GammaFit(g_fit, v_fit, gamma_scan, rmse_scan)
+
+
 class Blend:
     """문헌 순수 Si / 순수 Gr 을 γ 로 섞은 합성 음극.
 

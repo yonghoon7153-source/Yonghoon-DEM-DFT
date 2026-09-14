@@ -210,3 +210,49 @@ def test_cy_07_external_literature_and_the_source_label_must_agree(tmp_path):
                        capture_output=True, text=True, cwd=ROOT, timeout=600)
     assert r.returncode == 0, (r.returncode, r.stdout[-600:], r.stderr[-600:])
     assert (tmp_path / "o" / "cycles_pydma_external.csv").is_file(), list((tmp_path / "o").iterdir())
+
+
+# ── γ 사전 적합 (`fit_gamma_si.m` 포팅) — pyDMA Track C 와 설정을 맞추기 위한 것 ────────────────────
+def _lit_curves(n=400):
+    """문헌 Si·Gr 모양의 합성 곡선 (같은 전압 격자 위의 **서로 다른** Q(U)).
+
+    ⚠ 첫 판은 두 곡선의 **용량 배열을 같게** 뒀다 — 그러면 `γ·Q_Si + (1−γ)·Q_Gr` 가 γ 와 무관해져 '측정' 블렌드가
+      γ 를 안 담는다. 정답을 심을 수 없는 fixture 였다 (이 저장소의 'fixture 가 진실을 가린다' 와 같은 축).
+      모델은 **전압마다** 두 Q 를 섞으므로 Q_Si(U) 와 Q_Gr(U) 가 달라야 γ 가 식별된다.
+    """
+    import numpy as np
+    v = np.linspace(0.05, 0.9, n)
+    q_si = 1.0 - ((v - v.min()) / (v.max() - v.min())) ** 0.6        # Si: 완만하고 넓은 경사
+    q_gr = 1.0 / (1.0 + np.exp((v - 0.12) * 60)) * 0.6 + 1.0 / (1.0 + np.exp((v - 0.20) * 60)) * 0.4  # Gr: 계단 둘
+    return q_si, v, q_gr, v
+
+
+@pytest.mark.parametrize("gamma_true,use_dv", [(0.30, True), (0.12, True), (0.30, False)])
+def test_cy_08_fit_gamma_si_recovers_a_known_blend_fraction(gamma_true, use_dv):
+    """[pyDMA Track C 대조, 2026-09-14] `fit_gamma_si.m` 포팅 — 측정된 pristine 블렌드와 **독립** 문헌 Si/Gr 로
+    γ 를 1 차원 최적화로 찾는다 (Schmitt 2022 §3.2 의 DV 매칭).
+
+    정답을 아는 시험: 같은 식으로 γ=γ_true 블렌드를 만들어 '측정값' 으로 주고 그것을 되찾는지 본다.
+    세 곡선의 **공통 전압 구간**에서 각각 0~1 재정규화한 뒤 비교하는 것이 원본의 규약이다.
+    """
+    from bms_balancing import model as M
+    si_c, si_v, gr_c, gr_v = _lit_curves()
+    # '측정' 블렌드: 같은 전압 격자에서 섞고 재정규화 (원본 gamma_objective 와 같은 식)
+    q = gamma_true * si_c + (1 - gamma_true) * gr_c          # 전압마다 섞는다 (모델과 같은 식)
+    q = (q - q.min()) / (q.max() - q.min())
+    meas_c, meas_v = q, si_v                                  # 두 문헌이 같은 전압 격자를 쓴다
+
+    r = M.fit_gamma_si(meas_c, meas_v, si_c, si_v, gr_c, gr_v, use_dv=use_dv)
+    assert 0.02 <= r.gamma_Si_fit <= 0.5, r
+    assert abs(r.gamma_Si_fit - gamma_true) < 0.02, (r.gamma_Si_fit, gamma_true, r.rmse)
+    assert len(r.gamma_scan) == 60 and len(r.rmse_scan) == 60, "진단용 스캔 60 점 (원본 그대로)"
+    assert r.rmse == min(r.rmse_scan) or r.rmse <= min(r.rmse_scan) + 1e-9, (r.rmse, min(r.rmse_scan))
+
+
+def test_cy_09_fit_gamma_si_refuses_non_overlapping_voltage_windows():
+    """세 곡선의 전압 구간이 안 겹치면 원본은 `error` 다 — 여기서도 조용히 답을 내지 않는다."""
+    from bms_balancing import model as M
+    import numpy as np
+    q = np.linspace(0.0, 1.0, 50)
+    with pytest.raises(ValueError, match="겹치지"):
+        M.fit_gamma_si(q, q * 0.1 + 2.0, q, q * 0.1, q, q * 0.1)
