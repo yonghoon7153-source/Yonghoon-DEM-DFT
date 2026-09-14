@@ -275,3 +275,35 @@ sealed-record scan + fit resume 단계 (smoke_e2e.sh) → 전체 회귀 결과 �
 | 사소 | `_observed_environment` 죽은 코드 | 삭제 |
 
 변이 축: 재조준 4 (`dry-run-releases-the-claim` · `grid-dry-run-discards-the-capability-g62` · `promotion-checks-derived-freshness-g62` · `closure-follows-module-aliases` site 0) + 신설 11 (`capability-discarded-before-the-lock` · `grid-discards-before-the-lock` · `promotion-holds-the-run-locks` · `class-body-bindings-are-not-shadows` · `from-imports-are-namespace-targets` · `parent-package-import-is-refused` · `crossed-module-self-alias-is-followed` · `history-refuses-a-vanished-module` · `dist-info-bytes-are-in-the-receipt` · `parent-cross-checks-customization` · `schema-refuses-empty-receipts`). `--check-preimages` rc 0.
+
+## 마감 실측
+
+### strict smoke (커밋 `0dcbc17`, clean RUN_SCOPE)
+
+`./scripts/smoke_e2e.sh` → **✅ pipeline smoke 통과, exit 0**. 새 단계도 초록:
+7b (resume → journal 1개 · lock 정리 · 봉인이 지금 있는 member 를 정확히 담고
+승격 판정 통과 · 보고서 갱신 배너 없음) · 8b (굳은 기록 58개에 handle·staging·
+없는 경로 없음).
+
+### 세대 전환 (g16 → g17)
+
+```
+g16_2026_09_09  active → frozen  (journal seq 15)
+g17_2026_09_14  새 active · docs/22p_gap/proj_g17
+
+pin  compute            fa5b9324c01ab7f0 → 14ff767d5fbd0d9d
+     row_projection     0e22767966646d49 → f85fc2b39e15d3d0
+     producer_semantic  2e2ddce417ecf0db → 814278bfcb82fa2f
+     src_scoring        69e69cb046f4b4ae (변동 없음)
+     analysis_spec      43d74dd385b1f66d… (변동 없음)
+영수증 core             fc1cf9c0ef22490f… → d6ae274f6e06d95a…
+validator source_digest 4227b40871fa0c10 → fd7c90edbc56ff1f
+행 바이트                ad598fe77e75afec — **열세 세대째 같다**
+```
+
+원자료는 이 컨테이너에 없어 `tools.archive_bundle restore artifacts/paired_fixed5_v4`
+로 복원한 뒤 돌렸다 (bundle check 가 digest 를 대조하므로 바이트는 같다).
+`row_projection.py paired_fixed5_v4 --cohort g17_2026_09_14` → 6138행 · restart
+30690행 · 전체 True · by_obj True · fits삼중 True · 봉인일치 True.
+`make_receipt.py paired_fixed5_v4` → 검사 34건 · 산출 2건. runtime 의 yaml 은
+6.0.1 (g16 기록 6.0.3 과 다르다 — 컨테이너가 바뀌었다).

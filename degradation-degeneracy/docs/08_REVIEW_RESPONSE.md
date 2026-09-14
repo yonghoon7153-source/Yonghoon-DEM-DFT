@@ -6912,3 +6912,118 @@ pin 을 움직인 것은 δ 다 — analyzer 가 comprehension 을 자식 scope 
 - P0-6·P0-7 은 60차 P0-11 · 61차 P1-4 의 scope 축이다 — scope 의 **목록**은
   맞췄지만 **규칙**(무엇이 어디서 평가되는가 · 어느 module 의 table 인가)이 아직
   Python 보다 작았다.
+
+## §76 62차 대응 — **16건 전부 닫음** + 자체 리뷰 10건 (2026-09-14)
+
+대상 커밋은 마감 절에 적는다. 좌표·RED 관측·실측 수치의 정본은
+`docs/GATE62_WORKING_STATE.md`. 여기는 **왜 그렇게 고쳤는가**다.
+
+### β′ (P0-2·P1-1·P0-3·P1-2) — 잠금은 문자열이 아니라 커널이 정한다 · `449fcc7`
+
+옛 lock 은 `exists()` 를 본 뒤 `write_text()` 했다 — check-then-overwrite 다.
+두 contender 가 둘 다 "없다" 를 관측한 직후 쓰면 둘 다 성공한다 (리뷰어
+`acquired_count 2`). 그리고 release 는 PID 문자열을 **다시 읽어** 소유를
+추정했고, 못 읽으면 조용히 돌아갔다.
+
+`[고침]` `acquire_run_lock()` 은 `O_CREAT` 로 열고 `flock(LOCK_EX|LOCK_NB)` —
+배타는 커널의 한 연산이 정한다. 죽은 프로세스의 lock 은 커널이 이미 풀었으므로
+"stale 회수" 라는 경쟁 구간 자체가 없다 (`O_EXCL` 만 쓰면 지우고 다시 만드는
+사이가 남는다). 돌려주는 것은 **token** — 디렉터리 fd · 이름 · (dev, ino) ·
+nonce. release 는 이름이 아직 그 inode 를 가리킬 때만 unlink 하고, 사라졌거나
+바뀌었으면 올린다. 본문은 사람을 위한 정보이지 소유권이 아니다.
+
+P0-3 이 61차 P1-1 의 정정과 부딪친 이유가 여기서 풀린다. 61차는 lock 이
+`staged_root(cap)=/proc/self/fd/N` **경로** 아래 있어서 commit 이 fd 를 닫으면
+release 가 죽었고, 그래서 commit 을 lock 밖으로 옮겼다. token 은 디렉터리 fd 를
+따로 들고 있으므로 N 이 닫혀도 놓을 수 있다 — 그래서 순서가 compute → commit
+(봉인·class) → phase receipt → release 로 돌아왔고, grid 도 merge · manifest ·
+`write_curves_manifest` · `phase_done` 이 전부 lock 안이다.
+
+P1-2: commit 에 도달하지 못한 종료(dry-run · 예외)는 `discard_capability_on_abort`
+(fit·grid 공용, 원래 예외를 가리지 않는다). 자체 리뷰가 그 문장의 "모든" 이
+거짓임을 잡았다 — capability 는 lock **앞**에서 발행되므로 lock 거부·발행↔lock
+사이 예외가 빠져 있었다. try 를 발행 직후로 올렸다.
+
+### γ′ (P0-4·P0-5) — durable locator 는 이름, 서명은 논리 key · `449fcc7`
+
+grid 의 `manifest.yaml` 이 `curves_parquet=/proc/self/fd/N/…` 을 적고 fit 이
+그것을 `manifest_grid.yaml` 로 보존해 identity member 로 봉인했다 —
+61차 P0-2 의 grid 쪽 잔재다. `_grid_manifest_payload(named_out, merged, …)` 가
+이름 기준으로 적는다. run_spec 의 `base_config` 는 staging 사본
+(`/tmp/fit-stage-*/…`)을 그대로 넣어 실행마다 run_sig 가 바뀌었고, 정상
+resume 이 자기 completed journal 을 못 찾았다. `_ck()`(staging 뿌리 기준 논리
+key — `base_config_sha` 와 같은 key)로 바꿨다.
+
+### α′ (P0-1) — 승격 판정과 전이 조회를 가른다 · `449fcc7` `191a6f7`
+
+60차는 낡은 봉인을 **무시**하고 지금 있는 것으로 identity 를 만들었다
+(cross-process e2e 를 살리려고). 61차는 봉인이 담은 이름만 검증했다 (grid 가
+굳힌 뒤 fit 이 같은 자리에 실행 manifest 를 더하는 정상 순서를 살리려고). 둘 다
+**전이**에는 옳다 — 다음 phase 의 gate 는 아직 아무것도 안 굳혔고 commit 이
+다시 봉인한다. 그런데 같은 함수가 **승격**에도 쓰였다. 진행 중인 fit (봉인은
+grid 목록만 검증해 통과) · fit member 를 지운 grid (봉인이 낡아 무시, 지금 있는
+것 = grid 목록) — 둘 다 grid 의 등록된 identity 로 canonical 이 됐다.
+
+`[고침]` `_promotion_content_id()`: 봉인이 있으면 바이트가 맞아야 하고, 지금
+있는 실행 manifest 를 **정확히 다** 담아야 한다; 봉인이 없으면 지금 있는 것으로
+만들되 레코드가 `sealed` 면 거부한다 (commit 이 만든 레코드는 `sealed: true`).
+전이 조회는 그대로다. 자체 리뷰가 범위를 정확히 했다: 봉인엔 서명이 없으므로
+이 층이 막는 것은 **등록되지 않은** 상태이고, 과거에 봉인·등록된 상태로
+되돌리는 것(fit 을 지우고 grid 봉인을 복원)은 그 상태 자체다 — 방어선은
+원장 등록이다.
+
+### ζ′ (P0-8) — 승격 primitive 하나 · `449fcc7`
+
+파생 freshness 검사가 shell wrapper 에만 있어서 `archive_bundle bundle` 을
+직접 부르면 stale 파생이 묶였다. 48차 P0-8 이 낸 결론 그대로다 — 면제와 승격
+금지는 같은 경계여야 한다. `assert_promotable()` = smoke·등록·봉인 판정 + 파생
+freshness. 자체 리뷰가 하나 더 붙였다: 검사 뒤 복사 사이에 writer 가 끼어들
+수 있으므로 실행 lock 둘을 든 채 검사+복사한다.
+
+### δ′ (P0-6·P0-7) — scope 의 규칙 · `449fcc7` `0dcbc17`
+
+60차 P0-11 은 "shadow 는 scope 별", 61차 P1-4 는 "comprehension 은 자식 scope"
+를 세웠다 — scope 의 **목록**은 맞췄지만 **규칙**이 아직 Python 보다 작았다.
+definition head(default · decorator · annotation)는 정의 시점에 바깥에서
+평가되는데 매개변수가 그것을 가렸고, class 본문의 결속이 method 에 내려갔고,
+건너간 scoring 은 primary 의 symbol table 로 분석됐다. 셋 다 리뷰어 실측
+"digest 같고 계산은 1→9".
+
+`[고침]` `_definition_head()` 는 바깥 집합으로, class 는 자식 scope 에
+`inherited` 를 물려주고, `_producer_closure` 는 module 별 table 을 만든다.
+자체 리뷰가 셋을 더 잡았다 (전부 digest 같고 출력 다름): 건너간 module 의
+자기 이름 공간 접근을 walk 가 안 따라감 · `from src import scoring as me` /
+`import src as S` 가 target 밖 · class 본문·module 문장의 결속은 `LOAD_NAME`
+이라 위치 의존인데 scope 전체 shadow 로 봄 → 함수·lambda 만 결속 shadow 를
+준다 (fail-closed). δ′ 첫 판의 시험 2건이 반대를 고정하고 있었다 — fixture 가
+진실을 가리는 형태가 시험 자체에도 있다.
+
+### ε′ (P1-3~P1-6·P2-1) — 영수증 · `449fcc7` `0dcbc17`
+
+frame(P1-3) · typed failure 와 zip origin(P1-4) · sys.path 순서 첫 것(P1-5) ·
+한 스냅샷(P1-6) · 재귀 exact schema(P2-1). 자체 리뷰가 frame 의 한계를
+정확히 재고(child 의 startup 코드 전부 — fd·print 교체 포함 — 는 못 막는다;
+"customization 에 남는다" 는 거짓이었다) 둘째 층을 붙였다: 부모가 자기
+프로세스에서 customization 을 재서 child 와 대조. 그리고 importtime **헤더
+줄**을 module 이름으로 받던 파싱 버그가 "올렸다 지운 module → unfiled" 세탁의
+정상 사례였다는 것, dist-info 의 `entry_points.txt` 가 영수증 밖이라는 것,
+schema 가 빈 영수증을 받는다는 것을 닫았다.
+
+### η′ (P2-2) — 인용은 실재해야 한다 · `449fcc7`
+
+61차 P2 정정이 "문서도 실측 대상" 이라 적어 놓고 같은 문단에서 없는 이름
+`_canon_*` 을 인용했다. 고치고 lint 를 뒀다.
+
+### 이 라운드가 배운 것
+
+1. **관용은 경계를 건넌다.** 전이를 살리려고 둔 예외가 승격에 흘렀다. 같은
+   함수를 두 목적이 쓰면 한쪽의 예외가 다른 쪽의 구멍이다.
+2. **고침이 다음 반례의 재료가 된다 — 두 번째.** 61차 P1-1(commit 을 lock 밖으로)
+   이 62차 P0-3 이 됐다. 순서를 되돌리는 것이 답이 아니라 lock 을 경로에서
+   떼는 것이 답이었다.
+3. **e2e 시험이 다른 층에 먼저 걸리면 자기 축의 증인이 아니다.** class 본문
+   결속의 반례를 벌거벗은 별칭으로 쓰자 58차 별칭 고정점이 먼저 걸렸다.
+   감싼 값(`[getattr][0]`)으로 바꿔서야 리뷰어의 형태가 됐다.
+4. **자체 리뷰 4 렌즈가 결론이_바뀜 3 을 잡았다** — 전부 δ′ 의 scope 축에서.
+   판정을 닫은 코드가 판정과 같은 형태의 구멍을 옆에 남기는 것을 외부 리뷰
+   전에 실측으로 봤다.
