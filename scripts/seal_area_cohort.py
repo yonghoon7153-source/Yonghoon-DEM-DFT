@@ -65,6 +65,7 @@ COLS = ['case', 'status', 'design_family', 'family_source', 'n_types', 'deck', '
 DESIGN_CSV = ROOT / 'docs' / 'data' / 'lhs_design_20260818.csv'   # 설계족의 **정본** (`block` 열)
 BLOCK_NTYPES = {'bimodal': '3', 'mono_AM_S': '2', 'mono_AM_P': '2'}
 HEAD_RE = re.compile(r'^#\s*(\S+):\s*(\S+)\s*\((\d+)-type\)')
+_SHA_RE = re.compile(r'[0-9a-f]{64}')      # 봉인 지문의 모양 (빈칸은 결손이라 정상)
 
 
 def sha256(p: Path) -> str:
@@ -189,6 +190,23 @@ def refill_family(tsv: Path, design: dict) -> tuple[int, int]:
     else:
         rows = [ln.split('\t') for ln in lines[hdr_i + 1:]]
     ix = {c: i for i, c in enumerate(cols)}
+    #  ★ 2026-09-14 (판정문 §6.4) — refill 은 봉인 파일을 **다시 쓴다**.  검증 없이 쓰면
+    #    손상을 세탁한다.  fail-closed 로 거부한다 (모르면 통과가 아니다).
+    _ids = [v[ix['case']] for v in rows if len(v) > ix['case']]
+    _dup = sorted({c for c in _ids if _ids.count(c) > 1})
+    if _dup:
+        raise SystemExit(f'⛔ DUPLICATE_CASE_ID — 봉인 TSV 에 중복 ID 가 있다: {_dup}\n'
+                         f'   refill 은 이 파일을 다시 쓰므로 중복을 안고 덮어쓰지 않는다.')
+    _bad = []
+    for v in rows:
+        for c in ('deck_sha256', 'atom_sha256', 'contact_sha256'):
+            if c in ix and len(v) > ix[c]:
+                h = v[ix[c]]
+                if h and not _SHA_RE.fullmatch(h):      # 빈칸은 정상 — 결손이니까
+                    _bad.append(f"{v[ix['case']]}:{c}={h[:16]}…")
+    if _bad:
+        raise SystemExit('⛔ BROKEN_SHA — 지문이 64자 16진수가 아니다: ' + ', '.join(_bad[:8])
+                         + ('' if len(_bad) <= 8 else f' … 총 {len(_bad)}건'))
     n = 0
     for v in rows:
         blk = design.get(v[ix['case']], '')
@@ -207,7 +225,27 @@ def refill_family(tsv: Path, design: dict) -> tuple[int, int]:
 
 
 def seal(root: Path, deck_dir: Path | None, design: dict | None = None):
-    return [seal_case(d, deck_dir, design) for d in sorted(q for q in root.iterdir() if q.is_dir())]
+    """봉인 = **등록부 ∪ 디렉터리** 전수.
+
+    ★ 2026-09-14 (3라운드 판정문 §6.4) — 옛 판은 **디렉터리 inventory** 였다.  설계 폴더가
+    통째로 없으면 그 ID 의 **행 자체가 사라져**, 읽는 사람은 그 ID 가 애초에 없었는지 폴더가
+    없는지 구분할 수 없다 (*"생성기의 성공을 봉인 유효성 검사의 성공으로 읽지 말 것"*).
+    계약 `§5-v4 D-1` 이 주 ID 를 `lhs00_000`–`129` 로 **고정**했으므로 봉인은 등록부 전수여야
+    한다 — 없는 것은 행이 없는 게 아니라 **`CASE_DIR_MISSING`** 이다.
+    ⚠ 등록부로 **좁히지도** 않는다 — 등록 밖 폴더도 행을 남긴다 (전수의 뜻, 검사 ⑪b).
+    """
+    dirs = {q.name: q for q in root.iterdir() if q.is_dir()}
+    rows = [seal_case(dirs[n], deck_dir, design) for n in sorted(dirs)]
+    for cid in sorted(set(design or {}) - set(dirs)):
+        r = {k: '' for k in COLS}
+        blk = (design or {}).get(cid, '')
+        r.update(case=cid, status='CASE_DIR_MISSING',
+                 design_family=blk or 'UNKNOWN', family_source='design_csv' if blk else '',
+                 n_types=BLOCK_NTYPES.get(blk, ''),
+                 reason='제외 사유 = CASE_DIR_MISSING — 등록부에는 있으나 케이스 폴더가 없다 '
+                        '(행을 없애지 않는다; 솔버 이전)')
+        rows.append(r)
+    return sorted(rows, key=lambda r: r['case'])
 
 
 def write_tsv(rows, out: Path, root: Path):
@@ -336,6 +374,52 @@ def _selftest() -> int:
         and after['lhs00_900'][ix['design_family']] == 'mono_AM_P'
         and '설계족 분포: bimodal 1 · mono_AM_P 1 · mono_AM_S 3' in out.read_text(encoding='utf-8'),
         f'{n}/{tot} same_hash={same_hash}')
+
+    #  ── 판정문 §6.4 "봉인 도구가 보증하지 않는 것" 의 남은 둘 (2026-09-14) ─────────────
+    #  ⑪ **디렉터리 inventory 라 폴더가 통째로 없으면 행이 사라진다.**  계약 §5-v4 D-1 은
+    #     주 ID 를 `lhs00_000`–`129` 로 **고정**했으므로, 봉인은 디렉터리 목록이 아니라
+    #     **등록부 전수**여야 한다.  없으면 행이 없어지는 것이 아니라 `CASE_DIR_MISSING` 이다.
+    _reg = {'lhs00_900': 'mono_AM_S', 'lhs00_902': 'mono_AM_S', 'lhs00_999': 'bimodal'}
+    _r3 = seal(t, t, _reg)
+    _b3 = {r['case']: r for r in _r3}
+    chk('★⑪ 등록 ID 에 폴더가 없으면 행이 **사라지지 않는다** (CASE_DIR_MISSING)',
+        'lhs00_999' in _b3 and _b3['lhs00_999']['status'] == 'CASE_DIR_MISSING'
+        and _b3['lhs00_999']['design_family'] == 'bimodal',
+        str(sorted(_b3)))
+    chk('⑪b 등록 밖 폴더도 여전히 행이 있다 (전수의 뜻 — 등록부로 좁히지 않는다)',
+        'lhs00_901' in _b3 and 'lhs00_904' in _b3, str(sorted(_b3)))
+    chk('⑪c CASE_DIR_MISSING 행은 지문 칸이 전부 비어 있다 (없는 것을 지어내지 않는다)',
+        'lhs00_999' in _b3 and all(_b3['lhs00_999'][k] == '' for k in
+            ('deck', 'deck_sha256', 'atom_file', 'atom_sha256', 'contact_file', 'contact_sha256')),
+        '행 자체가 없다' if 'lhs00_999' not in _b3 else '')
+    #  ⑫ **refill 이 중복 ID·깨진 지문을 검증하지 않는다** — refill 은 봉인 파일을 **다시 쓴다**.
+    #     검증 없이 쓰면 손상을 세탁한다.  fail-closed 로 거부한다 (모르면 통과가 아니다).
+    _bad = t / 'dup.tsv'
+    _base = out.read_text(encoding='utf-8').splitlines()
+    _hi = next(i for i, ln in enumerate(_base) if not ln.startswith('#'))
+    _bad.write_text('\n'.join(_base + [_base[_hi + 1]]) + '\n', encoding='utf-8')   # 마지막 행 복제
+    try:
+        refill_family(_bad, {}); _dup_ok = False
+    except SystemExit as e:
+        _dup_ok = 'DUPLICATE' in str(e)
+    chk('★⑫ refill 은 중복 case ID 를 거부한다 (봉인을 다시 쓰기 전에)', _dup_ok)
+    _bad2 = t / 'badsha.tsv'
+    _v = _base[_hi + 1].split('\t'); _ixc = _base[_hi].split('\t')
+    _v[_ixc.index('atom_sha256')] = 'deadbeef'                      # 64자 16진수가 아니다
+    _bad2.write_text('\n'.join(_base[:_hi + 1] + ['\t'.join(_v)]) + '\n', encoding='utf-8')
+    try:
+        refill_family(_bad2, {}); _sha_ok = False
+    except SystemExit as e:
+        _sha_ok = 'SHA' in str(e)
+    chk('★⑫b refill 은 깨진 지문을 거부한다 (빈칸은 정상 — 결손이니까)', _sha_ok)
+    _okf = t / 'good.tsv'
+    _okf.write_text(out.read_text(encoding='utf-8'), encoding='utf-8')
+    try:
+        refill_family(_okf, {}); _pass_ok = True
+    except SystemExit as e:
+        _pass_ok = False
+    chk('⑫c 정상 TSV 는 그대로 통과 (검사가 refill 을 죽이지 않는다)', _pass_ok)
+
     print('코호트 봉인 SELFTEST', 'PASS' if ok else 'FAIL')
     return 0 if ok else 1
 
