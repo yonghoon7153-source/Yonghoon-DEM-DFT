@@ -44,6 +44,11 @@ DESIGN / TRUST (docs/step3_sigma_network.md):
       SDCP 250                  USER anchor (2026-07-16; 진성호계 S-PEDOT, interim 150 대체 — code L43).
                                   ⚠ the pellet ×5.1 anchor is COMPOSITE-level — do NOT paste onto a phase σ;
                                   the +52% σ_e is EMERGENT from the network solve.  --sigma-sdcp overrides.
+                                  ⛔ **철회 — `+52 %` 를 인용하지 말 것** (표지 2026-09-14, 원장 `CL-24`).
+                                  그 값은 vox 0.4 점-스탬프 격자의 산물이고, 같은 규약을 조이면
+                                  +42.15 → +8.49 % 로 계속 내려가며 σ_ion 은 **부호가 뒤집힌다**.
+                                  ★ 살아남는 문장은 *"σ_e 이득이 상별 σ 대입이 아니라 망 해에서
+                                  **창발한다**"* 는 **기전 서술**뿐이다 — 크기는 아직 못 쓴다.
       SE · PTFE 0               (electronic insulators)
 
 Analytic self-tests (python3 scripts/step3_sigma.py --selftest):

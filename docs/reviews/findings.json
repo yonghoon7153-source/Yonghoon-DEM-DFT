@@ -3583,6 +3583,48 @@
    "title": "`claimed_fixed_sha` 가 **수정이 없는 자리**를 가리킬 수 있다 — 수정과 등재를 같은 커밋에 넣으면 구조적으로 부모가 적힌다",
    "note": "원장은 `claimed_fixed` 에 **실재하는** SHA 를 요구하고 검사기가 그것을 강제한다.  그런데\n**실재하는 SHA 가 곧 그 수정의 SHA 는 아니다.**  실측:\n```\ngit show 672dedb18:scripts/sdcp_gain_verdict.py | grep -c rejected   ->  0\ngit show 777cd6c08:scripts/sdcp_gain_verdict.py | grep -c rejected   ->  7\n```\n`R5CX-08`·`R5CX-10`·`R5CX-11` 이 `672dedb1` 을 적었는데 그 자리에 수정이 없다\n(`mpm_webapp_payload.py`·`make_review_bundle.sh` 도 0 → 양수).  진짜는 `777cd6c08` 이다.\n\n★ **기전은 구조적이고 부주의가 아니다** — 수정과 원장 등재를 **같은 커밋**에 넣으면 그 커밋은\n자기 SHA 를 자기 안에 적을 수 없다(해시가 내용에 의존한다) ⇒ 적을 수 있는 최신 SHA 는\n**부모**다.  실제로 `777cd6c08` 은 R5CX **열 건을 한꺼번에** claimed_fixed 로 바꾸면서 셋만 고쳤다.\n⇒ **결함은 감사 가능성이지 수정의 부재가 아니다.**  수정은 자식 커밋에 있고 HEAD 트리에 있다.\n다만 *'적힌 SHA 를 열어 수정을 확인하라'* 는 절차가 **그 자리에서 아무것도 못 찾는다**.\n\n★★ **검사기가 나를 세 번 잡았다 — 이것이 이 항목의 절반이다.**  ⚠ `적힌 SHA == 등재 커밋의\n부모` 는 **그 자체로 결함이 아니다** (수정이 바로 앞 커밋이면 옳다).  초판 판별자\n*'등재 커밋이 그 항목의 evidence_tests 파일을 건드렸나'* 는 **22건**을 냈고 전부 확인하니\n거짓 양성 세 겹이었다:\n  ⓐ **증거 파일 공유** — R5CX 10건이 같은 selftest 3줄을 증거로 든다 ⇒ 셋만 고친 커밋이\n     열 건 전부의 수정처럼 보였다.  실측: `R5CX-01` 의 수정은 적힌 자리에 **있었다** (표지 14회).\n  ⓑ **진행 문서** — 등재 커밋이 `docs/session_*_progress.md` 만 건드린 경우 (`L3-06`·`SELF-22`·`HARV-01`).\n  ⓒ **원고·데이터** — ID 가 원고 초안에 적힌 경우 (`R20-02`).\n판별자를 *'등재 커밋이 그 ID 를 **실행되는 코드**에 새로 박았는가'* 로 좁히니 **22 → 5 → 1**.\n마지막 1건(`R4CX-06`)도 적힌 자리에 실질 수정 표지가 이미 셋 있고 등재 커밋은 중복 주석 한 줄만\n더했다 ⇒ 거짓 양성.\n⇒ **확정 결함은 3건이고 고쳤다.**  초판의 \"18~22건\" 은 내 판별자가 느슨했던 것이다.\n\n★ **수리**: 세 SHA 정정 + 상주 검사기 `scripts/audit_claimed_sha_provenance.py`\n(selftest 10/10 · `check_all` · CI · 등재).  `⑨`·`⑩` 이 거짓 양성 두 부류(증거 파일 공유 ·\nID 표기 하이픈 차이)를 회귀로 못박는다.\n⚠ 이 도구는 *\"정말 고쳐졌는가\"* 를 **답하지 않는다** — 재는 것은 **감사 가능성** 하나다.",
    "claimed_fixed_sha": "a709d57b9"
+  },
+  {
+   "id": "SELF-37",
+   "severity": "P1",
+   "status": "open",
+   "owner": "claude",
+   "found_by": "claude (갭 감사 2판 1차 — scripts/ 420 파일)",
+   "opened_in": "docs/data/audit_20260914_gap_r2/wave1_summary.json",
+   "evidence_tests": [
+    "scripts/check_review_findings.py",
+    "docs/data/audit_20260914_gap_r2/wave1_summary.json"
+   ],
+   "title": "★★ 철회 스윕이 **`scripts/*.py` 470개를 아예 안 봤다** — 리포의 계산 기계 전부가 사정권 밖이었다",
+   "note": "`BAN_SCAN_GLOBS` 가 `scripts/*.sh` **38개**는 보면서 `scripts/*.py` **470개**는 하나도 안 봤다.\n⇒ 리포의 **계산 기계 전부**가 인용 금지 스윕 밖이었고, 그동안 `--ban-sweep` 은 *'누수 없음 ✓'* 를 냈다.\n★ **실측**: 글롭에 넣자마자 3파일에서 **15건**이 나왔다 —\n`build_methods_docx.py`(CL-33·CL-41 의 p1 hold 값 10건) · `step3_sigma.py`(CL-24 헤드라인 4건) ·\n`sr01_carbon_network.py`(CL-15 1건).  스윕 대상 **1,081 → 1,551 파일**.\n★ `webapp/*.py` 는 2026-09-09 감사에서 이미 같은 이유로 넣었다 — 그때 **여기를 같이 안 넣은 것**이 구멍이었다.\n\n★ **수리**: ⓐ `scripts/*.py` 를 `BAN_SCAN_GLOBS` 에 추가 ⓑ 검사기 자신을 `BAN_ALLOW_ALWAYS` 에\n추가 (selftest 픽스처가 **금지값 그 자체**이고 그것이 없으면 음성 대조가 성립하지 않는다 —\n등록부의 쌍둥이) ⓒ `step3_sigma.py`·`sr01_carbon_network.py` 에 줄-근처 철회 표지 (값 불변)\nⓓ `build_methods_docx.py` 는 손으로 적던 금지값 12개를 **등록부에서 읽도록** 바꿨다\n(규율 ①: 이 리포에 이미 `load_bans()` 가 있다) ⇒ 하드코딩이 사라져 표지 문제가 원리적으로\n없어지고, 등록부가 자라면 그 검사도 **자동으로** 함께 자란다.  등록부를 못 읽으면 통과시키지 않는다.\n⇒ 스윕 1,551 파일 **누수 0**.\n\n⚠ **이것으로 다 잡히지 않는다** — `SELF-38` 이 그 나머지다.  범위(glob)와 형태(literal)는\n**다른 구멍**이고, 둘째는 글롭으로 못 닫는다."
+  },
+  {
+   "id": "SELF-38",
+   "severity": "P1",
+   "status": "open",
+   "owner": "claude",
+   "found_by": "claude (갭 감사 2판 1차, 적대 재검 통과)",
+   "opened_in": "docs/data/audit_20260914_gap_r2/wave1_summary.json",
+   "evidence_tests": [
+    "scripts/perf_reduced_order.py",
+    "docs/data/audit_20260914_gap_r2/wave1_summary.json"
+   ],
+   "title": "철회된 SDCP 쌍이 **맨 숫자 두 개**로 살아 있어 리터럴 스윕이 **원리적으로** 못 본다 (게다가 selftest 3건이 그 값과의 일치를 PASS 조건으로 삼는다)",
+   "note": "`scripts/perf_reduced_order.py` 의 `SDCP_2C_ANCHOR` 가 SBE/DBE σ_e 쌍을 갖고 있고, **그 둘의 비**가\n곧 `CL-24` 가 철회한 SDCP 헤드라인이다.  파일 371줄에 `철회|HISTORICAL|인용 금지|CL-24` 가 **0건**.\n⇒ 그 값에 맞춰 둔 selftest 셋이 **철회된 수와의 일치를 PASS 조건**으로 삼고 있다.\n\n★★ **왜 어느 검사기도 못 잡았나 — 구멍이 둘이고 성격이 다르다**\nⓐ **범위**: `scripts/*.py` 가 글롭 밖이었다 (`SELF-37`, 2026-09-14 에 닫음).\nⓑ **형태**: ⓐ 를 닫아도 **이 파일은 안 걸린다.**  등록부 패턴은 장식이 붙은 문자열인데\n   여기 사는 것은 **맨 숫자 두 개**이고 금지값은 그 둘의 **비**로만 나타난다.\n   ⇒ 리터럴 스윕이 원리적으로 못 보는 자리다.  **표지는 사람이 달아야 한다.**\n★ **규율 ④ 의 코드층 재현**: 출처 문서(`docs/sdcp_318_base_sbe_dbe_comparison.md`)는 2026-08-13 에\n철회 배너를 받았는데, 이 파일은 그보다 **10일 앞선 커밋 하나**(`1b0e0e451`)뿐이고 그 뒤 한 번도\n안 건드려졌다.  `_has_banner()` 가 그 md 에는 True, 이 .py 에는 False 를 준다 = **전파가 문서에서 멈췄다**.\n\n★ **조치**: 철회 배너를 달았다 (기전 ⓐⓑⓒ 를 그 자리에 적어 다음 사람이 같은 함정에 안 빠지게).\n⛔ **값은 안 바꿨다** — selftest 셋이 그 위에 서 있고 어느 값이 맞는지는 **저자 판단**이다.\n내가 임의로 고르면 그것이 또 하나의 출처 없는 값이 된다 (`AUD-02` 와 같은 처리).\n⬜ **결정 필요**: 이 앵커를 (a) 새 규약으로 재측정 (b) 검증 앵커에서 내리고 selftest 를 구조\n일관성만 보게 (c) *'그 시점 규약 안의 자기일관성 확인'* 으로 라벨만 하고 유지."
+  },
+  {
+   "id": "SELF-39",
+   "severity": "P1",
+   "status": "open",
+   "owner": "claude",
+   "found_by": "claude (갭 감사 2판 1차, 적대 재검 통과)",
+   "opened_in": "docs/data/audit_20260914_gap_r2/wave1_summary.json",
+   "evidence_tests": [
+    "scripts/fft_homogenize.py",
+    "scripts/network_conductivity.py"
+   ],
+   "title": "FFT 균질화가 **생산과 다른 고유 σ** 로 푼 값을 생산 솔버 값과 나란히 **비로** 찍는다 (ⓔ 부류)",
+   "note": "`fft_homogenize.py` 가 상별 고유 σ 를 하드코딩하는데 **생산 솔버와 다르다**.  실측 대조:\n```\n              fft_homogenize      생산 솔버                         배수\nSE 이온 σ     7.0 mS/cm  (:69)   3.0 mS/cm  (se_material)          2.33×\nAM 전자 σ     6.0 mS/cm  (:70)   50 mS/cm   (network_conductivity  0.12×\n                                  :57 SIGMA_AM_ELECTRONIC=0.05 S/cm)\nκ_SE          0.5 W/(m·K) (:72)  0.7 W/(m·K) (:118, Ketter 2025)   0.71×\nκ_AM          4.0 W/(m·K) (:71)  4.0 W/(m·K) (:117)                1.00 ✓\n```\n★ AM_P 인자도 다르다 — fft 는 **상수 ×0.65** (`:130`), 생산은 **크기 의존**\n`sigma_AM_relative(r) = 1/(1+(r/R_ref)^exp)` (`network_conductivity.py:100-114`).\n★ `argparse`(`:322-332`)에 이 상수들의 오버라이드가 **하나도 없다** (case_id/--all/--channel/\n--tol/--max-iter/--quiet 뿐) ⇒ 부르는 쪽이 맞출 방법이 없다.\n⇒ 두 솔버의 출력을 **비로 찍으면 그 비에 재료 차이가 섞인다.**  같은 기하를 다른 이산화로\n푼 대조가 아니라 **다른 재료를 다른 이산화로** 푼 것이다.\n⚠ 이것은 `CL-81` 이 복셀 σ 에 대해 판정한 것과 **다른 축**이다 — 거기는 *어느 가지 위에 있나*,\n여기는 *애초에 같은 물질을 풀었나* 다.\n⬜ **미조치** — 어느 쪽 값으로 맞출지가 저자 판단이다 (생산 정본에 맞추는 것이 기본이지만,\n이 도구가 문헌 대조용으로 일부러 다른 값을 쓰는 것이라면 그 사실을 파일이 적어야 한다)."
   }
  ]
 }

@@ -495,8 +495,24 @@ def selftest() -> int:
         chk(f"table {label} rectangular", len(widths) == 1, f"got {widths}")
 
     # 2. no retracted value leaks in (the ban registry patterns that touch this axis)
-    banned = ["1.1232", "1.123191", "+12.3 %", "+12.32", "+52.0", "+42.15",
-              "1.143817", "1.155448", "1.98", "3.00 S cm", "f_artifact", "×35.79"]
+    #  ⛔ **인용 금지 — 아래 목록은 값이 아니라 `음성 대조`다** (철회 표지, 2026-09-14).
+    #     여기 적힌 문자열은 전부 `docs/reviews/claims.json` 의 `quotation_ban` 등재값이고,
+    #     이 줄들의 목적은 **생성된 docx 에 그것이 들어가지 않았음을 확인하는 것**이다.
+    #     현행 사실로 읽지 말 것.  정본은 원장이고 충돌하면 원장이 이긴다 (CL-24·CL-33·CL-41·CL-15).
+    #  ⚠ 갭 감사 2판이 여기를 잡았다 — `scripts/*.py` 가 `BAN_SCAN_GLOBS` 밖이라 어느 스윕에도
+    #     안 걸렸다.  ★ **손으로 적던 12개를 등록부에서 읽도록 바꿨다** (규율 ①: 이 리포에 이미
+    #     `load_bans()` 가 있다).  ⇒ ⓐ 하드코딩한 금지값이 파일에서 **사라져** 표지 문제가 원리적으로
+    #     없어지고 ⓑ 등록부에 새 패턴이 늘면 이 검사가 **자동으로** 함께 자란다 (drift 불가).
+    #  ⚠ 등록부를 못 읽으면 **통과시키지 않는다** — 모르는 것을 초록으로 적는 것이 이 리포가
+    #     반복해 당한 false-green 이다.
+    import importlib.util as _ilu
+    _spec = _ilu.spec_from_file_location(
+        '_crf_bans', str(Path(__file__).resolve().parent / 'check_review_findings.py'))
+    _crf = _ilu.module_from_spec(_spec)
+    _spec.loader.exec_module(_crf)
+    _bans, _why = _crf.load_bans(str(REPO / 'docs' / 'reviews' / 'claims.json'))
+    chk('ban registry readable', bool(_bans), _why or 'quotation_ban 이 비었다')
+    banned = [b['pattern'] for b in _bans if b.get('pattern')]
     blob = "\n".join([
         STATUS_BODY, TABLE_S3B_FOOT,
         *[c for row in RELEASE_CONDITIONS for c in row],

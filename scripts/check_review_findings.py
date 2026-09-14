@@ -134,6 +134,15 @@ BAN_SCAN_GLOBS = ('CLAUDE.md', 'docs/**/*.md', 'wiki/**/*.md',
                   #   철회를 **설명하는** 주석이다.  `webapp/*.py` 는 반대로 **사용자 출력**이라
                   #   CDXIJ-4/9 가 웹앱 UI·덱을 넣은 것과 같은 부류다.
                   'webapp/*.py',
+                  #  ★★ 2026-09-14 (갭 감사 2판) — **`scripts/*.py` 470개가 스윕 밖이었다.**
+                  #    `scripts/*.sh` 38개는 보면서 리포의 **계산 기계 전부**를 안 봤다.
+                  #    실측: 넓히니 3파일에서 누수 15건이 즉시 나왔다 (`build_methods_docx.py`
+                  #    `sr01_carbon_network.py` `step3_sigma.py`).  `webapp/*.py` 를 넣은 것과
+                  #    같은 이유이고, 그때 여기를 같이 안 넣은 것이 구멍이었다.
+                  #    ⚠ **이것으로 다 잡히지 않는다** — `perf_reduced_order.py` 는 금지값을
+                  #    **맨 숫자 두 개의 비**로 갖고 있어 어떤 리터럴 패턴에도 안 걸린다.
+                  #    범위(glob)와 형태(literal)는 **다른 구멍**이고 둘째는 사람이 표지를 단다.
+                  'scripts/*.py',
                   # ⚠⚠ 2026-09-09 (잔여 감사) — **측정 CSV 도 읽는다.**  `docs/**/*.json` 은
                   #   원래 글롭에 있었지만 **CSV 는 한 번도 안 읽혔고**, 그 사각지대에서 실제로
                   #   새고 있었다: `docs/data/sdcp318_sigma_sdcp_sweep/sweep_summary.csv` 의
@@ -149,7 +158,12 @@ BAN_SCAN_GLOBS = ('CLAUDE.md', 'docs/**/*.md', 'wiki/**/*.md',
 
 #: 이 경로들은 **박제된 원문**이라 철회값이 들어 있는 것이 정상이다 (원장 자신 · 감사 원문 ·
 #: 사전등록 계약 · 외부 리뷰 요청서 = 리뷰 시점의 상태를 보존해야 하는 문서).
-BAN_ALLOW_ALWAYS = ('docs/reviews/claims.json',
+BAN_ALLOW_ALWAYS = (
+                    #  ★ 검사기 자신은 **등록부의 쌍둥이**다 — selftest 픽스처가
+                    #    금지값 그 자체이고, 그것이 없으면 음성 대조가 성립하지 않는다.
+                    #    (`scripts/*.py` 를 스윕에 넣으면서 필요해졌다, 2026-09-14.)
+                    'scripts/check_review_findings.py',
+                    'docs/reviews/claims.json',
                     # finding 원장도 "무엇을 철회했나" 를 적는 등록부다 (claims.json 과 같은 층).
                     'docs/reviews/findings.json',
                     'docs/reviews/fable_audit_docs_20260820.md',
