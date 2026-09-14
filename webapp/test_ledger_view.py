@@ -116,7 +116,24 @@ def main():
     chk('7) ★ 뒤처진 페이지를 뒤처졌다고 말한다', stale['stale'] and stale['behind'])
     fresh = LV.freshness('2999-01-01', ledger_ids=[LV.claims(limit=1)[0]['id']])
     chk('8) 앞선 페이지는 경고하지 않는다', not fresh['stale'])
-    chk('9) 기준선이 원장 최신 등재다', stale['newest'] == newest)
+    #  ⛔ **정정 2026-09-14 (감사 D-2)** — 기준선이 `newest_date()`(클레임 전용) 였고,
+    #    그래서 `/single` 이 초록을 띄우는 동안 그 화면을 만드는 코드에 09-13 자 결함이
+    #    6건(P1 4건) 열려 있었다.  기준선은 **클레임 ∪ 결함**이다.
+    chk('9) 기준선이 클레임과 결함 **둘 다**의 최신 등재다',
+        stale['newest'] == LV.newest_ledger_date()
+        and LV.newest_ledger_date() >= newest)
+    #  ★ 판별력 — 결함 축이 실제로 기준선을 움직였는가 (안 움직였으면 이 검사는 공허하다).
+    chk('9a) ★ 결함 등재가 클레임보다 최신이라 기준선이 실제로 움직였다',
+        LV.newest_finding_date() is not None
+        and LV.newest_ledger_date() > newest)
+    #  ★★ 이 검사가 이번 감사의 본체다 — **날짜가 최신이어도** 선언된 결함이 열려 있으면
+    #    초록이 나오면 안 된다.  옛 판은 여기서 초록이었다.
+    _f_open = LV.freshness('2999-01-01', ledger_ids=[],
+                           finding_ids=[_o['id'] for _o in LV.open_findings(limit=1)])
+    chk('9c) ★★ 날짜가 앞서도 열린 결함이 선언돼 있으면 초록이 아니다',
+        _f_open['stale'] is True and _f_open['open_findings'])
+    chk('9d) ★ 없는 결함 id 는 초록이 아니라 unknown 이다',
+        LV.freshness('2026-09-09', finding_ids=['ZZ-99999']).get('unknown') is True)
     #  ⚠ 2026-09-09 (Codex Q3-1) — 옛 판은 **없는 의존 ID** 를 조용히 통과시켰다
     #    (오타·삭제된 클레임이 영원히 초록).  이제 `unknown` 이어야 한다.
     ghost = LV.freshness('2026-09-09', ledger_ids=['CL-99999'])
@@ -217,6 +234,36 @@ def main():
     #    `redact()` 를 지나야 하고, 지나면 남을 이유가 없다.
     chk('28) ★★ 그 페이지들에 **표지 없는** 금지값이 없다 (스윕과 같은 기준)'
         + (f'  ← {leaks2}' if leaks2 else ''), not leaks2)
+
+    #  ── 28f~28i ★★ 2026-09-14 (webapp 감사 A-1/A-2 · D-3) ────────────────────
+    #    ⚠ 27·28 은 `pages` 를 `PAGE_FRESHNESS` 키로 좁혀서, 리포에서 **철회 자료를 가장
+    #    많이 서빙하는 두 창구**(`/api/seminar/*`)를 한 번도 안 봤다.  실측: 같은 세미나의
+    #    산출물 셋 중 `slides`·`deck` 만 `?historical=1` fail-closed 였고 **`doc/<key>` 는
+    #    게이트가 없어** 75 KB 원문이 등록부 값을 담은 채 그대로 나갔다.
+    #    파일 머리의 철회 배너가 `_has_banner` 로 **파일 전체를 스윕에서 면제**시켜
+    #    `--ban-sweep` 은 그동안 초록이었다 — 배너가 파일을 면제해도 **창구는 면제되지 않는다**.
+    def _api_bans(url):
+        t = c.get(url).data.decode('utf-8', 'replace')
+        return sorted({b['claim'] for b in bans
+                       if b['pattern'] in t or CRF._ban_norm(b['pattern'])
+                       in CRF._ban_norm(t)})
+    _doc = _api_bans('/api/seminar/doc/script')
+    chk('28f) ★★ 세미나 문서 창구가 게이트 없이 금지값을 내주지 않는다'
+        + (f'  ← {_doc}' if _doc else ''), not _doc)
+    #  ★ 판별력 — 게이트를 **명시적으로 풀면** 원문이 나와야 한다.  안 나오면 이 검사는
+    #    "그 문서에 원래 금지값이 없다" 를 확인한 것일 뿐 공허하다.
+    chk('28g) ★ 그러나 `?historical=1` 로는 원문이 나온다 (검사가 공허하지 않다)',
+        bool(_api_bans('/api/seminar/doc/script?historical=1')))
+    #  ★ 과잉차단 음성 대조 — 금지값이 없는 문서는 게이트에 안 걸려야 한다.
+    import json as _J
+    chk('28h) ★ 금지값이 없는 문서는 막지 않는다 (과잉차단 음성 대조)',
+        _J.loads(c.get('/api/seminar/doc/glossary').data.decode('utf-8')).get('ok') is True)
+    #  ★ 게이트가 **경로 목록이 아니라 내용**에 걸려 있는가 — 새 문서를 얹어도 자동으로
+    #    걸려야 한다 (규율 ⑤: 후보를 고르는 코드가 곧 사각지대다).
+    import inspect as _insp
+    _src = _insp.getsource(A.api_seminar_doc)
+    chk('28i) ★★ 그 게이트가 내용 기반이다 (경로 목록이면 새 문서가 샌다)',
+        'redact(' in _src and 'historical' in _src)
 
     #  ── 28 의 기준 자체가 옳은가 — 음성 대조 넷 (AUD-05) ──────────
     #    통과만 하는 검사는 없는 것과 같다.  아래 넷은 **합성 HTML** 이라 서버가 필요 없다.

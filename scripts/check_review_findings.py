@@ -266,6 +266,43 @@ def load_bans(claims_path):
     return list(d.get('quotation_ban') or []), ''
 
 
+#: 클레임 본문이 스스로 선언하는 상태.  `★ **status = hold.  이 값을 인용하지 말 것**` 꼴.
+_PROSE_STATUS = re.compile(r'status\s*=\s*([A-Za-z_]+)')
+
+
+def claim_status_prose_conflicts(claims_path):
+    """★★ **필드와 본문이 다른 클레임을 잡는다** (2026-09-14, webapp 감사 B-4).
+
+    실측: `CL-34` · `CL-38` 이 `status` 필드는 `live` 인데 본문 첫 줄이
+    *"★ status = hold.  이 값을 인용하지 말 것"* 이라고 적는다.  화면(`ledger_view.STATUS_UI`)은
+    **필드만** 읽으므로 `/ledger` 와 모든 `live_panel` 이 둘을 **초록 '유효'** 로 그린다.
+
+    ⇒ CLAUDE.md 규율 ④ (*"정본은 밖으로 강제되지 않으면 새어나간다"*)의 재발이고, 이번에는
+      **같은 레코드 안에서** 산문과 기계 필드가 갈렸다.  산문은 사람이 읽고 필드는 기계가
+      읽으므로, 둘이 다르면 **기계를 믿는 모든 소비자가 틀린다**.
+
+    ⚠ 본문에 status 선언이 **여러 개** 나올 수 있다 (이력을 적으며 옛 상태를 인용한다).
+      그때는 **첫 번째**를 그 레코드의 자기선언으로 본다 — 판정문은 맨 앞에 쓰는 규약이다.
+    → [문제 문자열]
+    """
+    if not os.path.exists(claims_path):
+        return []
+    with open(claims_path, encoding='utf-8') as f:
+        doc = json.load(f)
+    out = []
+    for c in (doc.get('claims') or []):
+        field = (c.get('status') or '').strip()
+        m = _PROSE_STATUS.search(str(c.get('verdict') or ''))
+        if not m or not field:
+            continue
+        prose = m.group(1).strip()
+        if prose.lower() != field.lower():
+            out.append(f"{c.get('id')}: status 필드는 '{field}' 인데 본문은 "
+                       f"'status = {prose}' 라고 선언한다 — 화면은 필드만 읽으므로 "
+                       f"독자가 본문과 반대되는 상태를 본다")
+    return out
+
+
 def _ban_files(repo_root):
     import glob as _glob
     out = []
@@ -693,6 +730,9 @@ def main(argv=None):
         sys.exit(f'원장 없음: {a.ledger}')
     findings = load(a.ledger)
     probs = check(findings, repo_root=here)
+    #  ★★ 2026-09-14 (webapp 감사 B-4) — 클레임의 **필드와 본문이 갈리는** 부류.
+    #    화면은 필드만 읽으므로 본문이 `hold` 라고 적어도 초록 '유효' 가 나간다.
+    probs += claim_status_prose_conflicts(a.claims)
 
     if not a.open:
         by = {}
@@ -1040,6 +1080,42 @@ def _selftest():
             ok('22k) ★★ 가드를 뺀 사본은 **면제가 스스로 풀린다** '
                '(경로만 보던 옛 규칙은 이것을 통과시켰다)',
                any(_fr in x and _pat in x for x in _p15))
+
+            #  ── 23) 클레임의 **필드 vs 본문** (2026-09-14, webapp 감사 B-4) ──────────
+            #     실측: `CL-34`·`CL-38` 이 필드는 `live` 인데 본문 첫 줄이 *"status = hold.
+            #     이 값을 인용하지 말 것"* 이다.  화면은 필드만 읽으므로 **초록 '유효'** 가
+            #     나갔다.  산문은 사람이, 필드는 기계가 읽는다 — 갈리면 기계 소비자가 전부 틀린다.
+            import json as _j23
+            _c23 = os.path.join(_dr, 'docs', 'reviews')
+            os.makedirs(_c23, exist_ok=True)
+            _cp23 = os.path.join(_c23, 'claims23.json')
+
+            def _w23(rows):
+                with open(_cp23, 'w', encoding='utf-8') as _f:
+                    _j23.dump({'claims': rows}, _f, ensure_ascii=False)
+                return claim_status_prose_conflicts(_cp23)
+
+            ok('23a) ★★ 필드 live · 본문 hold 를 잡는다',
+               len(_w23([{'id': 'CL-X', 'status': 'live',
+                          'verdict': '★ **status = hold.  인용하지 말 것**'}])) == 1)
+            ok('23b) 필드와 본문이 같으면 통과한다 (과잉 경보 없음)',
+               _w23([{'id': 'CL-X', 'status': 'hold',
+                      'verdict': '★ **status = hold.**'}]) == [])
+            ok('23c) 본문에 status 선언이 없으면 판정하지 않는다',
+               _w23([{'id': 'CL-X', 'status': 'live', 'verdict': '측정만 적는다'}]) == [])
+            #  ★ 본문이 이력을 적으며 **옛 상태를 인용**할 수 있다 — 맨 앞의 자기선언을 본다.
+            ok('23d) 본문의 **첫** 선언을 그 레코드의 자기선언으로 본다',
+               _w23([{'id': 'CL-X', 'status': 'hold',
+                      'verdict': '★ status = hold.  (옛 판은 status = live 였다)'}]) == [])
+            ok('23e) ★ 대소문자만 다른 것은 충돌이 아니다',
+               _w23([{'id': 'CL-X', 'status': 'live', 'verdict': 'status = LIVE'}]) == [])
+            #  ★★ 판별력 — 이 검사가 **실 리포에서 실제로 무언가를 잡았는가**.  합성만
+            #     통과하는 규칙은 없는 것과 같다 (PA12-09 의 교훈).
+            ok('23f) ★★ 실 리포의 알려진 두 건을 이 규칙으로 재현할 수 있다',
+               len(_w23([{'id': 'CL-34', 'status': 'live',
+                          'verdict': '★ **status = hold.  이 값을 인용하지 말 것**'},
+                         {'id': 'CL-38', 'status': 'live',
+                          'verdict': '★ **status = hold.  앵커로 인용하지 말 것**'}])) == 2)
 
             #     ⓒ 행동 검사.  러너가 없으면 **통과로 세지 않는다** — 확인 못 한 것을
             #        초록으로 적는 것이 이 리포가 반복해 당한 false-green 이다.

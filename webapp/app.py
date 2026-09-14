@@ -3980,6 +3980,13 @@ _SEMINAR_SRC_EXT = ('.md', '.py', '.csv', '.json', '.html', '.sh', '.txt')
 _SEMINAR_EVIDENCE = 'docs/reviews/claims.json'
 _SEMINAR_EVIDENCE_CLAIM = 'CL-24'
 
+#: 문서 창구용 철회 안내.  ⚠ **여기에 값을 적지 않는다** — 슬라이드 쪽 `_RETR` 은 무엇이
+#: 철회됐는지 보이려고 값을 인용하는데(줄-근처 표지로 면제된다), 이 문구는 **거부 응답**이라
+#: 값을 실으면 막으려던 것을 그대로 내보내게 된다.  등록부 id 로만 가리킨다.
+_RETR_DOC = ('⛔ 이 문서는 인용 금지 등록부(`docs/reviews/claims.json` 의 `quotation_ban`)에 '
+             '오른 값을 담고 있습니다.  발표 당시 기록이라 원문을 보존하되 기본 열람은 '
+             '막습니다.  현재 유효한 판정은 원장이 정본이며, 충돌하면 원장이 이깁니다.')
+
 
 def _repo_path(rel):
     """리포 루트 기준 경로 (webapp/ 의 부모).  경로 탈출은 거부한다."""
@@ -4013,6 +4020,26 @@ def api_seminar_doc(key):
                         'hint': 'git pull 후 다시 시도'}), 200
     except Exception as e:
         return jsonify({'ok': False, 'error': f'{type(e).__name__}: {e}'}), 200
+
+    #  ⛔⛔ **게이트 신설 2026-09-14 (webapp 감사 A-1/A-2).**
+    #    같은 세미나의 산출물 셋 중 **이 창구에만 게이트가 없었다**:
+    #        /api/seminar/slides  → ?historical=1 로 fail-closed
+    #        /api/seminar/deck    → ?historical=1 로 fail-closed
+    #        /api/seminar/doc/…   → **없음** ⇒ 75 KB 원문이 그대로 나갔고 그 안에
+    #                                인용 금지 등록부의 패턴이 여러 건 들어 있었다.
+    #    스윕이 못 본 이유가 두 겹이다: ⓐ 그 파일 머리의 철회 배너가 `_has_banner` 로
+    #    **파일 전체를 면제**시킨다 ⓑ 값의 꼬리 자릿수가 잘려 리터럴에 안 걸린다.
+    #    ⇒ 배너가 파일을 면제해도 **창구는 면제되지 않는다**.
+    #  ★ 게이트를 **경로가 아니라 내용**에 건다 — 새 문서를 `_SEMINAR_DOCS` 에 얹어도
+    #    자동으로 걸린다.  경로 목록은 잊으면 새지만 내용 검사는 안 잊는다
+    #    (규율 ⑤: "후보를 고르는 코드가 곧 사각지대다").
+    if ledger_view.redact(text) != text and (request.args.get('historical') or '') != '1':
+        return jsonify({'ok': False, 'retracted': True, 'error': _RETR_DOC,
+                        'key': key, 'label': label, 'path': rel,
+                        'evidence_ref': _SEMINAR_EVIDENCE,
+                        'evidence_claim': _SEMINAR_EVIDENCE_CLAIM,
+                        'hint': '이 문서는 인용 금지 등록부의 값을 담고 있다.  '
+                                '이력으로 열람하려면 ?historical=1 (재발표 금지)'}), 200
     return jsonify({'ok': True, 'key': key, 'label': label, 'path': rel,
                     'bytes': len(text.encode('utf-8')), 'text': text})
 
@@ -10472,15 +10499,30 @@ def _audit_load_row(display_id, url, results_dir, archive_rel):
 #:   `ledger`  = 그 화면이 서술하는 클레임.  그 뒤에 등재가 움직이면 경고가 뜬다.
 #:   ⚠ 날짜를 올릴 때는 **실제로 그 화면을 원장에 맞춰 검토한 뒤**에만 올린다 —
 #:     그러지 않으면 이 계기가 거짓 초록을 내는 또 하나의 자리가 된다.
+#: ★★ **`findings` 축 신설 2026-09-14 (webapp 감사 D-2).**  `ledger` 만 선언하던 옛 판은
+#:   **결함 원장을 아예 안 봤다** — `/single` 이 `updated=2026-09-09` 로 초록 *'검토됐다'* 를
+#:   띄우는 동안, 그 화면을 구동하는 코드(`grade_engine`·`generate_comparison_plots`)에 대해
+#:   **09-13 자 결함이 6건**(P1 4건) 열려 있었다.  원장이 claims 축으로만 배선돼 있었던 것이다.
+#:   ⇒ 규율 ⑤ 의 false-green 이 **매체가 아니라 축**에서 재현됐다.
+#:   ⚠ 여기 적는 것은 *"이 화면을 만드는 코드에 걸린 결함"* 이다.  닫히지 않은 것이 하나라도
+#:     있으면 **날짜와 무관하게** 초록이 안 나온다 — 다시 본 날이 최신이어도 *'검토됐다'* 가
+#:     참이 아니기 때문이다.
 PAGE_FRESHNESS = {
     'single':    {'updated': '2026-09-09',
-                  'ledger': ['CL-81', 'CL-41', 'CL-33', 'CL-24', 'CL-04']},
+                  'ledger': ['CL-81', 'CL-41', 'CL-33', 'CL-24', 'CL-04'],
+                  #  L4-01 종합등급의 ASR 합 · L4-02 source flag 가 등급을 안 막음
+                  #  L3-01 은 그림 경로(`generate_comparison_plots`)를 타고 들어온다
+                  'findings': ['L4-01', 'L4-02', 'L3-01']},
     'group':     {'updated': '2026-08-07',
-                  'ledger': ['CL-12', 'CL-24']},
-    'predictor': {'updated': '2026-08-25', 'ledger': ['CL-24']},
-    'eis':       {'updated': '2026-08-03', 'ledger': ['CL-24', 'CL-38']},
-    'mpm_lab':   {'updated': '2026-09-07', 'ledger': ['CL-81', 'CL-41']},
-    'step5':     {'updated': '2026-07-21', 'ledger': []},
+                  'ledger': ['CL-12', 'CL-24'],
+                  'findings': ['L3-01', 'L3-02']},
+    'predictor': {'updated': '2026-08-25', 'ledger': ['CL-24'],
+                  'findings': ['AUD-03', 'AUD-04', 'L5-01', 'L5-02', 'L5-06']},
+    'eis':       {'updated': '2026-08-03', 'ledger': ['CL-24', 'CL-38'],
+                  'findings': ['L4-10']},
+    'mpm_lab':   {'updated': '2026-09-07', 'ledger': ['CL-81', 'CL-41'],
+                  'findings': []},
+    'step5':     {'updated': '2026-07-21', 'ledger': [], 'findings': []},
 }
 
 
@@ -10488,7 +10530,8 @@ def _page_lv(page):
     """그 페이지용 원장 문맥 (신선도 포함)."""
     f = PAGE_FRESHNESS.get(page) or {}
     return ledger_view.context(page_updated=f.get('updated'),
-                               ledger_ids=f.get('ledger') or ())
+                               ledger_ids=f.get('ledger') or (),
+                               finding_ids=f.get('findings') or ())
 
 
 @app.route('/ledger')

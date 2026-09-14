@@ -218,9 +218,68 @@ def counts():
 
 
 def newest_date():
-    """가장 최근 등재 날짜 — 페이지 신선도 비교의 기준선."""
+    """가장 최근 **클레임** 등재 날짜."""
     ds = [c.get('date') for c in _load()['claims'] if c.get('date')]
     return max(ds) if ds else None
+
+
+#: `opened_in` 문서명에 박힌 8자리에서 날짜를 캔다 (예 `…_20260913.md`).
+_FDATE = re.compile(r'(20\d{2})(0[1-9]|1[0-2])(0[1-9]|[12]\d|3[01])')
+
+
+def finding_date(f):
+    """finding 의 등재 날짜.
+
+    ⚠ `findings.json` 레코드에는 **`date` 필드가 없다** — `opened_in` 문서명의 8자리에서
+    캔다.  못 캐면 `None` 이고, 그때는 **날짜 비교에서 뺀다** (모르는 것을 오늘로 치지 않는다).
+    """
+    m = _FDATE.search(str(f.get('opened_in') or ''))
+    return f'{m.group(1)}-{m.group(2)}-{m.group(3)}' if m else None
+
+
+def newest_finding_date():
+    """아직 안 닫힌 결함 중 가장 최근 등재 날짜."""
+    ds = [finding_date(f) for f in _load()['findings']
+          if f.get('status') in ('open', 'claimed_fixed')]
+    ds = [d for d in ds if d]
+    return max(ds) if ds else None
+
+
+def newest_ledger_date():
+    """★★ 신선도 기준선 — **클레임과 결함 둘 다** 본다.
+
+    ⛔ **정정 2026-09-14 (webapp 감사 D-2)** — 옛 판은 `newest_date()`(클레임 전용)만 썼다.
+    그래서 `/single` 이 `updated=2026-09-09` 로 **초록 '검토됐다'** 를 띄우는 동안, 정작 그
+    화면을 구동하는 코드에 대해 **2026-09-13 에 열린 결함이 6건**(`L3-01`·`L3-02`·`L4-01`·
+    `L4-02` = P1) 이었다.  원장이 claims 축으로만 화면에 배선돼 있었던 것이다.
+    ⇒ 규율 ⑤ 의 false-green 이 **매체가 아니라 축**에서 재현됐다.  결함도 원장이다.
+    """
+    ds = [d for d in (newest_date(), newest_finding_date()) if d]
+    return max(ds) if ds else None
+
+
+def finding_by_id(fid):
+    for f in _load()['findings']:
+        if f.get('id') == fid:
+            return f
+    return None
+
+
+def finding_chip(fid):
+    """한 결함의 화면용 요약 — 없는 id 면 **모른다고 말한다**."""
+    f = finding_by_id(fid)
+    if not f:
+        return {'id': fid, 'known': False, 'label': '미등재', 'cls': 'na',
+                'date': None, 'title': ''}
+    st = f.get('status')
+    label, cls = {'open': ('열림', 'hold'),
+                  'claimed_fixed': ('고쳤다고 주장', 'na'),
+                  'verified': ('검증됨', 'live'),
+                  'wontfix': ('안 고침', 'na')}.get(st, (st or '?', 'na'))
+    sev = f.get('severity') or ''
+    return {'id': fid, 'known': True, 'label': f'{sev} {label}'.strip(), 'cls': cls,
+            'status': st, 'severity': sev, 'date': finding_date(f),
+            'title': redact(f.get('title') or '')[:190]}
 
 
 def banned():
@@ -275,15 +334,16 @@ def chip(cl_id):
             'title': text[:190]}
 
 
-def freshness(page_updated, ledger_ids=()):
+def freshness(page_updated, ledger_ids=(), finding_ids=()):
     """페이지가 원장보다 뒤처졌는가 — **감사를 기다리지 않고 스스로 말하게 한다.**
 
     감사가 찾아낸 것이 정확히 이 형태였다: 템플릿이 마지막으로 바뀐 날짜 이후에
     그 페이지가 의존하는 클레임이 등재됐는데 아무도 몰랐다.
 
     page_updated : 'YYYY-MM-DD' — 그 화면의 마지막 **의미 있는** 갱신
-    ledger_ids   : 이 화면이 서술하는 클레임 id 들
-    → {'stale': bool, 'behind': [chip…], 'newest': 'YYYY-MM-DD'}
+    ledger_ids   : 이 화면이 서술하는 **클레임** id 들
+    finding_ids  : 이 화면을 구동하는 코드에 걸린 **결함** id 들 (2026-09-14 신설)
+    → {'stale': bool, 'behind': [chip…], 'open_findings': [chip…], 'newest': 'YYYY-MM-DD'}
     """
     #  ⛔ **정정 2026-09-09 (Codex Q3-1·Q3-3)** — 옛 판은 세 가지를 놓쳤다:
     #    ① 원장이 **없으면** `newest=None` 이라 `stale=False` 가 되고 화면이
@@ -291,11 +351,20 @@ def freshness(page_updated, ledger_ids=()):
     #    ② 날짜만 비교해서 **날짜 그대로 `live→retired`** 를 놓쳤다.
     #    ③ **없는 의존 ID**(오타·삭제된 클레임)를 조용히 통과시켰다.
     #  ⇒ 세 경우를 `unknown` 으로 분리한다.  모르는 것을 초록으로 칠하지 않는다.
+    #  ⛔⛔ **정정 2026-09-14 (webapp 감사 D-2)** — 넷째를 놓치고 있었다:
+    #    ④ **결함 원장을 아예 안 봤다.**  `/single` 이 초록 *'검토됐다'* 를 띄우는 동안
+    #       그 화면을 구동하는 코드에 09-13 자 결함이 6건(P1 4건) 열려 있었다.
+    #    ⇒ 기준선을 `newest_ledger_date()`(클레임 ∪ 결함) 로 옮기고, 페이지가 **자기에게
+    #      걸린 결함**을 선언하면 그것이 열려 있는 한 초록이 나오지 않게 한다.
     if not available():
-        return {'stale': None, 'unknown': True, 'behind': [], 'newest': None,
-                'updated': page_updated,
+        return {'stale': None, 'unknown': True, 'behind': [], 'open_findings': [],
+                'newest': None, 'updated': page_updated,
                 'why': '원장을 못 읽었다 — 신선도를 판정할 수 없다'}
-    newest = newest_date()
+    if findings_error():
+        return {'stale': None, 'unknown': True, 'behind': [], 'open_findings': [],
+                'newest': newest_date(), 'updated': page_updated,
+                'why': '결함 원장을 못 읽었다 — 신선도를 판정할 수 없다'}
+    newest = newest_ledger_date()
     behind, missing = [], []
     for cid in ledger_ids or ():
         c = by_id(cid)
@@ -303,16 +372,30 @@ def freshness(page_updated, ledger_ids=()):
             missing.append(cid)
         elif page_updated and (c.get('date') or '') > page_updated:
             behind.append(chip(cid))
-    if missing:
-        return {'stale': None, 'unknown': True, 'behind': [], 'missing': missing,
-                'newest': newest, 'updated': page_updated,
-                'why': f'의존 클레임 {", ".join(missing)} 이 원장에 없다 — 판정 불가'}
-    stale = bool(behind) or bool(newest and page_updated and newest > page_updated)
-    return {'stale': stale, 'unknown': False, 'behind': behind, 'newest': newest,
-            'updated': page_updated}
+    open_here, missing_f = [], []
+    for fid in finding_ids or ():
+        f = finding_by_id(fid)
+        if f is None:
+            missing_f.append(fid)
+        elif f.get('status') != 'verified':
+            #  ★ **닫히지 않은 결함은 날짜와 무관하게 초록을 막는다.**  페이지를 다시 본
+            #    날짜가 아무리 최신이어도, 그 화면을 만드는 코드에 열린 결함이 있으면
+            #    *'검토됐다'* 는 참이 아니다.  `claimed_fixed` 도 포함한다 — 규칙 ③ 대로
+            #    검증은 **다른 행위자**의 몫이고, 주장만으로는 닫힌 것이 아니기 때문이다.
+            open_here.append(finding_chip(fid))
+    if missing or missing_f:
+        miss = ', '.join(missing + missing_f)
+        return {'stale': None, 'unknown': True, 'behind': [], 'open_findings': [],
+                'missing': missing + missing_f, 'newest': newest,
+                'updated': page_updated,
+                'why': f'의존 항목 {miss} 이 원장에 없다 — 판정 불가'}
+    stale = (bool(behind) or bool(open_here)
+             or bool(newest and page_updated and newest > page_updated))
+    return {'stale': stale, 'unknown': False, 'behind': behind,
+            'open_findings': open_here, 'newest': newest, 'updated': page_updated}
 
 
-def context(page_updated=None, ledger_ids=()):
+def context(page_updated=None, ledger_ids=(), finding_ids=()):
     """템플릿 한 줄 배선용 묶음."""
     return {
         'available': available(),
@@ -323,7 +406,8 @@ def context(page_updated=None, ledger_ids=()):
         'banned': banned_summary(),
         'open_findings': open_findings(limit=6),
         'findings_error': findings_error(),
-        'freshness': freshness(page_updated, ledger_ids) if page_updated else None,
+        'freshness': (freshness(page_updated, ledger_ids, finding_ids)
+                      if page_updated else None),
     }
 
 

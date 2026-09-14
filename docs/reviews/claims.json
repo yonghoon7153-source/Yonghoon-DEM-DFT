@@ -1234,7 +1234,7 @@
   {
    "id": "CL-34",
    "date": "2026-08-16",
-   "status": "live",
+   "status": "hold",
    "kind": "measurement_record",
    "claim": "SDCP 를 **참 직경 구**로 그리면 σ_e 이득이 **+12.3 %** — 점 스탬프의 +1.6 % 도 vox 0.4 의 +42 % 도 아니다.  8/8 팔 완주, 우선순위 결함 = 실측 0 셀",
    "measured": {
@@ -1311,7 +1311,7 @@
   {
    "id": "CL-38",
    "date": "2026-08-18",
-   "status": "live",
+   "status": "hold",
    "kind": "measurement_record",
    "claim": "Fig 4c 의 R_ele 59.7 → 48.5 Ω·cm² 의 정체 **확정** (2026-09-02, SI v6 Table S4): **대칭셀 TLM 의 전자 레일 저항** = 읽기 (A).  ⇒ σ_e 앵커이긴 하나 우리 값과 **~440배** 어긋나고, 그 차이의 이름은 **접촉저항**이다",
    "measured": {

@@ -33,10 +33,19 @@
         이 화면이 서술하는 항목 중 <b>{{ f.behind|length }}</b> 건이 그 뒤에 바뀌었다 —
         {% for b in f.behind %}<code>{{ b.id }}</code>{% if not loop.last %} · {% endif %}{% endfor %}.
       {% endif %}
+      {# ★ 2026-09-14 (감사 D-2) — 결함 축.  날짜만 보던 옛 판은 이 줄이 없어서,
+         이 화면을 만드는 코드에 P1 이 열려 있어도 초록이 나왔다. #}
+      {% if f.open_findings %}
+        <br>⛔ <b>이 화면을 만드는 코드에 닫히지 않은 결함이 {{ f.open_findings|length }}건</b> 있다 —
+        {% for o in f.open_findings %}<code>{{ o.id }}</code>&nbsp;<small>{{ o.label }}</small>{% if not loop.last %} · {% endif %}{% endfor %}.
+        <br><small>여기 나오는 수는 그 결함의 영향을 받을 수 있다.  <b>검증은 구현자가 아닌 다른
+        행위자의 몫</b>이므로 <code>고쳤다고 주장</code> 도 닫힌 것이 아니다.</small>
+      {% endif %}
       충돌하면 <a href="/ledger">원장</a>이 이긴다.
     </div>
     {% else %}
-    <div class="lv-bar lv-ok">✓ 이 화면은 원장 최신 등재({{ f.newest }}) 이후로 검토됐다.</div>
+    <div class="lv-bar lv-ok">✓ 이 화면은 원장 최신 등재({{ f.newest }}) 이후로 검토됐고,
+      선언된 결함이 모두 <b>검증</b>으로 닫혀 있다.</div>
     {% endif %}
   {% endif %}
 {% endmacro %}
