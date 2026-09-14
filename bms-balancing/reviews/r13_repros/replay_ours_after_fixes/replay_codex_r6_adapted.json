@@ -1,5 +1,5 @@
 {
-  "target_head": "ef8e8f681050ee649783a8d85a9d584880c8aa80",
+  "target_head": "df6413d649ef51ace16d634c3856f857d598c79d",
   "probes": {
     "R6-01a 독자는 자기가 검증한 묶음만 (degeneracy)": {
       "상태": "닫힘",
@@ -57,8 +57,8 @@
         "A_value_PE_change_mV": 0.0,
         "B_value_PE_change_mV": 20.0,
         "recorded_sha_is_A": true,
-        "A_hash": "2cd53bdcbad0e528",
-        "disk_now": "b695e21b9ce64099"
+        "A_hash": "6dcd95c1ba850a2c",
+        "disk_now": "d9af9435613f2b69"
       }
     },
     "R6-03b 풀셀 build: A값이면 A서명": {
@@ -66,10 +66,10 @@
       "세부": {
         "raced_arrays_match_A": true,
         "recorded_full_cell_is_A": true,
-        "A_hash": "924fa30fe70d3c61",
-        "disk_now": "ed373e20c4562931",
-        "inputs_sha_raced": "429f37329f1d",
-        "inputs_sha_B": "0e408bc5d1fa"
+        "A_hash": "9d1f464e428eda6c",
+        "disk_now": "f5e3d9d29140a2f1",
+        "inputs_sha_raced": "1c4b9bab70ab",
+        "inputs_sha_B": "b0b9541a0416"
       }
     },
     "R6-04 inference 닫힘 확인(정본 이름으로)": {
@@ -100,6 +100,6 @@
       }
     }
   },
-  "baseline": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/a45978e3-3a6e-5e3d-af55-7c9b61e0d809/scratchpad/r6old/out",
+  "baseline": "/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/a45978e3-3a6e-5e3d-af55-7c9b61e0d809/scratchpad/u18fix/r6old/out",
   "mode": "full"
 }

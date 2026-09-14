@@ -1,13 +1,11 @@
 {
-  "target_head": "ef8e8f681050ee649783a8d85a9d584880c8aa80",
-  "expected_head": "ef8e8f681050ee649783a8d85a9d584880c8aa80",
-  "expected_tree": "2f4743517c8b0f302532a6f3d3646133f66ccd36",
+  "target_head": "df6413d649ef51ace16d634c3856f857d598c79d",
+  "expected_head": "df6413d649ef51ace16d634c3856f857d598c79d",
+  "expected_tree": "5a92468f3beb72c4f56b8b001524a51eab18e918",
   "head_ok": true,
   "dirty": true,
   "dirty_allowed": false,
   "dirty_paths": [
-    " M bms-balancing/reviews/r13_repros/replay_ours_after_fixes/codex_r6_mutation_audit.txt",
-    " M bms-balancing/reviews/r13_repros/replay_ours_after_fixes/replay_codex_r6_adapted.json",
     " M bms-balancing/reviews/r13_repros/replay_ours_after_fixes/replay_codex_r7.json"
   ],
   "evidence_eligible": true,
@@ -17,8 +15,8 @@
     "reviews/evidence_gate.py": "ok"
   },
   "materialized": {
-    "path": "/tmp/evidence-snap-21f1u_m4/snap/bms-balancing",
-    "head": "ef8e8f681050ee649783a8d85a9d584880c8aa80",
+    "path": "/tmp/evidence-snap-8k3k4d50/snap/bms-balancing",
+    "head": "df6413d649ef51ace16d634c3856f857d598c79d",
     "mode": "sparse detached worktree",
     "kept": false
   },
@@ -76,7 +74,7 @@
             "blank_receipts": 2,
             "config_mismatch": 2
           },
-          "current_out_schema_rc": 2,
+          "current_out_schema_rc": 0,
           "closure_assert": "assert all(rc != 0 for rc in got.values())"
         },
         "aggregation": {
@@ -249,7 +247,7 @@
       "멈춘_곳": "pytest tests/test_r9_codex.py::test_d9_10_matrix_sidecar_seals_the_exact_roster_and_argv → rc 0 · '1 passed'",
       "세부": {
         "node": "tests/test_r9_codex.py::test_d9_10_matrix_sidecar_seals_the_exact_roster_and_argv",
-        "summary": "1 passed in 3.28s",
+        "summary": "1 passed in 2.47s",
         "rc": 0,
         "passed": true
       }
@@ -268,7 +266,7 @@
         },
         "test": {
           "node": "tests/test_r9_codex.py::test_d9_11_zero_pair_and_partial_are_distinct_typed_states",
-          "summary": "1 passed in 1.11s",
+          "summary": "1 passed in 1.29s",
           "rc": 0,
           "passed": true,
           "closure_assert": "pytest tests/test_r9_codex.py::test_d9_11_zero_pair_and_partial_are_distinct_typed_states → rc 0 · '1 passed'"

@@ -10,7 +10,7 @@
 | 증거 커밋 | `84ab3b3e40d771b044ccc4310ae4ecf59487d8ce` (`reviews/r13_repros/replay_ours_after_fixes/`, 코드 diff 0 — `git diff ef8e8f681050ee649783a8d85a9d584880c8aa80 84ab3b3e40d771b044ccc4310ae4ecf59487d8ce -- '*.py' '*.sh'`) |
 | 회귀 | `python3 -m pytest tests/ -q` → **262 passed** (리뷰 대상 시점 236) |
 | 브랜치 | `claude/bms-alpha-beta-verify` |
-| 회신 이후 코드 | `066866595ab71827ef2d98e7a6cf26136df21495` — 조건 7 의 **실데이터 재실행**이 발견 셋을 냈다 (§8). §4 증거는 `ef8e8f6…` 시점 것이고 아직 재생성하지 않았다 |
+| 회신 이후 코드 | `df6413d649ef51ace16d634c3856f857d598c79d` — 조건 7 의 **실데이터 재실행이 끝났고**(U18b 승격 `37a889b`) 그 과정에서 발견 넷이 나왔다 (§8). **§4 증거는 이 커밋에서 다시 뽑았다** |
 
 ## 1. 발견별 — 재현 · 원인 · 수정 · 회귀
 
@@ -67,12 +67,13 @@ clean 트리에서 `promotion_eligible: true`.
 | 4 | BOM/파싱 실패의 구조화된 CLI 결과 · helper 와 CLI 둘 다 회귀 | 닫음 (P2-3, `test_g12` 는 CLI 경로) |
 | 5 | 증거 유효성/도달/개별/종결 분리 · 정확한 개별 명부 | 닫음 (P1-3 · P2-5; r11 은 `closed: false` · `closed_with_substitutes: false` 로 **정직하게** 남는다 — `publish:profile_partial_stdout` 에 대체 증거가 없다) |
 | 6 | 초기화 경계 재설계 · 동적 검증 | 코드 순서는 닫음 (P1-4). **동적 인증은 하지 않았다** — `test_g10` 은 AST 순서 검사이지 우회 재현이 아니다. 열린 항목으로 남긴다 |
-| 7 | shape 전용 계약 → producer→wrapper→U14 완주 · 기존 `out/` 보존, 별도 출력에 실제 재실행 | 계약·완주(합성) 닫음. 실데이터 **1 차 실행함** (`out_u18`, 기존 `out/` 보존) — 숫자 0 변화, 그러나 발견 셋이 나와 승격하지 않았다. **아직 열림** — 2 차(U18b) 진행 중 (§8) |
+| 7 | shape 전용 계약 → producer→wrapper→U14 완주 · 기존 `out/` 보존, 별도 출력에 실제 재실행 | **닫음** — 실데이터 재실행 2 차(U18b)가 `numbers 0` · 명부 13/13/13 · 계약 축 전부 0 으로 승격됐고(`37a889b`), 기존 `out/` 은 `out/archive/legacy_r6_u14/` 에 **얼려 보존**했다 (그 경로가 옛 40·25·6·1 을 그대로 낸다). 승격 뒤 `--schema-only` 는 사용자 기계와 fresh clone 둘 다 **rc 0** (§8) |
 | 8 | 기존 GO 전제(공통 snapshot · dataset manifest · run receipt · partial 수명 · locator 무결성)에 대한 명시적 판단 | **열림** — 이번 라운드는 신규 9 건 + Q6 만 닫았다. 전체 GO 로 바꾸지 않는다 (아래 §5) |
 
-## 4. 증거 (`reviews/r13_repros/replay_ours_after_fixes/`, 커밋 `84ab3b3e40d771b044ccc4310ae4ecf59487d8ce`)
+## 4. 증거 (`reviews/r13_repros/replay_ours_after_fixes/`, **U18b 승격 뒤 재생성**)
 
-전부 clean 트리의 `ef8e8f681050ee649783a8d85a9d584880c8aa80` 에서. 러너 넷 `evidence_eligible: true` · `instrument_sealed: true` · `package_digest_ok: true`.
+전부 clean 트리의 `df6413d649ef51ace16d634c3856f857d598c79d` 에서 (직전 판은 `ef8e8f6…`; 러너 넷의 leaf 별 판정은 **동일**하고,
+바뀐 것은 정본 `out/` 의 상태다 — 아래 `check_u14` 행). 러너 넷 `evidence_eligible: true` · `instrument_sealed: true` · `package_digest_ok: true`.
 새 종결 계약으로 읽는다 (rc 0 = `report_complete`, GO 소비자는 `closed`/`closed_with_substitutes`):
 
 | 파일 | 결과 |
@@ -83,11 +84,12 @@ clean 트리에서 `promotion_eligible: true`.
 | `replay_codex_r11.json` | leaf 37 · 반례 소멸 32/37 · 제외 5 (`root:profile_grid` 전제 변경 · `data:shape_wrapper` 환경상 불가 `wsl.exe` → `publish:shape_step` · `publish:matrix_filtered_canonical` 전제 변경 → `data:matrix_subset` · `publish:profile_grid1_canonical` 미실행(그룹 중단) → `data:profile_grid` · `publish:profile_partial_stdout` 미실행(그룹 중단) **대체 없음**) · closed false · closed_with_substitutes **false** |
 | `replay_codex_r6_adapted.json` | mode full 6/6 닫힘 (R6_OLD_OUT = `git archive bfc4623^ out`, 26 파일) |
 | `codex_r6_mutation_audit.txt` · `mutation_adapted.txt` | 8/8 · 5/5 CAUGHT, MISSED 0 |
-| `check_u14_out_schema_only.txt` | rc 2 · promotion_eligible false · blocked_by **40 · 25 · 6 · 1** (§2 — 바뀐 것은 옛 shape 한 파일의 분류뿐) |
-| `pytest_full.txt` | 262 passed |
+| `check_u14_out_schema_only.txt` | **rc 0** · blocked_by 전부 0 (`baseline_absent` 1 만) — U18b 가 정본을 새 계약으로 다시 서명했다. 옛 40·25·6·1 은 사라진 것이 아니라 `out/archive/legacy_r6_u14/` 로 **옮겨가 그대로 재현**된다 |
+| `pytest_full.txt` | 277 passed |
 | `matlab_smoke.txt` | Octave 전 단계 전부 통과 |
 
-leaf 별 판정은 d5d143f 판(직전 증거 커밋 71f3a86)과 동일하다 — Q6 의 코드 변경이 러너 결과를 움직이지 않았다.
+leaf 별 판정은 `ef8e8f6` 판과 동일하다 — Q6 이후의 코드 변경도, U18b 승격도 러너 결과를 움직이지 않았다.
+⚠ 재생성할 때 `tests/` 전체 실행과 러너를 동시에 돌리지 않는다 (`test_d8_07` 이 같은 `replay_codex_r7.py` 를 부른다 — §8 U18-04).
 
 ## 5. Q1~Q6 리뷰어 답에 대한 우리 답
 
@@ -115,8 +117,8 @@ leaf 별 판정은 d5d143f 판(직전 증거 커밋 71f3a86)과 동일하다 —
 
 | 항목 | 상태 |
 |---|---|
-| 조건 7 의 실데이터 재실행 | 1 차 실행 완료·발견 셋 닫음, **승격 안 함** → 2 차(U18b) 진행 중 (§8 · `WORKING_STATE.md` 2c) |
-| §4 증거의 현행 커밋 재생성 | 열림 — U18b 승격 뒤 한 번에 (지금 증거는 `ef8e8f6…` 시점) |
+| ~~조건 7 의 실데이터 재실행~~ | **닫음** (U18b 승격 `37a889b` · §8) |
+| ~~§4 증거의 현행 커밋 재생성~~ | **닫음** — `df6413d…` 에서 전부 재생성, 러너 넷의 leaf 별 판정은 그대로 |
 | 조건 6 의 동적 인증 · 조건 8 의 다섯 축 (snapshot · manifest · run receipt · partial 수명 · locator) | 열림 |
 | C34 `receipt_paths` 소비자 · C25 before-evidence 40-hex | 열림 (C25 는 보관 패키지라 안 고친다) |
 | `openpyxl` 이 `env_signature`/`ENV_KEYS` 에 없음 (리뷰어 정적 지적) | 열림 — 넣으면 세 종류의 sidecar 계약과 fixture 가 같이 바뀌므로 별도 라운드로 |
@@ -125,10 +127,9 @@ leaf 별 판정은 d5d143f 판(직전 증거 커밋 71f3a86)과 동일하다 —
 
 ---
 
-## 8. 조건 7 의 실데이터 재실행 — 1 차(U18)와 그것이 드러낸 것 셋 (2026-09-13/14, 회신 이후)
+## 8. 조건 7 의 실데이터 재실행 — 1 차(U18) · 2 차(U18b) · 승격, 그리고 드러난 것 넷 (2026-09-13/14, 회신 이후)
 
-> 이 절은 위 표의 코드 정본(`ef8e8f6…`) **이후**다. §4 증거는 그 시점 것이며 **재생성하지 않았다** — 조건 7 을
-> 닫으려면 2 차 실행 승격 뒤 현행 커밋에서 다시 뽑아야 한다 (§7 에 열린 항목으로 적었다).
+> 이 절은 위 표의 코드 정본(`ef8e8f6…`) **이후**다. 조건 7 은 **닫혔고**, §4 증거는 승격 뒤 `df6413d…` 에서 다시 뽑았다.
 
 원자료가 있는 기계에서 `OUT=out_u18 STATES='100 200 300_0009 300_0147' STARTS=24 ./scripts/run_states.sh`
 (2026-09-13 20:02–22:39 KST, 13/13 게시, 반쪽전지 소스 100·200·300_0009=GITT · 300_0147=step_005C).
@@ -151,4 +152,36 @@ U18-02 는 위조 방향이 아니라 **거짓 양성**이다. 다만 `provenanc
 사면 규칙을 만들지 않고 깨끗한 트리에서 2 차(U18b)를 돈다. 승격 조건은 `numbers 0` · 계약 축 전부 0 ·
 `provenance 0` 이고 **`inputs_uncomparable` 과 `env_uncomparable` 만 > 0** (둘 다 옛 정본의 나이 — 1 차 실측 17 · 1).
 
-회귀 전체: **277 passed**.
+### 8-1. 2 차(U18b)와 승격 — 조건 7 닫음
+
+고친 wrapper·checker 로 깨끗한 트리에서 다시 돌렸다 (사용자 기계, 같은 설정 `STATES='100 200 300_0009 300_0147'` ·
+`STARTS=24` · `SI=Li`). 도중에 저장소에서 git 명령이 한 번 돌아 `matrix_300_0147` 하나가 또 `git_state_changed_during_run:
+true` 가 됐고 **그 상태만 다시 게시**해 닫았다 (산출마다 독립 서명이라 전체 재실행이 필요 없다). 나머지 12 개는
+`out_u18b/` 가 untracked 인데도 전부 clean — **U18-02 고침이 실데이터에서 확인된 지점**이다.
+
+| 검사 | 결과 |
+|---|---|
+| `check_u14 --new out_u18b --old out` | **rc 4** · `numbers 0` · 명부 13/13/13 (missing·extra 없음) · 계약 축(schema·provenance_cols·content·unit·controls·env·alias·inputs·provenance·stale) **전부 0** · 남은 것은 `inputs_uncomparable 17` · `env_uncomparable 1` **뿐** — 둘 다 옛 정본의 나이다 |
+| 승격 (`37a889b`) | 옛 정본 26 파일을 `out/archive/legacy_r6_u14/` 로 **얼려 보존**(조건 7 의 요구), 새 묶음이 `out/` 이 됐다. archive 는 자기 문서(`out/archive/README.md`)에 그 사실을 적는다 |
+| 승격 뒤 `check_u14 --new out --schema-only` | **rc 0** — 사용자 기계와 **fresh clone(다른 기계)** 둘 다. 서명이 git 왕복(줄끝 정규화)을 견딘다는 뜻이고 U14-01 축을 실데이터로 다시 건 것이다 |
+| 승격 뒤 `--old-rev HEAD` (git 의 옛 정본 대 새 `out/`) | rc 4 · 13/13 대조 · `numbers 0` — 3 단계와 같은 판정 |
+| `compare_states.py out` | degeneracy 4/4 사용 · 제외 0 · "A 축에서 LLI 가 항상 가장 좁은가: **예**" · 묶음 불일치 경고 없음 |
+| 옛 묶음(`out/archive/legacy_r6_u14/`) | `--schema-only` 가 **40 · 25 · 6 · 1** 을 그대로 낸다 — 표본이 바이트 단위로 살아 있다 |
+
+**숫자는 이 라운드 내내 한 번도 안 움직였다.** 바뀐 것은 게시·서명 계약뿐이다.
+
+### 8-2. U18-04 — 승격이 깨뜨린 것 (테스트 7 건, 닫음)
+
+승격 직후 전체 테스트가 7 건 빨갰다. 원인은 셋으로 갈린다.
+
+| 무엇 | 왜 | 고침 |
+|---|---|---|
+| `_ne_shape_csv` 가 `inputs_sha` 를 `float()` 로 읽어 ValueError (FINDINGS §1-12·§5-2·R3-03 표 대조 셋) | 헬퍼의 텍스트 열 목록이 `schema` 와 **별개의 사본**이었다. 정본이 22 열 계약이 되자 모르는 열을 숫자로 읽었다 — `test_i6w_07` 이 2026-09-12 에 "커밋된 산출이 아직 옛 스키마라 fixture 가 진실을 가린다" 고 적어 둔 바로 그 고장이 실제로 터졌다 | 목록을 `schema.SHAPE_NON_NUMERIC` 에서 **유도**한다 |
+| `test_f26`(reader 가 정본 matrix 를 거부한다) · `test_d8_02`(`out/` schema-only rc 2) 의 전제 소멸 | 승격으로 정본이 새 계약이 됐다 — **그것이 승격의 뜻**이다 | 표본을 `out/archive/legacy_r6_u14/` 로. `d8_02` 에는 "현행 정본은 rc 0" 도 같이 고정해 이 검사가 "늘 rc 2" 를 재는 것이 아님을 못박았다 |
+| `test_d8_07` 이 **전체 실행에서만** 실패 | 증거 재생성으로 같은 `replay_codex_r7.py` 를 동시에 돌린 탓. 단독 통과, 직렬 전체 실행 277 passed | 코드 변경 없음. 증거 재생성과 테스트를 겹쳐 돌리지 않는다 (§4 경고) |
+
+교훈은 U14-05 와 같은 축이다 — **살아 있는 파이프라인 경로에 표본이나 역사 자료를 두면 재실행 한 번에 전제가
+사라진다.** archive 는 그래서 있다.
+
+회귀 전체: **277 passed** (승격 뒤 직렬 재실행). 증거는 `df6413d…` 에서 전부 재생성했고 러너 넷의 leaf 별 판정은
+`ef8e8f6` 판과 같다.

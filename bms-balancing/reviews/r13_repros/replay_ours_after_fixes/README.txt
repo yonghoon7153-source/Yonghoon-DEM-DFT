@@ -1,6 +1,10 @@
-Codex R13 (대상 94add7b) 수정 뒤 재생 — 코드 커밋 ef8e8f681050ee649783a8d85a9d584880c8aa80 에서 만들었다
-(§5 Q6 shape 전용 계약까지 닫은 판. 직전 판은 d5d143f 에서 만든 것이고 이 디렉터리는 그것을 **덮어쓴다** —
-옛 판은 git 이력 71f3a86 에 있다).
+Codex R13 (대상 94add7b) 수정 뒤 재생 — 코드 커밋 df6413d649ef51ace16d634c3856f857d598c79d 에서 만들었다
+(**U18b 실데이터 재실행·승격(37a889b) 뒤** 판. 직전 판은 ef8e8f6 에서 만든 것이고 이 디렉터리는 그것을 **덮어쓴다** —
+옛 판은 git 이력에 있다).
+
+왜 다시 뽑았나: 조건 7 의 실데이터 재실행이 끝나 정본 `out/` 이 새 계약으로 바뀌었다. 이 묶음의
+`check_u14_out_schema_only.txt` 는 바로 그 `out/` 을 재는 것이라 **승격 전 숫자를 그대로 두면 증거가 거짓이 된다.**
+러너 넷의 leaf 별 판정은 ef8e8f6 판과 **동일**하다 (아래) — 바뀐 것은 정본의 상태뿐이다.
 
 왜 코드 커밋에서 만드나: 러너가 `--expected-head` 의 커밋을 materialize 해서 돌고, 도구 자신
 (`replay_codex_r*.py` · `reviews/evidence_gate.py`)의 bytes 가 그 커밋의 blob 과 같아야 `evidence_eligible: true` 다.
@@ -23,7 +27,7 @@ Codex R13 (대상 94add7b) 수정 뒤 재생 — 코드 커밋 ef8e8f681050ee649
   · `closed_with_substitutes` = 제외마다 대체 증거의 **이름**이 있을 때만 참. 없는 것은 없다고 적었다.
   · 집계는 `evidence_gate.summarize_verdicts` 한 자리 (네 러너 공용). GO 소비자는 rc 가 아니라 `closed` / `closed_with_substitutes` 를 읽는다.
 
-네 재생기 전부 evidence_eligible: true · instrument_sealed: true · package_digest_ok: true · target_head ef8e8f6….
+네 재생기 전부 evidence_eligible: true · instrument_sealed: true · package_digest_ok: true · target_head df6413d6….
 
   replay_codex_r7.json    반례 소멸 5/6 · 제외 1 — R7-03 전제 변경 (대체 test_d7_03 회귀)
                           report_complete true · closed **false** · closed_with_substitutes true
@@ -35,19 +39,21 @@ Codex R13 (대상 94add7b) 수정 뒤 재생 — 코드 커밋 ef8e8f681050ee649
                           (fingerprint "wsl.exe", 대체 publish:shape_step) · publish:matrix_filtered_canonical 전제 변경
                           (대체 data:matrix_subset) · publish:profile_grid1_canonical 미실행 (그룹 중단, 대체 data:profile_grid) ·
                           publish:profile_partial_stdout 미실행 (그룹 중단) — **대체 증거 없음**
-                          → closed **false** · closed_with_substitutes **false** (정직하게). d5d143f 판과 leaf 별 판정 동일.
+                          → closed **false** · closed_with_substitutes **false** (정직하게). ef8e8f6 판과 leaf 별 판정 동일.
 
   replay_codex_r6_adapted.json   "mode": "full" 6/6 닫힘  (R6_OLD_OUT = `git archive bfc4623^ out`, 26 파일)
   codex_r6_mutation_audit.txt    8/8 CAUGHT · MISSED 0
   mutation_adapted.txt           5/5 CAUGHT · MISSED 0  (같은 R6_OLD_OUT)
-  check_u14_out_schema_only.txt  rc 2 · promotion_eligible false · blocked_by schema **40** · provenance_cols **25** · content **6** · provenance 1
-                                 — d5d143f 판(59 · 27 · 5 · 1)에서 **바뀐 것은 shape 한 파일의 분류뿐**: 옛 `ne_shape_GITT_Li.csv` 가
-                                 이제 제 종류(shape)로 읽혀 "모르는 열 19 + profile 열 21 누락 + state/starts/seed 누락" 이 사라지고
-                                 대신 `inputs_sha`(schema) · `consumed_inputs`(provenance_cols) 누락과 `status`·`pairing` 없음(content 2)
-                                 으로 잡힌다. degeneracy aggregate digest 4 · provenance 1 은 그대로. 산출 숫자는 하나도 안 움직였다.
-                                 옛 sidecar 는 소급 보수하지 않았다 — 실데이터 재생성은 사용자 기계 (WORKING_STATE U18 4 단계).
-  pytest_full.txt                262 passed  (PYTHONDONTWRITEBYTECODE=1 · -p no:cacheprovider — 트리를 더럽히지 않게)
+  check_u14_out_schema_only.txt  **rc 0** · blocked_by 전부 0 (`baseline_absent` 1 만 — schema-only 는 baseline 을 안 본다)
+                                 — 조건 7 의 실데이터 재실행(U18b)이 정본을 새 계약으로 다시 서명했다. 직전 판의 40 · 25 · 6 · 1 은
+                                 **없어진 것이 아니라 옮겨갔다**: 옛 정본은 `out/archive/legacy_r6_u14/` 에 얼려 보존했고
+                                 (`check_u14 --new out/archive/legacy_r6_u14 --schema-only` 가 그 네 수를 그대로 낸다), 회귀
+                                 `test_d8_02` 가 이제 그 경로를 표본으로 쓴다. **산출 숫자는 하나도 안 움직였다**
+                                 (`--new out_u18b --old out` 의 `numbers 0`, 명부 13/13/13). 옛 sidecar 는 소급 보수하지 않았다.
+  pytest_full.txt                277 passed  (PYTHONDONTWRITEBYTECODE=1 · -p no:cacheprovider — 트리를 더럽히지 않게)
   matlab_smoke.txt               Octave 전 단계 "전부 통과"
 
-각 파일 옆의 `*.rc.txt` 가 그 실행의 종료 코드다 (전부 직전 판과 같다: 러너·감사·pytest·smoke 0, check_u14 2).
+각 파일 옆의 `*.rc.txt` 가 그 실행의 종료 코드다 — 이번엔 **전부 0** 이다 (직전 판은 check_u14 만 2 였고, 그것이 승격으로 0 이 됐다).
+⚠ 재생성할 때 `tests/` 전체 실행과 러너를 **동시에 돌리지 않는다** — `test_d8_07` 이 같은 `replay_codex_r7.py` 를 부르므로
+  겹치면 그 테스트만 거짓으로 빨개진다 (U18-04, 2026-09-14 실측).
 R13 항목: P1-1~P1-4 · P2-1~P2-5 · §5 Q6 전부 닫음 — 회신은 `reviews/R13_RESPONSE.md`.
