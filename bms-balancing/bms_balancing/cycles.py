@@ -18,7 +18,7 @@ import pandas as pd
 from . import data as D
 from .model import LB5, UB5, Blend, HalfCell, Objective, _extract, degradation_modes, fit_gamma_si
 from .schema import inputs_digest
-from .verify import active_bounds, multistart
+from .verify import active_bounds, multistart, near_optimal_extrema
 
 #: main_blend_final.m:45 — 원본은 γ 를 Track B 로 대체하고 나머지 넷을 시작점으로 쓴다. 여기서는 seed 시작점들에 이 점 하나를 더한다.
 INITIAL5 = (1.08, -0.04, 1.05, -0.03, 0.25)
@@ -50,9 +50,42 @@ def load_cycle(df: pd.DataFrame, cycle: int):
     return _extract(df, str(cycle))
 
 
+
+#: 폭을 못 쟀을 때 채우는 값 — **빈 칸이지 0 이 아니다.** 0 으로 채우면 읽는 쪽이 "폭이 0 = 완벽히 식별됐다"
+#: 로 읽는다 (본체 게이트 61차 P1-3 과 같은 축: 측정 실패가 성공 영수증이 되면 안 된다).
+_WIDTH_EMPTY = {"width_tol": "", "width_is_lower_bound": "",
+                "LAM_PE_lo": "", "LAM_PE_hi": "", "LAM_NE_lo": "", "LAM_NE_hi": "", "LLI_lo": "", "LLI_hi": ""}
+
+
+def _width_fields(widths, obj, ref_p, ref_c, c_cell, best, best_val, tol, starts, seed, lb5, say):
+    """근최적 집합 위의 LAM/LLI 폭을 **이 적합이 쓴 상자에서** 잰다 (W-11 · W-12).
+
+    단위: `near_optimal_extrema` 는 % 로 돌려주는데 행의 `LAM_*`/`LLI` 는 **분수**다 — 100 으로 나눈다.
+    안 나누면 폭이 100 배가 되고, 점추정은 여전히 그 안에 들어가므로 범위 검사만으로는 안 걸린다.
+
+    실패하면 **값을 지어내지 않고** `failed` 로 적는다. 적합 자체는 살아 있으므로 산출을 버리지도 않는다.
+    """
+    if not widths:
+        return {"width_status": "not_requested", **_WIDTH_EMPTY}
+    try:
+        ext = near_optimal_extrema(obj, ref_p, ref_c, c_cell, best, best_val,
+                                   tol=float(tol), seeds=[], n_starts=int(starts), seed=int(seed),
+                                   lb=lb5, ub=UB5)
+        out = {"width_status": "measured", "width_tol": float(tol),
+               "width_is_lower_bound": all(bool(ext[k].get("is_lower_bound")) for k in ("LAM_PE", "LAM_NE", "LLI"))}
+        for mode in ("LAM_PE", "LAM_NE", "LLI"):
+            out[f"{mode}_lo"] = float(ext[mode]["min"]) / 100.0
+            out[f"{mode}_hi"] = float(ext[mode]["max"]) / 100.0
+        return out
+    except Exception as e:                                   # noqa: BLE001
+        say(f"  ! 폭 계산 실패 ({type(e).__name__}: {e}) — 이 행은 width_status=failed 로 적는다")
+        return {"width_status": "failed", **_WIDTH_EMPTY}
+
+
 def fit_cycles(root, half_cell, full_cell, si_source: str, *, cell: str, cycles=None,
                n_starts: int = 20, seed: int = 0, scale_seed: int = 0, w_dqdv: float = 0.0, run_id: str = "",
                literature=None, gamma_prefit: bool = False, gamma_lb: float | None = None,
+               widths: bool = False, width_tol: float = 0.01, width_starts: int = 4,
                log=None) -> dict:
     """사이클마다 적합 → {"rows": [CYCLES_ROW dict …], "consumed": 공통 receipt, "settings": 기록된 optimizer 설정}.
 
@@ -107,6 +140,10 @@ def fit_cycles(root, half_cell, full_cell, si_source: str, *, cell: str, cycles=
                 "initial": [float(x) for x in initial5],
                 "gamma_prefit": bool(gamma_prefit), "gamma_init": gamma_init,
                 "gamma_lb": (float(gamma_lb) if gamma_lb is not None else None),
+                # ⚠ 폭은 **기록되는 실행 조건**이다 — 허용(tol)을 안 밝힌 폭은 인용할 수 없다 (§12-3 과 같은 이유).
+                "widths": bool(widths), "width_tol": (float(width_tol) if widths else None),
+                "width_starts": (int(width_starts) if widths else None),
+                "width_method": ("near_optimal_extrema" if widths else None),
                 "free": ["a_PE", "b_PE", "a_NE", "b_NE", "gamma_Si"], "n_multistart": int(n_starts),
                 "seed": int(seed), "scale_seed": int(scale_seed), "w_pocv": 1.0, "w_dvdq": 1.0, "w_dqdv": float(w_dqdv),
                 "optimizer": "L-BFGS-B (scipy)"}
@@ -133,6 +170,7 @@ def fit_cycles(root, half_cell, full_cell, si_source: str, *, cell: str, cycles=
             "a_PE": p[0], "b_PE": p[1], "a_NE": p[2], "b_NE": p[3], "gamma_Si": p[4],
             "c_lit": o.c_cell * (p[0] + p[1] - p[3]),
             "LAM_PE": m["LAM_PE"], "LAM_NE": m["LAM_NE"], "LLI": m["LLI"],
+            **_width_fields(widths, o, p0, o0.c_cell, o.c_cell, p, val, width_tol, width_starts, seed, lb5, say),
             "obj": val, "rmse_pocv": o.rmse_pocv(p), "rmse_dvdq": o.rmse_dvdq(p), "rmse_dqdv": o.rmse_dqdv(p),
             "n_starts": int(n_starts), "n_accepted": int(st.get("accepted", 0)),
             # ⚠ scale 은 행이 스스로 말한다 (R5-07) — 두 seed 실행의 scale 열이 같아야 그 차이가 시작점의 것이다

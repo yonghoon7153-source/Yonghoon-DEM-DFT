@@ -43,7 +43,17 @@ SHAPE_ROW = (
 #: `scripts/fit_cycles.py` — 사이클별 α·β 적합 (BML_R1_RESPONSE §9 결정 실험). 행 key 는 `cycle`(정수).
 #: 규진팀 `result_L_*.xlsx` 의 11 열(`rails.RESULT_COLUMNS`) + 적합 근거(obj·rmse·시작점) + 하네스 출처(행별 receipt).
 CYCLES_ROW = ("cell", "cycle", "C_cell", "x_cell", "a_PE", "b_PE", "a_NE", "b_NE", "gamma_Si", "c_lit",
-              "LAM_PE", "LAM_NE", "LLI", "obj", "rmse_pocv", "rmse_dvdq", "rmse_dqdv", "n_starts", "n_accepted",
+              "LAM_PE", "LAM_NE", "LLI",
+              #: 폭 — **점추정 바로 뒤**에 둔다 (W-09). `BML_R1_RESPONSE` §12-5 가 "LAM 분할은 점추정으로
+              #: 보고할 수 없고 폭과 함께" 로 닫혔는데, 폭을 별도 파일에 두면 표로 옮길 때 또 떨어진다.
+              #: `width_status` 는 measured | not_requested | failed 셋이다 — **안 잰 것과 0 을 구분**한다
+              #: (본체 게이트 61차 P1-3 과 같은 축: 측정 실패가 성공 영수증이 되면 안 된다).
+              #: `lo`/`hi` 는 `LAM_*`/`LLI` 와 **같은 분수 단위**다 (`near_optimal_extrema` 의 % 를 100 으로 나눈다).
+              #: `width_is_lower_bound` 는 항상 True — 국소 해법 + 격자라 폭은 하한이고, 그 사실을 지운 채
+              #: 인용하지 못하게 행이 스스로 말한다.
+              "width_status", "width_tol", "width_is_lower_bound",
+              "LAM_PE_lo", "LAM_PE_hi", "LAM_NE_lo", "LAM_NE_hi", "LLI_lo", "LLI_hi",
+              "obj", "rmse_pocv", "rmse_dvdq", "rmse_dqdv", "n_starts", "n_accepted",
               #: scale 은 행이 스스로 말한다 (R5-07) — 시작점 seed 실험은 이 네 열이 같아야 성립한다
               "scale_seed", "scale_pocv", "scale_dvdq", "scale_dqdv",
               "bounds", "run_id", "inputs_sha", "consumed_inputs")
@@ -220,9 +230,38 @@ MAY_BE_EMPTY: frozenset = frozenset()
 #: (R3-03). 둘은 함께 비거나 함께 차야 한다 (`check_rows` 가 센다).
 SHAPE_MAY_BE_EMPTY: frozenset = frozenset({"gamma_witness", "gamma_witness_delta"})
 
+#: 폭 값 여덟 칸 (W-15). **비어도 되는 것이 아니라 `width_status` 가 정하는 것**이다 — 아래 tagged union 검사가
+#: 상태와 칸을 묶는다. 여기서 풀어 주기만 하고 union 을 안 걸면 "measured 라고 적고 칸은 빈" 행이 통과한다.
+CYCLES_WIDTH_VALUES: tuple = ("width_tol", "width_is_lower_bound",
+                              "LAM_PE_lo", "LAM_PE_hi", "LAM_NE_lo", "LAM_NE_hi", "LLI_lo", "LLI_hi")
+CYCLES_WIDTH_STATUSES: tuple = ("measured", "not_requested", "failed")
+CYCLES_MAY_BE_EMPTY: frozenset = frozenset(CYCLES_WIDTH_VALUES)
+
 
 def may_be_empty(kind: str) -> frozenset:
-    return SHAPE_MAY_BE_EMPTY if kind == "shape" else MAY_BE_EMPTY
+    if kind == "shape":
+        return SHAPE_MAY_BE_EMPTY
+    if kind == "cycles":
+        return CYCLES_MAY_BE_EMPTY
+    return MAY_BE_EMPTY
+
+
+def check_width_union(r: dict, where: str = "") -> list:
+    """폭은 **tagged union** 이다 — `width_status` 하나가 여덟 칸의 있고 없음을 정한다 (W-15).
+
+    왜 "비어도 되는 열" 로 풀지 않는가: 그러면 `measured` 라고 적어 놓고 칸을 비운 행이 통과한다. 그건
+    `BML_R1_RESPONSE` §12-5 가 막으려던 것과 같은 종류의 위조다 — **폭을 적었다고 말하면서 폭이 없다.**
+    반대쪽도 막는다: 안 쟀는데 0 이 적혀 있으면 읽는 쪽이 "폭 0 = 완벽히 식별됐다" 로 읽는다.
+    """
+    st = str(r.get("width_status") or "").strip()
+    if st not in CYCLES_WIDTH_STATUSES:
+        return [f"{where}width_status 가 {CYCLES_WIDTH_STATUSES} 중 하나가 아니다 ({r.get('width_status')!r})"]
+    filled = [c for c in CYCLES_WIDTH_VALUES if str(r.get(c) or "").strip() != ""]
+    if st == "measured":
+        missing = [c for c in CYCLES_WIDTH_VALUES if c not in filled]
+        return [f"{where}width_status=measured 인데 폭 칸이 비었다: {missing}"] if missing else []
+    return ([f"{where}width_status={st} 인데 폭 칸에 값이 있다: {filled} — 안 잰 것과 0 은 다르다"]
+            if filled else [])
 
 #: 숫자가 **아닌** 열 (라벨·출처·감사 문자열). 나머지는 전부 유한한 숫자여야 한다 — 목록을 반대로 두면 새 숫자 열이
 #: 생겼을 때 검사에서 조용히 빠진다 (Codex R11 P1-8: `a_NE="not-a-number"` 가 통과했다).
@@ -235,7 +274,11 @@ MATRIX_NUMERIC = tuple(c for c in MATRIX_ROW if c not in MATRIX_NON_NUMERIC)
 PROFILE_NUMERIC = tuple(c for c in PROFILE_ROW if c not in PROFILE_NON_NUMERIC)
 SHAPE_NON_NUMERIC = ("state", "run_id", "inputs_sha", "consumed_inputs")
 SHAPE_NUMERIC = tuple(c for c in SHAPE_ROW if c not in SHAPE_NON_NUMERIC)
-CYCLES_NON_NUMERIC = ("cell", "bounds", "run_id", "inputs_sha", "consumed_inputs")
+#: ⚠ W-14: 선언 안 된 열은 승격 게이트가 **전부 숫자로** 본다. 폭 열을 늘리면서 상태·불린 둘을 여기
+#:   넣지 않으면 `width_status 가 숫자가 아니다 ('measured')` 로 rc 2 가 난다 (e2e 가 잡았다).
+#:   `lo`/`hi` 여섯은 숫자가 맞으므로 그대로 둔다 — 다만 **빈 칸일 수 있다** (not_requested · failed).
+CYCLES_NON_NUMERIC = ("cell", "bounds", "run_id", "inputs_sha", "consumed_inputs",
+                      "width_status", "width_is_lower_bound")
 CYCLES_NUMERIC = tuple(c for c in CYCLES_ROW if c not in CYCLES_NON_NUMERIC)
 #: 숫자 대조에서 뺄 열 (출처·감사 문자열 — 숫자가 아니다)
 ROW_SKIP = frozenset({"run_id", "inputs_sha", "ref_inputs_sha", "consumed_inputs", "ref_consumed_inputs",
@@ -569,6 +612,8 @@ def check_rows(kind: str, rows: list, header: list, name: str = "") -> list:
         if all(c in header for c in ("consumed_inputs", "inputs_sha")):
             p += validate_receipt(r.get("consumed_inputs"), r.get("inputs_sha"), f"행 {i} consumed_inputs",
                                   roles=receipt_roles(kind))
+        if kind == "cycles" and "width_status" in header:
+            p += check_width_union(r, f"행 {i}: ")
         if kind == "shape" and all(c in header for c in SHAPE_MAY_BE_EMPTY):
             # R3-03: 빈 칸은 "격자에서 증인 없음" 이라는 값이므로 둘이 **함께** 비어야 뜻이 있다
             wit, delta = (str(r.get(c) or "").strip() for c in ("gamma_witness", "gamma_witness_delta"))

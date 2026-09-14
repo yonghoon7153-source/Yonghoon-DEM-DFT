@@ -10,6 +10,7 @@
 """
 from __future__ import annotations
 
+import csv
 import pathlib
 import sys
 
@@ -228,3 +229,193 @@ def test_w08b_check_degeneracy_publishes_an_artifact_whose_digest_looks_numeric(
          "inputs_sha": "796984e18157", "best_obj": 1.0, "n_starts": 1}
     bad = [m for m in S._finite_problems({k: v for k, v in j.items()}, "degeneracy") if "유한하지" in m]
     assert bad == [], bad
+
+
+# ══ 여기부터 본 작업: 폭을 cycles 산출에 붙인다 ═════════════════════════════
+#
+# `reviews/BML_R1_RESPONSE.md` §12-5 가 "이 데이터에서 LAM 분할은 점추정으로 보고할 수 없고 폭과 함께
+# 보고해야 한다" 로 닫혔다. 그런데 `fit_cycles` 는 아직 점추정만 낸다 — 누가 그 CSV 를 표로 옮기면
+# 우리가 쓴 경고는 안 따라간다. **폭을 같은 행에** 둔다 (별도 파일이면 또 떨어진다).
+
+def _cycles_fixture(tmp_path, n_cycles=2):
+    sys.path.insert(0, str(ROOT / "tests"))
+    from test_cycles import _cycle_workbook                # noqa: PLC0415
+    from test_r6_internal import _synth_root               # noqa: PLC0415
+    src = _synth_root(tmp_path)
+    wb = _cycle_workbook(src, tmp_path / "cyc.xlsx", n_cycles=n_cycles)
+    return src, wb, src / "data/half_cell/GITT/pristine.xlsx"
+
+
+WIDTH_COLS = ("width_status", "width_tol", "width_is_lower_bound",
+              "LAM_PE_lo", "LAM_PE_hi", "LAM_NE_lo", "LAM_NE_hi", "LLI_lo", "LLI_hi")
+
+
+def test_w09_cycles_row_declares_the_width_columns():
+    """[W-09] 계약부터. 폭이 **행의 일부**여야 점추정만 옮겨 적는 일이 안 생긴다."""
+    from bms_balancing import schema as S
+    assert set(WIDTH_COLS) <= set(S.CYCLES_ROW), sorted(set(WIDTH_COLS) - set(S.CYCLES_ROW))
+    assert S.required_columns("cycles") == S.CYCLES_ROW
+    # 점추정 바로 뒤에 온다 — 표로 옮길 때 잘려 나가지 않도록
+    i = S.CYCLES_ROW.index("LLI")
+    assert S.CYCLES_ROW[i + 1] == "width_status", S.CYCLES_ROW[i:i + 3]
+
+
+def test_w10_widths_off_is_empty_not_zero(tmp_path):
+    """[W-10] **안 잰 것과 0 은 다르다.** 폭을 안 켜면 값이 비어 있어야 한다 — 0 으로 채우면 읽는 쪽이
+    "폭이 0 이다(= 완벽히 식별된다)" 로 읽는다. 이건 본체 게이트 61차가 잡은 축과 같다: **측정 실패가
+    성공 영수증이 되면 안 된다.**"""
+    from bms_balancing import cycles as C                  # noqa: PLC0415
+    src, wb, hc = _cycles_fixture(tmp_path)
+    out = C.fit_cycles(src, hc, wb, "Li", cell="w10", n_starts=2, seed=0, scale_seed=0)
+    for r in out["rows"]:
+        assert r["width_status"] == "not_requested", r["width_status"]
+        for c in ("LAM_PE_lo", "LAM_PE_hi", "LAM_NE_lo", "LAM_NE_hi", "LLI_lo", "LLI_hi",
+                  "width_tol", "width_is_lower_bound"):
+            assert r[c] == "", (c, repr(r[c]))
+    assert out["settings"]["widths"] is False
+
+
+def test_w11_widths_on_bracket_the_point_estimate(tmp_path):
+    """[W-11] 켜면 폭이 붙고, **점추정이 그 안에 있어야 한다.**
+
+    단위가 이 시험의 진짜 축이다 — `near_optimal_extrema` 는 %, 행의 `LAM_*`/`LLI` 는 분수다.
+    나누는 것을 잊으면 폭이 100 배가 되고 점추정은 여전히 안에 들어가므로 **범위 검사만으로는 안 걸린다.**
+    그래서 폭의 크기에도 상한을 건다.
+    """
+    from bms_balancing import cycles as C                  # noqa: PLC0415
+    src, wb, hc = _cycles_fixture(tmp_path)
+    out = C.fit_cycles(src, hc, wb, "Li", cell="w11", n_starts=2, seed=0, scale_seed=0,
+                       widths=True, width_tol=0.01, width_starts=2)
+    assert out["settings"]["widths"] is True and out["settings"]["width_tol"] == 0.01
+    for r in out["rows"]:
+        assert r["width_status"] == "measured", r
+        assert r["width_is_lower_bound"] is True, r["width_is_lower_bound"]
+        assert float(r["width_tol"]) == 0.01
+        for mode in ("LAM_PE", "LAM_NE", "LLI"):
+            lo, hi, pt = float(r[f"{mode}_lo"]), float(r[f"{mode}_hi"]), float(r[mode])
+            assert lo <= pt <= hi, (r["cycle"], mode, lo, pt, hi)
+            assert hi - lo <= 2.0, (r["cycle"], mode, "폭이 분수 단위를 넘는다 — %/분수 혼동?", lo, hi)
+
+
+def test_w12_the_width_is_measured_in_the_box_the_fit_used(tmp_path):
+    """[W-12] **W-02 의 값어치가 여기서 나온다.** γ 하한을 올려 상자를 좁히면 **보고되는 폭도 좁아져야** 한다.
+    폭 함수가 모듈 상수를 읽던 전 판에서는 이 둘이 같은 값이 나왔다 — 적합은 좁은 상자, 폭은 넓은 상자."""
+    from bms_balancing import cycles as C                  # noqa: PLC0415
+    src, wb, hc = _cycles_fixture(tmp_path)
+    base = dict(cell="w12", n_starts=2, seed=0, scale_seed=0, widths=True, width_tol=0.05, width_starts=2)
+    wide = C.fit_cycles(src, hc, wb, "Li", **base)
+    tight = C.fit_cycles(src, hc, wb, "Li", gamma_lb=0.45, **base)   # γ 를 [0.45, 0.50] 으로 가둔다
+    assert tight["settings"]["lb"][4] == 0.45
+    w = max(float(r["LAM_NE_hi"]) - float(r["LAM_NE_lo"]) for r in wide["rows"])
+    t = max(float(r["LAM_NE_hi"]) - float(r["LAM_NE_lo"]) for r in tight["rows"])
+    assert t < w, ("좁힌 상자인데 폭이 안 줄었다 — 폭이 적합의 상자를 안 본다", w, t)
+
+
+def test_w13_a_failed_width_is_not_a_number(tmp_path, monkeypatch):
+    """[W-13] 폭 계산이 실패하면 **조용히 값을 지어내지 않는다.** 상태가 `failed` 이고 칸은 비어 있어야 한다.
+    적합 자체는 살아 있으므로 산출을 통째로 버리지도 않는다 — 못 잰 것은 못 쟀다고 적는다."""
+    from bms_balancing import cycles as C                  # noqa: PLC0415
+    from bms_balancing import verify as V                  # noqa: PLC0415
+    src, wb, hc = _cycles_fixture(tmp_path)
+
+    def boom(*a, **k):
+        raise RuntimeError("일부러 실패")
+    monkeypatch.setattr(V, "near_optimal_extrema", boom)
+    monkeypatch.setattr(C, "near_optimal_extrema", boom, raising=False)
+
+    out = C.fit_cycles(src, hc, wb, "Li", cell="w13", n_starts=2, seed=0, scale_seed=0,
+                       widths=True, width_tol=0.01, width_starts=2)
+    for r in out["rows"]:
+        assert r["width_status"] == "failed", r["width_status"]
+        for c in ("LAM_PE_lo", "LAM_NE_hi", "LLI_lo"):
+            assert r[c] == "", (c, repr(r[c]))
+        assert r["LAM_NE"] not in (None, ""), "적합 자체는 살아 있어야 한다"
+
+
+def test_w14_the_published_artifact_carries_widths_and_passes_both_validators(tmp_path):
+    """[W-14] 계약 고리를 닫는다: CLI 로 게시한 CSV 가 (a) 폭 열을 싣고 (b) `check_rails` 와
+    `check_u14 --schema-only` 를 **둘 다** 통과해야 한다.
+
+    열을 늘리면 난간·승격 게이트가 같이 움직인다 — 늘려 놓고 검사를 안 돌리면 그 열은 계약이 아니라 장식이다.
+    """
+    import json as _json
+    import subprocess
+
+    src, wb, hc = _cycles_fixture(tmp_path)
+    out = tmp_path / "out"
+    rc = subprocess.run(
+        [sys.executable, str(ROOT / "scripts/fit_cycles.py"),
+         "--data-root", str(src), "--half-cell", str(hc), "--full-cell", str(wb),
+         "--cell", "w14", "--si-source", "Li", "--starts", "2", "--seed", "0", "--scale-seed", "0",
+         "--widths", "--width-tol", "0.05", "--width-starts", "2", "--out", str(out)],
+        cwd=ROOT, capture_output=True, text=True, timeout=1800)
+    assert rc.returncode == 0, (rc.returncode, rc.stdout[-1500:], rc.stderr[-1500:])
+
+    art = out / "cycles_w14_Li.csv"
+    rows = list(csv.DictReader(art.open(encoding="utf-8")))
+    assert rows and all(r["width_status"] == "measured" for r in rows), [r["width_status"] for r in rows]
+    for r in rows:
+        for mode in ("LAM_PE", "LAM_NE", "LLI"):
+            assert float(r[f"{mode}_lo"]) <= float(r[mode]) <= float(r[f"{mode}_hi"]), (r["cycle"], mode)
+        assert r["width_is_lower_bound"] == "True", r["width_is_lower_bound"]
+        assert float(r["width_tol"]) == 0.05
+
+    meta = _json.loads((out / "cycles_w14_Li.csv.meta.json").read_text(encoding="utf-8"))
+    assert meta["widths"] is True and meta["width_tol"] == 0.05 and meta["width_starts"] == 2
+    assert meta["width_method"] == "near_optimal_extrema", meta.get("width_method")
+
+    r = subprocess.run([sys.executable, str(ROOT / "scripts/check_rails.py"), str(art)],
+                       cwd=ROOT, capture_output=True, text=True, timeout=600)
+    assert r.returncode == 0, ("check_rails", r.returncode, r.stdout[-1200:], r.stderr[-800:])
+
+    # ⚠ `check_u14` 의 rc 를 0 으로 단언하지 않는다 — **작업 트리가 dirty 하면 provenance 로 막히는 것이
+    #   정상**이고(그게 그 게이트의 일이다), baseline 이 없으면 `baseline_absent` 도 선다. 이 시험의 축은
+    #   "열을 늘린 것이 **계약**을 깨뜨리지 않는가" 이므로 그 버킷만 본다. (전 판은 rc 0 을 단언했다가
+    #   dirty 트리에서 빨갛게 났다 — 검사기가 옳고 단언이 틀렸다.)
+    r = subprocess.run([sys.executable, str(ROOT / "scripts/check_u14.py"), "--new", str(out), "--schema-only"],
+                       cwd=ROOT, capture_output=True, text=True, timeout=600)
+    line = next(l for l in r.stdout.splitlines() if l.startswith("PROMOTION "))
+    blocked = _json.loads(line[len("PROMOTION "):])["blocked_by"]
+    for bucket in ("schema", "provenance_cols", "content", "unit", "controls", "numbers", "alias"):
+        assert blocked[bucket] == 0, (bucket, blocked, r.stdout[-1200:])
+    assert "새 스키마: 전부 갖췄다" in r.stdout, r.stdout[-800:]
+
+
+def test_w15_the_width_columns_are_a_tagged_union_not_just_optional(tmp_path):
+    """[W-15] 폭 칸을 "비어도 되는 열" 로 풀어 주면, `measured` 라고 적어 놓고 칸을 비운 행이 통과한다.
+    그건 §12-5 가 막으려던 것과 **같은 종류의 위조**다 — 폭을 적었다고 말하면서 폭이 없다.
+
+    계약을 tagged union 으로 못 박는다 (shape 의 `gamma_witness` 짝 규칙과 같은 모양):
+      · `width_status` 는 셋 중 하나 — measured · not_requested · failed
+      · `measured` 면 여덟 칸이 **전부 차** 있어야 한다
+      · 나머지 둘이면 여덟 칸이 **전부 비어** 있어야 한다 (0 으로 채우는 것도 위반)
+    """
+    from bms_balancing import schema as S
+    from test_cycles import _cycle_workbook                # noqa: F401,PLC0415  (fixture 경로 확보)
+
+    base = {c: "1" for c in S.CYCLES_ROW}
+    base.update({"cell": "x", "bounds": "-", "run_id": "r", "inputs_sha": "s", "consumed_inputs": "{}"})
+    W = ("width_tol", "width_is_lower_bound", "LAM_PE_lo", "LAM_PE_hi",
+         "LAM_NE_lo", "LAM_NE_hi", "LLI_lo", "LLI_hi")
+
+    def probs(row):
+        return [m for m in S.check_rows("cycles", [row], list(S.CYCLES_ROW), name="t.csv") if "width" in m or "폭" in m]
+
+    ok_off = dict(base, width_status="not_requested", **{c: "" for c in W})
+    assert probs(ok_off) == [], probs(ok_off)
+
+    ok_on = dict(base, width_status="measured", width_is_lower_bound="True",
+                 **{c: "0.01" for c in W if c != "width_is_lower_bound"})
+    assert probs(ok_on) == [], probs(ok_on)
+
+    # (1) measured 인데 칸이 비었다 — 위조
+    lying = dict(ok_on, LAM_NE_lo="")
+    assert probs(lying), "measured 라고 적고 폭을 비운 행이 통과했다"
+
+    # (2) not_requested 인데 값이 있다 — 안 잰 것에 값이 붙었다
+    ghost = dict(ok_off, LAM_NE_lo="0.0", LAM_NE_hi="0.0")
+    assert probs(ghost), "안 쟀다면서 폭이 0 으로 적힌 행이 통과했다"
+
+    # (3) 모르는 상태
+    weird = dict(ok_off, width_status="maybe")
+    assert probs(weird), "선언에 없는 width_status 가 통과했다"

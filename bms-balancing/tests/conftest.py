@@ -43,6 +43,7 @@ _WATCHED = (
     ("bms_balancing.verify", "degradation_modes"),
     ("bms_balancing.cycles", "multistart"),
     ("bms_balancing.cycles", "active_bounds"),
+    ("bms_balancing.cycles", "near_optimal_extrema"),   # 폭이 여기서 나온다 (W-11)
 )
 
 

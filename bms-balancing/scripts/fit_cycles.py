@@ -52,6 +52,14 @@ def main(argv=None) -> int:
     ap.add_argument("--gamma-prefit", action="store_true",
                     help="γ 를 반쪽전지만으로 먼저 적합해 초기값으로 (fit_gamma_si.m · pyDMA Track C 규약)")
     ap.add_argument("--gamma-lb", type=float, default=None, help="γ 하한 (기본 0.0; Track C 는 0.02)")
+    # ⚠ 폭 (BML_R1_RESPONSE §12-5): LAM 분할은 이 데이터에서 점추정으로 보고할 수 없다. 켜면 사이클마다
+    #   근최적 집합 위의 LAM/LLI 폭을 **이 실행이 쓴 상자에서** 재어 같은 행에 싣는다 (W-11·W-12).
+    #   기본은 꺼짐 — 사이클당 SLSQP 를 여러 번 돌리므로 느리다. 끄면 칸이 **비고 0 이 아니다** (W-10).
+    ap.add_argument("--widths", action="store_true",
+                    help="사이클마다 LAM/LLI 폭을 같이 낸다 (근최적 집합 극값; 느리다)")
+    ap.add_argument("--width-tol", type=float, default=0.01,
+                    help="폭의 허용 — 최적 목적함수 대비 분수 (기본 0.01 = 1%%). 이 값을 안 밝힌 폭은 인용 불가")
+    ap.add_argument("--width-starts", type=int, default=4, help="폭 계산의 시작점 수 (기본 4)")
     ap.add_argument("--out", required=True, type=pathlib.Path, help="산출 디렉터리")
     ap.add_argument("--run-id", default=None)
     a = ap.parse_args(argv)
@@ -71,6 +79,7 @@ def main(argv=None) -> int:
         res = C.fit_cycles(root, a.half_cell, a.full_cell, a.si_source, cell=a.cell, cycles=cycles,
                            n_starts=a.starts, seed=a.seed, scale_seed=a.scale_seed, w_dqdv=a.w_dqdv, run_id=rid,
                            literature=a.literature, gamma_prefit=a.gamma_prefit, gamma_lb=a.gamma_lb,
+                           widths=a.widths, width_tol=a.width_tol, width_starts=a.width_starts,
                            log=lambda s: print(s, flush=True))
     except (ValueError, KeyError) as e:
         print(f"! {e} → 종료 코드 2"); return 2
@@ -87,6 +96,8 @@ def main(argv=None) -> int:
             "cell": a.cell, "si_source": a.si_source, "starts": int(a.starts), "seed": int(a.seed),
             "literature": (str(a.literature) if a.literature else None),
             "gamma_prefit": bool(a.gamma_prefit), "gamma_lb": a.gamma_lb,
+            "widths": bool(a.widths), "width_tol": (float(a.width_tol) if a.widths else None),
+            "width_starts": (int(a.width_starts) if a.widths else None),
             "scale_seed": int(a.scale_seed),
             "w_dqdv": float(a.w_dqdv), "cycles": res["cycles"], "status": "complete",
             "data_root": str(root), "half_cell_path": str(a.half_cell), "full_cell_path": str(a.full_cell),
