@@ -27,7 +27,7 @@
   · **왜 느린지 못 짚는다.** 누적 시간과 갱신 시각만 보인다. 느림·멈춤의 구분은
     `kb/platforms/v100_uma_setup_2026_09_14.md` 의 진단표를 쓴다.
   · **비용 상한을 집행하지 않는다.** 집행은 러너의 게이트다. 여기는 읽기만 한다.
-  · md.log 의 `Time[ps]` 는 equilib(5) + prod(200) 누적이라 **생산 구간만 따로 못 센다**.
+  · md.log 의 `Time[ps]` 는 equilib(5) + prod(200) 누적이라 **생산 구간만 따로 못 센다**.\n  · prep 진행은 `--log` 를 줘야 보인다 (prep 은 md.log 를 안 만든다). 안 주면 '대기'\n    처럼 보이는데 그건 **모른다**는 뜻이지 안 돈다는 뜻이 아니다.
   · 남은 시간(ETA)을 예측하지 않는다 — 구조마다 원자수가 같아도 온도가 다르면
     스텝 속도가 달라진다. 투영은 러너가 속도 시험 실측으로 하는 것만 보여준다.
 """
@@ -207,6 +207,40 @@ def md_rows(out_root, plan) -> list[dict]:
     return rows
 
 
+# ── 러너 로그 — prep 진행은 여기에만 있다 ────────────────────────────────────
+def log_state(path) -> dict:
+    """러너 stdout 로그에서 (지금 스텝, 그 스텝의 FIRE 마지막 줄) 을 읽는다.
+
+    자식(`--_prep_one`)의 fd1/2 는 이 로그다. ASE Optimizer 는 줄마다 flush 하므로
+    FIRE 진행이 실시간으로 여기 떨어진다 — prep 진행을 볼 곳은 **여기뿐**이다
+    (prep 은 md.log 를 안 만든다).
+
+    ⛔ **현재 스텝 뒤의 FIRE 줄만** 본다. 앞 스텝이 남긴 마지막 줄을 지금 진행으로
+      읽으면 끝난 계산의 숫자를 도는 계산의 것으로 보여준다.
+    """
+    f = Path(path) if path else None
+    if f is None or not f.is_file():
+        return {"상태": "못찾음", "step": None, "fire": None}
+    try:
+        lines = f.read_text(encoding="utf-8", errors="ignore").split("\n")
+    except OSError as e:
+        return {"상태": f"깨짐({type(e).__name__})", "step": None, "fire": None}
+    step, fire = None, None
+    for ln in lines:
+        s = ln.strip()
+        if s.startswith("▶ "):
+            step, fire = s[2:].split(" …")[0].strip(), None      # 새 스텝 → 진행 초기화
+        elif s.startswith("FIRE:") and step is not None:
+            tok = s.split()
+            if len(tok) >= 5:
+                try:
+                    fire = {"n": int(tok[1]), "E_eV": float(tok[3]),
+                            "fmax_eV_A": float(tok[4])}
+                except ValueError:
+                    pass
+    return {"상태": "ok", "step": step, "fire": fire}
+
+
 # ── 화면 ────────────────────────────────────────────────────────────────────
 def fmt(v, spec="{:.3f}") -> str:
     return MISSING if v is None else spec.format(v)
@@ -245,6 +279,18 @@ def render(out_root, log=None) -> int:
     # ③ 준비
     print("\n── 준비 (고정셀 FIRE, fmax 목표 "
           f"{EP.PREP_FMAX} eV/Å) ──")
+    ls = log_state(log)
+    if ls["상태"] == "ok" and ls["step"]:
+        if ls["fire"]:
+            fr = ls["fire"]
+            print(f"  ▶ 지금: {ls['step']}  FIRE {fr['n']} 스텝 · "
+                  f"fmax {fr['fmax_eV_A']:.4f} → 목표 {EP.PREP_FMAX} eV/Å · "
+                  f"E {fr['E_eV']:.4f} eV")
+        else:
+            print(f"  ▶ 지금: {ls['step']}  (FIRE 줄 아직 없음 — 체크포인트 "
+                  f"읽는 중일 수 있다. rchar 로 확인)")
+    elif log:
+        print(f"  (러너 로그 {ls['상태']})")
     for r in prep_rows(out_root):
         if r["상태"] != "ok":
             print(f"  {r['구조']:12s} {r['상태']}")
@@ -400,6 +446,31 @@ def _selftest() -> int:
         chk(pick_master([("5", ["python3", "tools/doping/run_eprime_pilot.py",
                                 "--selftest"])], SELF) is None,
             "⛔음성: --out_root 없이 도는 selftest 를 라운드로 착각하지 않는다")
+
+        # ── 러너 로그: 앞 스텝의 FIRE 줄을 지금 진행으로 읽지 않는다 ──
+        lg = root / "runner.log"
+        lg.write_text(
+            "계획: 준비 5건 · MD 호출 11건 = **30런**\n"
+            "▶ prep/H0_host …\n"
+            "      Step     Time          Energy          fmax\n"
+            "FIRE:    0 01:48:03    -1234.567890        1.2345\n"
+            "FIRE:   40 01:52:11    -1240.100000        0.0300\n"
+            "  ← rc=0 · 0.30 GPU-h · 누적 0.30 / 120\n"
+            "▶ prep/P1_Al2O3_A …\n", encoding="utf-8")
+        s = log_state(lg)
+        chk(s["step"] == "prep/P1_Al2O3_A",
+            "양성: 로그의 **마지막** ▶ 스텝을 현재 스텝으로 읽는다")
+        chk(s["fire"] is None,
+            "⛔음성: 앞 스텝이 남긴 FIRE 줄을 지금 진행으로 읽지 않는다")
+        lg.write_text(lg.read_text(encoding="utf-8")
+                      + "FIRE:    7 01:53:00    -1300.000000        0.4400\n",
+                      encoding="utf-8")
+        s = log_state(lg)
+        chk(s["fire"] == {"n": 7, "E_eV": -1300.0, "fmax_eV_A": 0.44},
+            "양성: 현재 스텝의 FIRE 줄은 읽는다 (스텝·E·fmax)")
+        chk(log_state(root / "없는.log")["상태"] == "못찾음" and
+            log_state(None)["상태"] == "못찾음",
+            "⛔음성: 로그가 없으면 '못찾음' 이다 (0 스텝으로 그리지 않는다)")
 
         # ── 계획을 베끼지 않았다는 증거: 러너의 상수와 같은 것을 쓴다 ──
         chk(TOTAL_PS == EP.EQUILIB_PS + EP.PROD_PS == 205.0,
