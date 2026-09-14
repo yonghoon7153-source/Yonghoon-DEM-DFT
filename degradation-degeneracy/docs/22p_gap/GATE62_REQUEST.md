@@ -5,24 +5,24 @@
 | 항목 | 값 |
 |---|---|
 | 브랜치 | `claude/14-gate-code-review-9qkx05` |
-| **판정 대상 코드** | **`{{TARGET_SHA}}`** (RUN_SCOPE 를 마지막으로 건드린 커밋) |
-| `source_digest` (RUN_SCOPE `src/ tools/ configs/ scripts/ run.sh requirements*.txt`) | **`{{SOURCE_DIGEST}}`** (직전 `4227b40871fa0c10`) |
+| **판정 대상 코드** | **`0dcbc17aa73ef1fc8ac681e2b0617da68a86ceb4`** (RUN_SCOPE 를 마지막으로 건드린 커밋) |
+| `source_digest` (RUN_SCOPE `src/ tools/ configs/ scripts/ run.sh requirements*.txt`) | **`fd7c90edbc56ff1f`** (직전 `4227b40871fa0c10`) |
 | 직전 판정 | 62차 **NO-GO** — P0 8건 · P1 6건 · P2 2건 (리뷰어 제목은 "61차 묶음 5", 우리 원장 번호 62차) |
 | 이번 라운드 | 접수 16건 **전부 코드에서 닫음** + 자체 리뷰 4 렌즈가 잡은 10건 코드로 닫음 + 신고 5건 |
 
 > **fetch 는 브랜치 head 로 해 주기 바란다.** 요청문은 자기가 담길 커밋 SHA 를
 > 적을 수 없다. 그래서 둘을 나눈다:
 >
-> - **판정 대상 코드** = `{{TARGET_SHORT}}` — `source_digest {{SOURCE_DIGEST}}` 이것을 가리킨다.
-> - **이 문서** = 브랜치 head. `{{TARGET_SHORT}}` 이후 커밋은 RUN_SCOPE 를 **한 바이트도**
+> - **판정 대상 코드** = `0dcbc17` — `source_digest fd7c90edbc56ff1f` 이것을 가리킨다.
+> - **이 문서** = 브랜치 head. `0dcbc17` 이후 커밋은 RUN_SCOPE 를 **한 바이트도**
 >   안 건드렸다 (아래 재현).
 >
 > ```
 > git fetch origin claude/14-gate-code-review-9qkx05 && git checkout FETCH_HEAD
 > cd degradation-degeneracy
 > python3 -c "import sys; sys.path.insert(0,'.'); from src.io import source_digest; print(source_digest())"
-> # → {{SOURCE_DIGEST}} 이어야 한다. 아니면 그 자체가 발견이다.
-> git log --oneline {{TARGET_SHORT}}..HEAD -- src tools configs scripts run.sh requirements*.txt
+> # → fd7c90edbc56ff1f 이어야 한다. 아니면 그 자체가 발견이다.
+> git log --oneline 0dcbc17..HEAD -- src tools configs scripts run.sh requirements*.txt
 > # → 출력이 비어야 한다.
 > ```
 

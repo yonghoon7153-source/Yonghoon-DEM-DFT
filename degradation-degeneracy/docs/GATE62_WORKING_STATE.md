@@ -307,3 +307,23 @@ validator source_digest 4227b40871fa0c10 → fd7c90edbc56ff1f
 30690행 · 전체 True · by_obj True · fits삼중 True · 봉인일치 True.
 `make_receipt.py paired_fixed5_v4` → 검사 34건 · 산출 2건. runtime 의 yaml 은
 6.0.1 (g16 기록 6.0.3 과 다르다 — 컨테이너가 바뀌었다).
+
+### 12조각 전수 재생 — 세 번 만에 (HEAD `1b4a837`, 증거 커밋 `2a4ca8a`)
+
+| 회차 | 결과 | 원인 |
+|---|---|---|
+| ① `6c54429` | 4조각 빨강 (s1·s4·s9·s11) | 증인 문구에 journal 이름·token repr·PID 로그(비결정) · ε′ 의 schema/교차 층이 먼저 걸려 옛 축 2개(`evidence-binds-the-environment` · `execution-receipt-binds-the-startup-g58`)의 실패 이유가 바뀜 · 61차 최소 dict fixture 가 부모 대조 층에 먼저 거부돼 `incomplete_receipt_is_refused-g61` 이 안 뭄 |
+| ② `dbfbbf8` | 1조각 빨강 (s11) | 8 프로세스 경쟁의 동시 보유자 수가 변이 아래서 7/8 로 흔들려 증인 불일치 |
+| ③ `1b4a837` | **12/12 rc 0** | `--check-coverage`: 등록부 scenario 266 (executable 255 · declared 11) · 관측 266 · 합집합이 등록부 전체를 정확히 덮음 |
+
+EXPECT 관측(`--emit-expect`) 자체가 셋을 더 잡았다 (마감 ②): 자체 리뷰 F3 가
+`class-locals-stay-in-the-class-body-g62` 를 의미 없는 변이로 만들었다 → declared ·
+`crossed-module-uses-its-own-symbol-table-g62` 의 증인이 seed 능력의 값 흐름이라
+table 무관 → 대상 판정이 갈리는 자리로 재조준 · `promotion-refuses-a-stale-seal-g62`
+는 셋째 규칙이 먼저 걸려 첫 규칙의 증인이 아니었다 → legacy 레코드 위의 낡은
+봉인 시험 신설.
+
+등록부 최종: **MUTANTS 235 · MULTI 31 · EXPECT 256 · DECLARED_MASKED 11** — 62차
+축 33 (접수 22 + 자체 리뷰 11) 중 실행 32 · 선언 1.
+
+wiki lint: 0 errors. strict smoke: ✅ 54 · exit 0 (`0dcbc17`).
