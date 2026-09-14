@@ -4123,27 +4123,38 @@ def api_seminar_deck():
 #  주 단위 진행 슬라이드텍스트(docs/seminar/weekly_YYYYMMDD_slide_text.md)를 링크로 모아
 #  HTML 로 렌더한다.  ⚠ 인용 금지값 누수는 scripts/check_review_findings.py --ban-sweep
 #  (docs/**/*.md 포함)가 CI 에서 막는다 — 이 창구는 그 통과분만 렌더한다.
-_WORKLOG_SUBDIR = 'docs/seminar'
+#  출처 둘 — **리치 주간 리포트가 있으면 그것을**, 없으면 발표용 슬라이드 문구를 렌더한다.
+_WORKLOG_SOURCES = (
+    ('docs/worklog', 'weekly_{key}.md', '주간 리포트'),
+    ('docs/seminar', 'weekly_{key}_slide_text.md', '슬라이드 문구'),
+)
+
+
+def _worklog_scan():
+    """{key: (path, kind)} — 앞선 출처가 이긴다 (같은 주차면 리포트 우선)."""
+    import os as _os
+    import re as _re
+    found = {}
+    for sub, tmpl, kind in _WORKLOG_SOURCES:
+        pat = _re.escape(tmpl).replace(r'\{key\}', r'(\d{8})')
+        try:
+            names = _os.listdir(_repo_path(sub))
+        except OSError:
+            continue
+        for fn in names:
+            m = _re.fullmatch(pat, fn)
+            if m and m.group(1) not in found:
+                found[m.group(1)] = (_os.path.join(_repo_path(sub), fn), kind)
+    return found
 
 
 def _worklog_entries():
-    """weekly_YYYYMMDD_slide_text.md 목록 (최신순) → [{key,date,title,file}]."""
-    import os as _os
-    import re as _re
-    base = _repo_path(_WORKLOG_SUBDIR)
+    """주간 기록 목록 (최신순) → [{key,date,title,kind}]."""
     ents = []
-    try:
-        names = _os.listdir(base)
-    except OSError:
-        names = []
-    for fn in names:
-        m = _re.fullmatch(r'weekly_(\d{8})_slide_text\.md', fn)
-        if not m:
-            continue
-        key = m.group(1)
+    for key, (path, kind) in _worklog_scan().items():
         title = ''
         try:
-            with open(_os.path.join(base, fn), encoding='utf-8') as f:
+            with open(path, encoding='utf-8') as f:
                 for line in f:
                     if line.startswith('# '):
                         title = line[2:].strip()
@@ -4151,28 +4162,28 @@ def _worklog_entries():
         except OSError:
             pass
         ents.append({'key': key, 'date': f'{key[:4]}-{key[4:6]}-{key[6:8]}',
-                     'title': title or f'주간보고 {key}', 'file': fn})
+                     'title': title or f'주간 기록 {key}', 'kind': kind})
     ents.sort(key=lambda e: e['key'], reverse=True)
     return ents
 
 
 @app.route('/worklog')
 def worklog_index():
-    """작업일지 — 주간보고를 링크로 모아 본다."""
+    """작업일지 — 주간 기록을 링크로 모아 본다."""
     return render_template('worklog.html', active='worklog',
                            entries=_worklog_entries())
 
 
 @app.route('/worklog/<key>')
 def worklog_view(key):
-    """주간보고 한 편을 HTML 로 렌더 (8자리 날짜 키만 — 경로탈출 차단)."""
-    import os as _os
+    """주간 기록 한 편을 HTML 로 렌더 (8자리 날짜 키만 — 경로탈출 차단)."""
     import re as _re
     if not _re.fullmatch(r'\d{8}', key or ''):
         abort(404)
-    path = _os.path.join(_repo_path(_WORKLOG_SUBDIR), f'weekly_{key}_slide_text.md')
-    if not _os.path.isfile(path):
+    hit = _worklog_scan().get(key)
+    if not hit:
         abort(404)
+    path, kind = hit
     with open(path, encoding='utf-8') as f:
         md_text = f.read()
     try:
@@ -4186,7 +4197,7 @@ def worklog_view(key):
             title = line[2:].strip()
             break
     return render_template('worklog_view.html', active='worklog', body=body,
-                           title=title or f'주간보고 {key}',
+                           title=title or f'주간 기록 {key}', kind=kind,
                            date=f'{key[:4]}-{key[4:6]}-{key[6:8]}', key=key)
 
 

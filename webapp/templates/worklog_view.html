@@ -4,31 +4,70 @@
 
 {% block content %}
 <style>
-  .worklog-doc { max-width:920px; line-height:1.6; }
-  .worklog-doc h1 { font-size:22px; border-bottom:2px solid var(--accent,#1a56db); padding-bottom:8px; }
-  .worklog-doc h2 { font-size:17px; color:var(--accent,#1a56db); margin-top:26px; }
-  .worklog-doc h3 { font-size:14px; margin-top:18px; }
-  .worklog-doc pre { background:var(--code-bg,#0e1116); color:var(--code-fg,#e6edf3);
-                     border:1px solid rgba(127,127,127,.25); border-radius:8px; padding:14px 16px;
-                     overflow-x:auto; white-space:pre; font:500 13px/1.55 'JetBrains Mono',monospace; }
-  .worklog-doc table { border-collapse:collapse; width:100%; margin:12px 0; font-size:13px; }
-  .worklog-doc th, .worklog-doc td { border:1px solid rgba(127,127,127,.3); padding:7px 11px;
-                                     text-align:left; vertical-align:top; }
-  .worklog-doc th { background:rgba(26,86,219,.12); font-weight:600; }
-  .worklog-doc blockquote { border-left:3px solid var(--accent,#1a56db); margin:10px 0; padding:6px 14px;
-                            color:var(--dim,#667); background:rgba(127,127,127,.06); border-radius:0 6px 6px 0; }
-  .worklog-doc code { background:rgba(127,127,127,.15); padding:1px 5px; border-radius:4px;
-                      font:500 12px 'JetBrains Mono',monospace; }
-  .worklog-doc pre code { background:none; padding:0; }
-  .worklog-doc hr { border:none; border-top:1px solid rgba(127,127,127,.25); margin:22px 0; }
-  .worklog-back { display:inline-block; margin-bottom:14px; color:var(--accent,#1a56db);
-                  text-decoration:none; font-weight:600; }
-  .worklog-meta { font:600 12px/1 'JetBrains Mono',monospace; color:var(--dim,#667); margin-bottom:10px; }
+  .wl-wrap { max-width:960px; }
+  .wl-back { display:inline-block; margin-bottom:16px; color:var(--accent,#4C8DF6);
+             text-decoration:none; font-weight:600; font-size:13px; }
+  .wl-back:hover { text-decoration:underline; }
+  .wl-head { border-bottom:2px solid var(--accent,#4C8DF6); padding-bottom:14px; margin-bottom:6px; }
+  .wl-kicker { display:flex; gap:10px; align-items:center; flex-wrap:wrap;
+               font:600 12px/1 'JetBrains Mono',monospace; letter-spacing:.04em; }
+  .wl-date { color:var(--accent,#4C8DF6); }
+  .wl-badge { padding:3px 9px; border-radius:999px; font-size:11px; font-weight:600;
+              border:1px solid rgba(127,127,127,.4); opacity:.85; }
+
+  /* ── 본문 렌더 ── */
+  .wl-doc { line-height:1.68; font-size:14.5px; }
+  .wl-doc > h1 { font-size:26px; margin:10px 0 4px; line-height:1.25; letter-spacing:-.01em; }
+  .wl-doc h2 { font-size:18px; margin:34px 0 12px; padding-bottom:7px;
+               border-bottom:1px solid rgba(127,127,127,.25); }
+  .wl-doc h3 { font-size:15px; margin:22px 0 8px; }
+  .wl-doc p { margin:10px 0; }
+  .wl-doc ul, .wl-doc ol { padding-left:22px; margin:10px 0; }
+  .wl-doc li { margin:6px 0; }
+
+  /* 요약 박스 — md 의 blockquote */
+  .wl-doc blockquote { margin:18px 0; padding:16px 20px; border:0;
+                       border-left:4px solid var(--accent,#4C8DF6); border-radius:0 10px 10px 0;
+                       background:rgba(76,141,246,.10); }
+  .wl-doc blockquote p { margin:6px 0; }
+
+  /* 표 */
+  .wl-doc table { border-collapse:collapse; width:100%; margin:14px 0; font-size:13px;
+                  display:block; overflow-x:auto; }
+  .wl-doc th, .wl-doc td { border:1px solid rgba(127,127,127,.28); padding:8px 12px;
+                           text-align:left; vertical-align:top; }
+  .wl-doc th { background:rgba(76,141,246,.12); font-weight:600; white-space:nowrap; }
+  .wl-doc tbody tr:nth-child(even) td { background:rgba(127,127,127,.05); }
+
+  /* 그림 */
+  .wl-doc figure { margin:22px 0; padding:18px 18px 12px; border:1px solid rgba(127,127,127,.25);
+                   border-radius:12px; background:rgba(127,127,127,.04); }
+  .wl-doc figure svg { display:block; max-width:100%; height:auto; }
+  .wl-doc figcaption { margin-top:12px; padding-top:10px; border-top:1px solid rgba(127,127,127,.2);
+                       font-size:12.5px; opacity:.8; line-height:1.5; }
+
+  /* 코드 · 구분선 */
+  .wl-doc code { background:rgba(127,127,127,.16); padding:1.5px 6px; border-radius:4px;
+                 font:500 12.5px 'JetBrains Mono',monospace; }
+  .wl-doc pre { background:var(--code-bg,#0e1116); color:var(--code-fg,#e6edf3);
+                border:1px solid rgba(127,127,127,.25); border-radius:9px; padding:14px 16px;
+                overflow-x:auto; white-space:pre; font:500 13px/1.55 'JetBrains Mono',monospace; }
+  .wl-doc pre code { background:none; padding:0; }
+  .wl-doc hr { border:none; border-top:1px solid rgba(127,127,127,.22); margin:30px 0; }
+  .wl-doc a { color:var(--accent,#4C8DF6); }
 </style>
 
-<a class="worklog-back" href="/worklog">&larr; 작업일지</a>
-<div class="worklog-meta">{{ date }}</div>
-<article class="card worklog-doc">
+<div class="wl-wrap">
+  <a class="wl-back" href="/worklog">&larr; 작업일지</a>
+  <div class="wl-head">
+    <div class="wl-kicker">
+      <span class="wl-date">{{ date }}</span>
+      <span class="wl-badge">{{ kind }}</span>
+      <span class="wl-badge">DEM simulation · 이종기술융합</span>
+    </div>
+  </div>
+  <article class="card wl-doc">
 {{ body|safe }}
-</article>
+  </article>
+</div>
 {% endblock %}

@@ -4,32 +4,39 @@
 
 {% block content %}
 <style>
-  .worklog-list { display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:14px; margin-top:16px; }
-  .worklog-item { display:block; text-decoration:none; color:inherit; border-left:3px solid var(--accent,#1a56db);
-                  transition:transform .08s ease, box-shadow .08s ease; }
-  .worklog-item:hover { transform:translateY(-2px); box-shadow:0 6px 18px rgba(0,0,0,.18); }
-  .worklog-date { font:600 12px/1 'JetBrains Mono',monospace; color:var(--accent,#1a56db); letter-spacing:.04em; }
-  .worklog-title { margin-top:8px; font-weight:600; font-size:15px; line-height:1.35; }
+  .wl-list { display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr)); gap:14px; margin-top:18px; }
+  .wl-item { display:block; text-decoration:none; color:inherit;
+             border-left:3px solid var(--accent,#4C8DF6);
+             transition:transform .08s ease, box-shadow .08s ease; }
+  .wl-item:hover { transform:translateY(-2px); box-shadow:0 8px 22px rgba(0,0,0,.20); }
+  .wl-row { display:flex; gap:10px; align-items:center; }
+  .wl-date { font:600 12px/1 'JetBrains Mono',monospace; color:var(--accent,#4C8DF6); letter-spacing:.04em; }
+  .wl-badge { padding:2px 8px; border-radius:999px; font-size:10.5px; font-weight:600;
+              border:1px solid rgba(127,127,127,.4); opacity:.8; }
+  .wl-title { margin-top:10px; font-weight:600; font-size:15px; line-height:1.4; }
 </style>
 
-<h1>&#x1F4D3; 작업일지 — 주간보고</h1>
-<p style="color:var(--dim,#667);max-width:900px;margin:-4px 0 4px">
-  주 단위 진행을 정리한 슬라이드 문구를 한 곳에서 링크로 본다.  원본은
-  <code>docs/seminar/weekly_*_slide_text.md</code> 이고, 인용 금지값 누수는 CI 의
-  <code>--ban-sweep</code> 가 막는다 (이 창구는 통과분만 렌더).
+<h1>&#x1F4D3; 작업일지 — 주간 기록</h1>
+<p style="color:var(--dim,#8a94a6);max-width:900px;margin:-4px 0 2px">
+  주 단위 진행을 정리해 한 곳에서 본다.  원본은 <code>docs/worklog/weekly_*.md</code>(주간 리포트)와
+  <code>docs/seminar/weekly_*_slide_text.md</code>(발표용 슬라이드 문구)이고, 같은 주차면 리포트를 보여 준다.
+  인용 금지값 누수는 CI 의 <code>--ban-sweep</code> 가 막는다 — 이 창구는 통과분만 렌더한다.
 </p>
 
 {% if entries %}
-<div class="worklog-list">
+<div class="wl-list">
   {% for e in entries %}
-  <a class="card worklog-item" href="/worklog/{{ e.key }}">
-    <div class="worklog-date">{{ e.date }}</div>
-    <div class="worklog-title">{{ e.title }}</div>
+  <a class="card wl-item" href="/worklog/{{ e.key }}">
+    <div class="wl-row">
+      <span class="wl-date">{{ e.date }}</span>
+      <span class="wl-badge">{{ e.kind }}</span>
+    </div>
+    <div class="wl-title">{{ e.title }}</div>
   </a>
   {% endfor %}
 </div>
 {% else %}
-<div class="card" style="margin-top:16px">주간보고가 아직 없다.
-  <code>docs/seminar/weekly_YYYYMMDD_slide_text.md</code> 를 추가하면 여기 뜬다.</div>
+<div class="card" style="margin-top:16px">주간 기록이 아직 없다.
+  <code>docs/worklog/weekly_YYYYMMDD.md</code> 를 추가하면 여기 뜬다.</div>
 {% endif %}
 {% endblock %}
