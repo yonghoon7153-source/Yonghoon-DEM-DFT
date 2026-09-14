@@ -558,7 +558,49 @@ def read_band(card=BAND_CARD):
     return float(d["중심"]), float(lo), float(hi)
 
 
-def gate_check(run, band_card=BAND_CARD, win_ps=10.0, p_tol=P_TOL_GPA, log=print):
+def hold_segment(t):
+    """thermo 의 **마지막 연속 T_set 일정 구간**(= 300 K 유지)의 불리언 마스크.
+
+    ⚠ 담금질 램프의 **마지막 프레임은 T_set 이 이미 T_final** 이라 유지 구간에 포함된다. 의도한 선택이다
+    (그 순간부터 목표 온도다). 프레임 하나 차이이고, 배제하려면 호출부가 t 범위를 직접 자른다.
+
+    ⛔ 이 함수가 못 하는 것: 유지 구간이 평형인지 말하지 않는다. 어디까지가 유지인지만 고른다."""
+    if "T_set_K" not in t:
+        raise KeyError("thermo.csv 에 T_set_K 가 없다 — 유지 구간을 **추측하지 않는다**")
+    ts = t["T_set_K"]
+    last = ts[-1]
+    m = np.isclose(ts, last)
+    # 마지막 연속 구간만 (담금질 램프가 지나가며 같은 값을 스칠 수 있다)
+    i = len(m) - 1
+    while i > 0 and m[i - 1]:
+        i -= 1
+    out = np.zeros_like(m); out[i:] = True
+    return out
+
+
+def hold_trend(t, n_blocks=5):
+    """유지 구간 **전체**를 n 블록으로 나눠 블록별 ⟨P⟩·⟨ρ⟩ 와 ρ 표류를 찍는다. 새 계산 0.
+
+    ⛔ 판정이 아니다 — 표류는 '유지시간이 모자랐다' 의 근거가 되고, 무표류는 **그 구간의 안정**만 지지한다.
+    ⛔ 블록 평균의 산포는 표본 표준편차이지 평균의 신뢰구간이 아니다 (자기상관이 크다)."""
+    m = hold_segment(t)
+    tt, P, rho = t["t_ps"][m], t["P_GPa"][m], t["density_g_cm3"][m]
+    if len(tt) < n_blocks:
+        n_blocks = max(1, len(tt))
+    idx = np.array_split(np.arange(len(tt)), n_blocks)
+    blocks = [{"t_from_ps": float(tt[k[0]]), "t_to_ps": float(tt[k[-1]]), "n": int(len(k)),
+               "P_mean_GPa": float(P[k].mean()), "rho_mean": float(rho[k].mean())} for k in idx if len(k)]
+    span = float(tt[-1] - tt[0])
+    slope = float(np.polyfit(tt, rho, 1)[0]) if len(tt) > 1 and span > 0 else 0.0
+    return {"hold_from_ps": float(tt[0]), "hold_to_ps": float(tt[-1]), "hold_len_ps": span,
+            "n_frames": int(len(tt)), "n_blocks": len(blocks), "blocks": blocks,
+            "rho_slope_per_ps": slope, "rho_drift_pct_over_hold": float(100.0 * slope * span / rho.mean()),
+            "block_rho_spread_pct": float(100.0 * (max(b["rho_mean"] for b in blocks)
+                                                   - min(b["rho_mean"] for b in blocks)) / rho.mean()),
+            "⛔": "관측이지 평형 검정이 아니다. 표류 없음은 **이 구간의 안정**만 지지한다."}
+
+
+def gate_check(run, band_card=BAND_CARD, win_ps=10.0, p_tol=P_TOL_GPA, n_blocks=5, log=print):
     """plan.json 의 **앙상블 선언**이 있는지 보고, 있으면 thermo.csv 로 대조한 뒤 G4(밀도 밴드)를 찍는다.
 
     ⛔ 이 함수가 못 하는 것
@@ -578,6 +620,10 @@ def gate_check(run, band_card=BAND_CARD, win_ps=10.0, p_tol=P_TOL_GPA, log=print
     tail = t["t_ps"] >= t["t_ps"].max() - win_ps
     P, rho, T = t["P_GPa"][tail], t["density_g_cm3"][tail], t["T_K"][tail]
     res.update({"win_ps": win_ps, "n_frames": int(tail.sum()),
+                "★_통계의_뜻": {
+                  "P_sd_GPa": "저장된 표본의 **표준편차**다. 평균의 신뢰구간이 아니고 자기상관이 크다.",
+                  "rho_flat_pct": "(최대−최소)/평균이다. **표류·평형을 검정한 값이 아니다.**",
+                  "P_GPa": "**운동 항을 포함한 총 수압**이다. 평균이 0에 가까워도 응력텐서 전체가 0은 아니다."},
                 "T_mean_K": float(T.mean()),
                 "P_mean_GPa": float(P.mean()), "P_sd_GPa": float(P.std(ddof=1)) if tail.sum() > 1 else 0.0,
                 "rho_mean": float(rho.mean()), "rho_min": float(rho.min()), "rho_max": float(rho.max()),
@@ -591,14 +637,35 @@ def gate_check(run, band_card=BAND_CARD, win_ps=10.0, p_tol=P_TOL_GPA, log=print
                 "dev_pct_vs_center": 100.0 * (res["rho_last"] / c - 1.0),
                 "in_band": bool(lo <= res["rho_last"] <= hi)})
     res["G4_fires"] = not res["in_band"]
+    res["G4_role"] = "alert"        # ⭐ 합격선이 아니다 (D-2026-09-14-li2s-layer1-density-alert)
+    res["G4_원인_지정"] = None       # 게이트는 원인을 지정하지 않는다 (셀·모델·후보상 어느 것도)
+    res["허용_서술"] = ("마지막 {:.0f} ps 에서 목표 근처의 총 수압 평균과 좁은 밀도 범위가 관측됐다. "
+                     "충분한 밀도 이완·준비 이력 소멸·모델의 압력–부피 정확성은 아직 확인되지 않았다."
+                     ).format(win_ps)
+    try:
+        res["hold_trend"] = hold_trend(t, n_blocks)
+    except KeyError as e:
+        res["hold_trend"] = {"⛔": str(e)}
     log(f"  앙상블 기록 {'있음' if g else '⛔없음'} · {res['출처']}")
-    log(f"  마지막 {win_ps:.0f} ps: ⟨P⟩ {res['P_mean_GPa']:+.3f} ± {res['P_sd_GPa']:.3f} GPa "
-        f"(목표 {tgt:+.2f}, 허용 ±{p_tol}) → {'⭕' if res['pressure_ok'] else '⛔'}")
-    log(f"  ρ {res['rho_min']:.4f}–{res['rho_max']:.4f} (폭 {res['rho_flat_pct']:.2f} %) · "
+    log(f"  마지막 {win_ps:.0f} ps ({res['n_frames']} 표본): ⟨P_총수압⟩ {res['P_mean_GPa']:+.3f} GPa "
+        f"(표본 sd {res['P_sd_GPa']:.3f}, 목표 {tgt:+.2f}, 허용 ±{p_tol}) "
+        f"→ {'목표 근처' if res['pressure_ok'] else '목표에서 벗어남'}")
+    log(f"  ρ {res['rho_min']:.4f}–{res['rho_max']:.4f} (범위/평균 {res['rho_flat_pct']:.2f} %) · "
         f"마지막 {res['rho_last']:.4f} g/cm³")
+    ht = res.get("hold_trend", {})
+    if "blocks" in ht:
+        log(f"  유지 구간 {ht['hold_from_ps']:.0f}–{ht['hold_to_ps']:.0f} ps 를 {ht['n_blocks']} 블록으로:")
+        for b in ht["blocks"]:
+            log(f"    {b['t_from_ps']:7.1f}–{b['t_to_ps']:7.1f} ps (n={b['n']:4d})  "
+                f"⟨P⟩ {b['P_mean_GPa']:+.3f} GPa  ⟨ρ⟩ {b['rho_mean']:.4f}")
+        log(f"    ρ 표류 {ht['rho_drift_pct_over_hold']:+.3f} % / 유지 전체 · "
+            f"블록 산포 {ht['block_rho_spread_pct']:.3f} %")
+    else:
+        log(f"  ⛔ 유지 구간 블록 추세 없음: {ht.get('⛔', '계산 안 됨')}")
     log(f"  밴드 [{lo:.4f}, {hi:.4f}] 중심 {c:.4f} → {res['dev_pct_vs_center']:+.2f} % · "
-        + ("G4 **발화**" if res["G4_fires"] else "밴드 안"))
-    log("  ⛔ 원인은 이 모드가 안 가른다 — UMA(황화물 연화)·셀·담금질 중 무엇인지는 G1 이 먼저 답한다.")
+        + ("G4 **경보**" if res["G4_fires"] else "밴드 안"))
+    log("  ⛔ G4 는 **합격선이 아니라 적정성 경보**다 — 셀 오류·모델 오류·후보상 기각 중 아무것도 확정하지 않는다.")
+    log("  ⛔ 위 수치는 **단기 안정성**이다. 밀도 이완·준비 이력 소멸·모델의 압력–부피 정확성은 확인되지 않았다.")
     return res
 
 
@@ -848,6 +915,58 @@ def _selftest():
         except ValueError:
             hit2 = True
         chk(hit2, "⛔음성: 자료 줄 없는 thermo.csv 를 빈 배열로 넘기지 않는다")
+    # ⑨ 회신 BR 이행: 유지 구간 블록 추세 · 통계 라벨 · G4 는 경보 (2026-09-14)
+    def _rows_hold(rho_start, rho_end, n_hold=60):
+        """melt(T_set 1200) → 램프 → hold(T_set 300). hold 동안 ρ 가 선형으로 rho_start→rho_end."""
+        out = []
+        for i in range(20):                              # melt
+            out.append((float(i), 1200.0, 1200.0, 1.2000, 8000.0, -1000.0, 5.0, 0.0))
+        for i in range(20):                              # 담금질 램프 (마지막 프레임이 T_set=300 이다)
+            Tset = 1200.0 - (1200.0 - 300.0) * (i + 1) / 20.0
+            out.append((float(20 + i), Tset, Tset, 1.4000 + (rho_start - 1.4000) * (i + 1) / 20.0,
+                        8000.0, -1000.0, 1.0, 0.0))
+        for i in range(n_hold):                          # hold
+            f = i / max(1, n_hold - 1)
+            out.append((float(40 + i), 300.0, 300.0, rho_start + (rho_end - rho_start) * f,
+                        8000.0, -1000.0, 0.01 * ((-1) ** i), 0.0))
+        return out
+    with tempfile.TemporaryDirectory() as td:
+        td = pathlib.Path(td)
+        flat = gate_check(_mkrun(td / "flat", plan_ok, _rows_hold(1.9000, 1.9000)),
+                          win_ps=10.0, n_blocks=5, log=lambda *a: None)
+        ht = flat["hold_trend"]
+        chk(ht["hold_from_ps"] == 39.0 and ht["n_frames"] == 61 and ht["n_blocks"] == 5,
+            f"유지 구간을 담금질 램프와 갈라 잡는다 — 램프의 **마지막 프레임(T_set 이 이미 300)**을 포함한다 "
+            f"({ht['hold_from_ps']:.0f}–{ht['hold_to_ps']:.0f} ps · {ht['n_frames']} 표본)")
+        chk(abs(ht["rho_drift_pct_over_hold"]) < 1e-9 and abs(ht["block_rho_spread_pct"]) < 1e-9,
+            "표류 없는 유지 구간은 표류 0 으로 나온다")
+        drift = gate_check(_mkrun(td / "drift", plan_ok, _rows_hold(1.9000, 1.8620)),
+                           win_ps=10.0, n_blocks=5, log=lambda *a: None)
+        hd = drift["hold_trend"]
+        chk(abs(hd["rho_drift_pct_over_hold"] + 2.0) < 0.15 and hd["rho_drift_pct_over_hold"] < -1.0,
+            f"⛔음성: 유지 전체에 걸친 −2 % ρ 표류를 잡아낸다 ({hd['rho_drift_pct_over_hold']:+.3f} %)")
+        chk(drift["rho_flat_pct"] < abs(hd["rho_drift_pct_over_hold"]) / 3.0,
+            f"⛔음성: **10 ps 창이 표류를 축소해 보여준다** (창 범위/평균 {drift['rho_flat_pct']:.3f} % vs "
+            f"유지 전체 {hd['rho_drift_pct_over_hold']:+.2f} %, {abs(hd['rho_drift_pct_over_hold'])/drift['rho_flat_pct']:.1f}배) "
+            f"— 창만 보면 '평탄' 으로 오독한다")
+        chk(hd["blocks"][0]["rho_mean"] > hd["blocks"][-1]["rho_mean"],
+            "블록 평균이 표류 방향을 보여준다 (첫 블록 > 마지막 블록)")
+        chk(flat["G4_role"] == "alert" and flat["G4_원인_지정"] is None,
+            "G4 는 **경보**로 표시되고 원인을 지정하지 않는다 (D-2026-09-14-li2s-layer1-density-alert)")
+        chk("확인되지 않았다" in flat["허용_서술"] and "총 수압" in flat["허용_서술"],
+            "허용 서술이 '단기 관측 · 이완/이력/압력-부피 정확성 미확인' 을 달고 나간다")
+        chk("표준편차" in flat["★_통계의_뜻"]["P_sd_GPa"] and "신뢰구간이 아니" in flat["★_통계의_뜻"]["P_sd_GPa"]
+            and "검정한 값이 아니" in flat["★_통계의_뜻"]["rho_flat_pct"],
+            "통계 라벨이 결과에 같이 실린다 (sd ≠ 신뢰구간 · 범위 ≠ 평형검정)")
+        noTset = td / "noTset"; noTset.mkdir()
+        (noTset / "plan.json").write_text(json.dumps(plan_ok, ensure_ascii=False), encoding="utf-8")
+        with open(noTset / "thermo.csv", "w") as f:
+            f.write("t_ps,T_K,density_g_cm3,volume_A3,E_pot_eV,P_GPa,P_virial_GPa\n")
+            for i in range(30):
+                f.write(f"{float(i):.4f},300.0,1.9,8000.0,-1000.0,0.0,0.0\n")
+        r5 = gate_check(noTset, win_ps=10.0, log=lambda *a: None)
+        chk("⛔" in r5["hold_trend"] and "T_set_K" in r5["hold_trend"]["⛔"],
+            "⛔음성: T_set_K 없는 thermo 에서 유지 구간을 **추측하지 않고** 없다고 말한다")
     print(f"selftest: ⭕ {ok} · ⛔ {bad}")
     return 0 if bad == 0 else 1
 
@@ -895,11 +1014,13 @@ def main():
                     help="plan.json 의 앙상블 선언 + thermo.csv 대조 + G4 밴드 (판정 아님, 기록 점검)")
     ap.add_argument("--band_card", default=BAND_CARD, help="--gate_check G4 밴드 출처 카드")
     ap.add_argument("--gate_win_ps", type=float, default=10.0, help="--gate_check 평균 창 [ps]")
+    ap.add_argument("--hold_blocks", type=int, default=5,
+                    help="--gate_check 유지 구간을 몇 블록으로 나눠 추세를 볼지 (회신 BR Q3: 제일 싼 첫 단계)")
     a = ap.parse_args()
     if a.selftest:
         raise SystemExit(_selftest())
     if a.gate_check:
-        r = gate_check(a.gate_check, a.band_card, a.gate_win_ps)
+        r = gate_check(a.gate_check, a.band_card, a.gate_win_ps, n_blocks=a.hold_blocks)
         (pathlib.Path(a.gate_check) / "gate_check.json").write_text(
             json.dumps(r, ensure_ascii=False, indent=1), encoding="utf-8")
         raise SystemExit(0 if (r["record_has_gate_input"] and r["pressure_ok"]) else 2)
